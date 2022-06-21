@@ -1,5 +1,6 @@
 package rs117.hd.model;
 
+import com.google.common.primitives.Floats;
 import com.google.common.primitives.Ints;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
@@ -24,8 +25,7 @@ import rs117.hd.utils.buffer.GpuIntBuffer;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.Arrays;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Pushes models
@@ -46,7 +46,7 @@ public class ModelPusher {
     private ProceduralGenerator proceduralGenerator;
 
     @Inject
-    private TextureManager textureManager;
+    private OffHeapModelCache offHeapModelCache;
 
     // subtracts the X lowest lightness levels from the formula.
     // helps keep darker colors appropriately dark
@@ -66,35 +66,108 @@ public class ModelPusher {
     private final static int[] modelColors = new int[HdPlugin.MAX_TRIANGLE * 4];
     private final static ModelData tempModelData = new ModelData();
 
-    private final Map<Integer, ModelData> modelCache = new ModelCache(4096);
-
     public void clearModelCache() {
-        modelCache.clear();
+        offHeapModelCache.clear();
     }
 
-    public int[] pushModel(Renderable renderable, Model model, GpuIntBuffer vertexBuffer, GpuFloatBuffer uvBuffer, GpuFloatBuffer normalBuffer, int tileX, int tileY, int tileZ, ObjectProperties objectProperties, ObjectType objectType, boolean noCache, int hash) {
+    public int[] pushModel(Renderable renderable, Model model, GpuIntBuffer vertexBuffer, GpuFloatBuffer uvBuffer, GpuFloatBuffer normalBuffer, int tileX, int tileY, int tileZ, ObjectProperties objectProperties, ObjectType objectType, boolean noCache, ModelHasher modelHasher) {
         final int faceCount = Math.min(model.getFaceCount(), HdPlugin.MAX_TRIANGLE);
+        int vertexLength = 0;
+        int uvLength = 0;
 
         // ensure capacity upfront
         vertexBuffer.ensureCapacity(12 * 2 * faceCount);
         normalBuffer.ensureCapacity(12 * 2 * faceCount);
         uvBuffer.ensureCapacity(12 * 2 * faceCount);
 
-        ModelData modelData = getCachedModelData(renderable, model, objectProperties, objectType, tileX, tileY, tileZ, faceCount, noCache, hash);
+        boolean cachedVertexData = false;
+        boolean cachedNormalData = false;
+        boolean cachedUvData = false;
+        int vertexCacheHash = 0;
+        int normalDataCacheHash = 0;
+        int uvDataCacheHash = 0;
 
-        int vertexLength = 0;
-        int uvLength = 0;
-        for (int face = 0; face < faceCount; face++) {
-            vertexBuffer.put(getVertexDataForFace(model, modelData, face));
-            vertexLength += 3;
+        if (!noCache) {
+            vertexCacheHash = modelHasher.calculateVertexCacheHash();
+            normalDataCacheHash = modelHasher.calculateNormalCacheHash();
+            uvDataCacheHash = modelHasher.calculateUvCacheHash(objectProperties == null ? new int[]{} : objectProperties.getId());
 
-            normalBuffer.put(getNormalDataForFace(model, objectProperties, face));
-
-            float[] uvData = getUvDataForFace(model, objectProperties, face);
-            if (uvData != null) {
-                uvBuffer.put(uvData);
-                uvLength += 3;
+            int[] vertexData = offHeapModelCache.getVertexData(vertexCacheHash);
+            cachedVertexData = vertexData != null;
+            if (cachedVertexData) {
+                vertexBuffer.put(vertexData);
+                vertexLength = faceCount * 3;
             }
+
+            float[] normalData = offHeapModelCache.getNormalData(normalDataCacheHash);
+            cachedNormalData = normalData != null;
+            if (cachedNormalData) {
+                normalBuffer.put(normalData);
+            }
+
+            float[] uvData = offHeapModelCache.getUvData(uvDataCacheHash);
+            cachedUvData = uvData != null;
+            if (cachedUvData) {
+                uvBuffer.put(uvData);
+                uvLength = 3 * (uvData.length/12);
+            }
+
+            if (cachedVertexData && cachedUvData && cachedNormalData) {
+                twoInts[0] = vertexLength;
+                twoInts[1] = uvLength;
+                return twoInts;
+            }
+        }
+
+        ModelData modelData = getCachedModelData(renderable, model, objectProperties, objectType, tileX, tileY, tileZ, faceCount, noCache, modelHasher == null ? 0 : modelHasher.calculateColorCacheHash());
+
+        ArrayList<Integer> fullVertexData = new ArrayList<>();
+        ArrayList<Float> fullNormalData = new ArrayList<>();
+        ArrayList<Float> fullUvData = new ArrayList<>();
+
+        for (int face = 0; face < faceCount; face++) {
+            if (!cachedVertexData) {
+                int[] tempVertexData = getVertexDataForFace(model, modelData, face);
+                for (int tempVertexDatum : tempVertexData) {
+                    fullVertexData.add(tempVertexDatum);
+                }
+
+                vertexBuffer.put(tempVertexData);
+                vertexLength += 3;
+            }
+
+            if (!cachedNormalData) {
+                float[] tempNormalData = getNormalDataForFace(model, objectProperties, face);
+                for (float tempNormalDatum : tempNormalData) {
+                    fullNormalData.add(tempNormalDatum);
+                }
+
+                normalBuffer.put(tempNormalData);
+            }
+
+            if (!cachedUvData) {
+                float[] tempUvData = getUvDataForFace(model, objectProperties, face);
+                if (tempUvData != null) {
+                    for (float tempUvDatum : tempUvData) {
+                        fullUvData.add(tempUvDatum);
+                    }
+
+                    uvBuffer.put(tempUvData);
+                    uvLength += 3;
+                }
+            }
+        }
+
+        if (!cachedVertexData && !noCache) {
+            offHeapModelCache.putVertexData(vertexCacheHash, Ints.toArray(fullVertexData));
+        }
+
+        if (!cachedNormalData && !noCache) {
+            offHeapModelCache.putNormalData(normalDataCacheHash, Floats.toArray(fullNormalData));
+        }
+
+        if (!cachedUvData && !noCache) {
+            offHeapModelCache.putUvData(uvDataCacheHash, Floats.toArray(fullUvData));
         }
 
         twoInts[0] = vertexLength;
@@ -232,19 +305,8 @@ public class ModelPusher {
     }
 
     private ModelData getCachedModelData(Renderable renderable, Model model, ObjectProperties objectProperties, ObjectType objectType, int tileX, int tileY, int tileZ, int faceCount, boolean noCache, int hash) {
-        if (noCache) {
-            tempModelData.setColors(getColorsForModel(renderable, model, objectProperties, objectType, tileX, tileY, tileZ, faceCount));
-            return tempModelData;
-        }
-
-        ModelData modelData = modelCache.get(hash);
-        if (modelData == null || modelData.getFaceCount() != model.getFaceCount()) {
-            // get new data if there was no cache or if we detected an exception causing hash collision
-            modelData = new ModelData().setColors(getColorsForModel(renderable, model, objectProperties, objectType, tileX, tileY, tileZ, faceCount)).setFaceCount(model.getFaceCount());
-            modelCache.put(hash, modelData);
-        }
-
-        return modelData;
+        tempModelData.setColors(getColorsForModel(renderable, model, objectProperties, objectType, tileX, tileY, tileZ, faceCount));
+        return tempModelData;
     }
 
     private int[] getColorsForModel(Renderable renderable, Model model, ObjectProperties objectProperties, ObjectType objectType, int tileX, int tileY, int tileZ, int faceCount) {

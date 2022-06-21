@@ -7,22 +7,117 @@ import javax.inject.Singleton;
 @Singleton
 public class ModelHasher {
     private Model model;
-    private int faceColors1Hash;
-    private int faceColors2Hash;
-    private int faceColors3Hash;
+    private int faceColorsOneHash;
+    private int faceColorsTwoHash;
+    private int faceColorsThreeHash;
     private int faceTransparenciesHash;
     private int faceTexturesHash;
     private int faceTexturesUvHash;
+    private int xVerticesHash;
+    private int yVerticesHash;
+    private int zVerticesHash;
+    private int faceIndicesOneHash;
+    private int faceIndicesTwoHash;
+    private int faceIndicesThreeHash;
 
-    public static int fastIntHash(int[] a) {
+    public void setModel(Model model) {
+        this.model = model;
+
+        this.faceColorsOneHash = fastIntHash(model.getFaceColors1(), -1);
+        this.faceColorsTwoHash = fastIntHash(model.getFaceColors2(), -1);
+        this.faceColorsThreeHash = fastIntHash(model.getFaceColors3(), -1);
+        this.faceTransparenciesHash = fastByteHash(model.getFaceTransparencies());
+        this.faceTexturesHash = fastShortHash(model.getFaceTextures());
+        this.faceTexturesUvHash = fastFloatHash(model.getFaceTextureUVCoordinates());
+        this.xVerticesHash = fastIntHash(model.getVerticesX(), model.getVerticesCount());
+        this.yVerticesHash = fastIntHash(model.getVerticesY(), model.getVerticesCount());
+        this.zVerticesHash = fastIntHash(model.getVerticesZ(), model.getVerticesCount());
+        this.faceIndicesOneHash = fastIntHash(model.getFaceIndices1(), -1);
+        this.faceIndicesTwoHash = fastIntHash(model.getFaceIndices2(), -1);
+        this.faceIndicesThreeHash = fastIntHash(model.getFaceIndices3(), -1);
+    }
+
+    public int calculateVertexCacheHash() {
+        return fastIntHash(new int[] {
+                this.faceColorsOneHash,
+                this.faceColorsTwoHash,
+                this.faceColorsThreeHash,
+                this.faceTransparenciesHash,
+                this.faceTexturesHash,
+                this.faceTexturesUvHash,
+                this.model.getOverrideAmount(),
+                this.model.getOverrideHue(),
+                this.model.getOverrideSaturation(),
+                this.model.getOverrideLuminance(),
+                faceIndicesOneHash,
+                faceIndicesTwoHash,
+                faceIndicesThreeHash,
+                xVerticesHash,
+                yVerticesHash,
+                zVerticesHash,
+        }, -1);
+    }
+
+    public int calculateNormalCacheHash() {
+        return fastIntHash(new int[] {
+                this.faceIndicesOneHash,
+                this.faceIndicesTwoHash,
+                this.faceIndicesThreeHash,
+                fastIntHash(this.model.getVertexNormalsX(), -1),
+                fastIntHash(this.model.getVertexNormalsY(), -1),
+                fastIntHash(this.model.getVertexNormalsZ(), -1),
+        }, -1);
+    }
+
+    public int calculateUvCacheHash(int[] objectPropertiesID) {
+        return fastIntHash(new int[] {
+                this.faceTexturesHash,
+                this.faceTexturesUvHash,
+                fastIntHash(objectPropertiesID, -1),
+        }, -1);
+    }
+
+    public int calculateColorCacheHash() {
+        return fastIntHash(new int[]{
+                this.faceColorsOneHash,
+                this.faceColorsTwoHash,
+                this.faceColorsThreeHash,
+                this.faceTransparenciesHash,
+                this.faceTexturesHash,
+                this.faceTexturesUvHash,
+                this.model.getOverrideAmount(),
+                this.model.getOverrideHue(),
+                this.model.getOverrideSaturation(),
+                this.model.getOverrideLuminance()
+        }, -1);
+    }
+
+    public int calculateBatchHash() {
+        return fastIntHash(new int[]{
+                this.xVerticesHash,
+                this.yVerticesHash,
+                this.zVerticesHash,
+                this.faceColorsOneHash,
+                this.faceColorsTwoHash,
+                this.faceColorsThreeHash,
+                this.faceTexturesHash,
+                this.faceTexturesUvHash,
+        }, -1);
+    }
+
+    public static int fastIntHash(int[] a, int actualLength) {
         if (a == null) {
             return 0;
         }
 
         int i = 0;
         int r = 1;
+        int length = a.length;
+        if (actualLength != -1) {
+            length = actualLength;
+        }
 
-        for (; i + 5 < a.length; i += 6) {
+        for (; i + 5 < length; i += 6) {
             r = 31 * 31 * 31 * 31 * 31 * 31 * r
                     + 31 * 31 * 31 * 31 * 31 * a[i]
                     + 31 * 31 * 31 * 31 * a[i + 1]
@@ -32,7 +127,7 @@ public class ModelHasher {
                     + a[i + 5];
         }
 
-        for (; i < a.length; i++) {
+        for (; i < length; i++) {
             r = 31 * r + a[i];
         }
 
@@ -112,43 +207,5 @@ public class ModelHasher {
         }
 
         return r;
-    }
-
-    public void setModel(Model model) {
-        this.model = model;
-        this.faceColors1Hash = fastIntHash(model.getFaceColors1());
-        this.faceColors2Hash = fastIntHash(model.getFaceColors2());
-        this.faceColors3Hash = fastIntHash(model.getFaceColors3());
-        this.faceTransparenciesHash = fastByteHash(model.getFaceTransparencies());
-        this.faceTexturesHash = fastShortHash(model.getFaceTextures());
-        this.faceTexturesUvHash = fastFloatHash(model.getFaceTextureUVCoordinates());
-    }
-
-    public int calculateColorCacheHash() {
-        return fastIntHash(new int[]{
-                this.faceColors1Hash,
-                this.faceColors2Hash,
-                this.faceColors3Hash,
-                this.faceTransparenciesHash,
-                this.faceTexturesHash,
-                this.faceTexturesUvHash,
-                this.model.getOverrideAmount(),
-                this.model.getOverrideHue(),
-                this.model.getOverrideSaturation(),
-                this.model.getOverrideLuminance()
-        });
-    }
-
-    public int calculateBatchHash() {
-        return fastIntHash(new int[]{
-                fastIntHash(this.model.getVerticesX()),
-                fastIntHash(this.model.getVerticesY()),
-                fastIntHash(this.model.getVerticesZ()),
-                this.faceColors1Hash,
-                this.faceColors2Hash,
-                this.faceColors3Hash,
-                this.faceTexturesHash,
-                this.faceTexturesUvHash,
-        });
     }
 }

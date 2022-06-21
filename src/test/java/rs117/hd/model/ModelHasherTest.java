@@ -41,7 +41,7 @@ public class ModelHasherTest extends TestCase {
     private long runFastHasher() {
         long start = System.nanoTime();
         for (int i = 0; i < this.testIterations; i++) {
-            ModelHasher.fastIntHash(intArrays.get(this.random.nextInt(this.testDataCount)));
+            ModelHasher.fastIntHash(intArrays.get(this.random.nextInt(this.testDataCount)), -1);
         }
         return System.nanoTime() - start;
     }

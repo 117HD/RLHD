@@ -7,7 +7,7 @@ public class ModelCache extends LinkedHashMap<Integer, ModelData> {
     private final int capacity;
 
     public ModelCache(int capacity) {
-        super(capacity, 0.75f, true);
+        super(capacity, 0.7f, true);
         this.capacity = capacity;
     }
 
