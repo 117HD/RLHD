@@ -56,7 +56,6 @@ import rs117.hd.data.WaterType;
 import rs117.hd.data.materials.Material;
 import rs117.hd.model.ModelHasher;
 import rs117.hd.model.ModelPusher;
-import rs117.hd.model.OffHeapModelCache;
 import rs117.hd.model.TempModelInfo;
 import rs117.hd.model.objects.ObjectProperties;
 import rs117.hd.model.objects.ObjectType;
@@ -172,8 +171,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 	@Inject
 	private DeveloperTools developerTools;
-	private OffHeapModelCache offHeapModelCache;
-
 	private ComputeMode computeMode = ComputeMode.OPENGL;
 
 	private Canvas canvas;

@@ -25,6 +25,8 @@ import rs117.hd.utils.buffer.GpuIntBuffer;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 import java.util.*;
 
 /**
@@ -45,8 +47,13 @@ public class ModelPusher {
     @Inject
     private ProceduralGenerator proceduralGenerator;
 
-    @Inject
-    private OffHeapModelCache offHeapModelCache;
+    private static final IntBufferCache vertexDataCache = new IntBufferCache(16384);
+    private static final FloatBufferCache normalDataCache = new FloatBufferCache(1024);
+    private static final FloatBufferCache uvDataCache = new FloatBufferCache(512);
+    int pushes = 0;
+    int vertexDataHits = 0;
+    int normalDataHits = 0;
+    int uvDataHits = 0;
 
     // subtracts the X lowest lightness levels from the formula.
     // helps keep darker colors appropriately dark
@@ -67,10 +74,31 @@ public class ModelPusher {
     private final static ModelData tempModelData = new ModelData();
 
     public void clearModelCache() {
-        offHeapModelCache.clear();
+        vertexDataCache.clear();
+        normalDataCache.clear();
+        uvDataCache.clear();
+    }
+
+    public void printStats() {
+        StringBuilder stats = new StringBuilder();
+        stats.append("\nModel pusher cache stats:\n");
+        stats.append("Vertex cache hit ratio: ").append((float)vertexDataHits/pushes*100).append("%\n");
+        stats.append("Normal cache hit ratio: ").append((float)normalDataHits/pushes*100).append("%\n");
+        stats.append("UV cache hit ratio: ").append((float)uvDataHits/pushes*100).append("%\n");
+        stats.append(vertexDataCache.size()).append("vertex datas\n");
+        stats.append(normalDataCache.size()).append("normal datas\n");
+        stats.append(uvDataCache.size()).append("uv datas\n");
+
+        log.debug(stats.toString());
+
+        vertexDataHits = 0;
+        normalDataHits = 0;
+        uvDataHits = 0;
+        pushes = 0;
     }
 
     public int[] pushModel(Renderable renderable, Model model, GpuIntBuffer vertexBuffer, GpuFloatBuffer uvBuffer, GpuFloatBuffer normalBuffer, int tileX, int tileY, int tileZ, ObjectProperties objectProperties, ObjectType objectType, boolean noCache, ModelHasher modelHasher) {
+        pushes++;
         final int faceCount = Math.min(model.getFaceCount(), HdPlugin.MAX_TRIANGLE);
         int vertexLength = 0;
         int uvLength = 0;
@@ -92,24 +120,30 @@ public class ModelPusher {
             normalDataCacheHash = modelHasher.calculateNormalCacheHash();
             uvDataCacheHash = modelHasher.calculateUvCacheHash(objectProperties == null ? new int[]{} : objectProperties.getId());
 
-            int[] vertexData = offHeapModelCache.getVertexData(vertexCacheHash);
+            IntBuffer vertexData = vertexDataCache.get(vertexCacheHash);
             cachedVertexData = vertexData != null;
             if (cachedVertexData) {
-                vertexBuffer.put(vertexData);
+                vertexDataHits++;
                 vertexLength = faceCount * 3;
+                vertexBuffer.put(vertexData);
+                vertexData.rewind();
             }
 
-            float[] normalData = offHeapModelCache.getNormalData(normalDataCacheHash);
+            FloatBuffer normalData = normalDataCache.get(normalDataCacheHash);
             cachedNormalData = normalData != null;
             if (cachedNormalData) {
+                normalDataHits++;
                 normalBuffer.put(normalData);
+                normalData.rewind();
             }
 
-            float[] uvData = offHeapModelCache.getUvData(uvDataCacheHash);
+            FloatBuffer uvData = uvDataCache.get(uvDataCacheHash);
             cachedUvData = uvData != null;
             if (cachedUvData) {
+                uvDataHits++;
+                uvLength = 3 * (uvData.remaining()/12);
                 uvBuffer.put(uvData);
-                uvLength = 3 * (uvData.length/12);
+                uvData.rewind();
             }
 
             if (cachedVertexData && cachedUvData && cachedNormalData) {
@@ -121,53 +155,48 @@ public class ModelPusher {
 
         ModelData modelData = getCachedModelData(renderable, model, objectProperties, objectType, tileX, tileY, tileZ, faceCount, noCache, modelHasher == null ? 0 : modelHasher.calculateColorCacheHash());
 
-        ArrayList<Integer> fullVertexData = new ArrayList<>();
-        ArrayList<Float> fullNormalData = new ArrayList<>();
-        ArrayList<Float> fullUvData = new ArrayList<>();
+        IntBuffer fullVertexData = GpuIntBuffer.allocateDirect(faceCount * 12);
+        FloatBuffer fullNormalData = GpuFloatBuffer.allocateDirect(faceCount * 12);
+        FloatBuffer fullUvData = GpuFloatBuffer.allocateDirect(faceCount * 12);
 
         for (int face = 0; face < faceCount; face++) {
             if (!cachedVertexData) {
                 int[] tempVertexData = getVertexDataForFace(model, modelData, face);
-                for (int tempVertexDatum : tempVertexData) {
-                    fullVertexData.add(tempVertexDatum);
-                }
-
+                fullVertexData.put(tempVertexData);
                 vertexBuffer.put(tempVertexData);
                 vertexLength += 3;
             }
 
             if (!cachedNormalData) {
                 float[] tempNormalData = getNormalDataForFace(model, objectProperties, face);
-                for (float tempNormalDatum : tempNormalData) {
-                    fullNormalData.add(tempNormalDatum);
-                }
-
+                fullNormalData.put(tempNormalData);
                 normalBuffer.put(tempNormalData);
             }
 
             if (!cachedUvData) {
                 float[] tempUvData = getUvDataForFace(model, objectProperties, face);
                 if (tempUvData != null) {
-                    for (float tempUvDatum : tempUvData) {
-                        fullUvData.add(tempUvDatum);
-                    }
-
+                    fullUvData.put(tempUvData);
                     uvBuffer.put(tempUvData);
                     uvLength += 3;
                 }
             }
         }
 
+        fullVertexData.flip();
+        fullNormalData.flip();
+        fullUvData.flip();
+
         if (!cachedVertexData && !noCache) {
-            offHeapModelCache.putVertexData(vertexCacheHash, Ints.toArray(fullVertexData));
+            vertexDataCache.put(vertexCacheHash, fullVertexData);
         }
 
         if (!cachedNormalData && !noCache) {
-            offHeapModelCache.putNormalData(normalDataCacheHash, Floats.toArray(fullNormalData));
+            normalDataCache.put(normalDataCacheHash, fullNormalData);
         }
 
         if (!cachedUvData && !noCache) {
-            offHeapModelCache.putUvData(uvDataCacheHash, Floats.toArray(fullUvData));
+            uvDataCache.put(uvDataCacheHash, fullUvData);
         }
 
         twoInts[0] = vertexLength;

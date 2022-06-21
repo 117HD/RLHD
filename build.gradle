@@ -16,8 +16,6 @@ def runeLiteVersion = '1.8.+'
 dependencies {
 	compileOnly group: 'net.runelite', name:'client', version: runeLiteVersion
 
-	implementation group: 'net.openhft', name: 'chronicle-map', version: '3.21.86'
-
 	compileOnly 'org.projectlombok:lombok:1.18.24'
 	annotationProcessor 'org.projectlombok:lombok:1.18.24'
 
