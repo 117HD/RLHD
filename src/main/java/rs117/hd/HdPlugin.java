@@ -2133,7 +2133,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 	private void uploadScene()
 	{
-		modelPusher.clearModelCache();
+//		modelPusher.clearModelCache();
 		vertexBuffer.clear();
 		uvBuffer.clear();
 		normalBuffer.clear();

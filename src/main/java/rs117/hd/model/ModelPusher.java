@@ -1,6 +1,5 @@
 package rs117.hd.model;
 
-import com.google.common.primitives.Floats;
 import com.google.common.primitives.Ints;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
@@ -47,13 +46,20 @@ public class ModelPusher {
     @Inject
     private ProceduralGenerator proceduralGenerator;
 
-    private static final IntBufferCache vertexDataCache = new IntBufferCache(16384);
-    private static final FloatBufferCache normalDataCache = new FloatBufferCache(1024);
-    private static final FloatBufferCache uvDataCache = new FloatBufferCache(512);
-    int pushes = 0;
-    int vertexDataHits = 0;
-    int normalDataHits = 0;
-    int uvDataHits = 0;
+    private final IntBufferCache vertexDataCache;
+    private final FloatBufferCache normalDataCache;
+    private final FloatBufferCache uvDataCache;
+    private int pushes = 0;
+    private int vertexDataHits = 0;
+    private int normalDataHits = 0;
+    private int uvDataHits = 0;
+
+    public ModelPusher() {
+        // 3.5G with 80% to vertex data, 15% to normal data, and 5% to uv data
+        this.vertexDataCache = new IntBufferCache(3006477107L);
+        this.normalDataCache = new FloatBufferCache(563714457L);
+        this.uvDataCache = new FloatBufferCache(187904819L);
+    }
 
     // subtracts the X lowest lightness levels from the formula.
     // helps keep darker colors appropriately dark
@@ -85,9 +91,9 @@ public class ModelPusher {
         stats.append("Vertex cache hit ratio: ").append((float)vertexDataHits/pushes*100).append("%\n");
         stats.append("Normal cache hit ratio: ").append((float)normalDataHits/pushes*100).append("%\n");
         stats.append("UV cache hit ratio: ").append((float)uvDataHits/pushes*100).append("%\n");
-        stats.append(vertexDataCache.size()).append("vertex datas\n");
-        stats.append(normalDataCache.size()).append("normal datas\n");
-        stats.append(uvDataCache.size()).append("uv datas\n");
+        stats.append(vertexDataCache.size()).append(" vertex datas consuming ").append(vertexDataCache.getBytesConsumed()).append(" bytes\n");
+        stats.append(normalDataCache.size()).append(" normal datas consuming ").append(normalDataCache.getBytesConsumed()).append(" bytes\n");
+        stats.append(uvDataCache.size()).append(" uv datas consuming ").append(uvDataCache.getBytesConsumed()).append(" bytes\n");
 
         log.debug(stats.toString());
 
