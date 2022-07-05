@@ -26,6 +26,12 @@ class IntBufferCache extends LinkedHashMap<Integer, IntBuffer> {
     }
 
     @Override
+    public void clear() {
+        this.bytesConsumed = 0;
+        super.clear();
+    }
+
+    @Override
     protected boolean removeEldestEntry(Map.Entry<Integer, IntBuffer> eldest) {
         // leave room for at least one max size entry
         if (this.bytesConsumed + (HdPlugin.MAX_TRIANGLE * 12 * 4) >= this.byteCapacity) {
