@@ -77,7 +77,6 @@ public class ModelPusher {
     private final static int[] twelveInts = new int[12];
     private final static float[] twelveFloats = new float[12];
     private final static int[] modelColors = new int[HdPlugin.MAX_TRIANGLE * 4];
-    private final static ModelData tempModelData = new ModelData();
 
     public void clearModelCache() {
         vertexDataCache.clear();
@@ -159,15 +158,13 @@ public class ModelPusher {
             }
         }
 
-        ModelData modelData = getCachedModelData(renderable, model, objectProperties, objectType, tileX, tileY, tileZ, faceCount, noCache, modelHasher == null ? 0 : modelHasher.calculateColorCacheHash());
-
         IntBuffer fullVertexData = GpuIntBuffer.allocateDirect(faceCount * 12);
         FloatBuffer fullNormalData = GpuFloatBuffer.allocateDirect(faceCount * 12);
         FloatBuffer fullUvData = GpuFloatBuffer.allocateDirect(faceCount * 12);
 
         for (int face = 0; face < faceCount; face++) {
             if (!cachedVertexData) {
-                int[] tempVertexData = getVertexDataForFace(model, modelData, face);
+                int[] tempVertexData = getVertexDataForFace(model, getColorsForFace(renderable, model, objectProperties, objectType, tileX, tileY, tileZ, face), face);
                 fullVertexData.put(tempVertexData);
                 vertexBuffer.put(tempVertexData);
                 vertexLength += 3;
@@ -211,7 +208,7 @@ public class ModelPusher {
         return twoInts;
     }
 
-    private int[] getVertexDataForFace(Model model, ModelData modelData, int face) {
+    private int[] getVertexDataForFace(Model model, int[] faceColors, int face) {
         final int[] xVertices = model.getVerticesX();
         final int[] yVertices = model.getVerticesY();
         final int[] zVertices = model.getVerticesZ();
@@ -222,15 +219,15 @@ public class ModelPusher {
         twelveInts[0] = xVertices[triA];
         twelveInts[1] = yVertices[triA];
         twelveInts[2] = zVertices[triA];
-        twelveInts[3] = modelData.getColorForFace(face, 3) | modelData.getColorForFace(face, 0);
+        twelveInts[3] = faceColors[3] | faceColors[0];
         twelveInts[4] = xVertices[triB];
         twelveInts[5] = yVertices[triB];
         twelveInts[6] = zVertices[triB];
-        twelveInts[7] = modelData.getColorForFace(face, 3) | modelData.getColorForFace(face, 1);
+        twelveInts[7] = faceColors[3] | faceColors[1];
         twelveInts[8] = xVertices[triC];
         twelveInts[9] = yVertices[triC];
         twelveInts[10] = zVertices[triC];
-        twelveInts[11] = modelData.getColorForFace(face, 3) | modelData.getColorForFace(face, 2);
+        twelveInts[11] = faceColors[3] | faceColors[2];
 
         return twelveInts;
     }
@@ -337,11 +334,6 @@ public class ModelPusher {
 
     public int packMaterialData(Material material, boolean isOverlay) {
         return material.ordinal() << 1 | (isOverlay ? 1 : 0);
-    }
-
-    private ModelData getCachedModelData(Renderable renderable, Model model, ObjectProperties objectProperties, ObjectType objectType, int tileX, int tileY, int tileZ, int faceCount, boolean noCache, int hash) {
-        tempModelData.setColors(getColorsForModel(renderable, model, objectProperties, objectType, tileX, tileY, tileZ, faceCount));
-        return tempModelData;
     }
 
     private int[] getColorsForModel(Renderable renderable, Model model, ObjectProperties objectProperties, ObjectType objectType, int tileX, int tileY, int tileZ, int faceCount) {
