@@ -28,8 +28,6 @@ package rs117.hd;
 import com.google.common.primitives.Ints;
 import com.google.inject.Provides;
 import javax.inject.Named;
-
-import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
@@ -39,16 +37,9 @@ import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
-import net.runelite.client.externalplugins.ExternalPluginManager;
-import net.runelite.client.externalplugins.ExternalPluginManifest;
-import net.runelite.client.input.KeyManager;
 import net.runelite.client.plugins.*;
 import net.runelite.client.plugins.entityhider.EntityHiderPlugin;
-import net.runelite.client.ui.ClientToolbar;
 import net.runelite.client.ui.DrawManager;
-import net.runelite.client.ui.NavigationButton;
-import net.runelite.client.ui.overlay.OverlayManager;
-import net.runelite.client.util.ImageUtil;
 import net.runelite.client.util.OSType;
 import net.runelite.rlawt.AWTContext;
 import org.jocl.CL;
@@ -59,9 +50,6 @@ import rs117.hd.config.DefaultSkyColor;
 import rs117.hd.config.FogDepthMode;
 import rs117.hd.config.UIScalingMode;
 import rs117.hd.data.materials.Material;
-import rs117.hd.gui.panel.HdPanel;
-import rs117.hd.gui.panel.debug.overlays.LightInfoOverlay;
-import rs117.hd.gui.panel.debug.overlays.TileInfoOverlay;
 import rs117.hd.model.ModelHasher;
 import rs117.hd.model.ModelPusher;
 import rs117.hd.model.TempModelInfo;
@@ -128,18 +116,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	private static final int[] eightIntWrite = new int[8];
 
 	@Inject
-	@Getter
 	private Client client;
-
-	@Inject
-	@Getter
-	@Named("runelite.version")
-	public String runeliteVersion;
-
-	@Getter
-	@Setter
-	String pluginVersion = "";
-
+	
 	@Inject
 	private OpenCLManager openCLManager;
 
@@ -147,29 +125,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	private ClientThread clientThread;
 
 	@Inject
-	@Getter
 	private HdPluginConfig config;
-
-	@Getter
-	@Setter
-	private String renderer,version;
 
 	@Inject
 	private TextureManager textureManager;
 
 	@Inject
-	@Getter
-	private KeyManager keyManager;
-
-	@Getter
-	@Setter
-	private HdPanel panel;
-
-	@Inject
-	private ClientToolbar clientToolbar;
-
-	@Inject
-	@Getter
 	private LightManager lightManager;
 
 	@Inject
@@ -188,7 +149,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	private ProceduralGenerator proceduralGenerator;
 
 	@Inject
-	@Getter
 	private ConfigManager configManager;
 
 	@Inject
@@ -199,7 +159,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 	@Inject
 	@Named("developerMode")
-	@Getter
 	private boolean developerMode;
 
 	@Inject
@@ -429,17 +388,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	@Setter
 	private boolean isInGauntlet = false;
 
-	private NavigationButton nav;
-
-	@Inject
-	private LightInfoOverlay lightInfoOverlay;
-
-	@Inject
-	private TileInfoOverlay tileInfoOverlay;
-
-	@Inject
-	private OverlayManager overlayManager;
-
 	private final Map<Integer, TempModelInfo> tempModelInfoMap = new HashMap<>();
 
 	@Subscribe
@@ -457,11 +405,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	@Override
 	protected void startUp()
 	{
-
-		ExternalPluginManifest manifest = ExternalPluginManager.getExternalPluginManifest(getClass());
-		setPluginVersion(manifest == null ? "Not Available" : manifest.getVersion());
-		log.info(HDUtils.getSpecs(runeliteVersion));
-
 		configGroundTextures = config.groundTextures();
 		configGroundBlending = config.groundBlending();
 		configObjectTextures = config.objectTextures();
@@ -507,8 +450,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				log.info("Using device: {}", glGetString(GL_RENDERER));
 				log.info("Using driver: {}", glGetString(GL_VERSION));
 				log.info("Client is {}-bit", System.getProperty("sun.arch.data.model"));
-				setRenderer(glGetString(GL_RENDERER));
-				setVersion(glGetString(GL_VERSION));
 
 				GLCapabilities caps = GL.getCapabilities();
 				if (computeMode == ComputeMode.OPENGL)
@@ -565,25 +506,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 					developerTools.activate();
 				}
 
-				if(!config.disablePanel()) {
-					SwingUtilities.invokeAndWait(() -> {
-						setPanel(injector.getInstance(HdPanel.class));
-
-						final BufferedImage icon = ImageUtil.loadImageResource(getClass(), "icon.png");
-						nav = NavigationButton.builder()
-								.tooltip("HD 117")
-								.icon(icon)
-								.priority(3)
-								.panel(panel)
-								.build();
-
-						clientToolbar.addNavigation(nav);
-						panel.setup();
-						setupOverlays();
-
-					});
-				}
-
 				lastFrameTime = System.currentTimeMillis();
 
 				setupSyncMode();
@@ -636,24 +558,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		});
 	}
 
-	public void setupOverlays() {
-		overlayManager.add(lightInfoOverlay);
-		overlayManager.add(tileInfoOverlay);
-	}
-
-	public void removeOverlays() {
-		overlayManager.remove(lightInfoOverlay);
-		overlayManager.remove(tileInfoOverlay);
-
-	}
-
 	@Override
 	protected void shutDown()
 	{
 		developerTools.deactivate();
 
 		lightManager.shutDown();
-		removeOverlays();
 
 		clientThread.invoke(() ->
 		{
@@ -2251,13 +2161,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			case "groundTextures":
 				configGroundTextures = config.groundTextures();
 				reloadScene();
-				break;
-			case "disablePanel":
-				if(config.disablePanel()) {
-					clientToolbar.removeNavigation(nav);
-				} else {
-					clientToolbar.addNavigation(nav);
-				}
 				break;
 			case "groundBlending":
 				configGroundBlending = config.groundBlending();
