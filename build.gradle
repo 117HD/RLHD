@@ -41,7 +41,7 @@ task development(type: JavaExec) {
 task normal(type: JavaExec) {
 	classpath sourceSets.test.runtimeClasspath
 	group = 'Run117'
-	description = 'Run HD117 in Nomral Mode'
+	description = 'Run HD117 in Normal Mode'
 	enableAssertions = true
 	mainClass.set("rs117.hd.HdPluginTest")
 }
