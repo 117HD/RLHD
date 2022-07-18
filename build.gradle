@@ -24,7 +24,28 @@ dependencies {
 
 	testCompileOnly 'org.projectlombok:lombok:1.18.20'
 	testAnnotationProcessor 'org.projectlombok:lombok:1.18.20'
+
+	implementation('org.jfree:jfreechart:1.5.3')
+	implementation('org.commonmark:commonmark:0.19.0')
 }
+
+task development(type: JavaExec) {
+	classpath sourceSets.test.runtimeClasspath
+	group = 'Run117'
+	description = 'Run HD117 in Development Mode'
+	enableAssertions = true
+	mainClass.set("rs117.hd.HdPluginTest")
+	args "--developer-mode"
+}
+
+task normal(type: JavaExec) {
+	classpath sourceSets.test.runtimeClasspath
+	group = 'Run117'
+	description = 'Run HD117 in Nomral Mode'
+	enableAssertions = true
+	mainClass.set("rs117.hd.HdPluginTest")
+}
+
 
 group = 'rs117.hd'
 version = '1.1.1'

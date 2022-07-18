@@ -58,6 +58,18 @@ public interface HdPluginConfig extends Config
 	)
 	String generalSettings = "generalSettings";
 
+	@ConfigItem(
+			keyName = "disablePanel",
+			name = "Disable Plugin Panel",
+			description = "Disable Plugin Panel.",
+			position = 0,
+			section = generalSettings
+	)
+	default boolean disablePanel()
+	{
+		return false;
+	}
+
 	@Range(
 		max = MAX_DISTANCE
 	)
