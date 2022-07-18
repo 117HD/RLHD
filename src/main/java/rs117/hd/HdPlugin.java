@@ -152,7 +152,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 	@Getter
 	@Setter
-	private String renderer,version;
+	private String glVersion,rendererVersion;
 
 	@Inject
 	private TextureManager textureManager;
@@ -507,8 +507,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				log.info("Using device: {}", glGetString(GL_RENDERER));
 				log.info("Using driver: {}", glGetString(GL_VERSION));
 				log.info("Client is {}-bit", System.getProperty("sun.arch.data.model"));
-				setRenderer(glGetString(GL_RENDERER));
-				setVersion(glGetString(GL_VERSION));
+				setRendererVersion(glGetString(GL_RENDERER));
+				setGlVersion(glGetString(GL_VERSION));
 
 				GLCapabilities caps = GL.getCapabilities();
 				if (computeMode == ComputeMode.OPENGL)
