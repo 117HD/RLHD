@@ -59,15 +59,15 @@ public interface HdPluginConfig extends Config
 	String generalSettings = "generalSettings";
 
 	@ConfigItem(
-			keyName = "disablePanel",
-			name = "Disable Plugin Panel",
-			description = "Disable Plugin Panel.",
+			keyName = "enablePanel",
+			name = "Enable Plugin Panel",
+			description = "Toggle Plugin Panel.",
 			position = 0,
 			section = generalSettings
 	)
-	default boolean disablePanel()
+	default boolean panelEnabled()
 	{
-		return false;
+		return true;
 	}
 
 	@Range(

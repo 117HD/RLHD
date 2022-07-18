@@ -565,17 +565,17 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 					developerTools.activate();
 				}
 
-				if(!config.disablePanel()) {
+				if(!config.panelEnabled()) {
 					SwingUtilities.invokeAndWait(() -> {
 						setPanel(injector.getInstance(HdPanel.class));
 
 						final BufferedImage icon = ImageUtil.loadImageResource(getClass(), "icon.png");
 						nav = NavigationButton.builder()
-								.tooltip("HD 117")
-								.icon(icon)
-								.priority(3)
-								.panel(panel)
-								.build();
+							.tooltip("HD 117")
+							.icon(icon)
+							.priority(3)
+							.panel(panel)
+						.build();
 
 						clientToolbar.addNavigation(nav);
 						panel.setup();
@@ -2252,8 +2252,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				configGroundTextures = config.groundTextures();
 				reloadScene();
 				break;
-			case "disablePanel":
-				if(config.disablePanel()) {
+			case "enablePanel":
+				if(config.panelEnabled()) {
 					clientToolbar.removeNavigation(nav);
 				} else {
 					clientToolbar.addNavigation(nav);
