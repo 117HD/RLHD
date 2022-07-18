@@ -28,9 +28,12 @@ package rs117.hd;
 import com.google.common.primitives.Ints;
 import com.google.inject.Provides;
 import javax.inject.Named;
+
+import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
+import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.events.*;
 import net.runelite.api.hooks.DrawCallbacks;
 import net.runelite.client.callback.ClientThread;
@@ -49,6 +52,9 @@ import rs117.hd.config.AntiAliasingMode;
 import rs117.hd.config.DefaultSkyColor;
 import rs117.hd.config.FogDepthMode;
 import rs117.hd.config.UIScalingMode;
+import rs117.hd.data.area.AreaManager;
+import rs117.hd.data.area.TileManager;
+import rs117.hd.data.area.effects.LargeTile;
 import rs117.hd.data.materials.Material;
 import rs117.hd.model.ModelHasher;
 import rs117.hd.model.ModelPusher;
@@ -123,6 +129,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 	@Inject
 	private ClientThread clientThread;
+
+	@Inject
+	@Getter
+	private AreaManager areaManager;
+
+	@Inject
+	@Getter
+	private TileManager tileManager;
 
 	@Inject
 	private HdPluginConfig config;
@@ -370,6 +384,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 	// Config settings used very frequently - thousands/frame
 	public boolean configGroundTextures = false;
+
+	public boolean configHideAreas = true;
+
 	public boolean configGroundBlending = false;
 	public boolean configObjectTextures = true;
 	public boolean configTzhaarHD = true;
@@ -415,6 +432,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		configExpandShadowDraw = config.expandShadowDraw();
 		configHdInfernalTexture = config.hdInfernalTexture();
 		configWinterTheme = config.winterTheme();
+		configHideAreas = config.hideAreas();
 
 		clientThread.invoke(() ->
 		{
@@ -541,6 +559,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 				// load all dynamic scene lights from text file
 				lightManager.startUp();
+				areaManager.startUp();
 
 				if (client.getGameState() == GameState.LOGGED_IN)
 				{
@@ -1226,6 +1245,34 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			lightsUniformBuf.clear();
 		}
 		glBindBufferBase(GL_UNIFORM_BUFFER, 2, lightsUniformBuffer.glBufferId);
+
+		LargeTile largeTile = getAreaManager().getCurrentArea().getLargeTile();
+		if(largeTile != null) {
+			GpuIntBuffer b = modelBufferUnordered;
+			b.ensureCapacity(largeTile.getMaterialBelow() == null ?  16: 32);
+			if(largeTile.getMaterialBelow() != null) {
+				b.getBuffer()
+						.put(targetBufferOffset)
+						.put(targetBufferOffset)
+						.put(2)
+						.put(targetBufferOffset)
+						.put(FLAG_SCENE_BUFFER)
+						.put(0).put(0).put(0);
+				targetBufferOffset += 6;
+				unorderedModels++;
+			}
+			b.getBuffer()
+					.put(targetBufferOffset)
+					.put(targetBufferOffset)
+					.put(2)
+					.put(targetBufferOffset)
+					.put(FLAG_SCENE_BUFFER)
+					.put(0).put(0).put(0);
+			targetBufferOffset += 6;
+			unorderedModels++;
+
+		}
+
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 	}
 
@@ -2084,6 +2131,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 		generateHDSceneData();
 
+		areaManager.update(client.getLocalPlayer().getWorldLocation());
 		sceneUploader.upload(client.getScene(), vertexBuffer, uvBuffer, normalBuffer);
 
 		vertexBuffer.flip();
@@ -2158,6 +2206,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 		switch (key)
 		{
+			case "hideAreas":
+				configHideAreas = config.hideAreas();
+				clientThread.invoke(() -> client.setGameState(GameState.LOADING));
+				break;
 			case "groundTextures":
 				configGroundTextures = config.groundTextures();
 				reloadScene();
@@ -2323,6 +2375,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	@Override
 	public void draw(Renderable renderable, int orientation, int pitchSin, int pitchCos, int yawSin, int yawCos, int x, int y, int z, long hash)
 	{
+		int lx = x + client.getCameraX2();
+		int lz = z + client.getCameraZ2();
+		WorldPoint worldPoint = WorldPoint.fromScene(client, lx / 128, lz / 128, 0);
+
+		if(areaManager.shouldHide(worldPoint)) {
+			return;
+		}
+
 		Model model = renderable instanceof Model ? (Model) renderable : renderable.getModel();
 		if (model == null || model.getFaceCount() == 0) {
 			// skip models with zero faces

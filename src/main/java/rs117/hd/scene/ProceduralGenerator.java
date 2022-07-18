@@ -26,6 +26,7 @@ package rs117.hd.scene;
 
 import com.google.common.primitives.Floats;
 import com.google.common.primitives.Ints;
+import com.jogamp.opengl.math.VectorUtil;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -41,15 +42,14 @@ import net.runelite.api.SceneTilePaint;
 import net.runelite.api.Tile;
 import rs117.hd.HdPlugin;
 import rs117.hd.data.WaterType;
+import rs117.hd.data.area.TileManager;
+import rs117.hd.data.area.effects.TileData;
 import rs117.hd.data.materials.GroundMaterial;
 import rs117.hd.data.materials.Material;
 import rs117.hd.model.objects.ObjectProperties;
-import rs117.hd.data.materials.Overlay;
 import rs117.hd.model.objects.TzHaarRecolorType;
-import rs117.hd.data.materials.Underlay;
 import rs117.hd.model.objects.ObjectType;
 import rs117.hd.utils.HDUtils;
-import static rs117.hd.utils.HDUtils.dotNormal3Lights;
 
 @Slf4j
 @Singleton
@@ -57,7 +57,7 @@ public class ProceduralGenerator
 {
 	@Inject
 	private Client client;
-	
+
 	@Inject
 	private HdPlugin hdPlugin;
 
@@ -269,6 +269,8 @@ public class ProceduralGenerator
 
 			int[] colorHSL = HDUtils.colorIntToHSL(vertexColors[vertex]);
 
+			float[] inverseLightDirection = VectorUtil.normalizeVec3(new float[]{1.0f, 1.0f, 0.0f});
+
 			float lightenMultiplier = 1.5f;
 			int lightenBase = 15;
 			int lightenAdd = 3;
@@ -278,7 +280,7 @@ public class ProceduralGenerator
 
 			float[] vNormals = vertexTerrainNormals.getOrDefault(vertexHashes[vertex], new float[]{0.0f, 0.0f, 0.0f});
 
-			float dot = dotNormal3Lights(vNormals, false);
+			float dot = VectorUtil.dotVec3(VectorUtil.normalizeVec3(vNormals), inverseLightDirection);
 			int lighten = (int) (Math.max((colorHSL[2] - lightenAdd), 0) * lightenMultiplier) + lightenBase;
 			colorHSL[2] = (int) HDUtils.lerp(colorHSL[2], lighten, Math.max(dot, 0));
 			int darken = (int) (Math.max((colorHSL[2] - darkenAdd), 0) * darkenMultiplier) + darkenBase;
@@ -289,7 +291,7 @@ public class ProceduralGenerator
 			Material material = Material.DIRT_1;
 			if (vertexOverlays[vertex] != 0)
 			{
-				Overlay overlay = Overlay.getOverlay(vertexOverlays[vertex], tile, client);
+				TileData overlay = hdPlugin.getTileManager().getTile(vertexOverlays[vertex], tile, client,false);
 				overlay = getSeasonalOverlay(overlay);
 				GroundMaterial groundMaterial = overlay.getGroundMaterial();
 				material = groundMaterial.getRandomMaterial(z, worldX, worldY);
@@ -298,7 +300,7 @@ public class ProceduralGenerator
 			}
 			else if (vertexUnderlays[vertex] != 0)
 			{
-				Underlay underlay = Underlay.getUnderlay(vertexUnderlays[vertex], tile, client);
+				TileData underlay = hdPlugin.getTileManager().getTile(vertexUnderlays[vertex], tile, client,true);
 				underlay = getSeasonalUnderlay(underlay);
 				GroundMaterial groundMaterial = underlay.getGroundMaterial();
 				material = groundMaterial.getRandomMaterial(z, worldX, worldY);
@@ -804,12 +806,12 @@ public class ProceduralGenerator
 			}
 
 			float[] vertexNormals = HDUtils.calculateSurfaceNormals(
-				// Vertex Xs
-				new int[]{faceVertices[face][0][0], faceVertices[face][1][0], faceVertices[face][2][0]},
-				// Vertex Ys
-				new int[]{faceVertices[face][0][1], faceVertices[face][1][1], faceVertices[face][2][1]},
-				// Vertex Zs
-				new int[]{vertexHeights[0], vertexHeights[1], vertexHeights[2]}
+					// Vertex Xs
+					new int[]{faceVertices[face][0][0], faceVertices[face][1][0], faceVertices[face][2][0]},
+					// Vertex Ys
+					new int[]{faceVertices[face][0][1], faceVertices[face][1][1], faceVertices[face][2][1]},
+					// Vertex Zs
+					new int[]{vertexHeights[0], vertexHeights[1], vertexHeights[2]}
 			);
 
 			for (int vertex = 0; vertex < VERTICES_PER_FACE; vertex++)
@@ -843,11 +845,11 @@ public class ProceduralGenerator
 		{
 			if (client.getScene().getOverlayIds()[tileZ][tileX][tileY] != 0)
 			{
-				waterType = Overlay.getOverlay(client.getScene().getOverlayIds()[tileZ][tileX][tileY], tile, client).getWaterType();
+				waterType = hdPlugin.getTileManager().getTile(client.getScene().getOverlayIds()[tileZ][tileX][tileY], tile, client,false).getWaterType();
 			}
 			else
 			{
-				waterType = Underlay.getUnderlay(client.getScene().getUnderlayIds()[tileZ][tileX][tileY], tile, client).getWaterType();
+				waterType = hdPlugin.getTileManager().getTile(client.getScene().getUnderlayIds()[tileZ][tileX][tileY], tile, client,true).getWaterType();
 			}
 		}
 
@@ -879,11 +881,11 @@ public class ProceduralGenerator
 		{
 			if (isOverlayFace(tile, face))
 			{
-				waterType = Overlay.getOverlay(client.getScene().getOverlayIds()[tileZ][tileX][tileY], tile, client).getWaterType();
+				waterType = hdPlugin.getTileManager().getTile(client.getScene().getOverlayIds()[tileZ][tileX][tileY], tile, client,false).getWaterType();
 			}
 			else
 			{
-				waterType = Underlay.getUnderlay(client.getScene().getUnderlayIds()[tileZ][tileX][tileY], tile, client).getWaterType();
+				waterType = hdPlugin.getTileManager().getTile(client.getScene().getUnderlayIds()[tileZ][tileX][tileY], tile, client,true).getWaterType();
 			}
 		}
 
@@ -893,20 +895,20 @@ public class ProceduralGenerator
 	}
 
 	boolean[][] tileOverlayTris = new boolean[][]
-		{
-			/*  0 */ new boolean[]{true, true, true, true}, // Used by tilemodels of varying tri counts?
-			/*  1 */ new boolean[]{false, true},
-			/*  2 */ new boolean[]{false, false, true},
-			/*  3 */ new boolean[]{false, false, true},
-			/*  4 */ new boolean[]{false, true, true},
-			/*  5 */ new boolean[]{false, true, true},
-			/*  6 */ new boolean[]{false, false, true, true},
-			/*  7 */ new boolean[]{false, false, false, true},
-			/*  8 */ new boolean[]{false, true, true, true},
-			/*  9 */ new boolean[]{false, false, false, true, true, true},
-			/* 10 */ new boolean[]{true, true, true, false, false, false},
-			/* 11 */ new boolean[]{true, true, false, false, false, false},
-		};
+			{
+					/*  0 */ new boolean[]{true, true, true, true}, // Used by tilemodels of varying tri counts?
+					/*  1 */ new boolean[]{false, true},
+					/*  2 */ new boolean[]{false, false, true},
+					/*  3 */ new boolean[]{false, false, true},
+					/*  4 */ new boolean[]{false, true, true},
+					/*  5 */ new boolean[]{false, true, true},
+					/*  6 */ new boolean[]{false, false, true, true},
+					/*  7 */ new boolean[]{false, false, false, true},
+					/*  8 */ new boolean[]{false, true, true, true},
+					/*  9 */ new boolean[]{false, false, false, true, true, true},
+					/* 10 */ new boolean[]{true, true, true, false, false, false},
+					/* 11 */ new boolean[]{true, true, false, false, false, false},
+			};
 
 	boolean[] getTileOverlayTris(int tileShapeIndex)
 	{
@@ -1075,7 +1077,7 @@ public class ProceduralGenerator
 		return vertexHashes;
 	}
 
-	public int[] recolorOverlay(Overlay overlay, int[] colorHSL)
+	public int[] recolorOverlay(TileData overlay, int[] colorHSL)
 	{
 		colorHSL[0] = overlay.getHue() >= 0 ? overlay.getHue() : colorHSL[0];
 		colorHSL[0] += overlay.getShiftHue();
@@ -1092,7 +1094,7 @@ public class ProceduralGenerator
 		return colorHSL;
 	}
 
-	public int[] recolorUnderlay(Underlay underlay, int[] colorHSL)
+	public int[] recolorUnderlay(TileData underlay, int[] colorHSL)
 	{
 		colorHSL[0] = underlay.getHue() >= 0 ? underlay.getHue() : colorHSL[0];
 		colorHSL[0] += underlay.getShiftHue();
@@ -1116,7 +1118,7 @@ public class ProceduralGenerator
 		int y = tile.getSceneLocation().getY();
 
 		if ((tile.getSceneTilePaint() != null && tile.getSceneTilePaint().getTexture() >= 0) ||
-			(tile.getSceneTileModel() != null && tile.getSceneTileModel().getTriangleTextureId() != null))
+				(tile.getSceneTileModel() != null && tile.getSceneTileModel().getTriangleTextureId() != null))
 		{
 			// skip tiles with textures provided by default
 			return true;
@@ -1124,14 +1126,14 @@ public class ProceduralGenerator
 
 		if (client.getScene().getOverlayIds()[z][x][y] != 0)
 		{
-			if (!Overlay.getOverlay(client.getScene().getOverlayIds()[z][x][y], tile, client).isBlended())
+			if (!hdPlugin.getTileManager().getTile(client.getScene().getOverlayIds()[z][x][y], tile, client,false).isBlended())
 			{
 				return true;
 			}
 		}
 		else if (client.getScene().getUnderlayIds()[z][x][y] != 0)
 		{
-			if (!Underlay.getUnderlay(client.getScene().getUnderlayIds()[z][x][y], tile, client).isBlended())
+			if (!hdPlugin.getTileManager().getTile(client.getScene().getUnderlayIds()[z][x][y], tile, client,true).isBlended())
 			{
 				return true;
 			}
@@ -1139,31 +1141,31 @@ public class ProceduralGenerator
 		return false;
 	}
 
-	public Underlay getSeasonalUnderlay(Underlay underlay)
+	public TileData getSeasonalUnderlay(TileData underlay)
 	{
 		if (hdPlugin.configWinterTheme)
 		{
 			switch (underlay.getGroundMaterial())
 			{
 				case OVERWORLD_GRASS_1:
-					underlay = Underlay.WINTER_GRASS;
+					underlay = TileManager.WINTER_GRASS;
 					break;
 				case OVERWORLD_DIRT:
-					underlay = Underlay.WINTER_DIRT;
+					underlay = TileManager.WINTER_DIRT;
 					break;
 			}
 		}
 		return underlay;
 	}
 
-	public Overlay getSeasonalOverlay(Overlay overlay)
+	public TileData getSeasonalOverlay(TileData overlay)
 	{
 		if (hdPlugin.configWinterTheme)
 		{
 			switch (overlay.getGroundMaterial())
 			{
 				case OVERWORLD_GRASS_1:
-					overlay = Overlay.WINTER_GRASS;
+					overlay = TileManager.WINTER_GRASS;
 					break;
 			}
 		}
