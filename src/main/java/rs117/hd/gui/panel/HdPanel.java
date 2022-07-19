@@ -99,16 +99,17 @@ public class HdPanel extends PluginPanel
 	private JPanel setupTabs()
 	{
 
-		MaterialTab panel = new MaterialTab(developerMode ? "Debug" : "Updates", tabGroup,  developerMode ? debugPanel : updatePanel);
-		MaterialTab settingsGuide = new MaterialTab("Setting Guide", tabGroup, guidePanel);
+		MaterialTab updates = new MaterialTab("Updates", tabGroup, updatePanel);
+		MaterialTab debug = new MaterialTab("Debug", tabGroup, debugPanel);
+		MaterialTab settingsGuide = new MaterialTab("Guide", tabGroup, guidePanel);
 
 		JPanel container = new JPanel();
 		container.setBorder(new EmptyBorder(10, 0, 5, 0));
 		container.setLayout(new BorderLayout());
 
 		tabGroup.addTab(settingsGuide);
-		tabGroup.addTab(panel);
-
+		tabGroup.addTab(updates);
+		tabGroup.addTab(debug);
 
 		tabGroup.select(settingsGuide);
 
