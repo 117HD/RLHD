@@ -66,8 +66,8 @@ public class MemoryInspector extends DebugFrame
 			.setRightAxisLabel("Memory")
 			.setBottomAxisLabel("Time")
 			.setNumberFormat(format)
-			.addDataset(new DataSet("Total Memory", Color.decode("#F68229")).build())
-			.addDataset(new DataSet("Current Memory", Color.decode("#40B094")).build())
+			.addDataset(new DataSet("Max Memory", Color.decode("#F68229")).build())
+			.addDataset(new DataSet("Memory Usage", Color.decode("#40B094")).build())
 			.build();
 
 		memoryUsage = new Chart(client, builder);

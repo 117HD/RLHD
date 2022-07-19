@@ -87,10 +87,13 @@ public class Chart extends JPanel
 			items.put(index, series);
 		}
 
+
+
 		DateAxis domain = new DateAxis(builder.getBottomAxisLabel());
 		NumberAxis range = new NumberAxis(builder.getRightAxisLabel());
 
 		domain.setLabelFont(labelFont);
+
 		range.setLabelFont(labelFont);
 		range.setLabelPaint(lightGray);
 		domain.setLabelPaint(lightGray);
@@ -129,8 +132,8 @@ public class Chart extends JPanel
 		legend.setBackgroundPaint(new Color(ColorScheme.DARK_GRAY_COLOR.getRGB()));
 		legend.setItemPaint(new Color(ColorScheme.LIGHT_GRAY_COLOR.getRGB()));
 
-		plot.setDomainGridlinePaint(ColorScheme.DARK_GRAY_COLOR);
-		plot.setRangeGridlinePaint(ColorScheme.DARK_GRAY_COLOR);
+		plot.setDomainGridlinePaint(ColorScheme.BRAND_ORANGE);
+		plot.setRangeGridlinePaint(ColorScheme.BRAND_ORANGE);
 
 		chartPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0), BorderFactory.createLineBorder(ColorScheme.DARK_GRAY_COLOR)));
 		add(chartPanel);
