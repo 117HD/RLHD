@@ -57,10 +57,10 @@ public class Specifications extends JPanel
 			Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(HDUtils.stripHtml(specs)), null);
 		});
 
-		ToggleButton open = new ToggleButton("Open Logs", "Open Log Folders", e -> {
+		ToggleButton open = new ToggleButton("Open Logs Folder", "Open Logs Folder", e -> {
 			LinkBrowser.open(RuneLite.LOGS_DIR.toString());
 		});
-		ToggleButton latest = new ToggleButton("Open Latest Logs", "Open Latest Logs", e -> {
+		ToggleButton latest = new ToggleButton("Open Latest Log File", "Open Latest Log File", e -> {
 			LinkBrowser.open(new File(RuneLite.LOGS_DIR, "client.log").toString());
 		});
 

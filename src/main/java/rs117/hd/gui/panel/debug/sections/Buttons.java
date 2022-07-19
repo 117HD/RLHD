@@ -46,9 +46,9 @@ public class Buttons extends JPanel
 	public Buttons(HdPlugin plugin) {
 
 		lightInfo = new ToggleButton("Light Info", "Show Light Information");
-		memoryInspector = new ToggleButton("Memory Inspector", "Memory Inspector");
-		fpsInspector = new ToggleButton("Fps Inspector", "Fps Inspector");
-		tileInfoOverlay = new ToggleButton("Tile Overlay", "Shows Tile Overlay Information");
+		memoryInspector = new ToggleButton("Memory Graph", "Memory Graph");
+		fpsInspector = new ToggleButton("FPS Plot", "FPS Plot");
+		tileInfoOverlay = new ToggleButton("Tile Info", "Shows Tile Information");
 
 		setBackground(ColorScheme.DARK_GRAY_COLOR);
 		setLayout(new GridLayout(0, 2, 1, 2));

@@ -146,7 +146,7 @@ public class Debug extends PluginPanel
 		.build();
 
 		new CategoryBuilder().
-			setName("Computer Specifications").
+			setName("System Specifications").
 			setPosition(1).
 			setPanel(specifications).
 			setEnabled(false)
@@ -163,7 +163,7 @@ public class Debug extends PluginPanel
 			category.entrySet()
 				.stream()
 				.sorted(Map.Entry.comparingByKey())
-				.collect(Collectors.toList());
+		.collect(Collectors.toList());
 
 
 		result.forEach(entry -> {

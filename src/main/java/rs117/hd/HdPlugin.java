@@ -565,7 +565,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 					developerTools.activate();
 				}
 
-				if(!config.panelEnabled()) {
+				if(config.panelEnabled()) {
 					SwingUtilities.invokeAndWait(() -> {
 						setPanel(injector.getInstance(HdPanel.class));
 
@@ -2253,7 +2253,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				reloadScene();
 				break;
 			case "enablePanel":
-				if(config.panelEnabled()) {
+				if(!config.panelEnabled()) {
 					clientToolbar.removeNavigation(nav);
 				} else {
 					clientToolbar.addNavigation(nav);
