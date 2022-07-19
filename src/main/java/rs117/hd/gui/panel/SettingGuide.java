@@ -54,7 +54,7 @@ public class SettingGuide extends JPanel
 		setLayout(layout);
 		setBackground(ColorScheme.DARK_GRAY_COLOR);
 		setBorder(new EmptyBorder(0, 0, 0, 0));
-		topPanel.setBorder(new EmptyBorder(2, 0, 25, 0));
+		topPanel.setBorder(new EmptyBorder(2, 0, 0, 0));
 		errorPanel.setContent("Loading", "Loading Latest Updates");
 		topPanel.add(errorPanel);
 
@@ -114,13 +114,6 @@ public class SettingGuide extends JPanel
 			e.printStackTrace();
 		}
 
-	}
-
-
-	public String getFormattedName(File file)
-	{
-		String[] info = file.getName().replace(".md", "").split("-");
-		return info[1] + " - v" + info[0];
 	}
 
 }
