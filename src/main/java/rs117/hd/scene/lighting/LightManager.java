@@ -398,10 +398,18 @@ public class LightManager
 		if (pluginManager.isPluginEnabled(entityHiderPlugin))
 		{
 			boolean isPet = npc.getComposition().isFollower();
+
+			if(client.getFollower() != null) {
+				if (client.getFollower().getIndex() == npc.getIndex()) {
+					return true;
+				}
+			}
+
 			if (entityHiderConfig.hideNPCs() && !isPet)
 			{
 				return false;
 			}
+
 			if (entityHiderConfig.hidePets() && isPet)
 			{
 				return false;
