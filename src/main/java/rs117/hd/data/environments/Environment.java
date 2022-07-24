@@ -954,6 +954,7 @@ public enum Environment
 
 	// overrides 'ALL' to provide default daylight conditions for the overworld area
 	OVERWORLD(Area.OVERWORLD, new Properties()),
+
 	// used for underground, instances, etc.
 	ALL(Area.ALL, new Properties()
 		.setFogColor("#241809")
@@ -963,7 +964,7 @@ public enum Environment
 		.setDirectionalColor("#FFFFFF")
 		.setDirectionalStrength(1.0f)
 		.setLightDirection(260f, 10f)
-		.setWaterColor(102, 234, 255)
+		.setWaterColor(102, 234, 255) // Teal-blue like vanilla, matches many water models in caves which 117hd does not recolor
 	),
 
 	;
@@ -994,7 +995,6 @@ public enum Environment
 	private final float[] underwaterCausticsColor;
 	private final float underwaterCausticsStrength;
 	private final float[] waterColor;
-	private final boolean customWaterColor;
 
 	private static class Properties
 	{
@@ -1022,8 +1022,7 @@ public enum Environment
 		private boolean underwater = false;
 		private float[] underwaterCausticsColor = null;
 		private float underwaterCausticsStrength = 0;
-		private float[] waterColor = rgb(185, 214, 255);
-		private boolean customWaterColor = false;
+		private float[] waterColor = rgb(185, 214, 255); // Regular overworld water, failsafe
 
 		public Properties setFogDepth(int depth)
 		{
@@ -1064,7 +1063,6 @@ public enum Environment
 		public Properties setWaterColor(int r, int g, int b)
 		{
 			this.waterColor = rgb(r, g, b);
-			this.customWaterColor = true;
 			return this;
 		}
 
@@ -1205,7 +1203,6 @@ public enum Environment
 		this.underwaterCausticsStrength = properties.underwaterCausticsStrength == 0 ?
 			properties.directionalStrength : properties.underwaterCausticsStrength;
 		this.waterColor = properties.waterColor;
-		this.customWaterColor = properties.customWaterColor;
 	}
 
 	public static float[] rgb(int r, int g, int b)

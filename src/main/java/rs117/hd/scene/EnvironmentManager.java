@@ -277,6 +277,7 @@ public class EnvironmentManager
 		startUnderwaterCausticsStrength = currentUnderwaterCausticsStrength;
 
 		updateSkyColor();
+		updateWaterColor();
 
 		targetFogDepth = newEnvironment.getFogDepth();
 		if (hdPlugin.configWinterTheme)
@@ -381,19 +382,16 @@ public class EnvironmentManager
 			{
 				sky = DefaultSkyColor.DEFAULT;
 			}
-			targetWaterColor = sky.getRgb(client);
 		}
 		else
 		{
-			targetFogColor = targetWaterColor = env.getFogColor();
+			targetFogColor = env.getFogColor();
 		}
+	}
 
-
-		//override with decoupled water/sky color if present
-		if(currentEnvironment.isCustomWaterColor())
-		{
-			targetWaterColor = currentEnvironment.getWaterColor();
-		}
+	public void updateWaterColor()
+	{
+		targetWaterColor = currentEnvironment.getWaterColor();
 	}
 
 	/**
