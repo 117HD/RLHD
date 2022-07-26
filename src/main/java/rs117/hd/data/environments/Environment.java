@@ -924,6 +924,9 @@ public enum Environment
 			.setWaterColor(79, 178, 255)
 	),
 
+
+
+
 	UNKNOWN_OVERWORLD_SNOWY(Area.UNKNOWN_OVERWORLD_SNOWY, new Properties()
 		.setFogColor("#AEBDE0")
 		.setFogDepth(70)
@@ -996,8 +999,6 @@ public enum Environment
 	private final float underwaterCausticsStrength;
 
 	private String ambientColor1 = "#97BAFF";
-	private String waterColor1 = "#7EADFF";
-
 	private String directionalColor1 = "#FFFFFF";
 	private String underglowColor1 = "#000000";
 
@@ -1016,7 +1017,6 @@ public enum Environment
 		private boolean customAmbientStrength = false;
 		private float[] ambientColor = rgb(151, 186, 255);
 		private String ambientColor1 = "#97baff";
-		private String waterColor1 = "#7EADFF";
 		private boolean customAmbientColor = false;
 		private float directionalStrength = 4.0f;
 		private boolean customDirectionalStrength = false;
@@ -1084,7 +1084,6 @@ public enum Environment
 		public Properties setWaterColor(int r, int g, int b)
 		{
 			this.waterColor = rgb(r, g, b);
-			this.waterColor1 = ColorUtil.rgbToHex(new Color(r,g,b));
 			this.customWaterColor = true;
 			return this;
 		}
@@ -1229,7 +1228,6 @@ public enum Environment
 		this.lightYaw = properties.lightYaw;
 
 		this.ambientColor1 = properties.ambientColor1;
-		this.waterColor1 = properties.waterColor1;
 		this.directionalColor1 = properties.directionalColor1;
 		this.underglowColor1 = properties.underglowColor1;
 
