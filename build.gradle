@@ -1,6 +1,5 @@
 plugins {
 	id 'java'
-	id 'org.jetbrains.kotlin.jvm' version '1.7.0'
 }
 
 repositories {
@@ -25,7 +24,6 @@ dependencies {
 
 	testCompileOnly 'org.projectlombok:lombok:1.18.20'
 	testAnnotationProcessor 'org.projectlombok:lombok:1.18.20'
-	testCompileOnly "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 }
 
 group = 'rs117.hd'
