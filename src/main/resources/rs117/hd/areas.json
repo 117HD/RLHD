@@ -1295,6 +1295,54 @@
   {
     "rects": [
       [
+        3006,
+        3348,
+        3006,
+        3346
+      ]
+    ],
+    "description": "FALADOR_EAST_BANK_PATH_FIX_2",
+    "theme": "NORMAL",
+    "hideOtherRegions": false,
+    "overlays": [
+      {
+        "id": -119,
+        "groundMaterial": "FALADOR_PATHS",
+        "waterType": "NONE",
+        "blended": false,
+        "hue": 7,
+        "saturation": 1,
+        "shiftLightness": 13
+      }
+    ]
+  },
+  {
+    "rects": [
+      [
+        3006,
+        3346,
+        3006,
+        3344
+      ]
+    ],
+    "description": "FALADOR_EAST_BANK_PATH_FIX_1",
+    "theme": "NORMAL",
+    "hideOtherRegions": false,
+    "overlays": [
+      {
+        "id": -119,
+        "groundMaterial": "FALADOR_PATHS",
+        "waterType": "NONE",
+        "blended": false,
+        "hue": 7,
+        "saturation": 1,
+        "shiftLightness": 9
+      }
+    ]
+  },
+  {
+    "rects": [
+      [
         2941,
         3389,
         2946,
@@ -4365,6 +4413,31 @@
   {
     "rects": [
       [
+        2527,
+        4725,
+        2549,
+        4708
+      ]
+    ],
+    "description": "MAGE_ARENA_BANK",
+    "theme": "NORMAL",
+    "hideOtherRegions": false,
+    "environment": {
+      "fog": {
+        "fogDepth": 40,
+        "fogColor": "#000000"
+      },
+      "lighting": {
+        "ambientStrength": 1.5,
+        "directionalStrength": 1.0,
+        "lightPitch": 260.0,
+        "lightYaw": 10.0
+      }
+    }
+  },
+  {
+    "rects": [
+      [
         2748,
         3980,
         2942,
@@ -4841,13 +4914,13 @@
     "theme": "SNOW",
     "hideOtherRegions": false,
     "environment": {
+      "waterColor": "#38BCFF",
       "fog": {
         "fogDepth": 30,
         "fogColor": "#0E3B59"
       },
       "lighting": {
-        "ambientStrength": 0.5,
-        "ambientColor": "#68ACFF",
+        "ambientColor": "#B5D7FF",
         "directionalStrength": 1.8,
         "directionalColor": "#92D1FA",
         "lightPitch": 260.0,
@@ -5556,6 +5629,7 @@
     "theme": "NORMAL",
     "hideOtherRegions": false,
     "environment": {
+      "waterColor": "#B9D6FF",
       "fog": {
         "fogDepth": 40,
         "fogColor": "#150A05"
@@ -5901,6 +5975,40 @@
     "description": "CRASH_ISLAND",
     "theme": "NORMAL",
     "hideOtherRegions": false
+  },
+  {
+    "rects": [
+      [
+        2829,
+        3353,
+        2835,
+        3347
+      ],
+      [
+        2829,
+        3346,
+        2829,
+        3346
+      ],
+      [
+        2833,
+        3346,
+        2833,
+        3346
+      ]
+    ],
+    "description": "ENTRANA_GLASS_BUILDING_FIX",
+    "theme": "NORMAL",
+    "hideOtherRegions": false,
+    "overlays": [
+      {
+        "id": 10,
+        "groundMaterial": "GRAVEL",
+        "waterType": "NONE",
+        "blended": false,
+        "shiftLightness": 8
+      }
+    ]
   },
   {
     "rects": [
@@ -6545,10 +6653,10 @@
   {
     "rects": [
       [
-        2689,
-        4860,
-        2747,
-        4801
+        2688,
+        4863,
+        2752,
+        4799
       ]
     ],
     "description": "WATER_ALTAR",
@@ -6712,6 +6820,7 @@
     "theme": "NORMAL",
     "hideOtherRegions": false,
     "environment": {
+      "waterColor": "#66EAFF",
       "fog": {
         "fogDepth": 20,
         "fogColor": "#FFD3C7"
@@ -6744,6 +6853,7 @@
     "theme": "NORMAL",
     "hideOtherRegions": true,
     "environment": {
+      "waterColor": "#66EAFF",
       "fog": {
         "fogDepth": 20,
         "fogColor": "#FFD3C7"
@@ -7646,7 +7756,7 @@
     "theme": "NORMAL",
     "hideOtherRegions": false,
     "environment": {
-      "waterColor": "#22D3FF",
+      "waterColor": "#66EAFF",
       "fog": {
         "fogDepth": 12,
         "fogColor": "#000000"
@@ -7674,7 +7784,7 @@
     "theme": "NORMAL",
     "hideOtherRegions": false,
     "environment": {
-      "waterColor": "#22D3FF",
+      "waterColor": "#66EAFF",
       "lighting": {
         "ambientStrength": 1.75,
         "directionalStrength": 1.0
@@ -7685,6 +7795,30 @@
         "id": -126,
         "groundMaterial": "WATER",
         "waterType": "WATER",
+        "blended": false
+      }
+    ]
+  },
+  {
+    "rects": [
+      [
+        1728,
+        5374,
+        1790,
+        5273
+      ]
+    ],
+    "description": "ANCIENT_CAVERN_UPPER",
+    "theme": "NORMAL",
+    "hideOtherRegions": false,
+    "environment": {
+      "waterColor": "#4FB2FF"
+    },
+    "overlays": [
+      {
+        "id": 41,
+        "groundMaterial": "WATER_FLAT",
+        "waterType": "WATER_FLAT",
         "blended": false
       }
     ]
@@ -7774,19 +7908,6 @@
     "description": "OVERWORLD",
     "theme": "NORMAL",
     "hideOtherRegions": false,
-    "environment": {
-      "fog": {
-        "fogDepth": 65,
-        "fogColor": "#B9D6FF"
-      },
-      "lighting": {
-        "ambientStrength": 1.0,
-        "ambientColor": "#97BAFF",
-        "directionalStrength": 4.0,
-        "lightPitch": -128,
-        "lightYaw": 55.0
-      }
-    },
     "underlays": [
       {
         "id": 10,
@@ -7978,6 +8099,7 @@
     "theme": "NORMAL",
     "hideOtherRegions": false,
     "environment": {
+      "waterColor": "#66EAFF",
       "fog": {
         "fogDepth": 40,
         "fogColor": "#241809"
