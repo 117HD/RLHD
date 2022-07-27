@@ -38,7 +38,7 @@ uniform sampler2D shadowMap;
 uniform mat4 lightProjectionMatrix;
 
 uniform float elapsedTime;
-uniform int colorBlindMode;
+uniform float colorBlindnessIntensity;
 uniform vec4 fogColor;
 uniform int fogDepth;
 uniform vec3 waterColorLight;
@@ -85,7 +85,7 @@ flat in mat3 TBN;
 
 out vec4 FragColor;
 
-#include colorblind.glsl
+#include utils/color_blindness.glsl
 #include utils/caustics.glsl
 #include utils/color_conversion.glsl
 #include utils/misc.glsl
@@ -707,10 +707,7 @@ void main() {
 
     compositeColor = hsvToRgb(hsv);
 
-    if (colorBlindMode > 0)
-    {
-        compositeColor = colorblind(colorBlindMode, compositeColor);
-    }
+    compositeColor = colorBlindnessCompensation(compositeColor);
 
     if (!isUnderwater)
     {

@@ -33,12 +33,12 @@ uniform sampler2D uiTexture;
 uniform int samplingMode;
 uniform ivec2 sourceDimensions;
 uniform ivec2 targetDimensions;
-uniform int colorBlindMode;
+uniform float colorBlindnessIntensity;
 uniform vec4 alphaOverlay;
 
 #include scale/bicubic.glsl
 #include scale/xbr_lv2_frag.glsl
-#include colorblind.glsl
+#include utils/color_blindness.glsl
 
 in vec2 TexCoord;
 in XBRTable xbrTable;
@@ -60,17 +60,17 @@ void main() {
         case SAMPLING_MITCHELL:
             c = textureCubic(uiTexture, TexCoord, samplingMode);
             c = alphaBlend(c, alphaOverlay);
-            c.rgb = colorblind(colorBlindMode, c.rgb);
+            c.rgb = colorBlindnessCompensation(c.rgb);
             break;
         case SAMPLING_XBR:
             c = textureXBR(uiTexture, TexCoord, xbrTable, ceil(1.0 * targetDimensions.x / sourceDimensions.x));
             c = alphaBlend(c, alphaOverlay);
-            c.rgb = colorblind(colorBlindMode, c.rgb);
+            c.rgb = colorBlindnessCompensation(c.rgb);
             break;
         default: // NEAREST or LINEAR, which uses GL_TEXTURE_MIN_FILTER/GL_TEXTURE_MAG_FILTER to affect sampling
             c = texture(uiTexture, TexCoord);
             c = alphaBlend(c, alphaOverlay);
-            c.rgb = colorblind(colorBlindMode, c.rgb);
+            c.rgb = colorBlindnessCompensation(c.rgb);
     }
 
     FragColor = c;
