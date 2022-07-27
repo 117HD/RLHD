@@ -3,6 +3,8 @@
 // https://web.archive.org/web/20090731011248/http://scien.stanford.edu/class/psych221/projects/05/ofidaner/project_report.pdf
 //
 
+#include COLOR_BLINDNESS
+
 #define NONE 0
 #define PROTAN 1
 #define DEUTERAN 2
@@ -32,29 +34,24 @@ const mat3 lms2lmst = mat3(
   vec3(-0.395913, 0.801109, 0.0)
 );
 
-const mat3 corrections = mat3(
+const mat3 protanopiaDaltonization = mat3(
   vec3(0.0, 0.0, 0.0),
   vec3(0.7, 1.0, 0.0),
   vec3(0.7, 0.0, 1.0)
 );
 
-vec3 colorblind(int mode, vec3 color)
+#if COLOR_BLINDNESS != NONE
+vec3 colorBlindnessCompensation(vec3 color)
 {
   vec3 LMS = color * rgb2lms;
-  vec3 lms;
 
-  if (mode == PROTAN) {
-    lms = LMS * lms2lmsp; // red deficiency
-  }
-  else if (mode == DEUTERAN) {
-    lms = LMS * lms2lmsd; // green deficiency
-  }
-  else if (mode == TRITAN) {
-    lms = LMS * lms2lmst; // blue deficiency
-  }
-  else {
-    return color;
-  }
+  #if COLOR_BLINDNESS == PROTAN
+  vec3 lms = LMS * lms2lmsp; // red deficiency
+  #elif COLOR_BLINDNESS == DEUTERAN
+  vec3 lms = LMS * lms2lmsd; // green deficiency
+  #elif COLOR_BLINDNESS == TRITAN
+  vec3 lms = LMS * lms2lmst; // blue deficiency
+  #endif
 
   // LMS to RGB matrix conversion
   mat3 lms2rgb = inverse(rgb2lms);
@@ -64,10 +61,13 @@ vec3 colorblind(int mode, vec3 color)
   error = (color - error);
 
   // Shift colors towards visible spectrum (apply error modifications)
-  vec3 correction = error * corrections;
+  vec3 compensation = error * protanopiaDaltonization;
 
   // Add compensation to original values
-  correction = color + correction;
+  compensation = color + compensation * colorBlindnessIntensity;
 
-  return correction;
+  return compensation;
 }
+#else
+#define colorBlindnessCompensation(color) color
+#endif

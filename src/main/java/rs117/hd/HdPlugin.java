@@ -302,8 +302,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	private int viewportOffsetY;
 
 	// Uniforms
-	private int uniColorBlindMode;
-	private int uniUiColorBlindMode;
+	private int uniColorBlindnessIntensity;
+	private int uniUiColorBlindnessIntensity;
 	private int uniUseFog;
 	private int uniFogColor;
 	private int uniFogDepth;
@@ -691,6 +691,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			{
 				case "version_header":
 					return versionHeader;
+				case "COLOR_BLINDNESS":
+					return String.format("#define %s %d", key, config.colorBlindness().ordinal());
 				case "MATERIAL_CONSTANTS":
 				{
 					StringBuilder include = new StringBuilder();
@@ -795,7 +797,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		uniGroundFogOpacity = glGetUniformLocation(glProgram, "groundFogOpacity");
 		uniLightningBrightness = glGetUniformLocation(glProgram, "lightningBrightness");
 		uniPointLightsCount = glGetUniformLocation(glProgram, "pointLightsCount");
-		uniColorBlindMode = glGetUniformLocation(glProgram, "colorBlindMode");
+		uniColorBlindnessIntensity = glGetUniformLocation(glProgram, "colorBlindnessIntensity");
 		uniLightDirection = glGetUniformLocation(glProgram, "lightDirection");
 		uniShadowMaxBias = glGetUniformLocation(glProgram, "shadowMaxBias");
 		uniShadowsEnabled = glGetUniformLocation(glProgram, "shadowsEnabled");
@@ -808,7 +810,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		uniTexSamplingMode = glGetUniformLocation(glUiProgram, "samplingMode");
 		uniTexTargetDimensions = glGetUniformLocation(glUiProgram, "targetDimensions");
 		uniTexSourceDimensions = glGetUniformLocation(glUiProgram, "sourceDimensions");
-		uniUiColorBlindMode = glGetUniformLocation(glUiProgram, "colorBlindMode");
+		uniUiColorBlindnessIntensity = glGetUniformLocation(glUiProgram, "colorBlindnessIntensity");
 		uniUiAlphaOverlay = glGetUniformLocation(glUiProgram, "alphaOverlay");
 		uniTextureArray = glGetUniformLocation(glProgram, "textureArray");
 		uniElapsedTime = glGetUniformLocation(glProgram, "elapsedTime");
@@ -1815,7 +1817,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			glUniform4f(uniFogColor, fogColor[0], fogColor[1], fogColor[2], 1f);
 
 			glUniform1i(uniDrawDistance, drawDistance * Perspective.LOCAL_TILE_SIZE);
-			glUniform1i(uniColorBlindMode, config.colorBlindMode().ordinal());
+			glUniform1f(uniColorBlindnessIntensity, config.colorBlindnessIntensity() / 100.f);
 
 			float[] waterColor = environmentManager.currentWaterColor;
 			float[] waterColorHSB = Color.RGBtoHSB((int) (waterColor[0] * 255f), (int) (waterColor[1] * 255f), (int) (waterColor[2] * 255f), null);
@@ -2005,7 +2007,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		glUseProgram(glUiProgram);
 		glUniform1i(uniTexSamplingMode, uiScalingMode.getMode());
 		glUniform2i(uniTexSourceDimensions, canvasWidth, canvasHeight);
-		glUniform1i(uniUiColorBlindMode, config.colorBlindMode().ordinal());
+		glUniform1f(uniUiColorBlindnessIntensity, config.colorBlindnessIntensity() / 100.f);
 		glUniform4f(uniUiAlphaOverlay,
 			(overlayColor >> 16 & 0xFF) / 255f,
 			(overlayColor >> 8 & 0xFF) / 255f,
@@ -2251,6 +2253,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 					recompilePrograms();
 				});
 				break;
+			case "colorBlindMode":
 			case "parallaxMappingMode":
 			case "macosIntelWorkaround":
 				clientThread.invoke(this::recompilePrograms);

@@ -25,11 +25,8 @@
  */
 package rs117.hd;
 
-import net.runelite.client.config.Config;
-import net.runelite.client.config.ConfigGroup;
-import net.runelite.client.config.ConfigItem;
-import net.runelite.client.config.ConfigSection;
-import net.runelite.client.config.Range;
+import net.runelite.client.config.*;
+
 import static rs117.hd.HdPlugin.MAX_DISTANCE;
 import static rs117.hd.HdPlugin.MAX_FOG_DEPTH;
 
@@ -154,21 +151,35 @@ public interface HdPluginConfig extends Config
 
 	@ConfigItem(
 		keyName = "colorBlindMode",
-		name = "Colorblindness Correction",
-		description = "Adjusts colors to account for colorblindness",
+		name = "Color Blindness",
+		description = "Adjust colors to account for color blindness.",
 		position = 8,
 		section = generalSettings
 	)
-	default ColorBlindMode colorBlindMode()
+	default ColorBlindMode colorBlindness()
 	{
 		return ColorBlindMode.NONE;
+	}
+
+	@ConfigItem(
+		keyName = "colorBlindnessIntensity",
+		name = "Color Blindness Intensity",
+		description = "Specifies how intense the color blindness compensation should be.",
+		position = 9,
+		section = generalSettings
+	)
+	@Units(Units.PERCENT)
+	@Range(max = 100)
+	default int colorBlindnessIntensity()
+	{
+		return 100;
 	}
 
 	@ConfigItem(
 		keyName = "flashingEffects",
 		name = "Flashing Effects",
 		description = "Displays fast flashing effects, such as lightning, in certain areas.",
-		position = 9,
+		position = 10,
 		section = generalSettings
 	)
 	default boolean flashingEffects()
@@ -180,7 +191,7 @@ public interface HdPluginConfig extends Config
 		keyName = "saturation",
 		name = "Saturation",
 		description = "Controls the saturation of the final rendered image.",
-		position = 10,
+		position = 11,
 		section = generalSettings
 	)
 	default Saturation saturation()
@@ -192,7 +203,7 @@ public interface HdPluginConfig extends Config
 		keyName = "contrast",
 		name = "Contrast",
 		description = "Controls the contrast of the final rendered image.",
-		position = 11,
+		position = 12,
 		section = generalSettings
 	)
 	default Contrast contrast()
@@ -208,7 +219,7 @@ public interface HdPluginConfig extends Config
 		keyName = "brightness2",
 		name = "Brightness",
 		description = "Controls the brightness of scene lighting.",
-		position = 12,
+		position = 13,
 		section = generalSettings
 	)
 	default int brightness() { return 20; }
