@@ -624,7 +624,6 @@ public enum Environment
 		.setAmbientStrength(1.0f)
 		.setDirectionalColor(125, 141, 179)
 		.setDirectionalStrength(4.0f)
-		.setWaterColor(185, 214, 255)
 	),
 
 	// Zanaris
@@ -663,7 +662,6 @@ public enum Environment
 		.setAmbientStrength(0.8f)
 		.setDirectionalColor("#FF8700")
 		.setDirectionalStrength(4.0f)
-		.setWaterColor(102, 234, 255)
 	),
 	DS2_SHIPS(Area.DS2_SHIPS, new Properties()
 		.setFogColor("#FFD3C7")
@@ -672,7 +670,6 @@ public enum Environment
 		.setAmbientStrength(0.8f)
 		.setDirectionalColor("#FF8700")
 		.setDirectionalStrength(4.0f)
-		.setWaterColor(102, 234, 255)
 	),
 
 	// The Gauntlet
