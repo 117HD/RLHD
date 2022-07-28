@@ -939,7 +939,7 @@ public enum Environment
 		.setAmbientStrength(3.5f)
 		.setDirectionalColor("#FFFFFF")
 		.setDirectionalStrength(1.5f)
-		.setWaterColor(184,197,219) // ice
+		.setWaterColor(184,197,219) // Ice
 	),
 
 	MAGE_ARENA_BANK(Area.MAGE_ARENA_BANK, new Properties()
