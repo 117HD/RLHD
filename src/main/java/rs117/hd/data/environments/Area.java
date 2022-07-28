@@ -223,6 +223,24 @@ public enum Area
 			new Rect(3090, 3497, 3090, 3494), // bumpout for window
 			new Rect(3091, 3497, 3091, 3493) // bumpout border correction
 	),
+	EDGEVILLE_BANK_TILING(
+			new Rect(3098, 3498, 3098, 3498),
+			new Rect(3098, 3496, 3098, 3496),
+			new Rect(3098, 3494, 3098, 3494),
+			new Rect(3098, 3492, 3098, 3492),
+			new Rect(3098, 3490, 3498, 3490),
+			new Rect(3098, 3488, 3098, 3488),
+			new Rect(3097, 3499, 3097, 3499),
+			new Rect(3096, 3488, 3096, 3488),
+			new Rect(3095, 3499, 3095, 3499),
+			new Rect(3094, 3488, 3094, 3488),
+			new Rect(3092, 3488, 3092, 3488),
+			new Rect(3091, 3489, 3091, 3489),
+			new Rect(3091, 3493, 3091, 3493),
+			new Rect(3091, 3495, 3091, 3495),
+			new Rect(3091, 3497, 3091, 3497),
+			new Rect(3091, 3499, 3091, 3499)
+	),
 	EDGEVILLE_BANK_CARPET(
 			new Rect(3092, 3489, 3093,3499),
 			new Rect(3094, 3491, 3094, 3491),
@@ -263,7 +281,7 @@ public enum Area
 			new Rect(3100, 3513, 3091, 3507)
 	),
 	EDGEVILLE_GENERAL_STORE_FLOOR_FIX(
-			new Rect(3080, 3507, 3080, 3507)
+			new Rect(3082, 3507, 3078, 3507)
 	),
 	EDGEVILLE_GENERAL_STORE_FLOOR(
 			new Rect(3084, 3513, 3076, 3507)
