@@ -391,7 +391,8 @@ public class EnvironmentManager
 
 	public void updateWaterColor()
 	{
-		targetWaterColor = currentEnvironment.getWaterColor();
+		Environment env = hdPlugin.configWinterTheme ? Environment.WINTER : currentEnvironment; // grab the water color from Winter theme if it's enabled, else use the one from current environment
+		targetWaterColor = env.getWaterColor();
 	}
 
 	/**
