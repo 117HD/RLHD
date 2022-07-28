@@ -56,6 +56,11 @@ public enum Area
 	LUMBRIDGE_CASTLE_DINING_ROOM(3205, 3218, 3212, 3226),
 	HAM_HIDEOUT(3137, 9661, 3192, 9602),
 	LUMBRIDGE_CASTLE(3216, 3230, 3204, 3207),
+	LUMBRIDGE_TOWER_FLOOR(
+			new Rect(3230, 3225, 3227, 3221,0),
+			new Rect(3230, 3216, 3227, 3212,0),
+			new Rect(3230, 3225, 3227, 3212, 2)
+	),
 	LUMBRIDGE(
 		new Rect(3136, 3137, 3254, 3327),
 		new Rect(3254, 3189, 3263, 3200),
@@ -88,11 +93,35 @@ public enum Area
 		new Rect(3193, 3410, 3197, 3416),
 		new Rect(3254, 3406, 3263, 3411)
 	),
-	VARROCK_EAST_BANK(3250, 3416, 3257, 3423),
-	VARROCK(
-		new Rect(3136, 3397, 3290, 3518),
-		new Rect(3177, 3371, 3291, 3410)
+	VARROCK_EAST_BANK_CENTER(3251, 3420, 3256, 3422),
+	VARROCK_EAST_BANK(
+			new Rect(3250, 3416, 3257, 3423)
 	),
+	VARROCK_EAST_BANK_OUTSIDE_1(
+			new Rect(3250 ,3424 ,3257 ,3424)
+	),
+	VARROCK_MOON_INN_BALCONY(3217, 3401, 3214, 3397),
+	VARROCK_MOON_INN_FLOOR(
+			new Rect(3229, 3396, 3228, 3394),
+			new Rect(3217, 3396, 3216,3394),
+			new Rect(3227, 3402, 3218, 3394),
+			new Rect(3228, 3402, 3227, 3401),
+			// South bumpout
+			new Rect(3229, 3393, 3226, 3393),
+			new Rect(3220, 3393,3217, 3393),
+			// Under fireplace
+			new Rect(3221, 3403, 3219, 3403)
+	),
+	VARROCK_MOON_INN_FLOOR_FIX(
+			new Rect(3225, 3393, 3225, 3393),
+			new Rect(3221, 3393, 3221, 3393),
+			new Rect(3216, 3393, 3216, 3393)
+	),
+	VARROCK(
+			new Rect(3136, 3397, 3290, 3518),
+			new Rect(3177, 3371, 3291, 3410)
+	),
+
 	// A Soul's Bane
 	TOLNA_DUNGEON_ANGER(
 		new Rect(3008, 5216, 3039, 5247),
@@ -124,6 +153,15 @@ public enum Area
 	DRAYNOR_MANOR_BASEMENT(
 		new Rect(3073, 9780, 3082, 9766)
 	),
+	DRAYNOR_AGGIES_HOUSE(3088, 3261, 3083, 3256),
+	DRAYNOR_BANK(
+			new Rect(3097, 3246, 3088, 3240)
+	),
+	// For correcting path placement around town that are screwed up from blending issues
+	DRAYNOR_PATH_ADJUSTMENTS(
+			new Rect(3093, 3247, 3092, 3247),
+			new Rect(3088, 3250,3088, 3250)
+	),
 	DRAYNOR(
 		new Rect(3071, 3226, 3133, 3292),
 		new Rect(2112, 4893, 2166, 4930) // bank robbery cutscene
@@ -140,6 +178,10 @@ public enum Area
 		new Rect(2946, 3376, 2949, 3382)
 	),
 	FALADOR_PARTY_ROOM(3034, 3387, 3057, 3369),
+	FALADOOR_PARTY_ROOM_STAIRS_FIX(
+			new Rect(3054, 3084, 3053, 3383),
+			new Rect(3038, 3084, 3037, 3383)
+	),
 	FALADOR(
 		new Rect(2932, 3306, 3068, 3401),
 		new Rect(3456, 4734, 3528, 4783)
@@ -176,10 +218,53 @@ public enum Area
 		new Rect(3101, 3504, 3102, 3503), // diagonal 4
 		new Rect(3100, 3503, 3101, 3502)  // diagonal 5
 	),
-	EDGEVILLE_BANK(3098, 3499, 3090, 3488),
-	EDGEVILLE_BANK_SURROUNDING(3087, 3502, 3098, 3483),
+	// Edgeville Bank overhaul
+	EDGEVILLE_BANK_PERIMETER_FIX(
+			new Rect(3090, 3497, 3090, 3494), // bumpout for window
+			new Rect(3091, 3497, 3091, 3493) // bumpout border correction
+	),
+	EDGEVILLE_BANK_CARPET(
+			new Rect(3092, 3489, 3093,3499),
+			new Rect(3094, 3491, 3094, 3491),
+			new Rect(3094, 3489, 3094, 3489),
+			new Rect(3091, 3491, 3091, 3490)
+	),
+
+	EDGEVILLE_BANK(3098, 3499, 3091, 3488),
+	EDGEVILLE_BANK_SURROUNDING_GRASS(
+			new Rect(3089, 3500, 3089, 3493), // north stripe next to path
+			new Rect(3090, 3490, 3089, 3488), // south of bank entrance
+			new Rect(3090, 3493, 3090, 3493), // north of bank entrance
+			new Rect(3090, 3500, 3090, 3498) // north of windows
+	),
+	EDGEVILLE_BANK_SURROUNDING_GRASS_RED(
+			new Rect(3092, 3485, 3088, 3484)
+	),
+	EDGEVILLE_BANK_SURROUNDING_GRASS_LIGHTRED(
+			new Rect(3092, 3487, 3089, 3486)
+	),
+	EDGEVILLE_BANK_SURROUNDING_PATH(
+			new Rect(3091, 3501, 3089, 3500), // north part of bank
+			new Rect(3093, 3502, 3089, 3500),// path north of bank
+			new Rect(3093, 3500, 3091, 3500), // path west of bank (north part)
+			new Rect(3088, 3502, 3086, 3485), // path west of bank
+			new Rect(3090, 3492, 3089, 3490) // west path to bank
+	),
+	// Edgeville buildings
 	EDGEVILLE_DORIS_HOUSE(3077, 3496, 3081, 3489),
 	EDGEVILLE_MONASTERY(3041, 3509, 3062, 3471),
+	EDGEVILLE_GUARD_TOWER_FLOOR(
+			new Rect(3111, 3517, 3107, 3511)
+	),
+	EDGEVILLE_FURNACE_FLOOR(
+			new Rect(3110, 3501, 3105, 3496)
+	),
+	EDGEVILLE_MANS_HOUSE_FLOOR(
+			new Rect(3100, 3513, 3091, 3507)
+	),
+	EDGEVILLE_GENERAL_STORE_FLOOR(
+			new Rect(3084, 3513, 3076, 3507)
+	),
 
 	// Seers
 	SEERS_BANK(2719, 3497, 2730, 3487),
@@ -220,6 +305,7 @@ public enum Area
 		new Rect(2905, 3265, 2995, 3195),
 		new Rect(2989, 3195, 2945, 3186)
 	),
+	PORT_SARIM_BETTYS_HOUSE(3016, 3261,3011, 3256),
 	PORT_SARIM(3005, 3265, 3064, 3174),
 	MUDSKIPPER_POINT(2977, 3132, 3008, 3102),
 	SOUTH_FALADOR_FARM(3011, 3322, 3069, 3279),
@@ -254,6 +340,10 @@ public enum Area
 		new Rect(2558, 3279, 2510, 3264),
 		new Rect(2429, 3323, 2466, 3305)
 	),
+	WEST_ARDOUGNE_CARPET_FIX(
+			new Rect(2544, 3289, 2451, 3286),
+			new Rect(2526, 3317, 2526, 3314)
+	),
 	EAST_ARDOUGNE(
 		new Rect(2558, 3342, 2686, 3257),
 		new Rect(3328, 5887, 3392, 5951) // SOTE cutscene
@@ -264,9 +354,19 @@ public enum Area
 	EAST_ARDOUGNE_CASTLE_PATH_FIX(
 		new Rect(2585, 3298, 2593, 3314)
 	),
+	EAST_ARDOUGNE_BANK(
+			new Rect(2658, 3287, 2652,3280, 0),
+			new Rect(2651, 3287, 2649, 3285,0),
+			new Rect(2651, 3282, 2649, 3280,0)
+	),
 
 	// Yanille
 	YANILLE_BANK(2609, 3088, 2616, 3097),
+	YANILLE_WATCHTOWER_TOP(2934, 4718, 2927, 4711, 2),
+	YANILLE_MAGIC_GUILD_FLOORS(
+			new Rect(2596, 3094, 2585, 3081, 1),
+			new Rect(2596, 3094, 2585, 3081, 2)
+	),
 	YANILLE(
 		new Rect(2531, 3127, 2622, 3070),
 		new Rect(2880, 4671, 2944, 4735) // instance
@@ -622,6 +722,15 @@ public enum Area
 		new Rect(3697, 3809, 3631, 3782)
 	),
 	FOSSIL_ISLAND(3626, 3908, 3851, 3693),
+	FOSSIL_ISLAND_CENTRAL_BANK_FIX(
+			new Rect(3744, 3805, 3742, 3802)
+	),
+	FOSSIL_ISLAND_HILL_HOUSE_FIX(
+			new Rect(3799, 3885, 3747, 3858)
+	),
+	FOSSIL_ISLAND_HILL_TEXTURE_FIX(
+			new Rect(3845,3900, 3657, 3720)
+	),
 
 	// Karamja
 	KARAMJA_VOLCANO_DUNGEON(2821, 9663, 2875, 9541),
