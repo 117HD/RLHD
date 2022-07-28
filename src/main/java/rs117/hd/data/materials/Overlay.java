@@ -128,7 +128,7 @@ public enum Overlay
 	EDGEVILLE_BANK_SURROUNDING_GRASS_LIGHTRED(10, Area.EDGEVILLE_BANK_SURROUNDING_GRASS_LIGHTRED, GroundMaterial.GRASS_1, new Properties().setBlendedAsUnderlay(true).setHue(8).setSaturation(7).setShiftLightness(-10)),
 	EDGEVILLE_BANK_SURROUNDING_PATH(10, Area.EDGEVILLE_BANK_SURROUNDING_PATH, GroundMaterial.VARROCK_PATHS),
 	EDGEVILLE_DORIS_HOUSE_FLOOR(119, Area.EDGEVILLE_DORIS_HOUSE, GroundMaterial.TILE_SMALL),
-	EDGEVILLE_FURNACE_FLOOR(10, Area.EDGEVILLE_FURNACE_FLOOR, GroundMaterial.TILES_2x2_1),
+	EDGEVILLE_FURNACE_FLOOR(10, Area.EDGEVILLE_FURNACE_FLOOR, GroundMaterial.TILES_2x2_1, new Properties().setLightness(26).setBlended(false)),
 	EDGEVILLE_MANS_HOUSE_FLOOR(10, Area.EDGEVILLE_MANS_HOUSE_FLOOR, GroundMaterial.TILE_SMALL, new Properties().setHue(5).setSaturation(4).setShiftLightness(-4).setBlended(false)),
 	EDGEVILLE_GENERAL_STORE_BLEND_FIX(10, Area.EDGEVILLE_GENERAL_STORE_FLOOR_FIX, GroundMaterial.TILE_SMALL, new Properties().setHue(5).setSaturation(4).setShiftLightness(-4).setBlended(false)),
 	EDGEVILLE_GENERAL_STORE_FLOOR(10, Area.EDGEVILLE_GENERAL_STORE_FLOOR, GroundMaterial.TILE_SMALL, new Properties().setHue(5).setSaturation(4).setShiftLightness(-4)),
