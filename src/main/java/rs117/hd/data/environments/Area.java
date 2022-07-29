@@ -234,39 +234,25 @@ public enum Area
 			new Rect(3096, 3488, 3096, 3488),
 			new Rect(3095, 3499, 3095, 3499),
 			new Rect(3094, 3488, 3094, 3488),
+			new Rect(3093, 3499, 3093, 3499),
 			new Rect(3092, 3488, 3092, 3488),
 			new Rect(3091, 3489, 3091, 3489),
+			new Rect(3091, 3491, 3091, 3491),
 			new Rect(3091, 3493, 3091, 3493),
 			new Rect(3091, 3495, 3091, 3495),
 			new Rect(3091, 3497, 3091, 3497),
-			new Rect(3091, 3499, 3091, 3499)
+			new Rect(3091, 3499, 3091, 3499),
+			new Rect(3090, 3494, 3090, 3494),
+			new Rect(3090, 3496, 3090, 3496)
 	),
-	EDGEVILLE_BANK_CARPET(
-			new Rect(3092, 3489, 3093,3499),
-			new Rect(3094, 3491, 3094, 3491),
-			new Rect(3094, 3489, 3094, 3489),
-			new Rect(3091, 3491, 3091, 3490)
-	),
-
 	EDGEVILLE_BANK(3098, 3499, 3091, 3488),
-	EDGEVILLE_BANK_SURROUNDING_GRASS(
-			new Rect(3089, 3500, 3089, 3493), // north stripe next to path
-			new Rect(3090, 3490, 3089, 3488), // south of bank entrance
-			new Rect(3090, 3493, 3090, 3493), // north of bank entrance
-			new Rect(3090, 3500, 3090, 3498) // north of windows
-	),
-	EDGEVILLE_BANK_SURROUNDING_GRASS_RED(
-			new Rect(3092, 3485, 3088, 3484)
-	),
-	EDGEVILLE_BANK_SURROUNDING_GRASS_LIGHTRED(
-			new Rect(3092, 3487, 3089, 3486)
-	),
 	EDGEVILLE_BANK_SURROUNDING_PATH(
 			new Rect(3091, 3501, 3089, 3500), // north part of bank
-			new Rect(3093, 3502, 3089, 3500),// path north of bank
-			new Rect(3093, 3500, 3091, 3500), // path west of bank (north part)
+			new Rect(3093, 3502, 3089, 3492),// path north of bank
+			new Rect(3093, 3500, 3091, 3498), // path west of bank (north part)
 			new Rect(3088, 3502, 3086, 3485), // path west of bank
-			new Rect(3090, 3492, 3089, 3490) // west path to bank
+			new Rect(3090, 3492, 3089, 3490), // west path to bank
+			new Rect(3092, 3489, 3088, 3483) // path south of bank
 	),
 	// Edgeville buildings
 	EDGEVILLE_DORIS_HOUSE(3077, 3496, 3081, 3489),

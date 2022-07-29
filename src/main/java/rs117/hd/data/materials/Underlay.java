@@ -45,8 +45,6 @@ public enum Underlay
 	EDGEVILLE_PATH_OVERLAY_48(48, Area.EDGEVILLE_PATH_OVERLAY, GroundMaterial.VARROCK_PATHS_LIGHT, new Properties().setBlendedAsOverlay(true).setHue(0).setShiftLightness(8).setSaturation(0)),
 	EDGEVILLE_PATH_OVERLAY_50(50, Area.EDGEVILLE_PATH_OVERLAY, GroundMaterial.VARROCK_PATHS_LIGHT, new Properties().setBlendedAsOverlay(true).setHue(0).setShiftLightness(8).setSaturation(0)),
 	EDGEVILLE_PATH_OVERLAY_64(64, Area.EDGEVILLE_PATH_OVERLAY, GroundMaterial.VARROCK_PATHS_LIGHT, new Properties().setBlendedAsOverlay(true).setHue(0).setShiftLightness(8).setSaturation(0)),
-	EDGEVILLE_BANK_PATH_OVERLAY_48(48, Area.EDGEVILLE_BANK_SURROUNDING_PATH, GroundMaterial.VARROCK_PATHS_LIGHT, new Properties().setHue(0).setShiftLightness(8).setSaturation(0)),
-	EDGEVILLE_BANK_PATH_OVERLAY_50(50, Area.EDGEVILLE_BANK_SURROUNDING_PATH, GroundMaterial.VARROCK_PATHS_LIGHT, new Properties().setHue(0).setShiftLightness(8).setSaturation(0)),
 
 	// Varrock
 	VARROCK_JULIETS_HOUSE_UPSTAIRS(8, Area.VARROCK_JULIETS_HOUSE, GroundMaterial.NONE, new Properties().setBlended(false)),
