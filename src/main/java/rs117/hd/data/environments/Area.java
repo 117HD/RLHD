@@ -285,6 +285,9 @@ public enum Area
 		new Rect(2709, 3473,2706, 3471 , 1),
 		new Rect(2716, 3473, 2716, 3470, 1)
 	),
+	SEERS_CHURCH(
+		new Rect(2703, 3466, 2690, 3459)
+	),
 
 	// White Wolf Mountain
 	WHITE_WOLF_MOUNTAIN(
