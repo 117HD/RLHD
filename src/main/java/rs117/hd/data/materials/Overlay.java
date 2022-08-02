@@ -145,7 +145,7 @@ public enum Overlay
 	SEERS_BANK_TILE_1(3, Area.SEERS_BANK, GroundMaterial.MARBLE_1_GLOSS, new Properties().setBlended(false)),
 	SEERS_BANK_TILE_2(4, Area.SEERS_BANK, GroundMaterial.MARBLE_2_GLOSS, new Properties().setBlended(false)),
 	SEERS_BANK_TILE_3(8, Area.SEERS_BANK, GroundMaterial.MARBLE_1_GLOSS, new Properties().setBlended(false)),
-
+	SEERS_HOUSE_FLOORS(22, Area.SEERS_HOUSES, GroundMaterial.TILE_SMALL, new Properties().setBlended(false)),
 	// Catherby
 	CATHERBY_BEACH_OBELISK_WATER_FIX(6, Area.CATHERBY_BEACH_OBELISK_WATER_FIX, WaterType.WATER_FLAT),
 	CATHERBY_BEACH_LADDER_FIX(11, Area.CATHERBY_BEACH_LADDER_FIX, GroundMaterial.NONE, new Properties().setBlended(false)),

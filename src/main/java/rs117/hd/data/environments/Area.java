@@ -278,6 +278,13 @@ public enum Area
 
 	// Seers
 	SEERS_BANK(2719, 3497, 2730, 3487),
+	SEERS_HOUSES(
+		new Rect(2716, 3482, 2709, 3476),
+		new Rect(2705, 3476, 2699, 3470),
+		new Rect(2715, 3473,2710,3470),
+		new Rect(2709, 3473,2706, 3471 , 1),
+		new Rect(2716, 3473, 2716, 3470, 1)
+	),
 
 	// White Wolf Mountain
 	WHITE_WOLF_MOUNTAIN(
