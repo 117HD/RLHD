@@ -145,7 +145,7 @@ public enum Overlay
 	SEERS_BANK_TILE_1(3, Area.SEERS_BANK, GroundMaterial.MARBLE_1_GLOSS, new Properties().setBlended(false)),
 	SEERS_BANK_TILE_2(4, Area.SEERS_BANK, GroundMaterial.MARBLE_2_GLOSS, new Properties().setBlended(false)),
 	SEERS_BANK_TILE_3(8, Area.SEERS_BANK, GroundMaterial.MARBLE_1_GLOSS, new Properties().setBlended(false)),
-	SEERS_HOUSE_FLOORS(22, Area.SEERS_HOUSES, GroundMaterial.TILE_SMALL, new Properties().setBlended(false)),
+	SEERS_HOUSE_FLOORS(22, Area.SEERS_HOUSES, GroundMaterial.WOOD_PLANKS_1, new Properties().setBlended(false).setLightness(48).setSaturation(2).setHue(13)),
 	SEERS_CHURCH_1(-85, Area.SEERS_CHURCH, GroundMaterial.TILES_2x2_2, new Properties().setBlended(false)),
 	SEERS_CHURCH_2(8, Area.SEERS_CHURCH, GroundMaterial.MARBLE_2, new Properties().setBlended(false)),
 
