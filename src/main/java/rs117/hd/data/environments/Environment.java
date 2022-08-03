@@ -622,7 +622,7 @@ public enum Environment
 		.setDirectionalStrength(1.0f)
 	),
 	BLOOD_ALTAR(Area.BLOOD_ALTAR, new Properties()
-		.setFogColor(0, 0, 0)
+		.setFogColor(6, 7, 25)
 		.setFogDepth(30)
 		.setAmbientColor(255, 150, 150)
 		.setAmbientStrength(1.5f)
