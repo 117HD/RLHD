@@ -622,12 +622,13 @@ public enum Environment
 		.setDirectionalStrength(1.0f)
 	),
 	BLOOD_ALTAR(Area.BLOOD_ALTAR, new Properties()
-		.setFogColor(79, 19, 37)
+		.setFogColor(0, 0, 0)
 		.setFogDepth(30)
-		.setAmbientColor(190, 72, 174)
-		.setAmbientStrength(1.0f)
-		.setDirectionalColor(78, 238, 255)
-		.setDirectionalStrength(2.5f)
+		.setAmbientColor(255, 150, 150)
+		.setAmbientStrength(1.5f)
+		.setDirectionalColor(255, 251, 212)
+		.setDirectionalStrength(1.0f)
+		.setWaterColor(64,64,64) // Compromise for red blood water and ocean water in the background to look good, carried by their shader values
 	),
 	ZEAH_SNOWY_NORTHERN_REGION(Area.ZEAH_SNOWY_NORTHERN_REGION, new Properties()
 		.setFogColor("#AEBDE0")
@@ -637,6 +638,15 @@ public enum Environment
 		.setDirectionalColor("#F4E5C9")
 		.setDirectionalStrength(2.5f)
 	),
+	SOUL_ALTAR(Area.SOUL_ALTAR, new Properties()
+			.setFogColor(153, 157, 204)
+			.setFogDepth(20)
+			.setAmbientColor(191, 196, 255)
+			.setAmbientStrength(0.8f)
+			.setDirectionalColor(191, 196, 255)
+			.setDirectionalStrength(2.5f)
+			.setWaterColor(100,100,100) //Compromise to make river of souls, nearby ocean and blood water all look okay; carried by shader values
+	),
 	ARCEUUS(Area.ARCEUUS, new Properties()
 		.setFogColor(19, 24, 79)
 		.setFogDepth(30)
@@ -644,6 +654,7 @@ public enum Environment
 		.setAmbientStrength(1.0f)
 		.setDirectionalColor(78, 238, 255)
 		.setDirectionalStrength(3.5f)
+		.setWaterColor(100,100,100) //Compromise to make river of souls, nearby ocean and blood water all look okay; carried by shader values
 	),
 	LOVAKENGJ(Area.LOVAKENGJ, new Properties()
 		.setFogColor(21, 10, 5)
@@ -909,6 +920,7 @@ public enum Environment
 	TRUE_BLOOD_ALTAR(Area.TRUE_BLOOD_ALTAR, new Properties()
 			.setFogColor("#000000")
 			.setFogDepth(25)
+			.setWaterColor(20,0,0) /// Dark blood red
 	),
 
 	TARNS_LAIR(Area.TARNS_LAIR, new Properties()

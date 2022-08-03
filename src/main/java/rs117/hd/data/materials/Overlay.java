@@ -187,6 +187,7 @@ public enum Overlay
 	XERICS_LOOKOUT_TILE_2(2, Area.XERICS_LOOKOUT, GroundMaterial.TILES_2x2_2, new Properties().setBlended(false)),
 	HOSIDIUS_STONE_FLOOR(123, Area.HOSIDIUS, GroundMaterial.FALADOR_PATHS),
 	BLOOD_ALTAR_BLOOD(72, Area.BLOOD_ALTAR, WaterType.BLOOD),
+	SOUL_ALTAR_RIVER(-128, Area.SOUL_ALTAR, WaterType.ICE_FLAT),
 	SHAYZIEN_PAVED_AREA_1(2, Area.SHAYZIEN, GroundMaterial.GRAVEL, new Properties().setBlended(false)),
 	SHAYZIEN_PAVED_AREA_2(-117, Area.SHAYZIEN, GroundMaterial.GRAVEL, new Properties().setBlended(false)),
 	SHAYZIEN_COMBAT_RING_FLOOR_1(30, Area.SHAYZIEN_COMBAT_RING, GroundMaterial.CARPET, new Properties().setBlended(false)),
