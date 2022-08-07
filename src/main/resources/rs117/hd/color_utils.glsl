@@ -112,14 +112,16 @@ vec3 hsvToRgb(vec3 c)
     return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
 }
 
-vec3 linearToGamma(vec3 c)
-{
-    float gamma = 2.2;
-    return pow(c, vec3(1.0 / gamma));
+vec3 gammaToLinear(vec3 srgb) {
+  return mix(
+    srgb / 12.92,
+    pow((srgb + vec3(0.055)) / vec3(1.055), vec3(2.4)),
+    step(vec3(0.04045), srgb));
 }
 
-vec3 gammaToLinear(vec3 c)
-{
-    float gamma = 2.2;
-    return pow(c, vec3(gamma));
+vec3 linearToGamma(vec3 rgb) {
+  return mix(
+    rgb * 12.92,
+    1.055 * pow(rgb, vec3(1 / 2.4)) - 0.055,
+    step(vec3(0.0031308), rgb));
 }

@@ -247,14 +247,16 @@ public class HDUtils
 
 	public static float linearToGamma(float c)
 	{
-		float gamma = 2.2f;
-		return (float)Math.pow(c, 1.0f / gamma);
+		return c <= 0.0031308 ?
+			c * 12.92f :
+			(float) (1.055 * Math.pow(c, 1 / 2.4) - 0.055);
 	}
 
 	public static float gammaToLinear(float c)
 	{
-		float gamma = 2.2f;
-		return (float)Math.pow(c, gamma);
+		return c <= 0.04045f ?
+			c / 12.92f :
+			(float) Math.pow((c + 0.055) / 1.055, 2.4);
 	}
 
 	public static float dotNormal3Lights(float[] normals)
