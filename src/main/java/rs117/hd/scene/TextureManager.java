@@ -39,6 +39,7 @@ import static org.lwjgl.opengl.GL43C.*;
 import rs117.hd.HdPlugin;
 import org.lwjgl.opengl.EXTTextureFilterAnisotropic;
 import org.lwjgl.opengl.GL;
+import rs117.hd.data.materials.Material;
 
 @Singleton
 @Slf4j
@@ -156,7 +157,7 @@ public class TextureManager
 		int width = 0;
 		int height = 0;
 		//Create the PNGDecoder object and decode the texture to a buffer
-		try (InputStream in = HdPlugin.class.getResourceAsStream("textures/" + textureId + ".png"))
+		try (InputStream in = HdPlugin.class.getResourceAsStream("textures/" + Material.getTextureName(textureId) + ".png"))
 		{
 			if (in != null)
 			{
