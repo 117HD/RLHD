@@ -35,6 +35,8 @@ public enum Material
 	// default
 	NONE(-1),
 
+	FLOWMAP_1(235),
+
 	// reserve first 128 materials for vanilla OSRS texture ids
 	TRAPDOOR(0),
 	WATER_FLAT(1),
@@ -43,97 +45,97 @@ public enum Material
 	DOOR(4),
 	DARK_WOOD(5),
 	ROOF_SHINGLES_1(6, new Properties().setSpecular(0.5f, 30f)),
-	TEXTURE_7(7),
+	WOODEN_WINDOW(7),
 	LEAVES_1(8, new Properties().setTextureScale(1.3f, 1.0f)),
-	TEXTURE_9(9),
-	TEXTURE_10(10),
+	TREE_RINGS(9),
+	MOSS_BRICK(10),
 	CONCRETE(11),
 	IRON_FENCE(12),
 	PAINTING_LANDSCAPE(13),
 	PAINTING_KING(14),
 	MARBLE_DARK(15, new Properties().setSpecular(1.1f, 380f)),
-	TEXTURE_16(16),
-	TEXTURE_17(17),
+	GRAIN_WOOD_ROOF(16),
+	WATER_DROPLETS(17),
 	STRAW(18),
 	NET(19),
 	BOOKCASE(20),
-	TEXTURE_21(21),
+	ROOF_WOODEN_SLATE(21),
 	WOOD_PLANKS_2(22, new Properties().setSpecular(0.35f, 30f)),
 	BRICK_BROWN(23),
 	WATER_FLAT_2(24),
 	SWAMP_WATER_FLAT(25),
 	SPIDER_WEB(26),
-	TEXTURE_27(27),
+	ROOF_SLATE(27),
 	MOSS(28),
 	PALM_LEAF(29),
 	WILLOW_LEAVES(30, new Properties().setTextureScale(1.025f, 1.0f)),
-	LAVA(31, new Properties().setEmissive(1).setDisplacement(235, 0.05f, 36f, 22f).setScroll(0f, 3f)),
-	TEXTURE_32(32),
+	LAVA(31, new Properties().setEmissive(1).setDisplacement(FLOWMAP_1, 0.05f, 36f, 22f).setScroll(0f, 3f)),
+	BROWN_CARPET(32),
 	MAPLE_LEAVES(33, new Properties().setTextureScale(1.3f, 1.0f)),
 	MAGIC_STARS(34, new Properties().setEmissive(1.0f)),
 	SAND_BRICK(35),
-	TEXTURE_36(36),
+	DOOR_TEXTURE(36),
 	CHAIN(37),
-	TEXTURE_38(38),
+	SANDSTONE(38),
 	PAINTING_ELF(39),
-	FIRE_CAPE(40, new Properties().setEmissive(1).setDisplacement(235, 0.05f, 12f, 4f).setScroll(0f, -3f)),
+	FIRE_CAPE(40, new Properties().setEmissive(1).setDisplacement(FLOWMAP_1, 0.05f, 12f, 4f).setScroll(0f, -3f)),
 	LEAVES_2(41, new Properties().setTextureScale(1.1f, 1.1f)),
 	MARBLE(42, new Properties().setSpecular(1.0f, 400f)),
 	TILE_DARK(43),
 	ROOF_SHINGLES_2(44),
-	TEXTURE_45(45),
+	ROOF_BRICK_TILE(45),
 	STONE_PATTERN(46),
 	TEXTURE_47(47),
 	HIEROGLYPHICS(48),
 	TEXTURE_49(49),
-	TEXTURE_50(50),
-	TEXTURE_51(51),
+	ROOF_BRICK_TILE_GREEN(50),
+	CLEAN_WOOD_FLOOR(51),
 	SNOW_FLAKES(52),
-	TEXTURE_53(53),
+	GLASS_TEXTURE(53),
 	TEXTURE_54(54),
-	TEXTURE_55(55),
-	TEXTURE_56(56),
-	TEXTURE_57(57),
-	TEXTURE_58(58),
-	INFERNAL_CAPE(59, new Properties().setEmissive(1).setDisplacement(235, 0.02f, 12f, 4f).setScroll(0f, 0f)),
+	ROOF_BRICK_TILE_DARK(55),
+	RED_LAVA(56),
+	WHITE_LAVA(57),
+	UNUSED_LEAVES(58),
+	INFERNAL_CAPE(59, new Properties().setEmissive(1).setDisplacement(FLOWMAP_1, 0.02f, 12f, 4f).setScroll(0f, 0f)),
 	LEAVES_3(60),
-	TEXTURE_61(61),
-	TEXTURE_62(62),
-	TEXTURE_63(63),
-	TEXTURE_64(64),
-	TEXTURE_65(65),
-	TEXTURE_66(66),
-	TEXTURE_67(67),
-	TEXTURE_68(68),
-	TEXTURE_69(69),
-	TEXTURE_70(70),
-	TEXTURE_71(71),
-	TEXTURE_72(72),
-	TEXTURE_73(73),
-	TEXTURE_74(74),
-	TEXTURE_75(75),
-	TEXTURE_76(76),
-	TEXTURE_77(77),
-	TEXTURE_78(78),
-	TEXTURE_79(79),
-	TEXTURE_80(80),
-	TEXTURE_81(81),
-	TEXTURE_82(82),
-	TEXTURE_83(83),
-	TEXTURE_84(84),
-	TEXTURE_85(85),
-	TEXTURE_86(86),
-	TEXTURE_87(87),
-	TEXTURE_88(88),
+	CLAN_SKULL(61),
+	CLAN_PARTYHAT(62),
+	CLAN_MAGIC_ICON(63),
+	CLAN_MIME_HAPPY(64),
+	CLAN_HELMET(65),
+	CLAN_SWORDS(66),
+	CLAN_MIME_SAD(67),
+	CLAN_SKILLING(68),
+	CLAN_FARMING(69),
+	CLAN_ARROWS(70),
+	CLAN_RUNE(71),
+	CLAN_THIEVING(72),
+	CLAN_BONES(73),
+	CLAN_CABBAGE(74),
+	CLAN_CAT(75),
+	CLAN_COMPASS(76),
+	CLAN_FISH(77),
+	CLAN_HITPOINTS(78),
+	CLAN_PRAYER(79),
+	CLAN_HUNTER(80),
+	CLAN_RING(81),
+	CLAN_ROBINHOOD(82),
+	CLAN_FLOWER(83),
+	CLAN_DEFENCE(84),
+	CLAN_ZAMORAK(85),
+	CLAN_GROUP(86),
+	CLAN_GROUP_HARDCORE(87),
+	CLAN_EMPTY(88),
 	SHAYZIEN_LEAVES_1(89),
 	SHAYZIEN_LEAVES_2(90, new Properties().setTextureScale(1.1f, 1.1f)),
-	TEXTURE_91(91),
-	TEXTURE_92(92),
-	TEXTURE_93(93),
-	TEXTURE_94(94),
-	TEXTURE_95(95),
-	TEXTURE_96(96),
-	TEXTURE_97(97),
+	WATER_ICE(91),
+	SNOW_ROOF(92),
+	SMALL_SNOWFLAKES(93),
+	COLOR_MAP(94),
+	CONCRETE_DARK(95),
+	HIEROGLYPHICS_LARGE(96),
+	HIEROGLYPHICS_SMALL(97),
 	TEXTURE_98(98),
 	TEXTURE_99(99),
 	TEXTURE_100(100),
@@ -225,21 +227,21 @@ public enum Material
 	MARBLE_2_SEMIGLOSS(232, new Properties().setSpecular(0.3f, 100f)),
 	MARBLE_3_SEMIGLOSS(234, new Properties().setSpecular(0.4f, 120f)),
 
-	HD_LAVA_1(241, new Properties().setEmissive(1.0f).setDisplacement(235, 0.04f, 36f, 12f)),
-	HD_LAVA_2(242, new Properties().setEmissive(1.0f).setDisplacement(235, 0.04f, 36f, 12f)),
-	HD_MAGMA_1(243, new Properties().setEmissive(1.0f).setDisplacement(235, 0.04f, 36f, 12f)),
-	HD_MAGMA_2(244, new Properties().setEmissive(1.0f).setDisplacement(235, 0.04f, 36f, 12f)),
+	HD_LAVA_1(241, new Properties().setEmissive(1.0f).setDisplacement(FLOWMAP_1, 0.04f, 36f, 12f)),
+	HD_LAVA_2(242, new Properties().setEmissive(1.0f).setDisplacement(FLOWMAP_1, 0.04f, 36f, 12f)),
+	HD_MAGMA_1(243, new Properties().setEmissive(1.0f).setDisplacement(FLOWMAP_1, 0.04f, 36f, 12f)),
+	HD_MAGMA_2(244, new Properties().setEmissive(1.0f).setDisplacement(FLOWMAP_1, 0.04f, 36f, 12f)),
 
 	BARK(245),
 	WOOD_GRAIN(247),
 
-	HD_INFERNAL_CAPE(248, new Properties().setEmissive(1).setDisplacement(235, 0.02f, 12f, 4f).setScroll(0f, 3f)),
+	HD_INFERNAL_CAPE(248, new Properties().setEmissive(1).setDisplacement(FLOWMAP_1, 0.02f, 12f, 4f).setScroll(0f, 3f)),
 
 	HD_BRICK(249),
 	HD_ROOF_SHINGLES_1(250, new Properties().setSpecular(0.5f, 30f)),
 	HD_MARBLE_DARK(251, new Properties().setSpecular(1.1f, 380f)),
 	HD_BRICK_BROWN(252),
-	HD_LAVA_3(253, new Properties().setEmissive(1).setDisplacement(235, 0.05f, 36f, 22f).setScroll(0f, 3f)),
+	HD_LAVA_3(253, new Properties().setEmissive(1).setDisplacement(FLOWMAP_1, 0.05f, 36f, 22f).setScroll(0f, 3f)),
 	HD_ROOF_SHINGLES_2(254),
 	WORN_TILES(299),
 
@@ -263,6 +265,14 @@ public enum Material
 	BLOOD_FLAT(999),
 	ICE(7997),
 	ICE_FLAT(997),
+
+	WAVE_DISPLACEMENT(237),
+	UNDERWATER_DISPLACEMENT(239),
+	CAUSTICS_MAP(240),
+	WATER_NORMAL_MAP_1(236),
+	WATER_NORMAL_MAP_2(246),
+	FOAM_MAP(238)
+
 	;
 
 	private final int diffuseMapId;
@@ -283,7 +293,7 @@ public enum Material
 		private float specularStrength = 0f;
 		private float specularGloss = 0f;
 		private float emissiveStrength = 0f;
-		private int displacementMapId = 304;
+		private int flowMapId = 304;
 		private float displacementStrength = 0f;
 		private float displacementDurationX = 0;
 		private float displacementDurationY = 0;
@@ -305,9 +315,9 @@ public enum Material
 			return this;
 		}
 
-		public Properties setDisplacement(int displacementMapId, float displacementStrength, float displacementDurationX, float displacementDurationY)
+		public Properties setDisplacement(Material flowMapId, float displacementStrength, float displacementDurationX, float displacementDurationY)
 		{
-			this.displacementMapId = displacementMapId;
+			this.flowMapId = flowMapId.getDiffuseMapId();
 			this.displacementStrength = displacementStrength;
 			this.displacementDurationX = displacementDurationX;
 			this.displacementDurationY = displacementDurationY;
@@ -351,7 +361,7 @@ public enum Material
 		this.emissiveStrength = properties.emissiveStrength;
 		this.specularStrength = properties.specularStrength;
 		this.specularGloss = properties.specularGloss;
-		this.displacementMapId = properties.displacementMapId;
+		this.displacementMapId = properties.flowMapId;
 		this.displacementStrength = properties.displacementStrength;
 		this.displacementDurationX = properties.displacementDurationX;
 		this.displacementDurationY = properties.displacementDurationY;
@@ -391,6 +401,10 @@ public enum Material
 		return DIFFUSE_ID_MATERIAL_MAP.getOrDefault(diffuseMapId, Material.NONE);
 	}
 
+	public static String getTextureName(int diffuseMapId)
+	{
+		return DIFFUSE_ID_MATERIAL_MAP.getOrDefault(diffuseMapId, Material.NONE).name().toLowerCase();
+	}
 	private static final HashMap<Material, Integer> MATERIAL_INDEX_MAP;
 
 	static

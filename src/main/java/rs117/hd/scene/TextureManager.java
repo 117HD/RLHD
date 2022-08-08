@@ -30,7 +30,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import javax.imageio.ImageIO;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Texture;
@@ -39,15 +42,57 @@ import static org.lwjgl.opengl.GL43C.*;
 import rs117.hd.HdPlugin;
 import org.lwjgl.opengl.EXTTextureFilterAnisotropic;
 import org.lwjgl.opengl.GL;
+import rs117.hd.data.materials.Material;
+import rs117.hd.utils.Env;
+import rs117.hd.utils.FileUtils;
+import rs117.hd.utils.FileWatcher;
 
 @Singleton
 @Slf4j
 public class TextureManager
 {
+
+	public static String ENV_TEXTURES = "RLHD_TEXTURES_PATH";
+
 	private static final float PERC_64 = 1f / 64f;
 	private static final float PERC_128 = 1f / 128f;
 
 	private static final int TEXTURE_SIZE = 128;
+
+	@Inject
+	HdPlugin plugin;
+
+	private Path texturePath;
+
+	private FileWatcher textureSourceWatcher;
+
+	public void shutDown() {
+		if(textureSourceWatcher != null)
+		{
+			textureSourceWatcher.close();
+			textureSourceWatcher = null;
+		}
+	}
+
+	public void startUp() {
+		texturePath = Env.getPath(ENV_TEXTURES);
+		if (texturePath != null)
+		{
+			try
+			{
+				textureSourceWatcher = new FileWatcher(texturePath, path -> {
+					if (path.getFileName().toString().endsWith(".png")) {
+						log.info("Reloading Textures...");
+						resetTextures();
+					}
+				});
+			}
+			catch (IOException ex)
+			{
+				throw new RuntimeException(ex);
+			}
+		}
+	}
 
 	public int initTextureArray(TextureProvider textureProvider)
 	{
@@ -132,10 +177,14 @@ public class TextureManager
 		int cnt = 0;
 		for (int textureId = 0; textureId < textureCount; textureId++)
 		{
-			if (loadHDTexture(textureId, textureProvider, textures))
+
+			boolean isOsrs = textureId <= 127;
+
+			if (loadTexture(textureId, textureProvider, textures,isOsrs))
 			{
 				cnt++;
 			}
+
 		}
 
 		textureProvider.setBrightness(save);
@@ -150,71 +199,18 @@ public class TextureManager
 		return textureArrayId;
 	}
 
-	boolean loadHDTexture(int textureId, TextureProvider textureProvider, Texture[] textures)
-	{
-
-		int width = 0;
-		int height = 0;
-		//Create the PNGDecoder object and decode the texture to a buffer
-		try (InputStream in = HdPlugin.class.getResourceAsStream("textures/" + textureId + ".png"))
-		{
-			if (in != null)
-			{
-				BufferedImage image;
-				synchronized (ImageIO.class)
-				{
-					image = ImageIO.read(in);
-				}
-
-				width = image.getWidth();
-				height = image.getHeight();
-				boolean hasAlphaChannel = image.getAlphaRaster() != null;
-				int bytesPerPixel = hasAlphaChannel ? 4 : 3;
-				byte[] pixels = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
-				assert width * height * bytesPerPixel == pixels.length;
-
-				assert width == TEXTURE_SIZE && height == TEXTURE_SIZE;
-
-//				ByteBuffer pixelData = BufferUtils.createByteBuffer(width * height * bytesPerPixel);
-				ByteBuffer pixelData = ByteBuffer.allocateDirect(width * height * bytesPerPixel).order(ByteOrder.nativeOrder());
-				if (hasAlphaChannel)
-				{
-					// argb -> bgra
-					for (int i = 0; i < pixels.length; i += 4)
-					{
-						byte a = pixels[i];
-						byte r = pixels[i + 1];
-						byte g = pixels[i + 2];
-						byte b = pixels[i + 3];
-						pixelData.put(b).put(g).put(r).put(a);
-					}
-				}
-				else
-				{
-					assert (width * 3) % 4 == 0 : "OpenGL expects each line of the image to start at a memory address divisible by 4";
-					for (int i = 0; i < pixels.length; i += 3)
-					{
-						byte r = pixels[i];
-						byte g = pixels[i + 1];
-						byte b = pixels[i + 2];
-						pixelData.put(b).put(g).put(r);
-					}
-				}
-
-				pixelData.flip();
-				int rgbMode = hasAlphaChannel ? GL_RGBA : GL_RGB;
-				glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, textureId, width, height,
-					1, rgbMode, GL_UNSIGNED_BYTE, pixelData);
-
-				return true;
-			}
+	public boolean loadTexture(int textureId, TextureProvider textureProvider, Texture[] textures, boolean osrs) {
+		if(Material.getTexture(textureId) == Material.NONE) {
+            return true;
+        }
+        if(osrs) {
+			return loadSDTexture(textureId,textureProvider,textures);
+		} else {
+			return loadHDTexture(textureId);
 		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-			return false;
-		}
+	}
 
+	boolean loadSDTexture(int textureId, TextureProvider textureProvider, Texture[] textures) {
 		if (textureId < textures.length)
 		{
 			Texture texture = textures[textureId];
@@ -240,13 +236,80 @@ public class TextureManager
 				pixelBuffer.put(pixels);
 				pixelBuffer.flip();
 				glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, textureId, TEXTURE_SIZE, TEXTURE_SIZE,
-					1, GL_RGBA, GL_UNSIGNED_BYTE, pixelBuffer);
+						1, GL_RGBA, GL_UNSIGNED_BYTE, pixelBuffer);
 
 				return true;
 			}
 		}
-
 		return false;
+	}
+
+	boolean loadHDTexture(int textureId) {
+		int width = 0;
+		int height = 0;
+		//Create the PNGDecoder object and decode the texture to a buffer
+
+		String materialName = Material.getTextureName(textureId);
+
+        try (InputStream in = FileUtils.getResource(
+            TextureManager.class,
+            Paths.get("textures").resolve(materialName + ".png")
+        ))
+		{
+            BufferedImage image;
+            synchronized (ImageIO.class)
+            {
+                image = ImageIO.read(in);
+            }
+
+            width = image.getWidth();
+            height = image.getHeight();
+            boolean hasAlphaChannel = image.getAlphaRaster() != null;
+            int bytesPerPixel = hasAlphaChannel ? 4 : 3;
+            byte[] pixels = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
+            assert width * height * bytesPerPixel == pixels.length;
+
+            assert width == TEXTURE_SIZE && height == TEXTURE_SIZE;
+
+//				ByteBuffer pixelData = BufferUtils.createByteBuffer(width * height * bytesPerPixel);
+            ByteBuffer pixelData = ByteBuffer.allocateDirect(width * height * bytesPerPixel).order(ByteOrder.nativeOrder());
+            if (hasAlphaChannel)
+            {
+                // argb -> bgra
+                for (int i = 0; i < pixels.length; i += 4)
+                {
+                    byte a = pixels[i];
+                    byte r = pixels[i + 1];
+                    byte g = pixels[i + 2];
+                    byte b = pixels[i + 3];
+                    pixelData.put(b).put(g).put(r).put(a);
+                }
+            }
+            else
+            {
+                assert (width * 3) % 4 == 0 : "OpenGL expects each line of the image to start at a memory address divisible by 4";
+                for (int i = 0; i < pixels.length; i += 3)
+                {
+                    byte r = pixels[i];
+                    byte g = pixels[i + 1];
+                    byte b = pixels[i + 2];
+                    pixelData.put(b).put(g).put(r);
+                }
+            }
+
+            pixelData.flip();
+            int rgbMode = hasAlphaChannel ? GL_RGBA : GL_RGB;
+            glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, textureId, width, height,
+                    1, rgbMode, GL_UNSIGNED_BYTE, pixelData);
+
+            return true;
+        }
+		catch (IOException e)
+		{
+			e.printStackTrace();
+			return false;
+		}
+
 	}
 
 	public void setAnisotropicFilteringLevel(int textureArrayId, int level, boolean trilinearFiltering)
@@ -319,6 +382,13 @@ public class TextureManager
 		}
 
 		return true;
+	}
+
+	public void resetTextures()
+	{
+		plugin.textureArrayId = -1;
+		plugin.textureHDArrayId = -1;
+		plugin.reloadScene();
 	}
 
 	private void updateTextures(TextureProvider textureProvider, int textureArrayId)
