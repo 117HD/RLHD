@@ -30,7 +30,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import javax.imageio.ImageIO;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Texture;
@@ -40,15 +43,59 @@ import rs117.hd.HdPlugin;
 import org.lwjgl.opengl.EXTTextureFilterAnisotropic;
 import org.lwjgl.opengl.GL;
 import rs117.hd.data.materials.Material;
+import rs117.hd.utils.Env;
+import rs117.hd.utils.FileWatcher;
 
 @Singleton
 @Slf4j
 public class TextureManager
 {
+
+	public static String ENV_TEXTURES = "RLHD_TEXTURES_PATH";
+
 	private static final float PERC_64 = 1f / 64f;
 	private static final float PERC_128 = 1f / 128f;
 
 	private static final int TEXTURE_SIZE = 128;
+
+	@Inject
+	HdPlugin plugin;
+
+	private Path texturePath;
+
+	private FileWatcher textureSourceWatcher;
+
+	public void shutDown() {
+		if(textureSourceWatcher != null)
+		{
+			textureSourceWatcher.close();
+			textureSourceWatcher = null;
+		}
+	}
+
+	public void startUp() {
+		texturePath = Env.getPath(ENV_TEXTURES);
+		if (texturePath != null)
+		{
+			try
+			{
+				textureSourceWatcher = new FileWatcher()
+						.watchPath(texturePath)
+						.addChangeHandler(path ->
+						{
+							if (path.getFileName().toString().endsWith(".png"))
+							{
+								log.info("Reloading Textures...");
+								resetTextures();
+							}
+						});
+			}
+			catch (IOException ex)
+			{
+				throw new RuntimeException(ex);
+			}
+		}
+	}
 
 	public int initTextureArray(TextureProvider textureProvider)
 	{
@@ -154,12 +201,13 @@ public class TextureManager
 	boolean loadHDTexture(int textureId, TextureProvider textureProvider, Texture[] textures)
 	{
 
+
 		int width = 0;
 		int height = 0;
 		//Create the PNGDecoder object and decode the texture to a buffer
-		try (InputStream in = HdPlugin.class.getResourceAsStream("textures/" + Material.getTextureName(textureId) + ".png"))
-		{
-			if (in != null)
+		Path fullPath = texturePath.resolve(Material.getTextureName(textureId) + ".png");
+		if(fullPath.toFile().exists()) {
+			try (InputStream in = Files.newInputStream(fullPath))
 			{
 				BufferedImage image;
 				synchronized (ImageIO.class)
@@ -205,15 +253,15 @@ public class TextureManager
 				pixelData.flip();
 				int rgbMode = hasAlphaChannel ? GL_RGBA : GL_RGB;
 				glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, textureId, width, height,
-					1, rgbMode, GL_UNSIGNED_BYTE, pixelData);
+						1, rgbMode, GL_UNSIGNED_BYTE, pixelData);
 
 				return true;
 			}
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-			return false;
+			catch (IOException e)
+			{
+				e.printStackTrace();
+				return false;
+			}
 		}
 
 		if (textureId < textures.length)
@@ -286,7 +334,7 @@ public class TextureManager
 			glTexParameterf(GL_TEXTURE_2D_ARRAY, EXTTextureFilterAnisotropic.GL_TEXTURE_MAX_ANISOTROPY_EXT, anisoLevel);
 		}
 	}
-
+	
 	public void freeTextureArray(int textureArrayId)
 	{
 		glDeleteTextures(textureArrayId);
@@ -320,6 +368,13 @@ public class TextureManager
 		}
 
 		return true;
+	}
+
+	public void resetTextures()
+	{
+		plugin.textureArrayId = -1;
+		plugin.textureHDArrayId = -1;
+		plugin.reloadScene();
 	}
 
 	private void updateTextures(TextureProvider textureProvider, int textureArrayId)

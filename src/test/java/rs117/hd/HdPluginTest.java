@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.client.RuneLite;
 import net.runelite.client.RuneLiteProperties;
 import net.runelite.client.externalplugins.ExternalPluginManager;
+import rs117.hd.scene.TextureManager;
 import rs117.hd.scene.lighting.LightManager;
 import rs117.hd.utils.Env;
 import rs117.hd.utils.FileWatcher;
@@ -11,6 +12,7 @@ import rs117.hd.utils.FileWatcher;
 import java.io.InputStream;
 import java.util.Properties;
 
+import static rs117.hd.scene.TextureManager.ENV_TEXTURES;
 import static rs117.hd.scene.lighting.LightManager.ENV_LIGHTS_CONFIG;
 import static rs117.hd.utils.DeveloperTools.ENV_SHADER_PATH;
 
@@ -25,6 +27,10 @@ public class HdPluginTest
 		if (Env.missing(ENV_LIGHTS_CONFIG))
 		{
 			Env.set(ENV_LIGHTS_CONFIG, FileWatcher.getResourcePath(LightManager.class).resolve("lights.json"));
+		}
+		if (Env.missing(ENV_TEXTURES))
+		{
+			Env.set(ENV_TEXTURES, FileWatcher.getResourcePath(TextureManager.class).resolve("textures"));
 		}
 		if (Env.missing(ENV_SHADER_PATH))
 		{

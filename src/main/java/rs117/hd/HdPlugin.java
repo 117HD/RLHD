@@ -238,8 +238,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	private final GLBuffer tmpOutUvBuffer = new GLBuffer(); // target uv buffer for compute shaders
 	private final GLBuffer tmpOutNormalBuffer = new GLBuffer(); // target normal buffer for compute shaders
 
-	private int textureArrayId;
-	private int textureHDArrayId;
+	public int textureArrayId;
+	public int textureHDArrayId;
 
 	private final GLBuffer uniformBuffer = new GLBuffer();
 	private final float[] textureOffsets = new float[256];
@@ -533,7 +533,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 				client.setDrawCallbacks(this);
 				client.setGpu(true);
-
+				textureManager.startUp();
 				// force rebuild of main buffer provider to enable alpha channel
 				client.resizeCanvas();
 
@@ -573,6 +573,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		clientThread.invoke(() ->
 		{
 			client.setGpu(false);
+			textureManager.shutDown();
 			client.setDrawCallbacks(null);
 			client.setUnlockedFps(false);
 
@@ -2262,7 +2263,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		checkGLErrors();
 	}
 
-	private void reloadScene()
+	public void reloadScene()
 	{
 		nextSceneReload = System.currentTimeMillis();
 	}
