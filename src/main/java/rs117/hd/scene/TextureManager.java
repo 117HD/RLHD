@@ -206,7 +206,7 @@ public class TextureManager
 
 		String materialName = Material.getTextureName(textureId);
 
-		InputStream is;
+		InputStream is = null;
 		if(texturePath == null) {
 			is = HdPlugin.class.getResourceAsStream(materialName + ".png");
 		} else {
