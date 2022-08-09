@@ -161,7 +161,8 @@ public enum Area
 	),
 	DRAYNOR_AGGIES_HOUSE(3088, 3261, 3083, 3256),
 	DRAYNOR_BANK(
-			new Rect(3097, 3246, 3088, 3240)
+			new Rect(3097, 3246, 3088, 3240),
+			new Rect(2127, 4910, 2137, 4903)
 	),
 	// For correcting path placement around town that are screwed up from blending issues
 	DRAYNOR_PATH_ADJUSTMENTS(
