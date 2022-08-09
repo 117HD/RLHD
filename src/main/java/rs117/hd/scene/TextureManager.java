@@ -198,16 +198,32 @@ public class TextureManager
 		return textureArrayId;
 	}
 
-	boolean loadHDTexture(int textureId, TextureProvider textureProvider, Texture[] textures)
-	{
-
+	boolean loadHDTexture(int textureId, TextureProvider textureProvider, Texture[] textures) {
 
 		int width = 0;
 		int height = 0;
 		//Create the PNGDecoder object and decode the texture to a buffer
-		Path fullPath = texturePath.resolve(Material.getTextureName(textureId) + ".png");
-		if(fullPath.toFile().exists()) {
-			try (InputStream in = Files.newInputStream(fullPath))
+
+		String materialName = Material.getTextureName(textureId);
+
+		InputStream is;
+		if(texturePath == null) {
+			is = HdPlugin.class.getResourceAsStream(materialName + ".png");
+		} else {
+			Path fullPath = texturePath.resolve(materialName + ".png");
+			if(fullPath.toFile().exists()) {
+				try {
+					is = Files.newInputStream(fullPath);
+				} catch (IOException e) {
+					is = HdPlugin.class.getResourceAsStream(materialName + ".png");
+					log.info("Unable to find: {}",materialName);
+				}
+			}
+		}
+
+		try (InputStream in = is)
+		{
+			if (in != null)
 			{
 				BufferedImage image;
 				synchronized (ImageIO.class)
@@ -257,11 +273,11 @@ public class TextureManager
 
 				return true;
 			}
-			catch (IOException e)
-			{
-				e.printStackTrace();
-				return false;
-			}
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+			return false;
 		}
 
 		if (textureId < textures.length)
@@ -289,7 +305,7 @@ public class TextureManager
 				pixelBuffer.put(pixels);
 				pixelBuffer.flip();
 				glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, textureId, TEXTURE_SIZE, TEXTURE_SIZE,
-					1, GL_RGBA, GL_UNSIGNED_BYTE, pixelBuffer);
+						1, GL_RGBA, GL_UNSIGNED_BYTE, pixelBuffer);
 
 				return true;
 			}
