@@ -79,16 +79,12 @@ public class TextureManager
 		{
 			try
 			{
-				textureSourceWatcher = new FileWatcher()
-						.watchPath(texturePath)
-						.addChangeHandler(path ->
-						{
-							if (path.getFileName().toString().endsWith(".png"))
-							{
-								log.info("Reloading Textures...");
-								resetTextures();
-							}
-						});
+				textureSourceWatcher = new FileWatcher(texturePath, path -> {
+					if (path.getFileName().toString().endsWith(".png")) {
+						log.info("Reloading Textures...");
+						resetTextures();
+					}
+				});
 			}
 			catch (IOException ex)
 			{
