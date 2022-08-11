@@ -43,9 +43,9 @@ public enum ObjectProperties
 	FARMING_PATCH_1(Material.DIRT_1, new Properties().setUvType(UvType.GROUND_PLANE), 7517),
 	FARMING_PATCH_2(Material.GRUNGE_1, new Properties().setUvType(UvType.GROUND_PLANE), 7522),
 
-	GRASS(Material.NONE, new Properties().setFlatNormals(true).setInheritTileColor(true), 1257, 1258, 3547, 3548, 3549, 4333, 4334, 4335, 4336, 4530, 4735, 4736, 4737, 4738, 4739, 4740, 4741, 4742, 4809, 4810, 4811, 4812, 4813, 4814, 5335, 5336, 5337, 5338, 5339, 5340, 5341, 5342, 5533, 5534, 5535, 5536, 6817, 6818, 6819, 6835, 6836, 6837, 6838, 7049, 7050, 9485, 9486, 9487, 9488, 9489, 9490, 9491, 9502, 9503, 9504, 9505, 9506, 9507, 13861, 13862, 13863, 14775, 14776, 14777, 14778, 16382, 16383, 16384, 16385, 19823, 19824, 19825, 19826, 19827, 19828, 19829, 19830, 19831, 19832, 19833, 19834, 19835, 19836, 19837, 19838, 20742, 20743, 20744, 20745, 23914, 23915, 31777, 31778, 31779, 31780, 34490, 34491, 34492),
+	GRASS(Material.NONE, new Properties().setFlatNormals(true).setInheritTileColorType(InheritTileColorType.UNDERLAY), 1257, 1258, 3547, 3548, 3549, 4333, 4334, 4335, 4336, 4530, 4735, 4736, 4737, 4738, 4739, 4740, 4741, 4742, 4809, 4810, 4811, 4812, 4813, 4814, 5335, 5336, 5337, 5338, 5339, 5340, 5341, 5342, 5533, 5534, 5535, 5536, 6817, 6818, 6819, 6835, 6836, 6837, 6838, 7049, 7050, 9485, 9486, 9487, 9488, 9489, 9490, 9491, 9502, 9503, 9504, 9505, 9506, 9507, 13861, 13862, 13863, 14775, 14776, 14777, 14778, 16382, 16383, 16384, 16385, 19823, 19824, 19825, 19826, 19827, 19828, 19829, 19830, 19831, 19832, 19833, 19834, 19835, 19836, 19837, 19838, 20742, 20743, 20744, 20745, 23914, 23915, 31777, 31778, 31779, 31780, 34490, 34491, 34492),
 	GRASS_MAINTAIN_ORIGINAL_COLOR(Material.NONE, new Properties().setFlatNormals(true), 16823, 16824, 16825, 16826),
-	FERN(Material.NONE, new Properties().setInheritTileColor(true), 19827, 19833, 19839),
+	FERN(Material.NONE, new Properties().setInheritTileColorType(InheritTileColorType.UNDERLAY), 19827, 19833, 19839),
 
 	// Wooden Fences
 	WOODEN_FENCES(Material.WOOD_GRAIN,new Properties().setFlatNormals(true),  814, 980, 981, 991, 992,993, 1007, 1008, 1558, 1559, 1560,1561,1562,1563,1564, 1565, 1566, 1567, 1739, 1740, 5432, 5433,5434,5435,5436,5437, 5438, 7055,7527, 9511, 9623),
@@ -124,8 +124,8 @@ public enum ObjectProperties
 	COX_PILLAR(Material.GRUNGE_1, new Properties().setFlatNormals(true), 29806, 29807, 29808, 29809, 29810),
 
 	// Ground decoration rocks
-	GROUND_DECORATION_TAN_ROCK(Material.DIRT_1, new Properties().setInheritTileColor(true),  7105, 7106, 7107),
-	GROUND_DECORATION_GRAY_ROCK(Material.ROCK_1, new Properties().setInheritTileColor(true), 7103, 7104, 7057),
+	GROUND_DECORATION_TAN_ROCK(Material.DIRT_1, new Properties().setInheritTileColorType(InheritTileColorType.OVERLAY),  7105, 7106, 7107),
+	GROUND_DECORATION_GRAY_ROCK(Material.ROCK_1, new Properties().setInheritTileColorType(InheritTileColorType.OVERLAY), 7103, 7104, 7057),
 	// environment rock objects such as piles of rocks, stalagmites, or rock like structures.
 	ROCK_LIKE_OBJECT(Material.ROCK_1,new Properties().setFlatNormals(true), 84, 3634,3635,3636,3637,3638, 3639, 5950, 5953, 22541, 22542,22543, 25077,25078,25079,25080,25081,25082,25083,25084,25085,25086, 25102, 25103, 25104, 25105, 25106, 25107, 25108, 25109, 25110, 25112,25113,25114,25161),
 
@@ -158,14 +158,14 @@ public enum ObjectProperties
 	private final boolean flatNormals;
 	private final UvType uvType;
 	private final TzHaarRecolorType tzHaarRecolorType;
-	private final boolean inheritTileColor;
+	private final InheritTileColorType inheritTileColorType;
 
 	private static class Properties
 	{
 		private boolean flatNormals = false;
 		private UvType uvType = UvType.GEOMETRY;
 		private TzHaarRecolorType tzHaarRecolorType = TzHaarRecolorType.NONE;
-		private boolean inheritTileColor = false;
+		private InheritTileColorType inheritTileColorType = InheritTileColorType.NONE;
 
 		public Properties setFlatNormals(boolean flatNormals)
 		{
@@ -185,9 +185,9 @@ public enum ObjectProperties
 			return this;
 		}
 
-		public Properties setInheritTileColor(boolean inheritTileColor)
+		public Properties setInheritTileColorType(InheritTileColorType inheritTileColorType)
 		{
-			this.inheritTileColor = inheritTileColor;
+			this.inheritTileColorType = inheritTileColorType;
 			return this;
 		}
 	}
@@ -199,7 +199,7 @@ public enum ObjectProperties
 		this.flatNormals = false;
 		this.uvType = UvType.GEOMETRY;
 		this.tzHaarRecolorType = TzHaarRecolorType.NONE;
-		this.inheritTileColor = false;
+		this.inheritTileColorType = InheritTileColorType.NONE;
 	}
 
 	ObjectProperties(Material material, Properties properties, int... ids)
@@ -209,7 +209,7 @@ public enum ObjectProperties
 		this.flatNormals = properties.flatNormals;
 		this.uvType = properties.uvType;
 		this.tzHaarRecolorType = properties.tzHaarRecolorType;
-		this.inheritTileColor = properties.inheritTileColor;
+		this.inheritTileColorType = properties.inheritTileColorType;
 	}
 
 	private static final HashMap<Integer, ObjectProperties> OBJECT_ID_MAP;

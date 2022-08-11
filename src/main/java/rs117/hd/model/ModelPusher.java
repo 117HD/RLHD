@@ -10,6 +10,7 @@ import rs117.hd.data.materials.Material;
 import rs117.hd.data.materials.Overlay;
 import rs117.hd.data.materials.Underlay;
 import rs117.hd.data.materials.UvType;
+import rs117.hd.model.objects.InheritTileColorType;
 import rs117.hd.model.objects.ObjectProperties;
 import rs117.hd.model.objects.ObjectType;
 import rs117.hd.scene.ProceduralGenerator;
@@ -60,7 +61,7 @@ public class ModelPusher
     private final static float[] twelveFloats = new float[12];
     private final static int[] modelColors = new int[HdPlugin.MAX_TRIANGLE * 4];
     private final static ModelData tempModelData = new ModelData();
-    
+
     private final Map<Integer, ModelData> modelCache = new ModelCache(4096);
 
     public void clearModelCache() {
@@ -386,13 +387,13 @@ public class ModelPusher
             color1L = color2L = color3L = 127;
         }
 
-        if (objectProperties != null && objectProperties.isInheritTileColor()) {
+        if (objectProperties != null && objectProperties.getInheritTileColorType() != InheritTileColorType.NONE) {
             if (tile != null && (tile.getSceneTilePaint() != null || tile.getSceneTileModel() != null)) {
                 int[] tileColorHSL;
 
                 if (tile.getSceneTilePaint() != null && tile.getSceneTilePaint().getTexture() == -1) {
                     // pull any corner color as either one should be OK
-                    tileColorHSL = HDUtils.colorIntToHSL(tile.getSceneTilePaint().getSwColor());
+                    tileColorHSL = HDUtils.colorIntToHSL(tile.getSceneTilePaint().getSeColor());
 
                     // average saturation and lightness
                     tileColorHSL[1] =
@@ -423,18 +424,33 @@ public class ModelPusher
                         tileColorHSL = proceduralGenerator.recolorUnderlay(underlay, tileColorHSL);
                     }
 
-                    color1H = color2H = color3H = tileColorHSL[0];
-                    color1S = color2S = color3S = tileColorHSL[1];
-                    color1L = color2L = color3L = tileColorHSL[2];
+                    // No point in inheriting the color if the ground tile does not have a color
+                    // Fixes inheriting tile colors for objects that exist above cave walls
+                    if(tile.getSceneTilePaint().getRBG() != 0) {
+                        color1H = color2H = color3H = tileColorHSL[0];
+                        color1S = color2S = color3S = tileColorHSL[1];
+                        color1L = color2L = color3L = tileColorHSL[2];
+                    }
+
                 } else if (tile.getSceneTileModel() != null && tile.getSceneTileModel().getTriangleTextureId() == null) {
                     int faceColorIndex = -1;
                     for (int i = 0; i < tile.getSceneTileModel().getTriangleColorA().length; i++) {
-                        if (!proceduralGenerator.isOverlayFace(tile, i)) {
-                            // get a color from an underlay face as it's generally more desirable
-                            // than pulling colors from paths and other overlays
-                            faceColorIndex = i;
-                            break;
-                        }
+                        boolean isOverlayFace = proceduralGenerator.isOverlayFace(tile, i);
+                        if(objectProperties.getInheritTileColorType() == InheritTileColorType.UNDERLAY) {
+                            // pulling the color from UNDERLAY is more desirable for green grass tiles
+                            // OVERLAY pulls in path color which is not desirable for grass next to paths
+                            if (!isOverlayFace) {                                
+                                faceColorIndex = i;
+                                break;
+                            }
+                        }  
+                        else if(objectProperties.getInheritTileColorType() == InheritTileColorType.OVERLAY) {
+                            if (isOverlayFace) {
+                                // OVERLAY used in dirt/path/house tile color blend better with rubbles/rocks
+                                faceColorIndex = i;
+                                break;
+                            }
+                        }                     
                     }
 
                     if (faceColorIndex != -1) {
