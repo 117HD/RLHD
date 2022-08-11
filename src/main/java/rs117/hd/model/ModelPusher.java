@@ -388,28 +388,33 @@ public class ModelPusher
         }
 
         if (objectProperties != null && objectProperties.getInheritTileColorType() != InheritTileColorType.NONE) {
-            if (tile != null && (tile.getSceneTilePaint() != null || tile.getSceneTileModel() != null)) {
+
+            SceneTileModel tileModel = tile.getSceneTileModel();
+            SceneTilePaint tilePaint = tile.getSceneTilePaint();
+
+            if (tile != null && (tilePaint != null || tileModel != null)) {
                 int[] tileColorHSL;
 
-                if (tile.getSceneTilePaint() != null && tile.getSceneTilePaint().getTexture() == -1) {
+                // No point in inheriting tilepaint color if the ground tile does not have a color, for example above a cave wall
+                if (tilePaint != null && tilePaint.getTexture() == -1 && tilePaint.getRBG() != 0) {
                     // pull any corner color as either one should be OK
-                    tileColorHSL = HDUtils.colorIntToHSL(tile.getSceneTilePaint().getSeColor());
+                    tileColorHSL = HDUtils.colorIntToHSL(tilePaint.getSwColor());
 
                     // average saturation and lightness
                     tileColorHSL[1] =
                             (
                                     tileColorHSL[1] +
-                                            HDUtils.colorIntToHSL(tile.getSceneTilePaint().getSeColor())[1] +
-                                            HDUtils.colorIntToHSL(tile.getSceneTilePaint().getNwColor())[1] +
-                                            HDUtils.colorIntToHSL(tile.getSceneTilePaint().getNeColor())[1]
+                                            HDUtils.colorIntToHSL(tilePaint.getSeColor())[1] +
+                                            HDUtils.colorIntToHSL(tilePaint.getNwColor())[1] +
+                                            HDUtils.colorIntToHSL(tilePaint.getNeColor())[1]
                             ) / 4;
 
                     tileColorHSL[2] =
                             (
                                     tileColorHSL[2] +
-                                            HDUtils.colorIntToHSL(tile.getSceneTilePaint().getSeColor())[2] +
-                                            HDUtils.colorIntToHSL(tile.getSceneTilePaint().getNwColor())[2] +
-                                            HDUtils.colorIntToHSL(tile.getSceneTilePaint().getNeColor())[2]
+                                            HDUtils.colorIntToHSL(tilePaint.getSeColor())[2] +
+                                            HDUtils.colorIntToHSL(tilePaint.getNwColor())[2] +
+                                            HDUtils.colorIntToHSL(tilePaint.getNeColor())[2]
                             ) / 4;
 
                     int overlayId = client.getScene().getOverlayIds()[tileZ][tileX][tileY];
@@ -424,19 +429,16 @@ public class ModelPusher
                         tileColorHSL = proceduralGenerator.recolorUnderlay(underlay, tileColorHSL);
                     }
 
-                    // No point in inheriting the color if the ground tile does not have a color
-                    // Fixes inheriting tile colors for objects that exist above cave walls
-                    if(tile.getSceneTilePaint().getRBG() != 0) {
-                        color1H = color2H = color3H = tileColorHSL[0];
-                        color1S = color2S = color3S = tileColorHSL[1];
-                        color1L = color2L = color3L = tileColorHSL[2];
-                    }
+                    color1H = color2H = color3H = tileColorHSL[0];
+                    color1S = color2S = color3S = tileColorHSL[1];
+                    color1L = color2L = color3L = tileColorHSL[2];
 
-                } else if (tile.getSceneTileModel() != null && tile.getSceneTileModel().getTriangleTextureId() == null) {
+                } else if (tileModel != null && tileModel.getTriangleTextureId() == null) {
                     int faceColorIndex = -1;
-                    for (int i = 0; i < tile.getSceneTileModel().getTriangleColorA().length; i++) {
+                    for (int i = 0; i < tileModel.getTriangleColorA().length; i++) {
                         boolean isOverlayFace = proceduralGenerator.isOverlayFace(tile, i);
-                        if(objectProperties.getInheritTileColorType() == InheritTileColorType.UNDERLAY) {
+                        // Use underlay if the tile does not have an overlay, useful for rocks in cave corners.
+                        if(objectProperties.getInheritTileColorType() == InheritTileColorType.UNDERLAY || tileModel.getModelOverlay() == 0) {
                             // pulling the color from UNDERLAY is more desirable for green grass tiles
                             // OVERLAY pulls in path color which is not desirable for grass next to paths
                             if (!isOverlayFace) {                                
@@ -454,7 +456,7 @@ public class ModelPusher
                     }
 
                     if (faceColorIndex != -1) {
-                        tileColorHSL = HDUtils.colorIntToHSL(tile.getSceneTileModel().getTriangleColorA()[faceColorIndex]);
+                        tileColorHSL = HDUtils.colorIntToHSL(tileModel.getTriangleColorA()[faceColorIndex]);
 
                         int underlayId = client.getScene().getUnderlayIds()[tileZ][tileX][tileY];
                         Underlay underlay = Underlay.getUnderlay(underlayId, tile, client);
