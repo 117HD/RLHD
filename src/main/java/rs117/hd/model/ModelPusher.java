@@ -387,12 +387,11 @@ public class ModelPusher
             color1L = color2L = color3L = 127;
         }
 
-        if (objectProperties != null && objectProperties.getInheritTileColorType() != InheritTileColorType.NONE) {
-
+        if (tile != null && objectProperties != null && objectProperties.getInheritTileColorType() != InheritTileColorType.NONE) {
             SceneTileModel tileModel = tile.getSceneTileModel();
             SceneTilePaint tilePaint = tile.getSceneTilePaint();
 
-            if (tile != null && (tilePaint != null || tileModel != null)) {
+            if (tilePaint != null || tileModel != null) {
                 int[] tileColorHSL;
 
                 // No point in inheriting tilepaint color if the ground tile does not have a color, for example above a cave wall
