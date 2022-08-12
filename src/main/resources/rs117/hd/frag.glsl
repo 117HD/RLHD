@@ -25,53 +25,16 @@
  */
 #version 330
 
-#include MAX_MATERIALS
-#define MAX_LIGHTS 100
+#include uniforms/camera.glsl
+#include uniforms/materials.glsl
+#include uniforms/water_types.glsl
+#include uniforms/lights.glsl
 
-layout(std140) uniform uniforms {
-    int cameraYaw;
-    int cameraPitch;
-    int centerX;
-    int centerY;
-    int zoom;
-    int cameraX;
-    int cameraY;
-    int cameraZ;
-    ivec2 sinCosTable[2048];
-};
+#include MATERIAL_CONSTANTS
 
-struct Material
-{
-    int diffuseMapId;
-    float specularStrength;
-    float specularGloss;
-    float emissiveStrength;
-    int displacementMapId;
-    float displacementStrength;
-    vec2 displacementDuration;
-    vec2 scrollDuration;
-    vec2 textureScale;
-};
-
-layout(std140) uniform materials {
-    Material material[MAX_MATERIALS];
-};
-
-struct PointLight
-{
-    ivec3 position;
-    float size;
-    vec3 color;
-    float strength;
-};
-
-layout(std140) uniform pointLights {
-    PointLight pointLight[MAX_LIGHTS];
-};
-
+uniform sampler2DArray textureArray;
 uniform sampler2D shadowMap;
 
-uniform sampler2DArray texturesHD;
 uniform vec2 textureOffsets[128];
 uniform float animationCurrent;
 uniform int colorBlindMode;
@@ -123,18 +86,12 @@ flat in ivec3 isOverlay;
 
 out vec4 FragColor;
 
-#include color_utils.glsl
-#include lighting.glsl
-#include utils.glsl
 #include colorblind.glsl
-#include utils/fetch_material.glsl
 #include utils/caustics.glsl
-
-#define WATER 1
-#define SWAMP_WATER 3
-#define POISON_WASTE 5
-#define BLOOD 7
-#define ICE 8
+#include utils/color_conversion.glsl
+#include utils/lighting.glsl
+#include utils/misc.glsl
+#include utils/normals.glsl
 
 void main() {
     vec3 camPos = vec3(cameraX, cameraY, cameraZ);
@@ -143,208 +100,40 @@ void main() {
     vec3 lightDir = normalize(vec3(lightX, lightY, lightZ));
 
     // material data
-    Material material1 = fetchMaterial(materialId.x);
-    Material material2 = fetchMaterial(materialId.y);
-    Material material3 = fetchMaterial(materialId.z);
+    Material material1 = getMaterial(materialId.x);
+    Material material2 = getMaterial(materialId.y);
+    Material material3 = getMaterial(materialId.z);
 
     // water data
-    int isTerrain = terrainData.x & 1; // 1 = 0b1
-    int terrainPlane = isTerrain == 1 ? (terrainData.x >> 1) & 3 : -1; // 3 = 0b11
-    int waterDepth1 = terrainData.x >> 7;
-    int waterDepth2 = terrainData.y >> 7;
-    int waterDepth3 = terrainData.z >> 7;
-    float waterDepth = waterDepth1 * texBlend.x + waterDepth2 * texBlend.y + waterDepth3 * texBlend.z;
-    int underwaterType = isTerrain == 1 ? (terrainData.x >> 3) & 15 : 0; // 15 = 0b1111
+    bool isTerrain = (terrainData.x & 1) != 0; // 1 = 0b1
+    int waterDepth1 = terrainData.x >> 8;
+    int waterDepth2 = terrainData.y >> 8;
+    int waterDepth3 = terrainData.z >> 8;
+    float waterDepth =
+        waterDepth1 * texBlend.x +
+        waterDepth2 * texBlend.y +
+        waterDepth3 * texBlend.z;
+    int waterTypeIndex = isTerrain ? terrainData.x >> 3 & 0x1F : 0;
+    WaterType waterType = getWaterType(waterTypeIndex);
 
     // set initial texture map ids
-    int diffuseMapId1 = material1.diffuseMapId;
-    int diffuseMapId2 = material2.diffuseMapId;
-    int diffuseMapId3 = material3.diffuseMapId;
+    int diffuseMap1 = material1.diffuseMap;
+    int diffuseMap2 = material2.diffuseMap;
+    int diffuseMap3 = material3.diffuseMap;
 
-    // only use one displacement map
-    int displacementMapId = material1.displacementMapId;
+    // only use one flowMap map
+    int flowMap = material1.flowMap;
 
-    bool isWater = false;
-    bool simpleWater = true;
-    int waterType = 0;
-    float waterSpecularStrength = 0.0;
-    float waterSpecularGloss = 500;
-    float waterNormalStrength = 0.0;
-    float waterBaseOpacity = 1.0;
-    float waterFresnelAmount = 0.0;
-    vec3 waterSurfaceColor = vec3(1, 0, 0);
-    vec3 waterFoamColor = vec3(0, 0, 0);
-    int waterHasFoam = 1;
-    float waterDuration = 1;
-    int waterNormalMap1 = 236;
-    int waterNormalMap2 = 236;
-
-    if (
-   diffuseMapId1 == 1 || diffuseMapId1 == 24 || diffuseMapId1 == 7001 || diffuseMapId1 == 7024 ||
-   diffuseMapId2 == 1 || diffuseMapId2 == 24 || diffuseMapId2 == 7001 || diffuseMapId2 == 7024 ||
-   diffuseMapId3 == 1 || diffuseMapId3 == 24 || diffuseMapId3 == 7001 || diffuseMapId3 == 7024)
-    {
-        isWater = true;
-        waterType = WATER;
-    }
-    else if (
-    diffuseMapId1 == 25 || diffuseMapId1 == 7025 ||
-    diffuseMapId2 == 25 || diffuseMapId2 == 7025 ||
-    diffuseMapId3 == 25 || diffuseMapId3 == 7025)
-    {
-        isWater = true;
-        waterType = SWAMP_WATER;
-    }
-    else if (
-    diffuseMapId1 == 998 || diffuseMapId1 == 7998 ||
-    diffuseMapId2 == 998 || diffuseMapId2 == 7998 ||
-    diffuseMapId3 == 998 || diffuseMapId3 == 7998)
-    {
-        isWater = true;
-        waterType = POISON_WASTE;
-    }
-    else if (
-    diffuseMapId1 == 999 || diffuseMapId1 == 7999 ||
-    diffuseMapId2 == 999 || diffuseMapId2 == 7999 ||
-    diffuseMapId3 == 999 || diffuseMapId3 == 7999)
-    {
-        isWater = true;
-        waterType = BLOOD;
-    }
-    else if (
-    diffuseMapId1 == 997 || diffuseMapId1 == 7997 ||
-    diffuseMapId2 == 997 || diffuseMapId2 == 7997 ||
-    diffuseMapId3 == 997 || diffuseMapId3 == 7997)
-    {
-        isWater = true;
-        waterType = ICE;
-    }
+    bool isUnderwater = waterDepth != 0;
+    bool isWater = waterTypeIndex > 0 && !isUnderwater;
 
     if (isWater)
     {
-        if (diffuseMapId1 >= 7000 || diffuseMapId2 >= 7000 || diffuseMapId3 >= 7000)
-        {
-            simpleWater = false;
-        }
-
-        switch (waterType)
-        {
-            case WATER:
-            waterSpecularStrength = 0.5;
-            waterSpecularGloss = 500;
-            waterNormalStrength = 0.09;
-            waterBaseOpacity = 0.5;
-            waterFresnelAmount = 1.0;
-            waterSurfaceColor = vec3(1, 1, 1);
-            waterFoamColor = vec3(176, 164, 146);
-            waterHasFoam = 1;
-            waterDuration = 1;
-            waterNormalMap1 = 236;
-            waterNormalMap2 = 236;
-            break;
-            case SWAMP_WATER:
-            waterSpecularStrength = 0.1;
-            waterSpecularGloss = 100;
-            waterNormalStrength = 0.05;
-            waterBaseOpacity = 0.8;
-            waterFresnelAmount = 0.3;
-            waterSurfaceColor = vec3(23, 33, 20) / 255.0;
-            waterFoamColor = vec3(115, 120, 101);
-            waterHasFoam = 1;
-            waterDuration = 1.2;
-            waterNormalMap1 = 236;
-            waterNormalMap2 = 236;
-            break;
-            case POISON_WASTE:
-            waterSpecularStrength = 0.1;
-            waterSpecularGloss = 100;
-            waterNormalStrength = 0.05;
-            waterBaseOpacity = 0.9;
-            waterFresnelAmount = 0.3;
-            waterSurfaceColor = vec3(22, 23, 13) / 255.0;
-            waterFoamColor = vec3(106, 108, 100);
-            waterHasFoam = 1;
-            waterDuration = 1.6;
-            waterNormalMap1 = 236;
-            waterNormalMap2 = 236;
-            break;
-            case BLOOD:
-            waterSpecularStrength = 0.5;
-            waterSpecularGloss = 500;
-            waterNormalStrength = 0.05;
-            waterBaseOpacity = 0.8;
-            waterFresnelAmount = 0.3;
-            waterSurfaceColor = vec3(38, 0, 0) / 255.0;
-            waterFoamColor = vec3(117, 63, 45);
-            waterHasFoam = 1;
-            waterDuration = 2;
-            waterNormalMap1 = 236;
-            waterNormalMap2 = 236;
-            break;
-            case ICE:
-            waterSpecularStrength = 0.3;
-            waterSpecularGloss = 200;
-            waterNormalStrength = 0.04;
-            waterBaseOpacity = 0.85;
-            waterFresnelAmount = 1.0;
-            waterSurfaceColor = vec3(1, 1, 1);
-            waterFoamColor = vec3(150, 150, 150);
-            waterHasFoam = 1;
-            waterDuration = 0;
-            waterNormalMap1 = 246;
-            waterNormalMap2 = 246;
-            break;
-        }
+        diffuseMap1 = waterType.normalMap; // wave normal map 1
+        diffuseMap2 = waterType.normalMap; // wave normal map 2
+        diffuseMap3 = waterType.foamMap; // foam diffuse map
+        flowMap = isUnderwater ? waterType.underwaterFlowMap : waterType.flowMap; // wave flow map
     }
-
-    if (isWater)
-    {
-        diffuseMapId1 = waterNormalMap1; // wave normal map 1
-        diffuseMapId2 = waterNormalMap2; // wave normal map 2
-        diffuseMapId3 = 238; // foam diffuse map
-        displacementMapId = 237; // wave displacement map
-    }
-
-    bool isUnderwater = false;
-    vec3 waterDepthColor = vec3(0, 0, 0);
-    float waterCausticsStrength = 0.0;
-    if (underwaterType != 0)
-    {
-        isUnderwater = true;
-
-        if (underwaterType == WATER)
-        {
-            waterDepthColor = vec3(0, 117, 142) / 255.0;
-            waterCausticsStrength = 1.0;
-        }
-        else if (underwaterType == SWAMP_WATER)
-        {
-            waterDepthColor = vec3(41, 82, 26) / 255.0;
-            waterCausticsStrength = 0.0;
-        }
-        else if (underwaterType == POISON_WASTE)
-        {
-            waterDepthColor = vec3(50, 52, 46) / 255.0;
-            waterCausticsStrength = 0.0;
-        }
-        else if (underwaterType == BLOOD)
-        {
-            waterDepthColor = vec3(50, 26, 22) / 255.0;
-            waterCausticsStrength = 0.0;
-        }
-        else if (underwaterType == ICE)
-        {
-            waterDepthColor = vec3(0, 117, 142) / 255.0;
-            waterCausticsStrength = 0.4;
-        }
-    }
-    if (isUnderwater)
-    {
-        displacementMapId = 239;
-    }
-
-
-
 
     float alpha = 1;
 
@@ -355,9 +144,9 @@ void main() {
 
     vec4 fragColor = vColor1 * texBlend.x + vColor2 * texBlend.y + vColor3 * texBlend.z;
 
-    vec2 uv1 = baseUv1 + textureOffsets[diffuseMapId1];
-    vec2 uv2 = baseUv2 + textureOffsets[diffuseMapId2];
-    vec2 uv3 = baseUv3 + textureOffsets[diffuseMapId3];
+    vec2 uv1 = baseUv1 + textureOffsets[diffuseMap1];
+    vec2 uv2 = baseUv2 + textureOffsets[diffuseMap2];
+    vec2 uv3 = baseUv3 + textureOffsets[diffuseMap3];
 
     uv1 = vec2((uv1.x - 0.5) / material1.textureScale.x + 0.5, (uv1.y - 0.5) / material1.textureScale.y + 0.5);
     uv2 = vec2((uv2.x - 0.5) / material2.textureScale.x + 0.5, (uv2.y - 0.5) / material2.textureScale.y + 0.5);
@@ -366,10 +155,10 @@ void main() {
     // water uvs
     if (isWater)
     {
-        uv1 = vec2(-worldUvs(5).y + animationFrame(31 * waterDuration),
-        worldUvs(5).x + animationFrame(31 * waterDuration));
-        uv2 = vec2(worldUvs(3).y - animationFrame(24 * waterDuration),
-        worldUvs(3).x - animationFrame(24 * waterDuration));
+        uv1 = vec2(-worldUvs(5).y + animationFrame(31 * waterType.duration),
+        worldUvs(5).x + animationFrame(31 * waterType.duration));
+        uv2 = vec2(worldUvs(3).y - animationFrame(24 * waterType.duration),
+        worldUvs(3).x - animationFrame(24 * waterType.duration));
     }
 
     uv1 -= vec2(animationFrame(material1.scrollDuration.x),
@@ -379,30 +168,30 @@ void main() {
     uv3 -= vec2(animationFrame(material3.scrollDuration.x),
     animationFrame(material3.scrollDuration.y));
 
-    // get displacement map
-    vec2 displacementUv = vec2(baseUv1.x - animationFrame(material1.displacementDuration.x),
-    baseUv1.y - animationFrame(material1.displacementDuration.y));
-    float displacementStrength = material1.displacementStrength;
+    // get flowMap map
+    vec2 flowMapUv = vec2(baseUv1.x - animationFrame(material1.flowMapDuration.x),
+    baseUv1.y - animationFrame(material1.flowMapDuration.y));
+    float flowMapStrength = material1.flowMapStrength;
     if (isWater)
     {
-        displacementUv = vec2(worldUvs(15).x + animationFrame(50 * waterDuration), worldUvs(15).y + animationFrame(50 * waterDuration));
-        displacementStrength = 0.025;
+        flowMapUv = vec2(worldUvs(15).x + animationFrame(50 * waterType.duration), worldUvs(15).y + animationFrame(50 * waterType.duration));
+        flowMapStrength = 0.025;
     }
     if (isUnderwater)
     {
-        displacementUv = vec2(worldUvs(1.5).x + animationFrame(10 * waterDuration), worldUvs(1.5).y - animationFrame(10 * waterDuration));
-        displacementStrength = 0.075;
+        flowMapUv = vec2(worldUvs(1.5).x + animationFrame(10 * waterType.duration), worldUvs(1.5).y - animationFrame(10 * waterType.duration));
+        flowMapStrength = 0.075;
     }
-    vec2 displacement = texture(texturesHD, vec3(displacementUv, displacementMapId)).xy;
-    uv1 += displacement * displacementStrength;
-    uv2 += displacement * displacementStrength;
-    uv3 += displacement * displacementStrength;
+    vec2 uvFlow = texture(textureArray, vec3(flowMapUv, flowMap)).xy;
+    uv1 += uvFlow * flowMapStrength;
+    uv2 += uvFlow * flowMapStrength;
+    uv3 += uvFlow * flowMapStrength;
     if (isWater)
     {
-        uv1 = vec2(worldUvs(2).x + animationFrame(20 * waterDuration) + displacement.x * displacementStrength,
-        worldUvs(2).y + animationFrame(20 * waterDuration) + displacement.y * displacementStrength);
-        uv1 = vec2(worldUvs(3).x - animationFrame(28 * waterDuration) - displacement.x * displacementStrength,
-        worldUvs(3).y + animationFrame(28 * waterDuration) + displacement.y * displacementStrength);
+        uv1 = vec2(worldUvs(2).x + animationFrame(20 * waterType.duration) + uvFlow.x * flowMapStrength,
+        worldUvs(2).y + animationFrame(20 * waterType.duration) + uvFlow.y * flowMapStrength);
+        uv1 = vec2(worldUvs(3).x - animationFrame(28 * waterType.duration) - uvFlow.x * flowMapStrength,
+        worldUvs(3).y + animationFrame(28 * waterType.duration) + uvFlow.y * flowMapStrength);
     }
 
     // get emissive output
@@ -422,12 +211,9 @@ void main() {
     color3 = vec4(mix(color3.rgb, vec3(1.0), emissive3), color3.a);
 
     // get diffuse textures
-    vec4 diffuse1 = vec4(1.0);
-    vec4 diffuse2 = vec4(1.0);
-    vec4 diffuse3 = vec4(1.0);
-    diffuse1 = texture(texturesHD, vec3(uv1, diffuseMapId1));
-    diffuse2 = texture(texturesHD, vec3(uv2, diffuseMapId2));
-    diffuse3 = texture(texturesHD, vec3(uv3, diffuseMapId3));
+    vec4 diffuse1 = texture(textureArray, vec3(uv1, diffuseMap1));
+    vec4 diffuse2 = texture(textureArray, vec3(uv2, diffuseMap2));
+    vec4 diffuse3 = texture(textureArray, vec3(uv3, diffuseMap3));
 
     ivec3 isOverlay = isOverlay;
     int overlayCount = isOverlay[0] + isOverlay[1] + isOverlay[2];
@@ -463,17 +249,17 @@ void main() {
 
     // get fragment colors by combining vertex colors and texture samples
     vec4 texA = color1;
-    if (diffuseMapId1 > -0.5)
+    if (diffuseMap1 > -0.5)
     {
         texA = vec4(diffuse1.rgb * texA.rgb, min(diffuse1.a, color1.a));
     }
     vec4 texB = color2;
-    if (diffuseMapId2 > -0.5)
+    if (diffuseMap2 > -0.5)
     {
         texB = vec4(diffuse2.rgb * texB.rgb, min(diffuse2.a, color2.a));
     }
     vec4 texC = color3;
-    if (diffuseMapId3 > -0.5)
+    if (diffuseMap3 > -0.5)
     {
         texC = vec4(diffuse3.rgb * texC.rgb, min(diffuse3.a, color3.a));
     }
@@ -607,15 +393,22 @@ void main() {
     float emissive = emissive1 * texBlend[0] + emissive2 * texBlend[1] + emissive3 * texBlend[2];
 
     // normals
-    vec3 normals = normalize(normals);
+    vec3 normals = normals;
+
     if (isWater)
     {
-        vec3 norm1 = -vec3((diffuse1.x * 2 - 1) * waterNormalStrength, diffuse1.z, (diffuse1.y * 2 - 1) * waterNormalStrength);
-        vec3 norm2 = -vec3((diffuse2.x * 2 - 1) * waterNormalStrength, diffuse2.z, (diffuse2.y * 2 - 1) * waterNormalStrength);
-        normals = normalize(norm1 + norm2);
+        vec3 n1 = -vec3((diffuse1.x * 2 - 1) * waterType.normalStrength, diffuse1.z, (diffuse1.y * 2 - 1) * waterType.normalStrength);
+        vec3 n2 = -vec3((diffuse2.x * 2 - 1) * waterType.normalStrength, diffuse2.z, (diffuse2.y * 2 - 1) * waterType.normalStrength);
+        normals = n1 + n2;
     }
-
-
+    else
+    {
+        vec3 n1 = material1.normalMap == -1 ? normals : sampleNormalMap(material1.normalMap, uv1);
+        vec3 n2 = material2.normalMap == -1 ? normals : sampleNormalMap(material2.normalMap, uv2);
+        vec3 n3 = material3.normalMap == -1 ? normals : sampleNormalMap(material3.normalMap, uv3);
+        normals = (n1 + n2 + n3) / 3;
+    }
+    normals = normalize(normals);
 
 
     float lightDotNormals = dot(normals, lightDir);
@@ -632,7 +425,7 @@ void main() {
         vec3 projCoords = shadowOut.xyz / shadowOut.w * 0.5 + 0.5;
         if (isWater || isUnderwater)
         {
-            projCoords += vec3(displacement * 0.00075, 0.0);
+            projCoords += vec3(uvFlow * 0.00075, 0.0);
         }
         float currentDepth = projCoords.z;
         float shadowMinBias = 0.0005f;
@@ -646,7 +439,7 @@ void main() {
                 shadow += currentDepth - shadowBias > pcfDepth ? 1.0 : 0.0;
             }
         }
-        shadow /= 9.0;
+        shadow /= 9;
 
         // fade out shadows near shadow texture edges
         float cutoff = 0.1;
@@ -698,12 +491,15 @@ void main() {
         vSpecularGloss.z = 30.0;
         vSpecularStrength.z = clamp((1.0 - color3.a) * 2, 0.0, 1.0);
     }
-    float combinedSpecularStrength = vSpecularStrength[0] * texBlend[0] + vSpecularStrength[1] * texBlend[1] + vSpecularStrength[2] * texBlend[2];
+    float combinedSpecularStrength =
+        vSpecularStrength[0] * texBlend[0] +
+        vSpecularStrength[1] * texBlend[1] +
+        vSpecularStrength[2] * texBlend[2];
     if (isWater)
     {
-        vSpecularStrength = vec3(waterSpecularStrength);
-        vSpecularGloss = vec3(waterSpecularGloss);
-        combinedSpecularStrength = waterSpecularStrength;
+        vSpecularStrength = vec3(waterType.specularStrength);
+        vSpecularGloss = vec3(waterType.specularGloss);
+        combinedSpecularStrength = waterType.specularStrength;
     }
 
 
@@ -751,10 +547,10 @@ void main() {
     vec3 pointLightsSpecularOut = vec3(0);
     for (int i = 0; i < pointLightsCount; i++)
     {
-        vec3 pointLightPos = vec3(pointLight[i].position.x, pointLight[i].position.z, pointLight[i].position.y);
-        float pointLightStrength = pointLight[i].strength;
-        vec3 pointLightColor = pointLight[i].color * pointLightStrength;
-        float pointLightSize = pointLight[i].size;
+        vec3 pointLightPos = vec3(PointLightArray[i].position.x, PointLightArray[i].position.z, PointLightArray[i].position.y);
+        float pointLightStrength = PointLightArray[i].strength;
+        vec3 pointLightColor = PointLightArray[i].color * pointLightStrength;
+        float pointLightSize = PointLightArray[i].size;
         float distanceToLightSource = length(pointLightPos - position);
         vec3 pointLightDir = normalize(pointLightPos - position);
 
@@ -820,16 +616,16 @@ void main() {
 
     if (isWater)
     {
-        vec3 baseColor = waterSurfaceColor * compositeLight;
-        baseColor = mix(baseColor, surfaceColor, waterFresnelAmount);
+        vec3 baseColor = waterType.surfaceColor * compositeLight;
+        baseColor = mix(baseColor, surfaceColor, waterType.fresnelAmount);
         float shadowDarken = 0.15;
         baseColor *= (1.0 - shadowDarken) + inverseShadow * shadowDarken;
         float maxFoamAmount = 0.8;
         float foamAmount = min(1.0 - fragColor.r, maxFoamAmount);
         float foamDistance = 0.7;
-        vec3 foamColor = waterFoamColor / 255.0;
+        vec3 foamColor = waterType.foamColor;
         foamColor = foamColor * diffuse3.rgb * compositeLight;
-        foamAmount = clamp(pow(1.0 - ((1.0 - foamAmount) / foamDistance), 3), 0.0, 1.0) * waterHasFoam;
+        foamAmount = clamp(pow(1.0 - ((1.0 - foamAmount) / foamDistance), 3), 0.0, 1.0) * waterType.hasFoam;
         foamAmount *= foamColor.r;
         baseColor = mix(baseColor, foamColor, foamAmount);
         vec3 specularComposite = mix(lightSpecularOut, vec3(0.0), foamAmount);
@@ -837,7 +633,7 @@ void main() {
         finalFresnel = max(finalFresnel, flatFresnel);
         finalFresnel -= finalFresnel * shadow * 0.2;
         baseColor += pointLightsSpecularOut + lightSpecularOut / 3;
-        alpha = max(waterBaseOpacity, max(foamAmount, max(finalFresnel, length(specularComposite / 3))));
+        alpha = max(waterType.baseOpacity, max(foamAmount, max(finalFresnel, length(specularComposite / 3))));
         compositeColor = baseColor;
     }
     else
@@ -860,11 +656,11 @@ void main() {
 
         if (depth < midColorLevel)
         {
-            mixed = mix(compositeColor, compositeColor * waterDepthColor, translateRange(0.0, midColorLevel, depth));
+            mixed = mix(compositeColor, compositeColor * waterType.depthColor, translateRange(0.0, midColorLevel, depth));
         }
         else if (depth < lowestColorLevel)
         {
-            mixed = mix(compositeColor * waterDepthColor, vec3(0.0), translateRange(midColorLevel, lowestColorLevel, depth));
+            mixed = mix(compositeColor * waterType.depthColor, vec3(0.0), translateRange(midColorLevel, lowestColorLevel, depth));
         }
         else
         {
@@ -896,7 +692,7 @@ void main() {
         }
     }
 
-    if (isWater && simpleWater)
+    if (isWater && waterType.isFlat)
     {
         alpha = 1.0f;
     }

@@ -15,6 +15,7 @@ import rs117.hd.model.objects.ObjectType;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.data.BakedModels;
 import rs117.hd.model.objects.TzHaarRecolorType;
+import rs117.hd.scene.TextureManager;
 import rs117.hd.utils.HDUtils;
 import static rs117.hd.utils.HDUtils.dotNormal3Lights;
 import rs117.hd.utils.buffer.GpuFloatBuffer;
@@ -42,6 +43,9 @@ public class ModelPusher
 
     @Inject
     private ProceduralGenerator proceduralGenerator;
+
+    @Inject
+    private TextureManager textureManager;
 
     // subtracts the X lowest lightness levels from the formula.
     // helps keep darker colors appropriately dark
@@ -161,7 +165,7 @@ public class ModelPusher
 
         if (faceTextures != null && faceTextures[face] != -1 && uv != null) {
             material = proceduralGenerator.getSeasonalMaterial(Material.getTexture(faceTextures[face]));
-            int packedMaterialData = packMaterialData(Material.getIndexFromDiffuseID(material.getDiffuseMapId()), false);
+            int packedMaterialData = packMaterialData(material, false);
             int idx = face * 6;
 
             twelveFloats[0] = packedMaterialData;
@@ -187,7 +191,7 @@ public class ModelPusher
             final int[] zVertices = model.getVerticesZ();
 
             material = proceduralGenerator.getSeasonalMaterial(material);
-            int packedMaterialData = packMaterialData(Material.getIndexFromDiffuseID(material.getDiffuseMapId()), false);
+            int packedMaterialData = packMaterialData(material, false);
 
             if (objectProperties.getUvType() == UvType.GROUND_PLANE) {
                 twelveFloats[0] = packedMaterialData;
@@ -227,28 +231,26 @@ public class ModelPusher
         return null;
     }
 
-    public int packMaterialData(int materialId, boolean isOverlay) {
-        if (materialId == Material.getIndex(Material.INFERNAL_CAPE) && hdPlugin.configHdInfernalTexture) {
-            materialId = Material.getIndex(Material.HD_INFERNAL_CAPE);
-        }
-
-        if (hdPlugin.configObjectTextures) {
-            if (materialId == Material.getIndex(Material.BRICK)) {
-                materialId = Material.getIndex(Material.HD_BRICK);
-            } else if (materialId == Material.getIndex(Material.ROOF_SHINGLES_1)) {
-                materialId = Material.getIndex(Material.HD_ROOF_SHINGLES_1);
-            } else if (materialId == Material.getIndex(Material.MARBLE_DARK)) {
-                materialId = Material.getIndex(Material.HD_MARBLE_DARK);
-            } else if (materialId == Material.getIndex(Material.BRICK_BROWN)) {
-                materialId = Material.getIndex(Material.HD_BRICK_BROWN);
-            } else if (materialId == Material.getIndex(Material.LAVA)) {
-                materialId = Material.getIndex(Material.HD_LAVA_3);
-            } else if (materialId == Material.getIndex(Material.ROOF_SHINGLES_2)) {
-                materialId = Material.getIndex(Material.HD_ROOF_SHINGLES_2);
+    public int packMaterialData(Material material, boolean isOverlay) {
+        if (hdPlugin.configHdInfernalTexture && material == Material.INFERNAL_CAPE) {
+            material = Material.HD_INFERNAL_CAPE;
+        } else if (hdPlugin.configObjectTextures) {
+            if (material == Material.BRICK) {
+                material = Material.HD_BRICK;
+            } else if (material == Material.ROOF_SHINGLES_1) {
+                material = Material.HD_ROOF_SHINGLES_1;
+            } else if (material == Material.MARBLE_DARK) {
+                material = Material.HD_MARBLE_DARK;
+            } else if (material == Material.BRICK_BROWN) {
+                material = Material.HD_BRICK_BROWN;
+            } else if (material == Material.LAVA) {
+                material = Material.HD_LAVA_3;
+            } else if (material == Material.ROOF_SHINGLES_2) {
+                material = Material.HD_ROOF_SHINGLES_2;
             }
         }
 
-        return materialId << 1 | (isOverlay ? 0b1 : 0b0);
+        return material.ordinal() << 1 | (isOverlay ? 0b1 : 0b0);
     }
 
     private ModelData getCachedModelData(Renderable renderable, Model model, ObjectProperties objectProperties, ObjectType objectType, int tileX, int tileY, int tileZ, int faceCount, boolean noCache, int hash) {

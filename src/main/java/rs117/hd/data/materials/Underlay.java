@@ -288,7 +288,7 @@ public enum Underlay
 	{
 		this.id = id;
 		this.area = Area.ALL;
-		this.groundMaterial = waterType.getGroundMaterial();
+		this.groundMaterial = GroundMaterial.NONE;
 		this.waterType = waterType;
 		this.blended = false;
 		this.blendedAsOverlay = false;
@@ -304,7 +304,7 @@ public enum Underlay
 	{
 		this.id = id;
 		this.area = area;
-		this.groundMaterial = waterType.getGroundMaterial();
+		this.groundMaterial = GroundMaterial.NONE;
 		this.waterType = waterType;
 		this.blended = false;
 		this.blendedAsOverlay = false;

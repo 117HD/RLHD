@@ -24,8 +24,7 @@ public class HdPluginTest
 	public static void main(String[] args) throws Exception
 	{
 		useLatestPluginHub();
-
-		FileUtils.setHotSwapping(true);
+		FileUtils.useHotswapping();
 
 		if (Env.missing(ENV_LIGHTS_CONFIG))
 		{

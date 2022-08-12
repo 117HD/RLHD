@@ -77,18 +77,6 @@ public enum GroundMaterial
 	CONCRETE(Material.CONCRETE),
 	SAND_BRICK(Material.SAND_BRICK),
 	TILE_DARK(Material.TILE_DARK),
-
-	// water/fluid variants
-	WATER(Material.WATER),
-	WATER_FLAT(Material.WATER_FLAT),
-	SWAMP_WATER(Material.SWAMP_WATER),
-	SWAMP_WATER_FLAT(Material.SWAMP_WATER_FLAT),
-	POISON_WASTE(Material.POISON_WASTE),
-	POISON_WASTE_FLAT(Material.POISON_WASTE_FLAT),
-	BLOOD(Material.BLOOD),
-	BLOOD_FLAT(Material.BLOOD_FLAT),
-	ICE(Material.ICE),
-	ICE_FLAT(Material.ICE_FLAT),
 	;
 
 	private final Material[] materials;

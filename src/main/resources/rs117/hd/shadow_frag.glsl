@@ -24,26 +24,9 @@
  */
 #version 330
 
-#include MAX_MATERIALS
+#include uniforms/materials.glsl
 
-struct Material
-{
-    int diffuseMapId;
-    float specularStrength;
-    float specularGloss;
-    float emissiveStrength;
-    int displacementMapId;
-    float displacementStrength;
-    ivec2 displacementDuration;
-    ivec2 scrollDuration;
-    vec2 textureScale;
-};
-
-layout(std140) uniform materials {
-    Material material[MAX_MATERIALS];
-};
-
-uniform sampler2DArray texturesHD;
+uniform sampler2DArray textureArray;
 uniform vec2 textureOffsets[128];
 
 in float alpha;
@@ -60,8 +43,10 @@ void main()
         discard;
     }
 
+    Material material = getMaterial(materialId);
+
     // skip water surfaces
-    switch (material[materialId].diffuseMapId)
+    switch (material.diffuseMap)
     {
         case 7001:
         case 7025:
@@ -71,9 +56,9 @@ void main()
             discard;
     }
 
-    vec2 uv = fUv + textureOffsets[material[materialId].diffuseMapId];
-    uv = vec2((uv.x - 0.5) / material[materialId].textureScale.x + 0.5, (uv.y - 0.5) / material[materialId].textureScale.y + 0.5);
-    vec4 texture = texture(texturesHD, vec3(uv, material[materialId].diffuseMapId));
+    vec2 uv = fUv + textureOffsets[material.diffuseMap];
+    uv = vec2((uv.x - 0.5) / material.textureScale.x + 0.5, (uv.y - 0.5) / material.textureScale.y + 0.5);
+    vec4 texture = texture(textureArray, vec3(uv, material.diffuseMap));
 
     if (min(texture.a, alpha) < 0.81)
     {

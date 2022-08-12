@@ -444,7 +444,7 @@ public enum Overlay
 	{
 		this.id = id;
 		this.area = Area.ALL;
-		this.groundMaterial = waterType.getGroundMaterial();
+		this.groundMaterial = GroundMaterial.NONE;
 		this.waterType = waterType;
 		this.blended = false;
 		this.blendedAsUnderlay = false;
@@ -460,7 +460,7 @@ public enum Overlay
 	{
 		this.id = id;
 		this.area = area;
-		this.groundMaterial = waterType.getGroundMaterial();
+		this.groundMaterial = GroundMaterial.NONE;
 		this.waterType = waterType;
 		this.blended = false;
 		this.blendedAsUnderlay = false;

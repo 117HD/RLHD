@@ -32,17 +32,7 @@
 layout(triangles) in;
 layout(triangle_strip, max_vertices = 3) out;
 
-layout(std140) uniform uniforms {
-    int cameraYaw;
-    int cameraPitch;
-    int centerX;
-    int centerY;
-    int zoom;
-    int cameraX;
-    int cameraY;
-    int cameraZ;
-    ivec2 sinCosTable[2048];
-};
+#include uniforms/camera.glsl
 
 uniform mat4 projectionMatrix;
 uniform mat4 lightProjectionMatrix;
