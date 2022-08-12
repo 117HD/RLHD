@@ -80,6 +80,7 @@ public class TextureManager
 	private int textureArray;
 	private int textureSize;
 	private int[] materialOrdinalToTextureIndex;
+	private int[] materialReplacements;
 
 	// Temporary buffers for texture loading
 	private IntBuffer pixelBuffer;
@@ -117,6 +118,12 @@ public class TextureManager
 	public int getTextureIndex(Material material)
 	{
 		return material == null ? -1 : materialOrdinalToTextureIndex[material.ordinal()];
+	}
+
+	public Material getEffectiveMaterial(Material material)
+	{
+		int replacement = materialReplacements[material.ordinal()];
+		return replacement == -1 ? material : Material.values()[replacement];
 	}
 
 	public void ensureTexturesLoaded(TextureProvider textureProvider)
@@ -192,7 +199,9 @@ public class TextureManager
 		scaledImage = new BufferedImage(textureSize, textureSize, BufferedImage.TYPE_INT_ARGB);
 
 		materialOrdinalToTextureIndex = new int[Material.values().length];
+		materialReplacements = new int[Material.values().length];
 		Arrays.fill(materialOrdinalToTextureIndex, -1);
+		Arrays.fill(materialReplacements, -1);
 
 		// Load vanilla textures to texture array layers
 		ArrayDeque<Integer> unusedIndices = new ArrayDeque<>();
@@ -271,10 +280,20 @@ public class TextureManager
 				continue;
 			}
 
-			Integer index = unusedIndices.pollFirst();
-			if (index == null)
+			Integer index = -1;
+			if (material.getMaterialToReplace() != null && material.getReplacementCondition().apply(config))
 			{
-				index = i++;
+				index = materialOrdinalToTextureIndex[material.getMaterialToReplace().ordinal()];
+				materialReplacements[material.getMaterialToReplace().ordinal()] = material.ordinal();
+			}
+
+			if (index == -1)
+			{
+				index = unusedIndices.pollFirst();
+				if (index == null)
+				{
+					index = i++;
+				}
 			}
 
 			uploadTexture(index, image);

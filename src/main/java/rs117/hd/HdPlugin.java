@@ -1062,6 +1062,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		ByteBuffer buffer = BufferUtils.createByteBuffer(Material.values().length * 16 * SCALAR_BYTES);
 		for (Material material : Material.values())
 		{
+			material = textureManager.getEffectiveMaterial(material);
 			buffer
 				.putInt(textureManager.getTextureIndex(material))
 				.putFloat(material.getSpecularStrength())
@@ -2220,18 +2221,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 		switch (key)
 		{
-			case "textureResolution":
-				textureManager.freeTextures();
-				reloadScene();
-				break;
-			case "groundTextures":
-				configGroundTextures = config.groundTextures();
-				reloadScene();
-				break;
-			case "groundBlending":
-				configGroundBlending = config.groundBlending();
-				reloadScene();
-				break;
 			case "shadowsEnabled":
 				configShadowsEnabled = config.shadowsEnabled();
 				modelPusher.clearModelCache();
@@ -2248,16 +2237,20 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 					initShadowMapFbo();
 				});
 				break;
+			case "textureResolution":
+			case "groundBlending":
+			case "groundTextures":
 			case "objectTextures":
-				configObjectTextures = config.objectTextures();
-				reloadScene();
-				break;
 			case "tzhaarHD":
-				configTzhaarHD = config.tzhaarHD();
-				reloadScene();
-				break;
 			case KEY_WINTER_THEME:
+			case "hdInfernalTexture":
+				configGroundBlending = config.groundBlending();
+				configGroundTextures = config.groundTextures();
+				configObjectTextures = config.objectTextures();
+				configTzhaarHD = config.tzhaarHD();
 				configWinterTheme = config.winterTheme();
+				configHdInfernalTexture = config.hdInfernalTexture();
+				textureManager.freeTextures();
 				reloadScene();
 				break;
 			case "projectileLights":
@@ -2279,10 +2272,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			case "fpsTarget":
 				log.debug("Rebuilding sync mode");
 				clientThread.invokeLater(this::setupSyncMode);
-				break;
-			case "hdInfernalTexture":
-				textureManager.freeTextures();
-				configHdInfernalTexture = config.hdInfernalTexture();
 				break;
 			case "hideBakedEffects":
 				modelPusher.clearModelCache();

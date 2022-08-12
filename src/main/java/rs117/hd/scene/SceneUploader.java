@@ -748,10 +748,6 @@ class SceneUploader
 					materialC = Material.getTexture(faceTextures[face]);
 				}
 
-				materialA = proceduralGenerator.getSeasonalMaterial(materialA);
-				materialB = proceduralGenerator.getSeasonalMaterial(materialB);
-				materialC = proceduralGenerator.getSeasonalMaterial(materialC);
-
 				normalsA = proceduralGenerator.vertexTerrainNormals.getOrDefault(vertexKeyA, normalsA);
 				normalsB = proceduralGenerator.vertexTerrainNormals.getOrDefault(vertexKeyB, normalsB);
 				normalsC = proceduralGenerator.vertexTerrainNormals.getOrDefault(vertexKeyC, normalsC);

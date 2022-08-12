@@ -1172,51 +1172,11 @@ public class ProceduralGenerator
 
 	WaterType getSeasonalWaterType(WaterType waterType)
 	{
-		if (hdPlugin.configWinterTheme)
+		if (hdPlugin.configWinterTheme && waterType == WaterType.WATER)
 		{
-			switch (waterType)
-			{
-				case WATER:
-					waterType = WaterType.ICE;
-					break;
-			}
+			return WaterType.ICE;
 		}
 		return waterType;
-	}
-
-	public Material getSeasonalMaterial(Material material)
-	{
-		if (hdPlugin.configWinterTheme)
-		{
-			switch (material)
-			{
-				case LEAVES_1:
-					material = Material.WINTER_LEAVES_1;
-					break;
-				case WILLOW_LEAVES:
-					material = Material.WINTER_WILLOW_LEAVES;
-					break;
-				case MAPLE_LEAVES:
-					material = Material.WINTER_MAPLE_LEAVES;
-					break;
-				case LEAVES_2:
-					material = Material.WINTER_LEAVES_2;
-					break;
-				case LEAVES_3:
-					material = Material.WINTER_LEAVES_3;
-					break;
-				case PAINTING_LANDSCAPE:
-					material = Material.WINTER_PAINTING_LANDSCAPE;
-					break;
-				case PAINTING_KING:
-					material = Material.WINTER_PAINTING_KING;
-					break;
-				case PAINTING_ELF:
-					material = Material.WINTER_PAINTING_ELF;
-					break;
-			}
-		}
-		return material;
 	}
 
 	int[][] tzHaarRecolored = new int[4][3];

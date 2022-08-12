@@ -26,9 +26,12 @@ package rs117.hd.data.materials;
 
 import java.util.HashMap;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
+import rs117.hd.HdPluginConfig;
 
 @Getter
 public enum Material
@@ -37,6 +40,7 @@ public enum Material
 	NONE,
 
 	// Special textures
+	TRANSPARENT,
 	LAVA_FLOW_MAP,
 	WATER_FLOW_MAP,
 	UNDERWATER_FLOW_MAP,
@@ -260,36 +264,50 @@ public enum Material
 	WOOD_GRAIN,
 
 	HD_INFERNAL_CAPE(p -> p
+		.replaceIf(INFERNAL_CAPE, HdPluginConfig::hdInfernalTexture)
 		.setEmissiveStrength(1)
 		.setFlowMap(LAVA_FLOW_MAP, 0.02f, 12f, 4f)
 		.setScroll(0f, 3f)),
 
-	HD_BRICK,
+	HD_BRICK(p -> p
+		.replaceIf(BRICK, HdPluginConfig::objectTextures)),
 	HD_ROOF_SHINGLES_1(p -> p
+		.replaceIf(ROOF_SHINGLES_1, HdPluginConfig::objectTextures)
 		.setSpecular(0.5f, 30f)),
 	HD_MARBLE_DARK(p -> p
+		.replaceIf(MARBLE_DARK, HdPluginConfig::objectTextures)
 		.setSpecular(1.1f, 380f)),
-	HD_BRICK_BROWN,
+	HD_BRICK_BROWN(p -> p
+		.replaceIf(BRICK_BROWN, HdPluginConfig::objectTextures)),
 	HD_LAVA_3(p -> p
+		.replaceIf(LAVA, HdPluginConfig::objectTextures)
 		.setEmissiveStrength(1)
 		.setFlowMap(LAVA_FLOW_MAP, 0.05f, 36f, 22f)
 		.setScroll(0f, 3f)),
-	HD_ROOF_SHINGLES_2,
+	HD_ROOF_SHINGLES_2(p -> p
+		.replaceIf(ROOF_SHINGLES_2, HdPluginConfig::objectTextures)),
 
 	// Seasonal
 	WINTER_WILLOW_LEAVES(p -> p
+		.replaceIf(WILLOW_LEAVES, HdPluginConfig::winterTheme)
 		.setTextureScale(1.025f, 1.0f)),
 	WINTER_MAPLE_LEAVES(p -> p
+		.replaceIf(MAPLE_LEAVES, HdPluginConfig::winterTheme)
 		.setTextureScale(1.3f, 1.0f)),
 	WINTER_LEAVES_1(p -> p
+		.replaceIf(LEAVES_1, HdPluginConfig::winterTheme)
 		.setTextureScale(1.3f, 1.0f)),
 	WINTER_LEAVES_2(p -> p
+		.replaceIf(LEAVES_2, HdPluginConfig::winterTheme)
 		.setTextureScale(1.1f, 1.1f)),
-	WINTER_LEAVES_3,
-	WINTER_PAINTING_LANDSCAPE,
-	WINTER_PAINTING_KING,
-	WINTER_PAINTING_ELF,
-	TRANSPARENT;
+	WINTER_LEAVES_3(p -> p
+		.replaceIf(LEAVES_3, HdPluginConfig::winterTheme)),
+	WINTER_PAINTING_LANDSCAPE(p -> p
+		.replaceIf(PAINTING_LANDSCAPE, HdPluginConfig::winterTheme)),
+	WINTER_PAINTING_KING(p -> p
+		.replaceIf(PAINTING_KING, HdPluginConfig::winterTheme)),
+	WINTER_PAINTING_ELF(p -> p
+		.replaceIf(PAINTING_ELF, HdPluginConfig::winterTheme));
 
 	private final Material parent;
 	private final int vanillaTextureIndex;
@@ -306,6 +324,8 @@ public enum Material
 	private final float scrollDurationY;
 	private final float textureScaleX;
 	private final float textureScaleY;
+	private final Material materialToReplace;
+	private final Function<HdPluginConfig, Boolean> replacementCondition;
 
 	@Setter
 	private static class Properties
@@ -323,6 +343,8 @@ public enum Material
 		private float scrollDurationY = 0;
 		private float textureScaleX = 1.0f;
 		private float textureScaleY = 1.0f;
+		private Material materialToReplace;
+		private Function<HdPluginConfig, Boolean> replacementCondition;
 
 		public Properties setSpecular(float specularStrength, float specularGloss)
 		{
@@ -351,6 +373,13 @@ public enum Material
 		{
 			this.textureScaleX = textureScaleX;
 			this.textureScaleY = textureScaleY;
+			return this;
+		}
+
+		public Properties replaceIf(@NonNull Material materialToReplace, @NonNull Function<HdPluginConfig, Boolean> condition)
+		{
+			this.materialToReplace = materialToReplace;
+			this.replacementCondition = condition;
 			return this;
 		}
 	}
@@ -392,6 +421,8 @@ public enum Material
 		this.scrollDurationY = properties.scrollDurationY;
 		this.textureScaleX = properties.textureScaleX;
 		this.textureScaleY = properties.textureScaleY;
+		this.materialToReplace = properties.materialToReplace;
+		this.replacementCondition = properties.replacementCondition;
 	}
 
 	Material(int vanillaTextureIndex)
@@ -418,6 +449,8 @@ public enum Material
 		this.scrollDurationY = properties.scrollDurationY;
 		this.textureScaleX = properties.textureScaleX;
 		this.textureScaleY = properties.textureScaleY;
+		this.materialToReplace = properties.materialToReplace;
+		this.replacementCondition = properties.replacementCondition;
 	}
 
 	private static final HashMap<Integer, Material> DIFFUSE_ID_MATERIAL_MAP;

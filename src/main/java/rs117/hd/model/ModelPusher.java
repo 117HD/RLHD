@@ -158,13 +158,8 @@ public class ModelPusher
         final short[] faceTextures = model.getFaceTextures();
         final float[] uv = model.getFaceTextureUVCoordinates();
 
-        Material material = null;
-        if (objectProperties != null && objectProperties.getMaterial() != Material.NONE) {
-            material = hdPlugin.configObjectTextures ? objectProperties.getMaterial() : Material.NONE;
-        }
-
         if (faceTextures != null && faceTextures[face] != -1 && uv != null) {
-            material = proceduralGenerator.getSeasonalMaterial(Material.getTexture(faceTextures[face]));
+            Material material = Material.getTexture(faceTextures[face]);
             int packedMaterialData = packMaterialData(material, false);
             int idx = face * 6;
 
@@ -182,7 +177,15 @@ public class ModelPusher
             twelveFloats[11] = 0;
 
             return twelveFloats;
-        } else if (material != null) {
+        } else {
+            Material material = hdPlugin.configObjectTextures && objectProperties != null ?
+                objectProperties.getMaterial() : Material.NONE;
+
+            if (material == Material.NONE)
+            {
+                return faceTextures == null ? null : zeroFloats;
+            }
+
             final int triA = model.getFaceIndices1()[face];
             final int triB = model.getFaceIndices2()[face];
             final int triC = model.getFaceIndices3()[face];
@@ -190,7 +193,6 @@ public class ModelPusher
             final int[] xVertices = model.getVerticesX();
             final int[] zVertices = model.getVerticesZ();
 
-            material = proceduralGenerator.getSeasonalMaterial(material);
             int packedMaterialData = packMaterialData(material, false);
 
             if (objectProperties.getUvType() == UvType.GROUND_PLANE) {
@@ -224,33 +226,11 @@ public class ModelPusher
 
                 return twelveFloats;
             }
-        } else if (faceTextures != null) {
-            return zeroFloats;
         }
-
-        return null;
     }
 
     public int packMaterialData(Material material, boolean isOverlay) {
-        if (hdPlugin.configHdInfernalTexture && material == Material.INFERNAL_CAPE) {
-            material = Material.HD_INFERNAL_CAPE;
-        } else if (hdPlugin.configObjectTextures) {
-            if (material == Material.BRICK) {
-                material = Material.HD_BRICK;
-            } else if (material == Material.ROOF_SHINGLES_1) {
-                material = Material.HD_ROOF_SHINGLES_1;
-            } else if (material == Material.MARBLE_DARK) {
-                material = Material.HD_MARBLE_DARK;
-            } else if (material == Material.BRICK_BROWN) {
-                material = Material.HD_BRICK_BROWN;
-            } else if (material == Material.LAVA) {
-                material = Material.HD_LAVA_3;
-            } else if (material == Material.ROOF_SHINGLES_2) {
-                material = Material.HD_ROOF_SHINGLES_2;
-            }
-        }
-
-        return material.ordinal() << 1 | (isOverlay ? 0b1 : 0b0);
+        return material.ordinal() << 1 | (isOverlay ? 1 : 0);
     }
 
     private ModelData getCachedModelData(Renderable renderable, Model model, ObjectProperties objectProperties, ObjectType objectType, int tileX, int tileY, int tileZ, int faceCount, boolean noCache, int hash) {
@@ -258,7 +238,6 @@ public class ModelPusher
             tempModelData.setColors(getColorsForModel(renderable, model, objectProperties, objectType, tileX, tileY, tileZ, faceCount));
             return tempModelData;
         }
-
 
         ModelData modelData = modelCache.get(hash);
         if (modelData == null || modelData.getFaceCount() != model.getFaceCount()) {
