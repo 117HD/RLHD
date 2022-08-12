@@ -23,24 +23,13 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-float sampleCausticsChannel(const vec2 flow1, const vec2 flow2) {
-    return min(
-        texture(textureArray, vec3(flow1, MAT_CAUSTICS_MAP.diffuseMap)).r,
-        texture(textureArray, vec3(flow2, MAT_CAUSTICS_MAP.diffuseMap)).r
-    );
-}
-
-float sampleCausticsChannel(const vec2 flow1, const vec2 flow2, const vec2 aberration) {
-    return sampleCausticsChannel(flow1 + aberration, flow2 + aberration);
-}
-
-vec3 sampleCaustics(const vec2 flow1, const vec2 flow2, const float aberration) {
-    float r = sampleCausticsChannel(flow1, flow2, aberration * vec2( 1,  1));
-    float g = sampleCausticsChannel(flow1, flow2, aberration * vec2( 1, -1));
-    float b = sampleCausticsChannel(flow1, flow2, aberration * vec2(-1, -1));
-    return vec3(r, g, b);
-}
-
-vec3 sampleCaustics(const vec2 flow1, const vec2 flow2) {
-    return vec3(sampleCausticsChannel(flow1, flow2));
+vec3 sampleNormalMap(int index, vec2 uv) {
+    // Sample normal map texture
+    vec3 n = texture(textureArray, vec3(uv, index)).rgb;
+    // Reverse sRGB -> linear conversion, since the normal is already linear in the texture
+    n = srgbToLinear(n);
+    // Scale and shift normal so it can point in both directions
+    n = n * 2 - 1;
+    // Assume the normal map is already normalized
+    return n;
 }

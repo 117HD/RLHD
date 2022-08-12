@@ -12,45 +12,39 @@ import java.nio.file.Paths;
 public class FileUtils {
     private static boolean hotswapping = false;
 
-    public static void setHotSwapping(boolean state) {
-        hotswapping = state;
+    public static void useHotswapping() {
+        hotswapping = true;
     }
 
-    public static InputStream getResourceWatching(Class<?> clazz, String path) {
-        return getResource(clazz,Paths.get(path).toAbsolutePath());
-    }
-
-    public static InputStream getResource(Class<?> clazz, Path path) {
+    public static InputStream getResource(Class<?> clazz, Path path) throws IOException {
         if (hotswapping) {
             Path filePath = Paths.get("src/main/resources")
-                    .resolve(clazz.getPackage().getName().replace(".", "/"))
-                    .resolve(path);
+                .resolve(clazz.getPackage().getName().replace(".", "/"))
+                .resolve(path);
             try {
                 filePath = filePath.toRealPath();
                 return getResource(filePath);
             } catch (IOException ex) {
-                log.error("Failed to load resource: {}", filePath, ex);
+                log.trace("Failed to load resource: {}", filePath, ex);
             }
         }
         return getJarResource(clazz, path);
     }
 
-    public static InputStream getResource(Path path) {
-        try {
-            return Files.newInputStream(path);
-        } catch (IOException ex) {
-            throw new RuntimeException("Missing file: " + path, ex);
-        }
+    public static InputStream getResource(Path path) throws IOException {
+        return Files.newInputStream(path);
     }
 
-    public static InputStream getJarResource(Class<?> clazz, Path path) {
-        InputStream is;
-        is = clazz.getResourceAsStream(path.toString().replace('\\', '/'));
+    public static InputStream getJarResource(Class<?> clazz, Path path) throws IOException
+    {
+        String resourcePath = path.toString().replace('\\', '/');
+        InputStream is = clazz.getResourceAsStream(resourcePath);
         if (is == null)
         {
-            throw new RuntimeException("Missing resource: " + clazz);
+            throw new IOException(String.format("Failed to load resource: %s.%s",
+                clazz.getPackage().getName().replaceAll(".", "/"),
+                resourcePath));
         }
         return is;
     }
-
 }

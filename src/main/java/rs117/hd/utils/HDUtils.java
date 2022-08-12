@@ -263,6 +263,24 @@ public class HDUtils
 			(float) Math.pow((c + 0.055) / 1.055, 2.4);
 	}
 
+	public static float[] linearToSrgb(float[] c)
+	{
+		float[] result = new float[c.length];
+		for (int i = 0; i < c.length; i++) {
+			result[i] = linearToSrgb(c[i]);
+		}
+		return result;
+	}
+
+	public static float[] srgbToLinear(float[] c)
+	{
+		float[] result = new float[c.length];
+		for (int i = 0; i < c.length; i++) {
+			result[i] = srgbToLinear(c[i]);
+		}
+		return result;
+	}
+
 	public static float dotNormal3Lights(float[] normals)
 	{
 		return dotNormal3Lights(normals, true);
@@ -284,4 +302,13 @@ public class HDUtils
 			return (normals[0] * inverseLightDirectionZ0[0] + normals[1] * inverseLightDirectionZ0[1]) / (float) sqrt(lengthSq);
 		}
 	}
+
+    public static float[] rgb(int r, int g, int b)
+    {
+        return new float[]{
+            srgbToLinear(r / 255f),
+            srgbToLinear(g / 255f),
+            srgbToLinear(b / 255f)
+        };
+    }
 }

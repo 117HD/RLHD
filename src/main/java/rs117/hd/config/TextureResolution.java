@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Hooder <ahooder@protonmail.com>
+ * Copyright (c) 2022, Hooder <ahooder@protonmail.com>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -22,15 +22,25 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package rs117.hd.config;
 
-#include CONST_MACOS_INTEL_WORKAROUND
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
-#if CONST_MACOS_INTEL_WORKAROUND
-    // Workaround wrapper for drivers that do not support dynamic indexing,
-    // particularly Intel drivers on MacOS
-    Material fetchMaterial(int i) {
-        #include MACOS_INTEL_WORKAROUND_MATERIAL_CASES
-    }
-#else
-    #define fetchMaterial(index) material[index]
-#endif
+@Getter
+@RequiredArgsConstructor
+public enum TextureResolution
+{
+	RES_128("128", 128),
+	RES_256("256", 256),
+	RES_512("512", 512);
+
+	private final String name;
+	private final int size;
+
+	@Override
+	public String toString()
+	{
+		return name;
+	}
+}
