@@ -65,6 +65,8 @@ public class TextureManager
 {
 	public static String ENV_TEXTURE_PATH = "RLHD_TEXTURE_PATH";
 
+	private static final String[] SUPPORTED_IMAGE_EXTENSIONS = { "png", "jpg" };
+
 	private static final float PERC_64 = 1f / 64f;
 	private static final float PERC_128 = 1f / 128f;
 
@@ -142,7 +144,7 @@ public class TextureManager
 
 		for (Material material : Material.values())
 		{
-			if (material.getVanillaTextureIndex() == -1 || diffuseIds.add(material.getVanillaTextureIndex()))
+			if (material.vanillaTextureIndex == -1 || diffuseIds.add(material.vanillaTextureIndex))
 			{
 				textureCount++;
 			}
@@ -203,6 +205,13 @@ public class TextureManager
 			}
 
 			Material material = Material.getTexture(i);
+			if (material.parent != null)
+			{
+				// Point this material to pre-existing texture from parent material
+				materialOrdinalToTextureIndex[material.ordinal()] = materialOrdinalToTextureIndex[material.parent.ordinal()];
+				continue;
+			}
+
 			String textureName = material == Material.NONE ? "" + i : material.name().toLowerCase();
 
 			BufferedImage image = loadTextureImage(textureName);
@@ -212,15 +221,13 @@ public class TextureManager
 				int[] pixels = textureProvider.load(i);
 				if (pixels == null)
 				{
-					log.warn("No pixels for texture index {}", i);
+					log.warn("No vanilla pixels for texture index {}", i);
 					unusedIndices.addLast(i);
 					continue;
 				}
 				if (pixels.length != 128 * 128)
 				{
-					// The texture storage is 128x128 bytes, and will only work correctly with the
-					// 128x128 textures from high detail mode
-					log.warn("Texture size for index {} is {}!", i, pixels.length);
+					log.warn("Unknown dimensions for vanilla texture at index {} ({} pixels)", i, pixels.length);
 					unusedIndices.addLast(i);
 					continue;
 				}
@@ -251,11 +258,10 @@ public class TextureManager
 				continue;
 			}
 
-			Material parent = material.getParent();
-			if (parent != null)
+			if (material.parent != null)
 			{
 				// Point this material to pre-existing texture from parent material
-				materialOrdinalToTextureIndex[material.ordinal()] = materialOrdinalToTextureIndex[parent.ordinal()];
+				materialOrdinalToTextureIndex[material.ordinal()] = materialOrdinalToTextureIndex[material.parent.ordinal()];
 				continue;
 			}
 
@@ -268,10 +274,10 @@ public class TextureManager
 			}
 
 			Integer index = -1;
-			if (material.getMaterialToReplace() != null && material.getReplacementCondition().apply(config))
+			if (material.materialToReplace != null && material.replacementCondition.apply(config))
 			{
-				index = materialOrdinalToTextureIndex[material.getMaterialToReplace().ordinal()];
-				materialReplacements[material.getMaterialToReplace().ordinal()] = material.ordinal();
+				index = materialOrdinalToTextureIndex[material.materialToReplace.ordinal()];
+				materialReplacements[material.materialToReplace.ordinal()] = material.ordinal();
 			}
 
 			if (index == -1)
@@ -305,16 +311,21 @@ public class TextureManager
 
 	private BufferedImage loadTextureImage(String textureName)
 	{
-		Path path = Paths.get("textures").resolve(textureName + ".png");
-		try (InputStream is = FileUtils.getResource(TextureManager.class, path))
+		for (String ext : SUPPORTED_IMAGE_EXTENSIONS)
 		{
-			synchronized (ImageIO.class) {
-				return ImageIO.read(is);
+			Path path = Paths.get("textures").resolve(textureName + "." + ext);
+			try (InputStream is = FileUtils.getResource(TextureManager.class, path))
+			{
+				synchronized (ImageIO.class) {
+					return ImageIO.read(is);
+				}
+			} catch (IOException ex) {
+				log.trace("Failed to load texture: {}", path, ex);
 			}
-		} catch (IOException ex) {
-			log.trace("Missing texture override: {}", path);
-			return null;
 		}
+
+		log.trace("Missing texture file: {}", textureName);
+		return null;
 	}
 
 	int c = 0;

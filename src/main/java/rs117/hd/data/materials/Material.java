@@ -24,18 +24,23 @@
  */
 package rs117.hd.data.materials;
 
-import java.util.HashMap;
-import java.util.function.Consumer;
-import java.util.function.Function;
-
-import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import rs117.hd.HdPluginConfig;
 
-@Getter
+import java.util.HashMap;
+import java.util.function.Consumer;
+import java.util.function.Function;
+
 public enum Material
 {
+	// - Each enum entry refers to a texture file by name, in lowercase. If a texture with the specified name is found,
+	//   it will be loaded and resized to fit the dimensions of the texture array.
+	// - Entries that specify a vanillaTextureIndex give names to vanilla textures, and will override the vanilla
+	//   texture if a corresponding texture file exists.
+	// - Materials can reuse textures by inheriting from a different material.
+	// - Materials can be composed of multiple textures by setting texture map fields to materials loaded before it.
+
 	// Default
 	NONE,
 
@@ -49,11 +54,22 @@ public enum Material
 	WATER_NORMAL_MAP_2,
 	WATER_FOAM,
 
+	STONE_WALL_NORMALS,
+	STONE_WALL_DISPLACEMENT,
+	STONE_WALL_ROUGHNESS,
+	STONE_WALL(p -> p
+		.setTextureScale(2, 2)
+		.setNormalMap(STONE_WALL_NORMALS)
+		.setDisplacementMap(STONE_WALL_DISPLACEMENT)
+		.setRoughnessMap(STONE_WALL_ROUGHNESS)
+		.setSpecular(1, 1)),
+
 	// Reserve first 128 materials for vanilla OSRS texture ids
 	TRAPDOOR(0),
 	WATER_FLAT(1),
 	BRICK(2),
 	WOOD_PLANKS_1(3, p -> p
+		.setParent(STONE_WALL)
 		.setSpecular(0.35f, 30f)),
 	DOOR(4),
 	DARK_WOOD(5),
@@ -310,51 +326,84 @@ public enum Material
 	WINTER_PAINTING_ELF(p -> p
 		.replaceIf(PAINTING_ELF, HdPluginConfig::winterTheme));
 
-	private final Material parent;
-	private final int vanillaTextureIndex;
-	private final float specularStrength;
-	private final float specularGloss;
-	private final float emissiveStrength;
-	private final Material normalMap;
-	private final Material displacementMap;
-	private final Material flowMap;
-	private final float flowMapStrength;
-	private final float flowMapDurationX;
-	private final float flowMapDurationY;
-	private final float scrollDurationX;
-	private final float scrollDurationY;
-	private final float textureScaleX;
-	private final float textureScaleY;
-	private final Material materialToReplace;
-	private final Function<HdPluginConfig, Boolean> replacementCondition;
+	public final int vanillaTextureIndex;
+	public final Material parent;
+	public final Material normalMap;
+	public final Material displacementMap;
+	public final Material roughnessMap;
+	public final Material flowMap;
+	public final float flowMapStrength;
+	public final float flowMapDurationX;
+	public final float flowMapDurationY;
+	public final float specularStrength;
+	public final float specularGloss;
+	public final float emissiveStrength;
+	public final float scrollDurationX;
+	public final float scrollDurationY;
+	public final float textureScaleX;
+	public final float textureScaleY;
+	public final Material materialToReplace;
+	public final Function<HdPluginConfig, Boolean> replacementCondition;
 
 	@Setter
-	private static class Properties
+	private static class Builder
 	{
-		private float specularStrength = 0f;
-		private float specularGloss = 0f;
-		private float emissiveStrength = 0f;
+		private int vanillaTextureIndex = -1;
+		private Material parent;
 		private Material normalMap = NONE;
 		private Material displacementMap = NONE;
+		private Material roughnessMap = NONE;
 		private Material flowMap = LAVA_FLOW_MAP;
-		private float flowMapStrength = 0f;
-		private float flowMapDurationX = 0;
-		private float flowMapDurationY = 0;
-		private float scrollDurationX = 0;
-		private float scrollDurationY = 0;
-		private float textureScaleX = 1.0f;
-		private float textureScaleY = 1.0f;
+		private float specularStrength;
+		private float specularGloss;
+		private float emissiveStrength;
+		private float flowMapStrength;
+		private float flowMapDurationX;
+		private float flowMapDurationY;
+		private float scrollDurationX;
+		private float scrollDurationY;
+		private float textureScaleX = 1;
+		private float textureScaleY = 1;
 		private Material materialToReplace;
 		private Function<HdPluginConfig, Boolean> replacementCondition;
 
-		public Properties setSpecular(float specularStrength, float specularGloss)
+		Builder apply(Consumer<Builder> consumer)
+		{
+			consumer.accept(this);
+			return this;
+		}
+
+		Builder setParent(Material parent)
+		{
+			this.parent = parent;
+			this.vanillaTextureIndex = parent.vanillaTextureIndex;
+			this.materialToReplace = parent.materialToReplace;
+			this.replacementCondition = parent.replacementCondition;
+			this.normalMap = parent.normalMap;
+			this.displacementMap = parent.displacementMap;
+			this.roughnessMap = parent.roughnessMap;
+			this.flowMap = parent.flowMap;
+			this.flowMapStrength = parent.flowMapStrength;
+			this.flowMapDurationX = parent.flowMapDurationX;
+			this.flowMapDurationY = parent.flowMapDurationY;
+			this.specularStrength = parent.specularStrength;
+			this.specularGloss = parent.specularGloss;
+			this.emissiveStrength = parent.emissiveStrength;
+			this.scrollDurationX = parent.scrollDurationX;
+			this.scrollDurationY = parent.scrollDurationY;
+			this.textureScaleX = parent.textureScaleX;
+			this.textureScaleY = parent.textureScaleY;
+			return this;
+		}
+
+		Builder setSpecular(float specularStrength, float specularGloss)
 		{
 			this.specularStrength = specularStrength;
 			this.specularGloss = specularGloss;
 			return this;
 		}
 
-		public Properties setFlowMap(Material flowMap, float flowMapStrength, float flowMapDurationX, float flowMapDurationY)
+		Builder setFlowMap(Material flowMap, float flowMapStrength, float flowMapDurationX, float flowMapDurationY)
 		{
 			this.flowMap = flowMap;
 			this.flowMapStrength = flowMapStrength;
@@ -363,21 +412,21 @@ public enum Material
 			return this;
 		}
 
-		public Properties setScroll(float scrollDurationX, float scrollDurationY)
+		Builder setScroll(float scrollDurationX, float scrollDurationY)
 		{
 			this.scrollDurationX = scrollDurationX;
 			this.scrollDurationY = scrollDurationY;
 			return this;
 		}
 
-		public Properties setTextureScale(float textureScaleX, float textureScaleY)
+		Builder setTextureScale(float textureScaleX, float textureScaleY)
 		{
 			this.textureScaleX = textureScaleX;
 			this.textureScaleY = textureScaleY;
 			return this;
 		}
 
-		public Properties replaceIf(@NonNull Material materialToReplace, @NonNull Function<HdPluginConfig, Boolean> condition)
+		Builder replaceIf(@NonNull Material materialToReplace, @NonNull Function<HdPluginConfig, Boolean> condition)
 		{
 			this.materialToReplace = materialToReplace;
 			this.replacementCondition = condition;
@@ -387,71 +436,46 @@ public enum Material
 
 	Material()
 	{
-		this(-1);
-	}
-
-	Material(Consumer<Properties> consumer)
-	{
-		this(-1, consumer);
-	}
-
-	Material(Material parent, Consumer<Properties> consumer)
-	{
-		this.parent = parent;
-		this.vanillaTextureIndex = -1;
-		Properties properties = new Properties();
-		properties
-			.setSpecular(parent.specularStrength, parent.specularGloss)
-			.setEmissiveStrength(parent.emissiveStrength)
-			.setNormalMap(parent.normalMap)
-			.setDisplacementMap(parent.displacementMap)
-			.setFlowMap(parent.flowMap, parent.flowMapStrength, parent.flowMapDurationX, parent.flowMapDurationY)
-			.setScroll(parent.scrollDurationX, parent.scrollDurationY)
-			.setTextureScale(parent.textureScaleX, parent.textureScaleY);
-		consumer.accept(properties);
-		this.emissiveStrength = properties.emissiveStrength;
-		this.specularStrength = properties.specularStrength;
-		this.specularGloss = properties.specularGloss;
-		this.normalMap = properties.normalMap;
-		this.displacementMap = properties.displacementMap;
-		this.flowMap = properties.flowMap;
-		this.flowMapStrength = properties.flowMapStrength;
-		this.flowMapDurationX = properties.flowMapDurationX;
-		this.flowMapDurationY = properties.flowMapDurationY;
-		this.scrollDurationX = properties.scrollDurationX;
-		this.scrollDurationY = properties.scrollDurationY;
-		this.textureScaleX = properties.textureScaleX;
-		this.textureScaleY = properties.textureScaleY;
-		this.materialToReplace = properties.materialToReplace;
-		this.replacementCondition = properties.replacementCondition;
+		this(b -> {});
 	}
 
 	Material(int vanillaTextureIndex)
 	{
-		this(vanillaTextureIndex, p -> {});
+		this(p -> p.setVanillaTextureIndex(vanillaTextureIndex));
 	}
 
-	Material(int vanillaTextureIndex, Consumer<Properties> consumer)
+	Material(Material parent, Consumer<Builder> consumer)
 	{
-		this.parent = null;
-		this.vanillaTextureIndex = vanillaTextureIndex;
-		Properties properties = new Properties();
-		consumer.accept(properties);
-		this.emissiveStrength = properties.emissiveStrength;
-		this.specularStrength = properties.specularStrength;
-		this.specularGloss = properties.specularGloss;
-		this.normalMap = properties.normalMap;
-		this.flowMap = properties.flowMap;
-		this.displacementMap = properties.displacementMap;
-		this.flowMapStrength = properties.flowMapStrength;
-		this.flowMapDurationX = properties.flowMapDurationX;
-		this.flowMapDurationY = properties.flowMapDurationY;
-		this.scrollDurationX = properties.scrollDurationX;
-		this.scrollDurationY = properties.scrollDurationY;
-		this.textureScaleX = properties.textureScaleX;
-		this.textureScaleY = properties.textureScaleY;
-		this.materialToReplace = properties.materialToReplace;
-		this.replacementCondition = properties.replacementCondition;
+		this(b -> b.setParent(parent).apply(consumer));
+	}
+
+	Material(int vanillaTextureIndex, Consumer<Builder> consumer)
+	{
+		this(b -> b.setVanillaTextureIndex(vanillaTextureIndex).apply(consumer));
+	}
+
+	Material(Consumer<Builder> consumer)
+	{
+		Builder builder = new Builder();
+		consumer.accept(builder);
+		this.vanillaTextureIndex = builder.vanillaTextureIndex;
+		this.parent = builder.parent;
+		this.normalMap = builder.normalMap;
+		this.displacementMap = builder.displacementMap;
+		this.roughnessMap = builder.roughnessMap;
+		this.flowMap = builder.flowMap;
+		this.flowMapStrength = builder.flowMapStrength;
+		this.flowMapDurationX = builder.flowMapDurationX;
+		this.flowMapDurationY = builder.flowMapDurationY;
+		this.specularStrength = builder.specularStrength;
+		this.specularGloss = builder.specularGloss;
+		this.emissiveStrength = builder.emissiveStrength;
+		this.scrollDurationX = builder.scrollDurationX;
+		this.scrollDurationY = builder.scrollDurationY;
+		this.textureScaleX = builder.textureScaleX;
+		this.textureScaleY = builder.textureScaleY;
+		this.materialToReplace = builder.materialToReplace;
+		this.replacementCondition = builder.replacementCondition;
 	}
 
 	private static final HashMap<Integer, Material> DIFFUSE_ID_MATERIAL_MAP;

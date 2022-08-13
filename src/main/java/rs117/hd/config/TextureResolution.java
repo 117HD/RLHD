@@ -33,7 +33,8 @@ public enum TextureResolution
 {
 	RES_128("128", 128),
 	RES_256("256", 256),
-	RES_512("512", 512);
+	RES_512("512", 512),
+	RES_1024("1024", 1024);
 
 	private final String name;
 	private final int size;

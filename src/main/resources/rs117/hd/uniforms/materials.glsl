@@ -3,14 +3,16 @@
 struct Material
 {
     int diffuseMap;
-    float specularStrength;
-    float specularGloss;
-    float emissiveStrength;
     int normalMap;
     int displacementMap;
+    int roughnessMap;
     int flowMap;
     float flowMapStrength;
     vec2 flowMapDuration;
+    float specularStrength;
+    float specularGloss;
+    float emissiveStrength;
+    float pad;
     vec2 scrollDuration;
     vec2 textureScale;
 };

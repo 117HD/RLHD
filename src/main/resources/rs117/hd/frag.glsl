@@ -69,7 +69,6 @@ uniform float contrast;
 
 uniform int pointLightsCount; // number of lights in current frame
 
-in vec4 shadowOut;
 in float fogAmount;
 in vec4 vColor1;
 in vec4 vColor2;
@@ -83,15 +82,17 @@ in vec3 texBlend;
 flat in ivec3 materialId;
 flat in ivec3 terrainData;
 flat in ivec3 isOverlay;
+flat in mat3 TBN;
+in vec4 shadowOut;
 
 out vec4 FragColor;
 
 #include colorblind.glsl
 #include utils/caustics.glsl
 #include utils/color_conversion.glsl
-#include utils/lighting.glsl
 #include utils/misc.glsl
 #include utils/normals.glsl
+#include utils/roughness.glsl
 
 void main() {
     vec3 camPos = vec3(cameraX, cameraY, cameraZ);
@@ -160,6 +161,8 @@ void main() {
         uv2 = vec2(worldUvs(3).y - animationFrame(24 * waterType.duration),
         worldUvs(3).x - animationFrame(24 * waterType.duration));
     }
+
+    uv1 = uv2 = uv3 = worldUvs(2).xy;
 
     uv1 -= vec2(animationFrame(material1.scrollDuration.x),
     animationFrame(material1.scrollDuration.y));
@@ -403,9 +406,9 @@ void main() {
     }
     else
     {
-        vec3 n1 = material1.normalMap == -1 ? normals : sampleNormalMap(material1.normalMap, uv1);
-        vec3 n2 = material2.normalMap == -1 ? normals : sampleNormalMap(material2.normalMap, uv2);
-        vec3 n3 = material3.normalMap == -1 ? normals : sampleNormalMap(material3.normalMap, uv3);
+        vec3 n1 = material1.normalMap == -1 ? normals : sampleNormalMap(material1.normalMap, uv1, normals);
+        vec3 n2 = material2.normalMap == -1 ? normals : sampleNormalMap(material2.normalMap, uv2, normals);
+        vec3 n3 = material3.normalMap == -1 ? normals : sampleNormalMap(material3.normalMap, uv3, normals);
         normals = (n1 + n2 + n3) / 3;
     }
     normals = normalize(normals);
@@ -414,8 +417,6 @@ void main() {
     float lightDotNormals = dot(normals, lightDir);
     float downDotNormals = dot(downDir, normals);
     float viewDotNormals = dot(viewDir, normals);
-
-
 
 
     // sample shadow map
@@ -476,25 +477,16 @@ void main() {
     vec3 vSpecularStrength = vec3(material1.specularStrength, material2.specularStrength, material3.specularStrength);
     // apply specular highlights to anything semi-transparent
     // this isn't always desirable but adds subtle light reflections to windows, etc.
-    if (color1.a < 0.99)
+    if (color1.a + color2.a + color3.a < 2.99)
     {
-        vSpecularGloss.x = 30.0;
-        vSpecularStrength.x = clamp((1.0 - color1.a) * 2, 0.0, 1.0);
+        vSpecularGloss = vec3(30);
+        vSpecularStrength = vec3(
+            clamp((1 - color1.a) * 2, 0, 1),
+            clamp((1 - color2.a) * 2, 0, 1),
+            clamp((1 - color3.a) * 2, 0, 1)
+        );
     }
-    if (color2.a < 0.99)
-    {
-        vSpecularGloss.y = 30.0;
-        vSpecularStrength.y = clamp((1.0 - color2.a) * 2, 0.0, 1.0);
-    }
-    if (color3.a < 0.99)
-    {
-        vSpecularGloss.z = 30.0;
-        vSpecularStrength.z = clamp((1.0 - color3.a) * 2, 0.0, 1.0);
-    }
-    float combinedSpecularStrength =
-        vSpecularStrength[0] * texBlend[0] +
-        vSpecularStrength[1] * texBlend[1] +
-        vSpecularStrength[2] * texBlend[2];
+    float combinedSpecularStrength = dot(vSpecularStrength, texBlend);
     if (isWater)
     {
         vSpecularStrength = vec3(waterType.specularStrength);

@@ -56,7 +56,7 @@ out vec3 texBlend;
 flat out ivec3 materialId;
 flat out ivec3 terrainData;
 flat out ivec3 isOverlay;
-
+flat out mat3 TBN; // needed for normal mapping
 out vec4 shadowOut;
 
 void main() {
@@ -81,9 +81,17 @@ void main() {
     vUv3 = vUv[2].yz;
 
     // fast normals
-    vec3 a = vPosition[0] - vPosition[1];
-    vec3 b = vPosition[0] - vPosition[2];
-    vec3 flatNormals = normalize(cross(a,b));
+    vec3 T = normalize(vec3(vPosition[0] - vPosition[1]));
+    vec3 B = normalize(vec3(vPosition[0] - vPosition[2]));
+    vec3 N = normalize(cross(T, B));
+
+    // Source: https://www.geeks3d.com/20130122/normal-mapping-without-precomputed-tangent-space-vectors/
+    vec3 C1 = cross(N, vec3(0, 0, 1));
+    vec3 C2 = cross(N, vec3(0, 1, 0));
+    T = length(C1) > length(C2) ? C1 : C2;
+    T = normalize(T);
+    B = normalize(cross(N, T));
+    TBN = transpose(mat3(T, B, N));
 
     texBlend = vec3(1, 0, 0);
     fogAmount = vFogAmount[0];
@@ -91,7 +99,7 @@ void main() {
     shadowOut = lightProjectionMatrix * vec4(vPosition[0], 1.f);
     if (abs(vNormal[0].x) < 0.01 && abs(vNormal[0].y) < 0.01 && abs(vNormal[0].z) < 0.01)
     {
-        normals = flatNormals;
+        normals = N;
     }
     else
     {
@@ -108,7 +116,7 @@ void main() {
     shadowOut = lightProjectionMatrix * vec4(vPosition[1], 1.f);
     if (abs(vNormal[1].x) < 0.01 && abs(vNormal[1].y) < 0.01 && abs(vNormal[1].z) < 0.01)
     {
-        normals = flatNormals;
+        normals = N;
     }
     else
     {
@@ -125,7 +133,7 @@ void main() {
     shadowOut = lightProjectionMatrix * vec4(vPosition[2], 1.f);
     if (abs(vNormal[2].x) < 0.01 && abs(vNormal[2].y) < 0.01 && abs(vNormal[2].z) < 0.01)
     {
-        normals = flatNormals;
+        normals = N;
     }
     else
     {

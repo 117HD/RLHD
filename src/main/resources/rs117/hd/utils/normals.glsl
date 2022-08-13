@@ -23,13 +23,15 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-vec3 sampleNormalMap(int index, vec2 uv) {
-    // Sample normal map texture
-    vec3 n = texture(textureArray, vec3(uv, index)).rgb;
+vec3 sampleNormalMap(int index, vec2 uv, vec3 surfaceNormal) {
+    // Sample normal map texture, swapping Y and Z to match the coordinate system in OSRS
+    vec3 n = texture(textureArray, vec3(uv, index)).xzy;
     // Reverse sRGB -> linear conversion, since the normal is already linear in the texture
-    n = srgbToLinear(n);
+    n = linearToSrgb(n);
     // Scale and shift normal so it can point in both directions
-    n = n * 2 - 1;
-    // Assume the normal map is already normalized
+    n.xz = n.xz * 2 - 1;
+    // Transform the normal from tangent space to world space
+    n = TBN * n;
+    // Assume the normal is already normalized
     return n;
 }

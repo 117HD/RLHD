@@ -65,7 +65,6 @@ import rs117.hd.opengl.shader.Shader;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.Template;
 import rs117.hd.scene.*;
-import rs117.hd.scene.LightManager;
 import rs117.hd.scene.lights.SceneLight;
 import rs117.hd.utils.*;
 import rs117.hd.utils.buffer.GLBuffer;
@@ -1077,20 +1076,21 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			material = textureManager.getEffectiveMaterial(material);
 			buffer
 				.putInt(textureManager.getTextureIndex(material))
-				.putFloat(material.getSpecularStrength())
-				.putFloat(material.getSpecularGloss())
-				.putFloat(material.getEmissiveStrength())
-				.putInt(textureManager.getTextureIndex(material.getNormalMap()))
-				.putInt(textureManager.getTextureIndex(material.getDisplacementMap()))
-				.putInt(textureManager.getTextureIndex(material.getFlowMap()))
-				.putFloat(material.getFlowMapStrength())
-				.putFloat(material.getFlowMapDurationX())
-				.putFloat(material.getFlowMapDurationY())
-				.putFloat(material.getScrollDurationX())
-				.putFloat(material.getScrollDurationY())
-				.putFloat(material.getTextureScaleX())
-				.putFloat(material.getTextureScaleY())
-				.putFloat(0).putFloat(0); // pad vec4
+				.putInt(textureManager.getTextureIndex(material.normalMap))
+				.putInt(textureManager.getTextureIndex(material.displacementMap))
+				.putInt(textureManager.getTextureIndex(material.roughnessMap))
+				.putInt(textureManager.getTextureIndex(material.flowMap))
+				.putFloat(material.flowMapStrength)
+				.putFloat(material.flowMapDurationX)
+				.putFloat(material.flowMapDurationY)
+				.putFloat(material.specularStrength)
+				.putFloat(material.specularGloss)
+				.putFloat(material.emissiveStrength)
+				.putFloat(0) // pad vec2
+				.putFloat(material.scrollDurationX)
+				.putFloat(material.scrollDurationY)
+				.putFloat(material.textureScaleX)
+				.putFloat(material.textureScaleY);
 		}
 		buffer.flip();
 
@@ -1104,32 +1104,32 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		for (WaterType type : WaterType.values())
 		{
 			log.info("Water type: {}, normal map: {}, foam map: {}", type,
-				textureManager.getTextureIndex(type.normalMap()),
+				textureManager.getTextureIndex(type.normalMap),
 				textureManager.getTextureIndex(Material.WATER_FOAM)
 			);
 			buffer
-				.putInt(type.flat() ? 1 : 0)
-				.putFloat(type.specularStrength())
-				.putFloat(type.specularGloss())
-				.putFloat(type.normalStrength())
-				.putFloat(type.baseOpacity())
-				.putInt(type.hasFoam() ? 1 : 0)
-				.putFloat(type.duration())
-				.putFloat(type.fresnelAmount())
-				.putFloat(type.surfaceColor()[0])
-				.putFloat(type.surfaceColor()[1])
-				.putFloat(type.surfaceColor()[2])
+				.putInt(type.flat ? 1 : 0)
+				.putFloat(type.specularStrength)
+				.putFloat(type.specularGloss)
+				.putFloat(type.normalStrength)
+				.putFloat(type.baseOpacity)
+				.putInt(type.hasFoam ? 1 : 0)
+				.putFloat(type.duration)
+				.putFloat(type.fresnelAmount)
+				.putFloat(type.surfaceColor[0])
+				.putFloat(type.surfaceColor[1])
+				.putFloat(type.surfaceColor[2])
 				.putFloat(0) // pad vec4
-				.putFloat(type.foamColor()[0])
-				.putFloat(type.foamColor()[1])
-				.putFloat(type.foamColor()[2])
+				.putFloat(type.foamColor[0])
+				.putFloat(type.foamColor[1])
+				.putFloat(type.foamColor[2])
 				.putFloat(0) // pad vec4
-				.putFloat(type.depthColor()[0])
-				.putFloat(type.depthColor()[1])
-				.putFloat(type.depthColor()[2])
+				.putFloat(type.depthColor[0])
+				.putFloat(type.depthColor[1])
+				.putFloat(type.depthColor[2])
 				.putFloat(0) // pad vec4
-				.putFloat(type.causticsStrength())
-				.putInt(textureManager.getTextureIndex(type.normalMap()))
+				.putFloat(type.causticsStrength)
+				.putInt(textureManager.getTextureIndex(type.normalMap))
 				.putInt(textureManager.getTextureIndex(Material.WATER_FOAM))
 				.putInt(textureManager.getTextureIndex(Material.WATER_FLOW_MAP))
 				.putInt(textureManager.getTextureIndex(Material.UNDERWATER_FLOW_MAP))
@@ -1696,8 +1696,16 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 				textureProvider.load(id); // trips the texture load flag which lets textures animate
 
-				textureOffsets[id * 2] = texture.getU();
-				textureOffsets[id * 2 + 1] = texture.getV();
+				int index = textureManager.getTextureIndex(Material.getTexture(id));
+				if (index < textureOffsets.length / 2)
+				{
+					textureOffsets[id * 2] = texture.getU();
+					textureOffsets[id * 2 + 1] = texture.getV();
+				}
+				else
+				{
+					throw new IllegalStateException("Texture anims are not implemented for HD textures yet");
+				}
 			}
 
 			// Update the camera target only when not loading, to keep drawing correct shadows while loading
