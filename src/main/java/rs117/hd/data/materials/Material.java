@@ -69,8 +69,8 @@ public enum Material
 	WATER_FLAT(1),
 	BRICK(2),
 	WOOD_PLANKS_1(3, p -> p
-		.setParent(STONE_WALL)
-		.setSpecular(0.35f, 30f)),
+		.setSpecular(0.35f, 30f)
+		.setParent(STONE_WALL)),
 	DOOR(4),
 	DARK_WOOD(5),
 	ROOF_SHINGLES_1(6, p -> p

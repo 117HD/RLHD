@@ -92,7 +92,7 @@ out vec4 FragColor;
 #include utils/color_conversion.glsl
 #include utils/misc.glsl
 #include utils/normals.glsl
-#include utils/roughness.glsl
+#include utils/specular.glsl
 
 void main() {
     vec3 camPos = vec3(cameraX, cameraY, cameraZ);
@@ -161,8 +161,6 @@ void main() {
         uv2 = vec2(worldUvs(3).y - animationFrame(24 * waterType.duration),
         worldUvs(3).x - animationFrame(24 * waterType.duration));
     }
-
-    uv1 = uv2 = uv3 = worldUvs(2).xy;
 
     uv1 -= vec2(animationFrame(material1.scrollDuration.x),
     animationFrame(material1.scrollDuration.y));
@@ -473,25 +471,36 @@ void main() {
 
 
     // specular
-    vec3 vSpecularGloss = vec3(material1.specularGloss, material2.specularGloss, material3.specularGloss);
-    vec3 vSpecularStrength = vec3(material1.specularStrength, material2.specularStrength, material3.specularStrength);
-    // apply specular highlights to anything semi-transparent
-    // this isn't always desirable but adds subtle light reflections to windows, etc.
-    if (color1.a + color2.a + color3.a < 2.99)
-    {
-        vSpecularGloss = vec3(30);
-        vSpecularStrength = vec3(
-            clamp((1 - color1.a) * 2, 0, 1),
-            clamp((1 - color2.a) * 2, 0, 1),
-            clamp((1 - color3.a) * 2, 0, 1)
-        );
-    }
-    float combinedSpecularStrength = dot(vSpecularStrength, texBlend);
+    vec3 vSpecularGloss, vSpecularStrength;
+    float combinedSpecularStrength;
     if (isWater)
     {
         vSpecularStrength = vec3(waterType.specularStrength);
         vSpecularGloss = vec3(waterType.specularGloss);
         combinedSpecularStrength = waterType.specularStrength;
+    }
+    else
+    {
+        vSpecularGloss = vec3(material1.specularGloss, material2.specularGloss, material3.specularGloss);
+        vSpecularStrength = linearToSrgb(vec3(
+            material1.roughnessMap == -1 ? 1 : texture(textureArray, vec3(uv1, material1.roughnessMap)).r,
+            material2.roughnessMap == -1 ? 1 : texture(textureArray, vec3(uv2, material2.roughnessMap)).r,
+            material3.roughnessMap == -1 ? 1 : texture(textureArray, vec3(uv3, material3.roughnessMap)).r
+        ));
+        vSpecularStrength *= vec3(material1.specularStrength, material2.specularStrength, material3.specularStrength);
+
+        // apply specular highlights to anything semi-transparent
+        // this isn't always desirable but adds subtle light reflections to windows, etc.
+        if (color1.a + color2.a + color3.a < 2.99)
+        {
+            vSpecularGloss = vec3(30);
+            vSpecularStrength = vec3(
+                clamp((1 - color1.a) * 2, 0, 1),
+                clamp((1 - color2.a) * 2, 0, 1),
+                clamp((1 - color3.a) * 2, 0, 1)
+            );
+        }
+        combinedSpecularStrength = dot(vSpecularStrength, texBlend);
     }
 
 
