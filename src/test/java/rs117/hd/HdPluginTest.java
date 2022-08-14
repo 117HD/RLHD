@@ -6,6 +6,7 @@ import net.runelite.client.RuneLiteProperties;
 import net.runelite.client.externalplugins.ExternalPluginManager;
 import rs117.hd.scene.lighting.LightManager;
 import rs117.hd.utils.Env;
+import rs117.hd.utils.FileUtils;
 import rs117.hd.utils.FileWatcher;
 
 import java.io.InputStream;
@@ -31,6 +32,7 @@ public class HdPluginTest
 			Env.set(ENV_SHADER_PATH, FileWatcher.getResourcePath(HdPlugin.class));
 		}
 
+		FileUtils.useHotswapping();
 		ExternalPluginManager.loadBuiltin(HdPlugin.class);
 		RuneLite.main(args);
 	}
