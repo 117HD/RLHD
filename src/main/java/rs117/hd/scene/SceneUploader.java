@@ -417,9 +417,9 @@ class SceneUploader
 				}
 				else
 				{
-					Underlay underlay = Underlay.getUnderlay(client.getScene().getUnderlayIds()[tileZ][tileX][tileY], tile, client);
+					Underlay underlay = Underlay.getUnderlay(client.getScene().getUnderlayIds()[tileZ][tileX][tileY], tile, client,hdPlugin);
 					underlay = proceduralGenerator.getSeasonalUnderlay(underlay);
-					groundMaterial = underlay.getGroundMaterial();
+					groundMaterial = underlay.groundMaterial;
 
 					swColor = HDUtils.colorHSLToInt(proceduralGenerator.recolorUnderlay(underlay, HDUtils.colorIntToHSL(swColor)));
 					seColor = HDUtils.colorHSLToInt(proceduralGenerator.recolorUnderlay(underlay, HDUtils.colorIntToHSL(seColor)));
@@ -446,7 +446,7 @@ class SceneUploader
 				}
 				else
 				{
-					Underlay underlay = Underlay.getUnderlay(client.getScene().getUnderlayIds()[tileZ][tileX][tileY], tile, client);
+					Underlay underlay = Underlay.getUnderlay(client.getScene().getUnderlayIds()[tileZ][tileX][tileY], tile, client,hdPlugin);
 					underlay = proceduralGenerator.getSeasonalUnderlay(underlay);
 
 					swColor = HDUtils.colorHSLToInt(proceduralGenerator.recolorUnderlay(underlay, HDUtils.colorIntToHSL(swColor)));
@@ -791,9 +791,9 @@ class SceneUploader
 				}
 				else
 				{
-					Underlay underlay = Underlay.getUnderlay(client.getScene().getUnderlayIds()[tileZ][tileX][tileY], tile, client);
+					Underlay underlay = Underlay.getUnderlay(client.getScene().getUnderlayIds()[tileZ][tileX][tileY], tile, client,hdPlugin);
 					underlay = proceduralGenerator.getSeasonalUnderlay(underlay);
-					groundMaterial = underlay.getGroundMaterial();
+					groundMaterial = underlay.groundMaterial;
 
 					colorA = HDUtils.colorHSLToInt(proceduralGenerator.recolorUnderlay(underlay, HDUtils.colorIntToHSL(colorA)));
 					colorB = HDUtils.colorHSLToInt(proceduralGenerator.recolorUnderlay(underlay, HDUtils.colorIntToHSL(colorB)));
@@ -817,7 +817,7 @@ class SceneUploader
 				}
 				else
 				{
-					Underlay underlay = Underlay.getUnderlay(client.getScene().getUnderlayIds()[tileZ][tileX][tileY], tile, client);
+					Underlay underlay = Underlay.getUnderlay(client.getScene().getUnderlayIds()[tileZ][tileX][tileY], tile, client,hdPlugin);
 					underlay = proceduralGenerator.getSeasonalUnderlay(underlay);
 
 					colorA = HDUtils.colorHSLToInt(proceduralGenerator.recolorUnderlay(underlay, HDUtils.colorIntToHSL(colorA)));
