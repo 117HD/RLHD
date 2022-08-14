@@ -40,6 +40,7 @@ import net.runelite.api.SceneTileModel;
 import net.runelite.api.SceneTilePaint;
 import net.runelite.api.Tile;
 import rs117.hd.HdPlugin;
+import rs117.hd.HdPluginConfig;
 import rs117.hd.data.WaterType;
 import rs117.hd.data.materials.GroundMaterial;
 import rs117.hd.data.materials.Material;
@@ -60,6 +61,9 @@ public class ProceduralGenerator
 	
 	@Inject
 	private HdPlugin hdPlugin;
+
+	@Inject
+	private HdPluginConfig pluginConfig;
 
 	private final int VERTICES_PER_FACE = 3;
 
@@ -297,7 +301,7 @@ public class ProceduralGenerator
 			}
 			else if (vertexUnderlays[vertex] != 0)
 			{
-				Underlay underlay = Underlay.getUnderlay(vertexUnderlays[vertex], tile, client,hdPlugin.getConfig());
+				Underlay underlay = Underlay.getUnderlay(vertexUnderlays[vertex], tile, client,pluginConfig);
 				GroundMaterial groundMaterial = underlay.groundMaterial;
 				material = groundMaterial.getRandomMaterial(z, worldX, worldY);
 				isOverlay = underlay.blendedAsUnderlay;
@@ -845,7 +849,7 @@ public class ProceduralGenerator
 			}
 			else
 			{
-				waterType = Underlay.getUnderlay(client.getScene().getUnderlayIds()[tileZ][tileX][tileY], tile, client,hdPlugin.getConfig()).waterType;
+				waterType = Underlay.getUnderlay(client.getScene().getUnderlayIds()[tileZ][tileX][tileY], tile, client,pluginConfig).waterType;
 			}
 		}
 
@@ -881,7 +885,7 @@ public class ProceduralGenerator
 			}
 			else
 			{
-				waterType = Underlay.getUnderlay(client.getScene().getUnderlayIds()[tileZ][tileX][tileY], tile, client,hdPlugin.getConfig()).waterType;
+				waterType = Underlay.getUnderlay(client.getScene().getUnderlayIds()[tileZ][tileX][tileY], tile, client,pluginConfig).waterType;
 			}
 		}
 
@@ -1129,7 +1133,7 @@ public class ProceduralGenerator
 		}
 		else if (client.getScene().getUnderlayIds()[z][x][y] != 0)
 		{
-			if (!Underlay.getUnderlay(client.getScene().getUnderlayIds()[z][x][y], tile, client,hdPlugin.getConfig()).blended)
+			if (!Underlay.getUnderlay(client.getScene().getUnderlayIds()[z][x][y], tile, client,pluginConfig).blended)
 			{
 				return true;
 			}
