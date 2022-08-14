@@ -290,19 +290,17 @@ public class ProceduralGenerator
 			if (vertexOverlays[vertex] != 0)
 			{
 				Overlay overlay = Overlay.getOverlay(vertexOverlays[vertex], tile, client);
-				overlay = getSeasonalOverlay(overlay);
 				GroundMaterial groundMaterial = overlay.getGroundMaterial();
 				material = groundMaterial.getRandomMaterial(z, worldX, worldY);
-				isOverlay = !overlay.isBlendedAsUnderlay();
+				isOverlay = !overlay.blendedAsOverlay;
 				colorHSL = recolorOverlay(overlay, colorHSL);
 			}
 			else if (vertexUnderlays[vertex] != 0)
 			{
-				Underlay underlay = Underlay.getUnderlay(vertexUnderlays[vertex], tile, client,hdPlugin);
-				underlay = getSeasonalUnderlay(underlay);
+				Underlay underlay = Underlay.getUnderlay(vertexUnderlays[vertex], tile, client,hdPlugin.getConfig());
 				GroundMaterial groundMaterial = underlay.groundMaterial;
 				material = groundMaterial.getRandomMaterial(z, worldX, worldY);
-				isOverlay = underlay.blendedAsOverlay;
+				isOverlay = underlay.blendedAsUnderlay;
 				colorHSL = recolorUnderlay(underlay, colorHSL);
 			}
 
@@ -847,7 +845,7 @@ public class ProceduralGenerator
 			}
 			else
 			{
-				waterType = Underlay.getUnderlay(client.getScene().getUnderlayIds()[tileZ][tileX][tileY], tile, client,hdPlugin).waterType;
+				waterType = Underlay.getUnderlay(client.getScene().getUnderlayIds()[tileZ][tileX][tileY], tile, client,hdPlugin.getConfig()).waterType;
 			}
 		}
 
@@ -883,7 +881,7 @@ public class ProceduralGenerator
 			}
 			else
 			{
-				waterType = Underlay.getUnderlay(client.getScene().getUnderlayIds()[tileZ][tileX][tileY], tile, client,hdPlugin).waterType;
+				waterType = Underlay.getUnderlay(client.getScene().getUnderlayIds()[tileZ][tileX][tileY], tile, client,hdPlugin.getConfig()).waterType;
 			}
 		}
 
@@ -1131,7 +1129,7 @@ public class ProceduralGenerator
 		}
 		else if (client.getScene().getUnderlayIds()[z][x][y] != 0)
 		{
-			if (!Underlay.getUnderlay(client.getScene().getUnderlayIds()[z][x][y], tile, client,hdPlugin).blended)
+			if (!Underlay.getUnderlay(client.getScene().getUnderlayIds()[z][x][y], tile, client,hdPlugin.getConfig()).blended)
 			{
 				return true;
 			}
@@ -1139,25 +1137,6 @@ public class ProceduralGenerator
 		return false;
 	}
 
-	public Underlay getSeasonalUnderlay(Underlay underlay)
-	{
-
-		return underlay;
-	}
-
-	public Overlay getSeasonalOverlay(Overlay overlay)
-	{
-		if (hdPlugin.configWinterTheme)
-		{
-			switch (overlay.getGroundMaterial())
-			{
-				case OVERWORLD_GRASS_1:
-					overlay = Overlay.WINTER_GRASS;
-					break;
-			}
-		}
-		return overlay;
-	}
 
 	WaterType getSeasonalWaterType(WaterType waterType)
 	{

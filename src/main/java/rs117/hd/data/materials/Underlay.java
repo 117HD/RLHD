@@ -49,7 +49,7 @@ public enum Underlay {
 
     // Edgeville
     EDGEVILLE_PATH_OVERLAY_48(48, Area.EDGEVILLE_PATH_OVERLAY, GroundMaterial.VARROCK_PATHS_LIGHT, p ->
-            p.isBlendedAsOverlay(true).
+            p.isBlendedAsType(true).
             hue(0).
             shiftLightness(8).
             saturation(0).
@@ -99,7 +99,7 @@ public enum Underlay {
 
     // Morytania
     VER_SINHAZA_WATER_FIX(54,
-            p -> p.setArea(Area.VER_SINHAZA_WATER_FIX).setWaterType(WaterType.WATER)),
+            p -> p.setArea(Area.VER_SINHAZA_WATER_FIX).setWaterType(WaterType.WATER).isBlended(false)),
 
     // Castle Wars
     CENTER_SARADOMIN_SIDE_DIRT_1(98, Area.CASTLE_WARS_ARENA_SARADOMIN_SIDE, GroundMaterial.DIRT, p ->
@@ -165,7 +165,7 @@ public enum Underlay {
 	public final GroundMaterial groundMaterial;
 	public final WaterType waterType;
 	public final boolean blended;
-	public final boolean blendedAsOverlay;
+	public final boolean blendedAsUnderlay;
 	public final int hue;
 	public final int shiftHue;
 	public final int saturation;
@@ -174,106 +174,6 @@ public enum Underlay {
 	public final int shiftLightness;
 	public final Underlay replacementUnderlay;
 	public final Function<HdPluginConfig, Boolean> replacementCondition;
-
-    @Setter
-    private static class Builder {
-        private int id;
-        private Integer[] ids = null;
-        private Area area;
-        private GroundMaterial groundMaterial;
-        private WaterType waterType = WaterType.NONE;
-        private boolean blended = true;
-        private boolean blendedAsOverlay = false;
-        private int hue = -1;
-        private int shiftHue = 0;
-        private int saturation = -1;
-        private int shiftSaturation = 0;
-        private int lightness = -1;
-        private int shiftLightness = 0;
-        private Underlay underlayToReplace;
-        private Function<HdPluginConfig, Boolean> replacementCondition;
-
-
-        Builder apply(Consumer<Builder> consumer) {
-            consumer.accept(this);
-            return this;
-        }
-
-        Builder setId(int id) {
-            this.id = id;
-            return this;
-        }
-
-        Builder setIds(Integer... ids) {
-            this.ids = ids;
-            return this;
-        }
-
-
-        Builder setGroundMaterial(GroundMaterial groundMaterial) {
-            this.groundMaterial = groundMaterial;
-            return this;
-        }
-
-        Builder setWaterType(WaterType waterType) {
-            this.waterType = waterType;
-            this.groundMaterial = waterType.getGroundMaterial();
-            return this;
-        }
-
-        Builder setArea(Area area) {
-            this.area = area;
-            return this;
-        }
-
-        Builder replaceIf(@NonNull Underlay underlayToReplace, @NonNull Function<HdPluginConfig, Boolean> condition) {
-            this.underlayToReplace = underlayToReplace;
-            this.replacementCondition = condition;
-            return this;
-        }
-
-        Builder shiftLightness(int shiftLightness) {
-            this.shiftLightness = shiftLightness;
-            return this;
-        }
-
-        Builder lightness(int lightness) {
-            this.lightness = lightness;
-            return this;
-        }
-
-        Builder shiftSaturation(int shiftSaturation) {
-            this.shiftSaturation = shiftSaturation;
-            return this;
-        }
-
-
-        Builder saturation(int saturation) {
-            this.saturation = saturation;
-            return this;
-        }
-
-        Builder shiftHue(int shiftHue) {
-            this.shiftHue = shiftHue;
-            return this;
-        }
-
-        Builder hue(int hue) {
-            this.hue = hue;
-            return this;
-        }
-
-        Builder isBlendedAsOverlay(boolean blended) {
-            this.blendedAsOverlay = blended;
-            return this;
-        }
-
-        Builder isBlended(boolean blended) {
-            this.blended = blended;
-            return this;
-        }
-
-    }
 
     Underlay(int id, GroundMaterial material) {
         this(p -> p.setId(id).setGroundMaterial(material).setArea(Area.ALL));
@@ -309,7 +209,7 @@ public enum Underlay {
         this.groundMaterial = builder.groundMaterial;
         this.area = builder.area;
 		this.blended = builder.blended;
-		this.blendedAsOverlay = builder.blendedAsOverlay;
+		this.blendedAsUnderlay = builder.blendedAsType;
 		this.hue = builder.hue;
 		this.shiftHue = builder.shiftHue;
 		this.saturation = builder.saturation;
@@ -332,7 +232,7 @@ public enum Underlay {
         }
     }
 
-    public static Underlay getUnderlay(int underlayId, Tile tile, Client client, HdPlugin plugin) {
+    public static Underlay getUnderlay(int underlayId, Tile tile, Client client, HdPluginConfig config) {
         WorldPoint worldPoint = tile.getWorldLocation();
 
         if (client.isInInstancedRegion()) {
@@ -347,7 +247,7 @@ public enum Underlay {
         List<Underlay> underlays = GROUND_MATERIAL_MAP.get(underlayId);
         for (Underlay underlay : underlays) {
             if (underlay.area.containsPoint(worldX, worldY, worldZ)) {
-                if (underlay.replacementCondition != null && underlay.replacementCondition.apply(plugin.getConfig())) {
+                if (underlay.replacementCondition != null && underlay.replacementCondition.apply(config)) {
                     return underlay.replacementUnderlay;
                 }
                 return underlay;

@@ -415,11 +415,9 @@ public class ModelPusher
                     int underlayId = client.getScene().getUnderlayIds()[tileZ][tileX][tileY];
                     if (overlayId != 0) {
                         Overlay overlay = Overlay.getOverlay(overlayId, tile, client);
-                        overlay = proceduralGenerator.getSeasonalOverlay(overlay);
                         tileColorHSL = proceduralGenerator.recolorOverlay(overlay, tileColorHSL);
                     } else {
-                        Underlay underlay = Underlay.getUnderlay(underlayId, tile, client,hdPlugin);
-                        underlay = proceduralGenerator.getSeasonalUnderlay(underlay);
+                        Underlay underlay = Underlay.getUnderlay(underlayId, tile, client,hdPlugin.getConfig());
                         tileColorHSL = proceduralGenerator.recolorUnderlay(underlay, tileColorHSL);
                     }
 
@@ -441,8 +439,7 @@ public class ModelPusher
                         tileColorHSL = HDUtils.colorIntToHSL(tile.getSceneTileModel().getTriangleColorA()[faceColorIndex]);
 
                         int underlayId = client.getScene().getUnderlayIds()[tileZ][tileX][tileY];
-                        Underlay underlay = Underlay.getUnderlay(underlayId, tile, client,hdPlugin);
-                        underlay = proceduralGenerator.getSeasonalUnderlay(underlay);
+                        Underlay underlay = Underlay.getUnderlay(underlayId, tile, client,hdPlugin.getConfig());
                         tileColorHSL = proceduralGenerator.recolorUnderlay(underlay, tileColorHSL);
 
                         color1H = color2H = color3H = tileColorHSL[0];
