@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 117 <https://twitter.com/117scape>
+ * Copyright (c) 2022, Hooder <ahooder@protonmail.com>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -22,55 +22,14 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package rs117.hd.config;
 
-// translates a value from a custom range into 0-1
-float translateRange(float rangeStart, float rangeEnd, float value)
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@Getter
+@RequiredArgsConstructor
+public enum ParallaxMappingMode
 {
-    return (value - rangeStart) / (rangeEnd - rangeStart);
-}
-
-// returns a value between 0-1 representing a frame of animation
-// based on the length of the animation
-float animationFrame(float animationDuration)
-{
-    if (animationDuration == 0)
-        return 0;
-    return mod(elapsedTime, animationDuration) / animationDuration;
-}
-
-vec2 animationFrame(vec2 animationDuration)
-{
-    if (animationDuration == 0)
-        return vec2(0);
-    return mod(vec2(elapsedTime), vec2(animationDuration)) / animationDuration;
-}
-
-vec2 worldUvs(float scale)
-{
-    scale *= 128.0;
-    return vec2(position.z / scale, position.x / scale);
-}
-
-// used for blending overlays into underlays.
-// adapted from http://www.alecjacobson.com/weblog/?p=1486
-float pointToLine(vec2 lineA, vec2 lineB, vec2 point)
-{
-    // vector from A to B
-    vec2 AB = lineB - lineA;
-
-    // squared distance from A to B
-    float ABsquared = dot(AB, AB);
-
-    if (ABsquared == 0)
-    {
-        // A and B are the same point
-        return 1.0;
-    }
-    else
-    {
-        // vector from A to p
-        vec2 Ap = (point - lineA);
-        float t = dot(Ap, AB) / ABsquared;
-        return t;
-    }
+	OFF, BASIC, FULL, EXTREME;
 }

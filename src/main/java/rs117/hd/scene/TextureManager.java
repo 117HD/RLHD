@@ -69,6 +69,7 @@ public class TextureManager
 
 	private static final float PERC_64 = 1f / 64f;
 	private static final float PERC_128 = 1f / 128f;
+	private static final float HALF_PI = (float) (Math.PI / 2);
 
 	private static final ResourcePath texturePath = Env
 		.getPathOrDefault(ENV_TEXTURE_PATH, () -> path(TextureManager.class,"textures"));
@@ -187,10 +188,13 @@ public class TextureManager
 		int[] vanillaPixels = new int[128 * 128];
 		scaledImage = new BufferedImage(textureSize, textureSize, BufferedImage.TYPE_INT_ARGB);
 
-		materialOrdinalToTextureIndex = new int[Material.values().length];
-		materialReplacements = new int[Material.values().length];
+		int materialCount = Material.values().length;
+		materialOrdinalToTextureIndex = new int[materialCount];
+		materialReplacements = new int[materialCount];
 		Arrays.fill(materialOrdinalToTextureIndex, -1);
 		Arrays.fill(materialReplacements, -1);
+
+		float[] textureAnimations = new float[textureCount * 2];
 
 		// Load vanilla textures to texture array layers
 		ArrayDeque<Integer> unusedIndices = new ArrayDeque<>();
@@ -246,6 +250,17 @@ public class TextureManager
 			{
 				materialOrdinalToTextureIndex[material.ordinal()] = i;
 			}
+
+			// Convert texture animations to the same format as Material scrolling
+			float u = 0, v = 0;
+			int direction = texture.getAnimationDirection();
+			float speed = texture.getAnimationSpeed() * 50 / 128.f;
+			if (direction != 0) {
+				u = (float) Math.cos(direction * HALF_PI) * speed;
+				v = (float) Math.sin(direction * -HALF_PI) * speed;
+			}
+			textureAnimations[i * 2] = u;
+			textureAnimations[i * 2 + 1] = v;
 		}
 
 		int vanillaCount = i - unusedIndices.size();
@@ -305,7 +320,7 @@ public class TextureManager
 		textureProvider.setBrightness(save);
 		glActiveTexture(TEXTURE_UNIT_UI);
 
-		plugin.updateMaterialUniformBuffer();
+		plugin.updateMaterialUniformBuffer(textureAnimations);
 		plugin.updateWaterTypeUniformBuffer();
 	}
 
@@ -328,10 +343,16 @@ public class TextureManager
 		return null;
 	}
 
-	int c = 0;
 	private void uploadTexture(int index, BufferedImage image)
 	{
+		// TODO: scale and transform on the GPU for better performance
 		AffineTransform t = new AffineTransform();
+		// Flip non-vanilla textures vertically
+		if (image != vanillaImage)
+		{
+			t.translate(0, scaledImage.getHeight());
+			t.scale(1, -1);
+		}
 		t.scale((double) textureSize / image.getWidth(), (double) textureSize / image.getHeight());
 		AffineTransformOp scaleOp = new AffineTransformOp(t, AffineTransformOp.TYPE_BICUBIC);
 		scaleOp.filter(image, scaledImage);
@@ -418,66 +439,5 @@ public class TextureManager
 		}
 
 		return true;
-	}
-
-	/**
-	 * Animate the given texture
-	 *
-	 * @param texture
-	 * @param diff    Number of elapsed client ticks since last animation
-	 */
-	public void animate(Texture texture, int diff)
-	{
-		final int[] pixels = texture.getPixels();
-		if (pixels == null)
-		{
-			return;
-		}
-
-		final int animationSpeed = texture.getAnimationSpeed();
-		final float uvdiff = pixels.length == 4096 ? PERC_64 : PERC_128;
-
-		float u = texture.getU();
-		float v = texture.getV();
-
-		int offset = animationSpeed * diff;
-		float d = (float) offset * uvdiff;
-
-		switch (texture.getAnimationDirection())
-		{
-			case 1:
-				v -= d;
-				if (v < 0f)
-				{
-					v += 1f;
-				}
-				break;
-			case 3:
-				v += d;
-				if (v > 1f)
-				{
-					v -= 1f;
-				}
-				break;
-			case 2:
-				u -= d;
-				if (u < 0f)
-				{
-					u += 1f;
-				}
-				break;
-			case 4:
-				u += d;
-				if (u > 1f)
-				{
-					u -= 1f;
-				}
-				break;
-			default:
-				return;
-		}
-
-		texture.setU(u);
-		texture.setV(v);
 	}
 }

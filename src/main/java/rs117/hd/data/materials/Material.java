@@ -58,23 +58,42 @@ public enum Material
 	STONE_WALL_DISPLACEMENT,
 	STONE_WALL_ROUGHNESS,
 	STONE_WALL(p -> p
-		.setTextureScale(2, 2)
+		.setTextureScale(3, 3)
 		.setNormalMap(STONE_WALL_NORMALS)
 		.setDisplacementMap(STONE_WALL_DISPLACEMENT)
 		.setRoughnessMap(STONE_WALL_ROUGHNESS)
 		.setSpecular(1, 1)),
+
+	WOODEN_PLANKS_NORMALS,
+	WOODEN_PLANKS_DISPLACEMENT,
+	WOODEN_PLANKS_ROUGHNESS,
+	WOODEN_PLANKS(p -> p
+		.setTextureScale(2, 2)
+		.setNormalMap(WOODEN_PLANKS_NORMALS)
+		.setDisplacementMap(WOODEN_PLANKS_DISPLACEMENT)
+		.setRoughnessMap(WOODEN_PLANKS_ROUGHNESS)
+		.setSpecular(1, 1)),
+
+	TOY_BOX_NORMAL,
+	TOY_BOX_DISP,
+	TOY_BOX_DIFFUSE(p -> p
+		.setTextureScale(1, 1)
+		.setNormalMap(TOY_BOX_NORMAL)
+		.setDisplacementMap(TOY_BOX_DISP)),
 
 	// Reserve first 128 materials for vanilla OSRS texture ids
 	TRAPDOOR(0),
 	WATER_FLAT(1),
 	BRICK(2),
 	WOOD_PLANKS_1(3, p -> p
-		.setSpecular(0.35f, 30f)
-		.setParent(STONE_WALL)),
+		.setSpecular(0.35f, 30)
+		.setParent(TOY_BOX_DIFFUSE)),
+//		.setParent(STONE_WALL)),
+//		.setParent(WOODEN_PLANKS)),
 	DOOR(4),
 	DARK_WOOD(5),
 	ROOF_SHINGLES_1(6, p -> p
-		.setSpecular(0.5f, 30f)),
+		.setSpecular(0.5f, 30)),
 	WOODEN_WINDOW(7),
 	LEAVES_1(8, p -> p
 		.setTextureScale(1.3f, 1.0f)),
@@ -85,7 +104,7 @@ public enum Material
 	PAINTING_LANDSCAPE(13),
 	PAINTING_KING(14),
 	MARBLE_DARK(15, p -> p
-		.setSpecular(1.1f, 380f)),
+		.setSpecular(1.1f, 380)),
 	GRAIN_WOOD_ROOF(16),
 	WATER_DROPLETS(17),
 	STRAW(18),
@@ -93,7 +112,7 @@ public enum Material
 	BOOKCASE(20),
 	ROOF_WOODEN_SLATE(21),
 	WOOD_PLANKS_2(22, p -> p
-		.setSpecular(0.35f, 30f)),
+		.setSpecular(0.35f, 30)),
 	BRICK_BROWN(23),
 	WATER_FLAT_2(24),
 	SWAMP_WATER_FLAT(25),
@@ -105,13 +124,13 @@ public enum Material
 		.setTextureScale(1.025f, 1.0f)),
 	LAVA(31, p -> p
 		.setEmissiveStrength(1)
-		.setFlowMap(LAVA_FLOW_MAP, 0.05f, 36f, 22f)
-		.setScroll(0f, 3f)),
+		.setFlowMap(LAVA_FLOW_MAP, 0.05f, 36, 22)
+		.setScroll(0, 1 / 3f)),
 	BROWN_CARPET(32),
 	MAPLE_LEAVES(33, p -> p
-		.setTextureScale(1.3f, 1.0f)),
+		.setTextureScale(1.3f, 1)),
 	MAGIC_STARS(34, p -> p
-		.setEmissiveStrength(1.0f)),
+		.setEmissiveStrength(1)),
 	SAND_BRICK(35),
 	DOOR_TEXTURE(36),
 	CHAIN(37),
@@ -119,12 +138,12 @@ public enum Material
 	PAINTING_ELF(39),
 	FIRE_CAPE(40, p -> p
 		.setEmissiveStrength(1)
-		.setFlowMap(LAVA_FLOW_MAP, 0.05f, 12f, 4f)
-		.setScroll(0f, -3f)),
+		.setFlowMap(LAVA_FLOW_MAP, 0.05f, 12, 4)
+		.setScroll(0, 1 / -3f)),
 	LEAVES_2(41, p -> p
 		.setTextureScale(1.1f, 1.1f)),
 	MARBLE(42, p -> p
-		.setSpecular(1.0f, 400f)),
+		.setSpecular(1.0f, 400)),
 	TILE_DARK(43),
 	ROOF_SHINGLES_2(44),
 	ROOF_BRICK_TILE(45),
@@ -143,8 +162,8 @@ public enum Material
 	UNUSED_LEAVES(58),
 	INFERNAL_CAPE(59, p -> p
 		.setEmissiveStrength(1)
-		.setFlowMap(LAVA_FLOW_MAP, 0.02f, 12f, 4f)
-		.setScroll(0f, 0f)),
+		.setFlowMap(LAVA_FLOW_MAP, 0.02f, 12, 4)
+		.setScroll(0, 0)),
 	LEAVES_3(60),
 	CLAN_SKULL(61),
 	CLAN_PARTYHAT(62),
@@ -192,9 +211,9 @@ public enum Material
 	BLACK,
 
 	BLANK_GLOSS(WHITE, p -> p
-		.setSpecular(0.9f, 280f)),
+		.setSpecular(0.9f, 280)),
 	BLANK_SEMIGLOSS(WHITE, p -> p
-		.setSpecular(0.35f, 80f)),
+		.setSpecular(0.35f, 80)),
 
 	SNOW_1,
 	SNOW_2,
@@ -205,18 +224,18 @@ public enum Material
 	GRASS_2,
 	GRASS_3,
 	GRASS_SCROLLING(GRASS_1, p -> p
-		.setScroll(0f, 0.7f)),
+		.setScroll(0, 1 / 0.7f)),
 
 	DIRT_1,
 	DIRT_2,
 	GRAVEL,
 
 	DIRT_SHINY_1(DIRT_1, p -> p
-		.setSpecular(1.1f, 380f)),
+		.setSpecular(1.1f, 380)),
 	DIRT_SHINY_2(DIRT_2, p -> p
-		.setSpecular(1.1f, 380f)),
+		.setSpecular(1.1f, 380)),
 	GRAVEL_SHINY(GRAVEL, p -> p
-		.setSpecular(1.1f, 380f)),
+		.setSpecular(1.1f, 380)),
 
 	SAND_1,
 	SAND_2,
@@ -231,50 +250,50 @@ public enum Material
 	CARPET,
 
 	FALADOR_PATH_BRICK(p -> p
-		.setSpecular(0.3f, 30f)),
+		.setSpecular(0.3f, 30)),
 	JAGGED_STONE_TILE,
 
 	TILE_SMALL_1(p -> p
-		.setSpecular(0.8f, 70f)),
+		.setSpecular(0.8f, 70)),
 	TILES_1_2x2,
 	TILES_2_2x2,
 	TILES_2x2_1_GLOSS(TILES_1_2x2, p -> p
-		.setSpecular(1.0f, 70f)),
+		.setSpecular(1.0f, 70)),
 	TILES_2x2_2_GLOSS(TILES_2_2x2, p -> p
-		.setSpecular(1.0f, 70f)),
+		.setSpecular(1.0f, 70)),
 	TILES_2x2_1_SEMIGLOSS(TILES_1_2x2, p -> p
-		.setSpecular(0.5f, 300f)),
+		.setSpecular(0.5f, 300)),
 	TILES_2x2_2_SEMIGLOSS(TILES_2_2x2, p -> p
-		.setSpecular(0.5f, 300f)),
+		.setSpecular(0.5f, 300)),
 
 	MARBLE_1,
 	MARBLE_2,
 	MARBLE_3,
 	MARBLE_1_GLOSS(MARBLE_1, p -> p
-		.setSpecular(0.9f, 280f)),
+		.setSpecular(0.9f, 280)),
 	MARBLE_2_GLOSS(MARBLE_2, p -> p
-		.setSpecular(0.8f, 300f)),
+		.setSpecular(0.8f, 300)),
 	MARBLE_3_GLOSS(MARBLE_3, p -> p
-		.setSpecular(0.7f, 320f)),
+		.setSpecular(0.7f, 320)),
 	MARBLE_1_SEMIGLOSS(MARBLE_1, p -> p
-		.setSpecular(0.35f, 80f)),
+		.setSpecular(0.35f, 80)),
 	MARBLE_2_SEMIGLOSS(MARBLE_2, p -> p
-		.setSpecular(0.3f, 100f)),
+		.setSpecular(0.3f, 100)),
 	MARBLE_3_SEMIGLOSS(MARBLE_3, p -> p
-		.setSpecular(0.4f, 120f)),
+		.setSpecular(0.4f, 120)),
 
 	HD_LAVA_1(p -> p
 		.setEmissiveStrength(1.0f)
-		.setFlowMap(LAVA_FLOW_MAP, 0.04f, 36f, 12f)),
+		.setFlowMap(LAVA_FLOW_MAP, 0.04f, 36, 12)),
 	HD_LAVA_2(p -> p
 		.setEmissiveStrength(1.0f)
-		.setFlowMap(LAVA_FLOW_MAP, 0.04f, 36f, 12f)),
+		.setFlowMap(LAVA_FLOW_MAP, 0.04f, 36, 12)),
 	HD_MAGMA_1(p -> p
 		.setEmissiveStrength(1.0f)
-		.setFlowMap(LAVA_FLOW_MAP, 0.04f, 36f, 12f)),
+		.setFlowMap(LAVA_FLOW_MAP, 0.04f, 36, 12)),
 	HD_MAGMA_2(p -> p
 		.setEmissiveStrength(1.0f)
-		.setFlowMap(LAVA_FLOW_MAP, 0.04f, 36f, 12f)),
+		.setFlowMap(LAVA_FLOW_MAP, 0.04f, 36, 12)),
 
 	BARK,
 	WOOD_GRAIN,
@@ -282,24 +301,24 @@ public enum Material
 	HD_INFERNAL_CAPE(p -> p
 		.replaceIf(INFERNAL_CAPE, HdPluginConfig::hdInfernalTexture)
 		.setEmissiveStrength(1)
-		.setFlowMap(LAVA_FLOW_MAP, 0.02f, 12f, 4f)
-		.setScroll(0f, 3f)),
+		.setFlowMap(LAVA_FLOW_MAP, 0.02f, 12, 4)
+		.setScroll(0, 1 / 3f)),
 
 	HD_BRICK(p -> p
 		.replaceIf(BRICK, HdPluginConfig::objectTextures)),
 	HD_ROOF_SHINGLES_1(p -> p
 		.replaceIf(ROOF_SHINGLES_1, HdPluginConfig::objectTextures)
-		.setSpecular(0.5f, 30f)),
+		.setSpecular(0.5f, 30)),
 	HD_MARBLE_DARK(p -> p
 		.replaceIf(MARBLE_DARK, HdPluginConfig::objectTextures)
-		.setSpecular(1.1f, 380f)),
+		.setSpecular(1.1f, 380)),
 	HD_BRICK_BROWN(p -> p
 		.replaceIf(BRICK_BROWN, HdPluginConfig::objectTextures)),
 	HD_LAVA_3(p -> p
 		.replaceIf(LAVA, HdPluginConfig::objectTextures)
 		.setEmissiveStrength(1)
-		.setFlowMap(LAVA_FLOW_MAP, 0.05f, 36f, 22f)
-		.setScroll(0f, 3f)),
+		.setFlowMap(LAVA_FLOW_MAP, 0.05f, 36, 22)
+		.setScroll(0, 1 / 3f)),
 	HD_ROOF_SHINGLES_2(p -> p
 		.replaceIf(ROOF_SHINGLES_2, HdPluginConfig::objectTextures)),
 	WORN_TILES,
@@ -332,16 +351,14 @@ public enum Material
 	public final Material displacementMap;
 	public final Material roughnessMap;
 	public final Material flowMap;
+	public final float displacementScale;
 	public final float flowMapStrength;
-	public final float flowMapDurationX;
-	public final float flowMapDurationY;
+	public final float[] flowMapDuration;
 	public final float specularStrength;
 	public final float specularGloss;
 	public final float emissiveStrength;
-	public final float scrollDurationX;
-	public final float scrollDurationY;
-	public final float textureScaleX;
-	public final float textureScaleY;
+	public final float[] scrollSpeed;
+	public final float[] textureScale;
 	public final Material materialToReplace;
 	public final Function<HdPluginConfig, Boolean> replacementCondition;
 
@@ -354,16 +371,14 @@ public enum Material
 		private Material displacementMap = NONE;
 		private Material roughnessMap = NONE;
 		private Material flowMap = LAVA_FLOW_MAP;
+		private float displacementScale = .1f;
+		private float flowMapStrength;
+		private float[] flowMapDuration = { 0, 0 };
 		private float specularStrength;
 		private float specularGloss;
 		private float emissiveStrength;
-		private float flowMapStrength;
-		private float flowMapDurationX;
-		private float flowMapDurationY;
-		private float scrollDurationX;
-		private float scrollDurationY;
-		private float textureScaleX = 1;
-		private float textureScaleY = 1;
+		private float[] scrollSpeed = { 0, 0 };
+		private float[] textureScale = { 1, 1 };
 		private Material materialToReplace;
 		private Function<HdPluginConfig, Boolean> replacementCondition;
 
@@ -383,16 +398,14 @@ public enum Material
 			this.displacementMap = parent.displacementMap;
 			this.roughnessMap = parent.roughnessMap;
 			this.flowMap = parent.flowMap;
+			this.displacementScale = parent.displacementScale;
 			this.flowMapStrength = parent.flowMapStrength;
-			this.flowMapDurationX = parent.flowMapDurationX;
-			this.flowMapDurationY = parent.flowMapDurationY;
+			this.flowMapDuration = parent.flowMapDuration;
 			this.specularStrength = parent.specularStrength;
 			this.specularGloss = parent.specularGloss;
 			this.emissiveStrength = parent.emissiveStrength;
-			this.scrollDurationX = parent.scrollDurationX;
-			this.scrollDurationY = parent.scrollDurationY;
-			this.textureScaleX = parent.textureScaleX;
-			this.textureScaleY = parent.textureScaleY;
+			this.scrollSpeed = parent.scrollSpeed;
+			this.textureScale = parent.textureScale;
 			return this;
 		}
 
@@ -403,26 +416,23 @@ public enum Material
 			return this;
 		}
 
-		Builder setFlowMap(Material flowMap, float flowMapStrength, float flowMapDurationX, float flowMapDurationY)
+		Builder setFlowMap(Material flowMap, float flowMapStrength, float durationX, float durationY)
 		{
 			this.flowMap = flowMap;
 			this.flowMapStrength = flowMapStrength;
-			this.flowMapDurationX = flowMapDurationX;
-			this.flowMapDurationY = flowMapDurationY;
+			this.flowMapDuration = new float[] { durationX, durationY };
 			return this;
 		}
 
-		Builder setScroll(float scrollDurationX, float scrollDurationY)
+		Builder setScroll(float speedX, float speedY)
 		{
-			this.scrollDurationX = scrollDurationX;
-			this.scrollDurationY = scrollDurationY;
+			this.scrollSpeed = new float[] { -speedX, -speedY };
 			return this;
 		}
 
-		Builder setTextureScale(float textureScaleX, float textureScaleY)
+		Builder setTextureScale(float x, float y)
 		{
-			this.textureScaleX = textureScaleX;
-			this.textureScaleY = textureScaleY;
+			this.textureScale = new float[] { x, y };
 			return this;
 		}
 
@@ -464,16 +474,14 @@ public enum Material
 		this.displacementMap = builder.displacementMap;
 		this.roughnessMap = builder.roughnessMap;
 		this.flowMap = builder.flowMap;
+		this.displacementScale = builder.displacementScale;
 		this.flowMapStrength = builder.flowMapStrength;
-		this.flowMapDurationX = builder.flowMapDurationX;
-		this.flowMapDurationY = builder.flowMapDurationY;
+		this.flowMapDuration = builder.flowMapDuration;
 		this.specularStrength = builder.specularStrength;
 		this.specularGloss = builder.specularGloss;
 		this.emissiveStrength = builder.emissiveStrength;
-		this.scrollDurationX = builder.scrollDurationX;
-		this.scrollDurationY = builder.scrollDurationY;
-		this.textureScaleX = builder.textureScaleX;
-		this.textureScaleY = builder.textureScaleY;
+		this.scrollSpeed = builder.scrollSpeed;
+		this.textureScale = builder.textureScale;
 		this.materialToReplace = builder.materialToReplace;
 		this.replacementCondition = builder.replacementCondition;
 	}

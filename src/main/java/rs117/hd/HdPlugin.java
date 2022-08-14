@@ -250,7 +250,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	private final GLBuffer tmpOutNormalBuffer = new GLBuffer(); // target normal buffer for compute shaders
 
 	private final GLBuffer uniformBuffer = new GLBuffer();
-	private final float[] textureOffsets = new float[256];
 	private final GLBuffer materialsUniformBuffer = new GLBuffer();
 	private final GLBuffer waterTypesUniformBuffer = new GLBuffer();
 	private final GLBuffer lightsUniformBuffer = new GLBuffer();
@@ -324,9 +323,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	private int uniLightningBrightness;
 	private int uniSaturation;
 	private int uniContrast;
-	private int uniLightX;
-	private int uniLightY;
-	private int uniLightZ;
+	private int uniLightDirection;
 	private int uniShadowMaxBias;
 	private int uniShadowsEnabled;
 	private int uniUnderwaterEnvironment;
@@ -336,7 +333,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 	// Shadow program uniforms
 	private int uniShadowTextureArray;
-	private int uniShadowTextureOffsets;
 	private int uniShadowLightProjectionMatrix;
 
 	// Point light uniforms
@@ -351,8 +347,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	private int uniTexTargetDimensions;
 	private int uniUiAlphaOverlay;
 	private int uniTextureArray;
-	private int uniTextureOffsets;
-	private int uniAnimationCurrent;
+	private int uniElapsedTime;
 
 	private int uniBlockSmall;
 	private int uniBlockLarge;
@@ -365,7 +360,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	// Animation things
 	private long lastFrameTime = System.currentTimeMillis();
 	// Generic scalable animation timer used in shaders
-	private float animationCurrent = 0;
+	private float elapsedTime = 0;
 
 	// future time to reload the scene
 	// useful for pulling new data into the scene buffer
@@ -725,6 +720,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 					return String.format("#define %s %d", key, configMaxDynamicLights);
 				case "LIGHT_GETTER":
 					return generateGetter("PointLight", configMaxDynamicLights);
+				case "PARALLAX_MAPPING":
+					return String.format("#define %s %d", key, config.parallaxMappingMode().ordinal());
 			}
 			return null;
 		});
@@ -803,9 +800,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		uniLightningBrightness = glGetUniformLocation(glProgram, "lightningBrightness");
 		uniPointLightsCount = glGetUniformLocation(glProgram, "pointLightsCount");
 		uniColorBlindMode = glGetUniformLocation(glProgram, "colorBlindMode");
-		uniLightX = glGetUniformLocation(glProgram, "lightX");
-		uniLightY = glGetUniformLocation(glProgram, "lightY");
-		uniLightZ = glGetUniformLocation(glProgram, "lightZ");
+		uniLightDirection = glGetUniformLocation(glProgram, "lightDirection");
 		uniShadowMaxBias = glGetUniformLocation(glProgram, "shadowMaxBias");
 		uniShadowsEnabled = glGetUniformLocation(glProgram, "shadowsEnabled");
 		uniUnderwaterEnvironment = glGetUniformLocation(glProgram, "underwaterEnvironment");
@@ -820,8 +815,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		uniUiColorBlindMode = glGetUniformLocation(glUiProgram, "colorBlindMode");
 		uniUiAlphaOverlay = glGetUniformLocation(glUiProgram, "alphaOverlay");
 		uniTextureArray = glGetUniformLocation(glProgram, "textureArray");
-		uniTextureOffsets = glGetUniformLocation(glProgram, "textureOffsets");
-		uniAnimationCurrent = glGetUniformLocation(glProgram, "animationCurrent");
+		uniElapsedTime = glGetUniformLocation(glProgram, "elapsedTime");
 
 		if (computeMode == ComputeMode.OPENGL)
 		{
@@ -837,7 +831,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		uniShadowBlockMaterials = glGetUniformBlockIndex(glShadowProgram, "MaterialUniforms");
 		uniShadowLightProjectionMatrix = glGetUniformLocation(glShadowProgram, "lightProjectionMatrix");
 		uniShadowTextureArray = glGetUniformLocation(glShadowProgram, "textureArray");
-		uniShadowTextureOffsets = glGetUniformLocation(glShadowProgram, "textureOffsets");
 	}
 
 	private void shutdownPrograms()
@@ -1068,29 +1061,37 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 	}
 
-	public void updateMaterialUniformBuffer()
+	public void updateMaterialUniformBuffer(float[] textureAnimations)
 	{
 		ByteBuffer buffer = BufferUtils.createByteBuffer(Material.values().length * 16 * SCALAR_BYTES);
 		for (Material material : Material.values())
 		{
 			material = textureManager.getEffectiveMaterial(material);
+			int index = textureManager.getTextureIndex(material);
+			float scrollSpeedX = material.scrollSpeed[0];
+			float scrollSpeedY = material.scrollSpeed[1];
+			if (index != -1)
+			{
+				scrollSpeedX += textureAnimations[index * 2];
+				scrollSpeedY += textureAnimations[index * 2 + 1];
+			}
 			buffer
-				.putInt(textureManager.getTextureIndex(material))
+				.putInt(index)
 				.putInt(textureManager.getTextureIndex(material.normalMap))
 				.putInt(textureManager.getTextureIndex(material.displacementMap))
 				.putInt(textureManager.getTextureIndex(material.roughnessMap))
 				.putInt(textureManager.getTextureIndex(material.flowMap))
-				.putFloat(material.flowMapStrength)
-				.putFloat(material.flowMapDurationX)
-				.putFloat(material.flowMapDurationY)
+				.putFloat(material.displacementScale)
 				.putFloat(material.specularStrength)
 				.putFloat(material.specularGloss)
+				.putFloat(material.flowMapStrength)
 				.putFloat(material.emissiveStrength)
-				.putFloat(0) // pad vec2
-				.putFloat(material.scrollDurationX)
-				.putFloat(material.scrollDurationY)
-				.putFloat(material.textureScaleX)
-				.putFloat(material.textureScaleY);
+				.putFloat(material.flowMapDuration[0])
+				.putFloat(material.flowMapDuration[1])
+				.putFloat(scrollSpeedX)
+				.putFloat(scrollSpeedY)
+				.putFloat(material.textureScale[0])
+				.putFloat(material.textureScale[1]);
 		}
 		buffer.flip();
 
@@ -1103,10 +1104,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		ByteBuffer buffer = BufferUtils.createByteBuffer(WaterType.values().length * 28 * SCALAR_BYTES);
 		for (WaterType type : WaterType.values())
 		{
-			log.info("Water type: {}, normal map: {}, foam map: {}", type,
-				textureManager.getTextureIndex(type.normalMap),
-				textureManager.getTextureIndex(Material.WATER_FOAM)
-			);
 			buffer
 				.putInt(type.flat ? 1 : 0)
 				.putFloat(type.specularStrength)
@@ -1140,7 +1137,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		updateBuffer(waterTypesUniformBuffer, GL_UNIFORM_BUFFER, buffer, GL_STATIC_DRAW, CL_MEM_READ_ONLY);
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 	}
-
 
 	private void initLightsUniformBuffer()
 	{
@@ -1600,7 +1596,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		}
 
 		// shader variables for water, lava animations
-		animationCurrent += (System.currentTimeMillis() - lastFrameTime) / 1000f;
+		elapsedTime += (System.currentTimeMillis() - lastFrameTime) / 1000f;
 		lastFrameTime = System.currentTimeMillis();
 
 		final int canvasHeight = client.getCanvasHeight();
@@ -1684,30 +1680,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			int uvBuffer = tmpOutUvBuffer.glBufferId;
 			int normalBuffer = tmpOutNormalBuffer.glBufferId;
 
-			// TODO: move anims to GPU
-			final Texture[] textures = textureProvider.getTextures();
-			for (int id = 0; id < textures.length; ++id)
-			{
-				Texture texture = textures[id];
-				if (texture == null)
-				{
-					continue;
-				}
-
-				textureProvider.load(id); // trips the texture load flag which lets textures animate
-
-				int index = textureManager.getTextureIndex(Material.getTexture(id));
-				if (index < textureOffsets.length / 2)
-				{
-					textureOffsets[id * 2] = texture.getU();
-					textureOffsets[id * 2 + 1] = texture.getV();
-				}
-				else
-				{
-					throw new IllegalStateException("Texture anims are not implemented for HD textures yet");
-				}
-			}
-
 			// Update the camera target only when not loading, to keep drawing correct shadows while loading
 			if (client.getGameState() != GameState.LOADING)
 			{
@@ -1747,14 +1719,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				float scale = HDUtils.lerp(maxScale, minScale, scaleMultiplier);
 				Mat4.mul(lightProjectionMatrix, Mat4.scale(scale, scale, scale));
 				Mat4.mul(lightProjectionMatrix, Mat4.ortho(width, height, near));
-				Mat4.mul(lightProjectionMatrix, Mat4.rotateX((float) (lightPitch * (Math.PI / 360f * 2))));
-				Mat4.mul(lightProjectionMatrix, Mat4.rotateY((float) -(lightYaw * (Math.PI / 360f * 2))));
+				Mat4.mul(lightProjectionMatrix, Mat4.rotateX((float) Math.toRadians(lightPitch)));
+				Mat4.mul(lightProjectionMatrix, Mat4.rotateY((float) -Math.toRadians(lightYaw)));
 				Mat4.mul(lightProjectionMatrix, Mat4.translate(-(width / 2f + west), -camZ, -(height / 2f + south)));
 				glUniformMatrix4fv(uniShadowLightProjectionMatrix, false, lightProjectionMatrix);
 
 				// bind uniforms
 				glUniformBlockBinding(glShadowProgram, uniShadowBlockMaterials, 1);
-				glUniform2fv(uniShadowTextureOffsets, textureOffsets);
 
 				glEnable(GL_CULL_FACE);
 				glEnable(GL_DEPTH_TEST);
@@ -1928,12 +1899,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 			double lightPitchRadians = Math.toRadians(lightPitch);
 			double lightYawRadians = Math.toRadians(lightYaw);
-			double lightX = Math.cos(lightPitchRadians) * Math.sin(lightYawRadians);
-			double lightY = Math.sin(lightPitchRadians);
-			double lightZ = Math.cos(lightPitchRadians) * Math.cos(lightYawRadians);
-			glUniform1f(uniLightX, (float)lightX);
-			glUniform1f(uniLightY, (float)lightY);
-			glUniform1f(uniLightZ, (float)lightZ);
+			glUniform3f(uniLightDirection,
+				(float) (Math.cos(lightPitchRadians) * -Math.sin(lightYawRadians)),
+				(float) -Math.sin(lightPitchRadians),
+				(float) (Math.cos(lightPitchRadians) * -Math.cos(lightYawRadians)));
 
 			// use a curve to calculate max bias value based on the density of the shadow map
 			float shadowPixelsPerTile = (float)config.shadowResolution().getValue() / (float)config.shadowDistance().getValue();
@@ -1958,8 +1927,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			glUniformBlockBinding(glProgram, uniBlockMaterials, 1);
 			glUniformBlockBinding(glProgram, uniBlockWaterTypes, 2);
 			glUniformBlockBinding(glProgram, uniBlockPointLights, 3);
-			glUniform2fv(uniTextureOffsets, textureOffsets);
-			glUniform1f(uniAnimationCurrent, animationCurrent);
+			glUniform1f(uniElapsedTime, elapsedTime);
 
 			// We just allow the GL to do face culling. Note this requires the priority renderer
 			// to have logic to disregard culled faces in the priority depth testing.
@@ -2145,10 +2113,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	}
 
 	@Override
-	public void animate(Texture texture, int diff)
-	{
-		textureManager.animate(texture, diff);
-	}
+	public void animate(Texture texture, int diff) {}
 
 	@Subscribe
 	public void onGameStateChanged(GameStateChanged gameStateChanged)
@@ -2293,6 +2258,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				break;
 			case "maxDynamicLights":
 				configMaxDynamicLights = config.maxDynamicLights().getValue();
+			case "parallaxMappingMode":
 			case "macosIntelWorkaround":
 				recompilePrograms();
 				break;

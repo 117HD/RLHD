@@ -86,12 +86,11 @@ void main() {
     vec3 N = normalize(cross(T, B));
 
     // Source: https://www.geeks3d.com/20130122/normal-mapping-without-precomputed-tangent-space-vectors/
-    vec3 C1 = cross(N, vec3(0, 0, 1));
-    vec3 C2 = cross(N, vec3(0, 1, 0));
-    T = length(C1) > length(C2) ? C1 : C2;
-    T = normalize(T);
+    vec3 C1 = cross(vec3(0, 0, 1), N);
+    vec3 C2 = cross(vec3(0, 1, 0), N);
+    T = normalize(length(C1) > length(C2) ? C1 : C2);
     B = normalize(cross(N, T));
-    TBN = transpose(mat3(T, B, N));
+    TBN = mat3(T, B, N);
 
     texBlend = vec3(1, 0, 0);
     fogAmount = vFogAmount[0];

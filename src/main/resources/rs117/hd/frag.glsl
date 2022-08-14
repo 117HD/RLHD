@@ -35,8 +35,9 @@
 uniform sampler2DArray textureArray;
 uniform sampler2D shadowMap;
 
-uniform vec2 textureOffsets[128];
-uniform float animationCurrent;
+uniform mat4 lightProjectionMatrix;
+
+uniform float elapsedTime;
 uniform int colorBlindMode;
 uniform vec4 fogColor;
 uniform int fogDepth;
@@ -53,9 +54,7 @@ uniform float groundFogStart;
 uniform float groundFogEnd;
 uniform float groundFogOpacity;
 uniform float lightningBrightness;
-uniform float lightX;
-uniform float lightY;
-uniform float lightZ;
+uniform vec3 lightDirection;
 uniform float shadowMaxBias;
 uniform int shadowsEnabled;
 uniform bool underwaterEnvironment;
@@ -83,7 +82,6 @@ flat in ivec3 materialId;
 flat in ivec3 terrainData;
 flat in ivec3 isOverlay;
 flat in mat3 TBN;
-in vec4 shadowOut;
 
 out vec4 FragColor;
 
@@ -93,12 +91,14 @@ out vec4 FragColor;
 #include utils/misc.glsl
 #include utils/normals.glsl
 #include utils/specular.glsl
+#include utils/displacement.glsl
 
 void main() {
     vec3 camPos = vec3(cameraX, cameraY, cameraZ);
     vec3 downDir = normalize(vec3(0, -1.0, 0));
+    // View & light directions are from the fragment to the camera/light
     vec3 viewDir = normalize(camPos - position);
-    vec3 lightDir = normalize(vec3(lightX, lightY, lightZ));
+    vec3 lightDir = -normalize(lightDirection);
 
     // material data
     Material material1 = getMaterial(materialId.x);
@@ -137,21 +137,35 @@ void main() {
     }
 
     float alpha = 1;
-
-    vec2 blendedUv = vUv1 * texBlend.x + vUv2 * texBlend.y + vUv3 * texBlend.z;
-    vec2 baseUv1 = blendedUv;
-    vec2 baseUv2 = blendedUv;
-    vec2 baseUv3 = blendedUv;
-
     vec4 fragColor = vColor1 * texBlend.x + vColor2 * texBlend.y + vColor3 * texBlend.z;
 
-    vec2 uv1 = baseUv1 + textureOffsets[diffuseMap1];
-    vec2 uv2 = baseUv2 + textureOffsets[diffuseMap2];
-    vec2 uv3 = baseUv3 + textureOffsets[diffuseMap3];
+    // TODO: consider blending colors by the end, and maybe depth, instead of UV blending
+    vec2 blendedUv = vUv1 * texBlend.x + vUv2 * texBlend.y + vUv3 * texBlend.z;
+    blendedUv = worldUvs(1).yx;
+    vec2 uv1 = blendedUv;
+    vec2 uv2 = blendedUv;
+    vec2 uv3 = blendedUv;
 
-    uv1 = vec2((uv1.x - 0.5) / material1.textureScale.x + 0.5, (uv1.y - 0.5) / material1.textureScale.y + 0.5);
-    uv2 = vec2((uv2.x - 0.5) / material2.textureScale.x + 0.5, (uv2.y - 0.5) / material2.textureScale.y + 0.5);
-    uv3 = vec2((uv3.x - 0.5) / material3.textureScale.x + 0.5, (uv3.y - 0.5) / material3.textureScale.y + 0.5);
+    // Scroll UVs
+    uv1 += material1.scrollDuration * elapsedTime;
+    uv2 += material2.scrollDuration * elapsedTime;
+    uv3 += material3.scrollDuration * elapsedTime;
+
+    // Scale from the center
+    uv1 = (uv1 - .5) / material1.textureScale + .5;
+    uv2 = (uv2 - .5) / material2.textureScale + .5;
+    uv3 = (uv3 - .5) / material3.textureScale + .5;
+
+    float selfShadowing = 0;
+    vec3 fragPos = position;
+    #if PARALLAX_MAPPING
+    mat3 invTBN = transpose(TBN);
+    vec3 tangentViewDir = invTBN * viewDir;
+    vec3 tangentLightDir = invTBN * lightDir;
+    uv1 = sampleDisplacementMap(material1, uv1, tangentViewDir, tangentLightDir, selfShadowing, fragPos);
+    uv2 = sampleDisplacementMap(material2, uv2, tangentViewDir, tangentLightDir, selfShadowing, fragPos);
+    uv3 = sampleDisplacementMap(material3, uv3, tangentViewDir, tangentLightDir, selfShadowing, fragPos);
+    #endif
 
     // water uvs
     if (isWater)
@@ -162,27 +176,20 @@ void main() {
         worldUvs(3).x - animationFrame(24 * waterType.duration));
     }
 
-    uv1 -= vec2(animationFrame(material1.scrollDuration.x),
-    animationFrame(material1.scrollDuration.y));
-    uv2 -= vec2(animationFrame(material2.scrollDuration.x),
-    animationFrame(material2.scrollDuration.y));
-    uv3 -= vec2(animationFrame(material3.scrollDuration.x),
-    animationFrame(material3.scrollDuration.y));
-
     // get flowMap map
-    vec2 flowMapUv = vec2(baseUv1.x - animationFrame(material1.flowMapDuration.x),
-    baseUv1.y - animationFrame(material1.flowMapDuration.y));
+    vec2 flowMapUv = uv1 - animationFrame(material1.flowMapDuration);
     float flowMapStrength = material1.flowMapStrength;
     if (isWater)
     {
-        flowMapUv = vec2(worldUvs(15).x + animationFrame(50 * waterType.duration), worldUvs(15).y + animationFrame(50 * waterType.duration));
+        flowMapUv = worldUvs(15) + animationFrame(50 * waterType.duration);
         flowMapStrength = 0.025;
     }
     if (isUnderwater)
     {
-        flowMapUv = vec2(worldUvs(1.5).x + animationFrame(10 * waterType.duration), worldUvs(1.5).y - animationFrame(10 * waterType.duration));
+        flowMapUv = worldUvs(1.5) + animationFrame(10 * waterType.duration) * vec2(1, -1);
         flowMapStrength = 0.075;
     }
+
     vec2 uvFlow = texture(textureArray, vec3(flowMapUv, flowMap)).xy;
     uv1 += uvFlow * flowMapStrength;
     uv2 += uvFlow * flowMapStrength;
@@ -249,21 +256,9 @@ void main() {
 
 
     // get fragment colors by combining vertex colors and texture samples
-    vec4 texA = color1;
-    if (diffuseMap1 > -0.5)
-    {
-        texA = vec4(diffuse1.rgb * texA.rgb, min(diffuse1.a, color1.a));
-    }
-    vec4 texB = color2;
-    if (diffuseMap2 > -0.5)
-    {
-        texB = vec4(diffuse2.rgb * texB.rgb, min(diffuse2.a, color2.a));
-    }
-    vec4 texC = color3;
-    if (diffuseMap3 > -0.5)
-    {
-        texC = vec4(diffuse3.rgb * texC.rgb, min(diffuse3.a, color3.a));
-    }
+    vec4 texA = diffuseMap1 == -1 ? color1 : vec4(diffuse1.rgb * color1.rgb, min(diffuse1.a, color1.a));
+    vec4 texB = diffuseMap2 == -1 ? color2 : vec4(diffuse2.rgb * color2.rgb, min(diffuse2.a, color2.a));
+    vec4 texC = diffuseMap3 == -1 ? color3 : vec4(diffuse3.rgb * color3.rgb, min(diffuse3.a, color3.a));
 
     // combine fragment colors based on each blend, creating
     // one color for each overlay/underlay 'layer'
@@ -298,7 +293,7 @@ void main() {
         // in a style similar to 2008+ HD
 
         // fragment UV
-        vec2 fragUv = baseUv1;
+        vec2 fragUv = blendedUv;
         // standalone UV
         // e.g. if there are 2 overlays and 1 underlay, the underlay is the standalone
         vec2 uvA = vec2(-999);
@@ -404,9 +399,9 @@ void main() {
     }
     else
     {
-        vec3 n1 = material1.normalMap == -1 ? normals : sampleNormalMap(material1.normalMap, uv1, normals);
-        vec3 n2 = material2.normalMap == -1 ? normals : sampleNormalMap(material2.normalMap, uv2, normals);
-        vec3 n3 = material3.normalMap == -1 ? normals : sampleNormalMap(material3.normalMap, uv3, normals);
+        vec3 n1 = sampleNormalMap(material1, uv1, normals);
+        vec3 n2 = sampleNormalMap(material2, uv2, normals);
+        vec3 n3 = sampleNormalMap(material3, uv3, normals);
         normals = (n1 + n2 + n3) / 3;
     }
     normals = normalize(normals);
@@ -421,7 +416,8 @@ void main() {
     float shadow = 0.0;
     if (shadowsEnabled == 1)
     {
-        vec3 projCoords = shadowOut.xyz / shadowOut.w * 0.5 + 0.5;
+        vec4 shadowPos = lightProjectionMatrix * vec4(fragPos, 1);
+        vec3 projCoords = shadowPos.xyz / shadowPos.w * 0.5 + 0.5;
         if (isWater || isUnderwater)
         {
             projCoords += vec3(uvFlow * 0.00075, 0.0);
@@ -466,6 +462,8 @@ void main() {
         shadow = clamp(shadow, 0.0, 1.0);
         shadow = projCoords.z > 1.0 ? 0.0 : shadow;
     }
+
+    shadow = max(shadow, selfShadowing);
     float inverseShadow = 1.0 - shadow;
 
 
@@ -482,12 +480,12 @@ void main() {
     else
     {
         vSpecularGloss = vec3(material1.specularGloss, material2.specularGloss, material3.specularGloss);
-        vSpecularStrength = linearToSrgb(vec3(
+        vSpecularStrength = vec3(material1.specularStrength, material2.specularStrength, material3.specularStrength);
+        vSpecularStrength *= linearToSrgb(vec3(
             material1.roughnessMap == -1 ? 1 : texture(textureArray, vec3(uv1, material1.roughnessMap)).r,
             material2.roughnessMap == -1 ? 1 : texture(textureArray, vec3(uv2, material2.roughnessMap)).r,
             material3.roughnessMap == -1 ? 1 : texture(textureArray, vec3(uv3, material3.roughnessMap)).r
         ));
-        vSpecularStrength *= vec3(material1.specularStrength, material2.specularStrength, material3.specularStrength);
 
         // apply specular highlights to anything semi-transparent
         // this isn't always desirable but adds subtle light reflections to windows, etc.
@@ -539,9 +537,8 @@ void main() {
     vec3 lightOut = max(lightDotNormals, 0.0) * lightColor;
 
     // directional light specular
-    vec3 lightReflectDir = reflect(-lightDir, normals);
+    vec3 lightReflectDir = reflect(lightDirection, normals);
     vec3 lightSpecularOut = specular(viewDir, lightReflectDir, vSpecularGloss, vSpecularStrength, lightColor, lightStrength).rgb;
-
 
     // point lights
     vec3 pointLightsOut = vec3(0);
