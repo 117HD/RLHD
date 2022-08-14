@@ -128,7 +128,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	private ClientThread clientThread;
 
 	@Inject
-	@Getter
 	private HdPluginConfig config;
 
 	@Inject

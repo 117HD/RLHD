@@ -26,13 +26,10 @@ package rs117.hd.data.materials;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
-import lombok.NonNull;
-import lombok.Setter;
 import net.runelite.api.Client;
 import net.runelite.api.Tile;
 import net.runelite.api.coords.LocalPoint;
 import net.runelite.api.coords.WorldPoint;
-import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.data.WaterType;
 import rs117.hd.data.environments.Area;
@@ -232,7 +229,7 @@ public enum Underlay {
         }
     }
 
-    public static Underlay getUnderlay(int underlayId, Tile tile, Client client, HdPluginConfig config) {
+    public static Underlay getUnderlay(int underlayId, Tile tile, Client client, HdPluginConfig pluginConfig) {
         WorldPoint worldPoint = tile.getWorldLocation();
 
         if (client.isInInstancedRegion()) {
@@ -247,7 +244,7 @@ public enum Underlay {
         List<Underlay> underlays = GROUND_MATERIAL_MAP.get(underlayId);
         for (Underlay underlay : underlays) {
             if (underlay.area.containsPoint(worldX, worldY, worldZ)) {
-                if (underlay.replacementCondition != null && underlay.replacementCondition.apply(config)) {
+                if (underlay.replacementCondition != null && underlay.replacementCondition.apply(pluginConfig)) {
                     return underlay.replacementUnderlay;
                 }
                 return underlay;
