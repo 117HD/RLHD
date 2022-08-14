@@ -22,6 +22,7 @@ public class HdPluginTest
 	public static void main(String[] args) throws Exception
 	{
 		useLatestPluginHub();
+		FileUtils.useHotswapping();
 
 		if (Env.missing(ENV_LIGHTS_CONFIG))
 		{
@@ -32,7 +33,6 @@ public class HdPluginTest
 			Env.set(ENV_SHADER_PATH, FileWatcher.getResourcePath(HdPlugin.class));
 		}
 
-		FileUtils.useHotswapping();
 		ExternalPluginManager.loadBuiltin(HdPlugin.class);
 		RuneLite.main(args);
 	}
