@@ -689,9 +689,9 @@ public enum Environment
 	THE_GAUNTLET_CORRUPTED(Area.THE_GAUNTLET_CORRUPTED, new Properties()
 		.setFogColor("#090606")
 		.setFogDepth(20)
-		.setAmbientColor("#95B6F7")
+		.setAmbientColor("#BB9EAE")
 		.setAmbientStrength(1.5f)
-		.setDirectionalColor("#FF7878")
+		.setDirectionalColor("#C58C9E")
 		.setDirectionalStrength(3.0f)
 		.setLightDirection(260f, 10f)
 	),
