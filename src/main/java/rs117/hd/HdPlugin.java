@@ -591,23 +591,35 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			}
 
 			if (awtContext != null)
-			{
 				awtContext.destroy();
-				awtContext = null;
-			}
+			awtContext = null;
 
 			if (debugCallback != null)
-			{
 				debugCallback.free();
-				debugCallback = null;
-			}
+			debugCallback = null;
 
+			if (vertexBuffer != null)
+				vertexBuffer.destroy();
 			vertexBuffer = null;
+
+			if (uvBuffer != null)
+				uvBuffer.destroy();
 			uvBuffer = null;
+
+			if (normalBuffer != null)
+				normalBuffer.destroy();
 			normalBuffer = null;
 
+			if (modelBufferSmall != null)
+				modelBufferSmall.destroy();
 			modelBufferSmall = null;
+
+			if (modelBuffer != null)
+				modelBuffer.destroy();
 			modelBuffer = null;
+
+			if (modelBufferUnordered != null)
+				modelBufferUnordered.destroy();
 			modelBufferUnordered = null;
 
 			// force main buffer provider rebuild to turn off alpha channel
@@ -900,7 +912,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		vboUiHandle = glGenBuffers();
 		glBindVertexArray(vaoUiHandle);
 
-		FloatBuffer vboUiBuf = GpuFloatBuffer.allocateDirect(5 * 4);
+		FloatBuffer vboUiBuf = BufferUtils.createFloatBuffer(5 * 4);
 		vboUiBuf.put(new float[]{
 			// positions     // texture coords
 			1f, 1f, 0.0f, 1.0f, 0f, // top right
@@ -1044,7 +1056,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 	private void initCameraUniformBuffer()
 	{
-		IntBuffer uniformBuf = GpuIntBuffer.allocateDirect(8 + 2048 * 4);
+		IntBuffer uniformBuf = BufferUtils.createIntBuffer(8 + 2048 * 4);
 		uniformBuf.put(new int[8]); // uniform block
 		final int[] pad = new int[2];
 		for (int i = 0; i < 2048; i++)
@@ -2076,8 +2088,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			graphics.dispose();
 		}
 
-		ByteBuffer buffer = ByteBuffer.allocateDirect(width * height * 4)
-			.order(ByteOrder.nativeOrder());
+		ByteBuffer buffer = BufferUtils.createByteBuffer(width * height * 4);
 
 		glReadBuffer(awtContext.getBufferMode());
 		glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
