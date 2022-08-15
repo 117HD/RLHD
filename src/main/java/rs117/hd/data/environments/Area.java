@@ -508,6 +508,16 @@ public enum Area
 		new Rect(1919, 4481, 1988, 4414)
 	),
 
+	//Sophanem and Menaphos
+	SOPHANEM_FLOORS(
+		new Rect(3316, 2803, 3308, 2796, 0),
+		new Rect(3307, 2803, 3307, 2801, 0),
+		new Rect(3307, 2798, 3307, 2796, 0),
+		new Rect(3285, 2777, 3277, 2765, 0),
+		new Rect(3277, 2764, 3279, 2764, 0),
+		new Rect(3285, 2764, 3283, 2764, 0)
+	),
+
 	// Morytania
 	// Hallowed Sepulchre
 	HALLOWED_SEPULCHRE_LOBBY(2380, 5958, 2420, 6000),
