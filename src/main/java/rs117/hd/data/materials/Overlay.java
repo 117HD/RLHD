@@ -82,6 +82,8 @@ public enum Overlay
 	DIGSITE_DOCK(93, Area.DIGSITE_DOCK, GroundMaterial.TILES_2x2_1_GLOSS, new Properties().setBlended(false)),
 
 	// Al Kharid
+	//OVERRIDE_SOPHANEM_CHURCH_FLOOR_FIX_1(21, Area.SOPHANEM_FLOORS, GroundMaterial.TILES_2x2_2_SEMIGLOSS, new Properties().setBlended(false)),
+	//OVERRIDE_SOPHANEM_CHURCH_FLOOR_FIX_2(26, Area.SOPHANEM_FLOORS, GroundMaterial.TILES_2x2_2_SEMIGLOSS, new Properties().setBlended(false)),
 	MAGE_TRAINING_ARENA_FLOOR(-122, Area.MAGE_TRAINING_ARENA, GroundMaterial.TILES_2x2_2_GLOSS, new Properties().setBlended(false)),
 	AL_KHARID_FLOOR_1(26, Area.AL_KHARID_BUILDINGS, GroundMaterial.TILES_2x2_2_SEMIGLOSS, new Properties().setBlended(false).setShiftSaturation(-1).setShiftLightness(7)),
 	AL_KHARID_FLOOR_2(1, Area.AL_KHARID_BUILDINGS, GroundMaterial.TILES_2x2_2_SEMIGLOSS, new Properties().setBlended(false)),
