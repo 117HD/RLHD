@@ -6,6 +6,7 @@ import net.runelite.client.RuneLiteProperties;
 import net.runelite.client.externalplugins.ExternalPluginManager;
 import rs117.hd.scene.lighting.LightManager;
 import rs117.hd.utils.Env;
+import rs117.hd.utils.FileUtils;
 import rs117.hd.utils.FileWatcher;
 
 import java.io.InputStream;
@@ -21,6 +22,7 @@ public class HdPluginTest
 	public static void main(String[] args) throws Exception
 	{
 		useLatestPluginHub();
+		FileUtils.useHotswapping();
 
 		if (Env.missing(ENV_LIGHTS_CONFIG))
 		{
