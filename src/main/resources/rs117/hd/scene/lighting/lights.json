@@ -27168,24 +27168,6 @@
     ]
   },
   {
-    "description": "HALLOWED_TORCH",
-    "height": 300,
-    "alignment": "CENTER",
-    "radius": 700,
-    "strength": 12.5,
-    "color": [
-      140,
-      0,
-      0
-    ],
-    "type": "FLICKER",
-    "duration": 0,
-    "range": 30,
-    "objectIds": [
-      6384
-    ]
-  },
-  {
     "description": "WIZARD_TOWER_RIFT_PORTAL",
     "height": 100,
     "alignment": "CENTER",
