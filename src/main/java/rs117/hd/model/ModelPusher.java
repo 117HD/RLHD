@@ -414,7 +414,7 @@ public class ModelPusher
                     int overlayId = client.getScene().getOverlayIds()[tileZ][tileX][tileY];
                     int underlayId = client.getScene().getUnderlayIds()[tileZ][tileX][tileY];
                     if (overlayId != 0) {
-                        Overlay overlay = Overlay.getOverlay(overlayId, tile, client);
+                        Overlay overlay = Overlay.getOverlay(overlayId, tile, client, config);
                         tileColorHSL = proceduralGenerator.recolorOverlay(overlay, tileColorHSL);
                     } else {
                         Underlay underlay = Underlay.getUnderlay(underlayId, tile, client,config);

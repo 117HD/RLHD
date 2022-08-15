@@ -60,10 +60,10 @@ public class ProceduralGenerator
 	private Client client;
 	
 	@Inject
-	private HdPlugin hdPlugin;
+	private HdPlugin plugin;
 
 	@Inject
-	private HdPluginConfig pluginConfig;
+	private HdPluginConfig config;
 
 	private final int VERTICES_PER_FACE = 3;
 
@@ -293,7 +293,7 @@ public class ProceduralGenerator
 			Material material = Material.DIRT_1;
 			if (vertexOverlays[vertex] != 0)
 			{
-				Overlay overlay = Overlay.getOverlay(vertexOverlays[vertex], tile, client);
+				Overlay overlay = Overlay.getOverlay(vertexOverlays[vertex], tile, client, config);
 				GroundMaterial groundMaterial = overlay.getGroundMaterial();
 				material = groundMaterial.getRandomMaterial(z, worldX, worldY);
 				isOverlay = !overlay.blendedAsOverlay;
@@ -301,7 +301,7 @@ public class ProceduralGenerator
 			}
 			else if (vertexUnderlays[vertex] != 0)
 			{
-				Underlay underlay = Underlay.getUnderlay(vertexUnderlays[vertex], tile, client,pluginConfig);
+				Underlay underlay = Underlay.getUnderlay(vertexUnderlays[vertex], tile, client, config);
 				GroundMaterial groundMaterial = underlay.groundMaterial;
 				material = groundMaterial.getRandomMaterial(z, worldX, worldY);
 				isOverlay = underlay.blendedAsUnderlay;
@@ -845,11 +845,11 @@ public class ProceduralGenerator
 		{
 			if (client.getScene().getOverlayIds()[tileZ][tileX][tileY] != 0)
 			{
-				waterType = Overlay.getOverlay(client.getScene().getOverlayIds()[tileZ][tileX][tileY], tile, client).getWaterType();
+				waterType = Overlay.getOverlay(client.getScene().getOverlayIds()[tileZ][tileX][tileY], tile, client, config).getWaterType();
 			}
 			else
 			{
-				waterType = Underlay.getUnderlay(client.getScene().getUnderlayIds()[tileZ][tileX][tileY], tile, client,pluginConfig).waterType;
+				waterType = Underlay.getUnderlay(client.getScene().getUnderlayIds()[tileZ][tileX][tileY], tile, client, config).waterType;
 			}
 		}
 
@@ -881,11 +881,11 @@ public class ProceduralGenerator
 		{
 			if (isOverlayFace(tile, face))
 			{
-				waterType = Overlay.getOverlay(client.getScene().getOverlayIds()[tileZ][tileX][tileY], tile, client).getWaterType();
+				waterType = Overlay.getOverlay(client.getScene().getOverlayIds()[tileZ][tileX][tileY], tile, client, config).getWaterType();
 			}
 			else
 			{
-				waterType = Underlay.getUnderlay(client.getScene().getUnderlayIds()[tileZ][tileX][tileY], tile, client,pluginConfig).waterType;
+				waterType = Underlay.getUnderlay(client.getScene().getUnderlayIds()[tileZ][tileX][tileY], tile, client, config).waterType;
 			}
 		}
 
@@ -1126,14 +1126,14 @@ public class ProceduralGenerator
 
 		if (client.getScene().getOverlayIds()[z][x][y] != 0)
 		{
-			if (!Overlay.getOverlay(client.getScene().getOverlayIds()[z][x][y], tile, client).isBlended())
+			if (!Overlay.getOverlay(client.getScene().getOverlayIds()[z][x][y], tile, client, config).isBlended())
 			{
 				return true;
 			}
 		}
 		else if (client.getScene().getUnderlayIds()[z][x][y] != 0)
 		{
-			if (!Underlay.getUnderlay(client.getScene().getUnderlayIds()[z][x][y], tile, client,pluginConfig).blended)
+			if (!Underlay.getUnderlay(client.getScene().getUnderlayIds()[z][x][y], tile, client, config).blended)
 			{
 				return true;
 			}
@@ -1144,7 +1144,7 @@ public class ProceduralGenerator
 
 	WaterType getSeasonalWaterType(WaterType waterType)
 	{
-		if (hdPlugin.configWinterTheme)
+		if (plugin.configWinterTheme)
 		{
 			switch (waterType)
 			{
@@ -1158,7 +1158,7 @@ public class ProceduralGenerator
 
 	public Material getSeasonalMaterial(Material material)
 	{
-		if (hdPlugin.configWinterTheme)
+		if (plugin.configWinterTheme)
 		{
 			switch (material)
 			{

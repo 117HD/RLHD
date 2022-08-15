@@ -25,7 +25,6 @@ import net.runelite.client.ui.overlay.OverlayLayer;
 import net.runelite.client.ui.overlay.OverlayPosition;
 import net.runelite.client.ui.overlay.OverlayUtil;
 import org.apache.commons.lang3.tuple.Pair;
-import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.data.materials.Material;
 import rs117.hd.data.materials.Overlay;
@@ -38,7 +37,7 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay
 	private Point mousePos;
 
 	@Inject
-	HdPluginConfig pluginConfig;
+	HdPluginConfig config;
 
 	@Inject
 	public TileInfoOverlay(Client client)
@@ -147,11 +146,11 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay
 
 		Scene scene = client.getScene();
 		int overlayId = scene.getOverlayIds()[plane][x][y];
-		Overlay overlay = Overlay.getOverlay(overlayId, tile, client);
+		Overlay overlay = Overlay.getOverlay(overlayId, tile, client, config);
 		lines.add(String.format("Overlay: %s (%d)", overlay.name(), overlayId));
 
 		int underlayId = scene.getOverlayIds()[plane][x][y];
-		Underlay underlay = Underlay.getUnderlay(underlayId, tile, client,pluginConfig);
+		Underlay underlay = Underlay.getUnderlay(underlayId, tile, client, config);
 		lines.add(String.format("Underlay: %s (%d)", underlay.name(), underlayId));
 
 		Color polyColor;
