@@ -717,7 +717,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				case "WATER_TYPE_GETTER":
 					return generateGetter("WaterType", WaterType.values().length);
 				case "LIGHT_COUNT":
-					return String.format("#define %s %d", key, configMaxDynamicLights);
+					return String.format("#define %s %d", key, Math.max(1, configMaxDynamicLights));
 				case "LIGHT_GETTER":
 					return generateGetter("PointLight", configMaxDynamicLights);
 				case "PARALLAX_MAPPING":
@@ -1301,11 +1301,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		glBindBufferBase(GL_UNIFORM_BUFFER, 2, waterTypesUniformBuffer.glBufferId);
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
-		if (config.maxDynamicLights().getValue() > 0)
+		if (configMaxDynamicLights > 0)
 		{
 			// Update lights UBO
 			lightsUniformBuf.clear();
-			ArrayList<SceneLight> visibleLights = lightManager.getVisibleLights(getDrawDistance(), config.maxDynamicLights().getValue());
+			ArrayList<SceneLight> visibleLights = lightManager.getVisibleLights(getDrawDistance(), configMaxDynamicLights);
 			for (SceneLight light : visibleLights)
 			{
 				lightsUniformBuf.putInt(light.x);
@@ -1888,7 +1888,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 			// lightning
 			glUniform1f(uniLightningBrightness, environmentManager.lightningBrightness);
-			glUniform1i(uniPointLightsCount, config.maxDynamicLights().getValue() > 0 ? lightManager.visibleLightsCount : 0);
+			glUniform1i(uniPointLightsCount, Math.min(configMaxDynamicLights, lightManager.visibleLightsCount));
 
 			glUniform1f(uniSaturation, config.saturation().getAmount());
 			glUniform1f(uniContrast, config.contrast().getAmount());
