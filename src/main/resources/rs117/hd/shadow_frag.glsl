@@ -25,45 +25,25 @@
 #version 330
 
 #include uniforms/materials.glsl
+#include utils/constants.glsl
 
 uniform sampler2DArray textureArray;
-uniform vec2 textureOffsets[128];
+uniform float elapsedTime;
 
-in float alpha;
 in vec2 fUv;
 flat in int materialId;
-flat in int terrainPlane;
-
-out vec4 FragColor;
 
 void main()
 {
-    if (terrainPlane == 0)
-    {
-        discard;
-    }
-
     Material material = getMaterial(materialId);
 
-    // skip water surfaces
-    switch (material.diffuseMap)
-    {
-        case 7001:
-        case 7025:
-        case 7997:
-        case 7998:
-        case 7999:
-            discard;
-    }
+    vec2 uv = fUv;
+    // Scroll UVs
+    uv += material.scrollDuration * elapsedTime;
+    // Scale from the center
+    uv = (uv - .5) / material.textureScale + .5;
 
-    vec2 uv = fUv + textureOffsets[material.diffuseMap];
-    uv = vec2((uv.x - 0.5) / material.textureScale.x + 0.5, (uv.y - 0.5) / material.textureScale.y + 0.5);
-    vec4 texture = texture(textureArray, vec3(uv, material.diffuseMap));
-
-    if (min(texture.a, alpha) < 0.81)
-    {
+    float texAlpha = texture(textureArray, vec3(uv, material.diffuseMap)).a;
+    if (texAlpha < SHADOW_OPACITY_THRESHOLD)
         discard;
-    }
-
-    FragColor = vec4(1.0);
 }

@@ -332,8 +332,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	private int uniUnderwaterCausticsStrength;
 
 	// Shadow program uniforms
-	private int uniShadowTextureArray;
 	private int uniShadowLightProjectionMatrix;
+	private int uniShadowTextureArray;
+	private int uniShadowElapsedTime;
 
 	// Point light uniforms
 	private int uniPointLightsCount;
@@ -695,7 +696,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 					return versionHeader;
 				case "MATERIAL_CONSTANTS":
 				{
-					// TODO: mat constants should probably be removed once no longer needed
 					StringBuilder include = new StringBuilder();
 					for (Material m : Material.values())
 					{
@@ -831,6 +831,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		uniShadowBlockMaterials = glGetUniformBlockIndex(glShadowProgram, "MaterialUniforms");
 		uniShadowLightProjectionMatrix = glGetUniformLocation(glShadowProgram, "lightProjectionMatrix");
 		uniShadowTextureArray = glGetUniformLocation(glShadowProgram, "textureArray");
+		uniShadowElapsedTime = glGetUniformLocation(glShadowProgram, "elapsedTime");
 	}
 
 	private void shutdownPrograms()
@@ -1293,13 +1294,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 		// Bind materials UBO
 		// TODO: this is probably unnecessary
-		glBindBuffer(GL_UNIFORM_BUFFER, materialsUniformBuffer.glBufferId);
 		glBindBufferBase(GL_UNIFORM_BUFFER, 1, materialsUniformBuffer.glBufferId);
-		glBindBuffer(GL_UNIFORM_BUFFER, 0);
-
-		glBindBuffer(GL_UNIFORM_BUFFER, waterTypesUniformBuffer.glBufferId);
 		glBindBufferBase(GL_UNIFORM_BUFFER, 2, waterTypesUniformBuffer.glBufferId);
-		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
 		if (configMaxDynamicLights > 0)
 		{
@@ -1322,9 +1318,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			glBindBuffer(GL_UNIFORM_BUFFER, lightsUniformBuffer.glBufferId);
 			glBufferSubData(GL_UNIFORM_BUFFER, 0, lightsUniformBuf);
 			lightsUniformBuf.clear();
+			glBindBuffer(GL_UNIFORM_BUFFER, 0);
 		}
 		glBindBufferBase(GL_UNIFORM_BUFFER, 3, lightsUniformBuffer.glBufferId);
-		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 	}
 
 	@Override
@@ -1725,6 +1721,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				glUniformMatrix4fv(uniShadowLightProjectionMatrix, false, lightProjectionMatrix);
 
 				// bind uniforms
+				glUniform1f(uniShadowElapsedTime, elapsedTime);
 				glUniformBlockBinding(glShadowProgram, uniShadowBlockMaterials, 1);
 
 				glEnable(GL_CULL_FACE);
