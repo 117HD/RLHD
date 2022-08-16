@@ -4,27 +4,23 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializer;
-import java.io.FileInputStream;
+import joptsimple.ArgumentAcceptingOptionSpec;
+import joptsimple.OptionParser;
+import joptsimple.OptionSet;
+import joptsimple.OptionSpec;
+import rs117.hd.scene.lighting.Light;
+import rs117.hd.utils.HDUtils;
+
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
-import joptsimple.ArgumentAcceptingOptionSpec;
-import joptsimple.OptionParser;
-import joptsimple.OptionSet;
-import joptsimple.OptionSpec;
-import rs117.hd.scene.lighting.Light;
-import rs117.hd.scene.lighting.LightConfig;
-import rs117.hd.utils.HDUtils;
+
+import static rs117.hd.utils.ResourcePath.path;
 
 @SuppressWarnings("deprecation")
 public class ExportLightsToJson
@@ -69,7 +65,7 @@ public class ExportLightsToJson
 			System.out.println("Loading current lights from JSON...");
 			// Load all lights from current lights.json
 			Light.THROW_WHEN_PARSING_FAILS = true;
-			Light[] currentLights = LightConfig.loadRawLights(new FileInputStream(configPath.toFile()));
+			Light[] currentLights = path(configPath).loadJson(Light[].class);
 			Collections.addAll(uniqueLights, currentLights);
 			System.out.println("Loaded " + currentLights.length + " lights");
 		}

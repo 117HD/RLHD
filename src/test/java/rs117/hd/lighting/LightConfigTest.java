@@ -12,6 +12,7 @@ import org.junit.Test;
 import rs117.hd.scene.lighting.Light;
 import rs117.hd.scene.lighting.LightConfig;
 import rs117.hd.scene.lighting.SceneLight;
+import rs117.hd.utils.ResourcePath;
 
 import java.util.ArrayList;
 
@@ -42,8 +43,8 @@ public class LightConfigTest {
 
 	@Test
     public void testLoad() {
-        LightConfig.load(Thread.currentThread().getContextClassLoader()
-			.getResourceAsStream("lighting/lights.json"),
+        LightConfig.load(
+			ResourcePath.path(Thread.currentThread().getContextClassLoader(), "lighting/lights.json"),
 			WORLD_LIGHTS, NPC_LIGHTS, OBJECT_LIGHTS, PROJECTILE_LIGHTS);
 
         // can we get the same light for both of its raw IDs?
@@ -60,7 +61,7 @@ public class LightConfigTest {
         assertEquals(0.0, spitRoastLight.duration, 0.0);
         assertEquals(20.0, spitRoastLight.range, 0.0);
         assertEquals(0.9743002, spitRoastLight.color[0], 0.001);
-        assertEquals(0.3021255, spitRoastLight.color[1], 0.001);
+        assertEquals(0.29613828659057617, spitRoastLight.color[1], 0.001);
         assertEquals(5.6921755E-5, spitRoastLight.color[2], 0.001);
     }
 

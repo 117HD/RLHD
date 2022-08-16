@@ -1,0 +1,23 @@
+/*
+  [ 3182, 3441, 0 ], // single world point on plane 0
+  [
+    3182, 3441,
+    3200, 3500
+  ] // rect for all planes
+  [
+    3182, 3441, 1,
+    3200, 3500, 3
+  ] // rect for all planes above plane 0
+  [ 3182, 3441 ], // single world point for all planes
+*/
+[
+  {
+    "objectIds": [ 4343, 4344, 4342 ],
+    "aabbs": [
+      [
+        3179, 3448,
+        3190, 3433
+      ]
+    ]
+  }
+]

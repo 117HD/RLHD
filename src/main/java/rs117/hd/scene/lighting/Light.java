@@ -200,45 +200,45 @@ public class Light
 	public static class NpcIDAdapter extends TypeAdapter<HashSet<Integer>>
 	{
 		@Override
-		public void write(JsonWriter out, HashSet<Integer> value) throws IOException
-		{
-			writeIDArray(out, value, NpcID.class);
-		}
-
-		@Override
 		public HashSet<Integer> read(JsonReader in) throws IOException
 		{
 			return parseIDArray(in, NpcID.class);
+		}
+
+		@Override
+		public void write(JsonWriter out, HashSet<Integer> value) throws IOException
+		{
+			writeIDArray(out, value, NpcID.class);
 		}
 	}
 
 	public static class ObjectIDAdapter extends TypeAdapter<HashSet<Integer>>
 	{
 		@Override
-		public void write(JsonWriter out, HashSet<Integer> value) throws IOException
-		{
-			writeIDArray(out, value, ObjectID.class);
-		}
-
-		@Override
 		public HashSet<Integer> read(JsonReader in) throws IOException
 		{
 			return parseIDArray(in, ObjectID.class);
+		}
+
+		@Override
+		public void write(JsonWriter out, HashSet<Integer> value) throws IOException
+		{
+			writeIDArray(out, value, ObjectID.class);
 		}
 	}
 
 	public static class ProjectileIDAdapter extends TypeAdapter<HashSet<Integer>>
 	{
 		@Override
-		public void write(JsonWriter out, HashSet<Integer> value) throws IOException
-		{
-			writeIDArray(out, value, null);
-		}
-
-		@Override
 		public HashSet<Integer> read(JsonReader in) throws IOException
 		{
 			return parseIDArray(in, null);
+		}
+
+		@Override
+		public void write(JsonWriter out, HashSet<Integer> value) throws IOException
+		{
+			writeIDArray(out, value, null);
 		}
 	}
 
