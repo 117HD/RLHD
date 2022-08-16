@@ -696,6 +696,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		ResourcePath shaderPath = Env.getPathOrDefault(ENV_SHADER_PATH, () -> path(HdPlugin.class));
 		template.add(key -> {
 			try {
+				// TODO: track current include stack
 				return shaderPath.resolve(key).loadString();
 			} catch (IOException ex) {
 				throw new RuntimeException(ex);

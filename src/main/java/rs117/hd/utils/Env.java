@@ -55,10 +55,11 @@ public class Env
 		return value == null ? defaultValue : value;
 	}
 
-	public static Path getPath(String variableName)
-	{
-		String value = env.get(variableName);
-		return value == null ? null : Paths.get(value);
+	public static ResourcePath getPathOrDefault(String variableName, ResourcePath fallback) {
+		String path = env.get(variableName);
+		if (path == null)
+			return fallback;
+		return path(path);
 	}
 
 	public static ResourcePath getPathOrDefault(String variableName, Supplier<ResourcePath> fallback) {

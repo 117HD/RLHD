@@ -315,6 +315,8 @@ public class ResourcePath {
 
         Stack<String> resolvedParts = new Stack<>();
         for (String part : parts) {
+            if (part.length() == 0)
+                continue;
             if (isAbsolute(part))
                 resolvedParts.clear();
 
