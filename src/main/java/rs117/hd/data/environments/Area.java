@@ -161,7 +161,8 @@ public enum Area
 	),
 	DRAYNOR_AGGIES_HOUSE(3088, 3261, 3083, 3256),
 	DRAYNOR_BANK(
-			new Rect(3097, 3246, 3088, 3240)
+			new Rect(3097, 3246, 3088, 3240),
+			new Rect(2127, 4910, 2137, 4903)
 	),
 	// For correcting path placement around town that are screwed up from blending issues
 	DRAYNOR_PATH_ADJUSTMENTS(
@@ -506,6 +507,16 @@ public enum Area
 		new Rect(1955, 4471, 1980, 4445),
 		new Rect(1922, 4440, 1946, 4416),
 		new Rect(1919, 4481, 1988, 4414)
+	),
+
+	//Sophanem and Menaphos
+	SOPHANEM_FLOORS(
+		new Rect(3316, 2803, 3308, 2796, 0),
+		new Rect(3307, 2803, 3307, 2801, 0),
+		new Rect(3307, 2798, 3307, 2796, 0),
+		new Rect(3285, 2777, 3277, 2765, 0),
+		new Rect(3277, 2764, 3279, 2764, 0),
+		new Rect(3285, 2764, 3283, 2764, 0)
 	),
 
 	// Morytania
