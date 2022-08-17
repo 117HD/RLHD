@@ -327,6 +327,12 @@ public class ResourcePath {
         }
     }
 
+    private static String normalizeSlashes(String path) {
+        if (Platform.get() == Platform.WINDOWS)
+            return path.replace("\\", "/");
+        return path;
+    }
+
     private static String normalize(String... parts) {
         return normalize(null, parts);
     }
@@ -334,11 +340,13 @@ public class ResourcePath {
     private static String normalize(@Nullable String workingDirectory, String[] parts) {
         Stack<String> resolvedParts = new Stack<>();
         if (workingDirectory != null && workingDirectory.length() > 0 && !workingDirectory.equals("."))
-            resolvedParts.addAll(Arrays.asList(workingDirectory.split("/")));
+            resolvedParts.addAll(Arrays.asList(normalizeSlashes(workingDirectory).split("/")));
 
         for (String part : parts) {
             if (part == null || part.length() == 0 || part.equals("."))
                 continue;
+
+            part = normalizeSlashes(part);
 
             if (isAbsolute(part))
                 resolvedParts.clear();

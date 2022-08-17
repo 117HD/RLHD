@@ -500,9 +500,12 @@ public class LightManager
 
 					for (GameObject gameObject : tile.getGameObjects()) {
 						if (gameObject != null) {
-							addObjectLight(gameObject, tile.getRenderLevel(), gameObject.sizeX(), gameObject.sizeY(), gameObject
-								.getOrientation()
-								.getAngle());
+							addObjectLight(
+								gameObject,
+								tile.getRenderLevel(),
+								gameObject.sizeX(),
+								gameObject.sizeY(),
+								gameObject.getOrientation().getAngle());
 						}
 					}
 				}

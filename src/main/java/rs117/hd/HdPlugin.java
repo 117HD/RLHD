@@ -102,7 +102,7 @@ import static rs117.hd.utils.ResourcePath.path;
 @Slf4j
 public class HdPlugin extends Plugin implements DrawCallbacks
 {
-	public static final String ENV_SHADER_PATH = "RLHD_SHADER_PATH";
+	private static final String ENV_SHADER_PATH = "RLHD_SHADER_PATH";
 
 	// This is the maximum number of triangles the compute shaders support
 	public static final int MAX_TRIANGLE = 6144;
@@ -206,6 +206,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	static final Shader UI_PROGRAM = new Shader()
 		.add(GL_VERTEX_SHADER, "vertui.glsl")
 		.add(GL_FRAGMENT_SHADER, "fragui.glsl");
+
+	static final ResourcePath shaderPath = Env
+		.getPathOrDefault(ENV_SHADER_PATH, () -> path(HdPlugin.class))
+		.chroot();
 
 	private int glProgram = -1;
 	private int glComputeProgram = -1;
@@ -693,9 +697,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			return null;
 		});
 
-		ResourcePath shaderPath = Env
-			.getPathOrDefault(ENV_SHADER_PATH, () -> path(HdPlugin.class))
-			.chroot();
 		template.add(key -> {
 			try {
 				// TODO: track current include stack
@@ -1405,14 +1406,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	}
 
 	public void initShaderHotswapping() {
-		Env.getPathOrDefault(ENV_SHADER_PATH, () -> path(HdPlugin.class))
-			.chroot()
-			.watch(path -> {
-				if (path.getExtension().equalsIgnoreCase("glsl")) {
-					log.info("Reloading shader: {}", path);
-					recompilePrograms();
-				}
-			});
+		shaderPath.watch(path -> {
+			if (path.getExtension().equalsIgnoreCase("glsl")) {
+				log.info("Reloading shader: {}", path);
+				recompilePrograms();
+			}
+		});
 	}
 
 	@Override
