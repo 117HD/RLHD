@@ -42,6 +42,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -181,7 +182,29 @@ public class ResourcePath {
 
     public Path toRealPath() {
         try {
-            return toPath().toRealPath();
+            Path path = toPath();
+
+            if (path.toString().startsWith("~")) {
+                String specifiedHome = path.getName(0).toString();
+                String userHome = System.getProperty("user.home");
+                if (userHome == null)
+                    throw new RuntimeException("Unable to resolve tilde path '" + specifiedHome + "' for resource: " + this);
+
+                Path result = Paths.get(userHome);
+
+                // Check if the home path of a different user was specified
+                if (specifiedHome.length() > 1) {
+                    // Note: We only support ~ and ~user tilde expansion
+                    String user = specifiedHome.substring(1);
+                    // Assume the username matches the home folder name,
+                    // and that it's located next to the current user's home directory
+                    result = result.resolve("../" + user);
+                }
+
+                path = result.resolve(path.subpath(1, path.getNameCount()));
+            }
+
+            return path.toRealPath();
         } catch (IOException ex) {
             throw new RuntimeException("Failed to resolve real path for resource: " + this, ex);
         }
@@ -215,7 +238,7 @@ public class ResourcePath {
         }
 
         try {
-            return new FileInputStream(path);
+            return new FileInputStream(toRealPath().toFile());
         } catch (FileNotFoundException ex) {
             throw new RuntimeException("Unable to load resource: " + this, ex);
         }
