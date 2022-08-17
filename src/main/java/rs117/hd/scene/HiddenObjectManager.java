@@ -3,7 +3,9 @@ package rs117.hd.scene;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.gson.annotations.JsonAdapter;
+import com.google.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
+import net.runelite.api.Client;
 import net.runelite.api.coords.WorldPoint;
 import rs117.hd.scene.lights.Light.ObjectIDAdapter;
 import rs117.hd.utils.AABB;
@@ -12,11 +14,16 @@ import rs117.hd.utils.Env;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Objects;
 
 import static rs117.hd.utils.ResourcePath.path;
 
 @Slf4j
 public class HiddenObjectManager {
+
+    @Inject
+    Client client;
+
     public static String ENV_HIDDEN_OBJECTS = "RLHD_HIDDEN_OBJECTS";
 
     private final Multimap<Integer, AABB> hiddenObjects = ArrayListMultimap.create();
@@ -52,6 +59,10 @@ public class HiddenObjectManager {
     public boolean shouldHide(int objectID, WorldPoint location) {
         return hiddenObjects.get(objectID)
             .stream()
-            .anyMatch(aabb -> aabb.contains(location));
+            .anyMatch(aabb -> aabb.contains(location) && hasNoActions(objectID));
+    }
+
+    private boolean hasNoActions(int objectID) {
+       return Arrays.stream(client.getObjectDefinition(objectID).getActions()).allMatch(Objects::isNull);
     }
 }
