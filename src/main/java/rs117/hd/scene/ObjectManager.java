@@ -9,7 +9,7 @@ import net.runelite.api.GameState;
 import net.runelite.api.coords.WorldPoint;
 import rs117.hd.HdPlugin;
 import rs117.hd.data.materials.Material;
-import rs117.hd.scene.objects.LocationInfo;
+import rs117.hd.scene.objects.HiddenObjectsEntry;
 import rs117.hd.scene.objects.ObjectProperties;
 import rs117.hd.utils.AABB;
 import rs117.hd.utils.Env;
@@ -29,14 +29,14 @@ public class ObjectManager {
     @Inject
     HdPlugin plugin;
 
-    public static ObjectProperties NONE = new ObjectProperties(Material.NONE);
+    public ObjectProperties NONE = new ObjectProperties(Material.NONE);
 
     public static String ENV_HIDDEN_OBJECTS = "RLHD_HIDDEN_OBJECTS_PATH";
     public static String ENV_OBJECT_PROPERTIES = "RLHD_OBJECTS_PROPERTIES_PATH";
 
-    private final HashMap<Integer, ObjectProperties> objectProperties = new HashMap<>();
+    private static final HashMap<Integer, ObjectProperties> objectProperties = new HashMap<>();
 
-    private final Multimap<Integer, AABB> hiddenObjects = ArrayListMultimap.create();
+    private static final Multimap<Integer, AABB> hiddenObjects = ArrayListMultimap.create();
 
 
     public void startUp() {
@@ -75,10 +75,10 @@ public class ObjectManager {
                     hiddenObjects.clear();
 
                     try {
-                        LocationInfo[] entries = path.loadJson(LocationInfo[].class);
+                        HiddenObjectsEntry[] entries = path.loadJson(HiddenObjectsEntry[].class);
                         if (entries == null)
                             throw new IOException("Empty or invalid: " + path);
-                        for (LocationInfo entry : entries) {
+                        for (HiddenObjectsEntry entry : entries) {
                             for (int objectId : entry.objectIds) {
                                 hiddenObjects.putAll(objectId, Arrays.asList(entry.aabbs));
                             }
@@ -104,6 +104,5 @@ public class ObjectManager {
     {
         return objectProperties.getOrDefault(objectId, NONE);
     }
-
 
 }

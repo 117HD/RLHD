@@ -2,8 +2,7 @@ package rs117.hd.scene;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import rs117.hd.scene.objects.LocationInfo;
-import rs117.hd.scene.objects.ObjectProperties;
+import rs117.hd.scene.objects.HiddenObjectsEntry;
 import rs117.hd.utils.ResourcePath;
 
 import java.io.IOException;
@@ -23,12 +22,12 @@ public class ExportHiddenObjectsToJson {
 
     public static void main(String[] args) throws IOException {
 
-		Set<LocationInfo> uniqueLights = new LinkedHashSet<>();
+		Set<HiddenObjectsEntry> uniqueLights = new LinkedHashSet<>();
         Path configPath = ResourcePath.path(RESOURCE_DIR, "rs117/hd/scene", "hidden_objects.jsonc").toPath();
 
         System.out.println("Loading current hidden objects from JSON...");
 
-        LocationInfo[] currentLights = path(configPath).loadJson(LocationInfo[].class);
+        HiddenObjectsEntry[] currentLights = path(configPath).loadJson(HiddenObjectsEntry[].class);
         Collections.addAll(uniqueLights, currentLights);
         System.out.println("Loaded " + currentLights.length + " hidden objects");
 

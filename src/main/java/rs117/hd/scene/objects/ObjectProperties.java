@@ -3,11 +3,10 @@ package rs117.hd.scene.objects;
 import com.google.gson.annotations.JsonAdapter;
 import lombok.Data;
 import lombok.Getter;
+import rs117.hd.data.ObjectID;
 import rs117.hd.data.materials.Material;
 import rs117.hd.data.materials.UvType;
-import rs117.hd.scene.lights.Light;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,7 +14,7 @@ import java.util.Set;
 @Data
 public class ObjectProperties
 {
-    @JsonAdapter(Light.ObjectIDAdapter.class)
+    @JsonAdapter(ObjectID.ObjectIDAdapter.class)
     public Set<Integer> objectIds = new HashSet<>();
     private String description;
     private Material material = Material.NONE;

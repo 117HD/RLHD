@@ -58,6 +58,9 @@ class SceneUploader
 	private HdPlugin plugin;
 
 	@Inject
+	private ObjectManager objectManager;
+
+	@Inject
 	private HdPluginConfig config;
 
 	@Inject
@@ -201,7 +204,7 @@ class SceneUploader
 		WallObject wallObject = tile.getWallObject();
 		if (wallObject != null)
 		{
-			objectProperties = plugin.objectManager.getObjectProperties(tile.getWallObject().getId());
+			objectProperties = objectManager.getObjectProperties(tile.getWallObject().getId());
 
 			Renderable renderable1 = wallObject.getRenderable1();
 			if (renderable1 instanceof Model)
@@ -223,7 +226,7 @@ class SceneUploader
 		GroundObject groundObject = tile.getGroundObject();
 		if (groundObject != null)
 		{
-			objectProperties = plugin.objectManager.getObjectProperties(tile.getGroundObject().getId());
+			objectProperties = objectManager.getObjectProperties(tile.getGroundObject().getId());
 
 			Renderable renderable = groundObject.getRenderable();
 			if (renderable instanceof Model)
@@ -237,7 +240,7 @@ class SceneUploader
 		DecorativeObject decorativeObject = tile.getDecorativeObject();
 		if (decorativeObject != null)
 		{
-			objectProperties = plugin.objectManager.getObjectProperties(tile.getDecorativeObject().getId());
+			objectProperties = objectManager.getObjectProperties(tile.getDecorativeObject().getId());
 
 			Renderable renderable = decorativeObject.getRenderable();
 			if (renderable instanceof Model)
@@ -264,7 +267,7 @@ class SceneUploader
 				continue;
 			}
 
-			objectProperties = plugin.objectManager.getObjectProperties(gameObject.getId());
+			objectProperties = objectManager.getObjectProperties(gameObject.getId());
 
 			Renderable renderable = gameObject.getRenderable();
 			if (renderable instanceof Model)
