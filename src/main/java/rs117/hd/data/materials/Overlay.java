@@ -26,7 +26,6 @@ package rs117.hd.data.materials;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
-import lombok.Getter;
 import net.runelite.api.Client;
 import net.runelite.api.Tile;
 import net.runelite.api.coords.LocalPoint;
@@ -39,7 +38,6 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-@Getter
 public enum Overlay {
     // Tutorial Island
     TUTORIAL_ISLAND_KITCHEN_TILE_1(9, Area.TUTORIAL_ISLAND_KITCHEN, GroundMaterial.MARBLE_1_SEMIGLOSS, p -> p.blended(false)),
@@ -145,20 +143,20 @@ public enum Overlay {
     // Edgeville
     EDGEVILLE_BANK_TILE_1(3, Area.EDGEVILLE_BANK, GroundMaterial.MARBLE_2_GLOSS, p -> p
         .blended(false)
-        .blendedAsType(true)
+        .blendedAsOpposite(true)
         .lightness(22)),
     EDGEVILLE_BANK_TILE_2(4, Area.EDGEVILLE_BANK, GroundMaterial.MARBLE_2_GLOSS, p -> p
         .blended(false)
-        .blendedAsType(true)
+        .blendedAsOpposite(true)
         .lightness(30)),
     EDGEVILLE_BANK_TILING_FIX_1(10, Area.EDGEVILLE_BANK_TILING, GroundMaterial.MARBLE_2_GLOSS, p -> p
         .blended(false)
-        .blendedAsType(true)
+        .blendedAsOpposite(true)
         .lightness(22)),
     EDGEVILLE_BANK_PERIMETER_FIX(10, Area.EDGEVILLE_BANK_PERIMETER_FIX, GroundMaterial.MARBLE_2_GLOSS, p -> p.lightness(30)),
     EDGEVILLE_BANK_PERIMETER(10, Area.EDGEVILLE_BANK, GroundMaterial.MARBLE_2_GLOSS, p -> p
         .blended(false)
-        .blendedAsType(true)
+        .blendedAsOpposite(true)
         .lightness(30)),
     EDGEVILLE_BANK_SURROUNDING_PATH(10, Area.EDGEVILLE_BANK_SURROUNDING_PATH, GroundMaterial.VARROCK_PATHS),
     EDGEVILLE_DORIS_HOUSE_FLOOR(119, Area.EDGEVILLE_DORIS_HOUSE, GroundMaterial.TILE_SMALL),
@@ -300,15 +298,15 @@ public enum Overlay {
     FOSSIL_ISLAND_HILL_TEXTURE_FIX(11, Area.FOSSIL_ISLAND_HILL_TEXTURE_FIX, GroundMaterial.VARIED_DIRT),
 
     // Zeah
-    XERICS_LOOKOUT_TILE(50, Area.XERICS_LOOKOUT, GroundMaterial.TILES_2x2_2, p -> p.blended(false).ids(2)),
+    XERICS_LOOKOUT_TILE(Area.XERICS_LOOKOUT, GroundMaterial.TILES_2x2_2, p -> p.blended(false).ids(50, 2)),
 
     HOSIDIUS_STONE_FLOOR(123, Area.HOSIDIUS, GroundMaterial.FALADOR_PATHS),
     BLOOD_ALTAR_BLOOD(72, Area.BLOOD_ALTAR, WaterType.BLOOD),
-    SHAYZIEN_PAVED_AREA(2, Area.SHAYZIEN, GroundMaterial.GRAVEL, p -> p.blended(false).ids(-117)),
+    SHAYZIEN_PAVED_AREA(Area.SHAYZIEN, GroundMaterial.GRAVEL, p -> p.blended(false).ids(2, -117)),
 
-    SHAYZIEN_COMBAT_RING_FLOOR(30, Area.SHAYZIEN_COMBAT_RING, GroundMaterial.CARPET, p -> p
+    SHAYZIEN_COMBAT_RING_FLOOR(Area.SHAYZIEN_COMBAT_RING, GroundMaterial.CARPET, p -> p
         .blended(false)
-        .ids(37, 72, 73)),
+        .ids(30, 37, 72, 73)),
 
     MESS_HALL_KITCHEN_TILE_1(30, Area.MESS_HALL_KITCHEN, GroundMaterial.MARBLE_1_SEMIGLOSS, p -> p.blended(false)),
     MESS_HALL_KITCHEN_TILE_2(99, Area.MESS_HALL_KITCHEN, GroundMaterial.MARBLE_2_SEMIGLOSS, p -> p.blended(false)),
@@ -336,7 +334,7 @@ public enum Overlay {
 
     // Mind Altar
     MIND_ALTAR_TILE_1(3, Area.MIND_ALTAR, GroundMaterial.MARBLE_1_SEMIGLOSS, p -> p.blended(false)),
-    MIND_ALTAR_TILE_4(4, Area.MIND_ALTAR, GroundMaterial.MARBLE_2_SEMIGLOSS, p -> p.blended(false).ids(10)),
+    MIND_ALTAR_TILE_4(Area.MIND_ALTAR, GroundMaterial.MARBLE_2_SEMIGLOSS, p -> p.blended(false).ids(4, 10)),
 
     // Dragon Slayer II
     DS2_SHIPS_WATER(6, Area.DS2_SHIPS, WaterType.WATER_FLAT),
@@ -353,17 +351,17 @@ public enum Overlay {
     BA_WAITING_ROOM_NUMBERS(89, Area.BARBARIAN_ASSAULT_WAITING_ROOMS, GroundMaterial.DIRT, p -> p.blended(false)),
 
     // POHs
-    POH_DESERT_INDOORS(26, Area.PLAYER_OWNED_HOUSE, GroundMaterial.TILES_2x2_2, p -> p.blended(false).ids(99)),
+    POH_DESERT_INDOORS(Area.PLAYER_OWNED_HOUSE, GroundMaterial.TILES_2x2_2, p -> p.blended(false).ids(26, 99)),
 
     // Random events
     PRISON_PETE_TILE_1(2, Area.RANDOM_EVENT_PRISON_PETE, GroundMaterial.MARBLE_1, p -> p.blended(false)),
     PRISON_PETE_TILE_2(-125, Area.RANDOM_EVENT_PRISON_PETE, GroundMaterial.MARBLE_2, p -> p.blended(false)),
 
     // GOTR Entrance fix
-    TEMPLE_OF_THE_EYE_ENTRANCE(0, Area.TEMPLE_OF_THE_EYE_ENTRANCE_FIX, GroundMaterial.DIRT, p -> p
+    TEMPLE_OF_THE_EYE_ENTRANCE(Area.TEMPLE_OF_THE_EYE_ENTRANCE_FIX, GroundMaterial.DIRT, p -> p
         .shiftLightness(-10)
         .blended(false)
-        .ids(-5)),
+        .ids(-53, 0)),
 
     // Elid Cave fix
     ELID_CAVE_WATER_FIX(-126, Area.ELID_CAVE, WaterType.WATER),
@@ -377,17 +375,17 @@ public enum Overlay {
     ANCIENT_CAVERN_UPPER_WATER(41, Area.ANCIENT_CAVERN_UPPER, WaterType.WATER_FLAT),
 
     // default overlays
-    OVERLAY_WATER(-128, WaterType.WATER, p -> p.ids(-105, -98, 6, 41, 104)),
-    OVERLAY_DIRT(-124, GroundMaterial.DIRT, p -> p.ids(-84, -83, 14, 15, 21, 22, 23, 60, 77, 81, 82, 88, 89, 101, 102, 107, 108, 110, 115, 123)),
-    OVERLAY_GRAVEL(-76, GroundMaterial.GRAVEL, p -> p.ids(2, 3, 4, 6, 8, 10, 119)),
-    OVERLAY_VARROCK_PATHS(-85, GroundMaterial.VARROCK_PATHS, p -> p.ids(-77, 11)),
-    OVERLAY_SWAMP_WATER(-100, WaterType.SWAMP_WATER, p -> p.ids(7)),
-    OVERLAY_WOOD_PLANKS(5, GroundMaterial.WOOD_PLANKS_1, p -> p.ids(35, 52)),
-    OVERLAY_SAND(25, GroundMaterial.SAND, p -> p.ids(26)),
-    OVERLAY_BRICK_BROWN(27, GroundMaterial.SAND, p -> p.ids(46).blended(false)),
-    OVERLAY_SNOW(30, GroundMaterial.SNOW_2, p -> p.ids(33)),
-    OVERLAY_VARIED_DIRT(49, GroundMaterial.VARIED_DIRT, p -> p.ids(83)),
-    OVERLAY_SAND_BRICK(-49, GroundMaterial.SAND_BRICK, p -> p.ids(84)),
+    OVERLAY_WATER(WaterType.WATER, p -> p.ids(-128, -105, -98, 6, 41, 104)),
+    OVERLAY_DIRT(GroundMaterial.DIRT, p -> p.ids(-124, -84, -83, 14, 15, 21, 22, 23, 60, 77, 81, 82, 88, 89, 101, 102, 107, 108, 110, 115, 123)),
+    OVERLAY_GRAVEL(GroundMaterial.GRAVEL, p -> p.ids(-76, 2, 3, 4, 6, 8, 10, 119)),
+    OVERLAY_VARROCK_PATHS(GroundMaterial.VARROCK_PATHS, p -> p.ids(-85, -77, 11)),
+    OVERLAY_SWAMP_WATER(WaterType.SWAMP_WATER, p -> p.ids(-100, 7)),
+    OVERLAY_WOOD_PLANKS(GroundMaterial.WOOD_PLANKS_1, p -> p.ids(5, 35, 52)),
+    OVERLAY_SAND(GroundMaterial.SAND, p -> p.ids(25, 26)),
+    OVERLAY_BRICK_BROWN(GroundMaterial.SAND, p -> p.ids(27, 46).blended(false)),
+    OVERLAY_SNOW(GroundMaterial.SNOW_2, p -> p.ids(30, 33)),
+    OVERLAY_VARIED_DIRT(GroundMaterial.VARIED_DIRT, p -> p.ids(49, 83)),
+    OVERLAY_SAND_BRICK(GroundMaterial.SAND_BRICK, p -> p.ids(-49, 84)),
     OVERLAY_N122(-122, GroundMaterial.TILES_2x2_2_GLOSS),
     OVERLAY_N119(-119, GroundMaterial.FALADOR_PATHS),
     OVERLAY_N93(-93, GroundMaterial.CARPET),
@@ -407,7 +405,7 @@ public enum Overlay {
     public final GroundMaterial groundMaterial;
     public final WaterType waterType;
     public final boolean blended;
-    public final boolean blendedAsOverlay;
+    public final boolean blendedAsUnderlay;
     public final int hue;
     public final int shiftHue;
     public final int saturation;
@@ -417,14 +415,6 @@ public enum Overlay {
     public final Overlay replacementOverlay;
     public final Function<HdPluginConfig, Boolean> replacementCondition;
 
-    Overlay(int id, WaterType waterType, Consumer<TileOverrideBuilder<Overlay>> consumer) {
-        this(p -> p.ids(id).waterType(waterType).blended(false).apply(consumer));
-    }
-
-    Overlay(int id, Area area, WaterType waterType) {
-        this(p -> p.ids(id).waterType(waterType).area(area).blended(false));
-    }
-
     Overlay(int id, GroundMaterial material) {
         this(p -> p.ids(id).groundMaterial(material));
     }
@@ -433,12 +423,28 @@ public enum Overlay {
         this(p -> p.ids(id).groundMaterial(material).area(area));
     }
 
+    Overlay(int id, Area area, WaterType waterType) {
+        this(p -> p.ids(id).waterType(waterType).area(area).blended(false));
+    }
+
     Overlay(int id, GroundMaterial material, Consumer<TileOverrideBuilder<Overlay>> consumer) {
         this(p -> p.ids(id).groundMaterial(material).apply(consumer));
     }
 
     Overlay(int id, Area area, GroundMaterial material, Consumer<TileOverrideBuilder<Overlay>> consumer) {
         this(p -> p.ids(id).groundMaterial(material).area(area).apply(consumer));
+    }
+
+    Overlay(GroundMaterial material, Consumer<TileOverrideBuilder<Overlay>> consumer) {
+        this(p -> p.groundMaterial(material).apply(consumer));
+    }
+
+    Overlay(WaterType waterType, Consumer<TileOverrideBuilder<Overlay>> consumer) {
+        this(p -> p.waterType(waterType).blended(false).apply(consumer));
+    }
+
+    Overlay(Area area, GroundMaterial material, Consumer<TileOverrideBuilder<Overlay>> consumer) {
+        this(p -> p.groundMaterial(material).area(area).apply(consumer));
     }
 
     Overlay(Consumer<TileOverrideBuilder<Overlay>> consumer) {
@@ -451,7 +457,7 @@ public enum Overlay {
         this.groundMaterial = builder.groundMaterial;
         this.area = builder.area;
         this.blended = builder.blended;
-        this.blendedAsOverlay = builder.blendedAsType;
+        this.blendedAsUnderlay = builder.blendedAsOpposite;
         this.hue = builder.hue;
         this.shiftHue = builder.shiftHue;
         this.saturation = builder.saturation;

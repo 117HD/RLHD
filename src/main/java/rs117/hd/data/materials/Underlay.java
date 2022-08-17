@@ -39,26 +39,25 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 public enum Underlay {
-
     // Default
     // Lumbridge
     LUMBRIDGE_CASTLE_TILE(56, Area.LUMBRIDGE_CASTLE_BASEMENT, GroundMaterial.MARBLE_2_SEMIGLOSS, p -> p.blended(false)),
 
     // Edgeville
-    EDGEVILLE_PATH_OVERLAY_48(48, Area.EDGEVILLE_PATH_OVERLAY, GroundMaterial.VARROCK_PATHS_LIGHT, p -> p
-        .blendedAsType(true)
+    EDGEVILLE_PATH_OVERLAY_48(Area.EDGEVILLE_PATH_OVERLAY, GroundMaterial.VARROCK_PATHS_LIGHT, p -> p
+        .blendedAsOpposite(true)
         .hue(0)
         .shiftLightness(8)
         .saturation(0)
-        .ids(50, 64)),
+        .ids(48, 50, 64)),
 
     // Varrock
     VARROCK_JULIETS_HOUSE_UPSTAIRS(8, Area.VARROCK_JULIETS_HOUSE, GroundMaterial.NONE, p -> p.blended(false)),
     // A Soul's Bane
-    TOLNA_DUNGEON_ANGER_FLOOR(58, Area.TOLNA_DUNGEON_ANGER, GroundMaterial.DIRT, p -> p.ids(58)),
+    TOLNA_DUNGEON_ANGER_FLOOR(Area.TOLNA_DUNGEON_ANGER, GroundMaterial.DIRT, p -> p.ids(58, 58)),
 
     // Burthorpe
-    WARRIORS_GUILD_FLOOR_1(55, Area.WARRIORS_GUILD, GroundMaterial.VARROCK_PATHS, p -> p.ids(56)),
+    WARRIORS_GUILD_FLOOR_1(Area.WARRIORS_GUILD, GroundMaterial.VARROCK_PATHS, p -> p.ids(55, 56)),
 
     // Catherby
     CATHERBY_BEACH_SAND(62, Area.CATHERBY, GroundMaterial.SAND),
@@ -66,10 +65,10 @@ public enum Underlay {
     // Al Kharid
     MAGE_TRAINING_ARENA_FLOOR_PATTERN(56, Area.MAGE_TRAINING_ARENA, GroundMaterial.TILES_2x2_2_GLOSS, p -> p.blended(false)),
 
-    KHARID_SAND_1(61, Area.KHARID_DESERT_REGION, GroundMaterial.SAND, p -> p
+    KHARID_SAND_1(Area.KHARID_DESERT_REGION, GroundMaterial.SAND, p -> p
         .saturation(3)
         .hue(6)
-        .ids(62, 67, 68, -127, 126, 49, 58, 63, 64, 50)),
+        .ids(61, 62, 67, 68, -127, 126, 49, 58, 63, 64, 50)),
 
     // Burthorpe games room
     GAMES_ROOM_INNER_FLOOR(64, Area.GAMES_ROOM_INNER, GroundMaterial.CARPET, p -> p.blended(false)),
@@ -79,10 +78,10 @@ public enum Underlay {
     CRANDOR_SAND(-110, Area.CRANDOR, GroundMaterial.SAND, p -> p.saturation(3).hue(6)),
 
     // God Wars Dungeon (GWD)
-    GOD_WARS_DUNGEON_SNOW_1(58, Area.GOD_WARS_DUNGEON, GroundMaterial.SNOW_1, p -> p.ids(59)),
+    GOD_WARS_DUNGEON_SNOW_1(Area.GOD_WARS_DUNGEON, GroundMaterial.SNOW_1, p -> p.ids(58, 59)),
 
     // TzHaar
-    INFERNO_1(-118, Area.THE_INFERNO, GroundMaterial.VARIED_DIRT, p -> p.ids(61, -115, -111, -110, 1, 61, 62, 72, 118, 122)),
+    INFERNO_1(Area.THE_INFERNO, GroundMaterial.VARIED_DIRT, p -> p.ids(-118, 61, -115, -111, -110, 1, 61, 62, 72, 118, 122)),
 
     TZHAAR(72, Area.TZHAAR, GroundMaterial.VARIED_DIRT_SHINY, p -> p.shiftLightness(2)),
 
@@ -99,10 +98,10 @@ public enum Underlay {
         .shiftLightness(3)),
 
     // Zanaris
-    COSMIC_ENTITYS_PLANE_ABYSS(72, Area.COSMIC_ENTITYS_PLANE, GroundMaterial.NONE, p -> p
+    COSMIC_ENTITYS_PLANE_ABYSS(Area.COSMIC_ENTITYS_PLANE, GroundMaterial.NONE, p -> p
         .lightness(0)
         .blended(false)
-        .ids(2)),
+        .ids(2, 72)),
 
     // Death's office
     DEATHS_OFFICE_TILE(-110, Area.DEATHS_OFFICE, GroundMaterial.TILES_2x2_1_SEMIGLOSS),
@@ -115,30 +114,30 @@ public enum Underlay {
     MIND_ALTAR_TILE(55, Area.MIND_ALTAR, GroundMaterial.MARBLE_1_SEMIGLOSS, p -> p.blended(false)),
 
     // Cutscenes
-    CANOE_CUTSCENE_GRASS_1(48, Area.CANOE_CUTSCENE, GroundMaterial.GRASS_SCROLLING, p -> p.ids(50, 63)),
+    CANOE_CUTSCENE_GRASS_1(Area.CANOE_CUTSCENE, GroundMaterial.GRASS_SCROLLING, p -> p.ids(48, 50, 63)),
 
     WINTER_GRASS(-999, GroundMaterial.SNOW_1, p -> p.hue(0).saturation(0).shiftLightness(40).blended(true)),
     WINTER_DIRT(-999, GroundMaterial.DIRT, p -> p.hue(0).saturation(0).shiftLightness(40).blended(true)),
 
     // default underlays
 
-    OVERWORLD_UNDERLAY_GRASS(10, Area.OVERWORLD, GroundMaterial.OVERWORLD_GRASS_1, p -> p
-        .ids(25, 33, 34, 40, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 62, 63, 67, 70, 75, 93, 96, 97, 103, 114, 115, 126)
+    OVERWORLD_UNDERLAY_GRASS(Area.OVERWORLD, GroundMaterial.OVERWORLD_GRASS_1, p -> p
+        .ids(10, 25, 33, 34, 40, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 62, 63, 67, 70, 75, 93, 96, 97, 103, 114, 115, 126)
         .replaceWithIf(WINTER_GRASS, HdPluginConfig::winterTheme)),
 
-    OVERWORLD_UNDERLAY_DIRT(-111, Area.OVERWORLD, GroundMaterial.OVERWORLD_DIRT, p -> p
-        .ids(-110, 64, 65, 66, 80, 92, 94)
+    OVERWORLD_UNDERLAY_DIRT(Area.OVERWORLD, GroundMaterial.OVERWORLD_DIRT, p -> p
+        .ids(-111, -110, 64, 65, 66, 80, 92, 94)
         .replaceWithIf(WINTER_DIRT, HdPluginConfig::winterTheme)),
 
-    OVERWORLD_UNDERLAY_SAND(-127, GroundMaterial.SAND, p -> p.ids(-118, 61, 68)),
+    OVERWORLD_UNDERLAY_SAND(GroundMaterial.SAND, p -> p.ids(-127, -118, 61, 68)),
 
-    OVERWORLD_DIRT(-111, GroundMaterial.DIRT, p -> p.ids(-110, 64, 66, 80, 92, 94)),
+    OVERWORLD_DIRT(GroundMaterial.DIRT, p -> p.ids(-111, -110, 64, 66, 80, 92, 94)),
 
-    UNDERLAY_10(10, GroundMaterial.GRASS_1, p -> p.ids(25, 33, 34, 40, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 62, 63, 67, 70, 75, 93, 96, 97, 103, 103, 114, 115, 126)),
+    UNDERLAY_10(GroundMaterial.GRASS_1, p -> p.ids(10, 25, 33, 34, 40, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 62, 63, 67, 70, 75, 93, 96, 97, 103, 103, 114, 115, 126)),
 
     UNDERLAY_58(58, GroundMaterial.SNOW_1),
 
-    UNDERLAY_72(72, GroundMaterial.VARIED_DIRT, p -> p.ids(90)),
+    UNDERLAY_72(GroundMaterial.VARIED_DIRT, p -> p.ids(72, 90)),
 
     NONE(-1, GroundMaterial.DIRT);
 
@@ -147,7 +146,7 @@ public enum Underlay {
     public final GroundMaterial groundMaterial;
     public final WaterType waterType;
     public final boolean blended;
-    public final boolean blendedAsUnderlay;
+    public final boolean blendedAsOverlay;
     public final int hue;
     public final int shiftHue;
     public final int saturation;
@@ -161,20 +160,28 @@ public enum Underlay {
         this(p -> p.ids(id).groundMaterial(material));
     }
 
-    Underlay(int id, GroundMaterial material, Consumer<TileOverrideBuilder<Underlay>> consumer) {
-        this(p -> p.ids(id).groundMaterial(material).apply(consumer));
+    Underlay(int id, Area area, GroundMaterial material) {
+        this(p -> p.ids(id).groundMaterial(material).area(area));
     }
 
     Underlay(int id, Consumer<TileOverrideBuilder<Underlay>> consumer) {
         this(p -> p.ids(id).apply(consumer));
     }
 
+    Underlay(int id, GroundMaterial material, Consumer<TileOverrideBuilder<Underlay>> consumer) {
+        this(p -> p.ids(id).groundMaterial(material).apply(consumer));
+    }
+
     Underlay(int id, Area area, GroundMaterial material, Consumer<TileOverrideBuilder<Underlay>> consumer) {
         this(p -> p.ids(id).groundMaterial(material).area(area).apply(consumer));
     }
 
-    Underlay(int id, Area area, GroundMaterial material) {
-        this(p -> p.ids(id).groundMaterial(material).area(area));
+    Underlay(GroundMaterial material, Consumer<TileOverrideBuilder<Underlay>> consumer) {
+        this(p -> p.groundMaterial(material).apply(consumer));
+    }
+
+    Underlay(Area area, GroundMaterial material, Consumer<TileOverrideBuilder<Underlay>> consumer) {
+        this(p -> p.groundMaterial(material).area(area).apply(consumer));
     }
 
     Underlay(Consumer<TileOverrideBuilder<Underlay>> consumer) {
@@ -187,7 +194,7 @@ public enum Underlay {
         this.groundMaterial = builder.groundMaterial;
         this.area = builder.area;
         this.blended = builder.blended;
-        this.blendedAsUnderlay = builder.blendedAsType;
+        this.blendedAsOverlay = builder.blendedAsOpposite;
         this.hue = builder.hue;
         this.shiftHue = builder.shiftHue;
         this.saturation = builder.saturation;
