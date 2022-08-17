@@ -32,7 +32,7 @@ public class ObjectManager {
     public static ObjectProperties NONE = new ObjectProperties(Material.NONE);
 
     public static String ENV_HIDDEN_OBJECTS = "RLHD_HIDDEN_OBJECTS_PATH";
-    public static String ENV_HIDDEN_PROPERTIES = "RLHD_OBJECTS_PROPERTIES_PATH";
+    public static String ENV_OBJECT_PROPERTIES = "RLHD_OBJECTS_PROPERTIES_PATH";
 
     private final HashMap<Integer, ObjectProperties> objectProperties = new HashMap<>();
 
@@ -46,7 +46,7 @@ public class ObjectManager {
 
 
     public void loadObjectProperties() {
-        Env.getPathOrDefault(ENV_HIDDEN_PROPERTIES, () -> path(ObjectManager.class, "objects_properties.jsonc"))
+        Env.getPathOrDefault(ENV_OBJECT_PROPERTIES, () -> path(ObjectManager.class, "objects_properties.jsonc"))
                 .watch(path -> {
                     objectProperties.clear();
 
