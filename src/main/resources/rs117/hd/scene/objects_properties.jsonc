@@ -16,11 +16,7 @@
       "MAGIC_TREE_10834",
       "TREE",
       "TREE_1278"
-    ],
-    "flatNormals": false,
-    "uvType": "GEOMETRY",
-    "tzHaarRecolorType": "NONE",
-    "inheritTileColor": false
+    ]
   },
   {
     "description": "FARMING_PATCH_1",
@@ -28,10 +24,7 @@
     "objectIds": [
       7517
     ],
-    "flatNormals": false,
-    "uvType": "GROUND_PLANE",
-    "tzHaarRecolorType": "NONE",
-    "inheritTileColor": false
+    "uvType": "GROUND_PLANE"
   },
   {
     "description": "FARMING_PATCH_2",
@@ -39,10 +32,7 @@
     "objectIds": [
       7522
     ],
-    "flatNormals": false,
-    "uvType": "GROUND_PLANE",
-    "tzHaarRecolorType": "NONE",
-    "inheritTileColor": false
+    "uvType": "GROUND_PLANE"
   },
   {
     "description": "GRASS",
@@ -148,8 +138,6 @@
       16383
     ],
     "flatNormals": true,
-    "uvType": "GEOMETRY",
-    "tzHaarRecolorType": "NONE",
     "inheritTileColor": true
   },
   {
@@ -161,10 +149,7 @@
       16825,
       16826
     ],
-    "flatNormals": true,
-    "uvType": "GEOMETRY",
-    "tzHaarRecolorType": "NONE",
-    "inheritTileColor": false
+    "flatNormals": true
   },
   {
     "description": "FERN",
@@ -174,9 +159,6 @@
       19833,
       "FERN_19839"
     ],
-    "flatNormals": false,
-    "uvType": "GEOMETRY",
-    "tzHaarRecolorType": "NONE",
     "inheritTileColor": true
   },
   {
@@ -215,10 +197,7 @@
       5437,
       5438
     ],
-    "flatNormals": true,
-    "uvType": "GEOMETRY",
-    "tzHaarRecolorType": "NONE",
-    "inheritTileColor": false
+    "flatNormals": true
   },
   {
     "description": "LUMBRIDGE_CASTLE_WALLS",
@@ -229,10 +208,7 @@
       1912,
       1913
     ],
-    "flatNormals": true,
-    "uvType": "GEOMETRY",
-    "tzHaarRecolorType": "NONE",
-    "inheritTileColor": false
+    "flatNormals": true
   },
   {
     "description": "VARROCK_FOUNTAIN_FLOOR",
@@ -245,31 +221,21 @@
       7151
     ],
     "flatNormals": true,
-    "uvType": "GROUND_PLANE",
-    "tzHaarRecolorType": "NONE",
-    "inheritTileColor": false
+    "uvType": "GROUND_PLANE"
   },
   {
     "description": "VARROCK_FOUNTAIN_STATUE",
     "material": "GRUNGE_1",
     "objectIds": [
       7144
-    ],
-    "flatNormals": false,
-    "uvType": "GEOMETRY",
-    "tzHaarRecolorType": "NONE",
-    "inheritTileColor": false
+    ]
   },
   {
     "description": "VARROCK_KNIGHT_STATUE",
     "material": "MARBLE_1_SEMIGLOSS",
     "objectIds": [
       "STATUE_3642"
-    ],
-    "flatNormals": false,
-    "uvType": "GEOMETRY",
-    "tzHaarRecolorType": "NONE",
-    "inheritTileColor": false
+    ]
   },
   {
     "description": "GRAND_EXCHANGE_FLOOR",
@@ -315,9 +281,7 @@
       11711
     ],
     "flatNormals": true,
-    "uvType": "GROUND_PLANE",
-    "tzHaarRecolorType": "NONE",
-    "inheritTileColor": false
+    "uvType": "GROUND_PLANE"
   },
   {
     "description": "GRAND_EXCHANGE_WALL",
@@ -333,10 +297,7 @@
       23755,
       23775
     ],
-    "flatNormals": true,
-    "uvType": "GEOMETRY",
-    "tzHaarRecolorType": "NONE",
-    "inheritTileColor": false
+    "flatNormals": true
   },
   {
     "description": "GRAND_EXCHANGE_CLAN_PORTAL",
@@ -344,10 +305,7 @@
     "objectIds": [
       "CLAN_HALL_PORTAL"
     ],
-    "flatNormals": true,
-    "uvType": "GEOMETRY",
-    "tzHaarRecolorType": "NONE",
-    "inheritTileColor": false
+    "flatNormals": true
   },
   {
     "description": "GRAND_EXCHANGE_STONE_DECORATION",
@@ -392,10 +350,7 @@
       10686,
       10687
     ],
-    "flatNormals": true,
-    "uvType": "GEOMETRY",
-    "tzHaarRecolorType": "NONE",
-    "inheritTileColor": false
+    "flatNormals": true
   },
   {
     "description": "VARROCK_WALLS",
@@ -514,10 +469,7 @@
       511,
       23807
     ],
-    "flatNormals": true,
-    "uvType": "GEOMETRY",
-    "tzHaarRecolorType": "NONE",
-    "inheritTileColor": false
+    "flatNormals": true
   },
   {
     "description": "FALADOR_WALLS",
@@ -631,21 +583,14 @@
       24035,
       23806
     ],
-    "flatNormals": true,
-    "uvType": "GEOMETRY",
-    "tzHaarRecolorType": "NONE",
-    "inheritTileColor": false
+    "flatNormals": true
   },
   {
     "description": "FALADOR_MINES_TORCH_WALL",
     "material": "GRUNGE_1",
     "objectIds": [
       1422
-    ],
-    "flatNormals": false,
-    "uvType": "GEOMETRY",
-    "tzHaarRecolorType": "NONE",
-    "inheritTileColor": false
+    ]
   },
   {
     "description": "STATUE_OF_SARADOMIN_1",
@@ -653,11 +598,7 @@
     "objectIds": [
       "STATUE_OF_SARADOMIN_24043",
       "STATUE_OF_SARADOMIN_24044"
-    ],
-    "flatNormals": false,
-    "uvType": "GEOMETRY",
-    "tzHaarRecolorType": "NONE",
-    "inheritTileColor": false
+    ]
   },
   {
     "description": "STONE_SIGNPOST",
@@ -665,11 +606,7 @@
     "objectIds": [
       "STONE_SIGNPOST",
       "STONE_SIGNPOST_23971"
-    ],
-    "flatNormals": false,
-    "uvType": "GEOMETRY",
-    "tzHaarRecolorType": "NONE",
-    "inheritTileColor": false
+    ]
   },
   {
     "description": "FALADOR_STEPS_1",
@@ -682,10 +619,7 @@
       10731,
       23885
     ],
-    "flatNormals": true,
-    "uvType": "GEOMETRY",
-    "tzHaarRecolorType": "NONE",
-    "inheritTileColor": false
+    "flatNormals": true
   },
   {
     "description": "FALADOR_UNKNOWN_1",
@@ -694,11 +628,7 @@
       24022,
       24023,
       24024
-    ],
-    "flatNormals": false,
-    "uvType": "GEOMETRY",
-    "tzHaarRecolorType": "NONE",
-    "inheritTileColor": false
+    ]
   },
   {
     "description": "AL_KHARID_WALLS",
@@ -709,10 +639,7 @@
       21799,
       1416
     ],
-    "flatNormals": true,
-    "uvType": "GEOMETRY",
-    "tzHaarRecolorType": "NONE",
-    "inheritTileColor": false
+    "flatNormals": true
   },
   {
     "description": "CITHAREDE_ABBEY_WALLS",
@@ -735,10 +662,7 @@
       39739,
       "STONE_PILE_39740"
     ],
-    "flatNormals": true,
-    "uvType": "GEOMETRY",
-    "tzHaarRecolorType": "NONE",
-    "inheritTileColor": false
+    "flatNormals": true
   },
   {
     "description": "SEERS_COURTHOUSE_WALLS",
@@ -759,10 +683,7 @@
       25980,
       "LOCKED_GATE"
     ],
-    "flatNormals": true,
-    "uvType": "GEOMETRY",
-    "tzHaarRecolorType": "NONE",
-    "inheritTileColor": false
+    "flatNormals": true
   },
   {
     "description": "SEERS_BUILDING_WALLS",
@@ -791,10 +712,7 @@
       25756,
       25757
     ],
-    "flatNormals": true,
-    "uvType": "GEOMETRY",
-    "tzHaarRecolorType": "NONE",
-    "inheritTileColor": false
+    "flatNormals": true
   },
   {
     "description": "STONE_WALL",
@@ -807,10 +725,7 @@
       5566,
       5567
     ],
-    "flatNormals": true,
-    "uvType": "GEOMETRY",
-    "tzHaarRecolorType": "NONE",
-    "inheritTileColor": false
+    "flatNormals": true
   },
   {
     "description": "STATUE_OF_A_WARRIOR_1",
@@ -818,11 +733,7 @@
     "objectIds": [
       "STATUE_OF_A_WARRIOR",
       "STATUE_OF_A_WARRIOR_566"
-    ],
-    "flatNormals": false,
-    "uvType": "GEOMETRY",
-    "tzHaarRecolorType": "NONE",
-    "inheritTileColor": false
+    ]
   },
   {
     "description": "KARAMJA_DUNGEON_WALLS",
@@ -836,11 +747,7 @@
       21737,
       "STAIRS_21725",
       "STAIRS_21726"
-    ],
-    "flatNormals": false,
-    "uvType": "GEOMETRY",
-    "tzHaarRecolorType": "NONE",
-    "inheritTileColor": false
+    ]
   },
   {
     "description": "TZHAAR_ROCK_GRADIENT",
@@ -882,10 +789,7 @@
       11839,
       "NODE"
     ],
-    "flatNormals": false,
-    "uvType": "GEOMETRY",
-    "tzHaarRecolorType": "GRADIENT",
-    "inheritTileColor": false
+    "tzHaarRecolorType": "GRADIENT"
   },
   {
     "description": "TZHAAR_GRADIENT",
@@ -897,10 +801,7 @@
       11850,
       11982
     ],
-    "flatNormals": false,
-    "uvType": "GEOMETRY",
-    "tzHaarRecolorType": "GRADIENT",
-    "inheritTileColor": false
+    "tzHaarRecolorType": "GRADIENT"
   },
   {
     "description": "TZHAAR_ROCK_HUESHIFT",
@@ -913,65 +814,42 @@
       30264,
       30265
     ],
-    "flatNormals": false,
-    "uvType": "GEOMETRY",
-    "tzHaarRecolorType": "HUE_SHIFT",
-    "inheritTileColor": false
+    "tzHaarRecolorType": "HUE_SHIFT"
   },
   {
     "description": "APE_ATOLL_DUNGEON_WALLS",
     "material": "GRUNGE_1",
     "objectIds": [
       4898
-    ],
-    "flatNormals": false,
-    "uvType": "GEOMETRY",
-    "tzHaarRecolorType": "NONE",
-    "inheritTileColor": false
+    ]
   },
   {
     "description": "SHAYZIEN_SHAY_SHRINE",
     "material": "MARBLE_3_GLOSS",
     "objectIds": [
       "CAT_SHRINE"
-    ],
-    "flatNormals": false,
-    "uvType": "GEOMETRY",
-    "tzHaarRecolorType": "NONE",
-    "inheritTileColor": false
+    ]
   },
   {
     "description": "SHAYZIEN_HERO_STATUE",
     "material": "GRUNGE_1",
     "objectIds": [
       "DRAGON_STATUE"
-    ],
-    "flatNormals": false,
-    "uvType": "GEOMETRY",
-    "tzHaarRecolorType": "NONE",
-    "inheritTileColor": false
+    ]
   },
   {
     "description": "SHAYZIEN_DRAGON_STATUE",
     "material": "MARBLE_2_GLOSS",
     "objectIds": [
       "SHAYZIEN_STATUE_42178"
-    ],
-    "flatNormals": false,
-    "uvType": "GEOMETRY",
-    "tzHaarRecolorType": "NONE",
-    "inheritTileColor": false
+    ]
   },
   {
     "description": "SHAYZIEN_GRAVE",
     "material": "GRUNGE_1",
     "objectIds": [
       "GRAVE_28451"
-    ],
-    "flatNormals": false,
-    "uvType": "GEOMETRY",
-    "tzHaarRecolorType": "NONE",
-    "inheritTileColor": false
+    ]
   },
   {
     "description": "SHAYZIEN_CEREMONIAL_PILLAR",
@@ -991,10 +869,7 @@
       "CEREMONIAL_PILLAR_42174",
       "CEREMONIAL_PILLAR_42175"
     ],
-    "flatNormals": true,
-    "uvType": "GEOMETRY",
-    "tzHaarRecolorType": "NONE",
-    "inheritTileColor": false
+    "flatNormals": true
   },
   {
     "description": "SHAYZIEN_WALLS_ROCK",
@@ -1014,10 +889,7 @@
       42110,
       42111
     ],
-    "flatNormals": true,
-    "uvType": "GEOMETRY",
-    "tzHaarRecolorType": "NONE",
-    "inheritTileColor": false
+    "flatNormals": true
   },
   {
     "description": "SHAYZIEN_WALLS_WOOD",
@@ -1029,10 +901,7 @@
       42108,
       42109
     ],
-    "flatNormals": true,
-    "uvType": "GEOMETRY",
-    "tzHaarRecolorType": "NONE",
-    "inheritTileColor": false
+    "flatNormals": true
   },
   {
     "description": "SHAYZIEN_STAIRS",
@@ -1042,21 +911,14 @@
       "STAIRCASE_42195",
       "STAIRCASE_42196"
     ],
-    "flatNormals": true,
-    "uvType": "GEOMETRY",
-    "tzHaarRecolorType": "NONE",
-    "inheritTileColor": false
+    "flatNormals": true
   },
   {
     "description": "STATUE_BUST",
     "material": "MARBLE_1_GLOSS",
     "objectIds": [
       26129
-    ],
-    "flatNormals": false,
-    "uvType": "GEOMETRY",
-    "tzHaarRecolorType": "NONE",
-    "inheritTileColor": false
+    ]
   },
   {
     "description": "CASTLE_WARS_WALLS",
@@ -1072,10 +934,7 @@
       1631,
       "BATTLEMENTS_4447"
     ],
-    "flatNormals": true,
-    "uvType": "GEOMETRY",
-    "tzHaarRecolorType": "NONE",
-    "inheritTileColor": false
+    "flatNormals": true
   },
   {
     "description": "CASTLE_WARS_UNDERGROUND_WALLS",
@@ -1085,11 +944,7 @@
       1417,
       1434,
       1435
-    ],
-    "flatNormals": false,
-    "uvType": "GEOMETRY",
-    "tzHaarRecolorType": "NONE",
-    "inheritTileColor": false
+    ]
   },
   {
     "description": "CASTLE_WARS_UNDERGROUND_ROCKS",
@@ -1103,11 +958,7 @@
       317,
       318,
       319
-    ],
-    "flatNormals": false,
-    "uvType": "GEOMETRY",
-    "tzHaarRecolorType": "NONE",
-    "inheritTileColor": false
+    ]
   },
   {
     "description": "CASTLE_WARS_DECORATION",
@@ -1116,10 +967,7 @@
       4435,
       4436
     ],
-    "flatNormals": true,
-    "uvType": "GEOMETRY",
-    "tzHaarRecolorType": "NONE",
-    "inheritTileColor": false
+    "flatNormals": true
   },
   {
     "description": "MORYTANIA_SLAYER_TOWER_WALLS",
@@ -1142,10 +990,7 @@
       2172,
       2173
     ],
-    "flatNormals": true,
-    "uvType": "GEOMETRY",
-    "tzHaarRecolorType": "NONE",
-    "inheritTileColor": false
+    "flatNormals": true
   },
   {
     "description": "TOB_VERZIK_TILE_FLOOR",
@@ -1161,11 +1006,7 @@
       32727,
       32728,
       32719
-    ],
-    "flatNormals": false,
-    "uvType": "GEOMETRY",
-    "tzHaarRecolorType": "NONE",
-    "inheritTileColor": false
+    ]
   },
   {
     "description": "COX_OUTSIDE_RUINS",
@@ -1195,10 +1036,7 @@
       29942,
       29943
     ],
-    "flatNormals": true,
-    "uvType": "GEOMETRY",
-    "tzHaarRecolorType": "NONE",
-    "inheritTileColor": false
+    "flatNormals": true
   },
   {
     "description": "COX_PILLAR",
@@ -1210,10 +1048,7 @@
       29806,
       29807
     ],
-    "flatNormals": true,
-    "uvType": "GEOMETRY",
-    "tzHaarRecolorType": "NONE",
-    "inheritTileColor": false
+    "flatNormals": true
   },
   {
     "description": "GROUND_DECORATION_TAN_ROCK",
@@ -1223,9 +1058,6 @@
       7106,
       7107
     ],
-    "flatNormals": false,
-    "uvType": "GEOMETRY",
-    "tzHaarRecolorType": "NONE",
     "inheritTileColor": true
   },
   {
@@ -1236,9 +1068,6 @@
       7057,
       7103
     ],
-    "flatNormals": false,
-    "uvType": "GEOMETRY",
-    "tzHaarRecolorType": "NONE",
     "inheritTileColor": true
   },
   {
@@ -1281,10 +1110,7 @@
       5950,
       25086
     ],
-    "flatNormals": true,
-    "uvType": "GEOMETRY",
-    "tzHaarRecolorType": "NONE",
-    "inheritTileColor": false
+    "flatNormals": true
   },
   {
     "description": "ROCK_CAVE_ENTRANCES",
@@ -1294,10 +1120,7 @@
       "CAVE_ENTRANCE_11835",
       "CRACK_29627"
     ],
-    "flatNormals": true,
-    "uvType": "GEOMETRY",
-    "tzHaarRecolorType": "NONE",
-    "inheritTileColor": false
+    "flatNormals": true
   },
   {
     "description": "CAVE_WALLS_BLEND",
@@ -1325,9 +1148,7 @@
       25055
     ],
     "flatNormals": true,
-    "uvType": "GROUND_PLANE",
-    "tzHaarRecolorType": "NONE",
-    "inheritTileColor": false
+    "uvType": "GROUND_PLANE"
   },
   {
     "description": "CAVE_WALL_ABOVE_FLOOR_TILE",
@@ -1338,9 +1159,7 @@
       17224
     ],
     "flatNormals": true,
-    "uvType": "GROUND_PLANE",
-    "tzHaarRecolorType": "NONE",
-    "inheritTileColor": false
+    "uvType": "GROUND_PLANE"
   },
   {
     "description": "LUMBRIDGE_CAVE_WALLS",
@@ -1390,10 +1209,7 @@
       "RUBBLE",
       5944
     ],
-    "flatNormals": true,
-    "uvType": "GEOMETRY",
-    "tzHaarRecolorType": "NONE",
-    "inheritTileColor": false
+    "flatNormals": true
   },
   {
     "description": "UNKNOWN_1",
@@ -1401,10 +1217,7 @@
     "objectIds": [
       "PASSAGE"
     ],
-    "flatNormals": true,
-    "uvType": "GEOMETRY",
-    "tzHaarRecolorType": "NONE",
-    "inheritTileColor": false
+    "flatNormals": true
   },
   {
     "description": "UNKNOWN_2",
@@ -1428,10 +1241,7 @@
       3102,
       3103
     ],
-    "flatNormals": true,
-    "uvType": "GEOMETRY",
-    "tzHaarRecolorType": "NONE",
-    "inheritTileColor": false
+    "flatNormals": true
   },
   {
     "description": "UNKNOWN_3",
@@ -1453,11 +1263,7 @@
       "ROCKS_3805",
       "ROCKS_3806",
       "ROCKS_3807"
-    ],
-    "flatNormals": false,
-    "uvType": "GEOMETRY",
-    "tzHaarRecolorType": "NONE",
-    "inheritTileColor": false
+    ]
   },
   {
     "description": "UNKNOWN_4",
@@ -1465,21 +1271,14 @@
     "objectIds": [
       "CRYPT"
     ],
-    "flatNormals": true,
-    "uvType": "GEOMETRY",
-    "tzHaarRecolorType": "NONE",
-    "inheritTileColor": false
+    "flatNormals": true
   },
   {
     "description": "UNKNOWN_5",
     "material": "GRUNGE_1",
     "objectIds": [
       29032
-    ],
-    "flatNormals": false,
-    "uvType": "GEOMETRY",
-    "tzHaarRecolorType": "NONE",
-    "inheritTileColor": false
+    ]
   },
   {
     "description": "UNKNOWN_6",
@@ -1494,21 +1293,14 @@
       477,
       462
     ],
-    "flatNormals": true,
-    "uvType": "GEOMETRY",
-    "tzHaarRecolorType": "NONE",
-    "inheritTileColor": false
+    "flatNormals": true
   },
   {
     "description": "UNKNOWN_7",
     "material": "GRUNGE_1",
     "objectIds": [
       "CAVE_EXIT"
-    ],
-    "flatNormals": false,
-    "uvType": "GEOMETRY",
-    "tzHaarRecolorType": "NONE",
-    "inheritTileColor": false
+    ]
   },
   {
     "description": "UNKNOWN_8",
@@ -1521,10 +1313,7 @@
       10749,
       10750
     ],
-    "flatNormals": true,
-    "uvType": "GEOMETRY",
-    "tzHaarRecolorType": "NONE",
-    "inheritTileColor": false
+    "flatNormals": true
   },
   {
     "description": "UNKNOWN_9",
@@ -1533,10 +1322,7 @@
       3110,
       3174
     ],
-    "flatNormals": true,
-    "uvType": "GEOMETRY",
-    "tzHaarRecolorType": "NONE",
-    "inheritTileColor": false
+    "flatNormals": true
   },
   {
     "description": "UNKNOWN_10",
@@ -1548,10 +1334,6 @@
       3948,
       3709,
       3950
-    ],
-    "flatNormals": false,
-    "uvType": "GEOMETRY",
-    "tzHaarRecolorType": "NONE",
-    "inheritTileColor": false
+    ]
   }
 ]

@@ -1,12 +1,14 @@
 package rs117.hd.scene;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.google.gson.*;
+import rs117.hd.data.materials.UvType;
 import rs117.hd.scene.objects.ObjectProperties;
+import rs117.hd.scene.objects.TzHaarRecolorType;
 import rs117.hd.utils.ResourcePath;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -31,9 +33,9 @@ public class ExportObjectPropertiesToJson {
         Collections.addAll(uniqueLights, currentLights);
         System.out.println("Loaded " + currentLights.length + " object Properties");
 
-        Gson gson = new GsonBuilder().disableHtmlEscaping().setPrettyPrinting().create();
-
-        String json = gson.toJson(uniqueLights);
+        GsonBuilder gsonBuilder = new GsonBuilder().disableHtmlEscaping().setPrettyPrinting();
+        gsonBuilder.registerTypeAdapter(ObjectProperties.class, new RemoveDefaults());
+        String json = gsonBuilder.create().toJson(uniqueLights);
 
         System.out.println("Writing " + uniqueLights.size() + " object Properties to JSON file: " + configPath.toAbsolutePath());
         configPath.toFile().getParentFile().mkdirs();
@@ -48,3 +50,32 @@ public class ExportObjectPropertiesToJson {
     }
 
 }
+
+
+class RemoveDefaults implements JsonSerializer<ObjectProperties> {
+
+    @Override
+    public JsonElement serialize(ObjectProperties obj, Type type, JsonSerializationContext jsc) {
+        Gson gson = new Gson();
+        JsonObject object = (JsonObject) gson.toJsonTree(obj);
+
+        if (obj.tzHaarRecolorType == TzHaarRecolorType.NONE) {
+            object.remove("tzHaarRecolorType");
+        }
+        if (!obj.description.equals("UNKNOWN")) {
+            object.remove("description");
+        }
+        if (!obj.flatNormals) {
+            object.remove("flatNormals");
+        }
+        if (obj.uvType == UvType.GEOMETRY) {
+            object.remove("uvType");
+        }
+        if (!obj.inheritTileColor) {
+            object.remove("inheritTileColor");
+        }
+
+        return object;
+    }
+}
+
