@@ -294,9 +294,9 @@ public class ProceduralGenerator
 			if (vertexOverlays[vertex] != 0)
 			{
 				Overlay overlay = Overlay.getOverlay(vertexOverlays[vertex], tile, client, config);
-				GroundMaterial groundMaterial = overlay.getGroundMaterial();
+				GroundMaterial groundMaterial = overlay.groundMaterial;
 				material = groundMaterial.getRandomMaterial(z, worldX, worldY);
-				isOverlay = !overlay.blendedAsOverlay;
+				isOverlay = !overlay.blendedAsUnderlay;
 				colorHSL = recolorOverlay(overlay, colorHSL);
 			}
 			else if (vertexUnderlays[vertex] != 0)
@@ -304,7 +304,7 @@ public class ProceduralGenerator
 				Underlay underlay = Underlay.getUnderlay(vertexUnderlays[vertex], tile, client, config);
 				GroundMaterial groundMaterial = underlay.groundMaterial;
 				material = groundMaterial.getRandomMaterial(z, worldX, worldY);
-				isOverlay = underlay.blendedAsUnderlay;
+				isOverlay = underlay.blendedAsOverlay;
 				colorHSL = recolorUnderlay(underlay, colorHSL);
 			}
 
@@ -845,7 +845,7 @@ public class ProceduralGenerator
 		{
 			if (client.getScene().getOverlayIds()[tileZ][tileX][tileY] != 0)
 			{
-				waterType = Overlay.getOverlay(client.getScene().getOverlayIds()[tileZ][tileX][tileY], tile, client, config).getWaterType();
+				waterType = Overlay.getOverlay(client.getScene().getOverlayIds()[tileZ][tileX][tileY], tile, client, config).waterType;
 			}
 			else
 			{
@@ -881,7 +881,7 @@ public class ProceduralGenerator
 		{
 			if (isOverlayFace(tile, face))
 			{
-				waterType = Overlay.getOverlay(client.getScene().getOverlayIds()[tileZ][tileX][tileY], tile, client, config).getWaterType();
+				waterType = Overlay.getOverlay(client.getScene().getOverlayIds()[tileZ][tileX][tileY], tile, client, config).waterType;
 			}
 			else
 			{
@@ -1079,16 +1079,16 @@ public class ProceduralGenerator
 
 	public int[] recolorOverlay(Overlay overlay, int[] colorHSL)
 	{
-		colorHSL[0] = overlay.getHue() >= 0 ? overlay.getHue() : colorHSL[0];
-		colorHSL[0] += overlay.getShiftHue();
+		colorHSL[0] = overlay.hue >= 0 ? overlay.hue : colorHSL[0];
+		colorHSL[0] += overlay.shiftHue;
 		colorHSL[0] = Ints.constrainToRange(colorHSL[0], 0, 63);
 
-		colorHSL[1] = overlay.getSaturation() >= 0 ? overlay.getSaturation() : colorHSL[1];
-		colorHSL[1] += overlay.getShiftSaturation();
+		colorHSL[1] = overlay.saturation >= 0 ? overlay.saturation : colorHSL[1];
+		colorHSL[1] += overlay.shiftSaturation;
 		colorHSL[1] = Ints.constrainToRange(colorHSL[1], 0, 7);
 
-		colorHSL[2] = overlay.getLightness() >= 0 ? overlay.getLightness() : colorHSL[2];
-		colorHSL[2] += overlay.getShiftLightness();
+		colorHSL[2] = overlay.lightness >= 0 ? overlay.lightness : colorHSL[2];
+		colorHSL[2] += overlay.shiftLightness;
 		colorHSL[2] = Ints.constrainToRange(colorHSL[2], 0, 127);
 
 		return colorHSL;
@@ -1126,7 +1126,7 @@ public class ProceduralGenerator
 
 		if (client.getScene().getOverlayIds()[z][x][y] != 0)
 		{
-			if (!Overlay.getOverlay(client.getScene().getOverlayIds()[z][x][y], tile, client, config).isBlended())
+			if (!Overlay.getOverlay(client.getScene().getOverlayIds()[z][x][y], tile, client, config).blended)
 			{
 				return true;
 			}

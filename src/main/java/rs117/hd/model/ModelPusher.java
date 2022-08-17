@@ -417,7 +417,7 @@ public class ModelPusher
                         Overlay overlay = Overlay.getOverlay(overlayId, tile, client, config);
                         tileColorHSL = proceduralGenerator.recolorOverlay(overlay, tileColorHSL);
                     } else {
-                        Underlay underlay = Underlay.getUnderlay(underlayId, tile, client,config);
+                        Underlay underlay = Underlay.getUnderlay(underlayId, tile, client, config);
                         tileColorHSL = proceduralGenerator.recolorUnderlay(underlay, tileColorHSL);
                     }
 
@@ -439,7 +439,7 @@ public class ModelPusher
                         tileColorHSL = HDUtils.colorIntToHSL(tile.getSceneTileModel().getTriangleColorA()[faceColorIndex]);
 
                         int underlayId = client.getScene().getUnderlayIds()[tileZ][tileX][tileY];
-                        Underlay underlay = Underlay.getUnderlay(underlayId, tile, client,config);
+                        Underlay underlay = Underlay.getUnderlay(underlayId, tile, client, config);
                         tileColorHSL = proceduralGenerator.recolorUnderlay(underlay, tileColorHSL);
 
                         color1H = color2H = color3H = tileColorHSL[0];

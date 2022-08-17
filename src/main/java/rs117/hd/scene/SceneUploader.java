@@ -411,7 +411,7 @@ class SceneUploader
 				if (client.getScene().getOverlayIds()[tileZ][tileX][tileY] != 0)
 				{
 					Overlay overlay = Overlay.getOverlay(client.getScene().getOverlayIds()[tileZ][tileX][tileY], tile, client, config);
-					groundMaterial = overlay.getGroundMaterial();
+					groundMaterial = overlay.groundMaterial;
 
 					swColor = HDUtils.colorHSLToInt(proceduralGenerator.recolorOverlay(overlay, HDUtils.colorIntToHSL(swColor)));
 					seColor = HDUtils.colorHSLToInt(proceduralGenerator.recolorOverlay(overlay, HDUtils.colorIntToHSL(seColor)));
@@ -782,7 +782,7 @@ class SceneUploader
 				if (proceduralGenerator.isOverlayFace(tile, face))
 				{
 					Overlay overlay = Overlay.getOverlay(client.getScene().getOverlayIds()[tileZ][tileX][tileY], tile, client, config);
-					groundMaterial = overlay.getGroundMaterial();
+					groundMaterial = overlay.groundMaterial;
 
 					colorA = HDUtils.colorHSLToInt(proceduralGenerator.recolorOverlay(overlay, HDUtils.colorIntToHSL(colorA)));
 					colorB = HDUtils.colorHSLToInt(proceduralGenerator.recolorOverlay(overlay, HDUtils.colorIntToHSL(colorB)));

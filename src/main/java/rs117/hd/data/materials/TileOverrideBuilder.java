@@ -7,6 +7,7 @@ import rs117.hd.HdPluginConfig;
 import rs117.hd.data.WaterType;
 import rs117.hd.data.environments.Area;
 
+import java.util.Arrays;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -18,7 +19,7 @@ class TileOverrideBuilder<T> {
     public GroundMaterial groundMaterial = GroundMaterial.NONE;
     public WaterType waterType = WaterType.NONE;
     public boolean blended = true;
-    public boolean blendedAsType = false;
+    public boolean blendedAsOpposite = false;
     public int hue = -1;
     public int shiftHue = 0;
     public int saturation = -1;
@@ -34,6 +35,12 @@ class TileOverrideBuilder<T> {
     }
 
     TileOverrideBuilder<T> ids(Integer... ids) {
+        if (this.ids.length > 0)
+            throw new IllegalStateException(
+                "Attempted to overwrite IDs " + Arrays.toString(this.ids) +
+                " with IDs " + Arrays.toString(ids) +
+                " in " + TileOverrideBuilder.class.getSimpleName() + "." +
+                "This is likely a mistake.");
         this.ids = ids;
         return this;
     }
