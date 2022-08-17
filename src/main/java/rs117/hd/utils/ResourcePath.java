@@ -281,6 +281,18 @@ public class ResourcePath {
         return FileWatcher.watchPath(path, changeHandler);
     }
 
+    /**
+     * Run the callback once at the start & every time the resource (or sub resource) changes.
+     * @param changeHandler Callback to call once at the start and every time the resource changes
+     * @return A runnable that can be called to unregister the watch callback
+     */
+    public FileWatcher.UnregisterCallback watch(@RegEx String filter, Consumer<ResourcePath> changeHandler) {
+        return watch(path -> {
+            if (path.toPosixPath().matches(filter))
+                changeHandler.accept(path);
+        });
+    }
+
     public String loadString() throws IOException {
         try (BufferedReader reader = toReader()) {
             return reader.lines().collect(Collectors.joining(System.lineSeparator()));
