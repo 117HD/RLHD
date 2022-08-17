@@ -25,9 +25,9 @@ import static rs117.hd.utils.ResourcePath.path;
 public class ObjectManager {
 
     @Inject
-    Client client;
+    private Client client;
     @Inject
-    HdPlugin plugin;
+    private HdPlugin plugin;
 
     public ObjectProperties NONE = new ObjectProperties(Material.NONE);
 
