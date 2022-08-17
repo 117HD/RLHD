@@ -44,11 +44,11 @@ import rs117.hd.HdPluginConfig;
 import rs117.hd.data.WaterType;
 import rs117.hd.data.materials.GroundMaterial;
 import rs117.hd.data.materials.Material;
-import rs117.hd.model.objects.ObjectProperties;
 import rs117.hd.data.materials.Overlay;
-import rs117.hd.model.objects.TzHaarRecolorType;
+import rs117.hd.scene.objects.ObjectProperties;
+import rs117.hd.scene.objects.TzHaarRecolorType;
 import rs117.hd.data.materials.Underlay;
-import rs117.hd.model.objects.ObjectType;
+import rs117.hd.scene.objects.ObjectType;
 import rs117.hd.utils.HDUtils;
 import static rs117.hd.utils.HDUtils.dotNormal3Lights;
 

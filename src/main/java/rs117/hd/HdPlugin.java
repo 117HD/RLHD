@@ -57,8 +57,7 @@ import rs117.hd.data.materials.Material;
 import rs117.hd.model.ModelHasher;
 import rs117.hd.model.ModelPusher;
 import rs117.hd.model.TempModelInfo;
-import rs117.hd.model.objects.ObjectProperties;
-import rs117.hd.model.objects.ObjectType;
+import rs117.hd.scene.objects.ObjectType;
 import rs117.hd.opengl.compute.ComputeMode;
 import rs117.hd.opengl.compute.OpenCLManager;
 import rs117.hd.opengl.shader.Shader;
@@ -139,7 +138,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	private LightManager lightManager;
 
 	@Inject
-	public HiddenObjectManager hiddenObjectManager;
+	public ObjectManager objectManager;
 
 	@Inject
 	private EnvironmentManager environmentManager;
@@ -545,7 +544,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				lastAntiAliasingMode = null;
 
 				lightManager.startUp();
-				hiddenObjectManager.startUp();
+				objectManager.startUp();
 
 				if (client.getGameState() == GameState.LOGGED_IN)
 				{
@@ -2377,7 +2376,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			return;
 		}
 
-		if (hiddenObjectManager.shouldHide(ModelUtils.getID(hash), ModelUtils.getWorldLocation(client, x, z))) {
+		if (objectManager.shouldHide(ModelUtils.getID(hash), ModelUtils.getWorldLocation(client, x, z))) {
 			return;
 		}
 
@@ -2452,7 +2451,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 			TempModelInfo tempModelInfo = tempModelInfoMap.get(batchHash);
 			if (config.disableModelBatching() || tempModelInfo == null || tempModelInfo.getFaceCount() != model.getFaceCount()) {
-				final int[] lengths = modelPusher.pushModel(renderable, model, vertexBuffer, uvBuffer, normalBuffer, 0, 0, 0, ObjectProperties.NONE, ObjectType.NONE, config.disableModelCaching(), modelHasher.calculateColorCacheHash());
+				final int[] lengths = modelPusher.pushModel(renderable, model, vertexBuffer, uvBuffer, normalBuffer, 0, 0, 0, ObjectManager.NONE, ObjectType.NONE, config.disableModelCaching(), modelHasher.calculateColorCacheHash());
 				final int faceCount = lengths[0] / 3;
 				final int actualTempUvOffset = lengths[1] > 0 ? tempUvOffset : -1;
 
