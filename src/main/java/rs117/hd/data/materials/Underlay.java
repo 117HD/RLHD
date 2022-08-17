@@ -137,7 +137,7 @@ public enum Underlay {
 
     UNDERLAY_58(58, GroundMaterial.SNOW_1),
 
-    UNDERLAY_72(GroundMaterial.VARIED_DIRT, p -> p.ids(72, 90)),
+    UNDERLAY_72(GroundMaterial.VARIED_DIRT, p -> p.ids(72, 98)),
 
     NONE(-1, GroundMaterial.DIRT);
 

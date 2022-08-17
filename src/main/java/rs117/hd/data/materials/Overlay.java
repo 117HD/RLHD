@@ -382,7 +382,7 @@ public enum Overlay {
     OVERLAY_SWAMP_WATER(WaterType.SWAMP_WATER, p -> p.ids(-100, 7)),
     OVERLAY_WOOD_PLANKS(GroundMaterial.WOOD_PLANKS_1, p -> p.ids(5, 35, 52)),
     OVERLAY_SAND(GroundMaterial.SAND, p -> p.ids(25, 26)),
-    OVERLAY_BRICK_BROWN(GroundMaterial.SAND, p -> p.ids(27, 46).blended(false)),
+    OVERLAY_BRICK_BROWN(GroundMaterial.BRICK_BROWN, p -> p.ids(27, 46).blended(false)),
     OVERLAY_SNOW(GroundMaterial.SNOW_2, p -> p.ids(30, 33)),
     OVERLAY_VARIED_DIRT(GroundMaterial.VARIED_DIRT, p -> p.ids(49, 83)),
     OVERLAY_SAND_BRICK(GroundMaterial.SAND_BRICK, p -> p.ids(-49, 84)),
