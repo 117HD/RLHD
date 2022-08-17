@@ -1,4 +1,4 @@
-package rs117.hd.scene.lighting;
+package rs117.hd.scene.lights;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.gson.TypeAdapter;

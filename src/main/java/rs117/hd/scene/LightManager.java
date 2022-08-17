@@ -23,8 +23,9 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package rs117.hd.scene.lighting;
+package rs117.hd.scene;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import com.google.common.primitives.Ints;
@@ -41,12 +42,14 @@ import net.runelite.client.plugins.entityhider.EntityHiderConfig;
 import net.runelite.client.plugins.entityhider.EntityHiderPlugin;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
+import rs117.hd.scene.lights.*;
 import rs117.hd.utils.Env;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ResourcePath;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -79,10 +82,14 @@ public class LightManager
 	@Inject
 	private PluginManager pluginManager;
 
-	private static final ArrayList<SceneLight> WORLD_LIGHTS = new ArrayList<>();
-	private static final ListMultimap<Integer, Light> NPC_LIGHTS = ArrayListMultimap.create();
-	private static final ListMultimap<Integer, Light> OBJECT_LIGHTS = ArrayListMultimap.create();
-	private static final ListMultimap<Integer, Light> PROJECTILE_LIGHTS = ArrayListMultimap.create();
+	@VisibleForTesting
+	final ArrayList<SceneLight> WORLD_LIGHTS = new ArrayList<>();
+	@VisibleForTesting
+	final ListMultimap<Integer, Light> NPC_LIGHTS = ArrayListMultimap.create();
+	@VisibleForTesting
+	final ListMultimap<Integer, Light> OBJECT_LIGHTS = ArrayListMultimap.create();
+	@VisibleForTesting
+	final ListMultimap<Integer, Light> PROJECTILE_LIGHTS = ArrayListMultimap.create();
 
 	@Getter
 	ArrayList<SceneLight> sceneLights = new ArrayList<>();
@@ -103,34 +110,58 @@ public class LightManager
 
 	static final float TWO_PI = (float) (2 * Math.PI);
 
+	public void loadConfig(ResourcePath path)
+	{
+		try
+		{
+			Light[] lights;
+			try {
+				lights = path.loadJson(Light[].class);
+			} catch (IOException ex) {
+				log.error("Failed to load lights", ex);
+				return;
+			}
+
+			WORLD_LIGHTS.clear();
+			NPC_LIGHTS.clear();
+			OBJECT_LIGHTS.clear();
+			PROJECTILE_LIGHTS.clear();
+
+			for (Light l : lights)
+			{
+				// Map values from [0, 255] in gamma color space to [0, 1] in linear color space
+				// Also ensure that each color always has 4 components with sensible defaults
+				float[] linearRGBA = { 0, 0, 0, 1 };
+				for (int i = 0; i < Math.min(l.color.length, linearRGBA.length); i++)
+					linearRGBA[i] = HDUtils.srgbToLinear(l.color[i] /= 255f);
+				l.color = linearRGBA;
+
+				if (l.worldX != null && l.worldY != null)
+					WORLD_LIGHTS.add(new SceneLight(l));
+				l.npcIds.forEach(id -> NPC_LIGHTS.put(id, l));
+				l.objectIds.forEach(id -> OBJECT_LIGHTS.put(id, l));
+				l.projectileIds.forEach(id -> PROJECTILE_LIGHTS.put(id, l));
+			}
+
+			log.debug("Loaded {} lights", lights.length);
+			configChanged = true;
+		}
+		catch (Exception ex)
+		{
+			log.error("Failed to parse light configuration", ex);
+		}
+	}
+
 	public void startUp()
 	{
 		entityHiderConfig = configManager.getConfig(EntityHiderConfig.class);
-
-		Env.getPathOrDefault(ENV_LIGHTS_CONFIG, () -> path(LightManager.class,"lights.json"))
-			.watch(path -> {
-				loadLightConfiguration(path);
-				configChanged = true;
-			});
+		Env.getPathOrDefault(ENV_LIGHTS_CONFIG, () -> path(LightManager.class,"lights.jsonc"))
+			.watch(this::loadConfig);
 	}
 
 	public void shutDown()
 	{
 		reset();
-	}
-
-	public void clearLightConfiguration()
-	{
-		WORLD_LIGHTS.clear();
-		NPC_LIGHTS.clear();
-		OBJECT_LIGHTS.clear();
-		PROJECTILE_LIGHTS.clear();
-	}
-
-	public void loadLightConfiguration(ResourcePath path)
-	{
-		clearLightConfiguration();
-		LightConfig.load(path, WORLD_LIGHTS, NPC_LIGHTS, OBJECT_LIGHTS, PROJECTILE_LIGHTS);
 	}
 
 	public void update()
@@ -415,34 +446,25 @@ public class LightManager
 				calculateScenePosition(light);
 			}
 		}
-		Tile[][][] tiles = client.getScene().getTiles();
-		for (int i = 0; i < tiles.length; i++)
-		{
-			for (int j = 0; j < tiles[i].length; j++)
-			{
-				for (int k = 0; k < tiles[i][j].length; k++)
-				{
-					Tile tile = tiles[i][j][k];
 
-					if (tile == null)
-					{
+		for (Tile[][] plane : client.getScene().getTiles()) {
+			for (Tile[] column : plane) {
+				for (Tile tile : column) {
+					if (tile == null) {
 						continue;
 					}
 
 					DecorativeObject decorativeObject = tile.getDecorativeObject();
-					if (decorativeObject != null && decorativeObject.getRenderable() != null)
-					{
+					if (decorativeObject != null && decorativeObject.getRenderable() != null) {
 						addObjectLight(decorativeObject, tile.getRenderLevel());
 					}
 
 					WallObject wallObject = tile.getWallObject();
-					if (wallObject != null && wallObject.getRenderable1() != null)
-					{
+					if (wallObject != null && wallObject.getRenderable1() != null) {
 						int orientation = 0;
 						// east = 1, south = 2, west = 4, north = 8,
 						// southeast = 16, southwest = 32, northwest = 64, northeast = 128
-						switch (wallObject.getOrientationA())
-						{
+						switch (wallObject.getOrientationA()) {
 							case 1:
 								orientation = 512;
 								break;
@@ -472,16 +494,15 @@ public class LightManager
 					}
 
 					GroundObject groundObject = tile.getGroundObject();
-					if (groundObject != null && groundObject.getRenderable() != null)
-					{
+					if (groundObject != null && groundObject.getRenderable() != null) {
 						addObjectLight(groundObject, tile.getRenderLevel());
 					}
 
-					for (GameObject gameObject : tile.getGameObjects())
-					{
-						if (gameObject != null)
-						{
-							addObjectLight(gameObject, tile.getRenderLevel(), gameObject.sizeX(), gameObject.sizeY(), gameObject.getOrientation().getAngle());
+					for (GameObject gameObject : tile.getGameObjects()) {
+						if (gameObject != null) {
+							addObjectLight(gameObject, tile.getRenderLevel(), gameObject.sizeX(), gameObject.sizeY(), gameObject
+								.getOrientation()
+								.getAngle());
 						}
 					}
 				}

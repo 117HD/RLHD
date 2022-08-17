@@ -1,29 +1,20 @@
-package rs117.hd.lighting;
+package rs117.hd.scene;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.ListMultimap;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import rs117.hd.scene.lighting.Light;
-import rs117.hd.scene.lighting.LightConfig;
-import rs117.hd.scene.lighting.SceneLight;
-import rs117.hd.utils.ResourcePath;
+import rs117.hd.lighting.ExportLightsToJson;
+import rs117.hd.scene.lights.Light;
 
-import java.util.ArrayList;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
 
 import static org.junit.Assert.assertEquals;
+import static rs117.hd.utils.ResourcePath.path;
 
 public class LightConfigTest {
-    private static final ArrayList<SceneLight> WORLD_LIGHTS = new ArrayList<>();
-    private static final ListMultimap<Integer, Light> NPC_LIGHTS = ArrayListMultimap.create();
-    private static final ListMultimap<Integer, Light> OBJECT_LIGHTS = ArrayListMultimap.create();
-    private static final ListMultimap<Integer, Light> PROJECTILE_LIGHTS = ArrayListMultimap.create();
-
 	private final ByteArrayOutputStream stderr = new ByteArrayOutputStream();
 	private final ByteArrayOutputStream stdout = new ByteArrayOutputStream();
 	private final PrintStream originalStdout = System.out;
@@ -43,13 +34,12 @@ public class LightConfigTest {
 
 	@Test
     public void testLoad() {
-        LightConfig.load(
-			ResourcePath.path(Thread.currentThread().getContextClassLoader(), "lighting/lights.json"),
-			WORLD_LIGHTS, NPC_LIGHTS, OBJECT_LIGHTS, PROJECTILE_LIGHTS);
+		LightManager lightManager = new LightManager();
+		lightManager.loadConfig(path(LightConfigTest.class, "lights.jsonc"));
 
         // can we get the same light for both of its raw IDs?
-        Light spitRoastLight = OBJECT_LIGHTS.get(5608).get(0);
-        assertEquals(spitRoastLight, OBJECT_LIGHTS.get(4267).get(0));
+        Light spitRoastLight = lightManager.OBJECT_LIGHTS.get(5608).get(0);
+        assertEquals(spitRoastLight, lightManager.OBJECT_LIGHTS.get(4267).get(0));
 
         // is its data correct?
         assertEquals("SPIT_ROAST", spitRoastLight.description);

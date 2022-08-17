@@ -5,7 +5,7 @@ import com.google.common.collect.Multimap;
 import com.google.gson.annotations.JsonAdapter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.coords.WorldPoint;
-import rs117.hd.scene.lighting.Light.ObjectIDAdapter;
+import rs117.hd.scene.lights.Light.ObjectIDAdapter;
 import rs117.hd.utils.AABB;
 import rs117.hd.utils.Env;
 

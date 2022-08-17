@@ -63,8 +63,8 @@ import rs117.hd.opengl.shader.Shader;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.Template;
 import rs117.hd.scene.*;
-import rs117.hd.scene.lighting.LightManager;
-import rs117.hd.scene.lighting.SceneLight;
+import rs117.hd.scene.LightManager;
+import rs117.hd.scene.lights.SceneLight;
 import rs117.hd.utils.*;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.GpuFloatBuffer;
@@ -693,7 +693,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			return null;
 		});
 
-		ResourcePath shaderPath = Env.getPathOrDefault(ENV_SHADER_PATH, () -> path(HdPlugin.class));
+		ResourcePath shaderPath = Env
+			.getPathOrDefault(ENV_SHADER_PATH, () -> path(HdPlugin.class))
+			.chroot();
 		template.add(key -> {
 			try {
 				// TODO: track current include stack
@@ -1404,6 +1406,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 	public void initShaderHotswapping() {
 		Env.getPathOrDefault(ENV_SHADER_PATH, () -> path(HdPlugin.class))
+			.chroot()
 			.watch(path -> {
 				if (path.getExtension().equalsIgnoreCase("glsl")) {
 					log.info("Reloading shader: {}", path);
