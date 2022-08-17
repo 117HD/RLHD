@@ -24,7 +24,7 @@ public class HiddenObjectManager {
     @Inject
     Client client;
 
-    public static String ENV_HIDDEN_OBJECTS = "RLHD_HIDDEN_OBJECTS";
+    public static String ENV_HIDDEN_OBJECTS = "RLHD_HIDDEN_OBJECTS_PATH";
 
     private final Multimap<Integer, AABB> hiddenObjects = ArrayListMultimap.create();
 
