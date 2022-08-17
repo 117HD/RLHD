@@ -1178,7 +1178,7 @@ public class ProceduralGenerator
 		color2H = hue;
 		color3H = hue;
 
-		if (objectProperties.getTzHaarRecolorType() == TzHaarRecolorType.GRADIENT)
+		if (objectProperties.tzHaarRecolorType == TzHaarRecolorType.GRADIENT)
 		{
 			// apply coloring to the rocky walls
 			if (color1L < 20)
@@ -1205,7 +1205,7 @@ public class ProceduralGenerator
 				color3L = (int)HDUtils.lerp(gradientDarkColor[2], gradientBaseColor[2], pos);
 			}
 		}
-		else if (objectProperties.getTzHaarRecolorType() == TzHaarRecolorType.HUE_SHIFT)
+		else if (objectProperties.tzHaarRecolorType == TzHaarRecolorType.HUE_SHIFT)
 		{
 			// objects around the entrance to The Inferno only need a hue-shift
 			// and very slight lightening to match the lightened terrain

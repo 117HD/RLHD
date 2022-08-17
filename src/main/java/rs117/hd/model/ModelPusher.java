@@ -129,7 +129,7 @@ public class ModelPusher
     }
 
     private float[] getNormalDataForFace(Model model, ObjectProperties objectProperties, int face) {
-        if (model.getFaceColors3()[face] == -1 || (objectProperties != null && objectProperties.isFlatNormals())) {
+        if (model.getFaceColors3()[face] == -1 || (objectProperties != null && objectProperties.flatNormals)) {
             return zeroFloats;
         }
 
@@ -197,7 +197,7 @@ public class ModelPusher
 
             int packedMaterialData = packMaterialData(material, false);
 
-            if (objectProperties.getUvType() == UvType.GROUND_PLANE) {
+            if (objectProperties.uvType == UvType.GROUND_PLANE) {
                 twelveFloats[0] = packedMaterialData;
                 twelveFloats[1] = (xVertices[triA] % Perspective.LOCAL_TILE_SIZE) / (float) Perspective.LOCAL_TILE_SIZE;
                 twelveFloats[2] = (zVertices[triA] % Perspective.LOCAL_TILE_SIZE) / (float) Perspective.LOCAL_TILE_SIZE;
@@ -369,7 +369,7 @@ public class ModelPusher
             color1L = color2L = color3L = 127;
         }
 
-        if (objectProperties != null && objectProperties.isInheritTileColor()) {
+        if (objectProperties != null && objectProperties.inheritTileColor) {
             if (tile != null && (tile.getSceneTilePaint() != null || tile.getSceneTileModel() != null)) {
                 int[] tileColorHSL;
 
@@ -435,7 +435,7 @@ public class ModelPusher
 
         int packedAlphaPriority = getPackedAlphaPriority(model, face);
 
-        if (hdPlugin.configTzhaarHD && objectProperties != null && objectProperties.getTzHaarRecolorType() != TzHaarRecolorType.NONE) {
+        if (hdPlugin.configTzhaarHD && objectProperties != null && objectProperties.tzHaarRecolorType != TzHaarRecolorType.NONE) {
             int[][] tzHaarRecolored = proceduralGenerator.recolorTzHaar(objectProperties, yVertices[triA], yVertices[triB], yVertices[triC], packedAlphaPriority, objectType, color1H, color1S, color1L, color2H, color2S, color2L, color3H, color3S, color3L);
             color1H = tzHaarRecolored[0][0];
             color1S = tzHaarRecolored[0][1];

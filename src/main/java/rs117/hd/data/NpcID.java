@@ -4,7 +4,6 @@ package rs117.hd.data;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import rs117.hd.scene.lights.Light;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -9820,7 +9819,7 @@ public final class NpcID
     public static final int FIGHTER_11682 = 11682;
     public static final int FIGHTER_11683 = 11683;
 
-    public static class NpcIDAdapter extends TypeAdapter<HashSet<Integer>>
+    public static class JsonAdapter extends TypeAdapter<HashSet<Integer>>
     {
         @Override
         public HashSet<Integer> read(JsonReader in) throws IOException

@@ -7,7 +7,7 @@ import rs117.hd.utils.AABB;
 import java.util.HashSet;
 
 public class HiddenObjectsEntry {
-    @JsonAdapter(ObjectID.ObjectIDAdapter.class)
+    @JsonAdapter(ObjectID.JsonAdapter.class)
     public HashSet<Integer> objectIds = new HashSet<>();
     @JsonAdapter(AABB.JsonAdapter.class)
     public AABB[] aabbs = {};

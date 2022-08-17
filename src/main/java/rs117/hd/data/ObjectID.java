@@ -4,7 +4,6 @@ package rs117.hd.data;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import rs117.hd.scene.lights.Light;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -22535,7 +22534,7 @@ public final class ObjectID
     public static final int PORTAL_44932 = 44932;
     public static final int TELESCOPE_44933 = 44933;
 
-    public static class ObjectIDAdapter extends TypeAdapter<HashSet<Integer>>
+    public static class JsonAdapter extends TypeAdapter<HashSet<Integer>>
     {
         @Override
         public HashSet<Integer> read(JsonReader in) throws IOException

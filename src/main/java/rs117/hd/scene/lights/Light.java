@@ -1,16 +1,13 @@
 package rs117.hd.scene.lights;
 
-import com.google.common.annotations.VisibleForTesting;
 import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
-import javax.annotation.Nullable;
+
 import lombok.extern.slf4j.Slf4j;
 import rs117.hd.data.NpcID;
 import rs117.hd.data.ObjectID;
@@ -35,11 +32,11 @@ public class Light
 	public float duration;
 	public float range;
 	public Integer fadeInDuration;
-	@JsonAdapter(NpcID.NpcIDAdapter.class)
+	@JsonAdapter(NpcID.JsonAdapter.class)
 	public HashSet<Integer> npcIds;
-	@JsonAdapter(ObjectID.ObjectIDAdapter.class)
+	@JsonAdapter(ObjectID.JsonAdapter.class)
 	public HashSet<Integer> objectIds;
-	@JsonAdapter(ProjectileIDAdapter.class)
+	@JsonAdapter(ProjectileJsonAdapter.class)
 	public HashSet<Integer> projectileIds;
 
 	// Called by GSON when parsing JSON
@@ -71,7 +68,7 @@ public class Light
 	}
 
 
-	public static class ProjectileIDAdapter extends TypeAdapter<HashSet<Integer>>
+	public static class ProjectileJsonAdapter extends TypeAdapter<HashSet<Integer>>
 	{
 		@Override
 		public HashSet<Integer> read(JsonReader in) throws IOException
