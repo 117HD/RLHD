@@ -6,24 +6,26 @@ import net.runelite.api.*;
 import net.runelite.api.kit.KitType;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
+import rs117.hd.data.BakedModels;
 import rs117.hd.data.materials.Material;
 import rs117.hd.data.materials.Overlay;
 import rs117.hd.data.materials.Underlay;
 import rs117.hd.data.materials.UvType;
 import rs117.hd.scene.ProceduralGenerator;
-import rs117.hd.data.BakedModels;
 import rs117.hd.scene.TextureManager;
 import rs117.hd.scene.objects.ObjectProperties;
 import rs117.hd.scene.objects.ObjectType;
 import rs117.hd.scene.objects.TzHaarRecolorType;
 import rs117.hd.utils.HDUtils;
-import static rs117.hd.utils.HDUtils.dotNormal3Lights;
 import rs117.hd.utils.buffer.GpuFloatBuffer;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Map;
+
+import static rs117.hd.utils.HDUtils.dotNormal3Lights;
 
 /**
  * Pushes models

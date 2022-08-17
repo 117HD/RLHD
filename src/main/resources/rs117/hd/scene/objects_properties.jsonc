@@ -1409,6 +1409,7 @@
   {
     "objectIds": [
       1602,
+      "SCOREBOARD",
       "ENTRANCE_3111",
       "ENTRANCE_3112",
       "SAILS_2569",
@@ -1420,7 +1421,6 @@
       10770,
       3091,
       3096,
-      "SCOREBOARD",
       3097,
       10748,
       3102,

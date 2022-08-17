@@ -5331,7 +5331,6 @@ public final class NpcID
     public static final int UNDEAD_LUMBERJACK_5718 = 5718;
     public static final int UNDEAD_LUMBERJACK_5719 = 5719;
     public static final int UNDEAD_LUMBERJACK_5720 = 5720;
-    public static final int LANTHUS = 5721;
     public static final int BARRICADE = 5722;
     public static final int BARRICADE_5723 = 5723;
     public static final int BARRICADE_5724 = 5724;
@@ -9616,7 +9615,6 @@ public final class NpcID
     public static final int MEDIUM_ELEMENTAL_GUARDIAN = 11415;
     public static final int STRONG_ELEMENTAL_GUARDIAN = 11416;
     public static final int OVERCHARGED_ELEMENTAL_GUARDIAN = 11417;
-    public static final int APPRENTICE_TAMARA = 11426;
     public static final int APPRENTICE_CORDELIA = 11427;
     public static final int GREATISH_GUARDIAN_11428 = 11428;
     public static final int ABYSSAL_PROTECTOR_11429 = 11429;
@@ -9630,7 +9628,7 @@ public final class NpcID
     public static final int WIZARD_PERSTEN_11437 = 11437;
     public static final int WIZARD_PERSTEN_11438 = 11438;
     public static final int WIZARD_PERSTEN_11439 = 11439;
-    public static final int APPRENTICE_TAMARA_11440 = 11440;
+    public static final int APPRENTICE_TAMARA = 11440;
     public static final int APPRENTICE_TAMARA_11441 = 11441;
     public static final int APPRENTICE_TAMARA_11442 = 11442;
     public static final int APPRENTICE_CORDELIA_11443 = 11443;
@@ -9647,14 +9645,16 @@ public final class NpcID
     public static final int ABYSSAL_WALKER_11454 = 11454;
     public static final int THE_GREAT_GUARDIAN_11455 = 11455;
     public static final int THE_GREAT_GUARDIAN_11456 = 11456;
-    public static final int SUSPICIOUS_CRATE = 11462;
-    public static final int SUSPICIOUS_CRATE_11463 = 11463;
-    public static final int PHOEBE_KAY = 11464;
-    public static final int XI_PLZPETDOGZ_XIX = 11465;
-    public static final int XI_PLZPETDOGZ_XIX_11466 = 11466;
-    public static final int CAMARST_11467 = 11467;
-    public static final int EASTER_BUNNY = 11468;
-    public static final int EASTER_BUNNY_11470 = 11470;
+    public static final int MENAPHITE_SHADOW = 11462;
+    public static final int REANIMATED_HELLHOUND = 11463;
+    public static final int APPRENTICE_TAMARA_11464 = 11464;
+    public static final int APPRENTICE_TAMARA_11465 = 11465;
+    public static final int SMITHING_CATALYST = 11466;
+    public static final int HILL_GIANT_11467 = 11467;
+    public static final int KOVAC = 11468;
+    public static final int KOVAC_11469 = 11469;
+    public static final int KOVAC_11470 = 11470;
+    public static final int KOVAC_11472 = 11472;
     public static final int TARIK_11473 = 11473;
     public static final int MAISA_11474 = 11474;
     public static final int MAISA_11475 = 11475;
@@ -9675,7 +9675,6 @@ public final class NpcID
     public static final int MENAPHITE_AKH_11491 = 11491;
     public static final int MENAPHITE_AKH_11492 = 11492;
     public static final int MENAPHITE_AKH_11493 = 11493;
-    public static final int MENAPHITE_SHADOW = 11494;
     public static final int MENAPHITE_AKH_11495 = 11495;
     public static final int MENAPHITE_AKH_11496 = 11496;
     public static final int MENAPHITE_AKH_11497 = 11497;
@@ -9739,7 +9738,6 @@ public final class NpcID
     public static final int CITIZEN_11556 = 11556;
     public static final int CITIZEN_11557 = 11557;
     public static final int CITIZEN_11558 = 11558;
-    public static final int SCABARAS = 11560;
     public static final int SELIM_11561 = 11561;
     public static final int JEX_11562 = 11562;
     public static final int JEX_11563 = 11563;
@@ -9788,5 +9786,27 @@ public final class NpcID
     public static final int POSSESSED_PRIEST_11608 = 11608;
     public static final int PRIEST_11609 = 11609;
     public static final int PRIEST_11610 = 11610;
+    public static final int LANTHUS = 11650;
+    public static final int GILBERT = 11658;
+    public static final int ARENA_GUARD_FRONK = 11664;
+    public static final int ARENA_GUARD_NIKKOLAS = 11665;
+    public static final int ARENA_GUARD_FAWRY = 11666;
+    public static final int ARENA_GUARD_YON = 11667;
+    public static final int ARENA_GUARD_DRAKNO = 11668;
+    public static final int ARENA_GUARD_RACHI = 11669;
+    public static final int ARENA_GUARD_JOBY = 11670;
+    public static final int ARENA_GUARD_BENI = 11671;
+    public static final int _1V1_TOURNAMENT_GUIDE = 11672;
+    public static final int DUEL_GUIDE = 11673;
+    public static final int CHRIS = 11674;
+    public static final int FIGHTER = 11675;
+    public static final int FIGHTER_11676 = 11676;
+    public static final int FIGHTER_11677 = 11677;
+    public static final int FIGHTER_11678 = 11678;
+    public static final int FIGHTER_11679 = 11679;
+    public static final int FIGHTER_11680 = 11680;
+    public static final int FIGHTER_11681 = 11681;
+    public static final int FIGHTER_11682 = 11682;
+    public static final int FIGHTER_11683 = 11683;
     /* This file is automatically generated. Do not edit. */
 }

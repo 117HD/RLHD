@@ -40,11 +40,7 @@ public class ExportLightsToJson
 		ArgumentAcceptingOptionSpec<String> configPathOption = parser.accepts("config",
 				"Path to lights.jsonc file to read from and write to")
 			.withRequiredArg()
-			.defaultsTo(Paths
-				.get("src/main/resources",
-					LightManager.class.getPackage().getName().replace(".", "/"),
-					"lights.jsonc")
-				.toString());
+			.defaultsTo(path(LightManager.class, "lights.jsonc").toURL().getPath());
 		OptionSpec<?> skipLoadingCurrentConfig = parser.accepts("skip-loading-current-config",
 			"Don't load current lights from the JSON config, instead overwrite them");
 		OptionSpec<?> convertOldFormats = parser.accepts("convert-old-formats",
