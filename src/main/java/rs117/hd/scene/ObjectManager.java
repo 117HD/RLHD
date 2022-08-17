@@ -5,7 +5,9 @@ import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
+import net.runelite.api.GameState;
 import net.runelite.api.coords.WorldPoint;
+import rs117.hd.HdPlugin;
 import rs117.hd.data.materials.Material;
 import rs117.hd.scene.objects.LocationInfo;
 import rs117.hd.scene.objects.ObjectProperties;
@@ -24,6 +26,8 @@ public class ObjectManager {
 
     @Inject
     Client client;
+    @Inject
+    HdPlugin plugin;
 
     public static ObjectProperties NONE = new ObjectProperties(Material.NONE);
 
@@ -54,6 +58,9 @@ public class ObjectManager {
                             for (int objectId : entry.objectIds) {
                                 objectProperties.put(objectId, entry);
                             }
+                        }
+                        if (client.getGameState() == GameState.LOGGED_IN) {
+                            plugin.reloadScene();
                         }
                         log.debug("Loaded {} object Properties", objectProperties.size());
                     } catch (IOException ex) {
