@@ -4,16 +4,9 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.client.RuneLite;
 import net.runelite.client.RuneLiteProperties;
 import net.runelite.client.externalplugins.ExternalPluginManager;
-import rs117.hd.scene.lighting.LightManager;
-import rs117.hd.utils.Env;
-import rs117.hd.utils.FileUtils;
-import rs117.hd.utils.FileWatcher;
 
 import java.io.InputStream;
 import java.util.Properties;
-
-import static rs117.hd.scene.lighting.LightManager.ENV_LIGHTS_CONFIG;
-import static rs117.hd.utils.DeveloperTools.ENV_SHADER_PATH;
 
 @SuppressWarnings("unchecked")
 @Slf4j
@@ -22,17 +15,6 @@ public class HdPluginTest
 	public static void main(String[] args) throws Exception
 	{
 		useLatestPluginHub();
-		FileUtils.useHotswapping();
-
-		if (Env.missing(ENV_LIGHTS_CONFIG))
-		{
-			Env.set(ENV_LIGHTS_CONFIG, FileWatcher.getResourcePath(LightManager.class).resolve("lights.json"));
-		}
-		if (Env.missing(ENV_SHADER_PATH))
-		{
-			Env.set(ENV_SHADER_PATH, FileWatcher.getResourcePath(HdPlugin.class));
-		}
-
 		ExternalPluginManager.loadBuiltin(HdPlugin.class);
 		RuneLite.main(args);
 	}
