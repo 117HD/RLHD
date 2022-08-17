@@ -253,6 +253,8 @@ public class ResourcePath {
             path = path(RESOURCE_DIR).chroot().resolve(toAbsolute().toPath().toString());
         }
 
+        // Load once up front
+        changeHandler.accept(path);
         return FileWatcher.watchPath(path, changeHandler);
     }
 
@@ -353,8 +355,9 @@ public class ResourcePath {
 
             for (String normalizedPart : part.split("/")) {
                 if (normalizedPart.equals("..") &&
-                        resolvedParts.size() > 0 &&
-                        !resolvedParts.peek().equals("..")) {
+                    resolvedParts.size() > 0 &&
+                    !resolvedParts.peek().equals("..")
+                ) {
                     resolvedParts.pop();
                 } else {
                     resolvedParts.push(normalizedPart);
