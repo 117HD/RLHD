@@ -24,6 +24,8 @@ public class ExportObjectPropertiesToJson {
 
     public static void main(String[] args) throws IOException {
 
+        Gson gson = new Gson();
+
 		Set<ObjectProperties> uniqueLights = new LinkedHashSet<>();
         Path configPath = ResourcePath.path(RESOURCE_DIR, "rs117/hd/scene", "objects_properties.jsonc").toPath();
 
@@ -34,7 +36,26 @@ public class ExportObjectPropertiesToJson {
         System.out.println("Loaded " + currentLights.length + " object Properties");
 
         GsonBuilder gsonBuilder = new GsonBuilder().disableHtmlEscaping().setPrettyPrinting();
-        gsonBuilder.registerTypeAdapter(ObjectProperties.class, new RemoveDefaults());
+        gsonBuilder.registerTypeAdapter(ObjectProperties.class, (JsonSerializer<ObjectProperties>) (obj, type, jsonSerializationContext) -> {
+            JsonObject object = (JsonObject) gson.toJsonTree(obj);
+            if (obj.tzHaarRecolorType == TzHaarRecolorType.NONE) {
+                object.remove("tzHaarRecolorType");
+            }
+            if (!obj.description.equals("UNKNOWN")) {
+                object.remove("description");
+            }
+            if (!obj.flatNormals) {
+                object.remove("flatNormals");
+            }
+            if (obj.uvType == UvType.GEOMETRY) {
+                object.remove("uvType");
+            }
+            if (!obj.inheritTileColor) {
+                object.remove("inheritTileColor");
+            }
+            return object;
+        });
+
         String json = gsonBuilder.create().toJson(uniqueLights);
 
         System.out.println("Writing " + uniqueLights.size() + " object Properties to JSON file: " + configPath.toAbsolutePath());
@@ -51,31 +72,4 @@ public class ExportObjectPropertiesToJson {
 
 }
 
-
-class RemoveDefaults implements JsonSerializer<ObjectProperties> {
-
-    @Override
-    public JsonElement serialize(ObjectProperties obj, Type type, JsonSerializationContext jsc) {
-        Gson gson = new Gson();
-        JsonObject object = (JsonObject) gson.toJsonTree(obj);
-
-        if (obj.tzHaarRecolorType == TzHaarRecolorType.NONE) {
-            object.remove("tzHaarRecolorType");
-        }
-        if (!obj.description.equals("UNKNOWN")) {
-            object.remove("description");
-        }
-        if (!obj.flatNormals) {
-            object.remove("flatNormals");
-        }
-        if (obj.uvType == UvType.GEOMETRY) {
-            object.remove("uvType");
-        }
-        if (!obj.inheritTileColor) {
-            object.remove("inheritTileColor");
-        }
-
-        return object;
-    }
-}
 
