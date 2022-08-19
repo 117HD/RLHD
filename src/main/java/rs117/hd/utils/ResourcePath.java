@@ -213,8 +213,10 @@ public class ResourcePath {
     @NonNull
     public URL toURL() {
         try {
-            if (root == null)
-                return new URL("file:" + toRealPath());
+            if (root == null) {
+                String path = toPath().toString();
+                return new URL("file:" + (isAbsolute(path) ? path : "./" + path));
+            }
             URL rootURL = root.toURL();
             return new URL(rootURL, rootURL.getProtocol() + ":" + normalize(rootURL.getPath(), new String[] { path }));
         } catch (IOException ex) {
@@ -238,7 +240,7 @@ public class ResourcePath {
         }
 
         try {
-            return new FileInputStream(toRealPath().toFile());
+            return new FileInputStream(toPath().toFile());
         } catch (FileNotFoundException ex) {
             throw new RuntimeException("Unable to load resource: " + this, ex);
         }
@@ -441,6 +443,16 @@ public class ResourcePath {
             return true;
         }
 
+        /**
+         * Check if the resource root is actually on the file system.
+         */
+        public boolean isFileSystemResource() {
+            URL url = root.getResource("/");
+            if (url == null)
+                return false;
+            return url.getProtocol().equals("file");
+        }
+
         @Override
         @NonNull
         public URL toURL() {
@@ -454,6 +466,18 @@ public class ResourcePath {
         @Override
         public InputStream toInputStream() {
             assert path != null;
+
+            // Attempt to load resource from project resource folder if it's not located in a jar
+            if (isFileSystemResource()) {
+                ResourcePath path = null;
+                try {
+                    path = path(RESOURCE_DIR).chroot().resolve(toAbsolute().toPath().toString());
+                    return path.toInputStream();
+                } catch (Exception ex) {
+                    log.warn("Failed to load resource from project resource folder: {}", path, ex);
+                }
+            }
+
             InputStream is = root.getResourceAsStream(path);
             if (is == null)
                 throw new RuntimeException("Missing resource: " + this);
@@ -490,6 +514,16 @@ public class ResourcePath {
             return true;
         }
 
+        /**
+         * Check if the resource pointed to is actually on the file system, even if it is loaded as a class resource.
+         */
+        public boolean isFileSystemResource() {
+            URL url = root.getResource("/");
+            if (url == null)
+                return false;
+            return url.getProtocol().equals("file");
+        }
+
         @Override
         @NonNull
         public URL toURL() {
@@ -501,6 +535,19 @@ public class ResourcePath {
 
         @Override
         public InputStream toInputStream() {
+            assert path != null;
+
+            // Attempt to load resource from project resource folder if it's not located in a jar
+            if (isFileSystemResource()) {
+                ResourcePath path = null;
+                try {
+                    path = path(RESOURCE_DIR).chroot().resolve(toAbsolute().toPath().toString());
+                    return path.toInputStream();
+                } catch (Exception ex) {
+                    log.warn("Failed to load resource from project resource folder: {}", path, ex);
+                }
+            }
+
             InputStream is = root.getResourceAsStream(path);
             if (is == null)
                 throw new RuntimeException("Missing resource: " + this);
