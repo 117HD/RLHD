@@ -415,22 +415,10 @@ public interface HdPluginConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "textureResolution",
-		name = "Texture Resolution",
-		description = "Controls the resolution used for all in-game textures.",
-		position = 206,
-		section = environmentSettings
-	)
-	default TextureResolution textureResolution()
-	{
-		return TextureResolution.RES_256;
-	}
-
-	@ConfigItem(
 		keyName = "objectTextures",
 		name = "Object Textures",
 		description = "Adds detail textures to certain world objects.",
-		position = 207,
+		position = 206,
 		section = environmentSettings
 	)
 	default boolean objectTextures()
@@ -442,12 +430,24 @@ public interface HdPluginConfig extends Config
 		keyName = "groundTextures",
 		name = "Ground Textures",
 		description = "Adds detail textures to the ground.",
-		position = 208,
+		position = 207,
 		section = environmentSettings
 	)
 	default boolean groundTextures()
 	{
 		return true;
+	}
+
+	@ConfigItem(
+		keyName = "textureResolution",
+		name = "Texture Resolution",
+		description = "Controls the resolution used for all in-game textures.",
+		position = 208,
+		section = environmentSettings
+	)
+	default TextureResolution textureResolution()
+	{
+		return TextureResolution.RES_256;
 	}
 
 	@ConfigItem(

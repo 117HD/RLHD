@@ -91,6 +91,7 @@ public class TextureManager
 	// Temporary buffers for texture loading
 	private IntBuffer pixelBuffer;
 	private BufferedImage scaledImage;
+	private BufferedImage vanillaImage;
 
 	public void startUp()
 	{
@@ -184,7 +185,7 @@ public class TextureManager
 		textureProvider.setBrightness(1.0d);
 
 		pixelBuffer = BufferUtils.createIntBuffer(textureSize * textureSize);
-		BufferedImage vanillaImage = new BufferedImage(128, 128, BufferedImage.TYPE_INT_ARGB);
+		vanillaImage = new BufferedImage(128, 128, BufferedImage.TYPE_INT_ARGB);
 		int[] vanillaPixels = new int[128 * 128];
 		scaledImage = new BufferedImage(textureSize, textureSize, BufferedImage.TYPE_INT_ARGB);
 
