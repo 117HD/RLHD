@@ -35,21 +35,15 @@ import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.data.materials.Material;
 import rs117.hd.utils.Env;
-import rs117.hd.utils.FileUtils;
 import rs117.hd.utils.ResourcePath;
 
-import javax.imageio.ImageIO;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
-import java.io.IOException;
-import java.io.InputStream;
 import java.nio.IntBuffer;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -63,14 +57,9 @@ import static rs117.hd.utils.ResourcePath.path;
 @Slf4j
 public class TextureManager
 {
-	public static String ENV_TEXTURE_PATH = "RLHD_TEXTURE_PATH";
-
+	private static final String ENV_TEXTURE_PATH = "RLHD_TEXTURE_PATH";
 	private static final String[] SUPPORTED_IMAGE_EXTENSIONS = { "png", "jpg" };
-
-	private static final float PERC_64 = 1f / 64f;
-	private static final float PERC_128 = 1f / 128f;
 	private static final float HALF_PI = (float) (Math.PI / 2);
-
 	private static final ResourcePath texturePath = Env
 		.getPathOrDefault(ENV_TEXTURE_PATH, () -> path(TextureManager.class,"textures"));
 
@@ -329,13 +318,10 @@ public class TextureManager
 	{
 		for (String ext : SUPPORTED_IMAGE_EXTENSIONS)
 		{
-			Path path = Paths.get("textures").resolve(textureName + "." + ext);
-			try (InputStream is = FileUtils.getResource(TextureManager.class, path))
-			{
-				synchronized (ImageIO.class) {
-					return ImageIO.read(is);
-				}
-			} catch (IOException ex) {
+			ResourcePath path = path(TextureManager.class, "textures", textureName + "." + ext);
+			try {
+				return path.loadImage();
+			} catch (Exception ex) {
 				log.trace("Failed to load texture: {}", path, ex);
 			}
 		}

@@ -76,14 +76,7 @@ public class FileWatcher
 							if (event.kind() == ENTRY_CREATE && path.toFile().isDirectory())
 								watchRecursively(path);
 
-							String key;
-							try {
-								key = path.toRealPath().toString();
-							} catch (IOException ex) {
-								log.debug("Unable to get real path for path: {}", path);
-								key = path.toString();
-							}
-
+							String key = path.toString();
 							ResourcePath resourcePath = path(key);
 							if (path.toFile().isDirectory())
 								key += File.separator;
