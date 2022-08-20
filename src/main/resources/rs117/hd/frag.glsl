@@ -141,7 +141,6 @@ void main() {
 
     // TODO: consider blending colors by the end, and maybe depth, instead of UV blending
     vec2 blendedUv = vUv1 * texBlend.x + vUv2 * texBlend.y + vUv3 * texBlend.z;
-    blendedUv = worldUvs(1).yx;
     vec2 uv1 = blendedUv;
     vec2 uv2 = blendedUv;
     vec2 uv3 = blendedUv;
