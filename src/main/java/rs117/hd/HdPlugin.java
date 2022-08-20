@@ -2451,7 +2451,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 			TempModelInfo tempModelInfo = tempModelInfoMap.get(batchHash);
 			if (config.disableModelBatching() || tempModelInfo == null || tempModelInfo.getFaceCount() != model.getFaceCount()) {
-				final int[] lengths = modelPusher.pushModel(renderable, model, vertexBuffer, uvBuffer, normalBuffer, 0, 0, 0, objectManager.NONE, ObjectType.NONE, config.disableModelCaching(), modelHasher.calculateColorCacheHash());
+				final int[] lengths = modelPusher.pushModel(renderable, model, vertexBuffer, uvBuffer, normalBuffer, 0, 0, 0, ObjectManager.NONE, ObjectType.NONE, config.disableModelCaching(), modelHasher.calculateColorCacheHash());
 				final int faceCount = lengths[0] / 3;
 				final int actualTempUvOffset = lengths[1] > 0 ? tempUvOffset : -1;
 

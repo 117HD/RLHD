@@ -26,14 +26,14 @@ public class ExportObjectPropertiesToJson {
 
         Gson gson = new Gson();
 
-		Set<ObjectProperties> uniqueLights = new LinkedHashSet<>();
+		Set<ObjectProperties> uniqueObjects = new LinkedHashSet<>();
         Path configPath = ResourcePath.path(RESOURCE_DIR, "rs117/hd/scene", "objects_properties.jsonc").toPath();
 
         System.out.println("Loading current object Properties from JSON...");
 
-        ObjectProperties[] currentLights = path(configPath).loadJson(ObjectProperties[].class);
-        Collections.addAll(uniqueLights, currentLights);
-        System.out.println("Loaded " + currentLights.length + " object Properties");
+        ObjectProperties[] currentObjects = path(configPath).loadJson(ObjectProperties[].class);
+        Collections.addAll(uniqueObjects, currentObjects);
+        System.out.println("Loaded " + currentObjects.length + " object Properties");
 
         GsonBuilder gsonBuilder = new GsonBuilder().disableHtmlEscaping().setPrettyPrinting();
         gsonBuilder.registerTypeAdapter(ObjectProperties.class, (JsonSerializer<ObjectProperties>) (obj, type, jsonSerializationContext) -> {
@@ -56,9 +56,9 @@ public class ExportObjectPropertiesToJson {
             return object;
         });
 
-        String json = gsonBuilder.create().toJson(uniqueLights);
+        String json = gsonBuilder.create().toJson(uniqueObjects);
 
-        System.out.println("Writing " + uniqueLights.size() + " object Properties to JSON file: " + configPath.toAbsolutePath());
+        System.out.println("Writing " + uniqueObjects.size() + " object Properties to JSON file: " + configPath.toAbsolutePath());
         configPath.toFile().getParentFile().mkdirs();
 
         OutputStreamWriter os = new OutputStreamWriter(

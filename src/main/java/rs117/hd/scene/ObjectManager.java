@@ -29,10 +29,10 @@ public class ObjectManager {
     @Inject
     private HdPlugin plugin;
 
-    public ObjectProperties NONE = new ObjectProperties(Material.NONE);
+    public static ObjectProperties NONE = new ObjectProperties();
 
-    public static String ENV_HIDDEN_OBJECTS = "RLHD_HIDDEN_OBJECTS_PATH";
-    public static String ENV_OBJECT_PROPERTIES = "RLHD_OBJECTS_PROPERTIES_PATH";
+    private static String ENV_HIDDEN_OBJECTS = "RLHD_HIDDEN_OBJECTS_PATH";
+    private static String ENV_OBJECT_PROPERTIES = "RLHD_OBJECTS_PROPERTIES_PATH";
 
     private static final HashMap<Integer, ObjectProperties> objectProperties = new HashMap<>();
 

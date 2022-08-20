@@ -22,20 +22,20 @@ public class ExportHiddenObjectsToJson {
 
     public static void main(String[] args) throws IOException {
 
-		Set<HiddenObjectsEntry> uniqueLights = new LinkedHashSet<>();
+		Set<HiddenObjectsEntry> uniqueHiddenObjects = new LinkedHashSet<>();
         Path configPath = ResourcePath.path(RESOURCE_DIR, "rs117/hd/scene", "hidden_objects.jsonc").toPath();
 
         System.out.println("Loading current hidden objects from JSON...");
 
-        HiddenObjectsEntry[] currentLights = path(configPath).loadJson(HiddenObjectsEntry[].class);
-        Collections.addAll(uniqueLights, currentLights);
-        System.out.println("Loaded " + currentLights.length + " hidden objects");
+        HiddenObjectsEntry[] currentObjects = path(configPath).loadJson(HiddenObjectsEntry[].class);
+        Collections.addAll(uniqueHiddenObjects, currentObjects);
+        System.out.println("Loaded " + currentObjects.length + " hidden objects");
 
         Gson gson = new GsonBuilder().setLenient().setPrettyPrinting().create();
 
-        String json = gson.toJson(uniqueLights);
+        String json = gson.toJson(uniqueHiddenObjects);
 
-        System.out.println("Writing " + uniqueLights.size() + " hidden objects to JSON file: " + configPath.toAbsolutePath());
+        System.out.println("Writing " + uniqueHiddenObjects.size() + " hidden objects to JSON file: " + configPath.toAbsolutePath());
         configPath.toFile().getParentFile().mkdirs();
 
         OutputStreamWriter os = new OutputStreamWriter(
