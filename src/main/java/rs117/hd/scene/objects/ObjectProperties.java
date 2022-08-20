@@ -14,10 +14,12 @@ import java.util.Set;
 @NoArgsConstructor
 public class ObjectProperties
 {
+    private static final Set<Integer> DEFAULT_OBJECT_IDS = new HashSet<>(Collections.singletonList(-1));
+
     public final String description = "UNKNOWN";
     public Material material = Material.NONE;
     @JsonAdapter(ObjectID.JsonAdapter.class)
-    public Set<Integer> objectIds = new HashSet<>(Collections.singletonList(-1));
+    public Set<Integer> objectIds = DEFAULT_OBJECT_IDS;
     public boolean flatNormals = false;
     public UvType uvType = UvType.GEOMETRY;
     public TzHaarRecolorType tzHaarRecolorType = TzHaarRecolorType.NONE;
