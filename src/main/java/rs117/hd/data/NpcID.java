@@ -13,6 +13,22 @@ import static rs117.hd.utils.GsonUtils.writeIDArray;
 
 public final class NpcID
 {
+
+    public static class JsonAdapter extends TypeAdapter<HashSet<Integer>>
+    {
+        @Override
+        public HashSet<Integer> read(JsonReader in) throws IOException
+        {
+            return parseIDArray(in, NpcID.class);
+        }
+
+        @Override
+        public void write(JsonWriter out, HashSet<Integer> value) throws IOException
+        {
+            writeIDArray(out, value, NpcID.class);
+        }
+    }
+
     public static final int TOOL_LEPRECHAUN = 0;
     public static final int MOLANISK = 1;
     public static final int ABERRANT_SPECTRE = 2;
@@ -9818,20 +9834,5 @@ public final class NpcID
     public static final int FIGHTER_11681 = 11681;
     public static final int FIGHTER_11682 = 11682;
     public static final int FIGHTER_11683 = 11683;
-
-    public static class JsonAdapter extends TypeAdapter<HashSet<Integer>>
-    {
-        @Override
-        public HashSet<Integer> read(JsonReader in) throws IOException
-        {
-            return parseIDArray(in, NpcID.class);
-        }
-
-        @Override
-        public void write(JsonWriter out, HashSet<Integer> value) throws IOException
-        {
-            writeIDArray(out, value, NpcID.class);
-        }
-    }
 
 }

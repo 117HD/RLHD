@@ -13,6 +13,22 @@ import static rs117.hd.utils.GsonUtils.writeIDArray;
 
 public final class ObjectID
 {
+
+    public static class JsonAdapter extends TypeAdapter<HashSet<Integer>>
+    {
+        @Override
+        public HashSet<Integer> read(JsonReader in) throws IOException
+        {
+            return parseIDArray(in, ObjectID.class);
+        }
+
+        @Override
+        public void write(JsonWriter out, HashSet<Integer> value) throws IOException
+        {
+            writeIDArray(out, value, ObjectID.class);
+        }
+    }
+
     public static final int CRATE = 1;
     public static final int CAVE_ENTRANCE = 2;
     public static final int DOOR = 3;
@@ -22533,20 +22549,5 @@ public final class ObjectID
     public static final int GATEWAY = 44931;
     public static final int PORTAL_44932 = 44932;
     public static final int TELESCOPE_44933 = 44933;
-
-    public static class JsonAdapter extends TypeAdapter<HashSet<Integer>>
-    {
-        @Override
-        public HashSet<Integer> read(JsonReader in) throws IOException
-        {
-            return parseIDArray(in, ObjectID.class);
-        }
-
-        @Override
-        public void write(JsonWriter out, HashSet<Integer> value) throws IOException
-        {
-            writeIDArray(out, value, ObjectID.class);
-        }
-    }
 
 }
