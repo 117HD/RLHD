@@ -242,15 +242,13 @@ public class TextureManager
 			}
 
 			// Convert texture animations to the same format as Material scrolling
-			float u = 0, v = 0;
 			int direction = texture.getAnimationDirection();
-			float speed = texture.getAnimationSpeed() * 50 / 128.f;
 			if (direction != 0) {
-				u = (float) Math.cos(direction * HALF_PI) * speed;
-				v = (float) Math.sin(direction * -HALF_PI) * speed;
+				float speed = texture.getAnimationSpeed() * 50 / 128.f;
+				float radians = direction * -HALF_PI;
+				textureAnimations[i * 2] = (float) Math.cos(radians) * speed;
+				textureAnimations[i * 2 + 1] = (float) Math.sin(radians) * speed;
 			}
-			textureAnimations[i * 2] = u;
-			textureAnimations[i * 2 + 1] = v;
 		}
 
 		int vanillaCount = i - unusedIndices.size();
