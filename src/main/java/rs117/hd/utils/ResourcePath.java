@@ -360,7 +360,8 @@ public class ResourcePath {
                     buffer = realloc.apply(buffer, buffer.capacity() * 2);
 
             channel.close();
-            return buffer.flip();
+            buffer.flip();
+            return buffer;
         }
     }
 
