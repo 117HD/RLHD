@@ -1,15 +1,15 @@
 package rs117.hd.utils;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.function.Supplier;
 import javax.annotation.Nullable;
+import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.function.Supplier;
+
+import static rs117.hd.utils.ResourcePath.path;
 
 public class Env
 {
-	private static HashMap<String, String> env = new HashMap<>(System.getenv());
+	private static final HashMap<String, String> env = new HashMap<>(System.getenv());
 
 	public static boolean has(String variableName)
 	{
@@ -26,13 +26,13 @@ public class Env
 		return env.get(variableName);
 	}
 
-	public static String getDefault(String variableName, String defaultValue)
+	public static String getOrDefault(String variableName, String defaultValue)
 	{
 		String value = env.get(variableName);
 		return value == null ? defaultValue : value;
 	}
 
-	public static String getDefault(String variableName, Supplier<String> defaultValueSupplier)
+	public static String getOrDefault(String variableName, Supplier<String> defaultValueSupplier)
 	{
 		String value = env.get(variableName);
 		return value == null ? defaultValueSupplier.get() : value;
@@ -48,22 +48,24 @@ public class Env
 		return value.equals("true") || value.equals("1") || value.equals("on") || value.equals("yes");
 	}
 
-	public static boolean getBooleanDefault(String variableName, boolean defaultValue)
+	public static boolean getBooleanOrDefault(String variableName, boolean defaultValue)
 	{
 		Boolean value = getBoolean(variableName);
 		return value == null ? defaultValue : value;
 	}
 
-	public static Path getPath(String variableName)
-	{
-		String value = env.get(variableName);
-		return value == null ? null : Paths.get(value);
+	public static ResourcePath getPathOrDefault(String variableName, ResourcePath fallback) {
+		String path = env.get(variableName);
+		if (path == null)
+			return fallback;
+		return path(path);
 	}
 
-	public static Path getPathDefault(String variableName, Path defaultValue)
-	{
-		String value = env.get(variableName);
-		return value == null ? defaultValue : Paths.get(value);
+	public static ResourcePath getPathOrDefault(String variableName, Supplier<ResourcePath> fallback) {
+		String path = env.get(variableName);
+		if (path == null)
+			return fallback.get();
+		return path(path);
 	}
 
 	public static void set(String variableName, boolean value)

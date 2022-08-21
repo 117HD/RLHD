@@ -4,27 +4,23 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializer;
-import java.io.FileInputStream;
+import joptsimple.ArgumentAcceptingOptionSpec;
+import joptsimple.OptionParser;
+import joptsimple.OptionSet;
+import joptsimple.OptionSpec;
+import rs117.hd.scene.lights.Light;
+import rs117.hd.utils.HDUtils;
+
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
-import joptsimple.ArgumentAcceptingOptionSpec;
-import joptsimple.OptionParser;
-import joptsimple.OptionSet;
-import joptsimple.OptionSpec;
-import rs117.hd.scene.lighting.Light;
-import rs117.hd.scene.lighting.LightConfig;
-import rs117.hd.utils.HDUtils;
+
+import static rs117.hd.utils.ResourcePath.path;
 
 @SuppressWarnings("deprecation")
 public class ExportLightsToJson
@@ -41,12 +37,12 @@ public class ExportLightsToJson
 			"Convert current light configuration from linear colors " +
 			"in the range [0, 1] to gamma colors in the range [0, 255]");
 		ArgumentAcceptingOptionSpec<String> configPathOption = parser.accepts("config",
-				"Path to lights.json file to read from and write to")
+				"Path to lights.jsonc file to read from and write to")
 			.withRequiredArg()
-			.defaultsTo(Paths.get(
-					"src/main/resources",
+			.defaultsTo(Paths
+				.get("src/main/resources",
 					Light.class.getPackage().getName().replace(".", "/"),
-					"lights.json")
+					"lights.jsonc")
 				.toString());
 		OptionSpec<?> skipLoadingCurrentConfig = parser.accepts("skip-loading-current-config",
 			"Don't load current lights from the JSON config, instead overwrite them");
@@ -67,9 +63,9 @@ public class ExportLightsToJson
 		if (!options.has(skipLoadingCurrentConfig))
 		{
 			System.out.println("Loading current lights from JSON...");
-			// Load all lights from current lights.json
+			// Load all lights from current lights.jsonc
 			Light.THROW_WHEN_PARSING_FAILS = true;
-			Light[] currentLights = LightConfig.loadRawLights(new FileInputStream(configPath.toFile()));
+			Light[] currentLights = path(configPath).loadJson(Light[].class);
 			Collections.addAll(uniqueLights, currentLights);
 			System.out.println("Loaded " + currentLights.length + " lights");
 		}
@@ -157,7 +153,7 @@ public class ExportLightsToJson
 
 			Gson gson = gsonBuilder.create();
 
-			// Write combined lights.json
+			// Write combined lights.jsonc
 			String json = gson.toJson(uniqueLights);
 
 			System.out.println("Writing " + uniqueLights.size() + " lights to JSON file: " + configPath.toAbsolutePath());

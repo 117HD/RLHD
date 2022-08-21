@@ -27,7 +27,6 @@ package rs117.hd;
 
 import com.google.common.primitives.Ints;
 import com.google.inject.Provides;
-import javax.inject.Named;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
@@ -43,8 +42,11 @@ import net.runelite.client.ui.DrawManager;
 import net.runelite.client.util.OSType;
 import net.runelite.rlawt.AWTContext;
 import org.jocl.CL;
-import static org.lwjgl.opengl.GL43C.*;
-import static rs117.hd.HdPluginConfig.KEY_WINTER_THEME;
+import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GLCapabilities;
+import org.lwjgl.opengl.GLUtil;
+import org.lwjgl.system.Callback;
+import org.lwjgl.system.Configuration;
 import rs117.hd.config.AntiAliasingMode;
 import rs117.hd.config.DefaultSkyColor;
 import rs117.hd.config.FogDepthMode;
@@ -60,12 +62,9 @@ import rs117.hd.opengl.compute.OpenCLManager;
 import rs117.hd.opengl.shader.Shader;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.Template;
-import rs117.hd.scene.EnvironmentManager;
-import rs117.hd.scene.ProceduralGenerator;
-import rs117.hd.scene.SceneUploader;
-import rs117.hd.scene.TextureManager;
-import rs117.hd.scene.lighting.LightManager;
-import rs117.hd.scene.lighting.SceneLight;
+import rs117.hd.scene.*;
+import rs117.hd.scene.LightManager;
+import rs117.hd.scene.lights.SceneLight;
 import rs117.hd.utils.*;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.GpuFloatBuffer;
@@ -73,22 +72,25 @@ import rs117.hd.utils.buffer.GpuIntBuffer;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
-import java.nio.*;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.jocl.CL.*;
-import org.lwjgl.opengl.GL;
-import org.lwjgl.opengl.GLCapabilities;
-import org.lwjgl.opengl.GLUtil;
-import org.lwjgl.system.Callback;
-import org.lwjgl.system.Configuration;
+import static org.lwjgl.opengl.GL43C.*;
+import static rs117.hd.HdPluginConfig.KEY_WINTER_THEME;
+import static rs117.hd.utils.ResourcePath.path;
 
 @PluginDescriptor(
 	name = "117 HD (beta)",
@@ -100,6 +102,8 @@ import org.lwjgl.system.Configuration;
 @Slf4j
 public class HdPlugin extends Plugin implements DrawCallbacks
 {
+	private static final String ENV_SHADER_PATH = "RLHD_SHADER_PATH";
+
 	// This is the maximum number of triangles the compute shaders support
 	public static final int MAX_TRIANGLE = 6144;
 	public static final int SMALL_TRIANGLE_COUNT = 512;
@@ -133,6 +137,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 	@Inject
 	private LightManager lightManager;
+
+	@Inject
+	public HiddenObjectManager hiddenObjectManager;
 
 	@Inject
 	private EnvironmentManager environmentManager;
@@ -199,6 +206,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	static final Shader UI_PROGRAM = new Shader()
 		.add(GL_VERTEX_SHADER, "vertui.glsl")
 		.add(GL_FRAGMENT_SHADER, "fragui.glsl");
+
+	static final ResourcePath shaderPath = Env
+		.getPathOrDefault(ENV_SHADER_PATH, () -> path(HdPlugin.class))
+		.chroot();
 
 	private int glProgram = -1;
 	private int glComputeProgram = -1;
@@ -506,6 +517,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				modelBufferSmall = new GpuIntBuffer();
 				modelBuffer = new GpuIntBuffer();
 
+				initShaderHotswapping();
 				if (developerMode)
 				{
 					developerTools.activate();
@@ -514,7 +526,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				lastFrameTime = System.currentTimeMillis();
 
 				setupSyncMode();
-
 				initVao();
 				try
 				{
@@ -543,9 +554,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 				textureArrayId = -1;
 				textureHDArrayId = -1;
-
-				// load all dynamic scene lights from text file
 				lightManager.startUp();
+				hiddenObjectManager.startUp();
 
 				if (client.getGameState() == GameState.LOGGED_IN)
 				{
@@ -566,8 +576,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	@Override
 	protected void shutDown()
 	{
+		FileWatcher.destroy();
 		developerTools.deactivate();
-
 		lightManager.shutDown();
 
 		clientThread.invoke(() ->
@@ -671,9 +681,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	private void initPrograms() throws ShaderException
 	{
 		String versionHeader = OSType.getOSType() == OSType.Linux ? LINUX_VERSION_HEADER : WINDOWS_VERSION_HEADER;
-		Template template = new Template();
-		template.add(key ->
-		{
+		Template template = new Template().add(key -> {
 			switch (key)
 			{
 				case "version_header":
@@ -688,11 +696,15 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			}
 			return null;
 		});
-		if (developerMode)
-		{
-			template.add(developerTools::shaderResolver);
-		}
-		template.addInclude(HdPlugin.class);
+
+		template.add(key -> {
+			try {
+				// TODO: track current include stack
+				return shaderPath.resolve(key).loadString();
+			} catch (IOException ex) {
+				throw new RuntimeException(ex);
+			}
+		});
 
 		glProgram = PROGRAM.compile(template);
 		glUiProgram = UI_PROGRAM.compile(template);
@@ -1391,6 +1403,15 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 			targetBufferOffset += bufferLength;
 		}
+	}
+
+	public void initShaderHotswapping() {
+		shaderPath.watch(path -> {
+			if (path.getExtension().equalsIgnoreCase("glsl")) {
+				log.info("Reloading shader: {}", path);
+				recompilePrograms();
+			}
+		});
 	}
 
 	@Override
@@ -2335,6 +2356,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			// skip models with zero faces
 			// this does seem to happen sometimes (mostly during loading)
 			// should save some CPU cycles here and there
+			return;
+		}
+
+		if (hiddenObjectManager.shouldHide(ModelUtils.getID(hash), ModelUtils.getWorldLocation(client, x, z))) {
 			return;
 		}
 

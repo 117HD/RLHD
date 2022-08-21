@@ -1,4 +1,4 @@
-package rs117.hd.scene.lighting;
+package rs117.hd.scene.lights;
 
 import java.util.Random;
 import net.runelite.api.NPC;
