@@ -4,6 +4,8 @@ import com.google.common.primitives.Ints;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.api.kit.KitType;
+import org.lwjgl.BufferUtils;
+import org.lwjgl.system.MemoryUtil;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.data.BakedModels;
@@ -24,6 +26,7 @@ import rs117.hd.utils.buffer.GpuIntBuffer;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.nio.Buffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.*;
@@ -158,9 +161,9 @@ public class ModelPusher {
             }
         }
 
-        IntBuffer fullVertexData = GpuIntBuffer.allocateDirect(faceCount * 12);
-        FloatBuffer fullNormalData = GpuFloatBuffer.allocateDirect(faceCount * 12);
-        FloatBuffer fullUvData = GpuFloatBuffer.allocateDirect(faceCount * 12);
+        IntBuffer fullVertexData = MemoryUtil.memAllocInt(faceCount * 12);
+        FloatBuffer fullNormalData = MemoryUtil.memAllocFloat(faceCount * 12);
+        FloatBuffer fullUvData = MemoryUtil.memAllocFloat(faceCount * 12);
 
         for (int face = 0; face < faceCount; face++) {
             if (!cachedVertexData) {

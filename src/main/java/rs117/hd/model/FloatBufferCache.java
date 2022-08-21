@@ -1,8 +1,10 @@
 package rs117.hd.model;
 
+import org.lwjgl.system.MemoryUtil;
 import rs117.hd.HdPlugin;
 
 import java.nio.FloatBuffer;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -28,6 +30,14 @@ public class FloatBufferCache extends LinkedHashMap<Integer, FloatBuffer> {
     @Override
     public void clear() {
         this.bytesConsumed = 0;
+
+        ArrayList<Integer> keys = new ArrayList<>();
+        forEach((key, buffer) -> {
+            MemoryUtil.memFree(buffer);
+            keys.add(key);
+        });
+        keys.forEach(key -> this.put(key, null));
+
         super.clear();
     }
 
@@ -36,6 +46,8 @@ public class FloatBufferCache extends LinkedHashMap<Integer, FloatBuffer> {
         // leave room for at least one max size entry
         if (this.bytesConsumed + (HdPlugin.MAX_TRIANGLE * 12 * 4) >= this.byteCapacity) {
             this.bytesConsumed -= eldest.getValue().remaining() * 4;
+            MemoryUtil.memFree(eldest.getValue());
+            eldest.setValue(null);
             return true;
         }
 
