@@ -33,9 +33,6 @@ vec3 sampleNormalMap(Material mat, vec2 uv, vec3 surfaceNormal) {
     n = linearToSrgb(n);
     // Scale and shift normal so it can point in both directions
     n.xy = n.xy * 2 - 1;
-    // TODO: Scale normal to match the amount of displacement
-//    n.z /= mat.displacementScale;
-//    n = normalize(n);
     // Transform the normal from tangent space to world space
     n = TBN * n;
     // Assume the normal is already normalized
