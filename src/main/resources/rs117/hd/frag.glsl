@@ -480,11 +480,11 @@ void main() {
     {
         vSpecularGloss = vec3(material1.specularGloss, material2.specularGloss, material3.specularGloss);
         vSpecularStrength = vec3(material1.specularStrength, material2.specularStrength, material3.specularStrength);
-        vSpecularStrength *= linearToSrgb(vec3(
-            material1.roughnessMap == -1 ? 1 : texture(textureArray, vec3(uv1, material1.roughnessMap)).r,
-            material2.roughnessMap == -1 ? 1 : texture(textureArray, vec3(uv2, material2.roughnessMap)).r,
-            material3.roughnessMap == -1 ? 1 : texture(textureArray, vec3(uv3, material3.roughnessMap)).r
-        ));
+        vSpecularStrength *= vec3(
+            material1.roughnessMap == -1 ? 1 : linearToSrgb(texture(textureArray, vec3(uv1, material1.roughnessMap)).r),
+            material2.roughnessMap == -1 ? 1 : linearToSrgb(texture(textureArray, vec3(uv2, material2.roughnessMap)).r),
+            material3.roughnessMap == -1 ? 1 : linearToSrgb(texture(textureArray, vec3(uv3, material3.roughnessMap)).r)
+        );
 
         // apply specular highlights to anything semi-transparent
         // this isn't always desirable but adds subtle light reflections to windows, etc.

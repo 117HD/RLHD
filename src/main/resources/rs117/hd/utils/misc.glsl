@@ -40,7 +40,7 @@ float animationFrame(float animationDuration)
 
 vec2 animationFrame(vec2 animationDuration)
 {
-    if (animationDuration == 0)
+    if (animationDuration == vec2(0))
         return vec2(0);
     return mod(vec2(elapsedTime), vec2(animationDuration)) / animationDuration;
 }

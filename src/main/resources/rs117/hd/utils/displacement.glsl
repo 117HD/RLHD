@@ -42,7 +42,7 @@ vec2 sampleDisplacementMap(
     if (map == -1)
         return uv;
 
-    const float strength = 3;
+    const float strength = 1; // TODO: remove this when Materials are in JSON
     const float minLayers = 4 * strength;
     const float maxLayers = 32 * strength;
     float numLayers = mix(maxLayers, minLayers, max(dot(vec3(0, 0, 1), tangentViewDir), 0));
