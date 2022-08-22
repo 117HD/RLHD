@@ -139,7 +139,6 @@ void main() {
     float alpha = 1;
     vec4 fragColor = vColor1 * texBlend.x + vColor2 * texBlend.y + vColor3 * texBlend.z;
 
-    // TODO: consider blending colors by the end, and maybe depth, instead of UV blending
     vec2 blendedUv = vUv1 * texBlend.x + vUv2 * texBlend.y + vUv3 * texBlend.z;
     vec2 uv1 = blendedUv;
     vec2 uv2 = blendedUv;
@@ -305,13 +304,9 @@ void main() {
         // assign standalone UV to uvA and others to uvB, uvC
         for (int i = 0; i < 3; i++)
         {
-            vec2 uv;
+            vec2 uv = vUv1;
 
-            if (i == 0)
-            {
-                uv = vUv1;
-            }
-            else if (i == 1)
+            if (i == 1)
             {
                 uv = vUv2;
             }
