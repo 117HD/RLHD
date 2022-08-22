@@ -2389,9 +2389,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			return;
 		}
 
-		if (hiddenObjectManager.shouldHide(ModelUtils.getID(hash), ModelUtils.getWorldLocation(client, x, z))) {
-			return;
-		}
+//		if (hiddenObjectManager.shouldHide(ModelUtils.getID(hash), ModelUtils.getWorldLocation(client, x, z))) {
+//			return;
+//		}
 
 		// Model may be in the scene buffer
 		if (model.getSceneId() == sceneUploader.sceneId)

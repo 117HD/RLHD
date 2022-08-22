@@ -19,6 +19,7 @@ import rs117.hd.model.objects.TzHaarRecolorType;
 import rs117.hd.scene.TextureManager;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.utils.HDUtils;
+
 import static rs117.hd.utils.HDUtils.dotNormal3Lights;
 import rs117.hd.utils.buffer.GpuFloatBuffer;
 import rs117.hd.utils.buffer.GpuIntBuffer;
@@ -26,7 +27,6 @@ import rs117.hd.utils.buffer.GpuIntBuffer;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.lang.ref.PhantomReference;
-import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
 import java.nio.Buffer;
 import java.nio.FloatBuffer;
@@ -112,12 +112,22 @@ public class ModelPusher {
     }
 
     public int[] pushModel(Renderable renderable, Model model, GpuIntBuffer vertexBuffer, GpuFloatBuffer uvBuffer, GpuFloatBuffer normalBuffer, int tileX, int tileY, int tileZ, ObjectProperties objectProperties, ObjectType objectType, boolean noCache, ModelHasher modelHasher) {
+        int freeCount = 0;
+        int freeAttempts = 0;
         PhantomReference<Buffer> reference;
         while ((reference = (PhantomReference<Buffer>) this.bufferReferenceQueue.poll()) != null) {
             Long address = this.bufferAddresses.get(reference);
             if (address != null) {
+                freeCount++;
                 MemoryUtil.nmemFree(address);
                 this.bufferAddresses.remove(reference);
+            }
+
+            freeAttempts++;
+            if (freeAttempts != freeCount) {
+                // I've thought about removing this bit, but it's probably a good assertion to leave in place.
+                // Given that this is a memory leak it's something we should look out for
+                log.error("failed to free cache reference!");
             }
         }
 
