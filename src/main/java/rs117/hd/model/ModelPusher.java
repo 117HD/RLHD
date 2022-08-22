@@ -4,7 +4,6 @@ import com.google.common.primitives.Ints;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.api.kit.KitType;
-import org.lwjgl.BufferUtils;
 import org.lwjgl.system.MemoryUtil;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
@@ -26,6 +25,9 @@ import rs117.hd.utils.buffer.GpuIntBuffer;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.lang.ref.PhantomReference;
+import java.lang.ref.Reference;
+import java.lang.ref.ReferenceQueue;
 import java.nio.Buffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -52,6 +54,8 @@ public class ModelPusher {
     private final IntBufferCache vertexDataCache;
     private final FloatBufferCache normalDataCache;
     private final FloatBufferCache uvDataCache;
+    private final Map<PhantomReference<Buffer>, Long> bufferAddresses;
+    private final ReferenceQueue<Buffer> bufferReferenceQueue;
     private int pushes = 0;
     private int vertexDataHits = 0;
     private int normalDataHits = 0;
@@ -62,6 +66,8 @@ public class ModelPusher {
         this.vertexDataCache = new IntBufferCache(3006477107L);
         this.normalDataCache = new FloatBufferCache(563714457L);
         this.uvDataCache = new FloatBufferCache(187904819L);
+        this.bufferAddresses = new HashMap<>();
+        this.bufferReferenceQueue = new ReferenceQueue<>();
     }
 
     // subtracts the X lowest lightness levels from the formula.
@@ -106,6 +112,15 @@ public class ModelPusher {
     }
 
     public int[] pushModel(Renderable renderable, Model model, GpuIntBuffer vertexBuffer, GpuFloatBuffer uvBuffer, GpuFloatBuffer normalBuffer, int tileX, int tileY, int tileZ, ObjectProperties objectProperties, ObjectType objectType, boolean noCache, ModelHasher modelHasher) {
+        PhantomReference<Buffer> reference;
+        while ((reference = (PhantomReference<Buffer>) this.bufferReferenceQueue.poll()) != null) {
+            Long address = this.bufferAddresses.get(reference);
+            if (address != null) {
+                MemoryUtil.nmemFree(address);
+                this.bufferAddresses.remove(reference);
+            }
+        }
+
         pushes++;
         final int faceCount = Math.min(model.getFaceCount(), HdPlugin.MAX_TRIANGLE);
         int vertexLength = 0;
@@ -164,6 +179,10 @@ public class ModelPusher {
         IntBuffer fullVertexData = MemoryUtil.memAllocInt(faceCount * 12);
         FloatBuffer fullNormalData = MemoryUtil.memAllocFloat(faceCount * 12);
         FloatBuffer fullUvData = MemoryUtil.memAllocFloat(faceCount * 12);
+
+        this.bufferAddresses.put(new PhantomReference<>(fullVertexData, this.bufferReferenceQueue), MemoryUtil.memAddress(fullVertexData));
+        this.bufferAddresses.put(new PhantomReference<>(fullNormalData, this.bufferReferenceQueue), MemoryUtil.memAddress(fullNormalData));
+        this.bufferAddresses.put(new PhantomReference<>(fullUvData, this.bufferReferenceQueue), MemoryUtil.memAddress(fullUvData));
 
         for (int face = 0; face < faceCount; face++) {
             if (!cachedVertexData) {
