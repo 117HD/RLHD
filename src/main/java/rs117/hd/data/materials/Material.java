@@ -54,42 +54,28 @@ public enum Material
 	WATER_NORMAL_MAP_2,
 	WATER_FOAM,
 
-	STONE_WALL_NORMALS,
-	STONE_WALL_DISPLACEMENT,
-	STONE_WALL_ROUGHNESS,
-	STONE_WALL(p -> p
+	TEST_STONE_WALL_NORMALS,
+	TEST_STONE_WALL_DISPLACEMENT,
+	TEST_STONE_WALL_ROUGHNESS,
+	TEST_STONE_WALL(p -> p
 		.setTextureScale(3, 3)
-		.setNormalMap(STONE_WALL_NORMALS)
-		.setDisplacementMap(STONE_WALL_DISPLACEMENT)
-		.setRoughnessMap(STONE_WALL_ROUGHNESS)
+		.setNormalMap(TEST_STONE_WALL_NORMALS)
+		.setDisplacementMap(TEST_STONE_WALL_DISPLACEMENT)
+		.setRoughnessMap(TEST_STONE_WALL_ROUGHNESS)
 		.setSpecular(1, 1)),
 
-	WOODEN_PLANKS_NORMALS,
-	WOODEN_PLANKS_DISPLACEMENT,
-	WOODEN_PLANKS_ROUGHNESS,
-	WOODEN_PLANKS(p -> p
-		.setTextureScale(2, 2)
-		.setNormalMap(WOODEN_PLANKS_NORMALS)
-		.setDisplacementMap(WOODEN_PLANKS_DISPLACEMENT)
-		.setRoughnessMap(WOODEN_PLANKS_ROUGHNESS)
-		.setSpecular(1, 1)),
-
-	TOY_BOX_NORMAL,
-	TOY_BOX_DISP,
-	TOY_BOX_DIFFUSE(p -> p
-		.setTextureScale(1, 1)
-		.setNormalMap(TOY_BOX_NORMAL)
-		.setDisplacementMap(TOY_BOX_DISP)),
+	TEST_TOY_BOX_NORMAL,
+	TEST_TOY_BOX_DISP,
+	TEST_TOY_BOX_DIFFUSE(p -> p
+		.setNormalMap(TEST_TOY_BOX_NORMAL)
+		.setDisplacementMap(TEST_TOY_BOX_DISP)),
 
 	// Reserve first 128 materials for vanilla OSRS texture ids
 	TRAPDOOR(0),
 	WATER_FLAT(1),
 	BRICK(2),
 	WOOD_PLANKS_1(3, p -> p
-		.setSpecular(0.35f, 30)
-		.setParent(TOY_BOX_DIFFUSE)),
-//		.setParent(STONE_WALL)),
-//		.setParent(WOODEN_PLANKS)),
+		.setSpecular(0.35f, 30)),
 	DOOR(4),
 	DARK_WOOD(5),
 	ROOF_SHINGLES_1(6, p -> p

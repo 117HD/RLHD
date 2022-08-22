@@ -98,7 +98,7 @@ void main() {
     vec3 downDir = normalize(vec3(0, -1.0, 0));
     // View & light directions are from the fragment to the camera/light
     vec3 viewDir = normalize(camPos - position);
-    vec3 lightDir = -normalize(lightDirection);
+    vec3 lightDir = -lightDirection;
 
     // material data
     Material material1 = getMaterial(materialId.x);

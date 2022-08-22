@@ -1293,7 +1293,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		uniformBuf.clear();
 
 		// Bind materials UBO
-		// TODO: this is probably unnecessary
 		glBindBufferBase(GL_UNIFORM_BUFFER, 1, materialsUniformBuffer.glBufferId);
 		glBindBufferBase(GL_UNIFORM_BUFFER, 2, waterTypesUniformBuffer.glBufferId);
 

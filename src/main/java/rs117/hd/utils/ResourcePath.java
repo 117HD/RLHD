@@ -371,7 +371,6 @@ public class ResourcePath {
                 continue;
 
             part = normalizeSlashes(part);
-            part = resolveTilde(part);
 
             if (isAbsolute(part))
                 resolvedParts.clear();
