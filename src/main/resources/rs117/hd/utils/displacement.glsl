@@ -42,9 +42,9 @@ vec2 sampleDisplacementMap(
     if (map == -1)
         return uv;
 
-    const float strength = 1;
+    const float strength = 3;
     const float minLayers = 4 * strength;
-    const float maxLayers = 64 * strength;
+    const float maxLayers = 32 * strength;
     float numLayers = mix(maxLayers, minLayers, max(dot(vec3(0, 0, 1), tangentViewDir), 0));
 
     float scale = mat.displacementScale * strength;
@@ -63,51 +63,50 @@ vec2 sampleDisplacementMap(
     }
 
     float after = depth - layerDepth;
-    float before = prevDepth - layerDepth + layerSize;
+    float before = prevDepth - (layerDepth - layerSize);
     float weight = after / (after - before);
     uv += deltaUv * weight;
 
-    // TODO: fix shadow casting onto displaced surface
-//    mat3 invTBN = transpose(TBN);
-//    fragPos += invTBN * vec3(P, -1) * depth * 128;
+    fragPos -= TBN * vec3(P, 1) * layerDepth * 128 * scale;
     P = tangentLightDir.xy / tangentLightDir.z * scale;
-//    fragPos += invTBN * vec3(P, 1) * depth * 128;
+    fragPos += TBN * vec3(P, 1) * layerDepth * 128 * scale;
 
     #if PARALLAX_MAPPING >= 2 // self-shadowing
+        depth = sampleDepth(map, uv);
         deltaUv = P / numLayers;
-        float depthBias = layerSize * 8;
+        float shadowDepth;
         float shadow = 0;
+        float shadowBias = .0125;
+
         #if PARALLAX_MAPPING == 2 // hard shadows
-            vec2 shadowUv = uv - deltaUv;
-            float shadowLayer = layerDepth - layerSize;
-            depth = sampleDepth(map, shadowUv) + depthBias;
-            while (depth > shadowLayer && shadowLayer > 0) {
-                shadowLayer -= layerSize;
+            vec2 shadowUv = uv;
+            float shadowLayerDepth = depth - shadowBias;
+            do {
                 shadowUv += deltaUv;
-                depth = sampleDepth(map, shadowUv);
-            }
-            if (shadowLayer > .001)
-                selfShadowing = 1;
+                shadowLayerDepth -= layerSize;
+                shadowDepth = sampleDepth(map, shadowUv);
+            } while (shadowDepth > shadowLayerDepth && shadowLayerDepth >= 0);
+            if (shadowLayerDepth > 0)
+                shadow++;
         #else // PCF 3x3 soft shadows
-            const float rad = 1;
-            for (float x = -rad; x <= rad; x++) {
-                for (float y = -rad; y <= rad; y++) {
-                    vec2 shadowUv = uv - deltaUv + vec2(x, y) * .015;
-                    float shadowLayer = layerDepth - layerSize;
-                    depth = sampleDepth(map, shadowUv) + depthBias;
-                    while (depth > shadowLayer && shadowLayer > 0) {
-                        shadowLayer -= layerSize;
+            for (int x = 0; x <= 1; x++) {
+                for (int y = 0; y <= 1; y++) {
+                    vec2 shadowUv = uv + (vec2(x, y) - .5) * .0125;
+                    float shadowLayerDepth = depth - shadowBias * 5;
+                    do {
                         shadowUv += deltaUv;
-                        depth = sampleDepth(map, shadowUv);
-                    }
-                    if (shadowLayer > .001)
+                        shadowLayerDepth -= layerSize;
+                        shadowDepth = sampleDepth(map, shadowUv);
+                    } while (shadowDepth > shadowLayerDepth && shadowLayerDepth >= 0);
+                    if (shadowLayerDepth > 0)
                         shadow++;
                 }
             }
-            selfShadowing = max(selfShadowing, shadow / 9.);
+            shadow /= 4;
         #endif
-    #endif
 
+        selfShadowing = max(selfShadowing, shadow);
+    #endif
     return uv;
 }
 #else
