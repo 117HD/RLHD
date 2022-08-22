@@ -38,13 +38,11 @@ import javax.annotation.Nullable;
 import javax.annotation.RegEx;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
+import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -109,6 +107,11 @@ public class ResourcePath {
 
     public ResourcePath resolve(String... parts) {
         return new ResourcePath(root, normalize(path, parts));
+    }
+    
+    public ResourcePath mkdirs() {
+        toPath().toFile().getParentFile().mkdirs();
+        return this;
     }
 
     public String getFilename() {
@@ -189,6 +192,10 @@ public class ResourcePath {
         return basePath.resolve(relativePath);
     }
 
+    public File toFile() {
+        return toPath().toFile();
+    }
+
     @NonNull
     public URL toURL() throws IOException {
         if (root == null) {
@@ -219,6 +226,10 @@ public class ResourcePath {
         } catch (IOException ex) {
             throw new IOException("Unable to load resource: " + this, ex);
         }
+    }
+
+    public FileOutputStream toOutputStream() throws FileNotFoundException {
+        return new FileOutputStream(toFile());
     }
 
     public boolean isClassResource() {
@@ -310,6 +321,13 @@ public class ResourcePath {
      */
     public ByteBuffer loadByteBufferMalloc() throws IOException {
         return readInputStream(toInputStream(), MemoryUtil::memAlloc, MemoryUtil::memRealloc);
+    }
+
+    public ResourcePath writeByteBuffer(ByteBuffer buffer) throws IOException {
+        try (FileChannel channel = toOutputStream().getChannel()) {
+            channel.write(buffer);
+        }
+        return this;
     }
 
     /**

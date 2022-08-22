@@ -26,12 +26,22 @@
 package rs117.hd.opengl.shader;
 
 import com.google.common.annotations.VisibleForTesting;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import static org.lwjgl.opengl.GL43C.*;
+import lombok.extern.slf4j.Slf4j;
+import org.lwjgl.BufferUtils;
+import rs117.hd.utils.Env;
 
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.lwjgl.opengl.GL43C.*;
+import static rs117.hd.utils.ResourcePath.path;
+
+@Slf4j
 public class Shader
 {
 	@VisibleForTesting
@@ -81,6 +91,7 @@ public class Shader
 					glDeleteShader(shader);
 					throw new ShaderException(err);
 				}
+
 				glAttachShader(program, shader);
 				shaders[i++] = shader;
 			}
@@ -94,6 +105,33 @@ public class Shader
 			}
 
 			ok = true;
+
+			if (Env.has("RLHD_DUMP_SHADERS"))
+			{
+				int[] numFormats = { 0 };
+				glGetIntegerv(GL_NUM_PROGRAM_BINARY_FORMATS, numFormats);
+				if (numFormats[0] < 1) {
+					log.error("OpenGL driver does not support any binary formats");
+				} else {
+					int[] size = { 0 };
+					glGetProgramiv(program, GL_PROGRAM_BINARY_LENGTH, size);
+
+					int[] format = { 0 };
+					ByteBuffer binary = BufferUtils.createByteBuffer(size[0]);
+					glGetProgramBinary(program, size, format, binary);
+
+					try {
+						String shaderName = units.stream()
+							.map(Unit::getFilename)
+							.collect(Collectors.joining(" + ")) + ".bin";
+						path("shader-dumps", shaderName)
+							.mkdirs()
+							.writeByteBuffer(binary);
+					} catch (IOException ex) {
+						throw new RuntimeException(ex);
+					}
+				}
+			}
 		}
 		finally
 		{
