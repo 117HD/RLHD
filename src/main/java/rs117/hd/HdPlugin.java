@@ -546,7 +546,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				lastStretchedCanvasWidth = lastStretchedCanvasHeight = 0;
 				lastAntiAliasingMode = null;
 
-				// load all dynamic scene lights from text file
 				lightManager.startUp();
 				hiddenObjectManager.startUp();
 
