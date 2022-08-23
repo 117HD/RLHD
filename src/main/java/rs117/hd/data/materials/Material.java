@@ -54,22 +54,6 @@ public enum Material
 	WATER_NORMAL_MAP_2,
 	WATER_FOAM,
 
-	TEST_STONE_WALL_NORMALS,
-	TEST_STONE_WALL_DISPLACEMENT,
-	TEST_STONE_WALL_ROUGHNESS,
-	TEST_STONE_WALL(p -> p
-		.setTextureScale(3, 3)
-		.setNormalMap(TEST_STONE_WALL_NORMALS)
-		.setDisplacementMap(TEST_STONE_WALL_DISPLACEMENT)
-		.setRoughnessMap(TEST_STONE_WALL_ROUGHNESS)
-		.setSpecular(1, 1)),
-
-	TEST_TOY_BOX_NORMAL,
-	TEST_TOY_BOX_DISP,
-	TEST_TOY_BOX_DIFFUSE(p -> p
-		.setNormalMap(TEST_TOY_BOX_NORMAL)
-		.setDisplacementMap(TEST_TOY_BOX_DISP)),
-
 	// Reserve first 128 materials for vanilla OSRS texture ids
 	TRAPDOOR(0),
 	WATER_FLAT(1),
