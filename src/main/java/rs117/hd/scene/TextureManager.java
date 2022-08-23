@@ -364,18 +364,9 @@ public class TextureManager
 		//Even if anisotropic filtering isn't supported, mipmaps will be enabled with any level >= 1
 		else
 		{
-			if (true) // TODO: decide
-			{
-				// Trilinear filtering is used for HD textures as linear filtering produces noisy textures
-				// that are very noticeable on terrain
-				glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-			}
-			else
-			{
-				// Set on GL_NEAREST_MIPMAP_LINEAR (bilinear filtering with mipmaps) since the pixel nature of the game means that nearest filtering
-				// looks best for objects up close but allows linear filtering to resolve possible aliasing and noise with mipmaps from far away objects.
-				glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
-			}
+			// Trilinear filtering is used for HD textures as linear filtering produces noisy textures
+			// that are very noticeable on terrain
+			glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 		}
 
 		if (GL.getCapabilities().GL_EXT_texture_filter_anisotropic)

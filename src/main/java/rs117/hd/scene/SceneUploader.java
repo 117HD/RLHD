@@ -26,39 +26,25 @@
 package rs117.hd.scene;
 
 import com.google.common.base.Stopwatch;
-import java.util.Random;
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
-import com.google.gson.GsonBuilder;
 import lombok.extern.slf4j.Slf4j;
-import net.runelite.api.Client;
-import net.runelite.api.Constants;
-import net.runelite.api.DecorativeObject;
-import net.runelite.api.GameObject;
-import net.runelite.api.GroundObject;
-import net.runelite.api.Model;
-import net.runelite.api.Perspective;
-import net.runelite.api.Point;
-import net.runelite.api.Renderable;
-import net.runelite.api.Scene;
-import net.runelite.api.SceneTileModel;
-import net.runelite.api.SceneTilePaint;
-import net.runelite.api.Tile;
-import net.runelite.api.WallObject;
+import net.runelite.api.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.data.WaterType;
 import rs117.hd.data.materials.GroundMaterial;
-import rs117.hd.model.objects.ObjectProperties;
-import rs117.hd.data.materials.Overlay;
 import rs117.hd.data.materials.Material;
+import rs117.hd.data.materials.Overlay;
 import rs117.hd.data.materials.Underlay;
 import rs117.hd.model.ModelPusher;
+import rs117.hd.model.objects.ObjectProperties;
 import rs117.hd.model.objects.ObjectType;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.buffer.GpuFloatBuffer;
 import rs117.hd.utils.buffer.GpuIntBuffer;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import java.util.Random;
 
 @Singleton
 @Slf4j
