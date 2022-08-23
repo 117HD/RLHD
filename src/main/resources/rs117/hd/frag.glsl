@@ -546,20 +546,19 @@ void main() {
         float distanceToLightSource = length(pointLightPos - position);
         vec3 pointLightDir = normalize(pointLightPos - position);
 
-        if (distanceToLightSource <= pointLightSize)
-        {
-            float pointLightDotNormals = dot(normals, pointLightDir);
-            vec3 pointLightOut = pointLightColor * max(pointLightDotNormals, 0.0);
+        float isWithinRange = step(distanceToLightSource, pointLightSize);
 
-            float attenuation = pow(clamp(1 - (distanceToLightSource / pointLightSize), 0.0, 1.0), 2.0);
-            pointLightOut *= attenuation;
+        float pointLightDotNormals = dot(normals, pointLightDir);
+        vec3 pointLightOut = pointLightColor * max(pointLightDotNormals, 0.0);
 
-            pointLightsOut += pointLightOut;
+        float attenuation = pow(clamp(1 - (distanceToLightSource / pointLightSize), 0.0, 1.0), 2.0);
+        pointLightOut *= attenuation;
 
-            vec3 pointLightReflectDir = reflect(-pointLightDir, normals);
-            vec4 spec = specular(viewDir, pointLightReflectDir, vSpecularGloss, vSpecularStrength, pointLightColor, pointLightStrength) * attenuation;
-            pointLightsSpecularOut += spec.rgb;
-        }
+        pointLightsOut += isWithinRange * pointLightOut;
+
+        vec3 pointLightReflectDir = reflect(-pointLightDir, normals);
+        vec4 spec = specular(viewDir, pointLightReflectDir, vSpecularGloss, vSpecularStrength, pointLightColor, pointLightStrength) * attenuation;
+        pointLightsSpecularOut += isWithinRange * spec.rgb;
     }
 
 
