@@ -721,9 +721,10 @@ public class LightManager
 			int plane = tileObject.getWorldLocation().getPlane();
 
 			sceneLights.removeIf(light ->
+				light.object == tileObject &&
 				light.x == localLocation.getX() &&
-					light.y == localLocation.getY() &&
-					light.plane == plane);
+				light.y == localLocation.getY() &&
+				light.plane == plane);
 		}
 	}
 

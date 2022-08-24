@@ -380,8 +380,26 @@ public enum Overlay {
     // Barbarian Assault
     BA_WAITING_ROOM_NUMBERS(89, Area.BARBARIAN_ASSAULT_WAITING_ROOMS, GroundMaterial.DIRT, p -> p.blended(false)),
 
-    // POHs
-    POH_DESERT_INDOORS(Area.PLAYER_OWNED_HOUSE, GroundMaterial.TILES_2x2_2, p -> p.blended(false).ids(26, 99)),
+	// Tombs of Amascut
+	TOA_DISABLE_BLENDING_4(4, Area.TOA_PATH_HUB, GroundMaterial.NONE, p -> p.blended(false)),
+	TOA_DISABLE_BLENDING_11(11, Area.TOA_PATH_HUB, GroundMaterial.NONE, p -> p.blended(false)),
+	TOA_DISABLE_BLENDING_86(86, Area.TOA_PATH_HUB, GroundMaterial.NONE, p -> p.blended(false)),
+	TOA_DISABLE_BLENDING_N23(-23, Area.TOA_PATH_HUB, GroundMaterial.NONE, p -> p.blended(false)),
+	TOA_DISABLE_BLENDING_50(50, Area.TOA_PATH_OF_SCABARAS_PUZZLE, GroundMaterial.NONE, p -> p.blended(false)),
+	TOA_DISABLE_BLENDING_66(66, Area.TOA_PATH_OF_SCABARAS_BOSS, GroundMaterial.NONE, p -> p.blended(false)),
+	TOA_DISABLE_BLENDING_N18(-18, Area.TOA_PATH_OF_APMEKEN_PUZZLE, GroundMaterial.NONE, p -> p.blended(false)),
+	TOA_DISABLE_BLENDING_30(30, Area.TOA_PATH_OF_APMEKEN_BOSS, GroundMaterial.NONE, p -> p.blended(false)),
+	TOA_DISABLE_BLENDING_N16(-16, Area.TOA_PATH_OF_HET_PUZZLE, GroundMaterial.NONE, p -> p.blended(false)),
+	TOA_DISABLE_BLENDING_N62(-62, Area.TOA_PATH_OF_CRONDIS_BOSS, GroundMaterial.NONE, p -> p.blended(false)),
+	TOA_DISABLE_BLENDING_N6(-6, Area.TOA_LOOT_ROOM, GroundMaterial.NONE, p -> p.blended(false)),
+	TOA_DISABLE_BLENDING_N7(-7, Area.TOA_LOOT_ROOM, GroundMaterial.NONE, p -> p.blended(false)),
+	TOA_DISABLE_BLENDING_N8(-8, Area.TOA_LOOT_ROOM, GroundMaterial.NONE, p -> p.blended(false)),
+	TOA_DISABLE_BLENDING_N9(-9, Area.TOA_LOOT_ROOM, GroundMaterial.NONE, p -> p.blended(false)),
+	TOA_PATH_OF_CRONDIS_PUZZLE_WATER(-5, Area.TOA_PATH_OF_CRONDIS_PUZZLE, WaterType.WATER_FLAT),
+	TOA_PATH_OF_CRONDIS_BOSS_WATER(-10, Area.TOA_PATH_OF_CRONDIS_BOSS, WaterType.SWAMP_WATER),
+
+	// POHs
+	POH_DESERT_INDOORS(Area.PLAYER_OWNED_HOUSE, GroundMaterial.TILES_2x2_2, p -> p.blended(false).ids(26, 99)),
 
     // Random events
     PRISON_PETE_TILE_1(2, Area.RANDOM_EVENT_PRISON_PETE, GroundMaterial.MARBLE_1, p -> p.blended(false)),

@@ -246,6 +246,22 @@ public enum Environment
 		.setDirectionalStrength(5.0f)
 		.setDirectionalColor("#DFC0C0")
 	),
+	TOA_LOOT_ROOM(Area.TOA_LOOT_ROOM, new Properties()
+		.setFogColor("#050505")
+		.setFogDepth(20)
+		.setAmbientStrength(1)
+		.setAmbientColor("#ffffff")
+		.setDirectionalStrength(4)
+		.setDirectionalColor("#ffffff")
+	),
+	TOMBS_OF_AMASCUT(Area.TOMBS_OF_AMASCUT, new Properties()
+		.setFogColor("#050505")
+		.setFogDepth(20)
+		.setAmbientStrength(1)
+		.setAmbientColor("#ffffff")
+		.setDirectionalStrength(.75f)
+		.setDirectionalColor("#ffffff")
+	),
 	BARROWS_CRYPTS(Area.BARROWS_CRYPTS, new Properties()
 		.setFogColor(0, 0, 0)
 		.setFogDepth(20)
