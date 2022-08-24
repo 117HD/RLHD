@@ -24,6 +24,8 @@
  */
 #version 330
 
+#include UI_SCALING_MODE
+
 #define SAMPLING_MITCHELL 1
 #define SAMPLING_CATROM 2
 #define SAMPLING_XBR 3
@@ -36,12 +38,16 @@ uniform ivec2 targetDimensions;
 uniform float colorBlindnessIntensity;
 uniform vec4 alphaOverlay;
 
-#include scale/bicubic.glsl
-#include scale/xbr_lv2_frag.glsl
+#include scaling/bicubic.glsl
 #include utils/color_blindness.glsl
 
-in vec2 TexCoord;
+#if UI_SCALING_MODE == SAMPLING_XBR
+#include scaling/xbr_lv2_frag.glsl
+
 in XBRTable xbrTable;
+#endif
+
+in vec2 TexCoord;
 
 out vec4 FragColor;
 
@@ -53,25 +59,16 @@ vec4 alphaBlend(vec4 src, vec4 dst) {
 }
 
 void main() {
-    vec4 c;
+    #if UI_SCALING_MODE == SAMPLING_MITCHELL || UI_SCALING_MODE == SAMPLING_CATROM
+    vec4 c = textureCubic(uiTexture, TexCoord);
+    #elif UI_SCALING_MODE == SAMPLING_XBR
+    vec4 c = textureXBR(uiTexture, TexCoord, xbrTable, ceil(1.0 * targetDimensions.x / sourceDimensions.x));
+    #else // NEAREST or LINEAR, which uses GL_TEXTURE_MIN_FILTER/GL_TEXTURE_MAG_FILTER to affect sampling
+    vec4 c = texture(uiTexture, TexCoord);
+    #endif
 
-    switch (samplingMode) {
-        case SAMPLING_CATROM:
-        case SAMPLING_MITCHELL:
-            c = textureCubic(uiTexture, TexCoord, samplingMode);
-            c = alphaBlend(c, alphaOverlay);
-            c.rgb = colorBlindnessCompensation(c.rgb);
-            break;
-        case SAMPLING_XBR:
-            c = textureXBR(uiTexture, TexCoord, xbrTable, ceil(1.0 * targetDimensions.x / sourceDimensions.x));
-            c = alphaBlend(c, alphaOverlay);
-            c.rgb = colorBlindnessCompensation(c.rgb);
-            break;
-        default: // NEAREST or LINEAR, which uses GL_TEXTURE_MIN_FILTER/GL_TEXTURE_MAG_FILTER to affect sampling
-            c = texture(uiTexture, TexCoord);
-            c = alphaBlend(c, alphaOverlay);
-            c.rgb = colorBlindnessCompensation(c.rgb);
-    }
+    c = alphaBlend(c, alphaOverlay);
+    c.rgb = colorBlindnessCompensation(c.rgb);
 
     FragColor = c;
 }
