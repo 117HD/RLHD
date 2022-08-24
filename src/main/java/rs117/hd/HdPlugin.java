@@ -522,6 +522,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 				setupSyncMode();
 				initVao();
+				initBuffers();
 				try
 				{
 					initPrograms();
@@ -531,9 +532,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 					throw new RuntimeException(ex);
 				}
 				initInterfaceTexture();
-				initBuffers();
-				initUniformBuffer();
-				initLightsUniformBuffer();
 				initShadowMapFbo();
 
 				client.setDrawCallbacks(this);
@@ -727,7 +725,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 		template.add(key -> {
 			try {
-				// TODO: track current include stack
 				return shaderPath.resolve(key).loadString();
 			} catch (IOException ex) {
 				throw new RuntimeException(ex);
@@ -831,6 +828,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		uniShadowLightProjectionMatrix = glGetUniformLocation(glShadowProgram, "lightProjectionMatrix");
 		uniShadowTextureArray = glGetUniformLocation(glShadowProgram, "textureArray");
 		uniShadowElapsedTime = glGetUniformLocation(glShadowProgram, "elapsedTime");
+
+		// Initialize uniform buffers that may depend on compile-time settings
+		initCameraUniformBuffer();
+		initLightsUniformBuffer();
 	}
 
 	private void shutdownPrograms()
@@ -874,21 +875,18 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 	public void recompilePrograms()
 	{
-		clientThread.invoke(() ->
+		try
 		{
-			try
-			{
-				shutdownPrograms();
-				shutdownVao();
-				initVao();
-				initPrograms();
-			}
-			catch (ShaderException ex)
-			{
-				log.error("Failed to recompile shader program", ex);
-				stopPlugin();
-			}
-		});
+			shutdownPrograms();
+			shutdownVao();
+			initVao();
+			initPrograms();
+		}
+		catch (ShaderException ex)
+		{
+			log.error("Failed to recompile shader program", ex);
+			stopPlugin();
+		}
 	}
 
 	private void initVao()
@@ -1044,7 +1042,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		}
 	}
 
-	private void initUniformBuffer()
+	private void initCameraUniformBuffer()
 	{
 		IntBuffer uniformBuf = GpuIntBuffer.allocateDirect(8 + 2048 * 4);
 		uniformBuf.put(new int[8]); // uniform block
@@ -1135,14 +1133,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		buffer.flip();
 
 		updateBuffer(waterTypesUniformBuffer, GL_UNIFORM_BUFFER, buffer, GL_STATIC_DRAW, CL_MEM_READ_ONLY);
-		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 	}
 
 	private void initLightsUniformBuffer()
 	{
 		lightsUniformBuf = BufferUtils.createByteBuffer(configMaxDynamicLights * 8 * SCALAR_BYTES);
 		updateBuffer(lightsUniformBuffer, GL_UNIFORM_BUFFER, lightsUniformBuf, GL_DYNAMIC_DRAW, CL_MEM_READ_ONLY);
-		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 	}
 
 	private void initAAFbo(int width, int height, int aaSamples)
@@ -1483,7 +1479,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	public void initShaderHotswapping() {
 		shaderPath.watch("\\.glsl$", path -> {
 			log.info("Reloading shader: {}", path);
-			recompilePrograms();
+			clientThread.invoke(this::recompilePrograms);
 		});
 	}
 
@@ -2250,16 +2246,20 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				configExpandShadowDraw = config.expandShadowDraw();
 				break;
 			case "maxDynamicLights":
-				configMaxDynamicLights = config.maxDynamicLights().getValue();
+				clientThread.invoke(() -> {
+					configMaxDynamicLights = config.maxDynamicLights().getValue();
+					recompilePrograms();
+				});
+				break;
 			case "parallaxMappingMode":
 			case "macosIntelWorkaround":
-				recompilePrograms();
+				clientThread.invoke(this::recompilePrograms);
 				break;
 			case "unlockFps":
 			case "vsyncMode":
 			case "fpsTarget":
 				log.debug("Rebuilding sync mode");
-				clientThread.invokeLater(this::setupSyncMode);
+				clientThread.invoke(this::setupSyncMode);
 				break;
 			case "hideBakedEffects":
 				modelPusher.clearModelCache();
