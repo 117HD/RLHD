@@ -92,7 +92,7 @@ float d(vec2 pt1, vec2 pt2)
 }
 
 // Samples a texture using a 4x4 kernel.
-vec4 textureCubic(sampler2D sampler, vec2 texCoords, int mode)
+vec4 textureCubic(sampler2D sampler, vec2 texCoords)
 {
     vec2 texSize = textureSize(sampler, 0);
     vec2 texelSize = 1.0 / texSize;
@@ -107,8 +107,7 @@ vec4 textureCubic(sampler2D sampler, vec2 texCoords, int mode)
 
     vec4 c;
 
-    if (mode == SAMPLING_CATROM)
-    {
+    #if UI_SCALING_MODE == SAMPLING_CATROM
         // catrom benefits from anti-ringing, which requires knowledge of the minimum and maximum samples in the kernel
         vec4 min_sample = vec4(FLT_MAX);
         vec4 max_sample = vec4(FLT_MIN);
@@ -140,9 +139,7 @@ vec4 textureCubic(sampler2D sampler, vec2 texCoords, int mode)
         c = clamp(c, min_sample, max_sample);
         // mix according to anti-ringing strength
         c = mix(aux, c, CR_AR_STRENGTH);
-    }
-    else if (mode == SAMPLING_MITCHELL)
-    {
+    #elif UI_SCALING_MODE == SAMPLING_MITCHELL
         for (int m = -1; m <= 2; m++)
         {
             for (int n = -1; n <= 2; n++)
@@ -160,7 +157,9 @@ vec4 textureCubic(sampler2D sampler, vec2 texCoords, int mode)
         }
         // calculate weighted average
         c = nSum / nDenom;
-    }
+    #else
+        c = vec4(1, 0, 1, 1); // magenta = error
+    #endif
 
     // return the weighted average
     return c;

@@ -343,7 +343,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	private int uniLightProjectionMatrix;
 	private int uniShadowMap;
 	private int uniUiTexture;
-	private int uniTexSamplingMode;
 	private int uniTexSourceDimensions;
 	private int uniTexTargetDimensions;
 	private int uniUiAlphaOverlay;
@@ -703,6 +702,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			{
 				case "version_header":
 					return versionHeader;
+				case "UI_SCALING_MODE":
+					return String.format("#define %s %d", key, config.uiScalingMode().getMode());
 				case "COLOR_BLINDNESS":
 					return String.format("#define %s %d", key, config.colorBlindness().ordinal());
 				case "MATERIAL_CONSTANTS":
@@ -819,7 +820,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		uniUnderwaterCausticsStrength = glGetUniformLocation(glProgram, "underwaterCausticsStrength");
 
 		uniUiTexture = glGetUniformLocation(glUiProgram, "uiTexture");
-		uniTexSamplingMode = glGetUniformLocation(glUiProgram, "samplingMode");
 		uniTexTargetDimensions = glGetUniformLocation(glUiProgram, "targetDimensions");
 		uniTexSourceDimensions = glGetUniformLocation(glUiProgram, "sourceDimensions");
 		uniUiColorBlindnessIntensity = glGetUniformLocation(glUiProgram, "colorBlindnessIntensity");
@@ -2015,9 +2015,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		glBindTexture(GL_TEXTURE_2D, interfaceTexture);
 
 		// Use the texture bound in the first pass
-		final UIScalingMode uiScalingMode = config.uiScalingMode();
 		glUseProgram(glUiProgram);
-		glUniform1i(uniTexSamplingMode, uiScalingMode.getMode());
 		glUniform2i(uniTexSourceDimensions, canvasWidth, canvasHeight);
 		glUniform1f(uniUiColorBlindnessIntensity, config.colorBlindnessIntensity() / 100.f);
 		glUniform4f(uniUiAlphaOverlay,
@@ -2045,7 +2043,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		if (client.isStretchedEnabled())
 		{
 			// GL_NEAREST makes sampling for bicubic/xBR simpler, so it should be used whenever linear isn't
-			final int function = uiScalingMode == UIScalingMode.LINEAR ? GL_LINEAR : GL_NEAREST;
+			final int function = config.uiScalingMode() == UIScalingMode.LINEAR ? GL_LINEAR : GL_NEAREST;
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, function);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, function);
 		}
@@ -2264,6 +2262,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 					recompilePrograms();
 				});
 				break;
+			case "uiScalingMode":
 			case "colorBlindMode":
 			case "parallaxMappingMode":
 			case "macosIntelWorkaround":
