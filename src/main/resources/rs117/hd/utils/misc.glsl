@@ -33,11 +33,16 @@ float translateRange(float rangeStart, float rangeEnd, float value)
 // based on the length of the animation
 float animationFrame(float animationDuration)
 {
-    if (animationDuration == 0.0)
-    {
-        return 0.0;
-    }
-    return mod(animationCurrent, animationDuration) / animationDuration;
+    if (animationDuration == 0)
+        return 0;
+    return mod(elapsedTime, animationDuration) / animationDuration;
+}
+
+vec2 animationFrame(vec2 animationDuration)
+{
+    if (animationDuration == vec2(0))
+        return vec2(0);
+    return mod(vec2(elapsedTime), vec2(animationDuration)) / animationDuration;
 }
 
 vec2 worldUvs(float scale)

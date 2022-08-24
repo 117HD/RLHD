@@ -26,7 +26,8 @@ package rs117.hd.data.environments;
 
 import java.awt.Color;
 import lombok.Getter;
-import rs117.hd.utils.HDUtils;
+
+import static rs117.hd.utils.HDUtils.*;
 
 @Getter
 public enum Environment
@@ -1206,14 +1207,5 @@ public enum Environment
 			properties.directionalStrength : properties.underwaterCausticsStrength;
 		this.waterColor = properties.waterColor;
 		this.customWaterColor = properties.customWaterColor;
-	}
-
-	public static float[] rgb(int r, int g, int b)
-	{
-		return new float[]{
-			HDUtils.srgbToLinear(r / 255f),
-			HDUtils.srgbToLinear(g / 255f),
-			HDUtils.srgbToLinear(b / 255f)
-		};
 	}
 }

@@ -8,6 +8,7 @@ import joptsimple.ArgumentAcceptingOptionSpec;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
+import rs117.hd.scene.LightManager;
 import rs117.hd.scene.lights.Light;
 import rs117.hd.utils.HDUtils;
 
@@ -41,7 +42,7 @@ public class ExportLightsToJson
 			.withRequiredArg()
 			.defaultsTo(Paths
 				.get("src/main/resources",
-					Light.class.getPackage().getName().replace(".", "/"),
+					LightManager.class.getPackage().getName().replace(".", "/"),
 					"lights.jsonc")
 				.toString());
 		OptionSpec<?> skipLoadingCurrentConfig = parser.accepts("skip-loading-current-config",

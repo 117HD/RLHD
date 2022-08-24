@@ -76,8 +76,7 @@ public class FileWatcher
 							if (event.kind() == ENTRY_CREATE && path.toFile().isDirectory())
 								watchRecursively(path);
 
-							String key = path.toRealPath().toString();
-
+							String key = path.toString();
 							ResourcePath resourcePath = path(key);
 							if (path.toFile().isDirectory())
 								key += File.separator;
@@ -138,7 +137,7 @@ public class FileWatcher
 			if (watchService == null)
 				initialize();
 
-			Path path = resourcePath.toRealPath();
+			Path path = resourcePath.toPath();
 
 			final String key;
 			final Consumer<ResourcePath> handler;
@@ -151,7 +150,7 @@ public class FileWatcher
 				key = path.toString();
 				handler = changed -> {
 					try {
-						if (Files.isSameFile(changed.toRealPath(), resourcePath.toRealPath()))
+						if (Files.isSameFile(changed.toPath(), resourcePath.toPath()))
 							changeHandler.accept(changed);
 					} catch (IOException ex) {
 						throw new RuntimeException(ex);

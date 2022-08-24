@@ -47,7 +47,7 @@ class TileOverrideBuilder<T> {
 
     TileOverrideBuilder<T> waterType(WaterType waterType) {
         this.waterType = waterType;
-        this.groundMaterial = waterType.getGroundMaterial();
+        this.groundMaterial = GroundMaterial.NONE;
         return this;
     }
 

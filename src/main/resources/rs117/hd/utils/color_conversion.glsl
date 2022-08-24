@@ -129,3 +129,17 @@ vec3 linearToSrgb(vec3 rgb) {
     1.055 * pow(rgb, vec3(1 / 2.4)) - 0.055,
     step(vec3(0.0031308), rgb));
 }
+
+float srgbToLinear(float srgb) {
+  return mix(
+    srgb / 12.92,
+    pow((srgb + float(0.055)) / float(1.055), float(2.4)),
+    step(float(0.04045), srgb));
+}
+
+float linearToSrgb(float rgb) {
+  return mix(
+    rgb * 12.92,
+    1.055 * pow(rgb, 1 / 2.4) - 0.055,
+    step(0.0031308, rgb));
+}

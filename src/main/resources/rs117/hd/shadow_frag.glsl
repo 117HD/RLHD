@@ -24,61 +24,26 @@
  */
 #version 330
 
-#include MAX_MATERIALS
+#include uniforms/materials.glsl
+#include utils/constants.glsl
 
-struct Material
-{
-    int diffuseMapId;
-    float specularStrength;
-    float specularGloss;
-    float emissiveStrength;
-    int displacementMapId;
-    float displacementStrength;
-    ivec2 displacementDuration;
-    ivec2 scrollDuration;
-    vec2 textureScale;
-};
+uniform sampler2DArray textureArray;
+uniform float elapsedTime;
 
-layout(std140) uniform materials {
-    Material material[MAX_MATERIALS];
-};
-
-uniform sampler2DArray texturesHD;
-uniform vec2 textureOffsets[128];
-
-in float alpha;
 in vec2 fUv;
 flat in int materialId;
-flat in int terrainPlane;
-
-out vec4 FragColor;
 
 void main()
 {
-    if (terrainPlane == 0)
-    {
+    Material material = getMaterial(materialId);
+
+    vec2 uv = fUv;
+    // Scroll UVs
+    uv += material.scrollDuration * elapsedTime;
+    // Scale from the center
+    uv = (uv - .5) / material.textureScale + .5;
+
+    float texAlpha = texture(textureArray, vec3(uv, material.diffuseMap)).a;
+    if (texAlpha < SHADOW_OPACITY_THRESHOLD)
         discard;
-    }
-
-    // skip water surfaces
-    switch (material[materialId].diffuseMapId)
-    {
-        case 7001:
-        case 7025:
-        case 7997:
-        case 7998:
-        case 7999:
-            discard;
-    }
-
-    vec2 uv = fUv + textureOffsets[material[materialId].diffuseMapId];
-    uv = vec2((uv.x - 0.5) / material[materialId].textureScale.x + 0.5, (uv.y - 0.5) / material[materialId].textureScale.y + 0.5);
-    vec4 texture = texture(texturesHD, vec3(uv, material[materialId].diffuseMapId));
-
-    if (min(texture.a, alpha) < 0.81)
-    {
-        discard;
-    }
-
-    FragColor = vec4(1.0);
 }

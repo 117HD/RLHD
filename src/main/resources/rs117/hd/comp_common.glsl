@@ -26,17 +26,7 @@
  #define PI 3.1415926535897932384626433832795f
  #define UNIT PI / 1024.0f
 
- layout(std140) uniform uniforms {
-   int cameraYaw;
-   int cameraPitch;
-   int centerX;
-   int centerY;
-   int zoom;
-   int cameraX;
-   int cameraY;
-   int cameraZ;
-   ivec2 sinCosTable[2048];
- };
+#include uniforms/camera.glsl
 
  struct modelinfo {
    int offset;   // offset into buffer

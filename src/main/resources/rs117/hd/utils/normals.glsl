@@ -23,24 +23,16 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-float sampleCausticsChannel(const vec2 flow1, const vec2 flow2) {
-    return min(
-        texture(textureArray, vec3(flow1, MAT_CAUSTICS_MAP.diffuseMap)).r,
-        texture(textureArray, vec3(flow2, MAT_CAUSTICS_MAP.diffuseMap)).r
-    );
-}
+vec3 sampleNormalMap(Material mat, vec2 uv, vec3 surfaceNormal) {
+    if (mat.normalMap == -1)
+        return surfaceNormal;
 
-float sampleCausticsChannel(const vec2 flow1, const vec2 flow2, const vec2 aberration) {
-    return sampleCausticsChannel(flow1 + aberration, flow2 + aberration);
-}
-
-vec3 sampleCaustics(const vec2 flow1, const vec2 flow2, const float aberration) {
-    float r = sampleCausticsChannel(flow1, flow2, aberration * vec2( 1,  1));
-    float g = sampleCausticsChannel(flow1, flow2, aberration * vec2( 1, -1));
-    float b = sampleCausticsChannel(flow1, flow2, aberration * vec2(-1, -1));
-    return vec3(r, g, b);
-}
-
-vec3 sampleCaustics(const vec2 flow1, const vec2 flow2) {
-    return vec3(sampleCausticsChannel(flow1, flow2));
+    // Sample normal map texture, swapping Y and Z to match the coordinate system in OSRS
+    vec3 n = texture(textureArray, vec3(uv, mat.normalMap)).xyz;
+    // Scale and shift normal so it can point in both directions
+    n.xy = n.xy * 2 - 1;
+    // Transform the normal from tangent space to world space
+    n = TBN * n;
+    // Assume the normal is already normalized
+    return n;
 }

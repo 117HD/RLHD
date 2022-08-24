@@ -32,16 +32,8 @@ import net.runelite.client.config.ConfigSection;
 import net.runelite.client.config.Range;
 import static rs117.hd.HdPlugin.MAX_DISTANCE;
 import static rs117.hd.HdPlugin.MAX_FOG_DEPTH;
-import rs117.hd.config.AntiAliasingMode;
-import rs117.hd.config.ColorBlindMode;
-import rs117.hd.config.Contrast;
-import rs117.hd.config.MaxDynamicLights;
-import rs117.hd.config.Saturation;
-import rs117.hd.config.DefaultSkyColor;
-import rs117.hd.config.FogDepthMode;
-import rs117.hd.config.ShadowDistance;
-import rs117.hd.config.ShadowResolution;
-import rs117.hd.config.UIScalingMode;
+
+import rs117.hd.config.*;
 
 @ConfigGroup("hd")
 public interface HdPluginConfig extends Config
@@ -339,6 +331,17 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
+	@ConfigItem(
+		keyName = "parallaxMappingMode",
+		name = "Parallax mapping",
+		description = "Enable parallax mapping to add more depth to materials that support it. Impacts performance.",
+		position = 110,
+		section = lightingSettings
+	)
+	default ParallaxMappingMode parallaxMappingMode() {
+		return ParallaxMappingMode.FULL;
+	}
+
 
 	/*====== Environment settings ======*/
 
@@ -436,11 +439,23 @@ public interface HdPluginConfig extends Config
 	}
 
 	@ConfigItem(
-			keyName = "groundBlending",
-			name = "Ground Blending",
-			description = "Affects the quality of blending between different ground/terrain textures.",
-			position = 208,
-			section = environmentSettings
+		keyName = "textureResolution",
+		name = "Texture Resolution",
+		description = "Controls the resolution used for all in-game textures.",
+		position = 208,
+		section = environmentSettings
+	)
+	default TextureResolution textureResolution()
+	{
+		return TextureResolution.RES_256;
+	}
+
+	@ConfigItem(
+		keyName = "groundBlending",
+		name = "Ground Blending",
+		description = "Affects the quality of blending between different ground/terrain textures.",
+		position = 209,
+		section = environmentSettings
 	)
 	default boolean groundBlending()
 	{
@@ -451,7 +466,7 @@ public interface HdPluginConfig extends Config
 		keyName = "underwaterCaustics",
 		name = "Underwater Caustics",
 		description = "Apply underwater lighting effects to imitate sunlight moving through waves on the surface.",
-		position = 209,
+		position = 210,
 		section = environmentSettings
 	)
 	default boolean underwaterCaustics()
@@ -463,7 +478,7 @@ public interface HdPluginConfig extends Config
 		keyName = "tzhaarHD",
 		name = "HD TzHaar Reskin",
 		description = "Recolors the TzHaar city of Mor Ul Rek to give it an appearance similar to that of its 2008 HD variant.",
-		position = 210,
+		position = 211,
 		section = environmentSettings
 	)
 	default boolean tzhaarHD()
