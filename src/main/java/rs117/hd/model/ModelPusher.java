@@ -111,7 +111,7 @@ public class ModelPusher {
         pushes = 0;
     }
 
-    public int[] pushModel(Renderable renderable, Model model, GpuIntBuffer vertexBuffer, GpuFloatBuffer uvBuffer, GpuFloatBuffer normalBuffer, int tileX, int tileY, int tileZ, ObjectProperties objectProperties, ObjectType objectType, boolean noCache, ModelHasher modelHasher) {
+    public void freeFinalizedBuffers() {
         int freeCount = 0;
         int freeAttempts = 0;
         PhantomReference<Buffer> reference;
@@ -130,7 +130,9 @@ public class ModelPusher {
                 log.error("failed to free cache reference!");
             }
         }
+    }
 
+    public int[] pushModel(Renderable renderable, Model model, GpuIntBuffer vertexBuffer, GpuFloatBuffer uvBuffer, GpuFloatBuffer normalBuffer, int tileX, int tileY, int tileZ, ObjectProperties objectProperties, ObjectType objectType, boolean noCache, ModelHasher modelHasher) {
         pushes++;
         final int faceCount = Math.min(model.getFaceCount(), HdPlugin.MAX_TRIANGLE);
         int vertexLength = 0;

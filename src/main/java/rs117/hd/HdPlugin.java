@@ -1596,6 +1596,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			return;
 		}
 
+		modelPusher.freeFinalizedBuffers();
+
 		// shader variables for water, lava animations
 		elapsedTime += (System.currentTimeMillis() - lastFrameTime) / 1000f;
 		lastFrameTime = System.currentTimeMillis();
