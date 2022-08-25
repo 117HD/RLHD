@@ -6,7 +6,6 @@ import rs117.hd.data.ObjectID;
 import rs117.hd.data.materials.Material;
 import rs117.hd.data.materials.UvType;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;

@@ -8,7 +8,6 @@ import net.runelite.api.Client;
 import net.runelite.api.GameState;
 import net.runelite.api.coords.WorldPoint;
 import rs117.hd.HdPlugin;
-import rs117.hd.data.materials.Material;
 import rs117.hd.scene.objects.HiddenObjectsEntry;
 import rs117.hd.scene.objects.ObjectProperties;
 import rs117.hd.utils.AABB;

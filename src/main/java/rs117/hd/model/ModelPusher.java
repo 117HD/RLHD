@@ -181,7 +181,7 @@ public class ModelPusher
             return twelveFloats;
         } else {
             Material material = hdPlugin.configObjectTextures && objectProperties != null ?
-                objectProperties.getMaterial() : Material.NONE;
+                objectProperties.material : Material.NONE;
 
             if (material == Material.NONE)
             {
