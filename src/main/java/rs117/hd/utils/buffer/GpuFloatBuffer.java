@@ -24,13 +24,19 @@
  */
 package rs117.hd.utils.buffer;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
+import org.lwjgl.system.MemoryUtil;
+
 import java.nio.FloatBuffer;
 
 public class GpuFloatBuffer
 {
-	private FloatBuffer buffer = allocateDirect(65536);
+	private FloatBuffer buffer = MemoryUtil.memAllocFloat(65536);
+
+	public void destroy() {
+		if (buffer != null)
+			MemoryUtil.memFree(buffer);
+		buffer = null;
+	}
 
 	public void put(float texture, float u, float v, float pad)
 	{
@@ -63,9 +69,10 @@ public class GpuFloatBuffer
 			}
 			while ((capacity - position) < size);
 
-			FloatBuffer newB = allocateDirect(capacity);
+			FloatBuffer newB = MemoryUtil.memAllocFloat(capacity);
 			buffer.flip();
 			newB.put(buffer);
+			MemoryUtil.memFree(buffer);
 			buffer = newB;
 		}
 	}
@@ -73,12 +80,5 @@ public class GpuFloatBuffer
 	public FloatBuffer getBuffer()
 	{
 		return buffer;
-	}
-
-	public static FloatBuffer allocateDirect(int size)
-	{
-		return ByteBuffer.allocateDirect(size * Float.BYTES)
-			.order(ByteOrder.nativeOrder())
-			.asFloatBuffer();
 	}
 }
