@@ -41,7 +41,7 @@ public class Template
 
 	private int includeCounter = 0;
 
-	public String process(String str)
+	public String process(String str, String filename)
 	{
 		StringBuilder sb = new StringBuilder();
 		int lineCount = 0;
@@ -65,9 +65,20 @@ public class Template
 						.append(contents)
 						.append("#line ")
 						.append(lineCount + 1)
-						.append(" ")
-						.append(includeCounter - 1)
-						.append("\n");
+						.append(" ");
+
+					if (filename.endsWith(".cl")) {
+						sb
+							.append("\"")
+							.append(resource)
+							.append("\"");
+					} else {
+						sb
+							.append(includeCounter - 1);
+					}
+
+					sb.append("\n");
+
 				}
 				includeCounter--;
 			}
@@ -86,7 +97,7 @@ public class Template
 			String value = loader.apply(filename);
 			if (value != null)
 			{
-				return process(value);
+				return process(value, filename);
 			}
 		}
 
