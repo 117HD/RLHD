@@ -1,7 +1,5 @@
 package rs117.hd.scene;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +11,7 @@ import rs117.hd.utils.Env;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Objects;
 
@@ -26,7 +25,7 @@ public class HiddenObjectManager {
 
     public static String ENV_HIDDEN_OBJECTS = "RLHD_HIDDEN_OBJECTS_PATH";
 
-    private final Multimap<Integer, AABB> hiddenObjects = ArrayListMultimap.create();
+    private final HashMap<Integer, AABB[]> hiddenObjects = new HashMap<>();
 
     private static class LocationInfo {
         @JsonAdapter(ObjectIDAdapter.class)
@@ -38,18 +37,18 @@ public class HiddenObjectManager {
     public void startUp() {
         Env.getPathOrDefault(ENV_HIDDEN_OBJECTS, () -> path(HiddenObjectManager.class, "hidden_objects.jsonc"))
             .watch(path -> {
-                hiddenObjects.clear();
-
                 try {
+                    hiddenObjects.clear();
+
                     LocationInfo[] entries = path.loadJson(LocationInfo[].class);
                     if (entries == null)
                         throw new IOException("Empty or invalid: " + path);
                     for (LocationInfo entry : entries) {
                         for (int objectId : entry.objectIds) {
-                            hiddenObjects.putAll(objectId, Arrays.asList(entry.aabbs));
+                            hiddenObjects.put(objectId, entry.aabbs);
                         }
                     }
-                    log.debug("Loaded {} hidden objects in {} areas", hiddenObjects.keySet().size(), hiddenObjects.values().size());
+                    log.debug("Loaded {} hidden objects", hiddenObjects.keySet().size());
                 } catch (IOException ex) {
                     log.error("Failed to load hidden objects:", ex);
                 }
@@ -57,9 +56,12 @@ public class HiddenObjectManager {
     }
 
     public boolean shouldHide(int objectID, WorldPoint location) {
-        return hiddenObjects.get(objectID)
-            .stream()
-            .anyMatch(aabb -> aabb.contains(location) && hasNoActions(objectID));
+        AABB[] aabbs = hiddenObjects.get(objectID);
+        if (aabbs != null)
+            for (AABB aabb : aabbs)
+                if (aabb.contains(location) && hasNoActions(objectID))
+                    return true;
+        return false;
     }
 
     private boolean hasNoActions(int objectID) {
