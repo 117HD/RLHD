@@ -26,7 +26,8 @@ package rs117.hd.data.environments;
 
 import java.awt.Color;
 import lombok.Getter;
-import rs117.hd.utils.HDUtils;
+
+import static rs117.hd.utils.HDUtils.*;
 
 @Getter
 public enum Environment
@@ -688,9 +689,9 @@ public enum Environment
 	THE_GAUNTLET_CORRUPTED(Area.THE_GAUNTLET_CORRUPTED, new Properties()
 		.setFogColor("#090606")
 		.setFogDepth(20)
-		.setAmbientColor("#95B6F7")
+		.setAmbientColor("#BB9EAE")
 		.setAmbientStrength(1.5f)
-		.setDirectionalColor("#FF7878")
+		.setDirectionalColor("#C58C9E")
 		.setDirectionalStrength(3.0f)
 		.setLightDirection(260f, 10f)
 	),
@@ -1206,14 +1207,5 @@ public enum Environment
 			properties.directionalStrength : properties.underwaterCausticsStrength;
 		this.waterColor = properties.waterColor;
 		this.customWaterColor = properties.customWaterColor;
-	}
-
-	public static float[] rgb(int r, int g, int b)
-	{
-		return new float[]{
-			HDUtils.srgbToLinear(r / 255f),
-			HDUtils.srgbToLinear(g / 255f),
-			HDUtils.srgbToLinear(b / 255f)
-		};
 	}
 }

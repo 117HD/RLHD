@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 117 <https://twitter.com/117scape>
+ * Copyright (c) 2022, Hooder <ahooder@protonmail.com>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -22,14 +22,24 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package rs117.hd.config;
 
-vec4 specular(vec3 viewDir, vec3 reflectDir, vec3 specularGloss, vec3 specularStrength, vec3 lightColor, float lightStrength)
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@Getter
+@RequiredArgsConstructor
+public enum TextureResolution
 {
-    float vDotR = max(dot(viewDir, reflectDir), 0.0);
-    vec3 specX = vec3(pow(vDotR, specularGloss.x) * lightColor * specularStrength.x);
-    vec3 specY = vec3(pow(vDotR, specularGloss.y) * lightColor * specularStrength.y);
-    vec3 specZ = vec3(pow(vDotR, specularGloss.z) * lightColor * specularStrength.z);
-    float specAmount = clamp(vDotR * lightStrength, 0.0, 1.0);
-    vec4 combined = vec4(specX * texBlend.x + specY * texBlend.y + specZ * texBlend.z, specAmount);
-    return vDotR > 0.0 ? combined : vec4(0.0);
+	RES_128("128", 128),
+	RES_256("256", 256);
+
+	private final String name;
+	private final int size;
+
+	@Override
+	public String toString()
+	{
+		return name;
+	}
 }

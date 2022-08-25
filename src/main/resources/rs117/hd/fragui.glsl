@@ -28,7 +28,7 @@
 #define SAMPLING_CATROM 2
 #define SAMPLING_XBR 3
 
-uniform sampler2D tex;
+uniform sampler2D uiTexture;
 
 uniform int samplingMode;
 uniform ivec2 sourceDimensions;
@@ -58,17 +58,17 @@ void main() {
     switch (samplingMode) {
         case SAMPLING_CATROM:
         case SAMPLING_MITCHELL:
-            c = textureCubic(tex, TexCoord, samplingMode);
+            c = textureCubic(uiTexture, TexCoord, samplingMode);
             c = alphaBlend(c, alphaOverlay);
             c.rgb = colorblind(colorBlindMode, c.rgb);
             break;
         case SAMPLING_XBR:
-            c = textureXBR(tex, TexCoord, xbrTable, ceil(1.0 * targetDimensions.x / sourceDimensions.x));
+            c = textureXBR(uiTexture, TexCoord, xbrTable, ceil(1.0 * targetDimensions.x / sourceDimensions.x));
             c = alphaBlend(c, alphaOverlay);
             c.rgb = colorblind(colorBlindMode, c.rgb);
             break;
         default: // NEAREST or LINEAR, which uses GL_TEXTURE_MIN_FILTER/GL_TEXTURE_MAG_FILTER to affect sampling
-            c = texture(tex, TexCoord);
+            c = texture(uiTexture, TexCoord);
             c = alphaBlend(c, alphaOverlay);
             c.rgb = colorblind(colorBlindMode, c.rgb);
     }

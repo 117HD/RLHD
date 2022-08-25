@@ -37,17 +37,7 @@ layout (location = 0) in ivec4 VertexPosition;
 layout (location = 1) in vec4 uv;
 layout (location = 2) in vec4 normal;
 
-layout(std140) uniform uniforms {
-    int cameraYaw;
-    int cameraPitch;
-    int centerX;
-    int centerY;
-    int zoom;
-    int cameraX;
-    int cameraY;
-    int cameraZ;
-    ivec2 sinCosTable[2048];
-};
+#include uniforms/camera.glsl
 
 uniform int useFog;
 uniform int fogDepth;
@@ -60,7 +50,7 @@ out float vHsl;
 out vec4 vUv;
 out float vFogAmount;
 
-#include color_utils.glsl
+#include utils/color_conversion.glsl
 
 float fogFactorLinear(const float dist, const float start, const float end) {
     return 1.0 - clamp((dist - start) / (end - start), 0.0, 1.0);

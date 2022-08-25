@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Hooder <ahooder@protonmail.com>
+ * Copyright (c) 2021, 117 <https://twitter.com/117scape>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -23,24 +23,13 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-float sampleCausticsChannel(const vec2 flow1, const vec2 flow2) {
-    return min(
-        texture(textureArray, vec3(flow1, MAT_CAUSTICS_MAP.diffuseMap)).r,
-        texture(textureArray, vec3(flow2, MAT_CAUSTICS_MAP.diffuseMap)).r
-    );
-}
-
-float sampleCausticsChannel(const vec2 flow1, const vec2 flow2, const vec2 aberration) {
-    return sampleCausticsChannel(flow1 + aberration, flow2 + aberration);
-}
-
-vec3 sampleCaustics(const vec2 flow1, const vec2 flow2, const float aberration) {
-    float r = sampleCausticsChannel(flow1, flow2, aberration * vec2( 1,  1));
-    float g = sampleCausticsChannel(flow1, flow2, aberration * vec2( 1, -1));
-    float b = sampleCausticsChannel(flow1, flow2, aberration * vec2(-1, -1));
-    return vec3(r, g, b);
-}
-
-vec3 sampleCaustics(const vec2 flow1, const vec2 flow2) {
-    return vec3(sampleCausticsChannel(flow1, flow2));
+vec4 specular(vec3 viewDir, vec3 reflectDir, vec3 specularGloss, vec3 specularStrength, vec3 lightColor, float lightStrength)
+{
+    float vDotR = max(dot(viewDir, reflectDir), 0.0);
+    vec3 specX = vec3(pow(vDotR, specularGloss.x) * lightColor * specularStrength.x);
+    vec3 specY = vec3(pow(vDotR, specularGloss.y) * lightColor * specularStrength.y);
+    vec3 specZ = vec3(pow(vDotR, specularGloss.z) * lightColor * specularStrength.z);
+    float specAmount = clamp(vDotR * lightStrength, 0.0, 1.0);
+    vec4 combined = vec4(specX * texBlend.x + specY * texBlend.y + specZ * texBlend.z, specAmount);
+    return vDotR > 0.0 ? combined : vec4(0.0);
 }

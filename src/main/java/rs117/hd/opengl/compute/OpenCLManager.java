@@ -51,6 +51,7 @@ import rs117.hd.HdPlugin;
 import rs117.hd.opengl.shader.Template;
 import rs117.hd.utils.buffer.GLBuffer;
 
+@SuppressWarnings("deprecation")
 @Singleton
 @Slf4j
 public class OpenCLManager
@@ -230,7 +231,7 @@ public class OpenCLManager
 			logPlatformInfo(platform, CL_PLATFORM_NAME);
 			logPlatformInfo(platform, CL_PLATFORM_VENDOR);
 			String[] extensions = logPlatformInfo(platform, CL_PLATFORM_EXTENSIONS).split(" ");
-			if (Arrays.stream(extensions).anyMatch(s -> s.equals(GL_SHARING_PLATFORM_EXT)))
+			if (Arrays.asList(extensions).contains(GL_SHARING_PLATFORM_EXT))
 			{
 				this.platform = platform;
 			}
@@ -474,7 +475,7 @@ public class OpenCLManager
 			clSetKernelArg(kernelSmall, 11, Sizeof.cl_mem, uniformBuffer.ptr());
 
 			clEnqueueNDRangeKernel(commandQueue, kernelSmall, 1, null,
-				new long[]{smallModels * (SMALL_SIZE / smallFaceCount)}, new long[]{SMALL_SIZE / smallFaceCount}, 1, new cl_event[]{acquireGLBuffers}, computeEvents[numComputeEvents++]);
+				new long[]{(long) smallModels * (SMALL_SIZE / smallFaceCount)}, new long[]{SMALL_SIZE / smallFaceCount}, 1, new cl_event[]{acquireGLBuffers}, computeEvents[numComputeEvents++]);
 		}
 
 		if (largeModels > 0)

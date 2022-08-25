@@ -24,52 +24,139 @@
  */
 package rs117.hd.scene;
 
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferByte;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import javax.imageio.ImageIO;
-import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Texture;
 import net.runelite.api.TextureProvider;
-import static org.lwjgl.opengl.GL43C.*;
-import rs117.hd.HdPlugin;
+import net.runelite.client.callback.ClientThread;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.EXTTextureFilterAnisotropic;
 import org.lwjgl.opengl.GL;
+import rs117.hd.HdPlugin;
+import rs117.hd.HdPluginConfig;
+import rs117.hd.data.materials.Material;
+import rs117.hd.utils.Env;
+import rs117.hd.utils.ResourcePath;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferInt;
+import java.nio.IntBuffer;
+import java.util.ArrayDeque;
+import java.util.Arrays;
+import java.util.HashSet;
+
+import static org.lwjgl.opengl.GL43C.*;
+import static rs117.hd.HdPlugin.TEXTURE_UNIT_GAME;
+import static rs117.hd.HdPlugin.TEXTURE_UNIT_UI;
+import static rs117.hd.utils.ResourcePath.path;
 
 @Singleton
 @Slf4j
 public class TextureManager
 {
-	private static final float PERC_64 = 1f / 64f;
-	private static final float PERC_128 = 1f / 128f;
+	private static final String ENV_TEXTURE_PATH = "RLHD_TEXTURE_PATH";
+	private static final String[] SUPPORTED_IMAGE_EXTENSIONS = { "png", "jpg" };
+	private static final float HALF_PI = (float) (Math.PI / 2);
+	private static final ResourcePath texturePath = Env
+		.getPathOrDefault(ENV_TEXTURE_PATH, () -> path(TextureManager.class,"textures"));
 
-	private static final int TEXTURE_SIZE = 128;
+	@Inject
+	private HdPlugin plugin;
 
-	public int initTextureArray(TextureProvider textureProvider)
+	@Inject
+	private HdPluginConfig config;
+
+	@Inject
+	private ClientThread clientThread;
+
+	private int textureArray;
+	private int textureSize;
+	private int[] materialOrdinalToTextureIndex;
+	private int[] materialReplacements;
+
+	// Temporary buffers for texture loading
+	private IntBuffer pixelBuffer;
+	private BufferedImage scaledImage;
+	private BufferedImage vanillaImage;
+
+	public void startUp()
 	{
+		texturePath.watch(path -> {
+			log.info("Reloading Textures...");
+			freeTextures();
+		});
+	}
+
+	public void shutDown()
+	{
+		freeTextures();
+	}
+
+	public int getTextureIndex(Material material)
+	{
+		return material == null ? -1 : materialOrdinalToTextureIndex[material.ordinal()];
+	}
+
+	public Material getEffectiveMaterial(Material material)
+	{
+		int replacement = materialReplacements[material.ordinal()];
+		return replacement == -1 ? material : Material.values()[replacement];
+	}
+
+	public void ensureTexturesLoaded(TextureProvider textureProvider)
+	{
+		if (textureArray != 0)
+		{
+			return;
+		}
+
 		if (!allTexturesLoaded(textureProvider))
 		{
-			return -1;
+			return;
 		}
 
 		Texture[] textures = textureProvider.getTextures();
 
-		int textureArrayId = glGenTextures();
-		glBindTexture(GL_TEXTURE_2D_ARRAY, textureArrayId);
+		HashSet<Integer> diffuseIds = new HashSet<>();
+
+		// Count the required number of texture array layers
+		for (int i = 0; i < textures.length; i++) {
+			Texture texture = textures[i];
+			if (texture != null)
+			{
+				diffuseIds.add(i);
+			}
+		}
+
+		int textureCount = diffuseIds.size();
+
+		for (Material material : Material.values())
+		{
+			if (material.vanillaTextureIndex == -1 || diffuseIds.add(material.vanillaTextureIndex))
+			{
+				textureCount++;
+			}
+		}
+
+		textureSize = config.textureResolution().getSize();
+		textureArray = glGenTextures();
+		glActiveTexture(TEXTURE_UNIT_GAME);
+		glBindTexture(GL_TEXTURE_2D_ARRAY, textureArray);
 		if (GL.getCapabilities().glTexStorage3D != 0)
 		{
-			glTexStorage3D(GL_TEXTURE_2D_ARRAY, 8, GL_RGBA8, TEXTURE_SIZE, TEXTURE_SIZE, textures.length);
+			glTexStorage3D(GL_TEXTURE_2D_ARRAY, 8, GL_SRGB8_ALPHA8, textureSize, textureSize, textureCount);
 		}
 		else
 		{
-			int size = TEXTURE_SIZE;
-			for (int i = 0; i < 8; i++)
+			int size = textureSize;
+			int i = 0;
+			while (size >= 1)
 			{
-				glTexImage3D(GL_TEXTURE_2D_ARRAY, i, GL_RGBA8, size, size, textures.length, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+				glTexImage3D(GL_TEXTURE_2D_ARRAY, i++, GL_SRGB8_ALPHA8, size, size, textureCount,
+					0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 				size /= 2;
 			}
 		}
@@ -77,182 +164,196 @@ public class TextureManager
 		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+		setAnisotropicFilteringLevel();
 
 		// Set brightness to 1.0d to upload unmodified textures to GPU
 		double save = textureProvider.getBrightness();
 		textureProvider.setBrightness(1.0d);
 
-		updateTextures(textureProvider, textureArrayId);
+		pixelBuffer = BufferUtils.createIntBuffer(textureSize * textureSize);
+		vanillaImage = new BufferedImage(128, 128, BufferedImage.TYPE_INT_ARGB);
+		int[] vanillaPixels = new int[128 * 128];
+		scaledImage = new BufferedImage(textureSize, textureSize, BufferedImage.TYPE_INT_ARGB);
 
-		textureProvider.setBrightness(save);
+		int materialCount = Material.values().length;
+		materialOrdinalToTextureIndex = new int[materialCount];
+		materialReplacements = new int[materialCount];
+		Arrays.fill(materialOrdinalToTextureIndex, -1);
+		Arrays.fill(materialReplacements, -1);
 
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D_ARRAY, textureArrayId);
+		float[] textureAnimations = new float[textureCount * 2];
+
+		// Load vanilla textures to texture array layers
+		ArrayDeque<Integer> unusedIndices = new ArrayDeque<>();
+		int i = 0;
+		for (; i < textures.length; i++)
+		{
+			Texture texture = textures[i];
+			if (texture == null)
+			{
+				unusedIndices.addLast(i);
+				continue;
+			}
+
+			Material material = Material.getTexture(i);
+			if (material.parent != null)
+			{
+				// Point this material to pre-existing texture from parent material
+				materialOrdinalToTextureIndex[material.ordinal()] = materialOrdinalToTextureIndex[material.parent.ordinal()];
+				continue;
+			}
+
+			String textureName = material == Material.NONE ? "" + i : material.name().toLowerCase();
+
+			BufferedImage image = loadTextureImage(textureName);
+			if (image == null)
+			{
+				// Load vanilla texture
+				int[] pixels = textureProvider.load(i);
+				if (pixels == null)
+				{
+					log.warn("No vanilla pixels for texture index {}", i);
+					unusedIndices.addLast(i);
+					continue;
+				}
+				if (pixels.length != 128 * 128)
+				{
+					log.warn("Unknown dimensions for vanilla texture at index {} ({} pixels)", i, pixels.length);
+					unusedIndices.addLast(i);
+					continue;
+				}
+
+				for (int j = 0; j < pixels.length; j++) {
+					int p = pixels[j];
+					vanillaPixels[j] = p == 0 ? 0 : 0xFF << 24 | p & 0xFFFFFF;
+				}
+
+				vanillaImage.setRGB(0, 0, 128, 128, vanillaPixels, 0, 128);
+				image = vanillaImage;
+			}
+
+			uploadTexture(i, image);
+			if (material != Material.NONE)
+			{
+				materialOrdinalToTextureIndex[material.ordinal()] = i;
+			}
+
+			// Convert texture animations to the same format as Material scrolling
+			int direction = texture.getAnimationDirection();
+			if (direction != 0) {
+				float speed = texture.getAnimationSpeed() * 50 / 128.f;
+				float radians = direction * -HALF_PI;
+				textureAnimations[i * 2] = (float) Math.cos(radians) * speed;
+				textureAnimations[i * 2 + 1] = (float) Math.sin(radians) * speed;
+			}
+		}
+
+		int vanillaCount = i - unusedIndices.size();
+		log.debug("Loaded {} vanilla textures", vanillaCount);
+
+		for (Material material : Material.values())
+		{
+			if (material == Material.NONE)
+			{
+				continue;
+			}
+
+			if (material.parent != null)
+			{
+				// Point this material to pre-existing texture from parent material
+				materialOrdinalToTextureIndex[material.ordinal()] = materialOrdinalToTextureIndex[material.parent.ordinal()];
+				continue;
+			}
+
+			String textureName = material.name().toLowerCase();
+			BufferedImage image = loadTextureImage(textureName);
+			if (image == null)
+			{
+				log.trace("No texture override for: {}", textureName);
+				continue;
+			}
+
+			Integer index = -1;
+			if (material.materialToReplace != null && material.replacementCondition.apply(config))
+			{
+				index = materialOrdinalToTextureIndex[material.materialToReplace.ordinal()];
+				materialReplacements[material.materialToReplace.ordinal()] = material.ordinal();
+			}
+
+			if (index == -1)
+			{
+				index = unusedIndices.pollFirst();
+				if (index == null)
+				{
+					index = i++;
+				}
+			}
+
+			uploadTexture(index, image);
+			materialOrdinalToTextureIndex[material.ordinal()] = index;
+		}
+
+		int hdCount = i - unusedIndices.size() - vanillaCount;
+		log.debug("Loaded {} HD textures", hdCount);
+
 		glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
-		glActiveTexture(GL_TEXTURE0);
 
-		return textureArrayId;
-	}
-
-	public int initTextureHDArray(TextureProvider textureProvider)
-	{
-		if (!allTexturesLoaded(textureProvider))
-		{
-			return -1;
-		}
-
-		Texture[] textures = textureProvider.getTextures();
-
-		int textureCount = 300; // Based on image ids from filenames
-
-		int textureArrayId = glGenTextures();
-		glBindTexture(GL_TEXTURE_2D_ARRAY, textureArrayId);
-		if (GL.getCapabilities().glTexStorage3D != 0)
-		{
-			glTexStorage3D(GL_TEXTURE_2D_ARRAY, 8, GL_SRGB8_ALPHA8, TEXTURE_SIZE, TEXTURE_SIZE, textureCount);
-		}
-		else
-		{
-			int size = TEXTURE_SIZE;
-			for (int i = 0; i < 8; i++)
-			{
-				glTexImage3D(GL_TEXTURE_2D_ARRAY, i, GL_SRGB8_ALPHA8, size, size, textureCount, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
-				size /= 2;
-			}
-		}
-
-		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-
-		double save = textureProvider.getBrightness();
-		textureProvider.setBrightness(1.0d);
-
-		int cnt = 0;
-		for (int textureId = 0; textureId < textureCount; textureId++)
-		{
-			if (loadHDTexture(textureId, textureProvider, textures))
-			{
-				cnt++;
-			}
-		}
-
+		// Reset
+		pixelBuffer = null;
+		vanillaImage = null;
+		scaledImage = null;
 		textureProvider.setBrightness(save);
+		glActiveTexture(TEXTURE_UNIT_UI);
 
-		log.debug("Uploaded HD textures {}", cnt);
-
-		glActiveTexture(GL_TEXTURE2);
-		glBindTexture(GL_TEXTURE_2D_ARRAY, textureArrayId);
-		glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
-		glActiveTexture(GL_TEXTURE0);
-
-		return textureArrayId;
+		plugin.updateMaterialUniformBuffer(textureAnimations);
+		plugin.updateWaterTypeUniformBuffer();
 	}
 
-	boolean loadHDTexture(int textureId, TextureProvider textureProvider, Texture[] textures)
+	private BufferedImage loadTextureImage(String textureName)
 	{
-
-		int width = 0;
-		int height = 0;
-		//Create the PNGDecoder object and decode the texture to a buffer
-		try (InputStream in = HdPlugin.class.getResourceAsStream("textures/" + textureId + ".png"))
+		for (String ext : SUPPORTED_IMAGE_EXTENSIONS)
 		{
-			if (in != null)
-			{
-				BufferedImage image;
-				synchronized (ImageIO.class)
-				{
-					image = ImageIO.read(in);
-				}
-
-				width = image.getWidth();
-				height = image.getHeight();
-				boolean hasAlphaChannel = image.getAlphaRaster() != null;
-				int bytesPerPixel = hasAlphaChannel ? 4 : 3;
-				byte[] pixels = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
-				assert width * height * bytesPerPixel == pixels.length;
-
-				assert width == TEXTURE_SIZE && height == TEXTURE_SIZE;
-
-//				ByteBuffer pixelData = BufferUtils.createByteBuffer(width * height * bytesPerPixel);
-				ByteBuffer pixelData = ByteBuffer.allocateDirect(width * height * bytesPerPixel).order(ByteOrder.nativeOrder());
-				if (hasAlphaChannel)
-				{
-					// argb -> bgra
-					for (int i = 0; i < pixels.length; i += 4)
-					{
-						byte a = pixels[i];
-						byte r = pixels[i + 1];
-						byte g = pixels[i + 2];
-						byte b = pixels[i + 3];
-						pixelData.put(b).put(g).put(r).put(a);
-					}
-				}
-				else
-				{
-					assert (width * 3) % 4 == 0 : "OpenGL expects each line of the image to start at a memory address divisible by 4";
-					for (int i = 0; i < pixels.length; i += 3)
-					{
-						byte r = pixels[i];
-						byte g = pixels[i + 1];
-						byte b = pixels[i + 2];
-						pixelData.put(b).put(g).put(r);
-					}
-				}
-
-				pixelData.flip();
-				int rgbMode = hasAlphaChannel ? GL_RGBA : GL_RGB;
-				glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, textureId, width, height,
-					1, rgbMode, GL_UNSIGNED_BYTE, pixelData);
-
-				return true;
-			}
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-			return false;
-		}
-
-		if (textureId < textures.length)
-		{
-			Texture texture = textures[textureId];
-			if (texture != null)
-			{
-				int[] srcPixels = textureProvider.load(textureId);
-				if (srcPixels == null)
-				{
-					log.warn("No pixels for texture {}!", textureId);
-					return false;
-				}
-
-
-				if (srcPixels.length != TEXTURE_SIZE * TEXTURE_SIZE)
-				{
-					// The texture storage is 128x128 bytes, and will only work correctly with the
-					// 128x128 textures from high detail mode
-					log.warn("Texture size for {} is {}!", textureId, srcPixels.length);
-				}
-
-				byte[] pixels = convertPixels(srcPixels, TEXTURE_SIZE, TEXTURE_SIZE, TEXTURE_SIZE, TEXTURE_SIZE);
-				ByteBuffer pixelBuffer = ByteBuffer.allocateDirect(pixels.length);
-				pixelBuffer.put(pixels);
-				pixelBuffer.flip();
-				glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, textureId, TEXTURE_SIZE, TEXTURE_SIZE,
-					1, GL_RGBA, GL_UNSIGNED_BYTE, pixelBuffer);
-
-				return true;
+			ResourcePath path = path(TextureManager.class, "textures", textureName + "." + ext);
+			try {
+				return path.loadImage();
+			} catch (Exception ex) {
+				log.trace("Failed to load texture: {}", path, ex);
 			}
 		}
 
-		return false;
+		log.trace("Missing texture file: {}", textureName);
+		return null;
 	}
 
-	public void setAnisotropicFilteringLevel(int textureArrayId, int level, boolean trilinearFiltering)
+	private void uploadTexture(int index, BufferedImage image)
 	{
-		glBindTexture(GL_TEXTURE_2D_ARRAY, textureArrayId);
+		// TODO: scale and transform on the GPU for better performance
+		AffineTransform t = new AffineTransform();
+		// Flip non-vanilla textures vertically
+		if (image != vanillaImage)
+		{
+			t.translate(0, scaledImage.getHeight());
+			t.scale(1, -1);
+		}
+		t.scale((double) textureSize / image.getWidth(), (double) textureSize / image.getHeight());
+		AffineTransformOp scaleOp = new AffineTransformOp(t, AffineTransformOp.TYPE_BICUBIC);
+		scaleOp.filter(image, scaledImage);
+		image = scaledImage;
 
+		int[] pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
+		pixelBuffer.put(pixels).flip();
+
+		// Go from TYPE_4BYTE_ABGR in the BufferedImage to RGBA
+		glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, index, textureSize, textureSize, 1,
+			GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, pixelBuffer);
+	}
+
+	private void setAnisotropicFilteringLevel()
+	{
+		int level = config.anisotropicFilteringLevel();
 		//level = 0 means no mipmaps and no anisotropic filtering
 		if (level == 0)
 		{
@@ -263,18 +364,9 @@ public class TextureManager
 		//Even if anisotropic filtering isn't supported, mipmaps will be enabled with any level >= 1
 		else
 		{
-			if (trilinearFiltering)
-			{
-				// Trilinear filtering is used for HD textures as linear filtering produces noisy textures
-				// that are very noticeable on terrain
-				glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-			}
-			else
-			{
-				// Set on GL_NEAREST_MIPMAP_LINEAR (bilinear filtering with mipmaps) since the pixel nature of the game means that nearest filtering
-				// looks best for objects up close but allows linear filtering to resolve possible aliasing and noise with mipmaps from far away objects.
-				glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
-			}
+			// Trilinear filtering is used for HD textures as linear filtering produces noisy textures
+			// that are very noticeable on terrain
+			glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 		}
 
 		if (GL.getCapabilities().GL_EXT_texture_filter_anisotropic)
@@ -286,9 +378,13 @@ public class TextureManager
 		}
 	}
 
-	public void freeTextureArray(int textureArrayId)
+	public void freeTextures()
 	{
-		glDeleteTextures(textureArrayId);
+		clientThread.invoke(() ->
+		{
+			glDeleteTextures(textureArray);
+			textureArray = 0;
+		});
 	}
 
 	/**
@@ -319,138 +415,5 @@ public class TextureManager
 		}
 
 		return true;
-	}
-
-	private void updateTextures(TextureProvider textureProvider, int textureArrayId)
-	{
-		Texture[] textures = textureProvider.getTextures();
-
-		glBindTexture(GL_TEXTURE_2D_ARRAY, textureArrayId);
-
-		int cnt = 0;
-		for (int textureId = 0; textureId < textures.length; textureId++)
-		{
-			Texture texture = textures[textureId];
-			if (texture != null)
-			{
-				int[] srcPixels = textureProvider.load(textureId);
-				if (srcPixels == null)
-				{
-					log.warn("No pixels for texture {}!", textureId);
-					continue; // this can't happen
-				}
-
-				++cnt;
-
-				if (srcPixels.length != TEXTURE_SIZE * TEXTURE_SIZE)
-				{
-					// The texture storage is 128x128 bytes, and will only work correctly with the
-					// 128x128 textures from high detail mode
-					log.warn("Texture size for {} is {}!", textureId, srcPixels.length);
-					continue;
-				}
-
-				byte[] pixels = convertPixels(srcPixels, TEXTURE_SIZE, TEXTURE_SIZE, TEXTURE_SIZE, TEXTURE_SIZE);
-				ByteBuffer pixelBuffer = ByteBuffer.allocateDirect(pixels.length);
-				pixelBuffer.put(pixels);
-				pixelBuffer.flip();
-				glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, textureId, TEXTURE_SIZE, TEXTURE_SIZE,
-					1, GL_RGBA, GL_UNSIGNED_BYTE, pixelBuffer);
-			}
-		}
-
-		log.debug("Uploaded textures {}", cnt);
-	}
-
-	private static byte[] convertPixels(int[] srcPixels, int width, int height, int textureWidth, int textureHeight)
-	{
-		byte[] pixels = new byte[textureWidth * textureHeight * 4];
-
-		int pixelIdx = 0;
-		int srcPixelIdx = 0;
-
-		int offset = (textureWidth - width) * 4;
-
-		for (int y = 0; y < height; y++)
-		{
-			for (int x = 0; x < width; x++)
-			{
-				int rgb = srcPixels[srcPixelIdx++];
-				if (rgb != 0)
-				{
-					pixels[pixelIdx++] = (byte) (rgb >> 16);
-					pixels[pixelIdx++] = (byte) (rgb >> 8);
-					pixels[pixelIdx++] = (byte) rgb;
-					pixels[pixelIdx++] = (byte) -1;
-				}
-				else
-				{
-					pixelIdx += 4;
-				}
-			}
-			pixelIdx += offset;
-		}
-		return pixels;
-	}
-
-	/**
-	 * Animate the given texture
-	 *
-	 * @param texture
-	 * @param diff    Number of elapsed client ticks since last animation
-	 */
-	public void animate(Texture texture, int diff)
-	{
-		final int[] pixels = texture.getPixels();
-		if (pixels == null)
-		{
-			return;
-		}
-
-		final int animationSpeed = texture.getAnimationSpeed();
-		final float uvdiff = pixels.length == 4096 ? PERC_64 : PERC_128;
-
-		float u = texture.getU();
-		float v = texture.getV();
-
-		int offset = animationSpeed * diff;
-		float d = (float) offset * uvdiff;
-
-		switch (texture.getAnimationDirection())
-		{
-			case 1:
-				v -= d;
-				if (v < 0f)
-				{
-					v += 1f;
-				}
-				break;
-			case 3:
-				v += d;
-				if (v > 1f)
-				{
-					v -= 1f;
-				}
-				break;
-			case 2:
-				u -= d;
-				if (u < 0f)
-				{
-					u += 1f;
-				}
-				break;
-			case 4:
-				u += d;
-				if (u > 1f)
-				{
-					u -= 1f;
-				}
-				break;
-			default:
-				return;
-		}
-
-		texture.setU(u);
-		texture.setV(v);
 	}
 }

@@ -22,8 +22,9 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 #version 330
+
+#include utils/constants.glsl
 
 layout (location = 0) in ivec4 VertexPosition;
 layout (location = 1) in vec4 uv;
@@ -34,15 +35,22 @@ uniform mat4 lightProjectionMatrix;
 out float alpha;
 out vec2 fUv;
 flat out int materialId;
-flat out int terrainPlane;
 
 void main()
 {
-    alpha = 1.0f - (float(VertexPosition.w >> 24 & 0xff) / 255.f);
-    materialId = int(uv.x) >> 1;
-    int isTerrain = int(normal.w) & 1; // 1 = 0b1
-    terrainPlane = isTerrain == 1 ? (int(normal.w) >> 1) & 3 : -1; // 3 = 0b11
     fUv = uv.yz;
     ivec3 vertex = VertexPosition.xyz;
+
+    alpha = 1 - float(VertexPosition.w >> 24 & 0xff) / 255.;
+    materialId = int(uv.x) >> 1;
+
+    int terrainData = int(normal.w);
+    int waterTypeIndex = terrainData >> 3 & 0x1F;
+    int waterDepth = terrainData >> 8;
+    bool isGroundPlane = (terrainData & 0xF) == 1; // isTerrain && plane == 0
+    bool isTransparent = alpha < SHADOW_OPACITY_THRESHOLD;
+    if (isGroundPlane || isTransparent)
+        vertex *= 0;
+
     gl_Position = lightProjectionMatrix * vec4(vertex, 1.f);
 }

@@ -36,10 +36,13 @@ import org.lwjgl.system.Platform;
 
 import javax.annotation.Nullable;
 import javax.annotation.RegEx;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
+import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -50,6 +53,8 @@ import java.util.Stack;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -103,6 +108,11 @@ public class ResourcePath {
     public ResourcePath resolve(String... parts) {
         return new ResourcePath(root, normalize(path, parts));
     }
+    
+    public ResourcePath mkdirs() {
+        toPath().toFile().getParentFile().mkdirs();
+        return this;
+    }
 
     public String getFilename() {
         if (path == null)
@@ -142,7 +152,9 @@ public class ResourcePath {
     }
 
     public boolean matches(@RegEx String posixPathRegex) {
-        return toPosixPath().matches(posixPathRegex);
+        Pattern p = Pattern.compile(posixPathRegex);
+        Matcher m = p.matcher(toPosixPath());
+        return m.find();
     }
 
     @Override
@@ -180,53 +192,25 @@ public class ResourcePath {
         return basePath.resolve(relativePath);
     }
 
-    public Path toRealPath() {
-        try {
-            Path path = toPath();
-
-            if (path.toString().startsWith("~")) {
-                String specifiedHome = path.getName(0).toString();
-                String userHome = System.getProperty("user.home");
-                if (userHome == null)
-                    throw new RuntimeException("Unable to resolve tilde path '" + specifiedHome + "' for resource: " + this);
-
-                Path result = Paths.get(userHome);
-
-                // Check if the home path of a different user was specified
-                if (specifiedHome.length() > 1) {
-                    // Note: We only support ~ and ~user tilde expansion
-                    String user = specifiedHome.substring(1);
-                    // Assume the username matches the home folder name,
-                    // and that it's located next to the current user's home directory
-                    result = result.resolve("../" + user);
-                }
-
-                path = result.resolve(path.subpath(1, path.getNameCount()));
-            }
-
-            return path.toRealPath();
-        } catch (IOException ex) {
-            throw new RuntimeException("Failed to resolve real path for resource: " + this, ex);
-        }
+    public File toFile() {
+        return toPath().toFile();
     }
 
     @NonNull
-    public URL toURL() {
-        try {
-            if (root == null)
-                return new URL("file:" + toRealPath());
-            URL rootURL = root.toURL();
-            return new URL(rootURL, rootURL.getProtocol() + ":" + normalize(rootURL.getPath(), new String[] { path }));
-        } catch (IOException ex) {
-            throw new RuntimeException("Failed to resolve resource: " + this, ex);
+    public URL toURL() throws IOException {
+        if (root == null) {
+            String path = toPath().toString();
+            return new URL("file:" + (isAbsolute(path) ? path : "./" + path));
         }
+        URL rootURL = root.toURL();
+        return new URL(rootURL, rootURL.getProtocol() + ":" + normalize(rootURL.getPath(), new String[] { path }));
     }
 
-    public BufferedReader toReader() {
+    public BufferedReader toReader() throws IOException {
         return new BufferedReader(new InputStreamReader(toInputStream(), StandardCharsets.UTF_8));
     }
 
-    public InputStream toInputStream() {
+    public InputStream toInputStream() throws IOException {
         if (path == null)
             throw new IllegalStateException("Cannot get InputStream for root path: " + this);
 
@@ -238,10 +222,14 @@ public class ResourcePath {
         }
 
         try {
-            return new FileInputStream(toRealPath().toFile());
-        } catch (FileNotFoundException ex) {
-            throw new RuntimeException("Unable to load resource: " + this, ex);
+            return Files.newInputStream(toPath());
+        } catch (IOException ex) {
+            throw new IOException("Unable to load resource: " + this, ex);
         }
+    }
+
+    public FileOutputStream toOutputStream() throws FileNotFoundException {
+        return new FileOutputStream(toFile());
     }
 
     public boolean isClassResource() {
@@ -254,7 +242,11 @@ public class ResourcePath {
      * Check if the resource pointed to is actually on the file system, even if it is loaded as a class resource.
      */
     public boolean isFileSystemResource() {
-        return toURL().getProtocol().equals("file");
+        try {
+            return toURL().getProtocol().equals("file");
+        } catch (IOException ex) {
+            return false;
+        }
     }
 
     /**
@@ -288,7 +280,7 @@ public class ResourcePath {
      */
     public FileWatcher.UnregisterCallback watch(@RegEx String filter, Consumer<ResourcePath> changeHandler) {
         return watch(path -> {
-            if (path.toPosixPath().matches(filter))
+            if (path.matches(filter))
                 changeHandler.accept(path);
         });
     }
@@ -302,6 +294,14 @@ public class ResourcePath {
     public <T> T loadJson(Class<T> type) throws IOException {
         try (BufferedReader reader = toReader()) {
             return GSON.fromJson(reader, type);
+        }
+    }
+
+    public BufferedImage loadImage() throws IOException {
+        try (InputStream is = toInputStream()) {
+            synchronized (ImageIO.class) {
+                return ImageIO.read(is);
+            }
         }
     }
 
@@ -321,6 +321,13 @@ public class ResourcePath {
      */
     public ByteBuffer loadByteBufferMalloc() throws IOException {
         return readInputStream(toInputStream(), MemoryUtil::memAlloc, MemoryUtil::memRealloc);
+    }
+
+    public ResourcePath writeByteBuffer(ByteBuffer buffer) throws IOException {
+        try (FileChannel channel = toOutputStream().getChannel()) {
+            channel.write(buffer);
+        }
+        return this;
     }
 
     /**
@@ -365,12 +372,6 @@ public class ResourcePath {
         }
     }
 
-    private static String normalizeSlashes(String path) {
-        if (Platform.get() == Platform.WINDOWS)
-            return path.replace("\\", "/");
-        return path;
-    }
-
     private static String normalize(String... parts) {
         return normalize(null, parts);
     }
@@ -379,6 +380,9 @@ public class ResourcePath {
         Stack<String> resolvedParts = new Stack<>();
         if (workingDirectory != null && workingDirectory.length() > 0 && !workingDirectory.equals("."))
             resolvedParts.addAll(Arrays.asList(normalizeSlashes(workingDirectory).split("/")));
+
+        if (parts.length > 0)
+            parts[0] = resolveTilde(parts[0]);
 
         for (String part : parts) {
             if (part == null || part.length() == 0 || part.equals("."))
@@ -402,6 +406,37 @@ public class ResourcePath {
         }
 
         return String.join("/", resolvedParts);
+    }
+
+    private static String normalizeSlashes(String path) {
+        if (Platform.get() == Platform.WINDOWS)
+            return path.replace("\\", "/");
+        return path;
+    }
+
+    private static String resolveTilde(String path) {
+        // Note: We only support ~ and ~user tilde expansion
+        if (path == null || !path.startsWith("~"))
+            return path;
+
+        int slashIndex = path.indexOf('/');
+        String specifiedUser = path.substring(1, slashIndex == -1 ? path.length() : slashIndex);
+        String userHome = System.getProperty("user.home");
+        if (userHome == null)
+            throw new RuntimeException("Unable to resolve tilde path: " + path);
+
+        Path home = Paths.get(userHome);
+
+        // Check if the home path of a different user was specified
+        if (!specifiedUser.isEmpty()) {
+            // Assume the username matches the home folder name,
+            // and that it's located next to the current user's home directory
+            home = home.resolve("../" + specifiedUser);
+        }
+
+        if (slashIndex == -1)
+            return home.toString();
+        return home.resolve(path.substring(slashIndex + 1)).toString();
     }
 
     /**
@@ -441,22 +476,44 @@ public class ResourcePath {
             return true;
         }
 
+        /**
+         * Check if the resource root is actually on the file system.
+         */
+        public boolean isFileSystemResource() {
+            URL url = root.getResource("/");
+            if (url == null)
+                return false;
+            return url.getProtocol().equals("file");
+        }
+
         @Override
         @NonNull
-        public URL toURL() {
+        public URL toURL() throws IOException {
             assert path != null;
             URL url = root.getResource(path);
             if (url == null)
-                throw new RuntimeException("No resource found for path " + this);
+                throw new IOException("No resource found for path " + this);
             return url;
         }
 
         @Override
-        public InputStream toInputStream() {
+        public InputStream toInputStream() throws IOException {
             assert path != null;
+
+            // Attempt to load resource from project resource folder if it's not located in a jar
+            if (isFileSystemResource()) {
+                ResourcePath path = null;
+                try {
+                    path = path(RESOURCE_DIR).chroot().resolve(toAbsolute().toPath().toString());
+                    return path.toInputStream();
+                } catch (Exception ex) {
+                    log.trace("Failed to load resource from project resource folder: {}", path, ex);
+                }
+            }
+
             InputStream is = root.getResourceAsStream(path);
             if (is == null)
-                throw new RuntimeException("Missing resource: " + this);
+                throw new IOException("Missing resource: " + this);
             return is;
         }
     }
@@ -490,20 +547,43 @@ public class ResourcePath {
             return true;
         }
 
+        /**
+         * Check if the resource pointed to is actually on the file system, even if it is loaded as a class resource.
+         */
+        public boolean isFileSystemResource() {
+            URL url = root.getResource("/");
+            if (url == null)
+                return false;
+            return url.getProtocol().equals("file");
+        }
+
         @Override
         @NonNull
-        public URL toURL() {
+        public URL toURL() throws IOException {
             URL url = root.getResource(path);
             if (url == null)
-                throw new RuntimeException("No resource found for path " + this);
+                throw new IOException("No resource found for path " + this);
             return url;
         }
 
         @Override
-        public InputStream toInputStream() {
+        public InputStream toInputStream() throws IOException {
+            assert path != null;
+
+            // Attempt to load resource from project resource folder if it's not located in a jar
+            if (isFileSystemResource()) {
+                ResourcePath path = null;
+                try {
+                    path = path(RESOURCE_DIR).chroot().resolve(toAbsolute().toPath().toString());
+                    return path.toInputStream();
+                } catch (Exception ex) {
+                    log.warn("Failed to load resource from project resource folder: {}", path, ex);
+                }
+            }
+
             InputStream is = root.getResourceAsStream(path);
             if (is == null)
-                throw new RuntimeException("Missing resource: " + this);
+                throw new IOException("Missing resource: " + this);
             return is;
         }
     }

@@ -39,17 +39,37 @@ public class Template
 {
 	private final List<Function<String, String>> resourceLoaders = new ArrayList<>();
 
+	private int includeCounter = 0;
+
 	public String process(String str)
 	{
 		StringBuilder sb = new StringBuilder();
+		int lineCount = 0;
 		for (String line : str.split("\r?\n"))
 		{
+			lineCount++;
 			String trimmed = line.trim();
 			if (trimmed.startsWith("#include "))
 			{
 				String resource = trimmed.substring(9);
-				String resourceStr = load(resource);
-				sb.append(resourceStr);
+				includeCounter++;
+				String contents = load(resource);
+				if (contents.trim().startsWith("#version "))
+				{
+					sb.append(contents);
+				}
+				else
+				{
+					sb
+						.append("#line 1\n")
+						.append(contents)
+						.append("#line ")
+						.append(lineCount + 1)
+						.append(" ")
+						.append(includeCounter - 1)
+						.append("\n");
+				}
+				includeCounter--;
 			}
 			else
 			{
