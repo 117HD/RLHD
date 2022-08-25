@@ -134,8 +134,7 @@ class SceneUploader
 		}
 		model.setSceneId(sceneId);
 
-		modelHasher.setModel(model);
-		final int[] lengths = modelPusher.pushModel(null, model, vertexBuffer, uvBuffer, normalBuffer, tileX, tileY, tileZ, objectProperties, objectType, config.disableModelCaching(), modelHasher);
+		final int[] lengths = modelPusher.pushModel(null, model, vertexBuffer, uvBuffer, normalBuffer, tileX, tileY, tileZ, objectProperties, objectType, true, null);
 
 		offset += lengths[0];
 		uvOffset += lengths[1];
