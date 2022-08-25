@@ -1,25 +1,23 @@
 package rs117.hd.scene.lights;
 
-import com.google.common.annotations.VisibleForTesting;
 import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
-import javax.annotation.Nullable;
+
 import lombok.extern.slf4j.Slf4j;
 import rs117.hd.data.NpcID;
 import rs117.hd.data.ObjectID;
 
+import static rs117.hd.utils.GsonUtils.parseIDArray;
+import static rs117.hd.utils.GsonUtils.writeIDArray;
+
 @Slf4j
 public class Light
 {
-	@VisibleForTesting
-    public static boolean THROW_WHEN_PARSING_FAILS = false;
 
 	public String description;
 	public Integer worldX, worldY, plane, height;
@@ -34,11 +32,11 @@ public class Light
 	public float duration;
 	public float range;
 	public Integer fadeInDuration;
-	@JsonAdapter(NpcIDAdapter.class)
+	@JsonAdapter(NpcID.JsonAdapter.class)
 	public HashSet<Integer> npcIds;
-	@JsonAdapter(ObjectIDAdapter.class)
+	@JsonAdapter(ObjectID.JsonAdapter.class)
 	public HashSet<Integer> objectIds;
-	@JsonAdapter(ProjectileIDAdapter.class)
+	@JsonAdapter(ProjectileJsonAdapter.class)
 	public HashSet<Integer> projectileIds;
 
 	// Called by GSON when parsing JSON
@@ -69,165 +67,8 @@ public class Light
 		this.projectileIds = projectileIds == null ? new HashSet<>() : projectileIds;
 	}
 
-	private static HashSet<Integer> parseIDArray(JsonReader in, @Nullable Class<?> idContainer) throws IOException
-	{
-		HashSet<Integer> ids = new HashSet<>();
-		in.beginArray();
-		while (in.hasNext())
-		{
-			switch (in.peek())
-			{
-				case NUMBER:
-					try
-					{
-						ids.add(in.nextInt());
-					}
-					catch (NumberFormatException ex)
-					{
-						String message = "Failed to parse int";
-						if (THROW_WHEN_PARSING_FAILS)
-						{
-							throw new RuntimeException(message, ex);
-						}
-						log.error(message, ex);
-					}
-					break;
-				case STRING:
-					String fieldName = in.nextString();
-					if (idContainer == null)
-					{
-						String message = String.format("String '%s' is not supported here", fieldName);
-						if (THROW_WHEN_PARSING_FAILS)
-						{
-							throw new RuntimeException(message);
-						}
-						log.error(message);
-						continue;
-					}
 
-					try
-					{
-						Field field = idContainer.getField(fieldName);
-						if (!field.getType().equals(int.class))
-						{
-							String message = String.format(
-								"%s field '%s' is not an int", idContainer.getName(), fieldName);
-							if (THROW_WHEN_PARSING_FAILS)
-							{
-								throw new RuntimeException(message);
-							}
-							log.error(message);
-							continue;
-						}
-						ids.add(field.getInt(null));
-					}
-					catch (NoSuchFieldException ex)
-					{
-						String message = String.format("Missing %s: %s", idContainer.getName(), fieldName);
-						if (THROW_WHEN_PARSING_FAILS)
-						{
-							throw new RuntimeException(message, ex);
-						}
-						log.error(message, ex);
-					}
-					catch (IllegalAccessException ex)
-					{
-						String message = String.format(
-							"Unable to access %s field: %s", idContainer.getName(), fieldName);
-						if (THROW_WHEN_PARSING_FAILS)
-						{
-							throw new RuntimeException(message, ex);
-						}
-						log.error(message, ex);
-					}
-
-					break;
-			}
-		}
-		in.endArray();
-		return ids;
-	}
-
-	private static void writeIDArray(JsonWriter out, HashSet<Integer> listToWrite, @Nullable Class<?> idContainer) throws IOException
-	{
-		if (listToWrite.size() == 0)
-		{
-			out.nullValue();
-			return;
-		}
-
-		if (idContainer == null)
-		{
-			out.beginArray();
-			for (int i : listToWrite)
-			{
-				out.value(i);
-			}
-			out.endArray();
-			return;
-		}
-
-		HashMap<Integer, String> idNames = new HashMap<>();
-		for (Field field : idContainer.getFields())
-		{
-			if (field.getType().equals(int.class))
-			{
-				try
-				{
-					int value = field.getInt(null);
-					idNames.put(value, field.getName());
-				}
-				catch (IllegalAccessException ignored) {}
-			}
-		}
-
-		out.beginArray();
-		for (int id : listToWrite)
-		{
-			String name = idNames.get(id);
-			if (name == null)
-			{
-				out.value(id);
-			}
-			else
-			{
-				out.value(name);
-			}
-		}
-		out.endArray();
-	}
-
-	public static class NpcIDAdapter extends TypeAdapter<HashSet<Integer>>
-	{
-		@Override
-		public HashSet<Integer> read(JsonReader in) throws IOException
-		{
-			return parseIDArray(in, NpcID.class);
-		}
-
-		@Override
-		public void write(JsonWriter out, HashSet<Integer> value) throws IOException
-		{
-			writeIDArray(out, value, NpcID.class);
-		}
-	}
-
-	public static class ObjectIDAdapter extends TypeAdapter<HashSet<Integer>>
-	{
-		@Override
-		public HashSet<Integer> read(JsonReader in) throws IOException
-		{
-			return parseIDArray(in, ObjectID.class);
-		}
-
-		@Override
-		public void write(JsonWriter out, HashSet<Integer> value) throws IOException
-		{
-			writeIDArray(out, value, ObjectID.class);
-		}
-	}
-
-	public static class ProjectileIDAdapter extends TypeAdapter<HashSet<Integer>>
+	public static class ProjectileJsonAdapter extends TypeAdapter<HashSet<Integer>>
 	{
 		@Override
 		public HashSet<Integer> read(JsonReader in) throws IOException

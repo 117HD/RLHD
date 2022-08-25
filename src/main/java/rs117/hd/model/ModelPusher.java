@@ -6,24 +6,26 @@ import net.runelite.api.*;
 import net.runelite.api.kit.KitType;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
+import rs117.hd.data.BakedModels;
 import rs117.hd.data.materials.Material;
 import rs117.hd.data.materials.Overlay;
 import rs117.hd.data.materials.Underlay;
 import rs117.hd.data.materials.UvType;
-import rs117.hd.model.objects.ObjectProperties;
-import rs117.hd.model.objects.ObjectType;
 import rs117.hd.scene.ProceduralGenerator;
-import rs117.hd.data.BakedModels;
-import rs117.hd.model.objects.TzHaarRecolorType;
 import rs117.hd.scene.TextureManager;
+import rs117.hd.scene.objects.ObjectProperties;
+import rs117.hd.scene.objects.ObjectType;
+import rs117.hd.scene.objects.TzHaarRecolorType;
 import rs117.hd.utils.HDUtils;
-import static rs117.hd.utils.HDUtils.dotNormal3Lights;
 import rs117.hd.utils.buffer.GpuFloatBuffer;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Map;
+
+import static rs117.hd.utils.HDUtils.dotNormal3Lights;
 
 /**
  * Pushes models
@@ -127,7 +129,7 @@ public class ModelPusher
     }
 
     private float[] getNormalDataForFace(Model model, ObjectProperties objectProperties, int face) {
-        if (model.getFaceColors3()[face] == -1 || (objectProperties != null && objectProperties.isFlatNormals())) {
+        if (model.getFaceColors3()[face] == -1 || (objectProperties != null && objectProperties.flatNormals)) {
             return zeroFloats;
         }
 
@@ -179,7 +181,7 @@ public class ModelPusher
             return twelveFloats;
         } else {
             Material material = hdPlugin.configObjectTextures && objectProperties != null ?
-                objectProperties.getMaterial() : Material.NONE;
+                objectProperties.material : Material.NONE;
 
             if (material == Material.NONE)
             {
@@ -195,7 +197,7 @@ public class ModelPusher
 
             int packedMaterialData = packMaterialData(material, false);
 
-            if (objectProperties.getUvType() == UvType.GROUND_PLANE) {
+            if (objectProperties.uvType == UvType.GROUND_PLANE) {
                 twelveFloats[0] = packedMaterialData;
                 twelveFloats[1] = (xVertices[triA] % Perspective.LOCAL_TILE_SIZE) / (float) Perspective.LOCAL_TILE_SIZE;
                 twelveFloats[2] = (zVertices[triA] % Perspective.LOCAL_TILE_SIZE) / (float) Perspective.LOCAL_TILE_SIZE;
@@ -367,7 +369,7 @@ public class ModelPusher
             color1L = color2L = color3L = 127;
         }
 
-        if (objectProperties != null && objectProperties.isInheritTileColor()) {
+        if (objectProperties != null && objectProperties.inheritTileColor) {
             if (tile != null && (tile.getSceneTilePaint() != null || tile.getSceneTileModel() != null)) {
                 int[] tileColorHSL;
 
@@ -433,7 +435,7 @@ public class ModelPusher
 
         int packedAlphaPriority = getPackedAlphaPriority(model, face);
 
-        if (hdPlugin.configTzhaarHD && objectProperties != null && objectProperties.getTzHaarRecolorType() != TzHaarRecolorType.NONE) {
+        if (hdPlugin.configTzhaarHD && objectProperties != null && objectProperties.tzHaarRecolorType != TzHaarRecolorType.NONE) {
             int[][] tzHaarRecolored = proceduralGenerator.recolorTzHaar(objectProperties, yVertices[triA], yVertices[triB], yVertices[triC], packedAlphaPriority, objectType, color1H, color1S, color1L, color2H, color2S, color2L, color3H, color3S, color3L);
             color1H = tzHaarRecolored[0][0];
             color1S = tzHaarRecolored[0][1];
