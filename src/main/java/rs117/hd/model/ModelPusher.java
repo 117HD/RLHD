@@ -16,7 +16,6 @@ import rs117.hd.model.objects.InheritTileColorType;
 import rs117.hd.model.objects.ObjectProperties;
 import rs117.hd.model.objects.ObjectType;
 import rs117.hd.model.objects.TzHaarRecolorType;
-import rs117.hd.scene.TextureManager;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.utils.HDUtils;
 
@@ -31,6 +30,7 @@ import java.lang.ref.ReferenceQueue;
 import java.nio.Buffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+import java.time.Instant;
 import java.util.*;
 
 /**
@@ -112,10 +112,12 @@ public class ModelPusher {
     }
 
     public void freeFinalizedBuffers() {
+        long begin = Instant.now().getEpochSecond();
+
         int freeCount = 0;
         int freeAttempts = 0;
         PhantomReference<Buffer> reference;
-        while ((reference = (PhantomReference<Buffer>) this.bufferReferenceQueue.poll()) != null) {
+        while (Instant.now().getEpochSecond() - begin <= 5 && (reference = (PhantomReference<Buffer>) this.bufferReferenceQueue.poll()) != null) {
             Long address = this.bufferAddresses.get(reference);
             if (address != null) {
                 freeCount++;

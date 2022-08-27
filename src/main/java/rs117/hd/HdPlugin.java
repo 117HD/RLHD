@@ -1599,7 +1599,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			return;
 		}
 
-		modelPusher.freeFinalizedBuffers();
 
 		// shader variables for water, lava animations
 		elapsedTime += (System.currentTimeMillis() - lastFrameTime) / 1000f;
@@ -1990,6 +1989,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			tempOffset = 0;
 			tempUvOffset = 0;
 			tempModelInfoMap.clear();
+			modelPusher.freeFinalizedBuffers();
 
 			// reload the scene if it was requested
 			if (nextSceneReload != 0 && nextSceneReload <= System.currentTimeMillis()) {
@@ -2124,6 +2124,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	{
 		switch (gameStateChanged.getGameState()) {
 			case LOGGED_IN:
+				modelPusher.clearModelCache();
 				uploadScene();
 				checkGLErrors();
 				break;
