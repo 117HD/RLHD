@@ -389,7 +389,7 @@ public enum Overlay {
     OVERLAY_N122(-122, GroundMaterial.TILES_2x2_2_GLOSS),
     OVERLAY_N119(-119, GroundMaterial.FALADOR_PATHS),
     OVERLAY_N93(-93, GroundMaterial.CARPET),
-    OVERLAY_N82(-82, GroundMaterial.TILE_DARK),
+    OVERLAY_N82(-82, GroundMaterial.CLEAN_TILE),
     OVERLAY_12(12, GroundMaterial.STONE_PATTERN),
     OVERLAY_13(13, GroundMaterial.CARPET, p -> p.blended(false)),
     LAVA(19, GroundMaterial.HD_LAVA, p -> p.hue(0).saturation(0).shiftLightness(127).blended(false)),

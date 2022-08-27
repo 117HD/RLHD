@@ -76,7 +76,7 @@ public enum GroundMaterial
 	STONE_PATTERN(Material.STONE_PATTERN),
 	CONCRETE(Material.CONCRETE),
 	SAND_BRICK(Material.SAND_BRICK),
-	TILE_DARK(Material.TILE_DARK),
+	CLEAN_TILE(Material.CLEAN_TILE),
 	WORN_TILES(Material.WORN_TILES),
 	;
 
