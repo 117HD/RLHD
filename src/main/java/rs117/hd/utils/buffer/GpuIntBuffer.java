@@ -24,13 +24,19 @@
  */
 package rs117.hd.utils.buffer;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
+import org.lwjgl.system.MemoryUtil;
+
 import java.nio.IntBuffer;
 
 public class GpuIntBuffer
 {
-	private IntBuffer buffer = allocateDirect(65536);
+	private IntBuffer buffer = MemoryUtil.memAllocInt(65536);
+
+	public void destroy() {
+		if (buffer != null)
+			MemoryUtil.memFree(buffer);
+		buffer = null;
+	}
 
 	public void put(int x, int y, int z)
 	{
@@ -68,9 +74,10 @@ public class GpuIntBuffer
 			}
 			while ((capacity - position) < size);
 
-			IntBuffer newB = allocateDirect(capacity);
+			IntBuffer newB = MemoryUtil.memAllocInt(capacity);
 			buffer.flip();
 			newB.put(buffer);
+			MemoryUtil.memFree(buffer);
 			buffer = newB;
 		}
 
@@ -80,12 +87,5 @@ public class GpuIntBuffer
 	public IntBuffer getBuffer()
 	{
 		return buffer;
-	}
-
-	public static IntBuffer allocateDirect(int size)
-	{
-		return ByteBuffer.allocateDirect(size * Integer.BYTES)
-			.order(ByteOrder.nativeOrder())
-			.asIntBuffer();
 	}
 }
