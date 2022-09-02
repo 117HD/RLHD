@@ -46,10 +46,10 @@ void main()
 
     int terrainData = int(normal.w);
     int waterTypeIndex = terrainData >> 3 & 0x1F;
-    int waterDepth = terrainData >> 8;
     bool isGroundPlane = (terrainData & 0xF) == 1; // isTerrain && plane == 0
     bool isTransparent = alpha < SHADOW_OPACITY_THRESHOLD;
-    if (isGroundPlane || isTransparent)
+    bool isWaterSurfaceOrUnderwaterTile = waterTypeIndex > 0;
+    if (isGroundPlane || isTransparent || isWaterSurfaceOrUnderwaterTile)
         vertex *= 0;
 
     gl_Position = lightProjectionMatrix * vec4(vertex, 1.f);
