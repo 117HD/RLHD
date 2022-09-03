@@ -36,7 +36,8 @@ vec2 sampleDisplacementMap(
     vec3 tangentViewDir,
     vec3 tangentLightDir,
     inout float selfShadowing,
-    inout vec3 fragPos
+    inout vec3 fragPos,
+    const mat3 TBN
 ) {
     int map = mat.displacementMap;
     if (map == -1)

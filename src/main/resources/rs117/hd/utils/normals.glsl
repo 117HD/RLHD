@@ -23,7 +23,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-vec3 sampleNormalMap(Material mat, vec2 uv, vec3 surfaceNormal) {
+vec3 sampleNormalMap(Material mat, vec2 uv, const vec3 surfaceNormal, const mat3 TBN) {
     if (mat.normalMap == -1)
         return surfaceNormal;
 
