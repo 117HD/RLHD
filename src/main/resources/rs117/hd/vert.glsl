@@ -62,7 +62,7 @@ void main() {
     int hsl = ahsl & 0xffff;
     float a = float(ahsl >> 24 & 0xff) / 255.f;
 
-    vec3 rgb = hslToRgb(hsl);
+    vec3 rgb = jagexHslToRgb(hsl);
 
     vPosition = vertex;
     vNormal = normal;
