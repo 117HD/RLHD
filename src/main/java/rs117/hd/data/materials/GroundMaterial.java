@@ -70,6 +70,7 @@ public enum GroundMaterial
 	UNDERWATER_GENERIC(Material.DIRT_1, Material.DIRT_2),
 
 	WOOD_PLANKS_1(Material.WOOD_PLANKS_1),
+	CLEAN_WOOD_FLOOR(Material.CLEAN_WOOD_FLOOR),
 
 	HD_LAVA(Material.HD_LAVA_1, Material.HD_LAVA_2, Material.HD_LAVA_1, Material.HD_LAVA_1, Material.HD_LAVA_2, Material.HD_MAGMA_1, Material.HD_MAGMA_2),
 
