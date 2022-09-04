@@ -298,7 +298,10 @@ public enum Overlay {
     FOSSIL_ISLAND_HILL_TEXTURE_FIX(11, Area.FOSSIL_ISLAND_HILL_TEXTURE_FIX, GroundMaterial.VARIED_DIRT),
 
     // Zeah
+    // Great Kourend
     KOUREND_CASTLE_BLEND_FIX(11, Area.KOUREND_CASTLE_ENTRANCE_FIX, GroundMaterial.VARROCK_PATHS, p -> p.blended(false)),
+    KOUREND_GREAT_STATUE_BLEND_FIX_1(108, Area.GREAT_KOUREND_STATUE, GroundMaterial.GRASS_1, p -> p.blended(true)),
+    KOUREND_GREAT_STATUE_BLEND_FIX_2(11, Area.GREAT_KOUREND_STATUE, GroundMaterial.GRASS_1, p -> p.blended(false)),
     XERICS_LOOKOUT_TILE(Area.XERICS_LOOKOUT, GroundMaterial.TILES_2x2_2, p -> p.blended(false).ids(50, 2)),
 
     HOSIDIUS_STONE_FLOOR(123, Area.HOSIDIUS, GroundMaterial.FALADOR_PATHS),
