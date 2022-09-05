@@ -303,6 +303,7 @@ public enum Overlay {
     KOUREND_GREAT_STATUE_BLEND_FIX_1(108, Area.GREAT_KOUREND_STATUE, GroundMaterial.GRASS_1, p -> p.blended(true)),
     KOUREND_GREAT_STATUE_BLEND_FIX_2(11, Area.GREAT_KOUREND_STATUE, GroundMaterial.GRASS_1, p -> p.blended(false)),
     HOSIDIUS_WELL_BLEND_FIX(-119, Area.HOSIDIUS_WELL, GroundMaterial.FALADOR_PATHS, p -> p.blended(false)),
+    HOSIDIUS_STAIRS_BLEND_FIX(-119, Area.HOSIDIUS_STAIRS, GroundMaterial.FALADOR_PATHS, p -> p.blended(false)),
     XERICS_LOOKOUT_TILE(Area.XERICS_LOOKOUT, GroundMaterial.TILES_2x2_2, p -> p.blended(false).ids(50, 2)),
 
     HOSIDIUS_STONE_FLOOR(123, Area.HOSIDIUS, GroundMaterial.FALADOR_PATHS),
