@@ -554,13 +554,13 @@ public interface HdPluginConfig extends Config
 	String experimentalSettings = "experimentalSettings";
 
 	@ConfigItem(
-			keyName = "modelCaching",
+			keyName = "offHeapModelCaching",
 			name = "Disable model caching",
 			description = "Model caching improves performance with increased memory usage.",
 			position = 401,
 			section = experimentalSettings
 	)
-	default boolean disableModelCaching() { return false; }
+	default boolean disableModelCaching() { return true; }
 
 	@ConfigItem(
 			keyName = "modelBatching",

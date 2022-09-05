@@ -1989,7 +1989,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			tempOffset = 0;
 			tempUvOffset = 0;
 			tempModelInfoMap.clear();
-			modelPusher.freeFinalizedBuffers();
 
 			// reload the scene if it was requested
 			if (nextSceneReload != 0 && nextSceneReload <= System.currentTimeMillis()) {
@@ -2005,6 +2004,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		awtContext.swapBuffers();
 
 		drawManager.processDrawComplete(this::screenshot);
+		modelPusher.freeFinalizedBuffers();
 
 		glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
 
@@ -2132,6 +2132,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				// Avoid drawing the last frame's buffer during LOADING after LOGIN_SCREEN
 				targetBufferOffset = 0;
 				hasLoggedIn = false;
+				modelPusher.clearModelCache();
 			default:
 				lightManager.reset();
 		}

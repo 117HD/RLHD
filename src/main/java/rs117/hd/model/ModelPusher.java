@@ -112,12 +112,12 @@ public class ModelPusher {
     }
 
     public void freeFinalizedBuffers() {
-        long begin = Instant.now().getEpochSecond();
-
         int freeCount = 0;
         int freeAttempts = 0;
         PhantomReference<Buffer> reference;
-        while (Instant.now().getEpochSecond() - begin <= 5 && (reference = (PhantomReference<Buffer>) this.bufferReferenceQueue.poll()) != null) {
+        while ((reference = (PhantomReference<Buffer>) this.bufferReferenceQueue.poll()) != null) {
+            freeAttempts++;
+
             Long address = this.bufferAddresses.get(reference);
             if (address != null) {
                 freeCount++;
@@ -125,12 +125,16 @@ public class ModelPusher {
                 this.bufferAddresses.remove(reference);
             }
 
-            freeAttempts++;
             if (freeAttempts != freeCount) {
                 // I've thought about removing this bit, but it's probably a good assertion to leave in place.
                 // Given that this is a memory leak it's something we should look out for
                 log.error("failed to free cache reference!");
             }
+        }
+
+        if (freeCount != 0) {
+            log.info("freed " + freeCount);
+            log.info("references remaining " + bufferAddresses.size());
         }
     }
 
@@ -190,51 +194,73 @@ public class ModelPusher {
             }
         }
 
-        IntBuffer fullVertexData = MemoryUtil.memAllocInt(faceCount * 12);
-        FloatBuffer fullNormalData = MemoryUtil.memAllocFloat(faceCount * 12);
-        FloatBuffer fullUvData = MemoryUtil.memAllocFloat(faceCount * 12);
+        boolean cachingVertexData = !cachedVertexData && !noCache;
+        boolean cachingNormalData = !cachedNormalData && !noCache;
+        boolean cachingUvData = !cachedUvData && !noCache;
 
-        this.bufferAddresses.put(new PhantomReference<>(fullVertexData, this.bufferReferenceQueue), MemoryUtil.memAddress(fullVertexData));
-        this.bufferAddresses.put(new PhantomReference<>(fullNormalData, this.bufferReferenceQueue), MemoryUtil.memAddress(fullNormalData));
-        this.bufferAddresses.put(new PhantomReference<>(fullUvData, this.bufferReferenceQueue), MemoryUtil.memAddress(fullUvData));
+        IntBuffer fullVertexData = null;
+        if (cachingVertexData) {
+            fullVertexData = MemoryUtil.memAllocInt(faceCount * 12);
+            this.bufferAddresses.put(new PhantomReference<>(fullVertexData, this.bufferReferenceQueue), MemoryUtil.memAddress(fullVertexData));
+        }
+
+        FloatBuffer fullNormalData = null;
+        if (cachingNormalData) {
+            fullNormalData = MemoryUtil.memAllocFloat(faceCount * 12);
+            this.bufferAddresses.put(new PhantomReference<>(fullNormalData, this.bufferReferenceQueue), MemoryUtil.memAddress(fullNormalData));
+        }
+
+        FloatBuffer fullUvData = null;
+        if (cachingUvData) {
+            fullUvData = MemoryUtil.memAllocFloat(faceCount * 12);
+            this.bufferAddresses.put(new PhantomReference<>(fullUvData, this.bufferReferenceQueue), MemoryUtil.memAddress(fullUvData));
+        }
 
         for (int face = 0; face < faceCount; face++) {
             if (!cachedVertexData) {
                 int[] tempVertexData = getVertexDataForFace(model, getColorsForFace(renderable, model, objectProperties, objectType, tileX, tileY, tileZ, face), face);
-                fullVertexData.put(tempVertexData);
                 vertexBuffer.put(tempVertexData);
                 vertexLength += 3;
+
+                if (cachingVertexData) {
+                    fullVertexData.put(tempVertexData);
+                }
             }
 
             if (!cachedNormalData) {
                 float[] tempNormalData = getNormalDataForFace(model, objectProperties, face);
-                fullNormalData.put(tempNormalData);
                 normalBuffer.put(tempNormalData);
+
+                if (cachingNormalData) {
+                    fullNormalData.put(tempNormalData);
+                }
             }
 
             if (!cachedUvData) {
                 float[] tempUvData = getUvDataForFace(model, objectProperties, face);
                 if (tempUvData != null) {
-                    fullUvData.put(tempUvData);
                     uvBuffer.put(tempUvData);
                     uvLength += 3;
+
+                    if (cachingUvData) {
+                        fullUvData.put(tempUvData);
+                    }
                 }
             }
         }
 
-        fullVertexData.flip();
-        fullNormalData.flip();
-        fullUvData.flip();
-
-        if (!cachedVertexData && !noCache) {
+        if (cachingVertexData) {
+            fullVertexData.flip();
             vertexDataCache.put(vertexCacheHash, fullVertexData);
         }
 
-        if (!cachedNormalData && !noCache) {
+        if (cachingNormalData) {
+            fullNormalData.flip();
             normalDataCache.put(normalDataCacheHash, fullNormalData);
         }
 
-        if (!cachedUvData && !noCache) {
+        if (cachingUvData) {
+            fullUvData.flip();
             uvDataCache.put(uvDataCacheHash, fullUvData);
         }
 

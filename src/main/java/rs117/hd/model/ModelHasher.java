@@ -102,6 +102,10 @@ public class ModelHasher {
                 this.faceColorsThreeHash,
                 this.faceTexturesHash,
                 this.faceTexturesUvHash,
+                this.model.getOverrideAmount(),
+                this.model.getOverrideHue(),
+                this.model.getOverrideSaturation(),
+                this.model.getOverrideLuminance()
         }, -1);
     }
 
