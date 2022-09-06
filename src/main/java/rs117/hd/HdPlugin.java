@@ -544,6 +544,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 				lightManager.startUp();
 				hiddenObjectManager.startUp();
+				modelPusher.init();
 
 				if (client.getGameState() == GameState.LOGGED_IN)
 				{
@@ -2124,7 +2125,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	{
 		switch (gameStateChanged.getGameState()) {
 			case LOGGED_IN:
-				modelPusher.clearModelCache();
 				uploadScene();
 				checkGLErrors();
 				break;

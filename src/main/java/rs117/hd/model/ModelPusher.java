@@ -51,9 +51,9 @@ public class ModelPusher {
     @Inject
     private ProceduralGenerator proceduralGenerator;
 
-    private final IntBufferCache vertexDataCache;
-    private final FloatBufferCache normalDataCache;
-    private final FloatBufferCache uvDataCache;
+    private IntBufferCache vertexDataCache;
+    private FloatBufferCache normalDataCache;
+    private FloatBufferCache uvDataCache;
     private final Map<PhantomReference<Buffer>, Long> bufferAddresses;
     private final ReferenceQueue<Buffer> bufferReferenceQueue;
     private int pushes = 0;
@@ -61,13 +61,18 @@ public class ModelPusher {
     private int normalDataHits = 0;
     private int uvDataHits = 0;
 
+    private long lastFinalizeTimestamp = Instant.now().toEpochMilli();
+
     public ModelPusher() {
-        // 3.5G with 80% to vertex data, 15% to normal data, and 5% to uv data
-        this.vertexDataCache = new IntBufferCache(3006477107L);
-        this.normalDataCache = new FloatBufferCache(563714457L);
-        this.uvDataCache = new FloatBufferCache(187904819L);
         this.bufferAddresses = new HashMap<>();
         this.bufferReferenceQueue = new ReferenceQueue<>();
+    }
+
+    public void init() {
+        // convert the configured cache size to bytes and give 80% to vertex data, 15% to normal data, and 5% to uv data
+        this.vertexDataCache = new IntBufferCache((long)(config.modelCacheSizeMB() * 1000000 * 0.80));
+        this.normalDataCache = new FloatBufferCache((long)(config.modelCacheSizeMB() * 1000000 * 0.15));
+        this.uvDataCache = new FloatBufferCache((long)(config.modelCacheSizeMB() * 1000000 * 0.05));
     }
 
     // subtracts the X lowest lightness levels from the formula.
@@ -91,6 +96,7 @@ public class ModelPusher {
         vertexDataCache.clear();
         normalDataCache.clear();
         uvDataCache.clear();
+        System.gc();
     }
 
     public void printStats() {
@@ -135,6 +141,14 @@ public class ModelPusher {
         if (freeCount != 0) {
             log.info("freed " + freeCount);
             log.info("references remaining " + bufferAddresses.size());
+            lastFinalizeTimestamp = Instant.now().toEpochMilli();
+        }
+
+        if (lastFinalizeTimestamp < Instant.now().toEpochMilli() - 30000) {
+            // hint that garbage collector needs to run every 30 seconds
+            // if we don't do this the references to off-heap memory may not be marked as finalized and thus freed
+            // meaning we're functionally leaking memory
+            System.gc();
         }
     }
 
@@ -162,7 +176,7 @@ public class ModelPusher {
             uvDataCacheHash = modelHasher.calculateUvCacheHash(objectProperties == null ? new int[]{} : objectProperties.getId());
 
             IntBuffer vertexData = vertexDataCache.get(vertexCacheHash);
-            cachedVertexData = vertexData != null;
+            cachedVertexData = vertexData != null && vertexData.remaining() == faceCount * 12;
             if (cachedVertexData) {
                 vertexDataHits++;
                 vertexLength = faceCount * 3;
@@ -171,7 +185,7 @@ public class ModelPusher {
             }
 
             FloatBuffer normalData = normalDataCache.get(normalDataCacheHash);
-            cachedNormalData = normalData != null;
+            cachedNormalData = normalData != null && normalData.remaining() == faceCount * 12;
             if (cachedNormalData) {
                 normalDataHits++;
                 normalBuffer.put(normalData);

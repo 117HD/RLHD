@@ -570,4 +570,18 @@ public interface HdPluginConfig extends Config
 			section = experimentalSettings
 	)
 	default boolean disableModelBatching() { return false; }
+
+	@Range(
+			min = 1
+	)
+	@ConfigItem(
+			keyName = "modelCacheSizeMB",
+			name = "Model cache size (MB)",
+			description = "Size of the model cache in megabytes",
+			position = 403,
+			section = experimentalSettings
+	)
+	default int modelCacheSizeMB() {
+		return 1024;
+	}
 }
