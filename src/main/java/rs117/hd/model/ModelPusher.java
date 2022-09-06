@@ -122,7 +122,10 @@ public class ModelPusher {
         int freeCount = 0;
         int freeAttempts = 0;
         PhantomReference<Buffer> reference;
-        while ((reference = (PhantomReference<Buffer>) this.bufferReferenceQueue.poll()) != null) {
+
+        // only free entries for 5 milliseconds to prevent drastic frametime spikes
+        long freeStartTimestamp = Instant.now().toEpochMilli();
+        while (Instant.now().toEpochMilli() < freeStartTimestamp + 5 && (reference = (PhantomReference<Buffer>) this.bufferReferenceQueue.poll()) != null) {
             freeAttempts++;
 
             Long address = this.bufferAddresses.get(reference);
