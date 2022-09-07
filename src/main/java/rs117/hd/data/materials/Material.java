@@ -73,7 +73,9 @@ public enum Material
 	IRON_FENCE(12),
 	PAINTING_LANDSCAPE(13),
 	PAINTING_KING(14),
+	MARBLE_DARK_N,
 	MARBLE_DARK(15, p -> p
+		.setNormalMap(MARBLE_DARK_N)
 		.setSpecular(1.1f, 380)),
 	GRAIN_WOOD_ROOF(16),
 	WATER_DROPLETS(17),
@@ -185,20 +187,53 @@ public enum Material
 	BLANK_SEMIGLOSS(WHITE, p -> p
 		.setSpecular(0.35f, 80)),
 
-	SNOW_1,
-	SNOW_2,
-	SNOW_3,
-	SNOW_4,
+	SNOW_1_N,
+	SNOW_1(p -> p
+		.setNormalMap(SNOW_1_N)
+	),
+	SNOW_2_N,
+	SNOW_2(p -> p
+		.setNormalMap(SNOW_2_N)
+	),
+	SNOW_3_N,
+	SNOW_3(p -> p
+		.setNormalMap(SNOW_3_N)
+	),
+	SNOW_4_N,
+	SNOW_4(p -> p
+		.setNormalMap(SNOW_4_N)
+	),
 
-	GRASS_1,
-	GRASS_2,
-	GRASS_3,
+	GRASS_1_N,
+	GRASS_1(p -> p
+		.setNormalMap(GRASS_1_N)
+	),
+	GRASS_2_N,
+	GRASS_2(p -> p
+		.setNormalMap(GRASS_2_N)
+	),
+	GRASS_3_N,
+	GRASS_3(p -> p
+		.setNormalMap(GRASS_3_N)
+	),
 	GRASS_SCROLLING(GRASS_1, p -> p
 		.setScroll(0, 1 / 0.7f)),
 
-	DIRT_1,
-	DIRT_2,
-	GRAVEL,
+	DIRT_1_N,
+	DIRT_1(p -> p
+		.setNormalMap(DIRT_1_N)
+
+	),
+	DIRT_2_N,
+	DIRT_2(p -> p
+		.setNormalMap(DIRT_1_N)
+
+	),
+	GRAVEL_N,
+	GRAVEL(p -> p
+		.setNormalMap(GRAVEL_N)
+
+	),
 
 	DIRT_SHINY_1(DIRT_1, p -> p
 		.setSpecular(1.1f, 380)),
@@ -207,26 +242,67 @@ public enum Material
 	GRAVEL_SHINY(GRAVEL, p -> p
 		.setSpecular(1.1f, 380)),
 
-	SAND_1,
-	SAND_2,
-	SAND_3,
+	SAND_1_N,
+	SAND_1(p -> p
+		.setNormalMap(SAND_1_N)
 
-	GRUNGE_1,
-	GRUNGE_2,
+	),
+	SAND_2_N,
+	SAND_2(p -> p
+		.setNormalMap(SAND_2_N)
 
-	ROCK_1,
-	ROCK_2,
+	),
+	SAND_3_N,
+	SAND_3(p -> p
+		.setNormalMap(SAND_3_N)
 
-	CARPET,
+	),
 
+	GRUNGE_1_N,
+	GRUNGE_1(p -> p
+		.setNormalMap(GRUNGE_1_N)
+	),
+	GRUNGE_2_N,
+	GRUNGE_2(p -> p
+		.setNormalMap(GRUNGE_2_N)
+	),
+
+	ROCK_1_N,
+	ROCK_1(p -> p
+		.setNormalMap(ROCK_1_N)
+	),
+	ROCK_2_N,
+	ROCK_2(p -> p
+		.setNormalMap(ROCK_2_N)
+	),
+
+	CARPET_N,
+	CARPET(p -> p
+		.setNormalMap(CARPET_N)
+	),
+
+	FALADOR_PATH_BRICK_N,
 	FALADOR_PATH_BRICK(p -> p
-		.setSpecular(0.3f, 30)),
-	JAGGED_STONE_TILE,
+		.setNormalMap(FALADOR_PATH_BRICK_N)
+		.setSpecular(0.3f, 30)
+	),
+	JAGGED_STONE_TILE_N,
+	JAGGED_STONE_TILE(p -> p
+		.setNormalMap(JAGGED_STONE_TILE_N)
+	),
 
+	TILE_SMALL_N,
 	TILE_SMALL_1(p -> p
+		.setNormalMap(TILE_SMALL_N)
 		.setSpecular(0.8f, 70)),
-	TILES_1_2x2,
-	TILES_2_2x2,
+	TILES_1_2x2_N,
+	TILES_1_2x2(p -> p
+		.setNormalMap(TILES_1_2x2_N)
+	),
+	TILES_2_2x2_N,
+	TILES_2_2x2(p -> p
+		.setNormalMap(TILES_2_2x2_N)
+	),
 	TILES_2x2_1_GLOSS(TILES_1_2x2, p -> p
 		.setSpecular(1.0f, 70)),
 	TILES_2x2_2_GLOSS(TILES_2_2x2, p -> p
@@ -236,9 +312,18 @@ public enum Material
 	TILES_2x2_2_SEMIGLOSS(TILES_2_2x2, p -> p
 		.setSpecular(0.5f, 300)),
 
-	MARBLE_1,
-	MARBLE_2,
-	MARBLE_3,
+	MARBLE_1_N,
+	MARBLE_1(p -> p
+		.setNormalMap(MARBLE_1_N)
+	),
+	MARBLE_2_N,
+	MARBLE_2(p -> p
+		.setNormalMap(MARBLE_2_N)
+	),
+	MARBLE_3_N,
+	MARBLE_3(p -> p
+		.setNormalMap(MARBLE_3_N)
+	),
 	MARBLE_1_GLOSS(MARBLE_1, p -> p
 		.setSpecular(0.9f, 280)),
 	MARBLE_2_GLOSS(MARBLE_2, p -> p
@@ -251,22 +336,36 @@ public enum Material
 		.setSpecular(0.3f, 100)),
 	MARBLE_3_SEMIGLOSS(MARBLE_3, p -> p
 		.setSpecular(0.4f, 120)),
+	HD_LAVA_1_N,
 
 	HD_LAVA_1(p -> p
+		.setNormalMap(HD_LAVA_1_N)
 		.setEmissiveStrength(1.0f)
 		.setFlowMap(LAVA_FLOW_MAP, 0.04f, 36, 12)),
+	HD_LAVA_2_N,
 	HD_LAVA_2(p -> p
+		.setNormalMap(HD_LAVA_2_N)
 		.setEmissiveStrength(1.0f)
 		.setFlowMap(LAVA_FLOW_MAP, 0.04f, 36, 12)),
+	HD_MAGMA_1_N,
 	HD_MAGMA_1(p -> p
+		.setNormalMap(HD_MAGMA_1_N)
 		.setEmissiveStrength(1.0f)
 		.setFlowMap(LAVA_FLOW_MAP, 0.04f, 36, 12)),
+	HD_MAGMA_2_N,
 	HD_MAGMA_2(p -> p
+		.setNormalMap(HD_MAGMA_2_N)
 		.setEmissiveStrength(1.0f)
 		.setFlowMap(LAVA_FLOW_MAP, 0.04f, 36, 12)),
 
-	BARK,
-	WOOD_GRAIN,
+	BARK_N,
+	BARK(p -> p
+		.setNormalMap(BARK_N)
+	),
+	WOOD_GRAIN_N,
+	WOOD_GRAIN(p -> p
+		.setNormalMap(WOOD_GRAIN_N)
+	),
 
 	HD_INFERNAL_CAPE(p -> p
 		.replaceIf(INFERNAL_CAPE, HdPluginConfig::hdInfernalTexture)
@@ -274,24 +373,38 @@ public enum Material
 		.setFlowMap(LAVA_FLOW_MAP, 0.02f, 12, 4)
 		.setScroll(0, 1 / 3f)),
 
+	HD_BRICK_N,
 	HD_BRICK(p -> p
-		.replaceIf(BRICK, HdPluginConfig::objectTextures)),
+		.replaceIf(BRICK, HdPluginConfig::objectTextures)
+		.setNormalMap(HD_BRICK_N)
+	),
+	HD_ROOF_SHINGLES_N,
 	HD_ROOF_SHINGLES_1(p -> p
 		.replaceIf(ROOF_SHINGLES_1, HdPluginConfig::objectTextures)
-		.setSpecular(0.5f, 30)),
+		.setNormalMap(HD_ROOF_SHINGLES_N)
+		.setSpecular(0.5f, 30)
+	),
 	HD_MARBLE_DARK(p -> p
 		.replaceIf(MARBLE_DARK, HdPluginConfig::objectTextures)
 		.setSpecular(1.1f, 380)),
 	HD_BRICK_BROWN(p -> p
-		.replaceIf(BRICK_BROWN, HdPluginConfig::objectTextures)),
+		.replaceIf(BRICK_BROWN, HdPluginConfig::objectTextures)
+		.setNormalMap(HD_BRICK_N)
+	),
 	HD_LAVA_3(p -> p
 		.replaceIf(LAVA, HdPluginConfig::objectTextures)
 		.setEmissiveStrength(1)
 		.setFlowMap(LAVA_FLOW_MAP, 0.05f, 36, 22)
 		.setScroll(0, 1 / 3f)),
 	HD_ROOF_SHINGLES_2(p -> p
-		.replaceIf(ROOF_SHINGLES_2, HdPluginConfig::objectTextures)),
-	WORN_TILES,
+		.replaceIf(ROOF_SHINGLES_2, HdPluginConfig::objectTextures)
+		.setNormalMap(HD_ROOF_SHINGLES_N)
+	),
+	WORN_TILES_N,
+	WORN_TILES(p -> p
+		.setNormalMap(WORN_TILES_N)
+
+	),
 
 	// Seasonal
 	WINTER_WILLOW_LEAVES(p -> p
