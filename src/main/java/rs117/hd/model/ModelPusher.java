@@ -61,9 +61,6 @@ public class ModelPusher {
     private int normalDataHits = 0;
     private int uvDataHits = 0;
 
-    private long lastFinalizeTimestamp = Instant.now().toEpochMilli();
-    private long lastGCTimestamp = Instant.now().toEpochMilli();
-
     public ModelPusher() {
         this.bufferAddresses = new HashMap<>();
         this.bufferReferenceQueue = new ReferenceQueue<>();
@@ -145,15 +142,6 @@ public class ModelPusher {
         if (freeCount != 0) {
             log.info("freed " + freeCount);
             log.info("references remaining " + bufferAddresses.size());
-            lastFinalizeTimestamp = Instant.now().toEpochMilli();
-        }
-
-        if (lastFinalizeTimestamp < Instant.now().toEpochMilli() - 30000 && lastGCTimestamp < Instant.now().toEpochMilli() - 30000) {
-            // hint that garbage collector needs to run every 30 seconds
-            // if we don't do this the references to off-heap memory may not be marked as finalized and thus freed
-            // meaning we're functionally leaking memory
-            System.gc();
-            lastGCTimestamp = Instant.now().toEpochMilli();
         }
     }
 
