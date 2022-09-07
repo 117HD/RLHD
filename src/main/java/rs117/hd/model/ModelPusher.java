@@ -56,10 +56,10 @@ public class ModelPusher {
     private FloatBufferCache uvDataCache;
     private final Map<PhantomReference<Buffer>, Long> bufferAddresses;
     private final ReferenceQueue<Buffer> bufferReferenceQueue;
-    private int pushes = 0;
-    private int vertexDataHits = 0;
-    private int normalDataHits = 0;
-    private int uvDataHits = 0;
+//    private int pushes = 0;
+//    private int vertexDataHits = 0;
+//    private int normalDataHits = 0;
+//    private int uvDataHits = 0;
 
     public ModelPusher() {
         this.bufferAddresses = new HashMap<>();
@@ -85,7 +85,7 @@ public class ModelPusher {
     private final static float[] zeroFloats = new float[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     private final static int[] twoInts = new int[2];
     private final static int[] fourInts = new int[4];
-    private final static int[] eightInts = new int[8];
+//    private final static int[] eightInts = new int[8];
     private final static int[] twelveInts = new int[12];
     private final static float[] twelveFloats = new float[12];
     private final static int[] modelColors = new int[HdPlugin.MAX_TRIANGLE * 4];
@@ -97,23 +97,23 @@ public class ModelPusher {
         System.gc();
     }
 
-    public void printStats() {
-        StringBuilder stats = new StringBuilder();
-        stats.append("\nModel pusher cache stats:\n");
-        stats.append("Vertex cache hit ratio: ").append((float)vertexDataHits/pushes*100).append("%\n");
-        stats.append("Normal cache hit ratio: ").append((float)normalDataHits/pushes*100).append("%\n");
-        stats.append("UV cache hit ratio: ").append((float)uvDataHits/pushes*100).append("%\n");
-        stats.append(vertexDataCache.size()).append(" vertex datas consuming ").append(vertexDataCache.getBytesConsumed()).append(" bytes\n");
-        stats.append(normalDataCache.size()).append(" normal datas consuming ").append(normalDataCache.getBytesConsumed()).append(" bytes\n");
-        stats.append(uvDataCache.size()).append(" uv datas consuming ").append(uvDataCache.getBytesConsumed()).append(" bytes\n");
-
-        log.debug(stats.toString());
-
-        vertexDataHits = 0;
-        normalDataHits = 0;
-        uvDataHits = 0;
-        pushes = 0;
-    }
+//    public void printStats() {
+//        StringBuilder stats = new StringBuilder();
+//        stats.append("\nModel pusher cache stats:\n");
+//        stats.append("Vertex cache hit ratio: ").append((float)vertexDataHits/pushes*100).append("%\n");
+//        stats.append("Normal cache hit ratio: ").append((float)normalDataHits/pushes*100).append("%\n");
+//        stats.append("UV cache hit ratio: ").append((float)uvDataHits/pushes*100).append("%\n");
+//        stats.append(vertexDataCache.size()).append(" vertex datas consuming ").append(vertexDataCache.getBytesConsumed()).append(" bytes\n");
+//        stats.append(normalDataCache.size()).append(" normal datas consuming ").append(normalDataCache.getBytesConsumed()).append(" bytes\n");
+//        stats.append(uvDataCache.size()).append(" uv datas consuming ").append(uvDataCache.getBytesConsumed()).append(" bytes\n");
+//
+//        log.debug(stats.toString());
+//
+//        vertexDataHits = 0;
+//        normalDataHits = 0;
+//        uvDataHits = 0;
+//        pushes = 0;
+//    }
 
     public void freeFinalizedBuffers() {
         int freeCount = 0;
@@ -137,16 +137,16 @@ public class ModelPusher {
                 // Given that this is a memory leak it's something we should look out for
                 log.error("failed to free cache reference!");
             }
-        }
 
-        if (freeCount != 0) {
-            log.info("freed " + freeCount);
-            log.info("references remaining " + bufferAddresses.size());
+//            if (freeCount != 0) {
+//                log.info("freed " + freeCount);
+//                log.info("references remaining " + bufferAddresses.size());
+//            }
         }
     }
 
     public int[] pushModel(Renderable renderable, Model model, GpuIntBuffer vertexBuffer, GpuFloatBuffer uvBuffer, GpuFloatBuffer normalBuffer, int tileX, int tileY, int tileZ, ObjectProperties objectProperties, ObjectType objectType, boolean noCache, ModelHasher modelHasher) {
-        pushes++;
+//        pushes++;
         final int faceCount = Math.min(model.getFaceCount(), HdPlugin.MAX_TRIANGLE);
         int vertexLength = 0;
         int uvLength = 0;
@@ -171,7 +171,7 @@ public class ModelPusher {
             IntBuffer vertexData = vertexDataCache.get(vertexCacheHash);
             cachedVertexData = vertexData != null && vertexData.remaining() == faceCount * 12;
             if (cachedVertexData) {
-                vertexDataHits++;
+//                vertexDataHits++;
                 vertexLength = faceCount * 3;
                 vertexBuffer.put(vertexData);
                 vertexData.rewind();
@@ -180,7 +180,7 @@ public class ModelPusher {
             FloatBuffer normalData = normalDataCache.get(normalDataCacheHash);
             cachedNormalData = normalData != null && normalData.remaining() == faceCount * 12;
             if (cachedNormalData) {
-                normalDataHits++;
+//                normalDataHits++;
                 normalBuffer.put(normalData);
                 normalData.rewind();
             }
@@ -188,7 +188,7 @@ public class ModelPusher {
             FloatBuffer uvData = uvDataCache.get(uvDataCacheHash);
             cachedUvData = uvData != null;
             if (cachedUvData) {
-                uvDataHits++;
+//                uvDataHits++;
                 uvLength = 3 * (uvData.remaining()/12);
                 uvBuffer.put(uvData);
                 uvData.rewind();

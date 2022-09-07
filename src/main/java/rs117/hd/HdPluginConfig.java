@@ -547,7 +547,7 @@ public interface HdPluginConfig extends Config
 
 	@ConfigSection(
 			name = "Experimental",
-			description = "Experimental features - you likely won't need to modify these settings",
+			description = "Experimental features - if you're experiencing issues you should consider disabling these",
 			position = 400,
 			closedByDefault = true
 	)
