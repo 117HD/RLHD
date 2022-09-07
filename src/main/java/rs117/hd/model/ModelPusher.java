@@ -223,9 +223,10 @@ public class ModelPusher {
             this.bufferAddresses.put(new PhantomReference<>(fullUvData, this.bufferReferenceQueue), MemoryUtil.memAddress(fullUvData));
         }
 
+        boolean hideBakedEffects = config.hideBakedEffects();
         for (int face = 0; face < faceCount; face++) {
             if (!cachedVertexData) {
-                int[] tempVertexData = getVertexDataForFace(model, getColorsForFace(renderable, model, objectProperties, objectType, tileX, tileY, tileZ, face), face);
+                int[] tempVertexData = getVertexDataForFace(model, getColorsForFace(renderable, model, objectProperties, objectType, tileX, tileY, tileZ, face, hideBakedEffects), face);
                 vertexBuffer.put(tempVertexData);
                 vertexLength += 3;
 
@@ -406,8 +407,10 @@ public class ModelPusher {
     }
 
     private int[] getColorsForModel(Renderable renderable, Model model, ObjectProperties objectProperties, ObjectType objectType, int tileX, int tileY, int tileZ, int faceCount) {
+        boolean hideBakedEffects = config.hideBakedEffects();
+
         for (int face = 0; face < faceCount; face++) {
-            System.arraycopy(getColorsForFace(renderable, model, objectProperties, objectType, tileX, tileY, tileZ, face), 0, modelColors, face * 4, 4);
+            System.arraycopy(getColorsForFace(renderable, model, objectProperties, objectType, tileX, tileY, tileZ, face, hideBakedEffects), 0, modelColors, face * 4, 4);
         }
 
         return Arrays.copyOfRange(modelColors, 0, faceCount * 4);
@@ -430,7 +433,7 @@ public class ModelPusher {
         return null;
     }
 
-    private int[] getColorsForFace(Renderable renderable, Model model, ObjectProperties objectProperties, ObjectType objectType, int tileX, int tileY, int tileZ, int face) {
+    private int[] getColorsForFace(Renderable renderable, Model model, ObjectProperties objectProperties, ObjectType objectType, int tileX, int tileY, int tileZ, int face, boolean hideBakedEffects) {
         int color1 = model.getFaceColors1()[face];
         int color2 = model.getFaceColors2()[face];
         int color3 = model.getFaceColors3()[face];
@@ -449,7 +452,7 @@ public class ModelPusher {
         final int[] zVertexNormals = model.getVertexNormalsZ();
         final Tile tile = client.getScene().getTiles()[tileZ][tileX][tileY];
 
-        if (config.hideBakedEffects()) {
+        if (hideBakedEffects) {
             // hide the shadows and lights that are often baked into models by setting the colors for the shadow faces to transparent
             NPC npc = renderable instanceof NPC ? (NPC) renderable : null;
             Player player = renderable instanceof Player  ? (Player) renderable : null;
