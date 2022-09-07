@@ -326,6 +326,11 @@ public enum Material
 		.replaceIf(ROOF_SHINGLES_2, HdPluginConfig::objectTextures)),
 	WORN_TILES,
 
+	STUCCO_N,
+	STUCCO(p -> p
+		.setNormalMap(STUCCO_N)
+	),
+
 	// Seasonal
 	WINTER_WILLOW_LEAVES(p -> p
 		.replaceIf(WILLOW_LEAVES, HdPluginConfig::winterTheme)
