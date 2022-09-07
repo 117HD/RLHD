@@ -554,22 +554,22 @@ public interface HdPluginConfig extends Config
 	String experimentalSettings = "experimentalSettings";
 
 	@ConfigItem(
-			keyName = "offHeapModelCaching",
-			name = "Disable model caching",
-			description = "Model caching improves performance with increased memory usage.",
+			keyName = "enableModelCaching",
+			name = "Enable model caching",
+			description = "Model caching improves performance with increased memory usage. May cause instability or graphical bugs.",
 			position = 401,
 			section = experimentalSettings
 	)
-	default boolean disableModelCaching() { return true; }
+	default boolean enableModelCaching() { return false; }
 
 	@ConfigItem(
-			keyName = "modelBatching",
-			name = "Disable model batching",
-			description = "Model batching generally improves performance but could cause some graphical artifacts",
+			keyName = "enableModelBatching",
+			name = "Enable model batching",
+			description = "Model batching generally improves performance but may cause instability and graphical bugs.",
 			position = 402,
 			section = experimentalSettings
 	)
-	default boolean disableModelBatching() { return false; }
+	default boolean enableModelBatching() { return false; }
 
 	@Range(
 			min = 1
@@ -577,7 +577,7 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 			keyName = "modelCacheSizeMB",
 			name = "Model cache size (MB)",
-			description = "Size of the model cache in megabytes",
+			description = "Size of the model cache in megabytes. Plugin must be restarted to apply changes.",
 			position = 403,
 			section = experimentalSettings
 	)

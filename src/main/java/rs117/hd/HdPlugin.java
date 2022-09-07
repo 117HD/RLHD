@@ -81,7 +81,6 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
@@ -2469,8 +2468,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			final int batchHash = modelHasher.calculateBatchHash();
 
 			TempModelInfo tempModelInfo = tempModelInfoMap.get(batchHash);
-			if (config.disableModelBatching() || tempModelInfo == null || tempModelInfo.getFaceCount() != model.getFaceCount()) {
-				final int[] lengths = modelPusher.pushModel(renderable, model, vertexBuffer, uvBuffer, normalBuffer, 0, 0, 0, ObjectProperties.NONE, ObjectType.NONE, config.disableModelCaching(), modelHasher);
+			if (!config.enableModelBatching() || tempModelInfo == null || tempModelInfo.getFaceCount() != model.getFaceCount()) {
+				final int[] lengths = modelPusher.pushModel(renderable, model, vertexBuffer, uvBuffer, normalBuffer, 0, 0, 0, ObjectProperties.NONE, ObjectType.NONE, !config.enableModelCaching(), modelHasher);
 				final int faceCount = lengths[0] / 3;
 				final int actualTempUvOffset = lengths[1] > 0 ? tempUvOffset : -1;
 
