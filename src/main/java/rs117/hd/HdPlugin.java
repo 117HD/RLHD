@@ -543,6 +543,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 				lightManager.startUp();
 				hiddenObjectManager.startUp();
+				modelPusher.init();
 
 				if (client.getGameState() == GameState.LOGGED_IN)
 				{
@@ -1598,6 +1599,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			return;
 		}
 
+		modelPusher.freeFinalizedBuffers();
+		modelPusher.hintGC();
 
 		// shader variables for water, lava animations
 		elapsedTime += (System.currentTimeMillis() - lastFrameTime) / 1000f;
@@ -2003,7 +2006,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		awtContext.swapBuffers();
 
 		drawManager.processDrawComplete(this::screenshot);
-		modelPusher.freeFinalizedBuffers();
 
 		glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
 

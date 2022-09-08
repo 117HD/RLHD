@@ -51,9 +51,9 @@ public class ModelPusher {
     @Inject
     private ProceduralGenerator proceduralGenerator;
 
-    private final IntBufferCache vertexDataCache;
-    private final FloatBufferCache normalDataCache;
-    private final FloatBufferCache uvDataCache;
+    private IntBufferCache vertexDataCache;
+    private FloatBufferCache normalDataCache;
+    private FloatBufferCache uvDataCache;
     private final Map<PhantomReference<Buffer>, BufferInfo> bufferInfo;
     private final ReferenceQueue<Buffer> bufferReferenceQueue;
     private long bytesCached;
@@ -67,11 +67,14 @@ public class ModelPusher {
     public ModelPusher() {
         this.bufferInfo = new HashMap<>();
         this.bufferReferenceQueue = new ReferenceQueue<>();
-        this.vertexDataCache = new IntBufferCache();
-        this.normalDataCache = new FloatBufferCache();
-        this.uvDataCache = new FloatBufferCache();
         this.bytesCached = 0;
-        this.maxByteCapacity = -1;
+    }
+
+    public void init() {
+        this.vertexDataCache = new IntBufferCache((long)(config.modelCacheSizeMB() / 2 * 1000000 * 0.80));
+        this.normalDataCache = new FloatBufferCache((long)(config.modelCacheSizeMB() / 2 * 1000000 * 0.15));
+        this.uvDataCache = new FloatBufferCache((long)(config.modelCacheSizeMB() / 2 * 1000000 * 0.05));
+        this.maxByteCapacity = config.modelCacheSizeMB() * 1000000L;
     }
 
     // subtracts the X lowest lightness levels from the formula.
@@ -148,10 +151,6 @@ public class ModelPusher {
     }
 
     public int[] pushModel(Renderable renderable, Model model, GpuIntBuffer vertexBuffer, GpuFloatBuffer uvBuffer, GpuFloatBuffer normalBuffer, int tileX, int tileY, int tileZ, ObjectProperties objectProperties, ObjectType objectType, boolean noCache, ModelHasher modelHasher) {
-        if (this.maxByteCapacity == -1) {
-            this.maxByteCapacity = config.modelCacheSizeMB() * 1000000L;
-        }
-
 //        pushes++;
         final int faceCount = Math.min(model.getFaceCount(), HdPlugin.MAX_TRIANGLE);
         int vertexLength = 0;
@@ -211,31 +210,25 @@ public class ModelPusher {
         FloatBuffer fullNormalData = null;
         FloatBuffer fullUvData = null;
 
-        boolean cachingVertexData = !cachedVertexData && !noCache && this.bytesCached + faceCount * 12 * 4 <= this.maxByteCapacity;
+        boolean cachingVertexData = !cachedVertexData && !noCache;
         if (cachingVertexData) {
             fullVertexData = MemoryUtil.memAllocInt(faceCount * 12);
-            this.bytesCached += faceCount * 12 * 4;
+            this.bytesCached += (long) faceCount * 12 * 4;
             this.bufferInfo.put(new PhantomReference<>(fullVertexData, this.bufferReferenceQueue), new BufferInfo(MemoryUtil.memAddress(fullVertexData), faceCount * 12L * 4L));
-        } else if (!noCache) {
-            this.vertexDataCache.requestRemoval();
         }
 
-        boolean cachingNormalData = !cachedNormalData && !noCache && this.bytesCached + faceCount * 12 * 4 <= this.maxByteCapacity;
+        boolean cachingNormalData = !cachedNormalData && !noCache;
         if (cachingNormalData) {
             fullNormalData = MemoryUtil.memAllocFloat(faceCount * 12);
             this.bufferInfo.put(new PhantomReference<>(fullNormalData, this.bufferReferenceQueue), new BufferInfo(MemoryUtil.memAddress(fullNormalData), faceCount * 12L * 4L));
-            this.bytesCached += faceCount * 12 * 4;
-        } else if (!noCache) {
-            this.normalDataCache.requestRemoval();
+            this.bytesCached += (long) faceCount * 12 * 4;
         }
 
-        boolean cachingUvData = !cachedUvData && !noCache && this.bytesCached + faceCount * 12 * 4 <= this.maxByteCapacity;
+        boolean cachingUvData = !cachedUvData && !noCache;
         if (cachingUvData) {
             fullUvData = MemoryUtil.memAllocFloat(faceCount * 12);
             this.bufferInfo.put(new PhantomReference<>(fullUvData, this.bufferReferenceQueue), new BufferInfo(MemoryUtil.memAddress(fullUvData), faceCount * 12L * 4L));
-            this.bytesCached += faceCount * 12 * 4;
-        } else if (!noCache) {
-            this.uvDataCache.requestRemoval();
+            this.bytesCached += (long) faceCount * 12 * 4;
         }
 
         boolean hideBakedEffects = config.hideBakedEffects();
@@ -291,6 +284,12 @@ public class ModelPusher {
         twoInts[1] = uvLength;
 
         return twoInts;
+    }
+
+    public void hintGC() {
+        if (this.bytesCached >= this.maxByteCapacity) {
+            System.gc();
+        }
     }
 
     private int[] getVertexDataForFace(Model model, int[] faceColors, int face) {
