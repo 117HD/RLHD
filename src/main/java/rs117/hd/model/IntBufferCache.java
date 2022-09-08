@@ -11,7 +11,7 @@ class IntBufferCache extends LinkedHashMap<Integer, IntBuffer> {
     private long bytesConsumed;
 
     public IntBufferCache(long byteCapacity) {
-        super(8192, 0.7f, true);
+        super(512, 0.7f, true);
         this.byteCapacity = byteCapacity;
         this.bytesConsumed = 0;
     }

@@ -71,6 +71,10 @@ public class ModelPusher {
     }
 
     public void init() {
+        // allocate half of the budget to actively used memory
+        // 80% to vertex data
+        // 15% to normal data
+        // 5% to uv data
         this.vertexDataCache = new IntBufferCache((long)(config.modelCacheSizeMB() / 2 * 1000000 * 0.80));
         this.normalDataCache = new FloatBufferCache((long)(config.modelCacheSizeMB() / 2 * 1000000 * 0.15));
         this.uvDataCache = new FloatBufferCache((long)(config.modelCacheSizeMB() / 2 * 1000000 * 0.05));
@@ -286,6 +290,8 @@ public class ModelPusher {
         return twoInts;
     }
 
+    // hint the gc to run if we're holding more cache than the max capacity
+    // this will allow the inactive portion of the cache to be finalized and thus freed
     public void hintGC() {
         if (this.bytesCached >= this.maxByteCapacity) {
             System.gc();
