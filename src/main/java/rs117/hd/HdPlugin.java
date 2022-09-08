@@ -543,7 +543,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 				lightManager.startUp();
 				hiddenObjectManager.startUp();
-				modelPusher.init();
 
 				if (client.getGameState() == GameState.LOGGED_IN)
 				{

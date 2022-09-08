@@ -7,35 +7,21 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class FloatBufferCache extends LinkedHashMap<Integer, FloatBuffer> {
-    private final long byteCapacity;
-    private long bytesConsumed;
+    private int removals = 0;
 
-    public FloatBufferCache(long byteCapacity) {
+    public FloatBufferCache() {
         super(512, 0.7f, true);
-        this.byteCapacity = byteCapacity;
-        this.bytesConsumed = 0;
     }
 
-    public long getBytesConsumed() {
-        return this.bytesConsumed;
-    }
-
-    public void put(int key, FloatBuffer value) {
-        this.bytesConsumed += value.remaining() * 4;
-        super.put(key, value);
-    }
-
-    @Override
-    public void clear() {
-        this.bytesConsumed = 0;
-        super.clear();
+    public void requestRemoval() {
+        this.removals++;
     }
 
     @Override
     protected boolean removeEldestEntry(Map.Entry<Integer, FloatBuffer> eldest) {
         // leave room for at least one max size entry
-        if (this.bytesConsumed + (HdPlugin.MAX_TRIANGLE * 12 * 4) >= this.byteCapacity) {
-            this.bytesConsumed -= eldest.getValue().remaining() * 4;
+        if (this.removals > 0) {
+            this.removals--;
             return true;
         }
 
