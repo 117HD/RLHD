@@ -219,33 +219,40 @@ public class ModelPusher {
         boolean cachingVertexData = !cachedVertexData && !noCache;
         if (cachingVertexData) {
             fullVertexData = MemoryUtil.memAllocInt(faceCount * 12);
-            synchronized (this.bufferInfo) {
-                this.bufferInfo.put(new PhantomReference<>(fullVertexData, this.bufferReferenceQueue), new BufferInfo(MemoryUtil.memAddress(fullVertexData), faceCount * 12L * 4L));
-            }
-            synchronized (this.bytesCachedLock) {
-                this.bytesCached += (long) faceCount * 12 * 4;
-            }
         }
 
         boolean cachingNormalData = !cachedNormalData && !noCache;
         if (cachingNormalData) {
             fullNormalData = MemoryUtil.memAllocFloat(faceCount * 12);
-            synchronized (this.bufferInfo) {
-                this.bufferInfo.put(new PhantomReference<>(fullNormalData, this.bufferReferenceQueue), new BufferInfo(MemoryUtil.memAddress(fullNormalData), faceCount * 12L * 4L));
-            }
-            synchronized (this.bytesCachedLock) {
-                this.bytesCached += (long) faceCount * 12 * 4;
-            }
         }
 
         boolean cachingUvData = !cachedUvData && !noCache;
         if (cachingUvData) {
             fullUvData = MemoryUtil.memAllocFloat(faceCount * 12);
+        }
+
+        if (cachingVertexData || cachingNormalData || cachingUvData) {
             synchronized (this.bufferInfo) {
-                this.bufferInfo.put(new PhantomReference<>(fullUvData, this.bufferReferenceQueue), new BufferInfo(MemoryUtil.memAddress(fullUvData), faceCount * 12L * 4L));
-            }
-            synchronized (this.bytesCachedLock) {
-                this.bytesCached += (long) faceCount * 12 * 4;
+                int bytesMultiplier = 0;
+
+                if (cachingVertexData) {
+                    this.bufferInfo.put(new PhantomReference<>(fullVertexData, this.bufferReferenceQueue), new BufferInfo(MemoryUtil.memAddress(fullVertexData), faceCount * 12L * 4L));
+                    bytesMultiplier++;
+                }
+
+                if (cachingNormalData) {
+                    this.bufferInfo.put(new PhantomReference<>(fullNormalData, this.bufferReferenceQueue), new BufferInfo(MemoryUtil.memAddress(fullNormalData), faceCount * 12L * 4L));
+                    bytesMultiplier++;
+                }
+
+                if (cachingUvData) {
+                    this.bufferInfo.put(new PhantomReference<>(fullUvData, this.bufferReferenceQueue), new BufferInfo(MemoryUtil.memAddress(fullUvData), faceCount * 12L * 4L));
+                    bytesMultiplier++;
+                }
+
+                synchronized (this.bytesCachedLock) {
+                    this.bytesCached += (long) faceCount * 12 * 4 * bytesMultiplier;
+                }
             }
         }
 
