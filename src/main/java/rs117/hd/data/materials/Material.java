@@ -188,51 +188,71 @@ public enum Material
 		.setSpecular(0.35f, 80)),
 
 	SNOW_1_N,
+	SNOW_1_D,
 	SNOW_1(p -> p
 		.setNormalMap(SNOW_1_N)
+		.setDisplacementMap(SNOW_1_D)
 	),
 	SNOW_2_N,
+	SNOW_2_D,
 	SNOW_2(p -> p
 		.setNormalMap(SNOW_2_N)
+		.setDisplacementMap(SNOW_1_D)
 	),
 	SNOW_3_N,
+	SNOW_3_D,
 	SNOW_3(p -> p
 		.setNormalMap(SNOW_3_N)
+		.setDisplacementMap(SNOW_3_D)
+
 	),
 	SNOW_4_N,
+	SNOW_4_D,
 	SNOW_4(p -> p
 		.setNormalMap(SNOW_4_N)
+		.setDisplacementMap(SNOW_4_D)
 	),
 
 	GRASS_1_N,
+	GRASS_1_D,
 	GRASS_1(p -> p
 		.setNormalMap(GRASS_1_N)
+		.setDisplacementMap(GRASS_1_D)
 	),
 	GRASS_2_N,
+	GRASS_2_D,
 	GRASS_2(p -> p
 		.setNormalMap(GRASS_2_N)
+		.setDisplacementMap(GRASS_2_D)
 	),
 	GRASS_3_N,
+	GRASS_3_D,
 	GRASS_3(p -> p
 		.setNormalMap(GRASS_3_N)
+		.setDisplacementMap(GRASS_2_D)
 	),
 	GRASS_SCROLLING(GRASS_1, p -> p
 		.setScroll(0, 1 / 0.7f)),
 
 	DIRT_1_N,
+	DIRT_1_D,
 	DIRT_1(p -> p
 		.setNormalMap(DIRT_1_N)
+		.setDisplacementMap(DIRT_1_D)
 
 	),
 	DIRT_2_N,
+	DIRT_2_D,
 	DIRT_2(p -> p
 		.setNormalMap(DIRT_1_N)
+		.setDisplacementMap(DIRT_2_D)
 
 	),
 	GRAVEL_N,
+	GRAVEL_D,
 	GRAVEL(p -> p
 		.setNormalMap(GRAVEL_N)
-
+		.setDisplacementMap(GRAVEL_D)
 	),
 
 	DIRT_SHINY_1(DIRT_1, p -> p
@@ -243,65 +263,91 @@ public enum Material
 		.setSpecular(1.1f, 380)),
 
 	SAND_1_N,
+	SAND_1_D,
 	SAND_1(p -> p
 		.setNormalMap(SAND_1_N)
+		.setDisplacementMap(SAND_1_D)
 
 	),
 	SAND_2_N,
+	SAND_2_D,
 	SAND_2(p -> p
 		.setNormalMap(SAND_2_N)
+		.setDisplacementMap(SAND_2_D)
 
 	),
 	SAND_3_N,
+	SAND_3_D,
 	SAND_3(p -> p
 		.setNormalMap(SAND_3_N)
+		.setDisplacementMap(SAND_3_D)
 
 	),
 
 	GRUNGE_1_N,
+	GRUNGE_1_D,
 	GRUNGE_1(p -> p
 		.setNormalMap(GRUNGE_1_N)
+		.setDisplacementMap(GRUNGE_1_D)
 	),
 	GRUNGE_2_N,
+	GRUNGE_2_D,
 	GRUNGE_2(p -> p
 		.setNormalMap(GRUNGE_2_N)
+		.setDisplacementMap(GRUNGE_2_D)
 	),
 
 	ROCK_1_N,
+	ROCK_1_D,
 	ROCK_1(p -> p
 		.setNormalMap(ROCK_1_N)
+		.setDisplacementMap(ROCK_1_D)
 	),
 	ROCK_2_N,
+	ROCK_2_D,
 	ROCK_2(p -> p
 		.setNormalMap(ROCK_2_N)
+		.setDisplacementMap(ROCK_2_D)
 	),
 
 	CARPET_N,
+	CARPET_D,
 	CARPET(p -> p
 		.setNormalMap(CARPET_N)
+			.setDisplacementMap(CARPET_D)
 	),
 
 	FALADOR_PATH_BRICK_N,
+	FALADOR_PATH_BRICK_D,
 	FALADOR_PATH_BRICK(p -> p
 		.setNormalMap(FALADOR_PATH_BRICK_N)
+		.setDisplacementMap(FALADOR_PATH_BRICK_D)
 		.setSpecular(0.3f, 30)
 	),
 	JAGGED_STONE_TILE_N,
+	JAGGED_STONE_TILE_D,
 	JAGGED_STONE_TILE(p -> p
 		.setNormalMap(JAGGED_STONE_TILE_N)
+		.setDisplacementMap(JAGGED_STONE_TILE_D)
 	),
 
 	TILE_SMALL_N,
+	TILE_SMALL_D,
 	TILE_SMALL_1(p -> p
 		.setNormalMap(TILE_SMALL_N)
+		.setDisplacementMap(TILE_SMALL_D)
 		.setSpecular(0.8f, 70)),
 	TILES_1_2x2_N,
+	TILES_1_2x2_D,
 	TILES_1_2x2(p -> p
 		.setNormalMap(TILES_1_2x2_N)
+		.setDisplacementMap(TILES_1_2x2_D)
 	),
 	TILES_2_2x2_N,
+	TILES_2_2x2_D,
 	TILES_2_2x2(p -> p
 		.setNormalMap(TILES_2_2x2_N)
+		.setDisplacementMap(TILES_2_2x2_D)
 	),
 	TILES_2x2_1_GLOSS(TILES_1_2x2, p -> p
 		.setSpecular(1.0f, 70)),
@@ -313,16 +359,22 @@ public enum Material
 		.setSpecular(0.5f, 300)),
 
 	MARBLE_1_N,
+	MARBLE_1_D,
 	MARBLE_1(p -> p
 		.setNormalMap(MARBLE_1_N)
+		.setDisplacementMap(MARBLE_1_D)
 	),
 	MARBLE_2_N,
+	MARBLE_2_D,
 	MARBLE_2(p -> p
 		.setNormalMap(MARBLE_2_N)
+		.setDisplacementMap(MARBLE_2_D)
 	),
 	MARBLE_3_N,
+	MARBLE_3_D,
 	MARBLE_3(p -> p
 		.setNormalMap(MARBLE_3_N)
+		.setDisplacementMap(MARBLE_3_D)
 	),
 	MARBLE_1_GLOSS(MARBLE_1, p -> p
 		.setSpecular(0.9f, 280)),
@@ -359,12 +411,16 @@ public enum Material
 		.setFlowMap(LAVA_FLOW_MAP, 0.04f, 36, 12)),
 
 	BARK_N,
+	BARK_D,
 	BARK(p -> p
 		.setNormalMap(BARK_N)
+		.setDisplacementMap(BARK_D)
 	),
 	WOOD_GRAIN_N,
+	WOOD_GRAIN_D,
 	WOOD_GRAIN(p -> p
 		.setNormalMap(WOOD_GRAIN_N)
+		.setDisplacementMap(WOOD_GRAIN_D)
 	),
 
 	HD_INFERNAL_CAPE(p -> p
@@ -374,14 +430,18 @@ public enum Material
 		.setScroll(0, 1 / 3f)),
 
 	HD_BRICK_N,
+	HD_BRICK_D,
 	HD_BRICK(p -> p
 		.replaceIf(BRICK, HdPluginConfig::objectTextures)
 		.setNormalMap(HD_BRICK_N)
+		.setDisplacementMap(HD_BRICK_D)
 	),
 	HD_ROOF_SHINGLES_N,
+	HD_ROOF_SHINGLES_D,
 	HD_ROOF_SHINGLES_1(p -> p
 		.replaceIf(ROOF_SHINGLES_1, HdPluginConfig::objectTextures)
 		.setNormalMap(HD_ROOF_SHINGLES_N)
+		.setDisplacementMap(HD_ROOF_SHINGLES_D)
 		.setSpecular(0.5f, 30)
 	),
 	HD_MARBLE_DARK(p -> p
@@ -390,6 +450,7 @@ public enum Material
 	HD_BRICK_BROWN(p -> p
 		.replaceIf(BRICK_BROWN, HdPluginConfig::objectTextures)
 		.setNormalMap(HD_BRICK_N)
+		.setDisplacementMap(HD_BRICK_D)
 	),
 	HD_LAVA_3(p -> p
 		.replaceIf(LAVA, HdPluginConfig::objectTextures)
@@ -399,10 +460,13 @@ public enum Material
 	HD_ROOF_SHINGLES_2(p -> p
 		.replaceIf(ROOF_SHINGLES_2, HdPluginConfig::objectTextures)
 		.setNormalMap(HD_ROOF_SHINGLES_N)
+		.setDisplacementMap(HD_ROOF_SHINGLES_D)
 	),
 	WORN_TILES_N,
+	WORN_TILES_D,
 	WORN_TILES(p -> p
 		.setNormalMap(WORN_TILES_N)
+		.setDisplacementMap(WORN_TILES_D)
 
 	),
 
