@@ -30,7 +30,6 @@ import java.lang.ref.ReferenceQueue;
 import java.nio.Buffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
-import java.time.Instant;
 import java.util.*;
 
 /**
@@ -58,6 +57,9 @@ public class ModelPusher {
     private final ReferenceQueue<Buffer> bufferReferenceQueue;
     private long bytesCached;
     private long maxByteCapacity;
+    private final Object bytesCachedLock;
+
+    private long lastHintTime;
 
 //    private int pushes = 0;
 //    private int vertexDataHits = 0;
@@ -68,6 +70,8 @@ public class ModelPusher {
         this.bufferInfo = new HashMap<>();
         this.bufferReferenceQueue = new ReferenceQueue<>();
         this.bytesCached = 0;
+        this.bytesCachedLock = new Object();
+        this.lastHintTime = System.currentTimeMillis();
     }
 
     public void init() {
@@ -128,29 +132,27 @@ public class ModelPusher {
         int freeAttempts = 0;
         PhantomReference<Buffer> reference;
 
-        // only free entries for 5 milliseconds to prevent drastic frametime spikes
-        long freeStartTimestamp = Instant.now().toEpochMilli();
-        while (Instant.now().toEpochMilli() < freeStartTimestamp + 5 && (reference = (PhantomReference<Buffer>) this.bufferReferenceQueue.poll()) != null) {
+        while ((reference = (PhantomReference<Buffer>) this.bufferReferenceQueue.poll()) != null) {
             freeAttempts++;
 
-            BufferInfo bi = this.bufferInfo.get(reference);
-            if (bi != null) {
-                freeCount++;
-                MemoryUtil.nmemFree(bi.getAddress());
-                this.bytesCached -= bi.getBytes();
-                this.bufferInfo.remove(reference);
+            synchronized (this.bufferInfo) {
+                BufferInfo bi = this.bufferInfo.get(reference);
+                if (bi != null) {
+                    freeCount++;
+                    MemoryUtil.nmemFree(bi.getAddress());
+                    synchronized (this.bytesCachedLock) {
+                        this.bytesCached -= bi.getBytes();
+                    }
+                    this.bufferInfo.remove(reference);
+                }
             }
+
 
             if (freeAttempts != freeCount) {
                 // I've thought about removing this bit, but it's probably a good assertion to leave in place.
                 // Given that this is a memory leak it's something we should look out for
                 log.error("failed to free cache reference!");
             }
-
-//            if (freeCount != 0) {
-//                log.info("freed " + freeCount);
-//                log.info("references remaining " + bufferAddresses.size());
-//            }
         }
     }
 
@@ -217,22 +219,34 @@ public class ModelPusher {
         boolean cachingVertexData = !cachedVertexData && !noCache;
         if (cachingVertexData) {
             fullVertexData = MemoryUtil.memAllocInt(faceCount * 12);
-            this.bytesCached += (long) faceCount * 12 * 4;
-            this.bufferInfo.put(new PhantomReference<>(fullVertexData, this.bufferReferenceQueue), new BufferInfo(MemoryUtil.memAddress(fullVertexData), faceCount * 12L * 4L));
+            synchronized (this.bufferInfo) {
+                this.bufferInfo.put(new PhantomReference<>(fullVertexData, this.bufferReferenceQueue), new BufferInfo(MemoryUtil.memAddress(fullVertexData), faceCount * 12L * 4L));
+            }
+            synchronized (this.bytesCachedLock) {
+                this.bytesCached += (long) faceCount * 12 * 4;
+            }
         }
 
         boolean cachingNormalData = !cachedNormalData && !noCache;
         if (cachingNormalData) {
             fullNormalData = MemoryUtil.memAllocFloat(faceCount * 12);
-            this.bufferInfo.put(new PhantomReference<>(fullNormalData, this.bufferReferenceQueue), new BufferInfo(MemoryUtil.memAddress(fullNormalData), faceCount * 12L * 4L));
-            this.bytesCached += (long) faceCount * 12 * 4;
+            synchronized (this.bufferInfo) {
+                this.bufferInfo.put(new PhantomReference<>(fullNormalData, this.bufferReferenceQueue), new BufferInfo(MemoryUtil.memAddress(fullNormalData), faceCount * 12L * 4L));
+            }
+            synchronized (this.bytesCachedLock) {
+                this.bytesCached += (long) faceCount * 12 * 4;
+            }
         }
 
         boolean cachingUvData = !cachedUvData && !noCache;
         if (cachingUvData) {
             fullUvData = MemoryUtil.memAllocFloat(faceCount * 12);
-            this.bufferInfo.put(new PhantomReference<>(fullUvData, this.bufferReferenceQueue), new BufferInfo(MemoryUtil.memAddress(fullUvData), faceCount * 12L * 4L));
-            this.bytesCached += (long) faceCount * 12 * 4;
+            synchronized (this.bufferInfo) {
+                this.bufferInfo.put(new PhantomReference<>(fullUvData, this.bufferReferenceQueue), new BufferInfo(MemoryUtil.memAddress(fullUvData), faceCount * 12L * 4L));
+            }
+            synchronized (this.bytesCachedLock) {
+                this.bytesCached += (long) faceCount * 12 * 4;
+            }
         }
 
         boolean hideBakedEffects = config.hideBakedEffects();
@@ -293,8 +307,10 @@ public class ModelPusher {
     // hint the gc to run if we're holding more cache than the max capacity
     // this will allow the inactive portion of the cache to be finalized and thus freed
     public void hintGC() {
-        if (this.bytesCached >= this.maxByteCapacity) {
+        // do not hint the GC more than once every 5 seconds
+        if (this.bytesCached >= this.maxByteCapacity && System.currentTimeMillis() - this.lastHintTime > 5000) {
             System.gc();
+            this.lastHintTime = System.currentTimeMillis();
         }
     }
 
