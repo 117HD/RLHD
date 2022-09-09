@@ -221,7 +221,7 @@ public class ModelPusher {
         boolean allocatedVertexData = false;
         if (cachingVertexData) {
             // try to take a recycled buffer before allocating a new one
-            fullVertexData = (IntBuffer) this.bufferPool.take(faceCount * 12);
+            fullVertexData = this.bufferPool.takeIntBuffer(faceCount * 12);
             if (fullVertexData == null) {
                 allocatedVertexData = true;
                 fullVertexData = MemoryUtil.memAllocInt(faceCount * 12);
@@ -231,7 +231,7 @@ public class ModelPusher {
         boolean cachingNormalData = !cachedNormalData && !noCache;
         boolean allocatedNormalData = false;
         if (cachingNormalData) {
-            fullNormalData = (FloatBuffer) this.bufferPool.take(faceCount * 12);
+            fullNormalData = this.bufferPool.takeFloatBuffer(faceCount * 12);
             if (fullNormalData == null) {
                 allocatedNormalData = true;
                 fullNormalData = MemoryUtil.memAllocFloat(faceCount * 12);
@@ -241,7 +241,7 @@ public class ModelPusher {
         boolean cachingUvData = !cachedUvData && !noCache;
         boolean allocatedUvData = false;
         if (cachingUvData) {
-            fullUvData = (FloatBuffer) this.bufferPool.take(faceCount * 12);
+            fullUvData = this.bufferPool.takeFloatBuffer(faceCount * 12);
             if (fullUvData == null) {
                 allocatedUvData = true;
                 fullUvData = MemoryUtil.memAllocFloat(faceCount * 12);

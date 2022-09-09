@@ -1,18 +1,21 @@
 package rs117.hd.model;
 
-import javax.inject.Singleton;
 import java.nio.Buffer;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
 public class BufferPool {
-    private final Map<Integer, Stack<Buffer>> bufferStackMap;
+    private final Map<Integer, Stack<IntBuffer>> intBufferStackMap;
+    private final Map<Integer, Stack<FloatBuffer>> floatBufferStackMap;
     private final long byteCapacity;
     private long bytesStored;
 
     public BufferPool(long byteCapacity) {
-        this.bufferStackMap = new HashMap<>();
+        this.intBufferStackMap = new HashMap<>();
+        this.floatBufferStackMap = new HashMap<>();
         this.byteCapacity = byteCapacity;
         bytesStored = 0;
     }
@@ -21,20 +24,49 @@ public class BufferPool {
         return this.bytesStored + size <= this.byteCapacity;
     }
 
-    public void put(int capacity, Buffer value) {
+    public void putIntBuffer(int capacity, IntBuffer value) {
         this.bytesStored += capacity * 4L;
 
-        Stack<Buffer> stack = bufferStackMap.get(capacity);
+        Stack<IntBuffer> stack = this.intBufferStackMap.get(capacity);
         if (stack == null) {
             stack = new Stack<>();
         }
 
         stack.push(value);
-        bufferStackMap.putIfAbsent(capacity, stack);
+        this.intBufferStackMap.putIfAbsent(capacity, stack);
     }
 
-    public Buffer take(int capacity) {
-        Stack<Buffer> stack = bufferStackMap.get(capacity);
-        return stack == null || stack.empty() ? null : stack.pop().clear();
+    public IntBuffer takeIntBuffer(int capacity) {
+        Stack<IntBuffer> stack = this.intBufferStackMap.get(capacity);
+        if (stack == null || stack.empty()) {
+            return null;
+        } else {
+            IntBuffer buffer = stack.pop().clear();
+            this.bytesStored -= buffer.capacity() * 4L;
+            return buffer;
+        }
+    }
+
+    public void putFloatBuffer(int capacity, FloatBuffer value) {
+        this.bytesStored += capacity * 4L;
+
+        Stack<FloatBuffer> stack = this.floatBufferStackMap.get(capacity);
+        if (stack == null) {
+            stack = new Stack<>();
+        }
+
+        stack.push(value);
+        this.floatBufferStackMap.putIfAbsent(capacity, stack);
+    }
+
+    public FloatBuffer takeFloatBuffer(int capacity) {
+        Stack<FloatBuffer> stack = this.floatBufferStackMap.get(capacity);
+        if (stack == null || stack.empty()) {
+            return null;
+        } else {
+            FloatBuffer buffer = stack.pop().clear();
+            this.bytesStored -= buffer.capacity() * 4L;
+            return buffer;
+        }
     }
 }

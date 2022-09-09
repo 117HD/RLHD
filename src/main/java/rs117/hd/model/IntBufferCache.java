@@ -2,7 +2,6 @@ package rs117.hd.model;
 
 import rs117.hd.HdPlugin;
 
-import javax.inject.Inject;
 import java.nio.Buffer;
 import java.nio.IntBuffer;
 import java.util.LinkedHashMap;
@@ -41,12 +40,12 @@ class IntBufferCache extends LinkedHashMap<Integer, IntBuffer> {
     protected boolean removeEldestEntry(Map.Entry<Integer, IntBuffer> eldest) {
         // leave room for at least one max size entry
         if (this.bytesConsumed + (HdPlugin.MAX_TRIANGLE * 12 * 4) >= this.byteCapacity) {
-            Buffer buffer = eldest.getValue();
+            IntBuffer buffer = eldest.getValue();
             this.bytesConsumed -= buffer.capacity() * 4L;
 
             // recycle the buffer if possible
             if (this.bufferPool.canPutBuffer(buffer.capacity())) {
-                this.bufferPool.put(buffer.capacity(), buffer);
+                this.bufferPool.putIntBuffer(buffer.capacity(), buffer);
             }
 
             return true;
