@@ -112,7 +112,7 @@ public enum ObjectProperties
 	SHAYZIEN_WALLS_ROCK(Material.ROCK_1, new Properties().setFlatNormals(true), 14543, 14544, 14545, 14546, 14547, 14548, 14549, 14550, 14551, 14558, 42110, 42111, 42116),
 	SHAYZIEN_WALLS_WOOD(Material.GRUNGE_1, new Properties().setFlatNormals(true), 42107, 42108, 42109, 42112, 42113),
 	SHAYZIEN_STAIRS(Material.GRUNGE_1, new Properties().setFlatNormals(true), 42193, 42195, 42196),
-	MOUNT_KARUULM_WALLS(Material.ROCK_1,  new Properties().setFlatNormals(true), 34347, 34384, 34385, 34386, 34387, 34388, 34389, 34390, 34391, 34392, 34393, 34394, 34395),
+	MOUNT_KARUULM_WALLS(Material.ROCK_WALL,  new Properties().setFlatNormals(true), 34347, 34384, 34385, 34386, 34387, 34388, 34389, 34390, 34391, 34392, 34393, 34394, 34395),
 	STATUE_BUST(Material.MARBLE_1_GLOSS, 26129),
 
 	// Castle Wars

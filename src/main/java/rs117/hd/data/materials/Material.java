@@ -216,6 +216,7 @@ public enum Material
 
 	ROCK_1,
 	ROCK_2,
+	ROCK_WALL,
 
 	CARPET,
 
