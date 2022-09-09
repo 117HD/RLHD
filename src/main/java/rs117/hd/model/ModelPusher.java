@@ -136,9 +136,9 @@ public class ModelPusher {
         int freeAttempts = 0;
         PhantomReference<Buffer> reference;
 
-        // limit freeing to 5ms per frame to prevent dramatic spikes
         long start = System.currentTimeMillis();
-        while (System.currentTimeMillis() - start < 5 && (reference = (PhantomReference<Buffer>) this.bufferReferenceQueue.poll()) != null) {
+        int maxFreeTime = Math.round((float)(this.bytesCached / this.maxByteCapacity));
+        while (System.currentTimeMillis() - start < maxFreeTime && (reference = (PhantomReference<Buffer>) this.bufferReferenceQueue.poll()) != null) {
             freeAttempts++;
             BufferInfo bi = this.bufferInfo.get(reference);
             if (bi != null) {
