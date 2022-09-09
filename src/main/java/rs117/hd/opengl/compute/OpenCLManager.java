@@ -47,6 +47,7 @@ import org.jocl.cl_kernel;
 import org.jocl.cl_mem;
 import org.jocl.cl_platform_id;
 import org.jocl.cl_program;
+import org.lwjgl.BufferUtils;
 import rs117.hd.HdPlugin;
 import rs117.hd.opengl.shader.Template;
 import rs117.hd.utils.buffer.GLBuffer;
@@ -187,7 +188,7 @@ public class OpenCLManager
 		long[] size = new long[1];
 		clGetProgramBuildInfo(program, device, param, 0, null, size);
 
-		ByteBuffer buffer = ByteBuffer.allocateDirect((int) size[0]);
+		ByteBuffer buffer = BufferUtils.createByteBuffer((int) size[0]);
 		clGetProgramBuildInfo(program, device, param, buffer.limit(), Pointer.toBuffer(buffer), null);
 
 		switch (param)

@@ -302,8 +302,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	private int viewportOffsetY;
 
 	// Uniforms
-	private int uniColorBlindMode;
-	private int uniUiColorBlindMode;
+	private int uniColorBlindnessIntensity;
+	private int uniUiColorBlindnessIntensity;
 	private int uniUseFog;
 	private int uniFogColor;
 	private int uniFogDepth;
@@ -343,7 +343,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	private int uniLightProjectionMatrix;
 	private int uniShadowMap;
 	private int uniUiTexture;
-	private int uniTexSamplingMode;
 	private int uniTexSourceDimensions;
 	private int uniTexTargetDimensions;
 	private int uniUiAlphaOverlay;
@@ -591,23 +590,35 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			}
 
 			if (awtContext != null)
-			{
 				awtContext.destroy();
-				awtContext = null;
-			}
+			awtContext = null;
 
 			if (debugCallback != null)
-			{
 				debugCallback.free();
-				debugCallback = null;
-			}
+			debugCallback = null;
 
+			if (vertexBuffer != null)
+				vertexBuffer.destroy();
 			vertexBuffer = null;
+
+			if (uvBuffer != null)
+				uvBuffer.destroy();
 			uvBuffer = null;
+
+			if (normalBuffer != null)
+				normalBuffer.destroy();
 			normalBuffer = null;
 
+			if (modelBufferSmall != null)
+				modelBufferSmall.destroy();
 			modelBufferSmall = null;
+
+			if (modelBuffer != null)
+				modelBuffer.destroy();
 			modelBuffer = null;
+
+			if (modelBufferUnordered != null)
+				modelBufferUnordered.destroy();
 			modelBufferUnordered = null;
 
 			// force main buffer provider rebuild to turn off alpha channel
@@ -691,6 +702,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			{
 				case "version_header":
 					return versionHeader;
+				case "UI_SCALING_MODE":
+					return String.format("#define %s %d", key, config.uiScalingMode().getMode());
+				case "COLOR_BLINDNESS":
+					return String.format("#define %s %d", key, config.colorBlindness().ordinal());
 				case "MATERIAL_CONSTANTS":
 				{
 					StringBuilder include = new StringBuilder();
@@ -795,7 +810,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		uniGroundFogOpacity = glGetUniformLocation(glProgram, "groundFogOpacity");
 		uniLightningBrightness = glGetUniformLocation(glProgram, "lightningBrightness");
 		uniPointLightsCount = glGetUniformLocation(glProgram, "pointLightsCount");
-		uniColorBlindMode = glGetUniformLocation(glProgram, "colorBlindMode");
+		uniColorBlindnessIntensity = glGetUniformLocation(glProgram, "colorBlindnessIntensity");
 		uniLightDirection = glGetUniformLocation(glProgram, "lightDirection");
 		uniShadowMaxBias = glGetUniformLocation(glProgram, "shadowMaxBias");
 		uniShadowsEnabled = glGetUniformLocation(glProgram, "shadowsEnabled");
@@ -805,10 +820,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		uniUnderwaterCausticsStrength = glGetUniformLocation(glProgram, "underwaterCausticsStrength");
 
 		uniUiTexture = glGetUniformLocation(glUiProgram, "uiTexture");
-		uniTexSamplingMode = glGetUniformLocation(glUiProgram, "samplingMode");
 		uniTexTargetDimensions = glGetUniformLocation(glUiProgram, "targetDimensions");
 		uniTexSourceDimensions = glGetUniformLocation(glUiProgram, "sourceDimensions");
-		uniUiColorBlindMode = glGetUniformLocation(glUiProgram, "colorBlindMode");
+		uniUiColorBlindnessIntensity = glGetUniformLocation(glUiProgram, "colorBlindnessIntensity");
 		uniUiAlphaOverlay = glGetUniformLocation(glUiProgram, "alphaOverlay");
 		uniTextureArray = glGetUniformLocation(glProgram, "textureArray");
 		uniElapsedTime = glGetUniformLocation(glProgram, "elapsedTime");
@@ -900,7 +914,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		vboUiHandle = glGenBuffers();
 		glBindVertexArray(vaoUiHandle);
 
-		FloatBuffer vboUiBuf = GpuFloatBuffer.allocateDirect(5 * 4);
+		FloatBuffer vboUiBuf = BufferUtils.createFloatBuffer(5 * 4);
 		vboUiBuf.put(new float[]{
 			// positions     // texture coords
 			1f, 1f, 0.0f, 1.0f, 0f, // top right
@@ -1044,7 +1058,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 	private void initCameraUniformBuffer()
 	{
-		IntBuffer uniformBuf = GpuIntBuffer.allocateDirect(8 + 2048 * 4);
+		IntBuffer uniformBuf = BufferUtils.createIntBuffer(8 + 2048 * 4);
 		uniformBuf.put(new int[8]); // uniform block
 		final int[] pad = new int[2];
 		for (int i = 0; i < 2048; i++)
@@ -1815,7 +1829,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			glUniform4f(uniFogColor, fogColor[0], fogColor[1], fogColor[2], 1f);
 
 			glUniform1i(uniDrawDistance, drawDistance * Perspective.LOCAL_TILE_SIZE);
-			glUniform1i(uniColorBlindMode, config.colorBlindMode().ordinal());
+			glUniform1f(uniColorBlindnessIntensity, config.colorBlindnessIntensity() / 100.f);
 
 			float[] waterColor = environmentManager.currentWaterColor;
 			float[] waterColorHSB = Color.RGBtoHSB((int) (waterColor[0] * 255f), (int) (waterColor[1] * 255f), (int) (waterColor[2] * 255f), null);
@@ -2001,11 +2015,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		glBindTexture(GL_TEXTURE_2D, interfaceTexture);
 
 		// Use the texture bound in the first pass
-		final UIScalingMode uiScalingMode = config.uiScalingMode();
 		glUseProgram(glUiProgram);
-		glUniform1i(uniTexSamplingMode, uiScalingMode.getMode());
 		glUniform2i(uniTexSourceDimensions, canvasWidth, canvasHeight);
-		glUniform1i(uniUiColorBlindMode, config.colorBlindMode().ordinal());
+		glUniform1f(uniUiColorBlindnessIntensity, config.colorBlindnessIntensity() / 100.f);
 		glUniform4f(uniUiAlphaOverlay,
 			(overlayColor >> 16 & 0xFF) / 255f,
 			(overlayColor >> 8 & 0xFF) / 255f,
@@ -2031,7 +2043,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		if (client.isStretchedEnabled())
 		{
 			// GL_NEAREST makes sampling for bicubic/xBR simpler, so it should be used whenever linear isn't
-			final int function = uiScalingMode == UIScalingMode.LINEAR ? GL_LINEAR : GL_NEAREST;
+			final int function = config.uiScalingMode() == UIScalingMode.LINEAR ? GL_LINEAR : GL_NEAREST;
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, function);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, function);
 		}
@@ -2076,8 +2088,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			graphics.dispose();
 		}
 
-		ByteBuffer buffer = ByteBuffer.allocateDirect(width * height * 4)
-			.order(ByteOrder.nativeOrder());
+		ByteBuffer buffer = BufferUtils.createByteBuffer(width * height * 4);
 
 		glReadBuffer(awtContext.getBufferMode());
 		glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
@@ -2251,6 +2262,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 					recompilePrograms();
 				});
 				break;
+			case "uiScalingMode":
+			case "colorBlindMode":
 			case "parallaxMappingMode":
 			case "macosIntelWorkaround":
 				clientThread.invoke(this::recompilePrograms);

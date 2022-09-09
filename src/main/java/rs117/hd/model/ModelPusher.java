@@ -10,6 +10,7 @@ import rs117.hd.data.materials.Material;
 import rs117.hd.data.materials.Overlay;
 import rs117.hd.data.materials.Underlay;
 import rs117.hd.data.materials.UvType;
+import rs117.hd.model.objects.InheritTileColorType;
 import rs117.hd.model.objects.ObjectProperties;
 import rs117.hd.model.objects.ObjectType;
 import rs117.hd.scene.ProceduralGenerator;
@@ -64,7 +65,7 @@ public class ModelPusher
     private final static float[] twelveFloats = new float[12];
     private final static int[] modelColors = new int[HdPlugin.MAX_TRIANGLE * 4];
     private final static ModelData tempModelData = new ModelData();
-    
+
     private final Map<Integer, ModelData> modelCache = new ModelCache(4096);
 
     public void clearModelCache() {
@@ -367,29 +368,33 @@ public class ModelPusher
             color1L = color2L = color3L = 127;
         }
 
-        if (objectProperties != null && objectProperties.isInheritTileColor()) {
-            if (tile != null && (tile.getSceneTilePaint() != null || tile.getSceneTileModel() != null)) {
+        if (tile != null && objectProperties != null && objectProperties.getInheritTileColorType() != InheritTileColorType.NONE) {
+            SceneTileModel tileModel = tile.getSceneTileModel();
+            SceneTilePaint tilePaint = tile.getSceneTilePaint();
+
+            if (tilePaint != null || tileModel != null) {
                 int[] tileColorHSL;
 
-                if (tile.getSceneTilePaint() != null && tile.getSceneTilePaint().getTexture() == -1) {
+                // No point in inheriting tilepaint color if the ground tile does not have a color, for example above a cave wall
+                if (tilePaint != null && tilePaint.getTexture() == -1 && tilePaint.getRBG() != 0) {
                     // pull any corner color as either one should be OK
-                    tileColorHSL = HDUtils.colorIntToHSL(tile.getSceneTilePaint().getSwColor());
+                    tileColorHSL = HDUtils.colorIntToHSL(tilePaint.getSwColor());
 
                     // average saturation and lightness
                     tileColorHSL[1] =
                             (
                                     tileColorHSL[1] +
-                                            HDUtils.colorIntToHSL(tile.getSceneTilePaint().getSeColor())[1] +
-                                            HDUtils.colorIntToHSL(tile.getSceneTilePaint().getNwColor())[1] +
-                                            HDUtils.colorIntToHSL(tile.getSceneTilePaint().getNeColor())[1]
+                                            HDUtils.colorIntToHSL(tilePaint.getSeColor())[1] +
+                                            HDUtils.colorIntToHSL(tilePaint.getNwColor())[1] +
+                                            HDUtils.colorIntToHSL(tilePaint.getNeColor())[1]
                             ) / 4;
 
                     tileColorHSL[2] =
                             (
                                     tileColorHSL[2] +
-                                            HDUtils.colorIntToHSL(tile.getSceneTilePaint().getSeColor())[2] +
-                                            HDUtils.colorIntToHSL(tile.getSceneTilePaint().getNwColor())[2] +
-                                            HDUtils.colorIntToHSL(tile.getSceneTilePaint().getNeColor())[2]
+                                            HDUtils.colorIntToHSL(tilePaint.getSeColor())[2] +
+                                            HDUtils.colorIntToHSL(tilePaint.getNwColor())[2] +
+                                            HDUtils.colorIntToHSL(tilePaint.getNeColor())[2]
                             ) / 4;
 
                     int overlayId = client.getScene().getOverlayIds()[tileZ][tileX][tileY];
@@ -405,19 +410,31 @@ public class ModelPusher
                     color1H = color2H = color3H = tileColorHSL[0];
                     color1S = color2S = color3S = tileColorHSL[1];
                     color1L = color2L = color3L = tileColorHSL[2];
-                } else if (tile.getSceneTileModel() != null && tile.getSceneTileModel().getTriangleTextureId() == null) {
+
+                } else if (tileModel != null && tileModel.getTriangleTextureId() == null) {
                     int faceColorIndex = -1;
-                    for (int i = 0; i < tile.getSceneTileModel().getTriangleColorA().length; i++) {
-                        if (!proceduralGenerator.isOverlayFace(tile, i)) {
-                            // get a color from an underlay face as it's generally more desirable
-                            // than pulling colors from paths and other overlays
-                            faceColorIndex = i;
-                            break;
-                        }
+                    for (int i = 0; i < tileModel.getTriangleColorA().length; i++) {
+                        boolean isOverlayFace = proceduralGenerator.isOverlayFace(tile, i);
+                        // Use underlay if the tile does not have an overlay, useful for rocks in cave corners.
+                        if(objectProperties.getInheritTileColorType() == InheritTileColorType.UNDERLAY || tileModel.getModelOverlay() == 0) {
+                            // pulling the color from UNDERLAY is more desirable for green grass tiles
+                            // OVERLAY pulls in path color which is not desirable for grass next to paths
+                            if (!isOverlayFace) {                                
+                                faceColorIndex = i;
+                                break;
+                            }
+                        }  
+                        else if(objectProperties.getInheritTileColorType() == InheritTileColorType.OVERLAY) {
+                            if (isOverlayFace) {
+                                // OVERLAY used in dirt/path/house tile color blend better with rubbles/rocks
+                                faceColorIndex = i;
+                                break;
+                            }
+                        }                     
                     }
 
                     if (faceColorIndex != -1) {
-                        tileColorHSL = HDUtils.colorIntToHSL(tile.getSceneTileModel().getTriangleColorA()[faceColorIndex]);
+                        tileColorHSL = HDUtils.colorIntToHSL(tileModel.getTriangleColorA()[faceColorIndex]);
 
                         int underlayId = client.getScene().getUnderlayIds()[tileZ][tileX][tileY];
                         Underlay underlay = Underlay.getUnderlay(underlayId, tile, client, config);

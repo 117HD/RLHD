@@ -609,10 +609,10 @@ class SceneUploader
 
 			WaterType waterType = proceduralGenerator.tileWaterType(tile, sceneTilePaint);
 
-			int swTerrainData = packTerrainData(swDepth, waterType, tileZ);
-			int seTerrainData = packTerrainData(seDepth, waterType, tileZ);
-			int nwTerrainData = packTerrainData(nwDepth, waterType, tileZ);
-			int neTerrainData = packTerrainData(neDepth, waterType, tileZ);
+			int swTerrainData = packTerrainData(Math.max(1, swDepth), waterType, tileZ);
+			int seTerrainData = packTerrainData(Math.max(1, seDepth), waterType, tileZ);
+			int nwTerrainData = packTerrainData(Math.max(1, nwDepth), waterType, tileZ);
+			int neTerrainData = packTerrainData(Math.max(1, neDepth), waterType, tileZ);
 
 			normalBuffer.ensureCapacity(24);
 			normalBuffer.put(neNormals[0], neNormals[2], neNormals[1], neTerrainData);
@@ -943,9 +943,9 @@ class SceneUploader
 
 				WaterType waterType = proceduralGenerator.faceWaterType(tile, face, sceneTileModel);
 
-				int aTerrainData = packTerrainData(depthA, waterType, tileZ);
-				int bTerrainData = packTerrainData(depthB, waterType, tileZ);
-				int cTerrainData = packTerrainData(depthC, waterType, tileZ);
+				int aTerrainData = packTerrainData(Math.max(1, depthA), waterType, tileZ);
+				int bTerrainData = packTerrainData(Math.max(1, depthB), waterType, tileZ);
+				int cTerrainData = packTerrainData(Math.max(1, depthC), waterType, tileZ);
 
 				normalBuffer.ensureCapacity(12);
 				normalBuffer.put(normalsA[0], normalsA[2], normalsA[1], aTerrainData);
