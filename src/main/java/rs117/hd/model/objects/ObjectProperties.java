@@ -134,6 +134,7 @@ public enum ObjectProperties
 	ROCK_CAVE_ENTRANCES(Material.ROCK_2, new Properties().setFlatNormals(true), 6659, 11835, 29627),
 	CAVE_WALLS_BLEND(Material.ROCK_2, new Properties().setFlatNormals(true).setUvType(UvType.GROUND_PLANE), 17211, 17210, 17215, 17216, 17217,25049,25050, 25051, 25052,25053,25054,25055,25056,25052, 25059,25060, 25061,25062, 25063,25064,29634),
 	CAVE_WALL_ABOVE_FLOOR_TILE(Material.ROCK_2, new Properties().setFlatNormals(true).setUvType(UvType.GROUND_PLANE), 17224, 25057, 25058),
+	TROOL_STRONGHOLD_HIDDEN_DOOR(Material.GRUNGE_1, 3762),
 
 	// All Lumbridge wall IDs
 	LUMBRIDGE_CAVE_WALLS(Material.ROCK_2, new Properties().setFlatNormals(true), 5912, 5913, 5914, 5915, 5916, 5917, 5918, 5919, 5920, 5921, 5922, 5923, 5924, 5925, 5926, 5927, 5928, 5929, 5930, 5931, 5932, 5933, 5934, 5935, 5936, 5937, 5938, 5939, 5940, 5941, 5942, 5943, 5944,6903,6925,6927,6929,6930,6931,6932,6933,6939,6940),
@@ -143,7 +144,7 @@ public enum ObjectProperties
 	// Unknown
 	UNKNOWN_1(Material.GRUNGE_1, new Properties().setFlatNormals(true), 677),
 	UNKNOWN_2(Material.NONE, new Properties().setFlatNormals(true), 1602, 2569, 3089, 3090, 3091, 3096, 3097, 3102, 3103, 3111, 3112, 3113, 3114, 3192, 10748, 10767, 10770),
-	UNKNOWN_3(Material.GRUNGE_1, 2141, 3669, 3714, 3737, 3738, 3759, 3760, 3805, 3806, 3807, 3808, 3812, 6820, 6822, 6826, 6827),
+	UNKNOWN_3(Material.GRUNGE_1, 2141, 3669, 3714, 3737, 3738, 3739, 3740, 3759, 3760, 3761, 3770, 3772, 3773, 3774, 3792, 3793, 3805, 3806, 3807, 3808, 3812, 6820, 6822, 6826, 6827),
 	UNKNOWN_4(Material.NONE, new Properties().setFlatNormals(true), 39617),
 	UNKNOWN_5(Material.GRUNGE_1, 29032),
 	UNKNOWN_6(Material.NONE, new Properties().setFlatNormals(true), 436, 441, 443, 455, 458, 461, 462, 477),
