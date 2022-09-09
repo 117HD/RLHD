@@ -86,7 +86,6 @@ import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ForkJoinPool;
 
 import static org.jocl.CL.*;
 import static org.lwjgl.opengl.GL43C.*;
@@ -358,7 +357,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 	// Animation things
 	private long lastFrameTime = System.currentTimeMillis();
-	private long lastFreeTime = System.currentTimeMillis();
 
 	// Generic scalable animation timer used in shaders
 	private float elapsedTime = 0;
@@ -1602,14 +1600,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			return;
 		}
 
-		// schedule buffer finalization every 5 seconds
-		if (System.currentTimeMillis() - lastFreeTime > 5000) {
-			ForkJoinPool.commonPool().execute(() -> {
-				modelPusher.freeFinalizedBuffers();
-				modelPusher.hintGC();
-			});
-			this.lastFreeTime = System.currentTimeMillis();
-		}
+		modelPusher.freeFinalizedBuffers();
+		modelPusher.hintGC();
 
 		// shader variables for water, lava animations
 		elapsedTime += (System.currentTimeMillis() - lastFrameTime) / 1000f;

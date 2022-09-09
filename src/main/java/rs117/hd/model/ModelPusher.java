@@ -136,19 +136,16 @@ public class ModelPusher {
         int freeAttempts = 0;
         PhantomReference<Buffer> reference;
 
-        while ((reference = (PhantomReference<Buffer>) this.bufferReferenceQueue.poll()) != null) {
+        // limit freeing to 5ms per frame to prevent dramatic spikes
+        long start = System.currentTimeMillis();
+        while (System.currentTimeMillis() - start < 5 && (reference = (PhantomReference<Buffer>) this.bufferReferenceQueue.poll()) != null) {
             freeAttempts++;
-
-            synchronized (this.bufferInfo) {
-                BufferInfo bi = this.bufferInfo.get(reference);
-                if (bi != null) {
-                    freeCount++;
-                    MemoryUtil.nmemFree(bi.getAddress());
-                    synchronized (this.bytesCachedLock) {
-                        this.bytesCached -= bi.getBytes();
-                    }
-                    this.bufferInfo.remove(reference);
-                }
+            BufferInfo bi = this.bufferInfo.get(reference);
+            if (bi != null) {
+                freeCount++;
+                MemoryUtil.nmemFree(bi.getAddress());
+                this.bytesCached -= bi.getBytes();
+                this.bufferInfo.remove(reference);
             }
 
 
@@ -252,37 +249,33 @@ public class ModelPusher {
         }
 
         if (cachingVertexData || cachingNormalData || cachingUvData) {
-            synchronized (this.bufferInfo) {
-                int bytesMultiplier = 0;
+            int bytesMultiplier = 0;
 
-                if (allocatedVertexData) {
-                    this.bufferInfo.put(new PhantomReference<>(fullVertexData, this.bufferReferenceQueue), new BufferInfo(MemoryUtil.memAddress(fullVertexData), faceCount * 12L * 4L));
-                }
-
-                if (cachingVertexData) {
-                    bytesMultiplier++;
-                }
-
-                if (allocatedNormalData) {
-                    this.bufferInfo.put(new PhantomReference<>(fullNormalData, this.bufferReferenceQueue), new BufferInfo(MemoryUtil.memAddress(fullNormalData), faceCount * 12L * 4L));
-                }
-
-                if (cachingNormalData) {
-                    bytesMultiplier++;
-                }
-
-                if (allocatedUvData) {
-                    this.bufferInfo.put(new PhantomReference<>(fullUvData, this.bufferReferenceQueue), new BufferInfo(MemoryUtil.memAddress(fullUvData), faceCount * 12L * 4L));
-                }
-
-                if (cachingUvData) {
-                    bytesMultiplier++;
-                }
-
-                synchronized (this.bytesCachedLock) {
-                    this.bytesCached += (long) faceCount * 12 * 4 * bytesMultiplier;
-                }
+            if (allocatedVertexData) {
+                this.bufferInfo.put(new PhantomReference<>(fullVertexData, this.bufferReferenceQueue), new BufferInfo(MemoryUtil.memAddress(fullVertexData), faceCount * 12L * 4L));
             }
+
+            if (cachingVertexData) {
+                bytesMultiplier++;
+            }
+
+            if (allocatedNormalData) {
+                this.bufferInfo.put(new PhantomReference<>(fullNormalData, this.bufferReferenceQueue), new BufferInfo(MemoryUtil.memAddress(fullNormalData), faceCount * 12L * 4L));
+            }
+
+            if (cachingNormalData) {
+                bytesMultiplier++;
+            }
+
+            if (allocatedUvData) {
+                this.bufferInfo.put(new PhantomReference<>(fullUvData, this.bufferReferenceQueue), new BufferInfo(MemoryUtil.memAddress(fullUvData), faceCount * 12L * 4L));
+            }
+
+            if (cachingUvData) {
+                bytesMultiplier++;
+            }
+
+            this.bytesCached += (long) faceCount * 12 * 4 * bytesMultiplier;
         }
 
         boolean hideBakedEffects = config.hideBakedEffects();
