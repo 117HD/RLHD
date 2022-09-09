@@ -1,6 +1,5 @@
 package rs117.hd.model;
 
-import java.nio.Buffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.HashMap;
@@ -41,7 +40,8 @@ public class BufferPool {
         if (stack == null || stack.empty()) {
             return null;
         } else {
-            IntBuffer buffer = stack.pop().clear();
+            IntBuffer buffer = stack.pop();
+            buffer.clear();
             this.bytesStored -= buffer.capacity() * 4L;
             return buffer;
         }
@@ -64,7 +64,8 @@ public class BufferPool {
         if (stack == null || stack.empty()) {
             return null;
         } else {
-            FloatBuffer buffer = stack.pop().clear();
+            FloatBuffer buffer = stack.pop();
+            buffer.clear();
             this.bytesStored -= buffer.capacity() * 4L;
             return buffer;
         }
