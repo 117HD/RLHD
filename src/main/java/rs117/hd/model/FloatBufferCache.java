@@ -2,6 +2,8 @@ package rs117.hd.model;
 
 import rs117.hd.HdPlugin;
 
+import javax.inject.Inject;
+import java.nio.Buffer;
 import java.nio.FloatBuffer;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -10,10 +12,13 @@ public class FloatBufferCache extends LinkedHashMap<Integer, FloatBuffer> {
     private final long byteCapacity;
     private long bytesConsumed;
 
-    public FloatBufferCache(long byteCapacity) {
+    private final BufferPool bufferPool;
+
+    public FloatBufferCache(long byteCapacity, BufferPool bufferPool) {
         super(512, 0.7f, true);
         this.byteCapacity = byteCapacity;
         this.bytesConsumed = 0;
+        this.bufferPool = bufferPool;
     }
 
     public long getBytesConsumed() {
@@ -21,7 +26,7 @@ public class FloatBufferCache extends LinkedHashMap<Integer, FloatBuffer> {
     }
 
     public void put(int key, FloatBuffer value) {
-        this.bytesConsumed += value.remaining() * 4;
+        this.bytesConsumed += value.capacity() * 4L;
         super.put(key, value);
     }
 
@@ -35,7 +40,14 @@ public class FloatBufferCache extends LinkedHashMap<Integer, FloatBuffer> {
     protected boolean removeEldestEntry(Map.Entry<Integer, FloatBuffer> eldest) {
         // leave room for at least one max size entry
         if (this.bytesConsumed + (HdPlugin.MAX_TRIANGLE * 12 * 4) >= this.byteCapacity) {
-            this.bytesConsumed -= eldest.getValue().remaining() * 4;
+            Buffer buffer = eldest.getValue();
+            this.bytesConsumed -= buffer.capacity() * 4L;
+
+            // recycle the buffer if possible
+            if (this.bufferPool.canPutBuffer(buffer.capacity())) {
+                this.bufferPool.put(buffer.capacity(), buffer);
+            }
+
             return true;
         }
 

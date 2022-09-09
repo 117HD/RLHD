@@ -50,6 +50,8 @@ public class ModelPusher {
     @Inject
     private ProceduralGenerator proceduralGenerator;
 
+    private BufferPool bufferPool;
+
     private IntBufferCache vertexDataCache;
     private FloatBufferCache normalDataCache;
     private FloatBufferCache uvDataCache;
@@ -79,9 +81,10 @@ public class ModelPusher {
         // 80% to vertex data
         // 15% to normal data
         // 5% to uv data
-        this.vertexDataCache = new IntBufferCache((long)(config.modelCacheSizeMB() / 2 * 1000000 * 0.80));
-        this.normalDataCache = new FloatBufferCache((long)(config.modelCacheSizeMB() / 2 * 1000000 * 0.15));
-        this.uvDataCache = new FloatBufferCache((long)(config.modelCacheSizeMB() / 2 * 1000000 * 0.05));
+        this.bufferPool = new BufferPool(config.modelCacheSizeMB() / 4L * 1000000L);
+        this.vertexDataCache = new IntBufferCache((long)(config.modelCacheSizeMB() / 2 * 1000000 * 0.80), this.bufferPool);
+        this.normalDataCache = new FloatBufferCache((long)(config.modelCacheSizeMB() / 2 * 1000000 * 0.15), this.bufferPool);
+        this.uvDataCache = new FloatBufferCache((long)(config.modelCacheSizeMB() / 2 * 1000000 * 0.05), this.bufferPool);
         this.maxByteCapacity = config.modelCacheSizeMB() * 1000000L;
     }
 
@@ -107,6 +110,7 @@ public class ModelPusher {
         normalDataCache.clear();
         uvDataCache.clear();
         System.gc();
+        freeFinalizedBuffers();
     }
 
 //    public void printStats() {
@@ -217,36 +221,61 @@ public class ModelPusher {
         FloatBuffer fullUvData = null;
 
         boolean cachingVertexData = !cachedVertexData && !noCache;
+        boolean allocatedVertexData = false;
         if (cachingVertexData) {
-            fullVertexData = MemoryUtil.memAllocInt(faceCount * 12);
+            // try to take a recycled buffer before allocating a new one
+            fullVertexData = (IntBuffer) this.bufferPool.take(faceCount * 12);
+            if (fullVertexData == null) {
+                allocatedVertexData = true;
+                fullVertexData = MemoryUtil.memAllocInt(faceCount * 12);
+            }
         }
 
         boolean cachingNormalData = !cachedNormalData && !noCache;
+        boolean allocatedNormalData = false;
         if (cachingNormalData) {
-            fullNormalData = MemoryUtil.memAllocFloat(faceCount * 12);
+            fullNormalData = (FloatBuffer) this.bufferPool.take(faceCount * 12);
+            if (fullNormalData == null) {
+                allocatedNormalData = true;
+                fullNormalData = MemoryUtil.memAllocFloat(faceCount * 12);
+            }
         }
 
         boolean cachingUvData = !cachedUvData && !noCache;
+        boolean allocatedUvData = false;
         if (cachingUvData) {
-            fullUvData = MemoryUtil.memAllocFloat(faceCount * 12);
+            fullUvData = (FloatBuffer) this.bufferPool.take(faceCount * 12);
+            if (fullUvData == null) {
+                allocatedUvData = true;
+                fullUvData = MemoryUtil.memAllocFloat(faceCount * 12);
+            }
         }
 
         if (cachingVertexData || cachingNormalData || cachingUvData) {
             synchronized (this.bufferInfo) {
                 int bytesMultiplier = 0;
 
-                if (cachingVertexData) {
+                if (allocatedVertexData) {
                     this.bufferInfo.put(new PhantomReference<>(fullVertexData, this.bufferReferenceQueue), new BufferInfo(MemoryUtil.memAddress(fullVertexData), faceCount * 12L * 4L));
+                }
+
+                if (cachingVertexData) {
                     bytesMultiplier++;
+                }
+
+                if (allocatedNormalData) {
+                    this.bufferInfo.put(new PhantomReference<>(fullNormalData, this.bufferReferenceQueue), new BufferInfo(MemoryUtil.memAddress(fullNormalData), faceCount * 12L * 4L));
                 }
 
                 if (cachingNormalData) {
-                    this.bufferInfo.put(new PhantomReference<>(fullNormalData, this.bufferReferenceQueue), new BufferInfo(MemoryUtil.memAddress(fullNormalData), faceCount * 12L * 4L));
                     bytesMultiplier++;
                 }
 
-                if (cachingUvData) {
+                if (allocatedUvData) {
                     this.bufferInfo.put(new PhantomReference<>(fullUvData, this.bufferReferenceQueue), new BufferInfo(MemoryUtil.memAddress(fullUvData), faceCount * 12L * 4L));
+                }
+
+                if (cachingUvData) {
                     bytesMultiplier++;
                 }
 
