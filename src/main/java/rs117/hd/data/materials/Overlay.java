@@ -298,6 +298,13 @@ public enum Overlay {
     FOSSIL_ISLAND_HILL_TEXTURE_FIX(11, Area.FOSSIL_ISLAND_HILL_TEXTURE_FIX, GroundMaterial.VARIED_DIRT),
 
     // Zeah
+    // Great Kourend
+    KOUREND_CASTLE_BLEND_FIX(11, Area.KOUREND_CASTLE_ENTRANCE_FIX, GroundMaterial.VARROCK_PATHS, p -> p.blended(false)),
+    KOUREND_GREAT_STATUE_BLEND_FIX_1(108, Area.GREAT_KOUREND_STATUE, GroundMaterial.GRASS_1, p -> p.blended(true)),
+    KOUREND_GREAT_STATUE_BLEND_FIX_2(11, Area.GREAT_KOUREND_STATUE, GroundMaterial.GRASS_1, p -> p.blended(false)),
+    HOSIDIUS_WELL_BLEND_FIX(-119, Area.HOSIDIUS_WELL, GroundMaterial.FALADOR_PATHS, p -> p.blended(false)),
+    HOSIDIUS_STAIRS_BLEND_FIX(-119, Area.HOSIDIUS_STAIRS, GroundMaterial.FALADOR_PATHS, p -> p.blended(false)),
+    SHAYZIEN_EAST_PATH_FIX(11, Area.SHAYZIEN_EAST_ENTRANCE_BLEND_FIX, GroundMaterial.VARROCK_PATHS, p -> p.blended(false)),
     XERICS_LOOKOUT_TILE(Area.XERICS_LOOKOUT, GroundMaterial.TILES_2x2_2, p -> p.blended(false).ids(50, 2)),
 
     HOSIDIUS_STONE_FLOOR(123, Area.HOSIDIUS, GroundMaterial.FALADOR_PATHS),
@@ -380,7 +387,8 @@ public enum Overlay {
     OVERLAY_GRAVEL(GroundMaterial.GRAVEL, p -> p.ids(-76, 2, 3, 4, 6, 8, 10, 119)),
     OVERLAY_VARROCK_PATHS(GroundMaterial.VARROCK_PATHS, p -> p.ids(-85, -77, 11)),
     OVERLAY_SWAMP_WATER(WaterType.SWAMP_WATER, p -> p.ids(-100, 7)),
-    OVERLAY_WOOD_PLANKS(GroundMaterial.WOOD_PLANKS_1, p -> p.ids(5, 35, 52)),
+    OVERLAY_WOOD_PLANKS(GroundMaterial.WOOD_PLANKS_1, p -> p.ids(5, 35)),
+    OVERLAY_CLEAN_WOOD_PLANKS(GroundMaterial.CLEAN_WOOD_FLOOR, p -> p.ids(52).shiftLightness(-4)),
     OVERLAY_SAND(GroundMaterial.SAND, p -> p.ids(25, 26)),
     OVERLAY_BRICK_BROWN(GroundMaterial.BRICK_BROWN, p -> p.ids(27, 46).blended(false)),
     OVERLAY_SNOW(GroundMaterial.SNOW_2, p -> p.ids(30, 33)),
@@ -389,7 +397,7 @@ public enum Overlay {
     OVERLAY_N122(-122, GroundMaterial.TILES_2x2_2_GLOSS),
     OVERLAY_N119(-119, GroundMaterial.FALADOR_PATHS),
     OVERLAY_N93(-93, GroundMaterial.CARPET),
-    OVERLAY_N82(-82, GroundMaterial.TILE_DARK),
+    OVERLAY_N82(-82, GroundMaterial.CLEAN_TILE),
     OVERLAY_12(12, GroundMaterial.STONE_PATTERN),
     OVERLAY_13(13, GroundMaterial.CARPET, p -> p.blended(false)),
     LAVA(19, GroundMaterial.HD_LAVA, p -> p.hue(0).saturation(0).shiftLightness(127).blended(false)),
