@@ -11,8 +11,8 @@ public class BufferPool {
     private final Map<Integer, Stack<FloatBuffer>> floatBufferStackMap;
     private final long byteCapacity;
     private long bytesStored;
-    private int takes;
-    private int hits;
+    private long takes;
+    private long hits;
 
     public BufferPool(long byteCapacity) {
         this.intBufferStackMap = new HashMap<>();
@@ -87,6 +87,8 @@ public class BufferPool {
             this.floatBufferStackMap.clear();
             this.intBufferStackMap.clear();
             this.bytesStored = 0;
+            this.takes = 0;
+            this.hits = 0;
         }
     }
 }
