@@ -59,21 +59,16 @@ public class ModelPusher {
     private final ReferenceQueue<Buffer> bufferReferenceQueue;
     private long bytesCached;
     private long maxByteCapacity;
-    private final Object bytesCachedLock;
-
-    private long lastHintTime;
 
 //    private int pushes = 0;
-//    private int vertexDataHits = 0;
-//    private int normalDataHits = 0;
-//    private int uvDataHits = 0;
+//    private int vertexdatahits = 0;
+//    private int normaldatahits = 0;
+//    private int uvdatahits = 0;
 
     public ModelPusher() {
         this.bufferInfo = new HashMap<>();
         this.bufferReferenceQueue = new ReferenceQueue<>();
         this.bytesCached = 0;
-        this.bytesCachedLock = new Object();
-        this.lastHintTime = System.currentTimeMillis();
     }
 
     public void init() {
@@ -116,15 +111,16 @@ public class ModelPusher {
 //    public void printStats() {
 //        StringBuilder stats = new StringBuilder();
 //        stats.append("\nModel pusher cache stats:\n");
-//        stats.append("Vertex cache hit ratio: ").append((float)vertexDataHits/pushes*100).append("%\n");
-//        stats.append("Normal cache hit ratio: ").append((float)normalDataHits/pushes*100).append("%\n");
-//        stats.append("UV cache hit ratio: ").append((float)uvDataHits/pushes*100).append("%\n");
+////        stats.append("Vertex cache hit ratio: ").append((float)vertexDataHits/pushes*100).append("%\n");
+////        stats.append("Normal cache hit ratio: ").append((float)normalDataHits/pushes*100).append("%\n");
+////        stats.append("UV cache hit ratio: ").append((float)uvDataHits/pushes*100).append("%\n");
 //        stats.append(vertexDataCache.size()).append(" vertex datas consuming ").append(vertexDataCache.getBytesConsumed()).append(" bytes\n");
 //        stats.append(normalDataCache.size()).append(" normal datas consuming ").append(normalDataCache.getBytesConsumed()).append(" bytes\n");
 //        stats.append(uvDataCache.size()).append(" uv datas consuming ").append(uvDataCache.getBytesConsumed()).append(" bytes\n");
+//        stats.append("totally consuming ").append(this.bytesCached).append(" bytes\n");
 //
 //        log.debug(stats.toString());
-//
+////
 //        vertexDataHits = 0;
 //        normalDataHits = 0;
 //        uvDataHits = 0;
@@ -132,12 +128,14 @@ public class ModelPusher {
 //    }
 
     public void freeFinalizedBuffers() {
+        bufferPool.checkRatio();
+
         int freeCount = 0;
         int freeAttempts = 0;
         PhantomReference<Buffer> reference;
 
         long start = System.currentTimeMillis();
-        int maxFreeTime = Math.round((float)(this.bytesCached / this.maxByteCapacity));
+        int maxFreeTime = Math.round((float)this.bytesCached / this.maxByteCapacity * 1.5f);
         while (System.currentTimeMillis() - start < maxFreeTime && (reference = (PhantomReference<Buffer>) this.bufferReferenceQueue.poll()) != null) {
             freeAttempts++;
             BufferInfo bi = this.bufferInfo.get(reference);
@@ -216,66 +214,43 @@ public class ModelPusher {
         IntBuffer fullVertexData = null;
         FloatBuffer fullNormalData = null;
         FloatBuffer fullUvData = null;
+        int byteCount = faceCount * 12 * 4;
 
         boolean cachingVertexData = !cachedVertexData && !noCache;
-        boolean allocatedVertexData = false;
         if (cachingVertexData) {
             // try to take a recycled buffer before allocating a new one
             fullVertexData = this.bufferPool.takeIntBuffer(faceCount * 12);
-            if (fullVertexData == null) {
-                allocatedVertexData = true;
+            if (fullVertexData == null && this.bytesCached + byteCount <= this.maxByteCapacity) {
                 fullVertexData = MemoryUtil.memAllocInt(faceCount * 12);
+                this.bufferInfo.put(new PhantomReference<>(fullVertexData, this.bufferReferenceQueue), new BufferInfo(MemoryUtil.memAddress(fullVertexData), byteCount));
+                this.bytesCached += byteCount;
+            } else {
+                cachingVertexData = false;
             }
         }
 
         boolean cachingNormalData = !cachedNormalData && !noCache;
-        boolean allocatedNormalData = false;
         if (cachingNormalData) {
             fullNormalData = this.bufferPool.takeFloatBuffer(faceCount * 12);
-            if (fullNormalData == null) {
-                allocatedNormalData = true;
+            if (fullNormalData == null && this.bytesCached + byteCount <= this.maxByteCapacity) {
                 fullNormalData = MemoryUtil.memAllocFloat(faceCount * 12);
+                this.bufferInfo.put(new PhantomReference<>(fullNormalData, this.bufferReferenceQueue), new BufferInfo(MemoryUtil.memAddress(fullNormalData), byteCount));
+                this.bytesCached += byteCount;
+            } else {
+                cachingNormalData = false;
             }
         }
 
         boolean cachingUvData = !cachedUvData && !noCache;
-        boolean allocatedUvData = false;
         if (cachingUvData) {
             fullUvData = this.bufferPool.takeFloatBuffer(faceCount * 12);
-            if (fullUvData == null) {
-                allocatedUvData = true;
+            if (fullUvData == null && this.bytesCached + byteCount <= this.maxByteCapacity) {
                 fullUvData = MemoryUtil.memAllocFloat(faceCount * 12);
+                this.bufferInfo.put(new PhantomReference<>(fullUvData, this.bufferReferenceQueue), new BufferInfo(MemoryUtil.memAddress(fullUvData), byteCount));
+                this.bytesCached += byteCount;
+            } else {
+                cachingUvData = false;
             }
-        }
-
-        if (cachingVertexData || cachingNormalData || cachingUvData) {
-            int bytesMultiplier = 0;
-
-            if (allocatedVertexData) {
-                this.bufferInfo.put(new PhantomReference<>(fullVertexData, this.bufferReferenceQueue), new BufferInfo(MemoryUtil.memAddress(fullVertexData), faceCount * 12L * 4L));
-            }
-
-            if (cachingVertexData) {
-                bytesMultiplier++;
-            }
-
-            if (allocatedNormalData) {
-                this.bufferInfo.put(new PhantomReference<>(fullNormalData, this.bufferReferenceQueue), new BufferInfo(MemoryUtil.memAddress(fullNormalData), faceCount * 12L * 4L));
-            }
-
-            if (cachingNormalData) {
-                bytesMultiplier++;
-            }
-
-            if (allocatedUvData) {
-                this.bufferInfo.put(new PhantomReference<>(fullUvData, this.bufferReferenceQueue), new BufferInfo(MemoryUtil.memAddress(fullUvData), faceCount * 12L * 4L));
-            }
-
-            if (cachingUvData) {
-                bytesMultiplier++;
-            }
-
-            this.bytesCached += (long) faceCount * 12 * 4 * bytesMultiplier;
         }
 
         boolean hideBakedEffects = config.hideBakedEffects();
@@ -336,10 +311,10 @@ public class ModelPusher {
     // hint the gc to run if we're holding more cache than the max capacity
     // this will allow the inactive portion of the cache to be finalized and thus freed
     public void hintGC() {
+        // hint the GC if we're above 95% capacity
         // do not hint the GC more than once every 5 seconds
-        if (this.bytesCached >= this.maxByteCapacity && System.currentTimeMillis() - this.lastHintTime > 5000) {
+        if (this.bytesCached >= Math.round(this.maxByteCapacity * 0.95)) {
             System.gc();
-            this.lastHintTime = System.currentTimeMillis();
         }
     }
 
