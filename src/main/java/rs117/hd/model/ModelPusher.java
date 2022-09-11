@@ -18,8 +18,6 @@ import rs117.hd.model.objects.ObjectType;
 import rs117.hd.model.objects.TzHaarRecolorType;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.utils.HDUtils;
-
-import static rs117.hd.utils.HDUtils.dotNormal3Lights;
 import rs117.hd.utils.buffer.GpuFloatBuffer;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 
@@ -30,7 +28,11 @@ import java.lang.ref.ReferenceQueue;
 import java.nio.Buffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
+import static rs117.hd.utils.HDUtils.dotNormal3Lights;
 
 /**
  * Pushes models
@@ -77,9 +79,9 @@ public class ModelPusher {
         // 15% to normal data
         // 5% to uv data
         this.bufferPool = new BufferPool(config.modelCacheSizeMB() / 4L * 1000000L);
-        this.vertexDataCache = new IntBufferCache((long)(config.modelCacheSizeMB() / 2 * 1000000 * 0.80), this.bufferPool);
-        this.normalDataCache = new FloatBufferCache((long)(config.modelCacheSizeMB() / 2 * 1000000 * 0.15), this.bufferPool);
-        this.uvDataCache = new FloatBufferCache((long)(config.modelCacheSizeMB() / 2 * 1000000 * 0.05), this.bufferPool);
+        this.vertexDataCache = new IntBufferCache((long) (config.modelCacheSizeMB() / 2 * 1000000 * 0.80), this.bufferPool);
+        this.normalDataCache = new FloatBufferCache((long) (config.modelCacheSizeMB() / 2 * 1000000 * 0.15), this.bufferPool);
+        this.uvDataCache = new FloatBufferCache((long) (config.modelCacheSizeMB() / 2 * 1000000 * 0.05), this.bufferPool);
         this.maxByteCapacity = config.modelCacheSizeMB() * 1000000L;
     }
 
@@ -95,7 +97,6 @@ public class ModelPusher {
     private final static float[] zeroFloats = new float[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     private final static int[] twoInts = new int[2];
     private final static int[] fourInts = new int[4];
-//    private final static int[] eightInts = new int[8];
     private final static int[] twelveInts = new int[12];
     private final static float[] twelveFloats = new float[12];
     private final static int[] modelColors = new int[HdPlugin.MAX_TRIANGLE * 4];
@@ -135,7 +136,7 @@ public class ModelPusher {
         PhantomReference<Buffer> reference;
 
         long start = System.currentTimeMillis();
-        int maxFreeTime = Math.round((float)this.bytesCached / this.maxByteCapacity * 1.5f);
+        int maxFreeTime = Math.round((float) this.bytesCached / this.maxByteCapacity * 1.5f);
         while (System.currentTimeMillis() - start < maxFreeTime && (reference = (PhantomReference<Buffer>) this.bufferReferenceQueue.poll()) != null) {
             freeAttempts++;
             BufferInfo bi = this.bufferInfo.get(reference);
@@ -199,7 +200,7 @@ public class ModelPusher {
             cachedUvData = uvData != null;
             if (cachedUvData) {
 //                uvDataHits++;
-                uvLength = 3 * (uvData.remaining()/12);
+                uvLength = 3 * (uvData.remaining() / 12);
                 uvBuffer.put(uvData);
                 uvData.rewind();
             }
@@ -495,10 +496,10 @@ public class ModelPusher {
         if (hideBakedEffects) {
             // hide the shadows and lights that are often baked into models by setting the colors for the shadow faces to transparent
             NPC npc = renderable instanceof NPC ? (NPC) renderable : null;
-            Player player = renderable instanceof Player  ? (Player) renderable : null;
+            Player player = renderable instanceof Player ? (Player) renderable : null;
             GraphicsObject graphicsObject = renderable instanceof GraphicsObject ? (GraphicsObject) renderable : null;
 
-            if ((npc != null && BakedModels.NPCS.contains(npc.getId())) || (graphicsObject != null && BakedModels.OBJECTS.contains(graphicsObject.getId())) || (player != null &&  player.getPlayerComposition().getEquipmentId(KitType.WEAPON) == ItemID.MAGIC_CARPET)) {
+            if ((npc != null && BakedModels.NPCS.contains(npc.getId())) || (graphicsObject != null && BakedModels.OBJECTS.contains(graphicsObject.getId())) || (player != null && player.getPlayerComposition().getEquipmentId(KitType.WEAPON) == ItemID.MAGIC_CARPET)) {
                 int[] transparency = removeBakedGroundShading(face, triA, triB, triC, faceTransparencies, faceTextures, yVertices);
                 if (transparency != null) {
                     return transparency;

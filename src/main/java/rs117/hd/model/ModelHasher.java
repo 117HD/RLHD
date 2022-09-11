@@ -38,7 +38,7 @@ public class ModelHasher {
     }
 
     public int calculateVertexCacheHash() {
-        return fastIntHash(new int[] {
+        return fastIntHash(new int[]{
                 this.faceColorsOneHash,
                 this.faceColorsTwoHash,
                 this.faceColorsThreeHash,
@@ -59,7 +59,7 @@ public class ModelHasher {
     }
 
     public int calculateNormalCacheHash() {
-        return fastIntHash(new int[] {
+        return fastIntHash(new int[]{
                 this.faceIndicesOneHash,
                 this.faceIndicesTwoHash,
                 this.faceIndicesThreeHash,
@@ -70,7 +70,7 @@ public class ModelHasher {
     }
 
     public int calculateUvCacheHash(int[] objectPropertiesID) {
-        return fastIntHash(new int[] {
+        return fastIntHash(new int[]{
                 this.faceTexturesHash,
                 this.faceTexturesUvHash,
                 fastIntHash(objectPropertiesID, -1),
