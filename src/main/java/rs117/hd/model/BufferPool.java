@@ -23,6 +23,11 @@ public class BufferPool {
         this.hits = 0;
     }
 
+    public void resetHitRatio() {
+        this.takes = 0;
+        this.hits = 0;
+    }
+
     public boolean canPutBuffer(long size) {
         return this.bytesStored + size <= this.byteCapacity;
     }
@@ -87,8 +92,7 @@ public class BufferPool {
             this.floatBufferStackMap.clear();
             this.intBufferStackMap.clear();
             this.bytesStored = 0;
-            this.takes = 0;
-            this.hits = 0;
+            this.resetHitRatio();
         }
     }
 }

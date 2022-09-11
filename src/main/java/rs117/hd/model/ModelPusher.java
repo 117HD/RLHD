@@ -109,6 +109,10 @@ public class ModelPusher {
         freeFinalizedBuffers();
     }
 
+    public void resetCounters() {
+        this.bufferPool.resetHitRatio();
+    }
+
 //    public void printStats() {
 //        StringBuilder stats = new StringBuilder();
 //        stats.append("\nModel pusher cache stats:\n");
