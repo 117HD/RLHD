@@ -572,7 +572,8 @@ public interface HdPluginConfig extends Config
 	default boolean enableModelBatching() { return false; }
 
 	@Range(
-			min = 1
+			min = 256,
+			max = 4096
 	)
 	@ConfigItem(
 			keyName = "modelCacheSizeMB",
