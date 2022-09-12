@@ -159,8 +159,11 @@ public class ModelPusher
         final short[] faceTextures = model.getFaceTextures();
         final float[] uv = model.getFaceTextureUVCoordinates();
 
-        if (faceTextures != null && faceTextures[face] != -1 && uv != null) {
-            Material material = Material.getTexture(faceTextures[face]);
+        boolean isVanillaTextured = faceTextures != null && faceTextures[face] != -1 && uv != null;
+        Material material = objectProperties == null ? Material.NONE : objectProperties.getMaterial();
+
+        if (isVanillaTextured) {
+            material = Material.getTexture(faceTextures[face]);
             int packedMaterialData = packMaterialData(material, false);
             int idx = face * 6;
 
@@ -178,15 +181,9 @@ public class ModelPusher
             twelveFloats[11] = 0;
 
             return twelveFloats;
+        } else if (material == Material.NONE) {
+            return faceTextures == null ? null : zeroFloats;
         } else {
-            Material material = hdPlugin.configObjectTextures && objectProperties != null ?
-                objectProperties.getMaterial() : Material.NONE;
-
-            if (material == Material.NONE)
-            {
-                return faceTextures == null ? null : zeroFloats;
-            }
-
             final int triA = model.getFaceIndices1()[face];
             final int triB = model.getFaceIndices2()[face];
             final int triC = model.getFaceIndices3()[face];
@@ -194,7 +191,7 @@ public class ModelPusher
             final int[] xVertices = model.getVerticesX();
             final int[] zVertices = model.getVerticesZ();
 
-            int packedMaterialData = packMaterialData(material, false);
+            int packedMaterialData = packMaterialData(hdPlugin.configObjectTextures ? material : Material.NONE, false);
 
             if (objectProperties.getUvType() == UvType.GROUND_PLANE) {
                 twelveFloats[0] = packedMaterialData;
