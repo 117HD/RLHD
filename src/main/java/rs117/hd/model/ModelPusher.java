@@ -61,6 +61,7 @@ public class ModelPusher {
     private final ReferenceQueue<Buffer> bufferReferenceQueue;
     private long bytesCached;
     private long maxByteCapacity;
+    private long lastCacheHint;
 
 //    private int pushes = 0;
 //    private int vertexdatahits = 0;
@@ -83,6 +84,7 @@ public class ModelPusher {
         this.normalDataCache = new FloatBufferCache((long) (config.modelCacheSizeMB() / 2 * 1000000 * 0.15), this.bufferPool);
         this.uvDataCache = new FloatBufferCache((long) (config.modelCacheSizeMB() / 2 * 1000000 * 0.05), this.bufferPool);
         this.maxByteCapacity = config.modelCacheSizeMB() * 1000000L;
+        this.lastCacheHint = System.currentTimeMillis();
     }
 
     // subtracts the X lowest lightness levels from the formula.
@@ -318,8 +320,9 @@ public class ModelPusher {
     public void hintGC() {
         // hint the GC if we're above 95% capacity
         // do not hint the GC more than once every 5 seconds
-        if (this.bytesCached >= Math.round(this.maxByteCapacity * 0.95)) {
+        if (this.bytesCached >= Math.round(this.maxByteCapacity * 0.95) && System.currentTimeMillis() - this.lastCacheHint > 5000) {
             System.gc();
+            this.lastCacheHint = System.currentTimeMillis();
         }
     }
 
