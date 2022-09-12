@@ -10,6 +10,7 @@ import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
 import rs117.hd.scene.LightManager;
 import rs117.hd.scene.lights.Light;
+import rs117.hd.utils.GsonUtils;
 import rs117.hd.utils.HDUtils;
 
 import java.io.FileOutputStream;
@@ -65,7 +66,7 @@ public class ExportLightsToJson
 		{
 			System.out.println("Loading current lights from JSON...");
 			// Load all lights from current lights.jsonc
-			Light.THROW_WHEN_PARSING_FAILS = true;
+			GsonUtils.THROW_WHEN_PARSING_FAILS = true;
 			Light[] currentLights = path(configPath).loadJson(Light[].class);
 			Collections.addAll(uniqueLights, currentLights);
 			System.out.println("Loaded " + currentLights.length + " lights");

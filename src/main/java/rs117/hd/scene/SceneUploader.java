@@ -32,13 +32,13 @@ import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.data.WaterType;
 import rs117.hd.data.materials.GroundMaterial;
-import rs117.hd.model.ModelHasher;
-import rs117.hd.model.objects.ObjectProperties;
 import rs117.hd.data.materials.Overlay;
 import rs117.hd.data.materials.Material;
 import rs117.hd.data.materials.Underlay;
 import rs117.hd.model.ModelPusher;
-import rs117.hd.model.objects.ObjectType;
+import rs117.hd.scene.objects.ObjectManager;
+import rs117.hd.scene.objects.data.ObjectProperties;
+import rs117.hd.scene.objects.data.ObjectType;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.buffer.GpuFloatBuffer;
 import rs117.hd.utils.buffer.GpuIntBuffer;
@@ -66,6 +66,9 @@ class SceneUploader
 
 	@Inject
 	private ModelPusher modelPusher;
+
+	@Inject
+	private ObjectManager objectManager;
 
 	public int sceneId = new Random().nextInt();
 	private int offset;
@@ -121,7 +124,7 @@ class SceneUploader
 		// pack a bit into bufferoffset that we can use later to hide
 		// some low-importance objects based on Level of Detail setting
 		model.setBufferOffset(offset << 2 | skipObject);
-		if (model.getFaceTextures() != null || (objectProperties != null && objectProperties.getMaterial() != Material.NONE))
+		if (model.getFaceTextures() != null || (objectProperties != null && objectProperties.material != Material.NONE))
 		{
 			model.setUvBufferOffset(uvOffset);
 		}
@@ -200,7 +203,7 @@ class SceneUploader
 		WallObject wallObject = tile.getWallObject();
 		if (wallObject != null)
 		{
-			objectProperties = ObjectProperties.getObjectProperties(tile.getWallObject().getId());
+			objectProperties = objectManager.getObjectProperties(tile.getWallObject().getId());
 
 			Renderable renderable1 = wallObject.getRenderable1();
 			if (renderable1 instanceof Model)
@@ -222,7 +225,7 @@ class SceneUploader
 		GroundObject groundObject = tile.getGroundObject();
 		if (groundObject != null)
 		{
-			objectProperties = ObjectProperties.getObjectProperties(tile.getGroundObject().getId());
+			objectProperties = objectManager.getObjectProperties(tile.getGroundObject().getId());
 
 			Renderable renderable = groundObject.getRenderable();
 			if (renderable instanceof Model)
@@ -236,7 +239,7 @@ class SceneUploader
 		DecorativeObject decorativeObject = tile.getDecorativeObject();
 		if (decorativeObject != null)
 		{
-			objectProperties = ObjectProperties.getObjectProperties(tile.getDecorativeObject().getId());
+			objectProperties = objectManager.getObjectProperties(tile.getDecorativeObject().getId());
 
 			Renderable renderable = decorativeObject.getRenderable();
 			if (renderable instanceof Model)
@@ -263,7 +266,7 @@ class SceneUploader
 				continue;
 			}
 
-			objectProperties = ObjectProperties.getObjectProperties(gameObject.getId());
+			objectProperties = objectManager.getObjectProperties(gameObject.getId());
 
 			Renderable renderable = gameObject.getRenderable();
 			if (renderable instanceof Model)

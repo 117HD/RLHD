@@ -61,7 +61,7 @@ import java.util.stream.Collectors;
 public class ResourcePath {
     // This could probably be improved to extract the source set from toURL()
     @Setter
-    private static String RESOURCE_DIR = "src/main/resources";
+    public static String RESOURCE_DIR = "src/main/resources";
 
     private static final Gson GSON = new GsonBuilder().setLenient().create();
     private static final FileWatcher.UnregisterCallback NOOP = () -> {};

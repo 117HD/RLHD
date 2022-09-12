@@ -12,10 +12,10 @@ import rs117.hd.data.materials.Material;
 import rs117.hd.data.materials.Overlay;
 import rs117.hd.data.materials.Underlay;
 import rs117.hd.data.materials.UvType;
-import rs117.hd.model.objects.InheritTileColorType;
-import rs117.hd.model.objects.ObjectProperties;
-import rs117.hd.model.objects.ObjectType;
-import rs117.hd.model.objects.TzHaarRecolorType;
+import rs117.hd.scene.objects.data.InheritTileColorType;
+import rs117.hd.scene.objects.data.ObjectProperties;
+import rs117.hd.scene.objects.data.ObjectType;
+import rs117.hd.scene.objects.data.TzHaarRecolorType;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.buffer.GpuFloatBuffer;
@@ -380,7 +380,7 @@ public class ModelPusher {
     }
 
     private float[] getNormalDataForFace(Model model, ObjectProperties objectProperties, int face) {
-        if ((objectProperties != null && objectProperties.isFlatNormals()) || model.getFaceColors3()[face] == -1) {
+        if ((objectProperties != null && objectProperties.flatNormals) || model.getFaceColors3()[face] == -1) {
             return zeroFloats;
         }
 
@@ -445,7 +445,7 @@ public class ModelPusher {
 
             int packedMaterialData = packMaterialData(hdPlugin.configObjectTextures ? material : Material.NONE, false);
 
-            if (objectProperties.getUvType() == UvType.GROUND_PLANE) {
+            if (objectProperties.uvType == UvType.GROUND_PLANE) {
                 twelveFloats[0] = packedMaterialData;
                 twelveFloats[1] = (xVertices[triA] % Perspective.LOCAL_TILE_SIZE) / (float) Perspective.LOCAL_TILE_SIZE;
                 twelveFloats[2] = (zVertices[triA] % Perspective.LOCAL_TILE_SIZE) / (float) Perspective.LOCAL_TILE_SIZE;
@@ -603,7 +603,7 @@ public class ModelPusher {
             color1L = color2L = color3L = 127;
         }
 
-        if (tile != null && objectProperties != null && objectProperties.getInheritTileColorType() != InheritTileColorType.NONE) {
+        if (tile != null && objectProperties != null && objectProperties.inheritTileColorType != InheritTileColorType.NONE) {
             SceneTileModel tileModel = tile.getSceneTileModel();
             SceneTilePaint tilePaint = tile.getSceneTilePaint();
 
@@ -651,7 +651,7 @@ public class ModelPusher {
                     for (int i = 0; i < tileModel.getTriangleColorA().length; i++) {
                         boolean isOverlayFace = proceduralGenerator.isOverlayFace(tile, i);
                         // Use underlay if the tile does not have an overlay, useful for rocks in cave corners.
-                        if(objectProperties.getInheritTileColorType() == InheritTileColorType.UNDERLAY || tileModel.getModelOverlay() == 0) {
+                        if(objectProperties.inheritTileColorType == InheritTileColorType.UNDERLAY || tileModel.getModelOverlay() == 0) {
                             // pulling the color from UNDERLAY is more desirable for green grass tiles
                             // OVERLAY pulls in path color which is not desirable for grass next to paths
                             if (!isOverlayFace) {                                
@@ -659,7 +659,7 @@ public class ModelPusher {
                                 break;
                             }
                         }  
-                        else if(objectProperties.getInheritTileColorType() == InheritTileColorType.OVERLAY) {
+                        else if(objectProperties.inheritTileColorType == InheritTileColorType.OVERLAY) {
                             if (isOverlayFace) {
                                 // OVERLAY used in dirt/path/house tile color blend better with rubbles/rocks
                                 faceColorIndex = i;
@@ -685,7 +685,7 @@ public class ModelPusher {
 
         int packedAlphaPriority = getPackedAlphaPriority(model, face);
 
-        if (hdPlugin.configTzhaarHD && objectProperties != null && objectProperties.getTzHaarRecolorType() != TzHaarRecolorType.NONE) {
+        if (hdPlugin.configTzhaarHD && objectProperties != null && objectProperties.tzHaarRecolorType != TzHaarRecolorType.NONE) {
             int[][] tzHaarRecolored = proceduralGenerator.recolorTzHaar(objectProperties, yVertices[triA], yVertices[triB], yVertices[triC], packedAlphaPriority, objectType, color1H, color1S, color1L, color2H, color2S, color2L, color3H, color3S, color3L);
             color1H = tzHaarRecolored[0][0];
             color1S = tzHaarRecolored[0][1];
