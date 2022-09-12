@@ -167,9 +167,18 @@ void main() {
     mat3 invTBN = transpose(TBN);
     vec3 tangentViewDir = invTBN * viewDir;
     vec3 tangentLightDir = invTBN * lightDir;
-    uv1 = sampleDisplacementMap(material1, uv1, tangentViewDir, tangentLightDir, selfShadowing, fragPos, TBN);
-    uv2 = sampleDisplacementMap(material2, uv2, tangentViewDir, tangentLightDir, selfShadowing, fragPos, TBN);
-    uv3 = sampleDisplacementMap(material3, uv3, tangentViewDir, tangentLightDir, selfShadowing, fragPos, TBN);
+
+    vec2 fragDelta = vec2(0);
+
+    sampleDisplacementMap(material1, tangentViewDir, tangentLightDir, uv1, fragDelta, selfShadowing);
+    sampleDisplacementMap(material2, tangentViewDir, tangentLightDir, uv2, fragDelta, selfShadowing);
+    sampleDisplacementMap(material3, tangentViewDir, tangentLightDir, uv3, fragDelta, selfShadowing);
+
+    // Average
+    fragDelta /= 3;
+    selfShadowing /= 3;
+
+    fragPos += TBN * vec3(fragDelta, 0);
     #endif
 
     // water uvs
