@@ -52,6 +52,9 @@ public class ModelPusher {
     @Inject
     private ProceduralGenerator proceduralGenerator;
 
+    @Inject
+    private ModelHasher modelHasher;
+
     private BufferPool bufferPool;
 
     private IntBufferCache vertexDataCache;
@@ -188,7 +191,7 @@ public class ModelPusher {
         }
     }
 
-    public int[] pushModel(Renderable renderable, Model model, GpuIntBuffer vertexBuffer, GpuFloatBuffer uvBuffer, GpuFloatBuffer normalBuffer, int tileX, int tileY, int tileZ, ObjectProperties objectProperties, ObjectType objectType, boolean noCache, ModelHasher modelHasher) {
+    public int[] pushModel(Renderable renderable, Model model, GpuIntBuffer vertexBuffer, GpuFloatBuffer uvBuffer, GpuFloatBuffer normalBuffer, int tileX, int tileY, int tileZ, ObjectProperties objectProperties, ObjectType objectType, boolean noCache) {
 //        pushes++;
         final int faceCount = Math.min(model.getFaceCount(), HdPlugin.MAX_TRIANGLE);
         int vertexLength = 0;
