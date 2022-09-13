@@ -583,6 +583,6 @@ public interface HdPluginConfig extends Config
 			section = experimentalSettings
 	)
 	default int modelCacheSizeMB() {
-		return 512;
+		return 2048;
 	}
 }
