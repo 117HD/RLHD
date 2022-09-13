@@ -30,6 +30,7 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import static rs117.hd.utils.HDUtils.dotNormal3Lights;
@@ -103,12 +104,17 @@ public class ModelPusher {
     private final static float[] twelveFloats = new float[12];
     private final static int[] modelColors = new int[HdPlugin.MAX_TRIANGLE * 4];
 
-    public void clearModelCache() {
+    public void clearModelCache(boolean hard) {
         vertexDataCache.clear();
         normalDataCache.clear();
         uvDataCache.clear();
-        System.gc();
-        freeFinalizedBuffers();
+
+        if (!hard) {
+            System.gc();
+            this.freeFinalizedBuffers();
+        } else {
+            this.freeAllBuffers();
+        }
     }
 
     public void resetCounters() {
@@ -134,6 +140,7 @@ public class ModelPusher {
 //        pushes = 0;
 //    }
 
+    // free all of the buffers that have been finalized by the garbage collector
     public void freeFinalizedBuffers() {
         bufferPool.checkRatio();
 
@@ -148,9 +155,12 @@ public class ModelPusher {
             BufferInfo bi = this.bufferInfo.get(reference);
             if (bi != null) {
                 freeCount++;
-                MemoryUtil.nmemFree(bi.getAddress());
-                this.bytesCached -= bi.getBytes();
                 this.bufferInfo.remove(reference);
+
+                if (!bi.isFreed()) {
+                    MemoryUtil.nmemFree(bi.getAddress());
+                    this.bytesCached -= bi.getBytes();
+                }
             }
 
 
@@ -158,6 +168,23 @@ public class ModelPusher {
                 // I've thought about removing this bit, but it's probably a good assertion to leave in place.
                 // Given that this is a memory leak it's something we should look out for
                 log.error("failed to free cache reference!");
+            }
+        }
+    }
+
+    // manually free all the buffers that have been allocated
+    // this is intended for use with plugin shutdown
+    public void freeAllBuffers() {
+        for (Map.Entry<PhantomReference<Buffer>, BufferInfo> entry : this.bufferInfo.entrySet()) {
+            BufferInfo bi = entry.getValue();
+
+            if (!bi.isFreed()) {
+                MemoryUtil.nmemFree(bi.getAddress());
+                this.bytesCached -= bi.getBytes();
+
+                // mark the buffer as freed so the other finalization method doesn't attempt a double free
+                // it may attempt to do so if the user immediately re-enables the plugin
+                bi.setFreed(true);
             }
         }
     }

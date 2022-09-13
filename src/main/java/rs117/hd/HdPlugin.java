@@ -574,7 +574,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			client.setGpu(false);
 			client.setDrawCallbacks(null);
 			client.setUnlockedFps(false);
-			modelPusher.clearModelCache();
+			modelPusher.clearModelCache(true);
 
 			if (lwjglInitted)
 			{
@@ -2134,7 +2134,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				// Avoid drawing the last frame's buffer during LOADING after LOGIN_SCREEN
 				targetBufferOffset = 0;
 				hasLoggedIn = false;
-				modelPusher.clearModelCache();
+				modelPusher.clearModelCache(false);
 			default:
 				lightManager.reset();
 		}
@@ -2224,7 +2224,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		{
 			case "shadowsEnabled":
 				configShadowsEnabled = config.shadowsEnabled();
-				modelPusher.clearModelCache();
+				modelPusher.clearModelCache(false);
 				clientThread.invoke(() ->
 				{
 					shutdownShadowMapFbo();
@@ -2282,7 +2282,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				clientThread.invoke(this::setupSyncMode);
 				break;
 			case "hideBakedEffects":
-				modelPusher.clearModelCache();
+				modelPusher.clearModelCache(false);
 				break;
 		}
 	}

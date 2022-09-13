@@ -37,24 +37,19 @@ public class FloatBufferCache extends LinkedHashMap<Integer, FloatBuffer> {
         Iterator<Map.Entry<Integer, FloatBuffer>> iterator = entrySet().iterator();
 
         long releasedSized = 0;
-        ArrayList<Integer> toBeReleased = new ArrayList<>();
         while (iterator.hasNext() && releasedSized < size) {
             Map.Entry<Integer, FloatBuffer> entry = iterator.next();
-            toBeReleased.add(entry.getKey());
-            releasedSized += entry.getValue().capacity() * 4L;
-        }
+            FloatBuffer buffer = entry.getValue();
+            long releasedBytes = buffer.capacity() * 4L;
+            releasedSized += releasedBytes;
+            this.bytesConsumed -= releasedBytes;
 
-        toBeReleased.forEach(key -> {
-            FloatBuffer buffer = this.remove(key);
-
-            if (buffer != null) {
-                this.bytesConsumed -= buffer.capacity() * 4L;
-
-                if (this.bufferPool.canPutBuffer(buffer.capacity() * 4L)) {
-                    this.bufferPool.putFloatBuffer(buffer.capacity(), buffer);
-                }
+            if (this.bufferPool.canPutBuffer(buffer)) {
+                this.bufferPool.putFloatBuffer(buffer);
             }
-        });
+
+            iterator.remove();
+        }
     }
 
     @Override

@@ -1,5 +1,6 @@
 package rs117.hd.model;
 
+import java.nio.Buffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.HashMap;
@@ -28,11 +29,12 @@ public class BufferPool {
         this.hits = 0;
     }
 
-    public boolean canPutBuffer(long size) {
-        return this.bytesStored + size <= this.byteCapacity;
+    public boolean canPutBuffer(Buffer buffer) {
+        return this.bytesStored + buffer.capacity() * 4L <= this.byteCapacity;
     }
 
-    public void putIntBuffer(int capacity, IntBuffer value) {
+    public void putIntBuffer(IntBuffer buffer) {
+        int capacity = buffer.capacity();
         this.bytesStored += capacity * 4L;
 
         Stack<IntBuffer> stack = this.intBufferStackMap.get(capacity);
@@ -40,7 +42,7 @@ public class BufferPool {
             stack = new Stack<>();
         }
 
-        stack.push(value);
+        stack.push(buffer);
         this.intBufferStackMap.putIfAbsent(capacity, stack);
     }
 
@@ -59,7 +61,8 @@ public class BufferPool {
         }
     }
 
-    public void putFloatBuffer(int capacity, FloatBuffer value) {
+    public void putFloatBuffer(FloatBuffer buffer) {
+        int capacity = buffer.capacity();
         this.bytesStored += capacity * 4L;
 
         Stack<FloatBuffer> stack = this.floatBufferStackMap.get(capacity);
@@ -67,7 +70,7 @@ public class BufferPool {
             stack = new Stack<>();
         }
 
-        stack.push(value);
+        stack.push(buffer);
         this.floatBufferStackMap.putIfAbsent(capacity, stack);
     }
 
@@ -87,8 +90,8 @@ public class BufferPool {
     }
 
     public void checkRatio() {
-        // clear the pools if the hit ratio is less than 90% and we're over 75% capacity
-        if ((double) this.bytesStored / this.byteCapacity >= 0.75 && (double) this.takes / this.hits < 0.90) {
+        // clear the pools if the hit ratio is less than 50% and we're over 75% capacity
+        if ((double) this.bytesStored / this.byteCapacity >= 0.75 && (double) this.takes / this.hits < 0.50) {
             this.floatBufferStackMap.clear();
             this.intBufferStackMap.clear();
             this.bytesStored = 0;

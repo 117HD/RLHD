@@ -38,24 +38,19 @@ class IntBufferCache extends LinkedHashMap<Integer, IntBuffer> {
         Iterator<Map.Entry<Integer, IntBuffer>> iterator = entrySet().iterator();
 
         long releasedSized = 0;
-        ArrayList<Integer> toBeReleased = new ArrayList<>();
         while (iterator.hasNext() && releasedSized < size) {
             Map.Entry<Integer, IntBuffer> entry = iterator.next();
-            toBeReleased.add(entry.getKey());
-            releasedSized += entry.getValue().capacity() * 4L;
-        }
+            IntBuffer buffer = entry.getValue();
+            long releasedBytes = buffer.capacity() * 4L;
+            releasedSized += releasedBytes;
+            this.bytesConsumed -= releasedBytes;
 
-        toBeReleased.forEach(key -> {
-            IntBuffer buffer = this.remove(key);
-
-            if (buffer != null) {
-                this.bytesConsumed -= buffer.capacity() * 4L;
-
-                if (this.bufferPool.canPutBuffer(buffer.capacity() * 4L)) {
-                    this.bufferPool.putIntBuffer(buffer.capacity(), buffer);
-                }
+            if (this.bufferPool.canPutBuffer(buffer)) {
+                this.bufferPool.putIntBuffer(buffer);
             }
-        });
+
+            iterator.remove();
+        }
     }
 
     @Override
