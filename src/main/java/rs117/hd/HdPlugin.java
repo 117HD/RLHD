@@ -622,8 +622,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				modelBufferUnordered.destroy();
 			modelBufferUnordered = null;
 
-			modelPusher.freeFinalizedBuffers();
-
 			// force main buffer provider rebuild to turn off alpha channel
 			client.resizeCanvas();
 		});

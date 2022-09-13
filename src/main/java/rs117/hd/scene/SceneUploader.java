@@ -67,9 +67,6 @@ class SceneUploader
 	@Inject
 	private ModelPusher modelPusher;
 
-	@Inject
-	private ModelHasher modelHasher;
-
 	public int sceneId = new Random().nextInt();
 	private int offset;
 	private int uvOffset;

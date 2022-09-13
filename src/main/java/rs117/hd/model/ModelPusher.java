@@ -30,7 +30,6 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import static rs117.hd.utils.HDUtils.dotNormal3Lights;
