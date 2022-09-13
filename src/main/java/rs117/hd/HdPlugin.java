@@ -81,7 +81,6 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
@@ -171,7 +170,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 	@Inject
 	private DeveloperTools developerTools;
-
 	private ComputeMode computeMode = ComputeMode.OPENGL;
 
 	private Canvas canvas;
@@ -359,6 +357,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 	// Animation things
 	private long lastFrameTime = System.currentTimeMillis();
+
 	// Generic scalable animation timer used in shaders
 	private float elapsedTime = 0;
 
@@ -545,6 +544,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 				lightManager.startUp();
 				hiddenObjectManager.startUp();
+				modelPusher.init();
 
 				if (client.getGameState() == GameState.LOGGED_IN)
 				{
@@ -574,6 +574,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			client.setGpu(false);
 			client.setDrawCallbacks(null);
 			client.setUnlockedFps(false);
+			modelPusher.clearModelCache(true);
 
 			if (lwjglInitted)
 			{
@@ -1597,6 +1598,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			return;
 		}
 
+		modelPusher.freeFinalizedBuffers();
+		modelPusher.hintGC();
+
 		// shader variables for water, lava animations
 		elapsedTime += (System.currentTimeMillis() - lastFrameTime) / 1000f;
 		lastFrameTime = System.currentTimeMillis();
@@ -2120,6 +2124,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	{
 		switch (gameStateChanged.getGameState()) {
 			case LOGGED_IN:
+				modelPusher.resetCounters();
 				uploadScene();
 				checkGLErrors();
 				break;
@@ -2127,6 +2132,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				// Avoid drawing the last frame's buffer during LOADING after LOGIN_SCREEN
 				targetBufferOffset = 0;
 				hasLoggedIn = false;
+				modelPusher.clearModelCache(false);
 			default:
 				lightManager.reset();
 		}
@@ -2134,7 +2140,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 	private void uploadScene()
 	{
-		modelPusher.clearModelCache();
 		vertexBuffer.clear();
 		uvBuffer.clear();
 		normalBuffer.clear();
@@ -2217,7 +2222,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		{
 			case "shadowsEnabled":
 				configShadowsEnabled = config.shadowsEnabled();
-				modelPusher.clearModelCache();
+				modelPusher.clearModelCache(false);
 				clientThread.invoke(() ->
 				{
 					shutdownShadowMapFbo();
@@ -2275,7 +2280,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				clientThread.invoke(this::setupSyncMode);
 				break;
 			case "hideBakedEffects":
-				modelPusher.clearModelCache();
+				modelPusher.clearModelCache(false);
 				break;
 		}
 	}
@@ -2464,8 +2469,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			final int batchHash = modelHasher.calculateBatchHash();
 
 			TempModelInfo tempModelInfo = tempModelInfoMap.get(batchHash);
-			if (config.disableModelBatching() || tempModelInfo == null || tempModelInfo.getFaceCount() != model.getFaceCount()) {
-				final int[] lengths = modelPusher.pushModel(renderable, model, vertexBuffer, uvBuffer, normalBuffer, 0, 0, 0, ObjectProperties.NONE, ObjectType.NONE, config.disableModelCaching(), modelHasher.calculateColorCacheHash());
+			if (!config.enableModelBatching() || tempModelInfo == null || tempModelInfo.getFaceCount() != model.getFaceCount()) {
+				final int[] lengths = modelPusher.pushModel(renderable, model, vertexBuffer, uvBuffer, normalBuffer, 0, 0, 0, ObjectProperties.NONE, ObjectType.NONE, !config.enableModelCaching());
 				final int faceCount = lengths[0] / 3;
 				final int actualTempUvOffset = lengths[1] > 0 ? tempUvOffset : -1;
 

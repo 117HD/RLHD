@@ -32,11 +32,12 @@ import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.data.WaterType;
 import rs117.hd.data.materials.GroundMaterial;
-import rs117.hd.data.materials.Material;
+import rs117.hd.model.ModelHasher;
+import rs117.hd.model.objects.ObjectProperties;
 import rs117.hd.data.materials.Overlay;
+import rs117.hd.data.materials.Material;
 import rs117.hd.data.materials.Underlay;
 import rs117.hd.model.ModelPusher;
-import rs117.hd.model.objects.ObjectProperties;
 import rs117.hd.model.objects.ObjectType;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.buffer.GpuFloatBuffer;
@@ -130,9 +131,7 @@ class SceneUploader
 		}
 		model.setSceneId(sceneId);
 
-		final int[] lengths = modelPusher.pushModel(
-			null, model, vertexBuffer, uvBuffer, normalBuffer, tileX, tileY, tileZ,
-			objectProperties, objectType, true, 0);
+		final int[] lengths = modelPusher.pushModel(null, model, vertexBuffer, uvBuffer, normalBuffer, tileX, tileY, tileZ, objectProperties, objectType, true);
 
 		offset += lengths[0];
 		uvOffset += lengths[1];

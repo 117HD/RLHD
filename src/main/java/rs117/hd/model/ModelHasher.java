@@ -3,33 +3,85 @@ package rs117.hd.model;
 import net.runelite.api.Model;
 
 import javax.inject.Singleton;
-import java.util.Arrays;
 
 @Singleton
 public class ModelHasher {
     private Model model;
-    private int faceColors1Hash;
-    private int faceColors2Hash;
-    private int faceColors3Hash;
+    private int faceColorsOneHash;
+    private int faceColorsTwoHash;
+    private int faceColorsThreeHash;
     private int faceTransparenciesHash;
     private int faceTexturesHash;
     private int faceTexturesUvHash;
+    private int xVerticesHash;
+    private int yVerticesHash;
+    private int zVerticesHash;
+    private int faceIndicesOneHash;
+    private int faceIndicesTwoHash;
+    private int faceIndicesThreeHash;
 
     public void setModel(Model model) {
         this.model = model;
-        this.faceColors1Hash = Arrays.hashCode(model.getFaceColors1());
-        this.faceColors2Hash = Arrays.hashCode(model.getFaceColors2());
-        this.faceColors3Hash = Arrays.hashCode(model.getFaceColors3());
-        this.faceTransparenciesHash = Arrays.hashCode(model.getFaceTransparencies());
-        this.faceTexturesHash = Arrays.hashCode(model.getFaceTextures());
-        this.faceTexturesUvHash = Arrays.hashCode(model.getFaceTextureUVCoordinates());
+
+        this.faceColorsOneHash = fastIntHash(model.getFaceColors1(), -1);
+        this.faceColorsTwoHash = fastIntHash(model.getFaceColors2(), -1);
+        this.faceColorsThreeHash = fastIntHash(model.getFaceColors3(), -1);
+        this.faceTransparenciesHash = fastByteHash(model.getFaceTransparencies());
+        this.faceTexturesHash = fastShortHash(model.getFaceTextures());
+        this.faceTexturesUvHash = fastFloatHash(model.getFaceTextureUVCoordinates());
+        this.xVerticesHash = fastIntHash(model.getVerticesX(), model.getVerticesCount());
+        this.yVerticesHash = fastIntHash(model.getVerticesY(), model.getVerticesCount());
+        this.zVerticesHash = fastIntHash(model.getVerticesZ(), model.getVerticesCount());
+        this.faceIndicesOneHash = fastIntHash(model.getFaceIndices1(), -1);
+        this.faceIndicesTwoHash = fastIntHash(model.getFaceIndices2(), -1);
+        this.faceIndicesThreeHash = fastIntHash(model.getFaceIndices3(), -1);
+    }
+
+    public int calculateVertexCacheHash() {
+        return fastIntHash(new int[]{
+                this.faceColorsOneHash,
+                this.faceColorsTwoHash,
+                this.faceColorsThreeHash,
+                this.faceTransparenciesHash,
+                this.faceTexturesHash,
+                this.faceTexturesUvHash,
+                this.model.getOverrideAmount(),
+                this.model.getOverrideHue(),
+                this.model.getOverrideSaturation(),
+                this.model.getOverrideLuminance(),
+                faceIndicesOneHash,
+                faceIndicesTwoHash,
+                faceIndicesThreeHash,
+                xVerticesHash,
+                yVerticesHash,
+                zVerticesHash,
+        }, -1);
+    }
+
+    public int calculateNormalCacheHash() {
+        return fastIntHash(new int[]{
+                this.faceIndicesOneHash,
+                this.faceIndicesTwoHash,
+                this.faceIndicesThreeHash,
+                fastIntHash(this.model.getVertexNormalsX(), -1),
+                fastIntHash(this.model.getVertexNormalsY(), -1),
+                fastIntHash(this.model.getVertexNormalsZ(), -1),
+        }, -1);
+    }
+
+    public int calculateUvCacheHash(int[] objectPropertiesID) {
+        return fastIntHash(new int[]{
+                this.faceTexturesHash,
+                this.faceTexturesUvHash,
+                fastIntHash(objectPropertiesID, -1),
+        }, -1);
     }
 
     public int calculateColorCacheHash() {
-        return Arrays.hashCode(new int[] {
-                this.faceColors1Hash,
-                this.faceColors2Hash,
-                this.faceColors3Hash,
+        return fastIntHash(new int[]{
+                this.faceColorsOneHash,
+                this.faceColorsTwoHash,
+                this.faceColorsThreeHash,
                 this.faceTransparenciesHash,
                 this.faceTexturesHash,
                 this.faceTexturesUvHash,
@@ -37,19 +89,127 @@ public class ModelHasher {
                 this.model.getOverrideHue(),
                 this.model.getOverrideSaturation(),
                 this.model.getOverrideLuminance()
-        });
+        }, -1);
     }
 
     public int calculateBatchHash() {
-        return Arrays.hashCode(new int[] {
-                Arrays.hashCode(this.model.getVerticesX()),
-                Arrays.hashCode(this.model.getVerticesY()),
-                Arrays.hashCode(this.model.getVerticesZ()),
-                this.faceColors1Hash,
-                this.faceColors2Hash,
-                this.faceColors3Hash,
+        return fastIntHash(new int[]{
+                this.xVerticesHash,
+                this.yVerticesHash,
+                this.zVerticesHash,
+                this.faceColorsOneHash,
+                this.faceColorsTwoHash,
+                this.faceColorsThreeHash,
                 this.faceTexturesHash,
                 this.faceTexturesUvHash,
-        });
+                this.model.getOverrideAmount(),
+                this.model.getOverrideHue(),
+                this.model.getOverrideSaturation(),
+                this.model.getOverrideLuminance()
+        }, -1);
+    }
+
+    public static int fastIntHash(int[] a, int actualLength) {
+        if (a == null) {
+            return 0;
+        }
+
+        int i = 0;
+        int r = 1;
+        int length = a.length;
+        if (actualLength != -1) {
+            length = actualLength;
+        }
+
+        for (; i + 5 < length; i += 6) {
+            r = 31 * 31 * 31 * 31 * 31 * 31 * r
+                    + 31 * 31 * 31 * 31 * 31 * a[i]
+                    + 31 * 31 * 31 * 31 * a[i + 1]
+                    + 31 * 31 * 31 * a[i + 2]
+                    + 31 * 31 * a[i + 3]
+                    + 31 * a[i + 4]
+                    + a[i + 5];
+        }
+
+        for (; i < length; i++) {
+            r = 31 * r + a[i];
+        }
+
+        return r;
+    }
+
+    public static int fastByteHash(byte[] a) {
+        if (a == null) {
+            return 0;
+        }
+
+        int i = 0;
+        int r = 1;
+
+        for (; i + 5 < a.length; i += 6) {
+            r = 31 * 31 * 31 * 31 * 31 * 31 * r
+                    + 31 * 31 * 31 * 31 * 31 * a[i]
+                    + 31 * 31 * 31 * 31 * a[i + 1]
+                    + 31 * 31 * 31 * a[i + 2]
+                    + 31 * 31 * a[i + 3]
+                    + 31 * a[i + 4]
+                    + a[i + 5];
+        }
+
+        for (; i < a.length; i++) {
+            r = 31 * r + a[i];
+        }
+
+        return r;
+    }
+
+    public static int fastShortHash(short[] a) {
+        if (a == null) {
+            return 0;
+        }
+
+        int i = 0;
+        int r = 1;
+
+        for (; i + 5 < a.length; i += 6) {
+            r = 31 * 31 * 31 * 31 * 31 * 31 * r
+                    + 31 * 31 * 31 * 31 * 31 * a[i]
+                    + 31 * 31 * 31 * 31 * a[i + 1]
+                    + 31 * 31 * 31 * a[i + 2]
+                    + 31 * 31 * a[i + 3]
+                    + 31 * a[i + 4]
+                    + a[i + 5];
+        }
+
+        for (; i < a.length; i++) {
+            r = 31 * r + a[i];
+        }
+
+        return r;
+    }
+
+    public static int fastFloatHash(float[] a) {
+        if (a == null) {
+            return 0;
+        }
+
+        int i = 0;
+        int r = 1;
+
+        for (; i + 5 < a.length; i += 6) {
+            r = 31 * 31 * 31 * 31 * 31 * 31 * r
+                    + 31 * 31 * 31 * 31 * 31 * Float.floatToIntBits(a[i])
+                    + 31 * 31 * 31 * 31 * Float.floatToIntBits(a[i + 1])
+                    + 31 * 31 * 31 * Float.floatToIntBits(a[i + 2])
+                    + 31 * 31 * Float.floatToIntBits(a[i + 3])
+                    + 31 * Float.floatToIntBits(a[i + 4])
+                    + Float.floatToIntBits(a[i + 5]);
+        }
+
+        for (; i < a.length; i++) {
+            r = 31 * r + Float.floatToIntBits(a[i]);
+        }
+
+        return r;
     }
 }
