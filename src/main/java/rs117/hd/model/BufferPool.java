@@ -91,7 +91,7 @@ public class BufferPool {
 
     public void checkRatio() {
         // clear the pools if the hit ratio is less than 50% and we're over 75% capacity
-        if ((double) this.bytesStored / this.byteCapacity >= 0.75 && (double) this.takes / this.hits < 0.50) {
+        if ((double) this.bytesStored / this.byteCapacity >= 0.75 && (double) this.takes / this.hits < 0.90) {
             this.floatBufferStackMap.clear();
             this.intBufferStackMap.clear();
             this.bytesStored = 0;

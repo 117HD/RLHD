@@ -109,11 +109,11 @@ public class ModelPusher {
         normalDataCache.clear();
         uvDataCache.clear();
 
-        if (!hard) {
+        if (hard) {
+            this.freeAllBuffers();
+        } else {
             System.gc();
             this.freeFinalizedBuffers();
-        } else {
-            this.freeAllBuffers();
         }
     }
 
