@@ -47,6 +47,10 @@ public class GpuFloatBuffer
 		buffer.put(floats);
 	}
 
+	public void put(FloatBuffer buffer) {
+		this.buffer.put(buffer);
+	}
+
 	public void flip()
 	{
 		buffer.flip();
