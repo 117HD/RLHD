@@ -34,12 +34,11 @@ class IntBufferCache extends LinkedHashMap<Integer, IntBuffer> {
     }
 
     public void makeRoom(long size) {
-        Iterator<Map.Entry<Integer, IntBuffer>> iterator = entrySet().iterator();
+        Iterator<IntBuffer> iterator = values().iterator();
 
         long releasedSized = 0;
         while (iterator.hasNext() && releasedSized < size) {
-            Map.Entry<Integer, IntBuffer> entry = iterator.next();
-            IntBuffer buffer = entry.getValue();
+            IntBuffer buffer = iterator.next();
             long releasedBytes = buffer.capacity() * 4L;
             releasedSized += releasedBytes;
             this.bytesConsumed -= releasedBytes;
