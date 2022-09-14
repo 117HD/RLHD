@@ -132,10 +132,6 @@ public class ModelPusher {
         this.freeFinalizedBuffers();
     }
 
-    public void resetCounters() {
-        this.bufferPool.resetHitRatio();
-    }
-
 //    public void printStats() {
 //        StringBuilder stats = new StringBuilder();
 //        stats.append("\nModel pusher cache stats:\n");
@@ -157,8 +153,6 @@ public class ModelPusher {
 
     // free all of the buffers that have been finalized by the garbage collector
     public void freeFinalizedBuffers() {
-        bufferPool.checkRatio();
-
         int freeCount = 0;
         int freeAttempts = 0;
         PhantomReference<Buffer> reference;
