@@ -6,7 +6,9 @@ import java.util.LinkedHashMap;
 import java.util.Stack;
 
 public class BufferStackMap<T extends Buffer> extends LinkedHashMap<Integer, Stack<T>> {
-    public BufferStackMap() {}
+    public BufferStackMap() {
+        super(512, 0.7f, true);
+    }
 
     public void putBuffer(T buffer) {
         int capacity = buffer.capacity();
@@ -17,7 +19,7 @@ public class BufferStackMap<T extends Buffer> extends LinkedHashMap<Integer, Sta
         }
 
         stack.push(buffer);
-        putIfAbsent(capacity, stack);
+        super.putIfAbsent(capacity, stack);
     }
 
     public T takeBuffer(int capacity) {
@@ -25,7 +27,7 @@ public class BufferStackMap<T extends Buffer> extends LinkedHashMap<Integer, Sta
         if (stack == null ) {
             return null;
         } else if (stack.empty()) {
-            remove(capacity);
+            super.remove(capacity);
             return null;
         } else {
             T buffer = stack.pop();
@@ -35,7 +37,7 @@ public class BufferStackMap<T extends Buffer> extends LinkedHashMap<Integer, Sta
     }
 
     public void makeRoom(long bytes) {
-        Iterator<Stack<T>> iterator = values().iterator();
+        Iterator<Stack<T>> iterator = super.values().iterator();
 
         long releasedSize = 0;
         while (iterator.hasNext() && releasedSize < bytes) {
