@@ -42,10 +42,7 @@ public class FloatBufferCache extends LinkedHashMap<Integer, FloatBuffer> {
             long releasedBytes = buffer.capacity() * 4L;
             releasedSized += releasedBytes;
             this.bytesConsumed -= releasedBytes;
-
-            if (this.bufferPool.canPutBuffer(buffer)) {
-                this.bufferPool.putFloatBuffer(buffer);
-            }
+            this.bufferPool.putFloatBuffer(buffer);
 
             iterator.remove();
         }

@@ -43,10 +43,7 @@ class IntBufferCache extends LinkedHashMap<Integer, IntBuffer> {
             long releasedBytes = buffer.capacity() * 4L;
             releasedSized += releasedBytes;
             this.bytesConsumed -= releasedBytes;
-
-            if (this.bufferPool.canPutBuffer(buffer)) {
-                this.bufferPool.putIntBuffer(buffer);
-            }
+            this.bufferPool.putIntBuffer(buffer);
 
             iterator.remove();
         }

@@ -2124,7 +2124,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	{
 		switch (gameStateChanged.getGameState()) {
 			case LOGGED_IN:
-				modelPusher.resetCounters();
 				uploadScene();
 				checkGLErrors();
 				break;
