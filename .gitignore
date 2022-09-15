@@ -1,6 +1,7 @@
 .gradle
 build
-.idea/
+.idea/*
+!.idea/jsonSchemas.xml
 .project
 .settings/
 .classpath
