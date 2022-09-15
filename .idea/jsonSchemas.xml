@@ -3,6 +3,22 @@
   <component name="JsonSchemaMappingsProjectConfiguration">
     <state>
       <map>
+        <entry key="Hidden Objects">
+          <value>
+            <SchemaInfo>
+              <option name="name" value="Hidden Objects" />
+              <option name="relativePathToSchema" value="schemas/hidden_objects.schema.json" />
+              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="path" value="src/main/resources/rs117/hd/scene/hidden_objects.jsonc" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
         <entry key="Lights">
           <value>
             <SchemaInfo>
