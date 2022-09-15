@@ -29,7 +29,7 @@ public class Light
 	public LightType type;
 	public float duration;
 	public float range;
-	public Integer fadeInDuration;
+	public int fadeInDuration;
 	@JsonAdapter(NpcID.JsonAdapter.class)
 	public HashSet<Integer> npcIds;
 	@JsonAdapter(ObjectID.JsonAdapter.class)
@@ -126,7 +126,7 @@ public class Light
 		hash = hash * 37 + (type == null ? 0 : type.hashCode());
 		hash = hash * 37 + (int) duration;
 		hash = hash * 37 + (int) range;
-		hash = hash * 37 + (fadeInDuration == null ? 0 : fadeInDuration);
+		hash = hash * 37 + fadeInDuration;
 		hash = hash * 37 + npcIds.hashCode();
 		hash = hash * 37 + objectIds.hashCode();
 		hash = hash * 37 + projectileIds.hashCode();
