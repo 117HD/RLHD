@@ -20,7 +20,7 @@ public class ExportObjectPropertiesToJson {
         Gson gson = new Gson();
 
 		Set<ObjectProperties> uniqueObjects = new LinkedHashSet<>();
-        ResourcePath configPath = path(ObjectManager.class, "object_properties.jsonc").toFileSystemPath();
+        ResourcePath configPath = path(ObjectManager.class, "object_properties.json").toFileSystemPath();
 
         System.out.println("Loading current object Properties from JSON: " + configPath);
 

@@ -155,7 +155,7 @@ public class LightManager
 	public void startUp()
 	{
 		entityHiderConfig = configManager.getConfig(EntityHiderConfig.class);
-		Env.getPathOrDefault(ENV_LIGHTS_CONFIG, () -> path(LightManager.class,"lights.jsonc"))
+		Env.getPathOrDefault(ENV_LIGHTS_CONFIG, () -> path(LightManager.class,"lights.json"))
 			.watch(this::loadConfig);
 	}
 

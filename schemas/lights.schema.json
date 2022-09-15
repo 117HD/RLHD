@@ -84,6 +84,7 @@
       },
       "type": {
         "type": "string",
+        "description": "Specify the animation to apply to the light. Defaults to STATIC.",
         "enum": [ "STATIC", "FLICKER", "PULSE" ]
       },
       "duration": {
