@@ -39,7 +39,7 @@ public class ObjectManager {
     }
 
     public void loadObjectProperties() {
-        Env.getPathOrDefault(ENV_OBJECT_PROPERTIES, () -> path(ObjectManager.class, "objects_properties.jsonc"))
+        Env.getPathOrDefault(ENV_OBJECT_PROPERTIES, () -> path(ObjectManager.class, "object_properties.jsonc"))
                 .watch(path -> {
                     objectProperties.clear();
 
