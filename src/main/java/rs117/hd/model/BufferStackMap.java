@@ -24,7 +24,7 @@ public class BufferStackMap<T extends Buffer> extends LinkedHashMap<Integer, Sta
 
     public T takeBuffer(int capacity) {
         Stack<T> stack = get(capacity);
-        if (stack == null ) {
+        if (stack == null) {
             return null;
         } else if (stack.empty()) {
             super.remove(capacity);
@@ -36,7 +36,7 @@ public class BufferStackMap<T extends Buffer> extends LinkedHashMap<Integer, Sta
         }
     }
 
-    public void makeRoom(long bytes) {
+    public long makeRoom(long bytes) {
         Iterator<Stack<T>> iterator = super.values().iterator();
 
         long releasedSize = 0;
@@ -51,5 +51,7 @@ public class BufferStackMap<T extends Buffer> extends LinkedHashMap<Integer, Sta
                 iterator.remove();
             }
         }
+
+        return releasedSize;
     }
 }

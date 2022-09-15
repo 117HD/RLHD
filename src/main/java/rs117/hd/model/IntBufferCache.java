@@ -3,8 +3,6 @@ package rs117.hd.model;
 import java.nio.IntBuffer;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.Map;
-
 
 class IntBufferCache extends LinkedHashMap<Integer, IntBuffer> {
     private final long byteCapacity;
