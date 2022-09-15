@@ -62,7 +62,7 @@ import static rs117.hd.utils.ResourcePath.path;
 @Slf4j
 public class LightManager
 {
-	public static String ENV_LIGHTS_CONFIG = "RLHD_LIGHTS_PATH";
+	private static final String ENV_LIGHTS_CONFIG = "RLHD_LIGHTS_PATH";
 
 	@Inject
 	private ConfigManager configManager;

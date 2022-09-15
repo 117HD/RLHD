@@ -1,6 +1,7 @@
 package rs117.hd.model;
 
 import net.runelite.api.Model;
+import rs117.hd.scene.objects.ObjectProperties;
 
 import javax.inject.Singleton;
 
@@ -69,11 +70,11 @@ public class ModelHasher {
         }, -1);
     }
 
-    public int calculateUvCacheHash(int[] objectPropertiesID) {
+    public int calculateUvCacheHash(ObjectProperties objectProperties) {
         return fastIntHash(new int[]{
                 this.faceTexturesHash,
                 this.faceTexturesUvHash,
-                fastIntHash(objectPropertiesID, -1),
+                objectProperties == null ? 0 : objectProperties.hashCode()
         }, -1);
     }
 
