@@ -12,7 +12,7 @@
               <option name="patterns">
                 <list>
                   <Item>
-                    <option name="path" value="src/main/resources/rs117/hd/scene/hidden_objects.jsonc" />
+                    <option name="path" value="src/main/resources/rs117/hd/scene/hidden_objects.json" />
                   </Item>
                 </list>
               </option>
@@ -28,7 +28,7 @@
               <option name="patterns">
                 <list>
                   <Item>
-                    <option name="path" value="src/main/resources/rs117/hd/scene/lights.jsonc" />
+                    <option name="path" value="src/main/resources/rs117/hd/scene/lights.json" />
                   </Item>
                 </list>
               </option>
@@ -44,7 +44,7 @@
               <option name="patterns">
                 <list>
                   <Item>
-                    <option name="path" value="src/main/resources/rs117/hd/scene/object_properties.jsonc" />
+                    <option name="path" value="src/main/resources/rs117/hd/scene/object_properties.json" />
                   </Item>
                 </list>
               </option>

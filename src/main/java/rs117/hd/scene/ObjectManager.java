@@ -39,7 +39,7 @@ public class ObjectManager {
     }
 
     public void loadObjectProperties() {
-        Env.getPathOrDefault(ENV_OBJECT_PROPERTIES, () -> path(ObjectManager.class, "object_properties.jsonc"))
+        Env.getPathOrDefault(ENV_OBJECT_PROPERTIES, () -> path(ObjectManager.class, "object_properties.json"))
                 .watch(path -> {
                     objectProperties.clear();
 
@@ -63,7 +63,7 @@ public class ObjectManager {
     }
 
     public void loadHiddenObjects() {
-        Env.getPathOrDefault(ENV_HIDDEN_OBJECTS, () -> path(ObjectManager.class, "hidden_objects.jsonc"))
+        Env.getPathOrDefault(ENV_HIDDEN_OBJECTS, () -> path(ObjectManager.class, "hidden_objects.json"))
                 .watch(path -> {
                     try {
                         hiddenObjects.clear();

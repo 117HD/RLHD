@@ -36,12 +36,12 @@ public class ExportLightsToJson
 			"Convert current light configuration from linear colors " +
 			"in the range [0, 1] to gamma colors in the range [0, 255]");
 		ArgumentAcceptingOptionSpec<String> configPathOption = parser.accepts("config",
-				"Path to lights.jsonc file to read from and write to")
+				"Path to lights.json file to read from and write to")
 			.withRequiredArg()
 			.defaultsTo(Paths
 				.get("src/main/resources",
 					LightManager.class.getPackage().getName().replace(".", "/"),
-					"lights.jsonc")
+					"lights.json")
 				.toString());
 		OptionSpec<?> skipLoadingCurrentConfig = parser.accepts("skip-loading-current-config",
 			"Don't load current lights from the JSON config, instead overwrite them");
@@ -62,7 +62,7 @@ public class ExportLightsToJson
 		if (!options.has(skipLoadingCurrentConfig))
 		{
 			System.out.println("Loading current lights from JSON...");
-			// Load all lights from current lights.jsonc
+			// Load all lights from current lights.json
 			GsonUtils.THROW_WHEN_PARSING_FAILS = true;
 			Light[] currentLights = configPath.loadJson(Light[].class);
 			Collections.addAll(uniqueLights, currentLights);
@@ -152,7 +152,7 @@ public class ExportLightsToJson
 
 			Gson gson = gsonBuilder.create();
 
-			// Write combined lights.jsonc
+			// Write combined lights.json
 			String json = gson.toJson(uniqueLights);
 
 			System.out.println("Writing " + uniqueLights.size() + " lights to JSON file: " + configPath);

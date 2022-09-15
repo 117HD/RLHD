@@ -15,7 +15,7 @@ import static rs117.hd.utils.ResourcePath.path;
 public class ExportHiddenObjectsToJson {
     public static void main(String[] args) throws IOException {
 		Set<LocationInfo> uniqueHiddenObjects = new LinkedHashSet<>();
-        ResourcePath configPath = path(ObjectManager.class, "hidden_objects.jsonc").toFileSystemPath();
+        ResourcePath configPath = path(ObjectManager.class, "hidden_objects.json").toFileSystemPath();
 
         System.out.println("Loading current hidden objects from JSON: " + configPath);
 
