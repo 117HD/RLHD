@@ -13,7 +13,6 @@ import java.util.HashSet;
 
 @Slf4j
 public class GsonUtils {
-
     @VisibleForTesting
     public static boolean THROW_WHEN_PARSING_FAILS = false;
 
@@ -144,6 +143,4 @@ public class GsonUtils {
         }
         out.endArray();
     }
-
-
 }

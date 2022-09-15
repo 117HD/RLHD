@@ -1,8 +1,7 @@
-package rs117.hd.scene.objects.data;
+package rs117.hd.scene.objects;
 
 import com.google.gson.annotations.JsonAdapter;
 import rs117.hd.data.ObjectID;
-import rs117.hd.scene.lights.Light;
 import rs117.hd.utils.AABB;
 
 import java.util.HashSet;

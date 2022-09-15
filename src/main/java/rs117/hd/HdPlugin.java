@@ -64,8 +64,9 @@ import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.Template;
 import rs117.hd.scene.*;
 import rs117.hd.scene.lights.SceneLight;
-import rs117.hd.scene.objects.ObjectManager;
-import rs117.hd.scene.objects.data.ObjectType;
+import rs117.hd.scene.ObjectManager;
+import rs117.hd.scene.objects.ObjectProperties;
+import rs117.hd.scene.objects.ObjectType;
 import rs117.hd.utils.*;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.GpuFloatBuffer;
@@ -138,7 +139,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	private LightManager lightManager;
 
 	@Inject
-	public ObjectManager objectManager;
+	private ObjectManager objectManager;
 
 	@Inject
 	private EnvironmentManager environmentManager;
@@ -2470,7 +2471,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 			TempModelInfo tempModelInfo = tempModelInfoMap.get(batchHash);
 			if (!config.enableModelBatching() || tempModelInfo == null || tempModelInfo.getFaceCount() != model.getFaceCount()) {
-				final int[] lengths = modelPusher.pushModel(renderable, model, vertexBuffer, uvBuffer, normalBuffer, 0, 0, 0, ObjectManager.NONE, ObjectType.NONE, !config.enableModelCaching());
+				final int[] lengths = modelPusher.pushModel(renderable, model, vertexBuffer, uvBuffer, normalBuffer, 0, 0, 0, ObjectProperties.NONE, ObjectType.NONE, !config.enableModelCaching());
 				final int faceCount = lengths[0] / 3;
 				final int actualTempUvOffset = lengths[1] > 0 ? tempUvOffset : -1;
 

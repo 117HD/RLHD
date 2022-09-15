@@ -2,31 +2,24 @@ package rs117.hd.scene;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import rs117.hd.scene.objects.data.LocationInfo;
+import rs117.hd.scene.objects.LocationInfo;
 import rs117.hd.utils.ResourcePath;
 
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import static rs117.hd.utils.ResourcePath.RESOURCE_DIR;
 import static rs117.hd.utils.ResourcePath.path;
 
 public class ExportHiddenObjectsToJson {
-
     public static void main(String[] args) throws IOException {
-
 		Set<LocationInfo> uniqueHiddenObjects = new LinkedHashSet<>();
-        Path configPath = ResourcePath.path(RESOURCE_DIR, "rs117/hd/scene", "hidden_objects.jsonc").toPath();
+        ResourcePath configPath = path(ObjectManager.class, "hidden_objects.jsonc").toFileSystemPath();
 
-        System.out.println("Loading current hidden objects from JSON...");
+        System.out.println("Loading current hidden objects from JSON: " + configPath);
 
-        LocationInfo[] currentObjects = path(configPath).loadJson(LocationInfo[].class);
+        LocationInfo[] currentObjects = configPath.loadJson(LocationInfo[].class);
         Collections.addAll(uniqueHiddenObjects, currentObjects);
         System.out.println("Loaded " + currentObjects.length + " hidden objects");
 
@@ -34,16 +27,7 @@ public class ExportHiddenObjectsToJson {
 
         String json = gson.toJson(uniqueHiddenObjects);
 
-        System.out.println("Writing " + uniqueHiddenObjects.size() + " hidden objects to JSON file: " + configPath.toAbsolutePath());
-        configPath.toFile().getParentFile().mkdirs();
-
-        OutputStreamWriter os = new OutputStreamWriter(
-				Files.newOutputStream(configPath.toFile().toPath()),
-                StandardCharsets.UTF_8);
-
-        os.write(json);
-        os.close();
-
+        System.out.println("Writing " + uniqueHiddenObjects.size() + " hidden objects to JSON file: " + configPath);
+        configPath.mkdirs().writeString(json);
     }
-
 }

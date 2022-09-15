@@ -12,10 +12,10 @@ import rs117.hd.data.materials.Material;
 import rs117.hd.data.materials.Overlay;
 import rs117.hd.data.materials.Underlay;
 import rs117.hd.data.materials.UvType;
-import rs117.hd.scene.objects.data.InheritTileColorType;
-import rs117.hd.scene.objects.data.ObjectProperties;
-import rs117.hd.scene.objects.data.ObjectType;
-import rs117.hd.scene.objects.data.TzHaarRecolorType;
+import rs117.hd.scene.objects.InheritTileColorType;
+import rs117.hd.scene.objects.ObjectProperties;
+import rs117.hd.scene.objects.ObjectType;
+import rs117.hd.scene.objects.TzHaarRecolorType;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.buffer.GpuFloatBuffer;
@@ -212,7 +212,7 @@ public class ModelPusher {
         if (!noCache) {
             vertexCacheHash = modelHasher.calculateVertexCacheHash();
             normalDataCacheHash = modelHasher.calculateNormalCacheHash();
-            uvDataCacheHash = modelHasher.calculateUvCacheHash(objectProperties == null ? new int[]{} : objectProperties.getId());
+            uvDataCacheHash = modelHasher.calculateUvCacheHash(objectProperties);
 
             IntBuffer vertexData = vertexDataCache.get(vertexCacheHash);
             cachedVertexData = vertexData != null && vertexData.remaining() == faceCount * 12;
@@ -412,7 +412,7 @@ public class ModelPusher {
         final float[] uv = model.getFaceTextureUVCoordinates();
 
         boolean isVanillaTextured = faceTextures != null && faceTextures[face] != -1 && uv != null;
-        Material material = objectProperties == null ? Material.NONE : objectProperties.getMaterial();
+        Material material = objectProperties == null ? Material.NONE : objectProperties.material;
 
         if (isVanillaTextured) {
             material = Material.getTexture(faceTextures[face]);

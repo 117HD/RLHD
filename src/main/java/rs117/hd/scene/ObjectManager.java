@@ -1,4 +1,4 @@
-package rs117.hd.scene.objects;
+package rs117.hd.scene;
 
 import com.google.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
@@ -6,8 +6,8 @@ import net.runelite.api.Client;
 import net.runelite.api.GameState;
 import net.runelite.api.coords.WorldPoint;
 import rs117.hd.HdPlugin;
-import rs117.hd.scene.objects.data.LocationInfo;
-import rs117.hd.scene.objects.data.ObjectProperties;
+import rs117.hd.scene.objects.LocationInfo;
+import rs117.hd.scene.objects.ObjectProperties;
 import rs117.hd.utils.AABB;
 import rs117.hd.utils.Env;
 
@@ -20,27 +20,23 @@ import static rs117.hd.utils.ResourcePath.path;
 
 @Slf4j
 public class ObjectManager {
-
     @Inject
     private Client client;
+
     @Inject
     private HdPlugin plugin;
 
-    public static ObjectProperties NONE = new ObjectProperties();
-
-    private static String ENV_HIDDEN_OBJECTS = "RLHD_HIDDEN_OBJECTS_PATH";
-    private static String ENV_OBJECT_PROPERTIES = "RLHD_OBJECTS_PROPERTIES_PATH";
+    private static final String ENV_HIDDEN_OBJECTS = "RLHD_HIDDEN_OBJECTS_PATH";
+    private static final String ENV_OBJECT_PROPERTIES = "RLHD_OBJECTS_PROPERTIES_PATH";
 
     private static final HashMap<Integer, ObjectProperties> objectProperties = new HashMap<>();
 
     private final HashMap<Integer, AABB[]> hiddenObjects = new HashMap<>();
 
-
     public void startUp() {
         loadObjectProperties();
         loadHiddenObjects();
     }
-
 
     public void loadObjectProperties() {
         Env.getPathOrDefault(ENV_OBJECT_PROPERTIES, () -> path(ObjectManager.class, "objects_properties.jsonc"))
@@ -102,7 +98,6 @@ public class ObjectManager {
 
     public ObjectProperties getObjectProperties(int objectId)
     {
-        return objectProperties.getOrDefault(objectId, NONE);
+        return objectProperties.getOrDefault(objectId, ObjectProperties.NONE);
     }
-
 }

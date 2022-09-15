@@ -1,4 +1,4 @@
-package rs117.hd.scene.objects.data;
+package rs117.hd.scene.objects;
 
 import com.google.gson.annotations.JsonAdapter;
 import lombok.NoArgsConstructor;
@@ -13,6 +13,8 @@ import java.util.Set;
 @NoArgsConstructor
 public class ObjectProperties
 {
+    public static ObjectProperties NONE = new ObjectProperties();
+
     private static final Set<Integer> DEFAULT_OBJECT_IDS = new HashSet<>(Collections.singletonList(-1));
 
     public final String description = "UNKNOWN";
@@ -22,6 +24,5 @@ public class ObjectProperties
     public boolean flatNormals = false;
     public UvType uvType = UvType.GEOMETRY;
     public TzHaarRecolorType tzHaarRecolorType = TzHaarRecolorType.NONE;
-
     public InheritTileColorType inheritTileColorType = InheritTileColorType.NONE;
 }
