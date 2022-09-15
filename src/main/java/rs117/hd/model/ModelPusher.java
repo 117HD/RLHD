@@ -81,17 +81,18 @@ public class ModelPusher {
     }
 
     public void init() {
+        this.maxByteCapacity = config.modelCacheSizeMB() * 1000000L;
+
+        // allocate a fourth of the memory budget to recycling buffers
+        this.bufferPool = new BufferPool(this.maxByteCapacity / 4);
+
         // allocate half of the budget to actively used memory
         // 80% to vertex data
         // 15% to normal data
         // 5% to uv data
-        this.maxByteCapacity = config.modelCacheSizeMB() * 1000000L;
         this.vertexDataCache = new IntBufferCache((long) (this.maxByteCapacity / 2 * 0.80f), this.bufferPool);
         this.normalDataCache = new FloatBufferCache((long) (this.maxByteCapacity / 2 * 0.15f), this.bufferPool);
         this.uvDataCache = new FloatBufferCache((long) (this.maxByteCapacity / 2 * 0.05f), this.bufferPool);
-
-        // allocate a fourth of the memory budget to recycling buffers
-        this.bufferPool = new BufferPool(this.maxByteCapacity / 4);
 
         this.lastCacheHint = System.currentTimeMillis();
         this.initialized = true;
@@ -163,7 +164,16 @@ public class ModelPusher {
         PhantomReference<Buffer> reference;
 
         long start = System.currentTimeMillis();
-        int maxFreeTime = Math.round((float) this.bytesCached / this.maxByteCapacity * 1.5f);
+
+        // allow 5ms of time spent freeing if the last cache hint less than 10 seconds ago
+        // otherwise only 1ms of free time
+        int maxFreeTime;
+        if (System.currentTimeMillis() - lastCacheHint < 10000) {
+            maxFreeTime = 5;
+        } else {
+            maxFreeTime = 1;
+        }
+
         while (System.currentTimeMillis() - start < maxFreeTime && (reference = (PhantomReference<Buffer>) this.bufferReferenceQueue.poll()) != null) {
             freeAttempts++;
             BufferInfo bi = this.bufferInfo.get(reference);
