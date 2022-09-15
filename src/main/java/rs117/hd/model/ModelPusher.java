@@ -65,6 +65,8 @@ public class ModelPusher {
     private long bytesCached;
     private long maxByteCapacity;
     private long lastCacheHint;
+    private long firstCacheHint;
+    private long hintCount;
     private boolean initialized;
 
 //    private int pushes = 0;
@@ -83,11 +85,14 @@ public class ModelPusher {
         // 80% to vertex data
         // 15% to normal data
         // 5% to uv data
-        this.bufferPool = new BufferPool(config.modelCacheSizeMB() / 4L * 1000000L);
-        this.vertexDataCache = new IntBufferCache((long) (config.modelCacheSizeMB() / 2 * 1000000 * 0.80), this.bufferPool);
-        this.normalDataCache = new FloatBufferCache((long) (config.modelCacheSizeMB() / 2 * 1000000 * 0.15), this.bufferPool);
-        this.uvDataCache = new FloatBufferCache((long) (config.modelCacheSizeMB() / 2 * 1000000 * 0.05), this.bufferPool);
         this.maxByteCapacity = config.modelCacheSizeMB() * 1000000L;
+        this.vertexDataCache = new IntBufferCache((long) (this.maxByteCapacity / 2 * 0.80f), this.bufferPool);
+        this.normalDataCache = new FloatBufferCache((long) (this.maxByteCapacity / 2 * 0.15f), this.bufferPool);
+        this.uvDataCache = new FloatBufferCache((long) (this.maxByteCapacity / 2 * 0.05f), this.bufferPool);
+
+        // allocate a fourth of the memory budget to recycling buffers
+        this.bufferPool = new BufferPool(this.maxByteCapacity / 4);
+
         this.lastCacheHint = System.currentTimeMillis();
         this.initialized = true;
     }
@@ -359,6 +364,14 @@ public class ModelPusher {
         if (this.bytesCached >= Math.round(this.maxByteCapacity * 0.95) && System.currentTimeMillis() - this.lastCacheHint > 5000) {
             System.gc();
             this.lastCacheHint = System.currentTimeMillis();
+
+//            if (this.firstCacheHint == 0) {
+//                this.firstCacheHint = System.currentTimeMillis();
+//            } else {
+//                this.hintCount++;
+//                float hintRate = (float) this.hintCount / Math.round((float)(System.currentTimeMillis() - this.firstCacheHint) / 1000);
+//                log.info("gc hint rate = " + hintRate + " per second");
+//            }
         }
     }
 

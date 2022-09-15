@@ -574,7 +574,7 @@ public interface HdPluginConfig extends Config
 
 	@Range(
 			min = 256,
-			max = 4096
+			max = 8192
 	)
 	@ConfigItem(
 			keyName = "modelCacheSizeMB",
