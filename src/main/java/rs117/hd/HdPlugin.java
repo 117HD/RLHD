@@ -48,10 +48,7 @@ import org.lwjgl.opengl.GLCapabilities;
 import org.lwjgl.opengl.GLUtil;
 import org.lwjgl.system.Callback;
 import org.lwjgl.system.Configuration;
-import rs117.hd.config.AntiAliasingMode;
-import rs117.hd.config.DefaultSkyColor;
-import rs117.hd.config.FogDepthMode;
-import rs117.hd.config.UIScalingMode;
+import rs117.hd.config.*;
 import rs117.hd.data.WaterType;
 import rs117.hd.data.materials.Material;
 import rs117.hd.model.ModelHasher;
@@ -735,7 +732,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				case "LIGHT_GETTER":
 					return generateGetter("PointLight", configMaxDynamicLights);
 				case "PARALLAX_MAPPING":
-					return String.format("#define %s %d", key, config.parallaxMappingMode().ordinal());
+					return String.format("#define %s %d", key, ParallaxMappingMode.OFF.ordinal()); // config.parallaxMappingMode().ordinal());
 			}
 			return null;
 		});

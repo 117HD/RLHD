@@ -25,11 +25,11 @@
 
 #include PARALLAX_MAPPING
 
+#if PARALLAX_MAPPING
 float sampleDepth(int heightMap, vec2 uv) {
     return 1 - linearToSrgb(texture(textureArray, vec3(uv, heightMap)).r);
 }
 
-#if PARALLAX_MAPPING
 void sampleDisplacementMap(
     Material mat,
     vec3 tsViewDir,
@@ -41,6 +41,13 @@ void sampleDisplacementMap(
     int map = mat.displacementMap;
     if (map == -1)
         return;
+
+    // TODO: improve displacement accuracy based on pixels on screen per tangent space unit
+    // TODO: improve shadow accuracy
+    // TODO: add basic anti-aliasing to fit more nicely with MSAA
+    // TODO: fix tile blending issues
+    // TODO: fix displacement on vertical surfaces
+    // TODO: make the code more readable
 
     const float minLayers = 4;
     const float maxLayers = 32;
