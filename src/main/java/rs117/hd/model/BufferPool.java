@@ -21,7 +21,7 @@ public class BufferPool {
         long bytesNeeded = buffer.capacity() * 4L;
 
         if (bytesNeeded > this.bytesRemaining) {
-            this.bytesRemaining += this.intBufferStackMap.makeRoom(bytesNeeded - this.bytesRemaining);
+            this.bytesRemaining += this.makeRoom(bytesNeeded - this.bytesRemaining);
         }
 
         this.intBufferStackMap.putBuffer(buffer);
@@ -40,7 +40,7 @@ public class BufferPool {
         long bytesNeeded = buffer.capacity() * 4L;
 
         if (bytesNeeded > this.bytesRemaining) {
-            this.bytesRemaining += this.floatBufferStackMap.makeRoom(bytesNeeded - this.bytesRemaining);
+            this.bytesRemaining += this.makeRoom(bytesNeeded - this.bytesRemaining);
         }
 
         this.floatBufferStackMap.putBuffer(buffer);
@@ -53,5 +53,19 @@ public class BufferPool {
             this.bytesRemaining += acquired.capacity() * 4L;
         }
         return acquired;
+    }
+
+    private long makeRoom(long bytes) {
+        long bytesFreed = this.intBufferStackMap.makeRoom(bytes);
+        if (bytesFreed < bytes) {
+            bytesFreed += this.floatBufferStackMap.makeRoom(bytes);
+        }
+
+        // this is technically possible but I think it should only happen if the size of the buffer pool is extremely small
+        if (bytesFreed < bytes) {
+            log.error("failed to make room for new buffers in the buffer pool!");
+        }
+
+        return bytesFreed;
     }
 }

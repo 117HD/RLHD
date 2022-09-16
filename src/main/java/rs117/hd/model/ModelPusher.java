@@ -63,7 +63,9 @@ public class ModelPusher {
     private final Map<PhantomReference<Buffer>, BufferInfo> bufferInfo;
     private final ReferenceQueue<Buffer> bufferReferenceQueue;
     private long bytesCached;
+    private long bytesActivelyCached;
     private long maxByteCapacity;
+    private long maxActivelyCachedBytes;
     private long lastCacheHint;
     private long firstCacheHint;
     private long hintCount;
@@ -81,18 +83,17 @@ public class ModelPusher {
     }
 
     public void init() {
-        this.maxByteCapacity = config.modelCacheSizeMB() * 1000000L;
+        this.maxByteCapacity = config.modelCacheSizeMiB() * 1048576L;
 
         // allocate a fourth of the memory budget to recycling buffers
         this.bufferPool = new BufferPool(this.maxByteCapacity / 4);
 
-        // allocate half of the budget to actively used memory
-        // 80% to vertex data
-        // 15% to normal data
-        // 5% to uv data
-        this.vertexDataCache = new IntBufferCache((long) (this.maxByteCapacity / 2 * 0.80f), this.bufferPool);
-        this.normalDataCache = new FloatBufferCache((long) (this.maxByteCapacity / 2 * 0.15f), this.bufferPool);
-        this.uvDataCache = new FloatBufferCache((long) (this.maxByteCapacity / 2 * 0.05f), this.bufferPool);
+        // allocate half of the budget to actively cached memory
+        this.maxActivelyCachedBytes = maxByteCapacity / 2;
+        this.bytesActivelyCached = 0;
+        this.vertexDataCache = new IntBufferCache(this.bufferPool);
+        this.normalDataCache = new FloatBufferCache(this.bufferPool);
+        this.uvDataCache = new FloatBufferCache(this.bufferPool);
 
         this.lastCacheHint = System.currentTimeMillis();
         this.initialized = true;
@@ -165,16 +166,22 @@ public class ModelPusher {
 
         long start = System.currentTimeMillis();
 
-        // allow 5ms of time spent freeing if the last cache hint less than 10 seconds ago
-        // otherwise only 1ms of free time
-        int maxFreeTime;
-        if (System.currentTimeMillis() - lastCacheHint < 10000) {
-            maxFreeTime = 5;
-        } else {
-            maxFreeTime = 1;
+        // calculate how much cache is currently used
+        float capacityUsed = (float) this.bytesCached / this.maxByteCapacity;
+
+        // scale free time based on cache pressure
+        int maxFreeTimeMS = 1;
+        if (capacityUsed >= .95f) {
+            maxFreeTimeMS = 5;
+        } else if (capacityUsed >= .90f) {
+            maxFreeTimeMS = 4;
+        } else if (capacityUsed >= .85f) {
+            maxFreeTimeMS = 3;
+        } else if (capacityUsed >= .80f) {
+            maxFreeTimeMS = 2;
         }
 
-        while (System.currentTimeMillis() - start < maxFreeTime && (reference = (PhantomReference<Buffer>) this.bufferReferenceQueue.poll()) != null) {
+        while (System.currentTimeMillis() - start < maxFreeTimeMS && (reference = (PhantomReference<Buffer>) this.bufferReferenceQueue.poll()) != null) {
             freeAttempts++;
             BufferInfo bi = this.bufferInfo.get(reference);
             if (bi != null) {
@@ -216,13 +223,15 @@ public class ModelPusher {
     public int[] pushModel(long hash, Model model, GpuIntBuffer vertexBuffer, GpuFloatBuffer uvBuffer, GpuFloatBuffer normalBuffer, int tileX, int tileY, int tileZ, ObjectProperties objectProperties, ObjectType objectType, boolean noCache) {
 //        pushes++;
         final int faceCount = Math.min(model.getFaceCount(), HdPlugin.MAX_TRIANGLE);
+        final int entryCount = faceCount * 12;
+        final long byteCount = entryCount * 4L;
         int vertexLength = 0;
         int uvLength = 0;
 
         // ensure capacity upfront
-        vertexBuffer.ensureCapacity(12 * 2 * faceCount);
-        normalBuffer.ensureCapacity(12 * 2 * faceCount);
-        uvBuffer.ensureCapacity(12 * 2 * faceCount);
+        vertexBuffer.ensureCapacity(entryCount);
+        normalBuffer.ensureCapacity(entryCount);
+        uvBuffer.ensureCapacity(entryCount);
 
         boolean cachedVertexData = false;
         boolean cachedNormalData = false;
@@ -237,7 +246,7 @@ public class ModelPusher {
             uvDataCacheHash = modelHasher.calculateUvCacheHash(objectProperties);
 
             IntBuffer vertexData = vertexDataCache.get(vertexCacheHash);
-            cachedVertexData = vertexData != null && vertexData.remaining() == faceCount * 12;
+            cachedVertexData = vertexData != null && vertexData.remaining() == entryCount;
             if (cachedVertexData) {
 //                vertexDataHits++;
                 vertexLength = faceCount * 3;
@@ -246,7 +255,7 @@ public class ModelPusher {
             }
 
             FloatBuffer normalData = normalDataCache.get(normalDataCacheHash);
-            cachedNormalData = normalData != null && normalData.remaining() == faceCount * 12;
+            cachedNormalData = normalData != null && normalData.remaining() == entryCount;
             if (cachedNormalData) {
 //                normalDataHits++;
                 normalBuffer.put(normalData);
@@ -272,14 +281,13 @@ public class ModelPusher {
         IntBuffer fullVertexData = null;
         FloatBuffer fullNormalData = null;
         FloatBuffer fullUvData = null;
-        int byteCount = faceCount * 12 * 4;
 
         boolean cachingVertexData = !cachedVertexData && !noCache;
         if (cachingVertexData) {
             // try to take a recycled buffer before allocating a new one
-            fullVertexData = this.bufferPool.takeIntBuffer(faceCount * 12);
+            fullVertexData = this.bufferPool.takeIntBuffer(entryCount);
             if (fullVertexData == null && this.bytesCached + byteCount <= this.maxByteCapacity) {
-                fullVertexData = MemoryUtil.memAllocInt(faceCount * 12);
+                fullVertexData = MemoryUtil.memAllocInt(entryCount);
                 this.bufferInfo.put(new PhantomReference<>(fullVertexData, this.bufferReferenceQueue), new BufferInfo(MemoryUtil.memAddress(fullVertexData), byteCount));
                 this.bytesCached += byteCount;
             } else {
@@ -289,9 +297,9 @@ public class ModelPusher {
 
         boolean cachingNormalData = !cachedNormalData && !noCache;
         if (cachingNormalData) {
-            fullNormalData = this.bufferPool.takeFloatBuffer(faceCount * 12);
+            fullNormalData = this.bufferPool.takeFloatBuffer(entryCount);
             if (fullNormalData == null && this.bytesCached + byteCount <= this.maxByteCapacity) {
-                fullNormalData = MemoryUtil.memAllocFloat(faceCount * 12);
+                fullNormalData = MemoryUtil.memAllocFloat(entryCount);
                 this.bufferInfo.put(new PhantomReference<>(fullNormalData, this.bufferReferenceQueue), new BufferInfo(MemoryUtil.memAddress(fullNormalData), byteCount));
                 this.bytesCached += byteCount;
             } else {
@@ -301,9 +309,9 @@ public class ModelPusher {
 
         boolean cachingUvData = !cachedUvData && !noCache;
         if (cachingUvData) {
-            fullUvData = this.bufferPool.takeFloatBuffer(faceCount * 12);
+            fullUvData = this.bufferPool.takeFloatBuffer(entryCount);
             if (fullUvData == null && this.bytesCached + byteCount <= this.maxByteCapacity) {
-                fullUvData = MemoryUtil.memAllocFloat(faceCount * 12);
+                fullUvData = MemoryUtil.memAllocFloat(entryCount);
                 this.bufferInfo.put(new PhantomReference<>(fullUvData, this.bufferReferenceQueue), new BufferInfo(MemoryUtil.memAddress(fullUvData), byteCount));
                 this.bytesCached += byteCount;
             } else {
@@ -347,16 +355,34 @@ public class ModelPusher {
 
         if (cachingVertexData) {
             fullVertexData.flip();
+
+            if (this.bytesActivelyCached + byteCount > this.maxActivelyCachedBytes) {
+                this.bytesActivelyCached -= this.makeRoom(byteCount - (this.maxActivelyCachedBytes - this.bytesActivelyCached));
+            }
+
+            this.bytesActivelyCached += byteCount;
             vertexDataCache.put(vertexCacheHash, fullVertexData);
         }
 
         if (cachingNormalData) {
             fullNormalData.flip();
+
+            if (this.bytesActivelyCached + byteCount > this.maxActivelyCachedBytes) {
+                this.bytesActivelyCached -= this.makeRoom(byteCount - (this.maxActivelyCachedBytes - this.bytesActivelyCached));
+            }
+
+            this.bytesActivelyCached += byteCount;
             normalDataCache.put(normalDataCacheHash, fullNormalData);
         }
 
         if (cachingUvData) {
             fullUvData.flip();
+
+            if (this.bytesActivelyCached + byteCount > this.maxActivelyCachedBytes) {
+                this.bytesActivelyCached -= this.makeRoom(byteCount - (this.maxActivelyCachedBytes - this.bytesActivelyCached));
+            }
+
+            this.bytesActivelyCached += byteCount;
             uvDataCache.put(uvDataCacheHash, fullUvData);
         }
 
@@ -364,6 +390,24 @@ public class ModelPusher {
         twoInts[1] = uvLength;
 
         return twoInts;
+    }
+
+    private long makeRoom(long bytes) {
+        long bytesFreed = this.vertexDataCache.makeRoom(bytes);
+        if (bytesFreed < bytes) {
+            bytesFreed += this.normalDataCache.makeRoom(bytes);
+        }
+
+        if (bytesFreed < bytes) {
+            bytesFreed += this.uvDataCache.makeRoom(bytes);
+        }
+
+        // this is technically possible but I think it should only happen if the cache size is extremely small
+        if (bytesFreed < bytes) {
+            log.error("failed to make room for new buffers in the caches!");
+        }
+
+        return bytesFreed;
     }
 
     // hint the gc to run if we're holding more cache than the max capacity
