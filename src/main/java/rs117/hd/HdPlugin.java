@@ -451,6 +451,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				// lwjgl defaults to lwjgl- + user.name, but this breaks if the username would cause an invalid path
 				// to be created, and also breaks if both 32 and 64 bit lwjgl versions try to run at once.
 				Configuration.SHARED_LIBRARY_EXTRACT_DIRECTORY.set("lwjgl-rl-" + System.getProperty("os.arch", "unknown"));
+				Configuration.MEMORY_ALLOCATOR.set("jemalloc");
 
 				GL.createCapabilities();
 

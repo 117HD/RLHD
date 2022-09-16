@@ -164,24 +164,7 @@ public class ModelPusher {
         int freeAttempts = 0;
         PhantomReference<Buffer> reference;
 
-        long start = System.currentTimeMillis();
-
-        // calculate how much cache is currently used
-        float capacityUsed = (float) this.bytesCached / this.maxByteCapacity;
-
-        // scale free time based on cache pressure
-        int maxFreeTimeMS = 1;
-        if (capacityUsed >= .95f) {
-            maxFreeTimeMS = 5;
-        } else if (capacityUsed >= .90f) {
-            maxFreeTimeMS = 4;
-        } else if (capacityUsed >= .85f) {
-            maxFreeTimeMS = 3;
-        } else if (capacityUsed >= .80f) {
-            maxFreeTimeMS = 2;
-        }
-
-        while (System.currentTimeMillis() - start < maxFreeTimeMS && (reference = (PhantomReference<Buffer>) this.bufferReferenceQueue.poll()) != null) {
+        while ((reference = (PhantomReference<Buffer>) this.bufferReferenceQueue.poll()) != null) {
             freeAttempts++;
             BufferInfo bi = this.bufferInfo.get(reference);
             if (bi != null) {
