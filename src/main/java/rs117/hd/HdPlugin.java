@@ -48,17 +48,12 @@ import org.lwjgl.opengl.GLCapabilities;
 import org.lwjgl.opengl.GLUtil;
 import org.lwjgl.system.Callback;
 import org.lwjgl.system.Configuration;
-import rs117.hd.config.AntiAliasingMode;
-import rs117.hd.config.DefaultSkyColor;
-import rs117.hd.config.FogDepthMode;
-import rs117.hd.config.UIScalingMode;
+import rs117.hd.config.*;
 import rs117.hd.data.WaterType;
 import rs117.hd.data.materials.Material;
 import rs117.hd.model.ModelHasher;
 import rs117.hd.model.ModelPusher;
 import rs117.hd.model.TempModelInfo;
-import rs117.hd.model.objects.ObjectProperties;
-import rs117.hd.model.objects.ObjectType;
 import rs117.hd.opengl.compute.ComputeMode;
 import rs117.hd.opengl.compute.OpenCLManager;
 import rs117.hd.opengl.shader.Shader;
@@ -66,6 +61,9 @@ import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.Template;
 import rs117.hd.scene.*;
 import rs117.hd.scene.lights.SceneLight;
+import rs117.hd.scene.ObjectManager;
+import rs117.hd.scene.objects.ObjectProperties;
+import rs117.hd.scene.objects.ObjectType;
 import rs117.hd.utils.*;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.GpuFloatBuffer;
@@ -81,7 +79,6 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
@@ -139,7 +136,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	private LightManager lightManager;
 
 	@Inject
-	public HiddenObjectManager hiddenObjectManager;
+	private ObjectManager objectManager;
 
 	@Inject
 	private EnvironmentManager environmentManager;
@@ -171,7 +168,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 	@Inject
 	private DeveloperTools developerTools;
-
 	private ComputeMode computeMode = ComputeMode.OPENGL;
 
 	private Canvas canvas;
@@ -302,8 +298,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	private int viewportOffsetY;
 
 	// Uniforms
-	private int uniColorBlindMode;
-	private int uniUiColorBlindMode;
+	private int uniColorBlindnessIntensity;
+	private int uniUiColorBlindnessIntensity;
 	private int uniUseFog;
 	private int uniFogColor;
 	private int uniFogDepth;
@@ -343,7 +339,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	private int uniLightProjectionMatrix;
 	private int uniShadowMap;
 	private int uniUiTexture;
-	private int uniTexSamplingMode;
 	private int uniTexSourceDimensions;
 	private int uniTexTargetDimensions;
 	private int uniUiAlphaOverlay;
@@ -360,6 +355,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 	// Animation things
 	private long lastFrameTime = System.currentTimeMillis();
+
 	// Generic scalable animation timer used in shaders
 	private float elapsedTime = 0;
 
@@ -545,7 +541,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				lastAntiAliasingMode = null;
 
 				lightManager.startUp();
-				hiddenObjectManager.startUp();
+				objectManager.startUp();
+				modelPusher.init();
 
 				if (client.getGameState() == GameState.LOGGED_IN)
 				{
@@ -575,6 +572,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			client.setGpu(false);
 			client.setDrawCallbacks(null);
 			client.setUnlockedFps(false);
+			modelPusher.clearModelCache(true);
 
 			if (lwjglInitted)
 			{
@@ -703,6 +701,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			{
 				case "version_header":
 					return versionHeader;
+				case "UI_SCALING_MODE":
+					return String.format("#define %s %d", key, config.uiScalingMode().getMode());
+				case "COLOR_BLINDNESS":
+					return String.format("#define %s %d", key, config.colorBlindness().ordinal());
 				case "MATERIAL_CONSTANTS":
 				{
 					StringBuilder include = new StringBuilder();
@@ -730,7 +732,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				case "LIGHT_GETTER":
 					return generateGetter("PointLight", configMaxDynamicLights);
 				case "PARALLAX_MAPPING":
-					return String.format("#define %s %d", key, config.parallaxMappingMode().ordinal());
+					return String.format("#define %s %d", key, ParallaxMappingMode.OFF.ordinal()); // config.parallaxMappingMode().ordinal());
 			}
 			return null;
 		});
@@ -807,7 +809,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		uniGroundFogOpacity = glGetUniformLocation(glProgram, "groundFogOpacity");
 		uniLightningBrightness = glGetUniformLocation(glProgram, "lightningBrightness");
 		uniPointLightsCount = glGetUniformLocation(glProgram, "pointLightsCount");
-		uniColorBlindMode = glGetUniformLocation(glProgram, "colorBlindMode");
+		uniColorBlindnessIntensity = glGetUniformLocation(glProgram, "colorBlindnessIntensity");
 		uniLightDirection = glGetUniformLocation(glProgram, "lightDirection");
 		uniShadowMaxBias = glGetUniformLocation(glProgram, "shadowMaxBias");
 		uniShadowsEnabled = glGetUniformLocation(glProgram, "shadowsEnabled");
@@ -817,10 +819,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		uniUnderwaterCausticsStrength = glGetUniformLocation(glProgram, "underwaterCausticsStrength");
 
 		uniUiTexture = glGetUniformLocation(glUiProgram, "uiTexture");
-		uniTexSamplingMode = glGetUniformLocation(glUiProgram, "samplingMode");
 		uniTexTargetDimensions = glGetUniformLocation(glUiProgram, "targetDimensions");
 		uniTexSourceDimensions = glGetUniformLocation(glUiProgram, "sourceDimensions");
-		uniUiColorBlindMode = glGetUniformLocation(glUiProgram, "colorBlindMode");
+		uniUiColorBlindnessIntensity = glGetUniformLocation(glUiProgram, "colorBlindnessIntensity");
 		uniUiAlphaOverlay = glGetUniformLocation(glUiProgram, "alphaOverlay");
 		uniTextureArray = glGetUniformLocation(glProgram, "textureArray");
 		uniElapsedTime = glGetUniformLocation(glProgram, "elapsedTime");
@@ -1595,6 +1596,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			return;
 		}
 
+		modelPusher.freeFinalizedBuffers();
+		modelPusher.hintGC();
+
 		// shader variables for water, lava animations
 		elapsedTime += (System.currentTimeMillis() - lastFrameTime) / 1000f;
 		lastFrameTime = System.currentTimeMillis();
@@ -1827,7 +1831,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			glUniform4f(uniFogColor, fogColor[0], fogColor[1], fogColor[2], 1f);
 
 			glUniform1i(uniDrawDistance, drawDistance * Perspective.LOCAL_TILE_SIZE);
-			glUniform1i(uniColorBlindMode, config.colorBlindMode().ordinal());
+			glUniform1f(uniColorBlindnessIntensity, config.colorBlindnessIntensity() / 100.f);
 
 			float[] waterColor = environmentManager.currentWaterColor;
 			float[] waterColorHSB = Color.RGBtoHSB((int) (waterColor[0] * 255f), (int) (waterColor[1] * 255f), (int) (waterColor[2] * 255f), null);
@@ -2013,11 +2017,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		glBindTexture(GL_TEXTURE_2D, interfaceTexture);
 
 		// Use the texture bound in the first pass
-		final UIScalingMode uiScalingMode = config.uiScalingMode();
 		glUseProgram(glUiProgram);
-		glUniform1i(uniTexSamplingMode, uiScalingMode.getMode());
 		glUniform2i(uniTexSourceDimensions, canvasWidth, canvasHeight);
-		glUniform1i(uniUiColorBlindMode, config.colorBlindMode().ordinal());
+		glUniform1f(uniUiColorBlindnessIntensity, config.colorBlindnessIntensity() / 100.f);
 		glUniform4f(uniUiAlphaOverlay,
 			(overlayColor >> 16 & 0xFF) / 255f,
 			(overlayColor >> 8 & 0xFF) / 255f,
@@ -2043,7 +2045,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		if (client.isStretchedEnabled())
 		{
 			// GL_NEAREST makes sampling for bicubic/xBR simpler, so it should be used whenever linear isn't
-			final int function = uiScalingMode == UIScalingMode.LINEAR ? GL_LINEAR : GL_NEAREST;
+			final int function = config.uiScalingMode() == UIScalingMode.LINEAR ? GL_LINEAR : GL_NEAREST;
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, function);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, function);
 		}
@@ -2120,6 +2122,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	{
 		switch (gameStateChanged.getGameState()) {
 			case LOGGED_IN:
+				modelPusher.resetCounters();
 				uploadScene();
 				checkGLErrors();
 				break;
@@ -2127,6 +2130,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				// Avoid drawing the last frame's buffer during LOADING after LOGIN_SCREEN
 				targetBufferOffset = 0;
 				hasLoggedIn = false;
+				modelPusher.clearModelCache(false);
 			default:
 				lightManager.reset();
 		}
@@ -2134,7 +2138,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 	private void uploadScene()
 	{
-		modelPusher.clearModelCache();
 		vertexBuffer.clear();
 		uvBuffer.clear();
 		normalBuffer.clear();
@@ -2217,7 +2220,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		{
 			case "shadowsEnabled":
 				configShadowsEnabled = config.shadowsEnabled();
-				modelPusher.clearModelCache();
+				modelPusher.clearModelCache(false);
 				clientThread.invoke(() ->
 				{
 					shutdownShadowMapFbo();
@@ -2262,6 +2265,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 					recompilePrograms();
 				});
 				break;
+			case "uiScalingMode":
+			case "colorBlindMode":
 			case "parallaxMappingMode":
 			case "macosIntelWorkaround":
 				clientThread.invoke(this::recompilePrograms);
@@ -2273,7 +2278,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				clientThread.invoke(this::setupSyncMode);
 				break;
 			case "hideBakedEffects":
-				modelPusher.clearModelCache();
+				modelPusher.clearModelCache(false);
 				break;
 		}
 	}
@@ -2388,7 +2393,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			return;
 		}
 
-		if (hiddenObjectManager.shouldHide(ModelUtils.getID(hash), ModelUtils.getWorldLocation(client, x, z))) {
+		if (objectManager.shouldHide(ModelUtils.getID(hash), ModelUtils.getWorldLocation(client, x, z))) {
 			return;
 		}
 
@@ -2462,8 +2467,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			final int batchHash = modelHasher.calculateBatchHash();
 
 			TempModelInfo tempModelInfo = tempModelInfoMap.get(batchHash);
-			if (config.disableModelBatching() || tempModelInfo == null || tempModelInfo.getFaceCount() != model.getFaceCount()) {
-				final int[] lengths = modelPusher.pushModel(renderable, model, vertexBuffer, uvBuffer, normalBuffer, 0, 0, 0, ObjectProperties.NONE, ObjectType.NONE, config.disableModelCaching(), modelHasher.calculateColorCacheHash());
+			if (!config.enableModelBatching() || tempModelInfo == null || tempModelInfo.getFaceCount() != model.getFaceCount()) {
+				final int[] lengths = modelPusher.pushModel(renderable, model, vertexBuffer, uvBuffer, normalBuffer, 0, 0, 0, ObjectProperties.NONE, ObjectType.NONE, !config.enableModelCaching());
 				final int faceCount = lengths[0] / 3;
 				final int actualTempUvOffset = lengths[1] > 0 ? tempUvOffset : -1;
 

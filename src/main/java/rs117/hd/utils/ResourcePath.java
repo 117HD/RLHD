@@ -61,7 +61,7 @@ import java.util.stream.Collectors;
 public class ResourcePath {
     // This could probably be improved to extract the source set from toURL()
     @Setter
-    private static String RESOURCE_DIR = "src/main/resources";
+    private static ResourcePath RESOURCE_DIR = path("src/main/resources");
 
     private static final Gson GSON = new GsonBuilder().setLenient().create();
     private static final FileWatcher.UnregisterCallback NOOP = () -> {};
@@ -102,6 +102,8 @@ public class ResourcePath {
     }
 
     public ResourcePath chroot() {
+        // Encapsulate the current root and path into a new root ResourcePath.
+        // Subsequent path resolutions will not include the encapsulated path.
         return new ResourcePath(this);
     }
 
@@ -109,6 +111,7 @@ public class ResourcePath {
         return new ResourcePath(root, normalize(path, parts));
     }
     
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     public ResourcePath mkdirs() {
         toPath().toFile().getParentFile().mkdirs();
         return this;
@@ -160,6 +163,8 @@ public class ResourcePath {
     @Override
     public String toString() {
         String path = toPosixPath();
+        if (root != null)
+            path = normalize(root.toPosixPath(), path.startsWith("/") ? path.substring(1) : path);
         return path.length() == 0 ? "." : path;
     }
 
@@ -194,6 +199,12 @@ public class ResourcePath {
 
     public File toFile() {
         return toPath().toFile();
+    }
+
+    public ResourcePath toFileSystemPath() {
+        if (root != null)
+            return new ResourcePath(root.toFileSystemPath(), path);
+        return this;
     }
 
     @NonNull
@@ -265,7 +276,7 @@ public class ResourcePath {
         // If the resource is loaded by a class or class loader, attempt to redirect it to the main resource directory
         if (isClassResource()) {
             // Assume the project's resource directory lies at "src/main/resources" in the process working directory
-            path = path(RESOURCE_DIR).chroot().resolve(toAbsolute().toPath().toString());
+            path = RESOURCE_DIR.chroot().resolve(toAbsolute().toPath().toString());
         }
 
         // Load once up front
@@ -326,6 +337,13 @@ public class ResourcePath {
     public ResourcePath writeByteBuffer(ByteBuffer buffer) throws IOException {
         try (FileChannel channel = toOutputStream().getChannel()) {
             channel.write(buffer);
+        }
+        return this;
+    }
+
+    public ResourcePath writeString(String string) throws IOException {
+        try (OutputStream os = toOutputStream()) {
+            os.write(string.getBytes(StandardCharsets.UTF_8));
         }
         return this;
     }
@@ -472,6 +490,11 @@ public class ResourcePath {
         }
 
         @Override
+        public ResourcePath toFileSystemPath() {
+            return RESOURCE_DIR.chroot().resolve(toAbsolute().path);
+        }
+
+        @Override
         public boolean isClassResource() {
             return true;
         }
@@ -504,7 +527,7 @@ public class ResourcePath {
             if (isFileSystemResource()) {
                 ResourcePath path = null;
                 try {
-                    path = path(RESOURCE_DIR).chroot().resolve(toAbsolute().toPath().toString());
+                    path = RESOURCE_DIR.chroot().resolve(toAbsolute().toPath().toString());
                     return path.toInputStream();
                 } catch (Exception ex) {
                     log.trace("Failed to load resource from project resource folder: {}", path, ex);
@@ -543,6 +566,11 @@ public class ResourcePath {
         }
 
         @Override
+        public ResourcePath toFileSystemPath() {
+            return RESOURCE_DIR.chroot().resolve(toAbsolute().path);
+        }
+
+        @Override
         public boolean isClassResource() {
             return true;
         }
@@ -574,7 +602,7 @@ public class ResourcePath {
             if (isFileSystemResource()) {
                 ResourcePath path = null;
                 try {
-                    path = path(RESOURCE_DIR).chroot().resolve(toAbsolute().toPath().toString());
+                    path = RESOURCE_DIR.chroot().resolve(toAbsolute().toPath().toString());
                     return path.toInputStream();
                 } catch (Exception ex) {
                     log.warn("Failed to load resource from project resource folder: {}", path, ex);

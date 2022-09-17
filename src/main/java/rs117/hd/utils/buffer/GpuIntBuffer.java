@@ -52,6 +52,10 @@ public class GpuIntBuffer
 		buffer.put(ints);
 	}
 
+	public void put(IntBuffer buffer) {
+		this.buffer.put(buffer);
+	}
+
 	public void flip()
 	{
 		buffer.flip();

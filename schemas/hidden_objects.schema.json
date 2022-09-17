@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "hidden_objects.schema.json",
+  "title": "Hidden Objects",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "description": {
+        "type": "string",
+        "description": "Description of the objects that are being hidden."
+      },
+      "objectIds": {
+        "type": "array",
+        "description": "A set of object IDs or ObjectID keys to hide.",
+        "items": {
+          "type": [ "integer", "string" ]
+        }
+      },
+      "aabbs": {
+        "type": "array",
+        "description": "An array of axis-aligned bounding boxes to hide specified objects within.",
+        "items": {
+          "$ref": "aabb.schema.json"
+        }
+      }
+    }
+  }
+}

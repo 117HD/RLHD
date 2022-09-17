@@ -23,7 +23,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-vec3 hslToRgb(int hsl) {
+vec3 jagexHslToRgb(int hsl) {
   int var5 = hsl / 128;
   float var6 = float(var5 >> 3) / 64.0f + 0.0078125f;
   float var8 = float(var5 & 7) / 8.0f + 0.0625f;

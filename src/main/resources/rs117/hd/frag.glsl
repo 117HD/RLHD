@@ -38,7 +38,7 @@ uniform sampler2D shadowMap;
 uniform mat4 lightProjectionMatrix;
 
 uniform float elapsedTime;
-uniform int colorBlindMode;
+uniform float colorBlindnessIntensity;
 uniform vec4 fogColor;
 uniform int fogDepth;
 uniform vec3 waterColorLight;
@@ -81,11 +81,10 @@ in vec3 texBlend;
 flat in ivec3 materialId;
 flat in ivec3 terrainData;
 flat in ivec3 isOverlay;
-flat in mat3 TBN;
 
 out vec4 FragColor;
 
-#include colorblind.glsl
+#include utils/color_blindness.glsl
 #include utils/caustics.glsl
 #include utils/color_conversion.glsl
 #include utils/misc.glsl
@@ -139,6 +138,14 @@ void main() {
     float alpha = 1;
     vec4 fragColor = vColor1 * texBlend.x + vColor2 * texBlend.y + vColor3 * texBlend.z;
 
+    // Source: https://www.geeks3d.com/20130122/normal-mapping-without-precomputed-tangent-space-vectors/
+    vec3 N = normalize(normals);
+    vec3 C1 = cross(vec3(0, 0, 1), N);
+    vec3 C2 = cross(vec3(0, 1, 0), N);
+    vec3 T = normalize(length(C1) > length(C2) ? C1 : C2);
+    vec3 B = normalize(cross(N, T));
+    mat3 TBN = mat3(T, B, N);
+
     vec2 blendedUv = vUv1 * texBlend.x + vUv2 * texBlend.y + vUv3 * texBlend.z;
     vec2 uv1 = blendedUv;
     vec2 uv2 = blendedUv;
@@ -160,9 +167,18 @@ void main() {
     mat3 invTBN = transpose(TBN);
     vec3 tangentViewDir = invTBN * viewDir;
     vec3 tangentLightDir = invTBN * lightDir;
-    uv1 = sampleDisplacementMap(material1, uv1, tangentViewDir, tangentLightDir, selfShadowing, fragPos);
-    uv2 = sampleDisplacementMap(material2, uv2, tangentViewDir, tangentLightDir, selfShadowing, fragPos);
-    uv3 = sampleDisplacementMap(material3, uv3, tangentViewDir, tangentLightDir, selfShadowing, fragPos);
+
+    vec2 fragDelta = vec2(0);
+
+    sampleDisplacementMap(material1, tangentViewDir, tangentLightDir, uv1, fragDelta, selfShadowing);
+    sampleDisplacementMap(material2, tangentViewDir, tangentLightDir, uv2, fragDelta, selfShadowing);
+    sampleDisplacementMap(material3, tangentViewDir, tangentLightDir, uv3, fragDelta, selfShadowing);
+
+    // Average
+    fragDelta /= 3;
+    selfShadowing /= 3;
+
+    fragPos += TBN * vec3(fragDelta, 0);
     #endif
 
     // water uvs
@@ -393,9 +409,9 @@ void main() {
     }
     else
     {
-        vec3 n1 = sampleNormalMap(material1, uv1, normals);
-        vec3 n2 = sampleNormalMap(material2, uv2, normals);
-        vec3 n3 = sampleNormalMap(material3, uv3, normals);
+        vec3 n1 = sampleNormalMap(material1, uv1, normals, TBN);
+        vec3 n2 = sampleNormalMap(material2, uv2, normals, TBN);
+        vec3 n3 = sampleNormalMap(material3, uv3, normals, TBN);
         normals = (n1 + n2 + n3) / 3;
     }
     normals = normalize(normals);
@@ -707,10 +723,7 @@ void main() {
 
     compositeColor = hsvToRgb(hsv);
 
-    if (colorBlindMode > 0)
-    {
-        compositeColor = colorblind(colorBlindMode, compositeColor);
-    }
+    compositeColor = colorBlindnessCompensation(compositeColor);
 
     if (!isUnderwater)
     {

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="JsonSchemaMappingsProjectConfiguration">
+    <state>
+      <map>
+        <entry key="Hidden Objects">
+          <value>
+            <SchemaInfo>
+              <option name="name" value="Hidden Objects" />
+              <option name="relativePathToSchema" value="schemas/hidden_objects.schema.json" />
+              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="path" value="src/main/resources/rs117/hd/scene/hidden_objects.json" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
+        <entry key="Lights">
+          <value>
+            <SchemaInfo>
+              <option name="name" value="Lights" />
+              <option name="relativePathToSchema" value="schemas/lights.schema.json" />
+              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="path" value="src/main/resources/rs117/hd/scene/lights.json" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
+        <entry key="Object Properties">
+          <value>
+            <SchemaInfo>
+              <option name="name" value="Object Properties" />
+              <option name="relativePathToSchema" value="schemas/object_properties.schema.json" />
+              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="path" value="src/main/resources/rs117/hd/scene/object_properties.json" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
+      </map>
+    </state>
+  </component>
+</project>

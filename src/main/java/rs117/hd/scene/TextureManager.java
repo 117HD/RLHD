@@ -85,7 +85,7 @@ public class TextureManager
 	public void startUp()
 	{
 		texturePath.watch(path -> {
-			log.info("Reloading Textures...");
+			log.debug("Loading Textures...");
 			freeTextures();
 		});
 	}
