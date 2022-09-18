@@ -35,7 +35,7 @@ public class LightConfigTest {
 	@Test
     public void testLoad() {
 		LightManager lightManager = new LightManager();
-		lightManager.loadConfig(path(LightConfigTest.class, "lights.jsonc"));
+		lightManager.loadConfig(path(LightConfigTest.class, "lights.json"));
 
         // can we get the same light for both of its raw IDs?
         Light spitRoastLight = lightManager.OBJECT_LIGHTS.get(5608).get(0);

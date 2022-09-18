@@ -342,16 +342,17 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
-	@ConfigItem(
-		keyName = "parallaxMappingMode",
-		name = "Parallax mapping",
-		description = "Enable parallax mapping to add more depth to materials that support it. Impacts performance.",
-		position = 110,
-		section = lightingSettings
-	)
-	default ParallaxMappingMode parallaxMappingMode() {
-		return ParallaxMappingMode.FULL;
-	}
+	// TODO: Fix parallax mapping before uncommenting this. See TODOs in displacement.glsl
+//	@ConfigItem(
+//		keyName = "parallaxMappingMode",
+//		name = "Parallax mapping",
+//		description = "Enable parallax mapping to add more depth to materials that support it. Impacts performance considerably.",
+//		position = 110,
+//		section = lightingSettings
+//	)
+//	default ParallaxMappingMode parallaxMappingMode() {
+//		return ParallaxMappingMode.FULL;
+//	}
 
 
 	/*====== Environment settings ======*/

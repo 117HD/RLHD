@@ -1,0 +1,1423 @@
+[
+  {
+    "description": "NONE",
+    "objectIds": [
+      -1
+    ]
+  },
+  {
+    "description": "TREES",
+    "material": "BARK",
+    "objectIds": [
+      "WILLOW",
+      "OAK_10820",
+      10823,
+      "EVERGREEN_2092",
+      1293,
+      1294,
+      1295,
+      "MAPLE_TREE_10832",
+      37329,
+      "WILLOW_10833",
+      "MAGIC_TREE_10834",
+      "TREE",
+      "TREE_1278"
+    ]
+  },
+  {
+    "description": "FARMING_PATCH_1",
+    "material": "DIRT_1",
+    "objectIds": [
+      7517
+    ],
+    "uvType": "GROUND_PLANE"
+  },
+  {
+    "description": "FARMING_PATCH_2",
+    "material": "GRUNGE_1",
+    "objectIds": [
+      7522
+    ],
+    "uvType": "GROUND_PLANE"
+  },
+  {
+    "description": "GRASS",
+    "objectIds": [
+      16384,
+      16385,
+      20742,
+      20743,
+      20744,
+      20745,
+      9485,
+      9486,
+      9487,
+      9488,
+      9489,
+      9490,
+      9491,
+      9502,
+      9503,
+      9504,
+      9505,
+      31777,
+      9506,
+      31778,
+      9507,
+      31779,
+      31780,
+      13861,
+      13862,
+      13863,
+      23914,
+      23915,
+      19823,
+      19824,
+      19825,
+      19826,
+      19827,
+      19828,
+      19829,
+      19830,
+      19831,
+      19832,
+      19833,
+      19834,
+      19835,
+      19836,
+      19837,
+      19838,
+      4735,
+      4736,
+      4737,
+      4738,
+      4739,
+      4740,
+      4741,
+      4742,
+      7049,
+      7050,
+      5533,
+      5534,
+      5535,
+      5536,
+      6817,
+      6818,
+      6819,
+      4530,
+      6835,
+      6836,
+      6837,
+      6838,
+      14775,
+      14776,
+      14777,
+      14778,
+      34490,
+      34491,
+      34492,
+      4809,
+      4810,
+      4811,
+      "JUNGLE_GRASS",
+      "JUNGLE_GRASS_4813",
+      "JUNGLE_GRASS_4814",
+      5335,
+      5336,
+      5337,
+      5338,
+      3547,
+      5339,
+      3548,
+      5340,
+      3549,
+      5341,
+      5342,
+      1257,
+      1258,
+      4333,
+      4334,
+      4335,
+      4336,
+      16382,
+      16383
+    ],
+    "flatNormals": true,
+    "inheritTileColorType": "UNDERLAY"
+  },
+  {
+    "description": "GRASS_MAINTAIN_ORIGINAL_COLOR",
+    "objectIds": [
+      16823,
+      16824,
+      16825,
+      16826
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "FERN",
+    "objectIds": [
+      19827,
+      19833,
+      "FERN_19839"
+    ],
+    "inheritTileColorType": "UNDERLAY"
+  },
+  {
+    "description": "WOODEN_FENCES",
+    "material": "WOOD_GRAIN",
+    "objectIds": [
+      "GATE_1739",
+      "GATE_1740",
+      7055,
+      980,
+      981,
+      "GATE_1558",
+      "GATE_1559",
+      9623,
+      "GATE_1560",
+      "GATE_1561",
+      "GATE_1562",
+      "GATE_1563",
+      "GATE_1564",
+      1565,
+      1566,
+      991,
+      "GATE_1567",
+      992,
+      "STILE",
+      "STILE_7527",
+      9511,
+      814,
+      1007,
+      1008,
+      5432,
+      5433,
+      5434,
+      5435,
+      5436,
+      5437,
+      5438
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "STONE_STEPS",
+    "material": "GRUNGE_2",
+    "objectIds": [
+      3684
+    ]
+  },
+  {
+    "description": "LUMBRIDGE_CASTLE_WALLS",
+    "objectIds": [
+      1651,
+      1911,
+      1912,
+      1913
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "VARROCK_FOUNTAIN_FLOOR",
+    "material": "GRUNGE_1",
+    "objectIds": [
+      7152,
+      7153,
+      7149,
+      7150,
+      7151
+    ],
+    "flatNormals": true,
+    "uvType": "GROUND_PLANE"
+  },
+  {
+    "description": "VARROCK_FOUNTAIN_STATUE",
+    "material": "GRUNGE_1",
+    "objectIds": [
+      7144
+    ]
+  },
+  {
+    "description": "VARROCK_KNIGHT_STATUE",
+    "material": "MARBLE_1_SEMIGLOSS",
+    "objectIds": [
+      "STATUE_3642"
+    ]
+  },
+  {
+    "description": "GRAND_EXCHANGE_FLOOR",
+    "material": "GRUNGE_2",
+    "objectIds": [
+      11712,
+      10689,
+      11713,
+      10690,
+      11714,
+      15810,
+      10691,
+      11715,
+      10692,
+      11716,
+      10693,
+      11717,
+      10694,
+      10695,
+      10696,
+      16010,
+      10699,
+      10700,
+      10701,
+      10702,
+      10703,
+      10704,
+      10705,
+      10706,
+      10711,
+      10712,
+      10713,
+      9371,
+      16155,
+      11703,
+      11704,
+      11705,
+      11706,
+      11707,
+      11708,
+      11709,
+      11710,
+      11711
+    ],
+    "flatNormals": true,
+    "uvType": "GROUND_PLANE"
+  },
+  {
+    "description": "GRAND_EXCHANGE_WALL",
+    "material": "GRUNGE_1",
+    "objectIds": [
+      23776,
+      23777,
+      23778,
+      23810,
+      23779,
+      23795,
+      23811,
+      23755,
+      23775
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "GRAND_EXCHANGE_CLAN_PORTAL",
+    "material": "GRUNGE_1",
+    "objectIds": [
+      "CLAN_HALL_PORTAL"
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "GRAND_EXCHANGE_STONE_DECORATION",
+    "material": "GRUNGE_1",
+    "objectIds": [
+      10688,
+      10063,
+      10643,
+      10644,
+      10645,
+      10646,
+      10647,
+      10648,
+      10649,
+      10650,
+      10651,
+      10652,
+      10653,
+      10654,
+      10655,
+      10656,
+      10657,
+      10664,
+      10665,
+      10666,
+      10667,
+      10668,
+      10669,
+      10673,
+      10674,
+      10675,
+      10676,
+      10677,
+      10678,
+      10679,
+      10680,
+      10681,
+      10682,
+      10683,
+      10684,
+      10685,
+      10686,
+      10687
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "VARROCK_WALLS",
+    "material": "GRUNGE_1",
+    "objectIds": [
+      512,
+      23808,
+      23809,
+      23810,
+      23811,
+      23812,
+      517,
+      23813,
+      23814,
+      519,
+      23815,
+      520,
+      23816,
+      23817,
+      23818,
+      23819,
+      23820,
+      23821,
+      23822,
+      23823,
+      23824,
+      23825,
+      23826,
+      23827,
+      23828,
+      23829,
+      23835,
+      23836,
+      23837,
+      23838,
+      23839,
+      23840,
+      23841,
+      23842,
+      23843,
+      23844,
+      9264,
+      9265,
+      23859,
+      23860,
+      9269,
+      23861,
+      23862,
+      23863,
+      23864,
+      23865,
+      23874,
+      23875,
+      23876,
+      23877,
+      23878,
+      23879,
+      23880,
+      23881,
+      23882,
+      23883,
+      23884,
+      23885,
+      40285,
+      23907,
+      23908,
+      23909,
+      23910,
+      "STAIRS_24428",
+      436,
+      23734,
+      23735,
+      23736,
+      441,
+      23737,
+      23738,
+      443,
+      23739,
+      23740,
+      23741,
+      23742,
+      23743,
+      23744,
+      23745,
+      450,
+      23746,
+      23747,
+      455,
+      23757,
+      462,
+      23758,
+      23759,
+      477,
+      23775,
+      23780,
+      23783,
+      23784,
+      490,
+      493,
+      494,
+      495,
+      496,
+      497,
+      23794,
+      500,
+      501,
+      23797,
+      23798,
+      23799,
+      504,
+      505,
+      23801,
+      506,
+      23802,
+      23803,
+      23804,
+      23805,
+      23806,
+      511,
+      23807
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "FALADOR_WALLS",
+    "material": "GRUNGE_1",
+    "objectIds": [
+      23826,
+      23834,
+      23835,
+      23836,
+      23837,
+      23838,
+      23839,
+      23841,
+      23844,
+      24115,
+      24116,
+      24119,
+      24120,
+      24125,
+      24127,
+      24128,
+      24131,
+      24132,
+      24134,
+      24135,
+      24137,
+      24175,
+      24176,
+      24178,
+      24180,
+      24182,
+      24183,
+      24184,
+      24185,
+      24186,
+      24188,
+      24189,
+      24191,
+      24193,
+      24194,
+      24195,
+      24196,
+      24198,
+      24199,
+      24200,
+      24203,
+      24206,
+      24207,
+      24210,
+      24211,
+      24212,
+      24213,
+      24215,
+      24220,
+      24221,
+      "CRUMBLING_WALL_24222",
+      24227,
+      24235,
+      24236,
+      24237,
+      "CITY_GATE_23982",
+      24238,
+      "CITY_GATE_23983",
+      24239,
+      "CITY_GATE_23984",
+      "CITY_GATE_23985",
+      "CITY_GATE_23986",
+      24242,
+      "CITY_GATE_23987",
+      24243,
+      "CITY_GATE_23988",
+      24244,
+      "CITY_GATE_23989",
+      24245,
+      "CITY_GATE_23990",
+      24246,
+      "CITY_GATE_23991",
+      24247,
+      "CITY_GATE_23992",
+      "CITY_GATE_23993",
+      23994,
+      23995,
+      23996,
+      23997,
+      23998,
+      23999,
+      23744,
+      24256,
+      24260,
+      24261,
+      24262,
+      24264,
+      24266,
+      24267,
+      24268,
+      24269,
+      24270,
+      24271,
+      24272,
+      24273,
+      24274,
+      24026,
+      24027,
+      24028,
+      24029,
+      24030,
+      24031,
+      24032,
+      24033,
+      24034,
+      24035,
+      23806
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "FALADOR_MINES_TORCH_WALL",
+    "material": "GRUNGE_1",
+    "objectIds": [
+      1422
+    ]
+  },
+  {
+    "description": "STATUE_OF_SARADOMIN_1",
+    "material": "MARBLE_1_SEMIGLOSS",
+    "objectIds": [
+      "STATUE_OF_SARADOMIN_24043",
+      "STATUE_OF_SARADOMIN_24044"
+    ]
+  },
+  {
+    "description": "STONE_SIGNPOST",
+    "material": "GRUNGE_1",
+    "objectIds": [
+      "STONE_SIGNPOST",
+      "STONE_SIGNPOST_23971"
+    ]
+  },
+  {
+    "description": "FALADOR_STEPS_1",
+    "material": "GRUNGE_1",
+    "objectIds": [
+      10729,
+      7386,
+      10730,
+      7387,
+      10731,
+      23885
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "FALADOR_UNKNOWN_1",
+    "material": "GRUNGE_1",
+    "objectIds": [
+      24022,
+      24023,
+      24024
+    ]
+  },
+  {
+    "description": "AL_KHARID_WALLS",
+    "objectIds": [
+      "BIG_WINDOW",
+      1415,
+      21799,
+      1416
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "CITHAREDE_ABBEY_WALLS",
+    "material": "GRUNGE_1",
+    "objectIds": [
+      39725,
+      39726,
+      39727,
+      39728,
+      39729,
+      39730,
+      39731,
+      39732,
+      39733,
+      39734,
+      39735,
+      39736,
+      39737,
+      39738,
+      39739,
+      "STONE_PILE_39740"
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "SEERS_COURTHOUSE_WALLS",
+    "material": "GRUNGE_1",
+    "objectIds": [
+      25966,
+      25967,
+      25969,
+      25970,
+      25971,
+      25972,
+      25973,
+      25974,
+      25975,
+      25978,
+      26010,
+      25979,
+      25980,
+      "LOCKED_GATE"
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "SEERS_BUILDING_WALLS",
+    "material": "GRUNGE_1",
+    "objectIds": [
+      25890,
+      25957,
+      25958,
+      25959,
+      25896,
+      25960,
+      25897,
+      25961,
+      25898,
+      25962,
+      25899,
+      25963,
+      25964,
+      25901,
+      25965,
+      25902,
+      25904,
+      25905,
+      25753,
+      25755,
+      25756,
+      25757
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "STONE_WALL",
+    "material": "GRUNGE_1",
+    "objectIds": [
+      5568,
+      "DRY_STONE_WALL",
+      5570,
+      979,
+      5566,
+      5567
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "STATUE_OF_A_WARRIOR_1",
+    "material": "MARBLE_2_GLOSS",
+    "objectIds": [
+      "STATUE_OF_A_WARRIOR",
+      "STATUE_OF_A_WARRIOR_566"
+    ]
+  },
+  {
+    "description": "KARAMJA_DUNGEON_WALLS",
+    "material": "GRUNGE_1",
+    "objectIds": [
+      21729,
+      21730,
+      1428,
+      21719,
+      21736,
+      21737,
+      "STAIRS_21725",
+      "STAIRS_21726"
+    ]
+  },
+  {
+    "description": "TZHAAR_ROCK_GRADIENT",
+    "material": "ROCK_1",
+    "objectIds": [
+      11840,
+      30272,
+      11841,
+      30273,
+      11842,
+      11971,
+      11972,
+      11973,
+      11974,
+      11981,
+      11983,
+      11984,
+      11985,
+      11818,
+      11819,
+      11820,
+      11821,
+      11822,
+      11823,
+      11824,
+      11825,
+      11826,
+      11827,
+      11828,
+      11829,
+      "SCOREBOARD_41013",
+      "CAVE_ENTRANCE_11833",
+      "CAVE_ENTRANCE_11834",
+      "CAVE_EXIT_11836",
+      11837,
+      "TERMINAL",
+      11838,
+      "TERMINAL_30270",
+      11839,
+      "NODE"
+    ],
+    "tzHaarRecolorType": "GRADIENT"
+  },
+  {
+    "description": "TZHAAR_GRADIENT",
+    "objectIds": [
+      11847,
+      11848,
+      11849,
+      11850,
+      11982
+    ],
+    "tzHaarRecolorType": "GRADIENT"
+  },
+  {
+    "description": "TZHAAR_ROCK_HUESHIFT",
+    "material": "ROCK_1",
+    "objectIds": [
+      26723,
+      26724,
+      26725,
+      30263,
+      30264,
+      30265
+    ],
+    "tzHaarRecolorType": "HUE_SHIFT"
+  },
+  {
+    "description": "APE_ATOLL_DUNGEON_WALLS",
+    "material": "GRUNGE_1",
+    "objectIds": [
+      4898
+    ]
+  },
+  {
+    "description": "KOUREND_PATHS",
+    "material": "GRUNGE_1",
+    "objectIds": [
+      42722,
+      13705,
+      13706,
+      13707,
+      13708,
+      13709,
+      13710,
+      13711,
+      13712,
+      13713,
+      13714,
+      13715,
+      13716,
+      13717
+    ]
+  },
+  {
+    "description": "KOUREND_PATH_STEPS",
+    "material": "GRUNGE_2",
+    "objectIds": [
+      30599,
+      30600
+    ]
+  },
+  {
+    "description": "KOUREND_WALLS",
+    "material": "GRUNGE_1",
+    "objectIds": [
+      23808,
+      23809,
+      23810,
+      23800,
+      23801,
+      23802,
+      23803,
+      23804,
+      23805,
+      23806,
+      23807
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "SHAYZIEN_SHAY_SHRINE",
+    "material": "MARBLE_3_GLOSS",
+    "objectIds": [
+      "CAT_SHRINE"
+    ]
+  },
+  {
+    "description": "SHAYZIEN_HERO_STATUE",
+    "material": "GRUNGE_1",
+    "objectIds": [
+      "DRAGON_STATUE"
+    ]
+  },
+  {
+    "description": "SHAYZIEN_DRAGON_STATUE",
+    "material": "MARBLE_2_GLOSS",
+    "objectIds": [
+      "SHAYZIEN_STATUE_42178"
+    ]
+  },
+  {
+    "description": "SHAYZIEN_GRAVE",
+    "material": "GRUNGE_1",
+    "objectIds": [
+      "GRAVE_28451"
+    ]
+  },
+  {
+    "description": "SHAYZIEN_CEREMONIAL_PILLAR",
+    "material": "BLANK_GLOSS",
+    "objectIds": [
+      "CEREMONIAL_PILLAR_42176",
+      "CEREMONIAL_PILLAR_42177",
+      "CEREMONIAL_PILLAR_42179",
+      "CEREMONIAL_PILLAR_42180",
+      "CEREMONIAL_PILLAR",
+      "CEREMONIAL_PILLAR_42168",
+      "CEREMONIAL_PILLAR_42169",
+      "CEREMONIAL_PILLAR_42170",
+      "CEREMONIAL_PILLAR_42171",
+      "CEREMONIAL_PILLAR_42172",
+      "CEREMONIAL_PILLAR_42173",
+      "CEREMONIAL_PILLAR_42174",
+      "CEREMONIAL_PILLAR_42175"
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "SHAYZIEN_WALLS_ROCK",
+    "material": "ROCK_1",
+    "objectIds": [
+      "DOOR_42116",
+      14543,
+      14544,
+      14545,
+      14546,
+      14547,
+      14548,
+      14549,
+      14550,
+      14551,
+      14558,
+      42110,
+      42111
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "SHAYZIEN_WALLS_WOOD",
+    "material": "GRUNGE_1",
+    "objectIds": [
+      42112,
+      42113,
+      42107,
+      42108,
+      42109
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "SHAYZIEN_STAIRS",
+    "material": "GRUNGE_1",
+    "objectIds": [
+      "STAIRCASE_42193",
+      "STAIRCASE_42195",
+      "STAIRCASE_42196"
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "MOUNT_KARUULM_WALLS",
+    "objectIds": [
+      34347,
+      34384,
+      34385,
+      34386,
+      34387,
+      34388,
+      34389,
+      34390,
+      34391,
+      34392,
+      34393,
+      34394,
+      34395
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "STATUE_BUST",
+    "material": "MARBLE_1_GLOSS",
+    "objectIds": [
+      26129
+    ]
+  },
+  {
+    "description": "CASTLE_WARS_WALLS",
+    "objectIds": [
+      1620,
+      1622,
+      4409,
+      4410,
+      4908,
+      4445,
+      "BATTLEMENTS",
+      1631,
+      "BATTLEMENTS_4447"
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "CASTLE_WARS_UNDERGROUND_WALLS",
+    "material": "GRUNGE_1",
+    "objectIds": [
+      "CAVE_WALL",
+      1417,
+      1434,
+      1435
+    ]
+  },
+  {
+    "description": "CASTLE_WARS_UNDERGROUND_ROCKS",
+    "material": "GRUNGE_1",
+    "objectIds": [
+      320,
+      321,
+      314,
+      315,
+      316,
+      317,
+      318,
+      319
+    ]
+  },
+  {
+    "description": "CASTLE_WARS_DECORATION",
+    "objectIds": [
+      4435,
+      4436
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "MORYTANIA_SLAYER_TOWER_WALLS",
+    "material": "GRUNGE_1",
+    "objectIds": [
+      "STAIRCASE",
+      4332,
+      2160,
+      2161,
+      2162,
+      2163,
+      2164,
+      2165,
+      2166,
+      2167,
+      2168,
+      2169,
+      2170,
+      "HEAP_OF_BRICKS",
+      2172,
+      2173
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "TOB_VERZIK_TILE_FLOOR",
+    "material": "BLANK_SEMIGLOSS",
+    "objectIds": [
+      32720,
+      32721,
+      32722,
+      32723,
+      32724,
+      32725,
+      32726,
+      32727,
+      32728,
+      32719
+    ]
+  },
+  {
+    "description": "COX_OUTSIDE_RUINS",
+    "material": "GRUNGE_1",
+    "objectIds": [
+      29921,
+      29922,
+      29923,
+      29924,
+      29925,
+      29926,
+      29927,
+      29928,
+      29929,
+      29930,
+      29931,
+      29932,
+      29933,
+      29934,
+      29935,
+      29936,
+      "XERICIAN_STATUE",
+      29938,
+      29939,
+      29940,
+      "ALTAR_29941",
+      29942,
+      29943
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "COX_PILLAR",
+    "material": "GRUNGE_1",
+    "objectIds": [
+      29808,
+      29809,
+      29810,
+      29806,
+      29807
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "GROUND_DECORATION_TAN_ROCK",
+    "material": "DIRT_1",
+    "objectIds": [
+      7105,
+      7106,
+      7107
+    ],
+    "inheritTileColorType": "OVERLAY"
+  },
+  {
+    "description": "GROUND_DECORATION_GRAY_ROCK",
+    "material": "ROCK_1",
+    "objectIds": [
+      7104,
+      7057,
+      7103
+    ],
+    "inheritTileColorType": "OVERLAY"
+  },
+  {
+    "description": "ROCK_LIKE_OBJECT",
+    "material": "ROCK_1",
+    "objectIds": [
+      5953,
+      "WALL_25161",
+      "STALAGMITE_22541",
+      "LARGE_STALAGMITE",
+      25102,
+      "CONNECTED_STALAGMITES",
+      25103,
+      25104,
+      25105,
+      25106,
+      25107,
+      84,
+      25108,
+      25109,
+      25110,
+      25112,
+      25113,
+      25114,
+      3634,
+      3635,
+      3636,
+      3637,
+      25077,
+      3638,
+      25078,
+      3639,
+      25079,
+      "COLUMN_25080",
+      "COLUMN_25081",
+      "COLUMN_25082",
+      "STALAGMITE_25083",
+      "STALAGMITES_25084",
+      "STALAGMITES_25085",
+      5950,
+      25086
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "ROCK_CAVE_ENTRANCES",
+    "material": "ROCK_2",
+    "objectIds": [
+      "TUNNEL_6659",
+      "CAVE_ENTRANCE_11835",
+      "CRACK_29627"
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "CAVE_WALLS_BLEND",
+    "material": "ROCK_2",
+    "objectIds": [
+      17216,
+      25056,
+      17217,
+      29634,
+      25059,
+      25060,
+      25061,
+      25062,
+      25063,
+      25064,
+      25049,
+      17210,
+      25050,
+      17211,
+      25051,
+      25052,
+      25053,
+      25054,
+      17215,
+      25055
+    ],
+    "flatNormals": true,
+    "uvType": "GROUND_PLANE"
+  },
+  {
+    "description": "CAVE_WALL_ABOVE_FLOOR_TILE",
+    "material": "ROCK_2",
+    "objectIds": [
+      25057,
+      25058,
+      17224
+    ],
+    "flatNormals": true,
+    "uvType": "GROUND_PLANE"
+  },
+  {
+    "description": "TROOL_STRONGHOLD_HIDDEN_DOOR",
+    "material": "GRUNGE_1",
+    "objectIds": [
+      "SECRET_DOOR"
+    ]
+  },
+  {
+    "description": "LUMBRIDGE_CAVE_WALLS",
+    "material": "ROCK_2",
+    "objectIds": [
+      6925,
+      "BIG_BIG_BOULDER",
+      "BONE_SUPPORT",
+      "BONE_SUPPORT_6930",
+      "BONE_ARCH",
+      "BONE_ARCH_6932",
+      "BONE_ARCH_6933",
+      5912,
+      5913,
+      5914,
+      5915,
+      "BONE_ARCH_6939",
+      5916,
+      "BONE_ARCH_6940",
+      "GAS_HOLE",
+      "GAS_HOLE_5918",
+      5919,
+      5920,
+      5921,
+      5922,
+      5923,
+      5924,
+      5925,
+      5926,
+      5927,
+      5928,
+      5929,
+      5930,
+      5931,
+      5932,
+      5933,
+      5934,
+      5935,
+      5936,
+      5937,
+      5938,
+      5939,
+      5940,
+      5941,
+      5942,
+      5943,
+      "RUBBLE",
+      5944
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "UNKNOWN_1",
+    "material": "GRUNGE_1",
+    "objectIds": [
+      "PASSAGE"
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "UNKNOWN_2",
+    "objectIds": [
+      1602,
+      "ENTRANCE_3111",
+      "ENTRANCE_3112",
+      "SAILS_2569",
+      "ENTRANCE_3113",
+      "ENTRANCE_3114",
+      10767,
+      3089,
+      3090,
+      10770,
+      3091,
+      3096,
+      3192,
+      3097,
+      10748,
+      3102,
+      3103
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "UNKNOWN_3",
+    "material": "GRUNGE_1",
+    "objectIds": [
+      3714,
+      3792,
+      3793,
+      3669,
+      3737,
+      3738,
+      3739,
+      3740,
+      "TUNNEL",
+      "ROCKS_3805",
+      "ROCKS_3806",
+      "ROCKS_3807",
+      "ROCKS_3808",
+      3812,
+      6820,
+      6822,
+      6826,
+      6827,
+      "CAVE_ENTRANCE_3759",
+      "CAVE_EXIT_3760",
+      "EXIT",
+      "WINDOW_3770",
+      "EXIT_3772",
+      "EXIT_3773",
+      "EXIT_3774"
+    ]
+  },
+  {
+    "description": "UNKNOWN_4",
+    "objectIds": [
+      "CRYPT"
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "UNKNOWN_5",
+    "material": "GRUNGE_1",
+    "objectIds": [
+      29032
+    ]
+  },
+  {
+    "description": "UNKNOWN_6",
+    "objectIds": [
+      436,
+      455,
+      441,
+      458,
+      443,
+      461,
+      477,
+      462
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "UNKNOWN_7",
+    "material": "GRUNGE_1",
+    "objectIds": [
+      "CAVE_EXIT"
+    ]
+  },
+  {
+    "description": "UNKNOWN_8",
+    "objectIds": [
+      10769,
+      17349,
+      10743,
+      10744,
+      10749,
+      10750
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "UNKNOWN_9",
+    "objectIds": [
+      3110,
+      3174
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "UNKNOWN_10",
+    "material": "GRUNGE_1",
+    "objectIds": [
+      "ROCKS_3803",
+      3724,
+      "ROCKS_3804",
+      3948,
+      3709,
+      3950
+    ]
+  }
+]
