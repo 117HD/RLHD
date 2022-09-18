@@ -342,6 +342,7 @@ public enum Material
 	public final Material normalMap;
 	public final Material displacementMap;
 	public final Material roughnessMap;
+	public final Material ambientOcclusionMap;
 	public final Material flowMap;
 	public final float displacementScale;
 	public final float flowMapStrength;
@@ -362,6 +363,7 @@ public enum Material
 		private Material normalMap = NONE;
 		private Material displacementMap = NONE;
 		private Material roughnessMap = NONE;
+		private Material ambientOcclusionMap = NONE;
 		private Material flowMap = LAVA_FLOW_MAP;
 		private float displacementScale = .1f;
 		private float flowMapStrength;
@@ -389,6 +391,7 @@ public enum Material
 			this.normalMap = parent.normalMap;
 			this.displacementMap = parent.displacementMap;
 			this.roughnessMap = parent.roughnessMap;
+			this.ambientOcclusionMap = parent.ambientOcclusionMap;
 			this.flowMap = parent.flowMap;
 			this.displacementScale = parent.displacementScale;
 			this.flowMapStrength = parent.flowMapStrength;
@@ -465,6 +468,7 @@ public enum Material
 		this.normalMap = builder.normalMap;
 		this.displacementMap = builder.displacementMap;
 		this.roughnessMap = builder.roughnessMap;
+		this.ambientOcclusionMap = builder.ambientOcclusionMap;
 		this.flowMap = builder.flowMap;
 		this.displacementScale = builder.displacementScale;
 		this.flowMapStrength = builder.flowMapStrength;

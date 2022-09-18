@@ -517,6 +517,12 @@ void main() {
     // ambient light
     vec3 ambientLightOut = ambientColor * ambientStrength;
 
+    ambientLightOut *= (
+        (material1.ambientOcclusionMap == -1 ? 1 : texture(textureArray, vec3(uv1, material1.ambientOcclusionMap)).r) +
+        (material2.ambientOcclusionMap == -1 ? 1 : texture(textureArray, vec3(uv2, material2.ambientOcclusionMap)).r) +
+        (material3.ambientOcclusionMap == -1 ? 1 : texture(textureArray, vec3(uv3, material3.ambientOcclusionMap)).r)
+    ) / 3;
+
     // directional light
     vec3 dirLightColor = lightColor * lightStrength;
 

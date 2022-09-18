@@ -1074,7 +1074,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 	public void updateMaterialUniformBuffer(float[] textureAnimations)
 	{
-		ByteBuffer buffer = BufferUtils.createByteBuffer(Material.values().length * 16 * SCALAR_BYTES);
+		ByteBuffer buffer = BufferUtils.createByteBuffer(Material.values().length * 20 * SCALAR_BYTES);
 		for (Material material : Material.values())
 		{
 			material = textureManager.getEffectiveMaterial(material);
@@ -1091,18 +1091,21 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				.putInt(textureManager.getTextureIndex(material.normalMap))
 				.putInt(textureManager.getTextureIndex(material.displacementMap))
 				.putInt(textureManager.getTextureIndex(material.roughnessMap))
+				.putInt(textureManager.getTextureIndex(material.ambientOcclusionMap))
 				.putInt(textureManager.getTextureIndex(material.flowMap))
 				.putFloat(material.displacementScale)
 				.putFloat(material.specularStrength)
 				.putFloat(material.specularGloss)
 				.putFloat(material.flowMapStrength)
 				.putFloat(material.emissiveStrength)
+				.putFloat(0) // pad vec2
 				.putFloat(material.flowMapDuration[0])
 				.putFloat(material.flowMapDuration[1])
 				.putFloat(scrollSpeedX)
 				.putFloat(scrollSpeedY)
 				.putFloat(material.textureScale[0])
-				.putFloat(material.textureScale[1]);
+				.putFloat(material.textureScale[1])
+				.putFloat(0).putFloat(0); // pad vec4
 		}
 		buffer.flip();
 
