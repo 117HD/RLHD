@@ -93,21 +93,24 @@ public enum Material
 	WILLOW_LEAVES(30, p -> p
 		.setTextureScale(1.025f, 1.0f)),
 	LAVA(31, p -> p
-		.setEmissiveStrength(1)
+		.setUnlit(true)
+		.setOverrideBaseColor(true)
 		.setFlowMap(LAVA_FLOW_MAP, 0.05f, 36, 22)
 		.setScroll(0, 1 / 3f)),
 	TREE_DOOR_BROWN(32),
 	MAPLE_LEAVES(33, p -> p
 		.setTextureScale(1.3f, 1)),
 	MAGIC_STARS(34, p -> p
-		.setEmissiveStrength(1)),
+		.setUnlit(true)
+		.setOverrideBaseColor(true)),
 	SAND_BRICK(35),
 	DOOR_TEXTURE(36),
 	BLADE(37),
 	SANDSTONE(38),
 	PAINTING_ELF(39),
 	FIRE_CAPE(40, p -> p
-		.setEmissiveStrength(1)
+		.setUnlit(true)
+		.setOverrideBaseColor(true)
 		.setFlowMap(LAVA_FLOW_MAP, 0.05f, 12, 4)
 		.setScroll(0, 1 / -3f)),
 	LEAVES_2(41, p -> p
@@ -131,7 +134,8 @@ public enum Material
 	SMOKE_BATTLESTAFF(57),
 	UNUSED_LEAVES(58),
 	INFERNAL_CAPE(59, p -> p
-		.setEmissiveStrength(1)
+		.setUnlit(true)
+		.setOverrideBaseColor(true)
 		.setFlowMap(LAVA_FLOW_MAP, 0.02f, 12, 4)
 		.setScroll(0, 0)),
 	LEAVES_3(60),
@@ -275,16 +279,20 @@ public enum Material
 		.setSpecular(0.4f, 120)),
 
 	HD_LAVA_1(p -> p
-		.setEmissiveStrength(1.0f)
+		.setUnlit(true)
+		.setOverrideBaseColor(true)
 		.setFlowMap(LAVA_FLOW_MAP, 0.04f, 36, 12)),
 	HD_LAVA_2(p -> p
-		.setEmissiveStrength(1.0f)
+		.setUnlit(true)
+		.setOverrideBaseColor(true)
 		.setFlowMap(LAVA_FLOW_MAP, 0.04f, 36, 12)),
 	HD_MAGMA_1(p -> p
-		.setEmissiveStrength(1.0f)
+		.setUnlit(true)
+		.setOverrideBaseColor(true)
 		.setFlowMap(LAVA_FLOW_MAP, 0.04f, 36, 12)),
 	HD_MAGMA_2(p -> p
-		.setEmissiveStrength(1.0f)
+		.setUnlit(true)
+		.setOverrideBaseColor(true)
 		.setFlowMap(LAVA_FLOW_MAP, 0.04f, 36, 12)),
 
 	BARK,
@@ -292,7 +300,8 @@ public enum Material
 
 	HD_INFERNAL_CAPE(p -> p
 		.replaceIf(INFERNAL_CAPE, HdPluginConfig::hdInfernalTexture)
-		.setEmissiveStrength(1)
+		.setUnlit(true)
+		.setOverrideBaseColor(true)
 		.setFlowMap(LAVA_FLOW_MAP, 0.02f, 12, 4)
 		.setScroll(0, 1 / 3f)),
 
@@ -308,7 +317,8 @@ public enum Material
 		.replaceIf(BRICK_BROWN, HdPluginConfig::objectTextures)),
 	HD_LAVA_3(p -> p
 		.replaceIf(LAVA, HdPluginConfig::objectTextures)
-		.setEmissiveStrength(1)
+		.setUnlit(true)
+		.setOverrideBaseColor(true)
 		.setFlowMap(LAVA_FLOW_MAP, 0.05f, 36, 22)
 		.setScroll(0, 1 / 3f)),
 	HD_ROOF_SHINGLES_2(p -> p
@@ -337,13 +347,15 @@ public enum Material
 	WINTER_PAINTING_ELF(p -> p
 		.replaceIf(PAINTING_ELF, HdPluginConfig::winterTheme));
 
-	public final int vanillaTextureIndex;
 	public final Material parent;
 	public final Material normalMap;
 	public final Material displacementMap;
 	public final Material roughnessMap;
 	public final Material ambientOcclusionMap;
 	public final Material flowMap;
+	public final int vanillaTextureIndex;
+	public final boolean overrideBaseColor;
+	public final boolean unlit;
 	public final float displacementScale;
 	public final float flowMapStrength;
 	public final float[] flowMapDuration;
@@ -358,13 +370,15 @@ public enum Material
 	@Setter
 	private static class Builder
 	{
-		private int vanillaTextureIndex = -1;
 		private Material parent;
 		private Material normalMap = NONE;
 		private Material displacementMap = NONE;
 		private Material roughnessMap = NONE;
 		private Material ambientOcclusionMap = NONE;
 		private Material flowMap = LAVA_FLOW_MAP;
+		private int vanillaTextureIndex = -1;
+		private boolean overrideBaseColor = false;
+		private boolean unlit = false;
 		private float displacementScale = .1f;
 		private float flowMapStrength;
 		private float[] flowMapDuration = { 0, 0 };
@@ -385,14 +399,14 @@ public enum Material
 		Builder setParent(Material parent)
 		{
 			this.parent = parent;
-			this.vanillaTextureIndex = parent.vanillaTextureIndex;
-			this.materialToReplace = parent.materialToReplace;
-			this.replacementCondition = parent.replacementCondition;
 			this.normalMap = parent.normalMap;
 			this.displacementMap = parent.displacementMap;
 			this.roughnessMap = parent.roughnessMap;
 			this.ambientOcclusionMap = parent.ambientOcclusionMap;
 			this.flowMap = parent.flowMap;
+			this.vanillaTextureIndex = parent.vanillaTextureIndex;
+			this.overrideBaseColor = parent.overrideBaseColor;
+			this.unlit = parent.unlit;
 			this.displacementScale = parent.displacementScale;
 			this.flowMapStrength = parent.flowMapStrength;
 			this.flowMapDuration = parent.flowMapDuration;
@@ -401,6 +415,8 @@ public enum Material
 			this.emissiveStrength = parent.emissiveStrength;
 			this.scrollSpeed = parent.scrollSpeed;
 			this.textureScale = parent.textureScale;
+			this.materialToReplace = parent.materialToReplace;
+			this.replacementCondition = parent.replacementCondition;
 			return this;
 		}
 
@@ -463,13 +479,15 @@ public enum Material
 	{
 		Builder builder = new Builder();
 		consumer.accept(builder);
-		this.vanillaTextureIndex = builder.vanillaTextureIndex;
 		this.parent = builder.parent;
 		this.normalMap = builder.normalMap;
 		this.displacementMap = builder.displacementMap;
 		this.roughnessMap = builder.roughnessMap;
 		this.ambientOcclusionMap = builder.ambientOcclusionMap;
 		this.flowMap = builder.flowMap;
+		this.vanillaTextureIndex = builder.vanillaTextureIndex;
+		this.overrideBaseColor = builder.overrideBaseColor;
+		this.unlit = builder.unlit;
 		this.displacementScale = builder.displacementScale;
 		this.flowMapStrength = builder.flowMapStrength;
 		this.flowMapDuration = builder.flowMapDuration;
@@ -482,22 +500,21 @@ public enum Material
 		this.replacementCondition = builder.replacementCondition;
 	}
 
-	private static final HashMap<Integer, Material> DIFFUSE_ID_MATERIAL_MAP;
+	private static final HashMap<Integer, Material> VANILLA_TEXTURE_MAP = new HashMap<>();
 
 	static
 	{
-		DIFFUSE_ID_MATERIAL_MAP = new HashMap<>();
 		for (Material material : values())
 		{
 			if (material.vanillaTextureIndex != -1)
 			{
-				DIFFUSE_ID_MATERIAL_MAP.putIfAbsent(material.vanillaTextureIndex, material);
+				VANILLA_TEXTURE_MAP.putIfAbsent(material.vanillaTextureIndex, material);
 			}
 		}
 	}
 
-	public static Material getTexture(int diffuseMap)
+	public static Material getTexture(int vanillaTextureId)
 	{
-		return DIFFUSE_ID_MATERIAL_MAP.getOrDefault(diffuseMap, Material.NONE);
+		return VANILLA_TEXTURE_MAP.getOrDefault(vanillaTextureId, Material.NONE);
 	}
 }
