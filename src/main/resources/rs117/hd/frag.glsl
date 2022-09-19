@@ -222,11 +222,6 @@ void main() {
     vec4 baseColor2 = vColor2;
     vec4 baseColor3 = vColor3;
 
-    // apply emissive output to color
-    baseColor1.rgb = mix(baseColor1.rgb, vec3(1), material1.emissiveStrength);
-    baseColor2.rgb = mix(baseColor2.rgb, vec3(1), material2.emissiveStrength);
-    baseColor3.rgb = mix(baseColor3.rgb, vec3(1), material3.emissiveStrength);
-
     // get diffuse textures
     vec4 texColor1 = colorMap1 == -1 ? vec4(1) : texture(textureArray, vec3(uv1, colorMap1));
     vec4 texColor2 = colorMap2 == -1 ? vec4(1) : texture(textureArray, vec3(uv2, colorMap2));
@@ -271,28 +266,12 @@ void main() {
 
     // combine fragment colors based on each blend, creating
     // one color for each overlay/underlay 'layer'
-    vec4 underlayA = texA * underlayBlend.x;
-    vec4 underlayB = texB * underlayBlend.y;
-    vec4 underlayC = texC * underlayBlend.z;
-
-    vec4 underlayColor = underlayA + underlayB + underlayC;
-
-    vec4 overlayA = texA * overlayBlend.x;
-    vec4 overlayB = texB * overlayBlend.y;
-    vec4 overlayC = texC * overlayBlend.z;
-
-    vec4 overlayColor = overlayA + overlayB + overlayC;
-
-
-
+    vec4 underlayColor = texA * underlayBlend.x + texB * underlayBlend.y + texC * underlayBlend.z;
+    vec4 overlayColor = texA * overlayBlend.x + texB * overlayBlend.y + texC * overlayBlend.z;
 
     float overlayMix = 0;
 
-    if (overlayCount == 3)
-    {
-        overlayMix = 0;
-    }
-    else if (overlayCount == 0)
+    if (overlayCount == 0 || overlayCount == 3)
     {
         overlayMix = 0;
     }
@@ -386,11 +365,7 @@ void main() {
     }
 
     vec4 texColor = mix(underlayColor, overlayColor, overlayMix);
-
     alpha = texColor.a;
-
-    // blend emissive properties
-    float emissive = material1.emissiveStrength * texBlend.x + material2.emissiveStrength * texBlend.y + material3.emissiveStrength * texBlend.z;
 
     // normals
     vec3 normals = normals;
@@ -647,7 +622,8 @@ void main() {
     }
     else
     {
-        compositeColor *= mix(compositeLight, vec3(1), emissive);
+        float unlit = dot(texBlend, vec3(material1.unlit, material2.unlit, material3.unlit));
+        compositeColor *= mix(compositeLight, vec3(1), unlit);
         compositeColor = linearToSrgb(compositeColor);
     }
 
