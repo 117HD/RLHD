@@ -2,18 +2,18 @@
 
 struct Material
 {
-    int diffuseMap;
+    int colorMap;
     int normalMap;
     int displacementMap;
     int roughnessMap;
     int ambientOcclusionMap;
     int flowMap;
+    bool overrideBaseColor;
+    int unlit;
     float displacementScale;
     float specularStrength;
     float specularGloss;
     float flowMapStrength;
-    float emissiveStrength;
-    float pad;
     vec2 flowMapDuration;
     vec2 scrollDuration;
     vec2 textureScale;

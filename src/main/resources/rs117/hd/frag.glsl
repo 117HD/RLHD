@@ -117,9 +117,9 @@ void main() {
     WaterType waterType = getWaterType(waterTypeIndex);
 
     // set initial texture map ids
-    int diffuseMap1 = material1.diffuseMap;
-    int diffuseMap2 = material2.diffuseMap;
-    int diffuseMap3 = material3.diffuseMap;
+    int colorMap1 = material1.colorMap;
+    int colorMap2 = material2.colorMap;
+    int colorMap3 = material3.colorMap;
 
     // only use one flowMap map
     int flowMap = material1.flowMap;
@@ -129,9 +129,9 @@ void main() {
 
     if (isWater)
     {
-        diffuseMap1 = waterType.normalMap; // wave normal map 1
-        diffuseMap2 = waterType.normalMap; // wave normal map 2
-        diffuseMap3 = waterType.foamMap; // foam diffuse map
+        colorMap1 = waterType.normalMap; // wave normal map 1
+        colorMap2 = waterType.normalMap; // wave normal map 2
+        colorMap3 = waterType.foamMap; // foam diffuse map
         flowMap = isUnderwater ? waterType.underwaterFlowMap : waterType.flowMap; // wave flow map
     }
 
@@ -216,26 +216,21 @@ void main() {
         worldUvs(3).y + animationFrame(28 * waterType.duration) + uvFlow.y * flowMapStrength);
     }
 
-    // get emissive output
-    float emissive1 = clamp(material1.emissiveStrength, 0.0, 1.0);
-    float emissive2 = clamp(material2.emissiveStrength, 0.0, 1.0);
-    float emissive3 = clamp(material3.emissiveStrength, 0.0, 1.0);
-
     // get vertex colors
     vec4 flatColor = vec4(0.5, 0.5, 0.5, 1.0);
-    vec4 color1 = vColor1;
-    vec4 color2 = vColor2;
-    vec4 color3 = vColor3;
+    vec4 baseColor1 = vColor1;
+    vec4 baseColor2 = vColor2;
+    vec4 baseColor3 = vColor3;
 
     // apply emissive output to color
-    color1 = vec4(mix(color1.rgb, vec3(1.0), emissive1), color1.a);
-    color2 = vec4(mix(color2.rgb, vec3(1.0), emissive2), color2.a);
-    color3 = vec4(mix(color3.rgb, vec3(1.0), emissive3), color3.a);
+    baseColor1.rgb = mix(baseColor1.rgb, vec3(1), material1.emissiveStrength);
+    baseColor2.rgb = mix(baseColor2.rgb, vec3(1), material2.emissiveStrength);
+    baseColor3.rgb = mix(baseColor3.rgb, vec3(1), material3.emissiveStrength);
 
     // get diffuse textures
-    vec4 diffuse1 = texture(textureArray, vec3(uv1, diffuseMap1));
-    vec4 diffuse2 = texture(textureArray, vec3(uv2, diffuseMap2));
-    vec4 diffuse3 = texture(textureArray, vec3(uv3, diffuseMap3));
+    vec4 texColor1 = colorMap1 == -1 ? vec4(1) : texture(textureArray, vec3(uv1, colorMap1));
+    vec4 texColor2 = colorMap2 == -1 ? vec4(1) : texture(textureArray, vec3(uv2, colorMap2));
+    vec4 texColor3 = colorMap3 == -1 ? vec4(1) : texture(textureArray, vec3(uv3, colorMap3));
 
     ivec3 isOverlay = isOverlay;
     int overlayCount = isOverlay[0] + isOverlay[1] + isOverlay[2];
@@ -270,21 +265,21 @@ void main() {
 
 
     // get fragment colors by combining vertex colors and texture samples
-    vec4 texA = diffuseMap1 == -1 ? color1 : vec4(diffuse1.rgb * color1.rgb, min(diffuse1.a, color1.a));
-    vec4 texB = diffuseMap2 == -1 ? color2 : vec4(diffuse2.rgb * color2.rgb, min(diffuse2.a, color2.a));
-    vec4 texC = diffuseMap3 == -1 ? color3 : vec4(diffuse3.rgb * color3.rgb, min(diffuse3.a, color3.a));
+    vec4 texA = material1.overrideBaseColor ? texColor1 : vec4(texColor1.rgb * baseColor1.rgb, min(texColor1.a, baseColor1.a));
+    vec4 texB = material2.overrideBaseColor ? texColor2 : vec4(texColor2.rgb * baseColor2.rgb, min(texColor2.a, baseColor2.a));
+    vec4 texC = material3.overrideBaseColor ? texColor3 : vec4(texColor3.rgb * baseColor3.rgb, min(texColor3.a, baseColor3.a));
 
     // combine fragment colors based on each blend, creating
     // one color for each overlay/underlay 'layer'
-    vec4 underlayA = texA * underlayBlend[0];
-    vec4 underlayB = texB * underlayBlend[1];
-    vec4 underlayC = texC * underlayBlend[2];
+    vec4 underlayA = texA * underlayBlend.x;
+    vec4 underlayB = texB * underlayBlend.y;
+    vec4 underlayC = texC * underlayBlend.z;
 
     vec4 underlayColor = underlayA + underlayB + underlayC;
 
-    vec4 overlayA = texA * overlayBlend[0];
-    vec4 overlayB = texB * overlayBlend[1];
-    vec4 overlayC = texC * overlayBlend[2];
+    vec4 overlayA = texA * overlayBlend.x;
+    vec4 overlayB = texB * overlayBlend.y;
+    vec4 overlayC = texC * overlayBlend.z;
 
     vec4 overlayColor = overlayA + overlayB + overlayC;
 
@@ -392,19 +387,18 @@ void main() {
 
     vec4 texColor = mix(underlayColor, overlayColor, overlayMix);
 
-    vec3 compositeColor = texColor.rgb;
     alpha = texColor.a;
 
     // blend emissive properties
-    float emissive = emissive1 * texBlend[0] + emissive2 * texBlend[1] + emissive3 * texBlend[2];
+    float emissive = material1.emissiveStrength * texBlend.x + material2.emissiveStrength * texBlend.y + material3.emissiveStrength * texBlend.z;
 
     // normals
     vec3 normals = normals;
 
     if (isWater)
     {
-        vec3 n1 = -vec3((diffuse1.x * 2 - 1) * waterType.normalStrength, diffuse1.z, (diffuse1.y * 2 - 1) * waterType.normalStrength);
-        vec3 n2 = -vec3((diffuse2.x * 2 - 1) * waterType.normalStrength, diffuse2.z, (diffuse2.y * 2 - 1) * waterType.normalStrength);
+        vec3 n1 = -vec3((texColor1.x * 2 - 1) * waterType.normalStrength, texColor1.z, (texColor1.y * 2 - 1) * waterType.normalStrength);
+        vec3 n2 = -vec3((texColor2.x * 2 - 1) * waterType.normalStrength, texColor2.z, (texColor2.y * 2 - 1) * waterType.normalStrength);
         normals = n1 + n2;
     }
     else
@@ -499,13 +493,13 @@ void main() {
 
         // apply specular highlights to anything semi-transparent
         // this isn't always desirable but adds subtle light reflections to windows, etc.
-        if (color1.a + color2.a + color3.a < 2.99)
+        if (baseColor1.a + baseColor2.a + baseColor3.a < 2.99)
         {
             vSpecularGloss = vec3(30);
             vSpecularStrength = vec3(
-                clamp((1 - color1.a) * 2, 0, 1),
-                clamp((1 - color2.a) * 2, 0, 1),
-                clamp((1 - color3.a) * 2, 0, 1)
+                clamp((1 - baseColor1.a) * 2, 0, 1),
+                clamp((1 - baseColor2.a) * 2, 0, 1),
+                clamp((1 - baseColor3.a) * 2, 0, 1)
             );
         }
         combinedSpecularStrength = dot(vSpecularStrength, texBlend);
@@ -627,6 +621,7 @@ void main() {
     vec3 compositeLight = ambientLightOut + lightOut + lightSpecularOut + skyLightOut + lightningOut +
         underglowOut + pointLightsOut + pointLightsSpecularOut + surfaceColorOut;
 
+    vec3 compositeColor = texColor.rgb;
 
     if (isWater)
     {
@@ -638,7 +633,7 @@ void main() {
         float foamAmount = min(1.0 - fragColor.r, maxFoamAmount);
         float foamDistance = 0.7;
         vec3 foamColor = waterType.foamColor;
-        foamColor = foamColor * diffuse3.rgb * compositeLight;
+        foamColor = foamColor * texColor3.rgb * compositeLight;
         foamAmount = clamp(pow(1.0 - ((1.0 - foamAmount) / foamDistance), 3), 0.0, 1.0) * waterType.hasFoam;
         foamAmount *= foamColor.r;
         baseColor = mix(baseColor, foamColor, foamAmount);
@@ -652,8 +647,7 @@ void main() {
     }
     else
     {
-        vec3 litColor = compositeColor * compositeLight;
-        compositeColor = mix(litColor, compositeColor, emissive);
+        compositeColor *= mix(compositeLight, vec3(1), emissive);
         compositeColor = linearToSrgb(compositeColor);
     }
 

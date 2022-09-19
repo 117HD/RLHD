@@ -25,8 +25,8 @@
 
 float sampleCausticsChannel(const vec2 flow1, const vec2 flow2) {
     return min(
-        texture(textureArray, vec3(flow1, MAT_CAUSTICS_MAP.diffuseMap)).r,
-        texture(textureArray, vec3(flow2, MAT_CAUSTICS_MAP.diffuseMap)).r
+        texture(textureArray, vec3(flow1, MAT_CAUSTICS_MAP.colorMap)).r,
+        texture(textureArray, vec3(flow2, MAT_CAUSTICS_MAP.colorMap)).r
     );
 }
 

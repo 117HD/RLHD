@@ -43,7 +43,7 @@ void main()
     // Scale from the center
     uv = (uv - .5) / material.textureScale + .5;
 
-    float texAlpha = texture(textureArray, vec3(uv, material.diffuseMap)).a;
+    float texAlpha = texture(textureArray, vec3(uv, material.colorMap)).a;
     if (texAlpha < SHADOW_OPACITY_THRESHOLD)
         discard;
 }
