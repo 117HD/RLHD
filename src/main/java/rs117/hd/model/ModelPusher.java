@@ -65,6 +65,7 @@ public class ModelPusher {
     private long bytesCached;
     private long maxByteCapacity;
     private long lastCacheHint;
+    private boolean initialized;
 
 //    private int pushes = 0;
 //    private int vertexdatahits = 0;
@@ -88,6 +89,19 @@ public class ModelPusher {
         this.uvDataCache = new FloatBufferCache((long) (config.modelCacheSizeMB() / 2 * 1000000 * 0.05), this.bufferPool);
         this.maxByteCapacity = config.modelCacheSizeMB() * 1000000L;
         this.lastCacheHint = System.currentTimeMillis();
+        this.initialized = true;
+    }
+
+    public void destroy() {
+        if (!this.initialized)
+            return;
+
+        this.initialized = false;
+        this.bufferPool = null;
+        this.vertexDataCache = null;
+        this.normalDataCache = null;
+        this.uvDataCache = null;
+        this.freeAllBuffers();
     }
 
     // subtracts the X lowest lightness levels from the formula.
@@ -106,17 +120,16 @@ public class ModelPusher {
     private final static float[] twelveFloats = new float[12];
     private final static int[] modelColors = new int[HdPlugin.MAX_TRIANGLE * 4];
 
-    public void clearModelCache(boolean hard) {
+    public void clearModelCache() {
+        if (!this.initialized)
+            return;
+
         vertexDataCache.clear();
         normalDataCache.clear();
         uvDataCache.clear();
 
-        if (hard) {
-            this.freeAllBuffers();
-        } else {
-            System.gc();
-            this.freeFinalizedBuffers();
-        }
+        System.gc();
+        this.freeFinalizedBuffers();
     }
 
     public void resetCounters() {
