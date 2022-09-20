@@ -2565,8 +2565,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	 */
 	public int[] getCameraFocalPoint()
 	{
-		int camX = client.getOculusOrbFocalPointX();
-		int camY = client.getOculusOrbFocalPointY();
+		boolean oculusActive = client.getOculusOrbState() == 1;
+		int camX = oculusActive ? client.getOculusOrbFocalPointX() : client.getCameraX();
+		int camY = oculusActive ? client.getOculusOrbFocalPointY() : client.getCameraY();
 		// approximate the Z position of the point the camera is aimed at.
 		// the difference in height between the camera at lowest and highest pitch
 		int camPitch = client.getCameraPitch();
