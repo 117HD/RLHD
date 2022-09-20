@@ -121,6 +121,9 @@ public class ModelPusher {
     private final static int[] modelColors = new int[HdPlugin.MAX_TRIANGLE * 4];
 
     public void clearModelCache() {
+        if (!this.initialized)
+            return;
+
         vertexDataCache.clear();
         normalDataCache.clear();
         uvDataCache.clear();
