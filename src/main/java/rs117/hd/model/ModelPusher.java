@@ -4,7 +4,6 @@ import com.google.common.primitives.Ints;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.api.kit.KitType;
-import org.lwjgl.system.MemoryUtil;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.data.BakedModels;
@@ -24,13 +23,8 @@ import rs117.hd.utils.buffer.GpuIntBuffer;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.lang.ref.PhantomReference;
-import java.lang.ref.ReferenceQueue;
-import java.nio.Buffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
-import java.util.HashMap;
-import java.util.Map;
 
 import static rs117.hd.utils.HDUtils.dotNormal3Lights;
 
@@ -55,20 +49,9 @@ public class ModelPusher {
     @Inject
     private ModelHasher modelHasher;
 
-    private BufferPool bufferPool;
-
-    private IntBufferCache vertexDataCache;
-    private FloatBufferCache normalDataCache;
-    private FloatBufferCache uvDataCache;
-    private final Map<PhantomReference<Buffer>, BufferInfo> bufferInfo;
-    private final ReferenceQueue<Buffer> bufferReferenceQueue;
-    private long bytesCached;
-    private long bytesActivelyCached;
-    private long maxByteCapacity;
-    private long maxActivelyCachedBytes;
-    private long lastCacheHint;
-    private long firstCacheHint;
-    private long hintCount;
+    private final ModelCache modelCache = new ModelCache();
+    public static final int DATUM_PER_FACE = 12;
+    public static final int BYTES_PER_DATUM = 4;
     private boolean initialized;
 
 //    private int pushes = 0;
@@ -76,39 +59,12 @@ public class ModelPusher {
 //    private int normaldatahits = 0;
 //    private int uvdatahits = 0;
 
-    public ModelPusher() {
-        this.bufferInfo = new HashMap<>();
-        this.bufferReferenceQueue = new ReferenceQueue<>();
-        this.bytesCached = 0;
-    }
-
     public void init() {
-        this.maxByteCapacity = config.modelCacheSizeMiB() * 1048576L;
-
-        // allocate a fourth of the memory budget to recycling buffers
-        this.bufferPool = new BufferPool(this.maxByteCapacity / 4);
-
-        // allocate half of the budget to actively cached memory
-        this.maxActivelyCachedBytes = maxByteCapacity / 2;
-        this.bytesActivelyCached = 0;
-        this.vertexDataCache = new IntBufferCache(this.bufferPool);
-        this.normalDataCache = new FloatBufferCache(this.bufferPool);
-        this.uvDataCache = new FloatBufferCache(this.bufferPool);
-
-        this.lastCacheHint = System.currentTimeMillis();
-        this.initialized = true;
+        this.modelCache.init(config);
     }
 
-    public void destroy() {
-        if (!this.initialized)
-            return;
-
-        this.initialized = false;
-        this.bufferPool = null;
-        this.vertexDataCache = null;
-        this.normalDataCache = null;
-        this.uvDataCache = null;
-        this.freeAllBuffers();
+    public void shutdown() {
+        this.modelCache.freeAllBuffers();
     }
 
     // subtracts the X lowest lightness levels from the formula.
@@ -128,15 +84,7 @@ public class ModelPusher {
     private final static int[] modelColors = new int[HdPlugin.MAX_TRIANGLE * 4];
 
     public void clearModelCache() {
-        if (!this.initialized)
-            return;
-
-        vertexDataCache.clear();
-        normalDataCache.clear();
-        uvDataCache.clear();
-
-        System.gc();
-        this.freeFinalizedBuffers();
+        this.modelCache.clear();
     }
 
 //    public void printStats() {
@@ -158,78 +106,32 @@ public class ModelPusher {
 //        pushes = 0;
 //    }
 
-    // free all of the buffers that have been finalized by the garbage collector
-    public void freeFinalizedBuffers() {
-        int freeCount = 0;
-        int freeAttempts = 0;
-        PhantomReference<Buffer> reference;
-
-        while ((reference = (PhantomReference<Buffer>) this.bufferReferenceQueue.poll()) != null) {
-            freeAttempts++;
-            BufferInfo bi = this.bufferInfo.get(reference);
-            if (bi != null) {
-                freeCount++;
-                this.bufferInfo.remove(reference);
-
-                if (!bi.isFreed()) {
-                    MemoryUtil.nmemFree(bi.getAddress());
-                    this.bytesCached -= bi.getBytes();
-                }
-            }
-
-
-            if (freeAttempts != freeCount) {
-                // I've thought about removing this bit, but it's probably a good assertion to leave in place.
-                // Given that this is a memory leak it's something we should look out for
-                log.error("failed to free cache reference!");
-            }
-        }
-    }
-
-    // manually free all the buffers that have been allocated
-    // this is intended for use with plugin shutdown
-    public void freeAllBuffers() {
-        for (Map.Entry<PhantomReference<Buffer>, BufferInfo> entry : this.bufferInfo.entrySet()) {
-            BufferInfo bi = entry.getValue();
-
-            if (!bi.isFreed()) {
-                MemoryUtil.nmemFree(bi.getAddress());
-                this.bytesCached -= bi.getBytes();
-
-                // mark the buffer as freed so the other finalization method doesn't attempt a double free
-                // it may attempt to do so if the user immediately re-enables the plugin
-                bi.setFreed(true);
-            }
-        }
-    }
-
     public int[] pushModel(long hash, Model model, GpuIntBuffer vertexBuffer, GpuFloatBuffer uvBuffer, GpuFloatBuffer normalBuffer, int tileX, int tileY, int tileZ, ObjectProperties objectProperties, ObjectType objectType, boolean noCache) {
 //        pushes++;
         final int faceCount = Math.min(model.getFaceCount(), HdPlugin.MAX_TRIANGLE);
-        final int entryCount = faceCount * 12;
-        final long byteCount = entryCount * 4L;
+        final int bufferSize = faceCount * DATUM_PER_FACE;
         int vertexLength = 0;
         int uvLength = 0;
 
         // ensure capacity upfront
-        vertexBuffer.ensureCapacity(entryCount);
-        normalBuffer.ensureCapacity(entryCount);
-        uvBuffer.ensureCapacity(entryCount);
+        vertexBuffer.ensureCapacity(bufferSize);
+        normalBuffer.ensureCapacity(bufferSize);
+        uvBuffer.ensureCapacity(bufferSize);
 
         boolean cachedVertexData = false;
         boolean cachedNormalData = false;
         boolean cachedUvData = false;
-        int vertexCacheHash = 0;
+        int vertexDataCacheHash = 0;
         int normalDataCacheHash = 0;
         int uvDataCacheHash = 0;
 
         if (!noCache) {
-            vertexCacheHash = modelHasher.calculateVertexCacheHash();
+            vertexDataCacheHash = modelHasher.calculateVertexCacheHash();
             normalDataCacheHash = modelHasher.calculateNormalCacheHash();
             uvDataCacheHash = modelHasher.calculateUvCacheHash(objectProperties);
 
-            IntBuffer vertexData = vertexDataCache.get(vertexCacheHash);
-            cachedVertexData = vertexData != null && vertexData.remaining() == entryCount;
+            IntBuffer vertexData = this.modelCache.getVertexData(vertexDataCacheHash);
+            cachedVertexData = vertexData != null && vertexData.remaining() == bufferSize;
             if (cachedVertexData) {
 //                vertexDataHits++;
                 vertexLength = faceCount * 3;
@@ -237,19 +139,19 @@ public class ModelPusher {
                 vertexData.rewind();
             }
 
-            FloatBuffer normalData = normalDataCache.get(normalDataCacheHash);
-            cachedNormalData = normalData != null && normalData.remaining() == entryCount;
+            FloatBuffer normalData = this.modelCache.getNormalData(normalDataCacheHash);
+            cachedNormalData = normalData != null && normalData.remaining() == bufferSize;
             if (cachedNormalData) {
 //                normalDataHits++;
                 normalBuffer.put(normalData);
                 normalData.rewind();
             }
 
-            FloatBuffer uvData = uvDataCache.get(uvDataCacheHash);
+            FloatBuffer uvData = this.modelCache.getUvData(uvDataCacheHash);
             cachedUvData = uvData != null;
             if (cachedUvData) {
 //                uvDataHits++;
-                uvLength = 3 * (uvData.remaining() / 12);
+                uvLength = 3 * (uvData.remaining() / DATUM_PER_FACE);
                 uvBuffer.put(uvData);
                 uvData.rewind();
             }
@@ -267,37 +169,27 @@ public class ModelPusher {
 
         boolean cachingVertexData = !cachedVertexData && !noCache;
         if (cachingVertexData) {
-            // try to take a recycled buffer before allocating a new one
-            fullVertexData = this.bufferPool.takeIntBuffer(entryCount);
-            if (fullVertexData == null && this.bytesCached + byteCount <= this.maxByteCapacity) {
-                fullVertexData = MemoryUtil.memAllocInt(entryCount);
-                this.bufferInfo.put(new PhantomReference<>(fullVertexData, this.bufferReferenceQueue), new BufferInfo(MemoryUtil.memAddress(fullVertexData), byteCount));
-                this.bytesCached += byteCount;
-            } else {
+            fullVertexData = this.modelCache.takeIntBuffer(bufferSize);
+            if (fullVertexData == null) {
+                log.error("failed to grab vertex buffer");
                 cachingVertexData = false;
             }
         }
 
         boolean cachingNormalData = !cachedNormalData && !noCache;
         if (cachingNormalData) {
-            fullNormalData = this.bufferPool.takeFloatBuffer(entryCount);
-            if (fullNormalData == null && this.bytesCached + byteCount <= this.maxByteCapacity) {
-                fullNormalData = MemoryUtil.memAllocFloat(entryCount);
-                this.bufferInfo.put(new PhantomReference<>(fullNormalData, this.bufferReferenceQueue), new BufferInfo(MemoryUtil.memAddress(fullNormalData), byteCount));
-                this.bytesCached += byteCount;
-            } else {
+            fullNormalData = this.modelCache.takeFloatBuffer(bufferSize);
+            if (fullNormalData == null) {
+                log.error("failed to grab normal buffer");
                 cachingNormalData = false;
             }
         }
 
         boolean cachingUvData = !cachedUvData && !noCache;
         if (cachingUvData) {
-            fullUvData = this.bufferPool.takeFloatBuffer(entryCount);
-            if (fullUvData == null && this.bytesCached + byteCount <= this.maxByteCapacity) {
-                fullUvData = MemoryUtil.memAllocFloat(entryCount);
-                this.bufferInfo.put(new PhantomReference<>(fullUvData, this.bufferReferenceQueue), new BufferInfo(MemoryUtil.memAddress(fullUvData), byteCount));
-                this.bytesCached += byteCount;
-            } else {
+            fullUvData = this.modelCache.takeFloatBuffer(bufferSize);
+            if (fullUvData == null) {
+                log.error("failed to grab uv buffer");
                 cachingUvData = false;
             }
         }
@@ -338,78 +230,23 @@ public class ModelPusher {
 
         if (cachingVertexData) {
             fullVertexData.flip();
-
-            if (this.bytesActivelyCached + byteCount > this.maxActivelyCachedBytes) {
-                this.bytesActivelyCached -= this.makeRoom(byteCount - (this.maxActivelyCachedBytes - this.bytesActivelyCached));
-            }
-
-            this.bytesActivelyCached += byteCount;
-            vertexDataCache.put(vertexCacheHash, fullVertexData);
+            this.modelCache.putVertexData(vertexDataCacheHash, fullVertexData);
         }
 
         if (cachingNormalData) {
             fullNormalData.flip();
-
-            if (this.bytesActivelyCached + byteCount > this.maxActivelyCachedBytes) {
-                this.bytesActivelyCached -= this.makeRoom(byteCount - (this.maxActivelyCachedBytes - this.bytesActivelyCached));
-            }
-
-            this.bytesActivelyCached += byteCount;
-            normalDataCache.put(normalDataCacheHash, fullNormalData);
+            this.modelCache.putNormalData(normalDataCacheHash, fullNormalData);
         }
 
         if (cachingUvData) {
             fullUvData.flip();
-
-            if (this.bytesActivelyCached + byteCount > this.maxActivelyCachedBytes) {
-                this.bytesActivelyCached -= this.makeRoom(byteCount - (this.maxActivelyCachedBytes - this.bytesActivelyCached));
-            }
-
-            this.bytesActivelyCached += byteCount;
-            uvDataCache.put(uvDataCacheHash, fullUvData);
+            this.modelCache.putUvData(uvDataCacheHash, fullUvData);
         }
 
         twoInts[0] = vertexLength;
         twoInts[1] = uvLength;
 
         return twoInts;
-    }
-
-    private long makeRoom(long bytes) {
-        long bytesFreed = this.vertexDataCache.makeRoom(bytes);
-        if (bytesFreed < bytes) {
-            bytesFreed += this.normalDataCache.makeRoom(bytes);
-        }
-
-        if (bytesFreed < bytes) {
-            bytesFreed += this.uvDataCache.makeRoom(bytes);
-        }
-
-        // this is technically possible but I think it should only happen if the cache size is extremely small
-        if (bytesFreed < bytes) {
-            log.error("failed to make room for new buffers in the caches!");
-        }
-
-        return bytesFreed;
-    }
-
-    // hint the gc to run if we're holding more cache than the max capacity
-    // this will allow the inactive portion of the cache to be finalized and thus freed
-    public void hintGC() {
-        // hint the GC if we're above 95% capacity
-        // do not hint the GC more than once every 5 seconds
-        if (this.bytesCached >= Math.round(this.maxByteCapacity * 0.95) && System.currentTimeMillis() - this.lastCacheHint > 5000) {
-            System.gc();
-            this.lastCacheHint = System.currentTimeMillis();
-
-//            if (this.firstCacheHint == 0) {
-//                this.firstCacheHint = System.currentTimeMillis();
-//            } else {
-//                this.hintCount++;
-//                float hintRate = (float) this.hintCount / Math.round((float)(System.currentTimeMillis() - this.firstCacheHint) / 1000);
-//                log.info("gc hint rate = " + hintRate + " per second");
-//            }
-        }
     }
 
     private int[] getVertexDataForFace(Model model, int[] faceColors, int face) {
@@ -720,7 +557,7 @@ public class ModelPusher {
                         if(objectProperties.inheritTileColorType == InheritTileColorType.UNDERLAY || tileModel.getModelOverlay() == 0) {
                             // pulling the color from UNDERLAY is more desirable for green grass tiles
                             // OVERLAY pulls in path color which is not desirable for grass next to paths
-                            if (!isOverlayFace) {                                
+                            if (!isOverlayFace) {
                                 faceColorIndex = i;
                                 break;
                             }
@@ -731,7 +568,7 @@ public class ModelPusher {
                                 faceColorIndex = i;
                                 break;
                             }
-                        }                     
+                        }
                     }
 
                     if (faceColorIndex != -1) {

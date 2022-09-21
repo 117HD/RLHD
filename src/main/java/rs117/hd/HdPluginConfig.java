@@ -579,7 +579,7 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 			keyName = "modelCacheSizeMiB",
 			name = "Model cache size (MiB)",
-			description = "Size of the model cache in mebibytes. Plugin must be restarted to apply changes.",
+			description = "Size of the model cache in mebibytes. Plugin must be restarted to apply changes. Min=256 Max=16384",
 			position = 403,
 			section = experimentalSettings
 	)

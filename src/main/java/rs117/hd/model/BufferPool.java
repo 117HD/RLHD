@@ -1,71 +1,79 @@
 package rs117.hd.model;
 
 import lombok.extern.slf4j.Slf4j;
+import org.lwjgl.system.MemoryUtil;
+import rs117.hd.HdPlugin;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+import java.util.Iterator;
+import java.util.Stack;
 
 @Slf4j
 public class BufferPool {
-    private final BufferStackMap<IntBuffer> intBufferStackMap;
-    private final BufferStackMap<FloatBuffer> floatBufferStackMap;
-    private long bytesRemaining;
+    private final Stack<Long> bufferAddressStack;
+    private final long byteCapacity;
+    private boolean allocated;
 
     public BufferPool(long byteCapacity) {
-        this.intBufferStackMap = new BufferStackMap<>();
-        this.floatBufferStackMap = new BufferStackMap<>();
-        this.bytesRemaining = byteCapacity;
+        this.bufferAddressStack = new Stack<>();
+        this.byteCapacity = byteCapacity;
+        this.allocated = false;
+    }
+
+    public boolean isEmpty() {
+        return this.bufferAddressStack.isEmpty();
+    }
+
+    public void allocate() {
+        if (this.allocated) {
+            return;
+        }
+
+        // we're going to allocate as many of these as possible
+        // these lovely allocations are perfectly sized to fit any piece of model data so they can be reused infinitely
+        long allocationSize = HdPlugin.MAX_TRIANGLE * ModelPusher.DATUM_PER_FACE * ModelPusher.BYTES_PER_DATUM;
+
+        long bytesRemaining = this.byteCapacity;
+        while (bytesRemaining - allocationSize >= 0) {
+            this.bufferAddressStack.push(MemoryUtil.nmemAllocChecked(allocationSize));
+            bytesRemaining -= allocationSize;
+        }
+
+        this.allocated = true;
+    }
+
+    public void free() {
+        Iterator<Long> iterator = this.bufferAddressStack.iterator();
+
+        while(iterator.hasNext()) {
+            Long address = iterator.next();
+            MemoryUtil.nmemFree(address);
+            iterator.remove();
+        }
     }
 
     public void putIntBuffer(IntBuffer buffer) {
-        long bytesNeeded = buffer.capacity() * 4L;
-
-        if (bytesNeeded > this.bytesRemaining) {
-            this.bytesRemaining += this.makeRoom(bytesNeeded - this.bytesRemaining);
-        }
-
-        this.intBufferStackMap.putBuffer(buffer);
-        this.bytesRemaining -= bytesNeeded;
+        this.bufferAddressStack.push(MemoryUtil.memAddress(buffer));
     }
 
     public IntBuffer takeIntBuffer(int capacity) {
-        IntBuffer acquired = this.intBufferStackMap.takeBuffer(capacity);
-        if (acquired != null) {
-            this.bytesRemaining += acquired.capacity() * 4L;
+        if (this.bufferAddressStack.isEmpty()) {
+            return null;
         }
-        return acquired;
+
+        return MemoryUtil.memIntBuffer(this.bufferAddressStack.pop(), capacity);
     }
 
     public void putFloatBuffer(FloatBuffer buffer) {
-        long bytesNeeded = buffer.capacity() * 4L;
-
-        if (bytesNeeded > this.bytesRemaining) {
-            this.bytesRemaining += this.makeRoom(bytesNeeded - this.bytesRemaining);
-        }
-
-        this.floatBufferStackMap.putBuffer(buffer);
-        this.bytesRemaining -= bytesNeeded;
+        this.bufferAddressStack.push(MemoryUtil.memAddress(buffer));
     }
 
     public FloatBuffer takeFloatBuffer(int capacity) {
-        FloatBuffer acquired = this.floatBufferStackMap.takeBuffer(capacity);
-        if (acquired != null) {
-            this.bytesRemaining += acquired.capacity() * 4L;
-        }
-        return acquired;
-    }
-
-    private long makeRoom(long bytes) {
-        long bytesFreed = this.intBufferStackMap.makeRoom(bytes);
-        if (bytesFreed < bytes) {
-            bytesFreed += this.floatBufferStackMap.makeRoom(bytes);
+        if (this.bufferAddressStack.isEmpty()) {
+            return null;
         }
 
-        // this is technically possible but I think it should only happen if the size of the buffer pool is extremely small
-        if (bytesFreed < bytes) {
-            log.error("failed to make room for new buffers in the buffer pool!");
-        }
-
-        return bytesFreed;
+        return MemoryUtil.memFloatBuffer(this.bufferAddressStack.pop(), capacity);
     }
 }

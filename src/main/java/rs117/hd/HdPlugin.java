@@ -108,6 +108,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 	// This is the maximum number of triangles the compute shaders support
 	public static final int MAX_TRIANGLE = 6144;
+
 	public static final int SMALL_TRIANGLE_COUNT = 512;
 	private static final int FLAG_SCENE_BUFFER = Integer.MIN_VALUE;
 	private static final int DEFAULT_DISTANCE = 25;
@@ -451,7 +452,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				// lwjgl defaults to lwjgl- + user.name, but this breaks if the username would cause an invalid path
 				// to be created, and also breaks if both 32 and 64 bit lwjgl versions try to run at once.
 				Configuration.SHARED_LIBRARY_EXTRACT_DIRECTORY.set("lwjgl-rl-" + System.getProperty("os.arch", "unknown"));
-				Configuration.MEMORY_ALLOCATOR.set("jemalloc");
 
 				GL.createCapabilities();
 
@@ -573,7 +573,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			client.setGpu(false);
 			client.setDrawCallbacks(null);
 			client.setUnlockedFps(false);
-			modelPusher.destroy();
+			modelPusher.shutdown();
 
 			if (lwjglInitted)
 			{
@@ -1597,9 +1597,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			return;
 		}
 
-		modelPusher.freeFinalizedBuffers();
-		modelPusher.hintGC();
-
 		// shader variables for water, lava animations
 		elapsedTime += (System.currentTimeMillis() - lastFrameTime) / 1000f;
 		lastFrameTime = System.currentTimeMillis();
@@ -2122,6 +2119,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	public void onGameStateChanged(GameStateChanged gameStateChanged)
 	{
 		switch (gameStateChanged.getGameState()) {
+			case LOADING:
+				lightManager.reset();
+				break;
 			case LOGGED_IN:
 				uploadScene();
 				checkGLErrors();

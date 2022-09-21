@@ -1,9 +1,12 @@
 package rs117.hd.model;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.nio.FloatBuffer;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 
+@Slf4j
 public class FloatBufferCache extends LinkedHashMap<Integer, FloatBuffer> {
     private final BufferPool bufferPool;
 
@@ -12,17 +15,24 @@ public class FloatBufferCache extends LinkedHashMap<Integer, FloatBuffer> {
         this.bufferPool = bufferPool;
     }
 
-    public long makeRoom(long size) {
+    public boolean makeRoom() {
         Iterator<FloatBuffer> iterator = super.values().iterator();
-
-        long releasedSized = 0;
-        while (iterator.hasNext() && releasedSized < size) {
-            FloatBuffer buffer = iterator.next();
-            releasedSized += buffer.capacity() * 4L;
-            this.bufferPool.putFloatBuffer(buffer);
+        if (iterator.hasNext()) {
+            this.bufferPool.putFloatBuffer(iterator.next());
             iterator.remove();
+            return true;
         }
 
-        return releasedSized;
+        return false;
+    }
+
+    @Override
+    public void clear() {
+        log.info("clearing in the override");
+        Iterator<FloatBuffer> iterator = super.values().iterator();
+        while (iterator.hasNext()) {
+            this.bufferPool.putFloatBuffer(iterator.next());
+            iterator.remove();
+        }
     }
 }
