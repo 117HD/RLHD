@@ -3,14 +3,12 @@ package rs117.hd.utils;
 import net.runelite.api.Client;
 import net.runelite.api.coords.WorldPoint;
 
-enum ModelType {
-    PLAYER,
-    NPC,
-    OBJECT,
-    GROUND_ITEM
-}
-
 public class ModelUtils {
+    public static final int TYPE_PLAYER = 0;
+    public static final int TYPE_NPC = 1;
+    public static final int TYPE_OBJECT = 2;
+    public static final int TYPE_GROUND_ITEM = 3;
+
     public static WorldPoint getWorldLocation(Client client, int x, int z) {
         int lx = x + client.getCameraX2();
         int lz = z + client.getCameraZ2();
@@ -22,7 +20,7 @@ public class ModelUtils {
      * Npc's it's the npc index
      * Players it's the player index
      */
-    public static int getID(long hash) {
+    public static int getIdOrIndex(long hash) {
         return (int) (hash >>> 17 & 0xffffffffL);
     }
 
@@ -36,9 +34,5 @@ public class ModelUtils {
 
     public static int getModelType(long hash) {
         return (int) ((hash >> 14) & 3);
-    }
-
-    public static ModelType getType(long hash) {
-        return ModelType.values()[getModelType(hash)];
     }
 }

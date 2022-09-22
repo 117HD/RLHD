@@ -18,6 +18,7 @@ import rs117.hd.scene.objects.ObjectType;
 import rs117.hd.scene.objects.TzHaarRecolorType;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.utils.HDUtils;
+import rs117.hd.utils.ModelUtils;
 import rs117.hd.utils.buffer.GpuFloatBuffer;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 
@@ -28,7 +29,6 @@ import java.lang.ref.ReferenceQueue;
 import java.nio.Buffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -204,7 +204,7 @@ public class ModelPusher {
         }
     }
 
-    public int[] pushModel(Renderable renderable, Model model, GpuIntBuffer vertexBuffer, GpuFloatBuffer uvBuffer, GpuFloatBuffer normalBuffer, int tileX, int tileY, int tileZ, ObjectProperties objectProperties, ObjectType objectType, boolean noCache) {
+    public int[] pushModel(long hash, Model model, GpuIntBuffer vertexBuffer, GpuFloatBuffer uvBuffer, GpuFloatBuffer normalBuffer, int tileX, int tileY, int tileZ, ObjectProperties objectProperties, ObjectType objectType, boolean noCache) {
 //        pushes++;
         final int faceCount = Math.min(model.getFaceCount(), HdPlugin.MAX_TRIANGLE);
         int vertexLength = 0;
@@ -305,7 +305,7 @@ public class ModelPusher {
         boolean hideBakedEffects = config.hideBakedEffects();
         for (int face = 0; face < faceCount; face++) {
             if (!cachedVertexData) {
-                int[] tempVertexData = getVertexDataForFace(model, getColorsForFace(renderable, model, objectProperties, objectType, tileX, tileY, tileZ, face, hideBakedEffects), face);
+                int[] tempVertexData = getVertexDataForFace(model, getColorsForFace(hash, model, objectProperties, objectType, tileX, tileY, tileZ, face, hideBakedEffects), face);
                 vertexBuffer.put(tempVertexData);
                 vertexLength += 3;
 
@@ -496,16 +496,6 @@ public class ModelPusher {
         return material.ordinal() << 1 | (isOverlay ? 1 : 0);
     }
 
-    private int[] getColorsForModel(Renderable renderable, Model model, ObjectProperties objectProperties, ObjectType objectType, int tileX, int tileY, int tileZ, int faceCount) {
-        boolean hideBakedEffects = config.hideBakedEffects();
-
-        for (int face = 0; face < faceCount; face++) {
-            System.arraycopy(getColorsForFace(renderable, model, objectProperties, objectType, tileX, tileY, tileZ, face, hideBakedEffects), 0, modelColors, face * 4, 4);
-        }
-
-        return Arrays.copyOfRange(modelColors, 0, faceCount * 4);
-    }
-
     private int[] removeBakedGroundShading(int face, int triA, int triB, int triC, byte[] faceTransparencies, short[] faceTextures, int[] yVertices) {
         if (faceTransparencies != null && (faceTextures == null || faceTextures[face] == -1) && (faceTransparencies[face] & 0xFF) > 100) {
             int aHeight = yVertices[triA];
@@ -523,7 +513,7 @@ public class ModelPusher {
         return null;
     }
 
-    private int[] getColorsForFace(Renderable renderable, Model model, ObjectProperties objectProperties, ObjectType objectType, int tileX, int tileY, int tileZ, int face, boolean hideBakedEffects) {
+    private int[] getColorsForFace(long hash, Model model, ObjectProperties objectProperties, ObjectType objectType, int tileX, int tileY, int tileZ, int face, boolean hideBakedEffects) {
         int color1 = model.getFaceColors1()[face];
         int color2 = model.getFaceColors2()[face];
         int color3 = model.getFaceColors3()[face];
@@ -544,11 +534,31 @@ public class ModelPusher {
 
         if (hideBakedEffects) {
             // hide the shadows and lights that are often baked into models by setting the colors for the shadow faces to transparent
-            NPC npc = renderable instanceof NPC ? (NPC) renderable : null;
-            Player player = renderable instanceof Player ? (Player) renderable : null;
-            GraphicsObject graphicsObject = renderable instanceof GraphicsObject ? (GraphicsObject) renderable : null;
+            int idOrIndex = ModelUtils.getIdOrIndex(hash);
+            int type = ModelUtils.getModelType(hash);
 
-            if ((npc != null && BakedModels.NPCS.contains(npc.getId())) || (graphicsObject != null && BakedModels.OBJECTS.contains(graphicsObject.getId())) || (player != null && player.getPlayerComposition().getEquipmentId(KitType.WEAPON) == ItemID.MAGIC_CARPET)) {
+            boolean removeShadow = false;
+
+            switch (type) {
+                case ModelUtils.TYPE_PLAYER:
+                    if (idOrIndex >= 0 && idOrIndex < client.getCachedPlayers().length) {
+                        Player player = client.getCachedPlayers()[idOrIndex];
+                        removeShadow = player != null &&
+                            player.getPlayerComposition().getEquipmentId(KitType.WEAPON) == ItemID.MAGIC_CARPET;
+                    }
+                    break;
+                case ModelUtils.TYPE_NPC:
+                    if (idOrIndex >= 0 && idOrIndex < client.getCachedNPCs().length) {
+                        NPC npc = client.getCachedNPCs()[idOrIndex];
+                        removeShadow = npc != null && BakedModels.NPCS.contains(npc.getId());
+                    }
+                    break;
+                case ModelUtils.TYPE_OBJECT:
+                    removeShadow = BakedModels.OBJECTS.contains(idOrIndex);
+                    break;
+            }
+
+            if (removeShadow) {
                 int[] transparency = removeBakedGroundShading(face, triA, triB, triC, faceTransparencies, faceTextures, yVertices);
                 if (transparency != null) {
                     return transparency;

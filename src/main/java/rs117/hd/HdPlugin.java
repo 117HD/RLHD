@@ -2279,6 +2279,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				break;
 			case "hideBakedEffects":
 				modelPusher.clearModelCache();
+				reloadScene();
 				break;
 		}
 	}
@@ -2393,7 +2394,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			return;
 		}
 
-		if (objectManager.shouldHide(ModelUtils.getID(hash), ModelUtils.getWorldLocation(client, x, z))) {
+		if (objectManager.shouldHide(ModelUtils.getIdOrIndex(hash), ModelUtils.getWorldLocation(client, x, z))) {
 			return;
 		}
 
@@ -2468,7 +2469,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 			TempModelInfo tempModelInfo = tempModelInfoMap.get(batchHash);
 			if (!config.enableModelBatching() || tempModelInfo == null || tempModelInfo.getFaceCount() != model.getFaceCount()) {
-				final int[] lengths = modelPusher.pushModel(renderable, model, vertexBuffer, uvBuffer, normalBuffer, 0, 0, 0, ObjectProperties.NONE, ObjectType.NONE, !config.enableModelCaching());
+				final int[] lengths = modelPusher.pushModel(hash, model, vertexBuffer, uvBuffer, normalBuffer, 0, 0, 0, ObjectProperties.NONE, ObjectType.NONE, !config.enableModelCaching());
 				final int faceCount = lengths[0] / 3;
 				final int actualTempUvOffset = lengths[1] > 0 ? tempUvOffset : -1;
 
