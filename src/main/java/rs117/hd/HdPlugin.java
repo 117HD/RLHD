@@ -108,7 +108,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 	// This is the maximum number of triangles the compute shaders support
 	public static final int MAX_TRIANGLE = 6144;
-
 	public static final int SMALL_TRIANGLE_COUNT = 512;
 	private static final int FLAG_SCENE_BUFFER = Integer.MIN_VALUE;
 	private static final int DEFAULT_DISTANCE = 25;
@@ -543,7 +542,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 				lightManager.startUp();
 				objectManager.startUp();
-				modelPusher.init();
+				modelPusher.startUp();
 
 				if (client.getGameState() == GameState.LOGGED_IN)
 				{
@@ -573,7 +572,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			client.setGpu(false);
 			client.setDrawCallbacks(null);
 			client.setUnlockedFps(false);
-			modelPusher.shutdown();
+			modelPusher.shutDown();
 
 			if (lwjglInitted)
 			{

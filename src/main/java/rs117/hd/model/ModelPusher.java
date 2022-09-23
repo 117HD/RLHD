@@ -52,18 +52,17 @@ public class ModelPusher {
     private final ModelCache modelCache = new ModelCache();
     public static final int DATUM_PER_FACE = 12;
     public static final int BYTES_PER_DATUM = 4;
-    private boolean initialized;
 
 //    private int pushes = 0;
 //    private int vertexdatahits = 0;
 //    private int normaldatahits = 0;
 //    private int uvdatahits = 0;
 
-    public void init() {
+    public void startUp() {
         this.modelCache.init(config);
     }
 
-    public void shutdown() {
+    public void shutDown() {
         this.modelCache.freeAllBuffers();
     }
 
@@ -81,7 +80,6 @@ public class ModelPusher {
     private final static int[] fourInts = new int[4];
     private final static int[] twelveInts = new int[12];
     private final static float[] twelveFloats = new float[12];
-    private final static int[] modelColors = new int[HdPlugin.MAX_TRIANGLE * 4];
 
     public void clearModelCache() {
         this.modelCache.clear();
