@@ -496,43 +496,29 @@ public class ModelPusher {
         return material.ordinal() << 1 | (isOverlay ? 1 : 0);
     }
 
-    private int[] removeBakedGroundShading(int face, int triA, int triB, int triC, byte[] faceTransparencies, short[] faceTextures, int[] yVertices) {
-        if (faceTransparencies != null && (faceTextures == null || faceTextures[face] == -1) && (faceTransparencies[face] & 0xFF) > 100) {
-            int aHeight = yVertices[triA];
-            int bHeight = yVertices[triB];
-            int cHeight = yVertices[triC];
-            if (aHeight >= -8 && aHeight == bHeight && aHeight == cHeight) {
-                fourInts[0] = 0;
-                fourInts[1] = 0;
-                fourInts[2] = 0;
-                fourInts[3] = 0xFF << 24;
-                return fourInts;
-            }
-        }
-
-        return null;
+    private boolean isBakedGroundShading(int face, int heightA, int heightB, int heightC, byte[] faceTransparencies, short[] faceTextures) {
+        return
+            faceTransparencies != null &&
+            heightA >= -8 &&
+            heightA == heightB &&
+            heightA == heightC &&
+            (faceTextures == null || faceTextures[face] == -1) &&
+            (faceTransparencies[face] & 0xFF) > 100;
     }
 
     private int[] getColorsForFace(long hash, Model model, ObjectProperties objectProperties, ObjectType objectType, int tileX, int tileY, int tileZ, int face, boolean hideBakedEffects) {
-        int color1 = model.getFaceColors1()[face];
-        int color2 = model.getFaceColors2()[face];
-        int color3 = model.getFaceColors3()[face];
-        final short[] faceTextures = model.getFaceTextures();
-        final byte[] faceTransparencies = model.getFaceTransparencies();
-        final byte overrideAmount = model.getOverrideAmount();
-        final byte overrideHue = model.getOverrideHue();
-        final byte overrideSat = model.getOverrideSaturation();
-        final byte overrideLum = model.getOverrideLuminance();
         final int triA = model.getFaceIndices1()[face];
         final int triB = model.getFaceIndices2()[face];
         final int triC = model.getFaceIndices3()[face];
+        final byte[] faceTransparencies = model.getFaceTransparencies();
+        final short[] faceTextures = model.getFaceTextures();
         final int[] yVertices = model.getVerticesY();
-        final int[] xVertexNormals = model.getVertexNormalsX();
-        final int[] yVertexNormals = model.getVertexNormalsY();
-        final int[] zVertexNormals = model.getVertexNormalsZ();
-        final Tile tile = client.getScene().getTiles()[tileZ][tileX][tileY];
 
-        if (hideBakedEffects) {
+        int heightA = yVertices[triA];
+        int heightB = yVertices[triB];
+        int heightC = yVertices[triC];
+
+        if (hideBakedEffects && isBakedGroundShading(face, heightA, heightB, heightC, faceTransparencies, faceTextures)) {
             // hide the shadows and lights that are often baked into models by setting the colors for the shadow faces to transparent
             int idOrIndex = ModelUtils.getIdOrIndex(hash);
             int type = ModelUtils.getModelType(hash);
@@ -559,12 +545,25 @@ public class ModelPusher {
             }
 
             if (removeShadow) {
-                int[] transparency = removeBakedGroundShading(face, triA, triB, triC, faceTransparencies, faceTextures, yVertices);
-                if (transparency != null) {
-                    return transparency;
-                }
+                fourInts[0] = 0;
+                fourInts[1] = 0;
+                fourInts[2] = 0;
+                fourInts[3] = 0xFF << 24;
+                return fourInts;
             }
         }
+
+        int color1 = model.getFaceColors1()[face];
+        int color2 = model.getFaceColors2()[face];
+        int color3 = model.getFaceColors3()[face];
+        final byte overrideAmount = model.getOverrideAmount();
+        final byte overrideHue = model.getOverrideHue();
+        final byte overrideSat = model.getOverrideSaturation();
+        final byte overrideLum = model.getOverrideLuminance();
+        final int[] xVertexNormals = model.getVertexNormalsX();
+        final int[] yVertexNormals = model.getVertexNormalsY();
+        final int[] zVertexNormals = model.getVertexNormalsZ();
+        final Tile tile = client.getScene().getTiles()[tileZ][tileX][tileY];
 
         if (color3 == -2) {
             fourInts[0] = 0;
@@ -709,7 +708,7 @@ public class ModelPusher {
         int packedAlphaPriority = getPackedAlphaPriority(model, face);
 
         if (hdPlugin.configTzhaarHD && objectProperties != null && objectProperties.tzHaarRecolorType != TzHaarRecolorType.NONE) {
-            int[][] tzHaarRecolored = proceduralGenerator.recolorTzHaar(objectProperties, yVertices[triA], yVertices[triB], yVertices[triC], packedAlphaPriority, objectType, color1H, color1S, color1L, color2H, color2S, color2L, color3H, color3S, color3L);
+            int[][] tzHaarRecolored = proceduralGenerator.recolorTzHaar(objectProperties, heightA, heightB, heightC, packedAlphaPriority, objectType, color1H, color1S, color1L, color2H, color2S, color2L, color3H, color3S, color3L);
             color1H = tzHaarRecolored[0][0];
             color1S = tzHaarRecolored[0][1];
             color1L = tzHaarRecolored[0][2];
