@@ -18,6 +18,7 @@ import rs117.hd.scene.objects.ObjectType;
 import rs117.hd.scene.objects.TzHaarRecolorType;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.utils.HDUtils;
+import rs117.hd.utils.ModelUtils;
 import rs117.hd.utils.buffer.GpuFloatBuffer;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 
@@ -28,7 +29,6 @@ import java.lang.ref.ReferenceQueue;
 import java.nio.Buffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -204,7 +204,7 @@ public class ModelPusher {
         }
     }
 
-    public int[] pushModel(Renderable renderable, Model model, GpuIntBuffer vertexBuffer, GpuFloatBuffer uvBuffer, GpuFloatBuffer normalBuffer, int tileX, int tileY, int tileZ, ObjectProperties objectProperties, ObjectType objectType, boolean noCache) {
+    public int[] pushModel(long hash, Model model, GpuIntBuffer vertexBuffer, GpuFloatBuffer uvBuffer, GpuFloatBuffer normalBuffer, int tileX, int tileY, int tileZ, ObjectProperties objectProperties, ObjectType objectType, boolean noCache) {
 //        pushes++;
         final int faceCount = Math.min(model.getFaceCount(), HdPlugin.MAX_TRIANGLE);
         int vertexLength = 0;
@@ -305,7 +305,7 @@ public class ModelPusher {
         boolean hideBakedEffects = config.hideBakedEffects();
         for (int face = 0; face < faceCount; face++) {
             if (!cachedVertexData) {
-                int[] tempVertexData = getVertexDataForFace(model, getColorsForFace(renderable, model, objectProperties, objectType, tileX, tileY, tileZ, face, hideBakedEffects), face);
+                int[] tempVertexData = getVertexDataForFace(model, getColorsForFace(hash, model, objectProperties, objectType, tileX, tileY, tileZ, face, hideBakedEffects), face);
                 vertexBuffer.put(tempVertexData);
                 vertexLength += 3;
 
@@ -496,22 +496,55 @@ public class ModelPusher {
         return material.ordinal() << 1 | (isOverlay ? 1 : 0);
     }
 
-    private int[] getColorsForModel(Renderable renderable, Model model, ObjectProperties objectProperties, ObjectType objectType, int tileX, int tileY, int tileZ, int faceCount) {
-        boolean hideBakedEffects = config.hideBakedEffects();
-
-        for (int face = 0; face < faceCount; face++) {
-            System.arraycopy(getColorsForFace(renderable, model, objectProperties, objectType, tileX, tileY, tileZ, face, hideBakedEffects), 0, modelColors, face * 4, 4);
-        }
-
-        return Arrays.copyOfRange(modelColors, 0, faceCount * 4);
+    private boolean isBakedGroundShading(int face, int heightA, int heightB, int heightC, byte[] faceTransparencies, short[] faceTextures) {
+        return
+            faceTransparencies != null &&
+            heightA >= -8 &&
+            heightA == heightB &&
+            heightA == heightC &&
+            (faceTextures == null || faceTextures[face] == -1) &&
+            (faceTransparencies[face] & 0xFF) > 100;
     }
 
-    private int[] removeBakedGroundShading(int face, int triA, int triB, int triC, byte[] faceTransparencies, short[] faceTextures, int[] yVertices) {
-        if (faceTransparencies != null && (faceTextures == null || faceTextures[face] == -1) && (faceTransparencies[face] & 0xFF) > 100) {
-            int aHeight = yVertices[triA];
-            int bHeight = yVertices[triB];
-            int cHeight = yVertices[triC];
-            if (aHeight >= -8 && aHeight == bHeight && aHeight == cHeight) {
+    private int[] getColorsForFace(long hash, Model model, ObjectProperties objectProperties, ObjectType objectType, int tileX, int tileY, int tileZ, int face, boolean hideBakedEffects) {
+        final int triA = model.getFaceIndices1()[face];
+        final int triB = model.getFaceIndices2()[face];
+        final int triC = model.getFaceIndices3()[face];
+        final byte[] faceTransparencies = model.getFaceTransparencies();
+        final short[] faceTextures = model.getFaceTextures();
+        final int[] yVertices = model.getVerticesY();
+
+        int heightA = yVertices[triA];
+        int heightB = yVertices[triB];
+        int heightC = yVertices[triC];
+
+        if (hideBakedEffects && isBakedGroundShading(face, heightA, heightB, heightC, faceTransparencies, faceTextures)) {
+            // hide the shadows and lights that are often baked into models by setting the colors for the shadow faces to transparent
+            int idOrIndex = ModelUtils.getIdOrIndex(hash);
+            int type = ModelUtils.getModelType(hash);
+
+            boolean removeShadow = false;
+
+            switch (type) {
+                case ModelUtils.TYPE_PLAYER:
+                    if (idOrIndex >= 0 && idOrIndex < client.getCachedPlayers().length) {
+                        Player player = client.getCachedPlayers()[idOrIndex];
+                        removeShadow = player != null &&
+                            player.getPlayerComposition().getEquipmentId(KitType.WEAPON) == ItemID.MAGIC_CARPET;
+                    }
+                    break;
+                case ModelUtils.TYPE_NPC:
+                    if (idOrIndex >= 0 && idOrIndex < client.getCachedNPCs().length) {
+                        NPC npc = client.getCachedNPCs()[idOrIndex];
+                        removeShadow = npc != null && BakedModels.NPCS.contains(npc.getId());
+                    }
+                    break;
+                case ModelUtils.TYPE_OBJECT:
+                    removeShadow = BakedModels.OBJECTS.contains(idOrIndex);
+                    break;
+            }
+
+            if (removeShadow) {
                 fourInts[0] = 0;
                 fourInts[1] = 0;
                 fourInts[2] = 0;
@@ -520,41 +553,17 @@ public class ModelPusher {
             }
         }
 
-        return null;
-    }
-
-    private int[] getColorsForFace(Renderable renderable, Model model, ObjectProperties objectProperties, ObjectType objectType, int tileX, int tileY, int tileZ, int face, boolean hideBakedEffects) {
         int color1 = model.getFaceColors1()[face];
         int color2 = model.getFaceColors2()[face];
         int color3 = model.getFaceColors3()[face];
-        final short[] faceTextures = model.getFaceTextures();
-        final byte[] faceTransparencies = model.getFaceTransparencies();
         final byte overrideAmount = model.getOverrideAmount();
         final byte overrideHue = model.getOverrideHue();
         final byte overrideSat = model.getOverrideSaturation();
         final byte overrideLum = model.getOverrideLuminance();
-        final int triA = model.getFaceIndices1()[face];
-        final int triB = model.getFaceIndices2()[face];
-        final int triC = model.getFaceIndices3()[face];
-        final int[] yVertices = model.getVerticesY();
         final int[] xVertexNormals = model.getVertexNormalsX();
         final int[] yVertexNormals = model.getVertexNormalsY();
         final int[] zVertexNormals = model.getVertexNormalsZ();
         final Tile tile = client.getScene().getTiles()[tileZ][tileX][tileY];
-
-        if (hideBakedEffects) {
-            // hide the shadows and lights that are often baked into models by setting the colors for the shadow faces to transparent
-            NPC npc = renderable instanceof NPC ? (NPC) renderable : null;
-            Player player = renderable instanceof Player ? (Player) renderable : null;
-            GraphicsObject graphicsObject = renderable instanceof GraphicsObject ? (GraphicsObject) renderable : null;
-
-            if ((npc != null && BakedModels.NPCS.contains(npc.getId())) || (graphicsObject != null && BakedModels.OBJECTS.contains(graphicsObject.getId())) || (player != null && player.getPlayerComposition().getEquipmentId(KitType.WEAPON) == ItemID.MAGIC_CARPET)) {
-                int[] transparency = removeBakedGroundShading(face, triA, triB, triC, faceTransparencies, faceTextures, yVertices);
-                if (transparency != null) {
-                    return transparency;
-                }
-            }
-        }
 
         if (color3 == -2) {
             fourInts[0] = 0;
@@ -699,7 +708,7 @@ public class ModelPusher {
         int packedAlphaPriority = getPackedAlphaPriority(model, face);
 
         if (hdPlugin.configTzhaarHD && objectProperties != null && objectProperties.tzHaarRecolorType != TzHaarRecolorType.NONE) {
-            int[][] tzHaarRecolored = proceduralGenerator.recolorTzHaar(objectProperties, yVertices[triA], yVertices[triB], yVertices[triC], packedAlphaPriority, objectType, color1H, color1S, color1L, color2H, color2S, color2L, color3H, color3S, color3L);
+            int[][] tzHaarRecolored = proceduralGenerator.recolorTzHaar(objectProperties, heightA, heightB, heightC, packedAlphaPriority, objectType, color1H, color1S, color1L, color2H, color2S, color2L, color3H, color3S, color3L);
             color1H = tzHaarRecolored[0][0];
             color1S = tzHaarRecolored[0][1];
             color1L = tzHaarRecolored[0][2];
