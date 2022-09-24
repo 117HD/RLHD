@@ -1444,7 +1444,7 @@ public final class ObjectID
     public static final int TABLE_2611 = 2611;
     public static final int CUPBOARD_2612 = 2612;
     public static final int CUPBOARD_2613 = 2613;
-    public static final int COFFIN_2614 = 2614;
+    public static final int DYNAMITEP = 2614;
     public static final int COFFIN_2615 = 2615;
     public static final int STAIRS_2616 = 2616;
     public static final int STAIRS_2617 = 2617;
@@ -22910,8 +22910,10 @@ public final class ObjectID
     public static final int URN_46184 = 46184;
     public static final int MOUNTED_MAX_CAPE_46226 = 46226;
     public static final int STRANGE_TABLET = 46227;
-    public static final int STRANGE_TABLET_46228 = 46228;
     public static final int STRANGE_CHEST = 46229;
     public static final int STRANGE_CHEST_46230 = 46230;
     public static final int CAM_THE_CAMEL = 46231;
+    public static final int COFFIN_46237 = 46237;
+    public static final int STRANGE_TABLET_46238 = 46238;
+    public static final int STRANGE_TABLET_46239 = 46239;
 }
