@@ -53,13 +53,18 @@ public class ModelPusher {
     public static final int DATUM_PER_FACE = 12;
     public static final int BYTES_PER_DATUM = 4;
 
+    private boolean started = false;
+
 //    private int pushes = 0;
 //    private int vertexdatahits = 0;
 //    private int normaldatahits = 0;
 //    private int uvdatahits = 0;
 
     public void startUp() {
-        this.modelCache.init(config);
+        if (!started) {
+            this.modelCache.init(config);
+            this.started = true;
+        }
     }
 
     public void shutDown() {

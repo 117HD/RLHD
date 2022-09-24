@@ -66,10 +66,14 @@ public class ModelCache {
         return this.bufferPool.takeFloatBuffer(capacity);
     }
 
+    // a more idealized way to balance the caches might look like:
+    // 1) count the number of gets for vertex, normal, and uv data on each frame
+    // 2) use the data from the previous frame to determine the cache usage for the scene (e.g. 85% vertex, 10% normal, 5% uv)
+    // 3) makeRoom here based on those weights to try and reactively match the cache pressure with usage
     public boolean makeRoom() {
-        if (this.uvDataCache.size() > this.normalDataCache.size() && this.normalDataCache.size() > 0) {
+        if (this.uvDataCache.size() * 16 > this.normalDataCache.size() && this.normalDataCache.size() > 0) {
             return this.uvDataCache.makeRoom();
-        } else if (this.normalDataCache.size() > this.vertexDataCache.size()) {
+        } else if (this.normalDataCache.size() * 2 > this.vertexDataCache.size()) {
             return this.normalDataCache.makeRoom();
         } else {
             return this.vertexDataCache.makeRoom();

@@ -542,7 +542,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 				lightManager.startUp();
 				objectManager.startUp();
-				modelPusher.startUp();
 
 				if (client.getGameState() == GameState.LOGGED_IN)
 				{
@@ -2119,6 +2118,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	{
 		switch (gameStateChanged.getGameState()) {
 			case LOADING:
+				modelPusher.startUp();
 				lightManager.reset();
 				if (config.loadingClearCache()) {
 					modelPusher.clearModelCache();
