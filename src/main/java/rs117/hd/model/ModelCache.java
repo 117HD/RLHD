@@ -48,7 +48,7 @@ public class ModelCache {
 
     public IntBuffer takeIntBuffer(int capacity) {
         if (this.bufferPool.isEmpty()) {
-            if(!this.vertexDataCache.makeRoom()) {
+            if(!this.makeRoom()) {
                 log.error("failed to make room for int buffer");
             }
         }
@@ -58,12 +58,22 @@ public class ModelCache {
 
     public FloatBuffer takeFloatBuffer(int capacity) {
         if (this.bufferPool.isEmpty()) {
-            if(!this.vertexDataCache.makeRoom()) {
+            if(!this.makeRoom()) {
                 log.error("failed to make room for float buffer");
             }
         }
 
         return this.bufferPool.takeFloatBuffer(capacity);
+    }
+
+    public boolean makeRoom() {
+        if (this.uvDataCache.size() > this.normalDataCache.size()) {
+            return this.uvDataCache.makeRoom();
+        } else if (this.normalDataCache.size() > this.vertexDataCache.size()) {
+            return this.normalDataCache.makeRoom();
+        } else {
+            return this.vertexDataCache.makeRoom();
+        }
     }
 
     public void clear() {
