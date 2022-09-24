@@ -545,6 +545,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 				if (client.getGameState() == GameState.LOGGED_IN)
 				{
+					modelPusher.startUp();
 					uploadScene();
 				}
 
