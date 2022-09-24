@@ -4037,7 +4037,7 @@ public final class NpcID
     public static final int JAIL_GUARD_4279 = 4279;
     public static final int NED = 4280;
     public static final int AGGIE = 4284;
-    public static final int HASSAN = 4285;
+    public static final int CHANCELLOR_HASSAN = 4285;
     public static final int OSMAN_4286 = 4286;
     public static final int BORDER_GUARD = 4287;
     public static final int BORDER_GUARD_4288 = 4288;
@@ -9182,15 +9182,6 @@ public final class NpcID
     public static final int MYSTERIOUS_STRANGER_10875 = 10875;
     public static final int MYSTERIOUS_STRANGER_10876 = 10876;
     public static final int MYSTERIOUS_STRANGER_10877 = 10877;
-    public static final int LESSER_GHOSTLY_THRALL = 10878;
-    public static final int SUPERIOR_GHOSTLY_THRALL = 10879;
-    public static final int GREATER_GHOSTLY_THRALL = 10880;
-    public static final int LESSER_SKELETAL_THRALL = 10881;
-    public static final int SUPERIOR_SKELETAL_THRALL = 10882;
-    public static final int GREATER_SKELETAL_THRALL = 10883;
-    public static final int LESSER_ZOMBIFIED_THRALL = 10884;
-    public static final int SUPERIOR_ZOMBIFIED_THRALL = 10885;
-    public static final int GREATER_ZOMBIFIED_THRALL = 10886;
     public static final int TOWN_CRIER_10887 = 10887;
     public static final int BAT_10888 = 10888;
     public static final int ASTEROS_ARCEUUS = 10889;
@@ -9981,4 +9972,6 @@ public final class NpcID
     public static final int ZEBO_11849 = 11849;
     public static final int TUMEKENS_DAMAGED_GUARDIAN_11850 = 11850;
     public static final int ELIDINIS_DAMAGED_GUARDIAN_11851 = 11851;
+    public static final int ELIZA = 11852;
+    public static final int ELIZA_11853 = 11853;
 }

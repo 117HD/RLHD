@@ -91,7 +91,7 @@ import static rs117.hd.HdPluginConfig.KEY_WINTER_THEME;
 import static rs117.hd.utils.ResourcePath.path;
 
 @PluginDescriptor(
-	name = "117 HD (beta)",
+	name = "117 HD",
 	description = "GPU renderer with a suite of graphical enhancements",
 	tags = {"hd", "high", "detail", "graphics", "shaders", "textures", "gpu", "shadows", "lights"},
 	conflicts = "GPU"
@@ -625,7 +625,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		});
 	}
 
-	private void stopPlugin()
+	public void stopPlugin()
 	{
 		SwingUtilities.invokeLater(() ->
 		{

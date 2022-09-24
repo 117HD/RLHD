@@ -62,7 +62,7 @@ public class ModelPusher {
 
     public void startUp() {
         if (!started) {
-            this.modelCache.init(config);
+            this.modelCache.init(hdPlugin, config);
             this.started = true;
         }
     }

@@ -14,11 +14,13 @@ public class BufferPool {
     private final Stack<Long> bufferAddressStack;
     private final long byteCapacity;
     private boolean allocated;
+    private final HdPlugin hdPlugin;
 
-    public BufferPool(long byteCapacity) {
+    public BufferPool(long byteCapacity, HdPlugin hdPlugin) {
         this.bufferAddressStack = new Stack<>();
         this.byteCapacity = byteCapacity;
         this.allocated = false;
+        this.hdPlugin = hdPlugin;
     }
 
     public boolean isEmpty() {
@@ -33,11 +35,16 @@ public class BufferPool {
         // we're going to allocate as many of these as possible
         // these lovely allocations are perfectly sized to fit any piece of model data so they can be reused infinitely
         long allocationSize = HdPlugin.MAX_TRIANGLE * ModelPusher.DATUM_PER_FACE * ModelPusher.BYTES_PER_DATUM;
-
         long bytesRemaining = this.byteCapacity;
-        while (bytesRemaining - allocationSize >= 0) {
-            this.bufferAddressStack.push(MemoryUtil.nmemAllocChecked(allocationSize));
-            bytesRemaining -= allocationSize;
+
+        try {
+            while (bytesRemaining - allocationSize >= 0) {
+                this.bufferAddressStack.push(MemoryUtil.nmemAllocChecked(allocationSize));
+                bytesRemaining -= allocationSize;
+            }
+        } catch (OutOfMemoryError oom) {
+            log.error("out of memory during initialization -- shutting down");
+            hdPlugin.stopPlugin();
         }
 
         this.allocated = true;
