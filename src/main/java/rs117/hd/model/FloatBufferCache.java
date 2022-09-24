@@ -28,7 +28,6 @@ public class FloatBufferCache extends LinkedHashMap<Integer, FloatBuffer> {
 
     @Override
     public void clear() {
-        log.info("clearing in the override");
         Iterator<FloatBuffer> iterator = super.values().iterator();
         while (iterator.hasNext()) {
             this.bufferPool.putFloatBuffer(iterator.next());
