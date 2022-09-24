@@ -1,101 +1,79 @@
 package rs117.hd.model;
 
-import java.nio.Buffer;
+import lombok.extern.slf4j.Slf4j;
+import org.lwjgl.system.MemoryUtil;
+import rs117.hd.HdPlugin;
+
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Iterator;
 import java.util.Stack;
 
+@Slf4j
 public class BufferPool {
-    private final Map<Integer, Stack<IntBuffer>> intBufferStackMap;
-    private final Map<Integer, Stack<FloatBuffer>> floatBufferStackMap;
+    private final Stack<Long> bufferAddressStack;
     private final long byteCapacity;
-    private long bytesStored;
-    private long takes;
-    private long hits;
+    private boolean allocated;
 
     public BufferPool(long byteCapacity) {
-        this.intBufferStackMap = new HashMap<>();
-        this.floatBufferStackMap = new HashMap<>();
+        this.bufferAddressStack = new Stack<>();
         this.byteCapacity = byteCapacity;
-        this.bytesStored = 0;
-        this.takes = 0;
-        this.hits = 0;
+        this.allocated = false;
     }
 
-    public void resetHitRatio() {
-        this.takes = 0;
-        this.hits = 0;
+    public boolean isEmpty() {
+        return this.bufferAddressStack.isEmpty();
     }
 
-    public boolean canPutBuffer(Buffer buffer) {
-        return this.bytesStored + buffer.capacity() * 4L <= this.byteCapacity;
+    public void allocate() {
+        if (this.allocated) {
+            return;
+        }
+
+        // we're going to allocate as many of these as possible
+        // these lovely allocations are perfectly sized to fit any piece of model data so they can be reused infinitely
+        long allocationSize = HdPlugin.MAX_TRIANGLE * ModelPusher.DATUM_PER_FACE * ModelPusher.BYTES_PER_DATUM;
+
+        long bytesRemaining = this.byteCapacity;
+        while (bytesRemaining - allocationSize >= 0) {
+            this.bufferAddressStack.push(MemoryUtil.nmemAllocChecked(allocationSize));
+            bytesRemaining -= allocationSize;
+        }
+
+        this.allocated = true;
+    }
+
+    public void free() {
+        Iterator<Long> iterator = this.bufferAddressStack.iterator();
+
+        while(iterator.hasNext()) {
+            Long address = iterator.next();
+            MemoryUtil.nmemFree(address);
+            iterator.remove();
+        }
     }
 
     public void putIntBuffer(IntBuffer buffer) {
-        int capacity = buffer.capacity();
-        this.bytesStored += capacity * 4L;
-
-        Stack<IntBuffer> stack = this.intBufferStackMap.get(capacity);
-        if (stack == null) {
-            stack = new Stack<>();
-        }
-
-        stack.push(buffer);
-        this.intBufferStackMap.putIfAbsent(capacity, stack);
+        this.bufferAddressStack.push(MemoryUtil.memAddress(buffer));
     }
 
     public IntBuffer takeIntBuffer(int capacity) {
-        this.takes++;
-
-        Stack<IntBuffer> stack = this.intBufferStackMap.get(capacity);
-        if (stack == null || stack.empty()) {
+        if (this.bufferAddressStack.isEmpty()) {
             return null;
-        } else {
-            this.hits++;
-            IntBuffer buffer = stack.pop();
-            buffer.clear();
-            this.bytesStored -= buffer.capacity() * 4L;
-            return buffer;
         }
+
+        return MemoryUtil.memIntBuffer(this.bufferAddressStack.pop(), capacity);
     }
 
     public void putFloatBuffer(FloatBuffer buffer) {
-        int capacity = buffer.capacity();
-        this.bytesStored += capacity * 4L;
-
-        Stack<FloatBuffer> stack = this.floatBufferStackMap.get(capacity);
-        if (stack == null) {
-            stack = new Stack<>();
-        }
-
-        stack.push(buffer);
-        this.floatBufferStackMap.putIfAbsent(capacity, stack);
+        this.bufferAddressStack.push(MemoryUtil.memAddress(buffer));
     }
 
     public FloatBuffer takeFloatBuffer(int capacity) {
-        this.takes++;
-
-        Stack<FloatBuffer> stack = this.floatBufferStackMap.get(capacity);
-        if (stack == null || stack.empty()) {
+        if (this.bufferAddressStack.isEmpty()) {
             return null;
-        } else {
-            this.hits++;
-            FloatBuffer buffer = stack.pop();
-            buffer.clear();
-            this.bytesStored -= buffer.capacity() * 4L;
-            return buffer;
         }
-    }
 
-    public void checkRatio() {
-        // clear the pools if the hit ratio is less than 50% and we're over 75% capacity
-        if ((double) this.bytesStored / this.byteCapacity >= 0.75 && (double) this.takes / this.hits < 0.50) {
-            this.floatBufferStackMap.clear();
-            this.intBufferStackMap.clear();
-            this.bytesStored = 0;
-            this.resetHitRatio();
-        }
+        return MemoryUtil.memFloatBuffer(this.bufferAddressStack.pop(), capacity);
     }
 }

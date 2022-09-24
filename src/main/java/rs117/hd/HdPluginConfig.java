@@ -574,16 +574,27 @@ public interface HdPluginConfig extends Config
 
 	@Range(
 			min = 256,
-			max = 4096
+			max = 16384
 	)
 	@ConfigItem(
-			keyName = "modelCacheSizeMB",
-			name = "Model cache size (MB)",
-			description = "Size of the model cache in megabytes. Plugin must be restarted to apply changes.",
+			keyName = "modelCacheSizeMiB",
+			name = "Model cache size (MiB)",
+			description = "Size of the model cache in mebibytes. Plugin must be restarted to apply changes. Min=256 Max=16384",
 			position = 403,
 			section = experimentalSettings
 	)
-	default int modelCacheSizeMB() {
+	default int modelCacheSizeMiB() {
 		return 2048;
+	}
+
+	@ConfigItem(
+			keyName = "loadingClearCache",
+			name = "Clear cache when loading",
+			description = "Clear the model cache whenever the game shows the \"loading please wait...\" message. This may improve performance when memory allocated to the cache is small.",
+			position = 404,
+			section = experimentalSettings
+	)
+	default boolean loadingClearCache() {
+		return false;
 	}
 }
