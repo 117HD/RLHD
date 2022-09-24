@@ -2120,6 +2120,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		switch (gameStateChanged.getGameState()) {
 			case LOADING:
 				lightManager.reset();
+				if (config.loadingClearCache()) {
+					modelPusher.clearModelCache();
+				}
 				break;
 			case LOGGED_IN:
 				uploadScene();

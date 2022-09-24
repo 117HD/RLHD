@@ -586,4 +586,15 @@ public interface HdPluginConfig extends Config
 	default int modelCacheSizeMiB() {
 		return 2048;
 	}
+
+	@ConfigItem(
+			keyName = "loadingClearCache",
+			name = "Clear cache when loading",
+			description = "Clear the model cache whenever the game shows the \"loading please wait...\" message. This may improve performance when memory allocated to the cache is small.",
+			position = 404,
+			section = experimentalSettings
+	)
+	default boolean loadingClearCache() {
+		return false;
+	}
 }

@@ -67,7 +67,7 @@ public class ModelCache {
     }
 
     public boolean makeRoom() {
-        if (this.uvDataCache.size() > this.normalDataCache.size()) {
+        if (this.uvDataCache.size() > this.normalDataCache.size() && this.normalDataCache.size() > 0) {
             return this.uvDataCache.makeRoom();
         } else if (this.normalDataCache.size() > this.vertexDataCache.size()) {
             return this.normalDataCache.makeRoom();
