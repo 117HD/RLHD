@@ -625,7 +625,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		});
 	}
 
-	private void stopPlugin()
+	public void stopPlugin()
 	{
 		SwingUtilities.invokeLater(() ->
 		{

@@ -1,10 +1,12 @@
 package rs117.hd.model;
 
 import lombok.extern.slf4j.Slf4j;
+import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+import java.util.Objects;
 
 @Slf4j
 public class ModelCache {
@@ -13,8 +15,14 @@ public class ModelCache {
     private FloatBufferCache normalDataCache;
     private FloatBufferCache uvDataCache;
 
-    public void init(HdPluginConfig config) {
-        this.bufferPool = new BufferPool(config.modelCacheSizeMiB() * 1048576L);
+    public void init(HdPlugin hdPlugin, HdPluginConfig config) {
+        int modelCacheSizeMiB = config.modelCacheSizeMiB();
+        if (!Objects.equals(System.getProperty("sun.arch.data.model"), "64") && modelCacheSizeMiB > 1024) {
+            log.error("defaulting model cache to 1024MiB due to non 64-bit client");
+            modelCacheSizeMiB = 1024;
+        }
+
+        this.bufferPool = new BufferPool(modelCacheSizeMiB * 1048576L, hdPlugin);
         this.bufferPool.allocate();
 
         this.vertexDataCache = new IntBufferCache(this.bufferPool);
