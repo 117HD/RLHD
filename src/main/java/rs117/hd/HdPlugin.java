@@ -87,6 +87,7 @@ import java.util.Map;
 
 import static org.jocl.CL.*;
 import static org.lwjgl.opengl.GL43C.*;
+import static rs117.hd.HdPluginConfig.KEY_REDUCE_OVER_EXPOSURE;
 import static rs117.hd.HdPluginConfig.KEY_WINTER_THEME;
 import static rs117.hd.utils.ResourcePath.path;
 
@@ -380,6 +381,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	public boolean configExpandShadowDraw = false;
 	public boolean configHdInfernalTexture = true;
 	public boolean configWinterTheme = true;
+	public boolean configReduceOverExposure = false;
 	public int configMaxDynamicLights;
 
 	public int[] camTarget = new int[3];
@@ -417,6 +419,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		configExpandShadowDraw = config.expandShadowDraw();
 		configHdInfernalTexture = config.hdInfernalTexture();
 		configWinterTheme = config.winterTheme();
+		configReduceOverExposure = config.reduceOverExposure();
 		configMaxDynamicLights = config.maxDynamicLights().getValue();
 
 		clientThread.invoke(() ->
@@ -1074,7 +1077,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 	public void updateMaterialUniformBuffer(float[] textureAnimations)
 	{
-		ByteBuffer buffer = BufferUtils.createByteBuffer(Material.values().length * 16 * SCALAR_BYTES);
+		ByteBuffer buffer = BufferUtils.createByteBuffer(Material.values().length * 20 * SCALAR_BYTES);
 		for (Material material : Material.values())
 		{
 			material = textureManager.getEffectiveMaterial(material);
@@ -1091,18 +1094,21 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				.putInt(textureManager.getTextureIndex(material.normalMap))
 				.putInt(textureManager.getTextureIndex(material.displacementMap))
 				.putInt(textureManager.getTextureIndex(material.roughnessMap))
+				.putInt(textureManager.getTextureIndex(material.ambientOcclusionMap))
 				.putInt(textureManager.getTextureIndex(material.flowMap))
+				.putInt(material.overrideBaseColor ? 1 : 0)
+				.putInt(material.unlit ? 1 : 0)
 				.putFloat(material.displacementScale)
 				.putFloat(material.specularStrength)
 				.putFloat(material.specularGloss)
 				.putFloat(material.flowMapStrength)
-				.putFloat(material.emissiveStrength)
 				.putFloat(material.flowMapDuration[0])
 				.putFloat(material.flowMapDuration[1])
 				.putFloat(scrollSpeedX)
 				.putFloat(scrollSpeedY)
 				.putFloat(material.textureScale[0])
-				.putFloat(material.textureScale[1]);
+				.putFloat(material.textureScale[1])
+				.putFloat(0).putFloat(0); // pad vec4
 		}
 		buffer.flip();
 
@@ -2223,9 +2229,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		{
 			case "shadowsEnabled":
 				configShadowsEnabled = config.shadowsEnabled();
-				modelPusher.clearModelCache();
 				clientThread.invoke(() ->
 				{
+					modelPusher.clearModelCache();
 					shutdownShadowMapFbo();
 					initShadowMapFbo();
 				});
@@ -2238,19 +2244,22 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				});
 				break;
 			case "textureResolution":
+			case "hdInfernalTexture":
+				configHdInfernalTexture = config.hdInfernalTexture();
+				textureManager.freeTextures();
 			case "groundBlending":
 			case "groundTextures":
 			case "objectTextures":
 			case "tzhaarHD":
 			case KEY_WINTER_THEME:
-			case "hdInfernalTexture":
+			case KEY_REDUCE_OVER_EXPOSURE:
 				configGroundBlending = config.groundBlending();
 				configGroundTextures = config.groundTextures();
 				configObjectTextures = config.objectTextures();
 				configTzhaarHD = config.tzhaarHD();
 				configWinterTheme = config.winterTheme();
-				configHdInfernalTexture = config.hdInfernalTexture();
-				textureManager.freeTextures();
+				configReduceOverExposure = config.reduceOverExposure();
+				modelPusher.clearModelCache();
 				reloadScene();
 				break;
 			case "projectileLights":
@@ -2281,8 +2290,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				clientThread.invoke(this::setupSyncMode);
 				break;
 			case "hideBakedEffects":
-				modelPusher.clearModelCache();
-				reloadScene();
+				clientThread.invoke(() -> {
+					modelPusher.clearModelCache();
+					reloadScene();
+				});
 				break;
 		}
 	}
@@ -2472,7 +2483,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 			TempModelInfo tempModelInfo = tempModelInfoMap.get(batchHash);
 			if (!config.enableModelBatching() || tempModelInfo == null || tempModelInfo.getFaceCount() != model.getFaceCount()) {
-				final int[] lengths = modelPusher.pushModel(hash, model, vertexBuffer, uvBuffer, normalBuffer, 0, 0, 0, ObjectProperties.NONE, ObjectType.NONE, !config.enableModelCaching());
+				int modelType = ModelUtils.getModelType(hash);
+				ObjectProperties objectProperties = ObjectProperties.NONE;
+				if (modelType == ModelUtils.TYPE_OBJECT) {
+					objectProperties = objectManager.getObjectProperties(ModelUtils.getIdOrIndex(hash));
+				}
+
+				final int[] lengths = modelPusher.pushModel(hash, model, vertexBuffer, uvBuffer, normalBuffer, 0, 0, 0, objectProperties, ObjectType.NONE, !config.enableModelCaching());
 				final int faceCount = lengths[0] / 3;
 				final int actualTempUvOffset = lengths[1] > 0 ? tempUvOffset : -1;
 
