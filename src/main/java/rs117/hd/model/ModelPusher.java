@@ -477,39 +477,42 @@ public class ModelPusher {
         int color3S = color3 >> 7 & 0x7;
         int color3L = color3 & 0x7F;
 
-        // reduce the effect of the baked shading by approximately inverting the process by which
-        // the shading is added initially.
-        int lightenA = (int) (Math.max((color1L - ignoreLowLightness), 0) * lightnessMultiplier) + baseLighten;
-        float dotA = Math.max(dotNormal3Lights(new float[]{
+        int maxBrightness = 55;
+        boolean isLit = objectProperties == null || objectProperties.material == null || !objectProperties.material.unlit;
+        if (isLit) {
+            // reduce the effect of the baked shading by approximately inverting the process by which
+            // the shading is added initially.
+            int lightenA = (int) (Math.max((color1L - ignoreLowLightness), 0) * lightnessMultiplier) + baseLighten;
+            float dotA = Math.max(dotNormal3Lights(new float[]{
                 xVertexNormals[triA],
                 yVertexNormals[triA],
                 zVertexNormals[triA],
-        }), 0);
-        color1L = (int) HDUtils.lerp(color1L, lightenA, dotA);
+            }), 0);
+            color1L = (int) HDUtils.lerp(color1L, lightenA, dotA);
 
-        int lightenB = (int) (Math.max((color2L - ignoreLowLightness), 0) * lightnessMultiplier) + baseLighten;
-        float dotB = Math.max(dotNormal3Lights(new float[]{
+            int lightenB = (int) (Math.max((color2L - ignoreLowLightness), 0) * lightnessMultiplier) + baseLighten;
+            float dotB = Math.max(dotNormal3Lights(new float[]{
                 xVertexNormals[triB],
                 yVertexNormals[triB],
                 zVertexNormals[triB],
-        }), 0);
-        color2L = (int) HDUtils.lerp(color2L, lightenB, dotB);
+            }), 0);
+            color2L = (int) HDUtils.lerp(color2L, lightenB, dotB);
 
-        int lightenC = (int) (Math.max((color3L - ignoreLowLightness), 0) * lightnessMultiplier) + baseLighten;
-        float dotC = Math.max(dotNormal3Lights(new float[]{
+            int lightenC = (int) (Math.max((color3L - ignoreLowLightness), 0) * lightnessMultiplier) + baseLighten;
+            float dotC = Math.max(dotNormal3Lights(new float[]{
                 xVertexNormals[triC],
                 yVertexNormals[triC],
                 zVertexNormals[triC],
-        }), 0);
-        color3L = (int) HDUtils.lerp(color3L, lightenC, dotC);
+            }), 0);
+            color3L = (int) HDUtils.lerp(color3L, lightenC, dotC);
 
-        int maxBrightness = 55;
-        if (faceTextures != null && faceTextures[face] != -1) {
-            maxBrightness = 90;
-            // set textured faces to pure white as they are harder to remove shadows from for some reason
-            color1H = color2H = color3H = 0;
-            color1S = color2S = color3S = 0;
-            color1L = color2L = color3L = 127;
+            if (faceTextures != null && faceTextures[face] != -1) {
+                maxBrightness = 90;
+                // set textured faces to pure white as they are harder to remove shadows from for some reason
+                color1H = color2H = color3H = 0;
+                color1S = color2S = color3S = 0;
+                color1L = color2L = color3L = 127;
+            }
         }
 
         if (tile != null && objectProperties != null && objectProperties.inheritTileColorType != InheritTileColorType.NONE) {

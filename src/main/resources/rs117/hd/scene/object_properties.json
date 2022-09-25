@@ -1419,5 +1419,13 @@
       3709,
       3950
     ]
+  },
+  {
+    "description": "Guardians of the Rift entrance",
+    "objectIds": [
+      "BARRIER_43700",
+      "BARRIER_43849"
+    ],
+    "material": "UNLIT"
   }
 ]
