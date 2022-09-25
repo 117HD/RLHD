@@ -69,9 +69,9 @@ uniform float contrast;
 uniform int pointLightsCount; // number of lights in current frame
 
 in float fogAmount;
-in vec4 vColor1;
-in vec4 vColor2;
-in vec4 vColor3;
+flat in vec4 vColor1;
+flat in vec4 vColor2;
+flat in vec4 vColor3;
 flat in vec2 vUv1;
 flat in vec2 vUv2;
 flat in vec2 vUv3;

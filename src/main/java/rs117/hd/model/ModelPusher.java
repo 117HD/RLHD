@@ -608,9 +608,11 @@ public class ModelPusher {
             packedAlphaPriority = tzHaarRecolored[3][0];
         }
 
-        color1L = Ints.constrainToRange(color1L, 0, maxBrightness);
-        color2L = Ints.constrainToRange(color2L, 0, maxBrightness);
-        color3L = Ints.constrainToRange(color3L, 0, maxBrightness);
+        if (hdPlugin.configReduceOverExposure) {
+            color1L = HDUtils.clamp(color1L, 0, maxBrightness);
+            color2L = HDUtils.clamp(color2L, 0, maxBrightness);
+            color3L = HDUtils.clamp(color3L, 0, maxBrightness);
+        }
 
         color1 = (color1H << 3 | color1S) << 7 | color1L;
         color2 = (color2H << 3 | color2S) << 7 | color2L;

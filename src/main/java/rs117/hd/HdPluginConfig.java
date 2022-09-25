@@ -35,8 +35,6 @@ import rs117.hd.config.*;
 @ConfigGroup("hd")
 public interface HdPluginConfig extends Config
 {
-	String KEY_WINTER_THEME = "winterTheme0";
-
 	/*====== General settings ======*/
 
 	@ConfigSection(
@@ -534,6 +532,7 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
+	String KEY_WINTER_THEME = "winterTheme0";
 	@ConfigItem(
 		keyName = KEY_WINTER_THEME,
 		name = "Winter theme",
@@ -545,6 +544,21 @@ public interface HdPluginConfig extends Config
 	{
 		return false;
 	}
+
+	String KEY_REDUCE_OVER_EXPOSURE = "reduceOverExposure";
+	@ConfigItem(
+		keyName = KEY_REDUCE_OVER_EXPOSURE,
+		name = "Reduce over-exposure",
+		description = "Previously, HD attempted to reduce over-exposure by lowering the maximum face color brightness.\n" +
+			"This turned most white-looking things into a dull grey. This option returns that old behaviour.",
+		position = 304,
+		section = miscellaneousSettings
+	)
+	default boolean reduceOverExposure() {
+		return false;
+	}
+
+	/*====== Experimental settings ======*/
 
 	@ConfigSection(
 			name = "Experimental",

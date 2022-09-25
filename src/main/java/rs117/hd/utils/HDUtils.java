@@ -132,6 +132,14 @@ public class HDUtils
 		return out;
 	}
 
+	public static int clamp(int value, int min, int max) {
+		return Math.min(max, Math.max(min, value));
+	}
+
+	public static float clamp(float value, float min, float max) {
+		return Math.min(max, Math.max(min, value));
+	}
+
 	public static int vertexHash(int[] vPos)
 	{
 		// simple custom hashing function for vertex position data
