@@ -298,6 +298,23 @@ public enum Material
 
 	BARK,
 	WOOD_GRAIN,
+	WOOD_GRAIN_2,
+	WOOD_GRAIN_TAN(p -> p
+		.setOverrideBaseColor(true)
+	),
+	WOOD_GRAIN_BROWN(p -> p
+			.setOverrideBaseColor(true)
+	),
+	WOOD_GRAIN_GREEN(p -> p
+		.setOverrideBaseColor(true)
+	),
+	WOOD_GRAIN_WEATHERED(p -> p
+		.setOverrideBaseColor(true)
+	),
+	WOOD_GRAIN_RED_WEATHERED(p -> p
+		.setOverrideBaseColor(true)
+	),
+	DOCK_FENCE(),
 
 	HD_INFERNAL_CAPE(p -> p
 		.replaceIf(INFERNAL_CAPE, HdPluginConfig::hdInfernalTexture)
