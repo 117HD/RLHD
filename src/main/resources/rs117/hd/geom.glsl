@@ -44,9 +44,9 @@ in vec4 vUv[];
 in float vFogAmount[];
 
 out float fogAmount;
-out vec4 vColor1;
-out vec4 vColor2;
-out vec4 vColor3;
+flat out vec4 vColor1;
+flat out vec4 vColor2;
+flat out vec4 vColor3;
 flat out vec2 vUv1;
 flat out vec2 vUv2;
 flat out vec2 vUv3;
