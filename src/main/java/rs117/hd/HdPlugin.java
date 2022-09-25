@@ -2226,9 +2226,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		{
 			case "shadowsEnabled":
 				configShadowsEnabled = config.shadowsEnabled();
-				modelPusher.clearModelCache();
 				clientThread.invoke(() ->
 				{
+					modelPusher.clearModelCache();
 					shutdownShadowMapFbo();
 					initShadowMapFbo();
 				});
@@ -2284,8 +2284,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				clientThread.invoke(this::setupSyncMode);
 				break;
 			case "hideBakedEffects":
-				modelPusher.clearModelCache();
-				reloadScene();
+				clientThread.invoke(() -> {
+					modelPusher.clearModelCache();
+					reloadScene();
+				});
 				break;
 		}
 	}
