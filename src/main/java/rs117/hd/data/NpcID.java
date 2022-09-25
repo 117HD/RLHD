@@ -28,6 +28,18 @@ public final class NpcID
         }
     }
 
+    // HD NPC names
+    public static final int LESSER_GHOSTLY_THRALL = 10878;
+    public static final int SUPERIOR_GHOSTLY_THRALL = 10879;
+    public static final int GREATER_GHOSTLY_THRALL = 10880;
+    public static final int LESSER_SKELETAL_THRALL = 10881;
+    public static final int SUPERIOR_SKELETAL_THRALL = 10882;
+    public static final int GREATER_SKELETAL_THRALL = 10883;
+    public static final int LESSER_ZOMBIFIED_THRALL = 10884;
+    public static final int SUPERIOR_ZOMBIFIED_THRALL = 10885;
+    public static final int GREATER_ZOMBIFIED_THRALL = 10886;
+
+    // RuneLite NPC names. Do not edit.
     public static final int TOOL_LEPRECHAUN = 0;
     public static final int MOLANISK = 1;
     public static final int ABERRANT_SPECTRE = 2;
