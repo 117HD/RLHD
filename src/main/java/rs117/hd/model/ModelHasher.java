@@ -94,20 +94,7 @@ public class ModelHasher {
     }
 
     public int calculateBatchHash() {
-        return fastIntHash(new int[]{
-                this.xVerticesHash,
-                this.yVerticesHash,
-                this.zVerticesHash,
-                this.faceColorsOneHash,
-                this.faceColorsTwoHash,
-                this.faceColorsThreeHash,
-                this.faceTexturesHash,
-                this.faceTexturesUvHash,
-                this.model.getOverrideAmount(),
-                this.model.getOverrideHue(),
-                this.model.getOverrideSaturation(),
-                this.model.getOverrideLuminance()
-        }, -1);
+        return calculateVertexCacheHash();
     }
 
     public static int fastIntHash(int[] a, int actualLength) {
