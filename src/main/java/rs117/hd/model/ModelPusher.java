@@ -68,7 +68,10 @@ public class ModelPusher {
     }
 
     public void shutDown() {
-        this.modelCache.freeAllBuffers();
+        if (started) {
+            this.modelCache.shutDown();
+            this.started = false;
+        }
     }
 
     // subtracts the X lowest lightness levels from the formula.

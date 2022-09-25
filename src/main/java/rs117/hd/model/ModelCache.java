@@ -30,6 +30,14 @@ public class ModelCache {
         this.uvDataCache = new FloatBufferCache(this.bufferPool);
     }
 
+    public void shutDown() {
+        clear();
+
+        if (this.bufferPool != null) {
+            this.bufferPool.free();
+        }
+    }
+
     public IntBuffer getVertexData(int hash) {
         return this.vertexDataCache.get(hash);
     }
@@ -99,12 +107,6 @@ public class ModelCache {
 
         if (this.uvDataCache != null) {
             this.uvDataCache.clear();
-        }
-    }
-
-    public void freeAllBuffers() {
-        if (this.bufferPool != null) {
-            this.bufferPool.free();
         }
     }
 }
