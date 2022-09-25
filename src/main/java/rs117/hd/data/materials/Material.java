@@ -44,7 +44,8 @@ public enum Material
 	// Default
 	NONE,
 
-	// Special textures
+	// Special materials
+	UNLIT(NONE, p -> p.setUnlit(true)),
 	TRANSPARENT,
 	LAVA_FLOW_MAP,
 	WATER_FLOW_MAP,
