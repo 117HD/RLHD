@@ -1,6 +1,5 @@
 package rs117.hd.model;
 
-import com.google.common.primitives.Ints;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.api.kit.KitType;
@@ -478,8 +477,7 @@ public class ModelPusher {
         int color3L = color3 & 0x7F;
 
         int maxBrightness = 55;
-        boolean isLit = objectProperties == null || objectProperties.material == null || !objectProperties.material.unlit;
-        if (isLit) {
+        if (hdPlugin.configRemoveVanillaShading) {
             // reduce the effect of the baked shading by approximately inverting the process by which
             // the shading is added initially.
             int lightenA = (int) (Math.max((color1L - ignoreLowLightness), 0) * lightnessMultiplier) + baseLighten;
@@ -611,7 +609,7 @@ public class ModelPusher {
             packedAlphaPriority = tzHaarRecolored[3][0];
         }
 
-        if (hdPlugin.configReduceOverExposure) {
+        if (hdPlugin.configRemoveVanillaShading) {
             color1L = HDUtils.clamp(color1L, 0, maxBrightness);
             color2L = HDUtils.clamp(color2L, 0, maxBrightness);
             color3L = HDUtils.clamp(color3L, 0, maxBrightness);
