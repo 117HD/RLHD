@@ -500,6 +500,12 @@ public class LightManager
 
 					for (GameObject gameObject : tile.getGameObjects()) {
 						if (gameObject != null) {
+							if (gameObject.getRenderable() instanceof Actor) {
+								// rarely these tile game objects are actors with weird properties
+								// we skip those
+								continue;
+							}
+
 							addObjectLight(
 								gameObject,
 								tile.getRenderLevel(),
