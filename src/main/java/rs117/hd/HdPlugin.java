@@ -2259,8 +2259,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				configTzhaarHD = config.tzhaarHD();
 				configWinterTheme = config.winterTheme();
 				configRemoveVanillaShading = config.removeVanillaShading();
-				modelPusher.clearModelCache();
-				reloadScene();
+				clientThread.invoke(() -> {
+					modelPusher.clearModelCache();
+					reloadScene();
+				});
 				break;
 			case "projectileLights":
 				configProjectileLights = config.projectileLights();
