@@ -395,8 +395,9 @@ public enum Overlay {
 	TOA_DISABLE_BLENDING_N7(-7, Area.TOA_LOOT_ROOM, GroundMaterial.NONE, p -> p.blended(false)),
 	TOA_DISABLE_BLENDING_N8(-8, Area.TOA_LOOT_ROOM, GroundMaterial.NONE, p -> p.blended(false)),
 	TOA_DISABLE_BLENDING_N9(-9, Area.TOA_LOOT_ROOM, GroundMaterial.NONE, p -> p.blended(false)),
-	TOA_PATH_OF_CRONDIS_PUZZLE_WATER(-5, Area.TOA_PATH_OF_CRONDIS_PUZZLE, WaterType.WATER_FLAT),
+	TOA_PATH_OF_CRONDIS_PUZZLE_WATER(-5, Area.TOA_PATH_OF_CRONDIS_PUZZLE, GroundMaterial.NONE, p -> p.blended(false)),
 	TOA_PATH_OF_CRONDIS_BOSS_WATER(-10, Area.TOA_PATH_OF_CRONDIS_BOSS, WaterType.SWAMP_WATER),
+	TOA_PATH_OF_CRONDIS_BOSS_GREY_ROCK(-122, Area.TOA_PATH_OF_CRONDIS_BOSS, GroundMaterial.DIRT),
 
 	// POHs
 	POH_DESERT_INDOORS(Area.PLAYER_OWNED_HOUSE, GroundMaterial.TILES_2x2_2, p -> p.blended(false).ids(26, 99)),
