@@ -44,9 +44,9 @@ in vec4 vUv[];
 in float vFogAmount[];
 
 out float fogAmount;
-out vec4 vColor1;
-out vec4 vColor2;
-out vec4 vColor3;
+flat out vec4 vColor1;
+flat out vec4 vColor2;
+flat out vec4 vColor3;
 flat out vec2 vUv1;
 flat out vec2 vUv2;
 flat out vec2 vUv3;
@@ -56,7 +56,6 @@ out vec3 texBlend;
 flat out ivec3 materialId;
 flat out ivec3 terrainData;
 flat out ivec3 isOverlay;
-flat out mat3 TBN; // needed for normal mapping
 out vec4 shadowOut;
 
 void main() {
@@ -84,13 +83,6 @@ void main() {
     vec3 T = normalize(vec3(vPosition[0] - vPosition[1]));
     vec3 B = normalize(vec3(vPosition[0] - vPosition[2]));
     vec3 N = normalize(cross(T, B));
-
-    // Source: https://www.geeks3d.com/20130122/normal-mapping-without-precomputed-tangent-space-vectors/
-    vec3 C1 = cross(vec3(0, 0, 1), N);
-    vec3 C2 = cross(vec3(0, 1, 0), N);
-    T = normalize(length(C1) > length(C2) ? C1 : C2);
-    B = normalize(cross(N, T));
-    TBN = mat3(T, B, N);
 
     texBlend = vec3(1, 0, 0);
     fogAmount = vFogAmount[0];

@@ -48,17 +48,12 @@ import org.lwjgl.opengl.GLCapabilities;
 import org.lwjgl.opengl.GLUtil;
 import org.lwjgl.system.Callback;
 import org.lwjgl.system.Configuration;
-import rs117.hd.config.AntiAliasingMode;
-import rs117.hd.config.DefaultSkyColor;
-import rs117.hd.config.FogDepthMode;
-import rs117.hd.config.UIScalingMode;
+import rs117.hd.config.*;
 import rs117.hd.data.WaterType;
 import rs117.hd.data.materials.Material;
 import rs117.hd.model.ModelHasher;
 import rs117.hd.model.ModelPusher;
 import rs117.hd.model.TempModelInfo;
-import rs117.hd.model.objects.ObjectProperties;
-import rs117.hd.model.objects.ObjectType;
 import rs117.hd.opengl.compute.ComputeMode;
 import rs117.hd.opengl.compute.OpenCLManager;
 import rs117.hd.opengl.shader.Shader;
@@ -66,6 +61,9 @@ import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.Template;
 import rs117.hd.scene.*;
 import rs117.hd.scene.lights.SceneLight;
+import rs117.hd.scene.ObjectManager;
+import rs117.hd.scene.objects.ObjectProperties;
+import rs117.hd.scene.objects.ObjectType;
 import rs117.hd.utils.*;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.GpuFloatBuffer;
@@ -81,7 +79,6 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
@@ -90,11 +87,12 @@ import java.util.Map;
 
 import static org.jocl.CL.*;
 import static org.lwjgl.opengl.GL43C.*;
+import static rs117.hd.HdPluginConfig.KEY_REMOVE_VANILLA_SHADING;
 import static rs117.hd.HdPluginConfig.KEY_WINTER_THEME;
 import static rs117.hd.utils.ResourcePath.path;
 
 @PluginDescriptor(
-	name = "117 HD (beta)",
+	name = "117 HD",
 	description = "GPU renderer with a suite of graphical enhancements",
 	tags = {"hd", "high", "detail", "graphics", "shaders", "textures", "gpu", "shadows", "lights"},
 	conflicts = "GPU"
@@ -139,7 +137,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	private LightManager lightManager;
 
 	@Inject
-	public HiddenObjectManager hiddenObjectManager;
+	private ObjectManager objectManager;
 
 	@Inject
 	private EnvironmentManager environmentManager;
@@ -171,7 +169,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 	@Inject
 	private DeveloperTools developerTools;
-
 	private ComputeMode computeMode = ComputeMode.OPENGL;
 
 	private Canvas canvas;
@@ -359,6 +356,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 	// Animation things
 	private long lastFrameTime = System.currentTimeMillis();
+
 	// Generic scalable animation timer used in shaders
 	private float elapsedTime = 0;
 
@@ -383,6 +381,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	public boolean configExpandShadowDraw = false;
 	public boolean configHdInfernalTexture = true;
 	public boolean configWinterTheme = true;
+	public boolean configRemoveVanillaShading = false;
 	public int configMaxDynamicLights;
 
 	public int[] camTarget = new int[3];
@@ -420,6 +419,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		configExpandShadowDraw = config.expandShadowDraw();
 		configHdInfernalTexture = config.hdInfernalTexture();
 		configWinterTheme = config.winterTheme();
+		configRemoveVanillaShading = config.removeVanillaShading();
 		configMaxDynamicLights = config.maxDynamicLights().getValue();
 
 		clientThread.invoke(() ->
@@ -544,10 +544,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				lastAntiAliasingMode = null;
 
 				lightManager.startUp();
-				hiddenObjectManager.startUp();
+				objectManager.startUp();
 
 				if (client.getGameState() == GameState.LOGGED_IN)
 				{
+					modelPusher.startUp();
 					uploadScene();
 				}
 
@@ -574,6 +575,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			client.setGpu(false);
 			client.setDrawCallbacks(null);
 			client.setUnlockedFps(false);
+			modelPusher.shutDown();
 
 			if (lwjglInitted)
 			{
@@ -626,7 +628,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		});
 	}
 
-	private void stopPlugin()
+	public void stopPlugin()
 	{
 		SwingUtilities.invokeLater(() ->
 		{
@@ -733,7 +735,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				case "LIGHT_GETTER":
 					return generateGetter("PointLight", configMaxDynamicLights);
 				case "PARALLAX_MAPPING":
-					return String.format("#define %s %d", key, config.parallaxMappingMode().ordinal());
+					return String.format("#define %s %d", key, ParallaxMappingMode.OFF.ordinal()); // config.parallaxMappingMode().ordinal());
 			}
 			return null;
 		});
@@ -1075,7 +1077,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 	public void updateMaterialUniformBuffer(float[] textureAnimations)
 	{
-		ByteBuffer buffer = BufferUtils.createByteBuffer(Material.values().length * 16 * SCALAR_BYTES);
+		ByteBuffer buffer = BufferUtils.createByteBuffer(Material.values().length * 20 * SCALAR_BYTES);
 		for (Material material : Material.values())
 		{
 			material = textureManager.getEffectiveMaterial(material);
@@ -1092,18 +1094,21 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				.putInt(textureManager.getTextureIndex(material.normalMap))
 				.putInt(textureManager.getTextureIndex(material.displacementMap))
 				.putInt(textureManager.getTextureIndex(material.roughnessMap))
+				.putInt(textureManager.getTextureIndex(material.ambientOcclusionMap))
 				.putInt(textureManager.getTextureIndex(material.flowMap))
+				.putInt(material.overrideBaseColor ? 1 : 0)
+				.putInt(material.unlit ? 1 : 0)
 				.putFloat(material.displacementScale)
 				.putFloat(material.specularStrength)
 				.putFloat(material.specularGloss)
 				.putFloat(material.flowMapStrength)
-				.putFloat(material.emissiveStrength)
 				.putFloat(material.flowMapDuration[0])
 				.putFloat(material.flowMapDuration[1])
 				.putFloat(scrollSpeedX)
 				.putFloat(scrollSpeedY)
 				.putFloat(material.textureScale[0])
-				.putFloat(material.textureScale[1]);
+				.putFloat(material.textureScale[1])
+				.putFloat(0).putFloat(0); // pad vec4
 		}
 		buffer.flip();
 
@@ -2119,6 +2124,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	public void onGameStateChanged(GameStateChanged gameStateChanged)
 	{
 		switch (gameStateChanged.getGameState()) {
+			case LOADING:
+				modelPusher.startUp();
+				lightManager.reset();
+				if (config.loadingClearCache()) {
+					modelPusher.clearModelCache();
+				}
+				break;
 			case LOGGED_IN:
 				uploadScene();
 				checkGLErrors();
@@ -2127,6 +2139,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				// Avoid drawing the last frame's buffer during LOADING after LOGIN_SCREEN
 				targetBufferOffset = 0;
 				hasLoggedIn = false;
+				modelPusher.clearModelCache();
 			default:
 				lightManager.reset();
 		}
@@ -2134,7 +2147,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 	private void uploadScene()
 	{
-		modelPusher.clearModelCache();
 		vertexBuffer.clear();
 		uvBuffer.clear();
 		normalBuffer.clear();
@@ -2217,9 +2229,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		{
 			case "shadowsEnabled":
 				configShadowsEnabled = config.shadowsEnabled();
-				modelPusher.clearModelCache();
 				clientThread.invoke(() ->
 				{
+					modelPusher.clearModelCache();
 					shutdownShadowMapFbo();
 					initShadowMapFbo();
 				});
@@ -2232,20 +2244,25 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				});
 				break;
 			case "textureResolution":
+			case "hdInfernalTexture":
+				configHdInfernalTexture = config.hdInfernalTexture();
+				textureManager.freeTextures();
 			case "groundBlending":
 			case "groundTextures":
 			case "objectTextures":
 			case "tzhaarHD":
 			case KEY_WINTER_THEME:
-			case "hdInfernalTexture":
+			case KEY_REMOVE_VANILLA_SHADING:
 				configGroundBlending = config.groundBlending();
 				configGroundTextures = config.groundTextures();
 				configObjectTextures = config.objectTextures();
 				configTzhaarHD = config.tzhaarHD();
 				configWinterTheme = config.winterTheme();
-				configHdInfernalTexture = config.hdInfernalTexture();
-				textureManager.freeTextures();
-				reloadScene();
+				configRemoveVanillaShading = config.removeVanillaShading();
+				clientThread.invoke(() -> {
+					modelPusher.clearModelCache();
+					reloadScene();
+				});
 				break;
 			case "projectileLights":
 				configProjectileLights = config.projectileLights();
@@ -2275,7 +2292,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				clientThread.invoke(this::setupSyncMode);
 				break;
 			case "hideBakedEffects":
-				modelPusher.clearModelCache();
+				clientThread.invoke(() -> {
+					modelPusher.clearModelCache();
+					reloadScene();
+				});
 				break;
 		}
 	}
@@ -2390,7 +2410,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			return;
 		}
 
-		if (hiddenObjectManager.shouldHide(ModelUtils.getID(hash), ModelUtils.getWorldLocation(client, x, z))) {
+		if (objectManager.shouldHide(ModelUtils.getIdOrIndex(hash), ModelUtils.getWorldLocation(client, x, z))) {
 			return;
 		}
 
@@ -2464,8 +2484,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			final int batchHash = modelHasher.calculateBatchHash();
 
 			TempModelInfo tempModelInfo = tempModelInfoMap.get(batchHash);
-			if (config.disableModelBatching() || tempModelInfo == null || tempModelInfo.getFaceCount() != model.getFaceCount()) {
-				final int[] lengths = modelPusher.pushModel(renderable, model, vertexBuffer, uvBuffer, normalBuffer, 0, 0, 0, ObjectProperties.NONE, ObjectType.NONE, config.disableModelCaching(), modelHasher.calculateColorCacheHash());
+			if (!config.enableModelBatching() || tempModelInfo == null || tempModelInfo.getFaceCount() != model.getFaceCount()) {
+				int modelType = ModelUtils.getModelType(hash);
+				ObjectProperties objectProperties = ObjectProperties.NONE;
+				if (modelType == ModelUtils.TYPE_OBJECT) {
+					objectProperties = objectManager.getObjectProperties(ModelUtils.getIdOrIndex(hash));
+				}
+
+				final int[] lengths = modelPusher.pushModel(hash, model, vertexBuffer, uvBuffer, normalBuffer, 0, 0, 0, objectProperties, ObjectType.NONE, !config.enableModelCaching());
 				final int faceCount = lengths[0] / 3;
 				final int actualTempUvOffset = lengths[1] > 0 ? tempUvOffset : -1;
 

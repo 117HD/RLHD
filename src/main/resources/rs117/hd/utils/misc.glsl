@@ -34,7 +34,7 @@ float translateRange(float rangeStart, float rangeEnd, float value)
 float animationFrame(float animationDuration)
 {
     if (animationDuration == 0)
-        return 0;
+        return 0.0;
     return mod(elapsedTime, animationDuration) / animationDuration;
 }
 

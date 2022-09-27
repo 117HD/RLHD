@@ -35,8 +35,6 @@ import rs117.hd.config.*;
 @ConfigGroup("hd")
 public interface HdPluginConfig extends Config
 {
-	String KEY_WINTER_THEME = "winterTheme0";
-
 	/*====== General settings ======*/
 
 	@ConfigSection(
@@ -342,16 +340,17 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
-	@ConfigItem(
-		keyName = "parallaxMappingMode",
-		name = "Parallax mapping",
-		description = "Enable parallax mapping to add more depth to materials that support it. Impacts performance.",
-		position = 110,
-		section = lightingSettings
-	)
-	default ParallaxMappingMode parallaxMappingMode() {
-		return ParallaxMappingMode.FULL;
-	}
+	// TODO: Fix parallax mapping before uncommenting this. See TODOs in displacement.glsl
+//	@ConfigItem(
+//		keyName = "parallaxMappingMode",
+//		name = "Parallax mapping",
+//		description = "Enable parallax mapping to add more depth to materials that support it. Impacts performance considerably.",
+//		position = 110,
+//		section = lightingSettings
+//	)
+//	default ParallaxMappingMode parallaxMappingMode() {
+//		return ParallaxMappingMode.FULL;
+//	}
 
 
 	/*====== Environment settings ======*/
@@ -533,6 +532,7 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
+	String KEY_WINTER_THEME = "winterTheme0";
 	@ConfigItem(
 		keyName = KEY_WINTER_THEME,
 		name = "Winter theme",
@@ -545,29 +545,72 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
+	String KEY_REMOVE_VANILLA_SHADING = "removeVanillaShading";
+	@ConfigItem(
+		keyName = KEY_REMOVE_VANILLA_SHADING,
+		name = "Remove vanilla shading",
+		description =
+			"Previously, HD attempted to remove vanilla shading by approximately increasing the brightness of colors<br> " +
+			"by the same amount as the base game would darken them. This worked alright for the most part, but it<br> " +
+			"resulted in white colors appearing more like dull greys. Enabling this option brings back that old behaviour.",
+		position = 304,
+		section = miscellaneousSettings
+	)
+	default boolean removeVanillaShading() {
+		return false;
+	}
+
+	/*====== Experimental settings ======*/
+
 	@ConfigSection(
 			name = "Experimental",
-			description = "Experimental features - you likely won't need to modify these settings",
+			description = "Experimental features - if you're experiencing issues you should consider disabling these",
 			position = 400,
 			closedByDefault = true
 	)
 	String experimentalSettings = "experimentalSettings";
 
 	@ConfigItem(
-			keyName = "modelCaching",
-			name = "Disable model caching",
-			description = "Model caching improves performance with increased memory usage.",
+			keyName = "enableModelCaching",
+			name = "Enable model caching",
+			description = "Model caching improves performance with increased memory usage. May cause instability or graphical bugs.",
 			position = 401,
 			section = experimentalSettings
 	)
-	default boolean disableModelCaching() { return false; }
+	default boolean enableModelCaching() { return false; }
 
 	@ConfigItem(
-			keyName = "modelBatching",
-			name = "Disable model batching",
-			description = "Model batching generally improves performance but could cause some graphical artifacts",
+			keyName = "enableModelBatching",
+			name = "Enable model batching",
+			description = "Model batching generally improves performance but may cause instability and graphical bugs.",
 			position = 402,
 			section = experimentalSettings
 	)
-	default boolean disableModelBatching() { return false; }
+	default boolean enableModelBatching() { return false; }
+
+	@Range(
+			min = 256,
+			max = 16384
+	)
+	@ConfigItem(
+			keyName = "modelCacheSizeMiB",
+			name = "Model cache size (MiB)",
+			description = "Size of the model cache in mebibytes. Plugin must be restarted to apply changes. Min=256 Max=16384",
+			position = 403,
+			section = experimentalSettings
+	)
+	default int modelCacheSizeMiB() {
+		return 2048;
+	}
+
+	@ConfigItem(
+			keyName = "loadingClearCache",
+			name = "Clear cache when loading",
+			description = "Clear the model cache whenever the game shows the \"loading please wait...\" message. This may improve performance when memory allocated to the cache is small.",
+			position = 404,
+			section = experimentalSettings
+	)
+	default boolean loadingClearCache() {
+		return false;
+	}
 }

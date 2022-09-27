@@ -1,0 +1,125 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "lights.schema.json",
+  "title": "Light",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": [
+      "radius",
+      "strength",
+      "color"
+    ],
+    "additionalProperties": false,
+    "properties": {
+      "description": {
+        "type": "string",
+        "description": "Description of where or what the light applies to."
+      },
+      "worldX": {
+        "type": "integer",
+        "description": "The non-instanced world X coordinate to spawn the light on. Used in combination with worldY and plane."
+      },
+      "worldY": {
+        "type": "integer",
+        "description": "The non-instanced world Y coordinate to spawn the light on. Used in combination with worldX and plane."
+      },
+      "plane": {
+        "type": "integer",
+        "description": "The world Z coordinate, or plane to spawn the light on. Used in combination with worldX and worldY."
+      },
+      "height": {
+        "type": "integer",
+        "description": "The height in scene units (128 per tile) to place the light above the current tile or entity base height."
+      },
+      "alignment": {
+        "type": "string",
+        "enum": [
+          "CENTER",
+
+          "NORTH",
+          "NORTHEAST",
+          "NORTHEAST_CORNER",
+          "EAST",
+          "SOUTHEAST",
+          "SOUTHEAST_CORNER",
+          "SOUTH",
+          "SOUTHWEST",
+          "SOUTHWEST_CORNER",
+          "WEST",
+          "NORTHWEST",
+          "NORTHWEST_CORNER",
+
+          "BACK",
+          "BACKLEFT",
+          "BACKLEFT_CORNER",
+          "LEFT",
+          "FRONTLEFT",
+          "FRONTLEFT_CORNER",
+          "FRONT",
+          "FRONTRIGHT",
+          "FRONTRIGHT_CORNER",
+          "RIGHT",
+          "BACKRIGHT",
+          "BACKRIGHT_CORNER"
+        ],
+        "description": "Where to place the light in relation to what it's attached to, be it an NPC, object or world location."
+      },
+      "radius": {
+        "type": "integer",
+        "description": "How far the light should reach in all directions."
+      },
+      "strength": {
+        "type": "number",
+        "description": "The intensity of the light."
+      },
+      "color": {
+        "type": "array",
+        "description": "The RGB color values of the light, normally in the range 0-255. Decimals are allowed. Color space: sRGB.",
+        "minItems": 3,
+        "maxItems": 3,
+        "items": {
+          "type": "number"
+        }
+      },
+      "type": {
+        "type": "string",
+        "description": "Specify the animation to apply to the light. Defaults to STATIC.",
+        "enum": [ "STATIC", "FLICKER", "PULSE" ]
+      },
+      "duration": {
+        "type": "number",
+        "description": "The time to complete one cycle of the light type's animation. Currently only affects PULSE lights."
+      },
+      "range": {
+        "type": "number",
+        "description": "The distance range to vary the light's radius by according to the light's animation."
+      },
+      "fadeInDuration": {
+        "type": "number",
+        "description": "The time in milliseconds until the light is fully active after spawning."
+      },
+      "npcIds": {
+        "type": "array",
+        "description": "A set of NPC IDs or NpcID keys to apply the light to.",
+        "items": {
+          "type": [ "integer", "string" ]
+        }
+      },
+      "objectIds": {
+        "type": "array",
+        "description": "A set of object IDs or ObjectID keys to apply the light to.",
+        "items": {
+          "type": [ "integer", "string" ]
+        }
+      },
+      "projectileIds": {
+        "type": "array",
+        "description": "A set of projectile IDs to apply the light to.",
+        "items": {
+          "type": [ "integer", "string" ]
+        }
+      }
+    }
+  }
+}

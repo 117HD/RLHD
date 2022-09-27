@@ -62,7 +62,7 @@ import static rs117.hd.utils.ResourcePath.path;
 @Slf4j
 public class LightManager
 {
-	public static String ENV_LIGHTS_CONFIG = "RLHD_LIGHTS_PATH";
+	private static final String ENV_LIGHTS_CONFIG = "RLHD_LIGHTS_PATH";
 
 	@Inject
 	private ConfigManager configManager;
@@ -155,7 +155,7 @@ public class LightManager
 	public void startUp()
 	{
 		entityHiderConfig = configManager.getConfig(EntityHiderConfig.class);
-		Env.getPathOrDefault(ENV_LIGHTS_CONFIG, () -> path(LightManager.class,"lights.jsonc"))
+		Env.getPathOrDefault(ENV_LIGHTS_CONFIG, () -> path(LightManager.class,"lights.json"))
 			.watch(this::loadConfig);
 	}
 
@@ -500,6 +500,12 @@ public class LightManager
 
 					for (GameObject gameObject : tile.getGameObjects()) {
 						if (gameObject != null) {
+							if (gameObject.getRenderable() instanceof Actor) {
+								// rarely these tile game objects are actors with weird properties
+								// we skip those
+								continue;
+							}
+
 							addObjectLight(
 								gameObject,
 								tile.getRenderLevel(),

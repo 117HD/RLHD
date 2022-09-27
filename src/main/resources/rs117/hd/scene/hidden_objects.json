@@ -1,0 +1,12 @@
+[
+  {
+    "description": "Varrock West bank rubble",
+    "objectIds": [ 4342, 4343, 4344 ],
+    "aabbs": [
+      [
+        3180, 3433,
+        3190, 3447
+      ]
+    ]
+  }
+]

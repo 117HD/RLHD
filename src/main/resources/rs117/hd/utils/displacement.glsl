@@ -25,31 +25,39 @@
 
 #include PARALLAX_MAPPING
 
+#if PARALLAX_MAPPING
 float sampleDepth(int heightMap, vec2 uv) {
     return 1 - linearToSrgb(texture(textureArray, vec3(uv, heightMap)).r);
 }
 
-#if PARALLAX_MAPPING
-vec2 sampleDisplacementMap(
+void sampleDisplacementMap(
     Material mat,
-    vec2 uv,
-    vec3 tangentViewDir,
-    vec3 tangentLightDir,
-    inout float selfShadowing,
-    inout vec3 fragPos
+    vec3 tsViewDir,
+    vec3 tsLightDir,
+    inout vec2 uv,
+    inout vec2 fragDelta,
+    inout float selfShadowing
 ) {
     int map = mat.displacementMap;
     if (map == -1)
-        return uv;
+        return;
 
-    const float strength = 1; // TODO: remove this when Materials are in JSON
-    const float minLayers = 4 * strength;
-    const float maxLayers = 32 * strength;
-    float numLayers = mix(maxLayers, minLayers, max(dot(vec3(0, 0, 1), tangentViewDir), 0));
+    // TODO: improve displacement accuracy based on pixels on screen per tangent space unit
+    // TODO: improve shadow accuracy
+    // TODO: add basic anti-aliasing to fit more nicely with MSAA
+    // TODO: fix tile blending issues
+    // TODO: fix displacement on vertical surfaces
+    // TODO: make the code more readable
 
-    float scale = mat.displacementScale * strength;
-    vec2 P = tangentViewDir.xy / tangentViewDir.z * scale;
-    vec2 deltaUv = P / numLayers;
+    const float minLayers = 4;
+    const float maxLayers = 32;
+    float numLayers = mix(maxLayers, minLayers, max(0, tsViewDir.z));
+
+    float scale = mat.displacementScale;
+
+    // ts = tangent space
+    vec2 deltaXyPerZ = tsViewDir.xy / tsViewDir.z * scale;
+    vec2 stepSize = deltaXyPerZ / numLayers;
 
     float layerSize = 1. / numLayers;
     float layerDepth = 0;
@@ -57,7 +65,7 @@ vec2 sampleDisplacementMap(
     float prevDepth = depth;
     while (layerDepth < depth) {
         prevDepth = depth;
-        uv -= deltaUv;
+        uv -= stepSize;
         layerDepth += layerSize;
         depth = sampleDepth(map, uv);
     }
@@ -65,15 +73,20 @@ vec2 sampleDisplacementMap(
     float after = depth - layerDepth;
     float before = prevDepth - (layerDepth - layerSize);
     float weight = after / (after - before);
-    uv += deltaUv * weight;
+    uv += stepSize * weight;
+    layerDepth -= layerSize * weight;
 
-    fragPos -= TBN * vec3(P, 1) * layerDepth * 128 * scale;
-    P = tangentLightDir.xy / tangentLightDir.z * scale;
-    fragPos += TBN * vec3(P, 1) * layerDepth * 128 * scale;
+    vec2 tsSpaceDelta = -deltaXyPerZ;
+
+    // Prepare for shadow steps
+    deltaXyPerZ = tsLightDir.xy / tsLightDir.z * scale;
+
+    tsSpaceDelta += deltaXyPerZ;
+    fragDelta += tsSpaceDelta * layerDepth * 128;
 
     #if PARALLAX_MAPPING >= 2 // self-shadowing
         depth = sampleDepth(map, uv);
-        deltaUv = P / numLayers;
+        stepSize = deltaXyPerZ / numLayers;
         float shadowDepth;
         float shadow = 0;
         float shadowBias = .0125;
@@ -82,7 +95,7 @@ vec2 sampleDisplacementMap(
             vec2 shadowUv = uv;
             float shadowLayerDepth = depth - shadowBias;
             do {
-                shadowUv += deltaUv;
+                shadowUv += stepSize;
                 shadowLayerDepth -= layerSize;
                 shadowDepth = sampleDepth(map, shadowUv);
             } while (shadowDepth > shadowLayerDepth && shadowLayerDepth >= 0);
@@ -94,7 +107,7 @@ vec2 sampleDisplacementMap(
                     vec2 shadowUv = uv + (vec2(x, y) - .5) * .0125;
                     float shadowLayerDepth = depth - shadowBias * 5;
                     do {
-                        shadowUv += deltaUv;
+                        shadowUv += stepSize;
                         shadowLayerDepth -= layerSize;
                         shadowDepth = sampleDepth(map, shadowUv);
                     } while (shadowDepth > shadowLayerDepth && shadowLayerDepth >= 0);
@@ -105,10 +118,9 @@ vec2 sampleDisplacementMap(
             shadow /= 4;
         #endif
 
-        selfShadowing = max(selfShadowing, shadow);
+        selfShadowing += shadow;
     #endif
-    return uv;
 }
 #else
-#define sampleDisplacementMap(mat, uv, view, light, selfShadowing, fragPos) uv
+#define sampleDisplacementMap(mat, viewDir, lightDir, fragDelta, selfShadowing) uv
 #endif

@@ -44,11 +44,11 @@ import rs117.hd.HdPluginConfig;
 import rs117.hd.data.WaterType;
 import rs117.hd.data.materials.GroundMaterial;
 import rs117.hd.data.materials.Material;
-import rs117.hd.model.objects.ObjectProperties;
 import rs117.hd.data.materials.Overlay;
-import rs117.hd.model.objects.TzHaarRecolorType;
 import rs117.hd.data.materials.Underlay;
-import rs117.hd.model.objects.ObjectType;
+import rs117.hd.scene.objects.ObjectProperties;
+import rs117.hd.scene.objects.ObjectType;
+import rs117.hd.scene.objects.TzHaarRecolorType;
 import rs117.hd.utils.HDUtils;
 import static rs117.hd.utils.HDUtils.dotNormal3Lights;
 
@@ -1178,7 +1178,7 @@ public class ProceduralGenerator
 		color2H = hue;
 		color3H = hue;
 
-		if (objectProperties.getTzHaarRecolorType() == TzHaarRecolorType.GRADIENT)
+		if (objectProperties.tzHaarRecolorType == TzHaarRecolorType.GRADIENT)
 		{
 			// apply coloring to the rocky walls
 			if (color1L < 20)
@@ -1205,7 +1205,7 @@ public class ProceduralGenerator
 				color3L = (int)HDUtils.lerp(gradientDarkColor[2], gradientBaseColor[2], pos);
 			}
 		}
-		else if (objectProperties.getTzHaarRecolorType() == TzHaarRecolorType.HUE_SHIFT)
+		else if (objectProperties.tzHaarRecolorType == TzHaarRecolorType.HUE_SHIFT)
 		{
 			// objects around the entrance to The Inferno only need a hue-shift
 			// and very slight lightening to match the lightened terrain
