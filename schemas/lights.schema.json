@@ -119,6 +119,13 @@
         "items": {
           "type": [ "integer", "string" ]
         }
+      },
+      "graphicsObjectIds": {
+        "type": "array",
+        "description": "A set of graphics object IDs to apply the light to.",
+        "items": {
+          "type": [ "integer", "string" ]
+        }
       }
     }
   }

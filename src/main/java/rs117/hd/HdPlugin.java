@@ -2774,6 +2774,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	}
 
 	@Subscribe
+	public void onGraphicsObjectCreated(GraphicsObjectCreated graphicsObjectCreated)
+	{
+		GraphicsObject graphicsObject = graphicsObjectCreated.getGraphicsObject();
+		lightManager.addGraphicsObjectLight(graphicsObject);
+	}
+
+	@Subscribe
 	public void onGameTick(GameTick gameTick)
 	{
 		if (!hasLoggedIn && client.getGameState() == GameState.LOGGED_IN)

@@ -34,8 +34,10 @@ public class Light
 	public HashSet<Integer> npcIds;
 	@JsonAdapter(ObjectID.JsonAdapter.class)
 	public HashSet<Integer> objectIds;
-	@JsonAdapter(ProjectileJsonAdapter.class)
+	@JsonAdapter(IntegerSetAdapter.class)
 	public HashSet<Integer> projectileIds;
+	@JsonAdapter(IntegerSetAdapter.class)
+	public HashSet<Integer> graphicsObjectIds;
 
 	// Called by GSON when parsing JSON
 	public Light()
@@ -43,9 +45,10 @@ public class Light
 		npcIds = new HashSet<>();
 		objectIds = new HashSet<>();
 		projectileIds = new HashSet<>();
+		graphicsObjectIds = new HashSet<>();
 	}
 
-	public Light(String description, Integer worldX, Integer worldY, Integer plane, Integer height, Alignment alignment, int radius, float strength, float[] color, LightType type, float duration, float range, Integer fadeInDuration, HashSet<Integer> npcIds, HashSet<Integer> objectIds, HashSet<Integer> projectileIds)
+	public Light(String description, Integer worldX, Integer worldY, Integer plane, Integer height, Alignment alignment, int radius, float strength, float[] color, LightType type, float duration, float range, Integer fadeInDuration, HashSet<Integer> npcIds, HashSet<Integer> objectIds, HashSet<Integer> projectileIds, HashSet<Integer> graphicsObjectIds)
 	{
 		this.description = description;
 		this.worldX = worldX;
@@ -63,9 +66,10 @@ public class Light
 		this.npcIds = npcIds == null ? new HashSet<>() : npcIds;
 		this.objectIds = objectIds == null ? new HashSet<>() : objectIds;
 		this.projectileIds = projectileIds == null ? new HashSet<>() : projectileIds;
+		this.graphicsObjectIds = graphicsObjectIds == null ? new HashSet<>() : graphicsObjectIds;
 	}
 
-	public static class ProjectileJsonAdapter extends TypeAdapter<HashSet<Integer>>
+	public static class IntegerSetAdapter extends TypeAdapter<HashSet<Integer>>
 	{
 		@Override
 		public HashSet<Integer> read(JsonReader in) throws IOException
@@ -104,7 +108,8 @@ public class Light
 			equal(other.fadeInDuration, fadeInDuration) &&
 			other.npcIds.equals(npcIds) &&
 			other.objectIds.equals(objectIds) &&
-			other.projectileIds.equals(projectileIds);
+			other.projectileIds.equals(projectileIds) &&
+			other.graphicsObjectIds.equals(graphicsObjectIds);
 	}
 
 	@Override
@@ -130,6 +135,7 @@ public class Light
 		hash = hash * 37 + npcIds.hashCode();
 		hash = hash * 37 + objectIds.hashCode();
 		hash = hash * 37 + projectileIds.hashCode();
+		hash = hash * 37 + graphicsObjectIds.hashCode();
 		return hash;
 	}
 

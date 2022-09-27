@@ -90,11 +90,15 @@ public class LightManager
 	final ListMultimap<Integer, Light> OBJECT_LIGHTS = ArrayListMultimap.create();
 	@VisibleForTesting
 	final ListMultimap<Integer, Light> PROJECTILE_LIGHTS = ArrayListMultimap.create();
+	@VisibleForTesting
+	final ListMultimap<Integer, Light> GRAPHICS_OBJECT_LIGHTS = ArrayListMultimap.create();
 
 	@Getter
 	ArrayList<SceneLight> sceneLights = new ArrayList<>();
 	@Getter
 	ArrayList<Projectile> sceneProjectiles = new ArrayList<>();
+	@Getter
+	ArrayList<GraphicsObject> sceneGraphicsObjects = new ArrayList<>();
 
 	long lastFrameTime = -1;
 	boolean configChanged = false;
@@ -126,6 +130,7 @@ public class LightManager
 			NPC_LIGHTS.clear();
 			OBJECT_LIGHTS.clear();
 			PROJECTILE_LIGHTS.clear();
+			GRAPHICS_OBJECT_LIGHTS.clear();
 
 			for (Light l : lights)
 			{
@@ -141,6 +146,7 @@ public class LightManager
 				l.npcIds.forEach(id -> NPC_LIGHTS.put(id, l));
 				l.objectIds.forEach(id -> OBJECT_LIGHTS.put(id, l));
 				l.projectileIds.forEach(id -> PROJECTILE_LIGHTS.put(id, l));
+				l.graphicsObjectIds.forEach(id -> GRAPHICS_OBJECT_LIGHTS.put(id, l));
 			}
 
 			log.debug("Loaded {} lights", lights.length);
@@ -203,9 +209,23 @@ public class LightManager
 
 				light.x = (int) light.projectile.getX();
 				light.y = (int) light.projectile.getY();
-				light.z = (int) light.projectile.getZ();
+				light.z = (int) light.projectile.getZ() - light.height;
 
 				light.visible = projectileLightVisible();
+			}
+
+			if (light.graphicsObject != null)
+			{
+				if (light.graphicsObject.finished())
+				{
+					lightIterator.remove();
+					sceneGraphicsObjects.remove(light.graphicsObject);
+					continue;
+				}
+
+				light.x = light.graphicsObject.getLocation().getX();
+				light.y = light.graphicsObject.getLocation().getY();
+				light.z = light.graphicsObject.getZ() - light.height;
 			}
 
 			if (light.npc != null)
@@ -411,7 +431,6 @@ public class LightManager
 			{
 				return false;
 			}
-
 		}
 
 		return hdPlugin.configProjectileLights;
@@ -580,7 +599,7 @@ public class LightManager
 			}
 
 			SceneLight light = new SceneLight(
-				0, 0, projectile.getFloor(), 0, Alignment.CENTER, l.radius,
+				0, 0, projectile.getFloor(), l.height == null ? 0 : l.height, Alignment.CENTER, l.radius,
 				l.strength, l.color, l.type, l.duration, l.range, 300);
 			light.projectile = projectile;
 			light.x = (int) projectile.getX();
@@ -725,6 +744,23 @@ public class LightManager
 				light.x == localLocation.getX() &&
 				light.y == localLocation.getY() &&
 				light.plane == plane);
+		}
+	}
+
+	public void addGraphicsObjectLight(GraphicsObject graphicsObject)
+	{
+		for (Light l : GRAPHICS_OBJECT_LIGHTS.get(graphicsObject.getId()))
+		{
+			SceneLight light = new SceneLight(
+				0, 0, graphicsObject.getLevel(), l.height == null ? 0 : l.height, Alignment.CENTER, l.radius,
+				l.strength, l.color, l.type, l.duration, l.range, 300);
+			light.graphicsObject = graphicsObject;
+			light.x = graphicsObject.getLocation().getX();
+			light.y = graphicsObject.getLocation().getY();
+			light.z = graphicsObject.getZ();
+
+			sceneGraphicsObjects.add(graphicsObject);
+			sceneLights.add(light);
 		}
 	}
 

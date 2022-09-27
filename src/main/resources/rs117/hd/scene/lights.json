@@ -29272,7 +29272,7 @@
     ]
   },
   {
-    "description": "TOA_GRATED_FLAME_PIT",
+    "description": "TOA_PATH_OF_APMEKEN_GRATED_FLAME_PIT",
     "height": 8,
     "alignment": "CENTER",
     "radius": 300,
@@ -29287,6 +29287,25 @@
     "range": 3,
     "objectIds": [
       45499
+    ]
+  },
+  {
+    "description": "TOA_PATH_OF_APMEKEN_APE_SKULL",
+    "height": 50,
+    "alignment": "CENTER",
+    "radius": 500,
+    "strength": 15,
+    "color": [
+      255,
+      25,
+      15
+    ],
+    "type": "PULSE",
+    "duration": 600,
+    "range": 3,
+    "graphicsObjectIds": [
+      2134,
+      2135
     ]
   },
   {
