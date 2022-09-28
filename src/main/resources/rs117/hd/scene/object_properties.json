@@ -1196,6 +1196,22 @@
     "flatNormals": true
   },
   {
+    "description": "SOPHANEM_PYRAMID",
+    "material": "WALL_STONE",
+    "objectIds": [
+      6617, 6618
+    ],
+    "flatNormals": true,
+    "uvType": "GROUND_PLANE"
+  },
+  {
+    "description": "SOPHANEM_PYRAMID_DOORS",
+    "material": "DIRT_1",
+    "objectIds": [
+      6614, 26622, 26623, 26624, 26625, 19168
+    ]
+  },
+  {
     "description": "CAVE_WALLS_BLEND",
     "material": "ROCK_2",
     "objectIds": [
