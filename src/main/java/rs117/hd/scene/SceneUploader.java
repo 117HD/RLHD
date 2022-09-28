@@ -36,8 +36,8 @@ import rs117.hd.data.materials.Overlay;
 import rs117.hd.data.materials.Material;
 import rs117.hd.data.materials.Underlay;
 import rs117.hd.model.ModelPusher;
-import rs117.hd.scene.objects.ObjectProperties;
-import rs117.hd.scene.objects.ObjectType;
+import rs117.hd.scene.model_overrides.ModelOverride;
+import rs117.hd.scene.model_overrides.ObjectType;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.buffer.GpuFloatBuffer;
 import rs117.hd.utils.buffer.GpuIntBuffer;
@@ -67,7 +67,7 @@ class SceneUploader
 	private ModelPusher modelPusher;
 
 	@Inject
-	private ObjectManager objectManager;
+	private ModelOverrideManager modelOverrideManager;
 
 	public int sceneId = new Random().nextInt();
 	private int offset;
@@ -105,12 +105,14 @@ class SceneUploader
 		log.debug("Scene upload time: {}", stopwatch);
 	}
 
-	private void uploadModel(long hash, Model model, GpuIntBuffer vertexBuffer, GpuFloatBuffer uvBuffer, GpuFloatBuffer normalBuffer, int tileZ, int tileX, int tileY, ObjectProperties objectProperties, ObjectType objectType)
+	private void uploadModel(long hash, Model model, GpuIntBuffer vertexBuffer, GpuFloatBuffer uvBuffer, GpuFloatBuffer normalBuffer, int tileZ, int tileX, int tileY, ObjectType objectType)
 	{
 		if (model.getSceneId() == sceneId)
 		{
 			return; // model has already been uploaded
 		}
+
+		ModelOverride modelOverride = modelOverrideManager.getOverride(hash);
 
 		byte skipObject = 0b00;
 		if (client.getBaseX() + tileX == 2558 && client.getBaseY() + tileY >= 3249 && client.getBaseY() + tileY <= 3252)
@@ -123,7 +125,7 @@ class SceneUploader
 		// pack a bit into bufferoffset that we can use later to hide
 		// some low-importance objects based on Level of Detail setting
 		model.setBufferOffset(offset << 2 | skipObject);
-		if (model.getFaceTextures() != null || (objectProperties != null && objectProperties.material != Material.NONE))
+		if (model.getFaceTextures() != null || modelOverride.material != Material.NONE)
 		{
 			model.setUvBufferOffset(uvOffset);
 		}
@@ -133,7 +135,7 @@ class SceneUploader
 		}
 		model.setSceneId(sceneId);
 
-		final int[] lengths = modelPusher.pushModel(hash, model, vertexBuffer, uvBuffer, normalBuffer, tileX, tileY, tileZ, objectProperties, objectType, true);
+		final int[] lengths = modelPusher.pushModel(hash, model, vertexBuffer, uvBuffer, normalBuffer, tileX, tileY, tileZ, modelOverride, objectType, true);
 
 		offset += lengths[0];
 		uvOffset += lengths[1];
@@ -197,63 +199,51 @@ class SceneUploader
 			uvOffset += uvBufferLength;
 		}
 
-		ObjectProperties objectProperties;
-
 		WallObject wallObject = tile.getWallObject();
 		if (wallObject != null)
 		{
-			objectProperties = objectManager.getObjectProperties(tile.getWallObject().getId());
-
 			Renderable renderable1 = wallObject.getRenderable1();
 			if (renderable1 instanceof Model)
 			{
-				Model model = (Model) renderable1;
-				uploadModel(wallObject.getHash(), model, vertexBuffer, uvBuffer, normalBuffer, tileZ, tileX,
-					tileY, objectProperties, ObjectType.WALL_OBJECT);
+				uploadModel(wallObject.getHash(), (Model) renderable1, vertexBuffer, uvBuffer, normalBuffer, tileZ, tileX,
+					tileY, ObjectType.WALL_OBJECT);
 			}
 
 			Renderable renderable2 = wallObject.getRenderable2();
 			if (renderable2 instanceof Model)
 			{
-				Model model = (Model) renderable2;
-				uploadModel(wallObject.getHash(), model, vertexBuffer, uvBuffer, normalBuffer, tileZ, tileX,
-					tileY, objectProperties, ObjectType.WALL_OBJECT);
+				uploadModel(wallObject.getHash(), (Model) renderable2, vertexBuffer, uvBuffer, normalBuffer, tileZ, tileX,
+					tileY, ObjectType.WALL_OBJECT);
 			}
 		}
 
 		GroundObject groundObject = tile.getGroundObject();
 		if (groundObject != null)
 		{
-			objectProperties = objectManager.getObjectProperties(tile.getGroundObject().getId());
-
 			Renderable renderable = groundObject.getRenderable();
 			if (renderable instanceof Model)
 			{
-				Model model = (Model) renderable;
-				uploadModel(groundObject.getHash(), model, vertexBuffer, uvBuffer, normalBuffer, tileZ, tileX,
-					tileY, objectProperties, ObjectType.GROUND_OBJECT);
+				uploadModel(groundObject.getHash(), (Model) renderable, vertexBuffer, uvBuffer, normalBuffer, tileZ, tileX,
+					tileY, ObjectType.GROUND_OBJECT);
 			}
 		}
 
 		DecorativeObject decorativeObject = tile.getDecorativeObject();
 		if (decorativeObject != null)
 		{
-			objectProperties = objectManager.getObjectProperties(tile.getDecorativeObject().getId());
 
 			Renderable renderable = decorativeObject.getRenderable();
 			if (renderable instanceof Model)
 			{
-				Model model = (Model) renderable;
-				uploadModel(decorativeObject.getHash(), model, vertexBuffer, uvBuffer, normalBuffer, tileZ, tileX,
-					tileY, objectProperties, ObjectType.DECORATIVE_OBJECT);
+				uploadModel(decorativeObject.getHash(), (Model) renderable, vertexBuffer, uvBuffer, normalBuffer, tileZ, tileX,
+					tileY, ObjectType.DECORATIVE_OBJECT);
 			}
 
 			Renderable renderable2 = decorativeObject.getRenderable2();
 			if (renderable2 instanceof Model)
 			{
-				Model model = (Model) renderable2;
-				uploadModel(decorativeObject.getHash(), model, vertexBuffer, uvBuffer, normalBuffer, tileZ, tileX,
-					tileY, objectProperties, ObjectType.DECORATIVE_OBJECT);
+				uploadModel(decorativeObject.getHash(), (Model) renderable2, vertexBuffer, uvBuffer, normalBuffer, tileZ, tileX,
+					tileY, ObjectType.DECORATIVE_OBJECT);
 			}
 		}
 
@@ -265,14 +255,11 @@ class SceneUploader
 				continue;
 			}
 
-			objectProperties = objectManager.getObjectProperties(gameObject.getId());
-
 			Renderable renderable = gameObject.getRenderable();
 			if (renderable instanceof Model)
 			{
-				Model model = (Model) gameObject.getRenderable();
-				uploadModel(gameObject.getHash(), model, vertexBuffer, uvBuffer, normalBuffer, tileZ, tileX,
-					tileY, objectProperties, ObjectType.GAME_OBJECT);
+				uploadModel(gameObject.getHash(), (Model) gameObject.getRenderable(), vertexBuffer, uvBuffer, normalBuffer, tileZ, tileX,
+					tileY, ObjectType.GAME_OBJECT);
 			}
 		}
 	}

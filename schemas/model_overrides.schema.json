@@ -1,35 +1,43 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "object_properties.schema.json",
-  "title": "Object Properties",
+  "$id": "model_overrides.schema.json",
+  "title": "Model Overrides",
   "type": "array",
   "items": {
     "type": "object",
     "additionalProperties": false,
+    "required": [ "description" ],
     "properties": {
       "description": {
         "type": "string",
         "description": "Description of which objects the properties apply to."
       },
-      "material": {
-        "type": "string",
-        "description": "Case-sensitive name of the material to apply."
-      },
-      "objectIds": {
+      "npcIds": {
         "type": "array",
-        "description": "A set of object IDs or ObjectID keys to apply properties to.",
+        "description": "A set of NPC IDs or NpcID keys that the override should apply to.",
         "items": {
           "type": [ "integer", "string" ]
         }
       },
-      "flatNormals": {
-        "type": "boolean",
-        "description": "Whether flat normals should be used instead of smooth normals. Defaults to false."
+      "objectIds": {
+        "type": "array",
+        "description": "A set of object IDs or ObjectID keys that the override should apply to.",
+        "items": {
+          "type": [ "integer", "string" ]
+        }
+      },
+      "material": {
+        "type": "string",
+        "description": "Case-sensitive name of the material to apply."
       },
       "uvType": {
         "type": "string",
         "description": "What to base UV coordinates on for object texturing. Defaults to GEOMETRY.",
         "enum": [ "GEOMETRY", "GROUND_PLANE" ]
+      },
+      "flatNormals": {
+        "type": "boolean",
+        "description": "Whether flat normals should be used instead of smooth normals. Defaults to false."
       },
       "tzHaarRecolorType": {
         "type": "string",
@@ -40,6 +48,13 @@
         "type": "string",
         "description": "Whether to inherit color from the overlay or underlay of the tile beneath. Defaults to NONE.",
         "enum": [ "NONE", "OVERLAY", "UNDERLAY" ]
+      },
+      "hideInAreas": {
+        "type": "array",
+        "description": "An array of axis-aligned bounding boxes where the model should be hidden.",
+        "items": {
+          "$ref": "aabb.schema.json"
+        }
       }
     }
   }

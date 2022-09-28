@@ -61,9 +61,9 @@ import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.Template;
 import rs117.hd.scene.*;
 import rs117.hd.scene.lights.SceneLight;
-import rs117.hd.scene.ObjectManager;
-import rs117.hd.scene.objects.ObjectProperties;
-import rs117.hd.scene.objects.ObjectType;
+import rs117.hd.scene.ModelOverrideManager;
+import rs117.hd.scene.model_overrides.ModelOverride;
+import rs117.hd.scene.model_overrides.ObjectType;
 import rs117.hd.utils.*;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.GpuFloatBuffer;
@@ -137,7 +137,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	private LightManager lightManager;
 
 	@Inject
-	private ObjectManager objectManager;
+	private ModelOverrideManager modelOverrideManager;
 
 	@Inject
 	private EnvironmentManager environmentManager;
@@ -544,7 +544,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				lastAntiAliasingMode = null;
 
 				lightManager.startUp();
-				objectManager.startUp();
+				modelOverrideManager.startUp();
 
 				if (client.getGameState() == GameState.LOGGED_IN)
 				{
@@ -2402,15 +2402,15 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	@Override
 	public void draw(Renderable renderable, int orientation, int pitchSin, int pitchCos, int yawSin, int yawCos, int x, int y, int z, long hash)
 	{
+		if (modelOverrideManager.shouldHideModel(hash, x, z)) {
+			return;
+		}
+
 		Model model = renderable instanceof Model ? (Model) renderable : renderable.getModel();
 		if (model == null || model.getFaceCount() == 0) {
 			// skip models with zero faces
 			// this does seem to happen sometimes (mostly during loading)
 			// should save some CPU cycles here and there
-			return;
-		}
-
-		if (objectManager.shouldHide(ModelUtils.getIdOrIndex(hash), ModelUtils.getWorldLocation(client, x, z))) {
 			return;
 		}
 
@@ -2485,13 +2485,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 			TempModelInfo tempModelInfo = tempModelInfoMap.get(batchHash);
 			if (!config.enableModelBatching() || tempModelInfo == null || tempModelInfo.getFaceCount() != model.getFaceCount()) {
-				int modelType = ModelUtils.getModelType(hash);
-				ObjectProperties objectProperties = ObjectProperties.NONE;
-				if (modelType == ModelUtils.TYPE_OBJECT) {
-					objectProperties = objectManager.getObjectProperties(ModelUtils.getIdOrIndex(hash));
-				}
-
-				final int[] lengths = modelPusher.pushModel(hash, model, vertexBuffer, uvBuffer, normalBuffer, 0, 0, 0, objectProperties, ObjectType.NONE, !config.enableModelCaching());
+				ModelOverride modelOverride = modelOverrideManager.getOverride(hash);
+				final int[] lengths = modelPusher.pushModel(hash, model, vertexBuffer, uvBuffer, normalBuffer, 0, 0, 0, modelOverride, ObjectType.NONE, !config.enableModelCaching());
 				final int faceCount = lengths[0] / 3;
 				final int actualTempUvOffset = lengths[1] > 0 ? tempUvOffset : -1;
 

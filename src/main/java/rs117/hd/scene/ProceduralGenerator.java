@@ -46,9 +46,9 @@ import rs117.hd.data.materials.GroundMaterial;
 import rs117.hd.data.materials.Material;
 import rs117.hd.data.materials.Overlay;
 import rs117.hd.data.materials.Underlay;
-import rs117.hd.scene.objects.ObjectProperties;
-import rs117.hd.scene.objects.ObjectType;
-import rs117.hd.scene.objects.TzHaarRecolorType;
+import rs117.hd.scene.model_overrides.ModelOverride;
+import rs117.hd.scene.model_overrides.ObjectType;
+import rs117.hd.scene.model_overrides.TzHaarRecolorType;
 import rs117.hd.utils.HDUtils;
 import static rs117.hd.utils.HDUtils.dotNormal3Lights;
 
@@ -1159,7 +1159,7 @@ public class ProceduralGenerator
 	final int gradientBottom = 200;
 	final int gradientTop = -200;
 
-	public int[][] recolorTzHaar(ObjectProperties objectProperties, int aY, int bY, int cY, int packedAlphaPriority, ObjectType objectType, int color1H, int color1S, int color1L, int color2H, int color2S, int color2L, int color3H, int color3S, int color3L)
+	public int[][] recolorTzHaar(ModelOverride modelOverride, int aY, int bY, int cY, int packedAlphaPriority, ObjectType objectType, int color1S, int color1L, int color2S, int color2L, int color3S, int color3L)
 	{
 		// recolor tzhaar to look like the 2008+ HD version
 		if (objectType == ObjectType.GROUND_OBJECT)
@@ -1174,11 +1174,11 @@ public class ProceduralGenerator
 
 		// shift model hues from red->yellow
 		int hue = 7;
-		color1H = hue;
-		color2H = hue;
-		color3H = hue;
+		int color1H = hue;
+		int color2H = hue;
+		int color3H = hue;
 
-		if (objectProperties.tzHaarRecolorType == TzHaarRecolorType.GRADIENT)
+		if (modelOverride.tzHaarRecolorType == TzHaarRecolorType.GRADIENT)
 		{
 			// apply coloring to the rocky walls
 			if (color1L < 20)
@@ -1205,7 +1205,7 @@ public class ProceduralGenerator
 				color3L = (int)HDUtils.lerp(gradientDarkColor[2], gradientBaseColor[2], pos);
 			}
 		}
-		else if (objectProperties.tzHaarRecolorType == TzHaarRecolorType.HUE_SHIFT)
+		else if (modelOverride.tzHaarRecolorType == TzHaarRecolorType.HUE_SHIFT)
 		{
 			// objects around the entrance to The Inferno only need a hue-shift
 			// and very slight lightening to match the lightened terrain

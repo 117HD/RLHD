@@ -1,11 +1,5 @@
 [
   {
-    "description": "NONE",
-    "objectIds": [
-      -1
-    ]
-  },
-  {
     "description": "TREES",
     "material": "BARK",
     "objectIds": [
@@ -1427,5 +1421,13 @@
       "BARRIER_43849"
     ],
     "material": "UNLIT"
+  },
+  {
+    "description": "Tombs of Amascut Baba boulders",
+    "npcIds": [
+      "BOULDER_11782",
+      "BOULDER_11783"
+    ],
+    "material": "WHITE"
   }
 ]
