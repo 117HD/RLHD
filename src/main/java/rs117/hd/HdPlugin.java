@@ -87,7 +87,6 @@ import java.util.Map;
 
 import static org.jocl.CL.*;
 import static org.lwjgl.opengl.GL43C.*;
-import static rs117.hd.HdPluginConfig.KEY_REMOVE_VANILLA_SHADING;
 import static rs117.hd.HdPluginConfig.KEY_WINTER_THEME;
 import static rs117.hd.utils.ResourcePath.path;
 
@@ -381,7 +380,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	public boolean configExpandShadowDraw = false;
 	public boolean configHdInfernalTexture = true;
 	public boolean configWinterTheme = true;
-	public boolean configRemoveVanillaShading = false;
 	public int configMaxDynamicLights;
 
 	public int[] camTarget = new int[3];
@@ -419,7 +417,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		configExpandShadowDraw = config.expandShadowDraw();
 		configHdInfernalTexture = config.hdInfernalTexture();
 		configWinterTheme = config.winterTheme();
-		configRemoveVanillaShading = config.removeVanillaShading();
 		configMaxDynamicLights = config.maxDynamicLights().getValue();
 
 		clientThread.invoke(() ->
@@ -2252,13 +2249,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			case "objectTextures":
 			case "tzhaarHD":
 			case KEY_WINTER_THEME:
-			case KEY_REMOVE_VANILLA_SHADING:
 				configGroundBlending = config.groundBlending();
 				configGroundTextures = config.groundTextures();
 				configObjectTextures = config.objectTextures();
 				configTzhaarHD = config.tzhaarHD();
 				configWinterTheme = config.winterTheme();
-				configRemoveVanillaShading = config.removeVanillaShading();
 				clientThread.invoke(() -> {
 					modelPusher.clearModelCache();
 					reloadScene();

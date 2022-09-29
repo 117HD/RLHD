@@ -545,21 +545,6 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
-	String KEY_REMOVE_VANILLA_SHADING = "removeVanillaShading";
-	@ConfigItem(
-		keyName = KEY_REMOVE_VANILLA_SHADING,
-		name = "Remove vanilla shading",
-		description =
-			"Previously, HD attempted to remove vanilla shading by approximately increasing the brightness of colors<br> " +
-			"by the same amount as the base game would darken them. This worked alright for the most part, but it<br> " +
-			"resulted in white colors appearing more like dull greys. Enabling this option brings back that old behaviour.",
-		position = 304,
-		section = miscellaneousSettings
-	)
-	default boolean removeVanillaShading() {
-		return false;
-	}
-
 	/*====== Experimental settings ======*/
 
 	@ConfigSection(

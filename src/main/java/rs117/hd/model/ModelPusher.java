@@ -463,41 +463,44 @@ public class ModelPusher {
         int color3S = color3 >> 7 & 0x7;
         int color3L = color3 & 0x7F;
 
-        int maxBrightness = 55;
-        if (hdPlugin.configRemoveVanillaShading) {
-            // reduce the effect of the baked shading by approximately inverting the process by which
-            // the shading is added initially.
-            int lightenA = (int) (Math.max((color1L - ignoreLowLightness), 0) * lightnessMultiplier) + baseLighten;
-            float dotA = Math.max(dotNormal3Lights(new float[]{
-                xVertexNormals[triA],
-                yVertexNormals[triA],
-                zVertexNormals[triA],
-            }), 0);
-            color1L = (int) HDUtils.lerp(color1L, lightenA, dotA);
+        // Approximately invert vanilla shading by brightening vertices that were likely darkened by vanilla based on
+        // vertex normals. This process is error-prone, as not all models are lit by vanilla with the same light
+        // direction, and some models even have baked lighting built into the model itself. In some cases, increasing
+        // brightness in this way leads to overly bright colors, so we are forced to cap brightness at a relatively
+        // low value for it to look acceptable in most cases.
+        int lightenA = (int) (Math.max((color1L - ignoreLowLightness), 0) * lightnessMultiplier) + baseLighten;
+        float dotA = Math.max(dotNormal3Lights(new float[]{
+            xVertexNormals[triA],
+            yVertexNormals[triA],
+            zVertexNormals[triA],
+        }), 0);
+        color1L = (int) HDUtils.lerp(color1L, lightenA, dotA);
 
-            int lightenB = (int) (Math.max((color2L - ignoreLowLightness), 0) * lightnessMultiplier) + baseLighten;
-            float dotB = Math.max(dotNormal3Lights(new float[]{
-                xVertexNormals[triB],
-                yVertexNormals[triB],
-                zVertexNormals[triB],
-            }), 0);
-            color2L = (int) HDUtils.lerp(color2L, lightenB, dotB);
+        int lightenB = (int) (Math.max((color2L - ignoreLowLightness), 0) * lightnessMultiplier) + baseLighten;
+        float dotB = Math.max(dotNormal3Lights(new float[]{
+            xVertexNormals[triB],
+            yVertexNormals[triB],
+            zVertexNormals[triB],
+        }), 0);
+        color2L = (int) HDUtils.lerp(color2L, lightenB, dotB);
 
-            int lightenC = (int) (Math.max((color3L - ignoreLowLightness), 0) * lightnessMultiplier) + baseLighten;
-            float dotC = Math.max(dotNormal3Lights(new float[]{
-                xVertexNormals[triC],
-                yVertexNormals[triC],
-                zVertexNormals[triC],
-            }), 0);
-            color3L = (int) HDUtils.lerp(color3L, lightenC, dotC);
+        int lightenC = (int) (Math.max((color3L - ignoreLowLightness), 0) * lightnessMultiplier) + baseLighten;
+        float dotC = Math.max(dotNormal3Lights(new float[]{
+            xVertexNormals[triC],
+            yVertexNormals[triC],
+            zVertexNormals[triC],
+        }), 0);
+        color3L = (int) HDUtils.lerp(color3L, lightenC, dotC);
 
-            if (faceTextures != null && faceTextures[face] != -1) {
-                maxBrightness = 90;
-                // set textured faces to pure white as they are harder to remove shadows from for some reason
-                color1H = color2H = color3H = 0;
-                color1S = color2S = color3S = 0;
-                color1L = color2L = color3L = 127;
-            }
+        int maxBrightness1 = (int) HDUtils.lerp(127, 55, (float) Math.pow((float) color1S / 0x7, .05));
+        int maxBrightness2 = (int) HDUtils.lerp(127, 55, (float) Math.pow((float) color2S / 0x7, .05));
+        int maxBrightness3 = (int) HDUtils.lerp(127, 55, (float) Math.pow((float) color3S / 0x7, .05));
+        if (faceTextures != null && faceTextures[face] != -1) {
+            // set textured faces to pure white as they are harder to remove shadows from for some reason
+            color1H = color2H = color3H = 0;
+            color1S = color2S = color3S = 0;
+            color1L = color2L = color3L = 127;
+            maxBrightness1 = maxBrightness2 = maxBrightness3 = 127;
         }
 
         if (tile != null && modelOverride.inheritTileColorType != InheritTileColorType.NONE) {
@@ -513,21 +516,19 @@ public class ModelPusher {
                     tileColorHSL = HDUtils.colorIntToHSL(tilePaint.getSwColor());
 
                     // average saturation and lightness
-                    tileColorHSL[1] =
-                            (
-                                    tileColorHSL[1] +
-                                            HDUtils.colorIntToHSL(tilePaint.getSeColor())[1] +
-                                            HDUtils.colorIntToHSL(tilePaint.getNwColor())[1] +
-                                            HDUtils.colorIntToHSL(tilePaint.getNeColor())[1]
-                            ) / 4;
+                    tileColorHSL[1] = (
+                        tileColorHSL[1] +
+                        HDUtils.colorIntToHSL(tilePaint.getSeColor())[1] +
+                        HDUtils.colorIntToHSL(tilePaint.getNwColor())[1] +
+                        HDUtils.colorIntToHSL(tilePaint.getNeColor())[1]
+                    ) / 4;
 
-                    tileColorHSL[2] =
-                            (
-                                    tileColorHSL[2] +
-                                            HDUtils.colorIntToHSL(tilePaint.getSeColor())[2] +
-                                            HDUtils.colorIntToHSL(tilePaint.getNwColor())[2] +
-                                            HDUtils.colorIntToHSL(tilePaint.getNeColor())[2]
-                            ) / 4;
+                    tileColorHSL[2] = (
+                        tileColorHSL[2] +
+                        HDUtils.colorIntToHSL(tilePaint.getSeColor())[2] +
+                        HDUtils.colorIntToHSL(tilePaint.getNwColor())[2] +
+                        HDUtils.colorIntToHSL(tilePaint.getNeColor())[2]
+                    ) / 4;
 
                     int overlayId = client.getScene().getOverlayIds()[tileZ][tileX][tileY];
                     int underlayId = client.getScene().getUnderlayIds()[tileZ][tileX][tileY];
@@ -596,11 +597,10 @@ public class ModelPusher {
             packedAlphaPriority = tzHaarRecolored[3][0];
         }
 
-        if (hdPlugin.configRemoveVanillaShading) {
-            color1L = HDUtils.clamp(color1L, 0, maxBrightness);
-            color2L = HDUtils.clamp(color2L, 0, maxBrightness);
-            color3L = HDUtils.clamp(color3L, 0, maxBrightness);
-        }
+        // Clamp brightness as detailed above
+        color1L = HDUtils.clamp(color1L, 0, maxBrightness1);
+        color2L = HDUtils.clamp(color2L, 0, maxBrightness2);
+        color3L = HDUtils.clamp(color3L, 0, maxBrightness3);
 
         color1 = (color1H << 3 | color1S) << 7 | color1L;
         color2 = (color2H << 3 | color2S) << 7 | color2L;
