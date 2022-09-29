@@ -28,7 +28,6 @@ package rs117.hd.scene;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
-import com.google.common.primitives.Ints;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
@@ -63,6 +62,8 @@ import static rs117.hd.utils.ResourcePath.path;
 public class LightManager
 {
 	private static final String ENV_LIGHTS_CONFIG = "RLHD_LIGHTS_PATH";
+	private static final ResourcePath lightsPath = Env.getPathOrDefault(ENV_LIGHTS_CONFIG,
+		() -> path(LightManager.class,"lights.json"));
 
 	@Inject
 	private ConfigManager configManager;
@@ -161,8 +162,7 @@ public class LightManager
 	public void startUp()
 	{
 		entityHiderConfig = configManager.getConfig(EntityHiderConfig.class);
-		Env.getPathOrDefault(ENV_LIGHTS_CONFIG, () -> path(LightManager.class,"lights.json"))
-			.watch(this::loadConfig);
+		lightsPath.watch(this::loadConfig);
 	}
 
 	public void shutDown()
@@ -459,6 +459,7 @@ public class LightManager
 
 		for (SceneLight light : WORLD_LIGHTS)
 		{
+			// noinspection ConstantConditions
 			if (light.worldX >= sceneMinX && light.worldX <= sceneMaxX && light.worldY >= sceneMinY && light.worldY <= sceneMaxY)
 			{
 				sceneLights.add(light);
@@ -492,9 +493,6 @@ public class LightManager
 								break;
 							case 4:
 								orientation = 1536;
-								break;
-							case 8:
-								orientation = 0;
 								break;
 							case 16:
 								orientation = 768;
@@ -708,10 +706,10 @@ public class LightManager
 			int tileMinY = (int) Math.floor(tileY);
 			int tileMaxX = tileMinX + 1;
 			int tileMaxY = tileMinY + 1;
-			tileMinX = Ints.constrainToRange(tileMinX, 0, Constants.SCENE_SIZE - 1);
-			tileMinY = Ints.constrainToRange(tileMinY, 0, Constants.SCENE_SIZE - 1);
-			tileMaxX = Ints.constrainToRange(tileMaxX, 0, Constants.SCENE_SIZE - 1);
-			tileMaxY = Ints.constrainToRange(tileMaxY, 0, Constants.SCENE_SIZE - 1);
+			tileMinX = HDUtils.clamp(tileMinX, 0, Constants.SCENE_SIZE - 1);
+			tileMinY = HDUtils.clamp(tileMinY, 0, Constants.SCENE_SIZE - 1);
+			tileMaxX = HDUtils.clamp(tileMaxX, 0, Constants.SCENE_SIZE - 1);
+			tileMaxY = HDUtils.clamp(tileMaxY, 0, Constants.SCENE_SIZE - 1);
 
 			float heightNorth = HDUtils.lerp(
 				client.getTileHeights()[plane][tileMinX][tileMaxY],
@@ -734,17 +732,14 @@ public class LightManager
 
 	public void removeObjectLight(TileObject tileObject)
 	{
-		for (Light l : OBJECT_LIGHTS.get(tileObject.getId()))
-		{
-			LocalPoint localLocation = tileObject.getLocalLocation();
-			int plane = tileObject.getWorldLocation().getPlane();
+		LocalPoint localLocation = tileObject.getLocalLocation();
+		int plane = tileObject.getWorldLocation().getPlane();
 
-			sceneLights.removeIf(light ->
-				light.object == tileObject &&
-				light.x == localLocation.getX() &&
-				light.y == localLocation.getY() &&
-				light.plane == plane);
-		}
+		sceneLights.removeIf(light ->
+			light.object == tileObject &&
+			light.x == localLocation.getX() &&
+			light.y == localLocation.getY() &&
+			light.plane == plane);
 	}
 
 	public void addGraphicsObjectLight(GraphicsObject graphicsObject)

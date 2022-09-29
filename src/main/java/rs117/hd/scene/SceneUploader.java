@@ -46,6 +46,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Random;
 
+@SuppressWarnings("UnnecessaryLocalVariable")
 @Singleton
 @Slf4j
 public
@@ -160,8 +161,8 @@ class SceneUploader
 			int[] uploadedTilePaintData = upload(
 				tile, sceneTilePaint,
 				tileZ, tileX, tileY,
-				vertexBuffer, uvBuffer, normalBuffer,
-				0, 0);
+				vertexBuffer, uvBuffer, normalBuffer
+			);
 
 			final int bufferLength = uploadedTilePaintData[0];
 			final int uvBufferLength = uploadedTilePaintData[1];
@@ -183,8 +184,8 @@ class SceneUploader
 			int[] uploadedTileModelData = upload(
 				tile, sceneTileModel,
 				tileZ, tileX, tileY,
-				vertexBuffer, uvBuffer, normalBuffer,
-				0, 0);
+				vertexBuffer, uvBuffer, normalBuffer
+			);
 
 			final int bufferLength = uploadedTileModelData[0];
 			final int uvBufferLength = uploadedTileModelData[1];
@@ -264,7 +265,7 @@ class SceneUploader
 		}
 	}
 
-	int[] upload(Tile tile, SceneTilePaint sceneTilePaint, int tileZ, int tileX, int tileY, GpuIntBuffer vertexBuffer, GpuFloatBuffer uvBuffer, GpuFloatBuffer normalBuffer, int offsetX, int offsetY)
+	int[] upload(Tile tile, SceneTilePaint sceneTilePaint, int tileZ, int tileX, int tileY, GpuIntBuffer vertexBuffer, GpuFloatBuffer uvBuffer, GpuFloatBuffer normalBuffer)
 	{
 		int bufferLength = 0;
 		int uvBufferLength = 0;
@@ -273,13 +274,13 @@ class SceneUploader
 		int[] bufferLengths;
 
 		bufferLengths = uploadHDTilePaintSurface(tile, sceneTilePaint, tileZ, tileX, tileY,
-			vertexBuffer, uvBuffer, normalBuffer, 0, 0);
+			vertexBuffer, uvBuffer, normalBuffer);
 		bufferLength += bufferLengths[0];
 		uvBufferLength += bufferLengths[1];
 		underwaterTerrain += bufferLengths[2];
 
 		bufferLengths = uploadHDTilePaintUnderwater(tile, sceneTilePaint, tileZ, tileX, tileY,
-			vertexBuffer, uvBuffer, normalBuffer, 0, 0);
+			vertexBuffer, uvBuffer, normalBuffer);
 		bufferLength += bufferLengths[0];
 		uvBufferLength += bufferLengths[1];
 		underwaterTerrain += bufferLengths[2];
@@ -287,19 +288,10 @@ class SceneUploader
 		return new int[]{bufferLength, uvBufferLength, underwaterTerrain};
 	}
 
-	int[] uploadHDTilePaintSurface(Tile tile, SceneTilePaint sceneTilePaint, int tileZ, int tileX, int tileY, GpuIntBuffer vertexBuffer, GpuFloatBuffer uvBuffer, GpuFloatBuffer normalBuffer, int offsetX, int offsetY)
+	int[] uploadHDTilePaintSurface(Tile tile, SceneTilePaint sceneTilePaint, int tileZ, int tileX, int tileY, GpuIntBuffer vertexBuffer, GpuFloatBuffer uvBuffer, GpuFloatBuffer normalBuffer)
 	{
-		boolean ignoreTile = false;
-
-		if (sceneTilePaint.getNeColor() == 12345678)
-		{
-			// ignore certain tiles that aren't supposed to be visible but
-			// we can still make a height-adjusted version of it for underwater
-			ignoreTile = true;
-		}
-
-		final int localX = offsetX;
-		final int localY = offsetY;
+		final int localX = 0;
+		final int localY = 0;
 
 		int baseX = client.getBaseX();
 		int baseY = client.getBaseY();
@@ -329,7 +321,9 @@ class SceneUploader
 		int nwVertexKey = vertexKeys[2];
 		int neVertexKey = vertexKeys[3];
 
-		if (!ignoreTile)
+		// Ignore certain tiles that aren't supposed to be visible,
+		// but which we can still make a height-adjusted version of for underwater
+		if (sceneTilePaint.getNeColor() != 12345678)
 		{
 			int swColor = sceneTilePaint.getSwColor();
 			int seColor = sceneTilePaint.getSeColor();
@@ -522,13 +516,13 @@ class SceneUploader
 		return new int[]{bufferLength, uvBufferLength, underwaterTerrain};
 	}
 
-	int[] uploadHDTilePaintUnderwater(Tile tile, SceneTilePaint sceneTilePaint, int tileZ, int tileX, int tileY, GpuIntBuffer vertexBuffer, GpuFloatBuffer uvBuffer, GpuFloatBuffer normalBuffer, int offsetX, int offsetY)
+	int[] uploadHDTilePaintUnderwater(Tile tile, SceneTilePaint sceneTilePaint, int tileZ, int tileX, int tileY, GpuIntBuffer vertexBuffer, GpuFloatBuffer uvBuffer, GpuFloatBuffer normalBuffer)
 	{
 
 		int baseX = client.getBaseX();
 		int baseY = client.getBaseY();
 
-		if (baseX + offsetX >= 2816 && baseX + offsetX <= 2970 && baseY + offsetY <= 5375 && baseY + offsetY >= 5220)
+		if (baseX >= 2816 && baseX <= 2970 && baseY <= 5375 && baseY >= 5220)
 		{
 			// fix for God Wars Dungeon's water rendering over zamorak bridge
 			return new int[]{0, 0, 0};
@@ -544,14 +538,14 @@ class SceneUploader
 		int uvBufferLength = 0;
 		int underwaterTerrain = 0;
 
-		int localSwVertexX = offsetX;
-		int localSwVertexY = offsetY;
-		int localSeVertexX = offsetX + Perspective.LOCAL_TILE_SIZE;
-		int localSeVertexY = offsetY;
-		int localNwVertexX = offsetX;
-		int localNwVertexY = offsetY + Perspective.LOCAL_TILE_SIZE;
-		int localNeVertexX = offsetX + Perspective.LOCAL_TILE_SIZE;
-		int localNeVertexY = offsetY + Perspective.LOCAL_TILE_SIZE;
+		int localSwVertexX = 0;
+		int localSwVertexY = 0;
+		int localSeVertexX = Perspective.LOCAL_TILE_SIZE;
+		int localSeVertexY = 0;
+		int localNwVertexX = 0;
+		int localNwVertexY = Perspective.LOCAL_TILE_SIZE;
+		int localNeVertexX = Perspective.LOCAL_TILE_SIZE;
+		int localNeVertexY = Perspective.LOCAL_TILE_SIZE;
 
 		int[] vertexKeys = proceduralGenerator.tileVertexKeys(tile);
 		int swVertexKey = vertexKeys[0];
@@ -642,7 +636,7 @@ class SceneUploader
 		return new int[]{bufferLength, uvBufferLength, underwaterTerrain};
 	}
 
-	int[] upload(Tile tile, SceneTileModel sceneTileModel, int tileZ, int tileX, int tileY, GpuIntBuffer vertexBuffer, GpuFloatBuffer uvBuffer, GpuFloatBuffer normalBuffer, int offsetX, int offsetY)
+	int[] upload(Tile tile, SceneTileModel sceneTileModel, int tileZ, int tileX, int tileY, GpuIntBuffer vertexBuffer, GpuFloatBuffer uvBuffer, GpuFloatBuffer normalBuffer)
 	{
 		int bufferLength = 0;
 		int uvBufferLength = 0;
@@ -650,12 +644,12 @@ class SceneUploader
 
 		int[] bufferLengths;
 
-		bufferLengths = uploadHDTileModelSurface(tile, sceneTileModel, tileZ, tileX, tileY, vertexBuffer, uvBuffer, normalBuffer, offsetX, offsetY);
+		bufferLengths = uploadHDTileModelSurface(tile, sceneTileModel, tileZ, tileX, tileY, vertexBuffer, uvBuffer, normalBuffer);
 		bufferLength += bufferLengths[0];
 		uvBufferLength += bufferLengths[1];
 		underwaterTerrain += bufferLengths[2];
 
-		bufferLengths = uploadHDTileModelUnderwater(tile, sceneTileModel, tileZ, tileX, tileY, vertexBuffer, uvBuffer, normalBuffer, offsetX, offsetY);
+		bufferLengths = uploadHDTileModelUnderwater(tile, sceneTileModel, tileZ, tileX, tileY, vertexBuffer, uvBuffer, normalBuffer);
 		bufferLength += bufferLengths[0];
 		uvBufferLength += bufferLengths[1];
 		underwaterTerrain += bufferLengths[2];
@@ -663,7 +657,7 @@ class SceneUploader
 		return new int[]{bufferLength, uvBufferLength, underwaterTerrain};
 	}
 
-	int[] uploadHDTileModelSurface(Tile tile, SceneTileModel sceneTileModel, int tileZ, int tileX, int tileY, GpuIntBuffer vertexBuffer, GpuFloatBuffer uvBuffer, GpuFloatBuffer normalBuffer, int offsetX, int offsetY)
+	int[] uploadHDTileModelSurface(Tile tile, SceneTileModel sceneTileModel, int tileZ, int tileX, int tileY, GpuIntBuffer vertexBuffer, GpuFloatBuffer uvBuffer, GpuFloatBuffer normalBuffer)
 	{
 		int bufferLength = 0;
 		int uvBufferLength = 0;
@@ -833,9 +827,9 @@ class SceneUploader
 			normalBuffer.put(normalsC[0], normalsC[2], normalsC[1], cTerrainData);
 
 			vertexBuffer.ensureCapacity(12);
-			vertexBuffer.put(localVertices[0][0] + offsetX, localVertices[0][2], localVertices[0][1] + offsetY, colorA);
-			vertexBuffer.put(localVertices[1][0] + offsetX, localVertices[1][2], localVertices[1][1] + offsetY, colorB);
-			vertexBuffer.put(localVertices[2][0] + offsetX, localVertices[2][2], localVertices[2][1] + offsetY, colorC);
+			vertexBuffer.put(localVertices[0][0], localVertices[0][2], localVertices[0][1], colorA);
+			vertexBuffer.put(localVertices[1][0], localVertices[1][2], localVertices[1][1], colorB);
+			vertexBuffer.put(localVertices[2][0], localVertices[2][2], localVertices[2][1], colorC);
 
 			bufferLength += 3;
 
@@ -854,7 +848,7 @@ class SceneUploader
 		return new int[]{bufferLength, uvBufferLength, underwaterTerrain};
 	}
 
-	int[] uploadHDTileModelUnderwater(Tile tile, SceneTileModel sceneTileModel, int tileZ, int tileX, int tileY, GpuIntBuffer vertexBuffer, GpuFloatBuffer uvBuffer, GpuFloatBuffer normalBuffer, int offsetX, int offsetY)
+	int[] uploadHDTileModelUnderwater(Tile tile, SceneTileModel sceneTileModel, int tileZ, int tileX, int tileY, GpuIntBuffer vertexBuffer, GpuFloatBuffer uvBuffer, GpuFloatBuffer normalBuffer)
 	{
 		int bufferLength = 0;
 		int uvBufferLength = 0;
@@ -871,7 +865,7 @@ class SceneUploader
 		int baseX = client.getBaseX();
 		int baseY = client.getBaseY();
 
-		if (baseX + offsetX >= 2816 && baseX + offsetX <= 2970 && baseY + offsetY <= 5375 && baseY + offsetY >= 5220)
+		if (baseX >= 2816 && baseX <= 2970 && baseY <= 5375 && baseY >= 5220)
 		{
 			// fix for God Wars Dungeon's water rendering over zamorak bridge
 			return new int[]{bufferLength, uvBufferLength, underwaterTerrain};
@@ -941,9 +935,9 @@ class SceneUploader
 				normalBuffer.put(normalsC[0], normalsC[2], normalsC[1], cTerrainData);
 
 				vertexBuffer.ensureCapacity(12);
-				vertexBuffer.put(localVertices[0][0] + offsetX, localVertices[0][2] + depthA, localVertices[0][1] + offsetY, colorA);
-				vertexBuffer.put(localVertices[1][0] + offsetX, localVertices[1][2] + depthB, localVertices[1][1] + offsetY, colorB);
-				vertexBuffer.put(localVertices[2][0] + offsetX, localVertices[2][2] + depthC, localVertices[2][1] + offsetY, colorC);
+				vertexBuffer.put(localVertices[0][0], localVertices[0][2] + depthA, localVertices[0][1], colorA);
+				vertexBuffer.put(localVertices[1][0], localVertices[1][2] + depthB, localVertices[1][1], colorB);
+				vertexBuffer.put(localVertices[2][0], localVertices[2][2] + depthC, localVertices[2][1], colorC);
 
 				bufferLength += 3;
 

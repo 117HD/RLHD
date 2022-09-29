@@ -43,7 +43,7 @@ public class GsonUtils {
                     String fieldName = in.nextString();
                     if (idContainer == null)
                     {
-                        String message = String.format("String '%s' is not supported here", fieldName);
+                        String message = String.format("String '%s' is not supported by this parser", fieldName);
                         if (THROW_WHEN_PARSING_FAILS)
                         {
                             throw new RuntimeException(message);
@@ -57,8 +57,7 @@ public class GsonUtils {
                         Field field = idContainer.getField(fieldName);
                         if (!field.getType().equals(int.class))
                         {
-                            String message = String.format(
-                                    "%s field '%s' is not an int", idContainer.getName(), fieldName);
+                            String message = String.format("Field '%s' in %s is not an int", fieldName, idContainer.getName());
                             if (THROW_WHEN_PARSING_FAILS)
                             {
                                 throw new RuntimeException(message);
@@ -70,7 +69,7 @@ public class GsonUtils {
                     }
                     catch (NoSuchFieldException ex)
                     {
-                        String message = String.format("Missing %s: %s", idContainer.getName(), fieldName);
+                        String message = String.format("Missing key '%s' in %s", fieldName, idContainer.getName());
                         if (THROW_WHEN_PARSING_FAILS)
                         {
                             throw new RuntimeException(message, ex);
@@ -79,8 +78,7 @@ public class GsonUtils {
                     }
                     catch (IllegalAccessException ex)
                     {
-                        String message = String.format(
-                                "Unable to access %s field: %s", idContainer.getName(), fieldName);
+                        String message = String.format("Unable to access field '%s' in %s", fieldName, idContainer.getName());
                         if (THROW_WHEN_PARSING_FAILS)
                         {
                             throw new RuntimeException(message, ex);
