@@ -599,7 +599,7 @@ public class LightManager
 			}
 
 			SceneLight light = new SceneLight(
-				0, 0, projectile.getFloor(), l.height == null ? 0 : l.height, Alignment.CENTER, l.radius,
+				0, 0, projectile.getFloor(), l.height, l.alignment, l.radius,
 				l.strength, l.color, l.type, l.duration, l.range, 300);
 			light.projectile = projectile;
 			light.x = (int) projectile.getX();
@@ -752,7 +752,7 @@ public class LightManager
 		for (Light l : GRAPHICS_OBJECT_LIGHTS.get(graphicsObject.getId()))
 		{
 			SceneLight light = new SceneLight(
-				0, 0, graphicsObject.getLevel(), l.height == null ? 0 : l.height, Alignment.CENTER, l.radius,
+				0, 0, graphicsObject.getLevel(), l.height, l.alignment, l.radius,
 				l.strength, l.color, l.type, l.duration, l.range, 300);
 			light.graphicsObject = graphicsObject;
 			light.x = graphicsObject.getLocation().getX();
