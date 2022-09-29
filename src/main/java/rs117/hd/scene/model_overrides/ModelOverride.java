@@ -28,6 +28,7 @@ public class ModelOverride
     public Material material = Material.NONE;
     public UvType uvType = UvType.GEOMETRY;
     public boolean flatNormals = false;
+    public boolean removeBakedLighting = false;
     public TzHaarRecolorType tzHaarRecolorType = TzHaarRecolorType.NONE;
     public InheritTileColorType inheritTileColorType = InheritTileColorType.NONE;
 

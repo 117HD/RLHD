@@ -39,6 +39,10 @@
         "type": "boolean",
         "description": "Whether flat normals should be used instead of smooth normals. Defaults to false."
       },
+      "removeBakedLighting": {
+        "type": "boolean",
+        "description": "Whether the model has fake shadows or baked lighting that should be removed. Defaults to false."
+      },
       "tzHaarRecolorType": {
         "type": "string",
         "description": "Specify a type of TzHaar recolor style to apply. Only relevant for the TzHaar area.",

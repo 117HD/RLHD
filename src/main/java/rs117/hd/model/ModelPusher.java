@@ -6,7 +6,6 @@ import net.runelite.api.*;
 import net.runelite.api.kit.KitType;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
-import rs117.hd.data.BakedModels;
 import rs117.hd.data.materials.Material;
 import rs117.hd.data.materials.Overlay;
 import rs117.hd.data.materials.Underlay;
@@ -405,33 +404,20 @@ public class ModelPusher {
         int heightB = yVertices[triB];
         int heightC = yVertices[triC];
 
+        // Hide fake shadows or lighting that is often baked into models by making the fake shadow transparent
         if (hideBakedEffects && isBakedGroundShading(face, heightA, heightB, heightC, faceTransparencies, faceTextures)) {
-            // hide the shadows and lights that are often baked into models by setting the colors for the shadow faces to transparent
-            int idOrIndex = ModelHash.getIdOrIndex(hash);
-            int type = ModelHash.getType(hash);
+            boolean removeBakedLighting = modelOverride.removeBakedLighting;
 
-            boolean removeShadow = false;
-
-            switch (type) {
-                case ModelHash.TYPE_PLAYER:
-                    if (idOrIndex >= 0 && idOrIndex < client.getCachedPlayers().length) {
-                        Player player = client.getCachedPlayers()[idOrIndex];
-                        removeShadow = player != null &&
-                            player.getPlayerComposition().getEquipmentId(KitType.WEAPON) == ItemID.MAGIC_CARPET;
-                    }
-                    break;
-                case ModelHash.TYPE_NPC:
-                    if (idOrIndex >= 0 && idOrIndex < client.getCachedNPCs().length) {
-                        NPC npc = client.getCachedNPCs()[idOrIndex];
-                        removeShadow = npc != null && BakedModels.NPCS.contains(npc.getId());
-                    }
-                    break;
-                case ModelHash.TYPE_OBJECT:
-                    removeShadow = BakedModels.OBJECTS.contains(idOrIndex);
-                    break;
+            if (ModelHash.getType(hash) == ModelHash.TYPE_PLAYER) {
+                int index = ModelHash.getIdOrIndex(hash);
+                Player[] players = client.getCachedPlayers();
+                Player player = index >= 0 && index < players.length ? players[index] : null;
+                if (player != null && player.getPlayerComposition().getEquipmentId(KitType.WEAPON) == ItemID.MAGIC_CARPET) {
+                    removeBakedLighting = true;
+                }
             }
 
-            if (removeShadow) {
+            if (removeBakedLighting) {
                 fourInts[0] = 0;
                 fourInts[1] = 0;
                 fourInts[2] = 0;
