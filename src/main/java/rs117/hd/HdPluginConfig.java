@@ -426,8 +426,8 @@ public interface HdPluginConfig extends Config
 
 	@ConfigItem(
 		keyName = "objectTextures",
-		name = "Object Textures",
-		description = "Adds detail textures to certain world objects.",
+		name = "Model Textures",
+		description = "Adds detail textures to certain models.",
 		position = 206,
 		section = environmentSettings
 	)

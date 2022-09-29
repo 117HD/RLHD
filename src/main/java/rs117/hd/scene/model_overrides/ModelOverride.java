@@ -25,8 +25,9 @@ public class ModelOverride
     @JsonAdapter(ObjectID.JsonAdapter.class)
     public Set<Integer> objectIds = EMPTY;
 
-    public Material material = Material.NONE;
-    public UvType uvType = UvType.GEOMETRY;
+    public Material baseMaterial = Material.NONE;
+    public Material textureMaterial = Material.NONE;
+    public UvType uvType = UvType.VANILLA;
     public boolean flatNormals = false;
     public boolean removeBakedLighting = false;
     public TzHaarRecolorType tzHaarRecolorType = TzHaarRecolorType.NONE;

@@ -9,7 +9,6 @@ import rs117.hd.HdPluginConfig;
 import rs117.hd.data.materials.Material;
 import rs117.hd.data.materials.Overlay;
 import rs117.hd.data.materials.Underlay;
-import rs117.hd.data.materials.UvType;
 import rs117.hd.scene.model_overrides.InheritTileColorType;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.scene.model_overrides.ObjectType;
@@ -310,41 +309,36 @@ public class ModelPusher {
         final short[] faceTextures = model.getFaceTextures();
         final float[] uv = model.getFaceTextureUVCoordinates();
 
-        boolean isVanillaTextured = faceTextures != null && faceTextures[face] != -1 && uv != null;
-        Material material = modelOverride.material;
+        Material material = Material.NONE;
 
+        boolean isVanillaTextured = faceTextures != null && uv != null && faceTextures[face] != -1;
         if (isVanillaTextured) {
-            material = Material.getTexture(faceTextures[face]);
-            int packedMaterialData = packMaterialData(material, false);
-            int idx = face * 6;
+            if (hdPlugin.configModelTextures) {
+                material = modelOverride.textureMaterial;
+            }
 
-            twelveFloats[0] = packedMaterialData;
-            twelveFloats[1] = uv[idx];
-            twelveFloats[2] = uv[idx + 1];
-            twelveFloats[3] = 0;
-            twelveFloats[4] = packedMaterialData;
-            twelveFloats[5] = uv[idx + 2];
-            twelveFloats[6] = uv[idx + 3];
-            twelveFloats[7] = 0;
-            twelveFloats[8] = packedMaterialData;
-            twelveFloats[9] = uv[idx + 4];
-            twelveFloats[10] = uv[idx + 5];
-            twelveFloats[11] = 0;
+            if (material == Material.NONE) {
+                material = Material.getTexture(faceTextures[face]);
+            }
+        } else if (hdPlugin.configModelTextures) {
+            material = modelOverride.baseMaterial;
+        }
 
-            return twelveFloats;
-        } else if (material == Material.NONE) {
+        if (material == Material.NONE) {
             return faceTextures == null ? null : zeroFloats;
-        } else {
-            final int triA = model.getFaceIndices1()[face];
-            final int triB = model.getFaceIndices2()[face];
-            final int triC = model.getFaceIndices3()[face];
+        }
 
-            final int[] xVertices = model.getVerticesX();
-            final int[] zVertices = model.getVerticesZ();
+        int packedMaterialData = packMaterialData(material, false);
 
-            int packedMaterialData = packMaterialData(hdPlugin.configObjectTextures ? material : Material.NONE, false);
+        switch (modelOverride.uvType) {
+            case GROUND_PLANE:
+                final int triA = model.getFaceIndices1()[face];
+                final int triB = model.getFaceIndices2()[face];
+                final int triC = model.getFaceIndices3()[face];
 
-            if (modelOverride.uvType == UvType.GROUND_PLANE) {
+                final int[] xVertices = model.getVerticesX();
+                final int[] zVertices = model.getVerticesZ();
+
                 twelveFloats[0] = packedMaterialData;
                 twelveFloats[1] = (xVertices[triA] % Perspective.LOCAL_TILE_SIZE) / (float) Perspective.LOCAL_TILE_SIZE;
                 twelveFloats[2] = (zVertices[triA] % Perspective.LOCAL_TILE_SIZE) / (float) Perspective.LOCAL_TILE_SIZE;
@@ -357,9 +351,27 @@ public class ModelPusher {
                 twelveFloats[9] = (xVertices[triC] % Perspective.LOCAL_TILE_SIZE) / (float) Perspective.LOCAL_TILE_SIZE;
                 twelveFloats[10] = (zVertices[triC] % Perspective.LOCAL_TILE_SIZE) / (float) Perspective.LOCAL_TILE_SIZE;
                 twelveFloats[11] = 0;
-
-                return twelveFloats;
-            } else {
+                break;
+            case VANILLA:
+                if (isVanillaTextured) {
+                    int idx = face * 6;
+                    twelveFloats[0] = packedMaterialData;
+                    twelveFloats[1] = uv[idx];
+                    twelveFloats[2] = uv[idx + 1];
+                    twelveFloats[3] = 0;
+                    twelveFloats[4] = packedMaterialData;
+                    twelveFloats[5] = uv[idx + 2];
+                    twelveFloats[6] = uv[idx + 3];
+                    twelveFloats[7] = 0;
+                    twelveFloats[8] = packedMaterialData;
+                    twelveFloats[9] = uv[idx + 4];
+                    twelveFloats[10] = uv[idx + 5];
+                    twelveFloats[11] = 0;
+                    break;
+                }
+                // fall through
+            case GEOMETRY:
+            default:
                 twelveFloats[0] = packedMaterialData;
                 twelveFloats[1] = 0;
                 twelveFloats[2] = 0;
@@ -372,10 +384,10 @@ public class ModelPusher {
                 twelveFloats[9] = 0;
                 twelveFloats[10] = 1;
                 twelveFloats[11] = 0;
-
-                return twelveFloats;
-            }
+                break;
         }
+
+        return twelveFloats;
     }
 
     public int packMaterialData(Material material, boolean isOverlay) {

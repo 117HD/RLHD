@@ -26,14 +26,18 @@
           "type": [ "integer", "string" ]
         }
       },
-      "material": {
+      "baseMaterial": {
         "type": "string",
-        "description": "Case-sensitive name of the material to apply."
+        "description": "Case-sensitive name of the material to apply to untextured faces."
+      },
+      "textureMaterial": {
+        "type": "string",
+        "description": "Case-sensitive name of the material to apply to textured faces."
       },
       "uvType": {
         "type": "string",
         "description": "What to base UV coordinates on for object texturing. Defaults to GEOMETRY.",
-        "enum": [ "GEOMETRY", "GROUND_PLANE" ]
+        "enum": [ "VANILLA", "GEOMETRY", "GROUND_PLANE" ]
       },
       "flatNormals": {
         "type": "boolean",

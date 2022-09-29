@@ -372,7 +372,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	// Config settings used very frequently - thousands/frame
 	public boolean configGroundTextures = false;
 	public boolean configGroundBlending = false;
-	public boolean configObjectTextures = true;
+	public boolean configModelTextures = true;
 	public boolean configTzhaarHD = true;
 	public boolean configProjectileLights = true;
 	public boolean configNpcLights = true;
@@ -409,7 +409,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	{
 		configGroundTextures = config.groundTextures();
 		configGroundBlending = config.groundBlending();
-		configObjectTextures = config.objectTextures();
+		configModelTextures = config.objectTextures();
 		configTzhaarHD = config.tzhaarHD();
 		configProjectileLights = config.projectileLights();
 		configNpcLights = config.npcLights();
@@ -2251,7 +2251,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			case KEY_WINTER_THEME:
 				configGroundBlending = config.groundBlending();
 				configGroundTextures = config.groundTextures();
-				configObjectTextures = config.objectTextures();
+				configModelTextures = config.objectTextures();
 				configTzhaarHD = config.tzhaarHD();
 				configWinterTheme = config.winterTheme();
 				clientThread.invoke(() -> {

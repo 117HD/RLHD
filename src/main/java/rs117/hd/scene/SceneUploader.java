@@ -126,7 +126,7 @@ class SceneUploader
 		// pack a bit into bufferoffset that we can use later to hide
 		// some low-importance objects based on Level of Detail setting
 		model.setBufferOffset(offset << 2 | skipObject);
-		if (model.getFaceTextures() != null || modelOverride.material != Material.NONE)
+		if (model.getFaceTextures() != null || (plugin.configModelTextures && modelOverride.baseMaterial != Material.NONE))
 		{
 			model.setUvBufferOffset(uvOffset);
 		}

@@ -1229,7 +1229,7 @@
   },
   {
     "description": "TREES",
-    "material": "BARK",
+    "baseMaterial": "BARK",
     "objectIds": [
       1293,
       1294,
@@ -1248,7 +1248,7 @@
   },
   {
     "description": "FARMING_PATCH_1",
-    "material": "DIRT_1",
+    "baseMaterial": "DIRT_1",
     "objectIds": [
       7517
     ],
@@ -1256,7 +1256,7 @@
   },
   {
     "description": "FARMING_PATCH_2",
-    "material": "GRUNGE_1",
+    "baseMaterial": "GRUNGE_1",
     "objectIds": [
       7522
     ],
@@ -1380,7 +1380,7 @@
   },
   {
     "description": "WOODEN_FENCES",
-    "material": "WOOD_GRAIN",
+    "baseMaterial": "WOOD_GRAIN",
     "objectIds": [
       814,
       980,
@@ -1418,7 +1418,7 @@
   },
   {
     "description": "STONE_STEPS",
-    "material": "GRUNGE_2",
+    "baseMaterial": "GRUNGE_2",
     "objectIds": [
       3684
     ]
@@ -1435,7 +1435,7 @@
   },
   {
     "description": "VARROCK_FOUNTAIN_FLOOR",
-    "material": "GRUNGE_1",
+    "baseMaterial": "GRUNGE_1",
     "objectIds": [
       7150,
       7149,
@@ -1448,21 +1448,21 @@
   },
   {
     "description": "VARROCK_FOUNTAIN_STATUE",
-    "material": "GRUNGE_1",
+    "baseMaterial": "GRUNGE_1",
     "objectIds": [
       7144
     ]
   },
   {
     "description": "VARROCK_KNIGHT_STATUE",
-    "material": "MARBLE_1_SEMIGLOSS",
+    "baseMaterial": "MARBLE_1_SEMIGLOSS",
     "objectIds": [
       "STATUE_3642"
     ]
   },
   {
     "description": "GRAND_EXCHANGE_FLOOR",
-    "material": "GRUNGE_2",
+    "baseMaterial": "GRUNGE_2",
     "objectIds": [
       9371,
       10689,
@@ -1508,7 +1508,7 @@
   },
   {
     "description": "GRAND_EXCHANGE_WALLS",
-    "material": "GRUNGE_1",
+    "baseMaterial": "GRUNGE_1",
     "objectIds": [
       23755,
       23775,
@@ -1524,7 +1524,7 @@
   },
   {
     "description": "GRAND_EXCHANGE_CLAN_PORTAL",
-    "material": "GRUNGE_1",
+    "baseMaterial": "GRUNGE_1",
     "objectIds": [
       "CLAN_HALL_PORTAL"
     ],
@@ -1532,7 +1532,7 @@
   },
   {
     "description": "GRAND_EXCHANGE_STONE_DECORATION",
-    "material": "GRUNGE_1",
+    "baseMaterial": "GRUNGE_1",
     "objectIds": [
       10063,
       10643,
@@ -1577,7 +1577,7 @@
   },
   {
     "description": "VARROCK_WALLS",
-    "material": "GRUNGE_1",
+    "baseMaterial": "GRUNGE_1",
     "objectIds": [
       450,
       490,
@@ -1693,7 +1693,7 @@
   },
   {
     "description": "FALADOR_WALLS",
-    "material": "GRUNGE_1",
+    "baseMaterial": "GRUNGE_1",
     "objectIds": [
       23744,
       23806,
@@ -1807,14 +1807,14 @@
   },
   {
     "description": "FALADOR_MINES_TORCH_WALL",
-    "material": "GRUNGE_1",
+    "baseMaterial": "GRUNGE_1",
     "objectIds": [
       1422
     ]
   },
   {
     "description": "STATUE_OF_SARADOMIN_1",
-    "material": "MARBLE_1_SEMIGLOSS",
+    "baseMaterial": "MARBLE_1_SEMIGLOSS",
     "objectIds": [
       "STATUE_OF_SARADOMIN_24043",
       "STATUE_OF_SARADOMIN_24044"
@@ -1822,7 +1822,7 @@
   },
   {
     "description": "STONE_SIGNPOST",
-    "material": "GRUNGE_1",
+    "baseMaterial": "GRUNGE_1",
     "objectIds": [
       "STONE_SIGNPOST",
       "STONE_SIGNPOST_23971"
@@ -1830,7 +1830,7 @@
   },
   {
     "description": "FALADOR_STEPS_1",
-    "material": "GRUNGE_1",
+    "baseMaterial": "GRUNGE_1",
     "objectIds": [
       7386,
       7387,
@@ -1843,7 +1843,7 @@
   },
   {
     "description": "FALADOR_UNKNOWN_1",
-    "material": "GRUNGE_1",
+    "baseMaterial": "GRUNGE_1",
     "objectIds": [
       24022,
       24023,
@@ -1862,7 +1862,7 @@
   },
   {
     "description": "CITHAREDE_ABBEY_WALLS",
-    "material": "GRUNGE_1",
+    "baseMaterial": "GRUNGE_1",
     "objectIds": [
       39725,
       39726,
@@ -1885,7 +1885,7 @@
   },
   {
     "description": "SEERS_COURTHOUSE_WALLS",
-    "material": "GRUNGE_1",
+    "baseMaterial": "GRUNGE_1",
     "objectIds": [
       25966,
       25967,
@@ -1906,7 +1906,7 @@
   },
   {
     "description": "SEERS_BUILDING_WALLS",
-    "material": "GRUNGE_1",
+    "baseMaterial": "GRUNGE_1",
     "objectIds": [
       25753,
       25755,
@@ -1935,7 +1935,7 @@
   },
   {
     "description": "STONE_WALL",
-    "material": "GRUNGE_1",
+    "baseMaterial": "GRUNGE_1",
     "objectIds": [
       979,
       5566,
@@ -1948,7 +1948,7 @@
   },
   {
     "description": "STATUE_OF_A_WARRIOR_1",
-    "material": "MARBLE_2_GLOSS",
+    "baseMaterial": "MARBLE_2_GLOSS",
     "objectIds": [
       "STATUE_OF_A_WARRIOR",
       "STATUE_OF_A_WARRIOR_566"
@@ -1956,7 +1956,7 @@
   },
   {
     "description": "KARAMJA_DUNGEON_WALLS",
-    "material": "GRUNGE_1",
+    "baseMaterial": "GRUNGE_1",
     "objectIds": [
       1428,
       21719,
@@ -1970,7 +1970,7 @@
   },
   {
     "description": "TZHAAR_ROCK_GRADIENT",
-    "material": "ROCK_1",
+    "baseMaterial": "ROCK_1",
     "objectIds": [
       11818,
       11819,
@@ -2023,7 +2023,7 @@
   },
   {
     "description": "TZHAAR_ROCK_HUESHIFT",
-    "material": "ROCK_1",
+    "baseMaterial": "ROCK_1",
     "objectIds": [
       26723,
       26724,
@@ -2036,14 +2036,14 @@
   },
   {
     "description": "APE_ATOLL_DUNGEON_WALLS",
-    "material": "GRUNGE_1",
+    "baseMaterial": "GRUNGE_1",
     "objectIds": [
       4898
     ]
   },
   {
     "description": "KOUREND_PATHS",
-    "material": "GRUNGE_1",
+    "baseMaterial": "GRUNGE_1",
     "objectIds": [
       13705,
       13706,
@@ -2063,7 +2063,7 @@
   },
   {
     "description": "KOUREND_PATH_STEPS",
-    "material": "GRUNGE_2",
+    "baseMaterial": "GRUNGE_2",
     "objectIds": [
       30599,
       30600
@@ -2071,7 +2071,7 @@
   },
   {
     "description": "KOUREND_WALLS",
-    "material": "GRUNGE_1",
+    "baseMaterial": "GRUNGE_1",
     "objectIds": [
       23800,
       23801,
@@ -2089,35 +2089,35 @@
   },
   {
     "description": "SHAYZIEN_SHAY_SHRINE",
-    "material": "MARBLE_3_GLOSS",
+    "baseMaterial": "MARBLE_3_GLOSS",
     "objectIds": [
       "CAT_SHRINE"
     ]
   },
   {
     "description": "SHAYZIEN_HERO_STATUE",
-    "material": "GRUNGE_1",
+    "baseMaterial": "GRUNGE_1",
     "objectIds": [
       "DRAGON_STATUE"
     ]
   },
   {
     "description": "SHAYZIEN_DRAGON_STATUE",
-    "material": "MARBLE_2_GLOSS",
+    "baseMaterial": "MARBLE_2_GLOSS",
     "objectIds": [
       "SHAYZIEN_STATUE_42178"
     ]
   },
   {
     "description": "SHAYZIEN_GRAVE",
-    "material": "GRUNGE_1",
+    "baseMaterial": "GRUNGE_1",
     "objectIds": [
       "GRAVE_28451"
     ]
   },
   {
     "description": "SHAYZIEN_CEREMONIAL_PILLAR",
-    "material": "BLANK_GLOSS",
+    "baseMaterial": "BLANK_GLOSS",
     "objectIds": [
       "CEREMONIAL_PILLAR",
       "CEREMONIAL_PILLAR_42168",
@@ -2137,7 +2137,7 @@
   },
   {
     "description": "SHAYZIEN_WALLS_ROCK",
-    "material": "ROCK_1",
+    "baseMaterial": "ROCK_1",
     "objectIds": [
       14543,
       14544,
@@ -2157,7 +2157,7 @@
   },
   {
     "description": "SHAYZIEN_WALLS_WOOD",
-    "material": "GRUNGE_1",
+    "baseMaterial": "GRUNGE_1",
     "objectIds": [
       42107,
       42108,
@@ -2169,7 +2169,7 @@
   },
   {
     "description": "SHAYZIEN_STAIRS",
-    "material": "GRUNGE_1",
+    "baseMaterial": "GRUNGE_1",
     "objectIds": [
       "STAIRCASE_42193",
       "STAIRCASE_42195",
@@ -2198,7 +2198,7 @@
   },
   {
     "description": "STATUE_BUST",
-    "material": "MARBLE_1_GLOSS",
+    "baseMaterial": "MARBLE_1_GLOSS",
     "objectIds": [
       26129
     ]
@@ -2220,7 +2220,7 @@
   },
   {
     "description": "CASTLE_WARS_UNDERGROUND_WALLS",
-    "material": "GRUNGE_1",
+    "baseMaterial": "GRUNGE_1",
     "objectIds": [
       1417,
       1434,
@@ -2230,7 +2230,7 @@
   },
   {
     "description": "CASTLE_WARS_UNDERGROUND_ROCKS",
-    "material": "GRUNGE_1",
+    "baseMaterial": "GRUNGE_1",
     "objectIds": [
       314,
       315,
@@ -2252,7 +2252,7 @@
   },
   {
     "description": "MORYTANIA_SLAYER_TOWER_WALLS",
-    "material": "GRUNGE_1",
+    "baseMaterial": "GRUNGE_1",
     "objectIds": [
       2160,
       2161,
@@ -2275,7 +2275,7 @@
   },
   {
     "description": "TOB_VERZIK_TILE_FLOOR",
-    "material": "BLANK_SEMIGLOSS",
+    "baseMaterial": "BLANK_SEMIGLOSS",
     "objectIds": [
       32719,
       32720,
@@ -2291,7 +2291,7 @@
   },
   {
     "description": "COX_OUTSIDE_RUINS",
-    "material": "GRUNGE_1",
+    "baseMaterial": "GRUNGE_1",
     "objectIds": [
       29921,
       29922,
@@ -2321,7 +2321,7 @@
   },
   {
     "description": "COX_PILLAR",
-    "material": "GRUNGE_1",
+    "baseMaterial": "GRUNGE_1",
     "objectIds": [
       29806,
       29807,
@@ -2333,7 +2333,7 @@
   },
   {
     "description": "GROUND_DECORATION_TAN_ROCK",
-    "material": "DIRT_1",
+    "baseMaterial": "DIRT_1",
     "objectIds": [
       7105,
       7106,
@@ -2343,7 +2343,7 @@
   },
   {
     "description": "GROUND_DECORATION_GRAY_ROCK",
-    "material": "ROCK_1",
+    "baseMaterial": "ROCK_1",
     "objectIds": [
       7057,
       7103,
@@ -2353,7 +2353,7 @@
   },
   {
     "description": "ROCK_LIKE_OBJECT",
-    "material": "ROCK_1",
+    "baseMaterial": "ROCK_1",
     "objectIds": [
       84,
       3634,
@@ -2395,7 +2395,7 @@
   },
   {
     "description": "ROCK_CAVE_ENTRANCES",
-    "material": "ROCK_2",
+    "baseMaterial": "ROCK_2",
     "objectIds": [
       "CAVE_ENTRANCE_11835",
       "CRACK_29627",
@@ -2405,7 +2405,7 @@
   },
   {
     "description": "CAVE_WALLS_BLEND",
-    "material": "ROCK_2",
+    "baseMaterial": "ROCK_2",
     "objectIds": [
       17210,
       17211,
@@ -2433,7 +2433,7 @@
   },
   {
     "description": "CAVE_WALL_ABOVE_FLOOR_TILE",
-    "material": "ROCK_2",
+    "baseMaterial": "ROCK_2",
     "objectIds": [
       17224,
       25057,
@@ -2444,14 +2444,14 @@
   },
   {
     "description": "TROOL_STRONGHOLD_HIDDEN_DOOR",
-    "material": "GRUNGE_1",
+    "baseMaterial": "GRUNGE_1",
     "objectIds": [
       "SECRET_DOOR"
     ]
   },
   {
     "description": "LUMBRIDGE_CAVE_WALLS",
-    "material": "ROCK_2",
+    "baseMaterial": "ROCK_2",
     "objectIds": [
       5912,
       5913,
@@ -2501,7 +2501,7 @@
   },
   {
     "description": "UNKNOWN_1",
-    "material": "GRUNGE_1",
+    "baseMaterial": "GRUNGE_1",
     "objectIds": [
       "PASSAGE"
     ],
@@ -2532,7 +2532,7 @@
   },
   {
     "description": "UNKNOWN_3",
-    "material": "GRUNGE_1",
+    "baseMaterial": "GRUNGE_1",
     "objectIds": [
       3669,
       3714,
@@ -2570,7 +2570,7 @@
   },
   {
     "description": "UNKNOWN_5",
-    "material": "GRUNGE_1",
+    "baseMaterial": "GRUNGE_1",
     "objectIds": [
       29032
     ]
@@ -2591,7 +2591,7 @@
   },
   {
     "description": "UNKNOWN_7",
-    "material": "GRUNGE_1",
+    "baseMaterial": "GRUNGE_1",
     "objectIds": [
       "CAVE_EXIT"
     ]
@@ -2618,7 +2618,7 @@
   },
   {
     "description": "UNKNOWN_10",
-    "material": "GRUNGE_1",
+    "baseMaterial": "GRUNGE_1",
     "objectIds": [
       3709,
       3724,
@@ -2634,7 +2634,7 @@
       "BARRIER_43700",
       "BARRIER_43849"
     ],
-    "material": "UNLIT"
+    "baseMaterial": "UNLIT"
   },
   {
     "description": "Tombs of Amascut Baba boulders",
@@ -2642,6 +2642,6 @@
       "BOULDER_11782",
       "BOULDER_11783"
     ],
-    "material": "WHITE"
+    "baseMaterial": "WHITE"
   }
 ]
