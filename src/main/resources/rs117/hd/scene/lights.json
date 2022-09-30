@@ -29446,6 +29446,23 @@
     ]
   },
   {
+    "description": "TOA_HET_MAGE_PROJECTILE",
+    "radius": 300,
+    "strength": 7,
+    "color": [
+      255,
+      25,
+      25
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 3,
+    "fadeInDuration": 0,
+    "projectileIds": [
+      2253
+    ]
+  },
+  {
     "description": "TOA_ORANGE_FLAME_PROJECTILE",
     "radius": 600,
     "strength": 7,
@@ -29536,24 +29553,6 @@
     ]
   },
   {
-    "description": "TOA_AKKHA_FINAL_PHASE_ORB",
-    "height": 160,
-    "alignment": "CENTER",
-    "radius": 225,
-    "strength": 20,
-    "color": [
-      255,
-      255,
-      255
-    ],
-    "type": "PULSE",
-    "duration": 900,
-    "range": 3,
-    "npcIds": [
-      11804
-    ]
-  },
-  {
     "description": "TOA_CRONDIS_MAGE_ORB",
     "height": 200,
     "alignment": "CENTER",
@@ -29590,24 +29589,6 @@
     ]
   },
   {
-    "description": "TOA_LOOT_SARCOPHAGUS",
-    "height": 240,
-    "alignment": "CENTER",
-    "radius": 1600,
-    "strength": 5,
-    "color": [
-      255,
-      255,
-      255
-    ],
-    "type": "STATIC",
-    "duration": 600,
-    "range": 3,
-    "objectIds": [
-      46220
-    ]
-  },
-  {
     "description": "TOA_HELPFUL_SPIRIT",
     "height": 130,
     "alignment": "CENTER",
@@ -29623,24 +29604,6 @@
     "range": 3,
     "npcIds": [
       11694
-    ]
-  },
-  {
-    "description": "TOA_TELEPORT_CRYSTAL_LOOT",
-    "height": 450,
-    "alignment": "CENTER",
-    "radius": 700,
-    "strength": 75,
-    "color": [
-      255,
-      255,
-      255
-    ],
-    "type": "FLICKER",
-    "duration": 600,
-    "range": 2,
-    "objectIds": [
-      45138
     ]
   },
   {
@@ -29824,7 +29787,7 @@
   {
     "description": "TOA_WARDEN_P2_MAGE_SKULL_BASIC",
     "radius": 500,
-    "strength": 50,
+    "strength": 15,
     "color": [
       255,
       25,
@@ -29856,7 +29819,7 @@
   {
     "description": "TOA_WARDEN_P2_CORE",
     "height": 25,
-    "radius": 500,
+    "radius": 300,
     "strength": 50,
     "color": [
       255,
@@ -29869,13 +29832,14 @@
     "projectileIds": [
       2239
     ],
-    "objectIds": [
-      26209
+    "npcIds": [
+      11770,
+      11771
     ]
   },
   {
     "description": "TOA_WARDEN_P2_MELEE_SPECIAL",
-    "radius": 300,
+    "radius": 600,
     "strength": 50,
     "color": [
       255,
@@ -29891,7 +29855,7 @@
   },
   {
     "description": "TOA_WARDEN_P2_RANGE_SPECIAL",
-    "radius": 300,
+    "radius": 600,
     "strength": 50,
     "color": [
       255,
@@ -29907,7 +29871,7 @@
   },
   {
     "description": "TOA_WARDEN_P2_MAGE_SPECIAL",
-    "radius": 300,
+    "radius": 600,
     "strength": 50,
     "color": [
       25,
@@ -29919,6 +29883,122 @@
     "range": 2,
     "projectileIds": [
       2208
+    ]
+  },
+  {
+    "description": "TOA_WARDEN_P3",
+    "height": 300,
+    "radius": 750,
+    "strength": 50,
+    "color": [
+      255,
+      25,
+      25
+    ],
+    "type": "PULSE",
+    "duration": 1800,
+    "range": 3,
+    "npcIds": [
+      11761,
+      11762,
+      11763,
+      11764
+    ]
+  },
+  {
+    "description": "TOA_WARDEN_P3_BOSS_SPIRITS",
+    "height": 200,
+    "radius": 600,
+    "strength": 75,
+    "color": [
+      255,
+      25,
+      25
+    ],
+    "type": "PULSE",
+    "duration": 1800,
+    "range": 3,
+    "npcIds": [
+      11774,
+      11775,
+      11776,
+      11777
+
+    ]
+  },
+  {
+    "description": "TOA_WARDEN_P3_SKULLS",
+    "height": 25,
+    "radius": 300,
+    "strength": 25,
+    "color": [
+      255,
+      25,
+      25
+    ],
+    "type": "PULSE",
+    "duration": 300,
+    "range": 2,
+    "npcIds": [
+      11772
+    ],
+    "projectileIds": [
+      2226,
+      2227
+    ]
+  },
+  {
+    "description": "TOA_WARDEN_P3_SKULLS_INACTIVE",
+    "height": 25,
+    "radius": 200,
+    "strength": 7,
+    "color": [
+      255,
+      25,
+      25
+    ],
+    "type": "PULSE",
+    "duration": 300,
+    "range": 2,
+    "npcIds": [
+      11773
+    ]
+  },
+  {
+    "description": "TOA_TELEPORT_CRYSTAL_LOOT",
+    "height": 450,
+    "alignment": "CENTER",
+    "radius": 750,
+    "strength": 50,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 2,
+    "fadeInDuration": 1200,
+    "objectIds": [
+      45138
+    ]
+  },
+  {
+    "description": "TOA_LOOT_SARCOPHAGUS",
+    "height": 100,
+    "alignment": "CENTER",
+    "radius": 600,
+    "strength": 10,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 600,
+    "range": 3,
+    "objectIds": [
+      46220
     ]
   }
 ]
