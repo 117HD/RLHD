@@ -34,6 +34,7 @@ import rs117.hd.HdPluginConfig;
 import rs117.hd.data.WaterType;
 import rs117.hd.data.environments.Area;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -110,6 +111,9 @@ public enum Underlay {
     COX_SNOW_1(16, Area.COX_SNOW, GroundMaterial.SNOW_1),
     COX_SNOW_2(59, Area.COX_SNOW, GroundMaterial.SNOW_2),
 
+    // Tombs of Amascut
+    TOA_CRONDIS_WATER(Area.TOA_CRONDIS_WATER, p -> p.waterType(WaterType.SWAMP_WATER).blended(false)),
+
     // Mind Altar
     MIND_ALTAR_TILE(55, Area.MIND_ALTAR, GroundMaterial.MARBLE_1_SEMIGLOSS, p -> p.blended(false)),
 
@@ -139,7 +143,7 @@ public enum Underlay {
 
     UNDERLAY_72(GroundMaterial.VARIED_DIRT, p -> p.ids(72, 98)),
 
-    NONE(-1, GroundMaterial.DIRT);
+    NONE(GroundMaterial.DIRT, p -> {});
 
     public final Integer[] ids;
     public final Area area;
@@ -180,6 +184,10 @@ public enum Underlay {
         this(p -> p.groundMaterial(material).apply(consumer));
     }
 
+    Underlay(Area area, Consumer<TileOverrideBuilder<Underlay>> consumer) {
+        this(p -> p.area(area).apply(consumer));
+    }
+
     Underlay(Area area, GroundMaterial material, Consumer<TileOverrideBuilder<Underlay>> consumer) {
         this(p -> p.groundMaterial(material).area(area).apply(consumer));
     }
@@ -188,11 +196,9 @@ public enum Underlay {
         TileOverrideBuilder<Underlay> builder = new TileOverrideBuilder<>();
         consumer.accept(builder);
         this.ids = builder.ids;
-        this.replacementUnderlay = builder.replacement;
-        this.replacementCondition = builder.replacementCondition;
-        this.waterType = builder.waterType;
-        this.groundMaterial = builder.groundMaterial;
         this.area = builder.area;
+        this.groundMaterial = builder.groundMaterial;
+        this.waterType = builder.waterType;
         this.blended = builder.blended;
         this.blendedAsOverlay = builder.blendedAsOpposite;
         this.hue = builder.hue;
@@ -201,6 +207,8 @@ public enum Underlay {
         this.shiftSaturation = builder.shiftSaturation;
         this.lightness = builder.lightness;
         this.shiftLightness = builder.shiftLightness;
+        this.replacementUnderlay = builder.replacement;
+        this.replacementCondition = builder.replacementCondition;
     }
 
     private static final ListMultimap<Integer, Underlay> GROUND_MATERIAL_MAP;
@@ -208,13 +216,17 @@ public enum Underlay {
     static {
         GROUND_MATERIAL_MAP = ArrayListMultimap.create();
         for (Underlay underlay : values()) {
-            for (Integer id : underlay.ids) {
-                GROUND_MATERIAL_MAP.put(id, underlay);
+            if (underlay.ids.length == 0) {
+                GROUND_MATERIAL_MAP.put(null, underlay);
+            } else {
+                for (Integer id : underlay.ids) {
+                    GROUND_MATERIAL_MAP.put(id, underlay);
+                }
             }
         }
     }
 
-    public static Underlay getUnderlay(int underlayId, Tile tile, Client client, HdPluginConfig pluginConfig) {
+    public static Underlay getUnderlay(@Nullable Integer underlayId, Tile tile, Client client, HdPluginConfig pluginConfig) {
         WorldPoint worldPoint = tile.getWorldLocation();
 
         if (client.isInInstancedRegion()) {
@@ -226,17 +238,19 @@ public enum Underlay {
         int worldY = worldPoint.getY();
         int worldZ = worldPoint.getPlane();
 
-        List<Underlay> underlays = GROUND_MATERIAL_MAP.get(underlayId);
-        for (Underlay underlay : underlays) {
-            if (underlay.area.containsPoint(worldX, worldY, worldZ)) {
-                if (underlay.replacementCondition != null && underlay.replacementCondition.apply(pluginConfig)) {
-                    return underlay.replacementUnderlay;
-                }
-                return underlay;
-            }
-        }
+        List<Underlay> anyMatchUnderlays = GROUND_MATERIAL_MAP.get(null);
+        Underlay anyUnderlay = anyMatchUnderlays.stream()
+            .filter(o -> o.area.containsPoint(worldX, worldY, worldZ))
+            .findFirst()
+            .orElse(Underlay.NONE);
 
-        return Underlay.NONE;
+        List<Underlay> specificUnderlays = GROUND_MATERIAL_MAP.get(underlayId);
+        Underlay overlay = specificUnderlays.stream()
+            .filter(o -> o.ordinal() < anyUnderlay.ordinal() && o.area.containsPoint(worldX, worldY, worldZ))
+            .findFirst()
+            .orElse(anyUnderlay);
+
+        return overlay.replacementCondition.apply(pluginConfig) ? overlay.replacementUnderlay : overlay;
     }
 
 }

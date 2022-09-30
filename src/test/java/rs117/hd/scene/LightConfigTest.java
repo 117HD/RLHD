@@ -4,7 +4,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import rs117.hd.lighting.ExportLightsToJson;
+import rs117.hd.lighting.ReformatLightsJson;
 import rs117.hd.scene.lights.Light;
 
 import java.io.ByteArrayOutputStream;
@@ -58,7 +58,7 @@ public class LightConfigTest {
 	@Test
 	public void validateLightsConfig() throws IOException
 	{
-		ExportLightsToJson.main(new String[] { "--dry-run" });
+		ReformatLightsJson.main(new String[] { "--dry-run" });
 		Assert.assertEquals(stderr.toString(), "");
 	}
 }

@@ -28,7 +28,6 @@ package rs117.hd.scene;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
-import com.google.common.primitives.Ints;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
@@ -63,6 +62,8 @@ import static rs117.hd.utils.ResourcePath.path;
 public class LightManager
 {
 	private static final String ENV_LIGHTS_CONFIG = "RLHD_LIGHTS_PATH";
+	private static final ResourcePath lightsPath = Env.getPathOrDefault(ENV_LIGHTS_CONFIG,
+		() -> path(LightManager.class,"lights.json"));
 
 	@Inject
 	private ConfigManager configManager;
@@ -90,11 +91,15 @@ public class LightManager
 	final ListMultimap<Integer, Light> OBJECT_LIGHTS = ArrayListMultimap.create();
 	@VisibleForTesting
 	final ListMultimap<Integer, Light> PROJECTILE_LIGHTS = ArrayListMultimap.create();
+	@VisibleForTesting
+	final ListMultimap<Integer, Light> GRAPHICS_OBJECT_LIGHTS = ArrayListMultimap.create();
 
 	@Getter
 	ArrayList<SceneLight> sceneLights = new ArrayList<>();
 	@Getter
 	ArrayList<Projectile> sceneProjectiles = new ArrayList<>();
+	@Getter
+	ArrayList<GraphicsObject> sceneGraphicsObjects = new ArrayList<>();
 
 	long lastFrameTime = -1;
 	boolean configChanged = false;
@@ -126,6 +131,7 @@ public class LightManager
 			NPC_LIGHTS.clear();
 			OBJECT_LIGHTS.clear();
 			PROJECTILE_LIGHTS.clear();
+			GRAPHICS_OBJECT_LIGHTS.clear();
 
 			for (Light l : lights)
 			{
@@ -141,6 +147,7 @@ public class LightManager
 				l.npcIds.forEach(id -> NPC_LIGHTS.put(id, l));
 				l.objectIds.forEach(id -> OBJECT_LIGHTS.put(id, l));
 				l.projectileIds.forEach(id -> PROJECTILE_LIGHTS.put(id, l));
+				l.graphicsObjectIds.forEach(id -> GRAPHICS_OBJECT_LIGHTS.put(id, l));
 			}
 
 			log.debug("Loaded {} lights", lights.length);
@@ -155,8 +162,7 @@ public class LightManager
 	public void startUp()
 	{
 		entityHiderConfig = configManager.getConfig(EntityHiderConfig.class);
-		Env.getPathOrDefault(ENV_LIGHTS_CONFIG, () -> path(LightManager.class,"lights.json"))
-			.watch(this::loadConfig);
+		lightsPath.watch(this::loadConfig);
 	}
 
 	public void shutDown()
@@ -203,9 +209,23 @@ public class LightManager
 
 				light.x = (int) light.projectile.getX();
 				light.y = (int) light.projectile.getY();
-				light.z = (int) light.projectile.getZ();
+				light.z = (int) light.projectile.getZ() - light.height;
 
 				light.visible = projectileLightVisible();
+			}
+
+			if (light.graphicsObject != null)
+			{
+				if (light.graphicsObject.finished())
+				{
+					lightIterator.remove();
+					sceneGraphicsObjects.remove(light.graphicsObject);
+					continue;
+				}
+
+				light.x = light.graphicsObject.getLocation().getX();
+				light.y = light.graphicsObject.getLocation().getY();
+				light.z = light.graphicsObject.getZ() - light.height;
 			}
 
 			if (light.npc != null)
@@ -411,7 +431,6 @@ public class LightManager
 			{
 				return false;
 			}
-
 		}
 
 		return hdPlugin.configProjectileLights;
@@ -440,6 +459,7 @@ public class LightManager
 
 		for (SceneLight light : WORLD_LIGHTS)
 		{
+			// noinspection ConstantConditions
 			if (light.worldX >= sceneMinX && light.worldX <= sceneMaxX && light.worldY >= sceneMinY && light.worldY <= sceneMaxY)
 			{
 				sceneLights.add(light);
@@ -473,9 +493,6 @@ public class LightManager
 								break;
 							case 4:
 								orientation = 1536;
-								break;
-							case 8:
-								orientation = 0;
 								break;
 							case 16:
 								orientation = 768;
@@ -580,7 +597,7 @@ public class LightManager
 			}
 
 			SceneLight light = new SceneLight(
-				0, 0, projectile.getFloor(), 0, Alignment.CENTER, l.radius,
+				0, 0, projectile.getFloor(), l.height, l.alignment, l.radius,
 				l.strength, l.color, l.type, l.duration, l.range, 300);
 			light.projectile = projectile;
 			light.x = (int) projectile.getX();
@@ -645,7 +662,7 @@ public class LightManager
 			WorldPoint worldLocation = tileObject.getWorldLocation();
 			SceneLight light = new SceneLight(
 				worldLocation.getX(), worldLocation.getY(), worldLocation.getPlane(), l.height, l.alignment, l.radius,
-				l.strength, l.color, l.type, l.duration, l.range, 0);
+				l.strength, l.color, l.type, l.duration, l.range, l.fadeInDuration);
 			LocalPoint localLocation = tileObject.getLocalLocation();
 			light.x = localLocation.getX();
 			light.y = localLocation.getY();
@@ -689,10 +706,10 @@ public class LightManager
 			int tileMinY = (int) Math.floor(tileY);
 			int tileMaxX = tileMinX + 1;
 			int tileMaxY = tileMinY + 1;
-			tileMinX = Ints.constrainToRange(tileMinX, 0, Constants.SCENE_SIZE - 1);
-			tileMinY = Ints.constrainToRange(tileMinY, 0, Constants.SCENE_SIZE - 1);
-			tileMaxX = Ints.constrainToRange(tileMaxX, 0, Constants.SCENE_SIZE - 1);
-			tileMaxY = Ints.constrainToRange(tileMaxY, 0, Constants.SCENE_SIZE - 1);
+			tileMinX = HDUtils.clamp(tileMinX, 0, Constants.SCENE_SIZE - 1);
+			tileMinY = HDUtils.clamp(tileMinY, 0, Constants.SCENE_SIZE - 1);
+			tileMaxX = HDUtils.clamp(tileMaxX, 0, Constants.SCENE_SIZE - 1);
+			tileMaxY = HDUtils.clamp(tileMaxY, 0, Constants.SCENE_SIZE - 1);
 
 			float heightNorth = HDUtils.lerp(
 				client.getTileHeights()[plane][tileMinX][tileMaxY],
@@ -715,15 +732,30 @@ public class LightManager
 
 	public void removeObjectLight(TileObject tileObject)
 	{
-		for (Light l : OBJECT_LIGHTS.get(tileObject.getId()))
-		{
-			LocalPoint localLocation = tileObject.getLocalLocation();
-			int plane = tileObject.getWorldLocation().getPlane();
+		LocalPoint localLocation = tileObject.getLocalLocation();
+		int plane = tileObject.getWorldLocation().getPlane();
 
-			sceneLights.removeIf(light ->
-				light.x == localLocation.getX() &&
-					light.y == localLocation.getY() &&
-					light.plane == plane);
+		sceneLights.removeIf(light ->
+			light.object == tileObject &&
+			light.x == localLocation.getX() &&
+			light.y == localLocation.getY() &&
+			light.plane == plane);
+	}
+
+	public void addGraphicsObjectLight(GraphicsObject graphicsObject)
+	{
+		for (Light l : GRAPHICS_OBJECT_LIGHTS.get(graphicsObject.getId()))
+		{
+			SceneLight light = new SceneLight(
+				0, 0, graphicsObject.getLevel(), l.height, l.alignment, l.radius,
+				l.strength, l.color, l.type, l.duration, l.range, 300);
+			light.graphicsObject = graphicsObject;
+			light.x = graphicsObject.getLocation().getX();
+			light.y = graphicsObject.getLocation().getY();
+			light.z = graphicsObject.getZ();
+
+			sceneGraphicsObjects.add(graphicsObject);
+			sceneLights.add(light);
 		}
 	}
 

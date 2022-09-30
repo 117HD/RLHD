@@ -61,9 +61,9 @@ import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.Template;
 import rs117.hd.scene.*;
 import rs117.hd.scene.lights.SceneLight;
-import rs117.hd.scene.ObjectManager;
-import rs117.hd.scene.objects.ObjectProperties;
-import rs117.hd.scene.objects.ObjectType;
+import rs117.hd.scene.ModelOverrideManager;
+import rs117.hd.scene.model_overrides.ModelOverride;
+import rs117.hd.scene.model_overrides.ObjectType;
 import rs117.hd.utils.*;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.GpuFloatBuffer;
@@ -87,7 +87,6 @@ import java.util.Map;
 
 import static org.jocl.CL.*;
 import static org.lwjgl.opengl.GL43C.*;
-import static rs117.hd.HdPluginConfig.KEY_REMOVE_VANILLA_SHADING;
 import static rs117.hd.HdPluginConfig.KEY_WINTER_THEME;
 import static rs117.hd.utils.ResourcePath.path;
 
@@ -137,7 +136,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	private LightManager lightManager;
 
 	@Inject
-	private ObjectManager objectManager;
+	private ModelOverrideManager modelOverrideManager;
 
 	@Inject
 	private EnvironmentManager environmentManager;
@@ -373,7 +372,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	// Config settings used very frequently - thousands/frame
 	public boolean configGroundTextures = false;
 	public boolean configGroundBlending = false;
-	public boolean configObjectTextures = true;
+	public boolean configModelTextures = true;
 	public boolean configTzhaarHD = true;
 	public boolean configProjectileLights = true;
 	public boolean configNpcLights = true;
@@ -381,7 +380,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	public boolean configExpandShadowDraw = false;
 	public boolean configHdInfernalTexture = true;
 	public boolean configWinterTheme = true;
-	public boolean configRemoveVanillaShading = false;
 	public int configMaxDynamicLights;
 
 	public int[] camTarget = new int[3];
@@ -411,7 +409,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	{
 		configGroundTextures = config.groundTextures();
 		configGroundBlending = config.groundBlending();
-		configObjectTextures = config.objectTextures();
+		configModelTextures = config.objectTextures();
 		configTzhaarHD = config.tzhaarHD();
 		configProjectileLights = config.projectileLights();
 		configNpcLights = config.npcLights();
@@ -419,7 +417,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		configExpandShadowDraw = config.expandShadowDraw();
 		configHdInfernalTexture = config.hdInfernalTexture();
 		configWinterTheme = config.winterTheme();
-		configRemoveVanillaShading = config.removeVanillaShading();
 		configMaxDynamicLights = config.maxDynamicLights().getValue();
 
 		clientThread.invoke(() ->
@@ -544,7 +541,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				lastAntiAliasingMode = null;
 
 				lightManager.startUp();
-				objectManager.startUp();
+				modelOverrideManager.startUp();
 
 				if (client.getGameState() == GameState.LOGGED_IN)
 				{
@@ -2252,13 +2249,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			case "objectTextures":
 			case "tzhaarHD":
 			case KEY_WINTER_THEME:
-			case KEY_REMOVE_VANILLA_SHADING:
 				configGroundBlending = config.groundBlending();
 				configGroundTextures = config.groundTextures();
-				configObjectTextures = config.objectTextures();
+				configModelTextures = config.objectTextures();
 				configTzhaarHD = config.tzhaarHD();
 				configWinterTheme = config.winterTheme();
-				configRemoveVanillaShading = config.removeVanillaShading();
 				clientThread.invoke(() -> {
 					modelPusher.clearModelCache();
 					reloadScene();
@@ -2402,15 +2397,15 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	@Override
 	public void draw(Renderable renderable, int orientation, int pitchSin, int pitchCos, int yawSin, int yawCos, int x, int y, int z, long hash)
 	{
+		if (modelOverrideManager.shouldHideModel(hash, x, z)) {
+			return;
+		}
+
 		Model model = renderable instanceof Model ? (Model) renderable : renderable.getModel();
 		if (model == null || model.getFaceCount() == 0) {
 			// skip models with zero faces
 			// this does seem to happen sometimes (mostly during loading)
 			// should save some CPU cycles here and there
-			return;
-		}
-
-		if (objectManager.shouldHide(ModelUtils.getIdOrIndex(hash), ModelUtils.getWorldLocation(client, x, z))) {
 			return;
 		}
 
@@ -2485,13 +2480,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 			TempModelInfo tempModelInfo = tempModelInfoMap.get(batchHash);
 			if (!config.enableModelBatching() || tempModelInfo == null || tempModelInfo.getFaceCount() != model.getFaceCount()) {
-				int modelType = ModelUtils.getModelType(hash);
-				ObjectProperties objectProperties = ObjectProperties.NONE;
-				if (modelType == ModelUtils.TYPE_OBJECT) {
-					objectProperties = objectManager.getObjectProperties(ModelUtils.getIdOrIndex(hash));
-				}
-
-				final int[] lengths = modelPusher.pushModel(hash, model, vertexBuffer, uvBuffer, normalBuffer, 0, 0, 0, objectProperties, ObjectType.NONE, !config.enableModelCaching());
+				ModelOverride modelOverride = modelOverrideManager.getOverride(hash);
+				final int[] lengths = modelPusher.pushModel(hash, model, vertexBuffer, uvBuffer, normalBuffer, 0, 0, 0, modelOverride, ObjectType.NONE, !config.enableModelCaching());
 				final int faceCount = lengths[0] / 3;
 				final int actualTempUvOffset = lengths[1] > 0 ? tempUvOffset : -1;
 
@@ -2771,6 +2761,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	{
 		GroundObject groundObject = groundObjectDespawned.getGroundObject();
 		lightManager.removeObjectLight(groundObject);
+	}
+
+	@Subscribe
+	public void onGraphicsObjectCreated(GraphicsObjectCreated graphicsObjectCreated)
+	{
+		GraphicsObject graphicsObject = graphicsObjectCreated.getGraphicsObject();
+		lightManager.addGraphicsObjectLight(graphicsObject);
 	}
 
 	@Subscribe
