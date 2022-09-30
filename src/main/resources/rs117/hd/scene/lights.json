@@ -29830,7 +29830,8 @@
     "duration": 300,
     "range": 2,
     "projectileIds": [
-      2239
+      2239,
+      2240
     ],
     "npcIds": [
       11770,
@@ -29941,7 +29942,21 @@
     "range": 2,
     "npcIds": [
       11772
+    ]
+  },
+  {
+    "description": "TOA_WARDEN_P3_SKULL_CHARGE_PROJECTILE",
+    "height": 25,
+    "radius": 400,
+    "strength": 7,
+    "color": [
+      255,
+      25,
+      25
     ],
+    "type": "PULSE",
+    "duration": 300,
+    "range": 2,
     "projectileIds": [
       2226,
       2227
