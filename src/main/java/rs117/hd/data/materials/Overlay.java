@@ -396,8 +396,13 @@ public enum Overlay {
 	TOA_DISABLE_BLENDING_N7(-7, Area.TOA_LOOT_ROOM, GroundMaterial.NONE, p -> p.blended(false)),
 	TOA_DISABLE_BLENDING_N8(-8, Area.TOA_LOOT_ROOM, GroundMaterial.NONE, p -> p.blended(false)),
 	TOA_DISABLE_BLENDING_N9(-9, Area.TOA_LOOT_ROOM, GroundMaterial.NONE, p -> p.blended(false)),
-	TOA_PATH_OF_CRONDIS_PUZZLE_WATER(-5, Area.TOA_PATH_OF_CRONDIS_PUZZLE, GroundMaterial.NONE, p -> p.blended(false)),
-    TOA_PATH_OF_CRONDIS_BOSS_GREY_ROCK(-122, Area.TOA_PATH_OF_CRONDIS_BOSS, GroundMaterial.NONE, p -> p.blended(false)),
+	TOA_CRONDIS_PUZZLE_WATER(-5, Area.TOA_PATH_OF_CRONDIS_PUZZLE, GroundMaterial.NONE, p -> p.blended(false)),
+
+    // Tombs of Amascut
+    // TODO: fix tile blending color issues with bridge tiles
+//    TOA_CRONDIS_ROCK(Area.TOA_PATH_OF_CRONDIS_BOSS, GroundMaterial.NONE, p -> p.ids(-123, -122, -74).blended(false)),
+//    TOA_CRONDIS_ISLAND(Area.TOA_CRONDIS_ISLAND, p -> p.groundMaterial(GroundMaterial.SAND)),
+    TOA_CRONDIS_WATER(Area.TOA_CRONDIS_WATER, p -> p.waterType(WaterType.SWAMP_WATER).blended(false)),
 
 	// POHs
 	POH_DESERT_INDOORS(Area.PLAYER_OWNED_HOUSE, GroundMaterial.TILES_2x2_2, p -> p.blended(false).ids(26, 99)),
@@ -491,6 +496,10 @@ public enum Overlay {
 
     Overlay(WaterType waterType, Consumer<TileOverrideBuilder<Overlay>> consumer) {
         this(p -> p.waterType(waterType).blended(false).apply(consumer));
+    }
+
+    Overlay(Area area, Consumer<TileOverrideBuilder<Overlay>> consumer) {
+        this(p -> p.area(area).apply(consumer));
     }
 
     Overlay(Area area, GroundMaterial material, Consumer<TileOverrideBuilder<Overlay>> consumer) {

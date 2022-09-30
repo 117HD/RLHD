@@ -112,8 +112,7 @@ public enum Underlay {
     COX_SNOW_2(59, Area.COX_SNOW, GroundMaterial.SNOW_2),
 
     // Tombs of Amascut
-    TOA_PATH_OF_CRONDIS_BOSS_WATER(-10, p -> p.area(Area.TOA_PATH_OF_CRONDIS_BOSS).waterType(WaterType.SWAMP_WATER).blended(false)),
-    TOA_PATH_OF_CRONDIS_BOSS_SWAMP_WATER(Area.TOA_PATH_OF_CRONDIS_BOSS, p -> p.waterType(WaterType.SWAMP_WATER).blended(false)),
+    TOA_CRONDIS_WATER(Area.TOA_CRONDIS_WATER, p -> p.waterType(WaterType.SWAMP_WATER).blended(false)),
 
     // Mind Altar
     MIND_ALTAR_TILE(55, Area.MIND_ALTAR, GroundMaterial.MARBLE_1_SEMIGLOSS, p -> p.blended(false)),

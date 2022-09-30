@@ -40,7 +40,6 @@ import net.runelite.api.Tile;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.data.WaterType;
-import rs117.hd.data.materials.GroundMaterial;
 import rs117.hd.data.materials.Material;
 import rs117.hd.data.materials.Overlay;
 import rs117.hd.data.materials.Underlay;
