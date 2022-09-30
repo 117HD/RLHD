@@ -410,7 +410,7 @@ public enum Overlay {
     TEMPLE_OF_THE_EYE_ENTRANCE(Area.TEMPLE_OF_THE_EYE_ENTRANCE_FIX, GroundMaterial.DIRT, p -> p
         .shiftLightness(-10)
         .blended(false)
-        .ids(-53, 0)),
+        .ids(-53)),
 
     // Elid Cave fix
     ELID_CAVE_WATER_FIX(-126, Area.ELID_CAVE, WaterType.WATER),
