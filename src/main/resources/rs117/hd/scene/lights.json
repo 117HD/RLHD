@@ -29987,8 +29987,8 @@
     "description": "TOA_LOOT_SARCOPHAGUS",
     "height": 100,
     "alignment": "CENTER",
-    "radius": 600,
-    "strength": 10,
+    "radius": 500,
+    "strength": 7,
     "color": [
       255,
       255,

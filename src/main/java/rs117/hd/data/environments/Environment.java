@@ -249,9 +249,9 @@ public enum Environment
 	TOA_LOOT_ROOM(Area.TOA_LOOT_ROOM, new Properties()
 		.setFogColor("#050505")
 		.setFogDepth(20)
-		.setAmbientStrength(1)
+		.setAmbientStrength(1.2f)
 		.setAmbientColor("#ffffff")
-		.setDirectionalStrength(4)
+		.setDirectionalStrength(.5f)
 		.setDirectionalColor("#ffffff")
 	),
 	TOMBS_OF_AMASCUT(Area.TOMBS_OF_AMASCUT, new Properties()

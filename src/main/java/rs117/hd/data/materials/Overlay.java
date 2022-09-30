@@ -392,11 +392,8 @@ public enum Overlay {
 	TOA_DISABLE_BLENDING_30(30, Area.TOA_PATH_OF_APMEKEN_BOSS, GroundMaterial.NONE, p -> p.blended(false)),
 	TOA_DISABLE_BLENDING_N16(-16, Area.TOA_PATH_OF_HET_PUZZLE, GroundMaterial.NONE, p -> p.blended(false)),
 	TOA_DISABLE_BLENDING_N62(-62, Area.TOA_PATH_OF_CRONDIS_BOSS, GroundMaterial.NONE, p -> p.blended(false)),
-	TOA_DISABLE_BLENDING_N6(-6, Area.TOA_LOOT_ROOM, GroundMaterial.NONE, p -> p.blended(false)),
-	TOA_DISABLE_BLENDING_N7(-7, Area.TOA_LOOT_ROOM, GroundMaterial.NONE, p -> p.blended(false)),
-	TOA_DISABLE_BLENDING_N8(-8, Area.TOA_LOOT_ROOM, GroundMaterial.NONE, p -> p.blended(false)),
-	TOA_DISABLE_BLENDING_N9(-9, Area.TOA_LOOT_ROOM, GroundMaterial.NONE, p -> p.blended(false)),
 	TOA_CRONDIS_PUZZLE_WATER(-5, Area.TOA_PATH_OF_CRONDIS_PUZZLE, GroundMaterial.NONE, p -> p.blended(false)),
+    TOA_DISABLE_BLENDING_LOOT_ROOM(Area.TOA_LOOT_ROOM, GroundMaterial.NONE, p -> p.blended(false)),
 
     // Tombs of Amascut
     // TODO: fix tile blending color issues with bridge tiles
