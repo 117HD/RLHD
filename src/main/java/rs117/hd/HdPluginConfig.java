@@ -270,7 +270,7 @@ public interface HdPluginConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "atmosphericLighting",
+		keyName = "environmentalLighting",
 		name = "Atmospheric Lighting",
 		description = "Changes the color and brightness of full-scene lighting in certain areas.",
 		position = 104,
