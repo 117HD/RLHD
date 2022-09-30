@@ -34,6 +34,7 @@ import rs117.hd.HdPluginConfig;
 import rs117.hd.data.WaterType;
 import rs117.hd.data.environments.Area;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -396,8 +397,7 @@ public enum Overlay {
 	TOA_DISABLE_BLENDING_N8(-8, Area.TOA_LOOT_ROOM, GroundMaterial.NONE, p -> p.blended(false)),
 	TOA_DISABLE_BLENDING_N9(-9, Area.TOA_LOOT_ROOM, GroundMaterial.NONE, p -> p.blended(false)),
 	TOA_PATH_OF_CRONDIS_PUZZLE_WATER(-5, Area.TOA_PATH_OF_CRONDIS_PUZZLE, GroundMaterial.NONE, p -> p.blended(false)),
-	TOA_PATH_OF_CRONDIS_BOSS_WATER(-10, Area.TOA_PATH_OF_CRONDIS_BOSS, WaterType.SWAMP_WATER),
-	TOA_PATH_OF_CRONDIS_BOSS_GREY_ROCK(-122, Area.TOA_PATH_OF_CRONDIS_BOSS, GroundMaterial.DIRT),
+    TOA_PATH_OF_CRONDIS_BOSS_GREY_ROCK(-122, Area.TOA_PATH_OF_CRONDIS_BOSS, GroundMaterial.NONE, p -> p.blended(false)),
 
 	// POHs
 	POH_DESERT_INDOORS(Area.PLAYER_OWNED_HOUSE, GroundMaterial.TILES_2x2_2, p -> p.blended(false).ids(26, 99)),
@@ -448,7 +448,7 @@ public enum Overlay {
     OVERLAY_29(29, GroundMaterial.GRASS_1),
     OVERLAY_32(32, GroundMaterial.CONCRETE),
 
-    DEFAULT(-1, GroundMaterial.DIRT);
+    NONE(GroundMaterial.DIRT, p -> {});
 
     public final Integer[] ids;
     public final Area area;
@@ -521,13 +521,17 @@ public enum Overlay {
     static {
         GROUND_MATERIAL_MAP = ArrayListMultimap.create();
         for (Overlay overlay : values()) {
-            for (Integer id : overlay.ids) {
-                GROUND_MATERIAL_MAP.put(id, overlay);
+            if (overlay.ids.length == 0) {
+                GROUND_MATERIAL_MAP.put(null, overlay);
+            } else {
+                for (Integer id : overlay.ids) {
+                    GROUND_MATERIAL_MAP.put(id, overlay);
+                }
             }
         }
     }
 
-    public static Overlay getOverlay(int overlayId, Tile tile, Client client, HdPluginConfig pluginConfig) {
+    public static Overlay getOverlay(@Nullable Integer overlayId, Tile tile, Client client, HdPluginConfig pluginConfig) {
         WorldPoint worldPoint = tile.getWorldLocation();
 
         if (client.isInInstancedRegion()) {
@@ -539,16 +543,18 @@ public enum Overlay {
         int worldY = worldPoint.getY();
         int worldZ = worldPoint.getPlane();
 
-        List<Overlay> overlays = GROUND_MATERIAL_MAP.get(overlayId);
-        for (Overlay overlay : overlays) {
-            if (overlay.area.containsPoint(worldX, worldY, worldZ)) {
-                if (overlay.replacementCondition != null && overlay.replacementCondition.apply(pluginConfig)) {
-                    return overlay.replacementOverlay;
-                }
-                return overlay;
-            }
-        }
+        List<Overlay> anyMatchOverlays = GROUND_MATERIAL_MAP.get(null);
+        Overlay anyOverlay = anyMatchOverlays.stream()
+            .filter(o -> o.area.containsPoint(worldX, worldY, worldZ))
+            .findFirst()
+            .orElse(Overlay.NONE);
 
-        return Overlay.DEFAULT;
+        List<Overlay> specificOverlays = GROUND_MATERIAL_MAP.get(overlayId);
+        Overlay overlay = specificOverlays.stream()
+            .filter(o -> o.ordinal() < anyOverlay.ordinal() && o.area.containsPoint(worldX, worldY, worldZ))
+            .findFirst()
+            .orElse(anyOverlay);
+
+        return overlay.replacementCondition.apply(pluginConfig) ? overlay.replacementOverlay : overlay;
     }
 }

@@ -27,7 +27,7 @@ class TileOverrideBuilder<T> {
     public int lightness = -1;
     public int shiftLightness = 0;
     public T replacement;
-    public Function<HdPluginConfig, Boolean> replacementCondition;
+    public Function<HdPluginConfig, Boolean> replacementCondition = c -> false;
 
     TileOverrideBuilder<T> apply(Consumer<TileOverrideBuilder<T>> consumer) {
         consumer.accept(this);

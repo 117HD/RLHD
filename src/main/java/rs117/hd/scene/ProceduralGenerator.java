@@ -285,19 +285,17 @@ public class ProceduralGenerator
 
 			boolean isOverlay = false;
 			Material material = Material.DIRT_1;
-			if (vertexOverlays[vertex] != 0)
+			Overlay overlay = Overlay.getOverlay(vertexOverlays[vertex], tile, client, config);
+			Underlay underlay = Underlay.getUnderlay(vertexUnderlays[vertex], tile, client, config);
+			if (overlay != Overlay.NONE)
 			{
-				Overlay overlay = Overlay.getOverlay(vertexOverlays[vertex], tile, client, config);
-				GroundMaterial groundMaterial = overlay.groundMaterial;
-				material = groundMaterial.getRandomMaterial(z, worldX, worldY);
+				material = overlay.groundMaterial.getRandomMaterial(z, worldX, worldY);
 				isOverlay = !overlay.blendedAsUnderlay;
 				colorHSL = recolorOverlay(overlay, colorHSL);
 			}
-			else if (vertexUnderlays[vertex] != 0)
+			else if (underlay != Underlay.NONE)
 			{
-				Underlay underlay = Underlay.getUnderlay(vertexUnderlays[vertex], tile, client, config);
-				GroundMaterial groundMaterial = underlay.groundMaterial;
-				material = groundMaterial.getRandomMaterial(z, worldX, worldY);
+				material = underlay.groundMaterial.getRandomMaterial(z, worldX, worldY);
 				isOverlay = underlay.blendedAsOverlay;
 				colorHSL = recolorUnderlay(underlay, colorHSL);
 			}
@@ -838,13 +836,15 @@ public class ProceduralGenerator
 
 		if (sceneTilePaint != null)
 		{
-			if (client.getScene().getOverlayIds()[tileZ][tileX][tileY] != 0)
+			Overlay overlay = Overlay.getOverlay((int) client.getScene().getOverlayIds()[tileZ][tileX][tileY], tile, client, config);
+			if (overlay != Overlay.NONE)
 			{
-				waterType = Overlay.getOverlay(client.getScene().getOverlayIds()[tileZ][tileX][tileY], tile, client, config).waterType;
+				waterType = overlay.waterType;
 			}
 			else
 			{
-				waterType = Underlay.getUnderlay(client.getScene().getUnderlayIds()[tileZ][tileX][tileY], tile, client, config).waterType;
+				Underlay underlay = Underlay.getUnderlay((int) client.getScene().getUnderlayIds()[tileZ][tileX][tileY], tile, client, config);
+				waterType = underlay.waterType;
 			}
 		}
 
@@ -874,13 +874,15 @@ public class ProceduralGenerator
 
 		if (sceneTileModel != null)
 		{
-			if (isOverlayFace(tile, face))
+			Overlay overlay = Overlay.getOverlay((int) client.getScene().getOverlayIds()[tileZ][tileX][tileY], tile, client, config);
+			if (isOverlayFace(tile, face) && overlay != Overlay.NONE)
 			{
-				waterType = Overlay.getOverlay(client.getScene().getOverlayIds()[tileZ][tileX][tileY], tile, client, config).waterType;
+				waterType = overlay.waterType;
 			}
 			else
 			{
-				waterType = Underlay.getUnderlay(client.getScene().getUnderlayIds()[tileZ][tileX][tileY], tile, client, config).waterType;
+				Underlay underlay = Underlay.getUnderlay((int) client.getScene().getUnderlayIds()[tileZ][tileX][tileY], tile, client, config);
+				waterType = underlay.waterType;
 			}
 		}
 
@@ -891,18 +893,18 @@ public class ProceduralGenerator
 
 	boolean[][] tileOverlayTris = new boolean[][]
 		{
-			/*  0 */ new boolean[]{true, true, true, true}, // Used by tilemodels of varying tri counts?
-			/*  1 */ new boolean[]{false, true},
-			/*  2 */ new boolean[]{false, false, true},
-			/*  3 */ new boolean[]{false, false, true},
-			/*  4 */ new boolean[]{false, true, true},
-			/*  5 */ new boolean[]{false, true, true},
-			/*  6 */ new boolean[]{false, false, true, true},
-			/*  7 */ new boolean[]{false, false, false, true},
-			/*  8 */ new boolean[]{false, true, true, true},
-			/*  9 */ new boolean[]{false, false, false, true, true, true},
-			/* 10 */ new boolean[]{true, true, true, false, false, false},
-			/* 11 */ new boolean[]{true, true, false, false, false, false},
+			/*  0 */ { true, true, true, true }, // Used by tilemodels of varying tri counts?
+			/*  1 */ { false, true },
+			/*  2 */ { false, false, true },
+			/*  3 */ { false, false, true },
+			/*  4 */ { false, true, true },
+			/*  5 */ { false, true, true },
+			/*  6 */ { false, false, true, true },
+			/*  7 */ { false, false, false, true },
+			/*  8 */ { false, true, true, true },
+			/*  9 */ { false, false, false, true, true, true },
+			/* 10 */ { true, true, true, false, false, false },
+			/* 11 */ { true, true, false, false, false, false },
 		};
 
 	boolean[] getTileOverlayTris(int tileShapeIndex)
@@ -910,7 +912,7 @@ public class ProceduralGenerator
 		if (tileShapeIndex >= tileOverlayTris.length)
 		{
 			log.debug("getTileOverlayTris(): unknown tileShapeIndex ({})", tileShapeIndex);
-			return new boolean[]{false, false, false, false, false, false, false, false, false, false};
+			return new boolean[10]; // false
 		}
 		else
 		{
@@ -1104,13 +1106,15 @@ public class ProceduralGenerator
 			return true;
 		}
 
-		if (client.getScene().getOverlayIds()[z][x][y] != 0)
+		Overlay overlay = Overlay.getOverlay((int) client.getScene().getOverlayIds()[z][x][y], tile, client, config);
+		if (overlay != Overlay.NONE)
 		{
-			return !Overlay.getOverlay(client.getScene().getOverlayIds()[z][x][y], tile, client, config).blended;
+			return !overlay.blended;
 		}
-		else if (client.getScene().getUnderlayIds()[z][x][y] != 0)
+		Underlay underlay = Underlay.getUnderlay((int) client.getScene().getUnderlayIds()[z][x][y], tile, client, config);
+		if (underlay != Underlay.NONE)
 		{
-			return !Underlay.getUnderlay(client.getScene().getUnderlayIds()[z][x][y], tile, client, config).blended;
+			return !underlay.blended;
 		}
 		return false;
 	}
