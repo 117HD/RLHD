@@ -25,7 +25,6 @@
  */
 package rs117.hd;
 
-import com.google.common.primitives.Ints;
 import com.google.inject.Provides;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -106,11 +105,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	public static final int TEXTURE_UNIT_GAME = GL_TEXTURE1;
 	public static final int TEXTURE_UNIT_SHADOW_MAP = GL_TEXTURE2;
 
-	// This is the maximum number of triangles the compute shaders support
+	// This is the maximum number of triangles supported by the large compute shader
 	public static final int MAX_TRIANGLE = 6144;
 	public static final int SMALL_TRIANGLE_COUNT = 512;
 	private static final int FLAG_SCENE_BUFFER = Integer.MIN_VALUE;
-	private static final int DEFAULT_DISTANCE = 25;
 	static final int MAX_DISTANCE = 90;
 	static final int MAX_FOG_DEPTH = 100;
 	private static final int SCALAR_BYTES = 4;
@@ -152,9 +150,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 	@Inject
 	private ProceduralGenerator proceduralGenerator;
-
-	@Inject
-	private ConfigManager configManager;
 
 	@Inject
 	private ModelPusher modelPusher;
@@ -383,7 +378,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	public int[] camTarget = new int[3];
 
 	private boolean hasLoggedIn;
-	private boolean lwjglInitted = false;
+	private boolean lwjglInitialized = false;
 
 	@Setter
 	private boolean isInGauntlet = false;
@@ -473,7 +468,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 					}
 				}
 
-				lwjglInitted = true;
+				lwjglInitialized = true;
 
 				checkGLErrors();
 				if (log.isDebugEnabled() && caps.glDebugMessageControl != 0)
@@ -575,7 +570,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			client.setUnlockedFps(false);
 			modelPusher.shutDown();
 
-			if (lwjglInitted)
+			if (lwjglInitialized)
 			{
 				openCLManager.cleanup();
 
@@ -671,7 +666,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		if (config.macosIntelWorkaround() && !isAppleM1)
 		{
 			// Workaround wrapper for drivers that do not support dynamic indexing,
-			// particularly Intel drivers on MacOS
+			// particularly Intel drivers on macOS
 			include
 				.append(type)
 				.append(" ")
@@ -916,7 +911,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 		FloatBuffer vboUiBuf = BufferUtils.createFloatBuffer(5 * 4);
 		vboUiBuf.put(new float[]{
-			// positions     // texture coords
+			// positions     // texture UVs
 			1f, 1f, 0.0f, 1.0f, 0f, // top right
 			1f, -1f, 0.0f, 1.0f, 1f, // bottom right
 			-1f, -1f, 0.0f, 0.0f, 1f, // bottom left
@@ -1384,7 +1379,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		{
 			// The docs for clEnqueueAcquireGLObjects say all pending GL operations must be completed before calling
 			// clEnqueueAcquireGLObjects, and recommends calling glFinish() as the only portable way to do that.
-			// However no issues have been observed from not calling it, and so will leave disabled for now.
+			// However, no issues have been observed from not calling it, and so will leave disabled for now.
 			// glFinish();
 
 			openCLManager.compute(
@@ -1455,7 +1450,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 			int bufferLength = paint.getBufferLen();
 
-			// we packed a boolean into the buffer length of tiles so we can tell
+			// we packed a boolean into the buffer length of tiles, so we can tell
 			// which tiles have procedurally-generated underwater terrain.
 			// unpack the boolean:
 			boolean underwaterTerrain = (bufferLength & 1) == 1;
@@ -1518,7 +1513,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 			int bufferLength = model.getBufferLen();
 
-			// we packed a boolean into the buffer length of tiles so we can tell
+			// we packed a boolean into the buffer length of tiles, so we can tell
 			// which tiles have procedurally-generated underwater terrain.
 			// unpack the boolean:
 			boolean underwaterTerrain = (bufferLength & 1) == 1;
@@ -1557,7 +1552,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		}
 	}
 
-	private void prepareInterfaceTexture(int canvasWidth, int canvasHeight)
+	private void prepareInterfaceTexture(int canvasWidth, int canvasHeight) throws IllegalStateException
 	{
 		if (canvasWidth != lastCanvasWidth || canvasHeight != lastCanvasHeight)
 		{
@@ -1579,7 +1574,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		final int height = bufferProvider.getHeight();
 
 		glBindBuffer(GL_PIXEL_UNPACK_BUFFER, interfacePbo);
-		glMapBuffer(GL_PIXEL_UNPACK_BUFFER, GL_WRITE_ONLY)
+		ByteBuffer mapped = glMapBuffer(GL_PIXEL_UNPACK_BUFFER, GL_WRITE_ONLY);
+		if (mapped == null) {
+			throw new IllegalStateException("Failed to map interface PBO: {pbo=" + interfacePbo + ", tex=" + interfaceTexture + "}");
+		}
+		mapped
 			.asIntBuffer()
 			.put(pixels, 0, width * height);
 		glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
@@ -1612,7 +1611,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		{
 			prepareInterfaceTexture(canvasWidth, canvasHeight);
 		}
-		catch (Exception ex)
+		catch (IllegalStateException ex)
 		{
 			// Fixes: https://github.com/runelite/runelite/issues/12930
 			// Gracefully Handle loss of opengl buffers and context
@@ -1681,7 +1680,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
 			}
 
-			// Draw using the output buffer of the compute
+			// Draw using the output buffer of the compute shaders
 			int vertexBuffer = tmpOutBuffer.glBufferId;
 			int uvBuffer = tmpOutUvBuffer.glBufferId;
 			int normalBuffer = tmpOutNormalBuffer.glBufferId;
@@ -1913,7 +1912,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 			// use a curve to calculate max bias value based on the density of the shadow map
 			float shadowPixelsPerTile = (float)config.shadowResolution().getValue() / (float)config.shadowDistance().getValue();
-			float maxBias = 26f * (float)Math.pow(0.925f, (0.4f * shadowPixelsPerTile + -10f)) + 13f;
+			float maxBias = 26f * (float)Math.pow(0.925f, (0.4f * shadowPixelsPerTile - 10f)) + 13f;
 			glUniform1f(uniShadowMaxBias, maxBias / 10000f);
 
 			glUniform1i(uniShadowsEnabled, configShadowsEnabled ? 1 : 0);
@@ -2062,7 +2061,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	/**
 	 * Convert the front framebuffer to an Image
 	 *
-	 * @return
+	 * @return Image of the captured frame
 	 */
 	private Image screenshot()
 	{
@@ -2183,20 +2182,17 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		environmentManager.loadSceneEnvironments();
 		lightManager.loadSceneLights();
 
-		long procGenTimer = System.currentTimeMillis();
-		long timerCalculateTerrainNormals, timerGenerateTerrainData, timerGenerateUnderwaterTerrain;
-
 		long startTime = System.currentTimeMillis();
 		proceduralGenerator.generateUnderwaterTerrain(client.getScene());
-		timerGenerateUnderwaterTerrain = (int)(System.currentTimeMillis() - startTime);
+		long timerGenerateUnderwaterTerrain = System.currentTimeMillis() - startTime;
 		startTime = System.currentTimeMillis();
 		proceduralGenerator.calculateTerrainNormals(client.getScene());
-		timerCalculateTerrainNormals = (int)(System.currentTimeMillis() - startTime);
+		long timerCalculateTerrainNormals = System.currentTimeMillis() - startTime;
 		startTime = System.currentTimeMillis();
 		proceduralGenerator.generateTerrainData(client.getScene());
-		timerGenerateTerrainData = (int)(System.currentTimeMillis() - startTime);
+		long timerGenerateTerrainData = System.currentTimeMillis() - startTime;
 
-		log.debug("procedural data generation took {}ms to complete", (System.currentTimeMillis() - procGenTimer));
+		log.debug("procedural data generation took {}ms to complete", (System.currentTimeMillis() - startTime));
 		log.debug("-- calculateTerrainNormals: {}ms", timerCalculateTerrainNormals);
 		log.debug("-- generateTerrainData: {}ms", timerGenerateTerrainData);
 		log.debug("-- generateUnderwaterTerrain: {}ms", timerGenerateUnderwaterTerrain);
@@ -2319,34 +2315,20 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				? this.config.syncMode()
 				: HdPluginConfig.SyncMode.OFF;
 
-		int swapInterval = 0;
-		switch (syncMode)
+		int swapInterval = awtContext.setSwapInterval(syncMode.swapInterval);
+		if (swapInterval != syncMode.swapInterval)
 		{
-			case ON:
-				swapInterval = 1;
-				break;
-			case OFF:
-				swapInterval = 0;
-				break;
-			case ADAPTIVE:
-				swapInterval = -1;
-				break;
+			log.info("unsupported swap interval {}, got {}", syncMode.swapInterval, swapInterval);
 		}
 
-		int actualSwapInterval = awtContext.setSwapInterval(swapInterval);
-		if (actualSwapInterval != swapInterval)
-		{
-			log.info("unsupported swap interval {}, got {}", swapInterval, actualSwapInterval);
-		}
-
-		client.setUnlockedFpsTarget(actualSwapInterval == 0 ? config.fpsTarget() : 0);
+		client.setUnlockedFpsTarget(swapInterval == 0 ? config.fpsTarget() : 0);
 		checkGLErrors();
 	}
 
 	/**
 	 * Check is a model is visible and should be drawn.
 	 */
-	private boolean isVisible(Model model, int pitchSin, int pitchCos, int yawSin, int yawCos, int x, int y, int z)
+	private boolean isOutsideViewport(Model model, int pitchSin, int pitchCos, int yawSin, int yawCos, int x, int y, int z)
 	{
 		model.calculateBoundsCylinder();
 
@@ -2374,34 +2356,34 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				if (var17 / depth > Rasterizer3D_clipNegativeMidX)
 				{
 					int ry = pitchCos * y - var11 * pitchSin >> 16;
-					int yheight = pitchSin * XYZMag >> 16;
-					int ybottom = (pitchCos * bottomY >> 16) + yheight;
-					int var20 = (ry + ybottom) * zoom;
+					int yHeight = pitchSin * XYZMag >> 16;
+					int yBottom = (pitchCos * bottomY >> 16) + yHeight;
+					int var20 = (ry + yBottom) * zoom;
 					if (var20 / depth > Rasterizer3D_clipNegativeMidY)
 					{
-						int ytop = (pitchCos * modelHeight >> 16) + yheight;
-						int var22 = (ry - ytop) * zoom;
-						return var22 / depth < Rasterizer3D_clipMidY2;
+						int yTop = (pitchCos * modelHeight >> 16) + yHeight;
+						int var22 = (ry - yTop) * zoom;
+						return var22 / depth >= Rasterizer3D_clipMidY2;
 					}
 				}
 			}
 		}
-		return false;
+		return true;
 	}
 
 	/**
-	 * Draw a renderable in the scene
+	 * Draw a Renderable in the scene
 	 *
-	 * @param renderable
-	 * @param orientation
-	 * @param pitchSin
-	 * @param pitchCos
-	 * @param yawSin
-	 * @param yawCos
-	 * @param x
-	 * @param y
-	 * @param z
-	 * @param hash
+	 * @param renderable Can be an Actor (Player or NPC), DynamicObject, GraphicsObject, TileItem, Projectile or a raw Model.
+	 * @param orientation Rotation around the up-axis, from 0 to 2048 exclusive, 2048 indicating a complete rotation.
+	 * @param pitchSin The sine of the camera's rotation about the horizontal axis, in the range from -65536 to 65536.
+	 * @param pitchCos The cosine of the camera's rotation about the horizontal axis, in the range from -65536 to 65536.
+	 * @param yawSin The sine of the camera's rotation about the vertical axis, in the range from -65536 to 65536.
+	 * @param yawCos The cosine of the camera's rotation about the vertical axis, in the range from -65536 to 65536.
+	 * @param x The Renderable's X offset relative to `client.getCameraX2()`.
+	 * @param y The Renderable's Y offset relative to `client.getCameraX2()`.
+	 * @param z The Renderable's Z offset relative to `client.getCameraX2()`.
+	 * @param hash A unique hash of the renderable consisting of some useful information. See {@link ModelHash} for more details.
 	 */
 	@Override
 	public void draw(Renderable renderable, int orientation, int pitchSin, int pitchCos, int yawSin, int yawCos, int x, int y, int z, long hash)
@@ -2423,7 +2405,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		{
 			model.calculateBoundsCylinder();
 
-			if (!isVisible(model, pitchSin, pitchCos, yawSin, yawCos, x, y, z))
+			if (isOutsideViewport(model, pitchSin, pitchCos, yawSin, yawCos, x, y, z))
 			{
 				return;
 			}
@@ -2464,7 +2446,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 			model.calculateBoundsCylinder();
 
-			if (!isVisible(model, pitchSin, pitchCos, yawSin, yawCos, x, y, z))
+			if (isOutsideViewport(model, pitchSin, pitchCos, yawSin, yawCos, x, y, z))
 			{
 				return;
 			}
@@ -2530,10 +2512,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	}
 
 	/**
-	 * returns the correct buffer based on triangle count and updates model count
+	 * Grab a model buffer handle suitable for the triangle count
 	 *
-	 * @param triangles
-	 * @return
+	 * @param triangles the number of triangles that the returned buffer must support
+	 * @return the correct buffer based on triangle count and updates model count
 	 */
 	private GpuIntBuffer bufferForTriangles(int triangles)
 	{
@@ -2558,7 +2540,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	{
 		if (OSType.getOSType() == OSType.MacOS)
 		{
-			// macos handles DPI scaling for us already
+			// macOS handles DPI scaling for us already
 			glViewport(x, y, width, height);
 		}
 		else
@@ -2577,8 +2559,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 	private int getDrawDistance()
 	{
-		final int limit = MAX_DISTANCE;
-		return Ints.constrainToRange(config.drawDistance(), 0, limit);
+		return HDUtils.clamp(config.drawDistance(), 0, MAX_DISTANCE);
 	}
 
 	/**
@@ -2603,6 +2584,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		return new int[]{camX, camY, camZ};
 	}
 
+	@SuppressWarnings("SameParameterValue")
 	private void updateBuffer(@Nonnull GLBuffer glBuffer, int target, @Nonnull IntBuffer data, int usage, long clFlags)
 	{
 		glBindBuffer(target, glBuffer.glBufferId);
@@ -2621,6 +2603,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		}
 	}
 
+	@SuppressWarnings("SameParameterValue")
 	private void updateBuffer(@Nonnull GLBuffer glBuffer, int target, @Nonnull FloatBuffer data, int usage, long clFlags)
 	{
 		glBindBuffer(target, glBuffer.glBufferId);
@@ -2639,6 +2622,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		}
 	}
 
+	@SuppressWarnings("SameParameterValue")
 	private void updateBuffer(@Nonnull GLBuffer glBuffer, int target, @Nonnull ByteBuffer data, int usage, long clFlags)
 	{
 		glBindBuffer(target, glBuffer.glBufferId);
@@ -2657,6 +2641,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		}
 	}
 
+	@SuppressWarnings("SameParameterValue")
 	private void updateBuffer(@Nonnull GLBuffer glBuffer, int target, int size, int usage, long clFlags)
 	{
 		glBindBuffer(target, glBuffer.glBufferId);
@@ -2683,7 +2668,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			// allocate new
 			if (glBuffer.size == 0)
 			{
-				// opencl does not allow 0-size gl buffers, it will segfault on macos
+				// opencl does not allow 0-size gl buffers, it will cause a segfault on macOS
 				glBuffer.cl_mem = null;
 			}
 			else

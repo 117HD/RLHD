@@ -25,6 +25,7 @@
  */
 package rs117.hd;
 
+import lombok.RequiredArgsConstructor;
 import net.runelite.client.config.*;
 
 import static rs117.hd.HdPlugin.MAX_DISTANCE;
@@ -114,11 +115,14 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
+	@RequiredArgsConstructor
 	enum SyncMode
 	{
-		OFF,
-		ON,
-		ADAPTIVE
+		OFF(0),
+		ON(1),
+		ADAPTIVE(-1);
+
+		public final int swapInterval;
 	}
 
 	@ConfigItem(
