@@ -28,7 +28,6 @@ package rs117.hd.scene;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.api.coords.LocalPoint;
@@ -40,7 +39,6 @@ import net.runelite.client.plugins.PluginManager;
 import net.runelite.client.plugins.entityhider.EntityHiderConfig;
 import net.runelite.client.plugins.entityhider.EntityHiderPlugin;
 import rs117.hd.HdPlugin;
-import rs117.hd.HdPluginConfig;
 import rs117.hd.scene.lights.*;
 import rs117.hd.utils.Env;
 import rs117.hd.utils.HDUtils;
@@ -53,8 +51,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
 
-import static java.lang.Math.cos;
-import static java.lang.Math.pow;
+import static java.lang.Math.*;
 import static rs117.hd.utils.ResourcePath.path;
 
 @Singleton
@@ -69,9 +66,6 @@ public class LightManager
 	private ConfigManager configManager;
 
 	@Inject
-	private HdPluginConfig config;
-
-	@Inject
 	private Client client;
 
 	@Inject
@@ -83,31 +77,19 @@ public class LightManager
 	@Inject
 	private PluginManager pluginManager;
 
-	@VisibleForTesting
 	final ArrayList<SceneLight> WORLD_LIGHTS = new ArrayList<>();
-	@VisibleForTesting
 	final ListMultimap<Integer, Light> NPC_LIGHTS = ArrayListMultimap.create();
 	@VisibleForTesting
 	final ListMultimap<Integer, Light> OBJECT_LIGHTS = ArrayListMultimap.create();
-	@VisibleForTesting
 	final ListMultimap<Integer, Light> PROJECTILE_LIGHTS = ArrayListMultimap.create();
-	@VisibleForTesting
 	final ListMultimap<Integer, Light> GRAPHICS_OBJECT_LIGHTS = ArrayListMultimap.create();
+	final ListMultimap<Integer, Light> SPOT_ANIM_LIGHTS = ArrayListMultimap.create();
 
-	@Getter
-	ArrayList<SceneLight> sceneLights = new ArrayList<>();
-	@Getter
-	ArrayList<Projectile> sceneProjectiles = new ArrayList<>();
-	@Getter
-	ArrayList<GraphicsObject> sceneGraphicsObjects = new ArrayList<>();
+	private ArrayList<SceneLight> sceneLights = new ArrayList<>();
+	private ArrayList<Projectile> sceneProjectiles = new ArrayList<>();
 
-	long lastFrameTime = -1;
-	boolean configChanged = false;
-
-	int sceneMinX = 0;
-	int sceneMinY = 0;
-	int sceneMaxX = 0;
-	int sceneMaxY = 0;
+	private long lastFrameTime = System.currentTimeMillis();
+	private boolean configChanged = false;
 
 	public int visibleLightsCount = 0;
 
@@ -132,6 +114,7 @@ public class LightManager
 			OBJECT_LIGHTS.clear();
 			PROJECTILE_LIGHTS.clear();
 			GRAPHICS_OBJECT_LIGHTS.clear();
+			SPOT_ANIM_LIGHTS.clear();
 
 			for (Light l : lights)
 			{
@@ -148,6 +131,7 @@ public class LightManager
 				l.objectIds.forEach(id -> OBJECT_LIGHTS.put(id, l));
 				l.projectileIds.forEach(id -> PROJECTILE_LIGHTS.put(id, l));
 				l.graphicsObjectIds.forEach(id -> GRAPHICS_OBJECT_LIGHTS.put(id, l));
+				l.actorGraphicIds.forEach(id -> SPOT_ANIM_LIGHTS.put(id, l));
 			}
 
 			log.debug("Loaded {} lights", lights.length);
@@ -211,7 +195,7 @@ public class LightManager
 				light.y = (int) light.projectile.getY();
 				light.z = (int) light.projectile.getZ() - light.height;
 
-				light.visible = projectileLightVisible();
+				light.visible = areProjectileLightsEnabled();
 			}
 
 			if (light.graphicsObject != null)
@@ -219,7 +203,6 @@ public class LightManager
 				if (light.graphicsObject.finished())
 				{
 					lightIterator.remove();
-					sceneGraphicsObjects.remove(light.graphicsObject);
 					continue;
 				}
 
@@ -263,12 +246,13 @@ public class LightManager
 				int npcTileX = light.npc.getLocalLocation().getSceneX();
 				int npcTileY = light.npc.getLocalLocation().getSceneY();
 
-				// Some NPCs, such as Crystalline Hunllef in The Gauntlet, sometimes return scene X/Y values far outside of the possible range.
+				// Some NPCs, such as Crystalline Hunllef in The Gauntlet, sometimes return scene X/Y values far outside the possible range.
 				if (npcTileX < Perspective.SCENE_SIZE && npcTileY < Perspective.SCENE_SIZE && npcTileX >= 0 && npcTileY >= 0)
 				{
 					// Tile null check is to prevent oddities caused by - once again - Crystalline Hunllef.
 					// May also apply to other NPCs in instances.
-					if (client.getScene().getTiles()[plane][npcTileX][npcTileY] != null && client.getScene().getTiles()[plane][npcTileX][npcTileY].getBridge() != null)
+					Tile tile = client.getScene().getTiles()[plane][npcTileX][npcTileY];
+					if (tile != null && tile.getBridge() != null)
 					{
 						plane++;
 					}
@@ -281,14 +265,39 @@ public class LightManager
 					float heightNorth = HDUtils.lerp(client.getTileHeights()[plane][baseTileX][baseTileY + 1], client.getTileHeights()[plane][baseTileX + 1][baseTileY + 1], lerpX);
 					float heightSouth = HDUtils.lerp(client.getTileHeights()[plane][baseTileX][baseTileY], client.getTileHeights()[plane][baseTileX + 1][baseTileY], lerpX);
 					float tileHeight = HDUtils.lerp(heightSouth, heightNorth, lerpY);
-					light.z = (int) tileHeight - 1 - light.height;
+					light.z = (int) tileHeight - light.height;
 
-					light.visible = npcLightVisible(light.npc);
+					light.visible = isNpcLightVisible(light.npc);
 				}
 				else
 				{
 					light.visible = false;
 				}
+			}
+
+			if (light.actorGraphicId != -1) {
+				if (light.actor.getGraphic() != light.actorGraphicId) {
+					lightIterator.remove();
+					continue;
+				}
+
+				Actor cached = null;
+				if (light.actor instanceof NPC) {
+					cached = client.getCachedNPCs()[((NPC) light.actor).getIndex()];
+				} else if (light.actor instanceof Player) {
+					cached = client.getCachedPlayers()[((Player) light.actor).getId()];
+				}
+
+				if (cached != light.actor) {
+					lightIterator.remove();
+					continue;
+				}
+
+				LocalPoint lp = light.actor.getLocalLocation();
+				light.x = lp.getX();
+				light.y = lp.getY();
+				light.z = HDUtils.getTileHeight(client, light.x, light.y, light.actor.getWorldLocation().getPlane());
+				light.z += light.actor.getGraphicHeight() - light.height;
 			}
 
 			if (light.type == LightType.FLICKER)
@@ -299,11 +308,11 @@ public class LightManager
 
 				float flicker = (float) (
 					pow(cos(11 * t), 2) +
-						pow(cos(17 * t), 4) +
-						pow(cos(23 * t), 6) +
-						pow(cos(31 * t), 2) +
-						pow(cos(71 * t), 2) / 3 +
-						pow(cos(151 * t), 2) / 7
+					pow(cos(17 * t), 4) +
+					pow(cos(23 * t), 6) +
+					pow(cos(31 * t), 2) +
+					pow(cos(71 * t), 2) / 3 +
+					pow(cos(151 * t), 2) / 7
 				) / 4.335f;
 
 				float maxFlicker = 1f + (light.range / 100f);
@@ -350,12 +359,30 @@ public class LightManager
 				light.currentSize = light.radius;
 				light.currentColor = light.color;
 			}
-			// Apply fade-in
-			if (light.fadeInDuration > 0)
-			{
-				light.currentStrength *= Math.min((float) light.currentFadeIn / (float) light.fadeInDuration, 1.0f);
 
-				light.currentFadeIn += frameTime;
+			// Apply fade-in and fade-out
+			if (light.fadeStepIndex < light.fadeStepsMs.length) {
+				int stepMs = light.fadeStepsMs[light.fadeStepIndex];
+				while (light.fadeStepTime >= stepMs && light.fadeStepIndex + 1 < light.fadeStepsMs.length) {
+					light.fadeStepTime -= stepMs;
+					stepMs = light.fadeStepsMs[++light.fadeStepIndex];
+				}
+
+				float factor = stepMs == 0 ? 1 : (float) ((double) light.fadeStepTime / stepMs);
+				switch (light.fadeStepIndex % 4) {
+					case 1: // delay before fade-out
+						factor = 1;
+						break;
+					case 2: // fading out
+						factor = 1 - factor;
+						break;
+					case 3: // delay before fade-in
+						factor = 0;
+						break;
+				}
+				factor = HDUtils.clamp(factor, 0, 1);
+				light.currentStrength *= factor;
+				light.fadeStepTime += frameTime;
 			}
 
 			// Calculate the distance between the player and the light to determine which
@@ -392,7 +419,7 @@ public class LightManager
 		lastFrameTime = System.currentTimeMillis();
 	}
 
-	public boolean npcLightVisible(NPC npc)
+	public boolean isNpcLightVisible(NPC npc)
 	{
 		if (npc.getModel() == null)
 		{
@@ -422,7 +449,7 @@ public class LightManager
 		return hdPlugin.configNpcLights;
 	}
 
-	public boolean projectileLightVisible()
+	public boolean areProjectileLightsEnabled()
 	{
 
 		if (pluginManager.isPluginEnabled(entityHiderPlugin))
@@ -444,8 +471,8 @@ public class LightManager
 
 	public void loadSceneLights()
 	{
-		sceneMinX = client.getBaseX();
-		sceneMinY = client.getBaseY();
+		int sceneMinX = client.getBaseX();
+		int sceneMinY = client.getBaseY();
 		if (client.isInInstancedRegion())
 		{
 			// adjust coordinates when inside an instanced area
@@ -454,8 +481,8 @@ public class LightManager
 			sceneMinX = worldPoint.getX() - localPoint.getSceneX();
 			sceneMinY = worldPoint.getY() - localPoint.getSceneY();
 		}
-		sceneMaxX = sceneMinX + Constants.SCENE_SIZE - 2;
-		sceneMaxY = sceneMinY + Constants.SCENE_SIZE - 2;
+		int sceneMaxX = sceneMinX + Constants.SCENE_SIZE - 2;
+		int sceneMaxY = sceneMinY + Constants.SCENE_SIZE - 2;
 
 		for (SceneLight light : WORLD_LIGHTS)
 		{
@@ -463,7 +490,26 @@ public class LightManager
 			if (light.worldX >= sceneMinX && light.worldX <= sceneMaxX && light.worldY >= sceneMinY && light.worldY <= sceneMaxY)
 			{
 				sceneLights.add(light);
-				calculateScenePosition(light);
+
+				light.x = ((light.worldX - sceneMinX) * Perspective.LOCAL_TILE_SIZE) + Perspective.LOCAL_HALF_TILE_SIZE;
+				light.y = ((light.worldY - sceneMinY) * Perspective.LOCAL_TILE_SIZE) + Perspective.LOCAL_HALF_TILE_SIZE;
+				light.z = client.getTileHeights()[light.plane][light.worldX - sceneMinX][light.worldY - sceneMinY] - light.height;
+				if (light.alignment == Alignment.NORTH || light.alignment == Alignment.NORTHEAST || light.alignment == Alignment.NORTHWEST)
+				{
+					light.y += Perspective.LOCAL_HALF_TILE_SIZE;
+				}
+				if (light.alignment == Alignment.EAST || light.alignment == Alignment.NORTHEAST || light.alignment == Alignment.SOUTHEAST)
+				{
+					light.x += Perspective.LOCAL_HALF_TILE_SIZE;
+				}
+				if (light.alignment == Alignment.SOUTH || light.alignment == Alignment.SOUTHEAST || light.alignment == Alignment.SOUTHWEST)
+				{
+					light.y -= Perspective.LOCAL_HALF_TILE_SIZE;
+				}
+				if (light.alignment == Alignment.WEST || light.alignment == Alignment.NORTHWEST || light.alignment == Alignment.SOUTHWEST)
+				{
+					light.x -= Perspective.LOCAL_HALF_TILE_SIZE;
+				}
 			}
 		}
 
@@ -545,12 +591,6 @@ public class LightManager
 		client.getNpcs().forEach(this::addNpcLights);
 	}
 
-	public void updateNpcChanged(NpcChanged npcChanged)
-	{
-		removeNpcLight(npcChanged);
-		addNpcLights(npcChanged.getNpc());
-	}
-
 	public ArrayList<SceneLight> getVisibleLights(int maxDistance, int maxLights)
 	{
 		ArrayList<SceneLight> visibleLights = new ArrayList<>();
@@ -598,7 +638,7 @@ public class LightManager
 
 			SceneLight light = new SceneLight(
 				0, 0, projectile.getFloor(), l.height, l.alignment, l.radius,
-				l.strength, l.color, l.type, l.duration, l.range, 300);
+				l.strength, l.color, l.type, l.duration, l.range, l.fadeStepsMs);
 			light.projectile = projectile;
 			light.x = (int) projectile.getX();
 			light.y = (int) projectile.getY();
@@ -621,7 +661,7 @@ public class LightManager
 
 			SceneLight light = new SceneLight(
 				0, 0, -1, l.height, l.alignment, l.radius,
-				l.strength, l.color, l.type, l.duration, l.range, 0);
+				l.strength, l.color, l.type, l.duration, l.range, l.fadeStepsMs);
 			light.npc = npc;
 			light.visible = false;
 
@@ -629,14 +669,52 @@ public class LightManager
 		}
 	}
 
-	public void removeNpcLight(NpcDespawned npcDespawned)
+	public void removeNpcLights(NpcDespawned npcDespawned)
 	{
 		sceneLights.removeIf(light -> light.npc == npcDespawned.getNpc());
 	}
 
-	public void removeNpcLight(NpcChanged npcChanged)
+	public void updateNpcLights(NpcChanged ignored)
 	{
-		sceneLights.removeIf(light -> light.npc == npcChanged.getNpc());
+		// This is a no-op, since lights don't depend on NPC composition yet
+	}
+
+	public void addActorLights(Actor actor)
+	{
+		addActorGraphicLight(actor);
+	}
+
+	public void removeActorLights(Actor actor)
+	{
+		sceneLights.removeIf(l -> l.actor == actor);
+	}
+
+	public void updateActorLights(Actor actor)
+	{
+		// Remove the light if the spot anim has changed
+		sceneLights.removeIf(l -> l.actor == actor && l.actorGraphicId != actor.getGraphic());
+		addActorGraphicLight(actor);
+	}
+
+	private void addActorGraphicLight(Actor actor)
+	{
+		if (actor.getGraphic() != -1) {
+			for (Light l : SPOT_ANIM_LIGHTS.get(actor.getGraphic()))
+			{
+				SceneLight light = new SceneLight(
+					0, 0, actor.getWorldLocation().getPlane(), l.height, l.alignment, l.radius,
+					l.strength, l.color, l.type, l.duration, l.range, l.fadeStepsMs);
+				light.actor = actor;
+				light.actorGraphicId = actor.getGraphic();
+
+				LocalPoint lp = actor.getLocalLocation();
+				light.x = lp.getX();
+				light.y = lp.getY();
+				light.z = actor.getGraphicHeight();
+
+				sceneLights.add(light);
+			}
+		}
 	}
 
 	public void addObjectLight(TileObject tileObject, int plane)
@@ -654,7 +732,7 @@ public class LightManager
 			}
 
 			// prevent duplicate lights being spawned for the same object
-			if (sceneLights.stream().anyMatch(light -> light.object != null && tileObjectHash(light.object) == tileObjectHash(tileObject)))
+			if (sceneLights.stream().anyMatch(light -> light.object != null && light.object.getHash() == tileObject.getHash()))
 			{
 				continue;
 			}
@@ -662,7 +740,7 @@ public class LightManager
 			WorldPoint worldLocation = tileObject.getWorldLocation();
 			SceneLight light = new SceneLight(
 				worldLocation.getX(), worldLocation.getY(), worldLocation.getPlane(), l.height, l.alignment, l.radius,
-				l.strength, l.color, l.type, l.duration, l.range, l.fadeInDuration);
+				l.strength, l.color, l.type, l.duration, l.range, l.fadeStepsMs);
 			LocalPoint localLocation = tileObject.getLocalLocation();
 			light.x = localLocation.getX();
 			light.y = localLocation.getY();
@@ -723,7 +801,7 @@ public class LightManager
 
 			light.x = lightX;
 			light.y = lightY;
-			light.z = (int) tileHeight - light.height - 1;
+			light.z = (int) tileHeight - light.height;
 			light.object = tileObject;
 
 			sceneLights.add(light);
@@ -748,42 +826,13 @@ public class LightManager
 		{
 			SceneLight light = new SceneLight(
 				0, 0, graphicsObject.getLevel(), l.height, l.alignment, l.radius,
-				l.strength, l.color, l.type, l.duration, l.range, 300);
+				l.strength, l.color, l.type, l.duration, l.range, l.fadeStepsMs);
 			light.graphicsObject = graphicsObject;
 			light.x = graphicsObject.getLocation().getX();
 			light.y = graphicsObject.getLocation().getY();
 			light.z = graphicsObject.getZ();
 
-			sceneGraphicsObjects.add(graphicsObject);
 			sceneLights.add(light);
-		}
-	}
-
-	int tileObjectHash(TileObject tileObject)
-	{
-		return tileObject.getWorldLocation().getX() * tileObject.getWorldLocation().getY() * (tileObject.getPlane() + 1) + tileObject.getId();
-	}
-
-	void calculateScenePosition(SceneLight light)
-	{
-		light.x = ((light.worldX - sceneMinX) * Perspective.LOCAL_TILE_SIZE) + Perspective.LOCAL_HALF_TILE_SIZE;
-		light.y = ((light.worldY - sceneMinY) * Perspective.LOCAL_TILE_SIZE) + Perspective.LOCAL_HALF_TILE_SIZE;
-		light.z = client.getTileHeights()[light.plane][light.worldX - sceneMinX][light.worldY - sceneMinY] - light.height - 1;
-		if (light.alignment == Alignment.NORTH || light.alignment == Alignment.NORTHEAST || light.alignment == Alignment.NORTHWEST)
-		{
-			light.y += Perspective.LOCAL_HALF_TILE_SIZE;
-		}
-		if (light.alignment == Alignment.EAST || light.alignment == Alignment.NORTHEAST || light.alignment == Alignment.SOUTHEAST)
-		{
-			light.x += Perspective.LOCAL_HALF_TILE_SIZE;
-		}
-		if (light.alignment == Alignment.SOUTH || light.alignment == Alignment.SOUTHEAST || light.alignment == Alignment.SOUTHWEST)
-		{
-			light.y -= Perspective.LOCAL_HALF_TILE_SIZE;
-		}
-		if (light.alignment == Alignment.WEST || light.alignment == Alignment.NORTHWEST || light.alignment == Alignment.SOUTHWEST)
-		{
-			light.x -= Perspective.LOCAL_HALF_TILE_SIZE;
 		}
 	}
 }

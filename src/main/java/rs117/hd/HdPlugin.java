@@ -2694,13 +2694,31 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	@Subscribe
 	public void onNpcDespawned(NpcDespawned npcDespawned)
 	{
-		lightManager.removeNpcLight(npcDespawned);
+		lightManager.removeNpcLights(npcDespawned);
 	}
 
 	@Subscribe
 	public void onNpcChanged(NpcChanged npcChanged)
 	{
-		lightManager.updateNpcChanged(npcChanged);
+		lightManager.updateNpcLights(npcChanged);
+	}
+
+	@Subscribe
+	public void onPlayerSpawned(PlayerSpawned playerSpawned)
+	{
+		lightManager.addActorLights(playerSpawned.getPlayer());
+	}
+
+	@Subscribe
+	public void onPlayerDespawned(PlayerDespawned playerDespawned)
+	{
+		lightManager.removeActorLights(playerDespawned.getPlayer());
+	}
+
+	@Subscribe
+	public void onGraphicChanged(GraphicChanged graphicChanged)
+	{
+		lightManager.updateActorLights(graphicChanged.getActor());
 	}
 
 	@Subscribe

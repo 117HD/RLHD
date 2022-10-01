@@ -25153,7 +25153,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeStepsMs": [ 1000 ],
     "projectileIds": [
       91
     ]
@@ -25170,7 +25170,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeStepsMs": [ 1000 ],
     "projectileIds": [
       94
     ]
@@ -25187,7 +25187,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeStepsMs": [ 1000 ],
     "projectileIds": [
       97
     ]
@@ -25204,7 +25204,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeStepsMs": [ 1000 ],
     "projectileIds": [
       100
     ]
@@ -25221,7 +25221,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeStepsMs": [ 1000 ],
     "projectileIds": [
       118
     ]
@@ -25238,7 +25238,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeStepsMs": [ 1000 ],
     "projectileIds": [
       121
     ]
@@ -25255,7 +25255,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeStepsMs": [ 1000 ],
     "projectileIds": [
       124
     ]
@@ -25272,7 +25272,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeStepsMs": [ 1000 ],
     "projectileIds": [
       127
     ]
@@ -25289,7 +25289,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeStepsMs": [ 1000 ],
     "projectileIds": [
       133
     ]
@@ -25306,7 +25306,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeStepsMs": [ 1000 ],
     "projectileIds": [
       136
     ]
@@ -25323,7 +25323,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeStepsMs": [ 1000 ],
     "projectileIds": [
       139
     ]
@@ -25340,7 +25340,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeStepsMs": [ 1000 ],
     "projectileIds": [
       130
     ]
@@ -25357,7 +25357,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeStepsMs": [ 1000 ],
     "projectileIds": [
       159
     ]
@@ -25374,7 +25374,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeStepsMs": [ 1000 ],
     "projectileIds": [
       162
     ]
@@ -25391,7 +25391,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeStepsMs": [ 1000 ],
     "projectileIds": [
       165
     ]
@@ -25408,7 +25408,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeStepsMs": [ 1000 ],
     "projectileIds": [
       156
     ]
@@ -25425,7 +25425,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeStepsMs": [ 1000 ],
     "projectileIds": [
       1456
     ]
@@ -25442,7 +25442,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeStepsMs": [ 1000 ],
     "projectileIds": [
       1459
     ]
@@ -25459,7 +25459,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeStepsMs": [ 1000 ],
     "projectileIds": [
       1462
     ]
@@ -25476,7 +25476,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeStepsMs": [ 1000 ],
     "projectileIds": [
       1465
     ]
@@ -25493,7 +25493,7 @@
     "type": "PULSE",
     "duration": 500,
     "range": 20,
-    "fadeInDuration": 1000,
+    "fadeStepsMs": [ 1000 ],
     "projectileIds": [
       103
     ]
@@ -25510,7 +25510,7 @@
     "type": "PULSE",
     "duration": 500,
     "range": 20,
-    "fadeInDuration": 1000,
+    "fadeStepsMs": [ 1000 ],
     "projectileIds": [
       106
     ]
@@ -25527,7 +25527,7 @@
     "type": "PULSE",
     "duration": 500,
     "range": 20,
-    "fadeInDuration": 1000,
+    "fadeStepsMs": [ 1000 ],
     "projectileIds": [
       109
     ]
@@ -25544,7 +25544,7 @@
     "type": "PULSE",
     "duration": 500,
     "range": 20,
-    "fadeInDuration": 1000,
+    "fadeStepsMs": [ 1000 ],
     "projectileIds": [
       168
     ]
@@ -25561,7 +25561,7 @@
     "type": "PULSE",
     "duration": 500,
     "range": 20,
-    "fadeInDuration": 1000,
+    "fadeStepsMs": [ 1000 ],
     "projectileIds": [
       171
     ]
@@ -25578,7 +25578,7 @@
     "type": "PULSE",
     "duration": 500,
     "range": 20,
-    "fadeInDuration": 1000,
+    "fadeStepsMs": [ 1000 ],
     "projectileIds": [
       174
     ]
@@ -25595,7 +25595,7 @@
     "type": "PULSE",
     "duration": 500,
     "range": 20,
-    "fadeInDuration": 1000,
+    "fadeStepsMs": [ 1000 ],
     "projectileIds": [
       178
     ]
@@ -25612,7 +25612,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeStepsMs": [ 1000 ],
     "projectileIds": [
       146
     ]
@@ -25629,7 +25629,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeStepsMs": [ 1000 ],
     "projectileIds": [
       328
     ]
@@ -25646,7 +25646,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeStepsMs": [ 1000 ],
     "projectileIds": [
       88
     ]
@@ -25663,7 +25663,7 @@
     "type": "PULSE",
     "duration": 500,
     "range": 20,
-    "fadeInDuration": 1000,
+    "fadeStepsMs": [ 1000 ],
     "projectileIds": [
       344
     ]
@@ -25680,7 +25680,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeStepsMs": [ 1000 ],
     "projectileIds": [
       1040
     ]
@@ -25697,7 +25697,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeStepsMs": [ 1000 ],
     "projectileIds": [
       1252
     ]
@@ -25714,7 +25714,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeStepsMs": [ 1000 ],
     "projectileIds": [
       384
     ]
@@ -25731,7 +25731,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeStepsMs": [ 1000 ],
     "projectileIds": [
       378
     ]
@@ -25748,7 +25748,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeStepsMs": [ 1000 ],
     "projectileIds": [
       360
     ]
@@ -25765,7 +25765,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeStepsMs": [ 1000 ],
     "projectileIds": [
       386
     ]
@@ -25782,7 +25782,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeStepsMs": [ 1000 ],
     "projectileIds": [
       380
     ]
@@ -25799,7 +25799,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeStepsMs": [ 1000 ],
     "projectileIds": [
       374
     ]
@@ -25816,7 +25816,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 300,
+    "fadeStepsMs": [ 300 ],
     "projectileIds": [
       249
     ]
@@ -25833,7 +25833,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 300,
+    "fadeStepsMs": [ 300 ],
     "projectileIds": [
       1574
     ]
@@ -25850,7 +25850,7 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 30,
-    "fadeInDuration": 300,
+    "fadeStepsMs": [ 300 ],
     "projectileIds": [
       17
     ]
@@ -25867,7 +25867,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 300,
+    "fadeStepsMs": [ 300 ],
     "projectileIds": [
       301
     ]
@@ -25884,7 +25884,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 500,
+    "fadeStepsMs": [ 500 ],
     "projectileIds": [
       450
     ]
@@ -25901,7 +25901,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 500,
+    "fadeStepsMs": [ 500 ],
     "projectileIds": [
       54
     ]
@@ -25918,7 +25918,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeStepsMs": [ 1000 ],
     "projectileIds": [
       1679
     ]
@@ -29303,9 +29303,13 @@
     "type": "PULSE",
     "duration": 1400,
     "range": 5,
+    "fadeStepsMs": [ 300 ],
     "graphicsObjectIds": [
       2134,
       2135
+    ],
+    "actorGraphicIds": [
+      2132
     ]
   },
   {
@@ -29457,7 +29461,7 @@
     "type": "FLICKER",
     "duration": 600,
     "range": 3,
-    "fadeInDuration": 0,
+    "fadeStepsMs": [ 0 ],
     "projectileIds": [
       2253
     ]
@@ -29474,7 +29478,7 @@
     "type": "FLICKER",
     "duration": 600,
     "range": 3,
-    "fadeInDuration": 0,
+    "fadeStepsMs": [ 0 ],
     "projectileIds": [
       1481,
       2266
@@ -30011,7 +30015,7 @@
     "type": "FLICKER",
     "duration": 600,
     "range": 2,
-    "fadeInDuration": 1200,
+    "fadeStepsMs": [ 1200 ],
     "objectIds": [
       45138
     ]

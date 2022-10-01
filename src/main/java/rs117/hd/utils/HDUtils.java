@@ -28,6 +28,8 @@ import static java.lang.Math.abs;
 import static java.lang.Math.sqrt;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
+import net.runelite.api.Client;
+import net.runelite.api.Perspective;
 
 @Slf4j
 @Singleton
@@ -319,4 +321,24 @@ public class HDUtils
             srgbToLinear(b / 255f)
         };
     }
+
+	public static int getTileHeight(Client client, int localX, int localY, int plane) {
+		int sceneX = localX >> 7;
+		int sceneY = localY >> 7;
+		if (sceneX >= 0 && sceneY >= 0 && sceneX < Perspective.SCENE_SIZE && sceneY < Perspective.SCENE_SIZE) {
+			if (plane < 3 && (client.getTileSettings()[1][sceneX][sceneY] & 2) == 2) {
+				plane++;
+			}
+
+			int[][][] tileHeights = client.getTileHeights();
+
+			int tileLocalX = localX & 127;
+			int tileLocalY = localY & 127;
+			int cornerSw = (128 - tileLocalX) * tileHeights[plane][sceneX][sceneY] + tileHeights[plane][sceneX + 1][sceneY] * tileLocalX >> 7;
+			int cornerNe = tileLocalX * tileHeights[plane][sceneX + 1][sceneY + 1] + tileHeights[plane][sceneX][sceneY + 1] * (128 - tileLocalX) >> 7;
+			return tileLocalY * cornerNe + (128 - tileLocalY) * cornerSw >> 7;
+		} else {
+			return 0;
+		}
+	}
 }

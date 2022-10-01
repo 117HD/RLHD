@@ -3,10 +3,7 @@ package rs117.hd.scene.lights;
 import java.util.Random;
 
 import lombok.NonNull;
-import net.runelite.api.GraphicsObject;
-import net.runelite.api.NPC;
-import net.runelite.api.Projectile;
-import net.runelite.api.TileObject;
+import net.runelite.api.*;
 
 public class SceneLight extends Light
 {
@@ -22,7 +19,8 @@ public class SceneLight extends Light
 	 */
 	public float[] currentColor;
 	public float currentAnimation = 0.5f;
-	public int currentFadeIn = 0;
+	public int fadeStepIndex = 0;
+	public long fadeStepTime = 0;
 	public boolean visible = true;
 
 	public int x;
@@ -36,32 +34,29 @@ public class SceneLight extends Light
 	public NPC npc = null;
 	public TileObject object = null;
 	public GraphicsObject graphicsObject = null;
+	public Actor actor = null;
+	public int actorGraphicId = -1;
 
 	public SceneLight(Light l)
 	{
 		this(l.description, l.worldX, l.worldY, l.plane, l.height, l.alignment, l.radius,
-			l.strength, l.color, l.type, l.duration, l.range, l.fadeInDuration);
+			l.strength, l.color, l.type, l.duration, l.range, l.fadeStepsMs);
 	}
 
-	public SceneLight(int worldX, int worldY, int plane, int height, @NonNull Alignment alignment, int radius, float strength, float[] color, LightType type, float duration, float range, int fadeInDuration)
+	public SceneLight(int worldX, int worldY, int plane, int height, @NonNull Alignment alignment, int radius, float strength, float[] color, LightType type, float duration, float range, int[] fadeStepsMs)
 	{
 		this(null, worldX, worldY, plane, height, alignment, radius,
-			strength, color, type, duration, range, fadeInDuration);
+			strength, color, type, duration, range, fadeStepsMs);
 	}
 
-	public SceneLight(String description, int worldX, int worldY, int plane, int height, @NonNull Alignment alignment, int radius, float strength, float[] color, LightType type, float duration, float range, int fadeInDuration)
+	public SceneLight(String description, int worldX, int worldY, int plane, int height, @NonNull Alignment alignment, int radius, float strength, float[] color, LightType type, float duration, float range, int[] fadeStepsMs)
 	{
 		super(description, worldX, worldY, plane, height, alignment, radius,
-			strength, color, type, duration, range, fadeInDuration,
-			null, null, null, null);
+			strength, color, type, duration, range, fadeStepsMs);
 
 		this.currentSize = radius;
 		this.currentStrength = strength;
 		this.currentColor = color;
-
-		if (type == LightType.PULSE)
-		{
-			this.currentAnimation = (float) Math.random();
-		}
+		this.currentAnimation = (float) Math.random();
 	}
 }

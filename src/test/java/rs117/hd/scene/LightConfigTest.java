@@ -43,7 +43,7 @@ public class LightConfigTest {
 
         // is its data correct?
         assertEquals("SPIT_ROAST", spitRoastLight.description);
-        assertEquals(50, (int) spitRoastLight.height);
+        assertEquals(50, spitRoastLight.height);
         assertEquals("CENTER", spitRoastLight.alignment.toString());
         assertEquals(250, spitRoastLight.radius);
         assertEquals(12.5, spitRoastLight.strength, 0.0);

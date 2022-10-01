@@ -27,7 +27,7 @@ public class Light
 	public int plane;
 	@NonNull
 	public Alignment alignment = Alignment.CENTER;
-	public int height;
+	public int height = 10;
 	public int radius;
 	public float strength;
 	/**
@@ -38,7 +38,8 @@ public class Light
 	public LightType type = LightType.STATIC;
 	public float duration;
 	public float range;
-	public int fadeInDuration;
+	public int[] fadeStepsMs = { 300 };
+
 	@JsonAdapter(NpcID.JsonAdapter.class)
 	public HashSet<Integer> npcIds = new HashSet<>();
 	@JsonAdapter(ObjectID.JsonAdapter.class)
@@ -47,26 +48,37 @@ public class Light
 	public HashSet<Integer> projectileIds = new HashSet<>();
 	@JsonAdapter(IntegerSetAdapter.class)
 	public HashSet<Integer> graphicsObjectIds = new HashSet<>();
+	@JsonAdapter(IntegerSetAdapter.class)
+	public HashSet<Integer> actorGraphicIds = new HashSet<>();
 
-	public Light(String description, int worldX, int worldY, int plane, Integer height, @NonNull Alignment alignment, int radius, float strength, float[] color, @NonNull LightType type, float duration, float range, Integer fadeInDuration, HashSet<Integer> npcIds, HashSet<Integer> objectIds, HashSet<Integer> projectileIds, HashSet<Integer> graphicsObjectIds)
-	{
+	public Light(
+		String description,
+		int worldX,
+		int worldY,
+		int plane,
+		Integer height,
+		@NonNull Alignment alignment,
+		int radius,
+		float strength,
+		float[] color,
+		@NonNull LightType type,
+		float duration,
+		float range,
+		int[] fadeStepsMs
+	) {
 		this.description = description;
 		this.worldX = worldX;
 		this.worldY = worldY;
 		this.plane = plane;
-		this.height = height;
 		this.alignment = alignment;
+		this.height = height;
 		this.radius = radius;
 		this.strength = strength;
 		this.color = color;
 		this.type = type;
 		this.duration = duration;
 		this.range = range;
-		this.fadeInDuration = fadeInDuration;
-		this.npcIds = npcIds == null ? new HashSet<>() : npcIds;
-		this.objectIds = objectIds == null ? new HashSet<>() : objectIds;
-		this.projectileIds = projectileIds == null ? new HashSet<>() : projectileIds;
-		this.graphicsObjectIds = graphicsObjectIds == null ? new HashSet<>() : graphicsObjectIds;
+		this.fadeStepsMs = fadeStepsMs;
 	}
 
 	public static class IntegerSetAdapter extends TypeAdapter<HashSet<Integer>>
@@ -105,11 +117,12 @@ public class Light
 			other.type == type &&
 			other.duration == duration &&
 			other.range == range &&
-			equal(other.fadeInDuration, fadeInDuration) &&
+			Arrays.equals(other.fadeStepsMs, fadeStepsMs) &&
 			other.npcIds.equals(npcIds) &&
 			other.objectIds.equals(objectIds) &&
 			other.projectileIds.equals(projectileIds) &&
-			other.graphicsObjectIds.equals(graphicsObjectIds);
+			other.graphicsObjectIds.equals(graphicsObjectIds) &&
+			other.actorGraphicIds.equals(actorGraphicIds);
 	}
 
 	@Override
@@ -129,11 +142,13 @@ public class Light
 		hash = hash * 37 + type.hashCode();
 		hash = hash * 37 + Float.floatToIntBits(duration);
 		hash = hash * 37 + Float.floatToIntBits(range);
-		hash = hash * 37 + fadeInDuration;
+		for (int i : fadeStepsMs)
+			hash = hash * 37 + i;
 		hash = hash * 37 + npcIds.hashCode();
 		hash = hash * 37 + objectIds.hashCode();
 		hash = hash * 37 + projectileIds.hashCode();
 		hash = hash * 37 + graphicsObjectIds.hashCode();
+		hash = hash * 37 + actorGraphicIds.hashCode();
 		return hash;
 	}
 

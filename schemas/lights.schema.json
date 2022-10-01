@@ -96,9 +96,12 @@
         "type": "number",
         "description": "The distance range to vary the light's radius by according to the light's animation."
       },
-      "fadeInDuration": {
-        "type": "number",
-        "description": "The time in milliseconds until the light is fully active after spawning."
+      "fadeStepsMs": {
+        "type": "array",
+        "description": "The time in milliseconds for each fade step. The 1st number is the fade-in time, the 2nd number is a delay until fade-out begins, the 3rd number is the fade-out duration, and the 4th number is a delay until fade-in begins. All numbers are optional, and you can have multiple cycles of fading in and out by supplying more than 3 durations.",
+        "items": {
+          "type": [ "integer" ]
+        }
       },
       "npcIds": {
         "type": "array",
@@ -118,14 +121,21 @@
         "type": "array",
         "description": "A set of projectile IDs to apply the light to.",
         "items": {
-          "type": [ "integer", "string" ]
+          "type": [ "integer" ]
         }
       },
       "graphicsObjectIds": {
         "type": "array",
         "description": "A set of graphics object IDs to apply the light to.",
         "items": {
-          "type": [ "integer", "string" ]
+          "type": [ "integer" ]
+        }
+      },
+      "actorGraphicIds": {
+        "type": "array",
+        "description": "A set of spot anim IDs to apply the light to.",
+        "items": {
+          "type": [ "integer" ]
         }
       }
     }
