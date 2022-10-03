@@ -652,7 +652,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	private String generateFetchCases(String array, int from, int to)
 	{
 		int length = to - from;
-		if (length == 1)
+		if (length <= 1)
 		{
 			return array + "[" + from + "]";
 		}
