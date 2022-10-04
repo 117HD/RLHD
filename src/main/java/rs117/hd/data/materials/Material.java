@@ -298,6 +298,8 @@ public enum Material
 
 	BARK,
 	WOOD_GRAIN,
+	GRANITE_ROCK,
+	SANDSTONE_ROCK,
 
 	HD_INFERNAL_CAPE(p -> p
 		.replaceIf(INFERNAL_CAPE, HdPluginConfig::hdInfernalTexture)
