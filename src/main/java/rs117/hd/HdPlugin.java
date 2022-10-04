@@ -1018,7 +1018,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			glDeleteBuffers(glBuffer.glBufferId);
 			glBuffer.glBufferId = 0;
 		}
-		glBuffer.size = 0;
+		glBuffer.size = -1;
 
 		if (glBuffer.cl_mem != null)
 		{
@@ -2671,7 +2671,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			}
 
 			// allocate new
-			if (glBuffer.size == 0)
+			if (glBuffer.size == -1)
 			{
 				// opencl does not allow 0-size gl buffers, it will segfault on macos
 				glBuffer.cl_mem = null;
