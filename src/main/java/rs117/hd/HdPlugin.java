@@ -542,10 +542,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 				lightManager.startUp();
 				modelOverrideManager.startUp();
+				modelPusher.startUp();
 
 				if (client.getGameState() == GameState.LOGGED_IN)
 				{
-					modelPusher.startUp();
 					uploadScene();
 				}
 
@@ -817,14 +817,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		uniUnderwaterCaustics = glGetUniformLocation(glProgram, "underwaterCaustics");
 		uniUnderwaterCausticsColor = glGetUniformLocation(glProgram, "underwaterCausticsColor");
 		uniUnderwaterCausticsStrength = glGetUniformLocation(glProgram, "underwaterCausticsStrength");
+		uniTextureArray = glGetUniformLocation(glProgram, "textureArray");
+		uniElapsedTime = glGetUniformLocation(glProgram, "elapsedTime");
 
 		uniUiTexture = glGetUniformLocation(glUiProgram, "uiTexture");
 		uniTexTargetDimensions = glGetUniformLocation(glUiProgram, "targetDimensions");
 		uniTexSourceDimensions = glGetUniformLocation(glUiProgram, "sourceDimensions");
 		uniUiColorBlindnessIntensity = glGetUniformLocation(glUiProgram, "colorBlindnessIntensity");
 		uniUiAlphaOverlay = glGetUniformLocation(glUiProgram, "alphaOverlay");
-		uniTextureArray = glGetUniformLocation(glProgram, "textureArray");
-		uniElapsedTime = glGetUniformLocation(glProgram, "elapsedTime");
 
 		if (computeMode == ComputeMode.OPENGL)
 		{
