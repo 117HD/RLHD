@@ -22,6 +22,13 @@ public class ModelCache {
             modelCacheSizeMiB = 1024;
         }
 
+        long totalPhysicalMemoryMiB = ((com.sun.management.OperatingSystemMXBean)java.lang.management.ManagementFactory.getOperatingSystemMXBean()).getTotalPhysicalMemorySize() / 1024 / 1024;
+
+        if (modelCacheSizeMiB > totalPhysicalMemoryMiB / 2) {
+            modelCacheSizeMiB = (int) (totalPhysicalMemoryMiB / 2);
+            log.error("limiting the cache to " + modelCacheSizeMiB + " since the selected amount exceeds half of the total physical memory for the system.");
+        }
+
         this.bufferPool = new BufferPool(modelCacheSizeMiB * 1048576L, hdPlugin);
         this.bufferPool.allocate();
 
