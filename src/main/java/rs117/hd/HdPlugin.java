@@ -2241,13 +2241,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				break;
 			case "textureResolution":
 			case "hdInfernalTexture":
+			case KEY_WINTER_THEME:
 				configHdInfernalTexture = config.hdInfernalTexture();
 				textureManager.freeTextures();
 			case "groundBlending":
 			case "groundTextures":
 			case "objectTextures":
 			case "tzhaarHD":
-			case KEY_WINTER_THEME:
 				configGroundBlending = config.groundBlending();
 				configGroundTextures = config.groundTextures();
 				configModelTextures = config.objectTextures();
