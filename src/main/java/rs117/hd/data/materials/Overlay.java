@@ -99,6 +99,8 @@ public enum Overlay {
     BARBARIAN_VILLAGE_EAST_PATH_FIX_2(2, Area.BARBARIAN_VILLAGE_EAST_PATH_FIX, GroundMaterial.GRAVEL, p -> p.shiftSaturation(-1).shiftLightness(4)),
 
     // Digsite
+    EXAMCENTRE_FLOOR_FIX_1(88, Area.DIGSITE_EXAM_CENTRE, GroundMaterial.WORN_TILES, p -> p.blended(false).shiftLightness(2)),
+    EXAMCENTRE_FLOOR_FIX_2(120, Area.DIGSITE_EXAM_CENTRE, GroundMaterial.WORN_TILES, p -> p.blended(false).shiftLightness(2)),
     DIGSITE_DOCK(93, Area.DIGSITE_DOCK, GroundMaterial.TILES_2x2_1_GLOSS, p -> p.blended(false)),
 
     // Al Kharid

@@ -156,6 +156,10 @@ public enum Area
 	),
 
 	// Digsite
+	DIGSITE_EXAM_CENTRE(
+		new AABB(3367,3348,3357,3332),
+		new AABB(3356, 3337,3348, 3332)
+	),
 	DIGSITE_DOCK(3348, 3460, 3404, 3444),
 
 	// Draynor
