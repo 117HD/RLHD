@@ -2670,13 +2670,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			}
 
 			// allocate new
-			if (glBuffer.size == -1)
+			if (glBuffer.size == 0)
 			{
 				// opencl does not allow 0-size gl buffers, it will segfault on macos
 				glBuffer.cl_mem = null;
 			}
 			else
 			{
+				assert glBuffer.size > 0 : "Size -1 should not reach this point";
 				glBuffer.cl_mem = clCreateFromGLBuffer(openCLManager.context, clFlags, glBuffer.glBufferId, null);
 			}
 		}
