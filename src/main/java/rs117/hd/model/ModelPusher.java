@@ -512,7 +512,7 @@ public class ModelPusher {
             color1H = color2H = color3H = 0;
             color1S = color2S = color3S = 0;
             color1L = color2L = color3L = 127;
-            maxBrightness1 = maxBrightness2 = maxBrightness3 = 127;
+            maxBrightness1 = maxBrightness2 = maxBrightness3 = 90;
         }
 
         if (tile != null && modelOverride.inheritTileColorType != InheritTileColorType.NONE) {
