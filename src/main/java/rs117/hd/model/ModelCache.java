@@ -29,7 +29,7 @@ public class ModelCache {
                 modelCacheSizeMiB = (int) (totalPhysicalMemoryMiB / 2);
                 log.error("limiting the cache to " + modelCacheSizeMiB + " since the selected amount exceeds half of the total physical memory for the system.");
             }
-        } catch (Exception e) {
+        } catch (Throwable e) {
             log.error("failed to check physical memory size: " + e);
         }
 
