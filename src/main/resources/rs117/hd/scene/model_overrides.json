@@ -2643,5 +2643,21 @@
       "BOULDER_11783"
     ],
     "flatNormals": true
+  },
+  {
+    "description": "SOPHANEM_PYRAMID",
+    "baseMaterial": "WALL_STONE",
+    "objectIds": [
+      6617, 6618
+    ],
+    "flatNormals": true,
+    "uvType": "GROUND_PLANE"
+  },
+  {
+    "description": "SOPHANEM_PYRAMID_DOORS",
+    "baseMaterial": "DIRT_1",
+    "objectIds": [
+      6614, 26622, 26623, 26624, 26625, 19168
+    ]
   }
 ]
