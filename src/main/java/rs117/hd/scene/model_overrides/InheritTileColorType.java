@@ -1,4 +1,4 @@
-package rs117.hd.scene.objects;
+package rs117.hd.scene.model_overrides;
 
 public enum InheritTileColorType
 {

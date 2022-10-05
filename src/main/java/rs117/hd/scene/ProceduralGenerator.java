@@ -24,8 +24,6 @@
  */
 package rs117.hd.scene;
 
-import com.google.common.primitives.Floats;
-import com.google.common.primitives.Ints;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -42,13 +40,12 @@ import net.runelite.api.Tile;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.data.WaterType;
-import rs117.hd.data.materials.GroundMaterial;
 import rs117.hd.data.materials.Material;
 import rs117.hd.data.materials.Overlay;
 import rs117.hd.data.materials.Underlay;
-import rs117.hd.scene.objects.ObjectProperties;
-import rs117.hd.scene.objects.ObjectType;
-import rs117.hd.scene.objects.TzHaarRecolorType;
+import rs117.hd.scene.model_overrides.ModelOverride;
+import rs117.hd.scene.model_overrides.ObjectType;
+import rs117.hd.scene.model_overrides.TzHaarRecolorType;
 import rs117.hd.utils.HDUtils;
 import static rs117.hd.utils.HDUtils.dotNormal3Lights;
 
@@ -90,7 +87,7 @@ public class ProceduralGenerator
 	 * material data for each vertex of each Tile. Then adds the resulting
 	 * data to appropriate HashMaps.
 	 *
-	 * @param scene
+	 * @param scene to generate terrain data for
 	 */
 	public void generateTerrainData(Scene scene)
 	{
@@ -116,11 +113,11 @@ public class ProceduralGenerator
 				{
 					if (tiles[z][x][y] != null)
 					{
+						generateDataForTile(tiles[z][x][y]);
 						if (tiles[z][x][y].getBridge() != null)
 						{
 							generateDataForTile(tiles[z][x][y].getBridge());
 						}
-						generateDataForTile(tiles[z][x][y]);
 					}
 				}
 			}
@@ -131,7 +128,7 @@ public class ProceduralGenerator
 	 * Produces color and material data for the vertices of the provided Tile.
 	 * Then adds the resulting data to appropriate HashMaps.
 	 *
-	 * @param tile
+	 * @param tile to generate terrain data for
 	 */
 	void generateDataForTile(Tile tile)
 	{
@@ -262,14 +259,10 @@ public class ProceduralGenerator
 				// skip invalid tile color
 				continue;
 			}
-			boolean lowPriorityColor = false;
-			// if this vertex already has a 'high priority' color assigned
-			// skip assigning a 'low priority' color unless there is no color assigned
-			if (vertexColors[vertex] <= 2)
-			{
-				// near-solid-black tiles that are used in some places under wall objects
-				lowPriorityColor = true;
-			}
+			// if this vertex already has a 'high priority' color assigned,
+			// skip assigning a 'low priority' color unless there is no color assigned.
+			// Near-solid-black tiles that are used in some places under wall objects
+			boolean lowPriorityColor = vertexColors[vertex] <= 2;
 
 			int[] colorHSL = HDUtils.colorIntToHSL(vertexColors[vertex]);
 
@@ -291,25 +284,23 @@ public class ProceduralGenerator
 
 			boolean isOverlay = false;
 			Material material = Material.DIRT_1;
-			if (vertexOverlays[vertex] != 0)
+			Overlay overlay = Overlay.getOverlay(vertexOverlays[vertex], tile, client, config);
+			Underlay underlay = Underlay.getUnderlay(vertexUnderlays[vertex], tile, client, config);
+			if (overlay != Overlay.NONE)
 			{
-				Overlay overlay = Overlay.getOverlay(vertexOverlays[vertex], tile, client, config);
-				GroundMaterial groundMaterial = overlay.groundMaterial;
-				material = groundMaterial.getRandomMaterial(z, worldX, worldY);
+				material = overlay.groundMaterial.getRandomMaterial(z, worldX, worldY);
 				isOverlay = !overlay.blendedAsUnderlay;
 				colorHSL = recolorOverlay(overlay, colorHSL);
 			}
-			else if (vertexUnderlays[vertex] != 0)
+			else if (underlay != Underlay.NONE)
 			{
-				Underlay underlay = Underlay.getUnderlay(vertexUnderlays[vertex], tile, client, config);
-				GroundMaterial groundMaterial = underlay.groundMaterial;
-				material = groundMaterial.getRandomMaterial(z, worldX, worldY);
+				material = underlay.groundMaterial.getRandomMaterial(z, worldX, worldY);
 				isOverlay = underlay.blendedAsOverlay;
 				colorHSL = recolorUnderlay(underlay, colorHSL);
 			}
 
 			final int maxBrightness = 55; // reduces overexposure
-			colorHSL[2] = Ints.constrainToRange(colorHSL[2], 0, maxBrightness);
+			colorHSL[2] = HDUtils.clamp(colorHSL[2], 0, maxBrightness);
 			vertexColors[vertex] = HDUtils.colorHSLToInt(colorHSL);
 
 			// mark the vertex as either an overlay or underlay.
@@ -347,7 +338,7 @@ public class ProceduralGenerator
 	 * Scene, increasing the depth of each tile based on its distance from the shore.
 	 * Then stores the resulting data in a HashMap.
 	 *
-	 * @param scene
+	 * @param scene to generate underwater terrain for
 	 */
 	public void generateUnderwaterTerrain(Scene scene)
 	{
@@ -644,7 +635,13 @@ public class ProceduralGenerator
 					{
 						continue;
 					}
+
 					Tile tile = tiles[z][x][y];
+					if (tile == null)
+					{
+						continue;
+					}
+
 					if (tile.getBridge() != null)
 					{
 						tile = tile.getBridge();
@@ -717,29 +714,24 @@ public class ProceduralGenerator
 	 * Iterates through all Tiles in a given Scene, calculating vertex normals
 	 * for each one, then stores resulting normal data in a HashMap.
 	 *
-	 * @param scene
+	 * @param scene to calculate terrain normals for
 	 */
 	public void calculateTerrainNormals(Scene scene)
 	{
 		vertexTerrainNormals = new HashMap<>();
 		Tile[][][] tiles = scene.getTiles();
 
-		for (int tileZ = 0; tileZ < tiles.length; tileZ++)
-		{
-			for (int tileX = 0; tileX < tiles[tileZ].length; tileX++)
-			{
-				for (int tileY = 0; tileY < tiles[tileZ][tileX].length; tileY++)
-				{
-					if (tiles[tileZ][tileX][tileY] != null)
-					{
+		for (Tile[][] plane : tiles) {
+			for (Tile[] column : plane) {
+				for (Tile tile : column) {
+					if (tile != null) {
 						boolean isBridge = false;
 
-						if (tiles[tileZ][tileX][tileY].getBridge() != null)
-						{
-							calculateNormalsForTile(tiles[tileZ][tileX][tileY].getBridge(), false);
+						if (tile.getBridge() != null) {
+							calculateNormalsForTile(tile.getBridge(), false);
 							isBridge = true;
 						}
-						calculateNormalsForTile(tiles[tileZ][tileX][tileY], isBridge);
+						calculateNormalsForTile(tile, isBridge);
 					}
 				}
 			}
@@ -750,8 +742,8 @@ public class ProceduralGenerator
 	 * Calculates vertex normals for a given Tile,
 	 * then stores resulting normal data in a HashMap.
 	 *
-	 * @param tile
-	 * @param isBridge
+	 * @param tile to calculate normals for
+	 * @param isBridge whether the tile is a bridge tile, i.e. tile above
 	 */
 	void calculateNormalsForTile(Tile tile, boolean isBridge)
 	{
@@ -826,7 +818,7 @@ public class ProceduralGenerator
 	/**
 	 * Returns the WaterType of the provided SceneTilePaint Tile.
 	 *
-	 * @param tile
+	 * @param tile to determine the WaterType of
 	 * @return the WaterType of the specified Tile
 	 */
 	WaterType tileWaterType(Tile tile, SceneTilePaint sceneTilePaint)
@@ -843,13 +835,15 @@ public class ProceduralGenerator
 
 		if (sceneTilePaint != null)
 		{
-			if (client.getScene().getOverlayIds()[tileZ][tileX][tileY] != 0)
+			Overlay overlay = Overlay.getOverlay((int) client.getScene().getOverlayIds()[tileZ][tileX][tileY], tile, client, config);
+			if (overlay != Overlay.NONE)
 			{
-				waterType = Overlay.getOverlay(client.getScene().getOverlayIds()[tileZ][tileX][tileY], tile, client, config).waterType;
+				waterType = overlay.waterType;
 			}
 			else
 			{
-				waterType = Underlay.getUnderlay(client.getScene().getUnderlayIds()[tileZ][tileX][tileY], tile, client, config).waterType;
+				Underlay underlay = Underlay.getUnderlay((int) client.getScene().getUnderlayIds()[tileZ][tileX][tileY], tile, client, config);
+				waterType = underlay.waterType;
 			}
 		}
 
@@ -861,9 +855,9 @@ public class ProceduralGenerator
 	/**
 	 * Returns the WaterType of the provided SceneTileModel Tile's specified face.
 	 *
-	 * @param tile
+	 * @param tile that the tile model is for
 	 * @param face the index of the specified face
-	 * @return
+	 * @return the WaterType of the specified face on the tile model
 	 */
 	WaterType faceWaterType(Tile tile, int face, SceneTileModel sceneTileModel)
 	{
@@ -879,13 +873,15 @@ public class ProceduralGenerator
 
 		if (sceneTileModel != null)
 		{
-			if (isOverlayFace(tile, face))
+			Overlay overlay = Overlay.getOverlay((int) client.getScene().getOverlayIds()[tileZ][tileX][tileY], tile, client, config);
+			if (isOverlayFace(tile, face) && overlay != Overlay.NONE)
 			{
-				waterType = Overlay.getOverlay(client.getScene().getOverlayIds()[tileZ][tileX][tileY], tile, client, config).waterType;
+				waterType = overlay.waterType;
 			}
 			else
 			{
-				waterType = Underlay.getUnderlay(client.getScene().getUnderlayIds()[tileZ][tileX][tileY], tile, client, config).waterType;
+				Underlay underlay = Underlay.getUnderlay((int) client.getScene().getUnderlayIds()[tileZ][tileX][tileY], tile, client, config);
+				waterType = underlay.waterType;
 			}
 		}
 
@@ -896,18 +892,18 @@ public class ProceduralGenerator
 
 	boolean[][] tileOverlayTris = new boolean[][]
 		{
-			/*  0 */ new boolean[]{true, true, true, true}, // Used by tilemodels of varying tri counts?
-			/*  1 */ new boolean[]{false, true},
-			/*  2 */ new boolean[]{false, false, true},
-			/*  3 */ new boolean[]{false, false, true},
-			/*  4 */ new boolean[]{false, true, true},
-			/*  5 */ new boolean[]{false, true, true},
-			/*  6 */ new boolean[]{false, false, true, true},
-			/*  7 */ new boolean[]{false, false, false, true},
-			/*  8 */ new boolean[]{false, true, true, true},
-			/*  9 */ new boolean[]{false, false, false, true, true, true},
-			/* 10 */ new boolean[]{true, true, true, false, false, false},
-			/* 11 */ new boolean[]{true, true, false, false, false, false},
+			/*  0 */ { true, true, true, true }, // Used by tilemodels of varying tri counts?
+			/*  1 */ { false, true },
+			/*  2 */ { false, false, true },
+			/*  3 */ { false, false, true },
+			/*  4 */ { false, true, true },
+			/*  5 */ { false, true, true },
+			/*  6 */ { false, false, true, true },
+			/*  7 */ { false, false, false, true },
+			/*  8 */ { false, true, true, true },
+			/*  9 */ { false, false, false, true, true, true },
+			/* 10 */ { true, true, true, false, false, false },
+			/* 11 */ { true, true, false, false, false, false },
 		};
 
 	boolean[] getTileOverlayTris(int tileShapeIndex)
@@ -915,7 +911,7 @@ public class ProceduralGenerator
 		if (tileShapeIndex >= tileOverlayTris.length)
 		{
 			log.debug("getTileOverlayTris(): unknown tileShapeIndex ({})", tileShapeIndex);
-			return new boolean[]{false, false, false, false, false, false, false, false, false, false};
+			return new boolean[10]; // false
 		}
 		else
 		{
@@ -984,21 +980,6 @@ public class ProceduralGenerator
 		return new int[][]{vertexA, vertexB, vertexC};
 	}
 
-	int[][] tileLocalVertices(Tile tile)
-	{
-		int x = tile.getSceneLocation().getX();
-		int y = tile.getSceneLocation().getY();
-		int z = tile.getRenderLevel();
-		int[][][] tileHeights = client.getTileHeights();
-
-		int[] swVertex = new int[]{0, 0, tileHeights[z][x][y]};
-		int[] seVertex = new int[]{Perspective.LOCAL_TILE_SIZE, 0, tileHeights[z][x + 1][y]};
-		int[] nwVertex = new int[]{0, Perspective.LOCAL_TILE_SIZE, tileHeights[z][x][y + 1]};
-		int[] neVertex = new int[]{Perspective.LOCAL_TILE_SIZE, Perspective.LOCAL_TILE_SIZE, tileHeights[z][x + 1][y + 1]};
-
-		return new int[][]{swVertex, seVertex, nwVertex, neVertex};
-	}
-
 	int[][] faceLocalVertices(Tile tile, int face)
 	{
 		int x = tile.getSceneLocation().getX();
@@ -1048,7 +1029,7 @@ public class ProceduralGenerator
 	/**
 	 * Gets the vertex keys of a Tile Paint tile for use in retrieving data from hashmaps.
 	 *
-	 * @param tile
+	 * @param tile to get the vertex keys of
 	 * @return Vertex keys in following order: SW, SE, NW, NE
 	 */
 	int[] tileVertexKeys(Tile tile)
@@ -1081,15 +1062,15 @@ public class ProceduralGenerator
 	{
 		colorHSL[0] = overlay.hue >= 0 ? overlay.hue : colorHSL[0];
 		colorHSL[0] += overlay.shiftHue;
-		colorHSL[0] = Ints.constrainToRange(colorHSL[0], 0, 63);
+		colorHSL[0] = HDUtils.clamp(colorHSL[0], 0, 63);
 
 		colorHSL[1] = overlay.saturation >= 0 ? overlay.saturation : colorHSL[1];
 		colorHSL[1] += overlay.shiftSaturation;
-		colorHSL[1] = Ints.constrainToRange(colorHSL[1], 0, 7);
+		colorHSL[1] = HDUtils.clamp(colorHSL[1], 0, 7);
 
 		colorHSL[2] = overlay.lightness >= 0 ? overlay.lightness : colorHSL[2];
 		colorHSL[2] += overlay.shiftLightness;
-		colorHSL[2] = Ints.constrainToRange(colorHSL[2], 0, 127);
+		colorHSL[2] = HDUtils.clamp(colorHSL[2], 0, 127);
 
 		return colorHSL;
 	}
@@ -1098,15 +1079,15 @@ public class ProceduralGenerator
 	{
 		colorHSL[0] = underlay.hue >= 0 ? underlay.hue : colorHSL[0];
 		colorHSL[0] += underlay.shiftHue;
-		colorHSL[0] = Ints.constrainToRange(colorHSL[0], 0, 63);
+		colorHSL[0] = HDUtils.clamp(colorHSL[0], 0, 63);
 
 		colorHSL[1] = underlay.saturation >= 0 ? underlay.saturation : colorHSL[1];
 		colorHSL[1] += underlay.shiftSaturation;
-		colorHSL[1] = Ints.constrainToRange(colorHSL[1], 0, 7);
+		colorHSL[1] = HDUtils.clamp(colorHSL[1], 0, 7);
 
 		colorHSL[2] = underlay.lightness >= 0 ? underlay.lightness : colorHSL[2];
 		colorHSL[2] += underlay.shiftLightness;
-		colorHSL[2] = Ints.constrainToRange(colorHSL[2], 0, 127);
+		colorHSL[2] = HDUtils.clamp(colorHSL[2], 0, 127);
 
 		return colorHSL;
 	}
@@ -1124,19 +1105,15 @@ public class ProceduralGenerator
 			return true;
 		}
 
-		if (client.getScene().getOverlayIds()[z][x][y] != 0)
+		Overlay overlay = Overlay.getOverlay((int) client.getScene().getOverlayIds()[z][x][y], tile, client, config);
+		if (overlay != Overlay.NONE)
 		{
-			if (!Overlay.getOverlay(client.getScene().getOverlayIds()[z][x][y], tile, client, config).blended)
-			{
-				return true;
-			}
+			return !overlay.blended;
 		}
-		else if (client.getScene().getUnderlayIds()[z][x][y] != 0)
+		Underlay underlay = Underlay.getUnderlay((int) client.getScene().getUnderlayIds()[z][x][y], tile, client, config);
+		if (underlay != Underlay.NONE)
 		{
-			if (!Underlay.getUnderlay(client.getScene().getUnderlayIds()[z][x][y], tile, client, config).blended)
-			{
-				return true;
-			}
+			return !underlay.blended;
 		}
 		return false;
 	}
@@ -1159,7 +1136,7 @@ public class ProceduralGenerator
 	final int gradientBottom = 200;
 	final int gradientTop = -200;
 
-	public int[][] recolorTzHaar(ObjectProperties objectProperties, int aY, int bY, int cY, int packedAlphaPriority, ObjectType objectType, int color1H, int color1S, int color1L, int color2H, int color2S, int color2L, int color3H, int color3S, int color3L)
+	public int[][] recolorTzHaar(ModelOverride modelOverride, int aY, int bY, int cY, int packedAlphaPriority, ObjectType objectType, int color1S, int color1L, int color2S, int color2L, int color3S, int color3L)
 	{
 		// recolor tzhaar to look like the 2008+ HD version
 		if (objectType == ObjectType.GROUND_OBJECT)
@@ -1174,16 +1151,16 @@ public class ProceduralGenerator
 
 		// shift model hues from red->yellow
 		int hue = 7;
-		color1H = hue;
-		color2H = hue;
-		color3H = hue;
+		int color1H = hue;
+		int color2H = hue;
+		int color3H = hue;
 
-		if (objectProperties.tzHaarRecolorType == TzHaarRecolorType.GRADIENT)
+		if (modelOverride.tzHaarRecolorType == TzHaarRecolorType.GRADIENT)
 		{
 			// apply coloring to the rocky walls
 			if (color1L < 20)
 			{
-				float pos = Floats.constrainToRange((float) (aY - gradientTop) / (float) gradientBottom, 0.0f, 1.0f);
+				float pos = HDUtils.clamp((float) (aY - gradientTop) / (float) gradientBottom, 0.0f, 1.0f);
 				color1H = (int)HDUtils.lerp(gradientDarkColor[0], gradientBaseColor[0], pos);
 				color1S = (int)HDUtils.lerp(gradientDarkColor[1], gradientBaseColor[1], pos);
 				color1L = (int)HDUtils.lerp(gradientDarkColor[2], gradientBaseColor[2], pos);
@@ -1191,7 +1168,7 @@ public class ProceduralGenerator
 
 			if (color2L < 20)
 			{
-				float pos = Floats.constrainToRange((float) (bY - gradientTop) / (float) gradientBottom, 0.0f, 1.0f);
+				float pos = HDUtils.clamp((float) (bY - gradientTop) / (float) gradientBottom, 0.0f, 1.0f);
 				color2H = (int)HDUtils.lerp(gradientDarkColor[0], gradientBaseColor[0], pos);
 				color2S = (int)HDUtils.lerp(gradientDarkColor[1], gradientBaseColor[1], pos);
 				color2L = (int)HDUtils.lerp(gradientDarkColor[2], gradientBaseColor[2], pos);
@@ -1199,13 +1176,13 @@ public class ProceduralGenerator
 
 			if (color3L < 20)
 			{
-				float pos = Floats.constrainToRange((float) (cY - gradientTop) / (float) gradientBottom, 0.0f, 1.0f);
+				float pos = HDUtils.clamp((float) (cY - gradientTop) / (float) gradientBottom, 0.0f, 1.0f);
 				color3H = (int)HDUtils.lerp(gradientDarkColor[0], gradientBaseColor[0], pos);
 				color3S = (int)HDUtils.lerp(gradientDarkColor[1], gradientBaseColor[1], pos);
 				color3L = (int)HDUtils.lerp(gradientDarkColor[2], gradientBaseColor[2], pos);
 			}
 		}
-		else if (objectProperties.tzHaarRecolorType == TzHaarRecolorType.HUE_SHIFT)
+		else if (modelOverride.tzHaarRecolorType == TzHaarRecolorType.HUE_SHIFT)
 		{
 			// objects around the entrance to The Inferno only need a hue-shift
 			// and very slight lightening to match the lightened terrain

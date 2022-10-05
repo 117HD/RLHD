@@ -6,6 +6,7 @@
   "items": {
     "type": "object",
     "required": [
+      "description",
       "radius",
       "strength",
       "color"
@@ -27,10 +28,6 @@
       "plane": {
         "type": "integer",
         "description": "The world Z coordinate, or plane to spawn the light on. Used in combination with worldX and worldY."
-      },
-      "height": {
-        "type": "integer",
-        "description": "The height in scene units (128 per tile) to place the light above the current tile or entity base height."
       },
       "alignment": {
         "type": "string",
@@ -64,6 +61,10 @@
           "BACKRIGHT_CORNER"
         ],
         "description": "Where to place the light in relation to what it's attached to, be it an NPC, object or world location."
+      },
+      "height": {
+        "type": "integer",
+        "description": "The height in scene units (128 per tile) to place the light above the current tile or entity base height."
       },
       "radius": {
         "type": "integer",
@@ -116,6 +117,13 @@
       "projectileIds": {
         "type": "array",
         "description": "A set of projectile IDs to apply the light to.",
+        "items": {
+          "type": [ "integer", "string" ]
+        }
+      },
+      "graphicsObjectIds": {
+        "type": "array",
+        "description": "A set of graphics object IDs to apply the light to.",
         "items": {
           "type": [ "integer", "string" ]
         }

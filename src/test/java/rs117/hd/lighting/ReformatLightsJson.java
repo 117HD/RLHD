@@ -21,8 +21,7 @@ import java.util.stream.Collectors;
 
 import static rs117.hd.utils.ResourcePath.path;
 
-@SuppressWarnings("deprecation")
-public class ExportLightsToJson
+public class ReformatLightsJson
 {
 	/**
 	 * Round floats to an int if they are within this small value of a whole number
@@ -45,8 +44,6 @@ public class ExportLightsToJson
 				.toString());
 		OptionSpec<?> skipLoadingCurrentConfig = parser.accepts("skip-loading-current-config",
 			"Don't load current lights from the JSON config, instead overwrite them");
-		OptionSpec<?> convertOldFormats = parser.accepts("convert-old-formats",
-			"Load lights from the old formats and convert to JSON format");
 		OptionSpec<?> serializeNulls = parser.accepts("serialize-nulls",
 			"Include null values when writing to JSON");
 		OptionSpec<?> minify = parser.accepts("minify", "Output minified JSON");
