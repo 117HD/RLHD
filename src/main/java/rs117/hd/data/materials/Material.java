@@ -311,7 +311,10 @@ public enum Material
 	WOOD_GRAIN_WEATHERED(p -> p
 		.setOverrideBaseColor(true)
 	),
-	WOOD_GRAIN_RED_WEATHERED(p -> p
+	WOOD_GRAIN_BROWN_WEATHERED(p -> p
+			.setOverrideBaseColor(true)
+	),
+	WEATHERED_LUNAR_WOOD(p -> p
 		.setOverrideBaseColor(true)
 	),
 	DOCK_FENCE(),
