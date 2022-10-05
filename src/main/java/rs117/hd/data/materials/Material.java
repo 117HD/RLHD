@@ -320,6 +320,9 @@ public enum Material
 	WEATHERED_LUNAR_WOOD(p -> p
 		.setOverrideBaseColor(true)
 	),
+	WOOD_GRAIN_RED(p -> p
+			.setOverrideBaseColor(true)
+	),
 	DOCK_FENCE(),
 
 	HD_INFERNAL_CAPE(p -> p
