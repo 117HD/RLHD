@@ -33,6 +33,7 @@ shared int totalMappedNum[18]; // number of faces with a given adjusted priority
 shared int min10; // minimum distance to a face of priority 10
 shared int dfs[6144]; // packed face id and distance
 
+#include uniforms/camera.glsl
 #include comp_common.glsl
 
 layout(local_size_x = 1024) in;

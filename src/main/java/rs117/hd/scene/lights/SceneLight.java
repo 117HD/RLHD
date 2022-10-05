@@ -1,6 +1,9 @@
 package rs117.hd.scene.lights;
 
 import java.util.Random;
+
+import lombok.NonNull;
+import net.runelite.api.GraphicsObject;
 import net.runelite.api.NPC;
 import net.runelite.api.Projectile;
 import net.runelite.api.TileObject;
@@ -32,6 +35,7 @@ public class SceneLight extends Light
 	public Projectile projectile = null;
 	public NPC npc = null;
 	public TileObject object = null;
+	public GraphicsObject graphicsObject = null;
 
 	public SceneLight(Light l)
 	{
@@ -39,17 +43,17 @@ public class SceneLight extends Light
 			l.strength, l.color, l.type, l.duration, l.range, l.fadeInDuration);
 	}
 
-	public SceneLight(int worldX, int worldY, int plane, int height, Alignment alignment, int radius, float strength, float[] color, LightType type, float duration, float range, int fadeInDuration)
+	public SceneLight(int worldX, int worldY, int plane, int height, @NonNull Alignment alignment, int radius, float strength, float[] color, LightType type, float duration, float range, int fadeInDuration)
 	{
 		this(null, worldX, worldY, plane, height, alignment, radius,
 			strength, color, type, duration, range, fadeInDuration);
 	}
 
-	public SceneLight(String description, int worldX, int worldY, int plane, int height, Alignment alignment, int radius, float strength, float[] color, LightType type, float duration, float range, int fadeInDuration)
+	public SceneLight(String description, int worldX, int worldY, int plane, int height, @NonNull Alignment alignment, int radius, float strength, float[] color, LightType type, float duration, float range, int fadeInDuration)
 	{
 		super(description, worldX, worldY, plane, height, alignment, radius,
 			strength, color, type, duration, range, fadeInDuration,
-			null, null, null);
+			null, null, null, null);
 
 		this.currentSize = radius;
 		this.currentStrength = strength;

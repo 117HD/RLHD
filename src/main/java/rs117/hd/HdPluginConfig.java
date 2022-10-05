@@ -270,7 +270,7 @@ public interface HdPluginConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "atmosphericLighting",
+		keyName = "environmentalLighting",
 		name = "Atmospheric Lighting",
 		description = "Changes the color and brightness of full-scene lighting in certain areas.",
 		position = 104,
@@ -426,8 +426,8 @@ public interface HdPluginConfig extends Config
 
 	@ConfigItem(
 		keyName = "objectTextures",
-		name = "Object Textures",
-		description = "Adds detail textures to certain world objects.",
+		name = "Model Textures",
+		description = "Adds detail textures to certain models.",
 		position = 206,
 		section = environmentSettings
 	)
@@ -509,8 +509,8 @@ public interface HdPluginConfig extends Config
 
 	@ConfigItem(
 		keyName = "macosIntelWorkaround",
-		name = "Fix shading on MacOS with Intel",
-		description = "Workaround for visual artifacts on some Intel GPU drivers on MacOS.",
+		name = "Fix shading on macOS with Intel",
+		description = "Workaround for visual artifacts on some Intel GPU drivers on macOS.",
 		warning = "This setting can cause RuneLite to crash, and can be difficult to revert. Only enable it if you\nare seeing black patches. Are you sure you want to enable the setting?",
 		position = 301,
 		section = miscellaneousSettings
@@ -542,21 +542,6 @@ public interface HdPluginConfig extends Config
 	)
 	default boolean winterTheme()
 	{
-		return false;
-	}
-
-	String KEY_REMOVE_VANILLA_SHADING = "removeVanillaShading";
-	@ConfigItem(
-		keyName = KEY_REMOVE_VANILLA_SHADING,
-		name = "Remove vanilla shading",
-		description =
-			"Previously, HD attempted to remove vanilla shading by approximately increasing the brightness of colors<br> " +
-			"by the same amount as the base game would darken them. This worked alright for the most part, but it<br> " +
-			"resulted in white colors appearing more like dull greys. Enabling this option brings back that old behaviour.",
-		position = 304,
-		section = miscellaneousSettings
-	)
-	default boolean removeVanillaShading() {
 		return false;
 	}
 

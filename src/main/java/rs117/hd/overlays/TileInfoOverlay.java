@@ -5,7 +5,6 @@ import com.google.inject.Inject;
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -20,6 +19,7 @@ import static net.runelite.api.Perspective.SCENE_SIZE;
 
 import net.runelite.api.Point;
 import net.runelite.api.coords.LocalPoint;
+import net.runelite.api.coords.WorldPoint;
 import net.runelite.client.ui.FontManager;
 import net.runelite.client.ui.overlay.OverlayLayer;
 import net.runelite.client.ui.overlay.OverlayPosition;
@@ -50,7 +50,11 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay
 	@Override
 	public Dimension render(Graphics2D g)
 	{
-		mousePos = client.getMouseCanvasPosition();
+		if (!client.isKeyPressed(KeyCode.KC_SHIFT))
+		{
+			mousePos = client.getMouseCanvasPosition();
+		}
+
 		if (mousePos != null && mousePos.getX() == -1 && mousePos.getY() == -1)
 		{
 			return null;
@@ -144,6 +148,14 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay
 		int y = tile.getSceneLocation().getY();
 		int plane = tile.getRenderLevel();
 
+		WorldPoint worldPoint = tile.getWorldLocation();
+		if (client.isInInstancedRegion()) {
+			LocalPoint localPoint = tile.getLocalLocation();
+			worldPoint = WorldPoint.fromLocalInstance(client, localPoint);
+		}
+		String worldPointInfo = "World point: " + worldPoint.getX() + ", " + worldPoint.getY() + ", " + worldPoint.getPlane();
+		lines.add(worldPointInfo);
+
 		Scene scene = client.getScene();
 		int overlayId = scene.getOverlayIds()[plane][x][y];
 		Overlay overlay = Overlay.getOverlay(overlayId, tile, client, config);
@@ -156,18 +168,23 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay
 		Color polyColor;
 		if (paint != null)
 		{
+			// TODO: separate H, S and L to hopefully more easily match tiles that are different shades of the same hue
 			polyColor = Color.CYAN;
 			lines.add("Tile type: Paint");
-			lines.add("RGB: " + (paint.getNeColor() == 12345678 ? "Hidden" :
-				Arrays.toString(HDUtils.colorIntToRGB(paint.getRBG()))));
 			Material material = Material.getTexture(paint.getTexture());
 			lines.add(String.format("Material: %s (%d)", material.name(), paint.getTexture()));
+			lines.add("JagexHSL: ");
+			lines.add("NW: " + paint.getNwColor());
+			lines.add("NE: " + paint.getNeColor());
+			lines.add("SE: " + paint.getSeColor());
+			lines.add("SW: " + paint.getSwColor());
 		}
 		else
 		{
 			polyColor = Color.ORANGE;
 			lines.add("Tile type: Model");
 			lines.add(String.format("Face count: %d", model.getFaceX().length));
+
 			HashSet<String> uniqueMaterials = new HashSet<>();
 			int numChars = 0;
 			if (model.getTriangleTextureId() != null)
@@ -214,14 +231,29 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay
 					lines.add("\t  " + iter.next() + (iter.hasNext() ? "," : " }"));
 				}
 			}
+
+			lines.add("JagexHSL: ");
+			int[] CA = model.getTriangleColorA();
+			int[] CB = model.getTriangleColorB();
+			int[] CC = model.getTriangleColorC();
+			for (int face = 0; face < model.getFaceX().length; face++)
+			{
+				int a = CA[face];
+				int b = CB[face];
+				int c = CC[face];
+				if (a == b && b == c) {
+					lines.add("" + face + ": " + a);
+				} else {
+					lines.add("" + face + ": [ " + a + ", " + b + ", " + c + " ]");
+				}
+			}
 		}
 
 		int padding = 4;
 		int xPadding = padding * 2;
-		int yPadding = padding;
 		FontMetrics fm = g.getFontMetrics();
 		int lineHeight = fm.getHeight();
-		int totalHeight = lineHeight * lines.size() + yPadding * 3;
+		int totalHeight = lineHeight * lines.size() + padding * 3;
 		int space = fm.charWidth(':');
 		int indent = fm.stringWidth("{ ");
 
@@ -233,15 +265,14 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay
 			int i = line.indexOf(":");
 			String left = line;
 			String right = "";
-			if (i != -1)
-			{
-				left = line.substring(0, i);
-				right = line.substring(i + 1);
-			}
-			else if (left.startsWith("\t"))
+			if (left.startsWith("\t"))
 			{
 				right = left;
 				left = "";
+			} else if (i != -1)
+			{
+				left = line.substring(0, i);
+				right = line.substring(i + 1);
 			}
 
 			return Pair.of(left, right);
@@ -266,11 +297,11 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay
 		int totalWidth = leftWidth + rightWidth + space + xPadding * 2;
 		Rectangle rect = new Rectangle(
 			tileCenter.getX() - totalWidth / 2,
-			tileCenter.getY() - totalHeight - yPadding, totalWidth, totalHeight);
+			tileCenter.getY() - totalHeight - padding, totalWidth, totalHeight);
 		if (dodgeRect != null && dodgeRect.intersects(rect))
 		{
 			// Avoid overlapping with other tile info
-			rect.y = dodgeRect.y - rect.height - yPadding;
+			rect.y = dodgeRect.y - rect.height - padding;
 		}
 
 		if (tile.getBridge() != null)
@@ -294,14 +325,14 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay
 				// centered
 				p = new Point(
 					rect.x + rect.width / 2 - fm.stringWidth(pair.getLeft()) / 2,
-					rect.y + yPadding + offsetY);
+					rect.y + padding + offsetY);
 			}
 			else
 			{
 				// left & right
 				p = new Point(
 					rect.x + xPadding + leftWidth - fm.stringWidth(pair.getLeft()) + (pair.getRight().startsWith("\t") ? indent : 0),
-					rect.y + yPadding + offsetY);
+					rect.y + padding + offsetY);
 			}
 			OverlayUtil.renderTextLocation(g, p, line, Color.WHITE);
 		}

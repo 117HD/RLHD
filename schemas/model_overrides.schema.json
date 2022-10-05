@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "model_overrides.schema.json",
+  "title": "Model Overrides",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [ "description" ],
+    "properties": {
+      "description": {
+        "type": "string",
+        "description": "Description of which objects the properties apply to."
+      },
+      "npcIds": {
+        "type": "array",
+        "description": "A set of NPC IDs or NpcID keys that the override should apply to.",
+        "items": {
+          "type": [ "integer", "string" ]
+        }
+      },
+      "objectIds": {
+        "type": "array",
+        "description": "A set of object IDs or ObjectID keys that the override should apply to.",
+        "items": {
+          "type": [ "integer", "string" ]
+        }
+      },
+      "baseMaterial": {
+        "type": "string",
+        "description": "Case-sensitive name of the material to apply to untextured faces."
+      },
+      "textureMaterial": {
+        "type": "string",
+        "description": "Case-sensitive name of the material to apply to textured faces."
+      },
+      "uvType": {
+        "type": "string",
+        "description": "What to base UV coordinates on for object texturing. Defaults to GEOMETRY.",
+        "enum": [ "VANILLA", "GEOMETRY", "GROUND_PLANE" ]
+      },
+      "flatNormals": {
+        "type": "boolean",
+        "description": "Whether flat normals should be used instead of smooth normals. Defaults to false."
+      },
+      "removeBakedLighting": {
+        "type": "boolean",
+        "description": "Whether the model has fake shadows or baked lighting that should be removed. Defaults to false."
+      },
+      "tzHaarRecolorType": {
+        "type": "string",
+        "description": "Specify a type of TzHaar recolor style to apply. Only relevant for the TzHaar area.",
+        "enum": [ "NONE", "GRADIENT", "HUE_SHIFT" ]
+      },
+      "inheritTileColorType": {
+        "type": "string",
+        "description": "Whether to inherit color from the overlay or underlay of the tile beneath. Defaults to NONE.",
+        "enum": [ "NONE", "OVERLAY", "UNDERLAY" ]
+      },
+      "hideInAreas": {
+        "type": "array",
+        "description": "An array of axis-aligned bounding boxes where the model should be hidden.",
+        "items": {
+          "$ref": "aabb.schema.json"
+        }
+      }
+    }
+  }
+}

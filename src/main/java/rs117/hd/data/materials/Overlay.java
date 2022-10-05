@@ -34,6 +34,7 @@ import rs117.hd.HdPluginConfig;
 import rs117.hd.data.WaterType;
 import rs117.hd.data.environments.Area;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -380,8 +381,28 @@ public enum Overlay {
     // Barbarian Assault
     BA_WAITING_ROOM_NUMBERS(89, Area.BARBARIAN_ASSAULT_WAITING_ROOMS, GroundMaterial.DIRT, p -> p.blended(false)),
 
-    // POHs
-    POH_DESERT_INDOORS(Area.PLAYER_OWNED_HOUSE, GroundMaterial.TILES_2x2_2, p -> p.blended(false).ids(26, 99)),
+	// Tombs of Amascut
+	TOA_DISABLE_BLENDING_4(4, Area.TOA_PATH_HUB, GroundMaterial.NONE, p -> p.blended(false)),
+	TOA_DISABLE_BLENDING_11(11, Area.TOA_PATH_HUB, GroundMaterial.NONE, p -> p.blended(false)),
+	TOA_DISABLE_BLENDING_86(86, Area.TOA_PATH_HUB, GroundMaterial.NONE, p -> p.blended(false)),
+	TOA_DISABLE_BLENDING_N23(-23, Area.TOA_PATH_HUB, GroundMaterial.NONE, p -> p.blended(false)),
+	TOA_DISABLE_BLENDING_50(50, Area.TOA_PATH_OF_SCABARAS_PUZZLE, GroundMaterial.NONE, p -> p.blended(false)),
+	TOA_DISABLE_BLENDING_66(66, Area.TOA_PATH_OF_SCABARAS_BOSS, GroundMaterial.NONE, p -> p.blended(false)),
+	TOA_DISABLE_BLENDING_N18(-18, Area.TOA_PATH_OF_APMEKEN_PUZZLE, GroundMaterial.NONE, p -> p.blended(false)),
+	TOA_DISABLE_BLENDING_30(30, Area.TOA_PATH_OF_APMEKEN_BOSS, GroundMaterial.NONE, p -> p.blended(false)),
+	TOA_DISABLE_BLENDING_N16(-16, Area.TOA_PATH_OF_HET_PUZZLE, GroundMaterial.NONE, p -> p.blended(false)),
+	TOA_DISABLE_BLENDING_N62(-62, Area.TOA_PATH_OF_CRONDIS_BOSS, GroundMaterial.NONE, p -> p.blended(false)),
+	TOA_CRONDIS_PUZZLE_WATER(-5, Area.TOA_PATH_OF_CRONDIS_PUZZLE, GroundMaterial.NONE, p -> p.blended(false)),
+    TOA_DISABLE_BLENDING_LOOT_ROOM(Area.TOA_LOOT_ROOM, GroundMaterial.NONE, p -> p.blended(false)),
+
+    // Tombs of Amascut
+    // TODO: fix tile blending color issues with bridge tiles
+//    TOA_CRONDIS_ROCK(Area.TOA_PATH_OF_CRONDIS_BOSS, GroundMaterial.NONE, p -> p.ids(-123, -122, -74).blended(false)),
+//    TOA_CRONDIS_ISLAND(Area.TOA_CRONDIS_ISLAND, p -> p.groundMaterial(GroundMaterial.SAND)),
+    TOA_CRONDIS_WATER(Area.TOA_CRONDIS_WATER, p -> p.waterType(WaterType.SWAMP_WATER).blended(false)),
+
+	// POHs
+	POH_DESERT_INDOORS(Area.PLAYER_OWNED_HOUSE, GroundMaterial.TILES_2x2_2, p -> p.blended(false).ids(26, 99)),
 
     // Random events
     PRISON_PETE_TILE_1(2, Area.RANDOM_EVENT_PRISON_PETE, GroundMaterial.MARBLE_1, p -> p.blended(false)),
@@ -391,7 +412,7 @@ public enum Overlay {
     TEMPLE_OF_THE_EYE_ENTRANCE(Area.TEMPLE_OF_THE_EYE_ENTRANCE_FIX, GroundMaterial.DIRT, p -> p
         .shiftLightness(-10)
         .blended(false)
-        .ids(-53, 0)),
+        .ids(-53)),
 
     // Elid Cave fix
     ELID_CAVE_WATER_FIX(-126, Area.ELID_CAVE, WaterType.WATER),
@@ -429,7 +450,7 @@ public enum Overlay {
     OVERLAY_29(29, GroundMaterial.GRASS_1),
     OVERLAY_32(32, GroundMaterial.CONCRETE),
 
-    DEFAULT(-1, GroundMaterial.DIRT);
+    NONE(GroundMaterial.DIRT, p -> {});
 
     public final Integer[] ids;
     public final Area area;
@@ -474,6 +495,10 @@ public enum Overlay {
         this(p -> p.waterType(waterType).blended(false).apply(consumer));
     }
 
+    Overlay(Area area, Consumer<TileOverrideBuilder<Overlay>> consumer) {
+        this(p -> p.area(area).apply(consumer));
+    }
+
     Overlay(Area area, GroundMaterial material, Consumer<TileOverrideBuilder<Overlay>> consumer) {
         this(p -> p.groundMaterial(material).area(area).apply(consumer));
     }
@@ -502,13 +527,17 @@ public enum Overlay {
     static {
         GROUND_MATERIAL_MAP = ArrayListMultimap.create();
         for (Overlay overlay : values()) {
-            for (Integer id : overlay.ids) {
-                GROUND_MATERIAL_MAP.put(id, overlay);
+            if (overlay.ids.length == 0) {
+                GROUND_MATERIAL_MAP.put(null, overlay);
+            } else {
+                for (Integer id : overlay.ids) {
+                    GROUND_MATERIAL_MAP.put(id, overlay);
+                }
             }
         }
     }
 
-    public static Overlay getOverlay(int overlayId, Tile tile, Client client, HdPluginConfig pluginConfig) {
+    public static Overlay getOverlay(@Nullable Integer overlayId, Tile tile, Client client, HdPluginConfig pluginConfig) {
         WorldPoint worldPoint = tile.getWorldLocation();
 
         if (client.isInInstancedRegion()) {
@@ -520,16 +549,18 @@ public enum Overlay {
         int worldY = worldPoint.getY();
         int worldZ = worldPoint.getPlane();
 
-        List<Overlay> overlays = GROUND_MATERIAL_MAP.get(overlayId);
-        for (Overlay overlay : overlays) {
-            if (overlay.area.containsPoint(worldX, worldY, worldZ)) {
-                if (overlay.replacementCondition != null && overlay.replacementCondition.apply(pluginConfig)) {
-                    return overlay.replacementOverlay;
-                }
-                return overlay;
-            }
-        }
+        List<Overlay> anyMatchOverlays = GROUND_MATERIAL_MAP.get(null);
+        Overlay anyOverlay = anyMatchOverlays.stream()
+            .filter(o -> o.area.containsPoint(worldX, worldY, worldZ))
+            .findFirst()
+            .orElse(Overlay.NONE);
 
-        return Overlay.DEFAULT;
+        List<Overlay> specificOverlays = GROUND_MATERIAL_MAP.get(overlayId);
+        Overlay overlay = specificOverlays.stream()
+            .filter(o -> o.ordinal() < anyOverlay.ordinal() && o.area.containsPoint(worldX, worldY, worldZ))
+            .findFirst()
+            .orElse(anyOverlay);
+
+        return overlay.replacementCondition.apply(pluginConfig) ? overlay.replacementOverlay : overlay;
     }
 }

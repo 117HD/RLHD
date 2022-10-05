@@ -26,8 +26,6 @@
  #define PI 3.1415926535897932384626433832795f
  #define UNIT PI / 1024.0f
 
-#include uniforms/camera.glsl
-
  struct modelinfo {
    int offset;   // offset into buffer
    int uvOffset; // offset into uv buffer
