@@ -1153,7 +1153,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 	private void initLightsUniformBuffer()
 	{
-		lightsUniformBuf = BufferUtils.createByteBuffer(configMaxDynamicLights * 8 * SCALAR_BYTES);
+		// Allowing a buffer size of zero causes Apple M1/M2 to revert to software rendering
+		lightsUniformBuf = BufferUtils.createByteBuffer(Math.max(1, configMaxDynamicLights) * 8 * SCALAR_BYTES);
 		updateBuffer(lightsUniformBuffer, GL_UNIFORM_BUFFER, lightsUniformBuf, GL_DYNAMIC_DRAW, CL_MEM_READ_ONLY);
 	}
 
