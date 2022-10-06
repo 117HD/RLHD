@@ -508,7 +508,9 @@ public class ModelPusher {
         int maxBrightness2 = (int) HDUtils.lerp(127, 55, (float) Math.pow((float) color2S / 0x7, .05));
         int maxBrightness3 = (int) HDUtils.lerp(127, 55, (float) Math.pow((float) color3S / 0x7, .05));
         if (faceTextures != null && faceTextures[face] != -1) {
-            // set textured faces to pure white as they are harder to remove shadows from for some reason
+            // Without overriding the color for textured faces, vanilla shading remains pretty noticeable even after
+            // the approximate reversal above. Ardougne rooftops is a good example, where vanilla shading results in a
+            // weird-looking tint. The brightness clamp afterwards is required to reduce the over-exposure introduced.
             color1H = color2H = color3H = 0;
             color1S = color2S = color3S = 0;
             color1L = color2L = color3L = 127;
