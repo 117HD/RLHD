@@ -598,4 +598,13 @@ public interface HdPluginConfig extends Config
 	default boolean loadingClearCache() {
 		return false;
 	}
+
+	/*====== Internal settings ======*/
+
+	@ConfigItem(keyName = "pluginUpdateMessage", hidden = true, name = "", description = "")
+	void setPluginUpdateMessage(int version);
+	@ConfigItem(keyName = "pluginUpdateMessage", hidden = true, name = "", description = "")
+	default int getPluginUpdateMessage() {
+		return 0;
+	}
 }
