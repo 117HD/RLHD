@@ -236,6 +236,7 @@ public enum Overlay {
     CATHERBY_BANK_TILE_2(4, Area.CATHERBY_BANK, GroundMaterial.MARBLE_2_GLOSS, p -> p.blended(false)),
 
     // Ardougne
+    EAST_ARDOUGNE_NORTH_BANK_11(11, Area.EAST_ARDOUGNE_BANK_NORTH, GroundMaterial.CONCRETE, p -> p.blended(false).lightness(40)),
     EAST_ARDOUGNE_CASTLE_DIRT_FIX(14, Area.EAST_ARDOUGNE_CASTLE_DIRT_FIX, GroundMaterial.DIRT, p -> p
         .shiftLightness(7)
         .blended(false)),
