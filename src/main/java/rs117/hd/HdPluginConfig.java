@@ -35,6 +35,8 @@ import rs117.hd.config.*;
 @ConfigGroup("hd")
 public interface HdPluginConfig extends Config
 {
+	String RESOURCE_PACK_GROUP_NAME = "resourcepacks";
+
 	/*====== General settings ======*/
 
 	@ConfigSection(

@@ -27,6 +27,7 @@ package rs117.hd;
 
 import com.google.common.primitives.Ints;
 import com.google.inject.Provides;
+import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
@@ -34,11 +35,15 @@ import net.runelite.api.events.*;
 import net.runelite.api.hooks.DrawCallbacks;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
+import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.plugins.*;
 import net.runelite.client.plugins.entityhider.EntityHiderPlugin;
+import net.runelite.client.ui.ClientToolbar;
 import net.runelite.client.ui.DrawManager;
+import net.runelite.client.ui.NavigationButton;
+import net.runelite.client.util.ImageUtil;
 import net.runelite.client.util.OSType;
 import net.runelite.rlawt.AWTContext;
 import org.jocl.CL;
@@ -51,6 +56,7 @@ import org.lwjgl.system.Configuration;
 import rs117.hd.config.*;
 import rs117.hd.data.WaterType;
 import rs117.hd.data.materials.Material;
+import rs117.hd.gui.panel.HdPanel;
 import rs117.hd.model.ModelHasher;
 import rs117.hd.model.ModelPusher;
 import rs117.hd.model.TempModelInfo;
@@ -59,6 +65,8 @@ import rs117.hd.opengl.compute.OpenCLManager;
 import rs117.hd.opengl.shader.Shader;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.Template;
+import rs117.hd.resourcepacks.ResourcePackManager;
+import rs117.hd.resourcepacks.data.PackData;
 import rs117.hd.scene.*;
 import rs117.hd.scene.lights.SceneLight;
 import rs117.hd.scene.ModelOverrideManager;
@@ -154,6 +162,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	private ProceduralGenerator proceduralGenerator;
 
 	@Inject
+	@Getter
 	private ConfigManager configManager;
 
 	@Inject
@@ -173,6 +182,25 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	private Canvas canvas;
 	private AWTContext awtContext;
 	private Callback debugCallback;
+
+	@Getter
+	@Setter
+	private HdPanel panel;
+
+	@Getter
+	@Setter
+	public ResourcePackManager resourcePackManager;
+
+	@Inject
+	@Getter
+	private EventBus eventBus;
+
+	@Inject
+	private ClientToolbar clientToolbar;
+
+	private NavigationButton naigation;
+
+	public PackData currentPack = null;
 
 	private static final String LINUX_VERSION_HEADER =
 		"#version 420\n" +
@@ -513,6 +541,22 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				{
 					developerTools.activate();
 				}
+
+				SwingUtilities.invokeAndWait(() -> {
+					setPanel(injector.getInstance(HdPanel.class));
+
+					final BufferedImage icon = ImageUtil.loadImageResource(getClass(), "icon.png");
+					naigation = NavigationButton.builder()
+							.tooltip("HD 117")
+							.icon(icon)
+							.priority(3)
+							.panel(panel)
+							.build();
+
+					clientToolbar.addNavigation(naigation);
+					panel.setup();
+				});
+
 
 				lastFrameTime = System.currentTimeMillis();
 
