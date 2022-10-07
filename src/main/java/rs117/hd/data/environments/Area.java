@@ -176,14 +176,18 @@ public enum Area
 		new AABB(3102, 3281, 3097, 3277)
 	),
 	DRAYNOR_AGGIES_HOUSE(3088, 3261, 3083, 3256),
+	DRAYNOR_WOM_HOUSE_FRONT(3095, 3250, 3088, 3250),
 	DRAYNOR_BANK(
 		new AABB(3097, 3246, 3088, 3240),
 		new AABB(2127, 4910, 2137, 4903)
 	),
-	// For correcting path placement around town that are screwed up from blending issues
-	DRAYNOR_PATH_ADJUSTMENTS(
-		new AABB(3093, 3247, 3092, 3247),
-		new AABB(3088, 3250,3088, 3250)
+	DRAYNOR_BANK_FRONT_PATH(
+		new AABB(3093, 3247, 3092, 3247)
+	),
+	DRAYNOR_MARKET_PATH_FIX(
+			new AABB(3087, 3246, 3085,3243),
+			new AABB(3089, 3247, 3087, 3247),
+			new AABB(3088, 3248, 3088, 3248) // middle of path to fix blending weirdness
 	),
 	DRAYNOR(
 		new AABB(3071, 3226, 3133, 3292),

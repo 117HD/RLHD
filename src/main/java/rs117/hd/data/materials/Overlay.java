@@ -269,7 +269,24 @@ public enum Overlay {
     // Draynor
     DRAYNOR_AGGIES_HOUSE(-93, Area.DRAYNOR_AGGIES_HOUSE, GroundMaterial.CARPET, p -> p.blended(false)),
     WISE_OLD_MANS_HOUSE_CARPET(86, Area.DRAYNOR, GroundMaterial.CARPET, p -> p.blended(false)),
+    DRAYNOR_WOM_FRONT_FIX_0(0, Area.DRAYNOR_WOM_HOUSE_FRONT, GroundMaterial.OVERWORLD_GRASS_1),
+    DRAYNOR_WOM_FRONT_FIX_10(10, Area.DRAYNOR_WOM_HOUSE_FRONT, GroundMaterial.OVERWORLD_GRASS_1, p -> p
+            .hue(8)
+            .saturation(4)
+            .lightness(15)
+    ),
     DRAYNOR_BANK_FLOOR(10, Area.DRAYNOR_BANK, GroundMaterial.WORN_TILES, p -> p.blended(false)),
+    DRAYNOR_BANK_FRONT_FIX(0, Area.DRAYNOR_BANK_FRONT_PATH, GroundMaterial.GRAVEL, p -> p
+            .hue(0)
+            .saturation(0)
+            .lightness(22)
+    ),
+    DRAYNOR_MARKET_PATH_FIX_0(0, Area.DRAYNOR_MARKET_PATH_FIX, GroundMaterial.OVERWORLD_GRASS_1),
+    DRAYNOR_MARKET_PATH_FIX_10(10, Area.DRAYNOR_MARKET_PATH_FIX, GroundMaterial.OVERWORLD_GRASS_1, p -> p
+            .hue(9)
+            .saturation(3)
+            .lightness(8)
+    ),
     DRAYNOR_MANS_HOUSE_FLOOR(14, Area.DRAYNOR_NORTHERN_HOUSE_FLOOR, GroundMaterial.WOOD_PLANKS_1, p -> p
         .blended(false)
         .lightness(74)
