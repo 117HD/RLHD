@@ -50,6 +50,7 @@ public enum Overlay {
 
     // Lumbridge
     LUM_BRIDGE(10, Area.LUM_BRIDGE, GroundMaterial.GRAVEL),
+    LUMBRIDGE_CASTLE_ENTRANCE_FIX(10, Area.LUMBRIDGE_CASTLE_ENTRANCE, GroundMaterial.WORN_TILES, p -> p.shiftLightness(12)),
     LUMBRIDGE_CASTLE_TILE(3, Area.LUMBRIDGE_CASTLE_BASEMENT, GroundMaterial.MARBLE_1_SEMIGLOSS),
     LUMBRIDGE_CASTLE_FLOORS(10, Area.LUMBRIDGE_CASTLE, GroundMaterial.VARROCK_PATHS_LIGHT, p -> p.shiftLightness(10)),
     LUMBRIDGE_TOWER_FLOOR_TEXTURE(10, Area.LUMBRIDGE_TOWER_FLOOR, GroundMaterial.VARROCK_PATHS_LIGHT, p -> p.shiftLightness(10)),
