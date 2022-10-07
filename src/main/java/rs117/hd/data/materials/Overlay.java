@@ -281,12 +281,17 @@ public enum Overlay {
             .saturation(0)
             .lightness(22)
     ),
-    DRAYNOR_MARKET_PATH_FIX_0(0, Area.DRAYNOR_MARKET_PATH_FIX, GroundMaterial.OVERWORLD_GRASS_1),
-    DRAYNOR_MARKET_PATH_FIX_10(10, Area.DRAYNOR_MARKET_PATH_FIX, GroundMaterial.OVERWORLD_GRASS_1, p -> p
+    DRAYNOR_BANK_PATH_FIX_10_DARK(10, Area.DRAYNOR_BANK_PATH_FIX_DARK, GroundMaterial.OVERWORLD_GRASS_1, p -> p
             .hue(9)
-            .saturation(3)
+            .saturation(4)
             .lightness(8)
     ),
+    DRAYNOR_BANK_PATH_FIX_10_LIGHT(10, Area.DRAYNOR_BANK_PATH_FIX_LIGHT, GroundMaterial.OVERWORLD_GRASS_1, p -> p
+            .hue(9)
+            .saturation(5)
+            .lightness(18)
+    ),
+    DRAYNOR_BANK_PATH_FIX_0(0, Area.DRAYNOR_MARKET_PATH_FIX, GroundMaterial.OVERWORLD_GRASS_1),
     DRAYNOR_MANS_HOUSE_FLOOR(14, Area.DRAYNOR_NORTHERN_HOUSE_FLOOR, GroundMaterial.WOOD_PLANKS_1, p -> p
         .blended(false)
         .lightness(74)
