@@ -504,9 +504,14 @@ public class ModelPusher {
         }), 0);
         color3L = (int) HDUtils.lerp(color3L, lightenC, dotC);
 
-        int maxBrightness1 = (int) HDUtils.lerp(127, 55, (float) Math.pow((float) color1S / 0x7, .05));
-        int maxBrightness2 = (int) HDUtils.lerp(127, 55, (float) Math.pow((float) color2S / 0x7, .05));
-        int maxBrightness3 = (int) HDUtils.lerp(127, 55, (float) Math.pow((float) color3S / 0x7, .05));
+        int maxBrightness1 = 55;
+        int maxBrightness2 = 55;
+        int maxBrightness3 = 55;
+        if (!hdPlugin.configReduceOverExposure) {
+            maxBrightness1 = (int) HDUtils.lerp(127, maxBrightness1, (float) Math.pow((float) color1S / 0x7, .05));
+            maxBrightness2 = (int) HDUtils.lerp(127, maxBrightness2, (float) Math.pow((float) color2S / 0x7, .05));
+            maxBrightness3 = (int) HDUtils.lerp(127, maxBrightness3, (float) Math.pow((float) color3S / 0x7, .05));
+        }
         if (faceTextures != null && faceTextures[face] != -1) {
             // Without overriding the color for textured faces, vanilla shading remains pretty noticeable even after
             // the approximate reversal above. Ardougne rooftops is a good example, where vanilla shading results in a
