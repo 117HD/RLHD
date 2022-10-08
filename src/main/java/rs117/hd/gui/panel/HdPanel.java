@@ -46,7 +46,6 @@ public class HdPanel extends PluginPanel
 	private final BufferedImage DISCORD_ICON;
 	public final BufferedImage GITHUB_ICON;
 	private final BufferedImage PATREON_ICON;
-	private final BufferedImage TWITTER_ICON;
 
 	private final JPanel display = new JPanel();
 
@@ -65,7 +64,6 @@ public class HdPanel extends PluginPanel
 		DISCORD_ICON = ImageUtil.resizeImage(ImageUtil.loadImageResource(getClass(), "discord.png"), 16, 16);
 		GITHUB_ICON = ImageUtil.resizeImage(ImageUtil.loadImageResource(getClass(), "github.png"), 16, 16);
 		PATREON_ICON = ImageUtil.resizeImage(ImageUtil.loadImageResource(getClass(), "patreon.png"), 16, 16);
-		TWITTER_ICON = ImageUtil.resizeImage(ImageUtil.loadImageResource(getClass(), "twitter.png"), 16, 16);
 
 		this.resourcePackPanel = resourcePackPanel;
 		this.debugPanel = debugPanel;
@@ -118,8 +116,7 @@ public class HdPanel extends PluginPanel
 
 		buttons.add(titleButton(DISCORD_ICON, "Get help or make suggestions", "https://discord.gg/U4p6ChjgSE"));
 		buttons.add(titleButton(GITHUB_ICON, "Report issues or contribute on GitHub", "https://github.com/117HD/RLHD"));
-		buttons.add(titleButton(TWITTER_ICON, "View updates on Twitter", "https://twitter.com/117scape"));
-		buttons.add(titleButton(PATREON_ICON, "Support development on Patreon", "https://www.patreon.com/RS_117"));
+		buttons.add(titleButton(PATREON_ICON, "Support the original creator of 117HD", "https://www.patreon.com/RS_117"));
 
 		container.add(buttons, BorderLayout.EAST);
 		return container;
