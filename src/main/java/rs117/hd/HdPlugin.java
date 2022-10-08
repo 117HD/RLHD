@@ -553,6 +553,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				}
 
 				checkGLErrors();
+
+				clientThread.invokeLater(this::displayUpdateMessage);
 			}
 			catch (Throwable e)
 			{
@@ -2822,5 +2824,35 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 			log.debug("glGetError:", new Exception(errStr));
 		}
+	}
+
+	private void displayUpdateMessage() {
+		int messageId = 1;
+		if (config.getPluginUpdateMessage() >= messageId) {
+			return; // Don't show the same message multiple times
+		}
+
+		// Don't display the popup to people who have likely seen the Discord announcement
+		if (config.enableModelCaching() && config.enableModelBatching()) {
+			config.setPluginUpdateMessage(messageId);
+			return;
+		}
+
+		PopupUtils.displayPopupMessage(client, "117HD Update",
+			"As you may have already noticed, the 117HD plugin was recently updated." +
+			"<br><br>" +
+			"The update brings improved performance, but it is <b>not enabled by default</b>. This is because we<br>" +
+			"cannot guarantee client stability with the new cache until it has been tested more thoroughly.<br>" +
+			"If you are willing to risk potential crashes for a performance uplift, you can enable the new<br>" +
+			"caching and batching options in the experimental section of 117HD's settings panel." +
+			"<br><br>" +
+			"If you experience any issues, please report them in the <a href=\"https://discord.gg/U4p6ChjgSE\">117HD Discord</a>.",
+			new String[] { "Remind me later", "Got it!" },
+			i -> {
+				if (i == 1) {
+					config.setPluginUpdateMessage(messageId);
+				}
+			}
+		);
 	}
 }
