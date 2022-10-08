@@ -28,7 +28,6 @@ package rs117.hd.utils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import lombok.NonNull;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.system.MemoryUtil;
@@ -59,9 +58,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 public class ResourcePath {
-    // This could probably be improved to extract the source set from toURL()
-    @Setter
-    private static ResourcePath RESOURCE_DIR = path("src/main/resources");
+    public static ResourcePath RESOURCE_PATH = Env.getPathOrDefault("RLHD_RESOURCE_PATH", (ResourcePath) null);
 
     private static final Gson GSON = new GsonBuilder().setLenient().create();
     private static final FileWatcher.UnregisterCallback NOOP = () -> {};
@@ -201,12 +198,6 @@ public class ResourcePath {
         return toPath().toFile();
     }
 
-    public ResourcePath toFileSystemPath() {
-        if (root != null)
-            return new ResourcePath(root.toFileSystemPath(), path);
-        return this;
-    }
-
     @NonNull
     public URL toURL() throws IOException {
         if (root == null) {
@@ -267,7 +258,7 @@ public class ResourcePath {
      */
     public FileWatcher.UnregisterCallback watch(Consumer<ResourcePath> changeHandler) {
         // Only watch files on the file system
-        if (!isFileSystemResource()) {
+        if (!isFileSystemResource() || RESOURCE_PATH == null) {
             changeHandler.accept(this);
             return NOOP;
         }
@@ -276,7 +267,7 @@ public class ResourcePath {
         // If the resource is loaded by a class or class loader, attempt to redirect it to the main resource directory
         if (isClassResource()) {
             // Assume the project's resource directory lies at "src/main/resources" in the process working directory
-            path = RESOURCE_DIR.chroot().resolve(toAbsolute().toPath().toString());
+            path = RESOURCE_PATH.chroot().resolve(toAbsolute().toPath().toString());
         }
 
         // Load once up front
@@ -490,11 +481,6 @@ public class ResourcePath {
         }
 
         @Override
-        public ResourcePath toFileSystemPath() {
-            return RESOURCE_DIR.chroot().resolve(toAbsolute().path);
-        }
-
-        @Override
         public boolean isClassResource() {
             return true;
         }
@@ -524,10 +510,10 @@ public class ResourcePath {
             assert path != null;
 
             // Attempt to load resource from project resource folder if it's not located in a jar
-            if (isFileSystemResource()) {
+            if (RESOURCE_PATH != null && isFileSystemResource()) {
                 ResourcePath path = null;
                 try {
-                    path = RESOURCE_DIR.chroot().resolve(toAbsolute().toPath().toString());
+                    path = RESOURCE_PATH.chroot().resolve(toAbsolute().toPath().toString());
                     return path.toInputStream();
                 } catch (Exception ex) {
                     log.trace("Failed to load resource from project resource folder: {}", path, ex);
@@ -566,11 +552,6 @@ public class ResourcePath {
         }
 
         @Override
-        public ResourcePath toFileSystemPath() {
-            return RESOURCE_DIR.chroot().resolve(toAbsolute().path);
-        }
-
-        @Override
         public boolean isClassResource() {
             return true;
         }
@@ -599,10 +580,10 @@ public class ResourcePath {
             assert path != null;
 
             // Attempt to load resource from project resource folder if it's not located in a jar
-            if (isFileSystemResource()) {
+            if (RESOURCE_PATH != null && isFileSystemResource()) {
                 ResourcePath path = null;
                 try {
-                    path = RESOURCE_DIR.chroot().resolve(toAbsolute().toPath().toString());
+                    path = RESOURCE_PATH.chroot().resolve(toAbsolute().toPath().toString());
                     return path.toInputStream();
                 } catch (Exception ex) {
                     log.warn("Failed to load resource from project resource folder: {}", path, ex);
