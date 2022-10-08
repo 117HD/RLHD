@@ -35,7 +35,7 @@ public class PopupUtils {
                 log.error("Unable to load HD logo: ", ex);
             }
 
-            String html = String.format("<html>%s</html>", message);
+            String html = String.format("<html><style>a { color: #dc8a00; }</style><body>%s</body></html>", message);
             JEditorPane messagePane = new JEditorPane("text/html", html);
             messagePane.setBorder(BorderFactory.createEmptyBorder());
             messagePane.setHighlighter(null);

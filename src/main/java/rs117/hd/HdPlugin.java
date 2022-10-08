@@ -2830,7 +2830,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		PopupUtils.displayPopupMessage(client, "117HD Update",
 			"As you may have already noticed, the 117HD plugin was recently updated." +
 			"<br><br>" +
-			"The update brings improved performance, but it is <u>not enabled by default</u>. This is because we<br>" +
+			"The update brings improved performance, but it is <b>not enabled by default</b>. This is because we<br>" +
 			"cannot guarantee client stability with the new cache until it has been tested more thoroughly.<br>" +
 			"If you are willing to risk potential crashes for a performance uplift, you can enable the new<br>" +
 			"caching and batching options in the experimental section of 117HD's settings panel." +
