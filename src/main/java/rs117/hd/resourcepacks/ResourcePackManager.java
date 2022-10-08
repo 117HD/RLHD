@@ -1,6 +1,7 @@
 package rs117.hd.resourcepacks;
 
 import com.google.gson.reflect.TypeToken;
+import com.google.inject.Inject;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.HttpUrl;
@@ -8,11 +9,13 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.apache.commons.lang3.StringUtils;
+import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.gui.panel.ResourcePackPanel;
 import rs117.hd.resourcepacks.data.Manifest;
 import rs117.hd.resourcepacks.data.PackData;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.io.*;
 import java.lang.reflect.Type;
@@ -26,6 +29,9 @@ import static rs117.hd.resourcepacks.Constants.*;
 
 @Slf4j
 public class ResourcePackManager {
+
+    @Inject
+    HdPlugin plugin;
 
     @Getter
     public ResourcePackPanel panel;
@@ -69,7 +75,7 @@ public class ResourcePackManager {
             }
 
         } catch (IOException e) {
-            panel.messagePanel.setContent("Error", "Unable to get manifest.json");
+            panel.messagePanel.setContent("Error", "Unable to load manifest.json");
             log.error("Unable to download manifest.json ", e);
             panel.installedDropdown.setVisible(false);
         }
@@ -89,6 +95,7 @@ public class ResourcePackManager {
         buildPackList();
 
         if(getActivePack() != null) {
+            System.out.println("Active Pack: " + getActivePack());
             panel.installedDropdown.setSelectedItem(fromInternalName(getActivePack()));
         }
 
@@ -147,6 +154,9 @@ public class ResourcePackManager {
         if(alreadyDownloading) {
             return;
         }
+        if (!PACK_DIR.exists()) {
+            PACK_DIR.mkdirs();
+        }
         executor.submit(() -> {
             URL url = Objects.requireNonNull(HttpUrl.parse(manifest.getLink())).newBuilder()
                     .addPathSegment("archive")
@@ -157,6 +167,7 @@ public class ResourcePackManager {
 
             Request request = new Request.Builder().url(url).build();
             final ProgressListener progressListener = new ProgressListener() {
+
                 @Override
                 public void finishedDownloading() {
                     SwingUtilities.invokeLater(() -> {
@@ -171,8 +182,11 @@ public class ResourcePackManager {
 
                 @Override
                 public void progress(long bytesRead, long contentLength) {
-                    SwingUtilities.invokeLater(() -> panel.progressBar.setValue((int) ((100 * bytesRead) / contentLength)));
-
+                    SwingUtilities.invokeLater(() -> {
+                        long progress = (100 * bytesRead) / contentLength;
+                        System.out.println(progress);
+                        panel.progressBar.setValue((int) progress);
+                    });
                 }
 
                 @Override
@@ -230,9 +244,9 @@ public class ResourcePackManager {
                 Enumeration<? extends ZipEntry> zipEntries = zipFile.entries();
                 while (zipEntries.hasMoreElements()) {
                     ZipEntry enrty = zipEntries.nextElement();
-                    if (enrty.getName().contains("/textures/")) {
+                    if (enrty.getName().contains("/materials/")) {
                         String name = StringUtils.substringAfterLast(enrty.getName(), "/");
-                        pack.getTextures().put(name, zipFile.getInputStream(enrty));
+                        pack.getMaterials().put(name, ImageIO.read(zipFile.getInputStream(enrty)));
                     }
                 }
                 reloadResourcePack(pack, internalName);

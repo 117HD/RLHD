@@ -53,11 +53,9 @@ public class HdPanel extends PluginPanel
 
 	@Getter
 	private final ResourcePackPanel resourcePackPanel;
-	@Getter
-	private final Debug debugPanel;
 
 	@Inject
-	private HdPanel(ResourcePackPanel resourcePackPanel, Debug debugPanel)
+	private HdPanel(ResourcePackPanel resourcePackPanel)
 	{
 		super(false);
 
@@ -66,7 +64,6 @@ public class HdPanel extends PluginPanel
 		PATREON_ICON = ImageUtil.resizeImage(ImageUtil.loadImageResource(getClass(), "patreon.png"), 16, 16);
 
 		this.resourcePackPanel = resourcePackPanel;
-		this.debugPanel = debugPanel;
 
 		setBackground(ColorScheme.DARK_GRAY_COLOR);
 		setLayout(new BorderLayout());
@@ -83,14 +80,11 @@ public class HdPanel extends PluginPanel
 	{
 
 		MaterialTab packs = new MaterialTab("Resource Packs", tabGroup, resourcePackPanel);
-		MaterialTab debug = new MaterialTab("Debug", tabGroup, debugPanel);
 		JPanel container = new JPanel();
 		container.setBorder(new EmptyBorder(10, 0, 5, 0));
 		container.setLayout(new BorderLayout());
 
 		tabGroup.addTab(packs);
-		tabGroup.addTab(debug);
-
 		tabGroup.select(packs);
 
 		container.add(tabGroup, BorderLayout.NORTH);

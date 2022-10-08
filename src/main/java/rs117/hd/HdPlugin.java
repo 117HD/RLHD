@@ -585,6 +585,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				lastAntiAliasingMode = null;
 
 				lightManager.startUp();
+				registerPackEvents(true);
 				modelOverrideManager.startUp();
 				modelPusher.startUp();
 
@@ -604,13 +605,23 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		});
 	}
 
+
+	public void registerPackEvents(boolean register) {
+		if (register) {
+			eventBus.register(textureManager);
+		} else {
+			eventBus.unregister(textureManager);
+		}
+
+	}
+
 	@Override
 	protected void shutDown()
 	{
 		FileWatcher.destroy();
 		developerTools.deactivate();
 		lightManager.shutDown();
-
+		registerPackEvents(false);
 		clientThread.invoke(() ->
 		{
 			client.setGpu(false);

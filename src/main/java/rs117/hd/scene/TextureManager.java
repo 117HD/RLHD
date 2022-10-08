@@ -28,12 +28,14 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Texture;
 import net.runelite.api.TextureProvider;
 import net.runelite.client.callback.ClientThread;
+import net.runelite.client.eventbus.Subscribe;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.EXTTextureFilterAnisotropic;
 import org.lwjgl.opengl.GL;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.data.materials.Material;
+import rs117.hd.resourcepacks.PackChangedEvent;
 import rs117.hd.utils.Env;
 import rs117.hd.utils.ResourcePath;
 
@@ -314,8 +316,13 @@ public class TextureManager
 
 	private BufferedImage loadTextureImage(String textureName)
 	{
+
 		for (String ext : SUPPORTED_IMAGE_EXTENSIONS)
 		{
+			if(plugin.currentPack != null && plugin.currentPack.getMaterials().containsKey(textureName + "." + ext)) {
+				return plugin.currentPack.getMaterials().get(textureName + "." + ext);
+			}
+
 			ResourcePath path = path(TextureManager.class, "textures", textureName + "." + ext);
 			try {
 				return path.loadImage();
@@ -416,4 +423,11 @@ public class TextureManager
 
 		return true;
 	}
+
+	@Subscribe
+	public void onPackChangedEvent(PackChangedEvent packsChanged)
+	{
+		freeTextures();
+	}
+
 }
