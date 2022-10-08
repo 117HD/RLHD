@@ -2824,7 +2824,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	private void displayUpdateMessage() {
 		int messageId = 1;
 		if (config.getPluginUpdateMessage() >= messageId) {
-			return; // don't show the same message multiple times
+			return; // Don't show the same message multiple times
+		}
+
+		// Don't display the popup to people who have likely seen the Discord announcement
+		if (config.enableModelCaching() && config.enableModelBatching()) {
+			config.setPluginUpdateMessage(messageId);
+			return;
 		}
 
 		PopupUtils.displayPopupMessage(client, "117HD Update",
