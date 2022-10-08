@@ -360,15 +360,6 @@ class SceneUploader
 				neNormals = proceduralGenerator.vertexTerrainNormals.getOrDefault(neVertexKey, neNormals);
 				nwNormals = proceduralGenerator.vertexTerrainNormals.getOrDefault(nwVertexKey, nwNormals);
 
-				if (proceduralGenerator.vertexIsWater.containsKey(swVertexKey) && proceduralGenerator.vertexIsLand.containsKey(swVertexKey))
-					swColor = 0;
-				if (proceduralGenerator.vertexIsWater.containsKey(seVertexKey) && proceduralGenerator.vertexIsLand.containsKey(seVertexKey))
-					seColor = 0;
-				if (proceduralGenerator.vertexIsWater.containsKey(nwVertexKey) && proceduralGenerator.vertexIsLand.containsKey(nwVertexKey))
-					nwColor = 0;
-				if (proceduralGenerator.vertexIsWater.containsKey(neVertexKey) && proceduralGenerator.vertexIsLand.containsKey(neVertexKey))
-					neColor = 0;
-
 				if (plugin.configGroundBlending && !proceduralGenerator.useDefaultColor(tile) && sceneTilePaint.getTexture() == -1)
 				{
 					// get the vertices' colors and textures from hashmaps
@@ -443,21 +434,13 @@ class SceneUploader
 				swColor = seColor = nwColor = neColor = 127;
 
 				if (proceduralGenerator.vertexIsWater.containsKey(swVertexKey) && proceduralGenerator.vertexIsLand.containsKey(swVertexKey))
-				{
 					swColor = 0;
-				}
 				if (proceduralGenerator.vertexIsWater.containsKey(seVertexKey) && proceduralGenerator.vertexIsLand.containsKey(seVertexKey))
-				{
 					seColor = 0;
-				}
 				if (proceduralGenerator.vertexIsWater.containsKey(nwVertexKey) && proceduralGenerator.vertexIsLand.containsKey(nwVertexKey))
-				{
 					nwColor = 0;
-				}
 				if (proceduralGenerator.vertexIsWater.containsKey(neVertexKey) && proceduralGenerator.vertexIsLand.containsKey(neVertexKey))
-				{
 					neColor = 0;
-				}
 			}
 
 			if (proceduralGenerator.vertexIsOverlay.containsKey(neVertexKey) && proceduralGenerator.vertexIsUnderlay.containsKey(neVertexKey))
