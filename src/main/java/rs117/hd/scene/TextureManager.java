@@ -319,7 +319,7 @@ public class TextureManager
 
 		for (String ext : SUPPORTED_IMAGE_EXTENSIONS)
 		{
-			if(plugin.currentPack != null && plugin.currentPack.getMaterials().containsKey(textureName + "." + ext)) {
+			if(plugin.currentPack != null && plugin.currentPack.getMaterials().containsKey(textureName + "." + ext) && config.enablepackTextures()) {
 				return plugin.currentPack.getMaterials().get(textureName + "." + ext);
 			}
 

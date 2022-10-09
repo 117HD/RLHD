@@ -20,6 +20,7 @@ import javax.swing.*;
 import java.io.*;
 import java.lang.reflect.Type;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.*;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.zip.ZipEntry;
@@ -68,7 +69,7 @@ public class ResourcePackManager {
                 Type types = new TypeToken<ArrayList<Manifest>>() {}.getType();
                 ArrayList<Manifest> manifestList = GSON.fromJson(content, types);
                 manifestList.forEach(manifest -> currentManifest.put(manifest.getInternalName(), manifest));
-                loadPacks();
+                locateInstalledPacks();
             } else {
                 panel.messagePanel.setContent("Error", "Unable to get manifest.json content");
                 panel.installedDropdown.setVisible(false);
@@ -82,26 +83,39 @@ public class ResourcePackManager {
 
     }
 
-    public void loadPacks() {
+    public void locateInstalledPacks() {
+
+        if (!PACK_DIR.exists()) {
+            PACK_DIR.mkdirs();
+        }
 
         panel.executor.submit(() -> {
-            if (PACK_DIR.exists()) {
-                for (File file : Objects.requireNonNull(PACK_DIR.listFiles())) {
-                    addPackZip(file, false);
-                }
-            }
+            Arrays.stream(Objects.requireNonNull(PACK_DIR.listFiles())).filter(it -> it.getName().startsWith("pack-") && it.isDirectory()).forEach(this::addPack);
         });
 
-        buildPackList();
+        Arrays.stream(Objects.requireNonNull(PACK_DIR.listFiles())).filter(it -> it.getName().startsWith("devpack-") && it.isDirectory()).forEach( dir -> {
+            Manifest manifest = new Manifest();
+            String name = dir.getName();
+            manifest.setInternalName(toInternalName(name));
+            manifest.setDescription("Dev Pack: " + name);
+            manifest.setDev(true);
+            currentManifest.put(manifest.getInternalName(),manifest);
+            installedPacks.put(toInternalName(name), dir);
+            panel.installedDropdown.addItem(name);
+            log.info("Resource Pack {} has been added", toInternalName(name));
+        });
 
-        if(getActivePack() != null) {
-            System.out.println("Active Pack: " + getActivePack());
-            panel.installedDropdown.setSelectedItem(fromInternalName(getActivePack()));
+        buildPackPanel();
+
+        String packedSelected = panel.getPlugin().getConfigManager().getConfiguration(HdPluginConfig.RESOURCE_PACK_GROUP_NAME, "selectedHubPack");
+
+        if (packedSelected != null) {
+            panel.installedDropdown.setSelectedItem(fromInternalName(packedSelected));
         }
 
     }
 
-    public void buildPackList() {
+    public void buildPackPanel() {
         panel.packList.removeAll();
         currentManifest.forEach((internalName, manifest) -> {
             panel.packList.add(new ResourcePackComponent(manifest, panel.executor, this));
@@ -110,52 +124,33 @@ public class ResourcePackManager {
         panel.messagePanel.setVisible(false);
     }
 
-    public void addPackZip(File file, boolean updatePanel) {
-        boolean validPack = validZip(file);
-        if (validPack) {
-            String name = file.getName().replace(".zip", "");
-            Manifest manifest = currentManifest.get(name);
-            installedPacks.put(manifest.getInternalName(), file);
-            panel.installedDropdown.removeItem(fromInternalName(name));
-            panel.installedDropdown.addItem(fromInternalName(name));
-            if (updatePanel) {
-                buildPackList();
-            }
-        }
-    }
+    public void addPack(File file) {
 
-
-    public boolean validZip(File file) {
-        if (!currentManifest.containsKey(file.getName().replace(".zip", ""))) {
-            return false;
+        if (!new File(file, "pack.properties").exists()) {
+            log.info("{} does not contain pack.properties", file.getPath());
+            return;
         }
 
-        if (file.isDirectory()) {
-            return false;
-        }
-        if (!file.getName().toLowerCase().contains(".zip")) {
-            return false;
-        }
+        Properties props = new Properties();
 
-        try (ZipFile zipFile = new ZipFile(file)) {
-            boolean foundFile = zipFile.stream().anyMatch(it -> it.getName().contains("pack.properties"));
-            zipFile.close();
-            return foundFile;
+        try {
+            props.load(Files.newInputStream(new File(file, "pack.properties").toPath()));
         } catch (IOException e) {
-            log.info("Unable to add Resource Pack {}", file.getPath());
-            e.printStackTrace();
-            return false;
+            log.info("{} unable to read pack.properties please add a display name", file.getPath());
+            return;
         }
-    }
 
+        String name = props.getProperty("displayName");
+        installedPacks.put(toInternalName(name), file);
+        panel.installedDropdown.addItem(name);
+        log.info("Resource Pack {} has been added", toInternalName(name));
+
+    }
 
 
     public void downloadResourcePack(Manifest manifest, ScheduledExecutorService executor) {
         if(alreadyDownloading) {
             return;
-        }
-        if (!PACK_DIR.exists()) {
-            PACK_DIR.mkdirs();
         }
         executor.submit(() -> {
             URL url = Objects.requireNonNull(HttpUrl.parse(manifest.getLink())).newBuilder()
@@ -170,13 +165,20 @@ public class ResourcePackManager {
 
                 @Override
                 public void finishedDownloading() {
+                    new File(PACK_DIR,"pack-" + manifest.getInternalName()).mkdirs();
+
+                    try {
+                        unZipAll(new File(PACK_DIR, manifest.getInternalName() + ".zip"), new File(PACK_DIR,"pack-" + manifest.getInternalName()));
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                     SwingUtilities.invokeLater(() -> {
-                        installedPacks.put(manifest.getInternalName(), null);
-                        addPackZip(new File(PACK_DIR, manifest.getInternalName() + ".zip"), true);
+                        installedPacks.put(manifest.getInternalName(), new File(PACK_DIR,"pack-" + manifest.getInternalName()));
                         panel.progressBar.setValue(0);
                         panel.dropdownPanel.setVisible(true);
                         panel.progressPanel.setVisible(false);
                         alreadyDownloading = false;
+
                     });
                 }
 
@@ -184,7 +186,6 @@ public class ResourcePackManager {
                 public void progress(long bytesRead, long contentLength) {
                     SwingUtilities.invokeLater(() -> {
                         long progress = (100 * bytesRead) / contentLength;
-                        System.out.println(progress);
                         panel.progressBar.setValue((int) progress);
                     });
                 }
@@ -230,6 +231,76 @@ public class ResourcePackManager {
 
     }
 
+    public static void unZipAll(File source, File destination) throws IOException {
+        System.out.println("Unzipping - " + source.getName());
+        int BUFFER = 2048;
+
+        ZipFile zip = new ZipFile(source);
+        try {
+            destination.getParentFile().mkdirs();
+            Enumeration zipFileEntries = zip.entries();
+
+            // Process each entry
+            while (zipFileEntries.hasMoreElements()) {
+
+                // grab a zip file entry
+                ZipEntry entry = (ZipEntry) zipFileEntries.nextElement();
+                String currentEntry = StringUtils.substringAfter(entry.getName(),"/");
+                System.out.println(currentEntry);
+                File destFile = new File(destination, currentEntry);
+                //destFile = new File(newPath, destFile.getName());
+                File destinationParent = destFile.getParentFile();
+
+                // create the parent directory structure if needed
+                destinationParent.mkdirs();
+
+                if (!entry.isDirectory()) {
+                    BufferedInputStream is = null;
+                    FileOutputStream fos = null;
+                    BufferedOutputStream dest = null;
+                    try {
+                        is = new BufferedInputStream(zip.getInputStream(entry));
+                        int currentByte;
+                        // establish buffer for writing file
+                        byte data[] = new byte[BUFFER];
+
+                        // write the current file to disk
+                        fos = new FileOutputStream(destFile);
+                        dest = new BufferedOutputStream(fos, BUFFER);
+
+                        // read and write until last byte is encountered
+                        while ((currentByte = is.read(data, 0, BUFFER)) != -1) {
+                            dest.write(data, 0, currentByte);
+                        }
+                    } catch (Exception e) {
+                        System.out.println("unable to extract entry:" + entry.getName());
+                        throw e;
+                    } finally {
+                        if (dest != null) {
+                            dest.close();
+                        }
+                        if (fos != null) {
+                            fos.close();
+                        }
+                        if (is != null) {
+                            is.close();
+                        }
+                    }
+                } else {
+                    //Create directory
+                    destFile.mkdirs();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Failed to successfully unzip:" + source.getName());
+        } finally {
+            zip.close();
+        }
+        source.delete();
+        System.out.println("Done Unzipping:" + source.getName());
+    }
+
     public void setActivePack(String name) {
         String internalName = toInternalName(name);
         panel.getPlugin().getConfigManager().setConfiguration(HdPluginConfig.RESOURCE_PACK_GROUP_NAME, "selectedHubPack",internalName);
@@ -238,26 +309,24 @@ public class ResourcePackManager {
 
     public void loadPackData(String internalName) {
         if (!internalName.equalsIgnoreCase("Default") && installedPacks.containsKey(internalName)) {
-            try {
-                ZipFile zipFile = new ZipFile(installedPacks.get(internalName));
-                PackData pack = new PackData();
-                Enumeration<? extends ZipEntry> zipEntries = zipFile.entries();
-                while (zipEntries.hasMoreElements()) {
-                    ZipEntry enrty = zipEntries.nextElement();
-                    if (enrty.getName().contains("/materials/")) {
-                        String name = StringUtils.substringAfterLast(enrty.getName(), "/");
-                        pack.getMaterials().put(name, ImageIO.read(zipFile.getInputStream(enrty)));
-                    }
+
+            PackData pack = new PackData();
+            File baseDir = installedPacks.get(internalName);
+
+            for (File texture : Objects.requireNonNull(new File(baseDir, "materials").listFiles())) {
+                try {
+                    pack.getMaterials().put(texture.getName(), ImageIO.read(texture));
+                } catch (IOException e) {
+                    log.error("Error loading Resource pack textures {} ", internalName);
+                    e.printStackTrace();
                 }
-                reloadResourcePack(pack, internalName);
-            } catch (IOException e) {
-                reloadResourcePack(null, internalName);
-                log.info("Error loading Resource pack data {} ", internalName);
-                e.printStackTrace();
             }
+
+            reloadResourcePack(pack, internalName);
         } else {
             reloadResourcePack(null, internalName);
         }
+
     }
 
     public void reloadResourcePack(PackData pack, String internalName) {
@@ -269,17 +338,26 @@ public class ResourcePackManager {
         panel.getPlugin().getEventBus().post(new PackChangedEvent(internalName));
     }
 
-    public void uninstallPack(File file) {
-        if (file.delete()) {
-            String name = file.getName().replace(".zip", "");
-            String formattedName = fromInternalName(name);
-            installedPacks.remove(name);
+    public void uninstallPack(File file, String internalName) {
+        if(deleteDirectory(file)) {
+            String formattedName = fromInternalName(internalName);
+            installedPacks.remove(internalName);
             if (formattedName.equalsIgnoreCase(getActivePack())) {
                 panel.installedDropdown.setSelectedItem("Default");
             }
             panel.installedDropdown.removeItem(formattedName);
             log.info("Pack {} has been removed", file.getName());
         }
+    }
+
+    boolean deleteDirectory(File directoryToBeDeleted) {
+        File[] allContents = directoryToBeDeleted.listFiles();
+        if (allContents != null) {
+            for (File file : allContents) {
+                deleteDirectory(file);
+            }
+        }
+        return directoryToBeDeleted.delete();
     }
 
     public String getActivePack() {

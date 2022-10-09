@@ -2295,6 +2295,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 					initShadowMapFbo();
 				});
 				break;
+			case "enablepackTextures":
+				textureManager.freeTextures();
+				break;
 			case "textureResolution":
 			case "hdInfernalTexture":
 			case KEY_WINTER_THEME:

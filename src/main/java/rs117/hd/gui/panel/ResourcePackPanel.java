@@ -36,11 +36,13 @@ import net.runelite.client.ui.ColorScheme;
 import net.runelite.client.ui.DynamicGridLayout;
 import net.runelite.client.util.ImageUtil;
 import rs117.hd.HdPlugin;
+import rs117.hd.HdPluginConfig;
 import rs117.hd.gui.panel.components.FixedWidthPanel;
 import rs117.hd.gui.panel.components.Header;
 import rs117.hd.resourcepacks.ResourcePackManager;
 
 import static net.runelite.client.ui.PluginPanel.PANEL_WIDTH;
+import static rs117.hd.resourcepacks.Constants.fromInternalName;
 
 public class ResourcePackPanel extends JPanel
 {
@@ -151,6 +153,8 @@ public class ResourcePackPanel extends JPanel
 		refreshButton.setIcon(new ImageIcon(ImageUtil.resizeImage(ImageUtil.loadImageResource(HdPanel.class, "refresh.png"), 16, 16)));
 		refreshButton.setToolTipText("Refresh");
 		refreshButton.addActionListener((ev) -> {
+			plugin.getPanel().getResourcePackPanel().installedDropdown.removeAllItems();
+			plugin.getPanel().getResourcePackPanel().installedDropdown.addItem("Default");
 			plugin.getResourcePackManager().loadManifest();
 		});
 

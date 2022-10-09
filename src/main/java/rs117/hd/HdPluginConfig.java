@@ -547,12 +547,49 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
+	/*====== Resource Packs settings ======*/
+
+	@ConfigSection(
+			name = "Resource Packs",
+			description = "Resource Packs",
+			position = 400,
+			closedByDefault = false
+	)
+	String packSettings = "packSettings";
+
+	@ConfigItem(
+			keyName = "enablepackTextures",
+			name = "Enable Icons",
+			description = "Enable Icons in the panel GUI.",
+			position = 401,
+			section = packSettings
+	)
+	default boolean enablepackIcons() { return true; }
+
+	@ConfigItem(
+			keyName = "enablepackTextures",
+			name = "Enable Textures",
+			description = "Enable Packs to use custom Textures.",
+			position = 402,
+			section = packSettings
+	)
+	default boolean enablepackTextures() { return true; }
+
+	@ConfigItem(
+			keyName = "packSorting",
+			name = "Pack Sorting",
+			description = "What order you would like packs to show.",
+			position = 403,
+			section = packSettings
+	)
+	default PackSortingMode packSorting() { return PackSortingMode.INSTALLED; }
+
 	/*====== Experimental settings ======*/
 
 	@ConfigSection(
 			name = "Experimental",
 			description = "Experimental features - if you're experiencing issues you should consider disabling these",
-			position = 400,
+			position = 401,
 			closedByDefault = true
 	)
 	String experimentalSettings = "experimentalSettings";
@@ -561,7 +598,7 @@ public interface HdPluginConfig extends Config
 			keyName = "enableModelCaching",
 			name = "Enable model caching",
 			description = "Model caching improves performance with increased memory usage. May cause instability or graphical bugs.",
-			position = 401,
+			position = 402,
 			section = experimentalSettings
 	)
 	default boolean enableModelCaching() { return false; }
@@ -570,7 +607,7 @@ public interface HdPluginConfig extends Config
 			keyName = "enableModelBatching",
 			name = "Enable model batching",
 			description = "Model batching generally improves performance but may cause instability and graphical bugs.",
-			position = 402,
+			position = 403,
 			section = experimentalSettings
 	)
 	default boolean enableModelBatching() { return false; }
@@ -583,7 +620,7 @@ public interface HdPluginConfig extends Config
 			keyName = "modelCacheSizeMiB",
 			name = "Model cache size (MiB)",
 			description = "Size of the model cache in mebibytes. Plugin must be restarted to apply changes. Min=256 Max=16384",
-			position = 403,
+			position = 404,
 			section = experimentalSettings
 	)
 	default int modelCacheSizeMiB() {
@@ -594,7 +631,7 @@ public interface HdPluginConfig extends Config
 			keyName = "loadingClearCache",
 			name = "Clear cache when loading",
 			description = "Clear the model cache whenever the game shows the \"loading please wait...\" message. This may improve performance when memory allocated to the cache is small.",
-			position = 404,
+			position = 405,
 			section = experimentalSettings
 	)
 	default boolean loadingClearCache() {

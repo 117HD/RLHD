@@ -93,28 +93,39 @@ public class ResourcePackComponent extends JPanel {
         help.addActionListener(ev -> LinkBrowser.browse(support));
         help.setBorder(null);
 
-        boolean install = !resourcePackManager.installedPacks.containsKey(manifest.getInternalName());
+        if (manifest.getDev()) {
+            help.setVisible(false);
+        }
+
         JButton actionButton = new JButton();
-        if (install) {
-            actionButton.setText("Install");
+
+        if (manifest.getDev()) {
+            actionButton.setText("Locate");
             actionButton.setBackground(new Color(0x28BE28));
-            actionButton.addActionListener(l ->
-            {
-                actionButton.setText("Installing");
-                actionButton.setBackground(ColorScheme.MEDIUM_GRAY_COLOR);
-                resourcePackManager.downloadResourcePack(manifest, executor);
-            });
+            actionButton.addActionListener(ev -> LinkBrowser.open(resourcePackManager.installedPacks.get(manifest.getInternalName()).getAbsolutePath()));
         } else {
-            actionButton.setText("Remove");
-            actionButton.setBackground(new Color(0xBE2828));
-            actionButton.addActionListener(l ->
-            {
-                actionButton.setText("Removing");
-                actionButton.setBackground(ColorScheme.MEDIUM_GRAY_COLOR);
-                resourcePackManager.panel.installedDropdown.removeItem(Constants.fromInternalName(manifest.getInternalName()));
-                resourcePackManager.uninstallPack(new File(Constants.PACK_DIR, manifest.getInternalName() + ".zip"));
-                resourcePackManager.loadPacks();
-            });
+            boolean install = !resourcePackManager.installedPacks.containsKey(manifest.getInternalName());
+            if (install) {
+                actionButton.setText("Install");
+                actionButton.setBackground(new Color(0x28BE28));
+                actionButton.addActionListener(l ->
+                {
+                    actionButton.setText("Installing");
+                    actionButton.setBackground(ColorScheme.MEDIUM_GRAY_COLOR);
+                    resourcePackManager.downloadResourcePack(manifest, executor);
+                });
+            } else {
+                actionButton.setText("Remove");
+                actionButton.setBackground(new Color(0xBE2828));
+                actionButton.addActionListener(l ->
+                {
+                    actionButton.setText("Removing");
+                    actionButton.setBackground(ColorScheme.MEDIUM_GRAY_COLOR);
+                    resourcePackManager.panel.installedDropdown.removeItem(Constants.fromInternalName(manifest.getInternalName()));
+                    resourcePackManager.uninstallPack(resourcePackManager.installedPacks.get(manifest.getInternalName()),manifest.getInternalName());
+                    resourcePackManager.locateInstalledPacks();
+                });
+            }
         }
 
         actionButton.setBorder(new LineBorder(actionButton.getBackground().darker()));

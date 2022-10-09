@@ -15,4 +15,5 @@ public class Manifest {
     String description = "";
     String link = "";
     String version = "";
+    Boolean dev = false;
 }
