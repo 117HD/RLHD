@@ -2643,5 +2643,21 @@
       "BOULDER_11783"
     ],
     "flatNormals": true
+  },
+  {
+    "description": "Desert pyramid walls",
+    "baseMaterial": "WALL_STONE",
+    "objectIds": [
+      6617, 6618, 6539, 6540
+    ],
+    "flatNormals": true,
+    "uvType": "GROUND_PLANE"
+  },
+  {
+    "description": "Sophanem pyramid door",
+    "baseMaterial": "MARBLE_3",
+    "objectIds": [
+      6614, 26622, 26623, 26624, 26625, 19168
+    ]
   }
 ]
