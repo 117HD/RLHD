@@ -135,6 +135,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	private ClientThread clientThread;
 
 	@Inject
+	@Getter
 	private HdPluginConfig config;
 
 	@Inject
@@ -2184,6 +2185,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				}
 				break;
 			case LOGGED_IN:
+				resourcePackManager.loadPackData(getConfig().packName());
 				uploadScene();
 				checkGLErrors();
 				break;

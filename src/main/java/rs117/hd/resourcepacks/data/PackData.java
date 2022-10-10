@@ -8,5 +8,6 @@ import java.util.Map;
 
 @Data
 public class PackData {
+    String internalName;
     Map<String, BufferedImage> materials = new HashMap<>();
 }

@@ -557,6 +557,11 @@ public interface HdPluginConfig extends Config
 	)
 	String packSettings = "packSettings";
 
+	@ConfigItem(keyName = "packname", hidden = true, name = "", description = "")
+	void setPackName(String name);
+	@ConfigItem(keyName = "packname", name = "", description = "", hidden = true)
+	default String packName() { return "default"; }
+
 	@ConfigItem(
 			keyName = "enablepackTextures",
 			name = "Enable Icons",

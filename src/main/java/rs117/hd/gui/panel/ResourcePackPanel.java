@@ -26,6 +26,7 @@ package rs117.hd.gui.panel;
 
 import java.awt.*;
 import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.concurrent.ScheduledExecutorService;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -138,12 +139,6 @@ public class ResourcePackPanel extends JPanel
 		installedDropdown.setForeground(Color.WHITE);
 		installedDropdown.setFocusable(false);
 		installedDropdown.addItem("Default");
-		installedDropdown.addItemListener(e -> {
-			if (e.getStateChange() == ItemEvent.SELECTED)
-			{
-				plugin.getResourcePackManager().setActivePack(e.getItem().toString());
-			}
-		});
 
 		dropdownPanel.add(installedDropdown, BorderLayout.WEST);
 
@@ -152,11 +147,6 @@ public class ResourcePackPanel extends JPanel
 		refreshButton.setMinimumSize(new Dimension(30,30));
 		refreshButton.setIcon(new ImageIcon(ImageUtil.resizeImage(ImageUtil.loadImageResource(HdPanel.class, "refresh.png"), 16, 16)));
 		refreshButton.setToolTipText("Refresh");
-		refreshButton.addActionListener((ev) -> {
-			plugin.getPanel().getResourcePackPanel().installedDropdown.removeAllItems();
-			plugin.getPanel().getResourcePackPanel().installedDropdown.addItem("Default");
-			plugin.getResourcePackManager().loadManifest();
-		});
 
 		dropdownPanel.add(refreshButton, BorderLayout.EAST);
 

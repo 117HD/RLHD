@@ -10,13 +10,14 @@ import okhttp3.Request;
 import okhttp3.Response;
 import org.apache.commons.lang3.StringUtils;
 import rs117.hd.HdPlugin;
-import rs117.hd.HdPluginConfig;
 import rs117.hd.gui.panel.ResourcePackPanel;
 import rs117.hd.resourcepacks.data.Manifest;
 import rs117.hd.resourcepacks.data.PackData;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.io.*;
 import java.lang.reflect.Type;
 import java.net.URL;
@@ -30,9 +31,6 @@ import static rs117.hd.resourcepacks.Constants.*;
 
 @Slf4j
 public class ResourcePackManager {
-
-    @Inject
-    HdPlugin plugin;
 
     @Getter
     public ResourcePackPanel panel;
@@ -106,13 +104,7 @@ public class ResourcePackManager {
         });
 
         buildPackPanel();
-
-        String packedSelected = panel.getPlugin().getConfigManager().getConfiguration(HdPluginConfig.RESOURCE_PACK_GROUP_NAME, "selectedHubPack");
-
-        if (packedSelected != null) {
-            panel.installedDropdown.setSelectedItem(fromInternalName(packedSelected));
-        }
-
+        loadDropdownItems();
     }
 
     public void buildPackPanel() {
@@ -122,6 +114,34 @@ public class ResourcePackManager {
         });
 
         panel.messagePanel.setVisible(false);
+    }
+
+    public ItemListener dropdownListener() {
+        return e -> {
+            if(e.getStateChange() == ItemEvent.SELECTED) {
+                setCurrentPack(e.getItem().toString());
+            }
+        };
+    }
+
+    public void loadDropdownItems() {
+        ItemListener listener = dropdownListener();
+        panel.installedDropdown.removeItemListener(listener);
+        if(panel.installedDropdown.getItemCount() != 0) {
+            panel.installedDropdown.removeAllItems();
+        }
+        panel.installedDropdown.addItem("Default");
+        installedPacks.forEach((internalName, manifest) -> {
+            panel.installedDropdown.addItem(fromInternalName(internalName));
+        });
+
+        String packedSelected = panel.getPlugin().getConfig().packName();
+        if (currentManifest.containsKey(packedSelected)) {
+            panel.installedDropdown.setSelectedItem(fromInternalName(packedSelected));
+        } else {
+            panel.installedDropdown.setSelectedItem("Default");
+        }
+        panel.installedDropdown.addItemListener(listener);
     }
 
     public void addPack(File file) {
@@ -172,14 +192,15 @@ public class ResourcePackManager {
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
+                    installedPacks.put(manifest.getInternalName(), new File(PACK_DIR,"pack-" + manifest.getInternalName()));
                     SwingUtilities.invokeLater(() -> {
-                        installedPacks.put(manifest.getInternalName(), new File(PACK_DIR,"pack-" + manifest.getInternalName()));
                         panel.progressBar.setValue(0);
                         panel.dropdownPanel.setVisible(true);
                         panel.progressPanel.setVisible(false);
-                        alreadyDownloading = false;
-
+                        buildPackPanel();
                     });
+                    alreadyDownloading = false;
+                    loadDropdownItems();
                 }
 
                 @Override
@@ -301,16 +322,20 @@ public class ResourcePackManager {
         System.out.println("Done Unzipping:" + source.getName());
     }
 
-    public void setActivePack(String name) {
+    public void setCurrentPack(String name) {
         String internalName = toInternalName(name);
-        panel.getPlugin().getConfigManager().setConfiguration(HdPluginConfig.RESOURCE_PACK_GROUP_NAME, "selectedHubPack",internalName);
+        panel.getPlugin().getConfig().setPackName(internalName);
         loadPackData(internalName);
     }
 
     public void loadPackData(String internalName) {
-        if (!internalName.equalsIgnoreCase("Default") && installedPacks.containsKey(internalName)) {
-
+        if (!internalName.equalsIgnoreCase("Default") && installedPacks.containsKey(internalName) ) {
+            if (panel.getPlugin().currentPack != null && panel.getPlugin().currentPack.getInternalName().equals(internalName)) {
+                activatePack(panel.getPlugin().currentPack, internalName);
+                return;
+            }
             PackData pack = new PackData();
+            pack.setInternalName(internalName);
             File baseDir = installedPacks.get(internalName);
 
             for (File texture : Objects.requireNonNull(new File(baseDir, "materials").listFiles())) {
@@ -322,17 +347,18 @@ public class ResourcePackManager {
                 }
             }
 
-            reloadResourcePack(pack, internalName);
+            activatePack(pack, internalName);
         } else {
-            reloadResourcePack(null, internalName);
+            activatePack(null, internalName);
         }
 
     }
 
-    public void reloadResourcePack(PackData pack, String internalName) {
+    public void activatePack(PackData pack, String internalName) {
         if(panel.getPlugin().currentPack == pack) {
             return;
         }
+        log.info("Resource pack {} enabled.", internalName);
         panel.getPlugin().currentPack = pack;
         panel.installedDropdown.setSelectedItem(Constants.fromInternalName(internalName));
         panel.getPlugin().getEventBus().post(new PackChangedEvent(internalName));
@@ -342,7 +368,7 @@ public class ResourcePackManager {
         if(deleteDirectory(file)) {
             String formattedName = fromInternalName(internalName);
             installedPacks.remove(internalName);
-            if (formattedName.equalsIgnoreCase(getActivePack())) {
+            if (formattedName.equalsIgnoreCase(panel.getPlugin().getConfig().packName())) {
                 panel.installedDropdown.setSelectedItem("Default");
             }
             panel.installedDropdown.removeItem(formattedName);
@@ -358,10 +384,6 @@ public class ResourcePackManager {
             }
         }
         return directoryToBeDeleted.delete();
-    }
-
-    public String getActivePack() {
-        return panel.getPlugin().getConfigManager().getConfiguration(HdPluginConfig.RESOURCE_PACK_GROUP_NAME, "selectedHubPack");
     }
 
 }
