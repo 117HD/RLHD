@@ -328,6 +328,9 @@ public enum Material
 	WORN_TILES,
 	STONE,
 
+	WALL_STONE_N,
+	WALL_STONE(p -> p.setNormalMap(WALL_STONE_N)),
+
 	// Seasonal
 	WINTER_WILLOW_LEAVES(p -> p
 		.replaceIf(WILLOW_LEAVES, HdPluginConfig::winterTheme)

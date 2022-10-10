@@ -7,7 +7,11 @@ import net.runelite.api.Client;
 import net.runelite.api.GameState;
 import net.runelite.api.coords.WorldPoint;
 import rs117.hd.HdPlugin;
+import rs117.hd.data.materials.Material;
+import rs117.hd.data.materials.UvType;
+import rs117.hd.scene.model_overrides.InheritTileColorType;
 import rs117.hd.scene.model_overrides.ModelOverride;
+import rs117.hd.scene.model_overrides.TzHaarRecolorType;
 import rs117.hd.utils.AABB;
 import rs117.hd.utils.Env;
 import rs117.hd.utils.ModelHash;
@@ -63,6 +67,19 @@ public class ModelOverrideManager {
         ModelOverride old = modelOverrides.put(uuid, entry);
         if (old != null)
             log.debug("ID {} clashes between entries '{}' and '{}'", ModelHash.getIdOrIndex(uuid), entry.description, old.description);
+
+        // Ensure there are no nulls in case of invalid configuration during development
+        if (entry.baseMaterial == null)
+            entry.baseMaterial = ModelOverride.NONE.baseMaterial;
+        if (entry.textureMaterial == null)
+            entry.textureMaterial = ModelOverride.NONE.textureMaterial;
+        if (entry.uvType == null)
+            entry.uvType = ModelOverride.NONE.uvType;
+        if (entry.tzHaarRecolorType == null)
+            entry.tzHaarRecolorType = ModelOverride.NONE.tzHaarRecolorType;
+        if (entry.inheritTileColorType == null)
+            entry.inheritTileColorType = ModelOverride.NONE.inheritTileColorType;
+
         modelsToHide.put(uuid, entry.hideInAreas);
     }
 
