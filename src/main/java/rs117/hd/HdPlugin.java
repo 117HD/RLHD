@@ -2281,6 +2281,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 					recompilePrograms();
 				});
 				break;
+			case "anisotropicFilteringLevel":
+				textureManager.freeTextures();
+				break;
 			case "uiScalingMode":
 			case "colorBlindMode":
 			case "parallaxMappingMode":
