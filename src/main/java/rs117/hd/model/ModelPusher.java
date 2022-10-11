@@ -47,11 +47,10 @@ public class ModelPusher {
     @Inject
     private ModelHasher modelHasher;
 
-    private final ModelCache modelCache = new ModelCache();
+    private ModelCache modelCache;
     public static final int DATUM_PER_FACE = 12;
     public static final int BYTES_PER_DATUM = 4;
 
-    private boolean started = false;
 
 //    private int pushes = 0;
 //    private int vertexdatahits = 0;
@@ -59,16 +58,15 @@ public class ModelPusher {
 //    private int uvdatahits = 0;
 
     public void startUp() {
-        if (!started) {
-            this.modelCache.init(hdPlugin, config);
-            this.started = true;
+        if (config.enableModelCaching()) {
+            modelCache = new ModelCache(hdPlugin, config);
         }
     }
 
     public void shutDown() {
-        if (started) {
-            this.modelCache.shutDown();
-            this.started = false;
+        if (modelCache != null) {
+            modelCache.destroy();
+            modelCache = null;
         }
     }
 
@@ -88,7 +86,9 @@ public class ModelPusher {
     private final static float[] twelveFloats = new float[12];
 
     public void clearModelCache() {
-        this.modelCache.clear();
+        if (modelCache != null) {
+            modelCache.clear();
+        }
     }
 
 //    public void printStats() {
@@ -110,7 +110,14 @@ public class ModelPusher {
 //        pushes = 0;
 //    }
 
-    public int[] pushModel(long hash, Model model, GpuIntBuffer vertexBuffer, GpuFloatBuffer uvBuffer, GpuFloatBuffer normalBuffer, int tileX, int tileY, int tileZ, @NonNull ModelOverride modelOverride, ObjectType objectType, boolean noCache) {
+    public int[] pushModel(
+        long hash, Model model, GpuIntBuffer vertexBuffer, GpuFloatBuffer uvBuffer, GpuFloatBuffer normalBuffer,
+        int tileX, int tileY, int tileZ, @NonNull ModelOverride modelOverride, ObjectType objectType, boolean shouldCache
+    ) {
+        if (modelCache == null) {
+            shouldCache = false;
+        }
+
 //        pushes++;
         final int faceCount = Math.min(model.getFaceCount(), HdPlugin.MAX_TRIANGLE);
         final int bufferSize = faceCount * DATUM_PER_FACE;
@@ -129,7 +136,7 @@ public class ModelPusher {
         int normalDataCacheHash = 0;
         int uvDataCacheHash = 0;
 
-        if (!noCache) {
+        if (shouldCache) {
             vertexDataCacheHash = modelHasher.calculateVertexCacheHash();
             normalDataCacheHash = modelHasher.calculateNormalCacheHash();
             uvDataCacheHash = modelHasher.calculateUvCacheHash(modelOverride);
@@ -171,7 +178,7 @@ public class ModelPusher {
         FloatBuffer fullNormalData = null;
         FloatBuffer fullUvData = null;
 
-        boolean cachingVertexData = !cachedVertexData && !noCache;
+        boolean cachingVertexData = !cachedVertexData && shouldCache;
         if (cachingVertexData) {
             fullVertexData = this.modelCache.takeIntBuffer(bufferSize);
             if (fullVertexData == null) {
@@ -180,7 +187,7 @@ public class ModelPusher {
             }
         }
 
-        boolean cachingNormalData = !cachedNormalData && !noCache;
+        boolean cachingNormalData = !cachedNormalData && shouldCache;
         if (cachingNormalData) {
             fullNormalData = this.modelCache.takeFloatBuffer(bufferSize);
             if (fullNormalData == null) {
@@ -189,7 +196,7 @@ public class ModelPusher {
             }
         }
 
-        boolean cachingUvData = !cachedUvData && !noCache;
+        boolean cachingUvData = !cachedUvData && shouldCache;
         if (cachingUvData) {
             fullUvData = this.modelCache.takeFloatBuffer(bufferSize);
             if (fullUvData == null) {

@@ -14,20 +14,21 @@ public class BufferPool {
     private final Stack<Long> bufferAddressStack;
     private final long byteCapacity;
     private boolean allocated;
-    private final HdPlugin hdPlugin;
+    private final HdPlugin plugin;
 
-    public BufferPool(long byteCapacity, HdPlugin hdPlugin) {
+    public BufferPool(long byteCapacity, HdPlugin plugin) {
         this.bufferAddressStack = new Stack<>();
         this.byteCapacity = byteCapacity;
         this.allocated = false;
-        this.hdPlugin = hdPlugin;
+        this.plugin = plugin;
+        allocate();
     }
 
     public boolean isEmpty() {
         return this.bufferAddressStack.isEmpty();
     }
 
-    public void allocate() {
+    private void allocate() {
         if (this.allocated) {
             return;
         }
@@ -43,8 +44,9 @@ public class BufferPool {
                 bytesRemaining -= allocationSize;
             }
         } catch (OutOfMemoryError oom) {
-            log.error("out of memory during initialization -- shutting down");
-            hdPlugin.stopPlugin();
+            log.error("Out of memory during initialization -- shutting down HD");
+            free();
+            plugin.stopPlugin();
         }
 
         this.allocated = true;

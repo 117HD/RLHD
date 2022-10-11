@@ -569,31 +569,36 @@ public interface HdPluginConfig extends Config
 	String experimentalSettings = "experimentalSettings";
 
 	@ConfigItem(
-			keyName = "enableModelCaching",
+		keyName = "enableModelBatching",
+		name = "Enable model batching",
+		description = "Model batching improves performance by reusing identical models within the same frame.<br>" +
+			"May cause instability and graphical bugs.",
+		position = 401,
+		section = experimentalSettings
+	)
+	default boolean enableModelBatching() { return false; }
+
+	String KEY_ENABLE_MODEL_CACHING = "enableModelCaching";
+	@ConfigItem(
+			keyName = KEY_ENABLE_MODEL_CACHING,
 			name = "Enable model caching",
-			description = "Model caching improves performance with increased memory usage. May cause instability or graphical bugs.",
-			position = 401,
+			description = "Model caching improves performance by saving and reusing model data from older frames.<br>" +
+				"May cause instability or graphical bugs.",
+			position = 402,
 			section = experimentalSettings
 	)
 	default boolean enableModelCaching() { return false; }
 
-	@ConfigItem(
-			keyName = "enableModelBatching",
-			name = "Enable model batching",
-			description = "Model batching generally improves performance but may cause instability and graphical bugs.",
-			position = 402,
-			section = experimentalSettings
-	)
-	default boolean enableModelBatching() { return false; }
-
+	String KEY_MODEL_CACHE_SIZE = "modelCacheSizeMiB";
 	@Range(
 			min = 256,
 			max = 16384
 	)
 	@ConfigItem(
-			keyName = "modelCacheSizeMiB",
+			keyName = KEY_MODEL_CACHE_SIZE,
 			name = "Model cache size (MiB)",
-			description = "Size of the model cache in mebibytes. Plugin must be restarted to apply changes. Min=256 Max=16384",
+			description = "Size of the model cache in mebibytes (slightly more than megabytes).<br>" +
+				"Minimum=256 MiB, maximum=16384 MiB",
 			position = 403,
 			section = experimentalSettings
 	)
@@ -604,7 +609,8 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 			keyName = "loadingClearCache",
 			name = "Clear cache when loading",
-			description = "Clear the model cache whenever the game shows the \"loading please wait...\" message. This may improve performance when memory allocated to the cache is small.",
+			description = "Clear the model cache whenever the game loads a new scene.<br>" +
+				"This should generally only be used if the cache size is lower than 512 MiB.",
 			position = 404,
 			section = experimentalSettings
 	)
