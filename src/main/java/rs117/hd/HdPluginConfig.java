@@ -91,7 +91,10 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = "anisotropicFilteringLevel",
 		name = "Anisotropic Filtering",
-		description = "Configures the anisotropic filtering level from 0 to 16x.",
+		description = "Configures whether mipmapping and anisotropic filtering should be used.<br>" +
+			"At zero, mipmapping is disabled and textures look the most pixelated.<br>" +
+			"At 1 through 16, mipmapping is enabled, and textures look more blurry and smoothed out.<br>" +
+			"The higher you go beyond 1, the less blurry textures will look, up to a certain extent.",
 		position = 4,
 		section = generalSettings
 	)
