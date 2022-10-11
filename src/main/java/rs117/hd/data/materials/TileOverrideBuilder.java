@@ -45,7 +45,8 @@ class TileOverrideBuilder<T> {
         // Overlay & underlay IDs were always meant to be treated as unsigned,
         // so our negative IDs broke when Jagex switched from bytes to shorts
         for (int i = 0; i < ids.length; i++)
-            ids[i] &= 0xff;
+            if (ids[i] < 0)
+                ids[i] &= 0xff;
         return this;
     }
 
