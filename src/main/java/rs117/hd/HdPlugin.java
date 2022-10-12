@@ -120,7 +120,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 	@Inject
 	private Client client;
-	
+
 	@Inject
 	private OpenCLManager openCLManager;
 
@@ -360,10 +360,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	// Generic scalable animation timer used in shaders
 	private float elapsedTime = 0;
 
-	// future time to reload the scene
-	// useful for pulling new data into the scene buffer
-	@Setter
-	private long nextSceneReload = 0;
+	private int gameTicksUntilSceneReload = 0;
 
 	// some necessary data for reloading the scene while in POH to fix major performance loss
 	@Setter
@@ -402,7 +399,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 		// reload the scene if the player is in the gauntlet and opening a new room to pull the new data into the buffer
 		if (event.getMessage().equals("You light the nodes in the corridor to help guide the way.")) {
-			reloadScene();
+			reloadSceneAfter(1);
 		}
 	}
 
@@ -753,7 +750,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		glProgram = PROGRAM.compile(template);
 		glUiProgram = UI_PROGRAM.compile(template);
 		glShadowProgram = SHADOW_PROGRAM.compile(template);
-		
+
 		if (computeMode == ComputeMode.OPENCL)
 		{
 			openCLManager.init(awtContext);
@@ -1994,13 +1991,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			tempOffset = 0;
 			tempUvOffset = 0;
 			tempModelInfoMap.clear();
-
-			// reload the scene if it was requested
-			if (nextSceneReload != 0 && nextSceneReload <= System.currentTimeMillis()) {
-				lightManager.reset();
-				uploadScene();
-				nextSceneReload = 0;
-			}
 		}
 
 		// Texture on UI
@@ -2341,7 +2331,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 	public void reloadScene()
 	{
-		nextSceneReload = System.currentTimeMillis();
+		reloadSceneAfter(0);
+	}
+
+	public void reloadSceneAfter(int gameTicks)
+	{
+		if (gameTicks > gameTicksUntilSceneReload) {
+			gameTicksUntilSceneReload = gameTicks;
+		}
 	}
 
 	/**
@@ -2784,6 +2781,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	@Subscribe
 	public void onGameTick(GameTick gameTick)
 	{
+		if (gameTicksUntilSceneReload > 0) {
+			gameTicksUntilSceneReload--;
+			if (gameTicksUntilSceneReload == 0) {
+				lightManager.reset();
+				uploadScene();
+			}
+		}
+
 		if (!hasLoggedIn && client.getGameState() == GameState.LOGGED_IN)
 		{
 			hasLoggedIn = true;

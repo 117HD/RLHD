@@ -167,7 +167,9 @@ public class EnvironmentManager
 				{
 					if (environment == Environment.PLAYER_OWNED_HOUSE || environment == Environment.PLAYER_OWNED_HOUSE_SNOWY) {
 						hdPlugin.setInHouse(true);
-						hdPlugin.setNextSceneReload(System.currentTimeMillis() + 2500);
+
+						// POH takes 1 game tick to enter, then 2 game ticks to load per floor
+						hdPlugin.reloadSceneAfter(7);
 					} else {
 						hdPlugin.setInHouse(false);
 					}
