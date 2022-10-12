@@ -4,6 +4,7 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.api.kit.KitType;
+import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.data.materials.Material;
@@ -42,6 +43,9 @@ public class ModelPusher {
     private Client client;
 
     @Inject
+    private ClientThread clientThread;
+
+    @Inject
     private ProceduralGenerator proceduralGenerator;
 
     @Inject
@@ -63,8 +67,8 @@ public class ModelPusher {
                 modelCache = new ModelCache(config.modelCacheSizeMiB());
             } catch (Throwable err) {
                 log.error("Error while initializing model cache. Stopping the plugin...", err);
-                plugin.stopPlugin();
                 // Allow the model pusher to be used until the plugin has cleanly shut down
+                clientThread.invokeLater(plugin::stopPlugin);
             }
         }
     }

@@ -552,9 +552,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 				clientThread.invokeLater(this::displayUpdateMessage);
 			}
-			catch (Throwable e)
+			catch (Throwable err)
 			{
-				log.error("Error starting HD plugin", e);
+				log.error("Error while starting 117HD", err);
 				stopPlugin();
 			}
 			return true;
@@ -637,7 +637,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			}
 			catch (PluginInstantiationException ex)
 			{
-				log.error("error stopping plugin", ex);
+				log.error("Error while stopping 117HD", ex);
 			}
 		});
 
