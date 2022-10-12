@@ -40,8 +40,7 @@ public interface HdPluginConfig extends Config
 	@ConfigSection(
 		name = "General",
 		description = "General settings",
-		position = 0,
-		closedByDefault = false
+		position = 0
 	)
 	String generalSettings = "generalSettings";
 
@@ -123,11 +122,11 @@ public interface HdPluginConfig extends Config
 	}
 
 	@ConfigItem(
-			keyName = "vsyncMode",
-			name = "VSync Mode",
-			description = "Method to synchronize frame rate with refresh rate",
-			position = 6,
-			section = generalSettings
+		keyName = "vsyncMode",
+		name = "VSync Mode",
+		description = "Method to synchronize frame rate with refresh rate",
+		position = 6,
+		section = generalSettings
 	)
 	default SyncMode syncMode()
 	{
@@ -135,15 +134,15 @@ public interface HdPluginConfig extends Config
 	}
 
 	@ConfigItem(
-			keyName = "fpsTarget",
-			name = "FPS Target",
-			description = "Target FPS when unlock FPS is enabled and Vsync mode is OFF",
-			position = 7,
-			section = generalSettings
+		keyName = "fpsTarget",
+		name = "FPS Target",
+		description = "Target FPS when unlock FPS is enabled and Vsync mode is OFF",
+		position = 7,
+		section = generalSettings
 	)
 	@Range(
-			min = 0,
-			max = 999
+		min = 0,
+		max = 999
 	)
 	default int fpsTarget()
 	{
@@ -231,8 +230,7 @@ public interface HdPluginConfig extends Config
 	@ConfigSection(
 		name = "Lighting",
 		description = "Lighting settings",
-		position = 100,
-		closedByDefault = false
+		position = 100
 	)
 	String lightingSettings = "lightingSettings";
 
@@ -564,10 +562,10 @@ public interface HdPluginConfig extends Config
 	/*====== Experimental settings ======*/
 
 	@ConfigSection(
-			name = "Experimental",
-			description = "Experimental features - if you're experiencing issues you should consider disabling these",
-			position = 400,
-			closedByDefault = true
+		name = "Experimental",
+		description = "Experimental features - if you're experiencing issues you should consider disabling these",
+		position = 400,
+		closedByDefault = true
 	)
 	String experimentalSettings = "experimentalSettings";
 
@@ -583,39 +581,39 @@ public interface HdPluginConfig extends Config
 
 	String KEY_ENABLE_MODEL_CACHING = "enableModelCaching";
 	@ConfigItem(
-			keyName = KEY_ENABLE_MODEL_CACHING,
-			name = "Enable model caching",
-			description = "Model caching improves performance by saving and reusing model data from older frames.<br>" +
-				"May cause instability or graphical bugs.",
-			position = 402,
-			section = experimentalSettings
+		keyName = KEY_ENABLE_MODEL_CACHING,
+		name = "Enable model caching",
+		description = "Model caching improves performance by saving and reusing model data from older frames.<br>" +
+			"May cause instability or graphical bugs.",
+		position = 402,
+		section = experimentalSettings
 	)
 	default boolean enableModelCaching() { return false; }
 
 	String KEY_MODEL_CACHE_SIZE = "modelCacheSizeMiB";
 	@Range(
-			min = 256,
-			max = 16384
+		min = 256,
+		max = 16384
 	)
 	@ConfigItem(
-			keyName = KEY_MODEL_CACHE_SIZE,
-			name = "Model cache size (MiB)",
-			description = "Size of the model cache in mebibytes (slightly more than megabytes).<br>" +
-				"Minimum=256 MiB, maximum=16384 MiB",
-			position = 403,
-			section = experimentalSettings
+		keyName = KEY_MODEL_CACHE_SIZE,
+		name = "Model cache size (MiB)",
+		description = "Size of the model cache in mebibytes (slightly more than megabytes).<br>" +
+			"Minimum=256 MiB, maximum=16384 MiB",
+		position = 403,
+		section = experimentalSettings
 	)
 	default int modelCacheSizeMiB() {
 		return 2048;
 	}
 
 	@ConfigItem(
-			keyName = "loadingClearCache",
-			name = "Clear cache when loading",
-			description = "Clear the model cache whenever the game loads a new scene.<br>" +
-				"This should generally only be used if the cache size is lower than 512 MiB.",
-			position = 404,
-			section = experimentalSettings
+		keyName = "loadingClearCache",
+		name = "Clear cache when loading",
+		description = "Clear the model cache whenever the game loads a new scene.<br>" +
+			"This should generally only be used if the cache size is lower than 512 MiB.",
+		position = 404,
+		section = experimentalSettings
 	)
 	default boolean loadingClearCache() {
 		return false;
