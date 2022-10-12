@@ -51,7 +51,7 @@ public class BufferPool {
         allocationHandles.add(handle);
 
         for (long cursor = 0; chunkSize - cursor >= BUFFER_SIZE; cursor += BUFFER_SIZE) {
-            bufferAddressStack.push(cursor);
+            bufferAddressStack.push(handle + cursor);
         }
     }
 
