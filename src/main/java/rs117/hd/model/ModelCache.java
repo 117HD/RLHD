@@ -1,24 +1,22 @@
 package rs117.hd.model;
 
 import lombok.extern.slf4j.Slf4j;
-import rs117.hd.HdPlugin;
-import rs117.hd.HdPluginConfig;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
 @Slf4j
 public class ModelCache {
-    private static final long MiB = 1024L * 1024L;
+    public static final long KiB = 1024;
+    public static final long MiB = 1024 * KiB;
+    public static final long GiB = 1024 * MiB;
 
     private final BufferPool bufferPool;
     private final IntBufferCache vertexDataCache;
     private final FloatBufferCache normalDataCache;
     private final FloatBufferCache uvDataCache;
 
-    public ModelCache(HdPlugin plugin, HdPluginConfig config) {
-        int modelCacheSizeMiB = config.modelCacheSizeMiB();
-
+    public ModelCache(int modelCacheSizeMiB) {
         // Limit cache size to 512MiB for 32-bit
         if (modelCacheSizeMiB > 512 && !"64".equals(System.getProperty("sun.arch.data.model"))) {
             log.warn("Defaulting model cache to 512MiB due to non 64-bit client");
@@ -33,15 +31,15 @@ public class ModelCache {
 
             // Try to limit the cache size to half of the total physical memory
             if (modelCacheSizeMiB > totalPhysicalMemoryMiB / 2) {
-                modelCacheSizeMiB = totalPhysicalMemoryMiB / 2;
                 log.warn("Limiting cache size to {} since the selected amount ({}) exceeds half of the total physical memory for the system ({} / 2).",
-                    modelCacheSizeMiB, config.modelCacheSizeMiB(), totalPhysicalMemoryMiB);
+                    totalPhysicalMemoryMiB / 2, modelCacheSizeMiB, totalPhysicalMemoryMiB);
+                modelCacheSizeMiB = totalPhysicalMemoryMiB / 2;
             }
         } catch (Throwable e) {
             log.warn("Unable to check physical memory size: " + e);
         }
 
-        this.bufferPool = new BufferPool(modelCacheSizeMiB * MiB, plugin);
+        this.bufferPool = new BufferPool(modelCacheSizeMiB * MiB);
         this.vertexDataCache = new IntBufferCache(this.bufferPool);
         this.normalDataCache = new FloatBufferCache(this.bufferPool);
         this.uvDataCache = new FloatBufferCache(this.bufferPool);
@@ -51,7 +49,7 @@ public class ModelCache {
         clear();
 
         if (this.bufferPool != null) {
-            this.bufferPool.free();
+            this.bufferPool.freeAllocations();
         }
     }
 

@@ -33,7 +33,7 @@ import static rs117.hd.utils.HDUtils.dotNormal3Lights;
 @Slf4j
 public class ModelPusher {
     @Inject
-    private HdPlugin hdPlugin;
+    private HdPlugin plugin;
 
     @Inject
     private HdPluginConfig config;
@@ -59,7 +59,13 @@ public class ModelPusher {
 
     public void startUp() {
         if (config.enableModelCaching()) {
-            modelCache = new ModelCache(hdPlugin, config);
+            try {
+                modelCache = new ModelCache(config.modelCacheSizeMiB());
+            } catch (Throwable err) {
+                log.error("Error while initializing model cache. Stopping the plugin...", err);
+                plugin.stopPlugin();
+                // Allow the model pusher to be used until the plugin has cleanly shut down
+            }
         }
     }
 
@@ -320,14 +326,14 @@ public class ModelPusher {
 
         boolean isVanillaTextured = faceTextures != null && uv != null && faceTextures[face] != -1;
         if (isVanillaTextured) {
-            if (hdPlugin.configModelTextures) {
+            if (plugin.configModelTextures) {
                 material = modelOverride.textureMaterial;
             }
 
             if (material == Material.NONE) {
                 material = Material.getTexture(faceTextures[face]);
             }
-        } else if (hdPlugin.configModelTextures) {
+        } else if (plugin.configModelTextures) {
             material = modelOverride.baseMaterial;
         }
 
@@ -514,7 +520,7 @@ public class ModelPusher {
         int maxBrightness1 = 55;
         int maxBrightness2 = 55;
         int maxBrightness3 = 55;
-        if (!hdPlugin.configReduceOverExposure) {
+        if (!plugin.configReduceOverExposure) {
             maxBrightness1 = (int) HDUtils.lerp(127, maxBrightness1, (float) Math.pow((float) color1S / 0x7, .05));
             maxBrightness2 = (int) HDUtils.lerp(127, maxBrightness2, (float) Math.pow((float) color2S / 0x7, .05));
             maxBrightness3 = (int) HDUtils.lerp(127, maxBrightness3, (float) Math.pow((float) color3S / 0x7, .05));
@@ -606,7 +612,7 @@ public class ModelPusher {
 
         int packedAlphaPriority = getPackedAlphaPriority(model, face);
 
-        if (hdPlugin.configTzhaarHD && modelOverride.tzHaarRecolorType != TzHaarRecolorType.NONE) {
+        if (plugin.configTzhaarHD && modelOverride.tzHaarRecolorType != TzHaarRecolorType.NONE) {
             int[][] tzHaarRecolored = proceduralGenerator.recolorTzHaar(modelOverride, heightA, heightB, heightC, packedAlphaPriority, objectType, color1S, color1L, color2S, color2L, color3S, color3L);
             color1H = tzHaarRecolored[0][0];
             color1S = tzHaarRecolored[0][1];

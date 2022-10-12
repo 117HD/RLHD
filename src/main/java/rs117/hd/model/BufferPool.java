@@ -6,83 +6,84 @@ import rs117.hd.HdPlugin;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Stack;
 
 @Slf4j
 public class BufferPool {
-    private final Stack<Long> bufferAddressStack;
-    private final long byteCapacity;
-    private boolean allocated;
-    private final HdPlugin plugin;
+    private static final long BUFFER_SIZE = HdPlugin.MAX_TRIANGLE * ModelPusher.DATUM_PER_FACE * ModelPusher.BYTES_PER_DATUM;
 
-    public BufferPool(long byteCapacity, HdPlugin plugin) {
-        this.bufferAddressStack = new Stack<>();
-        this.byteCapacity = byteCapacity;
-        this.allocated = false;
-        this.plugin = plugin;
-        allocate();
+    private final ArrayList<Long> allocationHandles = new ArrayList<>();
+    private final ArrayDeque<Long> bufferAddressStack = new ArrayDeque<>();
+
+    public BufferPool(long byteCapacity) throws OutOfMemoryError {
+        try {
+            // Try allocating the whole size as a single chunk
+            allocateChunk(byteCapacity);
+        } catch (OutOfMemoryError err) {
+            log.warn("Unable to allocate {} bytes as a single chunk", byteCapacity, err);
+
+            try {
+                // Try allocating in 1 GiB chunks
+                long bytesRemaining = byteCapacity;
+                while (bytesRemaining > 0) {
+                    long chunkSize = Math.min(bytesRemaining, ModelCache.GiB);
+                    allocateChunk(chunkSize);
+                    bytesRemaining -= chunkSize;
+                }
+            } catch (OutOfMemoryError err2) {
+                log.error("Unable to allocate {} bytes in chunks of 1 GiB", byteCapacity, err2);
+                freeAllocations();
+                throw err2;
+            }
+        }
     }
 
     public boolean isEmpty() {
-        return this.bufferAddressStack.isEmpty();
+        return bufferAddressStack.isEmpty();
     }
 
-    private void allocate() {
-        if (this.allocated) {
-            return;
+    private void allocateChunk(long chunkSize) throws OutOfMemoryError {
+        long handle = MemoryUtil.nmemAllocChecked(chunkSize);
+        allocationHandles.add(handle);
+
+        for (long cursor = 0; chunkSize - cursor >= BUFFER_SIZE; cursor += BUFFER_SIZE) {
+            bufferAddressStack.push(cursor);
         }
-
-        // we're going to allocate as many of these as possible
-        // these lovely allocations are perfectly sized to fit any piece of model data so they can be reused infinitely
-        long allocationSize = HdPlugin.MAX_TRIANGLE * ModelPusher.DATUM_PER_FACE * ModelPusher.BYTES_PER_DATUM;
-        long bytesRemaining = this.byteCapacity;
-
-        try {
-            while (bytesRemaining - allocationSize >= 0) {
-                this.bufferAddressStack.push(MemoryUtil.nmemAllocChecked(allocationSize));
-                bytesRemaining -= allocationSize;
-            }
-        } catch (OutOfMemoryError oom) {
-            log.error("Out of memory during initialization -- shutting down HD");
-            free();
-            plugin.stopPlugin();
-        }
-
-        this.allocated = true;
     }
 
-    public void free() {
-        Iterator<Long> iterator = this.bufferAddressStack.iterator();
+    public void freeAllocations() {
+        bufferAddressStack.clear();
 
+        Iterator<Long> iterator = allocationHandles.iterator();
         while(iterator.hasNext()) {
-            Long address = iterator.next();
-            MemoryUtil.nmemFree(address);
+            MemoryUtil.nmemFree(iterator.next());
             iterator.remove();
         }
     }
 
     public void putIntBuffer(IntBuffer buffer) {
-        this.bufferAddressStack.push(MemoryUtil.memAddress(buffer));
+        bufferAddressStack.push(MemoryUtil.memAddress(buffer));
     }
 
     public IntBuffer takeIntBuffer(int capacity) {
-        if (this.bufferAddressStack.isEmpty()) {
+        if (bufferAddressStack.isEmpty()) {
             return null;
         }
 
-        return MemoryUtil.memIntBuffer(this.bufferAddressStack.pop(), capacity);
+        return MemoryUtil.memIntBuffer(bufferAddressStack.pop(), capacity);
     }
 
     public void putFloatBuffer(FloatBuffer buffer) {
-        this.bufferAddressStack.push(MemoryUtil.memAddress(buffer));
+        bufferAddressStack.push(MemoryUtil.memAddress(buffer));
     }
 
     public FloatBuffer takeFloatBuffer(int capacity) {
-        if (this.bufferAddressStack.isEmpty()) {
+        if (bufferAddressStack.isEmpty()) {
             return null;
         }
 
-        return MemoryUtil.memFloatBuffer(this.bufferAddressStack.pop(), capacity);
+        return MemoryUtil.memFloatBuffer(bufferAddressStack.pop(), capacity);
     }
 }
