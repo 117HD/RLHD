@@ -1133,14 +1133,15 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		ByteBuffer buffer = BufferUtils.createByteBuffer(Material.values().length * 20 * SCALAR_BYTES);
 		for (Material material : Material.values())
 		{
+			System.out.println(material.name());
 			material = textureManager.getEffectiveMaterial(material);
 			int index = textureManager.getTextureIndex(material);
 			float scrollSpeedX = material.scrollSpeed[0];
 			float scrollSpeedY = material.scrollSpeed[1];
 			if (index != -1)
 			{
-				scrollSpeedX += textureAnimations[index * 2];
-				scrollSpeedY += textureAnimations[index * 2 + 1];
+				//scrollSpeedX += textureAnimations[index * 2];
+				//scrollSpeedY += textureAnimations[index * 2 + 1];
 			}
 			buffer
 				.putInt(index)
