@@ -399,7 +399,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 		// reload the scene if the player is in the gauntlet and opening a new room to pull the new data into the buffer
 		if (event.getMessage().equals("You light the nodes in the corridor to help guide the way.")) {
-			reloadSceneAfter(1);
+			reloadSceneNextGameTick();
 		}
 	}
 
@@ -1638,7 +1638,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			if (isInHouse) {
 				int plane = client.getPlane();
 				if (previousPlane != plane) {
-					reloadScene();
+					reloadSceneNextGameTick();
 					previousPlane = plane;
 				}
 			}
@@ -2118,7 +2118,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	{
 		switch (gameStateChanged.getGameState()) {
 			case LOADING:
-				lightManager.reset();
 				if (config.loadingClearCache()) {
 					modelPusher.clearModelCache();
 				}
@@ -2132,13 +2131,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				targetBufferOffset = 0;
 				hasLoggedIn = false;
 				modelPusher.clearModelCache();
-			default:
-				lightManager.reset();
+				break;
 		}
 	}
 
 	private void uploadScene()
 	{
+		lightManager.reset();
+
 		vertexBuffer.clear();
 		uvBuffer.clear();
 		normalBuffer.clear();
@@ -2164,6 +2164,19 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		vertexBuffer.clear();
 		uvBuffer.clear();
 		normalBuffer.clear();
+	}
+
+	public void reloadSceneNextGameTick()
+	{
+		reloadSceneIn(1);
+	}
+
+	public void reloadSceneIn(int gameTicks)
+	{
+		assert gameTicks > 0 : "A value <= 0 will not reload the scene";
+		if (gameTicks > gameTicksUntilSceneReload) {
+			gameTicksUntilSceneReload = gameTicks;
+		}
 	}
 
 	void generateHDSceneData()
@@ -2240,6 +2253,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			case KEY_WINTER_THEME:
 				configHdInfernalTexture = config.hdInfernalTexture();
 				textureManager.freeTextures();
+			case "hideBakedEffects":
 			case "groundBlending":
 			case "groundTextures":
 			case "objectTextures":
@@ -2253,7 +2267,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				configReduceOverExposure = config.reduceOverExposure();
 				clientThread.invoke(() -> {
 					modelPusher.clearModelCache();
-					reloadScene();
+					uploadScene();
 				});
 				break;
 			case "projectileLights":
@@ -2285,12 +2299,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			case "fpsTarget":
 				log.debug("Rebuilding sync mode");
 				clientThread.invoke(this::setupSyncMode);
-				break;
-			case "hideBakedEffects":
-				clientThread.invoke(() -> {
-					modelPusher.clearModelCache();
-					reloadScene();
-				});
 				break;
 		}
 	}
@@ -2327,18 +2335,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 		client.setUnlockedFpsTarget(actualSwapInterval == 0 ? config.fpsTarget() : 0);
 		checkGLErrors();
-	}
-
-	public void reloadScene()
-	{
-		reloadSceneAfter(0);
-	}
-
-	public void reloadSceneAfter(int gameTicks)
-	{
-		if (gameTicks > gameTicksUntilSceneReload) {
-			gameTicksUntilSceneReload = gameTicks;
-		}
 	}
 
 	/**
@@ -2781,12 +2777,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	@Subscribe
 	public void onGameTick(GameTick gameTick)
 	{
-		if (gameTicksUntilSceneReload > 0) {
-			gameTicksUntilSceneReload--;
-			if (gameTicksUntilSceneReload == 0) {
-				lightManager.reset();
-				uploadScene();
-			}
+		if (gameTicksUntilSceneReload > 0 && --gameTicksUntilSceneReload == 0) {
+			uploadScene();
 		}
 
 		if (!hasLoggedIn && client.getGameState() == GameState.LOGGED_IN)

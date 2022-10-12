@@ -169,7 +169,7 @@ public class EnvironmentManager
 						hdPlugin.setInHouse(true);
 
 						// POH takes 1 game tick to enter, then 2 game ticks to load per floor
-						hdPlugin.reloadSceneAfter(7);
+						hdPlugin.reloadSceneIn(7);
 					} else {
 						hdPlugin.setInHouse(false);
 					}
