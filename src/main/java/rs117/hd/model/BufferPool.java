@@ -35,8 +35,8 @@ public class BufferPool {
                     bytesRemaining -= chunkSize;
                 }
             } catch (Throwable err2) {
-                log.error("Unable to allocate {} bytes in chunks of 1 GiB", byteCapacity, err2);
                 freeAllocations();
+                log.error("Unable to allocate {} bytes in chunks of 1 GiB", byteCapacity, err2);
                 throw err2;
             }
         }
