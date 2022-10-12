@@ -21,7 +21,9 @@ public class BufferPool {
         try {
             // Try allocating the whole size as a single chunk
             allocateChunk(byteCapacity);
-        } catch (OutOfMemoryError err) {
+        } catch (Throwable err) {
+            // Largely unnecessary, but free the above allocation in case it failed while initializing buffer addresses
+            freeAllocations();
             log.warn("Unable to allocate {} bytes as a single chunk", byteCapacity, err);
 
             try {
@@ -32,7 +34,7 @@ public class BufferPool {
                     allocateChunk(chunkSize);
                     bytesRemaining -= chunkSize;
                 }
-            } catch (OutOfMemoryError err2) {
+            } catch (Throwable err2) {
                 log.error("Unable to allocate {} bytes in chunks of 1 GiB", byteCapacity, err2);
                 freeAllocations();
                 throw err2;
