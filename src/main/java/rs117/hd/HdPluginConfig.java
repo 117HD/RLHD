@@ -35,8 +35,6 @@ import rs117.hd.config.*;
 @ConfigGroup("hd")
 public interface HdPluginConfig extends Config
 {
-	String RESOURCE_PACK_GROUP_NAME = "resourcepacks";
-
 	/*====== General settings ======*/
 
 	@ConfigSection(
@@ -547,54 +545,25 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
-	/*====== Resource Packs settings ======*/
-
-	@ConfigSection(
-			name = "Resource Packs",
-			description = "Resource Packs",
-			position = 400,
-			closedByDefault = false
-	)
-	String packSettings = "packSettings";
-
-	@ConfigItem(keyName = "packname", hidden = true, name = "", description = "")
-	void setPackName(String name);
-	@ConfigItem(keyName = "packname", name = "", description = "", hidden = true)
-	default String packName() { return "default"; }
-
+	String KEY_REDUCE_OVER_EXPOSURE = "reduceOverExposure";
 	@ConfigItem(
-			keyName = "enablepackTextures",
-			name = "Enable Icons",
-			description = "Enable Icons in the panel GUI.",
-			position = 401,
-			section = packSettings
+		keyName = KEY_REDUCE_OVER_EXPOSURE,
+		name = "Reduce over-exposure",
+		description = "Previously, HD attempted to reduce over-exposure by lowering the maximum face color brightness.\n" +
+			"This turned most white-looking things into a dull grey. This option returns that old behaviour.",
+		position = 304,
+		section = miscellaneousSettings
 	)
-	default boolean enablepackIcons() { return true; }
-
-	@ConfigItem(
-			keyName = "enablepackTextures",
-			name = "Enable Textures",
-			description = "Enable Packs to use custom Textures.",
-			position = 402,
-			section = packSettings
-	)
-	default boolean enablepackTextures() { return true; }
-
-	@ConfigItem(
-			keyName = "packSorting",
-			name = "Pack Sorting",
-			description = "What order you would like packs to show.",
-			position = 403,
-			section = packSettings
-	)
-	default PackSortingMode packSorting() { return PackSortingMode.INSTALLED; }
+	default boolean reduceOverExposure() {
+		return false;
+	}
 
 	/*====== Experimental settings ======*/
 
 	@ConfigSection(
 			name = "Experimental",
 			description = "Experimental features - if you're experiencing issues you should consider disabling these",
-			position = 401,
+			position = 400,
 			closedByDefault = true
 	)
 	String experimentalSettings = "experimentalSettings";
@@ -603,7 +572,7 @@ public interface HdPluginConfig extends Config
 			keyName = "enableModelCaching",
 			name = "Enable model caching",
 			description = "Model caching improves performance with increased memory usage. May cause instability or graphical bugs.",
-			position = 402,
+			position = 401,
 			section = experimentalSettings
 	)
 	default boolean enableModelCaching() { return false; }
@@ -612,7 +581,7 @@ public interface HdPluginConfig extends Config
 			keyName = "enableModelBatching",
 			name = "Enable model batching",
 			description = "Model batching generally improves performance but may cause instability and graphical bugs.",
-			position = 403,
+			position = 402,
 			section = experimentalSettings
 	)
 	default boolean enableModelBatching() { return false; }
@@ -625,7 +594,7 @@ public interface HdPluginConfig extends Config
 			keyName = "modelCacheSizeMiB",
 			name = "Model cache size (MiB)",
 			description = "Size of the model cache in mebibytes. Plugin must be restarted to apply changes. Min=256 Max=16384",
-			position = 404,
+			position = 403,
 			section = experimentalSettings
 	)
 	default int modelCacheSizeMiB() {
@@ -636,10 +605,19 @@ public interface HdPluginConfig extends Config
 			keyName = "loadingClearCache",
 			name = "Clear cache when loading",
 			description = "Clear the model cache whenever the game shows the \"loading please wait...\" message. This may improve performance when memory allocated to the cache is small.",
-			position = 405,
+			position = 404,
 			section = experimentalSettings
 	)
 	default boolean loadingClearCache() {
 		return false;
+	}
+
+	/*====== Internal settings ======*/
+
+	@ConfigItem(keyName = "pluginUpdateMessage", hidden = true, name = "", description = "")
+	void setPluginUpdateMessage(int version);
+	@ConfigItem(keyName = "pluginUpdateMessage", hidden = true, name = "", description = "")
+	default int getPluginUpdateMessage() {
+		return 0;
 	}
 }

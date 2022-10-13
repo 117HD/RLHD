@@ -17,9 +17,9 @@ public class ModelCache {
 
     public void init(HdPlugin hdPlugin, HdPluginConfig config) {
         int modelCacheSizeMiB = config.modelCacheSizeMiB();
-        if (!Objects.equals(System.getProperty("sun.arch.data.model"), "64") && modelCacheSizeMiB > 1024) {
-            log.error("defaulting model cache to 1024MiB due to non 64-bit client");
-            modelCacheSizeMiB = 1024;
+        if (!Objects.equals(System.getProperty("sun.arch.data.model"), "64") && modelCacheSizeMiB > 512) {
+            log.error("defaulting model cache to 512MiB due to non 64-bit client");
+            modelCacheSizeMiB = 512;
         }
 
         try {
