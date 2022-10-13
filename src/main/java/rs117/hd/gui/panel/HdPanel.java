@@ -68,6 +68,8 @@ public class HdPanel extends PluginPanel
 		setBackground(ColorScheme.DARK_GRAY_COLOR);
 		setLayout(new BorderLayout());
 
+		setup();
+
 	}
 
 	public void setup() {

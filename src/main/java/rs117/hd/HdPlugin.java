@@ -95,8 +95,7 @@ import java.util.Map;
 
 import static org.jocl.CL.*;
 import static org.lwjgl.opengl.GL43C.*;
-import static rs117.hd.HdPluginConfig.KEY_REDUCE_OVER_EXPOSURE;
-import static rs117.hd.HdPluginConfig.KEY_WINTER_THEME;
+import static rs117.hd.HdPluginConfig.*;
 import static rs117.hd.utils.ResourcePath.path;
 
 @PluginDescriptor(
@@ -128,7 +127,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 	@Inject
 	private Client client;
-	
+
 	@Inject
 	private OpenCLManager openCLManager;
 
@@ -136,11 +135,17 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	private ClientThread clientThread;
 
 	@Inject
+	private ClientToolbar clientToolbar;
+
+	@Inject
 	@Getter
 	private HdPluginConfig config;
 
 	@Inject
 	private TextureManager textureManager;
+
+	@Inject
+	private ResourcePackManager resourcePackManager;
 
 	@Inject
 	private LightManager lightManager;
@@ -164,45 +169,29 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	private ProceduralGenerator proceduralGenerator;
 
 	@Inject
-	@Getter
-	private ConfigManager configManager;
-
-	@Inject
 	private ModelPusher modelPusher;
 
 	@Inject
 	private ModelHasher modelHasher;
 
 	@Inject
+	private DeveloperTools developerTools;
+
+	@Inject
 	@Named("developerMode")
 	private boolean developerMode;
 
-	@Inject
-	private DeveloperTools developerTools;
 	private ComputeMode computeMode = ComputeMode.OPENGL;
 
 	private Canvas canvas;
 	private AWTContext awtContext;
 	private Callback debugCallback;
 
-	@Getter
-	@Setter
-	private HdPanel panel;
-
-	@Getter
-	@Setter
-	public ResourcePackManager resourcePackManager;
-
 	@Inject
 	@Getter
 	private EventBus eventBus;
 
-	@Inject
-	private ClientToolbar clientToolbar;
-
-	private NavigationButton naigation;
-
-	public PackData currentPack = null;
+	private NavigationButton navigationButton;
 
 	private static final String LINUX_VERSION_HEADER =
 		"#version 420\n" +
@@ -546,22 +535,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 					developerTools.activate();
 				}
 
-				SwingUtilities.invokeAndWait(() -> {
-					setPanel(injector.getInstance(HdPanel.class));
-
-					final BufferedImage icon = ImageUtil.loadImageResource(getClass(), "icon.png");
-					naigation = NavigationButton.builder()
-							.tooltip("HD 117")
-							.icon(icon)
-							.priority(3)
-							.panel(panel)
-							.build();
-
-					clientToolbar.addNavigation(naigation);
-					panel.setup();
-				});
-
-
 				lastFrameTime = System.currentTimeMillis();
 
 				setupSyncMode();
@@ -581,6 +554,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				client.setDrawCallbacks(this);
 				client.setGpu(true);
 				textureManager.startUp();
+				registerPackEvents(true);
 				// force rebuild of main buffer provider to enable alpha channel
 				client.resizeCanvas();
 
@@ -589,7 +563,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				lastAntiAliasingMode = null;
 
 				lightManager.startUp();
-				registerPackEvents(true);
 				modelOverrideManager.startUp();
 				modelPusher.startUp();
 
@@ -599,6 +572,17 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				}
 
 				checkGLErrors();
+
+				SwingUtilities.invokeLater(() -> {
+					navigationButton = NavigationButton.builder()
+							.tooltip("117 HD")
+							.priority(3)
+							.icon(ImageUtil.loadImageResource(HdPlugin.class, "icon.png"))
+							.panel(injector.getInstance(HdPanel.class))
+							.build();
+					clientToolbar.addNavigation(navigationButton);
+					resourcePackManager.startUp();
+				});
 
 				clientThread.invokeLater(this::displayUpdateMessage);
 			}
@@ -628,6 +612,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		developerTools.deactivate();
 		lightManager.shutDown();
 		registerPackEvents(false);
+
+		if (navigationButton != null)
+		{
+			clientToolbar.removeNavigation(navigationButton);
+			navigationButton = null;
+		}
+
 		clientThread.invoke(() ->
 		{
 			client.setGpu(false);
@@ -640,6 +631,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				openCLManager.cleanup();
 
 				textureManager.shutDown();
+				resourcePackManager.shutDown();
 
 				shutdownBuffers();
 				shutdownInterfaceTexture();
@@ -809,7 +801,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		glProgram = PROGRAM.compile(template);
 		glUiProgram = UI_PROGRAM.compile(template);
 		glShadowProgram = SHADOW_PROGRAM.compile(template);
-		
+
 		if (computeMode == ComputeMode.OPENCL)
 		{
 			openCLManager.init(awtContext);
@@ -1138,15 +1130,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		ByteBuffer buffer = BufferUtils.createByteBuffer(Material.values().length * 20 * SCALAR_BYTES);
 		for (Material material : Material.values())
 		{
-			System.out.println(material.name());
 			material = textureManager.getEffectiveMaterial(material);
 			int index = textureManager.getTextureIndex(material);
 			float scrollSpeedX = material.scrollSpeed[0];
 			float scrollSpeedY = material.scrollSpeed[1];
 			if (index != -1)
 			{
-				//scrollSpeedX += textureAnimations[index * 2];
-				//scrollSpeedY += textureAnimations[index * 2 + 1];
+				scrollSpeedX += textureAnimations[index * 2];
+				scrollSpeedY += textureAnimations[index * 2 + 1];
 			}
 			buffer
 				.putInt(index)
@@ -2191,7 +2182,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				}
 				break;
 			case LOGGED_IN:
-				resourcePackManager.loadPackData(getConfig().packName());
+				resourcePackManager.loadPackData(config.packName());
 				uploadScene();
 				checkGLErrors();
 				break;
@@ -2303,7 +2294,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 					initShadowMapFbo();
 				});
 				break;
-			case "enablepackTextures":
+			case KEY_RESOURCE_PACK_TEXTURES:
 				textureManager.freeTextures();
 				break;
 			case "textureResolution":

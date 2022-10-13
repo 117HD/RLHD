@@ -36,5 +36,4 @@ public class FixedWidthPanel extends JPanel
 	{
 		return new Dimension(PluginPanel.PANEL_WIDTH, super.getPreferredSize().height);
 	}
-
 }

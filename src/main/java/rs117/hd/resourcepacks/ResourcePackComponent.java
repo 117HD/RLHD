@@ -14,18 +14,14 @@ import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.ScheduledExecutorService;
 
 @Slf4j
 public class ResourcePackComponent extends JPanel {
-
     private static final ImageIcon MISSING_ICON;
     private static final ImageIcon HELP_ICON;
     private static final ImageIcon HELP_ICON_HOVER;
-    private static final int HEIGHT = 147;
-    private static final int ICON_WIDTH = 224;
     private static final int BOTTOM_LINE_HEIGHT = 16;
 
     static {
@@ -37,8 +33,7 @@ public class ResourcePackComponent extends JPanel {
         HELP_ICON_HOVER = new ImageIcon(ImageUtil.alphaOffset(helpIcon, -100));
     }
 
-    ResourcePackComponent(Manifest manifest, ScheduledExecutorService executor, ResourcePackManager resourcePackManager) {
-
+    public ResourcePackComponent(Manifest manifest, ScheduledExecutorService executor, ResourcePackManager resourcePackManager) {
         setBackground(ColorScheme.DARKER_GRAY_COLOR);
         setOpaque(true);
 
@@ -73,13 +68,13 @@ public class ResourcePackComponent extends JPanel {
             {
                 try {
                     BufferedImage img = Constants.downloadIcon(manifest);
-
-                    SwingUtilities.invokeLater(() ->
-                    {
-                        icon.setIcon(new ImageIcon(img));
-                    });
+                    if (img == null) {
+                        log.warn("Received null icon for icon for pack \"{}\"", manifest.getInternalName());
+                    } else {
+                        SwingUtilities.invokeLater(() -> icon.setIcon(new ImageIcon(img)));
+                    }
                 } catch (IOException e) {
-                    log.info("Cannot download icon for pack \"{}\"", manifest.getInternalName(), e);
+                    log.warn("Cannot download icon for pack \"{}\"", manifest.getInternalName(), e);
                 }
             });
         }
@@ -121,7 +116,6 @@ public class ResourcePackComponent extends JPanel {
                 {
                     actionButton.setText("Removing");
                     actionButton.setBackground(ColorScheme.MEDIUM_GRAY_COLOR);
-                    resourcePackManager.panel.installedDropdown.removeItem(Constants.fromInternalName(manifest.getInternalName()));
                     resourcePackManager.uninstallPack(resourcePackManager.installedPacks.get(manifest.getInternalName()),manifest.getInternalName());
                     resourcePackManager.locateInstalledPacks();
                 });
@@ -130,7 +124,6 @@ public class ResourcePackComponent extends JPanel {
 
         actionButton.setBorder(new LineBorder(actionButton.getBackground().darker()));
         actionButton.setFocusPainted(false);
-
 
         layout.setHorizontalGroup(layout.createSequentialGroup()
                 .addGap(5)
@@ -164,6 +157,4 @@ public class ResourcePackComponent extends JPanel {
                         .addGap(5)));
 
     }
-
-
 }

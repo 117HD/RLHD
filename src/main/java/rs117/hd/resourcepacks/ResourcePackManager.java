@@ -2,17 +2,22 @@ package rs117.hd.resourcepacks;
 
 import com.google.gson.reflect.TypeToken;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import net.runelite.client.eventbus.EventBus;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.apache.commons.lang3.StringUtils;
-import rs117.hd.HdPlugin;
+import rs117.hd.HdPluginConfig;
 import rs117.hd.gui.panel.ResourcePackPanel;
 import rs117.hd.resourcepacks.data.Manifest;
 import rs117.hd.resourcepacks.data.PackData;
+import rs117.hd.scene.TextureManager;
+import rs117.hd.utils.ResourcePath;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -29,36 +34,63 @@ import java.util.zip.ZipFile;
 
 import static rs117.hd.resourcepacks.Constants.*;
 
+@Singleton
 @Slf4j
 public class ResourcePackManager {
+    @Inject
+    private HdPluginConfig config;
 
-    @Getter
-    public ResourcePackPanel panel;
+    @Inject
+    private ScheduledExecutorService executor;
+
+    @Inject
+    private TextureManager textureManager;
+
+    public PackData activeResourcePack;
 
     private boolean alreadyDownloading = false;
 
     private final HashMap<String, Manifest> currentManifest = new HashMap<>();
     public HashMap<String, File> installedPacks = new HashMap<>();
 
-    public ResourcePackManager(ResourcePackPanel panel) {
-        this.panel = panel;
-    }
+    @Setter
+    private ResourcePackPanel panel;
 
-    public void startup() {
+    @javax.inject.Inject
+    private EventBus eventBus;
+
+    public void startUp() {
         loadManifest();
+        if (!DEV_PACK_DIR.exists()) {
+            DEV_PACK_DIR.mkdirs();
+        }
+
+        ResourcePath.path(DEV_PACK_DIR.toPath()).watch(file -> {
+            if (activeResourcePack != null) {
+                if (file.getExtension().contains("png") && file.path.contains("materials") && activeResourcePack != null) {
+                    try {
+                        activeResourcePack.getMaterials().put(file.getFilename(), file.loadImage());
+                        textureManager.freeTextures();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+        });
     }
 
-    public void shutdown() {
-
+    public void shutDown() {
+        panel = null;
     }
 
     public void loadManifest() {
-        panel.messagePanel.setContent("Loading..", "Loading Manifest");
-
-        HttpUrl url = Objects.requireNonNull(RAW_GITHUB).newBuilder()
+        if (panel != null)
+            panel.displayMessage("Loading...", "Loading Manifest");
+        HttpUrl url = Objects.requireNonNull(RAW_GITHUB)
+                .newBuilder()
                 .addPathSegment("manifest")
                 .addPathSegment("manifest.json")
-        .build();
+                .build();
 
         try (Response res = CLIENT.newCall(new Request.Builder().url(url).build()).execute()) {
             String content;
@@ -69,83 +101,86 @@ public class ResourcePackManager {
                 manifestList.forEach(manifest -> currentManifest.put(manifest.getInternalName(), manifest));
                 locateInstalledPacks();
             } else {
-                panel.messagePanel.setContent("Error", "Unable to get manifest.json content");
-                panel.installedDropdown.setVisible(false);
+                if (panel != null)
+                    panel.displayMessage("Error", "Unable to get manifest.json content");
+                if (panel != null)
+                    panel.packSelectionDropdown.setVisible(false);
             }
-
         } catch (IOException e) {
-            panel.messagePanel.setContent("Error", "Unable to load manifest.json");
+            if (panel != null)
+                panel.displayMessage("Error", "Unable to load manifest.json");
             log.error("Unable to download manifest.json ", e);
-            panel.installedDropdown.setVisible(false);
+            if (panel != null)
+                panel.packSelectionDropdown.setVisible(false);
         }
-
     }
 
     public void locateInstalledPacks() {
-
         if (!PACK_DIR.exists()) {
             PACK_DIR.mkdirs();
         }
 
-        panel.executor.submit(() -> {
-            Arrays.stream(Objects.requireNonNull(PACK_DIR.listFiles())).filter(it -> it.getName().startsWith("pack-") && it.isDirectory()).forEach(this::addPack);
-        });
+        Arrays.stream(Objects.requireNonNull(PACK_DIR.listFiles()))
+                .filter(it -> it.getName().startsWith("pack-") && it.isDirectory())
+                .forEach(this::addPack);
 
-        Arrays.stream(Objects.requireNonNull(PACK_DIR.listFiles())).filter(it -> it.getName().startsWith("devpack-") && it.isDirectory()).forEach( dir -> {
-            Manifest manifest = new Manifest();
-            String name = dir.getName();
-            manifest.setInternalName(toInternalName(name));
-            manifest.setDescription("Dev Pack: " + name);
-            manifest.setDev(true);
-            currentManifest.put(manifest.getInternalName(),manifest);
-            installedPacks.put(toInternalName(name), dir);
-            panel.installedDropdown.addItem(name);
-            log.info("Resource Pack {} has been added", toInternalName(name));
-        });
 
-        buildPackPanel();
+        Arrays.stream(Objects.requireNonNull(DEV_PACK_DIR.listFiles()))
+                .filter(it -> it.getName().startsWith("pack-") && it.isDirectory())
+                .forEach( dir -> {
+                    Manifest manifest = new Manifest();
+                    String name = dir.getName();
+                    manifest.setInternalName(toInternalName(name));
+                    manifest.setDescription("Dev Pack: " + name);
+                    manifest.setDev(true);
+                    currentManifest.put(manifest.getInternalName(),manifest);
+                    installedPacks.put(toInternalName(name), dir);
+                    if (panel != null)
+                        panel.packSelectionDropdown.addItem(name);
+                    log.info("Resource Pack {} has been added", toInternalName(name));
+                });
+
+
         loadDropdownItems();
+        buildPackPanel();
     }
 
     public void buildPackPanel() {
-        panel.packList.removeAll();
-        currentManifest.forEach((internalName, manifest) -> {
-            panel.packList.add(new ResourcePackComponent(manifest, panel.executor, this));
-        });
-
-        panel.messagePanel.setVisible(false);
+        panel.loadManifest(currentManifest);
+        panel.clearMessage();
     }
 
     public ItemListener dropdownListener() {
         return e -> {
             if(e.getStateChange() == ItemEvent.SELECTED) {
-                setCurrentPack(e.getItem().toString());
+                setActiveResourcePack(e.getItem().toString());
             }
         };
     }
 
     public void loadDropdownItems() {
+        if (panel == null)
+            return;
         ItemListener listener = dropdownListener();
-        panel.installedDropdown.removeItemListener(listener);
-        if(panel.installedDropdown.getItemCount() != 0) {
-            panel.installedDropdown.removeAllItems();
+        panel.packSelectionDropdown.removeItemListener(listener);
+        if(panel.packSelectionDropdown.getItemCount() != 0) {
+            panel.packSelectionDropdown.removeAllItems();
         }
-        panel.installedDropdown.addItem("Default");
+        panel.packSelectionDropdown.addItem("Default");
         installedPacks.forEach((internalName, manifest) -> {
-            panel.installedDropdown.addItem(fromInternalName(internalName));
+            panel.packSelectionDropdown.addItem(fromInternalName(internalName));
         });
 
-        String packedSelected = panel.getPlugin().getConfig().packName();
+        String packedSelected = config.packName();
         if (currentManifest.containsKey(packedSelected)) {
-            panel.installedDropdown.setSelectedItem(fromInternalName(packedSelected));
+            panel.packSelectionDropdown.setSelectedItem(fromInternalName(packedSelected));
         } else {
-            panel.installedDropdown.setSelectedItem("Default");
+            panel.packSelectionDropdown.setSelectedItem("Default");
         }
-        panel.installedDropdown.addItemListener(listener);
+        panel.packSelectionDropdown.addItemListener(listener);
     }
 
     public void addPack(File file) {
-
         if (!new File(file, "pack.properties").exists()) {
             log.info("{} does not contain pack.properties", file.getPath());
             return;
@@ -162,21 +197,21 @@ public class ResourcePackManager {
 
         String name = props.getProperty("displayName");
         installedPacks.put(toInternalName(name), file);
-        panel.installedDropdown.addItem(name);
+        if (panel != null)
+            panel.packSelectionDropdown.addItem(name);
         log.info("Resource Pack {} has been added", toInternalName(name));
-
     }
 
-
     public void downloadResourcePack(Manifest manifest, ScheduledExecutorService executor) {
-        if(alreadyDownloading) {
+        if (alreadyDownloading) {
             return;
         }
+
         executor.submit(() -> {
             URL url = Objects.requireNonNull(HttpUrl.parse(manifest.getLink())).newBuilder()
                     .addPathSegment("archive")
                     .addPathSegment(manifest.getCommit() + ".zip")
-            .build().url();
+                    .build().url();
 
             log.info("Downloading Pack {} at {}", manifest.getInternalName(), url.getPath());
 
@@ -193,13 +228,12 @@ public class ResourcePackManager {
                         throw new RuntimeException(e);
                     }
                     installedPacks.put(manifest.getInternalName(), new File(PACK_DIR,"pack-" + manifest.getInternalName()));
-                    SwingUtilities.invokeLater(() -> {
-                        panel.progressBar.setValue(0);
-                        panel.dropdownPanel.setVisible(true);
-                        panel.progressPanel.setVisible(false);
-                        buildPackPanel();
-                    });
                     alreadyDownloading = false;
+                    SwingUtilities.invokeLater(() -> {
+                        if (panel != null)
+                            panel.showPackSelectionDropdown();
+                            buildPackPanel();
+                    });
                     loadDropdownItems();
                 }
 
@@ -207,7 +241,8 @@ public class ResourcePackManager {
                 public void progress(long bytesRead, long contentLength) {
                     SwingUtilities.invokeLater(() -> {
                         long progress = (100 * bytesRead) / contentLength;
-                        panel.progressBar.setValue((int) progress);
+                        if (panel != null)
+                            panel.progressBar.setValue((int) progress);
                     });
                 }
 
@@ -215,9 +250,12 @@ public class ResourcePackManager {
                 public void started() {
                     alreadyDownloading = true;
                     SwingUtilities.invokeLater(() -> {
-                        panel.progressBar.setValue(0);
-                        panel.dropdownPanel.setVisible(false);
-                        panel.progressPanel.setVisible(true);
+                        if (panel != null)
+                            panel.progressBar.setValue(0);
+                        if (panel != null)
+                            panel.dropdownPanel.setVisible(false);
+                        if (panel != null)
+                            panel.progressPanel.setVisible(true);
                     });
                 }
             };
@@ -249,7 +287,6 @@ public class ResourcePackManager {
                 currentManifest.remove(manifest.getInternalName());
             }
         });
-
     }
 
     public static void unZipAll(File source, File destination) throws IOException {
@@ -322,16 +359,16 @@ public class ResourcePackManager {
         System.out.println("Done Unzipping:" + source.getName());
     }
 
-    public void setCurrentPack(String name) {
+    public void setActiveResourcePack(String name) {
         String internalName = toInternalName(name);
-        panel.getPlugin().getConfig().setPackName(internalName);
+        config.setPackName(internalName);
         loadPackData(internalName);
     }
 
     public void loadPackData(String internalName) {
-        if (!internalName.equalsIgnoreCase("Default") && installedPacks.containsKey(internalName) ) {
-            if (panel.getPlugin().currentPack != null && panel.getPlugin().currentPack.getInternalName().equals(internalName)) {
-                activatePack(panel.getPlugin().currentPack, internalName);
+        if (!internalName.equalsIgnoreCase("Default") && installedPacks.containsKey(internalName)) {
+            if (activeResourcePack != null && activeResourcePack.getInternalName().equals(internalName)) {
+                activatePack(activeResourcePack, internalName);
                 return;
             }
             PackData pack = new PackData();
@@ -346,34 +383,37 @@ public class ResourcePackManager {
                     e.printStackTrace();
                 }
             }
-
             activatePack(pack, internalName);
         } else {
             activatePack(null, internalName);
         }
-
     }
 
     public void activatePack(PackData pack, String internalName) {
-        if(panel.getPlugin().currentPack == pack) {
+        if(activeResourcePack == pack) {
             return;
         }
         log.info("Resource pack {} enabled.", internalName);
-        panel.getPlugin().currentPack = pack;
-        panel.installedDropdown.setSelectedItem(Constants.fromInternalName(internalName));
-        panel.getPlugin().getEventBus().post(new PackChangedEvent(internalName));
+        activeResourcePack = pack;
+        panel.packSelectionDropdown.setSelectedItem(Constants.fromInternalName(internalName));
+        eventBus.post(new PackChangedEvent(internalName));
     }
 
     public void uninstallPack(File file, String internalName) {
-        if(deleteDirectory(file)) {
+        if (deleteDirectory(file)) {
             String formattedName = fromInternalName(internalName);
             installedPacks.remove(internalName);
-            if (formattedName.equalsIgnoreCase(panel.getPlugin().getConfig().packName())) {
-                panel.installedDropdown.setSelectedItem("Default");
+            if (formattedName.equalsIgnoreCase(config.packName())) {
+                panel.packSelectionDropdown.setSelectedItem("Default");
             }
-            panel.installedDropdown.removeItem(formattedName);
+            if (panel != null)
+                panel.packSelectionDropdown.removeItem(formattedName);
             log.info("Pack {} has been removed", file.getName());
         }
+
+        // TODO: idk if this is necessary
+        if (panel != null)
+            panel.packSelectionDropdown.removeItem(Constants.fromInternalName(internalName));
     }
 
     boolean deleteDirectory(File directoryToBeDeleted) {
@@ -385,5 +425,4 @@ public class ResourcePackManager {
         }
         return directoryToBeDeleted.delete();
     }
-
 }

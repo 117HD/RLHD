@@ -62,7 +62,7 @@ public class Header extends JPanel
 	public void setContent(String title, String description)
 	{
 		noResultsTitle.setText(title);
-		noResultsDescription.setText("<html><body style = 'text-align:center'>" + description + "</body></html>");
+		noResultsDescription.setText("<html><body style='text-align:center'>" + description + "</body></html>");
 		setVisible(true);
 	}
 }

@@ -25,35 +25,34 @@
 package rs117.hd.gui.panel;
 
 import java.awt.*;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
+import java.util.HashMap;
 import java.util.concurrent.ScheduledExecutorService;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import com.google.inject.Inject;
-import lombok.Getter;
 import net.runelite.client.ui.ColorScheme;
 import net.runelite.client.ui.DynamicGridLayout;
 import net.runelite.client.util.ImageUtil;
-import rs117.hd.HdPlugin;
-import rs117.hd.HdPluginConfig;
 import rs117.hd.gui.panel.components.FixedWidthPanel;
 import rs117.hd.gui.panel.components.Header;
+import rs117.hd.resourcepacks.ResourcePackComponent;
 import rs117.hd.resourcepacks.ResourcePackManager;
+import rs117.hd.resourcepacks.data.Manifest;
 
 import static net.runelite.client.ui.PluginPanel.PANEL_WIDTH;
-import static rs117.hd.resourcepacks.Constants.fromInternalName;
 
 public class ResourcePackPanel extends JPanel
 {
 
-	@Getter
-	private final HdPlugin plugin;
+	@Inject
+	private ScheduledExecutorService executor;
+
+	private final ResourcePackManager resourcePackManager;
 
 	public final Header messagePanel = new Header();
 
-	public JComboBox<String> installedDropdown;
+	public JComboBox<String> packSelectionDropdown;
 	public JButton refreshButton;
 	public final JPanel topPanel = new JPanel();
 
@@ -62,35 +61,31 @@ public class ResourcePackPanel extends JPanel
 	public JPanel dropdownPanel;
 	public JPanel progressPanel;
 
-	public JProgressBar progressBar = new JProgressBar(0, 100);
-
-	public final ScheduledExecutorService executor;
+	public JProgressBar progressBar;
 
 	@Inject
-	private ResourcePackPanel(HdPlugin plugin, ScheduledExecutorService executor)
+	private ResourcePackPanel(ResourcePackManager resourcePackManager)
 	{
 		super();
 
-		this.plugin = plugin;
-		this.executor = executor;
+		this.resourcePackManager = resourcePackManager;
+		resourcePackManager.setPanel(this);
 
 		setBackground(ColorScheme.DARK_GRAY_COLOR);
 
 		GroupLayout layout = new GroupLayout(this);
 		setLayout(layout);
 		setBackground(ColorScheme.DARK_GRAY_COLOR);
-		setBorder(new EmptyBorder(0, 0, 0, 0));
+		setBorder(BorderFactory.createEmptyBorder());
 
 		dropdownPanel = new JPanel();
 		dropdownPanel.setLayout(new BorderLayout());
-		dropdownPanel.setMinimumSize(new Dimension(PANEL_WIDTH, 0));
 
 		progressPanel = new JPanel();
 		progressPanel.setLayout(new BorderLayout());
-		progressPanel.setMinimumSize(new Dimension(PANEL_WIDTH, 0));
 		progressPanel.setVisible(false);
 
-
+		progressBar = new JProgressBar(0, 100);
 		progressBar.setStringPainted(true);
 		progressBar.setPreferredSize(new Dimension(200, 30));
 		progressBar.setForeground(Color.WHITE);
@@ -101,13 +96,14 @@ public class ResourcePackPanel extends JPanel
 		messagePanel.setContent("Loading..","Loading Manifest");
 		topPanel.add(messagePanel);
 		topPanel.add(progressPanel);
+
 		packList.setBorder(BorderFactory.createEmptyBorder(0, 7, 7, 7));
 		packList.setLayout(new DynamicGridLayout(0, 1, 0, 5));
 		packList.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-		JPanel mainPanelWrapper = new FixedWidthPanel();
-		mainPanelWrapper.setLayout(new BorderLayout());
-		mainPanelWrapper.add(packList, BorderLayout.NORTH);
+		JPanel scrollContainer = new FixedWidthPanel();
+		scrollContainer.setLayout(new BorderLayout());
+		scrollContainer.add(packList, BorderLayout.NORTH);
 
 		topPanel.add(createDropdown());
 
@@ -116,7 +112,7 @@ public class ResourcePackPanel extends JPanel
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
 		scrollPane.setPreferredSize(new Dimension(0x7000, 0x7000));
-		scrollPane.setViewportView(mainPanelWrapper);
+		scrollPane.setViewportView(scrollContainer);
 
 		layout.setVerticalGroup(layout.createSequentialGroup()
 				.addComponent(topPanel)
@@ -127,32 +123,57 @@ public class ResourcePackPanel extends JPanel
 				.addGroup(layout.createSequentialGroup()
 		.addComponent(scrollPane)));
 
-		plugin.setResourcePackManager(new ResourcePackManager(this));
-		plugin.getResourcePackManager().startup();
 	}
 
 	public JPanel createDropdown()
 	{
 
-		installedDropdown = new JComboBox<>();
-		installedDropdown.setPreferredSize(new Dimension(200, 30));
-		installedDropdown.setForeground(Color.WHITE);
-		installedDropdown.setFocusable(false);
-		installedDropdown.addItem("Default");
+		packSelectionDropdown = new JComboBox<>();
+		packSelectionDropdown.setPreferredSize(new Dimension(200, 30));
+		packSelectionDropdown.setForeground(Color.WHITE);
+		packSelectionDropdown.setFocusable(false);
+		packSelectionDropdown.addItem("Default");
 
-		dropdownPanel.add(installedDropdown, BorderLayout.WEST);
+		dropdownPanel.add(packSelectionDropdown, BorderLayout.WEST);
+		dropdownPanel.setMinimumSize(new Dimension(PANEL_WIDTH, 0));
 
 		refreshButton = new JButton();
 		refreshButton.setPreferredSize(new Dimension(30,30));
 		refreshButton.setMinimumSize(new Dimension(30,30));
 		refreshButton.setIcon(new ImageIcon(ImageUtil.resizeImage(ImageUtil.loadImageResource(HdPanel.class, "refresh.png"), 16, 16)));
 		refreshButton.setToolTipText("Refresh");
-
+		refreshButton.addActionListener(ev -> {
+			resourcePackManager.loadManifest();
+			resourcePackManager.loadDropdownItems();
+		});
 		dropdownPanel.add(refreshButton, BorderLayout.EAST);
 
 		return dropdownPanel;
 	}
 
+	public void loadManifest(HashMap<String, Manifest> manifests) {
+		packList.removeAll();
+		manifests.forEach((internalName, manifest) ->
+				packList.add(new ResourcePackComponent(manifest, executor, resourcePackManager)));
+	}
 
+	public void displayMessage(String title, String description) {
+		messagePanel.setContent(title, description);
+	}
+
+	public void clearMessage() {
+		messagePanel.setContent("", "");
+		messagePanel.setVisible(false);
+	}
+
+	public void showPackSelectionDropdown() {
+		progressPanel.setVisible(false);
+		dropdownPanel.setVisible(true);
+		hideAndResetProgressBar();
+	}
+
+	public void hideAndResetProgressBar() {
+		progressBar.setValue(0);
+	}
 
 }

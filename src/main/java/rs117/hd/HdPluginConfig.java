@@ -496,6 +496,50 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
+	/*====== Resource pack settings ======*/
+
+	@ConfigItem(keyName = "packname", hidden = true, name = "", description = "")
+	void setPackName(String name);
+	@ConfigItem(keyName = "packname", name = "", description = "", hidden = true)
+	default String packName() { return "default"; }
+
+	@ConfigSection(
+			name = "Resource Packs",
+			description = "Resource Packs",
+			position = 299
+	)
+	String packSettings = "packSettings";
+
+	String KEY_RESOURCE_PACK_ICONS = "resourcePackIcons";
+	@ConfigItem(
+			keyName = KEY_RESOURCE_PACK_ICONS,
+			name = "Enable Icons",
+			description = "Enable Icons in the panel GUI.",
+			position = 1,
+			section = packSettings
+	)
+	default boolean enableResourcePackIcons() { return true; }
+
+	String KEY_RESOURCE_PACK_TEXTURES = "resourcePackTextures";
+	@ConfigItem(
+			keyName = KEY_RESOURCE_PACK_TEXTURES,
+			name = "Enable Textures",
+			description = "Enable Packs to use custom Textures.",
+			position = 2,
+			section = packSettings
+	)
+	default boolean enableResourcePackTextures() { return true; }
+
+	@ConfigItem(
+			keyName = "resourcePackOrder",
+			name = "Pack Sorting",
+			description = "What order you would like packs to show.",
+			position = 3,
+			section = packSettings
+	)
+	default PackSortingMode resourcePackOrder() { return PackSortingMode.INSTALL_ORDER; }
+
+
 
 	/*====== Miscellaneous settings ======*/
 

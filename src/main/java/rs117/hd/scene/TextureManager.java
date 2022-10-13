@@ -36,6 +36,7 @@ import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.data.materials.Material;
 import rs117.hd.resourcepacks.PackChangedEvent;
+import rs117.hd.resourcepacks.ResourcePackManager;
 import rs117.hd.utils.Env;
 import rs117.hd.utils.ResourcePath;
 
@@ -73,6 +74,9 @@ public class TextureManager
 
 	@Inject
 	private ClientThread clientThread;
+
+	@Inject
+	private ResourcePackManager resourcePackManager;
 
 	private int textureArray;
 	private int textureSize;
@@ -319,8 +323,11 @@ public class TextureManager
 
 		for (String ext : SUPPORTED_IMAGE_EXTENSIONS)
 		{
-			if(plugin.currentPack != null && plugin.currentPack.getMaterials().containsKey(textureName + "." + ext) && config.enablepackTextures()) {
-				return plugin.currentPack.getMaterials().get(textureName + "." + ext);
+			if (resourcePackManager.activeResourcePack != null &&
+					resourcePackManager.activeResourcePack.getMaterials().containsKey(textureName + "." + ext) &&
+					config.enableResourcePackTextures()
+			) {
+				return resourcePackManager.activeResourcePack.getMaterials().get(textureName + "." + ext);
 			}
 
 			ResourcePath path = path(TextureManager.class, "textures", textureName + "." + ext);

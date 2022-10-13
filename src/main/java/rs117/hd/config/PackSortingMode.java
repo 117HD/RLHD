@@ -31,8 +31,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum PackSortingMode
 {
-	A_Z("A-Z"),
-	INSTALLED("Installed First");
+	ALPHABETICAL("Alphabetical"),
+	INSTALL_ORDER("Install order");
 
 	private final String name;
 

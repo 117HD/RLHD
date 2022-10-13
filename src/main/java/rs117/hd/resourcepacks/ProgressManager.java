@@ -26,9 +26,7 @@ import okio.ForwardingSource;
 import okio.Okio;
 import okio.Source;
 
-
 public class ProgressManager extends ResponseBody {
-
     private final ResponseBody responseBody;
     private final ProgressListener progressListener;
     private BufferedSource bufferedSource;
