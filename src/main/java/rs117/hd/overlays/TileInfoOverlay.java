@@ -29,6 +29,8 @@ import rs117.hd.HdPlugin;
 import rs117.hd.data.materials.Material;
 import rs117.hd.data.materials.Overlay;
 import rs117.hd.data.materials.Underlay;
+import rs117.hd.utils.HDUtils;
+import rs117.hd.utils.ModelHash;
 
 public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay
 {
@@ -49,11 +51,7 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay
 	@Override
 	public Dimension render(Graphics2D g)
 	{
-		if (!client.isKeyPressed(KeyCode.KC_SHIFT))
-		{
-			mousePos = client.getMouseCanvasPosition();
-		}
-
+		mousePos = client.getMouseCanvasPosition();
 		if (mousePos != null && mousePos.getX() == -1 && mousePos.getY() == -1)
 		{
 			return null;
@@ -245,6 +243,35 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay
 				} else {
 					lines.add("" + face + ": [ " + a + ", " + b + ", " + c + " ]");
 				}
+			}
+		}
+
+		if (client.isKeyPressed(KeyCode.KC_SHIFT)) {
+			GroundObject groundObject = tile.getGroundObject();
+			if (groundObject != null) {
+				lines.add(String.format("Ground Object: ID=%d x=%d y=%d ori=%d",
+					groundObject.getId(),
+					ModelHash.getSceneX(groundObject.getHash()),
+					ModelHash.getSceneY(groundObject.getHash()),
+					HDUtils.extractConfigOrientation(groundObject.getConfig())));
+			}
+
+			GameObject[] gameObjects = tile.getGameObjects();
+			if (gameObjects.length > 0) {
+				int counter = 0;
+				for (int i = 0; i < gameObjects.length; i++) {
+					GameObject gameObject = gameObjects[i];
+					if (gameObject == null)
+						continue;
+					counter++;
+					lines.add(String.format("ID %d: x=%d y=%d ori=%d",
+						gameObject.getId(),
+						ModelHash.getSceneX(gameObject.getHash()),
+						ModelHash.getSceneY(gameObject.getHash()),
+						gameObject.getModelOrientation()));
+				}
+				if (counter > 0)
+					lines.add(lines.size() - counter, "Game objects: ");
 			}
 		}
 
