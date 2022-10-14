@@ -40,8 +40,7 @@ public interface HdPluginConfig extends Config
 	@ConfigSection(
 		name = "General",
 		description = "General settings",
-		position = 0,
-		closedByDefault = false
+		position = 0
 	)
 	String generalSettings = "generalSettings";
 
@@ -91,7 +90,10 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = "anisotropicFilteringLevel",
 		name = "Anisotropic Filtering",
-		description = "Configures the anisotropic filtering level from 0 to 16x.",
+		description = "Configures whether mipmapping and anisotropic filtering should be used.<br>" +
+			"At zero, mipmapping is disabled and textures look the most pixelated.<br>" +
+			"At 1 through 16, mipmapping is enabled, and textures look more blurry and smoothed out.<br>" +
+			"The higher you go beyond 1, the less blurry textures will look, up to a certain extent.",
 		position = 4,
 		section = generalSettings
 	)
@@ -120,11 +122,11 @@ public interface HdPluginConfig extends Config
 	}
 
 	@ConfigItem(
-			keyName = "vsyncMode",
-			name = "VSync Mode",
-			description = "Method to synchronize frame rate with refresh rate",
-			position = 6,
-			section = generalSettings
+		keyName = "vsyncMode",
+		name = "VSync Mode",
+		description = "Method to synchronize frame rate with refresh rate",
+		position = 6,
+		section = generalSettings
 	)
 	default SyncMode syncMode()
 	{
@@ -132,15 +134,15 @@ public interface HdPluginConfig extends Config
 	}
 
 	@ConfigItem(
-			keyName = "fpsTarget",
-			name = "FPS Target",
-			description = "Target FPS when unlock FPS is enabled and Vsync mode is OFF",
-			position = 7,
-			section = generalSettings
+		keyName = "fpsTarget",
+		name = "FPS Target",
+		description = "Target FPS when unlock FPS is enabled and Vsync mode is OFF",
+		position = 7,
+		section = generalSettings
 	)
 	@Range(
-			min = 0,
-			max = 999
+		min = 0,
+		max = 999
 	)
 	default int fpsTarget()
 	{
@@ -228,8 +230,7 @@ public interface HdPluginConfig extends Config
 	@ConfigSection(
 		name = "Lighting",
 		description = "Lighting settings",
-		position = 100,
-		closedByDefault = false
+		position = 100
 	)
 	String lightingSettings = "lightingSettings";
 
@@ -561,52 +562,58 @@ public interface HdPluginConfig extends Config
 	/*====== Experimental settings ======*/
 
 	@ConfigSection(
-			name = "Experimental",
-			description = "Experimental features - if you're experiencing issues you should consider disabling these",
-			position = 400,
-			closedByDefault = true
+		name = "Experimental",
+		description = "Experimental features - if you're experiencing issues you should consider disabling these",
+		position = 400,
+		closedByDefault = true
 	)
 	String experimentalSettings = "experimentalSettings";
 
 	@ConfigItem(
-			keyName = "enableModelCaching",
-			name = "Enable model caching",
-			description = "Model caching improves performance with increased memory usage. May cause instability or graphical bugs.",
-			position = 401,
-			section = experimentalSettings
-	)
-	default boolean enableModelCaching() { return false; }
-
-	@ConfigItem(
-			keyName = "enableModelBatching",
-			name = "Enable model batching",
-			description = "Model batching generally improves performance but may cause instability and graphical bugs.",
-			position = 402,
-			section = experimentalSettings
+		keyName = "enableModelBatching",
+		name = "Enable model batching",
+		description = "Model batching improves performance by reusing identical models within the same frame.<br>" +
+			"May cause instability and graphical bugs.",
+		position = 401,
+		section = experimentalSettings
 	)
 	default boolean enableModelBatching() { return false; }
 
+	String KEY_ENABLE_MODEL_CACHING = "enableModelCaching";
+	@ConfigItem(
+		keyName = KEY_ENABLE_MODEL_CACHING,
+		name = "Enable model caching",
+		description = "Model caching improves performance by saving and reusing model data from older frames.<br>" +
+			"May cause instability or graphical bugs.",
+		position = 402,
+		section = experimentalSettings
+	)
+	default boolean enableModelCaching() { return false; }
+
+	String KEY_MODEL_CACHE_SIZE = "modelCacheSizeMiB";
 	@Range(
-			min = 256,
-			max = 16384
+		min = 256,
+		max = 16384
 	)
 	@ConfigItem(
-			keyName = "modelCacheSizeMiB",
-			name = "Model cache size (MiB)",
-			description = "Size of the model cache in mebibytes. Plugin must be restarted to apply changes. Min=256 Max=16384",
-			position = 403,
-			section = experimentalSettings
+		keyName = KEY_MODEL_CACHE_SIZE,
+		name = "Model cache size (MiB)",
+		description = "Size of the model cache in mebibytes (slightly more than megabytes).<br>" +
+			"Minimum=256 MiB, maximum=16384 MiB",
+		position = 403,
+		section = experimentalSettings
 	)
 	default int modelCacheSizeMiB() {
 		return 2048;
 	}
 
 	@ConfigItem(
-			keyName = "loadingClearCache",
-			name = "Clear cache when loading",
-			description = "Clear the model cache whenever the game shows the \"loading please wait...\" message. This may improve performance when memory allocated to the cache is small.",
-			position = 404,
-			section = experimentalSettings
+		keyName = "loadingClearCache",
+		name = "Clear cache when loading",
+		description = "Clear the model cache whenever the game loads a new scene.<br>" +
+			"This should generally only be used if the cache size is lower than 512 MiB.",
+		position = 404,
+		section = experimentalSettings
 	)
 	default boolean loadingClearCache() {
 		return false;

@@ -87,8 +87,7 @@ import java.util.Map;
 
 import static org.jocl.CL.*;
 import static org.lwjgl.opengl.GL43C.*;
-import static rs117.hd.HdPluginConfig.KEY_REDUCE_OVER_EXPOSURE;
-import static rs117.hd.HdPluginConfig.KEY_WINTER_THEME;
+import static rs117.hd.HdPluginConfig.*;
 import static rs117.hd.utils.ResourcePath.path;
 
 @PluginDescriptor(
@@ -553,9 +552,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 				clientThread.invokeLater(this::displayUpdateMessage);
 			}
-			catch (Throwable e)
+			catch (Throwable err)
 			{
-				log.error("Error starting HD plugin", e);
+				log.error("Error while starting 117HD", err);
 				stopPlugin();
 			}
 			return true;
@@ -638,7 +637,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			}
 			catch (PluginInstantiationException ex)
 			{
-				log.error("error stopping plugin", ex);
+				log.error("Error while stopping 117HD", ex);
 			}
 		});
 
@@ -2300,6 +2299,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				log.debug("Rebuilding sync mode");
 				clientThread.invoke(this::setupSyncMode);
 				break;
+			case KEY_ENABLE_MODEL_CACHING:
+			case KEY_MODEL_CACHE_SIZE:
+				clientThread.invoke(() -> {
+					modelPusher.shutDown();
+					modelPusher.startUp();
+				});
+				break;
 		}
 	}
 
@@ -2484,7 +2490,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			TempModelInfo tempModelInfo = tempModelInfoMap.get(batchHash);
 			if (!config.enableModelBatching() || tempModelInfo == null || tempModelInfo.getFaceCount() != model.getFaceCount()) {
 				ModelOverride modelOverride = modelOverrideManager.getOverride(hash);
-				final int[] lengths = modelPusher.pushModel(hash, model, vertexBuffer, uvBuffer, normalBuffer, 0, 0, 0, modelOverride, ObjectType.NONE, !config.enableModelCaching());
+				final int[] lengths = modelPusher.pushModel(hash, model, vertexBuffer, uvBuffer, normalBuffer,
+					0, 0, 0, modelOverride, ObjectType.NONE, true);
 				final int faceCount = lengths[0] / 3;
 				final int actualTempUvOffset = lengths[1] > 0 ? tempUvOffset : -1;
 

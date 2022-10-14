@@ -4,6 +4,7 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.api.kit.KitType;
+import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.data.materials.Material;
@@ -33,7 +34,7 @@ import static rs117.hd.utils.HDUtils.dotNormal3Lights;
 @Slf4j
 public class ModelPusher {
     @Inject
-    private HdPlugin hdPlugin;
+    private HdPlugin plugin;
 
     @Inject
     private HdPluginConfig config;
@@ -42,16 +43,18 @@ public class ModelPusher {
     private Client client;
 
     @Inject
+    private ClientThread clientThread;
+
+    @Inject
     private ProceduralGenerator proceduralGenerator;
 
     @Inject
     private ModelHasher modelHasher;
 
-    private final ModelCache modelCache = new ModelCache();
+    private ModelCache modelCache;
     public static final int DATUM_PER_FACE = 12;
     public static final int BYTES_PER_DATUM = 4;
 
-    private boolean started = false;
 
 //    private int pushes = 0;
 //    private int vertexdatahits = 0;
@@ -59,16 +62,21 @@ public class ModelPusher {
 //    private int uvdatahits = 0;
 
     public void startUp() {
-        if (!started) {
-            this.modelCache.init(hdPlugin, config);
-            this.started = true;
+        if (config.enableModelCaching()) {
+            try {
+                modelCache = new ModelCache(config.modelCacheSizeMiB());
+            } catch (Throwable err) {
+                log.error("Error while initializing model cache. Stopping the plugin...", err);
+                // Allow the model pusher to be used until the plugin has cleanly shut down
+                clientThread.invokeLater(plugin::stopPlugin);
+            }
         }
     }
 
     public void shutDown() {
-        if (started) {
-            this.modelCache.shutDown();
-            this.started = false;
+        if (modelCache != null) {
+            modelCache.destroy();
+            modelCache = null;
         }
     }
 
@@ -88,7 +96,9 @@ public class ModelPusher {
     private final static float[] twelveFloats = new float[12];
 
     public void clearModelCache() {
-        this.modelCache.clear();
+        if (modelCache != null) {
+            modelCache.clear();
+        }
     }
 
 //    public void printStats() {
@@ -110,7 +120,14 @@ public class ModelPusher {
 //        pushes = 0;
 //    }
 
-    public int[] pushModel(long hash, Model model, GpuIntBuffer vertexBuffer, GpuFloatBuffer uvBuffer, GpuFloatBuffer normalBuffer, int tileX, int tileY, int tileZ, @NonNull ModelOverride modelOverride, ObjectType objectType, boolean noCache) {
+    public int[] pushModel(
+        long hash, Model model, GpuIntBuffer vertexBuffer, GpuFloatBuffer uvBuffer, GpuFloatBuffer normalBuffer,
+        int tileX, int tileY, int tileZ, @NonNull ModelOverride modelOverride, ObjectType objectType, boolean shouldCache
+    ) {
+        if (modelCache == null) {
+            shouldCache = false;
+        }
+
 //        pushes++;
         final int faceCount = Math.min(model.getFaceCount(), HdPlugin.MAX_TRIANGLE);
         final int bufferSize = faceCount * DATUM_PER_FACE;
@@ -129,7 +146,7 @@ public class ModelPusher {
         int normalDataCacheHash = 0;
         int uvDataCacheHash = 0;
 
-        if (!noCache) {
+        if (shouldCache) {
             vertexDataCacheHash = modelHasher.calculateVertexCacheHash();
             normalDataCacheHash = modelHasher.calculateNormalCacheHash();
             uvDataCacheHash = modelHasher.calculateUvCacheHash(modelOverride);
@@ -171,7 +188,7 @@ public class ModelPusher {
         FloatBuffer fullNormalData = null;
         FloatBuffer fullUvData = null;
 
-        boolean cachingVertexData = !cachedVertexData && !noCache;
+        boolean cachingVertexData = !cachedVertexData && shouldCache;
         if (cachingVertexData) {
             fullVertexData = this.modelCache.takeIntBuffer(bufferSize);
             if (fullVertexData == null) {
@@ -180,7 +197,7 @@ public class ModelPusher {
             }
         }
 
-        boolean cachingNormalData = !cachedNormalData && !noCache;
+        boolean cachingNormalData = !cachedNormalData && shouldCache;
         if (cachingNormalData) {
             fullNormalData = this.modelCache.takeFloatBuffer(bufferSize);
             if (fullNormalData == null) {
@@ -189,7 +206,7 @@ public class ModelPusher {
             }
         }
 
-        boolean cachingUvData = !cachedUvData && !noCache;
+        boolean cachingUvData = !cachedUvData && shouldCache;
         if (cachingUvData) {
             fullUvData = this.modelCache.takeFloatBuffer(bufferSize);
             if (fullUvData == null) {
@@ -313,14 +330,14 @@ public class ModelPusher {
 
         boolean isVanillaTextured = faceTextures != null && uv != null && faceTextures[face] != -1;
         if (isVanillaTextured) {
-            if (hdPlugin.configModelTextures) {
+            if (plugin.configModelTextures) {
                 material = modelOverride.textureMaterial;
             }
 
             if (material == Material.NONE) {
                 material = Material.getTexture(faceTextures[face]);
             }
-        } else if (hdPlugin.configModelTextures) {
+        } else if (plugin.configModelTextures) {
             material = modelOverride.baseMaterial;
         }
 
@@ -507,7 +524,7 @@ public class ModelPusher {
         int maxBrightness1 = 55;
         int maxBrightness2 = 55;
         int maxBrightness3 = 55;
-        if (!hdPlugin.configReduceOverExposure) {
+        if (!plugin.configReduceOverExposure) {
             maxBrightness1 = (int) HDUtils.lerp(127, maxBrightness1, (float) Math.pow((float) color1S / 0x7, .05));
             maxBrightness2 = (int) HDUtils.lerp(127, maxBrightness2, (float) Math.pow((float) color2S / 0x7, .05));
             maxBrightness3 = (int) HDUtils.lerp(127, maxBrightness3, (float) Math.pow((float) color3S / 0x7, .05));
@@ -599,7 +616,7 @@ public class ModelPusher {
 
         int packedAlphaPriority = getPackedAlphaPriority(model, face);
 
-        if (hdPlugin.configTzhaarHD && modelOverride.tzHaarRecolorType != TzHaarRecolorType.NONE) {
+        if (plugin.configTzhaarHD && modelOverride.tzHaarRecolorType != TzHaarRecolorType.NONE) {
             int[][] tzHaarRecolored = proceduralGenerator.recolorTzHaar(modelOverride, heightA, heightB, heightC, packedAlphaPriority, objectType, color1S, color1L, color2S, color2L, color3S, color3L);
             color1H = tzHaarRecolored[0][0];
             color1S = tzHaarRecolored[0][1];
