@@ -96,7 +96,7 @@ public class ModelOverrideManager {
 
         AABB[] aabbs = modelsToHide.get(uuid);
         if (aabbs != null && hasNoActions(uuid)) {
-            WorldPoint location = ModelHash.getWorldLocation(client, x, z);
+            WorldPoint location = ModelHash.getWorldTemplateLocation(client, x, z);
             for (AABB aabb : aabbs)
                 if (aabb.contains(location))
                     return true;
