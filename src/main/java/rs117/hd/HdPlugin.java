@@ -2112,7 +2112,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		}
 	}
 
-	private void uploadScene()
+	public void uploadScene()
 	{
 		lightManager.reset();
 
