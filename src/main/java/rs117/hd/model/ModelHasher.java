@@ -71,8 +71,9 @@ public class ModelHasher {
         }, -1);
     }
 
-    public int calculateUvCacheHash(@NonNull ModelOverride modelOverride) {
+    public int calculateUvCacheHash(int orientation, @NonNull ModelOverride modelOverride) {
         return fastIntHash(new int[]{
+                orientation,
                 this.faceTexturesHash,
                 this.faceTexturesUvHash,
                 modelOverride.hashCode()

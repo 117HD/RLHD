@@ -341,4 +341,20 @@ public class HDUtils
 				return 0;
 		}
 	}
+
+	public static int extractConfigOrientation(int config)
+	{
+		switch (config >> 6 & 3) {
+			case 0: // south
+				return 1024;
+			case 1: // west
+				return 1536;
+			case 2: // north
+				return 0;
+			case 3: // east
+				return 512;
+			default:
+				return 0;
+		}
+	}
 }
