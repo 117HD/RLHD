@@ -14,7 +14,7 @@ import java.util.function.Function;
 @Setter
 @Accessors(fluent = true)
 class TileOverrideBuilder<T> {
-    public Integer[] ids = {};
+    public Integer[] ids = null;
     public Area area = Area.ALL;
     public GroundMaterial groundMaterial = GroundMaterial.NONE;
     public WaterType waterType = WaterType.NONE;
@@ -35,7 +35,7 @@ class TileOverrideBuilder<T> {
     }
 
     TileOverrideBuilder<T> ids(Integer... ids) {
-        if (this.ids.length > 0)
+        if (this.ids != null && this.ids.length > 0)
             throw new IllegalStateException(
                 "Attempted to overwrite IDs " + Arrays.toString(this.ids) +
                 " with IDs " + Arrays.toString(ids) +

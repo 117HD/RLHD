@@ -432,7 +432,7 @@ public enum Overlay {
     // TODO: fix tile blending color issues with bridge tiles
 //    TOA_CRONDIS_ROCK(Area.TOA_PATH_OF_CRONDIS_BOSS, GroundMaterial.NONE, p -> p.ids(-123, -122, -74).blended(false)),
 //    TOA_CRONDIS_ISLAND(Area.TOA_CRONDIS_ISLAND, p -> p.groundMaterial(GroundMaterial.SAND)),
-    TOA_CRONDIS_WATER(Area.TOA_CRONDIS_WATER, p -> p.waterType(WaterType.SWAMP_WATER).blended(false)),
+    TOA_CRONDIS_WATER(p -> p.area(Area.TOA_CRONDIS_WATER).waterType(WaterType.SWAMP_WATER).blended(false)),
 
 	// POHs
 	POH_DESERT_INDOORS(Area.PLAYER_OWNED_HOUSE, GroundMaterial.TILES_2x2_2, p -> p.blended(false).ids(26, 99)),
@@ -485,7 +485,8 @@ public enum Overlay {
 
     NONE(GroundMaterial.DIRT, p -> {});
 
-    public final Integer[] ids;
+    @Nullable
+    public final Integer[] filterIds;
     public final Area area;
     public final GroundMaterial groundMaterial;
     public final WaterType waterType;
@@ -528,10 +529,6 @@ public enum Overlay {
         this(p -> p.waterType(waterType).blended(false).apply(consumer));
     }
 
-    Overlay(Area area, Consumer<TileOverrideBuilder<Overlay>> consumer) {
-        this(p -> p.area(area).apply(consumer));
-    }
-
     Overlay(Area area, GroundMaterial material, Consumer<TileOverrideBuilder<Overlay>> consumer) {
         this(p -> p.groundMaterial(material).area(area).apply(consumer));
     }
@@ -539,7 +536,7 @@ public enum Overlay {
     Overlay(Consumer<TileOverrideBuilder<Overlay>> consumer) {
         TileOverrideBuilder<Overlay> builder = new TileOverrideBuilder<>();
         consumer.accept(builder);
-        this.ids = builder.ids;
+        this.filterIds = builder.ids;
         this.replacementOverlay = builder.replacement;
         this.replacementCondition = builder.replacementCondition;
         this.waterType = builder.waterType;
@@ -560,17 +557,17 @@ public enum Overlay {
     static {
         GROUND_MATERIAL_MAP = ArrayListMultimap.create();
         for (Overlay overlay : values()) {
-            if (overlay.ids.length == 0) {
+            if (overlay.filterIds == null) {
                 GROUND_MATERIAL_MAP.put(null, overlay);
             } else {
-                for (Integer id : overlay.ids) {
+                for (Integer id : overlay.filterIds) {
                     GROUND_MATERIAL_MAP.put(id, overlay);
                 }
             }
         }
     }
 
-    public static Overlay getOverlay(@Nullable Integer overlayId, Tile tile, Client client, HdPluginConfig pluginConfig) {
+    public static Overlay getOverlay(@Nullable Integer overlayId, Tile tile, Client client, HdPluginConfig config) {
         WorldPoint worldPoint = tile.getWorldLocation();
 
         if (client.isInInstancedRegion()) {
@@ -594,6 +591,6 @@ public enum Overlay {
             .findFirst()
             .orElse(anyOverlay);
 
-        return overlay.replacementCondition.apply(pluginConfig) ? overlay.replacementOverlay : overlay;
+        return overlay.replacementCondition.apply(config) ? overlay.replacementOverlay : overlay;
     }
 }

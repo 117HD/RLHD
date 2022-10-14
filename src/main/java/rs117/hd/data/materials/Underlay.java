@@ -87,7 +87,7 @@ public enum Underlay {
     TZHAAR(72, Area.TZHAAR, GroundMaterial.VARIED_DIRT_SHINY, p -> p.shiftLightness(2)),
 
     // Morytania
-    VER_SINHAZA_WATER_FIX(54, p -> p.area(Area.VER_SINHAZA_WATER_FIX).waterType(WaterType.WATER).blended(false)),
+    VER_SINHAZA_WATER_FIX(p -> p.ids(54).area(Area.VER_SINHAZA_WATER_FIX).waterType(WaterType.WATER).blended(false)),
 
     // Castle Wars
     CENTER_SARADOMIN_SIDE_DIRT_1(98, Area.CASTLE_WARS_ARENA_SARADOMIN_SIDE, GroundMaterial.DIRT, p -> p
@@ -112,7 +112,7 @@ public enum Underlay {
     COX_SNOW_2(59, Area.COX_SNOW, GroundMaterial.SNOW_2),
 
     // Tombs of Amascut
-    TOA_CRONDIS_WATER(Area.TOA_CRONDIS_WATER, p -> p.waterType(WaterType.SWAMP_WATER).blended(false)),
+    TOA_CRONDIS_WATER(p -> p.area(Area.TOA_CRONDIS_WATER).waterType(WaterType.SWAMP_WATER).blended(false)),
 
     // Mind Altar
     MIND_ALTAR_TILE(55, Area.MIND_ALTAR, GroundMaterial.MARBLE_1_SEMIGLOSS, p -> p.blended(false)),
@@ -120,8 +120,8 @@ public enum Underlay {
     // Cutscenes
     CANOE_CUTSCENE_GRASS_1(Area.CANOE_CUTSCENE, GroundMaterial.GRASS_SCROLLING, p -> p.ids(48, 50, 63)),
 
-    WINTER_GRASS(-999, GroundMaterial.SNOW_1, p -> p.hue(0).saturation(0).shiftLightness(40).blended(true)),
-    WINTER_DIRT(-999, GroundMaterial.DIRT, p -> p.hue(0).saturation(0).shiftLightness(40).blended(true)),
+    WINTER_GRASS(p -> p.ids().groundMaterial(GroundMaterial.SNOW_1).hue(0).saturation(0).shiftLightness(40).blended(true)),
+    WINTER_DIRT(p -> p.ids().groundMaterial(GroundMaterial.DIRT).hue(0).saturation(0).shiftLightness(40).blended(true)),
 
     // default underlays
 
@@ -138,14 +138,13 @@ public enum Underlay {
     OVERWORLD_DIRT(GroundMaterial.DIRT, p -> p.ids(-111, -110, 64, 66, 80, 92, 94)),
 
     UNDERLAY_10(GroundMaterial.GRASS_1, p -> p.ids(10, 25, 33, 34, 40, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 62, 63, 67, 70, 75, 93, 96, 97, 103, 103, 114, 115, 126)),
-
-    UNDERLAY_58(58, GroundMaterial.SNOW_1),
-
+    UNDERLAY_58(GroundMaterial.SNOW_1, p -> p.ids(58)),
     UNDERLAY_72(GroundMaterial.VARIED_DIRT, p -> p.ids(72, 98)),
 
     NONE(GroundMaterial.DIRT, p -> {});
 
-    public final Integer[] ids;
+    @Nullable
+    public final Integer[] filterIds;
     public final Area area;
     public final GroundMaterial groundMaterial;
     public final WaterType waterType;
@@ -160,20 +159,8 @@ public enum Underlay {
     public final Underlay replacementUnderlay;
     public final Function<HdPluginConfig, Boolean> replacementCondition;
 
-    Underlay(int id, GroundMaterial material) {
-        this(p -> p.ids(id).groundMaterial(material));
-    }
-
     Underlay(int id, Area area, GroundMaterial material) {
         this(p -> p.ids(id).groundMaterial(material).area(area));
-    }
-
-    Underlay(int id, Consumer<TileOverrideBuilder<Underlay>> consumer) {
-        this(p -> p.ids(id).apply(consumer));
-    }
-
-    Underlay(int id, GroundMaterial material, Consumer<TileOverrideBuilder<Underlay>> consumer) {
-        this(p -> p.ids(id).groundMaterial(material).apply(consumer));
     }
 
     Underlay(int id, Area area, GroundMaterial material, Consumer<TileOverrideBuilder<Underlay>> consumer) {
@@ -184,10 +171,6 @@ public enum Underlay {
         this(p -> p.groundMaterial(material).apply(consumer));
     }
 
-    Underlay(Area area, Consumer<TileOverrideBuilder<Underlay>> consumer) {
-        this(p -> p.area(area).apply(consumer));
-    }
-
     Underlay(Area area, GroundMaterial material, Consumer<TileOverrideBuilder<Underlay>> consumer) {
         this(p -> p.groundMaterial(material).area(area).apply(consumer));
     }
@@ -195,7 +178,7 @@ public enum Underlay {
     Underlay(Consumer<TileOverrideBuilder<Underlay>> consumer) {
         TileOverrideBuilder<Underlay> builder = new TileOverrideBuilder<>();
         consumer.accept(builder);
-        this.ids = builder.ids;
+        this.filterIds = builder.ids;
         this.area = builder.area;
         this.groundMaterial = builder.groundMaterial;
         this.waterType = builder.waterType;
@@ -212,21 +195,20 @@ public enum Underlay {
     }
 
     private static final ListMultimap<Integer, Underlay> GROUND_MATERIAL_MAP;
-
     static {
         GROUND_MATERIAL_MAP = ArrayListMultimap.create();
         for (Underlay underlay : values()) {
-            if (underlay.ids.length == 0) {
+            if (underlay.filterIds == null) {
                 GROUND_MATERIAL_MAP.put(null, underlay);
             } else {
-                for (Integer id : underlay.ids) {
+                for (Integer id : underlay.filterIds) {
                     GROUND_MATERIAL_MAP.put(id, underlay);
                 }
             }
         }
     }
 
-    public static Underlay getUnderlay(@Nullable Integer underlayId, Tile tile, Client client, HdPluginConfig pluginConfig) {
+    public static Underlay getUnderlay(@Nullable Integer underlayId, Tile tile, Client client, HdPluginConfig config) {
         WorldPoint worldPoint = tile.getWorldLocation();
 
         if (client.isInInstancedRegion()) {
@@ -250,7 +232,6 @@ public enum Underlay {
             .findFirst()
             .orElse(anyUnderlay);
 
-        return overlay.replacementCondition.apply(pluginConfig) ? overlay.replacementUnderlay : overlay;
+        return overlay.replacementCondition.apply(config) ? overlay.replacementUnderlay : overlay;
     }
-
 }
