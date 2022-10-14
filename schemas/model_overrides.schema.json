@@ -47,6 +47,10 @@
         "type": "boolean",
         "description": "Whether the model has fake shadows or baked lighting that should be removed. Defaults to false."
       },
+      "disableShadows": {
+        "type": "boolean",
+        "description": "Whether the model should be prevented from casting shadows. Defaults to false."
+      },
       "tzHaarRecolorType": {
         "type": "string",
         "description": "Specify a type of TzHaar recolor style to apply. Only relevant for the TzHaar area.",

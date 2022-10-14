@@ -78,7 +78,7 @@ flat in vec2 vUv3;
 in vec3 normals;
 in vec3 position;
 in vec3 texBlend;
-flat in ivec3 materialId;
+flat in ivec3 materialData;
 flat in ivec3 terrainData;
 flat in ivec3 isOverlay;
 
@@ -100,9 +100,9 @@ void main() {
     vec3 lightDir = -lightDirection;
 
     // material data
-    Material material1 = getMaterial(materialId.x);
-    Material material2 = getMaterial(materialId.y);
-    Material material3 = getMaterial(materialId.z);
+    Material material1 = getMaterial(materialData[0] >> 3);
+    Material material2 = getMaterial(materialData[1] >> 3);
+    Material material3 = getMaterial(materialData[2] >> 3);
 
     // water data
     bool isTerrain = (terrainData.x & 1) != 0; // 1 = 0b1
