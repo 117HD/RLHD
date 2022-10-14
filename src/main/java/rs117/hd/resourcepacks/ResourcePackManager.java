@@ -61,9 +61,10 @@ public class ResourcePackManager {
 
     public void startUp() {
         loadManifest();
-        if (!DEV_PACK_DIR.exists()) {
-            DEV_PACK_DIR.mkdirs();
+        if (!PACK_DIR.exists()) {
+            PACK_DIR.mkdirs();
         }
+
 
         ResourcePath.path(DEV_PACK_DIR.toPath()).watch(file -> {
             if (activeResourcePack != null) {
@@ -116,29 +117,29 @@ public class ResourcePackManager {
     }
 
     public void locateInstalledPacks() {
-        if (!PACK_DIR.exists()) {
-            PACK_DIR.mkdirs();
-        }
 
         Arrays.stream(Objects.requireNonNull(PACK_DIR.listFiles()))
                 .filter(it -> it.getName().startsWith("pack-") && it.isDirectory())
                 .forEach(this::addPack);
 
 
-        Arrays.stream(Objects.requireNonNull(DEV_PACK_DIR.listFiles()))
-                .filter(it -> it.getName().startsWith("pack-") && it.isDirectory())
-                .forEach( dir -> {
-                    Manifest manifest = new Manifest();
-                    String name = dir.getName();
-                    manifest.setInternalName(toInternalName(name));
-                    manifest.setDescription("Dev Pack: " + name);
-                    manifest.setDev(true);
-                    currentManifest.put(manifest.getInternalName(),manifest);
-                    installedPacks.put(toInternalName(name), dir);
-                    if (panel != null)
-                        panel.packSelectionDropdown.addItem(name);
-                    log.info("Resource Pack {} has been added", toInternalName(name));
-                });
+        if (DEV_PACK_DIR.exists()) {
+            Arrays.stream(Objects.requireNonNull(DEV_PACK_DIR.listFiles()))
+                    .filter(it -> it.getName().startsWith("pack-") && it.isDirectory())
+                    .forEach( dir -> {
+                        Manifest manifest = new Manifest();
+                        String name = dir.getName();
+                        manifest.setInternalName(toInternalName(name));
+                        manifest.setDescription("Dev Pack: " + name);
+                        manifest.setDev(true);
+                        currentManifest.put(manifest.getInternalName(),manifest);
+                        installedPacks.put(toInternalName(name), dir);
+                        if (panel != null)
+                            panel.packSelectionDropdown.addItem(name);
+                        log.info("Resource Pack {} has been added", toInternalName(name));
+                    });
+        }
+
 
 
         loadDropdownItems();
