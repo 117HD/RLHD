@@ -53,23 +53,23 @@ flat out vec2 vUv3;
 out vec3 normals;
 out vec3 position;
 out vec3 texBlend;
-flat out ivec3 materialId;
+flat out ivec3 materialData;
 flat out ivec3 terrainData;
 flat out ivec3 isOverlay;
 out vec4 shadowOut;
 
 void main() {
-    int material1 = int(vUv[0].x) >> 1;
-    int material2 = int(vUv[1].x) >> 1;
-    int material3 = int(vUv[2].x) >> 1;
-    materialId = ivec3(material1, material2, material3);
+    materialData[0] = int(vUv[0].x);
+    materialData[1] = int(vUv[1].x);
+    materialData[2] = int(vUv[2].x);
 
     terrainData = ivec3(int(vNormal[0].w), int(vNormal[1].w), int(vNormal[2].w));
 
-    isOverlay = ivec3(0, 0, 0);
-    isOverlay[0] = int(vUv[0].x) & 1;
-    isOverlay[1] = int(vUv[1].x) & 1;
-    isOverlay[2] = int(vUv[2].x) & 1;
+    isOverlay = ivec3(
+        materialData[0] >> 2 & 1,
+        materialData[1] >> 2 & 1,
+        materialData[2] >> 2 & 1
+    );
 
     vColor1 = vColor[0];
     vColor2 = vColor[1];

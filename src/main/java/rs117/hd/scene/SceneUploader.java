@@ -122,7 +122,9 @@ class SceneUploader
 		// pack a bit into bufferoffset that we can use later to hide
 		// some low-importance objects based on Level of Detail setting
 		model.setBufferOffset((vertexBuffer.position() / VERTEX_SIZE) << 2 | skipObject);
-		if (model.getFaceTextures() != null || (plugin.configModelTextures && modelOverride.baseMaterial != Material.NONE))
+		if (model.getFaceTextures() != null ||
+			(plugin.configModelTextures && modelOverride.baseMaterial != Material.NONE) ||
+			modelPusher.packMaterialData(Material.NONE, false, modelOverride) != 0)
 		{
 			model.setUvBufferOffset(uvBuffer.position() / UV_SIZE);
 		}
@@ -475,10 +477,10 @@ class SceneUploader
 
 			bufferLength += 6;
 
-			int packedMaterialDataSW = modelPusher.packMaterialData(swMaterial, swVertexIsOverlay);
-			int packedMaterialDataSE = modelPusher.packMaterialData(seMaterial, seVertexIsOverlay);
-			int packedMaterialDataNW = modelPusher.packMaterialData(nwMaterial, nwVertexIsOverlay);
-			int packedMaterialDataNE = modelPusher.packMaterialData(neMaterial, neVertexIsOverlay);
+			int packedMaterialDataSW = modelPusher.packMaterialData(swMaterial, swVertexIsOverlay, ModelOverride.NONE);
+			int packedMaterialDataSE = modelPusher.packMaterialData(seMaterial, seVertexIsOverlay, ModelOverride.NONE);
+			int packedMaterialDataNW = modelPusher.packMaterialData(nwMaterial, nwVertexIsOverlay, ModelOverride.NONE);
+			int packedMaterialDataNE = modelPusher.packMaterialData(neMaterial, neVertexIsOverlay, ModelOverride.NONE);
 
 			uvBuffer.ensureCapacity(24);
 			uvBuffer.put(packedMaterialDataNE, 1.0f, 1.0f, 0f);
@@ -595,10 +597,10 @@ class SceneUploader
 
 			bufferLength += 6;
 
-			int packedMaterialDataSW = modelPusher.packMaterialData(swMaterial, false);
-			int packedMaterialDataSE = modelPusher.packMaterialData(seMaterial, false);
-			int packedMaterialDataNW = modelPusher.packMaterialData(nwMaterial, false);
-			int packedMaterialDataNE = modelPusher.packMaterialData(neMaterial, false);
+			int packedMaterialDataSW = modelPusher.packMaterialData(swMaterial, false, ModelOverride.NONE);
+			int packedMaterialDataSE = modelPusher.packMaterialData(seMaterial, false, ModelOverride.NONE);
+			int packedMaterialDataNW = modelPusher.packMaterialData(nwMaterial, false, ModelOverride.NONE);
+			int packedMaterialDataNE = modelPusher.packMaterialData(neMaterial, false, ModelOverride.NONE);
 
 			uvBuffer.ensureCapacity(24);
 			uvBuffer.put(packedMaterialDataNE, 1.0f, 1.0f, 0f);
@@ -813,9 +815,9 @@ class SceneUploader
 
 			bufferLength += 3;
 
-			int packedMaterialDataA = modelPusher.packMaterialData(materialA, vertexAIsOverlay);
-			int packedMaterialDataB = modelPusher.packMaterialData(materialB, vertexBIsOverlay);
-			int packedMaterialDataC = modelPusher.packMaterialData(materialC, vertexCIsOverlay);
+			int packedMaterialDataA = modelPusher.packMaterialData(materialA, vertexAIsOverlay, ModelOverride.NONE);
+			int packedMaterialDataB = modelPusher.packMaterialData(materialB, vertexBIsOverlay, ModelOverride.NONE);
+			int packedMaterialDataC = modelPusher.packMaterialData(materialC, vertexCIsOverlay, ModelOverride.NONE);
 
 			uvBuffer.ensureCapacity(12);
 			uvBuffer.put(packedMaterialDataA, localVertices[0][0] / 128f, localVertices[0][1] / 128f, 0f);
@@ -921,9 +923,9 @@ class SceneUploader
 
 				bufferLength += 3;
 
-				int packedMaterialDataA = modelPusher.packMaterialData(materialA, false);
-				int packedMaterialDataB = modelPusher.packMaterialData(materialB, false);
-				int packedMaterialDataC = modelPusher.packMaterialData(materialC, false);
+				int packedMaterialDataA = modelPusher.packMaterialData(materialA, false, ModelOverride.NONE);
+				int packedMaterialDataB = modelPusher.packMaterialData(materialB, false, ModelOverride.NONE);
+				int packedMaterialDataC = modelPusher.packMaterialData(materialC, false, ModelOverride.NONE);
 
 				uvBuffer.ensureCapacity(12);
 				uvBuffer.put(packedMaterialDataA, localVertices[0][0] / 128f, localVertices[0][1] / 128f, 0f);

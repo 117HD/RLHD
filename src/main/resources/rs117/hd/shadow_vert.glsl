@@ -36,21 +36,35 @@ out float alpha;
 out vec2 fUv;
 flat out int materialId;
 
+int when_eq(int x, int y) {
+    return 1 - abs(sign(x - y));
+}
+
+int when_lt(float x, float y) {
+    return max(int(sign(y - x)), 0);
+}
+
+int when_gt(int x, int y) {
+    return max(sign(x - y), 0);
+}
+
 void main()
 {
-    fUv = uv.yz;
     ivec3 vertex = VertexPosition.xyz;
-
-    alpha = 1 - float(VertexPosition.w >> 24 & 0xff) / 255.;
-    materialId = int(uv.x) >> 1;
-
+    int materialData = int(uv.x);
     int terrainData = int(normal.w);
+
+    fUv = uv.yz;
+    alpha = 1 - float(VertexPosition.w >> 24 & 0xff) / 255.;
+    materialId = materialData >> 3;
+
     int waterTypeIndex = terrainData >> 3 & 0x1F;
-    bool isGroundPlane = (terrainData & 0xF) == 1; // isTerrain && plane == 0
-    bool isTransparent = alpha < SHADOW_OPACITY_THRESHOLD;
-    bool isWaterSurfaceOrUnderwaterTile = waterTypeIndex > 0;
-    if (isGroundPlane || isTransparent || isWaterSurfaceOrUnderwaterTile)
-        vertex *= 0;
+
+    int isShadowDisabled = materialData & 1;
+    int isGroundPlane = when_eq(terrainData & 0xF, 1); // isTerrain && plane == 0
+    int isTransparent = when_lt(alpha, SHADOW_OPACITY_THRESHOLD);
+    int isWaterSurfaceOrUnderwaterTile = when_gt(waterTypeIndex, 0);
+    vertex *= 1 - max(0, sign(isShadowDisabled + isGroundPlane + isTransparent + isWaterSurfaceOrUnderwaterTile));
 
     gl_Position = lightProjectionMatrix * vec4(vertex, 1.f);
 }
