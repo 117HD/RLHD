@@ -7,11 +7,7 @@ import net.runelite.api.Client;
 import net.runelite.api.GameState;
 import net.runelite.api.coords.WorldPoint;
 import rs117.hd.HdPlugin;
-import rs117.hd.data.materials.Material;
-import rs117.hd.data.materials.UvType;
-import rs117.hd.scene.model_overrides.InheritTileColorType;
 import rs117.hd.scene.model_overrides.ModelOverride;
-import rs117.hd.scene.model_overrides.TzHaarRecolorType;
 import rs117.hd.utils.AABB;
 import rs117.hd.utils.Env;
 import rs117.hd.utils.ModelHash;
@@ -55,7 +51,7 @@ public class ModelOverrideManager {
                         addEntry(ModelHash.packUuid(objectId, ModelHash.TYPE_OBJECT), entry);
                 }
                 if (client.getGameState() == GameState.LOGGED_IN)
-                    plugin.reloadScene();
+                    plugin.reloadSceneNextGameTick();
                 log.debug("Loaded {} model overrides", modelOverrides.size());
             } catch (IOException ex) {
                 log.error("Failed to load model overrides:", ex);
