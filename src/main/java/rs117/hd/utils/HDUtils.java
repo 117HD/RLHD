@@ -315,4 +315,30 @@ public class HDUtils
 	public static long ceilPow2(long x) {
 		return (long) Math.pow(2, Math.ceil(Math.log(x) / Math.log(2)));
 	}
+
+	public static int convertWallObjectOrientation(int orientation)
+	{
+		// east = 1, south = 2, west = 4, north = 8,
+		// southeast = 16, southwest = 32, northwest = 64, northeast = 128
+		switch (orientation) {
+			case 1: // east
+				return 512;
+			case 2: // south
+				return 1024;
+			case 4: // west
+				return 1536;
+			case 8: // north
+				return 0;
+			case 16: // south-east
+				return 768;
+			case 32: // south-west
+				return 1280;
+			case 64: // north-west
+				return 1792;
+			case 128: // north-east
+				return 256;
+			default:
+				return 0;
+		}
+	}
 }

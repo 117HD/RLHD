@@ -483,32 +483,7 @@ public class LightManager
 
 					WallObject wallObject = tile.getWallObject();
 					if (wallObject != null && wallObject.getRenderable1() != null) {
-						int orientation = 0;
-						// east = 1, south = 2, west = 4, north = 8,
-						// southeast = 16, southwest = 32, northwest = 64, northeast = 128
-						switch (wallObject.getOrientationA()) {
-							case 1:
-								orientation = 512;
-								break;
-							case 2:
-								orientation = 1024;
-								break;
-							case 4:
-								orientation = 1536;
-								break;
-							case 16:
-								orientation = 768;
-								break;
-							case 32:
-								orientation = 1280;
-								break;
-							case 64:
-								orientation = 1792;
-								break;
-							case 128:
-								orientation = 256;
-								break;
-						}
+						int orientation = HDUtils.convertWallObjectOrientation(wallObject.getOrientationA());
 						addObjectLight(wallObject, tile.getRenderLevel(), 1, 1, orientation);
 					}
 
