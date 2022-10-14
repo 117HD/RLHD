@@ -102,7 +102,7 @@ class SceneUploader
 		log.debug("Scene upload time: {}", stopwatch);
 	}
 
-	private void uploadModel(long hash, Model model, GpuIntBuffer vertexBuffer, GpuFloatBuffer uvBuffer, GpuFloatBuffer normalBuffer, int tileZ, int tileX, int tileY, ObjectType objectType)
+	private void uploadModel(long hash, Model model, GpuIntBuffer vertexBuffer, GpuFloatBuffer uvBuffer, GpuFloatBuffer normalBuffer, int tileZ, int tileX, int tileY, int orientation, ObjectType objectType)
 	{
 		if (model.getSceneId() == sceneId)
 		{
@@ -135,7 +135,7 @@ class SceneUploader
 		model.setSceneId(sceneId);
 
 		modelPusher.pushModel(hash, model, vertexBuffer, uvBuffer, normalBuffer,
-			tileX, tileY, tileZ, modelOverride, objectType, false);
+			tileX, tileY, tileZ, orientation, modelOverride, objectType, false);
 	}
 
 	private void upload(Tile tile, GpuIntBuffer vertexBuffer, GpuFloatBuffer uvBuffer, GpuFloatBuffer normalBuffer)
@@ -207,14 +207,18 @@ class SceneUploader
 			if (renderable1 instanceof Model)
 			{
 				uploadModel(wallObject.getHash(), (Model) renderable1,
-					vertexBuffer, uvBuffer, normalBuffer, tileZ, tileX, tileY, ObjectType.WALL_OBJECT);
+					vertexBuffer, uvBuffer, normalBuffer, tileZ, tileX, tileY,
+					HDUtils.convertWallObjectOrientation(wallObject.getOrientationA()),
+					ObjectType.WALL_OBJECT);
 			}
 
 			Renderable renderable2 = wallObject.getRenderable2();
 			if (renderable2 instanceof Model)
 			{
-				uploadModel(wallObject.getHash(), (Model) renderable2, vertexBuffer, uvBuffer, normalBuffer, tileZ, tileX,
-					tileY, ObjectType.WALL_OBJECT);
+				uploadModel(wallObject.getHash(), (Model) renderable2,
+					vertexBuffer, uvBuffer, normalBuffer, tileZ, tileX, tileY,
+					HDUtils.convertWallObjectOrientation(wallObject.getOrientationB()),
+					ObjectType.WALL_OBJECT);
 			}
 		}
 
@@ -224,27 +228,32 @@ class SceneUploader
 			Renderable renderable = groundObject.getRenderable();
 			if (renderable instanceof Model)
 			{
-				uploadModel(groundObject.getHash(), (Model) renderable, vertexBuffer, uvBuffer, normalBuffer, tileZ, tileX,
-					tileY, ObjectType.GROUND_OBJECT);
+				uploadModel(groundObject.getHash(), (Model) renderable,
+					vertexBuffer, uvBuffer, normalBuffer, tileZ, tileX, tileY,
+					HDUtils.extractConfigOrientation(groundObject.getConfig()),
+					ObjectType.GROUND_OBJECT);
 			}
 		}
 
 		DecorativeObject decorativeObject = tile.getDecorativeObject();
 		if (decorativeObject != null)
 		{
-
 			Renderable renderable = decorativeObject.getRenderable();
 			if (renderable instanceof Model)
 			{
-				uploadModel(decorativeObject.getHash(), (Model) renderable, vertexBuffer, uvBuffer, normalBuffer, tileZ, tileX,
-					tileY, ObjectType.DECORATIVE_OBJECT);
+				uploadModel(decorativeObject.getHash(), (Model) renderable,
+					vertexBuffer, uvBuffer, normalBuffer, tileZ, tileX, tileY,
+					HDUtils.extractConfigOrientation(decorativeObject.getConfig()),
+					ObjectType.DECORATIVE_OBJECT);
 			}
 
 			Renderable renderable2 = decorativeObject.getRenderable2();
 			if (renderable2 instanceof Model)
 			{
-				uploadModel(decorativeObject.getHash(), (Model) renderable2, vertexBuffer, uvBuffer, normalBuffer, tileZ, tileX,
-					tileY, ObjectType.DECORATIVE_OBJECT);
+				uploadModel(decorativeObject.getHash(), (Model) renderable2,
+					vertexBuffer, uvBuffer, normalBuffer, tileZ, tileX, tileY,
+					HDUtils.extractConfigOrientation(decorativeObject.getConfig()),
+					ObjectType.DECORATIVE_OBJECT);
 			}
 		}
 
@@ -259,8 +268,9 @@ class SceneUploader
 			Renderable renderable = gameObject.getRenderable();
 			if (renderable instanceof Model)
 			{
-				uploadModel(gameObject.getHash(), (Model) gameObject.getRenderable(), vertexBuffer, uvBuffer, normalBuffer, tileZ, tileX,
-					tileY, ObjectType.GAME_OBJECT);
+				uploadModel(gameObject.getHash(), (Model) gameObject.getRenderable(),
+					vertexBuffer, uvBuffer, normalBuffer, tileZ, tileX, tileY,
+					gameObject.getModelOrientation(), ObjectType.GAME_OBJECT);
 			}
 		}
 	}

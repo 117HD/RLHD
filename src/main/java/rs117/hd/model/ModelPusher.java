@@ -122,7 +122,8 @@ public class ModelPusher {
 
     public int[] pushModel(
         long hash, Model model, GpuIntBuffer vertexBuffer, GpuFloatBuffer uvBuffer, GpuFloatBuffer normalBuffer,
-        int tileX, int tileY, int tileZ, @NonNull ModelOverride modelOverride, ObjectType objectType, boolean shouldCache
+        int tileX, int tileY, int tileZ, int orientation, @NonNull ModelOverride modelOverride, ObjectType objectType,
+        boolean shouldCache
     ) {
         if (modelCache == null) {
             shouldCache = false;
@@ -149,7 +150,7 @@ public class ModelPusher {
         if (shouldCache) {
             vertexDataCacheHash = modelHasher.calculateVertexCacheHash();
             normalDataCacheHash = modelHasher.calculateNormalCacheHash();
-            uvDataCacheHash = modelHasher.calculateUvCacheHash(modelOverride);
+            uvDataCacheHash = modelHasher.calculateUvCacheHash(orientation, modelOverride);
 
             IntBuffer vertexData = this.modelCache.getVertexData(vertexDataCacheHash);
             cachedVertexData = vertexData != null && vertexData.remaining() == bufferSize;
@@ -236,7 +237,7 @@ public class ModelPusher {
             }
 
             if (!cachedUvData) {
-                float[] tempUvData = getUvDataForFace(model, modelOverride, face);
+                float[] tempUvData = getUvDataForFace(model, orientation, modelOverride, face);
                 if (tempUvData != null) {
                     uvBuffer.put(tempUvData);
                     uvLength += 3;
@@ -321,7 +322,7 @@ public class ModelPusher {
         return twelveFloats;
     }
 
-    private float[] getUvDataForFace(Model model, @NonNull ModelOverride modelOverride, int face) {
+    private float[] getUvDataForFace(Model model, int orientation, @NonNull ModelOverride modelOverride, int face) {
         final short[] faceTextures = model.getFaceTextures();
         final float[] uv = model.getFaceTextureUVCoordinates();
 
