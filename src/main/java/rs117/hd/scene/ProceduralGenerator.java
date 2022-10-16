@@ -104,23 +104,16 @@ public class ProceduralGenerator
 		vertexIsOverlay = new HashMap<>();
 		Tile[][][] tiles = scene.getTiles();
 
-		// first loop - assign land colors and textures to hashmap
-		for (int z = 0; z < Constants.MAX_Z; ++z)
-		{
+		for (int z = 0; z < Constants.MAX_Z; ++z) {
 			for (int x = 0; x < Constants.SCENE_SIZE; ++x)
-			{
 				for (int y = 0; y < Constants.SCENE_SIZE; ++y)
-				{
 					if (tiles[z][x][y] != null)
-					{
 						generateDataForTile(tiles[z][x][y]);
-						if (tiles[z][x][y].getBridge() != null)
-						{
-							generateDataForTile(tiles[z][x][y].getBridge());
-						}
-					}
-				}
-			}
+
+			for (int x = 0; x < Constants.SCENE_SIZE; ++x)
+				for (int y = 0; y < Constants.SCENE_SIZE; ++y)
+					if (tiles[z][x][y] != null && tiles[z][x][y].getBridge() != null)
+						generateDataForTile(tiles[z][x][y].getBridge());
 		}
 	}
 

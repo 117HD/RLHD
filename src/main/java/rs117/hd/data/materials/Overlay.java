@@ -429,10 +429,10 @@ public enum Overlay {
     TOA_DISABLE_BLENDING_LOOT_ROOM(Area.TOA_LOOT_ROOM, GroundMaterial.NONE, p -> p.blended(false)),
 
     // Tombs of Amascut
-    // TODO: fix tile blending color issues with bridge tiles
-//    TOA_CRONDIS_ROCK(Area.TOA_PATH_OF_CRONDIS_BOSS, GroundMaterial.NONE, p -> p.ids(-123, -122, -74).blended(false)),
-//    TOA_CRONDIS_ISLAND(Area.TOA_CRONDIS_ISLAND, p -> p.groundMaterial(GroundMaterial.SAND)),
-    TOA_CRONDIS_WATER(p -> p.area(Area.TOA_CRONDIS_WATER).waterType(WaterType.SWAMP_WATER).blended(false)),
+    TOA_CRONDIS_ROCK(Area.TOA_PATH_OF_CRONDIS_BOSS, GroundMaterial.GRUNGE, p -> p.ids(134, 182).blended(false)),
+    TOA_CRONDIS_ROCK_SUBMERGED(Area.TOA_CRONDIS_ISLAND_SUBMERGED, GroundMaterial.GRUNGE, p -> p.ids(133).blended(false)),
+    TOA_CRONDIS_SWAMP_SLUDGE(p -> p.ids(133, 245).area(Area.TOA_PATH_OF_CRONDIS_BOSS).waterType(WaterType.SWAMP_WATER).blended(false)),
+    TOA_CRONDIS_WATER(p -> p.ids(246).area(Area.TOA_CRONDIS_WATER).waterType(WaterType.SWAMP_WATER).blended(false)),
 
 	// POHs
 	POH_DESERT_INDOORS(Area.PLAYER_OWNED_HOUSE, GroundMaterial.TILES_2x2_2, p -> p.blended(false).ids(26, 99)),
