@@ -33,10 +33,10 @@ import rs117.hd.utils.HDUtils;
 @RequiredArgsConstructor
 public enum DefaultSkyColor
 {
-	DEFAULT("117HD (Blue)", 185, 214, 255),
+	DEFAULT("117HD Blue", 185, 214, 255),
 	RUNELITE("RuneLite Skybox", -1, -1, -1),
-	OSRS("Old School (Black)", 0, 0, 0),
-	HD2008("2008 HD (Tan)", 200, 192, 169);
+	OSRS("Old School Black", 0, 0, 0),
+	HD2008("2008 HD Tan", 200, 192, 169);
 
 	private final String name;
 	private final int r;

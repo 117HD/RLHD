@@ -415,7 +415,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		configExpandShadowDraw = config.expandShadowDraw();
 		configHdInfernalTexture = config.hdInfernalTexture();
 		configWinterTheme = config.winterTheme();
-		configReduceOverExposure = config.reduceOverExposure();
+		configReduceOverExposure = config.enableLegacyGreyColors();
 		configMaxDynamicLights = config.maxDynamicLights().getValue();
 
 		clientThread.invoke(() ->
@@ -2257,13 +2257,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			case "groundTextures":
 			case "objectTextures":
 			case "tzhaarHD":
-			case KEY_REDUCE_OVER_EXPOSURE:
+			case KEY_LEGACY_GREY_COLORS:
 				configGroundBlending = config.groundBlending();
 				configGroundTextures = config.groundTextures();
 				configModelTextures = config.objectTextures();
 				configTzhaarHD = config.tzhaarHD();
 				configWinterTheme = config.winterTheme();
-				configReduceOverExposure = config.reduceOverExposure();
+				configReduceOverExposure = config.enableLegacyGreyColors();
 				clientThread.invoke(() -> {
 					modelPusher.clearModelCache();
 					uploadScene();

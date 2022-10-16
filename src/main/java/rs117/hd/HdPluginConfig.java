@@ -50,7 +50,9 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = "drawDistance",
 		name = "Draw Distance",
-		description = "Draw distance",
+		description =
+			"The maximum number of tiles to draw in either direction from the camera.<br>" +
+			"Depending on where the scene was loaded from, you might only see as far as 16 tiles in some directions.",
 		position = 1,
 		section = generalSettings
 	)
@@ -61,8 +63,10 @@ public interface HdPluginConfig extends Config
 
 	@ConfigItem(
 		keyName = "antiAliasingMode",
-		name = "Anti Aliasing",
-		description = "Improves jagged/shimmering edges at a cost of GPU performance. 8x/16x MSAA are highly expensive.",
+		name = "Anti-Aliasing",
+		description =
+			"Improves jagged/shimmering edges at the cost of GPU performance.<br>" +
+			"16x MSAA is highly expensive, so 8x is recommended if anti-aliasing is desired.",
 		position = 2,
 		section = generalSettings
 	)
@@ -74,7 +78,9 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = "uiScalingMode",
 		name = "UI scaling mode",
-		description = "Sampling function to use for the UI in stretched mode",
+		description =
+			"The sampling function to use when the Stretched Mode plugin is enabled.<br>" +
+			"Affects how the UI looks with non-integer scaling.",
 		position = 3,
 		section = generalSettings
 	)
@@ -90,7 +96,8 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = "anisotropicFilteringLevel",
 		name = "Anisotropic Filtering",
-		description = "Configures whether mipmapping and anisotropic filtering should be used.<br>" +
+		description =
+			"Configures whether mipmapping and anisotropic filtering should be used.<br>" +
 			"At zero, mipmapping is disabled and textures look the most pixelated.<br>" +
 			"At 1 through 16, mipmapping is enabled, and textures look more blurry and smoothed out.<br>" +
 			"The higher you go beyond 1, the less blurry textures will look, up to a certain extent.",
@@ -105,7 +112,7 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = "unlockFps",
 		name = "Unlock FPS",
-		description = "Removes the 50 FPS cap for some game content such as camera movement and dynamic lighting.",
+		description = "Removes the 50 FPS cap for some game content, such as camera movement and dynamic lighting.",
 		position = 5,
 		section = generalSettings
 	)
@@ -124,7 +131,13 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = "vsyncMode",
 		name = "VSync Mode",
-		description = "Method to synchronize frame rate with refresh rate",
+		description =
+			"Controls whether the frame rate should be synchronized with your monitor's refresh rate.<br>" +
+			"If set to 'off', the FPS Target option will be used instead.<br>" +
+			"If set to 'adaptive', FPS will be limited to your monitor's refresh rate, which saves power.<br>" +
+			"If set to 'on', the game will attempt to match your monitor's refresh rate <b>exactly</b>,<br>" +
+			"but if it can't keep up, FPS will be <u>halved until it catches up</u>. This option is rarely desired.<br>" +
+			"Note, GPUs that don't support Adaptive VSync will silently fall back to 'on'.",
 		position = 6,
 		section = generalSettings
 	)
@@ -136,7 +149,9 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = "fpsTarget",
 		name = "FPS Target",
-		description = "Target FPS when unlock FPS is enabled and Vsync mode is OFF",
+		description =
+			"Controls the maximum number of frames per second.<br>" +
+			"This setting only applies if Unlock FPS is enabled, and VSync Mode is set to 'off'.",
 		position = 7,
 		section = generalSettings
 	)
@@ -152,7 +167,7 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = "colorBlindMode",
 		name = "Color Blindness",
-		description = "Adjust colors to account for color blindness.",
+		description = "Adjust colors to make them more distinguishable for people with a certain type of color blindness.",
 		position = 8,
 		section = generalSettings
 	)
@@ -164,7 +179,7 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = "colorBlindnessIntensity",
 		name = "Color Blindness Intensity",
-		description = "Specifies how intense the color blindness compensation should be.",
+		description = "Specifies how intense the color blindness adjustment should be.",
 		position = 9,
 		section = generalSettings
 	)
@@ -178,7 +193,7 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = "flashingEffects",
 		name = "Flashing Effects",
-		description = "Displays fast flashing effects, such as lightning, in certain areas.",
+		description = "Whether to show rapid flashing effects, such as lightning, in certain areas.",
 		position = 10,
 		section = generalSettings
 	)
@@ -218,7 +233,7 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = "brightness2",
 		name = "Brightness",
-		description = "Controls the brightness of scene lighting.",
+		description = "Controls the brightness of environmental lighting.",
 		position = 13,
 		section = generalSettings
 	)
@@ -237,13 +252,15 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = "maxDynamicLights",
 		name = "Dynamic Lights",
-		description = "The maximum number of dynamic lights visible at one time. Reducing this will improve performance.",
+		description =
+			"The maximum number of dynamic lights visible at once.<br>" +
+			"Reducing this may improve performance.",
 		position = 101,
 		section = lightingSettings
 	)
 	default MaxDynamicLights maxDynamicLights()
 	{
-		return MaxDynamicLights.FEW;
+		return MaxDynamicLights.SOME;
 	}
 
 	@ConfigItem(
@@ -273,7 +290,7 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = "environmentalLighting",
 		name = "Atmospheric Lighting",
-		description = "Changes the color and brightness of full-scene lighting in certain areas.",
+		description = "Change environmental lighting based on the current area.",
 		position = 104,
 		section = lightingSettings
 	)
@@ -285,7 +302,7 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = "shadowsEnabled",
 		name = "Shadows",
-		description = "Enables fully-dynamic shadows.",
+		description = "Enables fully dynamic shadows.",
 		position = 105,
 		section = lightingSettings
 	)
@@ -297,7 +314,9 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = "shadowResolution",
 		name = "Shadow Quality",
-		description = "The resolution of the shadow maps. Higher resolutions result in sharper, higher quality shadows at the cost of GPU performance.",
+		description =
+			"The resolution of the shadow map.<br>" +
+			"Higher resolutions result in higher quality shadows, at the cost of GPU performance.",
 		position = 106,
 		section = lightingSettings
 	)
@@ -309,7 +328,9 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = "shadowDistance",
 		name = "Shadow Distance",
-		description = "The maximum draw distance of shadow maps. Shorter distances result in sharper, higher quality shadows.",
+		description =
+			"The maximum draw distance for shadows.<br>" +
+			"Shorter distances result in higher quality shadows.",
 		position = 107,
 		section = lightingSettings
 	)
@@ -321,7 +342,9 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = "expandShadowDraw",
 		name = "Expand Shadow Draw",
-		description = "Reduces 'flickering' of shadows disappearing at screen edge by increasing geometry drawn at a cost of performance.",
+		description =
+			"Reduces shadows popping in and out at the edge of the screen by rendering<br>" +
+			"shadows for a larger portion of the scene, at the cost of performance.",
 		position = 108,
 		section = lightingSettings
 	)
@@ -332,8 +355,10 @@ public interface HdPluginConfig extends Config
 
 	@ConfigItem(
 		keyName = "hideBakedEffects",
-		name = "Hide Fake Lights and Shadows",
-		description = "Hides the fake light and shadow effects that Jagex often includes with models",
+		name = "Hide Fake Shadows",
+		description =
+			"Hide fake shadows and lighting which is often built into models by Jagex.<br>" +
+			"This does not affect the hitbox of NPCs, so you can still click where the fake shadow would normally be.",
 		position = 109,
 		section = lightingSettings
 	)
@@ -367,7 +392,10 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = "fogDepthMode",
 		name = "Fog Depth Mode",
-		description = "Determines the method of controlling the depth of the fog. 'Dynamic' changes fog depth based on the area.",
+		description =
+			"Determines how the fog amount is controlled.<br>" +
+			"'Dynamic' changes fog depth based on the area, while<br>" +
+			"'Static' respects the manually defined fog depth.",
 		position = 201,
 		section = environmentSettings
 	)
@@ -382,7 +410,9 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = "fogDepth",
 		name = "Static Fog Depth",
-		description = "Distance from the scene edge the fog starts. Applies when 'Fog Depth Mode' is set to 'static'.",
+		description =
+			"Specify how far from the edge fog should reach.<br>" +
+			"This applies only when 'Fog Depth Mode' is set to 'Static'.",
 		position = 202,
 		section = environmentSettings
 	)
@@ -405,7 +435,11 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = "defaultSkyColor",
 		name = "Default Sky Color",
-		description = "Determines the color of the sky when in a location without a custom sky color assigned.",
+		description =
+			"Specify a sky color to use when the current area doesn't have a sky color defined.<br>" +
+			"If set to 'RuneLite Skybox', the sky color from RuneLite's Skybox plugin will be used.<br>" +
+			"If set to 'Old School Black', the sky will be black and water will remain blue, but for any<br>" +
+			"other option, the water color will be influenced by the sky color.",
 		position = 204,
 		section = environmentSettings
 	)
@@ -417,7 +451,7 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = "overrideSky",
 		name = "Override Sky Color",
-		description = "Forces the selected sky color in all environments",
+		description = "Forces the default sky color to be used in all environments.",
 		position = 205,
 		section = environmentSettings
 	)
@@ -428,7 +462,7 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = "objectTextures",
 		name = "Model Textures",
-		description = "Adds detail textures to certain models.",
+		description = "Adds textures to some models.",
 		position = 206,
 		section = environmentSettings
 	)
@@ -440,7 +474,7 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = "groundTextures",
 		name = "Ground Textures",
-		description = "Adds detail textures to the ground.",
+		description = "Adds textures to some ground tiles.",
 		position = 207,
 		section = environmentSettings
 	)
@@ -464,7 +498,7 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = "groundBlending",
 		name = "Ground Blending",
-		description = "Affects the quality of blending between different ground/terrain textures.",
+		description = "Controls whether ground tiles should blend into each other, or have distinct edges.",
 		position = 209,
 		section = environmentSettings
 	)
@@ -476,7 +510,7 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = "underwaterCaustics",
 		name = "Underwater Caustics",
-		description = "Apply underwater lighting effects to imitate sunlight moving through waves on the surface.",
+		description = "Apply underwater lighting effects to imitate sunlight passing through waves on the surface.",
 		position = 210,
 		section = environmentSettings
 	)
@@ -510,9 +544,11 @@ public interface HdPluginConfig extends Config
 
 	@ConfigItem(
 		keyName = "macosIntelWorkaround",
-		name = "Fix shading on macOS with Intel",
-		description = "Workaround for visual artifacts on some Intel GPU drivers on macOS.",
-		warning = "This setting can cause RuneLite to crash, and can be difficult to revert. Only enable it if you\nare seeing black patches. Are you sure you want to enable the setting?",
+		name = "Fix broken colors on intel Macs",
+		description = "Workaround for visual artifacts found on some intel GPU drivers on macOS.",
+		warning =
+			"This setting can cause RuneLite to crash, and it can be difficult to undo.\n" +
+			"Only enable it if you are seeing broken colors. Are you sure you want to enable this setting?",
 		position = 301,
 		section = miscellaneousSettings
 	)
@@ -523,8 +559,10 @@ public interface HdPluginConfig extends Config
 
 	@ConfigItem(
 		keyName = "hdInfernalTexture",
-		name = "HD Infernal Texture",
-		description = "Replaces the OSRS infernal cape texture with a high detail one.",
+		name = "HD Infernal Cape",
+		description =
+			"Replace the infernal cape texture with a more detailed version.<br>" +
+			"Note, with Anisotropic Filtering above zero, the cape may look blurry when zoomed out.",
 		position = 302,
 		section = miscellaneousSettings
 	)
@@ -546,16 +584,17 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
-	String KEY_REDUCE_OVER_EXPOSURE = "reduceOverExposure";
+	String KEY_LEGACY_GREY_COLORS = "reduceOverExposure"; // poorly named config key for legacy reasons
 	@ConfigItem(
-		keyName = KEY_REDUCE_OVER_EXPOSURE,
-		name = "Reduce over-exposure",
-		description = "Previously, HD attempted to reduce over-exposure by lowering the maximum face color brightness.\n" +
-			"This turned most white-looking things into a dull grey. This option returns that old behaviour.",
+		keyName = KEY_LEGACY_GREY_COLORS,
+		name = "Legacy grey colors",
+		description =
+			"Previously, HD attempted to reduce over-exposure by capping the maximum color brightness,<br>" +
+			"which changed white colors into dull shades of grey. This option brings back that old behaviour.",
 		position = 304,
 		section = miscellaneousSettings
 	)
-	default boolean reduceOverExposure() {
+	default boolean enableLegacyGreyColors() {
 		return false;
 	}
 
@@ -572,8 +611,9 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = "enableModelBatching",
 		name = "Enable model batching",
-		description = "Model batching improves performance by reusing identical models within the same frame.<br>" +
-			"May cause instability and graphical bugs.",
+		description =
+			"Model batching improves performance by reusing identical models within the same frame.<br>" +
+			"May cause instability and graphical bugs, particularly if Jagex makes engine changes.",
 		position = 401,
 		section = experimentalSettings
 	)
@@ -583,8 +623,9 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = KEY_ENABLE_MODEL_CACHING,
 		name = "Enable model caching",
-		description = "Model caching improves performance by saving and reusing model data from older frames.<br>" +
-			"May cause instability or graphical bugs.",
+		description =
+			"Model caching improves performance by saving and reusing model data from previous frames.<br>" +
+			"May cause instability or graphical bugs, particularly if Jagex makes engine changes.",
 		position = 402,
 		section = experimentalSettings
 	)
@@ -598,7 +639,9 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = KEY_MODEL_CACHE_SIZE,
 		name = "Model cache size (MiB)",
-		description = "Size of the model cache in mebibytes (slightly more than megabytes).<br>" +
+		description =
+			"Size of the model cache in mebibytes (slightly more than megabytes).<br>" +
+			"Generally, 2048 MiB is plenty, with diminishing returns the higher you go.<br>" +
 			"Minimum=256 MiB, maximum=16384 MiB",
 		position = 403,
 		section = experimentalSettings
@@ -610,8 +653,10 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = "loadingClearCache",
 		name = "Clear cache when loading",
-		description = "Clear the model cache whenever the game loads a new scene.<br>" +
-			"This should generally only be used if the cache size is lower than 512 MiB.",
+		description =
+			"Clear the model cache when the game loads a new scene.<br>" +
+			"This should generally only be used if the cache size is lower than 512 MiB,<br>" +
+			"because old model data may still be useful in the new scene.",
 		position = 404,
 		section = experimentalSettings
 	)
