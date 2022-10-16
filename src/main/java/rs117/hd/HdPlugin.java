@@ -357,7 +357,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	private long lastFrameTime = System.currentTimeMillis();
 
 	// Generic scalable animation timer used in shaders
-	private float elapsedTime = 0;
+	private float elapsedTime;
 
 	private int gameTicksUntilSceneReload = 0;
 
@@ -426,6 +426,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				fboSceneHandle = rboSceneHandle = 0; // AA FBO
 				fboShadowMap = 0;
 				unorderedModels = smallModels = largeModels = 0;
+				elapsedTime = 0;
 
 				AWTContext.loadNatives();
 				canvas = client.getCanvas();
@@ -1602,7 +1603,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		}
 
 		// shader variables for water, lava animations
-		elapsedTime += (System.currentTimeMillis() - lastFrameTime) / 1000f;
+		long frameDeltaTime = System.currentTimeMillis() - lastFrameTime;
+		// if system time changes dramatically between frames,
+		// very large values may be added to elapsedTime,
+		// which causes floating point precision to break down,
+		// leading to texture animations and water appearing frozen
+		if (Math.abs(frameDeltaTime) > 10000)
+			frameDeltaTime = 16;
+		elapsedTime += frameDeltaTime / 1000f;
 		lastFrameTime = System.currentTimeMillis();
 
 		final int canvasHeight = client.getCanvasHeight();
