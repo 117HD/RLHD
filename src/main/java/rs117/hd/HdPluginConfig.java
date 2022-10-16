@@ -167,7 +167,7 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = "colorBlindMode",
 		name = "Color Blindness",
-		description = "Adjust colors to make them more distinguishable for someone with a certain type of color blindness.",
+		description = "Adjust colors to make them more distinguishable for people with a certain type of color blindness.",
 		position = 8,
 		section = generalSettings
 	)
