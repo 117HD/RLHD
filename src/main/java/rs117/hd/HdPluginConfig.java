@@ -63,10 +63,10 @@ public interface HdPluginConfig extends Config
 
 	@ConfigItem(
 		keyName = "antiAliasingMode",
-		name = "Anti Aliasing",
+		name = "Anti-Aliasing",
 		description =
 			"Improves jagged/shimmering edges at the cost of GPU performance.<br>" +
-			"16x MSAA is highly expensive, so 8x is recommended if anti aliasing is desired.",
+			"16x MSAA is highly expensive, so 8x is recommended if anti-aliasing is desired.",
 		position = 2,
 		section = generalSettings
 	)
@@ -79,7 +79,7 @@ public interface HdPluginConfig extends Config
 		keyName = "uiScalingMode",
 		name = "UI scaling mode",
 		description =
-			"Sampling function to use when the Stretched Mode plugin is used.<br>" +
+			"The sampling function to use when the Stretched Mode plugin is enabled.<br>" +
 			"Affects how the UI looks with non-integer scaling.",
 		position = 3,
 		section = generalSettings
@@ -252,7 +252,9 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = "maxDynamicLights",
 		name = "Dynamic Lights",
-		description = "The maximum number of dynamic lights visible at once.<br>Reducing this may improve performance.",
+		description =
+			"The maximum number of dynamic lights visible at once.<br>" +
+			"Reducing this may improve performance.",
 		position = 101,
 		section = lightingSettings
 	)
