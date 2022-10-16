@@ -144,7 +144,8 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = "fpsTarget",
 		name = "FPS Target",
-		description = "The number of FPS to target when VSync mode is turned off.",
+		description = "Controls the maximum number of frames per second." +
+			"This setting only applies if Unlock FPS is enabled and VSync Mode is set to 'off'.",
 		position = 7,
 		section = generalSettings
 	)
@@ -160,7 +161,7 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = "colorBlindMode",
 		name = "Color Blindness",
-		description = "Try to adjust colors to help with color blindness.",
+		description = "Try to adjust colors to make them more easily distinguishable.",
 		position = 8,
 		section = generalSettings
 	)
@@ -397,8 +398,8 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = "fogDepth",
 		name = "Static Fog Depth",
-		description = "Distance from the edge of the scene where the fog should start.<br>" +
-			"Applies only when 'Fog Depth Mode' is set to 'Static'.",
+		description = "Specify how far from the edge fog should reach.<br>" +
+			"This applies only when 'Fog Depth Mode' is set to 'Static'.",
 		position = 202,
 		section = environmentSettings
 	)
@@ -421,10 +422,10 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = "defaultSkyColor",
 		name = "Default Sky Color",
-		description = "Specify the sky color that should be used if the current area doesn't have a sky color defined.<br>" +
-			"If set to 'RuneLite Skybox', the skybox color from RuneLite's Skybox plugin will be used.<br>" +
-			"If set to 'Old School (Black)', the water color will remain blue, but for any other setting,<br>" +
-			"the water color will be directly influenced by the selected sky color.",
+		description = "Specify a sky color to use when the current area doesn't have a sky color defined.<br>" +
+			"If set to 'RuneLite Skybox', the sky color from RuneLite's Skybox plugin will be used.<br>" +
+			"If set to 'Old School Black', the sky will be black and water will remain blue, but for any<br>" +
+			"other option, the water color will be influenced by the sky color.",
 		position = 204,
 		section = environmentSettings
 	)
@@ -436,7 +437,7 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = "overrideSky",
 		name = "Override Sky Color",
-		description = "Forces the use of the above default sky color in all environments.",
+		description = "Forces the default sky color to be used in all environments.",
 		position = 205,
 		section = environmentSettings
 	)
@@ -447,7 +448,7 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = "objectTextures",
 		name = "Model Textures",
-		description = "Adds textures to supported models.",
+		description = "Adds textures to some models.",
 		position = 206,
 		section = environmentSettings
 	)
@@ -459,7 +460,7 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = "groundTextures",
 		name = "Ground Textures",
-		description = "Adds textures to supported ground tiles.",
+		description = "Adds textures to some ground tiles.",
 		position = 207,
 		section = environmentSettings
 	)
@@ -495,7 +496,7 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = "underwaterCaustics",
 		name = "Underwater Caustics",
-		description = "Apply underwater lighting effects to imitate sunlight moving through waves on the surface.",
+		description = "Apply underwater lighting effects to imitate sunlight passing through waves on the surface.",
 		position = 210,
 		section = environmentSettings
 	)
