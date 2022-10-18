@@ -3,6 +3,7 @@ package rs117.hd.data.materials;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.data.WaterType;
 import rs117.hd.data.environments.Area;
@@ -27,7 +28,7 @@ class TileOverrideBuilder<T> {
     public int lightness = -1;
     public int shiftLightness = 0;
     public T replacement;
-    public Function<HdPluginConfig, Boolean> replacementCondition = c -> false;
+    public Function<HdPlugin, Boolean> replacementCondition = c -> false;
 
     TileOverrideBuilder<T> apply(Consumer<TileOverrideBuilder<T>> consumer) {
         consumer.accept(this);
@@ -56,7 +57,7 @@ class TileOverrideBuilder<T> {
         return this;
     }
 
-    TileOverrideBuilder<T> replaceWithIf(@NonNull T replacement, @NonNull Function<HdPluginConfig, Boolean> condition) {
+    TileOverrideBuilder<T> replaceWithIf(@NonNull T replacement, @NonNull Function<HdPlugin, Boolean> condition) {
         this.replacement = replacement;
         this.replacementCondition = condition;
         return this;

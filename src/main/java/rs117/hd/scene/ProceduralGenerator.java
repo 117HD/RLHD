@@ -59,9 +59,6 @@ public class ProceduralGenerator
 	@Inject
 	private HdPlugin plugin;
 
-	@Inject
-	private HdPluginConfig config;
-
 	private final int VERTICES_PER_FACE = 3;
 
 	// terrain data
@@ -141,8 +138,8 @@ public class ProceduralGenerator
 
 		int[] vertexHashes = new int[faceCount * VERTICES_PER_FACE];
 		int[] vertexColors = new int[faceCount * VERTICES_PER_FACE];
-		int[] vertexOverlays = new int[faceCount * VERTICES_PER_FACE];
-		int[] vertexUnderlays = new int[faceCount * VERTICES_PER_FACE];
+		Overlay[] vertexOverlays = new Overlay[faceCount * VERTICES_PER_FACE];
+		Underlay[] vertexUnderlays = new Underlay[faceCount * VERTICES_PER_FACE];
 		boolean[] vertexDefaultColor = new boolean[faceCount * VERTICES_PER_FACE];
 
 		int z = tile.getRenderLevel();
@@ -155,7 +152,10 @@ public class ProceduralGenerator
 		{
 			// tile paint
 
-			if (tileWaterType(tile, tile.getSceneTilePaint()) != WaterType.NONE)
+			Overlay overlay = Overlay.getOverlay(client.getScene().getOverlayIds()[z][x][y], tile, client, plugin);
+			Underlay underlay =  Underlay.getUnderlay(client.getScene().getUnderlayIds()[z][x][y], tile, client, plugin);
+
+			if (overlay.waterType != WaterType.NONE || underlay.waterType != WaterType.NONE)
 			{
 				// skip water tiles
 				return;
@@ -191,11 +191,11 @@ public class ProceduralGenerator
 			vertexColors[2] = nwColor;
 			vertexColors[3] = neColor;
 
-			vertexOverlays[0] = vertexOverlays[1] = vertexOverlays[2] = vertexOverlays[3] = client.getScene().getOverlayIds()[z][x][y];
-			vertexUnderlays[0] = vertexUnderlays[1] = vertexUnderlays[2] = vertexUnderlays[3] = client.getScene().getUnderlayIds()[z][x][y];
+			vertexOverlays[0] = vertexOverlays[1] = vertexOverlays[2] = vertexOverlays[3] = overlay;
+			vertexUnderlays[0] = vertexUnderlays[1] = vertexUnderlays[2] = vertexUnderlays[3] = underlay;
 			if (useDefaultColor(tile))
 			{
-				vertexDefaultColor[0] = vertexDefaultColor[1] =vertexDefaultColor[2] =vertexDefaultColor[3] = true;
+				vertexDefaultColor[0] = vertexDefaultColor[1] = vertexDefaultColor[2] = vertexDefaultColor[3] = true;
 			}
 		}
 		else if (tile.getSceneTileModel() != null)
@@ -216,7 +216,15 @@ public class ProceduralGenerator
 
 				for (int vertex = 0; vertex < VERTICES_PER_FACE; vertex++)
 				{
-					if (faceWaterType(tile, face, sceneTileModel) != WaterType.NONE)
+					boolean isOverlay = isOverlayFace(tile, face);
+					Overlay overlay = Overlay.NONE;
+					if (isOverlay)
+					{
+						overlay = Overlay.getOverlay(client.getScene().getOverlayIds()[z][x][y], tile, client, plugin);
+					}
+					Underlay underlay =  Underlay.getUnderlay(client.getScene().getUnderlayIds()[z][x][y], tile, client, plugin);
+
+					if (overlay.waterType != WaterType.NONE || underlay.waterType != WaterType.NONE)
 					{
 						// skip water faces
 						continue;
@@ -227,13 +235,10 @@ public class ProceduralGenerator
 					int color = faceColors[vertex];
 					vertexColors[face * VERTICES_PER_FACE + vertex] = color;
 
-					if (isOverlayFace(tile, face))
-					{
-						vertexOverlays[face * VERTICES_PER_FACE + vertex] = client.getScene().getOverlayIds()[z][x][y];
-					}
-					vertexUnderlays[face * VERTICES_PER_FACE + vertex] = client.getScene().getUnderlayIds()[z][x][y];
+					vertexOverlays[face * VERTICES_PER_FACE + vertex] = overlay;
+					vertexUnderlays[face * VERTICES_PER_FACE + vertex] = underlay;
 
-					if (isOverlayFace(tile, face) && useDefaultColor(tile))
+					if (isOverlay && useDefaultColor(tile))
 					{
 						vertexDefaultColor[face * VERTICES_PER_FACE + vertex] = true;
 					}
@@ -277,16 +282,16 @@ public class ProceduralGenerator
 
 			boolean isOverlay = false;
 			Material material = Material.DIRT_1;
-			Overlay overlay = Overlay.getOverlay(vertexOverlays[vertex], tile, client, config);
-			Underlay underlay = Underlay.getUnderlay(vertexUnderlays[vertex], tile, client, config);
+			Overlay overlay = vertexOverlays[vertex];
 			if (overlay != Overlay.NONE)
 			{
 				material = overlay.groundMaterial.getRandomMaterial(z, worldX, worldY);
 				isOverlay = !overlay.blendedAsUnderlay;
 				colorHSL = recolorOverlay(overlay, colorHSL);
 			}
-			else if (underlay != Underlay.NONE)
+			else if (vertexUnderlays[vertex] != Underlay.NONE)
 			{
+				Underlay underlay = vertexUnderlays[vertex];
 				material = underlay.groundMaterial.getRandomMaterial(z, worldX, worldY);
 				isOverlay = underlay.blendedAsOverlay;
 				colorHSL = recolorUnderlay(underlay, colorHSL);
@@ -310,11 +315,11 @@ public class ProceduralGenerator
 			// add color and texture to hashmap
 			if ((!lowPriorityColor || !highPriorityColor.containsKey(vertexHashes[vertex])) && !vertexDefaultColor[vertex])
 			{
-				if (vertexOverlays[vertex] != 0 || !vertexTerrainColor.containsKey(vertexHashes[vertex]) || !highPriorityColor.containsKey(vertexHashes[vertex]))
+				if (vertexOverlays[vertex] != Overlay.NONE || !vertexTerrainColor.containsKey(vertexHashes[vertex]) || !highPriorityColor.containsKey(vertexHashes[vertex]))
 				{
 					vertexTerrainColor.put(vertexHashes[vertex], vertexColors[vertex]);
 				}
-				if (vertexOverlays[vertex] != 0 || !vertexTerrainTexture.containsKey(vertexHashes[vertex]) || !highPriorityColor.containsKey(vertexHashes[vertex]))
+				if (vertexOverlays[vertex] != Overlay.NONE || !vertexTerrainTexture.containsKey(vertexHashes[vertex]) || !highPriorityColor.containsKey(vertexHashes[vertex]))
 				{
 					vertexTerrainTexture.put(vertexHashes[vertex], material);
 				}
@@ -506,8 +511,9 @@ public class ProceduralGenerator
 										vertexIsLand.put(vertexKeys[vertex], true);
 									}
 
-									if (vertices[vertex][0] % Perspective.LOCAL_TILE_SIZE == 0 && vertices[vertex][1] % Perspective.LOCAL_TILE_SIZE == 0)
-									{
+									if (vertices[vertex][0] % Perspective.LOCAL_TILE_SIZE == 0 &&
+										vertices[vertex][1] % Perspective.LOCAL_TILE_SIZE == 0
+									) {
 										int vX = vertices[vertex][0] / Perspective.LOCAL_TILE_SIZE;
 										int vY = vertices[vertex][1] / Perspective.LOCAL_TILE_SIZE;
 
@@ -666,8 +672,9 @@ public class ProceduralGenerator
 
 							for (int vertex = 0; vertex < VERTICES_PER_FACE; vertex++)
 							{
-								if (vertices[vertex][0] % Perspective.LOCAL_TILE_SIZE == 0 && vertices[vertex][1] % Perspective.LOCAL_TILE_SIZE == 0)
-								{
+								if (vertices[vertex][0] % Perspective.LOCAL_TILE_SIZE == 0 &&
+									vertices[vertex][1] % Perspective.LOCAL_TILE_SIZE == 0
+								) {
 									// The vertex is at the corner of the tile;
 									// simply use the offset in the tile grid array.
 
@@ -828,14 +835,14 @@ public class ProceduralGenerator
 
 		if (sceneTilePaint != null)
 		{
-			Overlay overlay = Overlay.getOverlay((int) client.getScene().getOverlayIds()[tileZ][tileX][tileY], tile, client, config);
+			Overlay overlay = Overlay.getOverlay(client.getScene().getOverlayIds()[tileZ][tileX][tileY], tile, client, plugin);
 			if (overlay != Overlay.NONE)
 			{
 				waterType = overlay.waterType;
 			}
 			else
 			{
-				Underlay underlay = Underlay.getUnderlay((int) client.getScene().getUnderlayIds()[tileZ][tileX][tileY], tile, client, config);
+				Underlay underlay = Underlay.getUnderlay(client.getScene().getUnderlayIds()[tileZ][tileX][tileY], tile, client, plugin);
 				waterType = underlay.waterType;
 			}
 		}
@@ -866,14 +873,14 @@ public class ProceduralGenerator
 
 		if (sceneTileModel != null)
 		{
-			Overlay overlay = Overlay.getOverlay((int) client.getScene().getOverlayIds()[tileZ][tileX][tileY], tile, client, config);
+			Overlay overlay = Overlay.getOverlay(client.getScene().getOverlayIds()[tileZ][tileX][tileY], tile, client, plugin);
 			if (isOverlayFace(tile, face) && overlay != Overlay.NONE)
 			{
 				waterType = overlay.waterType;
 			}
 			else
 			{
-				Underlay underlay = Underlay.getUnderlay((int) client.getScene().getUnderlayIds()[tileZ][tileX][tileY], tile, client, config);
+				Underlay underlay = Underlay.getUnderlay(client.getScene().getUnderlayIds()[tileZ][tileX][tileY], tile, client, plugin);
 				waterType = underlay.waterType;
 			}
 		}
@@ -1098,12 +1105,12 @@ public class ProceduralGenerator
 			return true;
 		}
 
-		Overlay overlay = Overlay.getOverlay((int) client.getScene().getOverlayIds()[z][x][y], tile, client, config);
+		Overlay overlay = Overlay.getOverlay(client.getScene().getOverlayIds()[z][x][y], tile, client, plugin);
 		if (overlay != Overlay.NONE)
 		{
 			return !overlay.blended;
 		}
-		Underlay underlay = Underlay.getUnderlay((int) client.getScene().getUnderlayIds()[z][x][y], tile, client, config);
+		Underlay underlay = Underlay.getUnderlay(client.getScene().getUnderlayIds()[z][x][y], tile, client, plugin);
 		if (underlay != Underlay.NONE)
 		{
 			return !underlay.blended;
