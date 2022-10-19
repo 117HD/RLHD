@@ -36,6 +36,9 @@ import rs117.hd.data.environments.Area;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -197,21 +200,24 @@ public enum Underlay {
     }
 
     private static final Underlay[] ANY_MATCH;
-    private static final ListMultimap<Integer, Underlay> FILTERED_MAP;
+    private static final HashMap<Integer, Underlay[]> FILTERED_MAP = new HashMap<>();
 
     static {
-        FILTERED_MAP = ArrayListMultimap.create();
         ArrayList<Underlay> anyMatch = new ArrayList<>();
+        ListMultimap<Integer, Underlay> multiMap = ArrayListMultimap.create();
         for (Underlay underlay : values()) {
             if (underlay.filterIds == null) {
                 anyMatch.add(underlay);
             } else {
                 for (Integer id : underlay.filterIds) {
-                    FILTERED_MAP.put(id, underlay);
+                    multiMap.put(id, underlay);
                 }
             }
         }
+
         ANY_MATCH = anyMatch.toArray(new Underlay[0]);
+        for (Map.Entry<Integer, Collection<Underlay>> entry : multiMap.asMap().entrySet())
+            FILTERED_MAP.put(entry.getKey(), entry.getValue().toArray(new Underlay[0]));
     }
 
     public static Underlay getUnderlay(@Nullable Short underlayId, Tile tile, Client client, HdPlugin plugin) {
@@ -235,10 +241,15 @@ public enum Underlay {
         }
 
         if (underlayId != null) {
-            for (Underlay underlay : FILTERED_MAP.get((int) underlayId)) {
-                if (underlay.ordinal() < match.ordinal() && underlay.area.containsPoint(worldX, worldY, worldZ)) {
-                    match = underlay;
-                    break;
+            Underlay[] underlays = FILTERED_MAP.get((int) underlayId);
+            if (underlays != null) {
+                for (Underlay underlay : underlays) {
+                    if (underlay.ordinal() >= match.ordinal())
+                        break;
+                    if (underlay.area.containsPoint(worldX, worldY, worldZ)) {
+                        match = underlay;
+                        break;
+                    }
                 }
             }
         }

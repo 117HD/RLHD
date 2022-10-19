@@ -36,6 +36,9 @@ import rs117.hd.data.environments.Area;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -553,21 +556,24 @@ public enum Overlay {
     }
 
     private static final Overlay[] ANY_MATCH;
-    private static final ListMultimap<Integer, Overlay> FILTERED_MAP;
+    private static final HashMap<Integer, Overlay[]> FILTERED_MAP = new HashMap<>();
 
     static {
-        FILTERED_MAP = ArrayListMultimap.create();
         ArrayList<Overlay> anyMatch = new ArrayList<>();
+        ListMultimap<Integer, Overlay> multiMap = ArrayListMultimap.create();
         for (Overlay overlay : values()) {
             if (overlay.filterIds == null) {
                 anyMatch.add(overlay);
             } else {
                 for (Integer id : overlay.filterIds) {
-                    FILTERED_MAP.put(id, overlay);
+                    multiMap.put(id, overlay);
                 }
             }
         }
+
         ANY_MATCH = anyMatch.toArray(new Overlay[0]);
+        for (Map.Entry<Integer, Collection<Overlay>> entry : multiMap.asMap().entrySet())
+            FILTERED_MAP.put(entry.getKey(), entry.getValue().toArray(new Overlay[0]));
     }
 
     public static Overlay getOverlay(@Nullable Short overlayId, Tile tile, Client client, HdPlugin plugin) {
@@ -591,10 +597,15 @@ public enum Overlay {
         }
 
         if (overlayId != null) {
-            for (Overlay overlay : FILTERED_MAP.get((int) overlayId)) {
-                if (overlay.ordinal() < match.ordinal() && overlay.area.containsPoint(worldX, worldY, worldZ)) {
-                    match = overlay;
-                    break;
+            Overlay[] overlays = FILTERED_MAP.get((int) overlayId);
+            if (overlays != null) {
+                for (Overlay overlay : overlays) {
+                    if (overlay.ordinal() >= match.ordinal())
+                        break;
+                    if (overlay.area.containsPoint(worldX, worldY, worldZ)) {
+                        match = overlay;
+                        break;
+                    }
                 }
             }
         }
