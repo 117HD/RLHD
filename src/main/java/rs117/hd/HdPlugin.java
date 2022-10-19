@@ -375,6 +375,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	public boolean configNpcLights = true;
 	public boolean configShadowsEnabled = false;
 	public boolean configExpandShadowDraw = false;
+	public boolean configHideBakedEffects = false;
 	public boolean configHdInfernalTexture = true;
 	public boolean configWinterTheme = true;
 	public boolean configReduceOverExposure = false;
@@ -413,6 +414,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		configNpcLights = config.npcLights();
 		configShadowsEnabled = config.shadowsEnabled();
 		configExpandShadowDraw = config.expandShadowDraw();
+		configHideBakedEffects = config.hideBakedEffects();
 		configHdInfernalTexture = config.hdInfernalTexture();
 		configWinterTheme = config.winterTheme();
 		configReduceOverExposure = config.enableLegacyGreyColors();
@@ -2266,6 +2268,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			case "objectTextures":
 			case "tzhaarHD":
 			case KEY_LEGACY_GREY_COLORS:
+				configHideBakedEffects = config.hideBakedEffects();
 				configGroundBlending = config.groundBlending();
 				configGroundTextures = config.groundTextures();
 				configModelTextures = config.objectTextures();
