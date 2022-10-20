@@ -361,6 +361,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	public boolean configHdInfernalTexture = true;
 	public boolean configWinterTheme = true;
 	public boolean configReduceOverExposure = false;
+	public boolean configEnableModelBatching = false;
+	public boolean configEnableModelCaching = false;
 	public int configMaxDynamicLights;
 
 	public int[] camTarget = new int[3];
@@ -402,6 +404,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		configHdInfernalTexture = config.hdInfernalTexture();
 		configWinterTheme = config.winterTheme();
 		configReduceOverExposure = config.enableLegacyGreyColors();
+		configEnableModelBatching = config.enableModelBatching();
+		configEnableModelCaching = config.enableModelCaching();
 		configMaxDynamicLights = config.maxDynamicLights().getValue();
 
 		clientThread.invoke(() ->
@@ -2273,10 +2277,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				break;
 			case KEY_MODEL_CACHING:
 			case KEY_MODEL_CACHE_SIZE:
+				configEnableModelCaching = config.enableModelCaching();
 				clientThread.invoke(() -> {
 					modelPusher.shutDown();
 					modelPusher.startUp();
 				});
+				break;
+			case KEY_MODEL_BATCHING:
+				configEnableModelBatching = config.enableModelBatching();
 				break;
 		}
 	}
@@ -2456,11 +2464,26 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			eightIntWrite[6] = y + client.getCameraY2();
 			eightIntWrite[7] = z + client.getCameraZ2();
 
-			modelHasher.setModel(model);
-			final int batchHash = modelHasher.calculateBatchHash();
+			TempModelInfo tempModelInfo = null;
+			int batchHash = 0;
 
-			TempModelInfo tempModelInfo = frameModelInfoMap.get(batchHash);
-			if (!config.enableModelBatching() || tempModelInfo == null || tempModelInfo.getFaceCount() != model.getFaceCount()) {
+			if (configEnableModelBatching || configEnableModelCaching) {
+				modelHasher.setModel(model);
+				if (configEnableModelBatching) {
+					batchHash = modelHasher.calculateBatchHash();
+					tempModelInfo = frameModelInfoMap.get(batchHash);
+				}
+			}
+
+			if (tempModelInfo != null && tempModelInfo.getFaceCount() == model.getFaceCount()) {
+				eightIntWrite[0] = tempModelInfo.getTempOffset();
+				eightIntWrite[1] = tempModelInfo.getTempUvOffset();
+				eightIntWrite[2] = tempModelInfo.getFaceCount();
+
+				bufferForTriangles(tempModelInfo.getFaceCount()).ensureCapacity(8).put(eightIntWrite);
+
+				renderBufferOffset += tempModelInfo.getFaceCount() * 3;
+			} else {
 				int vertexOffset = dynamicOffsetVertices + stagingBufferVertices.position() / VERTEX_SIZE;
 				int uvOffset = dynamicOffsetUvs + stagingBufferUvs.position() / UV_SIZE;
 
@@ -2471,28 +2494,22 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				if (lengths[1] <= 0)
 					uvOffset = -1;
 
-				// add this temporary model to the map for batching purposes
-				tempModelInfo = new TempModelInfo();
-				tempModelInfo
-						.setTempOffset(vertexOffset)
-						.setTempUvOffset(uvOffset)
-						.setFaceCount(faceCount);
-				frameModelInfoMap.put(batchHash, tempModelInfo);
-
 				eightIntWrite[0] = vertexOffset;
 				eightIntWrite[1] = uvOffset;
 				eightIntWrite[2] = faceCount;
 				bufferForTriangles(faceCount).ensureCapacity(8).put(eightIntWrite);
 
 				renderBufferOffset += lengths[0];
-			} else {
-				eightIntWrite[0] = tempModelInfo.getTempOffset();
-				eightIntWrite[1] = tempModelInfo.getTempUvOffset();
-				eightIntWrite[2] = tempModelInfo.getFaceCount();
 
-				bufferForTriangles(tempModelInfo.getFaceCount()).ensureCapacity(8).put(eightIntWrite);
-
-				renderBufferOffset += tempModelInfo.getFaceCount() * 3;
+				// add this temporary model to the map for batching purposes
+				if (configEnableModelBatching) {
+					tempModelInfo = new TempModelInfo();
+					tempModelInfo
+						.setTempOffset(vertexOffset)
+						.setTempUvOffset(uvOffset)
+						.setFaceCount(faceCount);
+					frameModelInfoMap.put(batchHash, tempModelInfo);
+				}
 			}
 		}
 	}
