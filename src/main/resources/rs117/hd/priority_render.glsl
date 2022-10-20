@@ -79,7 +79,7 @@ int count_prio_offset(int priority) {
     return total;
 }
 
-void get_face(uint localId, modelinfo minfo, int cameraYaw, int cameraPitch,
+void get_face(uint localId, ModelInfo minfo, int cameraYaw, int cameraPitch,
 out int prio, out int dis, out ivec4 o1, out ivec4 o2, out ivec4 o3) {
     int size = minfo.size;
     int offset = minfo.offset;
@@ -97,15 +97,9 @@ out int prio, out int dis, out ivec4 o1, out ivec4 o2, out ivec4 o3) {
     ivec4 thisC;
 
     // Grab triangle vertices from the correct buffer
-    if (flags < 0) {
-        thisA = vb[offset + ssboOffset * 3];
-        thisB = vb[offset + ssboOffset * 3 + 1];
-        thisC = vb[offset + ssboOffset * 3 + 2];
-    } else {
-        thisA = tempvb[offset + ssboOffset * 3];
-        thisB = tempvb[offset + ssboOffset * 3 + 1];
-        thisC = tempvb[offset + ssboOffset * 3 + 2];
-    }
+    thisA = vb[offset + ssboOffset * 3];
+    thisB = vb[offset + ssboOffset * 3 + 1];
+    thisC = vb[offset + ssboOffset * 3 + 2];
 
     if (localId < size) {
         int radius = (flags & 0x7fffffff) >> 12;
@@ -140,7 +134,7 @@ out int prio, out int dis, out ivec4 o1, out ivec4 o2, out ivec4 o3) {
     }
 }
 
-void add_face_prio_distance(uint localId, modelinfo minfo, ivec4 thisrvA, ivec4 thisrvB, ivec4 thisrvC, int thisPriority, int thisDistance, ivec4 pos) {
+void add_face_prio_distance(uint localId, ModelInfo minfo, ivec4 thisrvA, ivec4 thisrvB, ivec4 thisrvC, int thisPriority, int thisDistance, ivec4 pos) {
     if (localId < minfo.size) {
         // if the face is not culled, it is calculated into priority distance averages
         if (face_visible(thisrvA, thisrvB, thisrvC, pos)) {
@@ -155,7 +149,7 @@ void add_face_prio_distance(uint localId, modelinfo minfo, ivec4 thisrvA, ivec4 
     }
 }
 
-int map_face_priority(uint localId, modelinfo minfo, int thisPriority, int thisDistance, out int prio) {
+int map_face_priority(uint localId, ModelInfo minfo, int thisPriority, int thisDistance, out int prio) {
     int size = minfo.size;
 
     // Compute average distances for 0/2, 3/4, and 6/8
@@ -188,7 +182,7 @@ int map_face_priority(uint localId, modelinfo minfo, int thisPriority, int thisD
     return 0;
 }
 
-void insert_dfs(uint localId, modelinfo minfo, int adjPrio, int distance, int prioIdx) {
+void insert_dfs(uint localId, ModelInfo minfo, int adjPrio, int distance, int prioIdx) {
     int size = minfo.size;
 
     if (localId < size) {
@@ -199,7 +193,7 @@ void insert_dfs(uint localId, modelinfo minfo, int adjPrio, int distance, int pr
     }
 }
 
-void sort_and_insert(uint localId, modelinfo minfo, int thisPriority, int thisDistance, ivec4 thisrvA, ivec4 thisrvB, ivec4 thisrvC) {
+void sort_and_insert(uint localId, ModelInfo minfo, int thisPriority, int thisDistance, ivec4 thisrvA, ivec4 thisrvB, ivec4 thisrvC) {
     /* compute face distance */
     int offset = minfo.offset;
     int size = minfo.size;
@@ -244,10 +238,6 @@ void sort_and_insert(uint localId, modelinfo minfo, int thisPriority, int thisDi
             uvout[outOffset + myOffset * 3]     = vec4(0, 0, 0, 0);
             uvout[outOffset + myOffset * 3 + 1] = vec4(0, 0, 0, 0);
             uvout[outOffset + myOffset * 3 + 2] = vec4(0, 0, 0, 0);
-        } else if (flags >= 0) {
-            uvout[outOffset + myOffset * 3]     = tempuv[uvOffset + localId * 3];
-            uvout[outOffset + myOffset * 3 + 1] = tempuv[uvOffset + localId * 3 + 1];
-            uvout[outOffset + myOffset * 3 + 2] = tempuv[uvOffset + localId * 3 + 2];
         } else {
             uvout[outOffset + myOffset * 3]     = uv[uvOffset + localId * 3];
             uvout[outOffset + myOffset * 3 + 1] = uv[uvOffset + localId * 3 + 1];
@@ -257,15 +247,9 @@ void sort_and_insert(uint localId, modelinfo minfo, int thisPriority, int thisDi
         vec4 normA, normB, normC;
 
         // Grab vertex normals from the correct buffer
-        if (flags < 0) {
-            normA = normal[offset + ssboOffset * 3    ];
-            normB = normal[offset + ssboOffset * 3 + 1];
-            normC = normal[offset + ssboOffset * 3 + 2];
-        } else {
-            normA = tempnormal[offset + ssboOffset * 3    ];
-            normB = tempnormal[offset + ssboOffset * 3 + 1];
-            normC = tempnormal[offset + ssboOffset * 3 + 2];
-        }
+        normA = normal[offset + ssboOffset * 3    ];
+        normB = normal[offset + ssboOffset * 3 + 1];
+        normC = normal[offset + ssboOffset * 3 + 2];
 
         normA = vec4(normalize(normA.xyz), normA.w);
         normB = vec4(normalize(normB.xyz), normB.w);

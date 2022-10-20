@@ -44,7 +44,7 @@ layout(local_size_x = 1024) in;
 void main() {
     uint groupId = gl_WorkGroupID.x;
     uint localId = gl_LocalInvocationID.x * 6;
-    modelinfo minfo = ol[groupId];
+    ModelInfo minfo = ol[groupId];
     ivec4 pos = ivec4(minfo.x, minfo.y, minfo.z, 0);
 
     if (localId == 0) {

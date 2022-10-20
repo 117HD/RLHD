@@ -111,11 +111,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	// This is the maximum number of triangles the compute shaders support
 	public static final int MAX_TRIANGLE = 6144;
 	public static final int SMALL_TRIANGLE_COUNT = 512;
-	private static final int FLAG_SCENE_BUFFER = Integer.MIN_VALUE;
-	private static final int DEFAULT_DISTANCE = 25;
-	static final int MAX_DISTANCE = 90;
-	static final int MAX_FOG_DEPTH = 100;
-	private static final int SCALAR_BYTES = 4;
+	public static final int MAX_DISTANCE = 90;
+	public static final int MAX_FOG_DEPTH = 100;
+	public static final int SCALAR_BYTES = 4;
+	public static final int VERTEX_SIZE = 4; // 4 ints per vertex
+	public static final int UV_SIZE = 4; // 4 floats per vertex
+	public static final int NORMAL_SIZE = 4; // 4 floats per vertex
 
 	private static final int[] eightIntWrite = new int[8];
 
@@ -235,63 +236,37 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	private int fboShadowMap;
 	private int texShadowMap;
 
-	// scene vertex buffer
-	private final GLBuffer sceneVertexBuffer = new GLBuffer();
-	// scene uv buffer
-	private final GLBuffer sceneUvBuffer = new GLBuffer();
-	// scene normal buffer
-	private final GLBuffer sceneNormalBuffer = new GLBuffer();
+	private final GLBuffer hStagingBufferVertices = new GLBuffer(); // temporary scene vertex buffer
+	private final GLBuffer hStagingBufferUvs = new GLBuffer(); // temporary scene uv buffer
+	private final GLBuffer hStagingBufferNormals = new GLBuffer(); // temporary scene normal buffer
+	private final GLBuffer hModelBufferUnordered = new GLBuffer(); // scene model buffer, unordered
+	private final GLBuffer hModelBufferSmall = new GLBuffer(); // scene model buffer, small
+	private final GLBuffer hModelBufferLarge = new GLBuffer(); // scene model buffer, large
+	private final GLBuffer hRenderBufferVertices = new GLBuffer(); // target vertex buffer for compute shaders
+	private final GLBuffer hRenderBufferUvs = new GLBuffer(); // target uv buffer for compute shaders
+	private final GLBuffer hRenderBufferNormals = new GLBuffer(); // target normal buffer for compute shaders
 
-	private final GLBuffer tmpVertexBuffer = new GLBuffer(); // temporary scene vertex buffer
-	private final GLBuffer tmpUvBuffer = new GLBuffer(); // temporary scene uv buffer
-	private final GLBuffer tmpNormalBuffer = new GLBuffer(); // temporary scene normal buffer
-	private final GLBuffer tmpModelBufferLarge = new GLBuffer(); // scene model buffer, large
-	private final GLBuffer tmpModelBufferSmall = new GLBuffer(); // scene model buffer, small
-	private final GLBuffer tmpModelBufferUnordered = new GLBuffer(); // scene model buffer, unordered
-	private final GLBuffer tmpOutBuffer = new GLBuffer(); // target vertex buffer for compute shaders
-	private final GLBuffer tmpOutUvBuffer = new GLBuffer(); // target uv buffer for compute shaders
-	private final GLBuffer tmpOutNormalBuffer = new GLBuffer(); // target normal buffer for compute shaders
+	private final GLBuffer hUniformBufferCamera = new GLBuffer();
+	private final GLBuffer hUniformBufferMaterials = new GLBuffer();
+	private final GLBuffer hUniformBufferWaterTypes = new GLBuffer();
+	private final GLBuffer hUniformBufferLights = new GLBuffer();
+	private ByteBuffer uniformBufferLights;
 
-	private final GLBuffer uniformBuffer = new GLBuffer();
-	private final GLBuffer materialsUniformBuffer = new GLBuffer();
-	private final GLBuffer waterTypesUniformBuffer = new GLBuffer();
-	private final GLBuffer lightsUniformBuffer = new GLBuffer();
-	private ByteBuffer lightsUniformBuf;
-
-	private GpuIntBuffer vertexBuffer;
-	private GpuFloatBuffer uvBuffer;
-	private GpuFloatBuffer normalBuffer;
+	public GpuIntBuffer stagingBufferVertices;
+	public GpuFloatBuffer stagingBufferUvs;
+	public GpuFloatBuffer stagingBufferNormals;
 
 	private GpuIntBuffer modelBufferUnordered;
 	private GpuIntBuffer modelBufferSmall;
-	private GpuIntBuffer modelBuffer;
+	private GpuIntBuffer modelBufferLarge;
 
-	private int unorderedModels;
+	private int numModelsUnordered;
+	private int numModelsSmall;
+	private int numModelsLarge;
 
-	/**
-	 * number of models in small buffer
-	 */
-	private int smallModels;
-
-	/**
-	 * number of models in large buffer
-	 */
-	private int largeModels;
-
-	/**
-	 * offset in the target buffer for model
-	 */
-	private int targetBufferOffset;
-
-	/**
-	 * offset into the temporary scene vertex buffer
-	 */
-	private int tempOffset;
-
-	/**
-	 * offset into the temporary scene uv buffer
-	 */
-	private int tempUvOffset;
+	private int dynamicOffsetVertices;
+	private int dynamicOffsetUvs;
+	private int renderBufferOffset;
 
 	private int lastCanvasWidth;
 	private int lastCanvasHeight;
@@ -396,7 +371,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	@Setter
 	private boolean isInGauntlet = false;
 
-	private final Map<Integer, TempModelInfo> tempModelInfoMap = new HashMap<>();
+	private final Map<Integer, TempModelInfo> frameModelInfoMap = new HashMap<>();
 
 	@Subscribe
 	public void onChatMessage(final ChatMessage event) {
@@ -433,10 +408,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		{
 			try
 			{
-				targetBufferOffset = 0;
+				renderBufferOffset = 0;
 				fboSceneHandle = rboSceneHandle = 0; // AA FBO
 				fboShadowMap = 0;
-				unorderedModels = smallModels = largeModels = 0;
+				numModelsUnordered = numModelsSmall = numModelsLarge = 0;
 				elapsedTime = 0;
 
 				AWTContext.loadNatives();
@@ -511,13 +486,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 					}
 				}
 
-				vertexBuffer = new GpuIntBuffer();
-				uvBuffer = new GpuFloatBuffer();
-				normalBuffer = new GpuFloatBuffer();
+				stagingBufferVertices = new GpuIntBuffer();
+				stagingBufferUvs = new GpuFloatBuffer();
+				stagingBufferNormals = new GpuFloatBuffer();
 
 				modelBufferUnordered = new GpuIntBuffer();
 				modelBufferSmall = new GpuIntBuffer();
-				modelBuffer = new GpuIntBuffer();
+				modelBufferLarge = new GpuIntBuffer();
 
 				initShaderHotswapping();
 				if (developerMode)
@@ -609,25 +584,25 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				debugCallback.free();
 			debugCallback = null;
 
-			if (vertexBuffer != null)
-				vertexBuffer.destroy();
-			vertexBuffer = null;
+			if (stagingBufferVertices != null)
+				stagingBufferVertices.destroy();
+			stagingBufferVertices = null;
 
-			if (uvBuffer != null)
-				uvBuffer.destroy();
-			uvBuffer = null;
+			if (stagingBufferUvs != null)
+				stagingBufferUvs.destroy();
+			stagingBufferUvs = null;
 
-			if (normalBuffer != null)
-				normalBuffer.destroy();
-			normalBuffer = null;
+			if (stagingBufferNormals != null)
+				stagingBufferNormals.destroy();
+			stagingBufferNormals = null;
 
 			if (modelBufferSmall != null)
 				modelBufferSmall.destroy();
 			modelBufferSmall = null;
 
-			if (modelBuffer != null)
-				modelBuffer.destroy();
-			modelBuffer = null;
+			if (modelBufferLarge != null)
+				modelBufferLarge.destroy();
+			modelBufferLarge = null;
 
 			if (modelBufferUnordered != null)
 				modelBufferUnordered.destroy();
@@ -973,26 +948,22 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 	private void initBuffers()
 	{
-		initGlBuffer(uniformBuffer);
-		initGlBuffer(materialsUniformBuffer);
-		initGlBuffer(waterTypesUniformBuffer);
-		initGlBuffer(lightsUniformBuffer);
+		initGlBuffer(hUniformBufferCamera);
+		initGlBuffer(hUniformBufferMaterials);
+		initGlBuffer(hUniformBufferWaterTypes);
+		initGlBuffer(hUniformBufferLights);
 
-		initGlBuffer(sceneVertexBuffer);
-		initGlBuffer(sceneUvBuffer);
-		initGlBuffer(sceneNormalBuffer);
+		initGlBuffer(hStagingBufferVertices);
+		initGlBuffer(hStagingBufferUvs);
+		initGlBuffer(hStagingBufferNormals);
 
-		initGlBuffer(tmpVertexBuffer);
-		initGlBuffer(tmpUvBuffer);
-		initGlBuffer(tmpNormalBuffer);
+		initGlBuffer(hModelBufferLarge);
+		initGlBuffer(hModelBufferSmall);
+		initGlBuffer(hModelBufferUnordered);
 
-		initGlBuffer(tmpModelBufferLarge);
-		initGlBuffer(tmpModelBufferSmall);
-		initGlBuffer(tmpModelBufferUnordered);
-
-		initGlBuffer(tmpOutBuffer);
-		initGlBuffer(tmpOutUvBuffer);
-		initGlBuffer(tmpOutNormalBuffer);
+		initGlBuffer(hRenderBufferVertices);
+		initGlBuffer(hRenderBufferUvs);
+		initGlBuffer(hRenderBufferNormals);
 	}
 
 	private void initGlBuffer(GLBuffer glBuffer)
@@ -1002,26 +973,22 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 	private void shutdownBuffers()
 	{
-		destroyGlBuffer(uniformBuffer);
-		destroyGlBuffer(materialsUniformBuffer);
-		destroyGlBuffer(waterTypesUniformBuffer);
-		destroyGlBuffer(lightsUniformBuffer);
+		destroyGlBuffer(hUniformBufferCamera);
+		destroyGlBuffer(hUniformBufferMaterials);
+		destroyGlBuffer(hUniformBufferWaterTypes);
+		destroyGlBuffer(hUniformBufferLights);
 
-		destroyGlBuffer(sceneVertexBuffer);
-		destroyGlBuffer(sceneUvBuffer);
-		destroyGlBuffer(sceneNormalBuffer);
+		destroyGlBuffer(hStagingBufferVertices);
+		destroyGlBuffer(hStagingBufferUvs);
+		destroyGlBuffer(hStagingBufferNormals);
 
-		destroyGlBuffer(tmpVertexBuffer);
-		destroyGlBuffer(tmpUvBuffer);
-		destroyGlBuffer(tmpNormalBuffer);
+		destroyGlBuffer(hModelBufferLarge);
+		destroyGlBuffer(hModelBufferSmall);
+		destroyGlBuffer(hModelBufferUnordered);
 
-		destroyGlBuffer(tmpModelBufferLarge);
-		destroyGlBuffer(tmpModelBufferSmall);
-		destroyGlBuffer(tmpModelBufferUnordered);
-
-		destroyGlBuffer(tmpOutBuffer);
-		destroyGlBuffer(tmpOutUvBuffer);
-		destroyGlBuffer(tmpOutNormalBuffer);
+		destroyGlBuffer(hRenderBufferVertices);
+		destroyGlBuffer(hRenderBufferUvs);
+		destroyGlBuffer(hRenderBufferNormals);
 	}
 
 	private void destroyGlBuffer(GLBuffer glBuffer)
@@ -1081,7 +1048,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		}
 		uniformBuf.flip();
 
-		updateBuffer(uniformBuffer, GL_UNIFORM_BUFFER, uniformBuf, GL_DYNAMIC_DRAW, CL_MEM_READ_ONLY);
+		updateBuffer(hUniformBufferCamera, GL_UNIFORM_BUFFER, uniformBuf, GL_DYNAMIC_DRAW, CL_MEM_READ_ONLY);
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 	}
 
@@ -1122,7 +1089,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		}
 		buffer.flip();
 
-		updateBuffer(materialsUniformBuffer, GL_UNIFORM_BUFFER, buffer, GL_STATIC_DRAW, CL_MEM_READ_ONLY);
+		updateBuffer(hUniformBufferMaterials, GL_UNIFORM_BUFFER, buffer, GL_STATIC_DRAW, CL_MEM_READ_ONLY);
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 	}
 
@@ -1161,14 +1128,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		}
 		buffer.flip();
 
-		updateBuffer(waterTypesUniformBuffer, GL_UNIFORM_BUFFER, buffer, GL_STATIC_DRAW, CL_MEM_READ_ONLY);
+		updateBuffer(hUniformBufferWaterTypes, GL_UNIFORM_BUFFER, buffer, GL_STATIC_DRAW, CL_MEM_READ_ONLY);
 	}
 
 	private void initLightsUniformBuffer()
 	{
 		// Allowing a buffer size of zero causes Apple M1/M2 to revert to software rendering
-		lightsUniformBuf = BufferUtils.createByteBuffer(Math.max(1, configMaxDynamicLights) * 8 * SCALAR_BYTES);
-		updateBuffer(lightsUniformBuffer, GL_UNIFORM_BUFFER, lightsUniformBuf, GL_DYNAMIC_DRAW, CL_MEM_READ_ONLY);
+		uniformBufferLights = BufferUtils.createByteBuffer(Math.max(1, configMaxDynamicLights) * 8 * SCALAR_BYTES);
+		updateBuffer(hUniformBufferLights, GL_UNIFORM_BUFFER, uniformBufferLights, GL_DYNAMIC_DRAW, CL_MEM_READ_ONLY);
 	}
 
 	private void initAAFbo(int width, int height, int aaSamples)
@@ -1291,14 +1258,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		// after this that don't involve a scene draw, like during LOADING/HOPPING/CONNECTION_LOST, we can
 		// still redraw the previous frame's scene to emulate the client behavior of not painting over the
 		// viewport buffer.
-		targetBufferOffset = 0;
+		renderBufferOffset = 0;
 
 
 		// UBO. Only the first 32 bytes get modified here, the rest is the constant sin/cos table.
 		// We can reuse the vertex buffer since it isn't used yet.
-		vertexBuffer.clear();
-		vertexBuffer.ensureCapacity(32);
-		IntBuffer uniformBuf = vertexBuffer.getBuffer();
+		stagingBufferVertices.clear();
+		stagingBufferVertices.ensureCapacity(32);
+		IntBuffer uniformBuf = stagingBufferVertices.getBuffer();
 		uniformBuf
 			.put(yaw)
 			.put(pitch)
@@ -1310,85 +1277,81 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			.put(cameraZ);
 		uniformBuf.flip();
 
-		glBindBuffer(GL_UNIFORM_BUFFER, uniformBuffer.glBufferId);
+		glBindBuffer(GL_UNIFORM_BUFFER, hUniformBufferCamera.glBufferId);
 		glBufferSubData(GL_UNIFORM_BUFFER, 0, uniformBuf);
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
-		glBindBufferBase(GL_UNIFORM_BUFFER, 0, uniformBuffer.glBufferId);
+		glBindBufferBase(GL_UNIFORM_BUFFER, 0, hUniformBufferCamera.glBufferId);
 		uniformBuf.clear();
 
 		// Bind materials UBO
-		glBindBufferBase(GL_UNIFORM_BUFFER, 1, materialsUniformBuffer.glBufferId);
-		glBindBufferBase(GL_UNIFORM_BUFFER, 2, waterTypesUniformBuffer.glBufferId);
+		glBindBufferBase(GL_UNIFORM_BUFFER, 1, hUniformBufferMaterials.glBufferId);
+		glBindBufferBase(GL_UNIFORM_BUFFER, 2, hUniformBufferWaterTypes.glBufferId);
 
 		if (configMaxDynamicLights > 0)
 		{
 			// Update lights UBO
-			lightsUniformBuf.clear();
+			uniformBufferLights.clear();
 			ArrayList<SceneLight> visibleLights = lightManager.getVisibleLights(getDrawDistance(), configMaxDynamicLights);
 			for (SceneLight light : visibleLights)
 			{
-				lightsUniformBuf.putInt(light.x);
-				lightsUniformBuf.putInt(light.y);
-				lightsUniformBuf.putInt(light.z);
-				lightsUniformBuf.putFloat(light.currentSize);
-				lightsUniformBuf.putFloat(light.currentColor[0]);
-				lightsUniformBuf.putFloat(light.currentColor[1]);
-				lightsUniformBuf.putFloat(light.currentColor[2]);
-				lightsUniformBuf.putFloat(light.currentStrength);
+				uniformBufferLights.putInt(light.x);
+				uniformBufferLights.putInt(light.y);
+				uniformBufferLights.putInt(light.z);
+				uniformBufferLights.putFloat(light.currentSize);
+				uniformBufferLights.putFloat(light.currentColor[0]);
+				uniformBufferLights.putFloat(light.currentColor[1]);
+				uniformBufferLights.putFloat(light.currentColor[2]);
+				uniformBufferLights.putFloat(light.currentStrength);
 			}
-			lightsUniformBuf.flip();
+			uniformBufferLights.flip();
 
-			glBindBuffer(GL_UNIFORM_BUFFER, lightsUniformBuffer.glBufferId);
-			glBufferSubData(GL_UNIFORM_BUFFER, 0, lightsUniformBuf);
-			lightsUniformBuf.clear();
+			glBindBuffer(GL_UNIFORM_BUFFER, hUniformBufferLights.glBufferId);
+			glBufferSubData(GL_UNIFORM_BUFFER, 0, uniformBufferLights);
+			uniformBufferLights.clear();
 			glBindBuffer(GL_UNIFORM_BUFFER, 0);
 		}
-		glBindBufferBase(GL_UNIFORM_BUFFER, 3, lightsUniformBuffer.glBufferId);
+		glBindBufferBase(GL_UNIFORM_BUFFER, 3, hUniformBufferLights.glBufferId);
 	}
 
 	@Override
 	public void postDrawScene()
 	{
 		// Upload buffers
-		vertexBuffer.flip();
-		uvBuffer.flip();
-		normalBuffer.flip();
-		modelBuffer.flip();
-		modelBufferSmall.flip();
+		stagingBufferVertices.flip();
+		stagingBufferUvs.flip();
+		stagingBufferNormals.flip();
 		modelBufferUnordered.flip();
-
-		IntBuffer vertexBuffer = this.vertexBuffer.getBuffer();
-		FloatBuffer uvBuffer = this.uvBuffer.getBuffer();
-		FloatBuffer normalBuffer = this.normalBuffer.getBuffer();
-		IntBuffer modelBuffer = this.modelBuffer.getBuffer();
-		IntBuffer modelBufferSmall = this.modelBufferSmall.getBuffer();
-		IntBuffer modelBufferUnordered = this.modelBufferUnordered.getBuffer();
+		modelBufferSmall.flip();
+		modelBufferLarge.flip();
 
 		// temp buffers
-		updateBuffer(tmpVertexBuffer, GL_ARRAY_BUFFER, vertexBuffer, GL_DYNAMIC_DRAW, CL_MEM_READ_ONLY);
-		updateBuffer(tmpUvBuffer, GL_ARRAY_BUFFER, uvBuffer, GL_DYNAMIC_DRAW, CL_MEM_READ_ONLY);
-		updateBuffer(tmpNormalBuffer, GL_ARRAY_BUFFER, normalBuffer, GL_DYNAMIC_DRAW, CL_MEM_READ_ONLY);
+		updateBuffer(hStagingBufferVertices, GL_ARRAY_BUFFER,
+			dynamicOffsetVertices * VERTEX_SIZE, stagingBufferVertices.getBuffer(), GL_DYNAMIC_DRAW, CL_MEM_READ_ONLY);
+		updateBuffer(hStagingBufferUvs, GL_ARRAY_BUFFER,
+			dynamicOffsetUvs * UV_SIZE, stagingBufferUvs.getBuffer(), GL_DYNAMIC_DRAW, CL_MEM_READ_ONLY);
+		updateBuffer(hStagingBufferNormals, GL_ARRAY_BUFFER,
+			dynamicOffsetVertices * NORMAL_SIZE, stagingBufferNormals.getBuffer(), GL_DYNAMIC_DRAW, CL_MEM_READ_ONLY);
 
 		// model buffers
-		updateBuffer(tmpModelBufferLarge, GL_ARRAY_BUFFER, modelBuffer, GL_DYNAMIC_DRAW, CL_MEM_READ_ONLY);
-		updateBuffer(tmpModelBufferSmall, GL_ARRAY_BUFFER, modelBufferSmall, GL_DYNAMIC_DRAW, CL_MEM_READ_ONLY);
-		updateBuffer(tmpModelBufferUnordered, GL_ARRAY_BUFFER, modelBufferUnordered, GL_DYNAMIC_DRAW, CL_MEM_READ_ONLY);
+		updateBuffer(hModelBufferLarge, GL_ARRAY_BUFFER, modelBufferLarge.getBuffer(), GL_STREAM_DRAW, CL_MEM_READ_ONLY);
+		updateBuffer(hModelBufferSmall, GL_ARRAY_BUFFER, modelBufferSmall.getBuffer(), GL_STREAM_DRAW, CL_MEM_READ_ONLY);
+		updateBuffer(hModelBufferUnordered, GL_ARRAY_BUFFER, modelBufferUnordered.getBuffer(), GL_STREAM_DRAW, CL_MEM_READ_ONLY);
 
 		// Output buffers
-		updateBuffer(tmpOutBuffer,
+		updateBuffer(hRenderBufferVertices,
 			GL_ARRAY_BUFFER,
-			targetBufferOffset * 16, // each vertex is an ivec4, which is 16 bytes
+			renderBufferOffset * 16, // each vertex is an ivec4, which is 16 bytes
 			GL_STREAM_DRAW,
 			CL_MEM_WRITE_ONLY);
-		updateBuffer(tmpOutUvBuffer,
+		updateBuffer(hRenderBufferUvs,
 			GL_ARRAY_BUFFER,
-			targetBufferOffset * 16, // each vertex is an ivec4, which is 16 bytes
+			renderBufferOffset * 16, // each vertex is an ivec4, which is 16 bytes
 			GL_STREAM_DRAW,
 			CL_MEM_WRITE_ONLY);
-		updateBuffer(tmpOutNormalBuffer,
+		updateBuffer(hRenderBufferNormals,
 			GL_ARRAY_BUFFER,
-			targetBufferOffset * 16, // each vertex is an ivec4, which is 16 bytes
+			renderBufferOffset * 16, // each vertex is an ivec4, which is 16 bytes
 			GL_STREAM_DRAW,
 			CL_MEM_WRITE_ONLY);
 
@@ -1396,17 +1359,15 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		{
 			// The docs for clEnqueueAcquireGLObjects say all pending GL operations must be completed before calling
 			// clEnqueueAcquireGLObjects, and recommends calling glFinish() as the only portable way to do that.
-			// However no issues have been observed from not calling it, and so will leave disabled for now.
+			// However, no issues have been observed from not calling it, and so will leave disabled for now.
 			// glFinish();
 
 			openCLManager.compute(
-				unorderedModels, smallModels, largeModels,
-				sceneVertexBuffer, sceneUvBuffer,
-				tmpVertexBuffer, tmpUvBuffer,
-				tmpModelBufferUnordered, tmpModelBufferSmall, tmpModelBufferLarge,
-				tmpOutBuffer, tmpOutUvBuffer,
-				uniformBuffer,
-				tmpOutNormalBuffer, sceneNormalBuffer, tmpNormalBuffer);
+				hUniformBufferCamera,
+				numModelsUnordered, numModelsSmall, numModelsLarge,
+				hModelBufferUnordered, hModelBufferSmall, hModelBufferLarge,
+				hStagingBufferVertices, hStagingBufferUvs, hStagingBufferNormals,
+				hRenderBufferVertices, hRenderBufferUvs, hRenderBufferNormals);
 
 			checkGLErrors();
 			return;
@@ -1422,30 +1383,27 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		glUniformBlockBinding(glComputeProgram, uniBlockLarge, 0);
 
 		// Bind shared buffers
-		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, sceneVertexBuffer.glBufferId);
-		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, tmpVertexBuffer.glBufferId);
-		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, tmpOutBuffer.glBufferId);
-		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 4, tmpOutUvBuffer.glBufferId);
-		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 5, sceneUvBuffer.glBufferId);
-		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 6, tmpUvBuffer.glBufferId);
-		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 7, tmpOutNormalBuffer.glBufferId);
-		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 8, sceneNormalBuffer.glBufferId);
-		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 9, tmpNormalBuffer.glBufferId);
+		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, hStagingBufferVertices.glBufferId);
+		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, hStagingBufferUvs.glBufferId);
+		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, hStagingBufferNormals.glBufferId);
+		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 4, hRenderBufferVertices.glBufferId);
+		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 5, hRenderBufferUvs.glBufferId);
+		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 6, hRenderBufferNormals.glBufferId);
 
 		// unordered
 		glUseProgram(glUnorderedComputeProgram);
-		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, tmpModelBufferUnordered.glBufferId);
-		glDispatchCompute(unorderedModels, 1, 1);
+		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, hModelBufferUnordered.glBufferId);
+		glDispatchCompute(numModelsUnordered, 1, 1);
 
 		// small
 		glUseProgram(glSmallComputeProgram);
-		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, tmpModelBufferSmall.glBufferId);
-		glDispatchCompute(smallModels, 1, 1);
+		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, hModelBufferSmall.glBufferId);
+		glDispatchCompute(numModelsSmall, 1, 1);
 
 		// large
 		glUseProgram(glComputeProgram);
-		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, tmpModelBufferLarge.glBufferId);
-		glDispatchCompute(largeModels, 1, 1);
+		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, hModelBufferLarge.glBufferId);
+		glDispatchCompute(numModelsLarge, 1, 1);
 
 		checkGLErrors();
 	}
@@ -1481,28 +1439,28 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				// buffer length includes the generated underwater terrain, so it must be halved
 				bufferLength /= 2;
 
-				++unorderedModels;
+				++numModelsUnordered;
 
 				buffer.put(paint.getBufferOffset() + bufferLength);
 				buffer.put(paint.getUvBufferOffset() + bufferLength);
 				buffer.put(bufferLength / 3);
-				buffer.put(targetBufferOffset);
-				buffer.put(FLAG_SCENE_BUFFER);
+				buffer.put(renderBufferOffset);
+				buffer.put(0);
 				buffer.put(localX).put(localY).put(localZ);
 
-				targetBufferOffset += bufferLength;
+				renderBufferOffset += bufferLength;
 			}
 
-			++unorderedModels;
+			++numModelsUnordered;
 
 			buffer.put(paint.getBufferOffset());
 			buffer.put(paint.getUvBufferOffset());
 			buffer.put(bufferLength / 3);
-			buffer.put(targetBufferOffset);
-			buffer.put(FLAG_SCENE_BUFFER);
+			buffer.put(renderBufferOffset);
+			buffer.put(0);
 			buffer.put(localX).put(localY).put(localZ);
 
-			targetBufferOffset += bufferLength;
+			renderBufferOffset += bufferLength;
 		}
 	}
 
@@ -1544,28 +1502,28 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				// buffer length includes the generated underwater terrain, so it must be halved
 				bufferLength /= 2;
 
-				++unorderedModels;
+				++numModelsUnordered;
 
 				buffer.put(model.getBufferOffset() + bufferLength);
 				buffer.put(model.getUvBufferOffset() + bufferLength);
 				buffer.put(bufferLength / 3);
-				buffer.put(targetBufferOffset);
-				buffer.put(FLAG_SCENE_BUFFER);
+				buffer.put(renderBufferOffset);
+				buffer.put(0);
 				buffer.put(localX).put(localY).put(localZ);
 
-				targetBufferOffset += bufferLength;
+				renderBufferOffset += bufferLength;
 			}
 
-			++unorderedModels;
+			++numModelsUnordered;
 
 			buffer.put(model.getBufferOffset());
 			buffer.put(model.getUvBufferOffset());
 			buffer.put(bufferLength / 3);
-			buffer.put(targetBufferOffset);
-			buffer.put(FLAG_SCENE_BUFFER);
+			buffer.put(renderBufferOffset);
+			buffer.put(0);
 			buffer.put(localX).put(localY).put(localZ);
 
-			targetBufferOffset += bufferLength;
+			renderBufferOffset += bufferLength;
 		}
 	}
 
@@ -1701,9 +1659,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			}
 
 			// Draw using the output buffer of the compute
-			int vertexBuffer = tmpOutBuffer.glBufferId;
-			int uvBuffer = tmpOutUvBuffer.glBufferId;
-			int normalBuffer = tmpOutNormalBuffer.glBufferId;
+			int vertexBuffer = hRenderBufferVertices.glBufferId;
+			int uvBuffer = hRenderBufferUvs.glBufferId;
+			int normalBuffer = hRenderBufferNormals.glBufferId;
 
 			// Update the camera target only when not loading, to keep drawing correct shadows while loading
 			if (client.getGameState() != GameState.LOADING)
@@ -1767,7 +1725,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				glBindBuffer(GL_ARRAY_BUFFER, uvBuffer);
 				glVertexAttribPointer(1, 4, GL_FLOAT, false, 0, 0);
 
-				glDrawArrays(GL_TRIANGLES, 0, targetBufferOffset);
+				glDrawArrays(GL_TRIANGLES, 0, renderBufferOffset);
 
 				glDisable(GL_CULL_FACE);
 				glDisable(GL_DEPTH_TEST);
@@ -1979,7 +1937,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			glBindBuffer(GL_ARRAY_BUFFER, normalBuffer);
 			glVertexAttribPointer(2, 4, GL_FLOAT, false, 0, 0);
 
-			glDrawArrays(GL_TRIANGLES, 0, targetBufferOffset);
+			glDrawArrays(GL_TRIANGLES, 0, renderBufferOffset);
 
 			glDisable(GL_BLEND);
 			glDisable(GL_CULL_FACE);
@@ -1998,17 +1956,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				glBindFramebuffer(GL_READ_FRAMEBUFFER, awtContext.getFramebuffer(false));
 			}
 
-			this.vertexBuffer.clear();
-			this.uvBuffer.clear();
-			this.normalBuffer.clear();
-			modelBuffer.clear();
-			modelBufferSmall.clear();
+			stagingBufferVertices.clear();
+			stagingBufferUvs.clear();
+			stagingBufferNormals.clear();
 			modelBufferUnordered.clear();
-
-			smallModels = largeModels = unorderedModels = 0;
-			tempOffset = 0;
-			tempUvOffset = 0;
-			tempModelInfoMap.clear();
+			modelBufferSmall.clear();
+			modelBufferLarge.clear();
+			frameModelInfoMap.clear();
+			numModelsUnordered = numModelsSmall = numModelsLarge = 0;
 		}
 
 		// Texture on UI
@@ -2075,7 +2030,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glDisable(GL_BLEND);
 
-		vertexBuffer.clear();
+		stagingBufferVertices.clear();
 	}
 
 	/**
@@ -2146,7 +2101,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				break;
 			case LOGIN_SCREEN:
 				// Avoid drawing the last frame's buffer during LOADING after LOGIN_SCREEN
-				targetBufferOffset = 0;
+				renderBufferOffset = 0;
 				hasLoggedIn = false;
 				modelPusher.clearModelCache();
 				break;
@@ -2157,31 +2112,28 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	{
 		lightManager.reset();
 
-		vertexBuffer.clear();
-		uvBuffer.clear();
-		normalBuffer.clear();
-
 		generateHDSceneData();
 
-		sceneUploader.upload(client.getScene(), vertexBuffer, uvBuffer, normalBuffer);
+		stagingBufferVertices.clear();
+		stagingBufferUvs.clear();
+		stagingBufferNormals.clear();
 
-		vertexBuffer.flip();
-		uvBuffer.flip();
-		normalBuffer.flip();
+		sceneUploader.upload(client.getScene(), stagingBufferVertices, stagingBufferUvs, stagingBufferNormals);
 
-		IntBuffer vertexBuffer = this.vertexBuffer.getBuffer();
-		FloatBuffer uvBuffer = this.uvBuffer.getBuffer();
-		FloatBuffer normalBuffer = this.normalBuffer.getBuffer();
+		dynamicOffsetVertices = stagingBufferVertices.position() / VERTEX_SIZE;
+		dynamicOffsetUvs = stagingBufferUvs.position() / UV_SIZE;
 
-		updateBuffer(sceneVertexBuffer, GL_ARRAY_BUFFER, vertexBuffer, GL_STATIC_COPY, CL_MEM_READ_ONLY);
-		updateBuffer(sceneUvBuffer, GL_ARRAY_BUFFER, uvBuffer, GL_STATIC_COPY, CL_MEM_READ_ONLY);
-		updateBuffer(sceneNormalBuffer, GL_ARRAY_BUFFER, normalBuffer, GL_STATIC_COPY, CL_MEM_READ_ONLY);
+		stagingBufferVertices.flip();
+		stagingBufferUvs.flip();
+		stagingBufferNormals.flip();
 
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		updateBuffer(hStagingBufferVertices, GL_ARRAY_BUFFER, stagingBufferVertices.getBuffer(), GL_STATIC_DRAW, CL_MEM_READ_ONLY);
+		updateBuffer(hStagingBufferUvs, GL_ARRAY_BUFFER, stagingBufferUvs.getBuffer(), GL_STATIC_DRAW, CL_MEM_READ_ONLY);
+		updateBuffer(hStagingBufferNormals, GL_ARRAY_BUFFER, stagingBufferNormals.getBuffer(), GL_STATIC_DRAW, CL_MEM_READ_ONLY);
 
-		vertexBuffer.clear();
-		uvBuffer.clear();
-		normalBuffer.clear();
+		stagingBufferVertices.clear();
+		stagingBufferUvs.clear();
+		stagingBufferNormals.clear();
 	}
 
 	public void reloadSceneNextGameTick()
@@ -2463,15 +2415,15 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			eightIntWrite[0] = model.getBufferOffset() >> 2;
 			eightIntWrite[1] = uvOffset;
 			eightIntWrite[2] = faceCount;
-			eightIntWrite[3] = targetBufferOffset;
-			eightIntWrite[4] = FLAG_SCENE_BUFFER | (model.getRadius() << 12) | orientation;
+			eightIntWrite[3] = renderBufferOffset;
+			eightIntWrite[4] = model.getRadius() << 12 | orientation;
 			eightIntWrite[5] = x + client.getCameraX2();
 			eightIntWrite[6] = y + client.getCameraY2();
 			eightIntWrite[7] = z + client.getCameraZ2();
 
 			bufferForTriangles(faceCount).ensureCapacity(8).put(eightIntWrite);
 
-			targetBufferOffset += faceCount * 3;
+			renderBufferOffset += faceCount * 3;
 		}
 		else
 		{
@@ -2498,8 +2450,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			model.calculateExtreme(orientation);
 			client.checkClickbox(model, orientation, pitchSin, pitchCos, yawSin, yawCos, x, y, z, hash);
 
-			eightIntWrite[3] = targetBufferOffset;
-			eightIntWrite[4] = (model.getRadius() << 12) | orientation;
+			eightIntWrite[3] = renderBufferOffset;
+			eightIntWrite[4] = model.getRadius() << 12 | orientation;
 			eightIntWrite[5] = x + client.getCameraX2();
 			eightIntWrite[6] = y + client.getCameraY2();
 			eightIntWrite[7] = z + client.getCameraZ2();
@@ -2507,30 +2459,32 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			modelHasher.setModel(model);
 			final int batchHash = modelHasher.calculateBatchHash();
 
-			TempModelInfo tempModelInfo = tempModelInfoMap.get(batchHash);
+			TempModelInfo tempModelInfo = frameModelInfoMap.get(batchHash);
 			if (!config.enableModelBatching() || tempModelInfo == null || tempModelInfo.getFaceCount() != model.getFaceCount()) {
+				int vertexOffset = dynamicOffsetVertices + stagingBufferVertices.position() / VERTEX_SIZE;
+				int uvOffset = dynamicOffsetUvs + stagingBufferUvs.position() / UV_SIZE;
+
 				ModelOverride modelOverride = modelOverrideManager.getOverride(hash);
-				final int[] lengths = modelPusher.pushModel(hash, model, vertexBuffer, uvBuffer, normalBuffer,
+				final int[] lengths = modelPusher.pushModel(hash, model, stagingBufferVertices, stagingBufferUvs, stagingBufferNormals,
 					0, 0, 0, modelOverride, ObjectType.NONE, true);
 				final int faceCount = lengths[0] / 3;
-				final int actualTempUvOffset = lengths[1] > 0 ? tempUvOffset : -1;
+				if (lengths[1] <= 0)
+					uvOffset = -1;
 
 				// add this temporary model to the map for batching purposes
 				tempModelInfo = new TempModelInfo();
 				tempModelInfo
-						.setTempOffset(tempOffset)
-						.setTempUvOffset(actualTempUvOffset)
+						.setTempOffset(vertexOffset)
+						.setTempUvOffset(uvOffset)
 						.setFaceCount(faceCount);
-				tempModelInfoMap.put(batchHash, tempModelInfo);
+				frameModelInfoMap.put(batchHash, tempModelInfo);
 
-				eightIntWrite[0] = tempOffset;
-				eightIntWrite[1] = actualTempUvOffset;
+				eightIntWrite[0] = vertexOffset;
+				eightIntWrite[1] = uvOffset;
 				eightIntWrite[2] = faceCount;
 				bufferForTriangles(faceCount).ensureCapacity(8).put(eightIntWrite);
 
-				tempOffset += lengths[0];
-				tempUvOffset += lengths[1];
-				targetBufferOffset += lengths[0];
+				renderBufferOffset += lengths[0];
 			} else {
 				eightIntWrite[0] = tempModelInfo.getTempOffset();
 				eightIntWrite[1] = tempModelInfo.getTempUvOffset();
@@ -2538,7 +2492,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 				bufferForTriangles(tempModelInfo.getFaceCount()).ensureCapacity(8).put(eightIntWrite);
 
-				targetBufferOffset += tempModelInfo.getFaceCount()*3;
+				renderBufferOffset += tempModelInfo.getFaceCount() * 3;
 			}
 		}
 	}
@@ -2559,13 +2513,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	{
 		if (triangles <= SMALL_TRIANGLE_COUNT)
 		{
-			++smallModels;
+			++numModelsSmall;
 			return modelBufferSmall;
 		}
 		else
 		{
-			++largeModels;
-			return modelBuffer;
+			++numModelsLarge;
+			return modelBufferLarge;
 		}
 	}
 
@@ -2623,42 +2577,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		return new int[]{camX, camY, camZ};
 	}
 
-	private void updateBuffer(@Nonnull GLBuffer glBuffer, int target, @Nonnull IntBuffer data, int usage, long clFlags)
-	{
-		glBindBuffer(target, glBuffer.glBufferId);
-		int size = data.remaining();
-		if (size > glBuffer.size)
-		{
-			log.trace("Buffer resize: {} {} -> {}", glBuffer, glBuffer.size, size);
-
-			glBuffer.size = size;
-			glBufferData(target, data, usage);
-			recreateCLBuffer(glBuffer, clFlags);
-		}
-		else
-		{
-			glBufferSubData(target, 0, data);
-		}
-	}
-
-	private void updateBuffer(@Nonnull GLBuffer glBuffer, int target, @Nonnull FloatBuffer data, int usage, long clFlags)
-	{
-		glBindBuffer(target, glBuffer.glBufferId);
-		int size = data.remaining();
-		if (size > glBuffer.size)
-		{
-			log.trace("Buffer resize: {} {} -> {}", glBuffer, glBuffer.size, size);
-
-			glBuffer.size = size;
-			glBufferData(target, data, usage);
-			recreateCLBuffer(glBuffer, clFlags);
-		}
-		else
-		{
-			glBufferSubData(target, 0, data);
-		}
-	}
-
 	private void updateBuffer(@Nonnull GLBuffer glBuffer, int target, @Nonnull ByteBuffer data, int usage, long clFlags)
 	{
 		glBindBuffer(target, glBuffer.glBufferId);
@@ -2674,6 +2592,90 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		else
 		{
 			glBufferSubData(target, 0, data);
+		}
+	}
+
+	private void updateBuffer(@Nonnull GLBuffer glBuffer, int target, @Nonnull IntBuffer data, int usage, long clFlags)
+	{
+		updateBuffer(glBuffer, target, 0, data, usage, clFlags);
+	}
+
+	private void updateBuffer(@Nonnull GLBuffer glBuffer, int target, int offset, @Nonnull IntBuffer data, int usage, long clFlags)
+	{
+		int size = offset + data.remaining();
+		if (size > glBuffer.size)
+		{
+			log.trace("Buffer resize: {} {} -> {}", glBuffer, glBuffer.size, size);
+
+			if (offset > 0)
+			{
+				int newBuffer = glGenBuffers();
+				glBindBuffer(target, newBuffer);
+				glBufferData(target, size * 4L, usage);
+				glBindBuffer(GL_COPY_READ_BUFFER, glBuffer.glBufferId);
+				glCopyBufferSubData(GL_COPY_READ_BUFFER, target, 0, 0, offset * 4L);
+
+				glDeleteBuffers(glBuffer.glBufferId);
+				glBuffer.glBufferId = newBuffer;
+
+				glBindBuffer(target, glBuffer.glBufferId);
+				glBufferSubData(target, offset * 4L, data);
+			}
+			else
+			{
+				glBindBuffer(target, glBuffer.glBufferId);
+				glBufferData(target, data, usage);
+			}
+
+			glBuffer.size = size;
+			recreateCLBuffer(glBuffer, clFlags);
+		}
+		else
+		{
+			glBindBuffer(target, glBuffer.glBufferId);
+			glBufferSubData(target, offset * 4L, data);
+		}
+	}
+
+	private void updateBuffer(@Nonnull GLBuffer glBuffer, int target, @Nonnull FloatBuffer data, int usage, long clFlags)
+	{
+		updateBuffer(glBuffer, target, 0, data, usage, clFlags);
+	}
+
+	private void updateBuffer(@Nonnull GLBuffer glBuffer, int target, int offset, @Nonnull FloatBuffer data, int usage, long clFlags)
+	{
+		int size = offset + data.remaining();
+		if (size > glBuffer.size)
+		{
+			log.trace("Buffer resize: {} {} -> {}", glBuffer, glBuffer.size, size);
+
+			if (offset > 0)
+			{
+				int newBuffer = glGenBuffers();
+				glBindBuffer(target, newBuffer);
+				glBufferData(target, size * 4L, usage);
+				glBindBuffer(GL_COPY_READ_BUFFER, glBuffer.glBufferId);
+				glCopyBufferSubData(GL_COPY_READ_BUFFER, target, 0, 0, offset * 4L);
+
+				glDeleteBuffers(glBuffer.glBufferId);
+				glBuffer.glBufferId = newBuffer;
+
+				glBindBuffer(target, glBuffer.glBufferId);
+				glBufferSubData(target, offset * 4L, data);
+			}
+			else
+			{
+				glBindBuffer(target, glBuffer.glBufferId);
+				glBufferData(target, data, usage);
+			}
+
+			glBuffer.size = size;
+			recreateCLBuffer(glBuffer, clFlags);
+		}
+		else
+		{
+			glBindBuffer(target, glBuffer.glBufferId);
+			glBufferSubData(target, offset * 4L, data);
 		}
 	}
 

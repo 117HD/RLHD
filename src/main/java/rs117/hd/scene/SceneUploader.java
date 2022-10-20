@@ -46,6 +46,9 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Random;
 
+import static rs117.hd.HdPlugin.UV_SIZE;
+import static rs117.hd.HdPlugin.VERTEX_SIZE;
+
 @SuppressWarnings("UnnecessaryLocalVariable")
 @Singleton
 @Slf4j
@@ -71,8 +74,6 @@ class SceneUploader
 	private ModelOverrideManager modelOverrideManager;
 
 	public int sceneId = new Random().nextInt();
-	private int offset;
-	private int uvOffset;
 
 	private final float[] UP_NORMAL = { 0, -1, 0 };
 
@@ -80,12 +81,7 @@ class SceneUploader
 	{
 		Stopwatch stopwatch = Stopwatch.createStarted();
 
-		++sceneId;
-		offset = 0;
-		uvOffset = 0;
-		vertexBuffer.clear();
-		uvBuffer.clear();
-		normalBuffer.clear();
+		sceneId++;
 
 		for (int z = 0; z < Constants.MAX_Z; ++z)
 		{
@@ -125,10 +121,10 @@ class SceneUploader
 
 		// pack a bit into bufferoffset that we can use later to hide
 		// some low-importance objects based on Level of Detail setting
-		model.setBufferOffset(offset << 2 | skipObject);
+		model.setBufferOffset((vertexBuffer.position() / VERTEX_SIZE) << 2 | skipObject);
 		if (model.getFaceTextures() != null || (plugin.configModelTextures && modelOverride.baseMaterial != Material.NONE))
 		{
-			model.setUvBufferOffset(uvOffset);
+			model.setUvBufferOffset(uvBuffer.position() / UV_SIZE);
 		}
 		else
 		{
@@ -136,11 +132,8 @@ class SceneUploader
 		}
 		model.setSceneId(sceneId);
 
-		final int[] lengths = modelPusher.pushModel(hash, model, vertexBuffer, uvBuffer, normalBuffer,
+		modelPusher.pushModel(hash, model, vertexBuffer, uvBuffer, normalBuffer,
 			tileX, tileY, tileZ, modelOverride, objectType, false);
-
-		offset += lengths[0];
-		uvOffset += lengths[1];
 	}
 
 	private void upload(Tile tile, GpuIntBuffer vertexBuffer, GpuFloatBuffer uvBuffer, GpuFloatBuffer normalBuffer)
@@ -159,6 +152,8 @@ class SceneUploader
 		SceneTilePaint sceneTilePaint = tile.getSceneTilePaint();
 		if (sceneTilePaint != null)
 		{
+			int vertexOffset = vertexBuffer.position() / VERTEX_SIZE;
+			int uvOffset = uvBuffer.position() / UV_SIZE;
 			int[] uploadedTilePaintData = upload(
 				tile, sceneTilePaint,
 				tileZ, tileX, tileY,
@@ -168,20 +163,22 @@ class SceneUploader
 			final int bufferLength = uploadedTilePaintData[0];
 			final int uvBufferLength = uploadedTilePaintData[1];
 			final int underwaterTerrain = uploadedTilePaintData[2];
+			if (uvBufferLength <= 0)
+				uvOffset = -1;
 			// pack a boolean into the buffer length of tiles so we can tell
 			// which tiles have procedurally generated underwater terrain.
 			// shift the bufferLength to make space for the boolean:
 			int packedBufferLength = bufferLength << 1 | underwaterTerrain;
-			sceneTilePaint.setBufferOffset(offset);
-			sceneTilePaint.setUvBufferOffset(uvBufferLength > 0 ? uvOffset : -1);
+			sceneTilePaint.setBufferOffset(vertexOffset);
+			sceneTilePaint.setUvBufferOffset(uvOffset);
 			sceneTilePaint.setBufferLen(packedBufferLength);
-			offset += bufferLength;
-			uvOffset += uvBufferLength;
 		}
 
 		SceneTileModel sceneTileModel = tile.getSceneTileModel();
 		if (sceneTileModel != null)
 		{
+			int vertexOffset = vertexBuffer.position() / VERTEX_SIZE;
+			int uvOffset = uvBuffer.position() / UV_SIZE;
 			int[] uploadedTileModelData = upload(
 				tile, sceneTileModel,
 				tileZ, tileX, tileY,
@@ -191,14 +188,14 @@ class SceneUploader
 			final int bufferLength = uploadedTileModelData[0];
 			final int uvBufferLength = uploadedTileModelData[1];
 			final int underwaterTerrain = uploadedTileModelData[2];
+			if (uvBufferLength <= 0)
+				uvOffset = -1;
 			// pack a boolean into the buffer length of tiles so we can tell
 			// which tiles have procedurally-generated underwater terrain
 			int packedBufferLength = bufferLength << 1 | underwaterTerrain;
-			sceneTileModel.setBufferOffset(offset);
-			sceneTileModel.setUvBufferOffset(uvBufferLength > 0 ? uvOffset : -1);
+			sceneTileModel.setBufferOffset(vertexOffset);
+			sceneTileModel.setUvBufferOffset(uvOffset);
 			sceneTileModel.setBufferLen(packedBufferLength);
-			offset += bufferLength;
-			uvOffset += uvBufferLength;
 		}
 
 		WallObject wallObject = tile.getWallObject();
@@ -207,8 +204,8 @@ class SceneUploader
 			Renderable renderable1 = wallObject.getRenderable1();
 			if (renderable1 instanceof Model)
 			{
-				uploadModel(wallObject.getHash(), (Model) renderable1, vertexBuffer, uvBuffer, normalBuffer, tileZ, tileX,
-					tileY, ObjectType.WALL_OBJECT);
+				uploadModel(wallObject.getHash(), (Model) renderable1,
+					vertexBuffer, uvBuffer, normalBuffer, tileZ, tileX, tileY, ObjectType.WALL_OBJECT);
 			}
 
 			Renderable renderable2 = wallObject.getRenderable2();
