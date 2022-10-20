@@ -56,6 +56,11 @@ public class GpuIntBuffer
 		this.buffer.put(buffer);
 	}
 
+	public int position()
+	{
+		return buffer.position();
+	}
+
 	public void flip()
 	{
 		buffer.flip();
