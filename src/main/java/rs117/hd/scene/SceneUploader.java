@@ -382,7 +382,7 @@ class SceneUploader
 				{
 					GroundMaterial groundMaterial;
 
-					Overlay overlay = Overlay.getOverlay((int) client.getScene().getOverlayIds()[tileZ][tileX][tileY], tile, client, config);
+					Overlay overlay = Overlay.getOverlay(client.getScene().getOverlayIds()[tileZ][tileX][tileY], tile, client, plugin);
 					if (overlay != Overlay.NONE)
 					{
 						groundMaterial = overlay.groundMaterial;
@@ -394,7 +394,7 @@ class SceneUploader
 					}
 					else
 					{
-						Underlay underlay = Underlay.getUnderlay((int) client.getScene().getUnderlayIds()[tileZ][tileX][tileY], tile, client, config);
+						Underlay underlay = Underlay.getUnderlay(client.getScene().getUnderlayIds()[tileZ][tileX][tileY], tile, client, plugin);
 						groundMaterial = underlay.groundMaterial;
 
 						swColor = HDUtils.colorHSLToInt(proceduralGenerator.recolorUnderlay(underlay, HDUtils.colorIntToHSL(swColor)));
@@ -410,7 +410,7 @@ class SceneUploader
 				}
 				else if (plugin.configWinterTheme)
 				{
-					Overlay overlay = Overlay.getOverlay((int) client.getScene().getOverlayIds()[tileZ][tileX][tileY], tile, client, config);
+					Overlay overlay = Overlay.getOverlay(client.getScene().getOverlayIds()[tileZ][tileX][tileY], tile, client, plugin);
 					if (overlay != Overlay.NONE)
 					{
 						swColor = HDUtils.colorHSLToInt(proceduralGenerator.recolorOverlay(overlay, HDUtils.colorIntToHSL(swColor)));
@@ -420,7 +420,7 @@ class SceneUploader
 					}
 					else
 					{
-						Underlay underlay = Underlay.getUnderlay((int) client.getScene().getUnderlayIds()[tileZ][tileX][tileY], tile, client, config);
+						Underlay underlay = Underlay.getUnderlay(client.getScene().getUnderlayIds()[tileZ][tileX][tileY], tile, client, plugin);
 						swColor = HDUtils.colorHSLToInt(proceduralGenerator.recolorUnderlay(underlay, HDUtils.colorIntToHSL(swColor)));
 						seColor = HDUtils.colorHSLToInt(proceduralGenerator.recolorUnderlay(underlay, HDUtils.colorIntToHSL(seColor)));
 						nwColor = HDUtils.colorHSLToInt(proceduralGenerator.recolorUnderlay(underlay, HDUtils.colorIntToHSL(nwColor)));
@@ -728,7 +728,7 @@ class SceneUploader
 
 					if (proceduralGenerator.isOverlayFace(tile, face))
 					{
-						Overlay overlay = Overlay.getOverlay((int) client.getScene().getOverlayIds()[tileZ][tileX][tileY], tile, client, config);
+						Overlay overlay = Overlay.getOverlay(client.getScene().getOverlayIds()[tileZ][tileX][tileY], tile, client, plugin);
 						groundMaterial = overlay.groundMaterial;
 
 						colorA = HDUtils.colorHSLToInt(proceduralGenerator.recolorOverlay(overlay, HDUtils.colorIntToHSL(colorA)));
@@ -737,7 +737,7 @@ class SceneUploader
 					}
 					else
 					{
-						Underlay underlay = Underlay.getUnderlay((int) client.getScene().getUnderlayIds()[tileZ][tileX][tileY], tile, client, config);
+						Underlay underlay = Underlay.getUnderlay(client.getScene().getUnderlayIds()[tileZ][tileX][tileY], tile, client, plugin);
 						groundMaterial = underlay.groundMaterial;
 
 						colorA = HDUtils.colorHSLToInt(proceduralGenerator.recolorUnderlay(underlay, HDUtils.colorIntToHSL(colorA)));
@@ -753,7 +753,7 @@ class SceneUploader
 				{
 					if (proceduralGenerator.isOverlayFace(tile, face))
 					{
-						Overlay overlay = Overlay.getOverlay((int) client.getScene().getOverlayIds()[tileZ][tileX][tileY], tile, client, config);
+						Overlay overlay = Overlay.getOverlay(client.getScene().getOverlayIds()[tileZ][tileX][tileY], tile, client, plugin);
 
 						colorA = HDUtils.colorHSLToInt(proceduralGenerator.recolorOverlay(overlay, HDUtils.colorIntToHSL(colorA)));
 						colorB = HDUtils.colorHSLToInt(proceduralGenerator.recolorOverlay(overlay, HDUtils.colorIntToHSL(colorB)));
@@ -761,7 +761,7 @@ class SceneUploader
 					}
 					else
 					{
-						Underlay underlay = Underlay.getUnderlay((int) client.getScene().getUnderlayIds()[tileZ][tileX][tileY], tile, client, config);
+						Underlay underlay = Underlay.getUnderlay(client.getScene().getUnderlayIds()[tileZ][tileX][tileY], tile, client, plugin);
 
 						colorA = HDUtils.colorHSLToInt(proceduralGenerator.recolorUnderlay(underlay, HDUtils.colorIntToHSL(colorA)));
 						colorB = HDUtils.colorHSLToInt(proceduralGenerator.recolorUnderlay(underlay, HDUtils.colorIntToHSL(colorB)));

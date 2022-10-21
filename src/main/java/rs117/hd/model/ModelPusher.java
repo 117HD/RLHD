@@ -215,10 +215,9 @@ public class ModelPusher {
             }
         }
 
-        boolean hideBakedEffects = config.hideBakedEffects();
         for (int face = 0; face < faceCount; face++) {
             if (!cachedVertexData) {
-                int[] tempVertexData = getVertexDataForFace(model, getColorsForFace(hash, model, modelOverride, objectType, tileX, tileY, tileZ, face, hideBakedEffects), face);
+                int[] tempVertexData = getVertexDataForFace(model, getColorsForFace(hash, model, modelOverride, objectType, tileX, tileY, tileZ, face), face);
                 vertexBuffer.put(tempVertexData);
                 vertexLength += 3;
 
@@ -421,7 +420,7 @@ public class ModelPusher {
             (faceTransparencies[face] & 0xFF) > 100;
     }
 
-    private int[] getColorsForFace(long hash, Model model, @NonNull ModelOverride modelOverride, ObjectType objectType, int tileX, int tileY, int tileZ, int face, boolean hideBakedEffects) {
+    private int[] getColorsForFace(long hash, Model model, @NonNull ModelOverride modelOverride, ObjectType objectType, int tileX, int tileY, int tileZ, int face) {
         final int triA = model.getFaceIndices1()[face];
         final int triB = model.getFaceIndices2()[face];
         final int triC = model.getFaceIndices3()[face];
@@ -434,7 +433,7 @@ public class ModelPusher {
         int heightC = yVertices[triC];
 
         // Hide fake shadows or lighting that is often baked into models by making the fake shadow transparent
-        if (hideBakedEffects && isBakedGroundShading(face, heightA, heightB, heightC, faceTransparencies, faceTextures)) {
+        if (plugin.configHideBakedEffects && isBakedGroundShading(face, heightA, heightB, heightC, faceTransparencies, faceTextures)) {
             boolean removeBakedLighting = modelOverride.removeBakedLighting;
 
             if (ModelHash.getType(hash) == ModelHash.TYPE_PLAYER) {
@@ -566,11 +565,11 @@ public class ModelPusher {
                         HDUtils.colorIntToHSL(tilePaint.getNeColor())[2]
                     ) / 4;
 
-                    Overlay overlay = Overlay.getOverlay((int) client.getScene().getOverlayIds()[tileZ][tileX][tileY], tile, client, config);
-                    Underlay underlay = Underlay.getUnderlay((int) client.getScene().getUnderlayIds()[tileZ][tileX][tileY], tile, client, config);
+                    Overlay overlay = Overlay.getOverlay(client.getScene().getOverlayIds()[tileZ][tileX][tileY], tile, client, plugin);
                     if (overlay != Overlay.NONE) {
                         tileColorHSL = proceduralGenerator.recolorOverlay(overlay, tileColorHSL);
                     } else {
+                        Underlay underlay = Underlay.getUnderlay(client.getScene().getUnderlayIds()[tileZ][tileX][tileY], tile, client, plugin);
                         tileColorHSL = proceduralGenerator.recolorUnderlay(underlay, tileColorHSL);
                     }
 
@@ -603,7 +602,7 @@ public class ModelPusher {
                     if (faceColorIndex != -1) {
                         tileColorHSL = HDUtils.colorIntToHSL(tileModel.getTriangleColorA()[faceColorIndex]);
 
-                        Underlay underlay = Underlay.getUnderlay((int) client.getScene().getUnderlayIds()[tileZ][tileX][tileY], tile, client, config);
+                        Underlay underlay = Underlay.getUnderlay(client.getScene().getUnderlayIds()[tileZ][tileX][tileY], tile, client, plugin);
                         tileColorHSL = proceduralGenerator.recolorUnderlay(underlay, tileColorHSL);
 
                         color1H = color2H = color3H = tileColorHSL[0];

@@ -28,14 +28,17 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import net.runelite.api.Client;
 import net.runelite.api.Tile;
-import net.runelite.api.coords.LocalPoint;
 import net.runelite.api.coords.WorldPoint;
+import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.data.WaterType;
 import rs117.hd.data.environments.Area;
 
 import javax.annotation.Nullable;
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -499,7 +502,7 @@ public enum Overlay {
     public final int lightness;
     public final int shiftLightness;
     public final Overlay replacementOverlay;
-    public final Function<HdPluginConfig, Boolean> replacementCondition;
+    public final Function<HdPlugin, Boolean> replacementCondition;
 
     Overlay(int id, GroundMaterial material) {
         this(p -> p.ids(id).groundMaterial(material));
@@ -552,45 +555,61 @@ public enum Overlay {
         this.shiftLightness = builder.shiftLightness;
     }
 
-    private static final ListMultimap<Integer, Overlay> GROUND_MATERIAL_MAP;
+    private static final Overlay[] ANY_MATCH;
+    private static final HashMap<Integer, Overlay[]> FILTERED_MAP = new HashMap<>();
 
     static {
-        GROUND_MATERIAL_MAP = ArrayListMultimap.create();
+        ArrayList<Overlay> anyMatch = new ArrayList<>();
+        ListMultimap<Integer, Overlay> multiMap = ArrayListMultimap.create();
         for (Overlay overlay : values()) {
             if (overlay.filterIds == null) {
-                GROUND_MATERIAL_MAP.put(null, overlay);
+                anyMatch.add(overlay);
             } else {
                 for (Integer id : overlay.filterIds) {
-                    GROUND_MATERIAL_MAP.put(id, overlay);
+                    multiMap.put(id, overlay);
                 }
             }
         }
+
+        ANY_MATCH = anyMatch.toArray(new Overlay[0]);
+        for (Map.Entry<Integer, Collection<Overlay>> entry : multiMap.asMap().entrySet())
+            FILTERED_MAP.put(entry.getKey(), entry.getValue().toArray(new Overlay[0]));
     }
 
-    public static Overlay getOverlay(@Nullable Integer overlayId, Tile tile, Client client, HdPluginConfig config) {
-        WorldPoint worldPoint = tile.getWorldLocation();
-
+    public static Overlay getOverlay(@Nullable Short overlayId, Tile tile, Client client, HdPlugin plugin) {
+        WorldPoint worldPoint;
         if (client.isInInstancedRegion()) {
-            LocalPoint localPoint = tile.getLocalLocation();
-            worldPoint = WorldPoint.fromLocalInstance(client, localPoint);
+            worldPoint = WorldPoint.fromLocalInstance(client, tile.getLocalLocation());
+        } else {
+            worldPoint = tile.getWorldLocation();
         }
 
         int worldX = worldPoint.getX();
         int worldY = worldPoint.getY();
         int worldZ = worldPoint.getPlane();
 
-        List<Overlay> anyMatchOverlays = GROUND_MATERIAL_MAP.get(null);
-        Overlay anyOverlay = anyMatchOverlays.stream()
-            .filter(o -> o.area.containsPoint(worldX, worldY, worldZ))
-            .findFirst()
-            .orElse(Overlay.NONE);
+        Overlay match = Overlay.NONE;
+        for (Overlay overlay : ANY_MATCH) {
+            if (overlay.area.containsPoint(worldX, worldY, worldZ)) {
+                match = overlay;
+                break;
+            }
+        }
 
-        List<Overlay> specificOverlays = GROUND_MATERIAL_MAP.get(overlayId);
-        Overlay overlay = specificOverlays.stream()
-            .filter(o -> o.ordinal() < anyOverlay.ordinal() && o.area.containsPoint(worldX, worldY, worldZ))
-            .findFirst()
-            .orElse(anyOverlay);
+        if (overlayId != null) {
+            Overlay[] overlays = FILTERED_MAP.get((int) overlayId);
+            if (overlays != null) {
+                for (Overlay overlay : overlays) {
+                    if (overlay.ordinal() >= match.ordinal())
+                        break;
+                    if (overlay.area.containsPoint(worldX, worldY, worldZ)) {
+                        match = overlay;
+                        break;
+                    }
+                }
+            }
+        }
 
-        return overlay.replacementCondition.apply(config) ? overlay.replacementOverlay : overlay;
+        return match.replacementCondition.apply(plugin) ? match.replacementOverlay : match;
     }
 }
