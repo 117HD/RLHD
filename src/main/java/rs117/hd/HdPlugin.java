@@ -568,8 +568,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 			if (lwjglInitted)
 			{
-				openCLManager.cleanup();
-
 				textureManager.shutDown();
 
 				shutdownBuffers();
@@ -841,6 +839,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 	private void shutdownPrograms()
 	{
+		openCLManager.cleanup();
+
 		if (glProgram != 0)
 		{
 			glDeleteProgram(glProgram);
@@ -1469,7 +1469,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	}
 
 	public void initShaderHotswapping() {
-		shaderPath.watch("\\.glsl$", path -> {
+		shaderPath.watch("\\.(glsl|cl)$", path -> {
 			log.info("Reloading shader: {}", path);
 			clientThread.invoke(this::recompilePrograms);
 		});
