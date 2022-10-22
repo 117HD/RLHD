@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Adam <Adam@sigterm.info>
+ * Copyright (c) 2022, Hooder <ahooder@protonmail.com>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -22,47 +22,13 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#version 330
 
-layout (location = 0) in ivec4 vPosition;
-layout (location = 1) in vec4 vUv;
-layout (location = 2) in vec4 vNormal;
+#ifndef POLYFILLS_INCLUDED
+#define POLYFILLS_INCLUDED
 
-uniform mat4 lightProjectionMatrix;
+#if __VERSION__ < 400
+#define length(v) sqrt(dot(v, v))
+#define fract(x) (x - floor(x))
+#endif
 
-out vec3 position;
-out vec3 uvw;
-flat out int materialData;
-
-#include utils/constants.glsl
-
-int when_eq(int x, int y) {
-    return 1 - abs(sign(x - y));
-}
-
-int when_lt(float x, float y) {
-    return max(int(sign(y - x)), 0);
-}
-
-int when_gt(int x, int y) {
-    return max(sign(x - y), 0);
-}
-
-void main()
-{
-    position = vPosition.xyz;
-    uvw = vUv.xyz;
-    materialData = int(vUv.w);
-    int terrainData = int(vNormal.w);
-
-    float alpha = 1 - float(vPosition.w >> 24 & 0xff) / 255.;
-    int waterTypeIndex = terrainData >> 3 & 0x1F;
-
-    int isShadowDisabled = materialData >> MATERIAL_FLAG_DISABLE_SHADOWS & 1;
-    int isGroundPlane = when_eq(terrainData & 0xF, 1); // isTerrain && plane == 0
-    int isTransparent = when_lt(alpha, SHADOW_OPACITY_THRESHOLD);
-    int isWaterSurfaceOrUnderwaterTile = when_gt(waterTypeIndex, 0);
-    position *= 1 - max(0, sign(isShadowDisabled + isGroundPlane + isTransparent + isWaterSurfaceOrUnderwaterTile));
-
-    gl_Position = lightProjectionMatrix * vec4(position, 1.f);
-}
+#endif

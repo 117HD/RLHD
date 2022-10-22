@@ -23,6 +23,10 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include utils/polyfills.glsl
+
+uniform float elapsedTime;
+
 // translates a value from a custom range into 0-1
 float translateRange(float rangeStart, float rangeEnd, float value)
 {
@@ -43,12 +47,6 @@ vec2 animationFrame(vec2 animationDuration)
     if (animationDuration == vec2(0))
         return vec2(0);
     return mod(vec2(elapsedTime), vec2(animationDuration)) / animationDuration;
-}
-
-vec2 worldUvs(float scale)
-{
-    scale *= 128.0;
-    return vec2(position.z / scale, position.x / scale);
 }
 
 // used for blending overlays into underlays.
@@ -73,4 +71,23 @@ float pointToLine(vec2 lineA, vec2 lineB, vec2 point)
         float t = dot(Ap, AB) / ABsquared;
         return t;
     }
+}
+
+vec2 getUvs(vec3 uvw, int materialData, vec3 position) {
+    if ((materialData >> MATERIAL_FLAG_WORLD_UVS & 1) == 1) {
+        // Treat the input uvw as a normal vector for a plane that goes through origo,
+        // and find the distance from the point to the plane
+        float scale = length(uvw);
+
+        vec3 N = uvw / scale;
+        vec3 C1 = cross(vec3(0, 0, 1), N);
+        vec3 C2 = cross(vec3(0, 1, 0), N);
+        vec3 T = normalize(length(C1) > length(C2) ? C1 : C2);
+        vec3 B = normalize(cross(N, T));
+        mat3 TBN = mat3(T, B, N);
+
+        return fract((TBN * position).xy / 128.f / scale);
+    }
+
+    return uvw.xy;
 }

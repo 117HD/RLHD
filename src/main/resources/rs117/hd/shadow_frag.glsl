@@ -25,19 +25,22 @@
 #version 330
 
 #include uniforms/materials.glsl
-#include utils/constants.glsl
 
 uniform sampler2DArray textureArray;
-uniform float elapsedTime;
 
-in vec2 fUv;
-flat in int materialId;
+in vec3 position;
+in vec3 uvw;
+flat in int materialData;
+
+#include utils/polyfills.glsl
+#include utils/constants.glsl
+#include utils/misc.glsl
 
 void main()
 {
-    Material material = getMaterial(materialId);
+    Material material = getMaterial(materialData >> MATERIAL_FLAG_BITS);
 
-    vec2 uv = fUv;
+    vec2 uv = getUvs(uvw, materialData, position);
     // Scroll UVs
     uv += material.scrollDuration * elapsedTime;
     // Scale from the center
