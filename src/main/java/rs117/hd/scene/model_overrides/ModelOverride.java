@@ -28,6 +28,7 @@ public class ModelOverride
     public Material baseMaterial = Material.NONE;
     public Material textureMaterial = Material.NONE;
     public UvType uvType = UvType.VANILLA;
+    public float uvScale = 1;
     public boolean flatNormals = false;
     public boolean removeBakedLighting = false;
     public boolean disableShadows = false;

@@ -346,60 +346,81 @@ public class ModelPusher {
             return faceTextures == null ? null : zeroFloats;
         }
 
+        twelveFloats[3] = twelveFloats[7] = twelveFloats[11] = materialData;
+
         switch (modelOverride.uvType) {
-            case GROUND_PLANE:
+            case WORLD_XY:
+            case WORLD_XZ:
+            case WORLD_YZ:
+                modelOverride.uvType.computeWorldUvw(twelveFloats, 0, modelOverride.uvScale);
+                modelOverride.uvType.computeWorldUvw(twelveFloats, 4, modelOverride.uvScale);
+                modelOverride.uvType.computeWorldUvw(twelveFloats, 8, modelOverride.uvScale);
+                break;
+            case MODEL_XY:
+            case MODEL_XZ:
+            case MODEL_YZ:
                 final int triA = model.getFaceIndices1()[face];
                 final int triB = model.getFaceIndices2()[face];
                 final int triC = model.getFaceIndices3()[face];
 
                 final int[] xVertices = model.getVerticesX();
+                final int[] yVertices = model.getVerticesY();
                 final int[] zVertices = model.getVerticesZ();
 
-                twelveFloats[0] = materialData;
-                twelveFloats[1] = (xVertices[triA] % Perspective.LOCAL_TILE_SIZE) / (float) Perspective.LOCAL_TILE_SIZE;
-                twelveFloats[2] = (zVertices[triA] % Perspective.LOCAL_TILE_SIZE) / (float) Perspective.LOCAL_TILE_SIZE;
-                twelveFloats[3] = 0;
-                twelveFloats[4] = materialData;
-                twelveFloats[5] = (xVertices[triB] % Perspective.LOCAL_TILE_SIZE) / (float) Perspective.LOCAL_TILE_SIZE;
-                twelveFloats[6] = (zVertices[triB] % Perspective.LOCAL_TILE_SIZE) / (float) Perspective.LOCAL_TILE_SIZE;
-                twelveFloats[7] = 0;
-                twelveFloats[8] = materialData;
-                twelveFloats[9] = (xVertices[triC] % Perspective.LOCAL_TILE_SIZE) / (float) Perspective.LOCAL_TILE_SIZE;
-                twelveFloats[10] = (zVertices[triC] % Perspective.LOCAL_TILE_SIZE) / (float) Perspective.LOCAL_TILE_SIZE;
-                twelveFloats[11] = 0;
+                int sin = Perspective.SINE[orientation];
+                int cos = Perspective.COSINE[orientation];
+                int x, y, z, tmp;
+
+                x = xVertices[triA] - 64;
+                y = yVertices[triA];
+                z = zVertices[triA] - 64;
+                tmp = x * sin + z * cos >> 16;
+                x = x * cos + z * sin >> 16;
+                z = tmp;
+                modelOverride.uvType.computeModelUvw(twelveFloats, 0, modelOverride.uvScale, x, y, z);
+
+                x = xVertices[triB] - 64;
+                y = yVertices[triB];
+                z = zVertices[triB] - 64;
+                tmp = x * sin + z * cos >> 16;
+                x = x * cos + z * sin >> 16;
+                z = tmp;
+                modelOverride.uvType.computeModelUvw(twelveFloats, 4, modelOverride.uvScale, x, y, z);
+
+                x = xVertices[triC] - 64;
+                y = yVertices[triC];
+                z = zVertices[triC] - 64;
+                tmp = x * sin + z * cos >> 16;
+                x = x * cos + z * sin >> 16;
+                z = tmp;
+                modelOverride.uvType.computeModelUvw(twelveFloats, 8, modelOverride.uvScale, x, y, z);
                 break;
             case VANILLA:
                 if (isVanillaTextured) {
                     int idx = face * 6;
-                    twelveFloats[0] = materialData;
-                    twelveFloats[1] = uv[idx];
-                    twelveFloats[2] = uv[idx + 1];
-                    twelveFloats[3] = 0;
-                    twelveFloats[4] = materialData;
-                    twelveFloats[5] = uv[idx + 2];
-                    twelveFloats[6] = uv[idx + 3];
-                    twelveFloats[7] = 0;
-                    twelveFloats[8] = materialData;
-                    twelveFloats[9] = uv[idx + 4];
-                    twelveFloats[10] = uv[idx + 5];
-                    twelveFloats[11] = 0;
+                    twelveFloats[0] = uv[idx];
+                    twelveFloats[1] = uv[idx + 1];
+                    twelveFloats[2] = 0;
+                    twelveFloats[4] = uv[idx + 2];
+                    twelveFloats[5] = uv[idx + 3];
+                    twelveFloats[6] = 0;
+                    twelveFloats[8] = uv[idx + 4];
+                    twelveFloats[9] = uv[idx + 5];
+                    twelveFloats[10] = 0;
                     break;
                 }
                 // fall through
             case GEOMETRY:
             default:
-                twelveFloats[0] = materialData;
+                twelveFloats[0] = 0;
                 twelveFloats[1] = 0;
                 twelveFloats[2] = 0;
-                twelveFloats[3] = 0;
-                twelveFloats[4] = materialData;
-                twelveFloats[5] = 1;
+                twelveFloats[4] = 1;
+                twelveFloats[5] = 0;
                 twelveFloats[6] = 0;
-                twelveFloats[7] = 0;
-                twelveFloats[8] = materialData;
-                twelveFloats[9] = 0;
-                twelveFloats[10] = 1;
-                twelveFloats[11] = 0;
+                twelveFloats[8] = 0;
+                twelveFloats[9] = 1;
+                twelveFloats[10] = 0;
                 break;
         }
 
@@ -407,8 +428,10 @@ public class ModelPusher {
     }
 
     public int packMaterialData(Material material, boolean isOverlay, @NonNull ModelOverride modelOverride) {
-        return (material.ordinal() & (1 << 10) - 1) << 3
-            | (isOverlay ? 1 : 0) << 2
+        return (material.ordinal() & (1 << 10) - 1) << 4
+            | (isOverlay ? 1 : 0) << 3
+            | (modelOverride.flatNormals ? 1 : 0) << 2
+            | (modelOverride.uvType.worldUvs ? 1 : 0) << 1
             | (modelOverride.disableShadows ? 1 : 0);
     }
 

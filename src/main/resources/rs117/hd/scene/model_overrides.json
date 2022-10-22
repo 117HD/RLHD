@@ -1252,7 +1252,7 @@
     "objectIds": [
       7517
     ],
-    "uvType": "GROUND_PLANE"
+    "uvType": "MODEL_XZ"
   },
   {
     "description": "FARMING_PATCH_2",
@@ -1260,7 +1260,7 @@
     "objectIds": [
       7522
     ],
-    "uvType": "GROUND_PLANE"
+    "uvType": "MODEL_XZ"
   },
   {
     "description": "GRASS",
@@ -1444,7 +1444,7 @@
       7153
     ],
     "flatNormals": true,
-    "uvType": "GROUND_PLANE"
+    "uvType": "MODEL_XZ"
   },
   {
     "description": "VARROCK_FOUNTAIN_STATUE",
@@ -1504,7 +1504,7 @@
       16155
     ],
     "flatNormals": true,
-    "uvType": "GROUND_PLANE"
+    "uvType": "MODEL_XZ"
   },
   {
     "description": "GRAND_EXCHANGE_WALLS",
@@ -2429,7 +2429,7 @@
       29634
     ],
     "flatNormals": true,
-    "uvType": "GROUND_PLANE"
+    "uvType": "MODEL_XZ"
   },
   {
     "description": "CAVE_WALL_ABOVE_FLOOR_TILE",
@@ -2440,7 +2440,7 @@
       25058
     ],
     "flatNormals": true,
-    "uvType": "GROUND_PLANE"
+    "uvType": "MODEL_XZ"
   },
   {
     "description": "TROOL_STRONGHOLD_HIDDEN_DOOR",
@@ -2651,7 +2651,7 @@
       6617, 6618, 6539, 6540
     ],
     "flatNormals": true,
-    "uvType": "GROUND_PLANE"
+    "uvType": "MODEL_XZ"
   },
   {
     "description": "Sophanem pyramid door",

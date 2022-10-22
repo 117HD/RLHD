@@ -37,7 +37,20 @@
       "uvType": {
         "type": "string",
         "description": "What to base UV coordinates on for object texturing. Defaults to GEOMETRY.",
-        "enum": [ "VANILLA", "GEOMETRY", "GROUND_PLANE" ]
+        "enum": [
+          "VANILLA",
+          "GEOMETRY",
+          "MODEL_XY",
+          "MODEL_XZ",
+          "MODEL_YZ",
+          "WORLD_XY",
+          "WORLD_XZ",
+          "WORLD_YZ"
+        ]
+      },
+      "uvScale": {
+        "type": "number",
+        "description": "A scaling factor to apply to UV coordinates. Defaults to 1."
       },
       "flatNormals": {
         "type": "boolean",
