@@ -24,19 +24,8 @@
  */
 package rs117.hd.scene;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
-import net.runelite.api.Client;
-import net.runelite.api.Constants;
-import net.runelite.api.Perspective;
-import net.runelite.api.Scene;
-import net.runelite.api.SceneTileModel;
-import net.runelite.api.SceneTilePaint;
-import net.runelite.api.Tile;
+import net.runelite.api.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.data.WaterType;
@@ -47,6 +36,15 @@ import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.scene.model_overrides.ObjectType;
 import rs117.hd.scene.model_overrides.TzHaarRecolorType;
 import rs117.hd.utils.HDUtils;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
+import static net.runelite.api.Constants.MAX_Z;
+import static net.runelite.api.Constants.SCENE_SIZE;
 import static rs117.hd.utils.HDUtils.dotNormal3Lights;
 
 @Slf4j
@@ -101,14 +99,14 @@ public class ProceduralGenerator
 		vertexIsOverlay = new HashMap<>();
 		Tile[][][] tiles = scene.getTiles();
 
-		for (int z = 0; z < Constants.MAX_Z; ++z) {
-			for (int x = 0; x < Constants.SCENE_SIZE; ++x)
-				for (int y = 0; y < Constants.SCENE_SIZE; ++y)
+		for (int z = 0; z < MAX_Z; ++z) {
+			for (int x = 0; x < SCENE_SIZE; ++x)
+				for (int y = 0; y < SCENE_SIZE; ++y)
 					if (tiles[z][x][y] != null)
 						generateDataForTile(tiles[z][x][y]);
 
-			for (int x = 0; x < Constants.SCENE_SIZE; ++x)
-				for (int y = 0; y < Constants.SCENE_SIZE; ++y)
+			for (int x = 0; x < SCENE_SIZE; ++x)
+				for (int y = 0; y < SCENE_SIZE; ++y)
 					if (tiles[z][x][y] != null && tiles[z][x][y].getBridge() != null)
 						generateDataForTile(tiles[z][x][y].getBridge());
 		}
@@ -168,19 +166,19 @@ public class ProceduralGenerator
 
 			vertexHashes = tileVertexKeys(tile);
 
-			if (x >= Constants.SCENE_SIZE - 2 && y >= Constants.SCENE_SIZE - 2)
+			if (x >= SCENE_SIZE - 2 && y >= SCENE_SIZE - 2)
 			{
 				// reduce the black scene edges by assigning surrounding colors
 				neColor = swColor;
 				nwColor = swColor;
 				seColor = swColor;
 			}
-			else if (y >= Constants.SCENE_SIZE - 2)
+			else if (y >= SCENE_SIZE - 2)
 			{
 				nwColor = swColor;
 				neColor = seColor;
 			}
-			else if (x >= Constants.SCENE_SIZE - 2)
+			else if (x >= SCENE_SIZE - 2)
 			{
 				neColor = nwColor;
 				seColor = swColor;
@@ -341,7 +339,7 @@ public class ProceduralGenerator
 	public void generateUnderwaterTerrain(Scene scene)
 	{
 		// true if a tile contains at least 1 face which qualifies as water
-		tileIsWater = new boolean[Constants.MAX_Z][Constants.SCENE_SIZE][Constants.SCENE_SIZE];
+		tileIsWater = new boolean[MAX_Z][SCENE_SIZE][SCENE_SIZE];
 		// true if a vertex is part of a face which qualifies as water; non-existent if not
 		vertexIsWater = new HashMap<>();
 		// true if a vertex is part of a face which qualifies as land; non-existent if not
@@ -349,22 +347,22 @@ public class ProceduralGenerator
 		vertexIsLand = new HashMap<>();
 		// if true, the tile will be skipped when the scene is drawn
 		// this is due to certain edge cases with water on the same X/Y on different planes
-		skipTile = new boolean[Constants.MAX_Z][Constants.SCENE_SIZE][Constants.SCENE_SIZE];
+		skipTile = new boolean[MAX_Z][SCENE_SIZE][SCENE_SIZE];
 		// the height adjustment for each vertex, to be applied to the vertex'
 		// real height to create the underwater terrain
 		vertexUnderwaterDepth = new HashMap<>();
 		// the basic 'levels' of underwater terrain, used to sink terrain based on its distance
 		// from the shore, then used to produce the world-space height offset
 		// 0 = land
-		underwaterDepthLevels = new int[Constants.MAX_Z][Constants.SCENE_SIZE + 1][Constants.SCENE_SIZE + 1];
+		underwaterDepthLevels = new int[MAX_Z][SCENE_SIZE + 1][SCENE_SIZE + 1];
 		// the world-space height offsets of each vertex on the tile grid
 		// these offsets are interpolated to calculate offsets for vertices not on the grid (tilemodels)
-		final int[][][] underwaterDepths = new int[Constants.MAX_Z][Constants.SCENE_SIZE + 1][Constants.SCENE_SIZE + 1];
+		final int[][][] underwaterDepths = new int[MAX_Z][SCENE_SIZE + 1][SCENE_SIZE + 1];
 
 		Tile[][][] tiles = scene.getTiles();
-		for (int z = 0; z < Constants.MAX_Z; ++z)
+		for (int z = 0; z < MAX_Z; ++z)
 		{
-			for (int x = 0; x < Constants.SCENE_SIZE; ++x)
+			for (int x = 0; x < SCENE_SIZE; ++x)
 			{
 				// set the array to 1 initially
 				// this assumes that all vertices are water;
@@ -374,11 +372,11 @@ public class ProceduralGenerator
 		}
 
 		// figure out which vertices are water and assign some data
-		for (int z = 0; z < Constants.MAX_Z; ++z)
+		for (int z = 0; z < MAX_Z; ++z)
 		{
-			for (int x = 0; x < Constants.SCENE_SIZE; ++x)
+			for (int x = 0; x < SCENE_SIZE; ++x)
 			{
-				for (int y = 0; y < Constants.SCENE_SIZE; ++y)
+				for (int y = 0; y < SCENE_SIZE; ++y)
 				{
 					if (tiles[z][x][y] == null)
 					{
@@ -546,7 +544,7 @@ public class ProceduralGenerator
 		// Sink terrain further from shore by desired levels.
 		for (int level = 0; level < depthLevelSlope.length - 1; level++)
 		{
-			for (int z = 0; z < Constants.MAX_Z; ++z)
+			for (int z = 0; z < MAX_Z; ++z)
 			{
 				for (int x = 0; x < underwaterDepthLevels[z].length; x++)
 				{
@@ -560,7 +558,7 @@ public class ProceduralGenerator
 						// If it's on the edge of the scene, reset the depth so
 						// it creates a 'wall' to prevent fog from passing through.
 						// Not incredibly effective, but better than nothing.
-						if (x == 0 || y == 0 || x == Constants.SCENE_SIZE || y == Constants.SCENE_SIZE)
+						if (x == 0 || y == 0 || x == SCENE_SIZE || y == SCENE_SIZE)
 						{
 							underwaterDepthLevels[z][x][y] = 0;
 							continue;
@@ -595,7 +593,7 @@ public class ProceduralGenerator
 		}
 
 		// Adjust the height levels to world coordinate offsets and add to an array.
-		for (int z = 0; z < Constants.MAX_Z; ++z)
+		for (int z = 0; z < MAX_Z; ++z)
 		{
 			for (int x = 0; x < underwaterDepthLevels[z].length; x++)
 			{
@@ -624,11 +622,11 @@ public class ProceduralGenerator
 
 		// Store the height offsets in a hashmap and calculate interpolated
 		// height offsets for non-corner vertices.
-		for (int z = 0; z < Constants.MAX_Z; ++z)
+		for (int z = 0; z < MAX_Z; ++z)
 		{
-			for (int x = 0; x < Constants.SCENE_SIZE; ++x)
+			for (int x = 0; x < SCENE_SIZE; ++x)
 			{
-				for (int y = 0; y < Constants.SCENE_SIZE; ++y)
+				for (int y = 0; y < SCENE_SIZE; ++y)
 				{
 					if (!tileIsWater[z][x][y])
 					{
