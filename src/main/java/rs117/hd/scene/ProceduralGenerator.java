@@ -823,10 +823,6 @@ public class ProceduralGenerator
 	 */
 	WaterType tileWaterType(Tile tile, SceneTilePaint sceneTilePaint)
 	{
-		if (tile.getBridge() != null)
-		{
-			return WaterType.NONE;
-		}
 		int tileZ = tile.getRenderLevel();
 		int tileX = tile.getSceneLocation().getX();
 		int tileY = tile.getSceneLocation().getY();
@@ -861,10 +857,6 @@ public class ProceduralGenerator
 	 */
 	WaterType faceWaterType(Tile tile, int face, SceneTileModel sceneTileModel)
 	{
-		if (tile.getBridge() != null)
-		{
-			return WaterType.NONE;
-		}
 		int tileZ = tile.getRenderLevel();
 		int tileX = tile.getSceneLocation().getX();
 		int tileY = tile.getSceneLocation().getY();
