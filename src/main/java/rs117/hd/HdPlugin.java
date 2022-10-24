@@ -2490,7 +2490,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				ModelOverride modelOverride = modelOverrideManager.getOverride(hash);
 				final int[] lengths = modelPusher.pushModel(hash, model,
 					stagingBufferVertices, stagingBufferUvs, stagingBufferNormals,
-					0, 0, 0, orientation, modelOverride, ObjectType.NONE, true);
+					0, 0, 0, 0, modelOverride, ObjectType.NONE, true);
 				final int faceCount = lengths[0] / 3;
 				if (lengths[1] <= 0)
 					uvOffset = -1;
