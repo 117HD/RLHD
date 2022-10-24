@@ -30,6 +30,7 @@ public class ModelOverride
     public Material textureMaterial = Material.NONE;
     public UvType uvType = UvType.VANILLA;
     public float uvScale = 1;
+    public int uvOrientation = 0;
     public boolean flatNormals = false;
     public boolean removeBakedLighting = false;
     public boolean disableShadows = false;
@@ -40,18 +41,35 @@ public class ModelOverride
     public AABB[] hideInAreas = {};
 
     public void computeModelUvw(float[] out, int i, float x, float y, float z, int orientation) {
-        // Reverse baked vertex rotation
-        double rad = orientation * Perspective.UNIT;
-        double cos = Math.cos(rad);
-        double sin = Math.sin(rad);
-        float temp = (float) (x * sin + z * cos);
-        x = (float) (x * cos - z * sin);
-        z = temp;
+        double rad, cos, sin;
+        float temp;
+        if (orientation % 2048 != 0) {
+            // Reverse baked vertex rotation
+            rad = orientation * Perspective.UNIT;
+            cos = Math.cos(rad);
+            sin = Math.sin(rad);
+            temp = (float) (x * sin + z * cos);
+            x = (float) (x * cos - z * sin);
+            z = temp;
+        }
 
         x = (x / Perspective.LOCAL_TILE_SIZE + .5f) / uvScale;
         y = (y / Perspective.LOCAL_TILE_SIZE + .5f) / uvScale;
         z = (z / Perspective.LOCAL_TILE_SIZE + .5f) / uvScale;
 
         uvType.computeModelUvw(out, i, x, y, z);
+
+        if (uvOrientation % 2048 != 0) {
+            rad = uvOrientation * Perspective.UNIT;
+            cos = Math.cos(rad);
+            sin = Math.sin(rad);
+            x = out[i] - .5f;
+            z = out[i + 1] - .5f;
+            temp = (float) (x * sin + z * cos);
+            x = (float) (x * cos - z * sin);
+            z = temp;
+            out[i] = x + .5f;
+            out[i + 1] = z + .5f;
+        }
     }
 }
