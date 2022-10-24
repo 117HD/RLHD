@@ -122,7 +122,7 @@ public class ModelPusher {
 
     public int[] pushModel(
         long hash, Model model, GpuIntBuffer vertexBuffer, GpuFloatBuffer uvBuffer, GpuFloatBuffer normalBuffer,
-        int tileX, int tileY, int tileZ, int orientation, @NonNull ModelOverride modelOverride, ObjectType objectType,
+        int tileX, int tileY, int tileZ, int preOrientation, @NonNull ModelOverride modelOverride, ObjectType objectType,
         boolean shouldCache
     ) {
         if (modelCache == null) {
@@ -150,7 +150,7 @@ public class ModelPusher {
         if (shouldCache) {
             vertexDataCacheHash = modelHasher.calculateVertexCacheHash();
             normalDataCacheHash = modelHasher.calculateNormalCacheHash();
-            uvDataCacheHash = modelHasher.calculateUvCacheHash(orientation, modelOverride);
+            uvDataCacheHash = modelHasher.calculateUvCacheHash(preOrientation, modelOverride);
 
             IntBuffer vertexData = this.modelCache.getVertexData(vertexDataCacheHash);
             cachedVertexData = vertexData != null && vertexData.remaining() == bufferSize;
@@ -237,7 +237,7 @@ public class ModelPusher {
             }
 
             if (!cachedUvData) {
-                float[] tempUvData = getUvDataForFace(model, orientation, modelOverride, face);
+                float[] tempUvData = getUvDataForFace(model, preOrientation, modelOverride, face);
                 if (tempUvData != null) {
                     uvBuffer.put(tempUvData);
                     uvLength += 3;
@@ -357,8 +357,14 @@ public class ModelPusher {
                 modelOverride.uvType.computeWorldUvw(twelveFloats, 8, modelOverride.uvScale);
                 break;
             case MODEL_XY:
+            case MODEL_XY_MIRROR_A:
+            case MODEL_XY_MIRROR_B:
             case MODEL_XZ:
+            case MODEL_XZ_MIRROR_A:
+            case MODEL_XZ_MIRROR_B:
             case MODEL_YZ:
+            case MODEL_YZ_MIRROR_A:
+            case MODEL_YZ_MIRROR_B:
                 final int triA = model.getFaceIndices1()[face];
                 final int triB = model.getFaceIndices2()[face];
                 final int triC = model.getFaceIndices3()[face];
@@ -367,33 +373,9 @@ public class ModelPusher {
                 final int[] yVertices = model.getVerticesY();
                 final int[] zVertices = model.getVerticesZ();
 
-                int sin = Perspective.SINE[orientation];
-                int cos = Perspective.COSINE[orientation];
-                int x, y, z, tmp;
-
-                x = xVertices[triA] - 64;
-                y = yVertices[triA];
-                z = zVertices[triA] - 64;
-                tmp = x * sin + z * cos >> 16;
-                x = x * cos + z * sin >> 16;
-                z = tmp;
-                modelOverride.uvType.computeModelUvw(twelveFloats, 0, modelOverride.uvScale, x, y, z);
-
-                x = xVertices[triB] - 64;
-                y = yVertices[triB];
-                z = zVertices[triB] - 64;
-                tmp = x * sin + z * cos >> 16;
-                x = x * cos + z * sin >> 16;
-                z = tmp;
-                modelOverride.uvType.computeModelUvw(twelveFloats, 4, modelOverride.uvScale, x, y, z);
-
-                x = xVertices[triC] - 64;
-                y = yVertices[triC];
-                z = zVertices[triC] - 64;
-                tmp = x * sin + z * cos >> 16;
-                x = x * cos + z * sin >> 16;
-                z = tmp;
-                modelOverride.uvType.computeModelUvw(twelveFloats, 8, modelOverride.uvScale, x, y, z);
+                modelOverride.computeModelUvw(twelveFloats, 0, xVertices[triA], yVertices[triA], zVertices[triA], orientation);
+                modelOverride.computeModelUvw(twelveFloats, 4, xVertices[triB], yVertices[triB], zVertices[triB], orientation);
+                modelOverride.computeModelUvw(twelveFloats, 8, xVertices[triC], yVertices[triC], zVertices[triC], orientation);
                 break;
             case VANILLA:
                 if (isVanillaTextured) {
