@@ -308,9 +308,6 @@ public enum Material
 	WOOD_GRAIN_BROWN_DARK(p -> p
 		.setOverrideBaseColor(true)
 	),
-	WOOD_GRAIN_BROWN_DARK(p -> p
-		.setOverrideBaseColor(true)
-	),
 	WOOD_GRAIN_GREEN(p -> p
 		.setOverrideBaseColor(true)
 	),

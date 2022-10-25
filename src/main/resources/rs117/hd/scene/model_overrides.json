@@ -1382,7 +1382,6 @@
     "description": "WOODEN_FENCES",
     "baseMaterial": "WOOD_GRAIN",
     "objectIds": [
-      814,
       980,
       981,
       991,
@@ -1391,13 +1390,6 @@
       1008,
       1565,
       1566,
-      5432,
-      5433,
-      5434,
-      5435,
-      5436,
-      5437,
-      5438,
       7055,
       9511,
       9623,
@@ -2676,5 +2668,286 @@
         3190, 3447
       ]
     ]
+  },
+  {
+    "description": "WOODEN_PLANK_DOCKS",
+    "baseMaterial": "WOOD_GRAIN_BROWN",
+    "objectIds": [
+      9513,
+      9541,
+      9542,
+      9543
+    ],
+    "uvType": "GROUND_PLANE"
+  },
+  {
+    "description": "WOODEN_PLANK_ROUGH",
+    "baseMaterial": "WOOD_GRAIN_BROWN_DARK",
+    "objectIds": [
+      796,
+      797,
+      798,
+      799,
+      800,
+      801,
+      802,
+      803,
+      808,
+      809,
+      11591,
+      15975,
+      41419
+    ],
+    "uvType": "GROUND_PLANE"
+  },
+  {
+    "description": "WOODEN_PLANK_ROUGH",
+    "baseMaterial": "WOOD_GRAIN_RED",
+    "objectIds": [
+      42036
+    ],
+    "uvType": "GROUND_PLANE"
+  },
+  {
+    "description": "DOCK_FENCES",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      814,
+      9539,
+      16004
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "DOCK_FENCES_TAN",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      17102,
+      25671,
+      25672
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "RELLEKKA_FENCES",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      4262,
+      8969,
+      8970,
+      8971
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "PHASMATYS_DOCK_FENCES",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      5236
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "RoU_DOCK_FENCES",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      41323,
+      41324,
+      41325
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "LIGHT_WOODEN_DOCKS",
+    "baseMaterial": "WOOD_GRAIN_TAN",
+    "objectIds": [
+      17103,
+      17104,
+      17106,
+      25618,
+      25619,
+      31589
+    ],
+    "uvType": "GROUND_PLANE"
+  },
+  {
+    "description": "PHASMATYS_DOCKS",
+    "baseMaterial": "WOOD_GRAIN_GREEN",
+    "objectIds": [
+      5238,
+      5239,
+      5455,
+      5456
+    ],
+    "flatNormals": true,
+    "uvType": "GROUND_PLANE"
+  },
+  {
+    "description": "LUNAR_ISLE_DOCKS",
+    "baseMaterial": "WEATHERED_LUNAR_WOOD",
+    "objectIds": [
+      16991
+    ],
+    "uvType": "GROUND_PLANE"
+  },
+  {
+    "description": "LUNAR_ISLE_DOCK_SUPPORTS",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      16966,
+      16967
+    ]
+  },
+  {
+    "description": "LUNAR_ISLE_DOCK_LADDERS",
+    "objectIds": [
+      16959,
+      16960,
+      16961,
+      16962
+    ]
+  },
+  {
+    "description": "LUNAR_ISLE_BRIDGES",
+    "baseMaterial": "WEATHERED_LUNAR_WOOD",
+    "objectIds": [
+      16807
+    ],
+    "uvType": "GROUND_PLANE"
+  },
+  {
+    "description": "PIRATE_ISLE_DOCKS",
+    "baseMaterial": "WEATHERED_LUNAR_WOOD",
+    "objectIds": [
+      16988,
+      16989,
+      16992,
+      16993
+    ],
+    "flatNormals": true,
+    "uvType": "GROUND_PLANE"
+  },
+  {
+    "description": "LUNAR_ISLE_DOCK_SUPPORTS",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      16963,
+      16965
+    ]
+  },
+  {
+    "description": "RELLEKKA_DOCKS",
+    "baseMaterial": "WOOD_GRAIN_BROWN_WEATHERED",
+    "objectIds": [
+      4256,
+      4257,
+      4258
+    ],
+    "flatNormals": true,
+    "uvType": "GROUND_PLANE"
+  },
+  {
+    "description": "RoU_DOCKS",
+    "baseMaterial": "WOOD_GRAIN_WEATHERED",
+    "objectIds": [
+      41320,
+      41321
+
+    ],
+    "uvType": "GROUND_PLANE"
+  },
+  {
+    "description": "FENCES_2",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      23848,
+      23849,
+      23850,
+      23851
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "FENCES_3",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      994,
+      995
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "PHASMATYS_WOODEN_FENCES",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      5432,
+      5433,
+      5434,
+      5435,
+      5436,
+      5437,
+      5438
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "PICARILIUS_DOCKS",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      27626,
+      27627,
+      27628,
+      27629,
+      27630,
+      27631,
+      27632,
+      27633,
+      27634,
+      27635,
+      27636,
+      27637,
+      27638,
+      27639,
+      27640,
+      27641,
+      27642,
+      27643,
+      27644,
+      27645,
+      27646,
+      27650,
+      27651,
+      42751
+    ],
+    "uvType": "GROUND_PLANE"
+  },
+  {
+    "description": "PICARILIUS_DOCKS_SAND_TILE",
+    "baseMaterial": "SAND_3",
+    "objectIds": [
+      27649,
+      27652,
+      27655,
+      29663,
+      27654,
+      29664,
+      27658,
+      27659
+
+    ],
+    "uvType": "GROUND_PLANE"
+  },
+  {
+    "description": "PICARILIUS_SAND_TILE",
+    "baseMaterial": "SAND_3",
+    "objectIds": [
+      27653,
+      27656,
+      27657,
+      27658,
+      27660
+
+    ],
+    "uvType": "GROUND_PLANE"
   }
 ]
