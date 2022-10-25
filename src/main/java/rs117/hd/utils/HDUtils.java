@@ -24,8 +24,6 @@
  */
 package rs117.hd.utils;
 
-import static java.lang.Math.abs;
-import static java.lang.Math.sqrt;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 
@@ -35,15 +33,15 @@ public class HDUtils
 {
 
 	// directional vectors approximately opposite of the directional light used by the client
-	private static final float[] inverseLightDirectionZ0 = new float[]{
+	private static final float[] lightDirTile = new float[]{
 		0.70710678f, 0.70710678f, 0f
 	};
-	private static final float[] inverseLightDirectionZ1 = new float[]{
+	public static final float[] lightDirModel = new float[]{
 		0.57735026f, 0.57735026f, 0.57735026f
 	};
 
 	// The epsilon for floating point values used by jogl
-	private static final float EPSILON = 1.1920929E-7f;
+	public static final float EPSILON = 1.1920929E-7f;
 
 	public static float[] vectorAdd(float[] vec1, float[] vec2)
 	{
@@ -144,10 +142,8 @@ public class HDUtils
 	{
 		// simple custom hashing function for vertex position data
 		StringBuilder s = new StringBuilder();
-		for (int i = 0; i < vPos.length; i++)
-		{
-			s.append(vPos[i]).append(",");
-		}
+		for (int part : vPos)
+			s.append(part).append(",");
 		return s.toString().hashCode();
 	}
 
@@ -289,26 +285,22 @@ public class HDUtils
 		return result;
 	}
 
-	public static float dotNormal3Lights(float[] normals)
+	public static float dotLightDirectionModel(float x, float y, float z)
 	{
-		return dotNormal3Lights(normals, true);
+		// Model normal vectors need to be normalized
+		float length = x * x + y * y + z * z;
+		if (length < EPSILON)
+			return 0;
+		return (x * lightDirModel[0] + y * lightDirModel[1] + z * lightDirModel[2]) / (float) Math.sqrt(length);
 	}
 
-	public static float dotNormal3Lights(float[] normals, final boolean includeZ)
+	public static float dotLightDirectionTile(float x, float y, float z)
 	{
-		final float lengthSq = normals[0] * normals[0] + normals[1] * normals[1] + normals[2] * normals[2];
-		if (abs(lengthSq) < EPSILON)
-		{
-			return 0f;
-		}
-		else if (includeZ)
-		{
-			return (normals[0] * inverseLightDirectionZ1[0] + normals[1] * inverseLightDirectionZ1[1] + normals[2] * inverseLightDirectionZ1[2]) / (float) sqrt(lengthSq);
-		}
-		else
-		{
-			return (normals[0] * inverseLightDirectionZ0[0] + normals[1] * inverseLightDirectionZ0[1]) / (float) sqrt(lengthSq);
-		}
+		// Tile normal vectors need to be normalized
+		float length = x * x + y * y + z * z;
+		if (length < EPSILON)
+			return 0;
+		return (x * lightDirTile[0] + y * lightDirTile[1]) / (float) Math.sqrt(length);
 	}
 
     public static float[] rgb(int r, int g, int b)

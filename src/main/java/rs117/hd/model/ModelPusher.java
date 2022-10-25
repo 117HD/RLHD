@@ -25,7 +25,7 @@ import javax.inject.Singleton;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
-import static rs117.hd.utils.HDUtils.dotNormal3Lights;
+import static rs117.hd.utils.HDUtils.dotLightDirectionModel;
 
 /**
  * Pushes models
@@ -89,7 +89,7 @@ public class ModelPusher {
     // the minimum amount by which each color will be lightened
     private static final int baseLighten = 10;
     // same thing but for the normalBuffer and uvBuffer
-    private final static float[] zeroFloats = new float[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    private final static float[] zeroFloats = new float[12];
     private final static int[] twoInts = new int[2];
     private final static int[] fourInts = new int[4];
     private final static int[] twelveInts = new int[12];
@@ -426,7 +426,9 @@ public class ModelPusher {
         final int triC = model.getFaceIndices3()[face];
         final byte[] faceTransparencies = model.getFaceTransparencies();
         final short[] faceTextures = model.getFaceTextures();
+        final int[] xVertices = model.getVerticesX();
         final int[] yVertices = model.getVerticesY();
+        final int[] zVertices = model.getVerticesZ();
 
         int heightA = yVertices[triA];
         int heightB = yVertices[triB];
@@ -496,29 +498,66 @@ public class ModelPusher {
         // direction, and some models even have baked lighting built into the model itself. In some cases, increasing
         // brightness in this way leads to overly bright colors, so we are forced to cap brightness at a relatively
         // low value for it to look acceptable in most cases.
-        int lightenA = (int) (Math.max((color1L - ignoreLowLightness), 0) * lightnessMultiplier) + baseLighten;
-        float dotA = Math.max(dotNormal3Lights(new float[]{
-            xVertexNormals[triA],
-            yVertexNormals[triA],
-            zVertexNormals[triA],
-        }), 0);
-        color1L = (int) HDUtils.lerp(color1L, lightenA, dotA);
+        if (modelOverride.flatNormals) {
+            float[] T = {
+                xVertices[triA] - xVertices[triB],
+                yVertices[triA] - yVertices[triB],
+                zVertices[triA] - zVertices[triB]
+            };
+            float[] B = {
+                xVertices[triA] - xVertices[triC],
+                yVertices[triA] - yVertices[triC],
+                zVertices[triA] - zVertices[triC]
+            };
+            float[] N = new float[3];
+            N[0] = T[1] * B[2] - T[2] * B[1];
+            N[1] = T[2] * B[0] - T[0] * B[2];
+            N[2] = T[0] * B[1] - T[1] * B[0];
+            float length = (float) Math.sqrt(N[0] * N[0] + N[1] * N[1] + N[2] * N[2]);
+            if (length < HDUtils.EPSILON) {
+                N[0] = N[1] = N[2] = 0;
+            } else {
+                N[0] /= length;
+                N[1] /= length;
+                N[2] /= length;
+            }
 
-        int lightenB = (int) (Math.max((color2L - ignoreLowLightness), 0) * lightnessMultiplier) + baseLighten;
-        float dotB = Math.max(dotNormal3Lights(new float[]{
-            xVertexNormals[triB],
-            yVertexNormals[triB],
-            zVertexNormals[triB],
-        }), 0);
-        color2L = (int) HDUtils.lerp(color2L, lightenB, dotB);
+            float[] L = HDUtils.lightDirModel;
+            float lightDotNormal = Math.max(0, N[0] * L[0] + N[1] * L[1] + N[2] * L[2]);
 
-        int lightenC = (int) (Math.max((color3L - ignoreLowLightness), 0) * lightnessMultiplier) + baseLighten;
-        float dotC = Math.max(dotNormal3Lights(new float[]{
-            xVertexNormals[triC],
-            yVertexNormals[triC],
-            zVertexNormals[triC],
-        }), 0);
-        color3L = (int) HDUtils.lerp(color3L, lightenC, dotC);
+            int lightenA = (int) (Math.max((color1L - ignoreLowLightness), 0) * lightnessMultiplier) + baseLighten;
+            color1L = (int) HDUtils.lerp(color1L, lightenA, lightDotNormal);
+
+            int lightenB = (int) (Math.max((color2L - ignoreLowLightness), 0) * lightnessMultiplier) + baseLighten;
+            color2L = (int) HDUtils.lerp(color2L, lightenB, lightDotNormal);
+
+            int lightenC = (int) (Math.max((color3L - ignoreLowLightness), 0) * lightnessMultiplier) + baseLighten;
+            color3L = (int) HDUtils.lerp(color3L, lightenC, lightDotNormal);
+        } else {
+            int lightenA = (int) (Math.max((color1L - ignoreLowLightness), 0) * lightnessMultiplier) + baseLighten;
+            float dotA = Math.max(0, dotLightDirectionModel(
+                xVertexNormals[triA],
+                yVertexNormals[triA],
+                zVertexNormals[triA]
+            ));
+            color1L = (int) HDUtils.lerp(color1L, lightenA, dotA);
+
+            int lightenB = (int) (Math.max((color2L - ignoreLowLightness), 0) * lightnessMultiplier) + baseLighten;
+            float dotB = Math.max(0, dotLightDirectionModel(
+                xVertexNormals[triB],
+                yVertexNormals[triB],
+                zVertexNormals[triB]
+            ));
+            color2L = (int) HDUtils.lerp(color2L, lightenB, dotB);
+
+            int lightenC = (int) (Math.max((color3L - ignoreLowLightness), 0) * lightnessMultiplier) + baseLighten;
+            float dotC = Math.max(0, dotLightDirectionModel(
+                xVertexNormals[triC],
+                yVertexNormals[triC],
+                zVertexNormals[triC]
+            ));
+            color3L = (int) HDUtils.lerp(color3L, lightenC, dotC);
+        }
 
         int maxBrightness1 = 55;
         int maxBrightness2 = 55;

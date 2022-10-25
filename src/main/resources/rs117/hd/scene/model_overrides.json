@@ -2659,5 +2659,12 @@
     "objectIds": [
       6614, 26622, 26623, 26624, 26625, 19168
     ]
+  },
+  {
+    "description": "Lighthouse underground door",
+    "objectIds": [
+      4543, 4544, 4545, 4546
+    ],
+    "flatNormals": true
   }
 ]

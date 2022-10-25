@@ -24,8 +24,18 @@
  */
 package rs117.hd.scene;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
-import net.runelite.api.*;
+import net.runelite.api.Client;
+import net.runelite.api.Perspective;
+import net.runelite.api.Scene;
+import net.runelite.api.SceneTileModel;
+import net.runelite.api.SceneTilePaint;
+import net.runelite.api.Tile;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.data.WaterType;
@@ -37,15 +47,8 @@ import rs117.hd.scene.model_overrides.ObjectType;
 import rs117.hd.scene.model_overrides.TzHaarRecolorType;
 import rs117.hd.utils.HDUtils;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-
 import static net.runelite.api.Constants.MAX_Z;
 import static net.runelite.api.Constants.SCENE_SIZE;
-import static rs117.hd.utils.HDUtils.dotNormal3Lights;
 
 @Slf4j
 @Singleton
@@ -269,9 +272,9 @@ public class ProceduralGenerator
 			int darkenBase = 0;
 			int darkenAdd = 0;
 
-			float[] vNormals = vertexTerrainNormals.getOrDefault(vertexHashes[vertex], new float[]{0.0f, 0.0f, 0.0f});
+			float[] vNormals = vertexTerrainNormals.getOrDefault(vertexHashes[vertex], new float[]{0, 0, 0});
 
-			float dot = dotNormal3Lights(vNormals, false);
+			float dot = HDUtils.dotLightDirectionTile(vNormals[0], vNormals[1], vNormals[2]);
 			int lighten = (int) (Math.max((colorHSL[2] - lightenAdd), 0) * lightenMultiplier) + lightenBase;
 			colorHSL[2] = (int) HDUtils.lerp(colorHSL[2], lighten, Math.max(dot, 0));
 			int darken = (int) (Math.max((colorHSL[2] - darkenAdd), 0) * darkenMultiplier) + darkenBase;
