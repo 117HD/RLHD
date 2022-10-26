@@ -75,7 +75,7 @@ public class LightManager
 	private Client client;
 
 	@Inject
-	private HdPlugin hdPlugin;
+	private HdPlugin plugin;
 
 	@Inject
 	private EntityHiderPlugin entityHiderPlugin;
@@ -121,7 +121,7 @@ public class LightManager
 		{
 			Light[] lights;
 			try {
-				lights = path.loadJson(Light[].class);
+				lights = path.loadJson(plugin.getGson(), Light[].class);
 			} catch (IOException ex) {
 				log.error("Failed to load lights", ex);
 				return;
@@ -184,9 +184,9 @@ public class LightManager
 			loadSceneLights();
 		}
 
-		int camX = hdPlugin.camTarget[0];
-		int camY = hdPlugin.camTarget[1];
-		int camZ = hdPlugin.camTarget[2];
+		int camX = plugin.camTarget[0];
+		int camY = plugin.camTarget[1];
+		int camZ = plugin.camTarget[2];
 
 		Iterator<SceneLight> lightIterator = sceneLights.iterator();
 
@@ -419,7 +419,7 @@ public class LightManager
 			}
 		}
 
-		return hdPlugin.configNpcLights;
+		return plugin.configNpcLights;
 	}
 
 	public boolean projectileLightVisible()
@@ -433,7 +433,7 @@ public class LightManager
 			}
 		}
 
-		return hdPlugin.configProjectileLights;
+		return plugin.configProjectileLights;
 	}
 
 	public void reset()

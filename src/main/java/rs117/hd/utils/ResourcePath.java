@@ -60,7 +60,6 @@ import java.util.stream.Collectors;
 public class ResourcePath {
     public static ResourcePath RESOURCE_PATH = Env.getPathOrDefault("RLHD_RESOURCE_PATH", (ResourcePath) null);
 
-    private static final Gson GSON = new GsonBuilder().setLenient().create();
     private static final FileWatcher.UnregisterCallback NOOP = () -> {};
 
     @Nullable
@@ -293,9 +292,9 @@ public class ResourcePath {
         }
     }
 
-    public <T> T loadJson(Class<T> type) throws IOException {
+    public <T> T loadJson(Gson gson, Class<T> type) throws IOException {
         try (BufferedReader reader = toReader()) {
-            return GSON.fromJson(reader, type);
+            return gson.fromJson(reader, type);
         }
     }
 
