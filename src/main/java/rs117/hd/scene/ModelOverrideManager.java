@@ -41,7 +41,7 @@ public class ModelOverrideManager {
             modelsToHide.clear();
 
             try {
-                ModelOverride[] entries = path.loadJson(ModelOverride[].class);
+                ModelOverride[] entries = path.loadJson(plugin.getGson(), ModelOverride[].class);
                 if (entries == null)
                     throw new IOException("Empty or invalid: " + path);
                 for (ModelOverride entry : entries) {

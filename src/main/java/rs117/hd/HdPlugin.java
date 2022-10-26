@@ -26,7 +26,9 @@
 package rs117.hd;
 
 import com.google.common.primitives.Ints;
+import com.google.gson.Gson;
 import com.google.inject.Provides;
+import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
@@ -169,6 +171,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	@Inject
 	private DeveloperTools developerTools;
 	private ComputeMode computeMode = ComputeMode.OPENGL;
+
+	@Inject
+	private Gson rlGson;
+	@Getter
+	private Gson gson;
 
 	private Canvas canvas;
 	private AWTContext awtContext;
@@ -406,6 +413,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	@Override
 	protected void startUp()
 	{
+		gson = rlGson.newBuilder().setLenient().create();
+
 		configGroundTextures = config.groundTextures();
 		configGroundBlending = config.groundBlending();
 		configModelTextures = config.objectTextures();
