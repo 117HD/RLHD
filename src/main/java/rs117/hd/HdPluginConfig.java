@@ -245,7 +245,7 @@ public interface HdPluginConfig extends Config
 	@ConfigSection(
 		name = "Lighting",
 		description = "Lighting settings",
-		position = 100
+		position = 1
 	)
 	String lightingSettings = "lightingSettings";
 
@@ -255,7 +255,7 @@ public interface HdPluginConfig extends Config
 		description =
 			"The maximum number of dynamic lights visible at once.<br>" +
 			"Reducing this may improve performance.",
-		position = 101,
+		position = 1,
 		section = lightingSettings
 	)
 	default MaxDynamicLights maxDynamicLights()
@@ -267,7 +267,7 @@ public interface HdPluginConfig extends Config
 		keyName = "projectileLights",
 		name = "Projectile Lights",
 		description = "Adds dynamic lights to some projectiles.",
-		position = 102,
+		position = 2,
 		section = lightingSettings
 	)
 	default boolean projectileLights()
@@ -279,7 +279,7 @@ public interface HdPluginConfig extends Config
 		keyName = "npcLights",
 		name = "NPC Lights",
 		description = "Adds dynamic lights to some NPCs.",
-		position = 103,
+		position = 3,
 		section = lightingSettings
 	)
 	default boolean npcLights()
@@ -291,7 +291,7 @@ public interface HdPluginConfig extends Config
 		keyName = "environmentalLighting",
 		name = "Atmospheric Lighting",
 		description = "Change environmental lighting based on the current area.",
-		position = 104,
+		position = 4,
 		section = lightingSettings
 	)
 	default boolean atmosphericLighting()
@@ -303,7 +303,7 @@ public interface HdPluginConfig extends Config
 		keyName = "shadowsEnabled",
 		name = "Shadows",
 		description = "Enables fully dynamic shadows.",
-		position = 105,
+		position = 5,
 		section = lightingSettings
 	)
 	default boolean shadowsEnabled()
@@ -317,7 +317,7 @@ public interface HdPluginConfig extends Config
 		description =
 			"The resolution of the shadow map.<br>" +
 			"Higher resolutions result in higher quality shadows, at the cost of GPU performance.",
-		position = 106,
+		position = 6,
 		section = lightingSettings
 	)
 	default ShadowResolution shadowResolution()
@@ -331,7 +331,7 @@ public interface HdPluginConfig extends Config
 		description =
 			"The maximum draw distance for shadows.<br>" +
 			"Shorter distances result in higher quality shadows.",
-		position = 107,
+		position = 7,
 		section = lightingSettings
 	)
 	default ShadowDistance shadowDistance()
@@ -345,7 +345,7 @@ public interface HdPluginConfig extends Config
 		description =
 			"Reduces shadows popping in and out at the edge of the screen by rendering<br>" +
 			"shadows for a larger portion of the scene, at the cost of performance.",
-		position = 108,
+		position = 8,
 		section = lightingSettings
 	)
 	default boolean expandShadowDraw()
@@ -359,7 +359,7 @@ public interface HdPluginConfig extends Config
 		description =
 			"Hide fake shadows and lighting which is often built into models by Jagex.<br>" +
 			"This does not affect the hitbox of NPCs, so you can still click where the fake shadow would normally be.",
-		position = 109,
+		position = 9,
 		section = lightingSettings
 	)
 	default boolean hideBakedEffects() {
@@ -371,7 +371,7 @@ public interface HdPluginConfig extends Config
 //		keyName = "parallaxMappingMode",
 //		name = "Parallax mapping",
 //		description = "Enable parallax mapping to add more depth to materials that support it. Impacts performance considerably.",
-//		position = 110,
+//		position = 10,
 //		section = lightingSettings
 //	)
 //	default ParallaxMappingMode parallaxMappingMode() {
@@ -384,7 +384,7 @@ public interface HdPluginConfig extends Config
 	@ConfigSection(
 		name = "Environment",
 		description = "Environment settings",
-		position = 200,
+		position = 2,
 		closedByDefault = false
 	)
 	String environmentSettings = "environmentSettings";
@@ -396,7 +396,7 @@ public interface HdPluginConfig extends Config
 			"Determines how the fog amount is controlled.<br>" +
 			"'Dynamic' changes fog depth based on the area, while<br>" +
 			"'Static' respects the manually defined fog depth.",
-		position = 201,
+		position = 1,
 		section = environmentSettings
 	)
 	default FogDepthMode fogDepthMode()
@@ -413,7 +413,7 @@ public interface HdPluginConfig extends Config
 		description =
 			"Specify how far from the edge fog should reach.<br>" +
 			"This applies only when 'Fog Depth Mode' is set to 'Static'.",
-		position = 202,
+		position = 2,
 		section = environmentSettings
 	)
 	default int fogDepth()
@@ -425,7 +425,7 @@ public interface HdPluginConfig extends Config
 		keyName = "groundFog",
 		name = "Ground Fog",
 		description = "Enables a height-based fog effect that covers the ground in certain areas.",
-		position = 203,
+		position = 3,
 		section = environmentSettings
 	)
 	default boolean groundFog() {
@@ -440,7 +440,7 @@ public interface HdPluginConfig extends Config
 			"If set to 'RuneLite Skybox', the sky color from RuneLite's Skybox plugin will be used.<br>" +
 			"If set to 'Old School Black', the sky will be black and water will remain blue, but for any<br>" +
 			"other option, the water color will be influenced by the sky color.",
-		position = 204,
+		position = 4,
 		section = environmentSettings
 	)
 	default DefaultSkyColor defaultSkyColor()
@@ -452,7 +452,7 @@ public interface HdPluginConfig extends Config
 		keyName = "overrideSky",
 		name = "Override Sky Color",
 		description = "Forces the default sky color to be used in all environments.",
-		position = 205,
+		position = 5,
 		section = environmentSettings
 	)
 	default boolean overrideSky() {
@@ -463,7 +463,7 @@ public interface HdPluginConfig extends Config
 		keyName = "objectTextures",
 		name = "Model Textures",
 		description = "Adds textures to some models.",
-		position = 206,
+		position = 6,
 		section = environmentSettings
 	)
 	default boolean objectTextures()
@@ -475,7 +475,7 @@ public interface HdPluginConfig extends Config
 		keyName = "groundTextures",
 		name = "Ground Textures",
 		description = "Adds textures to some ground tiles.",
-		position = 207,
+		position = 7,
 		section = environmentSettings
 	)
 	default boolean groundTextures()
@@ -487,7 +487,7 @@ public interface HdPluginConfig extends Config
 		keyName = "textureResolution",
 		name = "Texture Resolution",
 		description = "Controls the resolution used for all in-game textures.",
-		position = 208,
+		position = 8,
 		section = environmentSettings
 	)
 	default TextureResolution textureResolution()
@@ -499,7 +499,7 @@ public interface HdPluginConfig extends Config
 		keyName = "groundBlending",
 		name = "Ground Blending",
 		description = "Controls whether ground tiles should blend into each other, or have distinct edges.",
-		position = 209,
+		position = 9,
 		section = environmentSettings
 	)
 	default boolean groundBlending()
@@ -511,7 +511,7 @@ public interface HdPluginConfig extends Config
 		keyName = "underwaterCaustics",
 		name = "Underwater Caustics",
 		description = "Apply underwater lighting effects to imitate sunlight passing through waves on the surface.",
-		position = 210,
+		position = 10,
 		section = environmentSettings
 	)
 	default boolean underwaterCaustics()
@@ -523,7 +523,7 @@ public interface HdPluginConfig extends Config
 		keyName = "tzhaarHD",
 		name = "HD TzHaar Reskin",
 		description = "Recolors the TzHaar city of Mor Ul Rek to give it an appearance similar to that of its 2008 HD variant.",
-		position = 211,
+		position = 11,
 		section = environmentSettings
 	)
 	default boolean tzhaarHD()
@@ -532,12 +532,80 @@ public interface HdPluginConfig extends Config
 	}
 
 
+	/*====== Model caching settings ======*/
+
+	@ConfigSection(
+		name = "Model caching",
+		description = "Improve performance by reusing model data",
+		position = 3,
+		closedByDefault = true
+	)
+	String modelCachingSettings = "modelCachingSettings";
+
+	String KEY_MODEL_BATCHING = "useModelBatching";
+	@ConfigItem(
+		keyName = KEY_MODEL_BATCHING,
+		name = "Enable model batching",
+		description =
+			"Model batching improves performance by reusing identical models within the same frame.<br>" +
+			"May cause instability and graphical bugs, particularly if Jagex makes engine changes.",
+		position = 1,
+		section = modelCachingSettings
+	)
+	default boolean enableModelBatching() { return true; }
+
+	String KEY_MODEL_CACHING = "useModelCaching";
+	@ConfigItem(
+		keyName = KEY_MODEL_CACHING,
+		name = "Enable model caching",
+		description =
+			"Model caching improves performance by saving and reusing model data from previous frames.<br>" +
+			"May cause instability or graphical bugs, particularly if Jagex makes engine changes.",
+		position = 2,
+		section = modelCachingSettings
+	)
+	default boolean enableModelCaching() { return true; }
+
+	String KEY_MODEL_CACHE_SIZE = "modelCacheSizeMiB";
+	@Range(
+		min = 256,
+		max = 16384
+	)
+	@ConfigItem(
+		keyName = KEY_MODEL_CACHE_SIZE,
+		name = "Model cache size (MiB)",
+		description =
+			"Size of the model cache in mebibytes (slightly more than megabytes).<br>" +
+			"Generally, 2048 MiB is plenty, with diminishing returns the higher you go.<br>" +
+			"Minimum=256 MiB, maximum=16384 MiB",
+		position = 3,
+		section = modelCachingSettings
+	)
+	default int modelCacheSizeMiB() {
+		return 2048;
+	}
+
+	@ConfigItem(
+		keyName = "loadingClearCache",
+		name = "Clear cache when loading",
+		description =
+			"Clear the model cache when the game loads a new scene.<br>" +
+			"This should generally only be used if the cache size is lower than 512 MiB,<br>" +
+			"because old model data may still be useful in the new scene.",
+		position = 4,
+		section = modelCachingSettings
+	)
+	default boolean loadingClearCache() {
+		return false;
+	}
+
+
 	/*====== Miscellaneous settings ======*/
 
 	@ConfigSection(
 		name = "Miscellaneous",
 		description = "Miscellaneous settings",
-		position = 300,
+		position = 4,
 		closedByDefault = true
 	)
 	String miscellaneousSettings = "miscellaneousSettings";
@@ -549,7 +617,7 @@ public interface HdPluginConfig extends Config
 		warning =
 			"This setting can cause RuneLite to crash, and it can be difficult to undo.\n" +
 			"Only enable it if you are seeing broken colors. Are you sure you want to enable this setting?",
-		position = 301,
+		position = 1,
 		section = miscellaneousSettings
 	)
 	default boolean macosIntelWorkaround()
@@ -563,7 +631,7 @@ public interface HdPluginConfig extends Config
 		description =
 			"Replace the infernal cape texture with a more detailed version.<br>" +
 			"Note, with Anisotropic Filtering above zero, the cape may look blurry when zoomed out.",
-		position = 302,
+		position = 2,
 		section = miscellaneousSettings
 	)
 	default boolean hdInfernalTexture()
@@ -576,7 +644,7 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_WINTER_THEME,
 		name = "Winter theme",
 		description = "Covers the Gielinor overworld with a layer of snow!",
-		position = 303,
+		position = 3,
 		section = miscellaneousSettings
 	)
 	default boolean winterTheme()
@@ -591,78 +659,24 @@ public interface HdPluginConfig extends Config
 		description =
 			"Previously, HD attempted to reduce over-exposure by capping the maximum color brightness,<br>" +
 			"which changed white colors into dull shades of grey. This option brings back that old behaviour.",
-		position = 304,
+		position = 4,
 		section = miscellaneousSettings
 	)
 	default boolean enableLegacyGreyColors() {
 		return false;
 	}
 
+
 	/*====== Experimental settings ======*/
 
-	@ConfigSection(
-		name = "Experimental",
-		description = "Experimental features - if you're experiencing issues you should consider disabling these",
-		position = 400,
-		closedByDefault = true
-	)
-	String experimentalSettings = "experimentalSettings";
+//	@ConfigSection(
+//		name = "Experimental",
+//		description = "Experimental features - if you're experiencing issues you should consider disabling these",
+//		position = 5,
+//		closedByDefault = true
+//	)
+//	String experimentalSettings = "experimentalSettings";
 
-	@ConfigItem(
-		keyName = "enableModelBatching",
-		name = "Enable model batching",
-		description =
-			"Model batching improves performance by reusing identical models within the same frame.<br>" +
-			"May cause instability and graphical bugs, particularly if Jagex makes engine changes.",
-		position = 401,
-		section = experimentalSettings
-	)
-	default boolean enableModelBatching() { return false; }
-
-	String KEY_ENABLE_MODEL_CACHING = "enableModelCaching";
-	@ConfigItem(
-		keyName = KEY_ENABLE_MODEL_CACHING,
-		name = "Enable model caching",
-		description =
-			"Model caching improves performance by saving and reusing model data from previous frames.<br>" +
-			"May cause instability or graphical bugs, particularly if Jagex makes engine changes.",
-		position = 402,
-		section = experimentalSettings
-	)
-	default boolean enableModelCaching() { return false; }
-
-	String KEY_MODEL_CACHE_SIZE = "modelCacheSizeMiB";
-	@Range(
-		min = 256,
-		max = 16384
-	)
-	@ConfigItem(
-		keyName = KEY_MODEL_CACHE_SIZE,
-		name = "Model cache size (MiB)",
-		description =
-			"Size of the model cache in mebibytes (slightly more than megabytes).<br>" +
-			"Generally, 2048 MiB is plenty, with diminishing returns the higher you go.<br>" +
-			"Minimum=256 MiB, maximum=16384 MiB",
-		position = 403,
-		section = experimentalSettings
-	)
-	default int modelCacheSizeMiB() {
-		return 2048;
-	}
-
-	@ConfigItem(
-		keyName = "loadingClearCache",
-		name = "Clear cache when loading",
-		description =
-			"Clear the model cache when the game loads a new scene.<br>" +
-			"This should generally only be used if the cache size is lower than 512 MiB,<br>" +
-			"because old model data may still be useful in the new scene.",
-		position = 404,
-		section = experimentalSettings
-	)
-	default boolean loadingClearCache() {
-		return false;
-	}
 
 	/*====== Internal settings ======*/
 
