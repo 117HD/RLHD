@@ -2666,5 +2666,15 @@
       4543, 4544, 4545, 4546
     ],
     "flatNormals": true
+  },
+  {
+    "description": "Hide rubble in Varrock west bank",
+    "objectIds": [ 4342, 4343, 4344 ],
+    "hideInAreas": [
+      [
+        3180, 3433,
+        3190, 3447
+      ]
+    ]
   }
 ]
