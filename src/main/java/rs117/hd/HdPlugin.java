@@ -2756,7 +2756,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	public void onGameObjectSpawned(GameObjectSpawned gameObjectSpawned)
 	{
 		GameObject gameObject = gameObjectSpawned.getGameObject();
-		lightManager.addObjectLight(gameObject, gameObjectSpawned.getTile().getRenderLevel(), gameObject.sizeX(), gameObject.sizeY(), gameObject.getOrientation().getAngle());
+		lightManager.addObjectLight(gameObject, gameObjectSpawned.getTile().getRenderLevel(), gameObject.sizeX(), gameObject.sizeY(), gameObject.getOrientation());
 	}
 
 	@Subscribe

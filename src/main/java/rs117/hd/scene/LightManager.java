@@ -530,7 +530,7 @@ public class LightManager
 								tile.getRenderLevel(),
 								gameObject.sizeX(),
 								gameObject.sizeY(),
-								gameObject.getOrientation().getAngle());
+								gameObject.getOrientation());
 						}
 					}
 				}
