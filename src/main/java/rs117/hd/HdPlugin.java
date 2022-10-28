@@ -1139,7 +1139,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	{
 		// Allowing a buffer size of zero causes Apple M1/M2 to revert to software rendering
 		uniformBufferLights = BufferUtils.createByteBuffer(Math.max(1, configMaxDynamicLights) * 8 * SCALAR_BYTES);
-		updateBuffer(hUniformBufferLights, GL_UNIFORM_BUFFER, uniformBufferLights, GL_DYNAMIC_DRAW, CL_MEM_READ_ONLY);
+		updateBuffer(hUniformBufferLights, GL_UNIFORM_BUFFER, uniformBufferLights, GL_STREAM_DRAW, CL_MEM_READ_ONLY);
 	}
 
 	private void initAAFbo(int width, int height, int aaSamples)
@@ -1331,11 +1331,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 		// temp buffers
 		updateBuffer(hStagingBufferVertices, GL_ARRAY_BUFFER,
-			dynamicOffsetVertices * VERTEX_SIZE, stagingBufferVertices.getBuffer(), GL_DYNAMIC_DRAW, CL_MEM_READ_ONLY);
+			dynamicOffsetVertices * VERTEX_SIZE, stagingBufferVertices.getBuffer(), GL_STREAM_DRAW, CL_MEM_READ_ONLY);
 		updateBuffer(hStagingBufferUvs, GL_ARRAY_BUFFER,
-			dynamicOffsetUvs * UV_SIZE, stagingBufferUvs.getBuffer(), GL_DYNAMIC_DRAW, CL_MEM_READ_ONLY);
+			dynamicOffsetUvs * UV_SIZE, stagingBufferUvs.getBuffer(), GL_STREAM_DRAW, CL_MEM_READ_ONLY);
 		updateBuffer(hStagingBufferNormals, GL_ARRAY_BUFFER,
-			dynamicOffsetVertices * NORMAL_SIZE, stagingBufferNormals.getBuffer(), GL_DYNAMIC_DRAW, CL_MEM_READ_ONLY);
+			dynamicOffsetVertices * NORMAL_SIZE, stagingBufferNormals.getBuffer(), GL_STREAM_DRAW, CL_MEM_READ_ONLY);
 
 		// model buffers
 		updateBuffer(hModelBufferLarge, GL_ARRAY_BUFFER, modelBufferLarge.getBuffer(), GL_STREAM_DRAW, CL_MEM_READ_ONLY);
@@ -1345,17 +1345,17 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		// Output buffers
 		updateBuffer(hRenderBufferVertices,
 			GL_ARRAY_BUFFER,
-			renderBufferOffset * 16, // each vertex is an ivec4, which is 16 bytes
+			renderBufferOffset * 16L, // each vertex is an ivec4, which is 16 bytes
 			GL_STREAM_DRAW,
 			CL_MEM_WRITE_ONLY);
 		updateBuffer(hRenderBufferUvs,
 			GL_ARRAY_BUFFER,
-			renderBufferOffset * 16, // each vertex is an ivec4, which is 16 bytes
+			renderBufferOffset * 16L, // each vertex is an ivec4, which is 16 bytes
 			GL_STREAM_DRAW,
 			CL_MEM_WRITE_ONLY);
 		updateBuffer(hRenderBufferNormals,
 			GL_ARRAY_BUFFER,
-			renderBufferOffset * 16, // each vertex is an ivec4, which is 16 bytes
+			renderBufferOffset * 16L, // each vertex is an ivec4, which is 16 bytes
 			GL_STREAM_DRAW,
 			CL_MEM_WRITE_ONLY);
 
@@ -2597,19 +2597,17 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	private void updateBuffer(@Nonnull GLBuffer glBuffer, int target, @Nonnull ByteBuffer data, int usage, long clFlags)
 	{
 		glBindBuffer(target, glBuffer.glBufferId);
-		int size = data.remaining();
+		long size = data.remaining();
 		if (size > glBuffer.size)
 		{
-			log.trace("Buffer resize: {} {} -> {}", glBuffer, glBuffer.size, size);
+			size = HDUtils.ceilPow2(size);
+			log.debug("Buffer resize: {} {} -> {}", glBuffer, glBuffer.size, size);
 
 			glBuffer.size = size;
-			glBufferData(target, data, usage);
+			glBufferData(target, size, usage);
 			recreateCLBuffer(glBuffer, clFlags);
 		}
-		else
-		{
-			glBufferSubData(target, 0, data);
-		}
+		glBufferSubData(target, 0, data);
 	}
 
 	private void updateBuffer(@Nonnull GLBuffer glBuffer, int target, @Nonnull IntBuffer data, int usage, long clFlags)
@@ -2619,29 +2617,27 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 	private void updateBuffer(@Nonnull GLBuffer glBuffer, int target, int offset, @Nonnull IntBuffer data, int usage, long clFlags)
 	{
-		int size = offset + data.remaining();
+		long size = 4L * (offset + data.remaining());
 		if (size > glBuffer.size)
 		{
-			log.trace("Buffer resize: {} {} -> {}", glBuffer, glBuffer.size, size);
+			size = HDUtils.ceilPow2(size);
+			log.debug("Buffer resize: {} {} -> {}", glBuffer, glBuffer.size, size);
 
 			if (offset > 0)
 			{
-				int newBuffer = glGenBuffers();
-				glBindBuffer(target, newBuffer);
-				glBufferData(target, size * 4L, usage);
-				glBindBuffer(GL_COPY_READ_BUFFER, glBuffer.glBufferId);
-				glCopyBufferSubData(GL_COPY_READ_BUFFER, target, 0, 0, offset * 4L);
-
-				glDeleteBuffers(glBuffer.glBufferId);
-				glBuffer.glBufferId = newBuffer;
-
+				int oldBuffer = glBuffer.glBufferId;
+				glBuffer.glBufferId = glGenBuffers();
 				glBindBuffer(target, glBuffer.glBufferId);
-				glBufferSubData(target, offset * 4L, data);
+				glBufferData(target, size, usage);
+
+				glBindBuffer(GL_COPY_READ_BUFFER, oldBuffer);
+				glCopyBufferSubData(GL_COPY_READ_BUFFER, target, 0, 0, offset * 4L);
+				glDeleteBuffers(oldBuffer);
 			}
 			else
 			{
 				glBindBuffer(target, glBuffer.glBufferId);
-				glBufferData(target, data, usage);
+				glBufferData(target, size, usage);
 			}
 
 			glBuffer.size = size;
@@ -2650,8 +2646,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		else
 		{
 			glBindBuffer(target, glBuffer.glBufferId);
-			glBufferSubData(target, offset * 4L, data);
 		}
+		glBufferSubData(target, offset * 4L, data);
 	}
 
 	private void updateBuffer(@Nonnull GLBuffer glBuffer, int target, @Nonnull FloatBuffer data, int usage, long clFlags)
@@ -2661,29 +2657,27 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 	private void updateBuffer(@Nonnull GLBuffer glBuffer, int target, int offset, @Nonnull FloatBuffer data, int usage, long clFlags)
 	{
-		int size = offset + data.remaining();
+		long size = 4L * (offset + data.remaining());
 		if (size > glBuffer.size)
 		{
-			log.trace("Buffer resize: {} {} -> {}", glBuffer, glBuffer.size, size);
+			size = HDUtils.ceilPow2(size);
+			log.debug("Buffer resize: {} {} -> {}", glBuffer, glBuffer.size, size);
 
 			if (offset > 0)
 			{
-				int newBuffer = glGenBuffers();
-				glBindBuffer(target, newBuffer);
-				glBufferData(target, size * 4L, usage);
-				glBindBuffer(GL_COPY_READ_BUFFER, glBuffer.glBufferId);
-				glCopyBufferSubData(GL_COPY_READ_BUFFER, target, 0, 0, offset * 4L);
-
-				glDeleteBuffers(glBuffer.glBufferId);
-				glBuffer.glBufferId = newBuffer;
-
+				int oldBuffer = glBuffer.glBufferId;
+				glBuffer.glBufferId = glGenBuffers();
 				glBindBuffer(target, glBuffer.glBufferId);
-				glBufferSubData(target, offset * 4L, data);
+				glBufferData(target, size, usage);
+
+				glBindBuffer(GL_COPY_READ_BUFFER, oldBuffer);
+				glCopyBufferSubData(GL_COPY_READ_BUFFER, target, 0, 0, offset * 4L);
+				glDeleteBuffers(oldBuffer);
 			}
 			else
 			{
 				glBindBuffer(target, glBuffer.glBufferId);
-				glBufferData(target, data, usage);
+				glBufferData(target, size, usage);
 			}
 
 			glBuffer.size = size;
@@ -2692,18 +2686,19 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		else
 		{
 			glBindBuffer(target, glBuffer.glBufferId);
-			glBufferSubData(target, offset * 4L, data);
 		}
+		glBufferSubData(target, offset * 4L, data);
 	}
 
-	private void updateBuffer(@Nonnull GLBuffer glBuffer, int target, int size, int usage, long clFlags)
+	private void updateBuffer(@Nonnull GLBuffer glBuffer, int target, long size, int usage, long clFlags)
 	{
-		glBindBuffer(target, glBuffer.glBufferId);
 		if (size > glBuffer.size)
 		{
-			log.trace("Buffer resize: {} {} -> {}", glBuffer, glBuffer.size, size);
+			size = HDUtils.ceilPow2(size);
+			log.debug("Buffer resize: {} {} -> {}", glBuffer, glBuffer.size, size);
 
 			glBuffer.size = size;
+			glBindBuffer(target, glBuffer.glBufferId);
 			glBufferData(target, size, usage);
 			recreateCLBuffer(glBuffer, clFlags);
 		}
