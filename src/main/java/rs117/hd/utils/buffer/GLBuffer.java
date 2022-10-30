@@ -24,8 +24,12 @@
  */
 package rs117.hd.utils.buffer;
 
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 public class GLBuffer
 {
+	public final String name;
 	public int glBufferId;
 	public long clBuffer;
 	public long size = -1;
