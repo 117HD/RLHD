@@ -336,6 +336,27 @@ public enum Material
 
 	WALL_STONE_N,
 	WALL_STONE(p -> p.setNormalMap(WALL_STONE_N)),
+	METALLIC_1,
+	METALLIC_1_SEMIGLOSS(METALLIC_1, p -> p
+			.setSpecular(0.3f, 80)
+	),
+	METALLIC_1_GLOSS(METALLIC_1, p -> p
+			.setSpecular(0.7f, 80)
+	),
+	METALLIC_1_HIGHGLOSS(METALLIC_1, p -> p
+			.setSpecular(1.1f, 80)
+	),
+	METALLIC_2,
+	METALLIC_2_SEMIGLOSS(METALLIC_2, p -> p
+			.setSpecular(0.3f, 80)
+	),
+	METALLIC_2_GLOSS(METALLIC_2, p -> p
+			.setSpecular(0.7f, 80)
+	),
+	METALLIC_2_HIGHGLOSS(METALLIC_2, p -> p
+			.setSpecular(1.1f, 80)
+	),
+	WATTLE_1,
 
 	// Seasonal
 	WINTER_WILLOW_LEAVES(p -> p

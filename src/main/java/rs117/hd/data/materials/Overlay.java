@@ -62,6 +62,11 @@ public enum Overlay {
     SWAMP_PATH_FIX_1(81, Area.LUMBRIDGE_SWAMP_PATH_FIX, GroundMaterial.DIRT, p -> p.saturation(4).shiftLightness(-3)),
     SWAMP_PATH_FIX_2(83, Area.LUMBRIDGE_SWAMP_PATH_FIX, GroundMaterial.DIRT, p -> p.saturation(4).shiftLightness(-5)),
     SWAMP_PATH_FIX_3(88, Area.LUMBRIDGE_SWAMP_PATH_FIX, GroundMaterial.GRAVEL, p -> p.shiftLightness(12).hue(7).saturation(1)),
+    LUMBRIDGE_VARROCK_BAND_BLEND_FIX(10, Area.LUMB_VAR_PATH_BLEND_FIX, GroundMaterial.OVERWORLD_GRASS_1, p -> p
+            .hue(9)
+            .saturation(5)
+            .lightness(18)
+    ),
     LUMBRIDGE_VARROCK_PATH_FIX_1(3, Area.LUMBRIDGE_VARROCK_PATH_FIX, GroundMaterial.GRAVEL, p -> p.shiftLightness(12).hue(7).saturation(1)),
     LUMBRIDGE_VARROCK_PATH_FIX_2(8, Area.LUMBRIDGE_VARROCK_PATH_FIX, GroundMaterial.GRAVEL, p -> p.shiftLightness(12).hue(7).saturation(1)),
     LUMBRIDGE_PATHS(10, Area.LUMBRIDGE, GroundMaterial.GRAVEL, p -> p.shiftLightness(12).hue(7).saturation(1)),
@@ -255,16 +260,43 @@ public enum Overlay {
     CATHERBY_BANK_TILE_2(4, Area.CATHERBY_BANK, GroundMaterial.MARBLE_2_GLOSS, p -> p.blended(false)),
 
     // Ardougne
+    EAST_ARDOUGNE_PATH_FIXES(10, Area.EAST_ARDOUGNE_PATHING_FIXES, GroundMaterial.OVERWORLD_GRASS_1, p -> p
+            .hue(11)
+            .saturation(4)
+            .lightness(21)
+    ),
     EAST_ARDOUGNE_NORTH_BANK_11(11, Area.EAST_ARDOUGNE_BANK_NORTH, GroundMaterial.CONCRETE, p -> p.blended(false).lightness(40)),
     EAST_ARDOUGNE_CASTLE_DIRT_FIX(14, Area.EAST_ARDOUGNE_CASTLE_DIRT_FIX, GroundMaterial.DIRT, p -> p
         .shiftLightness(7)
         .blended(false)),
     EAST_ARDOUGNE_CASTLE_PATH_FIX(10, Area.EAST_ARDOUGNE_CASTLE_PATH_FIX, GroundMaterial.VARROCK_PATHS_LIGHT, p -> p
         .shiftLightness(16)
-        .blended(false)),
+        .blended(false)
+
+    ),
+    EAST_ARDOUGNE_CASTLE_FLOOR_TEXTURE(11, Area.EAST_ARDOUGNE_CASTLE_DIRT_FIX, GroundMaterial.CONCRETE, p -> p.blended(false).lightness(40)),
     EAST_ARDOUGNE_PATHS_1(10, Area.EAST_ARDOUGNE, GroundMaterial.VARROCK_PATHS_LIGHT, p -> p.shiftLightness(6)),
     WIZARD_HOUSE_TILE_LIGHT(38, Area.EAST_ARDOUGNE, GroundMaterial.MARBLE_1_SEMIGLOSS, p -> p.blended(false)),
     WIZARD_HOUSE_TILE_DARK(40, Area.EAST_ARDOUGNE, GroundMaterial.MARBLE_2_SEMIGLOSS, p -> p.blended(false)),
+    EAST_ARDOUGNE_HAZEL_MANOR_PATH_TEXTURE(12, Area.EAST_ARDOUGNE_HAZEL_HOUSE, GroundMaterial.VARROCK_PATHS_LIGHT, p -> p
+         .lightness(33)
+    ),
+    EAST_ARDOUGNE_BRIDGE_TEXTURE(12, Area.EAST_ARDOUGNE_BRIDGE, GroundMaterial.VARROCK_PATHS_LIGHT, p -> p
+            .lightness(33)
+    ),
+    EAST_ARDOUGNE_MANSION_TEXTURE(12, Area.EAST_ARDOUGNE_HANDELMORT_STONE_FLOOR, GroundMaterial.FALADOR_PATHS, p -> p
+            .lightness(33)
+    ),
+    WEST_ARDOUNGE_CARPET_FIX_1(14, Area.WEST_ARDOUGNE_CARPET_FIX, GroundMaterial.CARPET, p -> p
+            .blended(false)
+            .shiftHue(1)
+            .shiftSaturation(3)
+            .shiftLightness(-2)
+    ),
+    KANDARIN_MONISTARY_WINGS_TEXTURE_13(13, Area.KANDARIN_MONISTARY_WINGS, GroundMaterial.TILES_2x2_2_SEMIGLOSS),
+    KANDARIN_MONISTARY_FLOOR_TEXTURE(12, Area.KANDARIN_MONISTARY, GroundMaterial.VARROCK_PATHS_LIGHT, p -> p
+            .lightness(33)
+    ),
 
     // Yanille
     YANILLE_BANK_TILE_1(3, Area.YANILLE_BANK, GroundMaterial.MARBLE_1_GLOSS, p -> p.blended(false)),

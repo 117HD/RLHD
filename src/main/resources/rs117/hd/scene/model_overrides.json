@@ -1236,6 +1236,9 @@
       1295,
       10823,
       37329,
+      16546,
+      16547,
+      16548,
       "EVERGREEN_2092",
       "MAGIC_TREE_10834",
       "MAPLE_TREE_10832",
@@ -1244,6 +1247,15 @@
       "TREE_1278",
       "WILLOW",
       "WILLOW_10833"
+    ]
+  },
+  {
+    "description": "DEAD_TREES",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      1282,
+      1286,
+      1297
     ]
   },
   {
@@ -2286,6 +2298,29 @@
     "flatNormals": true
   },
   {
+    "description": "CASTLE_WARS_UNDERGROUND_WALLS",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      1417,
+      1434,
+      1435,
+      "CAVE_WALL"
+    ]
+  },
+  {
+    "description": "CASTLE_WARS_UNDERGROUND_ROCKS",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      314,
+      315,
+      316,
+      317,
+      318,
+      320,
+      321
+    ]
+  },
+  {
     "description": "CASTLE_WARS_DECORATION",
     "objectIds": [
       4435,
@@ -2433,6 +2468,16 @@
     "uvType": "MODEL_XZ"
   },
   {
+    "description": "GROUND_DECORATION_DIRT_UNCOLORED",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [
+      176,
+      320,
+      321
+    ],
+    "uvType": "GROUND_PLANE"
+  },
+  {
     "description": "Ground Decoration - Tan Rock Uncolored",
     "baseMaterial": "DIRT_1",
     "objectIds": [
@@ -2521,6 +2566,13 @@
       "TUNNEL_6659"
     ],
     "flatNormals": true
+  },
+  {
+    "description": "DIRT_CAVE_ENTRANCES",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [
+      3213
+    ]
   },
   {
     "description": "CAVE_WALLS_BLEND",
@@ -3630,6 +3682,203 @@
     "objectIds": [
       26134,
       26135
+    ]
+  },
+  {
+    "description": "West Ardougne Carpet",
+    "baseMaterial": "CARPET",
+    "objectIds": [
+      917,
+      918,
+      5243
+    ],
+    "flatNormals": true,
+    "uvType": "GROUND_PLANE"
+  },
+  {
+    "description": "East Ardounge House Walls",
+    "baseMaterial": "WATTLE_1",
+    "objectIds": [
+      1602,
+      1603,
+      1604,
+      1605,
+      1606,
+      1608
+    ]
+  },
+  {
+    "description": "Candelabra",
+    "baseMaterial": "METALLIC_2_HIGHGLOSS",
+    "objectIds": [
+      202,
+      203
+    ]
+  },
+  {
+    "description": "MARBLE_WALL_PILLARED",
+    "baseMaterial": "MARBLE_3",
+    "objectIds": [
+      982,
+      983,
+      984,
+      985,
+      986
+    ]
+  },
+  {
+    "description": "MARBLE_STAIRS",
+    "baseMaterial": "MARBLE_3",
+    "objectIds": [
+      1893,
+      1894,
+      1895
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "BRIDGE_UNDERSIDE",
+    "baseMaterial": "MARBLE_1",
+    "objectIds": [
+      770
+    ]
+  },
+  {
+    "description": "DECORATIVE_ARMOR",
+    "baseMaterial": "METALLIC_2_HIGHGLOSS",
+    "objectIds": [
+      817
+    ]
+  },
+  {
+    "description": "STONE_WINDOWS",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      1938
+    ]
+  },
+  {
+    "description": "WALL_TORCHES",
+    "baseMaterial": "METALLIC_2_HIGHGLOSS",
+    "objectIds": [
+      196
+    ]
+  },
+  {
+    "description": "WALL_SHIELD",
+    "baseMaterial": "METALLIC_2_HIGHGLOSS",
+    "objectIds": [
+      840
+    ]
+  },
+  {
+    "description": "MARBLE_STATUE_OF_KING",
+    "baseMaterial": "MARBLE_3_SEMIGLOSS",
+    "objectIds": [
+      563
+    ]
+  },
+  {
+    "description": "MARBLE_STATUE_BUST",
+    "baseMaterial": "MARBLE_3_SEMIGLOSS",
+    "objectIds": [
+      574,
+      575
+    ]
+  },
+  {
+    "description": "STONE_STAIRS_WOODEN_RAILS",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      15645,
+      15648,
+      35791
+    ]
+  },
+  {
+    "description": "METALLIC_PAINTINGS",
+    "baseMaterial": "METALLIC_1_GLOSS",
+    "objectIds": [
+      890,
+      891,
+      892,
+      893,
+      894
+    ]
+  },
+  {
+    "description": "GUILDED_CHEST",
+    "baseMaterial": "METALLIC_2_HIGHGLOSS",
+    "objectIds": [
+      376
+    ]
+  },
+  {
+    "description": "CANNON_BALL",
+    "baseMaterial": "METALLIC_2_HIGHGLOSS",
+    "objectIds": [
+      822
+    ]
+  },
+  {
+    "description": "CANNON",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      821
+    ]
+  },
+  {
+    "description": "METAL_FLAG_POLE",
+    "baseMaterial": "METALLIC_1_GLOSS",
+    "objectIds": [
+      861
+    ]
+  },
+  {
+    "description": "BATHTUB",
+    "baseMaterial": "METALLIC_2_HIGHGLOSS",
+    "objectIds": [
+      875
+    ]
+  },
+  {
+    "description": "BATH_PUMP",
+    "baseMaterial": "METALLIC_1_GLOSS",
+    "objectIds": [
+      871
+    ]
+  },
+  {
+    "description": "METAL_FENCE",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      1568,
+      1569,
+      1571,
+      1572
+    ]
+  },
+  {
+    "description": "Marble Fountain",
+    "baseMaterial": "MARBLE_1_SEMIGLOSS",
+    "objectIds": [
+      879
+    ]
+  },
+  {
+    "description": "Metallic Furnace",
+    "baseMaterial": "METALLIC_2_GLOSS",
+    "objectIds": [
+      24009,
+      24010,
+      24011
+    ]
+  },
+  {
+    "description": "Mysterious Statue",
+    "baseMaterial": "METALLIC_1",
+    "objectIds": [
+      24716
     ]
   }
 ]
