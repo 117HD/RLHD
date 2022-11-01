@@ -265,6 +265,8 @@ public enum Overlay {
             .saturation(4)
             .lightness(21)
     ),
+    EAST_ARDOUGNE_DOCKS_FIX_5(5, Area.EAST_ARDOUGNE_DOCKS_FIX, GroundMaterial.WOOD_PLANKS_1, p -> p.lightness(65)),
+    EAST_ARDOUGNE_DOCKS_FIX_35(35, Area.EAST_ARDOUGNE_DOCKS_FIX, GroundMaterial.WOOD_PLANKS_1, p -> p.lightness(65)),
     EAST_ARDOUGNE_NORTH_BANK_11(11, Area.EAST_ARDOUGNE_BANK_NORTH, GroundMaterial.CONCRETE, p -> p.blended(false).lightness(40)),
     EAST_ARDOUGNE_CASTLE_DIRT_FIX(14, Area.EAST_ARDOUGNE_CASTLE_DIRT_FIX, GroundMaterial.DIRT, p -> p
         .shiftLightness(7)
