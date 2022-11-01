@@ -2472,10 +2472,23 @@
     "baseMaterial": "DIRT_2",
     "objectIds": [
       176,
+      185,
+      186,
       320,
       321
     ],
-    "uvType": "GROUND_PLANE"
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "GROUND_OBJECT_DIRT_UNCOLORED",
+    "baseMaterial": "DIRT_1",
+    "objectIds": [
+      11190,
+      11191,
+      11192,
+      11193
+    ],
+    "uvType": "MODEL_XZ"
   },
   {
     "description": "Ground Decoration - Tan Rock Uncolored",
@@ -3693,7 +3706,7 @@
       5243
     ],
     "flatNormals": true,
-    "uvType": "GROUND_PLANE"
+    "uvType": "MODEL_XZ"
   },
   {
     "description": "East Ardounge House Walls",
@@ -3761,7 +3774,8 @@
     "description": "WALL_TORCHES",
     "baseMaterial": "METALLIC_2_HIGHGLOSS",
     "objectIds": [
-      196
+      196,
+      197
     ]
   },
   {
@@ -3849,13 +3863,15 @@
     ]
   },
   {
-    "description": "METAL_FENCE",
+    "description": "METAL_FENCE_GATE",
     "baseMaterial": "METALLIC_2_SEMIGLOSS",
     "objectIds": [
       1568,
       1569,
       1571,
-      1572
+      1572,
+      11721,
+      11722
     ]
   },
   {
@@ -3879,6 +3895,13 @@
     "baseMaterial": "METALLIC_1",
     "objectIds": [
       24716
+    ]
+  },
+  {
+    "description": "Wilderness Lever",
+    "baseMaterial": "METALLIC_2_GLOSS",
+    "objectIds": [
+      1814
     ]
   }
 ]
