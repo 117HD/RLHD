@@ -1250,12 +1250,29 @@
     ]
   },
   {
+    "description": "Fallen Tree",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      9661,
+      9663
+    ]
+  },
+  {
     "description": "DEAD_TREES",
     "baseMaterial": "BARK",
     "objectIds": [
       1282,
       1286,
-      1297
+      1297,
+      1383
+    ]
+  },
+  {
+    "description": "TREE_STUMP",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      1341,
+      4328
     ]
   },
   {
@@ -1605,16 +1622,81 @@
       495,
       496,
       497,
-      501,
+      451,
+      452,
+      453,
+      454,
+      455,
+      456,
+      457,
+      458,
+      458,
+      459,
+      460,
+      461,
+      462,
+      463,
+      464,
+      465,
+      466,
+      467,
+      468,
+      469,
+      471,
+      472,
+      473,
+      474,
+      475,
+      476,
+      477,
+      478,
+      480,
+      481,
+      482,
+      483,
+      484,
+      485,
+      486,
+      487,
+      488,
+      489,
+      490,
+      491,
+      491,
+      492,
+      493,
+      494,
+      495,
+      496,
+      497,
+      498,
+      499,
       500,
+      501,
+      502,
+      503,
       504,
       505,
       506,
+      507,
+      508,
+      509,
+      510,
       511,
       512,
+      513,
+      514,
+      515,
+      516,
       517,
+      518,
       519,
       520,
+      526,
+      527,
+      528,
+      529,
+      531,
       9264,
       9265,
       9269,
@@ -1871,7 +1953,8 @@
       24022,
       24023,
       24024
-    ]
+    ],
+    "uvType": "MODEL_XZ"
   },
   {
     "description": "AL_KHARID_WALLS",
@@ -2472,12 +2555,28 @@
     "baseMaterial": "DIRT_2",
     "objectIds": [
       176,
+      184,
       185,
       186,
       320,
-      321
+      321,
+      4342,
+      4343,
+      4344,
+      7121,
+      7123,
+      7124,
+      7128,
+      20750,
+      20751
     ],
-    "uvType": "MODEL_XZ"
+    "uvType": "MODEL_XZ",
+    "hideInAreas": [
+      [
+        3180, 3433,
+        3190, 3447
+      ]
+    ]
   },
   {
     "description": "GROUND_OBJECT_DIRT_UNCOLORED",
@@ -2500,6 +2599,20 @@
     ],
     "inheritTileColorType": "OVERLAY",
     "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "GROUND_DECORATION_GRAY_ROCK_UNCOLORED",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      335,
+      336,
+      337,
+      11438,
+      11439,
+      11440,
+      12707,
+      12708
+    ]
   },
   {
     "description": "ROCK_LIKE_OBJECT",
@@ -2806,15 +2919,20 @@
   },
   {
     "description": "BEIGE_WALLS",
+    "baseMaterial": "GRUNGE_1",
     "objectIds": [
       436,
+      437,
+      438,
       441,
+      442,
       443,
-      455,
-      458,
-      461,
-      462,
-      477
+      444,
+      445,
+      446,
+      447,
+      448,
+      449
     ],
     "flatNormals": true
   },
@@ -2849,9 +2967,12 @@
     "description": "UNKNOWN_10",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
+      3708,
       3709,
+      3710,
       3724,
       3948,
+      3949,
       3950,
       "ROCKS_3803",
       "ROCKS_3804"
@@ -3726,7 +3847,8 @@
     "baseMaterial": "METALLIC_2_HIGHGLOSS",
     "objectIds": [
       202,
-      203
+      203,
+      7432
     ]
   },
   {
@@ -3761,13 +3883,15 @@
     "description": "DECORATIVE_ARMOR",
     "baseMaterial": "METALLIC_2_HIGHGLOSS",
     "objectIds": [
-      817
+      817,
+      25206
     ]
   },
   {
     "description": "STONE_WINDOWS",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
+      1646,
       1938
     ]
   },
@@ -3806,7 +3930,10 @@
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
       15645,
+      15646,
       15648,
+      16664,
+      16665,
       35791
     ]
   },
@@ -3825,7 +3952,8 @@
     "description": "GUILDED_CHEST",
     "baseMaterial": "METALLIC_2_HIGHGLOSS",
     "objectIds": [
-      376
+      376,
+      26273
     ]
   },
   {
@@ -3903,6 +4031,137 @@
     "baseMaterial": "METALLIC_2_GLOSS",
     "objectIds": [
       1814
+    ]
+  },
+  {
+    "description": "Anvil",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      2097
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "Ground Hole Shortcuts",
+    "baseMaterial": "DIRT_1",
+    "objectIds": [
+      16529,
+      16530
+    ]
+  },
+  {
+    "description": "Wilderness Ditch",
+    "baseMaterial": "DIRT_1",
+    "objectIds": [
+      23261,
+      23262,
+      23263,
+      23264,
+      23265,
+      23266,
+      23267,
+      23268,
+      23269,
+      23270,
+      23271,
+      23272
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Wilderness Ditch Dirt clumps",
+    "baseMaterial": "DIRT_1",
+    "objectIds": [
+      23273
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Sewer Valve",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "objectIds": [
+      2848
+    ]
+  },
+  {
+    "description": "Wizard Tower and Bridge",
+    "baseMaterial": "MARBLE_3_SEMIGLOSS",
+    "objectIds": [
+      12662,
+      12663,
+      12664,
+      12665,
+      12666,
+      12667,
+      12668,
+      12669,
+      12670,
+      12671,
+      12672,
+      12673,
+      12674,
+      12675,
+      12676,
+      12677,
+      12678,
+      12679,
+      12680,
+      12681,
+      12682,
+      12683,
+      12684,
+      12685,
+      12686,
+      12687,
+      12688,
+      12689,
+      12690,
+      12691,
+      12692,
+      12693,
+      12694,
+      12695,
+      12696
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "Marble Staircase Spiral",
+    "baseMaterial": "MARBLE_3",
+    "objectIds": [
+      12536,
+      12537
+    ]
+  },
+  {
+    "description": "Metal Chimney",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      5098
+    ]
+  },
+  {
+    "description": "Black Knight Fortress Walls",
+    "baseMaterial": "ROCK_2",
+    "objectIds": [
+      14543
+    ]
+  },
+  {
+    "description": "Grave Dirt",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [
+      4136,
+      4137
+    ]
+  },
+  {
+    "description": "PoH Portal",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      15480,
+      15481,
+      15482
     ]
   }
 ]

@@ -163,7 +163,6 @@ public enum Area
 			new AABB(3136, 3397, 3290, 3518),
 			new AABB(3177, 3371, 3291, 3410)
 	),
-
 	// Barbarian Village
 	BARBARIAN_VILLAGE_EAST_PATH_FIX(3111,3420,3112,3421),
 
@@ -241,6 +240,31 @@ public enum Area
 		new AABB(2112, 4893, 2166, 4930) // bank robbery cutscene
 	),
 
+	// Wizards Tower
+	WIZARDS_TOWER_PATH(
+		new AABB(3115,3171,3112,3168),
+		new AABB(3117,3169,3116,3166),
+		new AABB(3111,3169,3110,3167),
+		new AABB(3115,3167),
+		new AABB(3118,3168,3118,3167),
+		new AABB(3109,3168,3108,3168),
+		new AABB(3109,3167,3108,3167),
+		// Partial tiles
+		new AABB(3116,3170),
+		new AABB(3118,3169),
+		new AABB(3108,3169),
+		new AABB(3109,3169)
+	),
+	WIZARD_TOWER_PATH_PARTIAL_TILES(
+		new AABB(3111,3170),
+		new AABB(3107,3186),
+		new AABB(3114,3167),
+		new AABB(3112,3167),
+		new AABB(3107,3167),
+		new AABB(3118,3166),
+		new AABB(3115,3166)
+	),
+
 	// Misthalin Mystery
 	MISTHALIN_MYSTERY_MANOR(1600, 4863, 1727, 4779),
 
@@ -294,8 +318,13 @@ public enum Area
 		new AABB(3103, 3506, 3104, 3505), // diagonal 2
 		new AABB(3102, 3505, 3103, 3504), // diagonal 3
 		new AABB(3101, 3504, 3102, 3503), // diagonal 4
-		new AABB(3100, 3503, 3101, 3502)  // diagonal 5
+		new AABB(3100, 3503, 3101, 3502),  // diagonal 5
+		new AABB(3130,3518,3130,3516), // path under bridge towards Varrock
+		new AABB(3133,3518,3133,3516), // path under bridge towards Varrock
+		new AABB(3134,3517,3134,3516) // path after bridge towards Varrock
 	),
+	EDGEVILLE_BRIDGE(3133,3518,3130,3516),
+
 	// Edgeville Bank overhaul
 	EDGEVILLE_BANK_PERIMETER_FIX(
 			new AABB(3090, 3497, 3090, 3494), // bumpout for window

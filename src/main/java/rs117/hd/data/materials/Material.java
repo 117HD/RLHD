@@ -225,7 +225,10 @@ public enum Material
 
 	DIRT_1,
 	DIRT_2,
-	GRAVEL,
+	GRAVEL_N,
+	GRAVEL(p -> p
+			.setNormalMap(GRAVEL_N)
+	),
 
 	DIRT_SHINY_1(DIRT_1, p -> p
 		.setSpecular(1.1f, 380)),
@@ -355,6 +358,9 @@ public enum Material
 	),
 	METALLIC_2_HIGHGLOSS(METALLIC_2, p -> p
 			.setSpecular(1.1f, 80)
+	),
+	METALLIC_NONE_GLOSS(NONE, p -> p
+			.setSpecular(0.7f, 80)
 	),
 	WATTLE_1,
 

@@ -87,8 +87,8 @@ public enum Overlay {
     VARROCK_JULIETS_HOUSE_CARPET_PINK(-96, Area.VARROCK_JULIETS_HOUSE, GroundMaterial.CARPET, p -> p.blended(false)),
     VARROCK_JOLLY_BOAR_INN_KITCHEN_1(-84, Area.VARROCK_JOLLY_BOAR_INN, GroundMaterial.TILES_2x2_1_SEMIGLOSS, p -> p.blended(false)),
     VARROCK_JOLLY_BOAR_INN_KITCHEN_2(-85, Area.VARROCK_JOLLY_BOAR_INN, GroundMaterial.TILES_2x2_1_SEMIGLOSS, p -> p.blended(false)),
-    VARROCK_CHURCH_CARPET(-83, Area.VARROCK_SARADOMIN_CHURCH, GroundMaterial.NONE, p -> p.blended(false)),
-    VARROCK_CHURCH_FLOOR(-85, Area.VARROCK_SARADOMIN_CHURCH, GroundMaterial.VARROCK_PATHS, p -> p.blended(false)),
+    VARROCK_CHURCH_CARPET(-83, Area.VARROCK_SARADOMIN_CHURCH, GroundMaterial.CARPET, p -> p.blended(false)),
+    VARROCK_CHURCH_FLOOR(-85, Area.VARROCK_SARADOMIN_CHURCH, GroundMaterial.FALADOR_PATHS, p -> p.blended(false)),
     VARROCK_ANVILS(81, Area.VARROCK_ANVILS, GroundMaterial.DIRT),
     VARROCK_BUILDING_RUINS(81, Area.VARROCK_BUILDING_RUINS, GroundMaterial.DIRT),
     VARROCK_BUILDING_FLOOR_1(81, Area.VARROCK, GroundMaterial.TILE_SMALL, p -> p.blended(false)),
@@ -223,7 +223,10 @@ public enum Overlay {
         .shiftLightness(-4)),
     EDGEVILLE_GUARD_TOWER_FLOOR(10, Area.EDGEVILLE_GUARD_TOWER_FLOOR, GroundMaterial.CONCRETE),
     EDGEVILLE_MONASTERY_FLOOR(10, Area.EDGEVILLE_MONASTERY, GroundMaterial.GRAVEL, p -> p.blended(false)),
-
+    EDGEVILLE_BRIDGE_TEXTURE(12, Area.EDGEVILLE_BRIDGE, GroundMaterial.VARROCK_PATHS_LIGHT, p -> p
+        .lightness(32)
+        .blended(true)
+    ),
 
     // Burthorpe
     HEROES_GUILD_TILE_1(3, Area.HEROES_GUILD, GroundMaterial.MARBLE_1_GLOSS, p -> p.blended(false)),
@@ -306,7 +309,7 @@ public enum Overlay {
     YANILLE_BANK_REAR_GROUND(2, Area.YANILLE_BANK, GroundMaterial.TILES_2x2_2_GLOSS, p -> p
         .blended(false)
         .lightness(25)),
-    YANILLE_HUNTER_SHOP_FLOOR(16, Area.YANILLE, GroundMaterial.WOOD_PLANKS_1, p -> p.blended(false).lightness(32)),
+    YANILLE_HUNTER_SHOP_FLOOR(16, Area.YANILLE, GroundMaterial.WOOD_PLANKS_1, p -> p.blended(false).lightness(35).shiftHue(3).shiftSaturation(-3)),
     YANILLE_MAGIC_GUILD_FLOOR_FIX(10, Area.YANILLE_MAGIC_GUILD_FLOORS, GroundMaterial.TILES_2x2_1_SEMIGLOSS, p -> p.lightness(30)),
     GUTANOTH_CAVE(29, Area.GUTANOTH_CAVE, WaterType.SWAMP_WATER_FLAT),
 
@@ -370,6 +373,15 @@ public enum Overlay {
     DRAYNOR_MANOR_CARPET(127, Area.DRAYNOR_MANOR_INTERIOR, GroundMaterial.CARPET, p -> p.blended(false)),
     DRAYNOR_MANOR_ENTRANCE_DIRT_1(2, Area.DRAYNOR_MANOR, GroundMaterial.DIRT),
     DRAYNOR_MANOR_ENTRANCE_DIRT_2(127, Area.DRAYNOR_MANOR, GroundMaterial.DIRT),
+
+
+    // Wizards Tower
+    WIZARDS_TOWER_PATH_FIX1(164, Area.WIZARDS_TOWER_PATH, GroundMaterial.FALADOR_PATHS, p -> p.shiftSaturation(-1)),
+    WIZARDS_TOWER_PATH_FIX2(164, Area.WIZARD_TOWER_PATH_PARTIAL_TILES, GroundMaterial.OVERWORLD_GRASS_1, p -> p
+            .hue(10)
+            .saturation(5)
+            .lightness(19)
+    ),
 
     // Misthalin Mystery
     MISTHALIN_MYSTERY_MANOR_TILE_DARK_1(11, Area.MISTHALIN_MYSTERY_MANOR, GroundMaterial.MARBLE_2, p -> p.blended(false)),
