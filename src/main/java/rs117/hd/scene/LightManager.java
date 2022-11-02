@@ -28,6 +28,7 @@ package rs117.hd.scene;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
+import com.google.gson.Gson;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
@@ -115,13 +116,14 @@ public class LightManager
 
 	static final float TWO_PI = (float) (2 * Math.PI);
 
-	public void loadConfig(ResourcePath path)
+	@VisibleForTesting
+	void loadConfig(Gson gson, ResourcePath path)
 	{
 		try
 		{
 			Light[] lights;
 			try {
-				lights = path.loadJson(plugin.getGson(), Light[].class);
+				lights = path.loadJson(gson, Light[].class);
 			} catch (IOException ex) {
 				log.error("Failed to load lights", ex);
 				return;
@@ -162,7 +164,7 @@ public class LightManager
 	public void startUp()
 	{
 		entityHiderConfig = configManager.getConfig(EntityHiderConfig.class);
-		lightsPath.watch(this::loadConfig);
+		lightsPath.watch(path -> loadConfig(plugin.getGson(), path));
 	}
 
 	public void shutDown()
