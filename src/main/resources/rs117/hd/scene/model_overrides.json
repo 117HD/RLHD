@@ -2734,25 +2734,33 @@
   },
   {
     "description": "WOODEN_PLANK_DOCKS",
-    "baseMaterial": "WOOD_GRAIN_BROWN",
+    "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       9513,
-      9541,
-      9543
+      9541
+
     ],
     "uvType": "MODEL_XZ"
   },
   {
     "description": "WOODEN_PLANK_DOCKS diagonal",
-    "baseMaterial": "WOOD_GRAIN_BROWN",
+    "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       9542
     ],
     "uvType": "MODEL_XZ_MIRROR_A"
   },
   {
+    "description": "WOODEN_PLANK_DOCKS diagonal",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      9543
+    ],
+    "uvType": "MODEL_XZ_MIRROR_B"
+  },
+  {
     "description": "WOODEN_PLANK_ROUGH",
-    "baseMaterial": "WOOD_GRAIN_BROWN_DARK",
+    "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       796,
       797,
@@ -2772,7 +2780,7 @@
   },
   {
     "description": "WOODEN_PLANK_ROUGH",
-    "baseMaterial": "WOOD_GRAIN_RED",
+    "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       42036
     ],
@@ -2829,7 +2837,7 @@
   },
   {
     "description": "LIGHT_WOODEN_DOCKS",
-    "baseMaterial": "WOOD_GRAIN_TAN",
+    "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       17103,
       17104,
@@ -2841,20 +2849,27 @@
     "uvType": "MODEL_XZ"
   },
   {
+    "description": "LIGHT_WOODEN_DOCKS_MIRRORED",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      17106
+    ],
+    "uvType": "MODEL_XZ_MIRROR_B"
+  },
+  {
     "description": "PHASMATYS_DOCKS",
-    "baseMaterial": "WOOD_GRAIN_GREEN",
+    "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       5238,
       5239,
       5455,
       5456
     ],
-    "flatNormals": true,
     "uvType": "MODEL_XZ"
   },
   {
     "description": "LUNAR_ISLE_DOCKS",
-    "baseMaterial": "WEATHERED_LUNAR_WOOD",
+    "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       16991
     ],
@@ -2879,7 +2894,7 @@
   },
   {
     "description": "LUNAR_ISLE_BRIDGES",
-    "baseMaterial": "WEATHERED_LUNAR_WOOD",
+    "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       16807
     ],
@@ -2887,14 +2902,13 @@
   },
   {
     "description": "PIRATE_ISLE_DOCKS",
-    "baseMaterial": "WEATHERED_LUNAR_WOOD",
+    "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       16988,
       16989,
       16992,
       16993
     ],
-    "flatNormals": true,
     "uvType": "MODEL_XZ"
   },
   {
@@ -2907,18 +2921,18 @@
   },
   {
     "description": "RELLEKKA_DOCKS",
-    "baseMaterial": "WOOD_GRAIN_BROWN_WEATHERED",
+    "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       4256,
       4257,
-      4258
+      4258,
+      4259
     ],
-    "flatNormals": true,
     "uvType": "MODEL_XZ"
   },
   {
     "description": "RoU_DOCKS",
-    "baseMaterial": "WOOD_GRAIN_WEATHERED",
+    "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       41320,
       41321
