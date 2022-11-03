@@ -92,6 +92,15 @@ public enum Overlay {
     VARROCK_EAST_BANK_CENTER(-83, Area.VARROCK_EAST_BANK_CENTER, GroundMaterial.TILES_2x2_1_SEMIGLOSS, p -> p.blended(false)),
     VARROCK_EAST_BANK_OUTSIDE_1(-85, Area.VARROCK_EAST_BANK_OUTSIDE_1, GroundMaterial.TILES_2x2_1_SEMIGLOSS, p -> p.blended(false)),
     VARROCK_EAST_BANK(-85, Area.VARROCK_EAST_BANK, GroundMaterial.TILES_2x2_1_SEMIGLOSS, p -> p.blended(false)),
+    VARROCK_CASTLE_PATH_FIXES_1(173, Area.VARROCK_CASTLE_DIRT_PATH_FIXES_1, GroundMaterial.OVERWORLD_DIRT, p -> p
+            .blended(false)
+            .shiftLightness(6)
+    ),
+    VARROCK_CASTLE_PATH_FIXES_2(173, Area.VARROCK_CASTLE_DIRT_PATH_FIXES_2, GroundMaterial.OVERWORLD_DIRT, p -> p
+            .blended(false)
+            .shiftLightness(7)
+    ),
+    VARROCK_CASTLE_FLOOR(171, Area.VARROCK_CASTLE, GroundMaterial.VARROCK_PATHS, p -> p.blended(false)),
     VARROCK_ROOF_GRAVEL(2, Area.VARROCK_CASTLE, GroundMaterial.GRAVEL, p -> p.blended(false)),
     VARROCK_ROOF_ARCHERY_FLOOR_1(-83, Area.VARROCK_CASTLE, GroundMaterial.DIRT, p -> p.blended(false)),
     VARROCK_ROOF_ARCHERY_FLOOR_2(-84, Area.VARROCK_CASTLE, GroundMaterial.DIRT, p -> p.blended(false)),
