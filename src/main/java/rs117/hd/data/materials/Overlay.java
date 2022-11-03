@@ -458,6 +458,9 @@ public enum Overlay {
 	// POHs
 	POH_DESERT_INDOORS(Area.PLAYER_OWNED_HOUSE, GroundMaterial.TILES_2x2_2, p -> p.blended(false).ids(26, 99)),
 
+    // Cutscenes
+    LAND_OF_GOBLINS_WATER_FIX(13, Area.LAND_OF_GOBLINS_CUTSCENE_WATER, WaterType.WATER),
+
     // Random events
     PRISON_PETE_TILE_1(2, Area.RANDOM_EVENT_PRISON_PETE, GroundMaterial.MARBLE_1, p -> p.blended(false)),
     PRISON_PETE_TILE_2(-125, Area.RANDOM_EVENT_PRISON_PETE, GroundMaterial.MARBLE_2, p -> p.blended(false)),
