@@ -37,7 +37,6 @@ uniform sampler2D shadowMap;
 
 uniform mat4 lightProjectionMatrix;
 
-uniform float elapsedTime;
 uniform float colorBlindnessIntensity;
 uniform vec4 fogColor;
 uniform int fogDepth;
@@ -68,29 +67,31 @@ uniform float contrast;
 
 uniform int pointLightsCount; // number of lights in current frame
 
+flat in vec4 vColor[3];
+flat in vec3 vUv[3];
+flat in int vMaterialData[3];
+flat in int vTerrainData[3];
+flat in ivec3 isOverlay;
 in float fogAmount;
-flat in vec4 vColor1;
-flat in vec4 vColor2;
-flat in vec4 vColor3;
-flat in vec2 vUv1;
-flat in vec2 vUv2;
-flat in vec2 vUv3;
 in vec3 normals;
 in vec3 position;
 in vec3 texBlend;
-flat in ivec3 materialId;
-flat in ivec3 terrainData;
-flat in ivec3 isOverlay;
 
 out vec4 FragColor;
 
+#include utils/polyfills.glsl
+#include utils/constants.glsl
+#include utils/misc.glsl
 #include utils/color_blindness.glsl
 #include utils/caustics.glsl
 #include utils/color_conversion.glsl
-#include utils/misc.glsl
 #include utils/normals.glsl
 #include utils/specular.glsl
 #include utils/displacement.glsl
+
+vec2 worldUvs(float scale) {
+    return position.xz / 128. / scale;
+}
 
 void main() {
     vec3 camPos = vec3(cameraX, cameraY, cameraZ);
@@ -100,20 +101,20 @@ void main() {
     vec3 lightDir = -lightDirection;
 
     // material data
-    Material material1 = getMaterial(materialId.x);
-    Material material2 = getMaterial(materialId.y);
-    Material material3 = getMaterial(materialId.z);
+    Material material1 = getMaterial(vMaterialData[0] >> MATERIAL_FLAG_BITS);
+    Material material2 = getMaterial(vMaterialData[1] >> MATERIAL_FLAG_BITS);
+    Material material3 = getMaterial(vMaterialData[2] >> MATERIAL_FLAG_BITS);
 
     // water data
-    bool isTerrain = (terrainData.x & 1) != 0; // 1 = 0b1
-    int waterDepth1 = terrainData.x >> 8;
-    int waterDepth2 = terrainData.y >> 8;
-    int waterDepth3 = terrainData.z >> 8;
+    bool isTerrain = (vTerrainData[0] & 1) != 0; // 1 = 0b1
+    int waterDepth1 = vTerrainData[0] >> 8;
+    int waterDepth2 = vTerrainData[1] >> 8;
+    int waterDepth3 = vTerrainData[2] >> 8;
     float waterDepth =
         waterDepth1 * texBlend.x +
         waterDepth2 * texBlend.y +
         waterDepth3 * texBlend.z;
-    int waterTypeIndex = isTerrain ? terrainData.x >> 3 & 0x1F : 0;
+    int waterTypeIndex = isTerrain ? vTerrainData[0] >> 3 & 0x1F : 0;
     WaterType waterType = getWaterType(waterTypeIndex);
 
     // set initial texture map ids
@@ -136,7 +137,7 @@ void main() {
     }
 
     float alpha = 1;
-    vec4 fragColor = vColor1 * texBlend.x + vColor2 * texBlend.y + vColor3 * texBlend.z;
+    vec4 fragColor = vColor[0] * texBlend.x + vColor[1] * texBlend.y + vColor[2] * texBlend.z;
 
     // Source: https://www.geeks3d.com/20130122/normal-mapping-without-precomputed-tangent-space-vectors/
     vec3 N = normalize(normals);
@@ -146,10 +147,11 @@ void main() {
     vec3 B = normalize(cross(N, T));
     mat3 TBN = mat3(T, B, N);
 
-    vec2 blendedUv = vUv1 * texBlend.x + vUv2 * texBlend.y + vUv3 * texBlend.z;
-    vec2 uv1 = blendedUv;
-    vec2 uv2 = blendedUv;
-    vec2 uv3 = blendedUv;
+    vec2 uv1 = getUvs(vUv[0], vMaterialData[0], position);
+    vec2 uv2 = getUvs(vUv[1], vMaterialData[1], position);
+    vec2 uv3 = getUvs(vUv[2], vMaterialData[2], position);
+    vec2 blendedUv = uv1 * texBlend.x + uv2 * texBlend.y + uv3 * texBlend.z;
+    uv1 = uv2 = uv3 = blendedUv;
 
     // Scroll UVs
     uv1 += material1.scrollDuration * elapsedTime;
@@ -184,10 +186,10 @@ void main() {
     // water uvs
     if (isWater)
     {
-        uv1 = vec2(-worldUvs(5).y + animationFrame(31 * waterType.duration),
-        worldUvs(5).x + animationFrame(31 * waterType.duration));
-        uv2 = vec2(worldUvs(3).y - animationFrame(24 * waterType.duration),
-        worldUvs(3).x - animationFrame(24 * waterType.duration));
+        uv1 = vec2(-worldUvs(5).x + animationFrame(31 * waterType.duration),
+        worldUvs(5).y + animationFrame(31 * waterType.duration));
+        uv2 = vec2(worldUvs(3).x - animationFrame(24 * waterType.duration),
+        worldUvs(3).y - animationFrame(24 * waterType.duration));
     }
 
     // get flowMap map
@@ -210,17 +212,17 @@ void main() {
     uv3 += uvFlow * flowMapStrength;
     if (isWater)
     {
-        uv1 = vec2(worldUvs(2).x + animationFrame(20 * waterType.duration) + uvFlow.x * flowMapStrength,
-        worldUvs(2).y + animationFrame(20 * waterType.duration) + uvFlow.y * flowMapStrength);
-        uv1 = vec2(worldUvs(3).x - animationFrame(28 * waterType.duration) - uvFlow.x * flowMapStrength,
-        worldUvs(3).y + animationFrame(28 * waterType.duration) + uvFlow.y * flowMapStrength);
+        uv1 = vec2(worldUvs(2).y + animationFrame(20 * waterType.duration) + uvFlow.x * flowMapStrength,
+        worldUvs(2).x + animationFrame(20 * waterType.duration) + uvFlow.y * flowMapStrength);
+        uv1 = vec2(worldUvs(3).y - animationFrame(28 * waterType.duration) - uvFlow.x * flowMapStrength,
+        worldUvs(3).x + animationFrame(28 * waterType.duration) + uvFlow.y * flowMapStrength);
     }
 
     // get vertex colors
     vec4 flatColor = vec4(0.5, 0.5, 0.5, 1.0);
-    vec4 baseColor1 = vColor1;
-    vec4 baseColor2 = vColor2;
-    vec4 baseColor3 = vColor3;
+    vec4 baseColor1 = vColor[0];
+    vec4 baseColor2 = vColor[1];
+    vec4 baseColor3 = vColor[2];
 
     // get diffuse textures
     vec4 texColor1 = colorMap1 == -1 ? vec4(1) : texture(textureArray, vec3(uv1, colorMap1));
@@ -294,15 +296,15 @@ void main() {
         // assign standalone UV to uvA and others to uvB, uvC
         for (int i = 0; i < 3; i++)
         {
-            vec2 uv = vUv1;
+            vec2 uv = vUv[0].xy;
 
             if (i == 1)
             {
-                uv = vUv2;
+                uv = vUv[1].xy;
             }
             else if (i == 2)
             {
-                uv = vUv3;
+                uv = vUv[2].xy;
             }
 
             if ((isOverlay[i] == 1 && overlayCount == 1) || (isUnderlay[i] == 1 && underlayCount == 1))

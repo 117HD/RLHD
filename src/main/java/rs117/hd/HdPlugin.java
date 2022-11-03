@@ -2112,7 +2112,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		}
 	}
 
-	private void uploadScene()
+	public void uploadScene()
 	{
 		lightManager.reset();
 
@@ -2488,8 +2488,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				int uvOffset = dynamicOffsetUvs + stagingBufferUvs.position() / UV_SIZE;
 
 				ModelOverride modelOverride = modelOverrideManager.getOverride(hash);
-				final int[] lengths = modelPusher.pushModel(hash, model, stagingBufferVertices, stagingBufferUvs, stagingBufferNormals,
-					0, 0, 0, modelOverride, ObjectType.NONE, true);
+				final int[] lengths = modelPusher.pushModel(hash, model,
+					stagingBufferVertices, stagingBufferUvs, stagingBufferNormals,
+					0, 0, 0, 0, modelOverride, ObjectType.NONE, true);
 				final int faceCount = lengths[0] / 3;
 				if (lengths[1] <= 0)
 					uvOffset = -1;
@@ -2756,7 +2757,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	public void onGameObjectSpawned(GameObjectSpawned gameObjectSpawned)
 	{
 		GameObject gameObject = gameObjectSpawned.getGameObject();
-		lightManager.addObjectLight(gameObject, gameObjectSpawned.getTile().getRenderLevel(), gameObject.sizeX(), gameObject.sizeY(), gameObject.getOrientation().getAngle());
+		lightManager.addObjectLight(gameObject, gameObjectSpawned.getTile().getRenderLevel(), gameObject.sizeX(), gameObject.sizeY(), gameObject.getOrientation());
 	}
 
 	@Subscribe

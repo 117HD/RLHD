@@ -102,7 +102,7 @@ class SceneUploader
 		log.debug("Scene upload time: {}", stopwatch);
 	}
 
-	private void uploadModel(long hash, Model model, GpuIntBuffer vertexBuffer, GpuFloatBuffer uvBuffer, GpuFloatBuffer normalBuffer, int tileZ, int tileX, int tileY, ObjectType objectType)
+	private void uploadModel(long hash, Model model, GpuIntBuffer vertexBuffer, GpuFloatBuffer uvBuffer, GpuFloatBuffer normalBuffer, int tileZ, int tileX, int tileY, int orientation, ObjectType objectType)
 	{
 		if (model.getSceneId() == sceneId)
 		{
@@ -122,7 +122,9 @@ class SceneUploader
 		// pack a bit into bufferoffset that we can use later to hide
 		// some low-importance objects based on Level of Detail setting
 		model.setBufferOffset((vertexBuffer.position() / VERTEX_SIZE) << 2 | skipObject);
-		if (model.getFaceTextures() != null || (plugin.configModelTextures && modelOverride.baseMaterial != Material.NONE))
+		if (model.getFaceTextures() != null ||
+			(plugin.configModelTextures && modelOverride.baseMaterial != Material.NONE) ||
+			modelPusher.packMaterialData(Material.NONE, false, modelOverride) != 0)
 		{
 			model.setUvBufferOffset(uvBuffer.position() / UV_SIZE);
 		}
@@ -133,7 +135,7 @@ class SceneUploader
 		model.setSceneId(sceneId);
 
 		modelPusher.pushModel(hash, model, vertexBuffer, uvBuffer, normalBuffer,
-			tileX, tileY, tileZ, modelOverride, objectType, false);
+			tileX, tileY, tileZ, orientation, modelOverride, objectType, false);
 	}
 
 	private void upload(Tile tile, GpuIntBuffer vertexBuffer, GpuFloatBuffer uvBuffer, GpuFloatBuffer normalBuffer)
@@ -205,14 +207,18 @@ class SceneUploader
 			if (renderable1 instanceof Model)
 			{
 				uploadModel(wallObject.getHash(), (Model) renderable1,
-					vertexBuffer, uvBuffer, normalBuffer, tileZ, tileX, tileY, ObjectType.WALL_OBJECT);
+					vertexBuffer, uvBuffer, normalBuffer, tileZ, tileX, tileY,
+					HDUtils.convertWallObjectOrientation(wallObject.getOrientationA()),
+					ObjectType.WALL_OBJECT);
 			}
 
 			Renderable renderable2 = wallObject.getRenderable2();
 			if (renderable2 instanceof Model)
 			{
-				uploadModel(wallObject.getHash(), (Model) renderable2, vertexBuffer, uvBuffer, normalBuffer, tileZ, tileX,
-					tileY, ObjectType.WALL_OBJECT);
+				uploadModel(wallObject.getHash(), (Model) renderable2,
+					vertexBuffer, uvBuffer, normalBuffer, tileZ, tileX, tileY,
+					HDUtils.convertWallObjectOrientation(wallObject.getOrientationB()),
+					ObjectType.WALL_OBJECT);
 			}
 		}
 
@@ -222,27 +228,32 @@ class SceneUploader
 			Renderable renderable = groundObject.getRenderable();
 			if (renderable instanceof Model)
 			{
-				uploadModel(groundObject.getHash(), (Model) renderable, vertexBuffer, uvBuffer, normalBuffer, tileZ, tileX,
-					tileY, ObjectType.GROUND_OBJECT);
+				uploadModel(groundObject.getHash(), (Model) renderable,
+					vertexBuffer, uvBuffer, normalBuffer, tileZ, tileX, tileY,
+					HDUtils.extractConfigOrientation(groundObject.getConfig()),
+					ObjectType.GROUND_OBJECT);
 			}
 		}
 
 		DecorativeObject decorativeObject = tile.getDecorativeObject();
 		if (decorativeObject != null)
 		{
-
 			Renderable renderable = decorativeObject.getRenderable();
 			if (renderable instanceof Model)
 			{
-				uploadModel(decorativeObject.getHash(), (Model) renderable, vertexBuffer, uvBuffer, normalBuffer, tileZ, tileX,
-					tileY, ObjectType.DECORATIVE_OBJECT);
+				uploadModel(decorativeObject.getHash(), (Model) renderable,
+					vertexBuffer, uvBuffer, normalBuffer, tileZ, tileX, tileY,
+					HDUtils.extractConfigOrientation(decorativeObject.getConfig()),
+					ObjectType.DECORATIVE_OBJECT);
 			}
 
 			Renderable renderable2 = decorativeObject.getRenderable2();
 			if (renderable2 instanceof Model)
 			{
-				uploadModel(decorativeObject.getHash(), (Model) renderable2, vertexBuffer, uvBuffer, normalBuffer, tileZ, tileX,
-					tileY, ObjectType.DECORATIVE_OBJECT);
+				uploadModel(decorativeObject.getHash(), (Model) renderable2,
+					vertexBuffer, uvBuffer, normalBuffer, tileZ, tileX, tileY,
+					HDUtils.extractConfigOrientation(decorativeObject.getConfig()),
+					ObjectType.DECORATIVE_OBJECT);
 			}
 		}
 
@@ -257,8 +268,9 @@ class SceneUploader
 			Renderable renderable = gameObject.getRenderable();
 			if (renderable instanceof Model)
 			{
-				uploadModel(gameObject.getHash(), (Model) gameObject.getRenderable(), vertexBuffer, uvBuffer, normalBuffer, tileZ, tileX,
-					tileY, ObjectType.GAME_OBJECT);
+				uploadModel(gameObject.getHash(), (Model) gameObject.getRenderable(),
+					vertexBuffer, uvBuffer, normalBuffer, tileZ, tileX, tileY,
+					gameObject.getModelOrientation(), ObjectType.GAME_OBJECT);
 			}
 		}
 	}
@@ -475,19 +487,19 @@ class SceneUploader
 
 			bufferLength += 6;
 
-			int packedMaterialDataSW = modelPusher.packMaterialData(swMaterial, swVertexIsOverlay);
-			int packedMaterialDataSE = modelPusher.packMaterialData(seMaterial, seVertexIsOverlay);
-			int packedMaterialDataNW = modelPusher.packMaterialData(nwMaterial, nwVertexIsOverlay);
-			int packedMaterialDataNE = modelPusher.packMaterialData(neMaterial, neVertexIsOverlay);
+			int packedMaterialDataSW = modelPusher.packMaterialData(swMaterial, swVertexIsOverlay, ModelOverride.NONE);
+			int packedMaterialDataSE = modelPusher.packMaterialData(seMaterial, seVertexIsOverlay, ModelOverride.NONE);
+			int packedMaterialDataNW = modelPusher.packMaterialData(nwMaterial, nwVertexIsOverlay, ModelOverride.NONE);
+			int packedMaterialDataNE = modelPusher.packMaterialData(neMaterial, neVertexIsOverlay, ModelOverride.NONE);
 
 			uvBuffer.ensureCapacity(24);
-			uvBuffer.put(packedMaterialDataNE, 1.0f, 1.0f, 0f);
-			uvBuffer.put(packedMaterialDataNW, 0.0f, 1.0f, 0f);
-			uvBuffer.put(packedMaterialDataSE, 1.0f, 0.0f, 0f);
+			uvBuffer.put(1, 1, 0, packedMaterialDataNE);
+			uvBuffer.put(0, 1, 0, packedMaterialDataNW);
+			uvBuffer.put(1, 0, 0, packedMaterialDataSE);
 
-			uvBuffer.put(packedMaterialDataSW, 0.0f, 0.0f, 0f);
-			uvBuffer.put(packedMaterialDataSE, 1.0f, 0.0f, 0f);
-			uvBuffer.put(packedMaterialDataNW, 0.0f, 1.0f, 0f);
+			uvBuffer.put(0, 0, 0, packedMaterialDataSW);
+			uvBuffer.put(1, 0, 0, packedMaterialDataSE);
+			uvBuffer.put(0, 1, 0, packedMaterialDataNW);
 
 			uvBufferLength += 6;
 		}
@@ -595,19 +607,19 @@ class SceneUploader
 
 			bufferLength += 6;
 
-			int packedMaterialDataSW = modelPusher.packMaterialData(swMaterial, false);
-			int packedMaterialDataSE = modelPusher.packMaterialData(seMaterial, false);
-			int packedMaterialDataNW = modelPusher.packMaterialData(nwMaterial, false);
-			int packedMaterialDataNE = modelPusher.packMaterialData(neMaterial, false);
+			int packedMaterialDataSW = modelPusher.packMaterialData(swMaterial, false, ModelOverride.NONE);
+			int packedMaterialDataSE = modelPusher.packMaterialData(seMaterial, false, ModelOverride.NONE);
+			int packedMaterialDataNW = modelPusher.packMaterialData(nwMaterial, false, ModelOverride.NONE);
+			int packedMaterialDataNE = modelPusher.packMaterialData(neMaterial, false, ModelOverride.NONE);
 
 			uvBuffer.ensureCapacity(24);
-			uvBuffer.put(packedMaterialDataNE, 1.0f, 1.0f, 0f);
-			uvBuffer.put(packedMaterialDataNW, 0.0f, 1.0f, 0f);
-			uvBuffer.put(packedMaterialDataSE, 1.0f, 0.0f, 0f);
+			uvBuffer.put(1, 1, 0, packedMaterialDataNE);
+			uvBuffer.put(0, 1, 0, packedMaterialDataNW);
+			uvBuffer.put(1, 0, 0, packedMaterialDataSE);
 
-			uvBuffer.put(packedMaterialDataSW, 0.0f, 0.0f, 0f);
-			uvBuffer.put(packedMaterialDataSE, 1.0f, 0.0f, 0f);
-			uvBuffer.put(packedMaterialDataNW, 0.0f, 1.0f, 0f);
+			uvBuffer.put(0, 0, 0, packedMaterialDataSW);
+			uvBuffer.put(1, 0, 0, packedMaterialDataSE);
+			uvBuffer.put(0, 1, 0, packedMaterialDataNW);
 
 			uvBufferLength += 6;
 		}
@@ -813,14 +825,14 @@ class SceneUploader
 
 			bufferLength += 3;
 
-			int packedMaterialDataA = modelPusher.packMaterialData(materialA, vertexAIsOverlay);
-			int packedMaterialDataB = modelPusher.packMaterialData(materialB, vertexBIsOverlay);
-			int packedMaterialDataC = modelPusher.packMaterialData(materialC, vertexCIsOverlay);
+			int packedMaterialDataA = modelPusher.packMaterialData(materialA, vertexAIsOverlay, ModelOverride.NONE);
+			int packedMaterialDataB = modelPusher.packMaterialData(materialB, vertexBIsOverlay, ModelOverride.NONE);
+			int packedMaterialDataC = modelPusher.packMaterialData(materialC, vertexCIsOverlay, ModelOverride.NONE);
 
 			uvBuffer.ensureCapacity(12);
-			uvBuffer.put(packedMaterialDataA, localVertices[0][0] / 128f, localVertices[0][1] / 128f, 0f);
-			uvBuffer.put(packedMaterialDataB, localVertices[1][0] / 128f, localVertices[1][1] / 128f, 0f);
-			uvBuffer.put(packedMaterialDataC, localVertices[2][0] / 128f, localVertices[2][1] / 128f, 0f);
+			uvBuffer.put(localVertices[0][0] / 128f, localVertices[0][1] / 128f, 0, packedMaterialDataA);
+			uvBuffer.put(localVertices[1][0] / 128f, localVertices[1][1] / 128f, 0, packedMaterialDataB);
+			uvBuffer.put(localVertices[2][0] / 128f, localVertices[2][1] / 128f, 0, packedMaterialDataC);
 
 			uvBufferLength += 3;
 		}
@@ -921,14 +933,14 @@ class SceneUploader
 
 				bufferLength += 3;
 
-				int packedMaterialDataA = modelPusher.packMaterialData(materialA, false);
-				int packedMaterialDataB = modelPusher.packMaterialData(materialB, false);
-				int packedMaterialDataC = modelPusher.packMaterialData(materialC, false);
+				int packedMaterialDataA = modelPusher.packMaterialData(materialA, false, ModelOverride.NONE);
+				int packedMaterialDataB = modelPusher.packMaterialData(materialB, false, ModelOverride.NONE);
+				int packedMaterialDataC = modelPusher.packMaterialData(materialC, false, ModelOverride.NONE);
 
 				uvBuffer.ensureCapacity(12);
-				uvBuffer.put(packedMaterialDataA, localVertices[0][0] / 128f, localVertices[0][1] / 128f, 0f);
-				uvBuffer.put(packedMaterialDataB, localVertices[1][0] / 128f, localVertices[1][1] / 128f, 0f);
-				uvBuffer.put(packedMaterialDataC, localVertices[2][0] / 128f, localVertices[2][1] / 128f, 0f);
+				uvBuffer.put(localVertices[0][0] / 128f, localVertices[0][1] / 128f, 0, packedMaterialDataA);
+				uvBuffer.put(localVertices[1][0] / 128f, localVertices[1][1] / 128f, 0, packedMaterialDataB);
+				uvBuffer.put(localVertices[2][0] / 128f, localVertices[2][1] / 128f, 0, packedMaterialDataC);
 
 				uvBufferLength += 3;
 			}

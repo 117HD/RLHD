@@ -350,7 +350,9 @@ public enum Material
 		.setScroll(0, 1 / 3f)),
 	HD_ROOF_SHINGLES_2(p -> p
 		.replaceIf(ROOF_SHINGLES_2, HdPluginConfig::objectTextures)),
+
 	WORN_TILES,
+	STONE,
 
 	// Seasonal
 	WINTER_WILLOW_LEAVES(p -> p

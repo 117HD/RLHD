@@ -6,7 +6,9 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
 import net.runelite.api.coords.WorldPoint;
+import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
+import rs117.hd.model.ModelPusher;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.AABB;
 import rs117.hd.utils.Env;
@@ -30,7 +32,13 @@ public class ModelOverrideManager {
     private Client client;
 
     @Inject
+    private ClientThread clientThread;
+
+    @Inject
     private HdPlugin plugin;
+
+    @Inject
+    private ModelPusher modelPusher;
 
     private final HashMap<Long, ModelOverride> modelOverrides = new HashMap<>();
     private final HashMap<Long, AABB[]> modelsToHide = new HashMap<>();
@@ -50,8 +58,12 @@ public class ModelOverrideManager {
                     for (int objectId : entry.objectIds)
                         addEntry(ModelHash.packUuid(objectId, ModelHash.TYPE_OBJECT), entry);
                 }
-                if (client.getGameState() == GameState.LOGGED_IN)
-                    plugin.reloadSceneNextGameTick();
+                if (client.getGameState() == GameState.LOGGED_IN) {
+                    clientThread.invokeLater(() -> {
+                        plugin.uploadScene();
+                        modelPusher.clearModelCache();
+                    });
+                }
                 log.debug("Loaded {} model overrides", modelOverrides.size());
             } catch (IOException ex) {
                 log.error("Failed to load model overrides:", ex);
@@ -84,7 +96,7 @@ public class ModelOverrideManager {
 
         AABB[] aabbs = modelsToHide.get(uuid);
         if (aabbs != null && hasNoActions(uuid)) {
-            WorldPoint location = ModelHash.getWorldLocation(client, x, z);
+            WorldPoint location = ModelHash.getWorldTemplateLocation(client, x, z);
             for (AABB aabb : aabbs)
                 if (aabb.contains(location))
                     return true;
