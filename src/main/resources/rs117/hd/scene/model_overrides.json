@@ -2738,10 +2738,17 @@
     "objectIds": [
       9513,
       9541,
-      9542,
       9543
     ],
-    "uvType": "GROUND_PLANE"
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "WOODEN_PLANK_DOCKS diagonal",
+    "baseMaterial": "WOOD_GRAIN_BROWN",
+    "objectIds": [
+      9542
+    ],
+    "uvType": "MODEL_XZ_MIRROR_A"
   },
   {
     "description": "WOODEN_PLANK_ROUGH",
@@ -2761,7 +2768,7 @@
       15975,
       41419
     ],
-    "uvType": "GROUND_PLANE"
+    "uvType": "MODEL_XZ"
   },
   {
     "description": "WOODEN_PLANK_ROUGH",
@@ -2769,7 +2776,7 @@
     "objectIds": [
       42036
     ],
-    "uvType": "GROUND_PLANE"
+    "uvType": "MODEL_XZ"
   },
   {
     "description": "DOCK_FENCES",
@@ -2831,7 +2838,7 @@
       25619,
       31589
     ],
-    "uvType": "GROUND_PLANE"
+    "uvType": "MODEL_XZ"
   },
   {
     "description": "PHASMATYS_DOCKS",
@@ -2843,7 +2850,7 @@
       5456
     ],
     "flatNormals": true,
-    "uvType": "GROUND_PLANE"
+    "uvType": "MODEL_XZ"
   },
   {
     "description": "LUNAR_ISLE_DOCKS",
@@ -2851,7 +2858,7 @@
     "objectIds": [
       16991
     ],
-    "uvType": "GROUND_PLANE"
+    "uvType": "MODEL_XZ"
   },
   {
     "description": "LUNAR_ISLE_DOCK_SUPPORTS",
@@ -2876,7 +2883,7 @@
     "objectIds": [
       16807
     ],
-    "uvType": "GROUND_PLANE"
+    "uvType": "MODEL_XZ"
   },
   {
     "description": "PIRATE_ISLE_DOCKS",
@@ -2888,7 +2895,7 @@
       16993
     ],
     "flatNormals": true,
-    "uvType": "GROUND_PLANE"
+    "uvType": "MODEL_XZ"
   },
   {
     "description": "LUNAR_ISLE_DOCK_SUPPORTS",
@@ -2907,7 +2914,7 @@
       4258
     ],
     "flatNormals": true,
-    "uvType": "GROUND_PLANE"
+    "uvType": "MODEL_XZ"
   },
   {
     "description": "RoU_DOCKS",
@@ -2917,7 +2924,7 @@
       41321
 
     ],
-    "uvType": "GROUND_PLANE"
+    "uvType": "MODEL_XZ"
   },
   {
     "description": "FENCES_2",
@@ -2982,7 +2989,7 @@
       27651,
       42751
     ],
-    "uvType": "GROUND_PLANE"
+    "uvType": "MODEL_XZ"
   },
   {
     "description": "PICARILIUS_DOCKS_SAND_TILE",
@@ -2998,7 +3005,7 @@
       27659
 
     ],
-    "uvType": "GROUND_PLANE"
+    "uvType": "MODEL_XZ"
   },
   {
     "description": "PICARILIUS_SAND_TILE",
@@ -3011,6 +3018,6 @@
       27660
 
     ],
-    "uvType": "GROUND_PLANE"
+    "uvType": "MODEL_XZ"
   }
 ]
