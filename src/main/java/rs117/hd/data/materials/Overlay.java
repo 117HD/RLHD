@@ -280,6 +280,15 @@ public enum Overlay {
             .saturation(4)
             .lightness(15)
     ),
+    DRAYNOR_PATH_BLENDING_FIX(10, Area.DRAYNOR_PATH_BLENDING_FIXES, GroundMaterial.OVERWORLD_GRASS_1, p -> p
+            .hue(9)
+            .saturation(5)
+            .lightness(15)),
+    DRAYNOR_NEDS_PATH_FIX(10, Area.DRAYNOR_NEDS_PATH_FIXES, GroundMaterial.OVERWORLD_GRASS_1, p -> p
+            .hue(9)
+            .saturation(5)
+            .lightness(18)
+    ),
     DRAYNOR_BANK_FLOOR(10, Area.DRAYNOR_BANK, GroundMaterial.WORN_TILES, p -> p.blended(false)),
     DRAYNOR_BANK_FRONT_FIX(0, Area.DRAYNOR_BANK_FRONT_PATH, GroundMaterial.GRAVEL, p -> p
             .hue(0)
