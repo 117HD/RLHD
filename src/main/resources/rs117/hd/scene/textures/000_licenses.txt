@@ -11,11 +11,15 @@ Sand textures derived from a photograph by Romain Dancre on Unsplash.
 Some textures copyright (c) 2021 117.
 -- https://twitter.com/117scape
 
-Wooden Grain(247) & Rock(224) Texture 2021 j-meds.
-https://github.com/j-meds
+WOODEN_GRAIN & ROCK Texture 2021 j-meds.
+-- https://github.com/j-meds
 
 Caustics texture by leenor_net, licensed under CC0 1.0 Universal.
 -- https://opengameart.org/content/water-caustics-effect-small
+
+
+STONE Obtained from https://tiled-bg.blogspot.com/2012/11/gray-stone-web-background-texture.html by (V.Hartikainen), texture has been darken.
+-- https://github.com/j-meds
 
 WALL_STONE and WALL_STONE_N Texture provided by Katsugi from 3dtextures. All textures on this site are licensed as CC0.
 -- https://3dtextures.me/2021/02/25/wall-stone-019/

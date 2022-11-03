@@ -1418,9 +1418,9 @@
   },
   {
     "description": "STONE_STEPS",
-    "baseMaterial": "GRUNGE_2",
+    "baseMaterial": "STONE",
     "objectIds": [
-      3684
+      3684, 20950
     ]
   },
   {
@@ -1579,15 +1579,27 @@
     "description": "VARROCK_WALLS",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
+      436,
+      437,
+      438,
+      441,
+      443,
+      444,
+      445,
+      448,
+      449,
       450,
+      455,
+      462,
+      477,
       490,
       493,
       494,
       495,
       496,
       497,
-      500,
       501,
+      500,
       504,
       505,
       506,
@@ -1934,14 +1946,19 @@
     "flatNormals": true
   },
   {
-    "description": "STONE_WALL",
-    "baseMaterial": "GRUNGE_1",
+    "description": "STONE_WALL_FENCES",
+    "baseMaterial": "STONE",
     "objectIds": [
       979,
       5566,
       5567,
       5568,
       5570,
+      23888,
+      23889,
+      23890,
+      23891,
+      23892,
       "DRY_STONE_WALL"
     ],
     "flatNormals": true
@@ -2219,30 +2236,6 @@
     "flatNormals": true
   },
   {
-    "description": "CASTLE_WARS_UNDERGROUND_WALLS",
-    "baseMaterial": "GRUNGE_1",
-    "objectIds": [
-      1417,
-      1434,
-      1435,
-      "CAVE_WALL"
-    ]
-  },
-  {
-    "description": "CASTLE_WARS_UNDERGROUND_ROCKS",
-    "baseMaterial": "GRUNGE_1",
-    "objectIds": [
-      314,
-      315,
-      316,
-      317,
-      318,
-      319,
-      320,
-      321
-    ]
-  },
-  {
     "description": "CASTLE_WARS_DECORATION",
     "objectIds": [
       4435,
@@ -2332,24 +2325,64 @@
     "flatNormals": true
   },
   {
-    "description": "GROUND_DECORATION_TAN_ROCK",
-    "baseMaterial": "DIRT_1",
+    "description": "GROUND_DECORATION_ROCKS",
+    "baseMaterial": "GRUNGE_2",
     "objectIds": [
-      7105,
-      7106,
-      7107
-    ],
-    "inheritTileColorType": "OVERLAY"
-  },
-  {
-    "description": "GROUND_DECORATION_GRAY_ROCK",
-    "baseMaterial": "ROCK_1",
-    "objectIds": [
+      314,
+      315,
+      316,
+      317,
+      318,
+      319,
+      320,
+      321,
+      325,
+      326,
+      329,
+      330,
+      331,
+      332,
+      333,
+      334,
+      335,
+      336,
+      337,
+      338,
+      339,
+      340,
+      728,
+      729,
+      730,
+      3169,
+      3170,
+      3171,
+      3172,
+      3173,
+      3174,
+      3949,
+      3950,
+      3204,
       7057,
       7103,
-      7104
+      7104,
+      7105,
+      7106,
+      7107,
+      7120,
+      7121,
+      7122,
+      7123,
+      7124,
+      7125,
+      7126,
+      7128,
+      10844,
+      10845,
+      10846,
+      10847
     ],
-    "inheritTileColorType": "OVERLAY"
+    "inheritTileColorType": "OVERLAY",
+    "uvType": "GROUND_PLANE"
   },
   {
     "description": "ROCK_LIKE_OBJECT",
@@ -2364,9 +2397,20 @@
       3639,
       5950,
       5953,
+      11190,
+      11191,
+      11192,
+      11193,
+      12578,
+      12588,
+      12589,
+      12590,
       25077,
       25078,
       25079,
+      25080,
+      25084,
+      25085,
       25086,
       25102,
       25103,
@@ -2380,6 +2424,14 @@
       25112,
       25113,
       25114,
+      26640,
+      26641,
+      39742,
+      39743,
+      39744,
+      39745,
+      39746,
+      39747,
       "COLUMN_25080",
       "COLUMN_25081",
       "COLUMN_25082",
@@ -2443,7 +2495,18 @@
     "uvType": "MODEL_XZ"
   },
   {
-    "description": "TROOL_STRONGHOLD_HIDDEN_DOOR",
+    "description": "ROUNDED_CAVE_WALLS",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      1417,
+      1422,
+      1434,
+      1435,
+      4448
+    ]
+  },
+  {
+    "description": "TROLL_STRONGHOLD_HIDDEN_DOOR",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
       "SECRET_DOOR"

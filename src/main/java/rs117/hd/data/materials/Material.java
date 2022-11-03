@@ -324,7 +324,9 @@ public enum Material
 		.setScroll(0, 1 / 3f)),
 	HD_ROOF_SHINGLES_2(p -> p
 		.replaceIf(ROOF_SHINGLES_2, HdPluginConfig::objectTextures)),
+
 	WORN_TILES,
+	STONE,
 
 	WALL_STONE_N,
 	WALL_STONE(p -> p.setNormalMap(WALL_STONE_N)),
