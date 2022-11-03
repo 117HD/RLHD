@@ -3033,5 +3033,41 @@
 
     ],
     "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Witchaven Docks",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      18193,
+      18195,
+      18196,
+      18198,
+      18199
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Witchaven Dock Rails",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      18200
+    ]
+  },
+  {
+    "description": "Fishing Platform docks",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      18335,
+      18336,
+      18337,
+      18338,
+      18339,
+      18369,
+      18370,
+      18371,
+      18372,
+      18373
+    ],
+    "uvType": "MODEL_XZ"
   }
 ]
