@@ -395,6 +395,8 @@ public enum Overlay {
 
     MESS_HALL_KITCHEN_TILE_1(30, Area.MESS_HALL_KITCHEN, GroundMaterial.MARBLE_1_SEMIGLOSS, p -> p.blended(false)),
     MESS_HALL_KITCHEN_TILE_2(99, Area.MESS_HALL_KITCHEN, GroundMaterial.MARBLE_2_SEMIGLOSS, p -> p.blended(false)),
+    // Kebos Swamp
+    XERIC_DIRT_SYMBOL_FIX(115, Area.KEBOS_SWAMP_XERIC_DIRT, GroundMaterial.DIRT, p -> p.blended(false)),
     // Chambers of Xeric
     MOUNT_QUIDAMORTEM_SYMBOL(-93, Area.MOUNT_QUIDAMORTEM, GroundMaterial.DIRT, p -> p.blended(false)),
     // Kebos Lowlands
