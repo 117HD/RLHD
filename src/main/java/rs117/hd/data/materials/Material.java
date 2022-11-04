@@ -298,6 +298,10 @@ public enum Material
 
 	BARK,
 	WOOD_GRAIN,
+	WOOD_GRAIN_2_N,
+	WOOD_GRAIN_2(p -> p
+		.setNormalMap(WOOD_GRAIN_2_N)),
+	DOCK_FENCE,
 
 	HD_INFERNAL_CAPE(p -> p
 		.replaceIf(INFERNAL_CAPE, HdPluginConfig::hdInfernalTexture)
