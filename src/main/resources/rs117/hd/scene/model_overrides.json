@@ -2976,7 +2976,7 @@
   },
   {
     "description": "PICARILIUS_DOCKS",
-    "baseMaterial": "WOOD_GRAIN_2",
+    "baseMaterial": "GRUNGE_2",
     "objectIds": [
       27626,
       27627,
@@ -3000,14 +3000,13 @@
       27645,
       27646,
       27650,
-      27651,
-      42751
+      27651
     ],
     "uvType": "MODEL_XZ"
   },
   {
     "description": "PICARILIUS_DOCKS_SAND_TILE",
-    "baseMaterial": "SAND_3",
+    "baseMaterial": "GRUNGE_2",
     "objectIds": [
       27649,
       27652,
@@ -3016,15 +3015,7 @@
       27654,
       29664,
       27658,
-      27659
-
-    ],
-    "uvType": "MODEL_XZ"
-  },
-  {
-    "description": "PICARILIUS_SAND_TILE",
-    "baseMaterial": "SAND_3",
-    "objectIds": [
+      27659,
       27653,
       27656,
       27657,
@@ -3033,6 +3024,38 @@
 
     ],
     "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Picarilius docks with Carpet",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      27727,
+      27728,
+      27729,
+      27730,
+      27731,
+      27732,
+      27733,
+      27735,
+      27736,
+      27737,
+      27738,
+      27739,
+      27740,
+      27741,
+      27742,
+      27743,
+      27744,
+      27745,
+      27746,
+      27747,
+      27748,
+      27749,
+      27750,
+      27751,
+      27752,
+      27753
+    ]
   },
   {
     "description": "Witchaven Docks",
