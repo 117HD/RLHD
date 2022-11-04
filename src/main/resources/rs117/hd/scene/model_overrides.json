@@ -2328,8 +2328,6 @@
       319,
       320,
       321,
-      325,
-      326,
       329,
       330,
       331,
@@ -2375,6 +2373,16 @@
     ],
     "inheritTileColorType": "OVERLAY",
     "uvType": "GROUND_PLANE"
+  },
+  {
+    "description": "Ground Decoration - Tan Rock Uncolored",
+    "baseMaterial": "DIRT_1",
+    "objectIds": [
+      324,
+      325,
+      326
+    ],
+    "uvType": "MODEL_XZ"
   },
   {
     "description": "ROCK_LIKE_OBJECT",
@@ -3108,5 +3116,56 @@
       15974
     ],
     "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Dirt Cave Entrance",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [
+      30374
+    ]
+  },
+  {
+    "description": "Motherload mine walls",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [
+      10047,
+      26656,
+      26658,
+      26659,
+      26660,
+      26661,
+      26662,
+      26663,
+      26664,
+      26665,
+      26666,
+      26667,
+      26668
+    ]
+  },
+  {
+    "description": "Motherload mine upper floor",
+    "baseMaterial": "DIRT_1",
+    "objectIds": [
+      26657
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Motherload Mine Rockfall",
+    "baseMaterial": "ROCK_2",
+    "objectIds": [
+      26679,
+      26680
+    ]
+  },
+  {
+    "description": "Rockslide Tan",
+    "baseMaterial": "ROCK_2",
+    "objectIds": [
+      11931,
+      11932,
+      11934
+    ]
   }
 ]
