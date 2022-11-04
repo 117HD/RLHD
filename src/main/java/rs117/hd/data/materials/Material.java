@@ -302,30 +302,6 @@ public enum Material
 	WOOD_GRAIN_2(p -> p
 		.setNormalMap(WOOD_GRAIN_2_N)
 	),
-	WOOD_GRAIN_TAN(p -> p
-		.setOverrideBaseColor(true)
-	),
-	WOOD_GRAIN_BROWN(p -> p
-		.setOverrideBaseColor(true)
-	),
-	WOOD_GRAIN_BROWN_DARK(p -> p
-		.setOverrideBaseColor(true)
-	),
-	WOOD_GRAIN_GREEN(p -> p
-		.setOverrideBaseColor(true)
-	),
-	WOOD_GRAIN_WEATHERED(p -> p
-		.setOverrideBaseColor(true)
-	),
-	WOOD_GRAIN_BROWN_WEATHERED(p -> p
-		.setOverrideBaseColor(true)
-	),
-	WEATHERED_LUNAR_WOOD(p -> p
-		.setOverrideBaseColor(true)
-	),
-	WOOD_GRAIN_RED(p -> p
-			.setOverrideBaseColor(true)
-	),
 	DOCK_FENCE(),
 
 	HD_INFERNAL_CAPE(p -> p
