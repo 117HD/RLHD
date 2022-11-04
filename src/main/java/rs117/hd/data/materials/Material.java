@@ -300,9 +300,8 @@ public enum Material
 	WOOD_GRAIN,
 	WOOD_GRAIN_2_N,
 	WOOD_GRAIN_2(p -> p
-		.setNormalMap(WOOD_GRAIN_2_N)
-	),
-	DOCK_FENCE(),
+		.setNormalMap(WOOD_GRAIN_2_N)),
+	DOCK_FENCE,
 
 	HD_INFERNAL_CAPE(p -> p
 		.replaceIf(INFERNAL_CAPE, HdPluginConfig::hdInfernalTexture)
@@ -332,6 +331,9 @@ public enum Material
 
 	WORN_TILES,
 	STONE,
+
+	WALL_STONE_N,
+	WALL_STONE(p -> p.setNormalMap(WALL_STONE_N)),
 
 	// Seasonal
 	WINTER_WILLOW_LEAVES(p -> p
