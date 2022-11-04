@@ -2801,6 +2801,7 @@
     "baseMaterial": "DOCK_FENCE",
     "objectIds": [
       17102,
+      23053,
       25671,
       25672
     ],
@@ -3090,6 +3091,14 @@
       18371,
       18372,
       18373
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Zeah Battlefront Docks",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      15974
     ],
     "uvType": "MODEL_XZ"
   }
