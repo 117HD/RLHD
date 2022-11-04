@@ -1765,6 +1765,10 @@
       24212,
       24213,
       24215,
+      24216,
+      24217,
+      24218,
+      24219,
       24220,
       24221,
       24227,
@@ -3221,7 +3225,7 @@
   },
   {
     "description": "Falador - Marble - Saradomin Statue",
-    "baseMaterial": "MARBLE_2_SEMIGLOSS",
+    "baseMaterial": "MARBLE_1_SEMIGLOSS",
     "objectIds": [
       9250
     ],
@@ -3276,5 +3280,12 @@
     ],
     "uvType": "MODEL_XZ",
     "uvOrientation": 512
+  },
+  {
+    "description": "Wooden Benches",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      5615
+    ]
   }
 ]
