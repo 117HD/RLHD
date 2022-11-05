@@ -301,6 +301,7 @@ public enum Material
 	WOOD_GRAIN_2_N,
 	WOOD_GRAIN_2(p -> p
 		.setNormalMap(WOOD_GRAIN_2_N)),
+	WOOD_GRAIN_3,
 	DOCK_FENCE,
 
 	HD_INFERNAL_CAPE(p -> p

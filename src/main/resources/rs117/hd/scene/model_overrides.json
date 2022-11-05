@@ -1929,6 +1929,9 @@
       25902,
       25904,
       25905,
+      25906,
+      25908,
+      25911,
       25957,
       25958,
       25959,
@@ -1937,7 +1940,9 @@
       25962,
       25963,
       25964,
-      25965
+      25965,
+      26114,
+      26115
     ],
     "flatNormals": true
   },
@@ -3125,6 +3130,50 @@
       15974
     ],
     "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "White double row fence",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      25760
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "Camelot - Wooden grave",
+    "baseMaterial": "WOOD_GRAIN",
+    "objectIds": [
+      401
+    ]
+  },
+  {
+    "description": "Seers Village tables",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      25774,
+      25930
+    ],
+    "uvOrientation": 512,
+    "uvType": "MODEL_XZ",
+    "flatNormals": true
+  },
+  {
+    "description": "Carpet",
+    "baseMaterial": "CARPET",
+    "objectIds": [
+      916,
+      917,
+      918
+    ],
+    "uvType": "MODEL_XZ",
+    "flatNormals": true
+  },
+  {
+    "description": "Brass coat rack",
+    "baseMaterial": "NONE",
+    "objectIds": [
+      374
+    ]
   },
   {
     "description": "Dirt Cave Entrance",
