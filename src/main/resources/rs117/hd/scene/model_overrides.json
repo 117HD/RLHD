@@ -2385,7 +2385,7 @@
       10847
     ],
     "inheritTileColorType": "OVERLAY",
-    "uvType": "GROUND_PLANE"
+    "uvType": "MODEL_XZ"
   },
   {
     "description": "Ground Decoration - Tan Rock Uncolored",
@@ -3409,10 +3409,20 @@
     ]
   },
   {
-    "description": "Wooden Sprial Stairs",
+    "description": "Wooden Spiral Stairs",
     "baseMaterial": "MARBLE_2",
     "objectIds": [
       25935
     ]
+  },
+  {
+    "description": "Rope Bridge",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      269,
+      14932,
+      14933
+    ],
+    "flatNormals": true
   }
 ]
