@@ -1932,7 +1932,9 @@
       25904,
       25905,
       25906,
+      25907,
       25908,
+      25909,
       25911,
       25957,
       25958,
@@ -3166,7 +3168,8 @@
     "objectIds": [
       25774,
       25778,
-      25930
+      25930,
+      25931
     ],
     "uvOrientation": 512,
     "uvType": "MODEL_XZ",
@@ -3214,8 +3217,18 @@
       917,
       918
     ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Fine Carpet",
+    "baseMaterial": "CARPET",
+    "objectIds": [
+      925,
+      926,
+      927
+    ],
     "uvType": "MODEL_XZ",
-    "flatNormals": true
+    "uvScale": 0.5
   },
   {
     "description": "Brass coat rack",
@@ -3393,6 +3406,13 @@
       26017,
       26018,
       26019
+    ]
+  },
+  {
+    "description": "Wooden Sprial Stairs",
+    "baseMaterial": "MARBLE_2",
+    "objectIds": [
+      25935
     ]
   }
 ]
