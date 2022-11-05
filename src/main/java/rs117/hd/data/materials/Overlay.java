@@ -237,7 +237,7 @@ public enum Overlay {
         .blended(false)
         .lightness(45)
         .saturation(2)
-        .hue(15)),
+        .hue(12)),
     SEERS_CHURCH_1(-85, Area.SEERS_CHURCH, GroundMaterial.TILES_2x2_2, p -> p.blended(false)),
     SEERS_CHURCH_2(8, Area.SEERS_CHURCH, GroundMaterial.MARBLE_2, p -> p.blended(false)),
 

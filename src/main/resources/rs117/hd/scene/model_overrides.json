@@ -1921,12 +1921,14 @@
       25756,
       25757,
       25890,
+      25895,
       25896,
       25897,
       25898,
       25899,
       25901,
       25902,
+      25903,
       25904,
       25905,
       25906,
@@ -3135,27 +3137,74 @@
     "description": "White double row fence",
     "baseMaterial": "DOCK_FENCE",
     "objectIds": [
-      25760
+      25760,
+      25923,
+      25924
     ],
     "flatNormals": true
+  },
+  {
+    "description": "Seers village - Railing",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      25795,
+      25801
+    ],
+    "flatNormals": false
   },
   {
     "description": "Camelot - Wooden grave",
     "baseMaterial": "WOOD_GRAIN",
     "objectIds": [
       401
-    ]
+    ],
+    "flatNormals": true
   },
   {
     "description": "Seers Village tables",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       25774,
+      25778,
       25930
     ],
     "uvOrientation": 512,
     "uvType": "MODEL_XZ",
     "flatNormals": true
+  },
+  {
+    "description": "Seers village wooden posts",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      25777
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "Seets village chairs",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      27276,
+      25768,
+      25771,
+      25772,
+      25773,
+      25783
+    ],
+    "uvType": "MODEL_XZ",
+    "flatNormals": true
+  },
+  {
+    "description": "Seer's Village Ladder",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      25938,
+      25939,
+      25940,
+      25941,
+      26118,
+      26119
+    ]
   },
   {
     "description": "Carpet",
@@ -3335,6 +3384,15 @@
     "baseMaterial": "DOCK_FENCE",
     "objectIds": [
       5615
+    ]
+  },
+  {
+    "description": "Courthouse Basement stairs",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      26017,
+      26018,
+      26019
     ]
   }
 ]
