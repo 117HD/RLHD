@@ -82,7 +82,7 @@ void main() {
         fogAmount = IN[i].fogAmount;
         gl_Position = projectionMatrix * vec4(IN[i].pos, 1.f);
         position = IN[i].pos;
-        if (!flatNormals)
+        if (!flatNormals && length(IN[i].normal.xyz) > .01)
             normals = IN[i].normal.xyz;
         EmitVertex();
     }
