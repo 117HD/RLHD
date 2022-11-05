@@ -1390,9 +1390,12 @@
       1008,
       1565,
       1566,
+      2664,
+      2665,
       7055,
       9511,
       9623,
+      25677,
       "GATE_1558",
       "GATE_1559",
       "GATE_1560",
@@ -1951,6 +1954,36 @@
     "flatNormals": true
   },
   {
+    "description": "Murder mystery House - Exterior Walls",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      26060,
+      26061,
+      26062,
+      26063,
+      26065,
+      26066,
+      26071,
+      26072,
+      26123
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "Murder mystery House - Interior walls",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      26054,
+      26055,
+      26056,
+      26057,
+      26058,
+      26069,
+      26070
+    ],
+    "flatNormals": true
+  },
+  {
     "description": "STONE_WALL_FENCES",
     "baseMaterial": "STONE",
     "objectIds": [
@@ -2222,6 +2255,11 @@
     "description": "STATUE_BUST",
     "baseMaterial": "MARBLE_1_GLOSS",
     "objectIds": [
+      574,
+      575,
+      576,
+      26127,
+      26128,
       26129
     ]
   },
@@ -3149,6 +3187,7 @@
     "description": "Seers village - Railing",
     "baseMaterial": "DOCK_FENCE",
     "objectIds": [
+      25613,
       25795,
       25801
     ],
@@ -3225,7 +3264,16 @@
     "objectIds": [
       925,
       926,
-      927
+      927,
+      928,
+      929,
+      930,
+      25596,
+      25597,
+      25598,
+      25678,
+      25679,
+      25680
     ],
     "uvType": "MODEL_XZ",
     "uvScale": 0.5
@@ -3396,7 +3444,8 @@
     "description": "Wooden Benches",
     "baseMaterial": "DOCK_FENCE",
     "objectIds": [
-      5615
+      5615,
+      25601
     ]
   },
   {
@@ -3424,5 +3473,119 @@
       14933
     ],
     "flatNormals": true
+  },
+  {
+    "description": "Stone Fountain",
+    "baseMaterial": "STONE_SEMIGLOSS",
+    "objectIds": [
+      879
+    ]
+  },
+  {
+    "description": "Wooden Staircase",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      25604,
+      26106
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "Wooden plank tables",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      25603
+    ],
+    "uvType": "MODEL_XZ",
+    "flatNormals": true
+  },
+  {
+    "description": "Wooden tables - Roubnd",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      25733
+    ],
+    "uvType": "MODEL_XZ",
+    "flatNormals": true
+  },
+  {
+    "description": "Wooden tables - Solid - Cobwebs",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      25615
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "Wooden Chair - Cobwebs",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      1111,
+      25616
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "Statue of a King",
+    "baseMaterial": "MARBLE_3_SEMIGLOSS",
+    "objectIds": [
+      563
+    ]
+  },
+  {
+    "description": "Ladder - Untextured",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      25606,
+      26107
+    ]
+  },
+  {
+    "description": "Camelot Stone",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      759
+    ]
+  },
+  {
+    "description": "Camelot Castle",
+    "baseMaterial": "MARBLE_3_SEMIGLOSS",
+    "objectIds": [
+      26085,
+      26089,
+      26090,
+      26091,
+      26092,
+      26093,
+      26094,
+      26095,
+      26096,
+      26097,
+      26100,
+      26101,
+      26103,
+      26105
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "Camelot Castle Pillars",
+    "baseMaterial": "MARBLE_3",
+    "objectIds": [
+      26087,
+      26088,
+      26098,
+      26099,
+      26102
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "Camelot stone wall",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      26134,
+      26135
+    ]
   }
 ]

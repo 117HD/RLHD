@@ -332,6 +332,7 @@ public enum Material
 
 	WORN_TILES,
 	STONE,
+	STONE_SEMIGLOSS(STONE, p -> p.setSpecular(0.6f, 100)),
 
 	WALL_STONE_N,
 	WALL_STONE(p -> p.setNormalMap(WALL_STONE_N)),

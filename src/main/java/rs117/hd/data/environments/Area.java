@@ -353,6 +353,11 @@ public enum Area
 	SEERS_CHURCH(
 		new AABB(2703, 3466, 2690, 3459)
 	),
+	// Murder Mystery Mansion
+	MURDER_MYSTERY_MANSION(
+		new AABB(2747,3582,2733,3574),
+		new AABB(2742,3573,2739,3573)
+	),
 
 	// White Wolf Mountain
 	WHITE_WOLF_MOUNTAIN(
