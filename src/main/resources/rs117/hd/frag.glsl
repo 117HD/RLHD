@@ -150,8 +150,7 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     WaterType waterType = getWaterType(waterTypeIndex);
 
     vec2 baseUv = vUv[0].xy * texBlend.x + vUv[1].xy * texBlend.y + vUv[2].xy * texBlend.z;
-    vec2 uv2, uv3;
-    uv2 = uv3 = baseUv;
+    vec2 uv2, uv3 = baseUv;
 
     uv2 = vec2(
         worldUvs(3).x - animationFrame(24 * waterType.duration),
@@ -181,14 +180,12 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     float foamMask = texture(textureArray, vec3(uv3, waterType.foamMap)).r;
 
     // normals
-    vec3 normals = normals;
     n1 = -vec3((n1.x * 2 - 1) * waterType.normalStrength, n1.z, (n1.y * 2 - 1) * waterType.normalStrength);
     n2 = -vec3((n2.x * 2 - 1) * waterType.normalStrength, n2.z, (n2.y * 2 - 1) * waterType.normalStrength);
-    normals = n1 + n2;
-    normals = normalize(normals);
+    vec3 normals = normalize(n1 + n2);
 
     float lightDotNormals = dot(normals, -lightDirection);
-    float downDotNormals = dot(vec3(0, -1, 0), normals);
+    float downDotNormals = -normals.y;
     float viewDotNormals = dot(viewDir, normals);
 
     vec2 distortion = uvFlow * .00075;
@@ -315,6 +312,42 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     return vec4(baseColor, alpha);
 }
 
+void sampleUnderwater(inout vec3 outputColor, WaterType waterType, float depth, float lightDotNormals) {
+    // underwater terrain
+    float lowestColorLevel = 500;
+    float midColorLevel = 150;
+    float surfaceLevel = position.y - depth; // e.g. -1600
+
+    if (depth < midColorLevel) {
+        outputColor *= mix(vec3(1), waterType.depthColor, translateRange(0, midColorLevel, depth));
+    } else if (depth < lowestColorLevel) {
+        outputColor *= mix(waterType.depthColor, vec3(0), translateRange(midColorLevel, lowestColorLevel, depth));
+    } else {
+        outputColor = vec3(0);
+    }
+
+    if (underwaterCaustics) {
+        const float scale = 1.75;
+        const float maxCausticsDepth = 128 * 4;
+
+        vec2 causticsUv = worldUvs(scale);
+
+        float depthMultiplier = (position.y - surfaceLevel - maxCausticsDepth) / -maxCausticsDepth;
+        depthMultiplier *= depthMultiplier;
+
+        // height offset
+        causticsUv += -lightDirection.xy * position.y / (128 * scale);
+
+        const ivec2 direction = ivec2(1, -2);
+        vec2 flow1 = causticsUv + animationFrame(17) * direction;
+        vec2 flow2 = causticsUv * 1.5 + animationFrame(23) * -direction;
+        vec3 caustics = sampleCaustics(flow1, flow2, .005);
+
+        vec3 causticsColor = underwaterCausticsColor * underwaterCausticsStrength;
+        outputColor.rgb *= 1 + caustics * causticsColor * depthMultiplier * lightDotNormals * lightStrength;
+    }
+}
+
 void main() {
     vec3 camPos = vec3(cameraX, cameraY, cameraZ);
     vec3 downDir = vec3(0, -1, 0);
@@ -333,9 +366,9 @@ void main() {
     int waterDepth2 = vTerrainData[1] >> 8;
     int waterDepth3 = vTerrainData[2] >> 8;
     float waterDepth =
-    waterDepth1 * texBlend.x +
-    waterDepth2 * texBlend.y +
-    waterDepth3 * texBlend.z;
+        waterDepth1 * texBlend.x +
+        waterDepth2 * texBlend.y +
+        waterDepth3 * texBlend.z;
     int waterTypeIndex = isTerrain ? vTerrainData[0] >> 3 & 0x1F : 0;
     WaterType waterType = getWaterType(waterTypeIndex);
 
@@ -405,6 +438,7 @@ void main() {
         float flowMapStrength = material1.flowMapStrength;
         if (isUnderwater)
         {
+            // Distort underwater textures
             flowMapUv = worldUvs(1.5) + animationFrame(10 * waterType.duration) * vec2(1, -1);
             flowMapStrength = 0.075;
         }
@@ -713,76 +747,26 @@ void main() {
         outputColor.rgb *= mix(compositeLight, vec3(1), unlit);
         outputColor.rgb = linearToSrgb(outputColor.rgb);
 
-
-        if (isUnderwater)
-        {
-            // underwater terrain
-            float lowestColorLevel = 500.0;
-            float midColorLevel = 150.0;
-            float depth = waterDepth; // e.g. 200
-            float surfaceLevel = position.y - waterDepth; // e.g. -1600
-
-            vec3 mixed = vec3(1);
-
-            if (depth < midColorLevel)
-            {
-                mixed = mix(outputColor.rgb, outputColor.rgb * waterType.depthColor, translateRange(0.0, midColorLevel, depth));
-            }
-            else if (depth < lowestColorLevel)
-            {
-                mixed = mix(outputColor.rgb * waterType.depthColor, vec3(0.0), translateRange(midColorLevel, lowestColorLevel, depth));
-            }
-            else
-            {
-                mixed = vec3(0.0);
-            }
-            outputColor.rgb = mixed;
-
-            // caustics
-            if (underwaterCaustics)
-            {
-                const float scale = 1.75;
-                const float maxCausticsDepth = 128 * 4;
-
-                vec2 causticsUv = worldUvs(scale);
-
-                float depthMultiplier = (position.y - surfaceLevel - maxCausticsDepth) / -maxCausticsDepth;
-                depthMultiplier *= depthMultiplier;
-
-                // height offset
-                causticsUv += lightDir.xy * position.y / (128 * scale);
-
-                const ivec2 direction = ivec2(1, -2);
-                vec2 flow1 = causticsUv + animationFrame(17) * direction;
-                vec2 flow2 = causticsUv * 1.5 + animationFrame(23) * -direction;
-                vec3 caustics = sampleCaustics(flow1, flow2, .005);
-
-                vec3 causticsColor = underwaterCausticsColor * underwaterCausticsStrength;
-                outputColor.rgb *= 1 + caustics * causticsColor * depthMultiplier * lightDotNormals * lightStrength;
-            }
+        if (isUnderwater) {
+            sampleUnderwater(outputColor.rgb, waterType, waterDepth, lightDotNormals);
         }
     }
 
 
-
+    outputColor.rgb = clamp(outputColor.rgb, 0, 1);
     vec3 hsv = rgbToHsv(outputColor.rgb);
 
     // Apply saturation setting
     hsv.y *= saturation;
 
     // Apply contrast setting
-    if (hsv.z > 0.5)
-    {
+    if (hsv.z > 0.5) {
         hsv.z = 0.5 + ((hsv.z - 0.5) * contrast);
-    }
-    else
-    {
+    } else {
         hsv.z = 0.5 - ((0.5 - hsv.z) * contrast);
     }
 
     outputColor.rgb = hsvToRgb(hsv);
-
-    outputColor.rgb = clamp(outputColor.rgb, 0, 1);
     outputColor.rgb = colorBlindnessCompensation(outputColor.rgb);
 
     // apply fog
