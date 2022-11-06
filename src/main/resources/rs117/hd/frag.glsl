@@ -782,11 +782,12 @@ void main() {
 
     outputColor.rgb = hsvToRgb(hsv);
 
+    outputColor.rgb = clamp(outputColor.rgb, 0, 1);
     outputColor.rgb = colorBlindnessCompensation(outputColor.rgb);
 
-    if (!isUnderwater)
-    {
-        // apply ground fog
+    // apply fog
+    if (!isUnderwater) {
+        // ground fog
         float distance = distance(position, camPos);
         float closeFadeDistance = 1500;
         float groundFog = 1.0 - clamp((position.y - groundFogStart) / (groundFogEnd - groundFogStart), 0.0, 1.0);
@@ -796,11 +797,11 @@ void main() {
         {
             outputColor.a = max(outputColor.a, groundFog);
         }
-        outputColor.rgb = mix(outputColor.rgb, fogColor.rgb, groundFog);
-    }
 
-    // apply distance fog
-    outputColor.rgb = mix(clamp(outputColor.rgb, 0.0, 1.0), fogColor.rgb, fogAmount);
+        // multiply the visibility of each fog
+        float combinedFog = 1 - (1 - fogAmount) * (1 - groundFog);
+        outputColor = mix(outputColor, fogColor, combinedFog);
+    }
 
     FragColor = outputColor;
 }
