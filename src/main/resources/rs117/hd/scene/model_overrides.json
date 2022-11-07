@@ -3018,7 +3018,8 @@
     "flatNormals": true
   },
   {
-    "description": "Hide rubble in Varrock west bank",
+    "description": "Hide rubble in Varrock west bank and texture other rubble",
+    "baseMaterial": "DIRT_1",
     "objectIds": [ 4342, 4343, 4344 ],
     "hideInAreas": [
       [
@@ -3840,7 +3841,8 @@
       1605,
       1606,
       1608
-    ]
+    ],
+    "flatNormals": true
   },
   {
     "description": "Candelabra",
