@@ -2510,9 +2510,6 @@
       332,
       333,
       334,
-      335,
-      336,
-      337,
       338,
       339,
       340,
@@ -2604,6 +2601,7 @@
     "description": "GROUND_DECORATION_GRAY_ROCK_UNCOLORED",
     "baseMaterial": "ROCK_1",
     "objectIds": [
+      180,
       335,
       336,
       337,
@@ -2688,6 +2686,7 @@
     "description": "ROCK_CAVE_ENTRANCES",
     "baseMaterial": "ROCK_2",
     "objectIds": [
+      2852,
       "CAVE_ENTRANCE_11835",
       "CRACK_29627",
       "TUNNEL_6659"
@@ -3068,6 +3067,9 @@
       803,
       808,
       809,
+      810,
+      811,
+      812,
       11591,
       11592,
       11593,
@@ -3610,6 +3612,8 @@
     "description": "Textured Ladder",
     "baseMaterial": "DOCK_FENCE",
     "objectIds": [
+      17384,
+      17385,
       17387,
       30367
     ]
@@ -3676,6 +3680,7 @@
     "description": "Wooden Benches",
     "baseMaterial": "DOCK_FENCE",
     "objectIds": [
+      1106,
       5615,
       25601
     ]
@@ -3994,9 +3999,12 @@
     ]
   },
   {
-    "description": "METAL_FENCE_GATE",
+    "description": "Metal Fence Gate",
     "baseMaterial": "METALLIC_2_SEMIGLOSS",
     "objectIds": [
+      37,
+      39,
+      1548,
       1568,
       1569,
       1571,
@@ -4029,9 +4037,11 @@
     ]
   },
   {
-    "description": "Wilderness Lever",
+    "description": "Metal Lever",
     "baseMaterial": "METALLIC_2_GLOSS",
     "objectIds": [
+      33,
+      34,
       1814
     ]
   },
@@ -4082,6 +4092,8 @@
     "description": "Sewer Valve",
     "baseMaterial": "METALLIC_1_SEMIGLOSS",
     "objectIds": [
+      2844,
+      2846,
       2848
     ]
   },
@@ -4164,6 +4176,42 @@
       15480,
       15481,
       15482
+    ]
+  },
+  {
+    "description": "Clocktower metal pipes",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "objectIds": [
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32
+    ]
+  },
+  {
+    "description": "Metal bars in wall",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "objectIds": [
+      1880,
+      1881
+    ]
+  },
+  {
+    "description": "Fire Remains",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      714
+    ]
+  },
+  {
+    "description": "Fire - Static object",
+    "baseMaterial": "WOOD_GRAIN_1",
+    "objectIds": [
+      26185
     ]
   }
 ]

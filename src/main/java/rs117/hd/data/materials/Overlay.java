@@ -298,6 +298,10 @@ public enum Overlay {
             .shiftSaturation(3)
             .shiftLightness(-2)
     ),
+    CLOCK_TOWER_DUNGEON_COLORED_TILES_FIX(Area.CLOCK_TOWER_DUNGEON_COLORED_TILES, GroundMaterial.MARBLE_1, p -> p
+            .blended(false)
+            .ids(9,11,13,18)
+    ),
     KANDARIN_MONISTARY_WINGS_TEXTURE_13(13, Area.KANDARIN_MONISTARY_WINGS, GroundMaterial.TILES_2x2_2_SEMIGLOSS),
     KANDARIN_MONISTARY_FLOOR_TEXTURE(12, Area.KANDARIN_MONISTARY, GroundMaterial.VARROCK_PATHS_LIGHT, p -> p
             .lightness(33)
