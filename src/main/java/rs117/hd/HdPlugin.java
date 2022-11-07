@@ -38,8 +38,10 @@ import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
+import net.runelite.client.events.PluginChanged;
 import net.runelite.client.plugins.*;
 import net.runelite.client.plugins.entityhider.EntityHiderPlugin;
+import net.runelite.client.plugins.skybox.SkyboxPlugin;
 import net.runelite.client.ui.DrawManager;
 import net.runelite.client.util.OSType;
 import net.runelite.rlawt.AWTContext;
@@ -99,6 +101,7 @@ import static rs117.hd.utils.ResourcePath.path;
 	conflicts = "GPU"
 )
 @PluginDependency(EntityHiderPlugin.class)
+@PluginDependency(SkyboxPlugin.class)
 @Slf4j
 public class HdPlugin extends Plugin implements DrawCallbacks
 {
@@ -2185,6 +2188,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		if (skyboxColorChanged) {
 			skyboxColorChanged = false;
 			environmentManager.updateSkyColor();
+		}
+	}
+
+	@Subscribe
+	public void onPluginChanged(PluginChanged event) {
+		if (event.getPlugin() instanceof SkyboxPlugin) {
+			skyboxColorChanged = true;
 		}
 	}
 
