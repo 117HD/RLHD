@@ -1,0 +1,1425 @@
+[
+  {
+    "aabbs": [
+      [
+        2495,
+        4805,
+        2559,
+        4747
+      ]
+    ],
+    "description": "EVIL_BOB_ISLAND",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        3067,
+        9534,
+        3120,
+        9491
+      ]
+    ],
+    "description": "TUTORIAL_ISLAND_UNDERGROUND",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        1600,
+        6207,
+        1792,
+        6015
+      ]
+    ],
+    "description": "TUTORIAL_ISLAND_INSTANCE",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        3206,
+        9628,
+        3220,
+        9614
+      ]
+    ],
+    "description": "LUMBRIDGE_CASTLE_BASEMENT",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        3137,
+        9661,
+        3192,
+        9602
+      ]
+    ],
+    "description": "HAM_HIDEOUT",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        3400,
+        4847,
+        3448,
+        4807
+      ]
+    ],
+    "description": "CLAN_WARS_INSTANCE",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        1992,
+        4914,
+        2044,
+        4867
+      ],
+      [
+        1922,
+        4861,
+        1981,
+        4801
+      ],
+      [
+        1990,
+        4861,
+        2038,
+        4804
+      ],
+      [
+        1862,
+        4856,
+        1909,
+        4802
+      ],
+      [
+        1793,
+        4792,
+        1853,
+        4738
+      ]
+    ],
+    "description": "FISHING_TRAWLER_INSTANCE",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        1988,
+        5052,
+        2010,
+        5027
+      ],
+      [
+        1999,
+        5022,
+        2021,
+        5002
+      ],
+      [
+        2014,
+        5052,
+        2042,
+        5027
+      ],
+      [
+        2047,
+        5049,
+        2055,
+        5040
+      ],
+      [
+        2056,
+        5044,
+        2068,
+        5026
+      ],
+      [
+        2078,
+        5049,
+        2105,
+        5031
+      ],
+      [
+        2078,
+        5025,
+        2101,
+        5001
+      ],
+      [
+        2052,
+        5017,
+        2065,
+        4999
+      ],
+      [
+        2123,
+        5034,
+        2163,
+        4995
+      ],
+      [
+        2181,
+        5053,
+        2202,
+        5027
+      ],
+      [
+        2207,
+        5051,
+        2233,
+        5027
+      ],
+      [
+        2192,
+        5022,
+        2213,
+        5002
+      ],
+      [
+        2256,
+        5022,
+        2276,
+        5002
+      ],
+      [
+        2243,
+        5053,
+        2265,
+        5027
+      ],
+      [
+        2270,
+        5053,
+        2297,
+        5027
+      ],
+      [
+        2307,
+        5053,
+        2330,
+        5026
+      ],
+      [
+        2334,
+        5053,
+        2362,
+        5026
+      ],
+      [
+        2320,
+        5023,
+        2342,
+        5001
+      ],
+      [
+        2373,
+        5053,
+        2396,
+        5025
+      ],
+      [
+        2385,
+        5023,
+        2407,
+        5000
+      ],
+      [
+        2401,
+        5053,
+        2428,
+        5025
+      ],
+      [
+        2441,
+        5046,
+        2471,
+        5017
+      ]
+    ],
+    "description": "TEMPLE_TREAKING",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        2687,
+        5376,
+        2752,
+        5247
+      ],
+      [
+        2751,
+        5440,
+        2816,
+        5311
+      ],
+      [
+        2815,
+        5504,
+        2880,
+        5375
+      ]
+    ],
+    "description": "DORGESHKAAN",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        3008,
+        5247,
+        3039,
+        5216
+      ],
+      [
+        2963,
+        5228,
+        2995,
+        5198
+      ],
+      [
+        3264,
+        9855,
+        3298,
+        9823
+      ]
+    ],
+    "description": "TOLNA_DUNGEON_ANGER",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        3040,
+        5247,
+        3071,
+        5216
+      ],
+      [
+        3072,
+        5215,
+        3103,
+        5184
+      ],
+      [
+        3008,
+        5215,
+        3039,
+        5184
+      ],
+      [
+        3264,
+        9822,
+        3296,
+        9792
+      ],
+      [
+        3299,
+        9855,
+        3327,
+        9823
+      ]
+    ],
+    "description": "TOLNA_DUNGEON_FEAR",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        3040,
+        5215,
+        3071,
+        5184
+      ],
+      [
+        3297,
+        9822,
+        3327,
+        9792
+      ]
+    ],
+    "description": "TOLNA_DUNGEON_CONFUSION",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        2112,
+        4930,
+        2166,
+        4893
+      ]
+    ],
+    "description": "DRAYNOR_INSTANCE",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        1600,
+        4863,
+        1727,
+        4779
+      ]
+    ],
+    "description": "MISTHALIN_MYSTERY_MANOR",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        3456,
+        4783,
+        3528,
+        4734
+      ]
+    ],
+    "description": "FALADOR_INSTANCE",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        3713,
+        5696,
+        3776,
+        5633
+      ],
+      [
+        3827,
+        5692,
+        3868,
+        5652
+      ]
+    ],
+    "description": "MOTHERLODE_MINE",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        2431,
+        5439,
+        2496,
+        5374
+      ]
+    ],
+    "description": "WHITE_WOLF_MOUNTAIN_INSTANCE",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        1670,
+        4280,
+        1721,
+        4230
+      ]
+    ],
+    "description": "KEEP_LE_FAYE_INSTANCE",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        2179,
+        4990,
+        2239,
+        4929
+      ]
+    ],
+    "description": "GAMES_ROOM",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        3328,
+        5951,
+        3392,
+        5887
+      ]
+    ],
+    "description": "EAST_ARDOUGNE_INSTANCE",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        2880,
+        4735,
+        2944,
+        4671
+      ]
+    ],
+    "description": "YANILLE_INSTANCE",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        2560,
+        9475,
+        2626,
+        9408
+      ]
+    ],
+    "description": "GUTANOTH_CAVE",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        2241,
+        4722,
+        2303,
+        4676
+      ]
+    ],
+    "description": "NIGHTMARE_ZONE",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        2361,
+        9544,
+        2444,
+        9473
+      ]
+    ],
+    "description": "CASTLE_WARS_UNDERGROUND",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        3455,
+        6205,
+        3647,
+        6015
+      ],
+      [
+        3520,
+        6015,
+        3648,
+        5886
+      ]
+    ],
+    "description": "LMS_ARENA_WILD_VARROCK",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        3008,
+        4734,
+        3072,
+        4671
+      ]
+    ],
+    "description": "KHARIDIAN_DESERT_INSTANCE",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        3198,
+        9339,
+        3267,
+        9275
+      ],
+      [
+        2755,
+        4982,
+        2812,
+        4934
+      ],
+      [
+        2825,
+        4976,
+        2873,
+        4938
+      ],
+      [
+        2894,
+        4972,
+        2933,
+        4941
+      ]
+    ],
+    "description": "DESERT_TREASURE_PYRAMID",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        1922,
+        4470,
+        1945,
+        4447
+      ],
+      [
+        1955,
+        4441,
+        1980,
+        4417
+      ],
+      [
+        1955,
+        4471,
+        1980,
+        4445
+      ],
+      [
+        1922,
+        4440,
+        1946,
+        4416
+      ],
+      [
+        1919,
+        4481,
+        1988,
+        4414
+      ]
+    ],
+    "description": "PYRAMID_PLUNDER",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        2380,
+        6000,
+        2420,
+        5958
+      ]
+    ],
+    "description": "HALLOWED_SEPULCHRE_LOBBY",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        2220,
+        6032,
+        2325,
+        5938
+      ]
+    ],
+    "description": "HALLOWED_SEPULCHRE_FLOOR_1",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        2475,
+        6032,
+        2580,
+        5938
+      ]
+    ],
+    "description": "HALLOWED_SEPULCHRE_FLOOR_2",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        2350,
+        5906,
+        2455,
+        5800
+      ]
+    ],
+    "description": "HALLOWED_SEPULCHRE_FLOOR_3",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        2475,
+        5906,
+        2580,
+        5800
+      ]
+    ],
+    "description": "HALLOWED_SEPULCHRE_FLOOR_4",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        2220,
+        5906,
+        2325,
+        5800
+      ]
+    ],
+    "description": "HALLOWED_SEPULCHRE_FLOOR_5",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        3641,
+        3236,
+        3684,
+        3202
+      ]
+    ],
+    "description": "VER_SINHAZA",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        3522,
+        9728,
+        3581,
+        9666
+      ]
+    ],
+    "description": "BARROWS_TUNNELS",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        2064,
+        4903,
+        2087,
+        4880
+      ]
+    ],
+    "description": "SINHAZA_CUTSCENE",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        2367,
+        5184,
+        2559,
+        4993
+      ]
+    ],
+    "description": "TZHAAR",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        1920,
+        5631,
+        2048,
+        5502
+      ]
+    ],
+    "description": "TREE_GNOME_STRONGHOLD_INSTANCE",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        3139,
+        10238,
+        3271,
+        10052
+      ]
+    ],
+    "description": "REVENANT_CAVES",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        2881,
+        6206,
+        2937,
+        6152
+      ]
+    ],
+    "description": "SOTE_LLETYA_ON_FIRE",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        3219,
+        5933,
+        3237,
+        5913
+      ]
+    ],
+    "description": "SOTE_TEMPLE_OF_LIGHT_SEREN_CUTSCENE",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        2688,
+        6207,
+        2944,
+        6015
+      ]
+    ],
+    "description": "TIRANNWN_INSTANCE",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        1855,
+        6078,
+        2175,
+        5823
+      ]
+    ],
+    "description": "ISLE_OF_SOULS_TUTORIAL",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        1178,
+        10273,
+        1195,
+        10260
+      ],
+      [
+        1296,
+        10277,
+        1333,
+        10255
+      ],
+      [
+        1371,
+        10233,
+        1392,
+        10214
+      ],
+      [
+        1112,
+        10295,
+        1384,
+        10124
+      ],
+      [
+        1247,
+        10172,
+        1278,
+        10146
+      ]
+    ],
+    "description": "KARUULM_SLAYER_DUNGEON",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        1280,
+        10109,
+        1341,
+        10047
+      ]
+    ],
+    "description": "LIZARDMAN_TEMPLE",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        2821,
+        9663,
+        2875,
+        9541
+      ]
+    ],
+    "description": "KARAMJA_VOLCANO_DUNGEON",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        2496,
+        4606,
+        2642,
+        4542
+      ]
+    ],
+    "description": "KARAMJA_INSTANCE",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        2048,
+        4863,
+        2111,
+        4800
+      ]
+    ],
+    "description": "COSMIC_ENTITYS_PLANE",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        2112,
+        5182,
+        2176,
+        5041
+      ],
+      [
+        2176,
+        5182,
+        2240,
+        5118
+      ]
+    ],
+    "description": "BRAINDEATH_ISLAND",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        1832,
+        4878,
+        1934,
+        4776
+      ]
+    ],
+    "description": "MOGRE_CAMP_CUTSCENE",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        2944,
+        9535,
+        3007,
+        9472
+      ]
+    ],
+    "description": "MOGRE_CAMP",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        3721,
+        10304,
+        3838,
+        10243
+      ]
+    ],
+    "description": "FOSSIL_ISLAND_UNDERWATER_AREA",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        2112,
+        4863,
+        2176,
+        4799
+      ]
+    ],
+    "description": "COSMIC_ALTAR",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        2176,
+        4863,
+        2240,
+        4799
+      ]
+    ],
+    "description": "DEATH_ALTAR",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        2240,
+        4863,
+        2304,
+        4799
+      ]
+    ],
+    "description": "CHAOS_ALTAR",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        2304,
+        4863,
+        2368,
+        4799
+      ]
+    ],
+    "description": "WRATH_ALTAR",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        2368,
+        4863,
+        2427,
+        4799
+      ]
+    ],
+    "description": "NATURE_ALTAR",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        2427,
+        4863,
+        2495,
+        4799
+      ]
+    ],
+    "description": "LAW_ALTAR",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        2495,
+        4863,
+        2553,
+        4799
+      ]
+    ],
+    "description": "BODY_ALTAR",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        2553,
+        4863,
+        2624,
+        4799
+      ]
+    ],
+    "description": "FIRE_ALTAR",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        2624,
+        4863,
+        2688,
+        4799
+      ]
+    ],
+    "description": "EARTH_ALTAR",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        2688,
+        4863,
+        2752,
+        4799
+      ]
+    ],
+    "description": "WATER_ALTAR",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        2752,
+        4863,
+        2816,
+        4799
+      ]
+    ],
+    "description": "MIND_ALTAR",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        2816,
+        4863,
+        2880,
+        4799
+      ]
+    ],
+    "description": "AIR_ALTAR",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        3200,
+        4862,
+        3262,
+        4800
+      ]
+    ],
+    "description": "TRUE_BLOOD_ALTAR",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        1528,
+        5125,
+        1606,
+        5052
+      ],
+      [
+        3535,
+        10490,
+        3570,
+        10440
+      ]
+    ],
+    "description": "LITHKREN_DUNGEON",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        1600,
+        5758,
+        1727,
+        5503
+      ]
+    ],
+    "description": "DS2_SHIPS",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        2897,
+        5848,
+        3036,
+        5760
+      ]
+    ],
+    "description": "CAMDOZAAL",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        3550,
+        9525,
+        3660,
+        9450
+      ]
+    ],
+    "description": "TEMPLE_OF_THE_EYE",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        3166,
+        5734,
+        3185,
+        4288
+      ]
+    ],
+    "description": "DEATHS_OFFICE",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        3152,
+        4468,
+        3231,
+        4416
+      ]
+    ],
+    "description": "TOB_ROOM_MAIDEN",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        3260,
+        4474,
+        3327,
+        4427
+      ]
+    ],
+    "description": "TOB_ROOM_BLOAT",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        3274,
+        4290,
+        3318,
+        4226
+      ]
+    ],
+    "description": "TOB_ROOM_NYCOLAS",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        3264,
+        4336,
+        3295,
+        4288
+      ]
+    ],
+    "description": "TOB_ROOM_SOTETSEG",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        3151,
+        4406,
+        3191,
+        4368
+      ]
+    ],
+    "description": "TOB_ROOM_XARPUS",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        3152,
+        4332,
+        3186,
+        4296
+      ]
+    ],
+    "description": "TOB_ROOM_VERZIK",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        3224,
+        4334,
+        3250,
+        4305
+      ]
+    ],
+    "description": "TOB_ROOM_VAULT",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        3120,
+        5760,
+        3360,
+        5694
+      ],
+      [
+        3262,
+        5694,
+        3360,
+        5118
+      ]
+    ],
+    "description": "CHAMBERS_OF_XERIC",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        2571,
+        5305,
+        2616,
+        5252
+      ]
+    ],
+    "description": "BARBARIAN_ASSAULT_WAITING_ROOMS",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        3136,
+        4608,
+        3391,
+        4544
+      ],
+      [
+        3168,
+        4639,
+        3196,
+        4604
+      ]
+    ],
+    "description": "TARNS_LAIR",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        1878,
+        5036,
+        1894,
+        5014
+      ]
+    ],
+    "description": "RANDOM_EVENT_CLASSROOM",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        1920,
+        5007,
+        1935,
+        4992
+      ]
+    ],
+    "description": "RANDOM_EVENT_GRAVEDIGGER",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        3136,
+        4863,
+        3200,
+        4799
+      ]
+    ],
+    "description": "RANDOM_EVENT_DRILL_DEMON",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        2059,
+        4479,
+        2111,
+        4447
+      ]
+    ],
+    "description": "RANDOM_EVENT_PRISON_PETE",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        1730,
+        5501,
+        1789,
+        5442
+      ]
+    ],
+    "description": "CLAN_HALL",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        2879,
+        5503,
+        2943,
+        5438
+      ]
+    ],
+    "description": "SORCERESSS_GARDEN",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        2558,
+        4352,
+        2625,
+        4286
+      ]
+    ],
+    "description": "PURO_PURO",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        2821,
+        5114,
+        2875,
+        5059
+      ]
+    ],
+    "description": "RATCATCHERS_HOUSE",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        1791,
+        4543,
+        1856,
+        4479
+      ]
+    ],
+    "description": "CANOE_CUTSCENE",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        2620,
+        4743,
+        2691,
+        4667
+      ],
+      [
+        2729,
+        4762,
+        2815,
+        4637
+      ],
+      [
+        2575,
+        4799,
+        2624,
+        4745
+      ]
+    ],
+    "description": "FISHER_KINGS_REALM",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
+        3010,
+        4540,
+        3073,
+        4478
+      ]
+    ],
+    "description": "ENCHANTED_VALLEY",
+    "hideOtherRegions": true
+  }
+]
+

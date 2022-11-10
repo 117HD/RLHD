@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "areas.schema.json",
+  "title": "Area Data",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [ "aabbs", "description" ],
+    "properties": {
+      "description": {
+        "type": "string",
+        "description": "Description of which area the properties apply to."
+      },
+      "rects": {
+        "type": "array",
+        "description": "An array of axis-aligned bounding boxes defining the area.",
+        "items": {
+          "$ref": "aabb.schema.json"
+        }
+      },
+      "hideOtherRegions": {
+        "type": "boolean",
+        "description": "If you want."
+      }
+    }
+  }
+}
