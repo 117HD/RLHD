@@ -2,13 +2,22 @@
   {
     "aabbs": [
       [
+        2709, 4842, 2728, 4826
+      ]
+    ],
+    "description": "EVIL_BOB_ISLAND",
+    "hideOtherRegions": true
+  },
+  {
+    "aabbs": [
+      [
         2495,
         4805,
         2559,
         4747
       ]
     ],
-    "description": "EVIL_BOB_ISLAND",
+    "description": "WATER_ALTER",
     "hideOtherRegions": true
   },
   {

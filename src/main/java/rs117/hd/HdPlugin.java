@@ -32,6 +32,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
+import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.events.*;
 import net.runelite.api.hooks.DrawCallbacks;
 import net.runelite.client.callback.ClientThread;
@@ -62,6 +63,7 @@ import rs117.hd.opengl.shader.Shader;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.Template;
 import rs117.hd.scene.*;
+import rs117.hd.scene.area.AreaManager;
 import rs117.hd.scene.lights.SceneLight;
 import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.model_overrides.ModelOverride;
@@ -140,6 +142,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 	@Inject
 	private ModelOverrideManager modelOverrideManager;
+
+	@Inject
+	private AreaManager areaManager;
 
 	@Inject
 	private EnvironmentManager environmentManager;
@@ -532,6 +537,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 				lightManager.startUp();
 				modelOverrideManager.startUp();
+				areaManager.startUp();
 				modelPusher.startUp();
 
 				if (client.getGameState() == GameState.LOGGED_IN)
@@ -2386,7 +2392,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	@Override
 	public void draw(Renderable renderable, int orientation, int pitchSin, int pitchCos, int yawSin, int yawCos, int x, int y, int z, long hash)
 	{
+
+		if(areaManager.shouldHide(x,z)) {
+			return;
+		}
+
 		if (modelOverrideManager.shouldHideModel(hash, x, z)) {
+
 			return;
 		}
 

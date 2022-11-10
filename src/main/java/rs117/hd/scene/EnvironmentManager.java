@@ -40,6 +40,7 @@ import net.runelite.api.coords.WorldPoint;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.data.environments.Environment;
+import rs117.hd.scene.area.AreaManager;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.config.DefaultSkyColor;
 import rs117.hd.utils.AABB;
@@ -56,6 +57,9 @@ public class EnvironmentManager
 
 	@Inject
 	private HdPlugin hdPlugin;
+
+	@Inject
+	private AreaManager areaManager;
 
 	private ArrayList<Environment> sceneEnvironments;
 	private Environment currentEnvironment;
@@ -155,6 +159,7 @@ public class EnvironmentManager
 	public void update()
 	{
 		WorldPoint camPosition = localPointToWorldTile(hdPlugin.camTarget[0], hdPlugin.camTarget[1]);
+		areaManager.update(client.getLocalPlayer().getWorldLocation());
 		int camTargetX = camPosition.getX();
 		int camTargetY = camPosition.getY();
 		int camTargetZ = camPosition.getPlane();
