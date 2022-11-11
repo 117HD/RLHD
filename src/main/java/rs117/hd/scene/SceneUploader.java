@@ -37,6 +37,7 @@ import rs117.hd.data.materials.Material;
 import rs117.hd.data.materials.Underlay;
 import rs117.hd.model.ModelPusher;
 import rs117.hd.scene.area.AreaManager;
+import rs117.hd.scene.area.HorizonTile;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.scene.model_overrides.ObjectType;
 import rs117.hd.utils.HDUtils;
@@ -69,6 +70,9 @@ class SceneUploader
 	public ProceduralGenerator proceduralGenerator;
 
 	@Inject
+	private SceneUploader sceneUploader;
+
+	@Inject
 	private ModelPusher modelPusher;
 
 	@Inject
@@ -86,6 +90,13 @@ class SceneUploader
 		Stopwatch stopwatch = Stopwatch.createStarted();
 
 		sceneId++;
+
+		if(areaManager.horizonAvailable()) {
+			renderFakeTile(vertexBuffer, uvBuffer, normalBuffer);
+			//int size = largeTile.getMaterialBelow() == null ? 6 : 12;
+			//offset += size;
+			//uvoffset += size;
+		}
 
 		for (int z = 0; z < Constants.MAX_Z; ++z)
 		{
@@ -105,6 +116,67 @@ class SceneUploader
 		stopwatch.stop();
 		log.debug("Scene upload time: {}", stopwatch);
 	}
+
+	public void renderFakeTile(GpuIntBuffer vertexBuffer, GpuFloatBuffer uvBuffer, GpuFloatBuffer normalBuffer) {
+		HorizonTile tile = plugin.areaManager.getCurrentArea().horizonTile;
+		int color = 127;
+		int size = 10000 * Perspective.LOCAL_TILE_SIZE;
+		int height = 0;
+
+		if(tile.getMaterialBelow() != null) {
+			int materialData = sceneUploader.modelPusher.packMaterialData(Material.DIRT_1, false, ModelOverride.NONE);
+			int terrainData = sceneUploader.packTerrainData(600, WaterType.WATER, 0);
+
+			vertexBuffer.put(-size, height, size, color);
+			uvBuffer.put(materialData, -size, size, 0);
+			// South-west
+			vertexBuffer.put(-size, height, -size, color);
+			uvBuffer.put(materialData, -size, -size, 0);
+			// North-east
+			vertexBuffer.put(size, height, size, color);
+			uvBuffer.put(materialData, size, size, 0);
+			// South-west
+			vertexBuffer.put(-size, height, -size, color);
+			uvBuffer.put(materialData, -size, -size, 0);
+			// South-east
+			vertexBuffer.put(size, height, -size, color);
+			uvBuffer.put(materialData, size, -size, 0);
+			// North-east
+			vertexBuffer.put(size, height, size, color);
+			uvBuffer.put(materialData, size, size, 0);
+			for (int i = 0; i < 6; i++) {
+				normalBuffer.put(0, 1, 0, terrainData);
+			}
+		}
+
+		int materialData = sceneUploader.modelPusher.packMaterialData(tile.getMaterial(), true, ModelOverride.NONE);
+		int terrainData = sceneUploader.packTerrainData(0, tile.getWaterType(), 0);
+
+		// North-west
+		vertexBuffer.put(-size, height, size, color);
+		uvBuffer.put(materialData, -size, size, 0);
+		// South-west
+		vertexBuffer.put(-size, height, -size, color);
+		uvBuffer.put(materialData, -size, -size, 0);
+		// North-east
+		vertexBuffer.put(size, height, size, color);
+		uvBuffer.put(materialData, size, size, 0);
+		// South-west
+		vertexBuffer.put(-size, height, -size, color);
+		uvBuffer.put(materialData, -size, -size, 0);
+		// South-east
+		vertexBuffer.put(size, height, -size, color);
+		uvBuffer.put(materialData, size, -size, 0);
+		// North-east
+		vertexBuffer.put(size, height, size, color);
+		uvBuffer.put(materialData, size, size, 0);
+
+		for (int i = 0; i < 6; i++) {
+			normalBuffer.put(0, 1, 0, terrainData);
+		}
+
+	}
+
 
 	private void uploadModel(long hash, Model model, GpuIntBuffer vertexBuffer, GpuFloatBuffer uvBuffer, GpuFloatBuffer normalBuffer, int tileZ, int tileX, int tileY, int orientation, ObjectType objectType)
 	{
@@ -145,7 +217,7 @@ class SceneUploader
 	private void upload(Tile tile, GpuIntBuffer vertexBuffer, GpuFloatBuffer uvBuffer, GpuFloatBuffer normalBuffer)
 	{
 
-		if(areaManager.shouldHide(tile.getWorldLocation().getX(),tile.getWorldLocation().getY())) {
+		if(areaManager.shouldHide(tile.getWorldLocation())) {
 			return;
 		}
 

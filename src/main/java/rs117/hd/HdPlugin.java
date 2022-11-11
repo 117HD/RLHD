@@ -64,6 +64,7 @@ import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.Template;
 import rs117.hd.scene.*;
 import rs117.hd.scene.area.AreaManager;
+import rs117.hd.scene.area.HorizonTile;
 import rs117.hd.scene.lights.SceneLight;
 import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.model_overrides.ModelOverride;
@@ -144,7 +145,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	private ModelOverrideManager modelOverrideManager;
 
 	@Inject
-	private AreaManager areaManager;
+	public AreaManager areaManager;
 
 	@Inject
 	private EnvironmentManager environmentManager;
@@ -1321,6 +1322,34 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			uniformBufferLights.clear();
 			glBindBuffer(GL_UNIFORM_BUFFER, 0);
 		}
+
+		HorizonTile largeTile = areaManager.getCurrentArea().horizonTile;
+		if(areaManager.horizonAvailable()) {
+			GpuIntBuffer b = modelBufferUnordered;
+			b.ensureCapacity(largeTile.getMaterialBelow() == null ?  16: 32);
+			if(largeTile.getMaterialBelow() != null) {
+				b.getBuffer()
+						.put(renderBufferOffset)
+						.put(renderBufferOffset)
+						.put(2)
+						.put(renderBufferOffset)
+						.put(0)
+						.put(0).put(0).put(0);
+				renderBufferOffset += 6;
+				numModelsUnordered++;
+			}
+			b.getBuffer()
+					.put(renderBufferOffset)
+					.put(renderBufferOffset)
+					.put(2)
+					.put(renderBufferOffset)
+					.put(0)
+					.put(0).put(0).put(0);
+			renderBufferOffset += 6;
+			numModelsUnordered++;
+
+		}
+
 		glBindBufferBase(GL_UNIFORM_BUFFER, 3, hUniformBufferLights.glBufferId);
 	}
 
@@ -2128,6 +2157,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		stagingBufferUvs.clear();
 		stagingBufferNormals.clear();
 
+		areaManager.update(client.getLocalPlayer().getWorldLocation());
 		sceneUploader.upload(client.getScene(), stagingBufferVertices, stagingBufferUvs, stagingBufferNormals);
 
 		dynamicOffsetVertices = stagingBufferVertices.position() / VERTEX_SIZE;
@@ -2398,7 +2428,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		}
 
 		if (modelOverrideManager.shouldHideModel(hash, x, z)) {
-
 			return;
 		}
 

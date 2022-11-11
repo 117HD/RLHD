@@ -159,7 +159,7 @@ public class EnvironmentManager
 	public void update()
 	{
 		WorldPoint camPosition = localPointToWorldTile(hdPlugin.camTarget[0], hdPlugin.camTarget[1]);
-		areaManager.update(client.getLocalPlayer().getWorldLocation());
+
 		int camTargetX = camPosition.getX();
 		int camTargetY = camPosition.getY();
 		int camTargetZ = camPosition.getPlane();
@@ -260,6 +260,7 @@ public class EnvironmentManager
 	 */
 	private void changeEnvironment(Environment newEnvironment, int camTargetX, int camTargetY, boolean instantChange)
 	{
+
 		currentEnvironment = newEnvironment;
 		log.debug("currentEnvironment changed to " + newEnvironment);
 

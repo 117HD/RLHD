@@ -12,7 +12,7 @@
         "type": "string",
         "description": "Description of which area the properties apply to."
       },
-      "rects": {
+      "aabbs": {
         "type": "array",
         "description": "An array of axis-aligned bounding boxes defining the area.",
         "items": {
@@ -21,7 +21,13 @@
       },
       "hideOtherRegions": {
         "type": "boolean",
-        "description": "If you want."
+        "description": "If you want regions around the aabbs to be hidden."
+      },
+      "horizonTile": {
+        "description": "Data for a fake tile into the horizon.",
+        "items": {
+          "$ref": "horizon.schema.json"
+        }
       }
     }
   }

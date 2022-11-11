@@ -2,27 +2,6 @@
   {
     "aabbs": [
       [
-        2709, 4842, 2728, 4826
-      ]
-    ],
-    "description": "EVIL_BOB_ISLAND",
-    "hideOtherRegions": true
-  },
-  {
-    "aabbs": [
-      [
-        2495,
-        4805,
-        2559,
-        4747
-      ]
-    ],
-    "description": "WATER_ALTER",
-    "hideOtherRegions": true
-  },
-  {
-    "aabbs": [
-      [
         3067,
         9534,
         3120,
@@ -1043,14 +1022,22 @@
   {
     "aabbs": [
       [
-        2688,
-        4863,
-        2752,
-        4799
+        2689,
+        4857,
+        2746,
+        4802
       ]
     ],
     "description": "WATER_ALTAR",
-    "hideOtherRegions": true
+    "hideOtherRegions": true,
+    "horizonTile": {
+      "material": "WATER_FLAT",
+      "isOverlay": true,
+      "waterType": "WATER_FLAT",
+      "height": 0,
+      "color": 127
+    }
+
   },
   {
     "aabbs": [

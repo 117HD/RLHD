@@ -68,7 +68,7 @@ public class AreaManager {
                 }
             }
         }
-        log.info("Area Changed to: " + currentArea.description);
+
     }
 
     public boolean shouldHide(int x, int z) {
@@ -88,5 +88,25 @@ public class AreaManager {
         return false;
     }
 
+    public boolean shouldHide(WorldPoint worldPoint) {
+        if (currentArea == null) {
+            return false;
+        }
+
+
+        if(currentArea.hideOtherRegions) {
+            for (AABB aabbs : currentArea.aabbs) {
+                if (!aabbs.contains(worldPoint)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public boolean horizonAvailable() {
+        return currentArea.horizonTile != null;
+    }
 
 }
