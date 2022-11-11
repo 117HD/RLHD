@@ -79,7 +79,7 @@ public class AreaManager {
         if(currentArea.hideOtherRegions) {
             for (AABB aabbs : currentArea.aabbs) {
                 WorldPoint location = ModelHash.getWorldTemplateLocation(client, x, z);
-                if (aabbs.contains(location)) {
+                if (!aabbs.contains(location)) {
                     return true;
                 }
             }
