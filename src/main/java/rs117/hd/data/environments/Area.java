@@ -319,8 +319,8 @@ public enum Area
 		new AABB(3102, 3505, 3103, 3504), // diagonal 3
 		new AABB(3101, 3504, 3102, 3503), // diagonal 4
 		new AABB(3100, 3503, 3101, 3502),  // diagonal 5
-		new AABB(3130,3518,3130,3516), // path under bridge towards Varrock
-		new AABB(3133,3518,3133,3516), // path under bridge towards Varrock
+		new AABB(3130, 3518, 3130, 3516, 1), // path on bridge towards Varrock
+		new AABB(3133, 3518, 3133, 3516, 1), // path on bridge towards Varrock
 		new AABB(3134,3517,3134,3516) // path after bridge towards Varrock
 	),
 	EDGEVILLE_BRIDGE(3133,3518,3130,3516),
