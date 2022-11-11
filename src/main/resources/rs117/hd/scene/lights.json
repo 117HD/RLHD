@@ -19793,7 +19793,7 @@
     "height": 250,
     "alignment": "CENTER",
     "radius": 500,
-    "strength": 12.5,
+    "strength": 10.5,
     "color": [
       252,
       148,
@@ -19822,8 +19822,8 @@
       "STANDING_TORCH",
       "STANDING_TORCH_5494",
       "STANDING_TORCH_11606",
-      "STANDING_TORCH_15158",
-      "LAMP_6203"
+      "STANDING_TORCH_15158"
+
     ]
   },
   {
@@ -19831,7 +19831,7 @@
     "height": 200,
     "alignment": "CENTER",
     "radius": 450,
-    "strength": 12.5,
+    "strength": 10.5,
     "color": [
       252,
       148,
@@ -19908,13 +19908,13 @@
     ]
   },
   {
-    "description": "STANDING_TORCH_KELDAGRIM",
+    "description": "STANDING_LAMP_KELDAGRIM",
     "height": 250,
     "alignment": "CENTER",
     "radius": 600,
-    "strength": 12.5,
+    "strength": 10.5,
     "color": [
-      252,
+      202,
       148,
       3
     ],
@@ -19923,6 +19923,24 @@
     "range": 20,
     "objectIds": [
       "LAMP_6202"
+    ]
+  },
+  {
+    "description": "STANDING_TORCH_KELDAGRIM",
+    "height": 180,
+    "alignment": "CENTER",
+    "radius": 500,
+    "strength": 10.5,
+    "color": [
+      202,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LAMP_6203"
     ]
   },
   {
@@ -20072,10 +20090,10 @@
   },
   {
     "description": "LANTERN",
-    "height": 250,
+    "height": 230,
     "alignment": "CENTER",
-    "radius": 500,
-    "strength": 12.5,
+    "radius": 450,
+    "strength": 9.5,
     "color": [
       252,
       148,
@@ -20174,7 +20192,7 @@
     "height": 40,
     "alignment": "CENTER",
     "radius": 450,
-    "strength": 12.5,
+    "strength": 11.5,
     "color": [
       252,
       148,
@@ -20204,7 +20222,6 @@
       "FIRE_35810",
       "FIRE_35811",
       "FIRE_10660",
-      "FIRE_4265",
       "CAMPFIRE",
       "FIRE_32297",
       "FIRE_4266",
@@ -20239,6 +20256,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
+      "FIRE_4265",
       "FIRE_25155",
       "FIRE_35812",
       "FIRE_40728"
@@ -20285,7 +20303,7 @@
     "description": "FIREPLACE",
     "height": 70,
     "alignment": "CENTER",
-    "radius": 800,
+    "radius": 500,
     "strength": 12.5,
     "color": [
       252,
@@ -20585,6 +20603,24 @@
     "objectIds": [
       12101,
       24012
+    ]
+  },
+  {
+    "description": "FURNACE_GLOW_LOW",
+    "height": 120,
+    "alignment": "CENTER",
+    "radius": 450,
+    "strength": 7.5,
+    "color": [
+      252,
+      90,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "objectIds": [
+      6189
     ]
   },
   {
@@ -21047,8 +21083,8 @@
     "description": "TABLE",
     "height": 100,
     "alignment": "CENTER",
-    "radius": 250,
-    "strength": 7.5,
+    "radius": 200,
+    "strength": 5.5,
     "color": [
       252,
       200,
@@ -24794,7 +24830,7 @@
     "radius": 500,
     "strength": 7.5,
     "color": [
-      252,
+      202,
       148,
       3
     ],
@@ -30094,7 +30130,7 @@
     ]
   },
   {
-    "description": "HALLOWEEN_JACK-o-LANTERN",
+    "description": "HALLOWEEN_JACK-o-LANTERN_BIG",
     "height": 30,
     "alignment": "CENTER",
     "radius": 200,
@@ -30109,6 +30145,42 @@
     "range": 20,
     "objectIds": [
       46268
+    ]
+  },
+  {
+    "description": "HALLOWEEN_JACK-o-LANTERN_SMALL",
+    "height": 30,
+    "alignment": "BACKLEFT_CORNER",
+    "radius": 200,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      46271
+    ]
+  },
+  {
+    "description": "COOKING_RANGE_JULIET",
+    "height": 30,
+    "alignment": "FRONTLEFT",
+    "radius": 200,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      7183
     ]
   }
 ]
