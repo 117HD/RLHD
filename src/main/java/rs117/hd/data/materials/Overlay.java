@@ -62,7 +62,7 @@ public enum Overlay {
     SWAMP_PATH_FIX_1(81, Area.LUMBRIDGE_SWAMP_PATH_FIX, GroundMaterial.DIRT, p -> p.saturation(4).shiftLightness(-3)),
     SWAMP_PATH_FIX_2(83, Area.LUMBRIDGE_SWAMP_PATH_FIX, GroundMaterial.DIRT, p -> p.saturation(4).shiftLightness(-5)),
     SWAMP_PATH_FIX_3(88, Area.LUMBRIDGE_SWAMP_PATH_FIX, GroundMaterial.GRAVEL, p -> p.shiftLightness(12).hue(7).saturation(1)),
-    LUMBRIDGE_VARROCK_BAND_BLEND_FIX(10, Area.LUMB_VAR_PATH_BLEND_FIX, GroundMaterial.OVERWORLD_GRASS_1, p -> p
+    LUMBRIDGE_VARROCK_BAND_BLEND_FIX(10, Area.LUMBRIDGE_VARROCK_PATH_BLEND_FIX, GroundMaterial.OVERWORLD_GRASS_1, p -> p
             .hue(9)
             .saturation(5)
             .lightness(18)
