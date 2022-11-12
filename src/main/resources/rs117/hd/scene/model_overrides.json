@@ -1954,7 +1954,7 @@
     "flatNormals": true
   },
   {
-    "description": "Murder mystery House - Exterior Walls",
+    "description": "Murder Mystery house - exterior walls",
     "baseMaterial": "STONE",
     "objectIds": [
       26060,
@@ -1970,7 +1970,7 @@
     "flatNormals": true
   },
   {
-    "description": "Murder mystery House - Interior walls",
+    "description": "Murder Mystery house - interior walls",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
       26054,
@@ -1982,6 +1982,13 @@
       26070
     ],
     "flatNormals": true
+  },
+  {
+    "description": "Murder Mystery house - white table",
+    "objectIds": [
+      597
+    ],
+    "baseMaterial": "GRAY_25"
   },
   {
     "description": "STONE_WALL_FENCES",
