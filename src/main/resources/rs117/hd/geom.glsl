@@ -59,7 +59,9 @@ out vec3 texBlend;
 
 void main() {
     int materialData = int(IN[0].uv.w);
-    bool flatNormals = (materialData >> MATERIAL_FLAG_FLAT_NORMALS & 1) == 1;
+    bool flatNormals =
+        length(IN[0].normal.xyz) < .01 ||
+        (materialData >> MATERIAL_FLAG_FLAT_NORMALS & 1) == 1;
 
     if (flatNormals) {
         vec3 T = normalize(vec3(IN[0].pos - IN[1].pos));
@@ -82,7 +84,7 @@ void main() {
         fogAmount = IN[i].fogAmount;
         gl_Position = projectionMatrix * vec4(IN[i].pos, 1.f);
         position = IN[i].pos;
-        if (!flatNormals && length(IN[i].normal.xyz) > .01)
+        if (!flatNormals)
             normals = IN[i].normal.xyz;
         EmitVertex();
     }
