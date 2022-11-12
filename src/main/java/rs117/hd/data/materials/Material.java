@@ -301,6 +301,7 @@ public enum Material
 	WOOD_GRAIN_2_N,
 	WOOD_GRAIN_2(p -> p
 		.setNormalMap(WOOD_GRAIN_2_N)),
+	WOOD_GRAIN_3,
 	DOCK_FENCE,
 
 	HD_INFERNAL_CAPE(p -> p
@@ -331,6 +332,7 @@ public enum Material
 
 	WORN_TILES,
 	STONE,
+	STONE_SEMIGLOSS(STONE, p -> p.setSpecular(0.6f, 100)),
 
 	WALL_STONE_N,
 	WALL_STONE(p -> p.setNormalMap(WALL_STONE_N)),
