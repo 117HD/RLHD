@@ -3525,7 +3525,8 @@
       7481,
       40304
     ],
-    "uvType": "MODEL_XZ"
+    "uvType": "MODEL_XZ",
+    "flatNormals": true
   },
   {
     "description": "Worn Carpet - Edges",
@@ -3565,6 +3566,9 @@
       943,
       944,
       945,
+      6812,
+      6813,
+      6814,
       7435,
       7436,
       7437,
@@ -3813,13 +3817,17 @@
     "description": "Wooden plank tables",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
-      25603
+      14851,
+      14852,
+      25603,
+      40223,
+      40224
     ],
     "uvType": "MODEL_XZ",
     "flatNormals": true
   },
   {
-    "description": "Wooden tables - Roubnd",
+    "description": "Wooden tables - Round",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       25733
@@ -4426,10 +4434,13 @@
     "description": "Wooden Door - Plank",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
+      2398,
       11765,
       11778,
       11779,
-      11780
+      11780,
+      44784,
+      44785
     ],
     "uvOrientation": 512,
     "uvScale": 0.4,
