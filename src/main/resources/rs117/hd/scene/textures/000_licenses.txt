@@ -30,8 +30,8 @@ WOOD_GRAIN_2 Texture provided by pexels.com. and require no attribution
 WOOD_GRAIN_3 Texture provided by Ambientcg; All textures on this site are licensed as CC0. texture has been combined with hightmap and colors altered
 -- https://ambientcg.com/view?id=Wood060
 
-GRAVEL and GRAVEL_N texture provided by textures.com are considered closed source and is not for use in projects other than RLHD
--- https://www.textures.com/download/3DScans0607/138052
+GRAVEL and GRAVEL_N textures from 3dtextures. All textures on this site are licensed as CC0.
+-- https://ambientcg.com/view?id=Rocks022
 
 METALLIC_1 texture provided by textures.com are considered closed source and is not for use in projects other than RLHD
 -- https://www.textures.com/download/PBR0837/139492
