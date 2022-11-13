@@ -5834,5 +5834,94 @@
     ],
     "uvType": "MODEL_XZ",
     "uvScale": 0.88
+  },
+  {
+    "description": "EMPTY Ore Rocks",
+    "baseMaterial": "ROCK_2",
+    "objectIds": [
+      11390,
+      11391,
+      11392
+    ]
+  },
+  {
+    "description": "Clay Rocks",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [
+      11362,
+      11363
+    ]
+  },
+  {
+    "description": "Copper Ore Rocks",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      10943,
+      11161
+    ]
+  },
+  {
+    "description": "Tin Ore Rocks",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      11360,
+      11361
+    ]
+  },
+  {
+  "description": "Silver Ore Rocks",
+  "baseMaterial": "ROCK_1",
+  "objectIds": [
+    11368,
+    11369
+    ]
+  },
+  {
+    "description": "Iron Ore Rocks",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      11364,
+      11365
+    ]
+  },
+  {
+    "description": "Coal Ore Rocks",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      11366,
+      11367
+    ]
+  },
+  {
+    "description": "Mithril Ore Rocks",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      11372,
+      11373
+    ]
+  },
+  {
+    "description": "Adamantite Ore Rocks",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      11374,
+      11375
+    ]
+  },
+  {
+    "description": "Runite Ore Rocks",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      11376,
+      11377
+    ]
+  },
+  {
+    "description": "Gem Rocks",
+    "baseMaterial": "ROCK_2",
+    "objectIds": [
+      11380,
+      11381
+    ]
   }
 ]
