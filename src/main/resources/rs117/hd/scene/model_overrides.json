@@ -4511,5 +4511,37 @@
       524
     ],
     "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "GuTanoth bridges",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      2830,
+      2831,
+      20010,
+      20011,
+      20012,
+      20013,
+      20014,
+      20015,
+      20016,
+      20017,
+      20018,
+      20019
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "GuTanoth bridges rope",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      20004,
+      20005,
+      20006,
+      20007
+    ],
+    "uvOrientation": 512,
+    "uvType": "MODEL_XY",
+    "flatNormals": true
   }
 ]
