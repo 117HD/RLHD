@@ -3512,6 +3512,7 @@
     "description": "Worn Carpet",
     "baseMaterial": "CARPET",
     "objectIds": [
+      7481,
       40304
     ],
     "uvType": "MODEL_XZ"
@@ -3520,6 +3521,7 @@
     "description": "Worn Carpet - Edges",
     "baseMaterial": "CARPET",
     "objectIds": [
+      7480,
       40305
     ],
     "uvType": "MODEL_XZ",
@@ -3529,6 +3531,7 @@
     "description": "Worn Carpet - Coners",
     "baseMaterial": "CARPET",
     "objectIds": [
+      7447,
       40306
     ],
     "uvType": "MODEL_XZ_MIRROR_A",
@@ -4406,6 +4409,19 @@
     ],
     "flatNormals": true,
     "uvScale": 0.4
+  },
+  {
+    "description": "Wooden Door - Plank",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      11778,
+      11779,
+      11780
+    ],
+    "uvOrientation": 512,
+    "uvScale": 0.4,
+    "uvType": "MODEL_XY",
+    "flatNormals": true
   },
   {
     "description": "Varrock Castle Doors",
