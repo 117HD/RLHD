@@ -3593,6 +3593,13 @@
     "description": "Dirt Cave Entrance",
     "baseMaterial": "DIRT_2",
     "objectIds": [
+      2,
+      2804,
+      2805,
+      2806,
+      2807,
+      2808,
+      2809,
       30374
     ]
   },
