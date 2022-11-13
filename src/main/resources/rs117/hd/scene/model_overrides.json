@@ -5870,7 +5870,7 @@
   },
   {
   "description": "Silver Ore Rocks",
-  "baseMaterial": "ROCK_1",
+  "baseMaterial": "METALLIC_ROCK_1",
   "objectIds": [
     11368,
     11369
@@ -5922,6 +5922,14 @@
     "objectIds": [
       11380,
       11381
+    ]
+  },
+  {
+    "description": "Gold Ore Rocks",
+    "baseMaterial": "METALLIC_ROCK_1",
+    "objectIds": [
+      11370,
+      11371
     ]
   }
 ]

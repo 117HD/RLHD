@@ -312,6 +312,9 @@ public enum Material
 		.setNormalMap(WOOD_GRAIN_2_N)),
 	WOOD_GRAIN_3,
 	DOCK_FENCE,
+	METALLIC_ROCK_1(ROCK_1, p -> p
+			.setSpecular(0.5f,220)
+	),
 
 	HD_INFERNAL_CAPE(p -> p
 		.replaceIf(INFERNAL_CAPE, HdPluginConfig::hdInfernalTexture)
