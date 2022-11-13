@@ -349,7 +349,7 @@ public enum Material
 	METALLIC_1_HIGHGLOSS(METALLIC_1, p -> p
 			.setSpecular(1.1f, 80)
 	),
-	METALLIC_2,
+	METALLIC_2(METALLIC_1, p -> p.setBrightness(1.8f)),
 	METALLIC_2_SEMIGLOSS(METALLIC_2, p -> p
 			.setSpecular(0.3f, 80)
 	),
