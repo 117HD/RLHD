@@ -27,5 +27,5 @@ WALL_STONE and WALL_STONE_N Texture provided by Katsugi from 3dtextures. All tex
 WOOD_GRAIN_2 Texture provided by pexels.com. and require no attribution
 -- https://www.pexels.com/license/
 
-WOOD_GRAIN_3 Texture provided by textures.com are considered closed source and is not for use in projects other than RLHD
--- https://www.textures.com/download/3DScans0105/128767
+WOOD_GRAIN_3 Texture provided by Ambientcg; All textures on this site are licensed as CC0. texture has been combined with hightmap and colors altered
+-- https://ambientcg.com/view?id=Wood060
