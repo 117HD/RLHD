@@ -3271,6 +3271,11 @@
       23849,
       23850,
       23851,
+      23895,
+      23896,
+      23897,
+      23898,
+      23899,
       24453,
       24454,
       24560,
@@ -3850,6 +3855,8 @@
     "description": "Ladder - Untextured",
     "baseMaterial": "DOCK_FENCE",
     "objectIds": [
+      11794,
+      11795,
       25606,
       26107
     ]
@@ -4419,6 +4426,7 @@
     "description": "Wooden Door - Plank",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
+      11765,
       11778,
       11779,
       11780
@@ -4458,5 +4466,39 @@
       11807
     ],
     "flatNormals": true
+  },
+  {
+    "description": "Varrock - Saw Mill Walls",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      533,
+      23900,
+      23901,
+      23902
+    ],
+    "uvType": "MODEL_XY",
+    "flatNormals": true,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Varrock - Saw Mill floors",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      521,
+      522,
+      523
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Varrock - Saw Mill floors",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      521,
+      522,
+      523,
+      524
+    ],
+    "uvType": "MODEL_XZ"
   }
 ]
