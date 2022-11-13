@@ -30242,5 +30242,41 @@
       20032,
       20036
     ]
+  },
+  {
+    "description": "CLAY_OVAN_1",
+    "height": 120,
+    "alignment": "CENTER",
+    "radius": 350,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      21302
+    ]
+  },
+  {
+    "description": "CLAY_FORGE",
+    "height": 120,
+    "alignment": "BACK",
+    "radius": 350,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      21303
+    ]
   }
 ]
