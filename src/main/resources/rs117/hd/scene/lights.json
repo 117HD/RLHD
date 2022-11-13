@@ -20107,11 +20107,46 @@
     "range": 20,
     "objectIds": [
       4691,
-      "LANTERN_10307",
       "LANTERN_16901",
       23577,
       "LANTERN",
       "LANTERN_11468"
+    ]
+  },
+  {
+    "description": "CANIFIS_LANTERN_POST",
+    "height": 230,
+    "alignment": "CENTER",
+    "radius": 500,
+    "strength": 10.5,
+    "color": [
+      202,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LANTERN_11468"
+    ]
+  },
+  {
+    "description": "CANIFIS_LANTERN_POST",
+    "height": 220,
+    "alignment": "FRONT",
+    "radius": 500,
+    "strength": 9.5,
+    "color": [
+      202,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 2,
+    "range": 20,
+    "objectIds": [
+      "LANTERN_10307"
     ]
   },
   {
