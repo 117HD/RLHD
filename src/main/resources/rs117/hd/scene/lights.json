@@ -20030,6 +20030,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
+      23380,
       24173
     ]
   },
@@ -30182,6 +30183,42 @@
     "range": 20,
     "objectIds": [
       7183
+    ]
+  },
+  {
+    "description": "DORGESHKAAN_TUNNEL_WALL_LAMP",
+    "height": 212,
+    "alignment": "FRONT",
+    "radius": 500,
+    "strength": 7.5,
+    "color": [
+      202,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      23514
+    ]
+  },
+  {
+    "description": "KELDAGRIM_TUNNEL_WALL_LAMP",
+    "height": 220,
+    "alignment": "FRONT",
+    "radius": 500,
+    "strength": 8.5,
+    "color": [
+      202,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      23507
     ]
   }
 ]
