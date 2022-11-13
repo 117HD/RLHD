@@ -20009,7 +20009,6 @@
       206,
       11474,
       5746,
-      4501,
       5787,
       24414,
       2175,
@@ -20036,6 +20035,24 @@
     ]
   },
   {
+    "description": "WALL_TORCH_LOW",
+    "height": 145,
+    "alignment": "FRONT",
+    "radius": 300,
+    "strength": 7.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      4501
+    ]
+  },
+  {
     "description": "WALL_CANDLE",
     "height": 300,
     "alignment": "FRONT",
@@ -20050,6 +20067,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
+      4500,
       9746,
       18355
     ]
