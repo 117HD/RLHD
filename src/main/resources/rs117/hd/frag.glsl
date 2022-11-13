@@ -602,12 +602,12 @@ void main() {
         outputColor = mix(underlayColor, overlayColor, overlayMix);
 
         // normals
-        vec3 normals = normals;
+        vec3 normals = normalize(normals);
 
         vec3 n1 = sampleNormalMap(material1, uv1, normals, TBN);
         vec3 n2 = sampleNormalMap(material2, uv2, normals, TBN);
         vec3 n3 = sampleNormalMap(material3, uv3, normals, TBN);
-        normals = normalize((n1 + n2 + n3) / 3);
+        normals = normalize(n1 * texBlend.x + n2 * texBlend.y + n3 * texBlend.z);
 
         float lightDotNormals = dot(normals, lightDir);
         float downDotNormals = dot(downDir, normals);
