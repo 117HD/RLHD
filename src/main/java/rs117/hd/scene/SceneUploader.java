@@ -93,9 +93,6 @@ class SceneUploader
 
 		if(areaManager.horizonAvailable()) {
 			renderFakeTile(vertexBuffer, uvBuffer, normalBuffer);
-			//int size = largeTile.getMaterialBelow() == null ? 6 : 12;
-			//offset += size;
-			//uvoffset += size;
 		}
 
 		for (int z = 0; z < Constants.MAX_Z; ++z)
@@ -118,7 +115,7 @@ class SceneUploader
 	}
 
 	public void renderFakeTile(GpuIntBuffer vertexBuffer, GpuFloatBuffer uvBuffer, GpuFloatBuffer normalBuffer) {
-		HorizonTile tile = plugin.areaManager.getCurrentArea().horizonTile;
+		HorizonTile tile = plugin.areaManager.getCurrentArea().get().horizonTile;
 		int color = 127;
 		int size = 10000 * Perspective.LOCAL_TILE_SIZE;
 		int height = 0;
