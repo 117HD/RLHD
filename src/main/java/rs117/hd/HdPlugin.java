@@ -1082,17 +1082,19 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				.putInt(textureManager.getTextureIndex(material.flowMap))
 				.putInt(material.overrideBaseColor ? 1 : 0)
 				.putInt(material.unlit ? 1 : 0)
+				.putFloat(material.brightness)
 				.putFloat(material.displacementScale)
 				.putFloat(material.specularStrength)
 				.putFloat(material.specularGloss)
 				.putFloat(material.flowMapStrength)
+				.putFloat(0) // pad vec2
 				.putFloat(material.flowMapDuration[0])
 				.putFloat(material.flowMapDuration[1])
 				.putFloat(scrollSpeedX)
 				.putFloat(scrollSpeedY)
 				.putFloat(material.textureScale[0])
-				.putFloat(material.textureScale[1])
-				.putFloat(0).putFloat(0); // pad vec4
+				.putFloat(material.textureScale[1]);
+				// vec4 aligned
 		}
 		buffer.flip();
 
