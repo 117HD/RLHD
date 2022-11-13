@@ -92,7 +92,7 @@ public enum Overlay {
     VARROCK_ANVILS(81, Area.VARROCK_ANVILS, GroundMaterial.DIRT),
     VARROCK_BUILDING_RUINS(81, Area.VARROCK_BUILDING_RUINS, GroundMaterial.DIRT),
     VARROCK_BUILDING_FLOOR_1(81, Area.VARROCK, GroundMaterial.TILE_SMALL, p -> p.blended(false)),
-    VARROCK_BUILDING_FLOOR_2(4, Area.VARROCK, GroundMaterial.NONE, p -> p.blended(false)),
+    VARROCK_BUILDING_FLOOR_2(4, Area.VARROCK, GroundMaterial.WOOD_PLANKS_1, p -> p.blended(false)),
     VARROCK_PLANT_PATCHES(89, Area.VARROCK, GroundMaterial.DIRT, p -> p.blended(false)),
     VARROCK_EAST_BANK_CENTER(-83, Area.VARROCK_EAST_BANK_CENTER, GroundMaterial.TILES_2x2_1_SEMIGLOSS, p -> p.blended(false)),
     VARROCK_EAST_BANK_OUTSIDE_1(-85, Area.VARROCK_EAST_BANK_OUTSIDE_1, GroundMaterial.TILES_2x2_1_SEMIGLOSS, p -> p.blended(false)),

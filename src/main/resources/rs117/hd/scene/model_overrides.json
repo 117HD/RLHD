@@ -3509,8 +3509,34 @@
     "uvType": "MODEL_XZ"
   },
   {
-    "description": "Fine Carpet",
+    "description": "Worn Carpet",
     "baseMaterial": "CARPET",
+    "objectIds": [
+      40304
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Worn Carpet - Edges",
+    "baseMaterial": "CARPET",
+    "objectIds": [
+      40305
+    ],
+    "uvType": "MODEL_XZ",
+    "flatNormals": true
+  },
+  {
+    "description": "Worn Carpet - Coners",
+    "baseMaterial": "CARPET",
+    "objectIds": [
+      40306
+    ],
+    "uvType": "MODEL_XZ_MIRROR_A",
+    "flatNormals": true
+  },
+  {
+    "description": "Fine Carpet",
+    "baseMaterial": "FINE_CARPET",
     "objectIds": [
       925,
       926,
@@ -3526,6 +3552,9 @@
       943,
       944,
       945,
+      7435,
+      7436,
+      7437,
       25596,
       25597,
       25598,
@@ -3534,7 +3563,7 @@
       25680
     ],
     "uvType": "MODEL_XZ",
-    "uvScale": 0.5
+    "flatNormals": true
   },
   {
     "description": "Brass coat rack",

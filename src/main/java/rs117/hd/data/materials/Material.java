@@ -249,6 +249,10 @@ public enum Material
 	ROCK_2,
 
 	CARPET,
+	FINE_CARPET(CARPET, p -> p
+			.setBrightness(1.4f)
+			.setTextureScale(0.5f,0.5f)
+	),
 
 	FALADOR_PATH_BRICK(p -> p
 		.setSpecular(0.3f, 30)),
