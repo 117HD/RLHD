@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Optional;
 
 import static rs117.hd.utils.ResourcePath.path;
 
@@ -27,8 +26,10 @@ import static rs117.hd.utils.ResourcePath.path;
 @Slf4j
 public class AreaManager {
 
+
     @Getter
-    Optional<AreaData> currentArea = Optional.empty();
+    @Setter
+    AreaData currentArea = null;
 
     private static final String ENV_AREA_PATH = "RLHD_AREA_PATH";
     private static final ResourcePath areaDataPath =  Env.getPathOrDefault(ENV_AREA_PATH,
@@ -47,8 +48,8 @@ public class AreaManager {
     private HdPlugin plugin;
 
     public void startUp() {
+        areas.clear();
         areaDataPath.watch(path -> {
-            areas.clear();
             try {
                 AreaData[] temp = path.loadJson(plugin.getGson(), AreaData[].class);
                 Collections.addAll(areas, temp);
@@ -63,7 +64,7 @@ public class AreaManager {
         for (AreaData area : areas) {
             for (AABB aabb : area.aabbs) {
                 if (aabb.contains(point)) {
-                    currentArea = Optional.of(area);
+                    currentArea = area;
                 }
             }
         }
@@ -71,12 +72,12 @@ public class AreaManager {
     }
 
     public boolean shouldHide(int x, int z) {
-        if (!currentArea.isPresent()) {
+        if (currentArea == null) {
             return false;
         }
 
-        if(currentArea.get().hideOtherRegions) {
-            for (AABB aabbs : currentArea.get().aabbs) {
+        if(currentArea.hideOtherRegions) {
+            for (AABB aabbs : currentArea.aabbs) {
                 WorldPoint location = ModelHash.getWorldTemplateLocation(client, x, z);
                 if (!aabbs.contains(location)) {
                     return true;
@@ -88,13 +89,13 @@ public class AreaManager {
     }
 
     public boolean shouldHide(WorldPoint worldPoint) {
-        if (!currentArea.isPresent()) {
+        if (currentArea == null) {
             return false;
         }
 
 
-        if(currentArea.get().hideOtherRegions) {
-            for (AABB aabbs : currentArea.get().aabbs) {
+        if(currentArea.hideOtherRegions) {
+            for (AABB aabbs : currentArea.aabbs) {
                 if (!aabbs.contains(worldPoint)) {
                     return true;
                 }
@@ -105,7 +106,7 @@ public class AreaManager {
     }
 
     public boolean horizonAvailable() {
-        return currentArea.filter(areaData -> areaData.horizonTile != null).isPresent();
+        return currentArea.horizonTile != null;
     }
 
 }

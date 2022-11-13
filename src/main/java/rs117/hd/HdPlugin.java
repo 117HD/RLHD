@@ -1323,22 +1323,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			glBindBuffer(GL_UNIFORM_BUFFER, 0);
 		}
 
-		if (areaManager.getCurrentArea().isPresent()) {
-			if(areaManager.horizonAvailable()) {
-				HorizonTile largeTile = areaManager.getCurrentArea().get().horizonTile;
-				GpuIntBuffer b = modelBufferUnordered;
-				b.ensureCapacity(largeTile.getMaterialBelow() == null ?  16: 32);
-				if(largeTile.getMaterialBelow() != null) {
-					b.getBuffer()
-							.put(renderBufferOffset)
-							.put(renderBufferOffset)
-							.put(2)
-							.put(renderBufferOffset)
-							.put(0)
-							.put(0).put(0).put(0);
-					renderBufferOffset += 6;
-					numModelsUnordered++;
-				}
+		HorizonTile largeTile = areaManager.getCurrentArea().horizonTile;
+		if(areaManager.horizonAvailable()) {
+			GpuIntBuffer b = modelBufferUnordered;
+			b.ensureCapacity(largeTile.getMaterialBelow() == null ?  16: 32);
+			if(largeTile.getMaterialBelow() != null) {
 				b.getBuffer()
 						.put(renderBufferOffset)
 						.put(renderBufferOffset)
@@ -1348,8 +1337,17 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 						.put(0).put(0).put(0);
 				renderBufferOffset += 6;
 				numModelsUnordered++;
-
 			}
+			b.getBuffer()
+					.put(renderBufferOffset)
+					.put(renderBufferOffset)
+					.put(2)
+					.put(renderBufferOffset)
+					.put(0)
+					.put(0).put(0).put(0);
+			renderBufferOffset += 6;
+			numModelsUnordered++;
+
 		}
 
 		glBindBufferBase(GL_UNIFORM_BUFFER, 3, hUniformBufferLights.glBufferId);
