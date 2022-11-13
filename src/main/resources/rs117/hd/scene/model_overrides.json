@@ -2601,6 +2601,7 @@
     "description": "Ground Decoration - Tan Rock Uncolored",
     "baseMaterial": "DIRT_1",
     "objectIds": [
+      176,
       324,
       325,
       326
@@ -2698,6 +2699,7 @@
     "baseMaterial": "ROCK_2",
     "objectIds": [
       2852,
+      30176,
       "CAVE_ENTRANCE_11835",
       "CRACK_29627",
       "TUNNEL_6659"
@@ -2947,9 +2949,17 @@
     "flatNormals": true
   },
   {
-    "description": "UNKNOWN_7",
+    "description": "Grunge Caves",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
+      2123,
+      4147,
+      5008,
+      5014,
+      5046,
+      5973,
+      12770,
+      43759,
       "CAVE_EXIT"
     ]
   },
@@ -3600,6 +3610,9 @@
       2807,
       2808,
       2809,
+      2810,
+      26709,
+      30177,
       30374
     ]
   },
@@ -4518,5 +4531,27 @@
       524
     ],
     "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Brimstils Cave",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      17209
+    ]
+  },
+  {
+    "description": "Eagles Peak Cave",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      19790
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "Dagannoth Cave",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      8929
+    ]
   }
 ]
