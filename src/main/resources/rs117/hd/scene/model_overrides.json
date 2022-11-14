@@ -2753,6 +2753,9 @@
       18893,
       18894,
       18895,
+      19390,
+      19393,
+      19397,
       25077,
       25078,
       25079,
@@ -4570,6 +4573,24 @@
       522,
       523,
       524
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Khandarian Eagles Landing",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      19798
+    ]
+  },
+  {
+    "description": "Grunge-Like Object",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      6358,
+      6359,
+      6360,
+      6361
     ],
     "uvType": "MODEL_XZ"
   },
