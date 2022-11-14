@@ -30406,5 +30406,23 @@
     "npcIds": [
       1365
     ]
+  },
+  {
+    "description": "WALL_TORCH_WITCHAVEN_DUNGEON",
+    "height": 245,
+    "alignment": "FRONT",
+    "radius": 300,
+    "strength": 7.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 2,
+    "range": 30,
+    "objectIds": [
+      18453
+    ]
   }
 ]
