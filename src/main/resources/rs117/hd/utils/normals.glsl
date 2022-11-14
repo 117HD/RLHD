@@ -29,6 +29,8 @@ vec3 sampleNormalMap(Material mat, vec2 uv, const vec3 surfaceNormal, const mat3
 
     // Sample normal map texture, swapping Y and Z to match the coordinate system in OSRS
     vec3 n = texture(textureArray, vec3(uv, mat.normalMap)).xyz;
+    // Undo automatic sRGB to linear conversion, since we want the raw values
+    n = linearToSrgb(n);
     // Scale and shift normal so it can point in both directions
     n.xy = n.xy * 2 - 1;
     // Transform the normal from tangent space to world space

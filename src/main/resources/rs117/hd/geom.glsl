@@ -85,7 +85,7 @@ void main() {
         gl_Position = projectionMatrix * vec4(IN[i].pos, 1.f);
         position = IN[i].pos;
         if (!flatNormals)
-            normals = IN[i].normal.xyz;
+            normals = normalize(IN[i].normal.xyz);
         EmitVertex();
     }
 

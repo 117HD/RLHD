@@ -389,7 +389,7 @@ void main() {
         outputColor = sampleWater(waterTypeIndex, viewDir);
     } else {
         // Source: https://www.geeks3d.com/20130122/normal-mapping-without-precomputed-tangent-space-vectors/
-        vec3 N = normalize(normals);
+        vec3 N = normals;
         vec3 C1 = cross(vec3(0, 0, 1), N);
         vec3 C2 = cross(vec3(0, 1, 0), N);
         vec3 T = normalize(length(C1) > length(C2) ? C1 : C2);
@@ -602,12 +602,10 @@ void main() {
         outputColor = mix(underlayColor, overlayColor, overlayMix);
 
         // normals
-        vec3 normals = normalize(normals);
-
         vec3 n1 = sampleNormalMap(material1, uv1, normals, TBN);
         vec3 n2 = sampleNormalMap(material2, uv2, normals, TBN);
         vec3 n3 = sampleNormalMap(material3, uv3, normals, TBN);
-        normals = normalize(n1 * texBlend.x + n2 * texBlend.y + n3 * texBlend.z);
+        vec3 normals = normalize(n1 * texBlend.x + n2 * texBlend.y + n3 * texBlend.z);
 
         float lightDotNormals = dot(normals, lightDir);
         float downDotNormals = dot(downDir, normals);
