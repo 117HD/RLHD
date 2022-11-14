@@ -20049,6 +20049,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
+      2501,
       4501
     ]
   },
@@ -20142,6 +20143,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
+      4503,
       4691,
       "LANTERN_16901",
       23577,
@@ -20676,7 +20678,8 @@
     "range": 10,
     "objectIds": [
       12101,
-      24012
+      24012,
+      26178
     ]
   },
   {
@@ -30366,6 +30369,42 @@
     "range": 25,
     "objectIds": [
       6282
+    ]
+  },
+  {
+    "description": "ELEMENTAL_WORKSHOP_LANTERN",
+    "height": 240,
+    "alignment": "CENTER",
+    "radius": 500,
+    "strength": 10.5,
+    "color": [
+      202,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      18536
+    ]
+  },
+  {
+    "description": "FIRE_ELEMENTAL",
+    "height": 200,
+    "alignment": "CENTER",
+    "radius": 350,
+    "strength": 10.5,
+    "color": [
+      202,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 30,
+    "npcIds": [
+      1365
     ]
   }
 ]
