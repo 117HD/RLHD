@@ -25149,8 +25149,8 @@
   },
   {
     "description": "WALL_TORCH_CERBERUS_DUNGEON",
-    "height": 250,
-    "alignment": "CENTER",
+    "height": 280,
+    "alignment": "FRONT",
     "radius": 650,
     "strength": 17.5,
     "color": [
@@ -25159,8 +25159,8 @@
       3
     ],
     "type": "FLICKER",
-    "duration": 0,
-    "range": 20,
+    "duration": 3,
+    "range": 30,
     "objectIds": [
       26570
     ]
