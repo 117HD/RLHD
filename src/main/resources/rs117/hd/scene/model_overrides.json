@@ -2479,8 +2479,21 @@
       10845,
       10846,
       10847,
+      11090,
+      11091,
+      11092,
+      11099,
+      11100,
+      11101,
+      11102,
       11103,
       11104,
+      11105,
+      11106,
+      11107,
+      11108,
+      11122,
+      11123,
       18934
     ],
     "inheritTileColorType": "OVERLAY",
@@ -4600,6 +4613,29 @@
     "uvType": "MODEL_XZ"
   },
   {
+    "description": "Sand clumps",
+    "baseMaterial": "SAND_2",
+    "objectIds": [
+      11114,
+      11115,
+      11116,
+      11117,
+      11118,
+      11119,
+      11120,
+      11121
+    ],
+    "uvType": "MODEL_XZ",
+    "inheritTileColorType": "OVERLAY"
+  },
+  {
+    "description": "Sand Hole",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      10952
+    ]
+  },
+  {
     "description": "GuTanoth bridges",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
@@ -5012,6 +5048,17 @@
       321,
       4342,
       4344,
+      11084,
+      11085,
+      11086,
+      11087,
+      11088,
+      11089,
+      11093,
+      11094,
+      11095,
+      11096,
+      11098,
       11190,
       11191,
       11192,
@@ -5033,6 +5080,7 @@
     "baseMaterial": "DIRT_2",
     "objectIds": [
       324,
+      325,
       326,
       2376,
       2377,
