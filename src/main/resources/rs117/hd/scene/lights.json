@@ -19967,7 +19967,6 @@
       31628,
       12238,
       20942,
-      3474,
       "GRAVE_43122",
       "GRAVE_43123",
       "GRAVE_43124",
@@ -20051,6 +20050,24 @@
     "range": 20,
     "objectIds": [
       4501
+    ]
+  },
+  {
+    "description": "POLLNIVNEACH_WALL_LANTERN",
+    "height": 208,
+    "alignment": "FRONT",
+    "radius": 300,
+    "strength": 7.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 3,
+    "range": 25,
+    "objectIds": [
+      3474
     ]
   },
   {
