@@ -19960,6 +19960,7 @@
     "objectIds": [
       198,
       6537,
+      6365,
       7376,
       18891,
       12300,
@@ -30330,6 +30331,24 @@
     "range": 20,
     "objectIds": [
       21303
+    ]
+  },
+  {
+    "description": "Golem Demon Portal",
+    "height": 210,
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 12.5,
+    "color": [
+      255,
+      0,
+      90
+    ],
+    "type": "PULSE",
+    "duration": 2000,
+    "range": 25,
+    "objectIds": [
+      6282
     ]
   }
 ]
