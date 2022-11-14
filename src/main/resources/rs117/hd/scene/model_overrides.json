@@ -4559,5 +4559,12 @@
     "objectIds": [
       8929
     ]
+  },
+  {
+    "description": "Desert Caves",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [
+      30180
+    ]
   }
 ]
