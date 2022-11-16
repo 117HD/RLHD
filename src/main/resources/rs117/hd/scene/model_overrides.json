@@ -2408,7 +2408,6 @@
       316,
       317,
       318,
-      320,
       321
     ]
   },
@@ -2511,8 +2510,6 @@
       317,
       318,
       319,
-      320,
-      321,
       329,
       330,
       331,
@@ -2534,6 +2531,9 @@
       3949,
       3950,
       3204,
+      4339,
+      4340,
+      4341,
       7057,
       7103,
       7104,
@@ -2554,10 +2554,10 @@
       10847
     ],
     "inheritTileColorType": "OVERLAY",
-    "uvType": "MODEL_XZ"
+    "uvType": "WORLD_XZ"
   },
   {
-    "description": "GROUND_DECORATION_DIRT_UNCOLORED",
+    "description": "GROUND_DECORATION_DIRT_COLORED",
     "baseMaterial": "DIRT_2",
     "objectIds": [
       176,
@@ -2576,7 +2576,8 @@
       20750,
       20751
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.75,
     "hideInAreas": [
       [
         3180, 3433,
@@ -2598,7 +2599,7 @@
     "uvType": "MODEL_XZ"
   },
   {
-    "description": "Ground Decoration - Tan Rock Uncolored",
+    "description": "Ground Decoration - Tan Rock colored",
     "baseMaterial": "DIRT_1",
     "objectIds": [
       324,
@@ -2620,8 +2621,16 @@
       11439,
       11440,
       12707,
-      12708
-    ]
+      12708,
+      15146,
+      15147,
+      15148,
+      15153,
+      15154,
+      15155
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.25
   },
   {
     "description": "ROCK_LIKE_OBJECT",
@@ -4511,5 +4520,33 @@
       524
     ],
     "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Stepping Stones",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      11768
+    ],
+    "uvType": "WORLD_XZ"
+  },
+  {
+    "description": "Objects - Rocks - Medium",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      5604,
+      5605,
+      5606,
+      15125,
+      15126,
+      15127,
+      15128,
+      15129,
+      15149,
+      15150,
+      15151,
+      15152
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.5
   }
 ]
