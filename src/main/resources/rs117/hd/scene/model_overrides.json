@@ -2479,6 +2479,8 @@
       10845,
       10846,
       10847,
+      11088,
+      11089,
       11090,
       11091,
       11092,
@@ -4631,8 +4633,63 @@
     "baseMaterial": "GRUNGE_2",
     "objectIds": [
       10952,
+      11122,
+      11123,
       11046
     ]
+  },
+  {
+    "description": "Sandstone Rocks",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      11386
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.4
+  },
+  {
+    "description": "Granite Rocks",
+    "baseMaterial": "ROCK_2",
+    "objectIds": [
+      11387
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.25
+  },
+  {
+    "description": "Kharidian Rocks",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      11084,
+      11085,
+      11086,
+      11087,
+      11093,
+      11094,
+      11095,
+      11096
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.4
+  },
+  {
+    "description": "Kharidian Sandstone",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      11099,
+      11100,
+      11101,
+      11102,
+      11103,
+      11104,
+      11105,
+      11106,
+      11107,
+      11108
+    ],
+    "inheritTileColorType": "OVERLAY",
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.6
   },
   {
     "description": "GuTanoth bridges",
@@ -5056,7 +5113,6 @@
       11093,
       11094,
       11095,
-      11096,
       11098,
       11190,
       11191,
