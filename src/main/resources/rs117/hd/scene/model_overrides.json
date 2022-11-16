@@ -2384,7 +2384,6 @@
       317,
       318,
       319,
-      320,
       321,
       329,
       330,
@@ -3594,5 +3593,13 @@
       26134,
       26135
     ]
+  },
+  {
+    "description": "Rock 320",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      320
+    ],
+    "uvType": "WORLD_XZ"
   }
 ]
