@@ -229,8 +229,6 @@ public enum Material
 	GRAVEL(p -> p
 		.setNormalMap(GRAVEL_N)
 		.setSpecular(0.6f,130)),
-	GRAVEL_LEGACY(p -> p
-		.replaceIf(GRAVEL, HdPluginConfig::useLegacyGravelTexture)),
 
 	DIRT_SHINY_1(DIRT_1, p -> p
 		.setSpecular(1.1f, 380)),
