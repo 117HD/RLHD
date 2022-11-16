@@ -225,7 +225,12 @@ public enum Material
 
 	DIRT_1,
 	DIRT_2,
-	GRAVEL,
+	GRAVEL_N,
+	GRAVEL(p -> p
+		.setNormalMap(GRAVEL_N)
+		.setSpecular(0.6f,130)),
+	GRAVEL_LEGACY(p -> p
+		.replaceIf(GRAVEL, HdPluginConfig::useLegacyGravelTexture)),
 
 	DIRT_SHINY_1(DIRT_1, p -> p
 		.setSpecular(1.1f, 380)),
@@ -245,6 +250,10 @@ public enum Material
 	ROCK_2,
 
 	CARPET,
+	FINE_CARPET(CARPET, p -> p
+			.setBrightness(1.4f)
+			.setTextureScale(0.5f,0.5f)
+	),
 
 	FALADOR_PATH_BRICK(p -> p
 		.setSpecular(0.3f, 30)),
@@ -336,6 +345,30 @@ public enum Material
 
 	WALL_STONE_N,
 	WALL_STONE(p -> p.setNormalMap(WALL_STONE_N)),
+	METALLIC_1,
+	METALLIC_1_SEMIGLOSS(METALLIC_1, p -> p
+			.setSpecular(0.3f, 80)
+	),
+	METALLIC_1_GLOSS(METALLIC_1, p -> p
+			.setSpecular(0.7f, 80)
+	),
+	METALLIC_1_HIGHGLOSS(METALLIC_1, p -> p
+			.setSpecular(1.1f, 80)
+	),
+	METALLIC_2(METALLIC_1, p -> p.setBrightness(1.8f)),
+	METALLIC_2_SEMIGLOSS(METALLIC_2, p -> p
+			.setSpecular(0.3f, 80)
+	),
+	METALLIC_2_GLOSS(METALLIC_2, p -> p
+			.setSpecular(0.7f, 80)
+	),
+	METALLIC_2_HIGHGLOSS(METALLIC_2, p -> p
+			.setSpecular(1.1f, 80)
+	),
+	METALLIC_NONE_GLOSS(NONE, p -> p
+			.setSpecular(0.7f, 80)
+	),
+	WATTLE_1,
 
 	// Seasonal
 	WINTER_WILLOW_LEAVES(p -> p

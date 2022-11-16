@@ -1236,6 +1236,9 @@
       1295,
       10823,
       37329,
+      16546,
+      16547,
+      16548,
       "EVERGREEN_2092",
       "MAGIC_TREE_10834",
       "MAPLE_TREE_10832",
@@ -1244,6 +1247,32 @@
       "TREE_1278",
       "WILLOW",
       "WILLOW_10833"
+    ]
+  },
+  {
+    "description": "Fallen Tree",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      9661,
+      9663
+    ]
+  },
+  {
+    "description": "DEAD_TREES",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      1282,
+      1286,
+      1297,
+      1383
+    ]
+  },
+  {
+    "description": "TREE_STUMP",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      1341,
+      4328
     ]
   },
   {
@@ -1259,6 +1288,15 @@
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
       7522
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "FARMING_PATCH_3",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      7517,
+      8173
     ],
     "uvType": "MODEL_XZ"
   },
@@ -1593,16 +1631,81 @@
       495,
       496,
       497,
-      501,
+      451,
+      452,
+      453,
+      454,
+      455,
+      456,
+      457,
+      458,
+      458,
+      459,
+      460,
+      461,
+      462,
+      463,
+      464,
+      465,
+      466,
+      467,
+      468,
+      469,
+      471,
+      472,
+      473,
+      474,
+      475,
+      476,
+      477,
+      478,
+      480,
+      481,
+      482,
+      483,
+      484,
+      485,
+      486,
+      487,
+      488,
+      489,
+      490,
+      491,
+      491,
+      492,
+      493,
+      494,
+      495,
+      496,
+      497,
+      498,
+      499,
       500,
+      501,
+      502,
+      503,
       504,
       505,
       506,
+      507,
+      508,
+      509,
+      510,
       511,
       512,
+      513,
+      514,
+      515,
+      516,
       517,
+      518,
       519,
       520,
+      526,
+      527,
+      528,
+      529,
+      531,
       9264,
       9265,
       9269,
@@ -1859,7 +1962,8 @@
       24022,
       24023,
       24024
-    ]
+    ],
+    "uvType": "MODEL_XZ"
   },
   {
     "description": "AL_KHARID_WALLS",
@@ -2286,6 +2390,29 @@
     "flatNormals": true
   },
   {
+    "description": "CASTLE_WARS_UNDERGROUND_WALLS",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      1417,
+      1434,
+      1435,
+      "CAVE_WALL"
+    ]
+  },
+  {
+    "description": "CASTLE_WARS_UNDERGROUND_ROCKS",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      314,
+      315,
+      316,
+      317,
+      318,
+      320,
+      321
+    ]
+  },
+  {
     "description": "CASTLE_WARS_DECORATION",
     "objectIds": [
       4435,
@@ -2392,9 +2519,6 @@
       332,
       333,
       334,
-      335,
-      336,
-      337,
       338,
       339,
       340,
@@ -2433,6 +2557,47 @@
     "uvType": "MODEL_XZ"
   },
   {
+    "description": "GROUND_DECORATION_DIRT_UNCOLORED",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [
+      176,
+      184,
+      185,
+      186,
+      320,
+      321,
+      4342,
+      4343,
+      4344,
+      7121,
+      7123,
+      7124,
+      7128,
+      20750,
+      20751
+    ],
+    "uvType": "MODEL_XZ",
+    "hideInAreas": [
+      [
+        3180, 3433,
+        3190, 3447
+      ]
+    ]
+  },
+  {
+    "description": "GROUND_OBJECT_DIRT_UNCOLORED",
+    "baseMaterial": "DIRT_1",
+    "objectIds": [
+      11190,
+      11191,
+      11192,
+      11193,
+      18474,
+      18478
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
     "description": "Ground Decoration - Tan Rock Uncolored",
     "baseMaterial": "DIRT_1",
     "objectIds": [
@@ -2444,10 +2609,26 @@
     "uvType": "MODEL_XZ"
   },
   {
+    "description": "GROUND_DECORATION_GRAY_ROCK_UNCOLORED",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      180,
+      335,
+      336,
+      337,
+      11438,
+      11439,
+      11440,
+      12707,
+      12708
+    ]
+  },
+  {
     "description": "ROCK_LIKE_OBJECT",
     "baseMaterial": "ROCK_1",
     "objectIds": [
       84,
+      179,
       3634,
       3635,
       3636,
@@ -2516,11 +2697,19 @@
     "description": "ROCK_CAVE_ENTRANCES",
     "baseMaterial": "ROCK_2",
     "objectIds": [
+      2852,
       "CAVE_ENTRANCE_11835",
       "CRACK_29627",
       "TUNNEL_6659"
     ],
     "flatNormals": true
+  },
+  {
+    "description": "DIRT_CAVE_ENTRANCES",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [
+      3213
+    ]
   },
   {
     "description": "CAVE_WALLS_BLEND",
@@ -2740,15 +2929,20 @@
   },
   {
     "description": "BEIGE_WALLS",
+    "baseMaterial": "GRUNGE_1",
     "objectIds": [
       436,
+      437,
+      438,
       441,
+      442,
       443,
-      455,
-      458,
-      461,
-      462,
-      477
+      444,
+      445,
+      446,
+      447,
+      448,
+      449
     ],
     "flatNormals": true
   },
@@ -2783,9 +2977,12 @@
     "description": "UNKNOWN_10",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
+      3708,
       3709,
+      3710,
       3724,
       3948,
+      3949,
       3950,
       "ROCKS_3803",
       "ROCKS_3804"
@@ -2831,14 +3028,16 @@
     "flatNormals": true
   },
   {
-    "description": "Hide rubble in Varrock west bank",
+    "description": "Hide rubble in Varrock west bank and texture other rubble",
+    "baseMaterial": "DIRT_1",
     "objectIds": [ 4342, 4343, 4344 ],
     "hideInAreas": [
       [
         3180, 3433,
         3190, 3447
       ]
-    ]
+    ],
+    "uvType": "MODEL_XY"
   },
   {
     "description": "WOODEN_PLANK_DOCKS",
@@ -2880,6 +3079,9 @@
       803,
       808,
       809,
+      810,
+      811,
+      812,
       11591,
       11592,
       11593,
@@ -3057,13 +3259,27 @@
     "uvType": "MODEL_XZ"
   },
   {
-    "description": "FENCES_2",
+    "description": "Single row fences",
     "baseMaterial": "DOCK_FENCE",
     "objectIds": [
+      2050,
+      2051,
+      2052,
+      2053,
+      2618,
       23848,
       23849,
       23850,
-      23851
+      23851,
+      23895,
+      23896,
+      23897,
+      23898,
+      23899,
+      24453,
+      24454,
+      24560,
+      24561
     ],
     "flatNormals": true
   },
@@ -3303,8 +3519,38 @@
     "uvType": "MODEL_XZ"
   },
   {
-    "description": "Fine Carpet",
+    "description": "Worn Carpet",
     "baseMaterial": "CARPET",
+    "objectIds": [
+      7481,
+      40304
+    ],
+    "uvType": "MODEL_XZ",
+    "flatNormals": true
+  },
+  {
+    "description": "Worn Carpet - Edges",
+    "baseMaterial": "CARPET",
+    "objectIds": [
+      7480,
+      40305
+    ],
+    "uvType": "MODEL_XZ",
+    "flatNormals": true
+  },
+  {
+    "description": "Worn Carpet - Coners",
+    "baseMaterial": "CARPET",
+    "objectIds": [
+      7447,
+      40306
+    ],
+    "uvType": "MODEL_XZ_MIRROR_A",
+    "flatNormals": true
+  },
+  {
+    "description": "Fine Carpet",
+    "baseMaterial": "FINE_CARPET",
     "objectIds": [
       925,
       926,
@@ -3312,6 +3558,20 @@
       928,
       929,
       930,
+      937,
+      938,
+      940,
+      941,
+      942,
+      943,
+      944,
+      945,
+      6812,
+      6813,
+      6814,
+      7435,
+      7436,
+      7437,
       25596,
       25597,
       25598,
@@ -3320,7 +3580,7 @@
       25680
     ],
     "uvType": "MODEL_XZ",
-    "uvScale": 0.5
+    "flatNormals": true
   },
   {
     "description": "Brass coat rack",
@@ -3422,8 +3682,25 @@
     "description": "Textured Ladder",
     "baseMaterial": "DOCK_FENCE",
     "objectIds": [
+      2147,
+      2148,
+      16679,
+      16683,
+      16684,
+      16685,
+      17026,
+      17384,
+      17385,
       17387,
       30367
+    ]
+  },
+  {
+    "description": "Textured - Crate 1",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      354,
+      357
     ]
   },
   {
@@ -3453,7 +3730,8 @@
     "description": "Falador - Wood Railing",
     "baseMaterial": "DOCK_FENCE",
     "objectIds": [
-      9585
+      9585,
+      12538
     ]
   },
   {
@@ -3488,6 +3766,7 @@
     "description": "Wooden Benches",
     "baseMaterial": "DOCK_FENCE",
     "objectIds": [
+      1106,
       5615,
       25601
     ]
@@ -3538,13 +3817,17 @@
     "description": "Wooden plank tables",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
-      25603
+      14851,
+      14852,
+      25603,
+      40223,
+      40224
     ],
     "uvType": "MODEL_XZ",
     "flatNormals": true
   },
   {
-    "description": "Wooden tables - Roubnd",
+    "description": "Wooden tables - Round",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       25733
@@ -3580,6 +3863,8 @@
     "description": "Ladder - Untextured",
     "baseMaterial": "DOCK_FENCE",
     "objectIds": [
+      11794,
+      11795,
       25606,
       26107
     ]
@@ -3631,5 +3916,600 @@
       26134,
       26135
     ]
+  },
+  {
+    "description": "West Ardougne Carpet",
+    "baseMaterial": "CARPET",
+    "objectIds": [
+      916,
+      917,
+      918,
+      5243
+    ],
+    "flatNormals": true,
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "East Ardounge House Walls",
+    "baseMaterial": "WATTLE_1",
+    "objectIds": [
+      1602,
+      1603,
+      1604,
+      1605,
+      1606,
+      1608
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "Candelabra",
+    "baseMaterial": "METALLIC_2_HIGHGLOSS",
+    "objectIds": [
+      202,
+      203,
+      7432
+    ]
+  },
+  {
+    "description": "Pillared Stone Wall",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      982,
+      983,
+      984,
+      985,
+      986
+    ]
+  },
+  {
+    "description": "MARBLE_STAIRS",
+    "baseMaterial": "MARBLE_3",
+    "objectIds": [
+      1893,
+      1894,
+      1895
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "BRIDGE_UNDERSIDE",
+    "baseMaterial": "MARBLE_1",
+    "objectIds": [
+      770
+    ]
+  },
+  {
+    "description": "Decorative Armor",
+    "baseMaterial": "METALLIC_2_HIGHGLOSS",
+    "objectIds": [
+      817,
+      5554,
+      25206
+    ]
+  },
+  {
+    "description": "STONE_WINDOWS",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      1646,
+      1938
+    ]
+  },
+  {
+    "description": "WALL_TORCHES",
+    "baseMaterial": "METALLIC_2_HIGHGLOSS",
+    "objectIds": [
+      196,
+      197
+    ]
+  },
+  {
+    "description": "WALL_SHIELD",
+    "baseMaterial": "METALLIC_2_HIGHGLOSS",
+    "objectIds": [
+      840
+    ]
+  },
+  {
+    "description": "MARBLE_STATUE_OF_KING",
+    "baseMaterial": "MARBLE_3_SEMIGLOSS",
+    "objectIds": [
+      563
+    ]
+  },
+  {
+    "description": "MARBLE_STATUE_BUST",
+    "baseMaterial": "MARBLE_3_SEMIGLOSS",
+    "objectIds": [
+      574,
+      575
+    ]
+  },
+  {
+    "description": "STONE_STAIRS_WOODEN_RAILS",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      15645,
+      15646,
+      15648,
+      15649,
+      15650,
+      16664,
+      16665,
+      35791
+    ]
+  },
+  {
+    "description": "METALLIC_PAINTINGS",
+    "baseMaterial": "METALLIC_1_GLOSS",
+    "objectIds": [
+      890,
+      891,
+      892,
+      893,
+      894
+    ]
+  },
+  {
+    "description": "Metallic Guilded Chest",
+    "baseMaterial": "METALLIC_2_HIGHGLOSS",
+    "objectIds": [
+      376,
+      26273
+    ]
+  },
+  {
+    "description": "Metallic Chest",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "objectIds": [
+      11735
+    ]
+  },
+  {
+    "description": "CANNON_BALL",
+    "baseMaterial": "METALLIC_2_HIGHGLOSS",
+    "objectIds": [
+      822
+    ]
+  },
+  {
+    "description": "CANNON",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      821,
+      7137
+    ]
+  },
+  {
+    "description": "METAL_FLAG_POLE",
+    "baseMaterial": "METALLIC_1_GLOSS",
+    "objectIds": [
+      861
+    ]
+  },
+  {
+    "description": "BATHTUB",
+    "baseMaterial": "METALLIC_2_HIGHGLOSS",
+    "objectIds": [
+      875
+    ]
+  },
+  {
+    "description": "BATH_PUMP",
+    "baseMaterial": "METALLIC_1_GLOSS",
+    "objectIds": [
+      871
+    ]
+  },
+  {
+    "description": "Metal Fence Gate",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      37,
+      39,
+      1548,
+      1568,
+      1569,
+      1571,
+      1572,
+      11721,
+      11722,
+      23866
+    ]
+  },
+  {
+    "description": "Metal Fence",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      20873,
+      20874,
+      24097
+    ]
+  },
+  {
+    "description": "Marble Fountain",
+    "baseMaterial": "MARBLE_1_SEMIGLOSS",
+    "objectIds": [
+      879
+    ]
+  },
+  {
+    "description": "Metallic Furnace",
+    "baseMaterial": "METALLIC_2_GLOSS",
+    "objectIds": [
+      24009,
+      24010,
+      24011
+    ]
+  },
+  {
+    "description": "Mysterious Statue",
+    "baseMaterial": "METALLIC_1",
+    "objectIds": [
+      24716
+    ]
+  },
+  {
+    "description": "Metal Lever",
+    "baseMaterial": "METALLIC_2_GLOSS",
+    "objectIds": [
+      33,
+      34,
+      1814
+    ]
+  },
+  {
+    "description": "Anvil",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      2097
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "Ground Hole Shortcuts",
+    "baseMaterial": "DIRT_1",
+    "objectIds": [
+      19519,
+      16520,
+      16529,
+      16530
+    ]
+  },
+  {
+    "description": "Wilderness Ditch",
+    "baseMaterial": "DIRT_1",
+    "objectIds": [
+      23261,
+      23262,
+      23263,
+      23264,
+      23265,
+      23266,
+      23267,
+      23268,
+      23269,
+      23270,
+      23271,
+      23272
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Wilderness Ditch Dirt clumps",
+    "baseMaterial": "DIRT_1",
+    "objectIds": [
+      23273
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Sewer Valve",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "objectIds": [
+      2844,
+      2845,
+      2846,
+      2847,
+      2848
+    ]
+  },
+  {
+    "description": "Wizard Tower and Bridge",
+    "baseMaterial": "MARBLE_3_SEMIGLOSS",
+    "objectIds": [
+      12662,
+      12663,
+      12664,
+      12665,
+      12666,
+      12667,
+      12668,
+      12669,
+      12670,
+      12671,
+      12672,
+      12673,
+      12674,
+      12675,
+      12676,
+      12677,
+      12678,
+      12679,
+      12680,
+      12681,
+      12682,
+      12683,
+      12684,
+      12685,
+      12686,
+      12687,
+      12688,
+      12689,
+      12690,
+      12691,
+      12692,
+      12693,
+      12694,
+      12695,
+      12696
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "Marble Staircase Spiral",
+    "baseMaterial": "MARBLE_3",
+    "objectIds": [
+      12536,
+      11792,
+      12537
+    ]
+  },
+  {
+    "description": "STONE Staircase Spiral",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      11789,
+      11790
+    ]
+  },
+  {
+    "description": "Metal Chimney",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      5098
+    ]
+  },
+  {
+    "description": "Black Knight Fortress Walls",
+    "baseMaterial": "ROCK_2",
+    "objectIds": [
+      14543
+    ]
+  },
+  {
+    "description": "Grave Dirt",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [
+      4136,
+      4137
+    ]
+  },
+  {
+    "description": "PoH Portal",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      15477,
+      15478,
+      15479,
+      15480,
+      15481,
+      15482
+    ]
+  },
+  {
+    "description": "Clocktower metal pipes",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "objectIds": [
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32
+    ]
+  },
+  {
+    "description": "Metal bars in wall",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "objectIds": [
+      1880,
+      1881
+    ]
+  },
+  {
+    "description": "Fire Remains",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      714
+    ]
+  },
+  {
+    "description": "Fire - Static object",
+    "baseMaterial": "WOOD_GRAIN_1",
+    "objectIds": [
+      26185
+    ]
+  },
+  {
+    "description": "Metal Lanturn",
+    "baseMaterial": "METALLIC_2_GLOSS",
+    "objectIds": [
+      205,
+      24172
+    ]
+  },
+  {
+    "description": "Butler's House",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      980
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "Wooden Door 1",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      1527,
+      1528,
+      1535,
+      1536,
+      1732,
+      1733,
+      1743,
+      2416,
+      2417,
+      5667,
+      11728,
+      11774,
+      11775,
+      11776,
+      11777,
+      11784,
+      11785,
+      11786,
+      11787,
+      23972,
+      23973,
+      24050,
+      24051,
+      24055,
+      24056,
+      24057,
+      24058,
+      24123,
+      24124,
+      24565,
+      24566,
+      24567,
+      24568,
+      25802,
+      25803,
+      25819,
+      25820,
+      26207
+    ],
+    "flatNormals": true,
+    "uvOrientation": 512,
+    "uvScale": 0.4
+  },
+  {
+    "description": "Wooden Door 2",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      1521,
+      1522,
+      1524,
+      1525
+    ],
+    "flatNormals": true,
+    "uvOrientation": 512,
+    "uvScale": 0.4
+  },
+  {
+    "description": "Wooden Door 3",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      1540,
+      1541
+    ],
+    "flatNormals": true,
+    "uvScale": 0.4
+  },
+  {
+    "description": "Wooden Door - Plank",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      2398,
+      11765,
+      11778,
+      11779,
+      11780,
+      44784,
+      44785
+    ],
+    "uvOrientation": 512,
+    "uvScale": 0.4,
+    "uvType": "MODEL_XY",
+    "flatNormals": true
+  },
+  {
+    "description": "Varrock Castle Doors",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      11772,
+      11773,
+      32463,
+      32464
+    ],
+    "flatNormals": true,
+    "uvScale": 0.4
+  },
+  {
+    "description": "Varrock Castle Railing",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      11793,
+      23852
+    ]
+  },
+  {
+    "description": "Varrock Castle and Museum Staircase",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      11797,
+      11798,
+      11799,
+      11807
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "Varrock - Saw Mill Walls",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      533,
+      23900,
+      23901,
+      23902
+    ],
+    "uvType": "MODEL_XY",
+    "flatNormals": true,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Varrock - Saw Mill floors",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      521,
+      522,
+      523
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Varrock - Saw Mill floors",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      521,
+      522,
+      523,
+      524
+    ],
+    "uvType": "MODEL_XZ"
   }
 ]
