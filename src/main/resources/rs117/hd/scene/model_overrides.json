@@ -2596,7 +2596,8 @@
       18474,
       18478
     ],
-    "uvType": "WORLD_XZ"
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.74
   },
   {
     "description": "Ground Decoration - Tan Rock colored",
@@ -2620,6 +2621,28 @@
     "uvType": "WORLD_XZ"
   },
   {
+    "description": "GROUND_DECORATION_SAND",
+    "baseMaterial": "SAND_1",
+    "objectIds": [
+      15634,
+      15635
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.4
+  },
+  {
+    "description": "GROUND_DECORATION_SNOW",
+    "baseMaterial": "SNOW_1",
+    "objectIds": [
+      559,
+      560,
+      561
+    ],
+    "uvScale": 0.75,
+    "uvType": "WORLD_XZ",
+    "inheritTileColorType": "OVERLAY"
+  },
+  {
     "description": "GROUND_DECORATION_GRAY_ROCK_UNCOLORED",
     "baseMaterial": "ROCK_1",
     "objectIds": [
@@ -2630,6 +2653,8 @@
       3702,
       3703,
       3704,
+      3720,
+      3721,
       11438,
       11439,
       11440,
@@ -2669,7 +2694,13 @@
       18300,
       18301,
       18302,
-      18303
+      18303,
+      18857,
+      18858,
+      18859,
+      18860,
+      18861,
+      18862
     ],
     "uvType": "WORLD_XZ",
     "uvScale": 0.25
@@ -2938,7 +2969,6 @@
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
       3669,
-      3714,
       3737,
       3738,
       3739,
@@ -3028,6 +3058,9 @@
     "description": "UNKNOWN_10",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
+      3705,
+      3706,
+      3707,
       3708,
       3709,
       3710,
@@ -3037,7 +3070,9 @@
       3950,
       "ROCKS_3803",
       "ROCKS_3804"
-    ]
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.74
   },
   {
     "description": "Guardians of the Rift entrance",
@@ -4581,6 +4616,18 @@
       5604,
       5605,
       5606,
+      3712,
+      3714,
+      3715,
+      3716,
+      3717,
+      3718,
+      3794,
+      3795,
+      3805,
+      3806,
+      3807,
+      3808,
       15125,
       15126,
       15127,
@@ -4590,6 +4637,20 @@
       15150,
       15151,
       15152
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Objects - Climing Rocks - Medium",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      16521,
+      16522,
+      16523,
+      16524,
+      16464,
+      19065
     ],
     "uvType": "WORLD_XZ",
     "uvScale": 0.5
