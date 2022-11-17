@@ -2528,8 +2528,6 @@
       3172,
       3173,
       3174,
-      3949,
-      3950,
       3204,
       4339,
       4340,
@@ -2554,7 +2552,8 @@
       10847
     ],
     "inheritTileColorType": "OVERLAY",
-    "uvType": "WORLD_XZ"
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.75
   },
   {
     "description": "GROUND_DECORATION_DIRT_UNCOLORED",
