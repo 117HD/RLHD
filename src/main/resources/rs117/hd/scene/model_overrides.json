@@ -4713,5 +4713,14 @@
     ],
     "uvType": "WORLD_XY",
     "uvScale": 0.25
+  },
+  {
+    "description": "Inconspicuous Rocks",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      28987
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.4
   }
 ]
