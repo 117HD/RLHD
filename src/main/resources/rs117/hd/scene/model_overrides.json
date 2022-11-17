@@ -2638,7 +2638,7 @@
       560,
       561
     ],
-    "uvScale": 0.75,
+    "uvScale": 0.25,
     "uvType": "WORLD_XZ",
     "inheritTileColorType": "OVERLAY"
   },
@@ -2666,6 +2666,9 @@
       15153,
       15154,
       15155,
+      15247,
+      15248,
+      15249,
       18275,
       18276,
       18277,
@@ -4654,5 +4657,25 @@
     ],
     "uvType": "WORLD_XZ",
     "uvScale": 0.5
+  },
+  {
+    "description": "Objects - Ice Rocks - Small",
+    "baseMaterial": "ICE_1",
+    "objectIds": [
+      6476,
+      6477
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Objects - Ice Rocks - Large",
+    "baseMaterial": "ICE_1",
+    "objectIds": [
+      6472,
+      6473
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.25
   }
 ]
