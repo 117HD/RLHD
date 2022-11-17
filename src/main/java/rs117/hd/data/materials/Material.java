@@ -369,7 +369,7 @@ public enum Material
 			.setSpecular(0.7f, 80)
 	),
 	WATTLE_1,
-	ICE_1(SNOW_1, p -> p
+	ICE_1(GRUNGE_2, p -> p
 			.setSpecular(1.1f,200)
 	),
 

@@ -2635,11 +2635,14 @@
     "objectIds": [
       559,
       560,
-      561
+      561,
+      10592,
+      10593,
+      10594
     ],
+    "inheritTileColorType": "OVERLAY",
     "uvScale": 0.25,
-    "uvType": "WORLD_XZ",
-    "inheritTileColorType": "OVERLAY"
+    "uvType": "WORLD_XZ"
   },
   {
     "description": "GROUND_DECORATION_GRAY_ROCK_UNCOLORED",
@@ -2654,6 +2657,15 @@
       3704,
       3720,
       3721,
+      9573,
+      9574,
+      9575,
+      9576,
+      9577,
+      9578,
+      9579,
+      9580,
+      9581,
       11438,
       11439,
       11440,
@@ -2726,17 +2738,10 @@
       5956,
       6672,
       6673,
-      11190,
-      11191,
-      11192,
-      11193,
       11931,
       11932,
       11934,
       12578,
-      12588,
-      12589,
-      12590,
       25077,
       25078,
       25079,
@@ -4630,6 +4635,9 @@
       3806,
       3807,
       3808,
+      12588,
+      12589,
+      12590,
       15125,
       15126,
       15127,
@@ -4662,7 +4670,8 @@
     "baseMaterial": "ICE_1",
     "objectIds": [
       6476,
-      6477
+      6477,
+      10593
     ],
     "uvType": "WORLD_XZ",
     "uvScale": 0.5
@@ -4671,10 +4680,34 @@
     "description": "Objects - Ice Rocks - Large",
     "baseMaterial": "ICE_1",
     "objectIds": [
+      1444,
+      1445,
+      1446,
+      1447,
       6472,
       6473
     ],
     "uvType": "WORLD_XZ",
+    "uvScale": 0.25
+  },
+  {
+    "description": "Objects - Snow Piles - Large",
+    "baseMaterial": "SNOW_4",
+    "objectIds": [
+      10590,
+      10591
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Objects - Ice Stalactite",
+    "baseMaterial": "ICE_1",
+    "objectIds": [
+      10602,
+      10604
+    ],
+    "uvType": "WORLD_XY",
     "uvScale": 0.25
   }
 ]
