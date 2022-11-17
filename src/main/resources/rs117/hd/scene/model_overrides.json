@@ -2557,7 +2557,7 @@
     "uvType": "WORLD_XZ"
   },
   {
-    "description": "GROUND_DECORATION_DIRT_COLORED",
+    "description": "GROUND_DECORATION_DIRT_UNCOLORED",
     "baseMaterial": "DIRT_2",
     "objectIds": [
       176,
@@ -2577,7 +2577,7 @@
       20751
     ],
     "uvType": "WORLD_XZ",
-    "uvScale": 0.75,
+    "uvScale": 0.44,
     "hideInAreas": [
       [
         3180, 3433,
@@ -2596,7 +2596,7 @@
       18474,
       18478
     ],
-    "uvType": "MODEL_XZ"
+    "uvType": "WORLD_XZ"
   },
   {
     "description": "Ground Decoration - Tan Rock colored",
@@ -2604,10 +2604,16 @@
     "objectIds": [
       324,
       325,
-      326
+      326,
+      4731,
+      4733,
+      4734,
+      5586,
+      5587,
+      5588
     ],
     "inheritTileColorType": "OVERLAY",
-    "uvType": "MODEL_XZ"
+    "uvType": "WORLD_XZ"
   },
   {
     "description": "GROUND_DECORATION_GRAY_ROCK_UNCOLORED",
@@ -2617,6 +2623,9 @@
       335,
       336,
       337,
+      3702,
+      3703,
+      3704,
       11438,
       11439,
       11440,
@@ -4200,18 +4209,19 @@
       23268,
       23269,
       23270,
-      23271,
-      23272
+      23271
     ],
-    "uvType": "MODEL_XZ"
+    "uvType": "WORLD_XZ"
   },
   {
     "description": "Wilderness Ditch Dirt clumps",
     "baseMaterial": "DIRT_1",
     "objectIds": [
+      23272,
       23273
     ],
-    "uvType": "MODEL_XZ"
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.75
   },
   {
     "description": "Sewer Valve",
@@ -4525,7 +4535,8 @@
     "description": "Stepping Stones",
     "baseMaterial": "ROCK_1",
     "objectIds": [
-      11768
+      11768,
+      16533
     ],
     "uvType": "WORLD_XZ"
   },
