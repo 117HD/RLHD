@@ -5532,5 +5532,14 @@
     ],
     "uvType": "WORLD_XZ",
     "uvScale": 0.6
+  },
+  {
+    "description": "Penguin Footprints",
+    "baseMaterial": "ICE_FLAT",
+    "objectIds": [
+      21247,
+      21248
+    ],
+    "disableShadows": true
   }
 ]
