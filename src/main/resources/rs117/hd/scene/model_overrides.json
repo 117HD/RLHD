@@ -2400,17 +2400,6 @@
     ]
   },
   {
-    "description": "CASTLE_WARS_UNDERGROUND_ROCKS",
-    "baseMaterial": "GRUNGE_1",
-    "objectIds": [
-      314,
-      316,
-      317,
-      318,
-      321
-    ]
-  },
-  {
     "description": "CASTLE_WARS_DECORATION",
     "objectIds": [
       4435,
