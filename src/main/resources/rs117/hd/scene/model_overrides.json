@@ -5282,6 +5282,7 @@
     "description": "Objects - Ice Rocks - Small",
     "baseMaterial": "ICE_1",
     "objectIds": [
+      3550,
       6476,
       6477,
       10593,
@@ -5302,7 +5303,7 @@
       21158
     ],
     "uvType": "WORLD_XZ",
-    "uvScale": 0.5
+    "uvScale": 0.6
   },
   {
     "description": "Objects - Ice Rocks - Large",
@@ -5316,6 +5317,11 @@
       6473,
       6474,
       6475,
+      21095,
+      21096,
+      21097,
+      21098,
+      21099,
       21101,
       21110,
       21111,
@@ -5331,7 +5337,9 @@
       21227,
       21228,
       21229,
-      21230
+      21230,
+      21231,
+      21233
     ],
     "uvType": "WORLD_XZ",
     "uvScale": 0.25
@@ -5353,7 +5361,8 @@
     "description": "Ground - Snow Piles - Small",
     "baseMaterial": "SNOW_2",
     "objectIds": [
-      21104
+      21104,
+      21074
     ],
     "uvType": "WORLD_XZ",
     "uvScale": 1.64
@@ -5450,6 +5459,8 @@
       21119,
       21157,
       21166,
+      21169,
+      21170,
       21171,
       21186,
       21187,
@@ -5493,5 +5504,25 @@
     ],
     "uvType": "MODEL_XZ",
     "uvScale": 0.33
+  },
+  {
+    "description": "Penguin Metal Doors",
+    "baseMaterial": "METALLIC_2",
+    "objectIds": [
+      21160,
+      21161
+    ],
+    "uvType": "MODEL_XY"
+  },
+  {
+    "description": "WALLS - ICE FENCE",
+    "baseMaterial": "ICE_1",
+    "objectIds": [
+      21017,
+      21088,
+      21172
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.6
   }
 ]
