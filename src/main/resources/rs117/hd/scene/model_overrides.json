@@ -5340,6 +5340,9 @@
     "description": "Ground - Snow Piles - Tiny",
     "baseMaterial": "SNOW_1",
     "objectIds": [
+      559,
+      560,
+      561,
       21103,
       21105
     ],
