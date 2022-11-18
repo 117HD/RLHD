@@ -24777,6 +24777,13 @@
     "duration": 1550,
     "range": 20,
     "objectIds": [
+      34749,
+      34752,
+      34753,
+      34754,
+      34755,
+      34756,
+      34757,
       "PORTAL_34748"
     ]
   },
@@ -30427,7 +30434,7 @@
   },
   {
     "description": "ALTER_EARTH_RUINS",
-    "height": 50,
+    "height": 100,
     "alignment": "CENTER",
     "radius": 300,
     "strength": 10.5,
@@ -30437,10 +30444,374 @@
       3
     ],
     "type": "PULSE",
-    "duration": 1695,
+    "duration": 1696,
     "range": 150,
     "objectIds": [
       34816
+    ]
+  },
+  {
+    "description": "ALTER_WATER_RUINS",
+    "height": 100,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 10.5,
+    "color": [
+      3,
+      148,
+      252
+    ],
+    "type": "PULSE",
+    "duration": 1696,
+    "range": 150,
+    "objectIds": [
+      34815
+    ]
+  },
+  {
+    "description": "ALTER_AIR_RUINS",
+    "height": 100,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 10.5,
+    "color": [
+      3,
+      148,
+      252
+    ],
+    "type": "PULSE",
+    "duration": 1696,
+    "range": 150,
+    "objectIds": [
+      34813
+    ]
+  },
+  {
+    "description": "ALTER_MIND_RUINS",
+    "height": 100,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 10.5,
+    "color": [
+      250,
+      108,
+      3
+    ],
+    "type": "PULSE",
+    "duration": 1696,
+    "range": 150,
+    "objectIds": [
+      34814
+    ]
+  },
+  {
+    "description": "ALTER_FIRE_RUINS",
+    "height": 100,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 10.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "PULSE",
+    "duration": 1696,
+    "range": 150,
+    "objectIds": [
+      34817
+    ]
+  },
+  {
+    "description": "ALTER_BODY_RUINS",
+    "height": 100,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 10.5,
+    "color": [
+      3,
+      148,
+      252
+    ],
+    "type": "PULSE",
+    "duration": 1696,
+    "range": 150,
+    "objectIds": [
+      34818
+    ]
+  },
+  {
+    "description": "ALTER_COSMIC_RUINS",
+    "height": 100,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 10.5,
+    "color": [
+      202,
+      25,
+      120
+    ],
+    "type": "PULSE",
+    "duration": 1696,
+    "range": 150,
+    "objectIds": [
+      34819
+    ]
+  },
+  {
+    "description": "ALTER_CHAOS_RUINS",
+    "height": 100,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 10.5,
+    "color": [
+      255,
+      216,
+      87
+    ],
+    "type": "PULSE",
+    "duration": 1696,
+    "range": 150,
+    "objectIds": [
+      34822
+    ]
+  },
+  {
+    "description": "ALTER_NATURE_RUINS",
+    "height": 100,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 10.5,
+    "color": [
+      87,
+      187,
+      87
+    ],
+    "type": "PULSE",
+    "duration": 1696,
+    "range": 150,
+    "objectIds": [
+      34821
+    ]
+  },
+  {
+    "description": "ALTER_LAW_RUINS",
+    "height": 100,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 10.5,
+    "color": [
+      3,
+      148,
+      252
+    ],
+    "type": "PULSE",
+    "duration": 1696,
+    "range": 150,
+    "objectIds": [
+      34820
+    ]
+  },
+  {
+    "description": "COSMIC_ALTER_LIGHT_BLASTS",
+    "height": 100,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 7.5,
+    "color": [
+      252,
+      252,
+      252
+    ],
+    "type": "PULSE",
+    "duration": 1696,
+    "range": 150,
+    "projectileIds": [
+      185
+    ]
+  },
+  {
+    "description": "ABYSSAL_RIFT",
+    "height": 150,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 10.5,
+    "color": [
+      120,
+      25,
+      202
+    ],
+    "type": "PULSE",
+    "duration": 1215,
+    "range": 300,
+    "objectIds": [
+      26149
+    ]
+  },
+  {
+    "description": "ABYSS_PORTAL_LAW_WATER",
+    "height": 150,
+    "alignment": "CENTER",
+    "radius": 120,
+    "strength": 75.5,
+    "color": [
+      20,
+      20,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 1694,
+    "range": 120,
+    "objectIds": [
+      25034,
+      25376
+    ]
+  },
+  {
+    "description": "ABYSS_PORTAL_CHAOS_MIND",
+    "height": 150,
+    "alignment": "CENTER",
+    "radius": 120,
+    "strength": 3.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "PULSE",
+    "duration": 1694,
+    "range": 120,
+    "objectIds": [
+      24976,
+      25379
+    ]
+  },
+  {
+    "description": "ABYSS_PORTAL_NATURE_EARTH",
+    "height": 150,
+    "alignment": "CENTER",
+    "radius": 120,
+    "strength": 21.5,
+    "color": [
+      87,
+      187,
+      87
+    ],
+    "type": "PULSE",
+    "duration": 1694,
+    "range": 120,
+    "objectIds": [
+      24972,
+      24975
+    ]
+  },
+  {
+    "description": "ABYSS_PORTAL_COSMIC",
+    "height": 150,
+    "alignment": "CENTER",
+    "radius": 120,
+    "strength": 6.5,
+    "color": [
+      180,
+      222,
+      87
+    ],
+    "type": "PULSE",
+    "duration": 1694,
+    "range": 120,
+    "objectIds": [
+      24974
+    ]
+  },
+  {
+    "description": "ABYSS_PORTAL_BLOOD",
+    "height": 150,
+    "alignment": "CENTER",
+    "radius": 120,
+    "strength": 4.5,
+    "color": [
+      255,
+      10,
+      10
+    ],
+    "type": "PULSE",
+    "duration": 1694,
+    "range": 120,
+    "objectIds": [
+      43848
+    ]
+  },
+  {
+    "description": "ABYSS_PORTAL_FIRE",
+    "height": 150,
+    "alignment": "CENTER",
+    "radius": 120,
+    "strength": 4.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "PULSE",
+    "duration": 1694,
+    "range": 120,
+    "objectIds": [
+      24971
+    ]
+  },
+  {
+    "description": "ABYSS_PORTAL_BODY",
+    "height": 150,
+    "alignment": "CENTER",
+    "radius": 120,
+    "strength": 90.5,
+    "color": [
+      3,
+      3,
+      150
+    ],
+    "type": "PULSE",
+    "duration": 1694,
+    "range": 120,
+    "objectIds": [
+      24973
+    ]
+  },
+  {
+    "description": "ABYSS_PORTAL_AIR_DEATH",
+    "height": 150,
+    "alignment": "CENTER",
+    "radius": 120,
+    "strength": 35.5,
+    "color": [
+      100,
+      130,
+      212
+    ],
+    "type": "PULSE",
+    "duration": 1694,
+    "range": 120,
+    "objectIds": [
+      25035,
+      25378
+    ]
+  },
+  {
+    "description": "ABYSS_PORTAL_SOUL",
+    "height": 150,
+    "alignment": "CENTER",
+    "radius": 120,
+    "strength": 60.5,
+    "color": [
+      80,
+      100,
+      242
+    ],
+    "type": "PULSE",
+    "duration": 1694,
+    "range": 120,
+    "objectIds": [
+      25377
     ]
   }
 ]
