@@ -3181,7 +3181,9 @@
       5238,
       5239,
       5455,
-      5456
+      5456,
+      5459,
+      5458
     ],
     "uvType": "MODEL_XZ"
   },
@@ -4543,5 +4545,16 @@
     "uvOrientation": 512,
     "uvType": "MODEL_XY",
     "flatNormals": true
+  },
+  {
+    "description": "Lighthouse broken bridge",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      3200,
+      4260,
+      4261,
+      4264
+    ],
+    "uvType": "MODEL_XZ"
   }
 ]
