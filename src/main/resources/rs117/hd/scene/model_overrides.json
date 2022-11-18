@@ -5278,7 +5278,22 @@
     "objectIds": [
       6476,
       6477,
-      10593
+      10593,
+      21135,
+      21136,
+      21137,
+      21138,
+      21148,
+      21149,
+      21150,
+      21151,
+      21152,
+      21153,
+      21154,
+      21155,
+      21156,
+      21157,
+      21158
     ],
     "uvType": "WORLD_XZ",
     "uvScale": 0.5
@@ -5294,7 +5309,23 @@
       6472,
       6473,
       6474,
-      6475
+      6475,
+      21101,
+      21110,
+      21111,
+      21120,
+      21121,
+      21122,
+      21123,
+      21124,
+      21219,
+      21220,
+      21221,
+      21222,
+      21227,
+      21228,
+      21229,
+      21230
     ],
     "uvType": "WORLD_XZ",
     "uvScale": 0.25
@@ -5407,11 +5438,20 @@
     "uvScale": 2.0
   },
   {
-    "description": "Ground - Snow Piles - Small",
-    "baseMaterial": "SNOW_2",
+    "description": "Ground - Snow Piles - Tiny",
+    "baseMaterial": "SNOW_1",
     "objectIds": [
       21104,
       21074
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 2.0
+  },
+  {
+    "description": "Ground - Snow Piles - Small",
+    "baseMaterial": "SNOW_2",
+    "objectIds": [
+      21104
     ],
     "uvType": "WORLD_XZ",
     "uvScale": 1.64
@@ -5431,6 +5471,11 @@
       21159,
       21199,
       21200,
+      21158,
+      21159,
+      21199,
+      21200,
+      21223,
       21224,
       26413,
       26485,
@@ -5642,5 +5687,71 @@
       21245
     ],
     "uvType": "WORLD_XZ"
+    "uvOrientation": 512,
+    "uvScale": 0.76
+  },
+  {
+    "description": "Firm Snowy Patch",
+    "baseMaterial": "SNOW_1",
+    "objectIds": [
+      21246
+    ],
+    "uvType": "WORLD_XZ"
+  },
+  {
+    "description": "Ice Walls",
+    "baseMaterial": "ICE_1",
+    "objectIds": [
+      21112,
+      21113,
+      21114,
+      21115,
+      21116,
+      21117,
+      21118,
+      21119,
+      21157,
+      21186,
+      21187,
+      21188,
+      21189,
+      21190,
+      21191,
+      21192,
+      21193,
+      21194,
+      21195,
+      21197,
+      21198,
+      21201,
+      21202,
+      21203,
+      21204,
+      21205,
+      21206,
+      21207,
+      21208,
+      21209,
+      21210,
+      21211,
+      21212,
+      21213,
+      21214,
+      21215,
+      21216,
+      21217,
+      21218
+    ],
+    "uvType": "MODEL_XY",
+    "uvScale": 0.33
+  },
+  {
+    "description": "Ice Walls Cap",
+    "baseMaterial": "ICE_1",
+    "objectIds": [
+      21196
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.33
   }
 ]
