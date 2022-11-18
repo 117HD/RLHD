@@ -30424,5 +30424,23 @@
     "objectIds": [
       18453
     ]
+  },
+  {
+    "description": "ALTER_EARTH_RUINS",
+    "height": 50,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 10.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "PULSE",
+    "duration": 1695,
+    "range": 150,
+    "objectIds": [
+      34816
+    ]
   }
 ]
