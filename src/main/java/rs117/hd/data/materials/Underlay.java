@@ -103,6 +103,9 @@ public enum Underlay {
         .saturation(4)
         .shiftLightness(3)),
 
+    // Iceberg
+    ICEBERG_TEXTURE(59, Area.ICEBERG, GroundMaterial.SNOW_1),
+
     // Zanaris
     COSMIC_ENTITYS_PLANE_ABYSS(Area.COSMIC_ENTITYS_PLANE, GroundMaterial.NONE, p -> p
         .lightness(0)
