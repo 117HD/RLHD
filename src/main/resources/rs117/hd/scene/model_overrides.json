@@ -2572,6 +2572,8 @@
       7460,
       7461,
       7462,
+      12586,
+      12587,
       20750,
       20751,
       25093,
@@ -2615,6 +2617,7 @@
       324,
       325,
       326,
+      341,
       4731,
       4733,
       4734,
@@ -4685,7 +4688,10 @@
     "objectIds": [
       11768,
       16466,
-      16533
+      16533,
+      23645,
+      23646,
+      23647
     ],
     "uvType": "WORLD_XZ"
   },
@@ -4693,6 +4699,7 @@
     "description": "Objects - Rocks - Medium",
     "baseMaterial": "ROCK_1",
     "objectIds": [
+      1797,
       5604,
       5605,
       5606,
@@ -4785,6 +4792,9 @@
     "description": "Objects - Climbing Rocks - Medium",
     "baseMaterial": "ROCK_1",
     "objectIds": [
+      2231,
+      2232,
+      2233,
       16521,
       16522,
       16523,
@@ -4866,6 +4876,7 @@
     "description": "Objects - Dirt Piles- Medium",
     "baseMaterial": "DIRT_2",
     "objectIds": [
+      2217,
       11931,
       11932,
       11933,
