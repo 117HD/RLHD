@@ -5306,6 +5306,17 @@
     "uvScale": 0.25
   },
   {
+    "description": "Ground - Snow Piles - Small",
+    "baseMaterial": "SNOW_2",
+    "objectIds": [
+      21103,
+      21104,
+      21105
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.75
+  },
+  {
     "description": "Objects - Snow Piles - Large",
     "baseMaterial": "SNOW_4",
     "objectIds": [
@@ -5332,7 +5343,11 @@
     "baseMaterial": "ICE_1",
     "objectIds": [
       10602,
-      10604
+      10604,
+      21139,
+      21140,
+      21223,
+      21334
     ],
     "uvType": "WORLD_XY",
     "uvScale": 0.25
