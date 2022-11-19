@@ -24766,7 +24766,7 @@
   },
   {
     "description": "RUNECRAFTING_ALTAR_PORTAL",
-    "height": 30,
+    "height": 32,
     "alignment": "CENTER",
     "radius": 500,
     "strength": 7.5,
@@ -30815,5 +30815,24 @@
     "objectIds": [
       25377
     ]
+  },
+  {
+    "description": "TALL_PALEBLUE_PILLAR_LIGHT",
+    "height": 243,
+    "alignment": "CENTER",
+    "radius": 120,
+    "strength": 60.5,
+    "color": [
+      75,
+      75,
+      150
+    ],
+    "type": "PULSE",
+    "duration": 1694,
+    "range": 120,
+    "objectIds": [
+      34794
+    ]
+
   }
 ]
