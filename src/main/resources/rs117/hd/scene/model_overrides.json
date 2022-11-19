@@ -5449,7 +5449,6 @@
       21053,
       21054,
       21055,
-      21056,
       21058,
       21059,
       21060,
@@ -5460,11 +5459,11 @@
       21065,
       21066,
       21067,
-      21068,
       21069,
       21070,
       21071,
       21072,
+      21077,
       21112,
       21113,
       21114,
@@ -5513,6 +5512,16 @@
     "uvScale": 0.33
   },
   {
+    "description": "Ice Walls - Rotated",
+    "baseMaterial": "ICE_1",
+    "objectIds": [
+      21056,
+      21057
+    ],
+    "uvType": "MODEL_YZ",
+    "uvScale": 0.33
+  },
+  {
     "description": "Ice Walls Cap",
     "baseMaterial": "ICE_1",
     "objectIds": [
@@ -5526,7 +5535,8 @@
     "baseMaterial": "METALLIC_2",
     "objectIds": [
       21160,
-      21161
+      21161,
+      21068
     ],
     "uvType": "MODEL_XY"
   },
@@ -5536,7 +5546,14 @@
     "objectIds": [
       21017,
       21088,
-      21172
+      21078,
+      21079,
+      21080,
+      21081,
+      21082,
+      21083,
+      21172,
+      21167
     ],
     "uvType": "WORLD_XZ",
     "uvScale": 0.6
@@ -5549,5 +5566,12 @@
       21248
     ],
     "disableShadows": true
+  },
+  {
+    "description": "Big Red Button",
+    "baseMaterial": "METALLIC_2",
+    "objectIds": [
+      21086
+    ]
   }
 ]
