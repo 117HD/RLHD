@@ -4843,6 +4843,7 @@
       31745,
       31746,
       31747,
+      31757,
       31758,
       31759,
       31760,
@@ -4931,7 +4932,6 @@
       30522,
       31781,
       31782,
-      31784,
       31785,
       31786,
       31787,
@@ -4946,6 +4946,15 @@
     "uvScale": 0.5
   },
   {
+    "description": "Objects - Mossy Rock - Rectangle",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      31784
+    ],
+    "uvType": "MODEL_XZ_MIRROR_B",
+    "uvScale": 0.35
+  },
+  {
     "description": "Objects - Mossy Rock - Large",
     "baseMaterial": "ROCK_1",
     "objectIds": [
@@ -4953,8 +4962,8 @@
       31788,
       31789
     ],
-    "uvType": "WORLD_YZ",
-    "uvScale": 0.5
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.44
   },
   {
     "description": "Ground Decoration - Ash Pile - Small",
