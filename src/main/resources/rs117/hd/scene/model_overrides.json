@@ -2698,14 +2698,15 @@
     "description": "ROCK_CAVE_ENTRANCES",
     "baseMaterial": "ROCK_2",
     "objectIds": [
-      2852,
       30176,
       30869,
       "CAVE_ENTRANCE_11835",
       "CRACK_29627",
       "TUNNEL_6659"
     ],
-    "flatNormals": true
+    "flatNormals": true,
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.5
   },
   {
     "description": "DIRT_CAVE_ENTRANCES",
@@ -4599,5 +4600,15 @@
     ],
     "uvType": "MODEL_XZ",
     "uvScale": 0.5
+  },
+  {
+    "description": "Objects - Ardougne Sewers - Rock Entrnace",
+    "baseMaterial": "ROCK_2",
+    "objectIds": [
+      2852
+    ],
+    "flatNormals": true,
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.67
   }
 ]
