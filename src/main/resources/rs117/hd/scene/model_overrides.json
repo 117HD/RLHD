@@ -2523,9 +2523,6 @@
       3615,
       3948,
       3950,
-      4339,
-      4340,
-      4341,
       7057,
       7103,
       7104,
@@ -5029,6 +5026,7 @@
     "description": "Ground Decoration - Grunge - Tiny - Colored",
     "baseMaterial": "GRUNGE_2",
     "objectIds": [
+      4340,
       3949
     ],
     "inheritTileColorType": "OVERLAY",
@@ -5052,6 +5050,17 @@
       "ROCKS_3803",
       "ROCKS_3804"
     ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.74
+  },
+  {
+    "description": "Ground Decoration - Grunge - Small - Colored",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      4339,
+      4341
+    ],
+    "inheritTileColorType": "OVERLAY",
     "uvType": "WORLD_XZ",
     "uvScale": 0.74
   }
