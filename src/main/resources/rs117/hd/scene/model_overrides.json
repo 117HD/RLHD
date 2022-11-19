@@ -2509,8 +2509,6 @@
       340,
       342,
       728,
-      729,
-      730,
       3169,
       3170,
       3171,
@@ -2526,9 +2524,6 @@
       7057,
       7103,
       7104,
-      7105,
-      7106,
-      7107,
       7120,
       7121,
       7122,
@@ -2685,7 +2680,6 @@
       2174,
       2383,
       3702,
-      3703,
       3704,
       3711,
       3720,
@@ -2814,6 +2808,7 @@
       179,
       336,
       2382,
+      3703,
       3750,
       5955,
       5958,
@@ -4676,7 +4671,7 @@
   },
   {
     "description": "Objects - Rocks - Medium",
-    "baseMaterial": "ROCK_1",
+    "baseMaterial": "ROCK_1_LIGHT",
     "objectIds": [
       1797,
       3634,
@@ -5026,6 +5021,7 @@
     "description": "Ground Decoration - Grunge - Tiny - Colored",
     "baseMaterial": "GRUNGE_2",
     "objectIds": [
+      729,
       4340,
       3949
     ],
@@ -5057,8 +5053,11 @@
     "description": "Ground Decoration - Grunge - Small - Colored",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
+      730,
       4339,
-      4341
+      4341,
+      7105,
+      7107
     ],
     "inheritTileColorType": "OVERLAY",
     "uvType": "WORLD_XZ",

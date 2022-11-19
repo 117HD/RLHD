@@ -247,6 +247,7 @@ public enum Material
 	GRUNGE_2,
 
 	ROCK_1,
+	ROCK_1_LIGHT(ROCK_1, p -> p.setBrightness(1.4f)),
 	ROCK_2,
 
 	CARPET,
