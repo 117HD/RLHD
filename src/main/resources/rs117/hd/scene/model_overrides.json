@@ -2627,6 +2627,7 @@
       5586,
       5587,
       5588,
+      10472,
       20176,
       20177,
       20178,
@@ -2720,6 +2721,7 @@
       13416,
       14391,
       14394,
+      14467,
       14482,
       14484,
       14485,
@@ -2740,6 +2742,8 @@
       15247,
       15248,
       15249,
+      15629,
+      15631,
       15798,
       15801,
       15802,
@@ -4776,6 +4780,10 @@
       14453,
       14454,
       14455,
+      14461,
+      14462,
+      14463,
+      14464,
       15125,
       15126,
       15127,
@@ -4868,6 +4876,12 @@
       3895,
       3896,
       3897,
+      27899,
+      29856,
+      29857,
+      29858,
+      30519,
+      30522,
       40552,
       40553,
       40554,
@@ -4877,5 +4891,35 @@
     ],
     "uvType": "WORLD_XZ",
     "uvScale": 0.5
+  },
+  {
+    "description": "Ground Decoration - Ash Pile - Small",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      14457,
+      14460
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.9
+  },
+  {
+    "description": "Objects - Ash Pile - Medium",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      30985
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Objects - Seaweed Rock - Medium",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      25158,
+      25159,
+      25160
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.25
   }
 ]
