@@ -4968,5 +4968,12 @@
     ],
     "uvType": "WORLD_XZ",
     "uvScale": 0.25
+  },
+  {
+    "description": "Ogre Benches",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      3376
+    ]
   }
 ]
