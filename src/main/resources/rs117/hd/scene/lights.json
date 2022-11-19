@@ -24790,7 +24790,7 @@
     ]
   },
   {
-    "description": "AIR_ALTAR_PILLAR",
+    "description": "WHITE_ALTAR_PILLAR",
     "height": 243,
     "alignment": "CENTER",
     "radius": 300,
@@ -24804,6 +24804,7 @@
     "duration": 502,
     "range": 20,
     "objectIds": [
+      34789,
       "MYSTERIOUS_GLOW_34790"
     ]
   },
@@ -24876,7 +24877,7 @@
     "height": 243,
     "alignment": "CENTER",
     "radius": 300,
-    "strength": 10,
+    "strength": 17,
     "color": [
       0,
       0,
