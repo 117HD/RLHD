@@ -24873,9 +24873,9 @@
   },
   {
     "description": "MAGIC_GUILD_ORBS_BLUE",
-    "height": 250,
+    "height": 243,
     "alignment": "CENTER",
-    "radius": 250,
+    "radius": 300,
     "strength": 10,
     "color": [
       0,
@@ -24883,7 +24883,7 @@
       255
     ],
     "type": "PULSE",
-    "duration": 500,
+    "duration": 502,
     "range": 20,
     "objectIds": [
       "MYSTERIOUS_GLOW_34791"
@@ -30833,6 +30833,5 @@
     "objectIds": [
       34794
     ]
-
   }
 ]
