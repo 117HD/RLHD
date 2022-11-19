@@ -24791,7 +24791,7 @@
   },
   {
     "description": "AIR_ALTAR_PILLAR",
-    "height": 250,
+    "height": 243,
     "alignment": "CENTER",
     "radius": 300,
     "strength": 10,
@@ -24801,7 +24801,7 @@
       255
     ],
     "type": "PULSE",
-    "duration": 500,
+    "duration": 502,
     "range": 20,
     "objectIds": [
       "MYSTERIOUS_GLOW_34790"
@@ -30817,7 +30817,7 @@
     ]
   },
   {
-    "description": "TALL_PALEBLUE_PILLAR_LIGHT",
+    "description": "LAW_ALTAR_PILLAR",
     "height": 243,
     "alignment": "CENTER",
     "radius": 120,
