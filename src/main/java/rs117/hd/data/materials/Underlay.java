@@ -104,9 +104,17 @@ public enum Underlay {
         .shiftLightness(3)),
 
     // Iceberg
-    ICEBERG_TEXTURE(59, Area.ICEBERG, GroundMaterial.SNOW_1),
-    // Iceberg
-    PENGUIN_BASE_TEXTURE(59, Area.PENGUIN_BASE, GroundMaterial.SNOW_1),
+    ICEBERG_TEXTURE(p -> p
+        .area(Area.ICEBERG)
+        .groundMaterial(GroundMaterial.SNOW_2)
+        .ids(59)
+        .shiftLightness(5)
+    ),
+    PENGUIN_BASE_TEXTURE(p -> p
+        .area(Area.PENGUIN_BASE)
+        .waterType(WaterType.ICE_FLAT)
+        .ids(59)
+    ),
 
     // Zanaris
     COSMIC_ENTITYS_PLANE_ABYSS(Area.COSMIC_ENTITYS_PLANE, GroundMaterial.NONE, p -> p
