@@ -2522,7 +2522,6 @@
       3614,
       3615,
       3948,
-      3949,
       3950,
       4339,
       4340,
@@ -2557,13 +2556,6 @@
     "objectIds": [
       176,
       184,
-      185,
-      186,
-      320,
-      321,
-      4342,
-      4343,
-      4344,
       7121,
       7123,
       7124,
@@ -2599,12 +2591,7 @@
     "description": "GROUND_OBJECT_DIRT_UNCOLORED",
     "baseMaterial": "DIRT_1",
     "objectIds": [
-      11190,
-      11191,
-      11192,
-      11193,
-      18474,
-      18478
+
     ],
     "uvType": "WORLD_XZ",
     "uvScale": 0.74
@@ -2617,9 +2604,6 @@
       178,
       322,
       323,
-      324,
-      325,
-      326,
       341,
       4731,
       4733,
@@ -2702,6 +2686,7 @@
       756,
       2173,
       2174,
+      2383,
       3702,
       3703,
       3704,
@@ -2832,7 +2817,6 @@
       179,
       336,
       2382,
-      2383,
       3750,
       5955,
       5958,
@@ -3228,18 +3212,6 @@
       4543, 4544, 4545, 4546
     ],
     "flatNormals": true
-  },
-  {
-    "description": "Hide rubble in Varrock west bank and texture other rubble",
-    "baseMaterial": "DIRT_1",
-    "objectIds": [ 4342, 4343, 4344 ],
-    "hideInAreas": [
-      [
-        3180, 3433,
-        3190, 3447
-      ]
-    ],
-    "uvType": "MODEL_XY"
   },
   {
     "description": "WOODEN_PLANK_DOCKS",
@@ -4895,23 +4867,6 @@
     "uvScale": 0.22
   },
   {
-    "description": "Objects - Dirt Piles- Medium",
-    "baseMaterial": "DIRT_2",
-    "objectIds": [
-      2217,
-      11931,
-      11932,
-      11933,
-      11934,
-      18892,
-      18893,
-      18894,
-      18895
-    ],
-    "uvType": "WORLD_XZ",
-    "uvScale": 0.5
-  },
-  {
     "description": "Objects - Mossy Rock - Medium",
     "baseMaterial": "ROCK_1",
     "objectIds": [
@@ -5001,5 +4956,109 @@
     "objectIds": [
       3376
     ]
+  },
+  {
+    "description": "Ground Decoration - Dirt Clump - Tiny - Uncolored",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [
+      4343
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.65,
+    "hideInAreas": [
+      [
+        3180, 3433,
+        3190, 3447
+      ]
+    ],
+    "disableShadows": true
+  },
+  {
+    "description": "Ground Decoration - Dirt Clump - Tiny - Colored",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [
+      185,
+      325
+    ],
+    "inheritTileColorType": "OVERLAY",
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.65,
+    "disableShadows": true
+  },
+  {
+    "description": "Ground Decoration - Dirt Clump - Small - Uncolored",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [
+      186,
+      321,
+      4342,
+      4344,
+      11190,
+      11191,
+      11192,
+      11193,
+      18474,
+      18478
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.65,
+    "hideInAreas": [
+      [
+        3180, 3433,
+        3190, 3447
+      ]
+    ]
+  },
+  {
+    "description": "Ground Decoration - Dirt Clump - Small - Colored",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [
+      324,
+      326
+    ],
+    "inheritTileColorType": "OVERLAY",
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.65
+  },
+  {
+    "description": "Objects - Dirt Piles - Medium",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [
+      2217,
+      5511,
+      5512,
+      11931,
+      11932,
+      11933,
+      11934,
+      18892,
+      18893,
+      18894,
+      18895
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Ground Decoration - Grunge - Tiny - Uncolored",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      320,
+      7106
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.65,
+    "disableShadows": true
+  },
+  {
+    "description": "Ground Decoration - Grunge - Tiny - Colored",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      3949
+    ],
+    "inheritTileColorType": "OVERLAY",
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.75,
+    "disableShadows": true
   }
 ]
