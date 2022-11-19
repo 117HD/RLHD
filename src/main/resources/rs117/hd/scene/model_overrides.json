@@ -2956,6 +2956,7 @@
       2123,
       4147,
       5008,
+      5013,
       5014,
       5046,
       5973,
@@ -2967,7 +2968,9 @@
       31482,
       43759,
       "CAVE_EXIT"
-    ]
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.5
   },
   {
     "description": "UNKNOWN_8",
@@ -3619,8 +3622,11 @@
       2810,
       26709,
       30177,
-      30374
-    ]
+      30374,
+      31766
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.5
   },
   {
     "description": "Motherload mine walls",
@@ -4566,5 +4572,32 @@
     "objectIds": [
       30180
     ]
+  },
+  {
+    "description": "Lumbridge Swamp Cave Hole",
+    "baseMaterial": "DIRT_1",
+    "objectIds": [
+      5947
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.85
+  },
+  {
+    "description": "Wyvern Shortcut",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      42506
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.42
+  },
+  {
+    "description": "Snow Caves",
+    "baseMaterial": "SNOW_2",
+    "objectIds": [
+      5012
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.5
   }
 ]
