@@ -2496,7 +2496,6 @@
       316,
       317,
       318,
-      319,
       329,
       330,
       331,
@@ -5032,6 +5031,7 @@
     "description": "Ground Decoration - Grunge - Small - Uncolored",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
+      319,
       3705,
       3706,
       3707,
