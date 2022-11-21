@@ -2698,6 +2698,7 @@
     "description": "ROCK_CAVE_ENTRANCES",
     "baseMaterial": "ROCK_2",
     "objectIds": [
+      12173,
       30176,
       30869,
       "CAVE_ENTRANCE_11835",
