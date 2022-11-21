@@ -3152,7 +3152,8 @@
       4262,
       8969,
       8970,
-      8971
+      8971,
+      25261
     ],
     "flatNormals": true
   },
@@ -3202,7 +3203,9 @@
       5238,
       5239,
       5455,
-      5456
+      5456,
+      5459,
+      5458
     ],
     "uvType": "MODEL_XZ"
   },
@@ -3265,7 +3268,15 @@
       4256,
       4257,
       4258,
-      4259
+      4259,
+      25253,
+      25254,
+      25255,
+      25256,
+      25257,
+      25258,
+      25259,
+      25260
     ],
     "uvType": "MODEL_XZ"
   },
@@ -4543,6 +4554,49 @@
       522,
       523,
       524
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "GuTanoth bridges",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      2830,
+      2831,
+      20010,
+      20011,
+      20012,
+      20013,
+      20014,
+      20015,
+      20016,
+      20017,
+      20018,
+      20019
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "GuTanoth bridges rope",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      20004,
+      20005,
+      20006,
+      20007
+    ],
+    "uvOrientation": 512,
+    "uvType": "MODEL_XY",
+    "flatNormals": true
+  },
+  {
+    "description": "Lighthouse broken bridge",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      3200,
+      4260,
+      4261,
+      4264
     ],
     "uvType": "MODEL_XZ"
   },

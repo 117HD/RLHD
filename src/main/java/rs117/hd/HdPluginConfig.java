@@ -666,18 +666,6 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
-	String KEY_LEGACY_GRAVEL_TEXTURE = "useLegacyGravelTexture";
-	@ConfigItem(
-		keyName = KEY_LEGACY_GRAVEL_TEXTURE,
-		name = "Legacy gravel texture",
-		description = "Use the gravel texture from the original release of 117 HD.",
-		position = 5,
-		section = miscellaneousSettings
-	)
-	default boolean useLegacyGravelTexture() {
-		return false;
-	}
-
 
 	/*====== Experimental settings ======*/
 

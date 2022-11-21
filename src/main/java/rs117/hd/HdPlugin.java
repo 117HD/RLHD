@@ -2237,7 +2237,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			case "textureResolution":
 			case "hdInfernalTexture":
 			case KEY_WINTER_THEME:
-			case KEY_LEGACY_GRAVEL_TEXTURE:
 				configHdInfernalTexture = config.hdInfernalTexture();
 				textureManager.freeTextures();
 			case "hideBakedEffects":
