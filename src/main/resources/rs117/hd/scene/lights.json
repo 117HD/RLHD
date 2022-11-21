@@ -24780,6 +24780,7 @@
     "range": 20,
     "objectIds": [
       34749,
+      34751,
       34752,
       34753,
       34754,
@@ -24793,7 +24794,7 @@
     "description": "WHITE_ALTAR_PILLAR",
     "height": 243,
     "alignment": "CENTER",
-    "radius": 300,
+    "radius": 120,
     "strength": 10,
     "color": [
       255,
@@ -24802,7 +24803,7 @@
     ],
     "type": "PULSE",
     "duration": 502,
-    "range": 20,
+    "range": 40,
     "objectIds": [
       34789,
       "MYSTERIOUS_GLOW_34790"
@@ -24876,7 +24877,7 @@
     "description": "MAGIC_GUILD_ORBS_BLUE",
     "height": 243,
     "alignment": "CENTER",
-    "radius": 300,
+    "radius": 120,
     "strength": 17,
     "color": [
       0,
@@ -24885,7 +24886,7 @@
     ],
     "type": "PULSE",
     "duration": 502,
-    "range": 20,
+    "range": 40,
     "objectIds": [
       "MYSTERIOUS_GLOW_34791"
     ]
@@ -30696,9 +30697,9 @@
     "radius": 120,
     "strength": 21.5,
     "color": [
-      87,
-      187,
-      87
+      50,
+      255,
+      50
     ],
     "type": "PULSE",
     "duration": 1694,
@@ -30829,10 +30830,28 @@
       150
     ],
     "type": "PULSE",
-    "duration": 1694,
-    "range": 120,
+    "duration": 502,
+    "range": 40,
     "objectIds": [
       34794
+    ]
+  },
+  {
+    "description": "BODY_ALTAR_PILLAR",
+    "height": 243,
+    "alignment": "CENTER",
+    "radius": 120,
+    "strength": 60.5,
+    "color": [
+      150,
+      75,
+      150
+    ],
+    "type": "PULSE",
+    "duration": 502,
+    "range": 40,
+    "objectIds": [
+      34793
     ]
   }
 ]
