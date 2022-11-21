@@ -2601,6 +2601,7 @@
     "description": "Ground Decoration - Tan Rock Uncolored",
     "baseMaterial": "DIRT_1",
     "objectIds": [
+      176,
       324,
       325,
       326
@@ -2697,12 +2698,16 @@
     "description": "ROCK_CAVE_ENTRANCES",
     "baseMaterial": "ROCK_2",
     "objectIds": [
-      2852,
+      12173,
+      30176,
+      30869,
       "CAVE_ENTRANCE_11835",
       "CRACK_29627",
       "TUNNEL_6659"
     ],
-    "flatNormals": true
+    "flatNormals": true,
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.5
   },
   {
     "description": "DIRT_CAVE_ENTRANCES",
@@ -2947,11 +2952,27 @@
     "flatNormals": true
   },
   {
-    "description": "UNKNOWN_7",
+    "description": "Grunge Caves",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
+      2123,
+      4147,
+      5008,
+      5013,
+      5014,
+      5046,
+      5973,
+      12770,
+      26567,
+      26568,
+      26569,
+      31481,
+      31482,
+      43759,
       "CAVE_EXIT"
-    ]
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.5
   },
   {
     "description": "UNKNOWN_8",
@@ -3604,8 +3625,21 @@
     "description": "Dirt Cave Entrance",
     "baseMaterial": "DIRT_2",
     "objectIds": [
-      30374
-    ]
+      2,
+      2804,
+      2805,
+      2806,
+      2807,
+      2808,
+      2809,
+      2810,
+      26709,
+      30177,
+      30374,
+      31766
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.5
   },
   {
     "description": "Motherload mine walls",
@@ -4565,5 +4599,71 @@
       4264
     ],
     "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Brimstils Cave",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      17209
+    ]
+  },
+  {
+    "description": "Eagles Peak Cave",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      19790
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "Dagannoth Cave",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      8929
+    ]
+  },
+  {
+    "description": "Desert Caves",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [
+      30180
+    ]
+  },
+  {
+    "description": "Lumbridge Swamp Cave Hole",
+    "baseMaterial": "DIRT_1",
+    "objectIds": [
+      5947
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.85
+  },
+  {
+    "description": "Wyvern Shortcut",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      42506
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.42
+  },
+  {
+    "description": "Snow Caves",
+    "baseMaterial": "SNOW_2",
+    "objectIds": [
+      5012
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Objects - Ardougne Sewers - Rock Entrnace",
+    "baseMaterial": "ROCK_2",
+    "objectIds": [
+      2852
+    ],
+    "flatNormals": true,
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.67
   }
 ]
