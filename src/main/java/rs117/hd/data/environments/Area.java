@@ -107,7 +107,7 @@ public enum Area
 		new AABB(3206, 3499, 3200, 3498), // Northwest Tower
 		new AABB(3205, 3500, 3201, 3500), // Northwest Tower
 		new AABB(3200, 3497, 3200, 3495), // Northwest Tower
-		new AABB(3200, 3274, 3200, 3470) // Southwest tower bump
+		new AABB(3200, 3474, 3200, 3470) // Southwest tower bump
 	),
 	VARROCK_CASTLE_DIRT_PATH_FIXES_1(
 		new AABB(3198,3500,3198, 3499),
