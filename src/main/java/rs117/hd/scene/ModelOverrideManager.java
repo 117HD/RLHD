@@ -72,10 +72,6 @@ public class ModelOverrideManager {
     }
 
     private void addEntry(long uuid, ModelOverride entry) {
-        ModelOverride old = modelOverrides.put(uuid, entry);
-        if (old != null)
-            log.debug("ID {} clashes between entries '{}' and '{}'", ModelHash.getIdOrIndex(uuid), entry.description, old.description);
-
         // Ensure there are no nulls in case of invalid configuration during development
         if (entry.baseMaterial == null)
             entry.baseMaterial = ModelOverride.NONE.baseMaterial;
@@ -87,8 +83,21 @@ public class ModelOverrideManager {
             entry.tzHaarRecolorType = ModelOverride.NONE.tzHaarRecolorType;
         if (entry.inheritTileColorType == null)
             entry.inheritTileColorType = ModelOverride.NONE.inheritTileColorType;
+        if (entry.hideInAreas == null)
+            entry.hideInAreas = new AABB[0];
 
+        ModelOverride old = modelOverrides.put(uuid, entry);
         modelsToHide.put(uuid, entry.hideInAreas);
+
+        if (Env.DEVELOPMENT && old != null) {
+            if (entry.hideInAreas.length > 0) {
+                log.warn("Replacing ID {} from '{}' with hideInAreas-override '{}'. This is likely a mistake...",
+                    ModelHash.getIdOrIndex(uuid), old.description, entry.description);
+            } else if (old.hideInAreas.length == 0) {
+                log.warn("Replacing ID {} from '{}' with '{}'. The first-mentioned override should be removed.",
+                    ModelHash.getIdOrIndex(uuid), old.description, entry.description);
+            }
+        }
     }
 
     public boolean shouldHideModel(long hash, int x, int z) {
