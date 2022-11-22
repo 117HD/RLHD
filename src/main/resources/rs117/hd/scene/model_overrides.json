@@ -5007,10 +5007,11 @@
     "objectIds": [
       320,
       3709,
+      3949,
       7106
     ],
     "uvType": "WORLD_XZ",
-    "uvScale": 0.78,
+    "uvScale": 0.68,
     "disableShadows": true
   },
   {
@@ -5019,12 +5020,11 @@
     "objectIds": [
       315,
       729,
-      4340,
-      3949
+      4340
     ],
     "inheritTileColorType": "OVERLAY",
     "uvType": "WORLD_XZ",
-    "uvScale": 0.75,
+    "uvScale": 0.68,
     "disableShadows": true
   },
   {
