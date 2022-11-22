@@ -245,6 +245,7 @@ public enum Material
 	GRUNGE_2,
 
 	ROCK_1,
+	ROCK_1_LIGHT(ROCK_1, p -> p.setBrightness(1.4f)),
 	ROCK_2,
 
 	CARPET,
@@ -367,6 +368,9 @@ public enum Material
 			.setSpecular(0.7f, 80)
 	),
 	WATTLE_1,
+	ICE_1(GRUNGE_2, p -> p
+			.setSpecular(1.1f,200)
+	),
 
 	// Seasonal
 	WINTER_WILLOW_LEAVES(p -> p

@@ -2400,19 +2400,6 @@
     ]
   },
   {
-    "description": "CASTLE_WARS_UNDERGROUND_ROCKS",
-    "baseMaterial": "GRUNGE_1",
-    "objectIds": [
-      314,
-      315,
-      316,
-      317,
-      318,
-      320,
-      321
-    ]
-  },
-  {
     "description": "CASTLE_WARS_DECORATION",
     "objectIds": [
       4435,
@@ -2506,13 +2493,9 @@
     "baseMaterial": "GRUNGE_2",
     "objectIds": [
       314,
-      315,
       316,
       317,
       318,
-      319,
-      320,
-      321,
       329,
       330,
       331,
@@ -2522,24 +2505,23 @@
       338,
       339,
       340,
+      342,
       728,
-      729,
-      730,
       3169,
       3170,
       3171,
       3172,
       3173,
       3174,
-      3949,
-      3950,
       3204,
+      3613,
+      3614,
+      3615,
+      3948,
+      3950,
       7057,
       7103,
       7104,
-      7105,
-      7106,
-      7107,
       7120,
       7121,
       7122,
@@ -2551,10 +2533,12 @@
       10844,
       10845,
       10846,
-      10847
+      10847,
+      18934
     ],
     "inheritTileColorType": "OVERLAY",
-    "uvType": "MODEL_XZ"
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.75
   },
   {
     "description": "GROUND_DECORATION_DIRT_UNCOLORED",
@@ -2562,21 +2546,30 @@
     "objectIds": [
       176,
       184,
-      185,
-      186,
-      320,
-      321,
-      4342,
-      4343,
-      4344,
       7121,
       7123,
       7124,
       7128,
+      7459,
+      7460,
+      7461,
+      7462,
+      12117,
+      12118,
+      12119,
+      12586,
+      12587,
       20750,
-      20751
+      20751,
+      25093,
+      25094,
+      25095,
+      25096,
+      25097,
+      25098
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.44,
     "hideInAreas": [
       [
         3180, 3433,
@@ -2588,26 +2581,94 @@
     "description": "GROUND_OBJECT_DIRT_UNCOLORED",
     "baseMaterial": "DIRT_1",
     "objectIds": [
-      11190,
-      11191,
-      11192,
-      11193,
-      18474,
-      18478
+
     ],
-    "uvType": "MODEL_XZ"
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.74
   },
   {
-    "description": "Ground Decoration - Tan Rock Uncolored",
+    "description": "Ground Decoration - dirt clump colored",
     "baseMaterial": "DIRT_1",
     "objectIds": [
       176,
+      177,
+      178,
+      322,
+      323,
       324,
       325,
-      326
+      326,
+      341,
+      4731,
+      4733,
+      4734,
+      5324,
+      5325,
+      5326,
+      5586,
+      5587,
+      5588,
+      9669,
+      9670,
+      9671,
+      9672,
+      9673,
+      9674,
+      10471,
+      10472,
+      10473,
+      12199,
+      13409,
+      20176,
+      20177,
+      20178,
+      20179,
+      20180,
+      20181,
+      20777,
+      20778,
+      20779
     ],
     "inheritTileColorType": "OVERLAY",
-    "uvType": "MODEL_XZ"
+    "uvType": "WORLD_XZ"
+  },
+  {
+    "description": "GROUND_DECORATION_SAND",
+    "baseMaterial": "SAND_1",
+    "objectIds": [
+      11101,
+      11102,
+      11103,
+      11104,
+      14914,
+      15634,
+      15635
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.4
+  },
+  {
+    "description": "GROUND_DECORATION_SNOW",
+    "baseMaterial": "SNOW_1",
+    "objectIds": [
+      559,
+      560,
+      561,
+      10592,
+      10593,
+      10594,
+      13411,
+      13412,
+      13413,
+      21103,
+      21104,
+      21105,
+      26397,
+      26398
+    ],
+    "inheritTileColorType": "OVERLAY",
+    "uvScale": 0.25,
+    "uvType": "WORLD_XZ"
   },
   {
     "description": "GROUND_DECORATION_GRAY_ROCK_UNCOLORED",
@@ -2615,14 +2676,126 @@
     "objectIds": [
       180,
       335,
-      336,
       337,
+      756,
+      2173,
+      2174,
+      2383,
+      3702,
+      3704,
+      3711,
+      3720,
+      3721,
+      3749,
+      3751,
+      5327,
+      5328,
+      5329,
+      5954,
+      5956,
+      5957,
+      9573,
+      9574,
+      9575,
+      9576,
+      9577,
+      9578,
+      9579,
+      9580,
+      9581,
       11438,
       11439,
       11440,
       12707,
-      12708
-    ]
+      12708,
+      12928,
+      12929,
+      12930,
+      12932,
+      13414,
+      13416,
+      14391,
+      14394,
+      14467,
+      14484,
+      14487,
+      14491,
+      14493,
+      14496,
+      14497,
+      14499,
+      15146,
+      15147,
+      15148,
+      15153,
+      15154,
+      15155,
+      15247,
+      15248,
+      15249,
+      15631,
+      15798,
+      15801,
+      15802,
+      15803,
+      16201,
+      16998,
+      16999,
+      17525,
+      17526,
+      17529,
+      18275,
+      18276,
+      18277,
+      18278,
+      18279,
+      18280,
+      18281,
+      18282,
+      18283,
+      18284,
+      18285,
+      18286,
+      18287,
+      18288,
+      18289,
+      18290,
+      18291,
+      18292,
+      18293,
+      18294,
+      18295,
+      18296,
+      18297,
+      18298,
+      18299,
+      18300,
+      18301,
+      18302,
+      18303,
+      18857,
+      18858,
+      18859,
+      18860,
+      18861,
+      18862,
+      19185,
+      22652,
+      22654,
+      22655,
+      23589,
+      25326,
+      25327,
+      25328,
+      28500,
+      28501,
+      28502,
+      28556,
+      28557,
+      28558
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.25
   },
   {
     "description": "ROCK_LIKE_OBJECT",
@@ -2630,30 +2803,24 @@
     "objectIds": [
       84,
       179,
-      3634,
-      3635,
-      3636,
-      3637,
-      3638,
-      3639,
-      5950,
-      5953,
-      5954,
+      336,
+      2382,
+      3703,
+      3750,
       5955,
-      5956,
+      5958,
       6672,
       6673,
-      11190,
-      11191,
-      11192,
-      11193,
-      11931,
-      11932,
-      11934,
       12578,
-      12588,
-      12589,
-      12590,
+      12596,
+      12705,
+      12931,
+      13415,
+      14483,
+      14492,
+      14494,
+      14495,
+      14498,
       25077,
       25078,
       25079,
@@ -2673,8 +2840,7 @@
       25112,
       25113,
       25114,
-      26640,
-      26641,
+      28555,
       39742,
       39743,
       39744,
@@ -2692,6 +2858,8 @@
       "STALAGMITES_25085",
       "WALL_25161"
     ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.5,
     "flatNormals": true
   },
   {
@@ -2892,7 +3060,6 @@
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
       3669,
-      3714,
       3737,
       3738,
       3739,
@@ -2924,13 +3091,6 @@
       "CRYPT"
     ],
     "flatNormals": true
-  },
-  {
-    "description": "UNKNOWN_5",
-    "baseMaterial": "GRUNGE_1",
-    "objectIds": [
-      29032
-    ]
   },
   {
     "description": "BEIGE_WALLS",
@@ -2995,21 +3155,6 @@
     "flatNormals": true
   },
   {
-    "description": "UNKNOWN_10",
-    "baseMaterial": "GRUNGE_1",
-    "objectIds": [
-      3708,
-      3709,
-      3710,
-      3724,
-      3948,
-      3949,
-      3950,
-      "ROCKS_3803",
-      "ROCKS_3804"
-    ]
-  },
-  {
     "description": "Guardians of the Rift entrance",
     "objectIds": [
       "BARRIER_43700",
@@ -3047,18 +3192,6 @@
       4543, 4544, 4545, 4546
     ],
     "flatNormals": true
-  },
-  {
-    "description": "Hide rubble in Varrock west bank and texture other rubble",
-    "baseMaterial": "DIRT_1",
-    "objectIds": [ 4342, 4343, 4344 ],
-    "hideInAreas": [
-      [
-        3180, 3433,
-        3190, 3447
-      ]
-    ],
-    "uvType": "MODEL_XY"
   },
   {
     "description": "WOODEN_PLANK_DOCKS",
@@ -3702,17 +3835,20 @@
       1454,
       1455
     ],
-    "uvType": "MODEL_YZ_MIRROR_A"
+    "uvType": "WORLD_XY",
+    "uvScale": 0.75
   },
   {
     "description": "Stalagmite - Tan",
     "baseMaterial": "STONE",
     "objectIds": [
+      12219,
       12575,
       12576,
       11184,
       11185,
-      11186
+      11186,
+      18479
     ]
   },
   {
@@ -4236,18 +4372,19 @@
       23268,
       23269,
       23270,
-      23271,
-      23272
+      23271
     ],
-    "uvType": "MODEL_XZ"
+    "uvType": "WORLD_XZ"
   },
   {
     "description": "Wilderness Ditch Dirt clumps",
     "baseMaterial": "DIRT_1",
     "objectIds": [
+      23272,
       23273
     ],
-    "uvType": "MODEL_XZ"
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.75
   },
   {
     "description": "Sewer Valve",
@@ -4665,5 +4802,464 @@
     "flatNormals": true,
     "uvType": "WORLD_XZ",
     "uvScale": 0.67
+  },
+  {
+    "description": "Stepping Stones",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      11768,
+      13504,
+      16466,
+      16533,
+      23645,
+      23646,
+      23647
+    ],
+    "uvType": "WORLD_XZ"
+  },
+  {
+    "description": "Objects - Rocks - Medium",
+    "baseMaterial": "ROCK_1_LIGHT",
+    "objectIds": [
+      1797,
+      3634,
+      3635,
+      3636,
+      3637,
+      3638,
+      3639,
+      5604,
+      5605,
+      5606,
+      3712,
+      3714,
+      3715,
+      3716,
+      3717,
+      3718,
+      3719,
+      3794,
+      3795,
+      3805,
+      3806,
+      3807,
+      3808,
+      4603,
+      4604,
+      4605,
+      4606,
+      5035,
+      5037,
+      5038,
+      5039,
+      5950,
+      5951,
+      5952,
+      5953,
+      5985,
+      5986,
+      5987,
+      11426,
+      11427,
+      11428,
+      11431,
+      11433,
+      11434,
+      11435,
+      12216,
+      12217,
+      12588,
+      12591,
+      12592,
+      12593,
+      12594,
+      12589,
+      12590,
+      12924,
+      12925,
+      12926,
+      12927,
+      14384,
+      14385,
+      14386,
+      14389,
+      14450,
+      14451,
+      14452,
+      14453,
+      14454,
+      14455,
+      14461,
+      14462,
+      14463,
+      14464,
+      15125,
+      15126,
+      15127,
+      15128,
+      15129,
+      15149,
+      15150,
+      15151,
+      15152,
+      15806,
+      15807,
+      15808,
+      15811,
+      15812,
+      19215,
+      22347,
+      22348,
+      22349,
+      26640,
+      26641,
+      26715,
+      26716,
+      27984,
+      27985,
+      27986,
+      27987,
+      27988,
+      27989,
+      30404,
+      31742,
+      31743,
+      31744,
+      31745,
+      31746,
+      31747,
+      31757,
+      31758,
+      31759,
+      31760,
+      34627,
+      34741,
+      42371,
+      42372,
+      42373,
+      42374,
+      42675,
+      42376
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Objects - Climbing Rocks - Medium",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      2231,
+      2232,
+      2233,
+      16521,
+      16522,
+      16523,
+      16524,
+      16464,
+      19065
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Inconspicuous Rocks",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      28961,
+      28966,
+      28969,
+      28973,
+      28976,
+      28979,
+      28987,
+      28994,
+      28997,
+      29000,
+      29032
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.22
+  },
+  {
+    "description": "Objects - Mossy Rock - Medium",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      3894,
+      3895,
+      3896,
+      3897,
+      4356,
+      4357,
+      5842,
+      5847,
+      27899,
+      29856,
+      29857,
+      29858,
+      30519,
+      30521,
+      30522,
+      31781,
+      31782,
+      31785,
+      31786,
+      31787,
+      40552,
+      40553,
+      40554,
+      40555,
+      40556,
+      40557
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Objects - Mossy Rock - Rectangle",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      31784
+    ],
+    "uvType": "MODEL_XZ_MIRROR_B",
+    "uvScale": 0.35
+  },
+  {
+    "description": "Objects - Mossy Rock - Large",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      31783,
+      31788,
+      31789
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.44
+  },
+  {
+    "description": "Ground Decoration - Ash Pile - Small",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      14457,
+      14460
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.9
+  },
+  {
+    "description": "Objects - Ash Pile - Medium",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      30985
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Objects - Seaweed Rock - Medium",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      25158,
+      25159,
+      25160
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.25
+  },
+  {
+    "description": "Ogre Benches",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      3376
+    ]
+  },
+  {
+    "description": "Ground Decoration - Dirt Clump - Tiny - Uncolored",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [
+      4343
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.65,
+    "hideInAreas": [
+      [
+        3180, 3433,
+        3190, 3447
+      ]
+    ],
+    "disableShadows": true
+  },
+  {
+    "description": "Ground Decoration - Dirt Clump - Tiny - Colored",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [
+      185,
+      325
+    ],
+    "inheritTileColorType": "OVERLAY",
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.65,
+    "disableShadows": true
+  },
+  {
+    "description": "Ground Decoration - Dirt Clump - Small - Uncolored",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [
+      186,
+      321,
+      4342,
+      4344,
+      11190,
+      11191,
+      11192,
+      11193,
+      18474,
+      18478
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.65,
+    "hideInAreas": [
+      [
+        3180, 3433,
+        3190, 3447
+      ]
+    ]
+  },
+  {
+    "description": "Ground Decoration - Dirt Clump - Small - Colored",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [
+      324,
+      326,
+      2376,
+      2377,
+      2378
+    ],
+    "inheritTileColorType": "OVERLAY",
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.65
+  },
+  {
+    "description": "Objects - Dirt Piles - Medium",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [
+      2217,
+      5511,
+      5512,
+      11604,
+      11605,
+      11931,
+      11932,
+      11933,
+      11934,
+      18892,
+      18893,
+      18894,
+      18895
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Ground Decoration - Grunge - Tiny - Uncolored",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      320,
+      3709,
+      3949,
+      7106
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.68,
+    "disableShadows": true
+  },
+  {
+    "description": "Ground Decoration - Grunge - Tiny - Colored",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      315,
+      729,
+      4340
+    ],
+    "inheritTileColorType": "OVERLAY",
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.68,
+    "disableShadows": true
+  },
+  {
+    "description": "Ground Decoration - Grunge - Small - Uncolored",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      319,
+      3705,
+      3706,
+      3707,
+      3708,
+      3710,
+      3724,
+      12910,
+      12911,
+      12912,
+      "ROCKS_3803",
+      "ROCKS_3804"
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.74
+  },
+  {
+    "description": "Ground Decoration - Grunge - Small - Colored",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      730,
+      4339,
+      4341,
+      7105,
+      7107
+    ],
+    "inheritTileColorType": "OVERLAY",
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.74
+  },
+  {
+    "description": "Ground Decoration - Rock - Tiny - Colored",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      14501,
+      15630
+    ],
+    "inheritTileColorType": "OVERLAY",
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.75,
+    "disableShadows": true
+  },
+  {
+    "description": "Ground Decoration - Rock - Tiny - Uncolored",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      14486
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.75,
+    "disableShadows": true
+  },
+  {
+    "description": "Ground Decoration - Rock - Small - Colored",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      14500,
+      14502,
+      15629
+    ],
+    "inheritTileColorType": "OVERLAY",
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.74
+  },
+  {
+    "description": "Ground Decoration - Rock - Small - Uncolored",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      14482,
+      14485
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.74
   }
 ]
