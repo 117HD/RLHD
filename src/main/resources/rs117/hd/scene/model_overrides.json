@@ -965,7 +965,6 @@
       "KOVAC_11472"
     ],
     "objectIds": [
-      2052,
       4502,
       17208,
       17324,
@@ -1055,8 +1054,6 @@
       "GATE_15511",
       "GATE_15514",
       "GATE_15515",
-      "GATE_2050",
-      "GATE_24560",
       "GENERAL_GRAARDOR_DISPLAY",
       "GENERAL_GRAARDOR_JR",
       "GIANT_ANVIL",
@@ -1277,9 +1274,10 @@
   },
   {
     "description": "FARMING_PATCH_1",
-    "baseMaterial": "DIRT_1",
+    "baseMaterial": "GRUNGE_1",
     "objectIds": [
-      7517
+      7517,
+      8173
     ],
     "uvType": "MODEL_XZ"
   },
@@ -1288,15 +1286,6 @@
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
       7522
-    ],
-    "uvType": "MODEL_XZ"
-  },
-  {
-    "description": "FARMING_PATCH_3",
-    "baseMaterial": "GRUNGE_1",
-    "objectIds": [
-      7517,
-      8173
     ],
     "uvType": "MODEL_XZ"
   },
@@ -1420,7 +1409,6 @@
     "description": "WOODEN_FENCES",
     "baseMaterial": "WOOD_GRAIN",
     "objectIds": [
-      980,
       981,
       991,
       992,
@@ -1544,14 +1532,11 @@
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
       23755,
-      23775,
       23776,
       23777,
       23778,
       23779,
-      23795,
-      23810,
-      23811
+      23795
     ],
     "flatNormals": true
   },
@@ -1609,7 +1594,7 @@
     "flatNormals": true
   },
   {
-    "description": "VARROCK_WALLS",
+    "description": "Walls",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
       436,
@@ -1805,17 +1790,7 @@
     "description": "FALADOR_WALLS",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
-      23744,
-      23806,
-      23826,
       23834,
-      23835,
-      23836,
-      23837,
-      23838,
-      23839,
-      23841,
-      23844,
       23994,
       23995,
       23996,
@@ -1920,13 +1895,6 @@
     "flatNormals": true
   },
   {
-    "description": "FALADOR_MINES_TORCH_WALL",
-    "baseMaterial": "GRUNGE_1",
-    "objectIds": [
-      1422
-    ]
-  },
-  {
     "description": "STATUE_OF_SARADOMIN_1",
     "baseMaterial": "MARBLE_1_SEMIGLOSS",
     "objectIds": [
@@ -1950,8 +1918,7 @@
       7387,
       10729,
       10730,
-      10731,
-      23885
+      10731
     ],
     "flatNormals": true
   },
@@ -2239,17 +2206,7 @@
     "description": "KOUREND_WALLS",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
-      23800,
-      23801,
-      23802,
-      23803,
-      23804,
-      23805,
-      23806,
-      23807,
-      23808,
-      23809,
-      23810
+      23800
     ],
     "flatNormals": true
   },
@@ -2305,7 +2262,6 @@
     "description": "SHAYZIEN_WALLS_ROCK",
     "baseMaterial": "ROCK_1",
     "objectIds": [
-      14543,
       14544,
       14545,
       14546,
@@ -2366,8 +2322,6 @@
     "description": "STATUE_BUST",
     "baseMaterial": "MARBLE_1_GLOSS",
     "objectIds": [
-      574,
-      575,
       576,
       26127,
       26128,
@@ -2388,16 +2342,6 @@
       "BATTLEMENTS_4447"
     ],
     "flatNormals": true
-  },
-  {
-    "description": "CASTLE_WARS_UNDERGROUND_WALLS",
-    "baseMaterial": "GRUNGE_1",
-    "objectIds": [
-      1417,
-      1434,
-      1435,
-      "CAVE_WALL"
-    ]
   },
   {
     "description": "CASTLE_WARS_DECORATION",
@@ -2423,7 +2367,6 @@
       2169,
       2170,
       2172,
-      2173,
       4332,
       "HEAP_OF_BRICKS",
       "STAIRCASE"
@@ -2523,13 +2466,9 @@
       7103,
       7104,
       7120,
-      7121,
       7122,
-      7123,
-      7124,
       7125,
       7126,
-      7128,
       10844,
       10845,
       10846,
@@ -2544,7 +2483,6 @@
     "description": "GROUND_DECORATION_DIRT_UNCOLORED",
     "baseMaterial": "DIRT_2",
     "objectIds": [
-      176,
       184,
       7121,
       7123,
@@ -2578,15 +2516,6 @@
     ]
   },
   {
-    "description": "GROUND_OBJECT_DIRT_UNCOLORED",
-    "baseMaterial": "DIRT_1",
-    "objectIds": [
-
-    ],
-    "uvType": "WORLD_XZ",
-    "uvScale": 0.74
-  },
-  {
     "description": "Ground Decoration - dirt clump colored",
     "baseMaterial": "DIRT_1",
     "objectIds": [
@@ -2595,9 +2524,6 @@
       178,
       322,
       323,
-      324,
-      325,
-      326,
       341,
       4731,
       4733,
@@ -3035,7 +2961,6 @@
   {
     "description": "UNKNOWN_2",
     "objectIds": [
-      1602,
       3089,
       3090,
       3091,
@@ -3077,10 +3002,6 @@
       "EXIT_3772",
       "EXIT_3773",
       "EXIT_3774",
-      "ROCKS_3805",
-      "ROCKS_3806",
-      "ROCKS_3807",
-      "ROCKS_3808",
       "TUNNEL",
       "WINDOW_3770"
     ]
@@ -3096,18 +3017,9 @@
     "description": "BEIGE_WALLS",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
-      436,
-      437,
-      438,
-      441,
       442,
-      443,
-      444,
-      445,
       446,
-      447,
-      448,
-      449
+      447
     ],
     "flatNormals": true
   },
@@ -3149,8 +3061,7 @@
   {
     "description": "UNKNOWN_9",
     "objectIds": [
-      3110,
-      3174
+      3110
     ],
     "flatNormals": true
   },
@@ -3199,7 +3110,6 @@
     "objectIds": [
       9513,
       9541
-
     ],
     "uvType": "MODEL_XZ"
   },
@@ -3314,7 +3224,6 @@
     "objectIds": [
       17103,
       17104,
-      17106,
       25618,
       25619,
       31589
@@ -3419,7 +3328,6 @@
     "objectIds": [
       41320,
       41321
-
     ],
     "uvType": "MODEL_XZ"
   },
@@ -3518,7 +3426,6 @@
       27657,
       27658,
       27660
-
     ],
     "uvType": "MODEL_XZ"
   },
@@ -3672,16 +3579,6 @@
       26118,
       26119
     ]
-  },
-  {
-    "description": "Carpet",
-    "baseMaterial": "CARPET",
-    "objectIds": [
-      916,
-      917,
-      918
-    ],
-    "uvType": "MODEL_XZ"
   },
   {
     "description": "Worn Carpet",
@@ -3979,13 +3876,6 @@
     "flatNormals": true
   },
   {
-    "description": "Stone Fountain",
-    "baseMaterial": "STONE_SEMIGLOSS",
-    "objectIds": [
-      879
-    ]
-  },
-  {
     "description": "Wooden Staircase",
     "baseMaterial": "DOCK_FENCE",
     "objectIds": [
@@ -4032,13 +3922,6 @@
       25616
     ],
     "flatNormals": true
-  },
-  {
-    "description": "Statue of a King",
-    "baseMaterial": "MARBLE_3_SEMIGLOSS",
-    "objectIds": [
-      563
-    ]
   },
   {
     "description": "Ladder - Untextured",
@@ -4672,16 +4555,6 @@
     "uvType": "MODEL_XY",
     "flatNormals": true,
     "uvScale": 0.6
-  },
-  {
-    "description": "Varrock - Saw Mill floors",
-    "baseMaterial": "WOOD_GRAIN_2",
-    "objectIds": [
-      521,
-      522,
-      523
-    ],
-    "uvType": "MODEL_XZ"
   },
   {
     "description": "Varrock - Saw Mill floors",

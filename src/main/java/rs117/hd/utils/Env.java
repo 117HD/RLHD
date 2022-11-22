@@ -9,6 +9,8 @@ import static rs117.hd.utils.ResourcePath.path;
 
 public class Env
 {
+	public static boolean DEVELOPMENT;
+
 	private static final HashMap<String, String> env = new HashMap<>(System.getenv());
 
 	public static boolean has(String variableName)
