@@ -20018,9 +20018,9 @@
   },
   {
     "description": "WALL_TORCH_MID_SMALL",
-    "height": 220,
+    "height": 210,
     "alignment": "CENTER",
-    "radius": 300,
+    "radius": 250,
     "strength": 7.5,
     "color": [
       252,
@@ -20028,8 +20028,8 @@
       3
     ],
     "type": "FLICKER",
-    "duration": 0,
-    "range": 20,
+    "duration": 16,
+    "range": 28,
     "objectIds": [
       23380,
       24173
