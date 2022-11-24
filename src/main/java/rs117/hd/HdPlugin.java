@@ -63,6 +63,7 @@ import rs117.hd.opengl.shader.Shader;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.Template;
 import rs117.hd.scene.*;
+import rs117.hd.scene.area.AreaData;
 import rs117.hd.scene.area.AreaManager;
 import rs117.hd.scene.area.HorizonTile;
 import rs117.hd.scene.lights.SceneLight;
@@ -1323,31 +1324,33 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			glBindBuffer(GL_UNIFORM_BUFFER, 0);
 		}
 
-		HorizonTile largeTile = areaManager.getCurrentArea().horizonTile;
-		if(areaManager.horizonAvailable()) {
+		AreaData area = areaManager.getCurrentArea();
+		if (area != null && area.horizonTile != null) {
+			HorizonTile horizonTile = area.horizonTile;
 			GpuIntBuffer b = modelBufferUnordered;
-			b.ensureCapacity(largeTile.getMaterialBelow() == null ?  16: 32);
-			if(largeTile.getMaterialBelow() != null) {
+			b.ensureCapacity(horizonTile.getMaterialBelow() == null ? 16 : 32);
+			int offset = 0;
+			if (horizonTile.getMaterialBelow() != null) {
 				b.getBuffer()
-						.put(renderBufferOffset)
-						.put(renderBufferOffset)
+						.put(offset)
+						.put(offset)
 						.put(2)
 						.put(renderBufferOffset)
 						.put(0)
 						.put(0).put(0).put(0);
 				renderBufferOffset += 6;
 				numModelsUnordered++;
+				offset += 6;
 			}
 			b.getBuffer()
-					.put(renderBufferOffset)
-					.put(renderBufferOffset)
+					.put(offset)
+					.put(offset)
 					.put(2)
 					.put(renderBufferOffset)
 					.put(0)
 					.put(0).put(0).put(0);
 			renderBufferOffset += 6;
 			numModelsUnordered++;
-
 		}
 
 		glBindBufferBase(GL_UNIFORM_BUFFER, 3, hUniformBufferLights.glBufferId);
@@ -2263,6 +2266,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			case KEY_WINTER_THEME:
 				configHdInfernalTexture = config.hdInfernalTexture();
 				textureManager.freeTextures();
+			case "extendhorizon":
+			case "areafiltering":
+				clientThread.invoke(() -> client.setGameState(GameState.LOADING));
+				break;
 			case "hideBakedEffects":
 			case "groundBlending":
 			case "groundTextures":

@@ -110,10 +110,33 @@ public interface HdPluginConfig extends Config
 	}
 
 	@ConfigItem(
+			keyName = "areafiltering",
+			name = "Area Filtering",
+			description = "Hide Areas That you are not supposed to see.",
+			position = 5,
+			section = generalSettings
+	)
+	default boolean filterAreas()
+	{
+		return true;
+	}
+	@ConfigItem(
+			keyName = "extendhorizon",
+			name = "Extend Horizon",
+			description = "Extend the Horizon so it does not cut off into black.",
+			position = 6,
+			section = generalSettings
+	)
+	default boolean extendHorizon()
+	{
+		return true;
+	}
+
+	@ConfigItem(
 		keyName = "unlockFps",
 		name = "Unlock FPS",
 		description = "Removes the 50 FPS cap for some game content, such as camera movement and dynamic lighting.",
-		position = 5,
+		position = 7,
 		section = generalSettings
 	)
 	default boolean unlockFps()
@@ -138,7 +161,7 @@ public interface HdPluginConfig extends Config
 			"If set to 'on', the game will attempt to match your monitor's refresh rate <b>exactly</b>,<br>" +
 			"but if it can't keep up, FPS will be <u>halved until it catches up</u>. This option is rarely desired.<br>" +
 			"Note, GPUs that don't support Adaptive VSync will silently fall back to 'on'.",
-		position = 6,
+		position = 8,
 		section = generalSettings
 	)
 	default SyncMode syncMode()
@@ -152,7 +175,7 @@ public interface HdPluginConfig extends Config
 		description =
 			"Controls the maximum number of frames per second.<br>" +
 			"This setting only applies if Unlock FPS is enabled, and VSync Mode is set to 'off'.",
-		position = 7,
+		position = 9,
 		section = generalSettings
 	)
 	@Range(
@@ -168,7 +191,7 @@ public interface HdPluginConfig extends Config
 		keyName = "colorBlindMode",
 		name = "Color Blindness",
 		description = "Adjust colors to make them more distinguishable for people with a certain type of color blindness.",
-		position = 8,
+		position = 10,
 		section = generalSettings
 	)
 	default ColorBlindMode colorBlindness()
@@ -180,7 +203,7 @@ public interface HdPluginConfig extends Config
 		keyName = "colorBlindnessIntensity",
 		name = "Color Blindness Intensity",
 		description = "Specifies how intense the color blindness adjustment should be.",
-		position = 9,
+		position = 11,
 		section = generalSettings
 	)
 	@Units(Units.PERCENT)
@@ -194,7 +217,7 @@ public interface HdPluginConfig extends Config
 		keyName = "flashingEffects",
 		name = "Flashing Effects",
 		description = "Whether to show rapid flashing effects, such as lightning, in certain areas.",
-		position = 10,
+		position = 12,
 		section = generalSettings
 	)
 	default boolean flashingEffects()
@@ -206,7 +229,7 @@ public interface HdPluginConfig extends Config
 		keyName = "saturation",
 		name = "Saturation",
 		description = "Controls the saturation of the final rendered image.",
-		position = 11,
+		position = 13,
 		section = generalSettings
 	)
 	default Saturation saturation()
@@ -218,7 +241,7 @@ public interface HdPluginConfig extends Config
 		keyName = "contrast",
 		name = "Contrast",
 		description = "Controls the contrast of the final rendered image.",
-		position = 12,
+		position = 14,
 		section = generalSettings
 	)
 	default Contrast contrast()
@@ -234,7 +257,7 @@ public interface HdPluginConfig extends Config
 		keyName = "brightness2",
 		name = "Brightness",
 		description = "Controls the brightness of environmental lighting.",
-		position = 13,
+		position = 14,
 		section = generalSettings
 	)
 	default int brightness() { return 20; }

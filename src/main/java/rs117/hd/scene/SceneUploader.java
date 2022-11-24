@@ -91,7 +91,7 @@ class SceneUploader
 
 		sceneId++;
 
-		if(areaManager.horizonAvailable()) {
+		if (areaManager.getCurrentArea() != null && areaManager.getCurrentArea().horizonTile != null) {
 			renderFakeTile(vertexBuffer, uvBuffer, normalBuffer);
 			//int size = largeTile.getMaterialBelow() == null ? 6 : 12;
 			//offset += size;
@@ -123,9 +123,9 @@ class SceneUploader
 		int size = 10000 * Perspective.LOCAL_TILE_SIZE;
 		int height = 0;
 
-		if(tile.getMaterialBelow() != null) {
+		if (tile.getMaterialBelow() != null) {
 			int materialData = sceneUploader.modelPusher.packMaterialData(Material.DIRT_1, false, ModelOverride.NONE);
-			int terrainData = sceneUploader.packTerrainData(600, WaterType.WATER, 0);
+			int terrainData = sceneUploader.packTerrainData(600, tile.getWaterType(), 0);
 
 			vertexBuffer.put(-size, height, size, color);
 			uvBuffer.put(materialData, -size, size, 0);

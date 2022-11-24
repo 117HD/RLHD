@@ -656,18 +656,6 @@
   {
     "aabbs": [
       [
-        3641,
-        3236,
-        3684,
-        3202
-      ]
-    ],
-    "description": "VER_SINHAZA",
-    "hideOtherRegions": true
-  },
-  {
-    "aabbs": [
-      [
         3522,
         9728,
         3581,
@@ -1031,9 +1019,10 @@
     "description": "WATER_ALTAR",
     "hideOtherRegions": true,
     "horizonTile": {
-      "material": "WATER_FLAT",
+      "material": "DIRT_1",
+      "materialBelow": "DIRT_1",
       "isOverlay": true,
-      "waterType": "WATER_FLAT",
+      "waterType": "WATER",
       "height": 0,
       "color": 127
     }
@@ -1144,10 +1133,10 @@
   {
     "aabbs": [
       [
-        3152,
-        4468,
-        3231,
-        4416
+        3166,
+        5734,
+        3185,
+        5720
       ]
     ],
     "description": "TOB_ROOM_MAIDEN",

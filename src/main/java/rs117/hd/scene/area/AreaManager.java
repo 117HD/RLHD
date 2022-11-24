@@ -8,6 +8,7 @@ import net.runelite.api.Client;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
+import rs117.hd.HdPluginConfig;
 import rs117.hd.data.environments.Area;
 import rs117.hd.utils.AABB;
 import rs117.hd.utils.Env;
@@ -47,12 +48,26 @@ public class AreaManager {
     @Inject
     private HdPlugin plugin;
 
+    @Inject
+    private HdPluginConfig config;
+
     public void startUp() {
         areas.clear();
         areaDataPath.watch(path -> {
             try {
                 AreaData[] temp = path.loadJson(plugin.getGson(), AreaData[].class);
                 Collections.addAll(areas, temp);
+                StringBuilder dfd = new StringBuilder("Area[] area = {" + System.lineSeparator());
+                for(AreaData area : areas) {
+                    for (AABB aabb : area.aabbs) {
+                        dfd.append("new Area(").append(aabb.minX).append(", ").append(aabb.minY).append(", ").append(aabb.maxX).append(" , ").append(aabb.maxY).append("), ").append(System.lineSeparator());
+
+                    }
+                }
+                dfd.append("};");
+
+                System.out.println(dfd);
+
                 log.debug("Loaded {} areas", areas.size());
             } catch (IOException ex) {
                 log.error("Failed to load areas: ", ex);
@@ -72,7 +87,7 @@ public class AreaManager {
     }
 
     public boolean shouldHide(int x, int z) {
-        if (currentArea == null) {
+        if (currentArea == null || !config.filterAreas()) {
             return false;
         }
 
@@ -89,10 +104,9 @@ public class AreaManager {
     }
 
     public boolean shouldHide(WorldPoint worldPoint) {
-        if (currentArea == null) {
+        if (currentArea == null || !config.filterAreas()) {
             return false;
         }
-
 
         if(currentArea.hideOtherRegions) {
             for (AABB aabbs : currentArea.aabbs) {
@@ -104,9 +118,4 @@ public class AreaManager {
 
         return false;
     }
-
-    public boolean horizonAvailable() {
-        return currentArea.horizonTile != null;
-    }
-
 }
