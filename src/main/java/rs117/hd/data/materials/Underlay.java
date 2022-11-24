@@ -110,11 +110,6 @@ public enum Underlay {
         .ids(59)
         .shiftLightness(5)
     ),
-    PENGUIN_BASE_TEXTURE(p -> p
-        .area(Area.PENGUIN_BASE)
-        .waterType(WaterType.ICE_FLAT)
-        .ids(59)
-    ),
 
     // Zanaris
     COSMIC_ENTITYS_PLANE_ABYSS(Area.COSMIC_ENTITYS_PLANE, GroundMaterial.NONE, p -> p

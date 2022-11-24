@@ -5553,7 +5553,7 @@
   },
   {
     "description": "WALLS - ICE FENCE",
-    "baseMaterial": "ICE_1",
+    "baseMaterial": "ICE_4",
     "objectIds": [
       21017,
       21088,
@@ -5566,8 +5566,7 @@
       21172,
       21167
     ],
-    "uvType": "WORLD_XZ",
-    "uvScale": 0.6
+    "uvType": "GEOMETRY"
   },
   {
     "description": "Penguin Footprints",
@@ -5584,5 +5583,13 @@
     "objectIds": [
       21086
     ]
+  },
+  {
+    "description": "Penguin Base Crack",
+    "baseMaterial": "SNOW_2",
+    "objectIds": [
+      21245
+    ],
+    "uvType": "WORLD_XZ"
   }
 ]
