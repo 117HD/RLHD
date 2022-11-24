@@ -30201,9 +30201,9 @@
   },
   {
     "description": "FALADOR_LANTERN",
-    "height": 170,
-    "alignment": "CENTER",
-    "radius": 400,
+    "height": 200,
+    "alignment": "FRONT",
+    "radius": 350,
     "strength": 7.5,
     "color": [
       252,
@@ -30211,8 +30211,8 @@
       3
     ],
     "type": "FLICKER",
-    "duration": 0,
-    "range": 20,
+    "duration": 14,
+    "range": 30,
     "objectIds": [
       24172
     ]
