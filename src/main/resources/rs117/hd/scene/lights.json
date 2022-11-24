@@ -30272,6 +30272,24 @@
     ]
   },
   {
+    "description": "COOKING_RANGE_HOSIDIUS",
+    "height": 43,
+    "alignment": "FRONTLEFT",
+    "radius": 200,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 40,
+    "objectIds": [
+      40164
+    ]
+  },
+  {
     "description": "DORGESHKAAN_TUNNEL_WALL_LAMP",
     "height": 212,
     "alignment": "FRONT",
