@@ -30854,5 +30854,23 @@
     "objectIds": [
       34793
     ]
+  },
+  {
+    "description": "MAGIC_TREE",
+    "height": 243,
+    "alignment": "CENTER",
+    "radius": 180,
+    "strength": 9,
+    "color": [
+      255,
+      255,
+      250
+    ],
+    "type": "PULSE",
+    "duration": 2752,
+    "range": 180,
+    "objectIds": [
+      10834
+    ]
   }
 ]
