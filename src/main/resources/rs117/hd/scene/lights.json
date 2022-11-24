@@ -28857,10 +28857,10 @@
   },
   {
     "description": "COOKING_RANGE",
-    "height": 100,
-    "alignment": "CENTER",
-    "radius": 350,
-    "strength": 6,
+    "height": 43,
+    "alignment": "FRONTLEFT",
+    "radius": 200,
+    "strength": 5,
     "color": [
       252,
       148,
@@ -28868,8 +28868,9 @@
     ],
     "type": "FLICKER",
     "duration": 0,
-    "range": 5,
+    "range": 40,
     "objectIds": [
+      40164,
       40296,
       40297
     ]
@@ -30269,24 +30270,6 @@
     "range": 20,
     "objectIds": [
       7183
-    ]
-  },
-  {
-    "description": "COOKING_RANGE_HOSIDIUS",
-    "height": 43,
-    "alignment": "FRONTLEFT",
-    "radius": 200,
-    "strength": 5,
-    "color": [
-      252,
-      148,
-      3
-    ],
-    "type": "FLICKER",
-    "duration": 0,
-    "range": 40,
-    "objectIds": [
-      40164
     ]
   },
   {
