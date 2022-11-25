@@ -5,11 +5,11 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
+import net.runelite.api.Constants;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
-import rs117.hd.data.environments.Area;
 import rs117.hd.utils.AABB;
 import rs117.hd.utils.Env;
 import rs117.hd.utils.ModelHash;
@@ -18,7 +18,6 @@ import rs117.hd.utils.ResourcePath;
 import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 
 import static rs117.hd.utils.ResourcePath.path;
@@ -57,17 +56,6 @@ public class AreaManager {
             try {
                 AreaData[] temp = path.loadJson(plugin.getGson(), AreaData[].class);
                 Collections.addAll(areas, temp);
-                StringBuilder dfd = new StringBuilder("Area[] area = {" + System.lineSeparator());
-                for(AreaData area : areas) {
-                    for (AABB aabb : area.aabbs) {
-                        dfd.append("new Area(").append(aabb.minX).append(", ").append(aabb.minY).append(", ").append(aabb.maxX).append(" , ").append(aabb.maxY).append("), ").append(System.lineSeparator());
-
-                    }
-                }
-                dfd.append("};");
-
-                System.out.println(dfd);
-
                 log.debug("Loaded {} areas", areas.size());
             } catch (IOException ex) {
                 log.error("Failed to load areas: ", ex);
@@ -75,47 +63,64 @@ public class AreaManager {
         });
     }
 
-    public void update(WorldPoint point) {
+    public AreaData update(WorldPoint point) {
         for (AreaData area : areas) {
-            for (AABB aabb : area.aabbs) {
-                if (aabb.contains(point)) {
-                    currentArea = area;
+            if (area.aabbs.length != 0) {
+                for (AABB aabb : area.aabbs) {
+                    if (aabb.contains(point)) {
+                        return area;
+                    }
+                }
+            } else if (area.region != -1) {
+                if (point.getRegionID() == area.region) {
+                    return area;
                 }
             }
         }
+        return null;
 
     }
 
-    public boolean shouldHide(int x, int z) {
+    public boolean shouldHideModels(int x, int z) {
         if (currentArea == null || !config.filterAreas()) {
             return false;
         }
 
         if(currentArea.hideOtherRegions) {
-            for (AABB aabbs : currentArea.aabbs) {
+            if (currentArea.aabbs.length != 0) {
+                for (AABB aabbs : currentArea.aabbs) {
+                    WorldPoint location = ModelHash.getWorldTemplateLocation(client, x, z);
+                    if (!aabbs.contains(location)) {
+                        return true;
+                    }
+                }
+            } else if (currentArea.region != -1 ){
                 WorldPoint location = ModelHash.getWorldTemplateLocation(client, x, z);
-                if (!aabbs.contains(location)) {
-                    return true;
-                }
+                return location.getRegionID() != currentArea.region;
             }
         }
 
         return false;
     }
 
-    public boolean shouldHide(WorldPoint worldPoint) {
+    public boolean shouldHideTiles(WorldPoint worldPoint) {
         if (currentArea == null || !config.filterAreas()) {
             return false;
         }
 
         if(currentArea.hideOtherRegions) {
-            for (AABB aabbs : currentArea.aabbs) {
-                if (!aabbs.contains(worldPoint)) {
-                    return true;
+            if (currentArea.aabbs.length != 0) {
+                for (AABB aabbs : currentArea.aabbs) {
+                    if (!aabbs.contains(worldPoint)) {
+                        return true;
+                    }
                 }
+            } else if (currentArea.region != -1 ){
+                return worldPoint.getRegionID() != currentArea.region;
             }
         }
 
         return false;
     }
+
 }

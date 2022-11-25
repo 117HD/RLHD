@@ -217,7 +217,7 @@ class SceneUploader
 	private void upload(Tile tile, GpuIntBuffer vertexBuffer, GpuFloatBuffer uvBuffer, GpuFloatBuffer normalBuffer)
 	{
 
-		if(areaManager.shouldHide(tile.getWorldLocation())) {
+		if(areaManager.shouldHideTiles(tile.getWorldLocation())) {
 			return;
 		}
 

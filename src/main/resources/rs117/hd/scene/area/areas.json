@@ -1,1 +1,1777 @@
-[]
+[
+  {
+    "aabbs": [
+      [
+        3135,
+        6207,
+        3391,
+        5952
+      ]
+    ],
+    "description": "Priffddinas Instance"
+  },
+  {
+    "aabbs": [
+      [
+        3455,
+        6206,
+        3646,
+        6016
+      ]
+    ]
+  },
+  {
+    "aabbs": [
+      [
+        3647,
+        6142,
+        3774,
+        6016
+      ]
+    ]
+  },
+  {
+    "aabbs": [
+      [
+        3583,
+        5696,
+        3455,
+        5823
+      ],
+      [
+        3455,
+        5760,
+        3392,
+        5951
+      ],
+      [
+        3519,
+        5951,
+        3456,
+        5824
+      ]
+    ],
+    "description": "Last Man Standing"
+  },
+  {
+    "aabbs": [
+      [
+        3327,
+        5951,
+        3455,
+        5889
+      ]
+    ],
+    "description": "Ardougne Instance"
+  },
+  {
+    "aabbs": [
+      [
+        3337,
+        5760,
+        3361,
+        5729
+      ]
+    ]
+  },
+  {
+    "aabbs": [
+      [
+        3337,
+        5727,
+        3360,
+        5697
+      ]
+    ]
+  },
+  {
+    "aabbs": [
+      [
+        3320,
+        5733,
+        3298,
+        5761
+      ]
+    ]
+  },
+  {
+    "aabbs": [
+      [
+        3321,
+        5700,
+        3298,
+        5730
+      ]
+    ]
+  },
+  {
+    "aabbs": [
+      [
+        3286,
+        5701,
+        3262,
+        5718
+      ]
+    ]
+  },
+  {
+    "aabbs": [
+      [
+        3261,
+        5753,
+        3285,
+        5735
+      ]
+    ]
+  },
+  {
+    "region": 12889
+  },
+  {
+    "region": 12633
+  },
+  {
+    "region": 12126
+  },
+  {
+    "region": 12124
+  },
+  {
+    "region": 10842
+  },
+  {
+    "aabbs": [
+      [
+        2562,
+        6207,
+        2682,
+        6084
+      ]
+    ]
+  },
+  {
+    "aabbs": [
+      [
+        2431,
+        6208,
+        2494,
+        6080
+      ]
+    ]
+  },
+  {
+    "aabbs": [
+      [
+        2111,
+        6151,
+        2047,
+        6184
+      ]
+    ],
+    "description": "Kourend Instance"
+  },
+  {
+    "region": 6997
+  },
+  {
+    "region": 6489
+  },
+  {
+    "region": 6745
+  },
+  {
+    "region": 6488
+  },
+  {
+    "region": 6744
+  },
+  {
+    "region": 6487
+  },
+  {
+    "region": 6743
+  },
+  {
+    "region": 6486
+  },
+  {
+    "region": 6742
+  },
+  {
+    "aabbs": [
+      [
+        1919,
+        5631,
+        2047,
+        5504
+      ]
+    ],
+    "description": "Gnome Stronghold Surface Instance"
+  },
+  {
+    "aabbs": [
+      [
+        2066,
+        5689,
+        2170,
+        5635
+      ]
+    ]
+  },
+  {
+    "aabbs": [
+      [
+        2432,
+        5759,
+        2495,
+        5664
+      ]
+    ],
+    "description": "Guardians of the Rift 1"
+  },
+  {
+    "aabbs": [
+      [
+        2367,
+        5695,
+        2431,
+        5599
+      ]
+    ],
+    "description": "Guardians of the Rift 2"
+  },
+  {
+    "aabbs": [
+      [
+        2367,
+        5695,
+        2431,
+        5599
+      ],
+      [
+        2367,
+        5695,
+        2431,
+        5599
+      ],
+      [
+        2367,
+        5695,
+        2431,
+        5599
+      ]
+    ],
+    "description": "Ruins of Camdozaal"
+  },
+  {
+    "region": 12119,
+    "description": "Ourania Cave"
+  },
+  {
+    "region": 11605,
+    "description": "Sorceress Garden"
+  },
+  {
+    "region": 12115,
+    "description": " "
+  },
+  {
+    "aabbs": [
+      [
+        3008,
+        5247,
+        3040,
+        5216
+      ]
+    ]
+  },
+  {
+    "aabbs": [
+      [
+        3041,
+        5216,
+        3070,
+        5247
+      ]
+    ]
+  },
+  {
+    "aabbs": [
+      [
+        3041,
+        5215,
+        3070,
+        5184
+      ]
+    ]
+  },
+  {
+    "aabbs": [
+      [
+        3008,
+        5215,
+        3040,
+        5184
+      ]
+    ]
+  },
+  {
+    "aabbs": [
+      [
+        3072,
+        5215,
+        3101,
+        5184
+      ]
+    ]
+  },
+  {
+    "aabbs": [
+      [
+        2847,
+        5233,
+        2943,
+        5186
+      ]
+    ]
+  },
+  {
+    "aabbs": [
+      [
+        2688,
+        5376,
+        2750,
+        5252
+      ]
+    ],
+    "description": "Dorgesh-Kaan"
+  },
+  {
+    "region": 10833
+  },
+  {
+    "region": 8789
+  },
+  {
+    "region": 7509
+  },
+  {
+    "region": 7508
+  },
+  {
+    "region": 9046,
+    "description": "Mouse Hole"
+  },
+  {
+    "region": 9558
+  },
+  {
+    "region": 9814,
+    "description": "Mouse Hole"
+  },
+  {
+    "aabbs": [
+      [
+        3263,
+        5469,
+        3291,
+        5440
+      ]
+    ],
+    "description": "RAIDS"
+  },
+  {
+    "aabbs": [
+      [
+        3295,
+        5472,
+        3321,
+        5440
+      ]
+    ],
+    "description": "RAIDS"
+  },
+  {
+    "aabbs": [
+      [
+        3330,
+        5470,
+        3359,
+        5440
+      ]
+    ],
+    "description": "RAIDS"
+  },
+  {
+    "aabbs": [
+      [
+        3263,
+        5393,
+        3268,
+        5388
+      ],
+      [
+        3269,
+        5405,
+        3292,
+        5376
+      ]
+    ],
+    "description": "RAIDS"
+  },
+  {
+    "aabbs": [
+      [
+        3297,
+        5408,
+        3325,
+        5343
+      ]
+    ],
+    "description": "RAIDS"
+  },
+  {
+    "aabbs": [
+      [
+        3328,
+        5408,
+        3359,
+        5376
+      ]
+    ],
+    "description": "RAIDS"
+  },
+  {
+    "aabbs": [
+      [
+        3328,
+        5342,
+        3360,
+        5311
+      ]
+    ],
+    "description": "RAIDS"
+  },
+  {
+    "aabbs": [
+      [
+        3328,
+        5371,
+        3361,
+        5343
+      ]
+    ],
+    "description": "RAIDS"
+  },
+  {
+    "aabbs": [
+      [
+        3263,
+        5342,
+        3294,
+        5312
+      ]
+    ],
+    "description": "RAIDS"
+  },
+  {
+    "aabbs": [
+      [
+        3263,
+        5375,
+        3294,
+        5343
+      ]
+    ],
+    "description": "RAIDS"
+  },
+  {
+    "aabbs": [
+      [
+        3297,
+        5342,
+        3326,
+        5310
+      ]
+    ],
+    "description": "RAIDS"
+  },
+  {
+    "aabbs": [
+      [
+        3263,
+        5310,
+        3294,
+        5279
+      ]
+    ],
+    "description": "RAIDS"
+  },
+  {
+    "aabbs": [
+      [
+        3296,
+        5309,
+        3326,
+        5278
+      ]
+    ],
+    "description": "RAIDS"
+  },
+  {
+    "aabbs": [
+      [
+        3328,
+        5310,
+        3360,
+        5280
+      ]
+    ],
+    "description": "RAIDS"
+  },
+  {
+    "aabbs": [
+      [
+        3330,
+        5278,
+        3359,
+        5248
+      ]
+    ],
+    "description": "RAIDS"
+  },
+  {
+    "aabbs": [
+      [
+        3262,
+        5278,
+        3295,
+        5247
+      ]
+    ],
+    "description": "RAIDS"
+  },
+  {
+    "aabbs": [
+      [
+        3295,
+        5278,
+        3325,
+        5248
+      ]
+    ],
+    "description": "RAIDS"
+  },
+  {
+    "aabbs": [
+      [
+        3295,
+        5278,
+        3325,
+        5184
+      ]
+    ],
+    "description": "RAIDS"
+  },
+  {
+    "aabbs": [
+      [
+        3264,
+        5247,
+        3291,
+        5214
+      ]
+    ],
+    "description": "RAIDS"
+  },
+  {
+    "aabbs": [
+      [
+        3262,
+        5211,
+        3290,
+        5183
+      ]
+    ],
+    "description": "RAIDS"
+  },
+  {
+    "aabbs": [
+      [
+        3329,
+        5244,
+        3361,
+        5213
+      ]
+    ],
+    "description": "RAIDS"
+  },
+  {
+    "aabbs": [
+      [
+        3328,
+        5211,
+        3360,
+        5185
+      ]
+    ],
+    "description": "RAIDS"
+  },
+  {
+    "aabbs": [
+      [
+        3266,
+        5181,
+        3291,
+        5151
+      ]
+    ],
+    "description": "RAIDS"
+  },
+  {
+    "aabbs": [
+      [
+        3294,
+        5182,
+        3326,
+        5151
+      ]
+    ],
+    "description": "RAIDS"
+  },
+  {
+    "aabbs": [
+      [
+        3264,
+        5149,
+        3291,
+        5120
+      ]
+    ],
+    "description": "RAIDS"
+  },
+  {
+    "aabbs": [
+      [
+        2372,
+        5183,
+        2431,
+        5125
+      ],
+      [
+        2432,
+        5183,
+        2558,
+        5056
+      ]
+    ],
+    "description": "TzHaar Region"
+  },
+  {
+    "region": 9551,
+    "description": "Fight Pits"
+  },
+  {
+    "region": 9295,
+    "description": "Witchaven Dungeon"
+  },
+  {
+    "aabbs": [
+      [
+        2508,
+        5630,
+        2525,
+        5529
+      ]
+    ],
+    "description": "Train Tunnel"
+  },
+  {
+    "region": 9812,
+    "description": "Goblin Village Instance"
+  },
+  {
+    "region": 9043,
+    "description": "The Inferno"
+  },
+  {
+    "region": 8530,
+    "description": "SoS Pestilence"
+  },
+  {
+    "region": 8017,
+    "description": "SoS Famine"
+  },
+  {
+    "region": 7505,
+    "description": "SoS War"
+  },
+  {
+    "region": 7297,
+    "description": "SoS Death"
+  },
+  {
+    "region": 7760,
+    "description": "Elemental Workshop - Basement"
+  },
+  {
+    "aabbs": [
+      [
+        1728,
+        5250,
+        1788,
+        5131
+      ]
+    ],
+    "description": "Mole Lair"
+  },
+  {
+    "region": 6995,
+    "description": "Ancient Cavern 1"
+  },
+  {
+    "region": 6483,
+    "description": "Ancient Cavern 2"
+  },
+  {
+    "aabbs": [
+      [
+        2175,
+        5042,
+        2112,
+        5183
+      ],
+      [
+        2176,
+        5183,
+        2239,
+        5120
+      ]
+    ]
+  },
+  {
+    "aabbs": [
+      [
+        2441,
+        5047,
+        2476,
+        5014
+      ]
+    ],
+    "description": "Trekking"
+  },
+  {
+    "aabbs": [
+      [
+        2399,
+        5054,
+        2428,
+        5024
+      ]
+    ],
+    "description": "Trekking"
+  },
+  {
+    "aabbs": [
+      [
+        2385,
+        5024,
+        2409,
+        5000
+      ]
+    ],
+    "description": "Trekking"
+  },
+  {
+    "aabbs": [
+      [
+        2371,
+        5054,
+        2396,
+        5025
+      ]
+    ],
+    "description": "Trekking"
+  },
+  {
+    "aabbs": [
+      [
+        2334,
+        5053,
+        2365,
+        5025
+      ]
+    ],
+    "description": "Trekking"
+  },
+  {
+    "aabbs": [
+      [
+        2305,
+        5053,
+        2330,
+        5027
+      ]
+    ],
+    "description": "Trekking"
+  },
+  {
+    "aabbs": [
+      [
+        2320,
+        5023,
+        2342,
+        5000
+      ]
+    ],
+    "description": "Trekking"
+  },
+  {
+    "aabbs": [
+      [
+        2270,
+        5052,
+        2296,
+        5025
+      ]
+    ],
+    "description": "Trekking"
+  },
+  {
+    "aabbs": [
+      [
+        2244,
+        5053,
+        2267,
+        5026
+      ]
+    ],
+    "description": "Trekking"
+  },
+  {
+    "aabbs": [
+      [
+        2256,
+        5023,
+        2279,
+        5002
+      ]
+    ],
+    "description": "Trekking"
+  },
+  {
+    "aabbs": [
+      [
+        2206,
+        5053,
+        2233,
+        5027
+      ]
+    ],
+    "description": "Trekking"
+  },
+  {
+    "aabbs": [
+      [
+        2179,
+        5053,
+        2202,
+        5027
+      ]
+    ],
+    "description": "Trekking"
+  },
+  {
+    "aabbs": [
+      [
+      ]
+    ],
+    "description": "Trekking"
+  },
+  {
+    "aabbs": [
+      [
+        2189,
+        5024,
+        2214,
+        5002
+      ]
+    ],
+    "description": "Trekking"
+  },
+  {
+    "aabbs": [
+      [
+        2112,
+        4927,
+        2156,
+        4895
+      ]
+    ],
+    "description": "Draynor Instance"
+  },
+  {
+    "aabbs": [
+      [
+        2077,
+        5049,
+        2104,
+        5031
+      ]
+    ],
+    "description": "Trekking"
+  },
+  {
+    "aabbs": [
+      [
+        2079,
+        5025,
+        2099,
+        5001
+      ]
+    ],
+    "description": "Trekking"
+  },
+  {
+    "aabbs": [
+      [
+        2054,
+        5015,
+        2066,
+        4998
+      ]
+    ],
+    "description": "Trekking"
+  },
+  {
+    "aabbs": [
+      [
+        2056,
+        5043,
+        2068,
+        5026
+      ]
+    ],
+    "description": "Trekking"
+  },
+  {
+    "aabbs": [
+      [
+        2179,
+        5053,
+        2202,
+        5027
+      ]
+    ],
+    "description": "Trekking"
+  },
+  {
+    "aabbs": [
+      [
+        2047,
+        5048,
+        2055,
+        5039
+      ]
+    ],
+    "description": "Trekking"
+  },
+  {
+    "aabbs": [
+      [
+        2014,
+        5051,
+        2041,
+        5026
+      ]
+    ],
+    "description": "Trekking"
+  },
+  {
+    "aabbs": [
+      [
+        1999,
+        5023,
+        2022,
+        5003
+      ]
+    ],
+    "description": "Trekking"
+  },
+  {
+    "aabbs": [
+      [
+        1987,
+        5052,
+        2010,
+        5026
+      ]
+    ],
+    "description": "Trekking"
+  },
+  {
+    "aabbs": [
+      [
+        1963,
+        5054,
+        1981,
+        5037
+      ]
+    ]
+  },
+  {
+    "aabbs": [
+      [
+        1919,
+        5055,
+        1958,
+        5031
+      ],
+      [
+        1918,
+        5030,
+        1984,
+        4991
+      ]
+    ]
+  },
+  {
+    "aabbs": [
+      [
+        1875,
+        5038,
+        1897,
+        5011
+      ]
+    ]
+  },
+  {
+    "aabbs": [
+      [
+        1951,
+        5344,
+        1983,
+        5312
+      ]
+    ],
+    "description": "Tai Bwo Wannai Instance"
+  },
+  {
+    "aabbs": [
+      [
+        1989,
+        5099,
+        2027,
+        5078
+      ],
+      [
+        2010,
+        5077,
+        2032,
+        5055
+      ]
+    ]
+  },
+  {
+    "region": 7757,
+    "description": "Blast Furnace"
+  },
+  {
+    "aabbs": [
+      [
+        1854,
+        4671,
+        2047,
+        4608
+      ]
+    ]
+  },
+  {
+    "aabbs": [
+      [
+        1925,
+        4717,
+        1966,
+        4678
+      ]
+    ]
+  },
+  {
+    "aabbs": [
+      [
+        1872,
+        4415,
+        1919,
+        4351
+      ],
+      [
+        1919,
+        4376,
+        1968,
+        4351
+      ]
+    ],
+    "description": "Waterbirth Dungeon (2)"
+  },
+  {
+    "aabbs": [
+      [
+        2368,
+        4479,
+        2495,
+        4415
+      ],
+      [
+        2373,
+        4414,
+        2422,
+        4398
+      ],
+      [
+        2381,
+        4397,
+        2414,
+        4390
+      ],
+      [
+        2398,
+        4389,
+        2426,
+        4367
+      ]
+    ],
+    "description": "Zanaris"
+  },
+  {
+    "region": 9285,
+    "description": "Zanaris"
+  },
+  {
+    "aabbs": [
+      [
+        2399,
+        4366,
+        2401,
+        4355
+      ],
+      [
+        2381,
+        4390,
+        2398,
+        4355
+      ],
+      [
+        2368,
+        4398,
+        2380,
+        4355
+      ]
+    ]
+  },
+  {
+    "region": 9796
+  },
+  {
+    "region": 8516
+  },
+  {
+    "region": 9027
+  },
+  {
+    "region": 9538
+  },
+  {
+    "region": 6722
+  },
+  {
+    "region": 7234
+  },
+  {
+    "aabbs": [
+      [
+        1860,
+        4250,
+        1872,
+        4231
+      ]
+    ],
+    "description": "Region 7749"
+  },
+  {
+    "aabbs": [
+      [
+        1877,
+        4286,
+        1916,
+        4256
+      ]
+    ],
+    "description": "Region 7749"
+  },
+  {
+    "aabbs": [
+      [
+        1921,
+        4478,
+        1933,
+        4463
+      ]
+    ],
+    "description": "Region 7749"
+  },
+  {
+    "aabbs": [
+      [
+        1946,
+        4479,
+        1963,
+        4463
+      ]
+    ],
+    "description": "Region 7749"
+  },
+  {
+    "aabbs": [
+      [
+        1967,
+        4473,
+        1981,
+        4453
+      ]
+    ],
+    "description": "Region 7749"
+  },
+  {
+    "aabbs": [
+      [
+        1923,
+        4460,
+        1942,
+        4447
+      ]
+    ],
+    "description": "Region 7749"
+  },
+  {
+    "aabbs": [
+      [
+        1950,
+        4455,
+        1966,
+        4442
+      ]
+    ],
+    "description": "Region 7749"
+  },
+  {
+    "aabbs": [
+      [
+        1966,
+        4438,
+        1979,
+        4419
+      ]
+    ],
+    "description": "Region 7749"
+  },
+  {
+    "aabbs": [
+      [
+        1940,
+        4436,
+        1955,
+        4419
+      ]
+    ],
+    "description": "Region 7749"
+  },
+  {
+    "aabbs": [
+      [
+        1921,
+        4441,
+        1932,
+        4421
+      ]
+    ],
+    "description": "Region 7749"
+  },
+  {
+    "region": 10307,
+    "description": "Puro-Puro"
+  },
+  {
+    "aabbs": [
+      [
+        2414,
+        4624,
+        2431,
+        4608
+      ],
+      [
+        2432,
+        4624,
+        2495,
+        4544
+      ]
+    ],
+    "description": "Waterbirth Lighthouse - Instance"
+  },
+  {
+    "region": 9545,
+    "description": "Viyeldi Caves"
+  },
+  {
+    "region": 8267,
+    "description": "Cosmic Entitys Plane"
+  },
+  {
+    "region": 8523
+  },
+  {
+    "region": 8779
+  },
+  {
+    "region": 9035
+  },
+  {
+    "region": 9291
+  },
+  {
+    "region": 9803
+  },
+  {
+    "aabbs": [
+      [
+        2495,
+        4800,
+        2559,
+        4748
+      ]
+    ],
+    "description": "Evil Bobs Island"
+  },
+  {
+    "aabbs": [
+      [
+        2526,
+        4726,
+        2552,
+        4707
+      ]
+    ]
+  },
+  {
+    "aabbs": [
+      [
+        2496,
+        4730,
+        2520,
+        4683
+      ]
+    ]
+  },
+  {
+    "region": 10056
+  },
+  {
+    "aabbs": [
+      [
+        2575,
+        4799,
+        2815,
+        4655
+      ],
+      [
+        2623,
+        4654,
+        2815,
+        4624
+      ],
+      [
+        2688,
+        4608,
+        2622,
+        4623
+      ]
+    ]
+  },
+  {
+    "region": 10055
+  },
+  {
+    "aabbs": [
+      [
+        2560,
+        4607,
+        2641,
+        4544
+      ]
+    ],
+    "description": "Ship Yard Instance "
+  },
+  {
+    "aabbs": [
+      [
+        1599,
+        4863,
+        1727,
+        4781
+      ]
+    ]
+  },
+  {
+    "aabbs": [
+      [
+        2643,
+        4607,
+        2686,
+        4545
+      ]
+    ]
+  },
+  {
+    "aabbs": [
+      [
+        2821,
+        4601,
+        2847,
+        4575
+      ]
+    ]
+  },
+  {
+    "aabbs": [
+      [
+        2847,
+        4575,
+        2872,
+        4551
+      ]
+    ]
+  },
+  {
+    "region": 10310
+  },
+  {
+    "region": 10566
+  },
+  {
+    "region": 10309
+  },
+  {
+    "region": 10823
+  },
+  {
+    "region": 11079
+  },
+  {
+    "region": 10822
+  },
+  {
+    "region": 11078
+  },
+  {
+    "region": 10821
+  },
+  {
+    "region": 11077
+  },
+  {
+    "region": 11589,
+    "description": "Waterbirth Dungeon (6)"
+  },
+  {
+    "region": 11589,
+    "description": "Waterbirth Dungeon (6) - Instance"
+  },
+  {
+    "region": 12100,
+    "description": "Creature Creation"
+  },
+  {
+    "region": 11595,
+    "description": "Essence Mine"
+  },
+  {
+    "aabbs": [
+      [
+        2944,
+        4927,
+        3135,
+        4736
+      ]
+    ],
+    "description": "The Abyss"
+  },
+  {
+    "region": 12785,
+    "description": "Blood Alter"
+  },
+  {
+    "aabbs": [
+      [
+        3263,
+        4863,
+        3390,
+        4735
+      ]
+    ]
+  },
+  {
+    "region": 12619
+  },
+  {
+    "region": 12105
+  },
+  {
+    "region": 11593,
+    "description": "Yanille Watertower Topfloor"
+  },
+  {
+    "aabbs": [
+      [
+        2501,
+        4859,
+        2540,
+        4819
+      ]
+    ],
+    "description": "Body Alter"
+  },
+  {
+    "aabbs": [
+      [
+        2553,
+        4863,
+        2623,
+        4804
+      ]
+    ],
+    "description": "Fire Alter"
+  },
+  {
+    "region": 10571,
+    "description": "Earth Alter"
+  },
+  {
+    "region": 10827,
+    "description": "Water Alter "
+  },
+  {
+    "region": 11083,
+    "description": "Mind Alter"
+  },
+  {
+    "region": 11339,
+    "description": "Air Alter "
+  },
+  {
+    "region": 11591,
+    "description": "Mysterious Maze"
+  },
+  {
+    "region": 12102
+  },
+  {
+    "aabbs": [
+      [
+        3161,
+        4641,
+        3135,
+        4672
+      ]
+    ]
+  },
+  {
+    "aabbs": [
+      [
+        3175,
+        4638,
+        3199,
+        4609
+      ]
+    ]
+  },
+  {
+    "region": 12615
+  },
+  {
+    "region": 13128
+  },
+  {
+    "aabbs": [
+      [
+        3392,
+        4799,
+        3455,
+        4672
+      ]
+    ],
+    "description": "Clan Wars"
+  },
+  {
+    "aabbs": [
+      [
+        3456,
+        4783,
+        3527,
+        4736
+      ]
+    ],
+    "description": "Falador Garden Instance"
+  },
+  {
+    "aabbs": [
+      [
+        3135,
+        5112,
+        3200,
+        5000
+      ]
+    ]
+  },
+  {
+    "aabbs": [
+      [
+        3135,
+        4999,
+        3199,
+        4928
+      ]
+    ]
+  },
+  {
+    "region": 13133
+  },
+  {
+    "aabbs": [
+      [
+        3264,
+        5119,
+        3327,
+        4992
+      ]
+    ]
+  },
+  {
+    "region": 13647
+  },
+  {
+    "region": 13646
+  },
+  {
+    "region": 13645
+  },
+  {
+    "region": 13644
+  },
+  {
+    "region": 13643
+  },
+  {
+    "aabbs": [
+      [
+        3648,
+        6143,
+        3774,
+        6016
+      ]
+    ]
+  },
+  {
+    "aabbs": [
+      [
+      ]
+    ]
+  },
+  {
+    "aabbs": [
+      [
+        2431,
+        6207,
+        2495,
+        6080
+      ]
+    ],
+    "description": "Underground Pass - Bottom"
+  },
+  {
+    "aabbs": [
+      [
+        2688,
+        6207,
+        2879,
+        6016
+      ]
+    ],
+    "description": "Elf lands - Instance"
+  },
+  {
+    "aabbs": [
+      [
+        2880,
+        6207,
+        2943,
+        6144
+      ]
+    ],
+    "description": "Elf Camp - Instance"
+  },
+  {
+    "region": 13404
+  },
+  {
+    "region": 13148
+  },
+  {
+    "region": 12892
+  },
+  {
+    "region": 12636
+  },
+  {
+    "aabbs": [
+      [
+        3153,
+        4464,
+        3199,
+        4421
+      ],
+      [
+        3200,
+        4463,
+        3226,
+        4444
+      ]
+    ]
+  },
+  {
+    "region": 13125
+  },
+  {
+    "region": 12612
+  },
+  {
+    "region": 12611
+  },
+  {
+    "region": 12867
+  },
+  {
+    "region": 13123
+  },
+  {
+    "region": 13122
+  },
+  {
+    "region": 14916
+  },
+  {
+    "region": 14915
+  },
+  {
+    "region": 15428,
+    "description": "Land of Goblins Quest Area "
+  }
+]

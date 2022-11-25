@@ -9,7 +9,8 @@ public class AreaData {
 
     @JsonAdapter(AABB.JsonAdapter.class)
     public AABB[] aabbs = {};
-    public boolean hideOtherRegions = false;
+    public int region = -1;
+    public boolean hideOtherRegions = true;
     public String description = "UNKNOWN";
     public HorizonTile horizonTile = null;
 

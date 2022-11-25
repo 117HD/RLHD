@@ -32,7 +32,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
-import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.events.*;
 import net.runelite.api.hooks.DrawCallbacks;
 import net.runelite.client.callback.ClientThread;
@@ -2160,7 +2159,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		stagingBufferUvs.clear();
 		stagingBufferNormals.clear();
 
-		areaManager.update(client.getLocalPlayer().getWorldLocation());
+		areaManager.setCurrentArea(areaManager.update(client.getLocalPlayer().getWorldLocation()));
+		System.out.println(areaManager.getCurrentArea().description);
 		sceneUploader.upload(client.getScene(), stagingBufferVertices, stagingBufferUvs, stagingBufferNormals);
 
 		dynamicOffsetVertices = stagingBufferVertices.position() / VERTEX_SIZE;
@@ -2430,7 +2430,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	public void draw(Renderable renderable, int orientation, int pitchSin, int pitchCos, int yawSin, int yawCos, int x, int y, int z, long hash)
 	{
 
-		if(areaManager.shouldHide(x,z)) {
+		if(areaManager.shouldHideModels(x,z)) {
 			return;
 		}
 
