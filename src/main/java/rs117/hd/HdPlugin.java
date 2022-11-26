@@ -2430,7 +2430,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	public void draw(Renderable renderable, int orientation, int pitchSin, int pitchCos, int yawSin, int yawCos, int x, int y, int z, long hash)
 	{
 
-		if(areaManager.shouldHideModels(x,z)) {
+		if(areaManager.shouldHide(ModelHash.getWorldTemplateLocation(client, x, z))) {
 			return;
 		}
 

@@ -18,7 +18,8 @@
         3646,
         6016
       ]
-    ]
+    ],
+    "description": "Lms Arena Wild Varrock"
   },
   {
     "aabbs": [
@@ -28,7 +29,8 @@
         3774,
         6016
       ]
-    ]
+    ],
+    "description": "Lms Arena Wild Varrock"
   },
   {
     "aabbs": [
@@ -72,7 +74,8 @@
         3361,
         5729
       ]
-    ]
+    ],
+    "description": "Chambers Of Xeric"
   },
   {
     "aabbs": [
@@ -82,7 +85,8 @@
         3360,
         5697
       ]
-    ]
+    ],
+    "description": "Chambers Of Xeric"
   },
   {
     "aabbs": [
@@ -92,7 +96,8 @@
         3298,
         5761
       ]
-    ]
+    ],
+    "description": "Chambers Of Xeric"
   },
   {
     "aabbs": [
@@ -102,7 +107,8 @@
         3298,
         5730
       ]
-    ]
+    ],
+    "description": "Chambers Of Xeric"
   },
   {
     "aabbs": [
@@ -112,7 +118,8 @@
         3262,
         5718
       ]
-    ]
+    ],
+    "description": "Chambers Of Xeric"
   },
   {
     "aabbs": [
@@ -122,13 +129,15 @@
         3285,
         5735
       ]
-    ]
+    ],
+    "description": "Chambers Of Xeric"
   },
   {
     "region": 12889
   },
   {
-    "region": 12633
+    "region": 12633,
+    "description": "Deaths Office"
   },
   {
     "region": 12126
@@ -177,7 +186,8 @@
     "region": 6489
   },
   {
-    "region": 6745
+    "region": 6745,
+    "description": "Ds2 Ships"
   },
   {
     "region": 6488
@@ -283,7 +293,8 @@
         3040,
         5216
       ]
-    ]
+    ],
+    "description": "Tolna Dungeon Fear"
   },
   {
     "aabbs": [
@@ -293,7 +304,8 @@
         3070,
         5247
       ]
-    ]
+    ],
+    "description": "Tolna Dungeon Fear"
   },
   {
     "aabbs": [
@@ -303,7 +315,8 @@
         3070,
         5184
       ]
-    ]
+    ],
+    "description": "Tolna Dungeon Confusion"
   },
   {
     "aabbs": [
@@ -313,7 +326,8 @@
         3040,
         5184
       ]
-    ]
+    ],
+    "description": "Tolna Dungeon Confusion"
   },
   {
     "aabbs": [
@@ -323,7 +337,8 @@
         3101,
         5184
       ]
-    ]
+    ],
+    "description": "Tolna Dungeon Fear"
   },
   {
     "aabbs": [
@@ -333,7 +348,8 @@
         2943,
         5186
       ]
-    ]
+    ],
+    "description": "God Wars Dungeon"
   },
   {
     "aabbs": [
@@ -727,7 +743,7 @@
   },
   {
     "region": 6995,
-    "description": "Ancient Cavern 1"
+    "description": "Ancient Cavern Upper"
   },
   {
     "region": 6483,
@@ -747,7 +763,8 @@
         2239,
         5120
       ]
-    ]
+    ],
+    "description": "Braindeath Island"
   },
   {
     "aabbs": [
@@ -877,13 +894,6 @@
         5053,
         2202,
         5027
-      ]
-    ],
-    "description": "Trekking"
-  },
-  {
-    "aabbs": [
-      [
       ]
     ],
     "description": "Trekking"
@@ -1033,7 +1043,8 @@
         1984,
         4991
       ]
-    ]
+    ],
+    "description": "Random Event Gravedigger"
   },
   {
     "aabbs": [
@@ -1043,7 +1054,8 @@
         1897,
         5011
       ]
-    ]
+    ],
+    "description": "Random Event Classroom"
   },
   {
     "aabbs": [
@@ -1166,7 +1178,8 @@
         2380,
         4355
       ]
-    ]
+    ],
+    "description": "Zanaris"
   },
   {
     "region": 9796
@@ -1181,7 +1194,8 @@
     "region": 9538
   },
   {
-    "region": 6722
+    "region": 6722,
+    "description": "Keep Le Faye"
   },
   {
     "region": 7234
@@ -1329,16 +1343,20 @@
     "region": 8523
   },
   {
-    "region": 8779
+    "region": 8779,
+    "description": "Cosmic Altar"
   },
   {
-    "region": 9035
+    "region": 9035,
+    "description": "Death Altar"
   },
   {
-    "region": 9291
+    "region": 9291,
+    "description": "Chaos Altar"
   },
   {
-    "region": 9803
+    "region": 9803,
+    "description": "Law Altar"
   },
   {
     "aabbs": [
@@ -1359,7 +1377,8 @@
         2552,
         4707
       ]
-    ]
+    ],
+    "description": "Mage Arena Bank"
   },
   {
     "aabbs": [
@@ -1394,7 +1413,8 @@
         2622,
         4623
       ]
-    ]
+    ],
+    "description": "Fisher Kings Realm"
   },
   {
     "region": 10055
@@ -1418,7 +1438,8 @@
         1727,
         4781
       ]
-    ]
+    ],
+    "description": "Misthalin Mystery Manor"
   },
   {
     "aabbs": [
@@ -1591,7 +1612,8 @@
         3199,
         4609
       ]
-    ]
+    ],
+    "description": "Tarns Lair"
   },
   {
     "region": 12615
@@ -1629,7 +1651,8 @@
         3200,
         5000
       ]
-    ]
+    ],
+    "description": "Deaths Office"
   },
   {
     "aabbs": [
@@ -1639,7 +1662,8 @@
         3199,
         4928
       ]
-    ]
+    ],
+    "description": "Deaths Office"
   },
   {
     "region": 13133
@@ -1652,7 +1676,8 @@
         3327,
         4992
       ]
-    ]
+    ],
+    "description": "Chambers Of Xeric"
   },
   {
     "region": 13647
@@ -1667,7 +1692,8 @@
     "region": 13644
   },
   {
-    "region": 13643
+    "region": 13643,
+    "description": "Lumbridge - Instance"
   },
   {
     "aabbs": [
@@ -1676,12 +1702,6 @@
         6143,
         3774,
         6016
-      ]
-    ]
-  },
-  {
-    "aabbs": [
-      [
       ]
     ]
   },
@@ -1719,13 +1739,15 @@
     "description": "Elf Camp - Instance"
   },
   {
-    "region": 13404
+    "region": 13404,
+    "description": "Sote Fragment Of Seren Arena"
   },
   {
     "region": 13148
   },
   {
-    "region": 12892
+    "region": 12892,
+    "description": "Sote Temple Of Light Seren Cutscene"
   },
   {
     "region": 12636
@@ -1744,22 +1766,28 @@
         3226,
         4444
       ]
-    ]
+    ],
+    "description": "Theatre Of Blood"
   },
   {
-    "region": 13125
+    "region": 13125,
+    "description": "Theatre Of Blood"
   },
   {
-    "region": 12612
+    "region": 12612,
+    "description": "Tob Room Xarpus"
   },
   {
-    "region": 12611
+    "region": 12611,
+    "description": "Tob Room Verzik"
   },
   {
-    "region": 12867
+    "region": 12867,
+    "description": "Tob Room Vault"
   },
   {
-    "region": 13123
+    "region": 13123,
+    "description": "Tob Room Sotetseg"
   },
   {
     "region": 13122
@@ -1773,5 +1801,1856 @@
   {
     "region": 15428,
     "description": "Land of Goblins Quest Area "
+  },
+  {
+    "aabbs": [
+      [
+        3550,
+        9545,
+        3674,
+        9433
+      ]
+    ],
+    "description": "Guardian's of the Rift - Game Area"
+  },
+  {
+    "aabbs": [
+      [
+        3714,
+        9469,
+        3838,
+        9409
+      ],
+      [
+        3714,
+        9408,
+        3770,
+        9348
+      ]
+    ]
+  },
+  {
+    "region": 13972 
+  },
+  {
+    "aabbs": [
+      [
+        3364,
+        9278,
+        3444,
+        9217
+      ]
+    ]
+  },
+  {
+    "aabbs": [
+      [
+        3775,
+        9152,
+        3904,
+        9023
+      ]
+    ]
+  },
+  {
+    "aabbs": [
+      [
+        3965,
+        9152,
+        4097,
+        9022
+      ]
+    ]
+  },
+  {
+    "aabbs": [
+      [
+        4034,
+        9014,
+        4091,
+        8968
+      ]
+    ]
+  },
+  {
+    "aabbs": [
+      [
+        3975,
+        9011,
+        4024,
+        8967
+      ]
+    ]
+  },
+  {
+    "aabbs": [
+      [
+        4157,
+        9153,
+        4289,
+        9021
+      ]
+    ]
+  },
+  {
+    "aabbs": [
+      [
+        3584,
+        9150,
+        3710,
+        8961
+      ]
+    ]
+  },{
+  "aabbs": [
+    [
+      3594,
+      8936,
+      3627,
+      8902
+    ]
+  ],
+  "description": ""
+},
+  {
+    "aabbs": [
+      [
+        3647,
+        8767,
+        3775,
+        8576
+      ]
+    ]
+  },
+  {
+    "region": 12425
+  },
+  {
+    "region": 12424
+  },
+  {
+    "region": 12423
+  },
+  {
+    "region": 12422
+  },
+  {
+    "region": 12681
+  },
+  {
+    "region": 12680
+  },
+  {
+    "region": 12679
+  },
+  {
+    "region": 12678
+  },
+  {
+    "region": 12937
+  },
+  {
+    "region": 12936
+  },
+  {
+    "region": 12935
+  },
+  {
+    "region": 12934
+  },
+  {
+    "region": 13193
+  },
+  {
+    "region": 13192
+  },
+  {
+    "region": 13191
+  },
+  {
+    "region": 13190
+  },
+  {
+    "region": 13449
+  },
+  {
+    "region": 13448
+  },
+  {
+    "region": 13447
+  },
+  {
+    "region": 13446
+  },
+  {
+    "region": 13705
+  },
+  {
+    "region": 13704
+  },
+  {
+    "region": 13703
+  },
+  {
+    "region": 13702
+  },
+  {
+    "region": 13961
+  },
+  {
+    "region": 13960
+  },
+  {
+    "region": 13959
+  },
+  {
+    "region": 13958
+  },
+  {
+    "region": 14217
+  },
+  {
+    "region": 14216
+  },
+  {
+    "region": 14215
+  },
+  {
+    "region": 14214
+  },
+  {
+    "region": 13199 
+  },
+  {
+    "region": 13457
+  },
+  {
+    "region": 12945
+  },
+  {
+    "region": 12433 ,
+    "description": "Enakhras Temple Bottom Floor"
+  },
+  {
+    "aabbs": [
+      [
+        3165,
+        9407,
+        3327,
+        9345
+      ]
+    ],
+    "description": "Smoke Dungeon"
+  },
+  {
+    "region": 13972
+  },
+  {
+    "aabbs": [
+      [
+        3333,
+        9595,
+        3383,
+        9532
+      ]
+    ],
+    "description": "Elid Cave"
+  },
+  {
+    "region": 13717
+  },
+  {
+    "aabbs": [
+      [
+        3353,
+        9472,
+        3265,
+        9531
+      ],
+      [
+        3329,
+        9532,
+        3265,
+        9551
+      ]
+    ],
+    "description": "Elid Cave"
+  },
+  {
+    "aabbs": [
+      [
+        3262,
+        9471,
+        3327,
+        9409
+      ]
+    ],
+    "description": "Smoke Dungeon"
+  },
+  {
+    "region": 11666
+  },
+  {
+    "region": 11665,
+    "description": "Ah Za Rhoon"
+  },
+  {
+    "region": 11410
+  },
+  {
+    "region": 11154 ,
+    "description": "Cairn Island Dungeon"
+  },
+  {
+    "region": 11662
+  },
+  {
+    "region": 11153 ,
+    "description": "Viyeldi Caves (2)"
+  },
+  {
+    "aabbs": [
+      [
+        2815,
+        9088,
+        2688,
+        9151
+      ]
+    ],
+    "description": "Monkey Madness Rock Cave"
+  },
+  {
+    "region": 11151,
+    "description": "Temple of Marimbo Dungeon"
+  },
+  {
+    "region": 10895
+  },
+  {
+    "aabbs": [
+      [
+        2623,
+        9210,
+        2677,
+        9189
+      ],
+      [
+        2633,
+        9188,
+        2671,
+        9123
+      ],
+      [
+        2624,
+        9122,
+        2666,
+        9080
+      ]
+    ]
+  },
+  {
+    "aabbs": [
+      [
+        2640,
+        9062,
+        2683,
+        9034
+      ]
+    ]
+  },
+  {
+    "aabbs": [
+      [
+        2496,
+        9088,
+        2601,
+        9035
+      ]
+    ]
+  },
+  {
+    "aabbs": [
+      [
+        2497,
+        9205,
+        2509,
+        9187
+      ]
+    ]
+  },
+  {
+    "aabbs": [
+      [
+        2496,
+        9088,
+        2601,
+        9035
+      ],
+      [
+        2497,
+        9205,
+        2509,
+        9187
+      ],
+      [
+        2512,
+        9187,
+        2632,
+        9132
+      ],
+      [
+        2623,
+        9188,
+        2562,
+        9264
+      ],
+      [
+        2522,
+        9260,
+        2560,
+        9223
+      ]
+    ]
+  },
+  {
+    "aabbs": [
+      [
+        2616,
+        9276,
+        2640,
+        9223
+      ]
+    ]
+  },
+  {
+    "aabbs": [
+      [
+        2505,
+        9332,
+        2529,
+        9312
+      ]
+    ]
+  },
+  {
+    "aabbs": [
+      [
+        2507,
+        9309,
+        2534,
+        9286
+      ]
+    ]
+  },
+  {
+    "aabbs": [
+      [
+        2630,
+        9401,
+        2661,
+        9375
+      ]
+    ]
+  },
+  {
+    "region": 9362,
+    "description": "Obsevatory Dungeon"
+  },
+
+  {
+    "region": 8593 
+  },
+  {
+    "region": 9116
+  },
+  {
+    "aabbs": [
+      [
+        1728,
+        10178,
+        1815,
+        10112
+      ]
+    ],
+    "description": "The Warrens"
+  },
+  {
+    "aabbs": [
+      [
+        1773,
+        10002,
+        1879,
+        9876
+      ]
+    ],
+    "description": "Forthos Dungeon"
+  },
+  {
+    "aabbs": [
+      [
+        1632,
+        9853,
+        1729,
+        9771
+      ]
+    ],
+    "description": "Crabclaw Cave"
+  },
+  {
+    "aabbs": [
+      [
+        1670,
+        9767,
+        1726,
+        9729
+      ]
+    ],
+    "description": "Crabclaw Cave 2"
+  },
+  {
+    "region": 6298
+  },
+  {
+    "region": 6555
+  },
+  {
+    "region": 6299
+  },
+  {
+    "region": 6043
+  },
+  {
+    "region": 5787,
+    "description": "Shayzien Prison"
+  },
+  {
+    "region": 5786
+  },
+  {
+    "aabbs": [
+      [
+        1587,
+        10111,
+        1750,
+        9978
+      ]
+    ],
+    "description": "Catacombs of Kourend"
+  },
+  {
+    "region": 6303 
+  },
+  {
+    "region": 5789,
+    "description": "Chasm Fire"
+  },
+  {
+    "region": 5277,
+    "description": "Lizardman Temple"
+  },
+  {
+    "region": 5021
+  },
+  {
+    "region": 4764
+  },
+  {
+    "region": 4763
+  },
+  {
+    "region": 5275 
+  },
+  {
+    "aabbs": [
+      [
+        1369,
+        10234,
+        1398,
+        10208
+      ]
+    ],
+    "description": "Karuulm Slayer Dungeon"
+  },
+  {
+    "aabbs": [
+      [
+        1386,
+        10235,
+        1297,
+        10281
+      ],
+      [
+        1355,
+        10234,
+        1280,
+        10177
+      ],
+      [
+        1279,
+        10173,
+        1254,
+        10203
+      ],
+      [
+        1279,
+        10172,
+        1250,
+        10146
+      ]
+    ],
+    "description": "Karuulm Slayer Dungeon"
+  },
+  {
+    "region": 4768 
+  },
+  {
+    "aabbs": [
+      [
+        1535,
+        10240,
+        1566,
+        10208
+      ]
+    ]
+  },
+  {
+    "aabbs": [
+      [
+        1562,
+        10216,
+        1592,
+        10184
+      ]
+    ]
+  },
+  {
+    "aabbs": [
+      [
+        3711,
+        10304,
+        3839,
+        10240
+      ],
+      [
+        3711,
+        10239,
+        3775,
+        10176
+      ]
+    ],
+    "description": "Fossil Island Underwater Area"
+  },
+  {
+    "aabbs": [
+      [
+        3776,
+        10239,
+        3839,
+        10112
+      ]
+    ]
+  },
+  {
+    "region": 14496
+  },
+  {
+    "region": 14495
+  },
+  {
+    "region": 14242
+  },
+  {
+    "aabbs": [
+      [
+        3534,
+        10488,
+        3564,
+        10439
+      ]
+    ],
+    "description": "Lithkren Dungeon"
+  },
+  {
+    "region": 15515,
+    "description": "Nightmare Of Ashihama Arena"
+  },
+  {
+    "aabbs": [
+      [
+        3327,
+        10177,
+        3455,
+        10048
+      ]
+    ],
+    "description": "Wilderness Slayer Cave"
+  },
+  {
+    "aabbs": [
+      [
+        3468,
+        9983,
+        3582,
+        9920
+      ]
+    ],
+    "description": "Frankenstrains Dungeon"
+  },
+  {
+    "region": 14747
+  },
+  {
+    "region": 14746
+  },
+  {
+    "region": 14745 
+  },
+  {
+    "region": 14234
+  },
+
+  {
+    "region": 13978
+  },
+
+  {
+    "region": 13772
+  },
+
+  {
+    "region": 13466
+  },
+
+  {
+    "region": 13465
+  },
+
+  {
+    "region": 16464 
+  },
+  {
+    "region": 13721
+  },
+  {
+    "region": 13720
+  },
+  {
+    "aabbs": [
+      [
+        3499,
+        9848,
+        3517,
+        9828
+      ]
+    ],
+    "description": "13977"
+  },
+  {
+    "aabbs": [
+      [
+        3458,
+        9823,
+        3466,
+        9809
+      ],
+      [
+        3467,
+        9822,
+        3472,
+        9811
+      ]
+    ],
+    "description": "13977"
+  },
+  {
+    "aabbs": [
+      [
+        3472,
+        9802,
+        3476,
+        9810
+      ],
+      [
+        3471,
+        9810,
+        3467,
+        9801
+      ]
+    ],
+    "description": "13977"
+  },
+  {
+    "aabbs": [
+      [
+        3472,
+        9801,
+        3477,
+        9794
+      ],
+      [
+        3471,
+        9800,
+        3464,
+        9794
+      ]
+    ],
+    "description": "13977"
+  },
+  {
+    "aabbs": [
+      [
+        3468,
+        9848,
+        3493,
+        9823
+      ],
+      [
+        3479,
+        9822,
+        3505,
+        9801
+      ]
+    ]
+  },
+  {
+    "aabbs": [
+      [
+        3511,
+        9827,
+        3582,
+        9729
+      ],
+      [
+        3584,
+        9791,
+        3640,
+        9687
+      ],
+      [
+        3641,
+        9686,
+        3603,
+        9670
+      ]
+    ],
+    "description": "Barrows Tunnels"
+  },
+  {
+    "aabbs": [
+      [
+        3588,
+        9685,
+        3600,
+        9670
+      ]
+    ]
+  },
+  {
+    "region": 14231,
+    "description": "Barrows Crypt"
+  },
+  {
+    "region": 13975
+  },
+  {
+    "region": 13974
+  },
+  {
+    "region": 13718,
+    "description": "Elid Cave"
+  },
+  {
+    "aabbs": [
+      [
+        3338,
+        9663,
+        3388,
+        9616
+      ]
+    ],
+    "description": "Mage Training Area Room"
+  },
+  {
+    "aabbs": [
+      [
+        3358,
+        9696,
+        3331,
+        9669
+      ]
+    ],
+    "description": "Mage Training Area Room"
+  },
+  {
+    "aabbs": [
+      [
+        3389,
+        9664,
+        3359,
+        9700
+      ],
+      [
+        3364,
+        9701,
+        3383,
+        9701
+      ],
+      [
+        3365,
+        9702,
+        3381,
+        9703
+      ]
+    ],
+    "description": "Mage Training Area Room"
+  },
+  {
+    "aabbs": [
+      [
+        3328,
+        9727,
+        3358,
+        9698
+      ],
+      [
+        3359,
+        9701,
+        3362,
+        9727
+      ],
+      [
+        3363,
+        9727,
+        3363,
+        9701
+      ],
+      [
+        3364,
+        9727,
+        3364,
+        9702
+      ],
+      [
+        3365,
+        9704,
+        3388,
+        9727
+      ]
+    ],
+    "description": "Mage Training Area Room"
+  },
+  {
+    "aabbs": [
+      [
+        3202,
+        9660,
+        3327,
+        9600
+      ],
+      [
+        3136,
+        9599,
+        3259,
+        9537
+      ]
+    ],
+    "description": "Lumbridge Swamp Caves"
+  },
+  {
+    "aabbs": [
+      [
+        3202,
+        9709,
+        3252,
+        9661
+      ]
+    ]
+  },
+  {
+    "aabbs": [
+      [
+        3136,
+        9535,
+        3263,
+        9409
+      ]
+    ],
+    "description": "Tears of Guthix"
+  },
+  {
+    "region": 12694,
+    "description": "Ham Hideout"
+  },
+
+  {
+    "region": 12695
+  },
+
+  {
+    "region": 12696
+  },
+
+  {
+    "region": 12697
+  },
+
+  {
+    "region": 12953
+  },
+
+  {
+    "region": 12952
+  },
+
+  {
+    "region": 13209,
+    "description": "Tolna Dungeon Confusion"
+  },
+  {
+    "aabbs": [
+      [
+        3077,
+        9699,
+        3130,
+        9642
+      ]
+    ],
+    "description": "Draynor Sewers"
+  },
+  {
+    "aabbs": [
+      [
+        3092,
+        9586,
+        3124,
+        9548
+      ]
+    ]
+  },
+  {
+    "region": 12436,
+    "description": "Tutorial Island Underground"
+  },
+  {
+    "aabbs": [
+      [
+        2982,
+        9599,
+        3016,
+        9536
+      ],
+      [
+        3017,
+        9604,
+        3083,
+        9532
+      ]
+    ],
+    "description": "Asgarnian Ice Dungeon "
+  },
+  {
+    "aabbs": [
+      [
+        2819,
+        9663,
+        2867,
+        9545
+      ]
+    ],
+    "description": "Karamaja and Crandor Dungeon"
+  },
+  {
+    "region": 11412,
+    "description": "Pothole Dungeon"
+  },
+  {
+    "region": 11668
+  },
+  {
+    "region": 11942
+  },
+  {
+    "region": 11926
+  },
+  {
+    "region": 11415 
+  },
+  {
+    "aabbs": [
+      [
+        2954,
+        9855,
+        3062,
+        9802
+      ],
+      [
+        2992,
+        9801,
+        3070,
+        9696
+      ]
+    ]
+  },
+  {
+    "aabbs": [
+      [
+        3065,
+        9919,
+        3294,
+        9856
+      ],
+      [
+        3072,
+        10008,
+        3135,
+        9920
+      ],
+      [
+        3072,
+        10008,
+        3135,
+        9920
+      ]
+    ],
+    "description": "Edgeville Dungeon"
+  },
+  {
+    "aabbs": [
+      [
+        3076,
+        9819,
+        3104,
+        9793
+      ]
+    ],
+    "description": "12441"
+  },
+  {
+    "aabbs": [
+      [
+        3199,
+        9952,
+        3236,
+        9920
+      ]
+    ],
+    "description": "12955"
+  },
+  {
+    "aabbs": [
+      [
+        3147,
+        9837,
+        3167,
+        9814
+      ]
+    ],
+    "description": "12697"
+  },
+  {
+    "aabbs": [
+      [
+        3182,
+        9838,
+        3198,
+        9814
+      ]
+    ],
+    "description": "12697"
+  },
+  {
+    "region": 12187
+  },
+  {
+    "region": 12700 
+  },
+  {
+    "aabbs": [
+      [
+        3136,
+        10239,
+        3264,
+        10051
+      ]
+    ],
+    "description": "Revenant Caves "
+  },
+  {
+    "region": 12961
+  },
+
+  {
+    "region": 12193,
+    "description": "Deep Wilderness Dungeon"
+  },
+
+  {
+    "region": 11937
+  },
+
+  {
+    "region": 12192,
+    "description": "Lava Maze Dungeon"
+  },
+
+  {
+    "region": 12190
+  },
+
+  {
+    "region":  11425
+  },
+  {
+    "region": 11658
+  },
+  {
+    "aabbs": [
+      [
+        2384,
+        10477,
+        2493,
+        10370
+      ]
+    ]
+  },
+  {
+    "aabbs": [
+      [
+        2251,
+        10496,
+        2296,
+        10447
+      ]
+    ]
+  },
+  {
+    "aabbs": [
+      [
+        2496,
+        10281,
+        2526,
+        10242
+      ],
+      [
+        2527,
+        10268,
+        2540,
+        10242
+      ],
+      [
+        2502,
+        10291,
+        2508,
+        10282
+      ]
+    ],
+    "description": "Miscellania Underground"
+  },
+  {
+    "aabbs": [
+      [
+        2509,
+        10303,
+        2623,
+        10288
+      ],
+      [
+        2528,
+        10287,
+        2623,
+        10269
+      ],
+      [
+        2542,
+        10268,
+        2623,
+        10242
+      ]
+    ],
+    "description": "Miscellania and Etceteria Dungeon"
+  },
+  {
+    "region": 9631
+  },
+  {
+    "aabbs": [
+      [
+        2432,
+        10175,
+        2558,
+        10112
+      ]
+    ]
+  },
+  {
+    "region": 11167
+  },
+  {
+    "region": 10911
+  },
+  {
+    "region": 10910,
+    "description": "Brine Rat Cavern"
+  },
+  {
+    "region": 11166
+  },
+  {
+    "region": 11165
+  },
+  {
+    "region": 11421
+  },
+  {
+    "region": 11677
+  },
+  {
+    "region": 11676
+  },
+  {
+    "region": 10653
+  },
+  {
+    "region": 10652
+  },
+  {
+    "region": 10140,
+    "description": "Lighthouse Dungeon"
+  },
+  {
+    "region": 10139
+  },
+  {
+    "region": 9116
+  },
+  {
+    "aabbs": [
+      [
+        2815,
+        10239,
+        2946,
+        10113
+      ]
+    ],
+    "description": "Keldagrim"
+  },
+  {
+    "aabbs": [
+      [
+        2687,
+        10047,
+        2815,
+        9984
+      ],
+      [
+        2689,
+        9983,
+        2722,
+        9951
+      ]
+    ],
+    "description": "Fremennik Slayer Dungeon "
+  },
+  {
+    "aabbs": [
+      [
+        2900,
+        9977,
+        2942,
+        9952
+      ]
+    ],
+    "description": "Warriors Guild Basement"
+  },
+  {
+    "aabbs": [
+      [
+        2816,
+        9977,
+        2896,
+        9920
+      ],
+      [
+        2815,
+        9919,
+        2877,
+        9896
+      ]
+    ],
+    "description": "Ice Queens Lair"
+  },
+  {
+    "aabbs": [
+      [
+        2969,
+        9918,
+        2992,
+        9903
+      ]
+    ],
+    "description": "11930"
+  },
+  {
+    "aabbs": [
+      [
+        2971,
+        9879,
+        2991,
+        9863
+      ]
+    ],
+    "description": "11930"
+  },
+  {
+    "aabbs": [
+      [
+        2881,
+        9919,
+        2941,
+        9881
+      ]
+    ],
+    "description": "Heros Guild Basement"
+  },
+  {
+    "aabbs": [
+      [
+        2893,
+        9879,
+        2926,
+        9858
+      ]
+    ]
+  },
+  {
+    "aabbs": [
+      [
+        2815,
+        9890,
+        2878,
+        9859
+      ]
+    ],
+    "description": "Fishing Contest Tunnel"
+  },
+  {
+    "aabbs": [
+      [
+        2812,
+        9855,
+        2952,
+        9695
+      ],
+      [
+        2953,
+        9800,
+        2972,
+        9768
+      ],
+      [
+        2880,
+        9694,
+        2936,
+        9670
+      ]
+    ],
+    "description": "Taverley Dungeon"
+  },
+  {
+    "aabbs": [
+      [
+        2954,
+        9748,
+        2980,
+        9729
+      ]
+    ],
+    "description": "Deaths Domain"
+  },
+  {
+    "region": 10906 ,
+    "description": "Elemental Workshop"
+  },
+  {
+    "aabbs": [
+      [
+        2880,
+        9694,
+        2936,
+        9670
+      ],
+      [
+        2954,
+        9748,
+        2980,
+        9729
+      ],
+      [
+        2624,
+        9919,
+        2674,
+        9792
+      ],
+      [
+        2675,
+        9847,
+        2749,
+        9792
+      ],
+      [
+        2688,
+        9855,
+        2749,
+        9848
+      ],
+      [
+        2679,
+        9791,
+        2687,
+        9784
+      ]
+    ],
+    "description": "Temple of Ikov"
+  },
+  {
+    "region": 10904,
+    "description": "Legends Guild Dungeon"
+  },
+  {
+    "region": 10903,
+    "description": "Witchaven Dungeon"
+  },
+  {
+    "region": 10394,
+    "description": "Waterfall Dungeon"
+  },
+  {
+    "region": 10393,
+    "description": "Goblin Cave"
+  },
+  {
+    "region": 10392,
+    "description": "Chaos Druuid Tower Dungeon"
+  },
+  {
+    "region": 10138
+  },
+  {
+    "region": 10137,
+    "description": "Glarial's Tomb"
+  },
+  {
+    "region": 9882,
+    "description": "Grand Tree Tunnels"
+  },
+  {
+    "aabbs": [
+      [
+        2624,
+        9727,
+        2687,
+        9616
+      ]
+    ],
+    "description": "Ardougne Sewers Mine"
+  },
+  {
+    "aabbs": [
+      [
+        2738,
+        9611,
+        2815,
+        9527
+      ]
+    ],
+    "description": "Brimhaven Agility Dungeon"
+  },
+  {
+    "region": 10390 ,
+    "description": "Clocktower Dungeon"
+  },
+  {
+    "aabbs": [
+      [
+        2580,
+        9727,
+        2623,
+        9664
+      ],
+      [
+        2560,
+        9700,
+        2579,
+        9676
+      ],
+      [
+        2545,
+        9681,
+        2559,
+        9666
+      ],
+      [
+        2510,
+        9663,
+        2557,
+        9637
+      ]
+    ],
+    "description": "Ardougne Sewers"
+  },
+  {
+    "aabbs": [
+      [
+        2533,
+        9676,
+        2543,
+        9667
+      ]
+    ],
+    "description": "10391"
+  },
+  {
+    "aabbs": [
+      [
+        2561,
+        9674,
+        2577,
+        9665
+      ]
+    ],
+    "description": "10135"
+  },
+  {
+    "aabbs": [
+      [
+        2562,
+        9596,
+        2607,
+        9546
+      ]
+    ],
+    "description": "Yanille Agility Dungeon (2)"
+  },
+  {
+    "region": 10388,
+    "description": "Yanille Agility Dungeon"
+  },
+  {
+    "aabbs": [
+      [
+        2611,
+        9575,
+        2624,
+        9559
+      ]
+    ],
+    "description": "10389"
+  },
+  {
+    "region":  10133
+  },
+  {
+    "aabbs": [
+      [
+        2626,
+        9599,
+        2732,
+        9472
+      ],
+      [
+        2733,
+        9501,
+        2751,
+        9473
+      ],
+      [
+        2733,
+        9515,
+        2744,
+        9502
+      ],
+      [
+        2745,
+        9510,
+        2746,
+        9502
+      ],
+      [
+        2688,
+        9471,
+        2750,
+        9409
+      ]
+    ],
+    "description": "Brimhaven Dungeon"
+  },
+  {
+    "region": 10643
+  },
+  {
+    "region": 10387,
+    "description": "Ogre Enclave "
+  },
+  {
+    "region": 10131
+  },
+  {
+    "region": 9875,
+    "description": "Jigging Dungeon (Bottom)"
+  },
+  {
+    "aabbs": [
+      [
+        2337,
+        9472,
+        2431,
+        9408
+      ]
+    ]
+  },
+  {
+    "region": 9620 
+  },
+  {
+    "region": 8855
+  },
+  {
+    "region": 9366
+  },
+  {
+    "region": 9365
+  },
+  {
+    "aabbs": [
+      [
+        2429,
+        9736,
+        2499,
+        9664
+      ],
+      [
+        2412,
+        9701,
+        2428,
+        9664
+      ],
+      [
+        2379,
+        9689,
+        2411,
+        9664
+      ]
+    ],
+    "description": "Underground Pass 1"
+  },
+  {
+    "aabbs": [
+      [
+        2367,
+        9662,
+        2431,
+        9588
+      ]
+    ],
+    "description": "Underground Pass 2"
+  },
+  {
+    "aabbs": [
+      [
+        2368,
+        9727,
+        2428,
+        9702
+      ],
+      [
+        2368,
+        9701,
+        2411,
+        9690
+      ],
+      [
+        2368,
+        9689,
+        2378,
+        9663
+      ]
+    ],
+    "description": "Underground Pass 3"
+  },
+  {
+    "aabbs": [
+      [
+        2303,
+        9920,
+        2368,
+        9792
+      ]
+    ],
+    "description": "Iban's Lair - Lower"
+  },
+  {
+    "region": 9878 
+  },
+  {
+    "aabbs": [
+      [
+        2379,
+        9913,
+        2408,
+        9864
+      ]
+    ],
+    "description": "Secret Hanger"
+  },
+  {
+    "aabbs": [
+      [
+        2410,
+        9916,
+        2420,
+        9906
+      ]
+    ],
+    "description": "9626"
+  },
+  {
+    "aabbs": [
+      [
+        2416,
+        9855,
+        2495,
+        9756
+      ],
+      [
+        2386,
+        9803,
+        2415,
+        9761
+      ],
+      [
+        2404,
+        9810,
+        2415,
+        9804
+      ]
+    ],
+    "description": "Stronghold Slayer Cave"
+  },
+  {
+    "aabbs": [
+      [
+        2415,
+        9811,
+        2378,
+        9833
+      ],
+      [
+        2398,
+        9810,
+        2379,
+        9804
+      ]
+    ],
+    "description": "9625"
   }
 ]

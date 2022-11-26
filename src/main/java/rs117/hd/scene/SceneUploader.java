@@ -28,6 +28,8 @@ package rs117.hd.scene;
 import com.google.common.base.Stopwatch;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
+import net.runelite.api.coords.LocalPoint;
+import net.runelite.api.coords.WorldPoint;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.data.WaterType;
@@ -217,7 +219,7 @@ class SceneUploader
 	private void upload(Tile tile, GpuIntBuffer vertexBuffer, GpuFloatBuffer uvBuffer, GpuFloatBuffer normalBuffer)
 	{
 
-		if(areaManager.shouldHideTiles(tile.getWorldLocation())) {
+		if(areaManager.shouldHideTile(tile.getWorldLocation().getX(),tile.getWorldLocation().getY())) {
 			return;
 		}
 

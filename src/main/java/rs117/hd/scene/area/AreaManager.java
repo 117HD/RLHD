@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.Constants;
+import net.runelite.api.coords.LocalPoint;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
@@ -81,7 +82,12 @@ public class AreaManager {
 
     }
 
-    public boolean shouldHideModels(int x, int z) {
+    public boolean shouldHideTile(int tileX, int tileY) {
+        WorldPoint point = WorldPoint.fromLocalInstance(client, LocalPoint.fromWorld(client, tileX, tileY));
+        return shouldHide(point);
+    }
+
+    public boolean shouldHide(WorldPoint location) {
         if (currentArea == null || !config.filterAreas()) {
             return false;
         }
@@ -89,13 +95,11 @@ public class AreaManager {
         if(currentArea.hideOtherRegions) {
             if (currentArea.aabbs.length != 0) {
                 for (AABB aabbs : currentArea.aabbs) {
-                    WorldPoint location = ModelHash.getWorldTemplateLocation(client, x, z);
                     if (!aabbs.contains(location)) {
                         return true;
                     }
                 }
             } else if (currentArea.region != -1 ){
-                WorldPoint location = ModelHash.getWorldTemplateLocation(client, x, z);
                 return location.getRegionID() != currentArea.region;
             }
         }
@@ -103,24 +107,5 @@ public class AreaManager {
         return false;
     }
 
-    public boolean shouldHideTiles(WorldPoint worldPoint) {
-        if (currentArea == null || !config.filterAreas()) {
-            return false;
-        }
-
-        if(currentArea.hideOtherRegions) {
-            if (currentArea.aabbs.length != 0) {
-                for (AABB aabbs : currentArea.aabbs) {
-                    if (!aabbs.contains(worldPoint)) {
-                        return true;
-                    }
-                }
-            } else if (currentArea.region != -1 ){
-                return worldPoint.getRegionID() != currentArea.region;
-            }
-        }
-
-        return false;
-    }
 
 }

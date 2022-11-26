@@ -6,10 +6,13 @@
   "items": {
     "type": "object",
     "additionalProperties": false,
-    "required": [ "description" ],
     "properties": {
       "description": {
         "type": "string",
+        "description": "Description of which area the properties apply to."
+      },
+      "region": {
+        "type": "int",
         "description": "Description of which area the properties apply to."
       },
       "aabbs": {
