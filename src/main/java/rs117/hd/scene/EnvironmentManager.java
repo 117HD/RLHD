@@ -25,24 +25,25 @@
 package rs117.hd.scene;
 
 import com.google.common.primitives.Floats;
-import java.util.ArrayList;
-import java.util.Arrays;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
-
-import static net.runelite.api.Constants.*;
-import static net.runelite.api.Constants.CHUNK_SIZE;
 import net.runelite.api.GameState;
 import net.runelite.api.coords.LocalPoint;
 import net.runelite.api.coords.WorldPoint;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
-import rs117.hd.data.environments.Environment;
-import rs117.hd.utils.HDUtils;
 import rs117.hd.config.DefaultSkyColor;
+import rs117.hd.data.environments.Environment;
 import rs117.hd.utils.AABB;
+import rs117.hd.utils.HDUtils;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import static net.runelite.api.Constants.CHUNK_SIZE;
+import static net.runelite.api.Constants.SCENE_SIZE;
 
 @Singleton
 @Slf4j
@@ -57,15 +58,15 @@ public class EnvironmentManager
 	@Inject
 	private HdPlugin hdPlugin;
 
-	private ArrayList<Environment> sceneEnvironments;
-	private Environment currentEnvironment;
 	private final Environment defaultEnvironment = Environment.OVERWORLD;
+	private ArrayList<Environment> sceneEnvironments;
+	private Environment currentEnvironment = defaultEnvironment;
 
 	// transition time
-	private final int transitionDuration = 3000;
+	private static final int transitionDuration = 3000;
 	// distance in tiles to skip transition (e.g. entering cave, teleporting)
 	// walking across a loading line causes a movement of 40-41 tiles
-	private final int skipTransitionTiles = 41;
+	private static final int skipTransitionTiles = 41;
 
 	// last environment change time
 	private long startTime = 0;
@@ -444,13 +445,10 @@ public class EnvironmentManager
 			log.debug("SceneArea: " + environment.name());
 		}
 
-		if (currentEnvironment != null)
-		{
-			WorldPoint camPosition = localPointToWorldTile(hdPlugin.camTarget[0], hdPlugin.camTarget[1]);
-			int camTargetX = camPosition.getX();
-			int camTargetY = camPosition.getY();
-			changeEnvironment(currentEnvironment, camTargetX, camTargetY, false);
-		}
+		WorldPoint camPosition = localPointToWorldTile(hdPlugin.camTarget[0], hdPlugin.camTarget[1]);
+		int camTargetX = camPosition.getX();
+		int camTargetY = camPosition.getY();
+		changeEnvironment(currentEnvironment, camTargetX, camTargetY, false);
 	}
 
 
@@ -529,7 +527,7 @@ public class EnvironmentManager
 	 * Returns the current fog color if logged in.
 	 * Else, returns solid black.
 	 *
-	 * @return
+	 * @return 3-component RGB color array
 	 */
 	public float[] getFogColor()
 	{
@@ -565,6 +563,6 @@ public class EnvironmentManager
 
 	public boolean isUnderwater()
 	{
-		return currentEnvironment != null && currentEnvironment.isUnderwater();
+		return currentEnvironment.isUnderwater();
 	}
 }
