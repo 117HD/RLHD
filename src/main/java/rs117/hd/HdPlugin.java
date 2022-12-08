@@ -2426,7 +2426,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				return;
 			}
 
-			model.calculateExtreme(orientation);
 			client.checkClickbox(model, orientation, pitchSin, pitchCos, yawSin, yawCos, x, y, z, hash);
 
 			int faceCount = Math.min(MAX_TRIANGLE, model.getFaceCount());
@@ -2467,7 +2466,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				return;
 			}
 
-			model.calculateExtreme(orientation);
 			client.checkClickbox(model, orientation, pitchSin, pitchCos, yawSin, yawCos, x, y, z, hash);
 
 			eightIntWrite[3] = renderBufferOffset;
