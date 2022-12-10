@@ -5310,6 +5310,7 @@
     "description": "Stone - Steps",
     "baseMaterial": "STONE",
     "objectIds": [
+      5307,
       5460
     ]
   },
