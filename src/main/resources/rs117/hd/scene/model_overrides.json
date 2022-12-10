@@ -5256,5 +5256,28 @@
     "uvType": "MODEL_XY",
     "uvOrientation": 512,
     "uvScale": 0.76
+  },
+  {
+    "description": "Objects - Swamp Root - Small",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      1366,
+      1367,
+      1368
+    ],
+    "uvType": "MODEL_XY_MIRROR_B",
+    "uvScale": 0.6,
+    "uvOrientation": 342
+  },
+  {
+    "description": "Objects - Swamp Root - Large",
+    "baseMaterial": "LIGHT_BARK",
+    "objectIds": [
+      1363,
+      1364
+    ],
+    "uvType": "MODEL_XY_MIRROR_B",
+    "uvScale": 0.4,
+    "uvOrientation": 342
   }
 ]
