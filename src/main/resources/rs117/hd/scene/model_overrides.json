@@ -3587,9 +3587,11 @@
     "baseMaterial": "CARPET",
     "objectIds": [
       7481,
+      24095,
       40304
     ],
     "uvType": "MODEL_XZ",
+    "uvScale": 0.7,
     "flatNormals": true
   },
   {
@@ -3597,9 +3599,11 @@
     "baseMaterial": "CARPET",
     "objectIds": [
       7480,
+      24094,
       40305
     ],
     "uvType": "MODEL_XZ",
+    "uvScale": 0.7,
     "flatNormals": true
   },
   {
@@ -3607,9 +3611,11 @@
     "baseMaterial": "CARPET",
     "objectIds": [
       7447,
+      24093,
       40306
     ],
     "uvType": "MODEL_XZ_MIRROR_A",
+    "uvScale": 0.7,
     "flatNormals": true
   },
   {
