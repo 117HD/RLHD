@@ -5259,5 +5259,16 @@
     "uvType": "MODEL_XY",
     "uvOrientation": 512,
     "uvScale": 0.76
+  },
+  {
+    "description": "Carpet - Aris",
+    "baseMaterial": "FINE_CARPET",
+    "objectIds": [
+      2455,
+      2456,
+      2457
+    ],
+    "uvType": "MODEL_XZ",
+    "flatNormals": true
   }
 ]
