@@ -4505,6 +4505,7 @@
     "description": "Wooden Door - Plank",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
+      1749,
       2398,
       5244,
       5245,
