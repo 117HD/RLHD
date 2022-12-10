@@ -5256,5 +5256,14 @@
     "uvType": "MODEL_XY",
     "uvOrientation": 512,
     "uvScale": 0.76
+  },
+  {
+    "description": "PHASMATYS_WALLS",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      5452,
+      5361,
+      5362
+    ]
   }
 ]
