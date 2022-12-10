@@ -71,7 +71,6 @@ flat in vec4 vColor[3];
 flat in vec3 vUv[3];
 flat in int vMaterialData[3];
 flat in int vTerrainData[3];
-flat in ivec3 isOverlay;
 in float fogAmount;
 in vec3 normals;
 in vec3 position;
@@ -462,7 +461,11 @@ void main() {
         texColor2.rgb *= material2.brightness;
         texColor3.rgb *= material3.brightness;
 
-        ivec3 isOverlay = isOverlay;
+        ivec3 isOverlay = ivec3(
+            vMaterialData[0] >> 3 & 1,
+            vMaterialData[1] >> 3 & 1,
+            vMaterialData[2] >> 3 & 1
+        );
         int overlayCount = isOverlay[0] + isOverlay[1] + isOverlay[2];
         ivec3 isUnderlay = ivec3(1) - isOverlay;
         int underlayCount = isUnderlay[0] + isUnderlay[1] + isUnderlay[2];

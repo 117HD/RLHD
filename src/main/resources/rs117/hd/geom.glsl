@@ -51,7 +51,6 @@ flat out vec4 vColor[3];
 flat out vec3 vUv[3];
 flat out int vMaterialData[3];
 flat out int vTerrainData[3];
-flat out ivec3 isOverlay;
 out float fogAmount;
 out vec3 normals;
 out vec3 position;
@@ -71,11 +70,10 @@ void main() {
     }
 
     for (int i = 0; i < 3; i++) {
+        vColor[i] = IN[i].color;
+        vUv[i] = IN[i].uv.xyz;
         vMaterialData[i] = int(IN[i].uv.w);
         vTerrainData[i] = int(IN[i].normal.w);
-        isOverlay[i] = vMaterialData[i] >> 3 & 1;
-        vUv[i] = IN[i].uv.xyz;
-        vColor[i] = IN[i].color;
     }
 
     for (int i = 0; i < 3; i++) {
