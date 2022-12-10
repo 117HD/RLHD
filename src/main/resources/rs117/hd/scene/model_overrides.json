@@ -3587,6 +3587,9 @@
     "baseMaterial": "CARPET",
     "objectIds": [
       7481,
+      14046,
+      14047,
+      14048,
       24095,
       40304
     ],
@@ -3628,6 +3631,9 @@
       928,
       929,
       930,
+      931,
+      932,
+      933,
       937,
       938,
       940,
@@ -3636,6 +3642,9 @@
       943,
       944,
       945,
+      6251,
+      6252,
+      6253,
       6812,
       6813,
       6814,
@@ -5267,12 +5276,25 @@
     "uvScale": 0.76
   },
   {
-    "description": "Carpet - Aris",
+    "description": "Round Rug",
     "baseMaterial": "FINE_CARPET",
     "objectIds": [
       2455,
       2456,
-      2457
+      2457,
+      25124,
+      25125,
+      25126
+    ],
+    "uvType": "MODEL_XZ",
+    "flatNormals": true
+  },
+  {
+    "description": "PoH - Rug",
+    "baseMaterial": "FINE_CARPET",
+    "objectIds": [
+      6762,
+      6763
     ],
     "uvType": "MODEL_XZ",
     "flatNormals": true
