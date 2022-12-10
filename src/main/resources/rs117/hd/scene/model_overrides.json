@@ -5304,5 +5304,20 @@
       5447,
       5448
     ]
+  },
+  {
+    "description": "Stone - Steps",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      5460
+    ]
+  }
+,
+  {
+    "description": "Stone - Stairs - cobbled",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      16646
+    ]
   }
 ]
