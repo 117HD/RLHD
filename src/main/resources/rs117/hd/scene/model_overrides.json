@@ -5264,7 +5264,8 @@
       5452,
       5361,
       5362
-    ]
+    ],
+    "flatNormals": true
   },
   {
     "description": "PHASMATYS - House - Walls",
@@ -5278,5 +5279,24 @@
     ],
     "uvType": "MODEL_XY",
     "uvScale": 0.83
+  },
+  {
+    "description": "PHASMATYS - Stone - Rubble - Small",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      5301,
+      5302,
+      5303
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.76
+  },
+  {
+    "description": "PHASMATYS - Stone - Rubble - Medium",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      5447,
+      5448
+    ]
   }
 ]
