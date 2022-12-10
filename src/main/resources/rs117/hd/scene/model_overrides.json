@@ -2605,7 +2605,6 @@
       756,
       2173,
       2174,
-      2383,
       3702,
       3704,
       3711,
@@ -5144,6 +5143,7 @@
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
       320,
+      2382,
       3709,
       3949,
       7106
@@ -5238,6 +5238,8 @@
     "description": "Ground Decoration - Rock - Small - Uncolored",
     "baseMaterial": "ROCK_1",
     "objectIds": [
+      2381,
+      2383,
       14482,
       14485
     ],
