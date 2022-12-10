@@ -5277,5 +5277,62 @@
     ],
     "uvType": "WORLD_XZ",
     "uvScale": 0.74
+  },
+  {
+    "description": "barbarian - Walls - Wooden - Planks",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      11558,
+      11559,
+      11560,
+      11561
+    ],
+    "uvType": "MODEL_XY",
+    "uvOrientation": 512,
+    "uvScale": 0.76
+  },
+  {
+    "description": "barbarian - Doors - Wooden - Planks - Closed",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      11616
+    ],
+    "uvType": "MODEL_XY",
+    "uvOrientation": 512,
+    "uvScale": 0.85,
+    "flatNormals": true
+  },
+  {
+    "description": "barbarian - Doors - Wooden - Planks - Open",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      11617
+    ],
+    "uvType": "MODEL_XY",
+    "uvOrientation": 512,
+    "uvScale": 0.85,
+    "flatNormals": true
+  },
+  {
+    "description": "barbarian - doors - Wooden - Planks",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.46,
+    "uvOrientation": 512,
+    "flatNormals": true
+  },
+  {
+    "description": "barbarian - doors - Wooden - Planks - Corners",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+
+    ],
+    "uvType": "MODEL_XY",
+    "uvOrientation": 512,
+    "uvScale": 0.46,
+    "flatNormals": true
   }
 ]
