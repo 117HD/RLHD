@@ -371,6 +371,9 @@ public enum Material
 	ICE_1(GRUNGE_2, p -> p
 			.setSpecular(1.1f,200)
 	),
+	SLIME_GRUNGE(GRUNGE_1, p -> p
+			.setSpecular(4.1f,60)
+	),
 
 	// Seasonal
 	WINTER_WILLOW_LEAVES(p -> p

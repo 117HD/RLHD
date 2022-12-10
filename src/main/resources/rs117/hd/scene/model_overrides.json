@@ -5318,5 +5318,18 @@
     "objectIds": [
       16646
     ]
+  },
+  {
+    "description": "Phasmatys - Slime",
+    "baseMaterial": "SLIME_GRUNGE",
+    "objectIds": [
+      5377,
+      5378,
+      5379,
+      5380,
+      5381,
+      5382,
+      5383
+    ]
   }
 ]
