@@ -25,6 +25,7 @@
  */
 #version 330
 
+#include utils/structs.glsl
 #include uniforms/camera.glsl
 #include uniforms/materials.glsl
 #include uniforms/water_types.glsl
@@ -67,16 +68,11 @@ uniform float contrast;
 
 uniform int pointLightsCount; // number of lights in current frame
 
-in PrimitiveData {
-    flat vec4 vColor;
-    flat vec3 vUv;
-    flat int vMaterialData;
-    flat int vTerrainData;
-} PRIM[3];
+flat in Vertex[3] vertices;
 
 in FragmentData {
     float fogAmount;
-    vec3 normals;
+    vec3 normal;
     vec3 position;
     vec3 texBlend;
 } IN;
@@ -153,7 +149,7 @@ float sampleShadowMap(vec3 fragPos, int waterTypeIndex, vec2 distortion, float l
 vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     WaterType waterType = getWaterType(waterTypeIndex);
 
-    vec2 baseUv = PRIM[0].vUv.xy * IN.texBlend.x + PRIM[1].vUv.xy * IN.texBlend.y + PRIM[2].vUv.xy * IN.texBlend.z;
+    vec2 baseUv = vertices[0].uv.xy * IN.texBlend.x + vertices[1].uv.xy * IN.texBlend.y + vertices[2].uv.xy * IN.texBlend.z;
     vec2 uv2, uv3 = baseUv;
 
     uv2 = vec2(
@@ -290,9 +286,9 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     float shadowDarken = 0.15;
     baseColor *= (1.0 - shadowDarken) + inverseShadow * shadowDarken;
     float shoreLineMask = 1 - (
-        PRIM[0].vColor.x * IN.texBlend.x +
-        PRIM[1].vColor.x * IN.texBlend.y +
-        PRIM[2].vColor.x * IN.texBlend.z
+        vertices[0].color.x * IN.texBlend.x +
+        vertices[1].color.x * IN.texBlend.y +
+        vertices[2].color.x * IN.texBlend.z
     );
     float maxFoamAmount = 0.8;
     float foamAmount = min(shoreLineMask, maxFoamAmount);
@@ -360,20 +356,20 @@ void main() {
     vec3 lightDir = -lightDirection;
 
     // material data
-    Material material1 = getMaterial(PRIM[0].vMaterialData >> MATERIAL_FLAG_BITS);
-    Material material2 = getMaterial(PRIM[1].vMaterialData >> MATERIAL_FLAG_BITS);
-    Material material3 = getMaterial(PRIM[2].vMaterialData >> MATERIAL_FLAG_BITS);
+    Material material1 = getMaterial(vertices[0].materialData >> MATERIAL_FLAG_BITS);
+    Material material2 = getMaterial(vertices[1].materialData >> MATERIAL_FLAG_BITS);
+    Material material3 = getMaterial(vertices[2].materialData >> MATERIAL_FLAG_BITS);
 
     // water data
-    bool isTerrain = (PRIM[0].vTerrainData & 1) != 0; // 1 = 0b1
-    int waterDepth1 = PRIM[0].vTerrainData >> 8;
-    int waterDepth2 = PRIM[1].vTerrainData >> 8;
-    int waterDepth3 = PRIM[2].vTerrainData >> 8;
+    bool isTerrain = (vertices[0].terrainData & 1) != 0; // 1 = 0b1
+    int waterDepth1 = vertices[0].terrainData >> 8;
+    int waterDepth2 = vertices[1].terrainData >> 8;
+    int waterDepth3 = vertices[2].terrainData >> 8;
     float waterDepth =
         waterDepth1 * IN.texBlend.x +
         waterDepth2 * IN.texBlend.y +
         waterDepth3 * IN.texBlend.z;
-    int waterTypeIndex = isTerrain ? PRIM[0].vTerrainData >> 3 & 0x1F : 0;
+    int waterTypeIndex = isTerrain ? vertices[0].terrainData >> 3 & 0x1F : 0;
     WaterType waterType = getWaterType(waterTypeIndex);
 
     // set initial texture map ids
@@ -393,17 +389,17 @@ void main() {
         outputColor = sampleWater(waterTypeIndex, viewDir);
     } else {
         // Source: https://www.geeks3d.com/20130122/normal-mapping-without-precomputed-tangent-space-vectors/
-        vec3 N = IN.normals;
+        vec3 N = IN.normal;
         vec3 C1 = cross(vec3(0, 0, 1), N);
         vec3 C2 = cross(vec3(0, 1, 0), N);
         vec3 T = normalize(length(C1) > length(C2) ? C1 : C2);
-        vec3 B = normalize(cross(N, T));
+        vec3 B = cross(N, T);
         mat3 TBN = mat3(T, B, N);
 
         // TODO: blended UV should probably be computed before getUvs
-        vec2 uv1 = getUvs(PRIM[0].vUv, PRIM[0].vMaterialData, IN.position);
-        vec2 uv2 = getUvs(PRIM[1].vUv, PRIM[1].vMaterialData, IN.position);
-        vec2 uv3 = getUvs(PRIM[2].vUv, PRIM[2].vMaterialData, IN.position);
+        vec2 uv1 = getUvs(vertices[0].uv, vertices[0].materialData, IN.position);
+        vec2 uv2 = getUvs(vertices[1].uv, vertices[1].materialData, IN.position);
+        vec2 uv3 = getUvs(vertices[2].uv, vertices[2].materialData, IN.position);
         vec2 blendedUv = uv1 * IN.texBlend.x + uv2 * IN.texBlend.y + uv3 * IN.texBlend.z;
         uv1 = uv2 = uv3 = blendedUv;
 
@@ -454,9 +450,9 @@ void main() {
 
         // get vertex colors
         vec4 flatColor = vec4(0.5, 0.5, 0.5, 1.0);
-        vec4 baseColor1 = PRIM[0].vColor;
-        vec4 baseColor2 = PRIM[1].vColor;
-        vec4 baseColor3 = PRIM[2].vColor;
+        vec4 baseColor1 = vertices[0].color;
+        vec4 baseColor2 = vertices[1].color;
+        vec4 baseColor3 = vertices[2].color;
 
         // get diffuse textures
         vec4 texColor1 = colorMap1 == -1 ? vec4(1) : texture(textureArray, vec3(uv1, colorMap1));
@@ -467,9 +463,9 @@ void main() {
         texColor3.rgb *= material3.brightness;
 
         ivec3 isOverlay = ivec3(
-            PRIM[0].vMaterialData >> 3 & 1,
-            PRIM[1].vMaterialData >> 3 & 1,
-            PRIM[2].vMaterialData >> 3 & 1
+            vertices[0].materialData >> 3 & 1,
+            vertices[1].materialData >> 3 & 1,
+            vertices[2].materialData >> 3 & 1
         );
         int overlayCount = isOverlay[0] + isOverlay[1] + isOverlay[2];
         ivec3 isUnderlay = ivec3(1) - isOverlay;
@@ -537,15 +533,15 @@ void main() {
             // assign standalone UV to uvA and others to uvB, uvC
             for (int i = 0; i < 3; i++)
             {
-                vec2 uv = PRIM[0].vUv.xy;
+                vec2 uv = vertices[0].uv.xy;
 
                 if (i == 1)
                 {
-                    uv = PRIM[1].vUv.xy;
+                    uv = vertices[1].uv.xy;
                 }
                 else if (i == 2)
                 {
-                    uv = PRIM[2].vUv.xy;
+                    uv = vertices[2].uv.xy;
                 }
 
                 if ((isOverlay[i] == 1 && overlayCount == 1) || (isUnderlay[i] == 1 && underlayCount == 1))
@@ -610,9 +606,9 @@ void main() {
         outputColor = mix(underlayColor, overlayColor, overlayMix);
 
         // normals
-        vec3 n1 = sampleNormalMap(material1, uv1, IN.normals, TBN);
-        vec3 n2 = sampleNormalMap(material2, uv2, IN.normals, TBN);
-        vec3 n3 = sampleNormalMap(material3, uv3, IN.normals, TBN);
+        vec3 n1 = sampleNormalMap(material1, uv1, IN.normal, TBN);
+        vec3 n2 = sampleNormalMap(material2, uv2, IN.normal, TBN);
+        vec3 n3 = sampleNormalMap(material3, uv3, IN.normal, TBN);
         vec3 normals = normalize(n1 * IN.texBlend.x + n2 * IN.texBlend.y + n3 * IN.texBlend.z);
 
         float lightDotNormals = dot(normals, lightDir);

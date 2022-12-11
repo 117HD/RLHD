@@ -34,6 +34,7 @@ layout(triangle_strip, max_vertices = 3) out;
 
 #include utils/polyfills.glsl
 #include utils/constants.glsl
+#include utils/structs.glsl
 #include utils/misc.glsl
 
 uniform mat4 projectionMatrix;
@@ -47,16 +48,11 @@ in VertexData {
     float fogAmount;
 } IN[3];
 
-out PrimitiveData {
-    flat vec4 vColor;
-    flat vec3 vUv;
-    flat int vMaterialData;
-    flat int vTerrainData;
-} PRIM[3];
+flat out Vertex[3] vertices;
 
 out FragmentData {
     float fogAmount;
-    vec3 normals;
+    vec3 normal;
     vec3 position;
     vec3 texBlend;
 } OUT;
@@ -67,18 +63,18 @@ void main() {
         length(IN[0].normal.xyz) < .01 ||
         (materialData >> MATERIAL_FLAG_FLAT_NORMALS & 1) == 1;
 
-    if (flatNormals) {
-        vec3 T = normalize(vec3(IN[0].pos - IN[1].pos));
-        vec3 B = normalize(vec3(IN[0].pos - IN[2].pos));
-        vec3 N = normalize(cross(T, B));
-        OUT.normals = N;
-    }
+    // Compute flat normals
+    vec3 T = vec3(IN[0].pos - IN[1].pos);
+    vec3 B = vec3(IN[0].pos - IN[2].pos);
+    vec3 N = normalize(cross(T, B));
 
     for (int i = 0; i < 3; i++) {
-        PRIM[i].vColor = IN[i].color;
-        PRIM[i].vUv = IN[i].uv.xyz;
-        PRIM[i].vMaterialData = int(IN[i].uv.w);
-        PRIM[i].vTerrainData = int(IN[i].normal.w);
+        vertices[i] = Vertex(
+            IN[i].color,
+            IN[i].uv.xyz,
+            int(IN[i].uv.w),
+            int(IN[i].normal.w)
+        );
     }
 
     for (int i = 0; i < 3; i++) {
@@ -86,8 +82,7 @@ void main() {
         OUT.texBlend[i] = 1;
         OUT.fogAmount = IN[i].fogAmount;
         OUT.position = IN[i].pos;
-        if (!flatNormals)
-            OUT.normals = normalize(IN[i].normal.xyz);
+        OUT.normal = flatNormals ? N : normalize(IN[i].normal.xyz);
         gl_Position = projectionMatrix * vec4(IN[i].pos, 1.f);
         EmitVertex();
     }
