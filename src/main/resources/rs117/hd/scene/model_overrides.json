@@ -1442,7 +1442,9 @@
     "description": "STONE_STEPS",
     "baseMaterial": "STONE",
     "objectIds": [
-      3684, 20950
+      3684,
+      20950,
+      20951
     ]
   },
   {
