@@ -3342,6 +3342,7 @@
       2052,
       2053,
       2618,
+      3125,
       23848,
       23849,
       23850,
@@ -5256,5 +5257,14 @@
     "uvType": "MODEL_XY",
     "uvOrientation": 512,
     "uvScale": 0.76
+  },
+  {
+    "description": "Fence Gate - Static",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      44922,
+      44923
+    ],
+    "flatNormals": true
   }
 ]
