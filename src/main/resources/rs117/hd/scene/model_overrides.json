@@ -965,6 +965,7 @@
       "KOVAC_11472"
     ],
     "objectIds": [
+      2052,
       4502,
       17208,
       17324,
@@ -2448,8 +2449,8 @@
       338,
       339,
       340,
+      341,
       342,
-      728,
       3169,
       3170,
       3171,
@@ -2469,10 +2470,25 @@
       7122,
       7125,
       7126,
+      7128,
+      10029,
+      10030,
+      10031,
       10844,
       10845,
       10846,
       10847,
+      11099,
+      11100,
+      11101,
+      11102,
+      11104,
+      11105,
+      11106,
+      11107,
+      11108,
+      11122,
+      11123,
       18934
     ],
     "inheritTileColorType": "OVERLAY",
@@ -2524,7 +2540,6 @@
       178,
       322,
       323,
-      341,
       4731,
       4733,
       4734,
@@ -2564,7 +2579,6 @@
     "objectIds": [
       11101,
       11102,
-      11103,
       11104,
       14914,
       15634,
@@ -2731,12 +2745,25 @@
       179,
       336,
       2382,
+      3634,
+      3635,
+      3636,
+      3637,
+      3638,
+      3639,
       3703,
       3750,
+      5950,
+      5953,
+      5954,
       5955,
+      5956,
       5958,
       6672,
       6673,
+      11931,
+      11932,
+      11934,
       12578,
       12596,
       12705,
@@ -2747,6 +2774,9 @@
       14494,
       14495,
       14498,
+      19390,
+      19393,
+      19397,
       25077,
       25078,
       25079,
@@ -4568,6 +4598,103 @@
     "uvType": "MODEL_XZ"
   },
   {
+    "description": "Khandarian Eagles Landing",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      19798
+    ]
+  },
+  {
+    "description": "Grunge-Like Object",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      6358,
+      6359,
+      6360,
+      6361
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Sand clumps",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      11114,
+      11115,
+      11116,
+      11117,
+      11118,
+      11119,
+      11120,
+      11121
+    ]
+  },
+  {
+    "description": "Sand Hole",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      10952,
+      11122,
+      11123,
+      11046
+    ]
+  },
+  {
+    "description": "Sandstone Rocks",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      11386
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.4
+  },
+  {
+    "description": "Granite Rocks",
+    "baseMaterial": "ROCK_2",
+    "objectIds": [
+      11387
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.25
+  },
+  {
+    "description": "Kharidian Rocks",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      11096,
+      16549,
+      16550,
+      16551,
+      18892,
+      18893,
+      18894,
+      18895,
+      26640,
+      26641
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.4
+  },
+  {
+    "description": "Kharidian Sandstone",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      11099,
+      11100,
+      11101,
+      11102,
+      11103,
+      11104,
+      11105,
+      11106,
+      11107,
+      11108
+    ],
+    "inheritTileColorType": "OVERLAY",
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.6
+  },
+  {
     "description": "GuTanoth bridges",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
@@ -4980,10 +5107,19 @@
       321,
       4342,
       4344,
+      11084,
+      11085,
+      11086,
+      11087,
+      11093,
+      11094,
+      11095,
+      11098,
       11190,
       11191,
       11192,
       11193,
+      11195,
       18474,
       18478
     ],
@@ -5001,10 +5137,16 @@
     "baseMaterial": "DIRT_2",
     "objectIds": [
       324,
+      325,
       326,
       2376,
       2377,
-      2378
+      2378,
+      11088,
+      11089,
+      11090,
+      11091,
+      11092
     ],
     "inheritTileColorType": "OVERLAY",
     "uvType": "WORLD_XZ",
@@ -5081,6 +5223,7 @@
     "description": "Ground Decoration - Grunge - Small - Colored",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
+      728,
       730,
       4339,
       4341,
