@@ -3355,7 +3355,8 @@
       24453,
       24454,
       24560,
-      24561
+      24561,
+      29110
     ],
     "flatNormals": true
   },
@@ -5264,6 +5265,25 @@
     "objectIds": [
       44922,
       44923
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "Objects - Wooden - Crate",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      7514
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "Wall - Decoration - Wooden - Crate",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      10131,
+      10132,
+      10133,
+      10134
     ],
     "flatNormals": true
   }
