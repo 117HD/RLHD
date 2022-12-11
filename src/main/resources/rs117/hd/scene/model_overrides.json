@@ -5274,7 +5274,8 @@
     "description": "Objects - Wooden - Crate",
     "baseMaterial": "DOCK_FENCE",
     "objectIds": [
-      7514
+      7514,
+      10374
     ],
     "flatNormals": true
   },
