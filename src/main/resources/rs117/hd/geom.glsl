@@ -34,7 +34,6 @@ layout(triangle_strip, max_vertices = 3) out;
 
 #include utils/polyfills.glsl
 #include utils/constants.glsl
-#include utils/structs.glsl
 #include utils/misc.glsl
 
 uniform mat4 projectionMatrix;
@@ -48,7 +47,10 @@ in VertexData {
     float fogAmount;
 } IN[3];
 
-flat out Vertex[3] vertices;
+flat out vec4 vColor[3];
+flat out vec3 vUv[3];
+flat out int vMaterialData[3];
+flat out int vTerrainData[3];
 
 out FragmentData {
     float fogAmount;
@@ -69,12 +71,10 @@ void main() {
     vec3 N = normalize(cross(T, B));
 
     for (int i = 0; i < 3; i++) {
-        vertices[i] = Vertex(
-            IN[i].color,
-            IN[i].uv.xyz,
-            int(IN[i].uv.w),
-            int(IN[i].normal.w)
-        );
+        vColor[i] = IN[i].color;
+        vUv[i] = IN[i].uv.xyz;
+        vMaterialData[i] = int(IN[i].uv.w);
+        vTerrainData[i] = int(IN[i].normal.w);
     }
 
     for (int i = 0; i < 3; i++) {
