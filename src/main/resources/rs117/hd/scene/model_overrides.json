@@ -2811,7 +2811,8 @@
     "description": "DIRT_CAVE_ENTRANCES",
     "baseMaterial": "DIRT_2",
     "objectIds": [
-      3213
+      3213,
+      39721
     ]
   },
   {
@@ -3150,6 +3151,7 @@
       810,
       811,
       812,
+      10837,
       11591,
       11592,
       11593,
@@ -3933,6 +3935,8 @@
     "description": "Ladder - Untextured",
     "baseMaterial": "DOCK_FENCE",
     "objectIds": [
+      10493,
+      10494,
       11794,
       11795,
       25606,
@@ -5302,5 +5306,60 @@
       827,
       828
     ]
+  },
+  {
+    "description": "Objects - Metallic - Chair - Broken",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      19929
+    ]
+  },
+  {
+    "description": "Objects - Metallic - Range",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      7183
+    ]
+  },
+  {
+    "description": "Wall - Decoration - Metallic - Sword and Shield",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      10515
+    ]
+  },
+  {
+    "description": "Wall - Wooden - Post",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      10106,
+      12278
+    ],
+    "uvScale": 0.4,
+    "uvType": "MODEL_YZ",
+    "flatNormals": true
+  },
+  {
+    "description": "Objects - Metallic - Pots",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      10504,
+      10505
+    ]
+  },
+  {
+    "description": "Objects - Metallic - Iron Billets",
+    "baseMaterial": "METALLIC_2",
+    "objectIds": [
+      2140
+    ]
+  },
+  {
+    "description": "Ground - Wooden - Plank Steps",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      4303
+    ],
+    "uvType": "MODEL_XZ"
   }
 ]
