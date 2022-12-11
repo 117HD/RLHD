@@ -1260,9 +1260,14 @@
     "baseMaterial": "BARK",
     "objectIds": [
       1282,
+      1284,
       1286,
       1297,
-      1383
+      1383,
+      5902,
+      5903,
+      5904,
+      5905
     ]
   },
   {
@@ -3035,6 +3040,7 @@
       5013,
       5014,
       5046,
+      5858,
       5973,
       12770,
       26567,
@@ -3342,6 +3348,9 @@
       2052,
       2053,
       2618,
+      5882,
+      9589,
+      12430,
       23848,
       23849,
       23850,
@@ -4757,7 +4766,8 @@
     "description": "Snow Caves",
     "baseMaterial": "SNOW_2",
     "objectIds": [
-      5012
+      5012,
+      5857
     ],
     "uvType": "MODEL_XZ",
     "uvScale": 0.5
@@ -4797,9 +4807,6 @@
       3637,
       3638,
       3639,
-      5604,
-      5605,
-      5606,
       3712,
       3714,
       3715,
@@ -4813,6 +4820,9 @@
       3806,
       3807,
       3808,
+      4356,
+      4357,
+      4358,
       4603,
       4604,
       4605,
@@ -4821,6 +4831,13 @@
       5037,
       5038,
       5039,
+      5604,
+      5605,
+      5606,
+      5842,
+      5843,
+      5844,
+      5849,
       5950,
       5951,
       5952,
@@ -4942,6 +4959,7 @@
       28994,
       28997,
       29000,
+      29015,
       29032
     ],
     "uvType": "WORLD_XZ",
@@ -4955,9 +4973,6 @@
       3895,
       3896,
       3897,
-      4356,
-      4357,
-      5842,
       5847,
       27899,
       29856,
@@ -5256,5 +5271,46 @@
     "uvType": "MODEL_XY",
     "uvOrientation": 512,
     "uvScale": 0.76
+  },
+  {
+    "description": "Ground Decoration - Flat Stone - Small - Uncolored",
+    "baseMaterial": "SNOW_3",
+    "objectIds": [
+      5850,
+      5851
+    ],
+    "uvType": "WORLD_XZ"
+  },
+  {
+    "description": "Walls - Grunge - Generic",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      4374
+    ]
+  },
+  {
+    "description": "Objects - Stone - Dwarf Statues",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      7002,
+      7003
+    ],
+    "flatNormals": true
+  },
+  {
+  "description": "Objects - Stone - Stalagmite",
+  "baseMaterial": "STONE",
+  "objectIds": [
+    5231,
+    5232
+  ]
+  },
+  {
+    "description": "Objects - Stone - Mountain Daughter Burial",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      5861
+    ],
+    "uvType": "MODEL_XZ"
   }
 ]
