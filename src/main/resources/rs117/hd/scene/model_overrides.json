@@ -5303,6 +5303,7 @@
   "description": "Objects - Stone - Stalagmite",
   "baseMaterial": "STONE",
   "objectIds": [
+    4600,
     5231,
     5232
   ]
