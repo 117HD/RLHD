@@ -5560,7 +5560,8 @@
   },
   {
     "description": "Penguin Footprints",
-    "baseMaterial": "ICE_FLAT",
+    "baseMaterial": "SNOW_2",
+    "uvType": "WORLD_XZ",
     "objectIds": [
       21247,
       21248
