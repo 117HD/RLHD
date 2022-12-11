@@ -5291,5 +5291,15 @@
       10134
     ],
     "flatNormals": true
+  },
+  {
+    "description": "Metallic - Ground - Armor",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      825,
+      826,
+      827,
+      828
+    ]
   }
 ]
