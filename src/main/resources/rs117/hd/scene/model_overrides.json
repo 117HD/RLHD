@@ -5243,6 +5243,7 @@
     "description": "Ground Decoration - Rock - Small - Uncolored",
     "baseMaterial": "ROCK_1",
     "objectIds": [
+      7115,
       14482,
       14485
     ],
