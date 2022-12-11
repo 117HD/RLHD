@@ -2812,7 +2812,8 @@
     "baseMaterial": "DIRT_2",
     "objectIds": [
       3213,
-      39721
+      39721,
+      44635
     ]
   },
   {
@@ -5290,6 +5291,7 @@
     "description": "Wall - Decoration - Wooden - Crate",
     "baseMaterial": "DOCK_FENCE",
     "objectIds": [
+      10130,
       10131,
       10132,
       10133,
@@ -5361,5 +5363,12 @@
       4303
     ],
     "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Objects - Metallic - Giant Anvil",
+    "baseMaterial": "METALLIC_2",
+    "objectIds": [
+      39724
+    ]
   }
 ]
