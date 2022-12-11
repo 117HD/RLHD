@@ -1286,7 +1286,8 @@
     "description": "FARMING_PATCH_2",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
-      7522
+      7522,
+      7523
     ],
     "uvType": "MODEL_XZ"
   },
