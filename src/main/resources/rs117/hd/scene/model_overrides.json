@@ -4530,6 +4530,8 @@
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       2398,
+      11616,
+      11617,
       11765,
       11778,
       11779,
@@ -4539,8 +4541,7 @@
     ],
     "uvOrientation": 512,
     "uvScale": 0.4,
-    "uvType": "MODEL_XY",
-    "flatNormals": true
+    "uvType": "MODEL_XY"
   },
   {
     "description": "Varrock Castle Doors",
@@ -5277,5 +5278,18 @@
     ],
     "uvType": "WORLD_XZ",
     "uvScale": 0.74
+  },
+  {
+    "description": "barbarian - Walls - Wooden - Planks",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      11558,
+      11559,
+      11560,
+      11561
+    ],
+    "uvType": "MODEL_XY",
+    "uvOrientation": 512,
+    "uvScale": 0.76
   }
 ]
