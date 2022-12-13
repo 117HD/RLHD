@@ -3747,7 +3747,9 @@
       11184,
       11185,
       11186,
-      18479
+      18479,
+      37816,
+      37817
     ]
   },
   {
@@ -5239,7 +5241,14 @@
     "baseMaterial": "ROCK_1",
     "objectIds": [
       14482,
-      14485
+      14485,
+      37800,
+      37801,
+      37802,
+      37803,
+      37804,
+      37805,
+      37806
     ],
     "uvType": "WORLD_XZ",
     "uvScale": 0.74
@@ -5287,5 +5296,16 @@
       4078
     ],
     "uvType": "MODEL_XY_MIRROR_B"
+  },
+  {
+    "description": "Mortten - Walls - Stone - Shade Catacombs Walls",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      17900,
+      38020,
+      38021,
+      40470
+    ],
+    "uvType": "MODEL_XY"
   }
 ]
