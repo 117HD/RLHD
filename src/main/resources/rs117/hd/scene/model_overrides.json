@@ -4966,6 +4966,7 @@
       5847,
       11182,
       11183,
+      11425,
       27899,
       29856,
       29857,
@@ -5285,7 +5286,7 @@
     "objectIds": [
       4065
     ],
-    "uvType": "MODEL_XZ"
+    "uvType": "GEOMETRY"
   },
   {
     "description": "Mortton - Objects - Stone - Temple Walls",
@@ -5404,6 +5405,14 @@
     "baseMaterial": "GRUNGE_2",
     "objectIds": [
       1171
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Objects - Huge Mushroom - Medium",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      4056
     ],
     "uvType": "MODEL_XZ"
   }
