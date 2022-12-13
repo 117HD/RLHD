@@ -5271,5 +5271,21 @@
       4065
     ],
     "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Mortten - Objects - Stone - Temple Walls",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      4089
+    ],
+    "uvType": "MODEL_XY"
+  },
+  {
+    "description": "Mortten - Objects - Stone - Temple Walls - Mirrored",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      4078
+    ],
+    "uvType": "MODEL_XY_MIRROR_B"
   }
 ]
