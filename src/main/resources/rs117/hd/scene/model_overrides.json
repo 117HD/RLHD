@@ -5311,8 +5311,8 @@
       40470
     ],
     "uvType": "MODEL_XY"
-   },
-   {
+  },
+  {
     "description": "Mortten Shade Catacombs - Walls - Stone",
     "baseMaterial": "STONE",
     "objectIds": [
@@ -5324,8 +5324,8 @@
       40470
     ],
     "uvType": "MODEL_XY_MIRROR_B"
-   },
-   {
+  },
+  {
     "description": "Mortten Shade Catacombs  - Walls - Metallic - Doors",
     "baseMaterial": "METALLIC_2_SEMIGLOSS",
     "objectIds": [
@@ -5340,8 +5340,8 @@
     ],
     "uvType": "MODEL_XY",
     "uvScale": 0.5
-   },
-   {
+  },
+  {
     "description": "Mortten Shade Catacombs  - Objects - Stone - Grave Stone",
     "baseMaterial": "STONE",
     "objectIds": [
@@ -5349,16 +5349,16 @@
        40472
     ],
     "uvType": "GEOMETRY"
-   },
-   {
+  },
+  {
     "description": "Mortten Shade Catacombs  - Objects - Stone - Alter",
     "baseMaterial": "STONE",
     "objectIds": [
        41222
     ],
     "uvType": "GEOMETRY"
-   },
-   {
+  },
+  {
     "description": "Mortten Shade Catacombs  - Objects - Stone - Hole",
     "baseMaterial": "ROCK_1_LIGHT",
     "objectIds": [
@@ -5366,8 +5366,8 @@
       37863
     ],
     "uvType": "MODEL_XZ"
-   },
-   {
+  },
+  {
     "description": "Objects - Vines",
     "baseMaterial": "GRUNGE_2",
     "objectIds": [
