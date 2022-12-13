@@ -25,6 +25,7 @@
 package rs117.hd.scene;
 
 import com.google.common.primitives.Floats;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
@@ -78,6 +79,10 @@ public class EnvironmentManager
 	DefaultSkyColor lastSkyColor = DefaultSkyColor.DEFAULT;
 	boolean lastEnvironmentLighting = true;
 	boolean lastSkyOverride = false;
+
+	@Setter
+	boolean isUnderground = false;
+
 	boolean lastUnderwater = false;
 
 	// previous camera target world X
@@ -247,6 +252,15 @@ public class EnvironmentManager
 		lastUnderwater = isUnderwater();
 	}
 
+
+	public boolean isUnderground() {
+		return isUnderground;
+	}
+
+	public boolean useWinterTheme() {
+		return hdPlugin.configWinterTheme && !isUnderground();
+	}
+
 	/**
 	 * Updates variables used in transition effects
 	 *
@@ -283,7 +297,7 @@ public class EnvironmentManager
 		updateSkyColor();
 
 		targetFogDepth = newEnvironment.getFogDepth();
-		if (hdPlugin.configWinterTheme)
+		if (useWinterTheme())
 		{
 			if (!newEnvironment.isCustomFogDepth())
 			{
@@ -302,7 +316,7 @@ public class EnvironmentManager
 			targetLightPitch = newEnvironment.getLightPitch();
 			targetLightYaw = newEnvironment.getLightYaw();
 
-			if (hdPlugin.configWinterTheme)
+			if (useWinterTheme())
 			{
 				if (!newEnvironment.isCustomAmbientStrength())
 				{
@@ -333,7 +347,7 @@ public class EnvironmentManager
 			targetLightPitch = defaultEnvironment.getLightPitch();
 			targetLightYaw = defaultEnvironment.getLightYaw();
 
-			if (hdPlugin.configWinterTheme)
+			if (useWinterTheme())
 			{
 				if (!defaultEnvironment.isCustomAmbientStrength())
 				{
@@ -376,7 +390,7 @@ public class EnvironmentManager
 
 	public void updateSkyColor()
 	{
-		Environment env = hdPlugin.configWinterTheme ? Environment.WINTER : currentEnvironment;
+		Environment env = useWinterTheme() ? Environment.WINTER : currentEnvironment;
 		if (!env.isCustomFogColor() || env.isAllowSkyOverride() && config.overrideSky())
 		{
 			DefaultSkyColor sky = config.defaultSkyColor();

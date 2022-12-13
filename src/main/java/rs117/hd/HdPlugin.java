@@ -32,6 +32,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
+import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.events.*;
 import net.runelite.api.hooks.DrawCallbacks;
 import net.runelite.client.callback.ClientThread;
@@ -54,6 +55,7 @@ import org.lwjgl.system.Callback;
 import org.lwjgl.system.Configuration;
 import rs117.hd.config.*;
 import rs117.hd.data.WaterType;
+import rs117.hd.data.environments.Area;
 import rs117.hd.data.materials.Material;
 import rs117.hd.model.ModelHasher;
 import rs117.hd.model.ModelPusher;
@@ -2126,6 +2128,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		stagingBufferVertices.clear();
 		stagingBufferUvs.clear();
 		stagingBufferNormals.clear();
+
+		WorldPoint playerPoint = client.getLocalPlayer().getWorldLocation();
+
+		environmentManager.setUnderground(!Area.OVERWORLD.containsPoint(playerPoint.getX(),playerPoint.getY(),playerPoint.getPlane()));
+
 
 		sceneUploader.upload(client.getScene(), stagingBufferVertices, stagingBufferUvs, stagingBufferNormals);
 
