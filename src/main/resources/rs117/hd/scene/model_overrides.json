@@ -5245,6 +5245,7 @@
     "objectIds": [
       14482,
       14485,
+      17929,
       37800,
       37801,
       37802,
@@ -5310,18 +5311,21 @@
       40470
     ],
     "uvType": "MODEL_XY"
-  },{
+ },
+ {
   "description": "Mortten Shade Catacombs - Walls - Stone",
   "baseMaterial": "STONE",
   "objectIds": [
     17900,
     38020,
     38021,
+    38023,
+    38024,
     40470
   ],
   "uvType": "MODEL_XY_MIRROR_B"
-},
-  {
+ },
+ {
     "description": "Mortten Shade Catacombs  - Walls - Metallic - Doors",
     "baseMaterial": "METALLIC_2_SEMIGLOSS",
     "objectIds": [
@@ -5332,7 +5336,8 @@
       18149,
       18150
     ],
-    "uvType": "MODEL_XY"
+    "uvType": "MODEL_XY",
+    "uvScale": 0.5
   },
   {
     "description": "Mortten Shade Catacombs  - Objects - Stone - Grave Stone",
@@ -5384,5 +5389,13 @@
       22798
     ],
     "uvType": "MODEL_XY"
-  }
+  },
+  {
+  "description": "Mortten Shade Catacombs - Stone - Brick rubble",
+  "baseMaterial": "STONE",
+  "objectIds": [
+    38028
+  ],
+  "uvType": "MODEL_XZ_MIRROR_B"
+}
 ]
