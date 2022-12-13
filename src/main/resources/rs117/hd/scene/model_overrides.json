@@ -5335,7 +5335,8 @@
     "description": "Mortten Shade Catacombs  - Objects - Stone - Grave Stone",
     "baseMaterial": "STONE",
     "objectIds": [
-      40471
+      40471,
+      40472
     ],
     "uvType": "GEOMETRY"
   },
