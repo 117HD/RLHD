@@ -5307,5 +5307,44 @@
       40470
     ],
     "uvType": "MODEL_XY"
+  },{
+  "description": "Mortten Shade Catacombs - Walls - Stone",
+  "baseMaterial": "STONE",
+  "objectIds": [
+    17900,
+    38020,
+    38021,
+    40470
+  ],
+  "uvType": "MODEL_XY"
+},
+  {
+    "description": "Mortten Shade Catacombs  - Walls - Metallic - Doors",
+    "baseMaterial": "METALLIC_2",
+    "objectIds": [
+      4107,
+      4108,
+      4109,
+      18148,
+      18149,
+      18150
+    ],
+    "uvType": "MODEL_XY"
+  },
+  {
+    "description": "Mortten Shade Catacombs  - Objects - Stone - Grave Stone",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      40471
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Mortten Shade Catacombs  - Objects - Stone - Alter",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      41222
+    ],
+    "uvType": "GEOMETRY"
   }
 ]
