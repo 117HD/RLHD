@@ -5329,9 +5329,11 @@
     "description": "Mortten Shade Catacombs  - Walls - Metallic - Doors",
     "baseMaterial": "METALLIC_2_SEMIGLOSS",
     "objectIds": [
+       4106,
        4107,
        4108,
        4109,
+       18147,
        18148,
        18149,
        18150
@@ -5397,5 +5399,13 @@
        38028
     ],
     "uvType": "MODEL_XZ_MIRROR_B"
+  },
+  {
+    "description": "Mortten Shade Catacombs  - Walls - Metallic - Fence",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      37774
+    ],
+    "uvType": "MODEL_XY"
   }
 ]
