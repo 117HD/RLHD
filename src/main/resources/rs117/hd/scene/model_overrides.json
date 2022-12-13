@@ -5256,5 +5256,20 @@
     "uvType": "MODEL_XY",
     "uvOrientation": 512,
     "uvScale": 0.76
+  },
+  {
+    "description": "Mortten - Objects - Stone - Funeral Pyre",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      4093
+    ]
+  },
+  {
+    "description": "Mortten - Objects - Stone - Stone Stand",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      4065
+    ],
+    "uvType": "MODEL_XZ"
   }
 ]
