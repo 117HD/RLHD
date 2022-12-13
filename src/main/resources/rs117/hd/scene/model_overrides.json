@@ -5412,6 +5412,7 @@
     "description": "Objects - Huge Mushroom - Medium",
     "baseMaterial": "GRUNGE_2",
     "objectIds": [
+      4055,
       4056
     ],
     "uvType": "MODEL_XZ"
