@@ -5315,7 +5315,8 @@
       38024,
       40470
     ],
-    "uvType": "MODEL_XY_MIRROR_B"
+    "uvType": "MODEL_XY",
+    "uvOrientation": 300
   },
   {
     "description": "Mortton Shade Catacombs  - Walls - Metallic - Doors",
