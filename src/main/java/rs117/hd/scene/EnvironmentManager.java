@@ -34,6 +34,7 @@ import net.runelite.api.coords.WorldPoint;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.config.DefaultSkyColor;
+import rs117.hd.data.environments.Area;
 import rs117.hd.data.environments.Environment;
 import rs117.hd.utils.AABB;
 import rs117.hd.utils.HDUtils;
@@ -42,6 +43,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static net.runelite.api.Constants.CHUNK_SIZE;
 import static net.runelite.api.Constants.SCENE_SIZE;
@@ -50,6 +52,41 @@ import static net.runelite.api.Constants.SCENE_SIZE;
 @Slf4j
 public class EnvironmentManager
 {
+
+	public final List<AABB> isAboveGround = Arrays.asList(
+			new AABB(3836, 4418, 3910, 4346),
+			new AABB(2296, 4612, 2372, 4539),
+			new AABB(2430, 4607, 2642, 4542),
+			new AABB(2577, 4798, 2825, 4608),
+			new AABB(2871, 4740, 2945, 4660),
+			new AABB(2492, 4806, 2559, 4747),
+			new AABB(2369, 4864, 2428, 4801),
+			new AABB(1787, 4547, 1859, 4472),
+			new AABB(1662, 4284, 1727, 4223),
+			new AABB(1914, 5060, 1957, 4989),
+			new AABB(1954, 5030, 1984, 4990),
+			new AABB(2108, 4992, 2168, 4893),
+			new AABB(2107, 5187, 2177, 5040),
+			new AABB(2686, 4864, 2752, 4798),
+			new AABB(2814, 4866, 2865, 4798),
+			new AABB(3390, 5056, 3457, 4928),
+			new AABB(3394, 4849, 3447, 4804),
+			new AABB(3454, 4782, 3536, 4732),
+			new AABB(2872, 5509, 2950, 5428),
+			new AABB(3127, 6214, 3399, 5954),
+			new AABB(3326, 5953, 3524, 5759),
+			new AABB(1919, 5631, 2049, 5502),
+			new AABB(2112, 5571, 2177, 5502),
+			new AABB(1792, 5437, 1727, 5506),
+			new AABB(2546, 4361, 2642, 4273),
+			new AABB(1836, 6093, 2189, 5810),
+			new AABB(1622, 6160, 1766, 6037),
+			new AABB(1780, 5770, 2048, 5634),
+			new AABB(2687, 6212, 2948, 6005),
+			new AABB(2419, 5442, 2511, 5352),
+			new AABB(1939, 5363, 2002, 5300)
+	);
+
 	@Inject
 	private Client client;
 
@@ -81,7 +118,7 @@ public class EnvironmentManager
 	boolean lastSkyOverride = false;
 
 	@Setter
-	boolean isUnderground = false;
+	boolean displaySnow = false;
 
 	boolean lastUnderwater = false;
 
@@ -253,12 +290,26 @@ public class EnvironmentManager
 	}
 
 
-	public boolean isUnderground() {
-		return isUnderground;
+	public boolean displaySnowTheme() {
+
+		WorldPoint playerLoc = client.getLocalPlayer().getWorldLocation();
+
+		if (Area.OVERWORLD.containsPoint(playerLoc.getX(),playerLoc.getY(),playerLoc.getPlane())) {
+			return true;
+		}
+
+		for (AABB aabb : isAboveGround) {
+			return aabb.contains(client.getLocalPlayer().getWorldLocation());
+		}
+
+		return false;
 	}
 
 	public boolean useWinterTheme() {
-		return hdPlugin.configWinterTheme && !isUnderground();
+		if (hdPlugin.configWinterTheme) {
+			return displaySnowTheme();
+		}
+		return false;
 	}
 
 	/**

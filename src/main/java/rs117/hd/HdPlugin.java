@@ -55,7 +55,6 @@ import org.lwjgl.system.Callback;
 import org.lwjgl.system.Configuration;
 import rs117.hd.config.*;
 import rs117.hd.data.WaterType;
-import rs117.hd.data.environments.Area;
 import rs117.hd.data.materials.Material;
 import rs117.hd.model.ModelHasher;
 import rs117.hd.model.ModelPusher;
@@ -2131,7 +2130,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 		WorldPoint playerPoint = client.getLocalPlayer().getWorldLocation();
 
-		environmentManager.setUnderground(!Area.OVERWORLD.containsPoint(playerPoint.getX(),playerPoint.getY(),playerPoint.getPlane()));
+
+
+		environmentManager.setDisplaySnow(environmentManager.displaySnowTheme());
 
 
 		sceneUploader.upload(client.getScene(), stagingBufferVertices, stagingBufferUvs, stagingBufferNormals);
