@@ -1391,7 +1391,7 @@
       "FERN_19839",
       "JUNGLE_GRASS",
       "JUNGLE_GRASS_4813",
-      "JUNGLE_GRASS_4814"
+      "JUNGLE_GRASS_4814",
     ],
     "flatNormals": true,
     "inheritTileColorType": "UNDERLAY"
@@ -4964,6 +4964,8 @@
       4357,
       5842,
       5847,
+      11182,
+      11183,
       27899,
       29856,
       29857,
@@ -5271,14 +5273,14 @@
     "uvScale": 0.76
   },
   {
-    "description": "Mortten - Objects - Stone - Funeral Pyre",
+    "description": "Mortton - Objects - Stone - Funeral Pyre",
     "baseMaterial": "STONE",
     "objectIds": [
       4093
     ]
   },
   {
-    "description": "Mortten - Objects - Stone - Stone Stand",
+    "description": "Mortton - Objects - Stone - Stone Stand",
     "baseMaterial": "STONE",
     "objectIds": [
       4065
@@ -5286,7 +5288,7 @@
     "uvType": "MODEL_XZ"
   },
   {
-    "description": "Mortten - Objects - Stone - Temple Walls",
+    "description": "Mortton - Objects - Stone - Temple Walls",
     "baseMaterial": "STONE",
     "objectIds": [
       4089
@@ -5294,7 +5296,7 @@
     "uvType": "MODEL_XY"
   },
   {
-    "description": "Mortten - Objects - Stone - Temple Walls - Mirrored",
+    "description": "Mortton - Objects - Stone - Temple Walls - Mirrored",
     "baseMaterial": "STONE",
     "objectIds": [
       4078
@@ -5302,18 +5304,7 @@
     "uvType": "MODEL_XY_MIRROR_B"
   },
   {
-    "description": "Mortten - Walls - Stone - Shade Catacombs Walls",
-    "baseMaterial": "STONE",
-    "objectIds": [
-      17900,
-      38020,
-      38021,
-      40470
-    ],
-    "uvType": "MODEL_XY"
-  },
-  {
-    "description": "Mortten Shade Catacombs - Walls - Stone",
+    "description": "Mortton Shade Catacombs - Walls - Stone",
     "baseMaterial": "STONE",
     "objectIds": [
       17900,
@@ -5326,7 +5317,7 @@
     "uvType": "MODEL_XY_MIRROR_B"
   },
   {
-    "description": "Mortten Shade Catacombs  - Walls - Metallic - Doors",
+    "description": "Mortton Shade Catacombs  - Walls - Metallic - Doors",
     "baseMaterial": "METALLIC_2_SEMIGLOSS",
     "objectIds": [
        4106,
@@ -5342,7 +5333,7 @@
     "uvScale": 0.5
   },
   {
-    "description": "Mortten Shade Catacombs  - Objects - Stone - Grave Stone",
+    "description": "Mortton Shade Catacombs  - Objects - Stone - Grave Stone",
     "baseMaterial": "STONE",
     "objectIds": [
        40471,
@@ -5351,7 +5342,7 @@
     "uvType": "GEOMETRY"
   },
   {
-    "description": "Mortten Shade Catacombs  - Objects - Stone - Alter",
+    "description": "Mortton Shade Catacombs  - Objects - Stone - Alter",
     "baseMaterial": "STONE",
     "objectIds": [
        41222
@@ -5359,7 +5350,7 @@
     "uvType": "GEOMETRY"
   },
   {
-    "description": "Mortten Shade Catacombs  - Objects - Stone - Hole",
+    "description": "Mortton Shade Catacombs  - Objects - Stone - Hole",
     "baseMaterial": "ROCK_1_LIGHT",
     "objectIds": [
       37862,
@@ -5393,7 +5384,7 @@
     "uvType": "MODEL_XY"
   },
   {
-    "description": "Mortten Shade Catacombs - Stone - Brick rubble",
+    "description": "Mortton Shade Catacombs - Stone - Brick rubble",
     "baseMaterial": "STONE",
     "objectIds": [
        38028
@@ -5401,11 +5392,19 @@
     "uvType": "MODEL_XZ_MIRROR_B"
   },
   {
-    "description": "Mortten Shade Catacombs  - Walls - Metallic - Fence",
+    "description": "Mortton Shade Catacombs  - Walls - Metallic - Fence",
     "baseMaterial": "METALLIC_2_SEMIGLOSS",
     "objectIds": [
       37774
     ],
     "uvType": "MODEL_XY"
+  },
+  {
+    "description": "Objects - Fungus - Medium",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      1171
+    ],
+    "uvType": "MODEL_XZ"
   }
 ]
