@@ -26,9 +26,13 @@ package rs117.hd.data.environments;
 
 import lombok.Getter;
 import net.runelite.api.Constants;
+import net.runelite.api.Point;
+import net.runelite.api.coords.WorldPoint;
+import org.apache.commons.lang3.ArrayUtils;
 import rs117.hd.utils.AABB;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 @Getter
 public enum Area
@@ -1231,8 +1235,41 @@ public enum Area
 		new AABB(2111, 4931, 2166, 4990),
 		new AABB(1599, 4778, 1728, 4863)
 	),
+	EXTRA_OVERWORLDS(
+		new AABB(3836, 4418, 3910, 4346),
+		new AABB(2296, 4612, 2372, 4539),
+		new AABB(2430, 4607, 2642, 4542),
+		new AABB(2577, 4798, 2825, 4608),
+		new AABB(2871, 4740, 2945, 4660),
+		new AABB(2492, 4806, 2559, 4747),
+		new AABB(2369, 4864, 2428, 4801),
+		new AABB(1787, 4547, 1859, 4472),
+		new AABB(1662, 4284, 1727, 4223),
+		new AABB(1914, 5060, 1957, 4989),
+		new AABB(1954, 5030, 1984, 4990),
+		new AABB(2108, 4992, 2168, 4893),
+		new AABB(2107, 5187, 2177, 5040),
+		new AABB(2686, 4864, 2752, 4798),
+		new AABB(2814, 4866, 2865, 4798),
+		new AABB(3390, 5056, 3457, 4928),
+		new AABB(3394, 4849, 3447, 4804),
+		new AABB(3454, 4782, 3536, 4732),
+		new AABB(2872, 5509, 2950, 5428),
+		new AABB(3127, 6214, 3399, 5954),
+		new AABB(3326, 5953, 3524, 5759),
+		new AABB(1919, 5631, 2049, 5502),
+		new AABB(2112, 5571, 2177, 5502),
+		new AABB(1792, 5437, 1727, 5506),
+		new AABB(2546, 4361, 2642, 4273),
+		new AABB(1836, 6093, 2189, 5810),
+		new AABB(1622, 6160, 1766, 6037),
+		new AABB(1780, 5770, 2048, 5634),
+		new AABB(2687, 6212, 2948, 6005),
+		new AABB(2419, 5442, 2511, 5352),
+		new AABB(1939, 5363, 2002, 5300)
+	),
 
-	OVERWORLD(700, 2300, 4200, 4095),
+	OVERWORLD(new AABB(700, 2300, 4200, 4095),EXTRA_OVERWORLDS),
 	ALL(0, 0, Integer.MAX_VALUE, Integer.MAX_VALUE),
 	NONE(0, 0, 0, 0),
 	;
@@ -1249,6 +1286,11 @@ public enum Area
 		this.aabbs = Arrays.stream(areas)
 			.flatMap(a -> Arrays.stream(a.aabbs))
 			.toArray(AABB[]::new);
+	}
+
+	Area(AABB area, Area parent)
+	{
+		this.aabbs = ArrayUtils.add(parent.aabbs, area);
 	}
 
 	Area(int pointAX, int pointAY, int pointBX, int pointBY)
@@ -1283,4 +1325,10 @@ public enum Area
 		}
 		return false;
 	}
+
+	public boolean containsPoint(WorldPoint point)
+	{
+		return containsPoint(point.getX(),point.getY(),point.getPlane());
+	}
+
 }

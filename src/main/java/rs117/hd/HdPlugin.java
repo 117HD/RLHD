@@ -2128,12 +2128,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		stagingBufferUvs.clear();
 		stagingBufferNormals.clear();
 
-		WorldPoint playerPoint = client.getLocalPlayer().getWorldLocation();
-
-
-
-		environmentManager.setDisplaySnow(environmentManager.displaySnowTheme());
-
+		environmentManager.setDisplaySnow(environmentManager.displaySnowTheme(client.getLocalPlayer().getWorldLocation()));
 
 		sceneUploader.upload(client.getScene(), stagingBufferVertices, stagingBufferUvs, stagingBufferNormals);
 
