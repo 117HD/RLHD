@@ -4069,7 +4069,8 @@
     "baseMaterial": "METALLIC_2_HIGHGLOSS",
     "objectIds": [
       196,
-      197
+      197,
+      38027
     ]
   },
   {
@@ -4879,6 +4880,8 @@
       15811,
       15812,
       19215,
+      20753,
+      20754,
       22347,
       22348,
       22349,
@@ -5316,11 +5319,11 @@
     38021,
     40470
   ],
-  "uvType": "MODEL_XY"
+  "uvType": "MODEL_XY_MIRROR_B"
 },
   {
     "description": "Mortten Shade Catacombs  - Walls - Metallic - Doors",
-    "baseMaterial": "METALLIC_2",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
     "objectIds": [
       4107,
       4108,
@@ -5347,5 +5350,39 @@
       41222
     ],
     "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Mortten Shade Catacombs  - Objects - Stone - Hole",
+    "baseMaterial": "ROCK_1_LIGHT",
+    "objectIds": [
+      37862,
+      37863
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Objects - Vines",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      41201,
+      41202,
+      41203,
+      41204,
+      41204,
+      41207,
+      41208,
+      41209
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Objects - White Mushrooms - Medium",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      22796,
+      22797,
+      22798
+    ],
+    "uvType": "MODEL_XY"
   }
 ]
