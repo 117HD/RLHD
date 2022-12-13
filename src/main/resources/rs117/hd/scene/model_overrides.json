@@ -5396,7 +5396,8 @@
     "description": "Mortton Shade Catacombs  - Walls - Metallic - Fence",
     "baseMaterial": "METALLIC_2_SEMIGLOSS",
     "objectIds": [
-      37774
+      37774,
+      37775
     ],
     "uvType": "MODEL_XY"
   },
