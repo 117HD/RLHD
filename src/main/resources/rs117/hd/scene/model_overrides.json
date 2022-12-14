@@ -5377,13 +5377,13 @@
   },
   {
     "description": "Objects - White Mushrooms - Medium",
-    "baseMaterial": "GRUNGE_2",
+    "baseMaterial": "GRUNGE_1",
     "objectIds": [
       22796,
       22797,
       22798
     ],
-    "uvType": "MODEL_XY"
+    "uvType": "GEOMETRY"
   },
   {
     "description": "Mortton Shade Catacombs - Stone - Brick rubble",
