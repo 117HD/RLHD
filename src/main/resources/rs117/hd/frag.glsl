@@ -780,13 +780,16 @@ void main() {
         float groundFog = 1.0 - clamp((IN.position.y - groundFogStart) / (groundFogEnd - groundFogStart), 0.0, 1.0);
         groundFog = mix(0.0, groundFogOpacity, groundFog);
         groundFog *= clamp(distance / closeFadeDistance, 0.0, 1.0);
-        if (isWater)
-        {
-            outputColor.a = max(outputColor.a, groundFog);
-        }
 
         // multiply the visibility of each fog
         float combinedFog = 1 - (1 - IN.fogAmount) * (1 - groundFog);
+
+        if (isWater) {
+            outputColor.a = max(outputColor.a, groundFog);
+        } else {
+            combinedFog *= outputColor.a;
+        }
+
         outputColor = mix(outputColor, fogColor, combinedFog);
     }
 
