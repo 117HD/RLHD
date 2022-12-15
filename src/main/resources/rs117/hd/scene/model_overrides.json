@@ -3395,7 +3395,6 @@
     "description": "PHASMATYS_WOODEN_FENCES",
     "baseMaterial": "DOCK_FENCE",
     "objectIds": [
-      5432,
       5433,
       5434,
       5435,
@@ -3403,6 +3402,7 @@
       5437,
       5438
     ],
+    "uvType": "GEOMETRY",
     "flatNormals": true
   },
   {
@@ -5834,5 +5834,33 @@
     ],
     "uvType": "MODEL_XZ",
     "uvScale": 0.88
+  },
+  {
+    "description": "Morytania - Walls - Triple Slat Fence",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      5417,
+      5432,
+      5433,
+      5434,
+      5435,
+      5436,
+      5437,
+      5438
+    ],
+    "uvType": "MODEL_XY",
+    "uvScale": 0.88
+  },
+  {
+    "description": "Morytania - Walls - Triple Slat Fence Gate",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      12816,
+      12817,
+      12818,
+      12819,
+      12776
+    ],
+    "uvType": "GEOMETRY"
   }
 ]
