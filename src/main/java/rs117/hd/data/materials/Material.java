@@ -312,6 +312,7 @@ public enum Material
 		.setNormalMap(WOOD_GRAIN_2_N)),
 	WOOD_GRAIN_3,
 	DOCK_FENCE,
+	DOCK_FENCE_DARK(DOCK_FENCE, p -> p.setBrightness(0.6f)),
 
 	HD_INFERNAL_CAPE(p -> p
 		.replaceIf(INFERNAL_CAPE, HdPluginConfig::hdInfernalTexture)
