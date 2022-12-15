@@ -376,6 +376,11 @@ public enum Material
 	SLIME_GRUNGE(GRUNGE_1, p -> p
 			.setSpecular(4.1f,60)
 	),
+	WATER_PUDDLE(NONE, p -> p
+			.setSpecular(1.5f,80)
+			.setNormalMap(WATER_NORMAL_MAP_1)
+			.setFlowMap(WATER_FLOW_MAP, 0.15f, 122, 172)
+	),
 
 	// Seasonal
 	WINTER_WILLOW_LEAVES(p -> p

@@ -6025,5 +6025,16 @@
       12879
     ],
     "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Morytania - Ground  - Water - Puddles - Burugh De Rott",
+    "baseMaterial": "WATER_PUDDLE",
+    "objectIds": [
+      12860,
+      12861,
+      12862
+    ],
+    "uvType": "MODEL_XZ",
+    "flatNormals": true
   }
 ]
