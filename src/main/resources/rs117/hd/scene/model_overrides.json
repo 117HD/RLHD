@@ -6014,5 +6014,16 @@
       20735,
       20736
     ]
+  },
+  {
+    "description": "Morytania - Objects - Wooden - Crate",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      12876,
+      12877,
+      12878,
+      12879
+    ],
+    "uvType": "GEOMETRY"
   }
 ]
