@@ -3267,7 +3267,12 @@
       5455,
       5456,
       5459,
-      5458
+      5458,
+      12936,
+      12937,
+      12938,
+      12939,
+      12940
     ],
     "uvType": "MODEL_XZ"
   },
@@ -3389,20 +3394,6 @@
       994,
       995
     ],
-    "flatNormals": true
-  },
-  {
-    "description": "PHASMATYS_WOODEN_FENCES",
-    "baseMaterial": "DOCK_FENCE",
-    "objectIds": [
-      5433,
-      5434,
-      5435,
-      5436,
-      5437,
-      5438
-    ],
-    "uvType": "GEOMETRY",
     "flatNormals": true
   },
   {
@@ -5862,5 +5853,58 @@
       12776
     ],
     "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Morytania - Walls - Wooden - Plank - Burugh De Rott",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      12821,
+      12822,
+      12823,
+      12824,
+      12825,
+      12826,
+      12827,
+      12828,
+      12829,
+      12830,
+      12831,
+      12832,
+      12833,
+      12913,
+      12914,
+      12916,
+      12918,
+      12922,
+      12923
+    ],
+    "uvType": "MODEL_XY",
+    "uvOrientation": 512,
+    "uvScale": 0.76
+  },
+  {
+    "description": "Morytania - Floor - Wooden - Plank - Burugh De Rott",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      12898,
+      12899,
+      12900,
+      12901,
+      12902,
+      12903,
+      12904,
+      12905,
+      12906
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Morytania - Floor - Wooden - Ladder - Burugh De Rott",
+    "baseMaterial": "WOOD_GRAIN",
+    "objectIds": [
+      12780,
+      12781,
+      12907
+    ]
   }
 ]
