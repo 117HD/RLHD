@@ -415,6 +415,16 @@ public enum Material
 		.replaceIf(PAINTING_KING, HdPluginConfig::winterTheme)),
 	WINTER_PAINTING_ELF(p -> p
 		.replaceIf(PAINTING_ELF, HdPluginConfig::winterTheme)),
+	WINTER_HD_ROOF_SHINGLES_1(p -> p
+			.replaceIf(ROOF_SHINGLES_1, HdPluginConfig::winterTheme)
+			.setSpecular(0.5f, 30)
+			.setNormalMap(HD_ROOF_SHINGLES_N)
+	),
+	WINTER_HD_ROOF_SHINGLES_2(p -> p
+			.replaceIf(ROOF_SHINGLES_2, HdPluginConfig::winterTheme)
+			.setSpecular(0.3f, 30)
+			.setNormalMap(HD_ROOF_SHINGLES_N)
+	),
 	WINTER_HD_ROOF_BRICK_TILE_1(p -> p
 			.replaceIf(ROOF_BRICK_TILE, HdPluginConfig::winterTheme)
 			.setNormalMap(HD_ROOF_BRICK_TILE_N)
