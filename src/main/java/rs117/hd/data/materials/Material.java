@@ -322,9 +322,12 @@ public enum Material
 
 	HD_BRICK(p -> p
 		.replaceIf(BRICK, HdPluginConfig::objectTextures)),
+	HD_ROOF_SHINGLES_N,
 	HD_ROOF_SHINGLES_1(p -> p
 		.replaceIf(ROOF_SHINGLES_1, HdPluginConfig::objectTextures)
-		.setSpecular(0.5f, 30)),
+		.setSpecular(0.5f, 30)
+		.setNormalMap(HD_ROOF_SHINGLES_N)
+	),
 	HD_MARBLE_DARK(p -> p
 		.replaceIf(MARBLE_DARK, HdPluginConfig::objectTextures)
 		.setSpecular(1.1f, 380)),
@@ -337,7 +340,10 @@ public enum Material
 		.setFlowMap(LAVA_FLOW_MAP, 0.05f, 36, 22)
 		.setScroll(0, 1 / 3f)),
 	HD_ROOF_SHINGLES_2(p -> p
-		.replaceIf(ROOF_SHINGLES_2, HdPluginConfig::objectTextures)),
+		.replaceIf(ROOF_SHINGLES_2, HdPluginConfig::objectTextures)
+		.setSpecular(0.3f, 30)
+		.setNormalMap(HD_ROOF_SHINGLES_N)
+	),
 
 	WORN_TILES,
 	STONE,
@@ -368,6 +374,22 @@ public enum Material
 		.setSpecular(4.1f,60)),
 	WATER_PUDDLE(NONE, p -> p
 		.setSpecular(1.5f, 80)),
+	HD_ROOF_BRICK_TILE_N,
+	HD_ROOF_BRICK_TILE_1(p -> p
+			.replaceIf(ROOF_BRICK_TILE, HdPluginConfig::objectTextures)
+			.setSpecular(0.3f, 30)
+			.setNormalMap(HD_ROOF_BRICK_TILE_N)
+	),
+	HD_ROOF_BRICK_TILE_2(p -> p
+			.replaceIf(ROOF_BRICK_TILE_GREEN, HdPluginConfig::objectTextures)
+			.setSpecular(0.3f, 30)
+			.setNormalMap(HD_ROOF_BRICK_TILE_N)
+	),
+	HD_ROOF_BRICK_TILE_3(p -> p
+			.replaceIf(ROOF_BRICK_TILE_DARK, HdPluginConfig::objectTextures)
+			.setSpecular(0.3f, 30)
+			.setNormalMap(HD_ROOF_BRICK_TILE_N)
+	),
 
 	// Seasonal
 	WINTER_WILLOW_LEAVES(p -> p
@@ -389,7 +411,31 @@ public enum Material
 	WINTER_PAINTING_KING(p -> p
 		.replaceIf(PAINTING_KING, HdPluginConfig::winterTheme)),
 	WINTER_PAINTING_ELF(p -> p
-		.replaceIf(PAINTING_ELF, HdPluginConfig::winterTheme));
+		.replaceIf(PAINTING_ELF, HdPluginConfig::winterTheme)),
+	WINTER_HD_ROOF_BRICK_TILE_1(p -> p
+			.replaceIf(ROOF_BRICK_TILE, HdPluginConfig::winterTheme)
+			.setNormalMap(HD_ROOF_BRICK_TILE_N)
+			.setSpecular(0.3f,30)
+	),
+	WINTER_HD_ROOF_BRICK_TILE_2(p -> p
+			.replaceIf(ROOF_BRICK_TILE_GREEN, HdPluginConfig::winterTheme)
+			.setNormalMap(HD_ROOF_BRICK_TILE_N)
+			.setSpecular(0.3f,30)
+	),
+	WINTER_HD_ROOF_BRICK_TILE_3(p -> p
+			.replaceIf(ROOF_BRICK_TILE_DARK, HdPluginConfig::winterTheme)
+			.setNormalMap(HD_ROOF_BRICK_TILE_N)
+			.setSpecular(0.3f,30)
+	),
+	WINTER_HD_ROOF_SLATE(p -> p
+			.replaceIf(ROOF_SLATE, HdPluginConfig::winterTheme)
+			.setSpecular(0.5f,30)
+	),
+	WINTER_HD_ROOF_WOODEN_SLATE(p -> p
+			.replaceIf(ROOF_WOODEN_SLATE, HdPluginConfig::winterTheme)
+			.setSpecular(0.5f,30)
+	);
+
 
 	public final Material parent;
 	public final Material normalMap;
