@@ -29,7 +29,6 @@ import lombok.NonNull;
 import lombok.Setter;
 import rs117.hd.HdPluginConfig;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.function.Consumer;
