@@ -256,7 +256,11 @@ public enum Material
 
 	FALADOR_PATH_BRICK(p -> p
 		.setSpecular(0.3f, 30)),
-	JAGGED_STONE_TILE,
+	JAGGED_STONE_TILE_N,
+	JAGGED_STONE_TILE(p -> p
+			.setNormalMap(JAGGED_STONE_TILE_N)
+			.setSpecular(0.5f, 30)
+	),
 
 	TILE_SMALL_1(p -> p
 		.setSpecular(0.8f, 70)),
