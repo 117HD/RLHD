@@ -431,7 +431,6 @@ public enum Material
 
 	WINTER_DROPLETS(p -> p
 			.replaceIf(WATER_DROPLETS, HdPluginConfig::winterTheme)
-			.setScroll(-1, -1)
 			.setSpecular(0.7f, 30)
 	),
 
