@@ -277,11 +277,14 @@ public class TextureManager
 			}
 
 			Integer index = -1;
-			if (material.materialToReplace != null && material.replacementCondition.apply(config))
-			{
-				index = materialOrdinalToTextureIndex[material.materialToReplace.ordinal()];
-				materialReplacements[material.materialToReplace.ordinal()] = material.ordinal();
+			for(Material replace : material.materialToReplace) {
+				if (replace != null && material.replacementCondition.apply(config))
+				{
+					index = materialOrdinalToTextureIndex[replace.ordinal()];
+					materialReplacements[replace.ordinal()] = material.ordinal();
+				}
 			}
+
 
 			if (index == -1)
 			{
@@ -332,12 +335,7 @@ public class TextureManager
 	{
 		// TODO: scale and transform on the GPU for better performance
 		AffineTransform t = new AffineTransform();
-		// Flip non-vanilla textures vertically
-		if (image != vanillaImage)
-		{
-			t.translate(0, scaledImage.getHeight());
-			t.scale(1, -1);
-		}
+
 		t.scale((double) textureSize / image.getWidth(), (double) textureSize / image.getHeight());
 		AffineTransformOp scaleOp = new AffineTransformOp(t, AffineTransformOp.TYPE_BICUBIC);
 		scaleOp.filter(image, scaledImage);
