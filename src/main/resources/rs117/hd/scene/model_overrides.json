@@ -6052,6 +6052,7 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       593,
+      598,
       25733
     ],
     "uvType": "MODEL_XZ",
@@ -6083,5 +6084,60 @@
       881
     ],
     "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Objects - Stone - Large Gravestone - Large",
+    "baseMaterial": "STONE_SEMIGLOSS",
+    "objectIds": [
+      406
+    ],
+    "uvType": "GEOMETRY",
+    "flatNormals": true
+  },
+  {
+    "description": "Ardougne - Walls - Stone - Zoo Fence",
+    "baseMaterial": "STONE_SEMIGLOSS",
+    "objectIds": [
+      21239,
+      21240,
+      21241,
+      21242
+    ],
+    "uvType": "GEOMETRY",
+    "flatNormals": true
+  },
+  {
+    "description": "Ardougne - Walls - Stone - Zoo Ferret Fence",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      19995
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Ardougne - Walls - Stone - Zoo Ferret Fence",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      306
+    ],
+    "uvType": "VANILLA"
+  },
+  {
+    "description": "Objects - Wooden - Fake Dead Tree",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      1133,
+      1134,
+      1135,
+      1136,
+      1137,
+      1138,
+      1139,
+      1140,
+      1141,
+      1142,
+      1143
+    ],
+    "uvType": "VANILLA"
   }
 ]
