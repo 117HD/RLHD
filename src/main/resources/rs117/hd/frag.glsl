@@ -785,12 +785,10 @@ void main() {
         float combinedFog = 1 - (1 - IN.fogAmount) * (1 - groundFog);
 
         if (isWater) {
-            outputColor.a = max(outputColor.a, groundFog);
-        } else {
-            combinedFog *= outputColor.a;
+            outputColor.a = combinedFog + outputColor.a * (1 - combinedFog);
         }
 
-        outputColor = mix(outputColor, fogColor, combinedFog);
+        outputColor.rgb = mix(outputColor.rgb, fogColor.rgb, combinedFog);
     }
 
     FragColor = outputColor;
