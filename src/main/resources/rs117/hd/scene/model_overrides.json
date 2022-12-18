@@ -6057,5 +6057,31 @@
     "uvType": "MODEL_XZ",
     "flatNormals": true,
     "uvScale": 1.2
+  },
+  {
+    "description": "Ardougne - Objects - Wooden - Stairs - Plank Textured",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      16667,
+      16668
+    ],
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 512,
+    "uvScale": 0.4
+  },
+  {
+    "description": "Objects - Wooden - Column",
+    "baseMaterial": "NONE",
+    "objectIds": [
+      1870
+    ]
+  },
+  {
+    "description": "Ardougne - Objects - Metallic - Manhole",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      881
+    ],
+    "uvType": "MODEL_XZ"
   }
 ]

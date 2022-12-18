@@ -369,6 +369,7 @@ public enum Material
 	WATER_PUDDLE(NONE, p -> p
 		.setSpecular(1.5f, 80)),
 
+
 	// Seasonal
 	WINTER_WILLOW_LEAVES(p -> p
 		.replaceIf(WILLOW_LEAVES, HdPluginConfig::winterTheme)
