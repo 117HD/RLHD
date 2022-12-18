@@ -3939,15 +3939,6 @@
     "flatNormals": true
   },
   {
-    "description": "Wooden tables - Round",
-    "baseMaterial": "WOOD_GRAIN_2",
-    "objectIds": [
-      25733
-    ],
-    "uvType": "MODEL_XZ",
-    "flatNormals": true
-  },
-  {
     "description": "Wooden tables - Solid - Cobwebs",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
@@ -6035,5 +6026,36 @@
     "uvType": "MODEL_XZ",
     "flatNormals": true,
     "disableShadows": true
+  },
+  {
+    "description": "Objects - Wooden - Chair",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      1088
+    ],
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 512,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Objects - Wooden - Stool",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      1102
+    ],
+    "uvType": "MODEL_XZ",
+    "flatNormals": true,
+    "uvScale": 0.8
+  },
+  {
+    "description": "Objects - Wooden - Tables - Round",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      593,
+      25733
+    ],
+    "uvType": "MODEL_XZ",
+    "flatNormals": true,
+    "uvScale": 1.2
   }
 ]
