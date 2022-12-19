@@ -30037,5 +30037,23 @@
     "objectIds": [
       46220
     ]
+  },
+  {
+    "description": "GNOME_LAMP",
+    "height": 130,
+    "alignment": "BACK",
+    "radius": 400,
+    "strength": 7,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 10,
+    "objectIds": [
+      201
+    ]
   }
 ]

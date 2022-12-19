@@ -3803,6 +3803,7 @@
     "objectIds": [
       2147,
       2148,
+      2884,
       16679,
       16683,
       16684,
@@ -6123,7 +6124,7 @@
     "uvType": "VANILLA"
   },
   {
-    "description": "Objects - Wooden - Fake Dead Tree",
+    "description": "Objects - Tree - Fake Dead Tree",
     "baseMaterial": "BARK",
     "objectIds": [
       1133,
@@ -6136,8 +6137,106 @@
       1140,
       1141,
       1142,
-      1143
+      1143,
+      23559,
+      23530,
+      23561
     ],
     "uvType": "VANILLA"
+  },
+  {
+    "description": "Gnome Stronghold - Objects - Tree - Fake Dead Tree",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      1706
+    ],
+    "uvType": "VANILLA"
+  },
+  {
+    "description": "Ground Decoration - Sticks - Small",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      1251,
+      1252
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.6,
+    "uvOrientation": 300
+  },
+  {
+    "description": "Gnome - Walls - Rope Rails",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      1708,
+      1982
+    ]
+  },
+  {
+    "description": "Gnome - Ground Decoration - Wooden - Log Supports",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      1702,
+      1703,
+      1704
+    ],
+    "uvType": "WORLD_XZ"
+  },
+  {
+    "description": "Gnome - Ground Decoration - Wooden - Log Bridges",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      1701
+    ],
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 512,
+    "uvScale": 0.8
+  },
+  {
+    "description": "Gnome - Ground Decoration - Wooden - Log Bridges - Corner",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      4045
+    ],
+    "uvType": "MODEL_XZ_MIRROR_A",
+    "uvOrientation": 256,
+    "uvScale": 0.8
+  },
+  {
+    "description": "Gnome - Objects - Wooden - Hammock",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      430
+    ]
+  },
+  {
+    "description": "Gnome - Objects - Wooden - Lamp",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      201
+    ]
+  },
+  {
+    "description": "Gnome - Objects - Wooden - Bench - Textured",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      1104
+    ]
+  },
+  {
+    "description": "Gnome - Objects - Wooden - Staircase Rails - Textured",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      16677
+    ]
+  },
+  {
+    "description": "Ground Decoration - Wooden - Agility Logs",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      23142,
+      23143,
+      23144,
+      23145
+    ]
   }
 ]
