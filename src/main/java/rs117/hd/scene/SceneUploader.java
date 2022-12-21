@@ -493,13 +493,13 @@ class SceneUploader
 			int packedMaterialDataNE = modelPusher.packMaterialData(neMaterial, neVertexIsOverlay, ModelOverride.NONE);
 
 			uvBuffer.ensureCapacity(24);
-			uvBuffer.put(1, 1, 0, packedMaterialDataNE);
-			uvBuffer.put(0, 1, 0, packedMaterialDataNW);
-			uvBuffer.put(1, 0, 0, packedMaterialDataSE);
+			uvBuffer.put(1, 0, 0, packedMaterialDataNE);
+			uvBuffer.put(0, 0, 0, packedMaterialDataNW);
+			uvBuffer.put(1, 1, 0, packedMaterialDataSE);
 
-			uvBuffer.put(0, 0, 0, packedMaterialDataSW);
-			uvBuffer.put(1, 0, 0, packedMaterialDataSE);
-			uvBuffer.put(0, 1, 0, packedMaterialDataNW);
+			uvBuffer.put(0, 1, 0, packedMaterialDataSW);
+			uvBuffer.put(1, 1, 0, packedMaterialDataSE);
+			uvBuffer.put(0, 0, 0, packedMaterialDataNW);
 
 			uvBufferLength += 6;
 		}
@@ -613,13 +613,13 @@ class SceneUploader
 			int packedMaterialDataNE = modelPusher.packMaterialData(neMaterial, false, ModelOverride.NONE);
 
 			uvBuffer.ensureCapacity(24);
-			uvBuffer.put(1, 1, 0, packedMaterialDataNE);
-			uvBuffer.put(0, 1, 0, packedMaterialDataNW);
-			uvBuffer.put(1, 0, 0, packedMaterialDataSE);
+			uvBuffer.put(1, 0, 0, packedMaterialDataNE);
+			uvBuffer.put(0, 0, 0, packedMaterialDataNW);
+			uvBuffer.put(1, 1, 0, packedMaterialDataSE);
 
-			uvBuffer.put(0, 0, 0, packedMaterialDataSW);
-			uvBuffer.put(1, 0, 0, packedMaterialDataSE);
-			uvBuffer.put(0, 1, 0, packedMaterialDataNW);
+			uvBuffer.put(0, 1, 0, packedMaterialDataSW);
+			uvBuffer.put(1, 1, 0, packedMaterialDataSE);
+			uvBuffer.put(0, 0, 0, packedMaterialDataNW);
 
 			uvBufferLength += 6;
 		}
@@ -830,9 +830,9 @@ class SceneUploader
 			int packedMaterialDataC = modelPusher.packMaterialData(materialC, vertexCIsOverlay, ModelOverride.NONE);
 
 			uvBuffer.ensureCapacity(12);
-			uvBuffer.put(localVertices[0][0] / 128f, localVertices[0][1] / 128f, 0, packedMaterialDataA);
-			uvBuffer.put(localVertices[1][0] / 128f, localVertices[1][1] / 128f, 0, packedMaterialDataB);
-			uvBuffer.put(localVertices[2][0] / 128f, localVertices[2][1] / 128f, 0, packedMaterialDataC);
+			uvBuffer.put(localVertices[0][0] / 128f, 1 - localVertices[0][1] / 128f, 0, packedMaterialDataA);
+			uvBuffer.put(localVertices[1][0] / 128f, 1 - localVertices[1][1] / 128f, 0, packedMaterialDataB);
+			uvBuffer.put(localVertices[2][0] / 128f, 1 - localVertices[2][1] / 128f, 0, packedMaterialDataC);
 
 			uvBufferLength += 3;
 		}
@@ -938,9 +938,9 @@ class SceneUploader
 				int packedMaterialDataC = modelPusher.packMaterialData(materialC, false, ModelOverride.NONE);
 
 				uvBuffer.ensureCapacity(12);
-				uvBuffer.put(localVertices[0][0] / 128f, localVertices[0][1] / 128f, 0, packedMaterialDataA);
-				uvBuffer.put(localVertices[1][0] / 128f, localVertices[1][1] / 128f, 0, packedMaterialDataB);
-				uvBuffer.put(localVertices[2][0] / 128f, localVertices[2][1] / 128f, 0, packedMaterialDataC);
+				uvBuffer.put(localVertices[0][0] / 128f, 1 - localVertices[0][1] / 128f, 0, packedMaterialDataA);
+				uvBuffer.put(localVertices[1][0] / 128f, 1 - localVertices[1][1] / 128f, 0, packedMaterialDataB);
+				uvBuffer.put(localVertices[2][0] / 128f, 1 - localVertices[2][1] / 128f, 0, packedMaterialDataC);
 
 				uvBufferLength += 3;
 			}
