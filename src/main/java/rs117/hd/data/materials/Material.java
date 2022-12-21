@@ -305,6 +305,7 @@ public enum Material
 		.setFlowMap(LAVA_FLOW_MAP, 0.04f, 36, 12)),
 
 	BARK,
+	LIGHT_BARK(BARK, p -> p.setBrightness(1.75f)),
 	WOOD_GRAIN,
 	WOOD_GRAIN_2_N,
 	WOOD_GRAIN_2(p -> p
@@ -370,6 +371,9 @@ public enum Material
 	WATTLE_1,
 	ICE_1(GRUNGE_2, p -> p
 			.setSpecular(1.1f,200)
+	),
+	SLIME_GRUNGE(GRUNGE_1, p -> p
+			.setSpecular(4.1f,60)
 	),
 
 	// Seasonal
