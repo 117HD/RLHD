@@ -3795,7 +3795,9 @@
       11184,
       11185,
       11186,
-      18479
+      18479,
+      37816,
+      37817
     ]
   },
   {
@@ -4117,7 +4119,8 @@
     "baseMaterial": "METALLIC_2_HIGHGLOSS",
     "objectIds": [
       196,
-      197
+      197,
+      38027
     ]
   },
   {
@@ -4936,6 +4939,8 @@
       15811,
       15812,
       19215,
+      20753,
+      20754,
       22347,
       22348,
       22349,
@@ -5016,6 +5021,9 @@
       3896,
       3897,
       5847,
+      11182,
+      11183,
+      11425,
       27899,
       29856,
       29857,
@@ -5305,6 +5313,14 @@
       7115,
       14482,
       14485,
+      17929,
+      37800,
+      37801,
+      37802,
+      37803,
+      37804,
+      37805,
+      37806,
       44730,
       44733,
       44734,
@@ -5610,5 +5626,213 @@
       5861
     ],
     "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Mortton - Objects - Stone - Funeral Pyre",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      4093
+    ]
+  },
+  {
+    "description": "Mortton - Objects - Stone - Stone Stand",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      4065
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Mortton - Objects - Stone - Temple Walls",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      4089
+    ],
+    "uvType": "MODEL_XY"
+  },
+  {
+    "description": "Mortton - Objects - Stone - Temple Walls - Mirrored",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      4078
+    ],
+    "uvType": "MODEL_XY_MIRROR_B"
+  },
+  {
+    "description": "Mortton Shade Catacombs - Walls - Stone",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      17900,
+      38020,
+      38021,
+      38023,
+      38024,
+      40470
+    ],
+    "uvType": "MODEL_XY",
+    "uvOrientation": 300
+  },
+  {
+    "description": "Mortton Shade Catacombs  - Walls - Metallic - Doors",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+       4106,
+       4107,
+       4108,
+       4109,
+       18147,
+       18148,
+       18149,
+       18150
+    ],
+    "uvType": "MODEL_XY",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Mortton Shade Catacombs  - Objects - Stone - Grave Stone",
+    "baseMaterial": "STONE",
+    "objectIds": [
+       40471,
+       40472
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Mortton Shade Catacombs  - Objects - Stone - Alter",
+    "baseMaterial": "STONE",
+    "objectIds": [
+       41222
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Mortton Shade Catacombs  - Objects - Stone - Hole",
+    "baseMaterial": "ROCK_1_LIGHT",
+    "objectIds": [
+      37862,
+      37863
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Objects - Vines",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+       41201,
+       41202,
+       41203,
+       41204,
+       41205,
+       41207,
+       41208,
+       41209
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Objects - White Mushrooms - Medium",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      22796,
+      22797,
+      22798
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Mortton Shade Catacombs - Decoration - Stone - Brick rubble",
+    "baseMaterial": "STONE",
+    "objectIds": [
+       38028
+    ],
+    "uvType": "MODEL_XZ_MIRROR_B"
+  },
+  {
+    "description": "Mortton Shade Catacombs - Objects - Stone - Brick rubble",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      20733
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Mortton Shade Catacombs  - Walls - Metallic - Fence",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      37773,
+      37774,
+      37775
+    ],
+    "uvType": "MODEL_XY"
+  },
+  {
+    "description": "Objects - Fungus - Medium",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      1171
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Objects - Huge Mushroom - Medium",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      4055,
+      4056,
+      4057
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Mortton - Objects - Shade Chests - Medium - Bronze",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      4111,
+      4112,
+      4113,
+      4114,
+      4115
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.88
+  },
+  {
+    "description": "Mortton - Objects - Shade Chests - Medium - Steel",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      4116,
+      4117,
+      4118,
+      4119,
+      4120
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.88
+  },
+  {
+    "description": "Mortton - Objects - Shade Chests - Medium - Black",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      4121,
+      4122,
+      4123,
+      4124,
+      4125
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.88
+  },
+  {
+    "description": "Mortton - Objects - Shade Chests - Medium - Silver",
+    "baseMaterial": "METALLIC_2_GLOSS",
+    "objectIds": [
+      4126,
+      4127,
+      4128,
+      4129,
+      4130
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.88
   }
 ]
