@@ -3591,9 +3591,14 @@
     "baseMaterial": "CARPET",
     "objectIds": [
       7481,
+      14046,
+      14047,
+      14048,
+      24095,
       40304
     ],
     "uvType": "MODEL_XZ",
+    "uvScale": 0.7,
     "flatNormals": true
   },
   {
@@ -3601,9 +3606,11 @@
     "baseMaterial": "CARPET",
     "objectIds": [
       7480,
+      24094,
       40305
     ],
     "uvType": "MODEL_XZ",
+    "uvScale": 0.7,
     "flatNormals": true
   },
   {
@@ -3611,9 +3618,11 @@
     "baseMaterial": "CARPET",
     "objectIds": [
       7447,
+      24093,
       40306
     ],
     "uvType": "MODEL_XZ_MIRROR_A",
+    "uvScale": 0.7,
     "flatNormals": true
   },
   {
@@ -3626,6 +3635,9 @@
       928,
       929,
       930,
+      931,
+      932,
+      933,
       937,
       938,
       940,
@@ -3634,12 +3646,24 @@
       943,
       944,
       945,
+      6251,
+      6252,
+      6253,
       6812,
       6813,
       6814,
+      7172,
+      7173,
+      7174,
       7435,
       7436,
       7437,
+      11475,
+      11476,
+      11477,
+      11478,
+      11479,
+      11480,
       25596,
       25597,
       25598,
@@ -3647,7 +3671,7 @@
       25679,
       25680
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "WORLD_XZ",
     "flatNormals": true
   },
   {
@@ -5261,6 +5285,33 @@
     "uvType": "MODEL_XY",
     "uvOrientation": 512,
     "uvScale": 0.76
+  },
+  {
+    "description": "Round Rug",
+    "baseMaterial": "FINE_CARPET",
+    "objectIds": [
+      2455,
+      2456,
+      2457,
+      4687,
+      4688,
+      4689,
+      25124,
+      25125,
+      25126
+    ],
+    "uvType": "WORLD_XZ",
+    "flatNormals": true
+  },
+  {
+    "description": "PoH - Rug",
+    "baseMaterial": "FINE_CARPET",
+    "objectIds": [
+      6762,
+      6763
+    ],
+    "uvType": "WORLD_XZ",
+    "flatNormals": true
   },
   {
     "description": "PHASMATYS - Stone - Walls",
