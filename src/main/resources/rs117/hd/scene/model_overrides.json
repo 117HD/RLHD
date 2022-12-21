@@ -1262,7 +1262,11 @@
       1282,
       1286,
       1297,
-      1383
+      1383,
+      4051,
+      4052,
+      4053,
+      4054
     ]
   },
   {
@@ -4525,6 +4529,7 @@
     "description": "Wooden Door - Plank",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
+      1749,
       2398,
       11616,
       11617,
@@ -5307,5 +5312,75 @@
     ],
     "uvType": "WORLD_XZ",
     "flatNormals": true
+  },
+  {
+    "description": "PHASMATYS - Stone - Walls",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      5452,
+      5361,
+      5362
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "PHASMATYS - House - Walls",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      5440,
+      5441,
+      5442,
+      5443,
+      5444
+    ],
+    "uvType": "MODEL_XY",
+    "uvScale": 0.83
+  },
+  {
+    "description": "PHASMATYS - Stone - Rubble - Small",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      5301,
+      5302,
+      5303
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.76
+  },
+  {
+    "description": "PHASMATYS - Stone - Rubble - Medium",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      5447,
+      5448
+    ]
+  },
+  {
+    "description": "Stone - Steps",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      5307,
+      5460
+    ]
+  },
+  {
+    "description": "Stone - Stairs - cobbled",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      16646
+    ]
+  },
+  {
+    "description": "Phasmatys - Slime",
+    "baseMaterial": "SLIME_GRUNGE",
+    "objectIds": [
+      5377,
+      5378,
+      5379,
+      5380,
+      5381,
+      5382,
+      5383
+    ]
   }
 ]
