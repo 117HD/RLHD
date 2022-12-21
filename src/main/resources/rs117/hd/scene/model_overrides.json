@@ -1262,7 +1262,11 @@
       1282,
       1286,
       1297,
-      1383
+      1383,
+      4051,
+      4052,
+      4053,
+      4054
     ]
   },
   {
@@ -2611,7 +2615,6 @@
       756,
       2173,
       2174,
-      2383,
       3702,
       3704,
       3711,
@@ -3599,9 +3602,14 @@
     "baseMaterial": "CARPET",
     "objectIds": [
       7481,
+      14046,
+      14047,
+      14048,
+      24095,
       40304
     ],
     "uvType": "MODEL_XZ",
+    "uvScale": 0.7,
     "flatNormals": true
   },
   {
@@ -3609,9 +3617,11 @@
     "baseMaterial": "CARPET",
     "objectIds": [
       7480,
+      24094,
       40305
     ],
     "uvType": "MODEL_XZ",
+    "uvScale": 0.7,
     "flatNormals": true
   },
   {
@@ -3619,9 +3629,11 @@
     "baseMaterial": "CARPET",
     "objectIds": [
       7447,
+      24093,
       40306
     ],
     "uvType": "MODEL_XZ_MIRROR_A",
+    "uvScale": 0.7,
     "flatNormals": true
   },
   {
@@ -3634,6 +3646,9 @@
       928,
       929,
       930,
+      931,
+      932,
+      933,
       937,
       938,
       940,
@@ -3642,12 +3657,24 @@
       943,
       944,
       945,
+      6251,
+      6252,
+      6253,
       6812,
       6813,
       6814,
+      7172,
+      7173,
+      7174,
       7435,
       7436,
       7437,
+      11475,
+      11476,
+      11477,
+      11478,
+      11479,
+      11480,
       25596,
       25597,
       25598,
@@ -3655,7 +3682,7 @@
       25679,
       25680
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "WORLD_XZ",
     "flatNormals": true
   },
   {
@@ -4515,6 +4542,7 @@
     "description": "Wooden Door - Plank",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
+      1749,
       2398,
       11616,
       11617,
@@ -5158,6 +5186,7 @@
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
       320,
+      2382,
       3170,
       3709,
       3949,
@@ -5254,6 +5283,8 @@
     "description": "Ground Decoration - Rock - Small - Uncolored",
     "baseMaterial": "ROCK_1",
     "objectIds": [
+      2381,
+      2383,
       7115,
       14482,
       14485,
@@ -5278,6 +5309,126 @@
     "uvType": "MODEL_XY",
     "uvOrientation": 512,
     "uvScale": 0.76
+  },
+  {
+    "description": "Round Rug",
+    "baseMaterial": "FINE_CARPET",
+    "objectIds": [
+      2455,
+      2456,
+      2457,
+      4687,
+      4688,
+      4689,
+      25124,
+      25125,
+      25126
+    ],
+    "uvType": "WORLD_XZ",
+    "flatNormals": true
+  },
+  {
+    "description": "PoH - Rug",
+    "baseMaterial": "FINE_CARPET",
+    "objectIds": [
+      6762,
+      6763
+    ],
+    "uvType": "WORLD_XZ",
+    "flatNormals": true
+  },
+  {
+    "description": "PHASMATYS - Stone - Walls",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      5452,
+      5361,
+      5362
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "PHASMATYS - House - Walls",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      5440,
+      5441,
+      5442,
+      5443,
+      5444
+    ],
+    "uvType": "MODEL_XY",
+    "uvScale": 0.83
+  },
+  {
+    "description": "PHASMATYS - Stone - Rubble - Small",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      5301,
+      5302,
+      5303
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.76
+  },
+  {
+    "description": "PHASMATYS - Stone - Rubble - Medium",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      5447,
+      5448
+    ]
+  },
+  {
+    "description": "Stone - Steps",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      5307,
+      5460
+    ]
+  },
+  {
+    "description": "Stone - Stairs - cobbled",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      16646
+    ]
+  },
+  {
+    "description": "Phasmatys - Slime",
+    "baseMaterial": "SLIME_GRUNGE",
+    "objectIds": [
+      5377,
+      5378,
+      5379,
+      5380,
+      5381,
+      5382,
+      5383
+    ]
+  },
+  {
+    "description": "Objects - Swamp Root - Small",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      1366,
+      1367,
+      1368
+    ],
+    "uvType": "MODEL_XY_MIRROR_B",
+    "uvScale": 0.6,
+    "uvOrientation": 342
+  },
+  {
+    "description": "Objects - Swamp Root - Large",
+    "baseMaterial": "LIGHT_BARK",
+    "objectIds": [
+      1363,
+      1364
+    ],
+    "uvType": "MODEL_XY_MIRROR_B",
+    "uvScale": 0.4,
+    "uvOrientation": 342
   },
   {
     "description": "Fence Gate - Static",
