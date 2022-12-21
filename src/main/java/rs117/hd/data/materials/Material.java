@@ -305,6 +305,7 @@ public enum Material
 		.setFlowMap(LAVA_FLOW_MAP, 0.04f, 36, 12)),
 
 	BARK,
+	LIGHT_BARK(BARK, p -> p.setBrightness(1.75f)),
 	WOOD_GRAIN,
 	WOOD_GRAIN_2_N,
 	WOOD_GRAIN_2(p -> p

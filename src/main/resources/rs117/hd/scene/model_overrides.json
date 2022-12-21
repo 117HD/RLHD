@@ -2609,7 +2609,6 @@
       756,
       2173,
       2174,
-      2383,
       3702,
       3704,
       3711,
@@ -5173,6 +5172,7 @@
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
       320,
+      2382,
       3709,
       3949,
       7106
@@ -5267,6 +5267,8 @@
     "description": "Ground Decoration - Rock - Small - Uncolored",
     "baseMaterial": "ROCK_1",
     "objectIds": [
+      2381,
+      2383,
       14482,
       14485
     ],
@@ -5382,5 +5384,28 @@
       5382,
       5383
     ]
+  },
+  {
+    "description": "Objects - Swamp Root - Small",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      1366,
+      1367,
+      1368
+    ],
+    "uvType": "MODEL_XY_MIRROR_B",
+    "uvScale": 0.6,
+    "uvOrientation": 342
+  },
+  {
+    "description": "Objects - Swamp Root - Large",
+    "baseMaterial": "LIGHT_BARK",
+    "objectIds": [
+      1363,
+      1364
+    ],
+    "uvType": "MODEL_XY_MIRROR_B",
+    "uvScale": 0.4,
+    "uvOrientation": 342
   }
 ]
