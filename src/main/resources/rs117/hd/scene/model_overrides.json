@@ -1290,7 +1290,8 @@
     "description": "FARMING_PATCH_2",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
-      7522
+      7522,
+      7523
     ],
     "uvType": "MODEL_XZ"
   },
@@ -1446,7 +1447,9 @@
     "description": "STONE_STEPS",
     "baseMaterial": "STONE",
     "objectIds": [
-      3684, 20950
+      3684,
+      20950,
+      20951
     ]
   },
   {
@@ -2455,8 +2458,7 @@
       340,
       341,
       342,
-      3169,
-      3170,
+      728,
       3171,
       3172,
       3173,
@@ -2560,7 +2562,11 @@
       20181,
       20777,
       20778,
-      20779
+      20779,
+      44740,
+      44741,
+      44742,
+      44743
     ],
     "inheritTileColorType": "OVERLAY",
     "uvType": "WORLD_XZ"
@@ -2812,7 +2818,9 @@
     "description": "DIRT_CAVE_ENTRANCES",
     "baseMaterial": "DIRT_2",
     "objectIds": [
-      3213
+      3213,
+      39721,
+      44635
     ]
   },
   {
@@ -3151,6 +3159,7 @@
       810,
       811,
       812,
+      10837,
       11591,
       11592,
       11593,
@@ -3345,6 +3354,7 @@
       2052,
       2053,
       2618,
+      3125,
       23848,
       23849,
       23850,
@@ -3357,7 +3367,9 @@
       24453,
       24454,
       24560,
-      24561
+      24561,
+      29110,
+      44680
     ],
     "flatNormals": true
   },
@@ -3956,6 +3968,8 @@
     "description": "Ladder - Untextured",
     "baseMaterial": "DOCK_FENCE",
     "objectIds": [
+      10493,
+      10494,
       11794,
       11795,
       25606,
@@ -5173,6 +5187,7 @@
     "objectIds": [
       320,
       2382,
+      3170,
       3709,
       3949,
       7106
@@ -5199,6 +5214,7 @@
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
       319,
+      3169,
       3705,
       3706,
       3707,
@@ -5269,8 +5285,14 @@
     "objectIds": [
       2381,
       2383,
+      7115,
       14482,
-      14485
+      14485,
+      44730,
+      44733,
+      44734,
+      44735,
+      44736
     ],
     "uvType": "WORLD_XZ",
     "uvScale": 0.74
@@ -5407,5 +5429,127 @@
     "uvType": "MODEL_XY_MIRROR_B",
     "uvScale": 0.4,
     "uvOrientation": 342
+  },
+  {
+    "description": "Fence Gate - Static",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      44922,
+      44923
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "Objects - Wooden - Crate",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      7514,
+      10374
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "Wall - Decoration - Wooden - Crate",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      10130,
+      10131,
+      10132,
+      10133,
+      10134
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "Metallic - Ground - Armor",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      825,
+      826,
+      827,
+      828
+    ]
+  },
+  {
+    "description": "Objects - Metallic - Chair - Broken",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      19929
+    ]
+  },
+  {
+    "description": "Objects - Metallic - Range",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      7183
+    ]
+  },
+  {
+    "description": "Wall - Decoration - Metallic - Sword and Shield",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      10515
+    ]
+  },
+  {
+    "description": "Wall - Wooden - Post",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      10106,
+      12278
+    ],
+    "uvScale": 0.4,
+    "uvType": "MODEL_YZ",
+    "flatNormals": true
+  },
+  {
+    "description": "Objects - Metallic - Pots",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      10504,
+      10505
+    ]
+  },
+  {
+    "description": "Objects - Metallic - Iron Billets",
+    "baseMaterial": "METALLIC_2",
+    "objectIds": [
+      2140
+    ]
+  },
+  {
+    "description": "Ground - Wooden - Plank Steps",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      4303
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Objects - Metallic - Giant Anvil",
+    "baseMaterial": "METALLIC_2",
+    "objectIds": [
+      39724
+    ]
+  },
+  {
+    "description": "Walls - Stone - Giants Foundry",
+    "baseMaterial": "ROCK_2",
+    "objectIds": [
+      44639,
+      44640,
+      44641,
+      44642,
+      44643,
+      44644,
+      44645,
+      44646,
+      44647,
+      44648,
+      44649,
+      44650,
+      44651,
+      44652
+    ]
   }
 ]
