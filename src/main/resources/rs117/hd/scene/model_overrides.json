@@ -5686,7 +5686,7 @@
     "objectIds": [
       21245
     ],
-    "uvType": "WORLD_XZ"
+    "uvType": "WORLD_XZ",
     "uvOrientation": 512,
     "uvScale": 0.76
   },
