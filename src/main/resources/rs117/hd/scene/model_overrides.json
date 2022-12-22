@@ -5834,7 +5834,7 @@
     "uvScale": 0.88
   },
   {
-    "description": "EMPTY Ore Rocks",
+    "description": "Objects - Ore - EMPTY Rocks",
     "baseMaterial": "ROCK_2",
     "objectIds": [
       11390,
@@ -5843,7 +5843,7 @@
     ]
   },
   {
-    "description": "Clay Rocks",
+    "description": "Objects - Soft - Stone - Clay Rocks",
     "baseMaterial": "DIRT_2",
     "objectIds": [
       11362,
@@ -5851,7 +5851,7 @@
     ]
   },
   {
-    "description": "Copper Ore Rocks",
+    "description": "Objects - Ore - Copper Rocks",
     "baseMaterial": "ROCK_1",
     "objectIds": [
       10943,
@@ -5859,7 +5859,7 @@
     ]
   },
   {
-    "description": "Tin Ore Rocks",
+    "description": "Objects - Ore - Tin Rocks",
     "baseMaterial": "ROCK_1",
     "objectIds": [
       11360,
@@ -5867,7 +5867,7 @@
     ]
   },
   {
-  "description": "Silver Ore Rocks",
+  "description": "Objects - Ore - Silver Rocks",
   "baseMaterial": "METALLIC_ROCK_1",
   "objectIds": [
     11368,
@@ -5875,7 +5875,7 @@
     ]
   },
   {
-    "description": "Iron Ore Rocks",
+    "description": "Objects - Ore - Iron Rocks",
     "baseMaterial": "ROCK_1",
     "objectIds": [
       11364,
@@ -5883,7 +5883,7 @@
     ]
   },
   {
-    "description": "Coal Ore Rocks",
+    "description": "Objects - Ore - Coal Rocks",
     "baseMaterial": "ROCK_1",
     "objectIds": [
       11366,
@@ -5891,7 +5891,7 @@
     ]
   },
   {
-    "description": "Mithril Ore Rocks",
+    "description": "Objects - Ore - Mithril Rocks",
     "baseMaterial": "ROCK_1",
     "objectIds": [
       11372,
@@ -5899,7 +5899,7 @@
     ]
   },
   {
-    "description": "Adamantite Ore Rocks",
+    "description": "Objects - Ore - Adamantite Rocks",
     "baseMaterial": "ROCK_1",
     "objectIds": [
       11374,
@@ -5907,7 +5907,7 @@
     ]
   },
   {
-    "description": "Runite Ore Rocks",
+    "description": "Objects - Ore - Runite Rocks",
     "baseMaterial": "ROCK_1",
     "objectIds": [
       11376,
@@ -5915,7 +5915,7 @@
     ]
   },
   {
-    "description": "Gem Rocks",
+    "description": "Objects - Ore - Gem Rocks",
     "baseMaterial": "ROCK_2",
     "objectIds": [
       11380,
@@ -5923,7 +5923,7 @@
     ]
   },
   {
-    "description": "Gold Ore Rocks",
+    "description": "Objects - Ore - Gold Rocks",
     "baseMaterial": "METALLIC_ROCK_1",
     "objectIds": [
       11370,
