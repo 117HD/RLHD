@@ -6033,6 +6033,7 @@
       12862
     ],
     "uvType": "MODEL_XZ",
-    "flatNormals": true
+    "flatNormals": true,
+    "disableShadows": true
   }
 ]
