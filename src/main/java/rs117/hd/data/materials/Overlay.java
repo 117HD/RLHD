@@ -249,7 +249,14 @@ public enum Overlay {
     WARRIORS_GUILD_FLOOR_1(11, Area.WARRIORS_GUILD, GroundMaterial.VARROCK_PATHS, p -> p.blended(false)),
     WARRIORS_GUILD_CARPET(86, Area.WARRIORS_GUILD, GroundMaterial.CARPET, p -> p.blended(false)),
 
-    // Seers
+    // Seers Indoors
+    SEERS_ELEMENTAL_WORKSHOP_HOUSE_171_BLENDED(171, Area.ELEMENTAL_WORKSHOP_HOUSE_ENTRANCE, GroundMaterial.VARROCK_PATHS),
+    SEERS_ELEMENTAL_WORKSHOP_HOUSE_171(171, Area.ELEMENTAL_WORKSHOP_HOUSE, GroundMaterial.VARROCK_PATHS, p -> p.blended(false).shiftLightness(3)),
+    SEERS_BAR_171_BLENDED(171, Area.SEERS_BAR_ENTRANCE, GroundMaterial.VARROCK_PATHS),
+    SEERS_BAR_171(171, Area.SEERS_BAR, GroundMaterial.VARROCK_PATHS, p -> p.blended(false).shiftLightness(3)),
+    SEERS_CAMELOT_CASTLE_BLENDED(171, Area.SEERS_CAMELOT_CASTLE_BLENDED, GroundMaterial.VARROCK_PATHS_LIGHT),
+    SEERS_CAMELOT_CASTLE(171, Area.SEERS_CAMELOT_CASTLE, GroundMaterial.VARROCK_PATHS_LIGHT, p -> p.blended(false).shiftLightness(3)),
+    SEERS_CAMELOT_CASTLE_KNIGHTSWAVE_OVERWORLD(171, Area.SEERS_CAMELOT_CASTLE_KNIGHTSWAVE_OVERWORLD, GroundMaterial.VARROCK_PATHS_LIGHT),
     SEERS_BANK_TILE_1(3, Area.SEERS_BANK, GroundMaterial.MARBLE_1_GLOSS, p -> p.blended(false)),
     SEERS_BANK_TILE_2(4, Area.SEERS_BANK, GroundMaterial.MARBLE_2_GLOSS, p -> p.blended(false)),
     SEERS_BANK_TILE_3(8, Area.SEERS_BANK, GroundMaterial.MARBLE_1_GLOSS, p -> p.blended(false)),
