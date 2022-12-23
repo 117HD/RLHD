@@ -47,8 +47,12 @@ public enum Overlay {
             .ids()
             .groundMaterial(GroundMaterial.WINTER_JAGGED_STONE_TILE)
     ),
+    WINTER_JAGGED_STONE_TILE_LIGHT(p ->p
+            .ids()
+            .groundMaterial(GroundMaterial.WINTER_JAGGED_STONE_TILE_LIGHT)
+    ),
     WINTER_EAST_ARDOUGNE_CASTLE_PATH_FIX(10, Area.EAST_ARDOUGNE_CASTLE_PATH_FIX, GroundMaterial.VARROCK_PATHS_LIGHT, p -> p
-            .replaceWithIf(WINTER_JAGGED_STONE_TILE, plugin -> plugin.configWinterTheme)
+            .replaceWithIf(WINTER_JAGGED_STONE_TILE_LIGHT, plugin -> plugin.configWinterTheme)
             .shiftLightness(3)
             .blended(false)
 
@@ -84,14 +88,24 @@ public enum Overlay {
     LUMBRIDGE_CASTLE_ENTRYWAY_1(2, Area.LUMBRIDGE_CASTLE_ENTRYWAY, GroundMaterial.MARBLE_1_GLOSS, p -> p.blended(false)),
     LUMBRIDGE_CASTLE_ENTRYWAY_2(3, Area.LUMBRIDGE_CASTLE_ENTRYWAY, GroundMaterial.MARBLE_2_GLOSS, p -> p.blended(false)),
 
+
+    //Varrock Indoors
+    VARROCK_GUARD_POSTS(171, Area.VARROCK_GUARD_POSTS, GroundMaterial.VARROCK_PATHS),
+    VARROCK_HORVIKS_ANVIL(171, Area.VARROCK_HORVIKS_ANVIL, GroundMaterial.VARROCK_PATHS),
+    VARROCK_ZAMORACK_TEMPLE(171, Area.VARROCK_ZAMORAK_TEMPLE, GroundMaterial.VARROCK_PATHS),
+    VARROCK_HOUSE_1(171, Area.VARROCK_HOUSE_1, GroundMaterial.VARROCK_PATHS),
+    VARROCK_HOUSE_2(171, Area.VARROCK_HOUSE_2, GroundMaterial.VARROCK_PATHS),
+    VARROCK_BLUE_MOON_INN(171, Area.VARROCK_BLUE_MOON_INN, GroundMaterial.VARROCK_PATHS),
+    VARROCK_MUSEUM_FLOOR(56, Area.VARROCK_MUSEUM, GroundMaterial.TILES_2x2_2_GLOSS, p -> p.blended(false)),
+    VARROCK_MUSEUM_BASEMENT_FLOOR(56, Area.VARROCK_MUSEUM_BASEMENT, GroundMaterial.TILES_2x2_2_GLOSS, p -> p.blended(false)),
+    VARROCK_CHAMPIONS_GUILD(171, Area.VARROCK_CHAMPIONS_GUILD, GroundMaterial.VARROCK_PATHS),
+
     // Varrock
     VARROCK_MUSEUM_SOUTH_PATH_FIX_1(-85, Area.VARROCK_MUSEUM_SOUTH_PATH_FIX, GroundMaterial.DIRT, p -> p.shiftSaturation(2)),
     VARROCK_MUSEUM_SOUTH_PATH_FIX_2(-84, Area.VARROCK_MUSEUM_SOUTH_PATH_FIX, GroundMaterial.DIRT, p -> p.shiftSaturation(1)),
     VARROCK_MUSEUM_SOUTH_PATH_FIX_3(56, Area.VARROCK_MUSEUM_SOUTH_PATH_FIX, GroundMaterial.VARROCK_PATHS, p -> p.shiftLightness(4)),
     VARROCK_WEST_BANK_SOUTH_PATH_FIX_1(-84, Area.VARROCK_WEST_BANK_SOUTH_PATH_FIX, GroundMaterial.VARROCK_PATHS, p -> p.shiftLightness(4).shiftSaturation(-1)),
     VARROCK_WILDERNESS_DITCH_PATH_FIX_1(-84, Area.VARROCK_WILDERNESS_DITCH_PATH_FIX, GroundMaterial.DIRT, p -> p.shiftSaturation(1)),
-    VARROCK_MUSEUM_FLOOR(56, Area.VARROCK_MUSEUM, GroundMaterial.TILES_2x2_2_GLOSS, p -> p.blended(false)),
-    VARROCK_MUSEUM_BASEMENT_FLOOR(56, Area.VARROCK_MUSEUM_BASEMENT, GroundMaterial.TILES_2x2_2_GLOSS, p -> p.blended(false)),
     VARROCK_JULIETS_FLOWER_BED(81, Area.VARROCK_JULIETS_HOUSE_FLOWER_BED, GroundMaterial.DIRT, p -> p.blended(true)),
     VARROCK_JULIETS_HOUSE_HARD_FLOORS(-85, Area.VARROCK_JULIETS_HOUSE, GroundMaterial.MARBLE_1_SEMIGLOSS, p -> p.blended(false)),
     VARROCK_JULIETS_HOUSE_CARPET_RED(-93, Area.VARROCK_JULIETS_HOUSE, GroundMaterial.CARPET, p -> p.blended(false)),
@@ -307,7 +321,7 @@ public enum Overlay {
     EAST_ARDOUGNE_CASTLE_FLOOR_TEXTURE(11, Area.EAST_ARDOUGNE_CASTLE_DIRT_FIX, GroundMaterial.CONCRETE, p -> p.blended(false).lightness(40)),
     EAST_ARDOUGNE_PATHS_1(10, Area.EAST_ARDOUGNE, GroundMaterial.VARROCK_PATHS_LIGHT, p -> p
             .shiftLightness(6)
-            .replaceWithIf(WINTER_JAGGED_STONE_TILE, plugin -> plugin.configWinterTheme)
+            .replaceWithIf(WINTER_JAGGED_STONE_TILE_LIGHT, plugin -> plugin.configWinterTheme)
     ),
     WIZARD_HOUSE_TILE_LIGHT(38, Area.EAST_ARDOUGNE, GroundMaterial.MARBLE_1_SEMIGLOSS, p -> p.blended(false)),
     WIZARD_HOUSE_TILE_DARK(40, Area.EAST_ARDOUGNE, GroundMaterial.MARBLE_2_SEMIGLOSS, p -> p.blended(false)),
@@ -579,7 +593,8 @@ public enum Overlay {
     OVERLAY_GRAVEL(GroundMaterial.GRAVEL, p -> p.ids(-76, 2, 3, 4, 6, 8, 10, 119)),
     OVERLAY_VARROCK_PATHS(GroundMaterial.VARROCK_PATHS, p -> p
             .replaceWithIf(WINTER_JAGGED_STONE_TILE, plugin -> plugin.configWinterTheme)
-            .ids(-85, -77, 11)),
+            .ids(-85, -77, 11)
+    ),
     OVERLAY_SWAMP_WATER(WaterType.SWAMP_WATER, p -> p.ids(-100, 7)),
     OVERLAY_WOOD_PLANKS(GroundMaterial.WOOD_PLANKS_1, p -> p.ids(5, 35)),
     OVERLAY_CLEAN_WOOD_PLANKS(GroundMaterial.CLEAN_WOOD_FLOOR, p -> p.ids(52).shiftLightness(-4)),
