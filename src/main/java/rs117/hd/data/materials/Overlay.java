@@ -51,6 +51,10 @@ public enum Overlay {
             .ids()
             .groundMaterial(GroundMaterial.WINTER_JAGGED_STONE_TILE_LIGHT)
     ),
+    WINTER_JAGGED_STONE_TILE_LIGHT_2(p ->p
+            .ids()
+            .groundMaterial(GroundMaterial.WINTER_JAGGED_STONE_TILE_LIGHT_2)
+    ),
     WINTER_EAST_ARDOUGNE_CASTLE_PATH_FIX(10, Area.EAST_ARDOUGNE_CASTLE_PATH_FIX, GroundMaterial.VARROCK_PATHS_LIGHT, p -> p
             .replaceWithIf(WINTER_JAGGED_STONE_TILE_LIGHT, plugin -> plugin.configWinterTheme)
             .shiftLightness(3)
@@ -480,6 +484,7 @@ public enum Overlay {
     // Zeah
     // Great Kourend
     KOUREND_CASTLE_BLEND_FIX(11, Area.KOUREND_CASTLE_ENTRANCE_FIX, GroundMaterial.VARROCK_PATHS, p -> p.blended(false)),
+    KOUREND_CASTLE_FLOOR(11, Area.KOUREND_CASTLE, GroundMaterial.VARROCK_PATHS),
     KOUREND_GREAT_STATUE_BLEND_FIX_1(108, Area.GREAT_KOUREND_STATUE, GroundMaterial.GRASS_1, p -> p.blended(true)),
     KOUREND_GREAT_STATUE_BLEND_FIX_2(11, Area.GREAT_KOUREND_STATUE, GroundMaterial.GRASS_1, p -> p.blended(false)),
     HOSIDIUS_WELL_BLEND_FIX(-119, Area.HOSIDIUS_WELL, GroundMaterial.FALADOR_PATHS, p -> p.blended(false)),
@@ -591,6 +596,10 @@ public enum Overlay {
     OVERLAY_WATER(WaterType.WATER, p -> p.ids(-128, -105, -98, 6, 41, 104)),
     OVERLAY_DIRT(GroundMaterial.DIRT, p -> p.ids(-124, -84, -83, 14, 15, 21, 22, 23, 60, 77, 81, 82, 88, 89, 101, 102, 107, 108, 110, 115, 123)),
     OVERLAY_GRAVEL(GroundMaterial.GRAVEL, p -> p.ids(-76, 2, 3, 4, 6, 8, 10, 119)),
+    OVERLAY_ZEAH_PATHS(Area.ZEAH, GroundMaterial.VARROCK_PATHS, p -> p
+            .replaceWithIf(WINTER_JAGGED_STONE_TILE_LIGHT_2, plugin -> plugin.configWinterTheme)
+            .ids(11)
+    ),
     OVERLAY_VARROCK_PATHS(GroundMaterial.VARROCK_PATHS, p -> p
             .replaceWithIf(WINTER_JAGGED_STONE_TILE, plugin -> plugin.configWinterTheme)
             .ids(-85, -77, 11)

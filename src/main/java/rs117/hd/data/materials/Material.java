@@ -458,6 +458,11 @@ public enum Material
 			.setNormalMap(JAGGED_STONE_TILE_N)
 			.setSpecular(0.6f,30)
 			.setBrightness(4)
+	),
+	WINTER_JAGGED_STONE_TILE_LIGHT_2(WINTER_JAGGED_STONE_TILE, p -> p
+		.setNormalMap(JAGGED_STONE_TILE_N)
+		.setSpecular(0.6f,30)
+		.setBrightness(12)
 	);
 
 
