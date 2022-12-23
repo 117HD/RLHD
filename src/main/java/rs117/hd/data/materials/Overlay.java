@@ -485,6 +485,8 @@ public enum Overlay {
     // Great Kourend
     KOUREND_CASTLE_BLEND_FIX(11, Area.KOUREND_CASTLE_ENTRANCE_FIX, GroundMaterial.VARROCK_PATHS, p -> p.blended(false)),
     KOUREND_CASTLE_FLOOR(11, Area.KOUREND_CASTLE, GroundMaterial.VARROCK_PATHS),
+    KOUREND_CASTLE_GUARDPOSTS_FLOORS(11, Area.KOUREND_GUARDPOSTS, GroundMaterial.VARROCK_PATHS),
+    KOUREND_HOUSES_FLOOR_11(11, Area.KOUREND_HOUSES, GroundMaterial.VARROCK_PATHS),
     KOUREND_GREAT_STATUE_BLEND_FIX_1(108, Area.GREAT_KOUREND_STATUE, GroundMaterial.GRASS_1, p -> p.blended(true)),
     KOUREND_GREAT_STATUE_BLEND_FIX_2(11, Area.GREAT_KOUREND_STATUE, GroundMaterial.GRASS_1, p -> p.blended(false)),
     HOSIDIUS_WELL_BLEND_FIX(-119, Area.HOSIDIUS_WELL, GroundMaterial.FALADOR_PATHS, p -> p.blended(false)),
