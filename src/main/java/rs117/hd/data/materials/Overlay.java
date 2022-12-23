@@ -30,7 +30,6 @@ import net.runelite.api.Client;
 import net.runelite.api.Tile;
 import net.runelite.api.coords.WorldPoint;
 import rs117.hd.HdPlugin;
-import rs117.hd.HdPluginConfig;
 import rs117.hd.data.WaterType;
 import rs117.hd.data.environments.Area;
 
@@ -43,6 +42,18 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 public enum Overlay {
+    // Winter Theme fixes
+    WINTER_JAGGED_STONE_TILE(p ->p
+            .ids()
+            .groundMaterial(GroundMaterial.WINTER_JAGGED_STONE_TILE)
+    ),
+    WINTER_EAST_ARDOUGNE_CASTLE_PATH_FIX(10, Area.EAST_ARDOUGNE_CASTLE_PATH_FIX, GroundMaterial.VARROCK_PATHS_LIGHT, p -> p
+            .replaceWithIf(WINTER_JAGGED_STONE_TILE, plugin -> plugin.configWinterTheme)
+            .shiftLightness(3)
+            .blended(false)
+
+    ),
+
     // Tutorial Island
     TUTORIAL_ISLAND_KITCHEN_TILE_1(9, Area.TUTORIAL_ISLAND_KITCHEN, GroundMaterial.MARBLE_1_SEMIGLOSS, p -> p.blended(false)),
     TUTORIAL_ISLAND_KITCHEN_TILE_2(11, Area.TUTORIAL_ISLAND_KITCHEN, GroundMaterial.MARBLE_2_SEMIGLOSS, p -> p.blended(false)),
@@ -263,6 +274,12 @@ public enum Overlay {
     CATHERBY_BANK_TILE_1(3, Area.CATHERBY_BANK, GroundMaterial.MARBLE_1_GLOSS, p -> p.blended(false)),
     CATHERBY_BANK_TILE_2(4, Area.CATHERBY_BANK, GroundMaterial.MARBLE_2_GLOSS, p -> p.blended(false)),
 
+    // Ardougne Indoors
+    EAST_ARDOUNGE_INDOORS_FURNACE(10, Area.EAST_ARDOUGNE_FURNACE, GroundMaterial.VARROCK_PATHS_LIGHT, p -> p.shiftLightness(6)),
+    EAST_ARDOUGNE_BANK_FLOOR(10, Area.EAST_ARDOUGNE_BANK, GroundMaterial.VARROCK_PATHS_LIGHT, p -> p.shiftLightness(6)),
+    EAST_ARDOUGNE_COBBLE_HOUSE_BLENDING(10, Area.EAST_ARDOUGNE_COBBLE_OFFICE, GroundMaterial.VARROCK_PATHS_LIGHT),
+    EAST_ARDOUGNE_COBBLE_HOUSE(10, Area.EAST_ARDOUGNE_COBBLE_OFFICE, GroundMaterial.VARROCK_PATHS_LIGHT, p -> p.blended(false)),
+
     // Ardougne
     EAST_ARDOUGNE_PATH_FIXES(10, Area.EAST_ARDOUGNE_PATHING_FIXES, GroundMaterial.OVERWORLD_GRASS_1, p -> p
             .hue(11)
@@ -281,7 +298,10 @@ public enum Overlay {
 
     ),
     EAST_ARDOUGNE_CASTLE_FLOOR_TEXTURE(11, Area.EAST_ARDOUGNE_CASTLE_DIRT_FIX, GroundMaterial.CONCRETE, p -> p.blended(false).lightness(40)),
-    EAST_ARDOUGNE_PATHS_1(10, Area.EAST_ARDOUGNE, GroundMaterial.VARROCK_PATHS_LIGHT, p -> p.shiftLightness(6)),
+    EAST_ARDOUGNE_PATHS_1(10, Area.EAST_ARDOUGNE, GroundMaterial.VARROCK_PATHS_LIGHT, p -> p
+            .shiftLightness(6)
+            .replaceWithIf(WINTER_JAGGED_STONE_TILE, plugin -> plugin.configWinterTheme)
+    ),
     WIZARD_HOUSE_TILE_LIGHT(38, Area.EAST_ARDOUGNE, GroundMaterial.MARBLE_1_SEMIGLOSS, p -> p.blended(false)),
     WIZARD_HOUSE_TILE_DARK(40, Area.EAST_ARDOUGNE, GroundMaterial.MARBLE_2_SEMIGLOSS, p -> p.blended(false)),
     EAST_ARDOUGNE_HAZEL_MANOR_PATH_TEXTURE(12, Area.EAST_ARDOUGNE_HAZEL_HOUSE, GroundMaterial.VARROCK_PATHS_LIGHT, p -> p
@@ -550,7 +570,9 @@ public enum Overlay {
     OVERLAY_WATER(WaterType.WATER, p -> p.ids(-128, -105, -98, 6, 41, 104)),
     OVERLAY_DIRT(GroundMaterial.DIRT, p -> p.ids(-124, -84, -83, 14, 15, 21, 22, 23, 60, 77, 81, 82, 88, 89, 101, 102, 107, 108, 110, 115, 123)),
     OVERLAY_GRAVEL(GroundMaterial.GRAVEL, p -> p.ids(-76, 2, 3, 4, 6, 8, 10, 119)),
-    OVERLAY_VARROCK_PATHS(GroundMaterial.VARROCK_PATHS, p -> p.ids(-85, -77, 11)),
+    OVERLAY_VARROCK_PATHS(GroundMaterial.VARROCK_PATHS, p -> p
+            .replaceWithIf(WINTER_JAGGED_STONE_TILE, plugin -> plugin.configWinterTheme)
+            .ids(-85, -77, 11)),
     OVERLAY_SWAMP_WATER(WaterType.SWAMP_WATER, p -> p.ids(-100, 7)),
     OVERLAY_WOOD_PLANKS(GroundMaterial.WOOD_PLANKS_1, p -> p.ids(5, 35)),
     OVERLAY_CLEAN_WOOD_PLANKS(GroundMaterial.CLEAN_WOOD_FLOOR, p -> p.ids(52).shiftLightness(-4)),

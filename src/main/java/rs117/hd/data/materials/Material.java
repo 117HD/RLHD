@@ -448,6 +448,11 @@ public enum Material
 	WINTER_HD_ROOF_WOODEN_SLATE(p -> p
 			.replaceIf(ROOF_WOODEN_SLATE, HdPluginConfig::winterTheme)
 			.setSpecular(0.5f,30)
+	),
+	WINTER_JAGGED_STONE_TILE(p -> p
+			.setNormalMap(JAGGED_STONE_TILE_N)
+			.setSpecular(0.6f,30)
+			.setBrightness(4)
 	);
 
 
