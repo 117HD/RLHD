@@ -5835,96 +5835,118 @@
   },
   {
     "description": "Objects - Ore - EMPTY Rocks",
-    "baseMaterial": "ROCK_2",
+    "baseMaterial": "ROCK_1",
     "objectIds": [
       11390,
       11391,
       11392
-    ]
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.4
   },
   {
     "description": "Objects - Soft - Stone - Clay Rocks",
-    "baseMaterial": "DIRT_2",
+    "baseMaterial": "GRUNGE_1",
     "objectIds": [
       11362,
       11363
-    ]
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.4
   },
   {
     "description": "Objects - Ore - Copper Rocks",
-    "baseMaterial": "ROCK_1",
+    "baseMaterial": "ORE_ROCK_SEMIGLOSS",
     "objectIds": [
       10943,
       11161
-    ]
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.4
   },
   {
     "description": "Objects - Ore - Tin Rocks",
-    "baseMaterial": "ROCK_1",
+    "baseMaterial": "ORE_ROCK_SEMIGLOSS",
     "objectIds": [
       11360,
       11361
-    ]
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.4
   },
   {
   "description": "Objects - Ore - Silver Rocks",
-  "baseMaterial": "METALLIC_ROCK_1",
+  "baseMaterial": "ORE_ROCK_GLOSS",
   "objectIds": [
     11368,
     11369
-    ]
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.4
   },
   {
     "description": "Objects - Ore - Iron Rocks",
-    "baseMaterial": "ROCK_1",
+    "baseMaterial": "ORE_ROCK_SEMIGLOSS",
     "objectIds": [
       11364,
       11365
-    ]
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.4
   },
   {
     "description": "Objects - Ore - Coal Rocks",
-    "baseMaterial": "ROCK_1",
+    "baseMaterial": "ORE_ROCK_SEMIGLOSS",
     "objectIds": [
       11366,
       11367
-    ]
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.4
   },
   {
     "description": "Objects - Ore - Mithril Rocks",
-    "baseMaterial": "ROCK_1",
+    "baseMaterial": "ORE_ROCK_SEMIGLOSS",
     "objectIds": [
       11372,
       11373
-    ]
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.4
   },
   {
     "description": "Objects - Ore - Adamantite Rocks",
-    "baseMaterial": "ROCK_1",
+    "baseMaterial": "ORE_ROCK_SEMIGLOSS",
     "objectIds": [
       11374,
       11375
-    ]
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.4
   },
   {
     "description": "Objects - Ore - Runite Rocks",
-    "baseMaterial": "ROCK_1",
+    "baseMaterial": "ORE_ROCK_SEMIGLOSS",
     "objectIds": [
       11376,
       11377
-    ]
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.4
   },
   {
     "description": "Objects - Ore - Gem Rocks",
-    "baseMaterial": "ROCK_2",
+    "baseMaterial": "STONE",
     "objectIds": [
       11380,
       11381
-    ]
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.4
   },
   {
     "description": "Objects - Ore - Gold Rocks",
-    "baseMaterial": "METALLIC_ROCK_1",
+    "baseMaterial": "ORE_ROCK_GLOSS",
     "objectIds": [
       11370,
       11371

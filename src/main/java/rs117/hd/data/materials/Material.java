@@ -312,9 +312,6 @@ public enum Material
 		.setNormalMap(WOOD_GRAIN_2_N)),
 	WOOD_GRAIN_3,
 	DOCK_FENCE,
-	METALLIC_ROCK_1(ROCK_1, p -> p
-			.setSpecular(0.5f,220)
-	),
 
 	HD_INFERNAL_CAPE(p -> p
 		.replaceIf(INFERNAL_CAPE, HdPluginConfig::hdInfernalTexture)
@@ -377,6 +374,14 @@ public enum Material
 	),
 	SLIME_GRUNGE(GRUNGE_1, p -> p
 			.setSpecular(4.1f,60)
+	),
+	ORE_ROCK_SEMIGLOSS(ROCK_1, p -> p
+			.setSpecular(0.7f, 80)
+			.setTextureScale(0.4f,1f)
+	),
+	ORE_ROCK_GLOSS(ROCK_1, p -> p
+			.setSpecular(1.35f, 80)
+			.setTextureScale(0.4f,1f)
 	),
 
 	// Seasonal
