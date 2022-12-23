@@ -173,10 +173,10 @@ public class TextureManager
 		double save = textureProvider.getBrightness();
 		textureProvider.setBrightness(1.0d);
 
-		pixelBuffer = BufferUtils.createIntBuffer(textureSize * textureSize);
-		vanillaImage = new BufferedImage(128, 128, BufferedImage.TYPE_INT_ARGB);
 		int[] vanillaPixels = new int[128 * 128];
+		pixelBuffer = BufferUtils.createIntBuffer(textureSize * textureSize);
 		scaledImage = new BufferedImage(textureSize, textureSize, BufferedImage.TYPE_INT_ARGB);
+		vanillaImage = new BufferedImage(128, 128, BufferedImage.TYPE_INT_ARGB);
 
 		int materialCount = Material.values().length;
 		materialOrdinalToTextureIndex = new int[materialCount];
@@ -303,8 +303,8 @@ public class TextureManager
 
 		// Reset
 		pixelBuffer = null;
-		vanillaImage = null;
 		scaledImage = null;
+		vanillaImage = null;
 		textureProvider.setBrightness(save);
 		glActiveTexture(TEXTURE_UNIT_UI);
 
@@ -332,18 +332,11 @@ public class TextureManager
 	{
 		// TODO: scale and transform on the GPU for better performance
 		AffineTransform t = new AffineTransform();
-		// Flip non-vanilla textures vertically
-		if (image != vanillaImage)
-		{
-			t.translate(0, scaledImage.getHeight());
-			t.scale(1, -1);
-		}
 		t.scale((double) textureSize / image.getWidth(), (double) textureSize / image.getHeight());
 		AffineTransformOp scaleOp = new AffineTransformOp(t, AffineTransformOp.TYPE_BICUBIC);
 		scaleOp.filter(image, scaledImage);
-		image = scaledImage;
 
-		int[] pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
+		int[] pixels = ((DataBufferInt) scaledImage.getRaster().getDataBuffer()).getData();
 		pixelBuffer.put(pixels).flip();
 
 		// Go from TYPE_4BYTE_ABGR in the BufferedImage to RGBA
