@@ -2463,7 +2463,6 @@
       340,
       341,
       342,
-      728,
       3171,
       3172,
       3173,
@@ -2743,7 +2742,6 @@
       84,
       179,
       336,
-      2382,
       3703,
       3750,
       5955,
@@ -3267,7 +3265,12 @@
       5455,
       5456,
       5459,
-      5458
+      5458,
+      12936,
+      12937,
+      12938,
+      12939,
+      12940
     ],
     "uvType": "MODEL_XZ"
   },
@@ -3388,20 +3391,6 @@
     "objectIds": [
       994,
       995
-    ],
-    "flatNormals": true
-  },
-  {
-    "description": "PHASMATYS_WOODEN_FENCES",
-    "baseMaterial": "DOCK_FENCE",
-    "objectIds": [
-      5432,
-      5433,
-      5434,
-      5435,
-      5436,
-      5437,
-      5438
     ],
     "flatNormals": true
   },
@@ -5834,5 +5823,217 @@
     ],
     "uvType": "MODEL_XZ",
     "uvScale": 0.88
+  },
+  {
+    "description": "Morytania - Walls - Triple Slat Fence",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      5417,
+      5432,
+      5433,
+      5434,
+      5435,
+      5436,
+      5437,
+      5438
+    ],
+    "uvType": "MODEL_XY",
+    "uvScale": 0.78
+  },
+  {
+    "description": "Morytania - Walls - Triple Slat Fence Gate",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      12816,
+      12817,
+      12818,
+      12819,
+      12776
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Morytania - Walls - Wooden - Plank - Burugh De Rott",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      12821,
+      12822,
+      12823,
+      12824,
+      12825,
+      12826,
+      12827,
+      12828,
+      12829,
+      12830,
+      12831,
+      12832,
+      12833,
+      12913,
+      12914,
+      12915,
+      12916,
+      12917,
+      12918,
+      12919,
+      12920,
+      12921,
+      12922,
+      12923
+    ],
+    "uvType": "MODEL_XY",
+    "uvOrientation": 512,
+    "uvScale": 0.76
+  },
+  {
+    "description": "Morytania - Floor - Wooden - Plank - Burugh De Rott",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      12898,
+      12899,
+      12900,
+      12901,
+      12902,
+      12903,
+      12904,
+      12905,
+      12906,
+      12949,
+      12950,
+      12948,
+      12951,
+      12952,
+      12953,
+      12957,
+      12958,
+      12959,
+      12960
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Morytania - Floor - Wooden - Ladder - Burugh De Rott",
+    "baseMaterial": "WOOD_GRAIN",
+    "objectIds": [
+      12780,
+      12781,
+      12907
+    ]
+  },
+  {
+    "description": "Morytania - Wall Decoration - Wooden - Plank - Burugh De Rott",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      12852,
+      12853
+    ],
+    "uvType": "MODEL_YZ",
+    "uvOrientation": -50,
+    "uvScale": 0.66
+  },
+  {
+    "description": "Morytania - Wall  - Wooden - Plank - Repaired Wall - Burugh De Rott",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      12752,
+      12760
+    ],
+    "uvType": "MODEL_XY",
+    "uvOrientation": 512,
+    "uvScale": 0.66
+  },
+  {
+    "description": "Morytania - Wall  - Wooden - Plank - Door",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      5244,
+      5245
+    ],
+    "uvType": "MODEL_XY",
+    "uvOrientation": 512,
+    "uvScale": 0.56
+  },
+  {
+    "description": "Morytania - Wall  - Stone - Stone Brick Wall - Burugh De Rott",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      12834,
+      12835,
+      12836,
+      12837,
+      12838,
+      12839,
+      12840,
+      12841,
+      12842,
+      12843,
+      12845,
+      12846,
+      12847,
+      12848,
+      12849,
+      12850,
+      12851
+    ],
+    "uvType": "GEOMETRY",
+    "flatNormals": true
+  },
+  {
+    "description": "Morytania - Objects  - Stone - Stone Brick Wall Rubble - Burugh De Rott",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      12738,
+      12844
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Morytania - Ground  - Wooden - Boat Launch - Burugh De Rott",
+    "baseMaterial": "DOCK_FENCE_DARK",
+    "objectIds": [
+      12946,
+      12947,
+      17924
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Burugh De Rott - Objects - Dirt - Rubble Pile",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [
+      12749
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Morytania - Ground  - Stone - Stone Steps - Burugh De Rott",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      20735,
+      20736
+    ]
+  },
+  {
+    "description": "Morytania - Objects - Wooden - Crate",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      12876,
+      12877,
+      12878,
+      12879
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Morytania - Ground  - Water - Puddles - Burugh De Rott",
+    "baseMaterial": "WATER_PUDDLE",
+    "objectIds": [
+      12860,
+      12861,
+      12862
+    ],
+    "uvType": "MODEL_XZ",
+    "flatNormals": true,
+    "disableShadows": true
   }
 ]
