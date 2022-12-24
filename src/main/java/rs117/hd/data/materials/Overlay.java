@@ -71,7 +71,10 @@ public enum Overlay {
     TUTORIAL_ISLAND_BANK_TILE_2(3, Area.TUTORIAL_ISLAND_BANK, GroundMaterial.MARBLE_2_SEMIGLOSS, p -> p.blended(false)),
 
     //Lumbridge Interior
-    LUMBRIDGE_TOWER_INTERIOR_FLOOR(10, Area.LUMBRIDGE_TOWER_FLOOR_INTERIOR, GroundMaterial.VARROCK_PATHS_LIGHT, p -> p.shiftLightness(10)),
+    LUMBRIDGE_TOWER_INTERIOR_FLOOR(10, Area.LUMBRIDGE_TOWER_FLOOR_INTERIOR, GroundMaterial.VARROCK_PATHS_LIGHT, p -> p
+            .shiftLightness(10)
+            .blended(false)
+    ),
     LUMBRIDGE_CASTLE_ENTRANCE_FIX(10, Area.LUMBRIDGE_CASTLE_ENTRANCE, GroundMaterial.WORN_TILES, p -> p.shiftLightness(12)),
     LUMBRIDGE_CASTLE_TILE(3, Area.LUMBRIDGE_CASTLE_BASEMENT, GroundMaterial.MARBLE_1_SEMIGLOSS),
     LUMBRIDGE_CASTLE_FLOORS(10, Area.LUMBRIDGE_CASTLE_COBBLE, GroundMaterial.VARROCK_PATHS_LIGHT, p -> p.shiftLightness(10)),
