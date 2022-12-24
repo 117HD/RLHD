@@ -277,14 +277,13 @@ public class TextureManager
 			}
 
 			Integer index = -1;
-			for(Material replace : material.materialToReplace) {
-				if (replace != null && material.replacementCondition.apply(config))
+			for (Material toReplace : material.materialsToReplace) {
+				if (material.replacementCondition.apply(config))
 				{
-					index = materialOrdinalToTextureIndex[replace.ordinal()];
-					materialReplacements[replace.ordinal()] = material.ordinal();
+					index = materialOrdinalToTextureIndex[toReplace.ordinal()];
+					materialReplacements[toReplace.ordinal()] = material.ordinal();
 				}
 			}
-
 
 			if (index == -1)
 			{

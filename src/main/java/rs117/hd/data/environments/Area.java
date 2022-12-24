@@ -26,13 +26,10 @@ package rs117.hd.data.environments;
 
 import lombok.Getter;
 import net.runelite.api.Constants;
-import net.runelite.api.Point;
 import net.runelite.api.coords.WorldPoint;
-import org.apache.commons.lang3.ArrayUtils;
 import rs117.hd.utils.AABB;
 
 import java.util.Arrays;
-import java.util.Collections;
 
 @Getter
 public enum Area
@@ -1236,7 +1233,8 @@ public enum Area
 		new AABB(2111, 4931, 2166, 4990),
 		new AABB(1599, 4778, 1728, 4863)
 	),
-	EXTRA_OVERWORLDS(
+	OVERWORLD_MAIN(700, 2300, 4200, 4095),
+	OVERWORLD_EXTRA(
 		new AABB(3836, 4418, 3910, 4346),
 		new AABB(2296, 4612, 2372, 4539),
 		new AABB(2430, 4607, 2642, 4542),
@@ -1269,8 +1267,8 @@ public enum Area
 		new AABB(2419, 5442, 2511, 5352),
 		new AABB(1939, 5363, 2002, 5300)
 	),
+	OVERWORLD(OVERWORLD_MAIN, OVERWORLD_EXTRA),
 
-	OVERWORLD(new AABB(700, 2300, 4200, 4095),EXTRA_OVERWORLDS),
 	ALL(0, 0, Integer.MAX_VALUE, Integer.MAX_VALUE),
 	NONE(0, 0, 0, 0),
 	;
@@ -1287,11 +1285,6 @@ public enum Area
 		this.aabbs = Arrays.stream(areas)
 			.flatMap(a -> Arrays.stream(a.aabbs))
 			.toArray(AABB[]::new);
-	}
-
-	Area(AABB area, Area parent)
-	{
-		this.aabbs = ArrayUtils.add(parent.aabbs, area);
 	}
 
 	Area(int pointAX, int pointAY, int pointBX, int pointBY)
@@ -1329,7 +1322,6 @@ public enum Area
 
 	public boolean containsPoint(WorldPoint point)
 	{
-		return containsPoint(point.getX(),point.getY(),point.getPlane());
+		return containsPoint(point.getX(), point.getY(), point.getPlane());
 	}
-
 }

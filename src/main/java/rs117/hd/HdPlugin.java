@@ -32,7 +32,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
-import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.events.*;
 import net.runelite.api.hooks.DrawCallbacks;
 import net.runelite.client.callback.ClientThread;
@@ -2127,8 +2126,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		stagingBufferVertices.clear();
 		stagingBufferUvs.clear();
 		stagingBufferNormals.clear();
-
-		environmentManager.setDisplaySnow(environmentManager.displaySnowTheme(client.getLocalPlayer().getWorldLocation()));
 
 		sceneUploader.upload(client.getScene(), stagingBufferVertices, stagingBufferUvs, stagingBufferNormals);
 
