@@ -43,6 +43,15 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 public enum Underlay {
+    // Seasonal
+    WINTER_EDGEVILLE_PATH(p ->p
+            .ids()
+            .blendedAsOpposite(true)
+            .hue(0)
+            .shiftLightness(8)
+            .saturation(0)
+            .groundMaterial(GroundMaterial.WINTER_JAGGED_STONE_TILE_LIGHT)
+    ),
     // Default
     // Lumbridge
     LUMBRIDGE_CASTLE_TILE(56, Area.LUMBRIDGE_CASTLE_BASEMENT, GroundMaterial.MARBLE_2_SEMIGLOSS, p -> p.blended(false)),
@@ -53,7 +62,9 @@ public enum Underlay {
         .hue(0)
         .shiftLightness(8)
         .saturation(0)
-        .ids(48, 50, 64)),
+        .ids(48, 50, 64)
+        .replaceWithIf(WINTER_EDGEVILLE_PATH, plugin -> plugin.configWinterTheme)
+    ),
 
     // Varrock
     VARROCK_JULIETS_HOUSE_UPSTAIRS(8, Area.VARROCK_JULIETS_HOUSE, GroundMaterial.NONE, p -> p.blended(false)),

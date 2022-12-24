@@ -241,7 +241,9 @@ public enum Overlay {
         .blended(false)
         .blendedAsOpposite(true)
         .lightness(30)),
-    EDGEVILLE_BANK_SURROUNDING_PATH(10, Area.EDGEVILLE_BANK_SURROUNDING_PATH, GroundMaterial.VARROCK_PATHS),
+    EDGEVILLE_BANK_SURROUNDING_PATH(10, Area.EDGEVILLE_BANK_SURROUNDING_PATH, GroundMaterial.VARROCK_PATHS, p -> p
+            .replaceWithIf(WINTER_JAGGED_STONE_TILE_LIGHT, plugin -> plugin.configWinterTheme)
+    ),
     EDGEVILLE_DORIS_HOUSE_FLOOR(119, Area.EDGEVILLE_DORIS_HOUSE, GroundMaterial.TILE_SMALL),
     EDGEVILLE_FURNACE_FLOOR(10, Area.EDGEVILLE_FURNACE_FLOOR, GroundMaterial.TILES_2x2_1, p -> p
         .lightness(26)
