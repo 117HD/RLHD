@@ -252,9 +252,8 @@ public enum Material
 
 	CARPET,
 	FINE_CARPET(CARPET, p -> p
-			.setBrightness(1.4f)
-			.setTextureScale(0.5f,0.5f)
-	),
+		.setBrightness(1.4f)
+		.setTextureScale(0.5f,0.5f)),
 
 	FALADOR_PATH_BRICK(p -> p
 		.setSpecular(0.3f, 30)),
@@ -311,12 +310,14 @@ public enum Material
 		.setFlowMap(LAVA_FLOW_MAP, 0.04f, 36, 12)),
 
 	BARK,
+	LIGHT_BARK(BARK, p -> p.setBrightness(1.75f)),
 	WOOD_GRAIN,
 	WOOD_GRAIN_2_N,
 	WOOD_GRAIN_2(p -> p
 		.setNormalMap(WOOD_GRAIN_2_N)),
 	WOOD_GRAIN_3,
 	DOCK_FENCE,
+	DOCK_FENCE_DARK(DOCK_FENCE, p -> p.setBrightness(0.6f)),
 
 	HD_INFERNAL_CAPE(p -> p
 		.replaceIf(INFERNAL_CAPE, HdPluginConfig::hdInfernalTexture)
@@ -353,37 +354,33 @@ public enum Material
 	WALL_STONE(p -> p.setNormalMap(WALL_STONE_N)),
 	METALLIC_1,
 	METALLIC_1_SEMIGLOSS(METALLIC_1, p -> p
-			.setSpecular(0.3f, 80)
-	),
+		.setSpecular(0.3f, 80)),
 	METALLIC_1_GLOSS(METALLIC_1, p -> p
-			.setSpecular(0.7f, 80)
-	),
+		.setSpecular(0.7f, 80)),
 	METALLIC_1_HIGHGLOSS(METALLIC_1, p -> p
-			.setSpecular(1.1f, 80)
-	),
+		.setSpecular(1.1f, 80)),
 	METALLIC_2(METALLIC_1, p -> p.setBrightness(1.8f)),
 	METALLIC_2_SEMIGLOSS(METALLIC_2, p -> p
-			.setSpecular(0.3f, 80)
-	),
+		.setSpecular(0.3f, 80)),
 	METALLIC_2_GLOSS(METALLIC_2, p -> p
-			.setSpecular(0.7f, 80)
-	),
+		.setSpecular(0.7f, 80)),
 	METALLIC_2_HIGHGLOSS(METALLIC_2, p -> p
-			.setSpecular(1.1f, 80)
-	),
+		.setSpecular(1.1f, 80)),
 	METALLIC_NONE_GLOSS(NONE, p -> p
-			.setSpecular(0.7f, 80)
-	),
+		.setSpecular(0.7f, 80)),
 	WATTLE_1,
 	ICE_1(GRUNGE_2, p -> p
-			.replaceIf(Lists.newArrayList(WATER_FLAT_2,WATER_FLAT), HdPluginConfig::winterTheme)
-			.setSpecular(1.1f,200)
-	),
+		.replaceIf(Lists.newArrayList(WATER_FLAT_2, WATER_FLAT), HdPluginConfig::winterTheme)
+		.setSpecular(1.1f, 200)),
+	SLIME_GRUNGE(GRUNGE_1, p -> p
+		.setSpecular(4.1f, 60)),
+	WATER_PUDDLE(NONE, p -> p
+		.setSpecular(1.5f, 80)),
 	HD_ROOF_BRICK_TILE_N,
 	HD_ROOF_BRICK_TILE_1(p -> p
-			.replaceIf(Lists.newArrayList(ROOF_BRICK_TILE,ROOF_BRICK_TILE_GREEN,ROOF_BRICK_TILE_DARK), HdPluginConfig::objectTextures)
-			.setSpecular(0.3f, 30)
-			.setNormalMap(HD_ROOF_BRICK_TILE_N)
+		.replaceIf(Lists.newArrayList(ROOF_BRICK_TILE, ROOF_BRICK_TILE_GREEN, ROOF_BRICK_TILE_DARK), HdPluginConfig::objectTextures)
+		.setSpecular(0.3f, 30)
+		.setNormalMap(HD_ROOF_BRICK_TILE_N)
 	),
 
 	// Seasonal
