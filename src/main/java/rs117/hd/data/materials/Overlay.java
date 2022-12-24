@@ -478,7 +478,10 @@ public enum Overlay {
     FOSSIL_ISLAND_CENTRAL_BANK_FIX(11, Area.FOSSIL_ISLAND_CENTRAL_BANK_FIX, GroundMaterial.GRAVEL, p -> p
         .shiftLightness(-2)
         .blended(false)),
-    FOSSIL_ISLAND_HILL_HOUSE_FIX(11, Area.FOSSIL_ISLAND_HILL_HOUSE_FIX, GroundMaterial.VARROCK_PATHS),
+    FOSSIL_ISLAND_HILL_HOUSE_INTERIOR(11, Area.FOSSIL_ISLAND_HILL_HOUSE_INTERIOR, GroundMaterial.VARROCK_PATHS),
+    FOSSIL_ISLAND_HILL_HOUSE(11, Area.FOSSIL_ISLAND_HILL_HOUSE_FIX, GroundMaterial.VARROCK_PATHS, p -> p
+        .replaceWithIf(WINTER_JAGGED_STONE_TILE_LIGHT_2, plugin -> plugin.configWinterTheme)
+    ),
     FOSSIL_ISLAND_HILL_TEXTURE_FIX(11, Area.FOSSIL_ISLAND_HILL_TEXTURE_FIX, GroundMaterial.VARIED_DIRT),
 
     // Zeah
