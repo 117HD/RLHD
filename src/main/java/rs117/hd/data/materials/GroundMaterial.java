@@ -80,6 +80,7 @@ public enum GroundMaterial
 	SAND_BRICK(Material.SAND_BRICK),
 	CLEAN_TILE(Material.CLEAN_TILE),
 	WORN_TILES(Material.WORN_TILES),
+	STONE_CAVE_FLOOR(Material.STONE, Material.ROCK_1, Material.ROCK_2)
 	;
 
 	private final Material[] materials;
