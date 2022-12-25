@@ -6041,7 +6041,8 @@
     "baseMaterial": "STONE",
     "objectIds": [
       11945,
-      11946
+      11946,
+      12568
     ],
     "uvType": "GEOMETRY"
   },
@@ -6049,7 +6050,9 @@
     "description": "Objects - Stone - Column - Limestone",
     "baseMaterial": "STONE",
     "objectIds": [
-      11938
+      11937,
+      11938,
+      11939
     ],
     "uvType": "GEOMETRY"
   },
@@ -6067,6 +6070,7 @@
     "objectIds": [
       1489,
       1490,
+      1491,
       1492,
       5962
     ],
@@ -6076,8 +6080,51 @@
     "description": "Mage Arena - Objects - Stone - Sparkling Pool",
     "baseMaterial": "ROCK_2",
     "objectIds": [
-      2878
+      2878,
+      2879
     ],
     "uvType": "VANILLA"
+  },
+  {
+    "description": "Mage Arena - Objects - God Statues",
+    "baseMaterial": "MARBLE_3_GLOSS",
+    "objectIds": [
+      2873,
+      2874,
+      2875
+    ],
+    "uvType": "VANILLA"
+  },
+  {
+    "description": "Wilderness - Walls - Brick Ruins",
+    "baseMaterial": "ROCK_1_LIGHT",
+    "objectIds": [
+      14723,
+      14724,
+      14725,
+      14726,
+      14727,
+      14728
+    ],
+    "uvType": "MODEL_XY"
+  },
+  {
+    "description": "Wall Decoration - Rocks",
+    "baseMaterial": "ROCK_1_LIGHT",
+    "objectIds": [
+      1493
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Wilderness - Objects - Mage Arena Level",
+    "baseMaterial": "ROCK_1_LIGHT",
+    "objectIds": [
+      9706,
+      9707
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.6
   }
 ]
