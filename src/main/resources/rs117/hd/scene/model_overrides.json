@@ -6035,5 +6035,49 @@
     "uvType": "MODEL_XZ",
     "flatNormals": true,
     "disableShadows": true
+  },
+  {
+    "description": "Objects - Stone - Stalagmites - Limestone",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      11945,
+      11946
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Objects - Stone - Column - Limestone",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      11938
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Objects - Stone - Counter",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      2876
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Walls - Rock Cave Walls",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      1489,
+      1490,
+      1492,
+      5962
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Mage Arena - Objects - Stone - Sparkling Pool",
+    "baseMaterial": "ROCK_2",
+    "objectIds": [
+      2878
+    ],
+    "uvType": "VANILLA"
   }
 ]
