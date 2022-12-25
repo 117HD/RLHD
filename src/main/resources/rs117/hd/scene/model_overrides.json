@@ -2821,6 +2821,7 @@
     "description": "DIRT_CAVE_ENTRANCES",
     "baseMaterial": "DIRT_2",
     "objectIds": [
+      720,
       3213,
       39721,
       44635
