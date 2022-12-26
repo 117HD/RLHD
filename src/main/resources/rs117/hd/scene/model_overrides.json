@@ -6095,5 +6095,45 @@
     ],
     "uvType": "MODEL_XZ",
     "uvScale": 0.55
+  },
+  {
+    "description": "Lunar Island - Walls - Wooden - Plank - Ruined",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      4281,
+      4282
+    ],
+    "uvType": "MODEL_XY",
+    "uvOrientation": 512,
+    "uvScale": 0.76
+  }
+,
+  {
+    "description": "Lunar Island - Objects - Bark - Windswept Tree",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      16639
+    ],
+    "uvType": "MODEL_XY",
+    "uvOrientation": 64,
+    "uvScale": 0.76
+  },
+  {
+    "description": "Lunar Island - Objects - Wooden - Chair",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      16743
+    ],
+    "flatNormals": true,
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Lunar Island - Objects - Wooden - Stool",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      16745
+    ],
+    "flatNormals": true,
+    "uvType": "MODEL_XZ"
   }
 ]
