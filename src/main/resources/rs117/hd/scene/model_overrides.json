@@ -6069,8 +6069,9 @@
   },
   {
     "description": "Lunar Isle - Objects - Ice - Ice Chunks - Large",
-    "baseMaterial": "ICE_1",
+    "baseMaterial": "ICE_1_HIGHGLOSS",
     "objectIds": [
+      6472,
       6473
     ],
     "uvType": "MODEL_XZ",
@@ -6078,7 +6079,7 @@
   },
   {
     "description": "Lunar Isle - Objects - Ice - Ice Chunks - Small",
-    "baseMaterial": "ICE_1",
+    "baseMaterial": "ICE_1_HIGHGLOSS",
     "objectIds": [
       6476,
       6477
@@ -6088,7 +6089,7 @@
   },
   {
     "description": "Lunar Isle - Objects - Ice - Ice Chunks - Medium",
-    "baseMaterial": "ICE_1",
+    "baseMaterial": "ICE_1_HIGHGLOSS",
     "objectIds": [
       6474
     ],

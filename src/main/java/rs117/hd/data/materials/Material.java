@@ -364,6 +364,8 @@ public enum Material
 	WATTLE_1,
 	ICE_1(GRUNGE_2, p -> p
 		.setSpecular(1.1f,200)),
+	ICE_1_HIGHGLOSS(GRUNGE_2, p -> p
+			.setSpecular(3.1f,30)),
 	SLIME_GRUNGE(GRUNGE_1, p -> p
 		.setSpecular(4.1f,60)),
 	WATER_PUDDLE(NONE, p -> p
