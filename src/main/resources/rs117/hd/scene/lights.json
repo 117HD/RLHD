@@ -30057,22 +30057,41 @@
       16691,
       16692
     ]
-  }
-,
+  },
   {
-    "description": "LUNAR_HAT_RACK",
-    "height": 210,
-    "alignment": "LEFT",
-    "radius": 420,
-    "strength": 12.5,
+    "description": "LUNAR_COOKING_RANGE_COOKER",
+    "height": 120,
+    "alignment": "CENTER",
+    "radius": 600,
+    "strength": 5,
     "color": [
-      255,
-      255,
-      255
+      252,
+      148,
+      3
     ],
-    "type": "STATIC",
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
     "objectIds": [
-      16701
+      16702
+    ]
+  },
+  {
+    "description": "LUNAR_COOKER",
+    "height": 160,
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      16703
     ]
   }
 ]
