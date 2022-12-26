@@ -6135,5 +6135,12 @@
     ],
     "flatNormals": true,
     "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Lunar Island - Objects - Wooden - Hat Rack",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      16692
+    ]
   }
 ]
