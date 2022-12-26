@@ -6035,5 +6035,64 @@
     "uvType": "MODEL_XZ",
     "flatNormals": true,
     "disableShadows": true
+  },
+  {
+    "description": "Lunar Isle - Walls - Stone - Northern Mine",
+    "baseMaterial": "ROCK_2",
+    "objectIds": [
+      14999,
+      15000,
+      15001,
+      15002,
+      15003,
+      15004,
+      15005,
+      15006,
+      15007,
+      15008,
+      15009,
+      15026,
+      15028,
+      15022,
+      11399
+    ],
+    "uvType": "VANILLA"
+  },
+  {
+    "description": "Lunar Isle - Objects - Limestone - Stalagmites - Mineable",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      15250,
+      15251
+    ],
+    "uvType": "VANILLA"
+  },
+  {
+    "description": "Lunar Isle - Objects - Ice - Ice Chunks - Large",
+    "baseMaterial": "ICE_1",
+    "objectIds": [
+      6473
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Lunar Isle - Objects - Ice - Ice Chunks - Small",
+    "baseMaterial": "ICE_1",
+    "objectIds": [
+      6476,
+      6477
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Lunar Isle - Objects - Ice - Ice Chunks - Medium",
+    "baseMaterial": "ICE_1",
+    "objectIds": [
+      6474
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.55
   }
 ]
