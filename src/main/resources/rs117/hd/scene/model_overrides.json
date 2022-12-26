@@ -6038,7 +6038,7 @@
   },
   {
     "description": "Lunar Isle - Walls - Stone - Northern Mine",
-    "baseMaterial": "ROCK_2",
+    "baseMaterial": "ROCK_1",
     "objectIds": [
       14999,
       15000,
