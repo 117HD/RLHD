@@ -6193,8 +6193,7 @@
       29712
     ],
     "uvType": "MODEL_XZ",
-    "flatNormals": true,
-    "uvScale": 0.6
+    "uvScale": 0.4
   },
   {
     "description": "Objects - Wooden - Plank tables - Wide",
@@ -6209,10 +6208,42 @@
     "description": "Lunar Isles - Objects - Wooden - Tables - Fine",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      16737
+      16737,
+      16738
     ],
     "uvType": "MODEL_XZ",
     "flatNormals": true,
     "uvScale": 0.8
+  },
+  {
+    "description": "Lunar Isles - Objects - Wooden - Table with hats",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      16740
+    ],
+    "uvType": "MODEL_XZ",
+    "flatNormals": true,
+    "uvOrientation": 512,
+    "uvScale": 0.8
+  },
+  {
+    "description": "Lunar Isles - Objects - Wooden staircase",
+    "baseMaterial": "HD_WOOD_PLANKS_1",
+    "objectIds": [
+      16732,
+      16733,
+      16734
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Lunar Isles - WALLS - Wooden Railing",
+    "baseMaterial": "HD_WOOD_PLANKS_1",
+    "objectIds": [
+      16761,
+      16767
+    ],
+    "uvType": "MODEL_XZ",
+    "flatNormals": true
   }
 ]
