@@ -546,6 +546,16 @@ public enum Overlay {
     // Ancient Cavern upper level water change
     ANCIENT_CAVERN_UPPER_WATER(41, Area.ANCIENT_CAVERN_UPPER, WaterType.WATER_FLAT),
 
+    // Lunar Isles
+    LUNAR_ISLAND_Houses_WOOD_FLOOR(81, Area.LUNAR_VILLAGE_HOUSE_INTERIORS, GroundMaterial.CLEAN_WOOD_FLOOR, p -> p
+            // HSL will need to be tuned if texture is changed
+            .hue(11)
+            .shiftSaturation(-5)
+            .shiftLightness(28)
+            .blended(false)
+    ),
+    LUNAR_ISLAND_Houses_CARPET_FLOOR(88, Area.LUNAR_VILLAGE_HOUSE_INTERIORS, GroundMaterial.CARPET, p -> p.blended(false)),
+
     // default overlays
     OVERLAY_WATER(WaterType.WATER, p -> p.ids(-128, -105, -98, 6, 41, 104)),
     OVERLAY_DIRT(GroundMaterial.DIRT, p -> p.ids(-124, -84, -83, 14, 15, 21, 22, 23, 60, 77, 81, 82, 88, 89, 101, 102, 107, 108, 110, 115, 123)),
