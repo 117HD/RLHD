@@ -370,6 +370,11 @@ public enum Material
 		.setSpecular(4.1f,60)),
 	WATER_PUDDLE(NONE, p -> p
 		.setSpecular(1.5f, 80)),
+	HD_WOOD_PLANKS_1_N,
+	HD_WOOD_PLANKS_1(p -> p
+			.setNormalMap(HD_WOOD_PLANKS_1_N)
+			.setSpecular(0.5f,80)
+			.setBrightness(1.2f)),
 
 	// Seasonal
 	WINTER_WILLOW_LEAVES(p -> p

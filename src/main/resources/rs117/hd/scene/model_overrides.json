@@ -3931,6 +3931,7 @@
     "description": "Wooden plank tables",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
+      12280,
       14851,
       14852,
       25603,
@@ -3938,7 +3939,8 @@
       40224
     ],
     "uvType": "MODEL_XZ",
-    "flatNormals": true
+    "flatNormals": true,
+    "uvScale": 0.6
   },
   {
     "description": "Wooden tables - Round",

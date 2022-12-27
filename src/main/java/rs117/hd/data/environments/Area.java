@@ -1005,7 +1005,7 @@ public enum Area
 			new AABB(2090, 3909, 2086, 3904, 0), // House 3
 			new AABB(2091, 3910, 2085, 3903, 1), // House 3
 			new AABB(2098, 3908, 2094, 3905, 0), // General Store
-			new AABB(2100, 3908, 2094, 3904, 1), // General Store
+			new AABB(2100, 3911, 2094, 3904, 1), // General Store
 			// Clothing Store Start
 			new AABB(2107, 3911, 0),
 			new AABB(2102, 3911, 0),
