@@ -547,7 +547,7 @@ public enum Overlay {
     ANCIENT_CAVERN_UPPER_WATER(41, Area.ANCIENT_CAVERN_UPPER, WaterType.WATER_FLAT),
 
     // Lunar Isles
-    LUNAR_ISLAND_Houses_WOOD_FLOOR(81, Area.LUNAR_VILLAGE_HOUSE_INTERIORS, GroundMaterial.HD_WOOD_PLANKS_1, p -> p
+    LUNAR_ISLAND_Houses_WOOD_FLOOR(81, Area.LUNAR_VILLAGE_HOUSE_INTERIORS, GroundMaterial.VARIED_DIRT, p -> p
             .blended(true)
     ),
     LUNAR_ISLAND_Houses_CARPET_FLOOR(88, Area.LUNAR_VILLAGE_HOUSE_INTERIORS, GroundMaterial.CARPET, p -> p.blended(false)),
