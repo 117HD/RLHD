@@ -6297,6 +6297,7 @@
     "description": "Lunar Isles - WALLS - Wooden - Door - Window",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      16775,
       16778,
       16779
     ],
