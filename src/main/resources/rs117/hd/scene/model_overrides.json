@@ -3931,7 +3931,6 @@
     "description": "Wooden plank tables",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
-      12280,
       14851,
       14852,
       25603,
@@ -6157,7 +6156,8 @@
       16710,
       16742
     ],
-    "uvType": "MODEL_XZ"
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.6
   },
   {
     "description": "Lunar Island - Objects - Wooden - Hat Rack",
@@ -6185,5 +6185,24 @@
       16736
     ],
     "uvType": "MODEL_XY_MIRROR_B"
+  },
+  {
+    "description": "Objects - Wooden - Plank tables - Medium",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      29712
+    ],
+    "uvType": "MODEL_XZ",
+    "flatNormals": true,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Objects - Wooden - Plank tables - Wide",
+    "baseMaterial": "WOOD_GRAIN_2_WIDE",
+    "objectIds": [
+      12280
+    ],
+    "uvType": "MODEL_XZ",
+    "flatNormals": true
   }
 ]

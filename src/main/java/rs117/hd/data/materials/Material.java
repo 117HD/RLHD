@@ -308,7 +308,13 @@ public enum Material
 	WOOD_GRAIN,
 	WOOD_GRAIN_2_N,
 	WOOD_GRAIN_2(p -> p
-		.setNormalMap(WOOD_GRAIN_2_N)),
+		.setNormalMap(WOOD_GRAIN_2_N)
+		.setSpecular(0.3f,30)
+	),
+	WOOD_GRAIN_2_WIDE(WOOD_GRAIN_2, p -> p
+			.setTextureScale(1.5f, 0.5f)
+
+	),
 	WOOD_GRAIN_3,
 	DOCK_FENCE,
 	DOCK_FENCE_DARK(DOCK_FENCE, p -> p.setBrightness(0.6f)),
