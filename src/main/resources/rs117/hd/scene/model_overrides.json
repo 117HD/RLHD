@@ -6241,10 +6241,76 @@
     "baseMaterial": "HD_WOOD_PLANKS_1",
     "objectIds": [
       16761,
+      16762,
       16763,
       16767
     ],
     "uvType": "MODEL_XZ",
     "flatNormals": true
+  },
+  {
+    "description": "Lunar Isles - WALLS - Wooden - Plank",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      16746,
+      16747,
+      16748,
+      16749,
+      16750,
+      16759,
+      16770,
+      16771,
+      16772
+    ],
+    "uvType": "MODEL_XY"
+  },
+  {
+    "description": "Lunar Isles - WALLS - Wooden - Plank - Windows",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      16751,
+      16752,
+      16753,
+      16768,
+      16769
+    ],
+    "uvType": "MODEL_XY"
+  },
+  {
+    "description": "Lunar Isles - WALLS - Wooden Railing",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      16750
+    ],
+    "uvType": "MODEL_XY"
+  },
+  {
+    "description": "Lunar Isles - WALLS - Wooden - Plank - Door",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      16776,
+      16777
+    ],
+    "uvType": "MODEL_XY"
+  },
+  {
+    "description": "Lunar Isles - WALLS - Wooden - Door - Window",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      16778,
+      16779
+    ],
+    "uvType": "MODEL_XY"
+  },
+  {
+    "description": "Lunar Isles - WALLS - Wooden - Railing - Window",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      16757,
+      16758,
+      16773
+    ],
+    "uvType": "MODEL_XY",
+    "uvOrientation": 512
   }
 ]
