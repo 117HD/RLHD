@@ -3292,12 +3292,14 @@
   },
   {
     "description": "LUNAR_ISLE_DOCK_LADDERS",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       16959,
       16960,
       16961,
       16962
-    ]
+    ],
+    "uvType": "GEOMETRY"
   },
   {
     "description": "LUNAR_ISLE_BRIDGES",
@@ -6122,9 +6124,19 @@
     "description": "Lunar Island - Objects - Wooden - Chair",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      16743
+      16743,
+      16744
     ],
     "flatNormals": true,
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Lunar Island - Objects - Wooden - Bench",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      16706,
+      32439
+    ],
     "uvType": "MODEL_XZ"
   },
   {
@@ -6137,10 +6149,39 @@
     "uvType": "MODEL_XZ"
   },
   {
+    "description": "Lunar Island - Objects - Wooden - Table - Round",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      16710,
+      16742
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
     "description": "Lunar Island - Objects - Wooden - Hat Rack",
     "baseMaterial": "DOCK_FENCE",
     "objectIds": [
       16692
     ]
+  },
+  {
+    "description": "Lunar Island - Ground - Carpet",
+    "baseMaterial": "FINE_CARPET",
+    "objectIds": [
+      16709,
+      16710,
+      16718
+    ],
+    "uvType": "WORLD_XZ",
+    "flatNormals": true
+  },
+  {
+    "description": "Lunar Island - Wooden - Ladder",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      16735,
+      16736
+    ],
+    "uvType": "MODEL_XY_MIRROR_B"
   }
 ]
