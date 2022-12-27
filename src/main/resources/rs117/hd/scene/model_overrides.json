@@ -6204,5 +6204,15 @@
     ],
     "uvType": "MODEL_XZ",
     "flatNormals": true
+  },
+  {
+    "description": "Lunar Isles - Objects - Wooden - Tables - Fine",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      16737
+    ],
+    "uvType": "MODEL_XZ",
+    "flatNormals": true,
+    "uvScale": 0.8
   }
 ]
