@@ -548,10 +548,6 @@ public enum Overlay {
 
     // Lunar Isles
     LUNAR_ISLAND_Houses_WOOD_FLOOR(81, Area.LUNAR_VILLAGE_HOUSE_INTERIORS, GroundMaterial.OVERWORLD_DIRT, p -> p
-            // HSL will need to be tuned if texture is changed
-            //.hue(11)
-            //.shiftSaturation(-5)
-            //.shiftLightness(28)
             .blended(false)
     ),
     LUNAR_ISLAND_Houses_CARPET_FLOOR(88, Area.LUNAR_VILLAGE_HOUSE_INTERIORS, GroundMaterial.CARPET, p -> p.blended(false)),
