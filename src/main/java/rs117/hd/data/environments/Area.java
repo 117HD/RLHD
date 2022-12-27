@@ -979,6 +979,57 @@ public enum Area
 		new AABB(1728, 5055, 1792, 5120),
 		new AABB(1800, 5066, 1850, 5109)
 	),
+	LUNAR_VILLAGE_HOUSE_INTERIORS(
+			new AABB(2104, 3922, 2097, 3917, 0), // Bank
+			new AABB(2091, 3922, 20920, 3922), // House 1
+			new AABB(2092, 3921, 2089, 3917), // House 1
+			new AABB(2084, 3922, 2082, 3921, 0), // House 2
+			new AABB(2084, 3922, 2082, 3919, 1), // House 2
+			new AABB(2075, 3922, 2070, 3919), // Pauline's House
+			// Brazier House Start
+			new AABB(2078, 3915),
+			new AABB(2069, 3915),
+			new AABB(2071, 3907),
+			new AABB(2081, 3914, 2066, 3913, 0),
+			new AABB(2081, 3912, 2069, 3910, 0),
+			new AABB(2068, 3910, 2066, 3908, 0),
+			new AABB(2078, 3909, 2069, 3909, 0),
+			new AABB(2078, 3908, 2075, 3908, 0),
+			new AABB(2072, 3908, 2069, 3908, 0),
+			new AABB(2079, 3915, 2079, 3910, 1),
+			new AABB(2078, 3915, 2076, 3908, 1),
+			new AABB(2082, 3915, 2080, 3904, 1),
+			new AABB(2079, 3909, 2079, 3904, 1),
+			new AABB(2078, 3907, 2074, 3904, 1),
+			// Brazier House End //
+			new AABB(2090, 3909, 2086, 3904, 0), // House 3
+			new AABB(2091, 3910, 2085, 3903, 1), // House 3
+			new AABB(2098, 3908, 2094, 3905, 0), // General Store
+			new AABB(2100, 3908, 2094, 3904, 1), // General Store
+			// Clothing Store Start
+			new AABB(2107, 3911, 0),
+			new AABB(2102, 3911, 0),
+			new AABB(2107, 3904, 0),
+			new AABB(2103, 3904, 0),
+			new AABB(2107, 3910, 2102, 3905, 0),
+			new AABB(2108, 3912, 2101, 3903, 1),
+			// Clothing Store End //
+			new AABB(2076,3899, 2072,3897), // House 4
+			// House 5 Start
+			new AABB(2084, 3899, 2083, 3892, 0),
+			new AABB(2082, 3897, 2080, 3893, 0),
+			new AABB(2082, 3892, 2081, 3892, 0),
+			new AABB(2085, 3900, 2079, 3891, 1),
+			// House 5 End //
+			new AABB(2092, 3900, 2089, 3899, 0), // House 6
+			new AABB(2092, 3898, 2091, 3896, 0), // house 6
+			new AABB(2093, 3901,2088, 3890, 1), // House 6
+			new AABB(2101, 3899, 2097, 3899, 1), // House 7
+			new AABB(2101, 3898,2099, 3897), // House 7
+			new AABB(2102, 3901, 2096, 3896) // House 7
+
+
+	),
 	LUNAR_ISLE(2050, 3965, 2174, 3841),
 
 	// Ape Atoll
