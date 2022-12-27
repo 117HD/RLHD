@@ -30093,5 +30093,23 @@
     "objectIds": [
       16703
     ]
+  },
+  {
+    "description": "LUNAR_LAMP",
+    "height": 218,
+    "alignment": "BACK",
+    "radius": 400,
+    "strength": 10,
+    "color": [
+      245,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 30,
+    "objectIds": [
+      16701
+    ]
   }
 ]
