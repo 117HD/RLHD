@@ -6035,5 +6035,31 @@
     "uvType": "MODEL_XZ",
     "flatNormals": true,
     "disableShadows": true
+  },
+  {
+    "description": "Chaos Tunnel - Walls - Cave Walls",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      23068,
+      23069,
+      23070,
+      23071,
+      23072,
+      23075,
+      23076,
+      23077,
+      23078,
+      23079
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Chaos Tunnel - Objects - Stairs",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      23073,
+      23074
+    ],
+    "uvType": "GEOMETRY"
   }
 ]
