@@ -6079,5 +6079,75 @@
       23090
     ],
     "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Objects - Bed - Bedroll - Non Interactable",
+    "baseMaterial": "CARPET",
+    "objectIds": [
+      23067
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.60
+  },
+  {
+    "description": "Objects - Locker - Wooden - Non Interactable",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      23064
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Objects - Stool - Wooden – Generic",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      23065
+    ],
+    "uvType": "MODEL_XZ",
+    "flatNormals": true,
+    "uvScale": 0.80
+  },
+  {
+    "description": "Objects - Table - Single - Wooden – Plank - Generic",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      23066
+    ],
+    "uvType": "MODEL_XZ",
+    "flatNormals": true
+  },
+  {
+    "description": "Ground - Chaos Alter - Path -  Wooden – Plank",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      2669,
+      4033,
+      11557,
+      11915,
+      11916,
+      11919,
+      11554,
+      11555,
+      11556
+    ],
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Chaos Alter - Walls - Path -  Wooden – Plank",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      169
+    ],
+    "uvType": "MODEL_XY",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Objects - Standing Torch -  Wood",
+    "baseMaterial": "WOOD_GRAIN",
+    "objectIds": [
+      724
+    ],
+    "uvType": "GEOMETRY"
   }
 ]

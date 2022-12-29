@@ -30057,7 +30057,7 @@
     ]
   },
   {
-    "description": "YELLOW_PORTAL",
+    "description": "CHAOS_YELLOW_PORTAL",
     "height": 30,
     "alignment": "CENTER",
     "radius": 500,
@@ -30071,7 +30071,9 @@
     "duration": 1550,
     "range": 50,
     "objectIds": [
-      23095
+      23095,
+      23098,
+      34757
     ]
   }
 ]
