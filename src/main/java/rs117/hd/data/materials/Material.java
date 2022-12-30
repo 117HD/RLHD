@@ -320,8 +320,12 @@ public enum Material
 		.setFlowMap(LAVA_FLOW_MAP, 0.02f, 12, 4)
 		.setScroll(0, 1 / 3f)),
 
+	HD_BRICK_N,
 	HD_BRICK(p -> p
-		.replaceIf(BRICK, HdPluginConfig::objectTextures)),
+		.replaceIf(BRICK, HdPluginConfig::objectTextures)
+		.setNormalMap(HD_BRICK_N)
+		.setSpecular(0.4f, 80)
+	),
 	HD_ROOF_SHINGLES_1(p -> p
 		.replaceIf(ROOF_SHINGLES_1, HdPluginConfig::objectTextures)
 		.setSpecular(0.5f, 30)),
@@ -329,7 +333,10 @@ public enum Material
 		.replaceIf(MARBLE_DARK, HdPluginConfig::objectTextures)
 		.setSpecular(1.1f, 380)),
 	HD_BRICK_BROWN(p -> p
-		.replaceIf(BRICK_BROWN, HdPluginConfig::objectTextures)),
+		.replaceIf(BRICK_BROWN, HdPluginConfig::objectTextures)
+		.setNormalMap(HD_BRICK_N)
+		.setSpecular(0.4f, 80)
+	),
 	HD_LAVA_3(p -> p
 		.replaceIf(LAVA, HdPluginConfig::objectTextures)
 		.setUnlit(true)
