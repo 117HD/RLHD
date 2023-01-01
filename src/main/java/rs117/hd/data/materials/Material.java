@@ -236,11 +236,21 @@ public enum Material
 		.setSpecular(1.1f, 380)),
 	GRAVEL_SHINY(GRAVEL, p -> p
 		.setSpecular(1.1f, 380)),
-
-	SAND_1,
-	SAND_2,
-	SAND_3,
-
+	SAND_1_N,
+	SAND_1(p -> p
+			.setNormalMap(SAND_1_N)
+			.setSpecular(0.2f, 80)
+	),
+	SAND_2_N,
+	SAND_2(p -> p
+			.setNormalMap(SAND_2_N)
+			.setSpecular(0.2f, 80)
+	),
+	SAND_3_N,
+	SAND_3(p -> p
+			.setNormalMap(SAND_3_N)
+			.setSpecular(0.2f, 80)
+	),
 	GRUNGE_1,
 	GRUNGE_2,
 
