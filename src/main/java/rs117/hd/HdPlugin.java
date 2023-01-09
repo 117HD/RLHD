@@ -42,6 +42,7 @@ import net.runelite.client.events.PluginChanged;
 import net.runelite.client.plugins.*;
 import net.runelite.client.plugins.entityhider.EntityHiderPlugin;
 import net.runelite.client.plugins.skybox.SkyboxPlugin;
+import net.runelite.client.ui.ClientUI;
 import net.runelite.client.ui.DrawManager;
 import net.runelite.client.util.OSType;
 import net.runelite.rlawt.AWTContext;
@@ -125,6 +126,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 	@Inject
 	private Client client;
+
+	@Inject
+	private ClientUI clientUI;
 
 	@Inject
 	private OpenCLManager openCLManager;
@@ -1149,6 +1153,16 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 	private void initAAFbo(int width, int height, int aaSamples)
 	{
+
+		if (OSType.getOSType() != OSType.MacOS)
+		{
+			final GraphicsConfiguration graphicsConfiguration = clientUI.getGraphicsConfiguration();
+			final AffineTransform transform = graphicsConfiguration.getDefaultTransform();
+
+			width = getScaledValue(transform.getScaleX(), width);
+			height = getScaledValue(transform.getScaleY(), height);
+		}
+
 		// Create and bind the FBO
 		fboSceneHandle = glGenFramebuffers();
 		glBindFramebuffer(GL_FRAMEBUFFER, fboSceneHandle);
@@ -1955,10 +1969,23 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 			if (aaEnabled)
 			{
+
+				int width = lastStretchedCanvasWidth;
+				int height = lastStretchedCanvasHeight;
+
+				if (OSType.getOSType() != OSType.MacOS)
+				{
+					final GraphicsConfiguration graphicsConfiguration = clientUI.getGraphicsConfiguration();
+					final AffineTransform transform = graphicsConfiguration.getDefaultTransform();
+
+					width = getScaledValue(transform.getScaleX(), width);
+					height = getScaledValue(transform.getScaleY(), height);
+				}
+
 				glBindFramebuffer(GL_READ_FRAMEBUFFER, fboSceneHandle);
 				glBindFramebuffer(GL_DRAW_FRAMEBUFFER, awtContext.getFramebuffer(false));
-				glBlitFramebuffer(0, 0, lastStretchedCanvasWidth, lastStretchedCanvasHeight,
-					0, 0, lastStretchedCanvasWidth, lastStretchedCanvasHeight,
+				glBlitFramebuffer(0, 0, width, height,
+					0, 0, width, height,
 					GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
 				// Reset
@@ -2061,11 +2088,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 		if (OSType.getOSType() != OSType.MacOS)
 		{
-			final Graphics2D graphics = (Graphics2D) canvas.getGraphics();
-			final AffineTransform t = graphics.getTransform();
+			final GraphicsConfiguration graphicsConfiguration = clientUI.getGraphicsConfiguration();
+			final AffineTransform t = graphicsConfiguration.getDefaultTransform();
 			width = getScaledValue(t.getScaleX(), width);
 			height = getScaledValue(t.getScaleY(), height);
-			graphics.dispose();
 		}
 
 		ByteBuffer buffer = BufferUtils.createByteBuffer(width * height * 4);
@@ -2565,15 +2591,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		}
 		else
 		{
-			final Graphics2D graphics = (Graphics2D) canvas.getGraphics();
-			if (graphics == null) return;
-			final AffineTransform t = graphics.getTransform();
+			final GraphicsConfiguration graphicsConfiguration = clientUI.getGraphicsConfiguration();
+			if (graphicsConfiguration == null) return;
+			final AffineTransform t = graphicsConfiguration.getDefaultTransform();
 			glViewport(
 				getScaledValue(t.getScaleX(), x),
 				getScaledValue(t.getScaleY(), y),
 				getScaledValue(t.getScaleX(), width),
 				getScaledValue(t.getScaleY(), height));
-			graphics.dispose();
 		}
 	}
 
