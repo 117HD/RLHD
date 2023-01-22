@@ -135,6 +135,7 @@ public enum Overlay {
     KHARID_PATHS_1(26, Area.KHARID_DESERT_REGION, GroundMaterial.DIRT, p -> p.saturation(2).hue(6).shiftLightness(5)),
     KHARID_PATHS_2(76, Area.KHARID_DESERT_REGION, GroundMaterial.DIRT, p -> p.saturation(3).hue(6).shiftLightness(-10)),
     KHARID_PATHS_3(25, Area.KHARID_DESERT_REGION, GroundMaterial.DIRT, p -> p.saturation(3).hue(6)),
+    GIANTS_PLATEAU_CABBAGE_PATCH_FIX(14, Area.GIANTS_PLATEAU_CABBAGE_PATCH, GroundMaterial.DIRT, p -> p.blended(false)),
 
     // Falador
     FALADOR_EAST_BANK_PATH_FIX_2(-119, Area.FALADOR_EAST_BANK_PATH_FIX_2, GroundMaterial.FALADOR_PATHS, p -> p
@@ -448,6 +449,7 @@ public enum Overlay {
     HOSIDIUS_STONE_FLOOR(123, Area.HOSIDIUS, GroundMaterial.FALADOR_PATHS),
     BLOOD_ALTAR_BLOOD(72, Area.BLOOD_ALTAR, WaterType.BLOOD),
     SHAYZIEN_PAVED_AREA(Area.SHAYZIEN, GroundMaterial.GRAVEL, p -> p.blended(false).ids(2, -117)),
+    SHAYZIEN_RED_FLOOR(86, Area.SHAYZIEN, GroundMaterial.MARBLE_2_GLOSS, p -> p.blended(false)),
 
     SHAYZIEN_COMBAT_RING_FLOOR(Area.SHAYZIEN_COMBAT_RING, GroundMaterial.CARPET, p -> p
         .blended(false)

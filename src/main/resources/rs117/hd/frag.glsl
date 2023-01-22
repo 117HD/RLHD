@@ -92,7 +92,8 @@ out vec4 FragColor;
 #include utils/displacement.glsl
 
 vec2 worldUvs(float scale) {
-    return IN.position.xz / 128. / scale;
+    vec2 uv = IN.position.xz / (128 * scale);
+    return vec2(uv.x, -uv.y);
 }
 
 float sampleShadowMap(vec3 fragPos, int waterTypeIndex, vec2 distortion, float lightDotNormals) {
@@ -152,29 +153,18 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     WaterType waterType = getWaterType(waterTypeIndex);
 
     vec2 baseUv = vUv[0].xy * IN.texBlend.x + vUv[1].xy * IN.texBlend.y + vUv[2].xy * IN.texBlend.z;
-    vec2 uv2, uv3 = baseUv;
+    vec2 uv3 = baseUv;
 
-    uv2 = vec2(
-        worldUvs(3).x - animationFrame(24 * waterType.duration),
-        worldUvs(3).y - animationFrame(24 * waterType.duration)
-    );
+    vec2 uv2 = worldUvs(3) + vec2(-1, 1) * animationFrame(24 * waterType.duration);
+    vec2 uv1 = worldUvs(3).yx + animationFrame(28 * waterType.duration);
 
     vec2 flowMapUv = worldUvs(15) + animationFrame(50 * waterType.duration);
     float flowMapStrength = 0.025;
 
     vec2 uvFlow = texture(textureArray, vec3(flowMapUv, waterType.flowMap)).xy;
+    uv1 += uvFlow * flowMapStrength;
     uv2 += uvFlow * flowMapStrength;
     uv3 += uvFlow * flowMapStrength;
-
-//    uv1 = vec2(
-//        worldUvs(2).y + animationFrame(20 * waterType.duration) + uvFlow.x * flowMapStrength,
-//        worldUvs(2).x + animationFrame(20 * waterType.duration) + uvFlow.y * flowMapStrength
-//    );
-    // TODO: this looks like a bug. Was probably intended to be uv2?
-    vec2 uv1 = vec2(
-        worldUvs(3).y - animationFrame(28 * waterType.duration) - uvFlow.x * flowMapStrength,
-        worldUvs(3).x + animationFrame(28 * waterType.duration) + uvFlow.y * flowMapStrength
-    );
 
     // get diffuse textures
     vec3 n1 = texture(textureArray, vec3(uv1, waterType.normalMap)).xyz;
@@ -285,8 +275,6 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
 
     vec3 baseColor = waterType.surfaceColor * compositeLight;
     baseColor = mix(baseColor, surfaceColor, waterType.fresnelAmount);
-    float shadowDarken = 0.15;
-    baseColor *= (1.0 - shadowDarken) + inverseShadow * shadowDarken;
     float shoreLineMask = 1 - dot(IN.texBlend, vec3(vColor[0].x, vColor[1].x, vColor[2].x));
     float maxFoamAmount = 0.8;
     float foamAmount = min(shoreLineMask, maxFoamAmount);
@@ -780,14 +768,15 @@ void main() {
         float groundFog = 1.0 - clamp((IN.position.y - groundFogStart) / (groundFogEnd - groundFogStart), 0.0, 1.0);
         groundFog = mix(0.0, groundFogOpacity, groundFog);
         groundFog *= clamp(distance / closeFadeDistance, 0.0, 1.0);
-        if (isWater)
-        {
-            outputColor.a = max(outputColor.a, groundFog);
-        }
 
         // multiply the visibility of each fog
         float combinedFog = 1 - (1 - IN.fogAmount) * (1 - groundFog);
-        outputColor = mix(outputColor, fogColor, combinedFog);
+
+        if (isWater) {
+            outputColor.a = combinedFog + outputColor.a * (1 - combinedFog);
+        }
+
+        outputColor.rgb = mix(outputColor.rgb, fogColor.rgb, combinedFog);
     }
 
     FragColor = outputColor;

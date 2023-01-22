@@ -592,9 +592,9 @@ public class ModelPusher {
                 int[] tileColorHSL;
 
                 // No point in inheriting tilepaint color if the ground tile does not have a color, for example above a cave wall
-                if (tilePaint != null && tilePaint.getTexture() == -1 && tilePaint.getRBG() != 0) {
+                if (tilePaint != null && tilePaint.getTexture() == -1 && tilePaint.getRBG() != 0 && tilePaint.getNeColor() != 12345678) {
                     // pull any corner color as either one should be OK
-                    tileColorHSL = HDUtils.colorIntToHSL(tilePaint.getSwColor());
+                    tileColorHSL = HDUtils.colorIntToHSL(tilePaint.getNeColor());
 
                     // average saturation and lightness
                     tileColorHSL[1] = (
@@ -646,14 +646,17 @@ public class ModelPusher {
                     }
 
                     if (faceColorIndex != -1) {
-                        tileColorHSL = HDUtils.colorIntToHSL(tileModel.getTriangleColorA()[faceColorIndex]);
+                        int color = tileModel.getTriangleColorA()[faceColorIndex];
+                        if (color != 12345678) {
+                            tileColorHSL = HDUtils.colorIntToHSL(color);
 
-                        Underlay underlay = Underlay.getUnderlay(client.getScene().getUnderlayIds()[tileZ][tileX][tileY], tile, client, plugin);
-                        tileColorHSL = proceduralGenerator.recolorUnderlay(underlay, tileColorHSL);
+                            Underlay underlay = Underlay.getUnderlay(client.getScene().getUnderlayIds()[tileZ][tileX][tileY], tile, client, plugin);
+                            tileColorHSL = proceduralGenerator.recolorUnderlay(underlay, tileColorHSL);
 
-                        color1H = color2H = color3H = tileColorHSL[0];
-                        color1S = color2S = color3S = tileColorHSL[1];
-                        color1L = color2L = color3L = tileColorHSL[2];
+                            color1H = color2H = color3H = tileColorHSL[0];
+                            color1S = color2S = color3S = tileColorHSL[1];
+                            color1L = color2L = color3L = tileColorHSL[2];
+                        }
                     }
                 }
             }
