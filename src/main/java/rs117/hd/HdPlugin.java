@@ -1153,7 +1153,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 	private void initAAFbo(int width, int height, int aaSamples)
 	{
-
 		if (OSType.getOSType() != OSType.MacOS)
 		{
 			final GraphicsConfiguration graphicsConfiguration = clientUI.getGraphicsConfiguration();
@@ -1969,7 +1968,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 			if (aaEnabled)
 			{
-
 				int width = lastStretchedCanvasWidth;
 				int height = lastStretchedCanvasHeight;
 
@@ -1984,7 +1982,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 				glBindFramebuffer(GL_READ_FRAMEBUFFER, fboSceneHandle);
 				glBindFramebuffer(GL_DRAW_FRAMEBUFFER, awtContext.getFramebuffer(false));
-				glBlitFramebuffer(0, 0, width, height,
+				glBlitFramebuffer(
+					0, 0, width, height,
 					0, 0, width, height,
 					GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
