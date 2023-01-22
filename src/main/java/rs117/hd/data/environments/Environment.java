@@ -831,7 +831,6 @@ public enum Environment
 		.setDirectionalStrength(2.0f)
 		.setDirectionalColor("#00FF60")
 		.setLightDirection(260f, 10f)
-		.setAllowSkyOverride(false)
 	),
 
 	// Underwater areas
