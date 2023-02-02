@@ -34,6 +34,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.api.events.*;
 import net.runelite.api.hooks.DrawCallbacks;
+import net.runelite.client.RuneLite;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
@@ -44,6 +45,7 @@ import net.runelite.client.plugins.entityhider.EntityHiderPlugin;
 import net.runelite.client.plugins.skybox.SkyboxPlugin;
 import net.runelite.client.ui.ClientUI;
 import net.runelite.client.ui.DrawManager;
+import net.runelite.client.util.LinkBrowser;
 import net.runelite.client.util.OSType;
 import net.runelite.rlawt.AWTContext;
 import org.jocl.CL;
@@ -106,7 +108,8 @@ import static rs117.hd.utils.ResourcePath.path;
 @Slf4j
 public class HdPlugin extends Plugin implements DrawCallbacks
 {
-	private static final String ENV_SHADER_PATH = "RLHD_SHADER_PATH";
+	public static final String DISCORD_URL = "https://discord.gg/U4p6ChjgSE";
+	public static final String RUNELITE_URL = "https://runelite.net";
 
 	public static final int TEXTURE_UNIT_UI = GL_TEXTURE0; // default state
 	public static final int TEXTURE_UNIT_GAME = GL_TEXTURE1;
@@ -122,6 +125,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	public static final int UV_SIZE = 4; // 4 floats per vertex
 	public static final int NORMAL_SIZE = 4; // 4 floats per vertex
 
+	private static final String ENV_SHADER_PATH = "RLHD_SHADER_PATH";
 	private static final int[] eightIntWrite = new int[8];
 
 	@Inject
@@ -451,24 +455,46 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 				GL.createCapabilities();
 
-				log.info("Using device: {}", glGetString(GL_RENDERER));
+				String glRenderer = glGetString(GL_RENDERER);
+				String arch = System.getProperty("sun.arch.data.model", "Unknown");
+				if (glRenderer == null)
+				{
+					glRenderer = "Unknown";
+				}
+				log.info("Using device: {}", glRenderer);
 				log.info("Using driver: {}", glGetString(GL_VERSION));
-				log.info("Client is {}-bit", System.getProperty("sun.arch.data.model"));
+				log.info("Client is {}-bit", arch);
 
 				GLCapabilities caps = GL.getCapabilities();
-				if (computeMode == ComputeMode.OPENGL)
+
+				boolean isGenericGpu = glRenderer.equals("GDI Generic");
+				boolean isUnsupportedGpu = isGenericGpu || (computeMode == ComputeMode.OPENGL ? !caps.OpenGL43 : !caps.OpenGL31);
+				if (isUnsupportedGpu)
 				{
-					if (!caps.OpenGL43)
-					{
-						throw new RuntimeException("OpenGL 4.3 is required but not available");
-					}
-				}
-				else
-				{
-					if (!caps.OpenGL31)
-					{
-						throw new RuntimeException("OpenGL 3.1 is required but not available");
-					}
+					log.error("The GPU is lacking OpenGL {} support. Stopping the plugin...",
+						computeMode == ComputeMode.OPENGL ? "4.3" : "3.1");
+					PopupUtils.displayPopupMessage(client, "117HD Error",
+						(isGenericGpu ?
+							"117HD was unable to access your GPU." :
+							"Your GPU is currently not supported by 117HD.<br><br>GPU name: " + glRenderer
+						) +
+						"<br><br>" +
+						"If your system actually has a supported GPU, try the following steps:<br>" +
+						(!arch.equals("32") ? "" :
+							"&nbsp;• Install the 64-bit version of RuneLite from " +
+								"<a href=\"" + HdPlugin.RUNELITE_URL + "\">the official website</a>.<br>"
+						) +
+						"&nbsp;• If you're on a desktop PC, make sure your monitor is plugged into the graphics card<br>" +
+						"&nbsp;&nbsp;&nbsp;&nbsp;instead of the motherboard's display output.<br>" +
+						"&nbsp;• Reinstall the drivers for your graphics card and restart your system.<br>" +
+						"<br>" +
+						"If you're still seeing this error after following the steps above, please join our " +
+							"<a href=\"" + HdPlugin.DISCORD_URL + "\">Discord</a><br>" +
+						"server, and drag and drop your client log file into one of our support channels.",
+						new String[] { "Open log folder", "Ok, let me try that..." },
+						i -> { if (i == 0) LinkBrowser.open(RuneLite.LOGS_DIR.toString()); });
+					stopPlugin();
+					return true;
 				}
 
 				lwjglInitted = true;
