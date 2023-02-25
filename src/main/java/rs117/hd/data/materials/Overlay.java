@@ -136,6 +136,8 @@ public enum Overlay {
     KHARID_PATHS_2(76, Area.KHARID_DESERT_REGION, GroundMaterial.DIRT, p -> p.saturation(3).hue(6).shiftLightness(-10)),
     KHARID_PATHS_3(25, Area.KHARID_DESERT_REGION, GroundMaterial.DIRT, p -> p.saturation(3).hue(6)),
     GIANTS_PLATEAU_CABBAGE_PATCH_FIX(14, Area.GIANTS_PLATEAU_CABBAGE_PATCH, GroundMaterial.DIRT, p -> p.blended(false)),
+    PVP_ARENA_PATH(227, Area.PVP_ARENA, GroundMaterial.DIRT),
+    PVP_ARENA_WATER(196, Area.PVP_ARENA, GroundMaterial.WATER_FLAT, p->p.waterType(WaterType.WATER_FLAT)),
 
     // Falador
     FALADOR_EAST_BANK_PATH_FIX_2(-119, Area.FALADOR_EAST_BANK_PATH_FIX_2, GroundMaterial.FALADOR_PATHS, p -> p

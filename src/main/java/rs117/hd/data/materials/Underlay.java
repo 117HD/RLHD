@@ -68,6 +68,10 @@ public enum Underlay {
 
     // Al Kharid
     MAGE_TRAINING_ARENA_FLOOR_PATTERN(56, Area.MAGE_TRAINING_ARENA, GroundMaterial.TILES_2x2_2_GLOSS, p -> p.blended(false)),
+    PVP_ARENA_PITFLOOR_SAND_REMOVAL(GroundMaterial.DIRT, p -> p
+            .area(Area.PVP_ARENA)
+            .ids(66,68)
+    ),
 
     KHARID_SAND_1(Area.KHARID_DESERT_REGION, GroundMaterial.SAND, p -> p
         .saturation(3)
