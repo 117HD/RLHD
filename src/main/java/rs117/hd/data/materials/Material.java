@@ -253,8 +253,11 @@ public enum Material
 		.setBrightness(1.4f)
 		.setTextureScale(0.5f,0.5f)),
 
+	FALADOR_PATH_BRICK_N,
 	FALADOR_PATH_BRICK(p -> p
-		.setSpecular(0.3f, 30)),
+		.setNormalMap(FALADOR_PATH_BRICK_N)
+		.setSpecular(0.3f, 30)
+	),
 	JAGGED_STONE_TILE,
 
 	TILE_SMALL_1(p -> p
