@@ -965,7 +965,6 @@
       "KOVAC_11472"
     ],
     "objectIds": [
-      2052,
       4502,
       17208,
       17324,
@@ -4936,6 +4935,9 @@
       22347,
       22348,
       22349,
+      23085,
+      23086,
+      23087,
       26715,
       26716,
       27984,
@@ -5306,6 +5308,11 @@
       14482,
       14485,
       17929,
+      23080,
+      23081,
+      23082,
+      23083,
+      23084,
       37800,
       37801,
       37802,
@@ -6038,6 +6045,112 @@
     "uvType": "MODEL_XZ",
     "flatNormals": true,
     "disableShadows": true
+  },
+  {
+    "description": "Chaos Tunnel - Walls - Cave Walls",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      23068,
+      23069,
+      23070,
+      23071,
+      23072,
+      23075,
+      23076,
+      23077,
+      23078,
+      23079
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Chaos Tunnel - Objects - Stairs",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      23073,
+      23074
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Objects - Rock - Staglagmite - Non Interactable",
+    "baseMaterial": "ROCK_2",
+    "objectIds": [
+      23088,
+      23089,
+      23090
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Objects - Bed - Bedroll - Non Interactable",
+    "baseMaterial": "CARPET",
+    "objectIds": [
+      23067
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.60
+  },
+  {
+    "description": "Objects - Locker - Wooden - Non Interactable",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      23064
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Objects - Stool - Wooden – Generic",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      23065
+    ],
+    "uvType": "MODEL_XZ",
+    "flatNormals": true,
+    "uvScale": 0.80
+  },
+  {
+    "description": "Objects - Table - Single - Wooden – Plank - Generic",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      23066
+    ],
+    "uvType": "MODEL_XZ",
+    "flatNormals": true
+  },
+  {
+    "description": "Ground - Chaos Alter - Path -  Wooden – Plank",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      2669,
+      4033,
+      11557,
+      11915,
+      11916,
+      11919,
+      11554,
+      11555,
+      11556
+    ],
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Chaos Alter - Walls - Path -  Wooden – Plank",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      169
+    ],
+    "uvType": "MODEL_XY",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Objects - Standing Torch -  Wood",
+    "baseMaterial": "WOOD_GRAIN",
+    "objectIds": [
+      724
+    ],
+    "uvType": "GEOMETRY"
   },
   {
     "description": "Lunar Isle - Walls - Stone - Northern Mine",
