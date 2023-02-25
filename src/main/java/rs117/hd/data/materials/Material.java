@@ -371,6 +371,9 @@ public enum Material
 		.setSpecular(4.1f,60)),
 	WATER_PUDDLE(NONE, p -> p
 		.setSpecular(1.5f, 80)),
+	HD_STONE_PATTERN(p -> p
+		.replaceIf(STONE_PATTERN, HdPluginConfig::objectTextures)
+	),
 
 	// Seasonal
 	WINTER_WILLOW_LEAVES(p -> p
