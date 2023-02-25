@@ -228,7 +228,7 @@ public enum Material
 	GRAVEL_N,
 	GRAVEL(p -> p
 		.setNormalMap(GRAVEL_N)
-		.setSpecular(0.6f,130)),
+		.setSpecular(0.4f,130)),
 
 	DIRT_SHINY_1(DIRT_1, p -> p
 		.setSpecular(1.1f, 380)),
@@ -253,8 +253,11 @@ public enum Material
 		.setBrightness(1.4f)
 		.setTextureScale(0.5f,0.5f)),
 
+	FALADOR_PATH_BRICK_N,
 	FALADOR_PATH_BRICK(p -> p
-		.setSpecular(0.3f, 30)),
+		.setNormalMap(FALADOR_PATH_BRICK_N)
+		.setSpecular(0.3f, 30)
+	),
 	JAGGED_STONE_TILE,
 
 	TILE_SMALL_1(p -> p

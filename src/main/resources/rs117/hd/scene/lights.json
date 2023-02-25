@@ -30039,6 +30039,44 @@
     ]
   },
   {
+    "description": "CAVE_WALL_LANTERN",
+    "height": 150,
+    "alignment": "FRONT",
+    "radius": 500,
+    "strength": 7,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 600,
+    "range": 3,
+    "objectIds": [
+      23072
+    ]
+  },
+  {
+    "description": "CHAOS_YELLOW_PORTAL",
+    "height": 30,
+    "alignment": "CENTER",
+    "radius": 500,
+    "strength": 7.5,
+    "color": [
+      255,
+      216,
+      87
+    ],
+    "type": "PULSE",
+    "duration": 1550,
+    "range": 50,
+    "objectIds": [
+      23095,
+      23098,
+      34757
+    ]
+  },
+  {
     "description": "GNOME_LAMP",
     "height": 130,
     "alignment": "BACK",
