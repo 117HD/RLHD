@@ -582,6 +582,7 @@ public enum Overlay {
     OVERLAY_28(28, GroundMaterial.BRICK, p -> p.blended(false)),
     OVERLAY_29(29, GroundMaterial.GRASS_1),
     OVERLAY_32(32, GroundMaterial.CONCRETE),
+    OVERLAY_DIRT_PATH(GroundMaterial.DIRT, p -> p.ids(36)),
 
     NONE(GroundMaterial.DIRT, p -> {});
 
