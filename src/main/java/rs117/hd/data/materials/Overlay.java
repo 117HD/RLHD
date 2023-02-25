@@ -52,7 +52,18 @@ public enum Overlay {
     TUTORIAL_ISLAND_BANK_TILE_2(3, Area.TUTORIAL_ISLAND_BANK, GroundMaterial.MARBLE_2_SEMIGLOSS, p -> p.blended(false)),
 
     // Lumbridge
-    LUM_BRIDGE(10, Area.LUM_BRIDGE, GroundMaterial.GRAVEL),
+    LUM_BRIDGE_10(Area.LUM_BRIDGE, GroundMaterial.GRAVEL, p->p
+            .ids(10)
+            .shiftLightness(12)
+            .hue(7)
+            .saturation(1)
+    ),
+    LUM_BRIDGE_22(Area.LUM_BRIDGE, GroundMaterial.GRAVEL, p->p
+            .ids(22)
+            .shiftLightness(-5)
+            .hue(7)
+            .saturation(1)
+    ),
     LUMBRIDGE_CASTLE_ENTRANCE_FIX(10, Area.LUMBRIDGE_CASTLE_ENTRANCE, GroundMaterial.WORN_TILES, p -> p.shiftLightness(12)),
     LUMBRIDGE_CASTLE_TILE(3, Area.LUMBRIDGE_CASTLE_BASEMENT, GroundMaterial.MARBLE_1_SEMIGLOSS),
     LUMBRIDGE_CASTLE_FLOORS(10, Area.LUMBRIDGE_CASTLE, GroundMaterial.VARROCK_PATHS_LIGHT, p -> p.shiftLightness(10)),
@@ -136,6 +147,7 @@ public enum Overlay {
     KHARID_PATHS_2(76, Area.KHARID_DESERT_REGION, GroundMaterial.DIRT, p -> p.saturation(3).hue(6).shiftLightness(-10)),
     KHARID_PATHS_3(25, Area.KHARID_DESERT_REGION, GroundMaterial.DIRT, p -> p.saturation(3).hue(6)),
     GIANTS_PLATEAU_CABBAGE_PATCH_FIX(14, Area.GIANTS_PLATEAU_CABBAGE_PATCH, GroundMaterial.DIRT, p -> p.blended(false)),
+    PVP_ARENA_PATH(227, Area.PVP_ARENA, GroundMaterial.DIRT),
 
     // Falador
     FALADOR_EAST_BANK_PATH_FIX_2(-119, Area.FALADOR_EAST_BANK_PATH_FIX_2, GroundMaterial.FALADOR_PATHS, p -> p
@@ -555,8 +567,8 @@ public enum Overlay {
         .blended(true)),
 
     // default overlays
-    OVERLAY_WATER(WaterType.WATER, p -> p.ids(-128, -105, -98, 6, 41, 104)),
-    OVERLAY_DIRT(GroundMaterial.DIRT, p -> p.ids(-124, -84, -83, 14, 15, 21, 22, 23, 60, 77, 81, 82, 88, 89, 101, 102, 107, 108, 110, 115, 123)),
+    OVERLAY_WATER(WaterType.WATER, p -> p.ids(-128, -105, -98, 6, 41, 104, 196)),
+    OVERLAY_DIRT(GroundMaterial.DIRT, p -> p.ids(-124, -84, -83, 14, 15, 21, 22, 23, 60, 77, 81, 82, 88, 89, 101, 102, 107, 108, 110, 115, 123, 227)),
     OVERLAY_GRAVEL(GroundMaterial.GRAVEL, p -> p.ids(-76, 2, 3, 4, 6, 8, 10, 119)),
     OVERLAY_VARROCK_PATHS(GroundMaterial.VARROCK_PATHS, p -> p.ids(-85, -77, 11)),
     OVERLAY_SWAMP_WATER(WaterType.SWAMP_WATER, p -> p.ids(-100, 7)),

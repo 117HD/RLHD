@@ -5524,7 +5524,7 @@
       12278
     ],
     "uvScale": 0.4,
-    "uvType": "MODEL_YZ",
+    "uvType": "MODEL_XY",
     "flatNormals": true
   },
   {
