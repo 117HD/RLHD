@@ -76,7 +76,7 @@ public enum Underlay {
     KHARID_SAND_1(Area.KHARID_DESERT_REGION, GroundMaterial.SAND, p -> p
         .saturation(3)
         .hue(6)
-        .ids(61, 62, 67, 68, -127, 126, 49, 58, 63, 64, 50)),
+        .ids(61, 62, 67, 68, -127, 126, 49, 58, 63, 64, 50, 45)),
 
     // Burthorpe games room
     GAMES_ROOM_INNER_FLOOR(64, Area.GAMES_ROOM_INNER, GroundMaterial.CARPET, p -> p.blended(false)),
