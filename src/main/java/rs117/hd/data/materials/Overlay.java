@@ -548,14 +548,11 @@ public enum Overlay {
 
     // Lunar Isles
     LUNAR_ISLAND_HOUSES_DIRT_FLOOR(81, Area.LUNAR_VILLAGE_HOUSE_INTERIORS_GROUND, GroundMaterial.VARIED_DIRT, p -> p
-            .blended(true)
-    ),
+        .blended(true)),
     LUNAR_ISLAND_HOUSES_CARPET_FLOOR(88, Area.LUNAR_VILLAGE_HOUSE_INTERIORS_GROUND, GroundMaterial.CARPET, p -> p
-            .blended(false)
-    ),
+        .blended(false)),
     LUNAR_ISLAND_HOUSES_WOOD_FLOOR(81, Area.LUNAR_VILLAGE_HOUSE_INTERIORS_FIRST, GroundMaterial.HD_WOOD_PLANKS_1, p -> p
-            .blended(true)
-    ),
+        .blended(true)),
 
     // default overlays
     OVERLAY_WATER(WaterType.WATER, p -> p.ids(-128, -105, -98, 6, 41, 104)),

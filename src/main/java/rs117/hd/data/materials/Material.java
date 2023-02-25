@@ -312,8 +312,7 @@ public enum Material
 		.setSpecular(0.3f,30)
 	),
 	WOOD_GRAIN_2_WIDE(WOOD_GRAIN_2, p -> p
-			.setTextureScale(1.5f, 0.5f)
-
+		.setTextureScale(1.5f, 0.5f)
 	),
 	WOOD_GRAIN_3,
 	DOCK_FENCE,
@@ -371,16 +370,16 @@ public enum Material
 	ICE_1(GRUNGE_2, p -> p
 		.setSpecular(1.1f,200)),
 	ICE_1_HIGHGLOSS(GRUNGE_2, p -> p
-			.setSpecular(3.1f,30)),
+		.setSpecular(3.1f,30)),
 	SLIME_GRUNGE(GRUNGE_1, p -> p
 		.setSpecular(4.1f,60)),
 	WATER_PUDDLE(NONE, p -> p
 		.setSpecular(1.5f, 80)),
 	HD_WOOD_PLANKS_1_N,
 	HD_WOOD_PLANKS_1(p -> p
-			.setNormalMap(HD_WOOD_PLANKS_1_N)
-			.setSpecular(0.5f,80)
-			.setBrightness(1.2f)),
+		.setNormalMap(HD_WOOD_PLANKS_1_N)
+		.setSpecular(0.5f,80)
+		.setBrightness(1.2f)),
 
 	// Seasonal
 	WINTER_WILLOW_LEAVES(p -> p
