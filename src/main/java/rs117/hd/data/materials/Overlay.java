@@ -582,7 +582,7 @@ public enum Overlay {
     OVERLAY_TEMPLE_OF_THE_EYE_DIRT(GroundMaterial.DIRT, p -> p
             .ids(202, 203)
     ),
-    OVERLAY_KOUREND_PATH(GroundMaterial.MARBLE_DARK, p -> p.ids(133).blended(false)),
+    OVERLAY_KOUREND_PATH(GroundMaterial.MARBLE_1, p -> p.ids(133).blended(false)),
 
     NONE(GroundMaterial.DIRT, p -> {});
 
