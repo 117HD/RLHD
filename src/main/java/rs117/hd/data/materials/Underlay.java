@@ -145,10 +145,10 @@ public enum Underlay {
         .replaceWithIf(WINTER_DIRT, plugin -> plugin.configWinterTheme)),
 
     OVERWORLD_UNDERLAY_SAND(GroundMaterial.SAND, p -> p.ids(-127, -118, 61, 68)),
-    UNDERLAY_SNOW(GroundMaterial.SNOW_1, p -> p.ids(55, 58)),
+    UNDERLAY_SNOW(GroundMaterial.SNOW_1, p -> p.ids(58)),
     UNDERLAY_72(GroundMaterial.VARIED_DIRT, p -> p.ids(72, 73, 98, 112, 113)),
     UNDERLAY_OVERWORLD_GRUNGE(GroundMaterial.OVERWORLD_GRUNGE, p -> p
-            .ids(8, 10, 60, 92) // 8 = Jatizso, 60 = GotR, 92 = Eadgars Cave
+            .ids(8, 10, 55, 60, 92) // 8 = Jatizso, 60 = GotR, 92 = Eadgars Cave
     ),
     UNDERLAY_TEMPLE_OF_THE_EYE(GroundMaterial.OVERWORLD_GRUNGE, p -> p.ids(87, 88, 89)),
     UNDERLAY_ARCEUUS_GROUND(GroundMaterial.OVERWORLD_DIRT, p -> p.ids(2, 3, 17, 23, 24)),
