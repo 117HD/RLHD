@@ -583,6 +583,7 @@ public enum Overlay {
             .ids(202, 203)
     ),
     OVERLAY_KOUREND_PATH(GroundMaterial.MARBLE_1, p -> p.ids(133).blended(false)),
+    OVERLAY_OVERWORLD_GRUNGE(GroundMaterial.OVERWORLD_GRUNGE, p -> p.ids(185)),
 
     NONE(GroundMaterial.DIRT, p -> {});
 
