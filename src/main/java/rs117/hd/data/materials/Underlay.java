@@ -147,7 +147,9 @@ public enum Underlay {
     OVERWORLD_UNDERLAY_SAND(GroundMaterial.SAND, p -> p.ids(-127, -118, 61, 68)),
     UNDERLAY_58(GroundMaterial.SNOW_1, p -> p.ids(58)),
     UNDERLAY_72(GroundMaterial.VARIED_DIRT, p -> p.ids(72, 98)),
-    UNDERLAY_OVERWORLD_GRUNGE(GroundMaterial.OVERWORLD_GRUNGE, p -> p.ids(8)),
+    UNDERLAY_OVERWORLD_GRUNGE(GroundMaterial.OVERWORLD_GRUNGE, p -> p
+            .ids(8, 92) // 8 = Jatizso, 92 = Eadgars Cave
+    ),
 
     NONE(GroundMaterial.DIRT, p -> {});
 
