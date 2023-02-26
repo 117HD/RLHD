@@ -137,16 +137,16 @@ public enum Underlay {
     // default underlays
 
     OVERWORLD_UNDERLAY_GRASS(Area.OVERWORLD, GroundMaterial.OVERWORLD_GRASS_1, p -> p
-        .ids(25, 33, 34, 40, 48, 49, 50, 51, 52, 53, 54, 55, 56, 62, 63, 67, 70, 75, 93, 96, 97, 103, 114, 115, 126)
+        .ids(25, 33, 34, 40, 48, 49, 50, 51, 52, 53, 54, 62, 63, 67, 70, 75, 93, 96, 97, 103, 114, 115, 126)
         .replaceWithIf(WINTER_GRASS, plugin -> plugin.configWinterTheme)),
 
     OVERWORLD_UNDERLAY_DIRT(Area.OVERWORLD, GroundMaterial.OVERWORLD_DIRT, p -> p
-        .ids(-111, -110, 19, 57, 64, 65, 66, 80, 92, 94, 111, 118, 122, 150)
+        .ids(-111, -110, 19, 56, 57, 64, 65, 66, 80, 92, 94, 111, 118, 122, 150)
         .replaceWithIf(WINTER_DIRT, plugin -> plugin.configWinterTheme)),
 
     OVERWORLD_UNDERLAY_SAND(GroundMaterial.SAND, p -> p.ids(-127, -118, 61, 68)),
-    UNDERLAY_58(GroundMaterial.SNOW_1, p -> p.ids(58)),
-    UNDERLAY_72(GroundMaterial.VARIED_DIRT, p -> p.ids(72, 73, 98, 112)),
+    UNDERLAY_SNOW(GroundMaterial.SNOW_1, p -> p.ids(55, 58)),
+    UNDERLAY_72(GroundMaterial.VARIED_DIRT, p -> p.ids(72, 73, 98, 112, 113)),
     UNDERLAY_OVERWORLD_GRUNGE(GroundMaterial.OVERWORLD_GRUNGE, p -> p
             .ids(8, 10, 60, 92) // 8 = Jatizso, 60 = GotR, 92 = Eadgars Cave
     ),
