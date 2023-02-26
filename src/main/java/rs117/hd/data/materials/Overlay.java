@@ -582,7 +582,10 @@ public enum Overlay {
     OVERLAY_28(28, GroundMaterial.BRICK, p -> p.blended(false)),
     OVERLAY_29(29, GroundMaterial.GRASS_1),
     OVERLAY_32(32, GroundMaterial.CONCRETE),
-    OVERLAY_90(90, GroundMaterial.WORN_TILES),
+    OVERLAY_90(90, GroundMaterial.WORN_TILES), // Known locations: 131 = Dark Wizards Tower
+    OVERLAY_DIRT_PATH(GroundMaterial.VARIED_DIRT, p -> p
+            .ids(36, 131) //36 = Corsair Cove, 131 = Burgh de Rott
+    ),
 
     NONE(GroundMaterial.DIRT, p -> {});
 
