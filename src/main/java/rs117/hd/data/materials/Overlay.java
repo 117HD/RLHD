@@ -476,9 +476,6 @@ public enum Overlay {
     // Kebos Lowlands
     LIZARDMAN_TEMPLE_WATER(-100, Area.LIZARDMAN_TEMPLE, WaterType.SWAMP_WATER_FLAT),
 
-    // Temple of the Eye
-    TEMPLE_OF_THE_EYE_INCORRECT_WATER(-100, Area.TEMPLE_OF_THE_EYE, GroundMaterial.DIRT),
-
     // God Wars Dungeon (GWD)
     GWD_WATER(104, Area.GOD_WARS_DUNGEON, WaterType.ICE_FLAT),
 
@@ -541,12 +538,6 @@ public enum Overlay {
     PRISON_PETE_TILE_1(2, Area.RANDOM_EVENT_PRISON_PETE, GroundMaterial.MARBLE_1, p -> p.blended(false)),
     PRISON_PETE_TILE_2(-125, Area.RANDOM_EVENT_PRISON_PETE, GroundMaterial.MARBLE_2, p -> p.blended(false)),
 
-    // GOTR Entrance fix
-    TEMPLE_OF_THE_EYE_ENTRANCE(Area.TEMPLE_OF_THE_EYE_ENTRANCE_FIX, GroundMaterial.DIRT, p -> p
-        .shiftLightness(-10)
-        .blended(false)
-        .ids(-53)),
-
     // Elid Cave fix
     ELID_CAVE_WATER_FIX(-126, Area.ELID_CAVE, WaterType.WATER),
 
@@ -585,6 +576,9 @@ public enum Overlay {
     OVERLAY_90(90, GroundMaterial.WORN_TILES), // Known locations: 131 = Dark Wizards Tower
     OVERLAY_DIRT_PATH(GroundMaterial.VARIED_DIRT, p -> p
             .ids(36, 131) //36 = Corsair Cove, 131 = Burgh de Rott
+    ),
+    TEMPLE_OF_THE_EYE_DIRT(GroundMaterial.DIRT, p -> p
+            .ids(202, 203)
     ),
 
     NONE(GroundMaterial.DIRT, p -> {});

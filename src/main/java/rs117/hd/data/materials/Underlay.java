@@ -150,6 +150,7 @@ public enum Underlay {
     UNDERLAY_OVERWORLD_GRUNGE(GroundMaterial.OVERWORLD_GRUNGE, p -> p
             .ids(8, 92) // 8 = Jatizso, 92 = Eadgars Cave
     ),
+    TEMPLE_OF_THE_EYE(GroundMaterial.OVERWORLD_GRUNGE, p -> p.ids(87, 88, 89)),
 
     NONE(GroundMaterial.DIRT, p -> {});
 
