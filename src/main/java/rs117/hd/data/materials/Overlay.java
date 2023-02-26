@@ -553,8 +553,8 @@ public enum Overlay {
 
     // default overlays
     OVERLAY_WATER(WaterType.WATER, p -> p.ids(-128, -105, -98, 6, 41, 104, 196)),
-    OVERLAY_DIRT(GroundMaterial.DIRT, p -> p.ids(-124, -84, -83, 14, 15, 21, 22, 23, 60, 77, 81, 82, 88, 89, 101, 102, 107, 108, 110, 115, 123, 227)),
-    OVERLAY_GRAVEL(GroundMaterial.GRAVEL, p -> p.ids(-76, 2, 3, 4, 6, 8, 10, 119)),
+    OVERLAY_DIRT(GroundMaterial.DIRT, p -> p.ids(-124, -84, -83, 14, 15, 21, 22, 23, 60, 77, 81, 82, 88, 89, 91, 101, 102, 107, 108, 110, 115, 123, 227)),
+    OVERLAY_GRAVEL(GroundMaterial.GRAVEL, p -> p.ids(-76, 2, 3, 4, 8, 10, 119)),
     OVERLAY_VARROCK_PATHS(GroundMaterial.VARROCK_PATHS, p -> p.ids(-85, -77, 11)),
     OVERLAY_SWAMP_WATER(WaterType.SWAMP_WATER, p -> p.ids(-100, 7)),
     OVERLAY_WOOD_PLANKS(GroundMaterial.WOOD_PLANKS_1, p -> p.ids(5, 35)),
@@ -584,6 +584,7 @@ public enum Overlay {
     ),
     OVERLAY_KOUREND_PATH(GroundMaterial.MARBLE_1, p -> p.ids(133).blended(false)),
     OVERLAY_OVERWORLD_GRUNGE(GroundMaterial.OVERWORLD_GRUNGE, p -> p.ids(185)),
+    OVERLAY_120(GroundMaterial.OVERWORLD_GRUNGE, p -> p.ids(120)),
 
     NONE(GroundMaterial.DIRT, p -> {});
 
