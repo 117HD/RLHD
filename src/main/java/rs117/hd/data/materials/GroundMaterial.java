@@ -81,6 +81,7 @@ public enum GroundMaterial
 	CLEAN_TILE(Material.CLEAN_TILE),
 	WORN_TILES(Material.WORN_TILES),
 	WATER_FLAT(Material.WATER_FLAT),
+	OVERWORLD_GRUNGE(Material.GRUNGE_1, Material.GRUNGE_2, Material.GRUNGE_1)
 	;
 
 	private final Material[] materials;
