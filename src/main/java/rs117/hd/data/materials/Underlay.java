@@ -141,7 +141,7 @@ public enum Underlay {
         .replaceWithIf(WINTER_GRASS, plugin -> plugin.configWinterTheme)),
 
     OVERWORLD_UNDERLAY_DIRT(Area.OVERWORLD, GroundMaterial.OVERWORLD_DIRT, p -> p
-        .ids(-111, -110, 64, 65, 66, 80, 92, 94)
+        .ids(-111, -110, 19, 64, 65, 66, 80, 92, 94)
         .replaceWithIf(WINTER_DIRT, plugin -> plugin.configWinterTheme)),
 
     OVERWORLD_UNDERLAY_SAND(GroundMaterial.SAND, p -> p.ids(-127, -118, 61, 68)),
@@ -150,8 +150,8 @@ public enum Underlay {
     UNDERLAY_OVERWORLD_GRUNGE(GroundMaterial.OVERWORLD_GRUNGE, p -> p
             .ids(8, 60, 92) // 8 = Jatizso, 60 = GotR, 92 = Eadgars Cave
     ),
-    TEMPLE_OF_THE_EYE(GroundMaterial.OVERWORLD_GRUNGE, p -> p.ids(87, 88, 89)),
-    ARCEUUS_GROUND(GroundMaterial.OVERWORLD_DIRT, p -> p.ids(2, 3, 17, 23, 24)),
+    UNDERLAY_TEMPLE_OF_THE_EYE(GroundMaterial.OVERWORLD_GRUNGE, p -> p.ids(87, 88, 89)),
+    UNDERLAY_ARCEUUS_GROUND(GroundMaterial.OVERWORLD_DIRT, p -> p.ids(2, 3, 17, 23, 24)),
 
     NONE(GroundMaterial.DIRT, p -> {});
 

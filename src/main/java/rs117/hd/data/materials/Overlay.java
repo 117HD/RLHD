@@ -579,9 +579,10 @@ public enum Overlay {
     OVERLAY_DIRT_PATH(GroundMaterial.VARIED_DIRT, p -> p
             .ids(36, 131) //36 = Corsair Cove, 131 = Burgh de Rott
     ),
-    TEMPLE_OF_THE_EYE_DIRT(GroundMaterial.DIRT, p -> p
+    OVERLAY_TEMPLE_OF_THE_EYE_DIRT(GroundMaterial.DIRT, p -> p
             .ids(202, 203)
     ),
+    OVERLAY_KOUREND_PATH(GroundMaterial.MARBLE_DARK, p -> p.ids(133).blended(false)),
 
     NONE(GroundMaterial.DIRT, p -> {});
 
