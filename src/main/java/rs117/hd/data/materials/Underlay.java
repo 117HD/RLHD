@@ -148,7 +148,7 @@ public enum Underlay {
 
     OVERWORLD_DIRT(GroundMaterial.DIRT, p -> p.ids(-111, -110, 64, 66, 80, 92, 94)),
 
-    UNDERLAY_10(GroundMaterial.GRASS_1, p -> p.ids(10, 25, 33, 34, 40, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 62, 63, 67, 70, 75, 93, 96, 97, 103, 103, 114, 115, 126)),
+    OVERWORLD_GRASS(GroundMaterial.GRASS_1, p -> p.ids(10, 25, 33, 34, 40, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 62, 63, 67, 70, 75, 93, 96, 97, 103, 103, 114, 115, 126)),
     UNDERLAY_58(GroundMaterial.SNOW_1, p -> p.ids(58)),
     UNDERLAY_72(GroundMaterial.VARIED_DIRT, p -> p.ids(72, 98)),
 
