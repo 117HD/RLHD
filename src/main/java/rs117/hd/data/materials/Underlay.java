@@ -152,6 +152,7 @@ public enum Underlay {
     ),
     UNDERLAY_TEMPLE_OF_THE_EYE(GroundMaterial.OVERWORLD_GRUNGE, p -> p.ids(87, 88, 89)),
     UNDERLAY_ARCEUUS_GROUND(GroundMaterial.OVERWORLD_DIRT, p -> p.ids(2, 3, 17, 23, 24)),
+    UNDERLAY_KOUREND_PATH(GroundMaterial.OVERWORLD_GRUNGE, p -> p.ids(112).blended(false)),
 
     NONE(GroundMaterial.DIRT, p -> {});
 
