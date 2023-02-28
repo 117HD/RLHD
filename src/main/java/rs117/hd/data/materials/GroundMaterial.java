@@ -36,20 +36,19 @@ public enum GroundMaterial
 	OVERWORLD_GRASS_1(Material.GRASS_1, Material.GRASS_2, Material.GRASS_3),
 	GRASS_SCROLLING(Material.GRASS_SCROLLING),
 	DIRT(Material.DIRT_1, Material.DIRT_2),
-	OVERWORLD_DIRT(Material.DIRT_1, Material.DIRT_2),
 	SNOW_1(Material.SNOW_1, Material.SNOW_1, Material.SNOW_2, Material.SNOW_3, Material.SNOW_3, Material.SNOW_4),
 	SNOW_2(Material.SNOW_2, Material.SNOW_4),
 	GRAVEL(Material.GRAVEL),
 	FALADOR_PATHS(Material.FALADOR_PATH_BRICK),
 	VARROCK_PATHS(Material.JAGGED_STONE_TILE),
-	VARROCK_PATHS_LIGHT(Material.JAGGED_STONE_TILE),
 	VARIED_DIRT(Material.GRAVEL, Material.DIRT_1, Material.DIRT_2),
-	VARIED_DIRT_SHINY(Material.GRAVEL_SHINY, Material.DIRT_SHINY_1, Material.DIRT_SHINY_2),
+	VARIED_DIRT_SHINY(Material.GRAVEL_SHINY, Material.DIRT_1_SHINY, Material.DIRT_2_SHINY),
 	TILE_SMALL(Material.TILE_SMALL_1),
 	CARPET(Material.CARPET),
 	BRICK(Material.BRICK),
 	BRICK_BROWN(Material.BRICK_BROWN),
-	GRUNGE(Material.GRUNGE_2),
+	GRUNGE(Material.GRUNGE_1, Material.GRUNGE_2, Material.GRUNGE_1),
+	GRUNGE_2(Material.GRUNGE_2),
 
 	TILES_2x2_1(Material.TILES_1_2x2),
 	TILES_2x2_2(Material.TILES_2_2x2),
@@ -81,7 +80,6 @@ public enum GroundMaterial
 	CLEAN_TILE(Material.CLEAN_TILE),
 	WORN_TILES(Material.WORN_TILES),
 	WATER_FLAT(Material.WATER_FLAT),
-	OVERWORLD_GRUNGE(Material.GRUNGE_1, Material.GRUNGE_2, Material.GRUNGE_1)
 	;
 
 	private final Material[] materials;

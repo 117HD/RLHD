@@ -30,7 +30,6 @@ import net.runelite.api.Client;
 import net.runelite.api.Tile;
 import net.runelite.api.coords.WorldPoint;
 import rs117.hd.HdPlugin;
-import rs117.hd.HdPluginConfig;
 import rs117.hd.data.WaterType;
 import rs117.hd.data.environments.Area;
 
@@ -48,7 +47,7 @@ public enum Underlay {
     LUMBRIDGE_CASTLE_TILE(56, Area.LUMBRIDGE_CASTLE_BASEMENT, GroundMaterial.MARBLE_2_SEMIGLOSS, p -> p.blended(false)),
 
     // Edgeville
-    EDGEVILLE_PATH_OVERLAY_48(Area.EDGEVILLE_PATH_OVERLAY, GroundMaterial.VARROCK_PATHS_LIGHT, p -> p
+    EDGEVILLE_PATH_OVERLAY_48(Area.EDGEVILLE_PATH_OVERLAY, GroundMaterial.VARROCK_PATHS, p -> p
         .blendedAsOpposite(true)
         .hue(0)
         .shiftLightness(8)
@@ -128,30 +127,31 @@ public enum Underlay {
     // Mind Altar
     MIND_ALTAR_TILE(55, Area.MIND_ALTAR, GroundMaterial.MARBLE_1_SEMIGLOSS, p -> p.blended(false)),
 
+    TEMPLE_OF_THE_EYE(Area.TEMPLE_OF_THE_EYE, GroundMaterial.GRUNGE, p -> p.ids(87, 88, 89)),
+    ARCEUUS_GROUND(Area.ARCEUUS, GroundMaterial.DIRT, p -> p.ids(2, 3, 17, 23, 24)),
+
     // Cutscenes
     CANOE_CUTSCENE_GRASS_1(Area.CANOE_CUTSCENE, GroundMaterial.GRASS_SCROLLING, p -> p.ids(48, 50, 63)),
 
     WINTER_GRASS(p -> p.ids().groundMaterial(GroundMaterial.SNOW_1).hue(0).saturation(0).shiftLightness(40).blended(true)),
     WINTER_DIRT(p -> p.ids().groundMaterial(GroundMaterial.DIRT).hue(0).saturation(0).shiftLightness(40).blended(true)),
 
-    // default underlays
 
-    OVERWORLD_UNDERLAY_GRASS(Area.OVERWORLD, GroundMaterial.OVERWORLD_GRASS_1, p -> p
+    // Default underlays
+
+    OVERWORLD_GRASS(Area.OVERWORLD, GroundMaterial.OVERWORLD_GRASS_1, p -> p
         .ids(25, 33, 34, 40, 48, 49, 50, 51, 52, 53, 54, 62, 63, 67, 70, 75, 93, 96, 97, 103, 114, 115, 126)
         .replaceWithIf(WINTER_GRASS, plugin -> plugin.configWinterTheme)),
-
-    OVERWORLD_UNDERLAY_DIRT(Area.OVERWORLD, GroundMaterial.OVERWORLD_DIRT, p -> p
+    OVERWORLD_DIRT(Area.OVERWORLD, GroundMaterial.DIRT, p -> p
         .ids(-111, -110, 19, 56, 57, 64, 65, 66, 80, 92, 94, 111, 118, 122, 150)
         .replaceWithIf(WINTER_DIRT, plugin -> plugin.configWinterTheme)),
+    OVERWORLD_SAND(Area.OVERWORLD, GroundMaterial.SAND, p -> p.ids(-127, -118, 61, 68)),
 
-    OVERWORLD_UNDERLAY_SAND(GroundMaterial.SAND, p -> p.ids(-127, -118, 61, 68)),
     UNDERLAY_SNOW(GroundMaterial.SNOW_1, p -> p.ids(58, 59)),
     UNDERLAY_72(GroundMaterial.VARIED_DIRT, p -> p.ids(72, 73, 98, 112, 113)),
-    UNDERLAY_OVERWORLD_GRUNGE(GroundMaterial.OVERWORLD_GRUNGE, p -> p
+    UNDERLAY_OVERWORLD_GRUNGE(GroundMaterial.GRUNGE, p -> p
             .ids(8, 10, 55, 60, 92) // 8 = Jatizso, 60 = GotR, 92 = Eadgars Cave
     ),
-    UNDERLAY_TEMPLE_OF_THE_EYE(GroundMaterial.OVERWORLD_GRUNGE, p -> p.ids(87, 88, 89)),
-    UNDERLAY_ARCEUUS_GROUND(GroundMaterial.OVERWORLD_DIRT, p -> p.ids(2, 3, 17, 23, 24)),
 
     NONE(GroundMaterial.DIRT, p -> {});
 
