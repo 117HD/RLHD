@@ -55,7 +55,7 @@ public enum Overlay {
             .ids()
             .groundMaterial(GroundMaterial.WINTER_JAGGED_STONE_TILE_LIGHT_2)
     ),
-    WINTER_EAST_ARDOUGNE_CASTLE_PATH_FIX(10, Area.EAST_ARDOUGNE_CASTLE_PATH_FIX, GroundMaterial.VARROCK_PATHS_LIGHT, p -> p
+    WINTER_EAST_ARDOUGNE_CASTLE_PATH_FIX(10, Area.EAST_ARDOUGNE_CASTLE_PATH_FIX, GroundMaterial.VARROCK_PATHS, p -> p
             .replaceWithIf(WINTER_JAGGED_STONE_TILE_LIGHT, plugin -> plugin.configWinterTheme)
             .shiftLightness(3)
             .blended(false)
@@ -71,7 +71,7 @@ public enum Overlay {
     TUTORIAL_ISLAND_BANK_TILE_2(3, Area.TUTORIAL_ISLAND_BANK, GroundMaterial.MARBLE_2_SEMIGLOSS, p -> p.blended(false)),
 
     //Lumbridge Interior
-    LUMBRIDGE_TOWER_INTERIOR_FLOOR(10, Area.LUMBRIDGE_TOWER_FLOOR_INTERIOR, GroundMaterial.VARROCK_PATHS_LIGHT, p -> p
+    LUMBRIDGE_TOWER_INTERIOR_FLOOR(10, Area.LUMBRIDGE_TOWER_FLOOR_INTERIOR, GroundMaterial.VARROCK_PATHS, p -> p
             .shiftLightness(10)
             .blended(false)
     ),
@@ -294,9 +294,9 @@ public enum Overlay {
     SEERS_ELEMENTAL_WORKSHOP_HOUSE_171(171, Area.ELEMENTAL_WORKSHOP_HOUSE, GroundMaterial.VARROCK_PATHS, p -> p.blended(false).shiftLightness(3)),
     SEERS_BAR_171_BLENDED(171, Area.SEERS_BAR_ENTRANCE, GroundMaterial.VARROCK_PATHS),
     SEERS_BAR_171(171, Area.SEERS_BAR, GroundMaterial.VARROCK_PATHS, p -> p.blended(false).shiftLightness(3)),
-    SEERS_CAMELOT_CASTLE_BLENDED(171, Area.SEERS_CAMELOT_CASTLE_BLENDED, GroundMaterial.VARROCK_PATHS_LIGHT),
-    SEERS_CAMELOT_CASTLE(171, Area.SEERS_CAMELOT_CASTLE, GroundMaterial.VARROCK_PATHS_LIGHT, p -> p.blended(false).shiftLightness(3)),
-    SEERS_CAMELOT_CASTLE_KNIGHTSWAVE_OVERWORLD(171, Area.SEERS_CAMELOT_CASTLE_KNIGHTSWAVE_OVERWORLD, GroundMaterial.VARROCK_PATHS_LIGHT),
+    SEERS_CAMELOT_CASTLE_BLENDED(171, Area.SEERS_CAMELOT_CASTLE_BLENDED, GroundMaterial.VARROCK_PATHS),
+    SEERS_CAMELOT_CASTLE(171, Area.SEERS_CAMELOT_CASTLE, GroundMaterial.VARROCK_PATHS, p -> p.blended(false).shiftLightness(3)),
+    SEERS_CAMELOT_CASTLE_KNIGHTSWAVE_OVERWORLD(171, Area.SEERS_CAMELOT_CASTLE_KNIGHTSWAVE_OVERWORLD, GroundMaterial.VARROCK_PATHS),
     SEERS_BANK_TILE_1(3, Area.SEERS_BANK, GroundMaterial.MARBLE_1_GLOSS, p -> p.blended(false)),
     SEERS_BANK_TILE_2(4, Area.SEERS_BANK, GroundMaterial.MARBLE_2_GLOSS, p -> p.blended(false)),
     SEERS_BANK_TILE_3(8, Area.SEERS_BANK, GroundMaterial.MARBLE_1_GLOSS, p -> p.blended(false)),
@@ -322,12 +322,12 @@ public enum Overlay {
     CATHERBY_BANK_TILE_2(4, Area.CATHERBY_BANK, GroundMaterial.MARBLE_2_GLOSS, p -> p.blended(false)),
 
     // Ardougne Indoors
-    EAST_ARDOUNGE_INDOORS_FURNACE(10, Area.EAST_ARDOUGNE_FURNACE, GroundMaterial.VARROCK_PATHS_LIGHT, p -> p.shiftLightness(6)),
-    EAST_ARDOUGNE_BANK_FLOOR(10, Area.EAST_ARDOUGNE_BANK, GroundMaterial.VARROCK_PATHS_LIGHT, p -> p.shiftLightness(6)),
-    EAST_ARDOUGNE_COBBLE_HOUSE_BLENDING(10, Area.EAST_ARDOUGNE_COBBLE_OFFICE, GroundMaterial.VARROCK_PATHS_LIGHT),
-    EAST_ARDOUGNE_COBBLE_HOUSE(10, Area.EAST_ARDOUGNE_COBBLE_OFFICE, GroundMaterial.VARROCK_PATHS_LIGHT, p -> p.blended(false)),
-    EAST_ARDOUNGE_COBBLE_CHURCH(10, Area.EAST_ARDOUGNE_COBBLE_CHRUCH, GroundMaterial.VARROCK_PATHS_LIGHT),
-    EAST_ARDOUGNE_COBBLE_DOCK_HOUSE(10, Area.EAST_ARDOUGNE_COBBLE_DOCK_HOUSE, GroundMaterial.VARROCK_PATHS_LIGHT),
+    EAST_ARDOUNGE_INDOORS_FURNACE(10, Area.EAST_ARDOUGNE_FURNACE, GroundMaterial.VARROCK_PATHS, p -> p.shiftLightness(6)),
+    EAST_ARDOUGNE_BANK_FLOOR(10, Area.EAST_ARDOUGNE_BANK, GroundMaterial.VARROCK_PATHS, p -> p.shiftLightness(6)),
+    EAST_ARDOUGNE_COBBLE_HOUSE_BLENDING(10, Area.EAST_ARDOUGNE_COBBLE_OFFICE, GroundMaterial.VARROCK_PATHS),
+    EAST_ARDOUGNE_COBBLE_HOUSE(10, Area.EAST_ARDOUGNE_COBBLE_OFFICE, GroundMaterial.VARROCK_PATHS, p -> p.blended(false)),
+    EAST_ARDOUNGE_COBBLE_CHURCH(10, Area.EAST_ARDOUGNE_COBBLE_CHRUCH, GroundMaterial.VARROCK_PATHS),
+    EAST_ARDOUGNE_COBBLE_DOCK_HOUSE(10, Area.EAST_ARDOUGNE_COBBLE_DOCK_HOUSE, GroundMaterial.VARROCK_PATHS),
 
     // Ardougne
     EAST_ARDOUGNE_PATH_FIXES(10, Area.EAST_ARDOUGNE_PATHING_FIXES, GroundMaterial.OVERWORLD_GRASS_1, p -> p
@@ -641,9 +641,6 @@ public enum Overlay {
             .replaceWithIf(WINTER_JAGGED_STONE_TILE, plugin -> plugin.configWinterTheme)
             .ids(-85, -77, 11)
     ),
-    OVERLAY_DIRT(GroundMaterial.DIRT, p -> p.ids(-124, -84, -83, 14, 15, 21, 22, 23, 60, 77, 81, 82, 88, 89, 91, 101, 102, 107, 108, 110, 115, 123, 227)),
-    OVERLAY_GRAVEL(GroundMaterial.GRAVEL, p -> p.ids(-76, 2, 3, 4, 8, 10, 119)),
-    OVERLAY_VARROCK_PATHS(GroundMaterial.VARROCK_PATHS, p -> p.ids(-85, -77, 11)),
     OVERLAY_SWAMP_WATER(WaterType.SWAMP_WATER, p -> p.ids(-100, 7)),
     OVERLAY_WOOD_PLANKS(GroundMaterial.WOOD_PLANKS_1, p -> p.ids(5, 35)),
     OVERLAY_CLEAN_WOOD_PLANKS(GroundMaterial.CLEAN_WOOD_FLOOR, p -> p.ids(52).shiftLightness(-4)),
