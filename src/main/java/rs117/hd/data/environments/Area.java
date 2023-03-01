@@ -806,6 +806,11 @@ public enum Area
 	),
 
 	// Morytania
+	CANIFIS_BAR_FLOOR_FIX(
+		new AABB(3502,3470),
+		new AABB(3501,3469),
+		new AABB(3500,3468)
+	),
 	// Hallowed Sepulchre
 	HALLOWED_SEPULCHRE_LOBBY(2380, 5958, 2420, 6000),
 	HALLOWED_SEPULCHRE_FLOOR_1(2220, 5938, 2325, 6032),

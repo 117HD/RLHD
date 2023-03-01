@@ -43,6 +43,7 @@ import java.util.function.Function;
 
 public enum Overlay {
     // Winter Theme fixes
+    WINTER_DIRT(p -> p.ids().groundMaterial(GroundMaterial.DIRT).hue(0).saturation(0).shiftLightness(40).blended(true)),
     WINTER_JAGGED_STONE_TILE(p ->p
             .ids()
             .groundMaterial(GroundMaterial.WINTER_JAGGED_STONE_TILE)
@@ -60,6 +61,9 @@ public enum Overlay {
             .shiftLightness(3)
             .blended(false)
 
+    ),
+    WINTER_CANIFIS_BAR_FLOOR_FIX(85, Area.CANIFIS_BAR_FLOOR_FIX, GroundMaterial.VARIED_DIRT, p -> p
+            .replaceWithIf(WINTER_DIRT, plugin -> plugin.configWinterTheme)
     ),
 
     // Tutorial Island
@@ -497,6 +501,8 @@ public enum Overlay {
     COSMIC_ENTITYS_PLANE_ABYSS(37, Area.COSMIC_ENTITYS_PLANE, GroundMaterial.NONE, p -> p.lightness(0).blended(false)),
 
     // Morytania
+    CANIFIS_FLOORS(85, Area.CANIFIS, GroundMaterial.VARIED_DIRT),
+
     MORYTANIA_SLAYER_TOWER(102, Area.MORYTANIA_SLAYER_TOWER, GroundMaterial.VARROCK_PATHS),
     ABANDONED_MINE_ROCK(11, Area.MORYTANIA, GroundMaterial.DIRT),
     TRUE_BLOOD_ALTAR_BLOOD(72, Area.TRUE_BLOOD_ALTAR, WaterType.BLOOD),
