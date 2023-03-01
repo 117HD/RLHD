@@ -1432,7 +1432,10 @@ public enum Area
 		new AABB(1599, 4778, 1728, 4863)
 	),
 
-	OVERWORLD(700, 2300, 4200, 4095),
+	OVERWORLD(
+			new AABB(700, 2300, 4200, 4095),
+			new AABB(2880, 4672,2943, 4735) //Watchtower top
+	),
 	ALL(0, 0, Integer.MAX_VALUE, Integer.MAX_VALUE),
 	NONE(0, 0, 0, 0),
 	;
