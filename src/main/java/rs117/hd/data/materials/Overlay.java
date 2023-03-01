@@ -30,7 +30,6 @@ import net.runelite.api.Client;
 import net.runelite.api.Tile;
 import net.runelite.api.coords.WorldPoint;
 import rs117.hd.HdPlugin;
-import rs117.hd.HdPluginConfig;
 import rs117.hd.data.WaterType;
 import rs117.hd.data.environments.Area;
 
@@ -66,8 +65,8 @@ public enum Overlay {
     ),
     LUMBRIDGE_CASTLE_ENTRANCE_FIX(10, Area.LUMBRIDGE_CASTLE_ENTRANCE, GroundMaterial.WORN_TILES, p -> p.shiftLightness(12)),
     LUMBRIDGE_CASTLE_TILE(3, Area.LUMBRIDGE_CASTLE_BASEMENT, GroundMaterial.MARBLE_1_SEMIGLOSS),
-    LUMBRIDGE_CASTLE_FLOORS(10, Area.LUMBRIDGE_CASTLE, GroundMaterial.VARROCK_PATHS_LIGHT, p -> p.shiftLightness(10)),
-    LUMBRIDGE_TOWER_FLOOR_TEXTURE(10, Area.LUMBRIDGE_TOWER_FLOOR, GroundMaterial.VARROCK_PATHS_LIGHT, p -> p.shiftLightness(10)),
+    LUMBRIDGE_CASTLE_FLOORS(10, Area.LUMBRIDGE_CASTLE, GroundMaterial.VARROCK_PATHS, p -> p.shiftLightness(10)),
+    LUMBRIDGE_TOWER_FLOOR_TEXTURE(10, Area.LUMBRIDGE_TOWER_FLOOR, GroundMaterial.VARROCK_PATHS, p -> p.shiftLightness(10)),
     BLEND_IMPROVEMENT_1(10, Area.LUMBRIDGE_DRAYNOR_PATH_BLEND_1, GroundMaterial.GRAVEL, p -> p.shiftLightness(6).hue(7).saturation(1)),
     BLEND_IMPROVEMENT_2(10, Area.LUMBRIDGE_DRAYNOR_PATH_BLEND_2, GroundMaterial.GRAVEL, p -> p.shiftLightness(9).hue(7).saturation(1)),
     SWAMP_PATH_FIX_1(81, Area.LUMBRIDGE_SWAMP_PATH_FIX, GroundMaterial.DIRT, p -> p.saturation(4).shiftLightness(-3)),
@@ -108,11 +107,11 @@ public enum Overlay {
     VARROCK_EAST_BANK_CENTER(-83, Area.VARROCK_EAST_BANK_CENTER, GroundMaterial.TILES_2x2_1_SEMIGLOSS, p -> p.blended(false)),
     VARROCK_EAST_BANK_OUTSIDE_1(-85, Area.VARROCK_EAST_BANK_OUTSIDE_1, GroundMaterial.TILES_2x2_1_SEMIGLOSS, p -> p.blended(false)),
     VARROCK_EAST_BANK(-85, Area.VARROCK_EAST_BANK, GroundMaterial.TILES_2x2_1_SEMIGLOSS, p -> p.blended(false)),
-    VARROCK_CASTLE_PATH_FIXES_1(173, Area.VARROCK_CASTLE_DIRT_PATH_FIXES_1, GroundMaterial.OVERWORLD_DIRT, p -> p
+    VARROCK_CASTLE_PATH_FIXES_1(173, Area.VARROCK_CASTLE_DIRT_PATH_FIXES_1, GroundMaterial.DIRT, p -> p
             .blended(false)
             .shiftLightness(6)
     ),
-    VARROCK_CASTLE_PATH_FIXES_2(173, Area.VARROCK_CASTLE_DIRT_PATH_FIXES_2, GroundMaterial.OVERWORLD_DIRT, p -> p
+    VARROCK_CASTLE_PATH_FIXES_2(173, Area.VARROCK_CASTLE_DIRT_PATH_FIXES_2, GroundMaterial.DIRT, p -> p
             .blended(false)
             .shiftLightness(7)
     ),
@@ -236,7 +235,7 @@ public enum Overlay {
         .shiftLightness(-4)),
     EDGEVILLE_GUARD_TOWER_FLOOR(10, Area.EDGEVILLE_GUARD_TOWER_FLOOR, GroundMaterial.CONCRETE),
     EDGEVILLE_MONASTERY_FLOOR(10, Area.EDGEVILLE_MONASTERY, GroundMaterial.GRAVEL, p -> p.blended(false)),
-    EDGEVILLE_BRIDGE_TEXTURE(12, Area.EDGEVILLE_BRIDGE, GroundMaterial.VARROCK_PATHS_LIGHT, p -> p
+    EDGEVILLE_BRIDGE_TEXTURE(12, Area.EDGEVILLE_BRIDGE, GroundMaterial.VARROCK_PATHS, p -> p
         .lightness(32)
         .blended(true)
     ),
@@ -287,19 +286,19 @@ public enum Overlay {
     EAST_ARDOUGNE_CASTLE_DIRT_FIX(14, Area.EAST_ARDOUGNE_CASTLE_DIRT_FIX, GroundMaterial.DIRT, p -> p
         .shiftLightness(7)
         .blended(false)),
-    EAST_ARDOUGNE_CASTLE_PATH_FIX(10, Area.EAST_ARDOUGNE_CASTLE_PATH_FIX, GroundMaterial.VARROCK_PATHS_LIGHT, p -> p
+    EAST_ARDOUGNE_CASTLE_PATH_FIX(10, Area.EAST_ARDOUGNE_CASTLE_PATH_FIX, GroundMaterial.VARROCK_PATHS, p -> p
         .shiftLightness(16)
         .blended(false)
 
     ),
     EAST_ARDOUGNE_CASTLE_FLOOR_TEXTURE(11, Area.EAST_ARDOUGNE_CASTLE_DIRT_FIX, GroundMaterial.CONCRETE, p -> p.blended(false).lightness(40)),
-    EAST_ARDOUGNE_PATHS_1(10, Area.EAST_ARDOUGNE, GroundMaterial.VARROCK_PATHS_LIGHT, p -> p.shiftLightness(6)),
+    EAST_ARDOUGNE_PATHS_1(10, Area.EAST_ARDOUGNE, GroundMaterial.VARROCK_PATHS, p -> p.shiftLightness(6)),
     WIZARD_HOUSE_TILE_LIGHT(38, Area.EAST_ARDOUGNE, GroundMaterial.MARBLE_1_SEMIGLOSS, p -> p.blended(false)),
     WIZARD_HOUSE_TILE_DARK(40, Area.EAST_ARDOUGNE, GroundMaterial.MARBLE_2_SEMIGLOSS, p -> p.blended(false)),
-    EAST_ARDOUGNE_HAZEL_MANOR_PATH_TEXTURE(12, Area.EAST_ARDOUGNE_HAZEL_HOUSE, GroundMaterial.VARROCK_PATHS_LIGHT, p -> p
+    EAST_ARDOUGNE_HAZEL_MANOR_PATH_TEXTURE(12, Area.EAST_ARDOUGNE_HAZEL_HOUSE, GroundMaterial.VARROCK_PATHS, p -> p
          .lightness(33)
     ),
-    EAST_ARDOUGNE_BRIDGE_TEXTURE(12, Area.EAST_ARDOUGNE_BRIDGE, GroundMaterial.VARROCK_PATHS_LIGHT, p -> p
+    EAST_ARDOUGNE_BRIDGE_TEXTURE(12, Area.EAST_ARDOUGNE_BRIDGE, GroundMaterial.VARROCK_PATHS, p -> p
             .lightness(33)
     ),
     EAST_ARDOUGNE_HANDELMORT_TEXTURE(12, Area.EAST_ARDOUGNE_HANDELMORT_STONE_FLOOR, GroundMaterial.FALADOR_PATHS, p -> p
@@ -319,7 +318,7 @@ public enum Overlay {
             .ids(9,11,13,18)
     ),
     KANDARIN_MONISTARY_WINGS_TEXTURE_13(13, Area.KANDARIN_MONISTARY_WINGS, GroundMaterial.TILES_2x2_2_SEMIGLOSS),
-    KANDARIN_MONISTARY_FLOOR_TEXTURE(12, Area.KANDARIN_MONISTARY, GroundMaterial.VARROCK_PATHS_LIGHT, p -> p
+    KANDARIN_MONISTARY_FLOOR_TEXTURE(12, Area.KANDARIN_MONISTARY, GroundMaterial.VARROCK_PATHS, p -> p
             .lightness(33)
     ),
 
@@ -391,8 +390,10 @@ public enum Overlay {
     DRAYNOR_MANOR_TILE_SMALL(11, Area.DRAYNOR_MANOR_INTERIOR, GroundMaterial.TILE_SMALL, p -> p.blended(false)),
     DRAYNOR_MANOR_WOOD(119, Area.DRAYNOR_MANOR_INTERIOR, GroundMaterial.WOOD_PLANKS_1, p -> p.blended(false)),
     DRAYNOR_MANOR_CARPET(127, Area.DRAYNOR_MANOR_INTERIOR, GroundMaterial.CARPET, p -> p.blended(false)),
-    DRAYNOR_MANOR_ENTRANCE_DIRT_1(2, Area.DRAYNOR_MANOR, GroundMaterial.DIRT),
-    DRAYNOR_MANOR_ENTRANCE_DIRT_2(127, Area.DRAYNOR_MANOR, GroundMaterial.DIRT),
+    DRAYNOR_MANOR_ENTRANCE_DIRT(GroundMaterial.DIRT, p -> p
+        .area(Area.DRAYNOR_MANOR)
+        .ids(2, 90, 120, 127, 132)
+    ),
 
 
     // Wizards Tower
@@ -433,7 +434,7 @@ public enum Overlay {
     COSMIC_ENTITYS_PLANE_ABYSS(37, Area.COSMIC_ENTITYS_PLANE, GroundMaterial.NONE, p -> p.lightness(0).blended(false)),
 
     // Morytania
-    MORYTANIA_SLAYER_TOWER(102, Area.MORYTANIA_SLAYER_TOWER, GroundMaterial.VARROCK_PATHS_LIGHT),
+    MORYTANIA_SLAYER_TOWER(102, Area.MORYTANIA_SLAYER_TOWER, GroundMaterial.VARROCK_PATHS),
     ABANDONED_MINE_ROCK(11, Area.MORYTANIA, GroundMaterial.DIRT),
     TRUE_BLOOD_ALTAR_BLOOD(72, Area.TRUE_BLOOD_ALTAR, WaterType.BLOOD),
 
@@ -477,7 +478,8 @@ public enum Overlay {
     LIZARDMAN_TEMPLE_WATER(-100, Area.LIZARDMAN_TEMPLE, WaterType.SWAMP_WATER_FLAT),
 
     // Temple of the Eye
-    TEMPLE_OF_THE_EYE_INCORRECT_WATER(-100, Area.TEMPLE_OF_THE_EYE, GroundMaterial.DIRT),
+    TEMPLE_OF_THE_EYE_INCORRECT_WATER(Area.TEMPLE_OF_THE_EYE, GroundMaterial.DIRT, p -> p.ids(-100)), // Only visible in low-detail mode
+    TEMPLE_OF_THE_EYE_DIRT(Area.TEMPLE_OF_THE_EYE, GroundMaterial.DIRT, p -> p.ids(202, 203)),
 
     // God Wars Dungeon (GWD)
     GWD_WATER(104, Area.GOD_WARS_DUNGEON, WaterType.ICE_FLAT),
@@ -526,8 +528,8 @@ public enum Overlay {
     TOA_DISABLE_BLENDING_LOOT_ROOM(Area.TOA_LOOT_ROOM, GroundMaterial.NONE, p -> p.blended(false)),
 
     // Tombs of Amascut
-    TOA_CRONDIS_ROCK(Area.TOA_PATH_OF_CRONDIS_BOSS, GroundMaterial.GRUNGE, p -> p.ids(134, 182).blended(false)),
-    TOA_CRONDIS_ROCK_SUBMERGED(Area.TOA_CRONDIS_ISLAND_SUBMERGED, GroundMaterial.GRUNGE, p -> p.ids(133).blended(false)),
+    TOA_CRONDIS_ROCK(Area.TOA_PATH_OF_CRONDIS_BOSS, GroundMaterial.GRUNGE_2, p -> p.ids(134, 182).blended(false)),
+    TOA_CRONDIS_ROCK_SUBMERGED(Area.TOA_CRONDIS_ISLAND_SUBMERGED, GroundMaterial.GRUNGE_2, p -> p.ids(133).blended(false)),
     TOA_CRONDIS_SWAMP_SLUDGE(p -> p.ids(133, 245).area(Area.TOA_PATH_OF_CRONDIS_BOSS).waterType(WaterType.SWAMP_WATER).blended(false)),
     TOA_CRONDIS_WATER(p -> p.ids(246).area(Area.TOA_CRONDIS_WATER).waterType(WaterType.SWAMP_WATER).blended(false)),
 
@@ -541,12 +543,6 @@ public enum Overlay {
     PRISON_PETE_TILE_1(2, Area.RANDOM_EVENT_PRISON_PETE, GroundMaterial.MARBLE_1, p -> p.blended(false)),
     PRISON_PETE_TILE_2(-125, Area.RANDOM_EVENT_PRISON_PETE, GroundMaterial.MARBLE_2, p -> p.blended(false)),
 
-    // GOTR Entrance fix
-    TEMPLE_OF_THE_EYE_ENTRANCE(Area.TEMPLE_OF_THE_EYE_ENTRANCE_FIX, GroundMaterial.DIRT, p -> p
-        .shiftLightness(-10)
-        .blended(false)
-        .ids(-53)),
-
     // Elid Cave fix
     ELID_CAVE_WATER_FIX(-126, Area.ELID_CAVE, WaterType.WATER),
 
@@ -558,10 +554,14 @@ public enum Overlay {
     // Ancient Cavern upper level water change
     ANCIENT_CAVERN_UPPER_WATER(41, Area.ANCIENT_CAVERN_UPPER, WaterType.WATER_FLAT),
 
-    // default overlays
+    OVERLAY_KOUREND_PATH(Area.ZEAH, GroundMaterial.MARBLE_1, p -> p.ids(133).blended(false)),
+
+
+    // Default overlays
+
     OVERLAY_WATER(WaterType.WATER, p -> p.ids(-128, -105, -98, 6, 41, 104, 196)),
-    OVERLAY_DIRT(GroundMaterial.DIRT, p -> p.ids(-124, -84, -83, 14, 15, 21, 22, 23, 60, 77, 81, 82, 88, 89, 101, 102, 107, 108, 110, 115, 123, 227)),
-    OVERLAY_GRAVEL(GroundMaterial.GRAVEL, p -> p.ids(-76, 2, 3, 4, 6, 8, 10, 119)),
+    OVERLAY_DIRT(GroundMaterial.DIRT, p -> p.ids(-124, -84, -83, 14, 15, 21, 22, 23, 60, 77, 81, 82, 88, 89, 91, 101, 102, 107, 108, 110, 115, 123, 227)),
+    OVERLAY_GRAVEL(GroundMaterial.GRAVEL, p -> p.ids(-76, 2, 3, 4, 8, 10, 119)),
     OVERLAY_VARROCK_PATHS(GroundMaterial.VARROCK_PATHS, p -> p.ids(-85, -77, 11)),
     OVERLAY_SWAMP_WATER(WaterType.SWAMP_WATER, p -> p.ids(-100, 7)),
     OVERLAY_WOOD_PLANKS(GroundMaterial.WOOD_PLANKS_1, p -> p.ids(5, 35)),
@@ -582,6 +582,11 @@ public enum Overlay {
     OVERLAY_28(28, GroundMaterial.BRICK, p -> p.blended(false)),
     OVERLAY_29(29, GroundMaterial.GRASS_1),
     OVERLAY_32(32, GroundMaterial.CONCRETE),
+    OVERLAY_90(90, GroundMaterial.DIRT), // Known locations: 90 = Dark Wizards Tower; Random shading in the overworld
+    OVERLAY_DIRT_PATH(GroundMaterial.VARIED_DIRT, p -> p
+        .ids(36, 131)), // 36 = Corsair Cove, 131 = Burgh de Rott
+    OVERWORLD_GRUNGE(GroundMaterial.GRUNGE, p -> p.ids(48, 185)),
+    OVERLAY_120(GroundMaterial.GRUNGE, p -> p.ids(120)),
 
     NONE(GroundMaterial.DIRT, p -> {});
 
