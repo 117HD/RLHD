@@ -155,7 +155,7 @@ public enum Underlay {
         .ids(25, 33, 34, 40, 48, 49, 50, 51, 52, 53, 54, 62, 63, 67, 70, 71, 75, 93, 96, 97, 103, 114, 115, 126)
         .replaceWithIf(WINTER_GRASS, plugin -> plugin.configWinterTheme)),
     OVERWORLD_DIRT(Area.OVERWORLD, GroundMaterial.DIRT, p -> p
-        .ids(-111, -110, 19, 56, 57, 64, 65, 66, 80, 92, 94, 111, 118, 122, 150)
+        .ids(-111, -110, 19, 56, 57, 64, 65, 66, 80, 92, 94, 111, 118, 122, 139, 150)
         .replaceWithIf(WINTER_DIRT, plugin -> plugin.configWinterTheme)),
     OVERWORLD_SAND(Area.OVERWORLD, GroundMaterial.SAND, p -> p.ids(-127, -118, 61, 68)),
 
