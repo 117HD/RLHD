@@ -146,6 +146,7 @@ public enum Underlay {
 
     WINTER_GRASS(p -> p.ids().groundMaterial(GroundMaterial.SNOW_1).hue(0).saturation(0).shiftLightness(40).blended(true)),
     WINTER_DIRT(p -> p.ids().groundMaterial(GroundMaterial.DIRT).hue(0).saturation(0).shiftLightness(40).blended(true)),
+    WINTER_GRUNGE(p -> p.ids().groundMaterial(GroundMaterial.SNOW_2).hue(0).saturation(0).shiftLightness(40).blended(true)),
 
 
     // Default underlays
@@ -165,6 +166,7 @@ public enum Underlay {
     ),
     UNDERLAY_OVERWORLD_GRUNGE(GroundMaterial.GRUNGE, p -> p
             .ids(8, 10, 55, 60, 92) // 8 = Jatizso, 60 = GotR, 92 = Eadgars Cave
+            .replaceWithIf(WINTER_GRUNGE, plugin -> plugin.configWinterTheme)
     ),
 
     NONE(GroundMaterial.DIRT, p -> {});
