@@ -949,6 +949,16 @@ public enum Environment
 			.setWaterColor(79, 178, 255)
 	),
 
+	ICY_UNDERGROUND_DARK(Area.ICY_UNDERGROUND_DARK, new Properties()
+		.setFogColor("#030303")
+		.setFogDepth(40)
+		.setAmbientColor("#AAAFB6")
+		.setAmbientStrength(.75f)
+		.setDirectionalColor("#FFFFFF")
+		.setDirectionalStrength(.75f)
+		.setLightDirection(260f, 10f)
+		.setWaterColor(102, 234, 255)
+	),
 
 
 
