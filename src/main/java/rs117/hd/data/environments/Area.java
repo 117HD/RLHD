@@ -794,7 +794,7 @@ public enum Area
 	// Tirannwn
 	GWENITH(2187, 3424, 2229, 3397),
 	PRIFDDINAS(3136, 5952, 3391, 6207),
-	MYNYDD(2119, 3453, 22112, 3384),
+	MYNYDD(2119, 3453, 2215, 3384),
 	LLETYA(2313, 3147, 2363, 3194),
 	POISON_WASTE(
 		new AABB(2166, 3119, 2315, 3025),
@@ -984,7 +984,7 @@ public enum Area
 	),
 	LUNAR_VILLAGE_HOUSE_INTERIORS_GROUND(
 		new AABB(2104, 3922, 2097, 3917, 0), // Bank
-		new AABB(2091, 3922, 20920, 3922, 0 ), // House 1
+		new AABB(2091, 3922, 2090, 3922, 0), // House 1
 		new AABB(2092, 3921, 2089, 3917, 0), // House 1
 		new AABB(2084, 3922, 2082, 3921, 0), // House 2
 		new AABB(2075, 3922, 2070, 3919), // Pauline's House
@@ -1020,7 +1020,7 @@ public enum Area
 		new AABB(2102, 3901, 2096, 3896, 0) // House 7
 	),
 	LUNAR_VILLAGE_HOUSE_INTERIORS_FIRST(
-		new AABB(2091, 3922, 20920, 3922, 1), // House 1
+		new AABB(2091, 3922, 2090, 3922, 1), // House 1
 		new AABB(2092, 3921, 2089, 3917, 1), // House 1
 		new AABB(2084, 3922, 2082, 3919, 1), // House 2
 		// Brazier House Start
@@ -1099,10 +1099,7 @@ public enum Area
 	),
 	LITHKREN(3519, 4032, 3602, 3967),
 	DS2_FLASHBACK_PLATFORM(1800, 5277, 1814, 5250),
-	DS2_FLEET_ATTACKED(
-		new AABB(1648,5480, 1750,5582),
-		new AABB(8166, 16360, 8206, 16400)
-	),
+	DS2_FLEET_ATTACKED(regions(6486, 6487, 6488, 6489, 6742, 6743, 6744, 6745)),
 	DS2_SHIPS(1600, 5503, 1727,5758),
 
 	// The Gauntlet
@@ -1304,7 +1301,7 @@ public enum Area
 	NONE(0, 0, 0, 0),
 	;
 
-	private final AABB[] aabbs;
+	public final AABB[] aabbs;
 
 	Area(AABB... aabbs)
 	{
@@ -1330,13 +1327,24 @@ public enum Area
 
 	Area(int regionId)
 	{
-		final int REGIONS_PER_COLUMN = 256;
+		this(regions(regionId));
+	}
 
-		int baseX = (int)Math.floor((float)regionId / REGIONS_PER_COLUMN) * Constants.REGION_SIZE;
-		int baseY = (regionId % REGIONS_PER_COLUMN) * Constants.REGION_SIZE;
-		int oppositeX = baseX + Constants.REGION_SIZE;
-		int oppositeY = baseY + Constants.REGION_SIZE;
-		aabbs = new AABB[]{new AABB(baseX, baseY, oppositeX, oppositeY)};
+	private static AABB[] regions(int... regionIds)
+	{
+		final int REGIONS_PER_COLUMN = 256;
+		AABB[] aabbs = new AABB[regionIds.length];
+
+		for (int i = 0; i < regionIds.length; i++)
+		{
+			int baseX = (int)Math.floor((float)regionIds[i] / REGIONS_PER_COLUMN) * Constants.REGION_SIZE;
+			int baseY = (regionIds[i] % REGIONS_PER_COLUMN) * Constants.REGION_SIZE;
+			int oppositeX = baseX + Constants.REGION_SIZE;
+			int oppositeY = baseY + Constants.REGION_SIZE;
+			aabbs[i] = new AABB(baseX, baseY, oppositeX, oppositeY);
+		}
+
+		return aabbs;
 	}
 
 	public boolean containsPoint(int pointX, int pointY, int pointZ)

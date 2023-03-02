@@ -158,7 +158,8 @@ public class AABB
 			minZ <= this.maxZ && maxZ >= this.minZ;
 	}
 
-	public boolean intersects(AABB other) {
+	public boolean intersects(AABB other)
+	{
 		return intersects(
 			other.minX, other.maxX,
 			other.minY, other.maxY,
