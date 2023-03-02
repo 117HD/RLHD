@@ -19962,7 +19962,8 @@
       5247,
       7376,
       5247,
-      38027
+      38027,
+      15016
     ]
   },
   {
@@ -30074,6 +30075,79 @@
       23095,
       23098,
       34757
+    ]
+  },
+  {
+    "description": "LUNAR_HAT_RACK",
+    "height": 250,
+    "alignment": "CENTER",
+    "radius": 220,
+    "strength": 6.5,
+    "color": [
+      170,
+      205,
+      200
+    ],
+    "type": "PULSE",
+    "duration": 1028,
+    "range": 50,
+    "objectIds": [
+      16691,
+      16692
+    ]
+  },
+  {
+    "description": "LUNAR_COOKING_RANGE_COOKER",
+    "height": 120,
+    "alignment": "CENTER",
+    "radius": 600,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      16702
+    ]
+  },
+  {
+    "description": "LUNAR_COOKER",
+    "height": 160,
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      16703
+    ]
+  },
+  {
+    "description": "LUNAR_LAMP",
+    "height": 218,
+    "alignment": "BACK",
+    "radius": 400,
+    "strength": 10,
+    "color": [
+      245,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 30,
+    "objectIds": [
+      16701
     ]
   }
 ]
