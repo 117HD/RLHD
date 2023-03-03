@@ -834,9 +834,6 @@ public enum Environment
 	),
 
 	// Underwater areas
-	MOGRE_CAMP_CUTSCENE(Area.MOGRE_CAMP_CUTSCENE, new Properties()
-		.setUnderwater(true)
-	),
 	MOGRE_CAMP(Area.MOGRE_CAMP, new Properties()
 		.setFogColor("#133156")
 		.setFogDepth(60)
