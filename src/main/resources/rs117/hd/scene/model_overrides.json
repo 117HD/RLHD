@@ -6266,7 +6266,6 @@
     "description": "Lunar Island - Objects - Wooden - Table - Round",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
-      16710,
       16742
     ],
     "uvType": "MODEL_XZ",
@@ -6369,7 +6368,6 @@
       16747,
       16748,
       16749,
-      16750,
       16759,
       16760,
       16770,
