@@ -633,6 +633,15 @@ public enum Overlay {
 
     OVERLAY_KOUREND_PATH(Area.ZEAH, GroundMaterial.MARBLE_1, p -> p.ids(133).blended(false)),
 
+    // Lunar Isles
+    LUNAR_ISLAND_HOUSES_DIRT_FLOOR(81, Area.LUNAR_VILLAGE_HOUSE_INTERIORS_GROUND, GroundMaterial.VARIED_DIRT, p -> p
+        .blended(true)),
+    LUNAR_ISLAND_HOUSES_CARPET_FLOOR(88, Area.LUNAR_VILLAGE_HOUSE_INTERIORS_GROUND, GroundMaterial.CARPET, p -> p
+        .blended(false)),
+    LUNAR_ISLAND_HOUSES_WOOD_FLOOR(81, Area.LUNAR_VILLAGE_HOUSE_INTERIORS_FIRST, GroundMaterial.HD_WOOD_PLANKS_1, p -> p
+        .blended(true)),
+
+
 
     // Default overlays
 
@@ -653,7 +662,7 @@ public enum Overlay {
     OVERLAY_SAND(GroundMaterial.SAND, p -> p.ids(25, 26)),
     OVERLAY_BRICK_BROWN(GroundMaterial.BRICK_BROWN, p -> p.ids(27, 46).blended(false)),
     OVERLAY_SNOW(GroundMaterial.SNOW_2, p -> p.ids(30, 33)),
-    OVERLAY_VARIED_DIRT(GroundMaterial.VARIED_DIRT, p -> p.ids(49, 83)),
+    OVERLAY_VARIED_DIRT(GroundMaterial.VARIED_DIRT, p -> p.ids(49, 83, 91)),
     OVERLAY_SAND_BRICK(GroundMaterial.SAND_BRICK, p -> p.ids(-49, 84)),
     OVERLAY_N122(-122, GroundMaterial.TILES_2x2_2_GLOSS),
     OVERLAY_N119(-119, GroundMaterial.FALADOR_PATHS),
