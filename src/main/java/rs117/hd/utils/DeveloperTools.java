@@ -40,6 +40,11 @@ public class DeveloperTools implements KeyListener
 		// Check for any out of bounds areas
 		for (Area area : Area.values())
 		{
+			if (area == Area.ALL || area == Area.NONE)
+			{
+				continue;
+			}
+
 			for (AABB aabb : area.aabbs)
 			{
 				if (aabb.minX < -128 || aabb.minY < 1000 || aabb.maxX > 5000 || aabb.maxY > 13000)
