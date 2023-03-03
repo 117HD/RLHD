@@ -1303,8 +1303,8 @@ public enum Area
 	),
 
 	OVERWORLD(700, 2300, 4200, 4095),
-	ALL(0, 0, Integer.MAX_VALUE, Integer.MAX_VALUE),
-	NONE(0, 0, 0, 0),
+	ALL(2, 1001, 5000, 13000),
+	NONE(1, 1000, 1, 1000),
 	;
 
 	public final AABB[] aabbs;
