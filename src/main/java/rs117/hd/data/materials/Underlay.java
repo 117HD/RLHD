@@ -43,13 +43,13 @@ import java.util.function.Function;
 
 public enum Underlay {
     // Seasonal
-    WINTER_EDGEVILLE_PATH(p ->p
-            .ids()
-            .blendedAsOpposite(true)
-            .hue(0)
-            .shiftLightness(8)
-            .saturation(0)
-            .groundMaterial(GroundMaterial.WINTER_JAGGED_STONE_TILE_LIGHT)
+    WINTER_EDGEVILLE_PATH(p -> p
+        .ids()
+        .blendedAsOpposite(true)
+        .hue(0)
+        .shiftLightness(8)
+        .saturation(0)
+        .groundMaterial(GroundMaterial.WINTER_JAGGED_STONE_TILE_LIGHT)
     ),
     // Default
     // Lumbridge
@@ -165,12 +165,12 @@ public enum Underlay {
 
     UNDERLAY_SNOW(GroundMaterial.SNOW_1, p -> p.ids(58, 59)),
     UNDERLAY_72(GroundMaterial.VARIED_DIRT, p -> p
-            .ids(72, 73, 98, 112, 113) //112 == Lovakengj
-            .replaceWithIf(WINTER_DIRT, plugin -> plugin.configWinterTheme)
+        .ids(72, 73, 98, 112, 113) //112 == Lovakengj
+        .replaceWithIf(WINTER_DIRT, plugin -> plugin.configWinterTheme)
     ),
     UNDERLAY_OVERWORLD_GRUNGE(GroundMaterial.GRUNGE, p -> p
-            .ids(8, 10, 55, 60, 92) // 8 = Jatizso, 60 = GotR, 92 = Eadgars Cave
-            .replaceWithIf(WINTER_GRUNGE, plugin -> plugin.configWinterTheme)
+        .ids(8, 10, 55, 60, 92) // 8 = Jatizso, 60 = GotR, 92 = Eadgars Cave
+        .replaceWithIf(WINTER_GRUNGE, plugin -> plugin.configWinterTheme)
     ),
 
     NONE(GroundMaterial.DIRT, p -> {});

@@ -44,26 +44,25 @@ import java.util.function.Function;
 public enum Overlay {
     // Winter Theme fixes
     WINTER_DIRT(p -> p.ids().groundMaterial(GroundMaterial.DIRT).hue(0).saturation(0).shiftLightness(40).blended(true)),
-    WINTER_JAGGED_STONE_TILE(p ->p
-            .ids()
-            .groundMaterial(GroundMaterial.WINTER_JAGGED_STONE_TILE)
+    WINTER_JAGGED_STONE_TILE(p -> p
+        .ids()
+        .groundMaterial(GroundMaterial.WINTER_JAGGED_STONE_TILE)
     ),
-    WINTER_JAGGED_STONE_TILE_LIGHT(p ->p
-            .ids()
-            .groundMaterial(GroundMaterial.WINTER_JAGGED_STONE_TILE_LIGHT)
+    WINTER_JAGGED_STONE_TILE_LIGHT(p -> p
+        .ids()
+        .groundMaterial(GroundMaterial.WINTER_JAGGED_STONE_TILE_LIGHT)
     ),
-    WINTER_JAGGED_STONE_TILE_LIGHT_2(p ->p
-            .ids()
-            .groundMaterial(GroundMaterial.WINTER_JAGGED_STONE_TILE_LIGHT_2)
+    WINTER_JAGGED_STONE_TILE_LIGHT_2(p -> p
+        .ids()
+        .groundMaterial(GroundMaterial.WINTER_JAGGED_STONE_TILE_LIGHT_2)
     ),
     WINTER_EAST_ARDOUGNE_CASTLE_PATH_FIX(10, Area.EAST_ARDOUGNE_CASTLE_PATH_FIX, GroundMaterial.VARROCK_PATHS, p -> p
-            .replaceWithIf(WINTER_JAGGED_STONE_TILE_LIGHT, plugin -> plugin.configWinterTheme)
-            .shiftLightness(3)
-            .blended(false)
-
+        .replaceWithIf(WINTER_JAGGED_STONE_TILE_LIGHT, plugin -> plugin.configWinterTheme)
+        .shiftLightness(3)
+        .blended(false)
     ),
     WINTER_CANIFIS_BAR_FLOOR_FIX(85, Area.CANIFIS_BAR_FLOOR_FIX, GroundMaterial.VARIED_DIRT, p -> p
-            .replaceWithIf(WINTER_DIRT, plugin -> plugin.configWinterTheme)
+        .replaceWithIf(WINTER_DIRT, plugin -> plugin.configWinterTheme)
     ),
 
     // Tutorial Island
@@ -76,28 +75,29 @@ public enum Overlay {
 
     //Lumbridge Interior
     LUMBRIDGE_TOWER_INTERIOR_FLOOR(10, Area.LUMBRIDGE_TOWER_FLOOR_INTERIOR, GroundMaterial.VARROCK_PATHS, p -> p
-            .shiftLightness(10)
-            .blended(false)
+        .shiftLightness(10)
+        .blended(false)
     ),
     LUMBRIDGE_CASTLE_ENTRANCE_FIX(10, Area.LUMBRIDGE_CASTLE_ENTRANCE, GroundMaterial.WORN_TILES, p -> p.shiftLightness(12)),
     LUMBRIDGE_CASTLE_TILE(3, Area.LUMBRIDGE_CASTLE_BASEMENT, GroundMaterial.MARBLE_1_SEMIGLOSS),
     LUMBRIDGE_CASTLE_FLOORS(10, Area.LUMBRIDGE_CASTLE_COBBLE, GroundMaterial.VARROCK_PATHS, p -> p.shiftLightness(10)),
 
     // Lumbridge
-    LUM_BRIDGE_10(Area.LUM_BRIDGE, GroundMaterial.GRAVEL, p->p
+    LUM_BRIDGE_10(Area.LUM_BRIDGE, GroundMaterial.GRAVEL, p -> p
             .ids(10)
             .shiftLightness(12)
             .hue(7)
             .saturation(1)
     ),
-    LUM_BRIDGE_22(Area.LUM_BRIDGE, GroundMaterial.GRAVEL, p->p
+    LUM_BRIDGE_22(Area.LUM_BRIDGE, GroundMaterial.GRAVEL, p -> p
             .ids(22)
             .shiftLightness(-5)
             .hue(7)
             .saturation(1)
-    ),LUMBRIDGE_TOWERS_EXTERIOR(10, Area.LUMBRIDGE_CASTLE, GroundMaterial.VARROCK_PATHS, p -> p
-            .shiftLightness(10)
-            .replaceWithIf(WINTER_JAGGED_STONE_TILE_LIGHT, plugin -> plugin.configWinterTheme)
+    ),
+    LUMBRIDGE_TOWERS_EXTERIOR(10, Area.LUMBRIDGE_CASTLE, GroundMaterial.VARROCK_PATHS, p -> p
+        .shiftLightness(10)
+        .replaceWithIf(WINTER_JAGGED_STONE_TILE_LIGHT, plugin -> plugin.configWinterTheme)
     ),
     BLEND_IMPROVEMENT_1(10, Area.LUMBRIDGE_DRAYNOR_PATH_BLEND_1, GroundMaterial.GRAVEL, p -> p.shiftLightness(6).hue(7).saturation(1)),
     BLEND_IMPROVEMENT_2(10, Area.LUMBRIDGE_DRAYNOR_PATH_BLEND_2, GroundMaterial.GRAVEL, p -> p.shiftLightness(9).hue(7).saturation(1)),
@@ -257,7 +257,7 @@ public enum Overlay {
         .blendedAsOpposite(true)
         .lightness(30)),
     EDGEVILLE_BANK_SURROUNDING_PATH(10, Area.EDGEVILLE_BANK_SURROUNDING_PATH, GroundMaterial.VARROCK_PATHS, p -> p
-            .replaceWithIf(WINTER_JAGGED_STONE_TILE_LIGHT, plugin -> plugin.configWinterTheme)
+        .replaceWithIf(WINTER_JAGGED_STONE_TILE_LIGHT, plugin -> plugin.configWinterTheme)
     ),
     EDGEVILLE_DORIS_HOUSE_FLOOR(119, Area.EDGEVILLE_DORIS_HOUSE, GroundMaterial.TILE_SMALL),
     EDGEVILLE_FURNACE_FLOOR(10, Area.EDGEVILLE_FURNACE_FLOOR, GroundMaterial.TILES_2x2_1, p -> p
@@ -352,8 +352,8 @@ public enum Overlay {
     ),
     EAST_ARDOUGNE_CASTLE_FLOOR_TEXTURE(11, Area.EAST_ARDOUGNE_CASTLE_DIRT_FIX, GroundMaterial.CONCRETE, p -> p.blended(false).lightness(40)),
     EAST_ARDOUGNE_PATHS_1(10, Area.EAST_ARDOUGNE, GroundMaterial.VARROCK_PATHS, p -> p
-            .shiftLightness(6)
-            .replaceWithIf(WINTER_JAGGED_STONE_TILE_LIGHT, plugin -> plugin.configWinterTheme)
+        .shiftLightness(6)
+        .replaceWithIf(WINTER_JAGGED_STONE_TILE_LIGHT, plugin -> plugin.configWinterTheme)
     ),
     WIZARD_HOUSE_TILE_LIGHT(38, Area.EAST_ARDOUGNE, GroundMaterial.MARBLE_1_SEMIGLOSS, p -> p.blended(false)),
     WIZARD_HOUSE_TILE_DARK(40, Area.EAST_ARDOUGNE, GroundMaterial.MARBLE_2_SEMIGLOSS, p -> p.blended(false)),
@@ -382,7 +382,7 @@ public enum Overlay {
     ),
     KHAZARD_BATTLEFIELD_COBBLE_INDOORS(11, Area.KHAZARD_BATTLEFIELD_COBBLE, GroundMaterial.VARROCK_PATHS),
     KHAZARD_BATTLEFIELD_COBBLE_OUTSIDE(11, Area.KHAZARD_BATTLEFIELD_COBBLE_OUTSIDE, GroundMaterial.VARROCK_PATHS, p -> p
-            .replaceWithIf(WINTER_JAGGED_STONE_TILE_LIGHT_2, plugin -> plugin.configWinterTheme)
+        .replaceWithIf(WINTER_JAGGED_STONE_TILE_LIGHT_2, plugin -> plugin.configWinterTheme)
     ),
     KANDARIN_MONISTARY_WINGS_TEXTURE_13(13, Area.KANDARIN_MONISTARY_WINGS, GroundMaterial.TILES_2x2_2_SEMIGLOSS),
     KANDARIN_MONISTARY_FLOOR_TEXTURE(12, Area.KANDARIN_MONISTARY, GroundMaterial.VARROCK_PATHS, p -> p
@@ -649,12 +649,12 @@ public enum Overlay {
     OVERLAY_DIRT(GroundMaterial.DIRT, p -> p.ids(-124, -84, -83, 14, 15, 21, 22, 23, 60, 77, 81, 82, 88, 89, 101, 102, 107, 108, 110, 115, 123, 227)),
     OVERLAY_GRAVEL(GroundMaterial.GRAVEL, p -> p.ids(-76, 2, 3, 4, 6, 8, 10, 119)),
     OVERLAY_ZEAH_PATHS(Area.ZEAH, GroundMaterial.VARROCK_PATHS, p -> p
-            .replaceWithIf(WINTER_JAGGED_STONE_TILE_LIGHT_2, plugin -> plugin.configWinterTheme)
-            .ids(11)
+        .replaceWithIf(WINTER_JAGGED_STONE_TILE_LIGHT_2, plugin -> plugin.configWinterTheme)
+        .ids(11)
     ),
     OVERLAY_VARROCK_PATHS(GroundMaterial.VARROCK_PATHS, p -> p
-            .replaceWithIf(WINTER_JAGGED_STONE_TILE, plugin -> plugin.configWinterTheme)
-            .ids(-85, -77, 11)
+        .replaceWithIf(WINTER_JAGGED_STONE_TILE, plugin -> plugin.configWinterTheme)
+        .ids(-85, -77, 11)
     ),
     OVERLAY_SWAMP_WATER(WaterType.SWAMP_WATER, p -> p.ids(-100, 7)),
     OVERLAY_WOOD_PLANKS(GroundMaterial.WOOD_PLANKS_1, p -> p.ids(5, 35)),
