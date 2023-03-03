@@ -28,7 +28,10 @@ import lombok.NonNull;
 import lombok.Setter;
 import rs117.hd.HdPluginConfig;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -326,33 +329,33 @@ public enum Material
 	DOCK_FENCE_DARK(DOCK_FENCE, p -> p.setBrightness(0.6f)),
 
 	HD_INFERNAL_CAPE(p -> p
-		.replaceIf(INFERNAL_CAPE, HdPluginConfig::hdInfernalTexture)
+		.replaceIf(HdPluginConfig::hdInfernalTexture, INFERNAL_CAPE)
 		.setUnlit(true)
 		.setOverrideBaseColor(true)
 		.setFlowMap(LAVA_FLOW_MAP, 0.02f, 12, 4)
 		.setScroll(0, 1 / 3f)),
 
 	HD_BRICK(p -> p
-		.replaceIf(BRICK, HdPluginConfig::objectTextures)),
+		.replaceIf(HdPluginConfig::objectTextures, BRICK)),
 	HD_ROOF_SHINGLES_N,
 	HD_ROOF_SHINGLES_1(p -> p
-		.replaceIf(ROOF_SHINGLES_1, HdPluginConfig::objectTextures)
+		.replaceIf(HdPluginConfig::objectTextures, ROOF_SHINGLES_1)
 		.setSpecular(0.5f, 30)
 		.setNormalMap(HD_ROOF_SHINGLES_N)
 	),
 	HD_MARBLE_DARK(p -> p
-		.replaceIf(MARBLE_DARK, HdPluginConfig::objectTextures)
+		.replaceIf(HdPluginConfig::objectTextures, MARBLE_DARK)
 		.setSpecular(1.1f, 380)),
 	HD_BRICK_BROWN(p -> p
-		.replaceIf(BRICK_BROWN, HdPluginConfig::objectTextures)),
+		.replaceIf(HdPluginConfig::objectTextures, BRICK_BROWN)),
 	HD_LAVA_3(p -> p
-		.replaceIf(LAVA, HdPluginConfig::objectTextures)
+		.replaceIf(HdPluginConfig::objectTextures, LAVA)
 		.setUnlit(true)
 		.setOverrideBaseColor(true)
 		.setFlowMap(LAVA_FLOW_MAP, 0.05f, 36, 22)
 		.setScroll(0, 1 / 3f)),
 	HD_ROOF_SHINGLES_2(p -> p
-		.replaceIf(ROOF_SHINGLES_2, HdPluginConfig::objectTextures)
+		.replaceIf(HdPluginConfig::objectTextures, ROOF_SHINGLES_2)
 		.setSpecular(0.3f, 30)
 		.setNormalMap(HD_ROOF_SHINGLES_N)
 	),
@@ -381,11 +384,13 @@ public enum Material
 		.setSpecular(0.7f, 80)),
 	WATTLE_1,
 	ICE_1(GRUNGE_2, p -> p
-		.setSpecular(1.1f,200)),
+		.replaceIf(HdPluginConfig::winterTheme, WATER_FLAT_2, WATER_FLAT)
+		.setSpecular(1.1f, 200)),
 	ICE_1_HIGHGLOSS(GRUNGE_2, p -> p
-		.setSpecular(3.1f,30)),
+		.replaceIf(HdPluginConfig::winterTheme, WATER_FLAT_2, WATER_FLAT)
+		.setSpecular(3.1f, 30)),
 	SLIME_GRUNGE(GRUNGE_1, p -> p
-		.setSpecular(4.1f,60)),
+		.setSpecular(4.1f, 60)),
 	WATER_PUDDLE(NONE, p -> p
 		.setSpecular(1.5f, 80)),
 	HD_WOOD_PLANKS_1_N,
@@ -395,90 +400,63 @@ public enum Material
 		.setBrightness(1.2f)),
 	HD_ROOF_BRICK_TILE_N,
 	HD_ROOF_BRICK_TILE_1(p -> p
-		.replaceIf(ROOF_BRICK_TILE, HdPluginConfig::objectTextures)
+		.replaceIf(HdPluginConfig::objectTextures, ROOF_BRICK_TILE, ROOF_BRICK_TILE_GREEN, ROOF_BRICK_TILE_DARK)
 		.setSpecular(0.3f, 30)
 		.setNormalMap(HD_ROOF_BRICK_TILE_N)
 	),
 	HD_ROOF_BRICK_TILE_2(p -> p
-		.replaceIf(ROOF_BRICK_TILE_GREEN, HdPluginConfig::objectTextures)
+		.replaceIf(HdPluginConfig::objectTextures, ROOF_BRICK_TILE_GREEN)
 		.setSpecular(0.3f, 30)
 		.setNormalMap(HD_ROOF_BRICK_TILE_N)
 	),
 	HD_ROOF_BRICK_TILE_3(p -> p
-		.replaceIf(ROOF_BRICK_TILE_DARK, HdPluginConfig::objectTextures)
+		.replaceIf(HdPluginConfig::objectTextures, ROOF_BRICK_TILE_DARK)
 		.setSpecular(0.3f, 30)
 		.setNormalMap(HD_ROOF_BRICK_TILE_N)
 	),
 
 	// Seasonal
 	WINTER_WILLOW_LEAVES(p -> p
-		.replaceIf(WILLOW_LEAVES, HdPluginConfig::winterTheme)
+		.replaceIf(HdPluginConfig::winterTheme, WILLOW_LEAVES)
 		.setTextureScale(1.025f, 1.0f)),
 	WINTER_MAPLE_LEAVES(p -> p
-		.replaceIf(MAPLE_LEAVES, HdPluginConfig::winterTheme)
+		.replaceIf(HdPluginConfig::winterTheme, MAPLE_LEAVES)
 		.setTextureScale(1.3f, 1.0f)),
 	WINTER_LEAVES_1(p -> p
-		.replaceIf(LEAVES_1, HdPluginConfig::winterTheme)
+		.replaceIf(HdPluginConfig::winterTheme, LEAVES_1)
 		.setTextureScale(1.3f, 1.0f)),
 	WINTER_LEAVES_2(p -> p
-		.replaceIf(LEAVES_2, HdPluginConfig::winterTheme)
+		.replaceIf(HdPluginConfig::winterTheme, LEAVES_2)
 		.setTextureScale(1.1f, 1.1f)),
 	WINTER_LEAVES_3(p -> p
-		.replaceIf(LEAVES_3, HdPluginConfig::winterTheme)),
-	WINTER_PAINTING_LANDSCAPE(p -> p
-		.replaceIf(PAINTING_LANDSCAPE, HdPluginConfig::winterTheme)),
-	WINTER_PAINTING_KING(p -> p
-		.replaceIf(PAINTING_KING, HdPluginConfig::winterTheme)),
-	WINTER_PAINTING_ELF(p -> p
-		.replaceIf(PAINTING_ELF, HdPluginConfig::winterTheme)),
+		.replaceIf(HdPluginConfig::winterTheme, LEAVES_3)),
+	WINTER_PAINTINGS(p -> p
+		.replaceIf(HdPluginConfig::winterTheme, PAINTING_LANDSCAPE, PAINTING_KING, PAINTING_ELF)),
 	WINTER_HD_ROOF_SHINGLES_1(p -> p
-		.replaceIf(ROOF_SHINGLES_1, HdPluginConfig::winterTheme)
+		.replaceIf(HdPluginConfig::winterTheme, ROOF_SHINGLES_1)
 		.setSpecular(0.5f, 30)
-		.setNormalMap(HD_ROOF_SHINGLES_N)
-	),
+		.setNormalMap(HD_ROOF_SHINGLES_N)),
 	WINTER_HD_ROOF_SHINGLES_2(p -> p
-		.replaceIf(ROOF_SHINGLES_2, HdPluginConfig::winterTheme)
+		.replaceIf(HdPluginConfig::winterTheme, ROOF_SHINGLES_2)
 		.setSpecular(0.3f, 30)
-		.setNormalMap(HD_ROOF_SHINGLES_N)
-	),
-	WINTER_HD_ROOF_BRICK_TILE_1(p -> p
-		.replaceIf(ROOF_BRICK_TILE, HdPluginConfig::winterTheme)
-		.setNormalMap(HD_ROOF_BRICK_TILE_N)
-		.setSpecular(0.3f,30)
-	),
-	WINTER_HD_ROOF_BRICK_TILE_2(p -> p
-		.replaceIf(ROOF_BRICK_TILE_GREEN, HdPluginConfig::winterTheme)
-		.setNormalMap(HD_ROOF_BRICK_TILE_N)
-		.setSpecular(0.3f,30)
-	),
-	WINTER_HD_ROOF_BRICK_TILE_3(p -> p
-		.replaceIf(ROOF_BRICK_TILE_DARK, HdPluginConfig::winterTheme)
-		.setNormalMap(HD_ROOF_BRICK_TILE_N)
-		.setSpecular(0.3f,30)
-	),
-	WINTER_HD_ROOF_SLATE(p -> p
-		.replaceIf(ROOF_SLATE, HdPluginConfig::winterTheme)
-		.setSpecular(0.5f,30)
-	),
-	WINTER_HD_ROOF_WOODEN_SLATE(p -> p
-		.replaceIf(ROOF_WOODEN_SLATE, HdPluginConfig::winterTheme)
-		.setSpecular(0.5f,30)
-	),
+		.setNormalMap(HD_ROOF_SHINGLES_N)),
+	WINTER_HD_ROOF_BRICK_TILES(p -> p
+		.replaceIf(HdPluginConfig::winterTheme, ROOF_BRICK_TILE, ROOF_BRICK_TILE_GREEN, ROOF_BRICK_TILE_DARK)),
+	WINTER_HD_ROOF_SLATES(p -> p
+		.replaceIf(HdPluginConfig::winterTheme, ROOF_SLATE, ROOF_WOODEN_SLATE)
+		.setSpecular(0.5f, 30)),
 	WINTER_JAGGED_STONE_TILE(p -> p
 		.setNormalMap(JAGGED_STONE_TILE_N)
-		.setSpecular(0.6f,30)
-		.setBrightness(1.4f)
-	),
+		.setSpecular(0.6f, 30)
+		.setBrightness(1.4f)),
 	WINTER_JAGGED_STONE_TILE_LIGHT(WINTER_JAGGED_STONE_TILE, p -> p
 		.setNormalMap(JAGGED_STONE_TILE_N)
-		.setSpecular(0.6f,30)
-		.setBrightness(4)
-	),
-	WINTER_JAGGED_STONE_TILE_LIGHT_2(WINTER_JAGGED_STONE_TILE, p -> p
+		.setSpecular(0.6f, 30)
+		.setBrightness(4)),
+	WINTER_JAGGED_STONE_TILE_LIGHTER(WINTER_JAGGED_STONE_TILE, p -> p
 		.setNormalMap(JAGGED_STONE_TILE_N)
-		.setSpecular(0.6f,30)
-		.setBrightness(12)
-	)
+		.setSpecular(0.6f, 30)
+		.setBrightness(12)),
 	;
 
 	public final Material parent;
@@ -498,7 +476,7 @@ public enum Material
 	public final float specularGloss;
 	public final float[] scrollSpeed;
 	public final float[] textureScale;
-	public final Material materialToReplace;
+	public final List<Material> materialsToReplace = new ArrayList<>();
 	public final Function<HdPluginConfig, Boolean> replacementCondition;
 
 	@Setter
@@ -521,7 +499,7 @@ public enum Material
 		private float specularGloss;
 		private float[] scrollSpeed = { 0, 0 };
 		private float[] textureScale = { 1, 1 };
-		private Material materialToReplace;
+		private List<Material> materialsToReplace = new ArrayList<>();
 		private Function<HdPluginConfig, Boolean> replacementCondition;
 
 		Builder apply(Consumer<Builder> consumer)
@@ -549,7 +527,7 @@ public enum Material
 			this.specularGloss = parent.specularGloss;
 			this.scrollSpeed = parent.scrollSpeed;
 			this.textureScale = parent.textureScale;
-			this.materialToReplace = parent.materialToReplace;
+			this.materialsToReplace.addAll(parent.materialsToReplace);
 			this.replacementCondition = parent.replacementCondition;
 			return this;
 		}
@@ -581,9 +559,9 @@ public enum Material
 			return this;
 		}
 
-		Builder replaceIf(@NonNull Material materialToReplace, @NonNull Function<HdPluginConfig, Boolean> condition)
+		Builder replaceIf(@NonNull Function<HdPluginConfig, Boolean> condition, @NonNull Material... materialsToReplace)
 		{
-			this.materialToReplace = materialToReplace;
+			Collections.addAll(this.materialsToReplace, materialsToReplace);
 			this.replacementCondition = condition;
 			return this;
 		}
@@ -630,7 +608,7 @@ public enum Material
 		this.specularGloss = builder.specularGloss;
 		this.scrollSpeed = builder.scrollSpeed;
 		this.textureScale = builder.textureScale;
-		this.materialToReplace = builder.materialToReplace;
+		this.materialsToReplace.addAll(builder.materialsToReplace);
 		this.replacementCondition = builder.replacementCondition;
 	}
 
