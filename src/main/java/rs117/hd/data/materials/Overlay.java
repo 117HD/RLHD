@@ -299,11 +299,11 @@ public enum Overlay {
             .blended(false)
             .ids(0, 2, 10)
     ),
-    TAVERLEY_DUNGEON_BLACK_KNIGHT_OVERLAY_11(GroundMaterial.MARBLE_2_GLOSS, p -> p
+    TAVERLEY_DUNGEON_MARBLE_GLOSS(GroundMaterial.MARBLE_2_GLOSS, p -> p
             .area(Area.TAVERLEY_DUNGEON)
-            .ids(11)
+            .ids(3, 11)
     ),
-    TAVERLEY_DUNGEON_TILE_OVERLAY(GroundMaterial.WORN_TILES, p -> p
+    TAVERLEY_DUNGEON_GRAVEL_OVERLAY(GroundMaterial.GRAVEL, p -> p
             .area(Area.TAVERLEY_DUNGEON)
             .ids(2, 10, 34)
     ),
