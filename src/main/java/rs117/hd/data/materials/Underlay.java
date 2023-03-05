@@ -127,7 +127,7 @@ public enum Underlay {
         .ids(2, 72)),
 
     // Taverley Underground
-    ICE_QUEENS_DUNGEON_UNDERLAY(Area.ICE_QUEENS_LAIR, GroundMaterial.SNOW_1, p -> p.ids(58).lightness(100).hue(0).saturation(0)),
+    ICE_QUEENS_DUNGEON_UNDERLAY(Area.ICE_QUEENS_DUNGEON, GroundMaterial.SNOW_1, p -> p.ids(58).lightness(100).hue(0).saturation(0)),
     TAVERLY_DUNGEON_DIRT(GroundMaterial.EARTHEN_CAVE_FLOOR, p -> p
             .area(Area.TAVERLEY_DUNGEON)
             .ids(50, 63, 64, 66, 67)
