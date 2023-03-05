@@ -956,6 +956,16 @@ public enum Environment
 		.setLightDirection(260f, 10f)
 		.setWaterColor(102, 234, 255)
 	),
+	ICE_QUEENS_LAIR(Area.ICE_QUEENS_LAIR, new Properties()
+			.setFogColor("#ADC5E4")
+			.setFogDepth(68)
+			.setAmbientColor("#AAAFB6")
+			.setAmbientStrength(.75f)
+			.setDirectionalColor("#FFFFFF")
+			.setDirectionalStrength(.75f)
+			.setLightDirection(260f, 10f)
+			.setWaterColor(102, 234, 255)
+	),
 
 
 

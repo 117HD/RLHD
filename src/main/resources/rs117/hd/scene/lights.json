@@ -30256,5 +30256,23 @@
       2327
     ],
     "fadeInDuration": 300
+  },
+  {
+    "description": "STANDING_TORCH",
+    "height": 90,
+    "alignment": "CENTER",
+    "radius": 160,
+    "strength": 7.5,
+    "color": [
+      220,
+      220,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "objectIds": [
+      210
+    ]
   }
 ]
