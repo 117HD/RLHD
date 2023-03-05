@@ -293,7 +293,20 @@ public enum Overlay {
     WARRIORS_GUILD_FLOOR_1(11, Area.WARRIORS_GUILD, GroundMaterial.VARROCK_PATHS, p -> p.blended(false)),
     WARRIORS_GUILD_CARPET(86, Area.WARRIORS_GUILD, GroundMaterial.CARPET, p -> p.blended(false)),
 
-    // Ice Queen's Lair
+    // Taverley Underground
+    TAVERLEY_DUNGEON_BLACK_KNIGHT_KITCHEN(GroundMaterial.TILES_2x2_2_SEMIGLOSS, p -> p
+            .area(Area.TAVERLEY_DUNGEON_BLACK_KNIGHT_KITCHEN)
+            .blended(false)
+            .ids(0, 2, 10)
+    ),
+    TAVERLEY_DUNGEON_BLACK_KNIGHT_OVERLAY_11(GroundMaterial.MARBLE_2_GLOSS, p -> p
+            .area(Area.TAVERLEY_DUNGEON)
+            .ids(11)
+    ),
+    TAVERLEY_DUNGEON_TILE_OVERLAY(GroundMaterial.WORN_TILES, p -> p
+            .area(Area.TAVERLEY_DUNGEON)
+            .ids(2, 10, 34)
+    ),
     ICE_QUEENS_SYMBOL(33, Area.ICE_QUEENS_LAIR, GroundMaterial.ICE_1),
     ICE_QUEENS_DUNGEON_OVERLAY(Area.ICE_QUEENS_LAIR, GroundMaterial.SNOW_1, p -> p.ids(42).lightness(100).hue(0).saturation(0)),
 

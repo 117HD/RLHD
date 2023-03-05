@@ -5141,10 +5141,8 @@
       11094,
       11095,
       11098,
-      11190,
       11191,
       11192,
-      11193,
       11195,
       18474,
       18478
@@ -6497,5 +6495,31 @@
       210
     ],
     "uvType": "GEOMETRY"
+  },
+  {
+    "description": "ROUNDED_CAVE_WALLS_WITH_PIPE",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      16509
+    ]
+  },
+  {
+    "description": "Objects - Rock Stairs - Large",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      30189
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Objects - Rockslide - Brown Rock - Rock - Medium",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      154, // Does not appy Taverley Dungeon blue dragons rock
+      11190,
+      11193
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.6
   }
 ]
