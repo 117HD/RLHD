@@ -136,6 +136,14 @@ public enum Underlay {
             .area(Area.TAVERLEY_DUNGEON)
             .ids(56, 57)
     ),
+    HEROES_GUILD_BASEMENT_CAVE(GroundMaterial.EARTHEN_CAVE_FLOOR, p -> p
+            .area(Area.HEROES_GUILD_BASEMENT)
+            .ids(63)
+    ),
+    HEROES_GUILD_BASEMENT_GRASS(GroundMaterial.GRASS_1, p -> p
+            .area(Area.HEROES_GUILD_BASEMENT)
+            .ids(48, 49, 50)
+    ),
 
     // Death's office
     DEATHS_OFFICE_TILE(-110, Area.DEATHS_OFFICE, GroundMaterial.TILES_2x2_1_SEMIGLOSS),
