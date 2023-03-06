@@ -5,6 +5,7 @@ import net.runelite.client.config.Keybind;
 import net.runelite.client.input.KeyListener;
 import net.runelite.client.input.KeyManager;
 import net.runelite.client.ui.overlay.OverlayManager;
+import rs117.hd.data.environments.Area;
 import rs117.hd.overlays.TileInfoOverlay;
 
 import javax.inject.Inject;
@@ -34,6 +35,24 @@ public class DeveloperTools implements KeyListener
 		if (tileInfoOverlayEnabled)
 		{
 			overlayManager.add(tileInfoOverlay);
+		}
+
+		// Check for any out of bounds areas
+		for (Area area : Area.values())
+		{
+			if (area == Area.ALL || area == Area.NONE)
+			{
+				continue;
+			}
+
+			for (AABB aabb : area.aabbs)
+			{
+				if (aabb.minX < -128 || aabb.minY < 1000 || aabb.maxX > 5000 || aabb.maxY > 13000)
+				{
+					throw new IllegalArgumentException(
+						"Your definition for the area " + area + " has an incorrect AABB: " + aabb);
+				}
+			}
 		}
 	}
 
