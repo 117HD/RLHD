@@ -144,6 +144,10 @@ public enum Underlay {
             .area(Area.HEROES_GUILD_BASEMENT)
             .ids(48, 49, 50)
     ),
+    MOTHERLODE_MINE(GroundMaterial.EARTHEN_CAVE_FLOOR, p -> p
+            .area(Area.MOTHERLODE_MINE)
+            .ids(63, 64)
+    ),
 
     // Death's office
     DEATHS_OFFICE_TILE(-110, Area.DEATHS_OFFICE, GroundMaterial.TILES_2x2_1_SEMIGLOSS),
