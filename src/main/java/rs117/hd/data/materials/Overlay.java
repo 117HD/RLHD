@@ -295,6 +295,23 @@ public enum Overlay {
     WARRIORS_GUILD_FLOOR_1(11, Area.WARRIORS_GUILD, GroundMaterial.VARROCK_PATHS, p -> p.blended(false)),
     WARRIORS_GUILD_CARPET(86, Area.WARRIORS_GUILD, GroundMaterial.CARPET, p -> p.blended(false)),
 
+    // Taverley Underground
+    TAVERLEY_DUNGEON_BLACK_KNIGHT_KITCHEN(GroundMaterial.TILES_2x2_2_SEMIGLOSS, p -> p
+            .area(Area.TAVERLEY_DUNGEON_BLACK_KNIGHT_KITCHEN)
+            .blended(false)
+            .ids(0, 2, 10)
+    ),
+    TAVERLEY_DUNGEON_MARBLE_GLOSS(GroundMaterial.MARBLE_2_GLOSS, p -> p
+            .area(Area.TAVERLEY_DUNGEON)
+            .ids(3, 11)
+    ),
+    TAVERLEY_DUNGEON_GRAVEL_OVERLAY(GroundMaterial.GRAVEL, p -> p
+            .area(Area.TAVERLEY_DUNGEON)
+            .ids(2, 10, 34)
+    ),
+    ICE_QUEENS_SYMBOL(33, Area.ICE_QUEENS_DUNGEON, GroundMaterial.ICE_1),
+    ICE_QUEENS_DUNGEON_OVERLAY(Area.ICE_QUEENS_DUNGEON, GroundMaterial.SNOW_1, p -> p.ids(42).lightness(100).hue(0).saturation(0)),
+
     // Seers Indoors
     SEERS_ELEMENTAL_WORKSHOP_HOUSE_171_BLENDED(171, Area.ELEMENTAL_WORKSHOP_HOUSE_ENTRANCE, GroundMaterial.VARROCK_PATHS),
     SEERS_ELEMENTAL_WORKSHOP_HOUSE_171(171, Area.ELEMENTAL_WORKSHOP_HOUSE, GroundMaterial.VARROCK_PATHS, p -> p.blended(false).shiftLightness(3)),

@@ -2872,7 +2872,12 @@
       1422,
       1434,
       1435,
+      1459,
+      1460,
+      1467,
       4448,
+      9739,
+      9740,
       16543
     ]
   },
@@ -3174,7 +3179,8 @@
       11596,
       11597,
       15975,
-      41419
+      41419,
+      25797
     ],
     "uvType": "MODEL_XZ"
   },
@@ -5144,10 +5150,8 @@
       11094,
       11095,
       11098,
-      11190,
       11191,
       11192,
-      11193,
       11195,
       18474,
       18478
@@ -5185,6 +5189,7 @@
     "baseMaterial": "DIRT_2",
     "objectIds": [
       2217,
+      2634,
       5511,
       5512,
       11604,
@@ -6428,5 +6433,102 @@
     ],
     "uvType": "MODEL_XY",
     "uvOrientation": 512
+  },
+  {
+    "description": "Ice Queens Dungeon - Walls - Snow",
+    "baseMaterial": "SNOW_2",
+    "objectIds": [
+      1440,
+      1441,
+      1442
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Ice Queens Dungeon - Objects - Icicle - Ice",
+    "baseMaterial": "ICE_1_HIGHGLOSS",
+    "objectIds": [
+      554,
+      555
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Ice Queens Dungeon - Decorations - Wall - White Object - Snow",
+    "baseMaterial": "SNOW_3",
+    "objectIds": [
+      1445,
+      1446,
+      1447
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Objects - Rockslide - Snow Drift - Snow - Medium",
+    "baseMaterial": "SNOW_1",
+    "objectIds": [
+      11920,
+      11921
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Objects - Rockslide - Snow Drift - Snow - Small",
+    "baseMaterial": "SNOW_3",
+    "objectIds": [
+      11922,
+      11923
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Ice Queens Dungeon - Objects - Ice Column - Ice",
+    "baseMaterial": "ICE_1_HIGHGLOSS",
+    "objectIds": [
+      11930
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Ice Queens Dungeon - Objects - Ice Throne - Ice",
+    "baseMaterial": "ICE_1_HIGHGLOSS",
+    "objectIds": [
+      1114
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Ice Queens Dungeon - Objects - Ice Light - Ice",
+    "baseMaterial": "ICE_1_HIGHGLOSS",
+    "objectIds": [
+      210
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "ROUNDED_CAVE_WALLS_WITH_PIPE",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      16509
+    ]
+  },
+  {
+    "description": "Objects - Rock Stairs - Large",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      30189
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Objects - Rockslide - Brown Rock - Rock - Medium",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      154, // Does not appy Taverley Dungeon blue dragons rock
+      11190,
+      11193
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.6
   }
 ]

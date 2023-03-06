@@ -126,6 +126,29 @@ public enum Underlay {
         .blended(false)
         .ids(2, 72)),
 
+    // Taverley Underground
+    ICE_QUEENS_DUNGEON_UNDERLAY(Area.ICE_QUEENS_DUNGEON, GroundMaterial.SNOW_1, p -> p.ids(58).lightness(100).hue(0).saturation(0)),
+    TAVERLY_DUNGEON_DIRT(GroundMaterial.EARTHEN_CAVE_FLOOR, p -> p
+            .area(Area.TAVERLEY_DUNGEON)
+            .ids(50, 63, 64, 66, 67)
+    ),
+    TAVERLY_DUNGEON_BLACK_KNIGHTS_BASE(GroundMaterial.MARBLE_1_SEMIGLOSS, p -> p
+            .area(Area.TAVERLEY_DUNGEON)
+            .ids(56, 57)
+    ),
+    HEROES_GUILD_BASEMENT_CAVE(GroundMaterial.EARTHEN_CAVE_FLOOR, p -> p
+            .area(Area.HEROES_GUILD_BASEMENT)
+            .ids(63)
+    ),
+    HEROES_GUILD_BASEMENT_GRASS(GroundMaterial.GRASS_1, p -> p
+            .area(Area.HEROES_GUILD_BASEMENT)
+            .ids(48, 49, 50)
+    ),
+    MOTHERLODE_MINE(GroundMaterial.EARTHEN_CAVE_FLOOR, p -> p
+            .area(Area.MOTHERLODE_MINE)
+            .ids(63, 64,71)
+    ),
+
     // Death's office
     DEATHS_OFFICE_TILE(-110, Area.DEATHS_OFFICE, GroundMaterial.TILES_2x2_1_SEMIGLOSS),
 
