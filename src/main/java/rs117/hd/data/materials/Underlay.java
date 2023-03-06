@@ -146,7 +146,7 @@ public enum Underlay {
     ),
     MOTHERLODE_MINE(GroundMaterial.EARTHEN_CAVE_FLOOR, p -> p
             .area(Area.MOTHERLODE_MINE)
-            .ids(63, 64)
+            .ids(63, 64,71)
     ),
 
     // Death's office
