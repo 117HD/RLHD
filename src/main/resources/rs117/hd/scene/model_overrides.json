@@ -965,7 +965,6 @@
       "KOVAC_11472"
     ],
     "objectIds": [
-      2052,
       4502,
       17208,
       17324,
@@ -2873,7 +2872,12 @@
       1422,
       1434,
       1435,
+      1459,
+      1460,
+      1467,
       4448,
+      9739,
+      9740,
       16543
     ]
   },
@@ -2919,6 +2923,7 @@
       5942,
       5943,
       5944,
+      5945,
       6658,
       6660,
       6664,
@@ -2951,6 +2956,8 @@
       6699,
       6700,
       6701,
+      6906,
+      6912,
       6925,
       "BIG_BIG_BOULDER",
       "BONE_ARCH",
@@ -3172,7 +3179,8 @@
       11596,
       11597,
       15975,
-      41419
+      41419,
+      25797
     ],
     "uvType": "MODEL_XZ"
   },
@@ -3292,12 +3300,14 @@
   },
   {
     "description": "LUNAR_ISLE_DOCK_LADDERS",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       16959,
       16960,
       16961,
       16962
-    ]
+    ],
+    "uvType": "GEOMETRY"
   },
   {
     "description": "LUNAR_ISLE_BRIDGES",
@@ -3936,7 +3946,8 @@
       40224
     ],
     "uvType": "MODEL_XZ",
-    "flatNormals": true
+    "flatNormals": true,
+    "uvScale": 0.6
   },
   {
     "description": "Wooden tables - Round",
@@ -4933,6 +4944,9 @@
       22347,
       22348,
       22349,
+      23085,
+      23086,
+      23087,
       26715,
       26716,
       27984,
@@ -5136,10 +5150,8 @@
       11094,
       11095,
       11098,
-      11190,
       11191,
       11192,
-      11193,
       11195,
       18474,
       18478
@@ -5177,6 +5189,7 @@
     "baseMaterial": "DIRT_2",
     "objectIds": [
       2217,
+      2634,
       5511,
       5512,
       11604,
@@ -5303,6 +5316,11 @@
       14482,
       14485,
       17929,
+      23080,
+      23081,
+      23082,
+      23083,
+      23084,
       37800,
       37801,
       37802,
@@ -5521,7 +5539,7 @@
       12278
     ],
     "uvScale": 0.4,
-    "uvType": "MODEL_YZ",
+    "uvType": "MODEL_XY",
     "flatNormals": true
   },
   {
@@ -6035,5 +6053,482 @@
     "uvType": "MODEL_XZ",
     "flatNormals": true,
     "disableShadows": true
+  },
+  {
+    "description": "Chaos Tunnel - Walls - Cave Walls",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      23068,
+      23069,
+      23070,
+      23071,
+      23072,
+      23075,
+      23076,
+      23077,
+      23078,
+      23079
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Chaos Tunnel - Objects - Stairs",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      23073,
+      23074
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Objects - Rock - Staglagmite - Non Interactable",
+    "baseMaterial": "ROCK_2",
+    "objectIds": [
+      23088,
+      23089,
+      23090
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Objects - Bed - Bedroll - Non Interactable",
+    "baseMaterial": "CARPET",
+    "objectIds": [
+      23067
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.60
+  },
+  {
+    "description": "Objects - Locker - Wooden - Non Interactable",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      23064
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Objects - Stool - Wooden – Generic",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      23065
+    ],
+    "uvType": "MODEL_XZ",
+    "flatNormals": true,
+    "uvScale": 0.80
+  },
+  {
+    "description": "Objects - Table - Single - Wooden – Plank - Generic",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      23066
+    ],
+    "uvType": "MODEL_XZ",
+    "flatNormals": true
+  },
+  {
+    "description": "Ground - Chaos Alter - Path -  Wooden – Plank",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      2669,
+      4033,
+      11557,
+      11915,
+      11916,
+      11919,
+      11554,
+      11555,
+      11556
+    ],
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Chaos Alter - Walls - Path -  Wooden – Plank",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      169
+    ],
+    "uvType": "MODEL_XY",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Objects - Standing Torch -  Wood",
+    "baseMaterial": "WOOD_GRAIN",
+    "objectIds": [
+      724
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Lunar Isle - Walls - Stone - Northern Mine",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      14999,
+      15000,
+      15001,
+      15002,
+      15003,
+      15004,
+      15005,
+      15006,
+      15007,
+      15008,
+      15009,
+      15026,
+      15028,
+      15022,
+      11399
+    ],
+    "uvType": "VANILLA"
+  },
+  {
+    "description": "Lunar Isle - Objects - Limestone - Stalagmites - Mineable",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      15250,
+      15251
+    ],
+    "uvType": "VANILLA"
+  },
+  {
+    "description": "Lunar Isle - Objects - Ice - Ice Chunks - Large",
+    "baseMaterial": "ICE_1_HIGHGLOSS",
+    "objectIds": [
+      6472,
+      6473
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Lunar Isle - Objects - Ice - Ice Chunks - Small",
+    "baseMaterial": "ICE_1_HIGHGLOSS",
+    "objectIds": [
+      6476,
+      6477
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Lunar Isle - Objects - Ice - Ice Chunks - Medium",
+    "baseMaterial": "ICE_1_HIGHGLOSS",
+    "objectIds": [
+      6474
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.55
+  },
+  {
+    "description": "Lunar Island - Walls - Wooden - Plank - Ruined",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      4281,
+      4282
+    ],
+    "uvType": "MODEL_XY",
+    "uvOrientation": 512,
+    "uvScale": 0.76
+  }
+,
+  {
+    "description": "Lunar Island - Objects - Bark - Windswept Tree",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      16639
+    ],
+    "uvType": "MODEL_XY",
+    "uvOrientation": 64,
+    "uvScale": 0.76
+  },
+  {
+    "description": "Lunar Island - Objects - Wooden - Chair",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      16743,
+      16744
+    ],
+    "flatNormals": true,
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Lunar Island - Objects - Wooden - Bench",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      16706,
+      32439
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Lunar Island - Objects - Wooden - Stool",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      16745
+    ],
+    "flatNormals": true,
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Lunar Island - Objects - Wooden - Table - Round",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      16742
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Lunar Island - Objects - Wooden - Hat Rack",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      16692
+    ]
+  },
+  {
+    "description": "Lunar Island - Ground - Carpet",
+    "baseMaterial": "FINE_CARPET",
+    "objectIds": [
+      16709,
+      16710,
+      16718
+    ],
+    "uvType": "WORLD_XZ",
+    "flatNormals": true
+  },
+  {
+    "description": "Lunar Island - Wooden - Ladder",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      16735,
+      16736
+    ],
+    "uvType": "MODEL_XY_MIRROR_B"
+  },
+  {
+    "description": "Objects - Wooden - Plank tables - Medium",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      29712
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.4
+  },
+  {
+    "description": "Objects - Wooden - Plank tables - Wide",
+    "baseMaterial": "WOOD_GRAIN_2_WIDE",
+    "objectIds": [
+      12280
+    ],
+    "uvType": "MODEL_XZ",
+    "flatNormals": true
+  },
+  {
+    "description": "Lunar Isles - Objects - Wooden - Tables - Fine",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      16737,
+      16738
+    ],
+    "uvType": "MODEL_XZ",
+    "flatNormals": true,
+    "uvScale": 0.8
+  },
+  {
+    "description": "Lunar Isles - Objects - Wooden - Table with hats",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      16740
+    ],
+    "uvType": "MODEL_XZ",
+    "flatNormals": true,
+    "uvOrientation": 512,
+    "uvScale": 0.8
+  },
+  {
+    "description": "Lunar Isles - Objects - Wooden staircase",
+    "baseMaterial": "HD_WOOD_PLANKS_1",
+    "objectIds": [
+      16732,
+      16733,
+      16734
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Lunar Isles - WALLS - Wooden Railing",
+    "baseMaterial": "HD_WOOD_PLANKS_1",
+    "objectIds": [
+      16761,
+      16762,
+      16763,
+      16767
+    ],
+    "uvType": "MODEL_XZ",
+    "flatNormals": true
+  },
+  {
+    "description": "Lunar Isles - WALLS - Wooden - Plank",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      16746,
+      16747,
+      16748,
+      16749,
+      16759,
+      16760,
+      16770,
+      16771,
+      16772
+    ],
+    "uvType": "MODEL_XY"
+  },
+  {
+    "description": "Lunar Isles - WALLS - Wooden - Plank - Windows",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      16751,
+      16752,
+      16753,
+      16768,
+      16769
+    ],
+    "uvType": "MODEL_XY"
+  },
+  {
+    "description": "Lunar Isles - WALLS - Wooden Railing",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      16750
+    ],
+    "uvType": "MODEL_XY"
+  },
+  {
+    "description": "Lunar Isles - WALLS - Wooden - Plank - Door",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      16776,
+      16777
+    ],
+    "uvType": "MODEL_XY"
+  },
+  {
+    "description": "Lunar Isles - WALLS - Wooden - Door - Window",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      16775,
+      16778,
+      16779
+    ],
+    "uvType": "MODEL_XY"
+  },
+  {
+    "description": "Lunar Isles - WALLS - Wooden - Railing - Window",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      16757,
+      16758,
+      16773
+    ],
+    "uvType": "MODEL_XY",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Ice Queens Dungeon - Walls - Snow",
+    "baseMaterial": "SNOW_2",
+    "objectIds": [
+      1440,
+      1441,
+      1442
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Ice Queens Dungeon - Objects - Icicle - Ice",
+    "baseMaterial": "ICE_1_HIGHGLOSS",
+    "objectIds": [
+      554,
+      555
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Ice Queens Dungeon - Decorations - Wall - White Object - Snow",
+    "baseMaterial": "SNOW_3",
+    "objectIds": [
+      1445,
+      1446,
+      1447
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Objects - Rockslide - Snow Drift - Snow - Medium",
+    "baseMaterial": "SNOW_1",
+    "objectIds": [
+      11920,
+      11921
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Objects - Rockslide - Snow Drift - Snow - Small",
+    "baseMaterial": "SNOW_3",
+    "objectIds": [
+      11922,
+      11923
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Ice Queens Dungeon - Objects - Ice Column - Ice",
+    "baseMaterial": "ICE_1_HIGHGLOSS",
+    "objectIds": [
+      11930
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Ice Queens Dungeon - Objects - Ice Throne - Ice",
+    "baseMaterial": "ICE_1_HIGHGLOSS",
+    "objectIds": [
+      1114
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Ice Queens Dungeon - Objects - Ice Light - Ice",
+    "baseMaterial": "ICE_1_HIGHGLOSS",
+    "objectIds": [
+      210
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "ROUNDED_CAVE_WALLS_WITH_PIPE",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      16509
+    ]
+  },
+  {
+    "description": "Objects - Rock Stairs - Large",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      30189
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Objects - Rockslide - Brown Rock - Rock - Medium",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      154, // Does not appy Taverley Dungeon blue dragons rock
+      11190,
+      11193
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.6
   }
 ]
