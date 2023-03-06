@@ -311,10 +311,10 @@ public enum Environment
 
 	LUMBRIDGE(Area.LUMBRIDGE, new Properties()),
 	LUMBRIDGE_BASEMENT(Area.LUMBRIDGE_CASTLE_BASEMENT, new Properties()
-			.setFogColor("#050505")
+			.setFogColor("#070606")
 			.setFogDepth(84)
 			.setAmbientColor("#FFFFFF")
-			.setAmbientStrength(0.75f)
+			.setAmbientStrength(1.0f)
 			.setDirectionalColor("#A29B71")
 			.setDirectionalStrength(1.5f)
 			.setLightDirection(260f, 10f)
@@ -326,7 +326,17 @@ public enum Environment
 			.setAmbientStrength(0.75f)
 			.setDirectionalColor("#A29B71")
 			.setDirectionalStrength(0.75f)
-			.setLightDirection(260f, 10f)),
+			.setLightDirection(260f, 10f)
+	),
+	LUMBRIDGE_SWAMP_CAVES(Area.LUMBRIDGE_SWAMP_CAVES, new Properties()
+			.setFogColor("#040D02")
+			.setFogDepth(50)
+			.setAmbientColor(198, 201, 194)
+			.setAmbientStrength(0.9f)
+			.setDirectionalColor(168, 171, 144)
+			.setDirectionalStrength(0.85f)
+			.setLightDirection(260f, 10f)
+	),
 
 	DRAYNOR_MANOR(Area.DRAYNOR_MANOR, new Properties()
 		.setFogColor(15, 14, 13)
