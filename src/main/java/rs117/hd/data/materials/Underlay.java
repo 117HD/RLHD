@@ -30,7 +30,6 @@ import net.runelite.api.Client;
 import net.runelite.api.Tile;
 import net.runelite.api.coords.WorldPoint;
 import rs117.hd.HdPlugin;
-import rs117.hd.HdPluginConfig;
 import rs117.hd.data.WaterType;
 import rs117.hd.data.environments.Area;
 
@@ -43,17 +42,28 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 public enum Underlay {
+    // Seasonal
+    WINTER_EDGEVILLE_PATH(p -> p
+        .ids()
+        .blendedAsOpposite(true)
+        .hue(0)
+        .shiftLightness(8)
+        .saturation(0)
+        .groundMaterial(GroundMaterial.WINTER_JAGGED_STONE_TILE_LIGHT)
+    ),
     // Default
     // Lumbridge
     LUMBRIDGE_CASTLE_TILE(56, Area.LUMBRIDGE_CASTLE_BASEMENT, GroundMaterial.MARBLE_2_SEMIGLOSS, p -> p.blended(false)),
 
     // Edgeville
-    EDGEVILLE_PATH_OVERLAY_48(Area.EDGEVILLE_PATH_OVERLAY, GroundMaterial.VARROCK_PATHS_LIGHT, p -> p
+    EDGEVILLE_PATH_OVERLAY_48(Area.EDGEVILLE_PATH_OVERLAY, GroundMaterial.VARROCK_PATHS, p -> p
         .blendedAsOpposite(true)
         .hue(0)
         .shiftLightness(8)
         .saturation(0)
-        .ids(48, 50, 64)),
+        .ids(48, 50, 64)
+        .replaceWithIf(WINTER_EDGEVILLE_PATH, plugin -> plugin.configWinterTheme)
+    ),
 
     // Varrock
     VARROCK_JULIETS_HOUSE_UPSTAIRS(8, Area.VARROCK_JULIETS_HOUSE, GroundMaterial.NONE, p -> p.blended(false)),
@@ -107,11 +117,37 @@ public enum Underlay {
         .saturation(4)
         .shiftLightness(3)),
 
+    // Yanille
+    YANILLE_AGILITY_DUNGEON_ENTRANCE_FIX(63, Area.YANILLE_AGILITY_DUNGEON_ENTRANCE, GroundMaterial.NONE, p -> p.blended(false)),
+
     // Zanaris
     COSMIC_ENTITYS_PLANE_ABYSS(Area.COSMIC_ENTITYS_PLANE, GroundMaterial.NONE, p -> p
         .lightness(0)
         .blended(false)
         .ids(2, 72)),
+
+    // Taverley Underground
+    ICE_QUEENS_DUNGEON_UNDERLAY(Area.ICE_QUEENS_DUNGEON, GroundMaterial.SNOW_1, p -> p.ids(58).lightness(100).hue(0).saturation(0)),
+    TAVERLY_DUNGEON_DIRT(GroundMaterial.EARTHEN_CAVE_FLOOR, p -> p
+            .area(Area.TAVERLEY_DUNGEON)
+            .ids(50, 63, 64, 66, 67)
+    ),
+    TAVERLY_DUNGEON_BLACK_KNIGHTS_BASE(GroundMaterial.MARBLE_1_SEMIGLOSS, p -> p
+            .area(Area.TAVERLEY_DUNGEON)
+            .ids(56, 57)
+    ),
+    HEROES_GUILD_BASEMENT_CAVE(GroundMaterial.EARTHEN_CAVE_FLOOR, p -> p
+            .area(Area.HEROES_GUILD_BASEMENT)
+            .ids(63)
+    ),
+    HEROES_GUILD_BASEMENT_GRASS(GroundMaterial.GRASS_1, p -> p
+            .area(Area.HEROES_GUILD_BASEMENT)
+            .ids(48, 49, 50)
+    ),
+    MOTHERLODE_MINE(GroundMaterial.EARTHEN_CAVE_FLOOR, p -> p
+            .area(Area.MOTHERLODE_MINE)
+            .ids(63, 64,71)
+    ),
 
     // Death's office
     DEATHS_OFFICE_TILE(-110, Area.DEATHS_OFFICE, GroundMaterial.TILES_2x2_1_SEMIGLOSS),
@@ -125,32 +161,45 @@ public enum Underlay {
     TOA_CRONDIS_WATER_GREEN(p -> p.ids(133, 134).area(Area.TOA_CRONDIS_WATER).waterType(WaterType.POISON_WASTE).blended(false)),
     TOA_CRONDIS_WATER_BLUE(p -> p.area(Area.TOA_CRONDIS_WATER).waterType(WaterType.WATER).blended(false)),
 
+    // Wilderness
+    // Mage Arena
+    MAGE_ARENA_BANK_FLOOR(p -> p.ids(55, 56, 57).area(Area.MAGE_ARENA_BANK).groundMaterial(GroundMaterial.STONE_CAVE_FLOOR)),
+    MAGE_ARENA_STATUE_ROOM_FLOOR(p -> p.ids(55, 56, 57).area(Area.MAGE_ARENA_GOD_STATUES).groundMaterial(GroundMaterial.STONE_CAVE_FLOOR)),
+
     // Mind Altar
     MIND_ALTAR_TILE(55, Area.MIND_ALTAR, GroundMaterial.MARBLE_1_SEMIGLOSS, p -> p.blended(false)),
+
+    TEMPLE_OF_THE_EYE(Area.TEMPLE_OF_THE_EYE, GroundMaterial.GRUNGE, p -> p.ids(87, 88, 89)),
+    ARCEUUS_GROUND(Area.ARCEUUS, GroundMaterial.DIRT, p -> p.ids(2, 3, 17, 23, 24)),
 
     // Cutscenes
     CANOE_CUTSCENE_GRASS_1(Area.CANOE_CUTSCENE, GroundMaterial.GRASS_SCROLLING, p -> p.ids(48, 50, 63)),
 
+    // Winter Textures
     WINTER_GRASS(p -> p.ids().groundMaterial(GroundMaterial.SNOW_1).hue(0).saturation(0).shiftLightness(40).blended(true)),
     WINTER_DIRT(p -> p.ids().groundMaterial(GroundMaterial.DIRT).hue(0).saturation(0).shiftLightness(40).blended(true)),
+    WINTER_GRUNGE(p -> p.ids().groundMaterial(GroundMaterial.SNOW_2).hue(0).saturation(0).shiftLightness(40).blended(true)),
 
-    // default underlays
 
-    OVERWORLD_UNDERLAY_GRASS(Area.OVERWORLD, GroundMaterial.OVERWORLD_GRASS_1, p -> p
-        .ids(10, 25, 33, 34, 40, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 62, 63, 67, 70, 75, 93, 96, 97, 103, 114, 115, 126)
+    // Default underlays
+
+    OVERWORLD_GRASS(Area.OVERWORLD, GroundMaterial.OVERWORLD_GRASS_1, p -> p
+        .ids(25, 33, 34, 40, 48, 49, 50, 51, 52, 53, 54, 62, 63, 67, 70, 71, 75, 93, 96, 97, 99, 100, 103, 114, 115, 126)
         .replaceWithIf(WINTER_GRASS, plugin -> plugin.configWinterTheme)),
-
-    OVERWORLD_UNDERLAY_DIRT(Area.OVERWORLD, GroundMaterial.OVERWORLD_DIRT, p -> p
-        .ids(-111, -110, 64, 65, 66, 80, 92, 94)
+    OVERWORLD_DIRT(Area.OVERWORLD, GroundMaterial.DIRT, p -> p
+        .ids(-111, -110, 19, 56, 57, 64, 65, 66, 80, 92, 94, 111, 118, 122, 139, 150)
         .replaceWithIf(WINTER_DIRT, plugin -> plugin.configWinterTheme)),
+    OVERWORLD_SAND(Area.OVERWORLD, GroundMaterial.SAND, p -> p.ids(-127, -118, 61, 68)),
 
-    OVERWORLD_UNDERLAY_SAND(GroundMaterial.SAND, p -> p.ids(-127, -118, 61, 68)),
-
-    OVERWORLD_DIRT(GroundMaterial.DIRT, p -> p.ids(-111, -110, 64, 66, 80, 92, 94)),
-
-    UNDERLAY_10(GroundMaterial.GRASS_1, p -> p.ids(10, 25, 33, 34, 40, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 62, 63, 67, 70, 75, 93, 96, 97, 103, 103, 114, 115, 126)),
-    UNDERLAY_58(GroundMaterial.SNOW_1, p -> p.ids(58)),
-    UNDERLAY_72(GroundMaterial.VARIED_DIRT, p -> p.ids(72, 98)),
+    UNDERLAY_SNOW(GroundMaterial.SNOW_1, p -> p.ids(58, 59)),
+    UNDERLAY_72(GroundMaterial.VARIED_DIRT, p -> p
+        .ids(72, 73, 98, 112, 113) //112 == Lovakengj
+        .replaceWithIf(WINTER_DIRT, plugin -> plugin.configWinterTheme)
+    ),
+    UNDERLAY_OVERWORLD_GRUNGE(GroundMaterial.GRUNGE, p -> p
+        .ids(8, 10, 55, 60, 92) // 8 = Jatizso, 60 = GotR, 92 = Eadgars Cave
+        .replaceWithIf(WINTER_GRUNGE, plugin -> plugin.configWinterTheme)
+    ),
 
     NONE(GroundMaterial.DIRT, p -> {});
 

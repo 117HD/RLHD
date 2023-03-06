@@ -28,11 +28,13 @@ import com.google.common.primitives.Floats;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
+import net.runelite.api.Player;
 import net.runelite.api.coords.LocalPoint;
 import net.runelite.api.coords.WorldPoint;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.config.DefaultSkyColor;
+import rs117.hd.data.environments.Area;
 import rs117.hd.data.environments.Environment;
 import rs117.hd.utils.AABB;
 import rs117.hd.utils.HDUtils;
@@ -151,7 +153,8 @@ public class EnvironmentManager
 	public float currentLightYaw = 0f;
 	private float targetLightYaw = 0f;
 
-	public boolean lightningEnabled = false;
+	private boolean lightningEnabled = false;
+	private boolean displaySnow = false;
 
 	public void update()
 	{
@@ -247,6 +250,20 @@ public class EnvironmentManager
 		lastUnderwater = isUnderwater();
 	}
 
+	private void updateWinterTheme() {
+		Player player = client.getLocalPlayer();
+		if (player == null)
+			return;
+		WorldPoint point = player.getWorldLocation();
+		if (point == null)
+			return;
+		displaySnow = Area.OVERWORLD.containsPoint(point);
+	}
+
+	private boolean useWinterTheme() {
+		return hdPlugin.configWinterTheme && displaySnow;
+	}
+
 	/**
 	 * Updates variables used in transition effects
 	 *
@@ -283,76 +300,39 @@ public class EnvironmentManager
 		updateSkyColor();
 
 		targetFogDepth = newEnvironment.getFogDepth();
-		if (hdPlugin.configWinterTheme)
+		if (useWinterTheme() && !newEnvironment.isCustomFogDepth()) {
+			targetFogDepth = Environment.WINTER.getFogDepth();
+		}
+
+		Environment atmospheric = config.atmosphericLighting() ? newEnvironment : defaultEnvironment;
+		targetAmbientStrength = atmospheric.getAmbientStrength();
+		targetAmbientColor = atmospheric.getAmbientColor();
+		targetDirectionalStrength = atmospheric.getDirectionalStrength();
+		targetDirectionalColor = atmospheric.getDirectionalColor();
+		targetUnderglowStrength = atmospheric.getUnderglowStrength();
+		targetUnderglowColor = atmospheric.getUnderglowColor();
+		targetLightPitch = atmospheric.getLightPitch();
+		targetLightYaw = atmospheric.getLightYaw();
+		if (useWinterTheme())
 		{
-			if (!newEnvironment.isCustomFogDepth())
+			if (!atmospheric.isCustomAmbientStrength())
 			{
-				targetFogDepth = Environment.WINTER.getFogDepth();
+				targetAmbientStrength = Environment.WINTER.getAmbientStrength();
+			}
+			if (!atmospheric.isCustomAmbientColor())
+			{
+				targetAmbientColor = Environment.WINTER.getAmbientColor();
+			}
+			if (!atmospheric.isCustomDirectionalStrength())
+			{
+				targetDirectionalStrength = Environment.WINTER.getDirectionalStrength();
+			}
+			if (!atmospheric.isCustomDirectionalColor())
+			{
+				targetDirectionalColor = Environment.WINTER.getDirectionalColor();
 			}
 		}
 
-		if (config.atmosphericLighting())
-		{
-			targetAmbientStrength = newEnvironment.getAmbientStrength();
-			targetAmbientColor = newEnvironment.getAmbientColor();
-			targetDirectionalStrength = newEnvironment.getDirectionalStrength();
-			targetDirectionalColor = newEnvironment.getDirectionalColor();
-			targetUnderglowStrength = newEnvironment.getUnderglowStrength();
-			targetUnderglowColor = newEnvironment.getUnderglowColor();
-			targetLightPitch = newEnvironment.getLightPitch();
-			targetLightYaw = newEnvironment.getLightYaw();
-
-			if (hdPlugin.configWinterTheme)
-			{
-				if (!newEnvironment.isCustomAmbientStrength())
-				{
-					targetAmbientStrength = Environment.WINTER.getAmbientStrength();
-				}
-				if (!newEnvironment.isCustomAmbientColor())
-				{
-					targetAmbientColor = Environment.WINTER.getAmbientColor();
-				}
-				if (!newEnvironment.isCustomDirectionalStrength())
-				{
-					targetDirectionalStrength = Environment.WINTER.getDirectionalStrength();
-				}
-				if (!newEnvironment.isCustomDirectionalColor())
-				{
-					targetDirectionalColor = Environment.WINTER.getDirectionalColor();
-				}
-			}
-		}
-		else
-		{
-			targetAmbientStrength = defaultEnvironment.getAmbientStrength();
-			targetAmbientColor = defaultEnvironment.getAmbientColor();
-			targetDirectionalStrength = defaultEnvironment.getDirectionalStrength();
-			targetDirectionalColor = defaultEnvironment.getDirectionalColor();
-			targetUnderglowStrength = defaultEnvironment.getUnderglowStrength();
-			targetUnderglowColor = defaultEnvironment.getUnderglowColor();
-			targetLightPitch = defaultEnvironment.getLightPitch();
-			targetLightYaw = defaultEnvironment.getLightYaw();
-
-			if (hdPlugin.configWinterTheme)
-			{
-				if (!defaultEnvironment.isCustomAmbientStrength())
-				{
-					targetAmbientStrength = Environment.WINTER.getAmbientStrength();
-				}
-				if (!defaultEnvironment.isCustomAmbientColor())
-				{
-					targetAmbientColor = Environment.WINTER.getAmbientColor();
-				}
-				if (!defaultEnvironment.isCustomDirectionalStrength())
-				{
-					targetDirectionalStrength = Environment.WINTER.getDirectionalStrength();
-				}
-				if (!defaultEnvironment.isCustomDirectionalColor())
-				{
-					targetDirectionalColor = Environment.WINTER.getDirectionalColor();
-				}
-			}
-		}
 		targetGroundFogStart = newEnvironment.getGroundFogStart();
 		targetGroundFogEnd = newEnvironment.getGroundFogEnd();
 		targetGroundFogOpacity = newEnvironment.getGroundFogOpacity();
@@ -376,7 +356,7 @@ public class EnvironmentManager
 
 	public void updateSkyColor()
 	{
-		Environment env = hdPlugin.configWinterTheme ? Environment.WINTER : currentEnvironment;
+		Environment env = useWinterTheme() ? Environment.WINTER : currentEnvironment;
 		if (!env.isCustomFogColor() || env.isAllowSkyOverride() && config.overrideSky())
 		{
 			DefaultSkyColor sky = config.defaultSkyColor();
@@ -406,6 +386,8 @@ public class EnvironmentManager
 	 */
 	public void loadSceneEnvironments()
 	{
+		updateWinterTheme();
+
 		// loop through all Areas, check Rects of each Area. if any
 		// coordinates overlap scene coordinates, add them to a list.
 		// then loop through all Environments, checking to see if any
