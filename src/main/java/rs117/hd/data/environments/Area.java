@@ -97,6 +97,7 @@ public enum Area
 		new AABB(3271, 3330, 3264, 3322),
 		new AABB(3400, 4807, 3448, 4847) // clan wars arena
 	),
+	GOBLIN_MAZE(3221 , 9660, 3307, 9602),
 
 	// Dorgesh-Kaan
 	DORGESHKAAN(
