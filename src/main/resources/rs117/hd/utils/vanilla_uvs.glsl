@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Adam <Adam@sigterm.info>
+ * Copyright (c) 2023, Adam <Adam@sigterm.info>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -22,79 +22,36 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package rs117.hd.utils.buffer;
 
-import org.lwjgl.system.MemoryUtil;
+void compute_uv(
+         ivec4 posA,      ivec4 posB,      ivec4 posC,
+    inout vec4  uvA, inout vec4  uvB, inout vec4  uvC
+) {
+    vec3 v1 = uvA.xyz;
+    vec3 v2 = uvB.xyz - v1;
+    vec3 v3 = uvC.xyz - v1;
 
-import java.nio.IntBuffer;
+    vec3 v4 = posA.xyz - v1;
+    vec3 v5 = posB.xyz - v1;
+    vec3 v6 = posC.xyz - v1;
 
-public class GpuIntBuffer
-{
-	private IntBuffer buffer = MemoryUtil.memAllocInt(65536);
+    vec3 v7 = cross(v2, v3);
 
-	public void destroy() {
-		if (buffer != null)
-			MemoryUtil.memFree(buffer);
-		buffer = null;
-	}
+    vec3 v8 = cross(v3, v7);
+    float d = 1.0f / dot(v8, v2);
 
-	public void put(int x, int y, int z)
-	{
-		buffer.put(x).put(y).put(z);
-	}
+    float u0 = dot(v8, v4) * d;
+    float u1 = dot(v8, v5) * d;
+    float u2 = dot(v8, v6) * d;
 
-	public void put(int x, int y, int z, int w)
-	{
-		buffer.put(x).put(y).put(z).put(w);
-	}
+    v8 = cross(v2, v7);
+    d = 1.0f / dot(v8, v3);
 
-	public void put(int[] ints) {
-		buffer.put(ints);
-	}
+    float v0_ = dot(v8, v4) * d;
+    float v1_ = dot(v8, v5) * d;
+    float v2_ = dot(v8, v6) * d;
 
-	public void put(IntBuffer buffer) {
-		this.buffer.put(buffer);
-	}
-
-	public int position()
-	{
-		return buffer.position();
-	}
-
-	public void flip()
-	{
-		buffer.flip();
-	}
-
-	public void clear()
-	{
-		buffer.clear();
-	}
-
-	public GpuIntBuffer ensureCapacity(int size)
-	{
-		int capacity = buffer.capacity();
-		final int position = buffer.position();
-		if ((capacity - position) < size)
-		{
-			do
-			{
-				capacity *= 2;
-			}
-			while ((capacity - position) < size);
-
-			IntBuffer newB = MemoryUtil.memAllocInt(capacity);
-			buffer.flip();
-			newB.put(buffer);
-			MemoryUtil.memFree(buffer);
-			buffer = newB;
-		}
-
-		return this;
-	}
-
-	public IntBuffer getBuffer()
-	{
-		return buffer;
-	}
+    uvA.xyz = vec3(u0, v0_, 0);
+    uvB.xyz = vec3(u1, v1_, 0);
+    uvC.xyz = vec3(u2, v2_, 0);
 }

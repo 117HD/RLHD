@@ -23,6 +23,9 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include constants.cl
+#include vanilla_uvs.cl
+
 // Calculate adjusted priority for a face with a given priority, distance, and
 // model global min10 and face distance averages. This allows positioning faces
 // with priorities 10/11 into the correct 'slots' resulting in 18 possible
@@ -244,15 +247,32 @@ void sort_and_insert(
     vout[outOffset + myOffset * 3 + 1] = pos + thisrvB;
     vout[outOffset + myOffset * 3 + 2] = pos + thisrvC;
 
-    if (uvOffset < 0) {
-      uvout[outOffset + myOffset * 3]     = (float4)(0, 0, 0, 0);
-      uvout[outOffset + myOffset * 3 + 1] = (float4)(0, 0, 0, 0);
-      uvout[outOffset + myOffset * 3 + 2] = (float4)(0, 0, 0, 0);
-    } else {
-      uvout[outOffset + myOffset * 3]     = uv[uvOffset + localId * 3];
-      uvout[outOffset + myOffset * 3 + 1] = uv[uvOffset + localId * 3 + 1];
-      uvout[outOffset + myOffset * 3 + 2] = uv[uvOffset + localId * 3 + 2];
+    float4 uvA = (float4)(0);
+    float4 uvB = (float4)(0);
+    float4 uvC = (float4)(0);
+
+    if (uvOffset >= 0) {
+      uvA = uv[uvOffset + localId * 3];
+      uvB = uv[uvOffset + localId * 3 + 1];
+      uvC = uv[uvOffset + localId * 3 + 2];
+
+      if ((((int)uvA.w) >> MATERIAL_FLAG_IS_VANILLA_TEXTURED & 1) == 1) {
+        // rotate back to original orientation because the tex triangles
+        // are not rotated
+        float3 posA = convert_float3(rotate_vertex(uni, thisrvA, 2047 - orientation).xyz);
+        float3 posB = convert_float3(rotate_vertex(uni, thisrvB, 2047 - orientation).xyz);
+        float3 posC = convert_float3(rotate_vertex(uni, thisrvC, 2047 - orientation).xyz);
+
+        compute_uv(
+          posA, posB, posC,
+          &uvA, &uvB, &uvC
+        );
+      }
     }
+
+    uvout[outOffset + myOffset * 3]     = uvA;
+    uvout[outOffset + myOffset * 3 + 1] = uvB;
+    uvout[outOffset + myOffset * 3 + 2] = uvC;
     
     float4 normA, normB, normC;
     

@@ -23,6 +23,9 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include utils/constants.glsl
+#include utils/vanilla_uvs.glsl
+
 // Calculate adjusted priority for a face with a given priority, distance, and
 // model global min10 and face distance averages. This allows positioning faces
 // with priorities 10/11 into the correct 'slots' resulting in 18 possible
@@ -234,15 +237,32 @@ void sort_and_insert(uint localId, ModelInfo minfo, int thisPriority, int thisDi
         vout[outOffset + myOffset * 3 + 1] = pos + thisrvB;
         vout[outOffset + myOffset * 3 + 2] = pos + thisrvC;
 
-        if (uvOffset < 0) {
-            uvout[outOffset + myOffset * 3]     = vec4(0, 0, 0, 0);
-            uvout[outOffset + myOffset * 3 + 1] = vec4(0, 0, 0, 0);
-            uvout[outOffset + myOffset * 3 + 2] = vec4(0, 0, 0, 0);
-        } else {
-            uvout[outOffset + myOffset * 3]     = uv[uvOffset + localId * 3];
-            uvout[outOffset + myOffset * 3 + 1] = uv[uvOffset + localId * 3 + 1];
-            uvout[outOffset + myOffset * 3 + 2] = uv[uvOffset + localId * 3 + 2];
+        vec4 uvA = vec4(0);
+        vec4 uvB = vec4(0);
+        vec4 uvC = vec4(0);
+
+        if (uvOffset >= 0) {
+            uvA = uv[uvOffset + localId * 3];
+            uvB = uv[uvOffset + localId * 3 + 1];
+            uvC = uv[uvOffset + localId * 3 + 2];
+
+            if ((int(uvA.w) >> MATERIAL_FLAG_IS_VANILLA_TEXTURED & 1) == 1) {
+                // rotate back to original orientation because the tex triangles
+                // are not rotated
+                ivec4 posA = rotate(thisrvA, 2047 - orientation);
+                ivec4 posB = rotate(thisrvB, 2047 - orientation);
+                ivec4 posC = rotate(thisrvC, 2047 - orientation);
+
+                compute_uv(
+                    posA, posB, posC,
+                    uvA, uvB, uvC
+                );
+            }
         }
+
+        uvout[outOffset + myOffset * 3]     = uvA;
+        uvout[outOffset + myOffset * 3 + 1] = uvB;
+        uvout[outOffset + myOffset * 3 + 2] = uvC;
 
         vec4 normA, normB, normC;
 
