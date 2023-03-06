@@ -115,6 +115,7 @@ public enum Overlay {
     LUMBRIDGE_CASTLE_ENTRYWAY_1(2, Area.LUMBRIDGE_CASTLE_ENTRYWAY, GroundMaterial.MARBLE_1_GLOSS, p -> p.blended(false)),
     LUMBRIDGE_CASTLE_ENTRYWAY_2(3, Area.LUMBRIDGE_CASTLE_ENTRYWAY, GroundMaterial.MARBLE_2_GLOSS, p -> p.blended(false)),
     LUMBRIDGE_CAVES_FLOOR(49, Area.LUMBRIDGE_SWAMP_CAVES, GroundMaterial.ROCKY_CAVE_FLOOR),
+    GOBLIN_MAZE_FLOOR(48, Area.GOBLIN_MAZE, GroundMaterial.ROCKY_CAVE_FLOOR),
 
 
     //Varrock Indoors
