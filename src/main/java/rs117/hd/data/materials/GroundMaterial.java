@@ -87,6 +87,7 @@ public enum GroundMaterial
 	WINTER_JAGGED_STONE_TILE_LIGHT_2(Material.WINTER_JAGGED_STONE_TILE_LIGHTER),
 	ROCKY_CAVE_FLOOR(Material.GRUNGE_2,Material.ROCK_2, Material.ROCK_2, Material.ROCK_1, Material.GRAVEL),
 	EARTHEN_CAVE_FLOOR(Material.GRUNGE_1,Material.DIRT_2, Material.DIRT_2, Material.ROCK_1, Material.DIRT_2),
+	STONE_CAVE_FLOOR(Material.STONE, Material.ROCK_1, Material.ROCK_2),
 	;
 
 	private final Material[] materials;

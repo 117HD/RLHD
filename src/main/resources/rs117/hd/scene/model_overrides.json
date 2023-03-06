@@ -2820,6 +2820,7 @@
     "description": "DIRT_CAVE_ENTRANCES",
     "baseMaterial": "DIRT_2",
     "objectIds": [
+      720,
       3213,
       39721,
       44635
@@ -6161,6 +6162,16 @@
     "uvType": "GEOMETRY"
   },
   {
+    "description": "Objects - Stone - Stalagmites - Limestone",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      11945,
+      11946,
+      12568
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
     "description": "Lunar Isle - Walls - Stone - Northern Mine",
     "baseMaterial": "ROCK_1",
     "objectIds": [
@@ -6527,6 +6538,87 @@
       154, // Does not appy Taverley Dungeon blue dragons rock
       11190,
       11193
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Objects - Stone - Column - Limestone",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      11937,
+      11938,
+      11939
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Objects - Stone - Counter",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      2876
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Walls - Rock Cave Walls",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      1489,
+      1490,
+      1491,
+      1492,
+      5962
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Mage Arena - Objects - Stone - Sparkling Pool",
+    "baseMaterial": "ROCK_2",
+    "objectIds": [
+      2878,
+      2879
+    ],
+    "uvType": "VANILLA"
+  },
+  {
+    "description": "Mage Arena - Objects - God Statues",
+    "baseMaterial": "MARBLE_3_GLOSS",
+    "objectIds": [
+      2873,
+      2874,
+      2875
+    ],
+    "uvType": "VANILLA"
+  },
+  {
+    "description": "Wilderness - Walls - Brick Ruins",
+    "baseMaterial": "ROCK_1_LIGHT",
+    "objectIds": [
+      14723,
+      14724,
+      14725,
+      14726,
+      14727,
+      14728
+    ],
+    "uvType": "MODEL_XY"
+  },
+  {
+    "description": "Wall Decoration - Rocks",
+    "baseMaterial": "ROCK_1_LIGHT",
+    "objectIds": [
+      1493
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Wilderness - Objects - Mage Arena Level",
+    "baseMaterial": "ROCK_1_LIGHT",
+    "objectIds": [
+      9706,
+      9707
     ],
     "uvType": "MODEL_XZ",
     "uvScale": 0.6
