@@ -310,14 +310,6 @@ public enum Environment
 	),
 
 	LUMBRIDGE(Area.LUMBRIDGE, new Properties()),
-	LUMBRIDGE_SWAMP_CAVES(Area.LUMBRIDGE_SWAMP_CAVES, new Properties()
-			.setFogColor(32, 33, 26)
-			.setFogDepth(50)
-			.setAmbientColor(198, 201, 174)
-			.setAmbientStrength(0.9f)
-			.setDirectionalColor(168, 171, 144)
-			.setDirectionalStrength(0.75f)
-	),
 
 	DRAYNOR_MANOR(Area.DRAYNOR_MANOR, new Properties()
 		.setFogColor(15, 14, 13)

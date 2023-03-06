@@ -97,7 +97,6 @@ public enum Area
 		new AABB(3271, 3330, 3264, 3322),
 		new AABB(3400, 4807, 3448, 4847) // clan wars arena
 	),
-	LUMBRIDGE_SWAMP_CAVES(3265, 9602, 3141, 9536),
 
 	// Dorgesh-Kaan
 	DORGESHKAAN(
