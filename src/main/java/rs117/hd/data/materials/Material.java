@@ -422,6 +422,7 @@ public enum Material
 		.setNormalMap(HD_ROOF_BRICK_TILE_N)
 	),
 
+
 	// Seasonal
 	WINTER_WILLOW_LEAVES(p -> p
 		.replaceIf(HdPluginConfig::winterTheme, WILLOW_LEAVES)

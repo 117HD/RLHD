@@ -3814,6 +3814,7 @@
     "objectIds": [
       2147,
       2148,
+      2884,
       16679,
       16683,
       16684,
@@ -3949,15 +3950,6 @@
     "uvType": "MODEL_XZ",
     "flatNormals": true,
     "uvScale": 0.6
-  },
-  {
-    "description": "Wooden tables - Round",
-    "baseMaterial": "WOOD_GRAIN_2",
-    "objectIds": [
-      25733
-    ],
-    "uvType": "MODEL_XZ",
-    "flatNormals": true
   },
   {
     "description": "Wooden tables - Solid - Cobwebs",
@@ -6622,5 +6614,216 @@
     ],
     "uvType": "MODEL_XZ",
     "uvScale": 0.6
+  },
+  {
+    "description": "Objects - Wooden - Chair",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      1088
+    ],
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 512,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Objects - Wooden - Stool",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      1102
+    ],
+    "uvType": "MODEL_XZ",
+    "flatNormals": true,
+    "uvScale": 0.8
+  },
+  {
+    "description": "Objects - Wooden - Tables - Round",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      593,
+      598,
+      25733
+    ],
+    "uvType": "MODEL_XZ",
+    "flatNormals": true,
+    "uvScale": 1.2
+  },
+  {
+    "description": "Ardougne - Objects - Wooden - Stairs - Plank Textured",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      16667,
+      16668
+    ],
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 512,
+    "uvScale": 0.4
+  },
+  {
+    "description": "Objects - Wooden - Column",
+    "baseMaterial": "NONE",
+    "objectIds": [
+      1870
+    ]
+  },
+  {
+    "description": "Ardougne - Objects - Metallic - Manhole",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      881
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Objects - Stone - Large Gravestone - Large",
+    "baseMaterial": "STONE_SEMIGLOSS",
+    "objectIds": [
+      406
+    ],
+    "uvType": "GEOMETRY",
+    "flatNormals": true
+  },
+  {
+    "description": "Ardougne - Walls - Stone - Zoo Fence",
+    "baseMaterial": "STONE_SEMIGLOSS",
+    "objectIds": [
+      21239,
+      21240,
+      21241,
+      21242
+    ],
+    "uvType": "GEOMETRY",
+    "flatNormals": true
+  },
+  {
+    "description": "Ardougne - Walls - Stone - Zoo Ferret Fence",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      19995
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Ardougne - Walls - Stone - Zoo Ferret Fence",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      306
+    ],
+    "uvType": "VANILLA"
+  },
+  {
+    "description": "Objects - Tree - Fake Dead Tree",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      1133,
+      1134,
+      1135,
+      1136,
+      1137,
+      1138,
+      1139,
+      1140,
+      1141,
+      1142,
+      1143,
+      23559,
+      23530,
+      23561
+    ],
+    "uvType": "VANILLA"
+  },
+  {
+    "description": "Gnome Stronghold - Objects - Tree - Fake Dead Tree",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      1706
+    ],
+    "uvType": "VANILLA"
+  },
+  {
+    "description": "Ground Decoration - Sticks - Small",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      1251,
+      1252
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.6,
+    "uvOrientation": 300
+  },
+  {
+    "description": "Gnome - Walls - Rope Rails",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      1708,
+      1982
+    ]
+  },
+  {
+    "description": "Gnome - Ground Decoration - Wooden - Log Supports",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      1702,
+      1703,
+      1704
+    ],
+    "uvType": "WORLD_XZ"
+  },
+  {
+    "description": "Gnome - Ground Decoration - Wooden - Log Bridges",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      1701
+    ],
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 512,
+    "uvScale": 0.8
+  },
+  {
+    "description": "Gnome - Ground Decoration - Wooden - Log Bridges - Corner",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      4045
+    ],
+    "uvType": "MODEL_XZ_MIRROR_A",
+    "uvOrientation": 256,
+    "uvScale": 0.8
+  },
+  {
+    "description": "Gnome - Objects - Wooden - Hammock",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      430
+    ]
+  },
+  {
+    "description": "Gnome - Objects - Wooden - Lamp",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      201
+    ]
+  },
+  {
+    "description": "Gnome - Objects - Wooden - Bench - Textured",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      1104
+    ]
+  },
+  {
+    "description": "Gnome - Objects - Wooden - Staircase Rails - Textured",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      16677
+    ]
+  },
+  {
+    "description": "Ground Decoration - Wooden - Agility Logs",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      23142,
+      23143,
+      23144,
+      23145
+    ]
   }
 ]
