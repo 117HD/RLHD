@@ -25,7 +25,6 @@
  */
 package rs117.hd;
 
-import com.google.common.primitives.Ints;
 import com.google.gson.Gson;
 import com.google.inject.Provides;
 import lombok.Getter;
@@ -568,10 +567,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				lastStretchedCanvasWidth = lastStretchedCanvasHeight = 0;
 				lastAntiAliasingMode = null;
 
-				lightManager.startUp();
-				modelOverrideManager.startUp();
 				areaManager.startUp();
+				modelOverrideManager.startUp();
 				modelPusher.startUp();
+				lightManager.startUp();
+				environmentManager.startUp();
 
 				if (client.getGameState() == GameState.LOGGED_IN)
 				{
@@ -1368,29 +1368,46 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 		glBindBufferBase(GL_UNIFORM_BUFFER, 3, hUniformBufferLights.glBufferId);
 
-		HorizonTile horizonTile = areaManager.getHorizonTile();
-		if (horizonTile != null) {
-			int vertexOffset = dynamicOffsetVertices + stagingBufferVertices.position() / VERTEX_SIZE;
-			int uvOffset = dynamicOffsetUvs + stagingBufferUvs.position() / UV_SIZE;
-			int faceCount = horizonTile.uploadFaces(stagingBufferVertices, stagingBufferUvs, stagingBufferNormals);
-			while (faceCount > 0) // max 6 faces per unordered model
-			{
-				int n = Math.min(6, faceCount);
-				faceCount -= n;
+		HorizonTile horizonTile = null;
+		if (config.extendHorizon()) {
+			horizonTile = areaManager.getHorizonTile();
+			if (horizonTile != null) {
+				int vertexOffset = dynamicOffsetVertices + stagingBufferVertices.position() / VERTEX_SIZE;
+				int uvOffset = dynamicOffsetUvs + stagingBufferUvs.position() / UV_SIZE;
+				int faceCount = horizonTile.uploadFaces(stagingBufferVertices, stagingBufferUvs, stagingBufferNormals);
 				modelBufferUnordered
 					.ensureCapacity(16)
 					.getBuffer()
 					.put(vertexOffset)
 					.put(uvOffset)
-					.put(n)
+					.put(faceCount)
 					.put(renderBufferOffset)
 					.put(0)
 					.put(0).put(0).put(0);
 				numModelsUnordered++;
-				renderBufferOffset += n * 3;
-				vertexOffset += n * 3;
-				uvOffset += n * 3;
+				renderBufferOffset += faceCount * 3;
 			}
+		}
+
+		int vertexOffset = dynamicOffsetVertices + stagingBufferVertices.position() / VERTEX_SIZE;
+		int uvOffset = dynamicOffsetUvs + stagingBufferUvs.position() / UV_SIZE;
+		int faceCount = sceneUploader.uploadSceneBox(horizonTile, stagingBufferVertices, stagingBufferUvs, stagingBufferNormals);
+		while (faceCount > 0) { // max 6 faces per unordered model
+			int n = Math.min(6, faceCount);
+			faceCount -= n;
+			modelBufferUnordered
+				.ensureCapacity(16)
+				.getBuffer()
+				.put(vertexOffset)
+				.put(uvOffset)
+				.put(n)
+				.put(renderBufferOffset)
+				.put(0)
+				.put(0).put(0).put(0);
+			numModelsUnordered++;
+			renderBufferOffset += n * 3;
+			vertexOffset += n * 3;
+			uvOffset += n * 3;
 		}
 	}
 
@@ -2323,7 +2340,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			case KEY_WINTER_THEME:
 				configHdInfernalTexture = config.hdInfernalTexture();
 				textureManager.freeTextures();
-			case "extendHorizon":
 			case "areaFiltering":
 				reloadSceneNextGameTick();
 				break;
@@ -2668,10 +2684,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		}
 	}
 
-	private int getDrawDistance()
+	public int getDrawDistance()
 	{
-		final int limit = MAX_DISTANCE;
-		return Ints.constrainToRange(config.drawDistance(), 0, limit);
+		return HDUtils.clamp(config.drawDistance(), 0, MAX_DISTANCE);
 	}
 
 	/**

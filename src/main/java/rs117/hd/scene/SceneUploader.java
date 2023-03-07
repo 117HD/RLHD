@@ -972,6 +972,89 @@ class SceneUploader
 		return new int[]{bufferLength, uvBufferLength, underwaterTerrain};
 	}
 
+	public int uploadSceneBox(HorizonTile horizonTile, GpuIntBuffer vertexBuffer, GpuFloatBuffer uvBuffer, GpuFloatBuffer normalBuffer) {
+		int color = 127;
+
+		final int centerX = client.getCameraX() / Perspective.LOCAL_TILE_SIZE;
+		final int centerY = client.getCameraY() / Perspective.LOCAL_TILE_SIZE;
+		final int drawDistance = plugin.getDrawDistance();
+		int sceneMinX = Math.max(1, centerX - drawDistance) * Perspective.LOCAL_TILE_SIZE;
+		int sceneMaxX = Math.min(Perspective.SCENE_SIZE - 1, centerX + drawDistance) * Perspective.LOCAL_TILE_SIZE;
+		int sceneMinY = Math.max(1, centerY - drawDistance) * Perspective.LOCAL_TILE_SIZE;
+		int sceneMaxY = Math.min(Perspective.SCENE_SIZE - 1, centerY + drawDistance) * Perspective.LOCAL_TILE_SIZE;
+		int maxDepth = ProceduralGenerator.depthLevelSlope[ProceduralGenerator.depthLevelSlope.length - 1];
+
+		WaterType waterType = WaterType.NONE;
+		Material material = Material.NONE;
+		if (horizonTile != null) {
+			if (horizonTile.getWaterType() != null)
+				waterType = horizonTile.getWaterType();
+			if (horizonTile.getMaterial() != null)
+				material = horizonTile.getMaterial();
+		}
+
+		int materialData, terrainData;
+
+		materialData = SceneUploader.packMaterialData(material, false, ModelOverride.NONE);
+		terrainData = SceneUploader.packTerrainData(maxDepth, waterType, 0);
+
+		// TODO: change y=0 to the actual water height (e.g. some map squares use -16)
+		//		 This will likely need one wall per map square, or one wall per edge tile
+
+		// Scene edges
+		vertexBuffer.put(sceneMaxX, maxDepth, sceneMinY, color);
+		vertexBuffer.put(sceneMinX, maxDepth, sceneMinY, color);
+		vertexBuffer.put(sceneMinX, 0, sceneMinY, color);
+		vertexBuffer.put(sceneMaxX, maxDepth, sceneMinY, color);
+		vertexBuffer.put(sceneMinX, 0, sceneMinY, color);
+		vertexBuffer.put(sceneMaxX, 0, sceneMinY, color);
+
+		vertexBuffer.put(sceneMaxX, maxDepth, sceneMaxY, color);
+		vertexBuffer.put(sceneMaxX, maxDepth, sceneMinY, color);
+		vertexBuffer.put(sceneMaxX, 0, sceneMinY, color);
+		vertexBuffer.put(sceneMaxX, maxDepth, sceneMaxY, color);
+		vertexBuffer.put(sceneMaxX, 0, sceneMinY, color);
+		vertexBuffer.put(sceneMaxX, 0, sceneMaxY, color);
+
+		vertexBuffer.put(sceneMinX, maxDepth, sceneMaxY, color);
+		vertexBuffer.put(sceneMaxX, maxDepth, sceneMaxY, color);
+		vertexBuffer.put(sceneMaxX, 0, sceneMaxY, color);
+		vertexBuffer.put(sceneMinX, maxDepth, sceneMaxY, color);
+		vertexBuffer.put(sceneMaxX, 0, sceneMaxY, color);
+		vertexBuffer.put(sceneMinX, 0, sceneMaxY, color);
+
+		vertexBuffer.put(sceneMinX, maxDepth, sceneMinY, color);
+		vertexBuffer.put(sceneMinX, maxDepth, sceneMaxY, color);
+		vertexBuffer.put(sceneMinX, 0, sceneMaxY, color);
+		vertexBuffer.put(sceneMinX, maxDepth, sceneMinY, color);
+		vertexBuffer.put(sceneMinX, 0, sceneMaxY, color);
+		vertexBuffer.put(sceneMinX, 0, sceneMinY, color);
+
+		for (int i = 0; i < 4 * 2 * 3; i++) {
+			uvBuffer.put(materialData, 0, 0, 0);
+			normalBuffer.put(0, 1, 0, terrainData);
+		}
+
+		// Scene bottom
+		color = 0; // black
+		materialData = SceneUploader.packMaterialData(Material.NONE, false, ModelOverride.NONE);
+		terrainData = SceneUploader.packTerrainData(0, WaterType.NONE, 0);
+
+		vertexBuffer.put(sceneMinX, maxDepth, sceneMinY, color);
+		vertexBuffer.put(sceneMaxX, maxDepth, sceneMinY, color);
+		vertexBuffer.put(sceneMaxX, maxDepth, sceneMaxY, color);
+		vertexBuffer.put(sceneMinX, maxDepth, sceneMinY, color);
+		vertexBuffer.put(sceneMaxX, maxDepth, sceneMaxY, color);
+		vertexBuffer.put(sceneMinX, maxDepth, sceneMaxY, color);
+
+		for (int i = 0; i < 2 * 3; i++) {
+			uvBuffer.put(materialData, 0, 0, 0);
+			normalBuffer.put(0, 1, 0, terrainData);
+		}
+
+		return 10;
+	}
+
 	public static int packMaterialData(Material material, boolean isOverlay, @NonNull ModelOverride modelOverride) {
 		return (material.ordinal() & (1 << 10) - 1) << 4
 			| (isOverlay ? 1 : 0) << 3

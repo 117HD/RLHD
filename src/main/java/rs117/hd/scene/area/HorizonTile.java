@@ -22,15 +22,14 @@ public class HorizonTile {
 
 	public int uploadFaces(GpuIntBuffer vertexBuffer, GpuFloatBuffer uvBuffer, GpuFloatBuffer normalBuffer) {
 		int color = 127;
-		int sceneMin = Perspective.LOCAL_TILE_SIZE;
-		int sceneMax = (Constants.SCENE_SIZE - 1) * Perspective.LOCAL_TILE_SIZE;
 		int maxDepth = ProceduralGenerator.depthLevelSlope[ProceduralGenerator.depthLevelSlope.length - 1];
 		// TODO: Scaling up much further leads to precision issues. A different method is needed for a perfectly flat horizon
 		int horizonRadius = 8000 * Perspective.LOCAL_TILE_SIZE;
 
-		int materialData, terrainData;
+		int materialData, terrainData, faceCount = 2;
 
 		if (materialBelow != null) {
+			faceCount += 2;
 			materialData = SceneUploader.packMaterialData(Material.DIRT_1, false, ModelOverride.NONE);
 			terrainData = SceneUploader.packTerrainData(maxDepth, waterType, 0);
 
@@ -81,63 +80,6 @@ public class HorizonTile {
 		for (int i = 0; i < 6; i++)
 			normalBuffer.put(0, 1, 0, terrainData);
 
-
-		if (materialBelow != null) {
-			materialData = SceneUploader.packMaterialData(Material.DIRT_1, false, ModelOverride.NONE);
-			terrainData = SceneUploader.packTerrainData(maxDepth, waterType, 0);
-
-			// Scene underwater bounding box
-			vertexBuffer.put(sceneMax, maxDepth, sceneMin, color);
-			vertexBuffer.put(sceneMin, maxDepth, sceneMin, color);
-			vertexBuffer.put(sceneMin, 0, sceneMin, color);
-			vertexBuffer.put(sceneMax, maxDepth, sceneMin, color);
-			vertexBuffer.put(sceneMin, 0, sceneMin, color);
-			vertexBuffer.put(sceneMax, 0, sceneMin, color);
-
-			vertexBuffer.put(sceneMax, maxDepth, sceneMax, color);
-			vertexBuffer.put(sceneMax, maxDepth, sceneMin, color);
-			vertexBuffer.put(sceneMax, 0, sceneMin, color);
-			vertexBuffer.put(sceneMax, maxDepth, sceneMax, color);
-			vertexBuffer.put(sceneMax, 0, sceneMin, color);
-			vertexBuffer.put(sceneMax, 0, sceneMax, color);
-
-			vertexBuffer.put(sceneMin, maxDepth, sceneMax, color);
-			vertexBuffer.put(sceneMax, maxDepth, sceneMax, color);
-			vertexBuffer.put(sceneMax, 0, sceneMax, color);
-			vertexBuffer.put(sceneMin, maxDepth, sceneMax, color);
-			vertexBuffer.put(sceneMax, 0, sceneMax, color);
-			vertexBuffer.put(sceneMin, 0, sceneMax, color);
-
-			vertexBuffer.put(sceneMin, maxDepth, sceneMin, color);
-			vertexBuffer.put(sceneMin, maxDepth, sceneMax, color);
-			vertexBuffer.put(sceneMin, 0, sceneMax, color);
-			vertexBuffer.put(sceneMin, maxDepth, sceneMin, color);
-			vertexBuffer.put(sceneMin, 0, sceneMax, color);
-			vertexBuffer.put(sceneMin, 0, sceneMin, color);
-
-			for (int i = 0; i < 4 * 2 * 3; i++) {
-				uvBuffer.put(materialData, 0, 0, 0);
-				normalBuffer.put(0, 1, 0, terrainData);
-			}
-
-			// Black scene bottom
-			color = 0; // black
-			materialData = SceneUploader.packMaterialData(Material.NONE, false, ModelOverride.NONE);
-			terrainData = SceneUploader.packTerrainData(0, WaterType.NONE, 0);
-
-			vertexBuffer.put(sceneMin, maxDepth, sceneMin, color);
-			vertexBuffer.put(sceneMax, maxDepth, sceneMin, color);
-			vertexBuffer.put(sceneMax, maxDepth, sceneMax, color);
-			vertexBuffer.put(sceneMin, maxDepth, sceneMin, color);
-			vertexBuffer.put(sceneMax, maxDepth, sceneMax, color);
-			vertexBuffer.put(sceneMin, maxDepth, sceneMax, color);
-
-			for (int i = 0; i < 2 * 3; i++) {
-				uvBuffer.put(materialData, 0, 0, 0);
-				normalBuffer.put(0, 1, 0, terrainData);
-			}
-		}
-
-		return materialBelow == null ? 4 : 14;
+		return faceCount;
 	}
 }
