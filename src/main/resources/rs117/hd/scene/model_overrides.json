@@ -2589,18 +2589,11 @@
     "description": "GROUND_DECORATION_SNOW",
     "baseMaterial": "SNOW_1",
     "objectIds": [
-      559,
-      560,
-      561,
       10592,
-      10593,
       10594,
       13411,
       13412,
       13413,
-      21103,
-      21104,
-      21105,
       26397,
       26398
     ],
@@ -6825,5 +6818,327 @@
       23144,
       23145
     ]
+  },
+  {
+    "description": "Objects - Ice Rocks - Small",
+    "baseMaterial": "ICE_1",
+    "objectIds": [
+      3550,
+      10593,
+      21135,
+      21136,
+      21137,
+      21138,
+      21148,
+      21149,
+      21150,
+      21151,
+      21152,
+      21153,
+      21154,
+      21155,
+      21156
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Objects - Ice Rocks - Large",
+    "baseMaterial": "ICE_1",
+    "objectIds": [
+      1444,
+      6475,
+      21095,
+      21096,
+      21097,
+      21098,
+      21099,
+      21101,
+      21110,
+      21111,
+      21120,
+      21121,
+      21122,
+      21123,
+      21124,
+      21221,
+      21222,
+      21227,
+      21228,
+      21229,
+      21230,
+      21231,
+      21233
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.25
+  },
+  {
+    "description": "Ground - Snow Piles - Tiny",
+    "baseMaterial": "SNOW_1",
+    "objectIds": [
+      559,
+      560,
+      561,
+      21103,
+      21105
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 2.0
+  },
+  {
+    "description": "Ground - Snow Piles - Tiny",
+    "baseMaterial": "SNOW_1",
+    "objectIds": [
+      21074
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 2.0
+  },
+  {
+    "description": "Ground - Snow Piles - Small",
+    "baseMaterial": "SNOW_2",
+    "objectIds": [
+      21104
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 1.64
+  },
+  {
+    "description": "Objects - Snow Piles - Large",
+    "baseMaterial": "SNOW_4",
+    "objectIds": [
+      5030,
+      5031,
+      10590,
+      10591,
+      21159,
+      21199,
+      21200,
+      21158,
+      21159,
+      21199,
+      21200,
+      21224,
+      26413,
+      26485,
+      26486,
+      26399,
+      27925
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Objects - Ice - Giant",
+    "baseMaterial": "ICE_3",
+    "objectIds": [
+      21219,
+      21220
+    ],
+    "uvType": "GEOMETRY",
+    "uvOrientation": 245,
+    "uvScale": 1.2
+  },
+  {
+    "description": "Objects - Ice Stalagmite",
+    "baseMaterial": "ICE_1",
+    "objectIds": [
+      10602,
+      10604,
+      21100,
+      21139,
+      21140,
+      21141,
+      21223,
+      21225,
+      21226,
+      21235,
+      21236,
+      21237,
+      21238,
+      21334
+    ],
+    "uvType": "WORLD_XY",
+    "uvScale": 0.25
+  },
+  {
+    "description": "Firm Snowy Patch",
+    "baseMaterial": "SNOW_1",
+    "objectIds": [
+      21246
+    ],
+    "uvType": "WORLD_XZ"
+  },
+  {
+    "description": "Ice Walls",
+    "baseMaterial": "ICE_2",
+    "objectIds": [
+      21034,
+      21035,
+      21036,
+      21037,
+      21038,
+      21039,
+      21040,
+      21041,
+      21042,
+      21043,
+      21044,
+      21045,
+      21046,
+      21047,
+      21048,
+      21049,
+      21050,
+      21051,
+      21052,
+      21053,
+      21054,
+      21055,
+      21058,
+      21059,
+      21060,
+      21061,
+      21062,
+      21063,
+      21064,
+      21065,
+      21066,
+      21067,
+      21069,
+      21070,
+      21071,
+      21072,
+      21077,
+      21166,
+      21169,
+      21170,
+      21171
+    ],
+    "uvType": "MODEL_XY",
+    "uvScale": 0.48,
+    "uvOrientation": 315
+  },
+  {
+    "description": "Ice Walls - Rotated",
+    "baseMaterial": "ICE_2",
+    "objectIds": [
+      21056,
+      21057
+    ],
+    "uvType": "MODEL_YZ",
+    "uvScale": 0.48,
+    "uvOrientation": 315
+  },
+  {
+    "description": "Ice Walls Cap",
+    "baseMaterial": "ICE_1",
+    "objectIds": [
+      21196
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.33
+  },
+  {
+    "description": "Penguin Metal Doors",
+    "baseMaterial": "METALLIC_2",
+    "objectIds": [
+      21160,
+      21161,
+      21068
+    ],
+    "uvType": "MODEL_XY"
+  },
+  {
+    "description": "WALLS - ICE FENCE",
+    "baseMaterial": "ICE_4",
+    "objectIds": [
+      21017,
+      21088,
+      21078,
+      21079,
+      21080,
+      21081,
+      21082,
+      21083,
+      21172,
+      21167
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Penguin Footprints",
+    "baseMaterial": "SNOW_2",
+    "uvType": "WORLD_XZ",
+    "objectIds": [
+      21247,
+      21248
+    ],
+    "disableShadows": true
+  },
+  {
+    "description": "Big Red Button",
+    "baseMaterial": "METALLIC_2",
+    "objectIds": [
+      21086
+    ]
+  },
+  {
+    "description": "Penguin Base Crack",
+    "baseMaterial": "SNOW_2",
+    "objectIds": [
+      21245
+    ],
+    "uvType": "WORLD_XZ",
+    "uvOrientation": 512,
+    "uvScale": 0.76
+  },
+  {
+    "description": "Ice Walls 2",
+    "baseMaterial": "ICE_1",
+    "objectIds": [
+      21112,
+      21113,
+      21114,
+      21115,
+      21116,
+      21117,
+      21118,
+      21119,
+      21157,
+      21186,
+      21187,
+      21188,
+      21189,
+      21190,
+      21191,
+      21192,
+      21193,
+      21194,
+      21195,
+      21197,
+      21198,
+      21201,
+      21202,
+      21203,
+      21204,
+      21205,
+      21206,
+      21207,
+      21208,
+      21209,
+      21210,
+      21211,
+      21212,
+      21213,
+      21214,
+      21215,
+      21216,
+      21217,
+      21218
+    ],
+    "uvType": "MODEL_XY",
+    "uvScale": 0.33
   }
 ]

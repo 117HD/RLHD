@@ -390,12 +390,19 @@ public enum Material
 	METALLIC_NONE_GLOSS(NONE, p -> p
 		.setSpecular(0.7f, 80)),
 	WATTLE_1,
-	ICE_1(GRUNGE_2, p -> p
+	ICE_1(SNOW_4, p -> p
 		.replaceIf(HdPluginConfig::winterTheme, WATER_FLAT_2, WATER_FLAT)
 		.setSpecular(1.1f, 200)),
-	ICE_1_HIGHGLOSS(GRUNGE_2, p -> p
+	ICE_1_HIGHGLOSS(ICE_1, p -> p
 		.replaceIf(HdPluginConfig::winterTheme, WATER_FLAT_2, WATER_FLAT)
 		.setSpecular(3.1f, 30)),
+	ICE_2(SNOW_2, p -> p
+		.setSpecular(1.5f,800)),
+	ICE_3(GRUNGE_2, p -> p
+		.setSpecular(1.9f,1000)),
+	ICE_4(WHITE, p -> p
+		.setSpecular(1.5f,1000)
+		.setNormalMap(WATER_NORMAL_MAP_2)),
 	SLIME_GRUNGE(GRUNGE_1, p -> p
 		.setSpecular(4.1f, 60)),
 	WATER_PUDDLE(NONE, p -> p

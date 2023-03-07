@@ -120,6 +120,14 @@ public enum Underlay {
     // Yanille
     YANILLE_AGILITY_DUNGEON_ENTRANCE_FIX(63, Area.YANILLE_AGILITY_DUNGEON_ENTRANCE, GroundMaterial.NONE, p -> p.blended(false)),
 
+    // Iceberg
+    ICEBERG_TEXTURE(p -> p
+        .area(Area.ICEBERG)
+        .groundMaterial(GroundMaterial.SNOW_2)
+        .ids(59)
+        .shiftLightness(5)
+    ),
+
     // Zanaris
     COSMIC_ENTITYS_PLANE_ABYSS(Area.COSMIC_ENTITYS_PLANE, GroundMaterial.NONE, p -> p
         .lightness(0)
@@ -148,6 +156,13 @@ public enum Underlay {
             .area(Area.MOTHERLODE_MINE)
             .ids(63, 64,71)
     ),
+
+	// Penguin Base
+	PENGUIN_BASE_FLOOR(p -> p
+		.area(Area.PENGUIN_BASE)
+		.groundMaterial(GroundMaterial.ICE_4)
+		.ids(59)
+	),
 
     // Death's office
     DEATHS_OFFICE_TILE(-110, Area.DEATHS_OFFICE, GroundMaterial.TILES_2x2_1_SEMIGLOSS),

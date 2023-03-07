@@ -166,7 +166,7 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay
 		Underlay underlay = Underlay.getUnderlay(underlayId, tile, client, plugin);
 		lines.add(String.format("Underlay: %s (%d)", underlay.name(), underlayId));
 
-		Color polyColor;
+		Color polyColor = Color.BLACK;
 		if (paint != null)
 		{
 			// TODO: separate H, S and L to hopefully more easily match tiles that are different shades of the same hue

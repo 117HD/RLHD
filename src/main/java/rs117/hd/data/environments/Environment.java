@@ -495,6 +495,17 @@ public enum Environment
 		.setGroundFog(-200, -400, 0.3f)
 	),
 
+	PENGUIN_BASE(Area.PENGUIN_BASE, new Properties()
+		.setFogColor("#090808")
+		.setFogDepth(40)
+		.setAmbientColor("#AAAFB6")
+		.setAmbientStrength(.75f)
+		.setDirectionalColor("#FFFFFF")
+		.setDirectionalStrength(.75f)
+		.setLightDirection(260f, 10f)
+		.setWaterColor(102, 234, 255)
+	),
+
 	// Karamja
 	KARAMJA_VOLCANO_DUNGEON(Area.KARAMJA_VOLCANO_DUNGEON, new Properties()
 		.setFogColor("#190D02")

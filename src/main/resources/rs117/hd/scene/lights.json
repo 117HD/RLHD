@@ -30293,5 +30293,23 @@
     "objectIds": [
       201
     ]
+  },
+  {
+    "description": "PENGUIN_BASE_LAMP",
+    "height": 120,
+    "alignment": "FRONT",
+    "radius": 140,
+    "strength": 10.5,
+    "color": [
+      202,
+      148,
+      3
+    ],
+    "type": "PULSE",
+    "duration": 1300,
+    "range": 100,
+    "objectIds": [
+      21085
+    ]
   }
 ]
