@@ -157,6 +157,13 @@ public enum Underlay {
             .ids(63, 64,71)
     ),
 
+	// Penguin Base
+	PENGUIN_BASE_FLOOR(p -> p
+		.area(Area.PENGUIN_BASE)
+		.groundMaterial(GroundMaterial.ICE_4)
+		.ids(59)
+	),
+
     // Death's office
     DEATHS_OFFICE_TILE(-110, Area.DEATHS_OFFICE, GroundMaterial.TILES_2x2_1_SEMIGLOSS),
 

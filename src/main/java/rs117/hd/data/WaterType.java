@@ -85,7 +85,8 @@ public enum WaterType
 		.causticsStrength(.4f)
 		.duration(0)
 		.normalMap(Material.WATER_NORMAL_MAP_2)),
-	ICE_FLAT(ICE, true);
+	ICE_FLAT(ICE, true),
+	;
 
 	public final boolean flat;
 	public final float specularStrength;
