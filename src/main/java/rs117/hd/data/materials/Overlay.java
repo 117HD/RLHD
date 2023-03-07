@@ -600,12 +600,12 @@ public enum Overlay {
     DS2_SHIPS_WATER(6, Area.DS2_SHIPS, WaterType.WATER_FLAT),
     DS2_FLEET_ATTACKED(6, Area.DS2_FLEET_ATTACKED, WaterType.WATER_FLAT),
 
-    //Penguin Base
+    // Penguin Base
     PENGUIN_BASE_FLOOR(p -> p
-            .area(Area.PENGUIN_BASE)
-            .groundMaterial(GroundMaterial.ICE_1)
-            .ids(0)
-            .shiftLightness(3)
+		.area(Area.PENGUIN_BASE)
+		.groundMaterial(GroundMaterial.ICE_1)
+		.ids(0)
+		.shiftLightness(3)
     ),
 
     // Camdozaal (Below Ice Mountain)

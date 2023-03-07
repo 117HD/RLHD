@@ -88,7 +88,6 @@ public enum GroundMaterial
 	ROCKY_CAVE_FLOOR(Material.GRUNGE_2,Material.ROCK_2, Material.ROCK_2, Material.ROCK_1, Material.GRAVEL),
 	EARTHEN_CAVE_FLOOR(Material.GRUNGE_1,Material.DIRT_2, Material.DIRT_2, Material.ROCK_1, Material.DIRT_2),
 	STONE_CAVE_FLOOR(Material.STONE, Material.ROCK_1, Material.ROCK_2),
-	ICE_1(Material.WATER_ICE)
 	;
 
 	private final Material[] materials;
