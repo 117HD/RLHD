@@ -1,7 +1,6 @@
 package rs117.hd.scene.area;
 
 import lombok.Data;
-import net.runelite.api.Constants;
 import net.runelite.api.Perspective;
 import rs117.hd.data.WaterType;
 import rs117.hd.data.materials.Material;

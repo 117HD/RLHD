@@ -763,7 +763,7 @@ void main() {
     outputColor.rgb = colorBlindnessCompensation(outputColor.rgb);
 
     // apply fog
-    if (!isUnderwater) {
+    if (!isUnderwater && IN.position.y <= 0) {
         // ground fog
         float distance = distance(IN.position, camPos);
         float closeFadeDistance = 1500;
