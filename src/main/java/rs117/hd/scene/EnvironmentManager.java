@@ -82,10 +82,7 @@ public class EnvironmentManager
 	boolean lastSkyOverride = false;
 	boolean lastUnderwater = false;
 
-	// previous camera target world X
-	private int prevCamTargetX = 0;
-	// previous camera target world Y
-	private int prevCamTargetY = 0;
+	private WorldPoint prevWorldPos = new WorldPoint(0, 0, 0);
 
 	public static final float[] BLACK_COLOR = {0,0,0};
 
@@ -158,14 +155,12 @@ public class EnvironmentManager
 
 	public void update()
 	{
-		WorldPoint camPosition = localPointToWorldTile(hdPlugin.camTarget[0], hdPlugin.camTarget[1]);
-		int camTargetX = camPosition.getX();
-		int camTargetY = camPosition.getY();
-		int camTargetZ = camPosition.getPlane();
+		LocalPoint localPos = client.getLocalPlayer().getLocalLocation();
+		WorldPoint worldPos = localPointToWorldTile(localPos.getX(), localPos.getY());
 
 		for (Environment environment : sceneEnvironments)
 		{
-			if (environment.getArea().containsPoint(camTargetX, camTargetY, camTargetZ))
+			if (environment.getArea().containsPoint(worldPos))
 			{
 				if (environment != currentEnvironment)
 				{
@@ -180,7 +175,16 @@ public class EnvironmentManager
 
 					hdPlugin.setInGauntlet(environment == Environment.THE_GAUNTLET || environment == Environment.THE_GAUNTLET_CORRUPTED);
 
-					changeEnvironment(environment, camTargetX, camTargetY, false);
+					int tileChangeX = Math.abs(worldPos.getX() - prevWorldPos.getX());
+					int tileChangeY = Math.abs(worldPos.getY() - prevWorldPos.getY());
+					int tileChange = Math.max(tileChangeX, tileChangeY);
+
+					// skip the transitional fade if the player has moved too far
+					// since the previous frame. results in an instant transition when
+					// teleporting, entering dungeons, etc.
+					boolean instantChange = tileChange >= skipTransitionTiles;
+
+					changeEnvironment(environment, instantChange);
 				}
 				break;
 			}
@@ -191,7 +195,7 @@ public class EnvironmentManager
 			lastSkyOverride != config.overrideSky() ||
 			lastUnderwater != isUnderwater())
 		{
-			changeEnvironment(currentEnvironment, camTargetX, camTargetY, true);
+			changeEnvironment(currentEnvironment, true);
 		}
 
 		// modify all environment values during transition
@@ -241,8 +245,7 @@ public class EnvironmentManager
 		updateLightning();
 
 		// update some things for use next frame
-		prevCamTargetX = camTargetX;
-		prevCamTargetY = camTargetY;
+		prevWorldPos = worldPos;
 		lastFrameTime = System.currentTimeMillis();
 		lastSkyColor = config.defaultSkyColor();
 		lastSkyOverride = config.overrideSky();
@@ -268,16 +271,16 @@ public class EnvironmentManager
 	 * Updates variables used in transition effects
 	 *
 	 * @param newEnvironment
-	 * @param camTargetX
-	 * @param camTargetY
 	 */
-	private void changeEnvironment(Environment newEnvironment, int camTargetX, int camTargetY, boolean instantChange)
+	private void changeEnvironment(Environment newEnvironment, boolean instantChange)
 	{
 		currentEnvironment = newEnvironment;
 		log.debug("currentEnvironment changed to " + newEnvironment);
 
 		startTime = System.currentTimeMillis();
-		transitionCompleteTime = instantChange ? 0 : startTime + transitionDuration;
+		transitionCompleteTime = startTime;
+		if (!instantChange)
+			transitionCompleteTime += transitionDuration;
 
 		// set previous variables to current ones
 		startFogColor = currentFogColor;
@@ -340,18 +343,6 @@ public class EnvironmentManager
 		targetUnderwaterCausticsStrength = newEnvironment.getUnderwaterCausticsStrength();
 
 		lightningEnabled = newEnvironment.isLightningEnabled();
-
-		int tileChangeX = Math.abs(prevCamTargetX - camTargetX);
-		int tileChangeY = Math.abs(prevCamTargetY - camTargetY);
-		int tileChange = Math.max(tileChangeX, tileChangeY);
-
-		// skip the transitional fade if the player has moved too far
-		// since the previous frame. results in an instant transition when
-		// teleporting, entering dungeons, etc.
-		if (tileChange >= skipTransitionTiles)
-		{
-			transitionCompleteTime = startTime;
-		}
 	}
 
 	public void updateSkyColor()
@@ -426,11 +417,6 @@ public class EnvironmentManager
 		{
 			log.debug("SceneArea: " + environment.name());
 		}
-
-		WorldPoint camPosition = localPointToWorldTile(hdPlugin.camTarget[0], hdPlugin.camTarget[1]);
-		int camTargetX = camPosition.getX();
-		int camTargetY = camPosition.getY();
-		changeEnvironment(currentEnvironment, camTargetX, camTargetY, false);
 	}
 
 
