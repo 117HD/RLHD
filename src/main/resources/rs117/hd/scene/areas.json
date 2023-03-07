@@ -891,8 +891,10 @@
     ]
   },
   {
-    "description": "Blood Alter",
-    "region": 12785
+    "description": "Blood Altar",
+    "aabbs": [
+      [ 3202, 4802, 3260, 4860 ]
+    ]
   },
   {
     "aabbs": [
@@ -910,31 +912,31 @@
     "region": 11593
   },
   {
-    "description": "Body Alter",
+    "description": "Body Altar",
     "aabbs": [
       [ 2501, 4859, 2540, 4819 ]
     ]
   },
   {
-    "description": "Fire Alter",
+    "description": "Fire Altar",
     "aabbs": [
       [ 2553, 4863, 2623, 4804 ]
     ]
   },
   {
-    "description": "Earth Alter",
+    "description": "Earth Altar",
     "region": 10571
   },
   {
-    "description": "Water Alter ",
+    "description": "Water Altar ",
     "region": 10827
   },
   {
-    "description": "Mind Alter",
+    "description": "Mind Altar",
     "region": 11083
   },
   {
-    "description": "Air Alter ",
+    "description": "Air Altar ",
     "region": 11339
   },
   {

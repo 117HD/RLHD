@@ -45,11 +45,12 @@ public class AreaManager {
     private HdPluginConfig config;
 
     public void startUp() {
-        areas.clear();
         areaDataPath.watch(path -> {
             try {
+				areas.clear();
                 Collections.addAll(areas, path.loadJson(plugin.getGson(), AreaDefinition[].class));
                 log.debug("Loaded {} areas", areas.size());
+				plugin.reloadSceneNextGameTick();
             } catch (IOException ex) {
                 log.error("Failed to load areas: ", ex);
             }
@@ -67,12 +68,15 @@ public class AreaManager {
                     }
                 }
             } else if (area.region != -1) {
+				System.out.println(point.getRegionID());
+				System.out.println("comparing with: " + area.description + " with ID " + area.region);
                 if (point.getRegionID() == area.region) {
 					currentArea = area;
                     break;
                 }
             }
         }
+		System.out.println(currentArea);
     }
 
     public boolean shouldHideTile(int tileX, int tileY) {
