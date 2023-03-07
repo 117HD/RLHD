@@ -1830,7 +1830,7 @@
     ]
   },
   {
-    "region": 13972 
+    "region": 13972
   },
   {
     "aabbs": [
@@ -2019,7 +2019,7 @@
     "region": 14214
   },
   {
-    "region": 13199 
+    "region": 13199
   },
   {
     "region": 13457
@@ -2258,7 +2258,7 @@
   },
 
   {
-    "region": 8593 
+    "region": 8593
   },
   {
     "region": 9116
@@ -2338,7 +2338,7 @@
     "description": "Catacombs of Kourend"
   },
   {
-    "region": 6303 
+    "region": 6303
   },
   {
     "region": 5789,
@@ -2358,7 +2358,7 @@
     "region": 4763
   },
   {
-    "region": 5275 
+    "region": 5275
   },
   {
     "aabbs": [
@@ -2401,7 +2401,7 @@
     "description": "Karuulm Slayer Dungeon"
   },
   {
-    "region": 4768 
+    "region": 4768
   },
   {
     "aabbs": [
@@ -2503,7 +2503,7 @@
     "region": 14746
   },
   {
-    "region": 14745 
+    "region": 14745
   },
   {
     "region": 14234
@@ -2526,7 +2526,7 @@
   },
 
   {
-    "region": 16464 
+    "region": 16464
   },
   {
     "region": 13721
@@ -2873,7 +2873,7 @@
     "region": 11926
   },
   {
-    "region": 11415 
+    "region": 11415
   },
   {
     "aabbs": [
@@ -2962,7 +2962,7 @@
     "region": 12187
   },
   {
-    "region": 12700 
+    "region": 12700
   },
   {
     "aabbs": [
@@ -3509,7 +3509,7 @@
     ]
   },
   {
-    "region": 9620 
+    "region": 9620
   },
   {
     "region": 8855
@@ -3589,7 +3589,7 @@
     "description": "Iban's Lair - Lower"
   },
   {
-    "region": 9878 
+    "region": 9878
   },
   {
     "aabbs": [
@@ -3652,5 +3652,17 @@
       ]
     ],
     "description": "9625"
+  },
+  {
+    "aabbs": [
+      [ 700, 2300, 4200, 4095 ]
+    ],
+    "description": "Overworld",
+    "horizonTile": {
+      "waterType": "WATER",
+      "height": 0,
+      "material": "DIRT_1",
+      "materialBelow": "DIRT_1"
+    }
   }
 ]

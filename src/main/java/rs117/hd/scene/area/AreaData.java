@@ -6,12 +6,10 @@ import rs117.hd.utils.AABB;
 
 @NoArgsConstructor
 public class AreaData {
-
-    @JsonAdapter(AABB.JsonAdapter.class)
+	public String description = "UNKNOWN";
+	@JsonAdapter(AABB.JsonAdapter.class)
     public AABB[] aabbs = {};
-    public int region = -1;
-    public boolean hideOtherRegions = true;
-    public String description = "UNKNOWN";
+	public int region = -1;
+	public boolean hideOtherRegions = true;
     public HorizonTile horizonTile = null;
-
 }

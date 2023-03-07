@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "horizon.schema.json",
+  "title": "Properties of a large tile to fill in the edges of the scene",
+  "type": "object",
+  "required": [ "material" ],
+  "properties": {
+    "material": {
+      "type": "enum",
+      "description": "The material to use for the horizon tile."
+    },
+    "materialBelow": {
+      "type": "enum",
+      "description": "The material to use beneath for multi-level tiles such as water."
+    },
+    "isOverlay": {
+      "type": "boolean",
+      "description": "Whether the tile should act as an overlay tile."
+    },
+    "waterType": {
+      "type": "enum",
+      "description": "The type of water to render for the tile."
+    },
+    "height": {
+      "type": "integer",
+      "description": "The vertical placement in the scene. Usually set to zero."
+    },
+    "color": {
+      "type": "integer",
+      "description": "The HSL color to use for the horizon tile."
+    }
+  }
+}

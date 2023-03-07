@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "areas.schema.json",
-  "title": "Area Data",
+  "title": "List of area definitions",
   "type": "array",
   "items": {
     "type": "object",
@@ -9,27 +9,27 @@
     "properties": {
       "description": {
         "type": "string",
-        "description": "Description of which area the properties apply to."
-      },
-      "region": {
-        "type": "int",
-        "description": "Description of which area the properties apply to."
+        "description": "Description of the area that the properties apply to."
       },
       "aabbs": {
         "type": "array",
-        "description": "An array of axis-aligned bounding boxes defining the area.",
+        "description": "An array of axis-aligned bounding boxes outlining the area.",
         "items": {
           "$ref": "aabb.schema.json"
         }
       },
+      "region": {
+        "type": "int",
+        "description": "A region ID as an alternative to AABBs."
+      },
       "hideOtherRegions": {
         "type": "boolean",
-        "description": "If you want regions around the aabbs to be hidden."
+        "description": "Whether regions outside of the area should be hidden."
       },
       "horizonTile": {
-        "description": "Data for a fake tile into the horizon.",
+        "description": "Definition of a horizon tile that fills in the scene edges.",
         "items": {
-          "$ref": "horizon.schema.json"
+          "$ref": "horizon_tile.schema.json"
         }
       }
     }

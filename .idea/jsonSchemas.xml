@@ -44,7 +44,7 @@
               <option name="patterns">
                 <list>
                   <Item>
-                    <option name="path" value="src/main/resources/rs117/hd/scene/area/areas.json" />
+                    <option name="path" value="src/main/resources/rs117/hd/scene/areas.json" />
                   </Item>
                 </list>
               </option>

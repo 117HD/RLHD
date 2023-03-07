@@ -78,7 +78,7 @@ public class ProceduralGenerator
 	boolean[][][] skipTile;
 	Map<Integer, Integer> vertexUnderwaterDepth;
 	int[][][] underwaterDepthLevels;
-	int[] depthLevelSlope = new int[]{150, 300, 470, 610, 700, 750, 820, 920, 1080, 1300, 1350, 1380};
+	public static final int[] depthLevelSlope = new int[]{150, 300, 470, 610, 700, 750, 820, 920, 1080, 1300, 1350, 1380};
 
 	/**
 	 * Iterates through all Tiles in a given Scene, producing color and
@@ -512,14 +512,14 @@ public class ProceduralGenerator
 										vertexIsLand.put(vertexKeys[vertex], true);
 									}
 
-									if (vertices[vertex][0] % Perspective.LOCAL_TILE_SIZE == 0 &&
-										vertices[vertex][1] % Perspective.LOCAL_TILE_SIZE == 0
-									) {
-										int vX = vertices[vertex][0] / Perspective.LOCAL_TILE_SIZE;
-										int vY = vertices[vertex][1] / Perspective.LOCAL_TILE_SIZE;
-
-										underwaterDepthLevels[z][vX][vY] = 0;
-									}
+//									if (vertices[vertex][0] % Perspective.LOCAL_TILE_SIZE == 0 &&
+//										vertices[vertex][1] % Perspective.LOCAL_TILE_SIZE == 0
+//									) {
+//										int vX = vertices[vertex][0] / Perspective.LOCAL_TILE_SIZE;
+//										int vY = vertices[vertex][1] / Perspective.LOCAL_TILE_SIZE;
+//
+//										underwaterDepthLevels[z][vX][vY] = 0;
+//									}
 								}
 							}
 							else
@@ -535,10 +535,10 @@ public class ProceduralGenerator
 					}
 					else
 					{
-						underwaterDepthLevels[z][x][y] = 0;
-						underwaterDepthLevels[z][x+1][y] = 0;
-						underwaterDepthLevels[z][x][y+1] = 0;
-						underwaterDepthLevels[z][x+1][y+1] = 0;
+//						underwaterDepthLevels[z][x][y] = 0;
+//						underwaterDepthLevels[z][x+1][y] = 0;
+//						underwaterDepthLevels[z][x][y+1] = 0;
+//						underwaterDepthLevels[z][x+1][y+1] = 0;
 					}
 				}
 			}
@@ -561,14 +561,14 @@ public class ProceduralGenerator
 						// If it's on the edge of the scene, reset the depth so
 						// it creates a 'wall' to prevent fog from passing through.
 						// Not incredibly effective, but better than nothing.
-						if (x == 0 || y == 0 || x == SCENE_SIZE || y == SCENE_SIZE)
-						{
-							underwaterDepthLevels[z][x][y] = 0;
-							continue;
-						}
+//						if (x == 0 || y == 0 || x == SCENE_SIZE || y == SCENE_SIZE)
+//						{
+//							underwaterDepthLevels[z][x][y] = 0;
+//							continue;
+//						}
 
 						int tileHeight = underwaterDepthLevels[z][x][y];
-						if (underwaterDepthLevels[z][x - 1][y] < tileHeight)
+						if (x > 0 && underwaterDepthLevels[z][x - 1][y] < tileHeight)
 						{
 							// West
 							continue;
@@ -578,7 +578,7 @@ public class ProceduralGenerator
 							// East
 							continue;
 						}
-						if (underwaterDepthLevels[z][x][y - 1] < tileHeight)
+						if (y > 0 && underwaterDepthLevels[z][x][y - 1] < tileHeight)
 						{
 							// South
 							continue;

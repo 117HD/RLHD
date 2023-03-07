@@ -106,7 +106,7 @@ public class FileWatcher
 		watcherThread.start();
 	}
 
-	public static void destroy() {
+	public static void destroyAll() {
 		if (watchService == null)
 			return;
 

@@ -67,8 +67,7 @@ import rs117.hd.opengl.shader.Shader;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.Template;
 import rs117.hd.scene.*;
-import rs117.hd.scene.area.AreaData;
-import rs117.hd.scene.area.AreaManager;
+import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.area.HorizonTile;
 import rs117.hd.scene.lights.SceneLight;
 import rs117.hd.scene.ModelOverrideManager;
@@ -595,7 +594,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	@Override
 	protected void shutDown()
 	{
-		FileWatcher.destroy();
+		FileWatcher.destroyAll();
 		developerTools.deactivate();
 		lightManager.shutDown();
 
@@ -1367,33 +1366,27 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			glBindBuffer(GL_UNIFORM_BUFFER, 0);
 		}
 
-		AreaData area = areaManager.getCurrentArea();
-		if (area != null && area.horizonTile != null) {
-			HorizonTile horizonTile = area.horizonTile;
-			GpuIntBuffer b = modelBufferUnordered;
-			b.ensureCapacity(horizonTile.getMaterialBelow() == null ? 16 : 32);
+		HorizonTile horizonTile = areaManager.getHorizonTile();
+		if (horizonTile != null) {
+			int faceCount = horizonTile.getMaterialBelow() == null ? 4 : 14;
 			int offset = 0;
-			if (horizonTile.getMaterialBelow() != null) {
-				b.getBuffer()
-						.put(offset)
-						.put(offset)
-						.put(2)
-						.put(renderBufferOffset)
-						.put(0)
-						.put(0).put(0).put(0);
-				renderBufferOffset += 6;
-				numModelsUnordered++;
-				offset += 6;
-			}
-			b.getBuffer()
+			while (faceCount > 0) // max 6 faces per unordered model
+			{
+				int n = Math.min(6, faceCount);
+				faceCount -= n;
+				modelBufferUnordered
+					.ensureCapacity(16)
+					.getBuffer()
 					.put(offset)
 					.put(offset)
-					.put(2)
+					.put(n)
 					.put(renderBufferOffset)
 					.put(0)
 					.put(0).put(0).put(0);
-			renderBufferOffset += 6;
-			numModelsUnordered++;
+				numModelsUnordered++;
+				renderBufferOffset += n * 3;
+				offset += n * 3;
+			}
 		}
 
 		glBindBufferBase(GL_UNIFORM_BUFFER, 3, hUniformBufferLights.glBufferId);
@@ -2216,7 +2209,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		stagingBufferNormals.clear();
 
 		areaManager.setCurrentArea(areaManager.update(client.getLocalPlayer().getWorldLocation()));
-		System.out.println(areaManager.getCurrentArea().description);
 		sceneUploader.upload(client.getScene(), stagingBufferVertices, stagingBufferUvs, stagingBufferNormals);
 
 		dynamicOffsetVertices = stagingBufferVertices.position() / VERTEX_SIZE;
@@ -2329,9 +2321,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			case KEY_WINTER_THEME:
 				configHdInfernalTexture = config.hdInfernalTexture();
 				textureManager.freeTextures();
-			case "extendhorizon":
-			case "areafiltering":
-				clientThread.invoke(() -> client.setGameState(GameState.LOADING));
+			case "extendHorizon":
+			case "areaFiltering":
+				reloadSceneNextGameTick();
 				break;
 			case "hideBakedEffects":
 			case "groundBlending":
@@ -2492,8 +2484,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	@Override
 	public void draw(Renderable renderable, int orientation, int pitchSin, int pitchCos, int yawSin, int yawCos, int x, int y, int z, long hash)
 	{
-
-		if(areaManager.shouldHide(ModelHash.getWorldTemplateLocation(client, x, z))) {
+		if (areaManager.shouldHide(ModelHash.getWorldTemplateLocation(client, x, z))) {
 			return;
 		}
 

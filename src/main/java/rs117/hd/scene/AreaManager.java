@@ -1,43 +1,38 @@
-package rs117.hd.scene.area;
+package rs117.hd.scene;
 
 import com.google.inject.Inject;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import javax.inject.Singleton;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
-import net.runelite.api.Constants;
 import net.runelite.api.coords.LocalPoint;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
+import rs117.hd.scene.area.AreaData;
+import rs117.hd.scene.area.HorizonTile;
 import rs117.hd.utils.AABB;
 import rs117.hd.utils.Env;
-import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.ResourcePath;
-
-import javax.inject.Singleton;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-
 import static rs117.hd.utils.ResourcePath.path;
 
 @Singleton
 @Slf4j
 public class AreaManager {
-
-
     @Getter
     @Setter
-    AreaData currentArea = null;
+	AreaData currentArea = null;
 
     private static final String ENV_AREA_PATH = "RLHD_AREA_PATH";
     private static final ResourcePath areaDataPath =  Env.getPathOrDefault(ENV_AREA_PATH,
-            () -> path(AreaManager.class, "areas.json"));
+		() -> path(AreaManager.class, "areas.json"));
 
-
-    public ArrayList<AreaData> areas = new ArrayList<AreaData>();
+    public ArrayList<AreaData> areas = new ArrayList<>();
 
     @Inject
     private ClientThread clientThread;
@@ -55,8 +50,7 @@ public class AreaManager {
         areas.clear();
         areaDataPath.watch(path -> {
             try {
-                AreaData[] temp = path.loadJson(plugin.getGson(), AreaData[].class);
-                Collections.addAll(areas, temp);
+                Collections.addAll(areas, path.loadJson(plugin.getGson(), AreaData[].class));
                 log.debug("Loaded {} areas", areas.size());
             } catch (IOException ex) {
                 log.error("Failed to load areas: ", ex);
@@ -79,7 +73,6 @@ public class AreaManager {
             }
         }
         return null;
-
     }
 
     public boolean shouldHideTile(int tileX, int tileY) {
@@ -107,5 +100,7 @@ public class AreaManager {
         return false;
     }
 
-
+	public HorizonTile getHorizonTile() {
+		return currentArea == null ? null : currentArea.horizonTile;
+	}
 }

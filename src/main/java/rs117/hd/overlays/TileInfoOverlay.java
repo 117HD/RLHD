@@ -179,6 +179,7 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay
 			lines.add("NE: " + (paint.getNeColor() == 12345678 ? "HIDDEN" : paint.getNeColor()));
 			lines.add("SE: " + (paint.getSeColor() == 12345678 ? "HIDDEN" : paint.getSeColor()));
 			lines.add("SW: " + (paint.getSwColor() == 12345678 ? "HIDDEN" : paint.getSwColor()));
+			lines.add("Height: " + client.getTileHeights()[plane][x][y]);
 		}
 		else if (model != null)
 		{

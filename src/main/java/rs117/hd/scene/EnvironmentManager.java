@@ -36,7 +36,6 @@ import rs117.hd.HdPluginConfig;
 import rs117.hd.config.DefaultSkyColor;
 import rs117.hd.data.environments.Area;
 import rs117.hd.data.environments.Environment;
-import rs117.hd.scene.area.AreaManager;
 import rs117.hd.utils.AABB;
 import rs117.hd.utils.HDUtils;
 
@@ -60,9 +59,6 @@ public class EnvironmentManager
 
 	@Inject
 	private HdPlugin hdPlugin;
-
-	@Inject
-	private AreaManager areaManager;
 
 	private final Environment defaultEnvironment = Environment.OVERWORLD;
 	private ArrayList<Environment> sceneEnvironments;
