@@ -34,13 +34,18 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.api.events.*;
 import net.runelite.api.hooks.DrawCallbacks;
+import net.runelite.client.RuneLite;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
+import net.runelite.client.events.PluginChanged;
 import net.runelite.client.plugins.*;
 import net.runelite.client.plugins.entityhider.EntityHiderPlugin;
+import net.runelite.client.plugins.skybox.SkyboxPlugin;
+import net.runelite.client.ui.ClientUI;
 import net.runelite.client.ui.DrawManager;
+import net.runelite.client.util.LinkBrowser;
 import net.runelite.client.util.OSType;
 import net.runelite.rlawt.AWTContext;
 import org.jocl.CL;
@@ -102,10 +107,12 @@ import static rs117.hd.utils.ResourcePath.path;
 	conflicts = "GPU"
 )
 @PluginDependency(EntityHiderPlugin.class)
+@PluginDependency(SkyboxPlugin.class)
 @Slf4j
 public class HdPlugin extends Plugin implements DrawCallbacks
 {
-	private static final String ENV_SHADER_PATH = "RLHD_SHADER_PATH";
+	public static final String DISCORD_URL = "https://discord.gg/U4p6ChjgSE";
+	public static final String RUNELITE_URL = "https://runelite.net";
 
 	public static final int TEXTURE_UNIT_UI = GL_TEXTURE0; // default state
 	public static final int TEXTURE_UNIT_GAME = GL_TEXTURE1;
@@ -121,10 +128,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	public static final int UV_SIZE = 4; // 4 floats per vertex
 	public static final int NORMAL_SIZE = 4; // 4 floats per vertex
 
+	private static final String ENV_SHADER_PATH = "RLHD_SHADER_PATH";
 	private static final int[] eightIntWrite = new int[8];
 
 	@Inject
 	private Client client;
+
+	@Inject
+	private ClientUI clientUI;
 
 	@Inject
 	private OpenCLManager openCLManager;
@@ -450,24 +461,46 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 				GL.createCapabilities();
 
-				log.info("Using device: {}", glGetString(GL_RENDERER));
+				String glRenderer = glGetString(GL_RENDERER);
+				String arch = System.getProperty("sun.arch.data.model", "Unknown");
+				if (glRenderer == null)
+				{
+					glRenderer = "Unknown";
+				}
+				log.info("Using device: {}", glRenderer);
 				log.info("Using driver: {}", glGetString(GL_VERSION));
-				log.info("Client is {}-bit", System.getProperty("sun.arch.data.model"));
+				log.info("Client is {}-bit", arch);
 
 				GLCapabilities caps = GL.getCapabilities();
-				if (computeMode == ComputeMode.OPENGL)
+
+				boolean isGenericGpu = glRenderer.equals("GDI Generic");
+				boolean isUnsupportedGpu = isGenericGpu || (computeMode == ComputeMode.OPENGL ? !caps.OpenGL43 : !caps.OpenGL31);
+				if (isUnsupportedGpu)
 				{
-					if (!caps.OpenGL43)
-					{
-						throw new RuntimeException("OpenGL 4.3 is required but not available");
-					}
-				}
-				else
-				{
-					if (!caps.OpenGL31)
-					{
-						throw new RuntimeException("OpenGL 3.1 is required but not available");
-					}
+					log.error("The GPU is lacking OpenGL {} support. Stopping the plugin...",
+						computeMode == ComputeMode.OPENGL ? "4.3" : "3.1");
+					PopupUtils.displayPopupMessage(client, "117HD Error",
+						(isGenericGpu ?
+							"117HD was unable to access your GPU." :
+							"Your GPU is currently not supported by 117HD.<br><br>GPU name: " + glRenderer
+						) +
+						"<br><br>" +
+						"If your system actually has a supported GPU, try the following steps:<br>" +
+						(!arch.equals("32") ? "" :
+							"&nbsp;• Install the 64-bit version of RuneLite from " +
+								"<a href=\"" + HdPlugin.RUNELITE_URL + "\">the official website</a>.<br>"
+						) +
+						"&nbsp;• If you're on a desktop PC, make sure your monitor is plugged into the graphics card<br>" +
+						"&nbsp;&nbsp;&nbsp;&nbsp;instead of the motherboard's display output.<br>" +
+						"&nbsp;• Reinstall the drivers for your graphics card and restart your system.<br>" +
+						"<br>" +
+						"If you're still seeing this error after following the steps above, please join our " +
+							"<a href=\"" + HdPlugin.DISCORD_URL + "\">Discord</a><br>" +
+						"server, and drag and drop your client log file into one of our support channels.",
+						new String[] { "Open log folder", "Ok, let me try that..." },
+						i -> { if (i == 0) LinkBrowser.open(RuneLite.LOGS_DIR.toString()); });
+					stopPlugin();
+					return true;
 				}
 
 				lwjglInitted = true;
@@ -1086,17 +1119,19 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				.putInt(textureManager.getTextureIndex(material.flowMap))
 				.putInt(material.overrideBaseColor ? 1 : 0)
 				.putInt(material.unlit ? 1 : 0)
+				.putFloat(material.brightness)
 				.putFloat(material.displacementScale)
 				.putFloat(material.specularStrength)
 				.putFloat(material.specularGloss)
 				.putFloat(material.flowMapStrength)
+				.putFloat(0) // pad vec2
 				.putFloat(material.flowMapDuration[0])
 				.putFloat(material.flowMapDuration[1])
 				.putFloat(scrollSpeedX)
 				.putFloat(scrollSpeedY)
 				.putFloat(material.textureScale[0])
-				.putFloat(material.textureScale[1])
-				.putFloat(0).putFloat(0); // pad vec4
+				.putFloat(material.textureScale[1]);
+				// vec4 aligned
 		}
 		buffer.flip();
 
@@ -1151,6 +1186,15 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 	private void initAAFbo(int width, int height, int aaSamples)
 	{
+		if (OSType.getOSType() != OSType.MacOS)
+		{
+			final GraphicsConfiguration graphicsConfiguration = clientUI.getGraphicsConfiguration();
+			final AffineTransform transform = graphicsConfiguration.getDefaultTransform();
+
+			width = getScaledValue(transform.getScaleX(), width);
+			height = getScaledValue(transform.getScaleY(), height);
+		}
+
 		// Create and bind the FBO
 		fboSceneHandle = glGenFramebuffers();
 		glBindFramebuffer(GL_FRAMEBUFFER, fboSceneHandle);
@@ -1987,10 +2031,23 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 			if (aaEnabled)
 			{
+				int width = lastStretchedCanvasWidth;
+				int height = lastStretchedCanvasHeight;
+
+				if (OSType.getOSType() != OSType.MacOS)
+				{
+					final GraphicsConfiguration graphicsConfiguration = clientUI.getGraphicsConfiguration();
+					final AffineTransform transform = graphicsConfiguration.getDefaultTransform();
+
+					width = getScaledValue(transform.getScaleX(), width);
+					height = getScaledValue(transform.getScaleY(), height);
+				}
+
 				glBindFramebuffer(GL_READ_FRAMEBUFFER, fboSceneHandle);
 				glBindFramebuffer(GL_DRAW_FRAMEBUFFER, awtContext.getFramebuffer(false));
-				glBlitFramebuffer(0, 0, lastStretchedCanvasWidth, lastStretchedCanvasHeight,
-					0, 0, lastStretchedCanvasWidth, lastStretchedCanvasHeight,
+				glBlitFramebuffer(
+					0, 0, width, height,
+					0, 0, width, height,
 					GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
 				// Reset
@@ -2093,11 +2150,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 		if (OSType.getOSType() != OSType.MacOS)
 		{
-			final Graphics2D graphics = (Graphics2D) canvas.getGraphics();
-			final AffineTransform t = graphics.getTransform();
+			final GraphicsConfiguration graphicsConfiguration = clientUI.getGraphicsConfiguration();
+			final AffineTransform t = graphicsConfiguration.getDefaultTransform();
 			width = getScaledValue(t.getScaleX(), width);
 			height = getScaledValue(t.getScaleY(), height);
-			graphics.dispose();
 		}
 
 		ByteBuffer buffer = BufferUtils.createByteBuffer(width * height * 4);
@@ -2224,6 +2280,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		if (skyboxColorChanged) {
 			skyboxColorChanged = false;
 			environmentManager.updateSkyColor();
+		}
+	}
+
+	@Subscribe
+	public void onPluginChanged(PluginChanged event) {
+		if (event.getPlugin() instanceof SkyboxPlugin) {
+			skyboxColorChanged = true;
 		}
 	}
 
@@ -2462,7 +2525,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				return;
 			}
 
-			model.calculateExtreme(orientation);
 			client.checkClickbox(model, orientation, pitchSin, pitchCos, yawSin, yawCos, x, y, z, hash);
 
 			int faceCount = Math.min(MAX_TRIANGLE, model.getFaceCount());
@@ -2503,7 +2565,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				return;
 			}
 
-			model.calculateExtreme(orientation);
 			client.checkClickbox(model, orientation, pitchSin, pitchCos, yawSin, yawCos, x, y, z, hash);
 
 			eightIntWrite[3] = renderBufferOffset;
@@ -2603,15 +2664,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		}
 		else
 		{
-			final Graphics2D graphics = (Graphics2D) canvas.getGraphics();
-			if (graphics == null) return;
-			final AffineTransform t = graphics.getTransform();
+			final GraphicsConfiguration graphicsConfiguration = clientUI.getGraphicsConfiguration();
+			if (graphicsConfiguration == null) return;
+			final AffineTransform t = graphicsConfiguration.getDefaultTransform();
 			glViewport(
 				getScaledValue(t.getScaleX(), x),
 				getScaledValue(t.getScaleY(), y),
 				getScaledValue(t.getScaleX(), width),
 				getScaledValue(t.getScaleY(), height));
-			graphics.dispose();
 		}
 	}
 

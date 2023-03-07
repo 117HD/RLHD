@@ -51,39 +51,39 @@ flat out vec4 vColor[3];
 flat out vec3 vUv[3];
 flat out int vMaterialData[3];
 flat out int vTerrainData[3];
-flat out ivec3 isOverlay;
-out float fogAmount;
-out vec3 normals;
-out vec3 position;
-out vec3 texBlend;
+
+out FragmentData {
+    float fogAmount;
+    vec3 normal;
+    vec3 position;
+    vec3 texBlend;
+} OUT;
 
 void main() {
     int materialData = int(IN[0].uv.w);
-    bool flatNormals = (materialData >> MATERIAL_FLAG_FLAT_NORMALS & 1) == 1;
+    bool flatNormals =
+        length(IN[0].normal.xyz) < .01 ||
+        (materialData >> MATERIAL_FLAG_FLAT_NORMALS & 1) == 1;
 
-    if (flatNormals) {
-        vec3 T = normalize(vec3(IN[0].pos - IN[1].pos));
-        vec3 B = normalize(vec3(IN[0].pos - IN[2].pos));
-        vec3 N = normalize(cross(T, B));
-        normals = N;
-    }
+    // Compute flat normals
+    vec3 T = vec3(IN[0].pos - IN[1].pos);
+    vec3 B = vec3(IN[0].pos - IN[2].pos);
+    vec3 N = normalize(cross(T, B));
 
     for (int i = 0; i < 3; i++) {
+        vColor[i] = IN[i].color;
+        vUv[i] = IN[i].uv.xyz;
         vMaterialData[i] = int(IN[i].uv.w);
         vTerrainData[i] = int(IN[i].normal.w);
-        isOverlay[i] = vMaterialData[i] >> 3 & 1;
-        vUv[i] = IN[i].uv.xyz;
-        vColor[i] = IN[i].color;
     }
 
     for (int i = 0; i < 3; i++) {
-        texBlend = vec3(0);
-        texBlend[i] = 1;
-        fogAmount = IN[i].fogAmount;
+        OUT.texBlend = vec3(0);
+        OUT.texBlend[i] = 1;
+        OUT.fogAmount = IN[i].fogAmount;
+        OUT.position = IN[i].pos;
+        OUT.normal = flatNormals ? N : normalize(IN[i].normal.xyz);
         gl_Position = projectionMatrix * vec4(IN[i].pos, 1.f);
-        position = IN[i].pos;
-        if (!flatNormals && length(IN[i].normal.xyz) > .01)
-            normals = IN[i].normal.xyz;
         EmitVertex();
     }
 

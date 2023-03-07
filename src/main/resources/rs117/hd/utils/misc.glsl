@@ -83,7 +83,7 @@ vec2 getUvs(vec3 uvw, int materialData, vec3 position) {
         vec3 C1 = cross(vec3(0, 0, 1), N);
         vec3 C2 = cross(vec3(0, 1, 0), N);
         vec3 T = normalize(length(C1) > length(C2) ? C1 : C2);
-        vec3 B = normalize(cross(N, T));
+        vec3 B = cross(N, T);
         mat3 TBN = mat3(T, B, N);
 
         return fract((TBN * position).xy / 128.f / scale);

@@ -4,7 +4,9 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.api.kit.KitType;
+import net.runelite.client.RuneLite;
 import net.runelite.client.callback.ClientThread;
+import net.runelite.client.util.LinkBrowser;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.data.materials.Material;
@@ -17,6 +19,7 @@ import rs117.hd.scene.model_overrides.TzHaarRecolorType;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ModelHash;
+import rs117.hd.utils.PopupUtils;
 import rs117.hd.utils.buffer.GpuFloatBuffer;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 
@@ -63,10 +66,45 @@ public class ModelPusher {
 
     public void startUp() {
         if (config.enableModelCaching()) {
+            final int size = config.modelCacheSizeMiB();
             try {
-                modelCache = new ModelCache(config.modelCacheSizeMiB());
+                modelCache = new ModelCache(size);
             } catch (Throwable err) {
                 log.error("Error while initializing model cache. Stopping the plugin...", err);
+
+                if (err instanceof OutOfMemoryError) {
+                    String arch = System.getProperty("sun.arch.data.model", "Unknown");
+                    PopupUtils.displayPopupMessage(client, "117HD Error",
+                        "117HD ran out of memory while trying to allocate the model cache.<br><br>" +
+                        (arch.equals("32") ?
+                            (
+                                "You are currently using the 32-bit RuneLite launcher, which heavily restricts<br>" +
+                                "the amount of memory RuneLite is allowed to use.<br>" +
+                                "Please install the 64-bit launcher from " +
+                                "<a href=\"" + HdPlugin.RUNELITE_URL + "\">RuneLite's website</a> and try again.<br>"
+                            ) : (
+                                (size <= 2048 ? "" :
+                                    "Your cache size of " + size + " MiB is " + (
+                                        size >= 4096 ?
+                                            "very large. We would recommend reducing it.<br>" :
+                                            "bigger than the default size. Try reducing it.<br>"
+                                    )
+                                ) +
+                                "Normally, a cache size above 2048 MiB is unnecessary, and the game should<br>" +
+                                "run acceptably even at 1024 MiB. If you end up having to reduce the size far<br>" +
+                                "below 512 MiB, you may be better off disabling the model cache entirely.<br>"
+                            )
+                        ) +
+                        "<br>" +
+                        "You can also try closing some other programs on your PC to free up memory.<br>" +
+                        "<br>" +
+                        "If you need further assistance, please join our " +
+                            "<a href=\"" + HdPlugin.DISCORD_URL + "\">Discord</a> server, and<br>" +
+                        "drag and drop your client log file into one of our support channels.",
+                        new String[] { "Open log folder", "Ok, let me try that..." },
+                        i -> { if (i == 0) LinkBrowser.open(RuneLite.LOGS_DIR.toString()); });
+                }
+
                 // Allow the model pusher to be used until the plugin has cleanly shut down
                 clientThread.invokeLater(plugin::stopPlugin);
             }
@@ -592,9 +630,9 @@ public class ModelPusher {
                 int[] tileColorHSL;
 
                 // No point in inheriting tilepaint color if the ground tile does not have a color, for example above a cave wall
-                if (tilePaint != null && tilePaint.getTexture() == -1 && tilePaint.getRBG() != 0) {
+                if (tilePaint != null && tilePaint.getTexture() == -1 && tilePaint.getRBG() != 0 && tilePaint.getNeColor() != 12345678) {
                     // pull any corner color as either one should be OK
-                    tileColorHSL = HDUtils.colorIntToHSL(tilePaint.getSwColor());
+                    tileColorHSL = HDUtils.colorIntToHSL(tilePaint.getNeColor());
 
                     // average saturation and lightness
                     tileColorHSL[1] = (
@@ -646,14 +684,17 @@ public class ModelPusher {
                     }
 
                     if (faceColorIndex != -1) {
-                        tileColorHSL = HDUtils.colorIntToHSL(tileModel.getTriangleColorA()[faceColorIndex]);
+                        int color = tileModel.getTriangleColorA()[faceColorIndex];
+                        if (color != 12345678) {
+                            tileColorHSL = HDUtils.colorIntToHSL(color);
 
-                        Underlay underlay = Underlay.getUnderlay(client.getScene().getUnderlayIds()[tileZ][tileX][tileY], tile, client, plugin);
-                        tileColorHSL = proceduralGenerator.recolorUnderlay(underlay, tileColorHSL);
+                            Underlay underlay = Underlay.getUnderlay(client.getScene().getUnderlayIds()[tileZ][tileX][tileY], tile, client, plugin);
+                            tileColorHSL = proceduralGenerator.recolorUnderlay(underlay, tileColorHSL);
 
-                        color1H = color2H = color3H = tileColorHSL[0];
-                        color1S = color2S = color3S = tileColorHSL[1];
-                        color1L = color2L = color3L = tileColorHSL[2];
+                            color1H = color2H = color3H = tileColorHSL[0];
+                            color1S = color2S = color3S = tileColorHSL[1];
+                            color1L = color2L = color3L = tileColorHSL[2];
+                        }
                     }
                 }
             }
