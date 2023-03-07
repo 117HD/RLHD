@@ -5,7 +5,8 @@ import lombok.NoArgsConstructor;
 import rs117.hd.utils.AABB;
 
 @NoArgsConstructor
-public class AreaData {
+public class AreaDefinition {
+	// TODO: Unify Area and AreaDefinition, ideally without losing auto completion of areas
 	public String description = "UNKNOWN";
 	@JsonAdapter(AABB.JsonAdapter.class)
     public AABB[] aabbs = {};

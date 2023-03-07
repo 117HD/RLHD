@@ -15,7 +15,7 @@ import net.runelite.api.Constants;
 import net.runelite.api.coords.WorldPoint;
 import org.apache.commons.text.WordUtils;
 import rs117.hd.data.environments.Area;
-import rs117.hd.scene.area.AreaData;
+import rs117.hd.scene.area.AreaDefinition;
 import rs117.hd.utils.AABB;
 import rs117.hd.utils.Env;
 import rs117.hd.utils.ResourcePath;
@@ -27,7 +27,7 @@ public class AreasTest {
     private static final ResourcePath areaDataPath =  Env.getPathOrDefault(ENV_AREA_PATH,
 		() -> path(AreaManager.class, "areas.json"));
 
-    public static ArrayList<AreaData> areas = new ArrayList<AreaData>();
+    public static ArrayList<AreaDefinition> areas = new ArrayList<>();
 
     public static Gson gson = new Gson();
 
@@ -37,7 +37,7 @@ public class AreasTest {
 
         areaDataPath.watch(path -> {
             try {
-                Collections.addAll(areas, path.loadJson(gson, AreaData[].class));
+                Collections.addAll(areas, path.loadJson(gson, AreaDefinition[].class));
                 log.debug("Loaded {} areas", areas.size());
             } catch (IOException ex) {
                 log.error("Failed to load areas: ", ex);
@@ -84,7 +84,7 @@ public class AreasTest {
         OptionSet options = parser.parse(args);
 
 		StringBuilder data = new StringBuilder("Area[] area = {" + System.lineSeparator());
-		for(AreaData area : areas) {
+		for(AreaDefinition area : areas) {
 			for (AABB aabb : area.aabbs) {
 				data.append("new Area(").append(aabb.minX).append(", ").append(aabb.minY).append(", ").append(aabb.maxX).append(" , ").append(aabb.maxY).append("), ").append(System.lineSeparator());
 			}

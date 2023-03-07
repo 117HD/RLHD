@@ -1366,10 +1366,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			glBindBuffer(GL_UNIFORM_BUFFER, 0);
 		}
 
+		glBindBufferBase(GL_UNIFORM_BUFFER, 3, hUniformBufferLights.glBufferId);
+
 		HorizonTile horizonTile = areaManager.getHorizonTile();
 		if (horizonTile != null) {
-			int faceCount = horizonTile.getMaterialBelow() == null ? 4 : 14;
-			int offset = 0;
+			int vertexOffset = dynamicOffsetVertices + stagingBufferVertices.position() / VERTEX_SIZE;
+			int uvOffset = dynamicOffsetUvs + stagingBufferUvs.position() / UV_SIZE;
+			int faceCount = horizonTile.uploadFaces(stagingBufferVertices, stagingBufferUvs, stagingBufferNormals);
 			while (faceCount > 0) // max 6 faces per unordered model
 			{
 				int n = Math.min(6, faceCount);
@@ -1377,19 +1380,18 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				modelBufferUnordered
 					.ensureCapacity(16)
 					.getBuffer()
-					.put(offset)
-					.put(offset)
+					.put(vertexOffset)
+					.put(uvOffset)
 					.put(n)
 					.put(renderBufferOffset)
 					.put(0)
 					.put(0).put(0).put(0);
 				numModelsUnordered++;
 				renderBufferOffset += n * 3;
-				offset += n * 3;
+				vertexOffset += n * 3;
+				uvOffset += n * 3;
 			}
 		}
-
-		glBindBufferBase(GL_UNIFORM_BUFFER, 3, hUniformBufferLights.glBufferId);
 	}
 
 	@Override
@@ -2208,7 +2210,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		stagingBufferUvs.clear();
 		stagingBufferNormals.clear();
 
-		areaManager.setCurrentArea(areaManager.update(client.getLocalPlayer().getWorldLocation()));
+		areaManager.update(client.getLocalPlayer().getWorldLocation());
 		sceneUploader.upload(client.getScene(), stagingBufferVertices, stagingBufferUvs, stagingBufferNormals);
 
 		dynamicOffsetVertices = stagingBufferVertices.position() / VERTEX_SIZE;

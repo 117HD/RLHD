@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import javax.inject.Singleton;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.coords.LocalPoint;
@@ -14,7 +13,7 @@ import net.runelite.api.coords.WorldPoint;
 import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
-import rs117.hd.scene.area.AreaData;
+import rs117.hd.scene.area.AreaDefinition;
 import rs117.hd.scene.area.HorizonTile;
 import rs117.hd.utils.AABB;
 import rs117.hd.utils.Env;
@@ -25,14 +24,13 @@ import static rs117.hd.utils.ResourcePath.path;
 @Slf4j
 public class AreaManager {
     @Getter
-    @Setter
-	AreaData currentArea = null;
+	private AreaDefinition currentArea = null;
 
     private static final String ENV_AREA_PATH = "RLHD_AREA_PATH";
     private static final ResourcePath areaDataPath =  Env.getPathOrDefault(ENV_AREA_PATH,
 		() -> path(AreaManager.class, "areas.json"));
 
-    public ArrayList<AreaData> areas = new ArrayList<>();
+    public ArrayList<AreaDefinition> areas = new ArrayList<>();
 
     @Inject
     private ClientThread clientThread;
@@ -50,7 +48,7 @@ public class AreaManager {
         areas.clear();
         areaDataPath.watch(path -> {
             try {
-                Collections.addAll(areas, path.loadJson(plugin.getGson(), AreaData[].class));
+                Collections.addAll(areas, path.loadJson(plugin.getGson(), AreaDefinition[].class));
                 log.debug("Loaded {} areas", areas.size());
             } catch (IOException ex) {
                 log.error("Failed to load areas: ", ex);
@@ -58,44 +56,41 @@ public class AreaManager {
         });
     }
 
-    public AreaData update(WorldPoint point) {
-        for (AreaData area : areas) {
+    public void update(WorldPoint point) {
+		currentArea = null;
+        for (AreaDefinition area : areas) {
             if (area.aabbs.length != 0) {
                 for (AABB aabb : area.aabbs) {
                     if (aabb.contains(point)) {
-                        return area;
+						currentArea = area;
+                        break;
                     }
                 }
             } else if (area.region != -1) {
                 if (point.getRegionID() == area.region) {
-                    return area;
+					currentArea = area;
+                    break;
                 }
             }
         }
-        return null;
     }
 
     public boolean shouldHideTile(int tileX, int tileY) {
-        WorldPoint point = WorldPoint.fromLocalInstance(client, LocalPoint.fromWorld(client, tileX, tileY));
-        return shouldHide(point);
+        return shouldHide(WorldPoint.fromLocalInstance(client, LocalPoint.fromWorld(client, tileX, tileY)));
     }
 
     public boolean shouldHide(WorldPoint location) {
-        if (currentArea == null || !config.filterAreas()) {
-            return false;
-        }
-
-        if(currentArea.hideOtherRegions) {
-            if (currentArea.aabbs.length != 0) {
-                for (AABB aabbs : currentArea.aabbs) {
-                    if (!aabbs.contains(location)) {
-                        return true;
-                    }
-                }
-            } else if (currentArea.region != -1 ){
-                return location.getRegionID() != currentArea.region;
-            }
-        }
+        if (currentArea != null && config.filterAreas() && currentArea.hideOtherRegions) {
+			if (currentArea.aabbs.length != 0) {
+				for (AABB aabbs : currentArea.aabbs) {
+					if (!aabbs.contains(location)) {
+						return true;
+					}
+				}
+			} else if (currentArea.region != -1 ){
+				return location.getRegionID() != currentArea.region;
+			}
+		}
 
         return false;
     }

@@ -12,6 +12,7 @@ import rs117.hd.HdPluginConfig;
 import rs117.hd.data.materials.Material;
 import rs117.hd.data.materials.Overlay;
 import rs117.hd.data.materials.Underlay;
+import rs117.hd.scene.SceneUploader;
 import rs117.hd.scene.model_overrides.InheritTileColorType;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.scene.model_overrides.ObjectType;
@@ -379,7 +380,7 @@ public class ModelPusher {
             material = modelOverride.baseMaterial;
         }
 
-        int materialData = packMaterialData(material, false, modelOverride);
+        int materialData = SceneUploader.packMaterialData(material, false, modelOverride);
         if (materialData == 0) {
             return faceTextures == null ? null : zeroFloats;
         }
@@ -447,15 +448,7 @@ public class ModelPusher {
         return twelveFloats;
     }
 
-    public int packMaterialData(Material material, boolean isOverlay, @NonNull ModelOverride modelOverride) {
-        return (material.ordinal() & (1 << 10) - 1) << 4
-            | (isOverlay ? 1 : 0) << 3
-            | (modelOverride.flatNormals ? 1 : 0) << 2
-            | (modelOverride.uvType.worldUvs ? 1 : 0) << 1
-            | (modelOverride.disableShadows ? 1 : 0);
-    }
-
-    private boolean isBakedGroundShading(int face, int heightA, int heightB, int heightC, byte[] faceTransparencies, short[] faceTextures) {
+	private boolean isBakedGroundShading(int face, int heightA, int heightB, int heightC, byte[] faceTransparencies, short[] faceTextures) {
         return
             faceTransparencies != null &&
             heightA >= -8 &&
