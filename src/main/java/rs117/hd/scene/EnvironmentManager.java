@@ -24,9 +24,14 @@
  */
 package rs117.hd.scene;
 
-import com.google.common.primitives.Floats;
+import java.util.ArrayList;
+import java.util.Arrays;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
+import static net.runelite.api.Constants.CHUNK_SIZE;
+import static net.runelite.api.Constants.SCENE_SIZE;
 import net.runelite.api.GameState;
 import net.runelite.api.Player;
 import net.runelite.api.coords.LocalPoint;
@@ -38,14 +43,6 @@ import rs117.hd.data.environments.Area;
 import rs117.hd.data.environments.Environment;
 import rs117.hd.utils.AABB;
 import rs117.hd.utils.HDUtils;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import java.util.ArrayList;
-import java.util.Arrays;
-
-import static net.runelite.api.Constants.CHUNK_SIZE;
-import static net.runelite.api.Constants.SCENE_SIZE;
 
 @Singleton
 @Slf4j
@@ -152,6 +149,11 @@ public class EnvironmentManager
 
 	private boolean lightningEnabled = false;
 	private boolean displaySnow = false;
+
+	public void startUp()
+	{
+		changeEnvironment(defaultEnvironment, true);
+	}
 
 	public void update()
 	{
@@ -460,7 +462,7 @@ public class EnvironmentManager
 
 		if (lightningEnabled && config.flashingEffects())
 		{
-			float t = Floats.constrainToRange(lightningBrightness, 0.0f, 1.0f);
+			float t = HDUtils.clamp(lightningBrightness, 0.0f, 1.0f);
 			currentFogColor = HDUtils.lerpVectors(currentFogColor, lightningColor, t);
 			currentWaterColor = HDUtils.lerpVectors(currentWaterColor, lightningColor, t);
 		}
