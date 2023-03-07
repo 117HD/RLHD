@@ -58,6 +58,7 @@ import rs117.hd.model.ModelPusher;
 import rs117.hd.scene.area.HorizonTile;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.scene.model_overrides.ObjectType;
+import rs117.hd.utils.AABB;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.buffer.GpuFloatBuffer;
 import rs117.hd.utils.buffer.GpuIntBuffer;
@@ -93,6 +94,7 @@ class SceneUploader
 	private ModelOverrideManager modelOverrideManager;
 
 	public int sceneId = new Random().nextInt();
+	public AABB sceneBounds;
 
 	private final float[] UP_NORMAL = { 0, -1, 0 };
 
@@ -101,6 +103,12 @@ class SceneUploader
 		Stopwatch stopwatch = Stopwatch.createStarted();
 
 		sceneId++;
+		int minX = Constants.SCENE_SIZE;
+		int minY = Constants.SCENE_SIZE;
+		int minZ = Constants.MAX_Z;
+		int maxX = 0;
+		int maxY = 0;
+		int maxZ = 0;
 
 		for (int z = 0; z < Constants.MAX_Z; ++z)
 		{
@@ -111,11 +119,21 @@ class SceneUploader
 					Tile tile = scene.getTiles()[z][x][y];
 					if (tile != null)
 					{
-						upload(tile, vertexBuffer, uvBuffer, normalBuffer);
+						if (upload(tile, vertexBuffer, uvBuffer, normalBuffer))
+						{
+							minX = Math.min(minX, x);
+							minY = Math.min(minY, y);
+							minZ = Math.min(minZ, z);
+							maxX = Math.max(maxX, x + 1);
+							maxY = Math.max(maxY, y + 1);
+							maxZ = Math.max(maxZ, z + 1);
+						}
 					}
 				}
 			}
 		}
+
+		sceneBounds = new AABB(minX, minY, minZ, maxX, maxY, maxZ);
 
 		stopwatch.stop();
 		log.debug("Scene upload time: {}", stopwatch);
@@ -157,16 +175,18 @@ class SceneUploader
 			tileX, tileY, tileZ, orientation, modelOverride, objectType, false);
 	}
 
-	private void upload(Tile tile, GpuIntBuffer vertexBuffer, GpuFloatBuffer uvBuffer, GpuFloatBuffer normalBuffer)
+	private boolean upload(Tile tile, GpuIntBuffer vertexBuffer, GpuFloatBuffer uvBuffer, GpuFloatBuffer normalBuffer)
 	{
 		if (areaManager.shouldHideTile(tile.getWorldLocation().getX(),tile.getWorldLocation().getY())) {
-			return;
+			return false;
 		}
+
+		boolean visible = false;
 
 		Tile bridge = tile.getBridge();
 		if (bridge != null)
 		{
-			upload(bridge, vertexBuffer, uvBuffer, normalBuffer);
+			visible = upload(bridge, vertexBuffer, uvBuffer, normalBuffer);
 		}
 
 		final Point tilePoint = tile.getSceneLocation();
@@ -197,6 +217,9 @@ class SceneUploader
 			sceneTilePaint.setBufferOffset(vertexOffset);
 			sceneTilePaint.setUvBufferOffset(uvOffset);
 			sceneTilePaint.setBufferLen(packedBufferLength);
+
+			if (bufferLength > 0)
+				visible = true;
 		}
 
 		SceneTileModel sceneTileModel = tile.getSceneTileModel();
@@ -221,6 +244,9 @@ class SceneUploader
 			sceneTileModel.setBufferOffset(vertexOffset);
 			sceneTileModel.setUvBufferOffset(uvOffset);
 			sceneTileModel.setBufferLen(packedBufferLength);
+
+			if (bufferLength > 0)
+				visible = true;
 		}
 
 		WallObject wallObject = tile.getWallObject();
@@ -296,6 +322,8 @@ class SceneUploader
 					gameObject.getModelOrientation(), ObjectType.GAME_OBJECT);
 			}
 		}
+
+		return visible;
 	}
 
 	int[] upload(Tile tile, SceneTilePaint sceneTilePaint, int tileZ, int tileX, int tileY, GpuIntBuffer vertexBuffer, GpuFloatBuffer uvBuffer, GpuFloatBuffer normalBuffer)
@@ -989,10 +1017,10 @@ class SceneUploader
 		final int centerX = client.getCameraX() / Perspective.LOCAL_TILE_SIZE;
 		final int centerY = client.getCameraY() / Perspective.LOCAL_TILE_SIZE;
 		final int drawDistance = plugin.getDrawDistance();
-		int sceneMinX = Math.max(1, centerX - drawDistance) * Perspective.LOCAL_TILE_SIZE;
-		int sceneMaxX = Math.min(Perspective.SCENE_SIZE - 1, centerX + drawDistance) * Perspective.LOCAL_TILE_SIZE;
-		int sceneMinY = Math.max(1, centerY - drawDistance) * Perspective.LOCAL_TILE_SIZE;
-		int sceneMaxY = Math.min(Perspective.SCENE_SIZE - 1, centerY + drawDistance) * Perspective.LOCAL_TILE_SIZE;
+		int sceneMinX = Math.max(sceneBounds.minX, centerX - drawDistance) * Perspective.LOCAL_TILE_SIZE;
+		int sceneMaxX = Math.min(sceneBounds.maxX, centerX + drawDistance) * Perspective.LOCAL_TILE_SIZE;
+		int sceneMinY = Math.max(sceneBounds.minY, centerY - drawDistance) * Perspective.LOCAL_TILE_SIZE;
+		int sceneMaxY = Math.min(sceneBounds.maxY, centerY + drawDistance) * Perspective.LOCAL_TILE_SIZE;
 		int maxDepth = ProceduralGenerator.depthLevelSlope[ProceduralGenerator.depthLevelSlope.length - 1];
 		int minDepth = 0;
 
