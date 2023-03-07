@@ -14,10 +14,12 @@ import javax.annotation.Nonnull;
 import net.runelite.api.*;
 
 import static net.runelite.api.Constants.MAX_Z;
-import static net.runelite.api.Perspective.*;
+import static net.runelite.api.Perspective.COSINE;
+import static net.runelite.api.Perspective.LOCAL_COORD_BITS;
 import static net.runelite.api.Perspective.LOCAL_TILE_SIZE;
 import static net.runelite.api.Perspective.SCENE_SIZE;
 
+import static net.runelite.api.Perspective.SINE;
 import net.runelite.api.Point;
 import net.runelite.api.coords.LocalPoint;
 import net.runelite.api.coords.WorldPoint;
@@ -401,10 +403,10 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay
 		final int neHeight = getHeight(client, neX, neY, plane);
 		final int seHeight = getHeight(client, swX, neY, plane);
 
-		Point p1 = localToCanvas(client, swX, swY, swHeight);
-		Point p2 = localToCanvas(client, neX, swY, nwHeight);
-		Point p3 = localToCanvas(client, neX, neY, neHeight);
-		Point p4 = localToCanvas(client, swX, neY, seHeight);
+		Point p1 = TileInfoOverlay.localToCanvas(client, swX, swY, swHeight);
+		Point p2 = TileInfoOverlay.localToCanvas(client, neX, swY, nwHeight);
+		Point p3 = TileInfoOverlay.localToCanvas(client, neX, neY, neHeight);
+		Point p4 = TileInfoOverlay.localToCanvas(client, swX, neY, seHeight);
 
 		if (p1 == null || p2 == null || p3 == null || p4 == null)
 		{
@@ -432,5 +434,29 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay
 			return (LOCAL_TILE_SIZE - y) * var8 + y * var9 >> 7;
 		}
 		return 0;
+	}
+
+	public static Point localToCanvas(@Nonnull Client client, int x, int y, int z) {
+		x -= client.getCameraX();
+		y -= client.getCameraY();
+		z -= client.getCameraZ();
+		int cameraPitch = client.getCameraPitch();
+		int cameraYaw = client.getCameraYaw();
+		int pitchSin = SINE[cameraPitch];
+		int pitchCos = COSINE[cameraPitch];
+		int yawSin = SINE[cameraYaw];
+		int yawCos = COSINE[cameraYaw];
+		int x1 = x * yawCos + y * yawSin >> 16;
+		int y1 = y * yawCos - x * yawSin >> 16;
+		int y2 = z * pitchCos - y1 * pitchSin >> 16;
+		int z1 = y1 * pitchCos + z * pitchSin >> 16;
+		if (z1 >= 50) {
+			int scale = client.getScale();
+			int pointX = client.getViewportWidth() / 2 + x1 * scale / z1;
+			int pointY = client.getViewportHeight() / 2 + y2 * scale / z1;
+			return new Point(pointX + client.getViewportXOffset(), pointY + client.getViewportYOffset());
+		}
+
+		return null;
 	}
 }
