@@ -34,10 +34,8 @@ import net.runelite.api.Client;
 import net.runelite.api.Perspective;
 import net.runelite.api.Scene;
 import net.runelite.api.SceneTileModel;
-import net.runelite.api.SceneTilePaint;
 import net.runelite.api.Tile;
 import rs117.hd.HdPlugin;
-import rs117.hd.HdPluginConfig;
 import rs117.hd.data.WaterType;
 import rs117.hd.data.materials.Material;
 import rs117.hd.data.materials.Overlay;
@@ -399,7 +397,7 @@ public class ProceduralGenerator
 					{
 						int[] vertexKeys = tileVertexKeys(tile);
 
-						if (tileWaterType(tile, tile.getSceneTilePaint()) == WaterType.NONE)
+						if (tileWaterType(tile) == WaterType.NONE)
 						{
 							for (int vertexKey : vertexKeys)
 							{
@@ -533,12 +531,12 @@ public class ProceduralGenerator
 							}
 						}
 					}
-					else
+					else if (x > 0 && y > 0 && x < SCENE_SIZE - 1 && y < SCENE_SIZE - 1)
 					{
-//						underwaterDepthLevels[z][x][y] = 0;
-//						underwaterDepthLevels[z][x+1][y] = 0;
-//						underwaterDepthLevels[z][x][y+1] = 0;
-//						underwaterDepthLevels[z][x+1][y+1] = 0;
+						underwaterDepthLevels[z][x][y] = 0;
+						underwaterDepthLevels[z][x+1][y] = 0;
+						underwaterDepthLevels[z][x][y+1] = 0;
+						underwaterDepthLevels[z][x+1][y+1] = 0;
 					}
 				}
 			}
@@ -558,36 +556,33 @@ public class ProceduralGenerator
 							// Skip the tile if it isn't water.
 							continue;
 						}
-						// If it's on the edge of the scene, reset the depth so
-						// it creates a 'wall' to prevent fog from passing through.
-						// Not incredibly effective, but better than nothing.
-//						if (x == 0 || y == 0 || x == SCENE_SIZE || y == SCENE_SIZE)
-//						{
-//							underwaterDepthLevels[z][x][y] = 0;
-//							continue;
-//						}
 
-						int tileHeight = underwaterDepthLevels[z][x][y];
-						if (x > 0 && underwaterDepthLevels[z][x - 1][y] < tileHeight)
+						// Always sink tiles on the edge
+						if (x > 0 && y > 0 && x < SCENE_SIZE - 1 && y < SCENE_SIZE - 1)
 						{
-							// West
-							continue;
+							int tileHeight = underwaterDepthLevels[z][x][y];
+							if (underwaterDepthLevels[z][x - 1][y] < tileHeight)
+							{
+								// West
+								continue;
+							}
+							if (x < underwaterDepthLevels[z].length - 1 && underwaterDepthLevels[z][x + 1][y] < tileHeight)
+							{
+								// East
+								continue;
+							}
+							if (underwaterDepthLevels[z][x][y - 1] < tileHeight)
+							{
+								// South
+								continue;
+							}
+							if (y < underwaterDepthLevels[z].length - 1 && underwaterDepthLevels[z][x][y + 1] < tileHeight)
+							{
+								// North
+								continue;
+							}
 						}
-						if (x < underwaterDepthLevels[z].length - 1 && underwaterDepthLevels[z][x + 1][y] < tileHeight)
-						{
-							// East
-							continue;
-						}
-						if (y > 0 && underwaterDepthLevels[z][x][y - 1] < tileHeight)
-						{
-							// South
-							continue;
-						}
-						if (y < underwaterDepthLevels[z].length - 1 && underwaterDepthLevels[z][x][y + 1] < tileHeight)
-						{
-							// North
-							continue;
-						}
+
 						// At this point, it's surrounded only by other depth-adjusted vertices.
 						underwaterDepthLevels[z][x][y]++;
 					}
@@ -822,26 +817,22 @@ public class ProceduralGenerator
 	 * @param tile to determine the WaterType of
 	 * @return the WaterType of the specified Tile
 	 */
-	WaterType tileWaterType(Tile tile, SceneTilePaint sceneTilePaint)
+	WaterType tileWaterType(Tile tile)
 	{
 		int tileZ = tile.getRenderLevel();
 		int tileX = tile.getSceneLocation().getX();
 		int tileY = tile.getSceneLocation().getY();
 
-		WaterType waterType = WaterType.NONE;
-
-		if (sceneTilePaint != null)
+		WaterType waterType;
+		Overlay overlay = Overlay.getOverlay(client.getScene().getOverlayIds()[tileZ][tileX][tileY], tile, client, plugin);
+		if (overlay != Overlay.NONE)
 		{
-			Overlay overlay = Overlay.getOverlay(client.getScene().getOverlayIds()[tileZ][tileX][tileY], tile, client, plugin);
-			if (overlay != Overlay.NONE)
-			{
-				waterType = overlay.waterType;
-			}
-			else
-			{
-				Underlay underlay = Underlay.getUnderlay(client.getScene().getUnderlayIds()[tileZ][tileX][tileY], tile, client, plugin);
-				waterType = underlay.waterType;
-			}
+			waterType = overlay.waterType;
+		}
+		else
+		{
+			Underlay underlay = Underlay.getUnderlay(client.getScene().getUnderlayIds()[tileZ][tileX][tileY], tile, client, plugin);
+			waterType = underlay.waterType;
 		}
 
 		waterType = getSeasonalWaterType(waterType);

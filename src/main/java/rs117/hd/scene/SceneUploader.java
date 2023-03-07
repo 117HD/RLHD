@@ -495,7 +495,7 @@ class SceneUploader
 			float[] neNormals = UP_NORMAL;
 			float[] nwNormals = UP_NORMAL;
 
-			WaterType waterType = proceduralGenerator.tileWaterType(tile, sceneTilePaint);
+			WaterType waterType = proceduralGenerator.tileWaterType(tile);
 			if (waterType == WaterType.NONE)
 			{
 				swMaterial = Material.getTexture(tileTexture);
@@ -718,7 +718,7 @@ class SceneUploader
 				neMaterial = groundMaterial.getRandomMaterial(tileZ, baseX + tileX + 1, baseY + tileY + 1);
 			}
 
-			WaterType waterType = proceduralGenerator.tileWaterType(tile, sceneTilePaint);
+			WaterType waterType = proceduralGenerator.tileWaterType(tile);
 
 			int swTerrainData = packTerrainData(Math.max(1, swDepth), waterType, tileZ);
 			int seTerrainData = packTerrainData(Math.max(1, seDepth), waterType, tileZ);
