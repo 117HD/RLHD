@@ -463,17 +463,24 @@ class SceneUploader
 			else
 			{
 				// set colors for the shoreline to create a foam effect in the water shader
-
 				swColor = seColor = nwColor = neColor = 127;
 
 				if (proceduralGenerator.vertexIsWater.containsKey(swVertexKey) && proceduralGenerator.vertexIsLand.containsKey(swVertexKey))
 					swColor = 0;
+				else if (swHeight <= -16)
+					swHeight = 0;
 				if (proceduralGenerator.vertexIsWater.containsKey(seVertexKey) && proceduralGenerator.vertexIsLand.containsKey(seVertexKey))
 					seColor = 0;
+				else if (seHeight <= -16)
+					seHeight = 0;
 				if (proceduralGenerator.vertexIsWater.containsKey(nwVertexKey) && proceduralGenerator.vertexIsLand.containsKey(nwVertexKey))
 					nwColor = 0;
+				else if (nwHeight <= -16)
+					nwHeight = 0;
 				if (proceduralGenerator.vertexIsWater.containsKey(neVertexKey) && proceduralGenerator.vertexIsLand.containsKey(neVertexKey))
 					neColor = 0;
+				else if (neHeight <= -16)
+					neHeight = 0;
 			}
 
 			if (proceduralGenerator.vertexIsOverlay.containsKey(neVertexKey) && proceduralGenerator.vertexIsUnderlay.containsKey(neVertexKey))
@@ -723,6 +730,10 @@ class SceneUploader
 			float[] normalsB = UP_NORMAL;
 			float[] normalsC = UP_NORMAL;
 
+			int heightA = localVertices[0][2];
+			int heightB = localVertices[1][2];
+			int heightC = localVertices[2][2];
+
 			WaterType waterType = proceduralGenerator.faceWaterType(tile, face, sceneTileModel);
 			if (waterType == WaterType.NONE)
 			{
@@ -806,17 +817,17 @@ class SceneUploader
 				// set colors for the shoreline to create a foam effect in the water shader
 				colorA = colorB = colorC = 127;
 				if (proceduralGenerator.vertexIsWater.containsKey(vertexKeyA) && proceduralGenerator.vertexIsLand.containsKey(vertexKeyA))
-				{
 					colorA = 0;
-				}
+				else if (heightA <= -16)
+					heightA = 0;
 				if (proceduralGenerator.vertexIsWater.containsKey(vertexKeyB) && proceduralGenerator.vertexIsLand.containsKey(vertexKeyB))
-				{
 					colorB = 0;
-				}
+				else if (heightB <= -16)
+					heightB = 0;
 				if (proceduralGenerator.vertexIsWater.containsKey(vertexKeyC) && proceduralGenerator.vertexIsLand.containsKey(vertexKeyC))
-				{
 					colorC = 0;
-				}
+				else if (heightC <= -16)
+					heightC = 0;
 			}
 
 			if (proceduralGenerator.vertexIsOverlay.containsKey(vertexKeyA) && proceduralGenerator.vertexIsUnderlay.containsKey(vertexKeyA))
@@ -842,9 +853,9 @@ class SceneUploader
 			normalBuffer.put(normalsC[0], normalsC[2], normalsC[1], cTerrainData);
 
 			vertexBuffer.ensureCapacity(12);
-			vertexBuffer.put(localVertices[0][0], localVertices[0][2], localVertices[0][1], colorA);
-			vertexBuffer.put(localVertices[1][0], localVertices[1][2], localVertices[1][1], colorB);
-			vertexBuffer.put(localVertices[2][0], localVertices[2][2], localVertices[2][1], colorC);
+			vertexBuffer.put(localVertices[0][0], heightA, localVertices[0][1], colorA);
+			vertexBuffer.put(localVertices[1][0], heightB, localVertices[1][1], colorB);
+			vertexBuffer.put(localVertices[2][0], heightC, localVertices[2][1], colorC);
 
 			bufferLength += 3;
 
@@ -983,6 +994,7 @@ class SceneUploader
 		int sceneMinY = Math.max(1, centerY - drawDistance) * Perspective.LOCAL_TILE_SIZE;
 		int sceneMaxY = Math.min(Perspective.SCENE_SIZE - 1, centerY + drawDistance) * Perspective.LOCAL_TILE_SIZE;
 		int maxDepth = ProceduralGenerator.depthLevelSlope[ProceduralGenerator.depthLevelSlope.length - 1];
+		int minDepth = 0;
 
 		WaterType waterType = WaterType.NONE;
 		Material material = Material.NONE;
@@ -998,37 +1010,34 @@ class SceneUploader
 		materialData = SceneUploader.packMaterialData(material, false, ModelOverride.NONE);
 		terrainData = SceneUploader.packTerrainData(maxDepth, waterType, 0);
 
-		// TODO: change y=0 to the actual water height (e.g. some map squares use -16)
-		//		 This will likely need one wall per map square, or one wall per edge tile
-
 		// Scene edges
 		vertexBuffer.put(sceneMaxX, maxDepth, sceneMinY, color);
 		vertexBuffer.put(sceneMinX, maxDepth, sceneMinY, color);
-		vertexBuffer.put(sceneMinX, 0, sceneMinY, color);
+		vertexBuffer.put(sceneMinX, minDepth, sceneMinY, color);
 		vertexBuffer.put(sceneMaxX, maxDepth, sceneMinY, color);
-		vertexBuffer.put(sceneMinX, 0, sceneMinY, color);
-		vertexBuffer.put(sceneMaxX, 0, sceneMinY, color);
+		vertexBuffer.put(sceneMinX, minDepth, sceneMinY, color);
+		vertexBuffer.put(sceneMaxX, minDepth, sceneMinY, color);
 
 		vertexBuffer.put(sceneMaxX, maxDepth, sceneMaxY, color);
 		vertexBuffer.put(sceneMaxX, maxDepth, sceneMinY, color);
-		vertexBuffer.put(sceneMaxX, 0, sceneMinY, color);
+		vertexBuffer.put(sceneMaxX, minDepth, sceneMinY, color);
 		vertexBuffer.put(sceneMaxX, maxDepth, sceneMaxY, color);
-		vertexBuffer.put(sceneMaxX, 0, sceneMinY, color);
-		vertexBuffer.put(sceneMaxX, 0, sceneMaxY, color);
+		vertexBuffer.put(sceneMaxX, minDepth, sceneMinY, color);
+		vertexBuffer.put(sceneMaxX, minDepth, sceneMaxY, color);
 
 		vertexBuffer.put(sceneMinX, maxDepth, sceneMaxY, color);
 		vertexBuffer.put(sceneMaxX, maxDepth, sceneMaxY, color);
-		vertexBuffer.put(sceneMaxX, 0, sceneMaxY, color);
+		vertexBuffer.put(sceneMaxX, minDepth, sceneMaxY, color);
 		vertexBuffer.put(sceneMinX, maxDepth, sceneMaxY, color);
-		vertexBuffer.put(sceneMaxX, 0, sceneMaxY, color);
-		vertexBuffer.put(sceneMinX, 0, sceneMaxY, color);
+		vertexBuffer.put(sceneMaxX, minDepth, sceneMaxY, color);
+		vertexBuffer.put(sceneMinX, minDepth, sceneMaxY, color);
 
 		vertexBuffer.put(sceneMinX, maxDepth, sceneMinY, color);
 		vertexBuffer.put(sceneMinX, maxDepth, sceneMaxY, color);
-		vertexBuffer.put(sceneMinX, 0, sceneMaxY, color);
+		vertexBuffer.put(sceneMinX, minDepth, sceneMaxY, color);
 		vertexBuffer.put(sceneMinX, maxDepth, sceneMinY, color);
-		vertexBuffer.put(sceneMinX, 0, sceneMaxY, color);
-		vertexBuffer.put(sceneMinX, 0, sceneMinY, color);
+		vertexBuffer.put(sceneMinX, minDepth, sceneMaxY, color);
+		vertexBuffer.put(sceneMinX, minDepth, sceneMinY, color);
 
 		for (int i = 0; i < 4 * 2 * 3; i++) {
 			uvBuffer.put(materialData, 0, 0, 0);
