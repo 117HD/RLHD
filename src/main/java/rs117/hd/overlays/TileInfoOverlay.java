@@ -29,9 +29,11 @@ import net.runelite.client.ui.overlay.OverlayPosition;
 import net.runelite.client.ui.overlay.OverlayUtil;
 import org.apache.commons.lang3.tuple.Pair;
 import rs117.hd.HdPlugin;
+import rs117.hd.data.WaterType;
 import rs117.hd.data.materials.Material;
 import rs117.hd.data.materials.Overlay;
 import rs117.hd.data.materials.Underlay;
+import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ModelHash;
 
@@ -43,6 +45,9 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay
 
 	@Inject
 	private HdPlugin plugin;
+
+	@Inject
+	private ProceduralGenerator proceduralGenerator;
 
 	@Inject
 	public TileInfoOverlay(Client client)
@@ -159,6 +164,13 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay
 		String worldPointInfo = "World point: " + worldPoint.getX() + ", " + worldPoint.getY() + ", " + worldPoint.getPlane();
 		lines.add(worldPointInfo);
 		lines.add("Height: " + client.getTileHeights()[plane][x][y]);
+		WaterType waterType = proceduralGenerator.tileWaterType(tile);
+		if (waterType != null) {
+			int[] vertexKeys = proceduralGenerator.tileVertexKeys(tile);
+			int swVertexKey = vertexKeys[0];
+			int depth = proceduralGenerator.vertexUnderwaterDepth.getOrDefault(swVertexKey, 0);
+			lines.add("Depth: " + depth);
+		}
 
 		Scene scene = client.getScene();
 		short overlayId = scene.getOverlayIds()[plane][x][y];
@@ -177,11 +189,38 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay
 			lines.add("Tile type: Paint");
 			Material material = Material.getTexture(paint.getTexture());
 			lines.add(String.format("Material: %s (%d)", material.name(), paint.getTexture()));
-			lines.add("JagexHSL: ");
-			lines.add("NW: " + (paint.getNwColor() == 12345678 ? "HIDDEN" : paint.getNwColor()));
-			lines.add("NE: " + (paint.getNeColor() == 12345678 ? "HIDDEN" : paint.getNeColor()));
-			lines.add("SE: " + (paint.getSeColor() == 12345678 ? "HIDDEN" : paint.getSeColor()));
-			lines.add("SW: " + (paint.getSwColor() == 12345678 ? "HIDDEN" : paint.getSwColor()));
+
+			lines.add("Vertices: HSL, height" + (waterType == null ? "" : ", depth"));
+			final int[][][] tileHeights = client.getTileHeights();
+			int swHeight = tileHeights[plane][x][y];
+			int seHeight = tileHeights[plane][x + 1][y];
+			int neHeight = tileHeights[plane][x + 1][y + 1];
+			int nwHeight = tileHeights[plane][x][y + 1];
+			int[] vertexKeys = proceduralGenerator.tileVertexKeys(tile);
+			int swVertexKey = vertexKeys[0];
+			int seVertexKey = vertexKeys[1];
+			int nwVertexKey = vertexKeys[2];
+			int neVertexKey = vertexKeys[3];
+			int swDepth = proceduralGenerator.vertexUnderwaterDepth.getOrDefault(swVertexKey, 0);
+			int seDepth = proceduralGenerator.vertexUnderwaterDepth.getOrDefault(seVertexKey, 0);
+			int nwDepth = proceduralGenerator.vertexUnderwaterDepth.getOrDefault(nwVertexKey, 0);
+			int neDepth = proceduralGenerator.vertexUnderwaterDepth.getOrDefault(neVertexKey, 0);
+			lines.add("NW: " +
+				(paint.getNwColor() == 12345678 ? "HIDDEN" : paint.getNwColor()) +
+				", " + nwHeight +
+				", " + nwDepth);
+			lines.add("NE: " +
+				(paint.getNeColor() == 12345678 ? "HIDDEN" : paint.getNeColor()) +
+				", " + neHeight +
+				", " + neDepth);
+			lines.add("SE: " +
+				(paint.getSeColor() == 12345678 ? "HIDDEN" : paint.getSeColor()) +
+				", " + seHeight +
+				", " + seDepth);
+			lines.add("SW: " +
+				(paint.getSwColor() == 12345678 ? "HIDDEN" : paint.getSwColor()) +
+				", " + swHeight +
+				", " + swDepth);
 		}
 		else if (model != null)
 		{
