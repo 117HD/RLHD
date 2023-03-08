@@ -28,7 +28,7 @@ GPU renderer with a suite of graphical enhancements.
 
 🔌 [117HD](https://github.com/117HD/RLHD) - The plugin's source code.
 
-🤖 [Discord-Bot](https://github.com/117HD/discord-bot) - The 117HD discord bot's source code.
+🤖 [Discord-Bot](https://github.com/117HD/discord-bot) - Our Discord bot's source code.
 
 # Links to the original author
 ![twitter](https://user-images.githubusercontent.com/5789682/173276125-347af1a5-e866-4770-97b2-7ebd3ab1aaa6.png)
