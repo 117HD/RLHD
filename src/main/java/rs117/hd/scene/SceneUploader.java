@@ -1032,10 +1032,10 @@ class SceneUploader
 				waterType = horizonTile.getWaterType();
 			if (horizonTile.getMaterial() != null)
 				material = horizonTile.getMaterial();
-			if (horizonTile.getHeight() != 0)
-				minDepth = horizonTile.getHeight();
-			if (horizonTile.getDepth() != 0)
-				maxDepth = horizonTile.getDepth();
+			if (horizonTile.getWaterHeight() != 0)
+				minDepth = horizonTile.getWaterHeight();
+			if (horizonTile.getWaterDepth() != 0)
+				maxDepth = horizonTile.getWaterDepth();
 		}
 
 		int materialData, terrainData;

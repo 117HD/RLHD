@@ -303,6 +303,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	private int uniDrawDistance;
 	private int uniSceneBounds;
 	private int uniExtendHorizon;
+	private int uniHorizonWaterHeight;
+	private int uniHorizonWaterDepth;
 	private int uniWaterColorLight;
 	private int uniWaterColorMid;
 	private int uniWaterColorDark;
@@ -833,6 +835,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		uniDrawDistance = glGetUniformLocation(glProgram, "drawDistance");
 		uniSceneBounds = glGetUniformLocation(glProgram, "sceneBounds");
 		uniExtendHorizon = glGetUniformLocation(glProgram, "extendHorizon");
+		uniHorizonWaterHeight = glGetUniformLocation(glProgram, "horizonWaterHeight");
+		uniHorizonWaterDepth = glGetUniformLocation(glProgram, "horizonWaterDepth");
 		uniAmbientStrength = glGetUniformLocation(glProgram, "ambientStrength");
 		uniAmbientColor = glGetUniformLocation(glProgram, "ambientColor");
 		uniLightStrength = glGetUniformLocation(glProgram, "lightStrength");
@@ -1895,7 +1899,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			glClearColor(fogColor[0], fogColor[1], fogColor[2], 1f);
 			glClear(GL_COLOR_BUFFER_BIT);
 
-			final boolean extendHorizon = config.extendHorizon();
+			HorizonTile horizonTile = areaManager.getHorizonTile();
+			final boolean extendHorizon = horizonTile != null && config.extendHorizon();
 			final int drawDistance = getDrawDistance();
 			float fogDepth = (config.fogDepthMode() == FogDepthMode.DYNAMIC ?
 				environmentManager.currentFogDepth : config.fogDepth()
@@ -1913,6 +1918,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				sceneUploader.sceneBounds.maxY * Perspective.LOCAL_TILE_SIZE
 			);
 			glUniform1i(uniExtendHorizon, config.extendHorizon() ? 1 : 0);
+			glUniform1i(uniHorizonWaterHeight, horizonTile == null ? 0 : horizonTile.getWaterHeight());
+			glUniform1i(uniHorizonWaterDepth, horizonTile == null ? 0 : horizonTile.getWaterDepth());
 
 			glUniform1f(uniColorBlindnessIntensity, config.colorBlindnessIntensity() / 100.f);
 

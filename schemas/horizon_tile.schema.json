@@ -21,11 +21,11 @@
       "type": "enum",
       "description": "The type of water to render for the tile."
     },
-    "height": {
+    "waterHeight": {
       "type": "integer",
       "description": "The vertical placement in the scene. Usually set to zero."
     },
-    "depth": {
+    "waterDepth": {
       "type": "integer",
       "description": "The depth to place the underwater tile at. Defaults to max depth."
     },

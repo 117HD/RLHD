@@ -16,8 +16,8 @@ public class HorizonTile {
     private final Material materialBelow;
     private final Boolean isOverlay;
     private final WaterType waterType;
-    private final int height;
-    private final int depth = ProceduralGenerator.depthLevelSlope[ProceduralGenerator.depthLevelSlope.length - 1];
+    private final int waterHeight;
+    private final int waterDepth = ProceduralGenerator.depthLevelSlope[ProceduralGenerator.depthLevelSlope.length - 1];
     private final int color;
 
 	public int uploadFaces(GpuIntBuffer vertexBuffer, GpuFloatBuffer uvBuffer, GpuFloatBuffer normalBuffer) {
@@ -30,7 +30,7 @@ public class HorizonTile {
 		if (materialBelow != null) {
 			faceCount += 2;
 			materialData = SceneUploader.packMaterialData(Material.DIRT_1, false, ModelOverride.NONE);
-			terrainData = SceneUploader.packTerrainData(depth, waterType, 0);
+			terrainData = SceneUploader.packTerrainData(waterDepth, waterType, 0);
 
 			// North-west
 			vertexBuffer.put(-horizonRadius, 0, horizonRadius, color);

@@ -44,6 +44,8 @@ uniform float fogDepth;
 uniform int drawDistance;
 uniform ivec4 sceneBounds;
 uniform bool extendHorizon;
+uniform int horizonWaterHeight;
+uniform int horizonWaterDepth;
 
 out VertexData {
     ivec3 pos;
@@ -64,6 +66,27 @@ void main() {
     int ahsl = VertexPosition.w;
     vec3 rgb = jagexHslToRgb(ahsl & 0xffff);
     float alpha = 1 - float(ahsl >> 24 & 0xff) / 255.f;
+
+    vec4 normal = normal;
+    int terrainData = int(normal.w);
+    bool isTerrain = (terrainData & 1) != 0; // 1 = 0b1
+    if (isTerrain) {
+        int waterTypeIndex = terrainData >> 3 & 0x1F;
+        bool isWater = waterTypeIndex > 0; // water surface or underwater tile
+        if (isWater && (
+            vertex.x == sceneBounds.x || vertex.x == sceneBounds.z ||
+            vertex.z == sceneBounds.y || vertex.z == sceneBounds.w
+        )) {
+            int waterDepth = terrainData >> 8;
+            bool isUnderwater = waterDepth != 0;
+            if (isUnderwater) {
+                terrainData = terrainData & ((1 << 8) - 1);
+                terrainData |= horizonWaterDepth << 8;
+            } else {
+                vertex.y = horizonWaterHeight;
+            }
+        }
+    }
 
     OUT.pos = vertex;
     OUT.normal = normal;
