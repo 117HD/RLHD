@@ -1379,7 +1379,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		glBindBufferBase(GL_UNIFORM_BUFFER, 3, hUniformBufferLights.glBufferId);
 
 		HorizonTile horizonTile = null;
-		if (config.extendHorizon()) {
+		if (config.extendHorizon() && configAreaFiltering) {
 			horizonTile = areaManager.getHorizonTile();
 			if (horizonTile != null) {
 				int vertexOffset = dynamicOffsetVertices + stagingBufferVertices.position() / VERTEX_SIZE;

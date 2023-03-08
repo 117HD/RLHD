@@ -547,7 +547,8 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = "extendHorizon",
 		name = "Extend Horizon",
-		description = "Add an infinite continuation of the scene in all directions. Only applies in certain areas.",
+		description = "Add an infinite continuation of the scene in all directions.<br>" +
+			"Only applies in certain areas, and requires Area Filtering to be turned on.",
 		position = 13,
 		section = environmentSettings
 	)
