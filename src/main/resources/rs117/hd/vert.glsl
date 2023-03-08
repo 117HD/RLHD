@@ -39,9 +39,11 @@ layout (location = 2) in vec4 normal;
 
 #include uniforms/camera.glsl
 
-uniform int useFog;
-uniform int fogDepth;
+uniform bool useVertexFog;
+uniform float fogDepth;
 uniform int drawDistance;
+uniform ivec4 sceneBounds;
+uniform bool extendHorizon;
 
 out VertexData {
     ivec3 pos;
@@ -69,11 +71,11 @@ void main() {
     OUT.uv = uv;
     OUT.fogAmount = 0;
 
-    if (fogDepth > 0) {
-        int fogWest = max(FOG_SCENE_EDGE_MIN, cameraX - drawDistance);
-        int fogEast = min(FOG_SCENE_EDGE_MAX, cameraX + drawDistance - TILE_SIZE);
-        int fogSouth = max(FOG_SCENE_EDGE_MIN, cameraZ - drawDistance);
-        int fogNorth = min(FOG_SCENE_EDGE_MAX, cameraZ + drawDistance - TILE_SIZE);
+    if (useVertexFog) {
+        int fogWest = max(sceneBounds.x, cameraX - drawDistance);
+        int fogEast = min(sceneBounds.z, cameraX + drawDistance - TILE_SIZE);
+        int fogSouth = max(sceneBounds.y, cameraZ - drawDistance);
+        int fogNorth = min(sceneBounds.w, cameraZ + drawDistance - TILE_SIZE);
 
         // Calculate distance from the scene edge
         int xDist = min(vertex.x - fogWest, fogEast - vertex.x);
@@ -85,7 +87,7 @@ void main() {
         (secondNearestEdgeDistance + FOG_CORNER_ROUNDING_SQUARED));
 
         float edgeFogDepth = 50;
-        float edgeFogAmount = fogFactorLinear(fogDistance, 0, edgeFogDepth * (TILE_SIZE / 10)) * useFog;
+        float edgeFogAmount = fogFactorLinear(fogDistance, 0, edgeFogDepth * (TILE_SIZE / 10));
 
 
         // Use a combination of two different methods of calculating distance fog.
@@ -99,7 +101,7 @@ void main() {
 
         float minFogStart = 0.0;
         float maxFogStart = 0.3;
-        int fogDepth2 = int(fogDepth * drawDistance / (TILE_SIZE * 100.0));
+        int fogDepth2 = int(fogDepth * 10 * drawDistance / TILE_SIZE);
         float fogDepthMultiplier = clamp(fogDepth2, 0, 1000) / 1000.0;
         float fogStart2 = (maxFogStart - (fogDepthMultiplier * (maxFogStart - minFogStart))) * float(drawDistance);
         float exponent = 2.71828;

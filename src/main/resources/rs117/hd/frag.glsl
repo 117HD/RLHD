@@ -39,7 +39,8 @@ uniform mat4 lightProjectionMatrix;
 
 uniform float colorBlindnessIntensity;
 uniform vec4 fogColor;
-uniform int fogDepth;
+uniform float fogDepth;
+uniform bool extendHorizon;
 uniform vec3 waterColorLight;
 uniform vec3 waterColorMid;
 uniform vec3 waterColorDark;
@@ -771,11 +772,16 @@ void main() {
         groundFog = mix(0.0, groundFogOpacity, groundFog);
         groundFog *= clamp(distance / closeFadeDistance, 0.0, 1.0);
 
+        float horizonFogVisibility = 1;
+        if (extendHorizon) {
+            horizonFogVisibility = exp(-.001 * fogDepth * fogDepth * distance);
+        }
+
         // multiply the visibility of each fog
-        float combinedFog = 1 - (1 - IN.fogAmount) * (1 - groundFog);
+        float combinedFog = 1 - (1 - IN.fogAmount) * (1 - groundFog) * horizonFogVisibility;
 
         if (isWater) {
-            outputColor.a = combinedFog + outputColor.a * (1 - combinedFog);
+            outputColor.a = mix(outputColor.a, 1, combinedFog);
         }
 
         outputColor.rgb = mix(outputColor.rgb, fogColor.rgb, combinedFog);

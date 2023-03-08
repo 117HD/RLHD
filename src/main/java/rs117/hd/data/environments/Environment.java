@@ -1051,7 +1051,7 @@ public enum Environment
 	;
 
 	private final Area area;
-	private final int fogDepth;
+	private final float fogDepth;
 	private final boolean customFogDepth;
 	private final float[] fogColor;
 	private final boolean customFogColor;
@@ -1080,7 +1080,7 @@ public enum Environment
 
 	private static class Properties
 	{
-		private int fogDepth = 65;
+		private float fogDepth = 6.5f;
 		private boolean customFogDepth = false;
 		private float[] fogColor = rgb(185, 214, 255);
 		private boolean customFogColor = false;
@@ -1107,9 +1107,9 @@ public enum Environment
 		private float[] waterColor = rgb(185, 214, 255);
 		private boolean customWaterColor = false;
 
-		public Properties setFogDepth(int depth)
+		public Properties setFogDepth(float depth)
 		{
-			this.fogDepth = depth * 10;
+			this.fogDepth = depth;
 			this.customFogDepth = true;
 			return this;
 		}

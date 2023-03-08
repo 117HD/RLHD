@@ -91,9 +91,9 @@ public class EnvironmentManager
 	public float[] currentWaterColor = new float[]{0,0,0};
 	private float[] targetWaterColor = new float[]{0,0,0};
 
-	private int startFogDepth = 0;
-	public int currentFogDepth = 0;
-	private int targetFogDepth = 0;
+	private float startFogDepth = 0;
+	public float currentFogDepth = 0;
+	private float targetFogDepth = 0;
 
 	private float startAmbientStrength = 0f;
 	public float currentAmbientStrength = 0f;

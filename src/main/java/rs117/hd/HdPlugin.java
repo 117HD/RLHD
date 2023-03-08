@@ -297,10 +297,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	// Uniforms
 	private int uniColorBlindnessIntensity;
 	private int uniUiColorBlindnessIntensity;
-	private int uniUseFog;
+	private int uniUseVertexFog;
 	private int uniFogColor;
 	private int uniFogDepth;
 	private int uniDrawDistance;
+	private int uniSceneBounds;
+	private int uniExtendHorizon;
 	private int uniWaterColorLight;
 	private int uniWaterColorMid;
 	private int uniWaterColorDark;
@@ -820,13 +822,15 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		uniShadowMap = glGetUniformLocation(glProgram, "shadowMap");
 		uniSaturation = glGetUniformLocation(glProgram, "saturation");
 		uniContrast = glGetUniformLocation(glProgram, "contrast");
-		uniUseFog = glGetUniformLocation(glProgram, "useFog");
+		uniUseVertexFog = glGetUniformLocation(glProgram, "useVertexFog");
 		uniFogColor = glGetUniformLocation(glProgram, "fogColor");
 		uniFogDepth = glGetUniformLocation(glProgram, "fogDepth");
 		uniWaterColorLight = glGetUniformLocation(glProgram, "waterColorLight");
 		uniWaterColorMid = glGetUniformLocation(glProgram, "waterColorMid");
 		uniWaterColorDark = glGetUniformLocation(glProgram, "waterColorDark");
 		uniDrawDistance = glGetUniformLocation(glProgram, "drawDistance");
+		uniSceneBounds = glGetUniformLocation(glProgram, "sceneBounds");
+		uniExtendHorizon = glGetUniformLocation(glProgram, "extendHorizon");
 		uniAmbientStrength = glGetUniformLocation(glProgram, "ambientStrength");
 		uniAmbientColor = glGetUniformLocation(glProgram, "ambientColor");
 		uniLightStrength = glGetUniformLocation(glProgram, "lightStrength");
@@ -1889,24 +1893,25 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			glClearColor(fogColor[0], fogColor[1], fogColor[2], 1f);
 			glClear(GL_COLOR_BUFFER_BIT);
 
+			final boolean extendHorizon = config.extendHorizon();
 			final int drawDistance = getDrawDistance();
-			int fogDepth = config.fogDepth();
-			fogDepth *= 10;
+			float fogDepth = (config.fogDepthMode() == FogDepthMode.DYNAMIC ?
+				environmentManager.currentFogDepth : config.fogDepth()
+			) / 100.f;
+			boolean useVertexFog = !extendHorizon && fogDepth > 0;
 
-			if (config.fogDepthMode() == FogDepthMode.DYNAMIC)
-			{
-				fogDepth = environmentManager.currentFogDepth;
-			}
-			else if (config.fogDepthMode() == FogDepthMode.NONE)
-			{
-				fogDepth = 0;
-			}
-			glUniform1i(uniUseFog, fogDepth > 0 ? 1 : 0);
-			glUniform1i(uniFogDepth, fogDepth);
-
+			glUniform1i(uniUseVertexFog, useVertexFog ? 1 : 0);
+			glUniform1f(uniFogDepth, fogDepth);
 			glUniform4f(uniFogColor, fogColor[0], fogColor[1], fogColor[2], 1f);
-
 			glUniform1i(uniDrawDistance, drawDistance * Perspective.LOCAL_TILE_SIZE);
+			glUniform4i(uniSceneBounds,
+				sceneUploader.sceneBounds.minX * Perspective.LOCAL_TILE_SIZE,
+				sceneUploader.sceneBounds.minY * Perspective.LOCAL_TILE_SIZE,
+				sceneUploader.sceneBounds.maxX * Perspective.LOCAL_TILE_SIZE,
+				sceneUploader.sceneBounds.maxY * Perspective.LOCAL_TILE_SIZE
+			);
+			glUniform1i(uniExtendHorizon, config.extendHorizon() ? 1 : 0);
+
 			glUniform1f(uniColorBlindnessIntensity, config.colorBlindnessIntensity() / 100.f);
 
 			float[] waterColor = environmentManager.currentWaterColor;

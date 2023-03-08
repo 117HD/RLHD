@@ -411,8 +411,8 @@ public interface HdPluginConfig extends Config
 		keyName = "fogDepth",
 		name = "Static Fog Depth",
 		description =
-			"Specify how far from the edge fog should reach.<br>" +
-			"This applies only when 'Fog Depth Mode' is set to 'Static'.",
+			"Specify how thick the fog should be.<br>" +
+			"Only applies when 'Fog Depth Mode' is set to 'Static'.",
 		position = 2,
 		section = environmentSettings
 	)
