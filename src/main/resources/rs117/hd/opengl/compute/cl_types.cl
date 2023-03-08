@@ -43,7 +43,7 @@ struct shared_data {
   int dfs[0]; // packed face id and distance, size 512 for small, 6144 for large
 };
 
-struct modelinfo {
+struct ModelInfo {
   int offset;   // offset into buffer
   int uvOffset; // offset into uv buffer
   int size;     // length in faces

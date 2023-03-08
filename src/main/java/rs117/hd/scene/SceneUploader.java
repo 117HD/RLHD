@@ -46,6 +46,9 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Random;
 
+import static rs117.hd.HdPlugin.UV_SIZE;
+import static rs117.hd.HdPlugin.VERTEX_SIZE;
+
 @SuppressWarnings("UnnecessaryLocalVariable")
 @Singleton
 @Slf4j
@@ -71,8 +74,6 @@ class SceneUploader
 	private ModelOverrideManager modelOverrideManager;
 
 	public int sceneId = new Random().nextInt();
-	private int offset;
-	private int uvOffset;
 
 	private final float[] UP_NORMAL = { 0, -1, 0 };
 
@@ -80,12 +81,7 @@ class SceneUploader
 	{
 		Stopwatch stopwatch = Stopwatch.createStarted();
 
-		++sceneId;
-		offset = 0;
-		uvOffset = 0;
-		vertexBuffer.clear();
-		uvBuffer.clear();
-		normalBuffer.clear();
+		sceneId++;
 
 		for (int z = 0; z < Constants.MAX_Z; ++z)
 		{
@@ -106,7 +102,7 @@ class SceneUploader
 		log.debug("Scene upload time: {}", stopwatch);
 	}
 
-	private void uploadModel(long hash, Model model, GpuIntBuffer vertexBuffer, GpuFloatBuffer uvBuffer, GpuFloatBuffer normalBuffer, int tileZ, int tileX, int tileY, ObjectType objectType)
+	private void uploadModel(long hash, Model model, GpuIntBuffer vertexBuffer, GpuFloatBuffer uvBuffer, GpuFloatBuffer normalBuffer, int tileZ, int tileX, int tileY, int orientation, ObjectType objectType)
 	{
 		if (model.getSceneId() == sceneId)
 		{
@@ -125,10 +121,12 @@ class SceneUploader
 
 		// pack a bit into bufferoffset that we can use later to hide
 		// some low-importance objects based on Level of Detail setting
-		model.setBufferOffset(offset << 2 | skipObject);
-		if (model.getFaceTextures() != null || (plugin.configModelTextures && modelOverride.baseMaterial != Material.NONE))
+		model.setBufferOffset((vertexBuffer.position() / VERTEX_SIZE) << 2 | skipObject);
+		if (model.getFaceTextures() != null ||
+			(plugin.configModelTextures && modelOverride.baseMaterial != Material.NONE) ||
+			modelPusher.packMaterialData(Material.NONE, false, modelOverride) != 0)
 		{
-			model.setUvBufferOffset(uvOffset);
+			model.setUvBufferOffset(uvBuffer.position() / UV_SIZE);
 		}
 		else
 		{
@@ -136,10 +134,8 @@ class SceneUploader
 		}
 		model.setSceneId(sceneId);
 
-		final int[] lengths = modelPusher.pushModel(hash, model, vertexBuffer, uvBuffer, normalBuffer, tileX, tileY, tileZ, modelOverride, objectType, true);
-
-		offset += lengths[0];
-		uvOffset += lengths[1];
+		modelPusher.pushModel(hash, model, vertexBuffer, uvBuffer, normalBuffer,
+			tileX, tileY, tileZ, orientation, modelOverride, objectType, false);
 	}
 
 	private void upload(Tile tile, GpuIntBuffer vertexBuffer, GpuFloatBuffer uvBuffer, GpuFloatBuffer normalBuffer)
@@ -158,6 +154,8 @@ class SceneUploader
 		SceneTilePaint sceneTilePaint = tile.getSceneTilePaint();
 		if (sceneTilePaint != null)
 		{
+			int vertexOffset = vertexBuffer.position() / VERTEX_SIZE;
+			int uvOffset = uvBuffer.position() / UV_SIZE;
 			int[] uploadedTilePaintData = upload(
 				tile, sceneTilePaint,
 				tileZ, tileX, tileY,
@@ -167,20 +165,22 @@ class SceneUploader
 			final int bufferLength = uploadedTilePaintData[0];
 			final int uvBufferLength = uploadedTilePaintData[1];
 			final int underwaterTerrain = uploadedTilePaintData[2];
+			if (uvBufferLength <= 0)
+				uvOffset = -1;
 			// pack a boolean into the buffer length of tiles so we can tell
 			// which tiles have procedurally generated underwater terrain.
 			// shift the bufferLength to make space for the boolean:
 			int packedBufferLength = bufferLength << 1 | underwaterTerrain;
-			sceneTilePaint.setBufferOffset(offset);
-			sceneTilePaint.setUvBufferOffset(uvBufferLength > 0 ? uvOffset : -1);
+			sceneTilePaint.setBufferOffset(vertexOffset);
+			sceneTilePaint.setUvBufferOffset(uvOffset);
 			sceneTilePaint.setBufferLen(packedBufferLength);
-			offset += bufferLength;
-			uvOffset += uvBufferLength;
 		}
 
 		SceneTileModel sceneTileModel = tile.getSceneTileModel();
 		if (sceneTileModel != null)
 		{
+			int vertexOffset = vertexBuffer.position() / VERTEX_SIZE;
+			int uvOffset = uvBuffer.position() / UV_SIZE;
 			int[] uploadedTileModelData = upload(
 				tile, sceneTileModel,
 				tileZ, tileX, tileY,
@@ -190,14 +190,14 @@ class SceneUploader
 			final int bufferLength = uploadedTileModelData[0];
 			final int uvBufferLength = uploadedTileModelData[1];
 			final int underwaterTerrain = uploadedTileModelData[2];
+			if (uvBufferLength <= 0)
+				uvOffset = -1;
 			// pack a boolean into the buffer length of tiles so we can tell
 			// which tiles have procedurally-generated underwater terrain
 			int packedBufferLength = bufferLength << 1 | underwaterTerrain;
-			sceneTileModel.setBufferOffset(offset);
-			sceneTileModel.setUvBufferOffset(uvBufferLength > 0 ? uvOffset : -1);
+			sceneTileModel.setBufferOffset(vertexOffset);
+			sceneTileModel.setUvBufferOffset(uvOffset);
 			sceneTileModel.setBufferLen(packedBufferLength);
-			offset += bufferLength;
-			uvOffset += uvBufferLength;
 		}
 
 		WallObject wallObject = tile.getWallObject();
@@ -206,15 +206,19 @@ class SceneUploader
 			Renderable renderable1 = wallObject.getRenderable1();
 			if (renderable1 instanceof Model)
 			{
-				uploadModel(wallObject.getHash(), (Model) renderable1, vertexBuffer, uvBuffer, normalBuffer, tileZ, tileX,
-					tileY, ObjectType.WALL_OBJECT);
+				uploadModel(wallObject.getHash(), (Model) renderable1,
+					vertexBuffer, uvBuffer, normalBuffer, tileZ, tileX, tileY,
+					HDUtils.convertWallObjectOrientation(wallObject.getOrientationA()),
+					ObjectType.WALL_OBJECT);
 			}
 
 			Renderable renderable2 = wallObject.getRenderable2();
 			if (renderable2 instanceof Model)
 			{
-				uploadModel(wallObject.getHash(), (Model) renderable2, vertexBuffer, uvBuffer, normalBuffer, tileZ, tileX,
-					tileY, ObjectType.WALL_OBJECT);
+				uploadModel(wallObject.getHash(), (Model) renderable2,
+					vertexBuffer, uvBuffer, normalBuffer, tileZ, tileX, tileY,
+					HDUtils.convertWallObjectOrientation(wallObject.getOrientationB()),
+					ObjectType.WALL_OBJECT);
 			}
 		}
 
@@ -224,27 +228,32 @@ class SceneUploader
 			Renderable renderable = groundObject.getRenderable();
 			if (renderable instanceof Model)
 			{
-				uploadModel(groundObject.getHash(), (Model) renderable, vertexBuffer, uvBuffer, normalBuffer, tileZ, tileX,
-					tileY, ObjectType.GROUND_OBJECT);
+				uploadModel(groundObject.getHash(), (Model) renderable,
+					vertexBuffer, uvBuffer, normalBuffer, tileZ, tileX, tileY,
+					HDUtils.extractConfigOrientation(groundObject.getConfig()),
+					ObjectType.GROUND_OBJECT);
 			}
 		}
 
 		DecorativeObject decorativeObject = tile.getDecorativeObject();
 		if (decorativeObject != null)
 		{
-
 			Renderable renderable = decorativeObject.getRenderable();
 			if (renderable instanceof Model)
 			{
-				uploadModel(decorativeObject.getHash(), (Model) renderable, vertexBuffer, uvBuffer, normalBuffer, tileZ, tileX,
-					tileY, ObjectType.DECORATIVE_OBJECT);
+				uploadModel(decorativeObject.getHash(), (Model) renderable,
+					vertexBuffer, uvBuffer, normalBuffer, tileZ, tileX, tileY,
+					HDUtils.extractConfigOrientation(decorativeObject.getConfig()),
+					ObjectType.DECORATIVE_OBJECT);
 			}
 
 			Renderable renderable2 = decorativeObject.getRenderable2();
 			if (renderable2 instanceof Model)
 			{
-				uploadModel(decorativeObject.getHash(), (Model) renderable2, vertexBuffer, uvBuffer, normalBuffer, tileZ, tileX,
-					tileY, ObjectType.DECORATIVE_OBJECT);
+				uploadModel(decorativeObject.getHash(), (Model) renderable2,
+					vertexBuffer, uvBuffer, normalBuffer, tileZ, tileX, tileY,
+					HDUtils.extractConfigOrientation(decorativeObject.getConfig()),
+					ObjectType.DECORATIVE_OBJECT);
 			}
 		}
 
@@ -259,8 +268,9 @@ class SceneUploader
 			Renderable renderable = gameObject.getRenderable();
 			if (renderable instanceof Model)
 			{
-				uploadModel(gameObject.getHash(), (Model) gameObject.getRenderable(), vertexBuffer, uvBuffer, normalBuffer, tileZ, tileX,
-					tileY, ObjectType.GAME_OBJECT);
+				uploadModel(gameObject.getHash(), (Model) gameObject.getRenderable(),
+					vertexBuffer, uvBuffer, normalBuffer, tileZ, tileX, tileY,
+					gameObject.getModelOrientation(), ObjectType.GAME_OBJECT);
 			}
 		}
 	}
@@ -381,7 +391,7 @@ class SceneUploader
 				{
 					GroundMaterial groundMaterial;
 
-					Overlay overlay = Overlay.getOverlay((int) client.getScene().getOverlayIds()[tileZ][tileX][tileY], tile, client, config);
+					Overlay overlay = Overlay.getOverlay(client.getScene().getOverlayIds()[tileZ][tileX][tileY], tile, client, plugin);
 					if (overlay != Overlay.NONE)
 					{
 						groundMaterial = overlay.groundMaterial;
@@ -393,7 +403,7 @@ class SceneUploader
 					}
 					else
 					{
-						Underlay underlay = Underlay.getUnderlay((int) client.getScene().getUnderlayIds()[tileZ][tileX][tileY], tile, client, config);
+						Underlay underlay = Underlay.getUnderlay(client.getScene().getUnderlayIds()[tileZ][tileX][tileY], tile, client, plugin);
 						groundMaterial = underlay.groundMaterial;
 
 						swColor = HDUtils.colorHSLToInt(proceduralGenerator.recolorUnderlay(underlay, HDUtils.colorIntToHSL(swColor)));
@@ -409,7 +419,7 @@ class SceneUploader
 				}
 				else if (plugin.configWinterTheme)
 				{
-					Overlay overlay = Overlay.getOverlay((int) client.getScene().getOverlayIds()[tileZ][tileX][tileY], tile, client, config);
+					Overlay overlay = Overlay.getOverlay(client.getScene().getOverlayIds()[tileZ][tileX][tileY], tile, client, plugin);
 					if (overlay != Overlay.NONE)
 					{
 						swColor = HDUtils.colorHSLToInt(proceduralGenerator.recolorOverlay(overlay, HDUtils.colorIntToHSL(swColor)));
@@ -419,7 +429,7 @@ class SceneUploader
 					}
 					else
 					{
-						Underlay underlay = Underlay.getUnderlay((int) client.getScene().getUnderlayIds()[tileZ][tileX][tileY], tile, client, config);
+						Underlay underlay = Underlay.getUnderlay(client.getScene().getUnderlayIds()[tileZ][tileX][tileY], tile, client, plugin);
 						swColor = HDUtils.colorHSLToInt(proceduralGenerator.recolorUnderlay(underlay, HDUtils.colorIntToHSL(swColor)));
 						seColor = HDUtils.colorHSLToInt(proceduralGenerator.recolorUnderlay(underlay, HDUtils.colorIntToHSL(seColor)));
 						nwColor = HDUtils.colorHSLToInt(proceduralGenerator.recolorUnderlay(underlay, HDUtils.colorIntToHSL(nwColor)));
@@ -477,19 +487,19 @@ class SceneUploader
 
 			bufferLength += 6;
 
-			int packedMaterialDataSW = modelPusher.packMaterialData(swMaterial, swVertexIsOverlay);
-			int packedMaterialDataSE = modelPusher.packMaterialData(seMaterial, seVertexIsOverlay);
-			int packedMaterialDataNW = modelPusher.packMaterialData(nwMaterial, nwVertexIsOverlay);
-			int packedMaterialDataNE = modelPusher.packMaterialData(neMaterial, neVertexIsOverlay);
+			int packedMaterialDataSW = modelPusher.packMaterialData(swMaterial, swVertexIsOverlay, ModelOverride.NONE);
+			int packedMaterialDataSE = modelPusher.packMaterialData(seMaterial, seVertexIsOverlay, ModelOverride.NONE);
+			int packedMaterialDataNW = modelPusher.packMaterialData(nwMaterial, nwVertexIsOverlay, ModelOverride.NONE);
+			int packedMaterialDataNE = modelPusher.packMaterialData(neMaterial, neVertexIsOverlay, ModelOverride.NONE);
 
 			uvBuffer.ensureCapacity(24);
-			uvBuffer.put(packedMaterialDataNE, 1.0f, 1.0f, 0f);
-			uvBuffer.put(packedMaterialDataNW, 0.0f, 1.0f, 0f);
-			uvBuffer.put(packedMaterialDataSE, 1.0f, 0.0f, 0f);
+			uvBuffer.put(1, 0, 0, packedMaterialDataNE);
+			uvBuffer.put(0, 0, 0, packedMaterialDataNW);
+			uvBuffer.put(1, 1, 0, packedMaterialDataSE);
 
-			uvBuffer.put(packedMaterialDataSW, 0.0f, 0.0f, 0f);
-			uvBuffer.put(packedMaterialDataSE, 1.0f, 0.0f, 0f);
-			uvBuffer.put(packedMaterialDataNW, 0.0f, 1.0f, 0f);
+			uvBuffer.put(0, 1, 0, packedMaterialDataSW);
+			uvBuffer.put(1, 1, 0, packedMaterialDataSE);
+			uvBuffer.put(0, 0, 0, packedMaterialDataNW);
 
 			uvBufferLength += 6;
 		}
@@ -597,19 +607,19 @@ class SceneUploader
 
 			bufferLength += 6;
 
-			int packedMaterialDataSW = modelPusher.packMaterialData(swMaterial, false);
-			int packedMaterialDataSE = modelPusher.packMaterialData(seMaterial, false);
-			int packedMaterialDataNW = modelPusher.packMaterialData(nwMaterial, false);
-			int packedMaterialDataNE = modelPusher.packMaterialData(neMaterial, false);
+			int packedMaterialDataSW = modelPusher.packMaterialData(swMaterial, false, ModelOverride.NONE);
+			int packedMaterialDataSE = modelPusher.packMaterialData(seMaterial, false, ModelOverride.NONE);
+			int packedMaterialDataNW = modelPusher.packMaterialData(nwMaterial, false, ModelOverride.NONE);
+			int packedMaterialDataNE = modelPusher.packMaterialData(neMaterial, false, ModelOverride.NONE);
 
 			uvBuffer.ensureCapacity(24);
-			uvBuffer.put(packedMaterialDataNE, 1.0f, 1.0f, 0f);
-			uvBuffer.put(packedMaterialDataNW, 0.0f, 1.0f, 0f);
-			uvBuffer.put(packedMaterialDataSE, 1.0f, 0.0f, 0f);
+			uvBuffer.put(1, 0, 0, packedMaterialDataNE);
+			uvBuffer.put(0, 0, 0, packedMaterialDataNW);
+			uvBuffer.put(1, 1, 0, packedMaterialDataSE);
 
-			uvBuffer.put(packedMaterialDataSW, 0.0f, 0.0f, 0f);
-			uvBuffer.put(packedMaterialDataSE, 1.0f, 0.0f, 0f);
-			uvBuffer.put(packedMaterialDataNW, 0.0f, 1.0f, 0f);
+			uvBuffer.put(0, 1, 0, packedMaterialDataSW);
+			uvBuffer.put(1, 1, 0, packedMaterialDataSE);
+			uvBuffer.put(0, 0, 0, packedMaterialDataNW);
 
 			uvBufferLength += 6;
 		}
@@ -727,7 +737,7 @@ class SceneUploader
 
 					if (proceduralGenerator.isOverlayFace(tile, face))
 					{
-						Overlay overlay = Overlay.getOverlay((int) client.getScene().getOverlayIds()[tileZ][tileX][tileY], tile, client, config);
+						Overlay overlay = Overlay.getOverlay(client.getScene().getOverlayIds()[tileZ][tileX][tileY], tile, client, plugin);
 						groundMaterial = overlay.groundMaterial;
 
 						colorA = HDUtils.colorHSLToInt(proceduralGenerator.recolorOverlay(overlay, HDUtils.colorIntToHSL(colorA)));
@@ -736,7 +746,7 @@ class SceneUploader
 					}
 					else
 					{
-						Underlay underlay = Underlay.getUnderlay((int) client.getScene().getUnderlayIds()[tileZ][tileX][tileY], tile, client, config);
+						Underlay underlay = Underlay.getUnderlay(client.getScene().getUnderlayIds()[tileZ][tileX][tileY], tile, client, plugin);
 						groundMaterial = underlay.groundMaterial;
 
 						colorA = HDUtils.colorHSLToInt(proceduralGenerator.recolorUnderlay(underlay, HDUtils.colorIntToHSL(colorA)));
@@ -752,7 +762,7 @@ class SceneUploader
 				{
 					if (proceduralGenerator.isOverlayFace(tile, face))
 					{
-						Overlay overlay = Overlay.getOverlay((int) client.getScene().getOverlayIds()[tileZ][tileX][tileY], tile, client, config);
+						Overlay overlay = Overlay.getOverlay(client.getScene().getOverlayIds()[tileZ][tileX][tileY], tile, client, plugin);
 
 						colorA = HDUtils.colorHSLToInt(proceduralGenerator.recolorOverlay(overlay, HDUtils.colorIntToHSL(colorA)));
 						colorB = HDUtils.colorHSLToInt(proceduralGenerator.recolorOverlay(overlay, HDUtils.colorIntToHSL(colorB)));
@@ -760,7 +770,7 @@ class SceneUploader
 					}
 					else
 					{
-						Underlay underlay = Underlay.getUnderlay((int) client.getScene().getUnderlayIds()[tileZ][tileX][tileY], tile, client, config);
+						Underlay underlay = Underlay.getUnderlay(client.getScene().getUnderlayIds()[tileZ][tileX][tileY], tile, client, plugin);
 
 						colorA = HDUtils.colorHSLToInt(proceduralGenerator.recolorUnderlay(underlay, HDUtils.colorIntToHSL(colorA)));
 						colorB = HDUtils.colorHSLToInt(proceduralGenerator.recolorUnderlay(underlay, HDUtils.colorIntToHSL(colorB)));
@@ -815,14 +825,14 @@ class SceneUploader
 
 			bufferLength += 3;
 
-			int packedMaterialDataA = modelPusher.packMaterialData(materialA, vertexAIsOverlay);
-			int packedMaterialDataB = modelPusher.packMaterialData(materialB, vertexBIsOverlay);
-			int packedMaterialDataC = modelPusher.packMaterialData(materialC, vertexCIsOverlay);
+			int packedMaterialDataA = modelPusher.packMaterialData(materialA, vertexAIsOverlay, ModelOverride.NONE);
+			int packedMaterialDataB = modelPusher.packMaterialData(materialB, vertexBIsOverlay, ModelOverride.NONE);
+			int packedMaterialDataC = modelPusher.packMaterialData(materialC, vertexCIsOverlay, ModelOverride.NONE);
 
 			uvBuffer.ensureCapacity(12);
-			uvBuffer.put(packedMaterialDataA, localVertices[0][0] / 128f, localVertices[0][1] / 128f, 0f);
-			uvBuffer.put(packedMaterialDataB, localVertices[1][0] / 128f, localVertices[1][1] / 128f, 0f);
-			uvBuffer.put(packedMaterialDataC, localVertices[2][0] / 128f, localVertices[2][1] / 128f, 0f);
+			uvBuffer.put(localVertices[0][0] / 128f, 1 - localVertices[0][1] / 128f, 0, packedMaterialDataA);
+			uvBuffer.put(localVertices[1][0] / 128f, 1 - localVertices[1][1] / 128f, 0, packedMaterialDataB);
+			uvBuffer.put(localVertices[2][0] / 128f, 1 - localVertices[2][1] / 128f, 0, packedMaterialDataC);
 
 			uvBufferLength += 3;
 		}
@@ -923,14 +933,14 @@ class SceneUploader
 
 				bufferLength += 3;
 
-				int packedMaterialDataA = modelPusher.packMaterialData(materialA, false);
-				int packedMaterialDataB = modelPusher.packMaterialData(materialB, false);
-				int packedMaterialDataC = modelPusher.packMaterialData(materialC, false);
+				int packedMaterialDataA = modelPusher.packMaterialData(materialA, false, ModelOverride.NONE);
+				int packedMaterialDataB = modelPusher.packMaterialData(materialB, false, ModelOverride.NONE);
+				int packedMaterialDataC = modelPusher.packMaterialData(materialC, false, ModelOverride.NONE);
 
 				uvBuffer.ensureCapacity(12);
-				uvBuffer.put(packedMaterialDataA, localVertices[0][0] / 128f, localVertices[0][1] / 128f, 0f);
-				uvBuffer.put(packedMaterialDataB, localVertices[1][0] / 128f, localVertices[1][1] / 128f, 0f);
-				uvBuffer.put(packedMaterialDataC, localVertices[2][0] / 128f, localVertices[2][1] / 128f, 0f);
+				uvBuffer.put(localVertices[0][0] / 128f, 1 - localVertices[0][1] / 128f, 0, packedMaterialDataA);
+				uvBuffer.put(localVertices[1][0] / 128f, 1 - localVertices[1][1] / 128f, 0, packedMaterialDataB);
+				uvBuffer.put(localVertices[2][0] / 128f, 1 - localVertices[2][1] / 128f, 0, packedMaterialDataC);
 
 				uvBufferLength += 3;
 			}

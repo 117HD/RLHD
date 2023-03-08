@@ -32,107 +32,60 @@
 layout(triangles) in;
 layout(triangle_strip, max_vertices = 3) out;
 
-#include uniforms/camera.glsl
+#include utils/polyfills.glsl
+#include utils/constants.glsl
+#include utils/misc.glsl
 
 uniform mat4 projectionMatrix;
 uniform mat4 lightProjectionMatrix;
 
-in ivec3 vPosition[];
-in vec4 vNormal[];
-in vec4 vColor[];
-in vec4 vUv[];
-in float vFogAmount[];
+in VertexData {
+    ivec3 pos;
+    vec4 normal;
+    vec4 color;
+    vec4 uv;
+    float fogAmount;
+} IN[3];
 
-out float fogAmount;
-flat out vec4 vColor1;
-flat out vec4 vColor2;
-flat out vec4 vColor3;
-flat out vec2 vUv1;
-flat out vec2 vUv2;
-flat out vec2 vUv3;
-out vec3 normals;
-out vec3 position;
-out vec3 texBlend;
-flat out ivec3 materialId;
-flat out ivec3 terrainData;
-flat out ivec3 isOverlay;
-out vec4 shadowOut;
+flat out vec4 vColor[3];
+flat out vec3 vUv[3];
+flat out int vMaterialData[3];
+flat out int vTerrainData[3];
+
+out FragmentData {
+    float fogAmount;
+    vec3 normal;
+    vec3 position;
+    vec3 texBlend;
+} OUT;
 
 void main() {
-    int material1 = int(vUv[0].x) >> 1;
-    int material2 = int(vUv[1].x) >> 1;
-    int material3 = int(vUv[2].x) >> 1;
-    materialId = ivec3(material1, material2, material3);
+    int materialData = int(IN[0].uv.w);
+    bool flatNormals =
+        length(IN[0].normal.xyz) < .01 ||
+        (materialData >> MATERIAL_FLAG_FLAT_NORMALS & 1) == 1;
 
-    terrainData = ivec3(int(vNormal[0].w), int(vNormal[1].w), int(vNormal[2].w));
-
-    isOverlay = ivec3(0, 0, 0);
-    isOverlay[0] = int(vUv[0].x) & 1;
-    isOverlay[1] = int(vUv[1].x) & 1;
-    isOverlay[2] = int(vUv[2].x) & 1;
-
-    vColor1 = vColor[0];
-    vColor2 = vColor[1];
-    vColor3 = vColor[2];
-
-    vUv1 = vUv[0].yz;
-    vUv2 = vUv[1].yz;
-    vUv3 = vUv[2].yz;
-
-    // fast normals
-    vec3 T = normalize(vec3(vPosition[0] - vPosition[1]));
-    vec3 B = normalize(vec3(vPosition[0] - vPosition[2]));
+    // Compute flat normals
+    vec3 T = vec3(IN[0].pos - IN[1].pos);
+    vec3 B = vec3(IN[0].pos - IN[2].pos);
     vec3 N = normalize(cross(T, B));
 
-    texBlend = vec3(1, 0, 0);
-    fogAmount = vFogAmount[0];
-    gl_Position = projectionMatrix * vec4(vPosition[0], 1.f);
-    shadowOut = lightProjectionMatrix * vec4(vPosition[0], 1.f);
-    if (abs(vNormal[0].x) < 0.01 && abs(vNormal[0].y) < 0.01 && abs(vNormal[0].z) < 0.01)
-    {
-        normals = N;
+    for (int i = 0; i < 3; i++) {
+        vColor[i] = IN[i].color;
+        vUv[i] = IN[i].uv.xyz;
+        vMaterialData[i] = int(IN[i].uv.w);
+        vTerrainData[i] = int(IN[i].normal.w);
     }
-    else
-    {
-        normals = vNormal[0].xyz;
+
+    for (int i = 0; i < 3; i++) {
+        OUT.texBlend = vec3(0);
+        OUT.texBlend[i] = 1;
+        OUT.fogAmount = IN[i].fogAmount;
+        OUT.position = IN[i].pos;
+        OUT.normal = flatNormals ? N : normalize(IN[i].normal.xyz);
+        gl_Position = projectionMatrix * vec4(IN[i].pos, 1.f);
+        EmitVertex();
     }
-    position = vPosition[0];
-    EmitVertex();
-
-
-
-    texBlend = vec3(0, 1, 0);
-    fogAmount = vFogAmount[1];
-    gl_Position = projectionMatrix * vec4(vPosition[1], 1.f);
-    shadowOut = lightProjectionMatrix * vec4(vPosition[1], 1.f);
-    if (abs(vNormal[1].x) < 0.01 && abs(vNormal[1].y) < 0.01 && abs(vNormal[1].z) < 0.01)
-    {
-        normals = N;
-    }
-    else
-    {
-        normals = vNormal[1].xyz;
-    }
-    position = vPosition[1];
-    EmitVertex();
-
-
-
-    texBlend = vec3(0, 0, 1);
-    fogAmount = vFogAmount[2];
-    gl_Position = projectionMatrix * vec4(vPosition[2], 1.f);
-    shadowOut = lightProjectionMatrix * vec4(vPosition[2], 1.f);
-    if (abs(vNormal[2].x) < 0.01 && abs(vNormal[2].y) < 0.01 && abs(vNormal[2].z) < 0.01)
-    {
-        normals = N;
-    }
-    else
-    {
-        normals = vNormal[2].xyz;
-    }
-    position = vPosition[2];
-    EmitVertex();
-
 
     EndPrimitive();
 }

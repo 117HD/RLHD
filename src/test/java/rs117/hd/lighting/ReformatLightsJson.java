@@ -61,7 +61,8 @@ public class ReformatLightsJson
 			System.out.println("Loading current lights from JSON...");
 			// Load all lights from current lights.json
 			GsonUtils.THROW_WHEN_PARSING_FAILS = true;
-			Light[] currentLights = configPath.loadJson(Light[].class);
+			Gson gson = new GsonBuilder().setLenient().create();
+			Light[] currentLights = configPath.loadJson(gson, Light[].class);
 			Collections.addAll(uniqueLights, currentLights);
 			System.out.println("Loaded " + currentLights.length + " lights");
 		}

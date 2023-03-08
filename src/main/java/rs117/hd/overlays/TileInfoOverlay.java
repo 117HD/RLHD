@@ -13,6 +13,7 @@ import javax.annotation.Nonnull;
 
 import net.runelite.api.*;
 
+import static net.runelite.api.Constants.MAX_Z;
 import static net.runelite.api.Perspective.*;
 import static net.runelite.api.Perspective.LOCAL_TILE_SIZE;
 import static net.runelite.api.Perspective.SCENE_SIZE;
@@ -25,19 +26,21 @@ import net.runelite.client.ui.overlay.OverlayLayer;
 import net.runelite.client.ui.overlay.OverlayPosition;
 import net.runelite.client.ui.overlay.OverlayUtil;
 import org.apache.commons.lang3.tuple.Pair;
-import rs117.hd.HdPluginConfig;
+import rs117.hd.HdPlugin;
 import rs117.hd.data.materials.Material;
 import rs117.hd.data.materials.Overlay;
 import rs117.hd.data.materials.Underlay;
 import rs117.hd.utils.HDUtils;
+import rs117.hd.utils.ModelHash;
 
 public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay
 {
 	private final Client client;
 	private Point mousePos;
+	private boolean ctrlPressed;
 
 	@Inject
-	HdPluginConfig config;
+	private HdPlugin plugin;
 
 	@Inject
 	public TileInfoOverlay(Client client)
@@ -50,11 +53,8 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay
 	@Override
 	public Dimension render(Graphics2D g)
 	{
-		if (!client.isKeyPressed(KeyCode.KC_SHIFT))
-		{
-			mousePos = client.getMouseCanvasPosition();
-		}
-
+		ctrlPressed = client.isKeyPressed(KeyCode.KC_CONTROL);
+		mousePos = client.getMouseCanvasPosition();
 		if (mousePos != null && mousePos.getX() == -1 && mousePos.getY() == -1)
 		{
 			return null;
@@ -65,7 +65,8 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay
 
 		Scene scene = client.getScene();
 		Tile[][][] tiles = scene.getTiles();
-		for (int plane = client.getPlane(); plane >= 0; plane--)
+		int plane = ctrlPressed ? MAX_Z - 1 : client.getPlane();
+		for (; plane >= 0; plane--)
 		{
 			for (int isBridge = 1; isBridge >= 0; isBridge--)
 			{
@@ -129,7 +130,7 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay
 		SceneTilePaint paint = tile.getSceneTilePaint();
 		SceneTileModel model = tile.getSceneTileModel();
 
-		if ((paint == null || (paint.getNeColor() == 12345678 && tile.getBridge() == null)) && model == null)
+		if (!ctrlPressed && (paint == null || (paint.getNeColor() == 12345678 && tile.getBridge() == null)) && model == null)
 		{
 			return null;
 		}
@@ -157,15 +158,15 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay
 		lines.add(worldPointInfo);
 
 		Scene scene = client.getScene();
-		int overlayId = scene.getOverlayIds()[plane][x][y];
-		Overlay overlay = Overlay.getOverlay(overlayId, tile, client, config);
+		short overlayId = scene.getOverlayIds()[plane][x][y];
+		Overlay overlay = Overlay.getOverlay(overlayId, tile, client, plugin);
 		lines.add(String.format("Overlay: %s (%d)", overlay.name(), overlayId));
 
-		int underlayId = scene.getOverlayIds()[plane][x][y];
-		Underlay underlay = Underlay.getUnderlay(underlayId, tile, client, config);
+		short underlayId = scene.getUnderlayIds()[plane][x][y];
+		Underlay underlay = Underlay.getUnderlay(underlayId, tile, client, plugin);
 		lines.add(String.format("Underlay: %s (%d)", underlay.name(), underlayId));
 
-		Color polyColor;
+		Color polyColor = Color.BLACK;
 		if (paint != null)
 		{
 			// TODO: separate H, S and L to hopefully more easily match tiles that are different shades of the same hue
@@ -174,12 +175,12 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay
 			Material material = Material.getTexture(paint.getTexture());
 			lines.add(String.format("Material: %s (%d)", material.name(), paint.getTexture()));
 			lines.add("JagexHSL: ");
-			lines.add("NW: " + paint.getNwColor());
-			lines.add("NE: " + paint.getNeColor());
-			lines.add("SE: " + paint.getSeColor());
-			lines.add("SW: " + paint.getSwColor());
+			lines.add("NW: " + (paint.getNwColor() == 12345678 ? "HIDDEN" : paint.getNwColor()));
+			lines.add("NE: " + (paint.getNeColor() == 12345678 ? "HIDDEN" : paint.getNeColor()));
+			lines.add("SE: " + (paint.getSeColor() == 12345678 ? "HIDDEN" : paint.getSeColor()));
+			lines.add("SW: " + (paint.getSwColor() == 12345678 ? "HIDDEN" : paint.getSwColor()));
 		}
-		else
+		else if (model != null)
 		{
 			polyColor = Color.ORANGE;
 			lines.add("Tile type: Model");
@@ -242,10 +243,42 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay
 				int b = CB[face];
 				int c = CC[face];
 				if (a == b && b == c) {
-					lines.add("" + face + ": " + a);
+					lines.add("" + face + ": " + (a == 12345678 ? "HIDDEN" : a));
 				} else {
-					lines.add("" + face + ": [ " + a + ", " + b + ", " + c + " ]");
+					lines.add("" + face + ": [ " +
+						(a == 12345678 ? "HIDDEN" : a) + ", " +
+						(b == 12345678 ? "HIDDEN" : b) + ", " +
+						(c == 12345678 ? "HIDDEN" : c) + " ]");
 				}
+			}
+		}
+
+		if (client.isKeyPressed(KeyCode.KC_SHIFT)) {
+			GroundObject groundObject = tile.getGroundObject();
+			if (groundObject != null) {
+				lines.add(String.format("Ground Object: ID=%d x=%d y=%d ori=%d",
+					groundObject.getId(),
+					ModelHash.getSceneX(groundObject.getHash()),
+					ModelHash.getSceneY(groundObject.getHash()),
+					HDUtils.extractConfigOrientation(groundObject.getConfig())));
+			}
+
+			GameObject[] gameObjects = tile.getGameObjects();
+			if (gameObjects.length > 0) {
+				int counter = 0;
+				for (int i = 0; i < gameObjects.length; i++) {
+					GameObject gameObject = gameObjects[i];
+					if (gameObject == null)
+						continue;
+					counter++;
+					lines.add(String.format("ID %d: x=%d y=%d ori=%d",
+						gameObject.getId(),
+						ModelHash.getSceneX(gameObject.getHash()),
+						ModelHash.getSceneY(gameObject.getHash()),
+						gameObject.getModelOrientation()));
+				}
+				if (counter > 0)
+					lines.add(lines.size() - counter, "Game objects: ");
 			}
 		}
 

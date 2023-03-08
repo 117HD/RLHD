@@ -965,7 +965,6 @@
       "KOVAC_11472"
     ],
     "objectIds": [
-      2052,
       4502,
       17208,
       17324,
@@ -1055,8 +1054,6 @@
       "GATE_15511",
       "GATE_15514",
       "GATE_15515",
-      "GATE_2050",
-      "GATE_24560",
       "GENERAL_GRAARDOR_DISPLAY",
       "GENERAL_GRAARDOR_JR",
       "GIANT_ANVIL",
@@ -1236,6 +1233,9 @@
       1295,
       10823,
       37329,
+      16546,
+      16547,
+      16548,
       "EVERGREEN_2092",
       "MAGIC_TREE_10834",
       "MAPLE_TREE_10832",
@@ -1247,20 +1247,57 @@
     ]
   },
   {
-    "description": "FARMING_PATCH_1",
-    "baseMaterial": "DIRT_1",
+    "description": "Fallen Tree",
+    "baseMaterial": "BARK",
     "objectIds": [
-      7517
+      9661,
+      9663
+    ]
+  },
+  {
+    "description": "DEAD_TREES",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      1282,
+      1284,
+      1286,
+      1297,
+      1383,
+      4051,
+      4052,
+      4053,
+      4054,
+      5902,
+      5903,
+      5904,
+      5905
+    ]
+  },
+  {
+    "description": "TREE_STUMP",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      1341,
+      4328
+    ]
+  },
+  {
+    "description": "FARMING_PATCH_1",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      7517,
+      8173
     ],
-    "uvType": "GROUND_PLANE"
+    "uvType": "MODEL_XZ"
   },
   {
     "description": "FARMING_PATCH_2",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
-      7522
+      7522,
+      7523
     ],
-    "uvType": "GROUND_PLANE"
+    "uvType": "MODEL_XZ"
   },
   {
     "description": "GRASS",
@@ -1382,8 +1419,6 @@
     "description": "WOODEN_FENCES",
     "baseMaterial": "WOOD_GRAIN",
     "objectIds": [
-      814,
-      980,
       981,
       991,
       992,
@@ -1391,16 +1426,12 @@
       1008,
       1565,
       1566,
-      5432,
-      5433,
-      5434,
-      5435,
-      5436,
-      5437,
-      5438,
+      2664,
+      2665,
       7055,
       9511,
       9623,
+      25677,
       "GATE_1558",
       "GATE_1559",
       "GATE_1560",
@@ -1418,9 +1449,11 @@
   },
   {
     "description": "STONE_STEPS",
-    "baseMaterial": "GRUNGE_2",
+    "baseMaterial": "STONE",
     "objectIds": [
-      3684
+      3684,
+      20950,
+      20951
     ]
   },
   {
@@ -1444,7 +1477,7 @@
       7153
     ],
     "flatNormals": true,
-    "uvType": "GROUND_PLANE"
+    "uvType": "MODEL_XZ"
   },
   {
     "description": "VARROCK_FOUNTAIN_STATUE",
@@ -1504,21 +1537,18 @@
       16155
     ],
     "flatNormals": true,
-    "uvType": "GROUND_PLANE"
+    "uvType": "MODEL_XZ"
   },
   {
     "description": "GRAND_EXCHANGE_WALLS",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
       23755,
-      23775,
       23776,
       23777,
       23778,
       23779,
-      23795,
-      23810,
-      23811
+      23795
     ],
     "flatNormals": true
   },
@@ -1576,26 +1606,103 @@
     "flatNormals": true
   },
   {
-    "description": "VARROCK_WALLS",
+    "description": "Walls",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
+      436,
+      437,
+      438,
+      441,
+      443,
+      444,
+      445,
+      448,
+      449,
       450,
+      455,
+      462,
+      477,
       490,
       493,
       494,
       495,
       496,
       497,
+      451,
+      452,
+      453,
+      454,
+      455,
+      456,
+      457,
+      458,
+      458,
+      459,
+      460,
+      461,
+      462,
+      463,
+      464,
+      465,
+      466,
+      467,
+      468,
+      469,
+      471,
+      472,
+      473,
+      474,
+      475,
+      476,
+      477,
+      478,
+      480,
+      481,
+      482,
+      483,
+      484,
+      485,
+      486,
+      487,
+      488,
+      489,
+      490,
+      491,
+      491,
+      492,
+      493,
+      494,
+      495,
+      496,
+      497,
+      498,
+      499,
       500,
       501,
+      502,
+      503,
       504,
       505,
       506,
+      507,
+      508,
+      509,
+      510,
       511,
       512,
+      513,
+      514,
+      515,
+      516,
       517,
+      518,
       519,
       520,
+      526,
+      527,
+      528,
+      529,
+      531,
       9264,
       9265,
       9269,
@@ -1695,17 +1802,7 @@
     "description": "FALADOR_WALLS",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
-      23744,
-      23806,
-      23826,
       23834,
-      23835,
-      23836,
-      23837,
-      23838,
-      23839,
-      23841,
-      23844,
       23994,
       23995,
       23996,
@@ -1761,6 +1858,10 @@
       24212,
       24213,
       24215,
+      24216,
+      24217,
+      24218,
+      24219,
       24220,
       24221,
       24227,
@@ -1806,13 +1907,6 @@
     "flatNormals": true
   },
   {
-    "description": "FALADOR_MINES_TORCH_WALL",
-    "baseMaterial": "GRUNGE_1",
-    "objectIds": [
-      1422
-    ]
-  },
-  {
     "description": "STATUE_OF_SARADOMIN_1",
     "baseMaterial": "MARBLE_1_SEMIGLOSS",
     "objectIds": [
@@ -1836,8 +1930,7 @@
       7387,
       10729,
       10730,
-      10731,
-      23885
+      10731
     ],
     "flatNormals": true
   },
@@ -1848,7 +1941,8 @@
       24022,
       24023,
       24024
-    ]
+    ],
+    "uvType": "MODEL_XZ"
   },
   {
     "description": "AL_KHARID_WALLS",
@@ -1913,14 +2007,21 @@
       25756,
       25757,
       25890,
+      25895,
       25896,
       25897,
       25898,
       25899,
       25901,
       25902,
+      25903,
       25904,
       25905,
+      25906,
+      25907,
+      25908,
+      25909,
+      25911,
       25957,
       25958,
       25959,
@@ -1929,19 +2030,63 @@
       25962,
       25963,
       25964,
-      25965
+      25965,
+      26114,
+      26115
     ],
     "flatNormals": true
   },
   {
-    "description": "STONE_WALL",
+    "description": "Murder Mystery house - exterior walls",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      26060,
+      26061,
+      26062,
+      26063,
+      26065,
+      26066,
+      26071,
+      26072,
+      26123
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "Murder Mystery house - interior walls",
     "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      26054,
+      26055,
+      26056,
+      26057,
+      26058,
+      26069,
+      26070
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "Murder Mystery house - white table",
+    "objectIds": [
+      597
+    ],
+    "baseMaterial": "GRAY_25"
+  },
+  {
+    "description": "STONE_WALL_FENCES",
+    "baseMaterial": "STONE",
     "objectIds": [
       979,
       5566,
       5567,
       5568,
       5570,
+      23888,
+      23889,
+      23890,
+      23891,
+      23892,
       "DRY_STONE_WALL"
     ],
     "flatNormals": true
@@ -2073,17 +2218,7 @@
     "description": "KOUREND_WALLS",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
-      23800,
-      23801,
-      23802,
-      23803,
-      23804,
-      23805,
-      23806,
-      23807,
-      23808,
-      23809,
-      23810
+      23800
     ],
     "flatNormals": true
   },
@@ -2139,7 +2274,6 @@
     "description": "SHAYZIEN_WALLS_ROCK",
     "baseMaterial": "ROCK_1",
     "objectIds": [
-      14543,
       14544,
       14545,
       14546,
@@ -2200,6 +2334,9 @@
     "description": "STATUE_BUST",
     "baseMaterial": "MARBLE_1_GLOSS",
     "objectIds": [
+      576,
+      26127,
+      26128,
       26129
     ]
   },
@@ -2217,30 +2354,6 @@
       "BATTLEMENTS_4447"
     ],
     "flatNormals": true
-  },
-  {
-    "description": "CASTLE_WARS_UNDERGROUND_WALLS",
-    "baseMaterial": "GRUNGE_1",
-    "objectIds": [
-      1417,
-      1434,
-      1435,
-      "CAVE_WALL"
-    ]
-  },
-  {
-    "description": "CASTLE_WARS_UNDERGROUND_ROCKS",
-    "baseMaterial": "GRUNGE_1",
-    "objectIds": [
-      314,
-      315,
-      316,
-      317,
-      318,
-      319,
-      320,
-      321
-    ]
   },
   {
     "description": "CASTLE_WARS_DECORATION",
@@ -2266,7 +2379,6 @@
       2169,
       2170,
       2172,
-      2173,
       4332,
       "HEAP_OF_BRICKS",
       "STAIRCASE"
@@ -2332,41 +2444,321 @@
     "flatNormals": true
   },
   {
-    "description": "GROUND_DECORATION_TAN_ROCK",
-    "baseMaterial": "DIRT_1",
+    "description": "GROUND_DECORATION_ROCKS",
+    "baseMaterial": "GRUNGE_2",
     "objectIds": [
-      7105,
-      7106,
-      7107
-    ],
-    "inheritTileColorType": "OVERLAY"
-  },
-  {
-    "description": "GROUND_DECORATION_GRAY_ROCK",
-    "baseMaterial": "ROCK_1",
-    "objectIds": [
+      314,
+      316,
+      317,
+      318,
+      329,
+      330,
+      331,
+      332,
+      333,
+      334,
+      338,
+      339,
+      340,
+      341,
+      342,
+      3171,
+      3172,
+      3173,
+      3174,
+      3204,
+      3613,
+      3614,
+      3615,
+      3948,
+      3950,
       7057,
       7103,
-      7104
+      7104,
+      7120,
+      7122,
+      7125,
+      7126,
+      10029,
+      10030,
+      10031,
+      10844,
+      10845,
+      10846,
+      10847,
+      18934
     ],
-    "inheritTileColorType": "OVERLAY"
+    "inheritTileColorType": "OVERLAY",
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.75
+  },
+  {
+    "description": "GROUND_DECORATION_DIRT_UNCOLORED",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [
+      184,
+      7121,
+      7123,
+      7124,
+      7128,
+      7459,
+      7460,
+      7461,
+      7462,
+      12117,
+      12118,
+      12119,
+      12586,
+      12587,
+      20750,
+      20751,
+      25093,
+      25094,
+      25095,
+      25096,
+      25097,
+      25098
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.44,
+    "hideInAreas": [
+      [
+        3180, 3433,
+        3190, 3447
+      ]
+    ]
+  },
+  {
+    "description": "Ground Decoration - dirt clump colored",
+    "baseMaterial": "DIRT_1",
+    "objectIds": [
+      176,
+      177,
+      178,
+      322,
+      323,
+      4731,
+      4733,
+      4734,
+      5324,
+      5325,
+      5326,
+      5586,
+      5587,
+      5588,
+      9669,
+      9670,
+      9671,
+      9672,
+      9673,
+      9674,
+      10471,
+      10472,
+      10473,
+      12199,
+      13409,
+      20176,
+      20177,
+      20178,
+      20179,
+      20180,
+      20181,
+      20777,
+      20778,
+      20779,
+      44740,
+      44741,
+      44742,
+      44743
+    ],
+    "inheritTileColorType": "OVERLAY",
+    "uvType": "WORLD_XZ"
+  },
+  {
+    "description": "GROUND_DECORATION_SAND",
+    "baseMaterial": "SAND_1",
+    "objectIds": [
+      14914,
+      15634,
+      15635
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.4
+  },
+  {
+    "description": "GROUND_DECORATION_SNOW",
+    "baseMaterial": "SNOW_1",
+    "objectIds": [
+      10592,
+      10594,
+      13411,
+      13412,
+      13413,
+      26397,
+      26398
+    ],
+    "inheritTileColorType": "OVERLAY",
+    "uvScale": 0.25,
+    "uvType": "WORLD_XZ"
+  },
+  {
+    "description": "GROUND_DECORATION_GRAY_ROCK_UNCOLORED",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      180,
+      335,
+      337,
+      756,
+      2173,
+      2174,
+      3702,
+      3704,
+      3711,
+      3720,
+      3721,
+      3749,
+      3751,
+      5327,
+      5328,
+      5329,
+      5954,
+      5956,
+      5957,
+      9573,
+      9574,
+      9575,
+      9576,
+      9577,
+      9578,
+      9579,
+      9580,
+      9581,
+      11438,
+      11439,
+      11440,
+      12707,
+      12708,
+      12928,
+      12929,
+      12930,
+      12932,
+      13414,
+      13416,
+      14391,
+      14394,
+      14467,
+      14484,
+      14487,
+      14491,
+      14493,
+      14496,
+      14497,
+      14499,
+      15146,
+      15147,
+      15148,
+      15153,
+      15154,
+      15155,
+      15247,
+      15248,
+      15249,
+      15631,
+      15798,
+      15801,
+      15802,
+      15803,
+      16201,
+      16998,
+      16999,
+      17525,
+      17526,
+      17529,
+      18275,
+      18276,
+      18277,
+      18278,
+      18279,
+      18280,
+      18281,
+      18282,
+      18283,
+      18284,
+      18285,
+      18286,
+      18287,
+      18288,
+      18289,
+      18290,
+      18291,
+      18292,
+      18293,
+      18294,
+      18295,
+      18296,
+      18297,
+      18298,
+      18299,
+      18300,
+      18301,
+      18302,
+      18303,
+      18857,
+      18858,
+      18859,
+      18860,
+      18861,
+      18862,
+      19185,
+      22652,
+      22654,
+      22655,
+      23589,
+      25326,
+      25327,
+      25328,
+      28500,
+      28501,
+      28502,
+      28556,
+      28557,
+      28558
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.25
   },
   {
     "description": "ROCK_LIKE_OBJECT",
     "baseMaterial": "ROCK_1",
     "objectIds": [
       84,
-      3634,
-      3635,
-      3636,
-      3637,
-      3638,
-      3639,
-      5950,
-      5953,
+      179,
+      336,
+      3703,
+      3750,
+      5955,
+      5958,
+      6672,
+      6673,
+      12578,
+      12596,
+      12705,
+      12931,
+      13415,
+      14483,
+      14492,
+      14494,
+      14495,
+      14498,
+      19390,
+      19393,
+      19397,
       25077,
       25078,
       25079,
+      25080,
+      25084,
+      25085,
       25086,
       25102,
       25103,
@@ -2380,6 +2772,13 @@
       25112,
       25113,
       25114,
+      28555,
+      39742,
+      39743,
+      39744,
+      39745,
+      39746,
+      39747,
       "COLUMN_25080",
       "COLUMN_25081",
       "COLUMN_25082",
@@ -2391,17 +2790,34 @@
       "STALAGMITES_25085",
       "WALL_25161"
     ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.5,
     "flatNormals": true
   },
   {
     "description": "ROCK_CAVE_ENTRANCES",
     "baseMaterial": "ROCK_2",
     "objectIds": [
+      12173,
+      30176,
+      30869,
       "CAVE_ENTRANCE_11835",
       "CRACK_29627",
       "TUNNEL_6659"
     ],
-    "flatNormals": true
+    "flatNormals": true,
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.5
+  },
+  {
+    "description": "DIRT_CAVE_ENTRANCES",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [
+      720,
+      3213,
+      39721,
+      44635
+    ]
   },
   {
     "description": "CAVE_WALLS_BLEND",
@@ -2429,7 +2845,7 @@
       29634
     ],
     "flatNormals": true,
-    "uvType": "GROUND_PLANE"
+    "uvType": "MODEL_XZ"
   },
   {
     "description": "CAVE_WALL_ABOVE_FLOOR_TILE",
@@ -2440,10 +2856,27 @@
       25058
     ],
     "flatNormals": true,
-    "uvType": "GROUND_PLANE"
+    "uvType": "MODEL_XZ"
   },
   {
-    "description": "TROOL_STRONGHOLD_HIDDEN_DOOR",
+    "description": "ROUNDED_CAVE_WALLS",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      1417,
+      1422,
+      1434,
+      1435,
+      1459,
+      1460,
+      1467,
+      4448,
+      9739,
+      9740,
+      16543
+    ]
+  },
+  {
+    "description": "TROLL_STRONGHOLD_HIDDEN_DOOR",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
       "SECRET_DOOR"
@@ -2484,6 +2917,41 @@
       5942,
       5943,
       5944,
+      5945,
+      6658,
+      6660,
+      6664,
+      6668,
+      6674,
+      6675,
+      6676,
+      6677,
+      6678,
+      6679,
+      6680,
+      6681,
+      6682,
+      6683,
+      6684,
+      6685,
+      6686,
+      6687,
+      6688,
+      6689,
+      6690,
+      6691,
+      6692,
+      6693,
+      6694,
+      6695,
+      6696,
+      6697,
+      6698,
+      6699,
+      6700,
+      6701,
+      6906,
+      6912,
       6925,
       "BIG_BIG_BOULDER",
       "BONE_ARCH",
@@ -2510,7 +2978,6 @@
   {
     "description": "UNKNOWN_2",
     "objectIds": [
-      1602,
       3089,
       3090,
       3091,
@@ -2535,7 +3002,6 @@
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
       3669,
-      3714,
       3737,
       3738,
       3739,
@@ -2553,10 +3019,6 @@
       "EXIT_3772",
       "EXIT_3773",
       "EXIT_3774",
-      "ROCKS_3805",
-      "ROCKS_3806",
-      "ROCKS_3807",
-      "ROCKS_3808",
       "TUNNEL",
       "WINDOW_3770"
     ]
@@ -2569,32 +3031,38 @@
     "flatNormals": true
   },
   {
-    "description": "UNKNOWN_5",
+    "description": "BEIGE_WALLS",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
-      29032
-    ]
-  },
-  {
-    "description": "BEIGE_WALLS",
-    "objectIds": [
-      436,
-      441,
-      443,
-      455,
-      458,
-      461,
-      462,
-      477
+      442,
+      446,
+      447
     ],
     "flatNormals": true
   },
   {
-    "description": "UNKNOWN_7",
+    "description": "Grunge Caves",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
+      2123,
+      4147,
+      5008,
+      5013,
+      5014,
+      5046,
+      5858,
+      5973,
+      12770,
+      26567,
+      26568,
+      26569,
+      31481,
+      31482,
+      43759,
       "CAVE_EXIT"
-    ]
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.5
   },
   {
     "description": "UNKNOWN_8",
@@ -2611,22 +3079,9 @@
   {
     "description": "UNKNOWN_9",
     "objectIds": [
-      3110,
-      3174
+      3110
     ],
     "flatNormals": true
-  },
-  {
-    "description": "UNKNOWN_10",
-    "baseMaterial": "GRUNGE_1",
-    "objectIds": [
-      3709,
-      3724,
-      3948,
-      3950,
-      "ROCKS_3803",
-      "ROCKS_3804"
-    ]
   },
   {
     "description": "Guardians of the Rift entrance",
@@ -2651,7 +3106,7 @@
       6617, 6618, 6539, 6540
     ],
     "flatNormals": true,
-    "uvType": "GROUND_PLANE"
+    "uvType": "MODEL_XZ"
   },
   {
     "description": "Sophanem pyramid door",
@@ -2659,5 +3114,4031 @@
     "objectIds": [
       6614, 26622, 26623, 26624, 26625, 19168
     ]
+  },
+  {
+    "description": "Lighthouse underground door",
+    "objectIds": [
+      4543, 4544, 4545, 4546
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "WOODEN_PLANK_DOCKS",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      9513,
+      9541
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "WOODEN_PLANK_DOCKS diagonal",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      9542
+    ],
+    "uvType": "MODEL_XZ_MIRROR_A"
+  },
+  {
+    "description": "WOODEN_PLANK_DOCKS diagonal",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      9543
+    ],
+    "uvType": "MODEL_XZ_MIRROR_B"
+  },
+  {
+    "description": "WOODEN_PLANK_ROUGH",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      796,
+      797,
+      798,
+      799,
+      800,
+      801,
+      802,
+      803,
+      808,
+      809,
+      810,
+      811,
+      812,
+      10837,
+      11591,
+      11592,
+      11593,
+      11594,
+      11595,
+      11596,
+      11597,
+      15975,
+      41419,
+      25797
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "WOODEN_PLANK_ROUGH",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      42036
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "DOCK_FENCES",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      814,
+      9539,
+      11598,
+      16004
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "DOCK_FENCES_TAN",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      17102,
+      23053,
+      25671,
+      25672
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "RELLEKKA_FENCES",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      4262,
+      8969,
+      8970,
+      8971,
+      25261
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "PHASMATYS_DOCK_FENCES",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      5236
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "RoU_DOCK_FENCES",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      41323,
+      41324,
+      41325
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "LIGHT_WOODEN_DOCKS",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      17103,
+      17104,
+      25618,
+      25619,
+      31589
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "LIGHT_WOODEN_DOCKS_MIRRORED",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      17106
+    ],
+    "uvType": "MODEL_XZ_MIRROR_B"
+  },
+  {
+    "description": "PHASMATYS_DOCKS",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      5238,
+      5239,
+      5455,
+      5456,
+      5459,
+      5458,
+      12936,
+      12937,
+      12938,
+      12939,
+      12940
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "LUNAR_ISLE_DOCKS",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      16991
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "LUNAR_ISLE_DOCK_SUPPORTS",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      16966,
+      16967
+    ]
+  },
+  {
+    "description": "LUNAR_ISLE_DOCK_LADDERS",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      16959,
+      16960,
+      16961,
+      16962
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "LUNAR_ISLE_BRIDGES",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      16807
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "PIRATE_ISLE_DOCKS",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      16988,
+      16989,
+      16992,
+      16993
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "LUNAR_ISLE_DOCK_SUPPORTS",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      16963,
+      16965
+    ]
+  },
+  {
+    "description": "RELLEKKA_DOCKS",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      4256,
+      4257,
+      4258,
+      4259,
+      25253,
+      25254,
+      25255,
+      25256,
+      25257,
+      25258,
+      25259,
+      25260
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "RoU_DOCKS",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      41320,
+      41321
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Single row fences",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      2050,
+      2051,
+      2052,
+      2053,
+      2618,
+      3125,
+      5882,
+      9589,
+      12430,
+      23848,
+      23849,
+      23850,
+      23851,
+      23895,
+      23896,
+      23897,
+      23898,
+      23899,
+      24453,
+      24454,
+      24560,
+      24561,
+      29110,
+      44680
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "FENCES_3",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      994,
+      995
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "PICARILIUS_DOCKS",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      27626,
+      27627,
+      27628,
+      27629,
+      27630,
+      27631,
+      27632,
+      27633,
+      27634,
+      27635,
+      27636,
+      27637,
+      27638,
+      27639,
+      27640,
+      27641,
+      27642,
+      27643,
+      27644,
+      27645,
+      27646,
+      27650,
+      27651
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "PICARILIUS_DOCKS_SAND_TILE",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      27649,
+      27652,
+      27655,
+      29663,
+      27654,
+      29664,
+      27658,
+      27659,
+      27653,
+      27656,
+      27657,
+      27658,
+      27660
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Picarilius docks with Carpet",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      27727,
+      27728,
+      27729,
+      27730,
+      27731,
+      27732,
+      27733,
+      27735,
+      27736,
+      27737,
+      27738,
+      27739,
+      27740,
+      27741,
+      27742,
+      27743,
+      27744,
+      27745,
+      27746,
+      27747,
+      27748,
+      27749,
+      27750,
+      27751,
+      27752,
+      27753
+    ]
+  },
+  {
+    "description": "Witchaven Docks",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      18193,
+      18195,
+      18196,
+      18198,
+      18199
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Witchaven Dock Rails",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      18200
+    ]
+  },
+  {
+    "description": "Fishing Platform docks",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      18335,
+      18336,
+      18337,
+      18338,
+      18339,
+      18369,
+      18370,
+      18371,
+      18372,
+      18373
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Zeah Battlefront Docks",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      15974
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "White double row fence",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      25760,
+      25923,
+      25924
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "Seers village - Railing",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      25613,
+      25795,
+      25801
+    ],
+    "flatNormals": false
+  },
+  {
+    "description": "Camelot - Wooden grave",
+    "baseMaterial": "WOOD_GRAIN",
+    "objectIds": [
+      401
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "Seers Village tables",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      25774,
+      25778,
+      25930,
+      25931
+    ],
+    "uvOrientation": 512,
+    "uvType": "MODEL_XZ",
+    "flatNormals": true
+  },
+  {
+    "description": "Seers village wooden posts",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      25777
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "Seets village chairs",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      27276,
+      25768,
+      25771,
+      25772,
+      25773,
+      25783
+    ],
+    "uvType": "MODEL_XZ",
+    "flatNormals": true
+  },
+  {
+    "description": "Seer's Village Ladder",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      25938,
+      25939,
+      25940,
+      25941,
+      26118,
+      26119
+    ]
+  },
+  {
+    "description": "Worn Carpet",
+    "baseMaterial": "CARPET",
+    "objectIds": [
+      7481,
+      14046,
+      14047,
+      14048,
+      24095,
+      40304
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.7,
+    "flatNormals": true
+  },
+  {
+    "description": "Worn Carpet - Edges",
+    "baseMaterial": "CARPET",
+    "objectIds": [
+      7480,
+      24094,
+      40305
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.7,
+    "flatNormals": true
+  },
+  {
+    "description": "Worn Carpet - Coners",
+    "baseMaterial": "CARPET",
+    "objectIds": [
+      7447,
+      24093,
+      40306
+    ],
+    "uvType": "MODEL_XZ_MIRROR_A",
+    "uvScale": 0.7,
+    "flatNormals": true
+  },
+  {
+    "description": "Fine Carpet",
+    "baseMaterial": "FINE_CARPET",
+    "objectIds": [
+      925,
+      926,
+      927,
+      928,
+      929,
+      930,
+      931,
+      932,
+      933,
+      937,
+      938,
+      940,
+      941,
+      942,
+      943,
+      944,
+      945,
+      6251,
+      6252,
+      6253,
+      6812,
+      6813,
+      6814,
+      7172,
+      7173,
+      7174,
+      7435,
+      7436,
+      7437,
+      11475,
+      11476,
+      11477,
+      11478,
+      11479,
+      11480,
+      25596,
+      25597,
+      25598,
+      25678,
+      25679,
+      25680
+    ],
+    "uvType": "WORLD_XZ",
+    "flatNormals": true
+  },
+  {
+    "description": "Brass coat rack",
+    "baseMaterial": "NONE",
+    "objectIds": [
+      374
+    ]
+  },
+  {
+    "description": "Dirt Cave Entrance",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [
+      2,
+      2804,
+      2805,
+      2806,
+      2807,
+      2808,
+      2809,
+      2810,
+      26709,
+      30177,
+      30374,
+      31766
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Motherload mine walls",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [
+      10047,
+      26655,
+      26656,
+      26658,
+      26659,
+      26660,
+      26661,
+      26662,
+      26663,
+      26664,
+      26665,
+      26666,
+      26667,
+      26668,
+      30375
+    ]
+  },
+  {
+    "description": "Motherload mine upper floor",
+    "baseMaterial": "DIRT_1",
+    "objectIds": [
+      26657
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Motherload Mine Rockfall",
+    "baseMaterial": "ROCK_2",
+    "objectIds": [
+      26679,
+      26680
+    ]
+  },
+  {
+    "description": "Mining Guild statue",
+    "baseMaterial": "MARBLE_1_GLOSS",
+    "objectIds": [
+      568
+    ]
+  },
+  {
+    "description": "Marble - White Knight Statue",
+    "baseMaterial": "MARBLE_3_SEMIGLOSS",
+    "objectIds": [
+      24036,
+      24037
+    ]
+  },
+  {
+    "description": "Wall decoration - Dirt clumps",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      1452,
+      1453,
+      1454,
+      1455
+    ],
+    "uvType": "WORLD_XY",
+    "uvScale": 0.75
+  },
+  {
+    "description": "Stalagmite - Tan",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      12219,
+      12575,
+      12576,
+      11184,
+      11185,
+      11186,
+      18479,
+      37816,
+      37817
+    ]
+  },
+  {
+    "description": "Wooden Wall Supports - Mines",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      1872
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "Textured Ladder",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      2147,
+      2148,
+      2884,
+      16679,
+      16683,
+      16684,
+      16685,
+      17026,
+      17384,
+      17385,
+      17387,
+      30367
+    ]
+  },
+  {
+    "description": "Textured - Crate 1",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      354,
+      357
+    ]
+  },
+  {
+    "description": "Falador - Marble - Saradomin Statue",
+    "baseMaterial": "MARBLE_1_SEMIGLOSS",
+    "objectIds": [
+      9250
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "Falador - Fountain",
+    "baseMaterial": "MARBLE_1_SEMIGLOSS",
+    "objectIds": [
+      24102
+    ]
+  },
+  {
+    "description": "Falador - Marble Stairs",
+    "baseMaterial": "MARBLE_3",
+    "objectIds": [
+      24072,
+      24074
+    ]
+  },
+  {
+    "description": "Falador - Wood Railing",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      9585,
+      12538
+    ]
+  },
+  {
+    "description": "Falador - Light Wooden Stairs",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      24077,
+      24078,
+      24079,
+      24080
+    ]
+  },
+  {
+    "description": "Falador - Tables",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      24025,
+      24081
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Falador - Tables - Rotated",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      7331
+    ],
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Wooden Benches",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      1106,
+      5615,
+      25601
+    ]
+  },
+  {
+    "description": "Courthouse Basement stairs",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      26017,
+      26018,
+      26019
+    ]
+  },
+  {
+    "description": "Wooden Spiral Stairs",
+    "baseMaterial": "MARBLE_2",
+    "objectIds": [
+      25935
+    ]
+  },
+  {
+    "description": "Rope Bridge",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      269,
+      14932,
+      14933
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "Wooden Staircase",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      25604,
+      26106
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "Wooden plank tables",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      14851,
+      14852,
+      25603,
+      40223,
+      40224
+    ],
+    "uvType": "MODEL_XZ",
+    "flatNormals": true,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Wooden tables - Solid - Cobwebs",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      25615
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "Wooden Chair - Cobwebs",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      1111,
+      25616
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "Ladder - Untextured",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      10493,
+      10494,
+      11794,
+      11795,
+      25606,
+      26107
+    ]
+  },
+  {
+    "description": "Camelot Stone",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      759
+    ]
+  },
+  {
+    "description": "Camelot Castle",
+    "baseMaterial": "MARBLE_3_SEMIGLOSS",
+    "objectIds": [
+      26085,
+      26089,
+      26090,
+      26091,
+      26092,
+      26093,
+      26094,
+      26095,
+      26096,
+      26097,
+      26100,
+      26101,
+      26103,
+      26105
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "Camelot Castle Pillars",
+    "baseMaterial": "MARBLE_3",
+    "objectIds": [
+      26087,
+      26088,
+      26098,
+      26099,
+      26102
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "Camelot stone wall",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      26134,
+      26135
+    ]
+  },
+  {
+    "description": "West Ardougne Carpet",
+    "baseMaterial": "CARPET",
+    "objectIds": [
+      916,
+      917,
+      918,
+      5243
+    ],
+    "flatNormals": true,
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "East Ardounge House Walls",
+    "baseMaterial": "WATTLE_1",
+    "objectIds": [
+      1602,
+      1603,
+      1604,
+      1605,
+      1606,
+      1608
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "Candelabra",
+    "baseMaterial": "METALLIC_2_HIGHGLOSS",
+    "objectIds": [
+      202,
+      203,
+      7432
+    ]
+  },
+  {
+    "description": "Pillared Stone Wall",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      982,
+      983,
+      984,
+      985,
+      986
+    ]
+  },
+  {
+    "description": "MARBLE_STAIRS",
+    "baseMaterial": "MARBLE_3",
+    "objectIds": [
+      1893,
+      1894,
+      1895
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "BRIDGE_UNDERSIDE",
+    "baseMaterial": "MARBLE_1",
+    "objectIds": [
+      770
+    ]
+  },
+  {
+    "description": "Decorative Armor",
+    "baseMaterial": "METALLIC_2_HIGHGLOSS",
+    "objectIds": [
+      817,
+      5554,
+      25206
+    ]
+  },
+  {
+    "description": "STONE_WINDOWS",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      1646,
+      1938
+    ]
+  },
+  {
+    "description": "WALL_TORCHES",
+    "baseMaterial": "METALLIC_2_HIGHGLOSS",
+    "objectIds": [
+      196,
+      197,
+      38027
+    ]
+  },
+  {
+    "description": "WALL_SHIELD",
+    "baseMaterial": "METALLIC_2_HIGHGLOSS",
+    "objectIds": [
+      840
+    ]
+  },
+  {
+    "description": "MARBLE_STATUE_OF_KING",
+    "baseMaterial": "MARBLE_3_SEMIGLOSS",
+    "objectIds": [
+      563
+    ]
+  },
+  {
+    "description": "MARBLE_STATUE_BUST",
+    "baseMaterial": "MARBLE_3_SEMIGLOSS",
+    "objectIds": [
+      574,
+      575
+    ]
+  },
+  {
+    "description": "STONE_STAIRS_WOODEN_RAILS",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      15645,
+      15646,
+      15648,
+      15649,
+      15650,
+      16664,
+      16665,
+      35791
+    ]
+  },
+  {
+    "description": "METALLIC_PAINTINGS",
+    "baseMaterial": "METALLIC_1_GLOSS",
+    "objectIds": [
+      890,
+      891,
+      892,
+      893,
+      894
+    ]
+  },
+  {
+    "description": "Metallic Guilded Chest",
+    "baseMaterial": "METALLIC_2_HIGHGLOSS",
+    "objectIds": [
+      376,
+      26273
+    ]
+  },
+  {
+    "description": "Metallic Chest",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "objectIds": [
+      11735
+    ]
+  },
+  {
+    "description": "CANNON_BALL",
+    "baseMaterial": "METALLIC_2_HIGHGLOSS",
+    "objectIds": [
+      822
+    ]
+  },
+  {
+    "description": "CANNON",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      821,
+      7137
+    ]
+  },
+  {
+    "description": "METAL_FLAG_POLE",
+    "baseMaterial": "METALLIC_1_GLOSS",
+    "objectIds": [
+      861
+    ]
+  },
+  {
+    "description": "BATHTUB",
+    "baseMaterial": "METALLIC_2_HIGHGLOSS",
+    "objectIds": [
+      875
+    ]
+  },
+  {
+    "description": "BATH_PUMP",
+    "baseMaterial": "METALLIC_1_GLOSS",
+    "objectIds": [
+      871
+    ]
+  },
+  {
+    "description": "Metal Fence Gate",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      37,
+      39,
+      1548,
+      1568,
+      1569,
+      1571,
+      1572,
+      11721,
+      11722,
+      23866
+    ]
+  },
+  {
+    "description": "Metal Fence",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      20873,
+      20874,
+      24097
+    ]
+  },
+  {
+    "description": "Marble Fountain",
+    "baseMaterial": "MARBLE_1_SEMIGLOSS",
+    "objectIds": [
+      879
+    ]
+  },
+  {
+    "description": "Metallic Furnace",
+    "baseMaterial": "METALLIC_2_GLOSS",
+    "objectIds": [
+      24009,
+      24010,
+      24011
+    ]
+  },
+  {
+    "description": "Mysterious Statue",
+    "baseMaterial": "METALLIC_1",
+    "objectIds": [
+      24716
+    ]
+  },
+  {
+    "description": "Metal Lever",
+    "baseMaterial": "METALLIC_2_GLOSS",
+    "objectIds": [
+      33,
+      34,
+      1814
+    ]
+  },
+  {
+    "description": "Anvil",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      2097
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "Ground Hole Shortcuts",
+    "baseMaterial": "DIRT_1",
+    "objectIds": [
+      19519,
+      16520,
+      16529,
+      16530
+    ]
+  },
+  {
+    "description": "Wilderness Ditch",
+    "baseMaterial": "DIRT_1",
+    "objectIds": [
+      23261,
+      23262,
+      23263,
+      23264,
+      23265,
+      23266,
+      23267,
+      23268,
+      23269,
+      23270,
+      23271
+    ],
+    "uvType": "WORLD_XZ"
+  },
+  {
+    "description": "Wilderness Ditch Dirt clumps",
+    "baseMaterial": "DIRT_1",
+    "objectIds": [
+      23272,
+      23273
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.75
+  },
+  {
+    "description": "Sewer Valve",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "objectIds": [
+      2844,
+      2845,
+      2846,
+      2847,
+      2848
+    ]
+  },
+  {
+    "description": "Wizard Tower and Bridge",
+    "baseMaterial": "MARBLE_3_SEMIGLOSS",
+    "objectIds": [
+      12662,
+      12663,
+      12664,
+      12665,
+      12666,
+      12667,
+      12668,
+      12669,
+      12670,
+      12671,
+      12672,
+      12673,
+      12674,
+      12675,
+      12676,
+      12677,
+      12678,
+      12679,
+      12680,
+      12681,
+      12682,
+      12683,
+      12684,
+      12685,
+      12686,
+      12687,
+      12688,
+      12689,
+      12690,
+      12691,
+      12692,
+      12693,
+      12694,
+      12695,
+      12696
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "Marble Staircase Spiral",
+    "baseMaterial": "MARBLE_3",
+    "objectIds": [
+      12536,
+      11792,
+      12537
+    ]
+  },
+  {
+    "description": "STONE Staircase Spiral",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      11789,
+      11790
+    ]
+  },
+  {
+    "description": "Metal Chimney",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      5098
+    ]
+  },
+  {
+    "description": "Black Knight Fortress Walls",
+    "baseMaterial": "ROCK_2",
+    "objectIds": [
+      14543
+    ]
+  },
+  {
+    "description": "Grave Dirt",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [
+      4136,
+      4137
+    ]
+  },
+  {
+    "description": "PoH Portal",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      15477,
+      15478,
+      15479,
+      15480,
+      15481,
+      15482
+    ]
+  },
+  {
+    "description": "Clocktower metal pipes",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "objectIds": [
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32
+    ]
+  },
+  {
+    "description": "Metal bars in wall",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "objectIds": [
+      1880,
+      1881
+    ]
+  },
+  {
+    "description": "Fire Remains",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      714
+    ]
+  },
+  {
+    "description": "Fire - Static object",
+    "baseMaterial": "WOOD_GRAIN_1",
+    "objectIds": [
+      26185
+    ]
+  },
+  {
+    "description": "Metal Lanturn",
+    "baseMaterial": "METALLIC_2_GLOSS",
+    "objectIds": [
+      205,
+      24172
+    ]
+  },
+  {
+    "description": "Butler's House",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      980
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "Wooden Door 1",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      1527,
+      1528,
+      1535,
+      1536,
+      1732,
+      1733,
+      1743,
+      2416,
+      2417,
+      5667,
+      11728,
+      11774,
+      11775,
+      11776,
+      11777,
+      11784,
+      11785,
+      11786,
+      11787,
+      23972,
+      23973,
+      24050,
+      24051,
+      24055,
+      24056,
+      24057,
+      24058,
+      24123,
+      24124,
+      24565,
+      24566,
+      24567,
+      24568,
+      25802,
+      25803,
+      25819,
+      25820,
+      26207
+    ],
+    "flatNormals": true,
+    "uvOrientation": 512,
+    "uvScale": 0.4
+  },
+  {
+    "description": "Wooden Door 2",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      1521,
+      1522,
+      1524,
+      1525
+    ],
+    "flatNormals": true,
+    "uvOrientation": 512,
+    "uvScale": 0.4
+  },
+  {
+    "description": "Wooden Door 3",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      1540,
+      1541
+    ],
+    "flatNormals": true,
+    "uvScale": 0.4
+  },
+  {
+    "description": "Wooden Door - Plank",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      1749,
+      2398,
+      11616,
+      11617,
+      11765,
+      11778,
+      11779,
+      11780,
+      44784,
+      44785
+    ],
+    "uvOrientation": 512,
+    "uvScale": 0.4,
+    "uvType": "MODEL_XY"
+  },
+  {
+    "description": "Varrock Castle Doors",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      11772,
+      11773,
+      32463,
+      32464
+    ],
+    "flatNormals": true,
+    "uvScale": 0.4
+  },
+  {
+    "description": "Varrock Castle Railing",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      11793,
+      23852
+    ]
+  },
+  {
+    "description": "Varrock Castle and Museum Staircase",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      11797,
+      11798,
+      11799,
+      11807
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "Varrock - Saw Mill Walls",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      533,
+      23900,
+      23901,
+      23902
+    ],
+    "uvType": "MODEL_XY",
+    "flatNormals": true,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Varrock - Saw Mill floors",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      521,
+      522,
+      523,
+      524
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Khandarian Eagles Landing",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      19798
+    ]
+  },
+  {
+    "description": "Grunge-Like Object",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      6358,
+      6359,
+      6360,
+      6361
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Sand clumps",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      11114,
+      11115,
+      11116,
+      11117,
+      11118,
+      11119,
+      11120,
+      11121
+    ]
+  },
+  {
+    "description": "Sand Hole",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      10952,
+      11122,
+      11123,
+      11046
+    ]
+  },
+  {
+    "description": "Sandstone Rocks",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      11386
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.4
+  },
+  {
+    "description": "Granite Rocks",
+    "baseMaterial": "ROCK_2",
+    "objectIds": [
+      11387
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.25
+  },
+  {
+    "description": "Kharidian Rocks",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      11096,
+      16549,
+      16550,
+      16551,
+      26640,
+      26641
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.4
+  },
+  {
+    "description": "Kharidian Sandstone",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      11099,
+      11100,
+      11101,
+      11102,
+      11103,
+      11104,
+      11105,
+      11106,
+      11107,
+      11108
+    ],
+    "inheritTileColorType": "OVERLAY",
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.6
+  },
+  {
+    "description": "GuTanoth bridges",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      2830,
+      2831,
+      20010,
+      20011,
+      20012,
+      20013,
+      20014,
+      20015,
+      20016,
+      20017,
+      20018,
+      20019
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "GuTanoth bridges rope",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      20004,
+      20005,
+      20006,
+      20007
+    ],
+    "uvOrientation": 512,
+    "uvType": "MODEL_XY",
+    "flatNormals": true
+  },
+  {
+    "description": "Lighthouse broken bridge",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      3200,
+      4260,
+      4261,
+      4264
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Brimstils Cave",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      17209
+    ]
+  },
+  {
+    "description": "Eagles Peak Cave",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      19790
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "Dagannoth Cave",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      8929
+    ]
+  },
+  {
+    "description": "Desert Caves",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [
+      30180
+    ]
+  },
+  {
+    "description": "Lumbridge Swamp Cave Hole",
+    "baseMaterial": "DIRT_1",
+    "objectIds": [
+      5947
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.85
+  },
+  {
+    "description": "Wyvern Shortcut",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      42506
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.42
+  },
+  {
+    "description": "Snow Caves",
+    "baseMaterial": "SNOW_2",
+    "objectIds": [
+      5012,
+      5857
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Objects - Ardougne Sewers - Rock Entrnace",
+    "baseMaterial": "ROCK_2",
+    "objectIds": [
+      2852
+    ],
+    "flatNormals": true,
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.67
+  },
+  {
+    "description": "Stepping Stones",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      11768,
+      13504,
+      16466,
+      16533,
+      23645,
+      23646,
+      23647
+    ],
+    "uvType": "WORLD_XZ"
+  },
+  {
+    "description": "Objects - Rocks - Medium",
+    "baseMaterial": "ROCK_1_LIGHT",
+    "objectIds": [
+      1797,
+      3634,
+      3635,
+      3636,
+      3637,
+      3638,
+      3639,
+      3712,
+      3714,
+      3715,
+      3716,
+      3717,
+      3718,
+      3719,
+      3794,
+      3795,
+      3805,
+      3806,
+      3807,
+      3808,
+      4356,
+      4357,
+      4358,
+      4603,
+      4604,
+      4605,
+      4606,
+      5035,
+      5037,
+      5038,
+      5039,
+      5604,
+      5605,
+      5606,
+      5842,
+      5843,
+      5844,
+      5849,
+      5950,
+      5951,
+      5952,
+      5953,
+      5985,
+      5986,
+      5987,
+      11426,
+      11427,
+      11428,
+      11431,
+      11433,
+      11434,
+      11435,
+      12216,
+      12217,
+      12588,
+      12591,
+      12592,
+      12593,
+      12594,
+      12589,
+      12590,
+      12924,
+      12925,
+      12926,
+      12927,
+      14384,
+      14385,
+      14386,
+      14389,
+      14450,
+      14451,
+      14452,
+      14453,
+      14454,
+      14455,
+      14461,
+      14462,
+      14463,
+      14464,
+      15125,
+      15126,
+      15127,
+      15128,
+      15129,
+      15149,
+      15150,
+      15151,
+      15152,
+      15806,
+      15807,
+      15808,
+      15811,
+      15812,
+      19215,
+      20753,
+      20754,
+      22347,
+      22348,
+      22349,
+      23085,
+      23086,
+      23087,
+      26715,
+      26716,
+      27984,
+      27985,
+      27986,
+      27987,
+      27988,
+      27989,
+      30404,
+      31742,
+      31743,
+      31744,
+      31745,
+      31746,
+      31747,
+      31757,
+      31758,
+      31759,
+      31760,
+      34627,
+      34741,
+      42371,
+      42372,
+      42373,
+      42374,
+      42675,
+      42376
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Objects - Climbing Rocks - Medium",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      2231,
+      2232,
+      2233,
+      16521,
+      16522,
+      16523,
+      16524,
+      16464,
+      19065
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Inconspicuous Rocks",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      28961,
+      28966,
+      28969,
+      28973,
+      28976,
+      28979,
+      28987,
+      28994,
+      28997,
+      29000,
+      29015,
+      29032
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.22
+  },
+  {
+    "description": "Objects - Mossy Rock - Medium",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      3894,
+      3895,
+      3896,
+      3897,
+      5847,
+      11182,
+      11183,
+      11425,
+      27899,
+      29856,
+      29857,
+      29858,
+      30519,
+      30521,
+      30522,
+      31781,
+      31782,
+      31785,
+      31786,
+      31787,
+      40552,
+      40553,
+      40554,
+      40555,
+      40556,
+      40557
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Objects - Mossy Rock - Rectangle",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      31784
+    ],
+    "uvType": "MODEL_XZ_MIRROR_B",
+    "uvScale": 0.35
+  },
+  {
+    "description": "Objects - Mossy Rock - Large",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      31783,
+      31788,
+      31789
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.44
+  },
+  {
+    "description": "Ground Decoration - Ash Pile - Small",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      14457,
+      14460
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.9
+  },
+  {
+    "description": "Objects - Ash Pile - Medium",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      30985
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Objects - Seaweed Rock - Medium",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      25158,
+      25159,
+      25160
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.25
+  },
+  {
+    "description": "Ogre Benches",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      3376
+    ]
+  },
+  {
+    "description": "Ground Decoration - Dirt Clump - Tiny - Uncolored",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [
+      4343
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.65,
+    "hideInAreas": [
+      [
+        3180, 3433,
+        3190, 3447
+      ]
+    ],
+    "disableShadows": true
+  },
+  {
+    "description": "Ground Decoration - Dirt Clump - Tiny - Colored",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [
+      185,
+      325
+    ],
+    "inheritTileColorType": "OVERLAY",
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.65,
+    "disableShadows": true
+  },
+  {
+    "description": "Ground Decoration - Dirt Clump - Small - Uncolored",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [
+      186,
+      321,
+      4342,
+      4344,
+      11084,
+      11085,
+      11086,
+      11087,
+      11093,
+      11094,
+      11095,
+      11098,
+      11191,
+      11192,
+      11195,
+      18474,
+      18478
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.65,
+    "hideInAreas": [
+      [
+        3180, 3433,
+        3190, 3447
+      ]
+    ]
+  },
+  {
+    "description": "Ground Decoration - Dirt Clump - Small - Colored",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [
+      324,
+      326,
+      2376,
+      2377,
+      2378,
+      11088,
+      11089,
+      11090,
+      11091,
+      11092
+    ],
+    "inheritTileColorType": "OVERLAY",
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.65
+  },
+  {
+    "description": "Objects - Dirt Piles - Medium",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [
+      2217,
+      2634,
+      5511,
+      5512,
+      11604,
+      11605,
+      11931,
+      11932,
+      11933,
+      11934,
+      18892,
+      18893,
+      18894,
+      18895
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Ground Decoration - Grunge - Tiny - Uncolored",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      320,
+      2382,
+      3170,
+      3709,
+      3949,
+      7106
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.68,
+    "disableShadows": true
+  },
+  {
+    "description": "Ground Decoration - Grunge - Tiny - Colored",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      315,
+      729,
+      4340
+    ],
+    "inheritTileColorType": "OVERLAY",
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.68,
+    "disableShadows": true
+  },
+  {
+    "description": "Ground Decoration - Grunge - Small - Uncolored",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      319,
+      3169,
+      3705,
+      3706,
+      3707,
+      3708,
+      3710,
+      3724,
+      12910,
+      12911,
+      12912,
+      "ROCKS_3803",
+      "ROCKS_3804"
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.74
+  },
+  {
+    "description": "Ground Decoration - Grunge - Small - Colored",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      728,
+      730,
+      4339,
+      4341,
+      4607,
+      4608,
+      7105,
+      7107
+    ],
+    "inheritTileColorType": "OVERLAY",
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.74
+  },
+  {
+    "description": "Ground Decoration - Rock - Tiny - Colored",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      14501,
+      15630
+    ],
+    "inheritTileColorType": "OVERLAY",
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.75,
+    "disableShadows": true
+  },
+  {
+    "description": "Ground Decoration - Rock - Tiny - Uncolored",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      14486
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.75,
+    "disableShadows": true
+  },
+  {
+    "description": "Ground Decoration - Rock - Small - Colored",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      14500,
+      14502,
+      15629
+    ],
+    "inheritTileColorType": "OVERLAY",
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.74
+  },
+  {
+    "description": "Ground Decoration - Rock - Small - Uncolored",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      2381,
+      2383,
+      7115,
+      14482,
+      14485,
+      17929,
+      23080,
+      23081,
+      23082,
+      23083,
+      23084,
+      37800,
+      37801,
+      37802,
+      37803,
+      37804,
+      37805,
+      37806,
+      44730,
+      44733,
+      44734,
+      44735,
+      44736
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.74
+  },
+  {
+    "description": "barbarian - Walls - Wooden - Planks",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      11558,
+      11559,
+      11560,
+      11561
+    ],
+    "uvType": "MODEL_XY",
+    "uvOrientation": 512,
+    "uvScale": 0.76
+  },
+  {
+    "description": "Round Rug",
+    "baseMaterial": "FINE_CARPET",
+    "objectIds": [
+      2455,
+      2456,
+      2457,
+      4687,
+      4688,
+      4689,
+      25124,
+      25125,
+      25126
+    ],
+    "uvType": "WORLD_XZ",
+    "flatNormals": true
+  },
+  {
+    "description": "PoH - Rug",
+    "baseMaterial": "FINE_CARPET",
+    "objectIds": [
+      6762,
+      6763
+    ],
+    "uvType": "WORLD_XZ",
+    "flatNormals": true
+  },
+  {
+    "description": "PHASMATYS - Stone - Walls",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      5452,
+      5361,
+      5362
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "PHASMATYS - House - Walls",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      5440,
+      5441,
+      5442,
+      5443,
+      5444
+    ],
+    "uvType": "MODEL_XY",
+    "uvScale": 0.83
+  },
+  {
+    "description": "PHASMATYS - Stone - Rubble - Small",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      5301,
+      5302,
+      5303
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.76
+  },
+  {
+    "description": "PHASMATYS - Stone - Rubble - Medium",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      5447,
+      5448
+    ]
+  },
+  {
+    "description": "Stone - Steps",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      5307,
+      5460
+    ]
+  },
+  {
+    "description": "Stone - Stairs - cobbled",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      16646
+    ]
+  },
+  {
+    "description": "Phasmatys - Slime",
+    "baseMaterial": "SLIME_GRUNGE",
+    "objectIds": [
+      5377,
+      5378,
+      5379,
+      5380,
+      5381,
+      5382,
+      5383
+    ]
+  },
+  {
+    "description": "Objects - Swamp Root - Small",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      1366,
+      1367,
+      1368
+    ],
+    "uvType": "MODEL_XY_MIRROR_B",
+    "uvScale": 0.6,
+    "uvOrientation": 342
+  },
+  {
+    "description": "Objects - Swamp Root - Large",
+    "baseMaterial": "LIGHT_BARK",
+    "objectIds": [
+      1363,
+      1364
+    ],
+    "uvType": "MODEL_XY_MIRROR_B",
+    "uvScale": 0.4,
+    "uvOrientation": 342
+  },
+  {
+    "description": "Fence Gate - Static",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      44922,
+      44923
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "Objects - Wooden - Crate",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      7514,
+      10374
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "Wall - Decoration - Wooden - Crate",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      10130,
+      10131,
+      10132,
+      10133,
+      10134
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "Metallic - Ground - Armor",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      825,
+      826,
+      827,
+      828
+    ]
+  },
+  {
+    "description": "Objects - Metallic - Chair - Broken",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      19929
+    ]
+  },
+  {
+    "description": "Objects - Metallic - Range",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      7183
+    ]
+  },
+  {
+    "description": "Wall - Decoration - Metallic - Sword and Shield",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      10515
+    ]
+  },
+  {
+    "description": "Wall - Wooden - Post",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      10106,
+      12278
+    ],
+    "uvScale": 0.4,
+    "uvType": "MODEL_XY",
+    "flatNormals": true
+  },
+  {
+    "description": "Objects - Metallic - Pots",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      10504,
+      10505
+    ]
+  },
+  {
+    "description": "Objects - Metallic - Iron Billets",
+    "baseMaterial": "METALLIC_2",
+    "objectIds": [
+      2140
+    ]
+  },
+  {
+    "description": "Ground - Wooden - Plank Steps",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      4303
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Objects - Metallic - Giant Anvil",
+    "baseMaterial": "METALLIC_2",
+    "objectIds": [
+      39724
+    ]
+  },
+  {
+    "description": "Walls - Stone - Giants Foundry",
+    "baseMaterial": "ROCK_2",
+    "objectIds": [
+      44639,
+      44640,
+      44641,
+      44642,
+      44643,
+      44644,
+      44645,
+      44646,
+      44647,
+      44648,
+      44649,
+      44650,
+      44651,
+      44652
+    ]
+  },
+  {
+    "description": "Ground Decoration - Flat Stone - Small - Uncolored",
+    "baseMaterial": "SNOW_3",
+    "objectIds": [
+      5850,
+      5851
+    ],
+    "uvType": "WORLD_XZ"
+  },
+  {
+    "description": "Walls - Grunge - Generic",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      4374
+    ]
+  },
+  {
+    "description": "Objects - Stone - Dwarf Statues",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      7002,
+      7003
+    ],
+    "flatNormals": true
+  },
+  {
+  "description": "Objects - Stone - Stalagmite",
+  "baseMaterial": "STONE",
+  "objectIds": [
+    4600,
+    5231,
+    5232
+  ]
+  },
+  {
+    "description": "Objects - Stone - Mountain Daughter Burial",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      5861
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Mortton - Objects - Stone - Funeral Pyre",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      4093
+    ]
+  },
+  {
+    "description": "Mortton - Objects - Stone - Stone Stand",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      4065
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Mortton - Objects - Stone - Temple Walls",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      4089
+    ],
+    "uvType": "MODEL_XY"
+  },
+  {
+    "description": "Mortton - Objects - Stone - Temple Walls - Mirrored",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      4078
+    ],
+    "uvType": "MODEL_XY_MIRROR_B"
+  },
+  {
+    "description": "Mortton Shade Catacombs - Walls - Stone",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      17900,
+      38020,
+      38021,
+      38023,
+      38024,
+      40470
+    ],
+    "uvType": "MODEL_XY",
+    "uvOrientation": 300
+  },
+  {
+    "description": "Mortton Shade Catacombs  - Walls - Metallic - Doors",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+       4106,
+       4107,
+       4108,
+       4109,
+       18147,
+       18148,
+       18149,
+       18150
+    ],
+    "uvType": "MODEL_XY",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Mortton Shade Catacombs  - Objects - Stone - Grave Stone",
+    "baseMaterial": "STONE",
+    "objectIds": [
+       40471,
+       40472
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Mortton Shade Catacombs  - Objects - Stone - Alter",
+    "baseMaterial": "STONE",
+    "objectIds": [
+       41222
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Mortton Shade Catacombs  - Objects - Stone - Hole",
+    "baseMaterial": "ROCK_1_LIGHT",
+    "objectIds": [
+      37862,
+      37863
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Objects - Vines",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+       41201,
+       41202,
+       41203,
+       41204,
+       41205,
+       41207,
+       41208,
+       41209
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Objects - White Mushrooms - Medium",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      22796,
+      22797,
+      22798
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Mortton Shade Catacombs - Decoration - Stone - Brick rubble",
+    "baseMaterial": "STONE",
+    "objectIds": [
+       38028
+    ],
+    "uvType": "MODEL_XZ_MIRROR_B"
+  },
+  {
+    "description": "Mortton Shade Catacombs - Objects - Stone - Brick rubble",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      20733
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Mortton Shade Catacombs  - Walls - Metallic - Fence",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      37773,
+      37774,
+      37775
+    ],
+    "uvType": "MODEL_XY"
+  },
+  {
+    "description": "Objects - Fungus - Medium",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      1171
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Objects - Huge Mushroom - Medium",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      4055,
+      4056,
+      4057
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Mortton - Objects - Shade Chests - Medium - Bronze",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      4111,
+      4112,
+      4113,
+      4114,
+      4115
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.88
+  },
+  {
+    "description": "Mortton - Objects - Shade Chests - Medium - Steel",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      4116,
+      4117,
+      4118,
+      4119,
+      4120
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.88
+  },
+  {
+    "description": "Mortton - Objects - Shade Chests - Medium - Black",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      4121,
+      4122,
+      4123,
+      4124,
+      4125
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.88
+  },
+  {
+    "description": "Mortton - Objects - Shade Chests - Medium - Silver",
+    "baseMaterial": "METALLIC_2_GLOSS",
+    "objectIds": [
+      4126,
+      4127,
+      4128,
+      4129,
+      4130
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.88
+  },
+  {
+    "description": "Morytania - Walls - Triple Slat Fence",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      5417,
+      5432,
+      5433,
+      5434,
+      5435,
+      5436,
+      5437,
+      5438
+    ],
+    "uvType": "MODEL_XY",
+    "uvScale": 0.78
+  },
+  {
+    "description": "Morytania - Walls - Triple Slat Fence Gate",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      12816,
+      12817,
+      12818,
+      12819,
+      12776
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Morytania - Walls - Wooden - Plank - Burugh De Rott",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      12821,
+      12822,
+      12823,
+      12824,
+      12825,
+      12826,
+      12827,
+      12828,
+      12829,
+      12830,
+      12831,
+      12832,
+      12833,
+      12913,
+      12914,
+      12915,
+      12916,
+      12917,
+      12918,
+      12919,
+      12920,
+      12921,
+      12922,
+      12923
+    ],
+    "uvType": "MODEL_XY",
+    "uvOrientation": 512,
+    "uvScale": 0.76
+  },
+  {
+    "description": "Morytania - Floor - Wooden - Plank - Burugh De Rott",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      12898,
+      12899,
+      12900,
+      12901,
+      12902,
+      12903,
+      12904,
+      12905,
+      12906,
+      12949,
+      12950,
+      12948,
+      12951,
+      12952,
+      12953,
+      12957,
+      12958,
+      12959,
+      12960
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Morytania - Floor - Wooden - Ladder - Burugh De Rott",
+    "baseMaterial": "WOOD_GRAIN",
+    "objectIds": [
+      12780,
+      12781,
+      12907
+    ]
+  },
+  {
+    "description": "Morytania - Wall Decoration - Wooden - Plank - Burugh De Rott",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      12852,
+      12853
+    ],
+    "uvType": "MODEL_YZ",
+    "uvOrientation": -50,
+    "uvScale": 0.66
+  },
+  {
+    "description": "Morytania - Wall  - Wooden - Plank - Repaired Wall - Burugh De Rott",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      12752,
+      12760
+    ],
+    "uvType": "MODEL_XY",
+    "uvOrientation": 512,
+    "uvScale": 0.66
+  },
+  {
+    "description": "Morytania - Wall  - Wooden - Plank - Door",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      5244,
+      5245
+    ],
+    "uvType": "MODEL_XY",
+    "uvOrientation": 512,
+    "uvScale": 0.56
+  },
+  {
+    "description": "Morytania - Wall  - Stone - Stone Brick Wall - Burugh De Rott",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      12834,
+      12835,
+      12836,
+      12837,
+      12838,
+      12839,
+      12840,
+      12841,
+      12842,
+      12843,
+      12845,
+      12846,
+      12847,
+      12848,
+      12849,
+      12850,
+      12851
+    ],
+    "uvType": "GEOMETRY",
+    "flatNormals": true
+  },
+  {
+    "description": "Morytania - Objects  - Stone - Stone Brick Wall Rubble - Burugh De Rott",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      12738,
+      12844
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Morytania - Ground  - Wooden - Boat Launch - Burugh De Rott",
+    "baseMaterial": "DOCK_FENCE_DARK",
+    "objectIds": [
+      12946,
+      12947,
+      17924
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Burugh De Rott - Objects - Dirt - Rubble Pile",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [
+      12749
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Morytania - Ground  - Stone - Stone Steps - Burugh De Rott",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      20735,
+      20736
+    ]
+  },
+  {
+    "description": "Morytania - Objects - Wooden - Crate",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      12876,
+      12877,
+      12878,
+      12879
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Morytania - Ground  - Water - Puddles - Burugh De Rott",
+    "baseMaterial": "WATER_PUDDLE",
+    "objectIds": [
+      12860,
+      12861,
+      12862
+    ],
+    "uvType": "MODEL_XZ",
+    "flatNormals": true,
+    "disableShadows": true
+  },
+  {
+    "description": "Chaos Tunnel - Walls - Cave Walls",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      23068,
+      23069,
+      23070,
+      23071,
+      23072,
+      23075,
+      23076,
+      23077,
+      23078,
+      23079
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Chaos Tunnel - Objects - Stairs",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      23073,
+      23074
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Objects - Rock - Staglagmite - Non Interactable",
+    "baseMaterial": "ROCK_2",
+    "objectIds": [
+      23088,
+      23089,
+      23090
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Objects - Bed - Bedroll - Non Interactable",
+    "baseMaterial": "CARPET",
+    "objectIds": [
+      23067
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.60
+  },
+  {
+    "description": "Objects - Locker - Wooden - Non Interactable",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      23064
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Objects - Stool - Wooden – Generic",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      23065
+    ],
+    "uvType": "MODEL_XZ",
+    "flatNormals": true,
+    "uvScale": 0.80
+  },
+  {
+    "description": "Objects - Table - Single - Wooden – Plank - Generic",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      23066
+    ],
+    "uvType": "MODEL_XZ",
+    "flatNormals": true
+  },
+  {
+    "description": "Ground - Chaos Alter - Path -  Wooden – Plank",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      2669,
+      4033,
+      11557,
+      11915,
+      11916,
+      11919,
+      11554,
+      11555,
+      11556
+    ],
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Chaos Alter - Walls - Path -  Wooden – Plank",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      169
+    ],
+    "uvType": "MODEL_XY",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Objects - Standing Torch -  Wood",
+    "baseMaterial": "WOOD_GRAIN",
+    "objectIds": [
+      724
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Objects - Stone - Stalagmites - Limestone",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      11945,
+      11946,
+      12568
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Lunar Isle - Walls - Stone - Northern Mine",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      14999,
+      15000,
+      15001,
+      15002,
+      15003,
+      15004,
+      15005,
+      15006,
+      15007,
+      15008,
+      15009,
+      15026,
+      15028,
+      15022,
+      11399
+    ],
+    "uvType": "VANILLA"
+  },
+  {
+    "description": "Lunar Isle - Objects - Limestone - Stalagmites - Mineable",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      15250,
+      15251
+    ],
+    "uvType": "VANILLA"
+  },
+  {
+    "description": "Lunar Isle - Objects - Ice - Ice Chunks - Large",
+    "baseMaterial": "ICE_1_HIGHGLOSS",
+    "objectIds": [
+      6472,
+      6473
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Lunar Isle - Objects - Ice - Ice Chunks - Small",
+    "baseMaterial": "ICE_1_HIGHGLOSS",
+    "objectIds": [
+      6476,
+      6477
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Lunar Isle - Objects - Ice - Ice Chunks - Medium",
+    "baseMaterial": "ICE_1_HIGHGLOSS",
+    "objectIds": [
+      6474
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.55
+  },
+  {
+    "description": "Lunar Island - Walls - Wooden - Plank - Ruined",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      4281,
+      4282
+    ],
+    "uvType": "MODEL_XY",
+    "uvOrientation": 512,
+    "uvScale": 0.76
+  }
+,
+  {
+    "description": "Lunar Island - Objects - Bark - Windswept Tree",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      16639
+    ],
+    "uvType": "MODEL_XY",
+    "uvOrientation": 64,
+    "uvScale": 0.76
+  },
+  {
+    "description": "Lunar Island - Objects - Wooden - Chair",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      16743,
+      16744
+    ],
+    "flatNormals": true,
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Lunar Island - Objects - Wooden - Bench",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      16706,
+      32439
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Lunar Island - Objects - Wooden - Stool",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      16745
+    ],
+    "flatNormals": true,
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Lunar Island - Objects - Wooden - Table - Round",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      16742
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Lunar Island - Objects - Wooden - Hat Rack",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      16692
+    ]
+  },
+  {
+    "description": "Lunar Island - Ground - Carpet",
+    "baseMaterial": "FINE_CARPET",
+    "objectIds": [
+      16709,
+      16710,
+      16718
+    ],
+    "uvType": "WORLD_XZ",
+    "flatNormals": true
+  },
+  {
+    "description": "Lunar Island - Wooden - Ladder",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      16735,
+      16736
+    ],
+    "uvType": "MODEL_XY_MIRROR_B"
+  },
+  {
+    "description": "Objects - Wooden - Plank tables - Medium",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      29712
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.4
+  },
+  {
+    "description": "Objects - Wooden - Plank tables - Wide",
+    "baseMaterial": "WOOD_GRAIN_2_WIDE",
+    "objectIds": [
+      12280
+    ],
+    "uvType": "MODEL_XZ",
+    "flatNormals": true
+  },
+  {
+    "description": "Lunar Isles - Objects - Wooden - Tables - Fine",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      16737,
+      16738
+    ],
+    "uvType": "MODEL_XZ",
+    "flatNormals": true,
+    "uvScale": 0.8
+  },
+  {
+    "description": "Lunar Isles - Objects - Wooden - Table with hats",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      16740
+    ],
+    "uvType": "MODEL_XZ",
+    "flatNormals": true,
+    "uvOrientation": 512,
+    "uvScale": 0.8
+  },
+  {
+    "description": "Lunar Isles - Objects - Wooden staircase",
+    "baseMaterial": "HD_WOOD_PLANKS_1",
+    "objectIds": [
+      16732,
+      16733,
+      16734
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Lunar Isles - WALLS - Wooden Railing",
+    "baseMaterial": "HD_WOOD_PLANKS_1",
+    "objectIds": [
+      16761,
+      16762,
+      16763,
+      16767
+    ],
+    "uvType": "MODEL_XZ",
+    "flatNormals": true
+  },
+  {
+    "description": "Lunar Isles - WALLS - Wooden - Plank",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      16746,
+      16747,
+      16748,
+      16749,
+      16759,
+      16760,
+      16770,
+      16771,
+      16772
+    ],
+    "uvType": "MODEL_XY"
+  },
+  {
+    "description": "Lunar Isles - WALLS - Wooden - Plank - Windows",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      16751,
+      16752,
+      16753,
+      16768,
+      16769
+    ],
+    "uvType": "MODEL_XY"
+  },
+  {
+    "description": "Lunar Isles - WALLS - Wooden Railing",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      16750
+    ],
+    "uvType": "MODEL_XY"
+  },
+  {
+    "description": "Lunar Isles - WALLS - Wooden - Plank - Door",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      16776,
+      16777
+    ],
+    "uvType": "MODEL_XY"
+  },
+  {
+    "description": "Lunar Isles - WALLS - Wooden - Door - Window",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      16775,
+      16778,
+      16779
+    ],
+    "uvType": "MODEL_XY"
+  },
+  {
+    "description": "Lunar Isles - WALLS - Wooden - Railing - Window",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      16757,
+      16758,
+      16773
+    ],
+    "uvType": "MODEL_XY",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Ice Queens Dungeon - Walls - Snow",
+    "baseMaterial": "SNOW_2",
+    "objectIds": [
+      1440,
+      1441,
+      1442
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Ice Queens Dungeon - Objects - Icicle - Ice",
+    "baseMaterial": "ICE_1_HIGHGLOSS",
+    "objectIds": [
+      554,
+      555
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Ice Queens Dungeon - Decorations - Wall - White Object - Snow",
+    "baseMaterial": "SNOW_3",
+    "objectIds": [
+      1445,
+      1446,
+      1447
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Objects - Rockslide - Snow Drift - Snow - Medium",
+    "baseMaterial": "SNOW_1",
+    "objectIds": [
+      11920,
+      11921
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Objects - Rockslide - Snow Drift - Snow - Small",
+    "baseMaterial": "SNOW_3",
+    "objectIds": [
+      11922,
+      11923
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Ice Queens Dungeon - Objects - Ice Column - Ice",
+    "baseMaterial": "ICE_1_HIGHGLOSS",
+    "objectIds": [
+      11930
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Ice Queens Dungeon - Objects - Ice Throne - Ice",
+    "baseMaterial": "ICE_1_HIGHGLOSS",
+    "objectIds": [
+      1114
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Ice Queens Dungeon - Objects - Ice Light - Ice",
+    "baseMaterial": "ICE_1_HIGHGLOSS",
+    "objectIds": [
+      210
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "ROUNDED_CAVE_WALLS_WITH_PIPE",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      16509
+    ]
+  },
+  {
+    "description": "Objects - Rock Stairs - Large",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      30189
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Objects - Rockslide - Brown Rock - Rock - Medium",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      154, // Does not appy Taverley Dungeon blue dragons rock
+      11190,
+      11193
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Objects - Stone - Column - Limestone",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      11937,
+      11938,
+      11939
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Objects - Stone - Counter",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      2876
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Walls - Rock Cave Walls",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      1489,
+      1490,
+      1491,
+      1492,
+      5962
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Mage Arena - Objects - Stone - Sparkling Pool",
+    "baseMaterial": "ROCK_2",
+    "objectIds": [
+      2878,
+      2879
+    ],
+    "uvType": "VANILLA"
+  },
+  {
+    "description": "Mage Arena - Objects - God Statues",
+    "baseMaterial": "MARBLE_3_GLOSS",
+    "objectIds": [
+      2873,
+      2874,
+      2875
+    ],
+    "uvType": "VANILLA"
+  },
+  {
+    "description": "Wilderness - Walls - Brick Ruins",
+    "baseMaterial": "ROCK_1_LIGHT",
+    "objectIds": [
+      14723,
+      14724,
+      14725,
+      14726,
+      14727,
+      14728
+    ],
+    "uvType": "MODEL_XY"
+  },
+  {
+    "description": "Wall Decoration - Rocks",
+    "baseMaterial": "ROCK_1_LIGHT",
+    "objectIds": [
+      1493
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Wilderness - Objects - Mage Arena Level",
+    "baseMaterial": "ROCK_1_LIGHT",
+    "objectIds": [
+      9706,
+      9707
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Objects - Wooden - Chair",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      1088
+    ],
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 512,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Objects - Wooden - Stool",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      1102
+    ],
+    "uvType": "MODEL_XZ",
+    "flatNormals": true,
+    "uvScale": 0.8
+  },
+  {
+    "description": "Objects - Wooden - Tables - Round",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      593,
+      598,
+      25733
+    ],
+    "uvType": "MODEL_XZ",
+    "flatNormals": true,
+    "uvScale": 1.2
+  },
+  {
+    "description": "Ardougne - Objects - Wooden - Stairs - Plank Textured",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      16667,
+      16668
+    ],
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 512,
+    "uvScale": 0.4
+  },
+  {
+    "description": "Objects - Wooden - Column",
+    "baseMaterial": "NONE",
+    "objectIds": [
+      1870
+    ]
+  },
+  {
+    "description": "Ardougne - Objects - Metallic - Manhole",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      881
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Objects - Stone - Large Gravestone - Large",
+    "baseMaterial": "STONE_SEMIGLOSS",
+    "objectIds": [
+      406
+    ],
+    "uvType": "GEOMETRY",
+    "flatNormals": true
+  },
+  {
+    "description": "Ardougne - Walls - Stone - Zoo Fence",
+    "baseMaterial": "STONE_SEMIGLOSS",
+    "objectIds": [
+      21239,
+      21240,
+      21241,
+      21242
+    ],
+    "uvType": "GEOMETRY",
+    "flatNormals": true
+  },
+  {
+    "description": "Ardougne - Walls - Stone - Zoo Ferret Fence",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      19995
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Ardougne - Walls - Stone - Zoo Ferret Fence",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      306
+    ],
+    "uvType": "VANILLA"
+  },
+  {
+    "description": "Objects - Tree - Fake Dead Tree",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      1133,
+      1134,
+      1135,
+      1136,
+      1137,
+      1138,
+      1139,
+      1140,
+      1141,
+      1142,
+      1143,
+      23559,
+      23530,
+      23561
+    ],
+    "uvType": "VANILLA"
+  },
+  {
+    "description": "Gnome Stronghold - Objects - Tree - Fake Dead Tree",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      1706
+    ],
+    "uvType": "VANILLA"
+  },
+  {
+    "description": "Ground Decoration - Sticks - Small",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      1251,
+      1252
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.6,
+    "uvOrientation": 300
+  },
+  {
+    "description": "Gnome - Walls - Rope Rails",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      1708,
+      1982
+    ]
+  },
+  {
+    "description": "Gnome - Ground Decoration - Wooden - Log Supports",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      1702,
+      1703,
+      1704
+    ],
+    "uvType": "WORLD_XZ"
+  },
+  {
+    "description": "Gnome - Ground Decoration - Wooden - Log Bridges",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      1701
+    ],
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 512,
+    "uvScale": 0.8
+  },
+  {
+    "description": "Gnome - Ground Decoration - Wooden - Log Bridges - Corner",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      4045
+    ],
+    "uvType": "MODEL_XZ_MIRROR_A",
+    "uvOrientation": 256,
+    "uvScale": 0.8
+  },
+  {
+    "description": "Gnome - Objects - Wooden - Hammock",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      430
+    ]
+  },
+  {
+    "description": "Gnome - Objects - Wooden - Lamp",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      201
+    ]
+  },
+  {
+    "description": "Gnome - Objects - Wooden - Bench - Textured",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      1104
+    ]
+  },
+  {
+    "description": "Gnome - Objects - Wooden - Staircase Rails - Textured",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      16677
+    ]
+  },
+  {
+    "description": "Ground Decoration - Wooden - Agility Logs",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      23142,
+      23143,
+      23144,
+      23145
+    ]
+  },
+  {
+    "description": "Objects - Ice Rocks - Small",
+    "baseMaterial": "ICE_1",
+    "objectIds": [
+      3550,
+      10593,
+      21135,
+      21136,
+      21137,
+      21138,
+      21148,
+      21149,
+      21150,
+      21151,
+      21152,
+      21153,
+      21154,
+      21155,
+      21156
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Objects - Ice Rocks - Large",
+    "baseMaterial": "ICE_1",
+    "objectIds": [
+      1444,
+      6475,
+      21095,
+      21096,
+      21097,
+      21098,
+      21099,
+      21101,
+      21110,
+      21111,
+      21120,
+      21121,
+      21122,
+      21123,
+      21124,
+      21221,
+      21222,
+      21227,
+      21228,
+      21229,
+      21230,
+      21231,
+      21233
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.25
+  },
+  {
+    "description": "Ground - Snow Piles - Tiny",
+    "baseMaterial": "SNOW_1",
+    "objectIds": [
+      559,
+      560,
+      561,
+      21103,
+      21105
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 2.0
+  },
+  {
+    "description": "Ground - Snow Piles - Tiny",
+    "baseMaterial": "SNOW_1",
+    "objectIds": [
+      21074
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 2.0
+  },
+  {
+    "description": "Ground - Snow Piles - Small",
+    "baseMaterial": "SNOW_2",
+    "objectIds": [
+      21104
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 1.64
+  },
+  {
+    "description": "Objects - Snow Piles - Large",
+    "baseMaterial": "SNOW_4",
+    "objectIds": [
+      5030,
+      5031,
+      10590,
+      10591,
+      21159,
+      21199,
+      21200,
+      21158,
+      21159,
+      21199,
+      21200,
+      21224,
+      26413,
+      26485,
+      26486,
+      26399,
+      27925
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Objects - Ice - Giant",
+    "baseMaterial": "ICE_3",
+    "objectIds": [
+      21219,
+      21220
+    ],
+    "uvType": "GEOMETRY",
+    "uvOrientation": 245,
+    "uvScale": 1.2
+  },
+  {
+    "description": "Objects - Ice Stalagmite",
+    "baseMaterial": "ICE_1",
+    "objectIds": [
+      10602,
+      10604,
+      21100,
+      21139,
+      21140,
+      21141,
+      21223,
+      21225,
+      21226,
+      21235,
+      21236,
+      21237,
+      21238,
+      21334
+    ],
+    "uvType": "WORLD_XY",
+    "uvScale": 0.25
+  },
+  {
+    "description": "Firm Snowy Patch",
+    "baseMaterial": "SNOW_1",
+    "objectIds": [
+      21246
+    ],
+    "uvType": "WORLD_XZ"
+  },
+  {
+    "description": "Ice Walls",
+    "baseMaterial": "ICE_2",
+    "objectIds": [
+      21034,
+      21035,
+      21036,
+      21037,
+      21038,
+      21039,
+      21040,
+      21041,
+      21042,
+      21043,
+      21044,
+      21045,
+      21046,
+      21047,
+      21048,
+      21049,
+      21050,
+      21051,
+      21052,
+      21053,
+      21054,
+      21055,
+      21058,
+      21059,
+      21060,
+      21061,
+      21062,
+      21063,
+      21064,
+      21065,
+      21066,
+      21067,
+      21069,
+      21070,
+      21071,
+      21072,
+      21077,
+      21166,
+      21169,
+      21170,
+      21171
+    ],
+    "uvType": "MODEL_XY",
+    "uvScale": 0.48,
+    "uvOrientation": 315
+  },
+  {
+    "description": "Ice Walls - Rotated",
+    "baseMaterial": "ICE_2",
+    "objectIds": [
+      21056,
+      21057
+    ],
+    "uvType": "MODEL_YZ",
+    "uvScale": 0.48,
+    "uvOrientation": 315
+  },
+  {
+    "description": "Ice Walls Cap",
+    "baseMaterial": "ICE_1",
+    "objectIds": [
+      21196
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.33
+  },
+  {
+    "description": "Penguin Metal Doors",
+    "baseMaterial": "METALLIC_2",
+    "objectIds": [
+      21160,
+      21161,
+      21068
+    ],
+    "uvType": "MODEL_XY"
+  },
+  {
+    "description": "WALLS - ICE FENCE",
+    "baseMaterial": "ICE_4",
+    "objectIds": [
+      21017,
+      21088,
+      21078,
+      21079,
+      21080,
+      21081,
+      21082,
+      21083,
+      21172,
+      21167
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Penguin Footprints",
+    "baseMaterial": "SNOW_2",
+    "uvType": "WORLD_XZ",
+    "objectIds": [
+      21247,
+      21248
+    ],
+    "disableShadows": true
+  },
+  {
+    "description": "Big Red Button",
+    "baseMaterial": "METALLIC_2",
+    "objectIds": [
+      21086
+    ]
+  },
+  {
+    "description": "Penguin Base Crack",
+    "baseMaterial": "SNOW_2",
+    "objectIds": [
+      21245
+    ],
+    "uvType": "WORLD_XZ",
+    "uvOrientation": 512,
+    "uvScale": 0.76
+  },
+  {
+    "description": "Ice Walls 2",
+    "baseMaterial": "ICE_1",
+    "objectIds": [
+      21112,
+      21113,
+      21114,
+      21115,
+      21116,
+      21117,
+      21118,
+      21119,
+      21157,
+      21186,
+      21187,
+      21188,
+      21189,
+      21190,
+      21191,
+      21192,
+      21193,
+      21194,
+      21195,
+      21197,
+      21198,
+      21201,
+      21202,
+      21203,
+      21204,
+      21205,
+      21206,
+      21207,
+      21208,
+      21209,
+      21210,
+      21211,
+      21212,
+      21213,
+      21214,
+      21215,
+      21216,
+      21217,
+      21218
+    ],
+    "uvType": "MODEL_XY",
+    "uvScale": 0.33
   }
 ]

@@ -32,7 +32,7 @@ layout(local_size_x = 6) in;
 void main() {
     uint groupId = gl_WorkGroupID.x;
     uint localId = gl_LocalInvocationID.x;
-    modelinfo minfo = ol[groupId];
+    ModelInfo minfo = ol[groupId];
 
     int offset = minfo.offset;
     int size = minfo.size;
@@ -50,15 +50,9 @@ void main() {
     ivec4 thisA, thisB, thisC;
 
     // Grab triangle vertices from the correct buffer
-    if (flags < 0) {
-        thisA = vb[offset + ssboOffset * 3    ];
-        thisB = vb[offset + ssboOffset * 3 + 1];
-        thisC = vb[offset + ssboOffset * 3 + 2];
-    } else {
-        thisA = tempvb[offset + ssboOffset * 3    ];
-        thisB = tempvb[offset + ssboOffset * 3 + 1];
-        thisC = tempvb[offset + ssboOffset * 3 + 2];
-    }
+    thisA = vb[offset + ssboOffset * 3    ];
+    thisB = vb[offset + ssboOffset * 3 + 1];
+    thisC = vb[offset + ssboOffset * 3 + 2];
 
     uint myOffset = localId;
 
@@ -71,10 +65,6 @@ void main() {
         uvout[outOffset + myOffset * 3]     = vec4(0, 0, 0, 0);
         uvout[outOffset + myOffset * 3 + 1] = vec4(0, 0, 0, 0);
         uvout[outOffset + myOffset * 3 + 2] = vec4(0, 0, 0, 0);
-    } else if (flags >= 0) {
-        uvout[outOffset + myOffset * 3]     = tempuv[uvOffset + localId * 3];
-        uvout[outOffset + myOffset * 3 + 1] = tempuv[uvOffset + localId * 3 + 1];
-        uvout[outOffset + myOffset * 3 + 2] = tempuv[uvOffset + localId * 3 + 2];
     } else {
         uvout[outOffset + myOffset * 3]     = uv[uvOffset + localId * 3];
         uvout[outOffset + myOffset * 3 + 1] = uv[uvOffset + localId * 3 + 1];
@@ -84,15 +74,9 @@ void main() {
     vec4 normA, normB, normC;
 
     // Grab triangle normals from the correct buffer
-    if (flags < 0) {
-        normA = normal[offset + ssboOffset * 3    ];
-        normB = normal[offset + ssboOffset * 3 + 1];
-        normC = normal[offset + ssboOffset * 3 + 2];
-    } else {
-        normA = tempnormal[offset + ssboOffset * 3    ];
-        normB = tempnormal[offset + ssboOffset * 3 + 1];
-        normC = tempnormal[offset + ssboOffset * 3 + 2];
-    }
+    normA = normal[offset + ssboOffset * 3    ];
+    normB = normal[offset + ssboOffset * 3 + 1];
+    normC = normal[offset + ssboOffset * 3 + 2];
 
     normalout[outOffset + myOffset * 3]     = normA;
     normalout[outOffset + myOffset * 3 + 1] = normB;

@@ -1,51 +1,55 @@
 package rs117.hd.model;
 
 import lombok.extern.slf4j.Slf4j;
-import rs117.hd.HdPlugin;
-import rs117.hd.HdPluginConfig;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
-import java.util.Objects;
 
 @Slf4j
 public class ModelCache {
-    private BufferPool bufferPool;
-    private IntBufferCache vertexDataCache;
-    private FloatBufferCache normalDataCache;
-    private FloatBufferCache uvDataCache;
+    public static final long KiB = 1024;
+    public static final long MiB = 1024 * KiB;
+    public static final long GiB = 1024 * MiB;
 
-    public void init(HdPlugin hdPlugin, HdPluginConfig config) {
-        int modelCacheSizeMiB = config.modelCacheSizeMiB();
-        if (!Objects.equals(System.getProperty("sun.arch.data.model"), "64") && modelCacheSizeMiB > 512) {
-            log.error("defaulting model cache to 512MiB due to non 64-bit client");
+    private final BufferPool bufferPool;
+    private final IntBufferCache vertexDataCache;
+    private final FloatBufferCache normalDataCache;
+    private final FloatBufferCache uvDataCache;
+
+    public ModelCache(int modelCacheSizeMiB) {
+        // Limit cache size to 512MiB for 32-bit
+        if (modelCacheSizeMiB > 512 && !"64".equals(System.getProperty("sun.arch.data.model"))) {
+            log.warn("Defaulting model cache to 512MiB due to non 64-bit client");
             modelCacheSizeMiB = 512;
         }
 
         try {
-            long totalPhysicalMemoryMiB = ((com.sun.management.OperatingSystemMXBean)java.lang.management.ManagementFactory.getOperatingSystemMXBean()).getTotalPhysicalMemorySize() / 1024 / 1024;
+            int totalPhysicalMemoryMiB = (int) (
+                ((com.sun.management.OperatingSystemMXBean)
+                    java.lang.management.ManagementFactory.getOperatingSystemMXBean())
+                .getTotalPhysicalMemorySize() / MiB);
 
+            // Try to limit the cache size to half of the total physical memory
             if (modelCacheSizeMiB > totalPhysicalMemoryMiB / 2) {
-                modelCacheSizeMiB = (int) (totalPhysicalMemoryMiB / 2);
-                log.error("limiting the cache to " + modelCacheSizeMiB + " since the selected amount exceeds half of the total physical memory for the system.");
+                log.warn("Limiting cache size to {} since the selected amount ({}) exceeds half of the total physical memory for the system ({} / 2).",
+                    totalPhysicalMemoryMiB / 2, modelCacheSizeMiB, totalPhysicalMemoryMiB);
+                modelCacheSizeMiB = totalPhysicalMemoryMiB / 2;
             }
         } catch (Throwable e) {
-            log.error("failed to check physical memory size: " + e);
+            log.warn("Unable to check physical memory size: " + e);
         }
 
-        this.bufferPool = new BufferPool(modelCacheSizeMiB * 1048576L, hdPlugin);
-        this.bufferPool.allocate();
-
+        this.bufferPool = new BufferPool(modelCacheSizeMiB * MiB);
         this.vertexDataCache = new IntBufferCache(this.bufferPool);
         this.normalDataCache = new FloatBufferCache(this.bufferPool);
         this.uvDataCache = new FloatBufferCache(this.bufferPool);
     }
 
-    public void shutDown() {
+    public void destroy() {
         clear();
 
         if (this.bufferPool != null) {
-            this.bufferPool.free();
+            this.bufferPool.freeAllocations();
         }
     }
 

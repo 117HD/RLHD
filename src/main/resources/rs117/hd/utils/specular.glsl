@@ -30,6 +30,6 @@ vec4 specular(vec3 viewDir, vec3 reflectDir, vec3 specularGloss, vec3 specularSt
     vec3 specY = vec3(pow(vDotR, specularGloss.y) * lightColor * specularStrength.y);
     vec3 specZ = vec3(pow(vDotR, specularGloss.z) * lightColor * specularStrength.z);
     float specAmount = clamp(vDotR * lightStrength, 0.0, 1.0);
-    vec4 combined = vec4(specX * texBlend.x + specY * texBlend.y + specZ * texBlend.z, specAmount);
+    vec4 combined = vec4(specX * IN.texBlend.x + specY * IN.texBlend.y + specZ * IN.texBlend.z, specAmount);
     return vDotR > 0.0 ? combined : vec4(0.0);
 }

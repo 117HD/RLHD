@@ -41,56 +41,57 @@ public class ModelHasher {
 
     public int calculateVertexCacheHash() {
         return fastIntHash(new int[]{
-                this.faceColorsOneHash,
-                this.faceColorsTwoHash,
-                this.faceColorsThreeHash,
-                this.faceTransparenciesHash,
-                this.faceTexturesHash,
-                this.faceTexturesUvHash,
-                this.model.getOverrideAmount(),
-                this.model.getOverrideHue(),
-                this.model.getOverrideSaturation(),
-                this.model.getOverrideLuminance(),
-                faceIndicesOneHash,
-                faceIndicesTwoHash,
-                faceIndicesThreeHash,
-                xVerticesHash,
-                yVerticesHash,
-                zVerticesHash,
+            this.faceColorsOneHash,
+            this.faceColorsTwoHash,
+            this.faceColorsThreeHash,
+            this.faceTransparenciesHash,
+            this.faceTexturesHash,
+            this.faceTexturesUvHash,
+            this.model.getOverrideAmount(),
+            this.model.getOverrideHue(),
+            this.model.getOverrideSaturation(),
+            this.model.getOverrideLuminance(),
+            faceIndicesOneHash,
+            faceIndicesTwoHash,
+            faceIndicesThreeHash,
+            xVerticesHash,
+            yVerticesHash,
+            zVerticesHash,
         }, -1);
     }
 
     public int calculateNormalCacheHash() {
         return fastIntHash(new int[]{
-                this.faceIndicesOneHash,
-                this.faceIndicesTwoHash,
-                this.faceIndicesThreeHash,
-                fastIntHash(this.model.getVertexNormalsX(), -1),
-                fastIntHash(this.model.getVertexNormalsY(), -1),
-                fastIntHash(this.model.getVertexNormalsZ(), -1),
+            this.faceIndicesOneHash,
+            this.faceIndicesTwoHash,
+            this.faceIndicesThreeHash,
+            fastIntHash(this.model.getVertexNormalsX(), -1),
+            fastIntHash(this.model.getVertexNormalsY(), -1),
+            fastIntHash(this.model.getVertexNormalsZ(), -1),
         }, -1);
     }
 
-    public int calculateUvCacheHash(@NonNull ModelOverride modelOverride) {
+    public int calculateUvCacheHash(int orientation, @NonNull ModelOverride modelOverride) {
         return fastIntHash(new int[]{
-                this.faceTexturesHash,
-                this.faceTexturesUvHash,
-                modelOverride.hashCode()
+            orientation,
+            this.faceTexturesHash,
+            this.faceTexturesUvHash,
+            modelOverride.hashCode()
         }, -1);
     }
 
     public int calculateColorCacheHash() {
         return fastIntHash(new int[]{
-                this.faceColorsOneHash,
-                this.faceColorsTwoHash,
-                this.faceColorsThreeHash,
-                this.faceTransparenciesHash,
-                this.faceTexturesHash,
-                this.faceTexturesUvHash,
-                this.model.getOverrideAmount(),
-                this.model.getOverrideHue(),
-                this.model.getOverrideSaturation(),
-                this.model.getOverrideLuminance()
+            this.faceColorsOneHash,
+            this.faceColorsTwoHash,
+            this.faceColorsThreeHash,
+            this.faceTransparenciesHash,
+            this.faceTexturesHash,
+            this.faceTexturesUvHash,
+            this.model.getOverrideAmount(),
+            this.model.getOverrideHue(),
+            this.model.getOverrideSaturation(),
+            this.model.getOverrideLuminance()
         }, -1);
     }
 
@@ -112,12 +113,12 @@ public class ModelHasher {
 
         for (; i + 5 < length; i += 6) {
             r = 31 * 31 * 31 * 31 * 31 * 31 * r
-                    + 31 * 31 * 31 * 31 * 31 * a[i]
-                    + 31 * 31 * 31 * 31 * a[i + 1]
-                    + 31 * 31 * 31 * a[i + 2]
-                    + 31 * 31 * a[i + 3]
-                    + 31 * a[i + 4]
-                    + a[i + 5];
+                + 31 * 31 * 31 * 31 * 31 * a[i]
+                + 31 * 31 * 31 * 31 * a[i + 1]
+                + 31 * 31 * 31 * a[i + 2]
+                + 31 * 31 * a[i + 3]
+                + 31 * a[i + 4]
+                + a[i + 5];
         }
 
         for (; i < length; i++) {
@@ -137,12 +138,12 @@ public class ModelHasher {
 
         for (; i + 5 < a.length; i += 6) {
             r = 31 * 31 * 31 * 31 * 31 * 31 * r
-                    + 31 * 31 * 31 * 31 * 31 * a[i]
-                    + 31 * 31 * 31 * 31 * a[i + 1]
-                    + 31 * 31 * 31 * a[i + 2]
-                    + 31 * 31 * a[i + 3]
-                    + 31 * a[i + 4]
-                    + a[i + 5];
+                + 31 * 31 * 31 * 31 * 31 * a[i]
+                + 31 * 31 * 31 * 31 * a[i + 1]
+                + 31 * 31 * 31 * a[i + 2]
+                + 31 * 31 * a[i + 3]
+                + 31 * a[i + 4]
+                + a[i + 5];
         }
 
         for (; i < a.length; i++) {
@@ -162,12 +163,12 @@ public class ModelHasher {
 
         for (; i + 5 < a.length; i += 6) {
             r = 31 * 31 * 31 * 31 * 31 * 31 * r
-                    + 31 * 31 * 31 * 31 * 31 * a[i]
-                    + 31 * 31 * 31 * 31 * a[i + 1]
-                    + 31 * 31 * 31 * a[i + 2]
-                    + 31 * 31 * a[i + 3]
-                    + 31 * a[i + 4]
-                    + a[i + 5];
+                + 31 * 31 * 31 * 31 * 31 * a[i]
+                + 31 * 31 * 31 * 31 * a[i + 1]
+                + 31 * 31 * 31 * a[i + 2]
+                + 31 * 31 * a[i + 3]
+                + 31 * a[i + 4]
+                + a[i + 5];
         }
 
         for (; i < a.length; i++) {
@@ -187,12 +188,12 @@ public class ModelHasher {
 
         for (; i + 5 < a.length; i += 6) {
             r = 31 * 31 * 31 * 31 * 31 * 31 * r
-                    + 31 * 31 * 31 * 31 * 31 * Float.floatToIntBits(a[i])
-                    + 31 * 31 * 31 * 31 * Float.floatToIntBits(a[i + 1])
-                    + 31 * 31 * 31 * Float.floatToIntBits(a[i + 2])
-                    + 31 * 31 * Float.floatToIntBits(a[i + 3])
-                    + 31 * Float.floatToIntBits(a[i + 4])
-                    + Float.floatToIntBits(a[i + 5]);
+                + 31 * 31 * 31 * 31 * 31 * Float.floatToIntBits(a[i])
+                + 31 * 31 * 31 * 31 * Float.floatToIntBits(a[i + 1])
+                + 31 * 31 * 31 * Float.floatToIntBits(a[i + 2])
+                + 31 * 31 * Float.floatToIntBits(a[i + 3])
+                + 31 * Float.floatToIntBits(a[i + 4])
+                + Float.floatToIntBits(a[i + 5]);
         }
 
         for (; i < a.length; i++) {

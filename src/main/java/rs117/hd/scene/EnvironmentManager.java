@@ -25,24 +25,27 @@
 package rs117.hd.scene;
 
 import com.google.common.primitives.Floats;
-import java.util.ArrayList;
-import java.util.Arrays;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
-
-import static net.runelite.api.Constants.*;
-import static net.runelite.api.Constants.CHUNK_SIZE;
 import net.runelite.api.GameState;
+import net.runelite.api.Player;
 import net.runelite.api.coords.LocalPoint;
 import net.runelite.api.coords.WorldPoint;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
-import rs117.hd.data.environments.Environment;
-import rs117.hd.utils.HDUtils;
 import rs117.hd.config.DefaultSkyColor;
+import rs117.hd.data.environments.Area;
+import rs117.hd.data.environments.Environment;
 import rs117.hd.utils.AABB;
+import rs117.hd.utils.HDUtils;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import static net.runelite.api.Constants.CHUNK_SIZE;
+import static net.runelite.api.Constants.SCENE_SIZE;
 
 @Singleton
 @Slf4j
@@ -57,15 +60,15 @@ public class EnvironmentManager
 	@Inject
 	private HdPlugin hdPlugin;
 
-	private ArrayList<Environment> sceneEnvironments;
-	private Environment currentEnvironment;
 	private final Environment defaultEnvironment = Environment.OVERWORLD;
+	private ArrayList<Environment> sceneEnvironments;
+	private Environment currentEnvironment = defaultEnvironment;
 
 	// transition time
-	private final int transitionDuration = 3000;
+	private static final int transitionDuration = 3000;
 	// distance in tiles to skip transition (e.g. entering cave, teleporting)
 	// walking across a loading line causes a movement of 40-41 tiles
-	private final int skipTransitionTiles = 41;
+	private static final int skipTransitionTiles = 41;
 
 	// last environment change time
 	private long startTime = 0;
@@ -150,7 +153,8 @@ public class EnvironmentManager
 	public float currentLightYaw = 0f;
 	private float targetLightYaw = 0f;
 
-	public boolean lightningEnabled = false;
+	private boolean lightningEnabled = false;
+	private boolean displaySnow = false;
 
 	public void update()
 	{
@@ -167,7 +171,9 @@ public class EnvironmentManager
 				{
 					if (environment == Environment.PLAYER_OWNED_HOUSE || environment == Environment.PLAYER_OWNED_HOUSE_SNOWY) {
 						hdPlugin.setInHouse(true);
-						hdPlugin.setNextSceneReload(System.currentTimeMillis() + 2500);
+
+						// POH takes 1 game tick to enter, then 2 game ticks to load per floor
+						hdPlugin.reloadSceneIn(7);
 					} else {
 						hdPlugin.setInHouse(false);
 					}
@@ -244,6 +250,20 @@ public class EnvironmentManager
 		lastUnderwater = isUnderwater();
 	}
 
+	private void updateWinterTheme() {
+		Player player = client.getLocalPlayer();
+		if (player == null)
+			return;
+		WorldPoint point = player.getWorldLocation();
+		if (point == null)
+			return;
+		displaySnow = Area.OVERWORLD.containsPoint(point);
+	}
+
+	private boolean useWinterTheme() {
+		return hdPlugin.configWinterTheme && displaySnow;
+	}
+
 	/**
 	 * Updates variables used in transition effects
 	 *
@@ -280,76 +300,39 @@ public class EnvironmentManager
 		updateSkyColor();
 
 		targetFogDepth = newEnvironment.getFogDepth();
-		if (hdPlugin.configWinterTheme)
+		if (useWinterTheme() && !newEnvironment.isCustomFogDepth()) {
+			targetFogDepth = Environment.WINTER.getFogDepth();
+		}
+
+		Environment atmospheric = config.atmosphericLighting() ? newEnvironment : defaultEnvironment;
+		targetAmbientStrength = atmospheric.getAmbientStrength();
+		targetAmbientColor = atmospheric.getAmbientColor();
+		targetDirectionalStrength = atmospheric.getDirectionalStrength();
+		targetDirectionalColor = atmospheric.getDirectionalColor();
+		targetUnderglowStrength = atmospheric.getUnderglowStrength();
+		targetUnderglowColor = atmospheric.getUnderglowColor();
+		targetLightPitch = atmospheric.getLightPitch();
+		targetLightYaw = atmospheric.getLightYaw();
+		if (useWinterTheme())
 		{
-			if (!newEnvironment.isCustomFogDepth())
+			if (!atmospheric.isCustomAmbientStrength())
 			{
-				targetFogDepth = Environment.WINTER.getFogDepth();
+				targetAmbientStrength = Environment.WINTER.getAmbientStrength();
+			}
+			if (!atmospheric.isCustomAmbientColor())
+			{
+				targetAmbientColor = Environment.WINTER.getAmbientColor();
+			}
+			if (!atmospheric.isCustomDirectionalStrength())
+			{
+				targetDirectionalStrength = Environment.WINTER.getDirectionalStrength();
+			}
+			if (!atmospheric.isCustomDirectionalColor())
+			{
+				targetDirectionalColor = Environment.WINTER.getDirectionalColor();
 			}
 		}
 
-		if (config.atmosphericLighting())
-		{
-			targetAmbientStrength = newEnvironment.getAmbientStrength();
-			targetAmbientColor = newEnvironment.getAmbientColor();
-			targetDirectionalStrength = newEnvironment.getDirectionalStrength();
-			targetDirectionalColor = newEnvironment.getDirectionalColor();
-			targetUnderglowStrength = newEnvironment.getUnderglowStrength();
-			targetUnderglowColor = newEnvironment.getUnderglowColor();
-			targetLightPitch = newEnvironment.getLightPitch();
-			targetLightYaw = newEnvironment.getLightYaw();
-
-			if (hdPlugin.configWinterTheme)
-			{
-				if (!newEnvironment.isCustomAmbientStrength())
-				{
-					targetAmbientStrength = Environment.WINTER.getAmbientStrength();
-				}
-				if (!newEnvironment.isCustomAmbientColor())
-				{
-					targetAmbientColor = Environment.WINTER.getAmbientColor();
-				}
-				if (!newEnvironment.isCustomDirectionalStrength())
-				{
-					targetDirectionalStrength = Environment.WINTER.getDirectionalStrength();
-				}
-				if (!newEnvironment.isCustomDirectionalColor())
-				{
-					targetDirectionalColor = Environment.WINTER.getDirectionalColor();
-				}
-			}
-		}
-		else
-		{
-			targetAmbientStrength = defaultEnvironment.getAmbientStrength();
-			targetAmbientColor = defaultEnvironment.getAmbientColor();
-			targetDirectionalStrength = defaultEnvironment.getDirectionalStrength();
-			targetDirectionalColor = defaultEnvironment.getDirectionalColor();
-			targetUnderglowStrength = defaultEnvironment.getUnderglowStrength();
-			targetUnderglowColor = defaultEnvironment.getUnderglowColor();
-			targetLightPitch = defaultEnvironment.getLightPitch();
-			targetLightYaw = defaultEnvironment.getLightYaw();
-
-			if (hdPlugin.configWinterTheme)
-			{
-				if (!defaultEnvironment.isCustomAmbientStrength())
-				{
-					targetAmbientStrength = Environment.WINTER.getAmbientStrength();
-				}
-				if (!defaultEnvironment.isCustomAmbientColor())
-				{
-					targetAmbientColor = Environment.WINTER.getAmbientColor();
-				}
-				if (!defaultEnvironment.isCustomDirectionalStrength())
-				{
-					targetDirectionalStrength = Environment.WINTER.getDirectionalStrength();
-				}
-				if (!defaultEnvironment.isCustomDirectionalColor())
-				{
-					targetDirectionalColor = Environment.WINTER.getDirectionalColor();
-				}
-			}
-		}
 		targetGroundFogStart = newEnvironment.getGroundFogStart();
 		targetGroundFogEnd = newEnvironment.getGroundFogEnd();
 		targetGroundFogOpacity = newEnvironment.getGroundFogOpacity();
@@ -373,7 +356,7 @@ public class EnvironmentManager
 
 	public void updateSkyColor()
 	{
-		Environment env = hdPlugin.configWinterTheme ? Environment.WINTER : currentEnvironment;
+		Environment env = useWinterTheme() ? Environment.WINTER : currentEnvironment;
 		if (!env.isCustomFogColor() || env.isAllowSkyOverride() && config.overrideSky())
 		{
 			DefaultSkyColor sky = config.defaultSkyColor();
@@ -403,6 +386,8 @@ public class EnvironmentManager
 	 */
 	public void loadSceneEnvironments()
 	{
+		updateWinterTheme();
+
 		// loop through all Areas, check Rects of each Area. if any
 		// coordinates overlap scene coordinates, add them to a list.
 		// then loop through all Environments, checking to see if any
@@ -442,13 +427,10 @@ public class EnvironmentManager
 			log.debug("SceneArea: " + environment.name());
 		}
 
-		if (currentEnvironment != null)
-		{
-			WorldPoint camPosition = localPointToWorldTile(hdPlugin.camTarget[0], hdPlugin.camTarget[1]);
-			int camTargetX = camPosition.getX();
-			int camTargetY = camPosition.getY();
-			changeEnvironment(currentEnvironment, camTargetX, camTargetY, false);
-		}
+		WorldPoint camPosition = localPointToWorldTile(hdPlugin.camTarget[0], hdPlugin.camTarget[1]);
+		int camTargetX = camPosition.getX();
+		int camTargetY = camPosition.getY();
+		changeEnvironment(currentEnvironment, camTargetX, camTargetY, false);
 	}
 
 
@@ -527,7 +509,7 @@ public class EnvironmentManager
 	 * Returns the current fog color if logged in.
 	 * Else, returns solid black.
 	 *
-	 * @return
+	 * @return 3-component RGB color array
 	 */
 	public float[] getFogColor()
 	{
@@ -563,6 +545,6 @@ public class EnvironmentManager
 
 	public boolean isUnderwater()
 	{
-		return currentEnvironment != null && currentEnvironment.isUnderwater();
+		return currentEnvironment.isUnderwater();
 	}
 }

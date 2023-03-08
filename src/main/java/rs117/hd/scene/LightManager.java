@@ -28,6 +28,7 @@ package rs117.hd.scene;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
+import com.google.gson.Gson;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
@@ -75,7 +76,7 @@ public class LightManager
 	private Client client;
 
 	@Inject
-	private HdPlugin hdPlugin;
+	private HdPlugin plugin;
 
 	@Inject
 	private EntityHiderPlugin entityHiderPlugin;
@@ -115,13 +116,14 @@ public class LightManager
 
 	static final float TWO_PI = (float) (2 * Math.PI);
 
-	public void loadConfig(ResourcePath path)
+	@VisibleForTesting
+	void loadConfig(Gson gson, ResourcePath path)
 	{
 		try
 		{
 			Light[] lights;
 			try {
-				lights = path.loadJson(Light[].class);
+				lights = path.loadJson(gson, Light[].class);
 			} catch (IOException ex) {
 				log.error("Failed to load lights", ex);
 				return;
@@ -162,7 +164,7 @@ public class LightManager
 	public void startUp()
 	{
 		entityHiderConfig = configManager.getConfig(EntityHiderConfig.class);
-		lightsPath.watch(this::loadConfig);
+		lightsPath.watch(path -> loadConfig(plugin.getGson(), path));
 	}
 
 	public void shutDown()
@@ -184,9 +186,9 @@ public class LightManager
 			loadSceneLights();
 		}
 
-		int camX = hdPlugin.camTarget[0];
-		int camY = hdPlugin.camTarget[1];
-		int camZ = hdPlugin.camTarget[2];
+		int camX = plugin.camTarget[0];
+		int camY = plugin.camTarget[1];
+		int camZ = plugin.camTarget[2];
 
 		Iterator<SceneLight> lightIterator = sceneLights.iterator();
 
@@ -419,7 +421,7 @@ public class LightManager
 			}
 		}
 
-		return hdPlugin.configNpcLights;
+		return plugin.configNpcLights;
 	}
 
 	public boolean projectileLightVisible()
@@ -433,7 +435,7 @@ public class LightManager
 			}
 		}
 
-		return hdPlugin.configProjectileLights;
+		return plugin.configProjectileLights;
 	}
 
 	public void reset()
@@ -481,32 +483,7 @@ public class LightManager
 
 					WallObject wallObject = tile.getWallObject();
 					if (wallObject != null && wallObject.getRenderable1() != null) {
-						int orientation = 0;
-						// east = 1, south = 2, west = 4, north = 8,
-						// southeast = 16, southwest = 32, northwest = 64, northeast = 128
-						switch (wallObject.getOrientationA()) {
-							case 1:
-								orientation = 512;
-								break;
-							case 2:
-								orientation = 1024;
-								break;
-							case 4:
-								orientation = 1536;
-								break;
-							case 16:
-								orientation = 768;
-								break;
-							case 32:
-								orientation = 1280;
-								break;
-							case 64:
-								orientation = 1792;
-								break;
-							case 128:
-								orientation = 256;
-								break;
-						}
+						int orientation = HDUtils.convertWallObjectOrientation(wallObject.getOrientationA());
 						addObjectLight(wallObject, tile.getRenderLevel(), 1, 1, orientation);
 					}
 
@@ -528,7 +505,7 @@ public class LightManager
 								tile.getRenderLevel(),
 								gameObject.sizeX(),
 								gameObject.sizeY(),
-								gameObject.getOrientation().getAngle());
+								gameObject.getOrientation());
 						}
 					}
 				}
