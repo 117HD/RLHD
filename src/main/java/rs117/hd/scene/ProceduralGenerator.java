@@ -74,8 +74,8 @@ public class ProceduralGenerator
 	Map<Integer, Boolean> vertexIsOverlay;
 	Map<Integer, Boolean> vertexIsUnderlay;
 	boolean[][][] skipTile;
-	Map<Integer, Integer> vertexUnderwaterDepth;
 	int[][][] underwaterDepthLevels;
+	public Map<Integer, Integer> vertexUnderwaterDepth;
 	public static final int[] depthLevelSlope = new int[]{150, 300, 470, 610, 700, 750, 820, 920, 1080, 1300, 1350, 1380};
 
 	/**
@@ -817,7 +817,7 @@ public class ProceduralGenerator
 	 * @param tile to determine the WaterType of
 	 * @return the WaterType of the specified Tile
 	 */
-	WaterType tileWaterType(Tile tile)
+	public WaterType tileWaterType(Tile tile)
 	{
 		int tileZ = tile.getRenderLevel();
 		int tileX = tile.getSceneLocation().getX();
@@ -1016,7 +1016,7 @@ public class ProceduralGenerator
 	 * @param tile to get the vertex keys of
 	 * @return Vertex keys in following order: SW, SE, NW, NE
 	 */
-	int[] tileVertexKeys(Tile tile)
+	public int[] tileVertexKeys(Tile tile)
 	{
 		int[][] tileVertices = tileVertices(tile);
 		int[] vertexHashes = new int[tileVertices.length];

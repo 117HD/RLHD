@@ -17,11 +17,11 @@ public class HorizonTile {
     private final Boolean isOverlay;
     private final WaterType waterType;
     private final int height;
+    private final int depth = ProceduralGenerator.depthLevelSlope[ProceduralGenerator.depthLevelSlope.length - 1];
     private final int color;
 
 	public int uploadFaces(GpuIntBuffer vertexBuffer, GpuFloatBuffer uvBuffer, GpuFloatBuffer normalBuffer) {
 		int color = 127;
-		int maxDepth = ProceduralGenerator.depthLevelSlope[ProceduralGenerator.depthLevelSlope.length - 1];
 		// TODO: Scaling up much further leads to precision issues. A different method is needed for a perfectly flat horizon
 		int horizonRadius = 8000 * Perspective.LOCAL_TILE_SIZE;
 
@@ -30,7 +30,7 @@ public class HorizonTile {
 		if (materialBelow != null) {
 			faceCount += 2;
 			materialData = SceneUploader.packMaterialData(Material.DIRT_1, false, ModelOverride.NONE);
-			terrainData = SceneUploader.packTerrainData(maxDepth, waterType, 0);
+			terrainData = SceneUploader.packTerrainData(depth, waterType, 0);
 
 			// North-west
 			vertexBuffer.put(-horizonRadius, 0, horizonRadius, color);

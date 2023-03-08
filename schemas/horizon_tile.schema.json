@@ -25,6 +25,10 @@
       "type": "integer",
       "description": "The vertical placement in the scene. Usually set to zero."
     },
+    "depth": {
+      "type": "integer",
+      "description": "The depth to place the underwater tile at. Defaults to max depth."
+    },
     "color": {
       "type": "integer",
       "description": "The HSL color to use for the horizon tile."

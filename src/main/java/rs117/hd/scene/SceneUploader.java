@@ -94,7 +94,7 @@ class SceneUploader
 	private ModelOverrideManager modelOverrideManager;
 
 	public int sceneId = new Random().nextInt();
-	public AABB sceneBounds;
+	public AABB sceneBounds = new AABB(1, 1, 0, Constants.SCENE_SIZE, Constants.SCENE_SIZE, Constants.MAX_Z);
 
 	private final float[] UP_NORMAL = { 0, -1, 0 };
 
@@ -495,20 +495,16 @@ class SceneUploader
 
 				if (proceduralGenerator.vertexIsWater.containsKey(swVertexKey) && proceduralGenerator.vertexIsLand.containsKey(swVertexKey))
 					swColor = 0;
-				else if (swHeight <= -16)
-					swHeight = 0;
 				if (proceduralGenerator.vertexIsWater.containsKey(seVertexKey) && proceduralGenerator.vertexIsLand.containsKey(seVertexKey))
 					seColor = 0;
-				else if (seHeight <= -16)
-					seHeight = 0;
 				if (proceduralGenerator.vertexIsWater.containsKey(nwVertexKey) && proceduralGenerator.vertexIsLand.containsKey(nwVertexKey))
 					nwColor = 0;
-				else if (nwHeight <= -16)
-					nwHeight = 0;
 				if (proceduralGenerator.vertexIsWater.containsKey(neVertexKey) && proceduralGenerator.vertexIsLand.containsKey(neVertexKey))
 					neColor = 0;
-				else if (neHeight <= -16)
-					neHeight = 0;
+
+				if (swHeight >= -16 && swHeight == seHeight && swHeight == nwHeight && swHeight == neHeight &&
+					swColor == 127 && swColor == seColor && swColor == nwColor && swColor == neColor)
+					swHeight = seHeight = nwHeight = neHeight = 0;
 			}
 
 			if (proceduralGenerator.vertexIsOverlay.containsKey(neVertexKey) && proceduralGenerator.vertexIsUnderlay.containsKey(neVertexKey))
@@ -846,16 +842,14 @@ class SceneUploader
 				colorA = colorB = colorC = 127;
 				if (proceduralGenerator.vertexIsWater.containsKey(vertexKeyA) && proceduralGenerator.vertexIsLand.containsKey(vertexKeyA))
 					colorA = 0;
-				else if (heightA <= -16)
-					heightA = 0;
 				if (proceduralGenerator.vertexIsWater.containsKey(vertexKeyB) && proceduralGenerator.vertexIsLand.containsKey(vertexKeyB))
 					colorB = 0;
-				else if (heightB <= -16)
-					heightB = 0;
 				if (proceduralGenerator.vertexIsWater.containsKey(vertexKeyC) && proceduralGenerator.vertexIsLand.containsKey(vertexKeyC))
 					colorC = 0;
-				else if (heightC <= -16)
-					heightC = 0;
+
+				if (heightA >= -16 && heightA == heightB && heightA == heightC &&
+					colorA == 127 && colorA == colorB && colorA == colorC)
+					heightA = heightB = heightC = 0;
 			}
 
 			if (proceduralGenerator.vertexIsOverlay.containsKey(vertexKeyA) && proceduralGenerator.vertexIsUnderlay.containsKey(vertexKeyA))
@@ -1031,6 +1025,10 @@ class SceneUploader
 				waterType = horizonTile.getWaterType();
 			if (horizonTile.getMaterial() != null)
 				material = horizonTile.getMaterial();
+			if (horizonTile.getHeight() != 0)
+				minDepth = horizonTile.getHeight();
+			if (horizonTile.getDepth() != 0)
+				maxDepth = horizonTile.getDepth();
 		}
 
 		int materialData, terrainData;
