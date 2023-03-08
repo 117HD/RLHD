@@ -508,10 +508,6 @@ class SceneUploader
 					nwColor = 0;
 				if (proceduralGenerator.vertexIsWater.containsKey(neVertexKey) && proceduralGenerator.vertexIsLand.containsKey(neVertexKey))
 					neColor = 0;
-
-				if (swHeight >= -16 && swHeight == seHeight && swHeight == nwHeight && swHeight == neHeight &&
-					swColor == 127 && swColor == seColor && swColor == nwColor && swColor == neColor)
-					swHeight = seHeight = nwHeight = neHeight = 0;
 			}
 
 			if (proceduralGenerator.vertexIsOverlay.containsKey(neVertexKey) && proceduralGenerator.vertexIsUnderlay.containsKey(neVertexKey))
@@ -853,10 +849,6 @@ class SceneUploader
 					colorB = 0;
 				if (proceduralGenerator.vertexIsWater.containsKey(vertexKeyC) && proceduralGenerator.vertexIsLand.containsKey(vertexKeyC))
 					colorC = 0;
-
-				if (heightA >= -16 && heightA == heightB && heightA == heightC &&
-					colorA == 127 && colorA == colorB && colorA == colorC)
-					heightA = heightB = heightC = 0;
 			}
 
 			if (proceduralGenerator.vertexIsOverlay.containsKey(vertexKeyA) && proceduralGenerator.vertexIsUnderlay.containsKey(vertexKeyA))
@@ -1034,8 +1026,7 @@ class SceneUploader
 				material = horizonTile.getMaterial();
 			if (horizonTile.getWaterHeight() != 0)
 				minDepth = horizonTile.getWaterHeight();
-			if (horizonTile.getWaterDepth() != 0)
-				maxDepth = horizonTile.getWaterDepth();
+			maxDepth = horizonTile.getWaterDepth();
 		}
 
 		int materialData, terrainData;

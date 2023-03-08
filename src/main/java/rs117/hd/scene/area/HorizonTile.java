@@ -17,8 +17,14 @@ public class HorizonTile {
     private final Boolean isOverlay;
     private final WaterType waterType;
     private final int waterHeight;
-    private final int waterDepth = ProceduralGenerator.depthLevelSlope[ProceduralGenerator.depthLevelSlope.length - 1];
+    private final int waterDepth;
     private final int color;
+
+	public int getWaterDepth() {
+		if (waterDepth == 0)
+			return ProceduralGenerator.depthLevelSlope[ProceduralGenerator.depthLevelSlope.length - 1];
+		return waterDepth;
+	}
 
 	public int uploadFaces(GpuIntBuffer vertexBuffer, GpuFloatBuffer uvBuffer, GpuFloatBuffer normalBuffer) {
 		int color = 127;
@@ -26,6 +32,7 @@ public class HorizonTile {
 		int horizonRadius = 8000 * Perspective.LOCAL_TILE_SIZE;
 
 		int materialData, terrainData, faceCount = 2;
+		int waterDepth = getWaterDepth();
 
 		if (materialBelow != null) {
 			faceCount += 2;

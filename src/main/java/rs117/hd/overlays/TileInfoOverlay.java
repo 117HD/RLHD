@@ -169,8 +169,8 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay
 			int[] vertexKeys = proceduralGenerator.tileVertexKeys(tile);
 			int swVertexKey = vertexKeys[0];
 			int depth = proceduralGenerator.vertexUnderwaterDepth.getOrDefault(swVertexKey, 0);
-			lines.add("Depth: " + depth);
 			lines.add("Water type: " + waterType.name());
+			lines.add("Water depth: " + depth);
 		}
 
 		Scene scene = client.getScene();

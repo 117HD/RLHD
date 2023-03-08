@@ -64,13 +64,13 @@ public class AreaManager {
                 for (AABB aabb : area.aabbs) {
                     if (aabb.contains(point)) {
 						currentArea = area;
-                        break;
+                        return;
                     }
                 }
             } else if (area.region != -1) {
                 if (point.getRegionID() == area.region) {
 					currentArea = area;
-                    break;
+                    return;
                 }
             }
         }
@@ -82,15 +82,12 @@ public class AreaManager {
 
     public boolean shouldHide(WorldPoint location) {
         if (currentArea != null && plugin.configAreaFiltering && currentArea.hideOtherRegions) {
-			if (currentArea.aabbs.length != 0) {
-				for (AABB aabbs : currentArea.aabbs) {
-					if (!aabbs.contains(location)) {
-						return true;
-					}
+			for (AABB aabbs : currentArea.aabbs) {
+				if (aabbs.contains(location)) {
+					return false;
 				}
-			} else if (currentArea.region != -1 ){
-				return location.getRegionID() != currentArea.region;
 			}
+			return currentArea.region != location.getRegionID();
 		}
 
         return false;

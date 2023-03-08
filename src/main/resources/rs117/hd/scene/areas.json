@@ -2183,6 +2183,24 @@
     ]
   },
   {
+    "description": "Karamja island",
+    "aabbs": [
+      [ 2689, 3257, 2809, 2822 ],
+      [ 2809, 3124, 2917, 3209 ],
+      [ 2917, 3184, 2964, 3132 ],
+      [ 2746, 3151, 2973, 2822 ],
+      [ 2973, 2822, 3012, 3100 ],
+      [ 2496, 4542, 2642, 4606 ]
+    ],
+    "horizonTile": {
+      "waterType": "WATER",
+      "waterHeight": 0,
+      "waterDepth": 759,
+      "material": "DIRT_1",
+      "materialBelow": "DIRT_1"
+    }
+  },
+  {
     "aabbs": [
       [ 1152, 2496, 3903, 4159 ]
     ],
@@ -2190,6 +2208,7 @@
     "horizonTile": {
       "waterType": "WATER",
       "waterHeight": 0,
+      "waterDepth": 759,
       "material": "DIRT_1",
       "materialBelow": "DIRT_1"
     }
