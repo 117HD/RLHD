@@ -1,4 +1,4 @@
-<p  align="center"><img width=60% src="https://media.discordapp.net/attachments/956088924013494352/993171212048007260/117HD-logo.png"></p>
+<p  align="center"><img width=60% src="https://user-images.githubusercontent.com/72366279/223843186-d157ed53-4425-4613-b12d-5e9bcbbc2678.png"></p>
 
 <p align="center">
   <img src="https://img.shields.io/endpoint?url=https://api.phstatistics.com/shields/installs/plugin/117hd&colorB=8a7f0e&style=for-the-badge">
@@ -19,6 +19,14 @@ GPU renderer with a suite of graphical enhancements.
 - Click Plugin-Hub at the top
 - Type 117 HD
 - Click Install
+
+<details>
+  <summary>Video of Installing</summary>
+
+![Alt Text](https://user-images.githubusercontent.com/72366279/223843005-6175c825-7f35-4bcb-84eb-882321a017f7.gif)
+
+</details>
+
 
 ### [Video of installing](https://i.imgur.com/aTZzsXD.gif)
 
