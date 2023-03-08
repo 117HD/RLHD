@@ -59,7 +59,7 @@ public class ModelOverrideManager {
                         addEntry(ModelHash.packUuid(objectId, ModelHash.TYPE_OBJECT), entry);
                 }
                 if (client.getGameState() == GameState.LOGGED_IN) {
-                    clientThread.invokeLater(() -> {
+                    clientThread.invoke(() -> {
                         plugin.uploadScene();
                         modelPusher.clearModelCache();
                     });

@@ -380,6 +380,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	public boolean configReduceOverExposure = false;
 	public boolean configEnableModelBatching = false;
 	public boolean configEnableModelCaching = false;
+	public boolean configAreaFiltering = false;
 	public int configMaxDynamicLights;
 
 	public int[] camTarget = new int[3];
@@ -424,6 +425,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		configEnableModelBatching = config.enableModelBatching();
 		configEnableModelCaching = config.enableModelCaching();
 		configMaxDynamicLights = config.maxDynamicLights().getValue();
+		configAreaFiltering = config.areaFiltering();
 
 		clientThread.invoke(() ->
 		{
@@ -2345,9 +2347,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			case KEY_WINTER_THEME:
 				configHdInfernalTexture = config.hdInfernalTexture();
 				textureManager.freeTextures();
-			case "areaFiltering":
-				reloadSceneNextGameTick();
-				break;
+			case KEY_AREA_FILTERING:
 			case "hideBakedEffects":
 			case "groundBlending":
 			case "groundTextures":
@@ -2362,6 +2362,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				configWinterTheme = config.winterTheme();
 				configReduceOverExposure = config.enableLegacyGreyColors();
 				clientThread.invoke(() -> {
+					configAreaFiltering = config.areaFiltering(); // Needs to be updated on the client thread
 					modelPusher.clearModelCache();
 					uploadScene();
 				});

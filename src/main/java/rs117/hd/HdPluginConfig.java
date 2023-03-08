@@ -531,8 +531,9 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
+	String KEY_AREA_FILTERING = "areaFiltering";
 	@ConfigItem(
-		keyName = "areaFiltering",
+		keyName = KEY_AREA_FILTERING,
 		name = "Area Filtering",
 		description = "Hide other areas that aren't meant to be visible from where you're currently standing.",
 		position = 12,

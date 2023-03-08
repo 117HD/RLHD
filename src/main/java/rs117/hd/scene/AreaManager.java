@@ -74,7 +74,6 @@ public class AreaManager {
                 }
             }
         }
-		System.out.println(currentArea);
     }
 
     public boolean shouldHideTile(int tileX, int tileY) {
@@ -82,7 +81,7 @@ public class AreaManager {
     }
 
     public boolean shouldHide(WorldPoint location) {
-        if (currentArea != null && config.areaFiltering() && currentArea.hideOtherRegions) {
+        if (currentArea != null && plugin.configAreaFiltering && currentArea.hideOtherRegions) {
 			if (currentArea.aabbs.length != 0) {
 				for (AABB aabbs : currentArea.aabbs) {
 					if (!aabbs.contains(location)) {

@@ -177,7 +177,16 @@ class SceneUploader
 
 	private boolean upload(Tile tile, GpuIntBuffer vertexBuffer, GpuFloatBuffer uvBuffer, GpuFloatBuffer normalBuffer)
 	{
-		if (areaManager.shouldHideTile(tile.getWorldLocation().getX(),tile.getWorldLocation().getY())) {
+		SceneTilePaint sceneTilePaint = tile.getSceneTilePaint();
+		SceneTileModel sceneTileModel = tile.getSceneTileModel();
+
+		if (areaManager.shouldHideTile(tile.getWorldLocation().getX(), tile.getWorldLocation().getY())) {
+			if (sceneTilePaint != null) {
+				sceneTilePaint.setBufferLen(0);
+			}
+			if (sceneTileModel != null) {
+				sceneTileModel.setBufferLen(0);
+			}
 			return false;
 		}
 
@@ -194,7 +203,6 @@ class SceneUploader
 		final int tileY = tilePoint.getY();
 		final int tileZ = tile.getRenderLevel();
 
-		SceneTilePaint sceneTilePaint = tile.getSceneTilePaint();
 		if (sceneTilePaint != null)
 		{
 			int vertexOffset = vertexBuffer.position() / VERTEX_SIZE;
@@ -222,7 +230,6 @@ class SceneUploader
 				visible = true;
 		}
 
-		SceneTileModel sceneTileModel = tile.getSceneTileModel();
 		if (sceneTileModel != null)
 		{
 			int vertexOffset = vertexBuffer.position() / VERTEX_SIZE;
