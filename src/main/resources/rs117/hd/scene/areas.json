@@ -894,7 +894,14 @@
     "description": "Blood Altar",
     "aabbs": [
       [ 3202, 4802, 3260, 4860 ]
-    ]
+    ],
+    "horizonTile": {
+      "waterType": "BLOOD",
+      "waterHeight": -120,
+      "waterDepth": 335,
+      "material": "DIRT_1",
+      "materialBelow": "DIRT_1"
+    }
   },
   {
     "aabbs": [
@@ -2182,7 +2189,7 @@
     "description": "Overworld",
     "horizonTile": {
       "waterType": "WATER",
-      "height": 0,
+      "waterHeight": 0,
       "material": "DIRT_1",
       "materialBelow": "DIRT_1"
     }
