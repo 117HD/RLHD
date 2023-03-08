@@ -305,7 +305,6 @@ public class ResourcePackManager {
                 // grab a zip file entry
                 ZipEntry entry = (ZipEntry) zipFileEntries.nextElement();
                 String currentEntry = StringUtils.substringAfter(entry.getName(),"/");
-                System.out.println(currentEntry);
                 File destFile = new File(destination, currentEntry);
                 //destFile = new File(newPath, destFile.getName());
                 File destinationParent = destFile.getParentFile();
