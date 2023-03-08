@@ -534,11 +534,11 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = "areaFiltering",
 		name = "Area Filtering",
-		description = "Hide Areas That you are not supposed to see.",
+		description = "Hide other areas that aren't meant to be visible from where you're currently standing.",
 		position = 12,
 		section = environmentSettings
 	)
-	default boolean filterAreas()
+	default boolean areaFiltering()
 	{
 		return true;
 	}
@@ -546,7 +546,7 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = "extendHorizon",
 		name = "Extend Horizon",
-		description = "Extend the Horizon so it does not cut off into black.",
+		description = "Add an infinite continuation of the scene in all directions. Only applies in certain areas.",
 		position = 13,
 		section = environmentSettings
 	)

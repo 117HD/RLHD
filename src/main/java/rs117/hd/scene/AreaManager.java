@@ -68,8 +68,6 @@ public class AreaManager {
                     }
                 }
             } else if (area.region != -1) {
-				System.out.println(point.getRegionID());
-				System.out.println("comparing with: " + area.description + " with ID " + area.region);
                 if (point.getRegionID() == area.region) {
 					currentArea = area;
                     break;
@@ -84,7 +82,7 @@ public class AreaManager {
     }
 
     public boolean shouldHide(WorldPoint location) {
-        if (currentArea != null && config.filterAreas() && currentArea.hideOtherRegions) {
+        if (currentArea != null && config.areaFiltering() && currentArea.hideOtherRegions) {
 			if (currentArea.aabbs.length != 0) {
 				for (AABB aabbs : currentArea.aabbs) {
 					if (!aabbs.contains(location)) {
