@@ -23,12 +23,19 @@ GPU renderer with a suite of graphical enhancements.
 ### [Video of installing](https://i.imgur.com/aTZzsXD.gif)
 
 
-# Links
+## Repository Listings
+🔌[117HD](https://github.com/117HD/RLHD) - The plugin itself.
 
-- Discord https://discord.gg/U4p6ChjgSE
+ 🖥 [117HD-API](https://github.com/117HD/117HD-API) - The API for the plugin. This is where the data gets sent to.
 
-- Twitter https://twitter.com/117scape
+  ![discord](https://user-images.githubusercontent.com/5789682/173276137-8ea82e88-4ec1-444f-baf0-4b0dc171901f.png) [Discord-Bot](https://github.com/117HD/discord-bot) - The 117HD discord bot. This is the bot that manages our discord.
 
-- Github https://github.com/117HD/RLHD
+ ## Support Us and Community Links
+ ![twitter](https://user-images.githubusercontent.com/5789682/173276125-347af1a5-e866-4770-97b2-7ebd3ab1aaa6.png)
+ [Twitter](https://twitter.com/117scape)
 
-- Github Organization https://github.com/117HD/RLHD
+ ![discord](https://user-images.githubusercontent.com/5789682/173276137-8ea82e88-4ec1-444f-baf0-4b0dc171901f.png)
+ [Discord](https://discord.gg/U4p6ChjgSE)
+
+ ![github](https://user-images.githubusercontent.com/5789682/173276200-a073b459-e9b6-45da-82b7-c1d88e1dd268.png)
+ [Github](https://github.com/117HD)
