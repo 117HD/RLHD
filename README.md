@@ -1,4 +1,4 @@
-<p  align="center"><img width=60% src="https://user-images.githubusercontent.com/72366279/223843186-d157ed53-4425-4613-b12d-5e9bcbbc2678.png"></p>
+<p align="center"><img width=60% src="https://user-images.githubusercontent.com/831317/223843536-9aa497c7-37ed-4d5f-98fd-1ba8aaa99d40.png"></p>
 
 <p align="center">
   <img src="https://img.shields.io/endpoint?url=https://api.phstatistics.com/shields/installs/plugin/117hd&colorB=8a7f0e&style=for-the-badge">
@@ -11,39 +11,28 @@
 
 GPU renderer with a suite of graphical enhancements.
 
-# Install
+# How to install it
 
-- Download RuneLite: https://runelite.net/
-- Open RuneLite
-- Click the Wrench on the Top Right of the RuneLite Panel
-- Click Plugin-Hub at the top
-- Type 117 HD
+- Download RuneLite from their website: https://runelite.net
+- Launch RuneLite
+- Click the Wrench icon on the top right of the RuneLite window
+- Click the Plugin-Hub button on the right side near the top"
+- Search for "117 HD"
 - Click Install
 
-<details>
-  <summary>Video of Installing</summary>
+![Install intruction video](https://user-images.githubusercontent.com/72366279/223843005-6175c825-7f35-4bcb-84eb-882321a017f7.gif)
 
-![Alt Text](https://user-images.githubusercontent.com/72366279/223843005-6175c825-7f35-4bcb-84eb-882321a017f7.gif)
+# Links
+![discord](https://user-images.githubusercontent.com/5789682/173276137-8ea82e88-4ec1-444f-baf0-4b0dc171901f.png)
+[Discord](https://discord.gg/U4p6ChjgSE) - Our Discord server.
 
-</details>
+🔌 [117HD](https://github.com/117HD/RLHD) - The plugin's source code.
 
+🤖 [Discord-Bot](https://github.com/117HD/discord-bot) - The 117HD discord bot's source code.
 
-### [Video of installing](https://i.imgur.com/aTZzsXD.gif)
+# Links to the original author
+![twitter](https://user-images.githubusercontent.com/5789682/173276125-347af1a5-e866-4770-97b2-7ebd3ab1aaa6.png)
+[117's Twitter](https://twitter.com/117scape) - The original author's Twitter handle.
 
-
-## Repository Listings
-🔌[117HD](https://github.com/117HD/RLHD) - The plugin itself.
-
- 🖥 [117HD-API](https://github.com/117HD/117HD-API) - The API for the plugin. This is where the data gets sent to.
-
-  ![discord](https://user-images.githubusercontent.com/5789682/173276137-8ea82e88-4ec1-444f-baf0-4b0dc171901f.png) [Discord-Bot](https://github.com/117HD/discord-bot) - The 117HD discord bot. This is the bot that manages our discord.
-
- ## Support Us and Community Links
- ![twitter](https://user-images.githubusercontent.com/5789682/173276125-347af1a5-e866-4770-97b2-7ebd3ab1aaa6.png)
- [Twitter](https://twitter.com/117scape)
-
- ![discord](https://user-images.githubusercontent.com/5789682/173276137-8ea82e88-4ec1-444f-baf0-4b0dc171901f.png)
- [Discord](https://discord.gg/U4p6ChjgSE)
-
- ![github](https://user-images.githubusercontent.com/5789682/173276200-a073b459-e9b6-45da-82b7-c1d88e1dd268.png)
- [Github](https://github.com/117HD)
+![patreon](https://user-images.githubusercontent.com/5789682/173276176-22dd9dcc-40c8-472b-9da2-455eebec296a.png)
+[117's Patreon](https://www.patreon.com/RS_117) - If you wish to support the original author of the plugin.
