@@ -16,7 +16,7 @@ GPU renderer with a suite of graphical enhancements.
 - Download RuneLite from their website: https://runelite.net
 - Launch RuneLite
 - Click the Wrench icon on the top right of the RuneLite window
-- Click the Plugin-Hub button on the right side near the top"
+- Click the Plugin-Hub button on the right side near the top
 - Search for "117 HD"
 - Click Install
 
