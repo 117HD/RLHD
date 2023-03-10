@@ -370,13 +370,13 @@ public class ModelPusher {
 
         Material material = Material.NONE;
 
-        boolean isVanillaTextured =
-            faceTextures != null &&
-            textureFaces != null &&
+        boolean isVanillaTextured = faceTextures != null && faceTextures[face] != -1;
+        boolean isVanillaUVMapped =
             texIndices1 != null &&
             texIndices2 != null &&
             texIndices3 != null &&
-            faceTextures[face] != -1;
+            textureFaces != null &&
+            textureFaces[face] != -1;
         if (isVanillaTextured) {
             if (plugin.configModelTextures) {
                 material = modelOverride.textureMaterial;
@@ -396,7 +396,7 @@ public class ModelPusher {
                     zeroFloats; // this face is untextured
             }
 
-            if (!isVanillaTextured || textureFaces[face] == -1) {
+            if (!isVanillaUVMapped) {
                 uvType = UvType.GEOMETRY;
             }
         }
