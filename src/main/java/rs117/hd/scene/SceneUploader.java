@@ -120,23 +120,16 @@ class SceneUploader
 			skipObject = 0b11;
 		}
 
-		// pack a bit into bufferoffset that we can use later to hide
-		// some low-importance objects based on Level of Detail setting
-		model.setBufferOffset((vertexBuffer.position() / VERTEX_SIZE) << 2 | skipObject);
-		if (model.getFaceTextures() != null ||
-			(plugin.configModelTextures && modelOverride.baseMaterial != Material.NONE) ||
-			modelPusher.packMaterialData(Material.NONE, modelOverride, UvType.GEOMETRY, false) != 0)
-		{
-			model.setUvBufferOffset(uvBuffer.position() / UV_SIZE);
-		}
-		else
-		{
-			model.setUvBufferOffset(-1);
-		}
-		model.setSceneId(sceneId);
-
-		modelPusher.pushModel(hash, model, vertexBuffer, uvBuffer, normalBuffer,
+        int vertexOffset = vertexBuffer.position() / VERTEX_SIZE;
+        int uvOffset = uvBuffer.position() / UV_SIZE;
+		int[] lengths = modelPusher.pushModel(hash, model, vertexBuffer, uvBuffer, normalBuffer,
 			tileX, tileY, tileZ, orientation, modelOverride, objectType, false);
+
+        // pack a bit into bufferoffset that we can use later to hide
+        // some low-importance objects based on Level of Detail setting
+        model.setBufferOffset(vertexOffset << 2 | skipObject);
+        model.setUvBufferOffset(lengths[1] == 0 ? -1 : uvOffset);
+        model.setSceneId(sceneId);
 	}
 
 	private void upload(Tile tile, GpuIntBuffer vertexBuffer, GpuFloatBuffer uvBuffer, GpuFloatBuffer normalBuffer)
