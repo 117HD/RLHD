@@ -1005,18 +1005,6 @@ public enum Environment
 			.setWaterColor(102, 234, 255)
 	),
 
-
-
-	UNKNOWN_OVERWORLD_SNOWY(Area.UNKNOWN_OVERWORLD_SNOWY, new Properties()
-		.setFogColor("#AEBDE0")
-		.setFogDepth(70)
-		.setAmbientColor("#6FB0FF")
-		.setAmbientStrength(1.5f)
-		.setDirectionalColor("#F4E5C9")
-		.setDirectionalStrength(2.5f)
-	),
-	UNKNOWN_OVERWORLD(Area.UNKNOWN_OVERWORLD, new Properties()),
-
 	WINTER(Area.NONE, new Properties()
 		.setFogColor("#B8C5DB")
 		.setFogDepth(35)
