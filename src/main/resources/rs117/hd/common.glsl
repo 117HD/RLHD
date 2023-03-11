@@ -36,10 +36,13 @@ ivec4 rotate(ivec4 vertex, int orientation) {
   int z = vertex.z * c - vertex.x * s >> 16;
   return ivec4(x, vertex.y, z, vertex.w);
 }
-vec4 rotate2(vec4 vertex, int orientation) {
-  ivec4 iVertex = ivec4(vertex * 1000);
-  vertex = rotate(iVertex, orientation) / 1000.0;
-  return vertex;
+vec4 rotate(vec4 vertex, int orientation) {
+    float rad = orientation * UNIT;
+    float s = sin(rad);
+    float c = cos(rad);
+    float x = vertex.z * s + vertex.x * c;
+    float z = vertex.z * c - vertex.x * s;
+    return vec4(x, vertex.y, z, vertex.w);
 }
 
 /*

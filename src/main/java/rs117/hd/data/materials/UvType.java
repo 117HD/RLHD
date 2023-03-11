@@ -28,19 +28,20 @@ public enum UvType
 {
 	VANILLA,
 	GEOMETRY,
-	MODEL_XY((uvw, i, x, y, z) -> { uvw[i] = x; uvw[i + 1] = y; uvw[i + 2] = z; }),
+	// TODO: move MODEL_* computation to compute shader for efficiency
+	MODEL_XY(true, (uvw, i, x, y, z) -> { uvw[i] = x; uvw[i + 1] = y; uvw[i + 2] = z; }),
 	MODEL_XY_MIRROR_A(MODEL_XY, UvType::mirrorDiagonally),
 	MODEL_XY_MIRROR_B(MODEL_XY, (uvw, i) -> {
 		uvw[i + 1] = 1 - uvw[i + 1];
 		mirrorDiagonally(uvw, i);
 	}),
-	MODEL_XZ((uvw, i, x, y, z) -> { uvw[i] = x; uvw[i + 1] = z; uvw[i + 2] = y; }),
+	MODEL_XZ(true, (uvw, i, x, y, z) -> { uvw[i] = x; uvw[i + 1] = z; uvw[i + 2] = y; }),
 	MODEL_XZ_MIRROR_A(MODEL_XZ, UvType::mirrorDiagonally),
 	MODEL_XZ_MIRROR_B(MODEL_XZ, (uvw, i) -> {
 		uvw[i + 1] = 1 - uvw[i + 1];
 		mirrorDiagonally(uvw, i);
 	}),
-	MODEL_YZ((uvw, i, x, y, z) -> { uvw[i] = y; uvw[i + 1] = z; uvw[i + 2] = x; }),
+	MODEL_YZ(true, (uvw, i, x, y, z) -> { uvw[i] = y; uvw[i + 1] = z; uvw[i + 2] = x; }),
 	MODEL_YZ_MIRROR_A(MODEL_YZ, UvType::mirrorDiagonally),
 	MODEL_YZ_MIRROR_B(MODEL_YZ, (uvw, i) -> {
 		uvw[i + 1] = 1 - uvw[i + 1];
@@ -51,20 +52,24 @@ public enum UvType
 	WORLD_YZ(new float[] { -1, 0, 0 });
 
 	public final boolean worldUvs;
+	public final boolean orientationDependent;
 	private final UvGenerator generator;
 
 	UvType() {
 		worldUvs = false;
+		orientationDependent = false;
 		generator = null;
 	}
 
-	UvType(UvGenerator generator) {
-		worldUvs = false;
+	UvType(boolean orientationDependent, UvGenerator generator) {
+		this.worldUvs = false;
+		this.orientationDependent = orientationDependent;
 		this.generator = generator;
 	}
 
 	UvType(UvType inherit, UvProcessor processor) {
 		worldUvs = inherit.worldUvs;
+		orientationDependent = inherit.orientationDependent;
 		generator = (uvw, i, x, y, z) -> {
 			inherit.generator.computeUvw(uvw, i, x, y, z);
 			processor.processUvw(uvw, i);
@@ -73,6 +78,7 @@ public enum UvType
 
 	UvType(float[] normal) {
 		worldUvs = true;
+		orientationDependent = false;
 		generator = (uvw, i, scale, _1, _2) -> {
 			uvw[i] = scale * normal[0];
 			uvw[i + 1] = scale * normal[1];

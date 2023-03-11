@@ -23,6 +23,9 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include constants.cl
+#include vanilla_uvs.cl
+
 // Calculate adjusted priority for a face with a given priority, distance, and
 // model global min10 and face distance averages. This allows positioning faces
 // with priorities 10/11 into the correct 'slots' resulting in 18 possible
@@ -105,9 +108,9 @@ void get_face(
     int orientation = flags & 0x7ff;
 
     // rotate for model orientation
-    int4 thisrvA = rotate_vertex(uni, thisA, orientation);
-    int4 thisrvB = rotate_vertex(uni, thisB, orientation);
-    int4 thisrvC = rotate_vertex(uni, thisC, orientation);
+    int4 thisrvA = rotate_ivec(uni, thisA, orientation);
+    int4 thisrvB = rotate_ivec(uni, thisB, orientation);
+    int4 thisrvC = rotate_ivec(uni, thisC, orientation);
 
     // calculate distance to face
     int thisPriority = (thisA.w >> 16) & 0xff;// all vertices on the face have the same priority
@@ -244,34 +247,41 @@ void sort_and_insert(
     vout[outOffset + myOffset * 3 + 1] = pos + thisrvB;
     vout[outOffset + myOffset * 3 + 2] = pos + thisrvC;
 
-    if (uvOffset < 0) {
-      uvout[outOffset + myOffset * 3]     = (float4)(0, 0, 0, 0);
-      uvout[outOffset + myOffset * 3 + 1] = (float4)(0, 0, 0, 0);
-      uvout[outOffset + myOffset * 3 + 2] = (float4)(0, 0, 0, 0);
-    } else {
-      uvout[outOffset + myOffset * 3]     = uv[uvOffset + localId * 3];
-      uvout[outOffset + myOffset * 3 + 1] = uv[uvOffset + localId * 3 + 1];
-      uvout[outOffset + myOffset * 3 + 2] = uv[uvOffset + localId * 3 + 2];
+    float4 uvA = (float4)(0);
+    float4 uvB = (float4)(0);
+    float4 uvC = (float4)(0);
+
+    if (uvOffset >= 0) {
+      uvA = uv[uvOffset + localId * 3];
+      uvB = uv[uvOffset + localId * 3 + 1];
+      uvC = uv[uvOffset + localId * 3 + 2];
+
+      if ((((int)uvA.w) >> MATERIAL_FLAG_IS_VANILLA_TEXTURED & 1) == 1) {
+        // Rotate the texture triangles to match model orientation
+        uvA = rotate_vec(uvA, orientation);
+        uvB = rotate_vec(uvB, orientation);
+        uvC = rotate_vec(uvC, orientation);
+        // Transform camera position to model space
+        float3 modelSpaceCameraPos = (float3)(uni->cameraX, uni->cameraY, uni->cameraZ) - convert_float3(pos.xyz);
+        compute_uv(modelSpaceCameraPos,
+            convert_float3(thisrvA.xyz),
+            convert_float3(thisrvB.xyz),
+            convert_float3(thisrvC.xyz),
+            &uvA, &uvB, &uvC
+        );
+      }
     }
+
+    uvout[outOffset + myOffset * 3]     = uvA;
+    uvout[outOffset + myOffset * 3 + 1] = uvB;
+    uvout[outOffset + myOffset * 3 + 2] = uvC;
     
-    float4 normA, normB, normC;
-    
-    normA = normal[offset + ssboOffset * 3    ];
-    normB = normal[offset + ssboOffset * 3 + 1];
-    normC = normal[offset + ssboOffset * 3 + 2];
-    
-    normA = (float4) (normalize(normA.xyz), normA.w);
-    normB = (float4) (normalize(normB.xyz), normB.w);
-    normC = (float4) (normalize(normC.xyz), normC.w);
-    
-    float4 normrvA, normrvB, normrvC;
-    
-    normrvA = rotate2(uni, normA, orientation);
-    normrvB = rotate2(uni, normB, orientation);
-    normrvC = rotate2(uni, normC, orientation);
-    
-    normalout[outOffset + myOffset * 3    ] = normrvA;
-    normalout[outOffset + myOffset * 3 + 1] = normrvB;
-    normalout[outOffset + myOffset * 3 + 2] = normrvC;
+    float4 normA = normal[offset + ssboOffset * 3    ];
+    float4 normB = normal[offset + ssboOffset * 3 + 1];
+    float4 normC = normal[offset + ssboOffset * 3 + 2];
+
+    normalout[outOffset + myOffset * 3    ] = rotate_vec(normA, orientation);
+    normalout[outOffset + myOffset * 3 + 1] = rotate_vec(normB, orientation);
+    normalout[outOffset + myOffset * 3 + 2] = rotate_vec(normC, orientation);
   }
 }
