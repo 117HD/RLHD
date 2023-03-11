@@ -108,9 +108,9 @@ void get_face(
     int orientation = flags & 0x7ff;
 
     // rotate for model orientation
-    int4 thisrvA = rotate_vertex(uni, thisA, orientation);
-    int4 thisrvB = rotate_vertex(uni, thisB, orientation);
-    int4 thisrvC = rotate_vertex(uni, thisC, orientation);
+    int4 thisrvA = rotate_ivec(uni, thisA, orientation);
+    int4 thisrvB = rotate_ivec(uni, thisB, orientation);
+    int4 thisrvC = rotate_ivec(uni, thisC, orientation);
 
     // calculate distance to face
     int thisPriority = (thisA.w >> 16) & 0xff;// all vertices on the face have the same priority
@@ -257,15 +257,17 @@ void sort_and_insert(
       uvC = uv[uvOffset + localId * 3 + 2];
 
       if ((((int)uvA.w) >> MATERIAL_FLAG_IS_VANILLA_TEXTURED & 1) == 1) {
-        // rotate back to original orientation because the tex triangles
-        // are not rotated
-        float3 posA = convert_float3(rotate_vertex(uni, thisrvA, 2047 - orientation).xyz);
-        float3 posB = convert_float3(rotate_vertex(uni, thisrvB, 2047 - orientation).xyz);
-        float3 posC = convert_float3(rotate_vertex(uni, thisrvC, 2047 - orientation).xyz);
-
-        compute_uv(
-          posA, posB, posC,
-          &uvA, &uvB, &uvC
+        // Rotate the texture triangles to match model orientation
+        uvA = rotate_vec(uvA, orientation);
+        uvB = rotate_vec(uvB, orientation);
+        uvC = rotate_vec(uvC, orientation);
+        // Transform camera position to model space
+        float3 modelSpaceCameraPos = (float3)(uni->cameraX, uni->cameraY, uni->cameraZ) - convert_float3(pos.xyz);
+        compute_uv(modelSpaceCameraPos,
+            convert_float3(thisrvA.xyz),
+            convert_float3(thisrvB.xyz),
+            convert_float3(thisrvC.xyz),
+            &uvA, &uvB, &uvC
         );
       }
     }
@@ -274,24 +276,12 @@ void sort_and_insert(
     uvout[outOffset + myOffset * 3 + 1] = uvB;
     uvout[outOffset + myOffset * 3 + 2] = uvC;
     
-    float4 normA, normB, normC;
-    
-    normA = normal[offset + ssboOffset * 3    ];
-    normB = normal[offset + ssboOffset * 3 + 1];
-    normC = normal[offset + ssboOffset * 3 + 2];
-    
-    normA = (float4) (normalize(normA.xyz), normA.w);
-    normB = (float4) (normalize(normB.xyz), normB.w);
-    normC = (float4) (normalize(normC.xyz), normC.w);
-    
-    float4 normrvA, normrvB, normrvC;
-    
-    normrvA = rotate2(uni, normA, orientation);
-    normrvB = rotate2(uni, normB, orientation);
-    normrvC = rotate2(uni, normC, orientation);
-    
-    normalout[outOffset + myOffset * 3    ] = normrvA;
-    normalout[outOffset + myOffset * 3 + 1] = normrvB;
-    normalout[outOffset + myOffset * 3 + 2] = normrvC;
+    float4 normA = normal[offset + ssboOffset * 3    ];
+    float4 normB = normal[offset + ssboOffset * 3 + 1];
+    float4 normC = normal[offset + ssboOffset * 3 + 2];
+
+    normalout[outOffset + myOffset * 3    ] = rotate_vec(normA, orientation);
+    normalout[outOffset + myOffset * 3 + 1] = rotate_vec(normB, orientation);
+    normalout[outOffset + myOffset * 3 + 2] = rotate_vec(normC, orientation);
   }
 }

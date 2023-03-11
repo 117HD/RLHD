@@ -23,7 +23,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-void compute_uv(
+void compute_uv(float3 cameraPos,
             float3  posA, float3  posB, float3  posC,
 /* inout */ float4*  uvA, float4*  uvB, float4*  uvC
 ) {
@@ -31,27 +31,32 @@ void compute_uv(
     float3 v2 = (*uvB).xyz - v1;
     float3 v3 = (*uvC).xyz - v1;
 
+    // Project vertex positions onto a plane going through the texture triangle
+    float3 vertexToCamera;
+    float3 uvNormal = cross(v2, v3);
+    vertexToCamera = cameraPos - posA;
+    posA += vertexToCamera * dot((*uvA).xyz - posA, uvNormal) / dot(vertexToCamera, uvNormal);
+    vertexToCamera = cameraPos - posB;
+    posB += vertexToCamera * dot((*uvB).xyz - posB, uvNormal) / dot(vertexToCamera, uvNormal);
+    vertexToCamera = cameraPos - posC;
+    posC += vertexToCamera * dot((*uvC).xyz - posC, uvNormal) / dot(vertexToCamera, uvNormal);
+
     float3 v4 = posA - v1;
     float3 v5 = posB - v1;
     float3 v6 = posC - v1;
 
-    float3 v7 = cross(v2, v3);
+    float d;
+    float3 perpv3 = cross(v3, uvNormal);
+    d = 1.0f / dot(perpv3, v2);
+    // (v4's distance along perpv3) * |perpv3| / (|perpv3| * (v2's distance along perpv3))
+    (*uvA).x = dot(perpv3, v4) * d; // (v4's distance along perpv3) / (v2's distance along perpv3) => uvA.x
+    (*uvB).x = dot(perpv3, v5) * d; // (v5's distance along perpv3) / (v2's distance along perpv3) => uvB.x
+    (*uvC).x = dot(perpv3, v6) * d; // (v6's distance along perpv3) / (v2's distance along perpv3) => uvC.x
 
-    float3 v8 = cross(v3, v7);
-    float d = 1.0f / dot(v8, v2);
-
-    float u0 = dot(v8, v4) * d;
-    float u1 = dot(v8, v5) * d;
-    float u2 = dot(v8, v6) * d;
-
-    v8 = cross(v2, v7);
-    d = 1.0f / dot(v8, v3);
-
-    float v0_ = dot(v8, v4) * d;
-    float v1_ = dot(v8, v5) * d;
-    float v2_ = dot(v8, v6) * d;
-
-    (*uvA).xyz = (float3)(u0, v0_, 0);
-    (*uvB).xyz = (float3)(u1, v1_, 0);
-    (*uvC).xyz = (float3)(u2, v2_, 0);
+    float3 perpv2 = cross(v2, uvNormal);
+    d = 1.0f / dot(perpv2, v3);
+    // (v4's distance along perpv2) * |perpv2| / (|perpv2| * (v3's distance along perpv2))
+    (*uvA).y = dot(perpv2, v4) * d; // (v4's distance along perpv2) / (v3's distance along perpv2) => uvA.y
+    (*uvB).y = dot(perpv2, v5) * d; // (v5's distance along perpv2) / (v3's distance along perpv2) => uvB.y
+    (*uvC).y = dot(perpv2, v6) * d; // (v6's distance along perpv2) / (v3's distance along perpv2) => uvC.y
 }
