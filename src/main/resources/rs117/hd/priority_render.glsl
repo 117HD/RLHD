@@ -23,6 +23,9 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include utils/constants.glsl
+#include utils/vanilla_uvs.glsl
+
 // Calculate adjusted priority for a face with a given priority, distance, and
 // model global min10 and face distance averages. This allows positioning faces
 // with priorities 10/11 into the correct 'slots' resulting in 18 possible
@@ -234,37 +237,41 @@ void sort_and_insert(uint localId, ModelInfo minfo, int thisPriority, int thisDi
         vout[outOffset + myOffset * 3 + 1] = pos + thisrvB;
         vout[outOffset + myOffset * 3 + 2] = pos + thisrvC;
 
-        if (uvOffset < 0) {
-            uvout[outOffset + myOffset * 3]     = vec4(0, 0, 0, 0);
-            uvout[outOffset + myOffset * 3 + 1] = vec4(0, 0, 0, 0);
-            uvout[outOffset + myOffset * 3 + 2] = vec4(0, 0, 0, 0);
-        } else {
-            uvout[outOffset + myOffset * 3]     = uv[uvOffset + localId * 3];
-            uvout[outOffset + myOffset * 3 + 1] = uv[uvOffset + localId * 3 + 1];
-            uvout[outOffset + myOffset * 3 + 2] = uv[uvOffset + localId * 3 + 2];
+        vec4 uvA = vec4(0);
+        vec4 uvB = vec4(0);
+        vec4 uvC = vec4(0);
+
+        if (uvOffset >= 0) {
+            uvA = uv[uvOffset + localId * 3];
+            uvB = uv[uvOffset + localId * 3 + 1];
+            uvC = uv[uvOffset + localId * 3 + 2];
+
+            if ((int(uvA.w) >> MATERIAL_FLAG_IS_VANILLA_TEXTURED & 1) == 1) {
+                // Rotate the texture triangles to match model orientation
+                uvA = rotate(uvA, orientation);
+                uvB = rotate(uvB, orientation);
+                uvC = rotate(uvC, orientation);
+                // Transform camera position to model space
+                vec3 modelSpaceCameraPos = vec3(cameraX, cameraY, cameraZ) - pos.xyz;
+                compute_uv(modelSpaceCameraPos,
+                    thisrvA.xyz, thisrvB.xyz, thisrvC.xyz,
+                    uvA.xyz, uvB.xyz, uvC.xyz
+                );
+            }
         }
 
-        vec4 normA, normB, normC;
+        uvout[outOffset + myOffset * 3]     = uvA;
+        uvout[outOffset + myOffset * 3 + 1] = uvB;
+        uvout[outOffset + myOffset * 3 + 2] = uvC;
 
         // Grab vertex normals from the correct buffer
-        normA = normal[offset + ssboOffset * 3    ];
-        normB = normal[offset + ssboOffset * 3 + 1];
-        normC = normal[offset + ssboOffset * 3 + 2];
+        vec4 normA = normal[offset + ssboOffset * 3    ];
+        vec4 normB = normal[offset + ssboOffset * 3 + 1];
+        vec4 normC = normal[offset + ssboOffset * 3 + 2];
 
-        normA = vec4(normalize(normA.xyz), normA.w);
-        normB = vec4(normalize(normB.xyz), normB.w);
-        normC = vec4(normalize(normC.xyz), normC.w);
-
-        vec4 normrvA;
-        vec4 normrvB;
-        vec4 normrvC;
-
-        normrvA = rotate2(normA, orientation);
-        normrvB = rotate2(normB, orientation);
-        normrvC = rotate2(normC, orientation);
-
-        normalout[outOffset + myOffset * 3]     = normrvA;
-        normalout[outOffset + myOffset * 3 + 1] = normrvB;
-        normalout[outOffset + myOffset * 3 + 2] = normrvC;
+        // Rotate normals to match model orientation
+        normalout[outOffset + myOffset * 3]     = rotate(normA, orientation);
+        normalout[outOffset + myOffset * 3 + 1] = rotate(normB, orientation);
+        normalout[outOffset + myOffset * 3 + 2] = rotate(normC, orientation);
     }
 }

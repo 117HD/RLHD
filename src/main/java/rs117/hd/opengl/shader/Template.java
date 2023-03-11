@@ -57,8 +57,8 @@ public class Template
 			String trimmed = line.trim();
 			if (trimmed.startsWith("#include "))
 			{
-				String currentFile = includeList.get(includeList.size() - 1);
 				int currentIndex = includeStack.peek();
+				String currentFile = includeList.get(currentIndex);
 
 				String includeFile = trimmed.substring(9);
 				int includeIndex = includeList.size();
