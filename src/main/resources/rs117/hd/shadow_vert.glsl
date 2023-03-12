@@ -58,7 +58,7 @@ void main()
     float alpha = 1 - float(vPosition.w >> 24 & 0xff) / 255.;
     int waterTypeIndex = terrainData >> 3 & 0x1F;
 
-    int isShadowDisabled = materialData >> MATERIAL_FLAG_DISABLE_SHADOWS & 1;
+    int isShadowDisabled = materialData >> MATERIAL_FLAG_DISABLE_SHADOW_CASTING & 1;
     int isGroundPlane = when_eq(terrainData & 0xF, 1); // isTerrain && plane == 0
     int isTransparent = when_lt(alpha, SHADOW_OPACITY_THRESHOLD);
     int isWaterSurfaceOrUnderwaterTile = when_gt(waterTypeIndex, 0);

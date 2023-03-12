@@ -9,10 +9,12 @@ import net.runelite.client.callback.ClientThread;
 import net.runelite.client.util.LinkBrowser;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
+import rs117.hd.data.WaterType;
 import rs117.hd.data.materials.Material;
 import rs117.hd.data.materials.Overlay;
 import rs117.hd.data.materials.Underlay;
 import rs117.hd.data.materials.UvType;
+import rs117.hd.scene.SceneUploader;
 import rs117.hd.scene.model_overrides.InheritTileColorType;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.scene.model_overrides.ObjectType;
@@ -334,9 +336,10 @@ public class ModelPusher {
     }
 
     private float[] getNormalDataForFace(Model model, @NonNull ModelOverride modelOverride, int face) {
-        if (modelOverride.flatNormals || model.getFaceColors3()[face] == -1) {
-            return zeroFloats;
-        }
+		int terrainData = SceneUploader.packTerrainData(false, 0, WaterType.NONE, 0);
+		if (terrainData == 0 && (modelOverride.flatNormals || model.getFaceColors3()[face] == -1)) {
+			return zeroFloats;
+		}
 
         final int triA = model.getFaceIndices1()[face];
         final int triB = model.getFaceIndices2()[face];
@@ -348,15 +351,15 @@ public class ModelPusher {
         twelveFloats[0] = xVertexNormals[triA];
         twelveFloats[1] = yVertexNormals[triA];
         twelveFloats[2] = zVertexNormals[triA];
-        twelveFloats[3] = 0;
+        twelveFloats[3] = terrainData;
         twelveFloats[4] = xVertexNormals[triB];
         twelveFloats[5] = yVertexNormals[triB];
         twelveFloats[6] = zVertexNormals[triB];
-        twelveFloats[7] = 0;
+        twelveFloats[7] = terrainData;
         twelveFloats[8] = xVertexNormals[triC];
         twelveFloats[9] = yVertexNormals[triC];
         twelveFloats[10] = zVertexNormals[triC];
-        twelveFloats[11] = 0;
+        twelveFloats[11] = terrainData;
 
         return twelveFloats;
     }
@@ -389,19 +392,17 @@ public class ModelPusher {
         }
 
         UvType uvType = modelOverride.uvType;
-        if (uvType == UvType.VANILLA) {
-            if (material == Material.NONE) {
-                return faceTextures == null ?
-                    null : // the whole model is untextured
-                    zeroFloats; // this face is untextured
-            }
+        if (uvType == UvType.VANILLA && !isVanillaUVMapped) {
+			uvType = UvType.GEOMETRY;
+		}
 
-            if (!isVanillaUVMapped) {
-                uvType = UvType.GEOMETRY;
-            }
-        }
+		int materialData = packMaterialData(material, modelOverride, uvType, false);
+		if (materialData == 0) {
+			return faceTextures == null ?
+				null : // the whole model is untextured
+				zeroFloats; // this face is untextured
+		}
 
-        int materialData = packMaterialData(material, modelOverride, uvType, false);
         twelveFloats[3] = twelveFloats[7] = twelveFloats[11] = materialData;
 
         switch (uvType) {
@@ -470,13 +471,14 @@ public class ModelPusher {
     }
 
     public int packMaterialData(Material material, @NonNull ModelOverride modelOverride, UvType uvType, boolean isOverlay) {
-        return
-            (material.ordinal() & (1 << 9) - 1) << 5
-            | (uvType == UvType.VANILLA ? 1 : 0) << 4
-            | (isOverlay ? 1 : 0) << 3
-            | (modelOverride.flatNormals ? 1 : 0) << 2
-            | (uvType.worldUvs ? 1 : 0) << 1
-            | (modelOverride.disableShadows ? 1 : 0);
+        return // This needs to return zero by default, since we often fall back to writing all zeroes to UVs
+            (material.ordinal() & (1 << 25) - 1) << 6
+			| (!modelOverride.receiveShadows ? 1 : 0) << 5
+			| (!modelOverride.castShadows ? 1 : 0) << 4
+			| (modelOverride.flatNormals ? 1 : 0) << 3
+			| (uvType.worldUvs ? 1 : 0) << 2
+			| (uvType == UvType.VANILLA ? 1 : 0) << 1
+			| (isOverlay ? 1 : 0);
     }
 
     private boolean isBakedGroundShading(int face, int heightA, int heightB, int heightC, byte[] faceTransparencies, short[] faceTextures) {

@@ -456,10 +456,10 @@ class SceneUploader
 			if (proceduralGenerator.vertexIsOverlay.containsKey(swVertexKey) && proceduralGenerator.vertexIsUnderlay.containsKey(swVertexKey))
 				swVertexIsOverlay = true;
 
-			int swTerrainData = packTerrainData(0, waterType, tileZ);
-			int seTerrainData = packTerrainData(0, waterType, tileZ);
-			int nwTerrainData = packTerrainData(0, waterType, tileZ);
-			int neTerrainData = packTerrainData(0, waterType, tileZ);
+			int swTerrainData = packTerrainData(true, 0, waterType, tileZ);
+			int seTerrainData = packTerrainData(true, 0, waterType, tileZ);
+			int nwTerrainData = packTerrainData(true, 0, waterType, tileZ);
+			int neTerrainData = packTerrainData(true, 0, waterType, tileZ);
 
 			normalBuffer.ensureCapacity(24);
 			normalBuffer.put(neNormals[0], neNormals[2], neNormals[1], neTerrainData);
@@ -576,10 +576,10 @@ class SceneUploader
 
 			WaterType waterType = proceduralGenerator.tileWaterType(tile, sceneTilePaint);
 
-			int swTerrainData = packTerrainData(Math.max(1, swDepth), waterType, tileZ);
-			int seTerrainData = packTerrainData(Math.max(1, seDepth), waterType, tileZ);
-			int nwTerrainData = packTerrainData(Math.max(1, nwDepth), waterType, tileZ);
-			int neTerrainData = packTerrainData(Math.max(1, neDepth), waterType, tileZ);
+			int swTerrainData = packTerrainData(true, Math.max(1, swDepth), waterType, tileZ);
+			int seTerrainData = packTerrainData(true, Math.max(1, seDepth), waterType, tileZ);
+			int nwTerrainData = packTerrainData(true, Math.max(1, nwDepth), waterType, tileZ);
+			int neTerrainData = packTerrainData(true, Math.max(1, neDepth), waterType, tileZ);
 
 			normalBuffer.ensureCapacity(24);
 			normalBuffer.put(neNormals[0], neNormals[2], neNormals[1], neTerrainData);
@@ -803,9 +803,9 @@ class SceneUploader
 				vertexCIsOverlay = true;
 			}
 
-			int aTerrainData = packTerrainData(0, waterType, tileZ);
-			int bTerrainData = packTerrainData(0, waterType, tileZ);
-			int cTerrainData = packTerrainData(0, waterType, tileZ);
+			int aTerrainData = packTerrainData(true, 0, waterType, tileZ);
+			int bTerrainData = packTerrainData(true, 0, waterType, tileZ);
+			int cTerrainData = packTerrainData(true, 0, waterType, tileZ);
 
 			normalBuffer.ensureCapacity(12);
 			normalBuffer.put(normalsA[0], normalsA[2], normalsA[1], aTerrainData);
@@ -911,9 +911,9 @@ class SceneUploader
 
 				WaterType waterType = proceduralGenerator.faceWaterType(tile, face, sceneTileModel);
 
-				int aTerrainData = packTerrainData(Math.max(1, depthA), waterType, tileZ);
-				int bTerrainData = packTerrainData(Math.max(1, depthB), waterType, tileZ);
-				int cTerrainData = packTerrainData(Math.max(1, depthC), waterType, tileZ);
+				int aTerrainData = packTerrainData(true, Math.max(1, depthA), waterType, tileZ);
+				int bTerrainData = packTerrainData(true, Math.max(1, depthB), waterType, tileZ);
+				int cTerrainData = packTerrainData(true, Math.max(1, depthC), waterType, tileZ);
 
 				normalBuffer.ensureCapacity(12);
 				normalBuffer.put(normalsA[0], normalsA[2], normalsA[1], aTerrainData);
@@ -943,10 +943,9 @@ class SceneUploader
 		return new int[]{bufferLength, uvBufferLength, underwaterTerrain};
 	}
 
-	private int packTerrainData(int waterDepth, WaterType waterType, int plane)
+	public static int packTerrainData(boolean isTerrain, int waterDepth, WaterType waterType, int plane)
 	{
-		byte isTerrain = 0b1;
-		return waterDepth << 8 | waterType.ordinal() << 3 | plane << 1 | isTerrain;
+		return waterDepth << 8 | waterType.ordinal() << 3 | plane << 1 | (isTerrain ? 1 : 0);
 	}
 
 	private boolean shouldSkipTile(int worldX, int worldY) {

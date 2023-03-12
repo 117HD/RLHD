@@ -5106,7 +5106,7 @@
         3190, 3447
       ]
     ],
-    "disableShadows": true
+    "castShadows": false
   },
   {
     "description": "Ground Decoration - Dirt Clump - Tiny - Colored",
@@ -5118,7 +5118,7 @@
     "inheritTileColorType": "OVERLAY",
     "uvType": "WORLD_XZ",
     "uvScale": 0.65,
-    "disableShadows": true
+    "castShadows": false
   },
   {
     "description": "Ground Decoration - Dirt Clump - Small - Uncolored",
@@ -5205,7 +5205,7 @@
     ],
     "uvType": "WORLD_XZ",
     "uvScale": 0.68,
-    "disableShadows": true
+    "castShadows": false
   },
   {
     "description": "Ground Decoration - Grunge - Tiny - Colored",
@@ -5218,7 +5218,7 @@
     "inheritTileColorType": "OVERLAY",
     "uvType": "WORLD_XZ",
     "uvScale": 0.68,
-    "disableShadows": true
+    "castShadows": false
   },
   {
     "description": "Ground Decoration - Grunge - Small - Uncolored",
@@ -5268,7 +5268,7 @@
     "inheritTileColorType": "OVERLAY",
     "uvType": "WORLD_XZ",
     "uvScale": 0.75,
-    "disableShadows": true
+    "castShadows": false
   },
   {
     "description": "Ground Decoration - Rock - Tiny - Uncolored",
@@ -5278,7 +5278,7 @@
     ],
     "uvType": "WORLD_XZ",
     "uvScale": 0.75,
-    "disableShadows": true
+    "castShadows": false
   },
   {
     "description": "Ground Decoration - Rock - Small - Colored",
@@ -6038,7 +6038,7 @@
     ],
     "uvType": "MODEL_XZ",
     "flatNormals": true,
-    "disableShadows": true
+    "castShadows": false
   },
   {
     "description": "Chaos Tunnel - Walls - Cave Walls",
@@ -7075,7 +7075,8 @@
       21247,
       21248
     ],
-    "disableShadows": true
+    "castShadows": false,
+    "receiveShadows": false
   },
   {
     "description": "Big Red Button",
