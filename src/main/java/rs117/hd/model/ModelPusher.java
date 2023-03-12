@@ -9,9 +9,12 @@ import net.runelite.client.callback.ClientThread;
 import net.runelite.client.util.LinkBrowser;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
+import rs117.hd.data.WaterType;
 import rs117.hd.data.materials.Material;
 import rs117.hd.data.materials.Overlay;
 import rs117.hd.data.materials.Underlay;
+import rs117.hd.data.materials.UvType;
+import rs117.hd.scene.SceneUploader;
 import rs117.hd.scene.model_overrides.InheritTileColorType;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.scene.model_overrides.ObjectType;
@@ -333,9 +336,10 @@ public class ModelPusher {
     }
 
     private float[] getNormalDataForFace(Model model, @NonNull ModelOverride modelOverride, int face) {
-        if (modelOverride.flatNormals || model.getFaceColors3()[face] == -1) {
-            return zeroFloats;
-        }
+		int terrainData = SceneUploader.packTerrainData(false, 0, WaterType.NONE, 0);
+		if (terrainData == 0 && (modelOverride.flatNormals || model.getFaceColors3()[face] == -1)) {
+			return zeroFloats;
+		}
 
         final int triA = model.getFaceIndices1()[face];
         final int triB = model.getFaceIndices2()[face];
@@ -347,31 +351,39 @@ public class ModelPusher {
         twelveFloats[0] = xVertexNormals[triA];
         twelveFloats[1] = yVertexNormals[triA];
         twelveFloats[2] = zVertexNormals[triA];
-        twelveFloats[3] = 0;
+        twelveFloats[3] = terrainData;
         twelveFloats[4] = xVertexNormals[triB];
         twelveFloats[5] = yVertexNormals[triB];
         twelveFloats[6] = zVertexNormals[triB];
-        twelveFloats[7] = 0;
+        twelveFloats[7] = terrainData;
         twelveFloats[8] = xVertexNormals[triC];
         twelveFloats[9] = yVertexNormals[triC];
         twelveFloats[10] = zVertexNormals[triC];
-        twelveFloats[11] = 0;
+        twelveFloats[11] = terrainData;
 
         return twelveFloats;
     }
 
     private float[] getUvDataForFace(Model model, int orientation, @NonNull ModelOverride modelOverride, int face) {
         final short[] faceTextures = model.getFaceTextures();
-        final float[] uv = model.getFaceTextureUVCoordinates();
+        final byte[] textureFaces = model.getTextureFaces();
+        final int[] texIndices1 = model.getTexIndices1();
+        final int[] texIndices2 = model.getTexIndices2();
+        final int[] texIndices3 = model.getTexIndices3();
 
         Material material = Material.NONE;
 
-        boolean isVanillaTextured = faceTextures != null && uv != null && faceTextures[face] != -1;
+        boolean isVanillaTextured = faceTextures != null && faceTextures[face] != -1;
+        boolean isVanillaUVMapped =
+            texIndices1 != null &&
+            texIndices2 != null &&
+            texIndices3 != null &&
+            textureFaces != null &&
+            textureFaces[face] != -1;
         if (isVanillaTextured) {
             if (plugin.configModelTextures) {
                 material = modelOverride.textureMaterial;
             }
-
             if (material == Material.NONE) {
                 material = Material.getTexture(faceTextures[face]);
             }
@@ -379,20 +391,27 @@ public class ModelPusher {
             material = modelOverride.baseMaterial;
         }
 
-        int materialData = packMaterialData(material, false, modelOverride);
-        if (materialData == 0) {
-            return faceTextures == null ? null : zeroFloats;
-        }
+        UvType uvType = modelOverride.uvType;
+        if (uvType == UvType.VANILLA && !isVanillaUVMapped) {
+			uvType = UvType.GEOMETRY;
+		}
+
+		int materialData = packMaterialData(material, modelOverride, uvType, false);
+		if (materialData == 0) {
+			return faceTextures == null ?
+				null : // the whole model is untextured
+				zeroFloats; // this face is untextured
+		}
 
         twelveFloats[3] = twelveFloats[7] = twelveFloats[11] = materialData;
 
-        switch (modelOverride.uvType) {
+        switch (uvType) {
             case WORLD_XY:
             case WORLD_XZ:
             case WORLD_YZ:
-                modelOverride.uvType.computeWorldUvw(twelveFloats, 0, modelOverride.uvScale);
-                modelOverride.uvType.computeWorldUvw(twelveFloats, 4, modelOverride.uvScale);
-                modelOverride.uvType.computeWorldUvw(twelveFloats, 8, modelOverride.uvScale);
+                uvType.computeWorldUvw(twelveFloats, 0, modelOverride.uvScale);
+                uvType.computeWorldUvw(twelveFloats, 4, modelOverride.uvScale);
+                uvType.computeWorldUvw(twelveFloats, 8, modelOverride.uvScale);
                 break;
             case MODEL_XY:
             case MODEL_XY_MIRROR_A:
@@ -416,20 +435,24 @@ public class ModelPusher {
                 modelOverride.computeModelUvw(twelveFloats, 8, xVertices[triC], yVertices[triC], zVertices[triC], orientation);
                 break;
             case VANILLA:
-                if (isVanillaTextured) {
-                    int idx = face * 6;
-                    twelveFloats[0] = uv[idx];
-                    twelveFloats[1] = uv[idx + 1];
-                    twelveFloats[2] = 0;
-                    twelveFloats[4] = uv[idx + 2];
-                    twelveFloats[5] = uv[idx + 3];
-                    twelveFloats[6] = 0;
-                    twelveFloats[8] = uv[idx + 4];
-                    twelveFloats[9] = uv[idx + 5];
-                    twelveFloats[10] = 0;
-                    break;
-                }
-                // fall through
+                final int[] vertexX = model.getVerticesX();
+                final int[] vertexY = model.getVerticesY();
+                final int[] vertexZ = model.getVerticesZ();
+                final int texFace = textureFaces[face] & 0xff;
+                final int texA = texIndices1[texFace];
+                final int texB = texIndices2[texFace];
+                final int texC = texIndices3[texFace];
+
+                twelveFloats[0] = vertexX[texA];
+                twelveFloats[1] = vertexY[texA];
+                twelveFloats[2] = vertexZ[texA];
+                twelveFloats[4] = vertexX[texB];
+                twelveFloats[5] = vertexY[texB];
+                twelveFloats[6] = vertexZ[texB];
+                twelveFloats[8] = vertexX[texC];
+                twelveFloats[9] = vertexY[texC];
+                twelveFloats[10] = vertexZ[texC];
+                break;
             case GEOMETRY:
             default:
                 twelveFloats[0] = 0;
@@ -447,12 +470,15 @@ public class ModelPusher {
         return twelveFloats;
     }
 
-    public int packMaterialData(Material material, boolean isOverlay, @NonNull ModelOverride modelOverride) {
-        return (material.ordinal() & (1 << 10) - 1) << 4
-            | (isOverlay ? 1 : 0) << 3
-            | (modelOverride.flatNormals ? 1 : 0) << 2
-            | (modelOverride.uvType.worldUvs ? 1 : 0) << 1
-            | (modelOverride.disableShadows ? 1 : 0);
+    public int packMaterialData(Material material, @NonNull ModelOverride modelOverride, UvType uvType, boolean isOverlay) {
+        return // This needs to return zero by default, since we often fall back to writing all zeroes to UVs
+            (material.ordinal() & (1 << 25) - 1) << 6
+			| (!modelOverride.receiveShadows ? 1 : 0) << 5
+			| (!modelOverride.castShadows ? 1 : 0) << 4
+			| (modelOverride.flatNormals ? 1 : 0) << 3
+			| (uvType.worldUvs ? 1 : 0) << 2
+			| (uvType == UvType.VANILLA ? 1 : 0) << 1
+			| (isOverlay ? 1 : 0);
     }
 
     private boolean isBakedGroundShading(int face, int heightA, int heightB, int heightC, byte[] faceTransparencies, short[] faceTextures) {
@@ -673,7 +699,7 @@ public class ModelPusher {
                                 faceColorIndex = i;
                                 break;
                             }
-                        }  
+                        }
                         else if(modelOverride.inheritTileColorType == InheritTileColorType.OVERLAY) {
                             if (isOverlayFace) {
                                 // OVERLAY used in dirt/path/house tile color blend better with rubbles/rocks

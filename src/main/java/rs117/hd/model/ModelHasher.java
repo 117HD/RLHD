@@ -1,10 +1,10 @@
 package rs117.hd.model;
 
+import javax.inject.Singleton;
 import lombok.NonNull;
 import net.runelite.api.Model;
+import rs117.hd.data.materials.UvType;
 import rs117.hd.scene.model_overrides.ModelOverride;
-
-import javax.inject.Singleton;
 
 @Singleton
 public class ModelHasher {
@@ -14,7 +14,7 @@ public class ModelHasher {
     private int faceColorsThreeHash;
     private int faceTransparenciesHash;
     private int faceTexturesHash;
-    private int faceTexturesUvHash;
+    private int textureTrianglesHash;
     private int xVerticesHash;
     private int yVerticesHash;
     private int zVerticesHash;
@@ -30,7 +30,46 @@ public class ModelHasher {
         this.faceColorsThreeHash = fastIntHash(model.getFaceColors3(), -1);
         this.faceTransparenciesHash = fastByteHash(model.getFaceTransparencies());
         this.faceTexturesHash = fastShortHash(model.getFaceTextures());
-        this.faceTexturesUvHash = fastFloatHash(model.getFaceTextureUVCoordinates());
+        this.textureTrianglesHash = 0;
+        final byte[] textureFaces = model.getTextureFaces();
+        if (textureFaces != null) {
+            boolean hasVanillaTexturedFaces = false;
+            for (int textureId : textureFaces) {
+                if (textureId != -1) {
+                    hasVanillaTexturedFaces = true;
+                    break;
+                }
+            }
+            if (hasVanillaTexturedFaces) {
+                final int[] texIndices1 = model.getTexIndices1();
+                final int[] texIndices2 = model.getTexIndices2();
+                final int[] texIndices3 = model.getTexIndices3();
+                final int[] vertexX = model.getVerticesX();
+                final int[] vertexY = model.getVerticesY();
+                final int[] vertexZ = model.getVerticesZ();
+                int h = 0;
+                for (int i = 0; i < model.getFaceCount(); i++) {
+                    int texFace = textureFaces[i];
+                    if (texFace == -1) {
+                        continue;
+                    }
+                    texFace &= 0xff;
+                    final int texA = texIndices1[texFace];
+                    final int texB = texIndices2[texFace];
+                    final int texC = texIndices3[texFace];
+                    h = h * 31 + vertexX[texA];
+                    h = h * 31 + vertexY[texA];
+                    h = h * 31 + vertexZ[texA];
+                    h = h * 31 + vertexX[texB];
+                    h = h * 31 + vertexY[texB];
+                    h = h * 31 + vertexZ[texB];
+                    h = h * 31 + vertexX[texC];
+                    h = h * 31 + vertexY[texC];
+                    h = h * 31 + vertexZ[texC];
+                }
+                this.textureTrianglesHash = h;
+            }
+        }
         this.xVerticesHash = fastIntHash(model.getVerticesX(), model.getVerticesCount());
         this.yVerticesHash = fastIntHash(model.getVerticesY(), model.getVerticesCount());
         this.zVerticesHash = fastIntHash(model.getVerticesZ(), model.getVerticesCount());
@@ -46,7 +85,7 @@ public class ModelHasher {
             this.faceColorsThreeHash,
             this.faceTransparenciesHash,
             this.faceTexturesHash,
-            this.faceTexturesUvHash,
+            this.textureTrianglesHash,
             this.model.getOverrideAmount(),
             this.model.getOverrideHue(),
             this.model.getOverrideSaturation(),
@@ -72,27 +111,15 @@ public class ModelHasher {
     }
 
     public int calculateUvCacheHash(int orientation, @NonNull ModelOverride modelOverride) {
-        return fastIntHash(new int[]{
-            orientation,
-            this.faceTexturesHash,
-            this.faceTexturesUvHash,
-            modelOverride.hashCode()
-        }, -1);
-    }
-
-    public int calculateColorCacheHash() {
-        return fastIntHash(new int[]{
-            this.faceColorsOneHash,
-            this.faceColorsTwoHash,
-            this.faceColorsThreeHash,
-            this.faceTransparenciesHash,
-            this.faceTexturesHash,
-            this.faceTexturesUvHash,
-            this.model.getOverrideAmount(),
-            this.model.getOverrideHue(),
-            this.model.getOverrideSaturation(),
-            this.model.getOverrideLuminance()
-        }, -1);
+        int h = 0;
+        if (modelOverride.uvType == UvType.VANILLA) {
+            h = textureTrianglesHash;
+        } else if (modelOverride.uvType.orientationDependent) {
+            h = orientation;
+        }
+        h = h * 31 + modelOverride.hashCode();
+        h = h * 31 + faceTexturesHash;
+        return h;
     }
 
     public int calculateBatchHash() {

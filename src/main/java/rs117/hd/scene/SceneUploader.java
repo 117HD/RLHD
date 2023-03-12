@@ -35,6 +35,7 @@ import rs117.hd.data.materials.GroundMaterial;
 import rs117.hd.data.materials.Overlay;
 import rs117.hd.data.materials.Material;
 import rs117.hd.data.materials.Underlay;
+import rs117.hd.data.materials.UvType;
 import rs117.hd.model.ModelPusher;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.scene.model_overrides.ObjectType;
@@ -119,23 +120,16 @@ class SceneUploader
 			skipObject = 0b11;
 		}
 
-		// pack a bit into bufferoffset that we can use later to hide
-		// some low-importance objects based on Level of Detail setting
-		model.setBufferOffset((vertexBuffer.position() / VERTEX_SIZE) << 2 | skipObject);
-		if (model.getFaceTextures() != null ||
-			(plugin.configModelTextures && modelOverride.baseMaterial != Material.NONE) ||
-			modelPusher.packMaterialData(Material.NONE, false, modelOverride) != 0)
-		{
-			model.setUvBufferOffset(uvBuffer.position() / UV_SIZE);
-		}
-		else
-		{
-			model.setUvBufferOffset(-1);
-		}
-		model.setSceneId(sceneId);
-
-		modelPusher.pushModel(hash, model, vertexBuffer, uvBuffer, normalBuffer,
+        int vertexOffset = vertexBuffer.position() / VERTEX_SIZE;
+        int uvOffset = uvBuffer.position() / UV_SIZE;
+		int[] lengths = modelPusher.pushModel(hash, model, vertexBuffer, uvBuffer, normalBuffer,
 			tileX, tileY, tileZ, orientation, modelOverride, objectType, false);
+
+        // pack a bit into bufferoffset that we can use later to hide
+        // some low-importance objects based on Level of Detail setting
+        model.setBufferOffset(vertexOffset << 2 | skipObject);
+        model.setUvBufferOffset(lengths[1] == 0 ? -1 : uvOffset);
+        model.setSceneId(sceneId);
 	}
 
 	private void upload(Tile tile, GpuIntBuffer vertexBuffer, GpuFloatBuffer uvBuffer, GpuFloatBuffer normalBuffer)
@@ -462,10 +456,10 @@ class SceneUploader
 			if (proceduralGenerator.vertexIsOverlay.containsKey(swVertexKey) && proceduralGenerator.vertexIsUnderlay.containsKey(swVertexKey))
 				swVertexIsOverlay = true;
 
-			int swTerrainData = packTerrainData(0, waterType, tileZ);
-			int seTerrainData = packTerrainData(0, waterType, tileZ);
-			int nwTerrainData = packTerrainData(0, waterType, tileZ);
-			int neTerrainData = packTerrainData(0, waterType, tileZ);
+			int swTerrainData = packTerrainData(true, 0, waterType, tileZ);
+			int seTerrainData = packTerrainData(true, 0, waterType, tileZ);
+			int nwTerrainData = packTerrainData(true, 0, waterType, tileZ);
+			int neTerrainData = packTerrainData(true, 0, waterType, tileZ);
 
 			normalBuffer.ensureCapacity(24);
 			normalBuffer.put(neNormals[0], neNormals[2], neNormals[1], neTerrainData);
@@ -487,10 +481,10 @@ class SceneUploader
 
 			bufferLength += 6;
 
-			int packedMaterialDataSW = modelPusher.packMaterialData(swMaterial, swVertexIsOverlay, ModelOverride.NONE);
-			int packedMaterialDataSE = modelPusher.packMaterialData(seMaterial, seVertexIsOverlay, ModelOverride.NONE);
-			int packedMaterialDataNW = modelPusher.packMaterialData(nwMaterial, nwVertexIsOverlay, ModelOverride.NONE);
-			int packedMaterialDataNE = modelPusher.packMaterialData(neMaterial, neVertexIsOverlay, ModelOverride.NONE);
+			int packedMaterialDataSW = modelPusher.packMaterialData(swMaterial, ModelOverride.NONE, UvType.GEOMETRY, swVertexIsOverlay);
+			int packedMaterialDataSE = modelPusher.packMaterialData(seMaterial, ModelOverride.NONE, UvType.GEOMETRY, seVertexIsOverlay);
+			int packedMaterialDataNW = modelPusher.packMaterialData(nwMaterial, ModelOverride.NONE, UvType.GEOMETRY, nwVertexIsOverlay);
+			int packedMaterialDataNE = modelPusher.packMaterialData(neMaterial, ModelOverride.NONE, UvType.GEOMETRY, neVertexIsOverlay);
 
 			uvBuffer.ensureCapacity(24);
 			uvBuffer.put(1, 0, 0, packedMaterialDataNE);
@@ -582,10 +576,10 @@ class SceneUploader
 
 			WaterType waterType = proceduralGenerator.tileWaterType(tile, sceneTilePaint);
 
-			int swTerrainData = packTerrainData(Math.max(1, swDepth), waterType, tileZ);
-			int seTerrainData = packTerrainData(Math.max(1, seDepth), waterType, tileZ);
-			int nwTerrainData = packTerrainData(Math.max(1, nwDepth), waterType, tileZ);
-			int neTerrainData = packTerrainData(Math.max(1, neDepth), waterType, tileZ);
+			int swTerrainData = packTerrainData(true, Math.max(1, swDepth), waterType, tileZ);
+			int seTerrainData = packTerrainData(true, Math.max(1, seDepth), waterType, tileZ);
+			int nwTerrainData = packTerrainData(true, Math.max(1, nwDepth), waterType, tileZ);
+			int neTerrainData = packTerrainData(true, Math.max(1, neDepth), waterType, tileZ);
 
 			normalBuffer.ensureCapacity(24);
 			normalBuffer.put(neNormals[0], neNormals[2], neNormals[1], neTerrainData);
@@ -607,10 +601,10 @@ class SceneUploader
 
 			bufferLength += 6;
 
-			int packedMaterialDataSW = modelPusher.packMaterialData(swMaterial, false, ModelOverride.NONE);
-			int packedMaterialDataSE = modelPusher.packMaterialData(seMaterial, false, ModelOverride.NONE);
-			int packedMaterialDataNW = modelPusher.packMaterialData(nwMaterial, false, ModelOverride.NONE);
-			int packedMaterialDataNE = modelPusher.packMaterialData(neMaterial, false, ModelOverride.NONE);
+			int packedMaterialDataSW = modelPusher.packMaterialData(swMaterial, ModelOverride.NONE, UvType.GEOMETRY, false);
+			int packedMaterialDataSE = modelPusher.packMaterialData(seMaterial, ModelOverride.NONE, UvType.GEOMETRY, false);
+			int packedMaterialDataNW = modelPusher.packMaterialData(nwMaterial, ModelOverride.NONE, UvType.GEOMETRY, false);
+			int packedMaterialDataNE = modelPusher.packMaterialData(neMaterial, ModelOverride.NONE, UvType.GEOMETRY, false);
 
 			uvBuffer.ensureCapacity(24);
 			uvBuffer.put(1, 0, 0, packedMaterialDataNE);
@@ -809,9 +803,9 @@ class SceneUploader
 				vertexCIsOverlay = true;
 			}
 
-			int aTerrainData = packTerrainData(0, waterType, tileZ);
-			int bTerrainData = packTerrainData(0, waterType, tileZ);
-			int cTerrainData = packTerrainData(0, waterType, tileZ);
+			int aTerrainData = packTerrainData(true, 0, waterType, tileZ);
+			int bTerrainData = packTerrainData(true, 0, waterType, tileZ);
+			int cTerrainData = packTerrainData(true, 0, waterType, tileZ);
 
 			normalBuffer.ensureCapacity(12);
 			normalBuffer.put(normalsA[0], normalsA[2], normalsA[1], aTerrainData);
@@ -825,9 +819,9 @@ class SceneUploader
 
 			bufferLength += 3;
 
-			int packedMaterialDataA = modelPusher.packMaterialData(materialA, vertexAIsOverlay, ModelOverride.NONE);
-			int packedMaterialDataB = modelPusher.packMaterialData(materialB, vertexBIsOverlay, ModelOverride.NONE);
-			int packedMaterialDataC = modelPusher.packMaterialData(materialC, vertexCIsOverlay, ModelOverride.NONE);
+			int packedMaterialDataA = modelPusher.packMaterialData(materialA, ModelOverride.NONE, UvType.GEOMETRY, vertexAIsOverlay);
+			int packedMaterialDataB = modelPusher.packMaterialData(materialB, ModelOverride.NONE, UvType.GEOMETRY, vertexBIsOverlay);
+			int packedMaterialDataC = modelPusher.packMaterialData(materialC, ModelOverride.NONE, UvType.GEOMETRY, vertexCIsOverlay);
 
 			uvBuffer.ensureCapacity(12);
 			uvBuffer.put(localVertices[0][0] / 128f, 1 - localVertices[0][1] / 128f, 0, packedMaterialDataA);
@@ -917,9 +911,9 @@ class SceneUploader
 
 				WaterType waterType = proceduralGenerator.faceWaterType(tile, face, sceneTileModel);
 
-				int aTerrainData = packTerrainData(Math.max(1, depthA), waterType, tileZ);
-				int bTerrainData = packTerrainData(Math.max(1, depthB), waterType, tileZ);
-				int cTerrainData = packTerrainData(Math.max(1, depthC), waterType, tileZ);
+				int aTerrainData = packTerrainData(true, Math.max(1, depthA), waterType, tileZ);
+				int bTerrainData = packTerrainData(true, Math.max(1, depthB), waterType, tileZ);
+				int cTerrainData = packTerrainData(true, Math.max(1, depthC), waterType, tileZ);
 
 				normalBuffer.ensureCapacity(12);
 				normalBuffer.put(normalsA[0], normalsA[2], normalsA[1], aTerrainData);
@@ -933,9 +927,9 @@ class SceneUploader
 
 				bufferLength += 3;
 
-				int packedMaterialDataA = modelPusher.packMaterialData(materialA, false, ModelOverride.NONE);
-				int packedMaterialDataB = modelPusher.packMaterialData(materialB, false, ModelOverride.NONE);
-				int packedMaterialDataC = modelPusher.packMaterialData(materialC, false, ModelOverride.NONE);
+				int packedMaterialDataA = modelPusher.packMaterialData(materialA, ModelOverride.NONE, UvType.GEOMETRY, false);
+				int packedMaterialDataB = modelPusher.packMaterialData(materialB, ModelOverride.NONE, UvType.GEOMETRY, false);
+				int packedMaterialDataC = modelPusher.packMaterialData(materialC, ModelOverride.NONE, UvType.GEOMETRY, false);
 
 				uvBuffer.ensureCapacity(12);
 				uvBuffer.put(localVertices[0][0] / 128f, 1 - localVertices[0][1] / 128f, 0, packedMaterialDataA);
@@ -949,10 +943,9 @@ class SceneUploader
 		return new int[]{bufferLength, uvBufferLength, underwaterTerrain};
 	}
 
-	private int packTerrainData(int waterDepth, WaterType waterType, int plane)
+	public static int packTerrainData(boolean isTerrain, int waterDepth, WaterType waterType, int plane)
 	{
-		byte isTerrain = 0b1;
-		return waterDepth << 8 | waterType.ordinal() << 3 | plane << 1 | isTerrain;
+		return waterDepth << 8 | waterType.ordinal() << 3 | plane << 1 | (isTerrain ? 1 : 0);
 	}
 
 	private boolean shouldSkipTile(int worldX, int worldY) {

@@ -38,9 +38,9 @@ public class GpuFloatBuffer
 		buffer = null;
 	}
 
-	public void put(float texture, float u, float v, float pad)
+	public void put(float x, float y, float z, float w)
 	{
-		buffer.put(texture).put(u).put(v).put(pad);
+		buffer.put(x).put(y).put(z).put(w);
 	}
 
 	public void put(float[] floats) {

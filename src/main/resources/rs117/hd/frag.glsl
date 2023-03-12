@@ -602,7 +602,9 @@ void main() {
         float viewDotNormals = dot(viewDir, normals);
 
 
-        float shadow = sampleShadowMap(fragPos, waterTypeIndex, vec2(0), lightDotNormals);
+        float shadow = 0;
+        if ((vMaterialData[0] >> MATERIAL_FLAG_DISABLE_SHADOW_RECEIVING & 1) == 0)
+            shadow = sampleShadowMap(fragPos, waterTypeIndex, vec2(0), lightDotNormals);
         shadow = max(shadow, selfShadowing);
         float inverseShadow = 1 - shadow;
 

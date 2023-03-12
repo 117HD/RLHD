@@ -35,6 +35,7 @@ public enum GroundMaterial
 	GRASS_1(Material.GRASS_1, Material.GRASS_2, Material.GRASS_3),
 	OVERWORLD_GRASS_1(Material.GRASS_1, Material.GRASS_2, Material.GRASS_3),
 	GRASS_SCROLLING(Material.GRASS_SCROLLING),
+	STONE_SCROLLING(Material.STONE_SCROLLING),
 	DIRT(Material.DIRT_1, Material.DIRT_2),
 	SNOW_1(Material.SNOW_1, Material.SNOW_1, Material.SNOW_2, Material.SNOW_3, Material.SNOW_3, Material.SNOW_4),
 	SNOW_2(Material.SNOW_2, Material.SNOW_4),
@@ -80,6 +81,15 @@ public enum GroundMaterial
 	CLEAN_TILE(Material.CLEAN_TILE),
 	WORN_TILES(Material.WORN_TILES),
 	WATER_FLAT(Material.WATER_FLAT),
+	HD_WOOD_PLANKS_1(Material.HD_WOOD_PLANKS_1),
+	ICE_1(Material.ICE_1_HIGHGLOSS),
+	ICE_4(Material.ICE_4),
+	WINTER_JAGGED_STONE_TILE(Material.WINTER_JAGGED_STONE_TILE),
+	WINTER_JAGGED_STONE_TILE_LIGHT(Material.WINTER_JAGGED_STONE_TILE_LIGHT),
+	WINTER_JAGGED_STONE_TILE_LIGHT_2(Material.WINTER_JAGGED_STONE_TILE_LIGHTER),
+	ROCKY_CAVE_FLOOR(Material.GRUNGE_2,Material.ROCK_2, Material.ROCK_2, Material.ROCK_1, Material.GRAVEL),
+	EARTHEN_CAVE_FLOOR(Material.GRUNGE_1,Material.DIRT_2, Material.DIRT_2, Material.ROCK_1, Material.DIRT_2),
+	STONE_CAVE_FLOOR(Material.STONE, Material.ROCK_1, Material.ROCK_2),
 	;
 
 	private final Material[] materials;

@@ -33,7 +33,8 @@ public class ModelOverride
     public int uvOrientation = 0;
     public boolean flatNormals = false;
     public boolean removeBakedLighting = false;
-    public boolean disableShadows = false;
+    public boolean castShadows = true;
+    public boolean receiveShadows = true;
     public TzHaarRecolorType tzHaarRecolorType = TzHaarRecolorType.NONE;
     public InheritTileColorType inheritTileColorType = InheritTileColorType.NONE;
 
