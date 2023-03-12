@@ -35,6 +35,7 @@ public enum GroundMaterial
 	GRASS_1(Material.GRASS_1, Material.GRASS_2, Material.GRASS_3),
 	OVERWORLD_GRASS_1(Material.GRASS_1, Material.GRASS_2, Material.GRASS_3),
 	GRASS_SCROLLING(Material.GRASS_SCROLLING),
+	STONE_SCROLLING(Material.STONE_SCROLLING),
 	DIRT(Material.DIRT_1, Material.DIRT_2),
 	SNOW_1(Material.SNOW_1, Material.SNOW_1, Material.SNOW_2, Material.SNOW_3, Material.SNOW_3, Material.SNOW_4),
 	SNOW_2(Material.SNOW_2, Material.SNOW_4),

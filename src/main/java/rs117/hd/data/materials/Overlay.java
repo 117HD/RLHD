@@ -635,6 +635,7 @@ public enum Overlay {
 
     // Cutscenes
     LAND_OF_GOBLINS_WATER_FIX(13, Area.LAND_OF_GOBLINS_CUTSCENE_WATER, WaterType.WATER),
+    CANOE_CUTSCENE_STONE(Area.CANOE_CUTSCENE, GroundMaterial.STONE_SCROLLING, p -> p.ids(0, 11)),
 
     // Random events
     PRISON_PETE_TILE_1(2, Area.RANDOM_EVENT_PRISON_PETE, GroundMaterial.MARBLE_1, p -> p.blended(false)),
