@@ -30311,5 +30311,24 @@
     "objectIds": [
       21085
     ]
+  },
+  {
+    "description": "ZANARIS_FLOWER_WISP",
+    "height": 120,
+    "alignment": "FRONT",
+    "radius": 120,
+    "strength": 6.25,
+    "color": [
+      255,
+      255,
+      195
+    ],
+    "type": "PULSE",
+    "duration": 1250,
+    "range": 60,
+    "objectIds": [
+      1195,
+      1196
+    ]
   }
 ]
