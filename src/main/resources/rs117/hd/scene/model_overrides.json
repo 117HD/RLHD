@@ -7141,5 +7141,21 @@
     ],
     "uvType": "MODEL_XY",
     "uvScale": 0.33
+  },
+  {
+    "description": "Penguin Base Crack",
+    "baseMaterial": "GRASS_1",
+    "objectIds": [
+      12007,
+      12009,
+      12010,
+      12011,
+      12012,
+      12013,
+      12015,
+      12017,
+      12027,
+      12029
+    ]
   }
 ]
