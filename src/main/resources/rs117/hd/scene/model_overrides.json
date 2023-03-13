@@ -7141,5 +7141,13 @@
     ],
     "uvType": "MODEL_XY",
     "uvScale": 0.33
+  },
+  {
+    "description": "Remove exaggerated flickering from magical shield on the top floor of the Watchtower",
+    "objectIds": [
+      2842
+    ],
+    "baseMaterial": "UNLIT",
+    "forceOverride": true
   }
 ]
