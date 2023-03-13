@@ -30314,8 +30314,8 @@
   },
   {
     "description": "ZANARIS_FLOWER_WISP",
-    "height": 120,
-    "alignment": "FRONT",
+    "height": 150,
+    "alignment": "CENTER",
     "radius": 120,
     "strength": 6.25,
     "color": [
@@ -30329,6 +30329,62 @@
     "objectIds": [
       1195,
       1196
+    ]
+  },
+  {
+    "description": "GREEN_MUSHROOM_WALL",
+    "height": 132,
+    "alignment": "FRONT",
+    "radius": 100,
+    "strength": 5.25,
+    "color": [
+      180,
+      255,
+      175
+    ],
+    "type": "FLICKER",
+    "duration": 1250,
+    "range": 20,
+    "objectIds": [
+      12009,
+      12011
+    ]
+  },
+  {
+    "description": "RED_MUSHROOM_WALL",
+    "height": 132,
+    "alignment": "FRONT",
+    "radius": 110,
+    "strength": 19.25,
+    "color": [
+      225,
+      30,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 1250,
+    "range": 20,
+    "objectIds": [
+      12010,
+      12012
+    ]
+  },
+  {
+    "description": "ROOF_TOP_MUSHROOM",
+    "height": 70,
+    "alignment": "CENTER",
+    "radius": 100,
+    "strength": 5.25,
+    "color": [
+      255,
+      255,
+      195
+    ],
+    "type": "FLICKER",
+    "duration": 5000,
+    "range": 20,
+    "objectIds": [
+      12124
     ]
   }
 ]
