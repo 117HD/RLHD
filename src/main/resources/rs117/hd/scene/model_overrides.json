@@ -7147,7 +7147,7 @@
   },
   {
     "description": "Zanaris - Walls - Grass",
-    "baseMaterial": "GRASS_1",
+    "baseMaterial": "GRUNGE_1",
     "objectIds": [
       12007,
       12009,
