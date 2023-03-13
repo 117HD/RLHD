@@ -1004,6 +1004,16 @@ public enum Environment
 			.setLightDirection(260f, 10f)
 			.setWaterColor(102, 234, 255)
 	),
+	TROLLWEISS_CAVES(Area.TROLLWEISS_CAVES, new Properties()
+			.setFogColor("#ADC5E4")
+			.setFogDepth(68)
+			.setAmbientColor("#AAAFB6")
+			.setAmbientStrength(.75f)
+			.setDirectionalColor("#FFFFFF")
+			.setDirectionalStrength(.75f)
+			.setLightDirection(260f, 10f)
+			.setWaterColor(102, 234, 255)
+	),
 
 	WINTER(Area.NONE, new Properties()
 		.setFogColor("#B8C5DB")
