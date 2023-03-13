@@ -197,6 +197,10 @@ public enum Underlay {
 
 
     // Default underlays
+    UNDERLAY_TROLLWEISS_CAVE_FLOOR(GroundMaterial.GRUNGE, p -> p
+            .ids(92, 94) // 8 = Jatizso, 60 = GotR, 92 = Eadgars Cave
+            .replaceWithIf(WINTER_GRUNGE, plugin -> plugin.configWinterTheme)
+    ),
 
     OVERWORLD_GRASS(Area.OVERWORLD, GroundMaterial.OVERWORLD_GRASS_1, p -> p
         .ids(25, 33, 34, 40, 48, 49, 50, 51, 52, 53, 54, 62, 63, 67, 70, 71, 75, 93, 96, 97, 99, 100, 103, 114, 115, 126)
