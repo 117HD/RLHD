@@ -31,6 +31,7 @@ public class ModelOverride
     public UvType uvType = UvType.VANILLA;
     public float uvScale = 1;
     public int uvOrientation = 0;
+    public boolean forceOverride = false;
     public boolean flatNormals = false;
     public boolean removeBakedLighting = false;
     public boolean castShadows = true;
