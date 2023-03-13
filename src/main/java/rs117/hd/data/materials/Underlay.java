@@ -206,6 +206,7 @@ public enum Underlay {
         .replaceWithIf(WINTER_DIRT, plugin -> plugin.configWinterTheme)),
     OVERWORLD_SAND(Area.OVERWORLD, GroundMaterial.SAND, p -> p.ids(-127, -118, 61, 68)),
     ZANARIS_GRASS(Area.ZANARIS, GroundMaterial.GRASS_1, p -> p.ids(143, 144)),
+    ZANARIS_DIRTS(Area.ZANARIS, GroundMaterial.VARIED_DIRT, p -> p.ids(66,67)),
 
     UNDERLAY_SNOW(GroundMaterial.SNOW_1, p -> p.ids(58, 59)),
     UNDERLAY_72(GroundMaterial.VARIED_DIRT, p -> p
