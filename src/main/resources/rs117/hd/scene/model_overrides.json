@@ -7156,5 +7156,19 @@
       21637
     ],
     "forceOverride": true
+  },
+  {
+    "description": "Footprints on agility rooftops",
+    "objectIds": [
+      39522,
+      39626,
+      39627,
+      39628,
+      39629,
+      39631,
+      39632
+    ],
+    "castShadows": false,
+    "receiveShadows": false
   }
 ]
