@@ -7148,5 +7148,13 @@
     ],
     "baseMaterial": "UNLIT",
     "forceOverride": true
+  },
+  {
+    "description": "Jatizso banners",
+    "baseMaterial": "UNLIT",
+    "objectIds": [
+      21637
+    ],
+    "forceOverride": true
   }
 ]
