@@ -217,7 +217,7 @@ public enum Material
 
 	SNOW_1,
 	SNOW_2,
-	SNOW_2_DARK(SNOW_2, p->p.setBrightness(0.5f)),
+	SNOW_2_DARK(SNOW_2, p -> p.setBrightness(0.5f)),
 	SNOW_3,
 	SNOW_4,
 
