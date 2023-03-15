@@ -505,6 +505,15 @@ public enum Environment
 		.setDirectionalStrength(1.0f)
 		.setLightDirection(260f, 10f)
 	),
+	BRIMHAVEN_AGILITY_ARENA(Area.BRIMHAVEN_AGILITY_ARENA, new Properties()
+		.setFogColor("#1A0808")
+		.setFogDepth(25)
+		.setAmbientColor("#FFEACC")
+		.setAmbientStrength(1.2f)
+		.setDirectionalColor("#FFA400")
+		.setDirectionalStrength(1.0f)
+		.setLightDirection(240f, 190f)
+	),
 	KARAMJA(Area.KARAMJA, new Properties()),
 
 
