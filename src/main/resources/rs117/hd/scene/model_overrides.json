@@ -4797,7 +4797,19 @@
     "baseMaterial": "SNOW_2",
     "objectIds": [
       5012,
-      5857
+      5857,
+      6440,
+      6447
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Overly Bright Snow Caves",
+    "baseMaterial": "SNOW_2_DARK",
+    "objectIds": [
+      5007,
+      5011
     ],
     "uvType": "MODEL_XZ",
     "uvScale": 0.5
@@ -4857,6 +4869,7 @@
       4604,
       4605,
       4606,
+      5009,
       5035,
       5037,
       5038,
@@ -6883,17 +6896,9 @@
       559,
       560,
       561,
+      21074,
       21103,
       21105
-    ],
-    "uvType": "WORLD_XZ",
-    "uvScale": 2.0
-  },
-  {
-    "description": "Ground - Snow Piles - Tiny",
-    "baseMaterial": "SNOW_1",
-    "objectIds": [
-      21074
     ],
     "uvType": "WORLD_XZ",
     "uvScale": 2.0
@@ -6902,6 +6907,8 @@
     "description": "Ground - Snow Piles - Small",
     "baseMaterial": "SNOW_2",
     "objectIds": [
+      5033,
+      5034,
       21104
     ],
     "uvType": "WORLD_XZ",
@@ -6911,6 +6918,7 @@
     "description": "Objects - Snow Piles - Large",
     "baseMaterial": "SNOW_4",
     "objectIds": [
+      5029,
       5030,
       5031,
       10590,
@@ -7220,5 +7228,47 @@
       16313,
       16314
     ]
+  },
+  {
+    "description": "Ice Gate",
+    "baseMaterial": "ICE_1_HIGHGLOSS",
+    "objectIds": [
+      5043,
+      5044
+    ]
+  },
+  {
+    "description": "Snow Walls",
+    "baseMaterial": "SNOW_4",
+    "objectIds": [
+      5017,
+      5018,
+      5019,
+      5020,
+      5021,
+      5022,
+      5025
+    ]
+  },
+  {
+    "description": "Ground Objects - White Rock-like Objects - Tiny - Colored",
+    "baseMaterial": "SNOW_2",
+    "objectIds": [
+      5027
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.6,
+    "inheritTileColorType": "true"
+  },
+  {
+    "description": "Ground Objects - White Rock-like Objects - Small - Colored",
+    "baseMaterial": "SNOW_3",
+    "objectIds": [
+      5026,
+      5028
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.6,
+    "inheritTileColorType": "true"
   }
 ]
