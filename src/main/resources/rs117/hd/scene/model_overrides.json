@@ -1368,7 +1368,6 @@
       16383,
       16384,
       16385,
-      19823,
       19824,
       19825,
       19826,
@@ -6041,7 +6040,8 @@
     ],
     "uvType": "MODEL_XZ",
     "flatNormals": true,
-    "castShadows": false
+    "castShadows": false,
+    "forceOverride": true
   },
   {
     "description": "Chaos Tunnel - Walls - Cave Walls",
@@ -7079,7 +7079,8 @@
       21248
     ],
     "castShadows": false,
-    "receiveShadows": false
+    "receiveShadows": false,
+    "forceOverride": true
   },
   {
     "description": "Big Red Button",
@@ -7144,6 +7145,37 @@
     ],
     "uvType": "MODEL_XY",
     "uvScale": 0.33
+  },
+  {
+    "description": "Remove exaggerated flickering from magical shield on the top floor of the Watchtower",
+    "objectIds": [
+      2842
+    ],
+    "baseMaterial": "UNLIT",
+    "forceOverride": true
+  },
+  {
+    "description": "Jatizso banners",
+    "baseMaterial": "UNLIT",
+    "objectIds": [
+      21637
+    ],
+    "forceOverride": true
+  },
+  {
+    "description": "Footprints on agility rooftops",
+    "objectIds": [
+      39522,
+      39626,
+      39627,
+      39628,
+      39629,
+      39631,
+      39632
+    ],
+    "castShadows": false,
+    "receiveShadows": false,
+    "forceOverride": true
   },
   {
     "description": "Zanaris - Walls - Grass",

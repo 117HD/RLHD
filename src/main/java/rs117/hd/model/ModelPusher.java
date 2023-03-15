@@ -381,13 +381,13 @@ public class ModelPusher {
             textureFaces != null &&
             textureFaces[face] != -1;
         if (isVanillaTextured) {
-            if (plugin.configModelTextures) {
+            if (plugin.configModelTextures || modelOverride.forceOverride) {
                 material = modelOverride.textureMaterial;
             }
             if (material == Material.NONE) {
                 material = Material.getTexture(faceTextures[face]);
             }
-        } else if (plugin.configModelTextures) {
+        } else if (plugin.configModelTextures || modelOverride.forceOverride) {
             material = modelOverride.baseMaterial;
         }
 
