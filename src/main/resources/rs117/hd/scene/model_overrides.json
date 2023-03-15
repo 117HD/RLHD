@@ -6037,7 +6037,8 @@
     ],
     "uvType": "MODEL_XZ",
     "flatNormals": true,
-    "castShadows": false
+    "castShadows": false,
+    "forceOverride": true
   },
   {
     "description": "Chaos Tunnel - Walls - Cave Walls",
@@ -7075,7 +7076,8 @@
       21248
     ],
     "castShadows": false,
-    "receiveShadows": false
+    "receiveShadows": false,
+    "forceOverride": true
   },
   {
     "description": "Big Red Button",
@@ -7169,6 +7171,7 @@
       39632
     ],
     "castShadows": false,
-    "receiveShadows": false
+    "receiveShadows": false,
+    "forceOverride": true
   }
 ]
