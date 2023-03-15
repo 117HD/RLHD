@@ -241,18 +241,18 @@ public enum Material
 		.setSpecular(1.1f, 380)),
 	SAND_1_N,
 	SAND_1(p -> p
-			.setNormalMap(SAND_1_N)
-			.setSpecular(0.2f, 80)
+		.setNormalMap(SAND_1_N)
+		.setSpecular(0.2f, 10)
 	),
 	SAND_2_N,
 	SAND_2(p -> p
-			.setNormalMap(SAND_2_N)
-			.setSpecular(0.2f, 80)
+		.setNormalMap(SAND_2_N)
+		.setSpecular(0.2f, 10)
 	),
 	SAND_3_N,
 	SAND_3(p -> p
-			.setNormalMap(SAND_3_N)
-			.setSpecular(0.2f, 80)
+		.setNormalMap(SAND_3_N)
+		.setSpecular(0.2f, 10)
 	),
 	GRUNGE_1,
 	GRUNGE_2,
