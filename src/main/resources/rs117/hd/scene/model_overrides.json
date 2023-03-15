@@ -5273,6 +5273,7 @@
     "description": "Ground Decoration - Rock - Tiny - Uncolored",
     "baseMaterial": "ROCK_1",
     "objectIds": [
+      12050,
       14486
     ],
     "uvType": "WORLD_XZ",
@@ -5298,6 +5299,8 @@
       2381,
       2383,
       7115,
+      12049,
+      12051,
       14482,
       14485,
       17929,
@@ -7173,5 +7176,49 @@
     "castShadows": false,
     "receiveShadows": false,
     "forceOverride": true
+  },
+  {
+    "description": "Zanaris - Walls - Grass",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      12007,
+      12009,
+      12010,
+      12011,
+      12012,
+      12013,
+      12014,
+      12015,
+      12016,
+      12017,
+      12018,
+      12027,
+      12029,
+      17001,
+      17002
+    ]
+  },
+  {
+    "description": "Zanaris - Walls - Dirt",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [
+      6926,
+      11999,
+      12000,
+      12001,
+      12004,
+      12031,
+      12032,
+      12033,
+      12034,
+      12035,
+      12038,
+      12039,
+      16310,
+      16311,
+      16312,
+      16313,
+      16314
+    ]
   }
 ]
