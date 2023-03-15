@@ -358,17 +358,6 @@ public enum Environment
 	),
 	DRAYNOR(Area.DRAYNOR, new Properties()),
 
-	ASGARNIA_ICE_DUNGEON(Area.ASGARNIA_ICE_DUNGEON_SNOWY, new Properties()
-		.setFogColor("#B8C5DB")
-		.setFogDepth(40)
-		.setAmbientColor("#AAAFB6")
-		.setAmbientStrength(.75f)
-		.setDirectionalColor("#FFFFFF")
-		.setDirectionalStrength(.75f)
-		.setLightDirection(260f, 10f)
-		.setWaterColor(102, 234, 255)
-	),
-
 	MISTHALIN_MYSTERY_MANOR(Area.MISTHALIN_MYSTERY_MANOR, new Properties()
 		.setFogColor(15, 14, 13)
 		.setFogDepth(30)
@@ -994,15 +983,15 @@ public enum Environment
 		.setLightDirection(260f, 10f)
 		.setWaterColor(102, 234, 255)
 	),
-	ICE_QUEENS_LAIR(Area.ICE_QUEENS_DUNGEON, new Properties()
-			.setFogColor("#ADC5E4")
-			.setFogDepth(68)
-			.setAmbientColor("#AAAFB6")
-			.setAmbientStrength(.75f)
-			.setDirectionalColor("#FFFFFF")
-			.setDirectionalStrength(.75f)
-			.setLightDirection(260f, 10f)
-			.setWaterColor(102, 234, 255)
+	ICY_UNDERGROUND_BRIGHT(Area.ICY_UNDERGROUND_BRIGHT, new Properties()
+		.setFogColor("#ADC5E4")
+		.setFogDepth(68)
+		.setAmbientColor("#AAAFB6")
+		.setAmbientStrength(.75f)
+		.setDirectionalColor("#FFFFFF")
+		.setDirectionalStrength(.75f)
+		.setLightDirection(260f, 10f)
+		.setWaterColor(102, 234, 255)
 	),
 
 	WINTER(Area.NONE, new Properties()
