@@ -25,6 +25,7 @@
  */
 package rs117.hd;
 
+import ch.qos.logback.core.util.FileUtil;
 import com.google.common.primitives.Ints;
 import com.google.gson.Gson;
 import com.google.inject.Provides;
@@ -37,14 +38,18 @@ import net.runelite.api.hooks.DrawCallbacks;
 import net.runelite.client.RuneLite;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
+import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.events.PluginChanged;
 import net.runelite.client.plugins.*;
 import net.runelite.client.plugins.entityhider.EntityHiderPlugin;
+import net.runelite.client.ui.ClientToolbar;
+import net.runelite.client.ui.DrawManager;
+import net.runelite.client.ui.NavigationButton;
+import net.runelite.client.util.ImageUtil;
 import net.runelite.client.plugins.skybox.SkyboxPlugin;
 import net.runelite.client.ui.ClientUI;
-import net.runelite.client.ui.DrawManager;
 import net.runelite.client.util.LinkBrowser;
 import net.runelite.client.util.OSType;
 import net.runelite.rlawt.AWTContext;
@@ -58,6 +63,7 @@ import org.lwjgl.system.Configuration;
 import rs117.hd.config.*;
 import rs117.hd.data.WaterType;
 import rs117.hd.data.materials.Material;
+import rs117.hd.gui.panel.HdPanel;
 import rs117.hd.model.ModelHasher;
 import rs117.hd.model.ModelPusher;
 import rs117.hd.model.TempModelInfo;
@@ -66,6 +72,7 @@ import rs117.hd.opengl.compute.OpenCLManager;
 import rs117.hd.opengl.shader.Shader;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.Template;
+import rs117.hd.resourcepacks.ResourcePackManager;
 import rs117.hd.scene.*;
 import rs117.hd.scene.lights.SceneLight;
 import rs117.hd.scene.ModelOverrideManager;
@@ -84,13 +91,14 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
+import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.nio.file.Files;
+import java.util.*;
+import java.util.List;
 
 import static org.jocl.CL.*;
 import static org.lwjgl.opengl.GL43C.*;
@@ -141,10 +149,17 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	private ClientThread clientThread;
 
 	@Inject
+	private ClientToolbar clientToolbar;
+
+	@Inject
+	@Getter
 	private HdPluginConfig config;
 
 	@Inject
 	private TextureManager textureManager;
+
+	@Inject
+	private ResourcePackManager resourcePackManager;
 
 	@Inject
 	private LightManager lightManager;
@@ -168,20 +183,18 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	private ProceduralGenerator proceduralGenerator;
 
 	@Inject
-	private ConfigManager configManager;
-
-	@Inject
 	private ModelPusher modelPusher;
 
 	@Inject
 	private ModelHasher modelHasher;
 
 	@Inject
+	private DeveloperTools developerTools;
+
+	@Inject
 	@Named("developerMode")
 	private boolean developerMode;
 
-	@Inject
-	private DeveloperTools developerTools;
 	private ComputeMode computeMode = ComputeMode.OPENGL;
 
 	@Inject
@@ -192,6 +205,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	private Canvas canvas;
 	private AWTContext awtContext;
 	private Callback debugCallback;
+
+	@Inject
+	@Getter
+	private EventBus eventBus;
+
+	private NavigationButton navigationButton;
 
 	private static final String LINUX_VERSION_HEADER =
 		"#version 420\n" +
@@ -399,8 +418,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	}
 
 	@Override
-	protected void startUp()
-	{
+	protected void startUp() {
 		gson = rlGson.newBuilder().setLenient().create();
 
 		configGroundTextures = config.groundTextures();
@@ -418,6 +436,28 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		configEnableModelBatching = config.enableModelBatching();
 		configEnableModelCaching = config.enableModelCaching();
 		configMaxDynamicLights = config.maxDynamicLights().getValue();
+
+
+		List<Material> ignore = new ArrayList<Material>();
+
+		for (Material material : Material.values()) {
+
+			ignore.add(material.normalMap);
+
+
+			ignore.add(material.flowMap);
+
+
+			ignore.add(material.displacementMap);
+
+
+			ignore.add(material.roughnessMap);
+
+
+			ignore.add(material.ambientOcclusionMap);
+
+
+		}
 
 		clientThread.invoke(() ->
 		{
@@ -556,6 +596,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				client.setDrawCallbacks(this);
 				client.setGpu(true);
 				textureManager.startUp();
+				registerPackEvents(true);
 				// force rebuild of main buffer provider to enable alpha channel
 				client.resizeCanvas();
 
@@ -574,6 +615,17 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 				checkGLErrors();
 
+				SwingUtilities.invokeLater(() -> {
+					navigationButton = NavigationButton.builder()
+							.tooltip("117 HD")
+							.priority(3)
+							.icon(ImageUtil.loadImageResource(HdPlugin.class, "icon.png"))
+							.panel(injector.getInstance(HdPanel.class))
+							.build();
+					clientToolbar.addNavigation(navigationButton);
+					resourcePackManager.startUp();
+				});
+
 				clientThread.invokeLater(this::displayUpdateMessage);
 			}
 			catch (Throwable err)
@@ -585,12 +637,29 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		});
 	}
 
+
+	public void registerPackEvents(boolean register) {
+		if (register) {
+			eventBus.register(textureManager);
+		} else {
+			eventBus.unregister(textureManager);
+		}
+
+	}
+
 	@Override
 	protected void shutDown()
 	{
 		FileWatcher.destroy();
 		developerTools.deactivate();
 		lightManager.shutDown();
+		registerPackEvents(false);
+
+		if (navigationButton != null)
+		{
+			clientToolbar.removeNavigation(navigationButton);
+			navigationButton = null;
+		}
 
 		clientThread.invoke(() ->
 		{
@@ -602,6 +671,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			if (lwjglInitted)
 			{
 				textureManager.shutDown();
+				resourcePackManager.shutDown();
 
 				shutdownBuffers();
 				shutdownInterfaceTexture();
@@ -2156,6 +2226,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				}
 				break;
 			case LOGGED_IN:
+				resourcePackManager.loadPackData(config.packName());
 				uploadScene();
 				checkGLErrors();
 				break;
@@ -2284,6 +2355,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 					shutdownShadowMapFbo();
 					initShadowMapFbo();
 				});
+				break;
+			case KEY_RESOURCE_PACK_TEXTURES:
+				textureManager.freeTextures();
 				break;
 			case "textureResolution":
 			case "hdInfernalTexture":
