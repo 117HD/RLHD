@@ -378,8 +378,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 	public int[] camTarget = new int[3];
 
+	private boolean hasStarted;
 	private boolean hasLoggedIn;
-	private boolean lwjglInitted = false;
+	private boolean lwjglInitted;
 
 	@Setter
 	private boolean isInGauntlet = false;
@@ -567,6 +568,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				modelOverrideManager.startUp();
 				modelPusher.startUp();
 
+				hasStarted = true;
+
 				if (client.getGameState() == GameState.LOGGED_IN)
 				{
 					uploadScene();
@@ -588,6 +591,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	@Override
 	protected void shutDown()
 	{
+		hasStarted = false;
+
 		FileWatcher.destroy();
 		developerTools.deactivate();
 		lightManager.shutDown();
@@ -2149,6 +2154,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	@Subscribe
 	public void onGameStateChanged(GameStateChanged gameStateChanged)
 	{
+		if (!hasStarted)
+			return;
+
 		switch (gameStateChanged.getGameState()) {
 			case LOADING:
 				if (config.loadingClearCache()) {
