@@ -23,7 +23,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-void compute_uv(vec3 cameraPos,
+void compute_uv(
           vec3 posA,       vec3 posB,       vec3 posC,
     inout vec3  uvA, inout vec3  uvB, inout vec3  uvC
 ) {
@@ -31,15 +31,19 @@ void compute_uv(vec3 cameraPos,
     vec3 v2 = uvB - v1;
     vec3 v3 = uvC - v1;
 
-    // Project vertex positions onto a plane going through the texture triangle
-    vec3 vertexToCamera;
     vec3 uvNormal = cross(v2, v3);
+
+    // Project vertex positions onto a plane going through the texture triangle
+    #ifdef USE_VANILLA_UV_PROJECTION
+    vec3 cameraPos = vec3(cameraX, cameraY, cameraZ);
+    vec3 vertexToCamera;
     vertexToCamera = cameraPos - posA;
     posA += vertexToCamera * dot(uvA - posA, uvNormal) / dot(vertexToCamera, uvNormal);
     vertexToCamera = cameraPos - posB;
     posB += vertexToCamera * dot(uvB - posB, uvNormal) / dot(vertexToCamera, uvNormal);
     vertexToCamera = cameraPos - posC;
     posC += vertexToCamera * dot(uvC - posC, uvNormal) / dot(vertexToCamera, uvNormal);
+    #endif
 
     vec3 v4 = posA - v1;
     vec3 v5 = posB - v1;

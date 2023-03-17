@@ -35,67 +35,50 @@ layout(triangle_strip, max_vertices = 3) out;
 #include utils/polyfills.glsl
 #include utils/constants.glsl
 #include utils/misc.glsl
-
-#include uniforms/camera.glsl
-#define USE_VANILLA_UV_PROJECTION
 #include utils/vanilla_uvs.glsl
 
-uniform mat4 projectionMatrix;
 uniform mat4 lightProjectionMatrix;
 
 in VertexData {
-    ivec3 pos;
-    vec4 normal;
-    vec4 color;
+    ivec4 position;
     vec4 uv;
-    float fogAmount;
+    vec4 normal;
 } IN[3];
 
-flat out vec4 vColor[3];
-flat out vec3 vUv[3];
-flat out int vMaterialData[3];
-flat out int vTerrainData[3];
-
-out FragmentData {
-    float fogAmount;
-    vec3 normal;
-    vec3 position;
-    vec3 texBlend;
-} OUT;
+out vec3 position;
+out vec3 uvw;
+flat out int materialData;
 
 void main() {
-    int materialData = int(IN[0].uv.w);
-    bool flatNormals =
-        length(IN[0].normal.xyz) < .01 ||
-        (materialData >> MATERIAL_FLAG_FLAT_NORMALS & 1) == 1;
+    materialData = int(IN[0].uv.w);
+    int terrainData = int(IN[0].normal.w);
+    int waterTypeIndex = terrainData >> 3 & 0x1F;
 
-    // Compute flat normals
-    vec3 T = vec3(IN[0].pos - IN[1].pos);
-    vec3 B = vec3(IN[0].pos - IN[2].pos);
-    vec3 N = normalize(cross(T, B));
+    bool isShadowDisabled = (materialData >> MATERIAL_FLAG_DISABLE_SHADOW_CASTING & 1) == 1;
+    bool isGroundPlane = (terrainData & 0xF) == 1;// isTerrain && plane == 0
+    bool isWaterSurfaceOrUnderwaterTile = waterTypeIndex > 0;
+    isShadowDisabled = isShadowDisabled || isGroundPlane || isWaterSurfaceOrUnderwaterTile;
 
-    for (int i = 0; i < 3; i++) {
-        vColor[i] = IN[i].color;
-        vUv[i] = IN[i].uv.xyz;
-        vMaterialData[i] = int(IN[i].uv.w);
-        vTerrainData[i] = int(IN[i].normal.w);
-    }
+    if (isShadowDisabled)
+        return;
 
+    vec3 uvs[3] = vec3[](IN[0].uv.xyz, IN[1].uv.xyz, IN[2].uv.xyz);
     if ((materialData >> MATERIAL_FLAG_IS_VANILLA_TEXTURED & 1) == 1) {
         compute_uv(
-            IN[0].pos, IN[1].pos, IN[2].pos,
-            vUv[0].xyz, vUv[1].xyz, vUv[2].xyz
+            IN[0].position.xyz, IN[1].position.xyz, IN[2].position.xyz,
+            uvs[0], uvs[1], uvs[2]
         );
     }
 
     for (int i = 0; i < 3; i++) {
-        OUT.texBlend = vec3(0);
-        OUT.texBlend[i] = 1;
-        OUT.fogAmount = IN[i].fogAmount;
-        OUT.position = IN[i].pos;
-        OUT.normal = flatNormals ? N : normalize(IN[i].normal.xyz);
-        gl_Position = projectionMatrix * vec4(IN[i].pos, 1.f);
-        EmitVertex();
+        position = IN[i].position.xyz;
+        uvw = uvs[i];
+        gl_Position = lightProjectionMatrix * vec4(position, 1.f);
+
+        float transparency = float(IN[i].position.w >> 24 & 0xff) / 255.;
+        bool castShadow = transparency < SHADOW_OPACITY_THRESHOLD;
+        if (castShadow)
+            EmitVertex();
     }
 
     EndPrimitive();

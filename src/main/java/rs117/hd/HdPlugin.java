@@ -204,6 +204,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 	private static final Shader SHADOW_PROGRAM = new Shader()
 		.add(GL_VERTEX_SHADER, "shadow_vert.glsl")
+		.add(GL_GEOMETRY_SHADER, "shadow_geom.glsl")
 		.add(GL_FRAGMENT_SHADER, "shadow_frag.glsl");
 
 	private static final Shader COMPUTE_PROGRAM = new Shader()
