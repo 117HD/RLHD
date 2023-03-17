@@ -375,6 +375,7 @@ public class ModelPusher {
 
         boolean isVanillaTextured = faceTextures != null && faceTextures[face] != -1;
         boolean isVanillaUVMapped =
+            isVanillaTextured && // Vanilla UV mapped models don't always have sensible UVs for untextured faces
             texIndices1 != null &&
             texIndices2 != null &&
             texIndices3 != null &&
