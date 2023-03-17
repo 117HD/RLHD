@@ -261,14 +261,12 @@ void sort_and_insert(
         uvA = rotate_vec(uvA, orientation);
         uvB = rotate_vec(uvB, orientation);
         uvC = rotate_vec(uvC, orientation);
-        // Transform camera position to model space
-        float3 modelSpaceCameraPos = (float3)(uni->cameraX, uni->cameraY, uni->cameraZ) - convert_float3(pos.xyz);
-        compute_uv(modelSpaceCameraPos,
-            convert_float3(thisrvA.xyz),
-            convert_float3(thisrvB.xyz),
-            convert_float3(thisrvC.xyz),
-            &uvA, &uvB, &uvC
-        );
+
+        // Shift texture triangles to world space
+        float3 modelPos = convert_float3(pos.xyz);
+        uvA.xyz += modelPos;
+        uvB.xyz += modelPos;
+        uvC.xyz += modelPos;
       }
     }
 

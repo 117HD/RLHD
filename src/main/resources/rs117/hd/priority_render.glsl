@@ -251,12 +251,11 @@ void sort_and_insert(uint localId, ModelInfo minfo, int thisPriority, int thisDi
                 uvA = rotate(uvA, orientation);
                 uvB = rotate(uvB, orientation);
                 uvC = rotate(uvC, orientation);
-                // Transform camera position to model space
-                vec3 modelSpaceCameraPos = vec3(cameraX, cameraY, cameraZ) - pos.xyz;
-                compute_uv(modelSpaceCameraPos,
-                    thisrvA.xyz, thisrvB.xyz, thisrvC.xyz,
-                    uvA.xyz, uvB.xyz, uvC.xyz
-                );
+
+                // Shift texture triangles to world space
+                uvA.xyz += pos.xyz;
+                uvB.xyz += pos.xyz;
+                uvC.xyz += pos.xyz;
             }
         }
 
