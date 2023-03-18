@@ -26,18 +26,18 @@
 
 #version 330
 
-#define PI 3.1415926535897932384626433832795f
-#define UNIT PI / 1024.0f
-
 layout(triangles) in;
 layout(triangle_strip, max_vertices = 3) out;
+
+uniform mat4 lightProjectionMatrix;
+uniform float elapsedTime;
+
+#include uniforms/materials.glsl
 
 #include utils/polyfills.glsl
 #include utils/constants.glsl
 #include utils/misc.glsl
-#include utils/vanilla_uvs.glsl
-
-uniform mat4 lightProjectionMatrix;
+#include utils/uvs.glsl
 
 in VertexData {
     ivec4 position;
@@ -45,40 +45,46 @@ in VertexData {
     vec4 normal;
 } IN[3];
 
-out vec3 position;
-out vec3 uvw;
-flat out int materialData;
+out vec3 fUvw;
 
 void main() {
-    materialData = int(IN[0].uv.w);
+    int materialData = int(IN[0].uv.w);
     int terrainData = int(IN[0].normal.w);
     int waterTypeIndex = terrainData >> 3 & 0x1F;
+    int transparency = 0;
+    for (int i = 0; i < 3; i++)
+        transparency += IN[i].position.w >> 24 & 0xff;
 
     bool isShadowDisabled = (materialData >> MATERIAL_FLAG_DISABLE_SHADOW_CASTING & 1) == 1;
     bool isGroundPlane = (terrainData & 0xF) == 1;// isTerrain && plane == 0
     bool isWaterSurfaceOrUnderwaterTile = waterTypeIndex > 0;
-    isShadowDisabled = isShadowDisabled || isGroundPlane || isWaterSurfaceOrUnderwaterTile;
-
-    if (isShadowDisabled)
+    bool isTransparent = transparency >= SHADOW_OPACITY_THRESHOLD * 3 * 255;
+    if (isShadowDisabled || isGroundPlane || isWaterSurfaceOrUnderwaterTile || isTransparent)
         return;
 
-    vec3 uvs[3] = vec3[](IN[0].uv.xyz, IN[1].uv.xyz, IN[2].uv.xyz);
-    if ((materialData >> MATERIAL_FLAG_IS_VANILLA_TEXTURED & 1) == 1) {
-        compute_uv(
-            IN[0].position.xyz, IN[1].position.xyz, IN[2].position.xyz,
-            uvs[0], uvs[1], uvs[2]
-        );
-    }
+    // TODO: add hasAlphaChannel to Material, so UV calculation and frag texture fetch can be skipped
+    Material material = getMaterial(materialData >> MATERIAL_FLAG_BITS);
+    vec3 pos[3] = vec3[](
+        IN[0].position.xyz,
+        IN[1].position.xyz,
+        IN[2].position.xyz
+    );
+    vec3 uvw[3] = vec3[](
+        IN[0].uv.xyz,
+        IN[1].uv.xyz,
+        IN[2].uv.xyz
+    );
+    computeUvs(material, materialData, pos, uvw);
 
     for (int i = 0; i < 3; i++) {
-        position = IN[i].position.xyz;
-        uvw = uvs[i];
-        gl_Position = lightProjectionMatrix * vec4(position, 1.f);
-
-        float transparency = float(IN[i].position.w >> 24 & 0xff) / 255.;
-        bool castShadow = transparency < SHADOW_OPACITY_THRESHOLD;
-        if (castShadow)
-            EmitVertex();
+        fUvw = uvw[i];
+        fUvw.z = material.colorMap;
+        // Scroll UVs
+        fUvw.xy += material.scrollDuration * elapsedTime;
+        // Scale from the center
+        fUvw.xy = .5 + (fUvw.xy - .5) / material.textureScale;
+        gl_Position = lightProjectionMatrix * vec4(IN[i].position.xyz, 1.f);
+        EmitVertex();
     }
 
     EndPrimitive();

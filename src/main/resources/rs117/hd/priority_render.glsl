@@ -24,7 +24,6 @@
  */
 
 #include utils/constants.glsl
-#include utils/vanilla_uvs.glsl
 
 // Calculate adjusted priority for a face with a given priority, distance, and
 // model global min10 and face distance averages. This allows positioning faces
@@ -82,8 +81,10 @@ int count_prio_offset(int priority) {
     return total;
 }
 
-void get_face(uint localId, ModelInfo minfo, int cameraYaw, int cameraPitch,
-out int prio, out int dis, out ivec4 o1, out ivec4 o2, out ivec4 o3) {
+void get_face(
+    uint localId, ModelInfo minfo, int cameraYaw, int cameraPitch,
+    out int prio, out int dis, out ivec4 o1, out ivec4 o2, out ivec4 o3
+) {
     int size = minfo.size;
     int offset = minfo.offset;
     int flags = minfo.flags;
