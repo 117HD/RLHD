@@ -24,29 +24,17 @@
  */
 #version 330
 
-#include uniforms/materials.glsl
-
 uniform sampler2DArray textureArray;
 
-in vec3 position;
-in vec3 uvw;
-flat in int materialData;
-
-#include utils/polyfills.glsl
 #include utils/constants.glsl
-#include utils/misc.glsl
+
+in vec3 fUvw;
 
 void main()
 {
-    Material material = getMaterial(materialData >> MATERIAL_FLAG_BITS);
-
-    vec2 uv = getUvs(uvw, materialData, position);
-    // Scroll UVs
-    uv += material.scrollDuration * elapsedTime;
-    // Scale from the center
-    uv = (uv - .5) / material.textureScale + .5;
-
-    float texAlpha = texture(textureArray, vec3(uv, material.colorMap)).a;
-    if (texAlpha < SHADOW_OPACITY_THRESHOLD)
-        discard;
+    if (fUvw.z != -1) {
+        float alpha = texture(textureArray, fUvw).a;
+        if (alpha < SHADOW_OPACITY_THRESHOLD)
+            discard;
+    }
 }

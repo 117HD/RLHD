@@ -26,22 +26,19 @@
 
 #version 330
 
-#define PI 3.1415926535897932384626433832795f
-#define UNIT PI / 1024.0f
-
 layout(triangles) in;
 layout(triangle_strip, max_vertices = 3) out;
 
-#include utils/polyfills.glsl
-#include utils/constants.glsl
-#include utils/misc.glsl
+uniform mat4 projectionMatrix;
+uniform float elapsedTime;
 
 #include uniforms/camera.glsl
-#define USE_VANILLA_UV_PROJECTION
-#include utils/vanilla_uvs.glsl
+#include uniforms/materials.glsl
 
-uniform mat4 projectionMatrix;
-uniform mat4 lightProjectionMatrix;
+#include utils/polyfills.glsl
+#include utils/constants.glsl
+#define USE_VANILLA_UV_PROJECTION
+#include utils/uvs.glsl
 
 in VertexData {
     ivec3 pos;
@@ -81,12 +78,13 @@ void main() {
         vTerrainData[i] = int(IN[i].normal.w);
     }
 
-    if ((materialData >> MATERIAL_FLAG_IS_VANILLA_TEXTURED & 1) == 1) {
-        compute_uv(
-            IN[0].pos, IN[1].pos, IN[2].pos,
-            vUv[0].xyz, vUv[1].xyz, vUv[2].xyz
-        );
-    }
+    Material material = getMaterial(materialData >> MATERIAL_FLAG_BITS);
+    vec3 pos[3] = vec3[](
+        IN[0].pos,
+        IN[1].pos,
+        IN[2].pos
+    );
+    computeUvs(material, materialData, pos, vUv);
 
     for (int i = 0; i < 3; i++) {
         OUT.texBlend = vec3(0);

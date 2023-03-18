@@ -33,9 +33,9 @@
 #define FOG_CORNER_ROUNDING 1.5
 #define FOG_CORNER_ROUNDING_SQUARED FOG_CORNER_ROUNDING * FOG_CORNER_ROUNDING
 
-layout (location = 0) in ivec4 VertexPosition;
-layout (location = 1) in vec4 uv;
-layout (location = 2) in vec4 normal;
+layout (location = 0) in ivec4 vPosition;
+layout (location = 1) in vec4 vUv;
+layout (location = 2) in vec4 vNormal;
 
 #include uniforms/camera.glsl
 
@@ -51,6 +51,7 @@ out VertexData {
     float fogAmount;
 } OUT;
 
+#include utils/polyfills.glsl
 #include utils/color_conversion.glsl
 
 float fogFactorLinear(const float dist, const float start, const float end) {
@@ -58,15 +59,15 @@ float fogFactorLinear(const float dist, const float start, const float end) {
 }
 
 void main() {
-    ivec3 vertex = VertexPosition.xyz;
-    int ahsl = VertexPosition.w;
+    ivec3 vertex = vPosition.xyz;
+    int ahsl = vPosition.w;
     vec3 rgb = jagexHslToRgb(ahsl & 0xffff);
     float alpha = 1 - float(ahsl >> 24 & 0xff) / 255.f;
 
     OUT.pos = vertex;
-    OUT.normal = normal;
+    OUT.normal = vNormal;
     OUT.color = vec4(srgbToLinear(rgb), alpha);
-    OUT.uv = uv;
+    OUT.uv = vUv;
     OUT.fogAmount = 0;
 
     if (fogDepth > 0) {
@@ -102,11 +103,10 @@ void main() {
         int fogDepth2 = int(fogDepth * drawDistance / (TILE_SIZE * 100.0));
         float fogDepthMultiplier = clamp(fogDepth2, 0, 1000) / 1000.0;
         float fogStart2 = (maxFogStart - (fogDepthMultiplier * (maxFogStart - minFogStart))) * float(drawDistance);
-        float exponent = 2.71828;
         float camToVertex = length(vec3(cameraX, cameraY, cameraZ) - vec3(vertex.x, mix(float(vertex.y), float(cameraY), 0.5), vertex.z));
         float distance2 = max(camToVertex - fogStart2, 0) / max(drawDistance - fogStart2, 1);
         float density = fogDepth2 / 100.0;
-        float distanceFogAmount2 = 1 / (pow(exponent, distance2 * density));
+        float distanceFogAmount2 = exp(-distance2 * density);
         distanceFogAmount2 = 1.0 - clamp(distanceFogAmount2, 0.0, 1.0);
 
         // Combine distance fogs

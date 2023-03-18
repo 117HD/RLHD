@@ -36,7 +36,7 @@ uniform sampler2DArray textureArray;
 uniform sampler2D shadowMap;
 
 uniform mat4 lightProjectionMatrix;
-
+uniform float elapsedTime;
 uniform float colorBlindnessIntensity;
 uniform vec4 fogColor;
 uniform int fogDepth;
@@ -382,10 +382,9 @@ void main() {
         vec3 B = cross(N, T);
         mat3 TBN = mat3(T, B, N);
 
-        // TODO: blended UV should probably be computed before getUvs
-        vec2 uv1 = getUvs(vUv[0], vMaterialData[0], IN.position);
-        vec2 uv2 = getUvs(vUv[1], vMaterialData[1], IN.position);
-        vec2 uv3 = getUvs(vUv[2], vMaterialData[2], IN.position);
+        vec2 uv1 = vUv[0].xy;
+        vec2 uv2 = vUv[1].xy;
+        vec2 uv3 = vUv[2].xy;
         vec2 blendedUv = uv1 * IN.texBlend.x + uv2 * IN.texBlend.y + uv3 * IN.texBlend.z;
         uv1 = uv2 = uv3 = blendedUv;
 
