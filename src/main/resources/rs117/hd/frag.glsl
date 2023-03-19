@@ -449,9 +449,9 @@ void main() {
         texColor3.rgb *= material3.brightness;
 
         ivec3 isOverlay = ivec3(
-            vMaterialData[0] >> 3 & 1,
-            vMaterialData[1] >> 3 & 1,
-            vMaterialData[2] >> 3 & 1
+            vMaterialData[0] >> MATERIAL_FLAG_IS_OVERLAY & 1,
+            vMaterialData[1] >> MATERIAL_FLAG_IS_OVERLAY & 1,
+            vMaterialData[2] >> MATERIAL_FLAG_IS_OVERLAY & 1
         );
         int overlayCount = isOverlay[0] + isOverlay[1] + isOverlay[2];
         ivec3 isUnderlay = ivec3(1) - isOverlay;
