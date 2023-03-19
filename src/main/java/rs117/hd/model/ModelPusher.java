@@ -472,8 +472,9 @@ public class ModelPusher {
     }
 
     public int packMaterialData(Material material, @NonNull ModelOverride modelOverride, UvType uvType, boolean isOverlay) {
+		// TODO: only the lower 24 bits can be safely used due to imprecise casting to float in shaders
         return // This needs to return zero by default, since we often fall back to writing all zeroes to UVs
-            (material.ordinal() & (1 << 25) - 1) << 6
+            (material.ordinal() & (1 << 18) - 1) << 6
 			| (!modelOverride.receiveShadows ? 1 : 0) << 5
 			| (!modelOverride.castShadows ? 1 : 0) << 4
 			| (modelOverride.flatNormals ? 1 : 0) << 3

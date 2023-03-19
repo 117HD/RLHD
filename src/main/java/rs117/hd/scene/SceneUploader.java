@@ -945,6 +945,8 @@ class SceneUploader
 
 	public static int packTerrainData(boolean isTerrain, int waterDepth, WaterType waterType, int plane)
 	{
+		// TODO: only the lower 24 bits can be safely used due to imprecise casting to float in shaders
+		// 11-bit water depth | 5-bit water type | 2-bit plane | terrain flag
 		return waterDepth << 8 | waterType.ordinal() << 3 | plane << 1 | (isTerrain ? 1 : 0);
 	}
 
