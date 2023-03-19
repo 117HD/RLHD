@@ -24,7 +24,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-void computeUvs(const Material material, const int materialData, vec3 pos[3], inout vec3 uvw[3]) {
+void computeUvs(const int materialData, const vec3 pos[3], inout vec3 uvw[3]) {
     if ((materialData >> MATERIAL_FLAG_WORLD_UVS & 1) == 1) {
         // Treat the input uvw as a normal vector for a plane that goes through origo,
         // and find the distance from the point to the plane
@@ -50,20 +50,17 @@ void computeUvs(const Material material, const int materialData, vec3 pos[3], in
         float du = 1.0f / dot(perpv3, v2);
         float dv = 1.0f / dot(perpv2, v3);
 
-        #ifdef USE_VANILLA_UV_PROJECTION
-        vec3 cameraPos = vec3(cameraX, cameraY, cameraZ);
-        vec3 vertexToCamera;
-        #endif
         for (int i = 0; i < 3; i++) {
+            vec3 p = pos[i];
             #ifdef USE_VANILLA_UV_PROJECTION
             // Project vertex positions onto a plane going through the texture triangle
-            vertexToCamera = cameraPos - pos[i];
-            pos[i] += vertexToCamera * dot(uvw[i] - pos[i], uvNormal) / dot(vertexToCamera, uvNormal);
+            vec3 vertexToCamera = vec3(cameraX, cameraY, cameraZ) - p;
+            p += vertexToCamera * dot(uvw[i] - p, uvNormal) / dot(vertexToCamera, uvNormal);
             #endif
 
             // uvw[i].x = (v4's distance along perpv3) / (v2's distance along perpv3)
             // uvw[i].y = (v4's distance along perpv2) / (v3's distance along perpv2)
-            vec3 v = pos[i] - v1;
+            vec3 v = p - v1;
             uvw[i].xy = vec2(
                 dot(perpv3, v) * du,
                 dot(perpv2, v) * dv

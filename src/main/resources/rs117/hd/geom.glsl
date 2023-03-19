@@ -33,20 +33,19 @@ uniform mat4 projectionMatrix;
 uniform float elapsedTime;
 
 #include uniforms/camera.glsl
-#include uniforms/materials.glsl
 
 #include utils/polyfills.glsl
 #include utils/constants.glsl
 #define USE_VANILLA_UV_PROJECTION
 #include utils/uvs.glsl
 
-in VertexData {
-    ivec3 pos;
-    vec4 normal;
-    vec4 color;
-    vec4 uv;
-    float fogAmount;
-} IN[3];
+in vec3 gPosition[3];
+in vec3 gUv[3];
+in vec3 gNormal[3];
+in vec4 gColor[3];
+in float gFogAmount[3];
+in int gMaterialData[3];
+in int gTerrainData[3];
 
 flat out vec4 vColor[3];
 flat out vec3 vUv[3];
@@ -54,45 +53,38 @@ flat out int vMaterialData[3];
 flat out int vTerrainData[3];
 
 out FragmentData {
-    float fogAmount;
-    vec3 normal;
     vec3 position;
+    vec3 normal;
     vec3 texBlend;
+    float fogAmount;
 } OUT;
 
 void main() {
-    int materialData = int(IN[0].uv.w);
-    bool flatNormals =
-        length(IN[0].normal.xyz) < .01 ||
-        (materialData >> MATERIAL_FLAG_FLAT_NORMALS & 1) == 1;
-
-    // Compute flat normals
-    vec3 T = vec3(IN[0].pos - IN[1].pos);
-    vec3 B = vec3(IN[0].pos - IN[2].pos);
-    vec3 N = normalize(cross(T, B));
-
+    // MacOS doesn't allow assigning these arrays directly.
+    // One of the many wonders of Apple software...
     for (int i = 0; i < 3; i++) {
-        vColor[i] = IN[i].color;
-        vUv[i] = IN[i].uv.xyz;
-        vMaterialData[i] = int(IN[i].uv.w);
-        vTerrainData[i] = int(IN[i].normal.w);
+        vColor[i] = gColor[i];
+        vUv[i] = gUv[i];
+        vMaterialData[i] = gMaterialData[i];
+        vTerrainData[i] = gTerrainData[i];
     }
 
-    Material material = getMaterial(materialData >> MATERIAL_FLAG_BITS);
-    vec3 pos[3] = vec3[](
-        IN[0].pos,
-        IN[1].pos,
-        IN[2].pos
-    );
-    computeUvs(material, materialData, pos, vUv);
+    // Compute flat normals
+    vec3 T = gPosition[0] - gPosition[1];
+    vec3 B = gPosition[0] - gPosition[2];
+    vec3 N = normalize(cross(T, B));
+
+    computeUvs(vMaterialData[0], vec3[](gPosition[0], gPosition[1], gPosition[2]), vUv);
 
     for (int i = 0; i < 3; i++) {
+        OUT.position = gPosition[i];
+        OUT.normal = gNormal[i];
+        if (OUT.normal == vec3(0))
+            OUT.normal = N;
         OUT.texBlend = vec3(0);
         OUT.texBlend[i] = 1;
-        OUT.fogAmount = IN[i].fogAmount;
-        OUT.position = IN[i].pos;
-        OUT.normal = flatNormals ? N : normalize(IN[i].normal.xyz);
-        gl_Position = projectionMatrix * vec4(IN[i].pos, 1.f);
+        OUT.fogAmount = gFogAmount[i];
+        gl_Position = projectionMatrix * vec4(OUT.position, 1);
         EmitVertex();
     }
 

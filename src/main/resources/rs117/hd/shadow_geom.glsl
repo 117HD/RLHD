@@ -39,51 +39,31 @@ uniform float elapsedTime;
 #include utils/misc.glsl
 #include utils/uvs.glsl
 
-in VertexData {
-    ivec4 position;
-    vec4 uv;
-    vec4 normal;
-} IN[3];
+flat in vec3 gPosition[3];
+flat in vec3 gUv[3];
+flat in int gMaterialData[3];
+flat in int gCastShadow[3];
 
 out vec3 fUvw;
 
 void main() {
-    int materialData = int(IN[0].uv.w);
-    int terrainData = int(IN[0].normal.w);
-    int waterTypeIndex = terrainData >> 3 & 0x1F;
-    int transparency = 0;
-    for (int i = 0; i < 3; i++)
-        transparency += IN[i].position.w >> 24 & 0xff;
-
-    bool isShadowDisabled = (materialData >> MATERIAL_FLAG_DISABLE_SHADOW_CASTING & 1) == 1;
-    bool isGroundPlane = (terrainData & 0xF) == 1;// isTerrain && plane == 0
-    bool isWaterSurfaceOrUnderwaterTile = waterTypeIndex > 0;
-    bool isTransparent = transparency >= SHADOW_OPACITY_THRESHOLD * 3 * 255;
-    if (isShadowDisabled || isGroundPlane || isWaterSurfaceOrUnderwaterTile || isTransparent)
-        return;
-
-    // TODO: add hasAlphaChannel to Material, so UV calculation and frag texture fetch can be skipped
-    Material material = getMaterial(materialData >> MATERIAL_FLAG_BITS);
-    vec3 pos[3] = vec3[](
-        IN[0].position.xyz,
-        IN[1].position.xyz,
-        IN[2].position.xyz
-    );
-    vec3 uvw[3] = vec3[](
-        IN[0].uv.xyz,
-        IN[1].uv.xyz,
-        IN[2].uv.xyz
-    );
-    computeUvs(material, materialData, pos, uvw);
+    // MacOS doesn't allow assigning these arrays directly.
+    // One of the many wonders of Apple software...
+    vec3 uvw[3] = vec3[](gUv[0], gUv[1], gUv[2]);
+    computeUvs(gMaterialData[0], vec3[](gPosition[0], gPosition[1], gPosition[2]), uvw);
 
     for (int i = 0; i < 3; i++) {
-        fUvw = uvw[i];
-        fUvw.z = material.colorMap;
+        Material material = getMaterial(gMaterialData[i] >> MATERIAL_FLAG_BITS);
+        fUvw = vec3(uvw[i].xy, material.colorMap);
         // Scroll UVs
         fUvw.xy += material.scrollDuration * elapsedTime;
         // Scale from the center
         fUvw.xy = .5 + (fUvw.xy - .5) / material.textureScale;
-        gl_Position = lightProjectionMatrix * vec4(IN[i].position.xyz, 1.f);
+        float castShadow = max(max(
+            gCastShadow[0],
+            gCastShadow[1]),
+            gCastShadow[2]);
+        gl_Position = lightProjectionMatrix * vec4(gPosition[i], castShadow);
         EmitVertex();
     }
 
