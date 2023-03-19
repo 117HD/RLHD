@@ -73,10 +73,10 @@ flat in int vMaterialData[3];
 flat in int vTerrainData[3];
 
 in FragmentData {
-    float fogAmount;
-    vec3 normal;
     vec3 position;
+    vec3 normal;
     vec3 texBlend;
+    float fogAmount;
 } IN;
 
 out vec4 FragColor;
