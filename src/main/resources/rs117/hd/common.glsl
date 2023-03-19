@@ -58,8 +58,7 @@ int distance(ivec4 vertex, int cameraYaw, int cameraPitch) {
   int j = vertex.z * yawCos - vertex.x * yawSin >> 16;
   int l = vertex.y * pitchSin + j * pitchCos >> 16;
 
-  // TODO: find out why this is necessary on open-source AMD drivers, as it should be positive
-  return max(0, l);
+  return l;
 }
 
 /*
