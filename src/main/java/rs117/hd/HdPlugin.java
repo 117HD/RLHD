@@ -541,14 +541,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				setupSyncMode();
 				initVao();
 				initBuffers();
-				try
-				{
-					initPrograms();
-				}
-				catch (ShaderException ex)
-				{
-					throw new RuntimeException(ex);
-				}
+				initPrograms();
 				initInterfaceTexture();
 				initShadowMapFbo();
 
