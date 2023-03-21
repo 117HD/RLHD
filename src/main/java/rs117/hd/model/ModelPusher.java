@@ -176,50 +176,72 @@ public class ModelPusher {
         int vertexLength = 0;
         int uvLength = 0;
 
+        boolean useMaterialOverrides = plugin.configModelTextures || modelOverride.forceOverride;
+		final short[] faceTextures = model.getFaceTextures();
+		final byte[] textureFaces = model.getTextureFaces();
+        boolean isVanillaTextured = faceTextures != null;
+        boolean isVanillaUVMapped =
+            isVanillaTextured && // Vanilla UV mapped models don't always have sensible UVs for untextured faces
+            model.getTexIndices1() != null &&
+            model.getTexIndices2() != null &&
+            model.getTexIndices3() != null &&
+            model.getTextureFaces() != null;
+        Material baseMaterial = Material.NONE;
+        Material textureMaterial = Material.NONE;
+		if (useMaterialOverrides) {
+			baseMaterial = modelOverride.baseMaterial;
+			textureMaterial = modelOverride.textureMaterial;
+		}
+        boolean skipUVs = !isVanillaTextured &&
+			baseMaterial == Material.NONE &&
+			packMaterialData(Material.NONE, modelOverride, UvType.GEOMETRY, false) == 0;
+
         // ensure capacity upfront
         vertexBuffer.ensureCapacity(bufferSize);
         normalBuffer.ensureCapacity(bufferSize);
-        uvBuffer.ensureCapacity(bufferSize);
+		if (!skipUVs)
+        	uvBuffer.ensureCapacity(bufferSize);
 
-        boolean cachedVertexData = false;
-        boolean cachedNormalData = false;
-        boolean cachedUvData = false;
+        boolean foundCachedVertexData = false;
+        boolean foundCachedNormalData = false;
+        boolean foundCachedUvData = skipUVs;
         int vertexDataCacheHash = 0;
         int normalDataCacheHash = 0;
         int uvDataCacheHash = 0;
 
         if (shouldCache) {
             vertexDataCacheHash = modelHasher.calculateVertexCacheHash();
-            normalDataCacheHash = modelHasher.calculateNormalCacheHash();
-            uvDataCacheHash = modelHasher.calculateUvCacheHash(preOrientation, modelOverride);
-
             IntBuffer vertexData = this.modelCache.getVertexData(vertexDataCacheHash);
-            cachedVertexData = vertexData != null && vertexData.remaining() == bufferSize;
-            if (cachedVertexData) {
-//                vertexDataHits++;
+            foundCachedVertexData = vertexData != null && vertexData.remaining() == bufferSize;
+            if (foundCachedVertexData) {
+//              vertexDataHits++;
                 vertexLength = faceCount * 3;
                 vertexBuffer.put(vertexData);
                 vertexData.rewind();
             }
 
+            normalDataCacheHash = modelHasher.calculateNormalCacheHash();
             FloatBuffer normalData = this.modelCache.getNormalData(normalDataCacheHash);
-            cachedNormalData = normalData != null && normalData.remaining() == bufferSize;
-            if (cachedNormalData) {
-//                normalDataHits++;
+            foundCachedNormalData = normalData != null && normalData.remaining() == bufferSize;
+            if (foundCachedNormalData) {
+//              normalDataHits++;
                 normalBuffer.put(normalData);
                 normalData.rewind();
             }
 
-            FloatBuffer uvData = this.modelCache.getUvData(uvDataCacheHash);
-            cachedUvData = uvData != null;
-            if (cachedUvData) {
-//                uvDataHits++;
-                uvLength = 3 * (uvData.remaining() / DATUM_PER_FACE);
-                uvBuffer.put(uvData);
-                uvData.rewind();
+            if (!foundCachedUvData) {
+                uvDataCacheHash = modelHasher.calculateUvCacheHash(preOrientation, modelOverride);
+                FloatBuffer uvData = this.modelCache.getUvData(uvDataCacheHash);
+                foundCachedUvData = uvData != null && uvData.remaining() == bufferSize;
+                if (foundCachedUvData) {
+//                  uvDataHits++;
+                    uvLength = faceCount * 3;
+                    uvBuffer.put(uvData);
+                    uvData.rewind();
+                }
             }
 
-            if (cachedVertexData && cachedUvData && cachedNormalData) {
+            if (foundCachedVertexData && foundCachedNormalData && foundCachedUvData) {
                 twoInts[0] = vertexLength;
                 twoInts[1] = uvLength;
                 return twoInts;
@@ -230,77 +252,99 @@ public class ModelPusher {
         FloatBuffer fullNormalData = null;
         FloatBuffer fullUvData = null;
 
-        boolean cachingVertexData = !cachedVertexData && shouldCache;
-        if (cachingVertexData) {
-            fullVertexData = this.modelCache.takeIntBuffer(bufferSize);
-            if (fullVertexData == null) {
-                log.error("failed to grab vertex buffer");
-                cachingVertexData = false;
-            }
-        }
+        boolean shouldCacheVertexData = false;
+		boolean shouldCacheNormalData = false;
+		boolean shouldCacheUvData = false;
+		if (shouldCache) {
+			shouldCacheVertexData = !foundCachedVertexData;
+			shouldCacheNormalData = !foundCachedNormalData;
+			shouldCacheUvData = !foundCachedUvData;
 
-        boolean cachingNormalData = !cachedNormalData && shouldCache;
-        if (cachingNormalData) {
-            fullNormalData = this.modelCache.takeFloatBuffer(bufferSize);
-            if (fullNormalData == null) {
-                log.error("failed to grab normal buffer");
-                cachingNormalData = false;
-            }
-        }
+			if (shouldCacheVertexData) {
+				fullVertexData = this.modelCache.takeIntBuffer(bufferSize);
+				if (fullVertexData == null) {
+					log.error("failed to grab vertex buffer");
+					shouldCacheVertexData = false;
+				}
+			}
 
-        boolean cachingUvData = !cachedUvData && shouldCache;
-        if (cachingUvData) {
-            fullUvData = this.modelCache.takeFloatBuffer(bufferSize);
-            if (fullUvData == null) {
-                log.error("failed to grab uv buffer");
-                cachingUvData = false;
-            }
-        }
+			if (shouldCacheNormalData) {
+				fullNormalData = this.modelCache.takeFloatBuffer(bufferSize);
+				if (fullNormalData == null) {
+					log.error("failed to grab normal buffer");
+					shouldCacheNormalData = false;
+				}
+			}
+
+			if (shouldCacheUvData) {
+				fullUvData = this.modelCache.takeFloatBuffer(bufferSize);
+				if (fullUvData == null) {
+					log.error("failed to grab uv buffer");
+					shouldCacheUvData = false;
+				}
+			}
+		}
 
         for (int face = 0; face < faceCount; face++) {
-            if (!cachedVertexData) {
+            if (!foundCachedVertexData) {
                 int[] tempVertexData = getVertexDataForFace(model, getColorsForFace(hash, model, modelOverride, objectType, tileX, tileY, tileZ, face), face);
                 vertexBuffer.put(tempVertexData);
                 vertexLength += 3;
 
-                if (cachingVertexData) {
+                if (shouldCacheVertexData) {
                     fullVertexData.put(tempVertexData);
                 }
             }
 
-            if (!cachedNormalData) {
+            if (!foundCachedNormalData) {
                 float[] tempNormalData = getNormalDataForFace(model, modelOverride, face);
                 normalBuffer.put(tempNormalData);
 
-                if (cachingNormalData) {
+                if (shouldCacheNormalData) {
                     fullNormalData.put(tempNormalData);
                 }
             }
 
-            if (!cachedUvData) {
-                float[] tempUvData = getUvDataForFace(model, preOrientation, modelOverride, face);
-                if (tempUvData != null) {
-                    uvBuffer.put(tempUvData);
-                    uvLength += 3;
+            if (!foundCachedUvData) {
+				Material material = baseMaterial;
+				short textureId = isVanillaTextured ? faceTextures[face] : -1;
+				if (textureId != -1) {
+					material = textureMaterial;
+					if (material == Material.NONE)
+						material = Material.getTexture(textureId);
+				}
 
-                    if (cachingUvData) {
-                        fullUvData.put(tempUvData);
-                    }
-                }
+				UvType uvType = modelOverride.uvType;
+				boolean isFaceVanillaTextured = isVanillaUVMapped && textureFaces[face] != -1;
+				if (uvType == UvType.VANILLA && !isFaceVanillaTextured)
+					uvType = UvType.GEOMETRY;
+				int materialData = packMaterialData(material, modelOverride, uvType, false);
+				if (materialData == 0) {
+					uvBuffer.put(zeroFloats);
+				} else {
+					modelOverride.fillUvsForFace(twelveFloats, model, preOrientation, uvType, face);
+					twelveFloats[3] = twelveFloats[7] = twelveFloats[11] = materialData;
+					uvBuffer.put(twelveFloats);
+
+					if (shouldCacheUvData) {
+						fullUvData.put(twelveFloats);
+					}
+				}
+				uvLength += 3;
             }
         }
 
-        if (cachingVertexData) {
+        if (shouldCacheVertexData) {
             fullVertexData.flip();
             this.modelCache.putVertexData(vertexDataCacheHash, fullVertexData);
         }
 
-        if (cachingNormalData) {
+        if (shouldCacheNormalData) {
             fullNormalData.flip();
             this.modelCache.putNormalData(normalDataCacheHash, fullNormalData);
         }
 
-        if (cachingUvData) {
+        if (shouldCacheUvData) {
             fullUvData.flip();
             this.modelCache.putUvData(uvDataCacheHash, fullUvData);
         }
@@ -360,113 +404,6 @@ public class ModelPusher {
         twelveFloats[9] = yVertexNormals[triC];
         twelveFloats[10] = zVertexNormals[triC];
         twelveFloats[11] = terrainData;
-
-        return twelveFloats;
-    }
-
-    private float[] getUvDataForFace(Model model, int orientation, @NonNull ModelOverride modelOverride, int face) {
-        final short[] faceTextures = model.getFaceTextures();
-        final byte[] textureFaces = model.getTextureFaces();
-        final int[] texIndices1 = model.getTexIndices1();
-        final int[] texIndices2 = model.getTexIndices2();
-        final int[] texIndices3 = model.getTexIndices3();
-
-        Material material = Material.NONE;
-
-        boolean isVanillaTextured = faceTextures != null && faceTextures[face] != -1;
-        boolean isVanillaUVMapped =
-            isVanillaTextured && // Vanilla UV mapped models don't always have sensible UVs for untextured faces
-            texIndices1 != null &&
-            texIndices2 != null &&
-            texIndices3 != null &&
-            textureFaces != null &&
-            textureFaces[face] != -1;
-        if (isVanillaTextured) {
-            if (plugin.configModelTextures || modelOverride.forceOverride) {
-                material = modelOverride.textureMaterial;
-            }
-            if (material == Material.NONE) {
-                material = Material.getTexture(faceTextures[face]);
-            }
-        } else if (plugin.configModelTextures || modelOverride.forceOverride) {
-            material = modelOverride.baseMaterial;
-        }
-
-        UvType uvType = modelOverride.uvType;
-        if (uvType == UvType.VANILLA && !isVanillaUVMapped) {
-			uvType = UvType.GEOMETRY;
-		}
-
-		int materialData = packMaterialData(material, modelOverride, uvType, false);
-		if (materialData == 0) {
-			return faceTextures == null ?
-				null : // the whole model is untextured
-				zeroFloats; // this face is untextured
-		}
-
-        twelveFloats[3] = twelveFloats[7] = twelveFloats[11] = materialData;
-
-        switch (uvType) {
-            case WORLD_XY:
-            case WORLD_XZ:
-            case WORLD_YZ:
-                uvType.computeWorldUvw(twelveFloats, 0, modelOverride.uvScale);
-                uvType.computeWorldUvw(twelveFloats, 4, modelOverride.uvScale);
-                uvType.computeWorldUvw(twelveFloats, 8, modelOverride.uvScale);
-                break;
-            case MODEL_XY:
-            case MODEL_XY_MIRROR_A:
-            case MODEL_XY_MIRROR_B:
-            case MODEL_XZ:
-            case MODEL_XZ_MIRROR_A:
-            case MODEL_XZ_MIRROR_B:
-            case MODEL_YZ:
-            case MODEL_YZ_MIRROR_A:
-            case MODEL_YZ_MIRROR_B:
-                final int triA = model.getFaceIndices1()[face];
-                final int triB = model.getFaceIndices2()[face];
-                final int triC = model.getFaceIndices3()[face];
-
-                final int[] xVertices = model.getVerticesX();
-                final int[] yVertices = model.getVerticesY();
-                final int[] zVertices = model.getVerticesZ();
-
-                modelOverride.computeModelUvw(twelveFloats, 0, xVertices[triA], yVertices[triA], zVertices[triA], orientation);
-                modelOverride.computeModelUvw(twelveFloats, 4, xVertices[triB], yVertices[triB], zVertices[triB], orientation);
-                modelOverride.computeModelUvw(twelveFloats, 8, xVertices[triC], yVertices[triC], zVertices[triC], orientation);
-                break;
-            case VANILLA:
-                final int[] vertexX = model.getVerticesX();
-                final int[] vertexY = model.getVerticesY();
-                final int[] vertexZ = model.getVerticesZ();
-                final int texFace = textureFaces[face] & 0xff;
-                final int texA = texIndices1[texFace];
-                final int texB = texIndices2[texFace];
-                final int texC = texIndices3[texFace];
-
-                twelveFloats[0] = vertexX[texA];
-                twelveFloats[1] = vertexY[texA];
-                twelveFloats[2] = vertexZ[texA];
-                twelveFloats[4] = vertexX[texB];
-                twelveFloats[5] = vertexY[texB];
-                twelveFloats[6] = vertexZ[texB];
-                twelveFloats[8] = vertexX[texC];
-                twelveFloats[9] = vertexY[texC];
-                twelveFloats[10] = vertexZ[texC];
-                break;
-            case GEOMETRY:
-            default:
-                twelveFloats[0] = 0;
-                twelveFloats[1] = 0;
-                twelveFloats[2] = 0;
-                twelveFloats[4] = 1;
-                twelveFloats[5] = 0;
-                twelveFloats[6] = 0;
-                twelveFloats[8] = 0;
-                twelveFloats[9] = 1;
-                twelveFloats[10] = 0;
-                break;
-        }
 
         return twelveFloats;
     }
