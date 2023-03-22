@@ -26,6 +26,13 @@
 #define PI 3.1415926535897932384626433832795f
 #define UNIT PI / 1024.0f
 
+float3 toScreen(int4 vertex, int cameraYaw, int cameraPitch, int centerX, int centerY, int zoom);
+int4 rotate_ivec(__constant struct uniform *uni, int4 vector, int orientation);
+float4 rotate_vec(float4 vector, int orientation);
+int vertex_distance(int4 vertex, int cameraYaw, int cameraPitch);
+int face_distance(int4 vA, int4 vB, int4 vC, int cameraYaw, int cameraPitch);
+bool face_visible(__constant struct uniform *uni, int4 vA, int4 vB, int4 vC, int4 position);
+
 float3 toScreen(int4 vertex, int cameraYaw, int cameraPitch, int centerX, int centerY, int zoom) {
   float yawSin = sin(cameraYaw * UNIT);
   float yawCos = cos(cameraYaw * UNIT);
