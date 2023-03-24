@@ -121,6 +121,9 @@ void get_face(
             thisDistance = 0;
         } else {
             thisDistance = face_distance(thisrvA, thisrvB, thisrvC, cameraYaw, cameraPitch) + radius;
+            // Clamping here *should* be unnecessary, but it prevents crashing in the unlikely event where we
+            // somehow end up with negative numbers, which is known to happen with open-source AMD drivers.
+            thisDistance = max(0, thisDistance);
         }
 
         o1 = thisrvA;
