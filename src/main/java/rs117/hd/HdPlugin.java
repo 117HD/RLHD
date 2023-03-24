@@ -2026,9 +2026,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		// Texture on UI
 		drawUi(overlayColor, canvasHeight, canvasWidth);
 
-		awtContext.swapBuffers();
-
-		drawManager.processDrawComplete(this::screenshot);
+		try {
+			awtContext.swapBuffers();
+			drawManager.processDrawComplete(this::screenshot);
+		} catch (Exception ex) {
+			log.error("Unable to swap buffers:", ex);
+		}
 
 		glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
 
