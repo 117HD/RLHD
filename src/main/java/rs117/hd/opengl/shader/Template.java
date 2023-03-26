@@ -114,6 +114,15 @@ public class Template
 						break;
 				}
 			}
+			else if (trimmed.startsWith("#pragma once"))
+			{
+				int currentIndex = includeList.size() - 1;
+				String currentInclude = includeList.get(currentIndex);
+				if (includeList.indexOf(currentInclude) != currentIndex) {
+					sb.append("// Already included\n");
+					break;
+				}
+			}
 			else
 			{
 				sb.append(line).append('\n');
