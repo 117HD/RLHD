@@ -315,7 +315,7 @@ public class ModelPusher {
 				}
 
 				UvType uvType = modelOverride.uvType;
-				boolean isFaceVanillaTextured = isVanillaUVMapped && textureFaces[face] != -1;
+				boolean isFaceVanillaTextured = isVanillaUVMapped && textureId != -1 && textureFaces[face] != -1;
 				if (uvType == UvType.VANILLA && !isFaceVanillaTextured)
 					uvType = UvType.GEOMETRY;
 				int materialData = packMaterialData(material, modelOverride, uvType, false);
