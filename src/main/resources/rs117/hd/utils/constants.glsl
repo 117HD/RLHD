@@ -1,3 +1,5 @@
+#pragma once
+
 // Any changes here may need to be reflected in OpenCL's constants.cl
 // They are kept separate to avoid accidentally breaking OpenCL compatibility
 #define SHADOW_OPACITY_THRESHOLD 0.81

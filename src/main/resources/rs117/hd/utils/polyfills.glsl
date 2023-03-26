@@ -23,12 +23,9 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef POLYFILLS_INCLUDED
-#define POLYFILLS_INCLUDED
+#pragma once
 
 #if __VERSION__ < 400
 #define length(v) sqrt(dot(v, v))
 #define fract(x) (x - floor(x))
-#endif
-
 #endif
