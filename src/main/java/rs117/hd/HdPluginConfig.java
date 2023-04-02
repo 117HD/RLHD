@@ -77,7 +77,7 @@ public interface HdPluginConfig extends Config
 
 	@ConfigItem(
 		keyName = "uiScalingMode",
-		name = "UI scaling mode",
+		name = "UI Scaling Mode",
 		description =
 			"The sampling function to use when the Stretched Mode plugin is enabled.<br>" +
 			"Affects how the UI looks with non-integer scaling.",
@@ -178,7 +178,7 @@ public interface HdPluginConfig extends Config
 
 	@ConfigItem(
 		keyName = "colorBlindnessIntensity",
-		name = "Color Blindness Intensity",
+		name = "Blindness Intensity",
 		description = "Specifies how intense the color blindness adjustment should be.",
 		position = 9,
 		section = generalSettings
@@ -434,7 +434,7 @@ public interface HdPluginConfig extends Config
 
 	@ConfigItem(
 		keyName = "defaultSkyColor",
-		name = "Default Sky Color",
+		name = "Default Sky",
 		description =
 			"Specify a sky color to use when the current area doesn't have a sky color defined.<br>" +
 			"If set to 'RuneLite Skybox', the sky color from RuneLite's Skybox plugin will be used.<br>" +
