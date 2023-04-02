@@ -3,7 +3,7 @@
 // Any changes here may need to be reflected in OpenCL's constants.cl
 // They are kept separate to avoid accidentally breaking OpenCL compatibility
 #define SHADOW_OPACITY_THRESHOLD 0.81
-#define MATERIAL_FLAG_BITS 6
+#define MATERIAL_FLAG_BITS 12
 #define MATERIAL_FLAG_DISABLE_SHADOW_RECEIVING 5
 #define MATERIAL_FLAG_DISABLE_SHADOW_CASTING 4
 #define MATERIAL_FLAG_FLAT_NORMALS 3

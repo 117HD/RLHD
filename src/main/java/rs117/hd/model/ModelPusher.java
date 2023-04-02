@@ -60,7 +60,7 @@ public class ModelPusher {
     private ModelCache modelCache;
     public static final int DATUM_PER_FACE = 12;
     public static final int BYTES_PER_DATUM = 4;
-
+	public static final int MAX_MATERIAL_COUNT = (1 << 10) - 1;
 
 //    private int pushes = 0;
 //    private int vertexdatahits = 0;
@@ -68,6 +68,11 @@ public class ModelPusher {
 //    private int uvdatahits = 0;
 
     public void startUp() {
+		if (Material.values().length - 1 >= MAX_MATERIAL_COUNT) {
+			throw new IllegalStateException(
+				"Too many materials (" + Material.values().length + ") to fit into packed material data.");
+		}
+
         if (config.enableModelCaching()) {
             final int size = config.modelCacheSizeMiB();
             try {
@@ -411,7 +416,7 @@ public class ModelPusher {
     public int packMaterialData(Material material, @NonNull ModelOverride modelOverride, UvType uvType, boolean isOverlay) {
 		// TODO: only the lower 24 bits can be safely used due to imprecise casting to float in shaders
         return // This needs to return zero by default, since we often fall back to writing all zeroes to UVs
-            (material.ordinal() & (1 << 18) - 1) << 6
+			(material.ordinal() & MAX_MATERIAL_COUNT) << 12
 			| (!modelOverride.receiveShadows ? 1 : 0) << 5
 			| (!modelOverride.castShadows ? 1 : 0) << 4
 			| (modelOverride.flatNormals ? 1 : 0) << 3
