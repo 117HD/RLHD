@@ -188,6 +188,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 	private Canvas canvas;
 	private AWTContext awtContext;
+	private GLCapabilities glCaps;
 	private Callback debugCallback;
 
 	private static final String LINUX_VERSION_HEADER =
@@ -452,7 +453,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				// to be created, and also breaks if both 32 and 64 bit lwjgl versions try to run at once.
 				Configuration.SHARED_LIBRARY_EXTRACT_DIRECTORY.set("lwjgl-rl-" + System.getProperty("os.arch", "unknown"));
 
-				GL.createCapabilities();
+				glCaps = GL.createCapabilities();
 
 				String glRenderer = glGetString(GL_RENDERER);
 				String arch = System.getProperty("sun.arch.data.model", "Unknown");
@@ -464,10 +465,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				log.info("Using driver: {}", glGetString(GL_VERSION));
 				log.info("Client is {}-bit", arch);
 
-				GLCapabilities caps = GL.getCapabilities();
-
 				boolean isGenericGpu = glRenderer.equals("GDI Generic");
-				boolean isUnsupportedGpu = isGenericGpu || (computeMode == ComputeMode.OPENGL ? !caps.OpenGL43 : !caps.OpenGL31);
+				boolean isUnsupportedGpu = isGenericGpu || (computeMode == ComputeMode.OPENGL ? !glCaps.OpenGL43 : !glCaps.OpenGL31);
 				if (isUnsupportedGpu)
 				{
 					log.error("The GPU is lacking OpenGL {} support. Stopping the plugin...",
@@ -499,7 +498,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				lwjglInitted = true;
 
 				checkGLErrors();
-				if (log.isDebugEnabled() && caps.glDebugMessageControl != 0)
+				if (log.isDebugEnabled() && glCaps.glDebugMessageControl != 0)
 				{
 					debugCallback = GLUtil.setupDebugMessageCallback();
 					if (debugCallback != null)
@@ -1228,13 +1227,21 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			// Create texture
 			texShadowMap = glGenTextures();
 			glBindTexture(GL_TEXTURE_2D, texShadowMap);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, config.shadowResolution().getValue(), config.shadowResolution().getValue(), 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
+
+			int shadowRes = config.shadowResolution().getValue();
+			int maxResolution = glGetInteger(GL_MAX_TEXTURE_SIZE);
+			if (maxResolution < shadowRes) {
+				log.info("Capping shadow resolution from {} to {}", shadowRes, maxResolution);
+				shadowRes = maxResolution;
+			}
+
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, shadowRes, shadowRes, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
 
-			float[] color = { 1.0f, 1.0f, 1.0f, 1.0f };
+			float[] color = { 1, 1, 1, 1 };
 			glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, color);
 
 			// Bind texture
