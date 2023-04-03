@@ -72,7 +72,9 @@ import rs117.hd.opengl.compute.OpenCLManager;
 import rs117.hd.opengl.shader.Shader;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.Template;
+import rs117.hd.resourcepacks.DefaultResourcePack;
 import rs117.hd.resourcepacks.ResourcePackManager;
+import rs117.hd.resourcepacks.ResourcePackRepository;
 import rs117.hd.scene.*;
 import rs117.hd.scene.lights.SceneLight;
 import rs117.hd.scene.ModelOverrideManager;
@@ -103,6 +105,8 @@ import java.util.List;
 import static org.jocl.CL.*;
 import static org.lwjgl.opengl.GL43C.*;
 import static rs117.hd.HdPluginConfig.*;
+import static rs117.hd.resourcepacks.Constants.DEV_PACK_DIR;
+import static rs117.hd.resourcepacks.Constants.PACK_DIR;
 import static rs117.hd.utils.ResourcePath.path;
 
 @PluginDescriptor(
@@ -154,6 +158,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	@Inject
 	@Getter
 	private HdPluginConfig config;
+
+	@Getter
+	private ResourcePackRepository resourcePackRepository;
 
 	@Inject
 	private TextureManager textureManager;
@@ -437,27 +444,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		configEnableModelCaching = config.enableModelCaching();
 		configMaxDynamicLights = config.maxDynamicLights().getValue();
 
+		DefaultResourcePack rprDefaultResourcePackIn = new DefaultResourcePack(path(HdPlugin.class).resolve("pack"));
 
-		List<Material> ignore = new ArrayList<Material>();
-
-		for (Material material : Material.values()) {
-
-			ignore.add(material.normalMap);
-
-
-			ignore.add(material.flowMap);
-
-
-			ignore.add(material.displacementMap);
-
-
-			ignore.add(material.roughnessMap);
-
-
-			ignore.add(material.ambientOcclusionMap);
-
-
-		}
+		resourcePackRepository = new ResourcePackRepository(PACK_DIR,DEV_PACK_DIR,rprDefaultResourcePackIn);
 
 		clientThread.invoke(() ->
 		{

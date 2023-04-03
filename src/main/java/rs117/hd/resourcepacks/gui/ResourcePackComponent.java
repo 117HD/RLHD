@@ -1,4 +1,4 @@
-package rs117.hd.resourcepacks;
+package rs117.hd.resourcepacks.gui;
 
 import com.google.common.html.HtmlEscapers;
 import lombok.extern.slf4j.Slf4j;
@@ -8,6 +8,8 @@ import net.runelite.client.util.ImageUtil;
 import net.runelite.client.util.LinkBrowser;
 import net.runelite.client.util.SwingUtil;
 import rs117.hd.gui.panel.HdPanel;
+import rs117.hd.resourcepacks.Constants;
+import rs117.hd.resourcepacks.ResourcePackManager;
 import rs117.hd.resourcepacks.data.Manifest;
 
 import javax.swing.*;

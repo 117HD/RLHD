@@ -36,7 +36,7 @@ import net.runelite.client.ui.DynamicGridLayout;
 import net.runelite.client.util.ImageUtil;
 import rs117.hd.gui.panel.components.FixedWidthPanel;
 import rs117.hd.gui.panel.components.Header;
-import rs117.hd.resourcepacks.ResourcePackComponent;
+import rs117.hd.resourcepacks.gui.ResourcePackComponent;
 import rs117.hd.resourcepacks.ResourcePackManager;
 import rs117.hd.resourcepacks.data.Manifest;
 
