@@ -37,11 +37,30 @@ public class ModelOverride
     public boolean removeBakedLighting = false;
     public boolean castShadows = true;
     public boolean receiveShadows = true;
+	public float shadowOpacityThreshold = 0;
     public TzHaarRecolorType tzHaarRecolorType = TzHaarRecolorType.NONE;
     public InheritTileColorType inheritTileColorType = InheritTileColorType.NONE;
 
     @JsonAdapter(AABB.JsonAdapter.class)
     public AABB[] hideInAreas = {};
+
+	public void gsonReallyShouldSupportThis() {
+		// Ensure there are no nulls in case of invalid configuration during development
+		if (baseMaterial == null)
+			baseMaterial = ModelOverride.NONE.baseMaterial;
+		if (textureMaterial == null)
+			textureMaterial = ModelOverride.NONE.textureMaterial;
+		if (uvType == null)
+			uvType = ModelOverride.NONE.uvType;
+		if (tzHaarRecolorType == null)
+			tzHaarRecolorType = ModelOverride.NONE.tzHaarRecolorType;
+		if (inheritTileColorType == null)
+			inheritTileColorType = ModelOverride.NONE.inheritTileColorType;
+		if (hideInAreas == null)
+			hideInAreas = new AABB[0];
+		if (!castShadows && shadowOpacityThreshold == 0)
+			shadowOpacityThreshold = 1;
+	}
 
     public void computeModelUvw(float[] out, int i, float x, float y, float z, int orientation) {
         double rad, cos, sin;

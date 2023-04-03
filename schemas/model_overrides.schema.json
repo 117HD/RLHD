@@ -82,6 +82,10 @@
         "type": "boolean",
         "description": "Whether the model receive shadows cast by other objects. Defaults to true."
       },
+      "shadowOpacityThreshold": {
+        "type": "number",
+        "description": "Specify an opacity threshold for shadow casting that better suits the model. Between 0 and 1."
+      },
       "tzHaarRecolorType": {
         "type": "string",
         "description": "Specify a type of TzHaar recolor style to apply. Only relevant for the TzHaar area.",

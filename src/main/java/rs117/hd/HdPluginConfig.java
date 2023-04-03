@@ -299,14 +299,33 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
+	String KEY_SHADOW_MODE = "shadowMode";
 	@ConfigItem(
-		keyName = "shadowsEnabled",
+		keyName = KEY_SHADOW_MODE,
 		name = "Shadows",
-		description = "Enables fully dynamic shadows.",
+		description =
+			"Render fully dynamic shadows.<br>" +
+			"'Off' completely disables shadows.<br>" +
+			"'Fast' enables fast shadows without any texture detail.<br>" +
+			"'Detailed' enables slower shadows with support for texture detail.",
 		position = 5,
 		section = lightingSettings
 	)
-	default boolean shadowsEnabled()
+	default ShadowMode shadowMode()
+	{
+		return ShadowMode.DETAILED;
+	}
+
+	String KEY_SHADOW_TRANSPARENCY = "enableShadowTransparency";
+	@ConfigItem(
+		keyName = "enableShadowTransparency",
+		name = "Shadow Transparency",
+		description =
+			"Enables partial support for shadows that take transparency into account.",
+		position = 6,
+		section = lightingSettings
+	)
+	default boolean enableShadowTransparency()
 	{
 		return true;
 	}
@@ -317,7 +336,7 @@ public interface HdPluginConfig extends Config
 		description =
 			"The resolution of the shadow map.<br>" +
 			"Higher resolutions result in higher quality shadows, at the cost of GPU performance.",
-		position = 6,
+		position = 7,
 		section = lightingSettings
 	)
 	default ShadowResolution shadowResolution()
@@ -331,7 +350,7 @@ public interface HdPluginConfig extends Config
 		description =
 			"The maximum draw distance for shadows.<br>" +
 			"Shorter distances result in higher quality shadows.",
-		position = 7,
+		position = 9,
 		section = lightingSettings
 	)
 	default ShadowDistance shadowDistance()
@@ -345,7 +364,7 @@ public interface HdPluginConfig extends Config
 		description =
 			"Reduces shadows popping in and out at the edge of the screen by rendering<br>" +
 			"shadows for a larger portion of the scene, at the cost of performance.",
-		position = 8,
+		position = 10,
 		section = lightingSettings
 	)
 	default boolean expandShadowDraw()
@@ -359,7 +378,7 @@ public interface HdPluginConfig extends Config
 		description =
 			"Hide fake shadows and lighting which is often built into models by Jagex.<br>" +
 			"This does not affect the hitbox of NPCs, so you can still click where the fake shadow would normally be.",
-		position = 9,
+		position = 11,
 		section = lightingSettings
 	)
 	default boolean hideBakedEffects() {
@@ -371,7 +390,7 @@ public interface HdPluginConfig extends Config
 //		keyName = "parallaxMappingMode",
 //		name = "Parallax mapping",
 //		description = "Enable parallax mapping to add more depth to materials that support it. Impacts performance considerably.",
-//		position = 10,
+//		position = 12,
 //		section = lightingSettings
 //	)
 //	default ParallaxMappingMode parallaxMappingMode() {

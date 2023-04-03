@@ -105,10 +105,9 @@ void main() {
     vec3 viewDir = normalize(camPos - IN.position);
     vec3 lightDir = -lightDirection;
 
-    // material data
-    Material material1 = getMaterial(vMaterialData[0] >> MATERIAL_FLAG_BITS);
-    Material material2 = getMaterial(vMaterialData[1] >> MATERIAL_FLAG_BITS);
-    Material material3 = getMaterial(vMaterialData[2] >> MATERIAL_FLAG_BITS);
+    Material material1 = getMaterial(vMaterialData[0] >> MATERIAL_INDEX_SHIFT);
+    Material material2 = getMaterial(vMaterialData[1] >> MATERIAL_INDEX_SHIFT);
+    Material material3 = getMaterial(vMaterialData[2] >> MATERIAL_INDEX_SHIFT);
 
     // Water data
     bool isTerrain = (vTerrainData[0] & 1) != 0; // 1 = 0b1

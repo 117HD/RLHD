@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2018, Adam <Adam@sigterm.info>
  * Copyright (c) 2021, 117 <https://twitter.com/117scape>
+ * Copyright (c) 2023, Hooder <ahooder@protonmail.com>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -46,26 +47,34 @@ flat in int gCastShadow[3];
 
 out vec3 fUvw;
 
+#if SHADOW_TRANSPARENCY
+    flat in float gOpacity[3];
+    out float fOpacity;
+#endif
+
 void main() {
+    if (gCastShadow[0] + gCastShadow[1] + gCastShadow[2] == 0)
+        return;
+
     // MacOS doesn't allow assigning these arrays directly.
     // One of the many wonders of Apple software...
     vec3 uvw[3] = vec3[](gUv[0], gUv[1], gUv[2]);
     computeUvs(gMaterialData[0], vec3[](gPosition[0], gPosition[1], gPosition[2]), uvw);
 
     for (int i = 0; i < 3; i++) {
-        Material material = getMaterial(gMaterialData[i] >> MATERIAL_FLAG_BITS);
+        Material material = getMaterial(gMaterialData[i] >> MATERIAL_INDEX_SHIFT);
         fUvw = vec3(uvw[i].xy, material.colorMap);
         // Scroll UVs
         fUvw.xy += material.scrollDuration * elapsedTime;
         // Scale from the center
         fUvw.xy = .5 + (fUvw.xy - .5) / material.textureScale;
-        float castShadow = max(max(
-            gCastShadow[0],
-            gCastShadow[1]),
-            gCastShadow[2]);
-        gl_Position = lightProjectionMatrix * vec4(gPosition[i], castShadow);
+
+        #if SHADOW_TRANSPARENCY
+            fOpacity = gOpacity[i];
+        #endif
+
+        gl_Position = lightProjectionMatrix * vec4(gPosition[i], 1);
         EmitVertex();
     }
-
     EndPrimitive();
 }

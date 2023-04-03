@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2021, 117 <https://twitter.com/117scape>
+ * Copyright (c) 2023, Hooder <ahooder@protonmail.com>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,55 +26,53 @@
 
 #include utils/constants.glsl
 
+#if SHADOW_MODE != SHADOW_MODE_OFF
 float sampleShadowMap(vec3 fragPos, int waterTypeIndex, vec2 distortion, float lightDotNormals) {
-    // sample shadow map
-    float shadow = 0.0;
-    if (shadowsEnabled == 1)
-    {
-        vec4 shadowPos = lightProjectionMatrix * vec4(fragPos, 1);
-        vec3 projCoords = shadowPos.xyz / shadowPos.w * 0.5 + 0.5;
-        projCoords.xy += distortion;
+    vec4 shadowPos = lightProjectionMatrix * vec4(fragPos, 1);
+    shadowPos = (shadowPos / shadowPos.w) * .5 + .5;
+    shadowPos.xy += distortion;
+    shadowPos = clamp(shadowPos, 0, 1);
 
-        float currentDepth = projCoords.z;
-        float shadowMinBias = 0.0009f;
-        float shadowBias = max(shadowMaxBias * (1.0 - lightDotNormals), shadowMinBias);
-        vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
-        for(int x = -1; x <= 1; ++x)
-        {
-            for(int y = -1; y <= 1; ++y)
-            {
-                float pcfDepth = texture(shadowMap, projCoords.xy + vec2(x, y) * texelSize).r;
-                shadow += currentDepth - shadowBias > pcfDepth ? 1.0 : 0.0;
-            }
-        }
-        shadow /= 9;
+    // Fade out shadows near shadow texture edges
+    vec2 uv = shadowPos.xy * 2 - 1;
+    float fadeOut = smoothstep(.75, 1, dot(uv, uv));
 
-        // fade out shadows near shadow texture edges
-        float cutoff = 0.1;
-        if (projCoords.x <= cutoff)
-        {
-            float amt = projCoords.x / cutoff;
-            shadow = mix(0.0, shadow, amt);
-        }
-        if (projCoords.y <= cutoff)
-        {
-            float amt = projCoords.y / cutoff;
-            shadow = mix(0.0, shadow, amt);
-        }
-        if (projCoords.x >= 1.0 - cutoff)
-        {
-            float amt = 1.0 - ((projCoords.x - (1.0 - cutoff)) / cutoff);
-            shadow = mix(0.0, shadow, amt);
-        }
-        if (projCoords.y >= 1.0 - cutoff)
-        {
-            float amt = 1.0 - ((projCoords.y - (1.0 - cutoff)) / cutoff);
-            shadow = mix(0.0, shadow, amt);
-        }
+    if (fadeOut >= 1)
+        return 0;
 
-        shadow = clamp(shadow, 0.0, 1.0);
-        shadow = projCoords.z > 1.0 ? 0.0 : shadow;
+    vec2 shadowRes = textureSize(shadowMap, 0);
+    float shadowMinBias = 0.0009f;
+    float shadowBias = shadowMinBias * max(1, (1.0 - lightDotNormals));
+    float fragDepth = shadowPos.z - shadowBias;
+    float shadow = 0;
+
+    const int kernelSize = 3;
+    const float kernelRadius = kernelSize / 2.;
+    const float kernelAreaReciprocal = 1. / (kernelSize * kernelSize);
+
+    ivec2 texelOffset = ivec2(shadowPos.xy * shadowRes - kernelRadius + .5);
+    #define fetchShadowTexel(x, y) texelFetch(shadowMap, texelOffset + ivec2(x, y), 0).r
+
+    float depth, alpha;
+    for (int x = 0; x < kernelSize; ++x) {
+        for (int y = 0; y < kernelSize; ++y) {
+            #if SHADOW_TRANSPARENCY
+                int alphaDepth = int(fetchShadowTexel(x, y) * SHADOW_COMBINED_MAX);
+                depth = float(alphaDepth & SHADOW_DEPTH_MAX) / SHADOW_DEPTH_MAX;
+                alpha = 1 - float(alphaDepth >> SHADOW_DEPTH_BITS) / SHADOW_ALPHA_MAX;
+            #else
+                depth = fetchShadowTexel(x, y);
+                alpha = 1;
+            #endif
+
+            if (fragDepth > depth)
+                shadow += alpha;
+        }
     }
+    shadow *= kernelAreaReciprocal;
 
-    return shadow;
+    return shadow * (1 - fadeOut);
 }
+#else
+#define sampleShadowMap(fragPos, waterTypeIndex, distortion, lightDotNormals) 0
+#endif
