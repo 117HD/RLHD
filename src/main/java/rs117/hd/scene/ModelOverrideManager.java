@@ -52,11 +52,12 @@ public class ModelOverrideManager {
                 ModelOverride[] entries = path.loadJson(plugin.getGson(), ModelOverride[].class);
                 if (entries == null)
                     throw new IOException("Empty or invalid: " + path);
-                for (ModelOverride entry : entries) {
-                    for (int npcId : entry.npcIds)
-                        addEntry(ModelHash.packUuid(npcId, ModelHash.TYPE_NPC), entry);
-                    for (int objectId : entry.objectIds)
-                        addEntry(ModelHash.packUuid(objectId, ModelHash.TYPE_OBJECT), entry);
+                for (ModelOverride override : entries) {
+					override.gsonReallyShouldSupportThis();
+                    for (int npcId : override.npcIds)
+                        addEntry(ModelHash.packUuid(npcId, ModelHash.TYPE_NPC), override);
+                    for (int objectId : override.objectIds)
+                        addEntry(ModelHash.packUuid(objectId, ModelHash.TYPE_OBJECT), override);
                 }
                 if (client.getGameState() == GameState.LOGGED_IN) {
                     clientThread.invokeLater(() -> {
@@ -72,20 +73,6 @@ public class ModelOverrideManager {
     }
 
     private void addEntry(long uuid, ModelOverride entry) {
-        // Ensure there are no nulls in case of invalid configuration during development
-        if (entry.baseMaterial == null)
-            entry.baseMaterial = ModelOverride.NONE.baseMaterial;
-        if (entry.textureMaterial == null)
-            entry.textureMaterial = ModelOverride.NONE.textureMaterial;
-        if (entry.uvType == null)
-            entry.uvType = ModelOverride.NONE.uvType;
-        if (entry.tzHaarRecolorType == null)
-            entry.tzHaarRecolorType = ModelOverride.NONE.tzHaarRecolorType;
-        if (entry.inheritTileColorType == null)
-            entry.inheritTileColorType = ModelOverride.NONE.inheritTileColorType;
-        if (entry.hideInAreas == null)
-            entry.hideInAreas = new AABB[0];
-
         ModelOverride old = modelOverrides.put(uuid, entry);
         modelsToHide.put(uuid, entry.hideInAreas);
 
