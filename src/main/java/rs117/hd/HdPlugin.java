@@ -2089,8 +2089,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		glUseProgram(0);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glDisable(GL_BLEND);
-
-		stagingBufferVertices.clear();
 	}
 
 	/**
