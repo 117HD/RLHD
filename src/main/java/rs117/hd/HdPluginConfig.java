@@ -612,8 +612,8 @@ public interface HdPluginConfig extends Config
 
 	@ConfigItem(
 		keyName = "macosIntelWorkaround",
-		name = "Fix broken colors on intel Macs",
-		description = "Workaround for visual artifacts found on some intel GPU drivers on macOS.",
+		name = "Fix white color issue on Intel Macs",
+		description = "Workaround for visual artifacts found on some Intel GPU drivers on macOS.",
 		warning =
 			"This setting can cause RuneLite to crash, and it can be difficult to undo.\n" +
 			"Only enable it if you are seeing broken colors. Are you sure you want to enable this setting?",
