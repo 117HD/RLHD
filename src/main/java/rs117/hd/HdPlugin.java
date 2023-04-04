@@ -225,7 +225,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		.chroot();
 
 	private int glProgram;
-	private int glComputeProgram;
+	private int glLargeComputeProgram;
 	private int glSmallComputeProgram;
 	private int glUnorderedComputeProgram;
 	private int glUiProgram;
@@ -336,12 +336,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	private int uniTextureArray;
 	private int uniElapsedTime;
 
-	private int uniBlockSmall;
-	private int uniBlockLarge;
-	private int uniBlockMain;
+	private int uniBlockCameraComputeSmall;
+	private int uniBlockCameraComputeLarge;
+	private int uniBlockCamera;
 	private int uniBlockMaterials;
-	private int uniBlockWaterTypes;
 	private int uniShadowBlockMaterials;
+	private int uniBlockWaterTypes;
 	private int uniBlockPointLights;
 
 	// Animation things
@@ -774,7 +774,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		}
 		else
 		{
-			glComputeProgram = COMPUTE_PROGRAM.compile(template);
+			glLargeComputeProgram = COMPUTE_PROGRAM.compile(template);
 			glSmallComputeProgram = SMALL_COMPUTE_PROGRAM.compile(template);
 			glUnorderedComputeProgram = UNORDERED_COMPUTE_PROGRAM.compile(template);
 		}
@@ -847,10 +847,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 		if (computeMode == ComputeMode.OPENGL)
 		{
-			uniBlockSmall = glGetUniformBlockIndex(glSmallComputeProgram, "CameraUniforms");
-			uniBlockLarge = glGetUniformBlockIndex(glComputeProgram, "CameraUniforms");
-			uniBlockMain = glGetUniformBlockIndex(glProgram, "CameraUniforms");
+			uniBlockCameraComputeSmall = glGetUniformBlockIndex(glSmallComputeProgram, "CameraUniforms");
+			uniBlockCameraComputeLarge = glGetUniformBlockIndex(glLargeComputeProgram, "CameraUniforms");
 		}
+		uniBlockCamera = glGetUniformBlockIndex(glProgram, "CameraUniforms");
 		uniBlockMaterials = glGetUniformBlockIndex(glProgram, "MaterialUniforms");
 		uniBlockWaterTypes = glGetUniformBlockIndex(glProgram, "WaterTypeUniforms");
 		uniBlockPointLights = glGetUniformBlockIndex(glProgram, "PointLightUniforms");
@@ -876,10 +876,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			glProgram = 0;
 		}
 
-		if (glComputeProgram != 0)
+		if (glLargeComputeProgram != 0)
 		{
-			glDeleteProgram(glComputeProgram);
-			glComputeProgram = 0;
+			glDeleteProgram(glLargeComputeProgram);
+			glLargeComputeProgram = 0;
 		}
 
 		if (glSmallComputeProgram != 0)
@@ -1423,8 +1423,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		 */
 
 		// Bind UBO to compute programs
-		glUniformBlockBinding(glSmallComputeProgram, uniBlockSmall, 0);
-		glUniformBlockBinding(glComputeProgram, uniBlockLarge, 0);
+		glUniformBlockBinding(glSmallComputeProgram, uniBlockCameraComputeSmall, 0);
+		glUniformBlockBinding(glLargeComputeProgram, uniBlockCameraComputeLarge, 0);
 
 		// Bind shared buffers
 		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, hStagingBufferVertices.glBufferId);
@@ -1445,7 +1445,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		glDispatchCompute(numModelsSmall, 1, 1);
 
 		// large
-		glUseProgram(glComputeProgram);
+		glUseProgram(glLargeComputeProgram);
 		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, hModelBufferLarge.glBufferId);
 		glDispatchCompute(numModelsLarge, 1, 1);
 
@@ -1951,7 +1951,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			glUniformMatrix4fv(uniLightProjectionMatrix, false, lightProjectionMatrix);
 
 			// Bind uniforms
-			glUniformBlockBinding(glProgram, uniBlockMain, 0);
+			glUniformBlockBinding(glProgram, uniBlockCamera, 0);
 			glUniformBlockBinding(glProgram, uniBlockMaterials, 1);
 			glUniformBlockBinding(glProgram, uniBlockWaterTypes, 2);
 			glUniformBlockBinding(glProgram, uniBlockPointLights, 3);
