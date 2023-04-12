@@ -41,8 +41,11 @@ import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.plugins.*;
 import net.runelite.client.plugins.entityhider.EntityHiderPlugin;
+import net.runelite.client.ui.ClientToolbar;
 import net.runelite.client.ui.ClientUI;
 import net.runelite.client.ui.DrawManager;
+import net.runelite.client.ui.NavigationButton;
+import net.runelite.client.util.ImageUtil;
 import net.runelite.client.util.LinkBrowser;
 import net.runelite.client.util.OSType;
 import net.runelite.rlawt.AWTContext;
@@ -56,6 +59,7 @@ import org.lwjgl.system.Configuration;
 import rs117.hd.config.*;
 import rs117.hd.data.WaterType;
 import rs117.hd.data.materials.Material;
+import rs117.hd.gui.panel.HdPanel;
 import rs117.hd.model.ModelHasher;
 import rs117.hd.model.ModelPusher;
 import rs117.hd.model.TempModelInfo;
@@ -64,6 +68,8 @@ import rs117.hd.opengl.compute.OpenCLManager;
 import rs117.hd.opengl.shader.Shader;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.Template;
+import rs117.hd.resourcepacks.ResourcePackRepository;
+import rs117.hd.resourcepacks.impl.DefaultResourcePack;
 import rs117.hd.scene.*;
 import rs117.hd.scene.lights.SceneLight;
 import rs117.hd.scene.ModelOverrideManager;
@@ -93,6 +99,8 @@ import java.util.Map;
 import static org.jocl.CL.*;
 import static org.lwjgl.opengl.GL43C.*;
 import static rs117.hd.HdPluginConfig.*;
+import static rs117.hd.resourcepacks.Constants.DEV_PACK_DIR;
+import static rs117.hd.resourcepacks.Constants.PACK_DIR;
 import static rs117.hd.utils.ResourcePath.path;
 
 @PluginDescriptor(
@@ -136,6 +144,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 	@Inject
 	private ClientThread clientThread;
+
+	@Inject
+	private ClientToolbar clientToolbar;
 
 	@Inject
 	private HdPluginConfig config;
@@ -189,6 +200,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	private Canvas canvas;
 	private AWTContext awtContext;
 	private Callback debugCallback;
+
+	private NavigationButton navigationButton;
+
+	@Getter
+	private ResourcePackRepository resourcePackRepository;
 
 	private static final String LINUX_VERSION_HEADER =
 		"#version 420\n" +
@@ -418,6 +434,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		configEnableModelCaching = config.enableModelCaching();
 		configMaxDynamicLights = config.maxDynamicLights().getValue();
 
+		DefaultResourcePack rprDefaultResourcePackIn = new DefaultResourcePack(path(HdPlugin.class,"pack"));
+		resourcePackRepository = new ResourcePackRepository(PACK_DIR,DEV_PACK_DIR,rprDefaultResourcePackIn);
+
+		navigationButton = NavigationButton.builder().tooltip("117 HD").priority(3).icon(ImageUtil.loadImageResource(HdPlugin.class, "icon.png")).panel(injector.getInstance(HdPanel.class)).build();
+		clientToolbar.addNavigation(navigationButton);
+
 		clientThread.invoke(() ->
 		{
 			try
@@ -499,6 +521,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				lwjglInitted = true;
 
 				checkGLErrors();
+
+				if(resourcePackRepository != null) {
+					resourcePackRepository.getPackPanel().populatePacks();
+				}
+
 				if (log.isDebugEnabled() && caps.glDebugMessageControl != 0)
 				{
 					debugCallback = GLUtil.setupDebugMessageCallback();
