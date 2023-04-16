@@ -341,7 +341,7 @@ public interface HdPluginConfig extends Config
 	)
 	default ShadowResolution shadowResolution()
 	{
-		return ShadowResolution.RES_1024;
+		return ShadowResolution.RES_4096;
 	}
 
 	@ConfigItem(
@@ -355,7 +355,7 @@ public interface HdPluginConfig extends Config
 	)
 	default ShadowDistance shadowDistance()
 	{
-		return ShadowDistance.DISTANCE_30;
+		return ShadowDistance.DISTANCE_50;
 	}
 
 	@ConfigItem(
