@@ -42,7 +42,6 @@ uniform int drawDistance;
 
 #include uniforms/materials.glsl
 
-#include utils/polyfills.glsl
 #include utils/constants.glsl
 #include utils/color_utils.glsl
 #include utils/fog.glsl
