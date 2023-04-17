@@ -74,6 +74,8 @@ public enum WaterType
 		.depthColor(linearToSrgb(rgb(50, 26, 22)))
 		.causticsStrength(0)
 		.duration(2)),
+	SOUL(b -> b
+		.surfaceColor(linearToSrgb(rgb(108, 136, 117)))),
 	ICE(b -> b
 		.specularStrength(.3f)
 		.specularGloss(200)

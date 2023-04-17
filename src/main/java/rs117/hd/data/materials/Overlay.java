@@ -561,7 +561,7 @@ public enum Overlay {
 
     HOSIDIUS_STONE_FLOOR(123, Area.HOSIDIUS, GroundMaterial.FALADOR_PATHS),
     BLOOD_ALTAR_BLOOD(72, Area.BLOOD_ALTAR, WaterType.BLOOD),
-	SOUL_ALTAR_RIVER(-128, Area.SOUL_ALTAR, WaterType.ICE_FLAT),
+	SOUL_ALTAR_RIVER(-128, Area.SOUL_ALTAR, WaterType.SOUL),
     SHAYZIEN_PAVED_AREA(Area.SHAYZIEN, GroundMaterial.GRAVEL, p -> p.blended(false).ids(2, -117)),
     SHAYZIEN_RED_FLOOR(86, Area.SHAYZIEN, GroundMaterial.MARBLE_2_GLOSS, p -> p.blended(false)),
 
