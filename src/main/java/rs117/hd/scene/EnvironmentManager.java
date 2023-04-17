@@ -306,6 +306,7 @@ public class EnvironmentManager
 		startUnderwaterCausticsStrength = currentUnderwaterCausticsStrength;
 
 		updateSkyColor();
+		targetWaterColor = getCurrentEnvironment().getWaterColor();
 
 		targetFogDepth = newEnvironment.getFogDepth();
 		if (useWinterTheme() && !newEnvironment.isCustomFogDepth()) {
@@ -362,29 +363,22 @@ public class EnvironmentManager
 		}
 	}
 
+	public Environment getCurrentEnvironment()
+	{
+		return useWinterTheme() ? Environment.WINTER : currentEnvironment;
+	}
+
 	public void updateSkyColor()
 	{
-		Environment env = useWinterTheme() ? Environment.WINTER : currentEnvironment;
-		if (!env.isCustomFogColor() || env.isAllowSkyOverride() && config.overrideSky())
+		Environment env = getCurrentEnvironment();
+		boolean overrideSkyColor = env.isAllowSkyOverride() && config.overrideSky();
+		if (overrideSkyColor || !env.isCustomFogColor())
 		{
-			DefaultSkyColor sky = config.defaultSkyColor();
-			targetFogColor = sky.getRgb(client);
-			if (sky == DefaultSkyColor.OSRS)
-			{
-				sky = DefaultSkyColor.DEFAULT;
-			}
-			targetWaterColor = sky.getRgb(client);
+			targetFogColor = config.defaultSkyColor().getRgb(client);
 		}
 		else
 		{
-			targetFogColor = targetWaterColor = env.getFogColor();
-		}
-
-
-		//override with decoupled water/sky color if present
-		if(currentEnvironment.isCustomWaterColor())
-		{
-			targetWaterColor = currentEnvironment.getWaterColor();
+			targetFogColor = env.getFogColor();
 		}
 	}
 

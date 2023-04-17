@@ -1010,6 +1010,10 @@ public enum Area
 		new AABB(1751, 3833, 1791, 3815)
 	),
 	DARK_ALTAR(1660, 3904, 1747, 3864),
+	SOUL_ALTAR(
+		new AABB(1790, 3833, 1851, 3940),
+		new AABB(1745, 3910, 1790, 3970) // Includes all visible soul river
+	),
 	ARCEUUS(
 		new AABB(1572, 3838, 1597, 3799),
 		new AABB(1566, 3832, 1586, 3805),
