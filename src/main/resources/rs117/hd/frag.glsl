@@ -201,9 +201,20 @@ void main() {
         vec4 baseColor3 = vColor[2];
 
         // get diffuse textures
-        vec4 texColor1 = colorMap1 == -1 ? vec4(1) : texture(textureArray, vec3(uv1, colorMap1));
-        vec4 texColor2 = colorMap2 == -1 ? vec4(1) : texture(textureArray, vec3(uv2, colorMap2));
-        vec4 texColor3 = colorMap3 == -1 ? vec4(1) : texture(textureArray, vec3(uv3, colorMap3));
+        vec4 texColor1 = vec4(1);
+        vec4 texColor2 = vec4(1);
+        vec4 texColor3 = vec4(1);
+        #define MATERIAL_ID_WATER_DROPLETS 17
+        if (colorMap1 == MATERIAL_ID_WATER_DROPLETS) {
+            // Disable mipmapping for fishing spots, as it makes them very hard to see when zoomed out
+            texColor1 = textureLod(textureArray, vec3(uv1, colorMap1), 0);
+            texColor2 = textureLod(textureArray, vec3(uv2, colorMap1), 0);
+            texColor3 = textureLod(textureArray, vec3(uv3, colorMap1), 0);
+        } else {
+            if (colorMap1 != -1) texColor1 = texture(textureArray, vec3(uv1, colorMap1));
+            if (colorMap2 != -1) texColor2 = texture(textureArray, vec3(uv2, colorMap2));
+            if (colorMap3 != -1) texColor3 = texture(textureArray, vec3(uv3, colorMap3));
+        }
         texColor1.rgb *= material1.brightness;
         texColor2.rgb *= material2.brightness;
         texColor3.rgb *= material3.brightness;
