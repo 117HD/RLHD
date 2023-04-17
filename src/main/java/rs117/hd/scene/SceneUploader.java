@@ -445,6 +445,16 @@ class SceneUploader
 					nwColor |= 1 << 20;
 				if (proceduralGenerator.vertexIsWater.containsKey(neVertexKey) && proceduralGenerator.vertexIsLand.containsKey(neVertexKey))
 					neColor |= 1 << 20;
+
+				// If all corners have foam, turn it off, as blending will not work properly
+				// This helps with the water in Motherlode mine
+				if (((swColor & seColor & nwColor & neColor) >> 20) == 1) {
+					int mask = ~(1 << 20);
+					swColor &= mask;
+					seColor &= mask;
+					nwColor &= mask;
+					neColor &= mask;
+				}
 			}
 
 			if (proceduralGenerator.vertexIsOverlay.containsKey(neVertexKey) && proceduralGenerator.vertexIsUnderlay.containsKey(neVertexKey))
