@@ -113,7 +113,7 @@ public enum WaterType
 		private float baseOpacity = .5f;
 		private float fresnelAmount = 1;
 		private Material normalMap = Material.WATER_NORMAL_MAP_1;
-		private float[] surfaceColor = { 1, 1, 1 };
+		private float[] surfaceColor = linearToSrgb(rgb(185, 214, 255));
 		private float[] foamColor = linearToSrgb(rgb(176, 164, 146));
 		private float[] depthColor = linearToSrgb(rgb(0, 117, 142));
 		private float causticsStrength = 1;

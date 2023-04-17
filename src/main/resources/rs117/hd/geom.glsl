@@ -44,6 +44,7 @@ in vec3 gUv[3];
 in vec3 gNormal[3];
 in vec4 gColor[3];
 in float gFogAmount[3];
+in float gShoreLineFoam[3];
 in int gMaterialData[3];
 in int gTerrainData[3];
 
@@ -57,6 +58,7 @@ out FragmentData {
     vec3 normal;
     vec3 texBlend;
     float fogAmount;
+    float shoreLineFoam;
 } OUT;
 
 void main() {
@@ -84,6 +86,7 @@ void main() {
         OUT.texBlend = vec3(0);
         OUT.texBlend[i] = 1;
         OUT.fogAmount = gFogAmount[i];
+        OUT.shoreLineFoam = gShoreLineFoam[i];
         gl_Position = projectionMatrix * vec4(OUT.position, 1);
         EmitVertex();
     }

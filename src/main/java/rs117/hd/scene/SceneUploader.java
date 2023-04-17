@@ -433,18 +433,18 @@ class SceneUploader
 			}
 			else
 			{
-				// set colors for the shoreline to create a foam effect in the water shader
+				swColor = seColor = nwColor = neColor = HDUtils.rgbToPackedHsl(waterType.surfaceColor);
 
-				swColor = seColor = nwColor = neColor = 127;
-
+				// Color bit packing: 8-bit alpha | 3 unused bits | 1-bit shoreline | 4-bit face priority | 16-bit Jagex HSL
+				// Add shoreline flag
 				if (proceduralGenerator.vertexIsWater.containsKey(swVertexKey) && proceduralGenerator.vertexIsLand.containsKey(swVertexKey))
-					swColor = 0;
+					swColor |= 1 << 20;
 				if (proceduralGenerator.vertexIsWater.containsKey(seVertexKey) && proceduralGenerator.vertexIsLand.containsKey(seVertexKey))
-					seColor = 0;
+					seColor |= 1 << 20;
 				if (proceduralGenerator.vertexIsWater.containsKey(nwVertexKey) && proceduralGenerator.vertexIsLand.containsKey(nwVertexKey))
-					nwColor = 0;
+					nwColor |= 1 << 20;
 				if (proceduralGenerator.vertexIsWater.containsKey(neVertexKey) && proceduralGenerator.vertexIsLand.containsKey(neVertexKey))
-					neColor = 0;
+					neColor |= 1 << 20;
 			}
 
 			if (proceduralGenerator.vertexIsOverlay.containsKey(neVertexKey) && proceduralGenerator.vertexIsUnderlay.containsKey(neVertexKey))
@@ -774,34 +774,23 @@ class SceneUploader
 			}
 			else
 			{
-				// set colors for the shoreline to create a foam effect in the water shader
-				colorA = colorB = colorC = 127;
+				colorA = colorB = colorC = HDUtils.rgbToPackedHsl(waterType.surfaceColor);
+
+				// Add shoreline flag
 				if (proceduralGenerator.vertexIsWater.containsKey(vertexKeyA) && proceduralGenerator.vertexIsLand.containsKey(vertexKeyA))
-				{
-					colorA = 0;
-				}
+					colorA |= 1 << 20;
 				if (proceduralGenerator.vertexIsWater.containsKey(vertexKeyB) && proceduralGenerator.vertexIsLand.containsKey(vertexKeyB))
-				{
-					colorB = 0;
-				}
+					colorB |= 1 << 20;
 				if (proceduralGenerator.vertexIsWater.containsKey(vertexKeyC) && proceduralGenerator.vertexIsLand.containsKey(vertexKeyC))
-				{
-					colorC = 0;
-				}
+					colorC |= 1 << 20;
 			}
 
 			if (proceduralGenerator.vertexIsOverlay.containsKey(vertexKeyA) && proceduralGenerator.vertexIsUnderlay.containsKey(vertexKeyA))
-			{
 				vertexAIsOverlay = true;
-			}
 			if (proceduralGenerator.vertexIsOverlay.containsKey(vertexKeyB) && proceduralGenerator.vertexIsUnderlay.containsKey(vertexKeyB))
-			{
 				vertexBIsOverlay = true;
-			}
 			if (proceduralGenerator.vertexIsOverlay.containsKey(vertexKeyC) && proceduralGenerator.vertexIsUnderlay.containsKey(vertexKeyC))
-			{
 				vertexCIsOverlay = true;
-			}
 
 			int aTerrainData = packTerrainData(true, 0, waterType, tileZ);
 			int bTerrainData = packTerrainData(true, 0, waterType, tileZ);

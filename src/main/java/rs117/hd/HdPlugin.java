@@ -300,9 +300,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	private int uniFogColor;
 	private int uniFogDepth;
 	private int uniDrawDistance;
-	private int uniWaterColorLight;
-	private int uniWaterColorMid;
-	private int uniWaterColorDark;
 	private int uniAmbientStrength;
 	private int uniAmbientColor;
 	private int uniLightStrength;
@@ -827,9 +824,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		uniUseFog = glGetUniformLocation(glProgram, "useFog");
 		uniFogColor = glGetUniformLocation(glProgram, "fogColor");
 		uniFogDepth = glGetUniformLocation(glProgram, "fogDepth");
-		uniWaterColorLight = glGetUniformLocation(glProgram, "waterColorLight");
-		uniWaterColorMid = glGetUniformLocation(glProgram, "waterColorMid");
-		uniWaterColorDark = glGetUniformLocation(glProgram, "waterColorDark");
 		uniDrawDistance = glGetUniformLocation(glProgram, "drawDistance");
 		uniAmbientStrength = glGetUniformLocation(glProgram, "ambientStrength");
 		uniAmbientColor = glGetUniformLocation(glProgram, "ambientColor");
@@ -1887,30 +1881,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 			glUniform1i(uniDrawDistance, drawDistance * Perspective.LOCAL_TILE_SIZE);
 			glUniform1f(uniColorBlindnessIntensity, config.colorBlindnessIntensity() / 100.f);
-
-			float[] waterColor = environmentManager.currentWaterColor;
-			float[] waterColorHSB = Color.RGBtoHSB((int) (waterColor[0] * 255f), (int) (waterColor[1] * 255f), (int) (waterColor[2] * 255f), null);
-			float lightBrightnessMultiplier = 0.8f;
-			float midBrightnessMultiplier = 0.45f;
-			float darkBrightnessMultiplier = 0.05f;
-			float[] waterColorLight = new Color(Color.HSBtoRGB(waterColorHSB[0], waterColorHSB[1], waterColorHSB[2] * lightBrightnessMultiplier)).getRGBColorComponents(null);
-			float[] waterColorMid = new Color(Color.HSBtoRGB(waterColorHSB[0], waterColorHSB[1], waterColorHSB[2] * midBrightnessMultiplier)).getRGBColorComponents(null);
-			float[] waterColorDark = new Color(Color.HSBtoRGB(waterColorHSB[0], waterColorHSB[1], waterColorHSB[2] * darkBrightnessMultiplier)).getRGBColorComponents(null);
-			for (int i = 0; i < waterColorLight.length; i++)
-			{
-				waterColorLight[i] = HDUtils.linearToSrgb(waterColorLight[i]);
-			}
-			for (int i = 0; i < waterColorMid.length; i++)
-			{
-				waterColorMid[i] = HDUtils.linearToSrgb(waterColorMid[i]);
-			}
-			for (int i = 0; i < waterColorDark.length; i++)
-			{
-				waterColorDark[i] = HDUtils.linearToSrgb(waterColorDark[i]);
-			}
-			glUniform3f(uniWaterColorLight, waterColorLight[0], waterColorLight[1], waterColorLight[2]);
-			glUniform3f(uniWaterColorMid, waterColorMid[0], waterColorMid[1], waterColorMid[2]);
-			glUniform3f(uniWaterColorDark, waterColorDark[0], waterColorDark[1], waterColorDark[2]);
 
 			// get ambient light strength from either the config or the current area
 			float ambientStrength = environmentManager.currentAmbientStrength;

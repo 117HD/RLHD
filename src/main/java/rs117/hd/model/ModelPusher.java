@@ -691,6 +691,7 @@ public class ModelPusher {
         color2L = HDUtils.clamp(color2L, 0, maxBrightness2);
         color3L = HDUtils.clamp(color3L, 0, maxBrightness3);
 
+        // 6-bit hue | 3-bit saturation | 7-bit lightness
         color1 = (color1H << 3 | color1S) << 7 | color1L;
         color2 = (color2H << 3 | color2S) << 7 | color2L;
         color3 = (color3H << 3 | color3S) << 7 | color3L;
@@ -734,7 +735,7 @@ public class ModelPusher {
         }
         int priority = 0;
         if (facePriorities != null) {
-            priority = (facePriorities[face] & 0xff) << 16;
+            priority = (facePriorities[face] & 0xF) << 16;
         }
         return alpha | priority;
     }

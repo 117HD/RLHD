@@ -40,9 +40,6 @@ uniform float elapsedTime;
 uniform float colorBlindnessIntensity;
 uniform vec4 fogColor;
 uniform int fogDepth;
-uniform vec3 waterColorLight;
-uniform vec3 waterColorMid;
-uniform vec3 waterColorDark;
 uniform vec3 ambientColor;
 uniform float ambientStrength;
 uniform vec3 lightColor;
@@ -77,6 +74,7 @@ in FragmentData {
     vec3 normal;
     vec3 texBlend;
     float fogAmount;
+    float shoreLineFoam;
 } IN;
 
 out vec4 FragColor;
@@ -135,7 +133,7 @@ void main() {
     vec4 outputColor = vec4(1);
 
     if (isWater) {
-        outputColor = sampleWater(waterTypeIndex, viewDir);
+        outputColor = sampleWaterReflection(waterType, viewDir);
     } else {
         // Source: https://www.geeks3d.com/20130122/normal-mapping-without-precomputed-tangent-space-vectors/
         vec3 N = IN.normal;
@@ -334,7 +332,7 @@ void main() {
 
         float shadow = 0;
         if ((vMaterialData[0] >> MATERIAL_FLAG_DISABLE_SHADOW_RECEIVING & 1) == 0)
-            shadow = sampleShadowMap(fragPos, waterTypeIndex, vec2(0), lightDotNormals);
+            shadow = sampleShadowMap(fragPos, vec2(0), lightDotNormals);
         shadow = max(shadow, selfShadowing);
         float inverseShadow = 1 - shadow;
 
@@ -471,7 +469,7 @@ void main() {
         outputColor.rgb = linearToSrgb(outputColor.rgb);
 
         if (isUnderwater) {
-            sampleUnderwater(outputColor.rgb, waterType, waterDepth, lightDotNormals);
+            outputColor = sampleWaterTransmission(waterType, waterDepth, outputColor, viewDir, lightDotNormals);
         }
     }
 

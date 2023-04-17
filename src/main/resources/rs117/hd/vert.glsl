@@ -35,6 +35,7 @@ out vec3 gUv;
 out vec3 gNormal;
 out vec4 gColor;
 out float gFogAmount;
+out float gShoreLineFoam;
 out int gMaterialData;
 out int gTerrainData;
 
@@ -66,4 +67,5 @@ void main() {
     gFogAmount = calculateFogAmount(gPosition);
     gMaterialData = materialData;
     gTerrainData = terrainData;
+    gShoreLineFoam = (ahsl >> 20) & 1;
 }

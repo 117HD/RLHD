@@ -25,7 +25,7 @@
 
 vec4 specular(vec3 viewDir, vec3 reflectDir, vec3 specularGloss, vec3 specularStrength, vec3 lightColor, float lightStrength)
 {
-    float vDotR = max(dot(viewDir, reflectDir), 0.0);
+    float vDotR = max(0, dot(viewDir, reflectDir));
     vec3 specX = vec3(pow(vDotR, specularGloss.x) * lightColor * specularStrength.x);
     vec3 specY = vec3(pow(vDotR, specularGloss.y) * lightColor * specularStrength.y);
     vec3 specZ = vec3(pow(vDotR, specularGloss.z) * lightColor * specularStrength.z);
