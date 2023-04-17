@@ -1950,8 +1950,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			glUniform1f(uniLightningBrightness, environmentManager.lightningBrightness);
 			glUniform1i(uniPointLightsCount, Math.min(configMaxDynamicLights, lightManager.visibleLightsCount));
 
-			glUniform1f(uniSaturation, config.saturation().getAmount());
-			glUniform1f(uniContrast, config.contrast().getAmount());
+			glUniform1f(uniSaturation, config.saturation() / 100f);
+			glUniform1f(uniContrast, config.contrast() / 100f);
 			glUniform1i(uniUnderwaterEnvironment, environmentManager.isUnderwater() ? 1 : 0);
 			glUniform1i(uniUnderwaterCaustics, config.underwaterCaustics() ? 1 : 0);
 			glUniform3fv(uniUnderwaterCausticsColor, environmentManager.currentUnderwaterCausticsColor);
@@ -2268,7 +2268,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	@Subscribe
 	public void onConfigChanged(ConfigChanged event)
 	{
-		if (!event.getGroup().equals("hd"))
+		if (!event.getGroup().equals(CONFIG_GROUP))
 		{
 			return;
 		}

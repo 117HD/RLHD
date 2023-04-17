@@ -29,12 +29,15 @@ import net.runelite.client.config.*;
 
 import static rs117.hd.HdPlugin.MAX_DISTANCE;
 import static rs117.hd.HdPlugin.MAX_FOG_DEPTH;
+import static rs117.hd.HdPluginConfig.CONFIG_GROUP;
 
 import rs117.hd.config.*;
 
-@ConfigGroup("hd")
+@ConfigGroup(CONFIG_GROUP)
 public interface HdPluginConfig extends Config
 {
+	String CONFIG_GROUP = "hd";
+
 	/*====== General settings ======*/
 
 	@ConfigSection(
@@ -203,25 +206,41 @@ public interface HdPluginConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "saturation",
+		keyName = "fSaturation",
 		name = "Saturation",
-		description = "Controls the saturation of the final rendered image.",
+		description = "Controls the saturation of the final rendered image.<br>" +
+			"Intended to be kept between 0% and 120%.",
 		position = 11,
 		section = generalSettings
 	)
-	default Saturation saturation()
+	@Units(Units.PERCENT)
+	@Range(min = -500, max = 500)
+	default int saturation()
+	{
+		return (int) (oldSaturationDropdown().getAmount() * 100);
+	}
+	@ConfigItem(keyName = "saturation", hidden = true, name = "", description = "")
+	default Saturation oldSaturationDropdown()
 	{
 		return Saturation.DEFAULT;
 	}
 
 	@ConfigItem(
-		keyName = "contrast",
+		keyName = "fContrast",
 		name = "Contrast",
-		description = "Controls the contrast of the final rendered image.",
+		description = "Controls the contrast of the final rendered image.<br>" +
+			"Intended to be kept between 90% and 110%.",
 		position = 12,
 		section = generalSettings
 	)
-	default Contrast contrast()
+	@Units(Units.PERCENT)
+	@Range(min = -500, max = 500)
+	default int contrast()
+	{
+		return (int) (oldContrastDropdown().getAmount() * 100);
+	}
+	@ConfigItem(keyName = "contrast", hidden = true, name = "", description = "")
+	default Contrast oldContrastDropdown()
 	{
 		return Contrast.DEFAULT;
 	}
