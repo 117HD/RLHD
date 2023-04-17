@@ -249,6 +249,45 @@ public class HDUtils
 		return p;
 	}
 
+	// Based on https://en.wikipedia.org/wiki/HSL_and_HSV
+	public static float[] rgbToHsl(float[] rgb)
+	{
+		float R = clamp(rgb[0], 0, 1);
+		float G = clamp(rgb[1], 0, 1);
+		float B = clamp(rgb[2], 0, 1);
+
+		float M = Math.max(Math.max(R, G), B);
+		float m = Math.min(Math.min(R, G), B);
+		float C = M - m;
+
+		float H;
+		if (M == R)
+			H = ((G - B) / C) % 6.f;
+		else if (M == G)
+			H = (B - R) / C + 2;
+		else
+			H = (R - G) / C + 4;
+		H /= 6;
+
+		float L = (M + m) / 2;
+
+		float S = 0;
+		if (0 < L && L < 1)
+			S = C / (1 - Math.abs(2 * L - 1));
+
+		return new float[] { H, S, L };
+	}
+
+	public static int rgbToPackedHsl(float[] rgb)
+	{
+		float[] hsl = rgbToHsl(rgb);
+		// 6-bit hue | 3-bit saturation | 7-bit lightness
+		int h = (int) (hsl[0] * 0x3F) & 0x3F;
+		int s = (int) (hsl[1] * 0x7) & 0x7;
+		int l = (int) (hsl[2] * 0x7F) & 0x7F;
+		return h << 10 | s << 7 | l;
+	}
+
 	// Conversion functions to and from sRGB and linear color space.
 	// The implementation is based on the sRGB EOTF given in the Khronos Data Format Specification.
 	// Source: https://web.archive.org/web/20220808015852/https://registry.khronos.org/DataFormat/specs/1.3/dataformat.1.3.pdf
