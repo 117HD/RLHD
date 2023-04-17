@@ -252,7 +252,8 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = "brightness2",
 		name = "Brightness",
-		description = "Controls the brightness of environmental lighting.",
+		description = "Controls the brightness of environmental lighting.<br>" +
+			"A brightness value of 20 is recommended.",
 		position = 13,
 		section = generalSettings
 	)
