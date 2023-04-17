@@ -84,7 +84,6 @@ vec2 worldUvs(float scale) {
     return vec2(uv.x, -uv.y);
 }
 
-#include utils/polyfills.glsl
 #include utils/constants.glsl
 #include utils/misc.glsl
 #include utils/color_blindness.glsl

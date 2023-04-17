@@ -41,7 +41,6 @@ out int gTerrainData;
 
 #include uniforms/materials.glsl
 
-#include utils/polyfills.glsl
 #include utils/constants.glsl
 #include utils/color_conversion.glsl
 #include utils/fog.glsl

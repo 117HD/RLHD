@@ -34,7 +34,6 @@ uniform float elapsedTime;
 
 #include uniforms/camera.glsl
 
-#include utils/polyfills.glsl
 #include utils/constants.glsl
 #define USE_VANILLA_UV_PROJECTION
 #include utils/uvs.glsl
