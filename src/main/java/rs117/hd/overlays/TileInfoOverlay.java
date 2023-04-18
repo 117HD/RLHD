@@ -47,7 +47,7 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay
 	{
 		this.client = client;
 		setPosition(OverlayPosition.DYNAMIC);
-		setLayer(OverlayLayer.ABOVE_SCENE);
+		setLayer(OverlayLayer.ALWAYS_ON_TOP);
 	}
 
 	@Override
@@ -154,7 +154,17 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay
 			LocalPoint localPoint = tile.getLocalLocation();
 			worldPoint = WorldPoint.fromLocalInstance(client, localPoint);
 		}
-		String worldPointInfo = "World point: " + worldPoint.getX() + ", " + worldPoint.getY() + ", " + worldPoint.getPlane();
+		String worldPointInfo =
+			"World point: " +
+			worldPoint.getX() + ", " +
+			worldPoint.getY() + ", " +
+			worldPoint.getPlane() +
+			" (" +
+				tile.getSceneLocation().getX() + ", " +
+				tile.getSceneLocation().getY() + ", " +
+				tile.getPlane() + ", " +
+				tile.getRenderLevel() +
+			")";
 		lines.add(worldPointInfo);
 
 		Scene scene = client.getScene();
@@ -243,12 +253,29 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay
 				int b = CB[face];
 				int c = CC[face];
 				if (a == b && b == c) {
-					lines.add("" + face + ": " + (a == 12345678 ? "HIDDEN" : a));
+					lines.add(face + ": " + (a == 12345678 ? "HIDDEN" : a));
 				} else {
-					lines.add("" + face + ": [ " +
+					lines.add(face + ": [ " +
 						(a == 12345678 ? "HIDDEN" : a) + ", " +
 						(b == 12345678 ? "HIDDEN" : b) + ", " +
 						(c == 12345678 ? "HIDDEN" : c) + " ]");
+				}
+			}
+		}
+
+		{
+			int localX = tile.getLocalLocation().getX();
+			int localY = tile.getLocalLocation().getY();
+			int tileHeight = getHeight(client, localX, localY, tile.getPlane());
+			Tile[][][] tiles = client.getScene().getTiles();
+			for (int i = 0; i < MAX_Z; i++) {
+				Tile other = tiles[i][x][y];
+				if (other == null || tile.getPlane() == i) continue;
+				int diff = Math.abs(getHeight(client, localX, localY, i) - tileHeight);
+				if (diff < 32) {
+					lines.add("Probable compound tile.");
+					lines.add("Hold ctrl to view floors above.");
+					break;
 				}
 			}
 		}
@@ -328,9 +355,12 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay
 		}
 
 		int totalWidth = leftWidth + rightWidth + space + xPadding * 2;
+		Rectangle bounds = g.getClipBounds();
 		Rectangle rect = new Rectangle(
-			tileCenter.getX() - totalWidth / 2,
-			tileCenter.getY() - totalHeight - padding, totalWidth, totalHeight);
+			HDUtils.clamp(tileCenter.getX() - totalWidth / 2, bounds.x, bounds.width - totalWidth),
+			HDUtils.clamp(tileCenter.getY() - totalHeight - padding, bounds.y, bounds.height - totalHeight),
+			totalWidth,
+			totalHeight);
 		if (dodgeRect != null && dodgeRect.intersects(rect))
 		{
 			// Avoid overlapping with other tile info
