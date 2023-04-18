@@ -194,9 +194,9 @@ vec4 sampleWaterReflection(WaterType waterType, vec3 viewDir) {
     vec3 baseColor = waterType.surfaceColor * compositeLight;
     baseColor = mix(baseColor, surfaceColor, waterType.fresnelAmount);
     float shoreLineMask = IN.shoreLineFoam;
-    float maxFoamAmount = 0.8;
+    float maxFoamAmount = .925;
     float foamAmount = min(shoreLineMask, maxFoamAmount);
-    float foamDistance = 0.7;
+    float foamDistance = 0.3;
     vec3 foamColor = waterType.foamColor;
     foamColor *= foamMask * compositeLight;
     foamAmount = clamp(pow(1.0 - ((1.0 - foamAmount) / foamDistance), 3), 0.0, 1.0) * waterType.hasFoam;
