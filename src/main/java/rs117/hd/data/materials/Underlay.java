@@ -106,9 +106,6 @@ public enum Underlay {
 
     TZHAAR(72, Area.TZHAAR, GroundMaterial.VARIED_DIRT_SHINY, p -> p.shiftLightness(2)),
 
-    // Morytania
-    VER_SINHAZA_WATER_FIX(p -> p.ids(54).area(Area.VER_SINHAZA_WATER_FIX).waterType(WaterType.WATER).blended(false)),
-
     // Ardougne
     SOUTH_OF_ZOO_FIX(61, Area.ARDOUGNE_SOUTH_OF_ZOO, GroundMaterial.OVERWORLD_GRASS_1),
     // Castle Wars
@@ -191,6 +188,9 @@ public enum Underlay {
 
     TEMPLE_OF_THE_EYE(Area.TEMPLE_OF_THE_EYE, GroundMaterial.GRUNGE, p -> p.ids(87, 88, 89)),
     ARCEUUS_GROUND(Area.ARCEUUS, GroundMaterial.DIRT, p -> p.ids(2, 3, 17, 23, 24)),
+
+	// Water fixes
+	COMPOUND_TILE_WATER_FIX(p -> p.ids(54, 96).area(Area.COMPOUND_TILE_WATER_FIX).waterType(WaterType.WATER).blended(false)),
 
     // Cutscenes
     CANOE_CUTSCENE_GRASS(Area.CANOE_CUTSCENE, GroundMaterial.GRASS_SCROLLING, p -> p.ids(48, 50, 63)),
