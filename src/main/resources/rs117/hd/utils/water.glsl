@@ -25,6 +25,7 @@
 #pragma once
 #include utils/misc.glsl
 #include utils/shadows.glsl
+#include DECOUPLE_SKY_AND_WATER_COLOR
 
 vec4 sampleWaterTransmission(WaterType waterType, float depth, vec4 seafloorColor, vec3 viewDir, float lightDotNormals) {
     // underwater terrain
@@ -172,10 +173,15 @@ vec4 sampleWaterReflection(WaterType waterType, vec3 viewDir) {
     float finalFresnel = clamp(mix(baseOpacity, 1.0, fresnel * 1.2), 0.0, 1.0);
     vec3 surfaceColor = vec3(0);
 
+    vec3 skyColor = vec3(185, 214, 255) / 255.f;
+    #if !DECOUPLE_SKY_AND_WATER_COLOR
+    if (fogColor.rgb != vec3(0))
+        skyColor = fogColor.rgb;
+    #endif
     // This gives the same result as the old calculation done in Java
-    vec3 waterColorDark = fogColor.rgb * 0.24780052799263164;
-    vec3 waterColorMid = fogColor.rgb * 0.7014107175340978;
-    vec3 waterColorLight = fogColor.rgb * 0.9309245449811874;
+    vec3 waterColorDark = skyColor * 0.24780052799263164;
+    vec3 waterColorMid = skyColor * 0.7014107175340978;
+    vec3 waterColorLight = skyColor * 0.9309245449811874;
 
     // add sky gradient
     if (finalFresnel < 0.5) {

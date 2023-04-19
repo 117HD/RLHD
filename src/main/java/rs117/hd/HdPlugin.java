@@ -758,6 +758,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 					return String.format("#define %s %d", key, configShadowMode.ordinal());
 				case "SHADOW_TRANSPARENCY":
 					return String.format("#define %s %d", key, config.enableShadowTransparency() ? 1 : 0);
+				case "DECOUPLE_SKY_AND_WATER_COLOR":
+					return String.format("#define %s %d", key, config.decoupleSkyAndWaterColor() ? 1 : 0);
 			}
 			return null;
 		});
@@ -2309,6 +2311,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			case "colorBlindMode":
 			case "parallaxMappingMode":
 			case "macosIntelWorkaround":
+			case KEY_DECOUPLE_SKY_AND_WATER_COLOR:
 				clientThread.invoke(this::recompilePrograms);
 				break;
 			case "unlockFps":

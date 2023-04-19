@@ -631,7 +631,7 @@ public interface HdPluginConfig extends Config
 
 	@ConfigItem(
 		keyName = "macosIntelWorkaround",
-		name = "Fix white color issue on Intel Macs",
+		name = "Fix white colors on Intel Macs",
 		description = "Workaround for visual artifacts found on some Intel GPU drivers on macOS.",
 		warning =
 			"This setting can cause RuneLite to crash, and it can be difficult to undo.\n" +
@@ -682,6 +682,20 @@ public interface HdPluginConfig extends Config
 		section = miscellaneousSettings
 	)
 	default boolean enableLegacyGreyColors() {
+		return false;
+	}
+
+	String KEY_DECOUPLE_SKY_AND_WATER_COLOR = "decoupleSkyAndWaterColor";
+	@ConfigItem(
+		keyName = KEY_DECOUPLE_SKY_AND_WATER_COLOR,
+		name = "Decouple sky and water color",
+		description =
+			"If you prefer to not have the sky color influence the water color, this is an option.<br>" +
+			"The option may get removed in the future if 117 HD's water rendering is changed.",
+		position = 5,
+		section = miscellaneousSettings
+	)
+	default boolean decoupleSkyAndWaterColor() {
 		return false;
 	}
 
