@@ -380,6 +380,9 @@ public enum Material
 
 	WORN_TILES,
 	STONE,
+	STONE_LOWGLOSS(STONE, p -> p
+			.setSpecular(0.3f, 30)
+	),
 	STONE_SEMIGLOSS(STONE, p -> p.setSpecular(0.6f, 100)),
 	STONE_SCROLLING(STONE, p -> p
 		.setScroll(0, -1 / 0.7f)),

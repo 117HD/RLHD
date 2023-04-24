@@ -7664,12 +7664,14 @@
   },
   {
     "description": "Al-Kharid Low Stone Wall",
-    "baseMaterial": "STONE",
+    "baseMaterial": "STONE_LOWGLOSS",
     "objectIds": [
       987,
       988,
       989,
-      990
+      990,
+      33344,
+      33345
     ]
   },
   {
