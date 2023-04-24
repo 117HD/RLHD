@@ -7735,5 +7735,21 @@
       1396,
       2670
     ]
+  },
+  {
+    "description": "Al-Kharid Well",
+    "baseMaterial": "STONE_LOWGLOSS",
+    "objectIds": [
+      878
+    ]
+  },
+  {
+    "description": "Al-Kharid Well",
+    "baseMaterial": "FINE_CARPET",
+    "objectIds": [
+      1534
+    ],
+    "uvType": "MODEL_XY",
+    "uvScale": 0.80
   }
 ]
