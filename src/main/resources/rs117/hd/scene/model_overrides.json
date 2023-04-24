@@ -8041,7 +8041,8 @@
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       3165,
-      3166
+      3166,
+      15973
     ],
     "uvType": "MODEL_XZ",
     "uvOrientation": 512
@@ -8051,6 +8052,57 @@
     "baseMaterial": "WATTLE_1",
     "objectIds": [
       3167
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "PvP Arena Walls",
+    "baseMaterial": "WATTLE_1",
+    "objectIds": [
+      44870,
+      44871,
+      44872,
+      44873,
+      44874,
+      44875,
+      44876,
+      44877,
+      44878,
+      44879,
+      44880,
+      44881,
+      44882,
+      44883,
+      44884,
+      44885,
+      44886,
+      44887
+    ],
+    "uvType": "MODEL_XY"
+  },
+  {
+    "description": "PvP Arena Walls - Corners",
+    "baseMaterial": "WATTLE_1",
+    "objectIds": [
+      44888,
+      44889
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "PvP Arena Stairs",
+    "baseMaterial": "STONE_LOWGLOSS",
+    "objectIds": [
+      44924,
+      44925
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "PvP Arena Statue",
+    "baseMaterial": "STONE_LOWGLOSS",
+    "objectIds": [
+      44829
     ],
     "uvType": "GEOMETRY"
   }
