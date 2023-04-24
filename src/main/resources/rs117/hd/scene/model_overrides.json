@@ -7898,7 +7898,7 @@
   },
   {
     "description": "Nardah Walls",
-    "baseMaterial": "STONE_LOWGLOSS",
+    "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       6590,
       6591,
@@ -7915,7 +7915,7 @@
   },
   {
     "description": "Nardah Walls - Flipped",
-    "baseMaterial": "STONE_LOWGLOSS",
+    "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       6588,
       6589

@@ -383,7 +383,12 @@ public enum Material
 	),
 
 	WORN_TILES,
+	STONE_N,
 	STONE,
+	STONE_NORMALED(STONE, p -> p
+			.setNormalMap(STONE_N)
+			.setSpecular(0.3f,30)
+	),
 	STONE_LOWGLOSS(STONE, p -> p
 			.setSpecular(0.3f, 30)
 	),
