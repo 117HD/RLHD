@@ -5500,7 +5500,8 @@
       10374,
       10378,
       10379,
-      10381
+      10381,
+      20367
     ],
     "flatNormals": true
   },
@@ -6148,6 +6149,7 @@
     "description": "Objects - Table - Single - Wooden – Plank - Generic",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      20351,
       23066
     ],
     "uvType": "MODEL_XZ",
@@ -7977,6 +7979,18 @@
     ],
     "uvType": "MODEL_XZ",
     "uvScale": 0.4,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Jungle Tree Big",
+    "baseMaterial": "PLANT_GRUNGE_2",
+    "objectIds": [
+      1326,
+      1327,
+      1328
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.2,
     "uvOrientation": 256
   },
   {
