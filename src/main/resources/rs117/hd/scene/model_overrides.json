@@ -7842,5 +7842,14 @@
       14943
     ],
     "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Agility Arrow",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      11402
+    ],
+    "uvType": "MODEL_XY",
+    "uvOrientation": 512
   }
 ]
