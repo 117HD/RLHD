@@ -1959,7 +1959,10 @@
       1415,
       1416,
       21799,
-      "BIG_WINDOW"
+      "BIG_WINDOW",
+      26585,
+      26586,
+      26587
     ],
     "flatNormals": true,
     "uvType": "MODEL_XY"
@@ -3669,6 +3672,9 @@
       943,
       944,
       945,
+      976,
+      977,
+      978,
       6251,
       6252,
       6253,
@@ -7663,6 +7669,14 @@
     "uvOrientation": 512
   },
   {
+    "description": "Pollnivneach Windows",
+    "baseMaterial": "WATTLE_1",
+    "objectIds": [
+      6247
+    ],
+    "uvType": "MODEL_XY"
+  },
+  {
     "description": "Al-Kharid Low Stone Wall",
     "baseMaterial": "STONE_LOWGLOSS",
     "objectIds": [
@@ -7722,10 +7736,18 @@
     ]
   },
   {
+    "description": "Kharidian Fern Cactus",
+    "baseMaterial": "PLANT_GRUNGE_2",
+    "objectIds": [
+      1405
+    ]
+  },
+  {
     "description": "Kharidian Columnar Cactus",
     "baseMaterial": "PLANT_GRUNGE_1",
     "objectIds": [
-      1404
+      1404,
+      6277
     ]
   },
   {
@@ -7737,19 +7759,88 @@
     ]
   },
   {
-    "description": "Al-Kharid Well",
+    "description": "Kharidian Well",
     "baseMaterial": "STONE_LOWGLOSS",
     "objectIds": [
-      878
+      878,
+      6249
     ]
   },
   {
-    "description": "Al-Kharid Well",
+    "description": "Al-Kharid Hanging Door",
     "baseMaterial": "FINE_CARPET",
     "objectIds": [
+      1533,
       1534
     ],
     "uvType": "MODEL_XY",
     "uvScale": 0.80
+  },
+  {
+    "description": "Pollnivneach Double Doors",
+    "baseMaterial": "WATTLE_1",
+    "objectIds": [
+      6238,
+      6239,
+      6240,
+      6241
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "Pollnivneach Stone Stairs",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      6242,
+      6243,
+      6244,
+      6245
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "Kharidian Basket",
+    "baseMaterial": "CARPET",
+    "objectIds": [
+      383,
+      385,
+      14935
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Metal Birdcage",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "objectIds": [
+      6264,
+      6265,
+      6266,
+      6267
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "AL_KHARID_WALLS_CORNER",
+    "baseMaterial": "WATTLE_1",
+    "objectIds": [
+      6214,
+      6215,
+      6216,
+      6217,
+      6218,
+      6219
+    ],
+    "flatNormals": true,
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Metal Monkeybars",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      14941,
+      14942,
+      14943
+    ],
+    "uvType": "GEOMETRY"
   }
 ]
