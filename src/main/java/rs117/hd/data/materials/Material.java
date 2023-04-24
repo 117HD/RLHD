@@ -281,7 +281,11 @@ public enum Material
 	TILE_SMALL_1(p -> p
 		.setSpecular(0.8f, 70)),
 	TILES_1_2x2,
-	TILES_2_2x2,
+	TILES_2_2x2_N,
+	TILES_2_2x2(p -> p
+			.setNormalMap(TILES_2_2x2_N)
+			.setSpecular(0.3f,30)
+	),
 	TILES_2x2_1_GLOSS(TILES_1_2x2, p -> p
 		.setSpecular(1.0f, 70)),
 	TILES_2x2_2_GLOSS(TILES_2_2x2, p -> p
