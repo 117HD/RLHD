@@ -8105,5 +8105,16 @@
       44829
     ],
     "uvType": "GEOMETRY"
+  },
+  {
+    "description": "PvP Arena blood",
+    "baseMaterial": "METALLIC_NONE_GLOSS",
+    "objectIds": [
+      44842,
+      44843,
+      44844,
+      44845
+    ],
+    "uvType": "MODEL_XZ"
   }
 ]
