@@ -3950,6 +3950,7 @@
     "description": "Wooden plank tables",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
+      10490,
       14851,
       14852,
       25603,
@@ -5494,7 +5495,20 @@
     "baseMaterial": "DOCK_FENCE",
     "objectIds": [
       7514,
-      10374
+      9534,
+      10374,
+      10378,
+      10379,
+      10381
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "Objects - Wooden - Boxes",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      9536,
+      10380
     ],
     "flatNormals": true
   },
@@ -6637,7 +6651,8 @@
     "description": "Objects - Wooden - Chair",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      1088
+      1088,
+      10491
     ],
     "uvType": "MODEL_XZ",
     "uvOrientation": 512,
@@ -7851,5 +7866,65 @@
     ],
     "uvType": "MODEL_XY",
     "uvOrientation": 512
+  },
+  {
+    "description": "Nardah Walls",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      6590,
+      6591,
+      6592,
+      6593,
+      6594,
+      6595,
+      6600,
+      6601
+    ],
+    "uvType": "MODEL_XY",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Nardah Walls - Flipped",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      6588,
+      6589
+    ],
+    "uvType": "MODEL_YZ",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Nardah Walls Rubble",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      10503
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Objects - Wooden - Counter",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      10485,
+      10486
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Objects - Wooden - Stairs",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      10525,
+      10526
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Nardah Worn Stone Stairs",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      10507
+    ],
+    "uvType": "GEOMETRY"
   }
 ]
