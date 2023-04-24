@@ -1958,6 +1958,10 @@
     "objectIds": [
       1415,
       1416,
+      3152,
+      3160,
+      3161,
+      3162,
       21799,
       "BIG_WINDOW",
       26585,
@@ -3139,6 +3143,8 @@
     "description": "WOODEN_PLANK_DOCKS",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
+      3123,
+      3124,
       9513,
       9541
     ],
@@ -3381,6 +3387,8 @@
       2053,
       2618,
       3125,
+      3126,
+      3127,
       5882,
       9589,
       12430,
@@ -8027,5 +8035,23 @@
     "uvType": "MODEL_YZ",
     "uvOrientation": 512,
     "uvScale": 0.6
+  },
+  {
+    "description": "Broken Wood Awning",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      3165,
+      3166
+    ],
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Wattle Roof",
+    "baseMaterial": "WATTLE_1",
+    "objectIds": [
+      3167
+    ],
+    "uvType": "GEOMETRY"
   }
 ]
