@@ -7707,28 +7707,28 @@
   },
   {
     "description": "Kharidian Barrell Cactus",
-    "baseMaterial": "GRUNGE_2",
+    "baseMaterial": "PLANT_GRUNGE_2",
     "objectIds": [
       1406
     ]
   },
   {
     "description": "Kharidian Saguaro Cactus",
-    "baseMaterial": "GRUNGE_1",
+    "baseMaterial": "PLANT_GRUNGE_1",
     "objectIds": [
       1403
     ]
   },
   {
     "description": "Kharidian Columnar Cactus",
-    "baseMaterial": "GRUNGE_1",
+    "baseMaterial": "PLANT_GRUNGE_1",
     "objectIds": [
       1404
     ]
   },
   {
     "description": "Kharidian Komodo Cactus",
-    "baseMaterial": "GRUNGE_2",
+    "baseMaterial": "PLANT_GRUNGE_2",
     "objectIds": [
       1396,
       2670

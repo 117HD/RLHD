@@ -441,6 +441,12 @@ public enum Material
 		.setSpecular(0.3f, 30)
 		.setNormalMap(HD_ROOF_BRICK_TILE_N)
 	),
+	PLANT_GRUNGE_1(GRUNGE_1, p -> p
+			.setSpecular(0.25f, 25)
+	),
+	PLANT_GRUNGE_2(GRUNGE_2, p -> p
+			.setSpecular(0.20f, 20)
+	),
 
 
 	// Seasonal
