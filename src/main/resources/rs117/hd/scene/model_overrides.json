@@ -7869,7 +7869,7 @@
   },
   {
     "description": "Nardah Walls",
-    "baseMaterial": "STONE",
+    "baseMaterial": "STONE_LOWGLOSS",
     "objectIds": [
       6590,
       6591,
@@ -7877,6 +7877,7 @@
       6593,
       6594,
       6595,
+      6596,
       6600,
       6601
     ],
@@ -7885,7 +7886,7 @@
   },
   {
     "description": "Nardah Walls - Flipped",
-    "baseMaterial": "STONE",
+    "baseMaterial": "STONE_LOWGLOSS",
     "objectIds": [
       6588,
       6589
@@ -7895,7 +7896,7 @@
   },
   {
     "description": "Nardah Walls Rubble",
-    "baseMaterial": "STONE",
+    "baseMaterial": "STONE_LOWGLOSS",
     "objectIds": [
       10503
     ],
@@ -7921,10 +7922,44 @@
   },
   {
     "description": "Nardah Worn Stone Stairs",
-    "baseMaterial": "STONE",
+    "baseMaterial": "STONE_LOWGLOSS",
     "objectIds": [
       10507
     ],
     "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Nardah Stone Pew",
+    "baseMaterial": "STONE_LOWGLOSS",
+    "objectIds": [
+      10508
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Nardah Clay Oven",
+    "baseMaterial": "STONE_LOWGLOSS",
+    "objectIds": [
+      10377
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Nardah Cloth Awning",
+    "baseMaterial": "FINE_CARPET",
+    "objectIds": [
+      6602
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Jungle Tree",
+    "baseMaterial": "PLANT_GRUNGE_2",
+    "objectIds": [
+      6578
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.4,
+    "uvOrientation": 256
   }
 ]
