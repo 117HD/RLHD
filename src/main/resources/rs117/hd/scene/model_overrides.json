@@ -3384,6 +3384,7 @@
       5882,
       9589,
       12430,
+      20366,
       23848,
       23849,
       23850,
@@ -5508,7 +5509,8 @@
     "baseMaterial": "DOCK_FENCE",
     "objectIds": [
       9536,
-      10380
+      10380,
+      20369
     ],
     "flatNormals": true
   },
@@ -7774,6 +7776,21 @@
     ]
   },
   {
+    "description": "Kharidian Sophmena Cactus",
+    "baseMaterial": "PLANT_GRUNGE_1",
+    "objectIds": [
+      44069,
+      44070,
+      44071,
+      44072,
+      44073,
+      44074,
+      44075,
+      44076,
+      44077
+    ]
+  },
+  {
     "description": "Kharidian Well",
     "baseMaterial": "STONE_LOWGLOSS",
     "objectIds": [
@@ -7961,5 +7978,29 @@
     "uvType": "MODEL_XZ",
     "uvScale": 0.4,
     "uvOrientation": 256
+  },
+  {
+    "description": "Sophamena Walls",
+    "baseMaterial": "STONE_LOWGLOSS",
+    "objectIds": [
+      6562,
+      6563,
+      6564,
+      6565
+    ],
+    "uvType": "MODEL_XY",
+    "uvOrientation": 512,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Sophamena Wall Decoration",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      6535,
+      6536
+    ],
+    "uvType": "MODEL_YZ",
+    "uvOrientation": 512,
+    "uvScale": 0.6
   }
 ]
