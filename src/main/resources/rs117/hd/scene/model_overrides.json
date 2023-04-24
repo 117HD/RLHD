@@ -1954,13 +1954,15 @@
   },
   {
     "description": "AL_KHARID_WALLS",
+    "baseMaterial": "WATTLE_1",
     "objectIds": [
       1415,
       1416,
       21799,
       "BIG_WINDOW"
     ],
-    "flatNormals": true
+    "flatNormals": true,
+    "uvType": "MODEL_XY"
   },
   {
     "description": "CITHAREDE_ABBEY_WALLS",
@@ -7650,5 +7652,86 @@
     ],
     "shadowOpacityThreshold": 0.12,
     "baseMaterial": "UNLIT"
+  },
+  {
+    "description": "Al-Kharid Windows",
+    "baseMaterial": "WATTLE_1",
+    "objectIds": [
+      1848
+    ],
+    "uvType": "MODEL_XY",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Al-Kharid Low Stone Wall",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      987,
+      988,
+      989,
+      990
+    ]
+  },
+  {
+    "description": "Al-Kharid Statues",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      579,
+      580,
+      581,
+      584
+    ]
+  },
+  {
+    "description": "Al-Kharid Pillars",
+    "baseMaterial": "MARBLE_3_SEMIGLOSS",
+    "objectIds": [
+      1859,
+      1860
+    ]
+  },
+  {
+    "description": "Al-Kharid stone stable with pillars",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      613,
+      614
+    ]
+  },
+  {
+    "description": "Al-Kharid pillar decoration",
+    "baseMaterial": "MARBLE_3",
+    "objectIds": [
+      914
+    ]
+  },
+  {
+    "description": "Kharidian Barrell Cactus",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      1406
+    ]
+  },
+  {
+    "description": "Kharidian Saguaro Cactus",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      1403
+    ]
+  },
+  {
+    "description": "Kharidian Columnar Cactus",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      1404
+    ]
+  },
+  {
+    "description": "Kharidian Komodo Cactus",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      1396,
+      2670
+    ]
   }
 ]
