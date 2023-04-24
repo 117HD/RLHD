@@ -7836,7 +7836,9 @@
     "description": "Kharidian Basket",
     "baseMaterial": "CARPET",
     "objectIds": [
+      382,
       383,
+      384,
       385,
       14935
     ],
@@ -7972,7 +7974,16 @@
     "uvType": "MODEL_XZ"
   },
   {
-    "description": "Jungle Tree",
+    "description": "Jungle Tree Tiny",
+    "baseMaterial": "PLANT_GRUNGE_2",
+    "objectIds": [
+      1304
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.4
+  },
+  {
+    "description": "Jungle Tree Small",
     "baseMaterial": "PLANT_GRUNGE_2",
     "objectIds": [
       6578
