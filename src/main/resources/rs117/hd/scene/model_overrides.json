@@ -8014,7 +8014,7 @@
   },
   {
     "description": "Sophamena Walls",
-    "baseMaterial": "STONE_LOWGLOSS",
+    "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       6562,
       6563,
@@ -8023,7 +8023,7 @@
     ],
     "uvType": "MODEL_XY",
     "uvOrientation": 512,
-    "uvScale": 0.6
+    "uvScale": 0.8
   },
   {
     "description": "Sophamena Wall Decoration",
@@ -8116,5 +8116,17 @@
       44845
     ],
     "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Exercise Mats",
+    "baseMaterial": "FINE_CARPET",
+    "objectIds": [
+      20810,
+      16508,
+      9313,
+      20801
+    ],
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 512
   }
 ]
