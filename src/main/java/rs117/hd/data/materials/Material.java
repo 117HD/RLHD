@@ -281,7 +281,11 @@ public enum Material
 	TILE_SMALL_1(p -> p
 		.setSpecular(0.8f, 70)),
 	TILES_1_2x2,
-	TILES_2_2x2,
+	TILES_2_2x2_N,
+	TILES_2_2x2(p -> p
+			.setNormalMap(TILES_2_2x2_N)
+			.setSpecular(0.3f,30)
+	),
 	TILES_2x2_1_GLOSS(TILES_1_2x2, p -> p
 		.setSpecular(1.0f, 70)),
 	TILES_2x2_2_GLOSS(TILES_2_2x2, p -> p
@@ -379,7 +383,15 @@ public enum Material
 	),
 
 	WORN_TILES,
+	STONE_N,
 	STONE,
+	STONE_NORMALED(STONE, p -> p
+			.setNormalMap(STONE_N)
+			.setSpecular(0.3f,30)
+	),
+	STONE_LOWGLOSS(STONE, p -> p
+			.setSpecular(0.3f, 30)
+	),
 	STONE_SEMIGLOSS(STONE, p -> p.setSpecular(0.6f, 100)),
 	STONE_SCROLLING(STONE, p -> p
 		.setScroll(0, -1 / 0.7f)),
@@ -440,6 +452,12 @@ public enum Material
 		.replaceIf(HdPluginConfig::objectTextures, ROOF_BRICK_TILE_DARK)
 		.setSpecular(0.3f, 30)
 		.setNormalMap(HD_ROOF_BRICK_TILE_N)
+	),
+	PLANT_GRUNGE_1(GRUNGE_1, p -> p
+			.setSpecular(0.25f, 25)
+	),
+	PLANT_GRUNGE_2(GRUNGE_2, p -> p
+			.setSpecular(0.20f, 20)
 	),
 
 
