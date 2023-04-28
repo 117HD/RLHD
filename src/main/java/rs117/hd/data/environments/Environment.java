@@ -1002,7 +1002,16 @@ public enum Environment
 		.setLightDirection(260f, 10f)
 		.setWaterColor(102, 234, 255)
 	),
-
+	GOBLIN_VLIIAGE_COOKS_CHAMBER_POST_RFD(Area.GOBLIN_VILLAGE_COOKS_CHAMBER_POST_RFD, new Properties()
+			.setFogColor("#040404")
+			.setFogDepth(5)
+			.setAmbientColor("#AAAFB6")
+			.setAmbientStrength(0.75f)
+			.setDirectionalColor("#FFFFFF")
+			.setDirectionalStrength(0.75f)
+			.setLightDirection(260f, 10f)
+			.setAllowSkyOverride(false)
+	),
 	WINTER(Area.NONE, new Properties()
 		.setFogColor("#B8C5DB")
 		.setFogDepth(35)
