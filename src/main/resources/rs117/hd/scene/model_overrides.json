@@ -4834,7 +4834,8 @@
       5012,
       5857,
       6440,
-      6447
+      6447,
+      40888
     ],
     "uvType": "MODEL_XZ",
     "uvScale": 0.5
@@ -6533,7 +6534,8 @@
     "baseMaterial": "SNOW_1",
     "objectIds": [
       11920,
-      11921
+      11921,
+      33220
     ],
     "uvType": "GEOMETRY"
   },
@@ -6542,7 +6544,8 @@
     "baseMaterial": "SNOW_3",
     "objectIds": [
       11922,
-      11923
+      11923,
+      33221
     ],
     "uvType": "GEOMETRY"
   },
@@ -6907,7 +6910,8 @@
       21153,
       21154,
       21155,
-      21156
+      21156,
+      21178
     ],
     "uvType": "WORLD_XZ",
     "uvScale": 0.6
@@ -7301,7 +7305,10 @@
       5020,
       5021,
       5022,
-      5025
+      5025,
+      40889,
+      40890,
+      40928
     ]
   },
   {
@@ -8212,6 +8219,30 @@
     "baseMaterial": "STONE",
     "objectIds": [
       16567
+    ],
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 256
+  },
+  {
+    "description": "Goblin Village Ice Bridge",
+    "baseMaterial": "ICE_3",
+    "objectIds": [
+      5040,
+      5041,
+      5042,
+      6463,
+      6464,
+      6465,
+      6466,
+      6467,
+      6468,
+      6469,
+      6470,
+      6471,
+      40905,
+      40906,
+      40907,
+      40908
     ],
     "uvType": "MODEL_XZ",
     "uvOrientation": 256
