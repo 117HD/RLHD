@@ -2527,6 +2527,7 @@
       12119,
       12586,
       12587,
+      12710,
       20750,
       20751,
       25093,
@@ -5343,6 +5344,7 @@
       7115,
       12049,
       12051,
+      12706,
       14482,
       14485,
       17929,
@@ -8141,5 +8143,16 @@
     ],
     "uvType": "MODEL_XY",
     "uvScale": 0.6
+  },
+  {
+    "description": "Sophanem Gate",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      12383,
+      12384,
+      12385
+    ],
+    "uvType": "MODEL_XY",
+    "uvScale": 0.5
   }
 ]
