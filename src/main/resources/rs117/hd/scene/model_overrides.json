@@ -8275,5 +8275,15 @@
     "uvType": "MODEL_XY",
     "uvOrientation": 256,
     "uvScale": 0.4
+  },
+  {
+    "description": "Goblin Battlements",
+    "baseMaterial": "WOOD_GRAIN",
+    "objectIds": [
+      12439,
+      12438,
+      12441
+    ],
+    "uvType": "GEOMETRY"
   }
 ]
