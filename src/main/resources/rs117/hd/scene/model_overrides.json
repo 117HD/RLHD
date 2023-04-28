@@ -6145,6 +6145,7 @@
     "description": "Objects - Bed - Bedroll - Non Interactable",
     "baseMaterial": "CARPET",
     "objectIds": [
+      422,
       23067
     ],
     "uvType": "MODEL_XZ",
