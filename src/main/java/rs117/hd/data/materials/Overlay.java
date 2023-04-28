@@ -289,7 +289,7 @@ public enum Overlay {
 
     // Goblin Village
     GOBLIN_VILLAGE_TILES_BLEND_FIX_OVERLAY(Area.GOBLIN_VILLAGE_COOKS_CHAMBER_BLEND_FIX, GroundMaterial.WORN_TILES, p -> p.ids(11).blended(true)),
-    GOBLIN_VILLAGE_TILES(Area.GOBLIN_VILLAGE_COOKS_CHAMBER, GroundMaterial.WORN_TILES, p -> p.ids(11).blended(false)),
+    GOBLIN_VILLAGE_TILES(Area.GOBLIN_VILLAGE_COOKS_CHAMBER, GroundMaterial.WORN_TILES, p -> p.ids(11,26).blended(false)),
     GOBLIN_VILLAGE_SAND(Area.GOBLIN_VILLAGE_COOKS_CHAMBER, GroundMaterial.VARIED_DIRT, p -> p.ids(83).blended(false)),
     GOBLIN_VILLAGE_PIT(Area.GOBLIN_VILLAGE_COOKS_CHAMBER, GroundMaterial.VARIED_DIRT, p -> p.ids(37)),
 

@@ -1002,7 +1002,7 @@ public enum Environment
 		.setLightDirection(260f, 10f)
 		.setWaterColor(102, 234, 255)
 	),
-	GOBLIN_VLIIAGE_COOKS_CHAMBER_POST_RFD(Area.GOBLIN_VILLAGE_COOKS_CHAMBER_POST_RFD, new Properties()
+	GOBLIN_VLIIAGE_COOKS_CHAMBER(Area.GOBLIN_VILLAGE_COOKS_CHAMBER, new Properties()
 			.setFogColor("#030303")
 			.setFogDepth(5)
 			.setAmbientColor("#AAAFB6")
