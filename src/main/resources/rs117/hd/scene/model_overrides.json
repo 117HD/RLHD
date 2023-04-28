@@ -3196,6 +3196,9 @@
       11595,
       11596,
       11597,
+      12433,
+      12436,
+      12437,
       15975,
       41419,
       25797
@@ -5517,7 +5520,10 @@
       10378,
       10379,
       10381,
+      12442,
+      12443,
       16560,
+      16561,
       20367
     ],
     "flatNormals": true
@@ -8184,7 +8190,13 @@
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       23320,
-      23321
+      23321,
+      23332,
+      23333,
+      23334,
+      23335,
+      23336,
+      23337
     ],
     "uvType": "MODEL_XY",
     "uvOrientation": 1536,
@@ -8194,7 +8206,8 @@
     "description": "Goblin - Walls - Wooden - Post",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
-      12275
+      12275,
+      12429
     ],
     "uvType": "MODEL_XY",
     "uvOrientation": 512,
@@ -8247,5 +8260,13 @@
     ],
     "uvType": "MODEL_XZ",
     "uvOrientation": 256
+  },
+  {
+    "description": "Goblin Village Wooden Ladder",
+    "baseMaterial": "WOOD_GRAIN",
+    "objectIds": [
+      16450,
+      16556
+    ]
   }
 ]
