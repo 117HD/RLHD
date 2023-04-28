@@ -6393,7 +6393,8 @@
     "description": "Objects - Wooden - Plank tables - Wide - Rotated",
     "baseMaterial": "WOOD_GRAIN_2_WIDE",
     "objectIds": [
-      12386
+      12386,
+      12416
     ],
     "uvType": "MODEL_XZ",
     "uvOrientation": 512,
@@ -6705,7 +6706,8 @@
     "description": "Objects - Wooden - Stool",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      1102
+      1102,
+      12407
     ],
     "uvType": "MODEL_XZ",
     "flatNormals": true,
@@ -8285,5 +8287,37 @@
       12441
     ],
     "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Sacks Pile",
+    "baseMaterial": "CARPET",
+    "objectIds": [
+      23,
+      365,
+      12394
+    ],
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 256,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Sacks with Sword",
+    "baseMaterial": "CARPET",
+    "objectIds": [
+      12392
+    ],
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 256,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Sack",
+    "baseMaterial": "CARPET",
+    "objectIds": [
+      12396
+    ],
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 256,
+    "uvScale": 0.4
   }
 ]
