@@ -8178,17 +8178,6 @@
     "uvScale": 0.6
   },
   {
-    "description": "Sophanem Gate",
-    "baseMaterial": "STONE_NORMALED",
-    "objectIds": [
-      12383,
-      12384,
-      12385
-    ],
-    "uvType": "MODEL_XY",
-    "uvScale": 0.5
-  },
-  {
     "description": "Goblin - Walls - Wooden - Planks",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
@@ -8271,5 +8260,19 @@
       16450,
       16556
     ]
+  },
+  {
+    "description": "Goblin Cooks Chamber Walls",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      12381,
+      12382,
+      12383,
+      12384,
+      12385
+    ],
+    "uvType": "MODEL_XY",
+    "uvOrientation": 256,
+    "uvScale": 0.4
   }
 ]
