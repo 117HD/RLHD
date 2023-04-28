@@ -3965,6 +3965,7 @@
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       10490,
+      12450,
       14851,
       14852,
       25603,
@@ -6378,6 +6379,17 @@
     "flatNormals": true
   },
   {
+    "description": "Objects - Wooden - Plank tables - Wide - Rotated",
+    "baseMaterial": "WOOD_GRAIN_2_WIDE",
+    "objectIds": [
+      12386
+    ],
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 512,
+    "flatNormals": true,
+    "uvScale": 0.6
+  },
+  {
     "description": "Lunar Isles - Objects - Wooden - Tables - Fine",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
@@ -8158,5 +8170,50 @@
     ],
     "uvType": "MODEL_XY",
     "uvScale": 0.5
+  },
+  {
+    "description": "Goblin - Walls - Wooden - Planks",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      23320,
+      23321
+    ],
+    "uvType": "MODEL_XY",
+    "uvOrientation": 1536,
+    "uvScale": 0.36
+  },
+  {
+    "description": "Goblin - Walls - Wooden - Post",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      12275
+    ],
+    "uvType": "MODEL_XY",
+    "uvOrientation": 512,
+    "uvScale": 0.36
+  },
+  {
+    "description": "Wooden - Plank - Door",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      12444,
+      12445,
+      12446,
+      12447,
+      12448,
+      12449
+    ],
+    "uvType": "MODEL_XY",
+    "uvOrientation": 512,
+    "uvScale": 0.36
+  },
+  {
+    "description": "Wooden - Plank - Door",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      16567
+    ],
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 256
   }
 ]
