@@ -229,7 +229,9 @@ public enum Material
 
 	DIRT_1,
 	DIRT_2_N,
-	DIRT_2(p -> p.setNormalMap(DIRT_2_N).setSpecular(0.4f, 80)),
+	DIRT_2(p -> p
+		.setNormalMap(DIRT_2_N)
+		.setSpecular(0.4f, 80)),
 	GRAVEL_N,
 	GRAVEL(p -> p
 		.setNormalMap(GRAVEL_N)
