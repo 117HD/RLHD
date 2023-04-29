@@ -9649,5 +9649,17 @@
     "objectIds": [
       1862
     ]
+  },
+  {
+    "description": "Motherload Trough",
+    "baseMaterial": "METALLIC_2_HIGHGLOSS",
+    "objectIds": [
+      3428,
+      26683,
+      26684,
+      26685,
+      26686
+    ],
+    "uvType": "MODEL_XY"
   }
 ]
