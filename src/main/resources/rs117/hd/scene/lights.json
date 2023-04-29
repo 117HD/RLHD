@@ -30496,5 +30496,23 @@
     "type": "STATIC",
     "duration": 1000,
     "range": 0.2
+  },
+  {
+    "description": "FALADOR_LAMP_HIGH",
+    "height": 190,
+    "alignment": "BACK",
+    "radius": 290,
+    "strength": 8.5,
+    "color": [
+      202,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 24,
+    "objectIds": [
+      24172
+    ]
   }
 ]
