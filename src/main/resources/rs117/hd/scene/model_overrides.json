@@ -3818,6 +3818,7 @@
     "description": "Motherload mine upper floor",
     "baseMaterial": "DIRT_1",
     "objectIds": [
+      26657,
       30368
     ],
     "uvType": "MODEL_XZ"
