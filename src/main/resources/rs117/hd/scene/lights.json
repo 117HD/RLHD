@@ -30500,7 +30500,7 @@
   {
     "description": "FALADOR_LAMP_HIGH",
     "height": 190,
-    "alignment": "BACK",
+    "alignment": "CENTER",
     "radius": 290,
     "strength": 8.5,
     "color": [
