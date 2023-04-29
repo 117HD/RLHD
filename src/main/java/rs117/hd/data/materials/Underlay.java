@@ -171,6 +171,10 @@ public enum Underlay {
             .area(Area.HEROES_GUILD_BASEMENT)
             .ids(48, 49, 50)
     ),
+    DWARVEN_MINE_DUNGEON(GroundMaterial.EARTHEN_CAVE_FLOOR, p -> p
+            .area(Area.DWARVEN_MINE_DUNGEON)
+            .ids(63, 64, 66)
+    ),
     MOTHERLODE_MINE(GroundMaterial.EARTHEN_CAVE_FLOOR, p -> p
             .area(Area.MOTHERLODE_MINE)
             .ids(63, 64,71)

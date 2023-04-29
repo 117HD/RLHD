@@ -328,6 +328,12 @@ public enum Area
 		new AABB(2964,3401,2969,3405) // path northwards
 	),
 
+	DWARVEN_MINE_DUNGEON(
+			new AABB(3071, 9855, 2985, 9690),
+			new AABB(2960, 9820, 2984, 9801)
+
+	),
+
 	MOTHERLODE_MINE(
 		new AABB(3713, 5696, 3776, 5633),
 		new AABB(3827, 5692, 3868, 5652)
