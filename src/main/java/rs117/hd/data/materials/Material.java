@@ -226,8 +226,10 @@ public enum Material
 	GRASS_3,
 	GRASS_SCROLLING(GRASS_1, p -> p
 		.setScroll(0, 1 / 0.7f)),
-
-	DIRT_1,
+	DIRT_1_N,
+	DIRT_1(p -> p
+			.setNormalMap(DIRT_1_N)
+			.setSpecular(0.5f, 35)),
 	DIRT_2_N,
 	DIRT_2(p -> p
 		.setNormalMap(DIRT_2_N)
