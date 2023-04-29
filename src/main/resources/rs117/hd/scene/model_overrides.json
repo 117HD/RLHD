@@ -3838,11 +3838,14 @@
   },
   {
     "description": "Motherload Mine Rockfall",
-    "baseMaterial": "ROCK_2",
+    "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       26679,
       26680
-    ]
+    ],
+    "uvType": "MODEL_YZ_MIRROR_B",
+    "uvScale": 0.4,
+    "uvOrientation": 400
   },
   {
     "description": "Mining Guild statue",
