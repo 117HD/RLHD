@@ -3457,12 +3457,13 @@
   },
   {
     "description": "FENCES_3",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       994,
       995
     ],
-    "flatNormals": true
+    "uvType": "MODEL_XY",
+    "uvScale": 0.4
   },
   {
     "description": "PICARILIUS_DOCKS",
