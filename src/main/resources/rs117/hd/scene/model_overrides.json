@@ -3795,7 +3795,7 @@
   },
   {
     "description": "Motherload mine walls",
-    "baseMaterial": "DIRT_2",
+    "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       10047,
       26655,
@@ -3816,16 +3816,17 @@
   },
   {
     "description": "Motherload mine upper floor",
-    "baseMaterial": "DIRT_1",
+    "baseMaterial": "DIRT_2",
     "objectIds": [
       26657,
       30368
     ],
-    "uvType": "MODEL_XZ"
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 128
   },
   {
     "description": "Amathyst mine walls",
-    "baseMaterial": "DIRT_2",
+    "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       11388,
       11389,
@@ -3833,9 +3834,7 @@
       11391,
       11392,
       11393
-    ],
-    "uvType": "MODEL_XZ",
-    "uvScale": 0.5
+    ]
   },
   {
     "description": "Motherload Mine Rockfall",
