@@ -681,6 +681,7 @@ public enum Overlay {
         .blended(false)),
     LUNAR_ISLAND_HOUSES_WOOD_FLOOR(81, Area.LUNAR_VILLAGE_HOUSE_INTERIORS_FIRST, GroundMaterial.HD_WOOD_PLANKS_1, p -> p
         .blended(true)),
+    KELDAGRIM_PATHS(117, GroundMaterial.FALADOR_PATHS),
 
 
 
