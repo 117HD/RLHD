@@ -3818,9 +3818,23 @@
     "description": "Motherload mine upper floor",
     "baseMaterial": "DIRT_1",
     "objectIds": [
-      26657
+      30368
     ],
     "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Amathyst mine walls",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [
+      11388,
+      11389,
+      11390,
+      11391,
+      11392,
+      11393
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.5
   },
   {
     "description": "Motherload Mine Rockfall",
