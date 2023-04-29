@@ -3795,7 +3795,7 @@
   },
   {
     "description": "Motherload mine walls",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "DIRT_2",
     "objectIds": [
       10047,
       26655,
@@ -9661,5 +9661,13 @@
       26686
     ],
     "uvType": "MODEL_XY"
+  },
+  {
+    "description": "Motherload Mine - Cogs",
+    "baseMaterial": "METALLIC_2_HIGHGLOSS",
+    "objectIds": [
+      13589
+    ],
+    "uvType": "MODEL_XZ"
   }
 ]
