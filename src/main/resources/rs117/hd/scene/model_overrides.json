@@ -9691,5 +9691,14 @@
       9124,
       9125
     ]
+  },
+  {
+    "description": "Motherload Furnace",
+    "baseMaterial": "METALLIC_1_HIGHGLOSS",
+    "objectIds": [
+      26674
+    ],
+    "uvType": "MODEL_XZ_MIRROR_A",
+    "uvScale": 0.7
   }
 ]
