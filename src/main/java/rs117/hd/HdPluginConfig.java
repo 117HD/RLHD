@@ -217,7 +217,7 @@ public interface HdPluginConfig extends Config
 	@Range(min = -500, max = 500)
 	default int saturation()
 	{
-		return (int) (oldSaturationDropdown().getAmount() * 100);
+		return Math.round(oldSaturationDropdown().getAmount() * 100);
 	}
 	@ConfigItem(keyName = "saturation", hidden = true, name = "", description = "")
 	default Saturation oldSaturationDropdown()
@@ -237,7 +237,7 @@ public interface HdPluginConfig extends Config
 	@Range(min = -500, max = 500)
 	default int contrast()
 	{
-		return (int) (oldContrastDropdown().getAmount() * 100);
+		return Math.round(oldContrastDropdown().getAmount() * 100);
 	}
 	@ConfigItem(keyName = "contrast", hidden = true, name = "", description = "")
 	default Contrast oldContrastDropdown()
