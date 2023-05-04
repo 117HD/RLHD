@@ -38,7 +38,7 @@ float sampleShadowMap(vec3 fragPos, int waterTypeIndex, vec2 distortion, float l
     float fadeOut = smoothstep(.75, 1, dot(uv, uv));
 
     if (fadeOut >= 1)
-        return 0;
+        return 0.f;
 
     vec2 shadowRes = textureSize(shadowMap, 0);
     float shadowMinBias = 0.0009f;
