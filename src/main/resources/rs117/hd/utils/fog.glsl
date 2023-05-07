@@ -42,7 +42,7 @@ float fogFactorLinear(const float dist, const float start, const float end) {
 
 float calculateFogAmount(vec3 position) {
     if (fogDepth == 0)
-        return 0;
+        return 0.f;
 
     int fogWest = max(FOG_SCENE_EDGE_MIN, cameraX - drawDistance);
     int fogEast = min(FOG_SCENE_EDGE_MAX, cameraX + drawDistance - TILE_SIZE);

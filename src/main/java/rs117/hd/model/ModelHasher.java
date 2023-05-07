@@ -114,12 +114,9 @@ public class ModelHasher {
     }
 
     public int calculateUvCacheHash(int orientation, @NonNull ModelOverride modelOverride) {
-        int h = faceCount * 31;
-        if (modelOverride.uvType == UvType.VANILLA) {
-            h += textureTrianglesHash;
-        } else if (modelOverride.uvType.orientationDependent) {
-            h += orientation;
-        }
+        int h = faceCount;
+        h = h * 31 + (modelOverride.uvType == UvType.VANILLA ? textureTrianglesHash : 0);
+        h = h * 31 + (modelOverride.uvType.orientationDependent ? orientation : 0);
         h = h * 31 + modelOverride.hashCode();
         h = h * 31 + faceTexturesHash;
         return h;

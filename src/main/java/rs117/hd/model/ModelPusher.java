@@ -324,16 +324,17 @@ public class ModelPusher {
 				if (uvType == UvType.VANILLA && !isFaceVanillaTextured)
 					uvType = UvType.GEOMETRY;
 				int materialData = packMaterialData(material, modelOverride, uvType, false);
-				if (materialData == 0) {
-					uvBuffer.put(zeroFloats);
-				} else {
-					modelOverride.fillUvsForFace(twelveFloats, model, preOrientation, uvType, face);
-					twelveFloats[3] = twelveFloats[7] = twelveFloats[11] = materialData;
-					uvBuffer.put(twelveFloats);
 
-					if (shouldCacheUvData) {
-						fullUvData.put(twelveFloats);
-					}
+				float[] uvData = zeroFloats;
+				if (materialData != 0) {
+					uvData = twelveFloats;
+					modelOverride.fillUvsForFace(uvData, model, preOrientation, uvType, face);
+					uvData[3] = uvData[7] = uvData[11] = materialData;
+				}
+
+				uvBuffer.put(uvData);
+				if (shouldCacheUvData) {
+					fullUvData.put(uvData);
 				}
 				uvLength += 3;
             }
