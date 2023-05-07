@@ -1353,10 +1353,6 @@
       13861,
       13862,
       13863,
-      14775,
-      14776,
-      14777,
-      14778,
       16382,
       16383,
       16384,
@@ -1405,7 +1401,11 @@
       4735,
       4736,
       4737,
-      4738
+      4738,
+      14775,
+      14776,
+      14777,
+      14778
     ],
     "flatNormals": true,
     "inheritTileColorType": "UNDERLAY",
@@ -1954,13 +1954,22 @@
   },
   {
     "description": "AL_KHARID_WALLS",
+    "baseMaterial": "WATTLE_1",
     "objectIds": [
       1415,
       1416,
+      3152,
+      3160,
+      3161,
+      3162,
       21799,
-      "BIG_WINDOW"
+      "BIG_WINDOW",
+      26585,
+      26586,
+      26587
     ],
-    "flatNormals": true
+    "flatNormals": true,
+    "uvType": "MODEL_XY"
   },
   {
     "description": "CITHAREDE_ABBEY_WALLS",
@@ -3134,6 +3143,8 @@
     "description": "WOODEN_PLANK_DOCKS",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
+      3123,
+      3124,
       9513,
       9541
     ],
@@ -3376,9 +3387,12 @@
       2053,
       2618,
       3125,
+      3126,
+      3127,
       5882,
       9589,
       12430,
+      20366,
       23848,
       23849,
       23850,
@@ -3667,6 +3681,9 @@
       943,
       944,
       945,
+      976,
+      977,
+      978,
       6251,
       6252,
       6253,
@@ -3942,6 +3959,7 @@
     "description": "Wooden plank tables",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
+      10490,
       14851,
       14852,
       25603,
@@ -5486,7 +5504,22 @@
     "baseMaterial": "DOCK_FENCE",
     "objectIds": [
       7514,
-      10374
+      9534,
+      10374,
+      10378,
+      10379,
+      10381,
+      20367
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "Objects - Wooden - Boxes",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      9536,
+      10380,
+      20369
     ],
     "flatNormals": true
   },
@@ -6124,6 +6157,7 @@
     "description": "Objects - Table - Single - Wooden – Plank - Generic",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      20351,
       23066
     ],
     "uvType": "MODEL_XZ",
@@ -6629,7 +6663,8 @@
     "description": "Objects - Wooden - Chair",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      1088
+      1088,
+      10491
     ],
     "uvType": "MODEL_XZ",
     "uvOrientation": 512,
@@ -7650,5 +7685,461 @@
     ],
     "shadowOpacityThreshold": 0.12,
     "baseMaterial": "UNLIT"
+  },
+  {
+    "description": "Al-Kharid Windows",
+    "baseMaterial": "WATTLE_1",
+    "objectIds": [
+      1848
+    ],
+    "uvType": "MODEL_XY",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Pollnivneach Windows",
+    "baseMaterial": "WATTLE_1",
+    "objectIds": [
+      6247
+    ],
+    "uvType": "MODEL_XY"
+  },
+  {
+    "description": "Al-Kharid Low Stone Wall",
+    "baseMaterial": "STONE_LOWGLOSS",
+    "objectIds": [
+      987,
+      988,
+      989,
+      990,
+      33344,
+      33345
+    ]
+  },
+  {
+    "description": "Al-Kharid Statues",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      579,
+      580,
+      581,
+      584
+    ]
+  },
+  {
+    "description": "Al-Kharid Pillars",
+    "baseMaterial": "MARBLE_3_SEMIGLOSS",
+    "objectIds": [
+      1859,
+      1860
+    ]
+  },
+  {
+    "description": "Al-Kharid stone stable with pillars",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      613,
+      614
+    ]
+  },
+  {
+    "description": "Al-Kharid pillar decoration",
+    "baseMaterial": "MARBLE_3",
+    "objectIds": [
+      914
+    ]
+  },
+  {
+    "description": "Kharidian Barrell Cactus",
+    "baseMaterial": "PLANT_GRUNGE_2",
+    "objectIds": [
+      1406
+    ]
+  },
+  {
+    "description": "Kharidian Saguaro Cactus",
+    "baseMaterial": "PLANT_GRUNGE_1",
+    "objectIds": [
+      1403
+    ]
+  },
+  {
+    "description": "Kharidian Fern Cactus",
+    "baseMaterial": "PLANT_GRUNGE_2",
+    "objectIds": [
+      1405
+    ]
+  },
+  {
+    "description": "Kharidian Columnar Cactus",
+    "baseMaterial": "PLANT_GRUNGE_1",
+    "objectIds": [
+      1404,
+      6277
+    ]
+  },
+  {
+    "description": "Kharidian Komodo Cactus",
+    "baseMaterial": "PLANT_GRUNGE_2",
+    "objectIds": [
+      1396,
+      2670
+    ]
+  },
+  {
+    "description": "Kharidian Sophmena Cactus",
+    "baseMaterial": "PLANT_GRUNGE_1",
+    "objectIds": [
+      44069,
+      44070,
+      44071,
+      44072,
+      44073,
+      44074,
+      44075,
+      44076,
+      44077
+    ]
+  },
+  {
+    "description": "Kharidian Well",
+    "baseMaterial": "STONE_LOWGLOSS",
+    "objectIds": [
+      878,
+      6249
+    ]
+  },
+  {
+    "description": "Al-Kharid Hanging Door",
+    "baseMaterial": "FINE_CARPET",
+    "objectIds": [
+      1533,
+      1534
+    ],
+    "uvType": "MODEL_XY",
+    "uvScale": 0.80
+  },
+  {
+    "description": "Pollnivneach Double Doors",
+    "baseMaterial": "WATTLE_1",
+    "objectIds": [
+      6238,
+      6239,
+      6240,
+      6241
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "Pollnivneach Stone Stairs",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      6242,
+      6243,
+      6244,
+      6245
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "Kharidian Basket",
+    "baseMaterial": "CARPET",
+    "objectIds": [
+      382,
+      383,
+      384,
+      385,
+      14935
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Metal Birdcage",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "objectIds": [
+      6264,
+      6265,
+      6266,
+      6267
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "AL_KHARID_WALLS_CORNER",
+    "baseMaterial": "WATTLE_1",
+    "objectIds": [
+      6214,
+      6215,
+      6216,
+      6217,
+      6218,
+      6219
+    ],
+    "flatNormals": true,
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Metal Monkeybars",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      14941,
+      14942,
+      14943
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Agility Arrow",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      11402
+    ],
+    "uvType": "MODEL_XY",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Nardah Walls",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      6590,
+      6591,
+      6592,
+      6593,
+      6594,
+      6595,
+      6596,
+      6600,
+      6601
+    ],
+    "uvType": "MODEL_XY",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Nardah Walls - Flipped",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      6588,
+      6589
+    ],
+    "uvType": "MODEL_YZ",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Nardah Walls Rubble",
+    "baseMaterial": "STONE_LOWGLOSS",
+    "objectIds": [
+      10503
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Objects - Wooden - Counter",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      10485,
+      10486
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Objects - Wooden - Stairs",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      10525,
+      10526
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Nardah Worn Stone Stairs",
+    "baseMaterial": "STONE_LOWGLOSS",
+    "objectIds": [
+      10507
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Nardah Stone Pew",
+    "baseMaterial": "STONE_LOWGLOSS",
+    "objectIds": [
+      10508
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Nardah Clay Oven",
+    "baseMaterial": "STONE_LOWGLOSS",
+    "objectIds": [
+      10377
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Nardah Cloth Awning",
+    "baseMaterial": "FINE_CARPET",
+    "objectIds": [
+      6602
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Jungle Tree Tiny",
+    "baseMaterial": "PLANT_GRUNGE_2",
+    "objectIds": [
+      1304
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.4
+  },
+  {
+    "description": "Jungle Tree Small",
+    "baseMaterial": "PLANT_GRUNGE_2",
+    "objectIds": [
+      6578
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.4,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Jungle Tree Big",
+    "baseMaterial": "PLANT_GRUNGE_2",
+    "objectIds": [
+      1326,
+      1327,
+      1328
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.2,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Sophamena Walls",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      6562,
+      6563,
+      6564,
+      6565
+    ],
+    "uvType": "MODEL_XY",
+    "uvOrientation": 512,
+    "uvScale": 0.8
+  },
+  {
+    "description": "Sophamena Wall Decoration",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      6535,
+      6536
+    ],
+    "uvType": "MODEL_YZ",
+    "uvOrientation": 512,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Broken Wood Awning",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      3165,
+      3166,
+      15973
+    ],
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Wattle Roof",
+    "baseMaterial": "WATTLE_1",
+    "objectIds": [
+      3167
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "PvP Arena Walls",
+    "baseMaterial": "WATTLE_1",
+    "objectIds": [
+      44870,
+      44871,
+      44872,
+      44873,
+      44874,
+      44875,
+      44876,
+      44877,
+      44878,
+      44879,
+      44880,
+      44881,
+      44882,
+      44883,
+      44884,
+      44885,
+      44886,
+      44887
+    ],
+    "uvType": "MODEL_XY"
+  },
+  {
+    "description": "PvP Arena Walls - Corners",
+    "baseMaterial": "WATTLE_1",
+    "objectIds": [
+      44888,
+      44889
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "PvP Arena Stairs",
+    "baseMaterial": "STONE_LOWGLOSS",
+    "objectIds": [
+      44924,
+      44925
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "PvP Arena Statue",
+    "baseMaterial": "STONE_LOWGLOSS",
+    "objectIds": [
+      44829
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "PvP Arena blood",
+    "baseMaterial": "METALLIC_NONE_GLOSS",
+    "objectIds": [
+      44842,
+      44843,
+      44844,
+      44845
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Exercise Mats",
+    "baseMaterial": "FINE_CARPET",
+    "objectIds": [
+      20810,
+      16508,
+      9313,
+      20801
+    ],
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Sophanem Gate",
+    "baseMaterial": "METALLIC_2_HIGHGLOSS",
+    "objectIds": [
+      44035,
+      44036,
+      44037,
+      44038,
+      44039
+    ],
+    "uvType": "MODEL_XY",
+    "uvScale": 0.6
   }
 ]

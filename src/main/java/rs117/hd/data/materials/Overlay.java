@@ -671,7 +671,7 @@ public enum Overlay {
 
     OVERLAY_WATER(WaterType.WATER, p -> p.ids(-128, -105, -98, 6, 41, 104, 196)),
     OVERLAY_DIRT(GroundMaterial.DIRT, p -> p.ids(-124, -84, -83, 14, 15, 21, 22, 23, 60, 77, 81, 82, 88, 89, 101, 102, 107, 108, 110, 115, 123, 227)),
-    OVERLAY_GRAVEL(GroundMaterial.GRAVEL, p -> p.ids(-76, 2, 3, 4, 6, 8, 10, 119)),
+    OVERLAY_GRAVEL(GroundMaterial.GRAVEL, p -> p.ids(-76, 2, 3, 4, 6, 8, 9, 10, 119)),
     OVERLAY_ZEAH_PATHS(Area.ZEAH, GroundMaterial.VARROCK_PATHS, p -> p
         .replaceWithIf(WINTER_JAGGED_STONE_TILE_LIGHT_2, plugin -> plugin.configWinterTheme)
         .ids(11)
