@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Hooder <ahooder@protonmail.com>
+ * Copyright (c) 2023, Hooder <ahooder@protonmail.com>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -22,10 +22,11 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package rs117.hd.config;
 
-#pragma once
-
-#if __VERSION__ < 400
-#define length(v) sqrt(dot(v, v))
-#define fract(x) (x - floor(x))
-#endif
+public enum ShadowMode
+{
+	OFF,
+	FAST,
+	DETAILED
+}

@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2018, Adam <Adam@sigterm.info>
+ * Copyright (c) 2021, 117 <https://twitter.com/117scape>
  * Copyright (c) 2023, Hooder <ahooder@protonmail.com>
  * All rights reserved.
  *
@@ -23,46 +24,57 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 #version 330
 
-#include utils/constants.glsl
+layout(triangles) in;
+layout(triangle_strip, max_vertices = 3) out;
 
-#if SHADOW_MODE == SHADOW_MODE_DETAILED
-    uniform sampler2DArray textureArray;
-    in vec3 fUvw;
-#endif
+uniform mat4 lightProjectionMatrix;
+uniform float elapsedTime;
+
+#include uniforms/materials.glsl
+
+#include utils/polyfills.glsl
+#include utils/constants.glsl
+#include utils/misc.glsl
+#include utils/uvs.glsl
+
+flat in vec3 gPosition[3];
+flat in vec3 gUv[3];
+flat in int gMaterialData[3];
+flat in int gCastShadow[3];
+
+out vec3 fUvw;
 
 #if SHADOW_TRANSPARENCY
-    in float fOpacity;
+    flat in float gOpacity[3];
+    out float fOpacity;
 #endif
 
 void main() {
-    float opacity = 0;
-    #if SHADOW_TRANSPARENCY
-        opacity = fOpacity;
-    #endif
+    if (gCastShadow[0] + gCastShadow[1] + gCastShadow[2] == 0)
+        return;
 
-    #if SHADOW_MODE == SHADOW_MODE_DETAILED
-        if (fUvw.z != -1) {
-            opacity = texture(textureArray, fUvw).a;
+    // MacOS doesn't allow assigning these arrays directly.
+    // One of the many wonders of Apple software...
+    vec3 uvw[3] = vec3[](gUv[0], gUv[1], gUv[2]);
+    computeUvs(gMaterialData[0], vec3[](gPosition[0], gPosition[1], gPosition[2]), uvw);
 
-            #if !SHADOW_TRANSPARENCY
-                if (opacity < SHADOW_DEFAULT_OPACITY_THRESHOLD)
-                    discard; // TODO: compare performance between discard and writing to gl_FragDepth
-            #endif
-        }
-    #endif
+    for (int i = 0; i < 3; i++) {
+        Material material = getMaterial(gMaterialData[i] >> MATERIAL_INDEX_SHIFT);
+        fUvw = vec3(uvw[i].xy, material.colorMap);
+        // Scroll UVs
+        fUvw.xy += material.scrollDuration * elapsedTime;
+        // Scale from the center
+        fUvw.xy = .5 + (fUvw.xy - .5) / material.textureScale;
 
-    #if SHADOW_TRANSPARENCY
-        // We pack the transparency and depth of each fragment into the upper and lower bits
-        // of the output depth respectively, such that less-transparent fragments overwrite
-        // more-transparent fragments first, and equally transparent fragments second, based on depth.
-        // Unfortunately, the exact handling of floats is implementation dependant, so this may not work
-        // the same across all GPUs.
-        float depth = gl_FragCoord.z;
-        gl_FragDepth = (
-            int((1 - opacity) * SHADOW_ALPHA_MAX) << SHADOW_DEPTH_BITS |
-            int(depth * SHADOW_DEPTH_MAX)
-        ) / float(SHADOW_COMBINED_MAX);
-    #endif
+        #if SHADOW_TRANSPARENCY
+            fOpacity = gOpacity[i];
+        #endif
+
+        gl_Position = lightProjectionMatrix * vec4(gPosition[i], 1);
+        EmitVertex();
+    }
+    EndPrimitive();
 }

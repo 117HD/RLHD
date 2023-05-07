@@ -527,6 +527,9 @@ public enum Overlay {
     ABANDONED_MINE_ROCK(11, Area.MORYTANIA, GroundMaterial.DIRT),
     TRUE_BLOOD_ALTAR_BLOOD(72, Area.TRUE_BLOOD_ALTAR, WaterType.BLOOD),
 
+    // Wilderness
+    WILDERNESS_NORTH_OF_RESOURCE_AREA_HILLS(11, Area.WILDERNESS_NORTH_OF_RESOURCE_AREA, GroundMaterial.VARIED_DIRT),
+
     // Tirannwn
     POISON_WASTE(85, Area.POISON_WASTE, WaterType.POISON_WASTE),
 
@@ -635,6 +638,7 @@ public enum Overlay {
 
     // Cutscenes
     LAND_OF_GOBLINS_WATER_FIX(13, Area.LAND_OF_GOBLINS_CUTSCENE_WATER, WaterType.WATER),
+    CANOE_CUTSCENE_STONE(Area.CANOE_CUTSCENE, GroundMaterial.STONE_SCROLLING, p -> p.ids(0, 11)),
 
     // Random events
     PRISON_PETE_TILE_1(2, Area.RANDOM_EVENT_PRISON_PETE, GroundMaterial.MARBLE_1, p -> p.blended(false)),

@@ -9,6 +9,7 @@ import rs117.hd.scene.model_overrides.ModelOverride;
 @Singleton
 public class ModelHasher {
     private Model model;
+	private int faceCount;
     private int faceColorsOneHash;
     private int faceColorsTwoHash;
     private int faceColorsThreeHash;
@@ -24,7 +25,7 @@ public class ModelHasher {
 
     public void setModel(Model model) {
         this.model = model;
-
+		this.faceCount = model.getFaceCount();
         this.faceColorsOneHash = fastIntHash(model.getFaceColors1(), -1);
         this.faceColorsTwoHash = fastIntHash(model.getFaceColors2(), -1);
         this.faceColorsThreeHash = fastIntHash(model.getFaceColors3(), -1);
@@ -80,6 +81,7 @@ public class ModelHasher {
 
     public int calculateVertexCacheHash() {
         return fastIntHash(new int[]{
+			this.faceCount,
             this.faceColorsOneHash,
             this.faceColorsTwoHash,
             this.faceColorsThreeHash,
@@ -101,6 +103,7 @@ public class ModelHasher {
 
     public int calculateNormalCacheHash() {
         return fastIntHash(new int[]{
+			this.faceCount,
             this.faceIndicesOneHash,
             this.faceIndicesTwoHash,
             this.faceIndicesThreeHash,
@@ -111,11 +114,11 @@ public class ModelHasher {
     }
 
     public int calculateUvCacheHash(int orientation, @NonNull ModelOverride modelOverride) {
-        int h = 0;
+        int h = faceCount * 31;
         if (modelOverride.uvType == UvType.VANILLA) {
-            h = textureTrianglesHash;
+            h += textureTrianglesHash;
         } else if (modelOverride.uvType.orientationDependent) {
-            h = orientation;
+            h += orientation;
         }
         h = h * 31 + modelOverride.hashCode();
         h = h * 31 + faceTexturesHash;

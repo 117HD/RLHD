@@ -26,6 +26,30 @@
 #include constants.cl
 #include vanilla_uvs.cl
 
+int priority_map(int p, int distance, int _min10, int avg1, int avg2, int avg3);
+int count_prio_offset(__local struct shared_data *shared, int priority);
+void get_face(
+  __local struct shared_data *shared,
+  __constant struct uniform *uni,
+  __global const int4 *vb,
+  uint localId, struct ModelInfo minfo, int cameraYaw, int cameraPitch,
+  /* out */ int *prio, int *dis, int4 *o1, int4 *o2, int4 *o3);
+void add_face_prio_distance(
+  __local struct shared_data *shared,
+  __constant struct uniform *uni,
+  uint localId, struct ModelInfo minfo, int4 thisrvA, int4 thisrvB, int4 thisrvC, int thisPriority, int thisDistance, int4 pos);
+int map_face_priority(__local struct shared_data *shared, uint localId, struct ModelInfo minfo, int thisPriority, int thisDistance, int *prio);
+void insert_dfs(__local struct shared_data *shared, uint localId, struct ModelInfo minfo, int adjPrio, int distance, int prioIdx);
+void sort_and_insert(
+  __local struct shared_data *shared,
+  __global const float4 *uv,
+  __global const float4 *normal,
+  __global int4 *vout,
+  __global float4 *uvout,
+  __global float4 *normalout,
+  __constant struct uniform *uni,
+  uint localId, struct ModelInfo minfo, int thisPriority, int thisDistance, int4 thisrvA, int4 thisrvB, int4 thisrvC);
+
 // Calculate adjusted priority for a face with a given priority, distance, and
 // model global min10 and face distance averages. This allows positioning faces
 // with priorities 10/11 into the correct 'slots' resulting in 18 possible
@@ -87,9 +111,10 @@ void get_face(
   __constant struct uniform *uni,
   __global const int4 *vb,
   uint localId, struct ModelInfo minfo, int cameraYaw, int cameraPitch,
-  /* out */ int *prio, int *dis, int4 *o1, int4 *o2, int4 *o3) {
-  int size = minfo.size;
-  int offset = minfo.offset;
+  /* out */ int *prio, int *dis, int4 *o1, int4 *o2, int4 *o3
+) {
+  uint size = minfo.size;
+  uint offset = minfo.offset;
   int flags = minfo.flags;
   uint ssboOffset;
 
@@ -140,7 +165,8 @@ void add_face_prio_distance(
   __local struct shared_data *shared,
   __constant struct uniform *uni,
   uint localId, struct ModelInfo minfo, int4 thisrvA, int4 thisrvB, int4 thisrvC, int thisPriority, int thisDistance, int4 pos) {
-  if (localId < minfo.size) {
+  uint size = minfo.size;
+  if (localId < size) {
     // if the face is not culled, it is calculated into priority distance averages
     if (face_visible(uni, thisrvA, thisrvB, thisrvC, pos)) {
       atomic_add(&shared->totalNum[thisPriority], 1);
@@ -155,7 +181,7 @@ void add_face_prio_distance(
 }
 
 int map_face_priority(__local struct shared_data *shared, uint localId, struct ModelInfo minfo, int thisPriority, int thisDistance, int *prio) {
-  int size = minfo.size;
+  uint size = minfo.size;
 
   // Compute average distances for 0/2, 3/4, and 6/8
 
@@ -188,7 +214,7 @@ int map_face_priority(__local struct shared_data *shared, uint localId, struct M
 }
 
 void insert_dfs(__local struct shared_data *shared, uint localId, struct ModelInfo minfo, int adjPrio, int distance, int prioIdx) {
-  int size = minfo.size;
+  uint size = minfo.size;
 
   if (localId < size) {
     // calculate base offset into dfs based on number of faces with a lower priority
@@ -208,8 +234,8 @@ void sort_and_insert(
   __constant struct uniform *uni,
   uint localId, struct ModelInfo minfo, int thisPriority, int thisDistance, int4 thisrvA, int4 thisrvB, int4 thisrvC) {
   /* compute face distance */
-  int offset = minfo.offset;
-  int size = minfo.size;
+  uint offset = minfo.offset;
+  uint size = minfo.size;
 
   if (localId < size) {
     int outOffset = minfo.idx;
@@ -230,7 +256,7 @@ void sort_and_insert(
     // calculate position this face will be in
     for (int i = start; i < end; ++i) {
       int d1 = shared->dfs[i];
-      int theirId = d1 >> 16;
+      uint theirId = d1 >> 16;
       int theirDistance = d1 & 0xffff;
 
       // the closest faces draw last, so have the highest index
@@ -261,14 +287,12 @@ void sort_and_insert(
         uvA = rotate_vec(uvA, orientation);
         uvB = rotate_vec(uvB, orientation);
         uvC = rotate_vec(uvC, orientation);
-        // Transform camera position to model space
-        float3 modelSpaceCameraPos = (float3)(uni->cameraX, uni->cameraY, uni->cameraZ) - convert_float3(pos.xyz);
-        compute_uv(modelSpaceCameraPos,
-            convert_float3(thisrvA.xyz),
-            convert_float3(thisrvB.xyz),
-            convert_float3(thisrvC.xyz),
-            &uvA, &uvB, &uvC
-        );
+
+        // Shift texture triangles to world space
+        float3 modelPos = convert_float3(pos.xyz);
+        uvA.xyz += modelPos;
+        uvB.xyz += modelPos;
+        uvC.xyz += modelPos;
       }
     }
 

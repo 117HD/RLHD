@@ -24,7 +24,6 @@
  */
 
 #include utils/constants.glsl
-#include utils/vanilla_uvs.glsl
 
 // Calculate adjusted priority for a face with a given priority, distance, and
 // model global min10 and face distance averages. This allows positioning faces
@@ -82,8 +81,10 @@ int count_prio_offset(int priority) {
     return total;
 }
 
-void get_face(uint localId, ModelInfo minfo, int cameraYaw, int cameraPitch,
-out int prio, out int dis, out ivec4 o1, out ivec4 o2, out ivec4 o3) {
+void get_face(
+    uint localId, ModelInfo minfo, int cameraYaw, int cameraPitch,
+    out int prio, out int dis, out ivec4 o1, out ivec4 o2, out ivec4 o3
+) {
     int size = minfo.size;
     int offset = minfo.offset;
     int flags = minfo.flags;
@@ -120,6 +121,9 @@ out int prio, out int dis, out ivec4 o1, out ivec4 o2, out ivec4 o3) {
             thisDistance = 0;
         } else {
             thisDistance = face_distance(thisrvA, thisrvB, thisrvC, cameraYaw, cameraPitch) + radius;
+            // Clamping here *should* be unnecessary, but it prevents crashing in the unlikely event where we
+            // somehow end up with negative numbers, which is known to happen with open-source AMD drivers.
+            thisDistance = max(0, thisDistance);
         }
 
         o1 = thisrvA;
@@ -251,12 +255,11 @@ void sort_and_insert(uint localId, ModelInfo minfo, int thisPriority, int thisDi
                 uvA = rotate(uvA, orientation);
                 uvB = rotate(uvB, orientation);
                 uvC = rotate(uvC, orientation);
-                // Transform camera position to model space
-                vec3 modelSpaceCameraPos = vec3(cameraX, cameraY, cameraZ) - pos.xyz;
-                compute_uv(modelSpaceCameraPos,
-                    thisrvA.xyz, thisrvB.xyz, thisrvC.xyz,
-                    uvA.xyz, uvB.xyz, uvC.xyz
-                );
+
+                // Shift texture triangles to world space
+                uvA.xyz += pos.xyz;
+                uvB.xyz += pos.xyz;
+                uvC.xyz += pos.xyz;
             }
         }
 

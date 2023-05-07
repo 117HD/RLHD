@@ -217,6 +217,7 @@ public enum Material
 
 	SNOW_1,
 	SNOW_2,
+	SNOW_2_DARK(SNOW_2, p -> p.setBrightness(0.5f)),
 	SNOW_3,
 	SNOW_4,
 
@@ -239,11 +240,21 @@ public enum Material
 		.setSpecular(1.1f, 380)),
 	GRAVEL_SHINY(GRAVEL, p -> p
 		.setSpecular(1.1f, 380)),
-
-	SAND_1,
-	SAND_2,
-	SAND_3,
-
+	SAND_1_N,
+	SAND_1(p -> p
+		.setNormalMap(SAND_1_N)
+		.setSpecular(0.2f, 10)
+	),
+	SAND_2_N,
+	SAND_2(p -> p
+		.setNormalMap(SAND_2_N)
+		.setSpecular(0.2f, 10)
+	),
+	SAND_3_N,
+	SAND_3(p -> p
+		.setNormalMap(SAND_3_N)
+		.setSpecular(0.2f, 10)
+	),
 	GRUNGE_1,
 	GRUNGE_2,
 
@@ -370,6 +381,8 @@ public enum Material
 	WORN_TILES,
 	STONE,
 	STONE_SEMIGLOSS(STONE, p -> p.setSpecular(0.6f, 100)),
+	STONE_SCROLLING(STONE, p -> p
+		.setScroll(0, -1 / 0.7f)),
 
 	WALL_STONE_N,
 	WALL_STONE(p -> p.setNormalMap(WALL_STONE_N)),

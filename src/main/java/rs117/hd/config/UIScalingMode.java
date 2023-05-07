@@ -31,10 +31,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum UIScalingMode
 {
-	NEAREST("Nearest Neighbor", 0),
+	NEAREST("Nearest", 0),
 	LINEAR("Bilinear", 0),
-	MITCHELL("Bicubic (Mitchell)", 1),
-	CATMULL_ROM("Bicubic (Catmull-Rom)", 2),
+	MITCHELL("Mitchell", 1),
+	CATMULL_ROM("Catmull-Rom", 2),
 	XBR("xBR", 3);
 
 	private final String name;

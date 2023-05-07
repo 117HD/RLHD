@@ -62,6 +62,10 @@
         "type": "integer",
         "description": "Extra rotation to apply to UVs with 2048 corresponding to a complete rotation. Defaults to 0."
       },
+      "forceOverride": {
+        "type": "boolean",
+        "description": "Apply the override even when model textures are disabled in the config. Defaults to false."
+      },
       "flatNormals": {
         "type": "boolean",
         "description": "Whether flat normals should be used instead of smooth normals. Defaults to false."
@@ -70,9 +74,17 @@
         "type": "boolean",
         "description": "Whether the model has fake shadows or baked lighting that should be removed. Defaults to false."
       },
-      "disableShadows": {
+      "castShadows": {
         "type": "boolean",
-        "description": "Whether the model should be prevented from casting shadows. Defaults to false."
+        "description": "Whether the model cast shadows. Defaults to true."
+      },
+      "receiveShadows": {
+        "type": "boolean",
+        "description": "Whether the model receive shadows cast by other objects. Defaults to true."
+      },
+      "shadowOpacityThreshold": {
+        "type": "number",
+        "description": "Specify an opacity threshold for shadow casting that better suits the model. Between 0 and 1."
       },
       "tzHaarRecolorType": {
         "type": "string",

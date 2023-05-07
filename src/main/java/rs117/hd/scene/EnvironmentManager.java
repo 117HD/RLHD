@@ -77,10 +77,10 @@ public class EnvironmentManager
 	// time of last frame; used for lightning
 	long lastFrameTime = -1;
 	// used for tracking changes to settings
-	DefaultSkyColor lastSkyColor = DefaultSkyColor.DEFAULT;
-	boolean lastEnvironmentLighting = true;
-	boolean lastSkyOverride = false;
-	boolean lastUnderwater = false;
+	DefaultSkyColor lastConfigDefaultSkyColor = DefaultSkyColor.DEFAULT;
+	boolean lastConfigAtmosphericLighting = true;
+	boolean lastConfigOverrideSkyColor = false;
+	boolean lastWasUnderwater = false;
 
 	// previous camera target world X
 	private int prevCamTargetX = 0;
@@ -186,12 +186,20 @@ public class EnvironmentManager
 			}
 		}
 
-		if (lastSkyColor != config.defaultSkyColor() ||
-			lastEnvironmentLighting != config.atmosphericLighting() ||
-			lastSkyOverride != config.overrideSky() ||
-			lastUnderwater != isUnderwater())
+		DefaultSkyColor defaultSkyColor = config.defaultSkyColor();
+		boolean configAtmosphericLighting = config.atmosphericLighting();
+		boolean configOverrideSkyColor = config.overrideSky();
+		boolean isUnderwater = isUnderwater();
+		if (lastConfigDefaultSkyColor != defaultSkyColor ||
+			lastConfigAtmosphericLighting != configAtmosphericLighting ||
+			lastConfigOverrideSkyColor != configOverrideSkyColor ||
+			lastWasUnderwater != isUnderwater)
 		{
 			changeEnvironment(currentEnvironment, camTargetX, camTargetY, true);
+		}
+		else if (defaultSkyColor == DefaultSkyColor.RUNELITE)
+		{
+			updateSkyColor(); // Update every frame, since other plugins may control it
 		}
 
 		// modify all environment values during transition
@@ -244,10 +252,10 @@ public class EnvironmentManager
 		prevCamTargetX = camTargetX;
 		prevCamTargetY = camTargetY;
 		lastFrameTime = System.currentTimeMillis();
-		lastSkyColor = config.defaultSkyColor();
-		lastSkyOverride = config.overrideSky();
-		lastEnvironmentLighting = config.atmosphericLighting();
-		lastUnderwater = isUnderwater();
+		lastConfigDefaultSkyColor = defaultSkyColor;
+		lastConfigOverrideSkyColor = configOverrideSkyColor;
+		lastConfigAtmosphericLighting = configAtmosphericLighting;
+		lastWasUnderwater = isUnderwater;
 	}
 
 	private void updateWinterTheme() {

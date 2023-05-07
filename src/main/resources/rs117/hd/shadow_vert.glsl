@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2018, Adam <Adam@sigterm.info>
+ * Copyright (c) 2023, Hooder <ahooder@protonmail.com>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,41 +29,58 @@ layout (location = 0) in ivec4 vPosition;
 layout (location = 1) in vec4 vUv;
 layout (location = 2) in vec4 vNormal;
 
-uniform mat4 lightProjectionMatrix;
-
-out vec3 position;
-out vec3 uvw;
-flat out int materialData;
-
 #include utils/constants.glsl
 
-int when_eq(int x, int y) {
-    return 1 - abs(sign(x - y));
-}
+#if SHADOW_MODE == SHADOW_MODE_DETAILED
+    // Pass to geometry shader
+    flat out vec3 gPosition;
+    flat out vec3 gUv;
+    flat out int gMaterialData;
+    flat out int gCastShadow;
+    #if SHADOW_TRANSPARENCY
+        flat out float gOpacity;
+    #endif
+#else
+    uniform mat4 lightProjectionMatrix;
+    #if SHADOW_TRANSPARENCY
+        // Pass to fragment shader
+        out float fOpacity;
+    #endif
+#endif
 
-int when_lt(float x, float y) {
-    return max(int(sign(y - x)), 0);
-}
-
-int when_gt(int x, int y) {
-    return max(sign(x - y), 0);
-}
-
-void main()
-{
-    position = vPosition.xyz;
-    uvw = vUv.xyz;
-    materialData = int(vUv.w);
+void main() {
+    int materialData = int(vUv.w);
     int terrainData = int(vNormal.w);
-
-    float alpha = 1 - float(vPosition.w >> 24 & 0xff) / 255.;
     int waterTypeIndex = terrainData >> 3 & 0x1F;
+    float opacity = 1 - (vPosition.w >> 24 & 0xFF) / float(0xFF);
 
-    int isShadowDisabled = materialData >> MATERIAL_FLAG_DISABLE_SHADOWS & 1;
-    int isGroundPlane = when_eq(terrainData & 0xF, 1); // isTerrain && plane == 0
-    int isTransparent = when_lt(alpha, SHADOW_OPACITY_THRESHOLD);
-    int isWaterSurfaceOrUnderwaterTile = when_gt(waterTypeIndex, 0);
-    position *= 1 - max(0, sign(isShadowDisabled + isGroundPlane + isTransparent + isWaterSurfaceOrUnderwaterTile));
+    float opacityThreshold = float(materialData >> MATERIAL_SHADOW_OPACITY_THRESHOLD_SHIFT & 0x3F) / 0x3F;
+    if (opacityThreshold == 0)
+        opacityThreshold = SHADOW_DEFAULT_OPACITY_THRESHOLD;
 
-    gl_Position = lightProjectionMatrix * vec4(position, 1.f);
+    bool isTransparent = opacity <= opacityThreshold;
+    bool isGroundPlane = (terrainData & 0xF) == 1;// isTerrain && plane == 0
+    bool isWaterSurfaceOrUnderwaterTile = waterTypeIndex > 0;
+
+    bool isShadowDisabled =
+        isGroundPlane ||
+        isWaterSurfaceOrUnderwaterTile ||
+        isTransparent;
+
+    int shouldCastShadow = isShadowDisabled ? 0 : 1;
+
+    #if SHADOW_MODE == SHADOW_MODE_DETAILED
+        gPosition = vec3(vPosition);
+        gUv = vec3(vUv);
+        gMaterialData = materialData;
+        gCastShadow = shouldCastShadow;
+        #if SHADOW_TRANSPARENCY
+            gOpacity = opacity;
+        #endif
+    #else
+        gl_Position = lightProjectionMatrix * vec4(vPosition.xyz, shouldCastShadow);
+        #if SHADOW_TRANSPARENCY
+            fOpacity = opacity;
+        #endif
+    #endif
 }
