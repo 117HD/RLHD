@@ -199,6 +199,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 	private Canvas canvas;
 	private AWTContext awtContext;
+	private GLCapabilities glCaps;
 	private Callback debugCallback;
 
 	private NavigationButton navigationButton;
@@ -218,7 +219,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		.add(GL_GEOMETRY_SHADER, "geom.glsl")
 		.add(GL_FRAGMENT_SHADER, "frag.glsl");
 
-	private static final Shader SHADOW_PROGRAM = new Shader()
+	private static final Shader SHADOW_PROGRAM_FAST = new Shader()
+		.add(GL_VERTEX_SHADER, "shadow_vert.glsl")
+		.add(GL_FRAGMENT_SHADER, "shadow_frag.glsl");
+
+	private static final Shader SHADOW_PROGRAM_DETAILED = new Shader()
 		.add(GL_VERTEX_SHADER, "shadow_vert.glsl")
 		.add(GL_GEOMETRY_SHADER, "shadow_geom.glsl")
 		.add(GL_FRAGMENT_SHADER, "shadow_frag.glsl");
@@ -241,7 +246,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		.chroot();
 
 	private int glProgram;
-	private int glComputeProgram;
+	private int glLargeComputeProgram;
 	private int glSmallComputeProgram;
 	private int glUnorderedComputeProgram;
 	private int glUiProgram;
@@ -336,7 +341,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 	// Shadow program uniforms
 	private int uniShadowLightProjectionMatrix;
-	private int uniShadowTextureArray;
 	private int uniShadowElapsedTime;
 
 	// Point light uniforms
@@ -352,12 +356,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	private int uniTextureArray;
 	private int uniElapsedTime;
 
-	private int uniBlockSmall;
-	private int uniBlockLarge;
-	private int uniBlockMain;
+	private int uniBlockCameraComputeSmall;
+	private int uniBlockCameraComputeLarge;
+	private int uniBlockCamera;
 	private int uniBlockMaterials;
 	private int uniBlockWaterTypes;
-	private int uniShadowBlockMaterials;
 	private int uniBlockPointLights;
 
 	// Animation things
@@ -380,8 +383,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	public boolean configTzhaarHD = true;
 	public boolean configProjectileLights = true;
 	public boolean configNpcLights = true;
-	public boolean configShadowsEnabled = false;
-	public boolean configExpandShadowDraw = false;
 	public boolean configHideBakedEffects = false;
 	public boolean configHdInfernalTexture = true;
 	public boolean configWinterTheme = true;
@@ -389,6 +390,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	public boolean configEnableModelBatching = false;
 	public boolean configEnableModelCaching = false;
 	public int configMaxDynamicLights;
+	public boolean configShadowsEnabled = false;
+	public boolean configExpandShadowDraw = false;
+	public ShadowMode configShadowMode = ShadowMode.OFF;
 
 	public int[] camTarget = new int[3];
 
@@ -424,7 +428,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		configTzhaarHD = config.tzhaarHD();
 		configProjectileLights = config.projectileLights();
 		configNpcLights = config.npcLights();
-		configShadowsEnabled = config.shadowsEnabled();
+		configShadowsEnabled = config.shadowMode() != ShadowMode.OFF;
 		configExpandShadowDraw = config.expandShadowDraw();
 		configHideBakedEffects = config.hideBakedEffects();
 		configHdInfernalTexture = config.hdInfernalTexture();
@@ -474,7 +478,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				// to be created, and also breaks if both 32 and 64 bit lwjgl versions try to run at once.
 				Configuration.SHARED_LIBRARY_EXTRACT_DIRECTORY.set("lwjgl-rl-" + System.getProperty("os.arch", "unknown"));
 
-				GL.createCapabilities();
+				glCaps = GL.createCapabilities();
 
 				String glRenderer = glGetString(GL_RENDERER);
 				String arch = System.getProperty("sun.arch.data.model", "Unknown");
@@ -486,10 +490,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				log.info("Using driver: {}", glGetString(GL_VERSION));
 				log.info("Client is {}-bit", arch);
 
-				GLCapabilities caps = GL.getCapabilities();
-
 				boolean isGenericGpu = glRenderer.equals("GDI Generic");
-				boolean isUnsupportedGpu = isGenericGpu || (computeMode == ComputeMode.OPENGL ? !caps.OpenGL43 : !caps.OpenGL31);
+				boolean isUnsupportedGpu = isGenericGpu || (computeMode == ComputeMode.OPENGL ? !glCaps.OpenGL43 : !glCaps.OpenGL31);
 				if (isUnsupportedGpu)
 				{
 					log.error("The GPU is lacking OpenGL {} support. Stopping the plugin...",
@@ -526,7 +528,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 					resourcePackRepository.getPackPanel().populatePacks();
 				}
 
-				if (log.isDebugEnabled() && caps.glDebugMessageControl != 0)
+				if (log.isDebugEnabled() && glCaps.glDebugMessageControl != 0)
 				{
 					debugCallback = GLUtil.setupDebugMessageCallback();
 					if (debugCallback != null)
@@ -741,6 +743,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 	private void initPrograms() throws ShaderException
 	{
+		configShadowMode = config.shadowMode();
+		configShadowsEnabled = configShadowMode != ShadowMode.OFF;
+
 		String versionHeader = OSType.getOSType() == OSType.Linux ? LINUX_VERSION_HEADER : WINDOWS_VERSION_HEADER;
 		Template template = new Template().add(key -> {
 			switch (key)
@@ -779,6 +784,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 					return generateGetter("PointLight", configMaxDynamicLights);
 				case "PARALLAX_MAPPING":
 					return String.format("#define %s %d", key, ParallaxMappingMode.OFF.ordinal()); // config.parallaxMappingMode().ordinal());
+				case "SHADOW_MODE":
+					return String.format("#define %s %d", key, configShadowMode.ordinal());
+				case "SHADOW_TRANSPARENCY":
+					return String.format("#define %s %d", key, config.enableShadowTransparency() ? 1 : 0);
 			}
 			return null;
 		});
@@ -793,7 +802,15 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 		glProgram = PROGRAM.compile(template);
 		glUiProgram = UI_PROGRAM.compile(template);
-		glShadowProgram = SHADOW_PROGRAM.compile(template);
+
+		switch (configShadowMode) {
+			case FAST:
+				glShadowProgram = SHADOW_PROGRAM_FAST.compile(template);
+				break;
+			case DETAILED:
+				glShadowProgram = SHADOW_PROGRAM_DETAILED.compile(template);
+				break;
+		}
 
 		if (computeMode == ComputeMode.OPENCL)
 		{
@@ -801,7 +818,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		}
 		else
 		{
-			glComputeProgram = COMPUTE_PROGRAM.compile(template);
+			glLargeComputeProgram = COMPUTE_PROGRAM.compile(template);
 			glSmallComputeProgram = SMALL_COMPUTE_PROGRAM.compile(template);
 			glUnorderedComputeProgram = UNORDERED_COMPUTE_PROGRAM.compile(template);
 		}
@@ -823,9 +840,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 		glUseProgram(glUiProgram);
 		glUniform1i(uniUiTexture, 0);
-
-		glUseProgram(glShadowProgram);
-		glUniform1i(uniShadowTextureArray, 1);
 
 		glUseProgram(0);
 	}
@@ -874,19 +888,27 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 		if (computeMode == ComputeMode.OPENGL)
 		{
-			uniBlockSmall = glGetUniformBlockIndex(glSmallComputeProgram, "CameraUniforms");
-			uniBlockLarge = glGetUniformBlockIndex(glComputeProgram, "CameraUniforms");
-			uniBlockMain = glGetUniformBlockIndex(glProgram, "CameraUniforms");
+			uniBlockCameraComputeSmall = glGetUniformBlockIndex(glSmallComputeProgram, "CameraUniforms");
+			uniBlockCameraComputeLarge = glGetUniformBlockIndex(glLargeComputeProgram, "CameraUniforms");
 		}
+		uniBlockCamera = glGetUniformBlockIndex(glProgram, "CameraUniforms");
 		uniBlockMaterials = glGetUniformBlockIndex(glProgram, "MaterialUniforms");
 		uniBlockWaterTypes = glGetUniformBlockIndex(glProgram, "WaterTypeUniforms");
 		uniBlockPointLights = glGetUniformBlockIndex(glProgram, "PointLightUniforms");
 
 		// Shadow program uniforms
-		uniShadowBlockMaterials = glGetUniformBlockIndex(glShadowProgram, "MaterialUniforms");
-		uniShadowLightProjectionMatrix = glGetUniformLocation(glShadowProgram, "lightProjectionMatrix");
-		uniShadowTextureArray = glGetUniformLocation(glShadowProgram, "textureArray");
-		uniShadowElapsedTime = glGetUniformLocation(glShadowProgram, "elapsedTime");
+		switch (configShadowMode)
+		{
+			case DETAILED:
+				int uniShadowBlockMaterials = glGetUniformBlockIndex(glShadowProgram, "MaterialUniforms");
+				int uniShadowTextureArray = glGetUniformLocation(glShadowProgram, "textureArray");
+				glUseProgram(glShadowProgram);
+				glUniform1i(uniShadowTextureArray, 1);
+				glUniformBlockBinding(glShadowProgram, uniShadowBlockMaterials, 1);
+				uniShadowElapsedTime = glGetUniformLocation(glShadowProgram, "elapsedTime");
+			case FAST:
+				uniShadowLightProjectionMatrix = glGetUniformLocation(glShadowProgram, "lightProjectionMatrix");
+		}
 
 		// Initialize uniform buffers that may depend on compile-time settings
 		initCameraUniformBuffer();
@@ -903,10 +925,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			glProgram = 0;
 		}
 
-		if (glComputeProgram != 0)
+		if (glLargeComputeProgram != 0)
 		{
-			glDeleteProgram(glComputeProgram);
-			glComputeProgram = 0;
+			glDeleteProgram(glLargeComputeProgram);
+			glLargeComputeProgram = 0;
 		}
 
 		if (glSmallComputeProgram != 0)
@@ -1255,13 +1277,21 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			// Create texture
 			texShadowMap = glGenTextures();
 			glBindTexture(GL_TEXTURE_2D, texShadowMap);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, config.shadowResolution().getValue(), config.shadowResolution().getValue(), 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
+
+			int shadowRes = config.shadowResolution().getValue();
+			int maxResolution = glGetInteger(GL_MAX_TEXTURE_SIZE);
+			if (maxResolution < shadowRes) {
+				log.info("Capping shadow resolution from {} to {}", shadowRes, maxResolution);
+				shadowRes = maxResolution;
+			}
+
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, shadowRes, shadowRes, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
 
-			float[] color = { 1.0f, 1.0f, 1.0f, 1.0f };
+			float[] color = { 1, 1, 1, 1 };
 			glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, color);
 
 			// Bind texture
@@ -1450,8 +1480,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		 */
 
 		// Bind UBO to compute programs
-		glUniformBlockBinding(glSmallComputeProgram, uniBlockSmall, 0);
-		glUniformBlockBinding(glComputeProgram, uniBlockLarge, 0);
+		glUniformBlockBinding(glSmallComputeProgram, uniBlockCameraComputeSmall, 0);
+		glUniformBlockBinding(glLargeComputeProgram, uniBlockCameraComputeLarge, 0);
 
 		// Bind shared buffers
 		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, hStagingBufferVertices.glBufferId);
@@ -1472,7 +1502,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		glDispatchCompute(numModelsSmall, 1, 1);
 
 		// large
-		glUseProgram(glComputeProgram);
+		glUseProgram(glLargeComputeProgram);
 		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, hModelBufferLarge.glBufferId);
 		glDispatchCompute(numModelsLarge, 1, 1);
 
@@ -1749,7 +1779,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				// render shadow depth map
 				glViewport(0, 0, config.shadowResolution().getValue(), config.shadowResolution().getValue());
 				glBindFramebuffer(GL_FRAMEBUFFER, fboShadowMap);
+				glClearDepthf(1);
 				glClear(GL_DEPTH_BUFFER_BIT);
+				glDepthFunc(GL_LEQUAL);
 
 				glUseProgram(glShadowProgram);
 
@@ -1779,8 +1811,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				glUniformMatrix4fv(uniShadowLightProjectionMatrix, false, lightProjectionMatrix);
 
 				// bind uniforms
-				glUniform1f(uniShadowElapsedTime, elapsedTime);
-				glUniformBlockBinding(glShadowProgram, uniShadowBlockMaterials, 1);
+				if (configShadowMode == ShadowMode.DETAILED)
+					glUniform1f(uniShadowElapsedTime, elapsedTime);
 
 				glEnable(GL_CULL_FACE);
 				glEnable(GL_DEPTH_TEST);
@@ -1945,8 +1977,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			glUniform1f(uniLightningBrightness, environmentManager.lightningBrightness);
 			glUniform1i(uniPointLightsCount, Math.min(configMaxDynamicLights, lightManager.visibleLightsCount));
 
-			glUniform1f(uniSaturation, config.saturation().getAmount());
-			glUniform1f(uniContrast, config.contrast().getAmount());
+			glUniform1f(uniSaturation, config.saturation() / 100f);
+			glUniform1f(uniContrast, config.contrast() / 100f);
 			glUniform1i(uniUnderwaterEnvironment, environmentManager.isUnderwater() ? 1 : 0);
 			glUniform1i(uniUnderwaterCaustics, config.underwaterCaustics() ? 1 : 0);
 			glUniform3fv(uniUnderwaterCausticsColor, environmentManager.currentUnderwaterCausticsColor);
@@ -1961,7 +1993,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 			// use a curve to calculate max bias value based on the density of the shadow map
 			float shadowPixelsPerTile = (float)config.shadowResolution().getValue() / (float)config.shadowDistance().getValue();
-			float maxBias = 26f * (float)Math.pow(0.925f, (0.4f * shadowPixelsPerTile + -10f)) + 13f;
+			float maxBias = 26f * (float)Math.pow(0.925f, (0.4f * shadowPixelsPerTile - 10f)) + 13f;
 			glUniform1f(uniShadowMaxBias, maxBias / 10000f);
 
 			glUniform1i(uniShadowsEnabled, configShadowsEnabled ? 1 : 0);
@@ -1978,7 +2010,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			glUniformMatrix4fv(uniLightProjectionMatrix, false, lightProjectionMatrix);
 
 			// Bind uniforms
-			glUniformBlockBinding(glProgram, uniBlockMain, 0);
+			glUniformBlockBinding(glProgram, uniBlockCamera, 0);
 			glUniformBlockBinding(glProgram, uniBlockMaterials, 1);
 			glUniformBlockBinding(glProgram, uniBlockWaterTypes, 2);
 			glUniformBlockBinding(glProgram, uniBlockPointLights, 3);
@@ -2116,8 +2148,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		glUseProgram(0);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glDisable(GL_BLEND);
-
-		stagingBufferVertices.clear();
 	}
 
 	/**
@@ -2265,7 +2295,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	@Subscribe
 	public void onConfigChanged(ConfigChanged event)
 	{
-		if (!event.getGroup().equals("hd"))
+		if (!event.getGroup().equals(CONFIG_GROUP))
 		{
 			return;
 		}
@@ -2274,11 +2304,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 		switch (key)
 		{
-			case "shadowsEnabled":
-				configShadowsEnabled = config.shadowsEnabled();
+			case KEY_SHADOW_MODE:
+			case KEY_SHADOW_TRANSPARENCY:
 				clientThread.invoke(() ->
 				{
 					modelPusher.clearModelCache();
+					recompilePrograms();
 					shutdownShadowMapFbo();
 					initShadowMapFbo();
 				});

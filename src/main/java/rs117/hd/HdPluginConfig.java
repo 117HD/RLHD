@@ -29,12 +29,15 @@ import net.runelite.client.config.*;
 
 import static rs117.hd.HdPlugin.MAX_DISTANCE;
 import static rs117.hd.HdPlugin.MAX_FOG_DEPTH;
+import static rs117.hd.HdPluginConfig.CONFIG_GROUP;
 
 import rs117.hd.config.*;
 
-@ConfigGroup("hd")
+@ConfigGroup(CONFIG_GROUP)
 public interface HdPluginConfig extends Config
 {
+	String CONFIG_GROUP = "hd";
+
 	/*====== General settings ======*/
 
 	@ConfigSection(
@@ -77,7 +80,7 @@ public interface HdPluginConfig extends Config
 
 	@ConfigItem(
 		keyName = "uiScalingMode",
-		name = "UI scaling mode",
+		name = "UI Scaling Mode",
 		description =
 			"The sampling function to use when the Stretched Mode plugin is enabled.<br>" +
 			"Affects how the UI looks with non-integer scaling.",
@@ -178,7 +181,7 @@ public interface HdPluginConfig extends Config
 
 	@ConfigItem(
 		keyName = "colorBlindnessIntensity",
-		name = "Color Blindness Intensity",
+		name = "Blindness Intensity",
 		description = "Specifies how intense the color blindness adjustment should be.",
 		position = 9,
 		section = generalSettings
@@ -203,25 +206,41 @@ public interface HdPluginConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "saturation",
+		keyName = "fSaturation",
 		name = "Saturation",
-		description = "Controls the saturation of the final rendered image.",
+		description = "Controls the saturation of the final rendered image.<br>" +
+			"Intended to be kept between 0% and 120%.",
 		position = 11,
 		section = generalSettings
 	)
-	default Saturation saturation()
+	@Units(Units.PERCENT)
+	@Range(min = -500, max = 500)
+	default int saturation()
+	{
+		return Math.round(oldSaturationDropdown().getAmount() * 100);
+	}
+	@ConfigItem(keyName = "saturation", hidden = true, name = "", description = "")
+	default Saturation oldSaturationDropdown()
 	{
 		return Saturation.DEFAULT;
 	}
 
 	@ConfigItem(
-		keyName = "contrast",
+		keyName = "fContrast",
 		name = "Contrast",
-		description = "Controls the contrast of the final rendered image.",
+		description = "Controls the contrast of the final rendered image.<br>" +
+			"Intended to be kept between 90% and 110%.",
 		position = 12,
 		section = generalSettings
 	)
-	default Contrast contrast()
+	@Units(Units.PERCENT)
+	@Range(min = -500, max = 500)
+	default int contrast()
+	{
+		return Math.round(oldContrastDropdown().getAmount() * 100);
+	}
+	@ConfigItem(keyName = "contrast", hidden = true, name = "", description = "")
+	default Contrast oldContrastDropdown()
 	{
 		return Contrast.DEFAULT;
 	}
@@ -233,7 +252,8 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = "brightness2",
 		name = "Brightness",
-		description = "Controls the brightness of environmental lighting.",
+		description = "Controls the brightness of environmental lighting.<br>" +
+			"A brightness value of 20 is recommended.",
 		position = 13,
 		section = generalSettings
 	)
@@ -299,14 +319,33 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
+	String KEY_SHADOW_MODE = "shadowMode";
 	@ConfigItem(
-		keyName = "shadowsEnabled",
+		keyName = KEY_SHADOW_MODE,
 		name = "Shadows",
-		description = "Enables fully dynamic shadows.",
+		description =
+			"Render fully dynamic shadows.<br>" +
+			"'Off' completely disables shadows.<br>" +
+			"'Fast' enables fast shadows without any texture detail.<br>" +
+			"'Detailed' enables slower shadows with support for texture detail.",
 		position = 5,
 		section = lightingSettings
 	)
-	default boolean shadowsEnabled()
+	default ShadowMode shadowMode()
+	{
+		return ShadowMode.DETAILED;
+	}
+
+	String KEY_SHADOW_TRANSPARENCY = "enableShadowTransparency";
+	@ConfigItem(
+		keyName = "enableShadowTransparency",
+		name = "Shadow Transparency",
+		description =
+			"Enables partial support for shadows that take transparency into account.",
+		position = 6,
+		section = lightingSettings
+	)
+	default boolean enableShadowTransparency()
 	{
 		return true;
 	}
@@ -317,12 +356,12 @@ public interface HdPluginConfig extends Config
 		description =
 			"The resolution of the shadow map.<br>" +
 			"Higher resolutions result in higher quality shadows, at the cost of GPU performance.",
-		position = 6,
+		position = 7,
 		section = lightingSettings
 	)
 	default ShadowResolution shadowResolution()
 	{
-		return ShadowResolution.RES_1024;
+		return ShadowResolution.RES_4096;
 	}
 
 	@ConfigItem(
@@ -331,12 +370,12 @@ public interface HdPluginConfig extends Config
 		description =
 			"The maximum draw distance for shadows.<br>" +
 			"Shorter distances result in higher quality shadows.",
-		position = 7,
+		position = 9,
 		section = lightingSettings
 	)
 	default ShadowDistance shadowDistance()
 	{
-		return ShadowDistance.DISTANCE_30;
+		return ShadowDistance.DISTANCE_50;
 	}
 
 	@ConfigItem(
@@ -345,7 +384,7 @@ public interface HdPluginConfig extends Config
 		description =
 			"Reduces shadows popping in and out at the edge of the screen by rendering<br>" +
 			"shadows for a larger portion of the scene, at the cost of performance.",
-		position = 8,
+		position = 10,
 		section = lightingSettings
 	)
 	default boolean expandShadowDraw()
@@ -359,7 +398,7 @@ public interface HdPluginConfig extends Config
 		description =
 			"Hide fake shadows and lighting which is often built into models by Jagex.<br>" +
 			"This does not affect the hitbox of NPCs, so you can still click where the fake shadow would normally be.",
-		position = 9,
+		position = 11,
 		section = lightingSettings
 	)
 	default boolean hideBakedEffects() {
@@ -371,7 +410,7 @@ public interface HdPluginConfig extends Config
 //		keyName = "parallaxMappingMode",
 //		name = "Parallax mapping",
 //		description = "Enable parallax mapping to add more depth to materials that support it. Impacts performance considerably.",
-//		position = 10,
+//		position = 12,
 //		section = lightingSettings
 //	)
 //	default ParallaxMappingMode parallaxMappingMode() {
@@ -434,7 +473,7 @@ public interface HdPluginConfig extends Config
 
 	@ConfigItem(
 		keyName = "defaultSkyColor",
-		name = "Default Sky Color",
+		name = "Default Sky",
 		description =
 			"Specify a sky color to use when the current area doesn't have a sky color defined.<br>" +
 			"If set to 'RuneLite Skybox', the sky color from RuneLite's Skybox plugin will be used.<br>" +
@@ -612,8 +651,8 @@ public interface HdPluginConfig extends Config
 
 	@ConfigItem(
 		keyName = "macosIntelWorkaround",
-		name = "Fix broken colors on intel Macs",
-		description = "Workaround for visual artifacts found on some intel GPU drivers on macOS.",
+		name = "Fix white color issue on Intel Macs",
+		description = "Workaround for visual artifacts found on some Intel GPU drivers on macOS.",
 		warning =
 			"This setting can cause RuneLite to crash, and it can be difficult to undo.\n" +
 			"Only enable it if you are seeing broken colors. Are you sure you want to enable this setting?",
