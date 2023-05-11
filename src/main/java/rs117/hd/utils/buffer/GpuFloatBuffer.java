@@ -24,13 +24,22 @@
  */
 package rs117.hd.utils.buffer;
 
-import org.lwjgl.system.MemoryUtil;
-
 import java.nio.FloatBuffer;
+import org.lwjgl.system.MemoryUtil;
 
 public class GpuFloatBuffer
 {
-	private FloatBuffer buffer = MemoryUtil.memAllocFloat(65536);
+	private FloatBuffer buffer;
+
+	public GpuFloatBuffer()
+	{
+		this(65536);
+	}
+
+	public GpuFloatBuffer(int initialCapacity)
+	{
+		buffer = MemoryUtil.memAllocFloat(initialCapacity);
+	}
 
 	public void destroy() {
 		if (buffer != null)

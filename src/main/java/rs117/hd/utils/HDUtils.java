@@ -24,13 +24,21 @@
  */
 package rs117.hd.utils;
 
+import java.util.Random;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
+import net.runelite.api.Client;
+import net.runelite.api.Scene;
+import net.runelite.api.coords.LocalPoint;
+import net.runelite.api.coords.WorldPoint;
+
+import static net.runelite.api.Constants.SCENE_SIZE;
 
 @Slf4j
 @Singleton
 public class HDUtils
 {
+	public static final Random rand = new Random();
 
 	// directional vectors approximately opposite of the directional light used by the client
 	private static final float[] lightDirTile = new float[]{
@@ -356,5 +364,55 @@ public class HDUtils
 			default:
 				return 0;
 		}
+	}
+
+	public static WorldPoint getSceneBase(Scene scene)
+	{
+		return getSceneBase(scene, 0);
+	}
+
+	/**
+	 * Returns the south-west coordinate of the scene in world space, after resolving instance template chunks to their
+	 * original world coordinates. If the scene is instanced, the base coordinates are computed from the center chunk.
+	 *
+	 * @param scene to get the south-west coordinate for
+	 * @param plane to use when resolving instance template chunks
+	 * @return the south-western coordinate of the scene in world space
+	 */
+	public static WorldPoint getSceneBase(Scene scene, int plane)
+	{
+		int baseX = scene.getBaseX();
+		int baseY = scene.getBaseY();
+		if (scene.isInstance())
+		{
+			// Assume the player is loaded into the center chunk, and calculate the world space position of the lower
+			// left corner of the scene, assuming well-behaved template chunks are used to create the instance.
+			int t = scene.getInstanceTemplateChunks()[plane][6][6];
+			baseX = (t >> 14 & 0x3FF);
+			baseY = (t >> 3 & 0x7FF);
+			// Shift to what would be the lower left corner chunk if the template chunks were contiguous on the map
+			baseX -= 6;
+			baseY -= 6;
+			// Chunk coordinates to world coordinates
+			baseX <<= 3;
+			baseY <<= 3;
+		}
+		return new WorldPoint(baseX, baseY, plane);
+	}
+
+	public static WorldPoint getSceneCenter(Scene scene, int plane)
+	{
+		WorldPoint base = getSceneBase(scene, plane);
+		return new WorldPoint(base.getX() + SCENE_SIZE / 2, base.getY() + SCENE_SIZE / 2, plane);
+	}
+
+	public static AABB getSceneBounds(Scene scene)
+	{
+		WorldPoint base = getSceneBase(scene);
+		return new AABB(base.getX(), base.getY(), base.getX() + SCENE_SIZE, base.getY() + SCENE_SIZE);
+	}
+
+	public static WorldPoint cameraSpaceToWorldPoint(Client client, int x, int z) {
+		return WorldPoint.fromLocalInstance(client, new LocalPoint(x + client.getCameraX2(), z + client.getCameraZ2()));
 	}
 }

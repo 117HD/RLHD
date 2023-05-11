@@ -1,19 +1,15 @@
 package rs117.hd.scene.lights;
 
-import java.util.Random;
-
 import lombok.NonNull;
 import net.runelite.api.GraphicsObject;
 import net.runelite.api.NPC;
 import net.runelite.api.Projectile;
 import net.runelite.api.TileObject;
+import rs117.hd.utils.HDUtils;
 
 public class SceneLight extends Light
 {
-
-	private static final Random randomizer = new Random();
-
-	public final int randomOffset = randomizer.nextInt();
+	public final int randomOffset = HDUtils.rand.nextInt();
 
 	public int currentSize;
 	public float currentStrength;
