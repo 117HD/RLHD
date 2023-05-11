@@ -1,5 +1,6 @@
 package rs117.hd.model;
 
+import java.util.Arrays;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import javax.annotation.Nullable;
@@ -306,21 +307,23 @@ public class ModelPusher {
 
         for (int face = 0; face < faceCount; face++) {
             if (!foundCachedVertexData) {
-                int[] vertexData = getFaceVertices(sceneContext, tile, hash, model, modelOverride, objectType, face);
-                sceneContext.stagingBufferVertices.put(vertexData);
+//                int[] vertexData = getFaceVertices(sceneContext, tile, hash, model, modelOverride, objectType, face);
+                getFaceVertices(sceneContext, tile, hash, model, modelOverride, objectType, face);
+                sceneContext.stagingBufferVertices.put(sceneContext.modelFaceVertices);
                 vertexLength += 3;
 
                 if (shouldCacheVertexData) {
-                    fullVertexData.put(vertexData);
+                    fullVertexData.put(sceneContext.modelFaceVertices);
                 }
             }
 
             if (!foundCachedNormalData) {
-                float[] tempNormalData = getNormalDataForFace(sceneContext, model, modelOverride, face);
-                sceneContext.stagingBufferNormals.put(tempNormalData);
+//                float[] tempNormalData = getNormalDataForFace(sceneContext, model, modelOverride, face);
+                getNormalDataForFace(sceneContext, model, modelOverride, face);
+                sceneContext.stagingBufferNormals.put(sceneContext.modelFaceNormals);
 
                 if (shouldCacheNormalData) {
-                    fullNormalData.put(tempNormalData);
+                    fullNormalData.put(sceneContext.modelFaceNormals);
                 }
             }
 
@@ -339,9 +342,10 @@ public class ModelPusher {
 					uvType = UvType.GEOMETRY;
 				int materialData = packMaterialData(material, modelOverride, uvType, false);
 
-				float[] uvData = FLOAT_ZEROS;
-				if (materialData != 0) {
-					uvData = sceneContext.modelFaceNormals;
+				final float[] uvData = sceneContext.modelFaceNormals;
+				if (materialData == 0) {
+					Arrays.fill(uvData, 0);
+				} else {
 					modelOverride.fillUvsForFace(uvData, model, preOrientation, uvType, face);
 					uvData[3] = uvData[7] = uvData[11] = materialData;
 				}
@@ -373,10 +377,12 @@ public class ModelPusher {
 		sceneContext.modelPusherResults[1] = uvLength;
     }
 
-    private float[] getNormalDataForFace(SceneContext sceneContext, Model model, @NonNull ModelOverride modelOverride, int face) {
+    private void getNormalDataForFace(SceneContext sceneContext, Model model, @NonNull ModelOverride modelOverride, int face) {
 		int terrainData = SceneUploader.packTerrainData(false, 0, WaterType.NONE, 0);
 		if (terrainData == 0 && (modelOverride.flatNormals || model.getFaceColors3()[face] == -1)) {
-			return FLOAT_ZEROS;
+			Arrays.fill(sceneContext.modelFaceNormals, 0);
+//			return FLOAT_ZEROS;
+			return;
 		}
 
         final int triA = model.getFaceIndices1()[face];
@@ -398,7 +404,7 @@ public class ModelPusher {
         sceneContext.modelFaceNormals[9] = yVertexNormals[triC];
         sceneContext.modelFaceNormals[10] = zVertexNormals[triC];
         sceneContext.modelFaceNormals[11] = terrainData;
-		return sceneContext.modelFaceNormals;
+//		return sceneContext.modelFaceNormals;
     }
 
     public int packMaterialData(Material material, @NonNull ModelOverride modelOverride, UvType uvType, boolean isOverlay) {
@@ -423,7 +429,7 @@ public class ModelPusher {
             (faceTransparencies[face] & 0xFF) > 100;
     }
 
-    private int[] getFaceVertices(SceneContext sceneContext, Tile tile, long hash, Model model, @NonNull ModelOverride modelOverride, ObjectType objectType, int face) {
+    private void getFaceVertices(SceneContext sceneContext, Tile tile, long hash, Model model, @NonNull ModelOverride modelOverride, ObjectType objectType, int face) {
 		final Scene scene = sceneContext.scene;
         final int triA = model.getFaceIndices1()[face];
         final int triB = model.getFaceIndices2()[face];
@@ -468,7 +474,9 @@ public class ModelPusher {
 
         if (color3 == -2) {
 			// Zero out vertex positions to effectively hide the face
-            return INT_ZEROS;
+			Arrays.fill(sceneContext.modelFaceVertices, 0);
+//            return INT_ZEROS;
+			return;
         } else if (color3 == -1) {
             color2 = color3 = color1;
         } else if ((faceTextures == null || faceTextures[face] == -1) && overrideAmount > 0) {
@@ -687,7 +695,7 @@ public class ModelPusher {
 		sceneContext.modelFaceVertices[9] = yVertices[triC];
 		sceneContext.modelFaceVertices[10] = zVertices[triC];
 		sceneContext.modelFaceVertices[11] = packedAlphaPriority | color3;
-		return sceneContext.modelFaceVertices;
+//		return sceneContext.modelFaceVertices;
     }
 
     private static int interpolateHSL(int hsl, byte hue2, byte sat2, byte lum2, byte lerp) {
