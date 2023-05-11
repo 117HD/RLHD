@@ -28,18 +28,71 @@ package rs117.hd;
 import com.google.common.primitives.Ints;
 import com.google.gson.Gson;
 import com.google.inject.Provides;
+import java.awt.Canvas;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GraphicsConfiguration;
+import java.awt.Image;
+import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferInt;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.swing.SwingUtilities;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import net.runelite.api.*;
-import net.runelite.api.events.*;
+import net.runelite.api.BufferProvider;
+import net.runelite.api.Client;
+import net.runelite.api.DecorativeObject;
+import net.runelite.api.GameObject;
+import net.runelite.api.GameState;
+import net.runelite.api.GraphicsObject;
+import net.runelite.api.GroundObject;
+import net.runelite.api.Model;
+import net.runelite.api.Perspective;
+import net.runelite.api.Renderable;
+import net.runelite.api.Scene;
+import net.runelite.api.SceneTileModel;
+import net.runelite.api.SceneTilePaint;
+import net.runelite.api.Texture;
+import net.runelite.api.TextureProvider;
+import net.runelite.api.WallObject;
+import net.runelite.api.events.ChatMessage;
+import net.runelite.api.events.DecorativeObjectDespawned;
+import net.runelite.api.events.DecorativeObjectSpawned;
+import net.runelite.api.events.GameObjectDespawned;
+import net.runelite.api.events.GameObjectSpawned;
+import net.runelite.api.events.GameStateChanged;
+import net.runelite.api.events.GameTick;
+import net.runelite.api.events.GraphicsObjectCreated;
+import net.runelite.api.events.GroundObjectDespawned;
+import net.runelite.api.events.GroundObjectSpawned;
+import net.runelite.api.events.NpcChanged;
+import net.runelite.api.events.NpcDespawned;
+import net.runelite.api.events.NpcSpawned;
+import net.runelite.api.events.ProjectileMoved;
+import net.runelite.api.events.WallObjectDespawned;
+import net.runelite.api.events.WallObjectSpawned;
 import net.runelite.api.hooks.DrawCallbacks;
 import net.runelite.client.RuneLite;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
-import net.runelite.client.plugins.*;
+import net.runelite.client.plugins.Plugin;
+import net.runelite.client.plugins.PluginDependency;
+import net.runelite.client.plugins.PluginDescriptor;
+import net.runelite.client.plugins.PluginInstantiationException;
+import net.runelite.client.plugins.PluginManager;
 import net.runelite.client.plugins.entityhider.EntityHiderPlugin;
 import net.runelite.client.ui.ClientUI;
 import net.runelite.client.ui.DrawManager;
@@ -53,7 +106,11 @@ import org.lwjgl.opengl.GLCapabilities;
 import org.lwjgl.opengl.GLUtil;
 import org.lwjgl.system.Callback;
 import org.lwjgl.system.Configuration;
-import rs117.hd.config.*;
+import rs117.hd.config.AntiAliasingMode;
+import rs117.hd.config.FogDepthMode;
+import rs117.hd.config.ParallaxMappingMode;
+import rs117.hd.config.ShadowMode;
+import rs117.hd.config.UIScalingMode;
 import rs117.hd.data.WaterType;
 import rs117.hd.data.materials.Material;
 import rs117.hd.model.ModelHasher;
@@ -64,35 +121,36 @@ import rs117.hd.opengl.compute.OpenCLManager;
 import rs117.hd.opengl.shader.Shader;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.Template;
-import rs117.hd.scene.*;
-import rs117.hd.scene.lights.SceneLight;
+import rs117.hd.scene.EnvironmentManager;
+import rs117.hd.scene.LightManager;
 import rs117.hd.scene.ModelOverrideManager;
+import rs117.hd.scene.ProceduralGenerator;
+import rs117.hd.scene.SceneUploader;
+import rs117.hd.scene.TextureManager;
+import rs117.hd.scene.lights.SceneLight;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.scene.model_overrides.ObjectType;
-import rs117.hd.utils.*;
+import rs117.hd.utils.DeveloperTools;
+import rs117.hd.utils.Env;
+import rs117.hd.utils.FileWatcher;
+import rs117.hd.utils.HDUtils;
+import rs117.hd.utils.Mat4;
+import rs117.hd.utils.PopupUtils;
+import rs117.hd.utils.ResourcePath;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.GpuFloatBuffer;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 
-import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.geom.AffineTransform;
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferInt;
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
 import static org.jocl.CL.*;
 import static org.lwjgl.opengl.GL43C.*;
-import static rs117.hd.HdPluginConfig.*;
+import static rs117.hd.HdPluginConfig.CONFIG_GROUP;
+import static rs117.hd.HdPluginConfig.KEY_LEGACY_GREY_COLORS;
+import static rs117.hd.HdPluginConfig.KEY_MODEL_BATCHING;
+import static rs117.hd.HdPluginConfig.KEY_MODEL_CACHE_SIZE;
+import static rs117.hd.HdPluginConfig.KEY_MODEL_CACHING;
+import static rs117.hd.HdPluginConfig.KEY_SHADOW_MODE;
+import static rs117.hd.HdPluginConfig.KEY_SHADOW_TRANSPARENCY;
+import static rs117.hd.HdPluginConfig.KEY_WINTER_THEME;
 import static rs117.hd.utils.ResourcePath.path;
 
 @PluginDescriptor(
@@ -132,28 +190,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	private ClientUI clientUI;
 
 	@Inject
-	private OpenCLManager openCLManager;
-
-	@Inject
 	private ClientThread clientThread;
-
-	@Inject
-	private HdPluginConfig config;
-
-	@Inject
-	private TextureManager textureManager;
-
-	@Inject
-	private LightManager lightManager;
-
-	@Inject
-	private ModelOverrideManager modelOverrideManager;
-
-	@Inject
-	private EnvironmentManager environmentManager;
-
-	@Inject
-	private SceneUploader sceneUploader;
 
 	@Inject
 	private DrawManager drawManager;
@@ -162,10 +199,25 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	private PluginManager pluginManager;
 
 	@Inject
+	private OpenCLManager openCLManager;
+
+	@Inject
+	private TextureManager textureManager;
+
+	@Inject
+	private LightManager lightManager;
+
+	@Inject
+	private EnvironmentManager environmentManager;
+
+	@Inject
+	private ModelOverrideManager modelOverrideManager;
+
+	@Inject
 	private ProceduralGenerator proceduralGenerator;
 
 	@Inject
-	private ConfigManager configManager;
+	private SceneUploader sceneUploader;
 
 	@Inject
 	private ModelPusher modelPusher;
@@ -179,7 +231,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 	@Inject
 	private DeveloperTools developerTools;
-	private ComputeMode computeMode = ComputeMode.OPENGL;
+
+	@Inject
+	private HdPluginConfig config;
 
 	@Inject
 	private Gson rlGson;
@@ -190,6 +244,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	private AWTContext awtContext;
 	private GLCapabilities glCaps;
 	private Callback debugCallback;
+	private ComputeMode computeMode = ComputeMode.OPENGL;
 
 	private static final String LINUX_VERSION_HEADER =
 		"#version 420\n" +
@@ -1953,8 +2008,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			glUniform1f(uniGroundFogOpacity, groundFogOpacity);
 
 			// lightning
-			glUniform1f(uniLightningBrightness, environmentManager.lightningBrightness);
-			glUniform1i(uniPointLightsCount, Math.min(configMaxDynamicLights, lightManager.visibleLightsCount));
+			glUniform1f(uniLightningBrightness, environmentManager.getLightningBrightness());
+			glUniform1i(uniPointLightsCount, lightManager.visibleLightsCount);
 
 			glUniform1f(uniSaturation, config.saturation() / 100f);
 			glUniform1f(uniContrast, config.contrast() / 100f);

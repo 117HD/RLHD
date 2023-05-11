@@ -37,7 +37,6 @@ import net.runelite.api.SceneTileModel;
 import net.runelite.api.SceneTilePaint;
 import net.runelite.api.Tile;
 import rs117.hd.HdPlugin;
-import rs117.hd.HdPluginConfig;
 import rs117.hd.data.WaterType;
 import rs117.hd.data.materials.Material;
 import rs117.hd.data.materials.Overlay;
@@ -54,13 +53,29 @@ import static net.runelite.api.Constants.SCENE_SIZE;
 @Singleton
 public class ProceduralGenerator
 {
+	private static final int VERTICES_PER_FACE = 3;
+	private static final int[] DEPTH_LEVEL_SLOPE = new int[]{150, 300, 470, 610, 700, 750, 820, 920, 1080, 1300, 1350, 1380};
+	private static final boolean[][] TILE_OVERLAY_TRIS = new boolean[][]
+		{
+			/*  0 */ { true, true, true, true }, // Used by tilemodels of varying tri counts?
+			/*  1 */ { false, true },
+			/*  2 */ { false, false, true },
+			/*  3 */ { false, false, true },
+			/*  4 */ { false, true, true },
+			/*  5 */ { false, true, true },
+			/*  6 */ { false, false, true, true },
+			/*  7 */ { false, false, false, true },
+			/*  8 */ { false, true, true, true },
+			/*  9 */ { false, false, false, true, true, true },
+			/* 10 */ { true, true, true, false, false, false },
+			/* 11 */ { true, true, false, false, false, false },
+		};
+
 	@Inject
 	private Client client;
-	
+
 	@Inject
 	private HdPlugin plugin;
-
-	private final int VERTICES_PER_FACE = 3;
 
 	// terrain data
 	Map<Integer, Integer> vertexTerrainColor;
@@ -78,7 +93,6 @@ public class ProceduralGenerator
 	boolean[][][] skipTile;
 	Map<Integer, Integer> vertexUnderwaterDepth;
 	int[][][] underwaterDepthLevels;
-	int[] depthLevelSlope = new int[]{150, 300, 470, 610, 700, 750, 820, 920, 1080, 1300, 1350, 1380};
 
 	/**
 	 * Iterates through all Tiles in a given Scene, producing color and
@@ -545,7 +559,7 @@ public class ProceduralGenerator
 		}
 
 		// Sink terrain further from shore by desired levels.
-		for (int level = 0; level < depthLevelSlope.length - 1; level++)
+		for (int level = 0; level < DEPTH_LEVEL_SLOPE.length - 1; level++)
 		{
 			for (int z = 0; z < MAX_Z; ++z)
 			{
@@ -606,8 +620,8 @@ public class ProceduralGenerator
 					{
 						continue;
 					}
-					int maxRange = depthLevelSlope[underwaterDepthLevels[z][x][y] - 1];
-					int minRange = (int) (depthLevelSlope[underwaterDepthLevels[z][x][y] - 1] * 0.1f);
+					int maxRange = DEPTH_LEVEL_SLOPE[underwaterDepthLevels[z][x][y] - 1];
+					int minRange = (int) (DEPTH_LEVEL_SLOPE[underwaterDepthLevels[z][x][y] - 1] * 0.1f);
 					// Range from noise-generated terrain is 10-60.
 					// Translate the result from range 0-1.
 //					float noiseOffset = (HeightCalc.calculate(baseX + x + 0xe3b7b, baseY + y + 0x87cce) - 10) / 50f;
@@ -883,32 +897,16 @@ public class ProceduralGenerator
 		return waterType;
 	}
 
-	boolean[][] tileOverlayTris = new boolean[][]
-		{
-			/*  0 */ { true, true, true, true }, // Used by tilemodels of varying tri counts?
-			/*  1 */ { false, true },
-			/*  2 */ { false, false, true },
-			/*  3 */ { false, false, true },
-			/*  4 */ { false, true, true },
-			/*  5 */ { false, true, true },
-			/*  6 */ { false, false, true, true },
-			/*  7 */ { false, false, false, true },
-			/*  8 */ { false, true, true, true },
-			/*  9 */ { false, false, false, true, true, true },
-			/* 10 */ { true, true, true, false, false, false },
-			/* 11 */ { true, true, false, false, false, false },
-		};
-
 	boolean[] getTileOverlayTris(int tileShapeIndex)
 	{
-		if (tileShapeIndex >= tileOverlayTris.length)
+		if (tileShapeIndex >= TILE_OVERLAY_TRIS.length)
 		{
 			log.debug("getTileOverlayTris(): unknown tileShapeIndex ({})", tileShapeIndex);
 			return new boolean[10]; // false
 		}
 		else
 		{
-			return tileOverlayTris[tileShapeIndex];
+			return TILE_OVERLAY_TRIS[tileShapeIndex];
 		}
 	}
 

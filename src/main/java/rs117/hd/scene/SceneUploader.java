@@ -56,6 +56,8 @@ import static rs117.hd.HdPlugin.VERTEX_SIZE;
 public
 class SceneUploader
 {
+	private static final float[] UP_NORMAL = { 0, -1, 0 };
+
 	@Inject
 	private Client client;
 
@@ -75,8 +77,6 @@ class SceneUploader
 	private ModelOverrideManager modelOverrideManager;
 
 	public int sceneId = new Random().nextInt();
-
-	private final float[] UP_NORMAL = { 0, -1, 0 };
 
 	public void upload(Scene scene, GpuIntBuffer vertexBuffer, GpuFloatBuffer uvBuffer, GpuFloatBuffer normalBuffer)
 	{

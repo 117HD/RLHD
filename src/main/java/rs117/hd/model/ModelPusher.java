@@ -1,8 +1,18 @@
 package rs117.hd.model;
 
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import net.runelite.api.*;
+import net.runelite.api.Client;
+import net.runelite.api.ItemID;
+import net.runelite.api.Model;
+import net.runelite.api.Player;
+import net.runelite.api.SceneTileModel;
+import net.runelite.api.SceneTilePaint;
+import net.runelite.api.Tile;
 import net.runelite.api.kit.KitType;
 import net.runelite.client.RuneLite;
 import net.runelite.client.callback.ClientThread;
@@ -14,22 +24,17 @@ import rs117.hd.data.materials.Material;
 import rs117.hd.data.materials.Overlay;
 import rs117.hd.data.materials.Underlay;
 import rs117.hd.data.materials.UvType;
+import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SceneUploader;
 import rs117.hd.scene.model_overrides.InheritTileColorType;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.scene.model_overrides.ObjectType;
 import rs117.hd.scene.model_overrides.TzHaarRecolorType;
-import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.PopupUtils;
 import rs117.hd.utils.buffer.GpuFloatBuffer;
 import rs117.hd.utils.buffer.GpuIntBuffer;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
 
 import static rs117.hd.utils.HDUtils.dotLightDirectionModel;
 
@@ -39,6 +44,12 @@ import static rs117.hd.utils.HDUtils.dotLightDirectionModel;
 @Singleton
 @Slf4j
 public class ModelPusher {
+	@Inject
+	private Client client;
+
+	@Inject
+	private ClientThread clientThread;
+
     @Inject
     private HdPlugin plugin;
 
@@ -46,28 +57,40 @@ public class ModelPusher {
     private HdPluginConfig config;
 
     @Inject
-    private Client client;
-
-    @Inject
-    private ClientThread clientThread;
-
-    @Inject
-    private ProceduralGenerator proceduralGenerator;
-
-    @Inject
     private ModelHasher modelHasher;
 
-    private ModelCache modelCache;
+	@Inject
+	private ProceduralGenerator proceduralGenerator;
+
     public static final int DATUM_PER_FACE = 12;
     public static final int BYTES_PER_DATUM = 4;
 	public static final int MAX_MATERIAL_COUNT = (1 << 10) - 1;
+	// subtracts the X lowest lightness levels from the formula.
+	// helps keep darker colors appropriately dark
+	private static final int IGNORE_LOW_LIGHTNESS = 3;
+	// multiplier applied to vertex' lightness value.
+	// results in greater lightening of lighter colors
+	private static final float LIGHTNESS_MULTIPLIER = 3f;
+	// the minimum amount by which each color will be lightened
+	private static final int BASE_LIGHTEN = 10;
+
+	// temporary arrays for face data & model pusher results
+	private static final int[] FOUR_INTS = new int[4];
+	private static final int[] TWELVE_INTS = new int[12];
+	private static final float[] TWELVE_FLOATS = new float[12];
+	private static final int[] MODEL_PUSHER_RESULTS = new int[2];
+
+	// constant array for zeroed out face data
+	private static final float[] FLOAT_ZEROS = new float[12];
+
+	private ModelCache modelCache;
 
 //    private int pushes = 0;
 //    private int vertexdatahits = 0;
 //    private int normaldatahits = 0;
 //    private int uvdatahits = 0;
 
-    public void startUp() {
+	public void startUp() {
 		if (Material.values().length - 1 >= MAX_MATERIAL_COUNT) {
 			throw new IllegalStateException(
 				"Too many materials (" + Material.values().length + ") to fit into packed material data.");
@@ -126,21 +149,6 @@ public class ModelPusher {
         }
     }
 
-    // subtracts the X lowest lightness levels from the formula.
-    // helps keep darker colors appropriately dark
-    private static final int ignoreLowLightness = 3;
-    // multiplier applied to vertex' lightness value.
-    // results in greater lightening of lighter colors
-    private static final float lightnessMultiplier = 3f;
-    // the minimum amount by which each color will be lightened
-    private static final int baseLighten = 10;
-    // same thing but for the normalBuffer and uvBuffer
-    private final static float[] zeroFloats = new float[12];
-    private final static int[] twoInts = new int[2];
-    private final static int[] fourInts = new int[4];
-    private final static int[] twelveInts = new int[12];
-    private final static float[] twelveFloats = new float[12];
-
     public void clearModelCache() {
         if (modelCache != null) {
             modelCache.clear();
@@ -167,9 +175,9 @@ public class ModelPusher {
 //    }
 
     public int[] pushModel(
-        long hash, Model model, GpuIntBuffer vertexBuffer, GpuFloatBuffer uvBuffer, GpuFloatBuffer normalBuffer,
-        int tileX, int tileY, int tileZ, int preOrientation, @NonNull ModelOverride modelOverride, ObjectType objectType,
-        boolean shouldCache
+		long hash, Model model, GpuIntBuffer vertexBuffer, GpuFloatBuffer uvBuffer, GpuFloatBuffer normalBuffer,
+		int tileX, int tileY, int tileZ, int preOrientation, @NonNull ModelOverride modelOverride, ObjectType objectType,
+		boolean shouldCache
     ) {
         if (modelCache == null) {
             shouldCache = false;
@@ -247,9 +255,9 @@ public class ModelPusher {
             }
 
             if (foundCachedVertexData && foundCachedNormalData && foundCachedUvData) {
-                twoInts[0] = vertexLength;
-                twoInts[1] = uvLength;
-                return twoInts;
+                MODEL_PUSHER_RESULTS[0] = vertexLength;
+                MODEL_PUSHER_RESULTS[1] = uvLength;
+                return MODEL_PUSHER_RESULTS;
             }
         }
 
@@ -325,9 +333,9 @@ public class ModelPusher {
 					uvType = UvType.GEOMETRY;
 				int materialData = packMaterialData(material, modelOverride, uvType, false);
 
-				float[] uvData = zeroFloats;
+				float[] uvData = FLOAT_ZEROS;
 				if (materialData != 0) {
-					uvData = twelveFloats;
+					uvData = TWELVE_FLOATS;
 					modelOverride.fillUvsForFace(uvData, model, preOrientation, uvType, face);
 					uvData[3] = uvData[7] = uvData[11] = materialData;
 				}
@@ -355,10 +363,10 @@ public class ModelPusher {
             this.modelCache.putUvData(uvDataCacheHash, fullUvData);
         }
 
-        twoInts[0] = vertexLength;
-        twoInts[1] = uvLength;
+        MODEL_PUSHER_RESULTS[0] = vertexLength;
+        MODEL_PUSHER_RESULTS[1] = uvLength;
 
-        return twoInts;
+        return MODEL_PUSHER_RESULTS;
     }
 
     private int[] getVertexDataForFace(Model model, int[] faceColors, int face) {
@@ -369,26 +377,26 @@ public class ModelPusher {
         final int triB = model.getFaceIndices2()[face];
         final int triC = model.getFaceIndices3()[face];
 
-        twelveInts[0] = xVertices[triA];
-        twelveInts[1] = yVertices[triA];
-        twelveInts[2] = zVertices[triA];
-        twelveInts[3] = faceColors[3] | faceColors[0];
-        twelveInts[4] = xVertices[triB];
-        twelveInts[5] = yVertices[triB];
-        twelveInts[6] = zVertices[triB];
-        twelveInts[7] = faceColors[3] | faceColors[1];
-        twelveInts[8] = xVertices[triC];
-        twelveInts[9] = yVertices[triC];
-        twelveInts[10] = zVertices[triC];
-        twelveInts[11] = faceColors[3] | faceColors[2];
+        TWELVE_INTS[0] = xVertices[triA];
+        TWELVE_INTS[1] = yVertices[triA];
+        TWELVE_INTS[2] = zVertices[triA];
+        TWELVE_INTS[3] = faceColors[3] | faceColors[0];
+        TWELVE_INTS[4] = xVertices[triB];
+        TWELVE_INTS[5] = yVertices[triB];
+        TWELVE_INTS[6] = zVertices[triB];
+        TWELVE_INTS[7] = faceColors[3] | faceColors[1];
+        TWELVE_INTS[8] = xVertices[triC];
+        TWELVE_INTS[9] = yVertices[triC];
+        TWELVE_INTS[10] = zVertices[triC];
+        TWELVE_INTS[11] = faceColors[3] | faceColors[2];
 
-        return twelveInts;
+        return TWELVE_INTS;
     }
 
     private float[] getNormalDataForFace(Model model, @NonNull ModelOverride modelOverride, int face) {
 		int terrainData = SceneUploader.packTerrainData(false, 0, WaterType.NONE, 0);
 		if (terrainData == 0 && (modelOverride.flatNormals || model.getFaceColors3()[face] == -1)) {
-			return zeroFloats;
+			return FLOAT_ZEROS;
 		}
 
         final int triA = model.getFaceIndices1()[face];
@@ -398,20 +406,20 @@ public class ModelPusher {
         final int[] yVertexNormals = model.getVertexNormalsY();
         final int[] zVertexNormals = model.getVertexNormalsZ();
 
-        twelveFloats[0] = xVertexNormals[triA];
-        twelveFloats[1] = yVertexNormals[triA];
-        twelveFloats[2] = zVertexNormals[triA];
-        twelveFloats[3] = terrainData;
-        twelveFloats[4] = xVertexNormals[triB];
-        twelveFloats[5] = yVertexNormals[triB];
-        twelveFloats[6] = zVertexNormals[triB];
-        twelveFloats[7] = terrainData;
-        twelveFloats[8] = xVertexNormals[triC];
-        twelveFloats[9] = yVertexNormals[triC];
-        twelveFloats[10] = zVertexNormals[triC];
-        twelveFloats[11] = terrainData;
+        TWELVE_FLOATS[0] = xVertexNormals[triA];
+        TWELVE_FLOATS[1] = yVertexNormals[triA];
+        TWELVE_FLOATS[2] = zVertexNormals[triA];
+        TWELVE_FLOATS[3] = terrainData;
+        TWELVE_FLOATS[4] = xVertexNormals[triB];
+        TWELVE_FLOATS[5] = yVertexNormals[triB];
+        TWELVE_FLOATS[6] = zVertexNormals[triB];
+        TWELVE_FLOATS[7] = terrainData;
+        TWELVE_FLOATS[8] = xVertexNormals[triC];
+        TWELVE_FLOATS[9] = yVertexNormals[triC];
+        TWELVE_FLOATS[10] = zVertexNormals[triC];
+        TWELVE_FLOATS[11] = terrainData;
 
-        return twelveFloats;
+        return TWELVE_FLOATS;
     }
 
     public int packMaterialData(Material material, @NonNull ModelOverride modelOverride, UvType uvType, boolean isOverlay) {
@@ -464,11 +472,11 @@ public class ModelPusher {
             }
 
             if (removeBakedLighting) {
-                fourInts[0] = 0;
-                fourInts[1] = 0;
-                fourInts[2] = 0;
-                fourInts[3] = 0xFF << 24;
-                return fourInts;
+                FOUR_INTS[0] = 0;
+                FOUR_INTS[1] = 0;
+                FOUR_INTS[2] = 0;
+                FOUR_INTS[3] = 0xFF << 24;
+                return FOUR_INTS;
             }
         }
 
@@ -485,11 +493,11 @@ public class ModelPusher {
         final Tile tile = client.getScene().getTiles()[tileZ][tileX][tileY];
 
         if (color3 == -2) {
-            fourInts[0] = 0;
-            fourInts[1] = 0;
-            fourInts[2] = 0;
-            fourInts[3] = 0xFF << 24;
-            return fourInts;
+            FOUR_INTS[0] = 0;
+            FOUR_INTS[1] = 0;
+            FOUR_INTS[2] = 0;
+            FOUR_INTS[3] = 0xFF << 24;
+            return FOUR_INTS;
         } else if (color3 == -1) {
             color2 = color3 = color1;
         } else if ((faceTextures == null || faceTextures[face] == -1) && overrideAmount > 0) {
@@ -541,16 +549,16 @@ public class ModelPusher {
             float[] L = HDUtils.lightDirModel;
             float lightDotNormal = Math.max(0, N[0] * L[0] + N[1] * L[1] + N[2] * L[2]);
 
-            int lightenA = (int) (Math.max((color1L - ignoreLowLightness), 0) * lightnessMultiplier) + baseLighten;
+            int lightenA = (int) (Math.max((color1L - IGNORE_LOW_LIGHTNESS), 0) * LIGHTNESS_MULTIPLIER) + BASE_LIGHTEN;
             color1L = (int) HDUtils.lerp(color1L, lightenA, lightDotNormal);
 
-            int lightenB = (int) (Math.max((color2L - ignoreLowLightness), 0) * lightnessMultiplier) + baseLighten;
+            int lightenB = (int) (Math.max((color2L - IGNORE_LOW_LIGHTNESS), 0) * LIGHTNESS_MULTIPLIER) + BASE_LIGHTEN;
             color2L = (int) HDUtils.lerp(color2L, lightenB, lightDotNormal);
 
-            int lightenC = (int) (Math.max((color3L - ignoreLowLightness), 0) * lightnessMultiplier) + baseLighten;
+            int lightenC = (int) (Math.max((color3L - IGNORE_LOW_LIGHTNESS), 0) * LIGHTNESS_MULTIPLIER) + BASE_LIGHTEN;
             color3L = (int) HDUtils.lerp(color3L, lightenC, lightDotNormal);
         } else {
-            int lightenA = (int) (Math.max((color1L - ignoreLowLightness), 0) * lightnessMultiplier) + baseLighten;
+            int lightenA = (int) (Math.max((color1L - IGNORE_LOW_LIGHTNESS), 0) * LIGHTNESS_MULTIPLIER) + BASE_LIGHTEN;
             float dotA = Math.max(0, dotLightDirectionModel(
                 xVertexNormals[triA],
                 yVertexNormals[triA],
@@ -558,7 +566,7 @@ public class ModelPusher {
             ));
             color1L = (int) HDUtils.lerp(color1L, lightenA, dotA);
 
-            int lightenB = (int) (Math.max((color2L - ignoreLowLightness), 0) * lightnessMultiplier) + baseLighten;
+            int lightenB = (int) (Math.max((color2L - IGNORE_LOW_LIGHTNESS), 0) * LIGHTNESS_MULTIPLIER) + BASE_LIGHTEN;
             float dotB = Math.max(0, dotLightDirectionModel(
                 xVertexNormals[triB],
                 yVertexNormals[triB],
@@ -566,7 +574,7 @@ public class ModelPusher {
             ));
             color2L = (int) HDUtils.lerp(color2L, lightenB, dotB);
 
-            int lightenC = (int) (Math.max((color3L - ignoreLowLightness), 0) * lightnessMultiplier) + baseLighten;
+            int lightenC = (int) (Math.max((color3L - IGNORE_LOW_LIGHTNESS), 0) * LIGHTNESS_MULTIPLIER) + BASE_LIGHTEN;
             float dotC = Math.max(0, dotLightDirectionModel(
                 xVertexNormals[triC],
                 yVertexNormals[triC],
@@ -696,12 +704,12 @@ public class ModelPusher {
         color2 = (color2H << 3 | color2S) << 7 | color2L;
         color3 = (color3H << 3 | color3S) << 7 | color3L;
 
-        fourInts[0] = color1;
-        fourInts[1] = color2;
-        fourInts[2] = color3;
-        fourInts[3] = packedAlphaPriority;
+        FOUR_INTS[0] = color1;
+        FOUR_INTS[1] = color2;
+        FOUR_INTS[2] = color3;
+        FOUR_INTS[3] = packedAlphaPriority;
 
-        return fourInts;
+        return FOUR_INTS;
     }
 
     private static int interpolateHSL(int hsl, byte hue2, byte sat2, byte lum2, byte lerp) {

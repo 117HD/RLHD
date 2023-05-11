@@ -24,7 +24,11 @@
  */
 package rs117.hd.scene;
 
-import com.google.common.primitives.Floats;
+import java.util.ArrayList;
+import java.util.Arrays;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
@@ -39,11 +43,6 @@ import rs117.hd.data.environments.Environment;
 import rs117.hd.utils.AABB;
 import rs117.hd.utils.HDUtils;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import java.util.ArrayList;
-import java.util.Arrays;
-
 import static net.runelite.api.Constants.CHUNK_SIZE;
 import static net.runelite.api.Constants.SCENE_SIZE;
 
@@ -55,20 +54,20 @@ public class EnvironmentManager
 	private Client client;
 
 	@Inject
-	private HdPluginConfig config;
+	private HdPlugin plugin;
 
 	@Inject
-	private HdPlugin hdPlugin;
+	private HdPluginConfig config;
 
 	private final Environment defaultEnvironment = Environment.OVERWORLD;
 	private ArrayList<Environment> sceneEnvironments;
 	private Environment currentEnvironment = defaultEnvironment;
 
 	// transition time
-	private static final int transitionDuration = 3000;
+	private static final int TRANSITION_DURATION = 3000;
 	// distance in tiles to skip transition (e.g. entering cave, teleporting)
 	// walking across a loading line causes a movement of 40-41 tiles
-	private static final int skipTransitionTiles = 41;
+	private static final int SKIP_TRANSITION_DISTANCE = 41;
 
 	// last environment change time
 	private long startTime = 0;
@@ -158,7 +157,7 @@ public class EnvironmentManager
 
 	public void update()
 	{
-		WorldPoint camPosition = localPointToWorldTile(hdPlugin.camTarget[0], hdPlugin.camTarget[1]);
+		WorldPoint camPosition = localPointToWorldTile(plugin.camTarget[0], plugin.camTarget[1]);
 		int camTargetX = camPosition.getX();
 		int camTargetY = camPosition.getY();
 		int camTargetZ = camPosition.getPlane();
@@ -170,15 +169,15 @@ public class EnvironmentManager
 				if (environment != currentEnvironment)
 				{
 					if (environment == Environment.PLAYER_OWNED_HOUSE || environment == Environment.PLAYER_OWNED_HOUSE_SNOWY) {
-						hdPlugin.setInHouse(true);
+						plugin.setInHouse(true);
 
 						// POH takes 1 game tick to enter, then 2 game ticks to load per floor
-						hdPlugin.reloadSceneIn(7);
+						plugin.reloadSceneIn(7);
 					} else {
-						hdPlugin.setInHouse(false);
+						plugin.setInHouse(false);
 					}
 
-					hdPlugin.setInGauntlet(environment == Environment.THE_GAUNTLET || environment == Environment.THE_GAUNTLET_CORRUPTED);
+					plugin.setInGauntlet(environment == Environment.THE_GAUNTLET || environment == Environment.THE_GAUNTLET_CORRUPTED);
 
 					changeEnvironment(environment, camTargetX, camTargetY, false);
 				}
@@ -226,7 +225,7 @@ public class EnvironmentManager
 		else
 		{
 			// interpolate between start and target values
-			float t = (float)(currentTime - startTime) / (float)transitionDuration;
+			float t = (float)(currentTime - startTime) / (float) TRANSITION_DURATION;
 
 			currentFogColor = HDUtils.lerpVectors(startFogColor, targetFogColor, t);
 			currentWaterColor = HDUtils.lerpVectors(startWaterColor, targetWaterColor, t);
@@ -269,7 +268,7 @@ public class EnvironmentManager
 	}
 
 	private boolean useWinterTheme() {
-		return hdPlugin.configWinterTheme && displaySnow;
+		return plugin.configWinterTheme && displaySnow;
 	}
 
 	/**
@@ -285,7 +284,7 @@ public class EnvironmentManager
 		log.debug("currentEnvironment changed to " + newEnvironment);
 
 		startTime = System.currentTimeMillis();
-		transitionCompleteTime = instantChange ? 0 : startTime + transitionDuration;
+		transitionCompleteTime = instantChange ? 0 : startTime + TRANSITION_DURATION;
 
 		// set previous variables to current ones
 		startFogColor = currentFogColor;
@@ -356,7 +355,7 @@ public class EnvironmentManager
 		// skip the transitional fade if the player has moved too far
 		// since the previous frame. results in an instant transition when
 		// teleporting, entering dungeons, etc.
-		if (tileChange >= skipTransitionTiles)
+		if (tileChange >= SKIP_TRANSITION_DISTANCE)
 		{
 			transitionCompleteTime = startTime;
 		}
@@ -435,7 +434,7 @@ public class EnvironmentManager
 			log.debug("SceneArea: " + environment.name());
 		}
 
-		WorldPoint camPosition = localPointToWorldTile(hdPlugin.camTarget[0], hdPlugin.camTarget[1]);
+		WorldPoint camPosition = localPointToWorldTile(plugin.camTarget[0], plugin.camTarget[1]);
 		int camTargetX = camPosition.getX();
 		int camTargetY = camPosition.getY();
 		changeEnvironment(currentEnvironment, camTargetX, camTargetY, false);
@@ -444,16 +443,18 @@ public class EnvironmentManager
 
 
 	/* lightning */
-	public float lightningBrightness = 0f;
-	public float[] lightningColor = new float[]{1.0f, 1.0f, 1.0f};
-	double nextLightningTime = -1;
-	float newLightningBrightness = 7f;
-	float lightningFadeSpeed = 80f; // brightness units per second
-	int minLightningInterval = 5500;
-	int maxLightningInterval = 17000;
-	float quickLightningChance = 2f;
-	int minQuickLightningInterval = 40;
-	int maxQuickLightningInterval = 150;
+	private static final float[] LIGHTNING_COLOR = new float[]{1.0f, 1.0f, 1.0f};
+	private static final float NEW_LIGHTNING_BRIGHTNESS = 7f;
+	private static final float LIGHTNING_FADE_SPEED = 80f; // brightness units per second
+	private static final int MIN_LIGHTNING_INTERVAL = 5500;
+	private static final int MAX_LIGHTNING_INTERVAL = 17000;
+	private static final float QUICK_LIGHTNING_CHANCE = 2f;
+	private static final int MIN_QUICK_LIGHTNING_INTERVAL = 40;
+	private static final int MAX_QUICK_LIGHTNING_INTERVAL = 150;
+
+	@Getter
+	private float lightningBrightness = 0f;
+	private double nextLightningTime = -1;
 
 	/**
 	 * Updates lightning variables and sets water reflection and sky
@@ -464,7 +465,7 @@ public class EnvironmentManager
 		if (lightningBrightness > 0)
 		{
 			int frameTime = (int)(System.currentTimeMillis() - lastFrameTime);
-			float brightnessChange = (frameTime / 1000f) * lightningFadeSpeed;
+			float brightnessChange = (frameTime / 1000f) * LIGHTNING_FADE_SPEED;
 			lightningBrightness = Math.max(lightningBrightness - brightnessChange, 0);
 		}
 
@@ -475,16 +476,16 @@ public class EnvironmentManager
 		}
 		if (System.currentTimeMillis() > nextLightningTime)
 		{
-			lightningBrightness = newLightningBrightness;
+			lightningBrightness = NEW_LIGHTNING_BRIGHTNESS;
 
 			generateNextLightningTime();
 		}
 
 		if (lightningEnabled && config.flashingEffects())
 		{
-			float t = Floats.constrainToRange(lightningBrightness, 0.0f, 1.0f);
-			currentFogColor = HDUtils.lerpVectors(currentFogColor, lightningColor, t);
-			currentWaterColor = HDUtils.lerpVectors(currentWaterColor, lightningColor, t);
+			float t = HDUtils.clamp(lightningBrightness, 0, 1);
+			currentFogColor = HDUtils.lerpVectors(currentFogColor, LIGHTNING_COLOR, t);
+			currentWaterColor = HDUtils.lerpVectors(currentWaterColor, LIGHTNING_COLOR, t);
 		}
 		else
 		{
@@ -499,9 +500,9 @@ public class EnvironmentManager
 	 */
 	void generateNextLightningTime()
 	{
-		int lightningInterval = (int)(minLightningInterval + ((maxLightningInterval - minLightningInterval) * Math.random()));
-		int quickLightningInterval = (int)(minQuickLightningInterval + ((maxQuickLightningInterval - minQuickLightningInterval) * Math.random()));
-		if (Math.random() <= 1f / quickLightningChance)
+		int lightningInterval = (int)(MIN_LIGHTNING_INTERVAL + ((MAX_LIGHTNING_INTERVAL - MIN_LIGHTNING_INTERVAL) * Math.random()));
+		int quickLightningInterval = (int)(MIN_QUICK_LIGHTNING_INTERVAL + ((MAX_QUICK_LIGHTNING_INTERVAL - MIN_QUICK_LIGHTNING_INTERVAL) * Math.random()));
+		if (Math.random() <= 1f / QUICK_LIGHTNING_CHANCE)
 		{
 			// chain together lighting strikes in quick succession
 			nextLightningTime = System.currentTimeMillis() + quickLightningInterval;

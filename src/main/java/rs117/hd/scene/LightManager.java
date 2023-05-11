@@ -67,12 +67,6 @@ public class LightManager
 		() -> path(LightManager.class,"lights.json"));
 
 	@Inject
-	private ConfigManager configManager;
-
-	@Inject
-	private HdPluginConfig config;
-
-	@Inject
 	private Client client;
 
 	@Inject
@@ -83,6 +77,9 @@ public class LightManager
 
 	@Inject
 	private PluginManager pluginManager;
+
+	@Inject
+	private ConfigManager configManager;
 
 	@VisibleForTesting
 	final ArrayList<SceneLight> WORLD_LIGHTS = new ArrayList<>();
