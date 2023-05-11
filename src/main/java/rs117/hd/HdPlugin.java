@@ -435,7 +435,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 	public int[] camTarget = new int[3];
 
-	private boolean hasStarted;
+	private boolean running;
 	private boolean hasLoggedIn;
 	private boolean lwjglInitted;
 
@@ -616,7 +616,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				modelOverrideManager.startUp();
 				modelPusher.startUp();
 
-				hasStarted = true;
+				running = true;
 
 				if (client.getGameState() == GameState.LOGGED_IN)
 				{
@@ -639,7 +639,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	@Override
 	protected void shutDown()
 	{
-		hasStarted = false;
+		running = false;
 
 		FileWatcher.destroy();
 		developerTools.deactivate();
@@ -1446,26 +1446,36 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	@Override
 	public void postDrawScene()
 	{
-		// Upload buffers
+		if (!running)
+			return;
+
+		// Geometry buffers
 		stagingBufferVertices.flip();
 		stagingBufferUvs.flip();
 		stagingBufferNormals.flip();
+		updateBuffer(hStagingBufferVertices, GL_ARRAY_BUFFER,
+			dynamicOffsetVertices * VERTEX_SIZE, stagingBufferVertices.getBuffer(),
+			GL_STREAM_DRAW, CL_MEM_READ_ONLY);
+		updateBuffer(hStagingBufferUvs, GL_ARRAY_BUFFER,
+			dynamicOffsetUvs * UV_SIZE, stagingBufferUvs.getBuffer(),
+			GL_STREAM_DRAW, CL_MEM_READ_ONLY);
+		updateBuffer(hStagingBufferNormals, GL_ARRAY_BUFFER,
+			dynamicOffsetVertices * NORMAL_SIZE, stagingBufferNormals.getBuffer(),
+			GL_STREAM_DRAW, CL_MEM_READ_ONLY);
+		stagingBufferVertices.clear();
+		stagingBufferUvs.clear();
+		stagingBufferNormals.clear();
+
+		// Model buffers
 		modelBufferUnordered.flip();
 		modelBufferSmall.flip();
 		modelBufferLarge.flip();
-
-		// temp buffers
-		updateBuffer(hStagingBufferVertices, GL_ARRAY_BUFFER,
-			dynamicOffsetVertices * VERTEX_SIZE, stagingBufferVertices.getBuffer(), GL_STREAM_DRAW, CL_MEM_READ_ONLY);
-		updateBuffer(hStagingBufferUvs, GL_ARRAY_BUFFER,
-			dynamicOffsetUvs * UV_SIZE, stagingBufferUvs.getBuffer(), GL_STREAM_DRAW, CL_MEM_READ_ONLY);
-		updateBuffer(hStagingBufferNormals, GL_ARRAY_BUFFER,
-			dynamicOffsetVertices * NORMAL_SIZE, stagingBufferNormals.getBuffer(), GL_STREAM_DRAW, CL_MEM_READ_ONLY);
-
-		// model buffers
 		updateBuffer(hModelBufferLarge, GL_ARRAY_BUFFER, modelBufferLarge.getBuffer(), GL_STREAM_DRAW, CL_MEM_READ_ONLY);
 		updateBuffer(hModelBufferSmall, GL_ARRAY_BUFFER, modelBufferSmall.getBuffer(), GL_STREAM_DRAW, CL_MEM_READ_ONLY);
 		updateBuffer(hModelBufferUnordered, GL_ARRAY_BUFFER, modelBufferUnordered.getBuffer(), GL_STREAM_DRAW, CL_MEM_READ_ONLY);
+		modelBufferUnordered.clear();
+		modelBufferSmall.clear();
+		modelBufferLarge.clear();
 
 		// Output buffers
 		updateBuffer(hRenderBufferVertices,
@@ -1535,6 +1545,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		glDispatchCompute(numModelsLarge, 1, 1);
 
 		checkGLErrors();
+
+		numModelsUnordered = numModelsSmall = numModelsLarge = 0;
 	}
 
 	@Override
@@ -2106,14 +2118,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				glBindFramebuffer(GL_READ_FRAMEBUFFER, awtContext.getFramebuffer(false));
 			}
 
-			stagingBufferVertices.clear();
-			stagingBufferUvs.clear();
-			stagingBufferNormals.clear();
-			modelBufferUnordered.clear();
-			modelBufferSmall.clear();
-			modelBufferLarge.clear();
 			frameModelInfoMap.clear();
-			numModelsUnordered = numModelsSmall = numModelsLarge = 0;
 		}
 
 		// Texture on UI
@@ -2239,7 +2244,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	@Subscribe
 	public void onGameStateChanged(GameStateChanged gameStateChanged)
 	{
-		if (!hasStarted)
+		if (!running)
 			return;
 
 		switch (gameStateChanged.getGameState()) {
