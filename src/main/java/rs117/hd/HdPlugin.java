@@ -2285,9 +2285,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		stagingBufferUvs.flip();
 		stagingBufferNormals.flip();
 
-		updateBuffer(hStagingBufferVertices, GL_ARRAY_BUFFER, stagingBufferVertices.getBuffer(), GL_STATIC_DRAW, CL_MEM_READ_ONLY);
-		updateBuffer(hStagingBufferUvs, GL_ARRAY_BUFFER, stagingBufferUvs.getBuffer(), GL_STATIC_DRAW, CL_MEM_READ_ONLY);
-		updateBuffer(hStagingBufferNormals, GL_ARRAY_BUFFER, stagingBufferNormals.getBuffer(), GL_STATIC_DRAW, CL_MEM_READ_ONLY);
+		updateBuffer(hStagingBufferVertices, GL_ARRAY_BUFFER, stagingBufferVertices.getBuffer(), GL_STREAM_DRAW, CL_MEM_READ_ONLY);
+		updateBuffer(hStagingBufferUvs, GL_ARRAY_BUFFER, stagingBufferUvs.getBuffer(), GL_STREAM_DRAW, CL_MEM_READ_ONLY);
+		updateBuffer(hStagingBufferNormals, GL_ARRAY_BUFFER, stagingBufferNormals.getBuffer(), GL_STREAM_DRAW, CL_MEM_READ_ONLY);
 
 		stagingBufferVertices.clear();
 		stagingBufferUvs.clear();
