@@ -101,12 +101,11 @@ public enum GroundMaterial
 
 	public Material getRandomMaterial(int plane, int worldX, int worldY)
 	{
-		Random randomTex = new Random();
 		// Generate a seed from the tile coordinates for
 		// consistent 'random' results between scene loads.
 		// This seed creates a patchy, varied terrain
-		long seed = (plane + 1) * 10 * (worldX % 100) * 20 * (worldY % 100) * 30;
-		randomTex.setSeed(seed);
+		long seed = (long) (plane + 1) * 10 * (worldX % 100) * 20 * (worldY % 100) * 30;
+		Random randomTex = new Random(seed);
 		int randomInt = randomTex.nextInt(this.materials.length);
 		return this.materials[randomInt];
 	}

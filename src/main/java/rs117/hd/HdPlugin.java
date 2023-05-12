@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2018, Adam <Adam@sigterm.info>
  * Copyright (c) 2021, 117 <https://twitter.com/117scape>
+ * Copyright (c) 2023, Hooder <ahooder@protonmail.com>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,21 +26,59 @@
  */
 package rs117.hd;
 
-import com.google.common.primitives.Ints;
 import com.google.gson.Gson;
 import com.google.inject.Provides;
+import java.awt.Canvas;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GraphicsConfiguration;
+import java.awt.Image;
+import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferInt;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.swing.SwingUtilities;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import net.runelite.api.*;
-import net.runelite.api.events.*;
+import net.runelite.api.BufferProvider;
+import net.runelite.api.Client;
+import net.runelite.api.GameState;
+import net.runelite.api.Model;
+import net.runelite.api.Perspective;
+import net.runelite.api.Renderable;
+import net.runelite.api.Scene;
+import net.runelite.api.SceneTileModel;
+import net.runelite.api.SceneTilePaint;
+import net.runelite.api.Texture;
+import net.runelite.api.TextureProvider;
+import net.runelite.api.coords.LocalPoint;
+import net.runelite.api.coords.WorldPoint;
+import net.runelite.api.events.ChatMessage;
+import net.runelite.api.events.GameStateChanged;
+import net.runelite.api.events.GameTick;
 import net.runelite.api.hooks.DrawCallbacks;
 import net.runelite.client.RuneLite;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
+import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
-import net.runelite.client.plugins.*;
+import net.runelite.client.plugins.Plugin;
+import net.runelite.client.plugins.PluginDependency;
+import net.runelite.client.plugins.PluginDescriptor;
+import net.runelite.client.plugins.PluginInstantiationException;
+import net.runelite.client.plugins.PluginManager;
 import net.runelite.client.plugins.entityhider.EntityHiderPlugin;
 import net.runelite.client.ui.ClientUI;
 import net.runelite.client.ui.DrawManager;
@@ -53,7 +92,11 @@ import org.lwjgl.opengl.GLCapabilities;
 import org.lwjgl.opengl.GLUtil;
 import org.lwjgl.system.Callback;
 import org.lwjgl.system.Configuration;
-import rs117.hd.config.*;
+import rs117.hd.config.AntiAliasingMode;
+import rs117.hd.config.FogDepthMode;
+import rs117.hd.config.ParallaxMappingMode;
+import rs117.hd.config.ShadowMode;
+import rs117.hd.config.UIScalingMode;
 import rs117.hd.data.WaterType;
 import rs117.hd.data.materials.Material;
 import rs117.hd.model.ModelHasher;
@@ -64,35 +107,36 @@ import rs117.hd.opengl.compute.OpenCLManager;
 import rs117.hd.opengl.shader.Shader;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.Template;
-import rs117.hd.scene.*;
-import rs117.hd.scene.lights.SceneLight;
+import rs117.hd.scene.EnvironmentManager;
+import rs117.hd.scene.LightManager;
 import rs117.hd.scene.ModelOverrideManager;
+import rs117.hd.scene.ProceduralGenerator;
+import rs117.hd.scene.SceneContext;
+import rs117.hd.scene.SceneUploader;
+import rs117.hd.scene.TextureManager;
+import rs117.hd.scene.lights.SceneLight;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.scene.model_overrides.ObjectType;
-import rs117.hd.utils.*;
+import rs117.hd.utils.DeveloperTools;
+import rs117.hd.utils.Env;
+import rs117.hd.utils.FileWatcher;
+import rs117.hd.utils.HDUtils;
+import rs117.hd.utils.Mat4;
+import rs117.hd.utils.PopupUtils;
+import rs117.hd.utils.ResourcePath;
 import rs117.hd.utils.buffer.GLBuffer;
-import rs117.hd.utils.buffer.GpuFloatBuffer;
 import rs117.hd.utils.buffer.GpuIntBuffer;
-
-import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.geom.AffineTransform;
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferInt;
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.jocl.CL.*;
 import static org.lwjgl.opengl.GL43C.*;
-import static rs117.hd.HdPluginConfig.*;
+import static rs117.hd.HdPluginConfig.CONFIG_GROUP;
+import static rs117.hd.HdPluginConfig.KEY_LEGACY_GREY_COLORS;
+import static rs117.hd.HdPluginConfig.KEY_MODEL_BATCHING;
+import static rs117.hd.HdPluginConfig.KEY_MODEL_CACHE_SIZE;
+import static rs117.hd.HdPluginConfig.KEY_MODEL_CACHING;
+import static rs117.hd.HdPluginConfig.KEY_SHADOW_MODE;
+import static rs117.hd.HdPluginConfig.KEY_SHADOW_TRANSPARENCY;
+import static rs117.hd.HdPluginConfig.KEY_WINTER_THEME;
 import static rs117.hd.utils.ResourcePath.path;
 
 @PluginDescriptor(
@@ -132,28 +176,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	private ClientUI clientUI;
 
 	@Inject
-	private OpenCLManager openCLManager;
-
-	@Inject
 	private ClientThread clientThread;
 
 	@Inject
-	private HdPluginConfig config;
-
-	@Inject
-	private TextureManager textureManager;
-
-	@Inject
-	private LightManager lightManager;
-
-	@Inject
-	private ModelOverrideManager modelOverrideManager;
-
-	@Inject
-	private EnvironmentManager environmentManager;
-
-	@Inject
-	private SceneUploader sceneUploader;
+	private EventBus eventBus;
 
 	@Inject
 	private DrawManager drawManager;
@@ -162,10 +188,25 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	private PluginManager pluginManager;
 
 	@Inject
+	private OpenCLManager openCLManager;
+
+	@Inject
+	private TextureManager textureManager;
+
+	@Inject
+	private LightManager lightManager;
+
+	@Inject
+	private EnvironmentManager environmentManager;
+
+	@Inject
+	private ModelOverrideManager modelOverrideManager;
+
+	@Inject
 	private ProceduralGenerator proceduralGenerator;
 
 	@Inject
-	private ConfigManager configManager;
+	private SceneUploader sceneUploader;
 
 	@Inject
 	private ModelPusher modelPusher;
@@ -179,7 +220,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 	@Inject
 	private DeveloperTools developerTools;
-	private ComputeMode computeMode = ComputeMode.OPENGL;
+
+	@Inject
+	private HdPluginConfig config;
 
 	@Inject
 	private Gson rlGson;
@@ -190,6 +233,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	private AWTContext awtContext;
 	private GLCapabilities glCaps;
 	private Callback debugCallback;
+	private ComputeMode computeMode = ComputeMode.OPENGL;
 
 	private static final String LINUX_VERSION_HEADER =
 		"#version 420\n" +
@@ -266,9 +310,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	private final GLBuffer hUniformBufferLights = new GLBuffer();
 	private ByteBuffer uniformBufferLights;
 
-	public GpuIntBuffer stagingBufferVertices;
-	public GpuFloatBuffer stagingBufferUvs;
-	public GpuFloatBuffer stagingBufferNormals;
+	private SceneContext sceneContext;
+	private SceneContext nextSceneContext;
+
+	@Nullable
+	public SceneContext getSceneContext()
+	{
+		return sceneContext;
+	}
 
 	private GpuIntBuffer modelBufferUnordered;
 	private GpuIntBuffer modelBufferSmall;
@@ -380,7 +429,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 	public int[] camTarget = new int[3];
 
-	private boolean hasStarted;
+	private boolean running;
 	private boolean hasLoggedIn;
 	private boolean lwjglInitted;
 
@@ -399,6 +448,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		if (event.getMessage().equals("You light the nodes in the corridor to help guide the way.")) {
 			reloadSceneNextGameTick();
 		}
+	}
+
+	@Provides
+	HdPluginConfig provideConfig(ConfigManager configManager)
+	{
+		return configManager.getConfig(HdPluginConfig.class);
 	}
 
 	@Override
@@ -524,10 +579,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 					}
 				}
 
-				stagingBufferVertices = new GpuIntBuffer();
-				stagingBufferUvs = new GpuFloatBuffer();
-				stagingBufferNormals = new GpuFloatBuffer();
-
 				modelBufferUnordered = new GpuIntBuffer();
 				modelBufferSmall = new GpuIntBuffer();
 				modelBufferLarge = new GpuIntBuffer();
@@ -557,11 +608,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				lastStretchedCanvasWidth = lastStretchedCanvasHeight = 0;
 				lastAntiAliasingMode = null;
 
-				lightManager.startUp();
-				modelOverrideManager.startUp();
 				modelPusher.startUp();
+				modelOverrideManager.startUp();
+				lightManager.startUp();
+				environmentManager.startUp();
 
-				hasStarted = true;
+				eventBus.register(lightManager);
+
+				running = true;
 
 				if (client.getGameState() == GameState.LOGGED_IN)
 				{
@@ -584,14 +638,15 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	@Override
 	protected void shutDown()
 	{
-		hasStarted = false;
+		running = false;
 
 		FileWatcher.destroy();
 		developerTools.deactivate();
-		lightManager.shutDown();
 
 		clientThread.invoke(() ->
 		{
+			eventBus.unregister(lightManager);
+
 			client.setGpu(false);
 			client.setDrawCallbacks(null);
 			client.setUnlockedFps(false);
@@ -617,17 +672,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				debugCallback.free();
 			debugCallback = null;
 
-			if (stagingBufferVertices != null)
-				stagingBufferVertices.destroy();
-			stagingBufferVertices = null;
+			if (sceneContext != null)
+				sceneContext.destroy();
+			sceneContext = null;
 
-			if (stagingBufferUvs != null)
-				stagingBufferUvs.destroy();
-			stagingBufferUvs = null;
-
-			if (stagingBufferNormals != null)
-				stagingBufferNormals.destroy();
-			stagingBufferNormals = null;
+			if (nextSceneContext != null)
+				nextSceneContext.destroy();
+			nextSceneContext = null;
 
 			if (modelBufferSmall != null)
 				modelBufferSmall.destroy();
@@ -662,12 +713,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		});
 
 		shutDown();
-	}
-
-	@Provides
-	HdPluginConfig provideConfig(ConfigManager configManager)
-	{
-		return configManager.getConfig(HdPluginConfig.class);
 	}
 
 	private String generateFetchCases(String array, int from, int to)
@@ -1317,16 +1362,31 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	@Override
 	public void drawScene(int cameraX, int cameraY, int cameraZ, int cameraPitch, int cameraYaw, int plane)
 	{
+		final Scene scene = client.getScene();
+		if (sceneContext == null || sceneContext.scene != scene)
+		{
+			log.error("Scene being drawn is not the current scene context", new Throwable());
+			stopPlugin();
+			return;
+		}
+
+		scene.setDrawDistance(getDrawDistance());
+
 		yaw = client.getCameraYaw();
 		pitch = client.getCameraPitch();
 		viewportOffsetX = client.getViewportXOffset();
 		viewportOffsetY = client.getViewportYOffset();
 
-		final Scene scene = client.getScene();
-		scene.setDrawDistance(getDrawDistance());
+		// Update the camera target only when not loading, to keep drawing correct shadows while loading
+		if (client.getGameState() != GameState.LOADING)
+		{
+			camTarget = getCameraFocalPoint();
+		}
 
-		environmentManager.update();
-		lightManager.update();
+		WorldPoint targetWorldPosition = WorldPoint.fromLocalInstance(sceneContext.scene,
+			new LocalPoint(camTarget[0], camTarget[1]), client.getPlane());
+		environmentManager.update(sceneContext, targetWorldPosition);
+		lightManager.update(sceneContext);
 
 		// Only reset the target buffer offset right before drawing the scene. That way if there are frames
 		// after this that don't involve a scene draw, like during LOADING/HOPPING/CONNECTION_LOST, we can
@@ -1337,9 +1397,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 		// UBO. Only the first 32 bytes get modified here, the rest is the constant sin/cos table.
 		// We can reuse the vertex buffer since it isn't used yet.
-		stagingBufferVertices.clear();
-		stagingBufferVertices.ensureCapacity(32);
-		IntBuffer uniformBuf = stagingBufferVertices.getBuffer();
+		sceneContext.stagingBufferVertices.clear();
+		sceneContext.stagingBufferVertices.ensureCapacity(32);
+		IntBuffer uniformBuf = sceneContext.stagingBufferVertices.getBuffer();
 		uniformBuf
 			.put(yaw)
 			.put(pitch)
@@ -1367,6 +1427,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			// Update lights UBO
 			uniformBufferLights.clear();
 			ArrayList<SceneLight> visibleLights = lightManager.getVisibleLights(getDrawDistance(), configMaxDynamicLights);
+			sceneContext.visibleLightCount = visibleLights.size();
 			for (SceneLight light : visibleLights)
 			{
 				uniformBufferLights.putInt(light.x);
@@ -1391,26 +1452,36 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	@Override
 	public void postDrawScene()
 	{
-		// Upload buffers
-		stagingBufferVertices.flip();
-		stagingBufferUvs.flip();
-		stagingBufferNormals.flip();
+		if (!running)
+			return;
+
+		// Geometry buffers
+		sceneContext.stagingBufferVertices.flip();
+		sceneContext.stagingBufferUvs.flip();
+		sceneContext.stagingBufferNormals.flip();
+		updateBuffer(hStagingBufferVertices, GL_ARRAY_BUFFER,
+			dynamicOffsetVertices * VERTEX_SIZE, sceneContext.stagingBufferVertices.getBuffer(),
+			GL_STREAM_DRAW, CL_MEM_READ_ONLY);
+		updateBuffer(hStagingBufferUvs, GL_ARRAY_BUFFER,
+			dynamicOffsetUvs * UV_SIZE, sceneContext.stagingBufferUvs.getBuffer(),
+			GL_STREAM_DRAW, CL_MEM_READ_ONLY);
+		updateBuffer(hStagingBufferNormals, GL_ARRAY_BUFFER,
+			dynamicOffsetVertices * NORMAL_SIZE, sceneContext.stagingBufferNormals.getBuffer(),
+			GL_STREAM_DRAW, CL_MEM_READ_ONLY);
+		sceneContext.stagingBufferVertices.clear();
+		sceneContext.stagingBufferUvs.clear();
+		sceneContext.stagingBufferNormals.clear();
+
+		// Model buffers
 		modelBufferUnordered.flip();
 		modelBufferSmall.flip();
 		modelBufferLarge.flip();
-
-		// temp buffers
-		updateBuffer(hStagingBufferVertices, GL_ARRAY_BUFFER,
-			dynamicOffsetVertices * VERTEX_SIZE, stagingBufferVertices.getBuffer(), GL_STREAM_DRAW, CL_MEM_READ_ONLY);
-		updateBuffer(hStagingBufferUvs, GL_ARRAY_BUFFER,
-			dynamicOffsetUvs * UV_SIZE, stagingBufferUvs.getBuffer(), GL_STREAM_DRAW, CL_MEM_READ_ONLY);
-		updateBuffer(hStagingBufferNormals, GL_ARRAY_BUFFER,
-			dynamicOffsetVertices * NORMAL_SIZE, stagingBufferNormals.getBuffer(), GL_STREAM_DRAW, CL_MEM_READ_ONLY);
-
-		// model buffers
 		updateBuffer(hModelBufferLarge, GL_ARRAY_BUFFER, modelBufferLarge.getBuffer(), GL_STREAM_DRAW, CL_MEM_READ_ONLY);
 		updateBuffer(hModelBufferSmall, GL_ARRAY_BUFFER, modelBufferSmall.getBuffer(), GL_STREAM_DRAW, CL_MEM_READ_ONLY);
 		updateBuffer(hModelBufferUnordered, GL_ARRAY_BUFFER, modelBufferUnordered.getBuffer(), GL_STREAM_DRAW, CL_MEM_READ_ONLY);
+		modelBufferUnordered.clear();
+		modelBufferSmall.clear();
+		modelBufferLarge.clear();
 
 		// Output buffers
 		updateBuffer(hRenderBufferVertices,
@@ -1480,6 +1551,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		glDispatchCompute(numModelsLarge, 1, 1);
 
 		checkGLErrors();
+
+		numModelsUnordered = numModelsSmall = numModelsLarge = 0;
 	}
 
 	@Override
@@ -1623,12 +1696,18 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		final int height = bufferProvider.getHeight();
 
 		glBindBuffer(GL_PIXEL_UNPACK_BUFFER, interfacePbo);
-		glMapBuffer(GL_PIXEL_UNPACK_BUFFER, GL_WRITE_ONLY)
-			.asIntBuffer()
-			.put(pixels, 0, width * height);
-		glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
-		glBindTexture(GL_TEXTURE_2D, interfaceTexture);
-		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, 0);
+		ByteBuffer mappedBuffer = glMapBuffer(GL_PIXEL_UNPACK_BUFFER, GL_WRITE_ONLY);
+		if (mappedBuffer == null)
+		{
+			log.error("Unable to map interface PBO. Skipping UI...");
+		}
+		else
+		{
+			mappedBuffer.asIntBuffer().put(pixels, 0, width * height);
+			glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
+			glBindTexture(GL_TEXTURE_2D, interfaceTexture);
+			glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, 0);
+		}
 		glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
@@ -1736,12 +1815,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			int vertexBuffer = hRenderBufferVertices.glBufferId;
 			int uvBuffer = hRenderBufferUvs.glBufferId;
 			int normalBuffer = hRenderBufferNormals.glBufferId;
-
-			// Update the camera target only when not loading, to keep drawing correct shadows while loading
-			if (client.getGameState() != GameState.LOADING)
-			{
-				camTarget = getCameraFocalPoint();
-			}
 
 			float[] lightProjectionMatrix = Mat4.identity();
 			float lightPitch = environmentManager.currentLightPitch;
@@ -1947,8 +2020,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			glUniform1f(uniGroundFogOpacity, groundFogOpacity);
 
 			// lightning
-			glUniform1f(uniLightningBrightness, environmentManager.lightningBrightness);
-			glUniform1i(uniPointLightsCount, Math.min(configMaxDynamicLights, lightManager.visibleLightsCount));
+			glUniform1f(uniLightningBrightness, environmentManager.getLightningBrightness());
+			glUniform1i(uniPointLightsCount, sceneContext == null ? 0 : sceneContext.visibleLightCount);
 
 			glUniform1f(uniSaturation, config.saturation() / 100f);
 			glUniform1f(uniContrast, config.contrast() / 100f);
@@ -2045,14 +2118,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				glBindFramebuffer(GL_READ_FRAMEBUFFER, awtContext.getFramebuffer(false));
 			}
 
-			stagingBufferVertices.clear();
-			stagingBufferUvs.clear();
-			stagingBufferNormals.clear();
-			modelBufferUnordered.clear();
-			modelBufferSmall.clear();
-			modelBufferLarge.clear();
 			frameModelInfoMap.clear();
-			numModelsUnordered = numModelsSmall = numModelsLarge = 0;
 		}
 
 		// Texture on UI
@@ -2125,8 +2191,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 	/**
 	 * Convert the front framebuffer to an Image
-	 *
-	 * @return
 	 */
 	private Image screenshot()
 	{
@@ -2178,7 +2242,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	@Subscribe
 	public void onGameStateChanged(GameStateChanged gameStateChanged)
 	{
-		if (!hasStarted)
+		if (!running)
 			return;
 
 		switch (gameStateChanged.getGameState()) {
@@ -2186,10 +2250,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				if (config.loadingClearCache()) {
 					modelPusher.clearModelCache();
 				}
-				break;
-			case LOGGED_IN:
-				uploadScene();
-				checkGLErrors();
 				break;
 			case LOGIN_SCREEN:
 				// Avoid drawing the last frame's buffer during LOADING after LOGIN_SCREEN
@@ -2202,30 +2262,68 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 	public void uploadScene()
 	{
-		lightManager.reset();
+		assert client.isClientThread() : "Loading a scene is unsafe while the client can simultaneously initiate a scene load";
+		Scene scene = client.getScene();
+		loadScene(scene);
+		swapScene(scene);
+	}
 
-		generateHDSceneData();
+	public void loadScene(Scene scene)
+	{
+		if (nextSceneContext != null)
+		{
+			log.error("Loading new scene before previously loaded scene was swapped to", new Throwable());
+			clientThread.invoke(this::stopPlugin);
+			return;
+		}
 
-		stagingBufferVertices.clear();
-		stagingBufferUvs.clear();
-		stagingBufferNormals.clear();
+		nextSceneContext = new SceneContext(scene, sceneContext);
+		proceduralGenerator.generateSceneData(nextSceneContext);
+		environmentManager.loadSceneEnvironments(nextSceneContext);
+		lightManager.loadSceneLights(nextSceneContext);
+		sceneUploader.upload(nextSceneContext);
+	}
 
-		sceneUploader.upload(client.getScene(), stagingBufferVertices, stagingBufferUvs, stagingBufferNormals);
+	public void swapScene(Scene scene)
+	{
+		if (nextSceneContext == null)
+		{
+			log.error("No new scene to swap to", new Throwable());
+			stopPlugin();
+			return;
+		}
 
-		dynamicOffsetVertices = stagingBufferVertices.position() / VERTEX_SIZE;
-		dynamicOffsetUvs = stagingBufferUvs.position() / UV_SIZE;
+		if (sceneContext != null)
+		{
+			// Copy over NPC and projectile lights
+			for (SceneLight light : sceneContext.lights)
+				if (light.npc != null || light.projectile != null)
+					nextSceneContext.lights.add(light);
 
-		stagingBufferVertices.flip();
-		stagingBufferUvs.flip();
-		stagingBufferNormals.flip();
+			sceneContext.destroy();
+		}
 
-		updateBuffer(hStagingBufferVertices, GL_ARRAY_BUFFER, stagingBufferVertices.getBuffer(), GL_STATIC_DRAW, CL_MEM_READ_ONLY);
-		updateBuffer(hStagingBufferUvs, GL_ARRAY_BUFFER, stagingBufferUvs.getBuffer(), GL_STATIC_DRAW, CL_MEM_READ_ONLY);
-		updateBuffer(hStagingBufferNormals, GL_ARRAY_BUFFER, stagingBufferNormals.getBuffer(), GL_STATIC_DRAW, CL_MEM_READ_ONLY);
+		sceneContext = nextSceneContext;
+		nextSceneContext = null;
 
-		stagingBufferVertices.clear();
-		stagingBufferUvs.clear();
-		stagingBufferNormals.clear();
+		dynamicOffsetVertices = sceneContext.getVertexOffset();
+		dynamicOffsetUvs = sceneContext.getUvOffset();
+
+		sceneContext.stagingBufferVertices.flip();
+		sceneContext.stagingBufferUvs.flip();
+		sceneContext.stagingBufferNormals.flip();
+		updateBuffer(hStagingBufferVertices, GL_ARRAY_BUFFER,
+			sceneContext.stagingBufferVertices.getBuffer(),
+			GL_STREAM_DRAW, CL_MEM_READ_ONLY);
+		updateBuffer(hStagingBufferUvs, GL_ARRAY_BUFFER,
+			sceneContext.stagingBufferUvs.getBuffer(),
+			GL_STREAM_DRAW, CL_MEM_READ_ONLY);
+		updateBuffer(hStagingBufferNormals, GL_ARRAY_BUFFER,
+			sceneContext.stagingBufferNormals.getBuffer(),
+			GL_STREAM_DRAW, CL_MEM_READ_ONLY);
+		sceneContext.stagingBufferVertices.clear();
+		sceneContext.stagingBufferUvs.clear();
+		sceneContext.stagingBufferNormals.clear();
 	}
 
 	public void reloadSceneNextGameTick()
@@ -2239,30 +2337,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		if (gameTicks > gameTicksUntilSceneReload) {
 			gameTicksUntilSceneReload = gameTicks;
 		}
-	}
-
-	void generateHDSceneData()
-	{
-		environmentManager.loadSceneEnvironments();
-		lightManager.loadSceneLights();
-
-		long procGenTimer = System.currentTimeMillis();
-		long timerCalculateTerrainNormals, timerGenerateTerrainData, timerGenerateUnderwaterTerrain;
-
-		long startTime = System.currentTimeMillis();
-		proceduralGenerator.generateUnderwaterTerrain(client.getScene());
-		timerGenerateUnderwaterTerrain = (int)(System.currentTimeMillis() - startTime);
-		startTime = System.currentTimeMillis();
-		proceduralGenerator.calculateTerrainNormals(client.getScene());
-		timerCalculateTerrainNormals = (int)(System.currentTimeMillis() - startTime);
-		startTime = System.currentTimeMillis();
-		proceduralGenerator.generateTerrainData(client.getScene());
-		timerGenerateTerrainData = (int)(System.currentTimeMillis() - startTime);
-
-		log.debug("procedural data generation took {}ms to complete", (System.currentTimeMillis() - procGenTimer));
-		log.debug("-- calculateTerrainNormals: {}ms", timerCalculateTerrainNormals);
-		log.debug("-- generateTerrainData: {}ms", timerGenerateTerrainData);
-		log.debug("-- generateUnderwaterTerrain: {}ms", timerGenerateUnderwaterTerrain);
 	}
 
 	@Subscribe
@@ -2371,17 +2445,18 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				? this.config.syncMode()
 				: HdPluginConfig.SyncMode.OFF;
 
-		int swapInterval = 0;
+		int swapInterval;
 		switch (syncMode)
 		{
 			case ON:
 				swapInterval = 1;
 				break;
-			case OFF:
-				swapInterval = 0;
-				break;
 			case ADAPTIVE:
 				swapInterval = -1;
+				break;
+			default:
+			case OFF:
+				swapInterval = 0;
 				break;
 		}
 
@@ -2398,7 +2473,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	/**
 	 * Check is a model is visible and should be drawn.
 	 */
-	private boolean isVisible(Model model, int pitchSin, int pitchCos, int yawSin, int yawCos, int x, int y, int z)
+	private boolean isOutsideViewport(Model model, int pitchSin, int pitchCos, int yawSin, int yawCos, int x, int y, int z)
 	{
 		model.calculateBoundsCylinder();
 
@@ -2433,27 +2508,16 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 					{
 						int ytop = (pitchCos * modelHeight >> 16) + yheight;
 						int var22 = (ry - ytop) * zoom;
-						return var22 / depth < Rasterizer3D_clipMidY2;
+						return var22 / depth >= Rasterizer3D_clipMidY2;
 					}
 				}
 			}
 		}
-		return false;
+		return true;
 	}
 
 	/**
 	 * Draw a renderable in the scene
-	 *
-	 * @param renderable
-	 * @param orientation
-	 * @param pitchSin
-	 * @param pitchCos
-	 * @param yawSin
-	 * @param yawCos
-	 * @param x
-	 * @param y
-	 * @param z
-	 * @param hash
 	 */
 	@Override
 	public void draw(Renderable renderable, int orientation, int pitchSin, int pitchCos, int yawSin, int yawCos, int x, int y, int z, long hash)
@@ -2471,11 +2535,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		}
 
 		// Model may be in the scene buffer
-		if (model.getSceneId() == sceneUploader.sceneId)
+		assert sceneContext != null;
+		if (model.getSceneId() == sceneContext.id)
 		{
 			model.calculateBoundsCylinder();
 
-			if (!isVisible(model, pitchSin, pitchCos, yawSin, yawCos, x, y, z))
+			if (isOutsideViewport(model, pitchSin, pitchCos, yawSin, yawCos, x, y, z))
 			{
 				return;
 			}
@@ -2515,7 +2580,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 			model.calculateBoundsCylinder();
 
-			if (!isVisible(model, pitchSin, pitchCos, yawSin, yawCos, x, y, z))
+			if (isOutsideViewport(model, pitchSin, pitchCos, yawSin, yawCos, x, y, z))
 			{
 				return;
 			}
@@ -2554,15 +2619,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 				renderBufferOffset += tempModelInfo.getFaceCount() * 3;
 			} else {
-				int vertexOffset = dynamicOffsetVertices + stagingBufferVertices.position() / VERTEX_SIZE;
-				int uvOffset = dynamicOffsetUvs + stagingBufferUvs.position() / UV_SIZE;
+				int vertexOffset = dynamicOffsetVertices + sceneContext.getVertexOffset();
+				int uvOffset = dynamicOffsetUvs + sceneContext.getUvOffset();
 
 				ModelOverride modelOverride = modelOverrideManager.getOverride(hash);
-				final int[] lengths = modelPusher.pushModel(hash, model,
-					stagingBufferVertices, stagingBufferUvs, stagingBufferNormals,
-					0, 0, 0, 0, modelOverride, ObjectType.NONE, true);
-				final int faceCount = lengths[0] / 3;
-				if (lengths[1] <= 0)
+				modelPusher.pushModel(sceneContext, null, hash, model,modelOverride, ObjectType.NONE, 0, true);
+				final int faceCount = sceneContext.modelPusherResults[0] / 3;
+				if (sceneContext.modelPusherResults[1] <= 0)
 					uvOffset = -1;
 
 				eightIntWrite[0] = vertexOffset;
@@ -2570,7 +2633,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				eightIntWrite[2] = faceCount;
 				bufferForTriangles(faceCount).ensureCapacity(8).put(eightIntWrite);
 
-				renderBufferOffset += lengths[0];
+				renderBufferOffset += sceneContext.modelPusherResults[0];
 
 				// add this temporary model to the map for batching purposes
 				if (configEnableModelBatching) {
@@ -2593,9 +2656,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 	/**
 	 * returns the correct buffer based on triangle count and updates model count
-	 *
-	 * @param triangles
-	 * @return
 	 */
 	private GpuIntBuffer bufferForTriangles(int triangles)
 	{
@@ -2638,8 +2698,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 	private int getDrawDistance()
 	{
-		final int limit = MAX_DISTANCE;
-		return Ints.constrainToRange(config.drawDistance(), 0, limit);
+		return HDUtils.clamp(config.drawDistance(), 0, MAX_DISTANCE);
 	}
 
 	/**
@@ -2799,93 +2858,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	}
 
 	@Subscribe
-	public void onProjectileMoved(ProjectileMoved projectileMoved)
-	{
-		lightManager.addProjectileLight(projectileMoved.getProjectile());
-	}
-
-	@Subscribe
-	public void onNpcSpawned(NpcSpawned npcSpawned)
-	{
-		lightManager.addNpcLights(npcSpawned.getNpc());
-	}
-
-	@Subscribe
-	public void onNpcDespawned(NpcDespawned npcDespawned)
-	{
-		lightManager.removeNpcLight(npcDespawned);
-	}
-
-	@Subscribe
-	public void onNpcChanged(NpcChanged npcChanged)
-	{
-		lightManager.updateNpcChanged(npcChanged);
-	}
-
-	@Subscribe
-	public void onGameObjectSpawned(GameObjectSpawned gameObjectSpawned)
-	{
-		GameObject gameObject = gameObjectSpawned.getGameObject();
-		lightManager.addObjectLight(gameObject, gameObjectSpawned.getTile().getRenderLevel(), gameObject.sizeX(), gameObject.sizeY(), gameObject.getOrientation());
-	}
-
-	@Subscribe
-	public void onGameObjectDespawned(GameObjectDespawned gameObjectDespawned)
-	{
-		GameObject gameObject = gameObjectDespawned.getGameObject();
-		lightManager.removeObjectLight(gameObject);
-	}
-
-	@Subscribe
-	public void onWallObjectSpawned(WallObjectSpawned wallObjectSpawned)
-	{
-		WallObject wallObject = wallObjectSpawned.getWallObject();
-		lightManager.addObjectLight(wallObject, wallObjectSpawned.getTile().getRenderLevel(), 1, 1, wallObject.getOrientationA());
-	}
-
-	@Subscribe
-	public void onWallObjectDespawned(WallObjectDespawned wallObjectDespawned)
-	{
-		WallObject wallObject = wallObjectDespawned.getWallObject();
-		lightManager.removeObjectLight(wallObject);
-	}
-
-	@Subscribe
-	public void onDecorativeObjectSpawned(DecorativeObjectSpawned decorativeObjectSpawned)
-	{
-		DecorativeObject decorativeObject = decorativeObjectSpawned.getDecorativeObject();
-		lightManager.addObjectLight(decorativeObject, decorativeObjectSpawned.getTile().getRenderLevel());
-	}
-
-	@Subscribe
-	public void onDecorativeObjectDespawned(DecorativeObjectDespawned decorativeObjectDespawned)
-	{
-		DecorativeObject decorativeObject = decorativeObjectDespawned.getDecorativeObject();
-		lightManager.removeObjectLight(decorativeObject);
-	}
-
-	@Subscribe
-	public void onGroundObjectSpawned(GroundObjectSpawned groundObjectSpawned)
-	{
-		GroundObject groundObject = groundObjectSpawned.getGroundObject();
-		lightManager.addObjectLight(groundObject, groundObjectSpawned.getTile().getRenderLevel());
-	}
-
-	@Subscribe
-	public void onGroundObjectDespawned(GroundObjectDespawned groundObjectDespawned)
-	{
-		GroundObject groundObject = groundObjectDespawned.getGroundObject();
-		lightManager.removeObjectLight(groundObject);
-	}
-
-	@Subscribe
-	public void onGraphicsObjectCreated(GraphicsObjectCreated graphicsObjectCreated)
-	{
-		GraphicsObject graphicsObject = graphicsObjectCreated.getGraphicsObject();
-		lightManager.addGraphicsObjectLight(graphicsObject);
-	}
-
-	@Subscribe
 	public void onGameTick(GameTick gameTick)
 	{
 		if (gameTicksUntilSceneReload > 0 && --gameTicksUntilSceneReload == 0) {
@@ -2929,7 +2901,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 					errStr = "INVALID_FRAMEBUFFER_OPERATION";
 					break;
 				default:
-					errStr = "" + err;
+					errStr = String.valueOf(err);
 					break;
 			}
 

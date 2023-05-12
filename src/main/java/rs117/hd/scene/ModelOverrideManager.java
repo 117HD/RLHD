@@ -1,6 +1,9 @@
 package rs117.hd.scene;
 
-import com.google.inject.Inject;
+import java.io.IOException;
+import java.util.HashMap;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
@@ -12,12 +15,9 @@ import rs117.hd.model.ModelPusher;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.AABB;
 import rs117.hd.utils.Env;
+import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.ResourcePath;
-
-import javax.inject.Singleton;
-import java.io.IOException;
-import java.util.HashMap;
 
 import static rs117.hd.utils.ResourcePath.path;
 
@@ -59,12 +59,13 @@ public class ModelOverrideManager {
                     for (int objectId : override.objectIds)
                         addEntry(ModelHash.packUuid(objectId, ModelHash.TYPE_OBJECT), override);
                 }
-                if (client.getGameState() == GameState.LOGGED_IN) {
-                    clientThread.invokeLater(() -> {
-                        plugin.uploadScene();
-                        modelPusher.clearModelCache();
-                    });
-                }
+
+				clientThread.invoke(() -> {
+					modelPusher.clearModelCache();
+					if (client.getGameState() == GameState.LOGGED_IN)
+						plugin.uploadScene();
+				});
+
                 log.debug("Loaded {} model overrides", modelOverrides.size());
             } catch (IOException ex) {
                 log.error("Failed to load model overrides:", ex);
@@ -88,11 +89,12 @@ public class ModelOverrideManager {
     }
 
     public boolean shouldHideModel(long hash, int x, int z) {
+		assert client.isClientThread();
         long uuid = ModelHash.getUuid(client, hash);
 
         AABB[] aabbs = modelsToHide.get(uuid);
         if (aabbs != null && hasNoActions(uuid)) {
-            WorldPoint location = ModelHash.getWorldTemplateLocation(client, x, z);
+            WorldPoint location = HDUtils.cameraSpaceToWorldPoint(client, x, z);
             for (AABB aabb : aabbs)
                 if (aabb.contains(location))
                     return true;

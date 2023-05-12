@@ -2,8 +2,6 @@ package rs117.hd.utils;
 
 import net.runelite.api.Client;
 import net.runelite.api.NPC;
-import net.runelite.api.coords.LocalPoint;
-import net.runelite.api.coords.WorldPoint;
 
 public class ModelHash {
     /**
@@ -77,12 +75,5 @@ public class ModelHash {
 
     public static long packUuid(int id, int type) {
         return pack(id, false, type, 0, 0);
-    }
-
-    public static WorldPoint getWorldTemplateLocation(Client client, int x, int z) {
-        LocalPoint lp = LocalPoint.fromScene(
-            (x + client.getCameraX2()) / 128,
-            (z + client.getCameraZ2()) / 128);
-        return WorldPoint.fromLocalInstance(client, lp);
     }
 }

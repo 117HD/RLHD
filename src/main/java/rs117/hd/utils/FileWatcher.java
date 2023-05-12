@@ -169,7 +169,7 @@ public class FileWatcher
 		Path dir = path.getParent();
 		try {
 			watchKeys.put(dir.register(watchService, eventKinds), dir);
-			log.debug("Watching {}", dir);
+			log.debug("Watching {}", path);
 		} catch (IOException ex) {
 			throw new RuntimeException("Failed to register file watcher for path: " + path, ex);
 		}
