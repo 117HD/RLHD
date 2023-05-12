@@ -444,7 +444,7 @@ void main() {
 
 
         // lightning
-        vec3 lightningColor = vec3(1.0, 1.0, 1.0);
+        vec3 lightningColor = vec3(.25, .25, .25);
         float lightningStrength = lightningBrightness;
         float lightningDotNormals = downDotNormals;
         vec3 lightningOut = max(lightningDotNormals, 0.0) * lightningColor * lightningStrength;

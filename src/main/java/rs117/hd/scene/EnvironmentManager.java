@@ -389,7 +389,7 @@ public class EnvironmentManager
 
 
 	/* lightning */
-	private static final float[] LIGHTNING_COLOR = new float[]{1.0f, 1.0f, 1.0f};
+	private static final float[] LIGHTNING_COLOR = new float[]{.25f, .25f, .25f};
 	private static final float NEW_LIGHTNING_BRIGHTNESS = 7f;
 	private static final float LIGHTNING_FADE_SPEED = 80f; // brightness units per second
 	private static final int MIN_LIGHTNING_INTERVAL = 5500;
