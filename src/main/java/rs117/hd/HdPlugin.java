@@ -1513,42 +1513,41 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				hModelBufferUnordered, hModelBufferSmall, hModelBufferLarge,
 				hStagingBufferVertices, hStagingBufferUvs, hStagingBufferNormals,
 				hRenderBufferVertices, hRenderBufferUvs, hRenderBufferNormals);
-
-			checkGLErrors();
-			return;
 		}
+		else
+		{
+			/*
+			 * Compute is split into three separate programs: 'unordered', 'small', and 'large'
+			 * to save on GPU resources. Small will sort <= 512 faces, large will do <= 4096.
+			 */
 
-		/*
-		 * Compute is split into three separate programs: 'unordered', 'small', and 'large'
-		 * to save on GPU resources. Small will sort <= 512 faces, large will do <= 4096.
-		 */
+			// Bind UBO to compute programs
+			glUniformBlockBinding(glSmallComputeProgram, uniBlockCameraComputeSmall, 0);
+			glUniformBlockBinding(glLargeComputeProgram, uniBlockCameraComputeLarge, 0);
 
-		// Bind UBO to compute programs
-		glUniformBlockBinding(glSmallComputeProgram, uniBlockCameraComputeSmall, 0);
-		glUniformBlockBinding(glLargeComputeProgram, uniBlockCameraComputeLarge, 0);
+			// Bind shared buffers
+			glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, hStagingBufferVertices.glBufferId);
+			glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, hStagingBufferUvs.glBufferId);
+			glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, hStagingBufferNormals.glBufferId);
+			glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 4, hRenderBufferVertices.glBufferId);
+			glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 5, hRenderBufferUvs.glBufferId);
+			glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 6, hRenderBufferNormals.glBufferId);
 
-		// Bind shared buffers
-		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, hStagingBufferVertices.glBufferId);
-		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, hStagingBufferUvs.glBufferId);
-		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, hStagingBufferNormals.glBufferId);
-		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 4, hRenderBufferVertices.glBufferId);
-		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 5, hRenderBufferUvs.glBufferId);
-		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 6, hRenderBufferNormals.glBufferId);
+			// unordered
+			glUseProgram(glUnorderedComputeProgram);
+			glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, hModelBufferUnordered.glBufferId);
+			glDispatchCompute(numModelsUnordered, 1, 1);
 
-		// unordered
-		glUseProgram(glUnorderedComputeProgram);
-		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, hModelBufferUnordered.glBufferId);
-		glDispatchCompute(numModelsUnordered, 1, 1);
+			// small
+			glUseProgram(glSmallComputeProgram);
+			glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, hModelBufferSmall.glBufferId);
+			glDispatchCompute(numModelsSmall, 1, 1);
 
-		// small
-		glUseProgram(glSmallComputeProgram);
-		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, hModelBufferSmall.glBufferId);
-		glDispatchCompute(numModelsSmall, 1, 1);
-
-		// large
-		glUseProgram(glLargeComputeProgram);
-		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, hModelBufferLarge.glBufferId);
-		glDispatchCompute(numModelsLarge, 1, 1);
+			// large
+			glUseProgram(glLargeComputeProgram);
+			glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, hModelBufferLarge.glBufferId);
+			glDispatchCompute(numModelsLarge, 1, 1);
+		}
 
 		checkGLErrors();
 
