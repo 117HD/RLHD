@@ -3812,6 +3812,9 @@
       26666,
       26667,
       26668,
+      30368,
+      30369,
+      30370,
       30375
     ]
   },
@@ -3819,11 +3822,8 @@
     "description": "Motherload mine upper floor",
     "baseMaterial": "DIRT_2",
     "objectIds": [
-      26657,
-      30368
-    ],
-    "uvType": "MODEL_XZ",
-    "uvOrientation": 128
+      26657
+    ]
   },
   {
     "description": "Amathyst mine walls",
