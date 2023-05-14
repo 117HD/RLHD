@@ -301,7 +301,7 @@ public enum Underlay {
             }
         }
 
-		short underlayId = scene.getOverlayIds()[tile.getRenderLevel()][localLocation.getSceneX()][localLocation.getSceneY()];
+		short underlayId = scene.getUnderlayIds()[tile.getRenderLevel()][localLocation.getSceneX()][localLocation.getSceneY()];
 		Underlay[] underlays = FILTERED_MAP.get((int) underlayId);
 		if (underlays != null) {
 			for (Underlay underlay : underlays) {
