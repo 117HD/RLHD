@@ -9739,5 +9739,14 @@
       44680
     ],
     "uvType": "MODEL_XY"
+  },
+  {
+    "description": "Giants Foundry Clamps",
+    "baseMaterial": "METALLIC_1_HIGHGLOSS",
+    "objectIds": [
+      44729
+    ],
+    "uvType": "MODEL_XZ_MIRROR_A",
+    "uvScale": 0.28
   }
 ]
