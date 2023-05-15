@@ -262,7 +262,6 @@ public enum Material
 	ROCK_1(p -> p
 			.setNormalMap(ROCK_1_N)
 			.setSpecular(0.35f, 40)
-			.setBrightness(1.2f)
 	),
 	ROCK_1_LIGHT(ROCK_1, p -> p.setBrightness(1.4f)),
 	ROCK_2_N,
