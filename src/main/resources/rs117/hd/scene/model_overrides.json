@@ -9398,5 +9398,20 @@
       40357
     ],
     "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Rocks - Small",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      23976,
+      23977,
+      23978,
+      23979,
+      23980,
+      23981
+
+    ],
+    "uvType": "WORLD_XZ_MIRROR_B",
+    "uvScale": 0.22
   }
 ]
