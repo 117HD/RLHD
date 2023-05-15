@@ -1019,6 +1019,15 @@ public enum Environment
 			.setDirectionalStrength(1.0f)
 			.setLightDirection(260f, 10f)
 	),
+	TEARS_OF_GUTHIX(Area.TEARS_OF_GUTHIX_CAVES, new Properties()
+			.setFogColor("#060505")
+			.setFogDepth(50)
+			.setAmbientColor("#AAAFB6")
+			.setAmbientStrength(1.2f)
+			.setDirectionalColor("#878474")
+			.setDirectionalStrength(1.5f)
+			.setLightDirection(260f, 10f)
+	),
 
 	// overrides 'ALL' to provide default daylight conditions for the overworld area
 	OVERWORLD(Area.OVERWORLD, new Properties()),
