@@ -641,12 +641,11 @@ public class LightManager
 				continue;
 			}
 
-			WorldPoint worldLocation = WorldPoint.fromLocalInstance(
-				sceneContext.scene, tileObject.getLocalLocation(), tileObject.getPlane());
+			WorldPoint worldLocation = tileObject.getWorldLocation();
 			SceneLight light = new SceneLight(
 				worldLocation.getX(), worldLocation.getY(), worldLocation.getPlane(), l.height, l.alignment, l.radius,
 				l.strength, l.color, l.type, l.duration, l.range, l.fadeInDuration);
-			LocalPoint localLocation = tileObject.getLocalLocation();
+			LocalPoint localLocation = HDUtils.worldSpaceToLocalSpace(sceneContext.scene, worldLocation);
 			light.x = localLocation.getX();
 			light.y = localLocation.getY();
 
