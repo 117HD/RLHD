@@ -1037,6 +1037,15 @@ public enum Environment
 			.setDirectionalStrength(1.5f)
 			.setLightDirection(260f, 10f)
 	),
+	BURGH_DE_ROTT_BASEMENT(Area.BURGH_DE_ROTT_BASEMENT, new Properties()
+			.setFogColor("#030403")
+			.setFogDepth(84)
+			.setAmbientColor("#FFFFFF")
+			.setAmbientStrength(1.0f)
+			.setDirectionalColor("#A29B71")
+			.setDirectionalStrength(1.5f)
+			.setLightDirection(260f, 10f)
+	),
 
 	// overrides 'ALL' to provide default daylight conditions for the overworld area
 	OVERWORLD(Area.OVERWORLD, new Properties()),
