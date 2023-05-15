@@ -157,16 +157,16 @@ public class AABB
 	public boolean intersects(int minX, int minY, int maxX, int maxY)
 	{
 		return
-			minX <= this.maxX && maxX >= this.minX &&
-			minY <= this.maxY && maxY >= this.minY;
+			minX < this.maxX && maxX > this.minX &&
+			minY < this.maxY && maxY > this.minY;
 	}
 
 	public boolean intersects(int minX, int maxX, int minY, int maxY, int minZ, int maxZ)
 	{
 		return
-			minX <= this.maxX && maxX >= this.minX &&
-			minY <= this.maxY && maxY >= this.minY &&
-			minZ <= this.maxZ && maxZ >= this.minZ;
+			minX < this.maxX && maxX > this.minX &&
+			minY < this.maxY && maxY > this.minY &&
+			minZ < this.maxZ && maxZ > this.minZ;
 	}
 
 	public boolean intersects(AABB other)
