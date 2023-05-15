@@ -3450,8 +3450,7 @@
       24560,
       24561,
       25796,
-      29110,
-      44680
+      29110
     ],
     "flatNormals": true
   },
@@ -5889,7 +5888,9 @@
       44649,
       44650,
       44651,
-      44652
+      44652,
+      44681,
+      44682
     ]
   },
   {
@@ -9704,5 +9705,39 @@
     ],
     "uvType": "MODEL_XZ_MIRROR_A",
     "uvScale": 0.7
+  },
+  {
+    "description": "Objects - Stone - Giants Foundry - Moulds",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      44683
+    ]
+  },
+  {
+    "description": "Objects - Stone - Giants Foundry - Lavapoor Rocks",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      44653,
+      44654,
+      44655,
+      44656,
+      44657,
+      44658,
+      44659,
+      44660,
+      44661,
+      44662
+    ],
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 512,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Giants Foundry Single row fences",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      44680
+    ],
+    "uvType": "MODEL_XY"
   }
 ]
