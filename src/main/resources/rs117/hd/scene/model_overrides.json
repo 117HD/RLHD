@@ -4006,6 +4006,7 @@
       10494,
       11794,
       11795,
+      12779,
       25606,
       26107
     ]
@@ -5949,7 +5950,13 @@
       12920,
       12921,
       12922,
-      12923
+      12923,
+      17713,
+      17714,
+      17715,
+      17716,
+      17717,
+      17718
     ],
     "uvType": "MODEL_XY",
     "uvOrientation": 512,
@@ -5982,12 +5989,14 @@
     "uvType": "MODEL_XZ"
   },
   {
-    "description": "Morytania - Floor - Wooden - Ladder - Burugh De Rott",
+    "description": "Morytania - Floor - Wooden - Ladder - Burugh De Rott - Meiyerditch",
     "baseMaterial": "WOOD_GRAIN",
     "objectIds": [
       12780,
       12781,
-      12907
+      12907,
+      17974,
+      17975
     ]
   },
   {
@@ -6377,6 +6386,7 @@
     "description": "Objects - Wooden - Plank tables - Medium",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
+      12884,
       29712
     ],
     "uvType": "MODEL_XZ",
@@ -6698,7 +6708,8 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       1088,
-      10491
+      10491,
+      12885
     ],
     "uvType": "MODEL_XZ",
     "uvOrientation": 512,
@@ -8400,5 +8411,162 @@
     "uvType": "MODEL_XZ",
     "uvOrientation": 256,
     "uvScale": 0.4
+  },
+  {
+    "description": "Meiyerditch Boat",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      17955
+    ],
+    "uvType": "MODEL_XY",
+    "uvOrientation": 512,
+    "uvScale": 0.77
+  },
+  {
+    "description": "Meiyerditch Walls",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      17676,
+      17677,
+      17678,
+      17679,
+      17680,
+      17681,
+      17720,
+      17721,
+      17722,
+      17723,
+      17724,
+      17725,
+      17726,
+      17727,
+      17728,
+      17729,
+      17730,
+      17731,
+      17732,
+      17733,
+      17734,
+      17735,
+      17738,
+      17739,
+      17740,
+      17741,
+      17742,
+      17743,
+      17744
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Meiyerditch Walls Rubble",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      18037,
+      18038
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Meiyerditch Wall Plank Floors",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      17564,
+      17565,
+      17566,
+      17567,
+      17568,
+      17591,
+      17592,
+      17593,
+      17594,
+      17595,
+      17596,
+      17597,
+      17598,
+      17599,
+      17689,
+      17690,
+      17691,
+      17692,
+      17693,
+      17694,
+      17695,
+      17696,
+      17697,
+      17698,
+      17699,
+      17700,
+      18070,
+      18071,
+      18072,
+      18073,
+      18122,
+      18123
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Meiyerditch Wall Plank Roofs",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      17702,
+      17709,
+      17711,
+      17712
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Meiyerditch Wall Plank Floors - Kicked",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      18124
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.66
+  },
+  {
+    "description": "Meiyerditch Plank Door",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      17600,
+      17601,
+      18031,
+      18032
+    ],
+    "uvType": "MODEL_XY",
+    "uvOrientation": 512,
+    "uvScale": 0.66
+  },
+  {
+    "description": "Meiyerditch House Walls",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      17602,
+      17603,
+      17604,
+      17605,
+      17606,
+      17607,
+      17608,
+      17609,
+      17610,
+      17611,
+      17612,
+      17613,
+      17614,
+      17615,
+      17616,
+      17617,
+      17618,
+      17619,
+      17620,
+      17621,
+      17622
+    ],
+    "uvType": "MODEL_XY",
+    "uvOrientation": 512,
+    "uvScale": 0.58
   }
 ]
