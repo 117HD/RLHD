@@ -6766,7 +6766,7 @@
     "description": "Objects - Rockslide - Brown Rock - Rock - Medium",
     "baseMaterial": "ROCK_1",
     "objectIds": [
-      154, // Does not appy Taverley Dungeon blue dragons rock
+      154,
       11190,
       11191,
       11192,
@@ -9408,10 +9408,38 @@
       23978,
       23979,
       23980,
-      23981
+      23981,
+      24146,
+      24147,
+      24148
 
     ],
     "uvType": "WORLD_XZ_MIRROR_B",
+    "uvScale": 0.22
+  },
+  {
+    "description": "Rocks - Medium",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      24143,
+      24144,
+      24145
+
+    ],
+    "uvType": "WORLD_XZ_MIRROR_B",
+    "uvScale": 0.22
+  },
+  {
+    "description": "Rocks - Large",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      24139,
+      24140,
+      24141,
+      24142
+
+    ],
+    "uvType": "WORLD_XZ_MIRROR_A",
     "uvScale": 0.22
   }
 ]
