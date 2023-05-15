@@ -197,6 +197,7 @@ public enum Overlay {
 		.area(Area.DESERT_TREASURE_PYRAMID)
 		.ids(21)
     ),
+    GIANTS_FOUNDRY_224(224, Area.GIANTS_FOUNDRY, GroundMaterial.ROCKY_CAVE_FLOOR),
 
     // Falador
     FALADOR_EAST_BANK_PATH_FIX_2(-119, Area.FALADOR_EAST_BANK_PATH_FIX_2, GroundMaterial.FALADOR_PATHS, p -> p
