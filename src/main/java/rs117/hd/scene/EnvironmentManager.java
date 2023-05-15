@@ -477,6 +477,9 @@ public class EnvironmentManager
 		return currentEnvironment.isUnderwater();
 	}
 
+	/**
+	 * This should not be used from the scene loader thread
+	 */
 	private boolean useWinterTheme() {
 		return plugin.configWinterTheme && isOverworld;
 	}
