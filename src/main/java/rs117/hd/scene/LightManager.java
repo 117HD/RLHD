@@ -156,8 +156,10 @@ public class LightManager
 					linearRGBA[i] = HDUtils.srgbToLinear(l.color[i] /= 255f);
 				l.color = linearRGBA;
 
-				if (l.worldX != null && l.worldY != null)
-					WORLD_LIGHTS.add(new SceneLight(l));
+				if (l.worldX != null && l.worldY != null) {
+					WorldPoint worldPoint = new WorldPoint(l.worldX, l.worldY, l.plane);
+					WORLD_LIGHTS.add(new SceneLight(l, worldPoint));
+				}
 				l.npcIds.forEach(id -> NPC_LIGHTS.put(id, l));
 				l.objectIds.forEach(id -> OBJECT_LIGHTS.put(id, l));
 				l.projectileIds.forEach(id -> PROJECTILE_LIGHTS.put(id, l));
@@ -455,11 +457,11 @@ public class LightManager
 
 		for (SceneLight light : WORLD_LIGHTS)
 		{
-			assert light.worldX != null && light.worldY != null;
-			if (sceneContext.bounds.contains(light.worldX, light.worldY))
+			assert light.worldPoint != null;
+			if (sceneContext.regionIds.contains(light.worldPoint.getRegionID()))
 			{
 				sceneContext.lights.add(light);
-				updateLightPosition(light, sceneContext.bounds);
+				updateLightPosition(sceneContext, light);
 			}
 		}
 
@@ -626,7 +628,7 @@ public class LightManager
 	{
 		for (Light l : OBJECT_LIGHTS.get(tileObject.getId()))
 		{
-			// prevent objects at plane -1 and under from having lights
+			// prevent objects at plane -1 and below from having lights
 			if (tileObject.getPlane() <= -1)
 			{
 				continue;
@@ -754,12 +756,16 @@ public class LightManager
 		return wp.getX() * wp.getY() * (tileObject.getPlane() + 1) + tileObject.getId();
 	}
 
-	private void updateLightPosition(SceneLight light, AABB sceneBounds)
+	private void updateLightPosition(SceneContext sceneContext, SceneLight light)
 	{
-		assert light.worldX != null && light.worldY != null;
-		light.x = ((light.worldX - sceneBounds.minX) * Perspective.LOCAL_TILE_SIZE) + Perspective.LOCAL_HALF_TILE_SIZE;
-		light.y = ((light.worldY - sceneBounds.minY) * Perspective.LOCAL_TILE_SIZE) + Perspective.LOCAL_HALF_TILE_SIZE;
-		light.z = client.getTileHeights()[light.plane][light.worldX - sceneBounds.minX][light.worldY - sceneBounds.minY] - light.height - 1;
+		assert light.worldPoint != null;
+
+		LocalPoint local = HDUtils.worldSpaceToLocalSpace(sceneContext.scene, light.worldPoint);
+
+		light.x = local.getX() + Perspective.LOCAL_HALF_TILE_SIZE;
+		light.y = local.getY() + Perspective.LOCAL_HALF_TILE_SIZE;
+		if (local.isInScene())
+			light.z = sceneContext.scene.getTileHeights()[light.plane][local.getSceneX()][local.getSceneY()] - light.height - 1;
 		if (light.alignment == Alignment.NORTH || light.alignment == Alignment.NORTHEAST || light.alignment == Alignment.NORTHWEST)
 		{
 			light.y += Perspective.LOCAL_HALF_TILE_SIZE;

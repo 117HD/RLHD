@@ -2,13 +2,13 @@ package rs117.hd.scene;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import javax.annotation.Nullable;
 import net.runelite.api.Scene;
 import rs117.hd.data.environments.Environment;
 import rs117.hd.data.materials.Material;
 import rs117.hd.scene.lights.SceneLight;
-import rs117.hd.utils.AABB;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.buffer.GpuFloatBuffer;
 import rs117.hd.utils.buffer.GpuIntBuffer;
@@ -19,8 +19,8 @@ import static rs117.hd.HdPlugin.VERTEX_SIZE;
 public class SceneContext
 {
 	public final int id = HDUtils.rand.nextInt();
-	public Scene scene;
-	public AABB bounds;
+	public final Scene scene;
+	public final HashSet<Integer> regionIds;
 
 	public GpuIntBuffer stagingBufferVertices;
 	public GpuFloatBuffer stagingBufferUvs;
@@ -43,10 +43,10 @@ public class SceneContext
 	public Map<Integer, Integer> vertexUnderwaterDepth;
 	public int[][][] underwaterDepthLevels;
 
-	public ArrayList<SceneLight> lights = new ArrayList<>();
+	public final ArrayList<SceneLight> lights = new ArrayList<>();
 	public int visibleLightCount = 0;
 
-	public ArrayList<Environment> environments = new ArrayList<>();
+	public final ArrayList<Environment> environments = new ArrayList<>();
 
 	// model pusher arrays, to avoid simultaneous usage from different threads
 	public final int[] modelFaceVertices = new int[12];
@@ -56,7 +56,7 @@ public class SceneContext
 	public SceneContext(Scene scene, @Nullable SceneContext previousSceneContext)
 	{
 		this.scene = scene;
-		bounds = HDUtils.getSceneBounds(scene);
+		this.regionIds = HDUtils.getSceneRegionIds(scene);
 
 		if (previousSceneContext == null)
 		{
@@ -85,9 +85,6 @@ public class SceneContext
 		if (stagingBufferNormals != null)
 			stagingBufferNormals.destroy();
 		stagingBufferNormals = null;
-
-		lights = null;
-		environments = null;
 	}
 
 	public int getVertexOffset()

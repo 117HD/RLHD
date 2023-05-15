@@ -155,7 +155,7 @@ public class EnvironmentManager
 	 */
 	public void update(SceneContext sceneContext, WorldPoint position)
 	{
-		boolean skipTransition = false;
+		isOverworld = Area.OVERWORLD.containsPoint(position);
 
 		// skip the transitional fade if the player has moved too far
 		// since the previous frame. results in an instant transition when
@@ -164,14 +164,9 @@ public class EnvironmentManager
 			Math.abs(position.getX() - previousPosition.getX()),
 			Math.abs(position.getY() - previousPosition.getY())
 		);
-
 		previousPosition = position;
 
-		if (tileChange >= SKIP_TRANSITION_DISTANCE)
-		{
-			skipTransition = true;
-		}
-
+		boolean skipTransition = tileChange >= SKIP_TRANSITION_DISTANCE;
 		for (Environment environment : sceneContext.environments)
 		{
 			if (environment.getArea().containsPoint(position))
@@ -365,28 +360,30 @@ public class EnvironmentManager
 		// of their Areas match any of the ones in the current scene.
 		// if so, add them to a list.
 
-		log.debug("Adding environments for scene {}", sceneContext.bounds);
+		log.debug("Adding environments for scene with regions: {}", sceneContext.regionIds);
 
-		sceneContext.environments = new ArrayList<>();
-		for (Environment environment: Environment.values())
+		AABB[] regions = sceneContext.regionIds.stream()
+			.map(AABB::new)
+			.toArray(AABB[]::new);
+
+		sceneContext.environments.clear();
+		outer:
+		for (Environment environment : Environment.values())
 		{
-			for (AABB aabb : environment.getArea().getAabbs())
+			for (AABB region : regions)
 			{
-				if (sceneContext.bounds.intersects(aabb))
+				for (AABB aabb : environment.getArea().getAabbs())
 				{
-					log.debug("Added environment: {}", environment);
-					sceneContext.environments.add(environment);
-					break;
+					if (region.intersects(aabb))
+					{
+						log.debug("Added environment: {}", environment);
+						sceneContext.environments.add(environment);
+						continue outer;
+					}
 				}
 			}
 		}
-
-		WorldPoint sceneCenter = HDUtils.getSceneCenter(sceneContext.scene, client.getPlane());
-		isOverworld = Area.OVERWORLD.containsPoint(sceneCenter);
-		update(sceneContext, sceneCenter);
 	}
-
-
 
 	/* lightning */
 	private static final float[] LIGHTNING_COLOR = new float[]{.25f, .25f, .25f};
