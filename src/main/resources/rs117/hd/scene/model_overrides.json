@@ -5123,6 +5123,7 @@
     "baseMaterial": "ROCK_1",
     "objectIds": [
       28961,
+      28965,
       28966,
       28969,
       28973,
@@ -5136,7 +5137,7 @@
       29032,
       29044
     ],
-    "uvType": "WORLD_XZ",
+    "uvType": "WORLD_XZ_MIRROR_B",
     "uvScale": 0.22
   },
   {
