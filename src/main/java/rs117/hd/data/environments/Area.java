@@ -1596,19 +1596,9 @@ public enum Area
 
 	private static AABB[] regions(int... regionIds)
 	{
-		final int REGIONS_PER_COLUMN = 256;
-		AABB[] aabbs = new AABB[regionIds.length];
-
-		for (int i = 0; i < regionIds.length; i++)
-		{
-			int baseX = (int)Math.floor((float)regionIds[i] / REGIONS_PER_COLUMN) * Constants.REGION_SIZE;
-			int baseY = (regionIds[i] % REGIONS_PER_COLUMN) * Constants.REGION_SIZE;
-			int oppositeX = baseX + Constants.REGION_SIZE;
-			int oppositeY = baseY + Constants.REGION_SIZE;
-			aabbs[i] = new AABB(baseX, baseY, oppositeX, oppositeY);
-		}
-
-		return aabbs;
+		return Arrays.stream(regionIds)
+			.mapToObj(AABB::new)
+			.toArray(AABB[]::new);
 	}
 
 	public boolean containsPoint(int pointX, int pointY, int pointZ)
