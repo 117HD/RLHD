@@ -2271,7 +2271,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	{
 		if (nextSceneContext != null)
 		{
-			log.info("Loading new scene before previously loaded scene was swapped to. Discarding the old pending scene...", new Throwable());
 			SceneContext handle = nextSceneContext;
 			nextSceneContext = null;
 			handle.destroy();
