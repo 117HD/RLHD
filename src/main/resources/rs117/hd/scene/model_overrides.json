@@ -6025,8 +6025,9 @@
   },
   {
     "description": "Morytania - Wall  - Stone - Stone Brick Wall - Burugh De Rott",
-    "baseMaterial": "STONE",
+    "baseMaterial": "STONE_NORMALED",
     "objectIds": [
+      12737,
       12834,
       12835,
       12836,
@@ -6045,8 +6046,9 @@
       12850,
       12851
     ],
-    "uvType": "GEOMETRY",
-    "flatNormals": true
+    "uvType": "MODEL_XY",
+    "uvOrientation": 512,
+    "uvScale": 0.44
   },
   {
     "description": "Morytania - Objects  - Stone - Stone Brick Wall Rubble - Burugh De Rott",
