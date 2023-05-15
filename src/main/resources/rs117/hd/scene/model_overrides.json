@@ -5284,9 +5284,6 @@
       11094,
       11095,
       11098,
-      11191,
-      11192,
-      11195,
       18474,
       18478
     ],
@@ -6770,10 +6767,13 @@
     "objectIds": [
       154, // Does not appy Taverley Dungeon blue dragons rock
       11190,
+      11191,
+      11192,
+      11195,
       11193
     ],
     "uvType": "MODEL_XZ",
-    "uvScale": 0.6
+    "uvScale": 0.33
   },
   {
     "description": "Objects - Stone - Column - Limestone",
