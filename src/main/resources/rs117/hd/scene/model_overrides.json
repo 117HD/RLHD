@@ -9748,5 +9748,29 @@
     ],
     "uvType": "MODEL_XZ_MIRROR_A",
     "uvScale": 0.28
+  },
+  {
+    "description": "Objects - Stone - Giants Foundry - Lava Rocks",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      44766,
+      44767,
+      44768,
+      44769
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.58
+  },
+  {
+    "description": "Objects - Stone - Giants Foundry - Lava Rocks - Small",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      42494,
+      42495,
+      42496
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.8,
+    "uvOrientation": 128
   }
 ]
