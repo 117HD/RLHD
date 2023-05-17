@@ -336,6 +336,9 @@ public enum Material
 		.setNormalMap(WOOD_GRAIN_2_N)
 		.setSpecular(0.3f,30)
 	),
+	WOOD_GRAIN_2_LIGHT(WOOD_GRAIN_2, p -> p
+			.setBrightness(1.1f)
+	),
 	WOOD_GRAIN_2_WIDE(WOOD_GRAIN_2, p -> p
 		.setTextureScale(1.5f, 0.5f)
 	),
