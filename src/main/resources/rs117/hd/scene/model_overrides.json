@@ -8157,5 +8157,52 @@
     ],
     "uvType": "WORLD_XZ",
     "forceOverride": true
+  },
+  {
+    "description": "Ruins of Ullek flat normals on walls and other wall objects",
+    "objectIds": [
+      6579,
+      6630,
+      6643,
+      44097,
+      44099,
+      44100,
+      44109,
+      44110,
+      44111,
+      44112,
+      44113,
+      44114,
+      44115,
+      44116,
+      44117
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "Ruins of Ullek crypt",
+    "objectIds": [
+      43904,
+      43908,
+      43910,
+      43911,
+      43912,
+      43905,
+      43906,
+      43907,
+      43909,
+      43960,
+      43959,
+      43958,
+      43961,
+      43962,
+      20391,
+      43975,
+      43976,
+      43977,
+      43978,
+      20392
+    ],
+    "flatNormals": true
   }
 ]
