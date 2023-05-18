@@ -299,6 +299,15 @@ public enum Environment
 		.setDirectionalStrength(4.0f)
 		.setGroundFog(-150, -350, 0.5f)
 	),
+	MEIYERDITCH(Area.MEIYERDITCH, new Properties()
+			.setFogColor("#2f361f")
+			.setFogDepth(40)
+			.setAmbientColor("#93a15c")
+			.setAmbientStrength(2.0f)
+			.setDirectionalColor("#99a370")
+			.setDirectionalStrength(1.8f)
+			.setGroundFog(-150, -350, 0.5f)
+	),
 	MORYTANIA(Area.MORYTANIA, new Properties()
 		.setFogColor("#1E314B")
 		.setFogDepth(40)
