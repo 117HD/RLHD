@@ -8204,5 +8204,21 @@
       20392
     ],
     "flatNormals": true
+  },
+  {
+    "description": "Tombs of Amascut invocation board",
+    "flatNormals": true,
+    "objectIds": [
+      46073
+    ]
+  },
+  {
+    "description": "Tombs of Amascut exit doorway",
+    "objectIds": [
+      46087,
+      46088
+    ],
+    "flatNormals": true,
+    "receiveShadows": false
   }
 ]
