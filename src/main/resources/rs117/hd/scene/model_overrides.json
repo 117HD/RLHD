@@ -5600,7 +5600,10 @@
     "baseMaterial": "METALLIC_2_SEMIGLOSS",
     "objectIds": [
       10504,
-      10505
+      10505,
+      17561,
+      17562,
+      17647
     ]
   },
   {
@@ -8478,6 +8481,13 @@
       17566,
       17567,
       17568,
+      17569,
+      17570,
+      17571,
+      17572,
+      17579,
+      17580,
+      17581,
       17591,
       17592,
       17593,
@@ -8503,6 +8513,24 @@
       18071,
       18072,
       18073,
+      17574,
+      17575,
+      17576,
+      17577,
+      17582,
+      17583,
+      17584,
+      17585,
+      17586,
+      17587,
+      17588,
+      17589,
+      17590,
+      18089,
+      18090,
+      18093,
+      18094,
+      18098,
       18122,
       18123
     ],
@@ -8534,8 +8562,12 @@
     "objectIds": [
       17600,
       17601,
+      17973,
       18031,
-      18032
+      18032,
+      18057,
+      18091,
+      18092
     ],
     "uvType": "MODEL_XY",
     "uvOrientation": 512,
@@ -8565,7 +8597,12 @@
       17619,
       17620,
       17621,
-      17622
+      17622,
+      18078,
+      18088,
+      18128,
+      18131,
+      18134
     ],
     "uvType": "MODEL_XY",
     "uvOrientation": 1536,
@@ -8576,7 +8613,9 @@
     "baseMaterial": "WOOD_GRAIN_2_WIDE",
     "objectIds": [
       17545,
-      17546
+      17546,
+      18083,
+      18084
     ],
     "uvType": "MODEL_XZ",
     "uvScale": 0.6
@@ -8589,5 +8628,61 @@
     ],
     "uvType": "MODEL_XZ",
     "uvScale": 0.86
+  },
+  {
+    "description": "Objects - Wooden - Chair - Meiyerditch",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      17548,
+      17549
+    ],
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 512,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Meiyerditch House Roof",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      17639,
+      17748,
+      17749,
+      17750,
+      17751,
+      17752,
+      17753,
+      17754,
+      18097
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Meiyerditch Wooden Shelves",
+    "baseMaterial": "WOOD_GRAIN_2_LIGHT",
+    "objectIds": [
+      17536,
+      17538,
+      18086,
+      18087,
+      18095,
+      18096,
+      18105,
+      18106,
+      18107,
+      18108
+    ],
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 512,
+    "uvScale": 0.86
+  },
+  {
+    "description": "Meiyerditch Stone Brick Fireplace",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      17641,
+      17642,
+      17643
+    ],
+    "uvType": "GEOMETRY"
   }
 ]
