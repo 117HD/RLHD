@@ -87,6 +87,7 @@ public enum Underlay {
         .ids(66, 68)
     ),
 
+    SOPHANEM_TRAPDOOR(Area.SOPHANEM_TRAPDOOR, GroundMaterial.NONE, p -> {}),
     KHARID_SAND_1(Area.KHARID_DESERT_REGION, GroundMaterial.SAND, p -> p
         .saturation(3)
         .hue(6)

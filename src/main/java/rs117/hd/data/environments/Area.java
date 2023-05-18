@@ -795,6 +795,7 @@ public enum Area
 		new AABB(1922, 4440, 1946, 4416),
 		new AABB(1919, 4481, 1988, 4414)
 	),
+	SOPHANEM_TRAPDOOR(new AABB(3315, 2797, 0)),
 
 	//Sophanem and Menaphos
 	SOPHANEM_FLOORS(
