@@ -1422,30 +1422,30 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		glBindBufferBase(GL_UNIFORM_BUFFER, 1, hUniformBufferMaterials.glBufferId);
 		glBindBufferBase(GL_UNIFORM_BUFFER, 2, hUniformBufferWaterTypes.glBufferId);
 
+		// Update lights UBO
+		uniformBufferLights.clear();
+		ArrayList<SceneLight> visibleLights = lightManager.getVisibleLights(getDrawDistance(), configMaxDynamicLights);
+		sceneContext.visibleLightCount = visibleLights.size();
+		for (SceneLight light : visibleLights)
+		{
+			uniformBufferLights.putInt(light.x);
+			uniformBufferLights.putInt(light.y);
+			uniformBufferLights.putInt(light.z);
+			uniformBufferLights.putFloat(light.currentSize);
+			uniformBufferLights.putFloat(light.currentColor[0]);
+			uniformBufferLights.putFloat(light.currentColor[1]);
+			uniformBufferLights.putFloat(light.currentColor[2]);
+			uniformBufferLights.putFloat(light.currentStrength);
+		}
+		uniformBufferLights.flip();
 		if (configMaxDynamicLights > 0)
 		{
-			// Update lights UBO
-			uniformBufferLights.clear();
-			ArrayList<SceneLight> visibleLights = lightManager.getVisibleLights(getDrawDistance(), configMaxDynamicLights);
-			sceneContext.visibleLightCount = visibleLights.size();
-			for (SceneLight light : visibleLights)
-			{
-				uniformBufferLights.putInt(light.x);
-				uniformBufferLights.putInt(light.y);
-				uniformBufferLights.putInt(light.z);
-				uniformBufferLights.putFloat(light.currentSize);
-				uniformBufferLights.putFloat(light.currentColor[0]);
-				uniformBufferLights.putFloat(light.currentColor[1]);
-				uniformBufferLights.putFloat(light.currentColor[2]);
-				uniformBufferLights.putFloat(light.currentStrength);
-			}
-			uniformBufferLights.flip();
-
 			glBindBuffer(GL_UNIFORM_BUFFER, hUniformBufferLights.glBufferId);
 			glBufferSubData(GL_UNIFORM_BUFFER, 0, uniformBufferLights);
-			uniformBufferLights.clear();
 			glBindBuffer(GL_UNIFORM_BUFFER, 0);
 		}
+		uniformBufferLights.clear();
+
 		glBindBufferBase(GL_UNIFORM_BUFFER, 3, hUniformBufferLights.glBufferId);
 	}
 
