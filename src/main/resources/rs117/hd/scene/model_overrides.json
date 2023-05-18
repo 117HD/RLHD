@@ -5607,6 +5607,13 @@
     ]
   },
   {
+    "description": "Objects - Metallic - Panning Tray",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      17560
+    ]
+  },
+  {
     "description": "Objects - Metallic - Iron Billets",
     "baseMaterial": "METALLIC_2",
     "objectIds": [
@@ -8509,10 +8516,6 @@
       17698,
       17699,
       17700,
-      18070,
-      18071,
-      18072,
-      18073,
       17574,
       17575,
       17576,
@@ -8531,6 +8534,16 @@
       18093,
       18094,
       18098,
+      18070,
+      18071,
+      18072,
+      18073,
+      18109,
+      18110,
+      18111,
+      18112,
+      18113,
+      18114,
       18122,
       18123
     ],
@@ -8600,6 +8613,7 @@
       17622,
       18078,
       18088,
+      18115,
       18128,
       18131,
       18134
@@ -8660,7 +8674,9 @@
     "description": "Meiyerditch Wooden Shelves",
     "baseMaterial": "WOOD_GRAIN_2_LIGHT",
     "objectIds": [
+      17535,
       17536,
+      17537,
       17538,
       18086,
       18087,
@@ -8684,5 +8700,54 @@
       17643
     ],
     "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Meiyerditch Poor Baricade",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      17645
+    ],
+    "uvType": "MODEL_XY_MIRROR_A",
+    "uvOrientation": 512,
+    "uvScale": 0.32
+  },
+  {
+    "description": "Meiyerditch Stone Brick Walls",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      17492,
+      17493,
+      17494,
+      14795,
+      17496,
+      17497,
+      17498,
+      17499,
+      17500,
+      17501
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Ver Sinhaza Walls",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      17487,
+      17514
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Ver Sinhaza Walls",
+    "baseMaterial": "METALLIC_2",
+    "objectIds": [
+      17503,
+      17504,
+      17505,
+      17517
+    ],
+    "uvType": "MODEL_YZ",
+    "uvOrientation": 512,
+    "uvScale": 0.4
   }
 ]
