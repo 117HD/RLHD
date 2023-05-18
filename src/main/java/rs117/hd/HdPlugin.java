@@ -1383,7 +1383,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			camTarget = getCameraFocalPoint();
 		}
 
-		WorldPoint targetWorldPosition = WorldPoint.fromLocalInstance(sceneContext.scene,
+		WorldPoint targetWorldPosition = sceneContext.fromLocalInstance(
 			new LocalPoint(camTarget[0], camTarget[1]), client.getPlane());
 		environmentManager.update(sceneContext, targetWorldPosition);
 		lightManager.update(sceneContext);
