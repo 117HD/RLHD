@@ -1,9 +1,14 @@
 package rs117.hd.scene;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 import net.runelite.api.Scene;
 import net.runelite.api.coords.LocalPoint;
@@ -16,6 +21,8 @@ import rs117.hd.utils.buffer.GpuFloatBuffer;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 
 import static net.runelite.api.Constants.CHUNK_SIZE;
+import static net.runelite.api.Perspective.LOCAL_HALF_TILE_SIZE;
+import static net.runelite.api.Perspective.LOCAL_TILE_SIZE;
 import static rs117.hd.HdPlugin.UV_SIZE;
 import static rs117.hd.HdPlugin.VERTEX_SIZE;
 
@@ -109,6 +116,78 @@ public class SceneContext
 		return stagingBufferUvs.position() / UV_SIZE;
 	}
 
+	public Collection<LocalPoint> worldInstanceToLocals(WorldPoint worldPoint)
+	{
+		return instanceToWorld(worldPoint).stream()
+			.map(this::worldToLocal)
+			.filter(Objects::nonNull)
+			.collect(Collectors.toList());
+	}
+
+	/**
+	 * Gets the local coordinate at the center of the passed tile.
+	 *
+	 * @param worldPoint the passed tile
+	 * @return coordinate if the tile is in the current scene, otherwise null
+	 */
+	@Nullable
+	public LocalPoint worldToLocal(WorldPoint worldPoint)
+	{
+		LocalPoint localPoint = new LocalPoint(
+			(worldPoint.getX() - scene.getBaseX()) * LOCAL_TILE_SIZE + LOCAL_HALF_TILE_SIZE,
+			(worldPoint.getY() - scene.getBaseY()) * LOCAL_TILE_SIZE + LOCAL_HALF_TILE_SIZE);
+
+		if (!localPoint.isInScene())
+		{
+			return null;
+		}
+
+		return localPoint;
+	}
+
+	/**
+	 * Get occurrences of a tile on the scene, accounting for instances. There may be
+	 * more than one if the same template chunk occurs more than once on the scene.
+	 * @param worldPoint
+	 * @return
+	 */
+	public Collection<WorldPoint> instanceToWorld(WorldPoint worldPoint)
+	{
+		if (!scene.isInstance())
+		{
+			return Collections.singleton(worldPoint);
+		}
+
+		// find instance chunks using the template point. there might be more than one.
+		List<WorldPoint> worldPoints = new ArrayList<>();
+		for (int z = 0; z < instanceTemplateChunks.length; z++)
+		{
+			for (int x = 0; x < instanceTemplateChunks[z].length; ++x)
+			{
+				for (int y = 0; y < instanceTemplateChunks[z][x].length; ++y)
+				{
+					int chunkData = instanceTemplateChunks[z][x][y];
+					int rotation = chunkData >> 1 & 0x3;
+					int templateChunkY = (chunkData >> 3 & 0x7FF) * CHUNK_SIZE;
+					int templateChunkX = (chunkData >> 14 & 0x3FF) * CHUNK_SIZE;
+					int plane = chunkData >> 24 & 0x3;
+					if (worldPoint.getX() >= templateChunkX && worldPoint.getX() < templateChunkX + CHUNK_SIZE
+						&& worldPoint.getY() >= templateChunkY && worldPoint.getY() < templateChunkY + CHUNK_SIZE
+						&& plane == worldPoint.getPlane())
+					{
+						WorldPoint p = new WorldPoint(
+							scene.getBaseX() + x * CHUNK_SIZE + (worldPoint.getX() & (CHUNK_SIZE - 1)),
+							scene.getBaseY() + y * CHUNK_SIZE + (worldPoint.getY() & (CHUNK_SIZE - 1)),
+							z);
+						p = rotate(p, rotation);
+						worldPoints.add(p);
+					}
+				}
+			}
+		}
+		return worldPoints;
+	}
+
 	/**
 	 * Gets the coordinate of the tile that contains the passed local point,
 	 * accounting for instances.
@@ -117,7 +196,7 @@ public class SceneContext
 	 * @param plane the plane for the returned point, if it is not an instance
 	 * @return the tile coordinate containing the local point
 	 */
-	public WorldPoint fromLocalInstance(LocalPoint localPoint, int plane)
+	public WorldPoint localToWorldInstance(LocalPoint localPoint, int plane)
 	{
 		if (scene.isInstance())
 		{

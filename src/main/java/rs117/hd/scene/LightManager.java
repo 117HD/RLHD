@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.Optional;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
@@ -47,7 +48,6 @@ import net.runelite.api.GroundObject;
 import net.runelite.api.NPC;
 import net.runelite.api.Perspective;
 import net.runelite.api.Projectile;
-import net.runelite.api.Scene;
 import net.runelite.api.Tile;
 import net.runelite.api.TileObject;
 import net.runelite.api.WallObject;
@@ -76,7 +76,6 @@ import rs117.hd.scene.lights.Alignment;
 import rs117.hd.scene.lights.Light;
 import rs117.hd.scene.lights.LightType;
 import rs117.hd.scene.lights.SceneLight;
-import rs117.hd.utils.AABB;
 import rs117.hd.utils.Env;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ResourcePath;
@@ -634,20 +633,27 @@ public class LightManager
 				continue;
 			}
 
+			WorldPoint worldLocation = sceneContext.localToWorldInstance(tileObject.getLocalLocation(), tileObject.getPlane());
+
 			// prevent duplicate lights being spawned for the same object
-			if (sceneContext.lights.stream().anyMatch(light -> light.object != null &&
-				tileObjectHash(sceneContext.scene, light.object) == tileObjectHash(sceneContext.scene, tileObject)))
+			int hash = tileObjectHash(worldLocation, tileObject);
+			if (sceneContext.lights.stream().anyMatch(light -> light.object != null && hash == tileObjectHash(
+				sceneContext.localToWorldInstance(light.object.getLocalLocation(), light.object.getPlane()), light.object)))
 			{
 				continue;
 			}
 
-			WorldPoint worldLocation = tileObject.getWorldLocation();
 			SceneLight light = new SceneLight(
 				worldLocation.getX(), worldLocation.getY(), worldLocation.getPlane(), l.height, l.alignment, l.radius,
 				l.strength, l.color, l.type, l.duration, l.range, l.fadeInDuration);
-			LocalPoint localLocation = HDUtils.worldSpaceToLocalSpace(sceneContext.scene, worldLocation);
-			light.x = localLocation.getX();
-			light.y = localLocation.getY();
+			Optional<LocalPoint> firstLocalPoint = sceneContext.worldInstanceToLocals(worldLocation).stream().findFirst();
+			if (!firstLocalPoint.isPresent())
+			{
+				continue;
+			}
+			LocalPoint localPoint = firstLocalPoint.get();
+			light.x = localPoint.getX();
+			light.y = localPoint.getY();
 
 			int lightX = tileObject.getX();
 			int lightY = tileObject.getY();
@@ -749,20 +755,29 @@ public class LightManager
 		}
 	}
 
-	private int tileObjectHash(Scene scene, TileObject tileObject)
+	private int tileObjectHash(WorldPoint worldPoint, TileObject tileObject)
 	{
-		WorldPoint wp = WorldPoint.fromLocalInstance(scene, tileObject.getLocalLocation(), tileObject.getPlane());
-		return wp.getX() * wp.getY() * (tileObject.getPlane() + 1) + tileObject.getId();
+		int hash = worldPoint.getX();
+		hash = hash * 31 + worldPoint.getY();
+		hash = hash * 31 + worldPoint.getPlane();
+		hash = hash * 31 + tileObject.getId();
+		return hash;
 	}
 
 	private void updateLightPosition(SceneContext sceneContext, SceneLight light)
 	{
 		assert light.worldPoint != null;
 
-		LocalPoint local = HDUtils.worldSpaceToLocalSpace(sceneContext.scene, light.worldPoint);
+		Optional<LocalPoint> firstLocalPoint = sceneContext.worldInstanceToLocals(light.worldPoint).stream().findFirst();
+		if (!firstLocalPoint.isPresent())
+		{
+			return;
+		}
 
-		light.x = local.getX() + Perspective.LOCAL_HALF_TILE_SIZE;
-		light.y = local.getY() + Perspective.LOCAL_HALF_TILE_SIZE;
+		LocalPoint local = firstLocalPoint.get();
+
+		light.x = local.getX();
+		light.y = local.getY();
 		if (local.isInScene())
 			light.z = sceneContext.scene.getTileHeights()[light.plane][local.getSceneX()][local.getSceneY()] - light.height - 1;
 		if (light.alignment == Alignment.NORTH || light.alignment == Alignment.NORTHEAST || light.alignment == Alignment.NORTHWEST)

@@ -462,11 +462,4 @@ public class HDUtils
 			x + client.getCameraX2(),
 			z + client.getCameraZ2()));
 	}
-
-	public static LocalPoint worldSpaceToLocalSpace(Scene scene, WorldPoint worldPoint)
-	{
-		int x = worldPoint.getX() - scene.getBaseX();
-		int y = worldPoint.getY() - scene.getBaseY();
-		return LocalPoint.fromScene(x, y);
-	}
 }
