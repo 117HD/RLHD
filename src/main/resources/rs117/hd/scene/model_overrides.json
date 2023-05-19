@@ -2527,6 +2527,7 @@
       12119,
       12586,
       12587,
+      12710,
       20750,
       20751,
       25093,
@@ -2833,8 +2834,12 @@
       720,
       3213,
       39721,
+      40887,
       44635
-    ]
+    ],
+    "uvType": "MODEL_YZ",
+    "uvScale": 0.4,
+    "uvOrientation": 512
   },
   {
     "description": "CAVE_WALLS_BLEND",
@@ -3191,6 +3196,10 @@
       11595,
       11596,
       11597,
+      12432,
+      12433,
+      12436,
+      12437,
       15975,
       41419,
       25797
@@ -3392,6 +3401,7 @@
       5882,
       9589,
       12430,
+      12431,
       20366,
       23848,
       23849,
@@ -3960,6 +3970,7 @@
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       10490,
+      12450,
       14851,
       14852,
       25603,
@@ -4828,7 +4839,8 @@
       5012,
       5857,
       6440,
-      6447
+      6447,
+      40888
     ],
     "uvType": "MODEL_XZ",
     "uvScale": 0.5
@@ -5343,6 +5355,7 @@
       7115,
       12049,
       12051,
+      12706,
       14482,
       14485,
       17929,
@@ -5509,6 +5522,10 @@
       10378,
       10379,
       10381,
+      12442,
+      12443,
+      16560,
+      16561,
       20367
     ],
     "flatNormals": true
@@ -6130,6 +6147,7 @@
     "description": "Objects - Bed - Bedroll - Non Interactable",
     "baseMaterial": "CARPET",
     "objectIds": [
+      422,
       23067
     ],
     "uvType": "MODEL_XZ",
@@ -6372,6 +6390,18 @@
     "flatNormals": true
   },
   {
+    "description": "Objects - Wooden - Plank tables - Wide - Rotated",
+    "baseMaterial": "WOOD_GRAIN_2_WIDE",
+    "objectIds": [
+      12386,
+      12416
+    ],
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 512,
+    "flatNormals": true,
+    "uvScale": 0.6
+  },
+  {
     "description": "Lunar Isles - Objects - Wooden - Tables - Fine",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
@@ -6515,7 +6545,8 @@
     "baseMaterial": "SNOW_1",
     "objectIds": [
       11920,
-      11921
+      11921,
+      33220
     ],
     "uvType": "GEOMETRY"
   },
@@ -6524,7 +6555,8 @@
     "baseMaterial": "SNOW_3",
     "objectIds": [
       11922,
-      11923
+      11923,
+      33221
     ],
     "uvType": "GEOMETRY"
   },
@@ -6674,7 +6706,8 @@
     "description": "Objects - Wooden - Stool",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      1102
+      1102,
+      12407
     ],
     "uvType": "MODEL_XZ",
     "flatNormals": true,
@@ -6889,7 +6922,8 @@
       21153,
       21154,
       21155,
-      21156
+      21156,
+      21178
     ],
     "uvType": "WORLD_XZ",
     "uvScale": 0.6
@@ -7283,7 +7317,10 @@
       5020,
       5021,
       5022,
-      5025
+      5025,
+      40889,
+      40890,
+      40928
     ]
   },
   {
@@ -8220,5 +8257,146 @@
     ],
     "flatNormals": true,
     "receiveShadows": false
+  },
+  {
+    "description": "Goblin - Walls - Wooden - Planks",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      23320,
+      23321,
+      23331,
+      23332,
+      23333,
+      23334,
+      23335,
+      23336,
+      23337
+    ],
+    "uvType": "MODEL_XY",
+    "uvOrientation": 1536,
+    "uvScale": 0.36
+  },
+  {
+    "description": "Goblin - Walls - Wooden - Post",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      12275,
+      12429
+    ],
+    "uvType": "MODEL_XY",
+    "uvOrientation": 512,
+    "uvScale": 0.36
+  },
+  {
+    "description": "Wooden - Plank - Door",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      12444,
+      12445,
+      12446,
+      12447,
+      12448,
+      12449
+    ],
+    "uvType": "MODEL_XY",
+    "uvOrientation": 512,
+    "uvScale": 0.36
+  },
+  {
+    "description": "Wooden - Plank - Door",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      16567
+    ],
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 256
+  },
+  {
+    "description": "Goblin Village Ice Bridge",
+    "baseMaterial": "ICE_3",
+    "objectIds": [
+      5040,
+      5041,
+      5042,
+      6463,
+      6464,
+      6465,
+      6466,
+      6467,
+      6468,
+      6469,
+      6470,
+      6471,
+      40905,
+      40906,
+      40907,
+      40908
+    ],
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 256
+  },
+  {
+    "description": "Goblin Village Wooden Ladder",
+    "baseMaterial": "WOOD_GRAIN",
+    "objectIds": [
+      16450,
+      16556
+    ]
+  },
+  {
+    "description": "Goblin Cooks Chamber Walls",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      12381,
+      12382,
+      12383,
+      12384,
+      12385
+    ],
+    "uvType": "MODEL_XY",
+    "uvOrientation": 256,
+    "uvScale": 0.4
+  },
+  {
+    "description": "Goblin Battlements",
+    "baseMaterial": "WOOD_GRAIN",
+    "objectIds": [
+      12439,
+      12438,
+      12441
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Sacks Pile",
+    "baseMaterial": "CARPET",
+    "objectIds": [
+      23,
+      365,
+      12394
+    ],
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 256,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Sacks with Sword",
+    "baseMaterial": "CARPET",
+    "objectIds": [
+      12392
+    ],
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 256,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Sack",
+    "baseMaterial": "CARPET",
+    "objectIds": [
+      12396
+    ],
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 256,
+    "uvScale": 0.4
   }
 ]

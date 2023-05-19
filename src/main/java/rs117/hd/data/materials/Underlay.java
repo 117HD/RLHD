@@ -165,6 +165,11 @@ public enum Underlay {
             .ids(63, 64,71)
     ),
 
+    // Goblin Village
+    GOBLIN_VILLAGE_TILES_BLEND_FIX(Area.GOBLIN_VILLAGE_COOKS_CHAMBER, GroundMaterial.WORN_TILES, p -> p.ids(56,57).blended(true)),
+    GOBLIN_VILLAGE_TILES(Area.GOBLIN_VILLAGE_COOKS_CHAMBER, GroundMaterial.WORN_TILES, p -> p.ids(56,57).blended(false)),
+    GOBLIN_VILLAGE_COOKS_PIT(118, Area.GOBLIN_VILLAGE_COOKS_CHAMBER, GroundMaterial.VARIED_DIRT_SHINY),
+
 	// Penguin Base
 	PENGUIN_BASE_FLOOR(p -> p
 		.area(Area.PENGUIN_BASE)
