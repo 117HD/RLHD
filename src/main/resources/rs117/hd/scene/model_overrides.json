@@ -3639,6 +3639,10 @@
       14046,
       14047,
       14048,
+      17992,
+      17993,
+      17994,
+      18120,
       24095,
       40304
     ],
@@ -8544,6 +8548,10 @@
       18112,
       18113,
       18114,
+      18115,
+      18116,
+      18117,
+      18118,
       18122,
       18123
     ],
@@ -8611,8 +8619,10 @@
       17620,
       17621,
       17622,
+      17980,
       18078,
       18088,
+      18146,
       18115,
       18128,
       18131,
@@ -8674,6 +8684,7 @@
     "description": "Meiyerditch Wooden Shelves",
     "baseMaterial": "WOOD_GRAIN_2_LIGHT",
     "objectIds": [
+      17534,
       17535,
       17536,
       17537,
@@ -8697,7 +8708,8 @@
     "objectIds": [
       17641,
       17642,
-      17643
+      17643,
+      18039
     ],
     "uvType": "GEOMETRY"
   },
@@ -8749,5 +8761,13 @@
     "uvType": "MODEL_YZ",
     "uvOrientation": 512,
     "uvScale": 0.4
+  },
+  {
+    "description": "Meiyerditch Poor Wooden Stairs",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      17976
+    ],
+    "uvType": "GEOMETRY"
   }
 ]
