@@ -24,13 +24,22 @@
  */
 package rs117.hd.utils.buffer;
 
-import org.lwjgl.system.MemoryUtil;
-
 import java.nio.IntBuffer;
+import org.lwjgl.system.MemoryUtil;
 
 public class GpuIntBuffer
 {
-	private IntBuffer buffer = MemoryUtil.memAllocInt(65536);
+	private IntBuffer buffer;
+
+	public GpuIntBuffer()
+	{
+		this(65536);
+	}
+
+	public GpuIntBuffer(int initialCapacity)
+	{
+		buffer = MemoryUtil.memAllocInt(initialCapacity);
+	}
 
 	public void destroy() {
 		if (buffer != null)

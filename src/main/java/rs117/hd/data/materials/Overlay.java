@@ -26,20 +26,21 @@ package rs117.hd.data.materials;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
-import net.runelite.api.Client;
-import net.runelite.api.Tile;
-import net.runelite.api.coords.WorldPoint;
-import rs117.hd.HdPlugin;
-import rs117.hd.data.WaterType;
-import rs117.hd.data.environments.Area;
-
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import javax.annotation.Nullable;
+import net.runelite.api.Scene;
+import net.runelite.api.Tile;
+import net.runelite.api.coords.LocalPoint;
+import net.runelite.api.coords.WorldPoint;
+import rs117.hd.HdPlugin;
+import rs117.hd.data.WaterType;
+import rs117.hd.data.environments.Area;
+import rs117.hd.utils.HDUtils;
 
 public enum Overlay {
     // Winter Theme fixes
@@ -801,40 +802,48 @@ public enum Overlay {
             FILTERED_MAP.put(entry.getKey(), entry.getValue().toArray(new Overlay[0]));
     }
 
-    public static Overlay getOverlay(@Nullable Short overlayId, Tile tile, Client client, HdPlugin plugin) {
-        WorldPoint worldPoint;
-        if (client.isInInstancedRegion()) {
-            worldPoint = WorldPoint.fromLocalInstance(client, tile.getLocalLocation());
-        } else {
-            worldPoint = tile.getWorldLocation();
-        }
-
-        int worldX = worldPoint.getX();
-        int worldY = worldPoint.getY();
-        int worldZ = worldPoint.getPlane();
+    public static Overlay getOverlay(Scene scene, Tile tile, HdPlugin plugin) {
+		LocalPoint localLocation = tile.getLocalLocation();
+        WorldPoint worldPoint = WorldPoint.fromLocalInstance(scene, localLocation, tile.getPlane());
 
         Overlay match = Overlay.NONE;
         for (Overlay overlay : ANY_MATCH) {
-            if (overlay.area.containsPoint(worldX, worldY, worldZ)) {
+            if (overlay.area.containsPoint(worldPoint)) {
                 match = overlay;
                 break;
             }
         }
 
-        if (overlayId != null) {
-            Overlay[] overlays = FILTERED_MAP.get((int) overlayId);
-            if (overlays != null) {
-                for (Overlay overlay : overlays) {
-                    if (overlay.ordinal() >= match.ordinal())
-                        break;
-                    if (overlay.area.containsPoint(worldX, worldY, worldZ)) {
-                        match = overlay;
-                        break;
-                    }
-                }
-            }
-        }
+		short overlayId = scene.getOverlayIds()[tile.getRenderLevel()][localLocation.getSceneX()][localLocation.getSceneY()];
+		Overlay[] overlays = FILTERED_MAP.get((int) overlayId);
+		if (overlays != null) {
+			for (Overlay overlay : overlays) {
+				if (overlay.ordinal() >= match.ordinal())
+					break;
+				if (overlay.area.containsPoint(worldPoint)) {
+					match = overlay;
+					break;
+				}
+			}
+		}
 
         return match.replacementCondition.apply(plugin) ? match.replacementOverlay : match;
     }
+
+	public int[] modifyColor(int[] colorHSL)
+	{
+		colorHSL[0] = hue >= 0 ? hue : colorHSL[0];
+		colorHSL[0] += shiftHue;
+		colorHSL[0] = HDUtils.clamp(colorHSL[0], 0, 63);
+
+		colorHSL[1] = saturation >= 0 ? saturation : colorHSL[1];
+		colorHSL[1] += shiftSaturation;
+		colorHSL[1] = HDUtils.clamp(colorHSL[1], 0, 7);
+
+		colorHSL[2] = lightness >= 0 ? lightness : colorHSL[2];
+		colorHSL[2] += shiftLightness;
+		colorHSL[2] = HDUtils.clamp(colorHSL[2], 0, 127);
+
+		return colorHSL;
+	}
 }

@@ -795,6 +795,11 @@ public enum Area
 		new AABB(1922, 4440, 1946, 4416),
 		new AABB(1919, 4481, 1988, 4414)
 	),
+	SOPHANEM_TRAPDOOR(new AABB(3315, 2797, 0)),
+	NECROPOLIS(
+		new AABB(3275, 2749, 3405, 2670),
+		new AABB(3322, 2773, 3370, 2750)
+	),
 
 	//Sophanem and Menaphos
 	SOPHANEM_FLOORS(
@@ -968,7 +973,7 @@ public enum Area
 		new AABB(2145, 2941, 2177, 2889)
 	),
 
-	ISLE_OF_SOULS_TUTORIAL(1855, 5823, 2175, 6078),
+	ISLE_OF_SOULS_TUTORIAL(1856, 5824, 2175, 6079),
 	SOUL_WARS_ARENA_TUTORIAL(1921, 6018, 2110, 5950),
 	SOUL_WARS_RED_BASE_TUTORIAL(
 		new AABB(2080, 6018, 2110, 5982),
@@ -1605,19 +1610,9 @@ public enum Area
 
 	private static AABB[] regions(int... regionIds)
 	{
-		final int REGIONS_PER_COLUMN = 256;
-		AABB[] aabbs = new AABB[regionIds.length];
-
-		for (int i = 0; i < regionIds.length; i++)
-		{
-			int baseX = (int)Math.floor((float)regionIds[i] / REGIONS_PER_COLUMN) * Constants.REGION_SIZE;
-			int baseY = (regionIds[i] % REGIONS_PER_COLUMN) * Constants.REGION_SIZE;
-			int oppositeX = baseX + Constants.REGION_SIZE;
-			int oppositeY = baseY + Constants.REGION_SIZE;
-			aabbs[i] = new AABB(baseX, baseY, oppositeX, oppositeY);
-		}
-
-		return aabbs;
+		return Arrays.stream(regionIds)
+			.mapToObj(AABB::new)
+			.toArray(AABB[]::new);
 	}
 
 	public boolean containsPoint(int pointX, int pointY, int pointZ)

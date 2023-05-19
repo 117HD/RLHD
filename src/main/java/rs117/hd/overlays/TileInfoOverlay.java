@@ -1,8 +1,13 @@
 package rs117.hd.overlays;
 
 import com.google.inject.Inject;
-
-import java.awt.*;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FontMetrics;
+import java.awt.Graphics2D;
+import java.awt.Polygon;
+import java.awt.Rectangle;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,15 +15,15 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.function.Function;
 import javax.annotation.Nonnull;
-
-import net.runelite.api.*;
-
-import static net.runelite.api.Constants.MAX_Z;
-import static net.runelite.api.Perspective.*;
-import static net.runelite.api.Perspective.LOCAL_TILE_SIZE;
-import static net.runelite.api.Perspective.SCENE_SIZE;
-
+import net.runelite.api.Client;
+import net.runelite.api.GameObject;
+import net.runelite.api.GroundObject;
+import net.runelite.api.KeyCode;
 import net.runelite.api.Point;
+import net.runelite.api.Scene;
+import net.runelite.api.SceneTileModel;
+import net.runelite.api.SceneTilePaint;
+import net.runelite.api.Tile;
 import net.runelite.api.coords.LocalPoint;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.client.ui.FontManager;
@@ -32,6 +37,12 @@ import rs117.hd.data.materials.Overlay;
 import rs117.hd.data.materials.Underlay;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ModelHash;
+
+import static net.runelite.api.Constants.MAX_Z;
+import static net.runelite.api.Perspective.LOCAL_COORD_BITS;
+import static net.runelite.api.Perspective.LOCAL_TILE_SIZE;
+import static net.runelite.api.Perspective.SCENE_SIZE;
+import static net.runelite.api.Perspective.localToCanvas;
 
 public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay
 {
@@ -149,21 +160,17 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay
 		int y = tile.getSceneLocation().getY();
 		int plane = tile.getRenderLevel();
 
-		WorldPoint worldPoint = tile.getWorldLocation();
-		if (client.isInInstancedRegion()) {
-			LocalPoint localPoint = tile.getLocalLocation();
-			worldPoint = WorldPoint.fromLocalInstance(client, localPoint);
-		}
+		WorldPoint worldPoint = WorldPoint.fromLocalInstance(client, tile.getLocalLocation());
 		String worldPointInfo = "World point: " + worldPoint.getX() + ", " + worldPoint.getY() + ", " + worldPoint.getPlane();
 		lines.add(worldPointInfo);
 
 		Scene scene = client.getScene();
 		short overlayId = scene.getOverlayIds()[plane][x][y];
-		Overlay overlay = Overlay.getOverlay(overlayId, tile, client, plugin);
+		Overlay overlay = Overlay.getOverlay(scene, tile, plugin);
 		lines.add(String.format("Overlay: %s (%d)", overlay.name(), overlayId));
 
 		short underlayId = scene.getUnderlayIds()[plane][x][y];
-		Underlay underlay = Underlay.getUnderlay(underlayId, tile, client, plugin);
+		Underlay underlay = Underlay.getUnderlay(scene, tile, plugin);
 		lines.add(String.format("Underlay: %s (%d)", underlay.name(), underlayId));
 
 		Color polyColor = Color.BLACK;
