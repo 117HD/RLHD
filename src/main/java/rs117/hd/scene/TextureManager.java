@@ -34,7 +34,7 @@ import org.lwjgl.opengl.GL;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.data.materials.Material;
-import rs117.hd.utils.Env;
+import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
 
 import javax.inject.Inject;
@@ -57,10 +57,9 @@ import static rs117.hd.utils.ResourcePath.path;
 @Slf4j
 public class TextureManager
 {
-	private static final String ENV_TEXTURE_PATH = "RLHD_TEXTURE_PATH";
 	private static final String[] SUPPORTED_IMAGE_EXTENSIONS = { "png", "jpg" };
 	private static final float HALF_PI = (float) (Math.PI / 2);
-	private static final ResourcePath texturePath = Env.getPathOrDefault(ENV_TEXTURE_PATH,
+	private static final ResourcePath TEXTURE_PATH = Props.getPathOrDefault("rlhd.texture-path",
 		() -> path(TextureManager.class,"textures"));
 
 	@Inject
@@ -84,7 +83,7 @@ public class TextureManager
 
 	public void startUp()
 	{
-		texturePath.watch(path -> {
+		TEXTURE_PATH.watch(path -> {
 			log.debug("Loading Textures...");
 			freeTextures();
 		});

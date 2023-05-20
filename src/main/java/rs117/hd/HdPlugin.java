@@ -118,11 +118,11 @@ import rs117.hd.scene.lights.SceneLight;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.scene.model_overrides.ObjectType;
 import rs117.hd.utils.DeveloperTools;
-import rs117.hd.utils.Env;
 import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.Mat4;
 import rs117.hd.utils.PopupUtils;
+import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.GpuIntBuffer;
@@ -166,7 +166,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	public static final int UV_SIZE = 4; // 4 floats per vertex
 	public static final int NORMAL_SIZE = 4; // 4 floats per vertex
 
-	private static final String ENV_SHADER_PATH = "RLHD_SHADER_PATH";
 	private static final int[] eightIntWrite = new int[8];
 
 	@Inject
@@ -269,8 +268,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		.add(GL_VERTEX_SHADER, "vertui.glsl")
 		.add(GL_FRAGMENT_SHADER, "fragui.glsl");
 
-	private static final ResourcePath shaderPath = Env
-		.getPathOrDefault(ENV_SHADER_PATH, () -> path(HdPlugin.class))
+	private static final ResourcePath SHADER_PATH = Props
+		.getPathOrDefault("rlhd.shader-path", () -> path(HdPlugin.class))
 		.chroot();
 
 	private int glProgram;
@@ -807,7 +806,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 		template.add(key -> {
 			try {
-				return shaderPath.resolve(key).loadString();
+				return SHADER_PATH.resolve(key).loadString();
 			} catch (IOException ex) {
 				throw new RuntimeException(ex);
 			}
@@ -1606,7 +1605,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	}
 
 	public void initShaderHotswapping() {
-		shaderPath.watch("\\.(glsl|cl)$", path -> {
+		SHADER_PATH.watch("\\.(glsl|cl)$", path -> {
 			log.info("Reloading shader: {}", path);
 			clientThread.invoke(this::recompilePrograms);
 		});

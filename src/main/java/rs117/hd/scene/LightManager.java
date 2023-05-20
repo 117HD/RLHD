@@ -75,8 +75,8 @@ import rs117.hd.scene.lights.Alignment;
 import rs117.hd.scene.lights.Light;
 import rs117.hd.scene.lights.LightType;
 import rs117.hd.scene.lights.SceneLight;
-import rs117.hd.utils.Env;
 import rs117.hd.utils.HDUtils;
+import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
 
 import static java.lang.Math.cos;
@@ -92,8 +92,7 @@ import static rs117.hd.utils.ResourcePath.path;
 @Slf4j
 public class LightManager
 {
-	private static final String ENV_LIGHTS_CONFIG = "RLHD_LIGHTS_PATH";
-	private static final ResourcePath lightsPath = Env.getPathOrDefault(ENV_LIGHTS_CONFIG,
+	private static final ResourcePath LIGHTS_PATH = Props.getPathOrDefault("rlhd.lights-path",
 		() -> path(LightManager.class,"lights.json"));
 
 	@Inject
@@ -181,7 +180,7 @@ public class LightManager
 	public void startUp()
 	{
 		entityHiderConfig = configManager.getConfig(EntityHiderConfig.class);
-		lightsPath.watch(path -> loadConfig(plugin.getGson(), path));
+		LIGHTS_PATH.watch(path -> loadConfig(plugin.getGson(), path));
 	}
 
 	public void update(SceneContext sceneContext)
