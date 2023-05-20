@@ -8535,5 +8535,18 @@
     "objectIds": [
       1392
     ]
+  },
+  {
+    "description": "Digsite Wooden Fence Gate",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      3630,
+      11766,
+      11767,
+      11770,
+      11771
+    ],
+    "uvOrientation": 512,
+    "uvType": "MODEL_XY"
   }
 ]
