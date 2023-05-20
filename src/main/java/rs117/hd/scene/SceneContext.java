@@ -123,8 +123,8 @@ public class SceneContext
 	public LocalPoint worldToLocal(WorldPoint worldPoint)
 	{
 		LocalPoint localPoint = new LocalPoint(
-			(worldPoint.getX() - scene.getBaseX()) * LOCAL_TILE_SIZE + LOCAL_HALF_TILE_SIZE,
-			(worldPoint.getY() - scene.getBaseY()) * LOCAL_TILE_SIZE + LOCAL_HALF_TILE_SIZE);
+			(worldPoint.getX() - scene.getBaseX()) * LOCAL_TILE_SIZE,
+			(worldPoint.getY() - scene.getBaseY()) * LOCAL_TILE_SIZE);
 
 		if (!localPoint.isInScene())
 		{

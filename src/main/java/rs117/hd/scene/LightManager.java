@@ -460,7 +460,7 @@ public class LightManager
 			if (sceneContext.regionIds.contains(light.worldPoint.getRegionID()))
 			{
 				sceneContext.lights.add(light);
-				updateLightPosition(sceneContext, light);
+				updateWorldLightPosition(sceneContext, light);
 			}
 		}
 
@@ -767,7 +767,7 @@ public class LightManager
 		return hash;
 	}
 
-	private void updateLightPosition(SceneContext sceneContext, SceneLight light)
+	private void updateWorldLightPosition(SceneContext sceneContext, SceneLight light)
 	{
 		assert light.worldPoint != null;
 
@@ -779,10 +779,11 @@ public class LightManager
 
 		LocalPoint local = firstLocalPoint.get();
 
-		light.x = local.getX();
-		light.y = local.getY();
+		light.x = local.getX() + Perspective.LOCAL_HALF_TILE_SIZE;
+		light.y = local.getY() + Perspective.LOCAL_HALF_TILE_SIZE;
 		if (local.isInScene())
 			light.z = sceneContext.scene.getTileHeights()[light.plane][local.getSceneX()][local.getSceneY()] - light.height - 1;
+
 		if (light.alignment == Alignment.NORTH || light.alignment == Alignment.NORTHEAST || light.alignment == Alignment.NORTHWEST)
 		{
 			light.y += Perspective.LOCAL_HALF_TILE_SIZE;
