@@ -633,12 +633,16 @@ public class LightManager
 				continue;
 			}
 
-			WorldPoint worldLocation = sceneContext.localToWorldInstance(tileObject.getLocalLocation(), tileObject.getPlane());
+			WorldPoint worldLocation = WorldPoint.fromLocalInstance(sceneContext.scene,
+				tileObject.getLocalLocation(), tileObject.getPlane());
 
 			// prevent duplicate lights being spawned for the same object
 			int hash = tileObjectHash(worldLocation, tileObject);
-			if (sceneContext.lights.stream().anyMatch(light -> light.object != null && hash == tileObjectHash(
-				sceneContext.localToWorldInstance(light.object.getLocalLocation(), light.object.getPlane()), light.object)))
+			boolean isDuplicate = sceneContext.lights.stream()
+				.anyMatch(light -> light.object != null && hash == tileObjectHash(
+					WorldPoint.fromLocalInstance(sceneContext.scene, light.object.getLocalLocation(), light.object.getPlane()),
+					light.object));
+			if (isDuplicate)
 			{
 				continue;
 			}
