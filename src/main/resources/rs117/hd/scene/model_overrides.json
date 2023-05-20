@@ -3300,9 +3300,14 @@
       12937,
       12938,
       12939,
-      12940
+      12940,
+      13865,
+      22533,
+      22534,
+      22535
     ],
-    "uvType": "MODEL_XZ"
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.88
   },
   {
     "description": "LUNAR_ISLE_DOCKS",
@@ -4982,6 +4987,9 @@
       15808,
       15811,
       15812,
+      17873,
+      17874,
+      17875,
       19215,
       20753,
       20754,
@@ -5259,7 +5267,10 @@
       3170,
       3709,
       3949,
-      7106
+      7106,
+      13831,
+      13832,
+      13833
     ],
     "uvType": "WORLD_XZ",
     "uvScale": 0.68,
@@ -5345,7 +5356,12 @@
     "objectIds": [
       14500,
       14502,
-      15629
+      15629,
+      17864,
+      17865,
+      17868,
+      17869,
+      17870
     ],
     "inheritTileColorType": "OVERLAY",
     "uvType": "WORLD_XZ",
@@ -5690,11 +5706,13 @@
   },
   {
   "description": "Objects - Stone - Stalagmite",
-  "baseMaterial": "STONE",
+  "baseMaterial": "STONE_NORMALED",
   "objectIds": [
     4600,
     5231,
-    5232
+    5232,
+    17876,
+    17877
   ]
   },
   {
@@ -8801,5 +8819,13 @@
     "objectIds": [
       17652
     ]
+  },
+  {
+    "description": "Temple Trekking Sign",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      23277
+    ],
+    "uvType": "MODEL_XY"
   }
 ]
