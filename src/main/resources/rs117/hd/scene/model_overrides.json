@@ -3681,6 +3681,9 @@
       931,
       932,
       933,
+      934,
+      935,
+      936,
       937,
       938,
       940,
@@ -5064,6 +5067,7 @@
     "description": "Inconspicuous Crate",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      28999,
       29018
     ]
   },
@@ -6162,6 +6166,7 @@
     "baseMaterial": "CARPET",
     "objectIds": [
       422,
+      423,
       23067
     ],
     "uvType": "MODEL_XZ",
@@ -7928,6 +7933,20 @@
     ],
     "flatNormals": true,
     "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Kharidian Tent",
+    "baseMaterial": "FINE_CARPET",
+    "objectIds": [
+      1673,
+      1674,
+      1675,
+      1676,
+      1677,
+      1678
+    ],
+    "uvType": "MODEL_XY",
+    "uvScale": 0.80
   },
   {
     "description": "Metal Monkeybars",
