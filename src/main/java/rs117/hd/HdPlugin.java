@@ -404,11 +404,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 	private int gameTicksUntilSceneReload = 0;
 
-	// some necessary data for reloading the scene while in POH to fix major performance loss
-	@Setter
-	private boolean isInHouse = false;
-	private int previousPlane;
-
 	// Config settings used very frequently - thousands/frame
 	public boolean configGroundTextures = false;
 	public boolean configGroundBlending = false;
@@ -1761,16 +1756,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			// lazy init textures as they may not be loaded at plugin start.
 			textureManager.ensureTexturesLoaded(textureProvider);
 
-			// reload the scene if the player is in a house and their plane changed
-			// this greatly improves the performance as it keeps the scene buffer up to date
-			if (isInHouse) {
-				int plane = client.getPlane();
-				if (previousPlane != plane) {
-					reloadSceneNextGameTick();
-					previousPlane = plane;
-				}
-			}
-
 			final int viewportHeight = client.getViewportHeight();
 			final int viewportWidth = client.getViewportWidth();
 
@@ -2336,6 +2321,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		if (gameTicks > gameTicksUntilSceneReload) {
 			gameTicksUntilSceneReload = gameTicks;
 		}
+	}
+
+	public void abortSceneReload()
+	{
+		gameTicksUntilSceneReload = 0;
 	}
 
 	@Subscribe

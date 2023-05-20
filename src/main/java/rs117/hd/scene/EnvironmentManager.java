@@ -24,7 +24,6 @@
  */
 package rs117.hd.scene;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -140,6 +139,9 @@ public class EnvironmentManager
 
 	private boolean lightningEnabled = false;
 	private boolean isOverworld = false;
+	// some necessary data for reloading the scene while in POH to fix major performance loss
+	private boolean isInHouse = false;
+	private int previousPlane;
 
 	public void startUp()
 	{
@@ -166,6 +168,16 @@ public class EnvironmentManager
 		);
 		previousPosition = position;
 
+		// reload the scene if the player is in a house and their plane changed
+		// this greatly improves the performance as it keeps the scene buffer up to date
+		if (isInHouse) {
+			int plane = client.getPlane();
+			if (previousPlane != plane) {
+				plugin.reloadSceneNextGameTick();
+				previousPlane = plane;
+			}
+		}
+
 		boolean skipTransition = tileChange >= SKIP_TRANSITION_DISTANCE;
 		for (Environment environment : sceneContext.environments)
 		{
@@ -174,12 +186,13 @@ public class EnvironmentManager
 				if (environment != currentEnvironment)
 				{
 					if (environment == Environment.PLAYER_OWNED_HOUSE || environment == Environment.PLAYER_OWNED_HOUSE_SNOWY) {
-						plugin.setInHouse(true);
-
 						// POH takes 1 game tick to enter, then 2 game ticks to load per floor
 						plugin.reloadSceneIn(7);
+						isInHouse = true;
 					} else {
-						plugin.setInHouse(false);
+						// Avoid an unnecessary scene reload if the player has already left the POH
+						plugin.abortSceneReload();
+						isInHouse = false;
 					}
 
 					plugin.setInGauntlet(environment == Environment.THE_GAUNTLET || environment == Environment.THE_GAUNTLET_CORRUPTED);
