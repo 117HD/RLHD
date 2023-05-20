@@ -302,9 +302,9 @@ public enum Environment
 	MEIYERDITCH(Area.MEIYERDITCH, new Properties()
 			.setFogColor("#172429")
 			.setFogDepth(40)
-			.setAmbientColor("#b6bc9c")
+			.setAmbientColor("#dad8ce")
 			.setAmbientStrength(2.0f)
-			.setDirectionalColor("#b6bc9c")
+			.setDirectionalColor("#ced6da")
 			.setDirectionalStrength(1.8f)
 			.setGroundFog(-150, -350, 0.5f)
 	),
