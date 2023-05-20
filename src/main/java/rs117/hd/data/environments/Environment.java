@@ -308,6 +308,15 @@ public enum Environment
 			.setDirectionalStrength(1.8f)
 			.setGroundFog(-150, -350, 0.5f)
 	),
+	MEIYERDITCH_MYREQUE_HIDEOUT(Area.MEIYERDITCH_MYREQUE_HIDEOUT, new Properties()
+			.setFogColor(0, 0, 0)
+			.setFogDepth(69)
+			.setAmbientColor("#dad8ce")
+			.setAmbientStrength(1.5f)
+			.setDirectionalColor("#ced6da")
+			.setDirectionalStrength(0.5f)
+			.setLightDirection(260f, 10f)
+	),
 	MORYTANIA(Area.MORYTANIA, new Properties()
 		.setFogColor("#1E314B")
 		.setFogDepth(40)
