@@ -8827,5 +8827,23 @@
       23277
     ],
     "uvType": "MODEL_XY"
+  },
+  {
+    "description": "Meiyerditch Mine Walls",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      17820,
+      17821,
+      17822,
+      17823,
+      17824,
+      17825,
+      17826,
+      17827,
+      17828,
+      17829,
+      17871
+    ],
+    "uvType": "GEOMETRY"
   }
 ]
