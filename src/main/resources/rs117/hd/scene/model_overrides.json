@@ -5387,6 +5387,8 @@
       14482,
       14485,
       17929,
+      17930,
+      17933,
       23080,
       23081,
       23082,
@@ -5558,6 +5560,10 @@
       17656,
       17657,
       17658,
+      17905,
+      17906,
+      17907,
+      17908,
       20367
     ],
     "flatNormals": true
@@ -5763,9 +5769,10 @@
   },
   {
     "description": "Mortton Shade Catacombs - Walls - Stone",
-    "baseMaterial": "STONE",
+    "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       17900,
+      17901,
       38020,
       38021,
       38023,
@@ -5773,6 +5780,7 @@
       40470
     ],
     "uvType": "MODEL_XY",
+    "uvScale": 0.46,
     "uvOrientation": 300
   },
   {
@@ -6222,6 +6230,8 @@
       17551,
       17552,
       17667,
+      17909,
+      17910,
       23065
     ],
     "uvType": "MODEL_XZ",
@@ -8628,6 +8638,8 @@
       17973,
       18031,
       18032,
+      18047,
+      18048,
       18057,
       18091,
       18092
@@ -8684,6 +8696,16 @@
       18084
     ],
     "uvType": "MODEL_XZ",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Objects - Wooden - Poor Lab tables",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      17896
+    ],
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 512,
     "uvScale": 0.6
   },
   {
@@ -8810,7 +8832,9 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       17976,
-      17978
+      17978,
+      18049,
+      18050
     ],
     "uvType": "GEOMETRY"
   },
@@ -8917,5 +8941,12 @@
       39188
     ],
     "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Vampyre Statue",
+    "baseMaterial": "MARBLE_1_SEMIGLOSS",
+    "objectIds": [
+      18127
+    ]
   }
 ]
