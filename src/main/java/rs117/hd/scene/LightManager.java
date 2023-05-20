@@ -633,8 +633,9 @@ public class LightManager
 				continue;
 			}
 
+			int instancedPlane = tileObject.getPlane();
 			WorldPoint worldLocation = WorldPoint.fromLocalInstance(sceneContext.scene,
-				tileObject.getLocalLocation(), tileObject.getPlane());
+				tileObject.getLocalLocation(), instancedPlane);
 
 			// prevent duplicate lights being spawned for the same object
 			int hash = tileObjectHash(worldLocation, tileObject);
@@ -648,7 +649,7 @@ public class LightManager
 			}
 
 			SceneLight light = new SceneLight(
-				worldLocation.getX(), worldLocation.getY(), worldLocation.getPlane(), l.height, l.alignment, l.radius,
+				worldLocation.getX(), worldLocation.getY(), instancedPlane, l.height, l.alignment, l.radius,
 				l.strength, l.color, l.type, l.duration, l.range, l.fadeInDuration);
 			Optional<LocalPoint> firstLocalPoint = sceneContext.worldInstanceToLocals(worldLocation).stream().findFirst();
 			if (!firstLocalPoint.isPresent())
@@ -656,11 +657,9 @@ public class LightManager
 				continue;
 			}
 			LocalPoint localPoint = firstLocalPoint.get();
-			light.x = localPoint.getX();
-			light.y = localPoint.getY();
 
-			int lightX = tileObject.getX();
-			int lightY = tileObject.getY();
+			int lightX = localPoint.getX();
+			int lightY = localPoint.getY();
 			int localSizeX = sizeX * Perspective.LOCAL_TILE_SIZE;
 			int localSizeY = sizeY * Perspective.LOCAL_TILE_SIZE;
 
