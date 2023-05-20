@@ -8504,5 +8504,36 @@
       17358
     ],
     "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Bush Wall",
+    "baseMaterial": "PLANT_GRUNGE_1",
+    "objectIds": [
+      17313,
+      17314,
+      17315
+    ]
+  },
+  {
+    "description": "Generic Leafy Fern",
+    "baseMaterial": "PLANT_GRUNGE_2",
+    "objectIds": [
+      1394
+    ]
+  },
+  {
+    "description": "Generic Fern - Small",
+    "baseMaterial": "PLANT_GRUNGE_1",
+    "objectIds": [
+      1173,
+      1299
+    ]
+  },
+  {
+    "description": "Generic Leafy Shrub",
+    "baseMaterial": "PLANT_GRUNGE_1",
+    "objectIds": [
+      1392
+    ]
   }
 ]
