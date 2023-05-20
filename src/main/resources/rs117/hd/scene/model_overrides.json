@@ -4016,6 +4016,10 @@
       11794,
       11795,
       12779,
+      17999,
+      18000,
+      18001,
+      18002,
       25606,
       26107
     ]
@@ -4999,6 +5003,8 @@
       23085,
       23086,
       23087,
+      24147,
+      24148,
       26715,
       26716,
       27984,
@@ -5062,7 +5068,8 @@
       28997,
       29000,
       29015,
-      29032
+      29032,
+      29044
     ],
     "uvType": "WORLD_XZ",
     "uvScale": 0.22
@@ -8493,7 +8500,13 @@
       17741,
       17742,
       17743,
-      17744
+      17744,
+      17941,
+      17942,
+      17943,
+      18054,
+      18055,
+      18056
     ],
     "uvType": "GEOMETRY"
   },
@@ -8543,6 +8556,13 @@
       17698,
       17699,
       17700,
+      17701,
+      17703,
+      17704,
+      17705,
+      17706,
+      17707,
+      17708,
       17574,
       17575,
       17576,
@@ -8739,6 +8759,7 @@
     "description": "Meiyerditch Poor Baricade",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
+      17644,
       17645
     ],
     "uvType": "MODEL_XY_MIRROR_A",
@@ -8788,7 +8809,8 @@
     "description": "Meiyerditch Poor Wooden Stairs",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      17976
+      17976,
+      17978
     ],
     "uvType": "GEOMETRY"
   },
@@ -8809,7 +8831,8 @@
     "description": "Meiyerditch Myreque Hideout Brick Stone Walls Rubble",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
-      17673
+      17673,
+      17914
     ],
     "uvType": "MODEL_XZ"
   },
@@ -8845,5 +8868,54 @@
       17871
     ],
     "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Meiyerditch Mine Walls - Daeyalt Rocks",
+    "baseMaterial": "ROCK_2",
+    "objectIds": [
+      17962,
+      17963,
+      17964,
+      17965
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Darkmeyer Stone Walls",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      39171,
+      39172,
+      39178,
+      39179,
+      39181,
+      39185,
+      39175,
+      39176,
+      39327,
+      39328,
+      39329,
+      39330,
+      39331,
+      39332,
+      39356,
+      39357,
+      39358,
+      39359,
+      39361,
+      39365,
+      39478
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Darkmeyer Stone Tiles",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      39186,
+      39187,
+      39188
+    ],
+    "uvType": "MODEL_XZ"
   }
 ]

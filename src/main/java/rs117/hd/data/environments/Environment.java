@@ -319,7 +319,7 @@ public enum Environment
 	),
 	MEIYERDITCH_MINES(Area.MEIYERDITCH_MINES, new Properties()
 			.setFogColor(0, 0, 0)
-			.setFogDepth(72)
+			.setFogDepth(70)
 			.setAmbientColor("#dad8ce")
 			.setAmbientStrength(1.5f)
 			.setDirectionalColor("#ced6da")
