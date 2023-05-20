@@ -1259,6 +1259,7 @@
       1284,
       1286,
       1297,
+      1365,
       1383,
       4051,
       4052,
@@ -8518,6 +8519,7 @@
     "description": "Generic Leafy Fern",
     "baseMaterial": "PLANT_GRUNGE_2",
     "objectIds": [
+      1391,
       1394
     ]
   },
@@ -8548,5 +8550,23 @@
     ],
     "uvOrientation": 512,
     "uvType": "MODEL_XY"
+  },
+  {
+    "description": "Morytania - Rotting Tree",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      3514,
+      3515
+    ]
+  },
+  {
+    "description": "Morytania - Tall Grass",
+    "baseMaterial": "PLANT_GRUNGE_1",
+    "objectIds": [
+      3501,
+      3502,
+      3503,
+      3504
+    ]
   }
 ]
