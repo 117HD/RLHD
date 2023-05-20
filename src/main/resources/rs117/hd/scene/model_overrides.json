@@ -1455,6 +1455,15 @@
     "flatNormals": true
   },
   {
+    "description": "Wooden - Fences - V Slats",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      17310
+    ],
+    "uvOrientation": 512,
+    "uvType": "MODEL_XY"
+  },
+  {
     "description": "STONE_STEPS",
     "baseMaterial": "STONE",
     "objectIds": [
@@ -3087,18 +3096,6 @@
     "uvScale": 0.5
   },
   {
-    "description": "UNKNOWN_8",
-    "objectIds": [
-      10743,
-      10744,
-      10749,
-      10750,
-      10769,
-      17349
-    ],
-    "flatNormals": true
-  },
-  {
     "description": "UNKNOWN_9",
     "objectIds": [
       3110
@@ -4071,7 +4068,7 @@
     "uvType": "MODEL_XZ"
   },
   {
-    "description": "East Ardounge House Walls",
+    "description": "Wattle Style Houses (Ardougne, Digsite)",
     "baseMaterial": "WATTLE_1",
     "objectIds": [
       1602,
@@ -4079,7 +4076,13 @@
       1604,
       1605,
       1606,
-      1608
+      1608,
+      10743,
+      10744,
+      10749,
+      10750,
+      10769,
+      17349
     ],
     "flatNormals": true
   },
@@ -4553,13 +4556,15 @@
     "uvScale": 0.4
   },
   {
-    "description": "Wooden Door 2",
+    "description": "Wooden Door 2 - 4 Panel",
     "baseMaterial": "DOCK_FENCE",
     "objectIds": [
       1521,
       1522,
       1524,
-      1525
+      1525,
+      17316,
+      17317
     ],
     "flatNormals": true,
     "uvOrientation": 512,
@@ -5055,6 +5060,13 @@
     "uvScale": 0.22
   },
   {
+    "description": "Inconspicuous Crate",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      29018
+    ]
+  },
+  {
     "description": "Objects - Mossy Rock - Medium",
     "baseMaterial": "ROCK_1",
     "objectIds": [
@@ -5526,6 +5538,7 @@
       12443,
       16560,
       16561,
+      17305,
       20367
     ],
     "flatNormals": true
@@ -6165,6 +6178,7 @@
     "description": "Objects - Stool - Wooden – Generic",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      17306,
       23065
     ],
     "uvType": "MODEL_XZ",
@@ -8373,6 +8387,8 @@
     "objectIds": [
       23,
       365,
+      2354,
+      2356,
       12394
     ],
     "uvType": "MODEL_XZ",
@@ -8398,5 +8414,95 @@
     "uvType": "MODEL_XZ",
     "uvOrientation": 256,
     "uvScale": 0.4
+  },
+  {
+    "description": "Sack",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      17298
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.4
+  },
+  {
+    "description": "Digsite - Objects - Wooden - Tables - Fine",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      17299
+    ],
+    "uvType": "MODEL_XZ",
+    "flatNormals": true,
+    "uvOrientation": 512,
+    "uvScale": 0.8
+  },
+  {
+    "description": "Digsite - Ground Decoration - Stone Plate",
+    "baseMaterial": "ROCK_2",
+    "objectIds": [
+      17343,
+      17346,
+      17347
+    ],
+    "uvType": "MODEL_XZ",
+    "flatNormals": true,
+    "uvOrientation": 512,
+    "uvScale": 0.7
+  },
+  {
+    "description": "Digsite - Object - Fireplace",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      17325
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Digsite - Object - Giant Vase",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      386,
+      17362
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Digsite - Ground Decoration - Wooden Plank Path",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      2384,
+      2385,
+      2386,
+      2387,
+      2390
+    ],
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 512,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Digsite - Ground Decoration - Wooden Plank Path",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      2388,
+      2389
+    ],
+    "uvType": "MODEL_XZ_MIRROR_B",
+    "uvOrientation": 512,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Digsite - Objects - Rectangle Rock - Large",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      17350,
+      17351,
+      17352,
+      17353,
+      17354,
+      17356,
+      17357,
+      17358
+    ],
+    "uvType": "GEOMETRY"
   }
 ]
