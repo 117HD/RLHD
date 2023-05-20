@@ -8768,5 +8768,33 @@
       17976
     ],
     "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Meiyerditch Myreque Hideout Brick Stone Walls",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      17649,
+      17650,
+      17651,
+      17653
+    ],
+    "uvType": "MODEL_XY",
+    "uvOrientation": 1536,
+    "uvScale": 0.66
+  },
+  {
+    "description": "Meiyerditch Myreque Hideout Brick Stone Walls Rubble",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      17673
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Meiyerditch Myreque Hideout Brick Stone Walls",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [
+      17652
+    ]
   }
 ]
