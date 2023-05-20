@@ -46,7 +46,6 @@ import net.runelite.api.GameState;
 import net.runelite.api.GraphicsObject;
 import net.runelite.api.GroundObject;
 import net.runelite.api.NPC;
-import net.runelite.api.Perspective;
 import net.runelite.api.Projectile;
 import net.runelite.api.Tile;
 import net.runelite.api.TileObject;
@@ -82,6 +81,11 @@ import rs117.hd.utils.ResourcePath;
 
 import static java.lang.Math.cos;
 import static java.lang.Math.pow;
+import static net.runelite.api.Perspective.COSINE;
+import static net.runelite.api.Perspective.LOCAL_HALF_TILE_SIZE;
+import static net.runelite.api.Perspective.LOCAL_TILE_SIZE;
+import static net.runelite.api.Perspective.SCENE_SIZE;
+import static net.runelite.api.Perspective.SINE;
 import static rs117.hd.utils.ResourcePath.path;
 
 @Singleton
@@ -254,19 +258,19 @@ public class LightManager
 				// Offset the light's position based on its Alignment
 				if (light.alignment == Alignment.NORTH || light.alignment == Alignment.NORTHEAST || light.alignment == Alignment.NORTHWEST)
 				{
-					light.y += Perspective.LOCAL_HALF_TILE_SIZE;
+					light.y += LOCAL_HALF_TILE_SIZE;
 				}
 				if (light.alignment == Alignment.SOUTH || light.alignment == Alignment.SOUTHEAST || light.alignment == Alignment.SOUTHWEST)
 				{
-					light.y -= Perspective.LOCAL_HALF_TILE_SIZE;
+					light.y -= LOCAL_HALF_TILE_SIZE;
 				}
 				if (light.alignment == Alignment.EAST || light.alignment == Alignment.SOUTHEAST || light.alignment == Alignment.NORTHEAST)
 				{
-					light.x += Perspective.LOCAL_HALF_TILE_SIZE;
+					light.x += LOCAL_HALF_TILE_SIZE;
 				}
 				if (light.alignment == Alignment.WEST || light.alignment == Alignment.SOUTHWEST || light.alignment == Alignment.NORTHWEST)
 				{
-					light.x -= Perspective.LOCAL_HALF_TILE_SIZE;
+					light.x -= LOCAL_HALF_TILE_SIZE;
 				}
 
 				int plane = client.getPlane();
@@ -275,7 +279,7 @@ public class LightManager
 				int npcTileY = light.npc.getLocalLocation().getSceneY();
 
 				// Some NPCs, such as Crystalline Hunllef in The Gauntlet, sometimes return scene X/Y values far outside the possible range.
-				if (npcTileX < Perspective.SCENE_SIZE && npcTileY < Perspective.SCENE_SIZE && npcTileX >= 0 && npcTileY >= 0)
+				if (npcTileX < SCENE_SIZE && npcTileY < SCENE_SIZE && npcTileX >= 0 && npcTileY >= 0)
 				{
 					// Tile null check is to prevent oddities caused by - once again - Crystalline Hunllef.
 					// May also apply to other NPCs in instances.
@@ -285,10 +289,10 @@ public class LightManager
 					}
 
 					// Interpolate between tile heights based on specific scene coordinates.
-					float lerpX = (light.x % Perspective.LOCAL_TILE_SIZE) / (float) Perspective.LOCAL_TILE_SIZE;
-					float lerpY = (light.y % Perspective.LOCAL_TILE_SIZE) / (float) Perspective.LOCAL_TILE_SIZE;
-					int baseTileX = (int) Math.floor(light.x / (float) Perspective.LOCAL_TILE_SIZE);
-					int baseTileY = (int) Math.floor(light.y / (float) Perspective.LOCAL_TILE_SIZE);
+					float lerpX = (light.x % LOCAL_TILE_SIZE) / (float) LOCAL_TILE_SIZE;
+					float lerpY = (light.y % LOCAL_TILE_SIZE) / (float) LOCAL_TILE_SIZE;
+					int baseTileX = (int) Math.floor(light.x / (float) LOCAL_TILE_SIZE);
+					int baseTileY = (int) Math.floor(light.y / (float) LOCAL_TILE_SIZE);
 					float heightNorth = HDUtils.lerp(tileHeights[plane][baseTileX][baseTileY + 1], tileHeights[plane][baseTileX + 1][baseTileY + 1], lerpX);
 					float heightSouth = HDUtils.lerp(tileHeights[plane][baseTileX][baseTileY], tileHeights[plane][baseTileX + 1][baseTileY], lerpX);
 					float tileHeight = HDUtils.lerp(heightSouth, heightNorth, lerpY);
@@ -383,7 +387,7 @@ public class LightManager
 			light.belowFloor = false;
 			light.aboveFloor = false;
 
-			if (tileX < Perspective.SCENE_SIZE && tileY < Perspective.SCENE_SIZE && tileX >= 0 && tileY >= 0 && tileZ >= 0)
+			if (tileX < SCENE_SIZE && tileY < SCENE_SIZE && tileX >= 0 && tileY >= 0 && tileZ >= 0)
 			{
 				Tile aboveTile = tileZ < 3 ? tiles[tileZ + 1][tileX][tileY] : null;
 
@@ -519,7 +523,7 @@ public class LightManager
 
 		for (SceneLight light : sceneContext.lights)
 		{
-			if (light.distance > maxDistance * Perspective.LOCAL_TILE_SIZE)
+			if (light.distance > maxDistance * LOCAL_TILE_SIZE)
 				break;
 
 			if (!light.visible)
@@ -660,8 +664,8 @@ public class LightManager
 
 			int lightX = localPoint.getX();
 			int lightY = localPoint.getY();
-			int localSizeX = sizeX * Perspective.LOCAL_TILE_SIZE;
-			int localSizeY = sizeY * Perspective.LOCAL_TILE_SIZE;
+			int localSizeX = sizeX * LOCAL_TILE_SIZE;
+			int localSizeY = sizeY * LOCAL_TILE_SIZE;
 
 			if (orientation != -1 && light.alignment != Alignment.CENTER)
 			{
@@ -678,8 +682,8 @@ public class LightManager
 				orientation += light.alignment.orientation;
 				orientation %= 2048;
 
-				float sine = Perspective.SINE[orientation] / 65536f;
-				float cosine = Perspective.COSINE[orientation] / 65536f;
+				float sine = SINE[orientation] / 65536f;
+				float cosine = COSINE[orientation] / 65536f;
 				cosine /= (float) localSizeX / (float) localSizeY;
 
 				int offsetX = (int) (radius * sine);
@@ -689,10 +693,10 @@ public class LightManager
 				lightY += offsetY;
 			}
 
-			float tileX = (float) lightX / Perspective.LOCAL_TILE_SIZE;
-			float tileY = (float) lightY / Perspective.LOCAL_TILE_SIZE;
-			float lerpX = (lightX % Perspective.LOCAL_TILE_SIZE) / (float) Perspective.LOCAL_TILE_SIZE;
-			float lerpY = (lightY % Perspective.LOCAL_TILE_SIZE) / (float) Perspective.LOCAL_TILE_SIZE;
+			float tileX = (float) lightX / LOCAL_TILE_SIZE;
+			float tileY = (float) lightY / LOCAL_TILE_SIZE;
+			float lerpX = (lightX % LOCAL_TILE_SIZE) / (float) LOCAL_TILE_SIZE;
+			float lerpY = (lightY % LOCAL_TILE_SIZE) / (float) LOCAL_TILE_SIZE;
 			int tileMinX = (int) Math.floor(tileX);
 			int tileMinY = (int) Math.floor(tileY);
 			int tileMaxX = tileMinX + 1;
@@ -779,26 +783,26 @@ public class LightManager
 
 		LocalPoint local = firstLocalPoint.get();
 
-		light.x = local.getX() + Perspective.LOCAL_HALF_TILE_SIZE;
-		light.y = local.getY() + Perspective.LOCAL_HALF_TILE_SIZE;
+		light.x = local.getX() + LOCAL_HALF_TILE_SIZE;
+		light.y = local.getY() + LOCAL_HALF_TILE_SIZE;
 		if (local.isInScene())
 			light.z = sceneContext.scene.getTileHeights()[light.plane][local.getSceneX()][local.getSceneY()] - light.height - 1;
 
 		if (light.alignment == Alignment.NORTH || light.alignment == Alignment.NORTHEAST || light.alignment == Alignment.NORTHWEST)
 		{
-			light.y += Perspective.LOCAL_HALF_TILE_SIZE;
+			light.y += LOCAL_HALF_TILE_SIZE;
 		}
 		if (light.alignment == Alignment.EAST || light.alignment == Alignment.NORTHEAST || light.alignment == Alignment.SOUTHEAST)
 		{
-			light.x += Perspective.LOCAL_HALF_TILE_SIZE;
+			light.x += LOCAL_HALF_TILE_SIZE;
 		}
 		if (light.alignment == Alignment.SOUTH || light.alignment == Alignment.SOUTHEAST || light.alignment == Alignment.SOUTHWEST)
 		{
-			light.y -= Perspective.LOCAL_HALF_TILE_SIZE;
+			light.y -= LOCAL_HALF_TILE_SIZE;
 		}
 		if (light.alignment == Alignment.WEST || light.alignment == Alignment.NORTHWEST || light.alignment == Alignment.SOUTHWEST)
 		{
-			light.x -= Perspective.LOCAL_HALF_TILE_SIZE;
+			light.x -= LOCAL_HALF_TILE_SIZE;
 		}
 	}
 
