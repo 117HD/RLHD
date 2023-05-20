@@ -164,6 +164,11 @@ public enum Underlay {
             .area(Area.MOTHERLODE_MINE)
             .ids(63, 64,71)
     ),
+    MEIYERDITCH_MYREQUE_HIDEOUT(GroundMaterial.VARIED_DIRT, p -> p
+            .area(Area.MEIYERDITCH_MYREQUE_HIDEOUT)
+            .ids(96, 103)
+
+    ),
 
     // Goblin Village
     GOBLIN_VILLAGE_TILES_BLEND_FIX(Area.GOBLIN_VILLAGE_COOKS_CHAMBER, GroundMaterial.WORN_TILES, p -> p.ids(56,57).blended(true)),
