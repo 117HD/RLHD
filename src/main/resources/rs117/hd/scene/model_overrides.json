@@ -1309,7 +1309,6 @@
       4334,
       4335,
       4336,
-
       4739,
       4740,
       4741,
@@ -1398,6 +1397,7 @@
   {
     "description": "Short grass that shouldn't cast shadows",
     "objectIds": [
+      1259,
       4530,
       4735,
       4736,
