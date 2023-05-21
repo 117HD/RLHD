@@ -59,6 +59,7 @@ public enum Underlay {
     // Lumbridge
     LUMBRIDGE_CASTLE_TILE(56, Area.LUMBRIDGE_CASTLE_BASEMENT, GroundMaterial.MARBLE_2_SEMIGLOSS, p -> p.blended(false)),
 
+
     // Edgeville
     EDGEVILLE_PATH_OVERLAY_48(Area.EDGEVILLE_PATH_OVERLAY, GroundMaterial.VARROCK_PATHS, p -> p
         .blendedAsOpposite(true)
@@ -115,6 +116,7 @@ public enum Underlay {
 
     // Ardougne
     SOUTH_OF_ZOO_FIX(61, Area.ARDOUGNE_SOUTH_OF_ZOO, GroundMaterial.OVERWORLD_GRASS_1),
+    SHADOW_DUNGEON_FLOOR(63, Area.SHADOW_DUNGEON, GroundMaterial.EARTHEN_CAVE_FLOOR),
     // Castle Wars
     CENTER_SARADOMIN_SIDE_DIRT_1(98, Area.CASTLE_WARS_ARENA_SARADOMIN_SIDE, GroundMaterial.DIRT, p -> p
         .hue(7)

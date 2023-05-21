@@ -587,6 +587,17 @@ public enum Environment
 		.setAllowSkyOverride(false)
 	),
 
+	// Ardounge
+	Shadow_DUNGEON(Area.SHADOW_DUNGEON, new Properties()
+			.setFogColor(0, 0, 0)
+			.setFogDepth(60)
+			.setAmbientColor(171, 171, 171)
+			.setAmbientStrength(1.0f)
+			.setDirectionalColor(86, 86, 86)
+			.setDirectionalStrength(1.0f)
+			.setLightDirection(260f, 10f)
+	),
+
 	// Yanille
 	YANILLE(Area.YANILLE, new Properties()),
 	// Nightmare Zone

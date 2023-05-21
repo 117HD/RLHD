@@ -4267,6 +4267,10 @@
       1569,
       1571,
       1572,
+      1573,
+      1574,
+      3506,
+      3507,
       11721,
       11722,
       23866
@@ -4572,8 +4576,10 @@
       1522,
       1524,
       1525,
+      1542,
       17316,
-      17317
+      17317,
+      20925
     ],
     "flatNormals": true,
     "uvOrientation": 512,
@@ -5072,6 +5078,7 @@
     "description": "Inconspicuous Crate",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      28964,
       28999,
       29018
     ]
@@ -5350,10 +5357,12 @@
     "description": "Ground Decoration - Rock - Tiny - Uncolored",
     "baseMaterial": "ROCK_1",
     "objectIds": [
+      6398,
       12050,
       14486
     ],
     "uvType": "WORLD_XZ",
+    "uvOrientation": 512,
     "uvScale": 0.75,
     "castShadows": false
   },
@@ -5375,6 +5384,8 @@
     "objectIds": [
       2381,
       2383,
+      6397,
+      6399,
       7115,
       12049,
       12051,
@@ -5542,7 +5553,10 @@
     "baseMaterial": "DOCK_FENCE",
     "objectIds": [
       7514,
+      9533,
       9534,
+      9535,
+      9536,
       10374,
       10378,
       10379,
@@ -6409,6 +6423,7 @@
     "description": "Objects - Wooden - Plank tables - Medium",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
+      24333,
       29712
     ],
     "uvType": "MODEL_XZ",
@@ -6710,9 +6725,13 @@
     "description": "Wall Decoration - Rocks",
     "baseMaterial": "ROCK_1_LIGHT",
     "objectIds": [
-      1493
+      1493,
+      6393,
+      6394,
+      6395
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "MODEL_YZ_MIRROR_A",
+    "uvOrientation": 512,
     "uvScale": 0.6
   },
   {
@@ -8608,7 +8627,8 @@
     "description": "Generic - Plank - Tables - Picnic Bench",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      611
+      611,
+      9532
     ],
     "flatNormals": true,
     "uvType": "MODEL_XZ"
@@ -8620,5 +8640,32 @@
       1612
     ],
     "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Hadleys House - Wattle",
+    "baseMaterial": "WATTLE_1",
+    "objectIds": [
+      1905
+    ],
+    "flatNormals": true,
+    "uvType": "VANILLA"
+  },
+  {
+    "description": "Walls  - Stone - Stone Brick Wall Rubble - Burugh De Rott",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      6389,
+      6390
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Metallic Pipes",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      872,
+      3421,
+      6480
+    ]
   }
 ]
