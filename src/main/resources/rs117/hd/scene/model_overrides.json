@@ -1427,6 +1427,8 @@
     "description": "WOODEN_FENCES",
     "baseMaterial": "WOOD_GRAIN",
     "objectIds": [
+      166,
+      167,
       981,
       991,
       992,
@@ -3841,6 +3843,7 @@
     "description": "Textured Ladder",
     "baseMaterial": "DOCK_FENCE",
     "objectIds": [
+      11,
       2147,
       2148,
       2884,
@@ -3967,13 +3970,15 @@
     "flatNormals": true
   },
   {
-    "description": "Wooden plank tables",
+    "description": "Wooden - Plank - Tables",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       10490,
       12450,
+      12962,
       14851,
       14852,
+      15684,
       25603,
       40223,
       40224
@@ -5248,6 +5253,7 @@
       2634,
       5511,
       5512,
+      10785,
       11604,
       11605,
       11931,
@@ -5259,7 +5265,7 @@
       18894,
       18895
     ],
-    "uvType": "WORLD_XZ",
+    "uvType": "MODEL_XZ",
     "uvScale": 0.5
   },
   {
@@ -5401,14 +5407,16 @@
     "description": "barbarian - Walls - Wooden - Planks",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
+      9587,
+      9588,
       11558,
       11559,
       11560,
       11561
     ],
     "uvType": "MODEL_XY",
-    "uvOrientation": 512,
-    "uvScale": 0.76
+    "uvOrientation": 1536,
+    "uvScale": 0.66
   },
   {
     "description": "Round Rug",
@@ -5541,6 +5549,8 @@
       10381,
       12442,
       12443,
+      12961,
+      15692,
       16560,
       16561,
       17305,
@@ -6185,6 +6195,8 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       7167,
+      14872,
+      15679,
       17306,
       23065,
       31483
@@ -6777,9 +6789,10 @@
     "description": "Objects - Stone - Large Gravestone - Large",
     "baseMaterial": "STONE_SEMIGLOSS",
     "objectIds": [
-      406
+      406,
+      1992
     ],
-    "uvType": "GEOMETRY",
+    "uvType": "VANILLA",
     "flatNormals": true
   },
   {
@@ -8541,11 +8554,12 @@
     "baseMaterial": "PLANT_GRUNGE_2",
     "objectIds": [
       1391,
+      1393,
       1394
     ]
   },
   {
-    "description": "Generic Fern - Small",
+    "description": "Generic - Plant - Fern - Small",
     "baseMaterial": "PLANT_GRUNGE_1",
     "objectIds": [
       1173,
@@ -8553,7 +8567,7 @@
     ]
   },
   {
-    "description": "Generic Leafy Shrub",
+    "description": "Generic - Plant - Leafy Shrub",
     "baseMaterial": "PLANT_GRUNGE_1",
     "objectIds": [
       1392
@@ -8589,5 +8603,22 @@
       3503,
       3504
     ]
+  },
+  {
+    "description": "Generic - Plank - Tables - Picnic Bench",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      611
+    ],
+    "flatNormals": true,
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Objects -  - Wooden - Battlements",
+    "baseMaterial": "WOOD_GRAIN",
+    "objectIds": [
+      1612
+    ],
+    "uvType": "GEOMETRY"
   }
 ]
