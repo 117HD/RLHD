@@ -661,8 +661,8 @@ public class LightManager
 			}
 			LocalPoint localPoint = firstLocalPoint.get();
 
-			int lightX = localPoint.getX();
-			int lightY = localPoint.getY();
+			int lightX = localPoint.getX() + (sizeX % 2 == 0 ? 0 : LOCAL_HALF_TILE_SIZE);
+			int lightY = localPoint.getY() + (sizeY % 2 == 0 ? 0 : LOCAL_HALF_TILE_SIZE);
 			int localSizeX = sizeX * LOCAL_TILE_SIZE;
 			int localSizeY = sizeY * LOCAL_TILE_SIZE;
 
