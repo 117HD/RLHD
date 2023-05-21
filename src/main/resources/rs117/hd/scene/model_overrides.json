@@ -4513,7 +4513,7 @@
     "flatNormals": true
   },
   {
-    "description": "Wooden Door 1",
+    "description": "Wooden Door 1 - Fake Plank",
     "baseMaterial": "DOCK_FENCE",
     "objectIds": [
       1527,
@@ -5808,7 +5808,7 @@
   },
   {
     "description": "Objects - White Mushrooms - Medium",
-    "baseMaterial": "GRUNGE_1",
+    "baseMaterial": "PLANT_GRUNGE_1",
     "objectIds": [
       22796,
       22797,
@@ -5852,7 +5852,7 @@
   },
   {
     "description": "Objects - Huge Mushroom - Medium",
-    "baseMaterial": "GRUNGE_2",
+    "baseMaterial": "PLANT_GRUNGE_2",
     "objectIds": [
       4055,
       4056,
@@ -6184,8 +6184,10 @@
     "description": "Objects - Stool - Wooden – Generic",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      7167,
       17306,
-      23065
+      23065,
+      31483
     ],
     "uvType": "MODEL_XZ",
     "flatNormals": true,
