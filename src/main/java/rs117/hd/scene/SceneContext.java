@@ -104,6 +104,21 @@ public class SceneContext
 		return stagingBufferUvs.position() / UV_SIZE;
 	}
 
+	/**
+	 * Transform local coordinates into world coordinates.
+	 * If the {@link LocalPoint} is not in the scene, this returns untranslated coordinates when in instances.
+	 *
+	 * @param localPoint to transform
+	 * @param plane		 which the local coordinate is on
+	 * @return world coordinate
+	 */
+	public WorldPoint localToWorld(LocalPoint localPoint, int plane)
+	{
+		if (scene.isInstance() && !localPoint.isInScene())
+			return WorldPoint.fromLocal(scene, localPoint.getX(), localPoint.getY(), plane);
+		return WorldPoint.fromLocalInstance(scene, localPoint, plane);
+	}
+
 	public Collection<LocalPoint> worldInstanceToLocals(WorldPoint worldPoint)
 	{
 		return WorldPoint.toLocalInstance(scene, worldPoint)

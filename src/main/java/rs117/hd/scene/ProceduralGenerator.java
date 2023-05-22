@@ -158,7 +158,7 @@ public class ProceduralGenerator
 
 		int x = tile.getSceneLocation().getX();
 		int y = tile.getSceneLocation().getY();
-		WorldPoint worldPos = WorldPoint.fromLocalInstance(sceneContext.scene, tile.getLocalLocation(), tile.getRenderLevel());
+		WorldPoint worldPos = sceneContext.localToWorld(tile.getLocalLocation(), tile.getRenderLevel());
 
 		Scene scene = sceneContext.scene;
 		if (tile.getSceneTilePaint() != null)
