@@ -4307,7 +4307,9 @@
       3507,
       11721,
       11722,
-      23866
+      23866,
+      44598,
+      44599
     ]
   },
   {
@@ -8748,5 +8750,33 @@
     "objectIds": [
       6538
     ]
+  },
+  {
+    "description": "Walls - Desert Treasure Pyramid Stone Doorway - Medium",
+    "baseMaterial": "ROCK_2",
+    "objectIds": [
+      6553,
+      6554,
+      6555,
+      6556
+    ]
+  },
+  {
+    "description": "Wall Decoration - Desert Treasure Pyramid - Golden Torch",
+    "baseMaterial": "METALLIC_2_HIGHGLOSS",
+    "objectIds": [
+      6537
+    ]
+  },
+  {
+    "description": "Object - Desert Treasure Pyramid Wall Sarcophigous - Medium",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      6516,
+      6517
+    ],
+    "uvType": "MODEL_XY",
+    "uvOrientation": 192,
+    "uvScale": 0.17
   }
 ]

@@ -86,6 +86,18 @@ public enum WaterType
 		.duration(0)
 		.normalMap(Material.WATER_NORMAL_MAP_2)),
 	ICE_FLAT(ICE, true),
+	MUDDY_WATER(b -> b
+			.specularStrength(.1f)
+			.specularGloss(100)
+			.normalStrength(.05f)
+			.baseOpacity(.7f)
+			.fresnelAmount(.3f)
+			.surfaceColor(linearToSrgb(rgb(35, 10, 0)))
+			.foamColor(linearToSrgb(rgb(106, 108, 24)))
+			.depthColor(linearToSrgb(rgb(65, 23, 0)))
+			.causticsStrength(0)
+			.duration(2.7f)
+	),
 	;
 
 	public final boolean flat;

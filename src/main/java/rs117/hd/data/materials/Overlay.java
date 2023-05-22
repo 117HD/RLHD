@@ -478,7 +478,7 @@ public enum Overlay {
         .shiftHue(-3)
         .shiftSaturation(-7)),
     // Draynor
-    DRAYNOR_SEWERS(p -> p.area(Area.DRAYNOR_SEWERS).ids(89).waterType(WaterType.SWAMP_WATER)),
+    DRAYNOR_SEWERS(p -> p.area(Area.DRAYNOR_SEWERS).ids(89).waterType(WaterType.MUDDY_WATER)),
 
     // Draynor manor
     DRAYNOR_MANOR_TILE_DARK(2, Area.DRAYNOR_MANOR_INTERIOR, GroundMaterial.MARBLE_1, p -> p.blended(false)),
