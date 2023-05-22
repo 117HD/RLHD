@@ -1300,8 +1300,6 @@
   {
     "description": "GRASS",
     "objectIds": [
-      1257,
-      1258,
       3547,
       3548,
       3549,
@@ -1397,6 +1395,8 @@
   {
     "description": "Short grass that shouldn't cast shadows",
     "objectIds": [
+      1257,
+      1258,
       1259,
       4530,
       4735,
