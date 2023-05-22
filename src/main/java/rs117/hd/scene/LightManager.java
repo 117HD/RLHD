@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Optional;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
@@ -636,32 +637,23 @@ public class LightManager
 				continue;
 			}
 
-			int instancedPlane = tileObject.getPlane();
-			WorldPoint worldLocation = sceneContext.localToWorld(tileObject.getLocalLocation(), instancedPlane);
-
 			// prevent duplicate lights being spawned for the same object
-			int hash = tileObjectHash(worldLocation, tileObject);
+			int hash = tileObjectHash(tileObject);
 			boolean isDuplicate = sceneContext.lights.stream()
-				.anyMatch(light -> light.object != null && hash == tileObjectHash(
-					sceneContext.localToWorld(light.object.getLocalLocation(), light.object.getPlane()),
-					light.object));
+				.anyMatch(light -> light.object == tileObject || hash == tileObjectHash(light.object));
 			if (isDuplicate)
 			{
 				continue;
 			}
 
+			int localPlane = tileObject.getPlane();
 			SceneLight light = new SceneLight(
-				worldLocation.getX(), worldLocation.getY(), instancedPlane, l.height, l.alignment, l.radius,
+				0, 0, localPlane, l.height, l.alignment, l.radius,
 				l.strength, l.color, l.type, l.duration, l.range, l.fadeInDuration);
-			Optional<LocalPoint> firstLocalPoint = sceneContext.worldInstanceToLocals(worldLocation).stream().findFirst();
-			if (!firstLocalPoint.isPresent())
-			{
-				continue;
-			}
-			LocalPoint localPoint = firstLocalPoint.get();
 
-			int lightX = localPoint.getX() + (sizeX % 2 == 0 ? 0 : LOCAL_HALF_TILE_SIZE);
-			int lightY = localPoint.getY() + (sizeY % 2 == 0 ? 0 : LOCAL_HALF_TILE_SIZE);
+			LocalPoint localPoint = tileObject.getLocalLocation();
+			int lightX = localPoint.getX();
+			int lightY = localPoint.getY();
 			int localSizeX = sizeX * LOCAL_TILE_SIZE;
 			int localSizeY = sizeY * LOCAL_TILE_SIZE;
 
@@ -760,11 +752,15 @@ public class LightManager
 		}
 	}
 
-	private int tileObjectHash(WorldPoint worldPoint, TileObject tileObject)
+	private int tileObjectHash(@Nullable TileObject tileObject)
 	{
-		int hash = worldPoint.getX();
-		hash = hash * 31 + worldPoint.getY();
-		hash = hash * 31 + worldPoint.getPlane();
+		if (tileObject == null)
+			return 0;
+
+		LocalPoint local = tileObject.getLocalLocation();
+		int hash = local.getX();
+		hash = hash * 31 + local.getY();
+		hash = hash * 31 + tileObject.getPlane();
 		hash = hash * 31 + tileObject.getId();
 		return hash;
 	}
