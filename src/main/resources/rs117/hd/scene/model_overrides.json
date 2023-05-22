@@ -4606,7 +4606,7 @@
   },
   {
     "description": "Wooden Door 2 - 4 Panel",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       1521,
       1522,
@@ -4618,7 +4618,8 @@
       20925
     ],
     "flatNormals": true,
-    "uvOrientation": 512,
+    "uvType": "MODEL_XY",
+    "uvOrientation": 1536,
     "uvScale": 0.4
   },
   {
