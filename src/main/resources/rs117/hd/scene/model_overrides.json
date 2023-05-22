@@ -3131,6 +3131,38 @@
     "uvType": "MODEL_XZ"
   },
   {
+    "description": "Desert pyramid walls - Interior",
+    "baseMaterial": "ROCK_2",
+    "objectIds": [
+      6505,
+      6512,
+      6525,
+      6526,
+      6529,
+      6530,
+      6531
+    ]
+  },
+  {
+    "description": "Desert pyramid Tunnel",
+    "baseMaterial": "ROCK_2",
+    "objectIds": [
+      6481
+    ]
+  },
+  {
+    "description": "Desert pyramid Door",
+    "baseMaterial": "WALL_STONE",
+    "objectIds": [
+      6545,
+      6546,
+      6547,
+      6548
+    ],
+    "flatNormals": true,
+    "uvType": "MODEL_XY"
+  },
+  {
     "description": "Sophanem pyramid door",
     "baseMaterial": "MARBLE_3",
     "objectIds": [
@@ -3820,6 +3852,7 @@
     "description": "Stalagmite - Tan",
     "baseMaterial": "STONE",
     "objectIds": [
+      5047,
       12219,
       12575,
       12576,
@@ -3931,6 +3964,7 @@
     "objectIds": [
       1106,
       5615,
+      9531,
       25601
     ]
   },
@@ -4933,8 +4967,6 @@
       5009,
       5035,
       5037,
-      5038,
-      5039,
       5604,
       5605,
       5606,
@@ -5080,6 +5112,7 @@
     "objectIds": [
       28964,
       28999,
+      29048,
       29018
     ]
   },
@@ -5556,7 +5589,6 @@
       9533,
       9534,
       9535,
-      9536,
       10374,
       10378,
       10379,
@@ -7024,7 +7056,7 @@
       21103,
       21105
     ],
-    "uvType": "WORLD_XZ",
+    "uvType": "MODEL_XZ",
     "uvScale": 2.0
   },
   {
@@ -7033,6 +7065,7 @@
     "objectIds": [
       5033,
       5034,
+      11437,
       21104
     ],
     "uvType": "WORLD_XZ",
@@ -8058,6 +8091,7 @@
     "description": "Nardah Worn Stone Stairs",
     "baseMaterial": "STONE_LOWGLOSS",
     "objectIds": [
+      6496,
       10507
     ],
     "uvType": "GEOMETRY"
@@ -8666,6 +8700,53 @@
       872,
       3421,
       6480
+    ]
+  },
+  {
+    "description": "Objects - Stone - Dessous Gravestone - Large",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      6437
+    ],
+    "uvType": "GEOMETRY",
+    "flatNormals": true
+  },
+  {
+    "description": "Double Row Fence",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      3729
+    ],
+    "uvType": "MODEL_XY",
+    "flatNormals": true,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Objects - Snowy Rock - Medium",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      5038,
+      5039,
+      6454
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Objects - Desert Treasure Pyramid Obilisk - Large",
+    "baseMaterial": "ROCK_2",
+    "objectIds": [
+      6482,
+      6484,
+      6485,
+      6491
+    ]
+  },
+  {
+    "description": "Objects - Desert Treasure Pyramid Statue - Medium",
+    "baseMaterial": "ROCK_2",
+    "objectIds": [
+      6538
     ]
   }
 ]
