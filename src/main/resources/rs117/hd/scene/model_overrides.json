@@ -11315,5 +11315,35 @@
     "description": "Crafting Guild Blacksmith's tools",
     "objectIds": [ 2098 ],
     "flatNormals": true
+      1862
+    ]
+  },
+  {
+    "description": "Stronghold Of Security War Metallic Floor",
+    "baseMaterial": "METALLIC_2_GLOSS",
+    "objectIds": [
+      20655
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Stronghold Of Security War Metallic Walls",
+    "baseMaterial": "METALLIC_2_GLOSS",
+    "objectIds": [
+      19173,
+      19204,
+      19208,
+      20659
+    ],
+    "uvType": "MODEL_YZ"
+  },
+  {
+    "description": "Stronghold Of Security War Metallic Ladder",
+    "baseMaterial": "METALLIC_2_GLOSS",
+    "objectIds": [
+      20784,
+      20785
+    ],
+    "uvType": "MODEL_YZ"
   }
 ]
