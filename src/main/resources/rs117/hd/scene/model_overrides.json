@@ -8751,7 +8751,8 @@
     "baseMaterial": "ROCK_2",
     "objectIds": [
       6538
-    ]
+    ],
+    "uvType": "GEOMETRY"
   },
   {
     "description": "Walls - Desert Treasure Pyramid Stone Doorway - Medium",
@@ -8784,5 +8785,22 @@
     "uvType": "MODEL_XY",
     "uvOrientation": 192,
     "uvScale": 0.17
+  },
+  {
+    "description": "Object - Desert Treasure Pyramid - Alter - Large",
+    "baseMaterial": "GRAY_25",
+    "objectIds": [
+      6552
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.23
+  },
+  {
+    "description": "Object - Desert Treasure Pyramid - Lectern - Medium",
+    "baseMaterial": "GRAY_25",
+    "objectIds": [
+      40357
+    ],
+    "uvType": "GEOMETRY"
   }
 ]
