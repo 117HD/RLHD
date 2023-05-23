@@ -4781,8 +4781,12 @@
   },
   {
     "description": "Kharidian Sandstone",
-    "baseMaterial": "STONE",
+    "baseMaterial": "STONE_NORMALED",
     "objectIds": [
+      6584,
+      6585,
+      6586,
+      6587,
       11099,
       11100,
       11101,
@@ -4795,7 +4799,7 @@
       11108
     ],
     "inheritTileColorType": "OVERLAY",
-    "uvType": "WORLD_XZ",
+    "uvType": "MODEL_XZ",
     "uvScale": 0.6
   },
   {
@@ -8039,7 +8043,7 @@
     "uvOrientation": 512
   },
   {
-    "description": "Nardah Walls",
+    "description": "Nardah Sophanem - Walls - Rock",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       6590,
@@ -8053,7 +8057,7 @@
       6601
     ],
     "uvType": "MODEL_XY",
-    "uvOrientation": 512
+    "uvScale": 0.6
   },
   {
     "description": "Nardah Walls - Flipped",
@@ -8062,12 +8066,12 @@
       6588,
       6589
     ],
-    "uvType": "MODEL_YZ",
-    "uvOrientation": 512
+    "uvType": "MODEL_XY",
+    "uvScale": 0.6
   },
   {
     "description": "Nardah Walls Rubble",
-    "baseMaterial": "STONE_LOWGLOSS",
+    "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       10503
     ],
@@ -8166,7 +8170,7 @@
     ],
     "uvType": "MODEL_XY",
     "uvOrientation": 512,
-    "uvScale": 0.8
+    "uvScale": 0.6
   },
   {
     "description": "Sophamena Wall Decoration",
