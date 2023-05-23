@@ -3135,7 +3135,6 @@
     "baseMaterial": "ROCK_2",
     "objectIds": [
       6505,
-      6512,
       6525,
       6526,
       6529,
@@ -8772,9 +8771,13 @@
     ]
   },
   {
-    "description": "Object - Desert Treasure Pyramid Wall Sarcophigous - Medium",
+    "description": "Object - Desert Treasure Pyramid - Sarcophagus - Medium",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
+      6512,
+      6513,
+      6514,
+      6515,
       6516,
       6517
     ],
