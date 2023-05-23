@@ -5591,6 +5591,9 @@
     "description": "Objects - Wooden - Crate",
     "baseMaterial": "DOCK_FENCE",
     "objectIds": [
+      5106,
+      5107,
+      5110,
       7514,
       9533,
       9534,
@@ -8670,6 +8673,7 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       611,
+      7430,
       9532
     ],
     "flatNormals": true,
