@@ -632,6 +632,9 @@ public enum Material {
 		.setSpecular(0.3f, 20)
 		.setBrightness(0.75f)
 	),
+	OOZE(DIRT_1, p -> p
+			.setSpecular(1.5f, 800)
+	),
 
 
 	// Seasonal

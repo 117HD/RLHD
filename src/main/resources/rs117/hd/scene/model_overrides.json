@@ -11378,8 +11378,8 @@
     "uvScale": 0.4
   },
   {
-    "description": "Stronghold Of Security Petilance Plant Walls",
-    "baseMaterial": "PLANT_GRUNGE_2",
+    "description": "Stronghold Of Security Petilance Walls",
+    "baseMaterial": "OOZE",
     "objectIds": [
       23648,
       23649,
@@ -11396,8 +11396,8 @@
     "uvType": "GEOMETRY"
   },
   {
-    "description": "Stronghold Of Security Petilance Plant Walls",
-    "baseMaterial": "PLANT_GRUNGE_2",
+    "description": "Stronghold Of Security Petilance Doors",
+    "baseMaterial": "OOZE",
     "objectIds": [
       23653,
       23654
@@ -11408,7 +11408,7 @@
   },
   {
     "description": "Stronghold Of Security Petilance Plant Ladder",
-    "baseMaterial": "PLANT_GRUNGE_2",
+    "baseMaterial": "OOZE",
     "objectIds": [
       23705,
       23706
