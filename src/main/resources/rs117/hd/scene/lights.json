@@ -30893,5 +30893,98 @@
     "objectIds": [
       11601
     ]
+  },
+  {
+    "description": "STRONGHOLD_OF_SECURITY_PORTALS",
+    "height": 30,
+    "alignment": "CENTER",
+    "radius": 500,
+    "strength": 7.5,
+    "color": [
+      255,
+      216,
+      87
+    ],
+    "type": "PULSE",
+    "duration": 1550,
+    "range": 20,
+    "objectIds": [
+      19005,
+      20786,
+      23707,
+      23922
+    ]
+  },
+  {
+    "description": "STRONGHOLD_OF_SECURITY_WAR_LIGHT",
+    "height": 30,
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 7.5,
+    "color": [
+      255,
+      80,
+      87
+    ],
+    "type": "PULSE",
+    "duration": 1,
+    "range": 20,
+    "objectIds": [
+      19204
+    ]
+  },
+  {
+    "description": "STRONGHOLD_OF_SECURITY_FAMINE_LIGHT",
+    "height": 186,
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 7.5,
+    "color": [
+      255,
+      216,
+      87
+    ],
+    "type": "PULSE",
+    "duration": 1,
+    "range": 20,
+    "objectIds": [
+
+    ]
+  },
+  {
+    "description": "STRONGHOLD_OF_SECURITY_PESTILENCE_LIGHT",
+    "height": 30,
+    "alignment": "FRONT",
+    "radius": 400,
+    "strength": 7.5,
+    "color": [
+      90,
+      233,
+      87
+    ],
+    "type": "PULSE",
+    "duration": 1,
+    "range": 20,
+    "objectIds": [
+      23651
+    ]
+  },
+  {
+    "description": "STRONGHOLD_OF_SECURITY_DEATH_LIGHT",
+    "height": 190,
+    "alignment": "FRONT",
+    "radius": 320,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      23715
+    ]
   }
 ]
