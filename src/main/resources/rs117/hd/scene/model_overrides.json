@@ -11345,5 +11345,49 @@
       20785
     ],
     "uvType": "MODEL_YZ"
+  },
+  {
+    "description": "Stronghold Of Security Famine Dirt Walls",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [
+      17003,
+      17004,
+      17005,
+      17007
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Stronghold Of Security Famine - Bone Structures ",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      17006
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.4
+  },
+  {
+    "description": "Stronghold Of Security Petilance Plant Walls",
+    "baseMaterial": "PLANT_GRUNGE_2",
+    "objectIds": [
+      23648,
+      23649,
+      23650,
+      23651,
+      23657,
+      23658,
+      23659,
+      23660,
+      23661
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Stronghold Of Security Petilance Plant Ladder",
+    "baseMaterial": "PLANT_GRUNGE_2",
+    "objectIds": [
+      23705,
+      23706
+    ]
   }
 ]
