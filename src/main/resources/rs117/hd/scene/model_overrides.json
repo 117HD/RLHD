@@ -11367,6 +11367,17 @@
     "uvScale": 0.4
   },
   {
+    "description": "Stronghold Of Security Famine - Ladder ",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      19003,
+      19004
+    ],
+    "uvType": "MODEL_XY",
+    "uvOrientation": 512,
+    "uvScale": 0.4
+  },
+  {
     "description": "Stronghold Of Security Petilance Plant Walls",
     "baseMaterial": "PLANT_GRUNGE_2",
     "objectIds": [
@@ -11374,13 +11385,26 @@
       23649,
       23650,
       23651,
+      23652,
       23657,
       23658,
       23659,
       23660,
-      23661
+      23661,
+      23662
     ],
     "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Stronghold Of Security Petilance Plant Walls",
+    "baseMaterial": "PLANT_GRUNGE_2",
+    "objectIds": [
+      23653,
+      23654
+    ],
+    "uvType": "MODEL_YZ",
+    "uvScale": 0.4,
+    "uvOrientation": 512
   },
   {
     "description": "Stronghold Of Security Petilance Plant Ladder",
