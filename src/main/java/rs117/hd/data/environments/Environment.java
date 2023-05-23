@@ -104,6 +104,16 @@ public enum Environment
 		.setDirectionalStrength(0.5f)
 		.setLightDirection(260f, 10f)
 	),
+	// Stronghold of Security
+	STRONGHOLD_OF_SECURITY(Area.STRONGHOLD_OF_SECURITY, new Properties()
+			.setFogColor("#000000")
+			.setFogDepth(50)
+			.setAmbientStrength(1.5f)
+			.setAmbientColor("#AAAFB6")
+			.setDirectionalStrength(1.0f)
+			.setDirectionalColor("#FFFFFF")
+			.setLightDirection(260f, 10f)
+	),
 	// A Soul's Bane
 	TOLNA_DUNGEON_ANGER(Area.TOLNA_DUNGEON_ANGER, new Properties()
 		.setFogColor("#290000")
