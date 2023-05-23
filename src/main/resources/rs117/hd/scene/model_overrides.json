@@ -11389,5 +11389,14 @@
       23705,
       23706
     ]
+  },
+  {
+    "description": "Stronghold Of Security Rock Entrance",
+    "baseMaterial": "ROCK_2",
+    "objectIds": [
+      20790
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.3
   }
 ]
