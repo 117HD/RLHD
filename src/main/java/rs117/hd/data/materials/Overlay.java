@@ -193,6 +193,10 @@ public enum Overlay {
     KHARID_PATHS_3(25, Area.KHARID_DESERT_REGION, GroundMaterial.DIRT, p -> p.saturation(3).hue(6)),
     GIANTS_PLATEAU_CABBAGE_PATCH_FIX(14, Area.GIANTS_PLATEAU_CABBAGE_PATCH, GroundMaterial.DIRT, p -> p.blended(false)),
     PVP_ARENA_PATH(227, Area.PVP_ARENA, GroundMaterial.DIRT),
+    DESERT_TREASURE_INTERIOR_FLOOR(GroundMaterial.MARBLE_2_GLOSS, p -> p
+            .area(Area.DESERT_TREASURE_PYRAMID)
+            .ids(21)
+    ),
 
     // Falador
     FALADOR_EAST_BANK_PATH_FIX_2(-119, Area.FALADOR_EAST_BANK_PATH_FIX_2, GroundMaterial.FALADOR_PATHS, p -> p
