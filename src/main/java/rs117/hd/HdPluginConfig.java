@@ -691,6 +691,20 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
+	String KEY_VANILLA_COLOR_BANDING = "vanillaColorBanding";
+	@ConfigItem(
+		keyName = KEY_VANILLA_COLOR_BANDING,
+		name = "Vanilla Color Banding",
+		description =
+			"Blend between colors similarly to how it works in vanilla, with clearly defined bands of color.<br>" +
+			"This isn't really noticeable on textured surfaces, and is intended to be used without ground textures.",
+		position = 5,
+		section = miscellaneousSettings
+	)
+	default boolean vanillaColorBanding() {
+		return false;
+	}
+
 
 	/*====== Experimental settings ======*/
 

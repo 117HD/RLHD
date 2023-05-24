@@ -136,6 +136,7 @@ import static rs117.hd.HdPluginConfig.KEY_MODEL_CACHE_SIZE;
 import static rs117.hd.HdPluginConfig.KEY_MODEL_CACHING;
 import static rs117.hd.HdPluginConfig.KEY_SHADOW_MODE;
 import static rs117.hd.HdPluginConfig.KEY_SHADOW_TRANSPARENCY;
+import static rs117.hd.HdPluginConfig.KEY_VANILLA_COLOR_BANDING;
 import static rs117.hd.HdPluginConfig.KEY_WINTER_THEME;
 import static rs117.hd.utils.ResourcePath.path;
 
@@ -800,6 +801,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 					return String.format("#define %s %d", key, configShadowMode.ordinal());
 				case "SHADOW_TRANSPARENCY":
 					return String.format("#define %s %d", key, config.enableShadowTransparency() ? 1 : 0);
+				case "VANILLA_COLOR_BANDING":
+					return String.format("#define %s %d", key, config.vanillaColorBanding() ? 1 : 0);
 			}
 			return null;
 		});
@@ -2393,6 +2396,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			case "colorBlindMode":
 			case "parallaxMappingMode":
 			case "macosIntelWorkaround":
+			case KEY_VANILLA_COLOR_BANDING:
 				clientThread.invoke(this::recompilePrograms);
 				break;
 			case "unlockFps":
