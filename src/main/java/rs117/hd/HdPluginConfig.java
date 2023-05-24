@@ -584,7 +584,7 @@ public interface HdPluginConfig extends Config
 	String KEY_MODEL_BATCHING = "useModelBatching";
 	@ConfigItem(
 		keyName = KEY_MODEL_BATCHING,
-		name = "Enable model batching",
+		name = "Model Batching",
 		description =
 			"Model batching improves performance by reusing identical models within the same frame.<br>" +
 			"May cause instability and graphical bugs, particularly if Jagex makes engine changes.",
@@ -596,7 +596,7 @@ public interface HdPluginConfig extends Config
 	String KEY_MODEL_CACHING = "useModelCaching";
 	@ConfigItem(
 		keyName = KEY_MODEL_CACHING,
-		name = "Enable model caching",
+		name = "Model Caching",
 		description =
 			"Model caching improves performance by saving and reusing model data from previous frames.<br>" +
 			"May cause instability or graphical bugs, particularly if Jagex makes engine changes.",
@@ -612,7 +612,7 @@ public interface HdPluginConfig extends Config
 	)
 	@ConfigItem(
 		keyName = KEY_MODEL_CACHE_SIZE,
-		name = "Model cache size (MiB)",
+		name = "Cache Size (MiB)",
 		description =
 			"Size of the model cache in mebibytes (slightly more than megabytes).<br>" +
 			"Generally, 2048 MiB is plenty, with diminishing returns the higher you go.<br>" +
@@ -626,7 +626,7 @@ public interface HdPluginConfig extends Config
 
 	@ConfigItem(
 		keyName = "loadingClearCache",
-		name = "Clear cache when loading",
+		name = "Clear Cache When Loading",
 		description =
 			"Clear the model cache when the game loads a new scene.<br>" +
 			"This should generally only be used if the cache size is lower than 512 MiB,<br>" +
@@ -651,7 +651,7 @@ public interface HdPluginConfig extends Config
 
 	@ConfigItem(
 		keyName = "macosIntelWorkaround",
-		name = "Fix white color issue on Intel Macs",
+		name = "Fix white color issue on Macs",
 		description = "Workaround for visual artifacts found on some Intel GPU drivers on macOS.",
 		warning =
 			"This setting can cause RuneLite to crash, and it can be difficult to undo.\n" +
@@ -681,7 +681,7 @@ public interface HdPluginConfig extends Config
 	String KEY_WINTER_THEME = "winterTheme0";
 	@ConfigItem(
 		keyName = KEY_WINTER_THEME,
-		name = "Winter theme",
+		name = "Winter Theme",
 		description = "Covers the Gielinor overworld with a layer of snow!",
 		position = 3,
 		section = miscellaneousSettings
@@ -694,7 +694,7 @@ public interface HdPluginConfig extends Config
 	String KEY_LEGACY_GREY_COLORS = "reduceOverExposure"; // poorly named config key for legacy reasons
 	@ConfigItem(
 		keyName = KEY_LEGACY_GREY_COLORS,
-		name = "Legacy grey colors",
+		name = "Legacy Grey Colors",
 		description =
 			"Previously, HD attempted to reduce over-exposure by capping the maximum color brightness,<br>" +
 			"which changed white colors into dull shades of grey. This option brings back that old behaviour.",
