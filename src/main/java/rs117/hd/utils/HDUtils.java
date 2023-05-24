@@ -24,6 +24,7 @@
  */
 package rs117.hd.utils;
 
+import java.util.HashSet;
 import java.util.Random;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +33,7 @@ import net.runelite.api.Scene;
 import net.runelite.api.coords.LocalPoint;
 import net.runelite.api.coords.WorldPoint;
 
+import static net.runelite.api.Constants.REGION_SIZE;
 import static net.runelite.api.Constants.SCENE_SIZE;
 
 @Slf4j
@@ -366,9 +368,41 @@ public class HDUtils
 		}
 	}
 
-	public static WorldPoint getSceneBase(Scene scene)
+	public static HashSet<Integer> getSceneRegionIds(Scene scene)
 	{
-		return getSceneBase(scene, 0);
+		HashSet<Integer> regionIds = new HashSet<>();
+
+		if (scene.isInstance())
+		{
+			// If the center chunk is invalid, pick any valid chunk and hope for the best
+			int[][][] chunks = scene.getInstanceTemplateChunks();
+			for (int[][] plane : chunks)
+			{
+				for (int[] column : plane)
+				{
+					for (int chunk : column)
+					{
+						if (chunk == -1)
+							continue;
+
+						// Extract chunk coordinates
+						int x = chunk >> 14 & 0x3FF;
+						int y = chunk >> 3 & 0x7FF;
+						regionIds.add((x >> 3) << 8 | y >> 3);
+					}
+				}
+			}
+		}
+		else
+		{
+			int baseX = scene.getBaseX();
+			int baseY = scene.getBaseY();
+			for (int x = 0; x < SCENE_SIZE; x += REGION_SIZE)
+				for (int y = 0; y < SCENE_SIZE; y += REGION_SIZE)
+					regionIds.add((baseX + x >> 6) << 8 | baseY + y >> 6);
+		}
+
+		return regionIds;
 	}
 
 	/**
@@ -383,36 +417,49 @@ public class HDUtils
 	{
 		int baseX = scene.getBaseX();
 		int baseY = scene.getBaseY();
+
 		if (scene.isInstance())
 		{
 			// Assume the player is loaded into the center chunk, and calculate the world space position of the lower
 			// left corner of the scene, assuming well-behaved template chunks are used to create the instance.
-			int t = scene.getInstanceTemplateChunks()[plane][6][6];
-			baseX = (t >> 14 & 0x3FF);
-			baseY = (t >> 3 & 0x7FF);
+			int chunkX = 6, chunkY = 6;
+			int chunk = scene.getInstanceTemplateChunks()[plane][chunkX][chunkY];
+			if (chunk == -1)
+			{
+				// If the center chunk is invalid, pick any valid chunk and hope for the best
+				int[][] chunks = scene.getInstanceTemplateChunks()[plane];
+				outer:
+				for (chunkX = 0; chunkX < chunks.length; chunkX++)
+				{
+					for (chunkY = 0; chunkY < chunks[chunkX].length; chunkY++)
+					{
+						chunk = chunks[chunkX][chunkY];
+						if (chunk != -1)
+						{
+							break outer;
+						}
+					}
+				}
+			}
+
+			// Extract chunk coordinates
+			baseX = chunk >> 14 & 0x3FF;
+			baseY = chunk >> 3 & 0x7FF;
 			// Shift to what would be the lower left corner chunk if the template chunks were contiguous on the map
-			baseX -= 6;
-			baseY -= 6;
-			// Chunk coordinates to world coordinates
+			baseX -= chunkX;
+			baseY -= chunkY;
+			// Transform to world coordinates
 			baseX <<= 3;
 			baseY <<= 3;
 		}
+
 		return new WorldPoint(baseX, baseY, plane);
 	}
 
-	public static WorldPoint getSceneCenter(Scene scene, int plane)
+	public static WorldPoint cameraSpaceToWorldPoint(Client client, int x, int z)
 	{
-		WorldPoint base = getSceneBase(scene, plane);
-		return new WorldPoint(base.getX() + SCENE_SIZE / 2, base.getY() + SCENE_SIZE / 2, plane);
-	}
-
-	public static AABB getSceneBounds(Scene scene)
-	{
-		WorldPoint base = getSceneBase(scene);
-		return new AABB(base.getX(), base.getY(), base.getX() + SCENE_SIZE, base.getY() + SCENE_SIZE);
-	}
-
-	public static WorldPoint cameraSpaceToWorldPoint(Client client, int x, int z) {
-		return WorldPoint.fromLocalInstance(client, new LocalPoint(x + client.getCameraX2(), z + client.getCameraZ2()));
+		return WorldPoint.fromLocalInstance(client, new LocalPoint(
+			x + client.getCameraX2(),
+			z + client.getCameraZ2()));
 	}
 }

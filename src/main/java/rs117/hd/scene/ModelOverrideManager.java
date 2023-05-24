@@ -14,9 +14,9 @@ import rs117.hd.HdPlugin;
 import rs117.hd.model.ModelPusher;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.AABB;
-import rs117.hd.utils.Env;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ModelHash;
+import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
 
 import static rs117.hd.utils.ResourcePath.path;
@@ -24,8 +24,7 @@ import static rs117.hd.utils.ResourcePath.path;
 @Singleton
 @Slf4j
 public class ModelOverrideManager {
-    private static final String ENV_MODEL_OVERRIDES = "RLHD_MODEL_OVERRIDES_PATH";
-    private static final ResourcePath modelOverridesPath =  Env.getPathOrDefault(ENV_MODEL_OVERRIDES,
+    private static final ResourcePath MODEL_OVERRIDES_PATH =  Props.getPathOrDefault("rlhd.model-overrides-path",
         () -> path(ModelOverrideManager.class, "model_overrides.json"));
 
     @Inject
@@ -44,7 +43,7 @@ public class ModelOverrideManager {
     private final HashMap<Long, AABB[]> modelsToHide = new HashMap<>();
 
     public void startUp() {
-        modelOverridesPath.watch(path -> {
+        MODEL_OVERRIDES_PATH.watch(path -> {
             modelOverrides.clear();
             modelsToHide.clear();
 
@@ -77,7 +76,7 @@ public class ModelOverrideManager {
         ModelOverride old = modelOverrides.put(uuid, entry);
         modelsToHide.put(uuid, entry.hideInAreas);
 
-        if (Env.DEVELOPMENT && old != null) {
+        if (Props.DEVELOPMENT && old != null) {
             if (entry.hideInAreas.length > 0) {
                 log.warn("Replacing ID {} from '{}' with hideInAreas-override '{}'. This is likely a mistake...",
                     ModelHash.getIdOrIndex(uuid), old.description, entry.description);

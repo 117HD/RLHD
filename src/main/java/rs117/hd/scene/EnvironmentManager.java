@@ -24,7 +24,6 @@
  */
 package rs117.hd.scene;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -140,6 +139,9 @@ public class EnvironmentManager
 
 	private boolean lightningEnabled = false;
 	private boolean isOverworld = false;
+	// some necessary data for reloading the scene while in POH to fix major performance loss
+	private boolean isInHouse = false;
+	private int previousPlane;
 
 	public void startUp()
 	{
@@ -155,7 +157,7 @@ public class EnvironmentManager
 	 */
 	public void update(SceneContext sceneContext, WorldPoint position)
 	{
-		boolean skipTransition = false;
+		isOverworld = Area.OVERWORLD.containsPoint(position);
 
 		// skip the transitional fade if the player has moved too far
 		// since the previous frame. results in an instant transition when
@@ -164,14 +166,19 @@ public class EnvironmentManager
 			Math.abs(position.getX() - previousPosition.getX()),
 			Math.abs(position.getY() - previousPosition.getY())
 		);
-
 		previousPosition = position;
 
-		if (tileChange >= SKIP_TRANSITION_DISTANCE)
-		{
-			skipTransition = true;
+		// reload the scene if the player is in a house and their plane changed
+		// this greatly improves the performance as it keeps the scene buffer up to date
+		if (isInHouse) {
+			int plane = client.getPlane();
+			if (previousPlane != plane) {
+				plugin.reloadSceneNextGameTick();
+				previousPlane = plane;
+			}
 		}
 
+		boolean skipTransition = tileChange >= SKIP_TRANSITION_DISTANCE;
 		for (Environment environment : sceneContext.environments)
 		{
 			if (environment.getArea().containsPoint(position))
@@ -179,12 +186,13 @@ public class EnvironmentManager
 				if (environment != currentEnvironment)
 				{
 					if (environment == Environment.PLAYER_OWNED_HOUSE || environment == Environment.PLAYER_OWNED_HOUSE_SNOWY) {
-						plugin.setInHouse(true);
-
 						// POH takes 1 game tick to enter, then 2 game ticks to load per floor
 						plugin.reloadSceneIn(7);
+						isInHouse = true;
 					} else {
-						plugin.setInHouse(false);
+						// Avoid an unnecessary scene reload if the player has already left the POH
+						plugin.abortSceneReload();
+						isInHouse = false;
 					}
 
 					plugin.setInGauntlet(environment == Environment.THE_GAUNTLET || environment == Environment.THE_GAUNTLET_CORRUPTED);
@@ -365,28 +373,30 @@ public class EnvironmentManager
 		// of their Areas match any of the ones in the current scene.
 		// if so, add them to a list.
 
-		log.debug("Adding environments for scene {}", sceneContext.bounds);
+		log.debug("Adding environments for scene with regions: {}", sceneContext.regionIds);
 
-		sceneContext.environments = new ArrayList<>();
-		for (Environment environment: Environment.values())
+		AABB[] regions = sceneContext.regionIds.stream()
+			.map(AABB::new)
+			.toArray(AABB[]::new);
+
+		sceneContext.environments.clear();
+		outer:
+		for (Environment environment : Environment.values())
 		{
-			for (AABB aabb : environment.getArea().getAabbs())
+			for (AABB region : regions)
 			{
-				if (sceneContext.bounds.intersects(aabb))
+				for (AABB aabb : environment.getArea().getAabbs())
 				{
-					log.debug("Added environment: {}", environment);
-					sceneContext.environments.add(environment);
-					break;
+					if (region.intersects(aabb))
+					{
+						log.debug("Added environment: {}", environment);
+						sceneContext.environments.add(environment);
+						continue outer;
+					}
 				}
 			}
 		}
-
-		WorldPoint sceneCenter = HDUtils.getSceneCenter(sceneContext.scene, client.getPlane());
-		isOverworld = Area.OVERWORLD.containsPoint(sceneCenter);
-		update(sceneContext, sceneCenter);
 	}
-
-
 
 	/* lightning */
 	private static final float[] LIGHTNING_COLOR = new float[]{.25f, .25f, .25f};
@@ -477,6 +487,9 @@ public class EnvironmentManager
 		return currentEnvironment.isUnderwater();
 	}
 
+	/**
+	 * This should not be used from the scene loader thread
+	 */
 	private boolean useWinterTheme() {
 		return plugin.configWinterTheme && isOverworld;
 	}

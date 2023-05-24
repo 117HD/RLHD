@@ -118,11 +118,11 @@ import rs117.hd.scene.lights.SceneLight;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.scene.model_overrides.ObjectType;
 import rs117.hd.utils.DeveloperTools;
-import rs117.hd.utils.Env;
 import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.Mat4;
 import rs117.hd.utils.PopupUtils;
+import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.GpuIntBuffer;
@@ -136,6 +136,7 @@ import static rs117.hd.HdPluginConfig.KEY_MODEL_CACHE_SIZE;
 import static rs117.hd.HdPluginConfig.KEY_MODEL_CACHING;
 import static rs117.hd.HdPluginConfig.KEY_SHADOW_MODE;
 import static rs117.hd.HdPluginConfig.KEY_SHADOW_TRANSPARENCY;
+import static rs117.hd.HdPluginConfig.KEY_VANILLA_COLOR_BANDING;
 import static rs117.hd.HdPluginConfig.KEY_WINTER_THEME;
 import static rs117.hd.utils.ResourcePath.path;
 
@@ -166,7 +167,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	public static final int UV_SIZE = 4; // 4 floats per vertex
 	public static final int NORMAL_SIZE = 4; // 4 floats per vertex
 
-	private static final String ENV_SHADER_PATH = "RLHD_SHADER_PATH";
 	private static final int[] eightIntWrite = new int[8];
 
 	@Inject
@@ -269,8 +269,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		.add(GL_VERTEX_SHADER, "vertui.glsl")
 		.add(GL_FRAGMENT_SHADER, "fragui.glsl");
 
-	private static final ResourcePath shaderPath = Env
-		.getPathOrDefault(ENV_SHADER_PATH, () -> path(HdPlugin.class))
+	private static final ResourcePath SHADER_PATH = Props
+		.getPathOrDefault("rlhd.shader-path", () -> path(HdPlugin.class))
 		.chroot();
 
 	private int glProgram;
@@ -403,11 +403,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	private float elapsedTime;
 
 	private int gameTicksUntilSceneReload = 0;
-
-	// some necessary data for reloading the scene while in POH to fix major performance loss
-	@Setter
-	private boolean isInHouse = false;
-	private int previousPlane;
 
 	// Config settings used very frequently - thousands/frame
 	public boolean configGroundTextures = false;
@@ -806,13 +801,15 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 					return String.format("#define %s %d", key, configShadowMode.ordinal());
 				case "SHADOW_TRANSPARENCY":
 					return String.format("#define %s %d", key, config.enableShadowTransparency() ? 1 : 0);
+				case "VANILLA_COLOR_BANDING":
+					return String.format("#define %s %d", key, config.vanillaColorBanding() ? 1 : 0);
 			}
 			return null;
 		});
 
 		template.add(key -> {
 			try {
-				return shaderPath.resolve(key).loadString();
+				return SHADER_PATH.resolve(key).loadString();
 			} catch (IOException ex) {
 				throw new RuntimeException(ex);
 			}
@@ -1383,8 +1380,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			camTarget = getCameraFocalPoint();
 		}
 
-		WorldPoint targetWorldPosition = WorldPoint.fromLocalInstance(sceneContext.scene,
-			new LocalPoint(camTarget[0], camTarget[1]), client.getPlane());
+		WorldPoint targetWorldPosition = sceneContext.localToWorld(new LocalPoint(camTarget[0], camTarget[1]), client.getPlane());
 		environmentManager.update(sceneContext, targetWorldPosition);
 		lightManager.update(sceneContext);
 
@@ -1422,30 +1418,30 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		glBindBufferBase(GL_UNIFORM_BUFFER, 1, hUniformBufferMaterials.glBufferId);
 		glBindBufferBase(GL_UNIFORM_BUFFER, 2, hUniformBufferWaterTypes.glBufferId);
 
+		// Update lights UBO
+		uniformBufferLights.clear();
+		ArrayList<SceneLight> visibleLights = lightManager.getVisibleLights(getDrawDistance(), configMaxDynamicLights);
+		sceneContext.visibleLightCount = visibleLights.size();
+		for (SceneLight light : visibleLights)
+		{
+			uniformBufferLights.putInt(light.x);
+			uniformBufferLights.putInt(light.y);
+			uniformBufferLights.putInt(light.z);
+			uniformBufferLights.putFloat(light.currentSize);
+			uniformBufferLights.putFloat(light.currentColor[0]);
+			uniformBufferLights.putFloat(light.currentColor[1]);
+			uniformBufferLights.putFloat(light.currentColor[2]);
+			uniformBufferLights.putFloat(light.currentStrength);
+		}
+		uniformBufferLights.flip();
 		if (configMaxDynamicLights > 0)
 		{
-			// Update lights UBO
-			uniformBufferLights.clear();
-			ArrayList<SceneLight> visibleLights = lightManager.getVisibleLights(getDrawDistance(), configMaxDynamicLights);
-			sceneContext.visibleLightCount = visibleLights.size();
-			for (SceneLight light : visibleLights)
-			{
-				uniformBufferLights.putInt(light.x);
-				uniformBufferLights.putInt(light.y);
-				uniformBufferLights.putInt(light.z);
-				uniformBufferLights.putFloat(light.currentSize);
-				uniformBufferLights.putFloat(light.currentColor[0]);
-				uniformBufferLights.putFloat(light.currentColor[1]);
-				uniformBufferLights.putFloat(light.currentColor[2]);
-				uniformBufferLights.putFloat(light.currentStrength);
-			}
-			uniformBufferLights.flip();
-
 			glBindBuffer(GL_UNIFORM_BUFFER, hUniformBufferLights.glBufferId);
 			glBufferSubData(GL_UNIFORM_BUFFER, 0, uniformBufferLights);
-			uniformBufferLights.clear();
 			glBindBuffer(GL_UNIFORM_BUFFER, 0);
 		}
+		uniformBufferLights.clear();
+
 		glBindBufferBase(GL_UNIFORM_BUFFER, 3, hUniformBufferLights.glBufferId);
 	}
 
@@ -1611,7 +1607,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	}
 
 	public void initShaderHotswapping() {
-		shaderPath.watch("\\.(glsl|cl)$", path -> {
+		SHADER_PATH.watch("\\.(glsl|cl)$", path -> {
 			log.info("Reloading shader: {}", path);
 			clientThread.invoke(this::recompilePrograms);
 		});
@@ -1760,16 +1756,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		{
 			// lazy init textures as they may not be loaded at plugin start.
 			textureManager.ensureTexturesLoaded(textureProvider);
-
-			// reload the scene if the player is in a house and their plane changed
-			// this greatly improves the performance as it keeps the scene buffer up to date
-			if (isInHouse) {
-				int plane = client.getPlane();
-				if (previousPlane != plane) {
-					reloadSceneNextGameTick();
-					previousPlane = plane;
-				}
-			}
 
 			final int viewportHeight = client.getViewportHeight();
 			final int viewportWidth = client.getViewportWidth();
@@ -2244,18 +2230,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		if (!running)
 			return;
 
-		switch (gameStateChanged.getGameState()) {
-			case LOADING:
-				if (config.loadingClearCache()) {
-					modelPusher.clearModelCache();
-				}
-				break;
-			case LOGIN_SCREEN:
-				// Avoid drawing the last frame's buffer during LOADING after LOGIN_SCREEN
-				renderBufferOffset = 0;
-				hasLoggedIn = false;
-				modelPusher.clearModelCache();
-				break;
+		if (gameStateChanged.getGameState() == GameState.LOGIN_SCREEN) {
+			// Avoid drawing the last frame's buffer during LOADING after LOGIN_SCREEN
+			renderBufferOffset = 0;
+			hasLoggedIn = false;
+			modelPusher.clearModelCache();
 		}
 	}
 
@@ -2271,9 +2250,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	{
 		if (nextSceneContext != null)
 		{
-			log.error("Loading new scene before previously loaded scene was swapped to", new Throwable());
-			clientThread.invoke(this::stopPlugin);
-			return;
+			SceneContext handle = nextSceneContext;
+			nextSceneContext = null;
+			handle.destroy();
 		}
 
 		nextSceneContext = new SceneContext(scene, sceneContext);
@@ -2336,6 +2315,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		if (gameTicks > gameTicksUntilSceneReload) {
 			gameTicksUntilSceneReload = gameTicks;
 		}
+	}
+
+	public void abortSceneReload()
+	{
+		gameTicksUntilSceneReload = 0;
 	}
 
 	@Subscribe
@@ -2412,6 +2396,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			case "colorBlindMode":
 			case "parallaxMappingMode":
 			case "macosIntelWorkaround":
+			case KEY_VANILLA_COLOR_BANDING:
 				clientThread.invoke(this::recompilePrograms);
 				break;
 			case "unlockFps":

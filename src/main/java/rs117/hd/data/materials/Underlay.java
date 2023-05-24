@@ -87,10 +87,12 @@ public enum Underlay {
         .ids(66, 68)
     ),
 
+    SOPHANEM_TRAPDOOR(Area.SOPHANEM_TRAPDOOR, GroundMaterial.NONE, p -> {}),
     KHARID_SAND_1(Area.KHARID_DESERT_REGION, GroundMaterial.SAND, p -> p
         .saturation(3)
         .hue(6)
         .ids(61, 62, 67, 68, -127, 126, 49, 58, 63, 64, 50, 45)),
+    NECROPOLIS_SAND(Area.NECROPOLIS, GroundMaterial.DIRT, p -> p.ids(124)),
 
     // Burthorpe games room
     GAMES_ROOM_INNER_FLOOR(64, Area.GAMES_ROOM_INNER, GroundMaterial.CARPET, p -> p.blended(false)),
@@ -162,6 +164,11 @@ public enum Underlay {
             .area(Area.MOTHERLODE_MINE)
             .ids(63, 64,71)
     ),
+
+    // Goblin Village
+    GOBLIN_VILLAGE_TILES_BLEND_FIX(Area.GOBLIN_VILLAGE_COOKS_CHAMBER, GroundMaterial.WORN_TILES, p -> p.ids(56,57).blended(true)),
+    GOBLIN_VILLAGE_TILES(Area.GOBLIN_VILLAGE_COOKS_CHAMBER, GroundMaterial.WORN_TILES, p -> p.ids(56,57).blended(false)),
+    GOBLIN_VILLAGE_COOKS_PIT(118, Area.GOBLIN_VILLAGE_COOKS_CHAMBER, GroundMaterial.VARIED_DIRT_SHINY),
 
 	// Penguin Base
 	PENGUIN_BASE_FLOOR(p -> p

@@ -1,17 +1,22 @@
 package rs117.hd.utils;
 
-import javax.annotation.Nullable;
 import java.nio.file.Path;
-import java.util.HashMap;
+import java.util.Properties;
 import java.util.function.Supplier;
+import javax.annotation.Nullable;
 
 import static rs117.hd.utils.ResourcePath.path;
 
-public class Env
+public class Props
 {
 	public static boolean DEVELOPMENT;
 
-	private static final HashMap<String, String> env = new HashMap<>(System.getenv());
+	private static final Properties env = new Properties();
+
+	static
+	{
+		env.putAll(System.getProperties());
+	}
 
 	public static boolean has(String variableName)
 	{
@@ -25,25 +30,25 @@ public class Env
 
 	public static String get(String variableName)
 	{
-		return env.get(variableName);
+		return env.getProperty(variableName);
 	}
 
 	public static String getOrDefault(String variableName, String defaultValue)
 	{
-		String value = env.get(variableName);
+		String value = get(variableName);
 		return value == null ? defaultValue : value;
 	}
 
 	public static String getOrDefault(String variableName, Supplier<String> defaultValueSupplier)
 	{
-		String value = env.get(variableName);
+		String value = get(variableName);
 		return value == null ? defaultValueSupplier.get() : value;
 	}
 
 	@Nullable
 	public static Boolean getBoolean(String variableName)
 	{
-		String value = env.get(variableName);
+		String value = get(variableName);
 		if (value == null)
 			return null;
 		value = value.toLowerCase();
@@ -56,15 +61,8 @@ public class Env
 		return value == null ? defaultValue : value;
 	}
 
-	public static ResourcePath getPathOrDefault(String variableName, ResourcePath fallback) {
-		String path = env.get(variableName);
-		if (path == null)
-			return fallback;
-		return path(path);
-	}
-
 	public static ResourcePath getPathOrDefault(String variableName, Supplier<ResourcePath> fallback) {
-		String path = env.get(variableName);
+		String path = get(variableName);
 		if (path == null)
 			return fallback.get();
 		return path(path);
