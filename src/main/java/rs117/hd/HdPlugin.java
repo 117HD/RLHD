@@ -2227,18 +2227,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		if (!running)
 			return;
 
-		switch (gameStateChanged.getGameState()) {
-			case LOADING:
-				if (config.loadingClearCache()) {
-					modelPusher.clearModelCache();
-				}
-				break;
-			case LOGIN_SCREEN:
-				// Avoid drawing the last frame's buffer during LOADING after LOGIN_SCREEN
-				renderBufferOffset = 0;
-				hasLoggedIn = false;
-				modelPusher.clearModelCache();
-				break;
+		if (gameStateChanged.getGameState() == GameState.LOGIN_SCREEN) {
+			// Avoid drawing the last frame's buffer during LOADING after LOGIN_SCREEN
+			renderBufferOffset = 0;
+			hasLoggedIn = false;
+			modelPusher.clearModelCache();
 		}
 	}
 

@@ -624,20 +624,6 @@ public interface HdPluginConfig extends Config
 		return 2048;
 	}
 
-	@ConfigItem(
-		keyName = "loadingClearCache",
-		name = "Clear Cache When Loading",
-		description =
-			"Clear the model cache when the game loads a new scene.<br>" +
-			"This should generally only be used if the cache size is lower than 512 MiB,<br>" +
-			"because old model data may still be useful in the new scene.",
-		position = 4,
-		section = modelCachingSettings
-	)
-	default boolean loadingClearCache() {
-		return false;
-	}
-
 
 	/*====== Miscellaneous settings ======*/
 
