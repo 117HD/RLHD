@@ -8707,7 +8707,8 @@
       2354,
       2356,
       2663,
-      12394
+      12394,
+      39696
     ],
     "uvType": "MODEL_XZ",
     "uvOrientation": 256,
@@ -9780,5 +9781,33 @@
     "uvType": "MODEL_XZ",
     "uvScale": 0.8,
     "uvOrientation": 128
+  },
+  {
+    "description": "Giants Anvil",
+    "baseMaterial": "METALLIC_1_GLOSS",
+    "objectIds": [
+      39724
+    ],
+    "uvType": "GEOMETRY",
+    "uvScale": 0.28
+  },
+  {
+    "description": "Giants Foundry - Volcano",
+    "baseMaterial": "DIRT_1",
+    "objectIds": [
+      29629,
+      29630
+    ],
+    "uvType": "GEOMETRY",
+    "uvScale": 0.28
+  },
+  {
+    "description": "Ingots",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "objectIds": [
+      2140
+    ],
+    "uvType": "GEOMETRY",
+    "uvScale": 0.28
   }
 ]
