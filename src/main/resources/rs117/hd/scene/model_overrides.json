@@ -2833,11 +2833,19 @@
     "objectIds": [
       720,
       3213,
-      39721,
-      40887,
-      44635
+      40887
     ],
     "uvType": "MODEL_YZ",
+    "uvScale": 0.4,
+    "uvOrientation": 512
+  },
+  {
+    "description": "DIRT_CAVE_ENTRANCES",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [
+      39721,
+      44635
+    ],
     "uvScale": 0.4,
     "uvOrientation": 512
   },
