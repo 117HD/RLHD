@@ -30423,5 +30423,23 @@
     "objectIds": [
       12400
     ]
+  },
+  {
+    "description": "CULINATOMANCERS_PORTAL",
+    "height": 30,
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 12.5,
+    "color": [
+      252,
+      252,
+      252
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 30,
+    "objectIds": [
+      12356
+    ]
   }
 ]
