@@ -8406,5 +8406,12 @@
     "uvType": "MODEL_XZ",
     "uvOrientation": 256,
     "uvScale": 0.4
+  },
+  {
+    "description": "Culinaromancers Floor",
+    "baseMaterial": "METALLIC_2_HIGHGLOSS",
+    "objectIds": [
+      12366
+    ]
   }
 ]
