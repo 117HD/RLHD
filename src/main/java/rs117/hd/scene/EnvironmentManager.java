@@ -24,12 +24,13 @@
  */
 package rs117.hd.scene;
 
-import com.google.common.primitives.Floats;
+import java.util.Arrays;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
-import net.runelite.api.Player;
-import net.runelite.api.coords.LocalPoint;
 import net.runelite.api.coords.WorldPoint;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
@@ -39,14 +40,6 @@ import rs117.hd.data.environments.Environment;
 import rs117.hd.utils.AABB;
 import rs117.hd.utils.HDUtils;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import java.util.ArrayList;
-import java.util.Arrays;
-
-import static net.runelite.api.Constants.CHUNK_SIZE;
-import static net.runelite.api.Constants.SCENE_SIZE;
-
 @Singleton
 @Slf4j
 public class EnvironmentManager
@@ -55,20 +48,19 @@ public class EnvironmentManager
 	private Client client;
 
 	@Inject
-	private HdPluginConfig config;
+	private HdPlugin plugin;
 
 	@Inject
-	private HdPlugin hdPlugin;
+	private HdPluginConfig config;
 
 	private final Environment defaultEnvironment = Environment.OVERWORLD;
-	private ArrayList<Environment> sceneEnvironments;
 	private Environment currentEnvironment = defaultEnvironment;
 
 	// transition time
-	private static final int transitionDuration = 3000;
+	private static final int TRANSITION_DURATION = 3000;
 	// distance in tiles to skip transition (e.g. entering cave, teleporting)
 	// walking across a loading line causes a movement of 40-41 tiles
-	private static final int skipTransitionTiles = 41;
+	private static final int SKIP_TRANSITION_DISTANCE = 41;
 
 	// last environment change time
 	private long startTime = 0;
@@ -76,16 +68,8 @@ public class EnvironmentManager
 	private long transitionCompleteTime = 0;
 	// time of last frame; used for lightning
 	long lastFrameTime = -1;
-	// used for tracking changes to settings
-	DefaultSkyColor lastConfigDefaultSkyColor = DefaultSkyColor.DEFAULT;
-	boolean lastConfigAtmosphericLighting = true;
-	boolean lastConfigOverrideSkyColor = false;
-	boolean lastWasUnderwater = false;
 
-	// previous camera target world X
-	private int prevCamTargetX = 0;
-	// previous camera target world Y
-	private int prevCamTargetY = 0;
+	private WorldPoint previousPosition = new WorldPoint(0, 0, 0);
 
 	public static final float[] BLACK_COLOR = {0,0,0};
 
@@ -154,53 +138,72 @@ public class EnvironmentManager
 	private float targetLightYaw = 0f;
 
 	private boolean lightningEnabled = false;
-	private boolean displaySnow = false;
+	private boolean isOverworld = false;
+	// some necessary data for reloading the scene while in POH to fix major performance loss
+	private boolean isInHouse = false;
+	private int previousPlane;
 
-	public void update()
+	public void startUp()
 	{
-		WorldPoint camPosition = localPointToWorldTile(hdPlugin.camTarget[0], hdPlugin.camTarget[1]);
-		int camTargetX = camPosition.getX();
-		int camTargetY = camPosition.getY();
-		int camTargetZ = camPosition.getPlane();
+		currentEnvironment = null;
+		changeEnvironment(defaultEnvironment, true);
+	}
 
-		for (Environment environment : sceneEnvironments)
+	/**
+	 * Updates variables used in transition effects
+	 *
+	 * @param sceneContext to possible environments from
+	 * @param position     in world space that the camera is or will be looking at
+	 */
+	public void update(SceneContext sceneContext, WorldPoint position)
+	{
+		isOverworld = Area.OVERWORLD.containsPoint(position);
+
+		// skip the transitional fade if the player has moved too far
+		// since the previous frame. results in an instant transition when
+		// teleporting, entering dungeons, etc.
+		int tileChange = Math.max(
+			Math.abs(position.getX() - previousPosition.getX()),
+			Math.abs(position.getY() - previousPosition.getY())
+		);
+		previousPosition = position;
+
+		// reload the scene if the player is in a house and their plane changed
+		// this greatly improves the performance as it keeps the scene buffer up to date
+		if (isInHouse) {
+			int plane = client.getPlane();
+			if (previousPlane != plane) {
+				plugin.reloadSceneNextGameTick();
+				previousPlane = plane;
+			}
+		}
+
+		boolean skipTransition = tileChange >= SKIP_TRANSITION_DISTANCE;
+		for (Environment environment : sceneContext.environments)
 		{
-			if (environment.getArea().containsPoint(camTargetX, camTargetY, camTargetZ))
+			if (environment.getArea().containsPoint(position))
 			{
 				if (environment != currentEnvironment)
 				{
 					if (environment == Environment.PLAYER_OWNED_HOUSE || environment == Environment.PLAYER_OWNED_HOUSE_SNOWY) {
-						hdPlugin.setInHouse(true);
-
 						// POH takes 1 game tick to enter, then 2 game ticks to load per floor
-						hdPlugin.reloadSceneIn(7);
+						plugin.reloadSceneIn(7);
+						isInHouse = true;
 					} else {
-						hdPlugin.setInHouse(false);
+						// Avoid an unnecessary scene reload if the player has already left the POH
+						plugin.abortSceneReload();
+						isInHouse = false;
 					}
 
-					hdPlugin.setInGauntlet(environment == Environment.THE_GAUNTLET || environment == Environment.THE_GAUNTLET_CORRUPTED);
+					plugin.setInGauntlet(environment == Environment.THE_GAUNTLET || environment == Environment.THE_GAUNTLET_CORRUPTED);
 
-					changeEnvironment(environment, camTargetX, camTargetY, false);
+					changeEnvironment(environment, skipTransition);
 				}
 				break;
 			}
 		}
 
-		DefaultSkyColor defaultSkyColor = config.defaultSkyColor();
-		boolean configAtmosphericLighting = config.atmosphericLighting();
-		boolean configOverrideSkyColor = config.overrideSky();
-		boolean isUnderwater = isUnderwater();
-		if (lastConfigDefaultSkyColor != defaultSkyColor ||
-			lastConfigAtmosphericLighting != configAtmosphericLighting ||
-			lastConfigOverrideSkyColor != configOverrideSkyColor ||
-			lastWasUnderwater != isUnderwater)
-		{
-			changeEnvironment(currentEnvironment, camTargetX, camTargetY, true);
-		}
-		else if (defaultSkyColor == DefaultSkyColor.RUNELITE)
-		{
-			updateSkyColor(); // Update every frame, since other plugins may control it
-		}
+		updateTargetSkyColor(); // Update every frame, since other plugins may control it
 
 		// modify all environment values during transition
 		long currentTime = System.currentTimeMillis();
@@ -226,7 +229,7 @@ public class EnvironmentManager
 		else
 		{
 			// interpolate between start and target values
-			float t = (float)(currentTime - startTime) / (float)transitionDuration;
+			float t = (float)(currentTime - startTime) / (float) TRANSITION_DURATION;
 
 			currentFogColor = HDUtils.lerpVectors(startFogColor, targetFogColor, t);
 			currentWaterColor = HDUtils.lerpVectors(startWaterColor, targetWaterColor, t);
@@ -249,43 +252,25 @@ public class EnvironmentManager
 		updateLightning();
 
 		// update some things for use next frame
-		prevCamTargetX = camTargetX;
-		prevCamTargetY = camTargetY;
 		lastFrameTime = System.currentTimeMillis();
-		lastConfigDefaultSkyColor = defaultSkyColor;
-		lastConfigOverrideSkyColor = configOverrideSkyColor;
-		lastConfigAtmosphericLighting = configAtmosphericLighting;
-		lastWasUnderwater = isUnderwater;
-	}
-
-	private void updateWinterTheme() {
-		Player player = client.getLocalPlayer();
-		if (player == null)
-			return;
-		WorldPoint point = player.getWorldLocation();
-		if (point == null)
-			return;
-		displaySnow = Area.OVERWORLD.containsPoint(point);
-	}
-
-	private boolean useWinterTheme() {
-		return hdPlugin.configWinterTheme && displaySnow;
 	}
 
 	/**
 	 * Updates variables used in transition effects
 	 *
-	 * @param newEnvironment
-	 * @param camTargetX
-	 * @param camTargetY
+	 * @param newEnvironment the new environment to transition to
+	 * @param skipTransition whether the transition should be done instantly
 	 */
-	private void changeEnvironment(Environment newEnvironment, int camTargetX, int camTargetY, boolean instantChange)
+	private void changeEnvironment(Environment newEnvironment, boolean skipTransition)
 	{
-		currentEnvironment = newEnvironment;
-		log.debug("currentEnvironment changed to " + newEnvironment);
+		if (currentEnvironment == newEnvironment)
+			return;
 
 		startTime = System.currentTimeMillis();
-		transitionCompleteTime = instantChange ? 0 : startTime + transitionDuration;
+		transitionCompleteTime = startTime + (skipTransition ? 0 : TRANSITION_DURATION);
+
+		log.debug("changing environment from {} to {} (instant: {})", currentEnvironment, newEnvironment, skipTransition);
+		currentEnvironment = newEnvironment;
 
 		// set previous variables to current ones
 		startFogColor = currentFogColor;
@@ -305,7 +290,7 @@ public class EnvironmentManager
 		startUnderwaterCausticsColor = currentUnderwaterCausticsColor;
 		startUnderwaterCausticsStrength = currentUnderwaterCausticsStrength;
 
-		updateSkyColor();
+		updateTargetSkyColor();
 
 		targetFogDepth = newEnvironment.getFogDepth();
 		if (useWinterTheme() && !newEnvironment.isCustomFogDepth()) {
@@ -348,21 +333,9 @@ public class EnvironmentManager
 		targetUnderwaterCausticsStrength = newEnvironment.getUnderwaterCausticsStrength();
 
 		lightningEnabled = newEnvironment.isLightningEnabled();
-
-		int tileChangeX = Math.abs(prevCamTargetX - camTargetX);
-		int tileChangeY = Math.abs(prevCamTargetY - camTargetY);
-		int tileChange = Math.max(tileChangeX, tileChangeY);
-
-		// skip the transitional fade if the player has moved too far
-		// since the previous frame. results in an instant transition when
-		// teleporting, entering dungeons, etc.
-		if (tileChange >= skipTransitionTiles)
-		{
-			transitionCompleteTime = startTime;
-		}
 	}
 
-	public void updateSkyColor()
+	public void updateTargetSkyColor()
 	{
 		Environment env = useWinterTheme() ? Environment.WINTER : currentEnvironment;
 		if (!env.isCustomFogColor() || env.isAllowSkyOverride() && config.overrideSky())
@@ -392,68 +365,52 @@ public class EnvironmentManager
 	 * Figures out which Areas exist in the current scene and
 	 * adds them to lists for easy access.
 	 */
-	public void loadSceneEnvironments()
+	public void loadSceneEnvironments(SceneContext sceneContext)
 	{
-		updateWinterTheme();
-
 		// loop through all Areas, check Rects of each Area. if any
 		// coordinates overlap scene coordinates, add them to a list.
 		// then loop through all Environments, checking to see if any
 		// of their Areas match any of the ones in the current scene.
 		// if so, add them to a list.
 
-		sceneEnvironments = new ArrayList<>();
+		log.debug("Adding environments for scene with regions: {}", sceneContext.regionIds);
 
-		int baseX = client.getBaseX();
-		int baseY = client.getBaseY();
-		if (client.isInInstancedRegion())
+		AABB[] regions = sceneContext.regionIds.stream()
+			.map(AABB::new)
+			.toArray(AABB[]::new);
+
+		sceneContext.environments.clear();
+		outer:
+		for (Environment environment : Environment.values())
 		{
-			LocalPoint localPoint = client.getLocalPlayer() != null ? client.getLocalPlayer().getLocalLocation() : new LocalPoint(0, 0);
-			WorldPoint worldPoint = WorldPoint.fromLocalInstance(client, localPoint);
-			baseX = worldPoint.getX() - localPoint.getSceneX();
-			baseY = worldPoint.getY() - localPoint.getSceneY();
-		}
-		AABB sceneAABB = new AABB(baseX, baseY, baseX + SCENE_SIZE - 2, baseY + SCENE_SIZE - 2);
-
-		log.debug("Adding environments for scene {}", sceneAABB);
-
-		for (Environment environment: Environment.values())
-		{
-			for (AABB aabb : environment.getArea().getAabbs())
+			for (AABB region : regions)
 			{
-				if (sceneAABB.intersects(aabb))
+				for (AABB aabb : environment.getArea().getAabbs())
 				{
-					log.debug("Added environment {} to sceneArea list", environment.name());
-					sceneEnvironments.add(environment);
-					break;
+					if (region.intersects(aabb))
+					{
+						log.debug("Added environment: {}", environment);
+						sceneContext.environments.add(environment);
+						continue outer;
+					}
 				}
 			}
 		}
-
-		for (Environment environment : sceneEnvironments)
-		{
-			log.debug("SceneArea: " + environment.name());
-		}
-
-		WorldPoint camPosition = localPointToWorldTile(hdPlugin.camTarget[0], hdPlugin.camTarget[1]);
-		int camTargetX = camPosition.getX();
-		int camTargetY = camPosition.getY();
-		changeEnvironment(currentEnvironment, camTargetX, camTargetY, false);
 	}
 
-
-
 	/* lightning */
-	public float lightningBrightness = 0f;
-	public float[] lightningColor = new float[]{1.0f, 1.0f, 1.0f};
-	double nextLightningTime = -1;
-	float newLightningBrightness = 7f;
-	float lightningFadeSpeed = 80f; // brightness units per second
-	int minLightningInterval = 5500;
-	int maxLightningInterval = 17000;
-	float quickLightningChance = 2f;
-	int minQuickLightningInterval = 40;
-	int maxQuickLightningInterval = 150;
+	private static final float[] LIGHTNING_COLOR = new float[]{.25f, .25f, .25f};
+	private static final float NEW_LIGHTNING_BRIGHTNESS = 7f;
+	private static final float LIGHTNING_FADE_SPEED = 80f; // brightness units per second
+	private static final int MIN_LIGHTNING_INTERVAL = 5500;
+	private static final int MAX_LIGHTNING_INTERVAL = 17000;
+	private static final float QUICK_LIGHTNING_CHANCE = 2f;
+	private static final int MIN_QUICK_LIGHTNING_INTERVAL = 40;
+	private static final int MAX_QUICK_LIGHTNING_INTERVAL = 150;
+
+	@Getter
+	private float lightningBrightness = 0f;
+	private double nextLightningTime = -1;
 
 	/**
 	 * Updates lightning variables and sets water reflection and sky
@@ -464,7 +421,7 @@ public class EnvironmentManager
 		if (lightningBrightness > 0)
 		{
 			int frameTime = (int)(System.currentTimeMillis() - lastFrameTime);
-			float brightnessChange = (frameTime / 1000f) * lightningFadeSpeed;
+			float brightnessChange = (frameTime / 1000f) * LIGHTNING_FADE_SPEED;
 			lightningBrightness = Math.max(lightningBrightness - brightnessChange, 0);
 		}
 
@@ -475,16 +432,16 @@ public class EnvironmentManager
 		}
 		if (System.currentTimeMillis() > nextLightningTime)
 		{
-			lightningBrightness = newLightningBrightness;
+			lightningBrightness = NEW_LIGHTNING_BRIGHTNESS;
 
 			generateNextLightningTime();
 		}
 
 		if (lightningEnabled && config.flashingEffects())
 		{
-			float t = Floats.constrainToRange(lightningBrightness, 0.0f, 1.0f);
-			currentFogColor = HDUtils.lerpVectors(currentFogColor, lightningColor, t);
-			currentWaterColor = HDUtils.lerpVectors(currentWaterColor, lightningColor, t);
+			float t = HDUtils.clamp(lightningBrightness, 0, 1);
+			currentFogColor = HDUtils.lerpVectors(currentFogColor, LIGHTNING_COLOR, t);
+			currentWaterColor = HDUtils.lerpVectors(currentWaterColor, LIGHTNING_COLOR, t);
 		}
 		else
 		{
@@ -499,9 +456,9 @@ public class EnvironmentManager
 	 */
 	void generateNextLightningTime()
 	{
-		int lightningInterval = (int)(minLightningInterval + ((maxLightningInterval - minLightningInterval) * Math.random()));
-		int quickLightningInterval = (int)(minQuickLightningInterval + ((maxQuickLightningInterval - minQuickLightningInterval) * Math.random()));
-		if (Math.random() <= 1f / quickLightningChance)
+		int lightningInterval = (int)(MIN_LIGHTNING_INTERVAL + ((MAX_LIGHTNING_INTERVAL - MIN_LIGHTNING_INTERVAL) * Math.random()));
+		int quickLightningInterval = (int)(MIN_QUICK_LIGHTNING_INTERVAL + ((MAX_QUICK_LIGHTNING_INTERVAL - MIN_QUICK_LIGHTNING_INTERVAL) * Math.random()));
+		if (Math.random() <= 1f / QUICK_LIGHTNING_CHANCE)
 		{
 			// chain together lighting strikes in quick succession
 			nextLightningTime = System.currentTimeMillis() + quickLightningInterval;
@@ -525,34 +482,15 @@ public class EnvironmentManager
 			currentFogColor : BLACK_COLOR, 3);
 	}
 
-	/**
-	 * Returns the world tile coordinates of a given local point, adjusted to template coordinates if within an instance.
-	 *
-	 * @param pointX
-	 * @param pointY
-	 * @return adjusted world coordinates
-	 */
-	WorldPoint localPointToWorldTile(int pointX, int pointY)
-	{
-		int[][][] instanceTemplateChunks = client.getInstanceTemplateChunks();
-		LocalPoint localPoint = new LocalPoint(pointX, pointY);
-		int chunkX = localPoint.getSceneX() / CHUNK_SIZE;
-		int chunkY = localPoint.getSceneY() / CHUNK_SIZE;
-
-		if (client.isInInstancedRegion() && chunkX >= 0 && chunkX < instanceTemplateChunks[client.getPlane()].length && chunkY >= 0 && chunkY < instanceTemplateChunks[client.getPlane()][chunkX].length)
-		{
-			// In some scenarios, taking the detached camera outside of instances
-			// will result in a crash if we don't check the chunk array indices first
-			return WorldPoint.fromLocalInstance(client, localPoint);
-		}
-		else
-		{
-			return WorldPoint.fromLocal(client, localPoint);
-		}
-	}
-
 	public boolean isUnderwater()
 	{
 		return currentEnvironment.isUnderwater();
+	}
+
+	/**
+	 * This should not be used from the scene loader thread
+	 */
+	private boolean useWinterTheme() {
+		return plugin.configWinterTheme && isOverworld;
 	}
 }

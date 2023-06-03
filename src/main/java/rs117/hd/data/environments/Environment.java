@@ -1002,7 +1002,16 @@ public enum Environment
 		.setLightDirection(260f, 10f)
 		.setWaterColor(102, 234, 255)
 	),
-
+	GOBLIN_VLIIAGE_COOKS_CHAMBER(Area.GOBLIN_VILLAGE_COOKS_CHAMBER, new Properties()
+			.setFogColor("#030303")
+			.setFogDepth(5)
+			.setAmbientColor("#AAAFB6")
+			.setAmbientStrength(0.75f)
+			.setDirectionalColor("#FFFFFF")
+			.setDirectionalStrength(0.75f)
+			.setLightDirection(260f, 10f)
+			.setAllowSkyOverride(false)
+	),
 	WINTER(Area.NONE, new Properties()
 		.setFogColor("#B8C5DB")
 		.setFogDepth(35)
@@ -1017,6 +1026,15 @@ public enum Environment
 			.setFogColor("#000000")
 			.setAmbientStrength(1.5f)
 			.setDirectionalStrength(1.0f)
+			.setLightDirection(260f, 10f)
+	),
+	TEARS_OF_GUTHIX(Area.TEARS_OF_GUTHIX_CAVES, new Properties()
+			.setFogColor("#060505")
+			.setFogDepth(50)
+			.setAmbientColor("#AAAFB6")
+			.setAmbientStrength(1.2f)
+			.setDirectionalColor("#878474")
+			.setDirectionalStrength(1.5f)
 			.setLightDirection(260f, 10f)
 	),
 

@@ -26,20 +26,21 @@ package rs117.hd.data.materials;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
-import net.runelite.api.Client;
-import net.runelite.api.Tile;
-import net.runelite.api.coords.WorldPoint;
-import rs117.hd.HdPlugin;
-import rs117.hd.data.WaterType;
-import rs117.hd.data.environments.Area;
-
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import javax.annotation.Nullable;
+import net.runelite.api.Scene;
+import net.runelite.api.Tile;
+import net.runelite.api.coords.LocalPoint;
+import net.runelite.api.coords.WorldPoint;
+import rs117.hd.HdPlugin;
+import rs117.hd.data.WaterType;
+import rs117.hd.data.environments.Area;
+import rs117.hd.utils.HDUtils;
 
 public enum Underlay {
     // Seasonal Winter Textures
@@ -86,10 +87,12 @@ public enum Underlay {
         .ids(66, 68)
     ),
 
+    SOPHANEM_TRAPDOOR(Area.SOPHANEM_TRAPDOOR, GroundMaterial.NONE, p -> {}),
     KHARID_SAND_1(Area.KHARID_DESERT_REGION, GroundMaterial.SAND, p -> p
         .saturation(3)
         .hue(6)
         .ids(61, 62, 67, 68, -127, 126, 49, 58, 63, 64, 50, 45)),
+    NECROPOLIS_SAND(Area.NECROPOLIS, GroundMaterial.DIRT, p -> p.ids(124)),
 
     // Burthorpe games room
     GAMES_ROOM_INNER_FLOOR(64, Area.GAMES_ROOM_INNER, GroundMaterial.CARPET, p -> p.blended(false)),
@@ -161,6 +164,11 @@ public enum Underlay {
             .area(Area.MOTHERLODE_MINE)
             .ids(63, 64,71)
     ),
+
+    // Goblin Village
+    GOBLIN_VILLAGE_TILES_BLEND_FIX(Area.GOBLIN_VILLAGE_COOKS_CHAMBER, GroundMaterial.WORN_TILES, p -> p.ids(56,57).blended(true)),
+    GOBLIN_VILLAGE_TILES(Area.GOBLIN_VILLAGE_COOKS_CHAMBER, GroundMaterial.WORN_TILES, p -> p.ids(56,57).blended(false)),
+    GOBLIN_VILLAGE_COOKS_PIT(118, Area.GOBLIN_VILLAGE_COOKS_CHAMBER, GroundMaterial.VARIED_DIRT_SHINY),
 
 	// Penguin Base
 	PENGUIN_BASE_FLOOR(p -> p
@@ -288,40 +296,48 @@ public enum Underlay {
             FILTERED_MAP.put(entry.getKey(), entry.getValue().toArray(new Underlay[0]));
     }
 
-    public static Underlay getUnderlay(@Nullable Short underlayId, Tile tile, Client client, HdPlugin plugin) {
-        WorldPoint worldPoint;
-        if (client.isInInstancedRegion()) {
-            worldPoint = WorldPoint.fromLocalInstance(client, tile.getLocalLocation());
-        } else {
-            worldPoint = tile.getWorldLocation();
-        }
-
-        int worldX = worldPoint.getX();
-        int worldY = worldPoint.getY();
-        int worldZ = worldPoint.getPlane();
+    public static Underlay getUnderlay(Scene scene, Tile tile, HdPlugin plugin) {
+		LocalPoint localLocation = tile.getLocalLocation();
+		WorldPoint worldPoint = WorldPoint.fromLocalInstance(scene, tile.getLocalLocation(), tile.getPlane());
 
         Underlay match = Underlay.NONE;
         for (Underlay underlay : ANY_MATCH) {
-            if (underlay.area.containsPoint(worldX, worldY, worldZ)) {
+            if (underlay.area.containsPoint(worldPoint)) {
                 match = underlay;
                 break;
             }
         }
 
-        if (underlayId != null) {
-            Underlay[] underlays = FILTERED_MAP.get((int) underlayId);
-            if (underlays != null) {
-                for (Underlay underlay : underlays) {
-                    if (underlay.ordinal() >= match.ordinal())
-                        break;
-                    if (underlay.area.containsPoint(worldX, worldY, worldZ)) {
-                        match = underlay;
-                        break;
-                    }
-                }
-            }
-        }
+		short underlayId = scene.getUnderlayIds()[tile.getRenderLevel()][localLocation.getSceneX()][localLocation.getSceneY()];
+		Underlay[] underlays = FILTERED_MAP.get((int) underlayId);
+		if (underlays != null) {
+			for (Underlay underlay : underlays) {
+				if (underlay.ordinal() >= match.ordinal())
+					break;
+				if (underlay.area.containsPoint(worldPoint)) {
+					match = underlay;
+					break;
+				}
+			}
+		}
 
         return match.replacementCondition.apply(plugin) ? match.replacementUnderlay : match;
     }
+
+	public int[] modifyColor(int[] colorHSL)
+	{
+		colorHSL[0] = hue >= 0 ? hue : colorHSL[0];
+		colorHSL[0] += shiftHue;
+		colorHSL[0] = HDUtils.clamp(colorHSL[0], 0, 63);
+
+		colorHSL[1] = saturation >= 0 ? saturation : colorHSL[1];
+		colorHSL[1] += shiftSaturation;
+		colorHSL[1] = HDUtils.clamp(colorHSL[1], 0, 7);
+
+		colorHSL[2] = lightness >= 0 ? lightness : colorHSL[2];
+		colorHSL[2] += shiftLightness;
+		colorHSL[2] = HDUtils.clamp(colorHSL[2], 0, 127);
+
+		return colorHSL;
+	}
 }

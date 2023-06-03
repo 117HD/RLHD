@@ -1,6 +1,9 @@
 package rs117.hd.scene;
 
-import com.google.inject.Inject;
+import java.io.IOException;
+import java.util.HashMap;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
@@ -11,21 +14,17 @@ import rs117.hd.HdPlugin;
 import rs117.hd.model.ModelPusher;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.AABB;
-import rs117.hd.utils.Env;
+import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ModelHash;
+import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
-
-import javax.inject.Singleton;
-import java.io.IOException;
-import java.util.HashMap;
 
 import static rs117.hd.utils.ResourcePath.path;
 
 @Singleton
 @Slf4j
 public class ModelOverrideManager {
-    private static final String ENV_MODEL_OVERRIDES = "RLHD_MODEL_OVERRIDES_PATH";
-    private static final ResourcePath modelOverridesPath =  Env.getPathOrDefault(ENV_MODEL_OVERRIDES,
+    private static final ResourcePath MODEL_OVERRIDES_PATH =  Props.getPathOrDefault("rlhd.model-overrides-path",
         () -> path(ModelOverrideManager.class, "model_overrides.json"));
 
     @Inject
@@ -44,7 +43,7 @@ public class ModelOverrideManager {
     private final HashMap<Long, AABB[]> modelsToHide = new HashMap<>();
 
     public void startUp() {
-        modelOverridesPath.watch(path -> {
+        MODEL_OVERRIDES_PATH.watch(path -> {
             modelOverrides.clear();
             modelsToHide.clear();
 
@@ -59,12 +58,13 @@ public class ModelOverrideManager {
                     for (int objectId : override.objectIds)
                         addEntry(ModelHash.packUuid(objectId, ModelHash.TYPE_OBJECT), override);
                 }
-                if (client.getGameState() == GameState.LOGGED_IN) {
-                    clientThread.invokeLater(() -> {
-                        plugin.uploadScene();
-                        modelPusher.clearModelCache();
-                    });
-                }
+
+				clientThread.invoke(() -> {
+					modelPusher.clearModelCache();
+					if (client.getGameState() == GameState.LOGGED_IN)
+						plugin.uploadScene();
+				});
+
                 log.debug("Loaded {} model overrides", modelOverrides.size());
             } catch (IOException ex) {
                 log.error("Failed to load model overrides:", ex);
@@ -76,7 +76,7 @@ public class ModelOverrideManager {
         ModelOverride old = modelOverrides.put(uuid, entry);
         modelsToHide.put(uuid, entry.hideInAreas);
 
-        if (Env.DEVELOPMENT && old != null) {
+        if (Props.DEVELOPMENT && old != null) {
             if (entry.hideInAreas.length > 0) {
                 log.warn("Replacing ID {} from '{}' with hideInAreas-override '{}'. This is likely a mistake...",
                     ModelHash.getIdOrIndex(uuid), old.description, entry.description);
@@ -88,11 +88,12 @@ public class ModelOverrideManager {
     }
 
     public boolean shouldHideModel(long hash, int x, int z) {
+		assert client.isClientThread();
         long uuid = ModelHash.getUuid(client, hash);
 
         AABB[] aabbs = modelsToHide.get(uuid);
         if (aabbs != null && hasNoActions(uuid)) {
-            WorldPoint location = ModelHash.getWorldTemplateLocation(client, x, z);
+            WorldPoint location = HDUtils.cameraSpaceToWorldPoint(client, x, z);
             for (AABB aabb : aabbs)
                 if (aabb.contains(location))
                     return true;

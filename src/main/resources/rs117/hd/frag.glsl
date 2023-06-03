@@ -202,6 +202,21 @@ void main() {
         vec4 baseColor2 = vColor[1];
         vec4 baseColor3 = vColor[2];
 
+        #if VANILLA_COLOR_BANDING
+        vec4 baseColor =
+            IN.texBlend[0] * baseColor1 +
+            IN.texBlend[1] * baseColor2 +
+            IN.texBlend[2] * baseColor3;
+
+        baseColor.rgb = linearToSrgb(baseColor.rgb);
+        baseColor.rgb = rgbToHsv(baseColor.rgb);
+        baseColor.b = floor(baseColor.b * 127) / 127;
+        baseColor.rgb = hsvToRgb(baseColor.rgb);
+        baseColor.rgb = srgbToLinear(baseColor.rgb);
+
+        baseColor1 = baseColor2 = baseColor3 = baseColor;
+        #endif
+
         // get diffuse textures
         vec4 texColor1 = colorMap1 == -1 ? vec4(1) : texture(textureArray, vec3(uv1, colorMap1));
         vec4 texColor2 = colorMap2 == -1 ? vec4(1) : texture(textureArray, vec3(uv2, colorMap2));
@@ -444,7 +459,7 @@ void main() {
 
 
         // lightning
-        vec3 lightningColor = vec3(1.0, 1.0, 1.0);
+        vec3 lightningColor = vec3(.25, .25, .25);
         float lightningStrength = lightningBrightness;
         float lightningDotNormals = downDotNormals;
         vec3 lightningOut = max(lightningDotNormals, 0.0) * lightningColor * lightningStrength;

@@ -1,19 +1,16 @@
 package rs117.hd.scene.lights;
 
-import java.util.Random;
-
 import lombok.NonNull;
 import net.runelite.api.GraphicsObject;
 import net.runelite.api.NPC;
 import net.runelite.api.Projectile;
 import net.runelite.api.TileObject;
+import net.runelite.api.coords.WorldPoint;
+import rs117.hd.utils.HDUtils;
 
 public class SceneLight extends Light
 {
-
-	private static final Random randomizer = new Random();
-
-	public final int randomOffset = randomizer.nextInt();
+	public final int randomOffset = HDUtils.rand.nextInt();
 
 	public int currentSize;
 	public float currentStrength;
@@ -25,6 +22,7 @@ public class SceneLight extends Light
 	public int currentFadeIn = 0;
 	public boolean visible = true;
 
+	public WorldPoint worldPoint;
 	public int x;
 	public int y;
 	public int z;
@@ -37,10 +35,11 @@ public class SceneLight extends Light
 	public TileObject object = null;
 	public GraphicsObject graphicsObject = null;
 
-	public SceneLight(Light l)
+	public SceneLight(Light l, WorldPoint worldPoint)
 	{
-		this(l.description, l.worldX, l.worldY, l.plane, l.height, l.alignment, l.radius,
+		this(l.description, worldPoint.getX(), worldPoint.getY(), l.plane, l.height, l.alignment, l.radius,
 			l.strength, l.color, l.type, l.duration, l.range, l.fadeInDuration);
+		this.worldPoint = worldPoint;
 	}
 
 	public SceneLight(int worldX, int worldY, int plane, int height, @NonNull Alignment alignment, int radius, float strength, float[] color, LightType type, float duration, float range, int fadeInDuration)

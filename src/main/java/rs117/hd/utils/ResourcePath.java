@@ -26,18 +26,15 @@
 package rs117.hd.utils;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import lombok.NonNull;
-import lombok.extern.slf4j.Slf4j;
-import org.lwjgl.BufferUtils;
-import org.lwjgl.system.MemoryUtil;
-import org.lwjgl.system.Platform;
-
-import javax.annotation.Nullable;
-import javax.annotation.RegEx;
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
@@ -55,10 +52,18 @@ import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import javax.annotation.Nullable;
+import javax.annotation.RegEx;
+import javax.imageio.ImageIO;
+import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
+import org.lwjgl.BufferUtils;
+import org.lwjgl.system.MemoryUtil;
+import org.lwjgl.system.Platform;
 
 @Slf4j
 public class ResourcePath {
-    public static ResourcePath RESOURCE_PATH = Env.getPathOrDefault("RLHD_RESOURCE_PATH", (ResourcePath) null);
+    public static ResourcePath RESOURCE_PATH = Props.getPathOrDefault("rlhd.resource-path", () -> null);
 
     private static final FileWatcher.UnregisterCallback NOOP = () -> {};
 

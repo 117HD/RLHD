@@ -74,6 +74,7 @@ public class BufferPool {
             return null;
         }
 
+        assert capacity <= BUFFER_SIZE;
         return MemoryUtil.memIntBuffer(bufferAddressStack.pop(), capacity);
     }
 
@@ -86,6 +87,7 @@ public class BufferPool {
             return null;
         }
 
+        assert capacity <= BUFFER_SIZE;
         return MemoryUtil.memFloatBuffer(bufferAddressStack.pop(), capacity);
     }
 }
