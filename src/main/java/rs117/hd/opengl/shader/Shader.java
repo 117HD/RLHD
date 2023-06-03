@@ -26,17 +26,16 @@
 package rs117.hd.opengl.shader;
 
 import com.google.common.annotations.VisibleForTesting;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.lwjgl.BufferUtils;
-import rs117.hd.utils.Env;
-
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.lwjgl.BufferUtils;
+import rs117.hd.utils.Props;
 
 import static org.lwjgl.opengl.GL43C.*;
 import static rs117.hd.utils.ResourcePath.path;
@@ -106,7 +105,7 @@ public class Shader
 
 			ok = true;
 
-			if (Env.has("RLHD_DUMP_SHADERS"))
+			if (Props.has("rlhd.dump-shaders"))
 			{
 				int[] numFormats = { 0 };
 				glGetIntegerv(GL_NUM_PROGRAM_BINARY_FORMATS, numFormats);

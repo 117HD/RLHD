@@ -29074,6 +29074,7 @@
     "range": 10,
     "objectIds": [
       46089,
+      46090,
       46164,
       46161,
       46155,
@@ -30385,6 +30386,42 @@
     "range": 20,
     "objectIds": [
       12124
+    ]
+  },
+  {
+    "description": "SKULL_WALL_TORCH",
+    "height": 207,
+    "alignment": "FRONT",
+    "radius": 300,
+    "strength": 10.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      207
+    ]
+  },
+  {
+    "description": "GOBLIN_CAULDRON",
+    "height": 30,
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 30,
+    "objectIds": [
+      12400
     ]
   }
 ]
