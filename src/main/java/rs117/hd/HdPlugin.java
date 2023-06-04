@@ -74,6 +74,7 @@ import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
+import net.runelite.client.game.WorldService;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDependency;
 import net.runelite.client.plugins.PluginDescriptor;
@@ -84,6 +85,9 @@ import net.runelite.client.ui.ClientUI;
 import net.runelite.client.ui.DrawManager;
 import net.runelite.client.util.LinkBrowser;
 import net.runelite.client.util.OSType;
+import net.runelite.http.api.worlds.World;
+import net.runelite.http.api.worlds.WorldRegion;
+import net.runelite.http.api.worlds.WorldResult;
 import net.runelite.rlawt.AWTContext;
 import org.jocl.CL;
 import org.lwjgl.BufferUtils;
@@ -180,6 +184,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 	@Inject
 	private EventBus eventBus;
+
+	@Inject
+	private WorldService worldService;
 
 	@Inject
 	private DrawManager drawManager;
@@ -422,6 +429,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	public boolean configExpandShadowDraw = false;
 	public ShadowMode configShadowMode = ShadowMode.OFF;
 
+	public int currentWorld;
+	public WorldRegion currentRegion = WorldRegion.UNITED_KINGDOM;
 	public int[] camTarget = new int[3];
 
 	private boolean running;
@@ -2230,11 +2239,30 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		if (!running)
 			return;
 
-		if (gameStateChanged.getGameState() == GameState.LOGIN_SCREEN) {
-			// Avoid drawing the last frame's buffer during LOADING after LOGIN_SCREEN
-			renderBufferOffset = 0;
-			hasLoggedIn = false;
-			modelPusher.clearModelCache();
+		switch (gameStateChanged.getGameState()) {
+			case LOGIN_SCREEN:
+				// Avoid drawing the last frame's buffer during LOADING after LOGIN_SCREEN
+				renderBufferOffset = 0;
+				hasLoggedIn = false;
+				modelPusher.clearModelCache();
+				break;
+			case LOGGED_IN:
+				int worldNumber = client.getWorld();
+				if (worldNumber != currentWorld && worldNumber > 300) {
+					WorldResult worldResult = worldService.getWorlds();
+					if (worldResult != null) {
+						World world = worldResult.findWorld(worldNumber);
+						if (world != null) {
+							WorldRegion region = world.getRegion();
+							if (region == null)
+								region = WorldRegion.UNITED_KINGDOM;
+							log.debug("Setting world region to {}", region);
+							currentWorld = worldNumber;
+							currentRegion = region;
+						}
+					}
+				}
+				break;
 		}
 	}
 
@@ -2848,7 +2876,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			uploadScene();
 		}
 
-		if (!hasLoggedIn && client.getGameState() == GameState.LOGGED_IN)
+		if (client.getGameState() == GameState.LOGGED_IN)
 		{
 			hasLoggedIn = true;
 		}
