@@ -51,7 +51,7 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     n2 = -vec3((n2.x * 2 - 1) * waterType.normalStrength, n2.z, (n2.y * 2 - 1) * waterType.normalStrength);
     vec3 normals = normalize(n1 + n2);
 
-    float lightDotNormals = dot(normals, -lightDirection);
+    float lightDotNormals = dot(normals, lightDir);
     float downDotNormals = -normals.y;
     float viewDotNormals = dot(viewDir, normals);
 
@@ -78,7 +78,7 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     vec3 lightOut = max(lightDotNormals, 0.0) * lightColor;
 
     // directional light specular
-    vec3 lightReflectDir = reflect(lightDirection, normals);
+    vec3 lightReflectDir = reflect(-lightDir, normals);
     vec3 lightSpecularOut = specular(viewDir, lightReflectDir, vSpecularGloss, vSpecularStrength, lightColor, lightStrength).rgb;
 
     // point lights
@@ -197,7 +197,7 @@ void sampleUnderwater(inout vec3 outputColor, WaterType waterType, float depth, 
         depthMultiplier *= depthMultiplier;
 
         // height offset
-        causticsUv += -lightDirection.xy * IN.position.y / (128 * scale);
+        causticsUv += lightDir.xy * IN.position.y / (128 * scale);
 
         const ivec2 direction = ivec2(1, -2);
         vec2 flow1 = causticsUv + animationFrame(17) * direction;

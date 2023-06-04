@@ -371,7 +371,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	private int uniLightningBrightness;
 	private int uniSaturation;
 	private int uniContrast;
-	private int uniLightDirection;
+	private int uniLightDir;
 	private int uniShadowMaxBias;
 	private int uniShadowsEnabled;
 	private int uniUnderwaterEnvironment;
@@ -894,7 +894,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		uniLightningBrightness = glGetUniformLocation(glProgram, "lightningBrightness");
 		uniPointLightsCount = glGetUniformLocation(glProgram, "pointLightsCount");
 		uniColorBlindnessIntensity = glGetUniformLocation(glProgram, "colorBlindnessIntensity");
-		uniLightDirection = glGetUniformLocation(glProgram, "lightDirection");
+		uniLightDir = glGetUniformLocation(glProgram, "lightDir");
 		uniShadowMaxBias = glGetUniformLocation(glProgram, "shadowMaxBias");
 		uniShadowsEnabled = glGetUniformLocation(glProgram, "shadowsEnabled");
 		uniUnderwaterEnvironment = glGetUniformLocation(glProgram, "underwaterEnvironment");
@@ -1810,10 +1810,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			int uvBuffer = hRenderBufferUvs.glBufferId;
 			int normalBuffer = hRenderBufferNormals.glBufferId;
 
-			float[] lightProjectionMatrix = Mat4.identity();
-			float lightPitch = environmentManager.currentLightPitch;
-			float lightYaw = environmentManager.currentLightYaw;
+			float lightPitch = (float) Math.toRadians(environmentManager.currentLightPitch);
+			float lightYaw = (float) Math.toRadians(environmentManager.currentLightYaw);
+			float[] lightViewMatrix = Mat4.rotateX(lightPitch);
+			Mat4.mul(lightViewMatrix, Mat4.rotateY(-lightYaw));
 
+			float[] lightProjectionMatrix = Mat4.identity();
 			if (configShadowsEnabled && fboShadowMap != 0 && environmentManager.currentDirectionalStrength > 0.0f)
 			{
 				// render shadow depth map
@@ -1845,8 +1847,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				float scale = HDUtils.lerp(maxScale, minScale, scaleMultiplier);
 				Mat4.mul(lightProjectionMatrix, Mat4.scale(scale, scale, scale));
 				Mat4.mul(lightProjectionMatrix, Mat4.ortho(width, height, near));
-				Mat4.mul(lightProjectionMatrix, Mat4.rotateX((float) Math.toRadians(lightPitch)));
-				Mat4.mul(lightProjectionMatrix, Mat4.rotateY((float) -Math.toRadians(lightYaw)));
+				Mat4.mul(lightProjectionMatrix, lightViewMatrix);
 				Mat4.mul(lightProjectionMatrix, Mat4.translate(-(width / 2f + west), -camZ, -(height / 2f + south)));
 				glUniformMatrix4fv(uniShadowLightProjectionMatrix, false, lightProjectionMatrix);
 
@@ -2024,12 +2025,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			glUniform3fv(uniUnderwaterCausticsColor, environmentManager.currentUnderwaterCausticsColor);
 			glUniform1f(uniUnderwaterCausticsStrength, environmentManager.currentUnderwaterCausticsStrength);
 
-			double lightPitchRadians = Math.toRadians(lightPitch);
-			double lightYawRadians = Math.toRadians(lightYaw);
-			glUniform3f(uniLightDirection,
-				(float) (Math.cos(lightPitchRadians) * -Math.sin(lightYawRadians)),
-				(float) -Math.sin(lightPitchRadians),
-				(float) (Math.cos(lightPitchRadians) * -Math.cos(lightYawRadians)));
+			glUniform3f(uniLightDir, lightViewMatrix[2], lightViewMatrix[6], lightViewMatrix[10]);
 
 			// use a curve to calculate max bias value based on the density of the shadow map
 			float shadowPixelsPerTile = (float)config.shadowResolution().getValue() / (float)config.shadowDistance().getValue();
