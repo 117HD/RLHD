@@ -12731,6 +12731,7 @@ public final class ObjectID
     public static final int PORTAL_OF_DEATH_23730 = 23730;
     public static final int CRADLE_OF_LIFE = 23731;
     public static final int BONE_CHAIN = 23732;
+    public static final int POLE_FLAME = 23813;
     public static final int GATE_23917 = 23917;
     public static final int GATE_23918 = 23918;
     public static final int GATE_23919 = 23919;

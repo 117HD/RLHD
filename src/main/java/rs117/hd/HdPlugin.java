@@ -40,6 +40,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -103,6 +104,7 @@ import rs117.hd.config.ShadowMode;
 import rs117.hd.config.UIScalingMode;
 import rs117.hd.data.WaterType;
 import rs117.hd.data.materials.Material;
+import rs117.hd.data.environments.Diurnal;
 import rs117.hd.model.ModelHasher;
 import rs117.hd.model.ModelPusher;
 import rs117.hd.model.TempModelInfo;
@@ -128,6 +130,7 @@ import rs117.hd.utils.Mat4;
 import rs117.hd.utils.PopupUtils;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
+import rs117.hd.utils.SunCalc;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 
@@ -430,7 +433,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	public ShadowMode configShadowMode = ShadowMode.OFF;
 
 	public int currentWorld;
-	public WorldRegion currentRegion = WorldRegion.UNITED_KINGDOM;
+	public double[] latLong = {0, 0};
 	public int[] camTarget = new int[3];
 
 	private boolean running;
@@ -1810,13 +1813,27 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			int uvBuffer = hRenderBufferUvs.glBufferId;
 			int normalBuffer = hRenderBufferNormals.glBufferId;
 
-			float lightPitch = (float) Math.toRadians(environmentManager.currentLightPitch);
-			float lightYaw = (float) Math.toRadians(environmentManager.currentLightYaw);
+			boolean shadowsAvailable = environmentManager.currentTimeOfDay.isShadowsEnabled();
+			float lightPitch;
+			float lightYaw;
+
+			if(config.dayLightMode() == Diurnal.Mode.CYCLE)
+			{
+				double[] angles = Diurnal.getCurrentAngles(latLong, config.dayLength()); // [ azimuth, altitude ] in radians
+				lightPitch = (float) -angles[1];
+				lightYaw = (float) (angles[0] + Math.PI);
+			}
+			else
+			{
+				lightPitch = (float) Math.toRadians(environmentManager.currentLightPitch);
+				lightYaw = (float) Math.toRadians(environmentManager.currentLightYaw);
+			}
+
+			float[] lightProjectionMatrix = Mat4.identity();
 			float[] lightViewMatrix = Mat4.rotateX(lightPitch);
 			Mat4.mul(lightViewMatrix, Mat4.rotateY(-lightYaw));
 
-			float[] lightProjectionMatrix = Mat4.identity();
-			if (configShadowsEnabled && fboShadowMap != 0 && environmentManager.currentDirectionalStrength > 0.0f)
+			if (configShadowsEnabled && shadowsAvailable && fboShadowMap != 0 && environmentManager.currentDirectionalStrength > 0.0f)
 			{
 				// render shadow depth map
 				glViewport(0, 0, config.shadowResolution().getValue(), config.shadowResolution().getValue());
@@ -1845,6 +1862,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				final float minScale = 0.4f;
 				final float scaleMultiplier = 1.0f - (getDrawDistance() / (maxDrawDistance * maxScale));
 				float scale = HDUtils.lerp(maxScale, minScale, scaleMultiplier);
+
 				Mat4.mul(lightProjectionMatrix, Mat4.scale(scale, scale, scale));
 				Mat4.mul(lightProjectionMatrix, Mat4.ortho(width, height, near));
 				Mat4.mul(lightProjectionMatrix, lightViewMatrix);
@@ -2254,7 +2272,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 								region = WorldRegion.UNITED_KINGDOM;
 							log.debug("Setting world region to {}", region);
 							currentWorld = worldNumber;
-							currentRegion = region;
+							latLong = Diurnal.getLatLong(region);
 						}
 					}
 				}
@@ -2406,6 +2424,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				break;
 			case "expandShadowDraw":
 				configExpandShadowDraw = config.expandShadowDraw();
+				break;
+			case "dayNight":
+				reloadSceneIn(1);
 				break;
 			case "maxDynamicLights":
 				clientThread.invoke(() -> {

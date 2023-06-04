@@ -27,7 +27,7 @@ package rs117.hd.data.environments;
 import java.awt.Color;
 import lombok.Getter;
 
-import static rs117.hd.utils.HDUtils.*;
+import static rs117.hd.utils.HDUtils.rgb;
 
 @Getter
 public enum Environment
@@ -308,6 +308,18 @@ public enum Environment
 		.setDirectionalStrength(2.0f)
 		.setGroundFog(-150, -350, 0.5f)
 	),
+	MORYTANIA_NIGHT(Area.MORYTANIA, new Properties()
+		.setFogColor("#05050b")
+		.setFogDepth(40)
+		.setAmbientColor("#2f5c9e")
+		.setAmbientStrength(2.5f)
+		.setDirectionalColor("#325d9c")
+		.setDirectionalStrength(1.25f)
+		.setLightDirection(260f, 10f)
+		.setWaterColor(8, 8, 18)
+		.setGroundFog(-150, -350, 0.6f)
+		.setTimeOfDay(Diurnal.NIGHT)
+	),
 
 	LUMBRIDGE(Area.LUMBRIDGE, new Properties()),
 	LUMBRIDGE_BASEMENT(Area.LUMBRIDGE_CASTLE_BASEMENT, new Properties()
@@ -318,6 +330,7 @@ public enum Environment
 			.setDirectionalColor("#A29B71")
 			.setDirectionalStrength(1.5f)
 			.setLightDirection(260f, 10f)
+			.setTimeOfDay(Diurnal.DEFAULT)
 	),
 	GOBLIN_MAZE(Area.GOBLIN_MAZE, new Properties()
 			.setFogColor("#050D02")
@@ -376,6 +389,7 @@ public enum Environment
 		.setDirectionalColor("#FFFFFF")
 		.setDirectionalStrength(1.0f)
 		.setLightDirection(260f, 10f)
+		.setTimeOfDay(Diurnal.DEFAULT)
 	),
 
 	GAMES_ROOM(Area.GAMES_ROOM, new Properties()
@@ -709,6 +723,7 @@ public enum Environment
 		.setDirectionalColor(245, 214, 122)
 		.setDirectionalStrength(1.3f)
 		.setLightDirection(260f, 10f)
+		.setTimeOfDay(Diurnal.DEFAULT)
 	),
 
 	// Dragon Slayer II
@@ -1027,6 +1042,7 @@ public enum Environment
 			.setAmbientStrength(1.5f)
 			.setDirectionalStrength(1.0f)
 			.setLightDirection(260f, 10f)
+			.setTimeOfDay(Diurnal.DEFAULT)
 	),
 	TEARS_OF_GUTHIX(Area.TEARS_OF_GUTHIX_CAVES, new Properties()
 			.setFogColor("#060505")
@@ -1038,6 +1054,51 @@ public enum Environment
 			.setLightDirection(260f, 10f)
 	),
 
+	OVERWORLD_NIGHT(Area.OVERWORLD, new Properties()
+			.setFogColor("#05050b")
+			.setFogDepth(30)
+			.setAmbientColor("#2f5c9e")
+			.setAmbientStrength(2.5f)
+			.setDirectionalColor("#325d9c")
+			.setDirectionalStrength(0.0f)
+			.setLightDirection( -45f, 40f)
+			.setWaterColor(8, 8, 18)
+			.setTimeOfDay(Diurnal.NIGHT)
+	),
+	OVERWORLD_MOON(Area.OVERWORLD, new Properties()
+			.setFogColor("#05050b")
+			.setFogDepth(30)
+			.setAmbientColor("#3863a1")
+			.setAmbientStrength(2.5f)
+			.setDirectionalColor("#3d6299")
+			.setDirectionalStrength(1.4f)
+			.setLightDirection( -45f, 40f)
+			.setWaterColor(8, 8, 18)
+			.setTimeOfDay(Diurnal.NIGHT_MOON)
+	),
+	OVERWORLD_SUNSET_SUNRISE(Area.OVERWORLD, new Properties()
+			.setFogColor("#e8a7b2")
+			.setFogDepth(20)
+			.setAmbientColor("#f79e39")
+			.setAmbientStrength(1.2f)
+			.setDirectionalColor("#f77219")
+			.setDirectionalStrength(3f)
+			.setLightDirection(260f, 10f)
+			.setWaterColor(120, 53, 27)
+			.setUnderglowColor("#f78419")
+			.setTimeOfDay(Diurnal.SUNSET_SUNRISE)
+	),
+	OVERWORLD_DUSK_DAWN(Area.OVERWORLD, new Properties()
+			.setFogColor("#16153d")
+			.setFogDepth(20)
+			.setAmbientColor("#174280")
+			.setAmbientStrength(2.5f)
+			.setDirectionalColor("#33497d")
+			.setDirectionalStrength(0.0f)
+			.setLightDirection(-45f, 55f)
+			.setWaterColor(10, 12, 10)
+			.setTimeOfDay(Diurnal.DUSK_DAWN)
+	),
 	// overrides 'ALL' to provide default daylight conditions for the overworld area
 	OVERWORLD(Area.OVERWORLD, new Properties()),
 	// used for underground, instances, etc.
@@ -1050,6 +1111,7 @@ public enum Environment
 		.setDirectionalStrength(1.0f)
 		.setLightDirection(260f, 10f)
 		.setWaterColor(102, 234, 255)
+		.setTimeOfDay(Diurnal.DEFAULT)
 	),
 
 	;
@@ -1081,6 +1143,7 @@ public enum Environment
 	private final float underwaterCausticsStrength;
 	private final float[] waterColor;
 	private final boolean customWaterColor;
+	private final Diurnal timeOfDay;
 
 	private static class Properties
 	{
@@ -1110,6 +1173,7 @@ public enum Environment
 		private float underwaterCausticsStrength = 0;
 		private float[] waterColor = rgb(185, 214, 255);
 		private boolean customWaterColor = false;
+		private Diurnal timeOfDay = Diurnal.DAY;
 
 		public Properties setFogDepth(int depth)
 		{
@@ -1259,6 +1323,12 @@ public enum Environment
 			this.underwaterCausticsStrength = strength;
 			return this;
 		}
+
+		public Properties setTimeOfDay(Diurnal timeOfDay)
+		{
+			this.timeOfDay = timeOfDay;
+			return this;
+		}
 	}
 
 	Environment(Area area, Properties properties)
@@ -1292,5 +1362,6 @@ public enum Environment
 			properties.directionalStrength : properties.underwaterCausticsStrength;
 		this.waterColor = properties.waterColor;
 		this.customWaterColor = properties.customWaterColor;
+		this.timeOfDay = properties.timeOfDay;
 	}
 }
