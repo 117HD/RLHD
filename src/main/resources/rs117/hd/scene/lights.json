@@ -19808,6 +19808,7 @@
       "CANDLE_STAND_25122",
       "STANDING_TORCH_10179",
       "CANDLE_STAND_25123",
+      "CANDLE_STAND",
       "STANDING_TORCH_6404",
       "STANDING_TORCH_6406",
       "STANDING_TORCH_6408",
@@ -19824,6 +19825,25 @@
       "STANDING_TORCH_11606",
       "STANDING_TORCH_15158",
       "LAMP_6203"
+    ]
+  },
+  {
+    "description": "CANDLE_STAND",
+    "height": 200,
+    "alignment": "CENTER",
+    "radius": 500,
+    "strength": 4,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "STAND_22124",
+      "STAND_22123"
     ]
   },
   {
@@ -19866,10 +19886,46 @@
     ],
     "type": "FLICKER",
     "duration": 0,
-    "range": 20,
+    "range": 40,
     "objectIds": [
       "FIRE_25156"
     ]
+  },
+  {
+    "description": "KOUREND_TORCH_SHORT_LARGE",
+    "worldX": 1656,
+    "worldY": 3676,
+    "plane": 0,
+    "height": 430,
+    "alignment": "CENTER",
+    "radius": 700,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 40
+  },
+  {
+    "description": "KOUREND_TORCH_SHORT_LARGE2",
+    "worldX": 1656,
+    "worldY": 3670,
+    "plane": 0,
+    "height": 430,
+    "alignment": "CENTER",
+    "radius": 700,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 40
   },
   {
     "description": "STANDING_TORCH_LARGE",
@@ -21556,6 +21612,81 @@
     "range": 20,
     "objectIds": [
       "POOL_OF_REFRESHMENT"
+    ]
+  },
+  {
+    "description": "WINTUMBER_TREE",
+    "height": 150,
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 5,
+    "color": [
+      255,
+      224,
+      224
+    ],
+    "type": "PULSE",
+    "duration": 1250,
+    "range": 20,
+    "objectIds": [
+      "WINTUMBER_TREE"
+    ]
+  },
+  {
+    "description": "MAGICAL_PUMPKIN",
+    "height": 160,
+    "alignment": "FRONTLEFT",
+    "radius": 300,
+    "strength": 4,
+    "color": [
+      255,
+      191,
+      0
+    ],
+    "type": "PULSE",
+    "duration": 2400,
+    "range": 20,
+    "objectIds": [
+      "MAGICAL_PUMPKIN",
+      "MAGICAL_PUMPKIN_40384",
+      "MAGICAL_PUMPKIN_40385"
+    ]
+  },
+  {
+    "description": "CRYSTAL_OF_POWER",
+    "height": 200,
+    "alignment": "CENTER",
+    "radius": 280,
+    "strength": 15,
+    "color": [
+      130,
+      188,
+      250
+    ],
+    "type": "STATIC",
+    "range": 20,
+    "objectIds": [
+      "CRYSTAL_OF_POWER"
+    ]
+  },
+  {
+    "description": "POH adventure logs",
+    "height": 180,
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 3,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "GILDED_ADVENTURE_LOG_31922",
+      "GILDED_ADVENTURE_LOG",
+      "MAHOGANY_ADVENTURE_LOG"
     ]
   },
   {
