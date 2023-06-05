@@ -40,7 +40,6 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -98,13 +97,14 @@ import org.lwjgl.opengl.GLUtil;
 import org.lwjgl.system.Callback;
 import org.lwjgl.system.Configuration;
 import rs117.hd.config.AntiAliasingMode;
+import rs117.hd.config.DaylightCycle;
 import rs117.hd.config.FogDepthMode;
 import rs117.hd.config.ParallaxMappingMode;
 import rs117.hd.config.ShadowMode;
 import rs117.hd.config.UIScalingMode;
 import rs117.hd.data.WaterType;
+import rs117.hd.scene.TimeOfDay;
 import rs117.hd.data.materials.Material;
-import rs117.hd.data.environments.Diurnal;
 import rs117.hd.model.ModelHasher;
 import rs117.hd.model.ModelPusher;
 import rs117.hd.model.TempModelInfo;
@@ -130,7 +130,6 @@ import rs117.hd.utils.Mat4;
 import rs117.hd.utils.PopupUtils;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
-import rs117.hd.utils.SunCalc;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 
@@ -145,6 +144,7 @@ import static rs117.hd.HdPluginConfig.KEY_SHADOW_MODE;
 import static rs117.hd.HdPluginConfig.KEY_SHADOW_TRANSPARENCY;
 import static rs117.hd.HdPluginConfig.KEY_VANILLA_COLOR_BANDING;
 import static rs117.hd.HdPluginConfig.KEY_WINTER_THEME;
+import static rs117.hd.scene.EnvironmentManager.MINUTES_PER_DAY;
 import static rs117.hd.utils.ResourcePath.path;
 
 @PluginDescriptor(
@@ -433,7 +433,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	public ShadowMode configShadowMode = ShadowMode.OFF;
 
 	public int currentWorld;
-	public double[] latLong = {0, 0};
+	public double[] latLong = { 0, 0 };
 	public int[] camTarget = new int[3];
 
 	private boolean running;
@@ -1813,13 +1813,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			int uvBuffer = hRenderBufferUvs.glBufferId;
 			int normalBuffer = hRenderBufferNormals.glBufferId;
 
-			boolean shadowsAvailable = environmentManager.currentTimeOfDay.isShadowsEnabled();
 			float lightPitch;
 			float lightYaw;
-
-			if(config.dayLightMode() == Diurnal.Mode.CYCLE)
+			if (config.daylightCycle() == DaylightCycle.HOUR_LONG_DAYS)
 			{
-				double[] angles = Diurnal.getCurrentAngles(latLong, config.dayLength()); // [ azimuth, altitude ] in radians
+				double[] angles = TimeOfDay.getCurrentAngles(latLong, MINUTES_PER_DAY);
 				lightPitch = (float) -angles[1];
 				lightYaw = (float) (angles[0] + Math.PI);
 			}
@@ -1829,11 +1827,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				lightYaw = (float) Math.toRadians(environmentManager.currentLightYaw);
 			}
 
-			float[] lightProjectionMatrix = Mat4.identity();
 			float[] lightViewMatrix = Mat4.rotateX(lightPitch);
 			Mat4.mul(lightViewMatrix, Mat4.rotateY(-lightYaw));
 
-			if (configShadowsEnabled && shadowsAvailable && fboShadowMap != 0 && environmentManager.currentDirectionalStrength > 0.0f)
+			float[] lightProjectionMatrix = Mat4.identity();
+			if (configShadowsEnabled && fboShadowMap != 0 && environmentManager.currentDirectionalStrength > 0.0f)
 			{
 				// render shadow depth map
 				glViewport(0, 0, config.shadowResolution().getValue(), config.shadowResolution().getValue());
@@ -2272,7 +2270,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 								region = WorldRegion.UNITED_KINGDOM;
 							log.debug("Setting world region to {}", region);
 							currentWorld = worldNumber;
-							latLong = Diurnal.getLatLong(region);
+							latLong = TimeOfDay.getLatLong(region);
 						}
 					}
 				}

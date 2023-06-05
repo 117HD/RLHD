@@ -34,9 +34,9 @@ import net.runelite.api.GameState;
 import net.runelite.api.coords.WorldPoint;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
+import rs117.hd.config.DaylightCycle;
 import rs117.hd.config.DefaultSkyColor;
 import rs117.hd.data.environments.Area;
-import rs117.hd.data.environments.Diurnal;
 import rs117.hd.data.environments.Environment;
 import rs117.hd.utils.AABB;
 import rs117.hd.utils.HDUtils;
@@ -62,6 +62,7 @@ public class EnvironmentManager
 	// distance in tiles to skip transition (e.g. entering cave, teleporting)
 	// walking across a loading line causes a movement of 40-41 tiles
 	private static final int SKIP_TRANSITION_DISTANCE = 41;
+	public static final int MINUTES_PER_DAY = 60;
 
 	// last environment change time
 	private long startTime = 0;
@@ -139,11 +140,12 @@ public class EnvironmentManager
 	private float targetLightYaw = 0f;
 
 	private boolean lightningEnabled = false;
-	public Diurnal currentTimeOfDay = Diurnal.DAY;
 	private boolean isOverworld = false;
 	// some necessary data for reloading the scene while in POH to fix major performance loss
 	private boolean isInHouse = false;
 	private int previousPlane;
+
+	public TimeOfDay currentTimeOfDay = TimeOfDay.DAY;
 
 	public void startUp()
 	{
@@ -160,28 +162,6 @@ public class EnvironmentManager
 	public void update(SceneContext sceneContext, WorldPoint position)
 	{
 		isOverworld = Area.OVERWORLD.containsPoint(position);
-
-
-		if(config.dayLightMode() == Diurnal.Mode.CYCLE)
-		{
-			currentTimeOfDay = Diurnal.getTimeOfDay(plugin.latLong, config.dayLength());
-		}
-		else if(config.dayLightMode() == Diurnal.Mode.ALWAYS_DAY)
-		{
-			currentTimeOfDay = Diurnal.DAY;
-		}
-		else if (config.dayLightMode() == Diurnal.Mode.ALWAYS_NIGHT)
-		{
-			currentTimeOfDay = Diurnal.NIGHT_MOON;
-		}
-		else if (config.dayLightMode() == Diurnal.Mode.ALWAYS_SUNSET) // Remove
-		{
-			currentTimeOfDay = Diurnal.SUNSET_SUNRISE;
-		}
-		else if (config.dayLightMode() == Diurnal.Mode.ALWAYS_DUSK) // Remove
-		{
-			currentTimeOfDay = Diurnal.DUSK_DAWN;
-		}
 
 		// skip the transitional fade if the player has moved too far
 		// since the previous frame. results in an instant transition when
@@ -202,15 +182,35 @@ public class EnvironmentManager
 			}
 		}
 
-		boolean skipTransition = tileChange >= SKIP_TRANSITION_DISTANCE;
+		switch (config.daylightCycle())
+		{
+			case HOUR_LONG_DAYS:
+				currentTimeOfDay = TimeOfDay.getTimeOfDay(plugin.latLong, MINUTES_PER_DAY);
+				break;
+			case ALWAYS_DAY:
+				currentTimeOfDay = TimeOfDay.DAY;
+				break;
+			case ALWAYS_NIGHT:
+				currentTimeOfDay = TimeOfDay.NIGHT_MOON;
+				break;
+			case ALWAYS_SUNSET:
+				currentTimeOfDay = TimeOfDay.SUNSET_SUNRISE;
+				break;
+			case ALWAYS_DUSK:
+				currentTimeOfDay = TimeOfDay.DUSK_DAWN;
+				break;
+		}
 
+		boolean skipTransition = tileChange >= SKIP_TRANSITION_DISTANCE;
 		for (Environment environment : sceneContext.environments)
 		{
-			if(environment.getTimeOfDay() == Diurnal.DEFAULT)
+			TimeOfDay timeOfDayFilter = environment.getApplyOnlyDuringTimeOfDay();
+			if (timeOfDayFilter != null && timeOfDayFilter != currentTimeOfDay)
 			{
-				currentTimeOfDay = Diurnal.DEFAULT;
+				continue;
 			}
-			if (environment.getArea().containsPoint(position) && environment.getTimeOfDay() == currentTimeOfDay)
+
+			if (environment.getArea().containsPoint(position))
 			{
 				if (environment != currentEnvironment)
 				{
@@ -258,7 +258,9 @@ public class EnvironmentManager
 		else
 		{
 			// interpolate between start and target values
-			float t = (float)(currentTime - startTime) / (float) (config.dayLightMode() == Diurnal.Mode.CYCLE ? Diurnal.getTransitionDuration(plugin.latLong, config.dayLength()) : TRANSITION_DURATION);
+			int transitionDuration = config.daylightCycle() == DaylightCycle.HOUR_LONG_DAYS ?
+				TimeOfDay.getTransitionDuration(plugin.latLong, MINUTES_PER_DAY) : TRANSITION_DURATION;
+			float t = (float) (currentTime - startTime) / transitionDuration;
 
 			currentFogColor = HDUtils.lerpVectors(startFogColor, targetFogColor, t);
 			currentWaterColor = HDUtils.lerpVectors(startWaterColor, targetWaterColor, t);
@@ -276,9 +278,6 @@ public class EnvironmentManager
 			currentLightYaw = HDUtils.lerp(startLightYaw, targetLightYaw, t);
 			currentUnderwaterCausticsColor = HDUtils.lerpVectors(startUnderwaterCausticsColor, targetUnderwaterCausticsColor, t);
 			currentUnderwaterCausticsStrength = HDUtils.lerp(startUnderwaterCausticsStrength, targetUnderwaterCausticsStrength, t);
-
-			// debug Directional Strength and Moon Strength
-			log.debug("Directional Strength: {}", currentDirectionalStrength);
 		}
 
 		updateLightning();
@@ -299,10 +298,11 @@ public class EnvironmentManager
 			return;
 
 		startTime = System.currentTimeMillis();
-		transitionCompleteTime = startTime + (skipTransition ? 0 : config.dayLightMode() == Diurnal.Mode.CYCLE ? Diurnal.getTransitionDuration(plugin.latLong, config.dayLength()) : TRANSITION_DURATION);
+		int transitionDuration = config.daylightCycle() == DaylightCycle.HOUR_LONG_DAYS ?
+			TimeOfDay.getTransitionDuration(plugin.latLong, MINUTES_PER_DAY) : TRANSITION_DURATION;
+		transitionCompleteTime = startTime + (skipTransition ? 0 : transitionDuration);
 
 		log.debug("changing environment from {} to {} (instant: {})", currentEnvironment, newEnvironment, skipTransition);
-
 		currentEnvironment = newEnvironment;
 
 		// set previous variables to current ones

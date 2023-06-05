@@ -32,7 +32,6 @@ import static rs117.hd.HdPlugin.MAX_FOG_DEPTH;
 import static rs117.hd.HdPluginConfig.CONFIG_GROUP;
 
 import rs117.hd.config.*;
-import rs117.hd.data.environments.Diurnal;
 
 @ConfigGroup(CONFIG_GROUP)
 public interface HdPluginConfig extends Config
@@ -312,7 +311,7 @@ public interface HdPluginConfig extends Config
 		keyName = "environmentalLighting",
 		name = "Atmospheric Lighting",
 		description = "Change environmental lighting based on the current area.",
-		position = 5,
+		position = 4,
 		section = lightingSettings
 	)
 	default boolean atmosphericLighting()
@@ -329,7 +328,7 @@ public interface HdPluginConfig extends Config
 			"'Off' completely disables shadows.<br>" +
 			"'Fast' enables fast shadows without any texture detail.<br>" +
 			"'Detailed' enables slower shadows with support for texture detail.",
-		position = 6,
+		position = 5,
 		section = lightingSettings
 	)
 	default ShadowMode shadowMode()
@@ -343,7 +342,7 @@ public interface HdPluginConfig extends Config
 		name = "Shadow Transparency",
 		description =
 			"Enables partial support for shadows that take transparency into account.",
-		position = 7,
+		position = 6,
 		section = lightingSettings
 	)
 	default boolean enableShadowTransparency()
@@ -357,7 +356,7 @@ public interface HdPluginConfig extends Config
 		description =
 			"The resolution of the shadow map.<br>" +
 			"Higher resolutions result in higher quality shadows, at the cost of GPU performance.",
-		position = 8,
+		position = 7,
 		section = lightingSettings
 	)
 	default ShadowResolution shadowResolution()
@@ -430,28 +429,15 @@ public interface HdPluginConfig extends Config
 	String environmentSettings = "environmentSettings";
 
 	@ConfigItem(
-			keyName = "dayLightMode",
-			name = "Daylight Mode",
-			description = "Choose between day/night cycle modes.",
-			position = 209,
-			section = environmentSettings
+		keyName = "daylightCycle",
+		name = "Daylight Cycle",
+		description = "Choose how the cycle between night and day should behave.",
+		position = 0,
+		section = environmentSettings
 	)
-	default Diurnal.Mode dayLightMode() {
-		return Diurnal.Mode.ALWAYS_DAY;
-	}
-
-	// day length
-	@Range(min = 1, max = 60)
-	@ConfigItem(
-			keyName = "dayLength",
-			name = "Day Length",
-			description = "Set the length of the day in minutes.",
-			position = 210,
-			section = environmentSettings
-	)
-	default int dayLength()
+	default DaylightCycle daylightCycle()
 	{
-		return 2;
+		return DaylightCycle.HOUR_LONG_DAYS;
 	}
 
 	@ConfigItem(

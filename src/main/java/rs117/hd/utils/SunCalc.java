@@ -45,7 +45,15 @@ public class SunCalc
 		J1970 = 2440588,
 		J2000 = 2451545;
 
-	// https://github.com/mourner/suncalc#sun-position
+	/**
+	 * Calculate angles for the sun's position in the sky at a given time and location.
+	 * @param millis time in milliseconds since the Unix epoch
+	 * @param latitude coordinate
+	 * @param longitude coordinate
+	 * @return the azimuth and altitude angles in radians
+	 * @see <a href="https://en.wikipedia.org/wiki/Horizontal_coordinate_system">Horizontal coordinate system</a>
+	 * @see <a href="https://github.com/mourner/suncalc#sun-position">suncalc npm documentation</a>
+	 */
 	public static double[] getPosition(long millis, double latitude, double longitude)
 	{
 		double
@@ -59,7 +67,15 @@ public class SunCalc
 		return new double[]{azimuth(H, phi, c[0]), altitude(H, phi, c[0])};
 	}
 
-	// https://github.com/mourner/suncalc#moon-position
+	/**
+	 * Calculate angles for the moon's position in the sky at a given time and location.
+	 * @param millis time in milliseconds since the Unix epoch
+	 * @param latitude coordinate
+	 * @param longitude coordinate
+	 * @return the azimuth and altitude angles in radians
+	 * @see <a href="https://en.wikipedia.org/wiki/Horizontal_coordinate_system">Horizontal coordinate system</a>
+	 * @see <a href="https://github.com/mourner/suncalc#moon-position">suncalc npm documentation</a>
+	 */
 	public static double[] getMoonPosition(long millis, double latitude, double longitude)
 	{
 		double

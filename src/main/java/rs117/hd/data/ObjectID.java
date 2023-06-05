@@ -28,10 +28,10 @@ public final class ObjectID
         }
     }
 
-	// HD Object names
-	public static final int POLE_FLAME = 23813;
+    // HD Object names
+    public static final int POLE_FLAME = 23813;
 
-	// RuneLite Object names. Do not edit.
+    // RuneLite Object names. Do not edit.
     public static final int CRATE = 1;
     public static final int CAVE_ENTRANCE = 2;
     public static final int DOOR = 3;
