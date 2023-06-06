@@ -1073,18 +1073,6 @@ public enum Environment
 		.setLightDirection( -45f, 40f)
 		.setWaterColor(8, 8, 18)
 	),
-	OVERWORLD_SUNSET_SUNRISE(Area.OVERWORLD, new Properties()
-		.applyOnlyDuringTimeOfDay(TimeOfDay.SUNSET_SUNRISE)
-		.setFogColor("#e8a7b2")
-		.setFogDepth(20)
-		.setAmbientColor("#f79e39")
-		.setAmbientStrength(1.2f)
-		.setDirectionalColor("#f77219")
-		.setDirectionalStrength(3f)
-		.setLightDirection(260f, 10f)
-		.setWaterColor(120, 53, 27)
-		.setUnderglowColor("#f78419")
-	),
 	OVERWORLD_DUSK_DAWN(Area.OVERWORLD, new Properties()
 		.applyOnlyDuringTimeOfDay(TimeOfDay.DUSK_DAWN)
 		.setFogColor("#16153d")

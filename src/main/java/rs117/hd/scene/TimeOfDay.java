@@ -9,14 +9,12 @@ public enum TimeOfDay
 	DAY,
 	NIGHT_MOON,
 	NIGHT,
-	SUNSET_SUNRISE,
 	DUSK_DAWN,
 	;
 
-	private static final float SUNRISE_DURATION = 0.02f;
 	private static final float DAWN_DURATION = 0.01333f;
 	private static final long MS_PER_MINUTE = 60000;
-	private static final float NIGHT_RANGE = 2.35f;
+	private static final float NIGHT_RANGE = 2f;
 
 	public static TimeOfDay getTimeOfDay(double[] latLong, int dayLength)
 	{
@@ -41,10 +39,6 @@ public enum TimeOfDay
 		{
 			return TimeOfDay.DUSK_DAWN;
 		}
-		else if (isSunriseSunset)
-		{
-			return TimeOfDay.SUNSET_SUNRISE;
-		}
 		else
 		{
 			return TimeOfDay.DAY;
@@ -58,15 +52,14 @@ public enum TimeOfDay
 		{
 			switch (timeOfDay)
 			{
-				case DAY:
-				case SUNSET_SUNRISE:
-					return (int) ((MS_PER_MINUTE * dayLength) * SUNRISE_DURATION);
 				case NIGHT:
 				case DUSK_DAWN:
 					return (int) ((MS_PER_MINUTE * dayLength) * DAWN_DURATION);
+				default:
+					return (int) ((MS_PER_MINUTE * dayLength) * 0.02f);
 			}
 		}
-		return (int) ((MS_PER_MINUTE * dayLength) * SUNRISE_DURATION);
+		return (int) ((MS_PER_MINUTE * dayLength) * 0.02f);
 	}
 
 	/**
@@ -95,6 +88,18 @@ public enum TimeOfDay
 		return angles;
 	}
 
+	public static float getSunlightStrength(double[] latLong, int dayLength) {
+		Instant modifiedDate = getModifiedDate(Instant.now(), dayLength);
+		float strength = SunCalc.getStrength(modifiedDate.toEpochMilli(), latLong);
+		return strength;
+	}
+
+	public static float[] getSunlightColor(double[] latLong, int dayLength) {
+		Instant modifiedDate = getModifiedDate(Instant.now(), dayLength);
+		float[] color = SunCalc.getColor(modifiedDate.toEpochMilli(), latLong);
+
+		return color;
+	}
 	public static Instant getModifiedDate(Instant currentDate, int dayLength)
 	{
 		long millisPerDay = dayLength * MS_PER_MINUTE;
