@@ -1815,14 +1815,15 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 			float lightPitch;
 			float lightYaw;
-			float strengthFactor = 1.0f;
+			float lightStrength = environmentManager.currentDirectionalStrength;
 			float[] lightColor = environmentManager.currentDirectionalColor;
 			TimeOfDay timeOfDayFilter = environmentManager.currentEnvironment.getApplyOnlyDuringTimeOfDay();
 
 			if (timeOfDayFilter != null && config.daylightCycle() == DaylightCycle.HOUR_LONG_DAYS)
 			{
 				double[] angles = TimeOfDay.getCurrentAngles(latLong, MINUTES_PER_DAY);
-				strengthFactor = TimeOfDay.getLightStrength(latLong, MINUTES_PER_DAY);
+				lightStrength *= TimeOfDay.getLightStrength(latLong, MINUTES_PER_DAY);
+				log.debug("lightStrength: {}", lightStrength);
 				lightColor = TimeOfDay.getLightColor(latLong, MINUTES_PER_DAY);
 				lightPitch = (float) -angles[1];
 				lightYaw = (float) (angles[0] + Math.PI);
@@ -2012,9 +2013,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			glUniform3f(uniAmbientColor, ambientColor[0], ambientColor[1], ambientColor[2]);
 
 			// get light strength from either the config or the current area
-			float lightStrength = environmentManager.currentDirectionalStrength;
+
 			lightStrength *= (double)config.brightness() / 20;
-			lightStrength *= strengthFactor;
 			glUniform1f(uniLightStrength, lightStrength);
 
 			// and light color

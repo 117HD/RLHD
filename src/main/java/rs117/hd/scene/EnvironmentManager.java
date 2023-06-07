@@ -193,9 +193,6 @@ public class EnvironmentManager
 			case ALWAYS_NIGHT:
 				currentTimeOfDay = TimeOfDay.NIGHT;
 				break;
-			case ALWAYS_DUSK:
-				currentTimeOfDay = TimeOfDay.DUSK_DAWN;
-				break;
 		}
 
 		boolean skipTransition = tileChange >= SKIP_TRANSITION_DISTANCE;

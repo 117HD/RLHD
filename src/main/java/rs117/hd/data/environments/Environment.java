@@ -1056,22 +1056,11 @@ public enum Environment
 		.setFogColor("#05050b")
 		.setFogDepth(30)
 		.setAmbientColor("#3863a1")
-		.setAmbientStrength(2.5f)
+		.setAmbientStrength(2f)
 		.setDirectionalColor("#B5CDFF")
 		.setDirectionalStrength(0.75f)
 		.setLightDirection( -45f, 40f)
 		.setWaterColor(8, 8, 18)
-	),
-	OVERWORLD_DUSK_DAWN(Area.OVERWORLD, new Properties()
-		.applyOnlyDuringTimeOfDay(TimeOfDay.DUSK_DAWN)
-		.setFogColor("#16153d")
-		.setFogDepth(20)
-		.setAmbientColor("#174280")
-		.setAmbientStrength(2.5f)
-		.setDirectionalColor("#33497d")
-		.setDirectionalStrength(0.0f)
-		.setLightDirection(-45f, 55f)
-		.setWaterColor(10, 12, 10)
 	),
 	// overrides 'ALL' to provide default daylight conditions for the overworld area
 	OVERWORLD(Area.OVERWORLD, new Properties()

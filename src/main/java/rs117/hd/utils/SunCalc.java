@@ -68,15 +68,36 @@ public class SunCalc
 		return new double[]{azimuth(H, phi, c[0]), altitude(H, phi, c[0])};
 	}
 
-	public static float getStrength(double[] angles) {
+	/**
+	 * Calculate strength of the sun's light based on the current altitude at a given time and location.
+	 * @param angles azimuth and altitude angles in radians
+	 * @param fadeFactor how soon to fade the light at the start and end of the day
+	 * @return light strength float between 0 and 1
+	 */
+	public static float getStrength(double[] angles, float fadeFactor) {
 		double altitude = angles[1];
 
 		if (altitude < 0) {
 			return 0;
 		}
 
-		// Calculate the sunlight strength as a normalized value from 0 to 1
-		float strength = (float) (altitude / (Math.PI / 2.0));
+		float normalizedAltitude = (float) (altitude / (Math.PI / 2.0));
+
+		float fadedStrength = (float) Math.sin(normalizedAltitude * Math.PI / 2.0);
+
+		float fadeStart = fadeFactor * 0.4f;
+		float fadeEnd = 1 - fadeStart;
+
+		float strength;
+		if (normalizedAltitude < fadeStart) {
+			strength = fadedStrength * (normalizedAltitude / fadeStart);
+			System.out.println("Fading starts");
+		} else if (normalizedAltitude > fadeEnd) {
+			strength = fadedStrength * ((1 - normalizedAltitude) / fadeStart);
+			System.out.println("Fading ends");
+		} else {
+			strength = fadedStrength;
+		}
 
 		return strength;
 	}
@@ -89,12 +110,12 @@ public class SunCalc
 		double[][] altitudeTemperatureRange = {
 				{0, 15000},
 				{5, 2000},
-				{15, 3000},
-				{20, 4000},
-				{30, 5000},
-				{45, 5500},
+				{15, 2500},
+				{30, 4500},
+				{40, 5000},
+				{50, 5500},
 				{60, 6000},
-				{75, 6500},
+				{70, 6500},
 				{80, 6500}
 		};
 
@@ -275,18 +296,19 @@ public class SunCalc
 		};
 	}
 
-	public static float getMoonStrength(double[] angles) {
-		double azimuth = angles[0];
-		double altitude = angles[1];
+	public static float getMoonStrength(double[] moonAngles, double[] angles) {
+		double moonAltitude = moonAngles[1];
+		double sunAltitude = angles[1];
 
-		if (altitude < 0) {
+		if (moonAltitude < 0) {
 			return 0;
 		}
+		else if (sunAltitude > Math.toRadians(-5)) {
+			double fadeFactor = Math.max(0, (sunAltitude - Math.toRadians(-5)) / Math.toRadians(5));
+			return (float) ((1 - fadeFactor) * (moonAltitude / (Math.PI / 2.0)));
+		}
 
-		// Calculate the Moon light strength as a normalized value from 0 to 1
-		float strength = (float) (altitude / (Math.PI / 2.0));
-
-		return strength;
+		return (float) (moonAltitude / (Math.PI / 2.0));
 	}
 
 	public static double toJulian(long millis)

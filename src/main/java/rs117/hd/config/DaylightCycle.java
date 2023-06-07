@@ -8,7 +8,6 @@ public enum DaylightCycle
 	HOUR_LONG_DAYS("1-Hour Days"),
 	ALWAYS_DAY,
 	ALWAYS_NIGHT,
-	ALWAYS_DUSK,
 	;
 
 	private final String name;

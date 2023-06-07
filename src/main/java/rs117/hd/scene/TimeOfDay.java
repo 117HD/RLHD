@@ -8,7 +8,6 @@ public enum TimeOfDay
 {
 	DAY,
 	NIGHT,
-	DUSK_DAWN,
 	;
 
 	private static final long MS_PER_MINUTE = 60000;
@@ -24,10 +23,6 @@ public enum TimeOfDay
 		if (isNight(angles[1]))
 		{
 			return TimeOfDay.NIGHT;
-		}
-		else if (isDuskDawn(angles[1]))
-		{
-			return TimeOfDay.DUSK_DAWN;
 		}
 		else
 		{
@@ -68,9 +63,9 @@ public enum TimeOfDay
 		float strength;
 
 		if (isNight(angles[1]))
-			strength = SunCalc.getMoonStrength(moonAngles);
+			strength = SunCalc.getMoonStrength(moonAngles, angles);
 		else
-			strength = SunCalc.getStrength(angles);
+			strength = SunCalc.getStrength(angles, 0.3f);
 
 		return strength;
 	}
@@ -123,10 +118,5 @@ public enum TimeOfDay
 	private static boolean isNight(double altitude) {
 		double angleFromZenith = Math.abs(altitude - Math.PI / 2);
 		return angleFromZenith > Math.PI / NIGHT_RANGE;
-	}
-
-	private static boolean isDuskDawn(double altitude) {
-		double angleFromZenith = Math.abs(altitude - Math.PI / 2);
-		return angleFromZenith > Math.PI / 2.45;
 	}
 }
