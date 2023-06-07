@@ -8,7 +8,6 @@ public enum DaylightCycle
 	HOUR_LONG_DAYS("1-Hour Days"),
 	ALWAYS_DAY,
 	ALWAYS_NIGHT,
-	ALWAYS_SUNSET,
 	ALWAYS_DUSK,
 	;
 
