@@ -1815,15 +1815,15 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 			float lightPitch;
 			float lightYaw;
-			float sunStrength = 1.0f;
-			float[] sunlightColor = environmentManager.currentDirectionalColor;
+			float strengthFactor = 1.0f;
+			float[] lightColor = environmentManager.currentDirectionalColor;
 			TimeOfDay timeOfDayFilter = environmentManager.currentEnvironment.getApplyOnlyDuringTimeOfDay();
 
 			if (timeOfDayFilter != null && config.daylightCycle() == DaylightCycle.HOUR_LONG_DAYS)
 			{
 				double[] angles = TimeOfDay.getCurrentAngles(latLong, MINUTES_PER_DAY);
-				sunStrength = TimeOfDay.getSunlightStrength(latLong, MINUTES_PER_DAY);
-				sunlightColor = TimeOfDay.getSunlightColor(latLong, MINUTES_PER_DAY);
+				strengthFactor = TimeOfDay.getLightStrength(latLong, MINUTES_PER_DAY);
+				lightColor = TimeOfDay.getLightColor(latLong, MINUTES_PER_DAY);
 				lightPitch = (float) -angles[1];
 				lightYaw = (float) (angles[0] + Math.PI);
 			}
@@ -2014,11 +2014,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			// get light strength from either the config or the current area
 			float lightStrength = environmentManager.currentDirectionalStrength;
 			lightStrength *= (double)config.brightness() / 20;
-			lightStrength *= sunStrength;
+			lightStrength *= strengthFactor;
 			glUniform1f(uniLightStrength, lightStrength);
 
 			// and light color
-			float[] lightColor = sunlightColor;
 			glUniform3f(uniLightColor, lightColor[0], lightColor[1], lightColor[2]);
 
 			// get underglow light strength from the current area

@@ -7,7 +7,6 @@ import rs117.hd.utils.SunCalc;
 public enum TimeOfDay
 {
 	DAY,
-	NIGHT_MOON,
 	NIGHT,
 	DUSK_DAWN,
 	;
@@ -21,19 +20,12 @@ public enum TimeOfDay
 
 		double[] angles = SunCalc.getPosition(modifiedDate.toEpochMilli(), latLong[0], latLong[1]);
 		angles[1] = Math.PI - angles[1]; // Flip the direction of rotation, since Gielinor rotates opposite to Earth
-		double angleFromZenith = Math.abs(angles[1] - Math.PI / 2);
-		boolean isNight = angleFromZenith > Math.PI / NIGHT_RANGE;
-		boolean isDuskDawn = angleFromZenith > Math.PI / 2.45;
 
-		if (isNight)
+		if (isNight(angles[1]))
 		{
-			angles = SunCalc.getMoonPosition(modifiedDate.toEpochMilli(), latLong[0], latLong[1]);
-			angles[1] = Math.PI - angles[1]; // Flip the direction of rotation, since the moon orbits opposite to Earth's moon
-			double moonAngleFromZenith = Math.abs(angles[1] - Math.PI / 2);
-
-			return moonAngleFromZenith > Math.PI / NIGHT_RANGE ? TimeOfDay.NIGHT : TimeOfDay.NIGHT_MOON;
+			return TimeOfDay.NIGHT;
 		}
-		else if (isDuskDawn)
+		else if (isDuskDawn(angles[1]))
 		{
 			return TimeOfDay.DUSK_DAWN;
 		}
@@ -56,10 +48,8 @@ public enum TimeOfDay
 
 		double[] angles = SunCalc.getPosition(modifiedDate.toEpochMilli(), latLong[0], latLong[1]);
 		angles[1] = Math.PI - angles[1]; // Flip the direction of rotation, since Gielinor rotates opposite to Earth
-		double angleFromZenith = Math.abs(angles[1] - Math.PI / 2);
-		boolean isNight = angleFromZenith > Math.PI / NIGHT_RANGE;
 
-		if (isNight)
+		if (isNight(angles[1]))
 		{
 			// Switch to moon angles
 			angles = SunCalc.getMoonPosition(modifiedDate.toEpochMilli(), latLong[0], latLong[1]);
@@ -69,18 +59,28 @@ public enum TimeOfDay
 		return angles;
 	}
 
-	public static float getSunlightStrength(double[] latLong, int dayLength) {
+	public static float getLightStrength(double[] latLong, int dayLength) {
 		Instant modifiedDate = getModifiedDate(Instant.now(), dayLength);
-		float strength = SunCalc.getStrength(modifiedDate.toEpochMilli(), latLong);
+
+		double[] angles = SunCalc.getPosition(modifiedDate.toEpochMilli(), latLong[0], latLong[1]);
+		double[] moonAngles = SunCalc.getMoonPosition(modifiedDate.toEpochMilli(), latLong[0], latLong[1]);
+
+		float strength;
+
+		if (isNight(angles[1]))
+			strength = SunCalc.getMoonStrength(moonAngles);
+		else
+			strength = SunCalc.getStrength(angles);
+
 		return strength;
 	}
 
-	public static float[] getSunlightColor(double[] latLong, int dayLength) {
+	public static float[] getLightColor(double[] latLong, int dayLength) {
 		Instant modifiedDate = getModifiedDate(Instant.now(), dayLength);
-		float[] color = SunCalc.getColor(modifiedDate.toEpochMilli(), latLong);
 
-		return color;
+		return SunCalc.getColor(modifiedDate.toEpochMilli(), latLong);
 	}
+
 	public static Instant getModifiedDate(Instant currentDate, int dayLength)
 	{
 		long millisPerDay = dayLength * MS_PER_MINUTE;
@@ -118,5 +118,15 @@ public enum TimeOfDay
 				break;
 		}
 		return new double[]{latitude, longitude};
+	}
+
+	private static boolean isNight(double altitude) {
+		double angleFromZenith = Math.abs(altitude - Math.PI / 2);
+		return angleFromZenith > Math.PI / NIGHT_RANGE;
+	}
+
+	private static boolean isDuskDawn(double altitude) {
+		double angleFromZenith = Math.abs(altitude - Math.PI / 2);
+		return angleFromZenith > Math.PI / 2.45;
 	}
 }

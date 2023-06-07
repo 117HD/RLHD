@@ -191,7 +191,7 @@ public class EnvironmentManager
 				currentTimeOfDay = TimeOfDay.DAY;
 				break;
 			case ALWAYS_NIGHT:
-				currentTimeOfDay = TimeOfDay.NIGHT_MOON;
+				currentTimeOfDay = TimeOfDay.NIGHT;
 				break;
 			case ALWAYS_DUSK:
 				currentTimeOfDay = TimeOfDay.DUSK_DAWN;

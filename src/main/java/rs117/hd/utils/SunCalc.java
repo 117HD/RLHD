@@ -68,19 +68,17 @@ public class SunCalc
 		return new double[]{azimuth(H, phi, c[0]), altitude(H, phi, c[0])};
 	}
 
-	public static float getStrength(long millis, double[] latLong) {
-		double[] position = getPosition(millis, latLong[0], latLong[1]);
-		double azimuth = position[0];
-		double altitude = position[1];
+	public static float getStrength(double[] angles) {
+		double altitude = angles[1];
 
 		if (altitude < 0) {
 			return 0;
 		}
 
 		// Calculate the sunlight strength as a normalized value from 0 to 1
-		float sunlightStrength = (float) (altitude / (Math.PI / 2.0));
+		float strength = (float) (altitude / (Math.PI / 2.0));
 
-		return sunlightStrength;
+		return strength;
 	}
 
 	public static float[] getColor(long millis, double[] latLong) {
@@ -88,18 +86,14 @@ public class SunCalc
 		double azimuth = position[0];
 		double altitudeDegrees = Math.toDegrees(position[1]);
 
-		if (altitudeDegrees < 0) {
-			return new float[]{0.0f, 0.0f, 0.0f}; // Sun is below the horizon, no sunlight
-		}
-
 		double[][] altitudeTemperatureRange = {
-				{0, 13000},
+				{0, 15000},
 				{5, 2000},
-				{15, 2500},
+				{15, 3000},
 				{20, 4000},
-				{30, 4500},
-				{45, 5000},
-				{60, 5500},
+				{30, 5000},
+				{45, 5500},
+				{60, 6000},
 				{75, 6500},
 				{80, 6500}
 		};
@@ -279,6 +273,20 @@ public class SunCalc
 			0.5 + 0.5 * inc * (angle < 0 ? -1 : 1) / Math.PI, // phase
 			angle
 		};
+	}
+
+	public static float getMoonStrength(double[] angles) {
+		double azimuth = angles[0];
+		double altitude = angles[1];
+
+		if (altitude < 0) {
+			return 0;
+		}
+
+		// Calculate the Moon light strength as a normalized value from 0 to 1
+		float strength = (float) (altitude / (Math.PI / 2.0));
+
+		return strength;
 	}
 
 	public static double toJulian(long millis)

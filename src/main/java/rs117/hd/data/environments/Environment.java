@@ -1055,21 +1055,10 @@ public enum Environment
 		.applyOnlyDuringTimeOfDay(TimeOfDay.NIGHT)
 		.setFogColor("#05050b")
 		.setFogDepth(30)
-		.setAmbientColor("#2f5c9e")
-		.setAmbientStrength(2.5f)
-		.setDirectionalColor("#325d9c")
-		.setDirectionalStrength(0.0f)
-		.setLightDirection( -45f, 40f)
-		.setWaterColor(8, 8, 18)
-	),
-	OVERWORLD_MOON(Area.OVERWORLD, new Properties()
-		.applyOnlyDuringTimeOfDay(TimeOfDay.NIGHT_MOON)
-		.setFogColor("#05050b")
-		.setFogDepth(30)
 		.setAmbientColor("#3863a1")
 		.setAmbientStrength(2.5f)
-		.setDirectionalColor("#3d6299")
-		.setDirectionalStrength(1.4f)
+		.setDirectionalColor("#B5CDFF")
+		.setDirectionalStrength(0.75f)
 		.setLightDirection( -45f, 40f)
 		.setWaterColor(8, 8, 18)
 	),
@@ -1085,7 +1074,8 @@ public enum Environment
 		.setWaterColor(10, 12, 10)
 	),
 	// overrides 'ALL' to provide default daylight conditions for the overworld area
-	OVERWORLD(Area.OVERWORLD, new Properties()),
+	OVERWORLD(Area.OVERWORLD, new Properties()
+			.applyOnlyDuringTimeOfDay(TimeOfDay.DAY)),
 	// used for underground, instances, etc.
 	ALL(Area.ALL, new Properties()
 		.setFogColor("#241809")
