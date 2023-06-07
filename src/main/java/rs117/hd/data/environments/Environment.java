@@ -322,7 +322,6 @@ public enum Environment
 		.setGroundFog(-150, -350, 0.5f)
 	),
 
-	LUMBRIDGE(Area.LUMBRIDGE, new Properties()),
 	LUMBRIDGE_BASEMENT(Area.LUMBRIDGE_CASTLE_BASEMENT, new Properties()
 			.setFogColor("#070606")
 			.setFogDepth(84)
@@ -369,7 +368,6 @@ public enum Environment
 		.setDirectionalStrength(0.0f)
 		.setLightDirection(260f, 10f)
 	),
-	DRAYNOR(Area.DRAYNOR, new Properties()),
 
 	MISTHALIN_MYSTERY_MANOR(Area.MISTHALIN_MYSTERY_MANOR, new Properties()
 		.setFogColor(15, 14, 13)
@@ -407,7 +405,6 @@ public enum Environment
 	TUTORIAL_SOUL_WARS_RED_TEAM(Area.SOUL_WARS_RED_BASE_TUTORIAL, new Properties()
 		.setFogColor(28, 21, 13)
 	),
-	TUTORIAL_ISLE_OF_SOULS(Area.ISLE_OF_SOULS_TUTORIAL, new Properties()),
 
 	SMOKE_DUNGEON(Area.SMOKE_DUNGEON, new Properties()
 		.setFogColor(0, 0, 0)
@@ -469,10 +466,6 @@ public enum Environment
 		.setDirectionalStrength(2.5f)
 	),
 
-	WHITE_WOLF_MOUNTAIN(Area.WHITE_WOLF_MOUNTAIN, new Properties()),
-
-	KEEP_LE_FAYE(Area.KEEP_LE_FAYE, new Properties()),
-
 	MOUNTAIN_CAMP_ENTRY_PATH(Area.MOUNTAIN_CAMP_ENTRY_PATH, new Properties()
 		.setFogColor(178, 187, 197)
 		.setFogDepth(50)
@@ -527,7 +520,6 @@ public enum Environment
 		.setDirectionalStrength(1.0f)
 		.setLightDirection(240f, 190f)
 	),
-	KARAMJA(Area.KARAMJA, new Properties()),
 
 
 	UNGAEL(Area.UNGAEL, new Properties()
@@ -600,8 +592,6 @@ public enum Environment
 		.setAllowSkyOverride(false)
 	),
 
-	// Yanille
-	YANILLE(Area.YANILLE, new Properties()),
 	// Nightmare Zone
 	NIGHTMARE_ZONE(Area.NIGHTMARE_ZONE, new Properties()
 		.setFogColor("#190D02")
@@ -612,9 +602,6 @@ public enum Environment
 		.setDirectionalStrength(1.0f)
 		.setLightDirection(260f, 10f)
 	),
-
-	// Tree Gnome Stronghold
-	TREE_GNOME_STRONGHOLD(Area.TREE_GNOME_STRONGHOLD, new Properties()),
 
 	// Castle Wars
 	CASTLE_WARS_UNDERGROUND(Area.CASTLE_WARS_UNDERGROUND, new Properties()
@@ -637,7 +624,6 @@ public enum Environment
 		.setDirectionalColor("#C5B8B6")
 		.setGroundFog(-0, -250, 0.3f)
 	),
-	LMS_ARENA_DESERTED_ISLAND(Area.LMS_ARENA_DESERTED_ISLAND, new Properties()),
 
 	// Zeah
 	MOUNT_KARUULM(Area.MOUNT_KARUULM, new Properties()
@@ -661,7 +647,6 @@ public enum Environment
 		.setDirectionalColor("#FFFFFF")
 		.setDirectionalStrength(1.0f)
 	),
-	MOUNT_QUIDAMORTEM(Area.MOUNT_QUIDAMORTEM, new Properties()),
 	KEBOS_LOWLANDS(Area.KEBOS_LOWLANDS, new Properties()
 		.setFogColor(41, 44, 16)
 		.setFogDepth(50)
@@ -781,13 +766,6 @@ public enum Environment
 		.setLightDirection(260f, 10f)
 	),
 
-	// Islands
-	BRAINDEATH_ISLAND(Area.BRAINDEATH_ISLAND, new Properties()),
-
-	// Ape Atoll
-	// Monkey Madness 2
-	MM2_AIRSHIP_PLATFORM(Area.MM2_AIRSHIP_PLATFORM, new Properties()),
-
 	// POHs
 	PLAYER_OWNED_HOUSE_SNOWY(Area.PLAYER_OWNED_HOUSE_SNOWY, new Properties()
 		.setFogColor("#AEBDE0")
@@ -809,9 +787,6 @@ public enum Environment
 		.setLightDirection(260f, 10f)
 		.setAllowSkyOverride(false)
 	),
-
-	// Fishing Trawler
-	FISHING_TRAWLER(Area.FISHING_TRAWLER, new Properties()),
 
 	// Camdozaal (Below Ice Mountain)
 	CAMDOZAAL(Area.CAMDOZAAL, new Properties()
@@ -929,9 +904,6 @@ public enum Environment
 	),
 
 	// Runecrafting altars
-	NATURE_ALTAR(Area.NATURE_ALTAR, new Properties()),
-	WATER_ALTAR(Area.WATER_ALTAR, new Properties()),
-	AIR_ALTAR(Area.AIR_ALTAR, new Properties()),
 	COSMIC_ALTAR(Area.COSMIC_ALTAR, new Properties()
 		.setFogColor("#000000")
 		.setFogDepth(40)
@@ -958,24 +930,11 @@ public enum Environment
 	),
 
 	// Random events
-	CLASSROOM(Area.RANDOM_EVENT_CLASSROOM, new Properties()),
-	FREAKY_FORESTER(Area.RANDOM_EVENT_FREAKY_FORESTER, new Properties()),
-	GRAVEDIGGER(Area.RANDOM_EVENT_GRAVEDIGGER, new Properties()),
 	DRILL_DEMON(Area.RANDOM_EVENT_DRILL_DEMON, new Properties()
 		.setFogColor("#696559")
 	),
 
-	// Clan halls
-	CLAN_HALL(Area.CLAN_HALL, new Properties()),
-
 	// Standalone and miscellaneous areas
-	LIGHTHOUSE(Area.LIGHTHOUSE, new Properties()),
-	SORCERESSS_GARDEN(Area.SORCERESSS_GARDEN, new Properties()),
-	PURO_PURO(Area.PURO_PURO, new Properties()),
-	RATCATCHERS_HOUSE(Area.RATCATCHERS_HOUSE, new Properties()),
-	CANOE_CUTSCENE(Area.CANOE_CUTSCENE, new Properties()),
-	FISHER_KINGS_REALM(Area.FISHER_KINGS_REALM, new Properties()),
-	ENCHANTED_VALLEY(Area.ENCHANTED_VALLEY, new Properties()),
 	GIANTS_FOUNDRY(Area.GIANTS_FOUNDRY, new Properties()
 		.setFogColor(0, 0, 0)
 		.setFogDepth(12)
