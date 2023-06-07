@@ -1817,7 +1817,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			float lightYaw;
 			float sunStrength = 1.0f;
 			float[] sunlightColor = environmentManager.currentDirectionalColor;
-			if (config.daylightCycle() == DaylightCycle.HOUR_LONG_DAYS)
+			TimeOfDay timeOfDayFilter = environmentManager.currentEnvironment.getApplyOnlyDuringTimeOfDay();
+
+			if (timeOfDayFilter != null && config.daylightCycle() == DaylightCycle.HOUR_LONG_DAYS)
 			{
 				double[] angles = TimeOfDay.getCurrentAngles(latLong, MINUTES_PER_DAY);
 				sunStrength = TimeOfDay.getSunlightStrength(latLong, MINUTES_PER_DAY);

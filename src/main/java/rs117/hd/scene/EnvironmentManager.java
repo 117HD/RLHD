@@ -55,7 +55,7 @@ public class EnvironmentManager
 	private HdPluginConfig config;
 
 	private final Environment defaultEnvironment = Environment.OVERWORLD;
-	private Environment currentEnvironment = defaultEnvironment;
+	public Environment currentEnvironment = defaultEnvironment;
 
 	// transition time
 	private static final int TRANSITION_DURATION = 3000;
