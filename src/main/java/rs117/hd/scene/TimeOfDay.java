@@ -12,7 +12,6 @@ public enum TimeOfDay
 	DUSK_DAWN,
 	;
 
-	private static final float DAWN_DURATION = 0.01333f;
 	private static final long MS_PER_MINUTE = 60000;
 	private static final float NIGHT_RANGE = 2f;
 
@@ -25,7 +24,6 @@ public enum TimeOfDay
 		double angleFromZenith = Math.abs(angles[1] - Math.PI / 2);
 		boolean isNight = angleFromZenith > Math.PI / NIGHT_RANGE;
 		boolean isDuskDawn = angleFromZenith > Math.PI / 2.45;
-		boolean isSunriseSunset = angleFromZenith > Math.PI / 2.6;
 
 		if (isNight)
 		{
@@ -43,23 +41,6 @@ public enum TimeOfDay
 		{
 			return TimeOfDay.DAY;
 		}
-	}
-
-	public static int getTransitionDuration(double[] latLong, int dayLength)
-	{
-		TimeOfDay timeOfDay = getTimeOfDay(latLong, dayLength);
-		if (timeOfDay != null)
-		{
-			switch (timeOfDay)
-			{
-				case NIGHT:
-				case DUSK_DAWN:
-					return (int) ((MS_PER_MINUTE * dayLength) * DAWN_DURATION);
-				default:
-					return (int) ((MS_PER_MINUTE * dayLength) * 0.02f);
-			}
-		}
-		return (int) ((MS_PER_MINUTE * dayLength) * 0.02f);
 	}
 
 	/**

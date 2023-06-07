@@ -255,8 +255,7 @@ public class EnvironmentManager
 		else
 		{
 			// interpolate between start and target values
-			int transitionDuration = config.daylightCycle() == DaylightCycle.HOUR_LONG_DAYS ?
-				TimeOfDay.getTransitionDuration(plugin.latLong, MINUTES_PER_DAY) : TRANSITION_DURATION;
+			int transitionDuration = TRANSITION_DURATION;
 			float t = (float) (currentTime - startTime) / transitionDuration;
 
 			currentFogColor = HDUtils.lerpVectors(startFogColor, targetFogColor, t);
@@ -295,8 +294,7 @@ public class EnvironmentManager
 			return;
 
 		startTime = System.currentTimeMillis();
-		int transitionDuration = config.daylightCycle() == DaylightCycle.HOUR_LONG_DAYS ?
-			TimeOfDay.getTransitionDuration(plugin.latLong, MINUTES_PER_DAY) : TRANSITION_DURATION;
+		int transitionDuration = TRANSITION_DURATION;
 		transitionCompleteTime = startTime + (skipTransition ? 0 : transitionDuration);
 
 		log.debug("changing environment from {} to {} (instant: {})", currentEnvironment, newEnvironment, skipTransition);
