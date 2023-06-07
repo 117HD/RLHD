@@ -34,7 +34,6 @@ import net.runelite.api.GameState;
 import net.runelite.api.coords.WorldPoint;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
-import rs117.hd.config.DaylightCycle;
 import rs117.hd.config.DefaultSkyColor;
 import rs117.hd.data.environments.Area;
 import rs117.hd.data.environments.Environment;
@@ -182,28 +181,9 @@ public class EnvironmentManager
 			}
 		}
 
-		switch (config.daylightCycle())
-		{
-			case HOUR_LONG_DAYS:
-				currentTimeOfDay = TimeOfDay.getTimeOfDay(plugin.latLong, MINUTES_PER_DAY);
-				break;
-			case ALWAYS_DAY:
-				currentTimeOfDay = TimeOfDay.DAY;
-				break;
-			case ALWAYS_NIGHT:
-				currentTimeOfDay = TimeOfDay.NIGHT;
-				break;
-		}
-
 		boolean skipTransition = tileChange >= SKIP_TRANSITION_DISTANCE;
 		for (Environment environment : sceneContext.environments)
 		{
-			TimeOfDay timeOfDayFilter = environment.getApplyOnlyDuringTimeOfDay();
-			if (timeOfDayFilter != null && timeOfDayFilter != currentTimeOfDay)
-			{
-				continue;
-			}
-
 			if (environment.getArea().containsPoint(position))
 			{
 				if (environment != currentEnvironment)

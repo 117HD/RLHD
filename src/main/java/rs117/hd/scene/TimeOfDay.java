@@ -1,8 +1,11 @@
 package rs117.hd.scene;
 
+import java.awt.Color;
 import java.time.Instant;
 import net.runelite.http.api.worlds.WorldRegion;
 import rs117.hd.utils.SunCalc;
+
+import static rs117.hd.utils.HDUtils.srgbToLinear;
 
 public enum TimeOfDay
 {
@@ -82,6 +85,14 @@ public enum TimeOfDay
 		return SunCalc.getAmbientColor(modifiedDate.toEpochMilli(), latLong);
 	}
 
+	public static float[] getNightFogColor() { return rgbToLinear(5, 5, 11); }
+	public static float[] getNightAmbientColor() { return rgbToLinear(56, 99, 161); }
+	public static float[] getNightLightColor() { return rgbToLinear(181, 205, 255); }
+	public static float[] getNightWaterColor() { return rgbToLinear(8, 8, 18); }
+	public static float getNightLightStrength() { return 0.25f; }
+	public static float getNightAmbientStrength() { return 2f; }
+
+
 	public static Instant getModifiedDate(Instant currentDate, int dayLength)
 	{
 		long millisPerDay = dayLength * MS_PER_MINUTE;
@@ -124,5 +135,14 @@ public enum TimeOfDay
 	private static boolean isNight(double altitude) {
 		double angleFromZenith = Math.abs(altitude - Math.PI / 2);
 		return angleFromZenith > Math.PI / NIGHT_RANGE;
+	}
+
+	public static float[] rgbToLinear(int r, int g, int b) {
+		Color color = new Color(r, g, b);
+		float[] linearColor = new float[3];
+		linearColor[0] = srgbToLinear(color.getRed() / 255f);
+		linearColor[1] = srgbToLinear(color.getGreen() / 255f);
+		linearColor[2] = srgbToLinear(color.getBlue() / 255f);
+		return linearColor;
 	}
 }

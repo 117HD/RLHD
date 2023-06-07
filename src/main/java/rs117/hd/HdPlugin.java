@@ -1816,21 +1816,38 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			float lightPitch;
 			float lightYaw;
 			float lightStrength = environmentManager.currentDirectionalStrength;
+			float ambientStrength = environmentManager.currentAmbientStrength;
+
 			float[] lightColor = environmentManager.currentDirectionalColor;
 			float[] ambientColor = environmentManager.currentAmbientColor;
-			TimeOfDay timeOfDayFilter = environmentManager.currentEnvironment.getApplyOnlyDuringTimeOfDay();
+			float[] fogColor = hasLoggedIn ? environmentManager.getFogColor() : EnvironmentManager.BLACK_COLOR;
+			float[] waterColor = environmentManager.currentWaterColor;
 
-			if (timeOfDayFilter != null && config.daylightCycle() == DaylightCycle.HOUR_LONG_DAYS)
+			Boolean isDaylightCycle = environmentManager.currentEnvironment.isEnableDaylightCycle();
+
+			if (isDaylightCycle && config.daylightCycle() == DaylightCycle.HOUR_LONG_DAYS)
 			{
 				double[] angles = TimeOfDay.getCurrentAngles(latLong, MINUTES_PER_DAY);
 				lightStrength *= TimeOfDay.getLightStrength(latLong, MINUTES_PER_DAY);
 				lightColor = TimeOfDay.getLightColor(latLong, MINUTES_PER_DAY);
 				ambientColor = TimeOfDay.getAmbientColor(latLong, MINUTES_PER_DAY);
+
 				lightPitch = (float) -angles[1];
 				lightYaw = (float) (angles[0] + Math.PI);
 			}
-			else
+			else if (isDaylightCycle && config.daylightCycle() == DaylightCycle.ALWAYS_NIGHT)
 			{
+				ambientColor = TimeOfDay.getNightAmbientColor();
+				ambientStrength = TimeOfDay.getNightAmbientStrength();
+				lightColor = TimeOfDay.getNightLightColor();
+				lightStrength = TimeOfDay.getNightLightStrength();
+				fogColor = TimeOfDay.getNightFogColor();
+				waterColor = TimeOfDay.getNightWaterColor();
+
+				lightPitch = (float) Math.toRadians(environmentManager.currentLightPitch);
+				lightYaw = (float) Math.toRadians(environmentManager.currentLightYaw);
+			}
+			else {
 				lightPitch = (float) Math.toRadians(environmentManager.currentLightPitch);
 				lightYaw = (float) Math.toRadians(environmentManager.currentLightYaw);
 			}
@@ -1952,7 +1969,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			lastAntiAliasingMode = antiAliasingMode;
 
 			// Clear scene
-			float[] fogColor = hasLoggedIn ? environmentManager.getFogColor() : EnvironmentManager.BLACK_COLOR;
 			for (int i = 0; i < fogColor.length; i++)
 			{
 				fogColor[i] = HDUtils.linearToSrgb(fogColor[i]);
@@ -1980,7 +1996,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			glUniform1i(uniDrawDistance, drawDistance * Perspective.LOCAL_TILE_SIZE);
 			glUniform1f(uniColorBlindnessIntensity, config.colorBlindnessIntensity() / 100.f);
 
-			float[] waterColor = environmentManager.currentWaterColor;
 			float[] waterColorHSB = Color.RGBtoHSB((int) (waterColor[0] * 255f), (int) (waterColor[1] * 255f), (int) (waterColor[2] * 255f), null);
 			float lightBrightnessMultiplier = 0.8f;
 			float midBrightnessMultiplier = 0.45f;
@@ -2005,7 +2020,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			glUniform3f(uniWaterColorDark, waterColorDark[0], waterColorDark[1], waterColorDark[2]);
 
 			// get ambient light strength from either the config or the current area
-			float ambientStrength = environmentManager.currentAmbientStrength;
 			ambientStrength *= (double)config.brightness() / 20;
 			glUniform1f(uniAmbientStrength, ambientStrength);
 

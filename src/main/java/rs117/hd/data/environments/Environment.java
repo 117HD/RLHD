@@ -300,18 +300,6 @@ public enum Environment
 		.setDirectionalStrength(4.0f)
 		.setGroundFog(-150, -350, 0.5f)
 	),
-	MORYTANIA_NIGHT(Area.MORYTANIA, new Properties()
-		.applyOnlyDuringTimeOfDay(TimeOfDay.NIGHT)
-		.setFogColor("#05050b")
-		.setFogDepth(40)
-		.setAmbientColor("#2f5c9e")
-		.setAmbientStrength(2.5f)
-		.setDirectionalColor("#325d9c")
-		.setDirectionalStrength(1.25f)
-		.setLightDirection(260f, 10f)
-		.setWaterColor(8, 8, 18)
-		.setGroundFog(-150, -350, 0.6f)
-	),
 	MORYTANIA(Area.MORYTANIA, new Properties()
 		.setFogColor("#1E314B")
 		.setFogDepth(40)
@@ -323,31 +311,31 @@ public enum Environment
 	),
 
 	LUMBRIDGE_BASEMENT(Area.LUMBRIDGE_CASTLE_BASEMENT, new Properties()
-			.setFogColor("#070606")
-			.setFogDepth(84)
-			.setAmbientColor("#FFFFFF")
-			.setAmbientStrength(1.0f)
-			.setDirectionalColor("#A29B71")
-			.setDirectionalStrength(1.5f)
-			.setLightDirection(260f, 10f)
+		.setFogColor("#070606")
+		.setFogDepth(84)
+		.setAmbientColor("#FFFFFF")
+		.setAmbientStrength(1.0f)
+		.setDirectionalColor("#A29B71")
+		.setDirectionalStrength(1.5f)
+		.setLightDirection(260f, 10f)
 	),
 	GOBLIN_MAZE(Area.GOBLIN_MAZE, new Properties()
-			.setFogColor("#050D02")
-			.setFogDepth(60)
-			.setAmbientColor("#FFFFFF")
-			.setAmbientStrength(0.75f)
-			.setDirectionalColor("#A29B71")
-			.setDirectionalStrength(0.75f)
-			.setLightDirection(260f, 10f)
+		.setFogColor("#050D02")
+		.setFogDepth(60)
+		.setAmbientColor("#FFFFFF")
+		.setAmbientStrength(0.75f)
+		.setDirectionalColor("#A29B71")
+		.setDirectionalStrength(0.75f)
+		.setLightDirection(260f, 10f)
 	),
 	LUMBRIDGE_SWAMP_CAVES(Area.LUMBRIDGE_SWAMP_CAVES, new Properties()
-			.setFogColor("#040D02")
-			.setFogDepth(50)
-			.setAmbientColor(198, 201, 194)
-			.setAmbientStrength(0.9f)
-			.setDirectionalColor(168, 171, 144)
-			.setDirectionalStrength(0.85f)
-			.setLightDirection(260f, 10f)
+		.setFogColor("#040D02")
+		.setFogDepth(50)
+		.setAmbientColor(198, 201, 194)
+		.setAmbientStrength(0.9f)
+		.setDirectionalColor(168, 171, 144)
+		.setDirectionalStrength(0.85f)
+		.setLightDirection(260f, 10f)
 	),
 
 	DRAYNOR_MANOR(Area.DRAYNOR_MANOR, new Properties()
@@ -627,8 +615,9 @@ public enum Environment
 
 	// Zeah
 	MOUNT_KARUULM(Area.MOUNT_KARUULM, new Properties()
-			.setAmbientStrength(1.0f)
-			.setDirectionalStrength(3.0f)
+		.setAmbientStrength(1.0f)
+		.setDirectionalStrength(3.0f)
+		.setEnableDaylightCycle(true)
 	),
 	KARUULM_SLAYER_DUNGEON(Area.KARUULM_SLAYER_DUNGEON, new Properties()
 		.setFogColor("#051E22")
@@ -775,7 +764,9 @@ public enum Environment
 		.setDirectionalColor("#F4E5C9")
 		.setDirectionalStrength(2.5f)
 	),
-	PLAYER_OWNED_HOUSE(Area.PLAYER_OWNED_HOUSE, new Properties()),
+	PLAYER_OWNED_HOUSE(Area.PLAYER_OWNED_HOUSE, new Properties()
+		.setEnableDaylightCycle(true)
+	),
 
 	// Blackhole
 	BLACKHOLE(Area.BLACKHOLE, new Properties()
@@ -785,7 +776,7 @@ public enum Environment
 		.setAmbientColor(255, 255, 255)
 		.setDirectionalStrength(0.0f)
 		.setLightDirection(260f, 10f)
-		.setAllowSkyOverride(false)
+		.setEnableDaylightCycle(true)
 	),
 
 	// Camdozaal (Below Ice Mountain)
@@ -915,8 +906,8 @@ public enum Environment
 		.setAllowSkyOverride(false)
 	),
 	TRUE_BLOOD_ALTAR(Area.TRUE_BLOOD_ALTAR, new Properties()
-			.setFogColor("#000000")
-			.setFogDepth(25)
+		.setFogColor("#000000")
+		.setFogDepth(25)
 	),
 
 	TARNS_LAIR(Area.TARNS_LAIR, new Properties()
@@ -946,12 +937,12 @@ public enum Environment
 		.setWaterColor(102, 234, 255)
 	),
 	ELID_CAVE(Area.ELID_CAVE, new Properties()
-			.setWaterColor(102, 234, 255)
-			.setAmbientStrength(1.75f)
-			.setDirectionalStrength(1.0f)
+		.setWaterColor(102, 234, 255)
+		.setAmbientStrength(1.75f)
+		.setDirectionalStrength(1.0f)
 	),
 	ANCIENT_CAVERN_UPPER(Area.ANCIENT_CAVERN_UPPER, new Properties()
-			.setWaterColor(79, 178, 255)
+		.setWaterColor(79, 178, 255)
 	),
 
 	ICY_UNDERGROUND_DARK(Area.ICY_UNDERGROUND_DARK, new Properties()
@@ -975,14 +966,14 @@ public enum Environment
 		.setWaterColor(102, 234, 255)
 	),
 	GOBLIN_VLIIAGE_COOKS_CHAMBER(Area.GOBLIN_VILLAGE_COOKS_CHAMBER, new Properties()
-			.setFogColor("#030303")
-			.setFogDepth(5)
-			.setAmbientColor("#AAAFB6")
-			.setAmbientStrength(0.75f)
-			.setDirectionalColor("#FFFFFF")
-			.setDirectionalStrength(0.75f)
-			.setLightDirection(260f, 10f)
-			.setAllowSkyOverride(false)
+		.setFogColor("#030303")
+		.setFogDepth(5)
+		.setAmbientColor("#AAAFB6")
+		.setAmbientStrength(0.75f)
+		.setDirectionalColor("#FFFFFF")
+		.setDirectionalStrength(0.75f)
+		.setLightDirection(260f, 10f)
+		.setAllowSkyOverride(false)
 	),
 	WINTER(Area.NONE, new Properties()
 		.setFogColor("#B8C5DB")
@@ -994,36 +985,24 @@ public enum Environment
 	),
 
 	MAGE_ARENA_BANK(Area.MAGE_ARENA_BANK, new Properties()
-			.setFogDepth(40)
-			.setFogColor("#000000")
-			.setAmbientStrength(1.5f)
-			.setDirectionalStrength(1.0f)
-			.setLightDirection(260f, 10f)
+		.setFogDepth(40)
+		.setFogColor("#000000")
+		.setAmbientStrength(1.5f)
+		.setDirectionalStrength(1.0f)
+		.setLightDirection(260f, 10f)
 	),
 	TEARS_OF_GUTHIX(Area.TEARS_OF_GUTHIX_CAVES, new Properties()
-			.setFogColor("#060505")
-			.setFogDepth(50)
-			.setAmbientColor("#AAAFB6")
-			.setAmbientStrength(1.2f)
-			.setDirectionalColor("#878474")
-			.setDirectionalStrength(1.5f)
-			.setLightDirection(260f, 10f)
-	),
-
-	OVERWORLD_NIGHT(Area.OVERWORLD, new Properties()
-		.applyOnlyDuringTimeOfDay(TimeOfDay.NIGHT)
-		.setFogColor("#05050b")
-		.setFogDepth(30)
-		.setAmbientColor("#3863a1")
-		.setAmbientStrength(2f)
-		.setDirectionalColor("#B5CDFF")
-		.setDirectionalStrength(0.75f)
-		.setLightDirection( -45f, 40f)
-		.setWaterColor(8, 8, 18)
+		.setFogColor("#060505")
+		.setFogDepth(50)
+		.setAmbientColor("#AAAFB6")
+		.setAmbientStrength(1.2f)
+		.setDirectionalColor("#878474")
+		.setDirectionalStrength(1.5f)
+		.setLightDirection(260f, 10f)
 	),
 	// overrides 'ALL' to provide default daylight conditions for the overworld area
 	OVERWORLD(Area.OVERWORLD, new Properties()
-			.applyOnlyDuringTimeOfDay(TimeOfDay.DAY)),
+		.setEnableDaylightCycle(true)),
 	// used for underground, instances, etc.
 	ALL(Area.ALL, new Properties()
 		.setFogColor("#241809")
@@ -1064,7 +1043,7 @@ public enum Environment
 	private final float underwaterCausticsStrength;
 	private final float[] waterColor;
 	private final boolean customWaterColor;
-	private final TimeOfDay applyOnlyDuringTimeOfDay;
+	private final boolean enableDaylightCycle;
 
 	private static class Properties
 	{
@@ -1094,7 +1073,7 @@ public enum Environment
 		private float underwaterCausticsStrength = 0;
 		private float[] waterColor = rgb(185, 214, 255);
 		private boolean customWaterColor = false;
-		private TimeOfDay applyOnlyDuringTimeOfDay = null;
+		private boolean enableDaylightCycle = false;
 
 		public Properties setFogDepth(int depth)
 		{
@@ -1245,9 +1224,9 @@ public enum Environment
 			return this;
 		}
 
-		public Properties applyOnlyDuringTimeOfDay(TimeOfDay timeOfDay)
+		public Properties setEnableDaylightCycle(boolean isEnabled)
 		{
-			this.applyOnlyDuringTimeOfDay = timeOfDay;
+			this.enableDaylightCycle = isEnabled;
 			return this;
 		}
 	}
@@ -1283,6 +1262,6 @@ public enum Environment
 			properties.directionalStrength : properties.underwaterCausticsStrength;
 		this.waterColor = properties.waterColor;
 		this.customWaterColor = properties.customWaterColor;
-		this.applyOnlyDuringTimeOfDay = properties.applyOnlyDuringTimeOfDay;
+		this.enableDaylightCycle = properties.enableDaylightCycle;
 	}
 }
