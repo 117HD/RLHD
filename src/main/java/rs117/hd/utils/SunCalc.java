@@ -34,6 +34,7 @@ import static java.lang.Math.atan2;
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
 import static java.lang.Math.tan;
+import static rs117.hd.utils.HDUtils.srgbToLinear;
 
 public class SunCalc
 {
@@ -91,10 +92,8 @@ public class SunCalc
 		float strength;
 		if (normalizedAltitude < fadeStart) {
 			strength = fadedStrength * (normalizedAltitude / fadeStart);
-			System.out.println("Fading starts");
 		} else if (normalizedAltitude > fadeEnd) {
 			strength = fadedStrength * ((1 - normalizedAltitude) / fadeStart);
-			System.out.println("Fading ends");
 		} else {
 			strength = fadedStrength;
 		}
@@ -123,11 +122,37 @@ public class SunCalc
 
 		Color color = getRGBFromK((int) temperature);
 
-		float red = color.getRed() / 255f;
-		float green = color.getGreen() / 255f;
-		float blue = color.getBlue() / 255f;
+		float redLinear = srgbToLinear(color.getRed() / 255f);
+		float greenLinear = srgbToLinear(color.getGreen() / 255f);
+		float blueLinear = srgbToLinear(color.getBlue() / 255f);
 
-		return new float[]{red, green, blue};
+		return new float[]{redLinear, greenLinear, blueLinear};
+	}
+
+	public static float[] getAmbientColor(long millis, double[] latLong) {
+		double[] position = getPosition(millis, latLong[0], latLong[1]);
+		double azimuth = position[0];
+		double altitudeDegrees = Math.toDegrees(position[1]);
+
+		double[][] altitudeColorRange = {
+				{0, 56, 99, 161},
+				{5, 255, 114, 54},
+				{15, 255, 178, 84},
+				{30, 173, 243, 255},
+				{40, 151, 186, 255},
+				{50, 151, 186, 255},
+				{60, 151, 186, 255},
+				{70, 151, 186, 255},
+				{80, 151, 186, 255}
+		};
+
+		double[] interpolatedColor = interpolateRGB(altitudeDegrees, altitudeColorRange);
+
+		float redLinear = srgbToLinear((float) interpolatedColor[1] / 255f);
+		float greenLinear = srgbToLinear((float) interpolatedColor[2] / 255f);
+		float blueLinear = srgbToLinear((float) interpolatedColor[3] / 255f);
+
+		return new float[]{redLinear, greenLinear, blueLinear};
 	}
 
 	public static double interpolate(double x, double[][] range) {
@@ -146,6 +171,29 @@ public class SunCalc
 			double y1 = range[i - 1][1];
 			double y2 = range[i][1];
 			return y1 + (y2 - y1) * (x - x1) / (x2 - x1);
+		}
+	}
+
+	public static double[] interpolateRGB(double x, double[][] range) {
+		int n = range.length;
+		int i = 0;
+		while (i < n && x > range[i][0]) {
+			i++;
+		}
+		if (i == 0) {
+			return range[0];
+		} else if (i == n) {
+			return range[n - 1];
+		} else {
+			double x1 = range[i - 1][0];
+			double x2 = range[i][0];
+			double[] y1 = range[i - 1];
+			double[] y2 = range[i];
+			double[] interpolatedColor = new double[y1.length];
+			for (int j = 0; j < interpolatedColor.length; j++) {
+				interpolatedColor[j] = y1[j] + (y2[j] - y1[j]) * (x - x1) / (x2 - x1);
+			}
+			return interpolatedColor;
 		}
 	}
 

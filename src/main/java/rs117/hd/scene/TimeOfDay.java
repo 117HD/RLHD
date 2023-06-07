@@ -76,6 +76,12 @@ public enum TimeOfDay
 		return SunCalc.getColor(modifiedDate.toEpochMilli(), latLong);
 	}
 
+	public static float[] getAmbientColor(double[] latLong, int dayLength) {
+		Instant modifiedDate = getModifiedDate(Instant.now(), dayLength);
+
+		return SunCalc.getAmbientColor(modifiedDate.toEpochMilli(), latLong);
+	}
+
 	public static Instant getModifiedDate(Instant currentDate, int dayLength)
 	{
 		long millisPerDay = dayLength * MS_PER_MINUTE;
