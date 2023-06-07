@@ -29,12 +29,8 @@ import java.util.HashMap;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
-import net.runelite.api.Perspective;
-import net.runelite.api.Scene;
-import net.runelite.api.SceneTileModel;
-import net.runelite.api.SceneTilePaint;
-import net.runelite.api.Tile;
-import net.runelite.api.coords.WorldPoint;
+import net.runelite.api.*;
+import net.runelite.api.coords.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.data.WaterType;
 import rs117.hd.data.materials.Material;
@@ -45,8 +41,7 @@ import rs117.hd.scene.model_overrides.ObjectType;
 import rs117.hd.scene.model_overrides.TzHaarRecolorType;
 import rs117.hd.utils.HDUtils;
 
-import static net.runelite.api.Constants.MAX_Z;
-import static net.runelite.api.Constants.SCENE_SIZE;
+import static net.runelite.api.Constants.*;
 
 @Slf4j
 @Singleton

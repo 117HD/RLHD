@@ -51,6 +51,7 @@ import rs117.hd.scene.lights.Alignment;
 import rs117.hd.scene.lights.Light;
 import rs117.hd.scene.lights.LightType;
 import rs117.hd.scene.lights.SceneLight;
+import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
@@ -122,7 +123,7 @@ public class LightManager
 				// Also ensure that each color always has 4 components with sensible defaults
 				float[] linearRGBA = { 0, 0, 0, 1 };
 				for (int i = 0; i < Math.min(lightDef.color.length, linearRGBA.length); i++)
-					linearRGBA[i] = HDUtils.srgbToLinear(lightDef.color[i] /= 255f);
+					linearRGBA[i] = ColorUtils.srgbToLinear(lightDef.color[i] /= 255f);
 				lightDef.color = linearRGBA;
 
 				if (lightDef.worldX != null && lightDef.worldY != null) {

@@ -42,12 +42,12 @@ out int gTerrainData;
 
 #include utils/polyfills.glsl
 #include utils/constants.glsl
-#include utils/color_conversion.glsl
+#include utils/color_utils.glsl
 #include utils/fog.glsl
 
 void main() {
     int ahsl = vPosition.w;
-    vec3 rgb = jagexHslToRgb(ahsl & 0xffff);
+    vec3 rgb = packedHslToSrgb(ahsl);
     float alpha = 1 - float(ahsl >> 24 & 0xff) / 255.;
     vec4 color = vec4(srgbToLinear(rgb), alpha);
     // CAUTION: only 24-bit ints can be stored safely as floats

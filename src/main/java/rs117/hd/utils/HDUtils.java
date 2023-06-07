@@ -35,39 +35,30 @@ import static net.runelite.api.Constants.*;
 
 @Slf4j
 @Singleton
-public class HDUtils
-{
+public class HDUtils {
 	public static final long KiB = 1024;
 	public static final long MiB = KiB * KiB;
 	public static final long GiB = MiB * KiB;
 	public static final Random rand = new Random();
 
 	// directional vectors approximately opposite of the directional light used by the client
-	private static final float[] lightDirTile = new float[]{
-		0.70710678f, 0.70710678f, 0f
-	};
-	public static final float[] lightDirModel = new float[]{
-		0.57735026f, 0.57735026f, 0.57735026f
-	};
+	private static final float[] lightDirTile = new float[] { 0.70710678f, 0.70710678f, 0f };
+	public static final float[] lightDirModel = new float[] { 0.57735026f, 0.57735026f, 0.57735026f };
 
 	// The epsilon for floating point values used by jogl
 	public static final float EPSILON = 1.1920929E-7f;
 
-	public static float[] vectorAdd(float[] vec1, float[] vec2)
-	{
+	public static float[] vectorAdd(float[] vec1, float[] vec2) {
 		float[] out = new float[vec1.length];
 		for (int i = 0; i < vec1.length; i++)
-		{
 			out[i] = vec1[i] + vec2[i];
-		}
 		return out;
 	}
 
 	static float[] vectorAdd(float[] vec1, int[] vec2) {
 		float[] out = new float[vec1.length];
-		for (int i = 0; i < vec1.length; i++) {
+		for (int i = 0; i < vec1.length; i++)
 			out[i] = vec1[i] + vec2[i];
-		}
 		return out;
 	}
 
@@ -75,9 +66,7 @@ public class HDUtils
 	{
 		int[] out = new int[vec1.length];
 		for (int i = 0; i < vec1.length; i++)
-		{
 			out[i] = vec1[i] + vec2[i];
-		}
 		return out;
 	}
 
@@ -85,9 +74,7 @@ public class HDUtils
 	{
 		double[] out = new double[vec1.length];
 		for (int i = 0; i < vec1.length; i++)
-		{
 			out[i] = vec1[i] + vec2[i];
-		}
 		return out;
 	}
 
@@ -95,24 +82,14 @@ public class HDUtils
 	{
 		Double[] out = new Double[vec1.length];
 		for (int i = 0; i < vec1.length; i++)
-		{
 			out[i] = vec1[i] + vec2[i];
-		}
 		return out;
 	}
 
-	static float[] vectorDivide(float[] vec1, float divide)
-	{
+	static float[] vectorDivide(float[] vec1, float divide) {
 		float[] out = new float[vec1.length];
-		for (int i = 0; i < vec1.length; i++) {
-			if (divide == 0)
-			{
-				out[i] = 0;
-			} else
-			{
-				out[i] = vec1[i] / divide;
-			}
-		}
+		for (int i = 0; i < vec1.length; i++)
+			out[i] = divide == 0 ? 0 : vec1[i] / divide;
 		return out;
 	}
 
@@ -124,9 +101,7 @@ public class HDUtils
 	{
 		float[] out = new float[Math.min(vecA.length, vecB.length)];
 		for (int i = 0; i < out.length; i++)
-		{
 			out[i] = lerp(vecA[i], vecB[i], t);
-		}
 		return out;
 	}
 
@@ -134,9 +109,7 @@ public class HDUtils
 	{
 		int[] out = new int[Math.min(vecA.length, vecB.length)];
 		for (int i = 0; i < out.length; i++)
-		{
 			out[i] = (int)lerp(vecA[i], vecB[i], t);
-		}
 		return out;
 	}
 
@@ -187,115 +160,11 @@ public class HDUtils
 		return outHSL;
 	}
 
-	public static int colorHSLToInt(int[] colorHSL)
-	{
+	public static int colorHSLToInt(int[] colorHSL) {
 		return (colorHSL[0] << 3 | colorHSL[1]) << 7 | colorHSL[2];
 	}
 
-	public static int[] colorIntToRGB(int colorInt)
-	{
-		int[] outHSL = new int[3];
-		outHSL[0] = colorInt >> 10 & 0x3F;
-		outHSL[1] = colorInt >> 7 & 0x7;
-		outHSL[2] = colorInt & 0x7F;
-		return colorHSLToRGB(outHSL[0], outHSL[1], outHSL[2]);
-	}
-
-	public static int colorRGBToInt(float[] colorRGB) {
-		int[] colorRGBInt = new int[3];
-		for (int i = 0; i < colorRGB.length; i++) {
-			colorRGBInt[i] = (int)(colorRGB[i] * 255);
-		}
-		return (colorRGBInt[0] << 8 | colorRGBInt[1]) << 8 | colorRGBInt[2] | 134217728;
-	}
-
-	static int[] colorHSLToRGB(float h, float s, float l)
-	{
-		h /= 64f;
-		s /= 8f;
-		l /= 128f;
-
-		float q;
-		if (l < 0.5)
-			q = l * (1 + s);
-		else
-			q = (l + s) - (s * l);
-
-		float p = 2 * l - q;
-
-		float r = Math.max(0, HueToRGB(p, q, h + (1.0f / 3.0f)));
-		float g = Math.max(0, HueToRGB(p, q, h));
-		float b = Math.max(0, HueToRGB(p, q, h - (1.0f / 3.0f)));
-
-		r = Math.min(r, 1.0f);
-		g = Math.min(g, 1.0f);
-		b = Math.min(b, 1.0f);
-
-		return new int[]{(int)(r * 255f), (int)(g * 255f), (int)(b * 255f)};
-	}
-
-	static float HueToRGB(float p, float q, float h)
-	{
-		if (h < 0) h += 1;
-
-		if (h > 1 ) h -= 1;
-
-		if (6 * h < 1)
-		{
-			return p + ((q - p) * 6 * h);
-		}
-
-		if (2 * h < 1 )
-		{
-			return  q;
-		}
-
-		if (3 * h < 2)
-		{
-			return p + ( (q - p) * 6 * ((2.0f / 3.0f) - h) );
-		}
-
-		return p;
-	}
-
-	// Conversion functions to and from sRGB and linear color space.
-	// The implementation is based on the sRGB EOTF given in the Khronos Data Format Specification.
-	// Source: https://web.archive.org/web/20220808015852/https://registry.khronos.org/DataFormat/specs/1.3/dataformat.1.3.pdf
-	// Page number 130 (146 in the PDF)
-	public static float linearToSrgb(float c)
-	{
-		return c <= 0.0031308 ?
-			c * 12.92f :
-			(float) (1.055 * Math.pow(c, 1 / 2.4) - 0.055);
-	}
-
-	public static float srgbToLinear(float c)
-	{
-		return c <= 0.04045f ?
-			c / 12.92f :
-			(float) Math.pow((c + 0.055) / 1.055, 2.4);
-	}
-
-	public static float[] linearToSrgb(float[] c)
-	{
-		float[] result = new float[c.length];
-		for (int i = 0; i < c.length; i++) {
-			result[i] = linearToSrgb(c[i]);
-		}
-		return result;
-	}
-
-	public static float[] srgbToLinear(float[] c)
-	{
-		float[] result = new float[c.length];
-		for (int i = 0; i < c.length; i++) {
-			result[i] = srgbToLinear(c[i]);
-		}
-		return result;
-	}
-
-	public static float dotLightDirectionModel(float x, float y, float z)
-	{
+	public static float dotLightDirectionModel(float x, float y, float z) {
 		// Model normal vectors need to be normalized
 		float length = x * x + y * y + z * z;
 		if (length < EPSILON)
@@ -309,14 +178,6 @@ public class HDUtils
 		if (length < EPSILON)
 			return 0;
 		return (x * lightDirTile[0] + y * lightDirTile[1]) / (float) Math.sqrt(length);
-	}
-
-	public static float[] rgb(int r, int g, int b) {
-		return new float[] {
-			srgbToLinear(r / 255f),
-			srgbToLinear(g / 255f),
-			srgbToLinear(b / 255f)
-		};
 	}
 
 	public static long ceilPow2(long x) {
