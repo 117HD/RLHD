@@ -72,27 +72,26 @@ public class SunCalc
 	/**
 	 * Calculate strength of the sun's light based on the current altitude at a given time and location.
 	 * @param angles     azimuth and altitude angles in radians
-	 * @param fadeFactor how soon to fade the light at the start and end of the day
+	 * @param startAngle  the angle over which to fade the light at the start and end of the day
 	 * @return light strength float between 0 and 1
 	 */
-	public static float getStrength(double[] angles, float fadeFactor)
-	{
+	public static float getStrength(double[] angles, double startAngle) {
 		double altitude = angles[1];
 		double angleFromZenith = Math.abs(altitude - Math.PI / 2);
-		if (angleFromZenith > Math.PI / 2) // below horizon
+
+		if (angleFromZenith > Math.PI / 2) { // Below horizon
 			return 0;
+		}
 
-		float normalizedAltitude = (float) (altitude / (Math.PI / 2.0));
+		float normalizedAltitude = (float) (altitude / (Math.PI / 2));
+		float fadeOffset = (float) Math.toRadians(startAngle) / (float) (Math.PI / 2);
+		float fadeStart = fadeOffset;
+		float fadeEnd = 1 - fadeOffset;
 
-		float fadedStrength = (float) Math.sin(normalizedAltitude * Math.PI / 2.0);
-
-		float fadeStart = fadeFactor * 0.4f;
-		float fadeEnd = 1 - fadeStart;
-
-		if (normalizedAltitude < fadeStart)
-			return fadedStrength * (normalizedAltitude / fadeStart);
-		if (normalizedAltitude > fadeEnd)
-			return fadedStrength * ((1 - normalizedAltitude) / fadeStart);
+		float fadedStrength = 0;
+		if (normalizedAltitude >= fadeStart && normalizedAltitude <= fadeEnd) {
+			fadedStrength = (float) Math.sin((normalizedAltitude - fadeStart) * (Math.PI / 2) / (fadeEnd - fadeStart));
+		}
 		return fadedStrength;
 	}
 
@@ -104,7 +103,8 @@ public class SunCalc
 			altitudeDegrees = 90 - altitudeDegrees;
 
 		float[][] altitudeTemperatureRange = {
-			{  0, 2250 },
+			{-90, 13000 },
+			{  0, 13000 },
 			{  3, 2500 },
 			{  5, 2600 },
 			{ 10, 3000 },
@@ -131,15 +131,38 @@ public class SunCalc
 			altitudeDegrees = 90 - altitudeDegrees;
 
 		float[][] altitudeColorRange = {
+			{-90,  56,  99, 161 },
 			{  0,  56,  99, 161 },
-			{  5, 255, 114,  54 },
-			{ 15, 255, 178,  84 },
-			{ 30, 173, 243, 255 },
-			{ 40, 151, 186, 255 },
-			{ 50, 151, 186, 255 },
-			{ 60, 151, 186, 255 },
-			{ 70, 151, 186, 255 },
+			{  3, 147,  56, 161 }, // dawn/dusk blue
+			{  6, 255, 114,  54 },
+			{  9, 255, 178,  84 }, // sunrise/sunset orange
+			{ 20, 173, 243, 255 },
+			{ 30, 151, 186, 255 },
 			{ 80, 151, 186, 255 }
+		};
+
+		float[] interpolatedColor = interpolateRGB(altitudeDegrees, altitudeColorRange);
+		for (int i = 0; i < 3; i++)
+			interpolatedColor[i] /= 255;
+		return srgbToLinear(interpolatedColor);
+	}
+
+	public static float[] getSkyColor(long millis, double[] latLong)
+	{
+		double[] position = getPosition(millis, latLong);
+		float altitudeDegrees = (float) Math.toDegrees(position[1]);
+		if (altitudeDegrees > 90)
+			altitudeDegrees = 90 - altitudeDegrees;
+
+		float[][] altitudeColorRange = {
+				{-90,   5,   5, 11 },
+				{  0,   5,   5, 11 },
+				{  3,  14,  15, 33 },  // dawn/dusk blue
+				{  6, 114,  48, 117 },
+				{  9, 222, 170, 106 }, // sunrise/sunset orange
+				{ 20, 185, 199, 255 },
+				{ 30, 185, 214, 255 },
+				{ 80, 185, 214, 255 }
 		};
 
 		float[] interpolatedColor = interpolateRGB(altitudeDegrees, altitudeColorRange);
@@ -254,22 +277,39 @@ public class SunCalc
 		};
 	}
 
-	public static float getMoonStrength(double[] moonAngles, double[] angles)
-	{
+	public static float getMoonStrength(double[] moonAngles, double[] angles, double startAngle, double filterAngle) {
 		double moonAltitude = moonAngles[1];
 		double moonAngleFromZenith = Math.abs(moonAltitude - Math.PI / 2);
 
-		if (moonAngleFromZenith > Math.PI / 2) // below horizon
+		if (moonAngleFromZenith > Math.PI / 2)
 			return 0;
 
-		double sunAltitude = angles[1];
-		if (sunAltitude > Math.toRadians(-5)) {
-			double fadeFactor = Math.max(0, (sunAltitude - Math.toRadians(-5)) / Math.toRadians(5));
-			return (float) ((1 - fadeFactor) * (moonAltitude / (Math.PI / 2.0)));
+		// get moon strength
+		float normalizedMoonAltitude = (float) (moonAltitude / (Math.PI / 2));
+
+		// offset
+		double fadeOffset = Math.toRadians(startAngle) / (Math.PI / 2);
+		float fadeStart = (float) fadeOffset;
+		float fadeEnd = 1 - (float) fadeOffset;
+
+		float moonStrength = 0;
+		if (normalizedMoonAltitude >= fadeStart && normalizedMoonAltitude <= fadeEnd) {
+			moonStrength = (normalizedMoonAltitude - fadeStart) / (fadeEnd - fadeStart);
 		}
 
-		return (float) (moonAltitude / (Math.PI / 2.0));
+		// filter based on sun altitude
+		double sunAltitude = angles[1];
+		double startFadeFactor = Math.max(0, (-sunAltitude - Math.toRadians(filterAngle)) / Math.toRadians(filterAngle));
+		moonStrength *= startFadeFactor;
+
+		if (sunAltitude > Math.toRadians(-filterAngle)) {
+			double endFadeFactor = Math.max(0, (sunAltitude - Math.toRadians(-filterAngle)) / Math.toRadians(filterAngle));
+			moonStrength *= (1 - endFadeFactor);
+		}
+
+		return moonStrength;
 	}
+
 
 	public static double toJulian(long millis)
 	{

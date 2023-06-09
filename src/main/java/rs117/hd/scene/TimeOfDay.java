@@ -42,8 +42,8 @@ public enum TimeOfDay
 		double[] angles = SunCalc.getPosition(modifiedDate.toEpochMilli(), latLong);
 		double[] moonAngles = SunCalc.getMoonPosition(modifiedDate.toEpochMilli(), latLong);
 		return isNight(angles) ?
-			SunCalc.getMoonStrength(moonAngles, angles) :
-			SunCalc.getStrength(angles, .3f);
+			SunCalc.getMoonStrength(moonAngles, angles, 10, 10) :
+			SunCalc.getStrength(angles, 10);
 	}
 
 	public static float[] getLightColor(double[] latLong, int dayLength) {
@@ -55,6 +55,15 @@ public enum TimeOfDay
 		Instant modifiedDate = getModifiedDate(Instant.now(), dayLength);
 		return SunCalc.getAmbientColor(modifiedDate.toEpochMilli(), latLong);
 	}
+
+	public static float[] getFogColor(double[] latLong, int dayLength) {
+		Instant modifiedDate = getModifiedDate(Instant.now(), dayLength);
+		return SunCalc.getSkyColor(modifiedDate.toEpochMilli(), latLong);
+	}
+
+	//blend water color
+	//blend ambient strength
+	//introduce moon light and ambient cap to replace previous env settings
 
 	public static float[] getNightFogColor() { return rgb(5, 5, 11); }
 	public static float[] getNightAmbientColor() { return rgb(56, 99, 161); }
