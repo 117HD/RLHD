@@ -7460,6 +7460,20 @@
     "forceOverride": true
   },
   {
+    "description": "POH superior garden zen theme carpet",
+    "objectIds": [
+      29242,
+      29243,
+      29244,
+      29245,
+      29246
+    ],
+    "uvType": "WORLD_XZ",
+    "flatNormals": true,
+    "castShadows": false,
+    "forceOverride": true
+  },
+  {
     "description": "Circular ground portals near runic altars",
     "objectIds": [
       34749,
