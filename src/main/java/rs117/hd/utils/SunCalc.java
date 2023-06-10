@@ -133,9 +133,9 @@ public class SunCalc
 		float[][] altitudeColorRange = {
 			{-90,  56,  99, 161 },
 			{  0,  56,  99, 161 },
-			{  3, 147,  56, 161 }, // dawn/dusk blue
-			{  6, 255, 114,  54 },
-			{  9, 255, 178,  84 }, // sunrise/sunset orange
+			{  2, 147,  56, 161 }, // dawn/dusk blue
+			{  4, 255, 114,  54 },
+			{  7, 255, 178,  84 }, // sunrise/sunset orange
 			{ 20, 173, 243, 255 },
 			{ 30, 151, 186, 255 },
 			{ 80, 151, 186, 255 }
@@ -145,6 +145,25 @@ public class SunCalc
 		for (int i = 0; i < 3; i++)
 			interpolatedColor[i] /= 255;
 		return srgbToLinear(interpolatedColor);
+	}
+
+	public static float getAmbientStrength(long millis, double[] latLong)
+	{
+		double[] position = getPosition(millis, latLong);
+		float altitudeDegrees = (float) Math.toDegrees(position[1]);
+		if (altitudeDegrees > 90)
+			altitudeDegrees = 90 - altitudeDegrees;
+
+		float[][] altitudeStrengthRange = {
+				{-90,  2 },
+				{  0,  2 },
+				{  3, 1 },
+				{ 20, 1 },
+				{ 30, 1 },
+				{ 80, 1 }
+		};
+
+		return interpolate(altitudeDegrees, altitudeStrengthRange);
 	}
 
 	public static float[] getSkyColor(long millis, double[] latLong)
@@ -157,9 +176,9 @@ public class SunCalc
 		float[][] altitudeColorRange = {
 				{-90,   5,   5, 11 },
 				{  0,   5,   5, 11 },
-				{  3,  14,  15, 33 },  // dawn/dusk blue
-				{  6, 114,  48, 117 },
-				{  9, 222, 170, 106 }, // sunrise/sunset orange
+				{  2,  14,  15, 33 },  // dawn/dusk blue
+				{  4, 114,  48, 117 },
+				{  7, 222, 170, 106 }, // sunrise/sunset orange
 				{ 20, 185, 199, 255 },
 				{ 30, 185, 214, 255 },
 				{ 80, 185, 214, 255 }

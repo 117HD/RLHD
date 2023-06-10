@@ -1831,6 +1831,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				lightStrength *= TimeOfDay.getLightStrength(latLong, MINUTES_PER_DAY);
 				lightColor = TimeOfDay.getLightColor(latLong, MINUTES_PER_DAY);
 				ambientColor = TimeOfDay.getAmbientColor(latLong, MINUTES_PER_DAY);
+				ambientStrength = TimeOfDay.getAmbientStrength(latLong, MINUTES_PER_DAY);
 				fogColor = TimeOfDay.getFogColor(latLong, MINUTES_PER_DAY);
 				lightPitch = (float) -angles[1];
 				lightYaw = (float) (angles[0] + Math.PI);

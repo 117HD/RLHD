@@ -1,6 +1,8 @@
 package rs117.hd.scene;
 
+import java.time.Duration;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import net.runelite.http.api.worlds.WorldRegion;
 import rs117.hd.utils.SunCalc;
 
@@ -17,7 +19,7 @@ public enum TimeOfDay
 
 	public static TimeOfDay getTimeOfDay(double[] latLong, int dayLength)
 	{
-		Instant modifiedDate = getModifiedDate(Instant.now(), dayLength);
+		Instant modifiedDate = getModifiedDate(dayLength);
 		double[] angles = SunCalc.getPosition(modifiedDate.toEpochMilli(), latLong);
 		return isNight(angles) ? TimeOfDay.NIGHT : TimeOfDay.DAY;
 	}
@@ -30,7 +32,7 @@ public enum TimeOfDay
 	 * @see <a href="https://en.wikipedia.org/wiki/Horizontal_coordinate_system">Horizontal coordinate system</a>
 	 */
 	public static double[] getCurrentAngles(double[] latLong, int dayLength) {
-		Instant modifiedDate = getModifiedDate(Instant.now(), dayLength);
+		Instant modifiedDate = getModifiedDate(dayLength);
 		double[] angles = SunCalc.getPosition(modifiedDate.toEpochMilli(), latLong);
 		return isNight(angles) ?
 			SunCalc.getMoonPosition(modifiedDate.toEpochMilli(), latLong) :
@@ -38,7 +40,7 @@ public enum TimeOfDay
 	}
 
 	public static float getLightStrength(double[] latLong, int dayLength) {
-		Instant modifiedDate = getModifiedDate(Instant.now(), dayLength);
+		Instant modifiedDate = getModifiedDate(dayLength);
 		double[] angles = SunCalc.getPosition(modifiedDate.toEpochMilli(), latLong);
 		double[] moonAngles = SunCalc.getMoonPosition(modifiedDate.toEpochMilli(), latLong);
 		return isNight(angles) ?
@@ -47,17 +49,22 @@ public enum TimeOfDay
 	}
 
 	public static float[] getLightColor(double[] latLong, int dayLength) {
-		Instant modifiedDate = getModifiedDate(Instant.now(), dayLength);
+		Instant modifiedDate = getModifiedDate(dayLength);
 		return SunCalc.getColor(modifiedDate.toEpochMilli(), latLong);
 	}
 
 	public static float[] getAmbientColor(double[] latLong, int dayLength) {
-		Instant modifiedDate = getModifiedDate(Instant.now(), dayLength);
+		Instant modifiedDate = getModifiedDate(dayLength);
 		return SunCalc.getAmbientColor(modifiedDate.toEpochMilli(), latLong);
 	}
 
+	public static float getAmbientStrength(double[] latLong, int dayLength) {
+		Instant modifiedDate = getModifiedDate(dayLength);
+		return SunCalc.getAmbientStrength(modifiedDate.toEpochMilli(), latLong);
+	}
+
 	public static float[] getFogColor(double[] latLong, int dayLength) {
-		Instant modifiedDate = getModifiedDate(Instant.now(), dayLength);
+		Instant modifiedDate = getModifiedDate(dayLength);
 		return SunCalc.getSkyColor(modifiedDate.toEpochMilli(), latLong);
 	}
 
@@ -72,11 +79,18 @@ public enum TimeOfDay
 	public static float getNightLightStrength() { return 0.25f; }
 	public static float getNightAmbientStrength() { return 2f; }
 
-	public static Instant getModifiedDate(Instant currentDate, int dayLength) {
-		long millisPerDay = dayLength * MS_PER_MINUTE;
-		long elapsedMillis = currentDate.toEpochMilli() % millisPerDay;
-		double speedFactor = 1440.0 / dayLength; // Speed factor to adjust the speed of time
-		return currentDate.plusMillis((long) (elapsedMillis * speedFactor));
+	public static Instant getModifiedDate(int dayLength) {
+		long currentTimeMillis = System.currentTimeMillis();
+		Instant currentInstant = Instant.ofEpochMilli(currentTimeMillis);
+
+		Duration elapsedDuration = Duration.between(
+				currentInstant.truncatedTo(ChronoUnit.DAYS),
+				currentInstant
+		);
+		double speedFactor = 24.0 * 60.0 / dayLength; // Speed factor to adjust the speed of time
+		Duration modifiedDuration = elapsedDuration.multipliedBy((long) speedFactor);
+
+		return currentInstant.plus(modifiedDuration);
 	}
 
 	public static double[] getLatLong(WorldRegion currentRegion) {
