@@ -337,7 +337,7 @@ public enum Material
 		.setSpecular(0.3f,30)
 	),
 	WOOD_GRAIN_2_LIGHT(WOOD_GRAIN_2, p -> p
-			.setBrightness(1.1f)
+		.setBrightness(1.1f)
 	),
 	WOOD_GRAIN_2_WIDE(WOOD_GRAIN_2, p -> p
 		.setTextureScale(1.5f, 0.5f)
@@ -401,7 +401,7 @@ public enum Material
 
 	WALL_STONE_N,
 	WALL_STONE(p -> p.setNormalMap(WALL_STONE_N)),
-	METALLIC_1( p -> p.setSpecular(0.2f, 20)),
+	METALLIC_1(p -> p.setSpecular(0.2f, 20)),
 	METALLIC_1_SEMIGLOSS(METALLIC_1, p -> p
 		.setSpecular(0.3f, 80)),
 	METALLIC_1_GLOSS(METALLIC_1, p -> p
