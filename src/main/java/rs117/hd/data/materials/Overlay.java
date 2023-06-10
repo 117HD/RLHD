@@ -193,6 +193,10 @@ public enum Overlay {
     KHARID_PATHS_3(25, Area.KHARID_DESERT_REGION, GroundMaterial.DIRT, p -> p.saturation(3).hue(6)),
     GIANTS_PLATEAU_CABBAGE_PATCH_FIX(14, Area.GIANTS_PLATEAU_CABBAGE_PATCH, GroundMaterial.DIRT, p -> p.blended(false)),
     PVP_ARENA_PATH(227, Area.PVP_ARENA, GroundMaterial.DIRT),
+    DESERT_TREASURE_INTERIOR_FLOOR(GroundMaterial.FALADOR_PATHS, p -> p
+		.area(Area.DESERT_TREASURE_PYRAMID)
+		.ids(21)
+    ),
 
     // Falador
     FALADOR_EAST_BANK_PATH_FIX_2(-119, Area.FALADOR_EAST_BANK_PATH_FIX_2, GroundMaterial.FALADOR_PATHS, p -> p
@@ -477,6 +481,8 @@ public enum Overlay {
         .lightness(74)
         .shiftHue(-3)
         .shiftSaturation(-7)),
+    // Draynor
+    DRAYNOR_SEWERS(p -> p.area(Area.DRAYNOR_SEWERS).ids(89).waterType(WaterType.MUDDY_WATER)),
 
     // Draynor manor
     DRAYNOR_MANOR_TILE_DARK(2, Area.DRAYNOR_MANOR_INTERIOR, GroundMaterial.MARBLE_1, p -> p.blended(false)),
@@ -708,7 +714,7 @@ public enum Overlay {
     OVERLAY_32(32, GroundMaterial.CONCRETE),
     OVERLAY_90(90, GroundMaterial.DIRT), // Known locations: 90 = Dark Wizards Tower; Random shading in the overworld
     OVERLAY_DIRT_PATH(GroundMaterial.VARIED_DIRT, p -> p
-        .ids(36, 131)), // 36 = Corsair Cove, 131 = Burgh de Rott
+        .ids(36, 80, 131)), // 36 = Corsair Cove, 80 = Mythics Guild, 131 = Burgh de Rott
     OVERWORLD_GRUNGE(GroundMaterial.GRUNGE, p -> p.ids(48, 185)),
     OVERLAY_120(GroundMaterial.GRUNGE, p -> p.ids(120)),
 

@@ -20019,7 +20019,8 @@
       7376,
       5247,
       38027,
-      15016
+      15016,
+      12934
     ]
   },
   {
@@ -30553,6 +30554,60 @@
     "range": 30,
     "objectIds": [
       12400
+    ]
+  },
+  {
+    "description": "CULINATOMANCERS_PORTAL",
+    "height": 30,
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 12.5,
+    "color": [
+      252,
+      252,
+      252
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 30,
+    "objectIds": [
+      12356
+    ]
+  },
+  {
+    "description": "WALL_TORCH_MORT",
+    "height": 200,
+    "alignment": "FRONT",
+    "radius": 200,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 23,
+    "objectIds": [
+      12934
+    ]
+  },
+  {
+    "description": "DIGSITE_LAMP",
+    "height": 170,
+    "alignment": "FRONT",
+    "radius": 290,
+    "strength": 8.5,
+    "color": [
+      202,
+      168,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 24,
+    "objectIds": [
+      17324
     ]
   }
 ]
