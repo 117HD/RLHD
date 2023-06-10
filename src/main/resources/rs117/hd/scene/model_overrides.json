@@ -8687,11 +8687,20 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       611,
-      7430,
-      9532
+      7430
     ],
     "flatNormals": true,
     "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Generic - Plank - Tables - Picnic Bench",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      9532
+    ],
+    "flatNormals": true,
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 512
   },
   {
     "description": "Objects -  - Wooden - Battlements",
