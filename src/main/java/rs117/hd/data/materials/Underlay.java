@@ -90,8 +90,8 @@ public enum Underlay {
         .ids(66, 68)
     ),
     DESERT_TREASURE_INTERIOR_FLOOR(GroundMaterial.SANDY_STONE_FLOOR, p -> p
-            .area(Area.DESERT_TREASURE_PYRAMID)
-            .ids(61, 64)
+		.area(Area.DESERT_TREASURE_PYRAMID)
+		.ids(61, 64)
     ),
 
     SOPHANEM_TRAPDOOR(Area.SOPHANEM_TRAPDOOR, GroundMaterial.NONE, p -> {}),

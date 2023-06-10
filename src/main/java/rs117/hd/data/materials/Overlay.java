@@ -194,8 +194,8 @@ public enum Overlay {
     GIANTS_PLATEAU_CABBAGE_PATCH_FIX(14, Area.GIANTS_PLATEAU_CABBAGE_PATCH, GroundMaterial.DIRT, p -> p.blended(false)),
     PVP_ARENA_PATH(227, Area.PVP_ARENA, GroundMaterial.DIRT),
     DESERT_TREASURE_INTERIOR_FLOOR(GroundMaterial.FALADOR_PATHS, p -> p
-            .area(Area.DESERT_TREASURE_PYRAMID)
-            .ids(21)
+		.area(Area.DESERT_TREASURE_PYRAMID)
+		.ids(21)
     ),
 
     // Falador
