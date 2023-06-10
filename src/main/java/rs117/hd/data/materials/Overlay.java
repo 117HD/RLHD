@@ -714,7 +714,7 @@ public enum Overlay {
     OVERLAY_32(32, GroundMaterial.CONCRETE),
     OVERLAY_90(90, GroundMaterial.DIRT), // Known locations: 90 = Dark Wizards Tower; Random shading in the overworld
     OVERLAY_DIRT_PATH(GroundMaterial.VARIED_DIRT, p -> p
-        .ids(36, 131)), // 36 = Corsair Cove, 131 = Burgh de Rott
+        .ids(36, 80, 131)), // 36 = Corsair Cove, 80 = Mythics Guild, 131 = Burgh de Rott
     OVERWORLD_GRUNGE(GroundMaterial.GRUNGE, p -> p.ids(48, 185)),
     OVERLAY_120(GroundMaterial.GRUNGE, p -> p.ids(120)),
 

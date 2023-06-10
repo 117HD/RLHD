@@ -2845,11 +2845,19 @@
     "objectIds": [
       720,
       3213,
-      39721,
-      40887,
-      44635
+      40887
     ],
     "uvType": "MODEL_YZ",
+    "uvScale": 0.4,
+    "uvOrientation": 512
+  },
+  {
+    "description": "DIRT_CAVE_ENTRANCES",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [
+      39721,
+      44635
+    ],
     "uvScale": 0.4,
     "uvOrientation": 512
   },
@@ -3331,9 +3339,14 @@
       12937,
       12938,
       12939,
-      12940
+      12940,
+      13865,
+      22533,
+      22534,
+      22535
     ],
-    "uvType": "MODEL_XZ"
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.88
   },
   {
     "description": "LUNAR_ISLE_DOCKS",
@@ -3670,6 +3683,10 @@
       14046,
       14047,
       14048,
+      17992,
+      17993,
+      17994,
+      18120,
       24095,
       40304
     ],
@@ -4045,6 +4062,11 @@
       10494,
       11794,
       11795,
+      12779,
+      17999,
+      18000,
+      18001,
+      18002,
       25606,
       26107
     ]
@@ -5035,6 +5057,9 @@
       15808,
       15811,
       15812,
+      17873,
+      17874,
+      17875,
       19215,
       20753,
       20754,
@@ -5044,6 +5069,8 @@
       23085,
       23086,
       23087,
+      24147,
+      24148,
       26715,
       26716,
       27984,
@@ -5107,7 +5134,8 @@
       28997,
       29000,
       29015,
-      29032
+      29032,
+      29044
     ],
     "uvType": "WORLD_XZ",
     "uvScale": 0.22
@@ -5323,7 +5351,10 @@
       3170,
       3709,
       3949,
-      7106
+      7106,
+      13831,
+      13832,
+      13833
     ],
     "uvType": "WORLD_XZ",
     "uvScale": 0.68,
@@ -5411,7 +5442,12 @@
     "objectIds": [
       14500,
       14502,
-      15629
+      15629,
+      17864,
+      17865,
+      17868,
+      17869,
+      17870
     ],
     "inheritTileColorType": "OVERLAY",
     "uvType": "WORLD_XZ",
@@ -5432,6 +5468,8 @@
       14482,
       14485,
       17929,
+      17930,
+      17933,
       23080,
       23081,
       23082,
@@ -5609,6 +5647,14 @@
       16560,
       16561,
       17305,
+      17655,
+      17656,
+      17657,
+      17658,
+      17905,
+      17906,
+      17907,
+      17908,
       20367
     ],
     "flatNormals": true
@@ -5682,7 +5728,17 @@
     "baseMaterial": "METALLIC_2_SEMIGLOSS",
     "objectIds": [
       10504,
-      10505
+      10505,
+      17561,
+      17562,
+      17647
+    ]
+  },
+  {
+    "description": "Objects - Metallic - Panning Tray",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      17560
     ]
   },
   {
@@ -5754,11 +5810,13 @@
   },
   {
   "description": "Objects - Stone - Stalagmite",
-  "baseMaterial": "STONE",
+  "baseMaterial": "STONE_NORMALED",
   "objectIds": [
     4600,
     5231,
-    5232
+    5232,
+    17876,
+    17877
   ]
   },
   {
@@ -5802,9 +5860,10 @@
   },
   {
     "description": "Mortton Shade Catacombs - Walls - Stone",
-    "baseMaterial": "STONE",
+    "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       17900,
+      17901,
       38020,
       38021,
       38023,
@@ -5812,6 +5871,7 @@
       40470
     ],
     "uvType": "MODEL_XY",
+    "uvScale": 0.46,
     "uvOrientation": 300
   },
   {
@@ -6032,7 +6092,13 @@
       12920,
       12921,
       12922,
-      12923
+      12923,
+      17713,
+      17714,
+      17715,
+      17716,
+      17717,
+      17718
     ],
     "uvType": "MODEL_XY",
     "uvOrientation": 512,
@@ -6065,12 +6131,14 @@
     "uvType": "MODEL_XZ"
   },
   {
-    "description": "Morytania - Floor - Wooden - Ladder - Burugh De Rott",
+    "description": "Morytania - Floor - Wooden - Ladder - Burugh De Rott - Meiyerditch",
     "baseMaterial": "WOOD_GRAIN",
     "objectIds": [
       12780,
       12781,
-      12907
+      12907,
+      17974,
+      17975
     ]
   },
   {
@@ -6108,8 +6176,9 @@
   },
   {
     "description": "Morytania - Wall  - Stone - Stone Brick Wall - Burugh De Rott",
-    "baseMaterial": "STONE",
+    "baseMaterial": "STONE_NORMALED",
     "objectIds": [
+      12737,
       12834,
       12835,
       12836,
@@ -6128,8 +6197,9 @@
       12850,
       12851
     ],
-    "uvType": "GEOMETRY",
-    "flatNormals": true
+    "uvType": "MODEL_XY",
+    "uvOrientation": 512,
+    "uvScale": 0.44
   },
   {
     "description": "Morytania - Objects  - Stone - Stone Brick Wall Rubble - Burugh De Rott",
@@ -6253,6 +6323,11 @@
       14872,
       15679,
       17306,
+      17551,
+      17552,
+      17667,
+      17909,
+      17910,
       23065,
       31483
     ],
@@ -6464,6 +6539,7 @@
     "description": "Objects - Wooden - Plank tables - Medium",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
+      12884,
       24333,
       29712
     ],
@@ -6790,7 +6866,8 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       1088,
-      10491
+      10491,
+      12885
     ],
     "uvType": "MODEL_XZ",
     "uvOrientation": 512,
@@ -8527,6 +8604,494 @@
     "uvType": "MODEL_XZ",
     "uvOrientation": 256,
     "uvScale": 0.4
+  },
+  {
+    "description": "Culinaromancers Floor",
+    "baseMaterial": "METALLIC_2_HIGHGLOSS",
+    "objectIds": [
+      12366
+    ]
+  },
+  {
+    "description": "Meiyerditch Boat",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      17955
+    ],
+    "uvType": "MODEL_XY",
+    "uvOrientation": 512,
+    "uvScale": 0.77
+  },
+  {
+    "description": "Meiyerditch Walls",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      17676,
+      17677,
+      17678,
+      17679,
+      17680,
+      17681,
+      17720,
+      17721,
+      17722,
+      17723,
+      17724,
+      17725,
+      17726,
+      17727,
+      17728,
+      17729,
+      17730,
+      17731,
+      17732,
+      17733,
+      17734,
+      17735,
+      17738,
+      17739,
+      17740,
+      17741,
+      17742,
+      17743,
+      17744,
+      17941,
+      17942,
+      17943,
+      18054,
+      18055,
+      18056
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Meiyerditch Walls Rubble",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      18037,
+      18038
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Meiyerditch Wall Plank Floors",
+    "baseMaterial": "WOOD_GRAIN_2_LIGHT",
+    "objectIds": [
+      17564,
+      17565,
+      17566,
+      17567,
+      17568,
+      17569,
+      17570,
+      17571,
+      17572,
+      17579,
+      17580,
+      17581,
+      17591,
+      17592,
+      17593,
+      17594,
+      17595,
+      17596,
+      17597,
+      17598,
+      17599,
+      17689,
+      17690,
+      17691,
+      17692,
+      17693,
+      17694,
+      17695,
+      17696,
+      17697,
+      17698,
+      17699,
+      17700,
+      17701,
+      17703,
+      17704,
+      17705,
+      17706,
+      17707,
+      17708,
+      17574,
+      17575,
+      17576,
+      17577,
+      17582,
+      17583,
+      17584,
+      17585,
+      17586,
+      17587,
+      17588,
+      17589,
+      17590,
+      18089,
+      18090,
+      18093,
+      18094,
+      18098,
+      18070,
+      18071,
+      18072,
+      18073,
+      18109,
+      18110,
+      18111,
+      18112,
+      18113,
+      18114,
+      18116,
+      18117,
+      18118,
+      18122,
+      18123
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Meiyerditch Wall Plank Roofs",
+    "baseMaterial": "WOOD_GRAIN_2_LIGHT",
+    "objectIds": [
+      17702,
+      17709,
+      17711,
+      17712
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Meiyerditch Wall Plank Floors - Kicked",
+    "baseMaterial": "WOOD_GRAIN_2_LIGHT",
+    "objectIds": [
+      18124
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.66
+  },
+  {
+    "description": "Meiyerditch Plank Door",
+    "baseMaterial": "WOOD_GRAIN_2_LIGHT",
+    "objectIds": [
+      17600,
+      17601,
+      17973,
+      18031,
+      18032,
+      18047,
+      18048,
+      18057,
+      18091,
+      18092
+    ],
+    "uvType": "MODEL_XY",
+    "uvOrientation": 512,
+    "uvScale": 0.66
+  },
+  {
+    "description": "Meiyerditch House Walls",
+    "baseMaterial": "WOOD_GRAIN_2_LIGHT",
+    "objectIds": [
+      17602,
+      17603,
+      17604,
+      17605,
+      17606,
+      17607,
+      17608,
+      17609,
+      17610,
+      17611,
+      17612,
+      17613,
+      17614,
+      17615,
+      17616,
+      17617,
+      17618,
+      17619,
+      17620,
+      17621,
+      17622,
+      17980,
+      18078,
+      18088,
+      18146,
+      18115,
+      18128,
+      18131,
+      18134
+    ],
+    "uvType": "MODEL_XY",
+    "uvOrientation": 1536,
+    "uvScale": 0.58
+  },
+  {
+    "description": "Objects - Wooden - Poor Looking tables - Wide",
+    "baseMaterial": "WOOD_GRAIN_2_WIDE",
+    "objectIds": [
+      17545,
+      17546,
+      18083,
+      18084
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Objects - Wooden - Poor Lab tables",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      17896
+    ],
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 512,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Objects - Wooden - Meiyerdith Trapdoor",
+    "baseMaterial": "WOOD_GRAIN_2_WIDE",
+    "objectIds": [
+      32577
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.86
+  },
+  {
+    "description": "Objects - Wooden - Chair - Meiyerditch",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      17548,
+      17549
+    ],
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 512,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Meiyerditch House Roof",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      17639,
+      17748,
+      17749,
+      17750,
+      17751,
+      17752,
+      17753,
+      17754,
+      18097
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Meiyerditch Wooden Shelves",
+    "baseMaterial": "WOOD_GRAIN_2_LIGHT",
+    "objectIds": [
+      17534,
+      17535,
+      17536,
+      17537,
+      17538,
+      18086,
+      18087,
+      18095,
+      18096,
+      18105,
+      18106,
+      18107,
+      18108
+    ],
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 512,
+    "uvScale": 0.86
+  },
+  {
+    "description": "Meiyerditch Stone Brick Fireplace",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      17641,
+      17642,
+      17643,
+      18039
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Meiyerditch Poor Baricade",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      17644,
+      17645
+    ],
+    "uvType": "MODEL_XY_MIRROR_A",
+    "uvOrientation": 512,
+    "uvScale": 0.32
+  },
+  {
+    "description": "Meiyerditch Stone Brick Walls",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      17492,
+      17493,
+      17494,
+      14795,
+      17496,
+      17497,
+      17498,
+      17499,
+      17500,
+      17501
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Ver Sinhaza Walls",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      17487,
+      17514
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Ver Sinhaza Walls",
+    "baseMaterial": "METALLIC_2",
+    "objectIds": [
+      17503,
+      17504,
+      17505,
+      17517
+    ],
+    "uvType": "MODEL_YZ",
+    "uvOrientation": 512,
+    "uvScale": 0.4
+  },
+  {
+    "description": "Meiyerditch Poor Wooden Stairs",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      17976,
+      17978,
+      18049,
+      18050
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Meiyerditch Myreque Hideout Brick Stone Walls",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      17649,
+      17650,
+      17651,
+      17653
+    ],
+    "uvType": "MODEL_XY",
+    "uvOrientation": 1536,
+    "uvScale": 0.66
+  },
+  {
+    "description": "Meiyerditch Myreque Hideout Brick Stone Walls Rubble",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      17673,
+      17914
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Meiyerditch Myreque Hideout Brick Stone Walls",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [
+      17652
+    ]
+  },
+  {
+    "description": "Temple Trekking Sign",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      23277
+    ],
+    "uvType": "MODEL_XY"
+  },
+  {
+    "description": "Meiyerditch Mine Walls",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      17820,
+      17821,
+      17822,
+      17823,
+      17824,
+      17825,
+      17826,
+      17827,
+      17828,
+      17829,
+      17871
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Meiyerditch Mine Walls - Daeyalt Rocks",
+    "baseMaterial": "ROCK_2",
+    "objectIds": [
+      17962,
+      17963,
+      17964,
+      17965
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Darkmeyer Stone Walls",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      39171,
+      39172,
+      39178,
+      39179,
+      39181,
+      39185,
+      39175,
+      39176,
+      39327,
+      39328,
+      39329,
+      39330,
+      39331,
+      39332,
+      39356,
+      39357,
+      39358,
+      39359,
+      39361,
+      39365,
+      39478
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Darkmeyer Stone Tiles",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      39186,
+      39187,
+      39188
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Vampyre Statue",
+    "baseMaterial": "MARBLE_1_SEMIGLOSS",
+    "objectIds": [
+      18127
+    ]
   },
   {
     "description": "Sack",
