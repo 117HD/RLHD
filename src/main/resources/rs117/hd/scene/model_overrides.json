@@ -1259,6 +1259,7 @@
       1284,
       1286,
       1297,
+      1365,
       1383,
       4051,
       4052,
@@ -1299,8 +1300,6 @@
   {
     "description": "GRASS",
     "objectIds": [
-      1257,
-      1258,
       3547,
       3548,
       3549,
@@ -1308,7 +1307,6 @@
       4334,
       4335,
       4336,
-
       4739,
       4740,
       4741,
@@ -1397,6 +1395,9 @@
   {
     "description": "Short grass that shouldn't cast shadows",
     "objectIds": [
+      1257,
+      1258,
+      1259,
       4530,
       4735,
       4736,
@@ -1426,6 +1427,8 @@
     "description": "WOODEN_FENCES",
     "baseMaterial": "WOOD_GRAIN",
     "objectIds": [
+      166,
+      167,
       981,
       991,
       992,
@@ -1453,6 +1456,15 @@
       "STILE_7527"
     ],
     "flatNormals": true
+  },
+  {
+    "description": "Wooden - Fences - V Slats",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      17310
+    ],
+    "uvOrientation": 512,
+    "uvType": "MODEL_XY"
   },
   {
     "description": "STONE_STEPS",
@@ -3095,18 +3107,6 @@
     "uvScale": 0.5
   },
   {
-    "description": "UNKNOWN_8",
-    "objectIds": [
-      10743,
-      10744,
-      10749,
-      10750,
-      10769,
-      17349
-    ],
-    "flatNormals": true
-  },
-  {
     "description": "UNKNOWN_9",
     "objectIds": [
       3110
@@ -3137,6 +3137,37 @@
     ],
     "flatNormals": true,
     "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Desert pyramid walls - Interior",
+    "baseMaterial": "ROCK_2",
+    "objectIds": [
+      6505,
+      6525,
+      6526,
+      6529,
+      6530,
+      6531
+    ]
+  },
+  {
+    "description": "Desert pyramid Tunnel",
+    "baseMaterial": "ROCK_2",
+    "objectIds": [
+      6481
+    ]
+  },
+  {
+    "description": "Desert pyramid Door",
+    "baseMaterial": "WALL_STONE",
+    "objectIds": [
+      6545,
+      6546,
+      6547,
+      6548
+    ],
+    "flatNormals": true,
+    "uvType": "MODEL_XY"
   },
   {
     "description": "Sophanem pyramid door",
@@ -3700,6 +3731,9 @@
       931,
       932,
       933,
+      934,
+      935,
+      936,
       937,
       938,
       940,
@@ -3834,6 +3868,7 @@
     "description": "Stalagmite - Tan",
     "baseMaterial": "STONE",
     "objectIds": [
+      5047,
       12219,
       12575,
       12576,
@@ -3857,6 +3892,7 @@
     "description": "Textured Ladder",
     "baseMaterial": "DOCK_FENCE",
     "objectIds": [
+      11,
       2147,
       2148,
       2884,
@@ -3944,6 +3980,7 @@
     "objectIds": [
       1106,
       5615,
+      9531,
       25601
     ]
   },
@@ -3983,13 +4020,15 @@
     "flatNormals": true
   },
   {
-    "description": "Wooden plank tables",
+    "description": "Wooden - Plank - Tables",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       10490,
       12450,
+      12962,
       14851,
       14852,
+      15684,
       25603,
       40223,
       40224
@@ -4093,7 +4132,7 @@
     "uvType": "MODEL_XZ"
   },
   {
-    "description": "East Ardounge House Walls",
+    "description": "Wattle Style Houses (Ardougne, Digsite)",
     "baseMaterial": "WATTLE_1",
     "objectIds": [
       1602,
@@ -4101,7 +4140,13 @@
       1604,
       1605,
       1606,
-      1608
+      1608,
+      10743,
+      10744,
+      10749,
+      10750,
+      10769,
+      17349
     ],
     "flatNormals": true
   },
@@ -4277,9 +4322,15 @@
       1569,
       1571,
       1572,
+      1573,
+      1574,
+      3506,
+      3507,
       11721,
       11722,
-      23866
+      23866,
+      44598,
+      44599
     ]
   },
   {
@@ -4528,7 +4579,7 @@
     "flatNormals": true
   },
   {
-    "description": "Wooden Door 1",
+    "description": "Wooden Door 1 - Fake Plank",
     "baseMaterial": "DOCK_FENCE",
     "objectIds": [
       1527,
@@ -4575,16 +4626,21 @@
     "uvScale": 0.4
   },
   {
-    "description": "Wooden Door 2",
-    "baseMaterial": "DOCK_FENCE",
+    "description": "Wooden Door 2 - 4 Panel",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       1521,
       1522,
       1524,
-      1525
+      1525,
+      1542,
+      17316,
+      17317,
+      20925
     ],
     "flatNormals": true,
-    "uvOrientation": 512,
+    "uvType": "MODEL_XY",
+    "uvOrientation": 1536,
     "uvScale": 0.4
   },
   {
@@ -4747,8 +4803,12 @@
   },
   {
     "description": "Kharidian Sandstone",
-    "baseMaterial": "STONE",
+    "baseMaterial": "STONE_NORMALED",
     "objectIds": [
+      6584,
+      6585,
+      6586,
+      6587,
       11099,
       11100,
       11101,
@@ -4761,7 +4821,7 @@
       11108
     ],
     "inheritTileColorType": "OVERLAY",
-    "uvType": "WORLD_XZ",
+    "uvType": "MODEL_XZ",
     "uvScale": 0.6
   },
   {
@@ -4935,8 +4995,6 @@
       5009,
       5035,
       5037,
-      5038,
-      5039,
       5604,
       5605,
       5606,
@@ -5081,6 +5139,16 @@
     ],
     "uvType": "WORLD_XZ",
     "uvScale": 0.22
+  },
+  {
+    "description": "Inconspicuous Crate",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      28964,
+      28999,
+      29048,
+      29018
+    ]
   },
   {
     "description": "Objects - Mossy Rock - Medium",
@@ -5259,6 +5327,7 @@
       2634,
       5511,
       5512,
+      10785,
       11604,
       11605,
       11931,
@@ -5270,7 +5339,7 @@
       18894,
       18895
     ],
-    "uvType": "WORLD_XZ",
+    "uvType": "MODEL_XZ",
     "uvScale": 0.5
   },
   {
@@ -5358,10 +5427,12 @@
     "description": "Ground Decoration - Rock - Tiny - Uncolored",
     "baseMaterial": "ROCK_1",
     "objectIds": [
+      6398,
       12050,
       14486
     ],
     "uvType": "WORLD_XZ",
+    "uvOrientation": 512,
     "uvScale": 0.75,
     "castShadows": false
   },
@@ -5388,6 +5459,8 @@
     "objectIds": [
       2381,
       2383,
+      6397,
+      6399,
       7115,
       12049,
       12051,
@@ -5422,14 +5495,16 @@
     "description": "barbarian - Walls - Wooden - Planks",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
+      9587,
+      9588,
       11558,
       11559,
       11560,
       11561
     ],
     "uvType": "MODEL_XY",
-    "uvOrientation": 512,
-    "uvScale": 0.76
+    "uvOrientation": 1536,
+    "uvScale": 0.66
   },
   {
     "description": "Round Rug",
@@ -5554,16 +5629,24 @@
     "description": "Objects - Wooden - Crate",
     "baseMaterial": "DOCK_FENCE",
     "objectIds": [
+      5106,
+      5107,
+      5110,
       7514,
+      9533,
       9534,
+      9535,
       10374,
       10378,
       10379,
       10381,
       12442,
       12443,
+      12961,
+      15692,
       16560,
       16561,
+      17305,
       17655,
       17656,
       17657,
@@ -5850,7 +5933,7 @@
   },
   {
     "description": "Objects - White Mushrooms - Medium",
-    "baseMaterial": "GRUNGE_1",
+    "baseMaterial": "PLANT_GRUNGE_1",
     "objectIds": [
       22796,
       22797,
@@ -5894,7 +5977,7 @@
   },
   {
     "description": "Objects - Huge Mushroom - Medium",
-    "baseMaterial": "GRUNGE_2",
+    "baseMaterial": "PLANT_GRUNGE_2",
     "objectIds": [
       4055,
       4056,
@@ -6218,6 +6301,7 @@
     "baseMaterial": "CARPET",
     "objectIds": [
       422,
+      423,
       23067
     ],
     "uvType": "MODEL_XZ",
@@ -6235,12 +6319,17 @@
     "description": "Objects - Stool - Wooden – Generic",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      7167,
+      14872,
+      15679,
+      17306,
       17551,
       17552,
       17667,
       17909,
       17910,
-      23065
+      23065,
+      31483
     ],
     "uvType": "MODEL_XZ",
     "flatNormals": true,
@@ -6451,6 +6540,7 @@
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       12884,
+      24333,
       29712
     ],
     "uvType": "MODEL_XZ",
@@ -6752,9 +6842,13 @@
     "description": "Wall Decoration - Rocks",
     "baseMaterial": "ROCK_1_LIGHT",
     "objectIds": [
-      1493
+      1493,
+      6393,
+      6394,
+      6395
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "MODEL_YZ_MIRROR_A",
+    "uvOrientation": 512,
     "uvScale": 0.6
   },
   {
@@ -6832,9 +6926,10 @@
     "description": "Objects - Stone - Large Gravestone - Large",
     "baseMaterial": "STONE_SEMIGLOSS",
     "objectIds": [
-      406
+      406,
+      1992
     ],
-    "uvType": "GEOMETRY",
+    "uvType": "VANILLA",
     "flatNormals": true
   },
   {
@@ -7047,7 +7142,7 @@
       21103,
       21105
     ],
-    "uvType": "WORLD_XZ",
+    "uvType": "MODEL_XZ",
     "uvScale": 2.0
   },
   {
@@ -7056,6 +7151,7 @@
     "objectIds": [
       5033,
       5034,
+      11437,
       21104
     ],
     "uvType": "WORLD_XZ",
@@ -7435,6 +7531,20 @@
       6767
     ],
     "baseMaterial": "FINE_CARPET",
+    "uvType": "WORLD_XZ",
+    "flatNormals": true,
+    "castShadows": false,
+    "forceOverride": true
+  },
+  {
+    "description": "POH superior garden zen theme carpet",
+    "objectIds": [
+      29242,
+      29243,
+      29244,
+      29245,
+      29246
+    ],
     "uvType": "WORLD_XZ",
     "flatNormals": true,
     "castShadows": false,
@@ -7992,6 +8102,22 @@
     "uvType": "GEOMETRY"
   },
   {
+    "description": "Kharidian Tent",
+    "baseMaterial": "FINE_CARPET",
+    "objectIds": [
+      1673,
+      1674,
+      1675,
+      1676,
+      1677,
+      1678,
+      6270,
+      6271
+    ],
+    "uvType": "MODEL_XY",
+    "uvScale": 0.80
+  },
+  {
     "description": "Metal Monkeybars",
     "baseMaterial": "METALLIC_2_SEMIGLOSS",
     "objectIds": [
@@ -8011,7 +8137,7 @@
     "uvOrientation": 512
   },
   {
-    "description": "Nardah Walls",
+    "description": "Nardah Sophanem - Walls - Rock",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       6590,
@@ -8025,7 +8151,7 @@
       6601
     ],
     "uvType": "MODEL_XY",
-    "uvOrientation": 512
+    "uvScale": 0.6
   },
   {
     "description": "Nardah Walls - Flipped",
@@ -8034,12 +8160,12 @@
       6588,
       6589
     ],
-    "uvType": "MODEL_YZ",
-    "uvOrientation": 512
+    "uvType": "MODEL_XY",
+    "uvScale": 0.6
   },
   {
     "description": "Nardah Walls Rubble",
-    "baseMaterial": "STONE_LOWGLOSS",
+    "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       10503
     ],
@@ -8067,6 +8193,7 @@
     "description": "Nardah Worn Stone Stairs",
     "baseMaterial": "STONE_LOWGLOSS",
     "objectIds": [
+      6496,
       10507
     ],
     "uvType": "GEOMETRY"
@@ -8137,7 +8264,7 @@
     ],
     "uvType": "MODEL_XY",
     "uvOrientation": 512,
-    "uvScale": 0.8
+    "uvScale": 0.6
   },
   {
     "description": "Sophamena Wall Decoration",
@@ -8450,6 +8577,8 @@
     "objectIds": [
       23,
       365,
+      2354,
+      2356,
       12394
     ],
     "uvType": "MODEL_XZ",
@@ -8963,5 +9092,311 @@
     "objectIds": [
       18127
     ]
+  },
+  {
+    "description": "Sack",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      17298
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.4
+  },
+  {
+    "description": "Digsite - Objects - Wooden - Tables - Fine",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      17299
+    ],
+    "uvType": "MODEL_XZ",
+    "flatNormals": true,
+    "uvOrientation": 512,
+    "uvScale": 0.8
+  },
+  {
+    "description": "Digsite - Ground Decoration - Stone Plate",
+    "baseMaterial": "ROCK_2",
+    "objectIds": [
+      17343,
+      17346,
+      17347
+    ],
+    "uvType": "MODEL_XZ",
+    "flatNormals": true,
+    "uvOrientation": 512,
+    "uvScale": 0.7
+  },
+  {
+    "description": "Digsite - Object - Fireplace",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      17325
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Digsite - Object - Giant Vase",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      386,
+      17362
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Digsite - Ground Decoration - Wooden Plank Path",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      2384,
+      2385,
+      2386,
+      2387,
+      2390
+    ],
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 512,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Digsite - Ground Decoration - Wooden Plank Path",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      2388,
+      2389
+    ],
+    "uvType": "MODEL_XZ_MIRROR_B",
+    "uvOrientation": 512,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Digsite - Objects - Rectangle Rock - Large",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      17350,
+      17351,
+      17352,
+      17353,
+      17354,
+      17356,
+      17357,
+      17358
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Bush Wall",
+    "baseMaterial": "PLANT_GRUNGE_1",
+    "objectIds": [
+      17313,
+      17314,
+      17315
+    ]
+  },
+  {
+    "description": "Generic Leafy Fern",
+    "baseMaterial": "PLANT_GRUNGE_2",
+    "objectIds": [
+      1391,
+      1393,
+      1394
+    ]
+  },
+  {
+    "description": "Generic - Plant - Fern - Small",
+    "baseMaterial": "PLANT_GRUNGE_1",
+    "objectIds": [
+      1173,
+      1299
+    ]
+  },
+  {
+    "description": "Generic - Plant - Leafy Shrub",
+    "baseMaterial": "PLANT_GRUNGE_1",
+    "objectIds": [
+      1392
+    ]
+  },
+  {
+    "description": "Digsite Wooden Fence Gate",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      3630,
+      11766,
+      11767,
+      11770,
+      11771
+    ],
+    "uvOrientation": 512,
+    "uvType": "MODEL_XY"
+  },
+  {
+    "description": "Morytania - Rotting Tree",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      3514,
+      3515
+    ]
+  },
+  {
+    "description": "Morytania - Tall Grass",
+    "baseMaterial": "PLANT_GRUNGE_1",
+    "objectIds": [
+      3501,
+      3502,
+      3503,
+      3504
+    ]
+  },
+  {
+    "description": "Generic - Plank - Tables - Picnic Bench",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      611,
+      7430
+    ],
+    "flatNormals": true,
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Generic - Plank - Tables - Picnic Bench",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      9532
+    ],
+    "flatNormals": true,
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Objects -  - Wooden - Battlements",
+    "baseMaterial": "WOOD_GRAIN",
+    "objectIds": [
+      1612
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Hadleys House - Wattle",
+    "baseMaterial": "WATTLE_1",
+    "objectIds": [
+      1905
+    ],
+    "flatNormals": true,
+    "uvType": "VANILLA"
+  },
+  {
+    "description": "Walls  - Stone - Stone Brick Wall Rubble - Burugh De Rott",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      6389,
+      6390
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Metallic Pipes",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      872,
+      3421,
+      6480
+    ]
+  },
+  {
+    "description": "Objects - Stone - Dessous Gravestone - Large",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      6437
+    ],
+    "uvType": "GEOMETRY",
+    "flatNormals": true
+  },
+  {
+    "description": "Double Row Fence",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      3729
+    ],
+    "uvType": "MODEL_XY",
+    "flatNormals": true,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Objects - Snowy Rock - Medium",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      5038,
+      5039,
+      6454
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Objects - Desert Treasure Pyramid Obilisk - Large",
+    "baseMaterial": "ROCK_2",
+    "objectIds": [
+      6482,
+      6484,
+      6485,
+      6491
+    ]
+  },
+  {
+    "description": "Objects - Desert Treasure Pyramid Statue - Medium",
+    "baseMaterial": "ROCK_2",
+    "objectIds": [
+      6538
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Walls - Desert Treasure Pyramid Stone Doorway - Medium",
+    "baseMaterial": "ROCK_2",
+    "objectIds": [
+      6553,
+      6554,
+      6555,
+      6556
+    ]
+  },
+  {
+    "description": "Wall Decoration - Desert Treasure Pyramid - Golden Torch",
+    "baseMaterial": "METALLIC_2_HIGHGLOSS",
+    "objectIds": [
+      6537
+    ]
+  },
+  {
+    "description": "Object - Desert Treasure Pyramid - Sarcophagus - Medium",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      6512,
+      6513,
+      6514,
+      6515,
+      6516,
+      6517
+    ],
+    "uvType": "MODEL_XY",
+    "uvOrientation": 192,
+    "uvScale": 0.17
+  },
+  {
+    "description": "Object - Desert Treasure Pyramid - Alter - Large",
+    "baseMaterial": "GRAY_25",
+    "objectIds": [
+      6552
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.23
+  },
+  {
+    "description": "Object - Desert Treasure Pyramid - Lectern - Medium",
+    "baseMaterial": "GRAY_25",
+    "objectIds": [
+      40357
+    ],
+    "uvType": "GEOMETRY"
   }
 ]

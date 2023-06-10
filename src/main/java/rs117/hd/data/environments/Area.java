@@ -277,6 +277,7 @@ public enum Area
 		new AABB(3071, 3226, 3133, 3292),
 		new AABB(2112, 4893, 2166, 4930) // bank robbery cutscene
 	),
+	DRAYNOR_SEWERS(3075, 9701, 3127, 9642),
 
 	// Wizards Tower
 	WIZARDS_TOWER_PATH(
@@ -1552,6 +1553,7 @@ public enum Area
 		GOBLIN_VILLAGE_ICE_CAVE,
 		TROLLWEISS_CAVES
 	),
+	SHADOW_DUNGEON(regions(10575, 10831)),
 
 	MAINLAND(700, 2300, 4200, 4095),
 	MAINLAND_EXTENSIONS(
