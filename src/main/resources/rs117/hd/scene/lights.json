@@ -19963,7 +19963,8 @@
       7376,
       5247,
       38027,
-      15016
+      15016,
+      12934
     ]
   },
   {
@@ -30440,6 +30441,24 @@
     "range": 30,
     "objectIds": [
       12356
+    ]
+  },
+  {
+    "description": "WALL_TORCH_MORT",
+    "height": 200,
+    "alignment": "FRONT",
+    "radius": 200,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 23,
+    "objectIds": [
+      12934
     ]
   }
 ]
