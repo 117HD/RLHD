@@ -1259,6 +1259,7 @@
       1284,
       1285,
       1286,
+      1289,
       1297,
       1365,
       1383,
@@ -3459,6 +3460,7 @@
       24454,
       24560,
       24561,
+      25796,
       29110,
       44680
     ],
@@ -4770,14 +4772,42 @@
   },
   {
     "description": "Grunge-Like Object",
-    "baseMaterial": "STONE",
+    "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       6358,
       6359,
       6360,
-      6361
+      6361,
+      25656,
+      25657,
+      25658
     ],
     "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Grunge-Like Object - Tiny",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      6358,
+      6359,
+      6360,
+      6361,
+      25657
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.3,
+    "uvOrientation": 1024
+  },
+  {
+    "description": "Grunge-Like Object - Small",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      25656,
+      25658
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.5,
+    "uvOrientation": 512
   },
   {
     "description": "Sand clumps",
@@ -5690,8 +5720,11 @@
       17907,
       17908,
       20367,
+      25655,
       25660,
-      25661
+      25661,
+      25775,
+      25776
     ],
     "flatNormals": true
   },
@@ -9473,5 +9506,22 @@
       25786,
       25787
     ]
+  },
+  {
+    "description": "Keep Le Faye Instanced - Stone Brick Walls",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      3389,
+      3390,
+      3391,
+      3392,
+      3393,
+      5812,
+      5835,
+      25845
+    ],
+    "uvType": "MODEL_XY",
+    "uvScale": 0.34,
+    "uvOrientation": 768
   }
 ]

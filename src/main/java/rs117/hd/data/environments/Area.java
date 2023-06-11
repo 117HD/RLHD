@@ -488,6 +488,7 @@ public enum Area
 	),
 
 	KEEP_LE_FAYE_JAIL(7490),
+	KEEP_LE_FAYE_INSTANCE(6722),
 
 	// White Wolf Mountain
 	WHITE_WOLF_MOUNTAIN(
