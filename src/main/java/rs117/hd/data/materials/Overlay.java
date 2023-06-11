@@ -342,6 +342,7 @@ public enum Overlay {
         .hue(12)),
     SEERS_CHURCH_1(-85, Area.SEERS_CHURCH, GroundMaterial.TILES_2x2_2, p -> p.blended(false)),
     SEERS_CHURCH_2(8, Area.SEERS_CHURCH, GroundMaterial.MARBLE_2, p -> p.blended(false)),
+    SEERS_COURTHOUSE_FLOOR(GroundMaterial.FALADOR_PATHS, p -> p.ids(110, 123)),
     SINCLAIR_MANSION_FLOOR(173, Area.SINCLAIR_MANSION, GroundMaterial.WOOD_PLANKS_1, p -> p
             .lightness(40)
             .hue(10)
