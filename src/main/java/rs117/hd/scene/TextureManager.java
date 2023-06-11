@@ -333,6 +333,12 @@ public class TextureManager
 	{
 		// TODO: scale and transform on the GPU for better performance
 		AffineTransform t = new AffineTransform();
+		if (image != vanillaImage)
+		{
+			// Flip non-vanilla textures horizontally to match vanilla UV orientation
+			t.translate(textureSize, 0);
+			t.scale(-1, 1);
+		}
 		t.scale((double) textureSize / image.getWidth(), (double) textureSize / image.getHeight());
 		AffineTransformOp scaleOp = new AffineTransformOp(t, AffineTransformOp.TYPE_BICUBIC);
 		scaleOp.filter(image, scaledImage);

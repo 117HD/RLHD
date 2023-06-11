@@ -82,8 +82,7 @@ in FragmentData {
 out vec4 FragColor;
 
 vec2 worldUvs(float scale) {
-    vec2 uv = IN.position.xz / (128 * scale);
-    return vec2(uv.x, -uv.y);
+    return -IN.position.xz / (128 * scale);
 }
 
 #include utils/polyfills.glsl
