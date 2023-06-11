@@ -2022,9 +2022,7 @@
       25975,
       25978,
       25979,
-      25980,
-      26010,
-      "LOCKED_GATE"
+      26010
     ],
     "flatNormals": true
   },
@@ -4640,6 +4638,10 @@
       25803,
       25819,
       25820,
+      25825,
+      25826,
+      25827,
+      25828,
       26207
     ],
     "flatNormals": true,
@@ -9428,5 +9430,13 @@
       40357
     ],
     "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Seers Village Courthouse Metal Cage",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "objectIds": [
+      25980,
+      "LOCKED_GATE"
+    ]
   }
 ]
