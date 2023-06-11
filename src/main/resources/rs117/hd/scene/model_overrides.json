@@ -3601,13 +3601,15 @@
   },
   {
     "description": "White double row fence",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       25760,
       25923,
       25924
     ],
-    "flatNormals": true
+    "uvType": "MODEL_XY",
+    "flatNormals": true,
+    "uvOrientation": 512
   },
   {
     "description": "Seers village - Railing",
@@ -9437,6 +9439,22 @@
     "objectIds": [
       25980,
       "LOCKED_GATE"
+    ]
+  },
+  {
+    "description": "Seers Courthouse Plank Floors",
+    "baseMaterial": "WOOD_GRAIN_2_LIGHT",
+    "objectIds": [
+      25830,
+      25831
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Marble - Camelot Knight Statue",
+    "baseMaterial": "MARBLE_1_SEMIGLOSS",
+    "objectIds": [
+      26073
     ]
   }
 ]
