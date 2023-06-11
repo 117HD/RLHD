@@ -441,26 +441,26 @@ public enum Material
 		.setSpecular(0.5f,80)
 		.setBrightness(1.2f)),
 	HD_ROOF_BRICK_TILE_N,
-	HD_ROOF_BRICK_TILE_1(p -> p
-		.replaceIf(HdPluginConfig::objectTextures, ROOF_BRICK_TILE, ROOF_BRICK_TILE_GREEN, ROOF_BRICK_TILE_DARK)
+	HD_ROOF_BRICK_TILE(ROOF_BRICK_TILE, p -> p
+		.replaceIf(HdPluginConfig::objectTextures, ROOF_BRICK_TILE)
 		.setSpecular(0.3f, 30)
 		.setNormalMap(HD_ROOF_BRICK_TILE_N)
 	),
-	HD_ROOF_BRICK_TILE_2(p -> p
+	HD_ROOF_BRICK_TILE_GREEN(ROOF_BRICK_TILE_GREEN, p -> p
 		.replaceIf(HdPluginConfig::objectTextures, ROOF_BRICK_TILE_GREEN)
 		.setSpecular(0.3f, 30)
 		.setNormalMap(HD_ROOF_BRICK_TILE_N)
 	),
-	HD_ROOF_BRICK_TILE_3(p -> p
+	HD_ROOF_BRICK_TILE_DARK(ROOF_BRICK_TILE_DARK, p -> p
 		.replaceIf(HdPluginConfig::objectTextures, ROOF_BRICK_TILE_DARK)
 		.setSpecular(0.3f, 30)
 		.setNormalMap(HD_ROOF_BRICK_TILE_N)
 	),
 	PLANT_GRUNGE_1(GRUNGE_1, p -> p
-			.setSpecular(0.25f, 25)
+		.setSpecular(0.25f, 25)
 	),
 	PLANT_GRUNGE_2(GRUNGE_2, p -> p
-			.setSpecular(0.20f, 20)
+		.setSpecular(0.20f, 20)
 	),
 
 
@@ -479,8 +479,12 @@ public enum Material
 		.setTextureScale(1.1f, 1.1f)),
 	WINTER_LEAVES_3(p -> p
 		.replaceIf(HdPluginConfig::winterTheme, LEAVES_3)),
-	WINTER_PAINTINGS(p -> p
-		.replaceIf(HdPluginConfig::winterTheme, PAINTING_LANDSCAPE, PAINTING_KING, PAINTING_ELF)),
+	WINTER_PAINTING_LANDSCAPE(p -> p
+		.replaceIf(HdPluginConfig::winterTheme, PAINTING_LANDSCAPE)),
+	WINTER_PAINTING_KING(p -> p
+		.replaceIf(HdPluginConfig::winterTheme, PAINTING_KING)),
+	WINTER_PAINTING_ELF(p -> p
+		.replaceIf(HdPluginConfig::winterTheme, PAINTING_ELF)),
 	WINTER_HD_ROOF_SHINGLES_1(p -> p
 		.replaceIf(HdPluginConfig::winterTheme, ROOF_SHINGLES_1)
 		.setSpecular(0.5f, 30)
@@ -490,9 +494,14 @@ public enum Material
 		.setSpecular(0.3f, 30)
 		.setNormalMap(HD_ROOF_SHINGLES_N)),
 	WINTER_HD_ROOF_BRICK_TILES(p -> p
-		.replaceIf(HdPluginConfig::winterTheme, ROOF_BRICK_TILE, ROOF_BRICK_TILE_GREEN, ROOF_BRICK_TILE_DARK)),
-	WINTER_HD_ROOF_SLATES(p -> p
-		.replaceIf(HdPluginConfig::winterTheme, ROOF_SLATE, ROOF_WOODEN_SLATE)
+		.replaceIf(HdPluginConfig::winterTheme, ROOF_BRICK_TILE, ROOF_BRICK_TILE_GREEN, ROOF_BRICK_TILE_DARK)
+		.setSpecular(0.3f, 30)
+		.setNormalMap(HD_ROOF_BRICK_TILE_N)),
+	WINTER_HD_ROOF_SLATE(p -> p
+		.replaceIf(HdPluginConfig::winterTheme, ROOF_SLATE)
+		.setSpecular(0.5f, 30)),
+	WINTER_HD_ROOF_WOODEN_SLATE(p -> p
+		.replaceIf(HdPluginConfig::winterTheme, ROOF_WOODEN_SLATE)
 		.setSpecular(0.5f, 30)),
 	WINTER_JAGGED_STONE_TILE(p -> p
 		.setNormalMap(JAGGED_STONE_TILE_N)
