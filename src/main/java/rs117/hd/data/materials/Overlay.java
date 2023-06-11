@@ -342,13 +342,13 @@ public enum Overlay {
         .hue(12)),
     SEERS_CHURCH_1(-85, Area.SEERS_CHURCH, GroundMaterial.TILES_2x2_2, p -> p.blended(false)),
     SEERS_CHURCH_2(8, Area.SEERS_CHURCH, GroundMaterial.MARBLE_2, p -> p.blended(false)),
-    MURDER_MYSTERY_HOUSE_FLOOR_FIX(173, Area.MURDER_MYSTERY_MANSION, GroundMaterial.WOOD_PLANKS_1, p -> p
+    SINCLAIR_MANSION_FLOOR(173, Area.SINCLAIR_MANSION, GroundMaterial.WOOD_PLANKS_1, p -> p
             .lightness(40)
             .hue(10)
             .saturation(5)
             .blended(false)
     ),
-    MURDER_MYSTERY_KITCHEN_FLOOR(3, Area.MURDER_MYSTERY_MANSION, GroundMaterial.TILE_SMALL),
+    SINCLAIR_MANSION_KITCHEN_FLOOR(3, Area.SINCLAIR_MANSION, GroundMaterial.TILE_SMALL, p -> p.blended(false)),
 
     // Catherby
     CATHERBY_BEACH_OBELISK_WATER_FIX(6, Area.CATHERBY_BEACH_OBELISK_WATER_FIX, WaterType.WATER_FLAT),

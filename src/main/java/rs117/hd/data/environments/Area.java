@@ -480,7 +480,7 @@ public enum Area
 		new AABB(2710, 3487, 2709, 3487)
 	),
 	// Murder Mystery Mansion
-	MURDER_MYSTERY_MANSION(
+	SINCLAIR_MANSION(
 		new AABB(2747,3582,2733,3574),
 		new AABB(2742,3573,2739,3573)
 	),
