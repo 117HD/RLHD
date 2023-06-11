@@ -7783,7 +7783,6 @@
       33407,
       33408,
       33409,
-      33410,
       33423,
       33424,
       33425,
@@ -7899,6 +7898,12 @@
       41807,
       41808
     ],
+    "shadowOpacityThreshold": 0.12
+  },
+  {
+    "description": "Use flat normals for POH Portal Nexus, since it spins around",
+    "objectIds": [ 33410 ],
+    "flatNormals": true,
     "shadowOpacityThreshold": 0.12
   },
   {

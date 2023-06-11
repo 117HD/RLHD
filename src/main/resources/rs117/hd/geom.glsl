@@ -51,6 +51,7 @@ flat out vec4 vColor[3];
 flat out vec3 vUv[3];
 flat out int vMaterialData[3];
 flat out int vTerrainData[3];
+flat out mat2x3 TB;
 
 out FragmentData {
     vec3 position;
@@ -75,6 +76,19 @@ void main() {
     vec3 N = normalize(cross(T, B));
 
     computeUvs(vMaterialData[0], vec3[](gPosition[0], gPosition[1], gPosition[2]), vUv);
+
+    // Calculate tangent-space vectors
+    mat2 uvToTri = inverse(mat2(
+        vUv[1].xy - vUv[0].xy,
+        vUv[2].xy - vUv[0].xy
+    )) * -1; // Flip UV direction, since OSRS UVs are oriented strangely
+    mat2x3 triToWorld = mat2x3(
+        gPosition[1] - gPosition[0],
+        gPosition[2] - gPosition[0]
+    );
+    TB = triToWorld * uvToTri;
+    TB[0] = normalize(TB[0]);
+    TB[1] = normalize(TB[1]);
 
     for (int i = 0; i < 3; i++) {
         OUT.position = gPosition[i];
