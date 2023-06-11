@@ -2067,13 +2067,15 @@
     "flatNormals": true
   },
   {
-    "description": "Murder Mystery house - exterior walls",
+    "description": "Sinclair Mansion - exterior walls",
     "baseMaterial": "STONE",
     "objectIds": [
+      26059,
       26060,
       26061,
       26062,
       26063,
+      26064,
       26065,
       26066,
       26071,
@@ -5723,7 +5725,8 @@
     "description": "Objects - Metallic - Range",
     "baseMaterial": "METALLIC_2_SEMIGLOSS",
     "objectIds": [
-      7183
+      7183,
+      25730
     ]
   },
   {
