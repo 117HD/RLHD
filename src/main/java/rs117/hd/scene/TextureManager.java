@@ -260,6 +260,22 @@ public class TextureManager
 				continue;
 			}
 
+			Integer index = -1;
+			if (material.replacementCondition != null)
+			{
+				if (material.replacementCondition.apply(config))
+				{
+					for (Material toReplace : material.materialsToReplace) {
+						index = materialOrdinalToTextureIndex[toReplace.ordinal()];
+						materialReplacements[toReplace.ordinal()] = material.ordinal();
+					}
+				}
+				else
+				{
+					continue;
+				}
+			}
+
 			if (material.parent != null)
 			{
 				// Point this material to pre-existing texture from parent material
@@ -273,15 +289,6 @@ public class TextureManager
 			{
 				log.trace("No texture override for: {}", textureName);
 				continue;
-			}
-
-			Integer index = -1;
-			for (Material toReplace : material.materialsToReplace) {
-				if (material.replacementCondition.apply(config))
-				{
-					index = materialOrdinalToTextureIndex[toReplace.ordinal()];
-					materialReplacements[toReplace.ordinal()] = material.ordinal();
-				}
 			}
 
 			if (index == -1)
