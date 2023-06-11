@@ -480,11 +480,14 @@ public enum Area
 		new AABB(2710, 3487, 2709, 3487)
 	),
 	SEERS_COURTHOUSE(2739, 3471, 2732, 3465),
+
 	// Murder Mystery Mansion
 	SINCLAIR_MANSION(
 		new AABB(2747,3582,2733,3574),
 		new AABB(2742,3573,2739,3573)
 	),
+
+	KINGS_RANSOM_DUNGEON(7490),
 
 	// White Wolf Mountain
 	WHITE_WOLF_MOUNTAIN(
