@@ -1957,16 +1957,6 @@
     "flatNormals": true
   },
   {
-    "description": "FALADOR_UNKNOWN_1",
-    "baseMaterial": "GRUNGE_1",
-    "objectIds": [
-      24022,
-      24023,
-      24024
-    ],
-    "uvType": "MODEL_XZ"
-  },
-  {
     "description": "AL_KHARID_WALLS",
     "baseMaterial": "WATTLE_1",
     "objectIds": [
@@ -4030,9 +4020,11 @@
       10490,
       12450,
       12962,
+      14762,
       14851,
       14852,
       15684,
+      17145,
       25603,
       40223,
       40224
@@ -4067,12 +4059,16 @@
       11794,
       11795,
       12779,
+      17148,
+      17149,
+      17159,
       17999,
       18000,
       18001,
       18002,
       25606,
       25663,
+      25844,
       26107
     ]
   },
@@ -4507,7 +4503,8 @@
     "baseMaterial": "STONE",
     "objectIds": [
       11789,
-      11790
+      11790,
+      17143
     ]
   },
   {
@@ -4521,7 +4518,18 @@
     "description": "Black Knight Fortress Walls",
     "baseMaterial": "ROCK_2",
     "objectIds": [
+      2341,
       14543
+    ]
+  },
+  {
+    "description": "Black Knight Fortress Wood Rails",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      17154,
+      17155,
+      17156,
+      17157
     ]
   },
   {
@@ -4604,6 +4612,8 @@
     "objectIds": [
       71,
       72,
+      73,
+      74,
       1527,
       1528,
       1535,
@@ -4611,6 +4621,10 @@
       1732,
       1733,
       1743,
+      2337,
+      2338,
+      2339,
+      2340,
       2416,
       2417,
       5667,
@@ -4623,6 +4637,8 @@
       11785,
       11786,
       11787,
+      14749,
+      14750,
       23972,
       23973,
       24050,
@@ -4787,6 +4803,7 @@
     "description": "Grunge-Like Object - Tiny",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
+      24023,
       25657
     ],
     "uvType": "MODEL_XZ",
@@ -4797,6 +4814,8 @@
     "description": "Grunge-Like Object - Small",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
+      24022,
+      24024,
       25656,
       25658
     ],
@@ -5488,7 +5507,8 @@
     "objectIds": [
       6398,
       12050,
-      14486
+      14486,
+      25834
     ],
     "uvType": "WORLD_XZ",
     "uvOrientation": 512,
@@ -5534,6 +5554,8 @@
       23082,
       23083,
       23084,
+      25833,
+      25835,
       37800,
       37801,
       37802,
@@ -5699,6 +5721,8 @@
       10378,
       10379,
       10381,
+      11331,
+      11228,
       12442,
       12443,
       12961,
@@ -5719,7 +5743,9 @@
       25660,
       25661,
       25775,
-      25776
+      25776,
+      25836,
+      25837
     ],
     "flatNormals": true
   },
@@ -6932,7 +6958,8 @@
     "objectIds": [
       1088,
       10491,
-      12885
+      12885,
+      17146
     ],
     "uvType": "MODEL_XZ",
     "uvOrientation": 512,
@@ -9532,6 +9559,21 @@
     "baseMaterial": "NONE",
     "objectIds": [
       25888
+    ]
+  },
+  {
+    "description": "Dirt Wedge Stairs",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [
+      23974,
+      23975
+    ]
+  },
+  {
+    "description": "Stone Wedge Stairs",
+    "baseMaterial": "ROCK_2",
+    "objectIds": [
+      1862
     ]
   }
 ]
