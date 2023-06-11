@@ -1084,7 +1084,7 @@ public enum Environment
 			.setDirectionalStrength(1.5f)
 			.setLightDirection(260f, 10f)
 	),
-	KINGS_RANSOM_DUNGEON(Area.KINGS_RANSOM_DUNGEON, new Properties()
+	KEEP_LE_FAYE_JAIL(Area.KEEP_LE_FAYE_JAIL, new Properties()
 			.setFogColor("#070606")
 			.setFogDepth(84)
 			.setAmbientColor("#AAAFB6")

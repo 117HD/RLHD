@@ -487,7 +487,7 @@ public enum Area
 		new AABB(2742,3573,2739,3573)
 	),
 
-	KINGS_RANSOM_DUNGEON(7490),
+	KEEP_LE_FAYE_JAIL(7490),
 
 	// White Wolf Mountain
 	WHITE_WOLF_MOUNTAIN(
