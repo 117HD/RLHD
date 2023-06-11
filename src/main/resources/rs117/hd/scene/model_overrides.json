@@ -4070,6 +4070,7 @@
       18001,
       18002,
       25606,
+      25663,
       26107
     ]
   },
@@ -4597,6 +4598,8 @@
     "description": "Wooden Door 1 - Fake Plank",
     "baseMaterial": "DOCK_FENCE",
     "objectIds": [
+      71,
+      72,
       1527,
       1528,
       1535,
@@ -4636,6 +4639,10 @@
       25749,
       25750,
       25751,
+      25788,
+      25789,
+      25790,
+      25791,
       25802,
       25803,
       25819,
@@ -5682,7 +5689,9 @@
       17906,
       17907,
       17908,
-      20367
+      20367,
+      25660,
+      25661
     ],
     "flatNormals": true
   },
@@ -9455,6 +9464,14 @@
     "baseMaterial": "MARBLE_1_SEMIGLOSS",
     "objectIds": [
       26073
+    ]
+  },
+  {
+    "description": "Marble - Stone Stairs",
+    "baseMaterial": "MARBLE_3",
+    "objectIds": [
+      25786,
+      25787
     ]
   }
 ]
