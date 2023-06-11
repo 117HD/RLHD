@@ -4779,10 +4779,7 @@
       6358,
       6359,
       6360,
-      6361,
-      25656,
-      25657,
-      25658
+      6361
     ],
     "uvType": "MODEL_XZ"
   },
@@ -4790,10 +4787,6 @@
     "description": "Grunge-Like Object - Tiny",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
-      6358,
-      6359,
-      6360,
-      6361,
       25657
     ],
     "uvType": "MODEL_XZ",
@@ -9525,5 +9518,20 @@
     "uvType": "MODEL_XY",
     "uvScale": 0.34,
     "uvOrientation": 768
+  },
+  {
+    "description": "Keep Le Faye Dungeon Walls",
+    "baseMaterial": "NONE",
+    "objectIds": [
+      25880,
+      25881
+    ]
+  },
+  {
+    "description": "Keep Le Faye Dungeon Wall Light",
+    "baseMaterial": "NONE",
+    "objectIds": [
+      25888
+    ]
   }
 ]

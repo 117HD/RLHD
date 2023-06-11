@@ -350,7 +350,7 @@ public enum Overlay {
             .blended(false)
     ),
     SINCLAIR_MANSION_KITCHEN_FLOOR(3, Area.SINCLAIR_MANSION, GroundMaterial.TILE_SMALL, p -> p.blended(false)),
-    KEEP_LE_FAYE_FLOOR_8(8, Area.KEEP_LE_FAYE, GroundMaterial.VARROCK_PATHS),
+    KEEP_LE_FAYE_FLOOR_8(8, Area.KEEP_LE_FAYE, GroundMaterial.WORN_TILES),
     KEEP_LE_FAYE_INSTANCED_FLOOR_COBBLE(GroundMaterial.WORN_TILES, p -> p.area(Area.KEEP_LE_FAYE_INSTANCE).ids(88, 119)),
     KEEP_LE_FAYE_INSTANCED_FLOOR_BRICK(Area.KEEP_LE_FAYE_INSTANCE, GroundMaterial.MARBLE_1_SEMIGLOSS, p -> p.area(Area.KEEP_LE_FAYE_INSTANCE).blended(false).ids(120)),
 
