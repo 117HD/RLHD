@@ -418,7 +418,7 @@ void main() {
 
         // directional light specular
         vec3 lightReflectDir = reflect(lightDirection, normals);
-        vec3 lightSpecularOut = specular(viewDir, lightReflectDir, vSpecularGloss, vSpecularStrength, lightColor, lightStrength).rgb;
+        vec3 lightSpecularOut = lightColor * specular(viewDir, lightReflectDir, vSpecularGloss, vSpecularStrength);
 
         // point lights
         vec3 pointLightsOut = vec3(0);
@@ -443,8 +443,8 @@ void main() {
                 pointLightsOut += pointLightOut;
 
                 vec3 pointLightReflectDir = reflect(-pointLightDir, normals);
-                vec4 spec = specular(viewDir, pointLightReflectDir, vSpecularGloss, vSpecularStrength, pointLightColor, pointLightStrength) * attenuation;
-                pointLightsSpecularOut += spec.rgb;
+                pointLightsSpecularOut += pointLightColor * attenuation *
+                    specular(viewDir, pointLightReflectDir, vSpecularGloss, vSpecularStrength);;
             }
         }
 
