@@ -25,13 +25,28 @@
  */
 package rs117.hd;
 
-import net.runelite.client.config.*;
+import net.runelite.client.config.Config;
+import net.runelite.client.config.ConfigGroup;
+import net.runelite.client.config.ConfigItem;
+import net.runelite.client.config.ConfigSection;
+import net.runelite.client.config.Range;
+import net.runelite.client.config.Units;
+import rs117.hd.config.AntiAliasingMode;
+import rs117.hd.config.ColorBlindMode;
+import rs117.hd.config.Contrast;
+import rs117.hd.config.DefaultSkyColor;
+import rs117.hd.config.FogDepthMode;
+import rs117.hd.config.MaxDynamicLights;
+import rs117.hd.config.Saturation;
+import rs117.hd.config.ShadowDistance;
+import rs117.hd.config.ShadowMode;
+import rs117.hd.config.ShadowResolution;
+import rs117.hd.config.TextureResolution;
+import rs117.hd.config.UIScalingMode;
 
 import static rs117.hd.HdPlugin.MAX_DISTANCE;
 import static rs117.hd.HdPlugin.MAX_FOG_DEPTH;
 import static rs117.hd.HdPluginConfig.CONFIG_GROUP;
-
-import rs117.hd.config.*;
 
 @ConfigGroup(CONFIG_GROUP)
 public interface HdPluginConfig extends Config
@@ -405,17 +420,17 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
-	// TODO: Fix parallax mapping before uncommenting this. See TODOs in displacement.glsl
-//	@ConfigItem(
-//		keyName = "parallaxMappingMode",
-//		name = "Parallax mapping",
-//		description = "Enable parallax mapping to add more depth to materials that support it. Impacts performance considerably.",
-//		position = 12,
-//		section = lightingSettings
-//	)
-//	default ParallaxMappingMode parallaxMappingMode() {
-//		return ParallaxMappingMode.FULL;
-//	}
+	String KEY_PARALLAX_OCCLUSION_MAPPING = "parallaxOcclusionMappingToggle";
+	@ConfigItem(
+		keyName = KEY_PARALLAX_OCCLUSION_MAPPING,
+		name = "Parallax Occlusion Mapping",
+		description = "Adds more depth to supported materials, at the cost of performance.",
+		position = 12,
+		section = lightingSettings
+	)
+	default boolean parallaxOcclusionMapping() {
+		return true;
+	}
 
 
 	/*====== Environment settings ======*/
