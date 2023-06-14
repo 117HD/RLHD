@@ -448,7 +448,7 @@ public enum Material
 	HD_WOOD_PLANKS_1(p -> p
 		.setNormalMap(HD_WOOD_PLANKS_1_N)
 		.setSpecular(0.5f,80)
-		.setBrightness(1.2f)),
+		.setBrightness(1.3f)),
 	HD_ROOF_BRICK_TILE_N,
 	HD_ROOF_BRICK_TILE(ROOF_BRICK_TILE, p -> p
 		.replaceIf(HdPluginConfig::objectTextures, ROOF_BRICK_TILE)
