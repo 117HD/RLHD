@@ -704,7 +704,7 @@ public enum Overlay {
     OVERLAY_SAND(GroundMaterial.SAND, p -> p.ids(25, 26)),
     OVERLAY_BRICK_BROWN(GroundMaterial.BRICK_BROWN, p -> p.ids(27, 46).blended(false)),
     OVERLAY_SNOW(GroundMaterial.SNOW_2, p -> p.ids(30, 33)),
-    OVERLAY_VARIED_DIRT(GroundMaterial.VARIED_DIRT, p -> p.ids(49, 83, 85, 91)),
+    OVERLAY_VARIED_DIRT(GroundMaterial.VARIED_DIRT, p -> p.ids(49, 83, 91)),
     OVERLAY_SAND_BRICK(GroundMaterial.SAND_BRICK, p -> p.ids(-49, 84)),
     OVERLAY_N122(-122, GroundMaterial.TILES_2x2_2_GLOSS),
     OVERLAY_N119(-119, GroundMaterial.FALADOR_PATHS),
@@ -719,7 +719,7 @@ public enum Overlay {
     OVERLAY_32(32, GroundMaterial.CONCRETE),
     OVERLAY_90(90, GroundMaterial.DIRT), // Known locations: 90 = Dark Wizards Tower; Random shading in the overworld
     OVERLAY_DIRT_PATH(GroundMaterial.VARIED_DIRT, p -> p
-        .ids(36, 80, 131)), // 36 = Corsair Cove, 80 = Mythics Guild, 131 = Burgh de Rott
+        .ids(36, 80, 85, 131)), // 36 = Corsair Cove, 80 = Mythics Guild, 85 = Slayer Tower, 131 = Burgh de Rott
     OVERWORLD_GRUNGE(GroundMaterial.GRUNGE, p -> p.ids(48, 185)),
     OVERLAY_120(GroundMaterial.GRUNGE, p -> p.ids(120)),
 
