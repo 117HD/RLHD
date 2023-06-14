@@ -4657,6 +4657,11 @@
       24058,
       24123,
       24124,
+      24363,
+      24366,
+      24367,
+      24368,
+      24369,
       24565,
       24566,
       24567,
@@ -9658,6 +9663,13 @@
     "objectIds": [
       1028,
       1029
+    ]
+  },
+  {
+    "description": "Objects - Metallic - Scuttle",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      24321
     ]
   },
   {
