@@ -3318,6 +3318,8 @@
     "description": "PHASMATYS_DOCKS",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
+      5159,
+      5160,
       5238,
       5239,
       5455,
@@ -4159,6 +4161,13 @@
       203,
       204,
       7432
+    ]
+  },
+  {
+    "description": "Candlestick Holder",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      1897
     ]
   },
   {
@@ -9649,6 +9658,22 @@
     "objectIds": [
       1028,
       1029
+    ]
+  },
+  {
+    "description": "Morytania - Walls - Metallic - Fence",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "objectIds": [
+      3457,
+      3458,
+      3459
+    ]
+  },
+  {
+    "description": "Morytania - Objects - Metallic - Suit of Armor",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      1900
     ]
   }
 ]
