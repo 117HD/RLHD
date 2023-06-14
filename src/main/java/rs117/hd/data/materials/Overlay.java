@@ -704,7 +704,7 @@ public enum Overlay {
     OVERLAY_SAND(GroundMaterial.SAND, p -> p.ids(25, 26)),
     OVERLAY_BRICK_BROWN(GroundMaterial.BRICK_BROWN, p -> p.ids(27, 46).blended(false)),
     OVERLAY_SNOW(GroundMaterial.SNOW_2, p -> p.ids(30, 33)),
-    OVERLAY_VARIED_DIRT(GroundMaterial.VARIED_DIRT, p -> p.ids(49, 83, 91)),
+    OVERLAY_VARIED_DIRT(GroundMaterial.VARIED_DIRT, p -> p.ids(49, 83, 85, 91)),
     OVERLAY_SAND_BRICK(GroundMaterial.SAND_BRICK, p -> p.ids(-49, 84)),
     OVERLAY_N122(-122, GroundMaterial.TILES_2x2_2_GLOSS),
     OVERLAY_N119(-119, GroundMaterial.FALADOR_PATHS),
