@@ -5736,6 +5736,8 @@
       17907,
       17908,
       20367,
+      24344,
+      20367,
       25655,
       25660,
       25661,
@@ -9337,6 +9339,15 @@
     ]
   },
   {
+    "description": "Morytania - Giant Tree",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      4048,
+      4049,
+      4050
+    ]
+  },
+  {
     "description": "Morytania - Tall Grass",
     "baseMaterial": "PLANT_GRUNGE_1",
     "objectIds": [
@@ -9630,6 +9641,14 @@
     "baseMaterial": "ROCK_2",
     "objectIds": [
       1862
+    ]
+  },
+  {
+    "description": "Objects - Metallic - Vat",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      1028,
+      1029
     ]
   }
 ]
