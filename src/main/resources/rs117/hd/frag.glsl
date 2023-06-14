@@ -71,6 +71,7 @@ flat in vec4 vColor[3];
 flat in vec3 vUv[3];
 flat in int vMaterialData[3];
 flat in int vTerrainData[3];
+flat in mat2x3 TB;
 
 in FragmentData {
     vec3 position;
@@ -82,8 +83,7 @@ in FragmentData {
 out vec4 FragColor;
 
 vec2 worldUvs(float scale) {
-    vec2 uv = IN.position.xz / (128 * scale);
-    return vec2(uv.x, -uv.y);
+    return -IN.position.xz / (128 * scale);
 }
 
 #include utils/polyfills.glsl
@@ -136,14 +136,6 @@ void main() {
     if (isWater) {
         outputColor = sampleWater(waterTypeIndex, viewDir);
     } else {
-        // Source: https://www.geeks3d.com/20130122/normal-mapping-without-precomputed-tangent-space-vectors/
-        vec3 N = IN.normal;
-        vec3 C1 = cross(vec3(0, 0, 1), N);
-        vec3 C2 = cross(vec3(0, 1, 0), N);
-        vec3 T = normalize(length(C1) > length(C2) ? C1 : C2);
-        vec3 B = cross(N, T);
-        mat3 TBN = mat3(T, B, N);
-
         vec2 uv1 = vUv[0].xy;
         vec2 uv2 = vUv[1].xy;
         vec2 uv3 = vUv[2].xy;
@@ -159,6 +151,25 @@ void main() {
         uv1 = (uv1 - .5) / material1.textureScale + .5;
         uv2 = (uv2 - .5) / material2.textureScale + .5;
         uv3 = (uv3 - .5) / material3.textureScale + .5;
+
+        // get flowMap map
+        vec2 flowMapUv = uv1 - animationFrame(material1.flowMapDuration);
+        float flowMapStrength = material1.flowMapStrength;
+        if (isUnderwater)
+        {
+            // Distort underwater textures
+            flowMapUv = worldUvs(1.5) + animationFrame(10 * waterType.duration) * vec2(1, -1);
+            flowMapStrength = 0.075;
+        }
+
+        vec2 uvFlow = texture(textureArray, vec3(flowMapUv, flowMap)).xy;
+        uv1 += uvFlow * flowMapStrength;
+        uv2 += uvFlow * flowMapStrength;
+        uv3 += uvFlow * flowMapStrength;
+
+        // Set up tangent-space transformation matrix
+        vec3 N = normalize(IN.normal);
+        mat3 TBN = mat3(TB[0], TB[1], N);
 
         float selfShadowing = 0;
         vec3 fragPos = IN.position;
@@ -179,21 +190,6 @@ void main() {
 
         fragPos += TBN * vec3(fragDelta, 0);
         #endif
-
-        // get flowMap map
-        vec2 flowMapUv = uv1 - animationFrame(material1.flowMapDuration);
-        float flowMapStrength = material1.flowMapStrength;
-        if (isUnderwater)
-        {
-            // Distort underwater textures
-            flowMapUv = worldUvs(1.5) + animationFrame(10 * waterType.duration) * vec2(1, -1);
-            flowMapStrength = 0.075;
-        }
-
-        vec2 uvFlow = texture(textureArray, vec3(flowMapUv, flowMap)).xy;
-        uv1 += uvFlow * flowMapStrength;
-        uv2 += uvFlow * flowMapStrength;
-        uv3 += uvFlow * flowMapStrength;
 
         // get vertex colors
         vec4 flatColor = vec4(0.5, 0.5, 0.5, 1.0);
@@ -338,9 +334,9 @@ void main() {
         outputColor = mix(underlayColor, overlayColor, overlayMix);
 
         // normals
-        vec3 n1 = sampleNormalMap(material1, uv1, IN.normal, TBN);
-        vec3 n2 = sampleNormalMap(material2, uv2, IN.normal, TBN);
-        vec3 n3 = sampleNormalMap(material3, uv3, IN.normal, TBN);
+        vec3 n1 = sampleNormalMap(material1, uv1, TBN);
+        vec3 n2 = sampleNormalMap(material2, uv2, TBN);
+        vec3 n3 = sampleNormalMap(material3, uv3, TBN);
         vec3 normals = normalize(n1 * IN.texBlend.x + n2 * IN.texBlend.y + n3 * IN.texBlend.z);
 
         float lightDotNormals = dot(normals, lightDir);
@@ -421,7 +417,7 @@ void main() {
 
         // directional light specular
         vec3 lightReflectDir = reflect(-lightDir, normals);
-        vec3 lightSpecularOut = specular(viewDir, lightReflectDir, vSpecularGloss, vSpecularStrength, lightColor, lightStrength).rgb;
+        vec3 lightSpecularOut = lightColor * specular(viewDir, lightReflectDir, vSpecularGloss, vSpecularStrength);
 
         // point lights
         vec3 pointLightsOut = vec3(0);
@@ -446,8 +442,8 @@ void main() {
                 pointLightsOut += pointLightOut;
 
                 vec3 pointLightReflectDir = reflect(-pointLightDir, normals);
-                vec4 spec = specular(viewDir, pointLightReflectDir, vSpecularGloss, vSpecularStrength, pointLightColor, pointLightStrength) * attenuation;
-                pointLightsSpecularOut += spec.rgb;
+                pointLightsSpecularOut += pointLightColor * attenuation *
+                    specular(viewDir, pointLightReflectDir, vSpecularGloss, vSpecularStrength);;
             }
         }
 

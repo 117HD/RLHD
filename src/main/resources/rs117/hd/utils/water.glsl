@@ -30,8 +30,8 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     vec2 baseUv = vUv[0].xy * IN.texBlend.x + vUv[1].xy * IN.texBlend.y + vUv[2].xy * IN.texBlend.z;
     vec2 uv3 = baseUv;
 
-    vec2 uv2 = worldUvs(3) + vec2(-1, 1) * animationFrame(24 * waterType.duration);
-    vec2 uv1 = worldUvs(3).yx + animationFrame(28 * waterType.duration);
+    vec2 uv2 = worldUvs(3) + animationFrame(24 * waterType.duration);
+    vec2 uv1 = worldUvs(3).yx - animationFrame(28 * waterType.duration);
 
     vec2 flowMapUv = worldUvs(15) + animationFrame(50 * waterType.duration);
     float flowMapStrength = 0.025;
@@ -79,7 +79,7 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
 
     // directional light specular
     vec3 lightReflectDir = reflect(-lightDir, normals);
-    vec3 lightSpecularOut = specular(viewDir, lightReflectDir, vSpecularGloss, vSpecularStrength, lightColor, lightStrength).rgb;
+    vec3 lightSpecularOut = lightColor * specular(viewDir, lightReflectDir, vSpecularGloss, vSpecularStrength);
 
     // point lights
     vec3 pointLightsOut = vec3(0);
@@ -104,8 +104,8 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
             pointLightsOut += pointLightOut;
 
             vec3 pointLightReflectDir = reflect(-pointLightDir, normals);
-            vec4 spec = specular(viewDir, pointLightReflectDir, vSpecularGloss, vSpecularStrength, pointLightColor, pointLightStrength) * attenuation;
-            pointLightsSpecularOut += spec.rgb;
+            pointLightsSpecularOut += pointLightColor * attenuation *
+                specular(viewDir, pointLightReflectDir, vSpecularGloss, vSpecularStrength);
         }
     }
 

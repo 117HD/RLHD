@@ -1257,7 +1257,9 @@
     "objectIds": [
       1282,
       1284,
+      1285,
       1286,
+      1289,
       1297,
       1365,
       1383,
@@ -1955,16 +1957,6 @@
     "flatNormals": true
   },
   {
-    "description": "FALADOR_UNKNOWN_1",
-    "baseMaterial": "GRUNGE_1",
-    "objectIds": [
-      24022,
-      24023,
-      24024
-    ],
-    "uvType": "MODEL_XZ"
-  },
-  {
     "description": "AL_KHARID_WALLS",
     "baseMaterial": "WATTLE_1",
     "objectIds": [
@@ -2021,9 +2013,7 @@
       25975,
       25978,
       25979,
-      25980,
-      26010,
-      "LOCKED_GATE"
+      26010
     ],
     "flatNormals": true
   },
@@ -2066,13 +2056,15 @@
     "flatNormals": true
   },
   {
-    "description": "Murder Mystery house - exterior walls",
+    "description": "Sinclair Mansion - exterior walls",
     "baseMaterial": "STONE",
     "objectIds": [
+      26059,
       26060,
       26061,
       26062,
       26063,
+      26064,
       26065,
       26066,
       26071,
@@ -3006,8 +2998,7 @@
       "GAS_HOLE",
       "GAS_HOLE_5918",
       "RUBBLE"
-    ],
-    "flatNormals": true
+    ]
   },
   {
     "description": "UNKNOWN_1",
@@ -3269,9 +3260,7 @@
     "baseMaterial": "DOCK_FENCE",
     "objectIds": [
       17102,
-      23053,
-      25671,
-      25672
+      23053
     ],
     "flatNormals": true
   },
@@ -3460,6 +3449,7 @@
       24454,
       24560,
       24561,
+      25796,
       29110,
       44680
     ],
@@ -3602,13 +3592,15 @@
   },
   {
     "description": "White double row fence",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       25760,
       25923,
       25924
     ],
-    "flatNormals": true
+    "uvType": "MODEL_XY",
+    "flatNormals": true,
+    "uvOrientation": 512
   },
   {
     "description": "Seers village - Railing",
@@ -3981,7 +3973,8 @@
       1106,
       5615,
       9531,
-      25601
+      25601,
+      25676
     ]
   },
   {
@@ -4026,9 +4019,11 @@
       10490,
       12450,
       12962,
+      14762,
       14851,
       14852,
       15684,
+      17145,
       25603,
       40223,
       40224
@@ -4063,11 +4058,16 @@
       11794,
       11795,
       12779,
+      17148,
+      17149,
+      17159,
       17999,
       18000,
       18001,
       18002,
       25606,
+      25663,
+      25844,
       26107
     ]
   },
@@ -4116,7 +4116,8 @@
     "baseMaterial": "STONE",
     "objectIds": [
       26134,
-      26135
+      26135,
+      26136
     ]
   },
   {
@@ -4156,6 +4157,7 @@
     "objectIds": [
       202,
       203,
+      204,
       7432
     ]
   },
@@ -4193,7 +4195,8 @@
     "objectIds": [
       817,
       5554,
-      25206
+      25206,
+      25792
     ]
   },
   {
@@ -4329,6 +4332,10 @@
       11721,
       11722,
       23866,
+      26130,
+      26131,
+      26132,
+      26133,
       44598,
       44599
     ]
@@ -4483,11 +4490,20 @@
     ]
   },
   {
+    "description": "Sinclair Mansion - Marble Stairs",
+    "baseMaterial": "MARBLE_2_SEMIGLOSS",
+    "objectIds": [
+      25682,
+      25683
+    ]
+  },
+  {
     "description": "STONE Staircase Spiral",
     "baseMaterial": "STONE",
     "objectIds": [
       11789,
-      11790
+      11790,
+      17143
     ]
   },
   {
@@ -4501,7 +4517,18 @@
     "description": "Black Knight Fortress Walls",
     "baseMaterial": "ROCK_2",
     "objectIds": [
+      2341,
       14543
+    ]
+  },
+  {
+    "description": "Black Knight Fortress Wood Rails",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      17154,
+      17155,
+      17156,
+      17157
     ]
   },
   {
@@ -4582,6 +4609,10 @@
     "description": "Wooden Door 1 - Fake Plank",
     "baseMaterial": "DOCK_FENCE",
     "objectIds": [
+      71,
+      72,
+      73,
+      74,
       1527,
       1528,
       1535,
@@ -4589,6 +4620,10 @@
       1732,
       1733,
       1743,
+      2337,
+      2338,
+      2339,
+      2340,
       2416,
       2417,
       5667,
@@ -4601,6 +4636,8 @@
       11785,
       11786,
       11787,
+      14749,
+      14750,
       23972,
       23973,
       24050,
@@ -4615,10 +4652,24 @@
       24566,
       24567,
       24568,
+      25716,
+      25717,
+      25748,
+      25749,
+      25750,
+      25751,
+      25788,
+      25789,
+      25790,
+      25791,
       25802,
       25803,
       25819,
       25820,
+      25825,
+      25826,
+      25827,
+      25828,
       26207
     ],
     "flatNormals": true,
@@ -4636,7 +4687,9 @@
       1542,
       17316,
       17317,
-      20925
+      20925,
+      25718,
+      25719
     ],
     "flatNormals": true,
     "uvType": "MODEL_XY",
@@ -4736,7 +4789,7 @@
   },
   {
     "description": "Grunge-Like Object",
-    "baseMaterial": "STONE",
+    "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       6358,
       6359,
@@ -4744,6 +4797,30 @@
       6361
     ],
     "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Grunge-Like Object - Tiny",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      24023,
+      25657
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.3,
+    "uvOrientation": 1024
+  },
+  {
+    "description": "Grunge-Like Object - Small",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      24022,
+      24024,
+      25656,
+      25658
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.5,
+    "uvOrientation": 512
   },
   {
     "description": "Sand clumps",
@@ -5100,7 +5177,7 @@
       42376
     ],
     "uvType": "WORLD_XZ",
-    "uvScale": 0.5
+    "uvScale": 0.32
   },
   {
     "description": "Objects - Climbing Rocks - Medium",
@@ -5124,6 +5201,7 @@
     "baseMaterial": "ROCK_1",
     "objectIds": [
       28961,
+      28965,
       28966,
       28969,
       28973,
@@ -5137,7 +5215,7 @@
       29032,
       29044
     ],
-    "uvType": "WORLD_XZ",
+    "uvType": "WORLD_XZ_MIRROR_B",
     "uvScale": 0.22
   },
   {
@@ -5285,9 +5363,6 @@
       11094,
       11095,
       11098,
-      11191,
-      11192,
-      11195,
       18474,
       18478
     ],
@@ -5429,7 +5504,8 @@
     "objectIds": [
       6398,
       12050,
-      14486
+      14486,
+      25834
     ],
     "uvType": "WORLD_XZ",
     "uvOrientation": 512,
@@ -5475,6 +5551,8 @@
       23082,
       23083,
       23084,
+      25833,
+      25835,
       37800,
       37801,
       37802,
@@ -5640,6 +5718,8 @@
       10378,
       10379,
       10381,
+      11331,
+      11228,
       12442,
       12443,
       12961,
@@ -5655,7 +5735,14 @@
       17906,
       17907,
       17908,
-      20367
+      20367,
+      25655,
+      25660,
+      25661,
+      25775,
+      25776,
+      25836,
+      25837
     ],
     "flatNormals": true
   },
@@ -5702,7 +5789,8 @@
     "description": "Objects - Metallic - Range",
     "baseMaterial": "METALLIC_2_SEMIGLOSS",
     "objectIds": [
-      7183
+      7183,
+      25730
     ]
   },
   {
@@ -6769,12 +6857,15 @@
     "description": "Objects - Rockslide - Brown Rock - Rock - Medium",
     "baseMaterial": "ROCK_1",
     "objectIds": [
-      154, // Does not appy Taverley Dungeon blue dragons rock
+      154,
       11190,
+      11191,
+      11192,
+      11195,
       11193
     ],
     "uvType": "MODEL_XZ",
-    "uvScale": 0.6
+    "uvScale": 0.33
   },
   {
     "description": "Objects - Stone - Column - Limestone",
@@ -6867,7 +6958,8 @@
     "objectIds": [
       1088,
       10491,
-      12885
+      12885,
+      17146
     ],
     "uvType": "MODEL_XZ",
     "uvOrientation": 512,
@@ -7783,7 +7875,6 @@
       33407,
       33408,
       33409,
-      33410,
       33423,
       33424,
       33425,
@@ -7899,6 +7990,12 @@
       41807,
       41808
     ],
+    "shadowOpacityThreshold": 0.12
+  },
+  {
+    "description": "Use flat normals for POH Portal Nexus, since it spins around",
+    "objectIds": [ 33410 ],
+    "flatNormals": true,
     "shadowOpacityThreshold": 0.12
   },
   {
@@ -8579,6 +8676,7 @@
       365,
       2354,
       2356,
+      2663,
       12394
     ],
     "uvType": "MODEL_XZ",
@@ -9189,7 +9287,8 @@
     "objectIds": [
       17313,
       17314,
-      17315
+      17315,
+      25668
     ]
   },
   {
@@ -9315,7 +9414,11 @@
     "description": "Double Row Fence",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      3729
+      3729,
+      25671,
+      25672,
+      25673,
+      25674
     ],
     "uvType": "MODEL_XY",
     "flatNormals": true,
@@ -9398,5 +9501,135 @@
       40357
     ],
     "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Rocks - Small",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      23976,
+      23977,
+      23978,
+      23979,
+      23980,
+      23981,
+      24146,
+      24147,
+      24148
+
+    ],
+    "uvType": "WORLD_XZ_MIRROR_B",
+    "uvScale": 0.22
+  },
+  {
+    "description": "Rocks - Medium",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      24143,
+      24144,
+      24145
+
+    ],
+    "uvType": "WORLD_XZ_MIRROR_B",
+    "uvScale": 0.22
+  },
+  {
+    "description": "Rocks - Large",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      24139,
+      24140,
+      24141,
+      24142
+
+    ],
+    "uvType": "WORLD_XZ_MIRROR_A",
+    "uvScale": 0.22
+  },
+  {
+    "description": "Crashed Star",
+    "baseMaterial": "ROCK_2",
+    "objectIds": [
+      41227,
+      41228
+    ]
+  },
+  {
+    "description": "Seers Village Courthouse Metal Cage",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "objectIds": [
+      25980,
+      "LOCKED_GATE"
+    ]
+  },
+  {
+    "description": "Seers Courthouse Plank Floors",
+    "baseMaterial": "WOOD_GRAIN_2_LIGHT",
+    "objectIds": [
+      25830,
+      25831
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Marble - Camelot Knight Statue",
+    "baseMaterial": "MARBLE_1_SEMIGLOSS",
+    "objectIds": [
+      26073
+    ]
+  },
+  {
+    "description": "Marble - Stone Stairs",
+    "baseMaterial": "MARBLE_3",
+    "objectIds": [
+      25786,
+      25787
+    ]
+  },
+  {
+    "description": "Keep Le Faye Instanced - Stone Brick Walls",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      3389,
+      3390,
+      3391,
+      3392,
+      3393,
+      5812,
+      5835,
+      25845
+    ],
+    "uvType": "MODEL_XY",
+    "uvScale": 0.34,
+    "uvOrientation": 768
+  },
+  {
+    "description": "Keep Le Faye Dungeon Walls",
+    "baseMaterial": "NONE",
+    "objectIds": [
+      25880,
+      25881
+    ]
+  },
+  {
+    "description": "Keep Le Faye Dungeon Wall Light",
+    "baseMaterial": "NONE",
+    "objectIds": [
+      25888
+    ]
+  },
+  {
+    "description": "Dirt Wedge Stairs",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [
+      23974,
+      23975
+    ]
+  },
+  {
+    "description": "Stone Wedge Stairs",
+    "baseMaterial": "ROCK_2",
+    "objectIds": [
+      1862
+    ]
   }
 ]

@@ -30609,5 +30609,23 @@
     "objectIds": [
       17324
     ]
+  },
+  {
+    "description": "Keep Le Faye Jail",
+    "worldX": 1904,
+    "worldY": 4283,
+    "plane": 0,
+    "height": 418,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 10,
+    "color": [
+      255,
+      249.4737,
+      230.40408
+    ],
+    "type": "STATIC",
+    "duration": 1000,
+    "range": 0.2
   }
 ]

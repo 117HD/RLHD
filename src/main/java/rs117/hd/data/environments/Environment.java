@@ -1047,6 +1047,15 @@ public enum Environment
 			.setDirectionalStrength(1.5f)
 			.setLightDirection(260f, 10f)
 	),
+	KEEP_LE_FAYE_JAIL(Area.KEEP_LE_FAYE_JAIL, new Properties()
+			.setFogColor("#070606")
+			.setFogDepth(84)
+			.setAmbientColor("#AAAFB6")
+			.setAmbientStrength(1.0f)
+			.setDirectionalColor("#878474")
+			.setDirectionalStrength(1.5f)
+			.setLightDirection(260f, 10f)
+	),
 
 	// overrides 'ALL' to provide default daylight conditions for the overworld area
 	OVERWORLD(Area.OVERWORLD, new Properties()
