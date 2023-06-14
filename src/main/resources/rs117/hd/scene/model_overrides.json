@@ -3006,8 +3006,7 @@
       "GAS_HOLE",
       "GAS_HOLE_5918",
       "RUBBLE"
-    ],
-    "flatNormals": true
+    ]
   },
   {
     "description": "UNKNOWN_1",
@@ -5100,7 +5099,7 @@
       42376
     ],
     "uvType": "WORLD_XZ",
-    "uvScale": 0.5
+    "uvScale": 0.32
   },
   {
     "description": "Objects - Climbing Rocks - Medium",
@@ -5124,6 +5123,7 @@
     "baseMaterial": "ROCK_1",
     "objectIds": [
       28961,
+      28965,
       28966,
       28969,
       28973,
@@ -5137,7 +5137,7 @@
       29032,
       29044
     ],
-    "uvType": "WORLD_XZ",
+    "uvType": "WORLD_XZ_MIRROR_B",
     "uvScale": 0.22
   },
   {
@@ -5285,9 +5285,6 @@
       11094,
       11095,
       11098,
-      11191,
-      11192,
-      11195,
       18474,
       18478
     ],
@@ -6769,12 +6766,15 @@
     "description": "Objects - Rockslide - Brown Rock - Rock - Medium",
     "baseMaterial": "ROCK_1",
     "objectIds": [
-      154, // Does not appy Taverley Dungeon blue dragons rock
+      154,
       11190,
+      11191,
+      11192,
+      11195,
       11193
     ],
     "uvType": "MODEL_XZ",
-    "uvScale": 0.6
+    "uvScale": 0.33
   },
   {
     "description": "Objects - Stone - Column - Limestone",
@@ -9403,5 +9403,56 @@
       40357
     ],
     "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Rocks - Small",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      23976,
+      23977,
+      23978,
+      23979,
+      23980,
+      23981,
+      24146,
+      24147,
+      24148
+
+    ],
+    "uvType": "WORLD_XZ_MIRROR_B",
+    "uvScale": 0.22
+  },
+  {
+    "description": "Rocks - Medium",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      24143,
+      24144,
+      24145
+
+    ],
+    "uvType": "WORLD_XZ_MIRROR_B",
+    "uvScale": 0.22
+  },
+  {
+    "description": "Rocks - Large",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      24139,
+      24140,
+      24141,
+      24142
+
+    ],
+    "uvType": "WORLD_XZ_MIRROR_A",
+    "uvScale": 0.22
+  },
+  {
+    "description": "Crashed Star",
+    "baseMaterial": "ROCK_2",
+    "objectIds": [
+      41227,
+      41228
+    ]
   }
 ]

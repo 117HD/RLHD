@@ -258,9 +258,18 @@ public enum Material
 	GRUNGE_1,
 	GRUNGE_2,
 
-	ROCK_1,
+	ROCK_1_N,
+	ROCK_1(p -> p
+		.setNormalMap(ROCK_1_N)
+		.setSpecular(0.35f, 40)
+	),
 	ROCK_1_LIGHT(ROCK_1, p -> p.setBrightness(1.4f)),
-	ROCK_2,
+	ROCK_2_N,
+	ROCK_2(p -> p
+		.setNormalMap(ROCK_2_N)
+		.setSpecular(0.35f, 60)
+		.setBrightness(1.2f)
+	),
 
 	CARPET,
 	FINE_CARPET(CARPET, p -> p
