@@ -819,11 +819,6 @@ public enum Area
 	),
 
 	// Morytania
-	CANIFIS_BAR_FLOOR_FIX(
-		new AABB(3502, 3470),
-		new AABB(3501, 3469),
-		new AABB(3500, 3468)
-	),
 	CANIFIS_BAR_FLOOR(
 		new AABB(3504, 3477,3488, 3471),
 		new AABB(3499, 3470, 3488, 3468),
