@@ -26,7 +26,6 @@ package rs117.hd.data.environments;
 
 import java.awt.Color;
 import lombok.Getter;
-import rs117.hd.scene.TimeOfDay;
 
 import static rs117.hd.utils.HDUtils.rgb;
 

@@ -2444,9 +2444,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			case "expandShadowDraw":
 				configExpandShadowDraw = config.expandShadowDraw();
 				break;
-			case "dayNight":
-				reloadSceneIn(1);
-				break;
 			case "maxDynamicLights":
 				clientThread.invoke(() -> {
 					configMaxDynamicLights = config.maxDynamicLights().getValue();

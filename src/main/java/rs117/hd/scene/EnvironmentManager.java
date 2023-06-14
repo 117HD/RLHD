@@ -144,8 +144,6 @@ public class EnvironmentManager
 	private boolean isInHouse = false;
 	private int previousPlane;
 
-	public TimeOfDay currentTimeOfDay = TimeOfDay.DAY;
-
 	public void startUp()
 	{
 		currentEnvironment = null;
