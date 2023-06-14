@@ -6444,7 +6444,8 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       20351,
-      23066
+      23066,
+      24360
     ],
     "uvType": "MODEL_XZ",
     "flatNormals": true
@@ -6975,7 +6976,8 @@
       1088,
       10491,
       12885,
-      17146
+      17146,
+      24335
     ],
     "uvType": "MODEL_XZ",
     "uvOrientation": 512,
