@@ -186,7 +186,7 @@ public enum Underlay {
     GOBLIN_VILLAGE_COOKS_PIT(118, Area.GOBLIN_VILLAGE_COOKS_CHAMBER, GroundMaterial.VARIED_DIRT_SHINY),
 
     // Kings Ransom Dungeon
-    KEEP_LE_FAYE_JAIL_FLOOR_FIX(58, Area.KEEP_LE_FAYE_JAIL, GroundMaterial.PACTED_EARTH),
+    KEEP_LE_FAYE_JAIL_FLOOR_FIX(58, Area.KEEP_LE_FAYE_JAIL, GroundMaterial.PACKED_EARTH),
 
 	// Penguin Base
 	PENGUIN_BASE_FLOOR(p -> p
@@ -229,7 +229,7 @@ public enum Underlay {
         .ids(-111, -110, 19, 56, 57, 64, 65, 66, 80, 92, 94, 111, 118, 122, 139, 150)
         .replaceWithIf(WINTER_DIRT, plugin -> plugin.configWinterTheme)),
     OVERWORLD_SAND(Area.OVERWORLD, GroundMaterial.SAND, p -> p.ids(-127, -118, 61, 68)),
-    UNDERLAY_PACTED_EARTH(GroundMaterial.PACTED_EARTH, p -> p.ids(15)),
+    UNDERLAY_PACKED_EARTH(GroundMaterial.PACKED_EARTH, p -> p.ids(15)),
 
     UNDERLAY_SNOW(GroundMaterial.SNOW_1, p -> p.ids(58, 59)),
     UNDERLAY_72(GroundMaterial.VARIED_DIRT, p -> p
