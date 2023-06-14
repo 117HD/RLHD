@@ -5854,7 +5854,9 @@
     "baseMaterial": "METALLIC_2",
     "objectIds": [
       2140
-    ]
+    ],
+    "uvType": "GEOMETRY",
+    "uvScale": 0.28
   },
   {
     "description": "Ground - Wooden - Plank Steps",
@@ -5863,13 +5865,6 @@
       4303
     ],
     "uvType": "MODEL_XZ"
-  },
-  {
-    "description": "Objects - Metallic - Giant Anvil",
-    "baseMaterial": "METALLIC_2",
-    "objectIds": [
-      39724
-    ]
   },
   {
     "description": "Walls - Stone - Giants Foundry",
@@ -9797,15 +9792,6 @@
     "objectIds": [
       29629,
       29630
-    ],
-    "uvType": "GEOMETRY",
-    "uvScale": 0.28
-  },
-  {
-    "description": "Ingots",
-    "baseMaterial": "METALLIC_1_SEMIGLOSS",
-    "objectIds": [
-      2140
     ],
     "uvType": "GEOMETRY",
     "uvScale": 0.28
