@@ -1316,6 +1316,10 @@
       4809,
       4810,
       4811,
+      4985,
+      4986,
+      4987,
+      4988,
       5335,
       5336,
       5337,
@@ -9659,7 +9663,8 @@
     "description": "Stone Wedge Stairs",
     "baseMaterial": "ROCK_2",
     "objectIds": [
-      1862
+      1862,
+      5189
     ]
   },
   {
@@ -9684,7 +9689,10 @@
       3457,
       3458,
       3459
-    ]
+    ],
+    "uvType": "MODEL_XY",
+    "uvOrientation": 256,
+    "uvScale": 1.2
   },
   {
     "description": "Morytania - Walls - Metallic - Frankenstrains Gate",
@@ -9692,7 +9700,10 @@
     "objectIds": [
       5172,
       5173
-    ]
+    ],
+    "uvType": "MODEL_XY",
+    "uvOrientation": 256,
+    "uvScale": 0.7
   },
   {
     "description": "Morytania - Objects - Metallic - Suit of Armor",
