@@ -9725,5 +9725,16 @@
     "uvType": "MODEL_XY",
     "uvOrientation": 1536,
     "uvScale": 0.66
+  },
+  {
+    "description": "Morytania - Frankenstrains Castle - Walls - Brick Stone Rubble",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      5198,
+      5199
+    ],
+    "uvType": "MODEL_YZ",
+    "uvOrientation": 1536,
+    "uvScale": 0.66
   }
 ]
