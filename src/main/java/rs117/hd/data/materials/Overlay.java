@@ -62,9 +62,8 @@ public enum Overlay {
         .shiftLightness(3)
         .blended(false)
     ),
-    WINTER_CANIFIS_BAR_FLOOR_BLENDED(85, Area.CANIFIS_BAR_FLOOR_BLENDED, GroundMaterial.HD_WOOD_PLANKS_1, p -> p
+    WINTER_CANIFIS_BAR_FLOOR_BLENDED(85, Area.CANIFIS_BAR_FLOOR_BLENDED, GroundMaterial.HD_WOOD_PLANKS_2, p -> p
         .replaceWithIf(WINTER_DIRT, plugin -> plugin.configWinterTheme)
-        .blendedAsOpposite(true)
     ),
 
     // Tutorial Island
@@ -539,7 +538,7 @@ public enum Overlay {
     COSMIC_ENTITYS_PLANE_ABYSS(37, Area.COSMIC_ENTITYS_PLANE, GroundMaterial.NONE, p -> p.lightness(0).blended(false)),
 
     // Morytania
-    CANIFIS_FLOORS(85, Area.CANIFIS, GroundMaterial.HD_WOOD_PLANKS_1, p -> p.blended(false)),
+    CANIFIS_FLOORS(85, Area.CANIFIS, GroundMaterial.HD_WOOD_PLANKS_2, p -> p.blended(false)),
 
     MORYTANIA_SLAYER_TOWER(102, Area.MORYTANIA_SLAYER_TOWER, GroundMaterial.VARROCK_PATHS),
     ABANDONED_MINE_ROCK(11, Area.MORYTANIA, GroundMaterial.DIRT),
@@ -680,7 +679,7 @@ public enum Overlay {
         .blended(true)),
     LUNAR_ISLAND_HOUSES_CARPET_FLOOR(88, Area.LUNAR_VILLAGE_HOUSE_INTERIORS_GROUND, GroundMaterial.CARPET, p -> p
         .blended(false)),
-    LUNAR_ISLAND_HOUSES_WOOD_FLOOR(81, Area.LUNAR_VILLAGE_HOUSE_INTERIORS_FIRST, GroundMaterial.HD_WOOD_PLANKS_1, p -> p
+    LUNAR_ISLAND_HOUSES_WOOD_FLOOR(81, Area.LUNAR_VILLAGE_HOUSE_INTERIORS_FIRST, GroundMaterial.HD_WOOD_PLANKS_2, p -> p
         .blended(true)),
 
 

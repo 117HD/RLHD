@@ -4067,6 +4067,8 @@
       18000,
       18001,
       18002,
+      24351,
+      24352,
       25606,
       25663,
       25844,
@@ -9688,6 +9690,13 @@
     "baseMaterial": "METALLIC_2_SEMIGLOSS",
     "objectIds": [
       1900
+    ]
+  },
+  {
+    "description": "Wooden Wedge Stairs",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      24361
     ]
   }
 ]
