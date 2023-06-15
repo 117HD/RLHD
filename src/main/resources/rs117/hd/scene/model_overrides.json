@@ -1256,6 +1256,7 @@
     "baseMaterial": "BARK",
     "objectIds": [
       1282,
+      1283,
       1284,
       1285,
       1286,
@@ -6460,6 +6461,16 @@
       24360
     ],
     "uvType": "MODEL_XZ",
+    "flatNormals": true
+  },
+  {
+    "description": "Objects - Table - Single - Wooden – Plank - Generic - Rotated",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      12734
+    ],
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 512,
     "flatNormals": true
   },
   {
