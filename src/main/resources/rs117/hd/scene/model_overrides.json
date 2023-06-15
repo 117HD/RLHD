@@ -4815,9 +4815,10 @@
     "uvType": "MODEL_XZ"
   },
   {
-    "description": "Grunge-Like Object - Tiny",
+    "description": "Rock-Like Object - Rubble - Tiny",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
+      5204,
       24023,
       25657
     ],
@@ -4826,9 +4827,11 @@
     "uvOrientation": 1024
   },
   {
-    "description": "Grunge-Like Object - Small",
+    "description": "Rock-Like Object - Rubble - Small",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
+      5203,
+      5205,
       24022,
       24024,
       25656,
@@ -9684,6 +9687,14 @@
     ]
   },
   {
+    "description": "Morytania - Walls - Metallic - Frankenstrains Gate",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      5172,
+      5173
+    ]
+  },
+  {
     "description": "Morytania - Objects - Metallic - Suit of Armor",
     "baseMaterial": "METALLIC_2_SEMIGLOSS",
     "objectIds": [
@@ -9696,5 +9707,23 @@
     "objectIds": [
       24361
     ]
+  },
+  {
+    "description": "Morytania - Frankenstrains Castle - Walls - Brick Stone",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      5190,
+      5191,
+      5192,
+      5194,
+      5195,
+      5196,
+      5197,
+      5200,
+      5201
+    ],
+    "uvType": "MODEL_XY",
+    "uvOrientation": 1536,
+    "uvScale": 0.66
   }
 ]
