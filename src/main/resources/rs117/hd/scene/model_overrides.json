@@ -5401,7 +5401,8 @@
       11095,
       11098,
       18474,
-      18478
+      18478,
+      22350
     ],
     "uvType": "WORLD_XZ",
     "uvScale": 0.65,
@@ -9809,5 +9810,17 @@
     ],
     "uvType": "MODEL_XZ",
     "uvOrientation": 1536
+  },
+  {
+    "description": "Ground Decoration - Flat Rocks - Small",
+    "baseMaterial": "ROCK_1_LIGHT",
+    "objectIds": [
+      39701,
+      39702,
+      39703,
+      39704
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.74
   }
 ]
