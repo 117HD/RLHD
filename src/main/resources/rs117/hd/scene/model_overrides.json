@@ -2103,6 +2103,10 @@
       5567,
       5568,
       5570,
+      20717,
+      20718,
+      20719,
+      20741,
       23888,
       23889,
       23890,
@@ -3232,7 +3236,12 @@
       12437,
       15975,
       41419,
-      25797
+      25797,
+      39705,
+      39706,
+      39707,
+      39708,
+      39709
     ],
     "uvType": "MODEL_XZ"
   },
@@ -3755,6 +3764,7 @@
       11478,
       11479,
       11480,
+      17229,
       25596,
       25597,
       25598,
@@ -4058,6 +4068,8 @@
       11794,
       11795,
       12779,
+      14745,
+      14746,
       17148,
       17149,
       17159,
@@ -5140,14 +5152,14 @@
       19215,
       20753,
       20754,
+      20755,
+      20757,
       22347,
       22348,
       22349,
       23085,
       23086,
       23087,
-      24147,
-      24148,
       26715,
       26716,
       27984,
@@ -5652,11 +5664,12 @@
     ]
   },
   {
-    "description": "Stone - Stairs - cobbled",
-    "baseMaterial": "STONE",
+    "description": "Stone - Stairs - Stone Brick",
+    "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       16646
-    ]
+    ],
+    "uvType": "VANILLA"
   },
   {
     "description": "Phasmatys - Slime",
@@ -5736,6 +5749,7 @@
       17907,
       17908,
       20367,
+      20429,
       25655,
       25660,
       25661,
@@ -6256,7 +6270,8 @@
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       5244,
-      5245
+      5245,
+      20773
     ],
     "uvType": "MODEL_XY",
     "uvOrientation": 512,
@@ -6290,11 +6305,16 @@
     "uvScale": 0.44
   },
   {
-    "description": "Morytania - Objects  - Stone - Stone Brick Wall Rubble - Burugh De Rott",
-    "baseMaterial": "STONE",
+    "description": "Morytania - Objects  - Stone - Stone Brick Wall Rubble",
+    "baseMaterial": "STONE_NORMALED",
     "objectIds": [
+      6389,
+      6390,
       12738,
-      12844
+      12844,
+      20734,
+      20765,
+      20766
     ],
     "uvType": "GEOMETRY"
   },
@@ -6317,11 +6337,13 @@
     "uvType": "GEOMETRY"
   },
   {
-    "description": "Morytania - Ground  - Stone - Stone Steps - Burugh De Rott",
-    "baseMaterial": "STONE",
+    "description": "Morytania - Ground  - Stone - Stone Steps",
+    "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       20735,
-      20736
+      20736,
+      20768,
+      20769
     ]
   },
   {
@@ -9351,13 +9373,15 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       611,
-      7430
+      3834,
+      7430,
+      39687
     ],
     "flatNormals": true,
     "uvType": "MODEL_XZ"
   },
   {
-    "description": "Generic - Plank - Tables - Picnic Bench",
+    "description": "Generic - Plank - Tables - Picnic Bench - Rotated",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       9532
@@ -9382,15 +9406,6 @@
     ],
     "flatNormals": true,
     "uvType": "VANILLA"
-  },
-  {
-    "description": "Walls  - Stone - Stone Brick Wall Rubble - Burugh De Rott",
-    "baseMaterial": "STONE_NORMALED",
-    "objectIds": [
-      6389,
-      6390
-    ],
-    "uvType": "GEOMETRY"
   },
   {
     "description": "Metallic Pipes",
@@ -9631,5 +9646,58 @@
     "objectIds": [
       1862
     ]
+  },
+  {
+    "description": "Ferox Enclave - Walls - Stone Brick",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      39661,
+      39662,
+      39663,
+      39665,
+      39666,
+      39667,
+      39668,
+      39669,
+      39671,
+      39672
+    ],
+    "uvType": "MODEL_XY",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Moritaynia - Walls - Wooden - Plank - Rotten Plank Walls",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      5240,
+      5241,
+      20774,
+      20775
+    ],
+    "uvType": "MODEL_XY",
+    "uvOrientation": 1536,
+    "uvScale": 0.66
+  },
+  {
+    "description": "Moritaynia - Walls - Stone - Barrows Crypt",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      20728,
+      20729,
+      20731,
+      20732,
+      20764
+    ],
+    "uvType": "MODEL_XY",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Forex Enclave - Wall Rubble",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      39691,
+      39692
+    ],
+    "uvType": "GEOMETRY"
   }
 ]
