@@ -3765,6 +3765,8 @@
       11479,
       11480,
       17229,
+      17230,
+      17231,
       25596,
       25597,
       25598,
@@ -4043,6 +4045,18 @@
     "uvScale": 0.6
   },
   {
+    "description": "Wooden - Plank - Tables - Rorated",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      23177,
+      39716
+    ],
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 1536,
+    "flatNormals": true,
+    "uvScale": 0.6
+  },
+  {
     "description": "Wooden tables - Solid - Cobwebs",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
@@ -4077,6 +4091,7 @@
       18000,
       18001,
       18002,
+      20675,
       25606,
       25663,
       25844,
@@ -4348,6 +4363,8 @@
       26131,
       26132,
       26133,
+      39685,
+      39686,
       44598,
       44599
     ]
@@ -6429,7 +6446,9 @@
     "description": "Objects - Stool - Wooden – Generic",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      1102,
       7167,
+      12407,
       14872,
       15679,
       17306,
@@ -6439,7 +6458,9 @@
       17909,
       17910,
       23065,
-      31483
+      23179,
+      31483,
+      39718
     ],
     "uvType": "MODEL_XZ",
     "flatNormals": true,
@@ -6453,6 +6474,16 @@
       23066
     ],
     "uvType": "MODEL_XZ",
+    "flatNormals": true
+  },
+  {
+    "description": "Objects - Table - Single - Wooden – Plank - Generic",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      17662
+    ],
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 512,
     "flatNormals": true
   },
   {
@@ -6986,17 +7017,6 @@
     "uvType": "MODEL_XZ",
     "uvOrientation": 512,
     "uvScale": 0.6
-  },
-  {
-    "description": "Objects - Wooden - Stool",
-    "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [
-      1102,
-      12407
-    ],
-    "uvType": "MODEL_XZ",
-    "flatNormals": true,
-    "uvScale": 0.8
   },
   {
     "description": "Objects - Wooden - Tables - Round",
@@ -9684,6 +9704,7 @@
     "objectIds": [
       20728,
       20729,
+      20730,
       20731,
       20732,
       20764
@@ -9699,5 +9720,86 @@
       39692
     ],
     "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Barrows Sarcophagus",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      20720,
+      20721,
+      20722,
+      20770,
+      20771,
+      20772
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Barrows Tunnels Doors",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "objectIds": [
+      20668,
+      20678,
+      20680,
+      20681,
+      20682,
+      20683,
+      20684,
+      20685,
+      20686,
+      20687,
+      20688,
+      20689,
+      20690,
+      20691,
+      20692,
+      20693,
+      20694,
+      20695,
+      20697,
+      20698,
+      20699,
+      20700,
+      20701,
+      20702,
+      20703,
+      20704,
+      20705,
+      20706,
+      20707,
+      20708,
+      20709,
+      20710,
+      20711,
+      20712,
+      20713,
+      20714
+    ],
+    "uvType": "MODEL_XY"
+  },
+  {
+    "description": "Barrows Chest",
+    "baseMaterial": "METALLIC_2_GLOSS",
+    "objectIds": [
+      20973
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Wooden Bank Chest",
+    "baseMaterial": "WOOD_GRAIN",
+    "objectIds": [
+      26711
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Ferox Enclave - Wooden Plank Stairs ",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      39643
+    ],
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 1536
   }
 ]
