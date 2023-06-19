@@ -19963,7 +19963,8 @@
       7376,
       5247,
       38027,
-      15016
+      15016,
+      12934
     ]
   },
   {
@@ -30423,5 +30424,77 @@
     "objectIds": [
       12400
     ]
+  },
+  {
+    "description": "CULINATOMANCERS_PORTAL",
+    "height": 30,
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 12.5,
+    "color": [
+      252,
+      252,
+      252
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 30,
+    "objectIds": [
+      12356
+    ]
+  },
+  {
+    "description": "WALL_TORCH_MORT",
+    "height": 200,
+    "alignment": "FRONT",
+    "radius": 200,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 23,
+    "objectIds": [
+      12934
+    ]
+  },
+  {
+    "description": "DIGSITE_LAMP",
+    "height": 170,
+    "alignment": "FRONT",
+    "radius": 290,
+    "strength": 8.5,
+    "color": [
+      202,
+      168,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 24,
+    "objectIds": [
+      17324
+    ]
+  },
+  {
+    "description": "Keep Le Faye Jail",
+    "worldX": 1904,
+    "worldY": 4283,
+    "plane": 0,
+    "height": 418,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 10,
+    "color": [
+      255,
+      249.4737,
+      230.40408
+    ],
+    "type": "STATIC",
+    "duration": 1000,
+    "range": 0.2
   }
 ]

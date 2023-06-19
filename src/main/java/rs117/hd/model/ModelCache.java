@@ -1,127 +1,310 @@
 package rs117.hd.model;
 
-import lombok.extern.slf4j.Slf4j;
-
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+import java.util.ArrayDeque;
+import java.util.HashMap;
+import lombok.extern.slf4j.Slf4j;
+import org.lwjgl.system.MemoryUtil;
+
+import static rs117.hd.utils.HDUtils.GiB;
+import static rs117.hd.utils.HDUtils.MiB;
 
 @Slf4j
 public class ModelCache {
-    public static final long KiB = 1024;
-    public static final long MiB = 1024 * KiB;
-    public static final long GiB = 1024 * MiB;
+	private static class Allocation {
+		long address;
+		long byteCapacity;
 
-    private final BufferPool bufferPool;
-    private final IntBufferCache vertexDataCache;
-    private final FloatBufferCache normalDataCache;
-    private final FloatBufferCache uvDataCache;
+		long cursor;
+		long freeBytesAhead;
 
-    public ModelCache(int modelCacheSizeMiB) {
-        // Limit cache size to 512MiB for 32-bit
-        if (modelCacheSizeMiB > 512 && !"64".equals(System.getProperty("sun.arch.data.model"))) {
-            log.warn("Defaulting model cache to 512MiB due to non 64-bit client");
-            modelCacheSizeMiB = 512;
-        }
+		Allocation(long byteCapacity) {
+			assert byteCapacity > 0;
+			address = MemoryUtil.nmemAllocChecked(byteCapacity);
+			this.byteCapacity = byteCapacity;
+			cursor = 0;
+			freeBytesAhead = byteCapacity;
+		}
 
-        try {
-            int totalPhysicalMemoryMiB = (int) (
-                ((com.sun.management.OperatingSystemMXBean)
-                    java.lang.management.ManagementFactory.getOperatingSystemMXBean())
-                .getTotalPhysicalMemorySize() / MiB);
+		void destroy() {
+			if (address != 0L) {
+				MemoryUtil.nmemFree(address);
+				address = 0;
+				byteCapacity = 0;
+				cursor = 0;
+				freeBytesAhead = 0;
+			}
+		}
 
-            // Try to limit the cache size to half of the total physical memory
-            if (modelCacheSizeMiB > totalPhysicalMemoryMiB / 2) {
-                log.warn("Limiting cache size to {} since the selected amount ({}) exceeds half of the total physical memory for the system ({} / 2).",
-                    totalPhysicalMemoryMiB / 2, modelCacheSizeMiB, totalPhysicalMemoryMiB);
-                modelCacheSizeMiB = totalPhysicalMemoryMiB / 2;
-            }
-        } catch (Throwable e) {
-            log.warn("Unable to check physical memory size: " + e);
-        }
+		long reserve(long numBytes) {
+			assert numBytes > 0;
+			assert numBytes <= freeBytesAhead;
+			assert numBytes <= byteCapacity - cursor;
+			long address = this.address + cursor;
+			cursor += numBytes;
+			freeBytesAhead -= numBytes;
+			return address;
+		}
 
-        this.bufferPool = new BufferPool(modelCacheSizeMiB * MiB);
-        this.vertexDataCache = new IntBufferCache(this.bufferPool);
-        this.normalDataCache = new FloatBufferCache(this.bufferPool);
-        this.uvDataCache = new FloatBufferCache(this.bufferPool);
-    }
+		long bytesFromEnd() {
+			return byteCapacity - cursor;
+		}
+	}
 
-    public void destroy() {
-        clear();
+	private static class Buffer {
+		final boolean endMarker;
+		final int hash;
+		final long byteCapacity;
+		final IntBuffer intBuffer;
+		final FloatBuffer floatBuffer;
 
-        if (this.bufferPool != null) {
-            this.bufferPool.freeAllocations();
-        }
-    }
+		public Buffer(long byteCapacity) {
+			endMarker = true;
+			this.hash = 0;
+			this.byteCapacity = byteCapacity;
+			intBuffer = null;
+			floatBuffer = null;
+		}
 
-    public IntBuffer getVertexData(int hash) {
-        return this.vertexDataCache.get(hash);
-    }
+		public Buffer(int hash, IntBuffer buffer) {
+			endMarker = false;
+			this.hash = hash;
+			byteCapacity = buffer.capacity() * 4L;
+			intBuffer = buffer;
+			floatBuffer = null;
+		}
 
-    public void putVertexData(int hash, IntBuffer data) {
-        this.vertexDataCache.put(hash, data);
-    }
+		public Buffer(int hash, FloatBuffer buffer) {
+			endMarker = false;
+			this.hash = hash;
+			byteCapacity = buffer.capacity() * 4L;
+			intBuffer = null;
+			floatBuffer = buffer;
+		}
+	}
 
-    public FloatBuffer getNormalData(int hash) {
-        return this.normalDataCache.get(hash);
-    }
+	private final Runnable terminationHook;
+	private final HashMap<Integer, Buffer> cache = new HashMap<>();
+	private final ArrayDeque<Buffer> buffers = new ArrayDeque<>();
+	private final Allocation[] allocations;
+	private Allocation currentAllocation;
+	private int currentAllocationIndex;
 
-    public void putNormalData(int hash, FloatBuffer data) {
-        this.normalDataCache.put(hash, data);
-    }
+	public ModelCache(int modelCacheSizeMiB, Runnable terminationHook) {
+		this.terminationHook = terminationHook;
 
-    public FloatBuffer getUvData(int hash) {
-        return this.uvDataCache.get(hash);
-    }
+		// Limit cache size to 128 MiB for 32-bit
+		if (modelCacheSizeMiB > 128 && !"64".equals(System.getProperty("sun.arch.data.model"))) {
+			log.warn("Defaulting model cache to 128 MiB due to non 64-bit client");
+			modelCacheSizeMiB = 128;
+		}
 
-    public void putUvData(int hash, FloatBuffer data) {
-        this.uvDataCache.put(hash, data);
-    }
+		try {
+			int totalPhysicalMemoryMiB = (int) (((com.sun.management.OperatingSystemMXBean)
+				java.lang.management.ManagementFactory.getOperatingSystemMXBean()).getTotalPhysicalMemorySize() / MiB);
 
-    public IntBuffer takeIntBuffer(int capacity) {
-        if (this.bufferPool.isEmpty()) {
-            if(!this.makeRoom()) {
-                log.error("failed to make room for int buffer");
-            }
-        }
+			// Try to limit the cache size to half of the total physical memory
+			if (modelCacheSizeMiB > totalPhysicalMemoryMiB / 2) {
+				log.warn(
+					"Limiting cache size to {} since the selected amount ({}) exceeds half of the total system memory ({} / 2)",
+					totalPhysicalMemoryMiB / 2, modelCacheSizeMiB, totalPhysicalMemoryMiB);
+				modelCacheSizeMiB = totalPhysicalMemoryMiB / 2;
+			}
+		} catch (Throwable e) {
+			log.warn("Unable to check physical memory size: " + e);
+		}
 
-        return this.bufferPool.takeIntBuffer(capacity);
-    }
+		long byteCapacity = modelCacheSizeMiB * MiB;
 
-    public FloatBuffer takeFloatBuffer(int capacity) {
-        if (this.bufferPool.isEmpty()) {
-            if(!this.makeRoom()) {
-                log.error("failed to make room for float buffer");
-            }
-        }
+		log.debug("Allocating {} MiB model cache", modelCacheSizeMiB);
 
-        return this.bufferPool.takeFloatBuffer(capacity);
-    }
+		Allocation[] allocations = new Allocation[1];
+		try {
+			// Try allocating the whole size as a single chunk
+			allocations[0] = new Allocation(byteCapacity);
+		} catch (Throwable err) {
+			log.warn("Unable to allocate {} MiB as a single chunk", modelCacheSizeMiB, err);
 
-    // a more idealized way to balance the caches might look like:
-    // 1) count the number of gets for vertex, normal, and uv data on each frame
-    // 2) use the data from the previous frame to determine the cache usage for the scene (e.g. 85% vertex, 10% normal, 5% uv)
-    // 3) makeRoom here based on those weights to try and reactively match the cache pressure with usage
-    public boolean makeRoom() {
-        if (this.uvDataCache.size() * 16 > this.normalDataCache.size() && this.normalDataCache.size() > 0) {
-            return this.uvDataCache.makeRoom();
-        } else if (this.normalDataCache.size() * 2 > this.vertexDataCache.size()) {
-            return this.normalDataCache.makeRoom();
-        } else {
-            return this.vertexDataCache.makeRoom();
-        }
-    }
+			try {
+				// Try allocating in chunks of up to 1 GiB each
+				int numChunks = (int) Math.ceil((double) byteCapacity / GiB);
+				allocations = new Allocation[numChunks];
+				for (int i = 0; i < numChunks; i++) {
+					allocations[i] = new Allocation(Math.min(byteCapacity - i * GiB, GiB));
+				}
+			} catch (Throwable err2) {
+				destroy();
+				log.error("Unable to allocate {} MiB in chunks of up to 1 GiB each", modelCacheSizeMiB, err2);
+				throw err2;
+			}
+		}
 
-    public void clear() {
-        if (this.vertexDataCache != null) {
-            this.vertexDataCache.clear();
-        }
+		this.allocations = allocations;
+		currentAllocation = allocations[0];
+	}
 
-        if (this.normalDataCache != null) {
-            this.normalDataCache.clear();
-        }
+	public void destroy() {
+		cache.clear();
+		buffers.clear();
+		currentAllocation = null;
 
-        if (this.uvDataCache != null) {
-            this.uvDataCache.clear();
-        }
-    }
+		for (int i = 0; i < allocations.length; i++) {
+			if (allocations[i] != null) {
+				allocations[i].destroy();
+				allocations[i] = null;
+			}
+		}
+	}
+
+	@Override
+	@SuppressWarnings("deprecation")
+	protected void finalize() throws Throwable {
+		try {
+			// Clean up allocations in case the plugin somehow fails to call destroy
+			destroy();
+		} finally {
+			super.finalize();
+		}
+	}
+
+	public void clear() {
+		cache.clear();
+		buffers.clear();
+		for (Allocation allocation : allocations) {
+			if (allocation != null) {
+				allocation.cursor = 0;
+				allocation.freeBytesAhead = allocation.byteCapacity;
+			}
+		}
+	}
+
+	private Buffer get(int hash) {
+		return cache.get(hash);
+	}
+
+	private void nextAllocation() {
+		currentAllocation.cursor = 0;
+		currentAllocation.freeBytesAhead = 0;
+
+		currentAllocationIndex++;
+		currentAllocationIndex %= allocations.length;
+		currentAllocation = allocations[currentAllocationIndex];
+	}
+
+	private long reserve(long numBytes) {
+		assert currentAllocation != null : "model cache used after destruction";
+
+		if (currentAllocation.bytesFromEnd() < numBytes) {
+			// ### = taken, ... = free, MMM = end marker
+			//                    _________ -> not enough space
+			// [##################....###MM]
+			// inserting a new end marker as follows will cause issues
+			// [##################MMMM###MM]
+			// since ### and MM will be freed next, an option is to move these to the end of the buffer list
+			// another minor optimization we can make is to pretend that the buffers are shifted to the left like so
+			// [##################|MMMM###MM]
+			// [##################|###MMMMMM]
+			// this leaves us with only a single dummy buffer at the end, and a guarantee that buffers will still be
+			// freed in an appropriate order with no collisions
+
+			// Move the existing regions to the end of the buffer list
+			while (currentAllocation.bytesFromEnd() != currentAllocation.freeBytesAhead) {
+				assert currentAllocation.bytesFromEnd() > currentAllocation.freeBytesAhead;
+				Buffer buffer = buffers.pollFirst();
+				if (buffer == null) {
+					log.error("No more cache entries left to free, yet the allocation is still in use ({} != {})",
+						currentAllocation.bytesFromEnd(), currentAllocation.freeBytesAhead);
+					terminationHook.run();
+					return 0;
+				}
+
+				if (buffer.endMarker) {
+					// Shift unused space to the end of the buffer, as detailed above
+					currentAllocation.freeBytesAhead += buffer.byteCapacity;
+					assert currentAllocation.cursor + currentAllocation.freeBytesAhead <= currentAllocation.byteCapacity;
+				} else {
+					// Move the buffer to the end of the list, and pretend we've shifted it to the left as detailed above
+					buffers.addLast(buffer);
+					currentAllocation.cursor += buffer.byteCapacity;
+				}
+			}
+
+			// Consume the remaining free bytes of the allocation
+			buffers.addLast(new Buffer(currentAllocation.freeBytesAhead));
+			// Advance to the next allocation, or the beginning of the same allocation if there is only one
+			nextAllocation();
+
+			if (currentAllocation.bytesFromEnd() < numBytes) {
+				log.error("Failed to reserve space for {} bytes. Too large to fit in allocation {} of size {}",
+					numBytes, currentAllocationIndex, currentAllocation.byteCapacity);
+				terminationHook.run();
+				return 0;
+			}
+		}
+
+		while (currentAllocation.freeBytesAhead < numBytes) {
+			if (removeOldestCacheEntry() == null) {
+				log.error("No more cache entries left to free, yet there aren't enough free bytes ({} < {})",
+					currentAllocation.freeBytesAhead, numBytes);
+				terminationHook.run();
+				return 0;
+			}
+		}
+
+		return currentAllocation.reserve(numBytes);
+	}
+
+	private Buffer removeOldestCacheEntry() {
+		Buffer buffer = buffers.pollFirst();
+
+		if (buffer != null) {
+			if (!buffer.endMarker) {
+				cache.remove(buffer.hash, buffer);
+				// Normally, these addresses will be equal, but in case they've been "shifted" as detailed in the
+				// reserve function, the buffer's actual address will be larger than the cursor position
+				assert currentAllocation.address + currentAllocation.cursor + currentAllocation.freeBytesAhead <=
+					MemoryUtil.memAddress0(buffer.intBuffer == null ? buffer.floatBuffer : buffer.intBuffer);
+			}
+
+			currentAllocation.freeBytesAhead += buffer.byteCapacity;
+			assert currentAllocation.cursor + currentAllocation.freeBytesAhead <= currentAllocation.byteCapacity;
+		}
+
+		return buffer;
+	}
+
+	public IntBuffer getIntBuffer(int hash) {
+		Buffer buffer = get(hash);
+		if (buffer == null)
+			return null;
+		return buffer.intBuffer;
+	}
+
+	public FloatBuffer getFloatBuffer(int hash) {
+		Buffer buffer = get(hash);
+		if (buffer == null)
+			return null;
+		return buffer.floatBuffer;
+	}
+
+	public IntBuffer reserveIntBuffer(int hash, int capacity) {
+		long address = reserve(capacity * 4L);
+		if (address == 0L)
+			return null;
+		Buffer buffer = new Buffer(hash, MemoryUtil.memIntBuffer(address, capacity));
+		cache.put(hash, buffer);
+		buffers.addLast(buffer);
+		return buffer.intBuffer;
+	}
+
+	public FloatBuffer reserveFloatBuffer(int hash, int capacity) {
+		long address = reserve(capacity * 4L);
+		if (address == 0L)
+			return null;
+		Buffer buffer = new Buffer(hash, MemoryUtil.memFloatBuffer(address, capacity));
+		cache.put(hash, buffer);
+		buffers.addLast(buffer);
+		return buffer.floatBuffer;
+	}
 }

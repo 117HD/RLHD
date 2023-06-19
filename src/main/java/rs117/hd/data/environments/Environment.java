@@ -299,6 +299,33 @@ public enum Environment
 		.setDirectionalStrength(4.0f)
 		.setGroundFog(-150, -350, 0.5f)
 	),
+	MEIYERDITCH(Area.MEIYERDITCH, new Properties()
+		.setFogColor("#1E314B")
+		.setFogDepth(40)
+		.setAmbientColor("#dad8ce")
+		.setAmbientStrength(2.0f)
+		.setDirectionalColor("#ced6da")
+		.setDirectionalStrength(1.8f)
+		.setGroundFog(-150, -350, 0.5f)
+	),
+	MEIYERDITCH_MYREQUE_HIDEOUT(Area.MEIYERDITCH_MYREQUE_HIDEOUT, new Properties()
+		.setFogColor(0, 0, 0)
+		.setFogDepth(69)
+		.setAmbientColor("#dad8ce")
+		.setAmbientStrength(1.5f)
+		.setDirectionalColor("#ced6da")
+		.setDirectionalStrength(0.5f)
+		.setLightDirection(260f, 10f)
+	),
+	MEIYERDITCH_MINES(Area.MEIYERDITCH_MINES, new Properties()
+		.setFogColor(0, 0, 0)
+		.setFogDepth(70)
+		.setAmbientColor("#dad8ce")
+		.setAmbientStrength(1.5f)
+		.setDirectionalColor("#ced6da")
+		.setDirectionalStrength(0.5f)
+		.setLightDirection(260f, 10f)
+	),
 	MORYTANIA(Area.MORYTANIA, new Properties()
 		.setFogColor("#1E314B")
 		.setFogDepth(40)
@@ -585,6 +612,17 @@ public enum Environment
 	SOTE_FRAGMENT_OF_SEREN_ARENA(Area.SOTE_FRAGMENT_OF_SEREN_ARENA, new Properties()
 		.setFogColor(0, 0, 0)
 		.setAllowSkyOverride(false)
+	),
+
+	// Ardougne
+	Shadow_DUNGEON(Area.SHADOW_DUNGEON, new Properties()
+		.setFogColor(0, 0, 0)
+		.setFogDepth(60)
+		.setAmbientColor(171, 171, 171)
+		.setAmbientStrength(1.0f)
+		.setDirectionalColor(86, 86, 86)
+		.setDirectionalStrength(1.0f)
+		.setLightDirection(260f, 10f)
 	),
 
 	// Yanille
@@ -1033,6 +1071,24 @@ public enum Environment
 			.setFogDepth(50)
 			.setAmbientColor("#AAAFB6")
 			.setAmbientStrength(1.2f)
+			.setDirectionalColor("#878474")
+			.setDirectionalStrength(1.5f)
+			.setLightDirection(260f, 10f)
+	),
+	BURGH_DE_ROTT_BASEMENT(Area.BURGH_DE_ROTT_BASEMENT, new Properties()
+			.setFogColor("#030403")
+			.setFogDepth(84)
+			.setAmbientColor("#FFFFFF")
+			.setAmbientStrength(1.0f)
+			.setDirectionalColor("#A29B71")
+			.setDirectionalStrength(1.5f)
+			.setLightDirection(260f, 10f)
+	),
+	KEEP_LE_FAYE_JAIL(Area.KEEP_LE_FAYE_JAIL, new Properties()
+			.setFogColor("#070606")
+			.setFogDepth(84)
+			.setAmbientColor("#AAAFB6")
+			.setAmbientStrength(1.0f)
 			.setDirectionalColor("#878474")
 			.setDirectionalStrength(1.5f)
 			.setLightDirection(260f, 10f)
