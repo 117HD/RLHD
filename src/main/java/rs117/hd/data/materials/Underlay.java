@@ -121,6 +121,18 @@ public enum Underlay {
     VER_SINHAZA_WATER_FIX(p -> p.ids(54).area(Area.VER_SINHAZA_WATER_FIX).waterType(WaterType.WATER).blended(false)),
     TEMPLE_TREKKING_GRASS(p -> p.ids(53, 103).area(Area.TEMPLE_TREKKING_INSTANCES)),
     MEIYERDITCH_MINES(111, Area.MEIYERDITCH_MINES, GroundMaterial.ROCKY_CAVE_FLOOR),
+    BARROWS_DIRT(GroundMaterial.DIRT, p->p
+            .ids(96)
+            .area(Area.BARROWS)
+    ),
+    BARROWS_CRYPT_FLOOR(GroundMaterial.STONE_CAVE_FLOOR, p->p
+            .ids(96, 103)
+            .area(Area.BARROWS_CRYPTS)
+    ),
+    BARROWS_TUNNELS_FLOOR(GroundMaterial.STONE_CAVE_FLOOR, p->p
+            .ids(96, 103)
+            .area(Area.BARROWS_TUNNELS)
+    ),
 
     // Ardougne
     SOUTH_OF_ZOO_FIX(61, Area.ARDOUGNE_SOUTH_OF_ZOO, GroundMaterial.OVERWORLD_GRASS_1),
