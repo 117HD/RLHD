@@ -21489,7 +21489,7 @@
   },
   {
     "description": "FEROX_BOUNTY_HUNTER_PORTAL",
-    "height": 120,
+    "height": 180,
     "alignment": "CENTER",
     "radius": 400,
     "strength": 10,
@@ -21499,7 +21499,7 @@
       0
     ],
     "type": "PULSE",
-    "duration": 1542,
+    "duration": 1541,
     "range": 40,
     "objectIds": [
       47346
