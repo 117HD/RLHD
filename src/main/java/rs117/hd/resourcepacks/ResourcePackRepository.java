@@ -90,7 +90,7 @@ public class ResourcePackRepository {
             }
         }
 
-        repository.stream().filter(it -> it.isNeedsUpdating()).forEach( pack -> {
+        repository.stream().filter(AbstractResourcePack::isNeedsUpdating).forEach(pack -> {
             //UPDATE ANY PACK HERE THAT NEEDS UPDATING AND THE USER HAS INSTALLED
         });
 
