@@ -9671,9 +9671,11 @@
   },
   {
     "description": "Stone Wedge Stairs",
-    "baseMaterial": "ROCK_2",
+    "baseMaterial": "ROCK_1_LIGHT",
     "objectIds": [
-      1862
+      1862,
+      47422,
+      47423
     ]
   },
   {
@@ -9822,5 +9824,14 @@
     ],
     "uvType": "WORLD_XZ",
     "uvScale": 0.74
+  },
+  {
+    "description": "Ground Decoration - Flat Rocks - Small",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      47421
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.64
   }
 ]
