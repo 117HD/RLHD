@@ -129,7 +129,7 @@ public enum Underlay {
             .ids(96, 103)
             .area(Area.BARROWS_CRYPTS)
     ),
-    BARROWS_TUNNELS_FLOOR(GroundMaterial.STONE_CAVE_FLOOR, p->p
+    BARROWS_TUNNELS_FLOOR(GroundMaterial.EARTHEN_CAVE_FLOOR, p->p
             .ids(96, 103)
             .area(Area.BARROWS_TUNNELS)
     ),
