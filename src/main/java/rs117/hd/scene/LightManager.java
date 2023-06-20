@@ -770,7 +770,7 @@ public class LightManager
 		assert light.worldPoint != null;
 
 		Optional<LocalPoint> firstLocalPoint = sceneContext.worldInstanceToLocals(light.worldPoint).stream().findFirst();
-		if (!firstLocalPoint.isPresent())
+		if (firstLocalPoint.isEmpty())
 		{
 			return;
 		}

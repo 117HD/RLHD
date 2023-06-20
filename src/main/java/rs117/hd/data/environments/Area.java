@@ -24,12 +24,10 @@
  */
 package rs117.hd.data.environments;
 
-import lombok.Getter;
-import net.runelite.api.Constants;
-import net.runelite.api.coords.WorldPoint;
-import rs117.hd.utils.AABB;
-
 import java.util.Arrays;
+import lombok.Getter;
+import net.runelite.api.coords.*;
+import rs117.hd.utils.AABB;
 
 @Getter
 public enum Area
