@@ -25,6 +25,7 @@
 package rs117.hd.opengl.compute;
 
 import com.google.common.base.Charsets;
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
@@ -91,7 +92,7 @@ public class OpenCLManager
 	private cl_kernel kernelSmall;
 	private cl_kernel kernelLarge;
 
-	public void init(AWTContext awtContext)
+	public void init(AWTContext awtContext) throws IOException
 	{
 		CL.setExceptionsEnabled(true);
 
@@ -373,24 +374,18 @@ public class OpenCLManager
 		return kernel;
 	}
 
-	private void compilePrograms()
+	private void compilePrograms() throws IOException
 	{
-		Template templateSmall = new Template()
-			.addInclude(OpenCLManager.class)
-			.add(key -> key.equals("FACE_COUNT") ? ("#define FACE_COUNT " + smallFaceCount) : null);
-		Template templateLarge = new Template()
-			.addInclude(OpenCLManager.class)
-			.add(key -> key.equals("FACE_COUNT") ? ("#define FACE_COUNT " + largeFaceCount) : null);
-
-		String unordered = new Template()
-			.addInclude(OpenCLManager.class)
-			.load("comp_unordered.cl");
-		String small = templateSmall.load("comp.cl");
-		String large = templateLarge.load("comp.cl");
-
-		programUnordered = compileProgram(unordered);
-		programSmall = compileProgram(small);
-		programLarge = compileProgram(large);
+		var template = new Template().addIncludePath(OpenCLManager.class);
+		programUnordered = compileProgram(template.load("comp_unordered.cl"));
+		programSmall = compileProgram(template
+			.copy()
+			.define("FACE_COUNT", smallFaceCount)
+			.load("comp.cl"));
+		programLarge = compileProgram(template
+			.copy()
+			.define("FACE_COUNT", largeFaceCount)
+			.load("comp.cl"));
 
 		kernelUnordered = getKernel(programUnordered, KERNEL_NAME_UNORDERED);
 		kernelSmall = getKernel(programSmall, KERNEL_NAME_LARGE);

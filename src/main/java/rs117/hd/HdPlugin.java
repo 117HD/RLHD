@@ -500,8 +500,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 				canvas.setIgnoreRepaint(true);
 
-				computeMode = OSType.getOSType() == OSType.MacOS ? ComputeMode.OPENCL : ComputeMode.OPENGL;
-
 				// lwjgl defaults to lwjgl- + user.name, but this breaks if the username would cause an invalid path
 				// to be created, and also breaks if both 32 and 64 bit lwjgl versions try to run at once.
 				Configuration.SHARED_LIBRARY_EXTRACT_DIRECTORY.set("lwjgl-rl-" + System.getProperty("os.arch", "unknown"));
@@ -517,6 +515,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				log.info("Using device: {}", glRenderer);
 				log.info("Using driver: {}", glGetString(GL_VERSION));
 				log.info("Client is {}-bit", arch);
+
+				computeMode = OSType.getOSType() == OSType.MacOS ? ComputeMode.OPENCL : ComputeMode.OPENGL;
 
 				boolean isGenericGpu = glRenderer.equals("GDI Generic");
 				boolean isUnsupportedGpu = isGenericGpu || (computeMode == ComputeMode.OPENGL ? !glCaps.OpenGL43 : !glCaps.OpenGL31);
@@ -549,8 +549,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				}
 
 				lwjglInitted = true;
-
 				checkGLErrors();
+
 				if (log.isDebugEnabled() && glCaps.glDebugMessageControl != 0)
 				{
 					debugCallback = GLUtil.setupDebugMessageCallback();
@@ -578,7 +578,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				modelBufferSmall = new GpuIntBuffer();
 				modelBufferLarge = new GpuIntBuffer();
 
-				initShaderHotswapping();
 				if (developerMode)
 				{
 					developerTools.activate();
@@ -590,6 +589,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				initVao();
 				initBuffers();
 				initPrograms();
+				initShaderHotswapping();
 				initInterfaceTexture();
 				initShadowMapFbo();
 
@@ -651,12 +651,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			{
 				textureManager.shutDown();
 
-				shutdownBuffers();
-				shutdownInterfaceTexture();
-				shutdownPrograms();
-				shutdownVao();
-				shutdownAAFbo();
-				shutdownShadowMapFbo();
+				destroyBuffers();
+				destroyInterfaceTexture();
+				destroyPrograms();
+				destroyVao();
+				destroyAAFbo();
+				destroyShadowMapFbo();
 			}
 
 			if (awtContext != null)
@@ -754,66 +754,40 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		return include.toString();
 	}
 
-	private void initPrograms() throws ShaderException
+	private void initPrograms() throws ShaderException, IOException
 	{
 		configShadowMode = config.shadowMode();
 		configShadowsEnabled = configShadowMode != ShadowMode.OFF;
 
 		String versionHeader = OSType.getOSType() == OSType.Linux ? LINUX_VERSION_HEADER : WINDOWS_VERSION_HEADER;
-		Template template = new Template().add(key -> {
-			switch (key)
-			{
-				case "version_header":
-					return versionHeader;
-				case "UI_SCALING_MODE":
-					return String.format("#define %s %d", key, config.uiScalingMode().getMode());
-				case "COLOR_BLINDNESS":
-					return String.format("#define %s %d", key, config.colorBlindness().ordinal());
-				case "MATERIAL_CONSTANTS":
+		Template template = new Template()
+			.addInclude("VERSION_HEADER", versionHeader)
+			.define("UI_SCALING_MODE", config.uiScalingMode().getMode())
+			.define("COLOR_BLINDNESS", config.colorBlindness())
+			.define("MATERIAL_CONSTANTS", () -> {
+				StringBuilder include = new StringBuilder();
+				for (Material m : Material.values())
 				{
-					StringBuilder include = new StringBuilder();
-					for (Material m : Material.values())
-					{
-						include
-							.append("#define MAT_")
-							.append(m.name().toUpperCase())
-							.append(" getMaterial(")
-							.append(m.ordinal())
-							.append(")\n");
-					}
-					return include.toString();
+					include
+						.append("#define MAT_")
+						.append(m.name().toUpperCase())
+						.append(" getMaterial(")
+						.append(m.ordinal())
+						.append(")\n");
 				}
-				case "MATERIAL_COUNT":
-					return String.format("#define %s %d", key, Material.values().length);
-				case "MATERIAL_GETTER":
-					return generateGetter("Material", Material.values().length);
-				case "WATER_TYPE_COUNT":
-					return String.format("#define %s %d", key, WaterType.values().length);
-				case "WATER_TYPE_GETTER":
-					return generateGetter("WaterType", WaterType.values().length);
-				case "LIGHT_COUNT":
-					return String.format("#define %s %d", key, Math.max(1, configMaxDynamicLights));
-				case "LIGHT_GETTER":
-					return generateGetter("PointLight", configMaxDynamicLights);
-				case "PARALLAX_MAPPING":
-					return String.format("#define %s %d", key, ParallaxMappingMode.OFF.ordinal()); // config.parallaxMappingMode().ordinal());
-				case "SHADOW_MODE":
-					return String.format("#define %s %d", key, configShadowMode.ordinal());
-				case "SHADOW_TRANSPARENCY":
-					return String.format("#define %s %d", key, config.enableShadowTransparency() ? 1 : 0);
-				case "VANILLA_COLOR_BANDING":
-					return String.format("#define %s %d", key, config.vanillaColorBanding() ? 1 : 0);
-			}
-			return null;
-		});
-
-		template.add(key -> {
-			try {
-				return SHADER_PATH.resolve(key).loadString();
-			} catch (IOException ex) {
-				throw new RuntimeException(ex);
-			}
-		});
+				return include.toString();
+			})
+			.define("MATERIAL_COUNT", Material.values().length)
+			.define("MATERIAL_GETTER", () -> generateGetter("Material", Material.values().length))
+			.define("WATER_TYPE_COUNT", WaterType.values().length)
+			.define("WATER_TYPE_GETTER", () -> generateGetter("WaterType", WaterType.values().length))
+			.define("LIGHT_COUNT", Math.max(1, configMaxDynamicLights))
+			.define("LIGHT_GETTER", () -> generateGetter("PointLight", configMaxDynamicLights))
+			.define("PARALLAX_MAPPING", ParallaxMappingMode.OFF) // config.parallaxMappingMode())
+			.define("SHADOW_MODE", configShadowMode)
+			.define("SHADOW_TRANSPARENCY", config.enableShadowTransparency())
+			.define("VANILLA_COLOR_BANDING", config.vanillaColorBanding())
+			.addIncludePath(SHADER_PATH);
 
 		glProgram = PROGRAM.compile(template);
 		glUiProgram = UI_PROGRAM.compile(template);
@@ -930,32 +904,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		initLightsUniformBuffer();
 	}
 
-	private void shutdownPrograms()
+	private void destroyPrograms()
 	{
-		openCLManager.cleanup();
-
 		if (glProgram != 0)
 		{
 			glDeleteProgram(glProgram);
 			glProgram = 0;
-		}
-
-		if (glLargeComputeProgram != 0)
-		{
-			glDeleteProgram(glLargeComputeProgram);
-			glLargeComputeProgram = 0;
-		}
-
-		if (glSmallComputeProgram != 0)
-		{
-			glDeleteProgram(glSmallComputeProgram);
-			glSmallComputeProgram = 0;
-		}
-
-		if (glUnorderedComputeProgram != 0)
-		{
-			glDeleteProgram(glUnorderedComputeProgram);
-			glUnorderedComputeProgram = 0;
 		}
 
 		if (glUiProgram != 0)
@@ -969,20 +923,45 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			glDeleteProgram(glShadowProgram);
 			glShadowProgram = 0;
 		}
+
+		if (computeMode == ComputeMode.OPENGL)
+		{
+			if (glLargeComputeProgram != 0)
+			{
+				glDeleteProgram(glLargeComputeProgram);
+				glLargeComputeProgram = 0;
+			}
+
+			if (glSmallComputeProgram != 0)
+			{
+				glDeleteProgram(glSmallComputeProgram);
+				glSmallComputeProgram = 0;
+			}
+
+			if (glUnorderedComputeProgram != 0)
+			{
+				glDeleteProgram(glUnorderedComputeProgram);
+				glUnorderedComputeProgram = 0;
+			}
+		}
+		else
+		{
+			openCLManager.cleanup();
+		}
 	}
 
 	public void recompilePrograms()
 	{
 		try
 		{
-			shutdownPrograms();
-			shutdownVao();
+			destroyPrograms();
+			destroyVao();
 			initVao();
 			initPrograms();
 		}
-		catch (ShaderException ex)
+		catch (ShaderException | IOException ex)
 		{
-			log.error("Failed to recompile shader program", ex);
+			log.error("Failed to recompile shader program:", ex);
 			stopPlugin();
 		}
 	}
@@ -1022,7 +1001,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
-	private void shutdownVao()
+	private void destroyVao()
 	{
 		if (vaoHandle != 0)
 		{
@@ -1068,7 +1047,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		glBuffer.glBufferId = glGenBuffers();
 	}
 
-	private void shutdownBuffers()
+	private void destroyBuffers()
 	{
 		destroyGlBuffer(hUniformBufferCamera);
 		destroyGlBuffer(hUniformBufferMaterials);
@@ -1117,7 +1096,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
-	private void shutdownInterfaceTexture()
+	private void destroyInterfaceTexture()
 	{
 		if (interfacePbo != 0)
 		{
@@ -1263,7 +1242,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		glBindRenderbuffer(GL_RENDERBUFFER, 0);
 	}
 
-	private void shutdownAAFbo()
+	private void destroyAAFbo()
 	{
 		if (fboSceneHandle != 0)
 		{
@@ -1341,7 +1320,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
-	private void shutdownShadowMapFbo()
+	private void destroyShadowMapFbo()
 	{
 		if (texShadowMap != 0)
 		{
@@ -1890,7 +1869,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 					|| lastStretchedCanvasHeight != stretchedCanvasHeight
 					|| lastAntiAliasingMode != antiAliasingMode)
 				{
-					shutdownAAFbo();
+					destroyAAFbo();
 
 					// Bind default FBO to check whether anti-aliasing is forced
 					glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
@@ -1912,7 +1891,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			else
 			{
 				glDisable(GL_MULTISAMPLE);
-				shutdownAAFbo();
+				destroyAAFbo();
 			}
 
 			lastAntiAliasingMode = antiAliasingMode;
@@ -2340,14 +2319,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				{
 					modelPusher.clearModelCache();
 					recompilePrograms();
-					shutdownShadowMapFbo();
+					destroyShadowMapFbo();
 					initShadowMapFbo();
 				});
 				break;
 			case "shadowResolution":
 				clientThread.invoke(() ->
 				{
-					shutdownShadowMapFbo();
+					destroyShadowMapFbo();
 					initShadowMapFbo();
 				});
 				break;
@@ -2835,7 +2814,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			}
 			else
 			{
-				assert glBuffer.size > 0 : "Size -1 should not reach this point";
+				assert glBuffer.size > 0 : "Size <= 0 should not reach this point";
 				glBuffer.cl_mem = clCreateFromGLBuffer(openCLManager.context, clFlags, glBuffer.glBufferId, null);
 			}
 		}

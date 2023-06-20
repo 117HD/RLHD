@@ -114,9 +114,15 @@ public class ResourcePath {
     
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public ResourcePath mkdirs() {
-        toPath().toFile().getParentFile().mkdirs();
+        toFile().getParentFile().mkdirs();
         return this;
     }
+
+	public boolean exists() {
+		if (root == null)
+			return toFile().exists();
+		return root.resolve(path).exists();
+	}
 
     public String getFilename() {
         if (path == null)
@@ -199,6 +205,8 @@ public class ResourcePath {
     }
 
     public File toFile() {
+		if (!isFileSystemResource())
+			throw new IllegalStateException("Not a file: " + this);
         return toPath().toFile();
     }
 
@@ -474,7 +482,14 @@ public class ResourcePath {
             return new ClassResourcePath(root, normalize(path, parts));
         }
 
-        @Override
+		@Override
+		public boolean exists()
+		{
+			assert path != null;
+			return root.getResource(path) != null;
+		}
+
+		@Override
         public String toString() {
             return super.toString() + " from class " + root.getName();
         }
@@ -543,6 +558,13 @@ public class ResourcePath {
         public ResourcePath resolve(String... parts) {
             return new ClassLoaderResourcePath(root, normalize(path, parts));
         }
+
+		@Override
+		public boolean exists()
+		{
+			assert path != null;
+			return root.getResource(path) != null;
+		}
 
         @Override
         public String toString() {
