@@ -4056,7 +4056,7 @@
     "uvScale": 0.6
   },
   {
-    "description": "Wooden - Plank - Tables - Rorated",
+    "description": "Wooden - Plank - Tables - Rotated",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       23177,
@@ -5260,7 +5260,7 @@
       29032,
       29044
     ],
-    "uvType": "WORLD_XZ_MIRROR_B",
+    "uvType": "MODEL_XZ_MIRROR_B",
     "uvScale": 0.22
   },
   {
@@ -9570,9 +9570,8 @@
       24146,
       24147,
       24148
-
     ],
-    "uvType": "WORLD_XZ_MIRROR_B",
+    "uvType": "MODEL_XZ_MIRROR_B",
     "uvScale": 0.22
   },
   {
@@ -9582,9 +9581,8 @@
       24143,
       24144,
       24145
-
     ],
-    "uvType": "WORLD_XZ_MIRROR_B",
+    "uvType": "MODEL_XZ_MIRROR_B",
     "uvScale": 0.22
   },
   {
@@ -9595,9 +9593,8 @@
       24140,
       24141,
       24142
-
     ],
-    "uvType": "WORLD_XZ_MIRROR_A",
+    "uvType": "MODEL_XZ_MIRROR_A",
     "uvScale": 0.22
   },
   {
