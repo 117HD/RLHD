@@ -24,21 +24,6 @@
  */
 package rs117.hd.scene;
 
-import lombok.extern.slf4j.Slf4j;
-import net.runelite.api.Texture;
-import net.runelite.api.TextureProvider;
-import net.runelite.client.callback.ClientThread;
-import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.EXTTextureFilterAnisotropic;
-import org.lwjgl.opengl.GL;
-import rs117.hd.HdPlugin;
-import rs117.hd.HdPluginConfig;
-import rs117.hd.data.materials.Material;
-import rs117.hd.utils.Props;
-import rs117.hd.utils.ResourcePath;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
@@ -47,6 +32,18 @@ import java.nio.IntBuffer;
 import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.HashSet;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import lombok.extern.slf4j.Slf4j;
+import net.runelite.api.*;
+import net.runelite.client.callback.ClientThread;
+import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.*;
+import rs117.hd.HdPlugin;
+import rs117.hd.HdPluginConfig;
+import rs117.hd.data.materials.Material;
+import rs117.hd.utils.Props;
+import rs117.hd.utils.ResourcePath;
 
 import static org.lwjgl.opengl.GL43C.*;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_GAME;
@@ -285,9 +282,9 @@ public class TextureManager
 
 			String textureName = material.name().toLowerCase();
 			BufferedImage image = loadTextureImage(textureName);
-			if (image == null)
-			{
-				log.trace("No texture override for: {}", textureName);
+			if (image == null) {
+				if (material.vanillaTextureIndex == -1)
+					System.err.println("No texture found for material: " + material);
 				continue;
 			}
 
@@ -324,15 +321,14 @@ public class TextureManager
 	{
 		for (String ext : SUPPORTED_IMAGE_EXTENSIONS)
 		{
-			ResourcePath path = path(TextureManager.class, "textures", textureName + "." + ext);
+			ResourcePath path = TEXTURE_PATH.resolve(textureName + "." + ext);
 			try {
 				return path.loadImage();
 			} catch (Exception ex) {
-				log.trace("Failed to load texture: {}", path, ex);
+				log.trace("Unable to load texture: {}", path, ex);
 			}
 		}
 
-		log.trace("Missing texture file: {}", textureName);
 		return null;
 	}
 
