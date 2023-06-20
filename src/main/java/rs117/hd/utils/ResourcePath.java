@@ -535,21 +535,21 @@ public class ResourcePath {
         public InputStream toInputStream() throws IOException {
             assert path != null;
 
-            // Attempt to load resource from project resource folder if it's not located in a jar
-            if (RESOURCE_PATH != null && isFileSystemResource()) {
-                ResourcePath path = null;
-                try {
-                    path = RESOURCE_PATH.chroot().resolve(toAbsolute().toPath().toString());
-                    return path.toInputStream();
-                } catch (Exception ex) {
-                    log.trace("Failed to load resource from project resource folder: {}", path, ex);
-                }
-            }
-
-            InputStream is = root.getResourceAsStream(path);
-            if (is == null)
-                throw new IOException("Missing resource: " + this);
-            return is;
+            // Attempt to load resource from project resource folder if it's on the file system
+			if (RESOURCE_PATH != null && isFileSystemResource()) {
+				ResourcePath path = null;
+				try {
+					path = RESOURCE_PATH.chroot().resolve(toAbsolute().toPath().toString());
+					return path.toInputStream();
+				} catch (IOException ex) {
+					throw new IOException("Failed to load resource from project resource path: " + path, ex);
+				}
+			} else {
+				InputStream is = root.getResourceAsStream(path);
+				if (is == null)
+					throw new IOException("Missing resource: " + this);
+				return is;
+			}
         }
     }
 
