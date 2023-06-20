@@ -4,6 +4,7 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
+import javax.annotation.Nonnull;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +26,7 @@ public class Light
 	@Nullable
 	public Integer worldX, worldY;
 	public int plane;
-	@NonNull
+	@Nonnull
 	public Alignment alignment = Alignment.CENTER;
 	public int height;
 	public int radius;

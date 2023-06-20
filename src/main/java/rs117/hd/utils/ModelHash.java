@@ -4,23 +4,21 @@ import net.runelite.api.Client;
 import net.runelite.api.NPC;
 
 public class ModelHash {
-    /**
-     * Model hashes are constructed as follows:
-     * | 1111 1111 1111 111 | 1  1111 1111 1111 1111 1111 1111 1111 111 |   1 |   11 |    11 1111 1 |     111 1111 |
-     * |     15 unused bits |                        32-bit id or index | ??? | type | 7-bit sceneY | 7-bit sceneX |
-     *
-     * type:
-     * - 0 = player
-     * - 1 = NPC
-     * - 2 = object
-     * - 3 = ground item
-     *
-     * id_or_index for different types:
-     * - player = index
-     * - NPC = index
-     * - object = id
-     * - ground item = ???
-     */
+    // Model hashes are constructed as follows:
+    // | 1111 1111 1111 111 | 1  1111 1111 1111 1111 1111 1111 1111 111 |   1 |   11 |    11 1111 1 |     111 1111 |
+    // |     15 unused bits |                        32-bit id or index | ??? | type | 7-bit sceneY | 7-bit sceneX |
+    //
+    // type:
+    // - 0 = player
+    // - 1 = NPC
+    // - 2 = object
+    // - 3 = ground item
+    //
+    // id_or_index for different types:
+    // - player = index
+    // - NPC = index
+    // - object = id
+    // - ground item = ???
 
     public static final int TYPE_PLAYER = 0;
     public static final int TYPE_NPC = 1;

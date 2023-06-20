@@ -29,7 +29,6 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum ParallaxMappingMode
-{
-	OFF, BASIC, FULL, EXTREME;
+public enum ParallaxMappingMode {
+	OFF, BASIC, FULL, EXTREME
 }

@@ -40,6 +40,9 @@ import static net.runelite.api.Constants.SCENE_SIZE;
 @Singleton
 public class HDUtils
 {
+	public static final long KiB = 1024;
+	public static final long MiB = KiB * KiB;
+	public static final long GiB = MiB * KiB;
 	public static final Random rand = new Random();
 
 	// directional vectors approximately opposite of the directional light used by the client
@@ -215,8 +218,7 @@ public class HDUtils
 		s /= 8f;
 		l /= 128f;
 
-		float q = 0;
-
+		float q;
 		if (l < 0.5)
 			q = l * (1 + s);
 		else
