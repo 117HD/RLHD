@@ -24,19 +24,17 @@
  */
 package rs117.hd.data.materials;
 
-import lombok.NonNull;
-import lombok.Setter;
-import rs117.hd.HdPluginConfig;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import lombok.NonNull;
+import lombok.Setter;
+import rs117.hd.HdPluginConfig;
 
-public enum Material
-{
+public enum Material {
 	// - Each enum entry refers to a texture file by name, in lowercase. If a texture with the specified name is found,
 	//   it will be loaded and resized to fit the dimensions of the texture array.
 	// - Entries that specify a vanillaTextureIndex give names to vanilla textures, and will override the vanilla
@@ -232,7 +230,7 @@ public enum Material
 	GRAVEL_N,
 	GRAVEL(p -> p
 		.setNormalMap(GRAVEL_N)
-		.setSpecular(0.4f,130)),
+		.setSpecular(0.4f, 130)),
 
 	DIRT_1_SHINY(DIRT_1, p -> p
 		.setSpecular(1.1f, 380)),
@@ -274,7 +272,7 @@ public enum Material
 	CARPET,
 	FINE_CARPET(CARPET, p -> p
 		.setBrightness(1.4f)
-		.setTextureScale(0.5f,0.5f)),
+		.setTextureScale(0.5f, 0.5f)),
 
 	FALADOR_PATH_BRICK_N,
 	FALADOR_PATH_BRICK(p -> p
@@ -292,8 +290,8 @@ public enum Material
 	TILES_1_2x2,
 	TILES_2_2x2_N,
 	TILES_2_2x2(p -> p
-			.setNormalMap(TILES_2_2x2_N)
-			.setSpecular(0.3f,30)
+		.setNormalMap(TILES_2_2x2_N)
+		.setSpecular(0.3f, 30)
 	),
 	TILES_2x2_1_GLOSS(TILES_1_2x2, p -> p
 		.setSpecular(1.0f, 70)),
@@ -343,7 +341,7 @@ public enum Material
 	WOOD_GRAIN_2_N,
 	WOOD_GRAIN_2(p -> p
 		.setNormalMap(WOOD_GRAIN_2_N)
-		.setSpecular(0.3f,30)
+		.setSpecular(0.3f, 30)
 	),
 	WOOD_GRAIN_2_LIGHT(WOOD_GRAIN_2, p -> p
 		.setBrightness(1.1f)
@@ -398,11 +396,11 @@ public enum Material
 	STONE_N,
 	STONE,
 	STONE_NORMALED(STONE, p -> p
-			.setNormalMap(STONE_N)
-			.setSpecular(0.3f,30)
+		.setNormalMap(STONE_N)
+		.setSpecular(0.3f, 30)
 	),
 	STONE_LOWGLOSS(STONE, p -> p
-			.setSpecular(0.3f, 30)
+		.setSpecular(0.3f, 30)
 	),
 	STONE_SEMIGLOSS(STONE, p -> p.setSpecular(0.6f, 100)),
 	STONE_SCROLLING(STONE, p -> p
@@ -434,11 +432,11 @@ public enum Material
 		.replaceIf(HdPluginConfig::winterTheme, WATER_FLAT_2, WATER_FLAT)
 		.setSpecular(3.1f, 30)),
 	ICE_2(SNOW_2, p -> p
-		.setSpecular(1.5f,800)),
+		.setSpecular(1.5f, 800)),
 	ICE_3(GRUNGE_2, p -> p
-		.setSpecular(1.9f,1000)),
+		.setSpecular(1.9f, 1000)),
 	ICE_4(WHITE, p -> p
-		.setSpecular(1.5f,1000)
+		.setSpecular(1.5f, 1000)
 		.setNormalMap(WATER_NORMAL_MAP_2)),
 	SLIME_GRUNGE(GRUNGE_1, p -> p
 		.setSpecular(4.1f, 60)),
@@ -447,7 +445,7 @@ public enum Material
 	HD_WOOD_PLANKS_1_N,
 	HD_WOOD_PLANKS_1(p -> p
 		.setNormalMap(HD_WOOD_PLANKS_1_N)
-		.setSpecular(0.5f,80)
+		.setSpecular(0.5f, 80)
 		.setBrightness(1.2f)),
 	HD_ROOF_BRICK_TILE_N,
 	HD_ROOF_BRICK_TILE(ROOF_BRICK_TILE, p -> p
@@ -547,8 +545,7 @@ public enum Material
 	public final Function<HdPluginConfig, Boolean> replacementCondition;
 
 	@Setter
-	private static class Builder
-	{
+	private static class Builder {
 		private Material parent;
 		private Material normalMap = NONE;
 		private Material displacementMap = NONE;
@@ -569,14 +566,12 @@ public enum Material
 		private List<Material> materialsToReplace = new ArrayList<>();
 		private Function<HdPluginConfig, Boolean> replacementCondition;
 
-		Builder apply(Consumer<Builder> consumer)
-		{
+		Builder apply(Consumer<Builder> consumer) {
 			consumer.accept(this);
 			return this;
 		}
 
-		Builder setParent(Material parent)
-		{
+		Builder setParent(Material parent) {
 			this.parent = parent;
 			this.normalMap = parent.normalMap;
 			this.displacementMap = parent.displacementMap;
@@ -599,63 +594,53 @@ public enum Material
 			return this;
 		}
 
-		Builder setSpecular(float specularStrength, float specularGloss)
-		{
+		Builder setSpecular(float specularStrength, float specularGloss) {
 			this.specularStrength = specularStrength;
 			this.specularGloss = specularGloss;
 			return this;
 		}
 
-		Builder setFlowMap(Material flowMap, float flowMapStrength, float durationX, float durationY)
-		{
+		Builder setFlowMap(Material flowMap, float flowMapStrength, float durationX, float durationY) {
 			this.flowMap = flowMap;
 			this.flowMapStrength = flowMapStrength;
 			this.flowMapDuration = new float[] { durationX, durationY };
 			return this;
 		}
 
-		Builder setScroll(float speedX, float speedY)
-		{
+		Builder setScroll(float speedX, float speedY) {
 			this.scrollSpeed = new float[] { -speedX, -speedY };
 			return this;
 		}
 
-		Builder setTextureScale(float x, float y)
-		{
+		Builder setTextureScale(float x, float y) {
 			this.textureScale = new float[] { x, y };
 			return this;
 		}
 
-		Builder replaceIf(@NonNull Function<HdPluginConfig, Boolean> condition, @NonNull Material... materialsToReplace)
-		{
+		Builder replaceIf(@NonNull Function<HdPluginConfig, Boolean> condition, @NonNull Material... materialsToReplace) {
 			Collections.addAll(this.materialsToReplace, materialsToReplace);
 			this.replacementCondition = condition;
 			return this;
 		}
 	}
 
-	Material()
-	{
+	Material() {
 		this(b -> {});
 	}
 
-	Material(int vanillaTextureIndex)
-	{
+	Material(int vanillaTextureIndex) {
 		this(p -> p.setVanillaTextureIndex(vanillaTextureIndex));
 	}
 
-	Material(Material parent, Consumer<Builder> consumer)
-	{
+	Material(Material parent, Consumer<Builder> consumer) {
 		this(b -> b.setParent(parent).apply(consumer));
 	}
 
-	Material(int vanillaTextureIndex, Consumer<Builder> consumer)
-	{
+	Material(int vanillaTextureIndex, Consumer<Builder> consumer) {
 		this(b -> b.setVanillaTextureIndex(vanillaTextureIndex).apply(consumer));
 	}
 
-	Material(Consumer<Builder> consumer)
-	{
+	Material(Consumer<Builder> consumer) {
 		Builder builder = new Builder();
 		consumer.accept(builder);
 		this.parent = builder.parent;
@@ -681,19 +666,15 @@ public enum Material
 
 	private static final HashMap<Integer, Material> VANILLA_TEXTURE_MAP = new HashMap<>();
 
-	static
-	{
-		for (Material material : values())
-		{
-			if (material.vanillaTextureIndex != -1)
-			{
+	static {
+		for (Material material : values()) {
+			if (material.vanillaTextureIndex != -1) {
 				VANILLA_TEXTURE_MAP.putIfAbsent(material.vanillaTextureIndex, material);
 			}
 		}
 	}
 
-	public static Material getTexture(int vanillaTextureId)
-	{
+	public static Material getTexture(int vanillaTextureId) {
 		return VANILLA_TEXTURE_MAP.getOrDefault(vanillaTextureId, Material.NONE);
 	}
 }
