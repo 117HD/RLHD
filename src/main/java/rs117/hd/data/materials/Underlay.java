@@ -82,7 +82,7 @@ public enum Underlay {
 	CATHERBY_BEACH_SAND(62, Area.CATHERBY, GroundMaterial.SAND),
 
 	// Al Kharid
-	MAGE_TRAINING_ARENA_FLOOR_PATTERN(56, Area.MAGE_TRAINING_ARENA, GroundMaterial.TILES_2x2_2_GLOSS, p -> p.blended(false)),
+	MAGE_TRAINING_ARENA_FLOOR_PATTERN(56, Area.MAGE_TRAINING_ARENA, GroundMaterial.TILES_2X2_2_GLOSS, p -> p.blended(false)),
 	PVP_ARENA_PITFLOOR_SAND_REMOVAL(GroundMaterial.DIRT, p -> p
 		.area(Area.PVP_ARENA)
 		.ids(66, 68)
@@ -206,7 +206,7 @@ public enum Underlay {
 	),
 
 	// Death's office
-	DEATHS_OFFICE_TILE(-110, Area.DEATHS_OFFICE, GroundMaterial.TILES_2x2_1_SEMIGLOSS),
+	DEATHS_OFFICE_TILE(-110, Area.DEATHS_OFFICE, GroundMaterial.TILES_2X2_1_SEMIGLOSS),
 
 	// Chambers of Xeric
 	COX_SNOW_1(16, Area.COX_SNOW, GroundMaterial.SNOW_1),
