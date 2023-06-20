@@ -28,8 +28,7 @@ import java.util.Random;
 import lombok.Getter;
 
 @Getter
-public enum GroundMaterial
-{
+public enum GroundMaterial {
 	NONE(Material.NONE),
 	SKULL_OBELISK(Material.SKULL_OBELISK),
 	TRANSPARENT(Material.TRANSPARENT),
@@ -74,7 +73,15 @@ public enum GroundMaterial
 	WOOD_PLANKS_1(Material.WOOD_PLANKS_1),
 	CLEAN_WOOD_FLOOR(Material.CLEAN_WOOD_FLOOR),
 
-	HD_LAVA(Material.HD_LAVA_1, Material.HD_LAVA_2, Material.HD_LAVA_1, Material.HD_LAVA_1, Material.HD_LAVA_2, Material.HD_MAGMA_1, Material.HD_MAGMA_2),
+	HD_LAVA(
+		Material.HD_LAVA_1,
+		Material.HD_LAVA_2,
+		Material.HD_LAVA_1,
+		Material.HD_LAVA_1,
+		Material.HD_LAVA_2,
+		Material.HD_MAGMA_1,
+		Material.HD_MAGMA_2
+	),
 
 	STONE_PATTERN(Material.STONE_PATTERN),
 	CONCRETE(Material.CONCRETE),
@@ -88,8 +95,8 @@ public enum GroundMaterial
 	WINTER_JAGGED_STONE_TILE(Material.WINTER_JAGGED_STONE_TILE),
 	WINTER_JAGGED_STONE_TILE_LIGHT(Material.WINTER_JAGGED_STONE_TILE_LIGHT),
 	WINTER_JAGGED_STONE_TILE_LIGHT_2(Material.WINTER_JAGGED_STONE_TILE_LIGHTER),
-	ROCKY_CAVE_FLOOR(Material.GRUNGE_2,Material.ROCK_2, Material.ROCK_2, Material.ROCK_1, Material.GRAVEL),
-	EARTHEN_CAVE_FLOOR(Material.GRUNGE_1,Material.DIRT_2, Material.DIRT_2, Material.ROCK_1, Material.DIRT_2),
+	ROCKY_CAVE_FLOOR(Material.GRUNGE_2, Material.ROCK_2, Material.ROCK_2, Material.ROCK_1, Material.GRAVEL),
+	EARTHEN_CAVE_FLOOR(Material.GRUNGE_1, Material.DIRT_2, Material.DIRT_2, Material.ROCK_1, Material.DIRT_2),
 	STONE_CAVE_FLOOR(Material.STONE, Material.ROCK_1, Material.ROCK_2),
 	SANDY_STONE_FLOOR(Material.SAND_2, Material.STONE_NORMALED, Material.ROCK_2, Material.STONE_NORMALED),
 	PACKED_EARTH(Material.DIRT_1, Material.GRAVEL, Material.DIRT_1, Material.DIRT_1, Material.DIRT_2),
@@ -97,13 +104,11 @@ public enum GroundMaterial
 
 	private final Material[] materials;
 
-	GroundMaterial(Material... materials)
-	{
+	GroundMaterial(Material... materials) {
 		this.materials = materials;
 	}
 
-	public Material getRandomMaterial(int plane, int worldX, int worldY)
-	{
+	public Material getRandomMaterial(int plane, int worldX, int worldY) {
 		// Generate a seed from the tile coordinates for
 		// consistent 'random' results between scene loads.
 		// This seed creates a patchy, varied terrain
