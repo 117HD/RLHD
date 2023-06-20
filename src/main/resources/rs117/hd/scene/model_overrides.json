@@ -4379,16 +4379,19 @@
       39686,
       44598,
       44599
-    ]
+    ],
+    "uvType": "MODEL_XY"
   },
   {
     "description": "Metal Fence",
     "baseMaterial": "METALLIC_2_SEMIGLOSS",
     "objectIds": [
+      3457,
       20873,
       20874,
       24097
-    ]
+    ],
+    "uvType": "MODEL_XY"
   },
   {
     "description": "Marble Fountain",
