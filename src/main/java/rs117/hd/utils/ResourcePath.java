@@ -38,7 +38,6 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
-import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -52,6 +51,7 @@ import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.RegEx;
 import javax.imageio.ImageIO;
@@ -92,12 +92,12 @@ public class ResourcePath {
         this(null, parts);
     }
 
-    private ResourcePath(ResourcePath root) {
+    private ResourcePath(@Nonnull ResourcePath root) {
         this.root = root;
         this.path = null;
     }
 
-    private ResourcePath(ResourcePath root, String... parts) {
+    private ResourcePath(@Nullable ResourcePath root, String... parts) {
         this.root = root;
         this.path = normalize(parts);
     }
@@ -330,9 +330,16 @@ public class ResourcePath {
     }
 
     public ResourcePath writeByteBuffer(ByteBuffer buffer) throws IOException {
-        try (FileChannel channel = toOutputStream().getChannel()) {
-            channel.write(buffer);
-        }
+		try (var os = toOutputStream(); var channel = os.getChannel()) {
+			int bytesToWrite = buffer.remaining();
+			int bytesWritten = channel.write(buffer);
+			if (bytesWritten < bytesToWrite) {
+				throw new IOException(String.format(
+					"Only %d out of %d bytes were successfully written to %s",
+					bytesWritten, bytesToWrite, this
+				));
+			}
+		}
         return this;
     }
 

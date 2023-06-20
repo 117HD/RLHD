@@ -114,7 +114,7 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay
 				poly = getCanvasTilePoly(client, bridge);
 				if (poly != null && poly.contains(mousePos.getX(), mousePos.getY()))
 				{
-					rect = drawTileInfo(g, bridge, poly, rect);
+					rect = drawTileInfo(g, bridge, poly, null);
 					if (rect != null)
 					{
 						infoDrawn = true;
@@ -250,9 +250,9 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay
 				int b = CB[face];
 				int c = CC[face];
 				if (a == b && b == c) {
-					lines.add("" + face + ": " + (a == 12345678 ? "HIDDEN" : a));
+					lines.add(face + ": " + (a == 12345678 ? "HIDDEN" : a));
 				} else {
-					lines.add("" + face + ": [ " +
+					lines.add(face + ": [ " +
 						(a == 12345678 ? "HIDDEN" : a) + ", " +
 						(b == 12345678 ? "HIDDEN" : b) + ", " +
 						(c == 12345678 ? "HIDDEN" : c) + " ]");
@@ -273,16 +273,17 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay
 			GameObject[] gameObjects = tile.getGameObjects();
 			if (gameObjects.length > 0) {
 				int counter = 0;
-				for (int i = 0; i < gameObjects.length; i++) {
-					GameObject gameObject = gameObjects[i];
+				for (GameObject gameObject : gameObjects) {
 					if (gameObject == null)
 						continue;
 					counter++;
-					lines.add(String.format("ID %d: x=%d y=%d ori=%d",
+					lines.add(String.format(
+						"ID %d: x=%d y=%d ori=%d",
 						gameObject.getId(),
 						ModelHash.getSceneX(gameObject.getHash()),
 						ModelHash.getSceneY(gameObject.getHash()),
-						gameObject.getModelOrientation()));
+						gameObject.getModelOrientation()
+					));
 				}
 				if (counter > 0)
 					lines.add(lines.size() - counter, "Game objects: ");

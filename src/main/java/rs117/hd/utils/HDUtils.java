@@ -218,8 +218,7 @@ public class HDUtils
 		s /= 8f;
 		l /= 128f;
 
-		float q = 0;
-
+		float q;
 		if (l < 0.5)
 			q = l * (1 + s);
 		else

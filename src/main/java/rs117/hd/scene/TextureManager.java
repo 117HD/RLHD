@@ -205,7 +205,7 @@ public class TextureManager
 				continue;
 			}
 
-			String textureName = material == Material.NONE ? "" + i : material.name().toLowerCase();
+			String textureName = material == Material.NONE ? String.valueOf(i) : material.name().toLowerCase();
 
 			BufferedImage image = loadTextureImage(textureName);
 			if (image == null)
@@ -396,9 +396,6 @@ public class TextureManager
 
 	/**
 	 * Check if all textures have been loaded and cached yet.
-	 *
-	 * @param textureProvider
-	 * @return
 	 */
 	private boolean allTexturesLoaded(TextureProvider textureProvider)
 	{

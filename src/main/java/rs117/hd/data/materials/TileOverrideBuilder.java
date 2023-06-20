@@ -1,16 +1,14 @@
 package rs117.hd.data.materials;
 
+import java.util.Arrays;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import rs117.hd.HdPlugin;
-import rs117.hd.HdPluginConfig;
 import rs117.hd.data.WaterType;
 import rs117.hd.data.environments.Area;
-
-import java.util.Arrays;
-import java.util.function.Consumer;
-import java.util.function.Function;
 
 @Setter
 @Accessors(fluent = true)
