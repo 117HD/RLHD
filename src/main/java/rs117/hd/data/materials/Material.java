@@ -361,32 +361,32 @@ public enum Material {
 
 	HD_BRICK_N,
 	HD_BRICK(p -> p
-		.replaceIf(HdPluginConfig::objectTextures, BRICK)
+		.replaceIf(HdPluginConfig::modelTextures, BRICK)
 		.setNormalMap(HD_BRICK_N)
 		.setSpecular(0.4f, 80)
 	),
 	HD_ROOF_SHINGLES_N,
 	HD_ROOF_SHINGLES_1(p -> p
-		.replaceIf(HdPluginConfig::objectTextures, ROOF_SHINGLES_1)
+		.replaceIf(HdPluginConfig::modelTextures, ROOF_SHINGLES_1)
 		.setSpecular(0.5f, 30)
 		.setNormalMap(HD_ROOF_SHINGLES_N)
 	),
 	HD_MARBLE_DARK(p -> p
-		.replaceIf(HdPluginConfig::objectTextures, MARBLE_DARK)
+		.replaceIf(HdPluginConfig::modelTextures, MARBLE_DARK)
 		.setSpecular(1.1f, 380)),
 	HD_BRICK_BROWN(p -> p
-		.replaceIf(HdPluginConfig::objectTextures, BRICK_BROWN)
+		.replaceIf(HdPluginConfig::modelTextures, BRICK_BROWN)
 		.setNormalMap(HD_BRICK_N)
 		.setSpecular(0.4f, 80)
 	),
 	HD_LAVA_3(p -> p
-		.replaceIf(HdPluginConfig::objectTextures, LAVA)
+		.replaceIf(HdPluginConfig::modelTextures, LAVA)
 		.setUnlit(true)
 		.setOverrideBaseColor(true)
 		.setFlowMap(LAVA_FLOW_MAP, 0.05f, 36, 22)
 		.setScroll(0, 1 / 3f)),
 	HD_ROOF_SHINGLES_2(p -> p
-		.replaceIf(HdPluginConfig::objectTextures, ROOF_SHINGLES_2)
+		.replaceIf(HdPluginConfig::modelTextures, ROOF_SHINGLES_2)
 		.setSpecular(0.3f, 30)
 		.setNormalMap(HD_ROOF_SHINGLES_N)
 	),
@@ -448,17 +448,17 @@ public enum Material {
 		.setBrightness(1.2f)),
 	HD_ROOF_BRICK_TILE_N,
 	HD_ROOF_BRICK_TILE(ROOF_BRICK_TILE, p -> p
-		.replaceIf(HdPluginConfig::objectTextures, ROOF_BRICK_TILE)
+		.replaceIf(HdPluginConfig::modelTextures, ROOF_BRICK_TILE)
 		.setSpecular(0.3f, 30)
 		.setNormalMap(HD_ROOF_BRICK_TILE_N)
 	),
 	HD_ROOF_BRICK_TILE_GREEN(ROOF_BRICK_TILE_GREEN, p -> p
-		.replaceIf(HdPluginConfig::objectTextures, ROOF_BRICK_TILE_GREEN)
+		.replaceIf(HdPluginConfig::modelTextures, ROOF_BRICK_TILE_GREEN)
 		.setSpecular(0.3f, 30)
 		.setNormalMap(HD_ROOF_BRICK_TILE_N)
 	),
 	HD_ROOF_BRICK_TILE_DARK(ROOF_BRICK_TILE_DARK, p -> p
-		.replaceIf(HdPluginConfig::objectTextures, ROOF_BRICK_TILE_DARK)
+		.replaceIf(HdPluginConfig::modelTextures, ROOF_BRICK_TILE_DARK)
 		.setSpecular(0.3f, 30)
 		.setNormalMap(HD_ROOF_BRICK_TILE_N)
 	),

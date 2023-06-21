@@ -38,34 +38,9 @@ import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
-import net.runelite.api.Actor;
-import net.runelite.api.Client;
-import net.runelite.api.Constants;
-import net.runelite.api.DecorativeObject;
-import net.runelite.api.GameObject;
-import net.runelite.api.GameState;
-import net.runelite.api.GraphicsObject;
-import net.runelite.api.GroundObject;
-import net.runelite.api.NPC;
-import net.runelite.api.Projectile;
-import net.runelite.api.Tile;
-import net.runelite.api.TileObject;
-import net.runelite.api.WallObject;
-import net.runelite.api.coords.LocalPoint;
-import net.runelite.api.coords.WorldPoint;
-import net.runelite.api.events.DecorativeObjectDespawned;
-import net.runelite.api.events.DecorativeObjectSpawned;
-import net.runelite.api.events.GameObjectDespawned;
-import net.runelite.api.events.GameObjectSpawned;
-import net.runelite.api.events.GraphicsObjectCreated;
-import net.runelite.api.events.GroundObjectDespawned;
-import net.runelite.api.events.GroundObjectSpawned;
-import net.runelite.api.events.NpcChanged;
-import net.runelite.api.events.NpcDespawned;
-import net.runelite.api.events.NpcSpawned;
-import net.runelite.api.events.ProjectileMoved;
-import net.runelite.api.events.WallObjectDespawned;
-import net.runelite.api.events.WallObjectSpawned;
+import net.runelite.api.*;
+import net.runelite.api.coords.*;
+import net.runelite.api.events.*;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.PluginManager;
@@ -82,11 +57,7 @@ import rs117.hd.utils.ResourcePath;
 
 import static java.lang.Math.cos;
 import static java.lang.Math.pow;
-import static net.runelite.api.Perspective.COSINE;
-import static net.runelite.api.Perspective.LOCAL_HALF_TILE_SIZE;
-import static net.runelite.api.Perspective.LOCAL_TILE_SIZE;
-import static net.runelite.api.Perspective.SCENE_SIZE;
-import static net.runelite.api.Perspective.SINE;
+import static net.runelite.api.Perspective.*;
 import static rs117.hd.utils.ResourcePath.path;
 
 @Singleton
@@ -132,10 +103,8 @@ public class LightManager
 	private final ArrayList<Projectile> trackedProjectiles = new ArrayList<>();
 
 	@VisibleForTesting
-	void loadConfig(Gson gson, ResourcePath path)
-	{
-		try
-		{
+	void loadConfig(Gson gson, ResourcePath path) {
+		try {
 			Light[] lights;
 			try {
 				lights = path.loadJson(gson, Light[].class);
@@ -547,21 +516,19 @@ public class LightManager
 	}
 
 	@Subscribe
-	public void onProjectileMoved(ProjectileMoved projectileMoved)
-	{
+	public void onProjectileMoved(ProjectileMoved projectileMoved) {
 		SceneContext sceneContext = plugin.getSceneContext();
 		Projectile projectile = projectileMoved.getProjectile();
-		for (Light l : PROJECTILE_LIGHTS.get(projectile.getId()))
-		{
+		for (Light l : PROJECTILE_LIGHTS.get(projectile.getId())) {
 			// prevent duplicate lights being spawned for the same projectile
-			if (trackedProjectiles.contains(projectile))
-			{
+			if (trackedProjectiles.contains(projectile)) {
 				continue;
 			}
 
 			SceneLight light = new SceneLight(
 				0, 0, projectile.getFloor(), l.height, l.alignment, l.radius,
-				l.strength, l.color, l.type, l.duration, l.range, 300);
+				l.strength, l.color, l.type, l.duration, l.range, 300
+			);
 			light.projectile = projectile;
 			light.x = (int) projectile.getX();
 			light.y = (int) projectile.getY();

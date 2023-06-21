@@ -119,13 +119,12 @@ import static rs117.hd.utils.ResourcePath.path;
 @PluginDescriptor(
 	name = "117 HD",
 	description = "GPU renderer with a suite of graphical enhancements",
-	tags = {"hd", "high", "detail", "graphics", "shaders", "textures", "gpu", "shadows", "lights"},
+	tags = { "hd", "high", "detail", "graphics", "shaders", "textures", "gpu", "shadows", "lights" },
 	conflicts = "GPU"
 )
 @PluginDependency(EntityHiderPlugin.class)
 @Slf4j
-public class HdPlugin extends Plugin implements DrawCallbacks
-{
+public class HdPlugin extends Plugin implements DrawCallbacks {
 	public static final String DISCORD_URL = "https://discord.gg/U4p6ChjgSE";
 	public static final String RUNELITE_URL = "https://runelite.net";
 
@@ -133,7 +132,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	public static final int TEXTURE_UNIT_GAME = GL_TEXTURE1;
 	public static final int TEXTURE_UNIT_SHADOW_MAP = GL_TEXTURE2;
 
-	// This is the maximum number of triangles the compute shaders support
+	/**
+	 * The maximum number of triangles supported by the large compute shader
+	 */
 	public static final int MAX_TRIANGLE = 6144;
 	public static final int SMALL_TRIANGLE_COUNT = 512;
 	public static final int MAX_DISTANCE = 90;
@@ -380,29 +381,28 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 	private int gameTicksUntilSceneReload = 0;
 
-	// Config settings used very frequently - thousands/frame
-	public boolean configGroundTextures = false;
-	public boolean configGroundBlending = false;
-	public boolean configModelTextures = true;
-	public boolean configTzhaarHD = true;
-	public boolean configProjectileLights = true;
-	public boolean configNpcLights = true;
-	public boolean configHideBakedEffects = false;
-	public boolean configHdInfernalTexture = true;
-	public boolean configWinterTheme = true;
-	public boolean configReduceOverExposure = false;
-	public boolean configEnableModelBatching = false;
-	public boolean configEnableModelCaching = false;
+	// Configs used frequently enough to be worth caching
+	public boolean configGroundTextures;
+	public boolean configGroundBlending;
+	public boolean configModelTextures;
+	public boolean configTzhaarHD;
+	public boolean configProjectileLights;
+	public boolean configNpcLights;
+	public boolean configHideFakeShadows;
+	public boolean configWinterTheme;
+	public boolean configLegacyGreyColors;
+	public boolean configModelBatching;
+	public boolean configModelCaching;
+	public boolean configShadowsEnabled;
+	public boolean configExpandShadowDraw;
+	public ShadowMode configShadowMode;
 	public int configMaxDynamicLights;
-	public boolean configShadowsEnabled = false;
-	public boolean configExpandShadowDraw = false;
-	public ShadowMode configShadowMode = ShadowMode.OFF;
 
 	public int[] camTarget = new int[3];
 
 	private boolean running;
 	private boolean hasLoggedIn;
-	private boolean lwjglInitted;
+	private boolean lwjglInitialized;
 
 	@Setter
 	private boolean isInGauntlet = false;
@@ -411,47 +411,22 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 	@Subscribe
 	public void onChatMessage(final ChatMessage event) {
-		if (!isInGauntlet) {
-			return;
-		}
-
-		// reload the scene if the player is in the gauntlet and opening a new room to pull the new data into the buffer
-		if (event.getMessage().equals("You light the nodes in the corridor to help guide the way.")) {
+		// Reload the scene if the player is in the gauntlet and opening a new room, to pull the new data into static buffers
+		if (isInGauntlet && event.getMessage().equals("You light the nodes in the corridor to help guide the way."))
 			reloadSceneNextGameTick();
-		}
 	}
 
 	@Provides
-	HdPluginConfig provideConfig(ConfigManager configManager)
-	{
+	HdPluginConfig provideConfig(ConfigManager configManager) {
 		return configManager.getConfig(HdPluginConfig.class);
 	}
 
 	@Override
-	protected void startUp()
-	{
+	protected void startUp() {
 		gson = rlGson.newBuilder().setLenient().create();
 
-		configGroundTextures = config.groundTextures();
-		configGroundBlending = config.groundBlending();
-		configModelTextures = config.objectTextures();
-		configTzhaarHD = config.tzhaarHD();
-		configProjectileLights = config.projectileLights();
-		configNpcLights = config.npcLights();
-		configShadowsEnabled = config.shadowMode() != ShadowMode.OFF;
-		configExpandShadowDraw = config.expandShadowDraw();
-		configHideBakedEffects = config.hideBakedEffects();
-		configHdInfernalTexture = config.hdInfernalTexture();
-		configWinterTheme = config.winterTheme();
-		configReduceOverExposure = config.enableLegacyGreyColors();
-		configEnableModelBatching = config.enableModelBatching();
-		configEnableModelCaching = config.enableModelCaching();
-		configMaxDynamicLights = config.maxDynamicLights().getValue();
-
-		clientThread.invoke(() ->
-		{
-			try
-			{
+		clientThread.invoke(() -> {
+			try {
 				renderBufferOffset = 0;
 				fboSceneHandle = rboSceneHandle = 0; // AA FBO
 				fboShadowMap = 0;
@@ -461,12 +436,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				AWTContext.loadNatives();
 				canvas = client.getCanvas();
 
-				synchronized (canvas.getTreeLock())
-				{
+				synchronized (canvas.getTreeLock()) {
 					if (!canvas.isValid())
-					{
 						return false;
-					}
 
 					awtContext = new AWTContext(canvas);
 					awtContext.configurePixelFormat(0, 0, 0);
@@ -485,9 +457,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				String glRenderer = glGetString(GL_RENDERER);
 				String arch = System.getProperty("sun.arch.data.model", "Unknown");
 				if (glRenderer == null)
-				{
 					glRenderer = "Unknown";
-				}
 				log.info("Using device: {}", glRenderer);
 				log.info("Using driver: {}", glGetString(GL_VERSION));
 				log.info("Client is {}-bit", arch);
@@ -524,7 +494,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 					return true;
 				}
 
-				lwjglInitted = true;
+				lwjglInitialized = true;
 				checkGLErrors();
 
 				if (log.isDebugEnabled() && glCaps.glDebugMessageControl != 0)
@@ -566,6 +536,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 				lastFrameTime = System.currentTimeMillis();
 
+				updateCachedConfigs();
 				setupSyncMode();
 				initVao();
 				initBuffers();
@@ -628,8 +599,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			client.setUnlockedFps(false);
 			modelPusher.shutDown();
 
-			if (lwjglInitted)
-			{
+			if (lwjglInitialized) {
 				textureManager.shutDown();
 
 				destroyBuffers();
@@ -1340,13 +1310,16 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 
 		// Update the camera target only when not loading, to keep drawing correct shadows while loading
 		if (client.getGameState() != GameState.LOADING)
-		{
 			camTarget = getCameraFocalPoint();
-		}
 
-		WorldPoint targetWorldPosition = sceneContext.localToWorld(new LocalPoint(camTarget[0], camTarget[1]), client.getPlane());
-		environmentManager.update(sceneContext, targetWorldPosition);
-		lightManager.update(sceneContext);
+		try {
+			WorldPoint targetWorldPosition = sceneContext.localToWorld(new LocalPoint(camTarget[0], camTarget[1]), client.getPlane());
+			environmentManager.update(sceneContext, targetWorldPosition);
+			lightManager.update(sceneContext);
+		} catch (Exception ex) {
+			log.error("Error while updating environment or lights:", ex);
+			stopPlugin();
+		}
 
 		// Only reset the target buffer offset right before drawing the scene. That way if there are frames
 		// after this that don't involve a scene draw, like during LOADING/HOPPING/CONNECTION_LOST, we can
@@ -2273,115 +2246,90 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		reloadSceneIn(1);
 	}
 
-	public void reloadSceneIn(int gameTicks)
-	{
+	public void reloadSceneIn(int gameTicks) {
 		assert gameTicks > 0 : "A value <= 0 will not reload the scene";
 		if (gameTicks > gameTicksUntilSceneReload) {
 			gameTicksUntilSceneReload = gameTicks;
 		}
 	}
 
-	public void abortSceneReload()
-	{
+	public void abortSceneReload() {
 		gameTicksUntilSceneReload = 0;
 	}
 
+	private void updateCachedConfigs() {
+		configGroundTextures = config.groundTextures();
+		configGroundBlending = config.groundBlending();
+		configModelTextures = config.modelTextures();
+		configTzhaarHD = config.hdTzHaarReskin();
+		configProjectileLights = config.projectileLights();
+		configNpcLights = config.npcLights();
+		configHideFakeShadows = config.hideFakeShadows();
+		configWinterTheme = config.winterTheme();
+		configLegacyGreyColors = config.legacyGreyColors();
+		configModelBatching = config.modelBatching();
+		configModelCaching = config.modelCaching();
+		configMaxDynamicLights = config.maxDynamicLights().getValue();
+		configShadowMode = config.shadowMode();
+		configShadowsEnabled = configShadowMode != ShadowMode.OFF;
+		configExpandShadowDraw = config.expandShadowDraw();
+	}
+
 	@Subscribe
-	public void onConfigChanged(ConfigChanged event)
-	{
+	public void onConfigChanged(ConfigChanged event) {
 		if (!event.getGroup().equals(CONFIG_GROUP))
-		{
 			return;
-		}
 
-		String key = event.getKey();
+		clientThread.invoke(() -> {
+			updateCachedConfigs();
 
-		switch (key)
-		{
-			case KEY_SHADOW_MODE:
-			case KEY_SHADOW_TRANSPARENCY:
-				clientThread.invoke(() ->
-				{
-					modelPusher.clearModelCache();
+			switch (event.getKey()) {
+				case KEY_MAX_DYNAMIC_LIGHTS:
+				case KEY_UI_SCALING_MODE:
+				case KEY_COLOR_BLINDNESS:
+				case KEY_MACOS_INTEL_WORKAROUND:
+				case KEY_NORMAL_MAPPING:
+				case KEY_PARALLAX_OCCLUSION_MAPPING:
+				case KEY_VANILLA_COLOR_BANDING:
 					recompilePrograms();
+					break;
+				case KEY_SHADOW_MODE:
+				case KEY_SHADOW_TRANSPARENCY:
+					recompilePrograms();
+					// fall-through
+				case KEY_SHADOW_RESOLUTION:
 					destroyShadowMapFbo();
 					initShadowMapFbo();
-				});
-				break;
-			case "shadowResolution":
-				clientThread.invoke(() ->
-				{
-					destroyShadowMapFbo();
-					initShadowMapFbo();
-				});
-				break;
-			case "textureResolution":
-			case "hdInfernalTexture":
-			case KEY_WINTER_THEME:
-				configHdInfernalTexture = config.hdInfernalTexture();
-				textureManager.freeTextures();
-			case "hideBakedEffects":
-			case "groundBlending":
-			case "groundTextures":
-			case "objectTextures":
-			case "tzhaarHD":
-			case KEY_LEGACY_GREY_COLORS:
-				configHideBakedEffects = config.hideBakedEffects();
-				configGroundBlending = config.groundBlending();
-				configGroundTextures = config.groundTextures();
-				configModelTextures = config.objectTextures();
-				configTzhaarHD = config.tzhaarHD();
-				configWinterTheme = config.winterTheme();
-				configReduceOverExposure = config.enableLegacyGreyColors();
-				clientThread.invoke(() -> {
+					break;
+				case KEY_TEXTURE_RESOLUTION:
+				case KEY_ANISOTROPIC_FILTERING_LEVEL:
+				case KEY_HD_INFERNAL_CAPE:
+					textureManager.freeTextures();
+					break;
+				case KEY_MODEL_TEXTURES:
+				case KEY_WINTER_THEME:
+					textureManager.freeTextures();
+					// fall-through
+				case KEY_HIDE_FAKE_SHADOWS:
+				case KEY_GROUND_BLENDING:
+				case KEY_GROUND_TEXTURES:
+				case KEY_HD_TZHAAR_RESKIN:
+				case KEY_LEGACY_GREY_COLORS:
 					modelPusher.clearModelCache();
 					uploadScene();
-				});
-				break;
-			case "projectileLights":
-				configProjectileLights = config.projectileLights();
-				break;
-			case "npcLights":
-				configNpcLights = config.npcLights();
-				break;
-			case "expandShadowDraw":
-				configExpandShadowDraw = config.expandShadowDraw();
-				break;
-			case "maxDynamicLights":
-				clientThread.invoke(() -> {
-					configMaxDynamicLights = config.maxDynamicLights().getValue();
-					recompilePrograms();
-				});
-				break;
-			case "anisotropicFilteringLevel":
-				textureManager.freeTextures();
-				break;
-			case "uiScalingMode":
-			case "colorBlindMode":
-			case "macosIntelWorkaround":
-			case KEY_NORMAL_MAPPING:
-			case KEY_PARALLAX_OCCLUSION_MAPPING:
-			case KEY_VANILLA_COLOR_BANDING:
-				clientThread.invoke(this::recompilePrograms);
-				break;
-			case "unlockFps":
-			case "vsyncMode":
-			case "fpsTarget":
-				log.debug("Rebuilding sync mode");
-				clientThread.invoke(this::setupSyncMode);
-				break;
-			case KEY_MODEL_CACHING:
-			case KEY_MODEL_CACHE_SIZE:
-				configEnableModelCaching = config.enableModelCaching();
-				clientThread.invoke(() -> {
+					break;
+				case KEY_UNLOCK_FPS:
+				case KEY_VSYNC_MODE:
+				case KEY_FPS_TARGET:
+					setupSyncMode();
+					break;
+				case KEY_MODEL_CACHING:
+				case KEY_MODEL_CACHE_SIZE:
 					modelPusher.shutDown();
 					modelPusher.startUp();
-				});
-				break;
-			case KEY_MODEL_BATCHING:
-				configEnableModelBatching = config.enableModelBatching();
-				break;
-		}
+					break;
+			}
+		});
 	}
 
 	private void setupSyncMode()
@@ -2466,7 +2414,18 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 	}
 
 	/**
-	 * Draw a renderable in the scene
+	 * Draw a Renderable in the scene
+	 *
+	 * @param renderable  Can be an Actor (Player or NPC), DynamicObject, GraphicsObject, TileItem, Projectile or a raw Model.
+	 * @param orientation Rotation around the up-axis, from 0 to 2048 exclusive, 2048 indicating a complete rotation.
+	 * @param pitchSin    The sine of the camera's rotation about the horizontal axis, in the range from -65536 to 65536.
+	 * @param pitchCos    The cosine of the camera's rotation about the horizontal axis, in the range from -65536 to 65536.
+	 * @param yawSin      The sine of the camera's rotation about the vertical axis, in the range from -65536 to 65536.
+	 * @param yawCos      The cosine of the camera's rotation about the vertical axis, in the range from -65536 to 65536.
+	 * @param x           The Renderable's X offset relative to {@link Client#getCameraX2()}.
+	 * @param y           The Renderable's Y offset relative to {@link Client#getCameraY2()}.
+	 * @param z           The Renderable's Z offset relative to {@link Client#getCameraZ2()}.
+	 * @param hash        A unique hash of the renderable consisting of some useful information. See {@link rs117.hd.utils.ModelHash} for more details.
 	 */
 	@Override
 	public void draw(Renderable renderable, int orientation, int pitchSin, int pitchCos, int yawSin, int yawCos, int x, int y, int z, long hash)
@@ -2551,9 +2510,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			TempModelInfo tempModelInfo = null;
 			int batchHash = 0;
 
-			if (configEnableModelBatching || configEnableModelCaching) {
+			if (configModelBatching || configModelCaching) {
 				modelHasher.setModel(model);
-				if (configEnableModelBatching) {
+				if (configModelBatching) {
 					batchHash = modelHasher.calculateBatchHash();
 					tempModelInfo = frameModelInfoMap.get(batchHash);
 				}
@@ -2585,7 +2544,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				renderBufferOffset += sceneContext.modelPusherResults[0];
 
 				// add this temporary model to the map for batching purposes
-				if (configEnableModelBatching) {
+				if (configModelBatching) {
 					tempModelInfo = new TempModelInfo();
 					tempModelInfo
 						.setTempOffset(vertexOffset)

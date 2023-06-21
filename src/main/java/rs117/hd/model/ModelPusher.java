@@ -8,15 +8,8 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import net.runelite.api.Client;
-import net.runelite.api.ItemID;
-import net.runelite.api.Model;
-import net.runelite.api.Player;
-import net.runelite.api.Scene;
-import net.runelite.api.SceneTileModel;
-import net.runelite.api.SceneTilePaint;
-import net.runelite.api.Tile;
-import net.runelite.api.kit.KitType;
+import net.runelite.api.*;
+import net.runelite.api.kit.*;
 import net.runelite.client.RuneLite;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.util.LinkBrowser;
@@ -80,7 +73,7 @@ public class ModelPusher {
 				"Too many materials (" + Material.values().length + ") to fit into packed material data.");
 		}
 
-		if (config.enableModelCaching()) {
+		if (config.modelCaching()) {
 			final int size = config.modelCacheSizeMiB();
 			try {
 				modelCache = new ModelCache(size, () -> {
@@ -127,7 +120,7 @@ public class ModelPusher {
 				}
 
 				// Allow the model pusher to be used until the plugin has cleanly shut down
-				clientThread.invokeLater(plugin::stopPlugin);
+				clientThread.invoke(plugin::stopPlugin);
 			}
 		}
 	}
@@ -425,7 +418,7 @@ public class ModelPusher {
 		int color3 = model.getFaceColors3()[face];
 
 		// Hide fake shadows or lighting that is often baked into models by making the fake shadow transparent
-		if (plugin.configHideBakedEffects && isBakedGroundShading(face, heightA, heightB, heightC, faceTransparencies, faceTextures)) {
+		if (plugin.configHideFakeShadows && isBakedGroundShading(face, heightA, heightB, heightC, faceTransparencies, faceTextures)) {
 			boolean removeBakedLighting = modelOverride.removeBakedLighting;
 
 			if (ModelHash.getType(hash) == ModelHash.TYPE_PLAYER) {
@@ -533,7 +526,7 @@ public class ModelPusher {
 		int maxBrightness1 = 55;
 		int maxBrightness2 = 55;
 		int maxBrightness3 = 55;
-		if (!plugin.configReduceOverExposure) {
+		if (!plugin.configLegacyGreyColors) {
 			maxBrightness1 = (int) HDUtils.lerp(127, maxBrightness1, (float) Math.pow((float) color1S / 0x7, .05));
 			maxBrightness2 = (int) HDUtils.lerp(127, maxBrightness2, (float) Math.pow((float) color2S / 0x7, .05));
 			maxBrightness3 = (int) HDUtils.lerp(127, maxBrightness3, (float) Math.pow((float) color3S / 0x7, .05));
