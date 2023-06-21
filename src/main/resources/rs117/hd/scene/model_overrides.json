@@ -4406,7 +4406,6 @@
     "description": "Metal Fence",
     "baseMaterial": "METALLIC_2_SEMIGLOSS",
     "objectIds": [
-      3457,
       20873,
       20874,
       24097
@@ -9734,7 +9733,6 @@
     "description": "Stone Wedge Stairs",
     "baseMaterial": "ROCK_1_LIGHT",
     "objectIds": [
-      1862,
       47422,
       47423
     ]
