@@ -60,7 +60,7 @@ public enum Overlay {
 		.shiftLightness(3)
 		.blended(false)
 	),
-	WINTER_CANIFIS_BAR_FLOOR_BLENDED(85, Area.CANIFIS_BAR_FLOOR_BLENDED, GroundMaterial.HD_WOOD_PLANKS_2, p -> p
+	WINTER_CANIFIS_BAR_FLOOR_BLENDED(85, Area.CANIFIS_BAR_FLOOR_BLENDED, GroundMaterial.HD_WOOD_PLANKS_1, p -> p
 		.replaceWithIf(WINTER_DIRT, plugin -> plugin.configWinterTheme)
 	),
 
@@ -736,7 +736,7 @@ public enum Overlay {
 		.blended(true)),
 	LUNAR_ISLAND_HOUSES_CARPET_FLOOR(88, Area.LUNAR_VILLAGE_HOUSE_INTERIORS_GROUND, GroundMaterial.CARPET, p -> p
 		.blended(false)),
-	LUNAR_ISLAND_HOUSES_WOOD_FLOOR(81, Area.LUNAR_VILLAGE_HOUSE_INTERIORS_FIRST, GroundMaterial.HD_WOOD_PLANKS_2, p -> p
+	LUNAR_ISLAND_HOUSES_WOOD_FLOOR(81, Area.LUNAR_VILLAGE_HOUSE_INTERIORS_FIRST, GroundMaterial.HD_WOOD_PLANKS_1, p -> p
 		.blended(true)),
 
 
