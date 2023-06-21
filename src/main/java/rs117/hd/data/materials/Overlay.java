@@ -60,7 +60,7 @@ public enum Overlay {
 		.shiftLightness(3)
 		.blended(false)
 	),
-	WINTER_CANIFIS_BAR_FLOOR_FIX(85, Area.CANIFIS_BAR_FLOOR_FIX, GroundMaterial.VARIED_DIRT, p -> p
+	WINTER_CANIFIS_BAR_FLOOR_BLENDED(85, Area.CANIFIS_BAR_FLOOR_BLENDED, GroundMaterial.HD_WOOD_PLANKS_1, p -> p
 		.replaceWithIf(WINTER_DIRT, plugin -> plugin.configWinterTheme)
 	),
 
@@ -594,9 +594,10 @@ public enum Overlay {
 	COSMIC_ENTITYS_PLANE_ABYSS(37, Area.COSMIC_ENTITYS_PLANE, GroundMaterial.NONE, p -> p.lightness(0).blended(false)),
 
 	// Morytania
-	CANIFIS_FLOORS(85, Area.CANIFIS, GroundMaterial.VARIED_DIRT),
+	CANIFIS_FLOORS(85, Area.CANIFIS, GroundMaterial.HD_WOOD_PLANKS_1),
 
 	MORYTANIA_SLAYER_TOWER(102, Area.MORYTANIA_SLAYER_TOWER, GroundMaterial.VARROCK_PATHS),
+	MORYTANIA_FENKENSTRAINS_CASTLE(102, Area.FENKENSTRAINS_CASTLE, GroundMaterial.VARROCK_PATHS),
 	ABANDONED_MINE_ROCK(11, Area.MORYTANIA, GroundMaterial.DIRT),
 	TRUE_BLOOD_ALTAR_BLOOD(72, Area.TRUE_BLOOD_ALTAR, WaterType.BLOOD),
 
@@ -776,7 +777,7 @@ public enum Overlay {
 	OVERLAY_32(32, GroundMaterial.CONCRETE),
 	OVERLAY_90(90, GroundMaterial.DIRT), // Known locations: 90 = Dark Wizards Tower; Random shading in the overworld
 	OVERLAY_DIRT_PATH(GroundMaterial.VARIED_DIRT, p -> p
-		.ids(36, 80, 131)), // 36 = Corsair Cove, 80 = Mythics Guild, 131 = Burgh de Rott
+		.ids(36, 80, 85, 131)), // 36 = Corsair Cove, 80 = Mythics Guild, 85 = Slayer Tower, 131 = Burgh de Rott
 	OVERWORLD_GRUNGE(GroundMaterial.GRUNGE, p -> p.ids(48, 185)),
 	OVERLAY_120(GroundMaterial.GRUNGE, p -> p.ids(120)),
 
