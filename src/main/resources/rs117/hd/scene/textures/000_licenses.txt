@@ -41,6 +41,3 @@ METALLIC_1 textures from AmbientCG. All textures on this site are licensed as CC
 
 HD_WOOD_PLANKS_1 texture from AmbientCG. All textures on this site are licensed as CC0; Texture is heavily altered; HD_WOOD_PLANKS_1_N generated
 -- https://ambientcg.com/view?id=Planks012
-
-HD_WOOD_PLANKS_2 and HD_WOOD_PLANKS_2_N textures from AmbientCG. All textures on this site are licensed as CC0; Texture is altered;
--- https://ambientcg.com/view?id=Planks024A
