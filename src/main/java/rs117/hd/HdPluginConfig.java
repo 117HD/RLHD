@@ -420,12 +420,24 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
+	String KEY_NORMAL_MAPPING = "normalMapping";
+	@ConfigItem(
+		keyName = KEY_NORMAL_MAPPING,
+		name = "Normal Mapping",
+		description = "Affects how light interacts with certain materials. Barely affects performance.",
+		position = 12,
+		section = lightingSettings
+	)
+	default boolean normalMapping() {
+		return true;
+	}
+
 	String KEY_PARALLAX_OCCLUSION_MAPPING = "parallaxOcclusionMappingToggle";
 	@ConfigItem(
 		keyName = KEY_PARALLAX_OCCLUSION_MAPPING,
 		name = "Parallax Occlusion Mapping",
 		description = "Adds more depth to supported materials, at the cost of performance.",
-		position = 12,
+		position = 13,
 		section = lightingSettings
 	)
 	default boolean parallaxOcclusionMapping() {

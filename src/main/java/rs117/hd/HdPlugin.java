@@ -113,16 +113,7 @@ import rs117.hd.utils.buffer.GpuIntBuffer;
 import static org.lwjgl.opencl.CL10.*;
 import static org.lwjgl.opencl.CL10GL.*;
 import static org.lwjgl.opengl.GL43C.*;
-import static rs117.hd.HdPluginConfig.CONFIG_GROUP;
-import static rs117.hd.HdPluginConfig.KEY_LEGACY_GREY_COLORS;
-import static rs117.hd.HdPluginConfig.KEY_MODEL_BATCHING;
-import static rs117.hd.HdPluginConfig.KEY_MODEL_CACHE_SIZE;
-import static rs117.hd.HdPluginConfig.KEY_MODEL_CACHING;
-import static rs117.hd.HdPluginConfig.KEY_PARALLAX_OCCLUSION_MAPPING;
-import static rs117.hd.HdPluginConfig.KEY_SHADOW_MODE;
-import static rs117.hd.HdPluginConfig.KEY_SHADOW_TRANSPARENCY;
-import static rs117.hd.HdPluginConfig.KEY_VANILLA_COLOR_BANDING;
-import static rs117.hd.HdPluginConfig.KEY_WINTER_THEME;
+import static rs117.hd.HdPluginConfig.*;
 import static rs117.hd.utils.ResourcePath.path;
 
 @PluginDescriptor(
@@ -775,6 +766,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			.define("WATER_TYPE_GETTER", () -> generateGetter("WaterType", WaterType.values().length))
 			.define("LIGHT_COUNT", Math.max(1, configMaxDynamicLights))
 			.define("LIGHT_GETTER", () -> generateGetter("PointLight", configMaxDynamicLights))
+			.define("NORMAL_MAPPING", config.normalMapping())
 			.define("PARALLAX_OCCLUSION_MAPPING", config.parallaxOcclusionMapping())
 			.define("SHADOW_MODE", configShadowMode)
 			.define("SHADOW_TRANSPARENCY", config.enableShadowTransparency())
@@ -2367,8 +2359,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			case "uiScalingMode":
 			case "colorBlindMode":
 			case "macosIntelWorkaround":
-			case KEY_VANILLA_COLOR_BANDING:
+			case KEY_NORMAL_MAPPING:
 			case KEY_PARALLAX_OCCLUSION_MAPPING:
+			case KEY_VANILLA_COLOR_BANDING:
 				clientThread.invoke(this::recompilePrograms);
 				break;
 			case "unlockFps":
