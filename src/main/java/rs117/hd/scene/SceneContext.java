@@ -48,8 +48,9 @@ public class SceneContext
 	public Map<Integer, Integer> vertexUnderwaterDepth;
 	public int[][][] underwaterDepthLevels;
 
-	public final ArrayList<SceneLight> lights = new ArrayList<>();
 	public int visibleLightCount = 0;
+	public final ArrayList<SceneLight> lights = new ArrayList<>();
+	public final HashSet<Projectile> projectiles = new HashSet<>();
 
 	public final ArrayList<Environment> environments = new ArrayList<>();
 
@@ -58,19 +59,15 @@ public class SceneContext
 	public final float[] modelFaceNormals = new float[12];
 	public final int[] modelPusherResults = new int[2];
 
-	public SceneContext(Scene scene, @Nullable SceneContext previousSceneContext)
-	{
+	public SceneContext(Scene scene, @Nullable SceneContext previousSceneContext) {
 		this.scene = scene;
 		this.regionIds = HDUtils.getSceneRegionIds(scene);
 
-		if (previousSceneContext == null)
-		{
+		if (previousSceneContext == null) {
 			stagingBufferVertices = new GpuIntBuffer();
 			stagingBufferUvs = new GpuFloatBuffer();
 			stagingBufferNormals = new GpuFloatBuffer();
-		}
-		else
-		{
+		} else {
 			stagingBufferVertices = new GpuIntBuffer(previousSceneContext.stagingBufferVertices.getBuffer().capacity());
 			stagingBufferUvs = new GpuFloatBuffer(previousSceneContext.stagingBufferUvs.getBuffer().capacity());
 			stagingBufferNormals = new GpuFloatBuffer(previousSceneContext.stagingBufferNormals.getBuffer().capacity());
