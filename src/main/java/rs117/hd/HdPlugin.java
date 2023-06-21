@@ -78,7 +78,6 @@ import org.lwjgl.system.Callback;
 import org.lwjgl.system.Configuration;
 import rs117.hd.config.AntiAliasingMode;
 import rs117.hd.config.FogDepthMode;
-import rs117.hd.config.ParallaxMappingMode;
 import rs117.hd.config.ShadowMode;
 import rs117.hd.config.UIScalingMode;
 import rs117.hd.data.WaterType;
@@ -119,6 +118,7 @@ import static rs117.hd.HdPluginConfig.KEY_LEGACY_GREY_COLORS;
 import static rs117.hd.HdPluginConfig.KEY_MODEL_BATCHING;
 import static rs117.hd.HdPluginConfig.KEY_MODEL_CACHE_SIZE;
 import static rs117.hd.HdPluginConfig.KEY_MODEL_CACHING;
+import static rs117.hd.HdPluginConfig.KEY_PARALLAX_OCCLUSION_MAPPING;
 import static rs117.hd.HdPluginConfig.KEY_SHADOW_MODE;
 import static rs117.hd.HdPluginConfig.KEY_SHADOW_TRANSPARENCY;
 import static rs117.hd.HdPluginConfig.KEY_VANILLA_COLOR_BANDING;
@@ -775,7 +775,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 			.define("WATER_TYPE_GETTER", () -> generateGetter("WaterType", WaterType.values().length))
 			.define("LIGHT_COUNT", Math.max(1, configMaxDynamicLights))
 			.define("LIGHT_GETTER", () -> generateGetter("PointLight", configMaxDynamicLights))
-			.define("PARALLAX_MAPPING", ParallaxMappingMode.OFF) // config.parallaxMappingMode())
+			.define("PARALLAX_OCCLUSION_MAPPING", config.parallaxOcclusionMapping())
 			.define("SHADOW_MODE", configShadowMode)
 			.define("SHADOW_TRANSPARENCY", config.enableShadowTransparency())
 			.define("VANILLA_COLOR_BANDING", config.vanillaColorBanding())
@@ -2366,9 +2366,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 				break;
 			case "uiScalingMode":
 			case "colorBlindMode":
-			case "parallaxMappingMode":
 			case "macosIntelWorkaround":
 			case KEY_VANILLA_COLOR_BANDING:
+			case KEY_PARALLAX_OCCLUSION_MAPPING:
 				clientThread.invoke(this::recompilePrograms);
 				break;
 			case "unlockFps":

@@ -30514,5 +30514,23 @@
     "type": "STATIC",
     "duration": 1000,
     "range": 0.2
+  },
+  {
+    "description": "RED_STREET_LAMP",
+    "height": 273,
+    "alignment": "CENTER",
+    "radius": 330,
+    "strength": 5,
+    "color": [
+      252,
+      168,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 30,
+    "objectIds": [
+      3434
+    ]
   }
 ]
