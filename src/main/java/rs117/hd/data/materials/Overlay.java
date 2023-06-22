@@ -215,6 +215,7 @@ public enum Overlay {
 		.area(Area.DESERT_TREASURE_PYRAMID)
 		.ids(21)
 	),
+	GIANTS_FOUNDRY_224(224, Area.GIANTS_FOUNDRY, GroundMaterial.ROCKY_CAVE_FLOOR),
 
 	// Falador
 	FALADOR_EAST_BANK_PATH_FIX_2(-119, Area.FALADOR_EAST_BANK_PATH_FIX_2, GroundMaterial.FALADOR_PATHS, p -> p
@@ -738,7 +739,7 @@ public enum Overlay {
 		.blended(false)),
 	LUNAR_ISLAND_HOUSES_WOOD_FLOOR(81, Area.LUNAR_VILLAGE_HOUSE_INTERIORS_FIRST, GroundMaterial.HD_WOOD_PLANKS_1, p -> p
 		.blended(true)),
-
+	KELDAGRIM_PATHS(117, GroundMaterial.FALADOR_PATHS),
 
 	// Default overlays
 

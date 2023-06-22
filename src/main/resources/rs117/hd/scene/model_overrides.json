@@ -3481,19 +3481,19 @@
       24560,
       24561,
       25796,
-      29110,
-      44680
+      29110
     ],
     "flatNormals": true
   },
   {
     "description": "FENCES_3",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       994,
       995
     ],
-    "flatNormals": true
+    "uvType": "MODEL_XY",
+    "uvScale": 0.4
   },
   {
     "description": "PICARILIUS_DOCKS",
@@ -3818,6 +3818,7 @@
       2808,
       2809,
       2810,
+      26654,
       26709,
       30177,
       30374,
@@ -3844,24 +3845,39 @@
       26666,
       26667,
       26668,
+      30368,
+      30369,
+      30370,
       30375
     ]
   },
   {
     "description": "Motherload mine upper floor",
-    "baseMaterial": "DIRT_1",
+    "baseMaterial": "DIRT_2",
     "objectIds": [
       26657
-    ],
-    "uvType": "MODEL_XZ"
+    ]
+  },
+  {
+    "description": "Amathyst mine walls",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      11388,
+      11389,
+      11392,
+      11393
+    ]
   },
   {
     "description": "Motherload Mine Rockfall",
-    "baseMaterial": "ROCK_2",
+    "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       26679,
       26680
-    ]
+    ],
+    "uvType": "MODEL_YZ_MIRROR_B",
+    "uvScale": 0.4,
+    "uvOrientation": 400
   },
   {
     "description": "Mining Guild statue",
@@ -5788,6 +5804,9 @@
       5106,
       5107,
       5110,
+      6176,
+      6177,
+      6178,
       7514,
       9533,
       9534,
@@ -5801,6 +5820,7 @@
       12442,
       12443,
       12961,
+      14395,
       15692,
       16560,
       16561,
@@ -5915,7 +5935,9 @@
     "baseMaterial": "METALLIC_2",
     "objectIds": [
       2140
-    ]
+    ],
+    "uvType": "GEOMETRY",
+    "uvScale": 0.28
   },
   {
     "description": "Ground - Wooden - Plank Steps",
@@ -5924,13 +5946,6 @@
       4303
     ],
     "uvType": "MODEL_XZ"
-  },
-  {
-    "description": "Objects - Metallic - Giant Anvil",
-    "baseMaterial": "METALLIC_2",
-    "objectIds": [
-      39724
-    ]
   },
   {
     "description": "Walls - Stone - Giants Foundry",
@@ -5949,7 +5964,15 @@
       44649,
       44650,
       44651,
-      44652
+      44652,
+      44681,
+      44682,
+      44713,
+      44714,
+      44715,
+      44717,
+      44719,
+      44720
     ]
   },
   {
@@ -5985,8 +6008,10 @@
     5231,
     5232,
     17876,
-    17877
-  ]
+    17877,
+    44744,
+    44745
+    ]
   },
   {
     "description": "Objects - Stone - Mountain Daughter Burial",
@@ -8781,7 +8806,8 @@
       2354,
       2356,
       2663,
-      12394
+      12394,
+      39696
     ],
     "uvType": "MODEL_XZ",
     "uvOrientation": 256,
@@ -9974,5 +10000,143 @@
     "uvType": "MODEL_YZ",
     "uvOrientation": 1536,
     "uvScale": 0.66
+  },
+  {
+    "description": "Motherload Trough",
+    "baseMaterial": "METALLIC_2_HIGHGLOSS",
+    "objectIds": [
+      3428,
+      26683,
+      26684,
+      26685,
+      26686
+    ],
+    "uvType": "MODEL_XY"
+  },
+  {
+    "description": "Motherload Mine - Cogs",
+    "baseMaterial": "METALLIC_2_HIGHGLOSS",
+    "objectIds": [
+      13589
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Blast Furnace",
+    "baseMaterial": "METALLIC_1_GLOSS",
+    "objectIds": [
+      9087,
+      9088,
+      9089,
+      9092,
+      9098,
+      9114,
+      9114,
+      9116,
+      9117,
+      9118,
+      9119,
+      9120,
+      9121,
+      9122,
+      9123,
+      9124,
+      9125
+    ]
+  },
+  {
+    "description": "Motherload Furnace",
+    "baseMaterial": "METALLIC_1_HIGHGLOSS",
+    "objectIds": [
+      26674
+    ],
+    "uvType": "MODEL_XZ_MIRROR_A",
+    "uvScale": 0.7
+  },
+  {
+    "description": "Objects - Stone - Giants Foundry - Moulds",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      44683
+    ]
+  },
+  {
+    "description": "Objects - Stone - Giants Foundry - Lavapool Rocks",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      44653,
+      44654,
+      44655,
+      44656,
+      44657,
+      44658,
+      44659,
+      44660,
+      44661,
+      44662
+    ],
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 512,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Giants Foundry Single row fences",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      44680
+    ],
+    "uvType": "MODEL_XY"
+  },
+  {
+    "description": "Giants Foundry Clamps",
+    "baseMaterial": "METALLIC_1_HIGHGLOSS",
+    "objectIds": [
+      44729
+    ],
+    "uvType": "MODEL_XZ_MIRROR_A",
+    "uvScale": 0.28
+  },
+  {
+    "description": "Objects - Stone - Giants Foundry - Lava Rocks",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      44766,
+      44767,
+      44768,
+      44769
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.58
+  },
+  {
+    "description": "Objects - Stone - Giants Foundry - Lava Rocks - Small",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      42494,
+      42495,
+      42496
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.8,
+    "uvOrientation": 128
+  },
+  {
+    "description": "Giants Anvil",
+    "baseMaterial": "METALLIC_1_GLOSS",
+    "objectIds": [
+      39724
+    ],
+    "uvType": "GEOMETRY",
+    "uvScale": 0.28
+  },
+  {
+    "description": "Giants Foundry - Volcano",
+    "baseMaterial": "DIRT_1",
+    "objectIds": [
+      29629,
+      29630
+    ],
+    "uvType": "GEOMETRY",
+    "uvScale": 0.28
   }
 ]
