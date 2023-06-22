@@ -110,6 +110,7 @@ import rs117.hd.utils.ResourcePath;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 
+import static net.runelite.api.Perspective.*;
 import static org.lwjgl.opencl.CL10.*;
 import static org.lwjgl.opencl.CL10GL.*;
 import static org.lwjgl.opengl.GL43C.*;
@@ -257,17 +258,17 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private int glUiProgram;
 	private int glShadowProgram;
 
-	private int vaoHandle;
-
 	private int interfaceTexture;
 	private int interfacePbo;
 
 	private int vaoUiHandle;
 	private int vboUiHandle;
 
+	private int vaoSceneHandle;
 	private int fboSceneHandle;
 	private int rboSceneHandle;
 
+	private int shadowMapResolution;
 	private int fboShadowMap;
 	private int texShadowMap;
 
@@ -538,7 +539,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 				updateCachedConfigs();
 				setupSyncMode();
-				initVao();
+				initVaos();
 				initBuffers();
 				initPrograms();
 				initShaderHotswapping();
@@ -605,7 +606,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				destroyBuffers();
 				destroyInterfaceTexture();
 				destroyPrograms();
-				destroyVao();
+				destroyVaos();
 				destroyAAFbo();
 				destroyShadowMapFbo();
 
@@ -849,6 +850,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				glUniform1i(uniShadowTextureArray, 1);
 				glUniformBlockBinding(glShadowProgram, uniShadowBlockMaterials, 1);
 				uniShadowElapsedTime = glGetUniformLocation(glShadowProgram, "elapsedTime");
+				// fall-through
 			case FAST:
 				uniShadowLightProjectionMatrix = glGetUniformLocation(glShadowProgram, "lightProjectionMatrix");
 		}
@@ -858,72 +860,49 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		initLightsUniformBuffer();
 	}
 
-	private void destroyPrograms()
-	{
+	private void destroyPrograms() {
 		if (glProgram != 0)
-		{
 			glDeleteProgram(glProgram);
-			glProgram = 0;
-		}
+		glProgram = 0;
 
 		if (glUiProgram != 0)
-		{
 			glDeleteProgram(glUiProgram);
-			glUiProgram = 0;
-		}
+		glUiProgram = 0;
 
 		if (glShadowProgram != 0)
-		{
 			glDeleteProgram(glShadowProgram);
-			glShadowProgram = 0;
-		}
+		glShadowProgram = 0;
 
-		if (computeMode == ComputeMode.OPENGL)
-		{
+		if (computeMode == ComputeMode.OPENGL) {
 			if (glLargeComputeProgram != 0)
-			{
 				glDeleteProgram(glLargeComputeProgram);
-				glLargeComputeProgram = 0;
-			}
+			glLargeComputeProgram = 0;
 
 			if (glSmallComputeProgram != 0)
-			{
 				glDeleteProgram(glSmallComputeProgram);
-				glSmallComputeProgram = 0;
-			}
+			glSmallComputeProgram = 0;
 
 			if (glUnorderedComputeProgram != 0)
-			{
 				glDeleteProgram(glUnorderedComputeProgram);
-				glUnorderedComputeProgram = 0;
-			}
-		}
-		else
-		{
+			glUnorderedComputeProgram = 0;
+		} else {
 			openCLManager.destroyPrograms();
 		}
 	}
 
-	public void recompilePrograms()
-	{
-		try
-		{
+	public void recompilePrograms() {
+		try {
 			destroyPrograms();
-			destroyVao();
-			initVao();
 			initPrograms();
-		}
-		catch (ShaderException | IOException ex)
-		{
+		} catch (ShaderException | IOException ex) {
 			log.error("Failed to recompile shader program:", ex);
 			stopPlugin();
 		}
 	}
 
-	private void initVao()
-	{
-		// Create VAO
-		vaoHandle = glGenVertexArrays();
+	private void initVaos() {
+		// Create scene VAO
+		vaoSceneHandle = glGenVertexArrays();
 
 		// Create UI VAO
 		vaoUiHandle = glGenVertexArrays();
@@ -931,17 +910,17 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		vboUiHandle = glGenBuffers();
 		glBindVertexArray(vaoUiHandle);
 
-		FloatBuffer vboUiBuf = BufferUtils.createFloatBuffer(5 * 4);
-		vboUiBuf.put(new float[]{
-			// positions     // texture coords
-			1f, 1f, 0.0f, 1.0f, 0f, // top right
-			1f, -1f, 0.0f, 1.0f, 1f, // bottom right
-			-1f, -1f, 0.0f, 0.0f, 1f, // bottom left
-			-1f, 1f, 0.0f, 0.0f, 0f  // top left
-		});
-		vboUiBuf.rewind();
+		FloatBuffer vboUiData = BufferUtils.createFloatBuffer(5 * 4)
+			.put(new float[] {
+				// vertices, UVs
+				1, 1, 0, 1, 0, // top right
+				1, -1, 0, 1, 1, // bottom right
+				-1, -1, 0, 0, 1, // bottom left
+				-1, 1, 0, 0, 0  // top left
+			})
+			.flip();
 		glBindBuffer(GL_ARRAY_BUFFER, vboUiHandle);
-		glBufferData(GL_ARRAY_BUFFER, vboUiBuf, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, vboUiData, GL_STATIC_DRAW);
 
 		// position attribute
 		glVertexAttribPointer(0, 3, GL_FLOAT, false, 5 * Float.BYTES, 0);
@@ -950,30 +929,36 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		// texture coord attribute
 		glVertexAttribPointer(1, 2, GL_FLOAT, false, 5 * Float.BYTES, 3 * Float.BYTES);
 		glEnableVertexAttribArray(1);
-
-		// unbind VBO
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
-	private void destroyVao()
-	{
-		if (vaoHandle != 0)
-		{
-			glDeleteVertexArrays(vaoHandle);
-			vaoHandle = 0;
-		}
+	private void updateSceneVao(GLBuffer vertexBuffer, GLBuffer uvBuffer, GLBuffer normalBuffer) {
+		glBindVertexArray(vaoSceneHandle);
+
+		glEnableVertexAttribArray(0);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer.glBufferId);
+		glVertexAttribIPointer(0, 4, GL_INT, 0, 0);
+
+		glEnableVertexAttribArray(1);
+		glBindBuffer(GL_ARRAY_BUFFER, uvBuffer.glBufferId);
+		glVertexAttribPointer(1, 4, GL_FLOAT, false, 0, 0);
+
+		glEnableVertexAttribArray(2);
+		glBindBuffer(GL_ARRAY_BUFFER, normalBuffer.glBufferId);
+		glVertexAttribPointer(2, 4, GL_FLOAT, false, 0, 0);
+	}
+
+	private void destroyVaos() {
+		if (vaoSceneHandle != 0)
+			glDeleteVertexArrays(vaoSceneHandle);
+		vaoSceneHandle = 0;
 
 		if (vboUiHandle != 0)
-		{
 			glDeleteBuffers(vboUiHandle);
-			vboUiHandle = 0;
-		}
+		vboUiHandle = 0;
 
 		if (vaoUiHandle != 0)
-		{
 			glDeleteVertexArrays(vaoUiHandle);
-			vaoUiHandle = 0;
-		}
+		vaoUiHandle = 0;
 	}
 
 	private void initBuffers()
@@ -1071,10 +1056,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		IntBuffer uniformBuf = BufferUtils.createIntBuffer(8 + 2048 * 4);
 		uniformBuf.put(new int[8]); // uniform block
 		final int[] pad = new int[2];
-		for (int i = 0; i < 2048; i++)
-		{
-			uniformBuf.put(Perspective.SINE[i]);
-			uniformBuf.put(Perspective.COSINE[i]);
+		for (int i = 0; i < 2048; i++) {
+			uniformBuf.put(SINE[i]);
+			uniformBuf.put(COSINE[i]);
 			uniformBuf.put(pad); // ivec2 alignment in std140 is 16 bytes
 		}
 		uniformBuf.flip();
@@ -1227,14 +1211,24 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			texShadowMap = glGenTextures();
 			glBindTexture(GL_TEXTURE_2D, texShadowMap);
 
-			int shadowRes = config.shadowResolution().getValue();
+			shadowMapResolution = config.shadowResolution().getValue();
 			int maxResolution = glGetInteger(GL_MAX_TEXTURE_SIZE);
-			if (maxResolution < shadowRes) {
-				log.info("Capping shadow resolution from {} to {}", shadowRes, maxResolution);
-				shadowRes = maxResolution;
+			if (maxResolution < shadowMapResolution) {
+				log.info("Capping shadow resolution from {} to {}", shadowMapResolution, maxResolution);
+				shadowMapResolution = maxResolution;
 			}
 
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, shadowRes, shadowRes, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
+			glTexImage2D(
+				GL_TEXTURE_2D,
+				0,
+				GL_DEPTH_COMPONENT24,
+				shadowMapResolution,
+				shadowMapResolution,
+				0,
+				GL_DEPTH_COMPONENT,
+				GL_FLOAT,
+				0
+			);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
@@ -1417,24 +1411,30 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		modelBufferLarge.clear();
 
 		// Output buffers
-		updateBuffer(hRenderBufferVertices,
+		updateBuffer(
+			hRenderBufferVertices,
 			GL_ARRAY_BUFFER,
 			renderBufferOffset * 16L, // each vertex is an ivec4, which is 16 bytes
 			GL_STREAM_DRAW,
-			CL_MEM_WRITE_ONLY);
-		updateBuffer(hRenderBufferUvs,
+			CL_MEM_WRITE_ONLY
+		);
+		updateBuffer(
+			hRenderBufferUvs,
 			GL_ARRAY_BUFFER,
 			renderBufferOffset * 16L, // each vertex is an ivec4, which is 16 bytes
 			GL_STREAM_DRAW,
-			CL_MEM_WRITE_ONLY);
-		updateBuffer(hRenderBufferNormals,
+			CL_MEM_WRITE_ONLY
+		);
+		updateBuffer(
+			hRenderBufferNormals,
 			GL_ARRAY_BUFFER,
 			renderBufferOffset * 16L, // each vertex is an ivec4, which is 16 bytes
 			GL_STREAM_DRAW,
-			CL_MEM_WRITE_ONLY);
+			CL_MEM_WRITE_ONLY
+		);
+		updateSceneVao(hRenderBufferVertices, hRenderBufferUvs, hRenderBufferNormals);
 
-		if (computeMode == ComputeMode.OPENCL)
-		{
+		if (computeMode == ComputeMode.OPENCL) {
 			// The docs for clEnqueueAcquireGLObjects say all pending GL operations must be completed before calling
 			// clEnqueueAcquireGLObjects, and recommends calling glFinish() as the only portable way to do that.
 			// However, no issues have been observed from not calling it, and so will leave disabled for now.
@@ -1494,9 +1494,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	{
 		if (paint.getBufferLen() > 0)
 		{
-			final int localX = tileX * Perspective.LOCAL_TILE_SIZE;
+			final int localX = tileX * LOCAL_TILE_SIZE;
 			final int localY = 0;
-			final int localZ = tileY * Perspective.LOCAL_TILE_SIZE;
+			final int localZ = tileY * LOCAL_TILE_SIZE;
 
 			GpuIntBuffer b = modelBufferUnordered;
 			b.ensureCapacity(16);
@@ -1557,9 +1557,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	{
 		if (model.getBufferLen() > 0)
 		{
-			final int localX = tileX * Perspective.LOCAL_TILE_SIZE;
+			final int localX = tileX * LOCAL_TILE_SIZE;
 			final int localY = 0;
-			final int localZ = tileY * Perspective.LOCAL_TILE_SIZE;
+			final int localZ = tileY * LOCAL_TILE_SIZE;
 
 			GpuIntBuffer b = modelBufferUnordered;
 			b.ensureCapacity(16);
@@ -1724,28 +1724,21 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			}
 
 			// Before reading the SSBOs written to from postDrawScene() we must insert a barrier
-			if (computeMode == ComputeMode.OPENCL)
-			{
+			if (computeMode == ComputeMode.OPENCL) {
 				openCLManager.finish();
-			}
-			else
-			{
+			} else {
 				glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
 			}
 
-			// Draw using the output buffer of the compute
-			int vertexBuffer = hRenderBufferVertices.glBufferId;
-			int uvBuffer = hRenderBufferUvs.glBufferId;
-			int normalBuffer = hRenderBufferNormals.glBufferId;
+			glBindVertexArray(vaoSceneHandle);
 
 			float[] lightProjectionMatrix = Mat4.identity();
 			float lightPitch = environmentManager.currentLightPitch;
 			float lightYaw = environmentManager.currentLightYaw;
 
-			if (configShadowsEnabled && fboShadowMap != 0 && environmentManager.currentDirectionalStrength > 0.0f)
-			{
-				// render shadow depth map
-				glViewport(0, 0, config.shadowResolution().getValue(), config.shadowResolution().getValue());
+			if (configShadowsEnabled && fboShadowMap != 0 && environmentManager.currentDirectionalStrength > 0) {
+				// Render to the shadow depth map
+				glViewport(0, 0, shadowMapResolution, shadowMapResolution);
 				glBindFramebuffer(GL_FRAMEBUFFER, fboShadowMap);
 				glClearDepthf(1);
 				glClear(GL_DEPTH_BUFFER_BIT);
@@ -1757,10 +1750,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				final int camY = camTarget[1];
 				final int camZ = camTarget[2];
 
-				final int drawDistanceSceneUnits = Math.min(config.shadowDistance().getValue(), getDrawDistance()) * Perspective.LOCAL_TILE_SIZE / 2;
-				final int east = Math.min(camX + drawDistanceSceneUnits, Perspective.LOCAL_TILE_SIZE * Perspective.SCENE_SIZE);
+				final int drawDistanceSceneUnits = Math.min(config.shadowDistance().getValue(), getDrawDistance()) * LOCAL_TILE_SIZE / 2;
+				final int east = Math.min(camX + drawDistanceSceneUnits, LOCAL_TILE_SIZE * SCENE_SIZE);
 				final int west = Math.max(camX - drawDistanceSceneUnits, 0);
-				final int north = Math.min(camY + drawDistanceSceneUnits, Perspective.LOCAL_TILE_SIZE * Perspective.SCENE_SIZE);
+				final int north = Math.min(camY + drawDistanceSceneUnits, LOCAL_TILE_SIZE * SCENE_SIZE);
 				final int south = Math.max(camY - drawDistanceSceneUnits, 0);
 				final int width = east - west;
 				final int height = north - south;
@@ -1785,17 +1778,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				glEnable(GL_CULL_FACE);
 				glEnable(GL_DEPTH_TEST);
 
-				// Draw buffers
-				glBindVertexArray(vaoHandle);
-
-				glEnableVertexAttribArray(0);
-				glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-				glVertexAttribIPointer(0, 4, GL_INT, 0, 0);
-
-				glEnableVertexAttribArray(1);
-				glBindBuffer(GL_ARRAY_BUFFER, uvBuffer);
-				glVertexAttribPointer(1, 4, GL_FLOAT, false, 0, 0);
-
+				// Draw with buffers bound to scene VAO
 				glDrawArrays(GL_TRIANGLES, 0, renderBufferOffset);
 
 				glDisable(GL_CULL_FACE);
@@ -1880,7 +1863,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 			glUniform4f(uniFogColor, fogColor[0], fogColor[1], fogColor[2], 1f);
 
-			glUniform1i(uniDrawDistance, drawDistance * Perspective.LOCAL_TILE_SIZE);
+			glUniform1i(uniDrawDistance, drawDistance * LOCAL_TILE_SIZE);
 			glUniform1f(uniColorBlindnessIntensity, config.colorBlindnessIntensity() / 100.f);
 
 			float[] waterColor = environmentManager.currentWaterColor;
@@ -1954,14 +1937,16 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 			double lightPitchRadians = Math.toRadians(lightPitch);
 			double lightYawRadians = Math.toRadians(lightYaw);
-			glUniform3f(uniLightDirection,
+			glUniform3f(
+				uniLightDirection,
 				(float) (Math.cos(lightPitchRadians) * -Math.sin(lightYawRadians)),
 				(float) -Math.sin(lightPitchRadians),
-				(float) (Math.cos(lightPitchRadians) * -Math.cos(lightYawRadians)));
+				(float) (Math.cos(lightPitchRadians) * -Math.cos(lightYawRadians))
+			);
 
 			// use a curve to calculate max bias value based on the density of the shadow map
-			float shadowPixelsPerTile = (float)config.shadowResolution().getValue() / (float)config.shadowDistance().getValue();
-			float maxBias = 26f * (float)Math.pow(0.925f, (0.4f * shadowPixelsPerTile - 10f)) + 13f;
+			float shadowPixelsPerTile = (float) shadowMapResolution / config.shadowDistance().getValue();
+			float maxBias = 26f * (float) Math.pow(0.925f, (0.4f * shadowPixelsPerTile - 10f)) + 13f;
 			glUniform1f(uniShadowMaxBias, maxBias / 10000f);
 
 			glUniform1i(uniShadowsEnabled, configShadowsEnabled ? 1 : 0);
@@ -1969,8 +1954,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			// Calculate projection matrix
 			float[] projectionMatrix = Mat4.scale(client.getScale(), client.getScale(), 1);
 			Mat4.mul(projectionMatrix, Mat4.projection(viewportWidth, viewportHeight, 50));
-			Mat4.mul(projectionMatrix, Mat4.rotateX((float) -(Math.PI - pitch * Perspective.UNIT)));
-			Mat4.mul(projectionMatrix, Mat4.rotateY((float) (yaw * Perspective.UNIT)));
+			Mat4.mul(projectionMatrix, Mat4.rotateX((float) -(Math.PI - pitch * UNIT)));
+			Mat4.mul(projectionMatrix, Mat4.rotateY((float) (yaw * UNIT)));
 			Mat4.mul(projectionMatrix, Mat4.translate(-client.getCameraX2(), -client.getCameraY2(), -client.getCameraZ2()));
 			glUniformMatrix4fv(uniProjectionMatrix, false, projectionMatrix);
 
@@ -1993,20 +1978,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			glEnable(GL_BLEND);
 			glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE);
 
-			// Draw buffers
-			glBindVertexArray(vaoHandle);
-
-			glEnableVertexAttribArray(0);
-			glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-			glVertexAttribIPointer(0, 4, GL_INT, 0, 0);
-
-			glEnableVertexAttribArray(1);
-			glBindBuffer(GL_ARRAY_BUFFER, uvBuffer);
-			glVertexAttribPointer(1, 4, GL_FLOAT, false, 0, 0);
-
-			glEnableVertexAttribArray(2);
-			glBindBuffer(GL_ARRAY_BUFFER, normalBuffer);
-			glVertexAttribPointer(2, 4, GL_FLOAT, false, 0, 0);
+			// Draw with buffers bound to scene VAO
+			glBindVertexArray(vaoSceneHandle);
 
 			glDrawArrays(GL_TRIANGLES, 0, renderBufferOffset);
 
@@ -2015,13 +1988,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 			glUseProgram(0);
 
-			if (aaEnabled)
-			{
+			if (aaEnabled) {
 				int width = lastStretchedCanvasWidth;
 				int height = lastStretchedCanvasHeight;
 
-				if (OSType.getOSType() != OSType.MacOS)
-				{
+				if (OSType.getOSType() != OSType.MacOS) {
 					final GraphicsConfiguration graphicsConfiguration = clientUI.getGraphicsConfiguration();
 					final AffineTransform transform = graphicsConfiguration.getDefaultTransform();
 
@@ -2270,8 +2241,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		configModelBatching = config.modelBatching();
 		configModelCaching = config.modelCaching();
 		configMaxDynamicLights = config.maxDynamicLights().getValue();
-		configShadowMode = config.shadowMode();
-		configShadowsEnabled = configShadowMode != ShadowMode.OFF;
 		configExpandShadowDraw = config.expandShadowDraw();
 	}
 
