@@ -24,16 +24,15 @@
  */
 package rs117.hd.data.materials;
 
-import lombok.NonNull;
-import lombok.Setter;
-import rs117.hd.HdPluginConfig;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import lombok.NonNull;
+import lombok.Setter;
+import rs117.hd.HdPluginConfig;
 
 public enum Material
 {
@@ -228,8 +227,8 @@ public enum Material
 		.setScroll(0, 1 / 0.7f)),
 	DIRT_1_N,
 	DIRT_1(p -> p
-			.setNormalMap(DIRT_1_N)
-			.setSpecular(0.5f, 35)),
+		.setNormalMap(DIRT_1_N)
+		.setSpecular(0.5f, 35)),
 	DIRT_2_N,
 	DIRT_2(p -> p
 		.setNormalMap(DIRT_2_N)
@@ -237,7 +236,7 @@ public enum Material
 	GRAVEL_N,
 	GRAVEL(p -> p
 		.setNormalMap(GRAVEL_N)
-		.setSpecular(0.4f,130)),
+		.setSpecular(0.4f, 130)),
 
 	DIRT_1_SHINY(DIRT_1, p -> p
 		.setSpecular(1.1f, 380)),

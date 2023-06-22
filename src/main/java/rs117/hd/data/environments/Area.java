@@ -24,12 +24,10 @@
  */
 package rs117.hd.data.environments;
 
-import lombok.Getter;
-import net.runelite.api.Constants;
-import net.runelite.api.coords.WorldPoint;
-import rs117.hd.utils.AABB;
-
 import java.util.Arrays;
+import lombok.Getter;
+import net.runelite.api.coords.*;
+import rs117.hd.utils.AABB;
 
 @Getter
 public enum Area
@@ -329,9 +327,8 @@ public enum Area
 	),
 
 	DWARVEN_MINE_DUNGEON(
-			new AABB(3071, 9855, 2985, 9690),
-			new AABB(2960, 9820, 2984, 9801)
-
+		new AABB(3071, 9855, 2985, 9690),
+		new AABB(2960, 9820, 2984, 9801)
 	),
 
 	MOTHERLODE_MINE(
