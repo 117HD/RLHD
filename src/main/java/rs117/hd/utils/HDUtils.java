@@ -28,13 +28,10 @@ import java.util.HashSet;
 import java.util.Random;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
-import net.runelite.api.Client;
-import net.runelite.api.Scene;
-import net.runelite.api.coords.LocalPoint;
-import net.runelite.api.coords.WorldPoint;
+import net.runelite.api.*;
+import net.runelite.api.coords.*;
 
-import static net.runelite.api.Constants.REGION_SIZE;
-import static net.runelite.api.Constants.SCENE_SIZE;
+import static net.runelite.api.Constants.*;
 
 @Slf4j
 @Singleton
@@ -306,8 +303,7 @@ public class HDUtils
 		return (x * lightDirModel[0] + y * lightDirModel[1] + z * lightDirModel[2]) / (float) Math.sqrt(length);
 	}
 
-	public static float dotLightDirectionTile(float x, float y, float z)
-	{
+	public static float dotLightDirectionTile(float x, float y, float z) {
 		// Tile normal vectors need to be normalized
 		float length = x * x + y * y + z * z;
 		if (length < EPSILON)
@@ -315,75 +311,70 @@ public class HDUtils
 		return (x * lightDirTile[0] + y * lightDirTile[1]) / (float) Math.sqrt(length);
 	}
 
-    public static float[] rgb(int r, int g, int b)
-    {
-        return new float[]{
-            srgbToLinear(r / 255f),
-            srgbToLinear(g / 255f),
-            srgbToLinear(b / 255f)
-        };
-    }
+	public static float[] rgb(int r, int g, int b) {
+		return new float[] {
+			srgbToLinear(r / 255f),
+			srgbToLinear(g / 255f),
+			srgbToLinear(b / 255f)
+		};
+	}
 
 	public static long ceilPow2(long x) {
 		return (long) Math.pow(2, Math.ceil(Math.log(x) / Math.log(2)));
 	}
 
-	public static int convertWallObjectOrientation(int orientation)
-	{
-		// east = 1, south = 2, west = 4, north = 8,
-		// southeast = 16, southwest = 32, northwest = 64, northeast = 128
+	public static int convertWallObjectOrientation(int orientation) {
+		// Note: this is still imperfect, since the model rotation of a wall object depends on more than just the config orientation,
+		// 		 i.e. extra rotation depending on wall type whatever. I'm not sure.
+		// Derived from config orientation {@link HDUtils#getBakedOrientation}
 		switch (orientation) {
-			case 1: // east
+			case 1: // east (config orientation = 0)
 				return 512;
-			case 2: // south
+			case 2: // south (config orientation = 1)
 				return 1024;
-			case 4: // west
+			case 4: // west (config orientation = 2)
 				return 1536;
-			case 8: // north
+			case 8: // north (config orientation = 3)
+			default:
 				return 0;
-			case 16: // south-east
+			case 16: // south-east (config orientation = 0)
 				return 768;
-			case 32: // south-west
+			case 32: // south-west (config orientation = 1)
 				return 1280;
-			case 64: // north-west
+			case 64: // north-west (config orientation = 2)
 				return 1792;
-			case 128: // north-east
+			case 128: // north-east (config orientation = 3)
 				return 256;
-			default:
-				return 0;
 		}
 	}
 
-	public static int extractConfigOrientation(int config)
-	{
+	// (gameObject.getConfig() >> 6) & 3, // 2-bit orientation
+	// (gameObject.getConfig() >> 8) & 1, // 1-bit interactType != 0 (supports items)
+	// (gameObject.getConfig() & 0x3F), // 6-bit object type? (10 seems to mean movement blocker)
+	// (gameObject.getConfig() >> 9) // should always be zero
+	public static int getBakedOrientation(int config) {
 		switch (config >> 6 & 3) {
-			case 0: // south
+			case 0: // Rotated 180 degrees
 				return 1024;
-			case 1: // west
+			case 1: // Rotated 90 degrees counter-clockwise
 				return 1536;
-			case 2: // north
-				return 0;
-			case 3: // east
-				return 512;
+			case 2: // Not rotated
 			default:
 				return 0;
+			case 3: // Rotated 90 degrees clockwise
+				return 512;
 		}
 	}
 
-	public static HashSet<Integer> getSceneRegionIds(Scene scene)
-	{
+	public static HashSet<Integer> getSceneRegionIds(Scene scene) {
 		HashSet<Integer> regionIds = new HashSet<>();
 
-		if (scene.isInstance())
-		{
+		if (scene.isInstance()) {
 			// If the center chunk is invalid, pick any valid chunk and hope for the best
 			int[][][] chunks = scene.getInstanceTemplateChunks();
-			for (int[][] plane : chunks)
-			{
-				for (int[] column : plane)
-				{
-					for (int chunk : column)
-					{
+			for (int[][] plane : chunks) {
+				for (int[] column : plane) {
+					for (int chunk : column) {
 						if (chunk == -1)
 							continue;
 

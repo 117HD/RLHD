@@ -15,17 +15,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.function.Function;
 import javax.annotation.Nonnull;
-import net.runelite.api.Client;
-import net.runelite.api.GameObject;
-import net.runelite.api.GroundObject;
-import net.runelite.api.KeyCode;
-import net.runelite.api.Point;
-import net.runelite.api.Scene;
-import net.runelite.api.SceneTileModel;
-import net.runelite.api.SceneTilePaint;
-import net.runelite.api.Tile;
-import net.runelite.api.coords.LocalPoint;
-import net.runelite.api.coords.WorldPoint;
+import net.runelite.api.*;
+import net.runelite.api.coords.*;
 import net.runelite.client.ui.FontManager;
 import net.runelite.client.ui.overlay.OverlayLayer;
 import net.runelite.client.ui.overlay.OverlayPosition;
@@ -38,11 +29,9 @@ import rs117.hd.data.materials.Underlay;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ModelHash;
 
-import static net.runelite.api.Constants.MAX_Z;
-import static net.runelite.api.Perspective.LOCAL_COORD_BITS;
-import static net.runelite.api.Perspective.LOCAL_TILE_SIZE;
+import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.SCENE_SIZE;
-import static net.runelite.api.Perspective.localToCanvas;
+import static net.runelite.api.Perspective.*;
 
 public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay
 {
@@ -252,42 +241,58 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay
 				if (a == b && b == c) {
 					lines.add(face + ": " + (a == 12345678 ? "HIDDEN" : a));
 				} else {
-					lines.add(face + ": [ " +
+					lines.add(
+						face + ": [ " +
 						(a == 12345678 ? "HIDDEN" : a) + ", " +
 						(b == 12345678 ? "HIDDEN" : b) + ", " +
-						(c == 12345678 ? "HIDDEN" : c) + " ]");
+						(c == 12345678 ? "HIDDEN" : c) +
+						" ]");
 				}
 			}
 		}
 
-		if (client.isKeyPressed(KeyCode.KC_SHIFT)) {
-			GroundObject groundObject = tile.getGroundObject();
-			if (groundObject != null) {
-				lines.add(String.format("Ground Object: ID=%d x=%d y=%d ori=%d",
-					groundObject.getId(),
-					ModelHash.getSceneX(groundObject.getHash()),
-					ModelHash.getSceneY(groundObject.getHash()),
-					HDUtils.extractConfigOrientation(groundObject.getConfig())));
-			}
+		GroundObject groundObject = tile.getGroundObject();
+		if (groundObject != null) {
+			lines.add(String.format(
+				"Ground Object: ID=%d x=%d y=%d ori=%d",
+				groundObject.getId(),
+				ModelHash.getSceneX(groundObject.getHash()),
+				ModelHash.getSceneY(groundObject.getHash()),
+				HDUtils.getBakedOrientation(groundObject.getConfig())
+			));
+		}
 
-			GameObject[] gameObjects = tile.getGameObjects();
-			if (gameObjects.length > 0) {
-				int counter = 0;
-				for (GameObject gameObject : gameObjects) {
-					if (gameObject == null)
-						continue;
-					counter++;
-					lines.add(String.format(
-						"ID %d: x=%d y=%d ori=%d",
-						gameObject.getId(),
-						ModelHash.getSceneX(gameObject.getHash()),
-						ModelHash.getSceneY(gameObject.getHash()),
-						gameObject.getModelOrientation()
-					));
-				}
-				if (counter > 0)
-					lines.add(lines.size() - counter, "Game objects: ");
+		WallObject wallObject = tile.getWallObject();
+		if (wallObject != null) {
+			lines.add(String.format(
+				"Wall Object: ID=%d x=%d y=%d bakedOri=%d oriA=%d oriB=%d",
+				wallObject.getId(),
+				ModelHash.getSceneX(wallObject.getHash()),
+				ModelHash.getSceneY(wallObject.getHash()),
+				HDUtils.getBakedOrientation(wallObject.getConfig()),
+				wallObject.getOrientationA(),
+				wallObject.getOrientationB()
+			));
+		}
+
+		GameObject[] gameObjects = tile.getGameObjects();
+		if (gameObjects.length > 0) {
+			int counter = 0;
+			for (GameObject gameObject : gameObjects) {
+				if (gameObject == null)
+					continue;
+				counter++;
+				lines.add(String.format(
+					"ID %d: x=%d y=%d bakedOri=%d ori=%d",
+					gameObject.getId(),
+					ModelHash.getSceneX(gameObject.getHash()),
+					ModelHash.getSceneY(gameObject.getHash()),
+					HDUtils.getBakedOrientation(gameObject.getConfig()),
+					gameObject.getModelOrientation()
+				));
 			}
+			if (counter > 0)
+				lines.add(lines.size() - counter, "Game objects: ");
 		}
 
 		int padding = 4;
