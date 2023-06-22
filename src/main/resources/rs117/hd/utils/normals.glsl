@@ -23,6 +23,9 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include NORMAL_MAPPING
+
+#if NORMAL_MAPPING
 vec3 sampleNormalMap(const Material material, const vec2 uv, const mat3 TBN) {
     if (material.normalMap == -1)
         return TBN[2];
@@ -38,3 +41,6 @@ vec3 sampleNormalMap(const Material material, const vec2 uv, const mat3 TBN) {
     // Assume the normal is already normalized
     return n;
 }
+#else
+#define sampleNormalMap(material, uv, TBN) TBN[2]
+#endif

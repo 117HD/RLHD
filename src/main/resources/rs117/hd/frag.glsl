@@ -170,26 +170,26 @@ void main() {
 
         // Set up tangent-space transformation matrix
         vec3 N = normalize(IN.normal);
-        mat3 TBN = mat3(TB[0], TB[1], N);
+        mat3 TBN = mat3(TB[0], TB[1], N * min(length(TB[0]), length(TB[1])));
 
         float selfShadowing = 0;
         vec3 fragPos = IN.position;
-        #if PARALLAX_MAPPING
-        mat3 invTBN = transpose(TBN);
-        vec3 tangentViewDir = invTBN * viewDir;
-        vec3 tangentLightDir = invTBN * lightDir;
+        #if PARALLAX_OCCLUSION_MAPPING
+        mat3 invTBN = inverse(TBN);
+        vec3 tsViewDir = invTBN * viewDir;
+        vec3 tsLightDir = invTBN * lightDir;
 
-        vec2 fragDelta = vec2(0);
+        vec3 fragDelta = vec3(0);
 
-        sampleDisplacementMap(material1, tangentViewDir, tangentLightDir, uv1, fragDelta, selfShadowing);
-        sampleDisplacementMap(material2, tangentViewDir, tangentLightDir, uv2, fragDelta, selfShadowing);
-        sampleDisplacementMap(material3, tangentViewDir, tangentLightDir, uv3, fragDelta, selfShadowing);
+        sampleDisplacementMap(material1, tsViewDir, tsLightDir, uv1, fragDelta, selfShadowing);
+        sampleDisplacementMap(material2, tsViewDir, tsLightDir, uv2, fragDelta, selfShadowing);
+        sampleDisplacementMap(material3, tsViewDir, tsLightDir, uv3, fragDelta, selfShadowing);
 
         // Average
         fragDelta /= 3;
         selfShadowing /= 3;
 
-        fragPos += TBN * vec3(fragDelta, 0);
+        fragPos += TBN * fragDelta;
         #endif
 
         // get vertex colors

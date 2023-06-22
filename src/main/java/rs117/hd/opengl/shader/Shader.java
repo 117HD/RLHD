@@ -63,7 +63,7 @@ public class Shader
 		return this;
 	}
 
-	public int compile(Template template) throws ShaderException
+	public int compile(Template template) throws ShaderException, IOException
 	{
 		int program = glCreateProgram();
 		int[] shaders = new int[units.size()];

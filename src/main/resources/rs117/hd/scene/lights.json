@@ -21488,6 +21488,24 @@
     ]
   },
   {
+    "description": "FEROX_BOUNTY_HUNTER_PORTAL",
+    "height": 180,
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 10,
+    "color": [
+      255,
+      50,
+      0
+    ],
+    "type": "PULSE",
+    "duration": 1541,
+    "range": 40,
+    "objectIds": [
+      47346
+    ]
+  },
+  {
     "description": "CHALLENGE_PORTAL",
     "height": 180,
     "alignment": "CENTER",
@@ -30496,6 +30514,24 @@
     "type": "STATIC",
     "duration": 1000,
     "range": 0.2
+  },
+  {
+    "description": "RED_STREET_LAMP",
+    "height": 273,
+    "alignment": "CENTER",
+    "radius": 330,
+    "strength": 5,
+    "color": [
+      252,
+      168,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 30,
+    "objectIds": [
+      3434
+    ]
   },
   {
     "description": "FALADOR_LAMP_HIGH",

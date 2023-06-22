@@ -23,7 +23,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include version_header
+#include VERSION_HEADER
 
 #include comp_common.glsl
 

@@ -114,6 +114,7 @@ public class Mat4
 			};
 	}
 
+	@SuppressWarnings("PointlessArithmeticExpression")
 	public static void mul(final float[] a, final float[] b)
 	{
 		final float b00 = b[0 + 0 * 4];

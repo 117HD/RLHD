@@ -1,15 +1,15 @@
 package rs117.hd.utils;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import lombok.extern.slf4j.Slf4j;
-
-import javax.annotation.Nullable;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.HashSet;
+import javax.annotation.Nullable;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class GsonUtils {
@@ -130,15 +130,24 @@ public class GsonUtils {
         for (int id : listToWrite)
         {
             String name = idNames.get(id);
-            if (name == null)
-            {
-                out.value(id);
-            }
-            else
-            {
-                out.value(name);
-            }
-        }
-        out.endArray();
-    }
+            if (name == null) {
+				out.value(id);
+			} else {
+				out.value(name);
+			}
+		}
+		out.endArray();
+	}
+
+	public static class IntegerSetAdapter extends TypeAdapter<HashSet<Integer>> {
+		@Override
+		public HashSet<Integer> read(JsonReader in) throws IOException {
+			return parseIDArray(in, null);
+		}
+
+		@Override
+		public void write(JsonWriter out, HashSet<Integer> value) throws IOException {
+			writeIDArray(out, value, null);
+		}
+	}
 }

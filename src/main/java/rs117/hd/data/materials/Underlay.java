@@ -82,7 +82,7 @@ public enum Underlay {
 	CATHERBY_BEACH_SAND(62, Area.CATHERBY, GroundMaterial.SAND),
 
 	// Al Kharid
-	MAGE_TRAINING_ARENA_FLOOR_PATTERN(56, Area.MAGE_TRAINING_ARENA, GroundMaterial.TILES_2x2_2_GLOSS, p -> p.blended(false)),
+	MAGE_TRAINING_ARENA_FLOOR_PATTERN(56, Area.MAGE_TRAINING_ARENA, GroundMaterial.TILES_2X2_2_GLOSS, p -> p.blended(false)),
 	PVP_ARENA_PITFLOOR_SAND_REMOVAL(GroundMaterial.DIRT, p -> p
 		.area(Area.PVP_ARENA)
 		.ids(66, 68)
@@ -119,6 +119,18 @@ public enum Underlay {
 	VER_SINHAZA_WATER_FIX(p -> p.ids(54).area(Area.VER_SINHAZA_WATER_FIX).waterType(WaterType.WATER).blended(false)),
 	TEMPLE_TREKKING_GRASS(p -> p.ids(53, 103).area(Area.TEMPLE_TREKKING_INSTANCES)),
 	MEIYERDITCH_MINES(111, Area.MEIYERDITCH_MINES, GroundMaterial.ROCKY_CAVE_FLOOR),
+	BARROWS_DIRT(GroundMaterial.DIRT, p -> p
+		.ids(96)
+		.area(Area.BARROWS)
+	),
+	BARROWS_CRYPT_FLOOR(GroundMaterial.EARTHEN_CAVE_FLOOR, p -> p
+		.ids(96, 103)
+		.area(Area.BARROWS_CRYPTS)
+	),
+	BARROWS_TUNNELS_FLOOR(GroundMaterial.EARTHEN_CAVE_FLOOR, p -> p
+		.ids(96, 103)
+		.area(Area.BARROWS_TUNNELS)
+	),
 
 	// Ardougne
 	SOUTH_OF_ZOO_FIX(61, Area.ARDOUGNE_SOUTH_OF_ZOO, GroundMaterial.OVERWORLD_GRASS_1),
@@ -202,7 +214,7 @@ public enum Underlay {
 	),
 
 	// Death's office
-	DEATHS_OFFICE_TILE(-110, Area.DEATHS_OFFICE, GroundMaterial.TILES_2x2_1_SEMIGLOSS),
+	DEATHS_OFFICE_TILE(-110, Area.DEATHS_OFFICE, GroundMaterial.TILES_2X2_1_SEMIGLOSS),
 
 	// Chambers of Xeric
 	COX_SNOW_1(16, Area.COX_SNOW, GroundMaterial.SNOW_1),

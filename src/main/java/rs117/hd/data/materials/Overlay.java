@@ -60,7 +60,7 @@ public enum Overlay {
 		.shiftLightness(3)
 		.blended(false)
 	),
-	WINTER_CANIFIS_BAR_FLOOR_FIX(85, Area.CANIFIS_BAR_FLOOR_FIX, GroundMaterial.VARIED_DIRT, p -> p
+	WINTER_CANIFIS_BAR_FLOOR_BLENDED(85, Area.CANIFIS_BAR_FLOOR_BLENDED, GroundMaterial.HD_WOOD_PLANKS_1, p -> p
 		.replaceWithIf(WINTER_DIRT, plugin -> plugin.configWinterTheme)
 	),
 
@@ -134,8 +134,8 @@ public enum Overlay {
 	VARROCK_HOUSE_1(171, Area.VARROCK_HOUSE_1, GroundMaterial.VARROCK_PATHS),
 	VARROCK_HOUSE_2(171, Area.VARROCK_HOUSE_2, GroundMaterial.VARROCK_PATHS),
 	VARROCK_BLUE_MOON_INN(171, Area.VARROCK_BLUE_MOON_INN, GroundMaterial.VARROCK_PATHS),
-	VARROCK_MUSEUM_FLOOR(56, Area.VARROCK_MUSEUM, GroundMaterial.TILES_2x2_2_GLOSS, p -> p.blended(false)),
-	VARROCK_MUSEUM_BASEMENT_FLOOR(56, Area.VARROCK_MUSEUM_BASEMENT, GroundMaterial.TILES_2x2_2_GLOSS, p -> p.blended(false)),
+	VARROCK_MUSEUM_FLOOR(56, Area.VARROCK_MUSEUM, GroundMaterial.TILES_2X2_2_GLOSS, p -> p.blended(false)),
+	VARROCK_MUSEUM_BASEMENT_FLOOR(56, Area.VARROCK_MUSEUM_BASEMENT, GroundMaterial.TILES_2X2_2_GLOSS, p -> p.blended(false)),
 	VARROCK_CHAMPIONS_GUILD(171, Area.VARROCK_CHAMPIONS_GUILD, GroundMaterial.VARROCK_PATHS),
 
 	// Varrock
@@ -153,8 +153,8 @@ public enum Overlay {
 	VARROCK_JULIETS_HOUSE_HARD_FLOORS(-85, Area.VARROCK_JULIETS_HOUSE, GroundMaterial.MARBLE_1_SEMIGLOSS, p -> p.blended(false)),
 	VARROCK_JULIETS_HOUSE_CARPET_RED(-93, Area.VARROCK_JULIETS_HOUSE, GroundMaterial.CARPET, p -> p.blended(false)),
 	VARROCK_JULIETS_HOUSE_CARPET_PINK(-96, Area.VARROCK_JULIETS_HOUSE, GroundMaterial.CARPET, p -> p.blended(false)),
-	VARROCK_JOLLY_BOAR_INN_KITCHEN_1(-84, Area.VARROCK_JOLLY_BOAR_INN, GroundMaterial.TILES_2x2_1_SEMIGLOSS, p -> p.blended(false)),
-	VARROCK_JOLLY_BOAR_INN_KITCHEN_2(-85, Area.VARROCK_JOLLY_BOAR_INN, GroundMaterial.TILES_2x2_1_SEMIGLOSS, p -> p.blended(false)),
+	VARROCK_JOLLY_BOAR_INN_KITCHEN_1(-84, Area.VARROCK_JOLLY_BOAR_INN, GroundMaterial.TILES_2X2_1_SEMIGLOSS, p -> p.blended(false)),
+	VARROCK_JOLLY_BOAR_INN_KITCHEN_2(-85, Area.VARROCK_JOLLY_BOAR_INN, GroundMaterial.TILES_2X2_1_SEMIGLOSS, p -> p.blended(false)),
 	VARROCK_CHURCH_CARPET(-83, Area.VARROCK_SARADOMIN_CHURCH, GroundMaterial.CARPET, p -> p.blended(false)),
 	VARROCK_CHURCH_FLOOR(-85, Area.VARROCK_SARADOMIN_CHURCH, GroundMaterial.FALADOR_PATHS, p -> p.blended(false)),
 	VARROCK_ANVILS(81, Area.VARROCK_ANVILS, GroundMaterial.DIRT),
@@ -162,9 +162,9 @@ public enum Overlay {
 	VARROCK_BUILDING_FLOOR_1(81, Area.VARROCK, GroundMaterial.TILE_SMALL, p -> p.blended(false)),
 	VARROCK_BUILDING_FLOOR_2(4, Area.VARROCK, GroundMaterial.WOOD_PLANKS_1, p -> p.blended(false)),
 	VARROCK_PLANT_PATCHES(89, Area.VARROCK, GroundMaterial.DIRT, p -> p.blended(false)),
-	VARROCK_EAST_BANK_CENTER(-83, Area.VARROCK_EAST_BANK_CENTER, GroundMaterial.TILES_2x2_1_SEMIGLOSS, p -> p.blended(false)),
-	VARROCK_EAST_BANK_OUTSIDE_1(-85, Area.VARROCK_EAST_BANK_OUTSIDE_1, GroundMaterial.TILES_2x2_1_SEMIGLOSS, p -> p.blended(false)),
-	VARROCK_EAST_BANK(-85, Area.VARROCK_EAST_BANK, GroundMaterial.TILES_2x2_1_SEMIGLOSS, p -> p.blended(false)),
+	VARROCK_EAST_BANK_CENTER(-83, Area.VARROCK_EAST_BANK_CENTER, GroundMaterial.TILES_2X2_1_SEMIGLOSS, p -> p.blended(false)),
+	VARROCK_EAST_BANK_OUTSIDE_1(-85, Area.VARROCK_EAST_BANK_OUTSIDE_1, GroundMaterial.TILES_2X2_1_SEMIGLOSS, p -> p.blended(false)),
+	VARROCK_EAST_BANK(-85, Area.VARROCK_EAST_BANK, GroundMaterial.TILES_2X2_1_SEMIGLOSS, p -> p.blended(false)),
 	VARROCK_CASTLE_PATH_FIXES_1(173, Area.VARROCK_CASTLE_DIRT_PATH_FIXES_1, GroundMaterial.DIRT, p -> p
 		.blended(false)
 		.shiftLightness(6)
@@ -192,18 +192,18 @@ public enum Overlay {
 	// Digsite
 	EXAMCENTRE_FLOOR_FIX_1(88, Area.DIGSITE_EXAM_CENTRE, GroundMaterial.WORN_TILES, p -> p.blended(false).shiftLightness(2)),
 	EXAMCENTRE_FLOOR_FIX_2(120, Area.DIGSITE_EXAM_CENTRE, GroundMaterial.WORN_TILES, p -> p.blended(false).shiftLightness(2)),
-	DIGSITE_DOCK(93, Area.DIGSITE_DOCK, GroundMaterial.TILES_2x2_1_GLOSS, p -> p.blended(false)),
+	DIGSITE_DOCK(93, Area.DIGSITE_DOCK, GroundMaterial.TILES_2X2_1_GLOSS, p -> p.blended(false)),
 
 	// Al Kharid
-	OVERRIDE_SOPHANEM_CHURCH_FLOOR_FIX_1(21, Area.SOPHANEM_FLOORS, GroundMaterial.TILES_2x2_2_SEMIGLOSS, p -> p.blended(false)),
-	OVERRIDE_SOPHANEM_CHURCH_FLOOR_FIX_2(26, Area.SOPHANEM_FLOORS, GroundMaterial.TILES_2x2_2_SEMIGLOSS, p -> p.blended(false)),
-	MAGE_TRAINING_ARENA_FLOOR(-122, Area.MAGE_TRAINING_ARENA, GroundMaterial.TILES_2x2_2_GLOSS, p -> p.blended(false)),
+	OVERRIDE_SOPHANEM_CHURCH_FLOOR_FIX_1(21, Area.SOPHANEM_FLOORS, GroundMaterial.TILES_2X2_2_SEMIGLOSS, p -> p.blended(false)),
+	OVERRIDE_SOPHANEM_CHURCH_FLOOR_FIX_2(26, Area.SOPHANEM_FLOORS, GroundMaterial.TILES_2X2_2_SEMIGLOSS, p -> p.blended(false)),
+	MAGE_TRAINING_ARENA_FLOOR(-122, Area.MAGE_TRAINING_ARENA, GroundMaterial.TILES_2X2_2_GLOSS, p -> p.blended(false)),
 	AL_KHARID_WELL_FIX(21, Area.AL_KHARID_WELL, GroundMaterial.DIRT, p -> p.blended(false)),
-	AL_KHARID_FLOOR_1(26, Area.AL_KHARID_BUILDINGS, GroundMaterial.TILES_2x2_2_SEMIGLOSS, p -> p
+	AL_KHARID_FLOOR_1(26, Area.AL_KHARID_BUILDINGS, GroundMaterial.TILES_2X2_2_SEMIGLOSS, p -> p
 		.blended(false)
 		.shiftSaturation(-1)
 		.shiftLightness(7)),
-	AL_KHARID_FLOOR_2(1, Area.AL_KHARID_BUILDINGS, GroundMaterial.TILES_2x2_2_SEMIGLOSS, p -> p.blended(false)),
+	AL_KHARID_FLOOR_2(1, Area.AL_KHARID_BUILDINGS, GroundMaterial.TILES_2X2_2_SEMIGLOSS, p -> p.blended(false)),
 	AL_KHARID_FLOOR_MARBLE_1(3, Area.AL_KHARID_BUILDINGS, GroundMaterial.MARBLE_2_SEMIGLOSS, p -> p.blended(false)),
 	AL_KHARID_FLOOR_MARBLE_2(4, Area.AL_KHARID_BUILDINGS, GroundMaterial.MARBLE_1_SEMIGLOSS, p -> p.blended(false)),
 	KHARID_PATHS_1(26, Area.KHARID_DESERT_REGION, GroundMaterial.DIRT, p -> p.saturation(2).hue(6).shiftLightness(5)),
@@ -256,7 +256,7 @@ public enum Overlay {
 	FALADOR_PARTROOM_STAIRS_FIX(37, Area.FALADOOR_PARTY_ROOM_STAIRS_FIX, GroundMaterial.NONE, p -> p
 		.blended(false)
 		.lightness(0)),
-	FALADOR_BUILDING_FLOOR_1(123, Area.FALADOR, GroundMaterial.TILES_2x2_1_GLOSS, p -> p.blended(false)),
+	FALADOR_BUILDING_FLOOR_1(123, Area.FALADOR, GroundMaterial.TILES_2X2_1_GLOSS, p -> p.blended(false)),
 	FALADOR_BUILDING_FLOOR_2(33, Area.FALADOR, GroundMaterial.MARBLE_1_GLOSS, p -> p.blended(false)),
 	FALADOR_BUILDING_FLOOR_3(77, Area.FALADOR, GroundMaterial.MARBLE_2_GLOSS, p -> p.blended(false)),
 	FALADOR_BUILDING_FLOOR_4(13, Area.FALADOR, GroundMaterial.NONE, p -> p.blended(false)),
@@ -346,7 +346,7 @@ public enum Overlay {
 	WARRIORS_GUILD_CARPET(86, Area.WARRIORS_GUILD, GroundMaterial.CARPET, p -> p.blended(false)),
 
 	// Taverley Underground
-	TAVERLEY_DUNGEON_BLACK_KNIGHT_KITCHEN(GroundMaterial.TILES_2x2_2_SEMIGLOSS, p -> p
+	TAVERLEY_DUNGEON_BLACK_KNIGHT_KITCHEN(GroundMaterial.TILES_2X2_2_SEMIGLOSS, p -> p
 		.area(Area.TAVERLEY_DUNGEON_BLACK_KNIGHT_KITCHEN)
 		.blended(false)
 		.ids(0, 2, 10)
@@ -471,7 +471,7 @@ public enum Overlay {
 	KHAZARD_BATTLEFIELD_COBBLE_OUTSIDE(11, Area.KHAZARD_BATTLEFIELD_COBBLE_OUTSIDE, GroundMaterial.VARROCK_PATHS, p -> p
 		.replaceWithIf(WINTER_JAGGED_STONE_TILE_LIGHT_2, plugin -> plugin.configWinterTheme)
 	),
-	KANDARIN_MONISTARY_WINGS_TEXTURE_13(13, Area.KANDARIN_MONISTARY_WINGS, GroundMaterial.TILES_2x2_2_SEMIGLOSS),
+	KANDARIN_MONISTARY_WINGS_TEXTURE_13(13, Area.KANDARIN_MONISTARY_WINGS, GroundMaterial.TILES_2X2_2_SEMIGLOSS),
 	KANDARIN_MONISTARY_FLOOR_TEXTURE(12, Area.KANDARIN_MONISTARY, GroundMaterial.VARROCK_PATHS, p -> p
 		.lightness(33)
 	),
@@ -479,7 +479,7 @@ public enum Overlay {
 	// Yanille
 	YANILLE_BANK_TILE_1(3, Area.YANILLE_BANK, GroundMaterial.MARBLE_1_GLOSS, p -> p.blended(false)),
 	YANILLE_BANK_TILE_2(4, Area.YANILLE_BANK, GroundMaterial.MARBLE_2_GLOSS, p -> p.blended(false)),
-	YANILLE_BANK_REAR_GROUND(2, Area.YANILLE_BANK, GroundMaterial.TILES_2x2_2_GLOSS, p -> p
+	YANILLE_BANK_REAR_GROUND(2, Area.YANILLE_BANK, GroundMaterial.TILES_2X2_2_GLOSS, p -> p
 		.blended(false)
 		.lightness(25)),
 	YANILLE_HUNTER_SHOP_FLOOR(
@@ -488,7 +488,7 @@ public enum Overlay {
 		GroundMaterial.WOOD_PLANKS_1,
 		p -> p.blended(false).lightness(35).shiftHue(3).shiftSaturation(-3)
 	),
-	YANILLE_MAGIC_GUILD_FLOOR_FIX(10, Area.YANILLE_MAGIC_GUILD_FLOORS, GroundMaterial.TILES_2x2_1_SEMIGLOSS, p -> p.lightness(30)),
+	YANILLE_MAGIC_GUILD_FLOOR_FIX(10, Area.YANILLE_MAGIC_GUILD_FLOORS, GroundMaterial.TILES_2X2_1_SEMIGLOSS, p -> p.lightness(30)),
 	GUTANOTH_CAVE(29, Area.GUTANOTH_CAVE, WaterType.SWAMP_WATER_FLAT),
 
 	// Watchtower
@@ -573,7 +573,7 @@ public enum Overlay {
 	MISTHALIN_MYSTERY_MANOR_WOOD(119, Area.MISTHALIN_MYSTERY_MANOR, GroundMaterial.WOOD_PLANKS_1, p -> p.blended(false)),
 
 	// Castle Wars
-	CASTLE_WARS_LOBBY_FLOOR(14, Area.CASTLE_WARS_LOBBY, GroundMaterial.TILES_2x2_2_GLOSS, p -> p
+	CASTLE_WARS_LOBBY_FLOOR(14, Area.CASTLE_WARS_LOBBY, GroundMaterial.TILES_2X2_2_GLOSS, p -> p
 		.saturation(0)
 		.shiftLightness(4)
 		.blended(false)),
@@ -586,7 +586,7 @@ public enum Overlay {
 		.saturation(1)
 		.shiftLightness(5)
 		.blended(false)),
-	CASTLE_WARS_ZAMORAK_FLOOR(15, Area.CASTLE_WARS, GroundMaterial.TILES_2x2_2_GLOSS, p -> p
+	CASTLE_WARS_ZAMORAK_FLOOR(15, Area.CASTLE_WARS, GroundMaterial.TILES_2X2_2_GLOSS, p -> p
 		.saturation(1)
 		.shiftLightness(5)
 		.blended(false)),
@@ -595,9 +595,10 @@ public enum Overlay {
 	COSMIC_ENTITYS_PLANE_ABYSS(37, Area.COSMIC_ENTITYS_PLANE, GroundMaterial.NONE, p -> p.lightness(0).blended(false)),
 
 	// Morytania
-	CANIFIS_FLOORS(85, Area.CANIFIS, GroundMaterial.VARIED_DIRT),
+	CANIFIS_FLOORS(85, Area.CANIFIS, GroundMaterial.HD_WOOD_PLANKS_1),
 
 	MORYTANIA_SLAYER_TOWER(102, Area.MORYTANIA_SLAYER_TOWER, GroundMaterial.VARROCK_PATHS),
+	MORYTANIA_FENKENSTRAINS_CASTLE(102, Area.FENKENSTRAINS_CASTLE, GroundMaterial.VARROCK_PATHS),
 	ABANDONED_MINE_ROCK(11, Area.MORYTANIA, GroundMaterial.DIRT),
 	TRUE_BLOOD_ALTAR_BLOOD(72, Area.TRUE_BLOOD_ALTAR, WaterType.BLOOD),
 
@@ -740,7 +741,6 @@ public enum Overlay {
 		.blended(true)),
 	KELDAGRIM_PATHS(117, GroundMaterial.FALADOR_PATHS),
 
-
 	// Default overlays
 
 	OVERLAY_WATER(WaterType.WATER, p -> p.ids(-128, -105, -98, 6, 41, 104, 196)),
@@ -765,7 +765,7 @@ public enum Overlay {
 	OVERLAY_SNOW(GroundMaterial.SNOW_2, p -> p.ids(30, 33)),
 	OVERLAY_VARIED_DIRT(GroundMaterial.VARIED_DIRT, p -> p.ids(49, 83, 91)),
 	OVERLAY_SAND_BRICK(GroundMaterial.SAND_BRICK, p -> p.ids(-49, 84)),
-	OVERLAY_N122(-122, GroundMaterial.TILES_2x2_2_GLOSS),
+	OVERLAY_N122(-122, GroundMaterial.TILES_2X2_2_GLOSS),
 	OVERLAY_N119(-119, GroundMaterial.FALADOR_PATHS),
 	OVERLAY_N93(-93, GroundMaterial.CARPET),
 	OVERLAY_N82(-82, GroundMaterial.CLEAN_TILE),
@@ -778,9 +778,10 @@ public enum Overlay {
 	OVERLAY_32(32, GroundMaterial.CONCRETE),
 	OVERLAY_90(90, GroundMaterial.DIRT), // Known locations: 90 = Dark Wizards Tower; Random shading in the overworld
 	OVERLAY_DIRT_PATH(GroundMaterial.VARIED_DIRT, p -> p
-		.ids(36, 80, 131)), // 36 = Corsair Cove, 80 = Mythics Guild, 131 = Burgh de Rott
+		.ids(36, 80, 85, 131)), // 36 = Corsair Cove, 80 = Mythics Guild, 85 = Slayer Tower, 131 = Burgh de Rott
 	OVERWORLD_GRUNGE(GroundMaterial.GRUNGE, p -> p.ids(48, 185)),
 	OVERLAY_120(GroundMaterial.GRUNGE, p -> p.ids(120)),
+	OVERLAY_SKULLS(261, GroundMaterial.SKULL_OBELISK),
 
 	NONE(GroundMaterial.DIRT, p -> {});
 

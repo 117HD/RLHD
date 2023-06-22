@@ -6,9 +6,8 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import net.runelite.api.Client;
-import net.runelite.api.GameState;
-import net.runelite.api.coords.WorldPoint;
+import net.runelite.api.*;
+import net.runelite.api.coords.*;
 import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
 import rs117.hd.model.ModelPusher;
@@ -78,12 +77,14 @@ public class ModelOverrideManager {
 
         if (Props.DEVELOPMENT && old != null) {
             if (entry.hideInAreas.length > 0) {
-                log.warn("Replacing ID {} from '{}' with hideInAreas-override '{}'. This is likely a mistake...",
-                    ModelHash.getIdOrIndex(uuid), old.description, entry.description);
-            } else if (old.hideInAreas.length == 0) {
-                log.warn("Replacing ID {} from '{}' with '{}'. The first-mentioned override should be removed.",
-                    ModelHash.getIdOrIndex(uuid), old.description, entry.description);
-            }
+				System.err.printf("Replacing ID %d from '%s' with hideInAreas-override '%s'. This is likely a mistake...\n",
+					ModelHash.getIdOrIndex(uuid), old.description, entry.description
+				);
+			} else if (old.hideInAreas.length == 0) {
+				System.err.printf("Replacing ID %d from '%s' with '%s'. The first-mentioned override should be removed.\n",
+					ModelHash.getIdOrIndex(uuid), old.description, entry.description
+				);
+			}
         }
     }
 
