@@ -780,6 +780,7 @@ public enum Overlay {
 		.ids(36, 80, 85, 131)), // 36 = Corsair Cove, 80 = Mythics Guild, 85 = Slayer Tower, 131 = Burgh de Rott
 	OVERWORLD_GRUNGE(GroundMaterial.GRUNGE, p -> p.ids(48, 185)),
 	OVERLAY_120(GroundMaterial.GRUNGE, p -> p.ids(120)),
+	OVERLAY_SKULLS(261, GroundMaterial.SKULL_OBELISK),
 
 	NONE(GroundMaterial.DIRT, p -> {});
 
