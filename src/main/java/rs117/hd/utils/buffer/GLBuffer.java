@@ -24,17 +24,9 @@
  */
 package rs117.hd.utils.buffer;
 
-import org.jocl.Pointer;
-import org.jocl.cl_mem;
-
 public class GLBuffer
 {
-	public int glBufferId = 0;
+	public int glBufferId;
+	public long clBuffer;
 	public long size = -1;
-	public cl_mem cl_mem;
-
-	public Pointer ptr()
-	{
-		return cl_mem != null ? Pointer.to(cl_mem) : null;
-	}
 }

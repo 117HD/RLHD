@@ -177,7 +177,7 @@ public class FileWatcher
 
 	private static void watchRecursively(Path path) {
 		try {
-			Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
+			Files.walkFileTree(path, new SimpleFileVisitor<>() {
 				@Override
 				public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
 					WatchKey key = dir.register(watchService, eventKinds);

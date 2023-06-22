@@ -1256,6 +1256,7 @@
     "baseMaterial": "BARK",
     "objectIds": [
       1282,
+      1283,
       1284,
       1285,
       1286,
@@ -1316,6 +1317,14 @@
       4809,
       4810,
       4811,
+      4985,
+      4986,
+      4987,
+      4988,
+      5210,
+      5211,
+      5212,
+      5213,
       5335,
       5336,
       5337,
@@ -3318,6 +3327,8 @@
     "description": "PHASMATYS_DOCKS",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
+      5159,
+      5160,
       5238,
       5239,
       5455,
@@ -4065,6 +4076,8 @@
       18000,
       18001,
       18002,
+      24351,
+      24352,
       25606,
       25663,
       25844,
@@ -4159,6 +4172,13 @@
       203,
       204,
       7432
+    ]
+  },
+  {
+    "description": "Candlestick Holder",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      1897
     ]
   },
   {
@@ -4648,6 +4668,11 @@
       24058,
       24123,
       24124,
+      24363,
+      24366,
+      24367,
+      24368,
+      24369,
       24565,
       24566,
       24567,
@@ -4799,9 +4824,10 @@
     "uvType": "MODEL_XZ"
   },
   {
-    "description": "Grunge-Like Object - Tiny",
+    "description": "Rock-Like Object - Rubble - Tiny",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
+      5204,
       24023,
       25657
     ],
@@ -4810,9 +4836,11 @@
     "uvOrientation": 1024
   },
   {
-    "description": "Grunge-Like Object - Small",
+    "description": "Rock-Like Object - Rubble - Small",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
+      5203,
+      5205,
       24022,
       24024,
       25656,
@@ -5072,6 +5100,7 @@
       5009,
       5035,
       5037,
+      5308,
       5604,
       5605,
       5606,
@@ -5146,8 +5175,6 @@
       23085,
       23086,
       23087,
-      24147,
-      24148,
       26715,
       26716,
       27984,
@@ -5735,6 +5762,8 @@
       17906,
       17907,
       17908,
+      20367,
+      24344,
       20367,
       25655,
       25660,
@@ -6428,9 +6457,20 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       20351,
-      23066
+      23066,
+      24360
     ],
     "uvType": "MODEL_XZ",
+    "flatNormals": true
+  },
+  {
+    "description": "Objects - Table - Single - Wooden – Plank - Generic - Rotated",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      12734
+    ],
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 512,
     "flatNormals": true
   },
   {
@@ -6959,7 +6999,8 @@
       1088,
       10491,
       12885,
-      17146
+      17146,
+      24335
     ],
     "uvType": "MODEL_XZ",
     "uvOrientation": 512,
@@ -9337,6 +9378,15 @@
     ]
   },
   {
+    "description": "Morytania - Giant Tree",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      4048,
+      4049,
+      4050
+    ]
+  },
+  {
     "description": "Morytania - Tall Grass",
     "baseMaterial": "PLANT_GRUNGE_1",
     "objectIds": [
@@ -9524,6 +9574,7 @@
     "description": "Rocks - Medium",
     "baseMaterial": "ROCK_1",
     "objectIds": [
+      5309,
       24143,
       24144,
       24145
@@ -9629,7 +9680,90 @@
     "description": "Stone Wedge Stairs",
     "baseMaterial": "ROCK_2",
     "objectIds": [
-      1862
+      1862,
+      2159,
+      5189
     ]
+  },
+  {
+    "description": "Objects - Metallic - Vat",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      1028,
+      1029
+    ]
+  },
+  {
+    "description": "Objects - Metallic - Scuttle",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      24321
+    ]
+  },
+  {
+    "description": "Morytania - Walls - Metallic - Fence",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "objectIds": [
+      3457,
+      3458,
+      3459
+    ],
+    "uvType": "MODEL_XY",
+    "uvOrientation": 256,
+    "uvScale": 1.2
+  },
+  {
+    "description": "Morytania - Walls - Metallic - Frankenstrains Gate",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      5172,
+      5173
+    ],
+    "uvType": "MODEL_XY",
+    "uvOrientation": 256,
+    "uvScale": 0.7
+  },
+  {
+    "description": "Morytania - Objects - Metallic - Suit of Armor",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      1900
+    ]
+  },
+  {
+    "description": "Wooden Wedge Stairs",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      24361
+    ]
+  },
+  {
+    "description": "Morytania - Frankenstrains Castle - Walls - Brick Stone",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      5190,
+      5191,
+      5192,
+      5194,
+      5195,
+      5196,
+      5197,
+      5200,
+      5201
+    ],
+    "uvType": "MODEL_XY",
+    "uvOrientation": 1536,
+    "uvScale": 0.66
+  },
+  {
+    "description": "Morytania - Frankenstrains Castle - Walls - Brick Stone Rubble",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      5198,
+      5199
+    ],
+    "uvType": "MODEL_YZ",
+    "uvOrientation": 1536,
+    "uvScale": 0.66
   }
 ]
