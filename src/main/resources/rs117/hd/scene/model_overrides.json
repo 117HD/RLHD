@@ -7772,6 +7772,11 @@
     "forceOverride": true
   },
   {
+    "description": "POH basement floor tile",
+    "objectIds": [ 13068 ],
+    "castShadows": false
+  },
+  {
     "description": "Circular ground portals near runic altars",
     "objectIds": [
       34749,
