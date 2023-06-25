@@ -91,7 +91,7 @@ vec2 worldUvs(float scale) {
 #include utils/misc.glsl
 #include utils/color_blindness.glsl
 #include utils/caustics.glsl
-#include utils/color_conversion.glsl
+#include utils/color_utils.glsl
 #include utils/normals.glsl
 #include utils/specular.glsl
 #include utils/displacement.glsl
@@ -204,9 +204,9 @@ void main() {
             IN.texBlend[2] * baseColor3;
 
         baseColor.rgb = linearToSrgb(baseColor.rgb);
-        baseColor.rgb = rgbToHsv(baseColor.rgb);
+        baseColor.rgb = srgbToHsv(baseColor.rgb);
         baseColor.b = floor(baseColor.b * 127) / 127;
-        baseColor.rgb = hsvToRgb(baseColor.rgb);
+        baseColor.rgb = hsvToSrgb(baseColor.rgb);
         baseColor.rgb = srgbToLinear(baseColor.rgb);
 
         baseColor1 = baseColor2 = baseColor3 = baseColor;
@@ -489,7 +489,7 @@ void main() {
 
 
     outputColor.rgb = clamp(outputColor.rgb, 0, 1);
-    vec3 hsv = rgbToHsv(outputColor.rgb);
+    vec3 hsv = srgbToHsv(outputColor.rgb);
 
     // Apply saturation setting
     hsv.y *= saturation;
@@ -501,7 +501,7 @@ void main() {
         hsv.z = 0.5 - ((0.5 - hsv.z) * contrast);
     }
 
-    outputColor.rgb = hsvToRgb(hsv);
+    outputColor.rgb = hsvToSrgb(hsv);
     outputColor.rgb = colorBlindnessCompensation(outputColor.rgb);
 
     // apply fog

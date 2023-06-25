@@ -27,7 +27,7 @@ package rs117.hd.data.environments;
 import java.awt.Color;
 import lombok.Getter;
 
-import static rs117.hd.utils.HDUtils.rgb;
+import static rs117.hd.utils.ColorUtils.rgb;
 
 @Getter
 public enum Environment

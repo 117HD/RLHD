@@ -105,6 +105,7 @@ import rs117.hd.scene.TimeOfDay;
 import rs117.hd.scene.lights.SceneLight;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.scene.model_overrides.ObjectType;
+import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.DeveloperTools;
 import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.HDUtils;
@@ -1883,9 +1884,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 			// Clear scene
 			for (int i = 0; i < fogColor.length; i++)
-			{
-				fogColor[i] = HDUtils.linearToSrgb(fogColor[i]);
-			}
+				fogColor[i] = ColorUtils.linearToSrgb(fogColor[i]);
 			glClearColor(fogColor[0], fogColor[1], fogColor[2], 1f);
 			glClear(GL_COLOR_BUFFER_BIT);
 
@@ -1917,17 +1916,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			float[] waterColorMid = new Color(Color.HSBtoRGB(waterColorHSB[0], waterColorHSB[1], waterColorHSB[2] * midBrightnessMultiplier)).getRGBColorComponents(null);
 			float[] waterColorDark = new Color(Color.HSBtoRGB(waterColorHSB[0], waterColorHSB[1], waterColorHSB[2] * darkBrightnessMultiplier)).getRGBColorComponents(null);
 			for (int i = 0; i < waterColorLight.length; i++)
-			{
-				waterColorLight[i] = HDUtils.linearToSrgb(waterColorLight[i]);
-			}
+				waterColorLight[i] = ColorUtils.linearToSrgb(waterColorLight[i]);
 			for (int i = 0; i < waterColorMid.length; i++)
-			{
-				waterColorMid[i] = HDUtils.linearToSrgb(waterColorMid[i]);
-			}
+				waterColorMid[i] = ColorUtils.linearToSrgb(waterColorMid[i]);
 			for (int i = 0; i < waterColorDark.length; i++)
-			{
-				waterColorDark[i] = HDUtils.linearToSrgb(waterColorDark[i]);
-			}
+				waterColorDark[i] = ColorUtils.linearToSrgb(waterColorDark[i]);
 			glUniform3f(uniWaterColorLight, waterColorLight[0], waterColorLight[1], waterColorLight[2]);
 			glUniform3f(uniWaterColorMid, waterColorMid[0], waterColorMid[1], waterColorMid[2]);
 			glUniform3f(uniWaterColorDark, waterColorDark[0], waterColorDark[1], waterColorDark[2]);

@@ -30,6 +30,7 @@ import lombok.Getter;
 @Getter
 public enum GroundMaterial {
 	NONE(Material.NONE),
+	SKULL_OBELISK(Material.SKULL_OBELISK),
 	TRANSPARENT(Material.TRANSPARENT),
 	GRASS_1(Material.GRASS_1, Material.GRASS_2, Material.GRASS_3),
 	OVERWORLD_GRASS_1(Material.GRASS_1, Material.GRASS_2, Material.GRASS_3),

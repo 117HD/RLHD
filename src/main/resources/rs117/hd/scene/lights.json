@@ -21544,6 +21544,24 @@
     ]
   },
   {
+    "description": "FEROX_BOUNTY_HUNTER_PORTAL",
+    "height": 180,
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 10,
+    "color": [
+      255,
+      50,
+      0
+    ],
+    "type": "PULSE",
+    "duration": 1541,
+    "range": 40,
+    "objectIds": [
+      47346
+    ]
+  },
+  {
     "description": "CHALLENGE_PORTAL",
     "height": 180,
     "alignment": "CENTER",
@@ -30644,6 +30662,62 @@
     "range": 30,
     "objectIds": [
       3434
+    ]
+  },
+  {
+    "description": "FALADOR_LAMP_HIGH",
+    "height": 190,
+    "alignment": "CENTER",
+    "radius": 290,
+    "strength": 8.5,
+    "color": [
+      202,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 24,
+    "objectIds": [
+      24172
+    ]
+  },
+  {
+    "description": "Giants Foundry - Lava Big",
+    "plane": 0,
+    "height": 52,
+    "alignment": "CENTER",
+    "radius": 350,
+    "strength": 10,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "PULSE",
+    "duration": 3000,
+    "range": 10,
+    "objectIds": [
+      29630
+    ]
+  },
+  {
+    "description": "Giants Foundry Lava - Small",
+    "plane": 0,
+    "height": 48,
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 10,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "PULSE",
+    "duration": 3000,
+    "range": 10,
+    "objectIds": [
+      29629
     ]
   }
 ]

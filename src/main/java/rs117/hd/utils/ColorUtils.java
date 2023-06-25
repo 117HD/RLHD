@@ -80,9 +80,166 @@ public class ColorUtils
 		return XYZ;
 	}
 
-	public static void mat3MulVec3(float[] out, float[] m, float[] v) {
+	private static void mat3MulVec3(float[] out, float[] m, float[] v) {
 		out[0] = m[0] * v[0] + m[1] * v[1] + m[2] * v[2];
 		out[1] = m[3] * v[0] + m[4] * v[1] + m[5] * v[2];
 		out[2] = m[6] * v[0] + m[7] * v[1] + m[8] * v[2];
+	}
+
+	// Conversion functions to and from sRGB and linear color space.
+	// The implementation is based on the sRGB EOTF given in the Khronos Data Format Specification.
+	// Source: https://web.archive.org/web/20220808015852/https://registry.khronos.org/DataFormat/specs/1.3/dataformat.1.3.pdf
+	// Page number 130 (146 in the PDF)
+	public static float linearToSrgb(float c) {
+		return c <= 0.0031308 ?
+			c * 12.92f :
+			(float) (1.055 * Math.pow(c, 1 / 2.4) - 0.055);
+	}
+
+	public static float srgbToLinear(float c) {
+		return c <= 0.04045f ?
+			c / 12.92f :
+			(float) Math.pow((c + 0.055) / 1.055, 2.4);
+	}
+
+	public static float[] linearToSrgb(float[] c) {
+		float[] result = new float[c.length];
+		for (int i = 0; i < c.length; i++)
+			result[i] = linearToSrgb(c[i]);
+		return result;
+	}
+
+	public static float[] srgbToLinear(float[] c) {
+		float[] result = new float[c.length];
+		for (int i = 0; i < c.length; i++)
+			result[i] = srgbToLinear(c[i]);
+		return result;
+	}
+
+	/**
+	 * Convert sRGB in the range 0-1 from sRGB to HSL in the range 0-1.
+	 *
+	 * @param srgb float[3]
+	 * @return hsl float[3]
+	 * @link <a href="https://web.archive.org/web/20230619214343/https://en.wikipedia.org/wiki/HSL_and_HSV#Color_conversion_formulae">Wikipedia: HSL and HSV</a>
+	 */
+	public static float[] srgbToHsl(float[] srgb) {
+		float V = Math.max(Math.max(srgb[0], srgb[1]), srgb[2]);
+		float X_min = Math.min(Math.min(srgb[0], srgb[1]), srgb[2]);
+		float C = V - X_min;
+
+		float H;
+		if (V == srgb[0]) {
+			H = ((srgb[1] - srgb[2]) / C) % 6f;
+		} else if (V == srgb[1]) {
+			H = (srgb[2] - srgb[0]) / C + 2;
+		} else {
+			H = (srgb[0] - srgb[1]) / C + 4;
+		}
+
+		float L = (V + X_min) / 2;
+		float S_L = L % 1 == 0 ? 0 : C / (1 - Math.abs(2 * L - 1));
+		return new float[] { H / 6, S_L, L };
+	}
+
+	/**
+	 * Convert HSL in the range 0-1 to sRGB in the range 0-1.
+	 *
+	 * @param hsl float[3]
+	 * @return srgb float[3]
+	 * @link <a href="https://web.archive.org/web/20230619214343/https://en.wikipedia.org/wiki/HSL_and_HSV#Color_conversion_formulae">Wikipedia: HSL and HSV</a>
+	 */
+	public static float[] hslToSrgb(float[] hsl) {
+		float C = hsl[2] % 1 == 0 ? 0 : hsl[1] * (1 - Math.abs(2 * hsl[2] - 1));
+		float H_prime = hsl[0] * 6;
+		float X = C * (1 - Math.abs((H_prime % 2f) - 1));
+		float m = hsl[2] - C / 2;
+		float x = C + m;
+		float y = X + m;
+
+		if (H_prime < 1)
+			return new float[] { x, y, m };
+		if (H_prime < 2)
+			return new float[] { y, x, m };
+		if (H_prime < 3)
+			return new float[] { m, x, y };
+		if (H_prime < 4)
+			return new float[] { m, y, x };
+		if (H_prime < 5)
+			return new float[] { y, m, x };
+		if (H_prime < 6)
+			return new float[] { x, m, y };
+		return new float[] { hsl[2], hsl[2], hsl[2] };
+	}
+
+	public static float[] hslToHsv(float[] hsl) {
+		float v = hsl[2] + hsl[1] * Math.min(hsl[2], 1 - hsl[2]);
+		return new float[] { hsl[0], v == 0 ? 0 : 2 * (1 - hsl[2] / v), v };
+	}
+
+	public static float[] hsvToHsl(float[] hsv) {
+		float l = hsv[2] * (1 - hsv[1] / 2);
+		return new float[] { hsv[0], l % 1 == 0 ? 0 : (hsv[2] - l) / Math.min(l, 1 - l), l };
+	}
+
+	/**
+	 * Convert sRGB in the range 0-1 from sRGB to HSV in the range 0-1.
+	 *
+	 * @param srgb float[3]
+	 * @return hsv float[3]
+	 * @link <a href="https://web.archive.org/web/20230619214343/https://en.wikipedia.org/wiki/HSL_and_HSV#Color_conversion_formulae">Wikipedia: HSL and HSV</a>
+	 */
+	public static float[] srgbToHsv(float[] srgb) {
+		return hslToHsv(srgbToHsl(srgb));
+	}
+
+	/**
+	 * Convert HSV in the range 0-1 to sRGB in the range 0-1.
+	 *
+	 * @param hsv float[3]
+	 * @return srgb float[3]
+	 * @link <a href="https://web.archive.org/web/20230619214343/https://en.wikipedia.org/wiki/HSL_and_HSV#Color_conversion_formulae">Wikipedia: HSL and HSV</a>
+	 */
+	public static float[] hsvToSrgb(float[] hsv) {
+		return hslToSrgb(hsvToHsl(hsv));
+	}
+
+	/**
+	 * Convert red, green and blue in the range 0-255 from sRGB to linear RGB in the range 0-1.
+	 *
+	 * @param r red color
+	 * @param g green color
+	 * @param b blue color
+	 * @return float[3] linear rgb values from 0-1
+	 */
+	public static float[] rgb(int r, int g, int b) {
+		return new float[] {
+			srgbToLinear(r / 255f),
+			srgbToLinear(g / 255f),
+			srgbToLinear(b / 255f)
+		};
+	}
+
+	public static int packHsl(float[] hsl) {
+		int H = (int) ((hsl[0] - .0078125f) * (0x3F + 1));
+		int S = (int) ((hsl[1] - .0625f) * (0x7 + 1));
+		int L = (int) (hsl[2] * (0x7F + 1));
+		return H << 10 | S << 7 | L;
+	}
+
+	public static float[] unpackHsl(int hsl) {
+		// 6-bit hue | 3-bit saturation | 7-bit lightness
+		float H = (hsl >> 10 & 0x3F) / (0x3F + 1f) + .0078125f;
+		float S = (hsl >> 7 & 0x7) / (0x7 + 1f) + .0625f;
+		float L = (hsl & 0x7F) / (0x7F + 1f);
+		return new float[] { H, S, L };
+	}
+
+	public static int srgbToPackedHsl(float[] srgb) {
+		return packHsl(srgbToHsl(srgb));
+	}
+
+	public static float[] packedHslToSrgb(int hsl) {
+		return hslToSrgb(unpackHsl(hsl));
 	}
 }

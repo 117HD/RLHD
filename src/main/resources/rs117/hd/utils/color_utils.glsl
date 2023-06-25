@@ -1,3 +1,4 @@
+#pragma once
 /*
  * Color utility functions
  * Written in 2023 by Hooder <ahooder@protonmail.com>
@@ -73,4 +74,123 @@ vec3 colorTemperatureToLinearRgb(float kelvin) {
     float m = max(linearRgb.x, max(linearRgb.y, linearRgb.z));
     linearRgb = linearRgb / m;
     return linearRgb;
+}
+
+// Conversion functions to and from sRGB and linear color space.
+// The implementation is based on the sRGB EOTF given in the Khronos Data Format Specification.
+// Source: https://web.archive.org/web/20220808015852/https://registry.khronos.org/DataFormat/specs/1.3/dataformat.1.3.pdf
+// Page number 130 (146 in the PDF)
+vec3 srgbToLinear(vec3 srgb) {
+  return mix(
+    srgb / 12.92,
+    pow((srgb + vec3(0.055)) / vec3(1.055), vec3(2.4)),
+    step(vec3(0.04045), srgb));
+}
+
+vec3 linearToSrgb(vec3 rgb) {
+  return mix(
+    rgb * 12.92,
+    1.055 * pow(rgb, vec3(1 / 2.4)) - 0.055,
+    step(vec3(0.0031308), rgb));
+}
+
+float srgbToLinear(float srgb) {
+  return mix(
+    srgb / 12.92,
+    pow((srgb + float(0.055)) / float(1.055), float(2.4)),
+    step(float(0.04045), srgb));
+}
+
+float linearToSrgb(float rgb) {
+  return mix(
+    rgb * 12.92,
+    1.055 * pow(rgb, 1 / 2.4) - 0.055,
+    step(0.0031308, rgb));
+}
+
+// https://web.archive.org/web/20230619214343/https://en.wikipedia.org/wiki/HSL_and_HSV#Color_conversion_formulae
+vec3 srgbToHsl(vec3 srgb) {
+    const float eps = 1e-8;
+    float V = max(max(srgb.r, srgb.g), srgb.b);
+    float X_min = min(min(srgb.r, srgb.g), srgb.b);
+    float C = V - X_min;
+
+    float H = 0;
+    if (V == srgb.r) {
+        H = mod((srgb.g - srgb.b) / C, 6);
+    } else if (V == srgb.g) {
+        H = (srgb.b - srgb.r) / C + 2;
+    } else {
+        H = (srgb.r - srgb.g) / C + 4;
+    }
+
+    float L = (V + X_min) / 2;
+    float S_L = fract(L) < eps ? 0 : C / (1 - abs(2 * L - 1));
+    return vec3(H / 6, S_L, L);
+}
+
+vec3 hslToSrgb(vec3 hsl) {
+    const float eps = 1e-8;
+    float C = (1 - abs(2 * hsl[2] - 1)) * hsl[1];
+    float H_prime = hsl[0] * 6;
+    float X = C * (1 - abs(mod(H_prime, 2) - 1));
+    float m = hsl[2] - C / 2;
+    vec3 RGB = vec3(C, X, 0) + m;
+
+    if (H_prime < 1)
+        return RGB;
+    if (H_prime < 2)
+        return RGB.yxz;
+    if (H_prime < 3)
+        return RGB.zxy;
+    if (H_prime < 4)
+        return RGB.zyx;
+    if (H_prime < 5)
+        return RGB.yzx;
+    if (H_prime < 6)
+        return RGB.xzy;
+    return vec3(hsl[2]);
+}
+
+vec3 hslToHsv(vec3 hsl) {
+    float v = hsl[2] + hsl[1] * min(hsl[2], 1 - hsl[2]);
+    return vec3(hsl[0], v == 0 ? 0 : 2 * (1 - hsl[2] / v), v);
+}
+
+vec3 hsvToHsl(vec3 hsv) {
+    float l = hsv[2] * (1 - hsv[1] / 2);
+    return vec3(hsv[0], fract(l) == 0 ? 0 : (hsv[2] - l) / min(l, 1 - l), l);
+}
+
+vec3 srgbToHsv(vec3 rgb) {
+    return hslToHsv(srgbToHsl(rgb));
+}
+
+vec3 hsvToSrgb(vec3 hsv) {
+    return hslToSrgb(hsvToHsl(hsv));
+}
+
+// Pack HSL int Jagex format
+int packHsl(vec3 hsl) {
+    int H = int(hsl.x * 0x3F);
+    int S = int(hsl.y * 0x7);
+    int L = int(hsl.z * 0x7F);
+    return H << 10 | S << 7 | L;
+}
+
+// Unpack HSL from Jagex format
+vec3 unpackHsl(int hsl) {
+    // 6-bit hue | 3-bit saturation | 7-bit lightness
+    float H = (hsl >> 10 & 0x3F) / float(0x3F + 1) + .0078125f;
+    float S = (hsl >> 7 & 0x7) / float(0x7 + 1) + .0625f;
+    float L = (hsl & 0x7F) / float(0x7F + 1);
+    return vec3(H, S, L);
+}
+
+int srgbToPackedHsl(vec3 srgb) {
+    return packHsl(srgbToHsl(srgb));
+}
+
+vec3 packedHslToSrgb(int hsl) {
+    return hslToSrgb(unpackHsl(hsl));
 }
