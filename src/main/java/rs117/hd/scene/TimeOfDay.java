@@ -6,7 +6,7 @@ import java.time.temporal.ChronoUnit;
 import net.runelite.http.api.worlds.WorldRegion;
 import rs117.hd.utils.SunCalc;
 
-import static rs117.hd.utils.HDUtils.rgb;
+import static rs117.hd.utils.ColorUtils.rgb;
 
 public enum TimeOfDay
 {

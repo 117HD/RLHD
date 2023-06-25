@@ -33,7 +33,6 @@ import static java.lang.Math.atan2;
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
 import static java.lang.Math.tan;
-import static rs117.hd.utils.HDUtils.srgbToLinear;
 
 public class SunCalc
 {
@@ -144,7 +143,7 @@ public class SunCalc
 		float[] interpolatedColor = interpolateRGB(altitudeDegrees, altitudeColorRange);
 		for (int i = 0; i < 3; i++)
 			interpolatedColor[i] /= 255;
-		return srgbToLinear(interpolatedColor);
+		return ColorUtils.srgbToLinear(interpolatedColor);
 	}
 
 	public static float getAmbientStrength(long millis, double[] latLong)
@@ -187,7 +186,7 @@ public class SunCalc
 		float[] interpolatedColor = interpolateRGB(altitudeDegrees, altitudeColorRange);
 		for (int i = 0; i < 3; i++)
 			interpolatedColor[i] /= 255;
-		return srgbToLinear(interpolatedColor);
+		return ColorUtils.srgbToLinear(interpolatedColor);
 	}
 
 	public static float interpolate(float x, float[][] range)
