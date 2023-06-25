@@ -7772,8 +7772,13 @@
     "forceOverride": true
   },
   {
-    "description": "POH basement floor tile",
-    "objectIds": [ 13068 ],
+    "description": "POH basement filler objects",
+    "objectIds": [
+      13026,
+      13027,
+      13028,
+      13068
+    ],
     "castShadows": false
   },
   {
