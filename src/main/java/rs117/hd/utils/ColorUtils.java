@@ -9,8 +9,9 @@
 
 package rs117.hd.utils;
 
-public class ColorUtils
-{
+public class ColorUtils {
+	private static final float EPS = 1e-10f;
+
 	/**
 	 * Row-major transformation matrices for conversion between RGB and XYZ color spaces.
 	 * Fairman, H. S., Brill, M. H., & Hemmendinger, H. (1997).
@@ -19,7 +20,7 @@ public class ColorUtils
 	 * doi:10.1002/(sici)1520-6378(199702)22:1<11::aid-col4>3.0.co;2-7
 	 */
 	private static final float[] RGB_TO_XYZ_MATRIX = {
-		.49f,   .31f,   .2f,
+		.49f, .31f, .2f,
 		.1769f, .8124f, .0107f,
 		.0f,    .0099f, .9901f
 	};
@@ -138,7 +139,8 @@ public class ColorUtils
 		}
 
 		float L = (V + X_min) / 2;
-		float S_L = L % 1 == 0 ? 0 : C / (1 - Math.abs(2 * L - 1));
+		float divisor = 1 - Math.abs(2 * L - 1);
+		float S_L = Math.abs(divisor) < EPS ? 0 : C / divisor;
 		return new float[] { H / 6, S_L, L };
 	}
 
@@ -150,36 +152,25 @@ public class ColorUtils
 	 * @link <a href="https://web.archive.org/web/20230619214343/https://en.wikipedia.org/wiki/HSL_and_HSV#Color_conversion_formulae">Wikipedia: HSL and HSV</a>
 	 */
 	public static float[] hslToSrgb(float[] hsl) {
-		float C = hsl[2] % 1 == 0 ? 0 : hsl[1] * (1 - Math.abs(2 * hsl[2] - 1));
+		float C = hsl[1] * (1 - Math.abs(2 * hsl[2] - 1));
 		float H_prime = hsl[0] * 6;
-		float X = C * (1 - Math.abs((H_prime % 2f) - 1));
 		float m = hsl[2] - C / 2;
-		float x = C + m;
-		float y = X + m;
 
-		if (H_prime < 1)
-			return new float[] { x, y, m };
-		if (H_prime < 2)
-			return new float[] { y, x, m };
-		if (H_prime < 3)
-			return new float[] { m, x, y };
-		if (H_prime < 4)
-			return new float[] { m, y, x };
-		if (H_prime < 5)
-			return new float[] { y, m, x };
-		if (H_prime < 6)
-			return new float[] { x, m, y };
-		return new float[] { hsl[2], hsl[2], hsl[2] };
+		float r = 1 - Math.min(Math.max(2 - Math.abs(H_prime - 3), 0), 1) * C + m;
+		float g = 1 - Math.min(Math.max(Math.abs(H_prime - 2) - 1, 0), 1) * C + m;
+		float b = 1 - Math.min(Math.max(Math.abs(H_prime - 4) - 1, 0), 1) * C + m;
+		return new float[] { r, g, b };
 	}
 
 	public static float[] hslToHsv(float[] hsl) {
 		float v = hsl[2] + hsl[1] * Math.min(hsl[2], 1 - hsl[2]);
-		return new float[] { hsl[0], v == 0 ? 0 : 2 * (1 - hsl[2] / v), v };
+		return new float[] { hsl[0], Math.abs(v) < EPS ? 0 : 2 * (1 - hsl[2] / v), v };
 	}
 
 	public static float[] hsvToHsl(float[] hsv) {
 		float l = hsv[2] * (1 - hsv[1] / 2);
-		return new float[] { hsv[0], l % 1 == 0 ? 0 : (hsv[2] - l) / Math.min(l, 1 - l), l };
+		float divisor = Math.min(l, 1 - l);
+		return new float[] { hsv[0], Math.abs(divisor) < EPS ? 0 : (hsv[2] - l) / divisor, l };
 	}
 
 	/**
