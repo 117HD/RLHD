@@ -98,7 +98,6 @@ import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.SceneUploader;
 import rs117.hd.scene.TextureManager;
 import rs117.hd.scene.lights.SceneLight;
-import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.scene.model_overrides.ObjectType;
 import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.DeveloperTools;
@@ -2486,8 +2485,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				int vertexOffset = dynamicOffsetVertices + sceneContext.getVertexOffset();
 				int uvOffset = dynamicOffsetUvs + sceneContext.getUvOffset();
 
-				ModelOverride modelOverride = modelOverrideManager.getOverride(hash);
-				modelPusher.pushModel(sceneContext, null, hash, model,modelOverride, ObjectType.NONE, 0, true);
+				modelPusher.pushModel(sceneContext, null, hash, model, ObjectType.NONE, 0, true);
 				final int faceCount = sceneContext.modelPusherResults[0] / 3;
 				if (sceneContext.modelPusherResults[1] <= 0)
 					uvOffset = -1;
