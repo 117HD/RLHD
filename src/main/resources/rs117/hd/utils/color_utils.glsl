@@ -117,12 +117,14 @@ vec3 srgbToHsl(vec3 srgb) {
     float C = V - X_min;
 
     float H = 0;
-    if (V == srgb.r) {
-        H = mod((srgb.g - srgb.b) / C, 6);
-    } else if (V == srgb.g) {
-        H = (srgb.b - srgb.r) / C + 2;
-    } else {
-        H = (srgb.r - srgb.g) / C + 4;
+    if (C > 0) {
+        if (V == srgb.r) {
+            H = mod((srgb.g - srgb.b) / C, 6);
+        } else if (V == srgb.g) {
+            H = (srgb.b - srgb.r) / C + 2;
+        } else {
+            H = (srgb.r - srgb.g) / C + 4;
+        }
     }
 
     float L = (V + X_min) / 2;
@@ -136,10 +138,10 @@ vec3 hslToSrgb(vec3 hsl) {
     float H_prime = hsl[0] * 6;
     float m = hsl[2] - C / 2;
 
-    float r = clamp(2 - abs(H_prime - 3), 0, 1);
-    float g = clamp(abs(H_prime - 2) - 1, 0, 1);
-    float b = clamp(abs(H_prime - 4) - 1, 0, 1);
-    return (1 - vec3(r, g, b)) * C + m;
+    float r = clamp(abs(H_prime - 3) - 1, 0, 1);
+    float g = clamp(2 - abs(H_prime - 2), 0, 1);
+    float b = clamp(2 - abs(H_prime - 4), 0, 1);
+    return vec3(r, g, b) * C + m;
 }
 
 vec3 hslToHsv(vec3 hsl) {
@@ -163,18 +165,18 @@ vec3 hsvToSrgb(vec3 hsv) {
 
 // Pack HSL int Jagex format
 int packHsl(vec3 hsl) {
-    int H = int(hsl.x * 0x3F);
-    int S = int(hsl.y * 0x7);
-    int L = int(hsl.z * 0x7F);
+    int H = clamp(int(round((hsl[0] - .0078125f) * (0x3F + 1))), 0, 0x3F);
+    int S = clamp(int(round((hsl[1] - .0625f) * (0x7 + 1))), 0, 0x7);
+    int L = clamp(int(round(hsl[2] * (0x7F + 1))), 0, 0x7F);
     return H << 10 | S << 7 | L;
 }
 
 // Unpack HSL from Jagex format
 vec3 unpackHsl(int hsl) {
     // 6-bit hue | 3-bit saturation | 7-bit lightness
-    float H = (hsl >> 10 & 0x3F) / float(0x3F + 1) + .0078125f;
-    float S = (hsl >> 7 & 0x7) / float(0x7 + 1) + .0625f;
-    float L = (hsl & 0x7F) / float(0x7F + 1);
+    float H = (hsl >> 10 & 0x3F) / (0x3F + 1f) + .0078125f;
+    float S = (hsl >> 7 & 0x7) / (0x7 + 1f) + .0625f;
+    float L = (hsl & 0x7F) / (0x7F + 1f);
     return vec3(H, S, L);
 }
 

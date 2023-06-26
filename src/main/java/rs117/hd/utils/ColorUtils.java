@@ -118,6 +118,21 @@ public class ColorUtils {
 	}
 
 	/**
+	 * Float modulo that returns the answer with the same sign as the modulus.
+	 */
+	public static float mod(float x, float modulus) {
+		return (float) (x - Math.floor(x / modulus) * modulus);
+	}
+
+	public static float clamp(float value, float min, float max) {
+		return Math.min(Math.max(value, min), max);
+	}
+
+	public static int clamp(int value, int min, int max) {
+		return Math.min(Math.max(value, min), max);
+	}
+
+	/**
 	 * Convert sRGB in the range 0-1 from sRGB to HSL in the range 0-1.
 	 *
 	 * @param srgb float[3]
@@ -129,13 +144,16 @@ public class ColorUtils {
 		float X_min = Math.min(Math.min(srgb[0], srgb[1]), srgb[2]);
 		float C = V - X_min;
 
-		float H;
-		if (V == srgb[0]) {
-			H = ((srgb[1] - srgb[2]) / C) % 6f;
-		} else if (V == srgb[1]) {
-			H = (srgb[2] - srgb[0]) / C + 2;
-		} else {
-			H = (srgb[0] - srgb[1]) / C + 4;
+		float H = 0;
+		if (C > 0) {
+			if (V == srgb[0]) {
+				H = mod((srgb[1] - srgb[2]) / C, 6);
+			} else if (V == srgb[1]) {
+				H = (srgb[2] - srgb[0]) / C + 2;
+			} else {
+				H = (srgb[0] - srgb[1]) / C + 4;
+			}
+			assert H >= 0 && H <= 6;
 		}
 
 		float L = (V + X_min) / 2;
@@ -156,9 +174,9 @@ public class ColorUtils {
 		float H_prime = hsl[0] * 6;
 		float m = hsl[2] - C / 2;
 
-		float r = 1 - Math.min(Math.max(2 - Math.abs(H_prime - 3), 0), 1) * C + m;
-		float g = 1 - Math.min(Math.max(Math.abs(H_prime - 2) - 1, 0), 1) * C + m;
-		float b = 1 - Math.min(Math.max(Math.abs(H_prime - 4) - 1, 0), 1) * C + m;
+		float r = clamp(Math.abs(H_prime - 3) - 1, 0, 1) * C + m;
+		float g = clamp(2 - Math.abs(H_prime - 2), 0, 1) * C + m;
+		float b = clamp(2 - Math.abs(H_prime - 4), 0, 1) * C + m;
 		return new float[] { r, g, b };
 	}
 
@@ -212,9 +230,9 @@ public class ColorUtils {
 	}
 
 	public static int packHsl(float[] hsl) {
-		int H = (int) ((hsl[0] - .0078125f) * (0x3F + 1));
-		int S = (int) ((hsl[1] - .0625f) * (0x7 + 1));
-		int L = (int) (hsl[2] * (0x7F + 1));
+		int H = clamp(Math.round((hsl[0] - .0078125f) * (0x3F + 1)), 0, 0x3F);
+		int S = clamp(Math.round((hsl[1] - .0625f) * (0x7 + 1)), 0, 0x7);
+		int L = clamp(Math.round(hsl[2] * (0x7F + 1)), 0, 0x7F);
 		return H << 10 | S << 7 | L;
 	}
 
