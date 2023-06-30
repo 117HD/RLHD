@@ -165,18 +165,18 @@ vec3 hsvToSrgb(vec3 hsv) {
 
 // Pack HSL int Jagex format
 int packHsl(vec3 hsl) {
-    int H = clamp(int(round((hsl[0] - .0078125f) * (0x3F + 1))), 0, 0x3F);
-    int S = clamp(int(round((hsl[1] - .0625f) * (0x7 + 1))), 0, 0x7);
-    int L = clamp(int(round(hsl[2] * (0x7F + 1))), 0, 0x7F);
+    int H = clamp(int(round((hsl[0] - .0078125f) * 64)), 0, 63);
+    int S = clamp(int(round((hsl[1] - .0625f) * 8)), 0, 7);
+    int L = clamp(int(round(hsl[2] * 128)), 0, 127);
     return H << 10 | S << 7 | L;
 }
 
 // Unpack HSL from Jagex format
 vec3 unpackHsl(int hsl) {
     // 6-bit hue | 3-bit saturation | 7-bit lightness
-    float H = (hsl >> 10 & 0x3F) / (0x3F + 1f) + .0078125f;
-    float S = (hsl >> 7 & 0x7) / (0x7 + 1f) + .0625f;
-    float L = (hsl & 0x7F) / (0x7F + 1f);
+    float H = (hsl >> 10 & 63) / 64.f + .0078125f;
+    float S = (hsl >> 7 & 7) / 8.f + .0625f;
+    float L = (hsl & 127) / 128.f;
     return vec3(H, S, L);
 }
 
