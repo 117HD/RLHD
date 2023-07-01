@@ -45,6 +45,8 @@ import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.nio.LongBuffer;
 
+import static org.lwjgl.opencl.APPLEGLSharing.CL_CGL_DEVICE_FOR_CURRENT_VIRTUAL_SCREEN_APPLE;
+import static org.lwjgl.opencl.APPLEGLSharing.clGetGLContextInfoAPPLE;
 import static org.lwjgl.opencl.CL10.*;
 import static org.lwjgl.opencl.CL12.CL_PROGRAM_BINARY_TYPE;
 import static org.lwjgl.opencl.CL12.clReleaseDevice;
@@ -99,7 +101,11 @@ public class OpenCLManager {
 	}
 
 	public void startUp(AWTContext awtContext) {
-		initContext(awtContext);
+		if (OSType.getOSType() == OSType.MacOS) {
+			initContextMacOS(awtContext);
+		} else {
+			initContext(awtContext);
+		}
 		ensureMinWorkGroupSize();
 		initQueue();
 	}
@@ -143,15 +149,7 @@ public class OpenCLManager {
 			checkCLError(clGetPlatformIDs(platforms, (IntBuffer) null));
 
 			PointerBuffer ctxProps = stack.mallocPointer(7);
-			if (OSType.getOSType() == OSType.MacOS) {
-				ctxProps
-					.put(CL_CONTEXT_PLATFORM)
-					.put(0)
-					.put(APPLEGLSharing.CL_CONTEXT_PROPERTY_USE_CGL_SHAREGROUP_APPLE)
-					.put(awtContext.getCGLShareGroup())
-					.put(0)
-					.flip();
-			} else if (OSType.getOSType() == OSType.Windows) {
+			if (OSType.getOSType() == OSType.Windows) {
 				ctxProps
 					.put(CL_CONTEXT_PLATFORM)
 					.put(0)
@@ -250,6 +248,31 @@ public class OpenCLManager {
 
 			if (this.context == 0)
 				throw new RuntimeException("Unable to create suitable compute context");
+		}
+	}
+
+	private void initContextMacOS(AWTContext awtContext) {
+		try (var stack = MemoryStack.stackPush()) {
+			PointerBuffer ctxProps = stack.mallocPointer(3);
+			ctxProps
+				.put(APPLEGLSharing.CL_CONTEXT_PROPERTY_USE_CGL_SHAREGROUP_APPLE)
+				.put(awtContext.getCGLShareGroup())
+				.put(0)
+				.flip();
+
+			IntBuffer errcode_ret = stack.callocInt(1);
+			var devices = stack.mallocPointer(0);
+			long context = clCreateContext(ctxProps, devices, CLContextCallback.create((errinfo, private_info, cb, user_data) ->
+				log.error("[LWJGL] cl_context_callback: {}", memUTF8(errinfo))), NULL, errcode_ret);
+			checkCLError(errcode_ret);
+
+			var deviceBuf = stack.mallocPointer(1);
+			checkCLError(clGetGLContextInfoAPPLE(context, awtContext.getGLContext(), CL_CGL_DEVICE_FOR_CURRENT_VIRTUAL_SCREEN_APPLE, deviceBuf, null));
+			long device = deviceBuf.get(0);
+
+			log.debug("Got macOS CLGL compute device {}", device);
+			this.context = context;
+			this.device = device;
 		}
 	}
 
