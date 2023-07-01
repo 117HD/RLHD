@@ -101,6 +101,9 @@ public class OpenCLManager {
 	}
 
 	public void startUp(AWTContext awtContext) {
+		CL.create();
+		initialized = true;
+
 		if (OSType.getOSType() == OSType.MacOS) {
 			initContextMacOS(awtContext);
 		} else {
@@ -136,9 +139,6 @@ public class OpenCLManager {
 	}
 
 	private void initContext(AWTContext awtContext) {
-		CL.create();
-		initialized = true;
-
 		try (var stack = MemoryStack.stackPush()) {
 			IntBuffer pi = stack.mallocInt(1);
 			checkCLError(clGetPlatformIDs(null, pi));
