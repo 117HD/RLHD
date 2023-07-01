@@ -29,7 +29,6 @@ package rs117.hd;
 import com.google.gson.Gson;
 import com.google.inject.Provides;
 import java.awt.Canvas;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GraphicsConfiguration;
 import java.awt.Image;
@@ -49,7 +48,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.swing.SwingUtilities;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.api.coords.*;
@@ -77,7 +75,6 @@ import org.lwjgl.opengl.*;
 import org.lwjgl.system.Callback;
 import org.lwjgl.system.Configuration;
 import rs117.hd.config.AntiAliasingMode;
-import rs117.hd.config.FogDepthMode;
 import rs117.hd.config.ShadowMode;
 import rs117.hd.config.UIScalingMode;
 import rs117.hd.data.WaterType;
@@ -401,12 +398,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	public int[] camTarget = new int[3];
 
+	private boolean lwjglInitialized;
 	private boolean running;
 	private boolean hasLoggedIn;
-	private boolean lwjglInitialized;
-
-	@Setter
-	private boolean isInGauntlet = false;
+	public boolean isInGauntlet;
 
 	private final Map<Integer, TempModelInfo> frameModelInfoMap = new HashMap<>();
 
@@ -559,7 +554,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				modelPusher.startUp();
 				modelOverrideManager.startUp();
 				lightManager.startUp();
-				environmentManager.startUp();
+				environmentManager.initialize();
 
 				eventBus.register(lightManager);
 
@@ -1303,17 +1298,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		viewportOffsetY = client.getViewportYOffset();
 
 		// Update the camera target only when not loading, to keep drawing correct shadows while loading
-		if (client.getGameState() != GameState.LOADING)
+		if (client.getGameState().getState() > GameState.LOADING.getState())
 			camTarget = getCameraFocalPoint();
-
-		try {
-			WorldPoint targetWorldPosition = sceneContext.localToWorld(new LocalPoint(camTarget[0], camTarget[1]), client.getPlane());
-			environmentManager.update(sceneContext, targetWorldPosition);
-			lightManager.update(sceneContext);
-		} catch (Exception ex) {
-			log.error("Error while updating environment or lights:", ex);
-			stopPlugin();
-		}
 
 		// Only reset the target buffer offset right before drawing the scene. That way if there are frames
 		// after this that don't involve a scene draw, like during LOADING/HOPPING/CONNECTION_LOST, we can
@@ -1670,12 +1656,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		final int canvasHeight = client.getCanvasHeight();
 		final int canvasWidth = client.getCanvasWidth();
 
-		try
-		{
+		try {
 			prepareInterfaceTexture(canvasWidth, canvasHeight);
-		}
-		catch (Exception ex)
-		{
+		} catch (Exception ex) {
 			// Fixes: https://github.com/runelite/runelite/issues/12930
 			// Gracefully Handle loss of opengl buffers and context
 			log.warn("prepareInterfaceTexture exception", ex);
@@ -1684,13 +1667,28 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			return;
 		}
 
-		glClearColor(0, 0, 0, 1f);
-		glClear(GL_COLOR_BUFFER_BIT);
+		// Upon logging in, the client will draw some frames with zero geometry before it hides the login screen
+		if (renderBufferOffset > 0)
+			hasLoggedIn = true;
 
 		// Draw 3d scene
 		final TextureProvider textureProvider = client.getTextureProvider();
-		if (textureProvider != null && client.getGameState().getState() >= GameState.LOADING.getState())
-		{
+		if (
+			hasLoggedIn &&
+			sceneContext != null &&
+			textureProvider != null &&
+			client.getGameState().getState() >= GameState.LOADING.getState()
+		) {
+			try {
+				WorldPoint targetWorldPosition = sceneContext.localToWorld(new LocalPoint(camTarget[0], camTarget[1]), client.getPlane());
+				environmentManager.update(sceneContext, targetWorldPosition);
+				lightManager.update(sceneContext);
+			} catch (Exception ex) {
+				log.error("Error while updating environment or lights:", ex);
+				stopPlugin();
+				return;
+			}
+
 			// lazy init textures as they may not be loaded at plugin start.
 			textureManager.ensureTexturesLoaded(textureProvider);
 
@@ -1703,13 +1701,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			int renderViewportHeight = viewportHeight;
 			int renderViewportWidth = viewportWidth;
 
-			if (client.isStretchedEnabled())
-			{
+			if (client.isStretchedEnabled()) {
 				Dimension dim = client.getStretchedDimensions();
 				renderCanvasHeight = dim.height;
 
 				double scaleFactorY = dim.getHeight() / canvasHeight;
-				double scaleFactorX = dim.getWidth()  / canvasWidth;
+				double scaleFactorX = dim.getWidth() / canvasWidth;
 
 				// Pad the viewport a little because having ints for our viewport dimensions can introduce off-by-one errors.
 				final int padding = 1;
@@ -1797,8 +1794,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			// Setup anti-aliasing
 			final AntiAliasingMode antiAliasingMode = config.antiAliasingMode();
 			final boolean aaEnabled = antiAliasingMode != AntiAliasingMode.DISABLED;
-			if (aaEnabled)
-			{
+			if (aaEnabled) {
 				glEnable(GL_MULTISAMPLE);
 
 				final Dimension stretchedDimensions = client.getStretchedDimensions();
@@ -1807,10 +1803,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				final int stretchedCanvasHeight = client.isStretchedEnabled() ? stretchedDimensions.height : canvasHeight;
 
 				// Re-create fbo
-				if (lastStretchedCanvasWidth != stretchedCanvasWidth
-					|| lastStretchedCanvasHeight != stretchedCanvasHeight
-					|| lastAntiAliasingMode != antiAliasingMode)
-				{
+				if (
+					lastStretchedCanvasWidth != stretchedCanvasWidth ||
+					lastStretchedCanvasHeight != stretchedCanvasHeight ||
+					lastAntiAliasingMode != antiAliasingMode
+				) {
 					destroyAAFbo();
 
 					// Bind default FBO to check whether anti-aliasing is forced
@@ -1829,9 +1826,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				}
 
 				glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fboSceneHandle);
-			}
-			else
-			{
+			} else {
 				glDisable(GL_MULTISAMPLE);
 				destroyAAFbo();
 			}
@@ -1839,87 +1834,66 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			lastAntiAliasingMode = antiAliasingMode;
 
 			// Clear scene
-			float[] fogColor = hasLoggedIn ? environmentManager.getFogColor() : EnvironmentManager.BLACK_COLOR;
-			for (int i = 0; i < fogColor.length; i++)
-				fogColor[i] = ColorUtils.linearToSrgb(fogColor[i]);
+			float[] fogColor = ColorUtils.linearToSrgb(environmentManager.currentFogColor);
 			glClearColor(fogColor[0], fogColor[1], fogColor[2], 1f);
 			glClear(GL_COLOR_BUFFER_BIT);
 
 			final int drawDistance = getDrawDistance();
-			int fogDepth = config.fogDepth();
-			fogDepth *= 10;
-
-			if (config.fogDepthMode() == FogDepthMode.DYNAMIC)
-			{
-				fogDepth = environmentManager.currentFogDepth;
-			}
-			else if (config.fogDepthMode() == FogDepthMode.NONE)
-			{
-				fogDepth = 0;
+			int fogDepth = 0;
+			switch (config.fogDepthMode()) {
+				case USER_DEFINED:
+					fogDepth = config.fogDepth() * 10;
+					break;
+				case DYNAMIC:
+					fogDepth = environmentManager.currentFogDepth;
+					break;
 			}
 			glUniform1i(uniUseFog, fogDepth > 0 ? 1 : 0);
 			glUniform1i(uniFogDepth, fogDepth);
-
-			glUniform4f(uniFogColor, fogColor[0], fogColor[1], fogColor[2], 1f);
+			glUniform3fv(uniFogColor, fogColor);
 
 			glUniform1i(uniDrawDistance, drawDistance * LOCAL_TILE_SIZE);
 			glUniform1f(uniColorBlindnessIntensity, config.colorBlindnessIntensity() / 100.f);
 
-			float[] waterColor = environmentManager.currentWaterColor;
-			float[] waterColorHSB = Color.RGBtoHSB((int) (waterColor[0] * 255f), (int) (waterColor[1] * 255f), (int) (waterColor[2] * 255f), null);
+			float[] waterColorHsv = ColorUtils.srgbToHsv(environmentManager.currentWaterColor);
 			float lightBrightnessMultiplier = 0.8f;
 			float midBrightnessMultiplier = 0.45f;
 			float darkBrightnessMultiplier = 0.05f;
-			float[] waterColorLight = new Color(Color.HSBtoRGB(waterColorHSB[0], waterColorHSB[1], waterColorHSB[2] * lightBrightnessMultiplier)).getRGBColorComponents(null);
-			float[] waterColorMid = new Color(Color.HSBtoRGB(waterColorHSB[0], waterColorHSB[1], waterColorHSB[2] * midBrightnessMultiplier)).getRGBColorComponents(null);
-			float[] waterColorDark = new Color(Color.HSBtoRGB(waterColorHSB[0], waterColorHSB[1], waterColorHSB[2] * darkBrightnessMultiplier)).getRGBColorComponents(null);
-			for (int i = 0; i < waterColorLight.length; i++)
-				waterColorLight[i] = ColorUtils.linearToSrgb(waterColorLight[i]);
-			for (int i = 0; i < waterColorMid.length; i++)
-				waterColorMid[i] = ColorUtils.linearToSrgb(waterColorMid[i]);
-			for (int i = 0; i < waterColorDark.length; i++)
-				waterColorDark[i] = ColorUtils.linearToSrgb(waterColorDark[i]);
-			glUniform3f(uniWaterColorLight, waterColorLight[0], waterColorLight[1], waterColorLight[2]);
-			glUniform3f(uniWaterColorMid, waterColorMid[0], waterColorMid[1], waterColorMid[2]);
-			glUniform3f(uniWaterColorDark, waterColorDark[0], waterColorDark[1], waterColorDark[2]);
+			float[] waterColorLight = ColorUtils.linearToSrgb(ColorUtils.hsvToSrgb(new float[] {
+				waterColorHsv[0],
+				waterColorHsv[1],
+				waterColorHsv[2] * lightBrightnessMultiplier
+			}));
+			float[] waterColorMid = ColorUtils.linearToSrgb(ColorUtils.hsvToSrgb(new float[] {
+				waterColorHsv[0],
+				waterColorHsv[1],
+				waterColorHsv[2] * midBrightnessMultiplier
+			}));
+			float[] waterColorDark = ColorUtils.linearToSrgb(ColorUtils.hsvToSrgb(new float[] {
+				waterColorHsv[0],
+				waterColorHsv[1],
+				waterColorHsv[2] * darkBrightnessMultiplier
+			}));
+			glUniform3fv(uniWaterColorLight, waterColorLight);
+			glUniform3fv(uniWaterColorMid, waterColorMid);
+			glUniform3fv(uniWaterColorDark, waterColorDark);
 
-			// get ambient light strength from either the config or the current area
-			float ambientStrength = environmentManager.currentAmbientStrength;
-			ambientStrength *= (double)config.brightness() / 20;
-			glUniform1f(uniAmbientStrength, ambientStrength);
+			float brightness = config.brightness() / 20f;
+			glUniform1f(uniAmbientStrength, environmentManager.currentAmbientStrength * brightness);
+			glUniform3fv(uniAmbientColor, environmentManager.currentAmbientColor);
+			glUniform1f(uniLightStrength, environmentManager.currentDirectionalStrength * brightness);
+			glUniform3fv(uniLightColor, environmentManager.currentDirectionalColor);
 
-			// and ambient color
-			float[] ambientColor = environmentManager.currentAmbientColor;
-			glUniform3f(uniAmbientColor, ambientColor[0], ambientColor[1], ambientColor[2]);
+			glUniform1f(uniUnderglowStrength, environmentManager.currentUnderglowStrength);
+			glUniform3fv(uniUnderglowColor, environmentManager.currentUnderglowColor);
 
-			// get light strength from either the config or the current area
-			float lightStrength = environmentManager.currentDirectionalStrength;
-			lightStrength *= (double)config.brightness() / 20;
-			glUniform1f(uniLightStrength, lightStrength);
+			glUniform1f(uniGroundFogStart, environmentManager.currentGroundFogStart);
+			glUniform1f(uniGroundFogEnd, environmentManager.currentGroundFogEnd);
+			glUniform1f(uniGroundFogOpacity, config.groundFog() ? environmentManager.currentGroundFogOpacity : 0);
 
-			// and light color
-			float[] lightColor = environmentManager.currentDirectionalColor;
-			glUniform3f(uniLightColor, lightColor[0], lightColor[1], lightColor[2]);
-
-			// get underglow light strength from the current area
-			float underglowStrength = environmentManager.currentUnderglowStrength;
-			glUniform1f(uniUnderglowStrength, underglowStrength);
-			// and underglow color
-			float[] underglowColor = environmentManager.currentUnderglowColor;
-			glUniform3f(uniUnderglowColor, underglowColor[0], underglowColor[1], underglowColor[2]);
-
-			// get ground fog variables
-			float groundFogStart = environmentManager.currentGroundFogStart;
-			glUniform1f(uniGroundFogStart, groundFogStart);
-			float groundFogEnd = environmentManager.currentGroundFogEnd;
-			glUniform1f(uniGroundFogEnd, groundFogEnd);
-			float groundFogOpacity = environmentManager.currentGroundFogOpacity;
-			groundFogOpacity = config.groundFog() ? groundFogOpacity : 0;
-			glUniform1f(uniGroundFogOpacity, groundFogOpacity);
-
-			// lightning
-			glUniform1f(uniLightningBrightness, environmentManager.getLightningBrightness());
+			// Lights & lightning
 			glUniform1i(uniPointLightsCount, sceneContext == null ? 0 : sceneContext.visibleLightCount);
+			glUniform1f(uniLightningBrightness, environmentManager.getLightningBrightness());
 
 			glUniform1f(uniSaturation, config.saturation() / 100f);
 			glUniform1f(uniContrast, config.contrast() / 100f);
@@ -1928,6 +1902,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			glUniform3fv(uniUnderwaterCausticsColor, environmentManager.currentUnderwaterCausticsColor);
 			glUniform1f(uniUnderwaterCausticsStrength, environmentManager.currentUnderwaterCausticsStrength);
 
+			// Extract the 3rd column from the light view matrix (the float array is column-major)
+			// This produces the light's forward direction vector in world space
 			glUniform3f(uniLightDir, lightViewMatrix[2], lightViewMatrix[6], lightViewMatrix[10]);
 
 			// use a curve to calculate max bias value based on the density of the shadow map
@@ -1940,7 +1916,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			// Calculate projection matrix
 			float[] projectionMatrix = Mat4.scale(client.getScale(), client.getScale(), 1);
 			Mat4.mul(projectionMatrix, Mat4.projection(viewportWidth, viewportHeight, 50));
-			Mat4.mul(projectionMatrix, Mat4.rotateX((float) -(Math.PI - pitch * UNIT)));
+			Mat4.mul(projectionMatrix, Mat4.rotateX((float) (pitch * UNIT - Math.PI)));
 			Mat4.mul(projectionMatrix, Mat4.rotateY((float) (yaw * UNIT)));
 			Mat4.mul(projectionMatrix, Mat4.translate(-client.getCameraX2(), -client.getCameraY2(), -client.getCameraZ2()));
 			glUniformMatrix4fv(uniProjectionMatrix, false, projectionMatrix);
@@ -1991,13 +1967,17 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				glBlitFramebuffer(
 					0, 0, width, height,
 					0, 0, width, height,
-					GL_COLOR_BUFFER_BIT, GL_NEAREST);
+					GL_COLOR_BUFFER_BIT, GL_NEAREST
+				);
 
 				// Reset
 				glBindFramebuffer(GL_READ_FRAMEBUFFER, awtContext.getFramebuffer(false));
 			}
 
 			frameModelInfoMap.clear();
+		} else {
+			glClearColor(0, 0, 0, 1f);
+			glClear(GL_COLOR_BUFFER_BIT);
 		}
 
 		// Texture on UI
@@ -2015,8 +1995,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		checkGLErrors();
 	}
 
-	private void drawUi(final int overlayColor, final int canvasHeight, final int canvasWidth)
-	{
+	private void drawUi(int overlayColor, final int canvasHeight, final int canvasWidth) {
+		// Fix vanilla bug causing the overlay to remain on the login screen in areas like Fossil Island underwater
+		if (client.getGameState().getState() < GameState.LOADING.getState())
+			overlayColor = 0;
+
 		glEnable(GL_BLEND);
 
 		glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
@@ -2025,22 +2008,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		// Use the texture bound in the first pass
 		glUseProgram(glUiProgram);
 		glUniform2i(uniTexSourceDimensions, canvasWidth, canvasHeight);
-		glUniform1f(uniUiColorBlindnessIntensity, config.colorBlindnessIntensity() / 100.f);
-		glUniform4f(uniUiAlphaOverlay,
-			(overlayColor >> 16 & 0xFF) / 255f,
-			(overlayColor >> 8 & 0xFF) / 255f,
-			(overlayColor & 0xFF) / 255f,
-			(overlayColor >>> 24) / 255f
-		);
+		glUniform1f(uniUiColorBlindnessIntensity, config.colorBlindnessIntensity() / 100f);
+		glUniform4fv(uniUiAlphaOverlay, ColorUtils.unpackARGB(overlayColor));
 
-		if (client.isStretchedEnabled())
-		{
+		if (client.isStretchedEnabled()) {
 			Dimension dim = client.getStretchedDimensions();
 			glDpiAwareViewport(0, 0, dim.width, dim.height);
 			glUniform2i(uniTexTargetDimensions, dim.width, dim.height);
-		}
-		else
-		{
+		} else {
 			glDpiAwareViewport(0, 0, canvasWidth, canvasHeight);
 			glUniform2i(uniTexTargetDimensions, canvasWidth, canvasHeight);
 		}
@@ -2048,8 +2023,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		// Set the sampling function used when stretching the UI.
 		// This is probably better done with sampler objects instead of texture parameters, but this is easier and likely more portable.
 		// See https://www.khronos.org/opengl/wiki/Sampler_Object for details.
-		if (client.isStretchedEnabled())
-		{
+		if (client.isStretchedEnabled()) {
 			// GL_NEAREST makes sampling for bicubic/xBR simpler, so it should be used whenever linear isn't
 			final int function = config.uiScalingMode() == UIScalingMode.LINEAR ? GL_LINEAR : GL_NEAREST;
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, function);
@@ -2119,16 +2093,15 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public void animate(Texture texture, int diff) {}
 
 	@Subscribe
-	public void onGameStateChanged(GameStateChanged gameStateChanged)
-	{
+	public void onGameStateChanged(GameStateChanged gameStateChanged) {
 		if (!running)
 			return;
 
 		if (gameStateChanged.getGameState() == GameState.LOGIN_SCREEN) {
-			// Avoid drawing the last frame's buffer during LOADING after LOGIN_SCREEN
 			renderBufferOffset = 0;
+			sceneContext = null;
 			hasLoggedIn = false;
-			modelPusher.clearModelCache();
+			environmentManager.initialize();
 		}
 	}
 
@@ -2261,8 +2234,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				case KEY_HD_INFERNAL_CAPE:
 					textureManager.freeTextures();
 					break;
-				case KEY_MODEL_TEXTURES:
 				case KEY_WINTER_THEME:
+					environmentManager.initialize();
+				case KEY_MODEL_TEXTURES:
 					textureManager.freeTextures();
 					// fall-through
 				case KEY_HIDE_FAKE_SHADOWS:
@@ -2720,36 +2694,24 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	@Subscribe
-	public void onGameTick(GameTick gameTick)
-	{
-		if (gameTicksUntilSceneReload > 0 && --gameTicksUntilSceneReload == 0) {
+	public void onGameTick(GameTick gameTick) {
+		if (--gameTicksUntilSceneReload == 0)
 			uploadScene();
-		}
-
-		if (!hasLoggedIn && client.getGameState() == GameState.LOGGED_IN)
-		{
-			hasLoggedIn = true;
-		}
 	}
 
 	private void checkGLErrors()
 	{
 		if (!log.isDebugEnabled())
-		{
 			return;
-		}
 
 		for (; ; )
 		{
 			int err = glGetError();
 			if (err == GL_NO_ERROR)
-			{
 				return;
-			}
 
 			String errStr;
-			switch (err)
-			{
+			switch (err) {
 				case GL_INVALID_ENUM:
 					errStr = "INVALID_ENUM";
 					break;
@@ -2773,9 +2735,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	private void displayUpdateMessage() {
 		int messageId = 1;
-		if (config.getPluginUpdateMessage() >= messageId) {
+		if (config.getPluginUpdateMessage() >= messageId)
 			return; // Don't show the same message multiple times
-		}
 
 //		PopupUtils.displayPopupMessage(client, "117HD Update",
 //			"<br><br>" +

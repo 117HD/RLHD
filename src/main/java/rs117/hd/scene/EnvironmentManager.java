@@ -29,9 +29,8 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import net.runelite.api.Client;
-import net.runelite.api.GameState;
-import net.runelite.api.coords.WorldPoint;
+import net.runelite.api.*;
+import net.runelite.api.coords.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.config.DefaultSkyColor;
@@ -143,8 +142,7 @@ public class EnvironmentManager
 	private boolean isInHouse = false;
 	private int previousPlane;
 
-	public void startUp()
-	{
+	public void initialize() {
 		currentEnvironment = null;
 		changeEnvironment(defaultEnvironment, true);
 	}
@@ -195,7 +193,7 @@ public class EnvironmentManager
 						isInHouse = false;
 					}
 
-					plugin.setInGauntlet(environment == Environment.THE_GAUNTLET || environment == Environment.THE_GAUNTLET_CORRUPTED);
+					plugin.isInGauntlet = environment == Environment.THE_GAUNTLET || environment == Environment.THE_GAUNTLET_CORRUPTED;
 
 					changeEnvironment(environment, skipTransition);
 				}

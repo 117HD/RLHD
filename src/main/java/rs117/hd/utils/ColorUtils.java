@@ -192,7 +192,7 @@ public class ColorUtils {
 	}
 
 	/**
-	 * Convert sRGB in the range 0-1 from sRGB to HSV in the range 0-1.
+	 * Convert sRGB in the range 0-1 from sRGB to HSV (also known as HSB) in the range 0-1.
 	 *
 	 * @param srgb float[3]
 	 * @return hsv float[3]
@@ -203,7 +203,7 @@ public class ColorUtils {
 	}
 
 	/**
-	 * Convert HSV in the range 0-1 to sRGB in the range 0-1.
+	 * Convert HSV (also known as HSB) in the range 0-1 to sRGB in the range 0-1.
 	 *
 	 * @param hsv float[3]
 	 * @return srgb float[3]
@@ -250,5 +250,14 @@ public class ColorUtils {
 
 	public static float[] packedHslToSrgb(int hsl) {
 		return hslToSrgb(unpackHsl(hsl));
+	}
+
+	public static float[] unpackARGB(int argb) {
+		return new float[] {
+			(argb >> 16 & 0xFF) / (float) 0xFF,
+			(argb >> 8 & 0xFF) / (float) 0xFF,
+			(argb & 0xFF) / (float) 0xFF,
+			(argb >> 24 & 0xFF) / (float) 0xFF
+		};
 	}
 }
