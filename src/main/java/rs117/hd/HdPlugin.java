@@ -2398,7 +2398,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			if ((model.getBufferOffset() & 0b11) == 0b11)
 				return;
 
-			model.calculateBoundsCylinder();
 			if (isOutsideViewport(model, pitchSin, pitchCos, yawSin, yawCos, x, y, z))
 				return;
 
@@ -2433,7 +2432,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			if ((model.getBufferOffset() & 0b11) == 0b11)
 				return;
 
-			model.calculateBoundsCylinder();
 			if (isOutsideViewport(model, pitchSin, pitchCos, yawSin, yawCos, x, y, z))
 				return;
 
