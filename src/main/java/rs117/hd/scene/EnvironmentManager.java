@@ -155,6 +155,8 @@ public class EnvironmentManager
 	 */
 	public void update(SceneContext sceneContext, WorldPoint position)
 	{
+		assert client.isClientThread();
+
 		isOverworld = Area.OVERWORLD.containsPoint(position);
 
 		// skip the transitional fade if the player has moved too far
@@ -193,7 +195,10 @@ public class EnvironmentManager
 						isInHouse = false;
 					}
 
+					// Since the environment which actually gets used may differ from the environment
+					// chosen based on position, update the plugin's area tracking here
 					plugin.isInGauntlet = environment == Environment.THE_GAUNTLET || environment == Environment.THE_GAUNTLET_CORRUPTED;
+					plugin.isInChambersOfXeric = environment == Environment.CHAMBERS_OF_XERIC;
 
 					changeEnvironment(environment, skipTransition);
 				}

@@ -398,7 +398,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private boolean isRunning;
 	private boolean hasLoggedIn;
 	private boolean shouldSkipModelUpdates;
+
 	public boolean isInGauntlet;
+	public boolean isInChambersOfXeric;
 
 	private final Map<Integer, TempModelInfo> frameModelInfoMap = new HashMap<>();
 
@@ -558,6 +560,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				isRunning = true;
 				hasLoggedIn = client.getGameState().getState() > GameState.LOGGING_IN.getState();
 				shouldSkipModelUpdates = false;
+				isInGauntlet = false;
+				isInChambersOfXeric = false;
 
 				if (client.getGameState() == GameState.LOGGED_IN)
 					uploadScene();
@@ -576,15 +580,17 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	@Override
-	protected void shutDown()
-	{
+	protected void shutDown() {
 		isRunning = false;
 
 		FileWatcher.destroy();
 		developerTools.deactivate();
 
-		clientThread.invoke(() ->
-		{
+		clientThread.invoke(() -> {
+			var scene = client.getScene();
+			if (scene != null)
+				scene.setMinLevel(0);
+
 			eventBus.unregister(lightManager);
 
 			client.setGpu(false);
@@ -2689,6 +2695,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				glBuffer.clBuffer = clCreateFromGLBuffer(openCLManager.getContext(), clFlags, glBuffer.glBufferId, (IntBuffer) null);
 			}
 		}
+	}
+
+	@Subscribe
+	public void onBeforeRender(BeforeRender beforeRender) {
+		// The game runs significantly slower when drawing lower planes, even though it in certain areas makes useful visual difference
+		client.getScene().setMinLevel(isInChambersOfXeric ? client.getPlane() : 0);
 	}
 
 	@Subscribe
