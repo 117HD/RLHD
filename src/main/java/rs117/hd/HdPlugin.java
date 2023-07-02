@@ -285,14 +285,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private final GLBuffer hUniformBufferLights = new GLBuffer();
 	private ByteBuffer uniformBufferLights;
 
+	@Getter
+	@Nullable
 	private SceneContext sceneContext;
 	private SceneContext nextSceneContext;
-
-	@Nullable
-	public SceneContext getSceneContext()
-	{
-		return sceneContext;
-	}
 
 	private GpuIntBuffer modelBufferUnordered;
 	private GpuIntBuffer modelBufferSmall;
@@ -399,8 +395,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public int[] camTarget = new int[3];
 
 	private boolean lwjglInitialized;
-	private boolean running;
+	private boolean isRunning;
 	private boolean hasLoggedIn;
+	private boolean shouldSkipModelUpdates;
 	public boolean isInGauntlet;
 
 	private final Map<Integer, TempModelInfo> frameModelInfoMap = new HashMap<>();
@@ -558,12 +555,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 				eventBus.register(lightManager);
 
-				running = true;
+				isRunning = true;
+				hasLoggedIn = client.getGameState().getState() > GameState.LOGGING_IN.getState();
+				shouldSkipModelUpdates = false;
 
 				if (client.getGameState() == GameState.LOGGED_IN)
-				{
 					uploadScene();
-				}
 
 				checkGLErrors();
 
@@ -581,7 +578,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	@Override
 	protected void shutDown()
 	{
-		running = false;
+		isRunning = false;
 
 		FileWatcher.destroy();
 		developerTools.deactivate();
@@ -1301,12 +1298,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (client.getGameState().getState() > GameState.LOADING.getState())
 			camTarget = getCameraFocalPoint();
 
-		// Only reset the target buffer offset right before drawing the scene. That way if there are frames
-		// after this that don't involve a scene draw, like during LOADING/HOPPING/CONNECTION_LOST, we can
-		// still redraw the previous frame's scene to emulate the client behavior of not painting over the
-		// viewport buffer.
-		renderBufferOffset = 0;
-
+		if (!shouldSkipModelUpdates) {
+			// Only reset the target buffer offset right before drawing the scene. That way if there are frames
+			// after this that don't involve a scene draw, like during LOADING/HOPPING/CONNECTION_LOST, we can
+			// still redraw the previous frame's scene to emulate the client behavior of not painting over the
+			// viewport buffer.
+			renderBufferOffset = 0;
+		}
 
 		// UBO. Only the first 32 bytes get modified here, the rest is the constant sin/cos table.
 		// We can reuse the vertex buffer since it isn't used yet.
@@ -1363,62 +1361,82 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	@Override
-	public void postDrawScene()
-	{
-		if (!running)
+	public void postDrawScene() {
+		if (!isRunning)
 			return;
 
-		// Geometry buffers
-		sceneContext.stagingBufferVertices.flip();
-		sceneContext.stagingBufferUvs.flip();
-		sceneContext.stagingBufferNormals.flip();
-		updateBuffer(hStagingBufferVertices, GL_ARRAY_BUFFER,
-			dynamicOffsetVertices * VERTEX_SIZE, sceneContext.stagingBufferVertices.getBuffer(),
-			GL_STREAM_DRAW, CL_MEM_READ_ONLY);
-		updateBuffer(hStagingBufferUvs, GL_ARRAY_BUFFER,
-			dynamicOffsetUvs * UV_SIZE, sceneContext.stagingBufferUvs.getBuffer(),
-			GL_STREAM_DRAW, CL_MEM_READ_ONLY);
-		updateBuffer(hStagingBufferNormals, GL_ARRAY_BUFFER,
-			dynamicOffsetVertices * NORMAL_SIZE, sceneContext.stagingBufferNormals.getBuffer(),
-			GL_STREAM_DRAW, CL_MEM_READ_ONLY);
-		sceneContext.stagingBufferVertices.clear();
-		sceneContext.stagingBufferUvs.clear();
-		sceneContext.stagingBufferNormals.clear();
+		// The client only updates animations once per client tick, so we can skip updating geometry buffers,
+		// but the compute shaders should still be executed in case the camera angle has changed.
+		// Technically we could skip compute shaders as well when the camera is unchanged,
+		// but it would only lead to micro stuttering when rotating the camera, compared to no rotation.
+		if (!shouldSkipModelUpdates) {
+			// Geometry buffers
+			sceneContext.stagingBufferVertices.flip();
+			sceneContext.stagingBufferUvs.flip();
+			sceneContext.stagingBufferNormals.flip();
+			updateBuffer(
+				hStagingBufferVertices,
+				GL_ARRAY_BUFFER,
+				dynamicOffsetVertices * VERTEX_SIZE,
+				sceneContext.stagingBufferVertices.getBuffer(),
+				GL_STREAM_DRAW, CL_MEM_READ_ONLY
+			);
+			updateBuffer(
+				hStagingBufferUvs,
+				GL_ARRAY_BUFFER,
+				dynamicOffsetUvs * UV_SIZE,
+				sceneContext.stagingBufferUvs.getBuffer(),
+				GL_STREAM_DRAW, CL_MEM_READ_ONLY
+			);
+			updateBuffer(
+				hStagingBufferNormals,
+				GL_ARRAY_BUFFER,
+				dynamicOffsetVertices * NORMAL_SIZE,
+				sceneContext.stagingBufferNormals.getBuffer(),
+				GL_STREAM_DRAW, CL_MEM_READ_ONLY
+			);
+			sceneContext.stagingBufferVertices.clear();
+			sceneContext.stagingBufferUvs.clear();
+			sceneContext.stagingBufferNormals.clear();
 
-		// Model buffers
-		modelBufferUnordered.flip();
-		modelBufferSmall.flip();
-		modelBufferLarge.flip();
-		updateBuffer(hModelBufferLarge, GL_ARRAY_BUFFER, modelBufferLarge.getBuffer(), GL_STREAM_DRAW, CL_MEM_READ_ONLY);
-		updateBuffer(hModelBufferSmall, GL_ARRAY_BUFFER, modelBufferSmall.getBuffer(), GL_STREAM_DRAW, CL_MEM_READ_ONLY);
-		updateBuffer(hModelBufferUnordered, GL_ARRAY_BUFFER, modelBufferUnordered.getBuffer(), GL_STREAM_DRAW, CL_MEM_READ_ONLY);
-		modelBufferUnordered.clear();
-		modelBufferSmall.clear();
-		modelBufferLarge.clear();
+			// Model buffers
+			modelBufferUnordered.flip();
+			modelBufferSmall.flip();
+			modelBufferLarge.flip();
+			updateBuffer(hModelBufferLarge, GL_ARRAY_BUFFER, modelBufferLarge.getBuffer(), GL_STREAM_DRAW, CL_MEM_READ_ONLY);
+			updateBuffer(hModelBufferSmall, GL_ARRAY_BUFFER, modelBufferSmall.getBuffer(), GL_STREAM_DRAW, CL_MEM_READ_ONLY);
+			updateBuffer(hModelBufferUnordered, GL_ARRAY_BUFFER, modelBufferUnordered.getBuffer(), GL_STREAM_DRAW, CL_MEM_READ_ONLY);
+			modelBufferUnordered.clear();
+			modelBufferSmall.clear();
+			modelBufferLarge.clear();
 
-		// Output buffers
-		updateBuffer(
-			hRenderBufferVertices,
-			GL_ARRAY_BUFFER,
-			renderBufferOffset * 16L, // each vertex is an ivec4, which is 16 bytes
-			GL_STREAM_DRAW,
-			CL_MEM_WRITE_ONLY
-		);
-		updateBuffer(
-			hRenderBufferUvs,
-			GL_ARRAY_BUFFER,
-			renderBufferOffset * 16L, // each vertex is an ivec4, which is 16 bytes
-			GL_STREAM_DRAW,
-			CL_MEM_WRITE_ONLY
-		);
-		updateBuffer(
-			hRenderBufferNormals,
-			GL_ARRAY_BUFFER,
-			renderBufferOffset * 16L, // each vertex is an ivec4, which is 16 bytes
-			GL_STREAM_DRAW,
-			CL_MEM_WRITE_ONLY
-		);
-		updateSceneVao(hRenderBufferVertices, hRenderBufferUvs, hRenderBufferNormals);
+			// Output buffers
+			updateBuffer(
+				hRenderBufferVertices,
+				GL_ARRAY_BUFFER,
+				renderBufferOffset * 16L, // each vertex is an ivec4, which is 16 bytes
+				GL_STREAM_DRAW,
+				CL_MEM_WRITE_ONLY
+			);
+			updateBuffer(
+				hRenderBufferUvs,
+				GL_ARRAY_BUFFER,
+				renderBufferOffset * 16L, // each vertex is an ivec4, which is 16 bytes
+				GL_STREAM_DRAW,
+				CL_MEM_WRITE_ONLY
+			);
+			updateBuffer(
+				hRenderBufferNormals,
+				GL_ARRAY_BUFFER,
+				renderBufferOffset * 16L, // each vertex is an ivec4, which is 16 bytes
+				GL_STREAM_DRAW,
+				CL_MEM_WRITE_ONLY
+			);
+			updateSceneVao(hRenderBufferVertices, hRenderBufferUvs, hRenderBufferNormals);
+
+			// Once geometry buffers have been updated, they can be reused until the client actually modifies the scene
+			shouldSkipModelUpdates = true;
+		}
 
 		if (computeMode == ComputeMode.OPENCL) {
 			// The docs for clEnqueueAcquireGLObjects say all pending GL operations must be completed before calling
@@ -1474,52 +1492,41 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	@Override
-	public void drawScenePaint(int orientation, int pitchSin, int pitchCos, int yawSin, int yawCos, int x, int y, int z,
+	public void drawScenePaint(
+		int orientation, int pitchSin, int pitchCos, int yawSin, int yawCos, int x, int y, int z,
 		SceneTilePaint paint, int tileZ, int tileX, int tileY,
-		int zoom, int centerX, int centerY)
-	{
-		if (paint.getBufferLen() > 0)
-		{
-			final int localX = tileX * LOCAL_TILE_SIZE;
-			final int localY = 0;
-			final int localZ = tileY * LOCAL_TILE_SIZE;
+		int zoom, int centerX, int centerY
+	) {
+		if (shouldSkipModelUpdates || paint.getBufferLen() <= 0)
+			return;
 
-			GpuIntBuffer b = modelBufferUnordered;
-			b.ensureCapacity(16);
-			IntBuffer buffer = b.getBuffer();
+		final int localX = tileX * LOCAL_TILE_SIZE;
+		final int localY = 0;
+		final int localZ = tileY * LOCAL_TILE_SIZE;
 
-			int bufferLength = paint.getBufferLen();
+		GpuIntBuffer b = modelBufferUnordered;
+		b.ensureCapacity(16);
+		IntBuffer buffer = b.getBuffer();
 
-			// we packed a boolean into the buffer length of tiles so we can tell
-			// which tiles have procedurally-generated underwater terrain.
-			// unpack the boolean:
-			boolean underwaterTerrain = (bufferLength & 1) == 1;
-			// restore the bufferLength variable:
-			bufferLength = bufferLength >> 1;
+		int bufferLength = paint.getBufferLen();
 
-			if (underwaterTerrain)
-			{
-				// draw underwater terrain tile before surface tile
+		// we packed a boolean into the buffer length of tiles so we can tell
+		// which tiles have procedurally-generated underwater terrain.
+		// unpack the boolean:
+		boolean underwaterTerrain = (bufferLength & 1) == 1;
+		// restore the bufferLength variable:
+		bufferLength = bufferLength >> 1;
 
-				// buffer length includes the generated underwater terrain, so it must be halved
-				bufferLength /= 2;
+		if (underwaterTerrain) {
+			// draw underwater terrain tile before surface tile
 
-				++numModelsUnordered;
-
-				buffer.put(paint.getBufferOffset() + bufferLength);
-				buffer.put(paint.getUvBufferOffset() + bufferLength);
-				buffer.put(bufferLength / 3);
-				buffer.put(renderBufferOffset);
-				buffer.put(0);
-				buffer.put(localX).put(localY).put(localZ);
-
-				renderBufferOffset += bufferLength;
-			}
+			// buffer length includes the generated underwater terrain, so it must be halved
+			bufferLength /= 2;
 
 			++numModelsUnordered;
 
-			buffer.put(paint.getBufferOffset());
-			buffer.put(paint.getUvBufferOffset());
+			buffer.put(paint.getBufferOffset() + bufferLength);
+			buffer.put(paint.getUvBufferOffset() + bufferLength);
 			buffer.put(bufferLength / 3);
 			buffer.put(renderBufferOffset);
 			buffer.put(0);
@@ -1527,6 +1534,17 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 			renderBufferOffset += bufferLength;
 		}
+
+		++numModelsUnordered;
+
+		buffer.put(paint.getBufferOffset());
+		buffer.put(paint.getUvBufferOffset());
+		buffer.put(bufferLength / 3);
+		buffer.put(renderBufferOffset);
+		buffer.put(0);
+		buffer.put(localX).put(localY).put(localZ);
+
+		renderBufferOffset += bufferLength;
 	}
 
 	public void initShaderHotswapping() {
@@ -1537,52 +1555,41 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	@Override
-	public void drawSceneModel(int orientation, int pitchSin, int pitchCos, int yawSin, int yawCos, int x, int y, int z,
-			SceneTileModel model, int tileZ, int tileX, int tileY,
-			int zoom, int centerX, int centerY)
-	{
-		if (model.getBufferLen() > 0)
-		{
-			final int localX = tileX * LOCAL_TILE_SIZE;
-			final int localY = 0;
-			final int localZ = tileY * LOCAL_TILE_SIZE;
+	public void drawSceneModel(
+		int orientation, int pitchSin, int pitchCos, int yawSin, int yawCos, int x, int y, int z,
+		SceneTileModel model, int tileZ, int tileX, int tileY,
+		int zoom, int centerX, int centerY
+	) {
+		if (shouldSkipModelUpdates || model.getBufferLen() <= 0)
+			return;
 
-			GpuIntBuffer b = modelBufferUnordered;
-			b.ensureCapacity(16);
-			IntBuffer buffer = b.getBuffer();
+		final int localX = tileX * LOCAL_TILE_SIZE;
+		final int localY = 0;
+		final int localZ = tileY * LOCAL_TILE_SIZE;
 
-			int bufferLength = model.getBufferLen();
+		GpuIntBuffer b = modelBufferUnordered;
+		b.ensureCapacity(16);
+		IntBuffer buffer = b.getBuffer();
 
-			// we packed a boolean into the buffer length of tiles so we can tell
-			// which tiles have procedurally-generated underwater terrain.
-			// unpack the boolean:
-			boolean underwaterTerrain = (bufferLength & 1) == 1;
-			// restore the bufferLength variable:
-			bufferLength = bufferLength >> 1;
+		int bufferLength = model.getBufferLen();
 
-			if (underwaterTerrain)
-			{
-				// draw underwater terrain tile before surface tile
+		// we packed a boolean into the buffer length of tiles so we can tell
+		// which tiles have procedurally-generated underwater terrain.
+		// unpack the boolean:
+		boolean underwaterTerrain = (bufferLength & 1) == 1;
+		// restore the bufferLength variable:
+		bufferLength = bufferLength >> 1;
 
-				// buffer length includes the generated underwater terrain, so it must be halved
-				bufferLength /= 2;
+		if (underwaterTerrain) {
+			// draw underwater terrain tile before surface tile
 
-				++numModelsUnordered;
-
-				buffer.put(model.getBufferOffset() + bufferLength);
-				buffer.put(model.getUvBufferOffset() + bufferLength);
-				buffer.put(bufferLength / 3);
-				buffer.put(renderBufferOffset);
-				buffer.put(0);
-				buffer.put(localX).put(localY).put(localZ);
-
-				renderBufferOffset += bufferLength;
-			}
+			// buffer length includes the generated underwater terrain, so it must be halved
+			bufferLength /= 2;
 
 			++numModelsUnordered;
 
-			buffer.put(model.getBufferOffset());
-			buffer.put(model.getUvBufferOffset());
+			buffer.put(model.getBufferOffset() + bufferLength);
+			buffer.put(model.getUvBufferOffset() + bufferLength);
 			buffer.put(bufferLength / 3);
 			buffer.put(renderBufferOffset);
 			buffer.put(0);
@@ -1590,6 +1597,17 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 			renderBufferOffset += bufferLength;
 		}
+
+		++numModelsUnordered;
+
+		buffer.put(model.getBufferOffset());
+		buffer.put(model.getUvBufferOffset());
+		buffer.put(bufferLength / 3);
+		buffer.put(renderBufferOffset);
+		buffer.put(0);
+		buffer.put(localX).put(localY).put(localZ);
+
+		renderBufferOffset += bufferLength;
 	}
 
 	private void prepareInterfaceTexture(int canvasWidth, int canvasHeight)
@@ -2094,7 +2112,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Subscribe
 	public void onGameStateChanged(GameStateChanged gameStateChanged) {
-		if (!running)
+		if (!isRunning)
 			return;
 
 		if (gameStateChanged.getGameState() == GameState.LOGIN_SCREEN) {
@@ -2359,10 +2377,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	@Override
 	public void draw(Renderable renderable, int orientation, int pitchSin, int pitchCos, int yawSin, int yawCos, int x, int y, int z, long hash)
 	{
-		if (modelOverrideManager.shouldHideModel(hash, x, z)) {
-			return;
-		}
-
 		Model model = renderable instanceof Model ? (Model) renderable : renderable.getModel();
 		if (model == null || model.getFaceCount() == 0) {
 			// skip models with zero faces
@@ -2373,22 +2387,19 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		// Model may be in the scene buffer
 		assert sceneContext != null;
-		if (model.getSceneId() == sceneContext.id)
-		{
-			model.calculateBoundsCylinder();
-
-			if (isOutsideViewport(model, pitchSin, pitchCos, yawSin, yawCos, x, y, z))
-			{
-				return;
-			}
-
+		if (model.getSceneId() == sceneContext.id) {
+			// check if the object was marked to be skipped
 			if ((model.getBufferOffset() & 0b11) == 0b11)
-			{
-				// this object was marked to be skipped
 				return;
-			}
+
+			model.calculateBoundsCylinder();
+			if (isOutsideViewport(model, pitchSin, pitchCos, yawSin, yawCos, x, y, z))
+				return;
 
 			client.checkClickbox(model, orientation, pitchSin, pitchCos, yawSin, yawCos, x, y, z, hash);
+
+			if (shouldSkipModelUpdates || modelOverrideManager.shouldHideModel(hash, x, z))
+				return;
 
 			int faceCount = Math.min(MAX_TRIANGLE, model.getFaceCount());
 			int uvOffset = model.getUvBufferOffset();
@@ -2405,30 +2416,25 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			bufferForTriangles(faceCount).ensureCapacity(8).put(eightIntWrite);
 
 			renderBufferOffset += faceCount * 3;
-		}
-		else
-		{
+		} else {
 			// Temporary model (animated or otherwise not a static Model on the scene)
 			// Apply height to renderable from the model
-			if (model != renderable)
-			{
+			if (model != renderable) {
 				renderable.setModelHeight(model.getModelHeight());
 			}
 
-			model.calculateBoundsCylinder();
-
-			if (isOutsideViewport(model, pitchSin, pitchCos, yawSin, yawCos, x, y, z))
-			{
-				return;
-			}
-
+			// check if the object was marked to be skipped
 			if ((model.getBufferOffset() & 0b11) == 0b11)
-			{
-				// this object was marked to be skipped
 				return;
-			}
+
+			model.calculateBoundsCylinder();
+			if (isOutsideViewport(model, pitchSin, pitchCos, yawSin, yawCos, x, y, z))
+				return;
 
 			client.checkClickbox(model, orientation, pitchSin, pitchCos, yawSin, yawCos, x, y, z, hash);
+
+			if (shouldSkipModelUpdates || modelOverrideManager.shouldHideModel(hash, x, z))
+				return;
 
 			eightIntWrite[3] = renderBufferOffset;
 			eightIntWrite[4] = model.getRadius() << 12 | orientation;
@@ -2485,23 +2491,18 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	@Override
-	public boolean drawFace(Model model, int face)
-	{
+	public boolean drawFace(Model model, int face) {
 		return false;
 	}
 
 	/**
 	 * returns the correct buffer based on triangle count and updates model count
 	 */
-	private GpuIntBuffer bufferForTriangles(int triangles)
-	{
-		if (triangles <= SMALL_TRIANGLE_COUNT)
-		{
+	private GpuIntBuffer bufferForTriangles(int triangles) {
+		if (triangles <= SMALL_TRIANGLE_COUNT) {
 			++numModelsSmall;
 			return modelBufferSmall;
-		}
-		else
-		{
+		} else {
 			++numModelsLarge;
 			return modelBufferLarge;
 		}
@@ -2680,17 +2681,19 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			}
 
 			// allocate new
-			if (glBuffer.size == 0)
-			{
+			if (glBuffer.size == 0) {
 				// opencl does not allow 0-size gl buffers, it will segfault on macos
 				glBuffer.clBuffer = 0;
-			}
-			else
-			{
+			} else {
 				assert glBuffer.size > 0 : "Size <= 0 should not reach this point";
 				glBuffer.clBuffer = clCreateFromGLBuffer(openCLManager.getContext(), clFlags, glBuffer.glBufferId, (IntBuffer) null);
 			}
 		}
+	}
+
+	@Subscribe
+	public void onClientTick(ClientTick clientTick) {
+		shouldSkipModelUpdates = false;
 	}
 
 	@Subscribe
@@ -2699,13 +2702,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			uploadScene();
 	}
 
-	private void checkGLErrors()
-	{
+	private void checkGLErrors() {
 		if (!log.isDebugEnabled())
 			return;
 
-		for (; ; )
-		{
+		for (; ; ) {
 			int err = glGetError();
 			if (err == GL_NO_ERROR)
 				return;
