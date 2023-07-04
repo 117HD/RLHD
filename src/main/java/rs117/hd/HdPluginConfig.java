@@ -329,8 +329,9 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
+	String KEY_ATMOSPHERIC_LIGHTING = "environmentalLighting";
 	@ConfigItem(
-		keyName = "environmentalLighting",
+		keyName = KEY_ATMOSPHERIC_LIGHTING,
 		name = "Atmospheric Lighting",
 		description = "Change environmental lighting based on the current area.",
 		position = 4,

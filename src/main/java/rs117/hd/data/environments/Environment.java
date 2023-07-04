@@ -1050,14 +1050,6 @@ public enum Environment
 			.setLightDirection(260f, 10f)
 			.setAllowSkyOverride(false)
 	),
-	WINTER(Area.NONE, new Properties()
-		.setFogColor("#B8C5DB")
-		.setFogDepth(35)
-		.setAmbientColor("#8FCAFF")
-		.setAmbientStrength(3.5f)
-		.setDirectionalColor("#FFFFFF")
-		.setDirectionalStrength(1.5f)
-	),
 
 	MAGE_ARENA_BANK(Area.MAGE_ARENA_BANK, new Properties()
 			.setFogDepth(40)
@@ -1107,7 +1099,17 @@ public enum Environment
 		.setLightDirection(260f, 10f)
 		.setWaterColor(102, 234, 255)
 	),
-
+	WINTER(Area.NONE, new Properties()
+		.setFogColor("#B8C5DB")
+		.setFogDepth(35)
+		.setAmbientColor("#8FCAFF")
+		.setAmbientStrength(3.5f)
+		.setDirectionalColor("#FFFFFF")
+		.setDirectionalStrength(1.5f)
+	),
+	NONE(Area.NONE, new Properties()
+		.setFogColor("#000000")
+	),
 	;
 
 	private final Area area;

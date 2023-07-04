@@ -494,7 +494,7 @@ public class ModelPusher {
 				N[2] /= length;
 			}
 
-			float[] L = HDUtils.lightDirModel;
+			float[] L = HDUtils.LIGHT_DIR_MODEL;
 			float lightDotNormal = Math.max(0, N[0] * L[0] + N[1] * L[1] + N[2] * L[2]);
 
 			int lightenA = (int) (Math.max((color1L - IGNORE_LOW_LIGHTNESS), 0) * LIGHTNESS_MULTIPLIER) + BASE_LIGHTEN;

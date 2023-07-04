@@ -553,9 +553,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				modelPusher.startUp();
 				modelOverrideManager.startUp();
 				lightManager.startUp();
-				environmentManager.initialize();
-
-				eventBus.register(lightManager);
 
 				isRunning = true;
 				hasLoggedIn = client.getGameState().getState() > GameState.LOGGING_IN.getState();
@@ -591,12 +588,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			if (scene != null)
 				scene.setMinLevel(0);
 
-			eventBus.unregister(lightManager);
-
 			client.setGpu(false);
 			client.setDrawCallbacks(null);
 			client.setUnlockedFps(false);
+
 			modelPusher.shutDown();
+			lightManager.shutDown();
+			environmentManager.reset();
 
 			if (lwjglInitialized) {
 				textureManager.shutDown();
@@ -2125,7 +2123,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			renderBufferOffset = 0;
 			sceneContext = null;
 			hasLoggedIn = false;
-			environmentManager.initialize();
+			environmentManager.reset();
 		}
 	}
 
@@ -2258,8 +2256,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				case KEY_HD_INFERNAL_CAPE:
 					textureManager.freeTextures();
 					break;
+				case KEY_ATMOSPHERIC_LIGHTING:
+					environmentManager.reset();
+					break;
 				case KEY_WINTER_THEME:
-					environmentManager.initialize();
+					environmentManager.reset();
+					// fall-through
 				case KEY_MODEL_TEXTURES:
 					textureManager.freeTextures();
 					// fall-through
