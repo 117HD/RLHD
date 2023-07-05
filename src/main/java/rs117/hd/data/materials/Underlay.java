@@ -151,7 +151,7 @@ public enum Underlay {
 	ICEBERG_TEXTURE(p -> p
 		.area(Area.ICEBERG)
 		.groundMaterial(GroundMaterial.SNOW_2)
-		.ids(19, 59)
+		.ids(59)
 		.shiftLightness(5)
 	),
 
@@ -159,7 +159,7 @@ public enum Underlay {
 	ZEAH_DIRT(p -> p
 		.area(Area.ZEAH)
 		.groundMaterial(GroundMaterial.VARIED_DIRT)
-		.ids(148)
+		.ids(19, 148)
 		.replaceWithIf(WINTER_DIRT, plugin -> plugin.configWinterTheme)
 	),
 	ZEAH_GRAVEL_HILLS(p -> p
