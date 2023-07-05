@@ -661,6 +661,13 @@ public enum Overlay {
 
 	// Purple symbol near Wintertodt
 	PURPLE_SYMBOL(68, Area.ZEAH_SNOWY_NORTHERN_REGION, GroundMaterial.DIRT, p -> p.blended(false)),
+	// Zeah Defaults
+	ZEAH_DIRT(p -> p
+		.area(Area.ZEAH)
+		.groundMaterial(GroundMaterial.VARIED_DIRT)
+		.ids(114, 148)
+		.replaceWithIf(WINTER_DIRT, plugin -> plugin.configWinterTheme)
+	),
 
 	// Burthorpe games room
 	GAMES_ROOM_FLOOR(22, Area.GAMES_ROOM, GroundMaterial.WOOD_PLANKS_1, p -> p.blended(false)),

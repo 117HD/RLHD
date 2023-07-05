@@ -151,8 +151,28 @@ public enum Underlay {
 	ICEBERG_TEXTURE(p -> p
 		.area(Area.ICEBERG)
 		.groundMaterial(GroundMaterial.SNOW_2)
-		.ids(59)
+		.ids(19, 59)
 		.shiftLightness(5)
+	),
+
+	// Zeah
+	ZEAH_DIRT(p -> p
+		.area(Area.ZEAH)
+		.groundMaterial(GroundMaterial.VARIED_DIRT)
+		.ids(148)
+		.replaceWithIf(WINTER_DIRT, plugin -> plugin.configWinterTheme)
+	),
+	ZEAH_GRAVEL_HILLS(p -> p
+		.area(Area.ZEAH)
+		.groundMaterial(GroundMaterial.GRAVEL)
+		.ids(99)
+		.replaceWithIf(WINTER_GRUNGE, plugin -> plugin.configWinterTheme)
+	),
+	ZEAH_ROCKY_GROUND(p -> p
+		.area(Area.ZEAH)
+		.groundMaterial(GroundMaterial.ROCKY_CAVE_FLOOR)
+		.ids(27, 29, 129)
+		.replaceWithIf(WINTER_GRUNGE, plugin -> plugin.configWinterTheme)
 	),
 
 	// Zanaris
@@ -260,7 +280,7 @@ public enum Underlay {
 	),
 	TILE_NEEDS_HUE_DEFINED(GroundMaterial.VARIED_DIRT, p -> p
 		.ids(26)
-		.replaceWithIf(UNDERLAY_SNOW, plugin -> plugin.configWinterTheme)
+		.replaceWithIf(WINTER_DIRT, plugin -> plugin.configWinterTheme)
 	),
 
 	NONE(GroundMaterial.DIRT, p -> {});
