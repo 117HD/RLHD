@@ -748,7 +748,7 @@ public enum Overlay {
 		GroundMaterial.DIRT,
 		p -> p.ids(-124, -84, -83, 14, 15, 21, 22, 23, 60, 77, 81, 82, 88, 89, 101, 102, 107, 108, 110, 115, 123, 227)
 	),
-	OVERLAY_GRAVEL(GroundMaterial.GRAVEL, p -> p.ids(-76, 2, 3, 4, 6, 8, 9, 10, 119)),
+	OVERLAY_GRAVEL(GroundMaterial.GRAVEL, p -> p.ids(-76, 2, 3, 4, 6, 8, 9, 10, 119, 127)),
 	OVERLAY_ZEAH_PATHS(Area.ZEAH, GroundMaterial.VARROCK_PATHS, p -> p
 		.replaceWithIf(WINTER_JAGGED_STONE_TILE_LIGHT_2, plugin -> plugin.configWinterTheme)
 		.ids(11)
@@ -760,7 +760,7 @@ public enum Overlay {
 	OVERLAY_SWAMP_WATER(WaterType.SWAMP_WATER, p -> p.ids(-100, 7)),
 	OVERLAY_WOOD_PLANKS(GroundMaterial.WOOD_PLANKS_1, p -> p.ids(5, 35)),
 	OVERLAY_CLEAN_WOOD_PLANKS(GroundMaterial.CLEAN_WOOD_FLOOR, p -> p.ids(52).shiftLightness(-4)),
-	OVERLAY_SAND(GroundMaterial.SAND, p -> p.ids(25, 26)),
+	OVERLAY_SAND(GroundMaterial.SAND, p -> p.ids(25, 26, 76)),
 	OVERLAY_BRICK_BROWN(GroundMaterial.BRICK_BROWN, p -> p.ids(27, 46).blended(false)),
 	OVERLAY_SNOW(GroundMaterial.SNOW_2, p -> p.ids(30, 33)),
 	OVERLAY_VARIED_DIRT(GroundMaterial.VARIED_DIRT, p -> p.ids(49, 83, 91)),
