@@ -258,6 +258,10 @@ public enum Underlay {
 		.ids(8, 10, 55, 60, 92) // 8 = Jatizso, 60 = GotR, 92 = Eadgars Cave
 		.replaceWithIf(WINTER_GRUNGE, plugin -> plugin.configWinterTheme)
 	),
+	TILE_NEEDS_HUE_DEFINED(GroundMaterial.VARIED_DIRT, p -> p
+		.ids(26)
+		.replaceWithIf(UNDERLAY_SNOW, plugin -> plugin.configWinterTheme)
+	),
 
 	NONE(GroundMaterial.DIRT, p -> {});
 
