@@ -613,6 +613,13 @@ public enum Overlay {
 		.shiftLightness(12)
 		.shiftSaturation(-2)
 	),
+	TIRANNWN_PATHS(p -> p
+		.area(Area.TIRANNWN)
+		.groundMaterial(GroundMaterial.SAND_BRICK)
+		.ids(106)
+		.shiftLightness(12)
+		.shiftSaturation(-2)
+	),
 	POISON_WASTE(85, Area.POISON_WASTE, WaterType.POISON_WASTE),
 
 	// Fossil Island
