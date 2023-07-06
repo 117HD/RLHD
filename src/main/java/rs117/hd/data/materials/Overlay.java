@@ -606,6 +606,13 @@ public enum Overlay {
 	WILDERNESS_NORTH_OF_RESOURCE_AREA_HILLS(11, Area.WILDERNESS_NORTH_OF_RESOURCE_AREA, GroundMaterial.VARIED_DIRT),
 
 	// Tirannwn
+	ARANDAR_PATHS(p -> p
+		.area(Area.ARANDAR)
+		.groundMaterial(GroundMaterial.SAND_BRICK)
+		.ids(106)
+		.shiftLightness(12)
+		.shiftSaturation(-2)
+	),
 	POISON_WASTE(85, Area.POISON_WASTE, WaterType.POISON_WASTE),
 
 	// Fossil Island
