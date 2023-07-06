@@ -278,7 +278,7 @@ public enum Underlay {
 	OVERWORLD_SAND(Area.OVERWORLD, GroundMaterial.SAND, p -> p.ids(-127, -118, 61, 68)),
 	UNDERLAY_PACKED_EARTH(GroundMaterial.PACKED_EARTH, p -> p.ids(15)),
 
-	UNDERLAY_SNOW(GroundMaterial.SNOW_1, p -> p.ids(58, 59)),
+	UNDERLAY_SNOW(GroundMaterial.SNOW_1, p -> p.ids(16, 58, 59)),
 	UNDERLAY_72(GroundMaterial.VARIED_DIRT, p -> p
 		.ids(72, 73, 98, 112, 113) //112 == Lovakengj
 		.replaceWithIf(WINTER_DIRT, plugin -> plugin.configWinterTheme)
