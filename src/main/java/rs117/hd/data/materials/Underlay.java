@@ -258,7 +258,16 @@ public enum Underlay {
 
 	// Cutscenes
 	CANOE_CUTSCENE_GRASS(Area.CANOE_CUTSCENE, GroundMaterial.GRASS_SCROLLING, p -> p.ids(48, 50, 63)),
-
+	// Items that cannot properly be fixed unless we can first detect the hue of the tile to set a texture.
+	NEEDS_HUE_FIX_GRASSY_EARTH(GroundMaterial.GRASSY_DIRT, p -> p
+		.area(Area.ZEAH)
+		.ids(63)
+		.replaceWithIf(WINTER_DIRT, plugin -> plugin.configWinterTheme)
+	),
+	TILE_NEEDS_HUE_DEFINED(GroundMaterial.VARIED_DIRT, p -> p
+		.ids(26)
+		.replaceWithIf(WINTER_DIRT, plugin -> plugin.configWinterTheme)
+	),
 	// Default underlays
 	OVERWORLD_GRASS(Area.OVERWORLD, GroundMaterial.OVERWORLD_GRASS_1, p -> p
 		.ids(25, 33, 34, 40, 48, 49, 50, 51, 52, 53, 54, 62, 63, 67, 70, 71, 75, 93, 96, 97, 99, 100, 103, 114, 115, 126)
@@ -277,10 +286,6 @@ public enum Underlay {
 	UNDERLAY_OVERWORLD_GRUNGE(GroundMaterial.GRUNGE, p -> p
 		.ids(8, 10, 55, 60, 92) // 8 = Jatizso, 60 = GotR, 92 = Eadgars Cave
 		.replaceWithIf(WINTER_GRUNGE, plugin -> plugin.configWinterTheme)
-	),
-	TILE_NEEDS_HUE_DEFINED(GroundMaterial.VARIED_DIRT, p -> p
-		.ids(26)
-		.replaceWithIf(WINTER_DIRT, plugin -> plugin.configWinterTheme)
 	),
 
 	NONE(GroundMaterial.DIRT, p -> {});
