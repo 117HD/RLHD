@@ -1014,29 +1014,31 @@ public class HdPlugin extends Plugin implements DrawCallbacks
 		}
 	}
 
-	private void initBuffers()
-	{
-		initGlBuffer(hUniformBufferCamera);
-		initGlBuffer(hUniformBufferMaterials);
-		initGlBuffer(hUniformBufferWaterTypes);
-		initGlBuffer(hUniformBufferLights);
+	private void initBuffers() {
+		initGlBuffer(hUniformBufferCamera, GL_UNIFORM_BUFFER, GL_DYNAMIC_DRAW, CL_MEM_READ_ONLY);
+		initGlBuffer(hUniformBufferMaterials, GL_UNIFORM_BUFFER, GL_STATIC_DRAW, CL_MEM_READ_ONLY);
+		initGlBuffer(hUniformBufferWaterTypes, GL_UNIFORM_BUFFER, GL_STATIC_DRAW, CL_MEM_READ_ONLY);
+		initGlBuffer(hUniformBufferLights, GL_UNIFORM_BUFFER, GL_STREAM_DRAW, CL_MEM_READ_ONLY);
 
-		initGlBuffer(hStagingBufferVertices);
-		initGlBuffer(hStagingBufferUvs);
-		initGlBuffer(hStagingBufferNormals);
+		initGlBuffer(hStagingBufferVertices, GL_ARRAY_BUFFER, GL_STREAM_DRAW, CL_MEM_READ_ONLY);
+		initGlBuffer(hStagingBufferUvs, GL_ARRAY_BUFFER, GL_STREAM_DRAW, CL_MEM_READ_ONLY);
+		initGlBuffer(hStagingBufferNormals, GL_ARRAY_BUFFER, GL_STREAM_DRAW, CL_MEM_READ_ONLY);
 
-		initGlBuffer(hModelBufferLarge);
-		initGlBuffer(hModelBufferSmall);
-		initGlBuffer(hModelBufferUnordered);
+		initGlBuffer(hModelBufferLarge, GL_ARRAY_BUFFER, GL_STREAM_DRAW, CL_MEM_READ_ONLY);
+		initGlBuffer(hModelBufferSmall, GL_ARRAY_BUFFER, GL_STREAM_DRAW, CL_MEM_READ_ONLY);
+		initGlBuffer(hModelBufferUnordered, GL_ARRAY_BUFFER, GL_STREAM_DRAW, CL_MEM_READ_ONLY);
 
-		initGlBuffer(hRenderBufferVertices);
-		initGlBuffer(hRenderBufferUvs);
-		initGlBuffer(hRenderBufferNormals);
+		initGlBuffer(hRenderBufferVertices, GL_ARRAY_BUFFER, GL_STREAM_DRAW, CL_MEM_WRITE_ONLY);
+		initGlBuffer(hRenderBufferUvs, GL_ARRAY_BUFFER, GL_STREAM_DRAW, CL_MEM_WRITE_ONLY);
+		initGlBuffer(hRenderBufferNormals, GL_ARRAY_BUFFER, GL_STREAM_DRAW, CL_MEM_WRITE_ONLY);
 	}
 
-	private void initGlBuffer(GLBuffer glBuffer)
-	{
+	private void initGlBuffer(GLBuffer glBuffer, int target, int glUsage, int clUsage) {
 		glBuffer.glBufferId = glGenBuffers();
+		// Initialize both GL and CL buffers to dummy buffers of a single byte,
+		// to ensure that valid buffers are given to compute dispatches.
+		// This is particularly important on Apple M2 Max, where an uninitialized buffer leads to a crash
+		updateBuffer(glBuffer, target, 1, glUsage, clUsage);
 	}
 
 	private void destroyBuffers()
