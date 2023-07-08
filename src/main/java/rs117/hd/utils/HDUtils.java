@@ -130,12 +130,26 @@ public class HDUtils {
 		return result;
 	}
 
-	public static int clamp(int value, int min, int max) {
-		return Math.min(max, Math.max(min, value));
+	/**
+	 * Modulo that returns the answer with the same sign as the modulus.
+	 */
+	public static float mod(float x, float modulus) {
+		return (float) (x - Math.floor(x / modulus) * modulus);
+	}
+
+	/**
+	 * Modulo that returns the answer with the same sign as the modulus.
+	 */
+	public static int mod(int x, int modulus) {
+		return x - (x / modulus) * modulus;
 	}
 
 	public static float clamp(float value, float min, float max) {
-		return Math.min(max, Math.max(min, value));
+		return Math.min(Math.max(value, min), max);
+	}
+
+	public static int clamp(int value, int min, int max) {
+		return Math.min(Math.max(value, min), max);
 	}
 
 	public static int vertexHash(int[] vPos) {

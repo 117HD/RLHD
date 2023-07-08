@@ -191,7 +191,7 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay {
 			// TODO: separate H, S and L to hopefully more easily match tiles that are different shades of the same hue
 			polyColor = Color.CYAN;
 			lines.add("Tile type: Paint");
-			Material material = Material.getTexture(paint.getTexture());
+			Material material = Material.fromVanillaTexture(paint.getTexture());
 			lines.add(String.format("Material: %s (%d)", material.name(), paint.getTexture()));
 			lines.add("JagexHSL: ");
 			lines.add("NW: " + (paint.getNwColor() == 12345678 ? "HIDDEN" : paint.getNwColor()));
@@ -211,7 +211,7 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay {
 			{
 				for (int texture : model.getTriangleTextureId())
 				{
-					String material = String.format("%s (%d)", Material.getTexture(texture).name(), texture);
+					String material = String.format("%s (%d)", Material.fromVanillaTexture(texture).name(), texture);
 					boolean unique = uniqueMaterials.add(material);
 					if (unique)
 					{

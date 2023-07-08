@@ -433,20 +433,18 @@ class SceneUploader {
 			float[] nwNormals = UP_NORMAL;
 
 			WaterType waterType = proceduralGenerator.tileWaterType(scene, tile, sceneTilePaint);
-			if (waterType == WaterType.NONE)
-			{
-				swMaterial = Material.getTexture(tileTexture);
-				seMaterial = Material.getTexture(tileTexture);
-				neMaterial = Material.getTexture(tileTexture);
-				nwMaterial = Material.getTexture(tileTexture);
+			if (waterType == WaterType.NONE) {
+				swMaterial = Material.fromVanillaTexture(tileTexture);
+				seMaterial = Material.fromVanillaTexture(tileTexture);
+				neMaterial = Material.fromVanillaTexture(tileTexture);
+				nwMaterial = Material.fromVanillaTexture(tileTexture);
 
 				swNormals = sceneContext.vertexTerrainNormals.getOrDefault(swVertexKey, swNormals);
 				seNormals = sceneContext.vertexTerrainNormals.getOrDefault(seVertexKey, seNormals);
 				neNormals = sceneContext.vertexTerrainNormals.getOrDefault(neVertexKey, neNormals);
 				nwNormals = sceneContext.vertexTerrainNormals.getOrDefault(nwVertexKey, nwNormals);
 
-				if (plugin.configGroundBlending && !proceduralGenerator.useDefaultColor(scene, tile) && sceneTilePaint.getTexture() == -1)
-				{
+				if (plugin.configGroundBlending && !proceduralGenerator.useDefaultColor(scene, tile) && sceneTilePaint.getTexture() == -1) {
 					// get the vertices' colors and textures from hashmaps
 
 					swColor = sceneContext.vertexTerrainColor.getOrDefault(swVertexKey, swColor);
@@ -454,8 +452,7 @@ class SceneUploader {
 					neColor = sceneContext.vertexTerrainColor.getOrDefault(neVertexKey, neColor);
 					nwColor = sceneContext.vertexTerrainColor.getOrDefault(nwVertexKey, nwColor);
 
-					if (plugin.configGroundTextures)
-					{
+					if (plugin.configGroundTextures) {
 						swMaterial = sceneContext.vertexTerrainTexture.getOrDefault(swVertexKey, swMaterial);
 						seMaterial = sceneContext.vertexTerrainTexture.getOrDefault(seVertexKey, seMaterial);
 						neMaterial = sceneContext.vertexTerrainTexture.getOrDefault(neVertexKey, neMaterial);
@@ -565,10 +562,14 @@ class SceneUploader {
 			bufferLength += 6;
 
 
-			int packedMaterialDataSW = modelPusher.packMaterialData(swMaterial, ModelOverride.NONE, UvType.GEOMETRY, swVertexIsOverlay);
-			int packedMaterialDataSE = modelPusher.packMaterialData(seMaterial, ModelOverride.NONE, UvType.GEOMETRY, seVertexIsOverlay);
-			int packedMaterialDataNW = modelPusher.packMaterialData(nwMaterial, ModelOverride.NONE, UvType.GEOMETRY, nwVertexIsOverlay);
-			int packedMaterialDataNE = modelPusher.packMaterialData(neMaterial, ModelOverride.NONE, UvType.GEOMETRY, neVertexIsOverlay);
+			int packedMaterialDataSW = modelPusher.packMaterialData(
+				swMaterial, tileTexture, ModelOverride.NONE, UvType.GEOMETRY, swVertexIsOverlay);
+			int packedMaterialDataSE = modelPusher.packMaterialData(
+				seMaterial, tileTexture, ModelOverride.NONE, UvType.GEOMETRY, seVertexIsOverlay);
+			int packedMaterialDataNW = modelPusher.packMaterialData(
+				nwMaterial, tileTexture, ModelOverride.NONE, UvType.GEOMETRY, nwVertexIsOverlay);
+			int packedMaterialDataNE = modelPusher.packMaterialData(
+				neMaterial, tileTexture, ModelOverride.NONE, UvType.GEOMETRY, neVertexIsOverlay);
 
 			sceneContext.stagingBufferUvs.ensureCapacity(24);
 			sceneContext.stagingBufferUvs.put(0, 0, 0, packedMaterialDataNE);
@@ -689,10 +690,14 @@ class SceneUploader {
 
 			bufferLength += 6;
 
-			int packedMaterialDataSW = modelPusher.packMaterialData(swMaterial, ModelOverride.NONE, UvType.GEOMETRY, false);
-			int packedMaterialDataSE = modelPusher.packMaterialData(seMaterial, ModelOverride.NONE, UvType.GEOMETRY, false);
-			int packedMaterialDataNW = modelPusher.packMaterialData(nwMaterial, ModelOverride.NONE, UvType.GEOMETRY, false);
-			int packedMaterialDataNE = modelPusher.packMaterialData(neMaterial, ModelOverride.NONE, UvType.GEOMETRY, false);
+			int packedMaterialDataSW = modelPusher.packMaterialData(
+				swMaterial, -1, ModelOverride.NONE, UvType.GEOMETRY, false);
+			int packedMaterialDataSE = modelPusher.packMaterialData(
+				seMaterial, -1, ModelOverride.NONE, UvType.GEOMETRY, false);
+			int packedMaterialDataNW = modelPusher.packMaterialData(
+				nwMaterial, -1, ModelOverride.NONE, UvType.GEOMETRY, false);
+			int packedMaterialDataNE = modelPusher.packMaterialData(
+				neMaterial, -1, ModelOverride.NONE, UvType.GEOMETRY, false);
 
 			sceneContext.stagingBufferUvs.ensureCapacity(24);
 			sceneContext.stagingBufferUvs.put(0, 0, 0, packedMaterialDataNE);
@@ -775,6 +780,7 @@ class SceneUploader {
 			boolean vertexBIsOverlay = false;
 			boolean vertexCIsOverlay = false;
 
+			int textureIndex = -1;
 			Material materialA = Material.NONE;
 			Material materialB = Material.NONE;
 			Material materialC = Material.NONE;
@@ -797,9 +803,10 @@ class SceneUploader {
 				waterType = proceduralGenerator.faceWaterType(scene, tile, face, sceneTileModel);
 				if (waterType == WaterType.NONE) {
 					if (faceTextures != null) {
-						materialA = Material.getTexture(faceTextures[face]);
-						materialB = Material.getTexture(faceTextures[face]);
-						materialC = Material.getTexture(faceTextures[face]);
+						textureIndex = faceTextures[face];
+						materialA = Material.fromVanillaTexture(textureIndex);
+						materialB = Material.fromVanillaTexture(textureIndex);
+						materialC = Material.fromVanillaTexture(textureIndex);
 					}
 
 					normalsA = sceneContext.vertexTerrainNormals.getOrDefault(vertexKeyA, normalsA);
@@ -907,9 +914,12 @@ class SceneUploader {
 
 			bufferLength += 3;
 
-			int packedMaterialDataA = modelPusher.packMaterialData(materialA, ModelOverride.NONE, UvType.GEOMETRY, vertexAIsOverlay);
-			int packedMaterialDataB = modelPusher.packMaterialData(materialB, ModelOverride.NONE, UvType.GEOMETRY, vertexBIsOverlay);
-			int packedMaterialDataC = modelPusher.packMaterialData(materialC, ModelOverride.NONE, UvType.GEOMETRY, vertexCIsOverlay);
+			int packedMaterialDataA = modelPusher.packMaterialData(
+				materialA, textureIndex, ModelOverride.NONE, UvType.GEOMETRY, vertexAIsOverlay);
+			int packedMaterialDataB = modelPusher.packMaterialData(
+				materialB, textureIndex, ModelOverride.NONE, UvType.GEOMETRY, vertexBIsOverlay);
+			int packedMaterialDataC = modelPusher.packMaterialData(
+				materialC, textureIndex, ModelOverride.NONE, UvType.GEOMETRY, vertexCIsOverlay);
 
 			sceneContext.stagingBufferUvs.ensureCapacity(12);
 			sceneContext.stagingBufferUvs.put(1 - localVertices[0][0] / 128f, 1 - localVertices[0][1] / 128f, 0, packedMaterialDataA);
@@ -1015,9 +1025,12 @@ class SceneUploader {
 
 				bufferLength += 3;
 
-				int packedMaterialDataA = modelPusher.packMaterialData(materialA, ModelOverride.NONE, UvType.GEOMETRY, false);
-				int packedMaterialDataB = modelPusher.packMaterialData(materialB, ModelOverride.NONE, UvType.GEOMETRY, false);
-				int packedMaterialDataC = modelPusher.packMaterialData(materialC, ModelOverride.NONE, UvType.GEOMETRY, false);
+				int packedMaterialDataA = modelPusher.packMaterialData(
+					materialA, -1, ModelOverride.NONE, UvType.GEOMETRY, false);
+				int packedMaterialDataB = modelPusher.packMaterialData(
+					materialB, -1, ModelOverride.NONE, UvType.GEOMETRY, false);
+				int packedMaterialDataC = modelPusher.packMaterialData(
+					materialC, -1, ModelOverride.NONE, UvType.GEOMETRY, false);
 
 				sceneContext.stagingBufferUvs.ensureCapacity(12);
 				sceneContext.stagingBufferUvs.put(1 - localVertices[0][0] / 128f, 1 - localVertices[0][1] / 128f, 0, packedMaterialDataA);
@@ -1066,7 +1079,7 @@ class SceneUploader {
 		sceneContext.stagingBufferVertices.put(toX, seHeight, fromY, color);
 		sceneContext.stagingBufferVertices.put(fromX, nwHeight, toY, color);
 
-		int packedMaterialData = modelPusher.packMaterialData(Material.BLACK, ModelOverride.NONE, UvType.GEOMETRY, false);
+		int packedMaterialData = modelPusher.packMaterialData(Material.BLACK, -1, ModelOverride.NONE, UvType.GEOMETRY, false);
 
 		sceneContext.stagingBufferUvs.ensureCapacity(24);
 		sceneContext.stagingBufferUvs.put(0, 0, 0, packedMaterialData);

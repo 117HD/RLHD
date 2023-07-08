@@ -212,9 +212,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	@Getter
 	private Gson gson;
 
+	public GLCapabilities glCaps;
 	private Canvas canvas;
 	private AWTContext awtContext;
-	private GLCapabilities glCaps;
 	private Callback debugCallback;
 	private ComputeMode computeMode = ComputeMode.OPENGL;
 
@@ -421,6 +421,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		clientThread.invoke(() -> {
 			try {
+				if (!textureManager.vanillaTexturesAvailable())
+					return false;
+
 				renderBufferOffset = 0;
 				fboSceneHandle = rboSceneHandle = 0; // AA FBO
 				fboShadowMap = 0;
@@ -526,10 +529,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				initInterfaceTexture();
 				initShadowMapFbo();
 
+				checkGLErrors();
+
 				client.setDrawCallbacks(this);
 				client.setGpuFlags(DrawCallbacks.GPU | DrawCallbacks.HILLSKEW | DrawCallbacks.NORMALS);
 				client.setExpandedMapLoading(getExpandedMapLoadingChunks());
-				textureManager.startUp();
 				// force rebuild of main buffer provider to enable alpha channel
 				client.resizeCanvas();
 
@@ -537,6 +541,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				lastStretchedCanvasWidth = lastStretchedCanvasHeight = 0;
 				lastAntiAliasingMode = null;
 
+				textureManager.startUp();
 				modelPusher.startUp();
 				modelOverrideManager.startUp();
 				lightManager.startUp();
@@ -709,7 +714,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 						.append("#define MAT_")
 						.append(m.name().toUpperCase())
 						.append(" getMaterial(")
-						.append(m.ordinal())
+						.append(textureManager.getMaterialIndex(m, m.vanillaTextureIndex))
 						.append(")\n");
 				}
 				return include.toString();
@@ -1125,84 +1130,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 	}
 
-	public void updateMaterialUniformBuffer(float[] textureAnimations)
-	{
-		ByteBuffer buffer = BufferUtils.createByteBuffer(Material.values().length * 20 * SCALAR_BYTES);
-		for (Material material : Material.values())
-		{
-			material = textureManager.getEffectiveMaterial(material);
-			int index = textureManager.getTextureIndex(material);
-			float scrollSpeedX = material.scrollSpeed[0];
-			float scrollSpeedY = material.scrollSpeed[1];
-			if (index != -1)
-			{
-				scrollSpeedX += textureAnimations[index * 2];
-				scrollSpeedY += textureAnimations[index * 2 + 1];
-			}
-			buffer
-				.putInt(index)
-				.putInt(textureManager.getTextureIndex(material.normalMap))
-				.putInt(textureManager.getTextureIndex(material.displacementMap))
-				.putInt(textureManager.getTextureIndex(material.roughnessMap))
-				.putInt(textureManager.getTextureIndex(material.ambientOcclusionMap))
-				.putInt(textureManager.getTextureIndex(material.flowMap))
-				.putInt(material.overrideBaseColor ? 1 : 0)
-				.putInt(material.unlit ? 1 : 0)
-				.putFloat(material.brightness)
-				.putFloat(material.displacementScale)
-				.putFloat(material.specularStrength)
-				.putFloat(material.specularGloss)
-				.putFloat(material.flowMapStrength)
-				.putFloat(0) // pad vec2
-				.putFloat(material.flowMapDuration[0])
-				.putFloat(material.flowMapDuration[1])
-				.putFloat(scrollSpeedX)
-				.putFloat(scrollSpeedY)
-				.putFloat(material.textureScale[0])
-				.putFloat(material.textureScale[1]);
-				// vec4 aligned
-		}
-		buffer.flip();
-
+	public void updateMaterialUniformBuffer(ByteBuffer buffer) {
 		updateBuffer(hUniformBufferMaterials, GL_UNIFORM_BUFFER, buffer, GL_STATIC_DRAW, CL_MEM_READ_ONLY);
-		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 	}
 
-	public void updateWaterTypeUniformBuffer()
-	{
-		ByteBuffer buffer = BufferUtils.createByteBuffer(WaterType.values().length * 28 * SCALAR_BYTES);
-		for (WaterType type : WaterType.values())
-		{
-			buffer
-				.putInt(type.flat ? 1 : 0)
-				.putFloat(type.specularStrength)
-				.putFloat(type.specularGloss)
-				.putFloat(type.normalStrength)
-				.putFloat(type.baseOpacity)
-				.putInt(type.hasFoam ? 1 : 0)
-				.putFloat(type.duration)
-				.putFloat(type.fresnelAmount)
-				.putFloat(type.surfaceColor[0])
-				.putFloat(type.surfaceColor[1])
-				.putFloat(type.surfaceColor[2])
-				.putFloat(0) // pad vec4
-				.putFloat(type.foamColor[0])
-				.putFloat(type.foamColor[1])
-				.putFloat(type.foamColor[2])
-				.putFloat(0) // pad vec4
-				.putFloat(type.depthColor[0])
-				.putFloat(type.depthColor[1])
-				.putFloat(type.depthColor[2])
-				.putFloat(0) // pad vec4
-				.putFloat(type.causticsStrength)
-				.putInt(textureManager.getTextureIndex(type.normalMap))
-				.putInt(textureManager.getTextureIndex(Material.WATER_FOAM))
-				.putInt(textureManager.getTextureIndex(Material.WATER_FLOW_MAP))
-				.putInt(textureManager.getTextureIndex(Material.UNDERWATER_FLOW_MAP))
-				.putFloat(0).putFloat(0).putFloat(0); // pad vec4
-		}
-		buffer.flip();
-
+	public void updateWaterTypeUniformBuffer(ByteBuffer buffer) {
 		updateBuffer(hUniformBufferWaterTypes, GL_UNIFORM_BUFFER, buffer, GL_STATIC_DRAW, CL_MEM_READ_ONLY);
 	}
 
@@ -1819,9 +1751,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			textureProvider != null &&
 			client.getGameState().getState() >= GameState.LOADING.getState()
 		) {
-			// lazy init textures as they may not be loaded at plugin start.
-			textureManager.ensureTexturesLoaded(textureProvider);
-
 			final int viewportHeight = client.getViewportHeight();
 			final int viewportWidth = client.getViewportWidth();
 
@@ -2431,6 +2360,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			return;
 
 		clientThread.invoke(() -> {
+			if (!lwjglInitialized)
+				return; // exit if the plugin has stopped
+
 			try {
 				updateCachedConfigs();
 
@@ -2440,12 +2372,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 						if (client.getGameState() == GameState.LOGGED_IN)
 							client.setGameState(GameState.LOADING);
 						break;
-					case KEY_MAX_DYNAMIC_LIGHTS:
-					case KEY_UI_SCALING_MODE:
 					case KEY_COLOR_BLINDNESS:
 					case KEY_MACOS_INTEL_WORKAROUND:
+					case KEY_MAX_DYNAMIC_LIGHTS:
 					case KEY_NORMAL_MAPPING:
 					case KEY_PARALLAX_OCCLUSION_MAPPING:
+					case KEY_UI_SCALING_MODE:
 					case KEY_VANILLA_COLOR_BANDING:
 						recompilePrograms();
 						break;
@@ -2457,36 +2389,33 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 						destroyShadowMapFbo();
 						initShadowMapFbo();
 						break;
-					case KEY_TEXTURE_RESOLUTION:
-					case KEY_ANISOTROPIC_FILTERING_LEVEL:
-					case KEY_HD_INFERNAL_CAPE:
-						textureManager.freeTextures();
-						break;
 					case KEY_ATMOSPHERIC_LIGHTING:
 						environmentManager.reset();
 						break;
 					case KEY_WINTER_THEME:
 						environmentManager.reset();
 						// fall-through
-					case KEY_MODEL_TEXTURES:
-						textureManager.freeTextures();
-						// fall-through
-					case KEY_HIDE_FAKE_SHADOWS:
+					case KEY_ANISOTROPIC_FILTERING_LEVEL:
 					case KEY_GROUND_BLENDING:
 					case KEY_GROUND_TEXTURES:
+					case KEY_HD_INFERNAL_CAPE:
 					case KEY_HD_TZHAAR_RESKIN:
+					case KEY_HIDE_FAKE_SHADOWS:
 					case KEY_LEGACY_GREY_COLORS:
+					case KEY_MODEL_TEXTURES:
+					case KEY_TEXTURE_RESOLUTION:
 					case KEY_FILL_GAPS_IN_TERRAIN:
+						textureManager.reloadTextures();
 						modelPusher.clearModelCache();
 						reuploadScene();
 						break;
+					case KEY_FPS_TARGET:
 					case KEY_UNLOCK_FPS:
 					case KEY_VSYNC_MODE:
-					case KEY_FPS_TARGET:
 						setupSyncMode();
 						break;
-					case KEY_MODEL_CACHING:
 					case KEY_MODEL_CACHE_SIZE:
+					case KEY_MODEL_CACHING:
 						modelPusher.shutDown();
 						modelPusher.startUp();
 						break;
@@ -2983,7 +2912,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		glFinish();
 	}
 
-	private void checkGLErrors() {
+	public void checkGLErrors() {
 		if (!log.isDebugEnabled())
 			return;
 

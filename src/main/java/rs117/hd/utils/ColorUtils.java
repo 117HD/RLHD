@@ -120,15 +120,15 @@ public class ColorUtils {
 	/**
 	 * Float modulo that returns the answer with the same sign as the modulus.
 	 */
-	public static float mod(float x, float modulus) {
+	private static float mod(float x, float modulus) {
 		return (float) (x - Math.floor(x / modulus) * modulus);
 	}
 
-	public static float clamp(float value, float min, float max) {
+	private static float clamp(float value, float min, float max) {
 		return Math.min(Math.max(value, min), max);
 	}
 
-	public static int clamp(int value, int min, int max) {
+	private static int clamp(int value, int min, int max) {
 		return Math.min(Math.max(value, min), max);
 	}
 

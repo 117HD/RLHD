@@ -3,6 +3,7 @@ package rs117.hd.model;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.Arrays;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -24,6 +25,7 @@ import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.SceneUploader;
+import rs117.hd.scene.TextureManager;
 import rs117.hd.scene.model_overrides.InheritTileColorType;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.scene.model_overrides.ObjectType;
@@ -52,6 +54,9 @@ public class ModelPusher {
 
 	@Inject
 	private HdPluginConfig config;
+
+	@Inject
+	private TextureManager textureManager;
 
 	@Inject
 	private ModelHasher modelHasher;
@@ -198,7 +203,7 @@ public class ModelPusher {
 		boolean skipUVs =
 			!isVanillaTextured &&
 			baseMaterial == Material.NONE &&
-			packMaterialData(Material.NONE, modelOverride, UvType.GEOMETRY, false) == 0;
+			packMaterialData(Material.NONE, -1, modelOverride, UvType.GEOMETRY, false) == 0;
 
 		// ensure capacity upfront
 		sceneContext.stagingBufferVertices.ensureCapacity(bufferSize);
@@ -313,13 +318,13 @@ public class ModelPusher {
 				if (textureId != -1) {
 					material = textureMaterial;
 					if (material == Material.NONE)
-						material = Material.getTexture(textureId);
+						material = Material.fromVanillaTexture(textureId);
 				}
 				UvType uvType = modelOverride.uvType;
 				if (uvType == UvType.VANILLA || (textureId != -1 && modelOverride.retainVanillaUvs))
 					uvType = isVanillaUVMapped && textureFaces[face] != -1 ? UvType.VANILLA : UvType.GEOMETRY;
 
-				int materialData = packMaterialData(material, modelOverride, uvType, false);
+				int materialData = packMaterialData(material, textureId, modelOverride, uvType, false);
 
 				final float[] uvData = sceneContext.modelFaceNormals;
 				if (materialData == 0) {
@@ -387,10 +392,18 @@ public class ModelPusher {
 		sceneContext.modelFaceNormals[11] = terrainData;
 	}
 
-	public int packMaterialData(Material material, @NonNull ModelOverride modelOverride, UvType uvType, boolean isOverlay) {
+	public int packMaterialData(
+		@Nonnull Material material,
+		int vanillaTexture,
+		@Nonnull ModelOverride modelOverride,
+		UvType uvType,
+		boolean isOverlay
+	) {
 		// This needs to return zero by default, since we often fall back to writing all zeroes to UVs
+		int materialIndex = textureManager.getMaterialIndex(material, vanillaTexture);
+		assert materialIndex <= MAX_MATERIAL_COUNT;
 		int materialData =
-			(material.ordinal() & MAX_MATERIAL_COUNT) << 12
+			(materialIndex & MAX_MATERIAL_COUNT) << 12
 			| ((int) (modelOverride.shadowOpacityThreshold * 0x3F) & 0x3F) << 5
 			| (!modelOverride.receiveShadows ? 1 : 0) << 4
 			| (modelOverride.flatNormals ? 1 : 0) << 3
