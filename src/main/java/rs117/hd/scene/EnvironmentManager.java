@@ -24,14 +24,12 @@
  */
 package rs117.hd.scene;
 
-import java.util.Arrays;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import net.runelite.api.Client;
-import net.runelite.api.GameState;
-import net.runelite.api.coords.WorldPoint;
+import net.runelite.api.*;
+import net.runelite.api.coords.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.config.DefaultSkyColor;
@@ -40,10 +38,13 @@ import rs117.hd.data.environments.Environment;
 import rs117.hd.utils.AABB;
 import rs117.hd.utils.HDUtils;
 
+import static rs117.hd.utils.HDUtils.clamp;
+import static rs117.hd.utils.HDUtils.lerp;
+import static rs117.hd.utils.HDUtils.rand;
+
 @Singleton
 @Slf4j
-public class EnvironmentManager
-{
+public class EnvironmentManager {
 	@Inject
 	private Client client;
 
@@ -53,8 +54,7 @@ public class EnvironmentManager
 	@Inject
 	private HdPluginConfig config;
 
-	private final Environment defaultEnvironment = Environment.OVERWORLD;
-	public Environment currentEnvironment = defaultEnvironment;
+	private Environment currentEnvironment = Environment.NONE;
 
 	// transition time
 	private static final int TRANSITION_DURATION = 3000;
@@ -65,14 +65,10 @@ public class EnvironmentManager
 
 	// last environment change time
 	private long startTime = 0;
-	// transition complete time
-	private long transitionCompleteTime = 0;
 	// time of last frame; used for lightning
 	long lastFrameTime = -1;
 
 	private WorldPoint previousPosition = new WorldPoint(0, 0, 0);
-
-	public static final float[] BLACK_COLOR = {0,0,0};
 
 	private float[] startFogColor = new float[]{0,0,0};
 	public float[] currentFogColor = new float[]{0,0,0};
@@ -144,11 +140,10 @@ public class EnvironmentManager
 	private boolean isInHouse = false;
 	private int previousPlane;
 
-	public void startUp()
-	{
-		currentEnvironment = null;
-		changeEnvironment(defaultEnvironment, true);
+	public void reset() {
+		currentEnvironment = Environment.NONE;
 	}
+
 
 	/**
 	 * Updates variables used in transition effects
@@ -156,8 +151,9 @@ public class EnvironmentManager
 	 * @param sceneContext to possible environments from
 	 * @param position     in world space that the camera is or will be looking at
 	 */
-	public void update(SceneContext sceneContext, WorldPoint position)
-	{
+	public void update(SceneContext sceneContext, WorldPoint position) {
+		assert client.isClientThread();
+
 		isOverworld = Area.OVERWORLD.containsPoint(position);
 
 		// skip the transitional fade if the player has moved too far
@@ -180,12 +176,9 @@ public class EnvironmentManager
 		}
 
 		boolean skipTransition = tileChange >= SKIP_TRANSITION_DISTANCE;
-		for (Environment environment : sceneContext.environments)
-		{
-			if (environment.getArea().containsPoint(position))
-			{
-				if (environment != currentEnvironment)
-				{
+		for (Environment environment : sceneContext.environments) {
+			if (environment.getArea().containsPoint(position)) {
+				if (environment != currentEnvironment) {
 					if (environment == Environment.PLAYER_OWNED_HOUSE || environment == Environment.PLAYER_OWNED_HOUSE_SNOWY) {
 						// POH takes 1 game tick to enter, then 2 game ticks to load per floor
 						plugin.reloadSceneIn(7);
@@ -196,7 +189,10 @@ public class EnvironmentManager
 						isInHouse = false;
 					}
 
-					plugin.setInGauntlet(environment == Environment.THE_GAUNTLET || environment == Environment.THE_GAUNTLET_CORRUPTED);
+					// Since the environment which actually gets used may differ from the environment
+					// chosen based on position, update the plugin's area tracking here
+					plugin.isInGauntlet = environment == Environment.THE_GAUNTLET || environment == Environment.THE_GAUNTLET_CORRUPTED;
+					plugin.isInChambersOfXeric = environment == Environment.CHAMBERS_OF_XERIC;
 
 					changeEnvironment(environment, skipTransition);
 				}
@@ -206,55 +202,30 @@ public class EnvironmentManager
 
 		updateTargetSkyColor(); // Update every frame, since other plugins may control it
 
-		// modify all environment values during transition
+		// interpolate between start and target values
 		long currentTime = System.currentTimeMillis();
-		if (currentTime >= transitionCompleteTime)
-		{
-			currentFogColor = targetFogColor;
-			currentWaterColor = targetWaterColor;
-			currentFogDepth = targetFogDepth;
-			currentAmbientStrength = targetAmbientStrength;
-			currentAmbientColor = targetAmbientColor;
-			currentDirectionalStrength = targetDirectionalStrength;
-			currentDirectionalColor = targetDirectionalColor;
-			currentUnderglowStrength = targetUnderglowStrength;
-			currentUnderglowColor = targetUnderglowColor;
-			currentGroundFogStart = targetGroundFogStart;
-			currentGroundFogEnd = targetGroundFogEnd;
-			currentGroundFogOpacity = targetGroundFogOpacity;
-			currentLightPitch = targetLightPitch;
-			currentLightYaw = targetLightYaw;
-			currentUnderwaterCausticsColor = targetUnderwaterCausticsColor;
-			currentUnderwaterCausticsStrength = targetUnderwaterCausticsStrength;
-		}
-		else
-		{
-			// interpolate between start and target values
-			int transitionDuration = TRANSITION_DURATION;
-			float t = (float) (currentTime - startTime) / transitionDuration;
-
-			currentFogColor = HDUtils.lerpVectors(startFogColor, targetFogColor, t);
-			currentWaterColor = HDUtils.lerpVectors(startWaterColor, targetWaterColor, t);
-			currentFogDepth = (int) HDUtils.lerp(startFogDepth, targetFogDepth, t);
-			currentAmbientStrength = HDUtils.lerp(startAmbientStrength, targetAmbientStrength, t);
-			currentAmbientColor = HDUtils.lerpVectors(startAmbientColor, targetAmbientColor, t);
-			currentDirectionalStrength = HDUtils.lerp(startDirectionalStrength, targetDirectionalStrength, t);
-			currentDirectionalColor = HDUtils.lerpVectors(startDirectionalColor, targetDirectionalColor, t);
-			currentUnderglowStrength = HDUtils.lerp(startUnderglowStrength, targetUnderglowStrength, t);
-			currentUnderglowColor = HDUtils.lerpVectors(startUnderglowColor, targetUnderglowColor, t);
-			currentGroundFogStart  = HDUtils.lerp(startGroundFogStart, targetGroundFogStart, t);
-			currentGroundFogEnd  = HDUtils.lerp(startGroundFogEnd, targetGroundFogEnd, t);
-			currentGroundFogOpacity  = HDUtils.lerp(startGroundFogOpacity, targetGroundFogOpacity, t);
-			currentLightPitch = HDUtils.lerp(startLightPitch, targetLightPitch, t);
-			currentLightYaw = HDUtils.lerp(startLightYaw, targetLightYaw, t);
-			currentUnderwaterCausticsColor = HDUtils.lerpVectors(startUnderwaterCausticsColor, targetUnderwaterCausticsColor, t);
-			currentUnderwaterCausticsStrength = HDUtils.lerp(startUnderwaterCausticsStrength, targetUnderwaterCausticsStrength, t);
-		}
+		float t = clamp((currentTime - startTime) / (float) TRANSITION_DURATION, 0, 1);
+		currentFogColor = lerp(startFogColor, targetFogColor, t);
+		currentWaterColor = lerp(startWaterColor, targetWaterColor, t);
+		currentFogDepth = (int) lerp(startFogDepth, targetFogDepth, t);
+		currentAmbientStrength = lerp(startAmbientStrength, targetAmbientStrength, t);
+		currentAmbientColor = lerp(startAmbientColor, targetAmbientColor, t);
+		currentDirectionalStrength = lerp(startDirectionalStrength, targetDirectionalStrength, t);
+		currentDirectionalColor = lerp(startDirectionalColor, targetDirectionalColor, t);
+		currentUnderglowStrength = lerp(startUnderglowStrength, targetUnderglowStrength, t);
+		currentUnderglowColor = lerp(startUnderglowColor, targetUnderglowColor, t);
+		currentGroundFogStart = lerp(startGroundFogStart, targetGroundFogStart, t);
+		currentGroundFogEnd = lerp(startGroundFogEnd, targetGroundFogEnd, t);
+		currentGroundFogOpacity = lerp(startGroundFogOpacity, targetGroundFogOpacity, t);
+		currentLightPitch = lerp(startLightPitch, targetLightPitch, t);
+		currentLightYaw = lerp(startLightYaw, targetLightYaw, t);
+		currentUnderwaterCausticsColor = lerp(startUnderwaterCausticsColor, targetUnderwaterCausticsColor, t);
+		currentUnderwaterCausticsStrength = lerp(startUnderwaterCausticsStrength, targetUnderwaterCausticsStrength, t);
 
 		updateLightning();
 
 		// update some things for use next frame
-		lastFrameTime = System.currentTimeMillis();
+		lastFrameTime = currentTime;
 	}
 
 	/**
@@ -263,14 +234,13 @@ public class EnvironmentManager
 	 * @param newEnvironment the new environment to transition to
 	 * @param skipTransition whether the transition should be done instantly
 	 */
-	private void changeEnvironment(Environment newEnvironment, boolean skipTransition)
-	{
+	private void changeEnvironment(Environment newEnvironment, boolean skipTransition) {
 		if (currentEnvironment == newEnvironment)
 			return;
 
 		startTime = System.currentTimeMillis();
-		int transitionDuration = TRANSITION_DURATION;
-		transitionCompleteTime = startTime + (skipTransition ? 0 : transitionDuration);
+		if (skipTransition || currentEnvironment == Environment.NONE)
+			startTime -= TRANSITION_DURATION;
 
 		log.debug("changing environment from {} to {} (instant: {})", currentEnvironment, newEnvironment, skipTransition);
 		currentEnvironment = newEnvironment;
@@ -300,68 +270,49 @@ public class EnvironmentManager
 			targetFogDepth = Environment.WINTER.getFogDepth();
 		}
 
-		Environment atmospheric = config.atmosphericLighting() ? newEnvironment : defaultEnvironment;
+		Environment atmospheric = config.atmosphericLighting() ? newEnvironment : Environment.OVERWORLD;
 		targetAmbientStrength = atmospheric.getAmbientStrength();
 		targetAmbientColor = atmospheric.getAmbientColor();
 		targetDirectionalStrength = atmospheric.getDirectionalStrength();
 		targetDirectionalColor = atmospheric.getDirectionalColor();
 		targetUnderglowStrength = atmospheric.getUnderglowStrength();
 		targetUnderglowColor = atmospheric.getUnderglowColor();
-		targetLightPitch = atmospheric.getLightPitch();
-		targetLightYaw = atmospheric.getLightYaw();
-		if (useWinterTheme())
-		{
+		targetUnderwaterCausticsColor = atmospheric.getUnderwaterCausticsColor();
+		targetUnderwaterCausticsStrength = atmospheric.getUnderwaterCausticsStrength();
+		if (useWinterTheme()) {
 			if (!atmospheric.isCustomAmbientStrength())
-			{
 				targetAmbientStrength = Environment.WINTER.getAmbientStrength();
-			}
 			if (!atmospheric.isCustomAmbientColor())
-			{
 				targetAmbientColor = Environment.WINTER.getAmbientColor();
-			}
 			if (!atmospheric.isCustomDirectionalStrength())
-			{
 				targetDirectionalStrength = Environment.WINTER.getDirectionalStrength();
-			}
 			if (!atmospheric.isCustomDirectionalColor())
-			{
 				targetDirectionalColor = Environment.WINTER.getDirectionalColor();
-			}
 		}
 
+		targetLightPitch = newEnvironment.getLightPitch();
+		targetLightYaw = newEnvironment.getLightYaw();
 		targetGroundFogStart = newEnvironment.getGroundFogStart();
 		targetGroundFogEnd = newEnvironment.getGroundFogEnd();
 		targetGroundFogOpacity = newEnvironment.getGroundFogOpacity();
-		targetUnderwaterCausticsColor = newEnvironment.getUnderwaterCausticsColor();
-		targetUnderwaterCausticsStrength = newEnvironment.getUnderwaterCausticsStrength();
-
 		lightningEnabled = newEnvironment.isLightningEnabled();
 	}
 
-	public void updateTargetSkyColor()
-	{
+	public void updateTargetSkyColor() {
 		Environment env = useWinterTheme() ? Environment.WINTER : currentEnvironment;
-		if (!env.isCustomFogColor() || env.isAllowSkyOverride() && config.overrideSky())
-		{
+		if (!env.isCustomFogColor() || env.isAllowSkyOverride() && config.overrideSky()) {
 			DefaultSkyColor sky = config.defaultSkyColor();
 			targetFogColor = sky.getRgb(client);
 			if (sky == DefaultSkyColor.OSRS)
-			{
 				sky = DefaultSkyColor.DEFAULT;
-			}
 			targetWaterColor = sky.getRgb(client);
-		}
-		else
-		{
+		} else {
 			targetFogColor = targetWaterColor = env.getFogColor();
 		}
 
-
-		//override with decoupled water/sky color if present
+		// Override with decoupled water/sky color if present
 		if(currentEnvironment.isCustomWaterColor())
-		{
 			targetWaterColor = currentEnvironment.getWaterColor();
-		}
 	}
 
 	/**
@@ -407,7 +358,7 @@ public class EnvironmentManager
 	private static final float LIGHTNING_FADE_SPEED = 80f; // brightness units per second
 	private static final int MIN_LIGHTNING_INTERVAL = 5500;
 	private static final int MAX_LIGHTNING_INTERVAL = 17000;
-	private static final float QUICK_LIGHTNING_CHANCE = 2f;
+	private static final float QUICK_LIGHTNING_CHANCE = .5f;
 	private static final int MIN_QUICK_LIGHTNING_INTERVAL = 40;
 	private static final int MAX_QUICK_LIGHTNING_INTERVAL = 150;
 
@@ -419,35 +370,27 @@ public class EnvironmentManager
 	 * Updates lightning variables and sets water reflection and sky
 	 * colors during lightning flashes.
 	 */
-	void updateLightning()
-	{
-		if (lightningBrightness > 0)
-		{
-			int frameTime = (int)(System.currentTimeMillis() - lastFrameTime);
+	void updateLightning() {
+		if (lightningBrightness > 0) {
+			int frameTime = (int) (System.currentTimeMillis() - lastFrameTime);
 			float brightnessChange = (frameTime / 1000f) * LIGHTNING_FADE_SPEED;
 			lightningBrightness = Math.max(lightningBrightness - brightnessChange, 0);
 		}
 
-		if (nextLightningTime == -1)
-		{
+		if (nextLightningTime == -1) {
 			generateNextLightningTime();
 			return;
 		}
-		if (System.currentTimeMillis() > nextLightningTime)
-		{
+		if (System.currentTimeMillis() > nextLightningTime) {
 			lightningBrightness = NEW_LIGHTNING_BRIGHTNESS;
-
 			generateNextLightningTime();
 		}
 
-		if (lightningEnabled && config.flashingEffects())
-		{
+		if (lightningEnabled && config.flashingEffects()) {
 			float t = HDUtils.clamp(lightningBrightness, 0, 1);
-			currentFogColor = HDUtils.lerpVectors(currentFogColor, LIGHTNING_COLOR, t);
-			currentWaterColor = HDUtils.lerpVectors(currentWaterColor, LIGHTNING_COLOR, t);
-		}
-		else
-		{
+			currentFogColor = lerp(currentFogColor, LIGHTNING_COLOR, t);
+			currentWaterColor = lerp(currentWaterColor, LIGHTNING_COLOR, t);
+		} else {
 			lightningBrightness = 0f;
 		}
 	}
@@ -457,37 +400,23 @@ public class EnvironmentManager
 	 * Produces a short interval for a quick successive strike
 	 * or a longer interval at the end of a cluster.
 	 */
-	void generateNextLightningTime()
-	{
-		int lightningInterval = (int)(MIN_LIGHTNING_INTERVAL + ((MAX_LIGHTNING_INTERVAL - MIN_LIGHTNING_INTERVAL) * Math.random()));
-		int quickLightningInterval = (int)(MIN_QUICK_LIGHTNING_INTERVAL + ((MAX_QUICK_LIGHTNING_INTERVAL - MIN_QUICK_LIGHTNING_INTERVAL) * Math.random()));
-		if (Math.random() <= 1f / QUICK_LIGHTNING_CHANCE)
-		{
+	void generateNextLightningTime() {
+		nextLightningTime = System.currentTimeMillis();
+		if (Math.random() <= QUICK_LIGHTNING_CHANCE) {
 			// chain together lighting strikes in quick succession
-			nextLightningTime = System.currentTimeMillis() + quickLightningInterval;
-		}
-		else
-		{
+			nextLightningTime += lerp(MIN_QUICK_LIGHTNING_INTERVAL, MAX_QUICK_LIGHTNING_INTERVAL, rand.nextFloat());
+		} else {
 			// cool-down period before a new lightning cluster
-			nextLightningTime = System.currentTimeMillis() + lightningInterval;
+			nextLightningTime += lerp(MIN_LIGHTNING_INTERVAL, MAX_LIGHTNING_INTERVAL, rand.nextFloat());
 		}
 	}
 
-	/**
-	 * Returns the current fog color if logged in.
-	 * Else, returns solid black.
-	 *
-	 * @return 3-component RGB color array
-	 */
-	public float[] getFogColor()
-	{
-		return Arrays.copyOf(client.getGameState().getState() >= GameState.LOADING.getState() ?
-			currentFogColor : BLACK_COLOR, 3);
+	public boolean isUnderwater() {
+		return currentEnvironment.isUnderwater();
 	}
 
-	public boolean isUnderwater()
-	{
-		return currentEnvironment.isUnderwater();
+	public boolean useDaylightCycle() {
+		return currentEnvironment.isDaylightCycleEnabled();
 	}
 
 	/**

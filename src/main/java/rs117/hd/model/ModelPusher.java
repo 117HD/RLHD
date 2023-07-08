@@ -20,6 +20,7 @@ import rs117.hd.data.materials.Material;
 import rs117.hd.data.materials.Overlay;
 import rs117.hd.data.materials.Underlay;
 import rs117.hd.data.materials.UvType;
+import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.SceneUploader;
@@ -53,6 +54,9 @@ public class ModelPusher {
 
 	@Inject
 	private ModelHasher modelHasher;
+
+	@Inject
+	private ModelOverrideManager modelOverrideManager;
 
 	public static final int DATUM_PER_FACE = 12;
 	public static final int MAX_MATERIAL_COUNT = (1 << 10) - 1;
@@ -146,14 +150,17 @@ public class ModelPusher {
 	 * @param tile           that the model is associated with, if any
 	 * @param hash           of the model
 	 * @param model          to push data from
-	 * @param modelOverride  to apply while pushing model data
 	 * @param objectType     of the specified model. Used for TzHaar recolor
 	 * @param preOrientation which the vertices have already been rotated by
 	 * @param shouldCache    whether the model should be cached for future reuse, if enabled
 	 */
 	public void pushModel(
-		SceneContext sceneContext, @Nullable Tile tile, long hash, Model model,
-		@NonNull ModelOverride modelOverride, ObjectType objectType, int preOrientation,
+		SceneContext sceneContext,
+		@Nullable Tile tile,
+		long hash,
+		Model model,
+		ObjectType objectType,
+		int preOrientation,
 		boolean shouldCache
 	) {
 		if (modelCache == null) {
@@ -165,6 +172,7 @@ public class ModelPusher {
 		int vertexLength = 0;
 		int uvLength = 0;
 
+		ModelOverride modelOverride = modelOverrideManager.getOverride(hash);
 		boolean useMaterialOverrides = plugin.configModelTextures || modelOverride.forceOverride;
 		final short[] faceTextures = model.getFaceTextures();
 		final byte[] textureFaces = model.getTextureFaces();
@@ -486,7 +494,7 @@ public class ModelPusher {
 				N[2] /= length;
 			}
 
-			float[] L = HDUtils.lightDirModel;
+			float[] L = HDUtils.LIGHT_DIR_MODEL;
 			float lightDotNormal = Math.max(0, N[0] * L[0] + N[1] * L[1] + N[2] * L[2]);
 
 			int lightenA = (int) (Math.max((color1L - IGNORE_LOW_LIGHTNESS), 0) * LIGHTNESS_MULTIPLIER) + BASE_LIGHTEN;

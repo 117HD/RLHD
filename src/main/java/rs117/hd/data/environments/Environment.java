@@ -654,7 +654,7 @@ public enum Environment
 	MOUNT_KARUULM(Area.MOUNT_KARUULM, new Properties()
 		.setAmbientStrength(1.0f)
 		.setDirectionalStrength(3.0f)
-		.setEnableDaylightCycle(true)
+		.setDaylightCycleEnabled(true)
 	),
 	KARUULM_SLAYER_DUNGEON(Area.KARUULM_SLAYER_DUNGEON, new Properties()
 		.setFogColor("#051E22")
@@ -802,7 +802,7 @@ public enum Environment
 		.setDirectionalStrength(2.5f)
 	),
 	PLAYER_OWNED_HOUSE(Area.PLAYER_OWNED_HOUSE, new Properties()
-		.setEnableDaylightCycle(true)
+		.setDaylightCycleEnabled(true)
 	),
 
 	// Blackhole
@@ -813,7 +813,7 @@ public enum Environment
 		.setAmbientColor(255, 255, 255)
 		.setDirectionalStrength(0.0f)
 		.setLightDirection(260f, 10f)
-		.setEnableDaylightCycle(true)
+		.setDaylightCycleEnabled(true)
 	),
 
 	// Camdozaal (Below Ice Mountain)
@@ -1012,14 +1012,6 @@ public enum Environment
 		.setLightDirection(260f, 10f)
 		.setAllowSkyOverride(false)
 	),
-	WINTER(Area.NONE, new Properties()
-		.setFogColor("#B8C5DB")
-		.setFogDepth(35)
-		.setAmbientColor("#8FCAFF")
-		.setAmbientStrength(3.5f)
-		.setDirectionalColor("#FFFFFF")
-		.setDirectionalStrength(1.5f)
-	),
 
 	MAGE_ARENA_BANK(Area.MAGE_ARENA_BANK, new Properties()
 		.setFogDepth(40)
@@ -1047,18 +1039,18 @@ public enum Environment
 			.setLightDirection(260f, 10f)
 	),
 	KEEP_LE_FAYE_JAIL(Area.KEEP_LE_FAYE_JAIL, new Properties()
-			.setFogColor("#070606")
-			.setFogDepth(84)
-			.setAmbientColor("#AAAFB6")
-			.setAmbientStrength(1.0f)
-			.setDirectionalColor("#878474")
-			.setDirectionalStrength(1.5f)
-			.setLightDirection(260f, 10f)
+		.setFogColor("#070606")
+		.setFogDepth(84)
+		.setAmbientColor("#AAAFB6")
+		.setAmbientStrength(1.0f)
+		.setDirectionalColor("#878474")
+		.setDirectionalStrength(1.5f)
+		.setLightDirection(260f, 10f)
 	),
 
 	// overrides 'ALL' to provide default daylight conditions for the overworld area
 	OVERWORLD(Area.OVERWORLD, new Properties()
-		.setEnableDaylightCycle(true)),
+		.setDaylightCycleEnabled(true)),
 	// used for underground, instances, etc.
 	ALL(Area.ALL, new Properties()
 		.setFogColor("#241809")
@@ -1069,6 +1061,17 @@ public enum Environment
 		.setDirectionalStrength(1.0f)
 		.setLightDirection(260f, 10f)
 		.setWaterColor(102, 234, 255)
+	),
+	WINTER(Area.NONE, new Properties()
+		.setFogColor("#B8C5DB")
+		.setFogDepth(35)
+		.setAmbientColor("#8FCAFF")
+		.setAmbientStrength(3.5f)
+		.setDirectionalColor("#FFFFFF")
+		.setDirectionalStrength(1.5f)
+	),
+	NONE(Area.NONE, new Properties()
+		.setFogColor("#000000")
 	),
 	;
 
@@ -1099,7 +1102,7 @@ public enum Environment
 	private final float underwaterCausticsStrength;
 	private final float[] waterColor;
 	private final boolean customWaterColor;
-	private final boolean enableDaylightCycle;
+	private final boolean daylightCycleEnabled;
 
 	private static class Properties
 	{
@@ -1129,7 +1132,7 @@ public enum Environment
 		private float underwaterCausticsStrength = 0;
 		private float[] waterColor = rgb(185, 214, 255);
 		private boolean customWaterColor = false;
-		private boolean enableDaylightCycle = false;
+		private boolean daylightCycleEnabled = false;
 
 		public Properties setFogDepth(int depth)
 		{
@@ -1274,15 +1277,13 @@ public enum Environment
 		 * @param strength a float value to replace directional strength
 		 * @return the same properties instance
 		 */
-		public Properties setUnderwaterCausticsStrength(float strength)
-		{
+		public Properties setUnderwaterCausticsStrength(float strength) {
 			this.underwaterCausticsStrength = strength;
 			return this;
 		}
 
-		public Properties setEnableDaylightCycle(boolean isEnabled)
-		{
-			this.enableDaylightCycle = isEnabled;
+		public Properties setDaylightCycleEnabled(boolean isEnabled) {
+			this.daylightCycleEnabled = isEnabled;
 			return this;
 		}
 	}
@@ -1318,6 +1319,6 @@ public enum Environment
 			properties.directionalStrength : properties.underwaterCausticsStrength;
 		this.waterColor = properties.waterColor;
 		this.customWaterColor = properties.customWaterColor;
-		this.enableDaylightCycle = properties.enableDaylightCycle;
+		this.daylightCycleEnabled = properties.daylightCycleEnabled;
 	}
 }

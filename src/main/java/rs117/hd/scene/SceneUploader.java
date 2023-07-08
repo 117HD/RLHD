@@ -66,9 +66,6 @@ class SceneUploader
 	@Inject
 	private ModelPusher modelPusher;
 
-	@Inject
-	private ModelOverrideManager modelOverrideManager;
-
 	public void upload(SceneContext sceneContext)
 	{
 		Stopwatch stopwatch = Stopwatch.createStarted();
@@ -113,12 +110,11 @@ class SceneUploader
 			skipObject = 0b11;
 		}
 
-		ModelOverride modelOverride = modelOverrideManager.getOverride(hash);
 		// pack a bit into bufferoffset that we can use later to hide
 		// some low-importance objects based on Level of Detail setting
 		model.setBufferOffset(sceneContext.getVertexOffset() << 2 | skipObject);
 		model.setUvBufferOffset(sceneContext.getUvOffset());
-		modelPusher.pushModel(sceneContext, tile, hash, model, modelOverride, objectType, orientation, false);
+		modelPusher.pushModel(sceneContext, tile, hash, model, objectType, orientation, false);
 		if (sceneContext.modelPusherResults[1] == 0)
 			model.setUvBufferOffset(-1);
 

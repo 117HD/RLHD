@@ -1,4 +1,3 @@
-#pragma once
 /*
  * Color utility functions
  * Written in 2023 by Hooder <ahooder@protonmail.com>
@@ -7,6 +6,9 @@
  * You should have received a copy of the CC0 Public Domain Dedication along with this software.
  * If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
  */
+#pragma once
+
+#include utils/constants.glsl
 
 /**
  * Row-major transformation matrices for conversion between RGB and XYZ color spaces.
@@ -110,56 +112,47 @@ float linearToSrgb(float rgb) {
 
 // https://web.archive.org/web/20230619214343/https://en.wikipedia.org/wiki/HSL_and_HSV#Color_conversion_formulae
 vec3 srgbToHsl(vec3 srgb) {
-    const float eps = 1e-8;
     float V = max(max(srgb.r, srgb.g), srgb.b);
     float X_min = min(min(srgb.r, srgb.g), srgb.b);
     float C = V - X_min;
 
     float H = 0;
-    if (V == srgb.r) {
-        H = mod((srgb.g - srgb.b) / C, 6);
-    } else if (V == srgb.g) {
-        H = (srgb.b - srgb.r) / C + 2;
-    } else {
-        H = (srgb.r - srgb.g) / C + 4;
+    if (C > 0) {
+        if (V == srgb.r) {
+            H = mod((srgb.g - srgb.b) / C, 6);
+        } else if (V == srgb.g) {
+            H = (srgb.b - srgb.r) / C + 2;
+        } else {
+            H = (srgb.r - srgb.g) / C + 4;
+        }
     }
 
     float L = (V + X_min) / 2;
-    float S_L = fract(L) < eps ? 0 : C / (1 - abs(2 * L - 1));
+    float divisor = 1 - abs(2 * L - 1);
+    float S_L = abs(divisor) < EPS ? 0 : C / divisor;
     return vec3(H / 6, S_L, L);
 }
 
 vec3 hslToSrgb(vec3 hsl) {
-    const float eps = 1e-8;
     float C = (1 - abs(2 * hsl[2] - 1)) * hsl[1];
     float H_prime = hsl[0] * 6;
-    float X = C * (1 - abs(mod(H_prime, 2) - 1));
     float m = hsl[2] - C / 2;
-    vec3 RGB = vec3(C, X, 0) + m;
 
-    if (H_prime < 1)
-        return RGB;
-    if (H_prime < 2)
-        return RGB.yxz;
-    if (H_prime < 3)
-        return RGB.zxy;
-    if (H_prime < 4)
-        return RGB.zyx;
-    if (H_prime < 5)
-        return RGB.yzx;
-    if (H_prime < 6)
-        return RGB.xzy;
-    return vec3(hsl[2]);
+    float r = clamp(abs(H_prime - 3) - 1, 0, 1);
+    float g = clamp(2 - abs(H_prime - 2), 0, 1);
+    float b = clamp(2 - abs(H_prime - 4), 0, 1);
+    return vec3(r, g, b) * C + m;
 }
 
 vec3 hslToHsv(vec3 hsl) {
     float v = hsl[2] + hsl[1] * min(hsl[2], 1 - hsl[2]);
-    return vec3(hsl[0], v == 0 ? 0 : 2 * (1 - hsl[2] / v), v);
+    return vec3(hsl[0], abs(v) < EPS ? 0 : 2 * (1 - hsl[2] / v), v);
 }
 
 vec3 hsvToHsl(vec3 hsv) {
     float l = hsv[2] * (1 - hsv[1] / 2);
-    return vec3(hsv[0], fract(l) == 0 ? 0 : (hsv[2] - l) / min(l, 1 - l), l);
+    float divisor = min(l, 1 - l);
+    return vec3(hsv[0], abs(divisor) < EPS ? 0 : (hsv[2] - l) / divisor, l);
 }
 
 vec3 srgbToHsv(vec3 rgb) {
@@ -172,18 +165,18 @@ vec3 hsvToSrgb(vec3 hsv) {
 
 // Pack HSL int Jagex format
 int packHsl(vec3 hsl) {
-    int H = int(hsl.x * 0x3F);
-    int S = int(hsl.y * 0x7);
-    int L = int(hsl.z * 0x7F);
+    int H = clamp(int(round((hsl[0] - .0078125f) * 64)), 0, 63);
+    int S = clamp(int(round((hsl[1] - .0625f) * 8)), 0, 7);
+    int L = clamp(int(round(hsl[2] * 128)), 0, 127);
     return H << 10 | S << 7 | L;
 }
 
 // Unpack HSL from Jagex format
 vec3 unpackHsl(int hsl) {
     // 6-bit hue | 3-bit saturation | 7-bit lightness
-    float H = (hsl >> 10 & 0x3F) / float(0x3F + 1) + .0078125f;
-    float S = (hsl >> 7 & 0x7) / float(0x7 + 1) + .0625f;
-    float L = (hsl & 0x7F) / float(0x7F + 1);
+    float H = (hsl >> 10 & 63) / 64.f + .0078125f;
+    float S = (hsl >> 7 & 7) / 8.f + .0625f;
+    float L = (hsl & 127) / 128.f;
     return vec3(H, S, L);
 }
 

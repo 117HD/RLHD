@@ -93,37 +93,14 @@ public class ModelOverrideManager {
         long uuid = ModelHash.getUuid(client, hash);
 
         AABB[] aabbs = modelsToHide.get(uuid);
-        if (aabbs != null && hasNoActions(uuid)) {
-            WorldPoint location = HDUtils.cameraSpaceToWorldPoint(client, x, z);
-            for (AABB aabb : aabbs)
-                if (aabb.contains(location))
-                    return true;
-        }
+        if (aabbs != null) {
+			WorldPoint location = HDUtils.cameraSpaceToWorldPoint(client, x, z);
+			for (AABB aabb : aabbs)
+				if (aabb.contains(location))
+					return true;
+		}
 
         return false;
-    }
-
-    private boolean hasNoActions(long uuid) {
-        int id = ModelHash.getIdOrIndex(uuid);
-        int type = ModelHash.getType(uuid);
-
-        String[] actions = {};
-
-        switch (type) {
-            case ModelHash.TYPE_OBJECT:
-                actions = client.getObjectDefinition(id).getActions();
-                break;
-            case ModelHash.TYPE_NPC:
-                actions = client.getNpcDefinition(id).getActions();
-                break;
-        }
-
-        for (String action : actions) {
-            if (action != null)
-                return false;
-        }
-
-        return true;
     }
 
     @NonNull

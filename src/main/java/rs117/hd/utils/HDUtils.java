@@ -42,8 +42,8 @@ public class HDUtils {
 	public static final Random rand = new Random();
 
 	// directional vectors approximately opposite of the directional light used by the client
-	private static final float[] lightDirTile = new float[] { 0.70710678f, 0.70710678f, 0f };
-	public static final float[] lightDirModel = new float[] { 0.57735026f, 0.57735026f, 0.57735026f };
+	private static final float[] LIGHT_DIR_TILE = new float[] { 0.70710678f, 0.70710678f, 0f };
+	public static final float[] LIGHT_DIR_MODEL = new float[] { 0.57735026f, 0.57735026f, 0.57735026f };
 
 	// The epsilon for floating point values used by jogl
 	public static final float EPSILON = 1.1920929E-7f;
@@ -94,22 +94,20 @@ public class HDUtils {
 	}
 
 	public static float lerp(float a, float b, float t) {
-		return a + ((b - a) * t);
+		return a + (b - a) * t;
 	}
 
-	public static float[] lerpVectors(float[] vecA, float[] vecB, float t)
-	{
+	public static float[] lerp(float[] vecA, float[] vecB, float t) {
 		float[] out = new float[Math.min(vecA.length, vecB.length)];
 		for (int i = 0; i < out.length; i++)
 			out[i] = lerp(vecA[i], vecB[i], t);
 		return out;
 	}
 
-	static int[] lerpVectors(int[] vecA, int[] vecB, float t)
-	{
+	static int[] lerp(int[] vecA, int[] vecB, float t) {
 		int[] out = new int[Math.min(vecA.length, vecB.length)];
 		for (int i = 0; i < out.length; i++)
-			out[i] = (int)lerp(vecA[i], vecB[i], t);
+			out[i] = (int) lerp(vecA[i], vecB[i], t);
 		return out;
 	}
 
@@ -169,7 +167,7 @@ public class HDUtils {
 		float length = x * x + y * y + z * z;
 		if (length < EPSILON)
 			return 0;
-		return (x * lightDirModel[0] + y * lightDirModel[1] + z * lightDirModel[2]) / (float) Math.sqrt(length);
+		return (x * LIGHT_DIR_MODEL[0] + y * LIGHT_DIR_MODEL[1] + z * LIGHT_DIR_MODEL[2]) / (float) Math.sqrt(length);
 	}
 
 	public static float dotLightDirectionTile(float x, float y, float z) {
@@ -177,7 +175,7 @@ public class HDUtils {
 		float length = x * x + y * y + z * z;
 		if (length < EPSILON)
 			return 0;
-		return (x * lightDirTile[0] + y * lightDirTile[1]) / (float) Math.sqrt(length);
+		return (x * LIGHT_DIR_TILE[0] + y * LIGHT_DIR_TILE[1]) / (float) Math.sqrt(length);
 	}
 
 	public static long ceilPow2(long x) {

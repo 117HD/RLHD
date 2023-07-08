@@ -24,11 +24,8 @@
  */
 package rs117.hd.opengl.compute;
 
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
-import java.nio.LongBuffer;
-import javax.inject.Singleton;
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.client.util.OSType;
@@ -37,16 +34,24 @@ import org.lwjgl.PointerBuffer;
 import org.lwjgl.opencl.*;
 import org.lwjgl.system.Configuration;
 import org.lwjgl.system.MemoryStack;
+import org.slf4j.LoggerFactory;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.Template;
 import rs117.hd.utils.buffer.GLBuffer;
 
+import javax.inject.Singleton;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
+import java.nio.LongBuffer;
+
+import static org.lwjgl.opencl.APPLEGLSharing.CL_CGL_DEVICE_FOR_CURRENT_VIRTUAL_SCREEN_APPLE;
+import static org.lwjgl.opencl.APPLEGLSharing.clGetGLContextInfoAPPLE;
 import static org.lwjgl.opencl.CL10.*;
-import static org.lwjgl.opencl.CL12.*;
+import static org.lwjgl.opencl.CL12.CL_PROGRAM_BINARY_TYPE;
+import static org.lwjgl.opencl.CL12.clReleaseDevice;
 import static org.lwjgl.opencl.KHRGLSharing.*;
-import static org.lwjgl.system.MemoryUtil.NULL;
-import static org.lwjgl.system.MemoryUtil.memASCII;
-import static org.lwjgl.system.MemoryUtil.memUTF8;
+import static org.lwjgl.system.MemoryUtil.*;
 import static rs117.hd.HdPlugin.MAX_TRIANGLE;
 import static rs117.hd.HdPlugin.SMALL_TRIANGLE_COUNT;
 
@@ -92,7 +97,14 @@ public class OpenCLManager {
 	}
 
 	public void startUp(AWTContext awtContext) {
-		initContext(awtContext);
+		CL.create();
+		initialized = true;
+
+		if (OSType.getOSType() == OSType.MacOS) {
+			initContextMacOS(awtContext);
+		} else {
+			initContext(awtContext);
+		}
 		ensureMinWorkGroupSize();
 		initQueue();
 	}
@@ -123,9 +135,6 @@ public class OpenCLManager {
 	}
 
 	private void initContext(AWTContext awtContext) {
-		CL.create();
-		initialized = true;
-
 		try (var stack = MemoryStack.stackPush()) {
 			IntBuffer pi = stack.mallocInt(1);
 			checkCLError(clGetPlatformIDs(null, pi));
@@ -136,15 +145,7 @@ public class OpenCLManager {
 			checkCLError(clGetPlatformIDs(platforms, (IntBuffer) null));
 
 			PointerBuffer ctxProps = stack.mallocPointer(7);
-			if (OSType.getOSType() == OSType.MacOS) {
-				ctxProps
-					.put(CL_CONTEXT_PLATFORM)
-					.put(0)
-					.put(APPLEGLSharing.CL_CONTEXT_PROPERTY_USE_CGL_SHAREGROUP_APPLE)
-					.put(awtContext.getCGLShareGroup())
-					.put(0)
-					.flip();
-			} else if (OSType.getOSType() == OSType.Windows) {
+			if (OSType.getOSType() == OSType.Windows) {
 				ctxProps
 					.put(CL_CONTEXT_PLATFORM)
 					.put(0)
@@ -196,6 +197,8 @@ public class OpenCLManager {
 
 					for (int d = 0; d < devices.capacity(); d++) {
 						long device = devices.get(d);
+						long deviceType = getDeviceInfoLong(device, CL_DEVICE_TYPE);
+
 						log.debug("\tdevice index {}:", d);
 						log.debug("\t\tCL_DEVICE_NAME: {}", getDeviceInfoStringUTF8(device, CL_DEVICE_NAME));
 						log.debug("\t\tCL_DEVICE_VENDOR: {}", getDeviceInfoStringUTF8(device, CL_DEVICE_VENDOR));
@@ -203,7 +206,7 @@ public class OpenCLManager {
 						log.debug("\t\tCL_DEVICE_PROFILE: {}", getDeviceInfoStringUTF8(device, CL_DEVICE_PROFILE));
 						log.debug("\t\tCL_DEVICE_VERSION: {}", getDeviceInfoStringUTF8(device, CL_DEVICE_VERSION));
 						log.debug("\t\tCL_DEVICE_EXTENSIONS: {}", getDeviceInfoStringUTF8(device, CL_DEVICE_EXTENSIONS));
-						log.debug("\t\tCL_DEVICE_TYPE: {}", getDeviceInfoLong(device, CL_DEVICE_TYPE));
+						log.debug("\t\tCL_DEVICE_TYPE: {}", deviceType);
 						log.debug("\t\tCL_DEVICE_VENDOR_ID: {}", getDeviceInfoInt(device, CL_DEVICE_VENDOR_ID));
 						log.debug("\t\tCL_DEVICE_MAX_COMPUTE_UNITS: {}", getDeviceInfoInt(device, CL_DEVICE_MAX_COMPUTE_UNITS));
 						log.debug("\t\tCL_DEVICE_MAX_WORK_ITEM_DIMENSIONS: {}", getDeviceInfoInt(device, CL_DEVICE_MAX_WORK_ITEM_DIMENSIONS));
@@ -213,6 +216,8 @@ public class OpenCLManager {
 						log.debug("\t\tCL_DEVICE_AVAILABLE: {}", getDeviceInfoInt(device, CL_DEVICE_AVAILABLE) != 0);
 						log.debug("\t\tCL_DEVICE_COMPILER_AVAILABLE: {}", (getDeviceInfoInt(device, CL_DEVICE_COMPILER_AVAILABLE) != 0));
 
+						if (deviceType != CL_DEVICE_TYPE_GPU)
+							continue;
 						CLCapabilities platformCaps = CL.createPlatformCapabilities(platform);
 						CLCapabilities deviceCaps = CL.createDeviceCapabilities(device, platformCaps);
 						if (!deviceCaps.cl_khr_gl_sharing && !deviceCaps.cl_APPLE_gl_sharing)
@@ -239,6 +244,31 @@ public class OpenCLManager {
 
 			if (this.context == 0)
 				throw new RuntimeException("Unable to create suitable compute context");
+		}
+	}
+
+	private void initContextMacOS(AWTContext awtContext) {
+		try (var stack = MemoryStack.stackPush()) {
+			PointerBuffer ctxProps = stack.mallocPointer(3);
+			ctxProps
+				.put(APPLEGLSharing.CL_CONTEXT_PROPERTY_USE_CGL_SHAREGROUP_APPLE)
+				.put(awtContext.getCGLShareGroup())
+				.put(0)
+				.flip();
+
+			IntBuffer errcode_ret = stack.callocInt(1);
+			var devices = stack.mallocPointer(0);
+			long context = clCreateContext(ctxProps, devices, CLContextCallback.create((errinfo, private_info, cb, user_data) ->
+				log.error("[LWJGL] cl_context_callback: {}", memUTF8(errinfo))), NULL, errcode_ret);
+			checkCLError(errcode_ret);
+
+			var deviceBuf = stack.mallocPointer(1);
+			checkCLError(clGetGLContextInfoAPPLE(context, awtContext.getGLContext(), CL_CGL_DEVICE_FOR_CURRENT_VIRTUAL_SCREEN_APPLE, deviceBuf, null));
+			long device = deviceBuf.get(0);
+
+			log.debug("Got macOS CLGL compute device {}", device);
+			this.context = context;
+			this.device = device;
 		}
 	}
 

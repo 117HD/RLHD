@@ -9,8 +9,9 @@
 
 package rs117.hd.utils;
 
-public class ColorUtils
-{
+public class ColorUtils {
+	private static final float EPS = 1e-10f;
+
 	/**
 	 * Row-major transformation matrices for conversion between RGB and XYZ color spaces.
 	 * Fairman, H. S., Brill, M. H., & Hemmendinger, H. (1997).
@@ -19,7 +20,7 @@ public class ColorUtils
 	 * doi:10.1002/(sici)1520-6378(199702)22:1<11::aid-col4>3.0.co;2-7
 	 */
 	private static final float[] RGB_TO_XYZ_MATRIX = {
-		.49f,   .31f,   .2f,
+		.49f, .31f, .2f,
 		.1769f, .8124f, .0107f,
 		.0f,    .0099f, .9901f
 	};
@@ -117,6 +118,21 @@ public class ColorUtils
 	}
 
 	/**
+	 * Float modulo that returns the answer with the same sign as the modulus.
+	 */
+	public static float mod(float x, float modulus) {
+		return (float) (x - Math.floor(x / modulus) * modulus);
+	}
+
+	public static float clamp(float value, float min, float max) {
+		return Math.min(Math.max(value, min), max);
+	}
+
+	public static int clamp(int value, int min, int max) {
+		return Math.min(Math.max(value, min), max);
+	}
+
+	/**
 	 * Convert sRGB in the range 0-1 from sRGB to HSL in the range 0-1.
 	 *
 	 * @param srgb float[3]
@@ -128,17 +144,21 @@ public class ColorUtils
 		float X_min = Math.min(Math.min(srgb[0], srgb[1]), srgb[2]);
 		float C = V - X_min;
 
-		float H;
-		if (V == srgb[0]) {
-			H = ((srgb[1] - srgb[2]) / C) % 6f;
-		} else if (V == srgb[1]) {
-			H = (srgb[2] - srgb[0]) / C + 2;
-		} else {
-			H = (srgb[0] - srgb[1]) / C + 4;
+		float H = 0;
+		if (C > 0) {
+			if (V == srgb[0]) {
+				H = mod((srgb[1] - srgb[2]) / C, 6);
+			} else if (V == srgb[1]) {
+				H = (srgb[2] - srgb[0]) / C + 2;
+			} else {
+				H = (srgb[0] - srgb[1]) / C + 4;
+			}
+			assert H >= 0 && H <= 6;
 		}
 
 		float L = (V + X_min) / 2;
-		float S_L = L % 1 == 0 ? 0 : C / (1 - Math.abs(2 * L - 1));
+		float divisor = 1 - Math.abs(2 * L - 1);
+		float S_L = Math.abs(divisor) < EPS ? 0 : C / divisor;
 		return new float[] { H / 6, S_L, L };
 	}
 
@@ -150,40 +170,29 @@ public class ColorUtils
 	 * @link <a href="https://web.archive.org/web/20230619214343/https://en.wikipedia.org/wiki/HSL_and_HSV#Color_conversion_formulae">Wikipedia: HSL and HSV</a>
 	 */
 	public static float[] hslToSrgb(float[] hsl) {
-		float C = hsl[2] % 1 == 0 ? 0 : hsl[1] * (1 - Math.abs(2 * hsl[2] - 1));
+		float C = hsl[1] * (1 - Math.abs(2 * hsl[2] - 1));
 		float H_prime = hsl[0] * 6;
-		float X = C * (1 - Math.abs((H_prime % 2f) - 1));
 		float m = hsl[2] - C / 2;
-		float x = C + m;
-		float y = X + m;
 
-		if (H_prime < 1)
-			return new float[] { x, y, m };
-		if (H_prime < 2)
-			return new float[] { y, x, m };
-		if (H_prime < 3)
-			return new float[] { m, x, y };
-		if (H_prime < 4)
-			return new float[] { m, y, x };
-		if (H_prime < 5)
-			return new float[] { y, m, x };
-		if (H_prime < 6)
-			return new float[] { x, m, y };
-		return new float[] { hsl[2], hsl[2], hsl[2] };
+		float r = clamp(Math.abs(H_prime - 3) - 1, 0, 1) * C + m;
+		float g = clamp(2 - Math.abs(H_prime - 2), 0, 1) * C + m;
+		float b = clamp(2 - Math.abs(H_prime - 4), 0, 1) * C + m;
+		return new float[] { r, g, b };
 	}
 
 	public static float[] hslToHsv(float[] hsl) {
 		float v = hsl[2] + hsl[1] * Math.min(hsl[2], 1 - hsl[2]);
-		return new float[] { hsl[0], v == 0 ? 0 : 2 * (1 - hsl[2] / v), v };
+		return new float[] { hsl[0], Math.abs(v) < EPS ? 0 : 2 * (1 - hsl[2] / v), v };
 	}
 
 	public static float[] hsvToHsl(float[] hsv) {
 		float l = hsv[2] * (1 - hsv[1] / 2);
-		return new float[] { hsv[0], l % 1 == 0 ? 0 : (hsv[2] - l) / Math.min(l, 1 - l), l };
+		float divisor = Math.min(l, 1 - l);
+		return new float[] { hsv[0], Math.abs(divisor) < EPS ? 0 : (hsv[2] - l) / divisor, l };
 	}
 
 	/**
-	 * Convert sRGB in the range 0-1 from sRGB to HSV in the range 0-1.
+	 * Convert sRGB in the range 0-1 from sRGB to HSV (also known as HSB) in the range 0-1.
 	 *
 	 * @param srgb float[3]
 	 * @return hsv float[3]
@@ -194,7 +203,7 @@ public class ColorUtils
 	}
 
 	/**
-	 * Convert HSV in the range 0-1 to sRGB in the range 0-1.
+	 * Convert HSV (also known as HSB) in the range 0-1 to sRGB in the range 0-1.
 	 *
 	 * @param hsv float[3]
 	 * @return srgb float[3]
@@ -221,9 +230,9 @@ public class ColorUtils
 	}
 
 	public static int packHsl(float[] hsl) {
-		int H = (int) ((hsl[0] - .0078125f) * (0x3F + 1));
-		int S = (int) ((hsl[1] - .0625f) * (0x7 + 1));
-		int L = (int) (hsl[2] * (0x7F + 1));
+		int H = clamp(Math.round((hsl[0] - .0078125f) * (0x3F + 1)), 0, 0x3F);
+		int S = clamp(Math.round((hsl[1] - .0625f) * (0x7 + 1)), 0, 0x7);
+		int L = clamp(Math.round(hsl[2] * (0x7F + 1)), 0, 0x7F);
 		return H << 10 | S << 7 | L;
 	}
 
@@ -241,5 +250,14 @@ public class ColorUtils
 
 	public static float[] packedHslToSrgb(int hsl) {
 		return hslToSrgb(unpackHsl(hsl));
+	}
+
+	public static float[] unpackARGB(int argb) {
+		return new float[] {
+			(argb >> 16 & 0xFF) / (float) 0xFF,
+			(argb >> 8 & 0xFF) / (float) 0xFF,
+			(argb & 0xFF) / (float) 0xFF,
+			(argb >> 24 & 0xFF) / (float) 0xFF
+		};
 	}
 }

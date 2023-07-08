@@ -38,7 +38,7 @@ uniform sampler2D shadowMap;
 uniform mat4 lightProjectionMatrix;
 uniform float elapsedTime;
 uniform float colorBlindnessIntensity;
-uniform vec4 fogColor;
+uniform vec3 fogColor;
 uniform int fogDepth;
 uniform vec3 waterColorLight;
 uniform vec3 waterColorMid;
@@ -449,7 +449,7 @@ void main() {
 
 
         // sky light
-        vec3 skyLightColor = fogColor.rgb;
+        vec3 skyLightColor = fogColor;
         float skyLightStrength = 0.5;
         float skyDotNormals = downDotNormals;
         vec3 skyLightOut = max(skyDotNormals, 0.0) * skyLightColor * skyLightStrength;
@@ -520,7 +520,7 @@ void main() {
             outputColor.a = combinedFog + outputColor.a * (1 - combinedFog);
         }
 
-        outputColor.rgb = mix(outputColor.rgb, fogColor.rgb, combinedFog);
+        outputColor.rgb = mix(outputColor.rgb, fogColor, combinedFog);
     }
 
     FragColor = outputColor;
