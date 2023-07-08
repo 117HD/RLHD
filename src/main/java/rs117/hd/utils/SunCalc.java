@@ -26,6 +26,10 @@
  */
 package rs117.hd.utils;
 
+import java.awt.Color;
+import lombok.extern.slf4j.Slf4j;
+import rs117.hd.scene.TimeOfDay;
+
 import static java.lang.Math.PI;
 import static java.lang.Math.acos;
 import static java.lang.Math.asin;
@@ -33,7 +37,13 @@ import static java.lang.Math.atan2;
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
 import static java.lang.Math.tan;
+import static rs117.hd.utils.ColorUtils.rgb;
+import static rs117.hd.utils.HDUtils.add;
+import static rs117.hd.utils.HDUtils.clamp;
+import static rs117.hd.utils.HDUtils.lerp;
+import static rs117.hd.utils.HDUtils.multiply;
 
+@Slf4j
 public class SunCalc
 {
 	private static final double
@@ -47,14 +57,14 @@ public class SunCalc
 
 	/**
 	 * Calculate angles for the sun's position in the sky at a given time and location.
-	 * @param millis    time in milliseconds since the Unix epoch
-	 * @param latLong   latitude and longitude coordinates
+	 *
+	 * @param millis  time in milliseconds since the Unix epoch
+	 * @param latLong latitude and longitude coordinates
 	 * @return the azimuth and altitude angles in radians
 	 * @see <a href="https://en.wikipedia.org/wiki/Horizontal_coordinate_system">Horizontal coordinate system</a>
 	 * @see <a href="https://github.com/mourner/suncalc#sun-position">suncalc npm documentation</a>
 	 */
-	public static double[] getPosition(long millis, double[] latLong)
-	{
+	public static double[] getSunAngles(long millis, double[] latLong) {
 		double
 			phi = rad * latLong[0],
 			lw = rad * -latLong[1],
@@ -65,184 +75,124 @@ public class SunCalc
 
 		double azimuth = azimuth(H, phi, c[0]);
 		double altitude = altitude(H, phi, c[0]);
-		return new double[]{ azimuth, altitude };
+		return new double[] { azimuth, altitude };
+	}
+
+	public static float[] getDirectionalLight(long millis, double[] latLong) {
+		double[] angles = getSunAngles(millis, latLong);
+
+		// Use night illumination as a base
+		float[] rgb = multiply(
+			ColorUtils.colorTemperatureToLinearRgb(4100),
+			(float) SunCalc.getMoonIllumination(millis)[0] * .2f
+		);
+
+		if (!TimeOfDay.isNight(angles)) {
+			float[][] altitudeTemperatureRange = {
+				{ 3, 2500 },
+				{ 5, 2600 },
+				{ 10, 3000 },
+				{ 15, 3300 },
+				{ 20, 3600 },
+				{ 30, 4000 },
+				{ 40, 4300 },
+				{ 50, 4750 },
+				{ 60, 5250 },
+				{ 70, 5500 },
+				{ 80, 5750 },
+				{ 90, 6000 }
+			};
+
+			float temperature = interpolate((float) Math.toDegrees(angles[1]), altitudeTemperatureRange);
+			float strength = (float) sin(angles[1]);
+			strength *= strength;
+			strength *= 3;
+			float[] sunIllumination = ColorUtils.colorTemperatureToLinearRgb(temperature);
+			sunIllumination = multiply(sunIllumination, strength);
+			rgb = add(rgb, sunIllumination);
+		}
+
+		return rgb;
+	}
+
+	public static float[] getAmbientColor(long millis, double[] latLong) {
+		// degrees above horizon 0-90, sRGB from 0-255
+		Object[][] altitudeColorRange = {
+			{ -5, new Color(113, 140, 180) },
+			{ 25, new Color(192, 185, 255) },
+			{ 40, new Color(185, 214, 255) },
+		};
+
+		double[] angles = getSunAngles(millis, latLong);
+		return interpolateSrgb((float) Math.toDegrees(angles[1]), altitudeColorRange);
+	}
+
+	public static float[] getSkyColor(long millis, double[] latLong) {
+		// degrees above horizon 0-90, sRGB from 0-255
+		Object[][] altitudeColorRange = {
+			{ -10, new Color(10, 10, 14) },
+			{ 25, new Color(153, 153, 201) },
+			{ 40, new Color(185, 214, 255) },
+		};
+
+		double[] angles = getSunAngles(millis, latLong);
+		var rgb = interpolateSrgb((float) Math.toDegrees(angles[1]), altitudeColorRange);
+		return ColorUtils.linearToSrgb(rgb);
+	}
+
+	public static float interpolate(float x, float[][] keyframesDegreesValue) {
+		int end = keyframesDegreesValue.length - 1;
+		int i = 0;
+		while (i < end && x < keyframesDegreesValue[i][0])
+			i++;
+
+		if (i == end)
+			return keyframesDegreesValue[end][1];
+
+		var from = keyframesDegreesValue[i];
+		var to = keyframesDegreesValue[i + 1];
+		var x1 = from[0];
+		var x2 = to[0];
+
+		float t = clamp((x - x1) / (x2 - x1), 0, 1);
+		return lerp(from[1], to[1], t);
 	}
 
 	/**
-	 * Calculate strength of the sun's light based on the current altitude at a given time and location.
-	 * @param angles     azimuth and altitude angles in radians
-	 * @param startAngle  the angle over which to fade the light at the start and end of the day
-	 * @return light strength float between 0 and 1
+	 * Converts colors in range from sRGB to linear RGB, then interpolates, and returns the interpolated linear RGB color.
+	 *
+	 * @param x                    interpolation value
+	 * @param keyframesDegreesSrgb values
+	 * @return interpolated linear RGB
 	 */
-	public static float getStrength(double[] angles, double startAngle) {
-		double altitude = angles[1];
-		double angleFromZenith = Math.abs(altitude - Math.PI / 2);
-
-		if (angleFromZenith > Math.PI / 2) { // Below horizon
-			return 0;
-		}
-
-		float normalizedAltitude = (float) (altitude / (Math.PI / 2));
-		float fadeOffset = (float) Math.toRadians(startAngle) / (float) (Math.PI / 2);
-		float fadeStart = fadeOffset;
-		float fadeEnd = 1 - fadeOffset;
-
-		float fadedStrength = 0;
-		if (normalizedAltitude >= fadeStart && normalizedAltitude <= fadeEnd) {
-			fadedStrength = (float) Math.sin((normalizedAltitude - fadeStart) * (Math.PI / 2) / (fadeEnd - fadeStart));
-		}
-		return fadedStrength;
-	}
-
-	public static float[] getColor(long millis, double[] latLong)
-	{
-		double[] angles = getPosition(millis, latLong);
-		float altitudeDegrees = (float) Math.toDegrees(angles[1]);
-		if (altitudeDegrees > 90)
-			altitudeDegrees = 90 - altitudeDegrees;
-
-		float[][] altitudeTemperatureRange = {
-			{-90, 13000 },
-			{  0, 13000 },
-			{  3, 2500 },
-			{  5, 2600 },
-			{ 10, 3000 },
-			{ 15, 3300 },
-			{ 20, 3600 },
-			{ 30, 4000 },
-			{ 40, 4300 },
-			{ 50, 4750 },
-			{ 60, 5250 },
-			{ 70, 5500 },
-			{ 80, 5750 },
-			{ 90, 6000 }
-		};
-
-		float temperature = interpolate(altitudeDegrees, altitudeTemperatureRange);
-		return ColorUtils.colorTemperatureToLinearRgb(temperature);
-	}
-
-	public static float[] getAmbientColor(long millis, double[] latLong)
-	{
-		double[] position = getPosition(millis, latLong);
-		float altitudeDegrees = (float) Math.toDegrees(position[1]);
-		if (altitudeDegrees > 90)
-			altitudeDegrees = 90 - altitudeDegrees;
-
-		float[][] altitudeColorRange = {
-			{-90,  56,  99, 161 },
-			{  0,  56,  99, 161 },
-			{  2, 147,  56, 161 }, // dawn/dusk blue
-			{  4, 255, 114,  54 },
-			{  7, 255, 178,  84 }, // sunrise/sunset orange
-			{ 20, 173, 243, 255 },
-			{ 30, 151, 186, 255 },
-			{ 80, 151, 186, 255 }
-		};
-
-		float[] interpolatedColor = interpolateRGB(altitudeDegrees, altitudeColorRange);
-		for (int i = 0; i < 3; i++)
-			interpolatedColor[i] /= 255;
-		return ColorUtils.srgbToLinear(interpolatedColor);
-	}
-
-	public static float getAmbientStrength(long millis, double[] latLong)
-	{
-		double[] position = getPosition(millis, latLong);
-		float altitudeDegrees = (float) Math.toDegrees(position[1]);
-		if (altitudeDegrees > 90)
-			altitudeDegrees = 90 - altitudeDegrees;
-
-		float[][] altitudeStrengthRange = {
-				{-90,  2 },
-				{  0,  2 },
-				{  3, 1 },
-				{ 20, 1 },
-				{ 30, 1 },
-				{ 80, 1 }
-		};
-
-		return interpolate(altitudeDegrees, altitudeStrengthRange);
-	}
-
-	public static float[] getSkyColor(long millis, double[] latLong)
-	{
-		double[] position = getPosition(millis, latLong);
-		float altitudeDegrees = (float) Math.toDegrees(position[1]);
-		if (altitudeDegrees > 90)
-			altitudeDegrees = 90 - altitudeDegrees;
-
-		float[][] altitudeColorRange = {
-				{-90,   5,   5, 11 },
-				{  0,   5,   5, 11 },
-				{  2,  14,  15, 33 },  // dawn/dusk blue
-				{  4, 114,  48, 117 },
-				{  7, 222, 170, 106 }, // sunrise/sunset orange
-				{ 20, 185, 199, 255 },
-				{ 30, 185, 214, 255 },
-				{ 80, 185, 214, 255 }
-		};
-
-		float[] interpolatedColor = interpolateRGB(altitudeDegrees, altitudeColorRange);
-		for (int i = 0; i < 3; i++)
-			interpolatedColor[i] /= 255;
-		return ColorUtils.srgbToLinear(interpolatedColor);
-	}
-
-	public static float interpolate(float x, float[][] range)
-	{
-		int n = range.length;
+	public static float[] interpolateSrgb(float x, Object[][] keyframesDegreesSrgb) {
+		int end = keyframesDegreesSrgb.length - 1;
 		int i = 0;
-		while (i < n && x > range[i][0]) {
+		while (i < end && x > ((Number) keyframesDegreesSrgb[i + 1][0]).floatValue())
 			i++;
-		}
-		if (i == 0) {
-			return range[0][1];
-		} else if (i == n) {
-			return range[n - 1][1];
-		} else {
-			float x1 = range[i - 1][0];
-			float x2 = range[i][0];
-			float y1 = range[i - 1][1];
-			float y2 = range[i][1];
-			return y1 + (y2 - y1) * (x - x1) / (x2 - x1);
-		}
-	}
 
-	public static float[] interpolateRGB(float x, float[][] range)
-	{
-		int n = range.length;
-		int i = 0;
-		while (i < n && x > range[i][0]) {
-			i++;
-		}
-		if (i == 0) {
-			return range[0];
-		} else if (i == n) {
-			return range[n - 1];
-		} else {
-			float x1 = range[i - 1][0];
-			float x2 = range[i][0];
-			float[] y1 = range[i - 1];
-			float[] y2 = range[i];
-			float[] interpolatedColor = new float[3];
-			for (int j = 1; j < 4; j++)
-				interpolatedColor[j - 1] = y1[j] + (y2[j] - y1[j]) * (x - x1) / (x2 - x1);
-			return interpolatedColor;
-		}
+		if (i == end)
+			return rgb((Color) keyframesDegreesSrgb[end][1]);
+
+		var from = keyframesDegreesSrgb[i];
+		var to = keyframesDegreesSrgb[i + 1];
+		var x1 = ((Number) from[0]).floatValue();
+		var x2 = ((Number) to[0]).floatValue();
+
+		float t = clamp((x - x1) / (x2 - x1), 0, 1);
+		return lerp(rgb((Color) from[1]), rgb((Color) to[1]), t);
 	}
 
 	/**
 	 * Calculate angles for the moon's position in the sky at a given time and location.
 	 *
-	 * @param millis    time in milliseconds since the Unix epoch
-	 * @param latLong   latitude and longitude coordinates
+	 * @param millis  time in milliseconds since the Unix epoch
+	 * @param latLong latitude and longitude coordinates
 	 * @return the azimuth and altitude angles in radians
 	 * @see <a href="https://en.wikipedia.org/wiki/Horizontal_coordinate_system">Horizontal coordinate system</a>
 	 * @see <a href="https://github.com/mourner/suncalc#moon-position">suncalc npm documentation</a>
 	 */
-	public static double[] getMoonPosition(long millis, double[] latLong)
-	{
+	public static double[] getMoonPosition(long millis, double[] latLong) {
 		double
 			phi = rad * latLong[0],
 			lw = rad * -latLong[1],
@@ -260,7 +210,7 @@ public class SunCalc
 
 		double azimuth = azimuth(H, phi, dec);
 		double altitude = h + astroRefraction(h); // altitude correction for refraction
-		return new double[]{
+		return new double[] {
 			azimuth,
 			altitude,
 			dist,
@@ -268,14 +218,13 @@ public class SunCalc
 		};
 	}
 
-	public static double[] getMoonIllumination(long millis)
-	{
-		return getMoonIllumination(millis, sunCoords(millis), moonCoords(millis));
+	public static double[] getMoonIllumination(long millis) {
+		double d = toDays(-millis);
+		return getMoonIllumination(sunCoords(d), moonCoords(d));
 	}
 
 	// https://github.com/mourner/suncalc#moon-illumination
-	public static double[] getMoonIllumination(long millis, double[] sunCoords, double[] moonCoords)
-	{
+	public static double[] getMoonIllumination(double[] sunCoords, double[] moonCoords) {
 		double
 			sdist = 149598000, // distance from Earth to Sun in km
 			sdec = sunCoords[0],
@@ -295,87 +244,47 @@ public class SunCalc
 		};
 	}
 
-	public static float getMoonStrength(double[] moonAngles, double[] angles, double startAngle, double filterAngle) {
-		double moonAltitude = moonAngles[1];
-		double moonAngleFromZenith = Math.abs(moonAltitude - Math.PI / 2);
-
-		if (moonAngleFromZenith > Math.PI / 2)
-			return 0;
-
-		// get moon strength
-		float normalizedMoonAltitude = (float) (moonAltitude / (Math.PI / 2));
-
-		// offset
-		double fadeOffset = Math.toRadians(startAngle) / (Math.PI / 2);
-		float fadeStart = (float) fadeOffset;
-		float fadeEnd = 1 - (float) fadeOffset;
-
-		float moonStrength = 0;
-		if (normalizedMoonAltitude >= fadeStart && normalizedMoonAltitude <= fadeEnd) {
-			moonStrength = (normalizedMoonAltitude - fadeStart) / (fadeEnd - fadeStart);
-		}
-
-		// filter based on sun altitude
-		double sunAltitude = angles[1];
-		double startFadeFactor = Math.max(0, (-sunAltitude - Math.toRadians(filterAngle)) / Math.toRadians(filterAngle));
-		moonStrength *= startFadeFactor;
-
-		if (sunAltitude > Math.toRadians(-filterAngle)) {
-			double endFadeFactor = Math.max(0, (sunAltitude - Math.toRadians(-filterAngle)) / Math.toRadians(filterAngle));
-			moonStrength *= (1 - endFadeFactor);
-		}
-
-		return moonStrength;
-	}
-
-
-	public static double toJulian(long millis)
-	{
+	public static double toJulian(long millis) {
 		return (double) millis / (double) dayMs - .5 + J1970;
 	}
 
-	public static double toDays(long millis)
-	{
+	public static double toDays(long millis) {
 		return toJulian(millis) - J2000;
 	}
 
-	private static double[] sunCoords(double d)
-	{
+	private static double[] sunCoords(double julianDay) {
 		double
-			M = solarMeanAnomaly(d),
+			M = solarMeanAnomaly(julianDay),
 			L = eclipticLongitude(M);
 
-		return new double[]{
+		return new double[] {
 			declination(L, 0),
 			rightAscension(L, 0)
 		};
 	}
 
-	private static double[] moonCoords(double d)
-	{ // geocentric ecliptic coordinates of the moon
+	private static double[] moonCoords(double julianDay) { // geocentric ecliptic coordinates of the moon
 		double
-			L = rad * (218.316 + 13.176396 * d), // ecliptic longitude
-			M = rad * (134.963 + 13.064993 * d), // mean anomaly
-			F = rad * (93.272 + 13.229350 * d),  // mean distance
+			L = rad * (218.316 + 13.176396 * julianDay), // ecliptic longitude
+			M = rad * (134.963 + 13.064993 * julianDay), // mean anomaly
+			F = rad * (93.272 + 13.229350 * julianDay),  // mean distance
 
 			l = L + rad * 6.289 * sin(M), // longitude
 			b = rad * 5.128 * sin(F),     // latitude
 			dt = 385001 - 20905 * cos(M);  // distance to the moon in km
 
-		return new double[]{
+		return new double[] {
 			declination(l, b),
 			rightAscension(l, b),
 			dt
 		};
 	}
 
-	private static double solarMeanAnomaly(double d)
-	{
-		return rad * (357.5291 + 0.98560028 * d);
+	private static double solarMeanAnomaly(double julianDay) {
+		return rad * (357.5291 + 0.98560028 * julianDay);
 	}
 
-	private static double eclipticLongitude(double M)
-	{
+	private static double eclipticLongitude(double M) {
 		double
 			C = rad * (1.9148 * sin(M) + 0.02 * sin(2 * M) + 0.0003 * sin(3 * M)), // equation of center
 			P = rad * 102.9372; // perihelion of the Earth
@@ -383,33 +292,27 @@ public class SunCalc
 		return M + C + P + PI;
 	}
 
-	private static double declination(double l, double b)
-	{
+	private static double declination(double l, double b) {
 		return asin(sin(b) * cos(e) + cos(b) * sin(e) * sin(l));
 	}
 
-	private static double rightAscension(double l, double b)
-	{
+	private static double rightAscension(double l, double b) {
 		return atan2(sin(l) * cos(e) - tan(b) * sin(e), cos(l));
 	}
 
-	private static double siderealTime(double d, double lw)
-	{
+	private static double siderealTime(double d, double lw) {
 		return rad * (280.16 + 360.9856235 * d) - lw;
 	}
 
-	private static double azimuth(double H, double phi, double dec)
-	{
+	private static double azimuth(double H, double phi, double dec) {
 		return atan2(sin(H), cos(H) * sin(phi) - tan(dec) * cos(phi));
 	}
 
-	private static double altitude(double H, double phi, double dec)
-	{
+	private static double altitude(double H, double phi, double dec) {
 		return asin(sin(phi) * sin(dec) + cos(phi) * cos(dec) * cos(H));
 	}
 
-	private static double astroRefraction(double h)
-	{
+	private static double astroRefraction(double h) {
 		if (h < 0) // the following formula works for positive altitudes only.
 		{
 			h = 0; // if h = -0.08901179 a div/0 would occur.

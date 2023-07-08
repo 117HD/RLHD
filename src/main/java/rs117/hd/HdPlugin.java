@@ -56,10 +56,8 @@ import net.runelite.api.hooks.*;
 import net.runelite.client.RuneLite;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
-import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
-import net.runelite.client.game.WorldService;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDependency;
 import net.runelite.client.plugins.PluginDescriptor;
@@ -114,7 +112,11 @@ import static org.lwjgl.opencl.CL10.*;
 import static org.lwjgl.opencl.CL10GL.*;
 import static org.lwjgl.opengl.GL43C.*;
 import static rs117.hd.HdPluginConfig.*;
-import static rs117.hd.scene.EnvironmentManager.MINUTES_PER_DAY;
+import static rs117.hd.scene.TimeOfDay.MINUTES_PER_DAY;
+import static rs117.hd.utils.HDUtils.add;
+import static rs117.hd.utils.HDUtils.clamp;
+import static rs117.hd.utils.HDUtils.lerp;
+import static rs117.hd.utils.HDUtils.multiply;
 import static rs117.hd.utils.ResourcePath.path;
 
 @PluginDescriptor(
@@ -155,12 +157,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Inject
 	private ClientThread clientThread;
-
-	@Inject
-	private EventBus eventBus;
-
-	@Inject
-	private WorldService worldService;
 
 	@Inject
 	private DrawManager drawManager;
@@ -329,9 +325,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private int uniWaterColorLight;
 	private int uniWaterColorMid;
 	private int uniWaterColorDark;
-	private int uniAmbientStrength;
 	private int uniAmbientColor;
-	private int uniLightStrength;
 	private int uniLightColor;
 	private int uniUnderglowStrength;
 	private int uniUnderglowColor;
@@ -398,7 +392,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public ShadowMode configShadowMode;
 	public int configMaxDynamicLights;
 
-	public int currentWorld;
 	public double[] latLong = { 0, 0 };
 	public int[] camTarget = new int[3];
 
@@ -806,9 +799,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		uniWaterColorMid = glGetUniformLocation(glProgram, "waterColorMid");
 		uniWaterColorDark = glGetUniformLocation(glProgram, "waterColorDark");
 		uniDrawDistance = glGetUniformLocation(glProgram, "drawDistance");
-		uniAmbientStrength = glGetUniformLocation(glProgram, "ambientStrength");
 		uniAmbientColor = glGetUniformLocation(glProgram, "ambientColor");
-		uniLightStrength = glGetUniformLocation(glProgram, "lightStrength");
 		uniLightColor = glGetUniformLocation(glProgram, "lightColor");
 		uniUnderglowStrength = glGetUniformLocation(glProgram, "underglowStrength");
 		uniUnderglowColor = glGetUniformLocation(glProgram, "underglowColor");
@@ -1383,7 +1374,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		// but the compute shaders should still be executed in case the camera angle has changed.
 		// Technically we could skip compute shaders as well when the camera is unchanged,
 		// but it would only lead to micro stuttering when rotating the camera, compared to no rotation.
-		if (!shouldSkipModelUpdates) {
+		if (!shouldSkipModelUpdates && sceneContext != null) {
 			// Geometry buffers
 			sceneContext.stagingBufferVertices.flip();
 			sceneContext.stagingBufferUvs.flip();
@@ -1761,9 +1752,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 			glBindVertexArray(vaoSceneHandle);
 
-			float lightStrength = environmentManager.currentDirectionalStrength;
-			float ambientStrength = environmentManager.currentAmbientStrength;
-
 			float[] lightColor = environmentManager.currentDirectionalColor;
 			float[] ambientColor = environmentManager.currentAmbientColor;
 			float[] fogColor = ColorUtils.linearToSrgb(environmentManager.currentFogColor);
@@ -1774,22 +1762,28 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			if (environmentManager.useDaylightCycle()) {
 				switch (config.daylightCycle()) {
 					case HOUR_LONG_DAYS:
-						double[] angles = TimeOfDay.getCurrentAngles(latLong, MINUTES_PER_DAY);
-						lightStrength *= TimeOfDay.getLightStrength(latLong, MINUTES_PER_DAY);
 						lightColor = TimeOfDay.getLightColor(latLong, MINUTES_PER_DAY);
 						ambientColor = TimeOfDay.getAmbientColor(latLong, MINUTES_PER_DAY);
-						ambientStrength = TimeOfDay.getAmbientStrength(latLong, MINUTES_PER_DAY);
-						fogColor = TimeOfDay.getFogColor(latLong, MINUTES_PER_DAY);
-						lightPitch = (float) -angles[1];
-						lightYaw = (float) (angles[0] + Math.PI);
+
+						double[] sunAngles = TimeOfDay.getSunAngles(latLong, MINUTES_PER_DAY);
+						double[] shadowAngles = TimeOfDay.getShadowAngles(latLong, MINUTES_PER_DAY);
+						lightPitch = (float) -shadowAngles[1];
+						lightYaw = (float) (shadowAngles[0] + Math.PI);
+
+						fogColor = TimeOfDay.getSkyColor(latLong, MINUTES_PER_DAY);
+//						fogColor = ColorUtils.linearToSrgb(multiply(ambientColor, (float) clamp(Math.sin(sunAngles[1]), 0, 1)));
+						waterColor = fogColor;
+
+						// Blend shadows between day and night
+						float shadowVisibility = 1 - (float) Math.pow(1 - Math.abs(Math.sin(sunAngles[1])), 5);
+						shadowVisibility *= 1 - Math.pow(1 - Math.sin(shadowAngles[1]), 2);
+						shadowVisibility = clamp(shadowVisibility, 0, 1);
+						ambientColor = add(ambientColor, multiply(lightColor, 1 - shadowVisibility));
+						lightColor = multiply(lightColor, shadowVisibility);
 						break;
 					case ALWAYS_NIGHT:
 						ambientColor = TimeOfDay.getNightAmbientColor();
-						ambientStrength = TimeOfDay.getNightAmbientStrength();
 						lightColor = TimeOfDay.getNightLightColor();
-						lightStrength = TimeOfDay.getNightLightStrength();
-						fogColor = TimeOfDay.getNightFogColor();
-						waterColor = TimeOfDay.getNightWaterColor();
 						break;
 				}
 			}
@@ -1798,7 +1792,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			Mat4.mul(lightViewMatrix, Mat4.rotateY(-lightYaw));
 
 			float[] lightProjectionMatrix = Mat4.identity();
-			if (configShadowsEnabled && fboShadowMap != 0 && lightStrength > 0) {
+			if (configShadowsEnabled && fboShadowMap != 0 && lightPitch < 0) {
 				// Render to the shadow depth map
 				glViewport(0, 0, shadowMapResolution, shadowMapResolution);
 				glBindFramebuffer(GL_FRAMEBUFFER, fboShadowMap);
@@ -1825,7 +1819,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				final float maxScale = 0.7f;
 				final float minScale = 0.4f;
 				final float scaleMultiplier = 1.0f - (getDrawDistance() / (maxDrawDistance * maxScale));
-				float scale = HDUtils.lerp(maxScale, minScale, scaleMultiplier);
+				float scale = lerp(maxScale, minScale, scaleMultiplier);
 
 				Mat4.mul(lightProjectionMatrix, Mat4.scale(scale, scale, scale));
 				Mat4.mul(lightProjectionMatrix, Mat4.ortho(width, height, near));
@@ -1942,10 +1936,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			glUniform3fv(uniWaterColorDark, waterColorDark);
 
 			float brightness = config.brightness() / 20f;
-			glUniform1f(uniAmbientStrength, ambientStrength * brightness);
-			glUniform3fv(uniAmbientColor, ambientColor);
-			glUniform1f(uniLightStrength, lightStrength * brightness);
-			glUniform3fv(uniLightColor, lightColor);
+			glUniform3fv(uniAmbientColor, HDUtils.multiply(ambientColor, brightness));
+			glUniform3fv(uniLightColor, HDUtils.multiply(lightColor, brightness));
 
 			glUniform1f(uniUnderglowStrength, environmentManager.currentUnderglowStrength);
 			glUniform3fv(uniUnderglowColor, environmentManager.currentUnderglowColor);
@@ -2582,7 +2574,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	private int getDrawDistance()
 	{
-		return HDUtils.clamp(config.drawDistance(), 0, MAX_DISTANCE);
+		return clamp(config.drawDistance(), 0, MAX_DISTANCE);
 	}
 
 	/**

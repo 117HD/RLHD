@@ -1080,12 +1080,8 @@ public enum Environment
 	private final boolean customFogDepth;
 	private final float[] fogColor;
 	private final boolean customFogColor;
-	private final float ambientStrength;
-	private final boolean customAmbientStrength;
 	private final float[] ambientColor;
 	private final boolean customAmbientColor;
-	private final float directionalStrength;
-	private final boolean customDirectionalStrength;
 	private final float[] directionalColor;
 	private final boolean customDirectionalColor;
 	private final float underglowStrength;
@@ -1111,11 +1107,9 @@ public enum Environment
 		private float[] fogColor = rgb(185, 214, 255);
 		private boolean customFogColor = false;
 		private float ambientStrength = 1.0f;
-		private boolean customAmbientStrength = false;
 		private float[] ambientColor = rgb(151, 186, 255);
 		private boolean customAmbientColor = false;
 		private float directionalStrength = 4.0f;
-		private boolean customDirectionalStrength = false;
 		private float[] directionalColor = rgb(255, 255, 255);
 		private boolean customDirectionalColor = false;
 		private float underglowStrength = 0.0f;
@@ -1159,7 +1153,6 @@ public enum Environment
 		public Properties setAmbientStrength(float str)
 		{
 			this.ambientStrength = str;
-			this.customAmbientStrength = true;
 			return this;
 		}
 
@@ -1188,7 +1181,6 @@ public enum Environment
 		public Properties setDirectionalStrength(float str)
 		{
 			this.directionalStrength = str;
-			this.customDirectionalStrength = true;
 			return this;
 		}
 
@@ -1295,13 +1287,15 @@ public enum Environment
 		this.customFogDepth = properties.customFogDepth;
 		this.fogColor = properties.fogColor;
 		this.customFogColor = properties.customFogColor;
-		this.ambientStrength = properties.ambientStrength;
-		this.customAmbientStrength = properties.customAmbientStrength;
-		this.ambientColor = properties.ambientColor;
+		var ambientColor = new float[3];
+		for (int i = 0; i < 3; i++)
+			ambientColor[i] = properties.ambientColor[i] * properties.ambientStrength;
+		this.ambientColor = ambientColor;
 		this.customAmbientColor = properties.customAmbientColor;
-		this.directionalStrength = properties.directionalStrength;
-		this.customDirectionalStrength = properties.customDirectionalStrength;
-		this.directionalColor = properties.directionalColor;
+		var directionalColor = new float[3];
+		for (int i = 0; i < 3; i++)
+			directionalColor[i] = properties.directionalColor[i] * properties.directionalStrength;
+		this.directionalColor = directionalColor;
 		this.customDirectionalColor = properties.customDirectionalColor;
 		this.underglowColor = properties.underglowColor;
 		this.underglowStrength = properties.underglowStrength;

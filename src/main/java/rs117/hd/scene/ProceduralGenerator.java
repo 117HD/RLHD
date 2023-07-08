@@ -822,7 +822,7 @@ public class ProceduralGenerator
 			{
 				int vertexKey = faceVertexKeys[face][vertex];
 				// accumulate normals to hashmap
-				sceneContext.vertexTerrainNormals.merge(vertexKey, vertexNormals, (a, b) -> HDUtils.vectorAdd(b, a));
+				sceneContext.vertexTerrainNormals.merge(vertexKey, vertexNormals, (a, b) -> HDUtils.add(b, a));
 			}
 		}
 	}

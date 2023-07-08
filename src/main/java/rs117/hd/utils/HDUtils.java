@@ -48,49 +48,44 @@ public class HDUtils {
 	// The epsilon for floating point values used by jogl
 	public static final float EPSILON = 1.1920929E-7f;
 
-	public static float[] vectorAdd(float[] vec1, float[] vec2) {
-		float[] out = new float[vec1.length];
-		for (int i = 0; i < vec1.length; i++)
-			out[i] = vec1[i] + vec2[i];
+	public static float dot(float[] a, float[] b) {
+		float out = 0;
+		for (int i = 0; i < a.length; i++)
+			out += a[i] * b[i];
 		return out;
 	}
 
-	static float[] vectorAdd(float[] vec1, int[] vec2) {
-		float[] out = new float[vec1.length];
-		for (int i = 0; i < vec1.length; i++)
-			out[i] = vec1[i] + vec2[i];
+	public static float magnitudeSquared(float[] vector) {
+		return dot(vector, vector);
+	}
+
+	public static float magnitude(float[] vector) {
+		return (float) Math.sqrt(magnitudeSquared(vector));
+	}
+
+	public static float[] add(float[] a, float[] b) {
+		float[] out = new float[a.length];
+		for (int i = 0; i < a.length; i++)
+			out[i] = a[i] + b[i];
 		return out;
 	}
 
-	static int[] vectorAdd(int[] vec1, int[] vec2)
-	{
-		int[] out = new int[vec1.length];
-		for (int i = 0; i < vec1.length; i++)
-			out[i] = vec1[i] + vec2[i];
+	public static int[] add(int[] a, int[] b) {
+		int[] out = new int[a.length];
+		for (int i = 0; i < a.length; i++)
+			out[i] = a[i] + b[i];
 		return out;
 	}
 
-	static double[] vectorAdd(double[] vec1, double[] vec2)
-	{
-		double[] out = new double[vec1.length];
-		for (int i = 0; i < vec1.length; i++)
-			out[i] = vec1[i] + vec2[i];
+	public static float[] multiply(float[] vec, float multiplier) {
+		float[] out = new float[vec.length];
+		for (int i = 0; i < vec.length; i++)
+			out[i] = vec[i] * multiplier;
 		return out;
 	}
 
-	static Double[] vectorAdd(Double[] vec1, Double[] vec2)
-	{
-		Double[] out = new Double[vec1.length];
-		for (int i = 0; i < vec1.length; i++)
-			out[i] = vec1[i] + vec2[i];
-		return out;
-	}
-
-	static float[] vectorDivide(float[] vec1, float divide) {
-		float[] out = new float[vec1.length];
-		for (int i = 0; i < vec1.length; i++)
-			out[i] = divide == 0 ? 0 : vec1[i] / divide;
-		return out;
+	public static float[] divide(float[] vec, float divide) {
+		return multiply(vec, 1 / divide);
 	}
 
 	public static float lerp(float a, float b, float t) {
@@ -119,8 +114,11 @@ public class HDUtils {
 		return Math.min(max, Math.max(min, value));
 	}
 
-	public static int vertexHash(int[] vPos)
-	{
+	public static double clamp(double value, double min, double max) {
+		return Math.min(max, Math.max(min, value));
+	}
+
+	public static int vertexHash(int[] vPos) {
 		// simple custom hashing function for vertex position data
 		StringBuilder s = new StringBuilder();
 		for (int part : vPos)

@@ -9,6 +9,8 @@
 
 package rs117.hd.utils;
 
+import java.awt.Color;
+
 public class ColorUtils {
 	private static final float EPS = 1e-10f;
 
@@ -227,6 +229,10 @@ public class ColorUtils {
 			srgbToLinear(g / 255f),
 			srgbToLinear(b / 255f)
 		};
+	}
+
+	public static float[] rgb(Color c) {
+		return rgb(c.getRed(), c.getGreen(), c.getBlue());
 	}
 
 	public static int packHsl(float[] hsl) {

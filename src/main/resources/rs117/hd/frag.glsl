@@ -44,9 +44,7 @@ uniform vec3 waterColorLight;
 uniform vec3 waterColorMid;
 uniform vec3 waterColorDark;
 uniform vec3 ambientColor;
-uniform float ambientStrength;
 uniform vec3 lightColor;
-uniform float lightStrength;
 uniform vec3 underglowColor;
 uniform float underglowStrength;
 uniform float groundFogStart;
@@ -378,7 +376,7 @@ void main() {
         // calculate lighting
 
         // ambient light
-        vec3 ambientLightOut = ambientColor * ambientStrength;
+        vec3 ambientLightOut = ambientColor;
 
         float aoFactor =
             IN.texBlend.x * (material1.ambientOcclusionMap == -1 ? 1 : texture(textureArray, vec3(uv1, material1.ambientOcclusionMap)).r) +
@@ -387,7 +385,7 @@ void main() {
         ambientLightOut *= aoFactor;
 
         // directional light
-        vec3 dirLightColor = lightColor * lightStrength;
+        vec3 dirLightColor = lightColor;
 
         // underwater caustics based on directional light
         if (underwaterCaustics && underwaterEnvironment) {
@@ -406,7 +404,7 @@ void main() {
             vec3 caustics = sampleCaustics(flow1, flow2) * 2;
 
             vec3 causticsColor = underwaterCausticsColor * underwaterCausticsStrength;
-            dirLightColor += caustics * causticsColor * lightDotNormals * pow(lightStrength, 1.5);
+            dirLightColor += caustics * causticsColor * lightDotNormals * pow(length(dirLightColor), 1.5);
         }
 
         // apply shadows

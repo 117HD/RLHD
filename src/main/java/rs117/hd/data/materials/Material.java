@@ -235,7 +235,7 @@ public enum Material {
 	GRAVEL_N,
 	GRAVEL(p -> p
 		.setNormalMap(GRAVEL_N)
-		.setSpecular(0.4f, 130)),
+		.setSpecular(0.4f, 1000)),
 
 	DIRT_1_SHINY(DIRT_1, p -> p
 		.setSpecular(1.1f, 380)),

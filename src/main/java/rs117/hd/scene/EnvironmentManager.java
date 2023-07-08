@@ -61,7 +61,6 @@ public class EnvironmentManager {
 	// distance in tiles to skip transition (e.g. entering cave, teleporting)
 	// walking across a loading line causes a movement of 40-41 tiles
 	private static final int SKIP_TRANSITION_DISTANCE = 41;
-	public static final int MINUTES_PER_DAY = 60;
 
 	// last environment change time
 	private long startTime = 0;
@@ -82,17 +81,9 @@ public class EnvironmentManager {
 	public int currentFogDepth = 0;
 	private int targetFogDepth = 0;
 
-	private float startAmbientStrength = 0f;
-	public float currentAmbientStrength = 0f;
-	private float targetAmbientStrength = 0f;
-
 	private float[] startAmbientColor = new float[]{0,0,0};
 	public float[] currentAmbientColor = new float[]{0,0,0};
 	private float[] targetAmbientColor = new float[]{0,0,0};
-
-	private float startDirectionalStrength = 0f;
-	public float currentDirectionalStrength = 0f;
-	private float targetDirectionalStrength = 0f;
 
 	private float[] startUnderwaterCausticsColor = new float[]{0,0,0};
 	public float[] currentUnderwaterCausticsColor = new float[]{0,0,0};
@@ -208,9 +199,7 @@ public class EnvironmentManager {
 		currentFogColor = lerp(startFogColor, targetFogColor, t);
 		currentWaterColor = lerp(startWaterColor, targetWaterColor, t);
 		currentFogDepth = (int) lerp(startFogDepth, targetFogDepth, t);
-		currentAmbientStrength = lerp(startAmbientStrength, targetAmbientStrength, t);
 		currentAmbientColor = lerp(startAmbientColor, targetAmbientColor, t);
-		currentDirectionalStrength = lerp(startDirectionalStrength, targetDirectionalStrength, t);
 		currentDirectionalColor = lerp(startDirectionalColor, targetDirectionalColor, t);
 		currentUnderglowStrength = lerp(startUnderglowStrength, targetUnderglowStrength, t);
 		currentUnderglowColor = lerp(startUnderglowColor, targetUnderglowColor, t);
@@ -249,9 +238,7 @@ public class EnvironmentManager {
 		startFogColor = currentFogColor;
 		startWaterColor = currentWaterColor;
 		startFogDepth = currentFogDepth;
-		startAmbientStrength = currentAmbientStrength;
 		startAmbientColor = currentAmbientColor;
-		startDirectionalStrength = currentDirectionalStrength;
 		startDirectionalColor = currentDirectionalColor;
 		startUnderglowStrength = currentUnderglowStrength;
 		startUnderglowColor = currentUnderglowColor;
@@ -271,21 +258,15 @@ public class EnvironmentManager {
 		}
 
 		Environment atmospheric = config.atmosphericLighting() ? newEnvironment : Environment.OVERWORLD;
-		targetAmbientStrength = atmospheric.getAmbientStrength();
 		targetAmbientColor = atmospheric.getAmbientColor();
-		targetDirectionalStrength = atmospheric.getDirectionalStrength();
 		targetDirectionalColor = atmospheric.getDirectionalColor();
 		targetUnderglowStrength = atmospheric.getUnderglowStrength();
 		targetUnderglowColor = atmospheric.getUnderglowColor();
 		targetUnderwaterCausticsColor = atmospheric.getUnderwaterCausticsColor();
 		targetUnderwaterCausticsStrength = atmospheric.getUnderwaterCausticsStrength();
 		if (useWinterTheme()) {
-			if (!atmospheric.isCustomAmbientStrength())
-				targetAmbientStrength = Environment.WINTER.getAmbientStrength();
 			if (!atmospheric.isCustomAmbientColor())
 				targetAmbientColor = Environment.WINTER.getAmbientColor();
-			if (!atmospheric.isCustomDirectionalStrength())
-				targetDirectionalStrength = Environment.WINTER.getDirectionalStrength();
 			if (!atmospheric.isCustomDirectionalColor())
 				targetDirectionalColor = Environment.WINTER.getDirectionalColor();
 		}

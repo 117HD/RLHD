@@ -66,10 +66,10 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     // calculate lighting
 
     // ambient light
-    vec3 ambientLightOut = ambientColor * ambientStrength;
+    vec3 ambientLightOut = ambientColor;
 
     // directional light
-    vec3 dirLightColor = lightColor * lightStrength;
+    vec3 dirLightColor = lightColor;
 
     // apply shadows
     dirLightColor *= inverseShadow;
@@ -205,6 +205,6 @@ void sampleUnderwater(inout vec3 outputColor, WaterType waterType, float depth, 
         vec3 caustics = sampleCaustics(flow1, flow2, .005);
 
         vec3 causticsColor = underwaterCausticsColor * underwaterCausticsStrength;
-        outputColor.rgb *= 1 + caustics * causticsColor * depthMultiplier * lightDotNormals * lightStrength;
+        outputColor.rgb *= 1 + caustics * causticsColor * depthMultiplier * lightDotNormals;
     }
 }
