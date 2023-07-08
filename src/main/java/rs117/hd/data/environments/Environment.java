@@ -594,6 +594,7 @@ public enum Environment
 	PRIFDDINAS(Area.PRIFDDINAS, new Properties()
 		.setFogColor("#99D8C8")
 		.setFogDepth(15)
+		.setDaylightCycleEnabled(true)
 	),
 	SOTE_GRAND_LIBRARY(Area.SOTE_GRAND_LIBRARY, new Properties()
 		.setFogColor(18, 64, 83)
