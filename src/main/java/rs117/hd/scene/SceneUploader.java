@@ -92,27 +92,11 @@ class SceneUploader
 	private void uploadModel(SceneContext sceneContext, Tile tile, long hash, Model model, int orientation, ObjectType objectType)
 	{
 		if (model.getSceneId() == sceneContext.id)
-		{
 			return; // model has already been uploaded
-		}
-
-		final Scene scene = sceneContext.scene;
-		final Point tilePoint = tile.getSceneLocation();
-		final int tileX = tilePoint.getX();
-		final int tileY = tilePoint.getY();
-		byte skipObject = 0b00;
-		if (scene.getBaseX() + tileX == 2558 &&
-			scene.getBaseY() + tileY >= 3249 &&
-			scene.getBaseY() + tileY <= 3252
-		) {
-			// fix for water by khazard spirit tree
-			// marks object to never be drawn
-			skipObject = 0b11;
-		}
 
 		// pack a bit into bufferoffset that we can use later to hide
 		// some low-importance objects based on Level of Detail setting
-		model.setBufferOffset(sceneContext.getVertexOffset() << 2 | skipObject);
+		model.setBufferOffset(sceneContext.getVertexOffset());
 		model.setUvBufferOffset(sceneContext.getUvOffset());
 		modelPusher.pushModel(sceneContext, tile, hash, model, objectType, orientation, false);
 		if (sceneContext.modelPusherResults[1] == 0)

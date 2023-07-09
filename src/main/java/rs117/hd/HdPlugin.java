@@ -2411,10 +2411,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		// Model may be in the scene buffer
 		assert sceneContext != null;
 		if (model.getSceneId() == sceneContext.id) {
-			// check if the object was marked to be skipped
-			if ((model.getBufferOffset() & 0b11) == 0b11)
-				return;
-
 			if (isOutsideViewport(model, pitchSin, pitchCos, yawSin, yawCos, x, y, z))
 				return;
 
@@ -2426,7 +2422,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			int faceCount = Math.min(MAX_TRIANGLE, model.getFaceCount());
 			int uvOffset = model.getUvBufferOffset();
 
-			eightIntWrite[0] = model.getBufferOffset() >> 2;
+			eightIntWrite[0] = model.getBufferOffset();
 			eightIntWrite[1] = uvOffset;
 			eightIntWrite[2] = faceCount;
 			eightIntWrite[3] = renderBufferOffset;
@@ -2444,10 +2440,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			if (model != renderable) {
 				renderable.setModelHeight(model.getModelHeight());
 			}
-
-			// check if the object was marked to be skipped
-			if ((model.getBufferOffset() & 0b11) == 0b11)
-				return;
 
 			if (isOutsideViewport(model, pitchSin, pitchCos, yawSin, yawCos, x, y, z))
 				return;

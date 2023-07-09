@@ -10149,5 +10149,17 @@
     ],
     "uvType": "GEOMETRY",
     "uvScale": 0.28
+  },
+  {
+    "description": "Hide weird waterfall texture near Port Khazard spirit tree",
+    "objectIds": [
+      10459
+    ],
+    "hideInAreas": [
+      [
+        2558, 3249,
+        2558, 3252
+      ]
+    ]
   }
 ]
