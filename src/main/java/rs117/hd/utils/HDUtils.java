@@ -57,42 +57,45 @@ public class HDUtils {
 		return out;
 	}
 
-	static float[] vectorAdd(float[] vec1, int[] vec2) {
+	public static float[] vectorAdd(float[] vec1, int[] vec2) {
 		float[] out = new float[vec1.length];
 		for (int i = 0; i < vec1.length; i++)
 			out[i] = vec1[i] + vec2[i];
 		return out;
 	}
 
-	static int[] vectorAdd(int[] vec1, int[] vec2)
-	{
+	public static int[] vectorAdd(int[] vec1, int[] vec2) {
 		int[] out = new int[vec1.length];
 		for (int i = 0; i < vec1.length; i++)
 			out[i] = vec1[i] + vec2[i];
 		return out;
 	}
 
-	static double[] vectorAdd(double[] vec1, double[] vec2)
-	{
+	public static double[] vectorAdd(double[] vec1, double[] vec2) {
 		double[] out = new double[vec1.length];
 		for (int i = 0; i < vec1.length; i++)
 			out[i] = vec1[i] + vec2[i];
 		return out;
 	}
 
-	static Double[] vectorAdd(Double[] vec1, Double[] vec2)
-	{
+	public static Double[] vectorAdd(Double[] vec1, Double[] vec2) {
 		Double[] out = new Double[vec1.length];
 		for (int i = 0; i < vec1.length; i++)
 			out[i] = vec1[i] + vec2[i];
 		return out;
 	}
 
-	static float[] vectorDivide(float[] vec1, float divide) {
+	public static float[] vectorMultiply(float[] vec1, float factor) {
 		float[] out = new float[vec1.length];
 		for (int i = 0; i < vec1.length; i++)
-			out[i] = divide == 0 ? 0 : vec1[i] / divide;
+			out[i] *= factor;
 		return out;
+	}
+
+	public static float[] vectorDivide(float[] vec1, float divide) {
+		if (divide == 0)
+			return new float[vec1.length];
+		return vectorMultiply(vec1, 1 / divide);
 	}
 
 	public static float lerp(float a, float b, float t) {

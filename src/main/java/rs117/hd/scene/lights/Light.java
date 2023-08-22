@@ -37,6 +37,7 @@ public class Light
 	public float duration;
 	public float range;
 	public int fadeInDuration;
+	public boolean visibleFromOtherPlanes = false;
 	@JsonAdapter(NpcID.JsonAdapter.class)
 	public HashSet<Integer> npcIds = new HashSet<>();
 	@JsonAdapter(ObjectID.JsonAdapter.class)

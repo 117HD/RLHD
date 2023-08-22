@@ -326,6 +326,18 @@ public enum Material {
 	MARBLE_3_SEMIGLOSS(MARBLE_3, p -> p
 		.setSpecular(0.4f, 120)),
 
+	LASSAR_UNDERCITY_TILE_NORMAL,
+	LASSAR_UNDERCITY_TILE_DISP,
+	LASSAR_UNDERCITY_TILES(MARBLE_2_SEMIGLOSS, p -> p
+		.setNormalMap(LASSAR_UNDERCITY_TILE_NORMAL)
+		.setDisplacementMap(LASSAR_UNDERCITY_TILE_DISP)
+		.setDisplacementScale(.015f)
+	),
+	LASSAR_UNDERCITY_TILES_SUBMERGED(LASSAR_UNDERCITY_TILES, p -> p
+		.setFlowMap(UNDERWATER_FLOW_MAP)
+		.setFlowMapStrength(0.025f)
+		.setFlowMapDuration(new float[] { 10, -10 })),
+
 	HD_LAVA_1(p -> p
 		.setUnlit(true)
 		.setOverrideBaseColor(true)

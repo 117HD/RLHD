@@ -267,7 +267,7 @@ public class ProceduralGenerator
 			int darkenBase = 0;
 			int darkenAdd = 0;
 
-			float[] vNormals = sceneContext.vertexTerrainNormals.getOrDefault(vertexHashes[vertex], new float[]{0, 0, 0});
+			float[] vNormals = sceneContext.vertexTerrainNormals.getOrDefault(vertexHashes[vertex], new float[] { 0, 0, 0 });
 
 			float dot = HDUtils.dotLightDirectionTile(vNormals[0], vNormals[1], vNormals[2]);
 			int lighten = (int) (Math.max((colorHSL[2] - lightenAdd), 0) * lightenMultiplier) + lightenBase;
@@ -279,14 +279,11 @@ public class ProceduralGenerator
 			boolean isOverlay = false;
 			Material material = Material.DIRT_1;
 			Overlay overlay = vertexOverlays[vertex];
-			if (overlay != Overlay.NONE)
-			{
+			if (overlay != Overlay.NONE) {
 				material = overlay.groundMaterial.getRandomMaterial(worldPos.getPlane(), worldPos.getX(), worldPos.getY());
 				isOverlay = !overlay.blendedAsUnderlay;
 				overlay.modifyColor(colorHSL);
-			}
-			else if (vertexUnderlays[vertex] != Underlay.NONE)
-			{
+			} else if (vertexUnderlays[vertex] != Underlay.NONE) {
 				Underlay underlay = vertexUnderlays[vertex];
 				material = underlay.groundMaterial.getRandomMaterial(worldPos.getPlane(), worldPos.getX(), worldPos.getY());
 				isOverlay = underlay.blendedAsOverlay;

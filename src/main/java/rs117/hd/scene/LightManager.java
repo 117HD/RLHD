@@ -113,6 +113,10 @@ public class LightManager {
 			Light[] lights;
 			try {
 				lights = path.loadJson(gson, Light[].class);
+				if (lights == null) {
+					log.warn("Skipping empty lights.json");
+					return;
+				}
 			} catch (IOException ex) {
 				log.error("Failed to load lights", ex);
 				return;
@@ -129,7 +133,7 @@ public class LightManager {
 				// Also ensure that each color always has 4 components with sensible defaults
 				float[] linearRGBA = { 0, 0, 0, 1 };
 				for (int i = 0; i < Math.min(lightDef.color.length, linearRGBA.length); i++)
-					linearRGBA[i] = ColorUtils.srgbToLinear(lightDef.color[i] /= 255f);
+					linearRGBA[i] = ColorUtils.srgbToLinear(lightDef.color[i] / 255f);
 				lightDef.color = linearRGBA;
 
 				if (lightDef.worldX != null && lightDef.worldY != null) {
@@ -482,21 +486,21 @@ public class LightManager {
 		if (sceneContext == null)
 			return visibleLights;
 
-		for (SceneLight light : sceneContext.lights)
-		{
+		for (SceneLight light : sceneContext.lights) {
 			if (light.distance > maxDistance * LOCAL_TILE_SIZE)
 				break;
 
 			if (!light.visible)
 				continue;
 
-			// Hide certain lights on planes lower than the player to prevent light 'leaking' through the floor
-			if (light.plane < client.getPlane() && light.belowFloor)
-				continue;
-
-			// Hide any light that is above the current plane and is above a solid floor
-			if (light.plane > client.getPlane() && light.aboveFloor)
-				continue;
+			if (!light.visibleFromOtherPlanes) {
+				// Hide certain lights on planes lower than the player to prevent light 'leaking' through the floor
+				if (light.plane < client.getPlane() && light.belowFloor)
+					continue;
+				// Hide any light that is above the current plane and is above a solid floor
+				if (light.plane > client.getPlane() && light.aboveFloor)
+					continue;
+			}
 
 			visibleLights.add(light);
 

@@ -730,6 +730,24 @@ public enum Environment
 		.setDirectionalStrength(4.0f)
 		.setWaterColor(185, 214, 255)
 	),
+	THE_STRANGLEWOOD(Area.THE_STRANGLEWOOD, new Properties()
+		.setFogColor("#af929c")
+		.setFogDepth(35)
+		.setAmbientColor("#c0bde7")
+		.setAmbientStrength(2.f)
+		.setDirectionalColor("#ebc9f4")
+		.setDirectionalStrength(2.5f)
+	),
+	THE_STRANGLEWOOD_QUEST_UNDERGROUND_AREAS(Area.THE_STRANGLEWOOD_QUEST_UNDERGROUND_AREAS, new Properties()
+		.setFogColor("#070707")
+		.setFogDepth(20)
+		.setAmbientColor("#AAAFB6")
+		.setAmbientStrength(4.0f)
+		.setDirectionalColor("#FFFFFF")
+		.setDirectionalStrength(0.0f)
+		.setLightDirection(260f, 10f)
+		.setAllowSkyOverride(false)
+	),
 
 	// Zanaris
 	COSMIC_ENTITYS_PLANE(Area.COSMIC_ENTITYS_PLANE, new Properties()
@@ -1109,6 +1127,37 @@ public enum Environment
 		.setWaterColor(102, 234, 255)
 	),
 
+	// Desert Treasure 2 areas
+	THE_SCAR(Area.THE_SCAR, new Properties()
+		.setFogColor("#080707")
+		.setFogDepth(15)
+		.setAmbientColor("#ffedec")
+		.setAmbientStrength(1.5f)
+		.setDirectionalColor("#fafaff")
+		.setDirectionalStrength(.5f)
+		.setLightDirection(270, 0)
+	),
+	LASSAR_UNDERCITY(Area.LASSAR_UNDERCITY_NORMAL, new Properties()
+		.setFogColor("#000000")
+		.setFogDepth(5)
+		.setAmbientColor("#AAAFB6")
+		.setAmbientStrength(1.5f)
+		.setDirectionalColor("#FFFFFF")
+		.setDirectionalStrength(1.0f)
+		.setLightDirection(230, -45)
+		.setWaterColor(43, 43, 64)
+	),
+	LASSAR_UNDERCITY_SHADOW_REALM(Area.LASSAR_UNDERCITY_SHADOW_REALM, new Properties()
+		.setFogColor("#030e09")
+		.setFogDepth(25)
+		.setAmbientColor("#aab6ac")
+		.setAmbientStrength(1.5f)
+		.setDirectionalColor("#FFFFFF")
+		.setDirectionalStrength(1.0f)
+		.setLightDirection(230, -45)
+		.setWaterColor(43, 43, 64)
+	),
+
 	// overrides 'ALL' to provide default daylight conditions for the overworld area
 	OVERWORLD(Area.OVERWORLD, new Properties()),
 	// used for underground, instances, etc.
@@ -1199,8 +1248,7 @@ public enum Environment
 			return this;
 		}
 
-		public Properties setFogColor(int r, int g, int b)
-		{
+		public Properties setFogColor(float r, float g, float b) {
 			this.fogColor = rgb(r, g, b);
 			this.customFogColor = true;
 			return this;
@@ -1221,15 +1269,13 @@ public enum Environment
 			return this;
 		}
 
-		public Properties setAmbientColor(int r, int g, int b)
-		{
+		public Properties setAmbientColor(float r, float g, float b) {
 			this.ambientColor = rgb(r, g, b);
 			this.customAmbientColor = true;
 			return this;
 		}
 
-		public Properties setWaterColor(int r, int g, int b)
-		{
+		public Properties setWaterColor(float r, float g, float b) {
 			this.waterColor = rgb(r, g, b);
 			this.customWaterColor = true;
 			return this;
@@ -1250,8 +1296,7 @@ public enum Environment
 			return this;
 		}
 
-		public Properties setDirectionalColor(int r, int g, int b)
-		{
+		public Properties setDirectionalColor(float r, float g, float b) {
 			this.directionalColor = rgb(r, g, b);
 			this.customDirectionalColor = true;
 			return this;
@@ -1271,8 +1316,7 @@ public enum Environment
 			return this;
 		}
 
-		public Properties setUnderglowColor(int r, int g, int b)
-		{
+		public Properties setUnderglowColor(float r, float g, float b) {
 			this.underglowColor = rgb(r, g, b);
 			return this;
 		}
@@ -1319,13 +1363,13 @@ public enum Environment
 
 		/**
 		 * Use a different color than the directional lighting color
+		 *
 		 * @param r 0-255 gamma
 		 * @param g 0-255 gamma
 		 * @param b 0-255 gamma
 		 * @return the same properties instance
 		 */
-		public Properties setUnderwaterCausticsColor(int r, int g, int b)
-		{
+		public Properties setUnderwaterCausticsColor(float r, float g, float b) {
 			this.underwaterCausticsColor = rgb(r, g, b);
 			return this;
 		}
