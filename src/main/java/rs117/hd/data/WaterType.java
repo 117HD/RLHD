@@ -25,14 +25,13 @@
  */
 package rs117.hd.data;
 
+import java.util.function.Consumer;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import rs117.hd.data.materials.Material;
 
-import java.util.function.Consumer;
-
-import static rs117.hd.utils.HDUtils.linearToSrgb;
-import static rs117.hd.utils.HDUtils.rgb;
+import static rs117.hd.utils.ColorUtils.linearToSrgb;
+import static rs117.hd.utils.ColorUtils.rgb;
 
 public enum WaterType
 {

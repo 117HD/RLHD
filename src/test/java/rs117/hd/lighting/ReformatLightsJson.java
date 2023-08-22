@@ -4,20 +4,23 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializer;
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 import joptsimple.ArgumentAcceptingOptionSpec;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
 import rs117.hd.scene.LightManager;
 import rs117.hd.scene.lights.Light;
+import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.GsonUtils;
-import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ResourcePath;
-
-import java.io.IOException;
-import java.nio.file.Paths;
-import java.util.*;
-import java.util.stream.Collectors;
 
 import static rs117.hd.utils.ResourcePath.path;
 
@@ -76,7 +79,7 @@ public class ReformatLightsJson
 			{
 				for (int i = 0; i < l.color.length; i++)
 				{
-					l.color[i] = HDUtils.linearToSrgb(l.color[i]) * 255f;
+					l.color[i] = ColorUtils.linearToSrgb(l.color[i]) * 255f;
 					int nearestInt = Math.round(l.color[i]);
 					if (Math.abs(nearestInt - l.color[i]) <= eps)
 					{

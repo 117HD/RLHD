@@ -24,12 +24,10 @@
  */
 package rs117.hd.data.environments;
 
-import lombok.Getter;
-import net.runelite.api.Constants;
-import net.runelite.api.coords.WorldPoint;
-import rs117.hd.utils.AABB;
-
 import java.util.Arrays;
+import lombok.Getter;
+import net.runelite.api.coords.*;
+import rs117.hd.utils.AABB;
 
 @Getter
 public enum Area
@@ -326,6 +324,11 @@ public enum Area
 		new AABB(2932, 3306, 3068, 3401),
 		new AABB(3456, 4734, 3528, 4783),
 		new AABB(2964,3401,2969,3405) // path northwards
+	),
+
+	DWARVEN_MINE_DUNGEON(
+		new AABB(3071, 9855, 2985, 9690),
+		new AABB(2960, 9820, 2984, 9801)
 	),
 
 	MOTHERLODE_MINE(
@@ -819,9 +822,18 @@ public enum Area
 	),
 
 	// Morytania
-	CANIFIS_BAR_FLOOR_FIX(
+	CANIFIS_BAR_FLOOR(
+		new AABB(3504, 3477, 3488, 3471),
+		new AABB(3499, 3470, 3488, 3468),
+		new AABB(3500, 3470, 3500, 3469),
+		new AABB(3501, 3470),
+		new AABB(3497, 3479, 3491, 3479)
+	),
+	CANIFIS_BAR_FLOOR_BLENDED(
+		new AABB(3498, 3478),
+		new AABB(3490, 3478),
 		new AABB(3502, 3470),
-		new AABB(3501, 3469),
+		new AABB(3501, 3496),
 		new AABB(3500, 3468)
 	),
 	// Hallowed Sepulchre
@@ -865,7 +877,7 @@ public enum Area
 		new AABB(3688, 3456, 3710, 3484),
 		new AABB(3670, 3503, 3684, 3514)
 	),
-	FENKENSTRAINS_CASTLE(3527, 3576, 3564, 3533),
+	FENKENSTRAINS_CASTLE(3534, 3565, 3562, 3536),
 	MORYTANIA_SLAYER_TOWER(3405, 3531, 3452, 3579),
 	CANIFIS(13878),
 	TEMPLE_TREKKING_INSTANCES(

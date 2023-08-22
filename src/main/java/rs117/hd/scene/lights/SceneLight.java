@@ -1,11 +1,7 @@
 package rs117.hd.scene.lights;
 
-import lombok.NonNull;
-import net.runelite.api.GraphicsObject;
-import net.runelite.api.NPC;
-import net.runelite.api.Projectile;
-import net.runelite.api.TileObject;
-import net.runelite.api.coords.WorldPoint;
+import net.runelite.api.*;
+import net.runelite.api.coords.*;
 import rs117.hd.utils.HDUtils;
 
 public class SceneLight extends Light
@@ -30,37 +26,36 @@ public class SceneLight extends Light
 	public boolean belowFloor = false;
 	public boolean aboveFloor = false;
 
-	public Projectile projectile = null;
-	public NPC npc = null;
-	public TileObject object = null;
-	public GraphicsObject graphicsObject = null;
+	public Projectile projectile;
+	public NPC npc;
+	public TileObject object;
+	public GraphicsObject graphicsObject;
 
-	public SceneLight(Light l, WorldPoint worldPoint)
-	{
-		this(l.description, worldPoint.getX(), worldPoint.getY(), l.plane, l.height, l.alignment, l.radius,
-			l.strength, l.color, l.type, l.duration, l.range, l.fadeInDuration);
-		this.worldPoint = worldPoint;
-	}
+	public SceneLight(Light l) {
+		super(
+			l.description,
+			l.worldX,
+			l.worldY,
+			l.plane,
+			l.alignment,
+			l.height,
+			l.radius,
+			l.strength,
+			l.color,
+			l.type,
+			l.duration,
+			l.range,
+			l.fadeInDuration,
+			l.npcIds,
+			l.objectIds,
+			l.projectileIds,
+			l.graphicsObjectIds
+		);
 
-	public SceneLight(int worldX, int worldY, int plane, int height, @NonNull Alignment alignment, int radius, float strength, float[] color, LightType type, float duration, float range, int fadeInDuration)
-	{
-		this(null, worldX, worldY, plane, height, alignment, radius,
-			strength, color, type, duration, range, fadeInDuration);
-	}
-
-	public SceneLight(String description, int worldX, int worldY, int plane, int height, @NonNull Alignment alignment, int radius, float strength, float[] color, LightType type, float duration, float range, int fadeInDuration)
-	{
-		super(description, worldX, worldY, plane, height, alignment, radius,
-			strength, color, type, duration, range, fadeInDuration,
-			null, null, null, null);
-
-		this.currentSize = radius;
-		this.currentStrength = strength;
-		this.currentColor = color;
-
+		currentSize = radius;
+		currentStrength = strength;
+		currentColor = color;
 		if (type == LightType.PULSE)
-		{
-			this.currentAnimation = (float) Math.random();
-		}
+			currentAnimation = (float) Math.random();
 	}
 }

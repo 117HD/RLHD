@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Hooder <ahooder@protonmail.com>
+ * Copyright (c) 2023, Hooder <ahooder@protonmail.com>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -23,102 +23,89 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include PARALLAX_MAPPING
+#include PARALLAX_OCCLUSION_MAPPING
 
-#if PARALLAX_MAPPING
-float sampleDepth(int heightMap, vec2 uv) {
-    return 1 - linearToSrgb(texture(textureArray, vec3(uv, heightMap)).r);
+#if PARALLAX_OCCLUSION_MAPPING
+float sampleHeight(const Material material, const vec2 uv) {
+    return linearToSrgb(texture(textureArray, vec3(uv, material.displacementMap)).r);
 }
 
 void sampleDisplacementMap(
-    Material mat,
-    vec3 tsViewDir,
-    vec3 tsLightDir,
+    const Material material,
+    const vec3 tsViewDir,
+    const vec3 tsLightDir,
     inout vec2 uv,
-    inout vec2 fragDelta,
+    inout vec3 fragDelta,
     inout float selfShadowing
 ) {
-    int map = mat.displacementMap;
-    if (map == -1)
+    if (material.displacementMap == -1)
         return;
 
-    // TODO: improve displacement accuracy based on pixels on screen per tangent space unit
-    // TODO: improve shadow accuracy
-    // TODO: add basic anti-aliasing to fit more nicely with MSAA
-    // TODO: fix tile blending issues
-    // TODO: fix displacement on vertical surfaces
-    // TODO: make the code more readable
+    float scale = material.displacementScale;
 
-    const float minLayers = 4;
-    const float maxLayers = 32;
-    float numLayers = mix(maxLayers, minLayers, max(0, tsViewDir.z));
+    // TODO: consider anti-aliasing to fit more nicely with MSAA
+    // TODO: improve close-up accuracy
+    const float minLayers = 1;
+    const float maxLayers = 16;
+    float cosView = normalize(tsViewDir).z;
+    float numLayers = mix(minLayers, maxLayers, 1 - clamp(cosView * cosView, 0, 1));
+    float heightPerLayer = 1. / numLayers;
 
-    float scale = mat.displacementScale;
-
-    // ts = tangent space
     vec2 deltaXyPerZ = tsViewDir.xy / tsViewDir.z * scale;
-    vec2 stepSize = deltaXyPerZ / numLayers;
 
-    float layerSize = 1. / numLayers;
-    float layerDepth = 0;
-    float depth = sampleDepth(map, uv);
-    float prevDepth = depth;
-    while (layerDepth < depth) {
-        prevDepth = depth;
-        uv -= stepSize;
-        layerDepth += layerSize;
-        depth = sampleDepth(map, uv);
+    float height = 0;
+    float prevHeight = 0;
+    float layer = 1;
+    float prevLayer = 1;
+    for (; layer >= 0 && height <= layer; layer -= heightPerLayer) {
+        prevLayer = layer;
+        prevHeight = height;
+        height = sampleHeight(material, uv - deltaXyPerZ * layer);
     }
 
-    float after = depth - layerDepth;
-    float before = prevDepth - (layerDepth - layerSize);
-    float weight = after / (after - before);
-    uv += stepSize * weight;
-    layerDepth -= layerSize * weight;
+    float overshoot = height - layer;
+    float undershoot = (layer + heightPerLayer) - prevHeight;
+    height = mix(height, prevHeight, overshoot / (overshoot + undershoot));
 
-    vec2 tsSpaceDelta = -deltaXyPerZ;
+    vec3 tsDelta = vec3(deltaXyPerZ, scale) * height;
+    uv -= tsDelta.xy;
+    fragDelta += tsDelta;
 
-    // Prepare for shadow steps
-    deltaXyPerZ = tsLightDir.xy / tsLightDir.z * scale;
+    // TODO: fix self-shadowing at steep angles
+//    #undef PARALLAX_OCCLUSION_MAPPING
+//    #define PARALLAX_OCCLUSION_MAPPING 2
+    #if PARALLAX_OCCLUSION_MAPPING >= 2 // self-shadowing
+        float cosLight = normalize(tsLightDir).z;
+        float shadowBias = max(.0001, pow(1 - cosLight, 5.) * scale);
 
-    tsSpaceDelta += deltaXyPerZ;
-    fragDelta += tsSpaceDelta * layerDepth * 128;
+        // Prepare for shadow steps
+        deltaXyPerZ = tsLightDir.xy / tsLightDir.z * scale;
+        layer = height;
 
-    #if PARALLAX_MAPPING >= 2 // self-shadowing
-        depth = sampleDepth(map, uv);
-        stepSize = deltaXyPerZ / numLayers;
-        float shadowDepth;
-        float shadow = 0;
-        float shadowBias = .0125;
+        #if PARALLAX_OCCLUSION_MAPPING == 2 // hard shadows
+            for (; layer <= 1 && height <= layer; layer += heightPerLayer)
+                height = sampleHeight(material, uv - deltaXyPerZ * layer) - shadowBias;
 
-        #if PARALLAX_MAPPING == 2 // hard shadows
-            vec2 shadowUv = uv;
-            float shadowLayerDepth = depth - shadowBias;
-            do {
-                shadowUv += stepSize;
-                shadowLayerDepth -= layerSize;
-                shadowDepth = sampleDepth(map, shadowUv);
-            } while (shadowDepth > shadowLayerDepth && shadowLayerDepth >= 0);
-            if (shadowLayerDepth > 0)
-                shadow++;
+            if (layer <= 1)
+                selfShadowing++;
         #else // PCF 3x3 soft shadows
-            for (int x = 0; x <= 1; x++) {
-                for (int y = 0; y <= 1; y++) {
-                    vec2 shadowUv = uv + (vec2(x, y) - .5) * .0125;
-                    float shadowLayerDepth = depth - shadowBias * 5;
-                    do {
-                        shadowUv += stepSize;
-                        shadowLayerDepth -= layerSize;
-                        shadowDepth = sampleDepth(map, shadowUv);
-                    } while (shadowDepth > shadowLayerDepth && shadowLayerDepth >= 0);
-                    if (shadowLayerDepth > 0)
+            float shadow = 0;
+            float texelSize = 1. / textureSize(textureArray, 0).x;
+            for (int x = -1; x <= 1; x++) {
+                for (int y = -1; y <= 1; y++) {
+                    vec2 sUv = uv + (vec2(x, y) - .5) * texelSize;
+
+                    float sLayer = layer;
+                    float sHeight = height;
+                    for (; sLayer <= 1 && sHeight <= sLayer; sLayer += heightPerLayer)
+                        sHeight = sampleHeight(material, sUv - deltaXyPerZ * sLayer);
+
+                    if (sLayer <= 1)
                         shadow++;
                 }
             }
-            shadow /= 4;
+            selfShadowing += shadow / 9;
         #endif
-
-        selfShadowing += shadow;
     #endif
 }
 #else

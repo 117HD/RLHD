@@ -8,15 +8,8 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import net.runelite.api.Client;
-import net.runelite.api.ItemID;
-import net.runelite.api.Model;
-import net.runelite.api.Player;
-import net.runelite.api.Scene;
-import net.runelite.api.SceneTileModel;
-import net.runelite.api.SceneTilePaint;
-import net.runelite.api.Tile;
-import net.runelite.api.kit.KitType;
+import net.runelite.api.*;
+import net.runelite.api.kit.*;
 import net.runelite.client.RuneLite;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.util.LinkBrowser;
@@ -27,6 +20,7 @@ import rs117.hd.data.materials.Material;
 import rs117.hd.data.materials.Overlay;
 import rs117.hd.data.materials.Underlay;
 import rs117.hd.data.materials.UvType;
+import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.SceneUploader;
@@ -61,6 +55,9 @@ public class ModelPusher {
 	@Inject
 	private ModelHasher modelHasher;
 
+	@Inject
+	private ModelOverrideManager modelOverrideManager;
+
 	public static final int DATUM_PER_FACE = 12;
 	public static final int MAX_MATERIAL_COUNT = (1 << 10) - 1;
 	// subtracts the X lowest lightness levels from the formula.
@@ -80,7 +77,7 @@ public class ModelPusher {
 				"Too many materials (" + Material.values().length + ") to fit into packed material data.");
 		}
 
-		if (config.enableModelCaching()) {
+		if (config.modelCaching()) {
 			final int size = config.modelCacheSizeMiB();
 			try {
 				modelCache = new ModelCache(size, () -> {
@@ -127,7 +124,7 @@ public class ModelPusher {
 				}
 
 				// Allow the model pusher to be used until the plugin has cleanly shut down
-				clientThread.invokeLater(plugin::stopPlugin);
+				clientThread.invoke(plugin::stopPlugin);
 			}
 		}
 	}
@@ -153,14 +150,17 @@ public class ModelPusher {
 	 * @param tile           that the model is associated with, if any
 	 * @param hash           of the model
 	 * @param model          to push data from
-	 * @param modelOverride  to apply while pushing model data
 	 * @param objectType     of the specified model. Used for TzHaar recolor
 	 * @param preOrientation which the vertices have already been rotated by
 	 * @param shouldCache    whether the model should be cached for future reuse, if enabled
 	 */
 	public void pushModel(
-		SceneContext sceneContext, @Nullable Tile tile, long hash, Model model,
-		@NonNull ModelOverride modelOverride, ObjectType objectType, int preOrientation,
+		SceneContext sceneContext,
+		@Nullable Tile tile,
+		long hash,
+		Model model,
+		ObjectType objectType,
+		int preOrientation,
 		boolean shouldCache
 	) {
 		if (modelCache == null) {
@@ -172,6 +172,7 @@ public class ModelPusher {
 		int vertexLength = 0;
 		int uvLength = 0;
 
+		ModelOverride modelOverride = modelOverrideManager.getOverride(hash);
 		boolean useMaterialOverrides = plugin.configModelTextures || modelOverride.forceOverride;
 		final short[] faceTextures = model.getFaceTextures();
 		final byte[] textureFaces = model.getTextureFaces();
@@ -377,7 +378,7 @@ public class ModelPusher {
 	}
 
 	public int packMaterialData(Material material, @NonNull ModelOverride modelOverride, UvType uvType, boolean isOverlay) {
-		// TODO: only the lower 24 bits can be safely used due to imprecise casting to float in shaders
+		// Only the lower 24 bits can be safely used due to imprecise casting to float in shaders
 		return // This needs to return zero by default, since we often fall back to writing all zeroes to UVs
 			(material.ordinal() & MAX_MATERIAL_COUNT) << 12
 			| ((int) (modelOverride.shadowOpacityThreshold * 0x3F) & 0x3F) << 5
@@ -425,7 +426,7 @@ public class ModelPusher {
 		int color3 = model.getFaceColors3()[face];
 
 		// Hide fake shadows or lighting that is often baked into models by making the fake shadow transparent
-		if (plugin.configHideBakedEffects && isBakedGroundShading(face, heightA, heightB, heightC, faceTransparencies, faceTextures)) {
+		if (plugin.configHideFakeShadows && isBakedGroundShading(face, heightA, heightB, heightC, faceTransparencies, faceTextures)) {
 			boolean removeBakedLighting = modelOverride.removeBakedLighting;
 
 			if (ModelHash.getType(hash) == ModelHash.TYPE_PLAYER) {
@@ -493,7 +494,7 @@ public class ModelPusher {
 				N[2] /= length;
 			}
 
-			float[] L = HDUtils.lightDirModel;
+			float[] L = HDUtils.LIGHT_DIR_MODEL;
 			float lightDotNormal = Math.max(0, N[0] * L[0] + N[1] * L[1] + N[2] * L[2]);
 
 			int lightenA = (int) (Math.max((color1L - IGNORE_LOW_LIGHTNESS), 0) * LIGHTNESS_MULTIPLIER) + BASE_LIGHTEN;
@@ -533,7 +534,7 @@ public class ModelPusher {
 		int maxBrightness1 = 55;
 		int maxBrightness2 = 55;
 		int maxBrightness3 = 55;
-		if (!plugin.configReduceOverExposure) {
+		if (!plugin.configLegacyGreyColors) {
 			maxBrightness1 = (int) HDUtils.lerp(127, maxBrightness1, (float) Math.pow((float) color1S / 0x7, .05));
 			maxBrightness2 = (int) HDUtils.lerp(127, maxBrightness2, (float) Math.pow((float) color2S / 0x7, .05));
 			maxBrightness3 = (int) HDUtils.lerp(127, maxBrightness3, (float) Math.pow((float) color3S / 0x7, .05));

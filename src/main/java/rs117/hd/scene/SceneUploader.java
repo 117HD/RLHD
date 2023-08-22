@@ -29,20 +29,7 @@ import com.google.common.base.Stopwatch;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
-import net.runelite.api.Client;
-import net.runelite.api.Constants;
-import net.runelite.api.DecorativeObject;
-import net.runelite.api.GameObject;
-import net.runelite.api.GroundObject;
-import net.runelite.api.Model;
-import net.runelite.api.Perspective;
-import net.runelite.api.Point;
-import net.runelite.api.Renderable;
-import net.runelite.api.Scene;
-import net.runelite.api.SceneTileModel;
-import net.runelite.api.SceneTilePaint;
-import net.runelite.api.Tile;
-import net.runelite.api.WallObject;
+import net.runelite.api.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.data.WaterType;
@@ -78,9 +65,6 @@ class SceneUploader
 
 	@Inject
 	private ModelPusher modelPusher;
-
-	@Inject
-	private ModelOverrideManager modelOverrideManager;
 
 	public void upload(SceneContext sceneContext)
 	{
@@ -126,12 +110,11 @@ class SceneUploader
 			skipObject = 0b11;
 		}
 
-		ModelOverride modelOverride = modelOverrideManager.getOverride(hash);
 		// pack a bit into bufferoffset that we can use later to hide
 		// some low-importance objects based on Level of Detail setting
 		model.setBufferOffset(sceneContext.getVertexOffset() << 2 | skipObject);
 		model.setUvBufferOffset(sceneContext.getUvOffset());
-		modelPusher.pushModel(sceneContext, tile, hash, model, modelOverride, objectType, orientation, false);
+		modelPusher.pushModel(sceneContext, tile, hash, model, objectType, orientation, false);
 		if (sceneContext.modelPusherResults[1] == 0)
 			model.setUvBufferOffset(-1);
 
@@ -213,8 +196,9 @@ class SceneUploader
 			if (renderable instanceof Model)
 			{
 				uploadModel(sceneContext, tile, groundObject.getHash(), (Model) renderable,
-					HDUtils.extractConfigOrientation(groundObject.getConfig()),
-					ObjectType.GROUND_OBJECT);
+					HDUtils.getBakedOrientation(groundObject.getConfig()),
+					ObjectType.GROUND_OBJECT
+				);
 			}
 		}
 
@@ -225,16 +209,18 @@ class SceneUploader
 			if (renderable instanceof Model)
 			{
 				uploadModel(sceneContext, tile, decorativeObject.getHash(), (Model) renderable,
-					HDUtils.extractConfigOrientation(decorativeObject.getConfig()),
-					ObjectType.DECORATIVE_OBJECT);
+					HDUtils.getBakedOrientation(decorativeObject.getConfig()),
+					ObjectType.DECORATIVE_OBJECT
+				);
 			}
 
 			Renderable renderable2 = decorativeObject.getRenderable2();
 			if (renderable2 instanceof Model)
 			{
 				uploadModel(sceneContext, tile, decorativeObject.getHash(), (Model) renderable2,
-					HDUtils.extractConfigOrientation(decorativeObject.getConfig()),
-					ObjectType.DECORATIVE_OBJECT);
+					HDUtils.getBakedOrientation(decorativeObject.getConfig()),
+					ObjectType.DECORATIVE_OBJECT
+				);
 			}
 		}
 
@@ -250,8 +236,8 @@ class SceneUploader
 			if (renderable instanceof Model)
 			{
 				uploadModel(sceneContext, tile, gameObject.getHash(), (Model) gameObject.getRenderable(),
-					gameObject.getModelOrientation(),
-					ObjectType.GAME_OBJECT);
+					HDUtils.getBakedOrientation(gameObject.getConfig()), ObjectType.GAME_OBJECT
+				);
 			}
 		}
 	}

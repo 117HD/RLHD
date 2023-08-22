@@ -38,7 +38,7 @@ uniform sampler2D shadowMap;
 uniform mat4 lightProjectionMatrix;
 uniform float elapsedTime;
 uniform float colorBlindnessIntensity;
-uniform vec4 fogColor;
+uniform vec3 fogColor;
 uniform int fogDepth;
 uniform vec3 waterColorLight;
 uniform vec3 waterColorMid;
@@ -53,7 +53,7 @@ uniform float groundFogStart;
 uniform float groundFogEnd;
 uniform float groundFogOpacity;
 uniform float lightningBrightness;
-uniform vec3 lightDirection;
+uniform vec3 lightDir;
 uniform float shadowMaxBias;
 uniform int shadowsEnabled;
 uniform bool underwaterEnvironment;
@@ -91,7 +91,7 @@ vec2 worldUvs(float scale) {
 #include utils/misc.glsl
 #include utils/color_blindness.glsl
 #include utils/caustics.glsl
-#include utils/color_conversion.glsl
+#include utils/color_utils.glsl
 #include utils/normals.glsl
 #include utils/specular.glsl
 #include utils/displacement.glsl
@@ -103,7 +103,6 @@ void main() {
     vec3 downDir = vec3(0, -1, 0);
     // View & light directions are from the fragment to the camera/light
     vec3 viewDir = normalize(camPos - IN.position);
-    vec3 lightDir = -lightDirection;
 
     Material material1 = getMaterial(vMaterialData[0] >> MATERIAL_INDEX_SHIFT);
     Material material2 = getMaterial(vMaterialData[1] >> MATERIAL_INDEX_SHIFT);
@@ -170,26 +169,26 @@ void main() {
 
         // Set up tangent-space transformation matrix
         vec3 N = normalize(IN.normal);
-        mat3 TBN = mat3(TB[0], TB[1], N);
+        mat3 TBN = mat3(TB[0], TB[1], N * min(length(TB[0]), length(TB[1])));
 
         float selfShadowing = 0;
         vec3 fragPos = IN.position;
-        #if PARALLAX_MAPPING
-        mat3 invTBN = transpose(TBN);
-        vec3 tangentViewDir = invTBN * viewDir;
-        vec3 tangentLightDir = invTBN * lightDir;
+        #if PARALLAX_OCCLUSION_MAPPING
+        mat3 invTBN = inverse(TBN);
+        vec3 tsViewDir = invTBN * viewDir;
+        vec3 tsLightDir = invTBN * lightDir;
 
-        vec2 fragDelta = vec2(0);
+        vec3 fragDelta = vec3(0);
 
-        sampleDisplacementMap(material1, tangentViewDir, tangentLightDir, uv1, fragDelta, selfShadowing);
-        sampleDisplacementMap(material2, tangentViewDir, tangentLightDir, uv2, fragDelta, selfShadowing);
-        sampleDisplacementMap(material3, tangentViewDir, tangentLightDir, uv3, fragDelta, selfShadowing);
+        sampleDisplacementMap(material1, tsViewDir, tsLightDir, uv1, fragDelta, selfShadowing);
+        sampleDisplacementMap(material2, tsViewDir, tsLightDir, uv2, fragDelta, selfShadowing);
+        sampleDisplacementMap(material3, tsViewDir, tsLightDir, uv3, fragDelta, selfShadowing);
 
         // Average
         fragDelta /= 3;
         selfShadowing /= 3;
 
-        fragPos += TBN * vec3(fragDelta, 0);
+        fragPos += TBN * fragDelta;
         #endif
 
         // get vertex colors
@@ -205,9 +204,9 @@ void main() {
             IN.texBlend[2] * baseColor3;
 
         baseColor.rgb = linearToSrgb(baseColor.rgb);
-        baseColor.rgb = rgbToHsv(baseColor.rgb);
+        baseColor.rgb = srgbToHsv(baseColor.rgb);
         baseColor.b = floor(baseColor.b * 127) / 127;
-        baseColor.rgb = hsvToRgb(baseColor.rgb);
+        baseColor.rgb = hsvToSrgb(baseColor.rgb);
         baseColor.rgb = srgbToLinear(baseColor.rgb);
 
         baseColor1 = baseColor2 = baseColor3 = baseColor;
@@ -417,7 +416,7 @@ void main() {
         vec3 lightOut = max(lightDotNormals, 0.0) * lightColor;
 
         // directional light specular
-        vec3 lightReflectDir = reflect(lightDirection, normals);
+        vec3 lightReflectDir = reflect(-lightDir, normals);
         vec3 lightSpecularOut = lightColor * specular(viewDir, lightReflectDir, vSpecularGloss, vSpecularStrength);
 
         // point lights
@@ -450,7 +449,7 @@ void main() {
 
 
         // sky light
-        vec3 skyLightColor = fogColor.rgb;
+        vec3 skyLightColor = fogColor;
         float skyLightStrength = 0.5;
         float skyDotNormals = downDotNormals;
         vec3 skyLightOut = max(skyDotNormals, 0.0) * skyLightColor * skyLightStrength;
@@ -490,7 +489,7 @@ void main() {
 
 
     outputColor.rgb = clamp(outputColor.rgb, 0, 1);
-    vec3 hsv = rgbToHsv(outputColor.rgb);
+    vec3 hsv = srgbToHsv(outputColor.rgb);
 
     // Apply saturation setting
     hsv.y *= saturation;
@@ -502,7 +501,7 @@ void main() {
         hsv.z = 0.5 - ((0.5 - hsv.z) * contrast);
     }
 
-    outputColor.rgb = hsvToRgb(hsv);
+    outputColor.rgb = hsvToSrgb(hsv);
     outputColor.rgb = colorBlindnessCompensation(outputColor.rgb);
 
     // apply fog
@@ -521,7 +520,7 @@ void main() {
             outputColor.a = combinedFog + outputColor.a * (1 - combinedFog);
         }
 
-        outputColor.rgb = mix(outputColor.rgb, fogColor.rgb, combinedFog);
+        outputColor.rgb = mix(outputColor.rgb, fogColor, combinedFog);
     }
 
     FragColor = outputColor;

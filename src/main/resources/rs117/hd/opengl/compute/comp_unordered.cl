@@ -42,14 +42,12 @@ void computeUnordered(
   struct ModelInfo minfo = ol[groupId];
 
   int offset = minfo.offset;
-  int size = minfo.size;
   int outOffset = minfo.idx;
   int uvOffset = minfo.uvOffset;
-  int flags = minfo.flags;
-  
+
   int4 pos = (int4)(minfo.x, minfo.y, minfo.z, 0);
 
-  if (localId >= size) {
+  if (localId >= (size_t) minfo.size) {
     return;
   }
 

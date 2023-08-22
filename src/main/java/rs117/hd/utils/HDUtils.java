@@ -28,49 +28,37 @@ import java.util.HashSet;
 import java.util.Random;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
-import net.runelite.api.Client;
-import net.runelite.api.Scene;
-import net.runelite.api.coords.LocalPoint;
-import net.runelite.api.coords.WorldPoint;
+import net.runelite.api.*;
+import net.runelite.api.coords.*;
 
-import static net.runelite.api.Constants.REGION_SIZE;
-import static net.runelite.api.Constants.SCENE_SIZE;
+import static net.runelite.api.Constants.*;
 
 @Slf4j
 @Singleton
-public class HDUtils
-{
+public class HDUtils {
 	public static final long KiB = 1024;
 	public static final long MiB = KiB * KiB;
 	public static final long GiB = MiB * KiB;
 	public static final Random rand = new Random();
 
 	// directional vectors approximately opposite of the directional light used by the client
-	private static final float[] lightDirTile = new float[]{
-		0.70710678f, 0.70710678f, 0f
-	};
-	public static final float[] lightDirModel = new float[]{
-		0.57735026f, 0.57735026f, 0.57735026f
-	};
+	private static final float[] LIGHT_DIR_TILE = new float[] { 0.70710678f, 0.70710678f, 0f };
+	public static final float[] LIGHT_DIR_MODEL = new float[] { 0.57735026f, 0.57735026f, 0.57735026f };
 
 	// The epsilon for floating point values used by jogl
 	public static final float EPSILON = 1.1920929E-7f;
 
-	public static float[] vectorAdd(float[] vec1, float[] vec2)
-	{
+	public static float[] vectorAdd(float[] vec1, float[] vec2) {
 		float[] out = new float[vec1.length];
 		for (int i = 0; i < vec1.length; i++)
-		{
 			out[i] = vec1[i] + vec2[i];
-		}
 		return out;
 	}
 
 	static float[] vectorAdd(float[] vec1, int[] vec2) {
 		float[] out = new float[vec1.length];
-		for (int i = 0; i < vec1.length; i++) {
+		for (int i = 0; i < vec1.length; i++)
 			out[i] = vec1[i] + vec2[i];
-		}
 		return out;
 	}
 
@@ -78,9 +66,7 @@ public class HDUtils
 	{
 		int[] out = new int[vec1.length];
 		for (int i = 0; i < vec1.length; i++)
-		{
 			out[i] = vec1[i] + vec2[i];
-		}
 		return out;
 	}
 
@@ -88,9 +74,7 @@ public class HDUtils
 	{
 		double[] out = new double[vec1.length];
 		for (int i = 0; i < vec1.length; i++)
-		{
 			out[i] = vec1[i] + vec2[i];
-		}
 		return out;
 	}
 
@@ -98,48 +82,32 @@ public class HDUtils
 	{
 		Double[] out = new Double[vec1.length];
 		for (int i = 0; i < vec1.length; i++)
-		{
 			out[i] = vec1[i] + vec2[i];
-		}
 		return out;
 	}
 
-	static float[] vectorDivide(float[] vec1, float divide)
-	{
+	static float[] vectorDivide(float[] vec1, float divide) {
 		float[] out = new float[vec1.length];
-		for (int i = 0; i < vec1.length; i++) {
-			if (divide == 0)
-			{
-				out[i] = 0;
-			} else
-			{
-				out[i] = vec1[i] / divide;
-			}
-		}
+		for (int i = 0; i < vec1.length; i++)
+			out[i] = divide == 0 ? 0 : vec1[i] / divide;
 		return out;
 	}
 
 	public static float lerp(float a, float b, float t) {
-		return a + ((b - a) * t);
+		return a + (b - a) * t;
 	}
 
-	public static float[] lerpVectors(float[] vecA, float[] vecB, float t)
-	{
+	public static float[] lerp(float[] vecA, float[] vecB, float t) {
 		float[] out = new float[Math.min(vecA.length, vecB.length)];
 		for (int i = 0; i < out.length; i++)
-		{
 			out[i] = lerp(vecA[i], vecB[i], t);
-		}
 		return out;
 	}
 
-	static int[] lerpVectors(int[] vecA, int[] vecB, float t)
-	{
+	static int[] lerp(int[] vecA, int[] vecB, float t) {
 		int[] out = new int[Math.min(vecA.length, vecB.length)];
 		for (int i = 0; i < out.length; i++)
-		{
-			out[i] = (int)lerp(vecA[i], vecB[i], t);
-		}
+			out[i] = (int) lerp(vecA[i], vecB[i], t);
 		return out;
 	}
 
@@ -190,201 +158,82 @@ public class HDUtils
 		return outHSL;
 	}
 
-	public static int colorHSLToInt(int[] colorHSL)
-	{
+	public static int colorHSLToInt(int[] colorHSL) {
 		return (colorHSL[0] << 3 | colorHSL[1]) << 7 | colorHSL[2];
 	}
 
-	public static int[] colorIntToRGB(int colorInt)
-	{
-		int[] outHSL = new int[3];
-		outHSL[0] = colorInt >> 10 & 0x3F;
-		outHSL[1] = colorInt >> 7 & 0x7;
-		outHSL[2] = colorInt & 0x7F;
-		return colorHSLToRGB(outHSL[0], outHSL[1], outHSL[2]);
-	}
-
-	public static int colorRGBToInt(float[] colorRGB) {
-		int[] colorRGBInt = new int[3];
-		for (int i = 0; i < colorRGB.length; i++) {
-			colorRGBInt[i] = (int)(colorRGB[i] * 255);
-		}
-		return (colorRGBInt[0] << 8 | colorRGBInt[1]) << 8 | colorRGBInt[2] | 134217728;
-	}
-
-	static int[] colorHSLToRGB(float h, float s, float l)
-	{
-		h /= 64f;
-		s /= 8f;
-		l /= 128f;
-
-		float q = 0;
-
-		if (l < 0.5)
-			q = l * (1 + s);
-		else
-			q = (l + s) - (s * l);
-
-		float p = 2 * l - q;
-
-		float r = Math.max(0, HueToRGB(p, q, h + (1.0f / 3.0f)));
-		float g = Math.max(0, HueToRGB(p, q, h));
-		float b = Math.max(0, HueToRGB(p, q, h - (1.0f / 3.0f)));
-
-		r = Math.min(r, 1.0f);
-		g = Math.min(g, 1.0f);
-		b = Math.min(b, 1.0f);
-
-		return new int[]{(int)(r * 255f), (int)(g * 255f), (int)(b * 255f)};
-	}
-
-	static float HueToRGB(float p, float q, float h)
-	{
-		if (h < 0) h += 1;
-
-		if (h > 1 ) h -= 1;
-
-		if (6 * h < 1)
-		{
-			return p + ((q - p) * 6 * h);
-		}
-
-		if (2 * h < 1 )
-		{
-			return  q;
-		}
-
-		if (3 * h < 2)
-		{
-			return p + ( (q - p) * 6 * ((2.0f / 3.0f) - h) );
-		}
-
-		return p;
-	}
-
-	// Conversion functions to and from sRGB and linear color space.
-	// The implementation is based on the sRGB EOTF given in the Khronos Data Format Specification.
-	// Source: https://web.archive.org/web/20220808015852/https://registry.khronos.org/DataFormat/specs/1.3/dataformat.1.3.pdf
-	// Page number 130 (146 in the PDF)
-	public static float linearToSrgb(float c)
-	{
-		return c <= 0.0031308 ?
-			c * 12.92f :
-			(float) (1.055 * Math.pow(c, 1 / 2.4) - 0.055);
-	}
-
-	public static float srgbToLinear(float c)
-	{
-		return c <= 0.04045f ?
-			c / 12.92f :
-			(float) Math.pow((c + 0.055) / 1.055, 2.4);
-	}
-
-	public static float[] linearToSrgb(float[] c)
-	{
-		float[] result = new float[c.length];
-		for (int i = 0; i < c.length; i++) {
-			result[i] = linearToSrgb(c[i]);
-		}
-		return result;
-	}
-
-	public static float[] srgbToLinear(float[] c)
-	{
-		float[] result = new float[c.length];
-		for (int i = 0; i < c.length; i++) {
-			result[i] = srgbToLinear(c[i]);
-		}
-		return result;
-	}
-
-	public static float dotLightDirectionModel(float x, float y, float z)
-	{
+	public static float dotLightDirectionModel(float x, float y, float z) {
 		// Model normal vectors need to be normalized
 		float length = x * x + y * y + z * z;
 		if (length < EPSILON)
 			return 0;
-		return (x * lightDirModel[0] + y * lightDirModel[1] + z * lightDirModel[2]) / (float) Math.sqrt(length);
+		return (x * LIGHT_DIR_MODEL[0] + y * LIGHT_DIR_MODEL[1] + z * LIGHT_DIR_MODEL[2]) / (float) Math.sqrt(length);
 	}
 
-	public static float dotLightDirectionTile(float x, float y, float z)
-	{
+	public static float dotLightDirectionTile(float x, float y, float z) {
 		// Tile normal vectors need to be normalized
 		float length = x * x + y * y + z * z;
 		if (length < EPSILON)
 			return 0;
-		return (x * lightDirTile[0] + y * lightDirTile[1]) / (float) Math.sqrt(length);
+		return (x * LIGHT_DIR_TILE[0] + y * LIGHT_DIR_TILE[1]) / (float) Math.sqrt(length);
 	}
-
-    public static float[] rgb(int r, int g, int b)
-    {
-        return new float[]{
-            srgbToLinear(r / 255f),
-            srgbToLinear(g / 255f),
-            srgbToLinear(b / 255f)
-        };
-    }
 
 	public static long ceilPow2(long x) {
 		return (long) Math.pow(2, Math.ceil(Math.log(x) / Math.log(2)));
 	}
 
-	public static int convertWallObjectOrientation(int orientation)
-	{
-		// east = 1, south = 2, west = 4, north = 8,
-		// southeast = 16, southwest = 32, northwest = 64, northeast = 128
+	public static int convertWallObjectOrientation(int orientation) {
+		// Note: this is still imperfect, since the model rotation of a wall object depends on more than just the config orientation,
+		// 		 i.e. extra rotation depending on wall type whatever. I'm not sure.
+		// Derived from config orientation {@link HDUtils#getBakedOrientation}
 		switch (orientation) {
-			case 1: // east
+			case 1: // east (config orientation = 0)
 				return 512;
-			case 2: // south
+			case 2: // south (config orientation = 1)
 				return 1024;
-			case 4: // west
+			case 4: // west (config orientation = 2)
 				return 1536;
-			case 8: // north
+			case 8: // north (config orientation = 3)
+			default:
 				return 0;
-			case 16: // south-east
+			case 16: // south-east (config orientation = 0)
 				return 768;
-			case 32: // south-west
+			case 32: // south-west (config orientation = 1)
 				return 1280;
-			case 64: // north-west
+			case 64: // north-west (config orientation = 2)
 				return 1792;
-			case 128: // north-east
+			case 128: // north-east (config orientation = 3)
 				return 256;
-			default:
-				return 0;
 		}
 	}
 
-	public static int extractConfigOrientation(int config)
-	{
+	// (gameObject.getConfig() >> 6) & 3, // 2-bit orientation
+	// (gameObject.getConfig() >> 8) & 1, // 1-bit interactType != 0 (supports items)
+	// (gameObject.getConfig() & 0x3F), // 6-bit object type? (10 seems to mean movement blocker)
+	// (gameObject.getConfig() >> 9) // should always be zero
+	public static int getBakedOrientation(int config) {
 		switch (config >> 6 & 3) {
-			case 0: // south
+			case 0: // Rotated 180 degrees
 				return 1024;
-			case 1: // west
+			case 1: // Rotated 90 degrees counter-clockwise
 				return 1536;
-			case 2: // north
-				return 0;
-			case 3: // east
-				return 512;
+			case 2: // Not rotated
 			default:
 				return 0;
+			case 3: // Rotated 90 degrees clockwise
+				return 512;
 		}
 	}
 
-	public static HashSet<Integer> getSceneRegionIds(Scene scene)
-	{
+	public static HashSet<Integer> getSceneRegionIds(Scene scene) {
 		HashSet<Integer> regionIds = new HashSet<>();
 
-		if (scene.isInstance())
-		{
+		if (scene.isInstance()) {
 			// If the center chunk is invalid, pick any valid chunk and hope for the best
 			int[][][] chunks = scene.getInstanceTemplateChunks();
-			for (int[][] plane : chunks)
-			{
-				for (int[] column : plane)
-				{
-					for (int chunk : column)
-					{
+			for (int[][] plane : chunks) {
+				for (int[] column : plane) {
+					for (int chunk : column) {
 						if (chunk == -1)
 							continue;
 
