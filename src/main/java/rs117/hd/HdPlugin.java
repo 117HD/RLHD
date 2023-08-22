@@ -2010,7 +2010,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		try {
 			awtContext.swapBuffers();
 			drawManager.processDrawComplete(this::screenshot);
-		} catch (Exception ex) {
+		} catch (RuntimeException ex) {
+			// this is always fatal
+			if (!canvas.isValid())
+			{
+				// this might be AWT shutting down on VM shutdown, ignore it
+				return;
+			}
+
 			log.error("Unable to swap buffers:", ex);
 		}
 
