@@ -1657,6 +1657,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	@Override
 	public void draw(int overlayColor)
 	{
+		final GameState gameState = client.getGameState();
+		if (gameState == GameState.STARTING)
+		{
+			return;
+		}
+
 		// reset the plugin if the last frame took >1min to draw
 		// why? because the user's computer was probably suspended and the buffers are no longer valid
 		if (System.currentTimeMillis() - lastFrameTime > 60000) {
