@@ -10168,5 +10168,11 @@
     "hideInAreas": [
       [ 3469, 9845 ]
     ]
+  },
+  {
+    "description": "Replace vanilla scrolling waterfall texture with droplets, until a better solution is found",
+    "objectIds": [ 754, 10459 ],
+    "textureMaterial": "WATER_DROPLETS",
+    "baseMaterial": "WATER_FLAT"
   }
 ]

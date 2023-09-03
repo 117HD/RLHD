@@ -633,6 +633,9 @@ public enum Overlay {
 	),
 	FOSSIL_ISLAND_HILL_TEXTURE_FIX(11, Area.FOSSIL_ISLAND_HILL_TEXTURE_FIX, GroundMaterial.VARIED_DIRT),
 
+	// Ape Atoll
+	APE_ATOLL_WATERFALLS(p -> p.area(Area.APE_ATOLL_WATERFALLS).waterType(WaterType.WATER).blended(false)),
+
 	// Zeah
 	// Great Kourend
 	KOUREND_CASTLE_BLEND_FIX(11, Area.KOUREND_CASTLE_ENTRANCE_FIX, GroundMaterial.VARROCK_PATHS, p -> p.blended(false)),
