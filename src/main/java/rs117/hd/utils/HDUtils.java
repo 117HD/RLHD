@@ -308,10 +308,46 @@ public class HDUtils {
 		return new WorldPoint(baseX, baseY, plane);
 	}
 
-	public static WorldPoint cameraSpaceToWorldPoint(Client client, int x, int z)
-	{
-		return WorldPoint.fromLocalInstance(client, new LocalPoint(
-			x + client.getCameraX2(),
-			z + client.getCameraZ2()));
+	public static int[] cameraSpaceToWorldPoint(Client client, int localX, int localY) {
+		localX += client.getCameraX2();
+		localY += client.getCameraZ2();
+		int plane = client.getPlane();
+
+		if (client.isInInstancedRegion()) {
+			int sceneX = localX >> 7;
+			int sceneY = localY >> 7;
+			int chunkX = sceneX / 8;
+			int chunkY = sceneY / 8;
+			int templateChunk = client.getInstanceTemplateChunks()[plane][chunkX][chunkY];
+			int rotation = templateChunk >> 1 & 3;
+			int templateChunkY = (templateChunk >> 3 & 2047) * 8;
+			int templateChunkX = (templateChunk >> 14 & 1023) * 8;
+			int templateChunkPlane = templateChunk >> 24 & 3;
+			int worldX = templateChunkX + (sceneX & 7);
+			int worldY = templateChunkY + (sceneY & 7);
+
+			int[] pos = { worldX, worldY, templateChunkPlane };
+
+			int x = pos[0] & 7;
+			int y = pos[1] & 7;
+			switch (rotation) {
+				case 1:
+					pos[0] = chunkX + y;
+					pos[1] = chunkY + (7 - x);
+					break;
+				case 2:
+					pos[0] = chunkX + (7 - x);
+					pos[1] = chunkY + (7 - y);
+					break;
+				case 3:
+					pos[0] = chunkX + (7 - y);
+					pos[1] = chunkY + x;
+					break;
+			}
+
+			return pos;
+		}
+
+		return new int[] { (localX >>> 7) + client.getBaseX(), (localY >>> 7) + client.getBaseY(), plane };
 	}
 }
