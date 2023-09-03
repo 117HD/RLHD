@@ -10161,5 +10161,12 @@
         2558, 3252
       ]
     ]
+  },
+  {
+    "description": "Hide weird wall piece above other walls in Canifis pub basement",
+    "objectIds": [ 1417 ],
+    "hideInAreas": [
+      [ 3469, 9845 ]
+    ]
   }
 ]
