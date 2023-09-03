@@ -1309,7 +1309,16 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			// after this that don't involve a scene draw, like during LOADING/HOPPING/CONNECTION_LOST, we can
 			// still redraw the previous frame's scene to emulate the client behavior of not painting over the
 			// viewport buffer.
-			renderBufferOffset = 0;
+			renderBufferOffset = sceneContext.staticVertexCount;
+
+			// Push unordered models that should always be drawn at the start of each frame.
+			// Used to fix issues like the right-click menu causing underwater tiles to disappear.
+			var staticUnordered = sceneContext.staticUnorderedModelBuffer.getBuffer();
+			modelBufferUnordered
+				.ensureCapacity(staticUnordered.limit())
+				.put(staticUnordered);
+			staticUnordered.rewind();
+			numModelsUnordered += staticUnordered.limit() / 8;
 		}
 
 		// UBO. Only the first 32 bytes get modified here, the rest is the constant sin/cos table.
@@ -1506,51 +1515,22 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (shouldSkipModelUpdates || paint.getBufferLen() <= 0)
 			return;
 
-		final int localX = tileX * LOCAL_TILE_SIZE;
-		final int localY = 0;
-		final int localZ = tileY * LOCAL_TILE_SIZE;
-
-		GpuIntBuffer b = modelBufferUnordered;
-		b.ensureCapacity(16);
-		IntBuffer buffer = b.getBuffer();
-
-		int bufferLength = paint.getBufferLen();
-
-		// we packed a boolean into the buffer length of tiles so we can tell
-		// which tiles have procedurally-generated underwater terrain.
-		// unpack the boolean:
-		boolean underwaterTerrain = (bufferLength & 1) == 1;
-		// restore the bufferLength variable:
-		bufferLength = bufferLength >> 1;
-
-		if (underwaterTerrain) {
-			// draw underwater terrain tile before surface tile
-
-			// buffer length includes the generated underwater terrain, so it must be halved
-			bufferLength /= 2;
-
-			++numModelsUnordered;
-
-			buffer.put(paint.getBufferOffset() + bufferLength);
-			buffer.put(paint.getUvBufferOffset() + bufferLength);
-			buffer.put(bufferLength / 3);
-			buffer.put(renderBufferOffset);
-			buffer.put(0);
-			buffer.put(localX).put(localY).put(localZ);
-
-			renderBufferOffset += bufferLength;
-		}
+		int vertexCount = paint.getBufferLen();
 
 		++numModelsUnordered;
+		modelBufferUnordered
+			.ensureCapacity(16)
+			.getBuffer()
+			.put(paint.getBufferOffset())
+			.put(paint.getUvBufferOffset())
+			.put(vertexCount / 3)
+			.put(renderBufferOffset)
+			.put(0)
+			.put(tileX * LOCAL_TILE_SIZE)
+			.put(0)
+			.put(tileY * LOCAL_TILE_SIZE);
 
-		buffer.put(paint.getBufferOffset());
-		buffer.put(paint.getUvBufferOffset());
-		buffer.put(bufferLength / 3);
-		buffer.put(renderBufferOffset);
-		buffer.put(0);
-		buffer.put(localX).put(localY).put(localZ);
-
-		renderBufferOffset += bufferLength;
+		renderBufferOffset += vertexCount;
 	}
 
 	public void initShaderHotswapping() {

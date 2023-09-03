@@ -43,6 +43,8 @@ import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.scene.model_overrides.ObjectType;
 import rs117.hd.utils.HDUtils;
 
+import static net.runelite.api.Perspective.*;
+
 @SuppressWarnings("UnnecessaryLocalVariable")
 @Singleton
 @Slf4j
@@ -66,24 +68,21 @@ class SceneUploader
 	@Inject
 	private ModelPusher modelPusher;
 
-	public void upload(SceneContext sceneContext)
-	{
+	public void upload(SceneContext sceneContext) {
 		Stopwatch stopwatch = Stopwatch.createStarted();
 
-		for (int z = 0; z < Constants.MAX_Z; ++z)
-		{
-			for (int x = 0; x < Constants.SCENE_SIZE; ++x)
-			{
-				for (int y = 0; y < Constants.SCENE_SIZE; ++y)
-				{
+		for (int z = 0; z < Constants.MAX_Z; ++z) {
+			for (int x = 0; x < Constants.SCENE_SIZE; ++x) {
+				for (int y = 0; y < Constants.SCENE_SIZE; ++y) {
 					Tile tile = sceneContext.scene.getTiles()[z][x][y];
-					if (tile != null)
-					{
+					if (tile != null) {
 						upload(sceneContext, tile);
 					}
 				}
 			}
 		}
+
+		sceneContext.staticUnorderedModelBuffer.flip();
 
 		stopwatch.stop();
 		log.debug("Scene upload time: {}", stopwatch);
@@ -114,23 +113,53 @@ class SceneUploader
 		}
 
 		SceneTilePaint sceneTilePaint = tile.getSceneTilePaint();
-		if (sceneTilePaint != null)
-		{
+		if (sceneTilePaint != null) {
 			// Set offsets before pushing new data
-			sceneTilePaint.setBufferOffset(sceneContext.getVertexOffset());
-			sceneTilePaint.setUvBufferOffset(sceneContext.getUvOffset());
+			int vertexOffset = sceneContext.getVertexOffset();
+			int uvOffset = sceneContext.getUvOffset();
 			int[] uploadedTilePaintData = upload(sceneContext, tile, sceneTilePaint);
 
-			final int bufferLength = uploadedTilePaintData[0];
-			final int uvBufferLength = uploadedTilePaintData[1];
-			final int underwaterTerrain = uploadedTilePaintData[2];
-			if (uvBufferLength <= 0)
-				sceneTilePaint.setUvBufferOffset(-1);
-			// pack a boolean into the buffer length of tiles so we can tell
-			// which tiles have procedurally generated underwater terrain.
-			// shift the bufferLength to make space for the boolean:
-			int packedBufferLength = bufferLength << 1 | underwaterTerrain;
-			sceneTilePaint.setBufferLen(packedBufferLength);
+			int vertexCount = uploadedTilePaintData[0];
+			int uvCount = uploadedTilePaintData[1];
+			int hasUnderwaterTerrain = uploadedTilePaintData[2];
+
+			// Opening the right-click menu causes the game to stop drawing hidden tiles, which prevents us from drawing underwater tiles
+			// below the boats at Pest Control. To work around this, we can instead draw all water tiles that never appear on top of any
+			// other model, all at once at the start of the frame. This bypasses any issues with draw order, and even partially solves the
+			// draw order artifacts resulting from skipped geometry updates for our extension to unlocked FPS.
+			Point tilePoint = tile.getSceneLocation();
+			final int[][][] tileHeights = sceneContext.scene.getTileHeights();
+			final int tileX = tilePoint.getX();
+			final int tileY = tilePoint.getY();
+			final int tileZ = tile.getRenderLevel();
+			if (hasUnderwaterTerrain == 1 && tileHeights[tileZ][tileX][tileY] >= -16) {
+				// Draw the underwater tile at the start of each frame
+				sceneContext.staticUnorderedModelBuffer
+					.ensureCapacity(8)
+					.getBuffer()
+					.put(vertexOffset)
+					.put(uvOffset)
+					.put(2) // 2 faces
+					.put(sceneContext.staticVertexCount)
+					.put(0)
+					.put(tileX * LOCAL_TILE_SIZE)
+					.put(0)
+					.put(tileY * LOCAL_TILE_SIZE);
+				sceneContext.staticVertexCount += 6;
+
+				// Since we're now drawing this tile's underwater geometry at the beginning of the frame, remove it from the draw callback
+				vertexCount -= 6;
+				uvCount -= 6;
+				vertexOffset += 6;
+				uvOffset += 6;
+			}
+
+			if (uvCount <= 0)
+				uvOffset = -1;
+
+			sceneTilePaint.setBufferLen(vertexCount);
+			sceneTilePaint.setBufferOffset(vertexOffset);
+			sceneTilePaint.setUvBufferOffset(uvOffset);
 		}
 
 		SceneTileModel sceneTileModel = tile.getSceneTileModel();
@@ -226,25 +255,24 @@ class SceneUploader
 		}
 	}
 
-	private int[] upload(SceneContext sceneContext, Tile tile, SceneTilePaint sceneTilePaint)
-	{
+	private int[] upload(SceneContext sceneContext, Tile tile, SceneTilePaint sceneTilePaint) {
 		int bufferLength = 0;
 		int uvBufferLength = 0;
 		int underwaterTerrain = 0;
 
 		int[] bufferLengths;
 
-		bufferLengths = uploadHDTilePaintSurface(sceneContext, tile, sceneTilePaint);
-		bufferLength += bufferLengths[0];
-		uvBufferLength += bufferLengths[1];
-		underwaterTerrain += bufferLengths[2];
-
 		bufferLengths = uploadHDTilePaintUnderwater(sceneContext, tile, sceneTilePaint);
 		bufferLength += bufferLengths[0];
 		uvBufferLength += bufferLengths[1];
 		underwaterTerrain += bufferLengths[2];
 
-		return new int[]{bufferLength, uvBufferLength, underwaterTerrain};
+		bufferLengths = uploadHDTilePaintSurface(sceneContext, tile, sceneTilePaint);
+		bufferLength += bufferLengths[0];
+		uvBufferLength += bufferLengths[1];
+		underwaterTerrain += bufferLengths[2];
+
+		return new int[] { bufferLength, uvBufferLength, underwaterTerrain };
 	}
 
 	private int[] uploadHDTilePaintSurface(SceneContext sceneContext, Tile tile, SceneTilePaint sceneTilePaint)

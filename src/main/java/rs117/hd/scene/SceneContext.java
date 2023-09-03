@@ -21,12 +21,13 @@ import static net.runelite.api.Perspective.*;
 import static rs117.hd.HdPlugin.UV_SIZE;
 import static rs117.hd.HdPlugin.VERTEX_SIZE;
 
-public class SceneContext
-{
+public class SceneContext {
 	public final int id = HDUtils.rand.nextInt();
 	public final Scene scene;
 	public final HashSet<Integer> regionIds;
 
+	public int staticVertexCount = 0;
+	public GpuIntBuffer staticUnorderedModelBuffer = new GpuIntBuffer();
 	public GpuIntBuffer stagingBufferVertices;
 	public GpuFloatBuffer stagingBufferUvs;
 	public GpuFloatBuffer stagingBufferNormals;
@@ -74,8 +75,11 @@ public class SceneContext
 		}
 	}
 
-	public void destroy()
-	{
+	public void destroy() {
+		if (staticUnorderedModelBuffer != null)
+			staticUnorderedModelBuffer.destroy();
+		staticUnorderedModelBuffer = null;
+
 		if (stagingBufferVertices != null)
 			stagingBufferVertices.destroy();
 		stagingBufferVertices = null;
