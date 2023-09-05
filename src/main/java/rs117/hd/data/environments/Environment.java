@@ -51,9 +51,11 @@ public enum Environment
 		.setDirectionalStrength(1.0f)
 		.setLightDirection(260f, 10f)
 	),
-	RFD_QUIZ(Area.RFD_QUIZ, new Properties()
+	BLACK_ROOMS(Area.BLACK_ROOMS, new Properties()
 		.setFogColor("#000000")
-		.setFogDepth(0)
+		.setFogDepth(65)
+		.setDirectionalStrength(0)
+		.setAmbientStrength(3)
 		.setAllowSkyOverride(false)
 	),
 	FROZEN_WASTE_PLATEAU(Area.FROZEN_WASTE_PLATEAU, new Properties()
