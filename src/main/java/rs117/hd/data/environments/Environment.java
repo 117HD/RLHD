@@ -1110,7 +1110,7 @@ public enum Environment
 		.setDirectionalStrength(1.5f)
 	),
 	NONE(Area.NONE, new Properties()
-		.setFogColor("#000000")
+		.setFogColor("#ff00ff") // never meant to be rendered
 	),
 	;
 
