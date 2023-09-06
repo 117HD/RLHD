@@ -2918,10 +2918,17 @@
     "uvType": "MODEL_XZ"
   },
   {
+    "description": "Hide weird wall piece above other walls in Canifis pub basement",
+    "objectIds": [ 1417 ],
+    "baseMaterial": "GRUNGE_1",
+    "hideInAreas": [
+      [ 3469, 9845 ]
+    ]
+  },
+  {
     "description": "ROUNDED_CAVE_WALLS",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
-      1417,
       1422,
       1434,
       1435,
@@ -10160,13 +10167,6 @@
         2558, 3249,
         2558, 3252
       ]
-    ]
-  },
-  {
-    "description": "Hide weird wall piece above other walls in Canifis pub basement",
-    "objectIds": [ 1417 ],
-    "hideInAreas": [
-      [ 3469, 9845 ]
     ]
   },
   {
