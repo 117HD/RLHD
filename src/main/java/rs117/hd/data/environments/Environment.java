@@ -51,9 +51,11 @@ public enum Environment
 		.setDirectionalStrength(1.0f)
 		.setLightDirection(260f, 10f)
 	),
-	RFD_QUIZ(Area.RFD_QUIZ, new Properties()
+	BLACK_ROOMS(Area.BLACK_ROOMS, new Properties()
 		.setFogColor("#000000")
-		.setFogDepth(0)
+		.setFogDepth(65)
+		.setDirectionalStrength(0)
+		.setAmbientStrength(3)
 		.setAllowSkyOverride(false)
 	),
 	FROZEN_WASTE_PLATEAU(Area.FROZEN_WASTE_PLATEAU, new Properties()
@@ -1025,19 +1027,19 @@ public enum Environment
 		.setFogColor("#060505")
 		.setFogDepth(50)
 		.setAmbientColor("#AAAFB6")
-		.setAmbientStrength(1.2f)
+		.setAmbientStrength(1.6f)
 		.setDirectionalColor("#878474")
 		.setDirectionalStrength(1.5f)
 		.setLightDirection(260f, 10f)
 	),
 	BURGH_DE_ROTT_BASEMENT(Area.BURGH_DE_ROTT_BASEMENT, new Properties()
-			.setFogColor("#030403")
-			.setFogDepth(84)
-			.setAmbientColor("#FFFFFF")
-			.setAmbientStrength(1.0f)
-			.setDirectionalColor("#A29B71")
-			.setDirectionalStrength(1.5f)
-			.setLightDirection(260f, 10f)
+		.setFogColor("#030403")
+		.setFogDepth(84)
+		.setAmbientColor("#FFFFFF")
+		.setAmbientStrength(1.0f)
+		.setDirectionalColor("#A29B71")
+		.setDirectionalStrength(1.5f)
+		.setLightDirection(260f, 10f)
 	),
 	KEEP_LE_FAYE_JAIL(Area.KEEP_LE_FAYE_JAIL, new Properties()
 		.setFogColor("#070606")
@@ -1072,7 +1074,7 @@ public enum Environment
 		.setDirectionalStrength(1.5f)
 	),
 	NONE(Area.NONE, new Properties()
-		.setFogColor("#000000")
+		.setFogColor("#ff00ff") // never meant to be rendered
 	),
 	;
 

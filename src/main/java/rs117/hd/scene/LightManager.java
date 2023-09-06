@@ -368,31 +368,27 @@ public class LightManager {
 		lastFrameTime = System.currentTimeMillis();
 	}
 
-	private boolean npcLightVisible(NPC npc)
-	{
-		if (npc.getModel() == null)
-		{
+	private boolean npcLightVisible(NPC npc) {
+		try {
+			// getModel may throw an exception from vanilla client code
+			if (npc.getModel() == null)
+				return false;
+		} catch (Exception ex) {
+			// Vanilla handles exceptions thrown in `DrawCallbacks#draw` gracefully, but here we have to handle them
 			return false;
 		}
 
-		if (pluginManager.isPluginEnabled(entityHiderPlugin))
-		{
+		if (pluginManager.isPluginEnabled(entityHiderPlugin)) {
 			boolean isPet = npc.getComposition().isFollower();
 
 			if (client.getFollower() != null && client.getFollower().getIndex() == npc.getIndex())
-			{
 				return true;
-			}
 
 			if (entityHiderConfig.hideNPCs() && !isPet)
-			{
 				return false;
-			}
 
 			if (entityHiderConfig.hidePets() && isPet)
-			{
 				return false;
-			}
 		}
 
 		return plugin.configNpcLights;

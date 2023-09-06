@@ -1404,6 +1404,7 @@
       34490,
       34491,
       34492,
+      34493,
       "FERN_19839",
       "JUNGLE_GRASS",
       "JUNGLE_GRASS_4813",
@@ -2917,10 +2918,17 @@
     "uvType": "MODEL_XZ"
   },
   {
+    "description": "Hide weird wall piece above other walls in Canifis pub basement",
+    "objectIds": [ 1417 ],
+    "baseMaterial": "GRUNGE_1",
+    "hideInAreas": [
+      [ 3469, 9845 ]
+    ]
+  },
+  {
     "description": "ROUNDED_CAVE_WALLS",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
-      1417,
       1422,
       1434,
       1435,
@@ -10148,5 +10156,23 @@
     ],
     "uvType": "GEOMETRY",
     "uvScale": 0.28
+  },
+  {
+    "description": "Hide weird waterfall texture near Port Khazard spirit tree",
+    "objectIds": [
+      10459
+    ],
+    "hideInAreas": [
+      [
+        2558, 3249,
+        2558, 3252
+      ]
+    ]
+  },
+  {
+    "description": "Replace vanilla scrolling waterfall texture with droplets, until a better solution is found",
+    "objectIds": [ 754, 10459 ],
+    "textureMaterial": "WATER_DROPLETS",
+    "baseMaterial": "WATER_FLAT"
   }
 ]

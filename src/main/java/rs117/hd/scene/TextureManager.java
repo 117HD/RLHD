@@ -205,21 +205,27 @@ public class TextureManager
 			String textureName = material == Material.NONE ? String.valueOf(i) : material.name().toLowerCase();
 
 			BufferedImage image = loadTextureImage(textureName);
-			if (image == null)
-			{
+			if (image == null) {
 				// Load vanilla texture
 				int[] pixels = textureProvider.load(i);
-				if (pixels == null)
-				{
+				if (pixels == null) {
 					log.warn("No vanilla pixels for texture index {}", i);
 					unusedIndices.addLast(i);
 					continue;
 				}
-				if (pixels.length != 128 * 128)
-				{
+
+				int resolution = (int) Math.round(Math.sqrt(pixels.length));
+				if (resolution * resolution != pixels.length) {
 					log.warn("Unknown dimensions for vanilla texture at index {} ({} pixels)", i, pixels.length);
 					unusedIndices.addLast(i);
 					continue;
+				}
+
+				if (vanillaImage.getWidth() != resolution) {
+					log.warn("Using vanilla texture resolution: {}x{}", resolution, resolution);
+					vanillaImage = new BufferedImage(resolution, resolution, BufferedImage.TYPE_INT_ARGB);
+					if (vanillaPixels.length < pixels.length)
+						vanillaPixels = new int[pixels.length];
 				}
 
 				for (int j = 0; j < pixels.length; j++) {
@@ -227,7 +233,7 @@ public class TextureManager
 					vanillaPixels[j] = p == 0 ? 0 : 0xFF << 24 | p & 0xFFFFFF;
 				}
 
-				vanillaImage.setRGB(0, 0, 128, 128, vanillaPixels, 0, 128);
+				vanillaImage.setRGB(0, 0, resolution, resolution, vanillaPixels, 0, resolution);
 				image = vanillaImage;
 			}
 

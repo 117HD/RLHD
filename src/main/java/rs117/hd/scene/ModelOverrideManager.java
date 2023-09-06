@@ -7,7 +7,6 @@ import javax.inject.Singleton;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
-import net.runelite.api.coords.*;
 import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
 import rs117.hd.model.ModelPusher;
@@ -89,14 +88,12 @@ public class ModelOverrideManager {
     }
 
     public boolean shouldHideModel(long hash, int x, int z) {
-		assert client.isClientThread();
         long uuid = ModelHash.getUuid(client, hash);
-
         AABB[] aabbs = modelsToHide.get(uuid);
         if (aabbs != null) {
-			WorldPoint location = HDUtils.cameraSpaceToWorldPoint(client, x, z);
+			int[] location = HDUtils.cameraSpaceToWorldPoint(client, x, z);
 			for (AABB aabb : aabbs)
-				if (aabb.contains(location))
+				if (aabb.contains(location[0], location[1], location[2]))
 					return true;
 		}
 
