@@ -45,6 +45,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Stack;
+import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -253,70 +254,80 @@ public class ResourcePath {
     }
 
     /**
-     * Check if the resource pointed to is actually on the file system, even if it is loaded as a class resource.
-     */
-    public boolean isFileSystemResource() {
-        try {
-            return toURL().getProtocol().equals("file");
-        } catch (IOException ex) {
-            return false;
-        }
-    }
+	 * Check if the resource pointed to is actually on the file system, even if it is loaded as a class resource.
+	 */
+	public boolean isFileSystemResource() {
+		try {
+			return toURL().getProtocol().equals("file");
+		} catch (IOException ex) {
+			return false;
+		}
+	}
 
-    /**
-     * Run the callback once at the start & every time the resource (or sub resource) changes.
-     * @param changeHandler Callback to call once at the start and every time the resource changes
-     * @return A runnable that can be called to unregister the watch callback
-     */
-    public FileWatcher.UnregisterCallback watch(Consumer<ResourcePath> changeHandler) {
-        // Only watch files on the file system
-        if (!isFileSystemResource() || RESOURCE_PATH == null) {
-            changeHandler.accept(this);
-            return NOOP;
-        }
+	/**
+	 * Run the callback once at the start & every time the resource (or sub resource) changes.
+	 *
+	 * @param changeHandler Callback to call once at the start (bool = true) and every time the resource changes (bool = false)
+	 * @return A runnable that can be called to unregister the watch callback
+	 */
+	public FileWatcher.UnregisterCallback watch(BiConsumer<ResourcePath, Boolean> changeHandler) {
+		// Only watch files on the file system
+		if (!isFileSystemResource() || RESOURCE_PATH == null) {
+			changeHandler.accept(this, true);
+			return NOOP;
+		}
 
-        ResourcePath path = this;
-        // If the resource is loaded by a class or class loader, attempt to redirect it to the main resource directory
-        if (isClassResource()) {
-            // Assume the project's resource directory lies at "src/main/resources" in the process working directory
-            path = RESOURCE_PATH.chroot().resolve(toAbsolute().toPath().toString());
-        }
+		ResourcePath path = this;
+		// If the resource is loaded by a class or class loader, attempt to redirect it to the main resource directory
+		if (isClassResource()) {
+			// Assume the project's resource directory lies at "src/main/resources" in the process working directory
+			path = RESOURCE_PATH.chroot().resolve(toAbsolute().toPath().toString());
+		}
 
-        // Load once up front
-        changeHandler.accept(path);
-        return FileWatcher.watchPath(path, changeHandler);
-    }
+		// Load once up front
+		changeHandler.accept(path, true);
+		return FileWatcher.watchPath(path, p -> changeHandler.accept(p, false));
+	}
 
-    /**
-     * Run the callback once at the start & every time the resource (or sub resource) changes.
-     * @param changeHandler Callback to call once at the start and every time the resource changes
-     * @return A runnable that can be called to unregister the watch callback
-     */
-    public FileWatcher.UnregisterCallback watch(@RegEx String filter, Consumer<ResourcePath> changeHandler) {
-        return watch(path -> {
-            if (path.matches(filter))
-                changeHandler.accept(path);
-        });
-    }
+	public FileWatcher.UnregisterCallback watch(Consumer<ResourcePath> changeHandler) {
+		return watch((path, first) -> changeHandler.accept(path));
+	}
 
-    public String loadString() throws IOException {
-        try (BufferedReader reader = toReader()) {
-            return reader.lines().collect(Collectors.joining(System.lineSeparator()));
-        }
-    }
+	/**
+	 * Run the callback once at the start & every time the resource (or sub resource) changes.
+	 *
+	 * @param changeHandler Callback to call once at the start and every time the resource changes
+	 * @return A runnable that can be called to unregister the watch callback
+	 */
+	public FileWatcher.UnregisterCallback watch(@RegEx String filter, BiConsumer<ResourcePath, Boolean> changeHandler) {
+		return watch((path, first) -> {
+			if (path.matches(filter))
+				changeHandler.accept(path, first);
+		});
+	}
 
-    public <T> T loadJson(Gson gson, Class<T> type) throws IOException {
-        try (BufferedReader reader = toReader()) {
-            return gson.fromJson(reader, type);
-        }
-    }
+	public FileWatcher.UnregisterCallback watch(@RegEx String filter, Consumer<ResourcePath> changeHandler) {
+		return watch(filter, (path, first) -> changeHandler.accept(path));
+	}
 
-    public BufferedImage loadImage() throws IOException {
-        try (InputStream is = toInputStream()) {
-            synchronized (ImageIO.class) {
-                return ImageIO.read(is);
-            }
-        }
+	public String loadString() throws IOException {
+		try (BufferedReader reader = toReader()) {
+			return reader.lines().collect(Collectors.joining(System.lineSeparator()));
+		}
+	}
+
+	public <T> T loadJson(Gson gson, Class<T> type) throws IOException {
+		try (BufferedReader reader = toReader()) {
+			return gson.fromJson(reader, type);
+		}
+	}
+
+	public BufferedImage loadImage() throws IOException {
+		try (InputStream is = toInputStream()) {
+			synchronized (ImageIO.class) {
+				return ImageIO.read(is);
+			}
+		}
     }
 
     /**

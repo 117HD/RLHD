@@ -41,11 +41,11 @@ public class ModelOverrideManager {
     private final HashMap<Long, AABB[]> modelsToHide = new HashMap<>();
 
     public void startUp() {
-        MODEL_OVERRIDES_PATH.watch(path -> {
-            modelOverrides.clear();
-            modelsToHide.clear();
+        MODEL_OVERRIDES_PATH.watch((path, first) -> {
+			modelOverrides.clear();
+			modelsToHide.clear();
 
-            try {
+			try {
 				ModelOverride[] entries = path.loadJson(plugin.getGson(), ModelOverride[].class);
 				if (entries == null)
 					throw new IOException("Empty or invalid: " + path);
@@ -57,17 +57,19 @@ public class ModelOverrideManager {
 						addEntry(ModelHash.packUuid(objectId, ModelHash.TYPE_OBJECT), override);
 				}
 
+				log.debug("Loaded {} model overrides", modelOverrides.size());
+			} catch (IOException ex) {
+				log.error("Failed to load model overrides:", ex);
+			}
+
+			if (!first) {
 				clientThread.invoke(() -> {
 					modelPusher.clearModelCache();
 					if (client.getGameState() == GameState.LOGGED_IN)
 						client.setGameState(GameState.LOADING);
 				});
-
-				log.debug("Loaded {} model overrides", modelOverrides.size());
-			} catch (IOException ex) {
-				log.error("Failed to load model overrides:", ex);
 			}
-        });
+		});
     }
 
     private void addEntry(long uuid, ModelOverride entry) {

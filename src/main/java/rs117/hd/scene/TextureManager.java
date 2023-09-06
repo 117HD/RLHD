@@ -391,7 +391,8 @@ public class TextureManager
 	{
 		clientThread.invoke(() ->
 		{
-			glDeleteTextures(textureArray);
+			if (textureArray != 0)
+				glDeleteTextures(textureArray);
 			textureArray = 0;
 		});
 	}
