@@ -107,13 +107,15 @@ class SceneUploader
 	private void upload(SceneContext sceneContext, Tile tile)
 	{
 		Tile bridge = tile.getBridge();
-		if (bridge != null)
-		{
+		if (bridge != null) {
 			upload(sceneContext, bridge);
 		}
 
+		final int tileZ = tile.getRenderLevel();
+
 		SceneTilePaint sceneTilePaint = tile.getSceneTilePaint();
-		if (sceneTilePaint != null) {
+		boolean hasTilePaint = sceneTilePaint != null && sceneTilePaint.getNeColor() != 12345678;
+		if (hasTilePaint) {
 			// Set offsets before pushing new data
 			int vertexOffset = sceneContext.getVertexOffset();
 			int uvOffset = sceneContext.getUvOffset();
@@ -131,7 +133,6 @@ class SceneUploader
 			final int[][][] tileHeights = sceneContext.scene.getTileHeights();
 			final int tileX = tilePoint.getX();
 			final int tileY = tilePoint.getY();
-			final int tileZ = tile.getRenderLevel();
 			if (hasUnderwaterTerrain == 1 && tileHeights[tileZ][tileX][tileY] >= -16) {
 				// Draw the underwater tile at the start of each frame
 				sceneContext.staticUnorderedModelBuffer
@@ -182,15 +183,37 @@ class SceneUploader
 			sceneTileModel.setBufferLen(packedBufferLength);
 		}
 
+		if (!hasTilePaint && sceneTileModel == null && tileZ == 0) {
+			// Draw the underwater tile at the start of each frame
+			int vertexOffset = sceneContext.getVertexOffset();
+			int uvOffset = sceneContext.getUvOffset();
+			Point tilePoint = tile.getSceneLocation();
+			final int tileX = tilePoint.getX();
+			final int tileY = tilePoint.getY();
+			sceneContext.staticUnorderedModelBuffer
+				.ensureCapacity(8)
+				.getBuffer()
+				.put(vertexOffset)
+				.put(uvOffset)
+				.put(2) // 2 faces
+				.put(sceneContext.staticVertexCount)
+				.put(0)
+				.put(tileX * LOCAL_TILE_SIZE)
+				.put(0)
+				.put(tileY * LOCAL_TILE_SIZE);
+			sceneContext.staticVertexCount += 6;
+
+			uploadBlackTile(sceneContext, tile);
+		}
+
 		WallObject wallObject = tile.getWallObject();
-		if (wallObject != null)
-		{
+		if (wallObject != null) {
 			Renderable renderable1 = wallObject.getRenderable1();
-			if (renderable1 instanceof Model)
-			{
+			if (renderable1 instanceof Model) {
 				uploadModel(sceneContext, tile, wallObject.getHash(), (Model) renderable1,
 					HDUtils.convertWallObjectOrientation(wallObject.getOrientationA()),
-					ObjectType.WALL_OBJECT);
+					ObjectType.WALL_OBJECT
+				);
 			}
 
 			Renderable renderable2 = wallObject.getRenderable2();
@@ -951,7 +974,66 @@ class SceneUploader
 			}
 		}
 
-		return new int[]{bufferLength, uvBufferLength, underwaterTerrain};
+		return new int[] { bufferLength, uvBufferLength, underwaterTerrain };
+	}
+
+	private void uploadBlackTile(SceneContext sceneContext, Tile tile) {
+		final Scene scene = sceneContext.scene;
+
+		Point tilePoint = tile.getSceneLocation();
+		final int tileX = tilePoint.getX();
+		final int tileY = tilePoint.getY();
+		final int tileZ = tile.getRenderLevel();
+		final int localX = 0;
+		final int localY = 0;
+
+		final int[][][] tileHeights = scene.getTileHeights();
+		int swHeight = tileHeights[tileZ][tileX][tileY];
+		int seHeight = tileHeights[tileZ][tileX + 1][tileY];
+		int neHeight = tileHeights[tileZ][tileX + 1][tileY + 1];
+		int nwHeight = tileHeights[tileZ][tileX][tileY + 1];
+
+		int localSwVertexX = localX;
+		int localSwVertexY = localY;
+		int localSeVertexX = localX + Perspective.LOCAL_TILE_SIZE;
+		int localSeVertexY = localY;
+		int localNwVertexX = localX;
+		int localNwVertexY = localY + Perspective.LOCAL_TILE_SIZE;
+		int localNeVertexX = localX + Perspective.LOCAL_TILE_SIZE;
+		int localNeVertexY = localY + Perspective.LOCAL_TILE_SIZE;
+
+		int terrainData = packTerrainData(true, 0, WaterType.NONE, tileZ);
+
+		sceneContext.stagingBufferNormals.ensureCapacity(24);
+		sceneContext.stagingBufferNormals.put(0, -1, 0, terrainData);
+		sceneContext.stagingBufferNormals.put(0, -1, 0, terrainData);
+		sceneContext.stagingBufferNormals.put(0, -1, 0, terrainData);
+
+		sceneContext.stagingBufferNormals.put(0, -1, 0, terrainData);
+		sceneContext.stagingBufferNormals.put(0, -1, 0, terrainData);
+		sceneContext.stagingBufferNormals.put(0, -1, 0, terrainData);
+
+		int color = 0;
+
+		sceneContext.stagingBufferVertices.ensureCapacity(24);
+		sceneContext.stagingBufferVertices.put(localNeVertexX, neHeight, localNeVertexY, color);
+		sceneContext.stagingBufferVertices.put(localNwVertexX, nwHeight, localNwVertexY, color);
+		sceneContext.stagingBufferVertices.put(localSeVertexX, seHeight, localSeVertexY, color);
+
+		sceneContext.stagingBufferVertices.put(localSwVertexX, swHeight, localSwVertexY, color);
+		sceneContext.stagingBufferVertices.put(localSeVertexX, seHeight, localSeVertexY, color);
+		sceneContext.stagingBufferVertices.put(localNwVertexX, nwHeight, localNwVertexY, color);
+
+		int packedMaterialData = modelPusher.packMaterialData(Material.BLACK, ModelOverride.NONE, UvType.GEOMETRY, false);
+
+		sceneContext.stagingBufferUvs.ensureCapacity(24);
+		sceneContext.stagingBufferUvs.put(0, 0, 0, packedMaterialData);
+		sceneContext.stagingBufferUvs.put(1, 0, 0, packedMaterialData);
+		sceneContext.stagingBufferUvs.put(0, 1, 0, packedMaterialData);
+
+		sceneContext.stagingBufferUvs.put(1, 1, 0, packedMaterialData);
+		sceneContext.stagingBufferUvs.put(0, 1, 0, packedMaterialData);
+		sceneContext.stagingBufferUvs.put(1, 0, 0, packedMaterialData);
 	}
 
 	private boolean shouldSkipTile(int worldX, int worldY) {
@@ -960,8 +1042,7 @@ class SceneUploader
 		return worldX == 2796 && worldY >= 2961 && worldY <= 2967;
 	}
 
-	public static int packTerrainData(boolean isTerrain, int waterDepth, WaterType waterType, int plane)
-	{
+	public static int packTerrainData(boolean isTerrain, int waterDepth, WaterType waterType, int plane) {
 		// TODO: only the lower 24 bits can be safely used due to imprecise casting to float in shaders
 		// 11-bit water depth | 5-bit water type | 2-bit plane | terrain flag
 		return waterDepth << 8 | waterType.ordinal() << 3 | plane << 1 | (isTerrain ? 1 : 0);
