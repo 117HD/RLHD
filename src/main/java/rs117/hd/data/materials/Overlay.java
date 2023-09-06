@@ -606,6 +606,20 @@ public enum Overlay {
 	WILDERNESS_NORTH_OF_RESOURCE_AREA_HILLS(11, Area.WILDERNESS_NORTH_OF_RESOURCE_AREA, GroundMaterial.VARIED_DIRT),
 
 	// Tirannwn
+	ARANDAR_PATHS(p -> p
+		.area(Area.ARANDAR)
+		.groundMaterial(GroundMaterial.SAND_BRICK)
+		.ids(106)
+		.shiftLightness(12)
+		.shiftSaturation(-2)
+	),
+	TIRANNWN_PATHS(p -> p
+		.area(Area.TIRANNWN)
+		.groundMaterial(GroundMaterial.SAND_BRICK)
+		.ids(106)
+		.shiftLightness(12)
+		.shiftSaturation(-2)
+	),
 	POISON_WASTE(85, Area.POISON_WASTE, WaterType.POISON_WASTE),
 
 	// Fossil Island
@@ -618,6 +632,9 @@ public enum Overlay {
 		.replaceWithIf(WINTER_JAGGED_STONE_TILE_LIGHT_2, plugin -> plugin.configWinterTheme)
 	),
 	FOSSIL_ISLAND_HILL_TEXTURE_FIX(11, Area.FOSSIL_ISLAND_HILL_TEXTURE_FIX, GroundMaterial.VARIED_DIRT),
+
+	// Ape Atoll
+	APE_ATOLL_WATERFALLS(p -> p.area(Area.APE_ATOLL_WATERFALLS).waterType(WaterType.WATER).blended(false)),
 
 	// Zeah
 	// Great Kourend
@@ -651,6 +668,10 @@ public enum Overlay {
 	MOUNT_QUIDAMORTEM_SYMBOL(-93, Area.MOUNT_QUIDAMORTEM, GroundMaterial.DIRT, p -> p.blended(false)),
 	// Kebos Lowlands
 	LIZARDMAN_TEMPLE_WATER(-100, Area.LIZARDMAN_TEMPLE, WaterType.SWAMP_WATER_FLAT),
+	NORTHERN_WASTES_COBBLE(GroundMaterial.VARROCK_PATHS, p -> p
+		.replaceWithIf(WINTER_JAGGED_STONE_TILE, plugin -> plugin.configWinterTheme)
+		.ids(44)
+	),
 
 	// Temple of the Eye
 	TEMPLE_OF_THE_EYE_INCORRECT_WATER(Area.TEMPLE_OF_THE_EYE, GroundMaterial.DIRT, p -> p.ids(-100)), // Only visible in low-detail mode
@@ -661,6 +682,13 @@ public enum Overlay {
 
 	// Purple symbol near Wintertodt
 	PURPLE_SYMBOL(68, Area.ZEAH_SNOWY_NORTHERN_REGION, GroundMaterial.DIRT, p -> p.blended(false)),
+	// Zeah Defaults
+	ZEAH_DIRT(p -> p
+		.area(Area.ZEAH)
+		.groundMaterial(GroundMaterial.VARIED_DIRT)
+		.ids(114, 148)
+		.replaceWithIf(WINTER_DIRT, plugin -> plugin.configWinterTheme)
+	),
 
 	// Burthorpe games room
 	GAMES_ROOM_FLOOR(22, Area.GAMES_ROOM, GroundMaterial.WOOD_PLANKS_1, p -> p.blended(false)),
@@ -748,7 +776,7 @@ public enum Overlay {
 		GroundMaterial.DIRT,
 		p -> p.ids(-124, -84, -83, 14, 15, 21, 22, 23, 60, 77, 81, 82, 88, 89, 101, 102, 107, 108, 110, 115, 123, 227)
 	),
-	OVERLAY_GRAVEL(GroundMaterial.GRAVEL, p -> p.ids(-76, 2, 3, 4, 6, 8, 9, 10, 119)),
+	OVERLAY_GRAVEL(GroundMaterial.GRAVEL, p -> p.ids(-76, 2, 3, 4, 6, 8, 9, 10, 119, 127)),
 	OVERLAY_ZEAH_PATHS(Area.ZEAH, GroundMaterial.VARROCK_PATHS, p -> p
 		.replaceWithIf(WINTER_JAGGED_STONE_TILE_LIGHT_2, plugin -> plugin.configWinterTheme)
 		.ids(11)
@@ -760,7 +788,7 @@ public enum Overlay {
 	OVERLAY_SWAMP_WATER(WaterType.SWAMP_WATER, p -> p.ids(-100, 7)),
 	OVERLAY_WOOD_PLANKS(GroundMaterial.WOOD_PLANKS_1, p -> p.ids(5, 35)),
 	OVERLAY_CLEAN_WOOD_PLANKS(GroundMaterial.CLEAN_WOOD_FLOOR, p -> p.ids(52).shiftLightness(-4)),
-	OVERLAY_SAND(GroundMaterial.SAND, p -> p.ids(25, 26)),
+	OVERLAY_SAND(GroundMaterial.SAND, p -> p.ids(25, 26, 76)),
 	OVERLAY_BRICK_BROWN(GroundMaterial.BRICK_BROWN, p -> p.ids(27, 46).blended(false)),
 	OVERLAY_SNOW(GroundMaterial.SNOW_2, p -> p.ids(30, 33)),
 	OVERLAY_VARIED_DIRT(GroundMaterial.VARIED_DIRT, p -> p.ids(49, 83, 91)),

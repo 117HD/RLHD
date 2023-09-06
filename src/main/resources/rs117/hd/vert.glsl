@@ -38,17 +38,28 @@ out float gFogAmount;
 out int gMaterialData;
 out int gTerrainData;
 
+uniform int drawDistance;
+
 #include uniforms/materials.glsl
 
-#include utils/polyfills.glsl
 #include utils/constants.glsl
 #include utils/color_utils.glsl
 #include utils/fog.glsl
 
 void main() {
     int ahsl = vPosition.w;
+    vec3 position = vec3(vPosition.xyz);
     vec3 rgb = packedHslToSrgb(ahsl);
     float alpha = 1 - float(ahsl >> 24 & 0xff) / 255.;
+
+    vec2 tiledist = abs(floor(position.xz / 128) - floor(vec2(cameraX, cameraZ) / 128));
+    float maxDist = max(tiledist.x, tiledist.y);
+    if (maxDist * 128 > drawDistance) {
+        // Rapidly fade out any geometry that extends beyond the draw distance.
+        // This is required since we always draw all underwater terrain.
+        alpha *= -256;
+    }
+
     vec4 color = vec4(srgbToLinear(rgb), alpha);
     // CAUTION: only 24-bit ints can be stored safely as floats
     int materialData = int(vUv.w);
@@ -59,7 +70,7 @@ void main() {
         normalMagnitude == 0 ||
         (materialData >> MATERIAL_FLAG_FLAT_NORMALS & 1) == 1;
 
-    gPosition = vec3(vPosition);
+    gPosition = position;
     gUv = vec3(vUv);
     gNormal = flatNormal ? vec3(0) : vNormal.xyz / normalMagnitude;
     gColor = color;

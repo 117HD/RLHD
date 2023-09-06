@@ -35,7 +35,6 @@ uniform float elapsedTime;
 
 #include uniforms/materials.glsl
 
-#include utils/polyfills.glsl
 #include utils/constants.glsl
 #include utils/misc.glsl
 #include utils/uvs.glsl

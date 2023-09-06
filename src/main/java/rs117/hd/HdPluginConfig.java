@@ -755,13 +755,25 @@ public interface HdPluginConfig extends Config
 
 	/*====== Experimental settings ======*/
 
-//	@ConfigSection(
-//		name = "Experimental",
-//		description = "Experimental features - if you're experiencing issues you should consider disabling these",
-//		position = 5,
-//		closedByDefault = true
-//	)
-//	String experimentalSettings = "experimentalSettings";
+	@ConfigSection(
+		name = "Experimental",
+		description = "Experimental features - if you're experiencing issues you should consider disabling these",
+		position = 5,
+		closedByDefault = true
+	)
+	String experimentalSettings = "experimentalSettings";
+
+	String KEY_FURTHER_UNLOCK_FPS = "furtherUnlockFps";
+	@ConfigItem(
+		keyName = KEY_FURTHER_UNLOCK_FPS,
+		name = "Further unlock FPS",
+		description = "Avoids unnecessarily updating geometry, leading to higher frame rates if already above 50 FPS.",
+		position = 0,
+		section = experimentalSettings
+	)
+	default boolean furtherUnlockFps() {
+		return false;
+	}
 
 
 	/*====== Internal settings ======*/

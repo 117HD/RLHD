@@ -1,3 +1,5 @@
+#pragma once
+
 #include LIGHT_COUNT
 
 struct PointLight

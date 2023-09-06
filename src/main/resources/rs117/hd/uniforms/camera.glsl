@@ -1,3 +1,5 @@
+#pragma once
+
 layout(std140) uniform CameraUniforms {
     int cameraYaw;
     int cameraPitch;

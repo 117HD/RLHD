@@ -28,7 +28,6 @@
 
 uniform int useFog;
 uniform int fogDepth;
-uniform int drawDistance;
 
 #define TILE_SIZE 128
 #define FOG_SCENE_EDGE_MIN TILE_SIZE

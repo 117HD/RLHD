@@ -7,7 +7,6 @@ import javax.inject.Singleton;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
-import net.runelite.api.coords.*;
 import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
 import rs117.hd.model.ModelPusher;
@@ -42,33 +41,35 @@ public class ModelOverrideManager {
     private final HashMap<Long, AABB[]> modelsToHide = new HashMap<>();
 
     public void startUp() {
-        MODEL_OVERRIDES_PATH.watch(path -> {
-            modelOverrides.clear();
-            modelsToHide.clear();
+        MODEL_OVERRIDES_PATH.watch((path, first) -> {
+			modelOverrides.clear();
+			modelsToHide.clear();
 
-            try {
-                ModelOverride[] entries = path.loadJson(plugin.getGson(), ModelOverride[].class);
-                if (entries == null)
-                    throw new IOException("Empty or invalid: " + path);
-                for (ModelOverride override : entries) {
+			try {
+				ModelOverride[] entries = path.loadJson(plugin.getGson(), ModelOverride[].class);
+				if (entries == null)
+					throw new IOException("Empty or invalid: " + path);
+				for (ModelOverride override : entries) {
 					override.gsonReallyShouldSupportThis();
-                    for (int npcId : override.npcIds)
-                        addEntry(ModelHash.packUuid(npcId, ModelHash.TYPE_NPC), override);
-                    for (int objectId : override.objectIds)
-                        addEntry(ModelHash.packUuid(objectId, ModelHash.TYPE_OBJECT), override);
-                }
+					for (int npcId : override.npcIds)
+						addEntry(ModelHash.packUuid(npcId, ModelHash.TYPE_NPC), override);
+					for (int objectId : override.objectIds)
+						addEntry(ModelHash.packUuid(objectId, ModelHash.TYPE_OBJECT), override);
+				}
 
+				log.debug("Loaded {} model overrides", modelOverrides.size());
+			} catch (IOException ex) {
+				log.error("Failed to load model overrides:", ex);
+			}
+
+			if (!first) {
 				clientThread.invoke(() -> {
 					modelPusher.clearModelCache();
 					if (client.getGameState() == GameState.LOGGED_IN)
-						plugin.uploadScene();
+						client.setGameState(GameState.LOADING);
 				});
-
-                log.debug("Loaded {} model overrides", modelOverrides.size());
-            } catch (IOException ex) {
-                log.error("Failed to load model overrides:", ex);
-            }
-        });
+			}
+		});
     }
 
     private void addEntry(long uuid, ModelOverride entry) {
@@ -89,14 +90,12 @@ public class ModelOverrideManager {
     }
 
     public boolean shouldHideModel(long hash, int x, int z) {
-		assert client.isClientThread();
         long uuid = ModelHash.getUuid(client, hash);
-
         AABB[] aabbs = modelsToHide.get(uuid);
         if (aabbs != null) {
-			WorldPoint location = HDUtils.cameraSpaceToWorldPoint(client, x, z);
+			int[] location = HDUtils.cameraSpaceToWorldPoint(client, x, z);
 			for (AABB aabb : aabbs)
-				if (aabb.contains(location))
+				if (aabb.contains(location[0], location[1], location[2]))
 					return true;
 		}
 

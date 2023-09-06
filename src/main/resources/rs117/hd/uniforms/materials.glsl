@@ -1,3 +1,5 @@
+#pragma once
+
 #include MATERIAL_COUNT
 
 struct Material

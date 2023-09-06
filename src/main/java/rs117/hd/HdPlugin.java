@@ -560,8 +560,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				isInGauntlet = false;
 				isInChambersOfXeric = false;
 
-				if (client.getGameState() == GameState.LOGGED_IN)
-					uploadScene();
+				if (client.getGameState() == GameState.LOGGED_IN) {
+					client.setGameState(GameState.LOADING);
+				}
 
 				checkGLErrors();
 
@@ -1309,7 +1310,16 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			// after this that don't involve a scene draw, like during LOADING/HOPPING/CONNECTION_LOST, we can
 			// still redraw the previous frame's scene to emulate the client behavior of not painting over the
 			// viewport buffer.
-			renderBufferOffset = 0;
+			renderBufferOffset = sceneContext.staticVertexCount;
+
+			// Push unordered models that should always be drawn at the start of each frame.
+			// Used to fix issues like the right-click menu causing underwater tiles to disappear.
+			var staticUnordered = sceneContext.staticUnorderedModelBuffer.getBuffer();
+			modelBufferUnordered
+				.ensureCapacity(staticUnordered.limit())
+				.put(staticUnordered);
+			staticUnordered.rewind();
+			numModelsUnordered += staticUnordered.limit() / 8;
 		}
 
 		// UBO. Only the first 32 bytes get modified here, the rest is the constant sin/cos table.
@@ -1441,7 +1451,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			updateSceneVao(hRenderBufferVertices, hRenderBufferUvs, hRenderBufferNormals);
 
 			// Once geometry buffers have been updated, they can be reused until the client actually modifies the scene
-			shouldSkipModelUpdates = true;
+			shouldSkipModelUpdates = config.furtherUnlockFps();
 		}
 
 		if (computeMode == ComputeMode.OPENCL) {
@@ -1506,51 +1516,22 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (shouldSkipModelUpdates || paint.getBufferLen() <= 0)
 			return;
 
-		final int localX = tileX * LOCAL_TILE_SIZE;
-		final int localY = 0;
-		final int localZ = tileY * LOCAL_TILE_SIZE;
-
-		GpuIntBuffer b = modelBufferUnordered;
-		b.ensureCapacity(16);
-		IntBuffer buffer = b.getBuffer();
-
-		int bufferLength = paint.getBufferLen();
-
-		// we packed a boolean into the buffer length of tiles so we can tell
-		// which tiles have procedurally-generated underwater terrain.
-		// unpack the boolean:
-		boolean underwaterTerrain = (bufferLength & 1) == 1;
-		// restore the bufferLength variable:
-		bufferLength = bufferLength >> 1;
-
-		if (underwaterTerrain) {
-			// draw underwater terrain tile before surface tile
-
-			// buffer length includes the generated underwater terrain, so it must be halved
-			bufferLength /= 2;
-
-			++numModelsUnordered;
-
-			buffer.put(paint.getBufferOffset() + bufferLength);
-			buffer.put(paint.getUvBufferOffset() + bufferLength);
-			buffer.put(bufferLength / 3);
-			buffer.put(renderBufferOffset);
-			buffer.put(0);
-			buffer.put(localX).put(localY).put(localZ);
-
-			renderBufferOffset += bufferLength;
-		}
+		int vertexCount = paint.getBufferLen();
 
 		++numModelsUnordered;
+		modelBufferUnordered
+			.ensureCapacity(16)
+			.getBuffer()
+			.put(paint.getBufferOffset())
+			.put(paint.getUvBufferOffset())
+			.put(vertexCount / 3)
+			.put(renderBufferOffset)
+			.put(0)
+			.put(tileX * LOCAL_TILE_SIZE)
+			.put(0)
+			.put(tileY * LOCAL_TILE_SIZE);
 
-		buffer.put(paint.getBufferOffset());
-		buffer.put(paint.getUvBufferOffset());
-		buffer.put(bufferLength / 3);
-		buffer.put(renderBufferOffset);
-		buffer.put(0);
-		buffer.put(localX).put(localY).put(localZ);
-
-		renderBufferOffset += bufferLength;
+		renderBufferOffset += vertexCount;
 	}
 
 	public void initShaderHotswapping() {
@@ -1657,6 +1638,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	@Override
 	public void draw(int overlayColor)
 	{
+		final GameState gameState = client.getGameState();
+		if (gameState == GameState.STARTING)
+		{
+			return;
+		}
+
 		// reset the plugin if the last frame took >1min to draw
 		// why? because the user's computer was probably suspended and the buffers are no longer valid
 		if (System.currentTimeMillis() - lastFrameTime > 60000) {
@@ -2010,7 +1997,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		try {
 			awtContext.swapBuffers();
 			drawManager.processDrawComplete(this::screenshot);
-		} catch (Exception ex) {
+		} catch (RuntimeException ex) {
+			// this is always fatal
+			if (!canvas.isValid())
+			{
+				// this might be AWT shutting down on VM shutdown, ignore it
+				return;
+			}
+
 			log.error("Unable to swap buffers:", ex);
 		}
 
@@ -2387,21 +2381,24 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	@Override
 	public void draw(Renderable renderable, int orientation, int pitchSin, int pitchCos, int yawSin, int yawCos, int x, int y, int z, long hash)
 	{
-		Model model = renderable instanceof Model ? (Model) renderable : renderable.getModel();
-		if (model == null || model.getFaceCount() == 0) {
-			// skip models with zero faces
-			// this does seem to happen sometimes (mostly during loading)
-			// should save some CPU cycles here and there
+		Model model;
+		try {
+			// getModel may throw an exception from vanilla client code
+			model = renderable instanceof Model ? (Model) renderable : renderable.getModel();
+			if (model == null || model.getFaceCount() == 0) {
+				// skip models with zero faces
+				// this does seem to happen sometimes (mostly during loading)
+				// should save some CPU cycles here and there
+				return;
+			}
+		} catch (Exception ex) {
+			// Vanilla happens to handle exceptions thrown here gracefully, but we handle them explicitly anyway
 			return;
 		}
 
 		// Model may be in the scene buffer
 		assert sceneContext != null;
 		if (model.getSceneId() == sceneContext.id) {
-			// check if the object was marked to be skipped
-			if ((model.getBufferOffset() & 0b11) == 0b11)
-				return;
-
 			if (isOutsideViewport(model, pitchSin, pitchCos, yawSin, yawCos, x, y, z))
 				return;
 
@@ -2413,7 +2410,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			int faceCount = Math.min(MAX_TRIANGLE, model.getFaceCount());
 			int uvOffset = model.getUvBufferOffset();
 
-			eightIntWrite[0] = model.getBufferOffset() >> 2;
+			eightIntWrite[0] = model.getBufferOffset();
 			eightIntWrite[1] = uvOffset;
 			eightIntWrite[2] = faceCount;
 			eightIntWrite[3] = renderBufferOffset;
@@ -2431,10 +2428,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			if (model != renderable) {
 				renderable.setModelHeight(model.getModelHeight());
 			}
-
-			// check if the object was marked to be skipped
-			if ((model.getBufferOffset() & 0b11) == 0b11)
-				return;
 
 			if (isOutsideViewport(model, pitchSin, pitchCos, yawSin, yawCos, x, y, z))
 				return;
