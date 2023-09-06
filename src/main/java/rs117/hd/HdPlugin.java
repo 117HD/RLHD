@@ -560,8 +560,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				isInGauntlet = false;
 				isInChambersOfXeric = false;
 
-				if (client.getGameState() == GameState.LOGGED_IN)
-					uploadScene();
+				if (client.getGameState() == GameState.LOGGED_IN) {
+					client.setGameState(GameState.LOADING);
+				}
 
 				checkGLErrors();
 

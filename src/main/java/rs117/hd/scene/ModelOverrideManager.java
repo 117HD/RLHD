@@ -46,27 +46,27 @@ public class ModelOverrideManager {
             modelsToHide.clear();
 
             try {
-                ModelOverride[] entries = path.loadJson(plugin.getGson(), ModelOverride[].class);
-                if (entries == null)
-                    throw new IOException("Empty or invalid: " + path);
-                for (ModelOverride override : entries) {
+				ModelOverride[] entries = path.loadJson(plugin.getGson(), ModelOverride[].class);
+				if (entries == null)
+					throw new IOException("Empty or invalid: " + path);
+				for (ModelOverride override : entries) {
 					override.gsonReallyShouldSupportThis();
-                    for (int npcId : override.npcIds)
-                        addEntry(ModelHash.packUuid(npcId, ModelHash.TYPE_NPC), override);
-                    for (int objectId : override.objectIds)
-                        addEntry(ModelHash.packUuid(objectId, ModelHash.TYPE_OBJECT), override);
-                }
+					for (int npcId : override.npcIds)
+						addEntry(ModelHash.packUuid(npcId, ModelHash.TYPE_NPC), override);
+					for (int objectId : override.objectIds)
+						addEntry(ModelHash.packUuid(objectId, ModelHash.TYPE_OBJECT), override);
+				}
 
 				clientThread.invoke(() -> {
 					modelPusher.clearModelCache();
 					if (client.getGameState() == GameState.LOGGED_IN)
-						plugin.uploadScene();
+						client.setGameState(GameState.LOADING);
 				});
 
-                log.debug("Loaded {} model overrides", modelOverrides.size());
-            } catch (IOException ex) {
-                log.error("Failed to load model overrides:", ex);
-            }
+				log.debug("Loaded {} model overrides", modelOverrides.size());
+			} catch (IOException ex) {
+				log.error("Failed to load model overrides:", ex);
+			}
         });
     }
 
