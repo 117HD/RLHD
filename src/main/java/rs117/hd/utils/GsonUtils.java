@@ -1,15 +1,15 @@
 package rs117.hd.utils;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import lombok.extern.slf4j.Slf4j;
-
-import javax.annotation.Nullable;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.HashSet;
+import javax.annotation.Nullable;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class GsonUtils {
@@ -43,7 +43,7 @@ public class GsonUtils {
                     String fieldName = in.nextString();
                     if (idContainer == null)
                     {
-                        String message = String.format("String '%s' is not supported here", fieldName);
+                        String message = String.format("String '%s' is not supported by this parser", fieldName);
                         if (THROW_WHEN_PARSING_FAILS)
                         {
                             throw new RuntimeException(message);
@@ -57,8 +57,7 @@ public class GsonUtils {
                         Field field = idContainer.getField(fieldName);
                         if (!field.getType().equals(int.class))
                         {
-                            String message = String.format(
-                                    "%s field '%s' is not an int", idContainer.getName(), fieldName);
+                            String message = String.format("Field '%s' in %s is not an int", fieldName, idContainer.getName());
                             if (THROW_WHEN_PARSING_FAILS)
                             {
                                 throw new RuntimeException(message);
@@ -70,7 +69,7 @@ public class GsonUtils {
                     }
                     catch (NoSuchFieldException ex)
                     {
-                        String message = String.format("Missing %s: %s", idContainer.getName(), fieldName);
+                        String message = String.format("Missing key '%s' in %s", fieldName, idContainer.getName());
                         if (THROW_WHEN_PARSING_FAILS)
                         {
                             throw new RuntimeException(message, ex);
@@ -79,8 +78,7 @@ public class GsonUtils {
                     }
                     catch (IllegalAccessException ex)
                     {
-                        String message = String.format(
-                                "Unable to access %s field: %s", idContainer.getName(), fieldName);
+                        String message = String.format("Unable to access field '%s' in %s", fieldName, idContainer.getName());
                         if (THROW_WHEN_PARSING_FAILS)
                         {
                             throw new RuntimeException(message, ex);
@@ -132,15 +130,24 @@ public class GsonUtils {
         for (int id : listToWrite)
         {
             String name = idNames.get(id);
-            if (name == null)
-            {
-                out.value(id);
-            }
-            else
-            {
-                out.value(name);
-            }
-        }
-        out.endArray();
-    }
+            if (name == null) {
+				out.value(id);
+			} else {
+				out.value(name);
+			}
+		}
+		out.endArray();
+	}
+
+	public static class IntegerSetAdapter extends TypeAdapter<HashSet<Integer>> {
+		@Override
+		public HashSet<Integer> read(JsonReader in) throws IOException {
+			return parseIDArray(in, null);
+		}
+
+		@Override
+		public void write(JsonWriter out, HashSet<Integer> value) throws IOException {
+			writeIDArray(out, value, null);
+		}
+	}
 }

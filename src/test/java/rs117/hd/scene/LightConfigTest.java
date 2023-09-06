@@ -1,10 +1,12 @@
 package rs117.hd.scene;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import rs117.hd.lighting.ExportLightsToJson;
+import rs117.hd.lighting.ReformatLightsJson;
 import rs117.hd.scene.lights.Light;
 
 import java.io.ByteArrayOutputStream;
@@ -34,8 +36,9 @@ public class LightConfigTest {
 
 	@Test
     public void testLoad() {
+		Gson gson = new GsonBuilder().setLenient().create();
 		LightManager lightManager = new LightManager();
-		lightManager.loadConfig(path(LightConfigTest.class, "lights.json"));
+		lightManager.loadConfig(gson, path(LightConfigTest.class, "lights.json"));
 
         // can we get the same light for both of its raw IDs?
         Light spitRoastLight = lightManager.OBJECT_LIGHTS.get(5608).get(0);
@@ -43,7 +46,7 @@ public class LightConfigTest {
 
         // is its data correct?
         assertEquals("SPIT_ROAST", spitRoastLight.description);
-        assertEquals(50, (int) spitRoastLight.height);
+        assertEquals(50, spitRoastLight.height);
         assertEquals("CENTER", spitRoastLight.alignment.toString());
         assertEquals(250, spitRoastLight.radius);
         assertEquals(12.5, spitRoastLight.strength, 0.0);
@@ -58,7 +61,7 @@ public class LightConfigTest {
 	@Test
 	public void validateLightsConfig() throws IOException
 	{
-		ExportLightsToJson.main(new String[] { "--dry-run" });
+		ReformatLightsJson.main(new String[] { "--dry-run" });
 		Assert.assertEquals(stderr.toString(), "");
 	}
 }

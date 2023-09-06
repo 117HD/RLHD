@@ -24,15 +24,11 @@
  */
 package rs117.hd.opengl.shader;
 
-import com.google.common.io.CharStreams;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
-import java.util.function.Function;
+import java.util.function.Supplier;
 import lombok.extern.slf4j.Slf4j;
 import rs117.hd.utils.ResourcePath;
 
@@ -41,13 +37,26 @@ public class Template
 {
 	enum IncludeType { GLSL, C, UNKNOWN }
 
-	private final List<Function<String, String>> resourceLoaders = new ArrayList<>();
-	private final Stack<Integer> includeStack = new Stack<>();
+	@FunctionalInterface
+	public interface IncludeLoader
+	{
+		String load(String path) throws IOException;
+	}
+
+	private final List<IncludeLoader> loaders = new ArrayList<>();
 
 	IncludeType includeType = IncludeType.UNKNOWN;
+	final Stack<Integer> includeStack = new Stack<>();
 	final ArrayList<String> includeList = new ArrayList<>();
 
-	public String process(String str)
+	public Template copy()
+	{
+		var clone = new Template();
+		clone.loaders.addAll(this.loaders);
+		return clone;
+	}
+
+	public String process(String str) throws IOException
 	{
 		StringBuilder sb = new StringBuilder();
 		int lineCount = 0;
@@ -57,8 +66,8 @@ public class Template
 			String trimmed = line.trim();
 			if (trimmed.startsWith("#include "))
 			{
-				String currentFile = includeList.get(includeList.size() - 1);
 				int currentIndex = includeStack.peek();
+				String currentFile = includeList.get(currentIndex);
 
 				String includeFile = trimmed.substring(9);
 				int includeIndex = includeList.size();
@@ -114,6 +123,15 @@ public class Template
 						break;
 				}
 			}
+			else if (trimmed.startsWith("#pragma once"))
+			{
+				int currentIndex = includeList.size() - 1;
+				String currentInclude = includeList.get(currentIndex);
+				if (includeList.indexOf(currentInclude) != currentIndex) {
+					sb.append("// Already included\n");
+					break;
+				}
+			}
 			else
 			{
 				sb.append(line).append('\n');
@@ -122,11 +140,11 @@ public class Template
 		return sb.toString();
 	}
 
-	private String loadInternal(String filename)
+	private String loadInternal(String path) throws IOException
 	{
-		for (Function<String, String> loader : resourceLoaders)
+		for (var loader : loaders)
 		{
-			String value = loader.apply(filename);
+			String value = loader.load(path);
 			if (value != null)
 			{
 				return process(value);
@@ -136,7 +154,7 @@ public class Template
 		return "";
 	}
 
-	public String load(String filename)
+	public String load(String filename) throws IOException
 	{
 		includeList.clear();
 		includeList.add(filename);
@@ -160,40 +178,64 @@ public class Template
 		return loadInternal(filename);
 	}
 
-	public Template add(Function<String, String> fn)
+	public Template addIncludeLoader(IncludeLoader resolver)
 	{
-		resourceLoaders.add(fn);
+		loaders.add(resolver);
 		return this;
 	}
 
-	public Template addInclude(Class<?> clazz)
+	public Template addIncludePath(Class<?> clazz)
 	{
-		return add(f ->
-		{
-			try (InputStream is = clazz.getResourceAsStream(f))
-			{
-				if (is != null)
-				{
-					return inputStreamToString(is);
-				}
-			}
-			catch (IOException ex)
-			{
-				log.warn(null, ex);
-			}
+		return addIncludePath(ResourcePath.path(clazz));
+	}
+
+	public Template addIncludePath(ResourcePath includePath)
+	{
+		return addIncludeLoader(path -> {
+			ResourcePath resolved = includePath.resolve(path);
+			if (resolved.exists())
+				return resolved.loadString();
 			return null;
 		});
 	}
 
-	public static String inputStreamToString(InputStream in)
+	public Template addInclude(String identifier, String value)
 	{
-		try
-		{
-			return CharStreams.toString(new InputStreamReader(in, StandardCharsets.UTF_8));
-		}
-		catch (IOException e)
-		{
-			throw new RuntimeException(e);
-		}
+		return addIncludeLoader(key -> key.equals(identifier) ? value : null);
+	}
+
+	public Template define(String identifier, String value)
+	{
+		return addIncludeLoader(key ->
+			key.equals(identifier) ? String.format("#define %s %s", identifier, value) : null);
+	}
+
+	public Template define(String identifier, boolean value)
+	{
+		return addIncludeLoader(key ->
+			key.equals(identifier) ? String.format("#define %s %d", identifier, value ? 1 : 0) : null);
+	}
+
+	public Template define(String identifier, int value)
+	{
+		return addIncludeLoader(key ->
+			key.equals(identifier) ? String.format("#define %s %d", identifier, value) : null);
+	}
+
+	public Template define(String identifier, double value)
+	{
+		return addIncludeLoader(key ->
+			key.equals(identifier) ? String.format("#define %s %f", identifier, value) : null);
+	}
+
+	public Template define(String identifier, Enum<?> enumValue)
+	{
+		return addIncludeLoader(key ->
+			key.equals(identifier) ? String.format("#define %s %d", identifier, enumValue.ordinal()) : null);
+	}
+
+	public Template define(String identifier, Supplier<String> supplier)
+	{
+		return addIncludeLoader(key -> key.equals(identifier) ? supplier.get() : null);
 	}
 }

@@ -23,6 +23,33 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include constants.cl
+#include vanilla_uvs.cl
+
+int priority_map(int p, int distance, int _min10, int avg1, int avg2, int avg3);
+int count_prio_offset(__local struct shared_data *shared, int priority);
+void get_face(
+  __local struct shared_data *shared,
+  __constant struct uniform *uni,
+  __global const int4 *vb,
+  uint localId, struct ModelInfo minfo, int cameraYaw, int cameraPitch,
+  /* out */ int *prio, int *dis, int4 *o1, int4 *o2, int4 *o3);
+void add_face_prio_distance(
+  __local struct shared_data *shared,
+  __constant struct uniform *uni,
+  uint localId, struct ModelInfo minfo, int4 thisrvA, int4 thisrvB, int4 thisrvC, int thisPriority, int thisDistance, int4 pos);
+int map_face_priority(__local struct shared_data *shared, uint localId, struct ModelInfo minfo, int thisPriority, int thisDistance, int *prio);
+void insert_dfs(__local struct shared_data *shared, uint localId, struct ModelInfo minfo, int adjPrio, int distance, int prioIdx);
+void sort_and_insert(
+  __local struct shared_data *shared,
+  __global const float4 *uv,
+  __global const float4 *normal,
+  __global int4 *vout,
+  __global float4 *uvout,
+  __global float4 *normalout,
+  __constant struct uniform *uni,
+  uint localId, struct ModelInfo minfo, int thisPriority, int thisDistance, int4 thisrvA, int4 thisrvB, int4 thisrvC);
+
 // Calculate adjusted priority for a face with a given priority, distance, and
 // model global min10 and face distance averages. This allows positioning faces
 // with priorities 10/11 into the correct 'slots' resulting in 18 possible
@@ -83,11 +110,11 @@ void get_face(
   __local struct shared_data *shared,
   __constant struct uniform *uni,
   __global const int4 *vb,
-  __global const int4 *tempvb,
-  uint localId, struct modelinfo minfo, int cameraYaw, int cameraPitch,
-  /* out */ int *prio, int *dis, int4 *o1, int4 *o2, int4 *o3) {
-  int size = minfo.size;
-  int offset = minfo.offset;
+  uint localId, struct ModelInfo minfo, int cameraYaw, int cameraPitch,
+  /* out */ int *prio, int *dis, int4 *o1, int4 *o2, int4 *o3
+) {
+  uint size = minfo.size;
+  uint offset = minfo.offset;
   int flags = minfo.flags;
   uint ssboOffset;
 
@@ -97,29 +124,18 @@ void get_face(
     ssboOffset = 0;
   }
 
-  int4 thisA;
-  int4 thisB;
-  int4 thisC;
-
-  // Grab triangle vertices from the correct buffer
-  if (flags < 0) {
-    thisA = vb[offset + ssboOffset * 3];
-    thisB = vb[offset + ssboOffset * 3 + 1];
-    thisC = vb[offset + ssboOffset * 3 + 2];
-  } else {
-    thisA = tempvb[offset + ssboOffset * 3];
-    thisB = tempvb[offset + ssboOffset * 3 + 1];
-    thisC = tempvb[offset + ssboOffset * 3 + 2];
-  }
+  int4 thisA = vb[offset + ssboOffset * 3];
+  int4 thisB = vb[offset + ssboOffset * 3 + 1];
+  int4 thisC = vb[offset + ssboOffset * 3 + 2];
 
   if (localId < size) {
     int radius = (flags & 0x7fffffff) >> 12;
     int orientation = flags & 0x7ff;
 
     // rotate for model orientation
-    int4 thisrvA = rotate_vertex(uni, thisA, orientation);
-    int4 thisrvB = rotate_vertex(uni, thisB, orientation);
-    int4 thisrvC = rotate_vertex(uni, thisC, orientation);
+    int4 thisrvA = rotate_ivec(uni, thisA, orientation);
+    int4 thisrvB = rotate_ivec(uni, thisB, orientation);
+    int4 thisrvC = rotate_ivec(uni, thisC, orientation);
 
     // calculate distance to face
     int thisPriority = (thisA.w >> 16) & 0xff;// all vertices on the face have the same priority
@@ -148,8 +164,9 @@ void get_face(
 void add_face_prio_distance(
   __local struct shared_data *shared,
   __constant struct uniform *uni,
-  uint localId, struct modelinfo minfo, int4 thisrvA, int4 thisrvB, int4 thisrvC, int thisPriority, int thisDistance, int4 pos) {
-  if (localId < minfo.size) {
+  uint localId, struct ModelInfo minfo, int4 thisrvA, int4 thisrvB, int4 thisrvC, int thisPriority, int thisDistance, int4 pos) {
+  uint size = minfo.size;
+  if (localId < size) {
     // if the face is not culled, it is calculated into priority distance averages
     if (face_visible(uni, thisrvA, thisrvB, thisrvC, pos)) {
       atomic_add(&shared->totalNum[thisPriority], 1);
@@ -163,8 +180,8 @@ void add_face_prio_distance(
   }
 }
 
-int map_face_priority(__local struct shared_data *shared, uint localId, struct modelinfo minfo, int thisPriority, int thisDistance, int *prio) {
-  int size = minfo.size;
+int map_face_priority(__local struct shared_data *shared, uint localId, struct ModelInfo minfo, int thisPriority, int thisDistance, int *prio) {
+  uint size = minfo.size;
 
   // Compute average distances for 0/2, 3/4, and 6/8
 
@@ -196,8 +213,8 @@ int map_face_priority(__local struct shared_data *shared, uint localId, struct m
   return 0;
 }
 
-void insert_dfs(__local struct shared_data *shared, uint localId, struct modelinfo minfo, int adjPrio, int distance, int prioIdx) {
-  int size = minfo.size;
+void insert_dfs(__local struct shared_data *shared, uint localId, struct ModelInfo minfo, int adjPrio, int distance, int prioIdx) {
+  uint size = minfo.size;
 
   if (localId < size) {
     // calculate base offset into dfs based on number of faces with a lower priority
@@ -210,17 +227,15 @@ void insert_dfs(__local struct shared_data *shared, uint localId, struct modelin
 void sort_and_insert(
   __local struct shared_data *shared,
   __global const float4 *uv,
-  __global const float4 *tempuv,
+  __global const float4 *normal,
   __global int4 *vout,
   __global float4 *uvout,
   __global float4 *normalout,
-  __global float4 *normal,
-  __global float4 *tempnormal,
   __constant struct uniform *uni,
-  uint localId, struct modelinfo minfo, int thisPriority, int thisDistance, int4 thisrvA, int4 thisrvB, int4 thisrvC) {
+  uint localId, struct ModelInfo minfo, int thisPriority, int thisDistance, int4 thisrvA, int4 thisrvB, int4 thisrvC) {
   /* compute face distance */
-  int offset = minfo.offset;
-  int size = minfo.size;
+  uint offset = minfo.offset;
+  uint size = minfo.size;
 
   if (localId < size) {
     int outOffset = minfo.idx;
@@ -241,7 +256,7 @@ void sort_and_insert(
     // calculate position this face will be in
     for (int i = start; i < end; ++i) {
       int d1 = shared->dfs[i];
-      int theirId = d1 >> 16;
+      uint theirId = d1 >> 16;
       int theirDistance = d1 & 0xffff;
 
       // the closest faces draw last, so have the highest index
@@ -258,45 +273,39 @@ void sort_and_insert(
     vout[outOffset + myOffset * 3 + 1] = pos + thisrvB;
     vout[outOffset + myOffset * 3 + 2] = pos + thisrvC;
 
-    if (uvOffset < 0) {
-      uvout[outOffset + myOffset * 3]     = (float4)(0, 0, 0, 0);
-      uvout[outOffset + myOffset * 3 + 1] = (float4)(0, 0, 0, 0);
-      uvout[outOffset + myOffset * 3 + 2] = (float4)(0, 0, 0, 0);
-    } else if (flags >= 0) {
-      uvout[outOffset + myOffset * 3]     = tempuv[uvOffset + localId * 3];
-      uvout[outOffset + myOffset * 3 + 1] = tempuv[uvOffset + localId * 3 + 1];
-      uvout[outOffset + myOffset * 3 + 2] = tempuv[uvOffset + localId * 3 + 2];
-    } else {
-      uvout[outOffset + myOffset * 3]     = uv[uvOffset + localId * 3];
-      uvout[outOffset + myOffset * 3 + 1] = uv[uvOffset + localId * 3 + 1];
-      uvout[outOffset + myOffset * 3 + 2] = uv[uvOffset + localId * 3 + 2];
+    float4 uvA = (float4)(0);
+    float4 uvB = (float4)(0);
+    float4 uvC = (float4)(0);
+
+    if (uvOffset >= 0) {
+      uvA = uv[uvOffset + localId * 3];
+      uvB = uv[uvOffset + localId * 3 + 1];
+      uvC = uv[uvOffset + localId * 3 + 2];
+
+      if ((((int)uvA.w) >> MATERIAL_FLAG_IS_VANILLA_TEXTURED & 1) == 1) {
+        // Rotate the texture triangles to match model orientation
+        uvA = rotate_vec(uvA, orientation);
+        uvB = rotate_vec(uvB, orientation);
+        uvC = rotate_vec(uvC, orientation);
+
+        // Shift texture triangles to world space
+        float3 modelPos = convert_float3(pos.xyz);
+        uvA.xyz += modelPos;
+        uvB.xyz += modelPos;
+        uvC.xyz += modelPos;
+      }
     }
+
+    uvout[outOffset + myOffset * 3]     = uvA;
+    uvout[outOffset + myOffset * 3 + 1] = uvB;
+    uvout[outOffset + myOffset * 3 + 2] = uvC;
     
-    float4 normA, normB, normC;
-    
-    // Grab vertex normals from the correct buffer
-    if (flags < 0) {
-      normA = normal[offset + ssboOffset * 3    ];
-      normB = normal[offset + ssboOffset * 3 + 1];
-      normC = normal[offset + ssboOffset * 3 + 2];
-    } else {
-      normA = tempnormal[offset + ssboOffset * 3    ];
-      normB = tempnormal[offset + ssboOffset * 3 + 1];
-      normC = tempnormal[offset + ssboOffset * 3 + 2];
-    }
-    
-    normA = (float4) (normalize(normA.xyz), normA.w);
-    normB = (float4) (normalize(normB.xyz), normB.w);
-    normC = (float4) (normalize(normC.xyz), normC.w);
-    
-    float4 normrvA, normrvB, normrvC;
-    
-    normrvA = rotate2(uni, normA, orientation);
-    normrvB = rotate2(uni, normB, orientation);
-    normrvC = rotate2(uni, normC, orientation);
-    
-    normalout[outOffset + myOffset * 3    ] = normrvA;
-    normalout[outOffset + myOffset * 3 + 1] = normrvB;
-    normalout[outOffset + myOffset * 3 + 2] = normrvC;
+    float4 normA = normal[offset + ssboOffset * 3    ];
+    float4 normB = normal[offset + ssboOffset * 3 + 1];
+    float4 normC = normal[offset + ssboOffset * 3 + 2];
+
+    normalout[outOffset + myOffset * 3    ] = rotate_vec(normA, orientation);
+    normalout[outOffset + myOffset * 3 + 1] = rotate_vec(normB, orientation);
+    normalout[outOffset + myOffset * 3 + 2] = rotate_vec(normC, orientation);
   }
 }

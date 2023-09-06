@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "model_overrides.schema.json",
+  "title": "Model Overrides",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [ "description" ],
+    "properties": {
+      "description": {
+        "type": "string",
+        "description": "Description of which objects the properties apply to."
+      },
+      "npcIds": {
+        "type": "array",
+        "description": "A set of NPC IDs or NpcID keys that the override should apply to.",
+        "items": {
+          "type": [ "integer", "string" ]
+        }
+      },
+      "objectIds": {
+        "type": "array",
+        "description": "A set of object IDs or ObjectID keys that the override should apply to.",
+        "items": {
+          "type": [ "integer", "string" ]
+        }
+      },
+      "baseMaterial": {
+        "type": "string",
+        "description": "Case-sensitive name of the material to apply to untextured faces."
+      },
+      "textureMaterial": {
+        "type": "string",
+        "description": "Case-sensitive name of the material to apply to textured faces."
+      },
+      "uvType": {
+        "type": "string",
+        "description": "What to base UV coordinates on for object texturing. Defaults to GEOMETRY.",
+        "enum": [
+          "VANILLA",
+          "GEOMETRY",
+          "MODEL_XY",
+          "MODEL_XY_MIRROR_A",
+          "MODEL_XY_MIRROR_B",
+          "MODEL_XZ",
+          "MODEL_XZ_MIRROR_A",
+          "MODEL_XZ_MIRROR_B",
+          "MODEL_YZ",
+          "MODEL_YZ_MIRROR_A",
+          "MODEL_YZ_MIRROR_B",
+          "WORLD_XY",
+          "WORLD_XZ",
+          "WORLD_YZ"
+        ]
+      },
+      "uvScale": {
+        "type": "number",
+        "description": "A scaling factor to apply to UV coordinates. Defaults to 1."
+      },
+      "uvOrientation": {
+        "type": "integer",
+        "description": "Extra rotation to apply to UVs with 2048 corresponding to a complete rotation. Defaults to 0."
+      },
+      "forceOverride": {
+        "type": "boolean",
+        "description": "Apply the override even when model textures are disabled in the config. Defaults to false."
+      },
+      "flatNormals": {
+        "type": "boolean",
+        "description": "Whether flat normals should be used instead of smooth normals. Defaults to false."
+      },
+      "removeBakedLighting": {
+        "type": "boolean",
+        "description": "Whether the model has fake shadows or baked lighting that should be removed. Defaults to false."
+      },
+      "castShadows": {
+        "type": "boolean",
+        "description": "Whether the model cast shadows. Defaults to true."
+      },
+      "receiveShadows": {
+        "type": "boolean",
+        "description": "Whether the model receive shadows cast by other objects. Defaults to true."
+      },
+      "shadowOpacityThreshold": {
+        "type": "number",
+        "description": "Specify an opacity threshold for shadow casting that better suits the model. Between 0 and 1."
+      },
+      "tzHaarRecolorType": {
+        "type": "string",
+        "description": "Specify a type of TzHaar recolor style to apply. Only relevant for the TzHaar area.",
+        "enum": [ "NONE", "GRADIENT", "HUE_SHIFT" ]
+      },
+      "inheritTileColorType": {
+        "type": "string",
+        "description": "Whether to inherit color from the overlay or underlay of the tile beneath. Defaults to NONE.",
+        "enum": [ "NONE", "OVERLAY", "UNDERLAY" ]
+      },
+      "hideInAreas": {
+        "type": "array",
+        "description": "An array of axis-aligned bounding boxes where the model should be hidden.",
+        "items": {
+          "$ref": "aabb.schema.json"
+        }
+      }
+    }
+  }
+}

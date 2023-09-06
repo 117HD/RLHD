@@ -19959,7 +19959,12 @@
       10297,
       15161,
       25659,
-      5247
+      5247,
+      7376,
+      5247,
+      38027,
+      15016,
+      12934
     ]
   },
   {
@@ -19989,7 +19994,8 @@
       4501,
       5787,
       24414,
-      2175
+      2175,
+      38027
     ]
   },
   {
@@ -20180,6 +20186,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
+      732,
       "FIRE_5249",
       "FIRE_30021",
       "FIRE_23046",
@@ -21478,6 +21485,24 @@
     "range": 20,
     "objectIds": [
       39656
+    ]
+  },
+  {
+    "description": "FEROX_BOUNTY_HUNTER_PORTAL",
+    "height": 180,
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 10,
+    "color": [
+      255,
+      50,
+      0
+    ],
+    "type": "PULSE",
+    "duration": 1541,
+    "range": 40,
+    "objectIds": [
+      47346
     ]
   },
   {
@@ -29050,6 +29075,1518 @@
     "range": 50,
     "objectIds": [
       34567
+    ]
+  },
+  {
+    "description": "TOA_FLAME_ENTRANCE",
+    "height": 140,
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 100,
+    "color": [
+      175,
+      18,
+      9
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 10,
+    "objectIds": [
+      46089,
+      46090,
+      46164,
+      46161,
+      46155,
+      46158,
+      46167
+    ]
+  },
+  {
+    "description": "TOA_LARGE_FLAME_ENTRANCE",
+    "height": 375,
+    "alignment": "CENTER",
+    "radius": 750,
+    "strength": 200,
+    "color": [
+      175,
+      18,
+      9
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 4,
+    "objectIds": [
+      46168
+    ]
+  },
+  {
+    "description": "TOA_INVOCATION_BOARD_LEFT",
+    "height": 150,
+    "alignment": "CENTER",
+    "radius": 130,
+    "strength": 100,
+    "color": [
+      175,
+      18,
+      9
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 3,
+    "worldX": 3362, "worldY": 9115, "plane": 0,
+    "fadeInDuration": 0
+  },
+  {
+    "description": "TOA_INVOCATION_BOARD_MIDDLE",
+    "height": 150,
+    "alignment": "CENTER",
+    "radius": 150,
+    "strength": 100,
+    "color": [
+      175,
+      18,
+      9
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 3,
+    "worldX": 3363, "worldY": 9115, "plane": 0,
+    "fadeInDuration": 0
+  },
+  {
+    "description": "TOA_INVOCATION_BOARD_RIGHT",
+    "height": 150,
+    "alignment": "CENTER",
+    "radius": 130,
+    "strength": 100,
+    "color": [
+      175,
+      18,
+      9
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 3,
+    "worldX": 3364, "worldY": 9115, "plane": 0,
+    "fadeInDuration": 0
+  },
+  {
+    "description": "TOA_GROUPING_OBELISK_NE",
+    "height": 550,
+    "alignment": "CENTER",
+    "radius": 350,
+    "strength": 25,
+    "color": [
+      175,
+      18,
+      9
+    ],
+    "type": "PULSE",
+    "duration": 1800,
+    "range": 9,
+    "worldX": 3360, "worldY": 9121, "plane": 0,
+    "fadeInDuration": 0
+  },
+  {
+    "description": "TOA_GROUPING_OBELISK_SE",
+    "height": 550,
+    "alignment": "CENTER",
+    "radius": 350,
+    "strength": 25,
+    "color": [
+      175,
+      18,
+      9
+    ],
+    "type": "PULSE",
+    "duration": 1800,
+    "range": 9,
+    "worldX": 3360, "worldY": 9119, "plane": 0,
+    "fadeInDuration": 0
+  },
+  {
+    "description": "TOA_GROUPING_OBELISK_SW",
+    "height": 550,
+    "alignment": "CENTER",
+    "radius": 350,
+    "strength": 25,
+    "color": [
+      175,
+      18,
+      9
+    ],
+    "type": "PULSE",
+    "duration": 1800,
+    "range": 9,
+    "worldX": 3358, "worldY": 9119, "plane": 0,
+    "fadeInDuration": 0
+  },
+  {
+    "description": "TOA_GROUPING_OBELISK_NW",
+    "height": 550,
+    "alignment": "CENTER",
+    "radius": 350,
+    "strength": 25,
+    "color": [
+      175,
+      18,
+      9
+    ],
+    "type": "PULSE",
+    "duration": 1800,
+    "range": 9,
+    "worldX": 3358, "worldY": 9121, "plane": 0,
+    "fadeInDuration": 0
+  },
+  {
+    "description": "TOA_TELEPORT_CRYSTAL",
+    "height": 220,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 50,
+    "color": [
+      175,
+      18,
+      9
+    ],
+    "type": "PULSE",
+    "duration": 1800,
+    "range": 9,
+    "objectIds": [
+      45505,
+      45506,
+      45579,
+      45754,
+      45866
+    ]
+  },
+  {
+    "description": "TOA_BRAZIER",
+    "height": 180,
+    "alignment": "CENTER",
+    "radius": 250,
+    "strength": 100,
+    "color": [
+      175,
+      18,
+      9
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 10,
+    "objectIds": [
+      45334
+    ]
+  },
+  {
+    "description": "TOA_FLAME_BARRIER",
+    "height": 80,
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 75,
+    "color": [
+      175,
+      18,
+      9
+    ],
+    "type": "PULSE",
+    "duration": 600,
+    "range": 3,
+    "objectIds": [
+      45135,
+      45335
+    ]
+  },
+  {
+    "description": "TOA_PATH_OF_APMEKEN_GRATED_FLAME_PIT",
+    "height": -10,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 50,
+    "color": [
+      175,
+      18,
+      9
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 3,
+    "objectIds": [
+      45499
+    ]
+  },
+  {
+    "description": "TOA_PATH_OF_APMEKEN_APE_SKULL",
+    "height": 50,
+    "alignment": "CENTER",
+    "radius": 700,
+    "strength": 20,
+    "color": [
+      255,
+      48,
+      9
+    ],
+    "type": "PULSE",
+    "duration": 1400,
+    "range": 5,
+    "graphicsObjectIds": [
+      2134,
+      2135
+    ]
+  },
+  {
+    "description": "TOA_UNLIT_PRESSURE_PLATE",
+    "height": 25,
+    "alignment": "CENTER",
+    "radius": 60,
+    "strength": 75,
+    "color": [
+      160,
+      116,
+      7
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 3,
+    "objectIds": [
+      45344
+    ]
+  },
+  {
+    "description": "TOA_LIT_PRESSURE_PLATE",
+    "height": 25,
+    "alignment": "CENTER",
+    "radius": 75,
+    "strength": 250,
+    "color": [
+      160,
+      116,
+      7
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 3,
+    "objectIds": [
+      45341,
+      45384,
+      45386,
+      45387,
+      45388,
+      45389,
+      45390,
+      45391,
+      45392,
+      45393,
+      45394,
+      45395
+    ]
+  },
+  {
+    "description": "TOA_LIT_PRESSURE_PLATE_ORANGE",
+    "height": 25,
+    "alignment": "CENTER",
+    "radius": 75,
+    "strength": 250,
+    "color": [
+      160,
+      78,
+      7
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 3,
+    "objectIds": [
+      45342
+    ]
+  },
+  {
+    "description": "TOA_LIT_PILLAR",
+    "height": 200,
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 50,
+    "color": [
+      160,
+      116,
+      180
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 3,
+    "npcIds": [
+      11699
+    ]
+  },
+  {
+    "description": "TOA_HET_PILLAR_PROTECTED",
+    "height": 200,
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 50,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 1800,
+    "range": 5,
+    "npcIds": [
+      11706
+    ]
+  },
+  {
+    "description": "TOA_HET_PILLAR_VULNERABLE",
+    "height": 500,
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 25,
+    "color": [
+      255,
+      255,
+      210
+    ],
+    "type": "PULSE",
+    "duration": 1800,
+    "range": 5,
+    "npcIds": [
+      11707
+    ]
+  },
+  {
+    "description": "TOA_HET_ORB_OF_DARKNESS",
+    "height": 210,
+    "alignment": "CENTER",
+    "radius": 350,
+    "strength": -1,
+    "color": [
+      255,
+      255,
+      210
+    ],
+    "type": "PULSE",
+    "duration": 1800,
+    "range": 2,
+    "npcIds": [
+      11708
+    ]
+  },
+  {
+    "description": "TOA_HET_MAGE_PROJECTILE",
+    "radius": 300,
+    "strength": 7,
+    "color": [
+      255,
+      25,
+      25
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 3,
+    "fadeInDuration": 0,
+    "projectileIds": [
+      2253
+    ]
+  },
+  {
+    "description": "TOA_ORANGE_FLAME_PROJECTILE",
+    "radius": 600,
+    "strength": 7,
+    "color": [
+      255,
+      130,
+      70
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 3,
+    "fadeInDuration": 0,
+    "projectileIds": [
+      1481,
+      2266
+    ]
+  },
+  {
+    "description": "TOA_AKKHA_FIRE_SYMBOL",
+    "height": 30,
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 40,
+    "color": [
+      255,
+      75,
+      0
+    ],
+    "type": "PULSE",
+    "duration": 400,
+    "range": 3,
+    "objectIds": [
+      45868
+    ]
+  },
+  {
+    "description": "TOA_AKKHA_LIGHTNING_SYMBOL",
+    "height": 20,
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 20,
+    "color": [
+      255,
+      255,
+      75
+    ],
+    "type": "PULSE",
+    "duration": 400,
+    "range": 3,
+    "objectIds": [
+      45869
+    ]
+  },
+  {
+    "description": "TOA_AKKHA_LIGHT_SYMBOL",
+    "height": 20,
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 20,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 400,
+    "range": 3,
+    "objectIds": [
+      45870
+    ]
+  },
+  {
+    "description": "TOA_AKKHA_DEATH_SYMBOL",
+    "height": 30,
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 40,
+    "color": [
+      121,
+      0,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 400,
+    "range": 3,
+    "objectIds": [
+      45871
+    ]
+  },
+  {
+    "description": "TOA_AKKHA_LIGHT_ORB",
+    "height": 100,
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 15,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 600,
+    "range": 5,
+    "npcIds": [
+      11804
+    ]
+  },
+  {
+    "description": "TOA_CRONDIS_MAGE_ORB",
+    "height": 200,
+    "alignment": "CENTER",
+    "radius": 500,
+    "strength": 10,
+    "color": [
+      255,
+      25,
+      25
+    ],
+    "type": "FLICKER",
+    "duration": 300,
+    "range": 3,
+    "projectileIds": [
+      2181
+    ]
+  },
+  {
+    "description": "TOA_CRONDIS_WALL_BEAST",
+    "height": 65,
+    "alignment": "CENTER",
+    "radius": 50,
+    "strength": 50,
+    "color": [
+      255,
+      25,
+      25
+    ],
+    "type": "FLICKER",
+    "duration": 300,
+    "range": 3,
+    "objectIds": [
+      45525
+    ]
+  },
+  {
+    "description": "TOA_HELPFUL_SPIRIT",
+    "height": 130,
+    "alignment": "CENTER",
+    "radius": 350,
+    "strength": 50,
+    "color": [
+      83,
+      156,
+      146
+    ],
+    "type": "STATIC",
+    "duration": 600,
+    "range": 3,
+    "npcIds": [
+      11694
+    ]
+  },
+  {
+    "description": "TOA_WARDEN_OBELISK",
+    "height": 250,
+    "alignment": "CENTER",
+    "radius": 600,
+    "strength": 25,
+    "color": [
+      255,
+      100,
+      50
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 2,
+    "npcIds": [
+      11750,
+      11751,
+      11752
+    ]
+  },
+  {
+    "description": "TOA_WARDEN_CHARGING_ORB",
+    "height": 140,
+    "alignment": "CENTER",
+    "radius": 150,
+    "strength": 25,
+    "color": [
+      255,
+      100,
+      50
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 2,
+    "npcIds": [
+      11769
+    ]
+  },
+  {
+    "description": "TOA_WARDEN_CHARGING_PLATFORM",
+    "height": 140,
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 25,
+    "color": [
+      255,
+      100,
+      50
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 2,
+    "objectIds": [
+      45607,
+      45608,
+      45609,
+      45610,
+      45611,
+      45612,
+      45613,
+      45614,
+      45615,
+      45616,
+      45617,
+      45618,
+      45619,
+      45620,
+      45621,
+      45622,
+      45623,
+      45624,
+      45625
+    ]
+  },
+  {
+    "description": "TOA_WARDEN_UFO_ATTACK_RED_DIM",
+    "height": 300,
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 50,
+    "color": [
+      255,
+      50,
+      50
+    ],
+    "type": "PULSE",
+    "duration": 600,
+    "range": 2,
+    "objectIds": [
+      45748
+    ]
+  },
+  {
+    "description": "TOA_WARDEN_UFO_ATTACK_RED",
+    "height": 300,
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 150,
+    "color": [
+      255,
+      50,
+      50
+    ],
+    "type": "PULSE",
+    "duration": 600,
+    "range": 2,
+    "objectIds": [
+      45750
+    ]
+  },
+  {
+    "description": "TOA_WARDEN_UFO_ATTACK_YELLOW_DIM",
+    "height": 300,
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 50,
+    "color": [
+      255,
+      255,
+      50
+    ],
+    "type": "PULSE",
+    "duration": 600,
+    "range": 2,
+    "objectIds": [
+      45749
+    ]
+  },
+  {
+    "description": "TOA_WARDEN_UFO_ATTACK_YELLOW",
+    "height": 300,
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 150,
+    "color": [
+      255,
+      255,
+      50
+    ],
+    "type": "PULSE",
+    "duration": 600,
+    "range": 2,
+    "objectIds": [
+      45751
+    ]
+  },
+  {
+    "description": "TOA_WARDEN_P1_BIG_BALL_ATTACK",
+    "radius": 700,
+    "strength": 15,
+    "color": [
+      255,
+      25,
+      25
+    ],
+    "type": "PULSE",
+    "duration": 600,
+    "range": 2,
+    "projectileIds": [
+      2237
+    ]
+  },
+  {
+    "description": "TOA_WARDEN_P1_SMALL_BALL_ATTACK",
+    "radius": 300,
+    "strength": 25,
+    "color": [
+      255,
+      25,
+      25
+    ],
+    "type": "PULSE",
+    "duration": 600,
+    "range": 2,
+    "projectileIds": [
+      2238
+    ]
+  },
+  {
+    "description": "TOA_WARDEN_P2_MAGE_SKULL_BASIC",
+    "radius": 500,
+    "strength": 15,
+    "color": [
+      255,
+      25,
+      25
+    ],
+    "type": "PULSE",
+    "duration": 300,
+    "range": 2,
+    "projectileIds": [
+      2224
+    ]
+  },
+  {
+    "description": "TOA_WARDEN_P2_OBELISK_LIGHTNING_BALL",
+    "radius": 500,
+    "strength": 50,
+    "color": [
+      255,
+      200,
+      25
+    ],
+    "type": "PULSE",
+    "duration": 300,
+    "range": 2,
+    "projectileIds": [
+      2225
+    ]
+  },
+  {
+    "description": "TOA_WARDEN_P2_CORE",
+    "height": 25,
+    "radius": 300,
+    "strength": 50,
+    "color": [
+      255,
+      25,
+      25
+    ],
+    "type": "PULSE",
+    "duration": 300,
+    "range": 2,
+    "projectileIds": [
+      2239,
+      2240
+    ],
+    "npcIds": [
+      11770,
+      11771
+    ]
+  },
+  {
+    "description": "TOA_WARDEN_P2_MELEE_SPECIAL",
+    "radius": 600,
+    "strength": 45,
+    "color": [
+      255,
+      25,
+      25
+    ],
+    "type": "PULSE",
+    "duration": 300,
+    "range": 2,
+    "projectileIds": [
+      2204
+    ]
+  },
+  {
+    "description": "TOA_WARDEN_P2_RANGE_SPECIAL",
+    "radius": 600,
+    "strength": 35,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 300,
+    "range": 2,
+    "projectileIds": [
+      2206
+    ]
+  },
+  {
+    "description": "TOA_WARDEN_P2_MAGE_SPECIAL",
+    "radius": 600,
+    "strength": 40,
+    "color": [
+      25,
+      25,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 300,
+    "range": 2,
+    "projectileIds": [
+      2208
+    ]
+  },
+  {
+    "description": "TOA_WARDEN_P3",
+    "height": 300,
+    "radius": 750,
+    "strength": 50,
+    "color": [
+      255,
+      25,
+      25
+    ],
+    "type": "PULSE",
+    "duration": 1800,
+    "range": 3,
+    "npcIds": [
+      11761,
+      11762,
+      11763,
+      11764
+    ]
+  },
+  {
+    "description": "TOA_WARDEN_P3_BOSS_SPIRITS",
+    "height": 200,
+    "radius": 600,
+    "strength": 75,
+    "color": [
+      255,
+      25,
+      25
+    ],
+    "type": "PULSE",
+    "duration": 1800,
+    "range": 3,
+    "npcIds": [
+      11774,
+      11775,
+      11776,
+      11777
+
+    ]
+  },
+  {
+    "description": "TOA_WARDEN_P3_SKULLS",
+    "height": 25,
+    "radius": 300,
+    "strength": 25,
+    "color": [
+      255,
+      25,
+      25
+    ],
+    "type": "PULSE",
+    "duration": 300,
+    "range": 2,
+    "npcIds": [
+      11772
+    ]
+  },
+  {
+    "description": "TOA_WARDEN_P3_SKULL_CHARGE_PROJECTILE",
+    "height": 25,
+    "radius": 400,
+    "strength": 7,
+    "color": [
+      255,
+      25,
+      25
+    ],
+    "type": "PULSE",
+    "duration": 300,
+    "range": 2,
+    "projectileIds": [
+      2226,
+      2227
+    ]
+  },
+  {
+    "description": "TOA_WARDEN_P3_SKULLS_INACTIVE",
+    "height": 25,
+    "radius": 200,
+    "strength": 7,
+    "color": [
+      255,
+      25,
+      25
+    ],
+    "type": "PULSE",
+    "duration": 300,
+    "range": 2,
+    "npcIds": [
+      11773
+    ]
+  },
+  {
+    "description": "TOA_TELEPORT_CRYSTAL_LOOT",
+    "height": 450,
+    "alignment": "CENTER",
+    "radius": 750,
+    "strength": 50,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 2,
+    "fadeInDuration": 1200,
+    "objectIds": [
+      45138
+    ]
+  },
+  {
+    "description": "TOA_LOOT_SARCOPHAGUS",
+    "height": 100,
+    "alignment": "CENTER",
+    "radius": 500,
+    "strength": 7,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 600,
+    "range": 3,
+    "objectIds": [
+      46220
+    ]
+  },
+  {
+    "description": "CAVE_WALL_LANTERN",
+    "height": 150,
+    "alignment": "FRONT",
+    "radius": 500,
+    "strength": 7,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 600,
+    "range": 3,
+    "objectIds": [
+      23072
+    ]
+  },
+  {
+    "description": "CHAOS_YELLOW_PORTAL",
+    "height": 30,
+    "alignment": "CENTER",
+    "radius": 500,
+    "strength": 7.5,
+    "color": [
+      255,
+      216,
+      87
+    ],
+    "type": "PULSE",
+    "duration": 1550,
+    "range": 50,
+    "objectIds": [
+      23095,
+      23098,
+      34757
+    ]
+  },
+  {
+    "description": "LUNAR_HAT_RACK",
+    "height": 250,
+    "alignment": "CENTER",
+    "radius": 220,
+    "strength": 6.5,
+    "color": [
+      170,
+      205,
+      200
+    ],
+    "type": "PULSE",
+    "duration": 1028,
+    "range": 50,
+    "objectIds": [
+      16691,
+      16692
+    ]
+  },
+  {
+    "description": "LUNAR_COOKING_RANGE_COOKER",
+    "height": 120,
+    "alignment": "CENTER",
+    "radius": 600,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      16702
+    ]
+  },
+  {
+    "description": "LUNAR_COOKER",
+    "height": 160,
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      16703
+    ]
+  },
+  {
+    "description": "LUNAR_LAMP",
+    "height": 218,
+    "alignment": "BACK",
+    "radius": 400,
+    "strength": 10,
+    "color": [
+      245,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 30,
+    "objectIds": [
+      16701
+    ]
+  },
+  {
+    "description": "Secrets of the North - Strange Barrier",
+    "height": 200,
+    "alignment": "CENTER",
+    "radius": 700,
+    "strength": 200,
+    "color": [
+      53,
+      30,
+      121
+    ],
+    "type": "PULSE",
+    "duration": 1800,
+    "range": 10,
+    "objectIds": [
+      46692
+    ]
+  },
+  {
+    "description": "Secrets of the North - Candle",
+    "height": 240,
+    "alignment": "CENTER",
+    "radius": 350,
+    "strength": 15,
+    "color": [
+      9,
+      149,
+      199
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 3,
+    "objectIds": [
+      46647
+    ]
+  },
+  {
+    "description": "Secrets of the North - Candle pillar",
+    "height": 240,
+    "alignment": "CENTER",
+    "radius": 350,
+    "strength": 25,
+    "color": [
+      9,
+      149,
+      199
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 3,
+    "objectIds": [
+      46629
+    ]
+  },
+  {
+    "description": "Secrets of the North - Brazier",
+    "height": 120,
+    "alignment": "CENTER",
+    "radius": 450,
+    "strength": 30,
+    "color": [
+      200,
+      125,
+      20
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 3,
+    "objectIds": [
+      46615
+    ]
+  },
+  {
+    "description": "Secrets of the North - Scoreboard",
+    "height": 125,
+    "alignment": "RIGHT",
+    "radius": 400,
+    "strength": 100,
+    "color": [
+      53,
+      30,
+      121
+    ],
+    "type": "PULSE",
+    "duration": 1800,
+    "range": 7,
+    "objectIds": [
+      46636
+    ]
+  },
+  {
+    "description": "Phantom Muspah - Magic attack",
+    "radius": 600,
+    "strength": 40,
+    "color": [
+      53,
+      30,
+      121
+    ],
+    "type": "PULSE",
+    "duration": 300,
+    "range": 2,
+    "projectileIds": [
+      2327
+    ],
+    "fadeInDuration": 300
+  },
+  {
+    "description": "STANDING_TORCH",
+    "height": 90,
+    "alignment": "CENTER",
+    "radius": 160,
+    "strength": 7.5,
+    "color": [
+      220,
+      220,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "objectIds": [
+      210
+    ]
+  },
+  {
+    "description": "GNOME_LAMP",
+    "height": 130,
+    "alignment": "BACK",
+    "radius": 400,
+    "strength": 7,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 10,
+    "objectIds": [
+      201
+    ]
+  },
+  {
+    "description": "PENGUIN_BASE_LAMP",
+    "height": 120,
+    "alignment": "FRONT",
+    "radius": 140,
+    "strength": 10.5,
+    "color": [
+      202,
+      148,
+      3
+    ],
+    "type": "PULSE",
+    "duration": 1300,
+    "range": 100,
+    "objectIds": [
+      21085
+    ]
+  },
+  {
+    "description": "ZANARIS_FLOWER_WISP",
+    "height": 150,
+    "alignment": "CENTER",
+    "radius": 120,
+    "strength": 6.25,
+    "color": [
+      255,
+      255,
+      195
+    ],
+    "type": "PULSE",
+    "duration": 1250,
+    "range": 60,
+    "objectIds": [
+      1195,
+      1196
+    ]
+  },
+  {
+    "description": "GREEN_MUSHROOM_WALL",
+    "height": 132,
+    "alignment": "FRONT",
+    "radius": 100,
+    "strength": 5.25,
+    "color": [
+      180,
+      255,
+      175
+    ],
+    "type": "FLICKER",
+    "duration": 1250,
+    "range": 20,
+    "objectIds": [
+      12009,
+      12011
+    ]
+  },
+  {
+    "description": "RED_MUSHROOM_WALL",
+    "height": 132,
+    "alignment": "FRONT",
+    "radius": 110,
+    "strength": 19.25,
+    "color": [
+      225,
+      30,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 1250,
+    "range": 20,
+    "objectIds": [
+      12010,
+      12012
+    ]
+  },
+  {
+    "description": "ROOF_TOP_MUSHROOM",
+    "height": 70,
+    "alignment": "CENTER",
+    "radius": 100,
+    "strength": 5.25,
+    "color": [
+      255,
+      255,
+      195
+    ],
+    "type": "FLICKER",
+    "duration": 5000,
+    "range": 20,
+    "objectIds": [
+      12124
+    ]
+  },
+  {
+    "description": "SKULL_WALL_TORCH",
+    "height": 207,
+    "alignment": "FRONT",
+    "radius": 300,
+    "strength": 10.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      207
+    ]
+  },
+  {
+    "description": "GOBLIN_CAULDRON",
+    "height": 30,
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 30,
+    "objectIds": [
+      12400
+    ]
+  },
+  {
+    "description": "CULINATOMANCERS_PORTAL",
+    "height": 30,
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 12.5,
+    "color": [
+      252,
+      252,
+      252
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 30,
+    "objectIds": [
+      12356
+    ]
+  },
+  {
+    "description": "WALL_TORCH_MORT",
+    "height": 200,
+    "alignment": "FRONT",
+    "radius": 200,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 23,
+    "objectIds": [
+      12934
+    ]
+  },
+  {
+    "description": "DIGSITE_LAMP",
+    "height": 170,
+    "alignment": "FRONT",
+    "radius": 290,
+    "strength": 8.5,
+    "color": [
+      202,
+      168,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 24,
+    "objectIds": [
+      17324
+    ]
+  },
+  {
+    "description": "Keep Le Faye Jail",
+    "worldX": 1904,
+    "worldY": 4283,
+    "plane": 0,
+    "height": 418,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 10,
+    "color": [
+      255,
+      249.4737,
+      230.40408
+    ],
+    "type": "STATIC",
+    "duration": 1000,
+    "range": 0.2
+  },
+  {
+    "description": "RED_STREET_LAMP",
+    "height": 273,
+    "alignment": "CENTER",
+    "radius": 330,
+    "strength": 5,
+    "color": [
+      252,
+      168,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 30,
+    "objectIds": [
+      3434
+    ]
+  },
+  {
+    "description": "FALADOR_LAMP_HIGH",
+    "height": 190,
+    "alignment": "CENTER",
+    "radius": 290,
+    "strength": 8.5,
+    "color": [
+      202,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 24,
+    "objectIds": [
+      24172
+    ]
+  },
+  {
+    "description": "Giants Foundry - Lava Big",
+    "plane": 0,
+    "height": 52,
+    "alignment": "CENTER",
+    "radius": 350,
+    "strength": 10,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "PULSE",
+    "duration": 3000,
+    "range": 10,
+    "objectIds": [
+      29630
+    ]
+  },
+  {
+    "description": "Giants Foundry Lava - Small",
+    "plane": 0,
+    "height": 48,
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 10,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "PULSE",
+    "duration": 3000,
+    "range": 10,
+    "objectIds": [
+      29629
     ]
   }
 ]

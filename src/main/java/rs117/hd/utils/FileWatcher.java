@@ -169,7 +169,7 @@ public class FileWatcher
 		Path dir = path.getParent();
 		try {
 			watchKeys.put(dir.register(watchService, eventKinds), dir);
-			log.debug("Watching {}", dir);
+			log.debug("Watching {}", path);
 		} catch (IOException ex) {
 			throw new RuntimeException("Failed to register file watcher for path: " + path, ex);
 		}
@@ -177,7 +177,7 @@ public class FileWatcher
 
 	private static void watchRecursively(Path path) {
 		try {
-			Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
+			Files.walkFileTree(path, new SimpleFileVisitor<>() {
 				@Override
 				public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
 					WatchKey key = dir.register(watchService, eventKinds);

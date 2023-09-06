@@ -27,7 +27,7 @@ package rs117.hd.data.environments;
 import java.awt.Color;
 import lombok.Getter;
 
-import static rs117.hd.utils.HDUtils.*;
+import static rs117.hd.utils.ColorUtils.rgb;
 
 @Getter
 public enum Environment
@@ -51,9 +51,11 @@ public enum Environment
 		.setDirectionalStrength(1.0f)
 		.setLightDirection(260f, 10f)
 	),
-	RFD_QUIZ(Area.RFD_QUIZ, new Properties()
+	BLACK_ROOMS(Area.BLACK_ROOMS, new Properties()
 		.setFogColor("#000000")
-		.setFogDepth(0)
+		.setFogDepth(65)
+		.setDirectionalStrength(0)
+		.setAmbientStrength(3)
 		.setAllowSkyOverride(false)
 	),
 	FROZEN_WASTE_PLATEAU(Area.FROZEN_WASTE_PLATEAU, new Properties()
@@ -246,6 +248,22 @@ public enum Environment
 		.setDirectionalStrength(5.0f)
 		.setDirectionalColor("#DFC0C0")
 	),
+	TOA_LOOT_ROOM(Area.TOA_LOOT_ROOM, new Properties()
+		.setFogColor("#050505")
+		.setFogDepth(20)
+		.setAmbientStrength(1.2f)
+		.setAmbientColor("#ffffff")
+		.setDirectionalStrength(.5f)
+		.setDirectionalColor("#ffffff")
+	),
+	TOMBS_OF_AMASCUT(Area.TOMBS_OF_AMASCUT, new Properties()
+		.setFogColor("#050505")
+		.setFogDepth(20)
+		.setAmbientStrength(1)
+		.setAmbientColor("#ffffff")
+		.setDirectionalStrength(.75f)
+		.setDirectionalColor("#ffffff")
+	),
 	BARROWS_CRYPTS(Area.BARROWS_CRYPTS, new Properties()
 		.setFogColor(0, 0, 0)
 		.setFogDepth(20)
@@ -283,6 +301,33 @@ public enum Environment
 		.setDirectionalStrength(4.0f)
 		.setGroundFog(-150, -350, 0.5f)
 	),
+	MEIYERDITCH(Area.MEIYERDITCH, new Properties()
+		.setFogColor("#1E314B")
+		.setFogDepth(40)
+		.setAmbientColor("#dad8ce")
+		.setAmbientStrength(2.0f)
+		.setDirectionalColor("#ced6da")
+		.setDirectionalStrength(1.8f)
+		.setGroundFog(-150, -350, 0.5f)
+	),
+	MEIYERDITCH_MYREQUE_HIDEOUT(Area.MEIYERDITCH_MYREQUE_HIDEOUT, new Properties()
+		.setFogColor(0, 0, 0)
+		.setFogDepth(69)
+		.setAmbientColor("#dad8ce")
+		.setAmbientStrength(1.5f)
+		.setDirectionalColor("#ced6da")
+		.setDirectionalStrength(0.5f)
+		.setLightDirection(260f, 10f)
+	),
+	MEIYERDITCH_MINES(Area.MEIYERDITCH_MINES, new Properties()
+		.setFogColor(0, 0, 0)
+		.setFogDepth(70)
+		.setAmbientColor("#dad8ce")
+		.setAmbientStrength(1.5f)
+		.setDirectionalColor("#ced6da")
+		.setDirectionalStrength(0.5f)
+		.setLightDirection(260f, 10f)
+	),
 	MORYTANIA(Area.MORYTANIA, new Properties()
 		.setFogColor("#1E314B")
 		.setFogDepth(40)
@@ -294,6 +339,33 @@ public enum Environment
 	),
 
 	LUMBRIDGE(Area.LUMBRIDGE, new Properties()),
+	LUMBRIDGE_BASEMENT(Area.LUMBRIDGE_CASTLE_BASEMENT, new Properties()
+			.setFogColor("#070606")
+			.setFogDepth(84)
+			.setAmbientColor("#FFFFFF")
+			.setAmbientStrength(1.0f)
+			.setDirectionalColor("#A29B71")
+			.setDirectionalStrength(1.5f)
+			.setLightDirection(260f, 10f)
+	),
+	GOBLIN_MAZE(Area.GOBLIN_MAZE, new Properties()
+			.setFogColor("#050D02")
+			.setFogDepth(60)
+			.setAmbientColor("#FFFFFF")
+			.setAmbientStrength(0.75f)
+			.setDirectionalColor("#A29B71")
+			.setDirectionalStrength(0.75f)
+			.setLightDirection(260f, 10f)
+	),
+	LUMBRIDGE_SWAMP_CAVES(Area.LUMBRIDGE_SWAMP_CAVES, new Properties()
+			.setFogColor("#040D02")
+			.setFogDepth(50)
+			.setAmbientColor(198, 201, 194)
+			.setAmbientStrength(0.9f)
+			.setDirectionalColor(168, 171, 144)
+			.setDirectionalStrength(0.85f)
+			.setLightDirection(260f, 10f)
+	),
 
 	DRAYNOR_MANOR(Area.DRAYNOR_MANOR, new Properties()
 		.setFogColor(15, 14, 13)
@@ -441,6 +513,17 @@ public enum Environment
 		.setGroundFog(-200, -400, 0.3f)
 	),
 
+	PENGUIN_BASE(Area.PENGUIN_BASE, new Properties()
+		.setFogColor("#090808")
+		.setFogDepth(40)
+		.setAmbientColor("#AAAFB6")
+		.setAmbientStrength(.75f)
+		.setDirectionalColor("#FFFFFF")
+		.setDirectionalStrength(.75f)
+		.setLightDirection(260f, 10f)
+		.setWaterColor(102, 234, 255)
+	),
+
 	// Karamja
 	KARAMJA_VOLCANO_DUNGEON(Area.KARAMJA_VOLCANO_DUNGEON, new Properties()
 		.setFogColor("#190D02")
@@ -450,6 +533,15 @@ public enum Environment
 		.setDirectionalColor(76, 120, 182)
 		.setDirectionalStrength(1.0f)
 		.setLightDirection(260f, 10f)
+	),
+	BRIMHAVEN_AGILITY_ARENA(Area.BRIMHAVEN_AGILITY_ARENA, new Properties()
+		.setFogColor("#1A0808")
+		.setFogDepth(25)
+		.setAmbientColor("#FFEACC")
+		.setAmbientStrength(1.2f)
+		.setDirectionalColor("#FFA400")
+		.setDirectionalStrength(1.0f)
+		.setLightDirection(240f, 190f)
 	),
 	KARAMJA(Area.KARAMJA, new Properties()),
 
@@ -522,6 +614,17 @@ public enum Environment
 	SOTE_FRAGMENT_OF_SEREN_ARENA(Area.SOTE_FRAGMENT_OF_SEREN_ARENA, new Properties()
 		.setFogColor(0, 0, 0)
 		.setAllowSkyOverride(false)
+	),
+
+	// Ardougne
+	Shadow_DUNGEON(Area.SHADOW_DUNGEON, new Properties()
+		.setFogColor(0, 0, 0)
+		.setFogDepth(60)
+		.setAmbientColor(171, 171, 171)
+		.setAmbientStrength(1.0f)
+		.setDirectionalColor(86, 86, 86)
+		.setDirectionalStrength(1.0f)
+		.setLightDirection(260f, 10f)
 	),
 
 	// Yanille
@@ -804,13 +907,9 @@ public enum Environment
 		.setDirectionalStrength(2.0f)
 		.setDirectionalColor("#00FF60")
 		.setLightDirection(260f, 10f)
-		.setAllowSkyOverride(false)
 	),
 
 	// Underwater areas
-	MOGRE_CAMP_CUTSCENE(Area.MOGRE_CAMP_CUTSCENE, new Properties()
-		.setUnderwater(true)
-	),
 	MOGRE_CAMP(Area.MOGRE_CAMP, new Properties()
 		.setFogColor("#133156")
 		.setFogDepth(60)
@@ -923,34 +1022,70 @@ public enum Environment
 			.setWaterColor(79, 178, 255)
 	),
 
-
-
-
-	UNKNOWN_OVERWORLD_SNOWY(Area.UNKNOWN_OVERWORLD_SNOWY, new Properties()
-		.setFogColor("#AEBDE0")
-		.setFogDepth(70)
-		.setAmbientColor("#6FB0FF")
-		.setAmbientStrength(1.5f)
-		.setDirectionalColor("#F4E5C9")
-		.setDirectionalStrength(2.5f)
-	),
-	UNKNOWN_OVERWORLD(Area.UNKNOWN_OVERWORLD, new Properties()),
-
-	WINTER(Area.NONE, new Properties()
-		.setFogColor("#B8C5DB")
-		.setFogDepth(35)
-		.setAmbientColor("#8FCAFF")
-		.setAmbientStrength(3.5f)
+	ICY_UNDERGROUND_DARK(Area.ICY_UNDERGROUND_DARK, new Properties()
+		.setFogColor("#030303")
+		.setFogDepth(40)
+		.setAmbientColor("#AAAFB6")
+		.setAmbientStrength(.75f)
 		.setDirectionalColor("#FFFFFF")
-		.setDirectionalStrength(1.5f)
+		.setDirectionalStrength(.75f)
+		.setLightDirection(260f, 10f)
+		.setWaterColor(102, 234, 255)
+	),
+	ICY_UNDERGROUND_BRIGHT(Area.ICY_UNDERGROUND_BRIGHT, new Properties()
+		.setFogColor("#ADC5E4")
+		.setFogDepth(68)
+		.setAmbientColor("#AAAFB6")
+		.setAmbientStrength(.75f)
+		.setDirectionalColor("#FFFFFF")
+		.setDirectionalStrength(.75f)
+		.setLightDirection(260f, 10f)
+		.setWaterColor(102, 234, 255)
+	),
+	GOBLIN_VLIIAGE_COOKS_CHAMBER(Area.GOBLIN_VILLAGE_COOKS_CHAMBER, new Properties()
+		.setFogColor("#030303")
+		.setFogDepth(5)
+		.setAmbientColor("#AAAFB6")
+		.setAmbientStrength(0.75f)
+		.setDirectionalColor("#FFFFFF")
+		.setDirectionalStrength(0.75f)
+		.setLightDirection(260f, 10f)
+		.setAllowSkyOverride(false)
 	),
 
 	MAGE_ARENA_BANK(Area.MAGE_ARENA_BANK, new Properties()
-			.setFogDepth(40)
-			.setFogColor("#000000")
-			.setAmbientStrength(1.5f)
-			.setDirectionalStrength(1.0f)
-			.setLightDirection(260f, 10f)
+		.setFogDepth(40)
+		.setFogColor("#000000")
+		.setAmbientStrength(1.5f)
+		.setDirectionalStrength(1.0f)
+		.setLightDirection(260f, 10f)
+	),
+	TEARS_OF_GUTHIX(Area.TEARS_OF_GUTHIX_CAVES, new Properties()
+		.setFogColor("#060505")
+		.setFogDepth(50)
+		.setAmbientColor("#AAAFB6")
+		.setAmbientStrength(1.6f)
+		.setDirectionalColor("#878474")
+		.setDirectionalStrength(1.5f)
+		.setLightDirection(260f, 10f)
+	),
+	BURGH_DE_ROTT_BASEMENT(Area.BURGH_DE_ROTT_BASEMENT, new Properties()
+		.setFogColor("#030403")
+		.setFogDepth(84)
+		.setAmbientColor("#FFFFFF")
+		.setAmbientStrength(1.0f)
+		.setDirectionalColor("#A29B71")
+		.setDirectionalStrength(1.5f)
+		.setLightDirection(260f, 10f)
+	),
+	KEEP_LE_FAYE_JAIL(Area.KEEP_LE_FAYE_JAIL, new Properties()
+		.setFogColor("#070606")
+		.setFogDepth(84)
+		.setAmbientColor("#AAAFB6")
+		.setAmbientStrength(1.0f)
+		.setDirectionalColor("#878474")
+		.setDirectionalStrength(1.5f)
+		.setLightDirection(260f, 10f)
 	),
 
 	// overrides 'ALL' to provide default daylight conditions for the overworld area
@@ -966,7 +1101,17 @@ public enum Environment
 		.setLightDirection(260f, 10f)
 		.setWaterColor(102, 234, 255)
 	),
-
+	WINTER(Area.NONE, new Properties()
+		.setFogColor("#B8C5DB")
+		.setFogDepth(35)
+		.setAmbientColor("#8FCAFF")
+		.setAmbientStrength(3.5f)
+		.setDirectionalColor("#FFFFFF")
+		.setDirectionalStrength(1.5f)
+	),
+	NONE(Area.NONE, new Properties()
+		.setFogColor("#ff00ff") // never meant to be rendered
+	),
 	;
 
 	private final Area area;

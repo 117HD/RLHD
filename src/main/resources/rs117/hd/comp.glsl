@@ -23,7 +23,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include version_header
+#include VERSION_HEADER
 
 shared int totalNum[12]; // number of faces with a given priority
 shared int totalDistance[12]; // sum of distances to faces of a given priority
@@ -33,6 +33,7 @@ shared int totalMappedNum[18]; // number of faces with a given adjusted priority
 shared int min10; // minimum distance to a face of priority 10
 shared int dfs[6144]; // packed face id and distance
 
+#include uniforms/camera.glsl
 #include comp_common.glsl
 
 layout(local_size_x = 1024) in;
@@ -43,11 +44,11 @@ layout(local_size_x = 1024) in;
 void main() {
     uint groupId = gl_WorkGroupID.x;
     uint localId = gl_LocalInvocationID.x * 6;
-    modelinfo minfo = ol[groupId];
+    ModelInfo minfo = ol[groupId];
     ivec4 pos = ivec4(minfo.x, minfo.y, minfo.z, 0);
 
     if (localId == 0) {
-        min10 = 1600;
+        min10 = 6000;
         for (int i = 0; i < 12; ++i) {
             totalNum[i] = 0;
             totalDistance[i] = 0;

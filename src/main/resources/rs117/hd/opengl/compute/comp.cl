@@ -33,25 +33,22 @@ __kernel
 __attribute__((work_group_size_hint(256, 1, 1)))
 void computeLarge(
   __local struct shared_data *shared,
-  __global const struct modelinfo *ol,
+  __global const struct ModelInfo *ol,
   __global const int4 *vb,
-  __global const int4 *tempvb,
   __global const float4 *uv,
-  __global const float4 *tempuv,
+  __global const float4 *normal,
   __global int4 *vout,
   __global float4 *uvout,
   __global float4 *normalout,
-  __global float4 *normal,
-  __global float4 *tempnormal,
-  __constant struct uniform *uni) {
-
+  __constant struct uniform *uni
+) {
   size_t groupId = get_group_id(0);
   size_t localId = get_local_id(0) * FACE_COUNT;
-  struct modelinfo minfo = ol[groupId];
+  struct ModelInfo minfo = ol[groupId];
   int4 pos = (int4)(minfo.x, minfo.y, minfo.z, 0);
 
   if (localId == 0) {
-    shared->min10 = 1600;
+    shared->min10 = 6000;
     for (int i = 0; i < 12; ++i) {
       shared->totalNum[i] = 0;
       shared->totalDistance[i] = 0;
@@ -68,7 +65,7 @@ void computeLarge(
   int4 v3[FACE_COUNT];
 
   for (int i = 0; i < FACE_COUNT; i++) {
-    get_face(shared, uni, vb, tempvb, localId + i, minfo, uni->cameraYaw, uni->cameraPitch, &prio[i], &dis[i], &v1[i], &v2[i], &v3[i]);
+    get_face(shared, uni, vb, localId + i, minfo, uni->cameraYaw, uni->cameraPitch, &prio[i], &dis[i], &v1[i], &v2[i], &v3[i]);
   }
 
   barrier(CLK_LOCAL_MEM_FENCE);
@@ -94,6 +91,6 @@ void computeLarge(
   barrier(CLK_LOCAL_MEM_FENCE);
 
   for (int i = 0; i < FACE_COUNT; i++) {
-    sort_and_insert(shared, uv, tempuv, vout, uvout, normalout, normal, tempnormal, uni, localId + i, minfo, prioAdj[i], dis[i], v1[i], v2[i], v3[i]);
+    sort_and_insert(shared, uv, normal, vout, uvout, normalout, uni, localId + i, minfo, prioAdj[i], dis[i], v1[i], v2[i], v3[i]);
   }
 }

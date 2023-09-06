@@ -26,6 +26,13 @@
 #define PI 3.1415926535897932384626433832795f
 #define UNIT PI / 1024.0f
 
+float3 toScreen(int4 vertex, int cameraYaw, int cameraPitch, int centerX, int centerY, int zoom);
+int4 rotate_ivec(__constant struct uniform *uni, int4 vector, int orientation);
+float4 rotate_vec(float4 vector, int orientation);
+int vertex_distance(int4 vertex, int cameraYaw, int cameraPitch);
+int face_distance(int4 vA, int4 vB, int4 vC, int cameraYaw, int cameraPitch);
+bool face_visible(__constant struct uniform *uni, int4 vA, int4 vB, int4 vC, int4 position);
+
 float3 toScreen(int4 vertex, int cameraYaw, int cameraPitch, int centerX, int centerY, int zoom) {
   float yawSin = sin(cameraYaw * UNIT);
   float yawCos = cos(cameraYaw * UNIT);
@@ -49,19 +56,22 @@ float3 toScreen(int4 vertex, int cameraYaw, int cameraPitch, int centerX, int ce
 /*
  * Rotate a vertex by a given orientation in JAU
  */
-int4 rotate_vertex(__constant struct uniform *uni, int4 vertex, int orientation) {
+int4 rotate_ivec(__constant struct uniform *uni, int4 vector, int orientation) {
   int4 sinCos = uni->sinCosTable[orientation];
   int s = sinCos.x;
   int c = sinCos.y;
-  int x = vertex.z * s + vertex.x * c >> 16;
-  int z = vertex.z * c - vertex.x * s >> 16;
-  return (int4)(x, vertex.y, z, vertex.w);
+  int x = (vector.z * s + vector.x * c) >> 16;
+  int z = (vector.z * c - vector.x * s) >> 16;
+  return (int4)(x, vector.y, z, vector.w);
 }
 
-float4 rotate2(__constant struct uniform *uni, float4 vertex, int orientation) {
-  int4 iVertex = convert_int4(vertex * 1000.0f);
-  vertex = convert_float4(rotate_vertex(uni, iVertex, orientation)) / 1000.0f;
-  return vertex;
+float4 rotate_vec(float4 vector, int orientation) {
+  float rad = orientation * UNIT;
+  float s = sin(rad);
+  float c = cos(rad);
+  float x = vector.z * s + vector.x * c;
+  float z = vector.z * c - vector.x * s;
+  return (float4)(x, vector.y, z, vector.w);
 }
 
 /*
@@ -74,8 +84,8 @@ int vertex_distance(int4 vertex, int cameraYaw, int cameraPitch) {
   int pitchSin = (int)(65536.0f * sin(cameraPitch * UNIT));
   int pitchCos = (int)(65536.0f * cos(cameraPitch * UNIT));
 
-  int j = vertex.z * yawCos - vertex.x * yawSin >> 16;
-  int l = vertex.y * pitchSin + j * pitchCos >> 16;
+  int j = (vertex.z * yawCos - vertex.x * yawSin) >> 16;
+  int l = (vertex.y * pitchSin + j * pitchCos) >> 16;
 
   return l;
 }

@@ -24,13 +24,22 @@
  */
 package rs117.hd.utils.buffer;
 
-import org.lwjgl.system.MemoryUtil;
-
 import java.nio.FloatBuffer;
+import org.lwjgl.system.MemoryUtil;
 
 public class GpuFloatBuffer
 {
-	private FloatBuffer buffer = MemoryUtil.memAllocFloat(65536);
+	private FloatBuffer buffer;
+
+	public GpuFloatBuffer()
+	{
+		this(65536);
+	}
+
+	public GpuFloatBuffer(int initialCapacity)
+	{
+		buffer = MemoryUtil.memAllocFloat(initialCapacity);
+	}
 
 	public void destroy() {
 		if (buffer != null)
@@ -38,9 +47,9 @@ public class GpuFloatBuffer
 		buffer = null;
 	}
 
-	public void put(float texture, float u, float v, float pad)
+	public void put(float x, float y, float z, float w)
 	{
-		buffer.put(texture).put(u).put(v).put(pad);
+		buffer.put(x).put(y).put(z).put(w);
 	}
 
 	public void put(float[] floats) {
@@ -49,6 +58,11 @@ public class GpuFloatBuffer
 
 	public void put(FloatBuffer buffer) {
 		this.buffer.put(buffer);
+	}
+
+	public int position()
+	{
+		return buffer.position();
 	}
 
 	public void flip()

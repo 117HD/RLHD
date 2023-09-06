@@ -24,21 +24,6 @@
  */
 package rs117.hd.scene;
 
-import lombok.extern.slf4j.Slf4j;
-import net.runelite.api.Texture;
-import net.runelite.api.TextureProvider;
-import net.runelite.client.callback.ClientThread;
-import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.EXTTextureFilterAnisotropic;
-import org.lwjgl.opengl.GL;
-import rs117.hd.HdPlugin;
-import rs117.hd.HdPluginConfig;
-import rs117.hd.data.materials.Material;
-import rs117.hd.utils.Env;
-import rs117.hd.utils.ResourcePath;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
@@ -47,6 +32,18 @@ import java.nio.IntBuffer;
 import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.HashSet;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import lombok.extern.slf4j.Slf4j;
+import net.runelite.api.*;
+import net.runelite.client.callback.ClientThread;
+import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.*;
+import rs117.hd.HdPlugin;
+import rs117.hd.HdPluginConfig;
+import rs117.hd.data.materials.Material;
+import rs117.hd.utils.Props;
+import rs117.hd.utils.ResourcePath;
 
 import static org.lwjgl.opengl.GL43C.*;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_GAME;
@@ -57,11 +54,10 @@ import static rs117.hd.utils.ResourcePath.path;
 @Slf4j
 public class TextureManager
 {
-	private static final String ENV_TEXTURE_PATH = "RLHD_TEXTURE_PATH";
 	private static final String[] SUPPORTED_IMAGE_EXTENSIONS = { "png", "jpg" };
 	private static final float HALF_PI = (float) (Math.PI / 2);
-	private static final ResourcePath texturePath = Env
-		.getPathOrDefault(ENV_TEXTURE_PATH, () -> path(TextureManager.class,"textures"));
+	private static final ResourcePath TEXTURE_PATH = Props.getPathOrDefault("rlhd.texture-path",
+		() -> path(TextureManager.class,"textures"));
 
 	@Inject
 	private HdPlugin plugin;
@@ -84,7 +80,7 @@ public class TextureManager
 
 	public void startUp()
 	{
-		texturePath.watch(path -> {
+		TEXTURE_PATH.watch(path -> {
 			log.debug("Loading Textures...");
 			freeTextures();
 		});
@@ -173,10 +169,10 @@ public class TextureManager
 		double save = textureProvider.getBrightness();
 		textureProvider.setBrightness(1.0d);
 
-		pixelBuffer = BufferUtils.createIntBuffer(textureSize * textureSize);
-		vanillaImage = new BufferedImage(128, 128, BufferedImage.TYPE_INT_ARGB);
 		int[] vanillaPixels = new int[128 * 128];
+		pixelBuffer = BufferUtils.createIntBuffer(textureSize * textureSize);
 		scaledImage = new BufferedImage(textureSize, textureSize, BufferedImage.TYPE_INT_ARGB);
+		vanillaImage = new BufferedImage(128, 128, BufferedImage.TYPE_INT_ARGB);
 
 		int materialCount = Material.values().length;
 		materialOrdinalToTextureIndex = new int[materialCount];
@@ -206,24 +202,30 @@ public class TextureManager
 				continue;
 			}
 
-			String textureName = material == Material.NONE ? "" + i : material.name().toLowerCase();
+			String textureName = material == Material.NONE ? String.valueOf(i) : material.name().toLowerCase();
 
 			BufferedImage image = loadTextureImage(textureName);
-			if (image == null)
-			{
+			if (image == null) {
 				// Load vanilla texture
 				int[] pixels = textureProvider.load(i);
-				if (pixels == null)
-				{
+				if (pixels == null) {
 					log.warn("No vanilla pixels for texture index {}", i);
 					unusedIndices.addLast(i);
 					continue;
 				}
-				if (pixels.length != 128 * 128)
-				{
+
+				int resolution = (int) Math.round(Math.sqrt(pixels.length));
+				if (resolution * resolution != pixels.length) {
 					log.warn("Unknown dimensions for vanilla texture at index {} ({} pixels)", i, pixels.length);
 					unusedIndices.addLast(i);
 					continue;
+				}
+
+				if (vanillaImage.getWidth() != resolution) {
+					log.warn("Using vanilla texture resolution: {}x{}", resolution, resolution);
+					vanillaImage = new BufferedImage(resolution, resolution, BufferedImage.TYPE_INT_ARGB);
+					if (vanillaPixels.length < pixels.length)
+						vanillaPixels = new int[pixels.length];
 				}
 
 				for (int j = 0; j < pixels.length; j++) {
@@ -231,7 +233,7 @@ public class TextureManager
 					vanillaPixels[j] = p == 0 ? 0 : 0xFF << 24 | p & 0xFFFFFF;
 				}
 
-				vanillaImage.setRGB(0, 0, 128, 128, vanillaPixels, 0, 128);
+				vanillaImage.setRGB(0, 0, resolution, resolution, vanillaPixels, 0, resolution);
 				image = vanillaImage;
 			}
 
@@ -261,6 +263,22 @@ public class TextureManager
 				continue;
 			}
 
+			Integer index = -1;
+			if (material.replacementCondition != null)
+			{
+				if (material.replacementCondition.apply(config))
+				{
+					for (Material toReplace : material.materialsToReplace) {
+						index = materialOrdinalToTextureIndex[toReplace.ordinal()];
+						materialReplacements[toReplace.ordinal()] = material.ordinal();
+					}
+				}
+				else
+				{
+					continue;
+				}
+			}
+
 			if (material.parent != null)
 			{
 				// Point this material to pre-existing texture from parent material
@@ -270,17 +288,10 @@ public class TextureManager
 
 			String textureName = material.name().toLowerCase();
 			BufferedImage image = loadTextureImage(textureName);
-			if (image == null)
-			{
-				log.trace("No texture override for: {}", textureName);
+			if (image == null) {
+				if (material.vanillaTextureIndex == -1)
+					System.err.println("No texture found for material: " + material);
 				continue;
-			}
-
-			Integer index = -1;
-			if (material.materialToReplace != null && material.replacementCondition.apply(config))
-			{
-				index = materialOrdinalToTextureIndex[material.materialToReplace.ordinal()];
-				materialReplacements[material.materialToReplace.ordinal()] = material.ordinal();
 			}
 
 			if (index == -1)
@@ -303,8 +314,8 @@ public class TextureManager
 
 		// Reset
 		pixelBuffer = null;
-		vanillaImage = null;
 		scaledImage = null;
+		vanillaImage = null;
 		textureProvider.setBrightness(save);
 		glActiveTexture(TEXTURE_UNIT_UI);
 
@@ -316,15 +327,14 @@ public class TextureManager
 	{
 		for (String ext : SUPPORTED_IMAGE_EXTENSIONS)
 		{
-			ResourcePath path = path(TextureManager.class, "textures", textureName + "." + ext);
+			ResourcePath path = TEXTURE_PATH.resolve(textureName + "." + ext);
 			try {
 				return path.loadImage();
 			} catch (Exception ex) {
-				log.trace("Failed to load texture: {}", path, ex);
+				log.trace("Unable to load texture: {}", path, ex);
 			}
 		}
 
-		log.trace("Missing texture file: {}", textureName);
 		return null;
 	}
 
@@ -332,18 +342,17 @@ public class TextureManager
 	{
 		// TODO: scale and transform on the GPU for better performance
 		AffineTransform t = new AffineTransform();
-		// Flip non-vanilla textures vertically
 		if (image != vanillaImage)
 		{
-			t.translate(0, scaledImage.getHeight());
-			t.scale(1, -1);
+			// Flip non-vanilla textures horizontally to match vanilla UV orientation
+			t.translate(textureSize, 0);
+			t.scale(-1, 1);
 		}
 		t.scale((double) textureSize / image.getWidth(), (double) textureSize / image.getHeight());
 		AffineTransformOp scaleOp = new AffineTransformOp(t, AffineTransformOp.TYPE_BICUBIC);
 		scaleOp.filter(image, scaledImage);
-		image = scaledImage;
 
-		int[] pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
+		int[] pixels = ((DataBufferInt) scaledImage.getRaster().getDataBuffer()).getData();
 		pixelBuffer.put(pixels).flip();
 
 		// Go from TYPE_4BYTE_ABGR in the BufferedImage to RGBA
@@ -382,16 +391,14 @@ public class TextureManager
 	{
 		clientThread.invoke(() ->
 		{
-			glDeleteTextures(textureArray);
+			if (textureArray != 0)
+				glDeleteTextures(textureArray);
 			textureArray = 0;
 		});
 	}
 
 	/**
 	 * Check if all textures have been loaded and cached yet.
-	 *
-	 * @param textureProvider
-	 * @return
 	 */
 	private boolean allTexturesLoaded(TextureProvider textureProvider)
 	{

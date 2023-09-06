@@ -25,14 +25,13 @@
  */
 package rs117.hd.data;
 
+import java.util.function.Consumer;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import rs117.hd.data.materials.Material;
 
-import java.util.function.Consumer;
-
-import static rs117.hd.utils.HDUtils.linearToSrgb;
-import static rs117.hd.utils.HDUtils.rgb;
+import static rs117.hd.utils.ColorUtils.linearToSrgb;
+import static rs117.hd.utils.ColorUtils.rgb;
 
 public enum WaterType
 {
@@ -85,7 +84,20 @@ public enum WaterType
 		.causticsStrength(.4f)
 		.duration(0)
 		.normalMap(Material.WATER_NORMAL_MAP_2)),
-	ICE_FLAT(ICE, true);
+	ICE_FLAT(ICE, true),
+	MUDDY_WATER(b -> b
+		.specularStrength(.1f)
+		.specularGloss(100)
+		.normalStrength(.05f)
+		.baseOpacity(.7f)
+		.fresnelAmount(.3f)
+		.surfaceColor(linearToSrgb(rgb(35, 10, 0)))
+		.foamColor(linearToSrgb(rgb(106, 108, 24)))
+		.depthColor(linearToSrgb(rgb(65, 23, 0)))
+		.causticsStrength(0)
+		.duration(2.7f)
+	),
+	;
 
 	public final boolean flat;
 	public final float specularStrength;

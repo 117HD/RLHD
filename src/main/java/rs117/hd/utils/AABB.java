@@ -29,6 +29,7 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
+import net.runelite.api.Constants;
 import net.runelite.api.coords.WorldPoint;
 
 import java.io.IOException;
@@ -42,6 +43,16 @@ public class AABB
 	public final int maxX;
 	public final int maxY;
 	public final int maxZ;
+
+	public AABB(int regionId)
+	{
+		minX = (regionId >>> 8) << 6;
+		minY = (regionId & 0xFF) << 6;
+		maxX = minX + Constants.REGION_SIZE;
+		maxY = minY + Constants.REGION_SIZE;
+		minZ = Integer.MIN_VALUE;
+		maxZ = Integer.MAX_VALUE;
+	}
 
 	public AABB(int x, int y)
 	{
@@ -146,19 +157,20 @@ public class AABB
 	public boolean intersects(int minX, int minY, int maxX, int maxY)
 	{
 		return
-			minX <= this.maxX && maxX >= this.minX &&
-			minY <= this.maxY && maxY >= this.minY;
+			minX < this.maxX && maxX > this.minX &&
+			minY < this.maxY && maxY > this.minY;
 	}
 
 	public boolean intersects(int minX, int maxX, int minY, int maxY, int minZ, int maxZ)
 	{
 		return
-			minX <= this.maxX && maxX >= this.minX &&
-			minY <= this.maxY && maxY >= this.minY &&
-			minZ <= this.maxZ && maxZ >= this.minZ;
+			minX < this.maxX && maxX > this.minX &&
+			minY < this.maxY && maxY > this.minY &&
+			minZ < this.maxZ && maxZ > this.minZ;
 	}
 
-	public boolean intersects(AABB other) {
+	public boolean intersects(AABB other)
+	{
 		return intersects(
 			other.minX, other.maxX,
 			other.minY, other.maxY,

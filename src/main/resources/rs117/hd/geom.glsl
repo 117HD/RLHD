@@ -26,113 +26,79 @@
 
 #version 330
 
-#define PI 3.1415926535897932384626433832795f
-#define UNIT PI / 1024.0f
-
 layout(triangles) in;
 layout(triangle_strip, max_vertices = 3) out;
 
+uniform mat4 projectionMatrix;
+uniform float elapsedTime;
+
 #include uniforms/camera.glsl
 
-uniform mat4 projectionMatrix;
-uniform mat4 lightProjectionMatrix;
+#include utils/constants.glsl
+#define USE_VANILLA_UV_PROJECTION
+#include utils/uvs.glsl
 
-in ivec3 vPosition[];
-in vec4 vNormal[];
-in vec4 vColor[];
-in vec4 vUv[];
-in float vFogAmount[];
+in vec3 gPosition[3];
+in vec3 gUv[3];
+in vec3 gNormal[3];
+in vec4 gColor[3];
+in float gFogAmount[3];
+in int gMaterialData[3];
+in int gTerrainData[3];
 
-out float fogAmount;
-flat out vec4 vColor1;
-flat out vec4 vColor2;
-flat out vec4 vColor3;
-flat out vec2 vUv1;
-flat out vec2 vUv2;
-flat out vec2 vUv3;
-out vec3 normals;
-out vec3 position;
-out vec3 texBlend;
-flat out ivec3 materialId;
-flat out ivec3 terrainData;
-flat out ivec3 isOverlay;
-out vec4 shadowOut;
+flat out vec4 vColor[3];
+flat out vec3 vUv[3];
+flat out int vMaterialData[3];
+flat out int vTerrainData[3];
+flat out mat2x3 TB;
+
+out FragmentData {
+    vec3 position;
+    vec3 normal;
+    vec3 texBlend;
+    float fogAmount;
+} OUT;
 
 void main() {
-    int material1 = int(vUv[0].x) >> 1;
-    int material2 = int(vUv[1].x) >> 1;
-    int material3 = int(vUv[2].x) >> 1;
-    materialId = ivec3(material1, material2, material3);
-
-    terrainData = ivec3(int(vNormal[0].w), int(vNormal[1].w), int(vNormal[2].w));
-
-    isOverlay = ivec3(0, 0, 0);
-    isOverlay[0] = int(vUv[0].x) & 1;
-    isOverlay[1] = int(vUv[1].x) & 1;
-    isOverlay[2] = int(vUv[2].x) & 1;
-
-    vColor1 = vColor[0];
-    vColor2 = vColor[1];
-    vColor3 = vColor[2];
-
-    vUv1 = vUv[0].yz;
-    vUv2 = vUv[1].yz;
-    vUv3 = vUv[2].yz;
-
-    // fast normals
-    vec3 T = normalize(vec3(vPosition[0] - vPosition[1]));
-    vec3 B = normalize(vec3(vPosition[0] - vPosition[2]));
-    vec3 N = normalize(cross(T, B));
-
-    texBlend = vec3(1, 0, 0);
-    fogAmount = vFogAmount[0];
-    gl_Position = projectionMatrix * vec4(vPosition[0], 1.f);
-    shadowOut = lightProjectionMatrix * vec4(vPosition[0], 1.f);
-    if (abs(vNormal[0].x) < 0.01 && abs(vNormal[0].y) < 0.01 && abs(vNormal[0].z) < 0.01)
-    {
-        normals = N;
+    // MacOS doesn't allow assigning these arrays directly.
+    // One of the many wonders of Apple software...
+    for (int i = 0; i < 3; i++) {
+        vColor[i] = gColor[i];
+        vUv[i] = gUv[i];
+        vMaterialData[i] = gMaterialData[i];
+        vTerrainData[i] = gTerrainData[i];
     }
-    else
-    {
-        normals = vNormal[0].xyz;
+
+    mat2x3 triToWorld = mat2x3(
+        gPosition[1] - gPosition[0],
+        gPosition[2] - gPosition[0]
+    );
+
+    computeUvs(vMaterialData[0], vec3[](gPosition[0], gPosition[1], gPosition[2]), vUv);
+
+    // Calculate tangent-space vectors
+    mat2 triToUv = mat2(
+        vUv[1].xy - vUv[0].xy,
+        vUv[2].xy - vUv[0].xy
+    );
+    if (determinant(triToUv) == 0)
+        triToUv = mat2(1);
+
+    mat2 uvToTri = inverse(triToUv) * -1; // Flip UV direction, since OSRS UVs are oriented strangely
+    TB = triToWorld * uvToTri; // Preserve scale in order for displacement to interact properly with shadow mapping
+    vec3 N = normalize(cross(triToWorld[0], triToWorld[1]));
+
+    for (int i = 0; i < 3; i++) {
+        OUT.position = gPosition[i];
+        OUT.normal = gNormal[i];
+        if (OUT.normal == vec3(0))
+            OUT.normal = N;
+        OUT.texBlend = vec3(0);
+        OUT.texBlend[i] = 1;
+        OUT.fogAmount = gFogAmount[i];
+        gl_Position = projectionMatrix * vec4(OUT.position, 1);
+        EmitVertex();
     }
-    position = vPosition[0];
-    EmitVertex();
-
-
-
-    texBlend = vec3(0, 1, 0);
-    fogAmount = vFogAmount[1];
-    gl_Position = projectionMatrix * vec4(vPosition[1], 1.f);
-    shadowOut = lightProjectionMatrix * vec4(vPosition[1], 1.f);
-    if (abs(vNormal[1].x) < 0.01 && abs(vNormal[1].y) < 0.01 && abs(vNormal[1].z) < 0.01)
-    {
-        normals = N;
-    }
-    else
-    {
-        normals = vNormal[1].xyz;
-    }
-    position = vPosition[1];
-    EmitVertex();
-
-
-
-    texBlend = vec3(0, 0, 1);
-    fogAmount = vFogAmount[2];
-    gl_Position = projectionMatrix * vec4(vPosition[2], 1.f);
-    shadowOut = lightProjectionMatrix * vec4(vPosition[2], 1.f);
-    if (abs(vNormal[2].x) < 0.01 && abs(vNormal[2].y) < 0.01 && abs(vNormal[2].z) < 0.01)
-    {
-        normals = N;
-    }
-    else
-    {
-        normals = vNormal[2].xyz;
-    }
-    position = vPosition[2];
-    EmitVertex();
-
 
     EndPrimitive();
 }

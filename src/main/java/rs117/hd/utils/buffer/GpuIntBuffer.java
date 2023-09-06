@@ -24,13 +24,22 @@
  */
 package rs117.hd.utils.buffer;
 
-import org.lwjgl.system.MemoryUtil;
-
 import java.nio.IntBuffer;
+import org.lwjgl.system.MemoryUtil;
 
 public class GpuIntBuffer
 {
-	private IntBuffer buffer = MemoryUtil.memAllocInt(65536);
+	private IntBuffer buffer;
+
+	public GpuIntBuffer()
+	{
+		this(65536);
+	}
+
+	public GpuIntBuffer(int initialCapacity)
+	{
+		buffer = MemoryUtil.memAllocInt(initialCapacity);
+	}
 
 	public void destroy() {
 		if (buffer != null)
@@ -43,9 +52,9 @@ public class GpuIntBuffer
 		buffer.put(x).put(y).put(z);
 	}
 
-	public void put(int x, int y, int z, int c)
+	public void put(int x, int y, int z, int w)
 	{
-		buffer.put(x).put(y).put(z).put(c);
+		buffer.put(x).put(y).put(z).put(w);
 	}
 
 	public void put(int[] ints) {
@@ -54,6 +63,11 @@ public class GpuIntBuffer
 
 	public void put(IntBuffer buffer) {
 		this.buffer.put(buffer);
+	}
+
+	public int position()
+	{
+		return buffer.position();
 	}
 
 	public void flip()

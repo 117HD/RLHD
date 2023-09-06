@@ -24,16 +24,17 @@
  */
 package rs117.hd.data.materials;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import lombok.NonNull;
 import lombok.Setter;
 import rs117.hd.HdPluginConfig;
 
-import java.util.HashMap;
-import java.util.function.Consumer;
-import java.util.function.Function;
-
-public enum Material
-{
+public enum Material {
 	// - Each enum entry refers to a texture file by name, in lowercase. If a texture with the specified name is found,
 	//   it will be loaded and resized to fit the dimensions of the texture array.
 	// - Entries that specify a vanillaTextureIndex give names to vanilla textures, and will override the vanilla
@@ -214,6 +215,7 @@ public enum Material
 
 	SNOW_1,
 	SNOW_2,
+	SNOW_2_DARK(SNOW_2, p -> p.setBrightness(0.5f)),
 	SNOW_3,
 	SNOW_4,
 
@@ -222,45 +224,86 @@ public enum Material
 	GRASS_3,
 	GRASS_SCROLLING(GRASS_1, p -> p
 		.setScroll(0, 1 / 0.7f)),
+	DIRT_1_N,
+	DIRT_1(p -> p
+		.setNormalMap(DIRT_1_N)
+		.setSpecular(0.5f, 35)),
+	DIRT_2_N,
+	DIRT_2(p -> p
+		.setNormalMap(DIRT_2_N)
+		.setSpecular(0.4f, 30)),
+	GRAVEL_N,
+	GRAVEL(p -> p
+		.setNormalMap(GRAVEL_N)
+		.setSpecular(0.4f, 130)),
 
-	DIRT_1,
-	DIRT_2,
-	GRAVEL,
-
-	DIRT_SHINY_1(DIRT_1, p -> p
+	DIRT_1_SHINY(DIRT_1, p -> p
 		.setSpecular(1.1f, 380)),
-	DIRT_SHINY_2(DIRT_2, p -> p
+	DIRT_2_SHINY(DIRT_2, p -> p
 		.setSpecular(1.1f, 380)),
 	GRAVEL_SHINY(GRAVEL, p -> p
 		.setSpecular(1.1f, 380)),
-
-	SAND_1,
-	SAND_2,
-	SAND_3,
-
+	SAND_1_N,
+	SAND_1(p -> p
+		.setNormalMap(SAND_1_N)
+		.setSpecular(0.2f, 10)
+	),
+	SAND_2_N,
+	SAND_2(p -> p
+		.setNormalMap(SAND_2_N)
+		.setSpecular(0.2f, 10)
+	),
+	SAND_3_N,
+	SAND_3(p -> p
+		.setNormalMap(SAND_3_N)
+		.setSpecular(0.2f, 10)
+	),
 	GRUNGE_1,
 	GRUNGE_2,
 
-	ROCK_1,
-	ROCK_2,
+	ROCK_1_N,
+	ROCK_1(p -> p
+		.setNormalMap(ROCK_1_N)
+		.setSpecular(0.35f, 40)
+	),
+	ROCK_1_LIGHT(ROCK_1, p -> p.setBrightness(1.4f)),
+	ROCK_2_N,
+	ROCK_2(p -> p
+		.setNormalMap(ROCK_2_N)
+		.setSpecular(0.35f, 60)
+		.setBrightness(1.2f)
+	),
 
 	CARPET,
+	FINE_CARPET(CARPET, p -> p
+		.setBrightness(1.4f)
+		.setTextureScale(0.5f, 0.5f)),
 
+	FALADOR_PATH_BRICK_N,
 	FALADOR_PATH_BRICK(p -> p
-		.setSpecular(0.3f, 30)),
-	JAGGED_STONE_TILE,
+		.setNormalMap(FALADOR_PATH_BRICK_N)
+		.setSpecular(0.3f, 30)
+	),
+	JAGGED_STONE_TILE_N,
+	JAGGED_STONE_TILE(p -> p
+		.setNormalMap(JAGGED_STONE_TILE_N)
+		.setSpecular(0.5f, 30)
+	),
 
 	TILE_SMALL_1(p -> p
 		.setSpecular(0.8f, 70)),
-	TILES_1_2x2,
-	TILES_2_2x2,
-	TILES_2x2_1_GLOSS(TILES_1_2x2, p -> p
+	TILES_2X2_1_N,
+	TILES_2X2_1(p -> p
+		.setNormalMap(TILES_2X2_1_N)),
+	TILES_2X2_1_GLOSS(TILES_2X2_1, p -> p
 		.setSpecular(1.0f, 70)),
-	TILES_2x2_2_GLOSS(TILES_2_2x2, p -> p
-		.setSpecular(1.0f, 70)),
-	TILES_2x2_1_SEMIGLOSS(TILES_1_2x2, p -> p
+	TILES_2X2_1_SEMIGLOSS(TILES_2X2_1, p -> p
 		.setSpecular(0.5f, 300)),
-	TILES_2x2_2_SEMIGLOSS(TILES_2_2x2, p -> p
+	TILES_2X2_2(p -> p
+		.setSpecular(0.3f, 30)),
+	TILES_2X2_2_GLOSS(TILES_2X2_2, p -> p
+		.setSpecular(1.0f, 70)),
+	TILES_2X2_2_SEMIGLOSS(TILES_2X2_2, p -> p
 		.setSpecular(0.5f, 300)),
 
 	MARBLE_1,
@@ -297,56 +340,193 @@ public enum Material
 		.setFlowMap(LAVA_FLOW_MAP, 0.04f, 36, 12)),
 
 	BARK,
+	LIGHT_BARK(BARK, p -> p.setBrightness(1.75f)),
 	WOOD_GRAIN,
+	WOOD_GRAIN_2_N,
+	WOOD_GRAIN_2(p -> p
+		.setNormalMap(WOOD_GRAIN_2_N)
+		.setSpecular(0.3f, 30)
+	),
+	WOOD_GRAIN_2_LIGHT(WOOD_GRAIN_2, p -> p
+		.setBrightness(1.1f)
+	),
+	WOOD_GRAIN_2_WIDE(WOOD_GRAIN_2, p -> p
+		.setTextureScale(1.5f, 0.5f)
+	),
+	WOOD_GRAIN_3,
+	DOCK_FENCE,
+	DOCK_FENCE_DARK(DOCK_FENCE, p -> p.setBrightness(0.6f)),
 
 	HD_INFERNAL_CAPE(p -> p
-		.replaceIf(INFERNAL_CAPE, HdPluginConfig::hdInfernalTexture)
+		.replaceIf(HdPluginConfig::hdInfernalTexture, INFERNAL_CAPE)
 		.setUnlit(true)
 		.setOverrideBaseColor(true)
 		.setFlowMap(LAVA_FLOW_MAP, 0.02f, 12, 4)
 		.setScroll(0, 1 / 3f)),
 
+	HD_BRICK_N,
 	HD_BRICK(p -> p
-		.replaceIf(BRICK, HdPluginConfig::objectTextures)),
+		.replaceIf(HdPluginConfig::modelTextures, BRICK)
+		.setNormalMap(HD_BRICK_N)
+		.setSpecular(0.4f, 80)
+	),
+	HD_ROOF_SHINGLES_N,
 	HD_ROOF_SHINGLES_1(p -> p
-		.replaceIf(ROOF_SHINGLES_1, HdPluginConfig::objectTextures)
-		.setSpecular(0.5f, 30)),
+		.replaceIf(HdPluginConfig::modelTextures, ROOF_SHINGLES_1)
+		.setSpecular(0.5f, 30)
+		.setNormalMap(HD_ROOF_SHINGLES_N)
+	),
 	HD_MARBLE_DARK(p -> p
-		.replaceIf(MARBLE_DARK, HdPluginConfig::objectTextures)
+		.replaceIf(HdPluginConfig::modelTextures, MARBLE_DARK)
 		.setSpecular(1.1f, 380)),
 	HD_BRICK_BROWN(p -> p
-		.replaceIf(BRICK_BROWN, HdPluginConfig::objectTextures)),
+		.replaceIf(HdPluginConfig::modelTextures, BRICK_BROWN)
+		.setNormalMap(HD_BRICK_N)
+		.setSpecular(0.4f, 80)
+	),
 	HD_LAVA_3(p -> p
-		.replaceIf(LAVA, HdPluginConfig::objectTextures)
+		.replaceIf(HdPluginConfig::modelTextures, LAVA)
 		.setUnlit(true)
 		.setOverrideBaseColor(true)
 		.setFlowMap(LAVA_FLOW_MAP, 0.05f, 36, 22)
 		.setScroll(0, 1 / 3f)),
 	HD_ROOF_SHINGLES_2(p -> p
-		.replaceIf(ROOF_SHINGLES_2, HdPluginConfig::objectTextures)),
+		.replaceIf(HdPluginConfig::modelTextures, ROOF_SHINGLES_2)
+		.setSpecular(0.3f, 30)
+		.setNormalMap(HD_ROOF_SHINGLES_N)
+	),
+
 	WORN_TILES,
+	STONE_N,
+	STONE,
+	STONE_NORMALED(STONE, p -> p
+		.setNormalMap(STONE_N)
+		.setSpecular(0.3f, 30)
+	),
+	STONE_LOWGLOSS(STONE, p -> p
+		.setSpecular(0.3f, 30)
+	),
+	STONE_SEMIGLOSS(STONE, p -> p.setSpecular(0.6f, 100)),
+	STONE_SCROLLING(STONE, p -> p
+		.setScroll(0, -1 / 0.7f)),
+
+	WALL_STONE_N,
+	WALL_STONE(p -> p.setNormalMap(WALL_STONE_N)),
+	METALLIC_1(p -> p.setSpecular(0.2f, 20)),
+	METALLIC_1_SEMIGLOSS(METALLIC_1, p -> p
+		.setSpecular(0.3f, 80)),
+	METALLIC_1_GLOSS(METALLIC_1, p -> p
+		.setSpecular(0.7f, 80)),
+	METALLIC_1_HIGHGLOSS(METALLIC_1, p -> p
+		.setSpecular(1.1f, 80)),
+	METALLIC_2(METALLIC_1, p -> p.setBrightness(1.8f)),
+	METALLIC_2_SEMIGLOSS(METALLIC_2, p -> p
+		.setSpecular(0.3f, 80)),
+	METALLIC_2_GLOSS(METALLIC_2, p -> p
+		.setSpecular(0.7f, 80)),
+	METALLIC_2_HIGHGLOSS(METALLIC_2, p -> p
+		.setSpecular(1.1f, 80)),
+	METALLIC_NONE_GLOSS(NONE, p -> p
+		.setSpecular(0.7f, 80)),
+	WATTLE_1,
+	ICE_1(SNOW_4, p -> p
+		.replaceIf(HdPluginConfig::winterTheme, WATER_FLAT_2, WATER_FLAT)
+		.setSpecular(1.1f, 200)),
+	ICE_1_HIGHGLOSS(ICE_1, p -> p
+		.replaceIf(HdPluginConfig::winterTheme, WATER_FLAT_2, WATER_FLAT)
+		.setSpecular(3.1f, 30)),
+	ICE_2(SNOW_2, p -> p
+		.setSpecular(1.5f, 800)),
+	ICE_3(GRUNGE_2, p -> p
+		.setSpecular(1.9f, 1000)),
+	ICE_4(WHITE, p -> p
+		.setSpecular(1.5f, 1000)
+		.setNormalMap(WATER_NORMAL_MAP_2)),
+	SLIME_GRUNGE(GRUNGE_1, p -> p
+		.setSpecular(4.1f, 60)),
+	WATER_PUDDLE(NONE, p -> p
+		.setSpecular(1.5f, 80)),
+	HD_WOOD_PLANKS_1_N,
+	HD_WOOD_PLANKS_1(p -> p
+		.setNormalMap(HD_WOOD_PLANKS_1_N)
+		.setSpecular(0.3f, 40)
+		.setBrightness(1.2f)),
+	HD_ROOF_BRICK_TILE_N,
+	HD_ROOF_BRICK_TILE(ROOF_BRICK_TILE, p -> p
+		.replaceIf(HdPluginConfig::modelTextures, ROOF_BRICK_TILE)
+		.setSpecular(0.3f, 30)
+		.setNormalMap(HD_ROOF_BRICK_TILE_N)
+	),
+	HD_ROOF_BRICK_TILE_GREEN(ROOF_BRICK_TILE_GREEN, p -> p
+		.replaceIf(HdPluginConfig::modelTextures, ROOF_BRICK_TILE_GREEN)
+		.setSpecular(0.3f, 30)
+		.setNormalMap(HD_ROOF_BRICK_TILE_N)
+	),
+	HD_ROOF_BRICK_TILE_DARK(ROOF_BRICK_TILE_DARK, p -> p
+		.replaceIf(HdPluginConfig::modelTextures, ROOF_BRICK_TILE_DARK)
+		.setSpecular(0.3f, 30)
+		.setNormalMap(HD_ROOF_BRICK_TILE_N)
+	),
+	PLANT_GRUNGE_1(GRUNGE_1, p -> p
+		.setSpecular(0.25f, 25)
+	),
+	PLANT_GRUNGE_2(GRUNGE_2, p -> p
+		.setSpecular(0.20f, 20)
+	),
+
 
 	// Seasonal
 	WINTER_WILLOW_LEAVES(p -> p
-		.replaceIf(WILLOW_LEAVES, HdPluginConfig::winterTheme)
+		.replaceIf(HdPluginConfig::winterTheme, WILLOW_LEAVES)
 		.setTextureScale(1.025f, 1.0f)),
 	WINTER_MAPLE_LEAVES(p -> p
-		.replaceIf(MAPLE_LEAVES, HdPluginConfig::winterTheme)
+		.replaceIf(HdPluginConfig::winterTheme, MAPLE_LEAVES)
 		.setTextureScale(1.3f, 1.0f)),
 	WINTER_LEAVES_1(p -> p
-		.replaceIf(LEAVES_1, HdPluginConfig::winterTheme)
+		.replaceIf(HdPluginConfig::winterTheme, LEAVES_1)
 		.setTextureScale(1.3f, 1.0f)),
 	WINTER_LEAVES_2(p -> p
-		.replaceIf(LEAVES_2, HdPluginConfig::winterTheme)
+		.replaceIf(HdPluginConfig::winterTheme, LEAVES_2)
 		.setTextureScale(1.1f, 1.1f)),
 	WINTER_LEAVES_3(p -> p
-		.replaceIf(LEAVES_3, HdPluginConfig::winterTheme)),
+		.replaceIf(HdPluginConfig::winterTheme, LEAVES_3)),
 	WINTER_PAINTING_LANDSCAPE(p -> p
-		.replaceIf(PAINTING_LANDSCAPE, HdPluginConfig::winterTheme)),
+		.replaceIf(HdPluginConfig::winterTheme, PAINTING_LANDSCAPE)),
 	WINTER_PAINTING_KING(p -> p
-		.replaceIf(PAINTING_KING, HdPluginConfig::winterTheme)),
+		.replaceIf(HdPluginConfig::winterTheme, PAINTING_KING)),
 	WINTER_PAINTING_ELF(p -> p
-		.replaceIf(PAINTING_ELF, HdPluginConfig::winterTheme));
+		.replaceIf(HdPluginConfig::winterTheme, PAINTING_ELF)),
+	WINTER_HD_ROOF_SHINGLES_1(p -> p
+		.replaceIf(HdPluginConfig::winterTheme, ROOF_SHINGLES_1)
+		.setSpecular(0.5f, 30)
+		.setNormalMap(HD_ROOF_SHINGLES_N)),
+	WINTER_HD_ROOF_SHINGLES_2(p -> p
+		.replaceIf(HdPluginConfig::winterTheme, ROOF_SHINGLES_2)
+		.setSpecular(0.3f, 30)
+		.setNormalMap(HD_ROOF_SHINGLES_N)),
+	WINTER_HD_ROOF_BRICK_TILES(p -> p
+		.replaceIf(HdPluginConfig::winterTheme, ROOF_BRICK_TILE, ROOF_BRICK_TILE_GREEN, ROOF_BRICK_TILE_DARK)
+		.setSpecular(0.3f, 30)
+		.setNormalMap(HD_ROOF_BRICK_TILE_N)),
+	WINTER_HD_ROOF_SLATE(p -> p
+		.replaceIf(HdPluginConfig::winterTheme, ROOF_SLATE)
+		.setSpecular(0.5f, 30)),
+	WINTER_HD_ROOF_WOODEN_SLATE(p -> p
+		.replaceIf(HdPluginConfig::winterTheme, ROOF_WOODEN_SLATE)
+		.setSpecular(0.5f, 30)),
+	WINTER_JAGGED_STONE_TILE(p -> p
+		.setNormalMap(JAGGED_STONE_TILE_N)
+		.setSpecular(0.6f, 30)
+		.setBrightness(1.4f)),
+	WINTER_JAGGED_STONE_TILE_LIGHT(WINTER_JAGGED_STONE_TILE, p -> p
+		.setNormalMap(JAGGED_STONE_TILE_N)
+		.setSpecular(0.6f, 30)
+		.setBrightness(4)),
+	WINTER_JAGGED_STONE_TILE_LIGHTER(WINTER_JAGGED_STONE_TILE, p -> p
+		.setNormalMap(JAGGED_STONE_TILE_N)
+		.setSpecular(0.6f, 30)
+		.setBrightness(12)),
+	;
 
 	public final Material parent;
 	public final Material normalMap;
@@ -357,20 +537,19 @@ public enum Material
 	public final int vanillaTextureIndex;
 	public final boolean overrideBaseColor;
 	public final boolean unlit;
+	public final float brightness;
 	public final float displacementScale;
 	public final float flowMapStrength;
 	public final float[] flowMapDuration;
 	public final float specularStrength;
 	public final float specularGloss;
-	public final float emissiveStrength;
 	public final float[] scrollSpeed;
 	public final float[] textureScale;
-	public final Material materialToReplace;
+	public final List<Material> materialsToReplace = new ArrayList<>();
 	public final Function<HdPluginConfig, Boolean> replacementCondition;
 
 	@Setter
-	private static class Builder
-	{
+	private static class Builder {
 		private Material parent;
 		private Material normalMap = NONE;
 		private Material displacementMap = NONE;
@@ -380,25 +559,23 @@ public enum Material
 		private int vanillaTextureIndex = -1;
 		private boolean overrideBaseColor = false;
 		private boolean unlit = false;
+		private float brightness = 1;
 		private float displacementScale = .1f;
 		private float flowMapStrength;
 		private float[] flowMapDuration = { 0, 0 };
 		private float specularStrength;
 		private float specularGloss;
-		private float emissiveStrength;
 		private float[] scrollSpeed = { 0, 0 };
 		private float[] textureScale = { 1, 1 };
-		private Material materialToReplace;
+		private List<Material> materialsToReplace = new ArrayList<>();
 		private Function<HdPluginConfig, Boolean> replacementCondition;
 
-		Builder apply(Consumer<Builder> consumer)
-		{
+		Builder apply(Consumer<Builder> consumer) {
 			consumer.accept(this);
 			return this;
 		}
 
-		Builder setParent(Material parent)
-		{
+		Builder setParent(Material parent) {
 			this.parent = parent;
 			this.normalMap = parent.normalMap;
 			this.displacementMap = parent.displacementMap;
@@ -408,76 +585,66 @@ public enum Material
 			this.vanillaTextureIndex = parent.vanillaTextureIndex;
 			this.overrideBaseColor = parent.overrideBaseColor;
 			this.unlit = parent.unlit;
+			this.brightness = parent.brightness;
 			this.displacementScale = parent.displacementScale;
 			this.flowMapStrength = parent.flowMapStrength;
 			this.flowMapDuration = parent.flowMapDuration;
 			this.specularStrength = parent.specularStrength;
 			this.specularGloss = parent.specularGloss;
-			this.emissiveStrength = parent.emissiveStrength;
 			this.scrollSpeed = parent.scrollSpeed;
 			this.textureScale = parent.textureScale;
-			this.materialToReplace = parent.materialToReplace;
+			this.materialsToReplace.addAll(parent.materialsToReplace);
 			this.replacementCondition = parent.replacementCondition;
 			return this;
 		}
 
-		Builder setSpecular(float specularStrength, float specularGloss)
-		{
+		Builder setSpecular(float specularStrength, float specularGloss) {
 			this.specularStrength = specularStrength;
 			this.specularGloss = specularGloss;
 			return this;
 		}
 
-		Builder setFlowMap(Material flowMap, float flowMapStrength, float durationX, float durationY)
-		{
+		Builder setFlowMap(Material flowMap, float flowMapStrength, float durationX, float durationY) {
 			this.flowMap = flowMap;
 			this.flowMapStrength = flowMapStrength;
 			this.flowMapDuration = new float[] { durationX, durationY };
 			return this;
 		}
 
-		Builder setScroll(float speedX, float speedY)
-		{
+		Builder setScroll(float speedX, float speedY) {
 			this.scrollSpeed = new float[] { -speedX, -speedY };
 			return this;
 		}
 
-		Builder setTextureScale(float x, float y)
-		{
+		Builder setTextureScale(float x, float y) {
 			this.textureScale = new float[] { x, y };
 			return this;
 		}
 
-		Builder replaceIf(@NonNull Material materialToReplace, @NonNull Function<HdPluginConfig, Boolean> condition)
-		{
-			this.materialToReplace = materialToReplace;
+		Builder replaceIf(@NonNull Function<HdPluginConfig, Boolean> condition, @NonNull Material... materialsToReplace) {
+			Collections.addAll(this.materialsToReplace, materialsToReplace);
 			this.replacementCondition = condition;
 			return this;
 		}
 	}
 
-	Material()
-	{
+	Material() {
 		this(b -> {});
 	}
 
-	Material(int vanillaTextureIndex)
-	{
+	Material(int vanillaTextureIndex) {
 		this(p -> p.setVanillaTextureIndex(vanillaTextureIndex));
 	}
 
-	Material(Material parent, Consumer<Builder> consumer)
-	{
+	Material(Material parent, Consumer<Builder> consumer) {
 		this(b -> b.setParent(parent).apply(consumer));
 	}
 
-	Material(int vanillaTextureIndex, Consumer<Builder> consumer)
-	{
+	Material(int vanillaTextureIndex, Consumer<Builder> consumer) {
 		this(b -> b.setVanillaTextureIndex(vanillaTextureIndex).apply(consumer));
 	}
 
-	Material(Consumer<Builder> consumer)
-	{
+	Material(Consumer<Builder> consumer) {
 		Builder builder = new Builder();
 		consumer.accept(builder);
 		this.parent = builder.parent;
@@ -489,33 +656,29 @@ public enum Material
 		this.vanillaTextureIndex = builder.vanillaTextureIndex;
 		this.overrideBaseColor = builder.overrideBaseColor;
 		this.unlit = builder.unlit;
+		this.brightness = builder.brightness;
 		this.displacementScale = builder.displacementScale;
 		this.flowMapStrength = builder.flowMapStrength;
 		this.flowMapDuration = builder.flowMapDuration;
 		this.specularStrength = builder.specularStrength;
 		this.specularGloss = builder.specularGloss;
-		this.emissiveStrength = builder.emissiveStrength;
 		this.scrollSpeed = builder.scrollSpeed;
 		this.textureScale = builder.textureScale;
-		this.materialToReplace = builder.materialToReplace;
+		this.materialsToReplace.addAll(builder.materialsToReplace);
 		this.replacementCondition = builder.replacementCondition;
 	}
 
 	private static final HashMap<Integer, Material> VANILLA_TEXTURE_MAP = new HashMap<>();
 
-	static
-	{
-		for (Material material : values())
-		{
-			if (material.vanillaTextureIndex != -1)
-			{
+	static {
+		for (Material material : values()) {
+			if (material.vanillaTextureIndex != -1) {
 				VANILLA_TEXTURE_MAP.putIfAbsent(material.vanillaTextureIndex, material);
 			}
 		}
 	}
 
-	public static Material getTexture(int vanillaTextureId)
-	{
+	public static Material getTexture(int vanillaTextureId) {
 		return VANILLA_TEXTURE_MAP.getOrDefault(vanillaTextureId, Material.NONE);
 	}
 }

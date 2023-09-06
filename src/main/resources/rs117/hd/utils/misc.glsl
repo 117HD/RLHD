@@ -22,6 +22,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+#pragma once
 
 // translates a value from a custom range into 0-1
 float translateRange(float rangeStart, float rangeEnd, float value)
@@ -34,7 +35,7 @@ float translateRange(float rangeStart, float rangeEnd, float value)
 float animationFrame(float animationDuration)
 {
     if (animationDuration == 0)
-        return 0;
+        return 0.0;
     return mod(elapsedTime, animationDuration) / animationDuration;
 }
 
@@ -43,12 +44,6 @@ vec2 animationFrame(vec2 animationDuration)
     if (animationDuration == vec2(0))
         return vec2(0);
     return mod(vec2(elapsedTime), vec2(animationDuration)) / animationDuration;
-}
-
-vec2 worldUvs(float scale)
-{
-    scale *= 128.0;
-    return vec2(position.z / scale, position.x / scale);
 }
 
 // used for blending overlays into underlays.

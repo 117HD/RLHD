@@ -26,20 +26,16 @@
 package rs117.hd.opengl.shader;
 
 import com.google.common.annotations.VisibleForTesting;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.BufferUtils;
-import rs117.hd.utils.Env;
-
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
+import rs117.hd.utils.Props;
 
 import static org.lwjgl.opengl.GL43C.*;
 import static rs117.hd.utils.ResourcePath.path;
@@ -55,10 +51,10 @@ public class Shader
 	static class Unit
 	{
 		@Getter
-		private final int type;
+		public final int type;
 
 		@Getter
-		private final String filename;
+		public final String filename;
 	}
 
 	public Shader add(int type, String name)
@@ -67,9 +63,7 @@ public class Shader
 		return this;
 	}
 
-	Pattern NVIDIA_ERROR_REGEX = Pattern.compile("^(\\d+)\\((\\d+)\\) : (.*)");
-
-	public int compile(Template template) throws ShaderException
+	public int compile(Template template) throws ShaderException, IOException
 	{
 		int program = glCreateProgram();
 		int[] shaders = new int[units.size()];
@@ -94,49 +88,7 @@ public class Shader
 				{
 					String err = glGetShaderInfoLog(shader);
 					glDeleteShader(shader);
-
-					if (template.includeType == Template.IncludeType.GLSL) {
-						Matcher m = NVIDIA_ERROR_REGEX.matcher(err);
-						if (m.find()) {
-							try {
-								int index = Integer.parseInt(m.group(1));
-								int lineNumber = Integer.parseInt(m.group(2));
-								String error = m.group(3);
-								String include = template.includeList.get(index);
-								err = String.format(
-									"Compile error in '%s' on line %d when compiling shader '%s':\n\n%s\n",
-									include, lineNumber, unit.filename, error);
-							} catch (Exception ex) {
-								log.error("Error while parsing shader compilation error:", ex);
-							}
-						}
-						else
-						{
-							// Unknown error format, so include a mapping from source file index to filename
-							StringBuilder sb = new StringBuilder();
-							sb
-								.append("Compile error while compiling shader '")
-								.append(unit.filename)
-								.append("':\n\n")
-								.append(err)
-								.append("\nIncluded sources: [\n");
-							for (int j = 0; j < template.includeList.size(); j++) {
-								String s = String.valueOf(j);
-								sb
-									.append("  ")
-									.append(String.join("", Collections.nCopies( // Left pad
-										1 + (int) Math.log10(template.includeList.size()) - s.length(), " ")))
-									.append(s)
-									.append(": ")
-									.append(template.includeList.get(j))
-									.append("\n");
-							}
-							sb.append("]\n");
-							err = sb.toString();
-						}
-					}
-
-					throw new ShaderException(err);
+					throw ShaderException.compileError(err, template, unit);
 				}
 
 				glAttachShader(program, shader);
@@ -148,12 +100,12 @@ public class Shader
 			if (glGetProgrami(program, GL_LINK_STATUS) == GL_FALSE)
 			{
 				String err = glGetProgramInfoLog(program);
-				throw new ShaderException(err);
+				throw ShaderException.compileError(err, template, units.toArray(new Unit[0]));
 			}
 
 			ok = true;
 
-			if (Env.has("RLHD_DUMP_SHADERS"))
+			if (Props.has("rlhd.dump-shaders"))
 			{
 				int[] numFormats = { 0 };
 				glGetIntegerv(GL_NUM_PROGRAM_BINARY_FORMATS, numFormats);
