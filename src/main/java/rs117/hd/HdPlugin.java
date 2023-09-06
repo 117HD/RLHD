@@ -1451,7 +1451,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			updateSceneVao(hRenderBufferVertices, hRenderBufferUvs, hRenderBufferNormals);
 
 			// Once geometry buffers have been updated, they can be reused until the client actually modifies the scene
-			shouldSkipModelUpdates = true;
+			shouldSkipModelUpdates = config.furtherUnlockFps();
 		}
 
 		if (computeMode == ComputeMode.OPENCL) {
