@@ -140,8 +140,7 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay
 
 		ArrayList<String> lines = new ArrayList<>();
 
-		if (tile.getBridge() != null)
-		{
+		if (tile.getBridge() != null) {
 			lines.add("Bridge");
 		}
 
@@ -149,9 +148,13 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay
 		int y = tile.getSceneLocation().getY();
 		int plane = tile.getRenderLevel();
 
+		lines.add("Scene point: " + x + ", " + y + ", " + plane);
+
 		WorldPoint worldPoint = WorldPoint.fromLocalInstance(client, tile.getLocalLocation());
 		String worldPointInfo = "World point: " + worldPoint.getX() + ", " + worldPoint.getY() + ", " + worldPoint.getPlane();
 		lines.add(worldPointInfo);
+
+		lines.add("Region ID: " + worldPoint.getRegionID());
 
 		Scene scene = client.getScene();
 		short overlayId = scene.getOverlayIds()[plane][x][y];
