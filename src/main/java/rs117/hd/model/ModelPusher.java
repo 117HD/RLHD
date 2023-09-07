@@ -363,6 +363,11 @@ public class ModelPusher {
 		final int[] yVertexNormals = model.getVertexNormalsY();
 		final int[] zVertexNormals = model.getVertexNormalsZ();
 
+		if (xVertexNormals == null || yVertexNormals == null || zVertexNormals == null) {
+			Arrays.fill(sceneContext.modelFaceNormals, 0);
+			return;
+		}
+
 		sceneContext.modelFaceNormals[0] = xVertexNormals[triA];
 		sceneContext.modelFaceNormals[1] = yVertexNormals[triA];
 		sceneContext.modelFaceNormals[2] = zVertexNormals[triA];
@@ -470,7 +475,7 @@ public class ModelPusher {
 		// direction, and some models even have baked lighting built into the model itself. In some cases, increasing
 		// brightness in this way leads to overly bright colors, so we are forced to cap brightness at a relatively
 		// low value for it to look acceptable in most cases.
-		if (modelOverride.flatNormals) {
+		if (modelOverride.flatNormals || xVertexNormals == null || yVertexNormals == null || zVertexNormals == null) {
 			float[] T = {
 				xVertices[triA] - xVertices[triB],
 				yVertices[triA] - yVertices[triB],
