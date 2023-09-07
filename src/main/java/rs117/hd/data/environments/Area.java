@@ -1488,6 +1488,7 @@ public enum Area
 	),
 
 	// Nightmare of Ashihama
+	SISTERHOOD_SANCTUARY(regions(14999, 15000, 15001, 15255, 15256, 15257, 15511, 15512, 15513)),
 	NIGHTMARE_OF_ASHIHAMA_ARENA(3840, 9920, 3903, 9983),
 
 	// Pest Control

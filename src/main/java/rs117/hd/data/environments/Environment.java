@@ -908,6 +908,16 @@ public enum Environment
 		.setDirectionalColor("#00FF60")
 		.setLightDirection(260f, 10f)
 	),
+	SISTERHOOD_SANCTUARY(Area.SISTERHOOD_SANCTUARY, new Properties()
+		.setFogColor("#000000")
+		.setFogDepth(20)
+		.setAmbientColor("#AAAFB6")
+		.setAmbientStrength(4.0f)
+		.setDirectionalColor("#FFFFFF")
+		.setDirectionalStrength(0.0f)
+		.setLightDirection(260f, 10f)
+		.setAllowSkyOverride(false)
+	),
 
 	// Underwater areas
 	MOGRE_CAMP(Area.MOGRE_CAMP, new Properties()
