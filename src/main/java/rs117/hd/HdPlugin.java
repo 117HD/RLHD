@@ -368,7 +368,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private int uniBlockPointLights;
 
 	// Animation things
-	private long lastFrameTime = System.currentTimeMillis();
+	private long lastFrameTime;
 
 	// Generic scalable animation timer used in shaders
 	private float elapsedTime;
@@ -529,7 +529,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					developerTools.activate();
 				}
 
-				lastFrameTime = System.currentTimeMillis();
+				lastFrameTime = 0;
 
 				updateCachedConfigs();
 				setupSyncMode();
@@ -1636,32 +1636,32 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	@Override
-	public void draw(int overlayColor)
-	{
+	public void draw(int overlayColor) {
 		final GameState gameState = client.getGameState();
-		if (gameState == GameState.STARTING)
-		{
+		if (gameState == GameState.STARTING) {
 			return;
 		}
 
 		// reset the plugin if the last frame took >1min to draw
 		// why? because the user's computer was probably suspended and the buffers are no longer valid
-		if (System.currentTimeMillis() - lastFrameTime > 60000) {
-			log.debug("resetting the plugin after probable OS suspend");
-			shutDown();
-			startUp();
-			return;
-		}
+		if (lastFrameTime > 0) {
+			if (System.currentTimeMillis() - lastFrameTime > 300000) {
+				log.debug("resetting the plugin after probable OS suspend");
+				shutDown();
+				startUp();
+				return;
+			}
 
-		// shader variables for water, lava animations
-		long frameDeltaTime = System.currentTimeMillis() - lastFrameTime;
-		// if system time changes dramatically between frames,
-		// very large values may be added to elapsedTime,
-		// which causes floating point precision to break down,
-		// leading to texture animations and water appearing frozen
-		if (Math.abs(frameDeltaTime) > 10000)
-			frameDeltaTime = 16;
-		elapsedTime += frameDeltaTime / 1000f;
+			// shader variables for water, lava animations
+			long frameDeltaTime = System.currentTimeMillis() - lastFrameTime;
+			// if system time changes dramatically between frames,
+			// very large values may be added to elapsedTime,
+			// which causes floating point precision to break down,
+			// leading to texture animations and water appearing frozen
+			if (Math.abs(frameDeltaTime) > 10000)
+				frameDeltaTime = 16;
+			elapsedTime += frameDeltaTime / 1000f;
+		}
 		lastFrameTime = System.currentTimeMillis();
 
 		final int canvasHeight = client.getCanvasHeight();
