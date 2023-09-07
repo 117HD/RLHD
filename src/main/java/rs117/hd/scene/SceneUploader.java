@@ -30,6 +30,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
+import net.runelite.api.coords.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.data.WaterType;
@@ -183,27 +184,43 @@ class SceneUploader
 			sceneTileModel.setBufferLen(packedBufferLength);
 		}
 
+		// Place black tiles to cover holes in the ground
 		if (!hasTilePaint && sceneTileModel == null && tileZ == 0) {
-			// Draw the underwater tile at the start of each frame
-			int vertexOffset = sceneContext.getVertexOffset();
-			int uvOffset = sceneContext.getUvOffset();
-			Point tilePoint = tile.getSceneLocation();
-			final int tileX = tilePoint.getX();
-			final int tileY = tilePoint.getY();
-			sceneContext.staticUnorderedModelBuffer
-				.ensureCapacity(8)
-				.getBuffer()
-				.put(vertexOffset)
-				.put(uvOffset)
-				.put(2) // 2 faces
-				.put(sceneContext.staticVertexCount)
-				.put(0)
-				.put(tileX * LOCAL_TILE_SIZE)
-				.put(0)
-				.put(tileY * LOCAL_TILE_SIZE);
-			sceneContext.staticVertexCount += 6;
+			int[] excludedRegionIds = {
+				13122, // tob nylos
+				13125, // tob bloat
+			};
+			WorldPoint worldPoint = WorldPoint.fromLocalInstance(sceneContext.scene, tile.getLocalLocation(), tileZ);
+			int regionId = worldPoint.getRegionID();
+			boolean isExcluded = false;
+			for (int excludedRegion : excludedRegionIds) {
+				if (excludedRegion == regionId) {
+					isExcluded = true;
+					break;
+				}
+			}
 
-			uploadBlackTile(sceneContext, tile);
+			if (!isExcluded) {
+				int vertexOffset = sceneContext.getVertexOffset();
+				int uvOffset = sceneContext.getUvOffset();
+				Point tilePoint = tile.getSceneLocation();
+				final int tileX = tilePoint.getX();
+				final int tileY = tilePoint.getY();
+				sceneContext.staticUnorderedModelBuffer
+					.ensureCapacity(8)
+					.getBuffer()
+					.put(vertexOffset)
+					.put(uvOffset)
+					.put(2) // 2 faces
+					.put(sceneContext.staticVertexCount)
+					.put(0)
+					.put(tileX * LOCAL_TILE_SIZE)
+					.put(0)
+					.put(tileY * LOCAL_TILE_SIZE);
+				sceneContext.staticVertexCount += 6;
+
+				uploadBlackTile(sceneContext, tile);
+			}
 		}
 
 		WallObject wallObject = tile.getWallObject();
