@@ -902,7 +902,7 @@ public enum Environment
 	NIGHTMARE_OF_ASHIHAMA_ARENA(Area.NIGHTMARE_OF_ASHIHAMA_ARENA, new Properties()
 		.setFogColor("#000000")
 		.setFogDepth(30)
-		.setAmbientStrength(3.5f)
+		.setAmbientStrength(2.5f)
 		.setAmbientColor("#9A5DFD")
 		.setDirectionalStrength(2.0f)
 		.setDirectionalColor("#00FF60")
