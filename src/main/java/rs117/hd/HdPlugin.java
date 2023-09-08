@@ -888,14 +888,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		}
 	}
 
-	public void recompilePrograms() {
-		try {
-			destroyPrograms();
-			initPrograms();
-		} catch (ShaderException | IOException ex) {
-			log.error("Failed to recompile shader program:", ex);
-			stopPlugin();
-		}
+	public void recompilePrograms() throws ShaderException, IOException {
+		destroyPrograms();
+		initPrograms();
 	}
 
 	private void initVaos() {
@@ -1537,8 +1532,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	public void initShaderHotswapping() {
 		SHADER_PATH.watch("\\.(glsl|cl)$", path -> {
-			log.info("Reloading shader: {}", path);
-			clientThread.invoke(this::recompilePrograms);
+			log.info("Recompiling shaders: {}", path);
+			clientThread.invoke(() -> {
+				try {
+					recompilePrograms();
+				} catch (ShaderException | IOException ex) {
+					log.error("Error while recompiling shaders:", ex);
+				}
+			});
 		});
 	}
 
@@ -2228,58 +2229,63 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			return;
 
 		clientThread.invoke(() -> {
-			updateCachedConfigs();
+			try {
+				updateCachedConfigs();
 
-			switch (event.getKey()) {
-				case KEY_MAX_DYNAMIC_LIGHTS:
-				case KEY_UI_SCALING_MODE:
-				case KEY_COLOR_BLINDNESS:
-				case KEY_MACOS_INTEL_WORKAROUND:
-				case KEY_NORMAL_MAPPING:
-				case KEY_PARALLAX_OCCLUSION_MAPPING:
-				case KEY_VANILLA_COLOR_BANDING:
-					recompilePrograms();
-					break;
-				case KEY_SHADOW_MODE:
-				case KEY_SHADOW_TRANSPARENCY:
-					recompilePrograms();
-					// fall-through
-				case KEY_SHADOW_RESOLUTION:
-					destroyShadowMapFbo();
-					initShadowMapFbo();
-					break;
-				case KEY_TEXTURE_RESOLUTION:
-				case KEY_ANISOTROPIC_FILTERING_LEVEL:
-				case KEY_HD_INFERNAL_CAPE:
-					textureManager.freeTextures();
-					break;
-				case KEY_ATMOSPHERIC_LIGHTING:
-					environmentManager.reset();
-					break;
-				case KEY_WINTER_THEME:
-					environmentManager.reset();
-					// fall-through
-				case KEY_MODEL_TEXTURES:
-					textureManager.freeTextures();
-					// fall-through
-				case KEY_HIDE_FAKE_SHADOWS:
-				case KEY_GROUND_BLENDING:
-				case KEY_GROUND_TEXTURES:
-				case KEY_HD_TZHAAR_RESKIN:
-				case KEY_LEGACY_GREY_COLORS:
-					modelPusher.clearModelCache();
-					uploadScene();
-					break;
-				case KEY_UNLOCK_FPS:
-				case KEY_VSYNC_MODE:
-				case KEY_FPS_TARGET:
-					setupSyncMode();
-					break;
-				case KEY_MODEL_CACHING:
-				case KEY_MODEL_CACHE_SIZE:
-					modelPusher.shutDown();
-					modelPusher.startUp();
-					break;
+				switch (event.getKey()) {
+					case KEY_MAX_DYNAMIC_LIGHTS:
+					case KEY_UI_SCALING_MODE:
+					case KEY_COLOR_BLINDNESS:
+					case KEY_MACOS_INTEL_WORKAROUND:
+					case KEY_NORMAL_MAPPING:
+					case KEY_PARALLAX_OCCLUSION_MAPPING:
+					case KEY_VANILLA_COLOR_BANDING:
+						recompilePrograms();
+						break;
+					case KEY_SHADOW_MODE:
+					case KEY_SHADOW_TRANSPARENCY:
+						recompilePrograms();
+						// fall-through
+					case KEY_SHADOW_RESOLUTION:
+						destroyShadowMapFbo();
+						initShadowMapFbo();
+						break;
+					case KEY_TEXTURE_RESOLUTION:
+					case KEY_ANISOTROPIC_FILTERING_LEVEL:
+					case KEY_HD_INFERNAL_CAPE:
+						textureManager.freeTextures();
+						break;
+					case KEY_ATMOSPHERIC_LIGHTING:
+						environmentManager.reset();
+						break;
+					case KEY_WINTER_THEME:
+						environmentManager.reset();
+						// fall-through
+					case KEY_MODEL_TEXTURES:
+						textureManager.freeTextures();
+						// fall-through
+					case KEY_HIDE_FAKE_SHADOWS:
+					case KEY_GROUND_BLENDING:
+					case KEY_GROUND_TEXTURES:
+					case KEY_HD_TZHAAR_RESKIN:
+					case KEY_LEGACY_GREY_COLORS:
+						modelPusher.clearModelCache();
+						uploadScene();
+						break;
+					case KEY_UNLOCK_FPS:
+					case KEY_VSYNC_MODE:
+					case KEY_FPS_TARGET:
+						setupSyncMode();
+						break;
+					case KEY_MODEL_CACHING:
+					case KEY_MODEL_CACHE_SIZE:
+						modelPusher.shutDown();
+						modelPusher.startUp();
+						break;
+				}
+			} catch (ShaderException | IOException ex) {
+				log.error("Error while changing settings:", ex);
+				stopPlugin();
 			}
 		});
 	}
