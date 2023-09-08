@@ -772,10 +772,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		glUniform1i(uniTextureArray, 1);
 		glUniform1i(uniShadowMap, 2);
 
+		// Bind a VOA, else validation may fail on older Intel-based Macs
+		glBindVertexArray(vaoSceneHandle);
+
 		// Validate program
 		glValidateProgram(glProgram);
-		if (glGetProgrami(glProgram, GL_VALIDATE_STATUS) == GL_FALSE)
-		{
+		if (glGetProgrami(glProgram, GL_VALIDATE_STATUS) == GL_FALSE) {
 			String err = glGetProgramInfoLog(glProgram);
 			throw new ShaderException(err);
 		}
