@@ -87,7 +87,7 @@ void main() {
     mat2x3 TB = triToWorld * uvToTri; // Preserve scale in order for displacement to interact properly with shadow mapping
     T = TB[0];
     B = TB[1];
-    vec3 N = normalize(cross(T, B));
+    vec3 N = normalize(cross(triToWorld[0], triToWorld[1]));
 
     for (int i = 0; i < 3; i++) {
         OUT.position = gPosition[i];
