@@ -2141,18 +2141,21 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	public void loadScene(Scene scene)
 	{
-		if (nextSceneContext != null)
-		{
+		if (nextSceneContext != null) {
 			SceneContext handle = nextSceneContext;
 			nextSceneContext = null;
 			handle.destroy();
 		}
 
-		nextSceneContext = new SceneContext(scene, config.expandedMapLoadingChunks(), sceneContext);
-		proceduralGenerator.generateSceneData(nextSceneContext);
-		environmentManager.loadSceneEnvironments(nextSceneContext);
-		lightManager.loadSceneLights(nextSceneContext);
-		sceneUploader.upload(nextSceneContext);
+		var context = new SceneContext(scene, config.expandedMapLoadingChunks(), sceneContext);
+		// noinspection SynchronizationOnLocalVariableOrMethodParameter
+		synchronized (context) {
+			nextSceneContext = context;
+			proceduralGenerator.generateSceneData(context);
+			environmentManager.loadSceneEnvironments(context);
+			lightManager.loadSceneLights(context);
+			sceneUploader.upload(context);
+		}
 	}
 
 	public void swapScene(Scene scene)

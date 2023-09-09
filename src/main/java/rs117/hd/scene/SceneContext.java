@@ -77,7 +77,7 @@ public class SceneContext {
 		}
 	}
 
-	public void destroy() {
+	public synchronized void destroy() {
 		if (staticUnorderedModelBuffer != null)
 			staticUnorderedModelBuffer.destroy();
 		staticUnorderedModelBuffer = null;
