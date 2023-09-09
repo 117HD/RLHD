@@ -38,6 +38,7 @@ import net.runelite.api.coords.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.data.WaterType;
 import rs117.hd.data.environments.Area;
+import rs117.hd.scene.SceneUploader;
 import rs117.hd.utils.HDUtils;
 
 public enum Overlay {
@@ -914,7 +915,9 @@ public enum Overlay {
 			}
 		}
 
-		short overlayId = scene.getOverlayIds()[tile.getRenderLevel()][localLocation.getSceneX()][localLocation.getSceneY()];
+		int tileExX = localLocation.getSceneX() + SceneUploader.SCENE_OFFSET;
+		int tileExY = localLocation.getSceneY() + SceneUploader.SCENE_OFFSET;
+		short overlayId = scene.getOverlayIds()[tile.getRenderLevel()][tileExX][tileExY];
 		Overlay[] overlays = FILTERED_MAP.get((int) overlayId);
 		if (overlays != null) {
 			for (Overlay overlay : overlays) {

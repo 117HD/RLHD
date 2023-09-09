@@ -52,8 +52,9 @@ import static net.runelite.api.Perspective.*;
 @Singleton
 @Slf4j
 public
-class SceneUploader
-{
+class SceneUploader {
+	public static final int SCENE_OFFSET = (Constants.EXTENDED_SCENE_SIZE - Constants.SCENE_SIZE) / 2; // offset for sxy -> msxy
+
 	private static final float[] UP_NORMAL = { 0, -1, 0 };
 
 	@Inject
@@ -75,9 +76,10 @@ class SceneUploader
 		Stopwatch stopwatch = Stopwatch.createStarted();
 
 		for (int z = 0; z < Constants.MAX_Z; ++z) {
-			for (int x = 0; x < Constants.SCENE_SIZE; ++x) {
-				for (int y = 0; y < Constants.SCENE_SIZE; ++y) {
-					upload(sceneContext, sceneContext.scene.getTiles()[z][x][y], x, y, z);
+			for (int x = 0; x < Constants.EXTENDED_SCENE_SIZE; ++x) {
+				for (int y = 0; y < Constants.EXTENDED_SCENE_SIZE; ++y) {
+					Tile tile = sceneContext.scene.getExtendedTiles()[z][x][y];
+					upload(sceneContext, tile, x, y, z);
 				}
 			}
 		}
@@ -104,7 +106,9 @@ class SceneUploader
 		model.setSceneId(sceneContext.id);
 	}
 
-	private void upload(SceneContext sceneContext, @Nullable Tile tile, int tileX, int tileY, int tileZ) {
+	private void upload(SceneContext sceneContext, @Nullable Tile tile, int tileExX, int tileExY, int tileZ) {
+		int tileX = tileExX - SCENE_OFFSET;
+		int tileY = tileExY - SCENE_OFFSET;
 		int renderLevel = tileZ;
 		boolean hasTilePaint = false;
 		SceneTileModel sceneTileModel = null;
@@ -112,7 +116,7 @@ class SceneUploader
 		if (tile != null) {
 			Tile bridge = tile.getBridge();
 			if (bridge != null)
-				upload(sceneContext, bridge, tileX, tileY, tileZ);
+				upload(sceneContext, bridge, tileExX, tileExY, tileZ);
 
 			renderLevel = tile.getRenderLevel();
 			SceneTilePaint sceneTilePaint = tile.getSceneTilePaint();
@@ -132,7 +136,7 @@ class SceneUploader
 				// other model, all at once at the start of the frame. This bypasses any issues with draw order, and even partially solves the
 				// draw order artifacts resulting from skipped geometry updates for our extension to unlocked FPS.
 				final int[][][] tileHeights = sceneContext.scene.getTileHeights();
-				if (hasUnderwaterTerrain == 1 && tileHeights[renderLevel][tileX][tileY] >= -16) {
+				if (hasUnderwaterTerrain == 1 && tileHeights[renderLevel][tileExX][tileExY] >= -16) {
 					// Draw the underwater tile at the start of each frame
 					sceneContext.staticUnorderedModelBuffer
 						.ensureCapacity(8)
@@ -245,13 +249,13 @@ class SceneUploader
 			}
 		}
 
-		WorldPoint worldPoint = WorldPoint.fromLocalInstance(sceneContext.scene, new LocalPoint(tileX, tileY), tileZ);
+		WorldPoint worldPoint = sceneContext.localToWorld(new LocalPoint(tileX, tileExY), tileZ);
 
 		boolean fillGaps =
 			tileZ == 0 &&
-			tileX > 0 && tileY > 0 &&
-			tileX < Constants.SCENE_SIZE - 1 &&
-			tileY < Constants.SCENE_SIZE - 1 &&
+			tileExX > 0 && tileExY > 0 &&
+			tileExX < Constants.EXTENDED_SCENE_SIZE - 1 &&
+			tileExY < Constants.EXTENDED_SCENE_SIZE - 1 &&
 			worldPoint != null &&
 			Area.OVERWORLD.containsPoint(worldPoint);
 
@@ -262,7 +266,7 @@ class SceneUploader
 
 			if (sceneTileModel == null) {
 				if (!hasTilePaint) {
-					uploadBlackTile(sceneContext, tileX, tileY, renderLevel);
+					uploadBlackTile(sceneContext, tileExX, tileExY, renderLevel);
 					vertexCount = 6;
 				}
 			} else {
@@ -312,6 +316,8 @@ class SceneUploader
 		final Point tilePoint = tile.getSceneLocation();
 		final int tileX = tilePoint.getX();
 		final int tileY = tilePoint.getY();
+		final int tileExX = tileX + SceneUploader.SCENE_OFFSET;
+		final int tileExY = tileY + SceneUploader.SCENE_OFFSET;
 		final int tileZ = tile.getRenderLevel();
 
 		final int localX = 0;
@@ -321,10 +327,10 @@ class SceneUploader
 		int baseY = scene.getBaseY();
 
 		final int[][][] tileHeights = scene.getTileHeights();
-		int swHeight = tileHeights[tileZ][tileX][tileY];
-		int seHeight = tileHeights[tileZ][tileX + 1][tileY];
-		int neHeight = tileHeights[tileZ][tileX + 1][tileY + 1];
-		int nwHeight = tileHeights[tileZ][tileX][tileY + 1];
+		int swHeight = tileHeights[tileZ][tileExX][tileExY];
+		int seHeight = tileHeights[tileZ][tileExX + 1][tileExY];
+		int neHeight = tileHeights[tileZ][tileExX + 1][tileExY + 1];
+		int nwHeight = tileHeights[tileZ][tileExX][tileExY + 1];
 
 		int bufferLength = 0;
 		int uvBufferLength = 0;
@@ -529,6 +535,8 @@ class SceneUploader
 		final Point tilePoint = tile.getSceneLocation();
 		final int tileX = tilePoint.getX();
 		final int tileY = tilePoint.getY();
+		final int tileExX = tileX + SceneUploader.SCENE_OFFSET;
+		final int tileExY = tileY + SceneUploader.SCENE_OFFSET;
 		final int tileZ = tile.getRenderLevel();
 
 		int baseX = scene.getBaseX();
@@ -540,10 +548,10 @@ class SceneUploader
 		}
 
 		final int[][][] tileHeights = scene.getTileHeights();
-		int swHeight = tileHeights[tileZ][tileX][tileY];
-		int seHeight = tileHeights[tileZ][tileX + 1][tileY];
-		int neHeight = tileHeights[tileZ][tileX + 1][tileY + 1];
-		int nwHeight = tileHeights[tileZ][tileX][tileY + 1];
+		int swHeight = tileHeights[tileZ][tileExX][tileExY];
+		int seHeight = tileHeights[tileZ][tileExX + 1][tileExY];
+		int neHeight = tileHeights[tileZ][tileExX + 1][tileExY + 1];
+		int nwHeight = tileHeights[tileZ][tileExX][tileExY + 1];
 
 		int bufferLength = 0;
 		int uvBufferLength = 0;
@@ -564,7 +572,7 @@ class SceneUploader
 		int nwVertexKey = vertexKeys[2];
 		int neVertexKey = vertexKeys[3];
 
-		if (sceneContext.tileIsWater[tileZ][tileX][tileY]) {
+		if (sceneContext.tileIsWater[tileZ][tileExX][tileExY]) {
 			// underwater terrain
 
 			underwaterTerrain = 1;
@@ -672,13 +680,15 @@ class SceneUploader
 		final Point tilePoint = tile.getSceneLocation();
 		final int tileX = tilePoint.getX();
 		final int tileY = tilePoint.getY();
+		final int tileExX = tileX + SceneUploader.SCENE_OFFSET;
+		final int tileExY = tileY + SceneUploader.SCENE_OFFSET;
 		final int tileZ = tile.getRenderLevel();
 
 		int bufferLength = 0;
 		int uvBufferLength = 0;
 		int underwaterTerrain = 0;
 
-		if (sceneContext.skipTile[tileZ][tileX][tileY]) {
+		if (sceneContext.skipTile[tileZ][tileExX][tileExY]) {
 			return new int[] { bufferLength, uvBufferLength, underwaterTerrain };
 		}
 
@@ -861,14 +871,17 @@ class SceneUploader
 		final Point tilePoint = tile.getSceneLocation();
 		final int tileX = tilePoint.getX();
 		final int tileY = tilePoint.getY();
+		final int tileExX = tileX + SceneUploader.SCENE_OFFSET;
+		final int tileExY = tileY + SceneUploader.SCENE_OFFSET;
 		final int tileZ = tile.getRenderLevel();
 
 		int bufferLength = 0;
 		int uvBufferLength = 0;
 		int underwaterTerrain = 0;
 
-		if (sceneContext.skipTile[tileZ][tileX][tileY])
+		if (sceneContext.skipTile[tileZ][tileExX][tileExY]) {
 			return new int[] { bufferLength, uvBufferLength, underwaterTerrain };
+		}
 
 		final int[] faceColorA = sceneTileModel.getTriangleColorA();
 		final int faceCount = sceneTileModel.getFaceX().length;
@@ -881,7 +894,7 @@ class SceneUploader
 			return new int[] { bufferLength, uvBufferLength, underwaterTerrain };
 		}
 
-		if (sceneContext.tileIsWater[tileZ][tileX][tileY]) {
+		if (sceneContext.tileIsWater[tileZ][tileExX][tileExY]) {
 			underwaterTerrain = 1;
 
 			// underwater terrain
@@ -963,17 +976,17 @@ class SceneUploader
 		return new int[] { bufferLength, uvBufferLength, underwaterTerrain };
 	}
 
-	private void uploadBlackTile(SceneContext sceneContext, int tileX, int tileY, int tileZ) {
+	private void uploadBlackTile(SceneContext sceneContext, int tileExX, int tileExY, int tileZ) {
 		final Scene scene = sceneContext.scene;
 
 		final int localX = 0;
 		final int localY = 0;
 
 		final int[][][] tileHeights = scene.getTileHeights();
-		int swHeight = tileHeights[tileZ][tileX][tileY];
-		int seHeight = tileHeights[tileZ][tileX + 1][tileY];
-		int neHeight = tileHeights[tileZ][tileX + 1][tileY + 1];
-		int nwHeight = tileHeights[tileZ][tileX][tileY + 1];
+		int swHeight = tileHeights[tileZ][tileExX][tileExY];
+		int seHeight = tileHeights[tileZ][tileExX + 1][tileExY];
+		int neHeight = tileHeights[tileZ][tileExX + 1][tileExY + 1];
+		int nwHeight = tileHeights[tileZ][tileExX][tileExY + 1];
 
 		int localSwVertexX = localX;
 		int localSwVertexY = localY;

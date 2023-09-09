@@ -135,7 +135,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	 */
 	public static final int MAX_TRIANGLE = 6144;
 	public static final int SMALL_TRIANGLE_COUNT = 512;
-	public static final int MAX_DISTANCE = 90;
+	public static final int MAX_DISTANCE = Constants.EXTENDED_SCENE_SIZE;
 	public static final int MAX_FOG_DEPTH = 100;
 	public static final int SCALAR_BYTES = 4;
 	public static final int VERTEX_SIZE = 4; // 4 ints per vertex
@@ -320,6 +320,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private int uniFogColor;
 	private int uniFogDepth;
 	private int uniDrawDistance;
+	private int uniExpandedMapLoadingChunks;
 	private int uniWaterColorLight;
 	private int uniWaterColorMid;
 	private int uniWaterColorDark;
@@ -542,6 +543,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 				client.setDrawCallbacks(this);
 				client.setGpuFlags(DrawCallbacks.GPU | DrawCallbacks.NORMALS);
+				client.setExpandedMapLoading(config.expandedMapLoadingChunks());
 				textureManager.startUp();
 				// force rebuild of main buffer provider to enable alpha channel
 				client.resizeCanvas();
@@ -593,6 +595,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			client.setGpuFlags(0);
 			client.setDrawCallbacks(null);
 			client.setUnlockedFps(false);
+			client.setExpandedMapLoading(0);
 
 			modelPusher.shutDown();
 			lightManager.shutDown();
@@ -802,6 +805,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		uniWaterColorMid = glGetUniformLocation(glProgram, "waterColorMid");
 		uniWaterColorDark = glGetUniformLocation(glProgram, "waterColorDark");
 		uniDrawDistance = glGetUniformLocation(glProgram, "drawDistance");
+		uniExpandedMapLoadingChunks = glGetUniformLocation(glProgram, "expandedMapLoadingChunks");
 		uniAmbientStrength = glGetUniformLocation(glProgram, "ambientStrength");
 		uniAmbientColor = glGetUniformLocation(glProgram, "ambientColor");
 		uniLightStrength = glGetUniformLocation(glProgram, "lightStrength");
@@ -1853,7 +1857,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			glClearColor(fogColor[0], fogColor[1], fogColor[2], 1f);
 			glClear(GL_COLOR_BUFFER_BIT);
 
-			final int drawDistance = getDrawDistance();
 			int fogDepth = 0;
 			switch (config.fogDepthMode()) {
 				case USER_DEFINED:
@@ -1867,7 +1870,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			glUniform1i(uniFogDepth, fogDepth);
 			glUniform3fv(uniFogColor, fogColor);
 
-			glUniform1i(uniDrawDistance, drawDistance * LOCAL_TILE_SIZE);
+			glUniform1i(uniDrawDistance, getDrawDistance() * LOCAL_TILE_SIZE);
+			glUniform1i(uniExpandedMapLoadingChunks, sceneContext.expandedMapLoadingChunks);
 			glUniform1f(uniColorBlindnessIntensity, config.colorBlindnessIntensity() / 100.f);
 
 			float[] waterColorHsv = ColorUtils.srgbToHsv(environmentManager.currentWaterColor);
@@ -2144,7 +2148,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			handle.destroy();
 		}
 
-		nextSceneContext = new SceneContext(scene, sceneContext);
+		nextSceneContext = new SceneContext(scene, config.expandedMapLoadingChunks(), sceneContext);
 		proceduralGenerator.generateSceneData(nextSceneContext);
 		environmentManager.loadSceneEnvironments(nextSceneContext);
 		lightManager.loadSceneLights(nextSceneContext);
@@ -2235,6 +2239,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				updateCachedConfigs();
 
 				switch (event.getKey()) {
+					case KEY_EXPANDED_MAP_LOADING_CHUNKS:
+						client.setExpandedMapLoading(config.expandedMapLoadingChunks());
+						if (client.getGameState() == GameState.LOGGED_IN)
+							client.setGameState(GameState.LOADING);
+						break;
 					case KEY_MAX_DYNAMIC_LIGHTS:
 					case KEY_UI_SCALING_MODE:
 					case KEY_COLOR_BLINDNESS:
