@@ -38,7 +38,10 @@ out float gFogAmount;
 out int gMaterialData;
 out int gTerrainData;
 
+uniform int useFog;
+uniform int fogDepth;
 uniform int drawDistance;
+uniform int expandedMapLoadingChunks;
 
 #include uniforms/materials.glsl
 

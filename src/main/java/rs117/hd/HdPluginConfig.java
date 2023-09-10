@@ -72,12 +72,26 @@ public interface HdPluginConfig extends Config
 		description =
 			"The maximum number of tiles to draw in either direction from the camera.<br>" +
 			"Depending on where the scene was loaded from, you might only see as far as 16 tiles in some directions.",
+		position = 0,
+		section = generalSettings
+	)
+	default int drawDistance() {
+		return 50;
+	}
+
+	String KEY_EXPANDED_MAP_LOADING_CHUNKS = "expandedMapLoadingChunks";
+	@Range(
+		max = 5
+	)
+	@ConfigItem(
+		keyName = KEY_EXPANDED_MAP_LOADING_CHUNKS,
+		name = "Extended map loading",
+		description = "Extra map area to load, in 8 tile chunks.",
 		position = 1,
 		section = generalSettings
 	)
-	default int drawDistance()
-	{
-		return 50;
+	default int expandedMapLoadingChunks() {
+		return 3;
 	}
 
 	@ConfigItem(
@@ -768,13 +782,25 @@ public interface HdPluginConfig extends Config
 
 	/*====== Experimental settings ======*/
 
-//	@ConfigSection(
-//		name = "Experimental",
-//		description = "Experimental features - if you're experiencing issues you should consider disabling these",
-//		position = 5,
-//		closedByDefault = true
-//	)
-//	String experimentalSettings = "experimentalSettings";
+	@ConfigSection(
+		name = "Experimental",
+		description = "Experimental features - if you're experiencing issues you should consider disabling these",
+		position = 5,
+		closedByDefault = true
+	)
+	String experimentalSettings = "experimentalSettings";
+
+	String KEY_FURTHER_UNLOCK_FPS = "furtherUnlockFps";
+	@ConfigItem(
+		keyName = KEY_FURTHER_UNLOCK_FPS,
+		name = "Further unlock FPS",
+		description = "Avoids unnecessarily updating geometry, leading to higher frame rates if already above 50 FPS.",
+		position = 0,
+		section = experimentalSettings
+	)
+	default boolean furtherUnlockFps() {
+		return false;
+	}
 
 
 	/*====== Internal settings ======*/
