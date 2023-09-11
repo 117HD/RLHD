@@ -902,11 +902,21 @@ public enum Environment
 	NIGHTMARE_OF_ASHIHAMA_ARENA(Area.NIGHTMARE_OF_ASHIHAMA_ARENA, new Properties()
 		.setFogColor("#000000")
 		.setFogDepth(30)
-		.setAmbientStrength(3.5f)
+		.setAmbientStrength(2.5f)
 		.setAmbientColor("#9A5DFD")
 		.setDirectionalStrength(2.0f)
 		.setDirectionalColor("#00FF60")
 		.setLightDirection(260f, 10f)
+	),
+	SISTERHOOD_SANCTUARY(Area.SISTERHOOD_SANCTUARY, new Properties()
+		.setFogColor("#000000")
+		.setFogDepth(20)
+		.setAmbientColor("#AAAFB6")
+		.setAmbientStrength(4.0f)
+		.setDirectionalColor("#FFFFFF")
+		.setDirectionalStrength(0.0f)
+		.setLightDirection(260f, 10f)
+		.setAllowSkyOverride(false)
 	),
 
 	// Underwater areas

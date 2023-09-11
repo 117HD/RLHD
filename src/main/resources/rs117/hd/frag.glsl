@@ -71,7 +71,8 @@ flat in vec4 vColor[3];
 flat in vec3 vUv[3];
 flat in int vMaterialData[3];
 flat in int vTerrainData[3];
-flat in mat2x3 TB;
+flat in vec3 T;
+flat in vec3 B;
 
 in FragmentData {
     vec3 position;
@@ -168,7 +169,7 @@ void main() {
 
         // Set up tangent-space transformation matrix
         vec3 N = normalize(IN.normal);
-        mat3 TBN = mat3(TB[0], TB[1], N * min(length(TB[0]), length(TB[1])));
+        mat3 TBN = mat3(T, B, N * min(length(T), length(B)));
 
         float selfShadowing = 0;
         vec3 fragPos = IN.position;

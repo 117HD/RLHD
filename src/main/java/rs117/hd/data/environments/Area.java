@@ -1488,6 +1488,7 @@ public enum Area
 	),
 
 	// Nightmare of Ashihama
+	SISTERHOOD_SANCTUARY(regions(14999, 15000, 15001, 15255, 15256, 15257, 15511, 15512, 15513)),
 	NIGHTMARE_OF_ASHIHAMA_ARENA(3840, 9920, 3903, 9983),
 
 	// Pest Control
@@ -1589,7 +1590,7 @@ public enum Area
 		new AABB(2296, 4612, 2372, 4539),
 		new AABB(2430, 4607, 2642, 4542),
 		new AABB(2577, 4798, 2825, 4608),
-		new AABB(2871, 4740, 2945, 4660),
+		new AABB(11593),
 		new AABB(2492, 4806, 2559, 4747),
 		new AABB(2369, 4864, 2428, 4801),
 		new AABB(1787, 4547, 1859, 4472),

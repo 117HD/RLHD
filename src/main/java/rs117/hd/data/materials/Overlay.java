@@ -38,6 +38,7 @@ import net.runelite.api.coords.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.data.WaterType;
 import rs117.hd.data.environments.Area;
+import rs117.hd.scene.SceneUploader;
 import rs117.hd.utils.HDUtils;
 
 public enum Overlay {
@@ -385,7 +386,7 @@ public enum Overlay {
 		.hue(12)),
 	SEERS_CHURCH_1(-85, Area.SEERS_CHURCH, GroundMaterial.TILES_2x2_2, p -> p.blended(false)),
 	SEERS_CHURCH_2(8, Area.SEERS_CHURCH, GroundMaterial.MARBLE_2, p -> p.blended(false)),
-	SEERS_COURTHOUSE_FLOOR(GroundMaterial.FALADOR_PATHS, p -> p.ids(110, 123)),
+	SEERS_COURTHOUSE_FLOOR(p -> p.area(Area.SEERS_COURTHOUSE).ids(110, 123).groundMaterial(GroundMaterial.FALADOR_PATHS)),
 	SINCLAIR_MANSION_FLOOR(173, Area.SINCLAIR_MANSION, GroundMaterial.WOOD_PLANKS_1, p -> p
 		.lightness(40)
 		.hue(10)
@@ -738,6 +739,7 @@ public enum Overlay {
 
 	// POHs
 	POH_DESERT_INDOORS(Area.PLAYER_OWNED_HOUSE, GroundMaterial.TILES_2x2_2, p -> p.blended(false).ids(26, 99)),
+	POH_BASEMENT_FLOOR_SHADOW_FIX(Area.PLAYER_OWNED_HOUSE, GroundMaterial.TRANSPARENT, p -> p.blended(false).ids(120)),
 
 	// Cutscenes
 	LAND_OF_GOBLINS_WATER_FIX(13, Area.LAND_OF_GOBLINS_CUTSCENE_WATER, WaterType.WATER),
@@ -913,7 +915,9 @@ public enum Overlay {
 			}
 		}
 
-		short overlayId = scene.getOverlayIds()[tile.getRenderLevel()][localLocation.getSceneX()][localLocation.getSceneY()];
+		int tileExX = localLocation.getSceneX() + SceneUploader.SCENE_OFFSET;
+		int tileExY = localLocation.getSceneY() + SceneUploader.SCENE_OFFSET;
+		short overlayId = scene.getOverlayIds()[tile.getRenderLevel()][tileExX][tileExY];
 		Overlay[] overlays = FILTERED_MAP.get((int) overlayId);
 		if (overlays != null) {
 			for (Overlay overlay : overlays) {

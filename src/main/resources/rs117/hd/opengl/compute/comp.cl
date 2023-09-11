@@ -40,7 +40,8 @@ void computeLarge(
   __global int4 *vout,
   __global float4 *uvout,
   __global float4 *normalout,
-  __constant struct uniform *uni
+  __constant struct uniform *uni,
+  read_only image3d_t tileHeightMap
 ) {
   size_t groupId = get_group_id(0);
   size_t localId = get_local_id(0) * FACE_COUNT;
@@ -91,6 +92,6 @@ void computeLarge(
   barrier(CLK_LOCAL_MEM_FENCE);
 
   for (int i = 0; i < FACE_COUNT; i++) {
-    sort_and_insert(shared, uv, normal, vout, uvout, normalout, uni, localId + i, minfo, prioAdj[i], dis[i], v1[i], v2[i], v3[i]);
+    sort_and_insert(shared, uv, normal, vout, uvout, normalout, uni, localId + i, minfo, prioAdj[i], dis[i], v1[i], v2[i], v3[i], tileHeightMap);
   }
 }

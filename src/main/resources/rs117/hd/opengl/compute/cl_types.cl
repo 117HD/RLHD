@@ -48,7 +48,7 @@ struct ModelInfo {
   int uvOffset; // offset into uv buffer
   int size;     // length in faces
   int idx;      // write idx in target buffer
-  int flags;    // radius, orientation
+  int flags;    // hillskew, plane, radius, orientation
   int x;        // scene position x
   int y;        // scene position y
   int z;        // scene position z

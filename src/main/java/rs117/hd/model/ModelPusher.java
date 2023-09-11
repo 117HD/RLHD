@@ -88,20 +88,21 @@ public class ModelPusher {
 				log.error("Error while initializing model cache. Stopping the plugin...", err);
 
 				if (err instanceof OutOfMemoryError) {
-					String arch = System.getProperty("sun.arch.data.model", "Unknown");
 					PopupUtils.displayPopupMessage(client, "117HD Error",
 						"117HD ran out of memory while trying to allocate the model cache.<br><br>" +
-						(arch.equals("32") ?
-							(
-								"You are currently using the 32-bit RuneLite launcher, which heavily restricts<br>" +
-								"the amount of memory RuneLite is allowed to use.<br>" +
-								"Please install the 64-bit launcher from " +
-								"<a href=\"" + HdPlugin.RUNELITE_URL + "\">RuneLite's website</a> and try again.<br>"
-							) : (
-								(size <= 512 ? "" :
-									"Your cache size of " + size + " MiB is " + (
-										size >= 4096 ?
-											"very large. We would recommend reducing it.<br>" :
+						(
+							HDUtils.is32Bit() ?
+								(
+									"You are currently using the 32-bit RuneLite launcher, which heavily restricts<br>" +
+									"the amount of memory RuneLite is allowed to use.<br>" +
+									"Please install the 64-bit launcher from " +
+									"<a href=\"" + HdPlugin.RUNELITE_URL + "\">RuneLite's website</a> and try again.<br>"
+								) : (
+								(
+									size <= 512 ? "" :
+										"Your cache size of " + size + " MiB is " + (
+											size >= 4096 ?
+												"very large. We would recommend reducing it.<br>" :
 											"bigger than the default size. Try reducing it.<br>"
 									)
 								) +
@@ -363,6 +364,11 @@ public class ModelPusher {
 		final int[] yVertexNormals = model.getVertexNormalsY();
 		final int[] zVertexNormals = model.getVertexNormalsZ();
 
+		if (xVertexNormals == null || yVertexNormals == null || zVertexNormals == null) {
+			Arrays.fill(sceneContext.modelFaceNormals, 0);
+			return;
+		}
+
 		sceneContext.modelFaceNormals[0] = xVertexNormals[triA];
 		sceneContext.modelFaceNormals[1] = yVertexNormals[triA];
 		sceneContext.modelFaceNormals[2] = zVertexNormals[triA];
@@ -470,7 +476,7 @@ public class ModelPusher {
 		// direction, and some models even have baked lighting built into the model itself. In some cases, increasing
 		// brightness in this way leads to overly bright colors, so we are forced to cap brightness at a relatively
 		// low value for it to look acceptable in most cases.
-		if (modelOverride.flatNormals) {
+		if (modelOverride.flatNormals || xVertexNormals == null || yVertexNormals == null || zVertexNormals == null) {
 			float[] T = {
 				xVertices[triA] - xVertices[triB],
 				yVertices[triA] - yVertices[triB],
