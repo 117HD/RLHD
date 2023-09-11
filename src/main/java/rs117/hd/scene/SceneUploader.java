@@ -47,6 +47,10 @@ import rs117.hd.scene.model_overrides.ObjectType;
 import rs117.hd.utils.HDUtils;
 
 import static net.runelite.api.Perspective.*;
+import static rs117.hd.HdPlugin.NORMAL_SIZE;
+import static rs117.hd.HdPlugin.SCALAR_BYTES;
+import static rs117.hd.HdPlugin.UV_SIZE;
+import static rs117.hd.HdPlugin.VERTEX_SIZE;
 
 @SuppressWarnings("UnnecessaryLocalVariable")
 @Singleton
@@ -87,7 +91,18 @@ class SceneUploader {
 		sceneContext.staticUnorderedModelBuffer.flip();
 
 		stopwatch.stop();
-		log.debug("Scene upload time: {}", stopwatch);
+		log.debug(
+			"Scene upload time: {}, unique models: {}, size: {} MB",
+			stopwatch,
+			sceneContext.uniqueModels,
+			String.format(
+				"%.2f",
+				(
+					sceneContext.getVertexOffset() * (VERTEX_SIZE + NORMAL_SIZE) * SCALAR_BYTES +
+					sceneContext.getUvOffset() * UV_SIZE * SCALAR_BYTES
+				) / 1e6
+			)
+		);
 	}
 
 	private void uploadModel(SceneContext sceneContext, Tile tile, long hash, Model model, int orientation, ObjectType objectType)
@@ -104,6 +119,7 @@ class SceneUploader {
 			model.setUvBufferOffset(-1);
 
 		model.setSceneId(sceneContext.id);
+		++sceneContext.uniqueModels;
 	}
 
 	private void upload(SceneContext sceneContext, @Nullable Tile tile, int tileExX, int tileExY, int tileZ) {

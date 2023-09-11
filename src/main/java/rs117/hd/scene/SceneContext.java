@@ -33,6 +33,9 @@ public class SceneContext {
 	public GpuFloatBuffer stagingBufferUvs;
 	public GpuFloatBuffer stagingBufferNormals;
 
+	// statistics
+	public int uniqueModels;
+
 	// terrain data
 	public Map<Integer, Integer> vertexTerrainColor;
 	public Map<Integer, Material> vertexTerrainTexture;
