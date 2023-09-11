@@ -32,6 +32,7 @@ import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.PopupUtils;
 
+import static rs117.hd.HdPlugin.MAX_FACE_COUNT;
 import static rs117.hd.utils.HDUtils.dotLightDirectionModel;
 
 /**
@@ -168,7 +169,7 @@ public class ModelPusher {
 			shouldCache = false;
 		}
 
-		final int faceCount = Math.min(model.getFaceCount(), HdPlugin.MAX_TRIANGLE);
+		final int faceCount = Math.min(model.getFaceCount(), MAX_FACE_COUNT);
 		final int bufferSize = faceCount * DATUM_PER_FACE;
 		int vertexLength = 0;
 		int uvLength = 0;

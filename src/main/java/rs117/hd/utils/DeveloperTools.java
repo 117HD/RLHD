@@ -1,5 +1,8 @@
 package rs117.hd.utils;
 
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
+import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.client.config.Keybind;
 import net.runelite.client.input.KeyListener;
@@ -8,14 +11,9 @@ import net.runelite.client.ui.overlay.OverlayManager;
 import rs117.hd.data.environments.Area;
 import rs117.hd.overlays.TileInfoOverlay;
 
-import javax.inject.Inject;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
-
 @Slf4j
 public class DeveloperTools implements KeyListener
 {
-
 	// This could be part of the config if we had developer mode config sections
 	private static final Keybind KEY_TOGGLE_TILE_INFO = new Keybind(KeyEvent.VK_F3, InputEvent.CTRL_DOWN_MASK);
 

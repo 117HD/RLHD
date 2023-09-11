@@ -789,6 +789,18 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
+	String KEY_MODEL_SORTING_CONFIGURATION = "useOldModelSortingConfiguration";
+	@ConfigItem(
+		keyName = KEY_MODEL_SORTING_CONFIGURATION,
+		name = "Use old model sorting",
+		description = "Revert back to the previous version of model sorting, in case performance has gotten worse.",
+		position = 1,
+		section = experimentalSettings
+	)
+	default boolean useOldModelSortingConfiguration() {
+		return false;
+	}
+
 
 	/*====== Internal settings ======*/
 

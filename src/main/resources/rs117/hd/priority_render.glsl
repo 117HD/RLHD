@@ -191,14 +191,16 @@ int map_face_priority(uint localId, ModelInfo minfo, int thisPriority, int thisD
     return 0;
 }
 
-void insert_dfs(uint localId, ModelInfo minfo, int adjPrio, int distance, int prioIdx) {
+void insert_face(uint localId, ModelInfo minfo, int adjPrio, int distance, int prioIdx) {
     int size = minfo.size;
 
     if (localId < size) {
-        // calculate base offset into dfs based on number of faces with a lower priority
+        // calculate base offset into renderPris based on number of faces with a lower priority
         int baseOff = count_prio_offset(adjPrio);
-        // store into face array offset array by unique index
-        dfs[baseOff + prioIdx] = (int(localId) << 16) | distance;
+        // the furthest faces draw first, and have the highest value
+        // if two faces have the same distance, the one with the
+        // lower id draws first
+        renderPris[baseOff + prioIdx] = uint(distance << 16) | (~localId & 0xffffu);
     }
 }
 
@@ -215,9 +217,9 @@ ivec4 hillskew_vertex(ivec4 v, int hillskew, int y, int plane) {
     int pz = v.z & 127;
     int sx = v.x >> 7;
     int sz = v.z >> 7;
-    int h1 = px * tile_height(plane, sx + 1, sz) + (128 - px) * tile_height(plane, sx, sz) >> 7;
-    int h2 = px * tile_height(plane, sx + 1, sz + 1) + (128 - px) * tile_height(plane, sx, sz + 1) >> 7;
-    int h3 = pz * h2 + (128 - pz) * h1 >> 7;
+    int h1 = (px * tile_height(plane, sx + 1, sz) + (128 - px) * tile_height(plane, sx, sz)) >> 7;
+    int h2 = (px * tile_height(plane, sx + 1, sz + 1) + (128 - px) * tile_height(plane, sx, sz + 1)) >> 7;
+    int h3 = (pz * h2 + (128 - pz) * h1) >> 7;
     return ivec4(v.x, v.y + h3 - y, v.z, v.w);
 }
 
@@ -233,29 +235,20 @@ void sort_and_insert(uint localId, ModelInfo minfo, int thisPriority, int thisDi
         ivec4 pos = ivec4(minfo.x, minfo.y, minfo.z, 0);
         int orientation = flags & 0x7ff;
 
+        // we only have to order faces against others of the same priority
         const int priorityOffset = count_prio_offset(thisPriority);
         const int numOfPriority = totalMappedNum[thisPriority];
-        int start = priorityOffset; // index of first face with this priority
-        int end = priorityOffset + numOfPriority; // index of last face with this priority
+        const int start = priorityOffset; // index of first face with this priority
+        const int end = priorityOffset + numOfPriority; // index of last face with this priority
+        const uint renderPriority = uint(thisDistance << 16) | (~localId & 0xffffu);
         int myOffset = priorityOffset;
 
         uint ssboOffset = localId;
 
-        // we only have to order faces against others of the same priority
         // calculate position this face will be in
-        for (int i = start; i < end; ++i) {
-            int d1 = dfs[i];
-            int theirId = d1 >> 16;
-            int theirDistance = d1 & 0xffff;
-
-            // the closest faces draw last, so have the highest index
-            // if two faces have the same distance, the one with the
-            // higher id draws last
-            if ((theirDistance > thisDistance)
-            || (theirDistance == thisDistance && theirId < localId)) {
+        for (int i = start; i < end; ++i)
+            if (renderPriority < renderPris[i])
                 ++myOffset;
-            }
-        }
 
         thisrvA += pos;
         thisrvB += pos;

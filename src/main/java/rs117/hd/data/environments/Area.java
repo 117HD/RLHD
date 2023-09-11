@@ -1665,20 +1665,24 @@ public enum Area
 			.toArray(AABB[]::new);
 	}
 
-	public boolean containsPoint(int pointX, int pointY, int pointZ)
+	public boolean containsPoint(int worldX, int worldY, int plane)
 	{
 		for (AABB aabb : this.getAabbs())
 		{
-			if (aabb.contains(pointX, pointY, pointZ))
+			if (aabb.contains(worldX, worldY, plane))
 			{
 				return true;
 			}
 		}
 		return false;
 	}
-
-	public boolean containsPoint(WorldPoint point)
+	public boolean containsPoint(int[] worldPoint)
 	{
-		return containsPoint(point.getX(), point.getY(), point.getPlane());
+		return containsPoint(worldPoint[0], worldPoint[1], worldPoint[2]);
+	}
+
+	public boolean containsPoint(WorldPoint worldPoint)
+	{
+		return containsPoint(worldPoint.getX(), worldPoint.getY(), worldPoint.getPlane());
 	}
 }
