@@ -34,7 +34,6 @@ uniform float elapsedTime;
 
 #include uniforms/camera.glsl
 
-#include utils/polyfills.glsl
 #include utils/constants.glsl
 #define USE_VANILLA_UV_PROJECTION
 #include utils/uvs.glsl
@@ -51,6 +50,7 @@ flat out vec4 vColor[3];
 flat out vec3 vUv[3];
 flat out int vMaterialData[3];
 flat out int vTerrainData[3];
+flat out mat2x3 TB;
 
 out FragmentData {
     vec3 position;
@@ -69,12 +69,24 @@ void main() {
         vTerrainData[i] = gTerrainData[i];
     }
 
-    // Compute flat normals
-    vec3 T = gPosition[0] - gPosition[1];
-    vec3 B = gPosition[0] - gPosition[2];
-    vec3 N = normalize(cross(T, B));
+    mat2x3 triToWorld = mat2x3(
+        gPosition[1] - gPosition[0],
+        gPosition[2] - gPosition[0]
+    );
 
     computeUvs(vMaterialData[0], vec3[](gPosition[0], gPosition[1], gPosition[2]), vUv);
+
+    // Calculate tangent-space vectors
+    mat2 triToUv = mat2(
+        vUv[1].xy - vUv[0].xy,
+        vUv[2].xy - vUv[0].xy
+    );
+    if (determinant(triToUv) == 0)
+        triToUv = mat2(1);
+
+    mat2 uvToTri = inverse(triToUv) * -1; // Flip UV direction, since OSRS UVs are oriented strangely
+    TB = triToWorld * uvToTri; // Preserve scale in order for displacement to interact properly with shadow mapping
+    vec3 N = normalize(cross(triToWorld[0], triToWorld[1]));
 
     for (int i = 0; i < 3; i++) {
         OUT.position = gPosition[i];

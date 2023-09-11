@@ -23,7 +23,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include version_header
+#include VERSION_HEADER
 
 shared int totalNum[12]; // number of faces with a given priority
 shared int totalDistance[12]; // sum of distances to faces of a given priority

@@ -38,7 +38,7 @@ uniform sampler2D shadowMap;
 uniform mat4 lightProjectionMatrix;
 uniform float elapsedTime;
 uniform float colorBlindnessIntensity;
-uniform vec4 fogColor;
+uniform vec3 fogColor;
 uniform int fogDepth;
 uniform vec3 waterColorLight;
 uniform vec3 waterColorMid;
@@ -53,7 +53,7 @@ uniform float groundFogStart;
 uniform float groundFogEnd;
 uniform float groundFogOpacity;
 uniform float lightningBrightness;
-uniform vec3 lightDirection;
+uniform vec3 lightDir;
 uniform float shadowMaxBias;
 uniform int shadowsEnabled;
 uniform bool underwaterEnvironment;
@@ -71,6 +71,7 @@ flat in vec4 vColor[3];
 flat in vec3 vUv[3];
 flat in int vMaterialData[3];
 flat in int vTerrainData[3];
+flat in mat2x3 TB;
 
 in FragmentData {
     vec3 position;
@@ -82,16 +83,14 @@ in FragmentData {
 out vec4 FragColor;
 
 vec2 worldUvs(float scale) {
-    vec2 uv = IN.position.xz / (128 * scale);
-    return vec2(uv.x, -uv.y);
+    return -IN.position.xz / (128 * scale);
 }
 
-#include utils/polyfills.glsl
 #include utils/constants.glsl
 #include utils/misc.glsl
 #include utils/color_blindness.glsl
 #include utils/caustics.glsl
-#include utils/color_conversion.glsl
+#include utils/color_utils.glsl
 #include utils/normals.glsl
 #include utils/specular.glsl
 #include utils/displacement.glsl
@@ -103,7 +102,6 @@ void main() {
     vec3 downDir = vec3(0, -1, 0);
     // View & light directions are from the fragment to the camera/light
     vec3 viewDir = normalize(camPos - IN.position);
-    vec3 lightDir = -lightDirection;
 
     Material material1 = getMaterial(vMaterialData[0] >> MATERIAL_INDEX_SHIFT);
     Material material2 = getMaterial(vMaterialData[1] >> MATERIAL_INDEX_SHIFT);
@@ -137,14 +135,6 @@ void main() {
     if (isWater) {
         outputColor = sampleWater(waterTypeIndex, viewDir);
     } else {
-        // Source: https://www.geeks3d.com/20130122/normal-mapping-without-precomputed-tangent-space-vectors/
-        vec3 N = IN.normal;
-        vec3 C1 = cross(vec3(0, 0, 1), N);
-        vec3 C2 = cross(vec3(0, 1, 0), N);
-        vec3 T = normalize(length(C1) > length(C2) ? C1 : C2);
-        vec3 B = cross(N, T);
-        mat3 TBN = mat3(T, B, N);
-
         vec2 uv1 = vUv[0].xy;
         vec2 uv2 = vUv[1].xy;
         vec2 uv3 = vUv[2].xy;
@@ -161,26 +151,6 @@ void main() {
         uv2 = (uv2 - .5) / material2.textureScale + .5;
         uv3 = (uv3 - .5) / material3.textureScale + .5;
 
-        float selfShadowing = 0;
-        vec3 fragPos = IN.position;
-        #if PARALLAX_MAPPING
-        mat3 invTBN = transpose(TBN);
-        vec3 tangentViewDir = invTBN * viewDir;
-        vec3 tangentLightDir = invTBN * lightDir;
-
-        vec2 fragDelta = vec2(0);
-
-        sampleDisplacementMap(material1, tangentViewDir, tangentLightDir, uv1, fragDelta, selfShadowing);
-        sampleDisplacementMap(material2, tangentViewDir, tangentLightDir, uv2, fragDelta, selfShadowing);
-        sampleDisplacementMap(material3, tangentViewDir, tangentLightDir, uv3, fragDelta, selfShadowing);
-
-        // Average
-        fragDelta /= 3;
-        selfShadowing /= 3;
-
-        fragPos += TBN * vec3(fragDelta, 0);
-        #endif
-
         // get flowMap map
         vec2 flowMapUv = uv1 - animationFrame(material1.flowMapDuration);
         float flowMapStrength = material1.flowMapStrength;
@@ -196,6 +166,30 @@ void main() {
         uv2 += uvFlow * flowMapStrength;
         uv3 += uvFlow * flowMapStrength;
 
+        // Set up tangent-space transformation matrix
+        vec3 N = normalize(IN.normal);
+        mat3 TBN = mat3(TB[0], TB[1], N * min(length(TB[0]), length(TB[1])));
+
+        float selfShadowing = 0;
+        vec3 fragPos = IN.position;
+        #if PARALLAX_OCCLUSION_MAPPING
+        mat3 invTBN = inverse(TBN);
+        vec3 tsViewDir = invTBN * viewDir;
+        vec3 tsLightDir = invTBN * lightDir;
+
+        vec3 fragDelta = vec3(0);
+
+        sampleDisplacementMap(material1, tsViewDir, tsLightDir, uv1, fragDelta, selfShadowing);
+        sampleDisplacementMap(material2, tsViewDir, tsLightDir, uv2, fragDelta, selfShadowing);
+        sampleDisplacementMap(material3, tsViewDir, tsLightDir, uv3, fragDelta, selfShadowing);
+
+        // Average
+        fragDelta /= 3;
+        selfShadowing /= 3;
+
+        fragPos += TBN * fragDelta;
+        #endif
+
         // get vertex colors
         vec4 flatColor = vec4(0.5, 0.5, 0.5, 1.0);
         vec4 baseColor1 = vColor[0];
@@ -209,9 +203,9 @@ void main() {
             IN.texBlend[2] * baseColor3;
 
         baseColor.rgb = linearToSrgb(baseColor.rgb);
-        baseColor.rgb = rgbToHsv(baseColor.rgb);
+        baseColor.rgb = srgbToHsv(baseColor.rgb);
         baseColor.b = floor(baseColor.b * 127) / 127;
-        baseColor.rgb = hsvToRgb(baseColor.rgb);
+        baseColor.rgb = hsvToSrgb(baseColor.rgb);
         baseColor.rgb = srgbToLinear(baseColor.rgb);
 
         baseColor1 = baseColor2 = baseColor3 = baseColor;
@@ -254,10 +248,12 @@ void main() {
             float underlayBlendMultiplier = 1.0 / (underlayBlend[0] + underlayBlend[1] + underlayBlend[2]);
             // adjust back to 1.0 total
             underlayBlend *= underlayBlendMultiplier;
+            underlayBlend = clamp(underlayBlend, 0, 1);
 
             float overlayBlendMultiplier = 1.0 / (overlayBlend[0] + overlayBlend[1] + overlayBlend[2]);
             // adjust back to 1.0 total
             overlayBlend *= overlayBlendMultiplier;
+            overlayBlend = clamp(overlayBlend, 0, 1);
         }
 
 
@@ -337,9 +333,9 @@ void main() {
         outputColor = mix(underlayColor, overlayColor, overlayMix);
 
         // normals
-        vec3 n1 = sampleNormalMap(material1, uv1, IN.normal, TBN);
-        vec3 n2 = sampleNormalMap(material2, uv2, IN.normal, TBN);
-        vec3 n3 = sampleNormalMap(material3, uv3, IN.normal, TBN);
+        vec3 n1 = sampleNormalMap(material1, uv1, TBN);
+        vec3 n2 = sampleNormalMap(material2, uv2, TBN);
+        vec3 n3 = sampleNormalMap(material3, uv3, TBN);
         vec3 normals = normalize(n1 * IN.texBlend.x + n2 * IN.texBlend.y + n3 * IN.texBlend.z);
 
         float lightDotNormals = dot(normals, lightDir);
@@ -419,8 +415,8 @@ void main() {
         vec3 lightOut = max(lightDotNormals, 0.0) * lightColor;
 
         // directional light specular
-        vec3 lightReflectDir = reflect(lightDirection, normals);
-        vec3 lightSpecularOut = specular(viewDir, lightReflectDir, vSpecularGloss, vSpecularStrength, lightColor, lightStrength).rgb;
+        vec3 lightReflectDir = reflect(-lightDir, normals);
+        vec3 lightSpecularOut = lightColor * specular(viewDir, lightReflectDir, vSpecularGloss, vSpecularStrength);
 
         // point lights
         vec3 pointLightsOut = vec3(0);
@@ -445,14 +441,14 @@ void main() {
                 pointLightsOut += pointLightOut;
 
                 vec3 pointLightReflectDir = reflect(-pointLightDir, normals);
-                vec4 spec = specular(viewDir, pointLightReflectDir, vSpecularGloss, vSpecularStrength, pointLightColor, pointLightStrength) * attenuation;
-                pointLightsSpecularOut += spec.rgb;
+                pointLightsSpecularOut += pointLightColor * attenuation *
+                    specular(viewDir, pointLightReflectDir, vSpecularGloss, vSpecularStrength);;
             }
         }
 
 
         // sky light
-        vec3 skyLightColor = fogColor.rgb;
+        vec3 skyLightColor = fogColor;
         float skyLightStrength = 0.5;
         float skyDotNormals = downDotNormals;
         vec3 skyLightOut = max(skyDotNormals, 0.0) * skyLightColor * skyLightStrength;
@@ -492,7 +488,7 @@ void main() {
 
 
     outputColor.rgb = clamp(outputColor.rgb, 0, 1);
-    vec3 hsv = rgbToHsv(outputColor.rgb);
+    vec3 hsv = srgbToHsv(outputColor.rgb);
 
     // Apply saturation setting
     hsv.y *= saturation;
@@ -504,7 +500,7 @@ void main() {
         hsv.z = 0.5 - ((0.5 - hsv.z) * contrast);
     }
 
-    outputColor.rgb = hsvToRgb(hsv);
+    outputColor.rgb = hsvToSrgb(hsv);
     outputColor.rgb = colorBlindnessCompensation(outputColor.rgb);
 
     // apply fog
@@ -523,7 +519,7 @@ void main() {
             outputColor.a = combinedFog + outputColor.a * (1 - combinedFog);
         }
 
-        outputColor.rgb = mix(outputColor.rgb, fogColor.rgb, combinedFog);
+        outputColor.rgb = mix(outputColor.rgb, fogColor, combinedFog);
     }
 
     FragColor = outputColor;

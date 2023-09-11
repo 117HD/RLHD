@@ -19963,7 +19963,8 @@
       7376,
       5247,
       38027,
-      15016
+      15016,
+      12934
     ]
   },
   {
@@ -21484,6 +21485,24 @@
     "range": 20,
     "objectIds": [
       39656
+    ]
+  },
+  {
+    "description": "FEROX_BOUNTY_HUNTER_PORTAL",
+    "height": 180,
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 10,
+    "color": [
+      255,
+      50,
+      0
+    ],
+    "type": "PULSE",
+    "duration": 1541,
+    "range": 40,
+    "objectIds": [
+      47346
     ]
   },
   {
@@ -30422,6 +30441,152 @@
     "range": 30,
     "objectIds": [
       12400
+    ]
+  },
+  {
+    "description": "CULINATOMANCERS_PORTAL",
+    "height": 30,
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 12.5,
+    "color": [
+      252,
+      252,
+      252
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 30,
+    "objectIds": [
+      12356
+    ]
+  },
+  {
+    "description": "WALL_TORCH_MORT",
+    "height": 200,
+    "alignment": "FRONT",
+    "radius": 200,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 23,
+    "objectIds": [
+      12934
+    ]
+  },
+  {
+    "description": "DIGSITE_LAMP",
+    "height": 170,
+    "alignment": "FRONT",
+    "radius": 290,
+    "strength": 8.5,
+    "color": [
+      202,
+      168,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 24,
+    "objectIds": [
+      17324
+    ]
+  },
+  {
+    "description": "Keep Le Faye Jail",
+    "worldX": 1904,
+    "worldY": 4283,
+    "plane": 0,
+    "height": 418,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 10,
+    "color": [
+      255,
+      249.4737,
+      230.40408
+    ],
+    "type": "STATIC",
+    "duration": 1000,
+    "range": 0.2
+  },
+  {
+    "description": "RED_STREET_LAMP",
+    "height": 273,
+    "alignment": "CENTER",
+    "radius": 330,
+    "strength": 5,
+    "color": [
+      252,
+      168,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 30,
+    "objectIds": [
+      3434
+    ]
+  },
+  {
+    "description": "FALADOR_LAMP_HIGH",
+    "height": 190,
+    "alignment": "CENTER",
+    "radius": 290,
+    "strength": 8.5,
+    "color": [
+      202,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 24,
+    "objectIds": [
+      24172
+    ]
+  },
+  {
+    "description": "Giants Foundry - Lava Big",
+    "plane": 0,
+    "height": 52,
+    "alignment": "CENTER",
+    "radius": 350,
+    "strength": 10,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "PULSE",
+    "duration": 3000,
+    "range": 10,
+    "objectIds": [
+      29630
+    ]
+  },
+  {
+    "description": "Giants Foundry Lava - Small",
+    "plane": 0,
+    "height": 48,
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 10,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "PULSE",
+    "duration": 3000,
+    "range": 10,
+    "objectIds": [
+      29629
     ]
   }
 ]

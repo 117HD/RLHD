@@ -60,8 +60,8 @@ int4 rotate_ivec(__constant struct uniform *uni, int4 vector, int orientation) {
   int4 sinCos = uni->sinCosTable[orientation];
   int s = sinCos.x;
   int c = sinCos.y;
-  int x = vector.z * s + vector.x * c >> 16;
-  int z = vector.z * c - vector.x * s >> 16;
+  int x = (vector.z * s + vector.x * c) >> 16;
+  int z = (vector.z * c - vector.x * s) >> 16;
   return (int4)(x, vector.y, z, vector.w);
 }
 
@@ -84,8 +84,8 @@ int vertex_distance(int4 vertex, int cameraYaw, int cameraPitch) {
   int pitchSin = (int)(65536.0f * sin(cameraPitch * UNIT));
   int pitchCos = (int)(65536.0f * cos(cameraPitch * UNIT));
 
-  int j = vertex.z * yawCos - vertex.x * yawSin >> 16;
-  int l = vertex.y * pitchSin + j * pitchCos >> 16;
+  int j = (vertex.z * yawCos - vertex.x * yawSin) >> 16;
+  int l = (vertex.y * pitchSin + j * pitchCos) >> 16;
 
   return l;
 }

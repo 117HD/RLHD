@@ -1,3 +1,5 @@
+#pragma once
+
 #include WATER_TYPE_COUNT
 
 struct WaterType

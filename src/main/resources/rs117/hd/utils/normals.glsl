@@ -23,12 +23,15 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-vec3 sampleNormalMap(Material mat, vec2 uv, const vec3 surfaceNormal, const mat3 TBN) {
-    if (mat.normalMap == -1)
-        return surfaceNormal;
+#include NORMAL_MAPPING
+
+#if NORMAL_MAPPING
+vec3 sampleNormalMap(const Material material, const vec2 uv, const mat3 TBN) {
+    if (material.normalMap == -1)
+        return TBN[2];
 
     // Sample normal map texture, swapping Y and Z to match the coordinate system in OSRS
-    vec3 n = texture(textureArray, vec3(uv, mat.normalMap)).xyz;
+    vec3 n = texture(textureArray, vec3(uv, material.normalMap)).xyz;
     // Undo automatic sRGB to linear conversion, since we want the raw values
     n = linearToSrgb(n);
     // Scale and shift normal so it can point in both directions
@@ -38,3 +41,6 @@ vec3 sampleNormalMap(Material mat, vec2 uv, const vec3 surfaceNormal, const mat3
     // Assume the normal is already normalized
     return n;
 }
+#else
+#define sampleNormalMap(material, uv, TBN) TBN[2]
+#endif
