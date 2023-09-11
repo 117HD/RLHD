@@ -467,14 +467,16 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					log.error("The GPU is lacking OpenGL {} support. Stopping the plugin...",
 						computeMode == ComputeMode.OPENGL ? "4.3" : "3.1");
 					PopupUtils.displayPopupMessage(client, "117HD Error",
-						(isGenericGpu ?
-							"117HD was unable to access your GPU." :
-							"Your GPU is currently not supported by 117HD.<br><br>GPU name: " + glRenderer
+						(
+							isGenericGpu ?
+								"117HD was unable to access your GPU." :
+								"Your GPU is currently not supported by 117HD.<br><br>GPU name: " + glRenderer
 						) +
 						"<br><br>" +
 						"If your system actually has a supported GPU, try the following steps:<br>" +
-						(!arch.equals("32") ? "" :
-							"&nbsp;• Install the 64-bit version of RuneLite from " +
+						(
+							!HDUtils.is32Bit() ? "" :
+								"&nbsp;• Install the 64-bit version of RuneLite from " +
 								"<a href=\"" + HdPlugin.RUNELITE_URL + "\">the official website</a>.<br>"
 						) +
 						"&nbsp;• If you're on a desktop PC, make sure your monitor is plugged into the graphics card<br>" +
@@ -482,7 +484,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 						"&nbsp;• Reinstall the drivers for your graphics card and restart your system.<br>" +
 						"<br>" +
 						"If you're still seeing this error after following the steps above, please join our " +
-							"<a href=\"" + HdPlugin.DISCORD_URL + "\">Discord</a><br>" +
+						"<a href=\"" + HdPlugin.DISCORD_URL + "\">Discord</a><br>" +
 						"server, and drag and drop your client log file into one of our support channels.",
 						new String[] { "Open log folder", "Ok, let me try that..." },
 						i -> { if (i == 0) LinkBrowser.open(RuneLite.LOGS_DIR.toString()); });
@@ -543,7 +545,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 				client.setDrawCallbacks(this);
 				client.setGpuFlags(DrawCallbacks.GPU | DrawCallbacks.NORMALS);
-				client.setExpandedMapLoading(config.expandedMapLoadingChunks());
+				client.setExpandedMapLoading(getExpandedMapLoadingChunks());
 				textureManager.startUp();
 				// force rebuild of main buffer provider to enable alpha channel
 				client.resizeCanvas();
@@ -2147,7 +2149,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			handle.destroy();
 		}
 
-		var context = new SceneContext(scene, config.expandedMapLoadingChunks(), sceneContext);
+		var context = new SceneContext(scene, getExpandedMapLoadingChunks(), sceneContext);
 		// noinspection SynchronizationOnLocalVariableOrMethodParameter
 		synchronized (context) {
 			nextSceneContext = context;
@@ -2243,7 +2245,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 				switch (event.getKey()) {
 					case KEY_EXPANDED_MAP_LOADING_CHUNKS:
-						client.setExpandedMapLoading(config.expandedMapLoadingChunks());
+						client.setExpandedMapLoading(getExpandedMapLoadingChunks());
 						if (client.getGameState() == GameState.LOGGED_IN)
 							client.setGameState(GameState.LOADING);
 						break;
@@ -2546,13 +2548,19 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				getScaledValue(t.getScaleX(), x),
 				getScaledValue(t.getScaleY(), y),
 				getScaledValue(t.getScaleX(), width),
-				getScaledValue(t.getScaleY(), height));
+				getScaledValue(t.getScaleY(), height)
+			);
 		}
 	}
 
-	private int getDrawDistance()
-	{
+	private int getDrawDistance() {
 		return HDUtils.clamp(config.drawDistance(), 0, MAX_DISTANCE);
+	}
+
+	private int getExpandedMapLoadingChunks() {
+		if (HDUtils.is32Bit())
+			return 0;
+		return config.expandedMapLoadingChunks();
 	}
 
 	/**
@@ -2560,8 +2568,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	 *
 	 * @return The camera target's x, y, z coordinates
 	 */
-	public int[] getCameraFocalPoint()
-	{
+	public int[] getCameraFocalPoint() {
 		int camX = client.getOculusOrbFocalPointX();
 		int camY = client.getOculusOrbFocalPointY();
 		// approximate the Z position of the point the camera is aimed at.
@@ -2570,7 +2577,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		final int minCamPitch = 128;
 		final int maxCamPitch = 512;
 		int camPitchDiff = maxCamPitch - minCamPitch;
-		float camHeight = (camPitch - minCamPitch) / (float)camPitchDiff;
+		float camHeight = (camPitch - minCamPitch) / (float) camPitchDiff;
 		final int camHeightDiff = 2200;
 		int camZ = (int)(client.getCameraZ() + (camHeight * camHeightDiff));
 

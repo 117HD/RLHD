@@ -350,4 +350,8 @@ public class HDUtils {
 
 		return new int[] { (localX >>> 7) + client.getBaseX(), (localY >>> 7) + client.getBaseY(), plane };
 	}
+
+	public static boolean is32Bit() {
+		return System.getProperty("sun.arch.data.model", "Unknown").equals("32");
+	}
 }
