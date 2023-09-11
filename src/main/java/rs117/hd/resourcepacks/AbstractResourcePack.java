@@ -6,11 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import rs117.hd.resourcepacks.data.Manifest;
-import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ResourcePath;
-import sun.jvm.hotspot.oops.Metadata;
 
-import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.Properties;
 
@@ -60,6 +57,7 @@ public abstract class AbstractResourcePack implements IResourcePack {
             Properties props = new Properties();
             props.load(bufferedreader);
             metadata = new Manifest(props.getProperty("displayName"),props.getProperty("description"),props.getProperty("author"));
+
         } catch (Exception exception) {
             exception.printStackTrace();
         } finally {

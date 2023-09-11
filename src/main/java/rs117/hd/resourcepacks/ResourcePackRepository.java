@@ -2,16 +2,22 @@ package rs117.hd.resourcepacks;
 
 import com.google.gson.reflect.TypeToken;
 import com.google.inject.Inject;
+import java.io.FileOutputStream;
+import java.net.URL;
+import java.util.concurrent.ScheduledExecutorService;
+import javax.swing.SwingUtilities;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.HttpUrl;
+import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import rs117.hd.HdPlugin;
 import rs117.hd.gui.panel.InstalledPacksPanel;
 import rs117.hd.resourcepacks.data.LocalPackData;
 import rs117.hd.resourcepacks.data.Manifest;
+import rs117.hd.resourcepacks.impl.DefaultResourcePack;
 import rs117.hd.resourcepacks.impl.FileResourcePack;
 
 import java.io.File;
@@ -48,9 +54,11 @@ public class ResourcePackRepository {
     @Inject
     HdPlugin plugin;
 
+	private boolean alreadyDownloading = false;
+
     public boolean packsLoaded = false;
 
-    public ResourcePackRepository(File dirResourcepacksIn, File dirDevResourcepacksIn, IResourcePack rprDefaultResourcePackIn) {
+    public ResourcePackRepository(File dirResourcepacksIn, File dirDevResourcepacksIn, DefaultResourcePack rprDefaultResourcePackIn) {
         this.rprDefaultResourcePackIn = rprDefaultResourcePackIn;
 
         List<AbstractResourcePack> repositoryTemp = new ArrayList<AbstractResourcePack>();
@@ -64,11 +72,14 @@ public class ResourcePackRepository {
             }
         }
 
+		repository.add(rprDefaultResourcePackIn);
+
         if (loadManifest()) {
             for (File pack : Objects.requireNonNull(dirResourcepacksIn.listFiles(resourcePackFilter))) {
                 AbstractResourcePack iResourcePack = new FileResourcePack(pack);
                 Manifest packManifest = iResourcePack.getPackMetadata();
                 String internalName = packManifest.getInternalName();
+				System.out.println(internalName);
                 if (presentInLocalManifest(packManifest.getInternalName())) {
                     LocalPackData localPackData = localManifest(packManifest.getInternalName());
                     if (manifestOnline.containsKey(packManifest.getInternalName())) {
@@ -116,6 +127,98 @@ public class ResourcePackRepository {
             return false;
         }
     }
+
+	public void downloadResourcePack(Manifest manifest, ScheduledExecutorService executor) {
+		if (alreadyDownloading) {
+			return;
+		}
+
+		executor.submit(() -> {
+			URL url = Objects.requireNonNull(HttpUrl.parse(manifest.getLink())).newBuilder()
+				.addPathSegment("archive")
+				.addPathSegment(manifest.getCommit() + ".zip")
+				.build().url();
+
+			log.info("Downloading Pack {} at {}", manifest.getInternalName(), url.getPath());
+
+			Request request = new Request.Builder().url(url).build();
+			final ProgressListener progressListener = new ProgressListener() {
+
+				@Override
+				public void finishedDownloading() {
+					if (new File(PACK_DIR,"pack-" + manifest.getInternalName()).mkdirs()) {
+						manifestLocal.add(new LocalPackData(manifest.getCommit(), manifest.getInternalName(), manifestLocal.size() + 1));
+						AbstractResourcePack iResourcePack = new FileResourcePack(new File(PACK_DIR, manifest.getInternalName() + ".zip"));
+						Manifest packManifest = iResourcePack.getPackMetadata();
+						String internalName = packManifest.getInternalName();
+						if (presentInLocalManifest(packManifest.getInternalName())) {
+							LocalPackData localPackData = localManifest(packManifest.getInternalName());
+							if (manifestOnline.containsKey(packManifest.getInternalName())) {
+								if (!Objects.equals(manifestOnline.get(internalName).getCommit(), localPackData.getCommitHash())) {
+									iResourcePack.setNeedsUpdating(true);
+								}
+								repository.add(iResourcePack);
+							}
+						}
+
+						alreadyDownloading = false;
+						//SwingUtilities.invokeLater(() -> {
+							//buildPackPanel();
+						//});
+					}
+				}
+
+				@Override
+				public void progress(long bytesRead, long contentLength) {
+					SwingUtilities.invokeLater(() -> {
+						long progress = (100 * bytesRead) / contentLength;
+						//if (panel != null)
+							//panel.progressBar.setValue((int) progress);
+					});
+				}
+
+				@Override
+				public void started() {
+					alreadyDownloading = true;
+					SwingUtilities.invokeLater(() -> {
+						//if (panel != null)
+							//panel.progressBar.setValue(0);
+						//if (panel != null)
+							//panel.dropdownPanel.setVisible(false);
+						//if (panel != null)
+							//panel.progressPanel.setVisible(true);
+					});
+				}
+			};
+
+			OkHttpClient client = new OkHttpClient.Builder().addNetworkInterceptor(chain -> {
+				Response originalResponse = chain.proceed(chain.request());
+				return originalResponse.newBuilder()
+					.body(new ProgressManager(originalResponse.body(), progressListener))
+					.build();
+			}).build();
+
+			try (Response response = client.newCall(request).execute()) {
+				if (!response.isSuccessful()) {
+					log.info("Error Downloading Pack {} at {}", manifest.getInternalName(), url.getPath());
+					manifestLocal.remove(manifest);
+				}
+				File outputFile = new File(PACK_DIR, manifest.getInternalName() + ".zip");
+				try (FileOutputStream outputStream = new FileOutputStream(outputFile)) {
+					if (response.body() != null) {
+						outputStream.write(response.body().bytes());
+					} else {
+						log.info("Error Downloading Pack {} at {}", manifest.getInternalName(), url.getPath());
+						manifestLocal.remove(manifest);
+					}
+				}
+				progressListener.finishedDownloading();
+			} catch (IOException e) {
+				log.info("Error Downloading Pack {} at {}", manifest.getInternalName(), url.getPath());
+				manifestLocal.remove(manifest);
+			}
+		});
+	}
 
     public boolean presentInLocalManifest(String name) {
         return manifestLocal.stream().anyMatch(it -> it.getInternalName().equalsIgnoreCase(name));

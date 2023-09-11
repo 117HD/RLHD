@@ -158,6 +158,29 @@ public class PackHubPanel extends JPanel {
 		pluginName.setForeground(Color.WHITE);
 		panel.add(pluginName);
 
+		JButton actionButton = new JButton();
+		boolean install = !plugin.getResourcePackRepository().presentInLocalManifest(manifest.getInternalName());
+		if (install) {
+			actionButton.setText("Install");
+			actionButton.setBackground(new Color(0x28BE28));
+			actionButton.addActionListener(l ->
+			{
+				actionButton.setText("Installing");
+				actionButton.setBackground(ColorScheme.MEDIUM_GRAY_COLOR);
+				plugin.getResourcePackRepository().downloadResourcePack(manifest, executor);
+			});
+		} else {
+			actionButton.setText("Remove");
+			actionButton.setBackground(new Color(0xBE2828));
+			actionButton.addActionListener(l ->
+			{
+				actionButton.setText("Removing");
+				actionButton.setBackground(ColorScheme.MEDIUM_GRAY_COLOR);
+				//plugin.getResourcePackRepository().uninstallPack(resourcePackManager.installedPacks.get(manifest.getInternalName()),manifest.getInternalName());
+				//plugin.resourcePackManager.locateInstalledPacks();
+			});
+		}
+		actionButton.setBounds(115, 97, 105, 25);
 
 		JLabel icon = new JLabel();
 		icon.setHorizontalAlignment(JLabel.CENTER);
@@ -176,8 +199,6 @@ public class PackHubPanel extends JPanel {
 							icon.setVisible(true);
 							blackBox.setVisible(true);
 						});
-						System.out.println("dfsdf");
-
 					} else {
 						log.warn("Received null icon for icon for pack \"{}\"", manifest.getInternalName());
 					}
@@ -197,6 +218,7 @@ public class PackHubPanel extends JPanel {
 
 		panel.add(blackBox);
 		panel.add(icon);
+		panel.add(actionButton);
 
 		return panel;
 	}

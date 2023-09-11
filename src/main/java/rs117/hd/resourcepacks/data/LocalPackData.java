@@ -8,4 +8,11 @@ public class LocalPackData {
     private String commitHash;
     private int index;
     private String internalName;
+
+	public LocalPackData(String commit, String internalName, int i) {
+		this.commitHash = commit;
+		this.internalName = internalName;
+		this.index = i;
+	}
+
 }

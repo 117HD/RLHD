@@ -3,7 +3,7 @@
     <option name="ALTERNATIVE_JRE_PATH" value="11" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
     <option name="MAIN_CLASS_NAME" value="rs117.hd.HdPluginTest" />
-    <module name="hd.test" />
+    <module name="rs117.hd.hd.test" />
     <option name="PROGRAM_PARAMETERS" value="--developer-mode --debug" />
     <option name="VM_PARAMETERS" value="-ea -Xmx512M" />
     <extension name="coverage">

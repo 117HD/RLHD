@@ -65,8 +65,11 @@ import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.PluginInstantiationException;
 import net.runelite.client.plugins.PluginManager;
 import net.runelite.client.plugins.entityhider.EntityHiderPlugin;
+import net.runelite.client.ui.ClientToolbar;
 import net.runelite.client.ui.ClientUI;
 import net.runelite.client.ui.DrawManager;
+import net.runelite.client.ui.NavigationButton;
+import net.runelite.client.util.ImageUtil;
 import net.runelite.client.util.LinkBrowser;
 import net.runelite.client.util.OSType;
 import net.runelite.rlawt.AWTContext;
@@ -79,6 +82,7 @@ import rs117.hd.config.ShadowMode;
 import rs117.hd.config.UIScalingMode;
 import rs117.hd.data.WaterType;
 import rs117.hd.data.materials.Material;
+import rs117.hd.gui.panel.HdPanel;
 import rs117.hd.model.ModelHasher;
 import rs117.hd.model.ModelPusher;
 import rs117.hd.model.TempModelInfo;
@@ -87,6 +91,8 @@ import rs117.hd.opengl.compute.OpenCLManager;
 import rs117.hd.opengl.shader.Shader;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.Template;
+import rs117.hd.resourcepacks.ResourcePackRepository;
+import rs117.hd.resourcepacks.impl.DefaultResourcePack;
 import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.LightManager;
 import rs117.hd.scene.ModelOverrideManager;
@@ -112,6 +118,8 @@ import static org.lwjgl.opencl.CL10.*;
 import static org.lwjgl.opencl.CL10GL.*;
 import static org.lwjgl.opengl.GL43C.*;
 import static rs117.hd.HdPluginConfig.*;
+import static rs117.hd.resourcepacks.Constants.DEV_PACK_DIR;
+import static rs117.hd.resourcepacks.Constants.PACK_DIR;
 import static rs117.hd.utils.ResourcePath.path;
 
 @PluginDescriptor(
@@ -154,6 +162,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private ClientThread clientThread;
 
 	@Inject
+	private ClientToolbar clientToolbar;
+
+	@Inject
 	private EventBus eventBus;
 
 	@Inject
@@ -167,6 +178,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Inject
 	private TextureManager textureManager;
+
+	private NavigationButton navigationButton;
+
+	@Getter
+	private ResourcePackRepository resourcePackRepository;
 
 	@Inject
 	private LightManager lightManager;
@@ -420,6 +436,17 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	protected void startUp() {
 		gson = rlGson.newBuilder().setLenient().create();
 
+		if (!PACK_DIR.exists()) {
+			PACK_DIR.mkdirs();
+		}
+
+		DefaultResourcePack rprDefaultResourcePackIn = new DefaultResourcePack(path(HdPlugin.class,"pack"));
+		resourcePackRepository = new ResourcePackRepository(PACK_DIR,DEV_PACK_DIR,rprDefaultResourcePackIn);
+
+		navigationButton = NavigationButton.builder().tooltip("117 HD").priority(3).icon(ImageUtil.loadImageResource(HdPlugin.class, "icon.png")).panel(injector.getInstance(
+			HdPanel.class)).build();
+		clientToolbar.addNavigation(navigationButton);
+
 		clientThread.invoke(() -> {
 			try {
 				renderBufferOffset = 0;
@@ -492,6 +519,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				lwjglInitialized = true;
 				checkGLErrors();
 
+				if(resourcePackRepository != null) {
+					resourcePackRepository.getPackPanel().populatePacks();
+				}
+
 				if (log.isDebugEnabled() && glCaps.glDebugMessageControl != 0)
 				{
 					debugCallback = GLUtil.setupDebugMessageCallback();
@@ -559,11 +590,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				shouldSkipModelUpdates = false;
 				isInGauntlet = false;
 				isInChambersOfXeric = false;
-
-				if (client.getGameState() == GameState.LOGGED_IN) {
-					// We need to force the client to reload the scene if GPU flags have changed
-					client.setGameState(GameState.LOADING);
-				}
 
 				checkGLErrors();
 
