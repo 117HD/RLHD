@@ -2588,10 +2588,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	{
 		glBindBuffer(target, glBuffer.glBufferId);
 		long size = data.remaining();
-		if (size > glBuffer.size)
-		{
+		if (size > glBuffer.size) {
 			size = HDUtils.ceilPow2(size);
-			log.debug("Buffer resize: {} {} -> {}", glBuffer, glBuffer.size, size);
+			log.trace("Buffer resize: {} {} -> {}", glBuffer, glBuffer.size, size);
 
 			glBuffer.size = size;
 			glBufferData(target, size, usage);
@@ -2608,13 +2607,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private void updateBuffer(@Nonnull GLBuffer glBuffer, int target, int offset, @Nonnull IntBuffer data, int usage, long clFlags)
 	{
 		long size = 4L * (offset + data.remaining());
-		if (size > glBuffer.size)
-		{
+		if (size > glBuffer.size) {
 			size = HDUtils.ceilPow2(size);
-			log.debug("Buffer resize: {} {} -> {}", glBuffer, glBuffer.size, size);
+			log.trace("Buffer resize: {} {} -> {}", glBuffer, glBuffer.size, size);
 
-			if (offset > 0)
-			{
+			if (offset > 0) {
 				int oldBuffer = glBuffer.glBufferId;
 				glBuffer.glBufferId = glGenBuffers();
 				glBindBuffer(target, glBuffer.glBufferId);
@@ -2623,9 +2620,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				glBindBuffer(GL_COPY_READ_BUFFER, oldBuffer);
 				glCopyBufferSubData(GL_COPY_READ_BUFFER, target, 0, 0, offset * 4L);
 				glDeleteBuffers(oldBuffer);
-			}
-			else
-			{
+			} else {
 				glBindBuffer(target, glBuffer.glBufferId);
 				glBufferData(target, size, usage);
 			}
@@ -2648,13 +2643,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private void updateBuffer(@Nonnull GLBuffer glBuffer, int target, int offset, @Nonnull FloatBuffer data, int usage, long clFlags)
 	{
 		long size = 4L * (offset + data.remaining());
-		if (size > glBuffer.size)
-		{
+		if (size > glBuffer.size) {
 			size = HDUtils.ceilPow2(size);
-			log.debug("Buffer resize: {} {} -> {}", glBuffer, glBuffer.size, size);
+			log.trace("Buffer resize: {} {} -> {}", glBuffer, glBuffer.size, size);
 
-			if (offset > 0)
-			{
+			if (offset > 0) {
 				int oldBuffer = glBuffer.glBufferId;
 				glBuffer.glBufferId = glGenBuffers();
 				glBindBuffer(target, glBuffer.glBufferId);
@@ -2663,29 +2656,23 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				glBindBuffer(GL_COPY_READ_BUFFER, oldBuffer);
 				glCopyBufferSubData(GL_COPY_READ_BUFFER, target, 0, 0, offset * 4L);
 				glDeleteBuffers(oldBuffer);
-			}
-			else
-			{
+			} else {
 				glBindBuffer(target, glBuffer.glBufferId);
 				glBufferData(target, size, usage);
 			}
 
 			glBuffer.size = size;
 			recreateCLBuffer(glBuffer, clFlags);
-		}
-		else
-		{
+		} else {
 			glBindBuffer(target, glBuffer.glBufferId);
 		}
 		glBufferSubData(target, offset * 4L, data);
 	}
 
-	private void updateBuffer(@Nonnull GLBuffer glBuffer, int target, long size, int usage, long clFlags)
-	{
-		if (size > glBuffer.size)
-		{
+	private void updateBuffer(@Nonnull GLBuffer glBuffer, int target, long size, int usage, long clFlags) {
+		if (size > glBuffer.size) {
 			size = HDUtils.ceilPow2(size);
-			log.debug("Buffer resize: {} {} -> {}", glBuffer, glBuffer.size, size);
+			log.trace("Buffer resize: {} {} -> {}", glBuffer, glBuffer.size, size);
 
 			glBuffer.size = size;
 			glBindBuffer(target, glBuffer.glBufferId);
