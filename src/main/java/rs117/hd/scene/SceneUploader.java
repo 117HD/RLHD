@@ -251,11 +251,14 @@ class SceneUploader {
 
 		WorldPoint worldPoint = sceneContext.localToWorld(new LocalPoint(tileX, tileExY), tileZ);
 
+		int sceneMin = sceneContext.expandedMapLoadingChunks * -8;
+		int sceneMax = SCENE_SIZE + sceneContext.expandedMapLoadingChunks * 8;
 		boolean fillGaps =
 			tileZ == 0 &&
-			tileExX > 0 && tileExY > 0 &&
-			tileExX < Constants.EXTENDED_SCENE_SIZE - 1 &&
-			tileExY < Constants.EXTENDED_SCENE_SIZE - 1 &&
+			tileX > sceneMin &&
+			tileY > sceneMin &&
+			tileX < sceneMax - 1 &&
+			tileY < sceneMax - 1 &&
 			worldPoint != null &&
 			Area.OVERWORLD.containsPoint(worldPoint);
 
