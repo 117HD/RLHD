@@ -105,8 +105,11 @@ class SceneUploader {
 		);
 	}
 
-	private void uploadModel(SceneContext sceneContext, Tile tile, long hash, Model model, int orientation, ObjectType objectType)
-	{
+	private void uploadModel(SceneContext sceneContext, Tile tile, long hash, Model model, int orientation, ObjectType objectType) {
+		// deduplicate hillskewed models
+		if (model.getUnskewedModel() != null)
+			model = model.getUnskewedModel();
+
 		if (model.getSceneId() == sceneContext.id)
 			return; // model has already been uploaded
 

@@ -37,8 +37,10 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+import java.nio.ShortBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -129,6 +131,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public static final int TEXTURE_UNIT_UI = GL_TEXTURE0; // default state
 	public static final int TEXTURE_UNIT_GAME = GL_TEXTURE1;
 	public static final int TEXTURE_UNIT_SHADOW_MAP = GL_TEXTURE2;
+	public static final int TEXTURE_UNIT_TILE_HEIGHT_MAP = GL_TEXTURE3;
 
 	/**
 	 * The maximum number of triangles supported by the large compute shader
@@ -268,6 +271,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private int shadowMapResolution;
 	private int fboShadowMap;
 	private int texShadowMap;
+
+	private int texTileHeightMap;
 
 	private final GLBuffer hStagingBufferVertices = new GLBuffer(); // temporary scene vertex buffer
 	private final GLBuffer hStagingBufferUvs = new GLBuffer(); // temporary scene uv buffer
@@ -544,7 +549,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				initShadowMapFbo();
 
 				client.setDrawCallbacks(this);
-				client.setGpuFlags(DrawCallbacks.GPU | DrawCallbacks.NORMALS);
+				client.setGpuFlags(DrawCallbacks.GPU | DrawCallbacks.HILLSKEW | DrawCallbacks.NORMALS);
 				client.setExpandedMapLoading(getExpandedMapLoadingChunks());
 				textureManager.startUp();
 				// force rebuild of main buffer provider to enable alpha channel
@@ -612,6 +617,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				destroyVaos();
 				destroyAAFbo();
 				destroyShadowMapFbo();
+				destroyTileHeightMap();
 
 				openCLManager.shutDown();
 			}
@@ -1272,27 +1278,62 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
-	private void destroyShadowMapFbo()
-	{
+	private void destroyShadowMapFbo() {
 		if (texShadowMap != 0)
-		{
 			glDeleteTextures(texShadowMap);
-			texShadowMap = 0;
-		}
+		texShadowMap = 0;
 
 		if (fboShadowMap != 0)
-		{
 			glDeleteFramebuffers(fboShadowMap);
-			fboShadowMap = 0;
+		fboShadowMap = 0;
+	}
+
+	private void initTileHeightMap(Scene scene) {
+		final int TILE_HEIGHT_BUFFER_SIZE = Constants.MAX_Z * Constants.EXTENDED_SCENE_SIZE * Constants.EXTENDED_SCENE_SIZE * Short.BYTES;
+		ShortBuffer tileBuffer = ByteBuffer
+			.allocateDirect(TILE_HEIGHT_BUFFER_SIZE)
+			.order(ByteOrder.nativeOrder())
+			.asShortBuffer();
+
+		int[][][] tileHeights = scene.getTileHeights();
+		for (int z = 0; z < Constants.MAX_Z; ++z) {
+			for (int y = 0; y < Constants.EXTENDED_SCENE_SIZE; ++y) {
+				for (int x = 0; x < Constants.EXTENDED_SCENE_SIZE; ++x) {
+					int h = tileHeights[z][x][y];
+					assert (h & 0b111) == 0;
+					h >>= 3;
+					tileBuffer.put((short) h);
+				}
+			}
 		}
+		tileBuffer.flip();
+
+		glActiveTexture(TEXTURE_UNIT_TILE_HEIGHT_MAP);
+
+		texTileHeightMap = glGenTextures();
+		glBindTexture(GL_TEXTURE_3D, texTileHeightMap);
+		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexImage3D(GL_TEXTURE_3D, 0, GL_R16I,
+			Constants.EXTENDED_SCENE_SIZE, Constants.EXTENDED_SCENE_SIZE, Constants.MAX_Z,
+			0, GL_RED_INTEGER, GL_SHORT, tileBuffer
+		);
+
+		glActiveTexture(TEXTURE_UNIT_UI); // default state
+	}
+
+	private void destroyTileHeightMap() {
+		if (texTileHeightMap != 0)
+			glDeleteTextures(texTileHeightMap);
+		texTileHeightMap = 0;
 	}
 
 	@Override
-	public void drawScene(int cameraX, int cameraY, int cameraZ, int cameraPitch, int cameraYaw, int plane)
-	{
+	public void drawScene(int cameraX, int cameraY, int cameraZ, int cameraPitch, int cameraYaw, int plane) {
 		final Scene scene = client.getScene();
-		if (sceneContext == null || sceneContext.scene != scene)
-		{
+		if (sceneContext == null || sceneContext.scene != scene) {
 			log.error("Scene being drawn is not the current scene context", new Throwable());
 			stopPlugin();
 			return;
@@ -1390,6 +1431,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		// Technically we could skip compute shaders as well when the camera is unchanged,
 		// but it would only lead to micro stuttering when rotating the camera, compared to no rotation.
 		if (!shouldSkipModelUpdates) {
+			assert sceneContext != null;
+
 			// Geometry buffers
 			sceneContext.stagingBufferVertices.flip();
 			sceneContext.stagingBufferUvs.flip();
@@ -1546,6 +1589,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					recompilePrograms();
 				} catch (ShaderException | IOException ex) {
 					log.error("Error while recompiling shaders:", ex);
+					stopPlugin();
 				}
 			});
 		});
@@ -2160,17 +2204,20 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		}
 	}
 
-	public void swapScene(Scene scene)
-	{
-		if (nextSceneContext == null)
-		{
+	public void swapScene(Scene scene) {
+		if (nextSceneContext == null) {
 			log.error("No new scene to swap to", new Throwable());
 			stopPlugin();
 			return;
 		}
 
-		if (sceneContext != null)
-		{
+		if (computeMode == ComputeMode.OPENCL) {
+			openCLManager.uploadTileHeights(scene);
+		} else {
+			initTileHeightMap(scene);
+		}
+
+		if (sceneContext != null) {
 			// Copy over NPC and projectile lights
 			for (SceneLight light : sceneContext.lights)
 				if (light.npc != null || light.projectile != null)
@@ -2404,10 +2451,17 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	@Override
 	public void draw(Renderable renderable, int orientation, int pitchSin, int pitchCos, int yawSin, int yawCos, int x, int y, int z, long hash)
 	{
-		Model model;
+		Model model, offsetModel;
 		try {
 			// getModel may throw an exception from vanilla client code
-			model = renderable instanceof Model ? (Model) renderable : renderable.getModel();
+			if (renderable instanceof Model) {
+				model = (Model) renderable;
+				offsetModel = model.getUnskewedModel();
+				if (offsetModel == null)
+					offsetModel = model;
+			} else {
+				offsetModel = model = renderable.getModel();
+			}
 			if (model == null || model.getFaceCount() == 0) {
 				// skip models with zero faces
 				// this does seem to happen sometimes (mostly during loading)
@@ -2421,7 +2475,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		// Model may be in the scene buffer
 		assert sceneContext != null;
-		if (model.getSceneId() == sceneContext.id) {
+		if (offsetModel.getSceneId() == sceneContext.id) {
+			assert model == renderable;
+
 			if (isOutsideViewport(model, pitchSin, pitchCos, yawSin, yawCos, x, y, z))
 				return;
 
@@ -2430,14 +2486,16 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			if (shouldSkipModelUpdates || modelOverrideManager.shouldHideModel(hash, x, z))
 				return;
 
-			int faceCount = Math.min(MAX_TRIANGLE, model.getFaceCount());
-			int uvOffset = model.getUvBufferOffset();
+			int faceCount = Math.min(MAX_TRIANGLE, offsetModel.getFaceCount());
+			int uvOffset = offsetModel.getUvBufferOffset();
+			int plane = (int) ((hash >> 49) & 3);
+			boolean hillskew = offsetModel != model;
 
-			eightIntWrite[0] = model.getBufferOffset();
+			eightIntWrite[0] = offsetModel.getBufferOffset();
 			eightIntWrite[1] = uvOffset;
 			eightIntWrite[2] = faceCount;
 			eightIntWrite[3] = renderBufferOffset;
-			eightIntWrite[4] = model.getRadius() << 12 | orientation;
+			eightIntWrite[4] = (hillskew ? 1 : 0) << 26 | plane << 24 | model.getRadius() << 12 | orientation;
 			eightIntWrite[5] = x + client.getCameraX2();
 			eightIntWrite[6] = y + client.getCameraY2();
 			eightIntWrite[7] = z + client.getCameraZ2();
@@ -2448,9 +2506,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		} else {
 			// Temporary model (animated or otherwise not a static Model on the scene)
 			// Apply height to renderable from the model
-			if (model != renderable) {
+			if (model != renderable)
 				renderable.setModelHeight(model.getModelHeight());
-			}
 
 			if (isOutsideViewport(model, pitchSin, pitchCos, yawSin, yawCos, x, y, z))
 				return;
