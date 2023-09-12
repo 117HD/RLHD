@@ -25,12 +25,16 @@ public class SceneContext {
 	public final int id = HDUtils.rand.nextInt();
 	public final Scene scene;
 	public final HashSet<Integer> regionIds;
+	public final int expandedMapLoadingChunks;
 
 	public int staticVertexCount = 0;
 	public GpuIntBuffer staticUnorderedModelBuffer = new GpuIntBuffer();
 	public GpuIntBuffer stagingBufferVertices;
 	public GpuFloatBuffer stagingBufferUvs;
 	public GpuFloatBuffer stagingBufferNormals;
+
+	// statistics
+	public int uniqueModels;
 
 	// terrain data
 	public Map<Integer, Integer> vertexTerrainColor;
@@ -60,9 +64,10 @@ public class SceneContext {
 	public final float[] modelFaceNormals = new float[12];
 	public final int[] modelPusherResults = new int[2];
 
-	public SceneContext(Scene scene, @Nullable SceneContext previousSceneContext) {
+	public SceneContext(Scene scene, int expandedMapLoadingChunks, @Nullable SceneContext previousSceneContext) {
 		this.scene = scene;
 		this.regionIds = HDUtils.getSceneRegionIds(scene);
+		this.expandedMapLoadingChunks = expandedMapLoadingChunks;
 
 		if (previousSceneContext == null) {
 			stagingBufferVertices = new GpuIntBuffer();
@@ -75,7 +80,7 @@ public class SceneContext {
 		}
 	}
 
-	public void destroy() {
+	public synchronized void destroy() {
 		if (staticUnorderedModelBuffer != null)
 			staticUnorderedModelBuffer.destroy();
 		staticUnorderedModelBuffer = null;
@@ -136,15 +141,9 @@ public class SceneContext {
 	@Nullable
 	public LocalPoint worldToLocal(WorldPoint worldPoint)
 	{
-		LocalPoint localPoint = new LocalPoint(
+		return new LocalPoint(
 			(worldPoint.getX() - scene.getBaseX()) * LOCAL_TILE_SIZE,
-			(worldPoint.getY() - scene.getBaseY()) * LOCAL_TILE_SIZE);
-
-		if (!localPoint.isInScene())
-		{
-			return null;
-		}
-
-		return localPoint;
+			(worldPoint.getY() - scene.getBaseY()) * LOCAL_TILE_SIZE
+		);
 	}
 }

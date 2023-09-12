@@ -48,7 +48,15 @@ void sort_and_insert(
   __global float4 *uvout,
   __global float4 *normalout,
   __constant struct uniform *uni,
-  uint localId, struct ModelInfo minfo, int thisPriority, int thisDistance, int4 thisrvA, int4 thisrvB, int4 thisrvC);
+  uint localId,
+  struct ModelInfo minfo,
+  int thisPriority,
+  int thisDistance,
+  int4 thisrvA,
+  int4 thisrvB,
+  int4 thisrvC,
+  read_only image3d_t tileHeightMap
+);
 
 // Calculate adjusted priority for a face with a given priority, distance, and
 // model global min10 and face distance averages. This allows positioning faces
@@ -129,7 +137,7 @@ void get_face(
   int4 thisC = vb[offset + ssboOffset * 3 + 2];
 
   if (localId < size) {
-    int radius = (flags & 0x7fffffff) >> 12;
+    int radius = (flags >> 12) & 0xfff;
     int orientation = flags & 0x7ff;
 
     // rotate for model orientation
@@ -224,6 +232,28 @@ void insert_dfs(__local struct shared_data *shared, uint localId, struct ModelIn
   }
 }
 
+int tile_height(read_only image3d_t tileHeightMap, int z, int x, int y) {
+  #define ESCENE_OFFSET 40 // (184-104)/2
+  const sampler_t tileHeightSampler = CLK_NORMALIZED_COORDS_FALSE | CLK_ADDRESS_CLAMP_TO_EDGE;
+  int4 coord = (int4)(x + ESCENE_OFFSET, y + ESCENE_OFFSET, z, 0);
+  return read_imagei(tileHeightMap, tileHeightSampler, coord).x << 3;
+}
+
+int4 hillskew_vertex(read_only image3d_t tileHeightMap, int4 v, int hillskew, int y, int plane) {
+  if (hillskew == 1) {
+    int px = v.x & 127;
+    int pz = v.z & 127;
+    int sx = v.x >> 7;
+    int sz = v.z >> 7;
+    int h1 = (px * tile_height(tileHeightMap, plane, sx + 1, sz) + (128 - px) * tile_height(tileHeightMap, plane, sx, sz)) >> 7;
+    int h2 = (px * tile_height(tileHeightMap, plane, sx + 1, sz + 1) + (128 - px) * tile_height(tileHeightMap, plane, sx, sz + 1)) >> 7;
+    int h3 = (pz * h2 + (128 - pz) * h1) >> 7;
+    return (int4)(v.x, v.y + h3 - y, v.z, v.w);
+  } else {
+    return v;
+  }
+}
+
 void sort_and_insert(
   __local struct shared_data *shared,
   __global const float4 *uv,
@@ -232,7 +262,15 @@ void sort_and_insert(
   __global float4 *uvout,
   __global float4 *normalout,
   __constant struct uniform *uni,
-  uint localId, struct ModelInfo minfo, int thisPriority, int thisDistance, int4 thisrvA, int4 thisrvB, int4 thisrvC) {
+  uint localId,
+  struct ModelInfo minfo,
+  int thisPriority,
+  int thisDistance,
+  int4 thisrvA,
+  int4 thisrvB,
+  int4 thisrvC,
+  read_only image3d_t tileHeightMap
+) {
   /* compute face distance */
   uint offset = minfo.offset;
   uint size = minfo.size;
@@ -268,10 +306,21 @@ void sort_and_insert(
       }
     }
 
+    thisrvA += pos;
+    thisrvB += pos;
+    thisrvC += pos;
+
+    // apply hillskew
+    int plane = (flags >> 24) & 3;
+    int hillskew = (flags >> 26) & 1;
+    thisrvA = hillskew_vertex(tileHeightMap, thisrvA, hillskew, minfo.y, plane);
+    thisrvB = hillskew_vertex(tileHeightMap, thisrvB, hillskew, minfo.y, plane);
+    thisrvC = hillskew_vertex(tileHeightMap, thisrvC, hillskew, minfo.y, plane);
+
     // position vertices in scene and write to out buffer
-    vout[outOffset + myOffset * 3]     = pos + thisrvA;
-    vout[outOffset + myOffset * 3 + 1] = pos + thisrvB;
-    vout[outOffset + myOffset * 3 + 2] = pos + thisrvC;
+    vout[outOffset + myOffset * 3]     = thisrvA;
+    vout[outOffset + myOffset * 3 + 1] = thisrvB;
+    vout[outOffset + myOffset * 3 + 2] = thisrvC;
 
     float4 uvA = (float4)(0);
     float4 uvB = (float4)(0);
