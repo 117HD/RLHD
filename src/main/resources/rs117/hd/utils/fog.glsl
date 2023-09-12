@@ -26,12 +26,9 @@
 
 #include uniforms/camera.glsl
 
-uniform int useFog;
-uniform int fogDepth;
-
 #define TILE_SIZE 128
-#define FOG_SCENE_EDGE_MIN TILE_SIZE
-#define FOG_SCENE_EDGE_MAX (103 * TILE_SIZE)
+#define FOG_SCENE_EDGE_MIN ((    - expandedMapLoadingChunks * 8 + 1) * TILE_SIZE)
+#define FOG_SCENE_EDGE_MAX ((104 + expandedMapLoadingChunks * 8 - 1) * TILE_SIZE)
 #define FOG_CORNER_ROUNDING 1.5
 #define FOG_CORNER_ROUNDING_SQUARED FOG_CORNER_ROUNDING * FOG_CORNER_ROUNDING
 
@@ -43,6 +40,8 @@ float calculateFogAmount(vec3 position) {
     if (fogDepth == 0)
         return 0.f;
 
+    // the client draws one less tile to the north and east than it does to the south
+    // and west, so subtract a tile's width from the north and east edges.
     int fogWest = max(FOG_SCENE_EDGE_MIN, cameraX - drawDistance);
     int fogEast = min(FOG_SCENE_EDGE_MAX, cameraX + drawDistance - TILE_SIZE);
     int fogSouth = max(FOG_SCENE_EDGE_MIN, cameraZ - drawDistance);
@@ -59,8 +58,8 @@ float calculateFogAmount(vec3 position) {
             / (secondNearestEdgeDistance + FOG_CORNER_ROUNDING_SQUARED)
         );
 
-    float edgeFogDepth = 50;
-    float edgeFogAmount = fogFactorLinear(fogDistance, 0, edgeFogDepth * (TILE_SIZE / 10)) * useFog;
+    // This is different from the GPU plugin, and seems to have worked this way from the start
+    float edgeFogAmount = fogFactorLinear(fogDistance, 0, 5 * TILE_SIZE) * useFog;
 
     // Use a combination of two different methods of calculating distance fog.
     // The is super arbitrary and is only eyeballed to provide a similar overall

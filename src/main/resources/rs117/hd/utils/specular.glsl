@@ -25,7 +25,7 @@
 
 float specular(vec3 viewDir, vec3 reflectDir, vec3 specularGloss, vec3 specularStrength)
 {
-    float vDotR = clamp(dot(viewDir, reflectDir), 1e-10, 1);
+    float vDotR = clamp(dot(viewDir, reflectDir), 1e-10, 1.);
     vec3 spec = pow(vec3(vDotR), specularGloss) * specularStrength;
     return dot(spec, IN.texBlend);
 }

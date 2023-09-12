@@ -24,34 +24,33 @@
  */
 package rs117.hd.opengl.compute;
 
-import ch.qos.logback.classic.Level;
-import ch.qos.logback.classic.Logger;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
+import java.nio.LongBuffer;
+import java.nio.ShortBuffer;
+import javax.inject.Singleton;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import net.runelite.api.*;
 import net.runelite.client.util.OSType;
 import net.runelite.rlawt.AWTContext;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.opencl.*;
 import org.lwjgl.system.Configuration;
 import org.lwjgl.system.MemoryStack;
-import org.slf4j.LoggerFactory;
+import org.lwjgl.system.MemoryUtil;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.Template;
 import rs117.hd.utils.buffer.GLBuffer;
 
-import javax.inject.Singleton;
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
-import java.nio.LongBuffer;
-
-import static org.lwjgl.opencl.APPLEGLSharing.CL_CGL_DEVICE_FOR_CURRENT_VIRTUAL_SCREEN_APPLE;
-import static org.lwjgl.opencl.APPLEGLSharing.clGetGLContextInfoAPPLE;
+import static org.lwjgl.opencl.APPLEGLSharing.*;
 import static org.lwjgl.opencl.CL10.*;
-import static org.lwjgl.opencl.CL12.CL_PROGRAM_BINARY_TYPE;
-import static org.lwjgl.opencl.CL12.clReleaseDevice;
+import static org.lwjgl.opencl.CL12.*;
 import static org.lwjgl.opencl.KHRGLSharing.*;
-import static org.lwjgl.system.MemoryUtil.*;
+import static org.lwjgl.system.MemoryUtil.NULL;
+import static org.lwjgl.system.MemoryUtil.memASCII;
+import static org.lwjgl.system.MemoryUtil.memUTF8;
 import static rs117.hd.HdPlugin.MAX_TRIANGLE;
 import static rs117.hd.HdPlugin.SMALL_TRIANGLE_COUNT;
 
@@ -92,6 +91,8 @@ public class OpenCLManager {
 	private long kernelSmall;
 	private long kernelLarge;
 
+	private long tileHeightMap;
+
 	static {
 		Configuration.OPENCL_EXPLICIT_INIT.set(true);
 	}
@@ -114,20 +115,21 @@ public class OpenCLManager {
 			return;
 
 		try {
+			if (tileHeightMap != 0)
+				clReleaseMemObject(tileHeightMap);
+			tileHeightMap = 0;
+
 			destroyPrograms();
 
-			if (commandQueue != 0) {
+			if (commandQueue != 0)
 				clReleaseCommandQueue(commandQueue);
-				commandQueue = 0;
-			}
-			if (context != 0) {
+			commandQueue = 0;
+			if (context != 0)
 				clReleaseContext(context);
-				context = 0;
-			}
-			if (device != 0) {
+			context = 0;
+			if (device != 0)
 				clReleaseDevice(device);
-				device = 0;
-			}
+			device = 0;
 		} finally {
 			CL.destroy();
 			initialized = false;
@@ -368,6 +370,44 @@ public class OpenCLManager {
 		}
 	}
 
+	public void uploadTileHeights(Scene scene) {
+		if (tileHeightMap != 0)
+			clReleaseMemObject(tileHeightMap);
+		tileHeightMap = 0;
+
+		final int TILEHEIGHT_BUFFER_SIZE = Constants.MAX_Z * Constants.EXTENDED_SCENE_SIZE * Constants.EXTENDED_SCENE_SIZE * Short.BYTES;
+		ShortBuffer tileBuffer = MemoryUtil.memAllocShort(TILEHEIGHT_BUFFER_SIZE);
+		int[][][] tileHeights = scene.getTileHeights();
+		for (int z = 0; z < Constants.MAX_Z; ++z) {
+			for (int y = 0; y < Constants.EXTENDED_SCENE_SIZE; ++y) {
+				for (int x = 0; x < Constants.EXTENDED_SCENE_SIZE; ++x) {
+					int h = tileHeights[z][x][y];
+					assert (h & 0b111) == 0;
+					h >>= 3;
+					tileBuffer.put((short) h);
+				}
+			}
+		}
+		tileBuffer.flip();
+
+		try (MemoryStack stack = MemoryStack.stackPush()) {
+			CLImageFormat imageFormat = CLImageFormat.calloc(stack);
+			imageFormat.image_channel_order(CL_R);
+			imageFormat.image_channel_data_type(CL_SIGNED_INT16);
+
+			IntBuffer errcode_ret = stack.callocInt(1);
+			tileHeightMap = clCreateImage3D(context, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, imageFormat,
+				Constants.EXTENDED_SCENE_SIZE, Constants.EXTENDED_SCENE_SIZE, Constants.MAX_Z,
+				0L, 0L,
+				tileBuffer,
+				errcode_ret
+			);
+			checkCLError(errcode_ret);
+		}
+
+		MemoryUtil.memFree(tileBuffer);
+	}
+
 	public void compute(
 		GLBuffer uniformBufferCamera,
 		int unorderedModels, int smallModels, int largeModels,
@@ -420,6 +460,7 @@ public class OpenCLManager {
 				clSetKernelArg1p(kernelSmall, 6, renderBufferUvs.clBuffer);
 				clSetKernelArg1p(kernelSmall, 7, renderBufferNormals.clBuffer);
 				clSetKernelArg1p(kernelSmall, 8, uniformBufferCamera.clBuffer);
+				clSetKernelArg1p(kernelSmall, 9, tileHeightMap);
 
 				clEnqueueNDRangeKernel(commandQueue, kernelSmall, 1, null,
 					stack.pointers((long) smallModels * (SMALL_SIZE / smallFaceCount)),
@@ -439,6 +480,7 @@ public class OpenCLManager {
 				clSetKernelArg1p(kernelLarge, 6, renderBufferUvs.clBuffer);
 				clSetKernelArg1p(kernelLarge, 7, renderBufferNormals.clBuffer);
 				clSetKernelArg1p(kernelLarge, 8, uniformBufferCamera.clBuffer);
+				clSetKernelArg1p(kernelLarge, 9, tileHeightMap);
 
 				clEnqueueNDRangeKernel(commandQueue, kernelLarge, 1, null,
 					stack.pointers((long) largeModels * (LARGE_SIZE / largeFaceCount)),
