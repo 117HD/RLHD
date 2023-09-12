@@ -327,7 +327,7 @@ public class TextureManager
 	{
 		for (String ext : SUPPORTED_IMAGE_EXTENSIONS)
 		{
-			ResourcePath path = TEXTURE_PATH.resolve(textureName + "." + ext);
+			ResourcePath path = plugin.getResourcePackRepository().locateFile("materials", textureName + "." + ext);
 			try {
 				return path.loadImage();
 			} catch (Exception ex) {

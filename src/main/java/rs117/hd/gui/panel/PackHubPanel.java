@@ -213,12 +213,12 @@ public class PackHubPanel extends JPanel {
 			blackBox.setVisible(false);
 		}
 
-		icon.setBounds(new Rectangle(new Point(0, 0), icon.getPreferredSize()));
-		blackBox.setBounds(new Rectangle(new Point(0, 0), icon.getPreferredSize()));
+		icon.setBounds(0, 0, 221, 124);
+		blackBox.setBounds(0, 0, 221, 124);
 
+		panel.add(actionButton);
 		panel.add(blackBox);
 		panel.add(icon);
-		panel.add(actionButton);
 
 		return panel;
 	}

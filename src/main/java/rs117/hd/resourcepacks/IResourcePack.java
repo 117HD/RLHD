@@ -12,6 +12,8 @@ public interface IResourcePack
 {
     InputStream getInputStream(String... parts) throws IOException;
 
+	ResourcePath getResource(String... parts);
+
     Manifest getPackMetadata();
 
     BufferedImage getPackImage();

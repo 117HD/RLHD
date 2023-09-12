@@ -29,6 +29,11 @@ public class DefaultResourcePack extends AbstractResourcePack {
         return this.resourcePackFile.resolve(parts).toInputStream();
     }
 
+	@Override
+	public ResourcePath getResource(String... parts) {
+		return this.resourcePackFile.resolve(parts);
+	}
+
     @Override
     public BufferedImage getPackImage() {
         ResourcePath path = resourcePackFile.resolve("icon.png");

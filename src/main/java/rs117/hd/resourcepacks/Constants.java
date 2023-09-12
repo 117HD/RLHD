@@ -38,6 +38,7 @@ public class Constants {
 
     public static BufferedImage downloadIcon(Manifest plugin) throws IOException {
         if (!plugin.isHasIcon()) {
+			System.out.println("NO ICON");
             return null;
         }
 
@@ -47,7 +48,7 @@ public class Constants {
                 .build();
 
         try (Response res = CLIENT.newCall(new Request.Builder().url(url).build()).execute()) {
-            byte[] bytes = res.body().bytes();
+			byte[] bytes = res.body().bytes();
             // We don't stream so the lock doesn't block the edt trying to load something at the same time
             synchronized (ImageIO.class) {
                 return ImageIO.read(new ByteArrayInputStream(bytes));

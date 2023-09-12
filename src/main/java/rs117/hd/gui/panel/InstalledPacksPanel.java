@@ -40,6 +40,7 @@ import rs117.hd.gui.panel.components.FixedWidthPanel;
 import rs117.hd.gui.panel.components.MessagePanel;
 import rs117.hd.resourcepacks.AbstractResourcePack;
 import rs117.hd.resourcepacks.Constants;
+import rs117.hd.resourcepacks.IResourcePack;
 import rs117.hd.resourcepacks.data.Manifest;
 
 import java.awt.*;
@@ -147,6 +148,7 @@ public class InstalledPacksPanel extends JPanel {
 
 	public void populatePacks() {
 		SwingUtilities.invokeLater(() -> {
+			packList.removeAll();
 			AtomicInteger index = new AtomicInteger();
 			plugin.getResourcePackRepository().getRepository().forEach(pack -> {
 				System.out.println(pack.getPackName());
@@ -251,7 +253,7 @@ public class InstalledPacksPanel extends JPanel {
 			blackBox.setVisible(false);
 		}
 		icon.setBounds(new Rectangle(new Point(0, 0), icon.getPreferredSize()));
-		blackBox.setBounds(new Rectangle(new Point(0, 0), icon.getPreferredSize()));
+		blackBox.setBounds(0, 0, 221, 124);
 
 		panel.add(blackBox);
 		panel.add(icon);
