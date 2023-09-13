@@ -30,6 +30,12 @@ public class Manifest {
 		return hasIcon;
 	}
 
+	public String getDisplayName() {
+		if (displayName == null || displayName.isEmpty())
+			return getInternalName();
+		return displayName;
+	}
+
 	public String getInternalName() {
 		return internalName;
 	}

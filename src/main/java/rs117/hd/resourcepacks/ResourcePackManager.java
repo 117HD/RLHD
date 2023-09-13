@@ -10,7 +10,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Objects;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import javax.inject.Inject;
@@ -19,7 +18,6 @@ import javax.swing.SwingUtilities;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.client.RuneLite;
-import net.runelite.client.callback.ClientThread;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.HttpUrl;
@@ -27,10 +25,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.text.WordUtils;
 import rs117.hd.HdPlugin;
 import rs117.hd.gui.components.MessagePanel;
-import rs117.hd.resourcepacks.data.LocalPackData;
 import rs117.hd.resourcepacks.data.Manifest;
 import rs117.hd.resourcepacks.impl.DefaultResourcePack;
 import rs117.hd.resourcepacks.impl.FileResourcePack;
@@ -41,26 +37,20 @@ import static rs117.hd.utils.ResourcePath.path;
 @Singleton
 @Slf4j
 public class ResourcePackManager {
-	//	private static final int UPDATE_CHECK_INTERVAL = 600000; // 10 minutes
-	private static final int UPDATE_CHECK_INTERVAL = 1000; // 10 minutes
-
 	public static ResourcePath RESOURCE_PACK_DIR = path(RuneLite.RUNELITE_DIR, "117hd-resource-packs");
-	public static ResourcePath RESOURCE_PACK_MANIFEST = RESOURCE_PACK_DIR.resolve("manifest.json");
-	public static ResourcePath RESOURCE_PACK_DEVELOPMENT_DIR = RESOURCE_PACK_DIR.resolve("development");
 
-	public static final HttpUrl GITHUB = HttpUrl.parse("https://github.com/117HD/resource-packs");
-	public static final HttpUrl RAW_GITHUB = HttpUrl.parse("https://raw.githubusercontent.com/117HD/resource-packs");
-	public static final HttpUrl RAW_GITHUB_URL = HttpUrl.parse("https://raw.githubusercontent.com/");
-	public static final HttpUrl API_GITHUB = HttpUrl.parse("https://api.github.com/repos/117HD/resource-packs");
+	public static final HttpUrl GITHUB = HttpUrl.get("https://github.com/117HD/resource-packs");
+	public static final HttpUrl RESOURCE_PACKS_MANIFEST_URL = HttpUrl.get(
+		"https://raw.githubusercontent.com/117HD/resource-packs/manifest/manifest.json");
+	public static final HttpUrl RAW_GITHUB_URL = HttpUrl.get("https://raw.githubusercontent.com/");
+	public static final HttpUrl API_GITHUB = HttpUrl.get("https://api.github.com/repos/117HD/resource-packs");
 
+	private static final int MAX_UPDATE_CHECK_INTERVAL = 600000; // 10 minutes
 	private static final FileFilter RESOURCE_PACK_FILTER = file ->
 		file.isFile() || file.isDirectory() && (new File(file, "pack.properties")).isFile();
 
 	@Inject
 	private OkHttpClient okHttpClient;
-
-	@Inject
-	private ClientThread clientThread;
 
 	@Inject
 	private HdPlugin plugin;
@@ -76,38 +66,20 @@ public class ResourcePackManager {
 
 	private long lastCheckForUpdates;
 
-	public static String toInternalName(String name) {
-		return name.toLowerCase().replace(" ", "_");
-	}
-
-	public static String fromInternalName(String name) {
-		return WordUtils.capitalizeFully(name.replace("_", " "));
-	}
-
 	public void startUp() {
 		checkForUpdates();
 
-		if (RESOURCE_PACK_MANIFEST.exists()) {
-			try {
-				LocalPackData[] manifest = RESOURCE_PACK_MANIFEST.loadJson(plugin.getGson(), LocalPackData[].class);
-				for (var pack : manifest) {
+		if (RESOURCE_PACK_DIR.exists()) {
+			for (File path : RESOURCE_PACK_DIR.toFile().listFiles(RESOURCE_PACK_FILTER)) {
+				AbstractResourcePack pack = new FileResourcePack(path);
+				pack.setNeedsUpdating(false);
+				pack.setDevelopmentPack(true);
 
-				}
-			} catch (IOException ex) {
-				log.error("Error while loading manifest:", ex);
+				if (pack.isValid())
+					installedPacks.add(pack);
 			}
 		}
 
-		if (RESOURCE_PACK_DEVELOPMENT_DIR.exists()) {
-			for (File pack : RESOURCE_PACK_DEVELOPMENT_DIR.toFile().listFiles(RESOURCE_PACK_FILTER)) {
-				AbstractResourcePack iResourcePack = new FileResourcePack(pack);
-				iResourcePack.setNeedsUpdating(false);
-				iResourcePack.setDevelopmentPack(true);
-				installedPacks.add(iResourcePack);
-			}
-		}
-
-		log.info("Adding default pack");
 		installedPacks.add(new DefaultResourcePack(path(HdPlugin.class, "resource-pack")));
 	}
 
@@ -115,30 +87,16 @@ public class ResourcePackManager {
 		installedPacks.clear();
 	}
 
-	public void verifyAndLoadPack(FileResourcePack pack) {
-		String internalName = pack.getManifest().getInternalName();
-		var localPack = getInstalledPack(internalName);
-		if (localPack != null) {
-			var downloadable = downloadablePacks.get(internalName);
-			if (downloadable != null && !downloadable.getCommit().equals(localPack.getManifest().getCommit())) {
-				pack.setNeedsUpdating(true);
-			}
-			installedPacks.add(pack);
-		}
-	}
-
 	public void checkForUpdates() {
-		if (System.currentTimeMillis() - lastCheckForUpdates < UPDATE_CHECK_INTERVAL)
+		if (System.currentTimeMillis() - lastCheckForUpdates < MAX_UPDATE_CHECK_INTERVAL)
 			return;
 		lastCheckForUpdates = System.currentTimeMillis();
 
 		setStatus("Loading...", "Fetching list of resource packs...");
 
-		okHttpClient.newCall(new Request.Builder()
-				.url(Objects.requireNonNull(RAW_GITHUB).newBuilder()
-					.addPathSegment("manifest")
-					.addPathSegment("manifest.json")
-					.build())
+		okHttpClient
+			.newCall(new Request.Builder()
+				.url(RESOURCE_PACKS_MANIFEST_URL)
 				.build())
 			.enqueue(new Callback() {
 				@Override
@@ -161,7 +119,6 @@ public class ResourcePackManager {
 						if (res.body() == null)
 							throw new IllegalStateException("Manifest is null");
 
-						downloadablePacks.clear();
 						manifests = plugin.getGson().fromJson(res.body().string(), Manifest[].class);
 					} catch (Exception ex) {
 						log.error("Error while reading downloaded manifest:", ex);
@@ -181,16 +138,17 @@ public class ResourcePackManager {
 						return;
 					}
 
-					clientThread.invokeLater(() -> {
-						for (var manifest : manifests)
+					SwingUtilities.invokeLater(() -> {
+						downloadablePacks.clear();
+
+						for (var manifest : manifests) {
 							downloadablePacks.put(manifest.getInternalName(), manifest);
 
-						for (File pack : RESOURCE_PACK_DIR.toFile().listFiles(RESOURCE_PACK_FILTER)) {
-							try {
-								verifyAndLoadPack(new FileResourcePack(pack));
-							} catch (Exception ex) {
-								log.warn("Unable to verify pack at '{}':", pack, ex);
-							}
+							var installed = getInstalledPack(manifest.getInternalName());
+							if (installed == null || installed.getManifest().getCommit().equals(manifest.getCommit()))
+								continue;
+
+							installed.setNeedsUpdating(true);
 						}
 
 						setStatus(null, null);
@@ -212,30 +170,35 @@ public class ResourcePackManager {
 		});
 	}
 
+	public void removeResourcePack(String internalName) {
+		installedPacks.removeIf(p -> p.getManifest().getInternalName().equals(internalName));
+		plugin.getSidebar().refresh();
+	}
+
 	public void downloadResourcePack(Manifest manifest) {
 		final ProgressListener progressListener = new ProgressListener() {
 
 			@Override
 			public void finishedDownloading() {
-				var pack = RESOURCE_PACK_DIR.resolve("pack-" + manifest.getInternalName());
+				var path = RESOURCE_PACK_DIR.resolve("pack-" + manifest.getInternalName());
 				try {
-					pack.mkdirs();
-					unZipAll(RESOURCE_PACK_DIR.resolve(manifest.getInternalName() + ".zip").toFile(), pack.toFile());
+					path.mkdirs();
+					unZipAll(RESOURCE_PACK_DIR.resolve(manifest.getInternalName() + ".zip").toFile(), path.toFile());
 				} catch (IOException ex) {
-					log.error("Unable to unzip resource pack to the following path: {}", pack, ex);
+					log.error("Unable to unzip resource pack to the following path: {}", path, ex);
 					return;
 				}
 
-				// TODO: add to list of installed packs
-//				new LocalPackData(manifest.getCommit(), manifest.getInternalName(), 0);
+				SwingUtilities.invokeLater(() -> {
+					var pack = new FileResourcePack(path.toFile());
+					String internalName = pack.getManifest().getInternalName();
 
-				verifyAndLoadPack(new FileResourcePack(pack.toFile()));
+					var localPack = getInstalledPack(internalName);
+					if (localPack == null)
+						installedPacks.add(pack);
 
-				SwingUtilities.invokeLater(() -> plugin.getSidebar().refresh());
-
-				//SwingUtilities.invokeLater(() -> {
-				//buildPackPanel();
-				//});
+					plugin.getSidebar().refresh();
+				});
 			}
 
 			@Override
@@ -261,6 +224,7 @@ public class ResourcePackManager {
 		};
 
 		OkHttpClient client = okHttpClient.newBuilder()
+			.cache(null)
 			.addNetworkInterceptor(chain -> {
 				try (var res = chain.proceed(chain.request())) {
 					return res.newBuilder()
@@ -285,17 +249,24 @@ public class ResourcePackManager {
 			.enqueue(new Callback() {
 				@Override
 				public void onFailure(Call call, IOException ex) {
-					log.info("Error resource pack '{}' from {}:", manifest.getInternalName(), url, ex);
+					log.info("Error while downloading resource pack '{}' from {}:", manifest.getInternalName(), url, ex);
 				}
 
 				@Override
 				public void onResponse(Call call, Response res) throws IOException {
-					File outputFile = RESOURCE_PACK_DIR.resolve(manifest.getInternalName() + ".zip").toFile();
-					try (FileOutputStream outputStream = new FileOutputStream(outputFile)) {
-						if (res.body() != null) {
-							outputStream.write(res.body().bytes());
-						} else {
-							log.info("Error resource pack '{}' from {}: empty body", manifest.getInternalName(), url);
+					if (!res.isSuccessful()) {
+						log.info(
+							"Error while downloading resource pack '{}' from {}: HTTP {}",
+							manifest.getInternalName(),
+							url,
+							res.code()
+						);
+					} else if (res.body() == null) {
+						log.info("Error while downloading resource pack '{}' from {}: empty body", manifest.getInternalName(), url);
+					} else {
+						var path = RESOURCE_PACK_DIR.resolve(manifest.getInternalName() + ".zip");
+						try (var os = path.toOutputStream()) {
+							res.body().byteStream().transferTo(os);
 						}
 					}
 					progressListener.finishedDownloading();

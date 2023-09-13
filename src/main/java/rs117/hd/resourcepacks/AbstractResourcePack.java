@@ -60,10 +60,14 @@ public abstract class AbstractResourcePack implements IResourcePack {
 				e.printStackTrace();
 			}
 		}
-        return metadata;
-    }
+		return metadata;
+	}
 
-    public String getPackName() {
+	public String getPackName() {
 		return getManifest().getInternalName();
-    }
+	}
+
+	public boolean isValid() {
+		return getManifest() != null;
+	}
 }

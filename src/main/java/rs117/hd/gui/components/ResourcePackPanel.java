@@ -65,6 +65,8 @@ import rs117.hd.resourcepacks.AbstractResourcePack;
 import rs117.hd.resourcepacks.ResourcePackManager;
 import rs117.hd.resourcepacks.data.Manifest;
 
+import static rs117.hd.resourcepacks.ResourcePackManager.RAW_GITHUB_URL;
+
 @Slf4j
 public class ResourcePackPanel extends JPanel {
 	private static final ImageIcon FADE;
@@ -278,7 +280,7 @@ public class ResourcePackPanel extends JPanel {
 		int packNameShift = pack.isDevelopmentPack() ? 19 : 0;
 		JLabel packName = new JLabel(manifest.getDisplayName());
 		packName.setFont(FontManager.getRunescapeBoldFont());
-		packName.setToolTipText(ResourcePackManager.fromInternalName(manifest.getInternalName()));
+		packName.setToolTipText(manifest.getInternalName());
 		packName.setBounds(5 + packNameShift, 5, 105, 25);
 		packName.setForeground(Color.WHITE);
 		panel.add(packName);
@@ -336,12 +338,12 @@ public class ResourcePackPanel extends JPanel {
 		description.setForeground(Color.WHITE);
 		panel.add(description);
 
-		JLabel pluginName = new JLabel(ResourcePackManager.fromInternalName(manifest.getInternalName()));
-		pluginName.setFont(FontManager.getRunescapeBoldFont());
-		pluginName.setToolTipText(ResourcePackManager.fromInternalName(manifest.getInternalName()));
-		pluginName.setBounds(5, 5, 105, 25);
-		pluginName.setForeground(Color.WHITE);
-		panel.add(pluginName);
+		JLabel packName = new JLabel(manifest.getDisplayName());
+		packName.setFont(FontManager.getRunescapeBoldFont());
+		packName.setToolTipText(manifest.getInternalName());
+		packName.setBounds(5, 5, 105, 25);
+		packName.setForeground(Color.WHITE);
+		panel.add(packName);
 
 		JButton actionButton = new JButton();
 		actionButton.setFocusPainted(false);
@@ -362,8 +364,7 @@ public class ResourcePackPanel extends JPanel {
 			{
 				actionButton.setText("Removing");
 				actionButton.setBackground(ColorScheme.MEDIUM_GRAY_COLOR);
-				//plugin.getResourcePackRepository().uninstallPack(resourcePackManager.installedPacks.get(manifest.getInternalName()),manifest.getInternalName());
-				//plugin.resourcePackManager.locateInstalledPacks();
+				resourcePackManager.removeResourcePack(manifest.getInternalName());
 			});
 		}
 		actionButton.setBounds(115, 97, 105, 25);
@@ -382,7 +383,8 @@ public class ResourcePackPanel extends JPanel {
 		if (manifest.hasIcon()) {
 			okHttpClient
 				.newCall(new Request.Builder()
-					.url(ResourcePackManager.RAW_GITHUB_URL.newBuilder()
+					.url(RAW_GITHUB_URL
+						.newBuilder()
 						.addPathSegment(manifest.getLink().replace("https://github.com/", ""))
 						.addPathSegment(manifest.getCommit())
 						.addPathSegment("icon.png")
