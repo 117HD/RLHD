@@ -1,7 +1,6 @@
 package rs117.hd.resourcepacks;
 
 import java.io.IOException;
-
 import okhttp3.MediaType;
 import okhttp3.ResponseBody;
 import okio.Buffer;
@@ -41,22 +40,27 @@ public class ProgressManager extends ResponseBody {
 	boolean firstUpdate = true;
 
 	private Source source(Source source) {
-
 		return new ForwardingSource(source) {
 			long totalBytesRead = 0L;
 
 			@Override
 			public long read(Buffer sink, long byteCount) throws IOException {
-				long bytesRead = super.read(sink, byteCount);
+				long bytesRead = 0;
+				try {
+					bytesRead = super.read(sink, byteCount);
+				} catch (Exception ex) {
+					sink.close();
+					System.out.println("Error while reading stream: " + ex);
+				}
+
 				// read() returns the number of bytes read, or -1 if this source is exhausted.
 				totalBytesRead += bytesRead != -1 ? bytesRead : 0;
 				if (firstUpdate) {
 					firstUpdate = false;
 					progressListener.started();
 				}
-				if (responseBody.contentLength() != -1) {
+				if (responseBody.contentLength() > 0)
 					progressListener.progress(totalBytesRead, responseBody.contentLength());
-				}
 
 				return bytesRead;
 			}

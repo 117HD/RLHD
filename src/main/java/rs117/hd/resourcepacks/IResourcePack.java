@@ -1,12 +1,10 @@
 package rs117.hd.resourcepacks;
 
-import rs117.hd.resourcepacks.data.Manifest;
-import rs117.hd.utils.ResourcePath;
-
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Set;
+import rs117.hd.resourcepacks.data.Manifest;
+import rs117.hd.utils.ResourcePath;
 
 public interface IResourcePack
 {
@@ -14,7 +12,7 @@ public interface IResourcePack
 
 	ResourcePath getResource(String... parts);
 
-    Manifest getPackMetadata();
+    Manifest getManifest();
 
     BufferedImage getPackImage();
 

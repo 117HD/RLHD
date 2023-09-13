@@ -32,6 +32,8 @@ import java.util.function.Supplier;
 import lombok.extern.slf4j.Slf4j;
 import rs117.hd.utils.ResourcePath;
 
+import static rs117.hd.utils.ResourcePath.path;
+
 @Slf4j
 public class Template
 {
@@ -160,8 +162,7 @@ public class Template
 		includeList.add(filename);
 		includeStack.add(0);
 
-		switch (ResourcePath.path(filename).getExtension().toLowerCase())
-		{
+		switch (path(filename).getExtension()) {
 			case "glsl":
 				includeType = IncludeType.GLSL;
 				break;
@@ -186,7 +187,7 @@ public class Template
 
 	public Template addIncludePath(Class<?> clazz)
 	{
-		return addIncludePath(ResourcePath.path(clazz));
+		return addIncludePath(path(clazz));
 	}
 
 	public Template addIncludePath(ResourcePath includePath)

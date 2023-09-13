@@ -22,12 +22,11 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package rs117.hd.gui.panel.components;
+package rs117.hd.gui.components;
 
+import java.awt.Dimension;
+import javax.swing.JPanel;
 import net.runelite.client.ui.PluginPanel;
-
-import javax.swing.*;
-import java.awt.*;
 
 public class FixedWidthPanel extends JPanel
 {

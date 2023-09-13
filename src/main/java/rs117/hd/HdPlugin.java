@@ -58,7 +58,6 @@ import net.runelite.api.hooks.*;
 import net.runelite.client.RuneLite;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
-import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.plugins.Plugin;
@@ -67,11 +66,8 @@ import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.PluginInstantiationException;
 import net.runelite.client.plugins.PluginManager;
 import net.runelite.client.plugins.entityhider.EntityHiderPlugin;
-import net.runelite.client.ui.ClientToolbar;
 import net.runelite.client.ui.ClientUI;
 import net.runelite.client.ui.DrawManager;
-import net.runelite.client.ui.NavigationButton;
-import net.runelite.client.util.ImageUtil;
 import net.runelite.client.util.LinkBrowser;
 import net.runelite.client.util.OSType;
 import net.runelite.rlawt.AWTContext;
@@ -84,7 +80,7 @@ import rs117.hd.config.ShadowMode;
 import rs117.hd.config.UIScalingMode;
 import rs117.hd.data.WaterType;
 import rs117.hd.data.materials.Material;
-import rs117.hd.gui.panel.HdPanel;
+import rs117.hd.gui.HdSidebar;
 import rs117.hd.model.ModelHasher;
 import rs117.hd.model.ModelPusher;
 import rs117.hd.model.TempModelInfo;
@@ -93,8 +89,7 @@ import rs117.hd.opengl.compute.OpenCLManager;
 import rs117.hd.opengl.shader.Shader;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.Template;
-import rs117.hd.resourcepacks.ResourcePackRepository;
-import rs117.hd.resourcepacks.impl.DefaultResourcePack;
+import rs117.hd.resourcepacks.ResourcePackManager;
 import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.LightManager;
 import rs117.hd.scene.ModelOverrideManager;
@@ -120,8 +115,6 @@ import static org.lwjgl.opencl.CL10.*;
 import static org.lwjgl.opencl.CL10GL.*;
 import static org.lwjgl.opengl.GL43C.*;
 import static rs117.hd.HdPluginConfig.*;
-import static rs117.hd.resourcepacks.Constants.DEV_PACK_DIR;
-import static rs117.hd.resourcepacks.Constants.PACK_DIR;
 import static rs117.hd.utils.ResourcePath.path;
 
 @PluginDescriptor(
@@ -165,12 +158,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private ClientThread clientThread;
 
 	@Inject
-	private ClientToolbar clientToolbar;
-
-	@Inject
-	private EventBus eventBus;
-
-	@Inject
 	private DrawManager drawManager;
 
 	@Inject
@@ -180,12 +167,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private OpenCLManager openCLManager;
 
 	@Inject
+	private ResourcePackManager resourcePackManager;
+
+	@Inject
 	private TextureManager textureManager;
-
-	private NavigationButton navigationButton;
-
-	@Getter
-	private ResourcePackRepository resourcePackRepository;
 
 	@Inject
 	private LightManager lightManager;
@@ -222,6 +207,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private Gson rlGson;
 	@Getter
 	private Gson gson;
+
+	@Getter
+	private HdSidebar sidebar;
 
 	private Canvas canvas;
 	private AWTContext awtContext;
@@ -442,17 +430,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	protected void startUp() {
 		gson = rlGson.newBuilder().setLenient().create();
 
-		if (!PACK_DIR.exists()) {
-			PACK_DIR.mkdirs();
-		}
-
-		DefaultResourcePack rprDefaultResourcePackIn = new DefaultResourcePack(path(HdPlugin.class,"pack"));
-		resourcePackRepository = new ResourcePackRepository(PACK_DIR,DEV_PACK_DIR,rprDefaultResourcePackIn);
-
-		navigationButton = NavigationButton.builder().tooltip("117 HD").priority(3).icon(ImageUtil.loadImageResource(HdPlugin.class, "icon.png")).panel(injector.getInstance(
-			HdPanel.class)).build();
-		clientToolbar.addNavigation(navigationButton);
-
 		clientThread.invoke(() -> {
 			try {
 				renderBufferOffset = 0;
@@ -527,10 +504,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				lwjglInitialized = true;
 				checkGLErrors();
 
-				if(resourcePackRepository != null) {
-					resourcePackRepository.getPackPanel().populatePacks();
-				}
-
 				if (log.isDebugEnabled() && glCaps.glDebugMessageControl != 0)
 				{
 					debugCallback = GLUtil.setupDebugMessageCallback();
@@ -582,7 +555,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				client.setDrawCallbacks(this);
 				client.setGpuFlags(DrawCallbacks.GPU | DrawCallbacks.HILLSKEW | DrawCallbacks.NORMALS);
 				client.setExpandedMapLoading(getExpandedMapLoadingChunks());
-				textureManager.startUp();
 				// force rebuild of main buffer provider to enable alpha channel
 				client.resizeCanvas();
 
@@ -590,6 +562,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				lastStretchedCanvasWidth = lastStretchedCanvasHeight = 0;
 				lastAntiAliasingMode = null;
 
+				resourcePackManager.startUp();
+				textureManager.startUp();
 				modelPusher.startUp();
 				modelOverrideManager.startUp();
 				lightManager.startUp();
@@ -600,9 +574,19 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				isInGauntlet = false;
 				isInChambersOfXeric = false;
 
+				if (client.getGameState() == GameState.LOGGED_IN) {
+					// We need to force the client to reload the scene if GPU flags have changed
+					client.setGameState(GameState.LOADING);
+				}
+
 				checkGLErrors();
 
 				clientThread.invokeLater(this::displayUpdateMessage);
+
+				SwingUtilities.invokeLater(() -> {
+					// The sidebar needs to be injected on plugin startup to inherit RuneLite styling
+					sidebar = injector.getInstance(HdSidebar.class);
+				});
 			}
 			catch (Throwable err)
 			{
@@ -620,6 +604,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		FileWatcher.destroy();
 		developerTools.deactivate();
 
+		if (sidebar != null)
+			sidebar.destroy();
+		sidebar = null;
+
 		clientThread.invoke(() -> {
 			var scene = client.getScene();
 			if (scene != null)
@@ -636,6 +624,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 			if (lwjglInitialized) {
 				textureManager.shutDown();
+				resourcePackManager.shutDown();
 
 				destroyBuffers();
 				destroyInterfaceTexture();

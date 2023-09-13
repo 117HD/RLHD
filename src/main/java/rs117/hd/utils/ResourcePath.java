@@ -35,6 +35,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.lang.reflect.Type;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
@@ -64,60 +65,71 @@ import org.lwjgl.system.Platform;
 
 @Slf4j
 public class ResourcePath {
-    public static ResourcePath RESOURCE_PATH = Props.getPathOrDefault("rlhd.resource-path", () -> null);
+	public static ResourcePath RESOURCE_PATH = Props.getPathOrDefault("rlhd.resource-path", () -> null);
 
-    private static final FileWatcher.UnregisterCallback NOOP = () -> {};
+	private static final FileWatcher.UnregisterCallback NOOP = () -> {};
 
-    @Nullable
-    public final ResourcePath root;
-    @Nullable
-    public final String path;
+	@Nullable
+	public final ResourcePath root;
+	@Nullable
+	public final String path;
 
-    public static ResourcePath path(Path path) {
-        return path(path.toString());
-    }
+	public static ResourcePath path(Path path) {
+		return path(path.toString());
+	}
 
-    public static ResourcePath path(String... parts) {
-        return new ResourcePath(parts);
-    }
+	public static ResourcePath path(String... parts) {
+		return new ResourcePath(parts);
+	}
 
-    public static ResourcePath path(Class<?> root, String... parts) {
-        return new ClassResourcePath(root, parts);
-    }
+	public static ResourcePath path(File root, String... parts) {
+		return new ResourcePath(root.getPath()).resolve(parts);
+	}
 
-    public static ResourcePath path(ClassLoader root, String... parts)  {
-        return new ClassLoaderResourcePath(root, parts);
-    }
+	public static ResourcePath path(Class<?> root, String... parts) {
+		return new ClassResourcePath(root, parts);
+	}
 
-    private ResourcePath(String... parts) {
-        this(null, parts);
-    }
+	public static ResourcePath path(ClassLoader root, String... parts) {
+		return new ClassLoaderResourcePath(root, parts);
+	}
 
-    private ResourcePath(@Nonnull ResourcePath root) {
-        this.root = root;
-        this.path = null;
-    }
+	private ResourcePath(String... parts) {
+		this(null, parts);
+	}
 
-    private ResourcePath(@Nullable ResourcePath root, String... parts) {
-        this.root = root;
-        this.path = normalize(parts);
-    }
+	private ResourcePath(@Nonnull ResourcePath root) {
+		this.root = root;
+		this.path = null;
+	}
 
-    public ResourcePath chroot() {
-        // Encapsulate the current root and path into a new root ResourcePath.
-        // Subsequent path resolutions will not include the encapsulated path.
-        return new ResourcePath(this);
-    }
+	private ResourcePath(@Nullable ResourcePath root, String... parts) {
+		this.root = root;
+		this.path = normalize(parts);
+	}
 
-    public ResourcePath resolve(String... parts) {
-        return new ResourcePath(root, normalize(path, parts));
-    }
-    
-    @SuppressWarnings("ResultOfMethodCallIgnored")
-    public ResourcePath mkdirs() {
-        toFile().getParentFile().mkdirs();
-        return this;
-    }
+	public ResourcePath chroot() {
+		// Encapsulate the current root and path into a new root ResourcePath.
+		// Subsequent path resolutions will not include the encapsulated path.
+		return new ResourcePath(this);
+	}
+
+	public ResourcePath resolve(String... parts) {
+		return new ResourcePath(root, normalize(path, parts));
+	}
+
+	public ResourcePath mkdirs() throws IOException {
+		var dir = toFile();
+		if (!getExtension().isEmpty())
+			dir = dir.getParentFile();
+		try {
+			// noinspection ResultOfMethodCallIgnored
+			dir.mkdirs();
+		} catch (Exception ex) {
+			throw new IOException("Unable to create directories for path: " + this);
+		}
+		return this;
+	}
 
 	public boolean exists() {
 		if (root == null)
@@ -125,91 +137,113 @@ public class ResourcePath {
 		return root.resolve(path).exists();
 	}
 
-    public String getFilename() {
-        if (path == null)
-            return "";
-        int i = path.lastIndexOf("/");
-        if (i != -1)
-            return path.substring(i + 1);
-        return path;
-    }
+	public boolean isDirectory() {
+		return toFile().isDirectory();
+	}
 
-    public String getExtension() {
-        return getExtension(0);
-    }
+	public boolean isFile() {
+		return toFile().isFile();
+	}
 
-    public String getExtension(int nthLast) {
-        String filename = getFilename();
-        String extension = "";
-        while (nthLast-- >= 0) {
-            int i = filename.lastIndexOf('.');
-            if (i == -1)
-                return nthLast >= 0 ? "" : filename;
-            extension = filename.substring(i + 1);
-            filename = filename.substring(0, i);
-        }
-        return extension;
-    }
+	public String getFilename() {
+		if (path == null)
+			return "";
+		int i = path.lastIndexOf("/");
+		if (i != -1)
+			return path.substring(i + 1);
+		return path;
+	}
 
-    public ResourcePath setExtension(String extension) {
-        if (path == null)
-            throw new IllegalStateException("Cannot set extension for root path: " + this);
+	/**
+	 * Get the last file extension (after "."), or an empty string if the file has no extension.
+	 */
+	public String getExtension() {
+		return getExtension(0);
+	}
 
-        String path = this.path;
-        int i = path.lastIndexOf('.');
-        if (i != -1)
-            path = path.substring(0, i);
-        return new ResourcePath(root, path);
-    }
+	/**
+	 * Split the filename on periods and find the nth string from the right.
+	 * If the filename contains no periods, this will return an empty string.
+	 *
+	 * @param nthLast the zero-based index of the extension, starting at the end of the string.
+	 * @return the nth file extension, or an empty string if the file has no extension.
+	 */
+	public String getExtension(int nthLast) {
+		String filename = getFilename();
 
-    public boolean matches(@RegEx String posixPathRegex) {
-        Pattern p = Pattern.compile(posixPathRegex);
-        Matcher m = p.matcher(toPosixPath());
-        return m.find();
-    }
+		int i = filename.length();
+		int j = i;
+		while (true) {
+			i = filename.lastIndexOf('.', i - 1);
+			if (i == -1)
+				break;
+			if (nthLast-- == 0)
+				return filename.substring(i + 1, j).toLowerCase();
+			j = i;
+		}
 
-    @Override
-    public String toString() {
-        String path = toPosixPath();
-        if (root != null)
-            path = normalize(root.toPosixPath(), path.startsWith("/") ? path.substring(1) : path);
-        return path.length() == 0 ? "." : path;
-    }
+		return "";
+	}
 
-    public ResourcePath toAbsolute() {
-        if (root != null) {
-            Path rootPath = root.toPath().toAbsolutePath();
-            Path path = toPath().toAbsolutePath();
-            return new ResourcePath(root, rootPath.relativize(path).toString());
-        }
-        return path(toPath().toAbsolutePath());
-    }
+	public ResourcePath setExtension(String extension) {
+		if (path == null)
+			throw new IllegalStateException("Cannot set extension for root path: " + this);
 
-    public String toPosixPath() {
-        if (root != null)
-            return normalize(root.toPosixPath(), new String[] { path });
-        return path;
-    }
+		String path = this.path;
+		int i = path.lastIndexOf('.');
+		if (i != -1)
+			path = path.substring(0, i);
+		return new ResourcePath(root, path);
+	}
 
-    public Path toPath() {
-        if (root == null) {
-            assert path != null;
-            return Paths.get(path);
-        }
+	public boolean matches(@RegEx String posixPathRegex) {
+		Pattern p = Pattern.compile(posixPathRegex);
+		Matcher m = p.matcher(toPosixPath());
+		return m.find();
+	}
 
-        Path basePath = root.toPath();
-        if (path == null)
-            return basePath;
+	@Override
+	public String toString() {
+		String path = toPosixPath();
+		if (root != null)
+			path = normalize(root.toPosixPath(), path.startsWith("/") ? path.substring(1) : path);
+		return path.length() == 0 ? "." : path;
+	}
 
-        String relativePath = path.startsWith("/") ? path.substring(1) : path;
-        return basePath.resolve(relativePath);
-    }
+	public ResourcePath toAbsolute() {
+		if (root != null) {
+			Path rootPath = root.toPath().toAbsolutePath();
+			Path path = toPath().toAbsolutePath();
+			return new ResourcePath(root, rootPath.relativize(path).toString());
+		}
+		return path(toPath().toAbsolutePath());
+	}
 
-    public File toFile() {
+	public String toPosixPath() {
+		if (root != null)
+			return normalize(root.toPosixPath(), new String[] { path });
+		return path;
+	}
+
+	public Path toPath() {
+		if (root == null) {
+			assert path != null;
+			return Paths.get(path);
+		}
+
+		Path basePath = root.toPath();
+		if (path == null)
+			return basePath;
+
+		String relativePath = path.startsWith("/") ? path.substring(1) : path;
+		return basePath.resolve(relativePath);
+	}
+
+	public File toFile() {
 		if (!isFileSystemResource())
 			throw new IllegalStateException("Not a file: " + this);
-        return toPath().toFile();
-    }
+		return toPath().toFile();
+	}
 
     @NonNull
     public URL toURL() throws IOException {
@@ -250,10 +284,10 @@ public class ResourcePath {
     public boolean isClassResource() {
         if (root != null)
             return root.isClassResource();
-        return false;
-    }
+		return false;
+	}
 
-    /**
+	/**
 	 * Check if the resource pointed to is actually on the file system, even if it is loaded as a class resource.
 	 */
 	public boolean isFileSystemResource() {
@@ -262,6 +296,10 @@ public class ResourcePath {
 		} catch (IOException ex) {
 			return false;
 		}
+	}
+
+	public void forEachFile(Consumer<ResourcePath> fileConsumer) {
+
 	}
 
 	/**
@@ -322,15 +360,21 @@ public class ResourcePath {
 		}
 	}
 
+	public <T> T loadJson(Gson gson, Type type) throws IOException {
+		try (BufferedReader reader = toReader()) {
+			return gson.fromJson(reader, type);
+		}
+	}
+
 	public BufferedImage loadImage() throws IOException {
 		try (InputStream is = toInputStream()) {
 			synchronized (ImageIO.class) {
 				return ImageIO.read(is);
 			}
 		}
-    }
+	}
 
-    /**
+	/**
      * Reads the full InputStream into a garbage-collected ByteBuffer allocated with BufferUtils.
      * @return a ByteBuffer
      * @throws IOException if the InputStream cannot be read

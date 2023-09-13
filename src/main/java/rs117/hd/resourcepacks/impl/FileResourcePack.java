@@ -1,44 +1,37 @@
 package rs117.hd.resourcepacks.impl;
 
-import lombok.extern.slf4j.Slf4j;
-import rs117.hd.resourcepacks.AbstractResourcePack;
-import rs117.hd.utils.ResourcePath;
-
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import lombok.extern.slf4j.Slf4j;
+import rs117.hd.resourcepacks.AbstractResourcePack;
+import rs117.hd.utils.ResourcePath;
 
 @Slf4j
 public class FileResourcePack extends AbstractResourcePack {
-
     public FileResourcePack(File resourcePackFileIn) {
         super(ResourcePath.path(resourcePackFileIn.getPath()));
     }
 
     @Override
-    protected boolean hasResourceName(String name) {
-        return (new File(this.resourcePackFile.toFile(), name)).isFile();
-    }
-
-    @Override
     protected InputStream getInputStreamByName(String name) throws IOException {
-        return this.resourcePackFile.resolve(name).toInputStream();
+		return this.path.resolve(name).toInputStream();
     }
 
     @Override
     public InputStream getInputStream(String... parts) throws IOException {
-        return this.resourcePackFile.resolve(parts).toInputStream();
+		return this.path.resolve(parts).toInputStream();
     }
 
 	@Override
 	public ResourcePath getResource(String... parts) {
-		return this.resourcePackFile.resolve(parts);
+		return this.path.resolve(parts);
 	}
 
 	@Override
     public BufferedImage getPackImage() {
-        ResourcePath path = resourcePackFile.resolve("icon.png");
+		ResourcePath path = this.path.resolve("icon.png");
         try {
             return path.loadImage();
         } catch (IOException e) {
@@ -51,5 +44,4 @@ public class FileResourcePack extends AbstractResourcePack {
     public boolean hasPackImage() {
         return getPackImage() != null;
     }
-
 }
