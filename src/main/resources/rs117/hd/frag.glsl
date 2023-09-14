@@ -140,6 +140,8 @@ void main() {
         vec2 uv2 = vUv[1].xy;
         vec2 uv3 = vUv[2].xy;
         vec2 blendedUv = uv1 * IN.texBlend.x + uv2 * IN.texBlend.y + uv3 * IN.texBlend.z;
+        if ((vMaterialData[0] >> MATERIAL_FLAG_IS_VANILLA_TEXTURED & 1) == 1)
+            blendedUv.x = clamp(blendedUv.x, 0, 1); // Vanilla textures rely on UVs being horizontally edge clamped
         uv1 = uv2 = uv3 = blendedUv;
 
         // Scroll UVs
