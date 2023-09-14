@@ -62,6 +62,10 @@
         "type": "integer",
         "description": "Extra rotation to apply to UVs with 2048 corresponding to a complete rotation. Defaults to 0."
       },
+      "retainVanillaUvs": {
+        "type": "boolean",
+        "description": "Retain vanilla UVs on already textured areas of the model. Defaults to true."
+      },
       "forceOverride": {
         "type": "boolean",
         "description": "Apply the override even when model textures are disabled in the config. Defaults to false."
