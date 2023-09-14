@@ -10,6 +10,7 @@ import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -65,11 +66,26 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay
 		Scene scene = client.getScene();
 		Tile[][][] tiles = scene.getExtendedTiles();
 		int plane = ctrlPressed ? MAX_Z - 1 : client.getPlane();
-		for (; plane >= 0; plane--) {
+		for (int z = plane; z >= 0; z--) {
 			for (int isBridge = 1; isBridge >= 0; isBridge--) {
 				for (int x = 0; x < EXTENDED_SCENE_SIZE; x++) {
 					for (int y = 0; y < EXTENDED_SCENE_SIZE; y++) {
-						Tile tile = tiles[plane][x][y];
+						Tile tile = tiles[z][x][y];
+						boolean shouldDraw = tile != null && (isBridge == 0 || tile.getBridge() != null);
+						if (shouldDraw && drawTileInfo(g, scene, tile)) {
+							return null;
+						}
+					}
+				}
+			}
+		}
+
+		ctrlPressed = true;
+		for (int z = plane; z >= 0; z--) {
+			for (int isBridge = 1; isBridge >= 0; isBridge--) {
+				for (int x = 0; x < EXTENDED_SCENE_SIZE; x++) {
+					for (int y = 0; y < EXTENDED_SCENE_SIZE; y++) {
+						Tile tile = tiles[z][x][y];
 						boolean shouldDraw = tile != null && (isBridge == 0 || tile.getBridge() != null);
 						if (shouldDraw && drawTileInfo(g, scene, tile)) {
 							return null;
@@ -139,14 +155,14 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay
 
 		lines.add("Scene point: " + tileX + ", " + tileY + ", " + plane);
 
-		WorldPoint worldPoint = null;
+		int[] worldPoint = null;
 		var sceneContext = plugin.getSceneContext();
 		if (sceneContext != null) {
-			worldPoint = sceneContext.localToWorld(new LocalPoint(tileX, tileY), plane);
+			worldPoint = sceneContext.sceneToWorld(tileX, tileY, plane);
 		}
 		if (worldPoint != null) {
-			lines.add("World point: " + worldPoint.getX() + ", " + worldPoint.getY() + ", " + worldPoint.getPlane());
-			lines.add("Region ID: " + worldPoint.getRegionID());
+			lines.add("World point: " + Arrays.toString(worldPoint));
+			lines.add("Region ID: " + HDUtils.worldToRegionID(worldPoint));
 		}
 
 		Scene scene = client.getScene();
@@ -158,7 +174,7 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay
 		Underlay underlay = Underlay.getUnderlay(scene, tile, plugin);
 		lines.add(String.format("Underlay: %s (%d)", underlay.name(), underlayId));
 
-		Color polyColor = Color.BLACK;
+		Color polyColor = Color.LIGHT_GRAY;
 		if (paint != null)
 		{
 			// TODO: separate H, S and L to hopefully more easily match tiles that are different shades of the same hue

@@ -2392,6 +2392,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					case KEY_GROUND_TEXTURES:
 					case KEY_HD_TZHAAR_RESKIN:
 					case KEY_LEGACY_GREY_COLORS:
+					case KEY_FILL_GAPS_IN_TERRAIN:
 						modelPusher.clearModelCache();
 						uploadScene();
 						break;

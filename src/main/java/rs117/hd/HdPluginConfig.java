@@ -789,12 +789,24 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
+	String KEY_FILL_GAPS_IN_TERRAIN = "experimentalFillGapsInTerrain";
+	@ConfigItem(
+		keyName = KEY_FILL_GAPS_IN_TERRAIN,
+		name = "Fill gaps in terrain",
+		description = "Attempt to patch all holes in the ground, such as around trapdoors and ladders.",
+		position = 1,
+		section = experimentalSettings
+	)
+	default boolean fillGapsInTerrain() {
+		return false;
+	}
+
 	String KEY_MODEL_SORTING_CONFIGURATION = "useOldModelSortingConfiguration";
 	@ConfigItem(
 		keyName = KEY_MODEL_SORTING_CONFIGURATION,
 		name = "Use old model sorting",
 		description = "Revert back to the previous version of model sorting, in case performance has gotten worse.",
-		position = 1,
+		position = 2,
 		section = experimentalSettings
 	)
 	default boolean useOldModelSortingConfiguration() {

@@ -31,7 +31,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
-import net.runelite.api.coords.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.data.WaterType;
@@ -268,47 +267,62 @@ class SceneUploader {
 			}
 		}
 
-		WorldPoint worldPoint = sceneContext.localToWorld(new LocalPoint(tileX, tileExY), tileZ);
+		if (config.fillGapsInTerrain()) {
+			int[] worldPoint = sceneContext.sceneToWorld(tileX, tileY, tileZ);
 
-		int sceneMin = sceneContext.expandedMapLoadingChunks * -8;
-		int sceneMax = SCENE_SIZE + sceneContext.expandedMapLoadingChunks * 8;
-		boolean fillGaps =
-			tileZ == 0 &&
-			tileX > sceneMin &&
-			tileY > sceneMin &&
-			tileX < sceneMax - 1 &&
-			tileY < sceneMax - 1 &&
-			worldPoint != null &&
-			Area.OVERWORLD.containsPoint(worldPoint);
+			int sceneMin = sceneContext.expandedMapLoadingChunks * -8;
+			int sceneMax = SCENE_SIZE + sceneContext.expandedMapLoadingChunks * 8;
+			boolean fillGaps =
+				tileZ == 0 &&
+				tileX > sceneMin &&
+				tileY > sceneMin &&
+				tileX < sceneMax - 1 &&
+				tileY < sceneMax - 1 &&
+				Area.OVERWORLD.containsPoint(worldPoint);
 
-		if (fillGaps) {
-			int vertexOffset = sceneContext.getVertexOffset();
-			int uvOffset = sceneContext.getUvOffset();
-			int vertexCount = 0;
+			// TODO: sync client map regions with the scene loader thread. atm this only works after swapScene
+//			if (fillGaps) {
+//				int tileRegionID = HDUtils.worldToRegionID(worldPoint);
+//				int[] regions = client.getMapRegions();
+//
+//				fillGaps = false;
+//				for (int region : regions) {
+//					if (region == tileRegionID) {
+//						fillGaps = true;
+//						break;
+//					}
+//				}
+//			}
 
-			if (sceneTileModel == null) {
-				if (!hasTilePaint) {
-					uploadBlackTile(sceneContext, tileExX, tileExY, renderLevel);
-					vertexCount = 6;
+			if (fillGaps) {
+				int vertexOffset = sceneContext.getVertexOffset();
+				int uvOffset = sceneContext.getUvOffset();
+				int vertexCount = 0;
+
+				if (sceneTileModel == null) {
+					if (!hasTilePaint) {
+						uploadBlackTile(sceneContext, tileExX, tileExY, renderLevel);
+						vertexCount = 6;
+					}
+				} else {
+					int[] uploadedTileModelData = uploadHDTileModelSurface(sceneContext, tile, sceneTileModel, true);
+					vertexCount = uploadedTileModelData[0];
 				}
-			} else {
-				int[] uploadedTileModelData = uploadHDTileModelSurface(sceneContext, tile, sceneTileModel, true);
-				vertexCount = uploadedTileModelData[0];
-			}
 
-			if (vertexCount > 0) {
-				sceneContext.staticUnorderedModelBuffer
-					.ensureCapacity(8)
-					.getBuffer()
-					.put(vertexOffset)
-					.put(uvOffset)
-					.put(vertexCount / 3)
-					.put(sceneContext.staticVertexCount)
-					.put(0)
-					.put(tileX * LOCAL_TILE_SIZE)
-					.put(0)
-					.put(tileY * LOCAL_TILE_SIZE);
-				sceneContext.staticVertexCount += vertexCount;
+				if (vertexCount > 0) {
+					sceneContext.staticUnorderedModelBuffer
+						.ensureCapacity(8)
+						.getBuffer()
+						.put(vertexOffset)
+						.put(uvOffset)
+						.put(vertexCount / 3)
+						.put(sceneContext.staticVertexCount)
+						.put(0)
+						.put(tileX * LOCAL_TILE_SIZE)
+						.put(0)
+						.put(tileY * LOCAL_TILE_SIZE);
+					sceneContext.staticVertexCount += vertexCount;
+				}
 			}
 		}
 	}
@@ -360,12 +374,12 @@ class SceneUploader {
 
 		int localSwVertexX = localX;
 		int localSwVertexY = localY;
-		int localSeVertexX = localX + Perspective.LOCAL_TILE_SIZE;
+		int localSeVertexX = localX + LOCAL_TILE_SIZE;
 		int localSeVertexY = localY;
 		int localNwVertexX = localX;
-		int localNwVertexY = localY + Perspective.LOCAL_TILE_SIZE;
-		int localNeVertexX = localX + Perspective.LOCAL_TILE_SIZE;
-		int localNeVertexY = localY + Perspective.LOCAL_TILE_SIZE;
+		int localNwVertexY = localY + LOCAL_TILE_SIZE;
+		int localNeVertexX = localX + LOCAL_TILE_SIZE;
+		int localNeVertexY = localY + LOCAL_TILE_SIZE;
 
 		int[] vertexKeys = ProceduralGenerator.tileVertexKeys(scene, tile);
 		int swVertexKey = vertexKeys[0];
@@ -581,12 +595,12 @@ class SceneUploader {
 
 		int localSwVertexX = 0;
 		int localSwVertexY = 0;
-		int localSeVertexX = Perspective.LOCAL_TILE_SIZE;
+		int localSeVertexX = LOCAL_TILE_SIZE;
 		int localSeVertexY = 0;
 		int localNwVertexX = 0;
-		int localNwVertexY = Perspective.LOCAL_TILE_SIZE;
-		int localNeVertexX = Perspective.LOCAL_TILE_SIZE;
-		int localNeVertexY = Perspective.LOCAL_TILE_SIZE;
+		int localNwVertexY = LOCAL_TILE_SIZE;
+		int localNeVertexX = LOCAL_TILE_SIZE;
+		int localNeVertexY = LOCAL_TILE_SIZE;
 
 		int[] vertexKeys = ProceduralGenerator.tileVertexKeys(scene, tile);
 		int swVertexKey = vertexKeys[0];
@@ -810,18 +824,18 @@ class SceneUploader {
 
 						materialA = groundMaterial.getRandomMaterial(
 							tileZ,
-							baseX + tileX + (int) Math.floor((float) localVertices[0][0] / Perspective.LOCAL_TILE_SIZE),
-							baseY + tileY + (int) Math.floor((float) localVertices[0][1] / Perspective.LOCAL_TILE_SIZE)
+							baseX + tileX + (int) Math.floor((float) localVertices[0][0] / LOCAL_TILE_SIZE),
+							baseY + tileY + (int) Math.floor((float) localVertices[0][1] / LOCAL_TILE_SIZE)
 						);
 						materialB = groundMaterial.getRandomMaterial(
 							tileZ,
-							baseX + tileX + (int) Math.floor((float) localVertices[1][0] / Perspective.LOCAL_TILE_SIZE),
-							baseY + tileY + (int) Math.floor((float) localVertices[1][1] / Perspective.LOCAL_TILE_SIZE)
+							baseX + tileX + (int) Math.floor((float) localVertices[1][0] / LOCAL_TILE_SIZE),
+							baseY + tileY + (int) Math.floor((float) localVertices[1][1] / LOCAL_TILE_SIZE)
 						);
 						materialC = groundMaterial.getRandomMaterial(
 							tileZ,
-							baseX + tileX + (int) Math.floor((float) localVertices[2][0] / Perspective.LOCAL_TILE_SIZE),
-							baseY + tileY + (int) Math.floor((float) localVertices[2][1] / Perspective.LOCAL_TILE_SIZE)
+							baseX + tileX + (int) Math.floor((float) localVertices[2][0] / LOCAL_TILE_SIZE),
+							baseY + tileY + (int) Math.floor((float) localVertices[2][1] / LOCAL_TILE_SIZE)
 						);
 					} else if (plugin.configWinterTheme) {
 						if (ProceduralGenerator.isOverlayFace(tile, face)) {
@@ -943,20 +957,19 @@ class SceneUploader {
 				int depthB = sceneContext.vertexUnderwaterDepth.getOrDefault(vertexKeyB, 0);
 				int depthC = sceneContext.vertexUnderwaterDepth.getOrDefault(vertexKeyC, 0);
 
-				if (plugin.configGroundTextures)
-				{
+				if (plugin.configGroundTextures) {
 					GroundMaterial groundMaterial = GroundMaterial.UNDERWATER_GENERIC;
 
-					int tileVertexX = Math.round((float)localVertices[0][0] / (float)Perspective.LOCAL_TILE_SIZE) + tileX + baseX;
-					int tileVertexY = Math.round((float)localVertices[0][1] / (float)Perspective.LOCAL_TILE_SIZE) + tileY + baseY;
+					int tileVertexX = Math.round((float) localVertices[0][0] / (float) LOCAL_TILE_SIZE) + tileX + baseX;
+					int tileVertexY = Math.round((float) localVertices[0][1] / (float) LOCAL_TILE_SIZE) + tileY + baseY;
 					materialA = groundMaterial.getRandomMaterial(tileZ, tileVertexX, tileVertexY);
 
-					tileVertexX = Math.round((float)localVertices[1][0] / (float)Perspective.LOCAL_TILE_SIZE) + tileX + baseX;
-					tileVertexY = Math.round((float)localVertices[1][1] / (float)Perspective.LOCAL_TILE_SIZE) + tileY + baseY;
+					tileVertexX = Math.round((float) localVertices[1][0] / (float) LOCAL_TILE_SIZE) + tileX + baseX;
+					tileVertexY = Math.round((float) localVertices[1][1] / (float) LOCAL_TILE_SIZE) + tileY + baseY;
 					materialB = groundMaterial.getRandomMaterial(tileZ, tileVertexX, tileVertexY);
 
-					tileVertexX = Math.round((float)localVertices[2][0] / (float)Perspective.LOCAL_TILE_SIZE) + tileX + baseX;
-					tileVertexY = Math.round((float)localVertices[2][1] / (float)Perspective.LOCAL_TILE_SIZE) + tileY + baseY;
+					tileVertexX = Math.round((float) localVertices[2][0] / (float) LOCAL_TILE_SIZE) + tileX + baseX;
+					tileVertexY = Math.round((float) localVertices[2][1] / (float) LOCAL_TILE_SIZE) + tileY + baseY;
 					materialC = groundMaterial.getRandomMaterial(tileZ, tileVertexX, tileVertexY);
 				}
 
@@ -1001,23 +1014,17 @@ class SceneUploader {
 	private void uploadBlackTile(SceneContext sceneContext, int tileExX, int tileExY, int tileZ) {
 		final Scene scene = sceneContext.scene;
 
-		final int localX = 0;
-		final int localY = 0;
+		int color = 0;
+		int fromX = 0;
+		int fromY = 0;
+		int toX = LOCAL_TILE_SIZE;
+		int toY = LOCAL_TILE_SIZE;
 
 		final int[][][] tileHeights = scene.getTileHeights();
 		int swHeight = tileHeights[tileZ][tileExX][tileExY];
 		int seHeight = tileHeights[tileZ][tileExX + 1][tileExY];
 		int neHeight = tileHeights[tileZ][tileExX + 1][tileExY + 1];
 		int nwHeight = tileHeights[tileZ][tileExX][tileExY + 1];
-
-		int localSwVertexX = localX;
-		int localSwVertexY = localY;
-		int localSeVertexX = localX + Perspective.LOCAL_TILE_SIZE;
-		int localSeVertexY = localY;
-		int localNwVertexX = localX;
-		int localNwVertexY = localY + Perspective.LOCAL_TILE_SIZE;
-		int localNeVertexX = localX + Perspective.LOCAL_TILE_SIZE;
-		int localNeVertexY = localY + Perspective.LOCAL_TILE_SIZE;
 
 		int terrainData = packTerrainData(true, 0, WaterType.NONE, tileZ);
 
@@ -1030,16 +1037,14 @@ class SceneUploader {
 		sceneContext.stagingBufferNormals.put(0, -1, 0, terrainData);
 		sceneContext.stagingBufferNormals.put(0, -1, 0, terrainData);
 
-		int color = 0;
-
 		sceneContext.stagingBufferVertices.ensureCapacity(24);
-		sceneContext.stagingBufferVertices.put(localNeVertexX, neHeight, localNeVertexY, color);
-		sceneContext.stagingBufferVertices.put(localNwVertexX, nwHeight, localNwVertexY, color);
-		sceneContext.stagingBufferVertices.put(localSeVertexX, seHeight, localSeVertexY, color);
+		sceneContext.stagingBufferVertices.put(toX, neHeight, toY, color);
+		sceneContext.stagingBufferVertices.put(fromX, nwHeight, toY, color);
+		sceneContext.stagingBufferVertices.put(toX, seHeight, fromY, color);
 
-		sceneContext.stagingBufferVertices.put(localSwVertexX, swHeight, localSwVertexY, color);
-		sceneContext.stagingBufferVertices.put(localSeVertexX, seHeight, localSeVertexY, color);
-		sceneContext.stagingBufferVertices.put(localNwVertexX, nwHeight, localNwVertexY, color);
+		sceneContext.stagingBufferVertices.put(fromX, swHeight, fromY, color);
+		sceneContext.stagingBufferVertices.put(toX, seHeight, fromY, color);
+		sceneContext.stagingBufferVertices.put(fromX, nwHeight, toY, color);
 
 		int packedMaterialData = modelPusher.packMaterialData(Material.BLACK, ModelOverride.NONE, UvType.GEOMETRY, false);
 
