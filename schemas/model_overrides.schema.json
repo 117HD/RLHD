@@ -102,7 +102,7 @@
       },
       "hideInAreas": {
         "type": "array",
-        "description": "An array of axis-aligned bounding boxes where the model should be hidden.",
+        "description": "An array of bounding boxes, region IDs and/or area enums specifying where the model should be hidden.",
         "items": {
           "$ref": "aabb.schema.json"
         }
