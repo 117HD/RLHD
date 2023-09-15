@@ -87,8 +87,6 @@ class SceneUploader {
 			}
 		}
 
-		sceneContext.staticUnorderedModelBuffer.flip();
-
 		stopwatch.stop();
 		log.debug(
 			"Scene upload time: {}, unique models: {}, size: {} MB",
@@ -102,6 +100,86 @@ class SceneUploader {
 				) / 1e6
 			)
 		);
+	}
+
+	public void fillGaps(SceneContext sceneContext) {
+		int sceneMin = sceneContext.expandedMapLoadingChunks * -8;
+		int sceneMax = SCENE_SIZE + sceneContext.expandedMapLoadingChunks * 8;
+
+		Tile[][][] extendedTiles = sceneContext.scene.getExtendedTiles();
+		for (int tileZ = 0; tileZ < Constants.MAX_Z; ++tileZ) {
+			for (int tileExX = 0; tileExX < Constants.EXTENDED_SCENE_SIZE; ++tileExX) {
+				for (int tileExY = 0; tileExY < Constants.EXTENDED_SCENE_SIZE; ++tileExY) {
+					int tileX = tileExX - SCENE_OFFSET;
+					int tileY = tileExY - SCENE_OFFSET;
+					Tile tile = extendedTiles[tileZ][tileExX][tileExY];
+
+					SceneTilePaint paint = null;
+					SceneTileModel model = null;
+					int renderLevel = tileZ;
+					if (tile != null) {
+						paint = tile.getSceneTilePaint();
+						model = tile.getSceneTileModel();
+						renderLevel = tile.getRenderLevel();
+					}
+					boolean hasTilePaint = paint != null && paint.getNeColor() != 12345678;
+
+					int[] worldPoint = sceneContext.sceneToWorld(tileX, tileY, tileZ);
+
+					boolean fillGaps =
+						tileZ == 0 &&
+						tileX > sceneMin &&
+						tileY > sceneMin &&
+						tileX < sceneMax - 1 &&
+						tileY < sceneMax - 1 &&
+						Area.OVERWORLD.containsPoint(worldPoint);
+
+					if (fillGaps) {
+						int tileRegionID = HDUtils.worldToRegionID(worldPoint);
+						int[] regions = client.getMapRegions();
+
+						fillGaps = false;
+						for (int region : regions) {
+							if (region == tileRegionID) {
+								fillGaps = true;
+								break;
+							}
+						}
+					}
+
+					if (fillGaps) {
+						int vertexOffset = sceneContext.getVertexOffset();
+						int uvOffset = sceneContext.getUvOffset();
+						int vertexCount = 0;
+
+						if (model == null) {
+							if (!hasTilePaint) {
+								uploadBlackTile(sceneContext, tileExX, tileExY, renderLevel);
+								vertexCount = 6;
+							}
+						} else {
+							int[] uploadedTileModelData = uploadHDTileModelSurface(sceneContext, tile, model, true);
+							vertexCount = uploadedTileModelData[0];
+						}
+
+						if (vertexCount > 0) {
+							sceneContext.staticUnorderedModelBuffer
+								.ensureCapacity(8)
+								.getBuffer()
+								.put(vertexOffset)
+								.put(uvOffset)
+								.put(vertexCount / 3)
+								.put(sceneContext.staticVertexCount)
+								.put(0)
+								.put(tileX * LOCAL_TILE_SIZE)
+								.put(0)
+								.put(tileY * LOCAL_TILE_SIZE);
+							sceneContext.staticVertexCount += vertexCount;
+						}
+					}
+				}
+			}
+		}
 	}
 
 	private void uploadModel(SceneContext sceneContext, Tile tile, long hash, Model model, int orientation, ObjectType objectType) {
@@ -263,65 +341,6 @@ class SceneUploader {
 					uploadModel(sceneContext, tile, gameObject.getHash(), (Model) gameObject.getRenderable(),
 						HDUtils.getBakedOrientation(gameObject.getConfig()), ObjectType.GAME_OBJECT
 					);
-				}
-			}
-		}
-
-		if (config.fillGapsInTerrain()) {
-			int[] worldPoint = sceneContext.sceneToWorld(tileX, tileY, tileZ);
-
-			int sceneMin = sceneContext.expandedMapLoadingChunks * -8;
-			int sceneMax = SCENE_SIZE + sceneContext.expandedMapLoadingChunks * 8;
-			boolean fillGaps =
-				tileZ == 0 &&
-				tileX > sceneMin &&
-				tileY > sceneMin &&
-				tileX < sceneMax - 1 &&
-				tileY < sceneMax - 1 &&
-				Area.OVERWORLD.containsPoint(worldPoint);
-
-			// TODO: sync client map regions with the scene loader thread. atm this only works after swapScene
-//			if (fillGaps) {
-//				int tileRegionID = HDUtils.worldToRegionID(worldPoint);
-//				int[] regions = client.getMapRegions();
-//
-//				fillGaps = false;
-//				for (int region : regions) {
-//					if (region == tileRegionID) {
-//						fillGaps = true;
-//						break;
-//					}
-//				}
-//			}
-
-			if (fillGaps) {
-				int vertexOffset = sceneContext.getVertexOffset();
-				int uvOffset = sceneContext.getUvOffset();
-				int vertexCount = 0;
-
-				if (sceneTileModel == null) {
-					if (!hasTilePaint) {
-						uploadBlackTile(sceneContext, tileExX, tileExY, renderLevel);
-						vertexCount = 6;
-					}
-				} else {
-					int[] uploadedTileModelData = uploadHDTileModelSurface(sceneContext, tile, sceneTileModel, true);
-					vertexCount = uploadedTileModelData[0];
-				}
-
-				if (vertexCount > 0) {
-					sceneContext.staticUnorderedModelBuffer
-						.ensureCapacity(8)
-						.getBuffer()
-						.put(vertexOffset)
-						.put(uvOffset)
-						.put(vertexCount / 3)
-						.put(sceneContext.staticVertexCount)
-						.put(0)
-						.put(tileX * LOCAL_TILE_SIZE)
-						.put(0)
-						.put(tileY * LOCAL_TILE_SIZE);
-					sceneContext.staticVertexCount += vertexCount;
 				}
 			}
 		}

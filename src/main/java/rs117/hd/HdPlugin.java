@@ -2292,8 +2292,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			sceneContext.destroy();
 		}
 
+		assert nextSceneContext != null;
 		sceneContext = nextSceneContext;
 		nextSceneContext = null;
+
+		// Gaps need to be filled in swapScene, since map regions aren't updated earlier
+		if (config.fillGapsInTerrain())
+			sceneUploader.fillGaps(sceneContext);
+		sceneContext.staticUnorderedModelBuffer.flip();
 
 		dynamicOffsetVertices = sceneContext.getVertexOffset();
 		dynamicOffsetUvs = sceneContext.getUvOffset();
@@ -2301,15 +2307,27 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		sceneContext.stagingBufferVertices.flip();
 		sceneContext.stagingBufferUvs.flip();
 		sceneContext.stagingBufferNormals.flip();
-		updateBuffer(hStagingBufferVertices, GL_ARRAY_BUFFER,
+		updateBuffer(
+			hStagingBufferVertices,
+			GL_ARRAY_BUFFER,
 			sceneContext.stagingBufferVertices.getBuffer(),
-			GL_STREAM_DRAW, CL_MEM_READ_ONLY);
-		updateBuffer(hStagingBufferUvs, GL_ARRAY_BUFFER,
+			GL_STREAM_DRAW,
+			CL_MEM_READ_ONLY
+		);
+		updateBuffer(
+			hStagingBufferUvs,
+			GL_ARRAY_BUFFER,
 			sceneContext.stagingBufferUvs.getBuffer(),
-			GL_STREAM_DRAW, CL_MEM_READ_ONLY);
-		updateBuffer(hStagingBufferNormals, GL_ARRAY_BUFFER,
+			GL_STREAM_DRAW,
+			CL_MEM_READ_ONLY
+		);
+		updateBuffer(
+			hStagingBufferNormals,
+			GL_ARRAY_BUFFER,
 			sceneContext.stagingBufferNormals.getBuffer(),
-			GL_STREAM_DRAW, CL_MEM_READ_ONLY);
+			GL_STREAM_DRAW,
+			CL_MEM_READ_ONLY
+		);
 		sceneContext.stagingBufferVertices.clear();
 		sceneContext.stagingBufferUvs.clear();
 		sceneContext.stagingBufferNormals.clear();

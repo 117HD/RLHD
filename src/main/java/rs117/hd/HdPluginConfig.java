@@ -789,7 +789,7 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
-	String KEY_FILL_GAPS_IN_TERRAIN = "experimentalFillGapsInTerrain";
+	String KEY_FILL_GAPS_IN_TERRAIN = "experimentalFillGapsInTerrain2";
 	@ConfigItem(
 		keyName = KEY_FILL_GAPS_IN_TERRAIN,
 		name = "Fill gaps in terrain",
@@ -798,7 +798,7 @@ public interface HdPluginConfig extends Config
 		section = experimentalSettings
 	)
 	default boolean fillGapsInTerrain() {
-		return false;
+		return true;
 	}
 
 	String KEY_MODEL_SORTING_CONFIGURATION = "useOldModelSortingConfiguration";
