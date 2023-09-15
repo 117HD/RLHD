@@ -260,6 +260,10 @@ public enum Material {
 	),
 	GRUNGE_1,
 	GRUNGE_2,
+	SUBMERGED_GRUNGE_2(GRUNGE_2, p -> p
+		.setFlowMap(UNDERWATER_FLOW_MAP)
+		.setFlowMapStrength(0.075f)
+		.setFlowMapDuration(new float[] { 12, -12 })),
 
 	ROCK_1_N,
 	ROCK_1(p -> p

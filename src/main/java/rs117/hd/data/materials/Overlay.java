@@ -733,7 +733,7 @@ public enum Overlay {
 
 	// Tombs of Amascut
 	TOA_CRONDIS_ROCK(Area.TOA_PATH_OF_CRONDIS_BOSS, GroundMaterial.GRUNGE_2, p -> p.ids(134, 182).blended(false)),
-	TOA_CRONDIS_ROCK_SUBMERGED(Area.TOA_CRONDIS_ISLAND_SUBMERGED, GroundMaterial.GRUNGE_2, p -> p.ids(133).blended(false)),
+	TOA_CRONDIS_ROCK_SUBMERGED(Area.TOA_CRONDIS_ISLAND_SUBMERGED, GroundMaterial.SUBMERGED_GRUNGE_2, p -> p.ids(133).blended(false)),
 	TOA_CRONDIS_SWAMP_SLUDGE(p -> p.ids(133, 245).area(Area.TOA_PATH_OF_CRONDIS_BOSS).waterType(WaterType.SWAMP_WATER).blended(false)),
 	TOA_CRONDIS_WATER(p -> p.ids(246).area(Area.TOA_CRONDIS_WATER).waterType(WaterType.SWAMP_WATER).blended(false)),
 
@@ -905,7 +905,7 @@ public enum Overlay {
 
 	public static Overlay getOverlay(Scene scene, Tile tile, HdPlugin plugin) {
 		LocalPoint localLocation = tile.getLocalLocation();
-		WorldPoint worldPoint = WorldPoint.fromLocalInstance(scene, localLocation, tile.getPlane());
+		int[] worldPoint = HDUtils.localToWorld(scene, localLocation.getX(), localLocation.getY(), tile.getRenderLevel());
 
 		Overlay match = Overlay.NONE;
 		for (Overlay overlay : ANY_MATCH) {

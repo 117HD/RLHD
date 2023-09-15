@@ -50,6 +50,7 @@ public enum GroundMaterial {
 	BRICK_BROWN(Material.BRICK_BROWN),
 	GRUNGE(Material.GRUNGE_1, Material.GRUNGE_2, Material.GRUNGE_1),
 	GRUNGE_2(Material.GRUNGE_2),
+	SUBMERGED_GRUNGE_2(Material.SUBMERGED_GRUNGE_2),
 
 	TILES_2x2_1(Material.TILES_2X2_1),
 	TILES_2x2_2(Material.TILES_2X2_2),

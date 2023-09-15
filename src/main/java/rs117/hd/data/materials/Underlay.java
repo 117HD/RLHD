@@ -365,7 +365,7 @@ public enum Underlay {
 
 	public static Underlay getUnderlay(Scene scene, Tile tile, HdPlugin plugin) {
 		LocalPoint localLocation = tile.getLocalLocation();
-		WorldPoint worldPoint = WorldPoint.fromLocalInstance(scene, tile.getLocalLocation(), tile.getPlane());
+		int[] worldPoint = HDUtils.localToWorld(scene, localLocation.getX(), localLocation.getY(), tile.getRenderLevel());
 
 		Underlay match = Underlay.NONE;
 		for (Underlay underlay : ANY_MATCH) {
