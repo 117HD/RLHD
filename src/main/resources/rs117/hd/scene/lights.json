@@ -30588,5 +30588,25 @@
     "objectIds": [
       29629
     ]
+  },
+  {
+    "description": "Poison Waste Dungeon entrance light",
+    "worldX": 1472,
+    "worldY": 4236,
+    "plane": 0,
+    "height": 200,
+    "radius": 1000,
+    "strength": 60,
+    "color": [ 255, 255, 255 ]
+  },
+  {
+    "description": "Poison Waste Dungeon entrance light",
+    "worldX": 1472,
+    "worldY": 4239,
+    "plane": 0,
+    "height": 180,
+    "radius": 1000,
+    "strength": 60,
+    "color": [ 255, 255, 255 ]
   }
 ]

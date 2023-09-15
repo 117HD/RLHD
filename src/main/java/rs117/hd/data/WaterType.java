@@ -62,6 +62,18 @@ public enum WaterType
 		.causticsStrength(0)
 		.duration(1.6f)),
 	POISON_WASTE_FLAT(POISON_WASTE, true),
+	BLACK_TAR_FLAT(b -> b
+		.specularStrength(.05f)
+		.specularGloss(300)
+		.normalStrength(.05f)
+		.baseOpacity(.9f)
+		.fresnelAmount(.02f)
+		.surfaceColor(rgb(38, 40, 43))
+		.foamColor(rgb(0, 0, 0))
+		.depthColor(rgb(38, 40, 43))
+		.causticsStrength(0)
+		.duration(1.6f)
+		.flat(true)),
 	BLOOD(b -> b
 		.specularStrength(.5f)
 		.specularGloss(500)

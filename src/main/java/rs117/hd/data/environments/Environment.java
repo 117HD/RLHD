@@ -589,7 +589,7 @@ public enum Environment
 		.setDirectionalStrength(0.0f)
 		.setAllowSkyOverride(false)
 	),
-	POSION_WASTE(Area.POISON_WASTE, new Properties()
+	POISON_WASTE(Area.POISON_WASTE, new Properties()
 		.setFogColor(50, 55, 47)
 		.setFogDepth(30)
 		.setAmbientColor(192, 219, 173)
@@ -1096,6 +1096,17 @@ public enum Environment
 		.setDirectionalColor("#878474")
 		.setDirectionalStrength(1.5f)
 		.setLightDirection(260f, 10f)
+	),
+
+	POISON_WASTE_DUNGEON(Area.POISON_WASTE_DUNGEON, new Properties()
+		.setFogColor("#000000")
+		.setFogDepth(40)
+		.setAmbientColor("#AAAFB6")
+		.setAmbientStrength(1.5f)
+		.setDirectionalColor("#FFFFFF")
+		.setDirectionalStrength(1.0f)
+		.setLightDirection(260f, 10f)
+		.setWaterColor(102, 234, 255)
 	),
 
 	// overrides 'ALL' to provide default daylight conditions for the overworld area

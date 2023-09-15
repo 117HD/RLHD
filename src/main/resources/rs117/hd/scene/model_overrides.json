@@ -10174,5 +10174,24 @@
     "objectIds": [ 754, 10459 ],
     "textureMaterial": "WATER_DROPLETS",
     "baseMaterial": "WATER_FLAT"
+  },
+  {
+    "description": "Poison Waste dungeon flowing tar (TODO)",
+    "objectIds": [
+      49789,
+      49790,
+      49791,
+      49792,
+      49793,
+      49794,
+      49795,
+      49797,
+      49798,
+      49799,
+      49800,
+      49801,
+      49802,
+      49803
+    ]
   }
 ]

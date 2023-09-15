@@ -622,6 +622,7 @@ public enum Overlay {
 		.shiftSaturation(-2)
 	),
 	POISON_WASTE(85, Area.POISON_WASTE, WaterType.POISON_WASTE),
+	POISON_WASTE_DUNGEON_TAR(p -> p.ids(304).area(Area.POISON_WASTE_DUNGEON).waterType(WaterType.BLACK_TAR_FLAT)),
 
 	// Fossil Island
 	ANCIENT_MUSHROOM_POOL(95, Area.FOSSIL_ISLAND, WaterType.SWAMP_WATER_FLAT),
