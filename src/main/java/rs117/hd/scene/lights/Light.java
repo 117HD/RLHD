@@ -10,8 +10,6 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import rs117.hd.data.NpcID;
-import rs117.hd.data.ObjectID;
 import rs117.hd.utils.GsonUtils;
 
 @Slf4j
@@ -38,9 +36,9 @@ public class Light
 	public float range;
 	public int fadeInDuration;
 	public boolean visibleFromOtherPlanes = false;
-	@JsonAdapter(NpcID.JsonAdapter.class)
+	@JsonAdapter(GsonUtils.IntegerSetAdapter.class)
 	public HashSet<Integer> npcIds = new HashSet<>();
-	@JsonAdapter(ObjectID.JsonAdapter.class)
+	@JsonAdapter(GsonUtils.IntegerSetAdapter.class)
 	public HashSet<Integer> objectIds = new HashSet<>();
 	@JsonAdapter(GsonUtils.IntegerSetAdapter.class)
 	public HashSet<Integer> projectileIds = new HashSet<>();

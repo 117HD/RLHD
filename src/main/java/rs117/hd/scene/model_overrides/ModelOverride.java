@@ -5,11 +5,10 @@ import java.util.HashSet;
 import java.util.Set;
 import lombok.NoArgsConstructor;
 import net.runelite.api.*;
-import rs117.hd.data.NpcID;
-import rs117.hd.data.ObjectID;
 import rs117.hd.data.materials.Material;
 import rs117.hd.data.materials.UvType;
 import rs117.hd.utils.AABB;
+import rs117.hd.utils.GsonUtils;
 
 @NoArgsConstructor
 public class ModelOverride
@@ -20,9 +19,9 @@ public class ModelOverride
 
     public String description = "UNKNOWN";
 
-    @JsonAdapter(NpcID.JsonAdapter.class)
+	@JsonAdapter(GsonUtils.IntegerSetAdapter.class)
     public Set<Integer> npcIds = EMPTY;
-    @JsonAdapter(ObjectID.JsonAdapter.class)
+	@JsonAdapter(GsonUtils.IntegerSetAdapter.class)
     public Set<Integer> objectIds = EMPTY;
 
     public Material baseMaterial = Material.NONE;
