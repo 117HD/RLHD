@@ -1,17 +1,14 @@
 package rs117.hd.scene.model_overrides;
 
 import com.google.gson.annotations.JsonAdapter;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.NoArgsConstructor;
-import net.runelite.api.Model;
-import net.runelite.api.Perspective;
-import rs117.hd.data.NpcID;
-import rs117.hd.data.ObjectID;
+import net.runelite.api.*;
 import rs117.hd.data.materials.Material;
 import rs117.hd.data.materials.UvType;
 import rs117.hd.utils.AABB;
-
-import java.util.HashSet;
-import java.util.Set;
+import rs117.hd.utils.GsonUtils;
 
 @NoArgsConstructor
 public class ModelOverride
@@ -22,9 +19,9 @@ public class ModelOverride
 
     public String description = "UNKNOWN";
 
-    @JsonAdapter(NpcID.JsonAdapter.class)
+	@JsonAdapter(GsonUtils.IntegerSetAdapter.class)
     public Set<Integer> npcIds = EMPTY;
-    @JsonAdapter(ObjectID.JsonAdapter.class)
+	@JsonAdapter(GsonUtils.IntegerSetAdapter.class)
     public Set<Integer> objectIds = EMPTY;
 
     public Material baseMaterial = Material.NONE;
@@ -32,7 +29,8 @@ public class ModelOverride
     public UvType uvType = UvType.VANILLA;
     public float uvScale = 1;
     public int uvOrientation = 0;
-    public boolean forceOverride = false;
+	public boolean retainVanillaUvs = true;
+	public boolean forceOverride = false;
     public boolean flatNormals = false;
     public boolean removeBakedLighting = false;
     public boolean castShadows = true;

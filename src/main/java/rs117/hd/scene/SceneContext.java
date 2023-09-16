@@ -118,9 +118,19 @@ public class SceneContext {
 	 */
 	public WorldPoint localToWorld(LocalPoint localPoint, int plane)
 	{
-		if (scene.isInstance() && !localPoint.isInScene())
-			return WorldPoint.fromLocal(scene, localPoint.getX(), localPoint.getY(), plane);
-		return WorldPoint.fromLocalInstance(scene, localPoint, plane);
+		int[] pos = HDUtils.localToWorld(scene, localPoint.getX(), localPoint.getY(), plane);
+		return new WorldPoint(pos[0], pos[1], pos[2]);
+
+	}
+
+	public int[] localToWorld(int localX, int localY, int plane)
+	{
+		return HDUtils.localToWorld(scene, localX, localY, plane);
+	}
+
+	public int[] sceneToWorld(int sceneX, int sceneY, int plane)
+	{
+		return HDUtils.localToWorld(scene, sceneX * LOCAL_TILE_SIZE, sceneY * LOCAL_TILE_SIZE, plane);
 	}
 
 	public Collection<LocalPoint> worldInstanceToLocals(WorldPoint worldPoint)

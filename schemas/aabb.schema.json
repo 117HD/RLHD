@@ -2,8 +2,8 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "aabb.schema.json",
   "title": "Axis-Aligned Bounding Box",
-  "type": "array",
-  "description": "Specify the X and Y world coordinates for one or two points, optionally including a plane, or Z coordinate. One of: XY, XYZ, XYXY, XYXYZ, XYZXYZ.",
+  "type": [ "integer", "string", "array" ],
+  "description": "Specify a region ID, area enum name, or the X and Y world coordinates for a single point, or two points on the corners of a bounding box, optionally including a plane per point. One of: RegionID, XY, XYZ, XYXY, XYXYZ, XYZXYZ.",
   "minItems": 2,
   "maxItems": 6,
   "items": {

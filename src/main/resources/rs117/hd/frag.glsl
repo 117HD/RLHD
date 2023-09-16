@@ -140,6 +140,8 @@ void main() {
         vec2 uv2 = vUv[1].xy;
         vec2 uv3 = vUv[2].xy;
         vec2 blendedUv = uv1 * IN.texBlend.x + uv2 * IN.texBlend.y + uv3 * IN.texBlend.z;
+        if ((vMaterialData[0] >> MATERIAL_FLAG_IS_VANILLA_TEXTURED & 1) == 1)
+            blendedUv.x = clamp(blendedUv.x, 0, 1); // Vanilla textures rely on UVs being horizontally edge clamped
         uv1 = uv2 = uv3 = blendedUv;
 
         // Scroll UVs
@@ -493,6 +495,11 @@ void main() {
 
     // Apply saturation setting
     hsv.y *= saturation;
+
+    #if !VANILLA_COLOR_BANDING
+    // Reduce color banding in smooth gradients
+    hsv.z *= .97 + .06 * fract(sin(dot(gl_FragCoord.xy * .00035251, vec2(12.9898, 78.233))) * 43758.5453123);
+    #endif
 
     // Apply contrast setting
     if (hsv.z > 0.5) {

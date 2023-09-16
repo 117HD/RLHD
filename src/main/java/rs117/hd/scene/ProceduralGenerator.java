@@ -267,7 +267,7 @@ public class ProceduralGenerator
 			int darkenBase = 0;
 			int darkenAdd = 0;
 
-			float[] vNormals = sceneContext.vertexTerrainNormals.getOrDefault(vertexHashes[vertex], new float[]{0, 0, 0});
+			float[] vNormals = sceneContext.vertexTerrainNormals.getOrDefault(vertexHashes[vertex], new float[] { 0, 0, 0 });
 
 			float dot = HDUtils.dotLightDirectionTile(vNormals[0], vNormals[1], vNormals[2]);
 			int lighten = (int) (Math.max((colorHSL[2] - lightenAdd), 0) * lightenMultiplier) + lightenBase;
@@ -279,14 +279,11 @@ public class ProceduralGenerator
 			boolean isOverlay = false;
 			Material material = Material.DIRT_1;
 			Overlay overlay = vertexOverlays[vertex];
-			if (overlay != Overlay.NONE)
-			{
+			if (overlay != Overlay.NONE) {
 				material = overlay.groundMaterial.getRandomMaterial(worldPos.getPlane(), worldPos.getX(), worldPos.getY());
 				isOverlay = !overlay.blendedAsUnderlay;
 				overlay.modifyColor(colorHSL);
-			}
-			else if (vertexUnderlays[vertex] != Underlay.NONE)
-			{
+			} else if (vertexUnderlays[vertex] != Underlay.NONE) {
 				Underlay underlay = vertexUnderlays[vertex];
 				material = underlay.groundMaterial.getRandomMaterial(worldPos.getPlane(), worldPos.getX(), worldPos.getY());
 				isOverlay = underlay.blendedAsOverlay;
@@ -833,25 +830,19 @@ public class ProceduralGenerator
 	 */
 	WaterType tileWaterType(Scene scene, Tile tile, SceneTilePaint sceneTilePaint)
 	{
-		WaterType waterType = WaterType.NONE;
+		if (sceneTilePaint == null)
+			return WaterType.NONE;
 
-		if (sceneTilePaint != null)
-		{
-			Overlay overlay = Overlay.getOverlay(scene, tile, plugin);
-			if (overlay != Overlay.NONE)
-			{
-				waterType = overlay.waterType;
-			}
-			else
-			{
-				Underlay underlay = Underlay.getUnderlay(scene, tile, plugin);
-				waterType = underlay.waterType;
-			}
+		WaterType waterType;
+		Overlay overlay = Overlay.getOverlay(scene, tile, plugin);
+		if (overlay != Overlay.NONE) {
+			waterType = overlay.waterType;
+		} else {
+			Underlay underlay = Underlay.getUnderlay(scene, tile, plugin);
+			waterType = underlay.waterType;
 		}
 
-		waterType = getSeasonalWaterType(waterType);
-
-		return waterType;
+		return getSeasonalWaterType(waterType);
 	}
 
 	/**
@@ -967,57 +958,28 @@ public class ProceduralGenerator
 		int sceneVertexYB = vertexY[vertexFacesB];
 		int sceneVertexYC = vertexY[vertexFacesC];
 
-		int[] vertexA = new int[]{sceneVertexXA, sceneVertexZA, sceneVertexYA};
-		int[] vertexB = new int[]{sceneVertexXB, sceneVertexZB, sceneVertexYB};
-		int[] vertexC = new int[]{sceneVertexXC, sceneVertexZC, sceneVertexYC};
+		int[] vertexA = new int[] { sceneVertexXA, sceneVertexZA, sceneVertexYA };
+		int[] vertexB = new int[] { sceneVertexXB, sceneVertexZB, sceneVertexYB };
+		int[] vertexC = new int[] { sceneVertexXC, sceneVertexZC, sceneVertexYC };
 
-		return new int[][]{vertexA, vertexB, vertexC};
+		return new int[][] { vertexA, vertexB, vertexC };
 	}
 
-	public static int[][] faceLocalVertices(Tile tile, int face)
-	{
+	public static int[][] faceLocalVertices(Tile tile, int face) {
+		if (tile.getSceneTileModel() == null)
+			return new int[0][0];
+
 		int x = tile.getSceneLocation().getX();
 		int y = tile.getSceneLocation().getY();
 		int baseX = x * Perspective.LOCAL_TILE_SIZE;
 		int baseY = y * Perspective.LOCAL_TILE_SIZE;
 
-		if (tile.getSceneTileModel() == null)
-		{
-			return new int[0][0];
+		int[][] vertices = faceVertices(tile, face);
+		for (int[] vertex : vertices) {
+			vertex[0] -= baseX;
+			vertex[1] -= baseY;
 		}
-
-		SceneTileModel sceneTileModel = tile.getSceneTileModel();
-
-		final int[] faceA = sceneTileModel.getFaceX();
-		final int[] faceB = sceneTileModel.getFaceY();
-		final int[] faceC = sceneTileModel.getFaceZ();
-
-		final int[] vertexX = sceneTileModel.getVertexX();
-		final int[] vertexY = sceneTileModel.getVertexY();
-		final int[] vertexZ = sceneTileModel.getVertexZ();
-
-		int vertexFacesA = faceA[face];
-		int vertexFacesB = faceB[face];
-		int vertexFacesC = faceC[face];
-
-		// scene X
-		int sceneVertexXA = vertexX[vertexFacesA];
-		int sceneVertexXB = vertexX[vertexFacesB];
-		int sceneVertexXC = vertexX[vertexFacesC];
-		// scene Y
-		int sceneVertexZA = vertexZ[vertexFacesA];
-		int sceneVertexZB = vertexZ[vertexFacesB];
-		int sceneVertexZC = vertexZ[vertexFacesC];
-		// scene Z - heights
-		int sceneVertexYA = vertexY[vertexFacesA];
-		int sceneVertexYB = vertexY[vertexFacesB];
-		int sceneVertexYC = vertexY[vertexFacesC];
-
-		int[] vertexA = new int[]{sceneVertexXA - baseX, sceneVertexZA - baseY, sceneVertexYA};
-		int[] vertexB = new int[]{sceneVertexXB - baseX, sceneVertexZB - baseY, sceneVertexYB};
-		int[] vertexC = new int[]{sceneVertexXC - baseX, sceneVertexZC - baseY, sceneVertexYC};
-
-		return new int[][]{vertexA, vertexB, vertexC};
+		return vertices;
 	}
 
 	/**
@@ -1033,9 +995,7 @@ public class ProceduralGenerator
 		int[] vertexHashes = new int[tileVertices.length];
 
 		for (int vertex = 0; vertex < tileVertices.length; ++vertex)
-		{
 			vertexHashes[vertex] = HDUtils.vertexHash(tileVertices[vertex]);
-		}
 
 		return vertexHashes;
 	}
@@ -1046,9 +1006,7 @@ public class ProceduralGenerator
 		int[] vertexHashes = new int[faceVertices.length];
 
 		for (int vertex = 0; vertex < faceVertices.length; ++vertex)
-		{
 			vertexHashes[vertex] = HDUtils.vertexHash(faceVertices[vertex]);
-		}
 
 		return vertexHashes;
 	}

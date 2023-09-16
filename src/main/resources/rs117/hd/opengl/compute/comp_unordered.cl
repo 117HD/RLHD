@@ -28,7 +28,7 @@
 
 __kernel
 __attribute__((reqd_work_group_size(6, 1, 1)))
-void computeUnordered(
+void passthroughModel(
   __global const struct ModelInfo *ol,
   __global const int4 *vb,
   __global const float4 *uv,

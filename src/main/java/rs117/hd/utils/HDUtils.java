@@ -31,7 +31,9 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.api.coords.*;
 
+import static net.runelite.api.Constants.SCENE_SIZE;
 import static net.runelite.api.Constants.*;
+import static net.runelite.api.Perspective.*;
 
 @Slf4j
 @Singleton
@@ -55,42 +57,45 @@ public class HDUtils {
 		return out;
 	}
 
-	static float[] vectorAdd(float[] vec1, int[] vec2) {
+	public static float[] vectorAdd(float[] vec1, int[] vec2) {
 		float[] out = new float[vec1.length];
 		for (int i = 0; i < vec1.length; i++)
 			out[i] = vec1[i] + vec2[i];
 		return out;
 	}
 
-	static int[] vectorAdd(int[] vec1, int[] vec2)
-	{
+	public static int[] vectorAdd(int[] vec1, int[] vec2) {
 		int[] out = new int[vec1.length];
 		for (int i = 0; i < vec1.length; i++)
 			out[i] = vec1[i] + vec2[i];
 		return out;
 	}
 
-	static double[] vectorAdd(double[] vec1, double[] vec2)
-	{
+	public static double[] vectorAdd(double[] vec1, double[] vec2) {
 		double[] out = new double[vec1.length];
 		for (int i = 0; i < vec1.length; i++)
 			out[i] = vec1[i] + vec2[i];
 		return out;
 	}
 
-	static Double[] vectorAdd(Double[] vec1, Double[] vec2)
-	{
+	public static Double[] vectorAdd(Double[] vec1, Double[] vec2) {
 		Double[] out = new Double[vec1.length];
 		for (int i = 0; i < vec1.length; i++)
 			out[i] = vec1[i] + vec2[i];
 		return out;
 	}
 
-	static float[] vectorDivide(float[] vec1, float divide) {
+	public static float[] vectorMultiply(float[] vec1, float factor) {
 		float[] out = new float[vec1.length];
 		for (int i = 0; i < vec1.length; i++)
-			out[i] = divide == 0 ? 0 : vec1[i] / divide;
+			out[i] *= factor;
 		return out;
+	}
+
+	public static float[] vectorDivide(float[] vec1, float divide) {
+		if (divide == 0)
+			return new float[vec1.length];
+		return vectorMultiply(vec1, 1 / divide);
 	}
 
 	public static float lerp(float a, float b, float t) {
@@ -308,18 +313,22 @@ public class HDUtils {
 		return new WorldPoint(baseX, baseY, plane);
 	}
 
-	public static int[] cameraSpaceToWorldPoint(Client client, int localX, int localY) {
-		localX += client.getCameraX2();
-		localY += client.getCameraZ2();
+	public static int[] cameraSpaceToWorldPoint(Client client, int relativeX, int relativeZ) {
+		int localX = client.getCameraX2() + relativeX;
+		int localY = client.getCameraZ2() + relativeZ;
 		int plane = client.getPlane();
+		return localToWorld(client.getScene(), localX, localY, plane);
+	}
 
-		if (client.isInInstancedRegion()) {
-			int sceneX = localX >> 7;
-			int sceneY = localY >> 7;
+	public static int[] localToWorld(Scene scene, int localX, int localY, int plane) {
+		int sceneX = localX / LOCAL_TILE_SIZE;
+		int sceneY = localY / LOCAL_TILE_SIZE;
+
+		if (scene.isInstance() && sceneX >= 0 && sceneY >= 0 && sceneX < SCENE_SIZE && sceneY < SCENE_SIZE) {
 			int chunkX = sceneX / 8;
 			int chunkY = sceneY / 8;
-			int templateChunk = client.getInstanceTemplateChunks()[plane][chunkX][chunkY];
-			int rotation = templateChunk >> 1 & 3;
+			int templateChunk = scene.getInstanceTemplateChunks()[plane][chunkX][chunkY];
+			int rotation = 4 - (templateChunk >> 1 & 3);
 			int templateChunkY = (templateChunk >> 3 & 2047) * 8;
 			int templateChunkX = (templateChunk >> 14 & 1023) * 8;
 			int templateChunkPlane = templateChunk >> 24 & 3;
@@ -328,6 +337,8 @@ public class HDUtils {
 
 			int[] pos = { worldX, worldY, templateChunkPlane };
 
+			chunkX = pos[0] & -8;
+			chunkY = pos[1] & -8;
 			int x = pos[0] & 7;
 			int y = pos[1] & 7;
 			switch (rotation) {
@@ -348,7 +359,15 @@ public class HDUtils {
 			return pos;
 		}
 
-		return new int[] { (localX >>> 7) + client.getBaseX(), (localY >>> 7) + client.getBaseY(), plane };
+		return new int[] { scene.getBaseX() + sceneX, scene.getBaseY() + sceneY, plane };
+	}
+
+	public static int worldToRegionID(int[] worldPoint) {
+		return worldToRegionID(worldPoint[0], worldPoint[1]);
+	}
+
+	public static int worldToRegionID(int worldX, int worldY) {
+		return worldX >> 6 << 8 | worldY >> 6;
 	}
 
 	public static boolean is32Bit() {

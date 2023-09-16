@@ -29,8 +29,8 @@ import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.nio.LongBuffer;
 import java.nio.ShortBuffer;
+import javax.inject.Inject;
 import javax.inject.Singleton;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.client.util.OSType;
@@ -40,29 +40,26 @@ import org.lwjgl.opencl.*;
 import org.lwjgl.system.Configuration;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
+import rs117.hd.HdPlugin;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.Template;
 import rs117.hd.utils.buffer.GLBuffer;
 
 import static org.lwjgl.opencl.APPLEGLSharing.*;
 import static org.lwjgl.opencl.CL10.*;
+import static org.lwjgl.opencl.CL10GL.*;
 import static org.lwjgl.opencl.CL12.*;
 import static org.lwjgl.opencl.KHRGLSharing.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 import static org.lwjgl.system.MemoryUtil.memASCII;
 import static org.lwjgl.system.MemoryUtil.memUTF8;
-import static rs117.hd.HdPlugin.MAX_TRIANGLE;
-import static rs117.hd.HdPlugin.SMALL_TRIANGLE_COUNT;
 
 @Singleton
 @Slf4j
 public class OpenCLManager {
-	private static final String KERNEL_NAME_UNORDERED = "computeUnordered";
-	private static final String KERNEL_NAME_LARGE = "computeLarge";
+	private static final String KERNEL_NAME_PASSTHROUGH = "passthroughModel";
+	private static final String KERNEL_NAME_SORT = "sortModel";
 
-	private static final int MIN_WORK_GROUP_SIZE = 256;
-	private static final int SMALL_SIZE = SMALL_TRIANGLE_COUNT;
-	private static final int LARGE_SIZE = MAX_TRIANGLE;
 	//  struct shared_data {
 	//      int totalNum[12];
 	//      int totalDistance[12];
@@ -72,24 +69,20 @@ public class OpenCLManager {
 	//  };
 	private static final int SHARED_SIZE = 12 + 12 + 18 + 1; // in ints
 
-	// The number of faces each worker processes in the two kernels
-	private int largeFaceCount;
-	private int smallFaceCount;
+	@Inject
+	private HdPlugin plugin;
 
 	private boolean initialized;
 
 	private long device;
-	@Getter
 	private long context;
 	private long commandQueue;
 
-	private long programUnordered;
-	private long programSmall;
-	private long programLarge;
+	private long passthroughProgram;
+	private long[] sortingPrograms;
 
-	private long kernelUnordered;
-	private long kernelSmall;
-	private long kernelLarge;
+	private long passthroughKernel;
+	private long[] sortingKernels;
 
 	private long tileHeightMap;
 
@@ -106,7 +99,7 @@ public class OpenCLManager {
 		} else {
 			initContext(awtContext);
 		}
-		ensureMinWorkGroupSize();
+		log.debug("Device CL_DEVICE_MAX_WORK_GROUP_SIZE: {}", getMaxWorkGroupSize());
 		initQueue();
 	}
 
@@ -265,7 +258,13 @@ public class OpenCLManager {
 			checkCLError(errcode_ret);
 
 			var deviceBuf = stack.mallocPointer(1);
-			checkCLError(clGetGLContextInfoAPPLE(context, awtContext.getGLContext(), CL_CGL_DEVICE_FOR_CURRENT_VIRTUAL_SCREEN_APPLE, deviceBuf, null));
+			checkCLError(clGetGLContextInfoAPPLE(
+				context,
+				awtContext.getGLContext(),
+				CL_CGL_DEVICE_FOR_CURRENT_VIRTUAL_SCREEN_APPLE,
+				deviceBuf,
+				null
+			));
 			long device = deviceBuf.get(0);
 
 			log.debug("Got macOS CLGL compute device {}", device);
@@ -274,20 +273,10 @@ public class OpenCLManager {
 		}
 	}
 
-	private void ensureMinWorkGroupSize() {
+	public int getMaxWorkGroupSize() {
 		long[] maxWorkGroupSize = new long[1];
 		clGetDeviceInfo(device, CL_DEVICE_MAX_WORK_GROUP_SIZE, maxWorkGroupSize, null);
-		log.debug("Device CL_DEVICE_MAX_WORK_GROUP_SIZE: {}", maxWorkGroupSize[0]);
-
-		if (maxWorkGroupSize[0] < MIN_WORK_GROUP_SIZE)
-			throw new RuntimeException("Compute device does not support min work group size " + MIN_WORK_GROUP_SIZE);
-
-		// Largest power of 2 less than or equal to maxWorkGroupSize
-		int groupSize = 0x80000000 >>> Integer.numberOfLeadingZeros((int) maxWorkGroupSize[0]);
-		largeFaceCount = LARGE_SIZE / (Math.min(groupSize, LARGE_SIZE));
-		smallFaceCount = SMALL_SIZE / (Math.min(groupSize, SMALL_SIZE));
-
-		log.debug("Face counts: small: {}, large: {}", smallFaceCount, largeFaceCount);
+		return (int) maxWorkGroupSize[0];
 	}
 
 	private void initQueue() {
@@ -326,48 +315,44 @@ public class OpenCLManager {
 	public void initPrograms() throws ShaderException, IOException {
 		try (var stack = MemoryStack.stackPush()) {
 			var template = new Template().addIncludePath(OpenCLManager.class);
-			programUnordered = compileProgram(stack, template.load("comp_unordered.cl"));
-			programSmall = compileProgram(stack, template
-				.copy()
-				.define("FACE_COUNT", smallFaceCount)
-				.load("comp.cl"));
-			programLarge = compileProgram(stack, template
-				.copy()
-				.define("FACE_COUNT", largeFaceCount)
-				.load("comp.cl"));
+			passthroughProgram = compileProgram(stack, template.load("comp_unordered.cl"));
+			passthroughKernel = getKernel(stack, passthroughProgram, KERNEL_NAME_PASSTHROUGH);
 
-			kernelUnordered = getKernel(stack, programUnordered, KERNEL_NAME_UNORDERED);
-			kernelSmall = getKernel(stack, programSmall, KERNEL_NAME_LARGE);
-			kernelLarge = getKernel(stack, programLarge, KERNEL_NAME_LARGE);
+			sortingPrograms = new long[plugin.numSortingBins];
+			sortingKernels = new long[plugin.numSortingBins];
+			for (int i = 0; i < plugin.numSortingBins; i++) {
+				int faceCount = plugin.modelSortingBinFaceCounts[i];
+				int threadCount = plugin.modelSortingBinThreadCounts[i];
+				int facesPerThread = (int) Math.ceil((float) faceCount / threadCount);
+				sortingPrograms[i] = compileProgram(stack, template
+					.copy()
+					.define("THREAD_COUNT", threadCount)
+					.define("FACES_PER_THREAD", facesPerThread)
+					.load("comp.cl")
+				);
+				sortingKernels[i] = getKernel(stack, sortingPrograms[i], KERNEL_NAME_SORT);
+			}
 		}
 	}
 
 	public void destroyPrograms() {
-		if (kernelUnordered != 0) {
-			clReleaseKernel(kernelUnordered);
-			kernelUnordered = 0;
-		}
-		if (kernelSmall != 0) {
-			clReleaseKernel(kernelSmall);
-			kernelSmall = 0;
-		}
-		if (kernelLarge != 0) {
-			clReleaseKernel(kernelLarge);
-			kernelLarge = 0;
-		}
+		if (passthroughKernel != 0)
+			clReleaseKernel(passthroughKernel);
+		passthroughKernel = 0;
 
-		if (programUnordered != 0) {
-			clReleaseProgram(programUnordered);
-			programUnordered = 0;
-		}
-		if (programSmall != 0) {
-			clReleaseProgram(programSmall);
-			programSmall = 0;
-		}
-		if (programLarge != 0) {
-			clReleaseProgram(programLarge);
-			programLarge = 0;
-		}
+		if (passthroughProgram != 0)
+			clReleaseProgram(passthroughProgram);
+		passthroughProgram = 0;
+
+		if (sortingKernels != null)
+			for (var kernel : sortingKernels)
+				clReleaseKernel(kernel);
+		sortingKernels = null;
+
+		if (sortingPrograms != null)
+			for (var program : sortingPrograms)
+				clReleaseProgram(program);
+		sortingPrograms = null;
 	}
 
 	public void uploadTileHeights(Scene scene) {
@@ -410,81 +395,69 @@ public class OpenCLManager {
 
 	public void compute(
 		GLBuffer uniformBufferCamera,
-		int unorderedModels, int smallModels, int largeModels,
-		GLBuffer modelBufferUnordered, GLBuffer modelBufferSmall, GLBuffer modelBufferLarge,
+		int numPassthroughModels, int[] numSortingBinModels,
+		GLBuffer modelPassthroughBuffer, GLBuffer[] modelSortingBuffers,
 		GLBuffer stagingBufferVertices, GLBuffer stagingBufferUvs, GLBuffer stagingBufferNormals,
 		GLBuffer renderBufferVertices, GLBuffer renderBufferUvs, GLBuffer renderBufferNormals
 	) {
 		try (var stack = MemoryStack.stackPush()) {
-			PointerBuffer glBuffers = stack.mallocPointer(10)
+			PointerBuffer glBuffers = stack.mallocPointer(8 + modelSortingBuffers.length)
 				.put(uniformBufferCamera.clBuffer)
-				.put(modelBufferUnordered.clBuffer)
-				.put(modelBufferSmall.clBuffer)
-				.put(modelBufferLarge.clBuffer)
+				.put(modelPassthroughBuffer.clBuffer)
 				.put(stagingBufferVertices.clBuffer)
 				.put(stagingBufferUvs.clBuffer)
 				.put(stagingBufferNormals.clBuffer)
 				.put(renderBufferVertices.clBuffer)
 				.put(renderBufferUvs.clBuffer)
-				.put(renderBufferNormals.clBuffer)
-				.flip();
+				.put(renderBufferNormals.clBuffer);
+			for (var buffer : modelSortingBuffers)
+				glBuffers.put(buffer.clBuffer);
+			glBuffers.flip();
 
 			PointerBuffer acquireEvent = stack.mallocPointer(1);
 			CL10GL.clEnqueueAcquireGLObjects(commandQueue, glBuffers, null, acquireEvent);
 
-			PointerBuffer computeEvents = stack.mallocPointer(3);
-			if (unorderedModels > 0) {
-				clSetKernelArg1p(kernelUnordered, 0, modelBufferUnordered.clBuffer);
-				clSetKernelArg1p(kernelUnordered, 1, stagingBufferVertices.clBuffer);
-				clSetKernelArg1p(kernelUnordered, 2, stagingBufferUvs.clBuffer);
-				clSetKernelArg1p(kernelUnordered, 3, stagingBufferNormals.clBuffer);
-				clSetKernelArg1p(kernelUnordered, 4, renderBufferVertices.clBuffer);
-				clSetKernelArg1p(kernelUnordered, 5, renderBufferUvs.clBuffer);
-				clSetKernelArg1p(kernelUnordered, 6, renderBufferNormals.clBuffer);
+			PointerBuffer computeEvents = stack.mallocPointer(1 + modelSortingBuffers.length);
+			if (numPassthroughModels > 0) {
+				clSetKernelArg1p(passthroughKernel, 0, modelPassthroughBuffer.clBuffer);
+				clSetKernelArg1p(passthroughKernel, 1, stagingBufferVertices.clBuffer);
+				clSetKernelArg1p(passthroughKernel, 2, stagingBufferUvs.clBuffer);
+				clSetKernelArg1p(passthroughKernel, 3, stagingBufferNormals.clBuffer);
+				clSetKernelArg1p(passthroughKernel, 4, renderBufferVertices.clBuffer);
+				clSetKernelArg1p(passthroughKernel, 5, renderBufferUvs.clBuffer);
+				clSetKernelArg1p(passthroughKernel, 6, renderBufferNormals.clBuffer);
 
 				// queue compute call after acquireGLBuffers
-				clEnqueueNDRangeKernel(commandQueue, kernelUnordered, 1, null,
-					stack.pointers(unorderedModels * 6L), stack.pointers(6),
+				clEnqueueNDRangeKernel(commandQueue, passthroughKernel, 1, null,
+					stack.pointers(numPassthroughModels * 6L), stack.pointers(6),
 					acquireEvent, computeEvents
 				);
 				computeEvents.position(computeEvents.position() + 1);
 			}
 
-			if (smallModels > 0) {
-				clSetKernelArg(kernelSmall, 0, (SHARED_SIZE + SMALL_SIZE) * Integer.BYTES);
-				clSetKernelArg1p(kernelSmall, 1, modelBufferSmall.clBuffer);
-				clSetKernelArg1p(kernelSmall, 2, stagingBufferVertices.clBuffer);
-				clSetKernelArg1p(kernelSmall, 3, stagingBufferUvs.clBuffer);
-				clSetKernelArg1p(kernelSmall, 4, stagingBufferNormals.clBuffer);
-				clSetKernelArg1p(kernelSmall, 5, renderBufferVertices.clBuffer);
-				clSetKernelArg1p(kernelSmall, 6, renderBufferUvs.clBuffer);
-				clSetKernelArg1p(kernelSmall, 7, renderBufferNormals.clBuffer);
-				clSetKernelArg1p(kernelSmall, 8, uniformBufferCamera.clBuffer);
-				clSetKernelArg1p(kernelSmall, 9, tileHeightMap);
+			for (int i = 0; i < numSortingBinModels.length; i++) {
+				int numModels = numSortingBinModels[i];
+				if (numModels == 0)
+					continue;
 
-				clEnqueueNDRangeKernel(commandQueue, kernelSmall, 1, null,
-					stack.pointers((long) smallModels * (SMALL_SIZE / smallFaceCount)),
-					stack.pointers(SMALL_SIZE / smallFaceCount),
-					acquireEvent, computeEvents
-				);
-				computeEvents.position(computeEvents.position() + 1);
-			}
+				int faceCount = plugin.modelSortingBinFaceCounts[i];
+				int threadCount = plugin.modelSortingBinThreadCounts[i];
+				long kernel = sortingKernels[i];
 
-			if (largeModels > 0) {
-				clSetKernelArg(kernelLarge, 0, (SHARED_SIZE + LARGE_SIZE) * Integer.BYTES);
-				clSetKernelArg1p(kernelLarge, 1, modelBufferLarge.clBuffer);
-				clSetKernelArg1p(kernelLarge, 2, stagingBufferVertices.clBuffer);
-				clSetKernelArg1p(kernelLarge, 3, stagingBufferUvs.clBuffer);
-				clSetKernelArg1p(kernelLarge, 4, stagingBufferNormals.clBuffer);
-				clSetKernelArg1p(kernelLarge, 5, renderBufferVertices.clBuffer);
-				clSetKernelArg1p(kernelLarge, 6, renderBufferUvs.clBuffer);
-				clSetKernelArg1p(kernelLarge, 7, renderBufferNormals.clBuffer);
-				clSetKernelArg1p(kernelLarge, 8, uniformBufferCamera.clBuffer);
-				clSetKernelArg1p(kernelLarge, 9, tileHeightMap);
+				clSetKernelArg(kernel, 0, (long) (SHARED_SIZE + faceCount) * Integer.BYTES);
+				clSetKernelArg1p(kernel, 1, modelSortingBuffers[i].clBuffer);
+				clSetKernelArg1p(kernel, 2, stagingBufferVertices.clBuffer);
+				clSetKernelArg1p(kernel, 3, stagingBufferUvs.clBuffer);
+				clSetKernelArg1p(kernel, 4, stagingBufferNormals.clBuffer);
+				clSetKernelArg1p(kernel, 5, renderBufferVertices.clBuffer);
+				clSetKernelArg1p(kernel, 6, renderBufferUvs.clBuffer);
+				clSetKernelArg1p(kernel, 7, renderBufferNormals.clBuffer);
+				clSetKernelArg1p(kernel, 8, uniformBufferCamera.clBuffer);
+				clSetKernelArg1p(kernel, 9, tileHeightMap);
 
-				clEnqueueNDRangeKernel(commandQueue, kernelLarge, 1, null,
-					stack.pointers((long) largeModels * (LARGE_SIZE / largeFaceCount)),
-					stack.pointers(LARGE_SIZE / largeFaceCount),
+				clEnqueueNDRangeKernel(commandQueue, kernel, 1, null,
+					stack.pointers((long) numModels * threadCount),
+					stack.pointers(threadCount),
 					acquireEvent, computeEvents
 				);
 				computeEvents.position(computeEvents.position() + 1);
@@ -581,5 +554,20 @@ public class OpenCLManager {
 	private static void checkCLError(int errcode) {
 		if (errcode != CL_SUCCESS)
 			throw new RuntimeException(String.format("OpenCL error [%d]", errcode));
+	}
+
+	public void recreateCLBuffer(GLBuffer glBuffer, long clFlags) {
+		// cleanup previous buffer
+		if (glBuffer.clBuffer != 0)
+			clReleaseMemObject(glBuffer.clBuffer);
+
+		// allocate new
+		if (glBuffer.size == 0) {
+			// opencl does not allow 0-size gl buffers, it will segfault on macOS
+			glBuffer.clBuffer = 0;
+		} else {
+			assert glBuffer.size > 0 : "Size <= 0 should not reach this point";
+			glBuffer.clBuffer = clCreateFromGLBuffer(context, clFlags, glBuffer.glBufferId, (IntBuffer) null);
+		}
 	}
 }
