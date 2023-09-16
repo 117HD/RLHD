@@ -19842,8 +19842,8 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      "STAND_22124",
-      "STAND_22123"
+      22124,
+      22123
     ]
   },
   {
@@ -21648,7 +21648,7 @@
     "duration": 1250,
     "range": 20,
     "objectIds": [
-      "WINTUMBER_TREE"
+      19038
     ]
   },
   {
@@ -21666,9 +21666,9 @@
     "duration": 2400,
     "range": 20,
     "objectIds": [
-      "MAGICAL_PUMPKIN",
-      "MAGICAL_PUMPKIN_40384",
-      "MAGICAL_PUMPKIN_40385"
+      40383,
+      40384,
+      40385
     ]
   },
   {
@@ -21685,7 +21685,7 @@
     "type": "STATIC",
     "range": 20,
     "objectIds": [
-      "CRYSTAL_OF_POWER"
+      13661
     ]
   },
   {
@@ -21703,9 +21703,9 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      "GILDED_ADVENTURE_LOG_31922",
-      "GILDED_ADVENTURE_LOG",
-      "MAHOGANY_ADVENTURE_LOG"
+      31922,
+      29152,
+      29151
     ]
   },
   {

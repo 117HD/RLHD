@@ -7,7 +7,6 @@ import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.util.HashSet;
-import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -19,7 +18,7 @@ public class GsonUtils {
 		HashSet<Integer> ids = new HashSet<>();
 		in.beginArray();
 		while (in.hasNext()) {
-			if (Objects.requireNonNull(in.peek()) == JsonToken.NUMBER) {
+			if (in.peek() == JsonToken.NUMBER) {
 				try {
 					ids.add(in.nextInt());
 				} catch (NumberFormatException ex) {
@@ -28,6 +27,8 @@ public class GsonUtils {
 						throw new RuntimeException(message, ex);
 					log.error(message, ex);
 				}
+			} else {
+				throw new RuntimeException("Unable to parse ID: " + in.peek());
 			}
 		}
         in.endArray();
