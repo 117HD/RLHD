@@ -29,11 +29,12 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
-import net.runelite.api.Constants;
-import net.runelite.api.coords.WorldPoint;
-
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import net.runelite.api.*;
+import net.runelite.api.coords.*;
+import rs117.hd.data.environments.Area;
 
 public class AABB
 {
@@ -187,25 +188,38 @@ public class AABB
 	public static class JsonAdapter extends TypeAdapter<AABB[]>
 	{
 		@Override
-		public AABB[] read(JsonReader in) throws IOException
-		{
+		public AABB[] read(JsonReader in) throws IOException {
 			in.beginArray();
 			ArrayList<AABB> list = new ArrayList<>();
-			while (in.hasNext() && in.peek() != JsonToken.END_ARRAY)
-			{
-				if (in.peek() == JsonToken.NULL)
-				{
+			outer:
+			while (in.hasNext() && in.peek() != JsonToken.END_ARRAY) {
+				if (in.peek() == JsonToken.NULL) {
 					in.skipValue();
 					continue;
+				}
+
+				// Parse numbers as region IDs
+				if (in.peek() == JsonToken.NUMBER) {
+					list.add(new AABB(in.nextInt()));
+					continue;
+				}
+
+				if (in.peek() == JsonToken.STRING) {
+					String s = in.nextString();
+					for (Area area : Area.values()) {
+						if (area.name().equals(s)) {
+							Collections.addAll(list, area.aabbs);
+							continue outer;
+						}
+					}
+					throw new IOException("Unknown area specified in AABB array: " + s);
 				}
 
 				in.beginArray();
 				int[] ints = new int[6];
 				int i = 0;
-				while (in.hasNext())
-				{
-					switch (in.peek())
-					{
+				while (in.hasNext()) {
+					switch (in.peek()) {
 						case NUMBER:
 							if (i >= ints.length)
 								throw new IOException(
@@ -222,8 +236,7 @@ public class AABB
 				}
 				in.endArray();
 
-				switch (i)
-				{
+				switch (i) {
 					case 2:
 						list.add(new AABB(ints[0], ints[1]));
 						break;

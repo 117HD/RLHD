@@ -175,6 +175,7 @@ public enum Underlay {
 		.ids(27, 29, 129)
 		.replaceWithIf(WINTER_GRUNGE, plugin -> plugin.configWinterTheme)
 	),
+	STRANGLEWOOD_SNOW_DARK(p -> p.area(Area.THE_STRANGLEWOOD_EXTENDED).ids(174).groundMaterial(GroundMaterial.SNOW_1)),
 
 	// Zanaris
 	ZANARIS_GRASS(Area.ZANARIS, GroundMaterial.GRASS_1, p -> p.ids(143, 144)),
@@ -256,6 +257,27 @@ public enum Underlay {
 
 	TEMPLE_OF_THE_EYE(Area.TEMPLE_OF_THE_EYE, GroundMaterial.GRUNGE, p -> p.ids(87, 88, 89)),
 	ARCEUUS_GROUND(Area.ARCEUUS, GroundMaterial.DIRT, p -> p.ids(2, 3, 17, 23, 24)),
+
+	// Secrets of the North dungeon
+	ICY_UNDERGROUND_SNOW(p -> p.area(Area.ICY_UNDERGROUND_DARK).ids(159).groundMaterial(GroundMaterial.SNOW_1)),
+
+	// Desert Treasure 2 areas
+	LASSAR_UNDERCITY_SUNKEN_CATHEDRAL(p -> p
+		.ids(44, 45, 104, 181, 182)
+		.area(Area.LASSAR_UNDERCITY_SUNKEN_CATHEDRAL)
+		.groundMaterial(GroundMaterial.LASSAR_UNDERCITY_TILES_SUBMERGED)),
+	LASSAR_UNDERCITY_WATER(p -> p.ids(292).area(Area.LASSAR_UNDERCITY).waterType(WaterType.LASSAR_UNDERCITY_WATER).blended(false)),
+	LASSAR_UNDERCITY_MARBLE(p -> p.ids(45, 104).area(Area.LASSAR_UNDERCITY).groundMaterial(GroundMaterial.MARBLE_2_SEMIGLOSS)),
+	LASSAR_UNDERCITY_TILES(p -> p
+		.ids(182)
+		.area(Area.LASSAR_UNDERCITY)
+		.groundMaterial(GroundMaterial.LASSAR_UNDERCITY_TILES)
+		.blended(false)),
+	LASSAR_UNDERCITY_TILES_BLENDED(p -> p
+		.ids(46, 150)
+		.area(Area.LASSAR_UNDERCITY)
+		.groundMaterial(GroundMaterial.LASSAR_UNDERCITY_TILES)
+		.blended(true)),
 
 	// Cutscenes
 	CANOE_CUTSCENE_GRASS(Area.CANOE_CUTSCENE, GroundMaterial.GRASS_SCROLLING, p -> p.ids(48, 50, 63)),
@@ -365,7 +387,7 @@ public enum Underlay {
 
 	public static Underlay getUnderlay(Scene scene, Tile tile, HdPlugin plugin) {
 		LocalPoint localLocation = tile.getLocalLocation();
-		WorldPoint worldPoint = WorldPoint.fromLocalInstance(scene, tile.getLocalLocation(), tile.getPlane());
+		int[] worldPoint = HDUtils.localToWorld(scene, localLocation.getX(), localLocation.getY(), tile.getRenderLevel());
 
 		Underlay match = Underlay.NONE;
 		for (Underlay underlay : ANY_MATCH) {

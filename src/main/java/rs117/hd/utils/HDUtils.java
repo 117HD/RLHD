@@ -31,7 +31,9 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.api.coords.*;
 
+import static net.runelite.api.Constants.SCENE_SIZE;
 import static net.runelite.api.Constants.*;
+import static net.runelite.api.Perspective.*;
 
 @Slf4j
 @Singleton
@@ -306,18 +308,22 @@ public class HDUtils {
 		return new WorldPoint(baseX, baseY, plane);
 	}
 
-	public static int[] cameraSpaceToWorldPoint(Client client, int localX, int localY) {
-		localX += client.getCameraX2();
-		localY += client.getCameraZ2();
+	public static int[] cameraSpaceToWorldPoint(Client client, int relativeX, int relativeZ) {
+		int localX = client.getCameraX2() + relativeX;
+		int localY = client.getCameraZ2() + relativeZ;
 		int plane = client.getPlane();
+		return localToWorld(client.getScene(), localX, localY, plane);
+	}
 
-		if (client.isInInstancedRegion()) {
-			int sceneX = localX >> 7;
-			int sceneY = localY >> 7;
+	public static int[] localToWorld(Scene scene, int localX, int localY, int plane) {
+		int sceneX = localX / LOCAL_TILE_SIZE;
+		int sceneY = localY / LOCAL_TILE_SIZE;
+
+		if (scene.isInstance() && sceneX >= 0 && sceneY >= 0 && sceneX < SCENE_SIZE && sceneY < SCENE_SIZE) {
 			int chunkX = sceneX / 8;
 			int chunkY = sceneY / 8;
-			int templateChunk = client.getInstanceTemplateChunks()[plane][chunkX][chunkY];
-			int rotation = templateChunk >> 1 & 3;
+			int templateChunk = scene.getInstanceTemplateChunks()[plane][chunkX][chunkY];
+			int rotation = 4 - (templateChunk >> 1 & 3);
 			int templateChunkY = (templateChunk >> 3 & 2047) * 8;
 			int templateChunkX = (templateChunk >> 14 & 1023) * 8;
 			int templateChunkPlane = templateChunk >> 24 & 3;
@@ -326,6 +332,8 @@ public class HDUtils {
 
 			int[] pos = { worldX, worldY, templateChunkPlane };
 
+			chunkX = pos[0] & -8;
+			chunkY = pos[1] & -8;
 			int x = pos[0] & 7;
 			int y = pos[1] & 7;
 			switch (rotation) {
@@ -346,6 +354,18 @@ public class HDUtils {
 			return pos;
 		}
 
-		return new int[] { (localX >>> 7) + client.getBaseX(), (localY >>> 7) + client.getBaseY(), plane };
+		return new int[] { scene.getBaseX() + sceneX, scene.getBaseY() + sceneY, plane };
+	}
+
+	public static int worldToRegionID(int[] worldPoint) {
+		return worldToRegionID(worldPoint[0], worldPoint[1]);
+	}
+
+	public static int worldToRegionID(int worldX, int worldY) {
+		return worldX >> 6 << 8 | worldY >> 6;
+	}
+
+	public static boolean is32Bit() {
+		return System.getProperty("sun.arch.data.model", "Unknown").equals("32");
 	}
 }

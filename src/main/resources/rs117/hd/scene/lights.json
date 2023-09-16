@@ -17600,15 +17600,15 @@
     "duration": 0,
     "range": 0,
     "npcIds": [
-      "LAZY_HELLCAT",
-      "LAZY_HELLCAT_6689",
-      "OVERGROWN_HELLCAT",
-      "WILY_HELLCAT",
-      "WILY_HELLCAT_6696",
-      "HELLCAT",
-      "OVERGROWN_HELLCAT_6682",
-      "HELLCAT_6668",
-      "HELLKITTEN"
+      1632,
+      6689,
+      5604,
+      5590,
+      6696,
+      1625,
+      6682,
+      6668,
+      5597
     ]
   },
   {
@@ -17626,8 +17626,8 @@
     "duration": 0,
     "range": 0,
     "npcIds": [
-      "HELLRAT",
-      "HELLRAT_BEHEMOTH"
+      4809,
+      6793
     ]
   },
   {
@@ -17645,8 +17645,8 @@
     "duration": 5000,
     "range": 20,
     "npcIds": [
-      "HELLPUPPY",
-      "HELLPUPPY_3099"
+      964,
+      3099
     ]
   },
   {
@@ -17664,8 +17664,8 @@
     "duration": 0,
     "range": 0,
     "npcIds": [
-      "IKKLE_HYDRA_8519",
-      "IKKLE_HYDRA_8494"
+      8519,
+      8494
     ]
   },
   {
@@ -17683,8 +17683,8 @@
     "duration": 0,
     "range": 0,
     "npcIds": [
-      "IKKLE_HYDRA_8517",
-      "IKKLE_HYDRA"
+      8517,
+      8492
     ]
   },
   {
@@ -17702,8 +17702,8 @@
     "duration": 0,
     "range": 0,
     "npcIds": [
-      "IKKLE_HYDRA_8518",
-      "IKKLE_HYDRA_8493"
+      8518,
+      8493
     ]
   },
   {
@@ -17721,8 +17721,8 @@
     "duration": 0,
     "range": 0,
     "npcIds": [
-      "IKKLE_HYDRA_8520",
-      "IKKLE_HYDRA_8495"
+      8520,
+      8495
     ]
   },
   {
@@ -17740,8 +17740,8 @@
     "duration": 0,
     "range": 40,
     "npcIds": [
-      "PHOENIX_7368",
-      "PHOENIX_7370"
+      7368,
+      7370
     ]
   },
   {
@@ -17759,8 +17759,8 @@
     "duration": 0,
     "range": 40,
     "npcIds": [
-      "PHOENIX_3079",
-      "PHOENIX_3083"
+      3079,
+      3083
     ]
   },
   {
@@ -17778,8 +17778,8 @@
     "duration": 0,
     "range": 40,
     "npcIds": [
-      "PHOENIX_3078",
-      "PHOENIX_3082"
+      3078,
+      3082
     ]
   },
   {
@@ -17797,8 +17797,8 @@
     "duration": 0,
     "range": 40,
     "npcIds": [
-      "PHOENIX_3080",
-      "PHOENIX_3084"
+      3080,
+      3084
     ]
   },
   {
@@ -17816,8 +17816,8 @@
     "duration": 0,
     "range": 40,
     "npcIds": [
-      "PHOENIX",
-      "PHOENIX_3081"
+      3077,
+      3081
     ]
   },
   {
@@ -17835,8 +17835,8 @@
     "duration": 0,
     "range": 0,
     "npcIds": [
-      "TZREKZUK",
-      "TZREKZUK_8011"
+      8009,
+      8011
     ]
   },
   {
@@ -17854,8 +17854,8 @@
     "duration": 0,
     "range": 0,
     "npcIds": [
-      "MIDNIGHT",
-      "MIDNIGHT_7893"
+      7890,
+      7893
     ]
   },
   {
@@ -17873,8 +17873,8 @@
     "duration": 2100,
     "range": 10,
     "npcIds": [
-      "RIFT_GUARDIAN",
-      "RIFT_GUARDIAN_7354"
+      7337,
+      7354
     ]
   },
   {
@@ -17892,8 +17892,8 @@
     "duration": 2100,
     "range": 10,
     "npcIds": [
-      "RIFT_GUARDIAN_7338",
-      "RIFT_GUARDIAN_7355"
+      7338,
+      7355
     ]
   },
   {
@@ -17911,8 +17911,8 @@
     "duration": 2100,
     "range": 10,
     "npcIds": [
-      "RIFT_GUARDIAN_7339",
-      "RIFT_GUARDIAN_7356"
+      7339,
+      7356
     ]
   },
   {
@@ -17930,8 +17930,8 @@
     "duration": 2100,
     "range": 10,
     "npcIds": [
-      "RIFT_GUARDIAN_7340",
-      "RIFT_GUARDIAN_7357"
+      7340,
+      7357
     ]
   },
   {
@@ -17949,8 +17949,8 @@
     "duration": 2100,
     "range": 10,
     "npcIds": [
-      "RIFT_GUARDIAN_7341",
-      "RIFT_GUARDIAN_7358"
+      7341,
+      7358
     ]
   },
   {
@@ -17968,8 +17968,8 @@
     "duration": 2100,
     "range": 10,
     "npcIds": [
-      "RIFT_GUARDIAN_7342",
-      "RIFT_GUARDIAN_7359"
+      7342,
+      7359
     ]
   },
   {
@@ -17987,8 +17987,8 @@
     "duration": 2100,
     "range": 10,
     "npcIds": [
-      "RIFT_GUARDIAN_7360",
-      "RIFT_GUARDIAN_7343"
+      7360,
+      7343
     ]
   },
   {
@@ -18006,8 +18006,8 @@
     "duration": 2100,
     "range": 10,
     "npcIds": [
-      "RIFT_GUARDIAN_7344",
-      "RIFT_GUARDIAN_7361"
+      7344,
+      7361
     ]
   },
   {
@@ -18025,8 +18025,8 @@
     "duration": 2100,
     "range": 10,
     "npcIds": [
-      "RIFT_GUARDIAN_7345",
-      "RIFT_GUARDIAN_7362"
+      7345,
+      7362
     ]
   },
   {
@@ -18044,8 +18044,8 @@
     "duration": 2100,
     "range": 10,
     "npcIds": [
-      "RIFT_GUARDIAN_7346",
-      "RIFT_GUARDIAN_7363"
+      7346,
+      7363
     ]
   },
   {
@@ -18063,8 +18063,8 @@
     "duration": 2100,
     "range": 10,
     "npcIds": [
-      "RIFT_GUARDIAN_7347",
-      "RIFT_GUARDIAN_7364"
+      7347,
+      7364
     ]
   },
   {
@@ -18082,8 +18082,8 @@
     "duration": 2100,
     "range": 10,
     "npcIds": [
-      "RIFT_GUARDIAN_7348",
-      "RIFT_GUARDIAN_7365"
+      7348,
+      7365
     ]
   },
   {
@@ -18101,8 +18101,8 @@
     "duration": 2100,
     "range": 10,
     "npcIds": [
-      "RIFT_GUARDIAN_7349",
-      "RIFT_GUARDIAN_7366"
+      7349,
+      7366
     ]
   },
   {
@@ -18120,8 +18120,8 @@
     "duration": 2100,
     "range": 10,
     "npcIds": [
-      "RIFT_GUARDIAN_7350",
-      "RIFT_GUARDIAN_7367"
+      7350,
+      7367
     ]
   },
   {
@@ -18139,8 +18139,8 @@
     "duration": 2100,
     "range": 10,
     "npcIds": [
-      "RIFT_GUARDIAN_8024",
-      "RIFT_GUARDIAN_8028"
+      8024,
+      8028
     ]
   },
   {
@@ -18158,8 +18158,8 @@
     "duration": 0,
     "range": 80,
     "npcIds": [
-      "CHAOS_ELEMENTAL_JR_5907",
-      "CHAOS_ELEMENTAL_JR"
+      5907,
+      2055
     ]
   },
   {
@@ -18177,8 +18177,8 @@
     "duration": 3000,
     "range": 20,
     "npcIds": [
-      "SKOTOS_7671",
-      "SKOTOS"
+      7671,
+      425
     ]
   },
   {
@@ -18196,8 +18196,8 @@
     "duration": 2100,
     "range": 10,
     "npcIds": [
-      "VANGUARD_8198",
-      "VANGUARD_8203"
+      8198,
+      8203
     ]
   },
   {
@@ -18215,8 +18215,8 @@
     "duration": 2400,
     "range": 30,
     "npcIds": [
-      "VASA_MINIRIO",
-      "VASA_MINIRIO_8204"
+      8199,
+      8204
     ]
   },
   {
@@ -18234,8 +18234,8 @@
     "duration": 2400,
     "range": 0,
     "npcIds": [
-      "TEKTINY",
-      "TEKTINY_8202"
+      8197,
+      8202
     ]
   },
   {
@@ -18253,8 +18253,8 @@
     "duration": 2400,
     "range": 0,
     "npcIds": [
-      "ENRAGED_TEKTINY",
-      "ENRAGED_TEKTINY_9513"
+      9511,
+      9513
     ]
   },
   {
@@ -18272,8 +18272,8 @@
     "duration": 3000,
     "range": 15,
     "npcIds": [
-      "SMOKE_DEVIL_6639",
-      "SMOKE_DEVIL_6655"
+      6639,
+      6655
     ]
   },
   {
@@ -18291,8 +18291,8 @@
     "duration": 3000,
     "range": 15,
     "npcIds": [
-      "YOUNGLLEF_8737",
-      "YOUNGLLEF"
+      8737,
+      8729
     ]
   },
   {
@@ -18310,8 +18310,8 @@
     "duration": 3000,
     "range": 15,
     "npcIds": [
-      "CORRUPTED_YOUNGLLEF_8738",
-      "CORRUPTED_YOUNGLLEF"
+      8738,
+      8730
     ]
   },
   {
@@ -18329,8 +18329,8 @@
     "duration": 3200,
     "range": 20,
     "npcIds": [
-      "TINY_TEMPOR",
-      "TINY_TEMPOR_10637"
+      10562,
+      10637
     ]
   },
   {
@@ -18348,11 +18348,11 @@
     "duration": 0,
     "range": 20,
     "npcIds": [
-      "PYREFIEND",
-      "PYREFIEND_434",
-      "PYREFIEND_435",
-      "PYREFIEND_3139",
-      "PYREFIEND_436"
+      433,
+      434,
+      435,
+      3139,
+      436
     ]
   },
   {
@@ -18370,57 +18370,57 @@
     "duration": 1,
     "range": 10,
     "npcIds": [
-      "GHOST_3975",
-      "GHOST_3976",
-      "GHOST_3977",
-      "GHOST_3978",
-      "GHOST_3979",
-      "GHOST_920",
-      "GHOST_3625",
-      "GHOST_10538",
-      "GHOST_3516",
-      "ANCIENT_GHOST_10558",
-      "GHOST_",
-      "GHOST__3009",
-      "GHOST",
-      "GHOST_86",
-      "GHOST_87",
-      "GHOST_88",
-      "GHOST_472",
-      "GHOST_89",
-      "GHOST_473",
-      "GHOST_90",
-      "GHOST_474",
-      "GHOST_91",
-      "GHOST_92",
-      "GHOST_93",
-      "GHOST_94",
-      "GHOST_95",
-      "GHOST_2527",
-      "GHOST_7263",
-      "GHOST_96",
-      "GHOST_2528",
-      "GHOST_7264",
-      "GHOST_97",
-      "GHOST_2529",
-      "GHOST_98",
-      "GHOST_2530",
-      "GHOST_99",
-      "GHOST_2531",
-      "GHOST_2532",
-      "GHOST_2533",
-      "GHOST_2534",
-      "GHOST_9194",
-      "GHOST_505",
-      "GHOST_506",
-      "GHOST_1786",
-      "GHOST_5370",
-      "GHOST_507",
-      "MYSTERIOUS_GHOST_3451",
-      "MYSTERIOUS_GHOST_3452",
-      "MYSTERIOUS_GHOST_3453",
-      "MYSTERIOUS_GHOST_3454",
-      "MYSTERIOUS_GHOST_3455"
+      3975,
+      3976,
+      3977,
+      3978,
+      3979,
+      920,
+      3625,
+      10538,
+      3516,
+      10558,
+      3008,
+      3009,
+      85,
+      86,
+      87,
+      88,
+      472,
+      89,
+      473,
+      90,
+      474,
+      91,
+      92,
+      93,
+      94,
+      95,
+      2527,
+      7263,
+      96,
+      2528,
+      7264,
+      97,
+      2529,
+      98,
+      2530,
+      99,
+      2531,
+      2532,
+      2533,
+      2534,
+      9194,
+      505,
+      506,
+      1786,
+      5370,
+      507,
+      3451,
+      3452,
+      3453,
+      3454,
+      3455
     ]
   },
   {
@@ -18438,15 +18438,15 @@
     "duration": 1,
     "range": 10,
     "npcIds": [
-      "FORGOTTEN_SOUL_10544",
-      "FORGOTTEN_SOUL_10545",
-      "FORGOTTEN_SOUL_10534",
-      "FORGOTTEN_SOUL_10535",
-      "FORGOTTEN_SOUL_10536",
-      "FORGOTTEN_SOUL_10537",
-      "FORGOTTEN_SOUL_10524",
-      "FORGOTTEN_SOUL_10525",
-      "FORGOTTEN_SOUL_10526"
+      10544,
+      10545,
+      10534,
+      10535,
+      10536,
+      10537,
+      10524,
+      10525,
+      10526
     ]
   },
   {
@@ -18464,24 +18464,24 @@
     "duration": 0,
     "range": 10,
     "npcIds": [
-      "DROALAK",
-      "DROALAK_3494",
-      "SARAH_8134",
-      "VELORINA",
-      "NECROVARUS",
-      "GHOST_GUARD_6698",
-      "GRAVINGAS",
-      "GHOST_DISCIPLE",
-      "GHOST_VILLAGER",
-      "TORTURED_SOUL",
-      "GHOST_SHOPKEEPER",
-      "GHOST_INNKEEPER",
-      "GHOST_FARMER",
-      "GHOST_BANKER",
-      "GHOST_SAILOR",
-      "GHOST_CAPTAIN",
-      "GHOST_CAPTAIN_3006",
-      "GHOST_GUARD"
+      3493,
+      3494,
+      8134,
+      2985,
+      2986,
+      6698,
+      2987,
+      2988,
+      2998,
+      2999,
+      3000,
+      3001,
+      3002,
+      3003,
+      3004,
+      3005,
+      3006,
+      3007
     ]
   },
   {
@@ -18499,12 +18499,12 @@
     "duration": 0,
     "range": 10,
     "npcIds": [
-      "ABERRANT_SPECTRE",
-      "ABERRANT_SPECTRE_3",
-      "ABERRANT_SPECTRE_4",
-      "ABERRANT_SPECTRE_5",
-      "ABERRANT_SPECTRE_6",
-      "ABERRANT_SPECTRE_7"
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
     ]
   },
   {
@@ -18522,7 +18522,7 @@
     "duration": 0,
     "range": 10,
     "npcIds": [
-      "DEVIANT_SPECTRE"
+      7279
     ]
   },
   {
@@ -18540,7 +18540,7 @@
     "duration": 0,
     "range": 10,
     "npcIds": [
-      "ABHORRENT_SPECTRE"
+      7402
     ]
   },
   {
@@ -18558,7 +18558,7 @@
     "duration": 0,
     "range": 10,
     "npcIds": [
-      "REPUGNANT_SPECTRE"
+      7403
     ]
   },
   {
@@ -18576,12 +18576,12 @@
     "duration": 1,
     "range": 0.7,
     "npcIds": [
-      "AHRIM_THE_BLIGHTED",
-      "DHAROK_THE_WRETCHED",
-      "GUTHAN_THE_INFESTED",
-      "KARIL_THE_TAINTED",
-      "TORAG_THE_CORRUPTED",
-      "VERAC_THE_DEFILED"
+      1672,
+      1673,
+      1674,
+      1675,
+      1676,
+      1677
     ]
   },
   {
@@ -18599,16 +18599,16 @@
     "duration": 3200,
     "range": 10,
     "npcIds": [
-      "MEMORY_OF_SEREN_8784",
-      "SEREN",
-      "MEMORY_OF_SEREN",
-      "MEMORY_OF_SEREN_8777",
-      "MEMORY_OF_SEREN_8778",
-      "MEMORY_OF_SEREN_8779",
-      "MEMORY_OF_SEREN_8780",
-      "MEMORY_OF_SEREN_8781",
-      "MEMORY_OF_SEREN_8782",
-      "MEMORY_OF_SEREN_8783"
+      8784,
+      8775,
+      8776,
+      8777,
+      8778,
+      8779,
+      8780,
+      8781,
+      8782,
+      8783
     ]
   },
   {
@@ -18626,9 +18626,9 @@
     "duration": 3200,
     "range": 10,
     "npcIds": [
-      "FRAGMENT_OF_SEREN",
-      "FRAGMENT_OF_SEREN_8919",
-      "FRAGMENT_OF_SEREN_8920"
+      8917,
+      8919,
+      8920
     ]
   },
   {
@@ -18646,10 +18646,10 @@
     "duration": 0,
     "range": 0,
     "npcIds": [
-      "CRYSTALLINE_HUNLLEF_9024",
-      "CRYSTALLINE_HUNLLEF",
-      "CRYSTALLINE_HUNLLEF_9022",
-      "CRYSTALLINE_HUNLLEF_9023"
+      9024,
+      9021,
+      9022,
+      9023
     ]
   },
   {
@@ -18667,7 +18667,7 @@
     "duration": 0,
     "range": 0,
     "npcIds": [
-      "CRYSTALLINE_BAT"
+      9028
     ]
   },
   {
@@ -18685,7 +18685,7 @@
     "duration": 0,
     "range": 0,
     "npcIds": [
-      "CRYSTALLINE_RAT"
+      9026
     ]
   },
   {
@@ -18703,7 +18703,7 @@
     "duration": 0,
     "range": 0,
     "npcIds": [
-      "CRYSTALLINE_SPIDER"
+      9027
     ]
   },
   {
@@ -18721,7 +18721,7 @@
     "duration": 0,
     "range": 0,
     "npcIds": [
-      "CRYSTALLINE_DRAGON"
+      9033
     ]
   },
   {
@@ -18739,7 +18739,7 @@
     "duration": 0,
     "range": 0,
     "npcIds": [
-      "CRYSTALLINE_BEAR"
+      9032
     ]
   },
   {
@@ -18757,7 +18757,7 @@
     "duration": 0,
     "range": 0,
     "npcIds": [
-      "CRYSTALLINE_DARK_BEAST"
+      9034
     ]
   },
   {
@@ -18775,7 +18775,7 @@
     "duration": 0,
     "range": 0,
     "npcIds": [
-      "CRYSTALLINE_SCORPION"
+      9030
     ]
   },
   {
@@ -18793,7 +18793,7 @@
     "duration": 0,
     "range": 0,
     "npcIds": [
-      "CRYSTALLINE_UNICORN"
+      9029
     ]
   },
   {
@@ -18811,7 +18811,7 @@
     "duration": 0,
     "range": 0,
     "npcIds": [
-      "CRYSTALLINE_WOLF"
+      9031
     ]
   },
   {
@@ -18829,10 +18829,10 @@
     "duration": 0,
     "range": 0,
     "npcIds": [
-      "CORRUPTED_HUNLLEF",
-      "CORRUPTED_HUNLLEF_9036",
-      "CORRUPTED_HUNLLEF_9037",
-      "CORRUPTED_HUNLLEF_9038"
+      9035,
+      9036,
+      9037,
+      9038
     ]
   },
   {
@@ -18850,7 +18850,7 @@
     "duration": 0,
     "range": 0,
     "npcIds": [
-      "CORRUPTED_BAT"
+      9042
     ]
   },
   {
@@ -18868,7 +18868,7 @@
     "duration": 0,
     "range": 0,
     "npcIds": [
-      "CORRUPTED_RAT"
+      9040
     ]
   },
   {
@@ -18886,7 +18886,7 @@
     "duration": 0,
     "range": 0,
     "npcIds": [
-      "CORRUPTED_SPIDER"
+      9041
     ]
   },
   {
@@ -18904,7 +18904,7 @@
     "duration": 0,
     "range": 0,
     "npcIds": [
-      "CORRUPTED_DRAGON"
+      9047
     ]
   },
   {
@@ -18922,7 +18922,7 @@
     "duration": 0,
     "range": 0,
     "npcIds": [
-      "CORRUPTED_BEAR"
+      9046
     ]
   },
   {
@@ -18940,7 +18940,7 @@
     "duration": 0,
     "range": 0,
     "npcIds": [
-      "CORRUPTED_DARK_BEAST"
+      9048
     ]
   },
   {
@@ -18958,7 +18958,7 @@
     "duration": 0,
     "range": 0,
     "npcIds": [
-      "CORRUPTED_SCORPION"
+      9044
     ]
   },
   {
@@ -18976,7 +18976,7 @@
     "duration": 0,
     "range": 0,
     "npcIds": [
-      "CORRUPTED_UNICORN"
+      9043
     ]
   },
   {
@@ -18994,7 +18994,7 @@
     "duration": 0,
     "range": 0,
     "npcIds": [
-      "CORRUPTED_WOLF"
+      9045
     ]
   },
   {
@@ -19012,9 +19012,9 @@
     "duration": 5000,
     "range": 20,
     "npcIds": [
-      "CERBERUS",
-      "CERBERUS_5863",
-      "CERBERUS_5866"
+      5862,
+      5863,
+      5866
     ]
   },
   {
@@ -19032,7 +19032,7 @@
     "duration": 3200,
     "range": 20,
     "npcIds": [
-      "TEMPOROSS"
+      10572
     ]
   },
   {
@@ -19051,7 +19051,7 @@
     "range": 20,
     "npcIds": [
       10573,
-      "TEMPOROSS_10574"
+      10574
     ]
   },
   {
@@ -19069,7 +19069,7 @@
     "duration": 3200,
     "range": 20,
     "npcIds": [
-      "SPIRIT_POOL"
+      10571
     ]
   },
   {
@@ -19141,7 +19141,7 @@
     "duration": 0,
     "range": 40,
     "npcIds": [
-      "NYLOCAS_HAGIOS"
+      8344
     ]
   },
   {
@@ -19159,8 +19159,8 @@
     "duration": 0,
     "range": 40,
     "npcIds": [
-      "NYLOCAS_HAGIOS_8347",
-      "NYLOCAS_HAGIOS_8383"
+      8347,
+      8383
     ]
   },
   {
@@ -19178,7 +19178,7 @@
     "duration": 0,
     "range": 40,
     "npcIds": [
-      "NYLOCAS_VASILIAS_8356"
+      8356
     ]
   },
   {
@@ -19196,30 +19196,30 @@
     "duration": 4500,
     "range": 10,
     "npcIds": [
-      "FAIRY_CHEF",
-      "FAIRY_3204",
-      "FAIRY_FIXIT",
-      "FAIRY_7748",
-      "FAIRY_AERYKA",
-      "FAIRY_QUEEN",
-      "COORDINATOR",
-      "FAIRY_NUFF_5836",
-      "FAIRY_2829",
-      "FAIRY_GODFATHER_5837",
-      "SLIM_LOUIE",
-      "FAT_ROCCO",
-      "FAIRY_GODFATHER",
-      "FAIRY_NUFF",
-      "FAIRY_QUEEN_1842",
-      "CHAELDAR",
-      "FAIRY_SHOP_KEEPER",
-      "BANKER_3092",
-      "FAIRY_SHOP_ASSISTANT",
-      "FAIRY_VERY_WISE",
-      "FAIRY",
-      "FAIRY_1849",
-      "FAIRY_1850",
-      "FAIRY_1851"
+      5856,
+      3204,
+      7332,
+      7748,
+      5736,
+      1161,
+      5835,
+      5836,
+      2829,
+      5837,
+      5838,
+      5839,
+      1840,
+      1841,
+      1842,
+      404,
+      2868,
+      3092,
+      2869,
+      1847,
+      1848,
+      1849,
+      1850,
+      1851
     ]
   },
   {
@@ -19237,9 +19237,9 @@
     "duration": 0,
     "range": 10,
     "npcIds": [
-      "GREATER_GHOSTLY_THRALL",
-      "LESSER_GHOSTLY_THRALL",
-      "SUPERIOR_GHOSTLY_THRALL"
+      10880,
+      10878,
+      10879
     ]
   },
   {
@@ -19257,9 +19257,9 @@
     "duration": 0,
     "range": 10,
     "npcIds": [
-      "LESSER_SKELETAL_THRALL",
-      "SUPERIOR_SKELETAL_THRALL",
-      "GREATER_SKELETAL_THRALL"
+      10881,
+      10882,
+      10883
     ]
   },
   {
@@ -19277,9 +19277,9 @@
     "duration": 0,
     "range": 10,
     "npcIds": [
-      "LESSER_ZOMBIFIED_THRALL",
-      "SUPERIOR_ZOMBIFIED_THRALL",
-      "GREATER_ZOMBIFIED_THRALL"
+      10884,
+      10885,
+      10886
     ]
   },
   {
@@ -19297,7 +19297,7 @@
     "duration": 2400,
     "range": 20,
     "npcIds": [
-      "GLOWING_CRYSTAL"
+      7568
     ]
   },
   {
@@ -19315,8 +19315,8 @@
     "duration": 2400,
     "range": 30,
     "npcIds": [
-      "VASA_NISTIRIO",
-      "VASA_NISTIRIO_7567"
+      7566,
+      7567
     ]
   },
   {
@@ -19334,10 +19334,10 @@
     "duration": 2400,
     "range": 0,
     "npcIds": [
-      "TEKTON",
-      "TEKTON_7541",
-      "TEKTON_7542",
-      "TEKTON_7545"
+      7540,
+      7541,
+      7542,
+      7545
     ]
   },
   {
@@ -19355,8 +19355,8 @@
     "duration": 2400,
     "range": 0,
     "npcIds": [
-      "TEKTON_ENRAGED",
-      "TEKTON_ENRAGED_7544"
+      7543,
+      7544
     ]
   },
   {
@@ -19374,11 +19374,11 @@
     "duration": 2400,
     "range": 0,
     "npcIds": [
-      "VANGUARD",
-      "VANGUARD_7526",
-      "VANGUARD_7527",
-      "VANGUARD_7528",
-      "VANGUARD_7529"
+      7525,
+      7526,
+      7527,
+      7528,
+      7529
     ]
   },
   {
@@ -19396,7 +19396,7 @@
     "duration": 2400,
     "range": 20,
     "npcIds": [
-      "JEWELLED_CRAB_GREEN"
+      7578
     ]
   },
   {
@@ -19414,7 +19414,7 @@
     "duration": 2400,
     "range": 20,
     "npcIds": [
-      "JEWELLED_CRAB_RED"
+      7577
     ]
   },
   {
@@ -19432,7 +19432,7 @@
     "duration": 2400,
     "range": 20,
     "npcIds": [
-      "JEWELLED_CRAB_BLUE"
+      7579
     ]
   },
   {
@@ -19450,10 +19450,10 @@
     "duration": 1950,
     "range": 20,
     "npcIds": [
-      "THE_NIGHTMARE_9461",
-      "THE_NIGHTMARE_9462",
-      "THE_NIGHTMARE_9463",
-      "THE_NIGHTMARE_9464"
+      9461,
+      9462,
+      9463,
+      9464
     ]
   },
   {
@@ -19471,18 +19471,18 @@
     "duration": 0,
     "range": 20,
     "npcIds": [
-      "FIRE_GIANT_2080",
-      "FIRE_GIANT_2081",
-      "FIRE_GIANT_2082",
-      "FIRE_GIANT_2083",
-      "FIRE_GIANT_7251",
-      "FIRE_GIANT_2084",
-      "FIRE_GIANT_7252",
-      "FIRE_GIANT",
-      "FIRE_GIANT_2076",
-      "FIRE_GIANT_2077",
-      "FIRE_GIANT_2078",
-      "FIRE_GIANT_2079"
+      2080,
+      2081,
+      2082,
+      2083,
+      7251,
+      2084,
+      7252,
+      2075,
+      2076,
+      2077,
+      2078,
+      2079
     ]
   },
   {
@@ -19500,10 +19500,10 @@
     "duration": 2000,
     "range": 25,
     "npcIds": [
-      "PORTAL_1747",
-      "PORTAL_1751",
-      "PORTAL",
-      "PORTAL_1743"
+      1747,
+      1751,
+      1739,
+      1743
     ]
   },
   {
@@ -19521,10 +19521,10 @@
     "duration": 2000,
     "range": 25,
     "npcIds": [
-      "PORTAL_1744",
-      "PORTAL_1748",
-      "PORTAL_1752",
-      "PORTAL_1740"
+      1744,
+      1748,
+      1752,
+      1740
     ]
   },
   {
@@ -19542,10 +19542,10 @@
     "duration": 2000,
     "range": 25,
     "npcIds": [
-      "PORTAL_1745",
-      "PORTAL_1749",
-      "PORTAL_1753",
-      "PORTAL_1741"
+      1745,
+      1749,
+      1753,
+      1741
     ]
   },
   {
@@ -19563,10 +19563,10 @@
     "duration": 2000,
     "range": 25,
     "npcIds": [
-      "PORTAL_1746",
-      "PORTAL_1750",
-      "PORTAL_1754",
-      "PORTAL_1742"
+      1746,
+      1750,
+      1754,
+      1742
     ]
   },
   {
@@ -19584,10 +19584,10 @@
     "duration": 1500,
     "range": 10,
     "npcIds": [
-      "VOID_KNIGHT_2950",
-      "VOID_KNIGHT_2951",
-      "VOID_KNIGHT_2952",
-      "VOID_KNIGHT_2953"
+      2950,
+      2951,
+      2952,
+      2953
     ]
   },
   {
@@ -19605,7 +19605,7 @@
     "duration": 3400,
     "range": 10,
     "npcIds": [
-      "REVENANT_CYCLOPS"
+      7934
     ]
   },
   {
@@ -19623,7 +19623,7 @@
     "duration": 3400,
     "range": 10,
     "npcIds": [
-      "REVENANT_IMP"
+      7881
     ]
   },
   {
@@ -19641,7 +19641,7 @@
     "duration": 3400,
     "range": 10,
     "npcIds": [
-      "REVENANT_DEMON"
+      7936
     ]
   },
   {
@@ -19659,7 +19659,7 @@
     "duration": 3400,
     "range": 10,
     "npcIds": [
-      "REVENANT_DRAGON"
+      7940
     ]
   },
   {
@@ -19677,7 +19677,7 @@
     "duration": 3400,
     "range": 10,
     "npcIds": [
-      "REVENANT_GOBLIN"
+      7931
     ]
   },
   {
@@ -19695,7 +19695,7 @@
     "duration": 3400,
     "range": 10,
     "npcIds": [
-      "REVENANT_DARK_BEAST"
+      7938
     ]
   },
   {
@@ -19713,7 +19713,7 @@
     "duration": 3400,
     "range": 10,
     "npcIds": [
-      "REVENANT_HELLHOUND"
+      7935
     ]
   },
   {
@@ -19731,7 +19731,7 @@
     "duration": 3400,
     "range": 10,
     "npcIds": [
-      "REVENANT_HOBGOBLIN"
+      7933
     ]
   },
   {
@@ -19749,7 +19749,7 @@
     "duration": 3400,
     "range": 10,
     "npcIds": [
-      "REVENANT_KNIGHT"
+      7939
     ]
   },
   {
@@ -19767,7 +19767,7 @@
     "duration": 3400,
     "range": 10,
     "npcIds": [
-      "REVENANT_ORK"
+      7937
     ]
   },
   {
@@ -19785,7 +19785,7 @@
     "duration": 3400,
     "range": 10,
     "npcIds": [
-      "REVENANT_PYREFIEND"
+      7932
     ]
   },
   {
@@ -19804,27 +19804,27 @@
     "range": 20,
     "objectIds": [
       10720,
-      "STANDING_TORCH_10178",
-      "CANDLE_STAND_25122",
-      "STANDING_TORCH_10179",
-      "CANDLE_STAND_25123",
-      "CANDLE_STAND",
-      "STANDING_TORCH_6404",
-      "STANDING_TORCH_6406",
-      "STANDING_TORCH_6408",
-      "STANDING_TORCH_6410",
-      "STANDING_TORCH_6412",
-      "STANDING_TORCH_20716",
-      "STANDING_TORCH_6413",
-      "STANDING_TORCH_6414",
-      "STANDING_TORCH_6415",
-      "STANDING_TORCH_6416",
-      "STANDING_TORCH_6896",
-      "STANDING_TORCH",
-      "STANDING_TORCH_5494",
-      "STANDING_TORCH_11606",
-      "STANDING_TORCH_15158",
-      "LAMP_6203"
+      10178,
+      25122,
+      10179,
+      25123,
+      22125,
+      6404,
+      6406,
+      6408,
+      6410,
+      6412,
+      20716,
+      6413,
+      6414,
+      6415,
+      6416,
+      6896,
+      724,
+      5494,
+      11606,
+      15158,
+      6203
     ]
   },
   {
@@ -19861,16 +19861,16 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      "TORCH_38512",
-      "TORCH_38513",
-      "TORCH_38514",
-      "TORCH_38562",
-      "TORCH_17237",
+      38512,
+      38513,
+      38514,
+      38562,
+      17237,
       3478,
-      "TORCH_32118",
-      "STANDING_TORCH_5881",
-      "TORCH_38555",
-      "BRAZIER_33454"
+      32118,
+      5881,
+      38555,
+      33454
     ]
   },
   {
@@ -19888,7 +19888,7 @@
     "duration": 0,
     "range": 40,
     "objectIds": [
-      "FIRE_25156"
+      25156
     ]
   },
   {
@@ -19942,7 +19942,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      "BRAZIER_37826"
+      37826
     ]
   },
   {
@@ -19960,7 +19960,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      "TORCH_34856"
+      34856
     ]
   },
   {
@@ -19978,7 +19978,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      "LAMP_6202"
+      6202
     ]
   },
   {
@@ -20004,12 +20004,12 @@
       12238,
       20942,
       3474,
-      "GRAVE_43122",
-      "GRAVE_43123",
-      "GRAVE_43124",
-      "GRAVE_43125",
+      43122,
+      43123,
+      43124,
+      43125,
       4694,
-      "GRAVE_43126",
+      43126,
       43127,
       5208,
       10297,
@@ -20040,10 +20040,10 @@
     "objectIds": [
       196,
       197,
-      "OIL_LAMP",
+      2501,
       7432,
-      "CANDLES",
-      "CANDLES_203",
+      202,
+      203,
       206,
       11474,
       5746,
@@ -20106,8 +20106,8 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      "CANDLES_11472",
-      "CANDLES_12301"
+      11472,
+      12301
     ]
   },
   {
@@ -20125,7 +20125,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      "CANDLES_12302"
+      12302
     ]
   },
   {
@@ -20144,11 +20144,11 @@
     "range": 20,
     "objectIds": [
       4691,
-      "LANTERN_10307",
-      "LANTERN_16901",
+      10307,
+      16901,
       23577,
-      "LANTERN",
-      "LANTERN_11468"
+      2492,
+      11468
     ]
   },
   {
@@ -20166,10 +20166,10 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      "LANTERN_42132",
-      "LANTERN_42133",
-      "LANTERN_42134",
-      "LANTERN_42135"
+      42132,
+      42133,
+      42134,
+      42135
     ]
   },
   {
@@ -20187,7 +20187,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      "FIREPLACE_4650"
+      4650
     ]
   },
   {
@@ -20205,8 +20205,8 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      "SPIT_ROAST_5608",
-      "SPIT_ROAST"
+      5608,
+      4267
     ]
   },
   {
@@ -20224,7 +20224,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      "COOKING_POT_26180"
+      26180
     ]
   },
   {
@@ -20243,44 +20243,44 @@
     "range": 20,
     "objectIds": [
       732,
-      "FIRE_5249",
-      "FIRE_30021",
-      "FIRE_23046",
-      "FIRE_9735",
-      "CAMPING_FIRE",
-      "FIRE_35912",
-      "FIRE_26185",
-      "FIRE_35913",
-      "FIRE_26577",
-      "FIRE_26578",
-      "FIRE_43475",
-      "FIRE_13337",
-      "FIRE_14169",
-      "FIRE_5981",
-      "CAMPFIRE_29085",
-      "CAMPFIRE_25374",
-      "FIRE_33311",
-      "FIRE_35810",
-      "FIRE_35811",
-      "FIRE_10660",
-      "FIRE_4265",
-      "CAMPFIRE",
-      "FIRE_32297",
-      "FIRE_4266",
-      "CAMPFIRE_19884",
-      "FIRE_15156",
-      "FIRE_21620",
-      "BONFIRE",
-      "FIRE_31798",
-      "FIRE_28791",
-      "FIRE",
-      "FIRE_13881",
-      "FIRE_25465",
-      "FIRE_34682",
-      "FIRE_5499",
+      5249,
+      30021,
+      23046,
+      9735,
+      23175,
+      35912,
+      26185,
+      35913,
+      26577,
+      26578,
+      43475,
+      13337,
+      14169,
+      5981,
+      29085,
+      25374,
+      33311,
+      35810,
+      35811,
+      10660,
+      4265,
+      19881,
+      32297,
+      4266,
+      19884,
+      15156,
+      21620,
+      29300,
+      31798,
+      28791,
+      3769,
+      13881,
+      25465,
+      34682,
+      5499,
       12795,
-      "FIRE_12796",
-      "FIRE_3775"
+      12796,
+      3775
     ]
   },
   {
@@ -20298,9 +20298,9 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      "FIRE_25155",
-      "FIRE_35812",
-      "FIRE_40728"
+      25155,
+      35812,
+      40728
     ]
   },
   {
@@ -20318,7 +20318,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      "MAGICAL_FIRE_37996"
+      37996
     ]
   },
   {
@@ -20336,8 +20336,8 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      "MAGICAL_FIRE_37994",
-      "MAGICAL_FIRE_37995"
+      37994,
+      37995
     ]
   },
   {
@@ -20355,37 +20355,37 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      "MARBLE_FIREPLACE_6785",
-      "FIREPLACE_26179",
-      "DECORATED_LIMESTONE_FIREPLACE_40775",
-      "FIREPLACE_8712",
-      "FIREPLACE_10824",
-      "FIREPLACE_24969",
-      "DECORATED_MARBLE_FIREPLACE_40777",
-      "FIREPLACE",
-      "FIREPLACE_10058",
-      "FIREPLACE_24970",
-      "FIREPLACE_6093",
-      "FIREPLACE_6094",
-      "FIREPLACE_6095",
-      "FIREPLACE_6096",
-      "FIREPLACE_7185",
-      "FIREPLACE_9439",
-      "FIREPLACE_9440",
-      "FIREPLACE_9441",
-      "FIREPLACE_21795",
-      "FIREPLACE_17640",
-      "FIREPLACE_17641",
-      "FIREPLACE_17642",
-      "FIREPLACE_17643",
-      "FIREPLACE_5165",
-      "LIMESTONE_FIREPLACE_17325",
-      "FIREPLACE_18039",
-      "FIREPLACE_30136",
-      "FIREPLACE_30137",
-      "FIREPLACE_30138",
-      "CLAY_FIREPLACE_6781",
-      "LIMESTONE_FIREPLACE_6783"
+      6785,
+      26179,
+      40775,
+      8712,
+      10824,
+      24969,
+      40777,
+      4618,
+      10058,
+      24970,
+      6093,
+      6094,
+      6095,
+      6096,
+      7185,
+      9439,
+      9440,
+      9441,
+      21795,
+      17640,
+      17641,
+      17642,
+      17643,
+      5165,
+      17325,
+      18039,
+      30136,
+      30137,
+      30138,
+      6781,
+      6783
     ]
   },
   {
@@ -20421,7 +20421,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      "BARRICADE_35806"
+      35806
     ]
   },
   {
@@ -20439,7 +20439,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      "TORCH_34345"
+      34345
     ]
   },
   {
@@ -20457,7 +20457,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      "STANDING_TORCH_34346"
+      34346
     ]
   },
   {
@@ -20475,7 +20475,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      "FIRE_20001"
+      20001
     ]
   },
   {
@@ -20493,7 +20493,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      "FIRE_26186"
+      26186
     ]
   },
   {
@@ -20511,7 +20511,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      "FIRE_26576"
+      26576
     ]
   },
   {
@@ -20529,7 +20529,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      "FIRE_20000"
+      20000
     ]
   },
   {
@@ -20547,7 +20547,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      "FIRE_26575"
+      26575
     ]
   },
   {
@@ -20565,10 +20565,10 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      "CLIMBING_ROPE_18967",
-      "CLIMBING_ROPE_18968",
-      "CLIMBING_ROPE_18969",
-      "CLIMBING_ROPE_25213"
+      18967,
+      18968,
+      18969,
+      25213
     ]
   },
   {
@@ -20606,7 +20606,7 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      "MUSHROOM_TORCH"
+      12005
     ]
   },
   {
@@ -20624,7 +20624,7 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      "MUSHROOM_TORCH_12006"
+      12006
     ]
   },
   {
@@ -20679,8 +20679,8 @@
     "duration": 0,
     "range": 30,
     "objectIds": [
-      "FURNACE_16657",
-      "FURNACE_16469"
+      16657,
+      16469
     ]
   },
   {
@@ -20698,7 +20698,7 @@
     "duration": 4000,
     "range": 15,
     "objectIds": [
-      "ECTOFUNTUS"
+      16648
     ]
   },
   {
@@ -20842,7 +20842,7 @@
     "duration": 4000,
     "range": 15,
     "objectIds": [
-      "ECTOFUNTUS_16649"
+      16649
     ]
   },
   {
@@ -21076,12 +21076,12 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      "SARCOPHAGUS_20720",
-      "SARCOPHAGUS_20721",
-      "SARCOPHAGUS_20722",
-      "SARCOPHAGUS_20770",
-      "SARCOPHAGUS_20771",
-      "SARCOPHAGUS_20772"
+      20720,
+      20721,
+      20722,
+      20770,
+      20771,
+      20772
     ]
   },
   {
@@ -21099,7 +21099,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      "HEARTH"
+      2282
     ]
   },
   {
@@ -21117,9 +21117,9 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      "TABLE_6197",
-      "TABLE_6199",
-      "TABLE_6201"
+      6197,
+      6199,
+      6201
     ]
   },
   {
@@ -21137,7 +21137,7 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      "CHAOS_RIFT_26765"
+      26765
     ]
   },
   {
@@ -21173,7 +21173,7 @@
     "duration": 1550,
     "range": 20,
     "objectIds": [
-      "ENERGY_BARRIER_4470"
+      4470
     ]
   },
   {
@@ -21191,7 +21191,7 @@
     "duration": 1550,
     "range": 20,
     "objectIds": [
-      "ENERGY_BARRIER"
+      4469
     ]
   },
   {
@@ -21209,9 +21209,9 @@
     "duration": 1550,
     "range": 20,
     "objectIds": [
-      "ZAMORAK_PORTAL",
-      "PORTAL_4390",
-      "PORTAL_4407"
+      4388,
+      4390,
+      4407
     ]
   },
   {
@@ -21229,8 +21229,8 @@
     "duration": 1550,
     "range": 20,
     "objectIds": [
-      "SARADOMIN_PORTAL",
-      "PORTAL_4389"
+      4387,
+      4389
     ]
   },
   {
@@ -21248,7 +21248,7 @@
     "duration": 1550,
     "range": 20,
     "objectIds": [
-      "GUTHIX_PORTAL"
+      4408
     ]
   },
   {
@@ -21266,7 +21266,7 @@
     "duration": 1600,
     "range": 20,
     "objectIds": [
-      "BLUE_BARRIER_40454"
+      40454
     ]
   },
   {
@@ -21284,8 +21284,8 @@
     "duration": 1600,
     "range": 20,
     "objectIds": [
-      "RED_BARRIER_40456",
-      "RED_BARRIER_40457"
+      40456,
+      40457
     ]
   },
   {
@@ -21303,7 +21303,7 @@
     "duration": 1600,
     "range": 20,
     "objectIds": [
-      "BARRIER_41200"
+      41200
     ]
   },
   {
@@ -21321,7 +21321,7 @@
     "duration": 1600,
     "range": 20,
     "objectIds": [
-      "BARRIER_41199"
+      41199
     ]
   },
   {
@@ -21339,8 +21339,8 @@
     "duration": 1000,
     "range": 20,
     "objectIds": [
-      "SOUL_WARS_PORTAL",
-      "PORTAL_40476"
+      40474,
+      40476
     ]
   },
   {
@@ -21358,7 +21358,7 @@
     "duration": 1000,
     "range": 20,
     "objectIds": [
-      "PORTAL_40460"
+      40460
     ]
   },
   {
@@ -21376,7 +21376,7 @@
     "duration": 1000,
     "range": 20,
     "objectIds": [
-      "PORTAL_40461"
+      40461
     ]
   },
   {
@@ -21394,7 +21394,7 @@
     "duration": 1000,
     "range": 20,
     "objectIds": [
-      "SOUL_WARS_PORTAL_40475"
+      40475
     ]
   },
   {
@@ -21412,8 +21412,8 @@
     "duration": 0,
     "range": 30,
     "objectIds": [
-      "TORCH_40550",
-      "TORCH_40551"
+      40550,
+      40551
     ]
   },
   {
@@ -21431,7 +21431,7 @@
     "duration": 1000,
     "range": 30,
     "objectIds": [
-      "SOUL_OBELISK_40449",
+      40449,
       40765
     ]
   },
@@ -21450,7 +21450,7 @@
     "duration": 3000,
     "range": 30,
     "objectIds": [
-      "SOUL_OBELISK_40451"
+      40451
     ]
   },
   {
@@ -21468,7 +21468,7 @@
     "duration": 3000,
     "range": 30,
     "objectIds": [
-      "SOUL_OBELISK_40450"
+      40450
     ]
   },
   {
@@ -21486,7 +21486,7 @@
     "duration": 1550,
     "range": 20,
     "objectIds": [
-      "CASTLE_WARS_PORTAL"
+      30386
     ]
   },
   {
@@ -21504,7 +21504,7 @@
     "duration": 1600,
     "range": 20,
     "objectIds": [
-      "COMPETITIVE"
+      39640
     ]
   },
   {
@@ -21522,7 +21522,7 @@
     "duration": 1500,
     "range": 20,
     "objectIds": [
-      "CASUAL"
+      39639
     ]
   },
   {
@@ -21576,7 +21576,7 @@
     "duration": 1750,
     "range": 20,
     "objectIds": [
-      "CHALLENGE_PORTAL"
+      26642
     ]
   },
   {
@@ -21594,7 +21594,7 @@
     "duration": 1850,
     "range": 20,
     "objectIds": [
-      "FREEFORALL_PORTAL"
+      26645
     ]
   },
   {
@@ -21612,7 +21612,7 @@
     "duration": 1850,
     "range": 20,
     "objectIds": [
-      "PORTAL_26646"
+      26646
     ]
   },
   {
@@ -21630,7 +21630,7 @@
     "duration": 1250,
     "range": 20,
     "objectIds": [
-      "POOL_OF_REFRESHMENT"
+      39651
     ]
   },
   {
@@ -21777,7 +21777,7 @@
     "duration": 1850,
     "range": 20,
     "objectIds": [
-      "PORTAL_39549"
+      39549
     ]
   },
   {
@@ -21795,8 +21795,8 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      "CAVE_ENTRANCE_11833",
-      "CAVE_ENTRANCE_11834"
+      11833,
+      11834
     ]
   },
   {
@@ -21814,7 +21814,7 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      "CAVE_EXIT_11836"
+      11836
     ]
   },
   {
@@ -21850,7 +21850,7 @@
     "duration": 4100,
     "range": 20,
     "objectIds": [
-      "PORTAL_4525"
+      4525
     ]
   },
   {
@@ -21868,12 +21868,12 @@
     "duration": 4100,
     "range": 20,
     "objectIds": [
-      "PORTAL_15477",
-      "PORTAL_15478",
-      "PORTAL_28822",
-      "PORTAL_15479",
-      "PORTAL_15480",
-      "PORTAL_15481",
+      15477,
+      15478,
+      28822,
+      15479,
+      15480,
+      15481,
       15482
     ]
   },
@@ -21892,7 +21892,7 @@
     "duration": 4100,
     "range": 20,
     "objectIds": [
-      "PORTAL_34947"
+      34947
     ]
   },
   {
@@ -21910,108 +21910,108 @@
     "duration": 1250,
     "range": 20,
     "objectIds": [
-      "PORTAL_NEXUS_33354",
-      "PORTAL_NEXUS_33355",
-      "PORTAL_NEXUS_33356",
-      "PORTAL_NEXUS_33357",
-      "PORTAL_NEXUS_33358",
-      "PORTAL_NEXUS_33359",
-      "PORTAL_NEXUS_33360",
-      "PORTAL_NEXUS_33361",
-      "PORTAL_NEXUS_33362",
-      "PORTAL_NEXUS_33363",
-      "PORTAL_NEXUS_33364",
-      "PORTAL_NEXUS_33365",
-      "PORTAL_NEXUS_33366",
-      "PORTAL_NEXUS_33367",
-      "PORTAL_NEXUS_33368",
-      "PORTAL_NEXUS_33369",
-      "PORTAL_NEXUS_33370",
-      "PORTAL_NEXUS_33371",
-      "PORTAL_NEXUS_33372",
-      "PORTAL_NEXUS_33373",
-      "PORTAL_NEXUS_33374",
-      "PORTAL_NEXUS_33375",
-      "PORTAL_NEXUS_33376",
-      "PORTAL_NEXUS_33377",
-      "PORTAL_NEXUS_33378",
-      "PORTAL_NEXUS_33379",
-      "PORTAL_NEXUS_33380",
-      "PORTAL_NEXUS_33381",
-      "PORTAL_NEXUS_33382",
-      "PORTAL_NEXUS_33383",
-      "PORTAL_NEXUS_33384",
-      "PORTAL_NEXUS_33385",
-      "PORTAL_NEXUS_33386",
-      "PORTAL_NEXUS_33387",
-      "PORTAL_NEXUS_33388",
-      "PORTAL_NEXUS_33389",
-      "PORTAL_NEXUS_33390",
-      "PORTAL_NEXUS_33391",
-      "PORTAL_NEXUS_33392",
-      "PORTAL_NEXUS_33393",
-      "PORTAL_NEXUS_33394",
-      "PORTAL_NEXUS_33395",
-      "PORTAL_NEXUS_33396",
-      "PORTAL_NEXUS_33397",
-      "PORTAL_NEXUS_33398",
-      "PORTAL_NEXUS_33399",
-      "PORTAL_NEXUS_33400",
-      "PORTAL_NEXUS_33401",
-      "PORTAL_NEXUS_33402",
-      "PORTAL_NEXUS_33403",
-      "PORTAL_NEXUS_33404",
-      "PORTAL_NEXUS_33405",
-      "PORTAL_NEXUS_33406",
-      "PORTAL_NEXUS_33407",
-      "PORTAL_NEXUS_33408",
-      "PORTAL_NEXUS_33409",
-      "PORTAL_NEXUS_33410",
-      "PORTAL_NEXUS_33423",
-      "PORTAL_NEXUS_33424",
-      "PORTAL_NEXUS_33425",
-      "PORTAL_NEXUS_33426",
-      "PORTAL_NEXUS_33427",
-      "PORTAL_NEXUS_33428",
-      "PORTAL_NEXUS_33429",
-      "PORTAL_NEXUS_33430",
-      "PORTAL_NEXUS_33431",
-      "PORTAL_NEXUS_37547",
-      "PORTAL_NEXUS_37548",
-      "PORTAL_NEXUS_37549",
-      "PORTAL_NEXUS_37550",
-      "PORTAL_NEXUS_37551",
-      "PORTAL_NEXUS_37552",
-      "PORTAL_NEXUS_37553",
-      "PORTAL_NEXUS_37554",
-      "PORTAL_NEXUS_37555",
-      "PORTAL_NEXUS_37556",
-      "PORTAL_NEXUS_37557",
-      "PORTAL_NEXUS_37559",
-      "PORTAL_NEXUS_37560",
-      "PORTAL_NEXUS_37561",
-      "PORTAL_NEXUS_37562",
-      "PORTAL_NEXUS_37563",
-      "PORTAL_NEXUS_37564",
-      "PORTAL_NEXUS_37565",
-      "PORTAL_NEXUS_37566",
-      "PORTAL_NEXUS_37567",
-      "PORTAL_NEXUS_37568",
-      "PORTAL_NEXUS_37569",
-      "PORTAL_NEXUS_37571",
-      "PORTAL_NEXUS_37572",
-      "PORTAL_NEXUS_37573",
-      "PORTAL_NEXUS_41413",
-      "PORTAL_NEXUS_37574",
-      "PORTAL_NEXUS_41414",
-      "PORTAL_NEXUS_37575",
-      "PORTAL_NEXUS_41415",
-      "PORTAL_NEXUS_37576",
-      "PORTAL_NEXUS_37577",
-      "PORTAL_NEXUS_37578",
-      "PORTAL_NEXUS_37579",
-      "PORTAL_NEXUS_37580",
-      "PORTAL_NEXUS"
+      33354,
+      33355,
+      33356,
+      33357,
+      33358,
+      33359,
+      33360,
+      33361,
+      33362,
+      33363,
+      33364,
+      33365,
+      33366,
+      33367,
+      33368,
+      33369,
+      33370,
+      33371,
+      33372,
+      33373,
+      33374,
+      33375,
+      33376,
+      33377,
+      33378,
+      33379,
+      33380,
+      33381,
+      33382,
+      33383,
+      33384,
+      33385,
+      33386,
+      33387,
+      33388,
+      33389,
+      33390,
+      33391,
+      33392,
+      33393,
+      33394,
+      33395,
+      33396,
+      33397,
+      33398,
+      33399,
+      33400,
+      33401,
+      33402,
+      33403,
+      33404,
+      33405,
+      33406,
+      33407,
+      33408,
+      33409,
+      33410,
+      33423,
+      33424,
+      33425,
+      33426,
+      33427,
+      33428,
+      33429,
+      33430,
+      33431,
+      37547,
+      37548,
+      37549,
+      37550,
+      37551,
+      37552,
+      37553,
+      37554,
+      37555,
+      37556,
+      37557,
+      37559,
+      37560,
+      37561,
+      37562,
+      37563,
+      37564,
+      37565,
+      37566,
+      37567,
+      37568,
+      37569,
+      37571,
+      37572,
+      37573,
+      41413,
+      37574,
+      41414,
+      37575,
+      41415,
+      37576,
+      37577,
+      37578,
+      37579,
+      37580,
+      27097
     ]
   },
   {
@@ -22029,8 +22029,8 @@
     "duration": 1250,
     "range": 20,
     "objectIds": [
-      "POOL_OF_RESTORATION",
-      "FROZEN_POOL_OF_RESTORATION"
+      29237,
+      40844
     ]
   },
   {
@@ -22048,8 +22048,8 @@
     "duration": 1250,
     "range": 20,
     "objectIds": [
-      "POOL_OF_REVITALISATION",
-      "FROZEN_POOL_OF_REVITALISATION"
+      29238,
+      40845
     ]
   },
   {
@@ -22067,8 +22067,8 @@
     "duration": 1250,
     "range": 20,
     "objectIds": [
-      "POOL_OF_REJUVENATION",
-      "FROZEN_POOL_OF_REJUVENATION"
+      29239,
+      40846
     ]
   },
   {
@@ -22086,8 +22086,8 @@
     "duration": 1250,
     "range": 20,
     "objectIds": [
-      "FANCY_POOL_OF_REJUVENATION",
-      "FROZEN_FANCY_POOL_OF_REJUVENATION"
+      29240,
+      40847
     ]
   },
   {
@@ -22105,8 +22105,8 @@
     "duration": 1250,
     "range": 20,
     "objectIds": [
-      "FROZEN_ORNATE_POOL_OF_REJUVENATION",
-      "ORNATE_POOL_OF_REJUVENATION"
+      40848,
+      29241
     ]
   },
   {
@@ -22124,9 +22124,9 @@
     "duration": 4100,
     "range": 20,
     "objectIds": [
-      "SCRYING_POOL",
-      "TELEPORTATION_FOCUS",
-      "GREATER_TELEPORT_FOCUS"
+      13639,
+      13640,
+      13641
     ]
   },
   {
@@ -22144,9 +22144,9 @@
     "duration": 4100,
     "range": 20,
     "objectIds": [
-      "ARCEUUS_LIBRARY_PORTAL",
-      "ARCEUUS_LIBRARY_PORTAL_41417",
-      "ARCEUUS_LIBRARY_PORTAL_41418"
+      41416,
+      41417,
+      41418
     ]
   },
   {
@@ -22164,9 +22164,9 @@
     "duration": 4100,
     "range": 20,
     "objectIds": [
-      "DRAYNOR_MANOR_PORTAL_37607",
-      "DRAYNOR_MANOR_PORTAL_37595",
-      "DRAYNOR_MANOR_PORTAL"
+      37607,
+      37595,
+      37583
     ]
   },
   {
@@ -22184,9 +22184,9 @@
     "duration": 4100,
     "range": 20,
     "objectIds": [
-      "BATTLEFRONT_PORTAL",
-      "BATTLEFRONT_PORTAL_37608",
-      "BATTLEFRONT_PORTAL_37596"
+      37584,
+      37608,
+      37596
     ]
   },
   {
@@ -22204,12 +22204,12 @@
     "duration": 4100,
     "range": 20,
     "objectIds": [
-      "VARROCK_PORTAL_33104",
-      "GRAND_EXCHANGE_PORTAL_33105",
-      "VARROCK_PORTAL",
-      "GRAND_EXCHANGE_PORTAL",
-      "VARROCK_PORTAL_33098",
-      "GRAND_EXCHANGE_PORTAL_33099",
+      33104,
+      33105,
+      33092,
+      33093,
+      33098,
+      33099,
       13629,
       13615
     ]
@@ -22229,9 +22229,9 @@
     "duration": 4100,
     "range": 20,
     "objectIds": [
-      "MIND_ALTAR_PORTAL",
-      "MIND_ALTAR_PORTAL_37609",
-      "MIND_ALTAR_PORTAL_37597"
+      37585,
+      37609,
+      37597
     ]
   },
   {
@@ -22249,9 +22249,9 @@
     "duration": 4100,
     "range": 20,
     "objectIds": [
-      "LUMBRIDGE_PORTAL",
-      "LUMBRIDGE_PORTAL_13623",
-      "LUMBRIDGE_PORTAL_13630"
+      13616,
+      13623,
+      13630
     ]
   },
   {
@@ -22269,9 +22269,9 @@
     "duration": 4100,
     "range": 20,
     "objectIds": [
-      "FALADOR_PORTAL",
-      "FALADOR_PORTAL_13624",
-      "FALADOR_PORTAL_13631"
+      13617,
+      13624,
+      13631
     ]
   },
   {
@@ -22289,9 +22289,9 @@
     "duration": 4100,
     "range": 20,
     "objectIds": [
-      "SALVE_GRAVEYARD_PORTAL",
-      "SALVE_GRAVEYARD_PORTAL_37610",
-      "SALVE_GRAVEYARD_PORTAL_37598"
+      37586,
+      37610,
+      37598
     ]
   },
   {
@@ -22310,13 +22310,13 @@
     "range": 20,
     "objectIds": [
       13632,
-      "CAMELOT_PORTAL_33106",
+      33106,
       13618,
-      "SEERS_VILLAGE_PORTAL_33107",
-      "CAMELOT_PORTAL",
-      "SEERS_VILLAGE_PORTAL",
-      "CAMELOT_PORTAL_33100",
-      "SEERS_VILLAGE_PORTAL_33101"
+      33107,
+      33094,
+      33095,
+      33100,
+      33101
     ]
   },
   {
@@ -22334,9 +22334,9 @@
     "duration": 4100,
     "range": 20,
     "objectIds": [
-      "FENKENSTRAINS_CASTLE_PORTAL",
-      "FENKENSTRAINS_CASTLE_PORTAL_37611",
-      "FENKENSTRAINS_CASTLE_PORTAL_37599"
+      37587,
+      37611,
+      37599
     ]
   },
   {
@@ -22354,9 +22354,9 @@
     "duration": 4100,
     "range": 20,
     "objectIds": [
-      "ARDOUGNE_PORTAL_13633",
-      "ARDOUGNE_PORTAL",
-      "ARDOUGNE_PORTAL_13626"
+      13633,
+      13619,
+      13626
     ]
   },
   {
@@ -22375,12 +22375,12 @@
     "range": 20,
     "objectIds": [
       13634,
-      "YANILLE_WATCHTOWER_PORTAL_33108",
-      "YANILLE_PORTAL_33109",
-      "YANILLE_WATCHTOWER_PORTAL",
-      "YANILLE_PORTAL",
-      "YANILLE_PORTAL_33102",
-      "YANILLE_PORTAL_33103"
+      33108,
+      33109,
+      33096,
+      33097,
+      33102,
+      33103
     ]
   },
   {
@@ -22398,9 +22398,9 @@
     "duration": 4100,
     "range": 20,
     "objectIds": [
-      "SENNTISTEN_PORTAL_29348",
-      "SENNTISTEN_PORTAL",
-      "SENNTISTEN_PORTAL_29356"
+      29348,
+      29340,
+      29356
     ]
   },
   {
@@ -22418,9 +22418,9 @@
     "duration": 4100,
     "range": 20,
     "objectIds": [
-      "WEST_ARDOUGNE_PORTAL_37600",
-      "WEST_ARDOUGNE_PORTAL",
-      "WEST_ARDOUGNE_PORTAL_37612"
+      37600,
+      37588,
+      37612
     ]
   },
   {
@@ -22438,9 +22438,9 @@
     "duration": 4100,
     "range": 20,
     "objectIds": [
-      "MARIM_PORTAL",
-      "MARIM_PORTAL_29360",
-      "MARIM_PORTAL_29352"
+      29344,
+      29360,
+      29352
     ]
   },
   {
@@ -22458,9 +22458,9 @@
     "duration": 4100,
     "range": 20,
     "objectIds": [
-      "HARMONY_ISLAND_PORTAL_37601",
-      "HARMONY_ISLAND_PORTAL",
-      "HARMONY_ISLAND_PORTAL_37613"
+      37601,
+      37589,
+      37613
     ]
   },
   {
@@ -22478,9 +22478,9 @@
     "duration": 4100,
     "range": 20,
     "objectIds": [
-      "KHARYRLL_PORTAL_29346",
-      "KHARYRLL_PORTAL",
-      "KHARYRLL_PORTAL_29354"
+      29346,
+      29338,
+      29354
     ]
   },
   {
@@ -22498,9 +22498,9 @@
     "duration": 4100,
     "range": 20,
     "objectIds": [
-      "LUNAR_ISLE_PORTAL_29347",
-      "LUNAR_ISLE_PORTAL",
-      "LUNAR_ISLE_PORTAL_29355"
+      29347,
+      29339,
+      29355
     ]
   },
   {
@@ -22518,9 +22518,9 @@
     "duration": 4100,
     "range": 20,
     "objectIds": [
-      "KOUREND_PORTAL",
-      "KOUREND_PORTAL_29361",
-      "KOUREND_PORTAL_29353"
+      29345,
+      29361,
+      29353
     ]
   },
   {
@@ -22538,9 +22538,9 @@
     "duration": 4100,
     "range": 20,
     "objectIds": [
-      "CEMETERY_PORTAL_37602",
-      "CEMETERY_PORTAL",
-      "CEMETERY_PORTAL_37614"
+      37602,
+      37590,
+      37614
     ]
   },
   {
@@ -22558,9 +22558,9 @@
     "duration": 4100,
     "range": 20,
     "objectIds": [
-      "WATERBIRTH_ISLAND_PORTAL_29350",
-      "WATERBIRTH_ISLAND_PORTAL",
-      "WATERBIRTH_ISLAND_PORTAL_29358"
+      29350,
+      29342,
+      29358
     ]
   },
   {
@@ -22578,9 +22578,9 @@
     "duration": 4100,
     "range": 20,
     "objectIds": [
-      "BARROWS_PORTAL_37603",
-      "BARROWS_PORTAL",
-      "BARROWS_PORTAL_37615"
+      37603,
+      37591,
+      37615
     ]
   },
   {
@@ -22598,9 +22598,9 @@
     "duration": 4100,
     "range": 20,
     "objectIds": [
-      "CARRALLANGAR_PORTAL_33440",
-      "CARRALLANGAR_PORTAL",
-      "CARRALLANGAR_PORTAL_33437"
+      33440,
+      33434,
+      33437
     ]
   },
   {
@@ -22618,9 +22618,9 @@
     "duration": 4100,
     "range": 20,
     "objectIds": [
-      "FISHING_GUILD_PORTAL_29351",
-      "FISHING_GUILD_PORTAL",
-      "FISHING_GUILD_PORTAL_29359"
+      29351,
+      29343,
+      29359
     ]
   },
   {
@@ -22638,9 +22638,9 @@
     "duration": 4100,
     "range": 20,
     "objectIds": [
-      "CATHERBY_PORTAL",
-      "CATHERBY_PORTAL_33435",
-      "CATHERBY_PORTAL_33438"
+      33432,
+      33435,
+      33438
     ]
   },
   {
@@ -22658,9 +22658,9 @@
     "duration": 4100,
     "range": 20,
     "objectIds": [
-      "ANNAKARL_PORTAL_29349",
-      "ANNAKARL_PORTAL",
-      "ANNAKARL_PORTAL_29357"
+      29349,
+      29341,
+      29357
     ]
   },
   {
@@ -22678,9 +22678,9 @@
     "duration": 4100,
     "range": 20,
     "objectIds": [
-      "APE_ATOLL_DUNGEON_PORTAL_37616",
-      "APE_ATOLL_DUNGEON_PORTAL_37604",
-      "APE_ATOLL_DUNGEON_PORTAL"
+      37616,
+      37604,
+      37592
     ]
   },
   {
@@ -22698,9 +22698,9 @@
     "duration": 4100,
     "range": 20,
     "objectIds": [
-      "GHORROCK_PORTAL",
-      "GHORROCK_PORTAL_33436",
-      "GHORROCK_PORTAL_33439"
+      33433,
+      33436,
+      33439
     ]
   },
   {
@@ -22718,9 +22718,9 @@
     "duration": 4100,
     "range": 20,
     "objectIds": [
-      "TROLL_STRONGHOLD_PORTAL",
-      "TROLL_STRONGHOLD_PORTAL_33180",
-      "TROLL_STRONGHOLD_PORTAL_33181"
+      33179,
+      33180,
+      33181
     ]
   },
   {
@@ -22738,9 +22738,9 @@
     "duration": 4100,
     "range": 20,
     "objectIds": [
-      "WEISS_PORTAL_37605",
-      "WEISS_PORTAL_37593",
-      "WEISS_PORTAL"
+      37605,
+      37593,
+      37581
     ]
   },
   {
@@ -22758,7 +22758,7 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      "CAVE_EXIT_3760"
+      3760
     ]
   },
   {
@@ -22776,8 +22776,8 @@
     "duration": 1200,
     "range": 30,
     "objectIds": [
-      "WELL_4004",
-      "WELL_4005"
+      4004,
+      4005
     ]
   },
   {
@@ -22795,12 +22795,12 @@
     "duration": 1000,
     "range": 10,
     "objectIds": [
-      "ELVEN_LAMP_35867",
-      "ELVEN_LAMP_36492",
-      "ELVEN_LAMP_35868",
-      "ELVEN_LAMP",
-      "ELVEN_LAMP_34958",
-      "ELVEN_LAMP_8767"
+      35867,
+      36492,
+      35868,
+      3918,
+      34958,
+      8767
     ]
   },
   {
@@ -22818,7 +22818,7 @@
     "duration": 1200,
     "range": 10,
     "objectIds": [
-      "PORTAL_35075"
+      35075
     ]
   },
   {
@@ -22912,31 +22912,31 @@
     "duration": 3200,
     "range": 5,
     "objectIds": [
-      "SEAL_OF_AMLODD_35456",
-      "SEAL_OF_HEFIN",
-      "SEAL_OF_HEFIN_35458",
-      "SEAL_OF_IORWERTH",
-      "SEAL_OF_IORWERTH_35460",
-      "SEAL_OF_ITHELL",
-      "SEAL_OF_ITHELL_35462",
-      "SEAL_OF_MEILYR",
-      "SEAL_OF_MEILYR_35464",
-      "SEAL_OF_TRAHAEARN",
-      "SEAL_OF_TRAHAEARN_35466",
-      "SEAL_OF_THE_FORGOTTEN",
+      35456,
+      35457,
+      35458,
+      35459,
+      35460,
+      35461,
+      35462,
+      35463,
+      35464,
+      35465,
+      35466,
+      35467,
       36725,
       36726,
       36727,
       36728,
       36729,
       36730,
-      "SEAL_OF_CADARN",
+      35451,
       36731,
-      "SEAL_OF_CADARN_35452",
+      35452,
       36732,
-      "SEAL_OF_CRWYS",
-      "SEAL_OF_CRWYS_35454",
-      "SEAL_OF_AMLODD"
+      35453,
+      35454,
+      35455
     ]
   },
   {
@@ -22972,15 +22972,15 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      "TELEPORT_PLATFORM_35984",
-      "TELEPORT_PLATFORM_35985",
-      "TELEPORT_PLATFORM_36082",
-      "TELEPORT_PLATFORM_36197",
-      "TELEPORT_PLATFORM_36198",
-      "TELEPORT_PLATFORM_36614",
-      "TELEPORT_PLATFORM_36615",
-      "TELEPORT_PLATFORM_36490",
-      "TELEPORT_PLATFORM_36062"
+      35984,
+      35985,
+      36082,
+      36197,
+      36198,
+      36614,
+      36615,
+      36490,
+      36062
     ]
   },
   {
@@ -22998,7 +22998,7 @@
     "duration": 5000,
     "range": 20,
     "objectIds": [
-      "GAUNTLET_PORTAL"
+      36081
     ]
   },
   {
@@ -23052,7 +23052,7 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      "TOOL_STORAGE_36074"
+      36074
     ]
   },
   {
@@ -23070,7 +23070,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      "RANGE_36077"
+      36077
     ]
   },
   {
@@ -23088,7 +23088,7 @@
     "duration": 3100,
     "range": 20,
     "objectIds": [
-      "SINGING_BOWL_36063"
+      36063
     ]
   },
   {
@@ -23142,7 +23142,7 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      "PHREN_ROOTS_36066"
+      36066
     ]
   },
   {
@@ -23160,7 +23160,7 @@
     "duration": 2400,
     "range": 20,
     "objectIds": [
-      "CRYSTAL_DEPOSIT"
+      36064
     ]
   },
   {
@@ -23178,7 +23178,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      "TELEPORT_PLATFORM"
+      35965
     ]
   },
   {
@@ -23196,7 +23196,7 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      "TOOL_STORAGE"
+      35977
     ]
   },
   {
@@ -23214,7 +23214,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      "RANGE_35980"
+      35980
     ]
   },
   {
@@ -23232,7 +23232,7 @@
     "duration": 3100,
     "range": 20,
     "objectIds": [
-      "SINGING_BOWL_35966"
+      35966
     ]
   },
   {
@@ -23286,7 +23286,7 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      "PHREN_ROOTS"
+      35969
     ]
   },
   {
@@ -23304,7 +23304,7 @@
     "duration": 2400,
     "range": 20,
     "objectIds": [
-      "CORRUPT_DEPOSIT"
+      35967
     ]
   },
   {
@@ -23322,7 +23322,7 @@
     "duration": 4300,
     "range": 20,
     "objectIds": [
-      "ROCK_FORMATION_GLOWING"
+      36192
     ]
   },
   {
@@ -23340,7 +23340,7 @@
     "duration": 4300,
     "range": 20,
     "objectIds": [
-      "ROCK_FORMATION"
+      36193
     ]
   },
   {
@@ -23358,7 +23358,7 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      "ALTAR_36196"
+      36196
     ]
   },
   {
@@ -23376,7 +23376,7 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      "FURNACE_36195"
+      36195
     ]
   },
   {
@@ -23395,7 +23395,7 @@
     "range": 20,
     "objectIds": [
       6550,
-      "PORTAL_6551"
+      6551
     ]
   },
   {
@@ -23485,10 +23485,10 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      "TOMB_DOOR",
-      "TOMB_DOOR_20932",
-      "TOMB_DOOR_20948",
-      "TOMB_DOOR_20949"
+      20931,
+      20932,
+      20948,
+      20949
     ]
   },
   {
@@ -23527,7 +23527,7 @@
     "duration": 6200,
     "range": 30,
     "objectIds": [
-      "ARCANE_CRYSTAL"
+      27878
     ]
   },
   {
@@ -23545,7 +23545,7 @@
     "duration": 4000,
     "range": 30,
     "objectIds": [
-      "ARCANE_CRYSTAL_27882"
+      27882
     ]
   },
   {
@@ -23563,7 +23563,7 @@
     "duration": 2400,
     "range": 30,
     "objectIds": [
-      "ARCANE_CRYSTAL_27886"
+      27886
     ]
   },
   {
@@ -23581,7 +23581,7 @@
     "duration": 6100,
     "range": 30,
     "objectIds": [
-      "DARK_CRYSTAL"
+      27879
     ]
   },
   {
@@ -23599,7 +23599,7 @@
     "duration": 3900,
     "range": 30,
     "objectIds": [
-      "DARK_CRYSTAL_27883"
+      27883
     ]
   },
   {
@@ -23617,7 +23617,7 @@
     "duration": 2300,
     "range": 30,
     "objectIds": [
-      "DARK_CRYSTAL_27887"
+      27887
     ]
   },
   {
@@ -23653,7 +23653,7 @@
     "duration": 4100,
     "range": 30,
     "objectIds": [
-      "BLOOD_CRYSTAL_27884",
+      27884,
       27885
     ]
   },
@@ -23672,7 +23672,7 @@
     "duration": 2500,
     "range": 30,
     "objectIds": [
-      "BLOOD_CRYSTAL_27888"
+      27888
     ]
   },
   {
@@ -23690,7 +23690,7 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      "BLOOD_ALTAR"
+      27978
     ]
   },
   {
@@ -23708,7 +23708,7 @@
     "duration": 2000,
     "range": 10,
     "objectIds": [
-      "ALTAR_43479"
+      43479
     ]
   },
   {
@@ -23726,7 +23726,7 @@
     "duration": 1800,
     "range": 5,
     "objectIds": [
-      "PORTAL_43478"
+      43478
     ]
   },
   {
@@ -23744,7 +23744,7 @@
     "duration": 500,
     "range": 10,
     "objectIds": [
-      "MYSTERIOUS_GLOW_34792"
+      34792
     ]
   },
   {
@@ -23834,7 +23834,7 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      "DARK_ALTAR"
+      27979
     ]
   },
   {
@@ -23852,7 +23852,7 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      "SOUL_ALTAR"
+      27980
     ]
   },
   {
@@ -23870,10 +23870,10 @@
     "duration": 2400,
     "range": 20,
     "objectIds": [
-      "LARGE_CRYSTAL",
-      "CRYSTAL_30018",
-      "CRYSTAL_30027",
-      "CRYSTAL_30015"
+      29794,
+      30018,
+      30027,
+      30015
     ]
   },
   {
@@ -23927,7 +23927,7 @@
     "duration": 2400,
     "range": 20,
     "objectIds": [
-      "CRYSTAL_30016",
+      30016,
       29775
     ]
   },
@@ -23964,7 +23964,7 @@
     "duration": 2400,
     "range": 20,
     "objectIds": [
-      "CRYSTAL_30017",
+      30017,
       29798
     ]
   },
@@ -24001,8 +24001,8 @@
     "duration": 2400,
     "range": 20,
     "objectIds": [
-      "BLOOD_CRYSTAL_33147",
-      "BLOOD_CRYSTAL_30014"
+      33147,
+      30014
     ]
   },
   {
@@ -24020,7 +24020,7 @@
     "duration": 2400,
     "range": 20,
     "objectIds": [
-      "GIANT_ANVIL"
+      29867
     ]
   },
   {
@@ -24038,7 +24038,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      "BRAZIER_29748"
+      29748
     ]
   },
   {
@@ -24056,7 +24056,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      "MAGICAL_FIRE"
+      30019
     ]
   },
   {
@@ -24074,8 +24074,8 @@
     "duration": 2400,
     "range": 20,
     "objectIds": [
-      "MAGENTA_CRYSTAL",
-      "MAGENTA_CRYSTAL_31958"
+      29760,
+      31958
     ]
   },
   {
@@ -24093,8 +24093,8 @@
     "duration": 2400,
     "range": 20,
     "objectIds": [
-      "CYAN_CRYSTAL_31957",
-      "CYAN_CRYSTAL"
+      31957,
+      29759
     ]
   },
   {
@@ -24112,8 +24112,8 @@
     "duration": 2400,
     "range": 20,
     "objectIds": [
-      "YELLOW_CRYSTAL",
-      "YELLOW_CRYSTAL_31959"
+      29761,
+      31959
     ]
   },
   {
@@ -24131,7 +24131,7 @@
     "duration": 2400,
     "range": 20,
     "objectIds": [
-      "BLACK_CRYSTAL"
+      29758
     ]
   },
   {
@@ -24149,8 +24149,8 @@
     "duration": 1400,
     "range": 20,
     "objectIds": [
-      "MYSTICAL_BARRIER_34432",
-      "MYSTICAL_BARRIER"
+      34432,
+      29879
     ]
   },
   {
@@ -24168,7 +24168,7 @@
     "duration": 1400,
     "range": 20,
     "objectIds": [
-      "MYSTICAL_BARRIER_ORANGE"
+      34433
     ]
   },
   {
@@ -24186,7 +24186,7 @@
     "duration": 1400,
     "range": 20,
     "objectIds": [
-      "MYSTICAL_BARRIER_RED"
+      34434
     ]
   },
   {
@@ -24204,7 +24204,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      "FIRE_10433"
+      10433
     ]
   },
   {
@@ -24222,7 +24222,7 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      "LIGHT_34421"
+      34421
     ]
   },
   {
@@ -24262,8 +24262,8 @@
     "duration": 1550,
     "range": 20,
     "objectIds": [
-      "PRIVATE_PORTAL",
-      "PRIVATE_PORTAL_9369",
+      9368,
+      9369,
       9370
     ]
   },
@@ -24282,7 +24282,7 @@
     "duration": 1550,
     "range": 20,
     "objectIds": [
-      "TUNNEL"
+      2141
     ]
   },
   {
@@ -24300,7 +24300,7 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      "VINE_LADDER_31790"
+      31790
     ]
   },
   {
@@ -24318,7 +24318,7 @@
     "duration": 0,
     "range": 30,
     "objectIds": [
-      "BRAZIER_32119"
+      32119
     ]
   },
   {
@@ -24336,8 +24336,8 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      "BLUE_TEARS",
-      "BLUE_TEARS_6665"
+      6661,
+      6665
     ]
   },
   {
@@ -24355,8 +24355,8 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      "GREEN_TEARS",
-      "GREEN_TEARS_6666"
+      6662,
+      6666
     ]
   },
   {
@@ -24410,8 +24410,8 @@
     "duration": 2200,
     "range": 20,
     "objectIds": [
-      "ROCKS_41547",
-      "ROCKS_41548"
+      41547,
+      41548
     ]
   },
   {
@@ -24465,7 +24465,7 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      "WATER_41588"
+      41588
     ]
   },
   {
@@ -24501,7 +24501,7 @@
     "duration": 0,
     "range": 30,
     "objectIds": [
-      "SHRINE_41236"
+      41236
     ]
   },
   {
@@ -24519,10 +24519,10 @@
     "duration": 0,
     "range": 40,
     "objectIds": [
-      "ELECTRIFIED_HARPOONFISH_CANNON",
-      "ELECTRIFIED_HARPOONFISH_CANNON_41243",
-      "ELECTRIFIED_HARPOONFISH_CANNON_41244",
-      "ELECTRIFIED_HARPOONFISH_CANNON_41245"
+      41242,
+      41243,
+      41244,
+      41245
     ]
   },
   {
@@ -24540,7 +24540,7 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      "CLAN_HALL_PORTAL"
+      41724
     ]
   },
   {
@@ -24576,7 +24576,7 @@
     "duration": 2100,
     "range": 20,
     "objectIds": [
-      "MAGICAL_OBELISK"
+      38451
     ]
   },
   {
@@ -24613,7 +24613,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      "LAMP_39152"
+      39152
     ]
   },
   {
@@ -24631,11 +24631,11 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      "MONUMENTAL_CHEST_32992",
-      "MONUMENTAL_CHEST_32993",
-      "MONUMENTAL_CHEST_32994",
-      "MONUMENTAL_CHEST",
-      "MONUMENTAL_CHEST_32991"
+      32992,
+      32993,
+      32994,
+      32990,
+      32991
     ]
   },
   {
@@ -24672,7 +24672,7 @@
     "duration": 1800,
     "range": 30,
     "objectIds": [
-      "TELEPORT_CRYSTAL"
+      32996
     ]
   },
   {
@@ -24690,7 +24690,7 @@
     "duration": 2200,
     "range": 30,
     "objectIds": [
-      "BARRIER_32755"
+      32755
     ]
   },
   {
@@ -24708,7 +24708,7 @@
     "duration": 1800,
     "range": 10,
     "objectIds": [
-      "CHAMBER"
+      32957
     ]
   },
   {
@@ -24816,7 +24816,7 @@
     "duration": 1550,
     "range": 20,
     "objectIds": [
-      "PORTAL_34748"
+      34748
     ]
   },
   {
@@ -24834,7 +24834,7 @@
     "duration": 500,
     "range": 20,
     "objectIds": [
-      "MYSTERIOUS_GLOW_34790"
+      34790
     ]
   },
   {
@@ -24852,17 +24852,17 @@
     "duration": 2200,
     "range": 30,
     "objectIds": [
-      "DOOR_20208",
-      "DOOR_20209",
-      "DOOR_20199",
-      "DOOR_20200",
-      "DOOR_20201",
-      "DOOR_20202",
-      "DOOR_20203",
-      "DOOR_20204",
-      "DOOR_20205",
-      "DOOR_20206",
-      "DOOR_20207"
+      20208,
+      20209,
+      20199,
+      20200,
+      20201,
+      20202,
+      20203,
+      20204,
+      20205,
+      20206,
+      20207
     ]
   },
   {
@@ -24898,7 +24898,7 @@
     "duration": 500,
     "range": 20,
     "objectIds": [
-      "MYSTERIOUS_GLOW"
+      34789
     ]
   },
   {
@@ -24916,7 +24916,7 @@
     "duration": 500,
     "range": 20,
     "objectIds": [
-      "MYSTERIOUS_GLOW_34791"
+      34791
     ]
   },
   {
@@ -24934,9 +24934,9 @@
     "duration": 1550,
     "range": 20,
     "objectIds": [
-      "MAGIC_PORTAL",
-      "MAGIC_PORTAL_2157",
-      "MAGIC_PORTAL_2158"
+      2156,
+      2157,
+      2158
     ]
   },
   {
@@ -24956,7 +24956,7 @@
     "objectIds": [
       23040,
       23041,
-      "LAMP_22976",
+      22976,
       22978,
       22979,
       22980,
@@ -24978,14 +24978,14 @@
       23013,
       23014,
       23015,
-      "LAMP_22760",
+      22760,
       23016,
-      "LAMP_22761",
+      22761,
       23017,
-      "LAMP_22762",
+      22762,
       23018,
       23019,
-      "LAMP_22764",
+      22764,
       23020,
       23021,
       23022,
@@ -25022,9 +25022,9 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      "ZAPPER_22736",
-      "ZAPPER_22737",
-      "ZAPPER"
+      22736,
+      22737,
+      22735
     ]
   },
   {
@@ -25042,7 +25042,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      "MAGIC_BALL"
+      22826
     ]
   },
   {
@@ -25060,7 +25060,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      "THINGYMAJIG"
+      22823
     ]
   },
   {
@@ -25078,7 +25078,7 @@
     "duration": 0,
     "range": 30,
     "objectIds": [
-      "FURNACE_22721"
+      22721
     ]
   },
   {
@@ -25096,7 +25096,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      "FIRE_43146"
+      43146
     ]
   },
   {
@@ -25114,7 +25114,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      "ALTAR_43089"
+      43089
     ]
   },
   {
@@ -25132,7 +25132,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      "MELTING_POT"
+      9098
     ]
   },
   {
@@ -25150,7 +25150,7 @@
     "duration": 0,
     "range": 30,
     "objectIds": [
-      "EMBALMING_TUBE"
+      15469
     ]
   },
   {
@@ -25168,7 +25168,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      "RANGE_26181"
+      26181
     ]
   },
   {
@@ -25258,7 +25258,7 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      "ANCIENT_FORGE"
+      42859
     ]
   },
   {
@@ -25276,7 +25276,7 @@
     "duration": 1550,
     "range": 20,
     "objectIds": [
-      "EXIT_PORTAL_20843"
+      20843
     ]
   },
   {
@@ -25294,7 +25294,7 @@
     "duration": 2800,
     "range": 30,
     "objectIds": [
-      "STRANGE_SHRINE"
+      14985
     ]
   },
   {
@@ -26148,7 +26148,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      "FLAMES"
+      23105
     ]
   },
   {
@@ -26166,7 +26166,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      "SOUL_DEVOURER"
+      21773
     ]
   },
   {
@@ -26184,7 +26184,7 @@
     "duration": 0,
     "range": 20,
     "npcIds": [
-      "DRAGON_HEAD_8144"
+      8144
     ]
   },
   {
@@ -26238,7 +26238,7 @@
     "duration": 0,
     "range": 30,
     "objectIds": [
-      "SACRED_FORGE"
+      41412
     ]
   },
   {
@@ -26256,8 +26256,8 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      "ANVIL_32215",
-      "ANVIL_32216",
+      32215,
+      32216,
       32217,
       32218,
       32219,
@@ -26279,7 +26279,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      "DRAGON_HEAD_32213"
+      32213
     ]
   },
   {
@@ -26371,7 +26371,7 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      "REWARDS_GUARDIAN"
+      43695
     ]
   },
   {
@@ -26389,7 +26389,7 @@
     "duration": 0,
     "range": 5,
     "objectIds": [
-      "DEPOSIT_POOL"
+      43696
     ]
   },
   {
@@ -26407,7 +26407,7 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      "GUARDIAN_OF_FIRE"
+      43704
     ]
   },
   {
@@ -26425,7 +26425,7 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      "GUARDIAN_OF_NATURE"
+      43711
     ]
   },
   {
@@ -26443,7 +26443,7 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      "GUARDIAN_OF_EARTH"
+      43703
     ]
   },
   {
@@ -26461,7 +26461,7 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      "GUARDIAN_OF_WATER"
+      43702
     ]
   },
   {
@@ -26479,7 +26479,7 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      "GUARDIAN_OF_COSMIC"
+      43710
     ]
   },
   {
@@ -26497,7 +26497,7 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      "GUARDIAN_OF_AIR"
+      43701
     ]
   },
   {
@@ -26515,7 +26515,7 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      "GUARDIAN_OF_MIND"
+      43705
     ]
   },
   {
@@ -26533,7 +26533,7 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      "GUARDIAN_OF_BODY"
+      43709
     ]
   },
   {
@@ -26551,7 +26551,7 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      "GUARDIAN_OF_CHAOS"
+      43706
     ]
   },
   {
@@ -26569,7 +26569,7 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      "GUARDIAN_OF_DEATH"
+      43707
     ]
   },
   {
@@ -26587,7 +26587,7 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      "GUARDIAN_OF_LAW"
+      43712
     ]
   },
   {
@@ -26605,7 +26605,7 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      "GUARDIAN_OF_BLOOD"
+      43708
     ]
   },
   {
@@ -26623,7 +26623,7 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      "PORTAL_43729",
+      43729,
       38044
     ]
   },
@@ -26642,8 +26642,8 @@
     "duration": 1200,
     "range": 15,
     "objectIds": [
-      "ABYSSAL_RIFT_43713",
-      "ABYSSAL_RIFT_43714"
+      43713,
+      43714
     ]
   },
   {
@@ -26661,7 +26661,7 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      "BARRIER_43700"
+      43700
     ]
   },
   {
@@ -26679,7 +26679,7 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      "BARRIER_43849"
+      43849
     ]
   },
   {
@@ -26697,8 +26697,8 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      "WEAK_BARRIER",
-      "WEAK_BARRIER_43745"
+      43744,
+      43745
     ]
   },
   {
@@ -26716,8 +26716,8 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      "MEDIUM_BARRIER",
-      "MEDIUM_BARRIER_43747"
+      43746,
+      43747
     ]
   },
   {
@@ -26735,8 +26735,8 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      "STRONG_BARRIER",
-      "STRONG_BARRIER_43749"
+      43748,
+      43749
     ]
   },
   {
@@ -26754,8 +26754,8 @@
     "duration": 0,
     "range": 5,
     "objectIds": [
-      "OVERCHARGED_BARRIER",
-      "OVERCHARGED_BARRIER_43751"
+      43750,
+      43751
     ]
   },
   {
@@ -26773,7 +26773,7 @@
     "duration": 0,
     "range": 5,
     "objectIds": [
-      "WEAK_CELL_TILE"
+      43740
     ]
   },
   {
@@ -26791,7 +26791,7 @@
     "duration": 0,
     "range": 5,
     "objectIds": [
-      "MEDIUM_CELL_TILE"
+      43741
     ]
   },
   {
@@ -26809,7 +26809,7 @@
     "duration": 0,
     "range": 5,
     "objectIds": [
-      "STRONG_CELL_TILE"
+      43742
     ]
   },
   {
@@ -26827,7 +26827,7 @@
     "duration": 0,
     "range": 5,
     "objectIds": [
-      "OVERPOWERED_CELL_TILE"
+      43743
     ]
   },
   {
@@ -28339,7 +28339,7 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      "SULPHUR_VENT_34335"
+      34335
     ]
   },
   {
@@ -28393,8 +28393,8 @@
     "duration": 0,
     "range": 15,
     "objectIds": [
-      "BURNING_BRAZIER_29314",
-      "BURNING_BRAZIER_31926"
+      29314,
+      31926
     ]
   },
   {
@@ -28412,7 +28412,7 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      "DOORS_OF_DINH"
+      29322
     ]
   },
   {
@@ -28844,7 +28844,7 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      "LOVAKITE_FURNACE"
+      28562
     ]
   },
   {
@@ -28862,7 +28862,7 @@
     "duration": 200,
     "range": 15,
     "objectIds": [
-      "SHRINE"
+      29088
     ]
   },
   {
@@ -28898,7 +28898,7 @@
     "duration": 2000,
     "range": 10,
     "objectIds": [
-      "CRYSTAL_31969"
+      31969
     ]
   },
   {
@@ -28916,7 +28916,7 @@
     "duration": 2000,
     "range": 10,
     "objectIds": [
-      "CRYSTAL_31970"
+      31970
     ]
   },
   {
@@ -28934,7 +28934,7 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      "GLOWING_CARVING_32524"
+      32524
     ]
   },
   {
@@ -28952,8 +28952,8 @@
     "duration": 500,
     "range": 10,
     "objectIds": [
-      "FIRE_44023",
-      "FIRE_44024"
+      44023,
+      44024
     ]
   },
   {
@@ -28971,7 +28971,7 @@
     "duration": 1000,
     "range": 10,
     "objectIds": [
-      "FIRE_44022"
+      44022
     ]
   },
   {
@@ -28989,7 +28989,7 @@
     "duration": 800,
     "range": 7,
     "objectIds": [
-      "SACRIFICIAL_PYRE"
+      4767
     ]
   },
   {
@@ -29007,7 +29007,7 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      "ROPE_28687"
+      28687
     ]
   },
   {
@@ -29061,7 +29061,7 @@
     "duration": 7000,
     "range": 50,
     "objectIds": [
-      "BLUE_CHEMICAL"
+      34562
     ]
   },
   {
@@ -29079,7 +29079,7 @@
     "duration": 7000,
     "range": 50,
     "objectIds": [
-      "GREEN_CHEMICAL"
+      34563
     ]
   },
   {
@@ -29097,7 +29097,7 @@
     "duration": 7000,
     "range": 50,
     "objectIds": [
-      "RED_CHEMICAL"
+      34564
     ]
   },
   {
@@ -30718,6 +30718,258 @@
     "range": 10,
     "objectIds": [
       29629
+    ]
+  },
+  {
+    "description": "Poison Waste Dungeon entrance light",
+    "worldX": 1472,
+    "worldY": 4236,
+    "plane": 0,
+    "height": 200,
+    "radius": 1000,
+    "strength": 60,
+    "color": [ 255, 255, 255 ]
+  },
+  {
+    "description": "Poison Waste Dungeon entrance light",
+    "worldX": 1472,
+    "worldY": 4239,
+    "plane": 0,
+    "height": 180,
+    "radius": 1000,
+    "strength": 60,
+    "color": [ 255, 255, 255 ]
+  },
+  {
+    "description": "The Scar red flames",
+    "height": 30,
+    "alignment": "CENTER",
+    "radius": 500,
+    "strength": 8,
+    "color": [
+      175,
+      18,
+      9
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 15,
+    "objectIds": [
+      49335
+    ]
+  },
+  {
+    "description": "The Scar exit portal",
+    "objectIds": [ 49204 ],
+    "alignment": "CENTER",
+    "radius": 2500,
+    "height": 256,
+    "strength": 5,
+    "color": [
+      209,
+      0,
+      227
+    ],
+    "type": "PULSE",
+    "duration": 1200,
+    "range": 12
+  },
+  {
+    "description": "The Scar camp fire",
+    "height": 50,
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 15,
+    "color": [
+      237,
+      94,
+      59
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 15,
+    "objectIds": [
+      49342
+    ]
+  },
+  {
+    "description": "Leviathan mage projectile",
+    "radius": 700,
+    "strength": 7,
+    "color": [
+      12,
+      165,
+      215
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 3,
+    "fadeInDuration": 0,
+    "projectileIds": [
+      2489
+    ]
+  },
+  {
+    "description": "Leviathan range projectile",
+    "radius": 700,
+    "strength": 7,
+    "color": [
+      143,
+      222,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 3,
+    "fadeInDuration": 0,
+    "projectileIds": [
+      2487
+    ]
+  },
+  {
+    "description": "Leviathan melee projectile",
+    "radius": 700,
+    "strength": 7,
+    "color": [
+      201,
+      79,
+      46
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 3,
+    "fadeInDuration": 0,
+    "projectileIds": [
+      2488
+    ]
+  },
+  {
+    "description": "Lassar Undercity throne light",
+    "radius": 1500,
+    "strength": 35,
+    "height": 1000,
+    "color": [
+      255, 255, 255
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      48004
+    ]
+  },
+  {
+    "description": "Lassar Undercity brazier",
+    "radius": 400,
+    "strength": 50,
+    "height": 40,
+    "color": [
+      4,
+      168,
+      118
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 3,
+    "fadeInDuration": 0,
+    "objectIds": [
+      48252
+    ]
+  },
+  {
+    "description": "Lassar Undercity lamp",
+    "radius": 1800,
+    "strength": 20,
+    "height": 480,
+    "color": [
+      177, 125, 255
+    ],
+    "type": "STATIC",
+    "duration": 600,
+    "range": 2,
+    "fadeInDuration": 0,
+    "objectIds": [
+      48189
+    ]
+  },
+  {
+    "description": "Lassar Undercity shadow realm lamp",
+    "radius": 1800,
+    "strength": 20,
+    "height": 480,
+    "color": [
+      4, 181, 111
+    ],
+    "type": "STATIC",
+    "duration": 600,
+    "range": 2,
+    "fadeInDuration": 0,
+    "visibleFromOtherPlanes": true,
+    "objectIds": [
+      47945
+    ]
+  },
+  {
+    "description": "Lassar Undercity teleporter",
+    "radius": 350,
+    "strength": 125,
+    "height": 128,
+    "color": [
+      112, 69, 126
+    ],
+    "type": "PULSE",
+    "duration": 600,
+    "range": 3,
+    "fadeInDuration": 0,
+    "objectIds": [
+      49480
+    ]
+  },
+  {
+    "description": "Lassar Undercity anima portal",
+    "radius": 600,
+    "strength": 35,
+    "height": 180,
+    "color": [
+      5, 200, 170
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 5,
+    "objectIds": [
+      48218,
+      48219
+    ]
+  },
+  {
+    "description": "Lassar Undercity lost soul",
+    "radius": 600,
+    "strength": 15,
+    "height": 140,
+    "color": [
+      49, 213, 217
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 5,
+    "npcIds": [
+      12234
+    ],
+    "projectileIds": [
+      1907
+    ]
+  },
+  {
+    "description": "Lassar Undercity lost soul projectile",
+    "radius": 300,
+    "strength": 35,
+    "height": 140,
+    "color": [
+      49, 213, 217
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 5,
+    "projectileIds": [
+      1907
     ]
   }
 ]

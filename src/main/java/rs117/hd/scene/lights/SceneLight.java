@@ -46,6 +46,7 @@ public class SceneLight extends Light
 			l.duration,
 			l.range,
 			l.fadeInDuration,
+			l.visibleFromOtherPlanes,
 			l.npcIds,
 			l.objectIds,
 			l.projectileIds,

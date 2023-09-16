@@ -32,6 +32,7 @@ import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.PopupUtils;
 
+import static rs117.hd.HdPlugin.MAX_FACE_COUNT;
 import static rs117.hd.utils.HDUtils.dotLightDirectionModel;
 
 /**
@@ -88,20 +89,21 @@ public class ModelPusher {
 				log.error("Error while initializing model cache. Stopping the plugin...", err);
 
 				if (err instanceof OutOfMemoryError) {
-					String arch = System.getProperty("sun.arch.data.model", "Unknown");
 					PopupUtils.displayPopupMessage(client, "117HD Error",
 						"117HD ran out of memory while trying to allocate the model cache.<br><br>" +
-						(arch.equals("32") ?
-							(
-								"You are currently using the 32-bit RuneLite launcher, which heavily restricts<br>" +
-								"the amount of memory RuneLite is allowed to use.<br>" +
-								"Please install the 64-bit launcher from " +
-								"<a href=\"" + HdPlugin.RUNELITE_URL + "\">RuneLite's website</a> and try again.<br>"
-							) : (
-								(size <= 512 ? "" :
-									"Your cache size of " + size + " MiB is " + (
-										size >= 4096 ?
-											"very large. We would recommend reducing it.<br>" :
+						(
+							HDUtils.is32Bit() ?
+								(
+									"You are currently using the 32-bit RuneLite launcher, which heavily restricts<br>" +
+									"the amount of memory RuneLite is allowed to use.<br>" +
+									"Please install the 64-bit launcher from " +
+									"<a href=\"" + HdPlugin.RUNELITE_URL + "\">RuneLite's website</a> and try again.<br>"
+								) : (
+								(
+									size <= 512 ? "" :
+										"Your cache size of " + size + " MiB is " + (
+											size >= 4096 ?
+												"very large. We would recommend reducing it.<br>" :
 											"bigger than the default size. Try reducing it.<br>"
 									)
 								) +
@@ -167,7 +169,7 @@ public class ModelPusher {
 			shouldCache = false;
 		}
 
-		final int faceCount = Math.min(model.getFaceCount(), HdPlugin.MAX_TRIANGLE);
+		final int faceCount = Math.min(model.getFaceCount(), MAX_FACE_COUNT);
 		final int bufferSize = faceCount * DATUM_PER_FACE;
 		int vertexLength = 0;
 		int uvLength = 0;
@@ -313,7 +315,9 @@ public class ModelPusher {
 
 				UvType uvType = modelOverride.uvType;
 				boolean isFaceVanillaTextured = isVanillaUVMapped && textureId != -1 && textureFaces[face] != -1;
-				if (uvType == UvType.VANILLA && !isFaceVanillaTextured)
+				if (isFaceVanillaTextured && modelOverride.retainVanillaUvs)
+					uvType = UvType.VANILLA;
+				else if (uvType == UvType.VANILLA && !isFaceVanillaTextured)
 					uvType = UvType.GEOMETRY;
 				int materialData = packMaterialData(material, modelOverride, uvType, false);
 

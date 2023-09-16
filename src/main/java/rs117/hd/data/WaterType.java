@@ -62,6 +62,18 @@ public enum WaterType
 		.causticsStrength(0)
 		.duration(1.6f)),
 	POISON_WASTE_FLAT(POISON_WASTE, true),
+	BLACK_TAR_FLAT(b -> b
+		.specularStrength(.05f)
+		.specularGloss(300)
+		.normalStrength(.05f)
+		.baseOpacity(.9f)
+		.fresnelAmount(.02f)
+		.surfaceColor(rgb(38, 40, 43))
+		.foamColor(rgb(0, 0, 0))
+		.depthColor(rgb(38, 40, 43))
+		.causticsStrength(0)
+		.duration(1.6f)
+		.flat(true)),
 	BLOOD(b -> b
 		.specularStrength(.5f)
 		.specularGloss(500)
@@ -95,8 +107,30 @@ public enum WaterType
 		.foamColor(linearToSrgb(rgb(106, 108, 24)))
 		.depthColor(linearToSrgb(rgb(65, 23, 0)))
 		.causticsStrength(0)
-		.duration(2.7f)
-	),
+		.duration(2.7f)),
+	SCAR_SLUDGE(b -> b
+		.specularStrength(0)
+		.specularGloss(100)
+		.normalStrength(.05f)
+		.baseOpacity(.85f)
+		.fresnelAmount(.3f)
+		.surfaceColor(linearToSrgb(rgb(0x26, 0x26, 0x23)))
+		.foamColor(linearToSrgb(rgb(0x69, 0x77, 0x5e)))
+		.depthColor(linearToSrgb(rgb(0x69, 0x77, 0x5e)))
+		.causticsStrength(0)
+		.duration(1.2f)),
+	LASSAR_UNDERCITY_WATER(b -> b
+		.specularStrength(.5f)
+		.specularGloss(75)
+		.normalStrength(.01f)
+		.baseOpacity(0)
+		.fresnelAmount(1)
+		.surfaceColor(linearToSrgb(rgb(39, 38, 62)))
+		.foamColor(linearToSrgb(rgb(37, 37, 56)))
+		.depthColor(linearToSrgb(rgb(22, 21, 35)))
+		.causticsStrength(0)
+		.duration(1)
+		.flat(true)),
 	;
 
 	public final boolean flat;

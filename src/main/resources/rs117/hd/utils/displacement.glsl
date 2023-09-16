@@ -53,6 +53,9 @@ void sampleDisplacementMap(
 
     vec2 deltaXyPerZ = tsViewDir.xy / tsViewDir.z * scale;
 
+    // Shift UVs so the displacement goes into the surface instead of coming out of it
+    uv += deltaXyPerZ;
+
     float height = 0;
     float prevHeight = 0;
     float layer = 1;

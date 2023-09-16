@@ -10174,5 +10174,71 @@
     "objectIds": [ 754, 10459 ],
     "textureMaterial": "WATER_DROPLETS",
     "baseMaterial": "WATER_FLAT"
+  },
+  {
+    "description": "Poison Waste dungeon flowing tar (TODO)",
+    "objectIds": [
+      49789,
+      49790,
+      49791,
+      49792,
+      49793,
+      49794,
+      49795,
+      49797,
+      49798,
+      49799,
+      49800,
+      49801,
+      49802,
+      49803
+    ]
+  },
+  {
+    "description": "Disable shadows for shoreline sludge in The Scar",
+    "objectIds": [
+      49373,
+      49376,
+      49377,
+      49378,
+      49380,
+      49381,
+      49382,
+      49383,
+      49384,
+      49385,
+      49209
+    ],
+    "castShadows": false,
+    "baseMaterial": "TRANSPARENT",
+    "uvType": "WORLD_XZ"
+  },
+  {
+    "description": "The Scar stepping stones",
+    "objectIds": [
+      49209
+    ],
+    "castShadows": false,
+    "baseMaterial": "STONE",
+    "uvType": "WORLD_XZ"
+  },
+  {
+    "description": "Lassar Undercity floor tile texture",
+    "objectIds": [
+      48088,
+      48089,
+      48090,
+      48091,
+      48092,
+      48093
+    ]
+  },
+  {
+    "description": "Lassar Undercity fake tiles",
+    "objectIds": [ 46950 ],
+    "baseMaterial": "LASSAR_UNDERCITY_TILES",
+    "hideInAreas": [
+      "LASSAR_UNDERCITY"
+    ]
   }
 ]

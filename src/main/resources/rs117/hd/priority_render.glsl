@@ -25,6 +25,8 @@
 
 #include utils/constants.glsl
 
+layout(binding = 3) uniform isampler3D tileHeightMap;
+
 // Calculate adjusted priority for a face with a given priority, distance, and
 // model global min10 and face distance averages. This allows positioning faces
 // with priorities 10/11 into the correct 'slots' resulting in 18 possible
@@ -106,7 +108,7 @@ void get_face(
     thisC = vb[offset + ssboOffset * 3 + 2];
 
     if (localId < size) {
-        int radius = (flags & 0x7fffffff) >> 12;
+        int radius = (flags >> 12) & 0xfff;
         int orientation = flags & 0x7ff;
 
         // rotate for model orientation
@@ -189,15 +191,36 @@ int map_face_priority(uint localId, ModelInfo minfo, int thisPriority, int thisD
     return 0;
 }
 
-void insert_dfs(uint localId, ModelInfo minfo, int adjPrio, int distance, int prioIdx) {
+void insert_face(uint localId, ModelInfo minfo, int adjPrio, int distance, int prioIdx) {
     int size = minfo.size;
 
     if (localId < size) {
-        // calculate base offset into dfs based on number of faces with a lower priority
+        // calculate base offset into renderPris based on number of faces with a lower priority
         int baseOff = count_prio_offset(adjPrio);
-        // store into face array offset array by unique index
-        dfs[baseOff + prioIdx] = (int(localId) << 16) | distance;
+        // the furthest faces draw first, and have the highest value
+        // if two faces have the same distance, the one with the
+        // lower id draws first
+        renderPris[baseOff + prioIdx] = uint(distance << 16) | (~localId & 0xffffu);
     }
+}
+
+int tile_height(int z, int x, int y) {
+    #define ESCENE_OFFSET 40 // (184-104)/2
+    return texelFetch(tileHeightMap, ivec3(x + ESCENE_OFFSET, y + ESCENE_OFFSET, z), 0).r << 3;
+}
+
+ivec4 hillskew_vertex(ivec4 v, int hillskew, int y, int plane) {
+    if (hillskew == 0)
+        return v;
+
+    int px = v.x & 127;
+    int pz = v.z & 127;
+    int sx = v.x >> 7;
+    int sz = v.z >> 7;
+    int h1 = (px * tile_height(plane, sx + 1, sz) + (128 - px) * tile_height(plane, sx, sz)) >> 7;
+    int h2 = (px * tile_height(plane, sx + 1, sz + 1) + (128 - px) * tile_height(plane, sx, sz + 1)) >> 7;
+    int h3 = (pz * h2 + (128 - pz) * h1) >> 7;
+    return ivec4(v.x, v.y + h3 - y, v.z, v.w);
 }
 
 void sort_and_insert(uint localId, ModelInfo minfo, int thisPriority, int thisDistance, ivec4 thisrvA, ivec4 thisrvB, ivec4 thisrvC) {
@@ -212,34 +235,36 @@ void sort_and_insert(uint localId, ModelInfo minfo, int thisPriority, int thisDi
         ivec4 pos = ivec4(minfo.x, minfo.y, minfo.z, 0);
         int orientation = flags & 0x7ff;
 
+        // we only have to order faces against others of the same priority
         const int priorityOffset = count_prio_offset(thisPriority);
         const int numOfPriority = totalMappedNum[thisPriority];
-        int start = priorityOffset; // index of first face with this priority
-        int end = priorityOffset + numOfPriority; // index of last face with this priority
+        const int start = priorityOffset; // index of first face with this priority
+        const int end = priorityOffset + numOfPriority; // index of last face with this priority
+        const uint renderPriority = uint(thisDistance << 16) | (~localId & 0xffffu);
         int myOffset = priorityOffset;
 
         uint ssboOffset = localId;
 
-        // we only have to order faces against others of the same priority
         // calculate position this face will be in
-        for (int i = start; i < end; ++i) {
-            int d1 = dfs[i];
-            int theirId = d1 >> 16;
-            int theirDistance = d1 & 0xffff;
-
-            // the closest faces draw last, so have the highest index
-            // if two faces have the same distance, the one with the
-            // higher id draws last
-            if ((theirDistance > thisDistance)
-            || (theirDistance == thisDistance && theirId < localId)) {
+        for (int i = start; i < end; ++i)
+            if (renderPriority < renderPris[i])
                 ++myOffset;
-            }
-        }
+
+        thisrvA += pos;
+        thisrvB += pos;
+        thisrvC += pos;
+
+        // apply hillskew
+        int plane = (flags >> 24) & 3;
+        int hillskew = (flags >> 26) & 1;
+        thisrvA = hillskew_vertex(thisrvA, hillskew, pos.y, plane);
+        thisrvB = hillskew_vertex(thisrvB, hillskew, pos.y, plane);
+        thisrvC = hillskew_vertex(thisrvC, hillskew, pos.y, plane);
 
         // position vertices in scene and write to out buffer
-        vout[outOffset + myOffset * 3]     = pos + thisrvA;
-        vout[outOffset + myOffset * 3 + 1] = pos + thisrvB;
-        vout[outOffset + myOffset * 3 + 2] = pos + thisrvC;
+        vout[outOffset + myOffset * 3]     = thisrvA;
+        vout[outOffset + myOffset * 3 + 1] = thisrvB;
+        vout[outOffset + myOffset * 3 + 2] = thisrvC;
 
         vec4 uvA = vec4(0);
         vec4 uvB = vec4(0);
