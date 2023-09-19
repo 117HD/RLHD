@@ -64,19 +64,33 @@ public class SceneContext {
 	public final float[] modelFaceNormals = new float[12];
 	public final int[] modelPusherResults = new int[2];
 
-	public SceneContext(Scene scene, int expandedMapLoadingChunks, @Nullable SceneContext previousSceneContext) {
+	public SceneContext(Scene scene, int expandedMapLoadingChunks, boolean reuseBuffers, @Nullable SceneContext previous) {
 		this.scene = scene;
 		this.regionIds = HDUtils.getSceneRegionIds(scene);
 		this.expandedMapLoadingChunks = expandedMapLoadingChunks;
 
-		if (previousSceneContext == null) {
+		if (previous == null) {
 			stagingBufferVertices = new GpuIntBuffer();
 			stagingBufferUvs = new GpuFloatBuffer();
 			stagingBufferNormals = new GpuFloatBuffer();
+		} else if (reuseBuffers) {
+			// Avoid reallocating buffers whenever possible
+			staticUnorderedModelBuffer = previous.staticUnorderedModelBuffer;
+			stagingBufferVertices = previous.stagingBufferVertices;
+			stagingBufferUvs = previous.stagingBufferUvs;
+			stagingBufferNormals = previous.stagingBufferNormals;
+			staticUnorderedModelBuffer.clear();
+			stagingBufferVertices.clear();
+			stagingBufferUvs.clear();
+			stagingBufferNormals.clear();
+			previous.staticUnorderedModelBuffer = null;
+			previous.stagingBufferVertices = null;
+			previous.stagingBufferUvs = null;
+			previous.stagingBufferNormals = null;
 		} else {
-			stagingBufferVertices = new GpuIntBuffer(previousSceneContext.stagingBufferVertices.getBuffer().capacity());
-			stagingBufferUvs = new GpuFloatBuffer(previousSceneContext.stagingBufferUvs.getBuffer().capacity());
-			stagingBufferNormals = new GpuFloatBuffer(previousSceneContext.stagingBufferNormals.getBuffer().capacity());
+			stagingBufferVertices = new GpuIntBuffer(previous.stagingBufferVertices.getBuffer().capacity());
+			stagingBufferUvs = new GpuFloatBuffer(previous.stagingBufferUvs.getBuffer().capacity());
+			stagingBufferNormals = new GpuFloatBuffer(previous.stagingBufferNormals.getBuffer().capacity());
 		}
 	}
 
