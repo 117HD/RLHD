@@ -25,7 +25,6 @@
  */
 package rs117.hd.scene;
 
-import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import com.google.gson.Gson;
@@ -89,16 +88,11 @@ public class LightManager {
 	@Inject
 	private EntityHiderPlugin entityHiderPlugin;
 
-	@VisibleForTesting
-	final ArrayList<SceneLight> WORLD_LIGHTS = new ArrayList<>();
-	@VisibleForTesting
-	final ListMultimap<Integer, Light> NPC_LIGHTS = ArrayListMultimap.create();
-	@VisibleForTesting
-	final ListMultimap<Integer, Light> OBJECT_LIGHTS = ArrayListMultimap.create();
-	@VisibleForTesting
-	final ListMultimap<Integer, Light> PROJECTILE_LIGHTS = ArrayListMultimap.create();
-	@VisibleForTesting
-	final ListMultimap<Integer, Light> GRAPHICS_OBJECT_LIGHTS = ArrayListMultimap.create();
+	public final ArrayList<SceneLight> WORLD_LIGHTS = new ArrayList<>();
+	public final ListMultimap<Integer, Light> NPC_LIGHTS = ArrayListMultimap.create();
+	public final ListMultimap<Integer, Light> OBJECT_LIGHTS = ArrayListMultimap.create();
+	public final ListMultimap<Integer, Light> PROJECTILE_LIGHTS = ArrayListMultimap.create();
+	public final ListMultimap<Integer, Light> GRAPHICS_OBJECT_LIGHTS = ArrayListMultimap.create();
 
 	long lastFrameTime = -1;
 	boolean configChanged = false;
@@ -107,8 +101,7 @@ public class LightManager {
 
 	static final float TWO_PI = (float) (2 * Math.PI);
 
-	@VisibleForTesting
-	void loadConfig(Gson gson, ResourcePath path) {
+	public void loadConfig(Gson gson, ResourcePath path) {
 		try {
 			Light[] lights;
 			try {
