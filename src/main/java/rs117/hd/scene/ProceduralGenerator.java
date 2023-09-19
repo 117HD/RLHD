@@ -777,19 +777,28 @@ public class ProceduralGenerator
 			}
 
 			float[] vertexNormals = HDUtils.calculateSurfaceNormals(
-				// Vertex Xs
-				new int[]{faceVertices[face][0][0], faceVertices[face][1][0], faceVertices[face][2][0]},
-				// Vertex Ys
-				new int[]{faceVertices[face][0][1], faceVertices[face][1][1], faceVertices[face][2][1]},
-				// Vertex Zs
-				new int[]{vertexHeights[0], vertexHeights[1], vertexHeights[2]}
+				new float[] {
+					faceVertices[face][0][0],
+					faceVertices[face][0][1],
+					vertexHeights[0]
+				},
+				new float[] {
+					faceVertices[face][1][0],
+					faceVertices[face][1][1],
+					vertexHeights[1]
+				},
+				new float[] {
+					faceVertices[face][2][0],
+					faceVertices[face][2][1],
+					vertexHeights[2]
+				}
 			);
 
 			for (int vertex = 0; vertex < VERTICES_PER_FACE; vertex++)
 			{
 				int vertexKey = faceVertexKeys[face][vertex];
 				// accumulate normals to hashmap
-				sceneContext.vertexTerrainNormals.merge(vertexKey, vertexNormals, (a, b) -> HDUtils.vectorAdd(b, a));
+				sceneContext.vertexTerrainNormals.merge(vertexKey, vertexNormals, (a, b) -> HDUtils.add(a, a, b));
 			}
 		}
 	}

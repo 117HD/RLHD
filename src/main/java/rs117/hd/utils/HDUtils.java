@@ -50,52 +50,51 @@ public class HDUtils {
 	// The epsilon for floating point values used by jogl
 	public static final float EPSILON = 1.1920929E-7f;
 
-	public static float[] vectorAdd(float[] vec1, float[] vec2) {
-		float[] out = new float[vec1.length];
-		for (int i = 0; i < vec1.length; i++)
-			out[i] = vec1[i] + vec2[i];
+	/**
+	 * Computes a + b, storing it in the out array
+	 */
+	public static float[] add(float[] out, float[] a, float[] b) {
+		for (int i = 0; i < out.length; i++)
+			out[i] = a[i] + b[i];
 		return out;
 	}
 
-	public static float[] vectorAdd(float[] vec1, int[] vec2) {
-		float[] out = new float[vec1.length];
-		for (int i = 0; i < vec1.length; i++)
-			out[i] = vec1[i] + vec2[i];
+	/**
+	 * Computes a - b, storing it in the out array
+	 */
+	public static float[] subtract(float[] out, float[] a, float[] b) {
+		for (int i = 0; i < out.length; i++)
+			out[i] = a[i] - b[i];
 		return out;
 	}
 
-	public static int[] vectorAdd(int[] vec1, int[] vec2) {
-		int[] out = new int[vec1.length];
-		for (int i = 0; i < vec1.length; i++)
-			out[i] = vec1[i] + vec2[i];
+	public static float[] cross(float[] out, float[] a, float[] b) {
+		out[0] = a[1] * b[2] - a[2] * b[1];
+		out[1] = a[2] * b[0] - a[0] * b[2];
+		out[2] = a[0] * b[1] - a[1] * b[0];
 		return out;
 	}
 
-	public static double[] vectorAdd(double[] vec1, double[] vec2) {
-		double[] out = new double[vec1.length];
-		for (int i = 0; i < vec1.length; i++)
-			out[i] = vec1[i] + vec2[i];
+	public static float[] abs(float[] out, float[] v) {
+		for (int i = 0; i < out.length; i++)
+			out[i] = Math.abs(v[i]);
 		return out;
 	}
 
-	public static Double[] vectorAdd(Double[] vec1, Double[] vec2) {
-		Double[] out = new Double[vec1.length];
-		for (int i = 0; i < vec1.length; i++)
-			out[i] = vec1[i] + vec2[i];
-		return out;
+	public static float min(float... v) {
+		float min = v[0];
+		for (int i = 1; i < v.length; i++)
+			if (v[i] < min)
+				min = v[i];
+		return min;
 	}
 
-	public static float[] vectorMultiply(float[] vec1, float factor) {
-		float[] out = new float[vec1.length];
-		for (int i = 0; i < vec1.length; i++)
-			out[i] *= factor;
-		return out;
-	}
-
-	public static float[] vectorDivide(float[] vec1, float divide) {
-		if (divide == 0)
-			return new float[vec1.length];
-		return vectorMultiply(vec1, 1 / divide);
+	public static float max(float... v) {
+		float max = v[0];
+		for (int i = 1; i < v.length; i++)
+			if (v[i] > max)
+				max = v[i];
+		return max;
 	}
 
 	public static float lerp(float a, float b, float t) {
@@ -124,8 +123,7 @@ public class HDUtils {
 		return Math.min(max, Math.max(min, value));
 	}
 
-	public static int vertexHash(int[] vPos)
-	{
+	public static int vertexHash(int[] vPos) {
 		// simple custom hashing function for vertex position data
 		StringBuilder s = new StringBuilder();
 		for (int part : vPos)
@@ -133,29 +131,14 @@ public class HDUtils {
 		return s.toString().hashCode();
 	}
 
-	public static float[] calculateSurfaceNormals(int[] vertexX, int[] vertexY, int[] vertexZ)
-	{
-		// calculate normals
-		float[] a = new float[3];
-		a[0] = vertexX[0] - vertexX[1];
-		a[1] = vertexY[0] - vertexY[1];
-		a[2] = vertexZ[0] - vertexZ[1];
-
-		float[] b = new float[3];
-		b[0] = vertexX[0] - vertexX[2];
-		b[1] = vertexY[0] - vertexY[2];
-		b[2] = vertexZ[0] - vertexZ[2];
-
-		// cross
+	public static float[] calculateSurfaceNormals(float[] a, float[] b, float[] c) {
+		subtract(b, a, b);
+		subtract(c, a, c);
 		float[] n = new float[3];
-		n[0] = a[1] * b[2] - a[2] * b[1];
-		n[1] = a[2] * b[0] - a[0] * b[2];
-		n[2] = a[0] * b[1] - a[1] * b[0];
-		return n;
+		return cross(n, b, c);
 	}
 
-	public static int[] colorIntToHSL(int colorInt)
-	{
+	public static int[] colorIntToHSL(int colorInt) {
 		int[] outHSL = new int[3];
 		outHSL[0] = colorInt >> 10 & 0x3F;
 		outHSL[1] = colorInt >> 7 & 0x7;
