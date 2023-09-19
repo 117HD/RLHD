@@ -78,7 +78,7 @@ public class ModelPusher {
 				"Too many materials (" + Material.values().length + ") to fit into packed material data.");
 		}
 
-		if (config.modelCaching()) {
+		if (config.modelCaching() && !plugin.useLowMemoryMode) {
 			final int size = config.modelCacheSizeMiB();
 			try {
 				modelCache = new ModelCache(size, () -> {
@@ -89,12 +89,12 @@ public class ModelPusher {
 				log.error("Error while initializing model cache. Stopping the plugin...", err);
 
 				if (err instanceof OutOfMemoryError) {
-					PopupUtils.displayPopupMessage(client, "117HD Error",
-						"117HD ran out of memory while trying to allocate the model cache.<br><br>" +
+					PopupUtils.displayPopupMessage(client, "117 HD Error",
+						"117 HD ran out of memory while trying to allocate the model cache.<br><br>" +
 						(
 							HDUtils.is32Bit() ?
 								(
-									"You are currently using the 32-bit RuneLite launcher, which heavily restricts<br>" +
+									"You are currently using 32-bit RuneLite, which heavily restricts<br>" +
 									"the amount of memory RuneLite is allowed to use.<br>" +
 									"Please install the 64-bit launcher from " +
 									"<a href=\"" + HdPlugin.RUNELITE_URL + "\">RuneLite's website</a> and try again.<br>"
@@ -102,27 +102,32 @@ public class ModelPusher {
 								(
 									size <= 512 ? "" :
 										"Your cache size of " + size + " MiB is " + (
-											size >= 4096 ?
+											size >= 4000 ?
 												"very large. We would recommend reducing it.<br>" :
-											"bigger than the default size. Try reducing it.<br>"
-									)
+												"bigger than the default size. Try reducing it.<br>"
+										)
 								) +
 								"Normally, a cache size above 512 MiB is unnecessary, and the game should<br>" +
-								"run acceptably even at 256 MiB. If you have to reduce the size by a lot,<br>" +
+								"run acceptably even at 128 MiB. If you have to reduce the size by a lot,<br>" +
 								"you may be better off disabling model caching entirely.<br>"
 							)
-						) +
-						"<br>" +
-						"You can also try closing some other programs on your PC to free up memory.<br>" +
-						"<br>" +
-						"If you need further assistance, please join our " +
-						"<a href=\"" + HdPlugin.DISCORD_URL + "\">Discord</a> server, and<br>" +
-						"drag and drop your client log file into one of our support channels.",
-						new String[]{ "Open log folder", "Ok, let me try that..." },
+						)
+						+ "<br>"
+						+ "You can also try closing some other programs on your PC to free up memory.<br>"
+						+ "<br>"
+						+ "If you need further assistance, please join our "
+						+ "<a href=\"" + HdPlugin.DISCORD_URL + "\">Discord</a> server, and click the <br>"
+						+ "\"Open logs folder\" button below, find the file named \"client\" or \"client.log\",<br>"
+						+ "then drag and drop that file into one of our support channels.",
+						new String[] { "Open logs folder", "Ok, let me try that..." },
 						i -> {
-							if (i == 0)
+							if (i == 0) {
 								LinkBrowser.open(RuneLite.LOGS_DIR.toString());
-						});
+								return false;
+							}
+							return true;
+						}
+					);
 				}
 
 				// Allow the model pusher to be used until the plugin has cleanly shut down

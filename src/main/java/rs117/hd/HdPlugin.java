@@ -116,6 +116,7 @@ import static net.runelite.api.Perspective.*;
 import static org.lwjgl.opencl.CL10.*;
 import static org.lwjgl.opengl.GL43C.*;
 import static rs117.hd.HdPluginConfig.*;
+import static rs117.hd.scene.SceneUploader.SCENE_OFFSET;
 import static rs117.hd.utils.ResourcePath.path;
 
 @PluginDescriptor(
@@ -130,6 +131,9 @@ import static rs117.hd.utils.ResourcePath.path;
 public class HdPlugin extends Plugin implements DrawCallbacks {
 	public static final String DISCORD_URL = "https://discord.gg/U4p6ChjgSE";
 	public static final String RUNELITE_URL = "https://runelite.net";
+	public static final String AMD_DRIVER_URL = "https://www.amd.com/en/support";
+	public static final String INTEL_DRIVER_URL = "https://www.intel.com/content/www/us/en/support/detect.html";
+	public static final String NVIDIA_DRIVER_URL = "https://www.nvidia.com/en-us/geforce/drivers/";
 
 	public static final int TEXTURE_UNIT_UI = GL_TEXTURE0; // default state
 	public static final int TEXTURE_UNIT_GAME = GL_TEXTURE1;
@@ -143,6 +147,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public static final int VERTEX_SIZE = 4; // 4 ints per vertex
 	public static final int UV_SIZE = 4; // 4 floats per vertex
 	public static final int NORMAL_SIZE = 4; // 4 floats per vertex
+
+	public static float BUFFER_GROWTH_MULTIPLIER = 2; // can be less than 2 if trying to conserve memory
 
 	private static final int[] eightIntWrite = new int[8];
 
@@ -202,7 +208,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private HdPluginConfig config;
 
 	@Inject
-	private LowMemoryConfig lowMemoryConfig;
+	private LowMemoryConfig lowDetailPluginConfig;
 
 	@Inject
 	private Gson rlGson;
@@ -405,6 +411,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private boolean hasLoggedIn;
 	private boolean shouldSkipModelUpdates;
 
+	public boolean useLowMemoryMode;
 	public boolean isInGauntlet;
 	public boolean isInChambersOfXeric;
 
@@ -456,6 +463,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				Configuration.SHARED_LIBRARY_EXTRACT_DIRECTORY.set("lwjgl-rl");
 
 				glCaps = GL.createCapabilities();
+				useLowMemoryMode = config.lowMemoryMode();
+				BUFFER_GROWTH_MULTIPLIER = useLowMemoryMode ? 1.333f : 2;
 
 				String glRenderer = glGetString(GL_RENDERER);
 				String arch = System.getProperty("sun.arch.data.model", "Unknown");
@@ -464,37 +473,18 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				log.info("Using device: {}", glRenderer);
 				log.info("Using driver: {}", glGetString(GL_VERSION));
 				log.info("Client is {}-bit", arch);
+				log.info("Low memory mode: {}", useLowMemoryMode);
 
 				computeMode = OSType.getOSType() == OSType.MacOS ? ComputeMode.OPENCL : ComputeMode.OPENGL;
 
 				boolean isGenericGpu = glRenderer.equals("GDI Generic");
 				boolean isUnsupportedGpu = isGenericGpu || (computeMode == ComputeMode.OPENGL ? !glCaps.OpenGL43 : !glCaps.OpenGL31);
-				if (isUnsupportedGpu)
-				{
-					log.error("The GPU is lacking OpenGL {} support. Stopping the plugin...",
-						computeMode == ComputeMode.OPENGL ? "4.3" : "3.1");
-					PopupUtils.displayPopupMessage(client, "117HD Error",
-						(
-							isGenericGpu ?
-								"117HD was unable to access your GPU." :
-								"Your GPU is currently not supported by 117HD.<br><br>GPU name: " + glRenderer
-						) +
-						"<br><br>" +
-						"If your system actually has a supported GPU, try the following steps:<br>" +
-						(
-							!HDUtils.is32Bit() ? "" :
-								"&nbsp;• Install the 64-bit version of RuneLite from " +
-								"<a href=\"" + HdPlugin.RUNELITE_URL + "\">the official website</a>.<br>"
-						) +
-						"&nbsp;• If you're on a desktop PC, make sure your monitor is plugged into the graphics card<br>" +
-						"&nbsp;&nbsp;&nbsp;&nbsp;instead of the motherboard's display output.<br>" +
-						"&nbsp;• Reinstall the drivers for your graphics card and restart your system.<br>" +
-						"<br>" +
-						"If you're still seeing this error after following the steps above, please join our " +
-						"<a href=\"" + HdPlugin.DISCORD_URL + "\">Discord</a><br>" +
-						"server, and drag and drop your client log file into one of our support channels.",
-						new String[] { "Open log folder", "Ok, let me try that..." },
-						i -> { if (i == 0) LinkBrowser.open(RuneLite.LOGS_DIR.toString()); });
+				if (isUnsupportedGpu) {
+					log.error(
+						"The GPU is lacking OpenGL {} support. Stopping the plugin...",
+						computeMode == ComputeMode.OPENGL ? "4.3" : "3.1"
+					);
+					displayUnsupportedGpuMessage(isGenericGpu, glRenderer);
 					stopPlugin();
 					return true;
 				}
@@ -592,7 +582,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		isRunning = false;
 
 		FileWatcher.destroy();
-		developerTools.deactivate();
 
 		clientThread.invoke(() -> {
 			var scene = client.getScene();
@@ -604,11 +593,16 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			client.setUnlockedFps(false);
 			client.setExpandedMapLoading(0);
 
+			if (developerMode)
+				developerTools.deactivate();
+
 			modelPusher.shutDown();
 			lightManager.shutDown();
 			environmentManager.reset();
 
 			if (lwjglInitialized) {
+				waitUntilIdle();
+
 				textureManager.shutDown();
 
 				destroyBuffers();
@@ -2243,38 +2237,60 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		}
 	}
 
-	public void uploadScene()
-	{
+	public void uploadScene() {
 		assert client.isClientThread() : "Loading a scene is unsafe while the client can simultaneously initiate a scene load";
 		Scene scene = client.getScene();
 		loadScene(scene);
 		swapScene(scene);
 	}
 
-	public void loadScene(Scene scene)
-	{
+	@Override
+	public void loadScene(Scene scene) {
+		if (useLowMemoryMode)
+			return; // Force scene loading to happen on the client thread
+
+		loadSceneInternal(scene);
+	}
+
+	private void loadSceneInternal(Scene scene) {
 		if (nextSceneContext != null) {
 			SceneContext handle = nextSceneContext;
 			nextSceneContext = null;
 			handle.destroy();
 		}
 
-		var context = new SceneContext(scene, getExpandedMapLoadingChunks(), sceneContext);
-		// noinspection SynchronizationOnLocalVariableOrMethodParameter
-		synchronized (context) {
-			nextSceneContext = context;
-			proceduralGenerator.generateSceneData(context);
-			environmentManager.loadSceneEnvironments(context);
-			lightManager.loadSceneLights(context);
-			sceneUploader.upload(context);
+		try {
+			// Reuse buffers on synchronous scene loads
+			boolean reuseBuffers = client.isClientThread();
+			var context = new SceneContext(scene, getExpandedMapLoadingChunks(), reuseBuffers, sceneContext);
+			// noinspection SynchronizationOnLocalVariableOrMethodParameter
+			synchronized (context) {
+				nextSceneContext = context;
+				proceduralGenerator.generateSceneData(context);
+				environmentManager.loadSceneEnvironments(context);
+				lightManager.loadSceneLights(context);
+				sceneUploader.upload(context);
+			}
+		} catch (OutOfMemoryError oom) {
+			log.error("Ran out of memory while loading scene (32-bit: {}, low memory mode: {})",
+				HDUtils.is32Bit(), useLowMemoryMode, oom
+			);
+			displayOutOfMemoryMessage();
+			stopPlugin();
 		}
 	}
 
+	@Override
 	public void swapScene(Scene scene) {
 		if (nextSceneContext == null) {
-			log.error("No new scene to swap to", new Throwable());
-			stopPlugin();
-			return;
+			if (useLowMemoryMode) {
+				// Load the scene synchronously on the client thread, so we can reuse the old scene context
+				loadSceneInternal(scene);
+			} else {
+				log.error("No new scene to swap to", new Throwable());
+				stopPlugin();
+				return;
+			}
 		}
 
 		if (computeMode == ComputeMode.OPENCL) {
@@ -2431,13 +2447,16 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 						modelPusher.startUp();
 						break;
 					case KEY_MODEL_SORTING_CONFIGURATION:
-						glFinish();
+						waitUntilIdle();
 						shouldSkipModelUpdates = false;
-						if (computeMode == ComputeMode.OPENCL)
-							openCLManager.finish();
 						destroyModelSortingBins();
 						initModelSortingBins(maxComputeThreadCount);
 						recompilePrograms();
+						break;
+					case KEY_LOW_MEMORY_MODE:
+						shutDown();
+						startUp();
+						break;
 				}
 			} catch (ShaderException | IOException ex) {
 				log.error("Error while changing settings:", ex);
@@ -2472,8 +2491,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		}
 
 		int actualSwapInterval = awtContext.setSwapInterval(swapInterval);
-		if (actualSwapInterval != swapInterval)
-		{
+		if (actualSwapInterval != swapInterval) {
 			log.info("unsupported swap interval {}, got {}", swapInterval, actualSwapInterval);
 		}
 
@@ -2481,11 +2499,62 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		checkGLErrors();
 	}
 
+	@Override
+	public boolean tileInFrustum(
+		Scene scene,
+		int pitchSin,
+		int pitchCos,
+		int yawSin,
+		int yawCos,
+		int cameraX,
+		int cameraY,
+		int cameraZ,
+		int plane,
+		int msx,
+		int msy
+	) {
+		int[][][] tileHeights = scene.getTileHeights();
+		int x = ((msx - SCENE_OFFSET) << Perspective.LOCAL_COORD_BITS) + 64 - cameraX;
+		int z = ((msy - SCENE_OFFSET) << Perspective.LOCAL_COORD_BITS) + 64 - cameraZ;
+		int y = Math.max(
+			Math.max(tileHeights[plane][msx][msy], tileHeights[plane][msx][msy + 1]),
+			Math.max(tileHeights[plane][msx + 1][msy], tileHeights[plane][msx + 1][msy + 1])
+		) - cameraY;
+
+		int radius = 96; // ~ 64 * sqrt(2)
+
+		int zoom = (configShadowsEnabled && configExpandShadowDraw) ? client.get3dZoom() / 2 : client.get3dZoom();
+		int Rasterizer3D_clipMidX2 = client.getRasterizer3D_clipMidX2();
+		int Rasterizer3D_clipNegativeMidX = client.getRasterizer3D_clipNegativeMidX();
+		int Rasterizer3D_clipNegativeMidY = client.getRasterizer3D_clipNegativeMidY();
+
+		int var11 = yawCos * z - yawSin * x >> 16;
+		int var12 = pitchSin * y + pitchCos * var11 >> 16;
+		int var13 = pitchCos * radius >> 16;
+		int depth = var12 + var13;
+		if (depth > 50) {
+			int rx = z * yawSin + yawCos * x >> 16;
+			int var16 = (rx - radius) * zoom;
+			int var17 = (rx + radius) * zoom;
+			// left && right
+			if (var16 < Rasterizer3D_clipMidX2 * depth && var17 > Rasterizer3D_clipNegativeMidX * depth) {
+				int ry = pitchCos * y - var11 * pitchSin >> 16;
+				int ybottom = pitchSin * radius >> 16;
+				int var20 = (ry + ybottom) * zoom;
+				// top
+				if (var20 > Rasterizer3D_clipNegativeMidY * depth) {
+					// we don't test the bottom so we don't have to find the height of all the models on the tile
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
 	/**
 	 * Check is a model is visible and should be drawn.
 	 */
-	private boolean isOutsideViewport(Model model, int pitchSin, int pitchCos, int yawSin, int yawCos, int x, int y, int z)
-	{
+	private boolean isOutsideViewport(Model model, int pitchSin, int pitchCos, int yawSin, int yawCos, int x, int y, int z) {
 		model.calculateBoundsCylinder();
 
 		final int XYZMag = model.getXYZMag();
@@ -2711,7 +2780,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	private int getExpandedMapLoadingChunks() {
-		if (HDUtils.is32Bit())
+		if (useLowMemoryMode)
 			return 0;
 		return config.expandedMapLoadingChunks();
 	}
@@ -2732,18 +2801,24 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		int camPitchDiff = maxCamPitch - minCamPitch;
 		float camHeight = (camPitch - minCamPitch) / (float) camPitchDiff;
 		final int camHeightDiff = 2200;
-		int camZ = (int)(client.getCameraZ() + (camHeight * camHeightDiff));
+		int camZ = (int) (client.getCameraZ() + (camHeight * camHeightDiff));
 
-		return new int[]{camX, camY, camZ};
+		return new int[] { camX, camY, camZ };
 	}
 
-	private void updateBuffer(@Nonnull GLBuffer glBuffer, int target, @Nonnull ByteBuffer data, int usage, long clFlags)
-	{
+	private void logBufferResize(GLBuffer glBuffer, long newSize) {
+		if (!log.isTraceEnabled())
+			return;
+
+		log.trace("Buffer resize: {} {}", glBuffer, String.format("%.2f MB -> %.2f MB", glBuffer.size / 1e6, newSize / 1e6));
+	}
+
+	private void updateBuffer(@Nonnull GLBuffer glBuffer, int target, @Nonnull ByteBuffer data, int usage, long clFlags) {
 		glBindBuffer(target, glBuffer.glBufferId);
 		long size = data.remaining();
 		if (size > glBuffer.size) {
 			size = HDUtils.ceilPow2(size);
-			log.trace("Buffer resize: {} {} -> {}", glBuffer, glBuffer.size, size);
+			logBufferResize(glBuffer, size);
 
 			glBuffer.size = size;
 			glBufferData(target, size, usage);
@@ -2764,7 +2839,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		long size = 4L * (offset + data.remaining());
 		if (size > glBuffer.size) {
 			size = HDUtils.ceilPow2(size);
-			log.trace("Buffer resize: {} {} -> {}", glBuffer, glBuffer.size, size);
+			logBufferResize(glBuffer, size);
 
 			if (offset > 0) {
 				int oldBuffer = glBuffer.glBufferId;
@@ -2802,7 +2877,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		long size = 4L * (offset + data.remaining());
 		if (size > glBuffer.size) {
 			size = HDUtils.ceilPow2(size);
-			log.trace("Buffer resize: {} {} -> {}", glBuffer, glBuffer.size, size);
+			logBufferResize(glBuffer, size);
 
 			if (offset > 0) {
 				int oldBuffer = glBuffer.glBufferId;
@@ -2831,7 +2906,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private void updateBuffer(@Nonnull GLBuffer glBuffer, int target, long size, int usage, long clFlags) {
 		if (size > glBuffer.size) {
 			size = HDUtils.ceilPow2(size);
-			log.trace("Buffer resize: {} {} -> {}", glBuffer, glBuffer.size, size);
+			logBufferResize(glBuffer, size);
 
 			glBuffer.size = size;
 			glBindBuffer(target, glBuffer.glBufferId);
@@ -2845,7 +2920,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	@Subscribe(priority = -1) // Run after the low detail plugin
 	public void onBeforeRender(BeforeRender beforeRender) {
 		// The game runs significantly slower when drawing lower planes, even though it in certain areas makes useful visual difference
-		client.getScene().setMinLevel(isInChambersOfXeric || lowMemoryConfig.hideLowerPlanes() ? client.getPlane() : 0);
+		client.getScene().setMinLevel(isInChambersOfXeric || lowDetailPluginConfig.hideLowerPlanes() ? client.getPlane() : 0);
 	}
 
 	@Subscribe
@@ -2857,6 +2932,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public void onGameTick(GameTick gameTick) {
 		if (--gameTicksUntilSceneReload == 0)
 			uploadScene();
+	}
+
+	private void waitUntilIdle() {
+		if (computeMode == ComputeMode.OPENCL)
+			openCLManager.finish();
+		glFinish();
 	}
 
 	private void checkGLErrors() {
@@ -2898,7 +2979,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 //		PopupUtils.displayPopupMessage(client, "117HD Update",
 //			"<br><br>" +
-//			"If you experience any issues, please report them in the <a href=\"https://discord.gg/U4p6ChjgSE\">117HD Discord</a>.",
+//			"If you experience any issues, please report them in the <a href=\"" + DISCORD_URL +"\">117HD Discord</a>.",
 //			new String[] { "Remind me later", "Got it!" },
 //			i -> {
 //				if (i == 1) {
@@ -2906,5 +2987,100 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 //				}
 //			}
 //		);
+	}
+
+	private void displayUnsupportedGpuMessage(boolean isGenericGpu, String glRenderer) {
+		String hint32Bit = "";
+		if (HDUtils.is32Bit()) {
+			hint32Bit =
+				"&nbsp;• Install the 64-bit version of RuneLite from " +
+				"<a href=\"" + HdPlugin.RUNELITE_URL + "\">the official website</a>. You are currently using 32-bit.<br>";
+		}
+
+		String driverLinks =
+			"<br>" +
+			"Links to drivers for each graphics card vendor:<br>" +
+			"&nbsp;• <a href=\"" + HdPlugin.AMD_DRIVER_URL + "\">AMD drivers</a><br>" +
+			"&nbsp;• <a href=\"" + HdPlugin.INTEL_DRIVER_URL + "\">Intel drivers</a><br>" +
+			"&nbsp;• <a href=\"" + HdPlugin.NVIDIA_DRIVER_URL + "\">Nvidia drivers</a><br>";
+
+		String errorMessage =
+			(
+				isGenericGpu ? (
+					"Your graphics driver appears to be broken.<br>"
+					+ "<br>"
+					+ "Some things to try:<br>"
+					+ "&nbsp;• Reinstall the drivers for your <b>both</b> your processor's integrated graphics <b>and</b> your graphics card.<br>"
+				) :
+					(
+						"Your GPU is currently not supported by 117 HD.<br><br>GPU name: " + glRenderer + "<br>"
+						+ "<br>"
+						+ "Your computer might not be letting RuneLite access your most powerful GPU.<br>"
+						+ "To find out if your system is supported, try the following steps:<br>"
+						+ "&nbsp;• Reinstall the drivers for your graphics card. You can find a link below.<br>"
+					)
+			)
+			+ hint32Bit
+			+ "&nbsp;• Tell your machine to use your high performance GPU for RuneLite.<br>"
+			+ "&nbsp;• If you are on a desktop PC, make sure your monitor is plugged into your graphics card instead of<br>"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;your motherboard. The graphics card's display outputs are usually lower down behind the computer.<br>"
+			+ driverLinks
+			+ "<br>"
+			+ "If the issue persists even after <b>all of the above</b>, please join our "
+			+ "<a href=\"" + HdPlugin.DISCORD_URL + "\">Discord server</a>, and click the <br>"
+			+ "\"Open logs folder\" button below, find the file named \"client\" or \"client.log\", then drag and drop<br>"
+			+ "that file into one of our support channels.";
+
+		PopupUtils.displayPopupMessage(client, "117 HD Error", errorMessage,
+			new String[] { "Open logs folder", "Ok, let me try that..." },
+			i -> {
+				if (i == 0) {
+					LinkBrowser.open(RuneLite.LOGS_DIR.toString());
+					return false;
+				}
+				return true;
+			}
+		);
+	}
+
+	private void displayOutOfMemoryMessage() {
+		String errorMessage;
+		if (HDUtils.is32Bit()) {
+			String lowMemoryModeHint = useLowMemoryMode ? "" : (
+				"If you are unable to install 64-bit RuneLite, you can instead turn on <b>Low Memory Mode</b> in the<br>" +
+				"Miscellaneous section of 117 HD settings.<br>"
+			);
+			errorMessage =
+				"The plugin ran out of memory because you are using the 32-bit version of RuneLite.<br>"
+				+ "We would recommend installing the 64-bit version from "
+				+ "<a href=\"" + HdPlugin.RUNELITE_URL + "\">RuneLite's website</a> if possible.<br>"
+				+ "<br>"
+				+ lowMemoryModeHint
+				+ "<br>"
+				+ "If you need further assistance, please join our "
+				+ "<a href=\"" + HdPlugin.DISCORD_URL + "\">Discord</a> server, and click the \"Open logs folder\"<br>"
+				+ "button below, find the file named \"client\" or \"client.log\", then drag and drop that file into one of<br>"
+				+ "our support channels.";
+		} else {
+			errorMessage =
+				"The plugin ran out of memory. "
+				+ "Try " + (useLowMemoryMode ? "" : "reducing your model cache size or ") + "closing other programs.<br>"
+				+ "<br>"
+				+ "If the issue persists, please join our "
+				+ "<a href=\"" + HdPlugin.DISCORD_URL + "\">Discord</a> server, and click the \"Open logs folder\" button<br>"
+				+ "below, find the file named \"client\" or \"client.log\", then drag and drop that file into one of our<br>"
+				+ "support channels.";
+		}
+
+		PopupUtils.displayPopupMessage(client, "117 HD Error", errorMessage,
+			new String[] { "Open logs folder", "Ok, let me try that..." },
+			i -> {
+				if (i == 0) {
+					LinkBrowser.open(RuneLite.LOGS_DIR.toString());
+					return false;
+				}
+				return true;
+			}
+		);
 	}
 }

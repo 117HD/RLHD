@@ -766,6 +766,21 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
+	String KEY_LOW_MEMORY_MODE = "lowMemoryMode";
+	@ConfigItem(
+		keyName = KEY_LOW_MEMORY_MODE,
+		name = "Low Memory Mode",
+		description = "Turns off features which require extra memory, such as model caching, faster scene loading & extended scene loading.",
+		warning =
+			"<html>This <b>will not</b> result in better performance. It is recommended only if you are unable to install<br>" +
+			"the 64-bit version of RuneLite, or if your computer has a very low amount of memory available.</html>",
+		position = 6,
+		section = miscellaneousSettings
+	)
+	default boolean lowMemoryMode() {
+		return false;
+	}
+
 
 	/*====== Experimental settings ======*/
 
