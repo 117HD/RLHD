@@ -35,11 +35,11 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.client.util.OSType;
 import net.runelite.rlawt.AWTContext;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.opencl.*;
 import org.lwjgl.system.Configuration;
 import org.lwjgl.system.MemoryStack;
-import org.lwjgl.system.MemoryUtil;
 import rs117.hd.HdPlugin;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.Template;
@@ -361,7 +361,7 @@ public class OpenCLManager {
 		tileHeightMap = 0;
 
 		final int TILEHEIGHT_BUFFER_SIZE = Constants.MAX_Z * Constants.EXTENDED_SCENE_SIZE * Constants.EXTENDED_SCENE_SIZE * Short.BYTES;
-		ShortBuffer tileBuffer = MemoryUtil.memAllocShort(TILEHEIGHT_BUFFER_SIZE);
+		ShortBuffer tileBuffer = BufferUtils.createShortBuffer(TILEHEIGHT_BUFFER_SIZE);
 		int[][][] tileHeights = scene.getTileHeights();
 		for (int z = 0; z < Constants.MAX_Z; ++z) {
 			for (int y = 0; y < Constants.EXTENDED_SCENE_SIZE; ++y) {
@@ -389,8 +389,6 @@ public class OpenCLManager {
 			);
 			checkCLError(errcode_ret);
 		}
-
-		MemoryUtil.memFree(tileBuffer);
 	}
 
 	public void compute(

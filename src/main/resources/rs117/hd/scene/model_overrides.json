@@ -1831,6 +1831,7 @@
       23883,
       23884,
       23885,
+      23904,
       23907,
       23908,
       23909,
@@ -4074,6 +4075,7 @@
     "description": "Wooden - Plank - Tables",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
+      7175,
       10490,
       12450,
       12962,
@@ -4140,6 +4142,8 @@
       24351,
       24352,
       20675,
+      24082,
+      24084,
       25606,
       25663,
       25844,
@@ -4702,6 +4706,8 @@
       74,
       1527,
       1528,
+      1529,
+      1530,
       1535,
       1536,
       1732,
@@ -5845,6 +5851,7 @@
       20367,
       20429,
       24344,
+      24088,
       25655,
       25660,
       25661,
@@ -6531,6 +6538,7 @@
     "objectIds": [
       1102,
       7167,
+      7168,
       12407,
       14872,
       15679,
@@ -6542,6 +6550,8 @@
       17910,
       23065,
       23179,
+      24089,
+      27272,
       31483,
       39718
     ],
@@ -6555,7 +6565,8 @@
     "objectIds": [
       20351,
       23066,
-      24360
+      24360,
+      40000
     ],
     "uvType": "MODEL_XZ",
     "flatNormals": true
@@ -7114,11 +7125,21 @@
     "uvScale": 0.6
   },
   {
+    "description": "Objects - Wooden - Chair 2",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      7182,
+      27268
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
     "description": "Objects - Wooden - Tables - Round",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       593,
       598,
+      2335,
       25733
     ],
     "uvType": "MODEL_XZ",
@@ -8429,7 +8450,9 @@
     "baseMaterial": "DOCK_FENCE",
     "objectIds": [
       10525,
-      10526
+      10526,
+      11796,
+      11799
     ],
     "uvType": "GEOMETRY"
   },
@@ -10240,5 +10263,88 @@
     "hideInAreas": [
       "LASSAR_UNDERCITY"
     ]
+  },
+  {
+    "description": "Objects - Wooden - Crate - Tall",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      3045,
+      3205
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "Wall - Decoration - Wooden - Post",
+    "baseMaterial": "WOOD_GRAIN",
+    "objectIds": [
+      439,
+      440
+    ],
+    "uvType": "GEOMETRY",
+    "flatNormals": true
+  },
+  {
+    "description": "Object - Wooden - Support Post",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      23853
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "Object - Plank - Tables - Wooden Bench",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      2452
+    ],
+    "flatNormals": true,
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Object - Tables - Bar Table - Round",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      2332,
+      2333
+    ],
+    "flatNormals": true,
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Object - Wooden - Plank - Chest",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      7192
+    ],
+    "flatNormals": true
+  }
+,
+  {
+    "description": "Object - Tables - Broken - Round",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      7446
+    ],
+    "flatNormals": true,
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Object - Dying Tree",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      3648
+    ]
+  },
+  {
+    "description": "Varrock - Wall Decoration - Wooden - Plank",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      5090,
+      5091
+    ],
+    "uvType": "MODEL_YZ",
+    "uvOrientation": -60,
+    "uvScale": 0.66
   }
 ]

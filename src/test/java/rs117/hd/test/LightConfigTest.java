@@ -1,4 +1,4 @@
-package rs117.hd.scene;
+package rs117.hd.test;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -7,6 +7,7 @@ import java.io.PrintStream;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import rs117.hd.scene.LightManager;
 import rs117.hd.scene.lights.Light;
 
 import static org.junit.Assert.assertEquals;

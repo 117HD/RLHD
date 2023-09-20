@@ -1,10 +1,10 @@
-package rs117.hd.model;
-
-import junit.framework.TestCase;
+package rs117.hd.test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
+import junit.framework.TestCase;
+import rs117.hd.model.ModelHasher;
 
 public class ModelHasherTest extends TestCase {
     private final ArrayList<int[]> intArrays;
