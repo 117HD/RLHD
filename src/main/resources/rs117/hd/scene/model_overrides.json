@@ -4032,10 +4032,11 @@
     "uvOrientation": 512
   },
   {
-    "description": "Wooden Benches",
+    "description": "Wooden Benches - Plank",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       1106,
+      3632,
       5615,
       9531,
       25601,
@@ -10469,6 +10470,8 @@
     "description": "Barbarian Village - Wall - Wooden - Log",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
+      11587,
+      11588,
       11607,
       11608,
       11609,
