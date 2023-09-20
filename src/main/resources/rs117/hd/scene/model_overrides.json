@@ -2535,7 +2535,7 @@
       18934
     ],
     "inheritTileColorType": "OVERLAY",
-    "uvType": "WORLD_XZ",
+    "uvType": "BOX",
     "uvScale": 0.75
   },
   {
@@ -2838,7 +2838,7 @@
       25085,
       25161
     ],
-    "uvType": "WORLD_XZ",
+    "uvType": "BOX",
     "uvScale": 0.5,
     "flatNormals": true
   },
@@ -3464,7 +3464,7 @@
   },
   {
     "description": "Single row fences",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       2050,
       2051,
@@ -3495,7 +3495,9 @@
       25796,
       29110
     ],
-    "flatNormals": true
+    "flatNormals": true,
+    "uvType": "BOX",
+    "uvOrientation": 512
   },
   {
     "description": "FENCES_3",
@@ -5490,7 +5492,7 @@
       18478,
       22350
     ],
-    "uvType": "WORLD_XZ",
+    "uvType": "BOX",
     "uvScale": 0.65,
     "hideInAreas": [
       [
@@ -5538,7 +5540,7 @@
       18894,
       18895
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "uvScale": 0.5
   },
   {
@@ -10347,6 +10349,7 @@
     "description": "Object - Wooden - Support Post",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
+      11628,
       23853
     ],
     "uvType": "BOX",
@@ -10409,5 +10412,21 @@
     "uvType": "BOX",
     "uvOrientation": 562,
     "uvScale": 0.66
+  },
+  {
+    "description": "Barbarian Village - Wall - Wooden - Log",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      11607,
+      11608,
+      11609,
+      11610,
+      11611,
+      11612,
+      11613
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 512
   }
 ]
