@@ -5738,7 +5738,7 @@
       5443,
       5444
     ],
-    "uvType": "MODEL_XY",
+    "uvType": "BOX",
     "uvScale": 0.83
   },
   {
