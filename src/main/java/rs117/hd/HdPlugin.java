@@ -150,6 +150,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	public static float BUFFER_GROWTH_MULTIPLIER = 2; // can be less than 2 if trying to conserve memory
 
+	private static final float NEAR_PLANE = 1;
+
 	private static final int[] eightIntWrite = new int[8];
 
 	@Inject
@@ -2040,7 +2042,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 			// Calculate projection matrix
 			float[] projectionMatrix = Mat4.scale(client.getScale(), client.getScale(), 1);
-			Mat4.mul(projectionMatrix, Mat4.projection(viewportWidth, viewportHeight, 50));
+			Mat4.mul(projectionMatrix, Mat4.projection(viewportWidth, viewportHeight, NEAR_PLANE));
 			Mat4.mul(projectionMatrix, Mat4.rotateX((float) (pitch * UNIT - Math.PI)));
 			Mat4.mul(projectionMatrix, Mat4.rotateY((float) (yaw * UNIT)));
 			Mat4.mul(projectionMatrix, Mat4.translate(-client.getCameraX2(), -client.getCameraY2(), -client.getCameraZ2()));
@@ -2532,7 +2534,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		int var12 = pitchSin * y + pitchCos * var11 >> 16;
 		int var13 = pitchCos * radius >> 16;
 		int depth = var12 + var13;
-		if (depth > 50) {
+		if (depth > NEAR_PLANE) {
 			int rx = z * yawSin + yawCos * x >> 16;
 			int var16 = (rx - radius) * zoom;
 			int var17 = (rx + radius) * zoom;
@@ -2571,21 +2573,17 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		int var12 = pitchSin * y + pitchCos * var11 >> 16;
 		int var13 = pitchCos * XYZMag >> 16;
 		int depth = var12 + var13;
-		if (depth > 50)
-		{
+		if (depth > NEAR_PLANE) {
 			int rx = z * yawSin + yawCos * x >> 16;
 			int var16 = (rx - XYZMag) * zoom;
-			if (var16 / depth < Rasterizer3D_clipMidX2)
-			{
+			if (var16 / depth < Rasterizer3D_clipMidX2) {
 				int var17 = (rx + XYZMag) * zoom;
-				if (var17 / depth > Rasterizer3D_clipNegativeMidX)
-				{
+				if (var17 / depth > Rasterizer3D_clipNegativeMidX) {
 					int ry = pitchCos * y - var11 * pitchSin >> 16;
 					int yheight = pitchSin * XYZMag >> 16;
 					int ybottom = (pitchCos * bottomY >> 16) + yheight;
 					int var20 = (ry + ybottom) * zoom;
-					if (var20 / depth > Rasterizer3D_clipNegativeMidY)
-					{
+					if (var20 / depth > Rasterizer3D_clipNegativeMidY) {
 						int ytop = (pitchCos * modelHeight >> 16) + yheight;
 						int var22 = (ry - ytop) * zoom;
 						return var22 / depth >= Rasterizer3D_clipMidY2;
