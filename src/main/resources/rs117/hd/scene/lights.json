@@ -30840,5 +30840,23 @@
     "projectileIds": [
       1907
     ]
+  },
+  {
+    "description": "POTTERY_OVEN_GLOW",
+    "height": 150,
+    "alignment": "NORTH",
+    "radius": 500,
+    "strength": 7.5,
+    "color": [
+      252,
+      90,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "objectIds": [
+      11601
+    ]
   }
 ]
