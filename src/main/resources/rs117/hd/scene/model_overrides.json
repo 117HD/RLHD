@@ -10526,5 +10526,26 @@
     ],
     "uvType": "BOX",
     "flatNormals": true
+  },
+  {
+    "description": "Ore - Coal - Rock",
+    "baseMaterial": "ROCK_2",
+    "objectIds": [
+      11366,
+      11367
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Ore - Tin - Rock",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      11360,
+      11361
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7
   }
 ]
