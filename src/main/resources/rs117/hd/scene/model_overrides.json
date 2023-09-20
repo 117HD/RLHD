@@ -4859,10 +4859,20 @@
     "objectIds": [
       11797,
       11798,
-      11799,
       11807
     ],
     "flatNormals": true
+  },
+  {
+    "description": "Varrock Museum Staircase",
+    "baseMaterial": "WOOD_GRAIN_2_LIGHT",
+    "objectIds": [
+      11798
+    ],
+    "flatNormals": true,
+    "uvType": "BOX",
+    "uvScale": 0.45,
+    "uvOrientationX": 200
   },
   {
     "description": "Varrock - Saw Mill Walls",
@@ -10238,8 +10248,7 @@
       49382,
       49383,
       49384,
-      49385,
-      49209
+      49385
     ],
     "castShadows": false,
     "baseMaterial": "TRANSPARENT",
