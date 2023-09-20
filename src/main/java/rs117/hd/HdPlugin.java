@@ -3008,7 +3008,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					"Your graphics driver appears to be broken.<br>"
 					+ "<br>"
 					+ "Some things to try:<br>"
-					+ "&nbsp;• Reinstall the drivers for your <b>both</b> your processor's integrated graphics <b>and</b> your graphics card.<br>"
+					+ "&nbsp;• Reinstall the drivers for <b>both</b> your processor's integrated graphics <b>and</b> your graphics card.<br>"
 				) :
 					(
 						"Your GPU is currently not supported by 117 HD.<br><br>GPU name: " + glRenderer + "<br>"
