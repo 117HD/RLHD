@@ -1994,7 +1994,7 @@
       26587
     ],
     "flatNormals": true,
-    "uvType": "MODEL_XY"
+    "uvType": "BOX"
   },
   {
     "description": "CITHAREDE_ABBEY_WALLS",
@@ -3191,7 +3191,7 @@
       6548
     ],
     "flatNormals": true,
-    "uvType": "MODEL_XY"
+    "uvType": "BOX"
   },
   {
     "description": "Sophanem pyramid door",
@@ -3216,7 +3216,7 @@
       9513,
       9541
     ],
-    "uvType": "MODEL_XZ"
+    "uvType": "BOX"
   },
   {
     "description": "WOODEN_PLANK_DOCKS diagonal",
@@ -3272,7 +3272,7 @@
       39708,
       39709
     ],
-    "uvType": "MODEL_XZ"
+    "uvType": "BOX"
   },
   {
     "description": "WOODEN_PLANK_ROUGH",
@@ -3280,18 +3280,21 @@
     "objectIds": [
       42036
     ],
-    "uvType": "MODEL_XZ"
+    "uvType": "BOX"
   },
   {
     "description": "DOCK_FENCES",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       814,
       9539,
       11598,
       16004
     ],
-    "flatNormals": true
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvScale": 1.1,
+    "uvOrientation": 512
   },
   {
     "description": "DOCK_FENCES_TAN",
@@ -3342,7 +3345,7 @@
       25619,
       31589
     ],
-    "uvType": "MODEL_XZ"
+    "uvType": "BOX"
   },
   {
     "description": "LIGHT_WOODEN_DOCKS_MIRRORED",
@@ -3374,7 +3377,7 @@
       22534,
       22535
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "uvScale": 0.88
   },
   {
@@ -3383,7 +3386,7 @@
     "objectIds": [
       16991
     ],
-    "uvType": "MODEL_XZ"
+    "uvType": "BOX"
   },
   {
     "description": "LUNAR_ISLE_DOCK_SUPPORTS",
@@ -3501,7 +3504,7 @@
       994,
       995
     ],
-    "uvType": "MODEL_XY",
+    "uvType": "BOX",
     "uvScale": 0.4
   },
   {
@@ -3638,7 +3641,7 @@
       25923,
       25924
     ],
-    "uvType": "MODEL_XY",
+    "uvType": "BOX",
     "flatNormals": true,
     "uvOrientation": 512
   },
@@ -3670,8 +3673,9 @@
       25931
     ],
     "uvOrientation": 512,
-    "uvType": "MODEL_XZ",
-    "flatNormals": true
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvScale": 0.8
   },
   {
     "description": "Seers village wooden posts",
@@ -3679,10 +3683,11 @@
     "objectIds": [
       25777
     ],
-    "flatNormals": true
+    "flatNormals": true,
+    "uvType": "BOX"
   },
   {
-    "description": "Seets village chairs",
+    "description": "Seers village chairs",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       27276,
@@ -3692,7 +3697,7 @@
       25773,
       25783
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "flatNormals": true
   },
   {
@@ -3912,7 +3917,7 @@
       1454,
       1455
     ],
-    "uvType": "WORLD_XY",
+    "uvType": "MODEL_XY",
     "uvScale": 0.75
   },
   {
@@ -4014,7 +4019,8 @@
       24025,
       24081
     ],
-    "uvType": "MODEL_XZ"
+    "uvType": "BOX",
+    "uvScale": 0.8
   },
   {
     "description": "Falador - Tables - Rotated",
@@ -4027,14 +4033,16 @@
   },
   {
     "description": "Wooden Benches",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       1106,
       5615,
       9531,
       25601,
       25676
-    ]
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7
   },
   {
     "description": "Courthouse Basement stairs",
@@ -4084,11 +4092,12 @@
       14852,
       15684,
       17145,
+      20058,
       25603,
       40223,
       40224
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "flatNormals": true,
     "uvScale": 0.6
   },
@@ -4454,7 +4463,8 @@
       24009,
       24010,
       24011
-    ]
+    ],
+    "uvType": "BOX"
   },
   {
     "description": "Mysterious Statue",
@@ -4698,7 +4708,7 @@
   },
   {
     "description": "Wooden Door 1 - Fake Plank",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       71,
       72,
@@ -4770,14 +4780,14 @@
       25828,
       26207
     ],
-    "flatNormals": true,
-    "uvOrientation": 512,
-    "uvScale": 0.4
+    "uvType": "BOX",
+    "flatNormals": true
   },
   {
     "description": "Wooden Door 2 - 4 Panel",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      59,
       1521,
       1522,
       1524,
@@ -4790,17 +4800,17 @@
       25719
     ],
     "flatNormals": true,
-    "uvType": "MODEL_XY",
-    "uvOrientation": 1536,
+    "uvType": "BOX",
     "uvScale": 0.4
   },
   {
     "description": "Wooden Door 3",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       1540,
       1541
     ],
+    "uvType": "BOX",
     "flatNormals": true,
     "uvScale": 0.4
   },
@@ -4821,7 +4831,7 @@
     ],
     "uvOrientation": 512,
     "uvScale": 0.4,
-    "uvType": "MODEL_XY"
+    "uvType": "BOX"
   },
   {
     "description": "Varrock Castle Doors",
@@ -4863,7 +4873,7 @@
       23901,
       23902
     ],
-    "uvType": "MODEL_XY",
+    "uvType": "BOX",
     "flatNormals": true,
     "uvScale": 0.6
   },
@@ -5687,7 +5697,7 @@
       11560,
       11561
     ],
-    "uvType": "MODEL_XY",
+    "uvType": "BOX",
     "uvOrientation": 1536,
     "uvScale": 0.66
   },
@@ -5813,11 +5823,12 @@
   },
   {
     "description": "Objects - Wooden - Crate",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       5106,
       5107,
       5110,
+      5330,
       6176,
       6177,
       6178,
@@ -5860,16 +5871,18 @@
       25836,
       25837
     ],
+    "uvType": "BOX",
     "flatNormals": true
   },
   {
     "description": "Objects - Wooden - Boxes",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       9536,
       10380,
       20369
     ],
+    "uvType": "BOX",
     "flatNormals": true
   },
   {
@@ -6259,7 +6272,7 @@
       5437,
       5438
     ],
-    "uvType": "MODEL_XY",
+    "uvType": "BOX",
     "uvScale": 0.78
   },
   {
@@ -6309,7 +6322,7 @@
       17717,
       17718
     ],
-    "uvType": "MODEL_XY",
+    "uvType": "BOX",
     "uvOrientation": 512,
     "uvScale": 0.76
   },
@@ -6357,8 +6370,8 @@
       12852,
       12853
     ],
-    "uvType": "MODEL_YZ",
-    "uvOrientation": -50,
+    "uvType": "BOX",
+    "uvOrientation": 560,
     "uvScale": 0.66
   },
   {
@@ -6368,7 +6381,7 @@
       12752,
       12760
     ],
-    "uvType": "MODEL_XY",
+    "uvType": "BOX",
     "uvOrientation": 512,
     "uvScale": 0.66
   },
@@ -6378,9 +6391,10 @@
     "objectIds": [
       5244,
       5245,
+      7503,
       20773
     ],
-    "uvType": "MODEL_XY",
+    "uvType": "BOX",
     "uvOrientation": 512,
     "uvScale": 0.56
   },
@@ -6407,7 +6421,7 @@
       12850,
       12851
     ],
-    "uvType": "MODEL_XY",
+    "uvType": "BOX",
     "uvOrientation": 512,
     "uvScale": 0.44
   },
@@ -6455,14 +6469,15 @@
   },
   {
     "description": "Morytania - Objects - Wooden - Crate",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       12876,
       12877,
       12878,
       12879
     ],
-    "uvType": "GEOMETRY"
+    "uvType": "BOX",
+    "uvScale": 0.7
   },
   {
     "description": "Morytania - Ground  - Water - Puddles - Burugh De Rott",
@@ -6548,6 +6563,7 @@
       17667,
       17909,
       17910,
+      20059,
       23065,
       23179,
       24089,
@@ -6555,7 +6571,7 @@
       31483,
       39718
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "flatNormals": true,
     "uvScale": 0.80
   },
@@ -6568,7 +6584,7 @@
       24360,
       40000
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "flatNormals": true
   },
   {
@@ -6577,7 +6593,7 @@
     "objectIds": [
       12734
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "uvOrientation": 512,
     "flatNormals": true
   },
@@ -6587,7 +6603,7 @@
     "objectIds": [
       17662
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "uvOrientation": 512,
     "flatNormals": true
   },
@@ -6751,7 +6767,7 @@
     "objectIds": [
       16742
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "uvScale": 0.6
   },
   {
@@ -6789,7 +6805,7 @@
       24333,
       29712
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "uvScale": 0.4
   },
   {
@@ -6798,7 +6814,7 @@
     "objectIds": [
       12280
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "flatNormals": true
   },
   {
@@ -6808,7 +6824,7 @@
       12386,
       12416
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "uvOrientation": 512,
     "flatNormals": true,
     "uvScale": 0.6
@@ -6820,7 +6836,7 @@
       16737,
       16738
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "flatNormals": true,
     "uvScale": 0.8
   },
@@ -6865,13 +6881,14 @@
       16747,
       16748,
       16749,
+      16750,
       16759,
       16760,
       16770,
       16771,
       16772
     ],
-    "uvType": "MODEL_XY"
+    "uvType": "BOX"
   },
   {
     "description": "Lunar Isles - WALLS - Wooden - Plank - Windows",
@@ -6883,15 +6900,7 @@
       16768,
       16769
     ],
-    "uvType": "MODEL_XY"
-  },
-  {
-    "description": "Lunar Isles - WALLS - Wooden Railing",
-    "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [
-      16750
-    ],
-    "uvType": "MODEL_XY"
+    "uvType": "BOX"
   },
   {
     "description": "Lunar Isles - WALLS - Wooden - Plank - Door",
@@ -6900,7 +6909,7 @@
       16776,
       16777
     ],
-    "uvType": "MODEL_XY"
+    "uvType": "BOX"
   },
   {
     "description": "Lunar Isles - WALLS - Wooden - Door - Window",
@@ -6910,7 +6919,7 @@
       16778,
       16779
     ],
-    "uvType": "MODEL_XY"
+    "uvType": "BOX"
   },
   {
     "description": "Lunar Isles - WALLS - Wooden - Railing - Window",
@@ -7131,7 +7140,7 @@
       7182,
       27268
     ],
-    "uvType": "GEOMETRY"
+    "uvType": "BOX"
   },
   {
     "description": "Objects - Wooden - Tables - Round",
@@ -7142,7 +7151,7 @@
       2335,
       25733
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "flatNormals": true,
     "uvScale": 1.2
   },
@@ -8415,7 +8424,7 @@
       6600,
       6601
     ],
-    "uvType": "MODEL_XY",
+    "uvType": "BOX",
     "uvScale": 0.6
   },
   {
@@ -8425,7 +8434,7 @@
       6588,
       6589
     ],
-    "uvType": "MODEL_XY",
+    "uvType": "BOX",
     "uvScale": 0.6
   },
   {
@@ -8529,7 +8538,7 @@
       6564,
       6565
     ],
-    "uvType": "MODEL_XY",
+    "uvType": "BOX",
     "uvOrientation": 512,
     "uvScale": 0.6
   },
@@ -8586,7 +8595,7 @@
       44886,
       44887
     ],
-    "uvType": "MODEL_XY"
+    "uvType": "BOX"
   },
   {
     "description": "PvP Arena Walls - Corners",
@@ -8647,7 +8656,7 @@
       44038,
       44039
     ],
-    "uvType": "MODEL_XY",
+    "uvType": "BOX",
     "uvScale": 0.6
   },
   {
@@ -8743,7 +8752,7 @@
       23336,
       23337
     ],
-    "uvType": "MODEL_XY",
+    "uvType": "BOX",
     "uvOrientation": 1536,
     "uvScale": 0.36
   },
@@ -8754,7 +8763,7 @@
       12275,
       12429
     ],
-    "uvType": "MODEL_XY",
+    "uvType": "BOX",
     "uvOrientation": 512,
     "uvScale": 0.36
   },
@@ -8769,7 +8778,7 @@
       12448,
       12449
     ],
-    "uvType": "MODEL_XY",
+    "uvType": "BOX",
     "uvOrientation": 512,
     "uvScale": 0.36
   },
@@ -8779,7 +8788,7 @@
     "objectIds": [
       16567
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "uvOrientation": 256
   },
   {
@@ -8824,7 +8833,7 @@
       12384,
       12385
     ],
-    "uvType": "MODEL_XY",
+    "uvType": "BOX",
     "uvOrientation": 256,
     "uvScale": 0.4
   },
@@ -9057,7 +9066,7 @@
       18091,
       18092
     ],
-    "uvType": "MODEL_XY",
+    "uvType": "BOX",
     "uvOrientation": 512,
     "uvScale": 0.66
   },
@@ -9095,7 +9104,7 @@
       18131,
       18134
     ],
-    "uvType": "MODEL_XY",
+    "uvType": "BOX",
     "uvOrientation": 1536,
     "uvScale": 0.58
   },
@@ -9260,7 +9269,7 @@
       17651,
       17653
     ],
-    "uvType": "MODEL_XY",
+    "uvType": "BOX",
     "uvOrientation": 1536,
     "uvScale": 0.66
   },
@@ -9286,7 +9295,7 @@
     "objectIds": [
       23277
     ],
-    "uvType": "MODEL_XY"
+    "uvType": "BOX"
   },
   {
     "description": "Meiyerditch Mine Walls",
@@ -9497,7 +9506,7 @@
       11771
     ],
     "uvOrientation": 512,
-    "uvType": "MODEL_XY"
+    "uvType": "BOX"
   },
   {
     "description": "Morytania - Rotting Tree",
@@ -9536,7 +9545,7 @@
       39687
     ],
     "flatNormals": true,
-    "uvType": "MODEL_XZ"
+    "uvType": "BOX"
   },
   {
     "description": "Generic - Plank - Tables - Picnic Bench - Rotated",
@@ -9545,7 +9554,7 @@
       9532
     ],
     "flatNormals": true,
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "uvOrientation": 512
   },
   {
@@ -9593,7 +9602,7 @@
       25673,
       25674
     ],
-    "uvType": "MODEL_XY",
+    "uvType": "BOX",
     "flatNormals": true,
     "uvOrientation": 512
   },
@@ -9654,7 +9663,7 @@
       6516,
       6517
     ],
-    "uvType": "MODEL_XY",
+    "uvType": "BOX",
     "uvOrientation": 192,
     "uvScale": 0.17
   },
@@ -9769,7 +9778,7 @@
       5835,
       25845
     ],
-    "uvType": "MODEL_XY",
+    "uvType": "BOX",
     "uvScale": 0.34,
     "uvOrientation": 768
   },
@@ -9819,7 +9828,7 @@
       39671,
       39672
     ],
-    "uvType": "MODEL_XY",
+    "uvType": "BOX",
     "uvScale": 0.6
   },
   {
@@ -9831,7 +9840,7 @@
       20774,
       20775
     ],
-    "uvType": "MODEL_XY",
+    "uvType": "BOX",
     "uvOrientation": 1536,
     "uvScale": 0.66
   },
@@ -9846,7 +9855,7 @@
       20732,
       20764
     ],
-    "uvType": "MODEL_XY",
+    "uvType": "BOX",
     "uvScale": 0.6
   },
   {
@@ -9912,7 +9921,7 @@
       20713,
       20714
     ],
-    "uvType": "MODEL_XY"
+    "uvType": "BOX"
   },
   {
     "description": "Barrows Chest",
@@ -9984,7 +9993,7 @@
       3458,
       3459
     ],
-    "uvType": "MODEL_XY",
+    "uvType": "BOX",
     "uvOrientation": 256,
     "uvScale": 1.2
   },
@@ -10027,7 +10036,7 @@
       5200,
       5201
     ],
-    "uvType": "MODEL_XY",
+    "uvType": "BOX",
     "uvOrientation": 1536,
     "uvScale": 0.66
   },
@@ -10052,7 +10061,7 @@
       26685,
       26686
     ],
-    "uvType": "MODEL_XY"
+    "uvType": "BOX"
   },
   {
     "description": "Motherload Mine - Cogs",
@@ -10126,7 +10135,7 @@
     "objectIds": [
       44680
     ],
-    "uvType": "MODEL_XY"
+    "uvType": "BOX"
   },
   {
     "description": "Giants Foundry Clamps",
@@ -10275,21 +10284,24 @@
   },
   {
     "description": "Wall - Decoration - Wooden - Post",
-    "baseMaterial": "WOOD_GRAIN",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       439,
       440
     ],
-    "uvType": "GEOMETRY",
+    "uvType": "BOX",
     "flatNormals": true
   },
   {
     "description": "Object - Wooden - Support Post",
-    "baseMaterial": "WOOD_GRAIN_3",
+    "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       23853
     ],
-    "flatNormals": true
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvOrientation": 512,
+    "uvScale": 0.66
   },
   {
     "description": "Object - Plank - Tables - Wooden Bench",
@@ -10298,7 +10310,7 @@
       2452
     ],
     "flatNormals": true,
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "uvOrientation": 512
   },
   {
@@ -10343,8 +10355,8 @@
       5090,
       5091
     ],
-    "uvType": "MODEL_YZ",
-    "uvOrientation": -60,
+    "uvType": "BOX",
+    "uvOrientation": 562,
     "uvScale": 0.66
   }
 ]
