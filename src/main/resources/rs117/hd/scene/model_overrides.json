@@ -5843,9 +5843,7 @@
       6177,
       6178,
       7514,
-      9533,
       9534,
-      9535,
       10374,
       10378,
       10379,
@@ -5885,10 +5883,54 @@
     "flatNormals": true
   },
   {
+    "description": "Objects - Wooden - Crate",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      9533
+    ],
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Objects - Wooden - Crate",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      9534
+    ],
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512
+  },
+  {
+    "description": "Objects - Wooden - Crate",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      9535
+    ],
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvOrientationY": 29,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512
+  },
+  {
+    "description": "Objects - Wooden - Stack of crates",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      9536
+    ],
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvOrientationY": 600,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512
+  },
+  {
     "description": "Objects - Wooden - Boxes",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      9536,
       10380,
       20369
     ],
