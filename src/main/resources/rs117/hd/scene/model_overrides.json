@@ -5714,6 +5714,56 @@
     "uvScale": 0.66
   },
   {
+    "description": "Barbarian Hall - Walls - Wooden - Planks",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      11562,
+      11563,
+      11564
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Barbarian Hall - Roof - Wooden - Planks",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      11565,
+      11566,
+      11567,
+      11568
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Barbarian Hall - Roof Corners - Wooden - Planks",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      11569,
+      11570,
+      11571,
+      11572,
+      11573,
+      11574,
+      11576,
+      11577,
+      11578,
+      11579,
+      11580,
+      11581,
+      11582,
+      11583,
+      11584
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512
+  },
+  {
     "description": "Round Rug",
     "baseMaterial": "FINE_CARPET",
     "objectIds": [
@@ -6608,6 +6658,7 @@
       1102,
       7167,
       7168,
+      11603,
       12407,
       14872,
       15679,
@@ -10428,5 +10479,48 @@
     "uvType": "BOX",
     "uvScale": 0.8,
     "uvOrientation": 512
+  },
+  {
+    "description": "Barbarian VIllage - Objects - Wooden - Crate",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      11599
+    ],
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512
+  },
+  {
+    "description": "Barbarian VIllage - Objects - Table - Double - Wooden – Plank",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      11619
+    ],
+    "uvType": "BOX",
+    "flatNormals": true
+  },
+  {
+    "description": "Barbarian VIllage - Objects - Table - Double - Wooden – Plank - With Shelfs",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      11626
+    ],
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvOrientationX": 512,
+    "uvOrientationY": 512
+  },
+  {
+    "description": "Barbarian VIllage - Wall  Longhall Door – Fake Plank",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      11620,
+      11621,
+      11624,
+      11625
+    ],
+    "uvType": "BOX",
+    "flatNormals": true
   }
 ]
