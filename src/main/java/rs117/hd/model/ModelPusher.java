@@ -359,8 +359,9 @@ public class ModelPusher {
 	}
 
 	private void getNormalDataForFace(SceneContext sceneContext, Model model, @NonNull ModelOverride modelOverride, int face) {
-		int terrainData = SceneUploader.packTerrainData(false, 0, WaterType.NONE, 0);
-		if (terrainData == 0 && (modelOverride.flatNormals || model.getFaceColors3()[face] == -1)) {
+		assert SceneUploader.packTerrainData(false, 0, WaterType.NONE, 0) == 0;
+		float terrainData = 0;
+		if (modelOverride.flatNormals || model.getFaceColors3()[face] == -1) {
 			Arrays.fill(sceneContext.modelFaceNormals, 0);
 			return;
 		}
@@ -392,8 +393,8 @@ public class ModelPusher {
 	}
 
 	public int packMaterialData(Material material, @NonNull ModelOverride modelOverride, UvType uvType, boolean isOverlay) {
-		// Only the lower 24 bits can be safely used due to imprecise casting to float in shaders
-		return // This needs to return zero by default, since we often fall back to writing all zeroes to UVs
+		// This needs to return zero by default, since we often fall back to writing all zeroes to UVs
+		int materialData =
 			(material.ordinal() & MAX_MATERIAL_COUNT) << 12
 			| ((int) (modelOverride.shadowOpacityThreshold * 0x3F) & 0x3F) << 5
 			| (!modelOverride.receiveShadows ? 1 : 0) << 4
@@ -401,6 +402,8 @@ public class ModelPusher {
 			| (uvType.worldUvs ? 1 : 0) << 2
 			| (uvType == UvType.VANILLA ? 1 : 0) << 1
 			| (isOverlay ? 1 : 0);
+		assert (materialData & ~0xFFFFFF) == 0 : "Only the lower 24 bits are usable, since we pass this into shaders as a float";
+		return materialData;
 	}
 
 	private boolean isBakedGroundShading(int face, int heightA, int heightB, int heightC, byte[] faceTransparencies, short[] faceTextures) {
