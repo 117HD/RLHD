@@ -631,9 +631,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				sceneContext.destroy();
 			sceneContext = null;
 
-			if (nextSceneContext != null)
-				nextSceneContext.destroy();
-			nextSceneContext = null;
+			synchronized (this) {
+				if (nextSceneContext != null)
+					nextSceneContext.destroy();
+				nextSceneContext = null;
+			}
 
 			if (modelPassthroughBuffer != null)
 				modelPassthroughBuffer.destroy();
@@ -2254,15 +2256,15 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		loadSceneInternal(scene);
 	}
 
-	private void loadSceneInternal(Scene scene) {
-		if (nextSceneContext != null) {
-			SceneContext handle = nextSceneContext;
-			nextSceneContext = null;
-			handle.destroy();
-		}
+	private synchronized void loadSceneInternal(Scene scene) {
+		if (nextSceneContext != null)
+			nextSceneContext.destroy();
+		nextSceneContext = null;
 
 		try {
-			// Reuse buffers on synchronous scene loads
+			// Because scene contexts are always swapped on the client thread, it is guaranteed to only be
+			// in use by the client thread, meaning we can reuse all of its buffers if we are loading the
+			// next scene also on the client thread
 			boolean reuseBuffers = client.isClientThread();
 			var context = new SceneContext(scene, getExpandedMapLoadingChunks(), reuseBuffers, sceneContext);
 			// noinspection SynchronizationOnLocalVariableOrMethodParameter
@@ -2283,7 +2285,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	@Override
-	public void swapScene(Scene scene) {
+	public synchronized void swapScene(Scene scene) {
 		if (nextSceneContext == null) {
 			if (useLowMemoryMode) {
 				// Load the scene synchronously on the client thread, so we can reuse the old scene context

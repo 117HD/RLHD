@@ -28,7 +28,7 @@ public class SceneContext {
 	public final int expandedMapLoadingChunks;
 
 	public int staticVertexCount = 0;
-	public GpuIntBuffer staticUnorderedModelBuffer = new GpuIntBuffer();
+	public GpuIntBuffer staticUnorderedModelBuffer;
 	public GpuIntBuffer stagingBufferVertices;
 	public GpuFloatBuffer stagingBufferUvs;
 	public GpuFloatBuffer stagingBufferNormals;
@@ -70,27 +70,25 @@ public class SceneContext {
 		this.expandedMapLoadingChunks = expandedMapLoadingChunks;
 
 		if (previous == null) {
+			staticUnorderedModelBuffer = new GpuIntBuffer();
 			stagingBufferVertices = new GpuIntBuffer();
 			stagingBufferUvs = new GpuFloatBuffer();
 			stagingBufferNormals = new GpuFloatBuffer();
 		} else if (reuseBuffers) {
 			// Avoid reallocating buffers whenever possible
-			staticUnorderedModelBuffer = previous.staticUnorderedModelBuffer;
-			stagingBufferVertices = previous.stagingBufferVertices;
-			stagingBufferUvs = previous.stagingBufferUvs;
-			stagingBufferNormals = previous.stagingBufferNormals;
-			staticUnorderedModelBuffer.clear();
-			stagingBufferVertices.clear();
-			stagingBufferUvs.clear();
-			stagingBufferNormals.clear();
+			staticUnorderedModelBuffer = previous.staticUnorderedModelBuffer.clear();
+			stagingBufferVertices = previous.stagingBufferVertices.clear();
+			stagingBufferUvs = previous.stagingBufferUvs.clear();
+			stagingBufferNormals = previous.stagingBufferNormals.clear();
 			previous.staticUnorderedModelBuffer = null;
 			previous.stagingBufferVertices = null;
 			previous.stagingBufferUvs = null;
 			previous.stagingBufferNormals = null;
 		} else {
-			stagingBufferVertices = new GpuIntBuffer(previous.stagingBufferVertices.getBuffer().capacity());
-			stagingBufferUvs = new GpuFloatBuffer(previous.stagingBufferUvs.getBuffer().capacity());
-			stagingBufferNormals = new GpuFloatBuffer(previous.stagingBufferNormals.getBuffer().capacity());
+			staticUnorderedModelBuffer = new GpuIntBuffer(previous.staticUnorderedModelBuffer.capacity());
+			stagingBufferVertices = new GpuIntBuffer(previous.stagingBufferVertices.capacity());
+			stagingBufferUvs = new GpuFloatBuffer(previous.stagingBufferUvs.capacity());
+			stagingBufferNormals = new GpuFloatBuffer(previous.stagingBufferNormals.capacity());
 		}
 	}
 

@@ -70,24 +70,24 @@ public class GpuFloatBuffer
 		return buffer.position();
 	}
 
-	public void flip()
-	{
+	public void flip() {
 		buffer.flip();
 	}
 
-	public void clear()
-	{
+	public GpuFloatBuffer clear() {
 		buffer.clear();
+		return this;
 	}
 
-	public void ensureCapacity(int size)
-	{
+	public int capacity() {
+		return buffer.capacity();
+	}
+
+	public void ensureCapacity(int size) {
 		int capacity = buffer.capacity();
 		final int position = buffer.position();
-		if ((capacity - position) < size)
-		{
-			do
-			{
+		if ((capacity - position) < size) {
+			do {
 				capacity *= HdPlugin.BUFFER_GROWTH_MULTIPLIER;
 			}
 			while ((capacity - position) < size);
