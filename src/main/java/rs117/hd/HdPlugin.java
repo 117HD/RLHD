@@ -53,7 +53,6 @@ import javax.swing.SwingUtilities;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
-import net.runelite.api.coords.*;
 import net.runelite.api.events.*;
 import net.runelite.api.hooks.*;
 import net.runelite.client.RuneLite;
@@ -85,8 +84,8 @@ import rs117.hd.config.UIScalingMode;
 import rs117.hd.data.WaterType;
 import rs117.hd.data.materials.Material;
 import rs117.hd.model.ModelHasher;
+import rs117.hd.model.ModelOffsets;
 import rs117.hd.model.ModelPusher;
-import rs117.hd.model.TempModelInfo;
 import rs117.hd.opengl.compute.ComputeMode;
 import rs117.hd.opengl.compute.OpenCLManager;
 import rs117.hd.opengl.shader.Shader;
@@ -322,8 +321,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private int lastStretchedCanvasHeight;
 	private AntiAliasingMode lastAntiAliasingMode;
 
-	private int yaw;
-	private int pitch;
 	private int viewportOffsetX;
 	private int viewportOffsetY;
 
@@ -407,25 +404,15 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public ShadowMode configShadowMode;
 	public int configMaxDynamicLights;
 
-	public int[] camTarget = new int[3];
-
 	private boolean lwjglInitialized;
-	private boolean isRunning;
 	private boolean hasLoggedIn;
-	private boolean shouldSkipModelUpdates;
+	private boolean redrawPreviousFrame;
+	private Scene skipScene;
 
 	public boolean useLowMemoryMode;
-	public boolean isInGauntlet;
 	public boolean isInChambersOfXeric;
 
-	private final Map<Integer, TempModelInfo> frameModelInfoMap = new HashMap<>();
-
-	@Subscribe
-	public void onChatMessage(final ChatMessage event) {
-		// Reload the scene if the player is in the gauntlet and opening a new room, to pull the new data into static buffers
-		if (isInGauntlet && event.getMessage().equals("You light the nodes in the corridor to help guide the way."))
-			reloadSceneNextGameTick();
-	}
+	private final Map<Integer, ModelOffsets> frameModelInfoMap = new HashMap<>();
 
 	@Provides
 	HdPluginConfig provideConfig(ConfigManager configManager) {
@@ -556,10 +543,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				modelOverrideManager.startUp();
 				lightManager.startUp();
 
-				isRunning = true;
 				hasLoggedIn = client.getGameState().getState() > GameState.LOGGING_IN.getState();
-				shouldSkipModelUpdates = false;
-				isInGauntlet = false;
+				redrawPreviousFrame = false;
+				skipScene = null;
 				isInChambersOfXeric = false;
 
 				if (client.getGameState() == GameState.LOGGED_IN) {
@@ -582,8 +568,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Override
 	protected void shutDown() {
-		isRunning = false;
-
 		FileWatcher.destroy();
 
 		clientThread.invoke(() -> {
@@ -963,6 +947,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	private void destroyModelSortingBins() {
+		// Don't allow redrawing the previous frame if the model sorting buffers are no longer valid
+		redrawPreviousFrame = false;
+
 		numSortingBins = 0;
 		modelSortingBinFaceCounts = null;
 		modelSortingBinThreadCounts = null;
@@ -1396,25 +1383,16 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Override
 	public void drawScene(int cameraX, int cameraY, int cameraZ, int cameraPitch, int cameraYaw, int plane) {
-		final Scene scene = client.getScene();
-		if (sceneContext == null || sceneContext.scene != scene) {
-			log.error("Scene being drawn is not the current scene context", new Throwable());
-			stopPlugin();
+		if (sceneContext == null)
 			return;
-		}
 
+		final Scene scene = client.getScene();
 		scene.setDrawDistance(getDrawDistance());
 
-		yaw = client.getCameraYaw();
-		pitch = client.getCameraPitch();
 		viewportOffsetX = client.getViewportXOffset();
 		viewportOffsetY = client.getViewportYOffset();
 
-		// Update the camera target only when not loading, to keep drawing correct shadows while loading
-		if (client.getGameState().getState() > GameState.LOADING.getState())
-			camTarget = getCameraFocalPoint();
-
-		if (!shouldSkipModelUpdates) {
+		if (!redrawPreviousFrame) {
 			// Only reset the target buffer offset right before drawing the scene. That way if there are frames
 			// after this that don't involve a scene draw, like during LOADING/HOPPING/CONNECTION_LOST, we can
 			// still redraw the previous frame's scene to emulate the client behavior of not painting over the
@@ -1431,72 +1409,93 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			numPassthroughModels += staticUnordered.limit() / 8;
 		}
 
+		sceneContext.cameraPosition[0] = cameraX;
+		sceneContext.cameraPosition[1] = cameraY;
+		sceneContext.cameraPosition[2] = cameraZ;
+		sceneContext.cameraOrientation[0] = cameraYaw;
+		sceneContext.cameraOrientation[1] = cameraPitch;
+
+		if (sceneContext.scene == scene) {
+			sceneContext.cameraFocalPoint[0] = client.getOculusOrbFocalPointX();
+			sceneContext.cameraFocalPoint[1] = client.getOculusOrbFocalPointY();
+			Arrays.fill(sceneContext.cameraShift, 0);
+
+			try {
+				environmentManager.update(sceneContext);
+				lightManager.update(sceneContext);
+			} catch (Exception ex) {
+				log.error("Error while updating environment or lights:", ex);
+				stopPlugin();
+				return;
+			}
+		} else {
+			sceneContext.cameraShift[0] = sceneContext.cameraFocalPoint[0] - client.getOculusOrbFocalPointX();
+			sceneContext.cameraShift[1] = sceneContext.cameraFocalPoint[1] - client.getOculusOrbFocalPointY();
+			sceneContext.cameraPosition[0] += sceneContext.cameraShift[0];
+			sceneContext.cameraPosition[2] += sceneContext.cameraShift[1];
+		}
+
 		// UBO. Only the first 32 bytes get modified here, the rest is the constant sin/cos table.
 		// We can reuse the vertex buffer since it isn't used yet.
 		sceneContext.stagingBufferVertices.clear();
 		sceneContext.stagingBufferVertices.ensureCapacity(32);
 		IntBuffer uniformBuf = sceneContext.stagingBufferVertices.getBuffer();
 		uniformBuf
-			.put(yaw)
-			.put(pitch)
+			.put(sceneContext.cameraOrientation)
 			.put(client.getCenterX())
 			.put(client.getCenterY())
 			.put(client.getScale())
-			.put(cameraX)
-			.put(cameraY)
-			.put(cameraZ);
-		uniformBuf.flip();
+			.put(sceneContext.cameraPosition)
+			.flip();
 
 		glBindBuffer(GL_UNIFORM_BUFFER, hUniformBufferCamera.glBufferId);
-		glBufferSubData(GL_UNIFORM_BUFFER, 0, uniformBuf);
+		glBufferSubData(GL_UNIFORM_BUFFER, 0, sceneContext.stagingBufferVertices.getBuffer());
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
 		glBindBufferBase(GL_UNIFORM_BUFFER, 0, hUniformBufferCamera.glBufferId);
-		uniformBuf.clear();
+		sceneContext.stagingBufferVertices.clear();
 
 		// Bind materials UBO
 		glBindBufferBase(GL_UNIFORM_BUFFER, 1, hUniformBufferMaterials.glBufferId);
 		glBindBufferBase(GL_UNIFORM_BUFFER, 2, hUniformBufferWaterTypes.glBufferId);
 
-		// Update lights UBO
-		uniformBufferLights.clear();
-		ArrayList<SceneLight> visibleLights = lightManager.getVisibleLights(getDrawDistance(), configMaxDynamicLights);
-		sceneContext.visibleLightCount = visibleLights.size();
-		for (SceneLight light : visibleLights)
-		{
-			uniformBufferLights.putInt(light.x);
-			uniformBufferLights.putInt(light.y);
-			uniformBufferLights.putInt(light.z);
-			uniformBufferLights.putFloat(light.currentSize);
-			uniformBufferLights.putFloat(light.currentColor[0]);
-			uniformBufferLights.putFloat(light.currentColor[1]);
-			uniformBufferLights.putFloat(light.currentColor[2]);
-			uniformBufferLights.putFloat(light.currentStrength);
-		}
-		uniformBufferLights.flip();
-		if (configMaxDynamicLights > 0)
-		{
-			glBindBuffer(GL_UNIFORM_BUFFER, hUniformBufferLights.glBufferId);
-			glBufferSubData(GL_UNIFORM_BUFFER, 0, uniformBufferLights);
-			glBindBuffer(GL_UNIFORM_BUFFER, 0);
-		}
-		uniformBufferLights.clear();
+		if (sceneContext.scene == scene) {
+			// Update lights UBO
+			uniformBufferLights.clear();
+			ArrayList<SceneLight> visibleLights = lightManager.getVisibleLights(configMaxDynamicLights);
+			sceneContext.visibleLightCount = visibleLights.size();
+			for (SceneLight light : visibleLights) {
+				uniformBufferLights.putInt(light.x + sceneContext.cameraShift[0]);
+				uniformBufferLights.putInt(light.y + sceneContext.cameraShift[1]);
+				uniformBufferLights.putInt(light.z);
+				uniformBufferLights.putFloat(light.currentSize);
+				uniformBufferLights.putFloat(light.currentColor[0]);
+				uniformBufferLights.putFloat(light.currentColor[1]);
+				uniformBufferLights.putFloat(light.currentColor[2]);
+				uniformBufferLights.putFloat(light.currentStrength);
+			}
+			uniformBufferLights.flip();
+			if (configMaxDynamicLights > 0) {
+				glBindBuffer(GL_UNIFORM_BUFFER, hUniformBufferLights.glBufferId);
+				glBufferSubData(GL_UNIFORM_BUFFER, 0, uniformBufferLights);
+				glBindBuffer(GL_UNIFORM_BUFFER, 0);
+			}
+			uniformBufferLights.clear();
 
-		glBindBufferBase(GL_UNIFORM_BUFFER, 3, hUniformBufferLights.glBufferId);
+			glBindBufferBase(GL_UNIFORM_BUFFER, 3, hUniformBufferLights.glBufferId);
+		}
 	}
 
 	@Override
 	public void postDrawScene() {
-		if (!isRunning)
+		if (sceneContext == null)
 			return;
 
 		// The client only updates animations once per client tick, so we can skip updating geometry buffers,
 		// but the compute shaders should still be executed in case the camera angle has changed.
 		// Technically we could skip compute shaders as well when the camera is unchanged,
 		// but it would only lead to micro stuttering when rotating the camera, compared to no rotation.
-		if (!shouldSkipModelUpdates) {
-			assert sceneContext != null;
-
+		if (!redrawPreviousFrame) {
 			// Geometry buffers
 			sceneContext.stagingBufferVertices.flip();
 			sceneContext.stagingBufferUvs.flip();
@@ -1561,9 +1560,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				CL_MEM_WRITE_ONLY
 			);
 			updateSceneVao(hRenderBufferVertices, hRenderBufferUvs, hRenderBufferNormals);
-
-			// Once geometry buffers have been updated, they can be reused until the client actually modifies the scene
-			shouldSkipModelUpdates = config.furtherUnlockFps();
 		}
 
 		if (computeMode == ComputeMode.OPENCL) {
@@ -1615,8 +1611,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		checkGLErrors();
 
-		numPassthroughModels = 0;
-		Arrays.fill(numModelsToSort, 0);
+		if (!redrawPreviousFrame) {
+			numPassthroughModels = 0;
+			Arrays.fill(numModelsToSort, 0);
+		}
+
+		// Once geometry buffers have been updated, they can be reused until the client actually modifies the scene
+		if (config.furtherUnlockFps())
+			redrawPreviousFrame = true;
 	}
 
 	@Override
@@ -1625,7 +1627,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		SceneTilePaint paint, int tileZ, int tileX, int tileY,
 		int zoom, int centerX, int centerY
 	) {
-		if (shouldSkipModelUpdates || paint.getBufferLen() <= 0)
+		if (redrawPreviousFrame || paint.getBufferLen() <= 0)
 			return;
 
 		int vertexCount = paint.getBufferLen();
@@ -1666,7 +1668,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		SceneTileModel model, int tileZ, int tileX, int tileY,
 		int zoom, int centerX, int centerY
 	) {
-		if (shouldSkipModelUpdates || model.getBufferLen() <= 0)
+		if (redrawPreviousFrame || model.getBufferLen() <= 0)
 			return;
 
 		final int localX = tileX * LOCAL_TILE_SIZE;
@@ -1809,16 +1811,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			textureProvider != null &&
 			client.getGameState().getState() >= GameState.LOADING.getState()
 		) {
-			try {
-				WorldPoint targetWorldPosition = sceneContext.localToWorld(new LocalPoint(camTarget[0], camTarget[1]), client.getPlane());
-				environmentManager.update(sceneContext, targetWorldPosition);
-				lightManager.update(sceneContext);
-			} catch (Exception ex) {
-				log.error("Error while updating environment or lights:", ex);
-				stopPlugin();
-				return;
-			}
-
 			// lazy init textures as they may not be loaded at plugin start.
 			textureManager.ensureTexturesLoaded(textureProvider);
 
@@ -1875,9 +1867,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 				glUseProgram(glShadowProgram);
 
-				final int camX = camTarget[0];
-				final int camY = camTarget[1];
-				final int camZ = camTarget[2];
+				final int camX = sceneContext.cameraFocalPoint[0];
+				final int camY = sceneContext.cameraFocalPoint[1];
 
 				final int drawDistanceSceneUnits = Math.min(config.shadowDistance().getValue(), getDrawDistance()) * LOCAL_TILE_SIZE / 2;
 				final int east = Math.min(camX + drawDistanceSceneUnits, LOCAL_TILE_SIZE * SCENE_SIZE);
@@ -1896,7 +1887,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				Mat4.mul(lightProjectionMatrix, Mat4.scale(scale, scale, scale));
 				Mat4.mul(lightProjectionMatrix, Mat4.ortho(width, height, near));
 				Mat4.mul(lightProjectionMatrix, lightViewMatrix);
-				Mat4.mul(lightProjectionMatrix, Mat4.translate(-(width / 2f + west), -camZ, -(height / 2f + south)));
+				Mat4.mul(lightProjectionMatrix, Mat4.translate(-(width / 2f + west), 0, -(height / 2f + south)));
 				glUniformMatrix4fv(uniShadowLightProjectionMatrix, false, lightProjectionMatrix);
 
 				// bind uniforms
@@ -2046,9 +2037,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			// Calculate projection matrix
 			float[] projectionMatrix = Mat4.scale(client.getScale(), client.getScale(), 1);
 			Mat4.mul(projectionMatrix, Mat4.projection(viewportWidth, viewportHeight, NEAR_PLANE));
-			Mat4.mul(projectionMatrix, Mat4.rotateX((float) (pitch * UNIT - Math.PI)));
-			Mat4.mul(projectionMatrix, Mat4.rotateY((float) (yaw * UNIT)));
-			Mat4.mul(projectionMatrix, Mat4.translate(-client.getCameraX2(), -client.getCameraY2(), -client.getCameraZ2()));
+			Mat4.mul(projectionMatrix, Mat4.rotateX((float) (sceneContext.cameraOrientation[1] * UNIT - Math.PI)));
+			Mat4.mul(projectionMatrix, Mat4.rotateY((float) (sceneContext.cameraOrientation[0] * UNIT)));
+			Mat4.mul(projectionMatrix, Mat4.translate(
+				-sceneContext.cameraPosition[0],
+				-sceneContext.cameraPosition[1],
+				-sceneContext.cameraPosition[2]
+			));
 			glUniformMatrix4fv(uniProjectionMatrix, false, projectionMatrix);
 
 			// Bind directional light projection matrix
@@ -2231,26 +2226,42 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Subscribe
 	public void onGameStateChanged(GameStateChanged gameStateChanged) {
-		if (!isRunning)
-			return;
-
 		if (gameStateChanged.getGameState() == GameState.LOGIN_SCREEN) {
 			renderBufferOffset = 0;
-			sceneContext = null;
 			hasLoggedIn = false;
 			environmentManager.reset();
 		}
 	}
 
-	public void uploadScene() {
+	public void reuploadScene() {
 		assert client.isClientThread() : "Loading a scene is unsafe while the client can simultaneously initiate a scene load";
 		Scene scene = client.getScene();
-		loadScene(scene);
-		swapScene(scene);
+		if (skipScene == scene) {
+			loadScene(scene);
+			if (skipScene == scene)
+				skipScene = null;
+			swapScene(scene);
+		} else {
+			new Thread(
+				() -> {
+					loadScene(scene);
+					clientThread.invokeLater(() -> swapScene(scene));
+				},
+				"117 HD Scene Loader"
+			).start();
+		}
 	}
 
 	@Override
 	public void loadScene(Scene scene) {
+		if (skipScene != scene && HDUtils.sceneIsTheGauntlet(scene)) {
+			// Some game objects in The Gauntlet are spawned in too late for the initial scene load,
+			// so we skip the first scene load and trigger another scene load the next game tick
+			reloadSceneNextGameTick();
+			skipScene = scene;
+			return;
+		}
+
 		if (useLowMemoryMode)
 			return; // Force scene loading to happen on the client thread
 
@@ -2282,11 +2293,19 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			);
 			displayOutOfMemoryMessage();
 			stopPlugin();
+		} catch (Throwable ex) {
+			log.error("Error while loading scene:", ex);
+			stopPlugin();
 		}
 	}
 
 	@Override
 	public synchronized void swapScene(Scene scene) {
+		if (skipScene == scene) {
+			redrawPreviousFrame = true;
+			return;
+		}
+
 		if (nextSceneContext == null) {
 			if (useLowMemoryMode) {
 				// Load the scene synchronously on the client thread, so we can reuse the old scene context
@@ -2361,9 +2380,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	public void reloadSceneIn(int gameTicks) {
 		assert gameTicks > 0 : "A value <= 0 will not reload the scene";
-		if (gameTicks > gameTicksUntilSceneReload) {
+		if (gameTicks > gameTicksUntilSceneReload)
 			gameTicksUntilSceneReload = gameTicks;
-		}
 	}
 
 	public void abortSceneReload() {
@@ -2439,7 +2457,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					case KEY_LEGACY_GREY_COLORS:
 					case KEY_FILL_GAPS_IN_TERRAIN:
 						modelPusher.clearModelCache();
-						uploadScene();
+						reuploadScene();
 						break;
 					case KEY_UNLOCK_FPS:
 					case KEY_VSYNC_MODE:
@@ -2453,7 +2471,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 						break;
 					case KEY_MODEL_SORTING_CONFIGURATION:
 						waitUntilIdle();
-						shouldSkipModelUpdates = false;
 						destroyModelSortingBins();
 						initModelSortingBins(maxComputeThreadCount);
 						recompilePrograms();
@@ -2518,19 +2535,26 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		int tileExX,
 		int tileExY
 	) {
+		if (sceneContext == null)
+			return false;
+
 		int[][][] tileHeights = scene.getTileHeights();
-		int x = ((tileExX - SCENE_OFFSET) << Perspective.LOCAL_COORD_BITS) + 64 - cameraX;
-		int z = ((tileExY - SCENE_OFFSET) << Perspective.LOCAL_COORD_BITS) + 64 - cameraZ;
+		int x = ((tileExX - SCENE_OFFSET) << Perspective.LOCAL_COORD_BITS) + 64;
+		int z = ((tileExY - SCENE_OFFSET) << Perspective.LOCAL_COORD_BITS) + 64;
 		int y = Math.max(
 			Math.max(tileHeights[plane][tileExX][tileExY], tileHeights[plane][tileExX][tileExY + 1]),
 			Math.max(tileHeights[plane][tileExX + 1][tileExY], tileHeights[plane][tileExX + 1][tileExY + 1])
-		) - cameraY + GROUND_MIN_Y;
+		) + GROUND_MIN_Y;
 
 		if (sceneContext != null && sceneContext.scene == scene) {
 			int depthLevel = sceneContext.underwaterDepthLevels[plane][tileExX][tileExY];
 			if (depthLevel > 0)
 				y += ProceduralGenerator.DEPTH_LEVEL_SLOPE[depthLevel - 1] - GROUND_MIN_Y;
 		}
+
+		x -= sceneContext.cameraPosition[0];
+		y -= sceneContext.cameraPosition[1];
+		z -= sceneContext.cameraPosition[2];
 
 		int radius = 96; // ~ 64 * sqrt(2)
 
@@ -2553,10 +2577,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				int ybottom = pitchSin * radius >> 16;
 				int var20 = (ry + ybottom) * zoom;
 				// top
-				if (var20 > Rasterizer3D_clipNegativeMidY * depth) {
-					// we don't test the bottom so we don't have to find the height of all the models on the tile
-					return true;
-				}
+				// we don't test the bottom so we don't have to find the height of all the models on the tile
+				return var20 > Rasterizer3D_clipNegativeMidY * depth;
 			}
 		}
 		return false;
@@ -2566,6 +2588,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	 * Check is a model is visible and should be drawn.
 	 */
 	private boolean isOutsideViewport(Model model, int pitchSin, int pitchCos, int yawSin, int yawCos, int x, int y, int z) {
+		if (sceneContext == null)
+			return true;
+
 		model.calculateBoundsCylinder();
 
 		final int XYZMag = model.getXYZMag();
@@ -2618,8 +2643,21 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	 * @param hash        A unique hash of the renderable consisting of some useful information. See {@link rs117.hd.utils.ModelHash} for more details.
 	 */
 	@Override
-	public void draw(Renderable renderable, int orientation, int pitchSin, int pitchCos, int yawSin, int yawCos, int x, int y, int z, long hash)
-	{
+	public void draw(
+		Renderable renderable,
+		int orientation,
+		int pitchSin,
+		int pitchCos,
+		int yawSin,
+		int yawCos,
+		int x,
+		int y,
+		int z,
+		long hash
+	) {
+		if (sceneContext == null)
+			return;
+
 		Model model, offsetModel;
 		try {
 			// getModel may throw an exception from vanilla client code
@@ -2642,20 +2680,30 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			return;
 		}
 
-		// Model may be in the scene buffer
-		assert sceneContext != null;
-		if (offsetModel.getSceneId() == sceneContext.id) {
+		// Apply height to renderable from the model
+		if (model != renderable)
+			renderable.setModelHeight(model.getModelHeight());
+
+		if (isOutsideViewport(model, pitchSin, pitchCos, yawSin, yawCos, x, y, z))
+			return;
+
+		client.checkClickbox(model, orientation, pitchSin, pitchCos, yawSin, yawCos, x, y, z, hash);
+
+		if (redrawPreviousFrame || modelOverrideManager.shouldHideModel(hash, x, z))
+			return;
+
+		eightIntWrite[3] = renderBufferOffset;
+		eightIntWrite[4] = model.getRadius() << 12 | orientation;
+		eightIntWrite[5] = x + sceneContext.cameraPosition[0];
+		eightIntWrite[6] = y + sceneContext.cameraPosition[1];
+		eightIntWrite[7] = z + sceneContext.cameraPosition[2];
+
+		int faceCount;
+		if (sceneContext.id == offsetModel.getSceneId()) {
 			assert model == renderable;
 
-			if (isOutsideViewport(model, pitchSin, pitchCos, yawSin, yawCos, x, y, z))
-				return;
-
-			client.checkClickbox(model, orientation, pitchSin, pitchCos, yawSin, yawCos, x, y, z, hash);
-
-			if (shouldSkipModelUpdates || modelOverrideManager.shouldHideModel(hash, x, z))
-				return;
-
-			int faceCount = Math.min(MAX_FACE_COUNT, offsetModel.getFaceCount());
+			// The model is part of the static scene buffer
+			faceCount = Math.min(MAX_FACE_COUNT, offsetModel.getFaceCount());
 			int uvOffset = offsetModel.getUvBufferOffset();
 			int plane = (int) ((hash >> 49) & 3);
 			boolean hillskew = offsetModel != model;
@@ -2663,81 +2711,45 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			eightIntWrite[0] = offsetModel.getBufferOffset();
 			eightIntWrite[1] = uvOffset;
 			eightIntWrite[2] = faceCount;
-			eightIntWrite[3] = renderBufferOffset;
-			eightIntWrite[4] = (hillskew ? 1 : 0) << 26 | plane << 24 | model.getRadius() << 12 | orientation;
-			eightIntWrite[5] = x + client.getCameraX2();
-			eightIntWrite[6] = y + client.getCameraY2();
-			eightIntWrite[7] = z + client.getCameraZ2();
-
-			bufferForTriangles(faceCount).ensureCapacity(8).put(eightIntWrite);
-
-			renderBufferOffset += faceCount * 3;
+			eightIntWrite[4] |= (hillskew ? 1 : 0) << 26 | plane << 24;
 		} else {
-			// Temporary model (animated or otherwise not a static Model on the scene)
-			// Apply height to renderable from the model
-			if (model != renderable)
-				renderable.setModelHeight(model.getModelHeight());
-
-			if (isOutsideViewport(model, pitchSin, pitchCos, yawSin, yawCos, x, y, z))
-				return;
-
-			client.checkClickbox(model, orientation, pitchSin, pitchCos, yawSin, yawCos, x, y, z, hash);
-
-			if (shouldSkipModelUpdates || modelOverrideManager.shouldHideModel(hash, x, z))
-				return;
-
-			eightIntWrite[3] = renderBufferOffset;
-			eightIntWrite[4] = model.getRadius() << 12 | orientation;
-			eightIntWrite[5] = x + client.getCameraX2();
-			eightIntWrite[6] = y + client.getCameraY2();
-			eightIntWrite[7] = z + client.getCameraZ2();
-
-			TempModelInfo tempModelInfo = null;
+			// Temporary model (animated or otherwise not a static Model already in the scene buffer)
+			ModelOffsets modelOffsets = null;
 			int batchHash = 0;
-
 			if (configModelBatching || configModelCaching) {
 				modelHasher.setModel(model);
 				if (configModelBatching) {
 					batchHash = modelHasher.calculateBatchHash();
-					tempModelInfo = frameModelInfoMap.get(batchHash);
+					modelOffsets = frameModelInfoMap.get(batchHash);
 				}
 			}
 
-			if (tempModelInfo != null && tempModelInfo.getFaceCount() == model.getFaceCount()) {
-				eightIntWrite[0] = tempModelInfo.getTempOffset();
-				eightIntWrite[1] = tempModelInfo.getTempUvOffset();
-				eightIntWrite[2] = tempModelInfo.getFaceCount();
-
-				bufferForTriangles(tempModelInfo.getFaceCount()).ensureCapacity(8).put(eightIntWrite);
-
-				renderBufferOffset += tempModelInfo.getFaceCount() * 3;
+			if (modelOffsets != null && modelOffsets.faceCount == model.getFaceCount()) {
+				faceCount = modelOffsets.faceCount;
+				eightIntWrite[0] = modelOffsets.vertexOffset;
+				eightIntWrite[1] = modelOffsets.uvOffset;
+				eightIntWrite[2] = modelOffsets.faceCount;
 			} else {
 				int vertexOffset = dynamicOffsetVertices + sceneContext.getVertexOffset();
 				int uvOffset = dynamicOffsetUvs + sceneContext.getUvOffset();
-
 				modelPusher.pushModel(sceneContext, null, hash, model, ObjectType.NONE, 0, true);
-				final int faceCount = sceneContext.modelPusherResults[0] / 3;
-				if (sceneContext.modelPusherResults[1] <= 0)
+				if (sceneContext.modelPusherResults[1] == 0)
 					uvOffset = -1;
-
+				faceCount = sceneContext.modelPusherResults[0];
 				eightIntWrite[0] = vertexOffset;
 				eightIntWrite[1] = uvOffset;
 				eightIntWrite[2] = faceCount;
-				bufferForTriangles(faceCount).ensureCapacity(8).put(eightIntWrite);
-
-				renderBufferOffset += sceneContext.modelPusherResults[0];
 
 				// add this temporary model to the map for batching purposes
-				if (configModelBatching) {
-					tempModelInfo = new TempModelInfo();
-					tempModelInfo
-						.setTempOffset(vertexOffset)
-						.setTempUvOffset(uvOffset)
-						.setFaceCount(faceCount);
-					frameModelInfoMap.put(batchHash, tempModelInfo);
-				}
+				if (configModelBatching)
+					frameModelInfoMap.put(batchHash, new ModelOffsets(faceCount, vertexOffset, uvOffset));
 			}
 		}
+
+		bufferForTriangles(faceCount)
+			.ensureCapacity(8)
+			.put(eightIntWrite);
+		renderBufferOffset += faceCount * 3;
 	}
 
 	/**
@@ -2782,7 +2794,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		}
 	}
 
-	private int getDrawDistance() {
+	public int getDrawDistance() {
 		return HDUtils.clamp(config.drawDistance(), 0, MAX_DISTANCE);
 	}
 
@@ -2932,13 +2944,17 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Subscribe
 	public void onClientTick(ClientTick clientTick) {
-		shouldSkipModelUpdates = false;
+		if (skipScene != client.getScene())
+			redrawPreviousFrame = false;
 	}
 
 	@Subscribe
 	public void onGameTick(GameTick gameTick) {
-		if (--gameTicksUntilSceneReload == 0)
-			uploadScene();
+		if (gameTicksUntilSceneReload > 0) {
+			if (gameTicksUntilSceneReload == 1)
+				reuploadScene();
+			--gameTicksUntilSceneReload;
+		}
 	}
 
 	private void waitUntilIdle() {

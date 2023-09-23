@@ -356,4 +356,28 @@ public class HDUtils {
 	public static boolean is32Bit() {
 		return System.getProperty("sun.arch.data.model", "Unknown").equals("32");
 	}
+
+	public static boolean sceneIsTheGauntlet(Scene scene) {
+		if (!scene.isInstance())
+			return false;
+
+		var templateChunks = scene.getInstanceTemplateChunks();
+		for (var plane : templateChunks) {
+			for (var column : plane) {
+				for (int chunk : column) {
+					if (chunk == -1)
+						continue;
+
+					int worldX = (chunk >> 14 & 1023) * 8;
+					int worldY = (chunk >> 3 & 2047) * 8;
+					int regionId = HDUtils.worldToRegionID(worldX, worldY);
+
+					// The Gauntlet should only ever consist of chunks from these regions
+					return regionId == 7512 || regionId == 7768;
+				}
+			}
+		}
+
+		return false;
+	}
 }
