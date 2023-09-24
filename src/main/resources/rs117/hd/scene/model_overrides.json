@@ -1241,7 +1241,9 @@
       1278,
       10819,
       10833
-    ]
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
   },
   {
     "description": "Fallen Tree",
@@ -1249,7 +1251,9 @@
     "objectIds": [
       9661,
       9663
-    ]
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
   },
   {
     "description": "DEAD_TREES",
@@ -1281,7 +1285,9 @@
       14565,
       14566,
       39679
-    ]
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
   },
   {
     "description": "TREE_STUMP",
@@ -1290,7 +1296,10 @@
       1341,
       4328,
       14517
-    ]
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+
   },
   {
     "description": "FARMING_PATCH_1",
