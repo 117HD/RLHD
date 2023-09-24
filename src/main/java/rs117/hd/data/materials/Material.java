@@ -355,7 +355,8 @@ public enum Material {
 		.setOverrideBaseColor(true)
 		.setFlowMap(LAVA_FLOW_MAP, 0.04f, 36, 12)),
 
-	BARK,
+	BARK_N,
+	BARK(p -> p.setNormalMap(BARK_N)),
 	LIGHT_BARK(BARK, p -> p.setBrightness(1.75f)),
 	WOOD_GRAIN,
 	WOOD_GRAIN_2_N,
