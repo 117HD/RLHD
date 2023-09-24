@@ -142,6 +142,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	public static final int MAX_FACE_COUNT = 6144;
 	public static final int MAX_DISTANCE = Constants.EXTENDED_SCENE_SIZE;
+	public static final int GROUND_MIN_Y = 350; // how far below the ground models extend
 	public static final int MAX_FOG_DEPTH = 100;
 	public static final int SCALAR_BYTES = 4;
 	public static final int VERTEX_SIZE = 4; // 4 ints per vertex
@@ -2514,16 +2515,22 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		int cameraY,
 		int cameraZ,
 		int plane,
-		int msx,
-		int msy
+		int tileExX,
+		int tileExY
 	) {
 		int[][][] tileHeights = scene.getTileHeights();
-		int x = ((msx - SCENE_OFFSET) << Perspective.LOCAL_COORD_BITS) + 64 - cameraX;
-		int z = ((msy - SCENE_OFFSET) << Perspective.LOCAL_COORD_BITS) + 64 - cameraZ;
+		int x = ((tileExX - SCENE_OFFSET) << Perspective.LOCAL_COORD_BITS) + 64 - cameraX;
+		int z = ((tileExY - SCENE_OFFSET) << Perspective.LOCAL_COORD_BITS) + 64 - cameraZ;
 		int y = Math.max(
-			Math.max(tileHeights[plane][msx][msy], tileHeights[plane][msx][msy + 1]),
-			Math.max(tileHeights[plane][msx + 1][msy], tileHeights[plane][msx + 1][msy + 1])
-		) - cameraY;
+			Math.max(tileHeights[plane][tileExX][tileExY], tileHeights[plane][tileExX][tileExY + 1]),
+			Math.max(tileHeights[plane][tileExX + 1][tileExY], tileHeights[plane][tileExX + 1][tileExY + 1])
+		) - cameraY + GROUND_MIN_Y;
+
+		if (sceneContext != null && sceneContext.scene == scene) {
+			int depthLevel = sceneContext.underwaterDepthLevels[plane][tileExX][tileExY];
+			if (depthLevel > 0)
+				y += ProceduralGenerator.DEPTH_LEVEL_SLOPE[depthLevel - 1] - GROUND_MIN_Y;
+		}
 
 		int radius = 96; // ~ 64 * sqrt(2)
 
