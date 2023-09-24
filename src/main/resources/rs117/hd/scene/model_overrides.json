@@ -1301,7 +1301,15 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.8
-
+  },
+  {
+    "description": "Objects - Tree - Yew",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      8390
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
   },
   {
     "description": "FARMING_PATCH_1",
