@@ -10446,7 +10446,8 @@
     "baseMaterial": "BARK",
     "objectIds": [
       3648
-    ]
+    ],
+    "uvType": "BOX"
   },
   {
     "description": "Varrock - Wall Decoration - Wooden - Plank",
