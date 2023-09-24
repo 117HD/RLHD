@@ -5827,7 +5827,7 @@
       1367,
       1368
     ],
-    "uvType": "MODEL_XY_MIRROR_B",
+    "uvType": "BOX",
     "uvScale": 0.6,
     "uvOrientation": 342
   },
@@ -5838,7 +5838,7 @@
       1363,
       1364
     ],
-    "uvType": "MODEL_XY_MIRROR_B",
+    "uvType": "BOX",
     "uvScale": 0.4,
     "uvOrientation": 342
   },
@@ -9588,7 +9588,9 @@
     "objectIds": [
       3514,
       3515
-    ]
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
   },
   {
     "description": "Morytania - Giant Tree",
@@ -9597,7 +9599,9 @@
       4048,
       4049,
       4050
-    ]
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
   },
   {
     "description": "Morytania - Tall Grass",
