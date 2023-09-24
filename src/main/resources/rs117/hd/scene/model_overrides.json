@@ -1252,7 +1252,8 @@
     "objectIds": [
       1297,
       9661,
-      9663
+      9663,
+      40347
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -1298,6 +1299,7 @@
     "objectIds": [
       1341,
       4328,
+      6212,
       14516,
       14517
     ],
@@ -1319,6 +1321,7 @@
     "description": "Objects - Tree - Willow",
     "baseMaterial": "BARK",
     "objectIds": [
+      9471,
       10819,
       10829,
       10831,
@@ -7344,6 +7347,7 @@
     "description": "Ground Decoration - Sticks - Small",
     "baseMaterial": "BARK",
     "objectIds": [
+      1250,
       1251,
       1252
     ],
