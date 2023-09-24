@@ -3464,7 +3464,7 @@
   },
   {
     "description": "Single row fences",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       2050,
       2051,
@@ -3495,7 +3495,9 @@
       25796,
       29110
     ],
-    "flatNormals": true
+    "flatNormals": true,
+    "uvType": "BOX",
+    "uvOrientation": 512
   },
   {
     "description": "FENCES_3",
@@ -4108,8 +4110,7 @@
       23177,
       39716
     ],
-    "uvType": "MODEL_XZ",
-    "uvOrientation": 1536,
+    "uvType": "BOX",
     "flatNormals": true,
     "uvScale": 0.6
   },
@@ -5939,7 +5940,7 @@
   },
   {
     "description": "Wall - Decoration - Wooden - Crate",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       10130,
       10131,
@@ -5947,7 +5948,9 @@
       10133,
       10134
     ],
-    "flatNormals": true
+    "flatNormals": true,
+    "uvType": "BOX",
+    "uvOrientationY": 512
   },
   {
     "description": "Metallic - Ground - Armor",
@@ -5989,8 +5992,9 @@
       12278
     ],
     "uvScale": 0.4,
-    "uvType": "MODEL_XY",
-    "flatNormals": true
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvOrientation": 512
   },
   {
     "description": "Objects - Metallic - Pots",
@@ -6656,7 +6660,6 @@
       17662
     ],
     "uvType": "BOX",
-    "uvOrientation": 512,
     "flatNormals": true
   },
   {
@@ -8891,13 +8894,13 @@
   },
   {
     "description": "Goblin Battlements",
-    "baseMaterial": "WOOD_GRAIN",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       12439,
       12438,
       12441
     ],
-    "uvType": "GEOMETRY"
+    "uvType": "BOX"
   },
   {
     "description": "Sacks Pile",
@@ -9593,11 +9596,20 @@
     "objectIds": [
       611,
       3834,
-      7430,
-      39687
+      7430
     ],
     "flatNormals": true,
     "uvType": "BOX"
+  },
+  {
+    "description": "Generic - Plank - Tables - Picnic Bench - Rotated",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      39687
+    ],
+    "flatNormals": true,
+    "uvType": "BOX",
+    "uvOrientationY": 512
   },
   {
     "description": "Generic - Plank - Tables - Picnic Bench - Rotated",
@@ -9997,8 +10009,7 @@
     "objectIds": [
       39643
     ],
-    "uvType": "MODEL_XZ",
-    "uvOrientation": 1536
+    "uvType": "BOX"
   },
   {
     "description": "Ground Decoration - Flat Rocks - Small",
