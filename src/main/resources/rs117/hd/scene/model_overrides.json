@@ -1239,6 +1239,7 @@
       10820,
       1276,
       1278,
+      10041,
       10819,
       10833
     ],
@@ -1307,9 +1308,23 @@
     "baseMaterial": "BARK",
     "objectIds": [
       8390
+
     ],
     "uvType": "BOX",
     "uvScale": 0.8
+  },
+  {
+    "description": "Objects - Tree - Willow",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      10819,
+      10829,
+      10833
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationZ": 128,
+    "uvOrientationY": 512
   },
   {
     "description": "FARMING_PATCH_1",
@@ -7329,9 +7344,8 @@
       1251,
       1252
     ],
-    "uvType": "MODEL_XZ",
-    "uvScale": 0.6,
-    "uvOrientation": 300
+    "uvType": "BOX",
+    "uvScale": 0.4
   },
   {
     "description": "Gnome - Walls - Rope Rails",
