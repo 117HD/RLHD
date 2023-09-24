@@ -1307,7 +1307,8 @@
     "description": "Objects - Tree - Yew",
     "baseMaterial": "BARK",
     "objectIds": [
-      8390
+      8390,
+      10822
 
     ],
     "uvType": "BOX",
@@ -1319,6 +1320,7 @@
     "objectIds": [
       10819,
       10829,
+      10831,
       10833
     ],
     "uvType": "BOX",
@@ -6818,7 +6820,7 @@
     "objectIds": [
       16639
     ],
-    "uvType": "MODEL_XY",
+    "uvType": "BOX",
     "uvOrientation": 64,
     "uvScale": 0.76
   },
@@ -7327,7 +7329,7 @@
       23530,
       23561
     ],
-    "uvType": "VANILLA"
+    "uvType": "BOX"
   },
   {
     "description": "Gnome Stronghold - Objects - Tree - Fake Dead Tree",
@@ -7335,7 +7337,7 @@
     "objectIds": [
       1706
     ],
-    "uvType": "VANILLA"
+    "uvType": "BOX"
   },
   {
     "description": "Ground Decoration - Sticks - Small",
@@ -8601,21 +8603,20 @@
     "objectIds": [
       6578
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "uvScale": 0.4,
     "uvOrientation": 256
   },
   {
     "description": "Jungle Tree Big",
-    "baseMaterial": "PLANT_GRUNGE_2",
+    "baseMaterial": "BARK",
     "objectIds": [
       1326,
       1327,
       1328
     ],
-    "uvType": "MODEL_XZ",
-    "uvScale": 0.2,
-    "uvOrientation": 256
+    "uvType": "BOX",
+    "uvScale": 0.62
   },
   {
     "description": "Sophamena Walls",
