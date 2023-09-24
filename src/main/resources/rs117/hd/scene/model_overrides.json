@@ -1249,11 +1249,14 @@
     "description": "Fallen Tree",
     "baseMaterial": "BARK",
     "objectIds": [
+      1297,
       9661,
       9663
     ],
     "uvType": "BOX",
-    "uvScale": 0.8
+    "uvScale": 0.8,
+    "uvOrientationY": 512,
+    "uvOrientationZ": 512
   },
   {
     "description": "DEAD_TREES",
@@ -1265,7 +1268,6 @@
       1285,
       1286,
       1289,
-      1297,
       1365,
       1383,
       1729,
