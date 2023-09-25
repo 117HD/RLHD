@@ -10547,5 +10547,14 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.7
+  },
+  {
+    "description": "Stronghold of Security Entrance",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      20790
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.72
   }
 ]
