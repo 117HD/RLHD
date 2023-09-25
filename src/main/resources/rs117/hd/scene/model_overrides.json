@@ -8606,18 +8606,22 @@
     "uvType": "MODEL_XZ"
   },
   {
-    "description": "Jungle Tree Tiny",
+    "description": "Tree - Non interactable - Jungle",
     "baseMaterial": "PLANT_GRUNGE_2",
     "objectIds": [
+      1302,
+      1303,
       1304
     ],
-    "uvType": "MODEL_XZ",
-    "uvScale": 0.4
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 256
   },
   {
     "description": "Jungle Tree Small",
     "baseMaterial": "PLANT_GRUNGE_2",
     "objectIds": [
+      4818,
       6578
     ],
     "uvType": "BOX",
@@ -8625,15 +8629,44 @@
     "uvOrientation": 256
   },
   {
-    "description": "Jungle Tree Big",
-    "baseMaterial": "BARK",
+    "description": "Jungle Tree Large - Unusual Plant",
+    "baseMaterial": "PLANT_GRUNGE_2",
+    "objectIds": [
+      1314
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Tropical Tree Big",
+    "baseMaterial": "LIGHT_BARK",
     "objectIds": [
       1326,
       1327,
-      1328
+      1328,
+      1360,
+      1361,
+      1371,
+      1372,
+      1373,
+      4845,
+      4846,
+      4847
     ],
     "uvType": "BOX",
     "uvScale": 0.62
+  },
+  {
+    "description": "Tropical Tree Big - Leaning",
+    "baseMaterial": "LIGHT_BARK",
+    "objectIds": [
+      1361
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.62,
+    "uvOrientationY": 512,
+    "uvOrientationZ": 256
   },
   {
     "description": "Sophamena Walls",
