@@ -490,6 +490,9 @@ public enum Material {
 	PLANT_GRUNGE_2(GRUNGE_2, p -> p
 		.setSpecular(0.20f, 20)
 	),
+	HD_TROPICAL_LEAF(TROPICAL_LEAF, p -> p
+		.replaceIf(HdPluginConfig::modelTextures, TROPICAL_LEAF)
+	),
 
 
 	// Seasonal
