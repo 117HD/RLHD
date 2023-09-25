@@ -1225,9 +1225,6 @@
     "description": "TREES",
     "baseMaterial": "BARK",
     "objectIds": [
-      1293,
-      1294,
-      1295,
       10823,
       37329,
       16546,
@@ -1242,6 +1239,18 @@
       10041,
       10819,
       10833
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "retainVanillaUvs": true
+  },
+  {
+    "description": "Spirit Trees",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      1293,
+      1294,
+      1295
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
