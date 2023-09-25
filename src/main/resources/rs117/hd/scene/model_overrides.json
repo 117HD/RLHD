@@ -4996,7 +4996,7 @@
       26640,
       26641
     ],
-    "uvType": "WORLD_XZ",
+    "uvType": "BOX",
     "uvScale": 0.4
   },
   {
@@ -5299,7 +5299,7 @@
       42675,
       42376
     ],
-    "uvType": "WORLD_XZ",
+    "uvType": "BOX",
     "uvScale": 0.32
   },
   {
@@ -5316,7 +5316,7 @@
       16464,
       19065
     ],
-    "uvType": "WORLD_XZ",
+    "uvType": "BOX",
     "uvScale": 0.5
   },
   {
@@ -5338,7 +5338,7 @@
       29032,
       29044
     ],
-    "uvType": "MODEL_XZ_MIRROR_B",
+    "uvType": "BOX",
     "uvScale": 0.22
   },
   {
@@ -5382,7 +5382,7 @@
       40556,
       40557
     ],
-    "uvType": "WORLD_XZ",
+    "uvType": "BOX",
     "uvScale": 0.5
   },
   {
@@ -5391,7 +5391,7 @@
     "objectIds": [
       31784
     ],
-    "uvType": "MODEL_XZ_MIRROR_B",
+    "uvType": "BOX",
     "uvScale": 0.35
   },
   {
@@ -5402,7 +5402,7 @@
       31788,
       31789
     ],
-    "uvType": "WORLD_XZ",
+    "uvType": "BOX",
     "uvScale": 0.44
   },
   {
@@ -7083,7 +7083,7 @@
       11195,
       11193
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "uvScale": 0.33
   },
   {
@@ -7157,7 +7157,7 @@
       6394,
       6395
     ],
-    "uvType": "MODEL_YZ_MIRROR_A",
+    "uvType": "BOX",
     "uvOrientation": 512,
     "uvScale": 0.6
   },
@@ -9511,7 +9511,7 @@
       17357,
       17358
     ],
-    "uvType": "GEOMETRY"
+    "uvType": "BOX"
   },
   {
     "description": "Bush Wall",
@@ -9750,7 +9750,7 @@
       24147,
       24148
     ],
-    "uvType": "MODEL_XZ_MIRROR_B",
+    "uvType": "BOX",
     "uvScale": 0.22
   },
   {
@@ -9762,7 +9762,7 @@
       24144,
       24145
     ],
-    "uvType": "MODEL_XZ_MIRROR_B",
+    "uvType": "BOX",
     "uvScale": 0.22
   },
   {
@@ -9774,7 +9774,7 @@
       24141,
       24142
     ],
-    "uvType": "MODEL_XZ_MIRROR_A",
+    "uvType": "BOX",
     "uvScale": 0.22
   },
   {
