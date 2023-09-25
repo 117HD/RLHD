@@ -210,9 +210,9 @@ public class ModelPusher {
 		boolean foundCachedVertexData = false;
 		boolean foundCachedNormalData = false;
 		boolean foundCachedUvData = skipUVs;
-		int vertexHash = 0;
-		int normalHash = 0;
-		int uvHash = 0;
+		long vertexHash = 0;
+		long normalHash = 0;
+		long uvHash = 0;
 
 		if (shouldCache) {
 			assert client.isClientThread() : "Model caching isn't thread-safe";

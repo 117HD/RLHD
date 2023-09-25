@@ -412,7 +412,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public boolean useLowMemoryMode;
 	public boolean isInChambersOfXeric;
 
-	private final Map<Integer, ModelOffsets> frameModelInfoMap = new HashMap<>();
+	private final Map<Long, ModelOffsets> frameModelInfoMap = new HashMap<>();
 
 	@Provides
 	HdPluginConfig provideConfig(ConfigManager configManager) {
@@ -2715,11 +2715,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		} else {
 			// Temporary model (animated or otherwise not a static Model already in the scene buffer)
 			ModelOffsets modelOffsets = null;
-			int batchHash = 0;
+			long batchHash = 0;
 			if (configModelBatching || configModelCaching) {
 				modelHasher.setModel(model);
 				if (configModelBatching) {
-					batchHash = modelHasher.calculateBatchHash();
+					batchHash = modelHasher.calculateVertexCacheHash();
 					modelOffsets = frameModelInfoMap.get(batchHash);
 				}
 			}
