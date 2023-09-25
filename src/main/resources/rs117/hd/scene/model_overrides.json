@@ -10527,7 +10527,6 @@
     "uvType": "BOX",
     "flatNormals": true
   },
-  ,
   {
     "description": "Ore - Empty - Rock",
     "baseMaterial": "ROCK_2",
