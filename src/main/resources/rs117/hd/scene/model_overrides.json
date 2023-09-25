@@ -1245,7 +1245,7 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
-    "preserveVanillaUvs": true
+    "retainVanillaUvs": true
   },
   {
     "description": "Fallen Tree",
@@ -1317,7 +1317,7 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
-    "preserveVanillaUvs": true
+    "retainVanillaUvs": true
   },
   {
     "description": "Objects - Tree - Willow",
@@ -1333,7 +1333,7 @@
     "uvScale": 0.8,
     "uvOrientationZ": 128,
     "uvOrientationY": 512,
-    "preserveVanillaUvs": true
+    "retainVanillaUvs": true
   },
   {
     "description": "FARMING_PATCH_1",
