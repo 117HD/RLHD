@@ -204,6 +204,7 @@ public enum Material {
 	SKULL_OBELISK(116),
 	WHITE,
 	GRAY_25,
+	GRAY_33,
 	GRAY_50,
 	GRAY_75,
 	BLACK,
