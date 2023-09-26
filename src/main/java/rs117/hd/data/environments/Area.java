@@ -1356,11 +1356,11 @@ public enum Area
 	LITHKREN(3519, 4032, 3602, 3967),
 	DS2_FLASHBACK_PLATFORM(1800, 5277, 1814, 5250),
 	DS2_FLEET_ATTACKED(regions(6486, 6487, 6488, 6489, 6742, 6743, 6744, 6745)),
-	DS2_SHIPS(1600, 5503, 1727,5758),
+	DS2_SHIPS(1600, 5503, 1727, 5758),
 
 	// The Gauntlet
-	THE_GAUNTLET(1856, 5632, 1919, 5695),
-	THE_GAUNTLET_CORRUPTED(1920, 5632, 1983, 5695),
+	THE_GAUNTLET(regionOnPlane(7512, 1)),
+	THE_GAUNTLET_CORRUPTED(regionOnPlane(7768, 1)),
 	THE_GAUNTLET_LOBBY(3025, 6131, 3040, 6116),
 
 	// POHs
@@ -1670,31 +1670,31 @@ public enum Area
 		aabbs = new AABB[]{new AABB(pointAX, pointAY, pointBX, pointBY, plane)};
 	}
 
-	Area(int regionId)
-	{
+	Area(int regionId) {
 		this(regions(regionId));
 	}
 
-	private static AABB[] regions(int... regionIds)
-	{
+	private static AABB[] regions(int... regionIds) {
 		return Arrays.stream(regionIds)
 			.mapToObj(AABB::new)
 			.toArray(AABB[]::new);
 	}
 
-	public boolean containsPoint(int worldX, int worldY, int plane)
-	{
-		for (AABB aabb : this.getAabbs())
-		{
-			if (aabb.contains(worldX, worldY, plane))
-			{
+	private static AABB regionOnPlane(int regionId, int plane) {
+		var aabb = new AABB(regionId);
+		return new AABB(aabb.minX, aabb.minY, plane, aabb.maxX, aabb.maxY, plane);
+	}
+
+	public boolean containsPoint(int worldX, int worldY, int plane) {
+		for (AABB aabb : this.getAabbs()) {
+			if (aabb.contains(worldX, worldY, plane)) {
 				return true;
 			}
 		}
 		return false;
 	}
-	public boolean containsPoint(int[] worldPoint)
-	{
+
+	public boolean containsPoint(int[] worldPoint) {
 		return containsPoint(worldPoint[0], worldPoint[1], worldPoint[2]);
 	}
 

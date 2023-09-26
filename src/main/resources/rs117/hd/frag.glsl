@@ -426,7 +426,7 @@ void main() {
         vec3 pointLightsSpecularOut = vec3(0);
         for (int i = 0; i < pointLightsCount; i++)
         {
-            vec3 pointLightPos = vec3(PointLightArray[i].position.x, PointLightArray[i].position.z, PointLightArray[i].position.y);
+            vec3 pointLightPos = vec3(PointLightArray[i].position.xzy);
             float pointLightStrength = PointLightArray[i].strength;
             vec3 pointLightColor = PointLightArray[i].color * pointLightStrength;
             float pointLightSize = PointLightArray[i].size;

@@ -31,70 +31,88 @@ public class ModelHasherTest extends TestCase {
         return a;
     }
 
-    private long runStandardHasher() {
-        long start = System.nanoTime();
-        for (int i = 0; i < this.testIterations; i++) {
-            accumulatedHash *= 31;
-            accumulatedHash += Arrays.hashCode(intArrays.get(this.random.nextInt(this.testDataCount)));
-        }
-        return System.nanoTime() - start;
-    }
+	private long runStandardHasher() {
+		long start = System.nanoTime();
+		for (int i = 0; i < this.testIterations; i++) {
+			accumulatedHash *= 31;
+			accumulatedHash += Arrays.hashCode(intArrays.get(this.random.nextInt(this.testDataCount)));
+		}
+		return System.nanoTime() - start;
+	}
 
-    private long runFastHasher() {
-        long start = System.nanoTime();
-        for (int i = 0; i < this.testIterations; i++) {
-            accumulatedHash *= 31;
-            accumulatedHash += ModelHasher.fastIntHash(intArrays.get(this.random.nextInt(this.testDataCount)), -1);
-        }
-        return System.nanoTime() - start;
-    }
+	private long runFastIntHasher() {
+		long start = System.nanoTime();
+		for (int i = 0; i < this.testIterations; i++) {
+			accumulatedHash *= 31;
+			accumulatedHash += ModelHasher.fastHash(intArrays.get(this.random.nextInt(this.testDataCount)), -1);
+		}
+		return System.nanoTime() - start;
+	}
 
-    private double percentageDifference(long original, long changed) {
-        long diff = original - changed;
-        double delta = (double) diff / original;
-        return delta * 100;
-    }
+	private long runFastHasher() {
+		long start = System.nanoTime();
+		for (int i = 0; i < this.testIterations; i++) {
+			accumulatedHash *= 31;
+			accumulatedHash += ModelHasher.fastHash(intArrays.get(this.random.nextInt(this.testDataCount)), -1);
+		}
+		return System.nanoTime() - start;
+	}
 
-    public void testHashPerformance() {
-        System.out.printf("Java version: %s\n\n", System.getProperty("java.version"));
-        System.out.printf("Comparing hash performance of with %,d test items and %,d iterations\n\n", testDataCount, testIterations);
+	private double percentageDifference(long original, long changed) {
+		long diff = original - changed;
+		double delta = (double) diff / original;
+		return delta * 100;
+	}
 
-        // small arrays (size=512)
-        for (int i = 0; i < testDataCount; i++) {
-            // generate random test data
-            intArrays.add(generateRandomIntArray(512));
-        }
+	public void testHashPerformance() {
+		System.out.printf("Java version: %s\n\n", System.getProperty("java.version"));
+		System.out.printf("Comparing hash performance of with %,d test items and %,d iterations\n\n", testDataCount, testIterations);
 
-        long standardSmallBatchResult = runStandardHasher();
-        System.out.printf("Standard hasher small data set:  \t%,.3f seconds\n", (double) standardSmallBatchResult / 1e9);
-        long fastSmallBatchResult = runFastHasher();
-        System.out.printf("Fast hasher small data set:      \t%,.3f seconds\n", (double) fastSmallBatchResult / 1e9);
-        System.out.printf("Improvement =\t%.2f%%\n\n", percentageDifference(standardSmallBatchResult, fastSmallBatchResult));
+		// small arrays (size=512)
+		for (int i = 0; i < testDataCount; i++) {
+			// generate random test data
+			intArrays.add(generateRandomIntArray(512));
+		}
 
-        // medium arrays (size=2048)
-        intArrays.clear();
-        for (int i = 0; i < testDataCount; i++) {
-            intArrays.add(generateRandomIntArray(2048));
-        }
+		long standardBatchResult = runStandardHasher();
+		System.out.printf("Standard hasher small data set:  \t%,.3f seconds\n", (double) standardBatchResult / 1e9);
+		long fastIntBatchResult = runFastHasher();
+		System.out.printf("Fast int hasher small data set:  \t%,.3f seconds\n", (double) fastIntBatchResult / 1e9);
+		System.out.printf("Improvement =\t%.2f%%\n\n", percentageDifference(standardBatchResult, fastIntBatchResult));
+		long fastBatchResult = runFastHasher();
+		System.out.printf("Fast hasher small data set:      \t%,.3f seconds\n", (double) fastBatchResult / 1e9);
+		System.out.printf("Improvement =\t%.2f%%\n\n", percentageDifference(standardBatchResult, fastBatchResult));
 
-        long standardMediumBatchResult = runStandardHasher();
-        System.out.printf("Standard hasher medium data set: \t%,.3f seconds\n", (double) standardMediumBatchResult / 1e9);
-        long fastMediumBatchResult = runFastHasher();
-        System.out.printf("Fast hasher medium data set:     \t%,.3f seconds\n", (double) fastMediumBatchResult / 1e9);
-        System.out.printf("Improvement =\t%.2f%%\n\n", percentageDifference(standardMediumBatchResult, fastMediumBatchResult));
+		// medium arrays (size=2048)
+		intArrays.clear();
+		for (int i = 0; i < testDataCount; i++) {
+			intArrays.add(generateRandomIntArray(2048));
+		}
 
-        // large arrays (size=6144)
-        intArrays.clear();
-        for (int i = 0; i < testDataCount; i++) {
-            intArrays.add(generateRandomIntArray(6144));
-        }
+		standardBatchResult = runStandardHasher();
+		System.out.printf("Standard hasher medium data set:  \t%,.3f seconds\n", (double) standardBatchResult / 1e9);
+		fastIntBatchResult = runFastHasher();
+		System.out.printf("Fast int hasher medium data set:  \t%,.3f seconds\n", (double) fastIntBatchResult / 1e9);
+		System.out.printf("Improvement =\t%.2f%%\n\n", percentageDifference(standardBatchResult, fastIntBatchResult));
+		fastBatchResult = runFastHasher();
+		System.out.printf("Fast hasher medium data set:      \t%,.3f seconds\n", (double) fastBatchResult / 1e9);
+		System.out.printf("Improvement =\t%.2f%%\n\n", percentageDifference(standardBatchResult, fastBatchResult));
 
-        long standardLargeBatchResult = runStandardHasher();
-        System.out.printf("Standard hasher large data set:  \t%,.3f seconds\n", (double) standardLargeBatchResult / 1e9);
-        long fastLargeBatchResult = runFastHasher();
-        System.out.printf("Fast hasher large data set:      \t%,.3f seconds\n", (double) fastLargeBatchResult / 1e9);
-        System.out.printf("Improvement =\t%.2f%%\n\n", percentageDifference(standardLargeBatchResult, fastLargeBatchResult));
+		// large arrays (size=6144)
+		intArrays.clear();
+		for (int i = 0; i < testDataCount; i++) {
+			intArrays.add(generateRandomIntArray(6144));
+		}
 
-        System.out.println("Hash: " + accumulatedHash);
-    }
+		standardBatchResult = runStandardHasher();
+		System.out.printf("Standard hasher large data set:  \t%,.3f seconds\n", (double) standardBatchResult / 1e9);
+		fastIntBatchResult = runFastHasher();
+		System.out.printf("Fast int hasher large data set:  \t%,.3f seconds\n", (double) fastIntBatchResult / 1e9);
+		System.out.printf("Improvement =\t%.2f%%\n\n", percentageDifference(standardBatchResult, fastIntBatchResult));
+		fastBatchResult = runFastHasher();
+		System.out.printf("Fast hasher large data set:      \t%,.3f seconds\n", (double) fastBatchResult / 1e9);
+		System.out.printf("Improvement =\t%.2f%%\n\n", percentageDifference(standardBatchResult, fastBatchResult));
+
+		System.out.println("Hash: " + accumulatedHash);
+	}
 }

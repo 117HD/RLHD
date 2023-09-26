@@ -148,11 +148,12 @@ public class EnvironmentManager {
 	 * Updates variables used in transition effects
 	 *
 	 * @param sceneContext to possible environments from
-	 * @param position     in world space that the camera is or will be looking at
 	 */
-	public void update(SceneContext sceneContext, WorldPoint position)
-	{
+	public void update(SceneContext sceneContext) {
 		assert client.isClientThread();
+
+		WorldPoint position = sceneContext.localToWorld(
+			new LocalPoint(sceneContext.cameraFocalPoint[0], sceneContext.cameraFocalPoint[1]), client.getPlane());
 
 		isOverworld = Area.OVERWORLD.containsPoint(position);
 
@@ -186,7 +187,7 @@ public class EnvironmentManager {
 						// POH takes 1 game tick to enter, then 2 game ticks to load per floor
 						plugin.reloadSceneIn(7);
 						isInHouse = true;
-					} else {
+					} else if (isInHouse) {
 						// Avoid an unnecessary scene reload if the player has already left the POH
 						plugin.abortSceneReload();
 						isInHouse = false;
@@ -194,7 +195,6 @@ public class EnvironmentManager {
 
 					// Since the environment which actually gets used may differ from the environment
 					// chosen based on position, update the plugin's area tracking here
-					plugin.isInGauntlet = environment == Environment.THE_GAUNTLET || environment == Environment.THE_GAUNTLET_CORRUPTED;
 					plugin.isInChambersOfXeric = environment == Environment.CHAMBERS_OF_XERIC;
 
 					changeEnvironment(environment, skipTransition);

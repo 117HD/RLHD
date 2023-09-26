@@ -179,7 +179,7 @@ public class LightManager {
 		Iterator<SceneLight> lightIterator = sceneContext.lights.iterator();
 		while (lightIterator.hasNext()) {
 			SceneLight light = lightIterator.next();
-			light.distance = Integer.MAX_VALUE;
+			light.distanceSquared = Integer.MAX_VALUE;
 
 			if (light.projectile != null) {
 				if (light.projectile.getRemainingCycles() <= 0) {
@@ -332,8 +332,7 @@ public class LightManager {
 				light.currentColor = light.color;
 			}
 			// Apply fade-in
-			if (light.fadeInDuration > 0)
-			{
+			if (light.fadeInDuration > 0) {
 				light.currentStrength *= Math.min((float) light.currentFadeIn / (float) light.fadeInDuration, 1.0f);
 
 				light.currentFadeIn += frameTime;
@@ -341,10 +340,9 @@ public class LightManager {
 
 			// Calculate the distance between the player and the light to determine which
 			// lights to display based on the 'max dynamic lights' config option
-			int camX = plugin.camTarget[0];
-			int camY = plugin.camTarget[1];
-			int camZ = plugin.camTarget[2];
-			light.distance = (int) Math.sqrt(Math.pow(camX - light.x, 2) + Math.pow(camY - light.y, 2) + Math.pow(camZ - light.z, 2));
+			int distX = sceneContext.cameraFocalPoint[0] - light.x;
+			int distY = sceneContext.cameraFocalPoint[1] - light.y;
+			light.distanceSquared = distX * distX + distY * distY + light.z * light.z;
 
 			int tileX = (int) Math.floor(light.x / 128f) + SceneUploader.SCENE_OFFSET;
 			int tileY = (int) Math.floor(light.y / 128f) + SceneUploader.SCENE_OFFSET;
@@ -367,7 +365,7 @@ public class LightManager {
 			}
 		}
 
-		sceneContext.lights.sort(Comparator.comparingInt(light -> light.distance));
+		sceneContext.lights.sort(Comparator.comparingInt(light -> light.distanceSquared));
 
 		lastFrameTime = System.currentTimeMillis();
 	}
@@ -471,16 +469,18 @@ public class LightManager {
 		}
 	}
 
-	public ArrayList<SceneLight> getVisibleLights(int maxDistance, int maxLights)
-	{
+	public ArrayList<SceneLight> getVisibleLights(int maxLights) {
 		SceneContext sceneContext = plugin.getSceneContext();
 		ArrayList<SceneLight> visibleLights = new ArrayList<>();
 
 		if (sceneContext == null)
 			return visibleLights;
 
+		int maxDistanceSquared = plugin.getDrawDistance() * LOCAL_TILE_SIZE;
+		maxDistanceSquared *= maxDistanceSquared;
+
 		for (SceneLight light : sceneContext.lights) {
-			if (light.distance > maxDistance * LOCAL_TILE_SIZE)
+			if (light.distanceSquared > maxDistanceSquared)
 				break;
 
 			if (!light.visible)

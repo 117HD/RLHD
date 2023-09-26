@@ -176,8 +176,7 @@ public class ModelPusher {
 
 		final int faceCount = Math.min(model.getFaceCount(), MAX_FACE_COUNT);
 		final int bufferSize = faceCount * DATUM_PER_FACE;
-		int vertexLength = 0;
-		int uvLength = 0;
+		int texturedFaceCount = 0;
 
 		ModelOverride modelOverride = modelOverrideManager.getOverride(hash);
 		boolean useMaterialOverrides = plugin.configModelTextures || modelOverride.forceOverride;
@@ -196,7 +195,8 @@ public class ModelPusher {
 			baseMaterial = modelOverride.baseMaterial;
 			textureMaterial = modelOverride.textureMaterial;
 		}
-		boolean skipUVs = !isVanillaTextured &&
+		boolean skipUVs =
+			!isVanillaTextured &&
 			baseMaterial == Material.NONE &&
 			packMaterialData(Material.NONE, modelOverride, UvType.GEOMETRY, false) == 0;
 
@@ -210,9 +210,9 @@ public class ModelPusher {
 		boolean foundCachedVertexData = false;
 		boolean foundCachedNormalData = false;
 		boolean foundCachedUvData = skipUVs;
-		int vertexHash = 0;
-		int normalHash = 0;
-		int uvHash = 0;
+		long vertexHash = 0;
+		long normalHash = 0;
+		long uvHash = 0;
 
 		if (shouldCache) {
 			assert client.isClientThread() : "Model caching isn't thread-safe";
@@ -221,7 +221,6 @@ public class ModelPusher {
 			IntBuffer vertexData = this.modelCache.getIntBuffer(vertexHash);
 			foundCachedVertexData = vertexData != null && vertexData.remaining() == bufferSize;
 			if (foundCachedVertexData) {
-				vertexLength = faceCount * 3;
 				sceneContext.stagingBufferVertices.put(vertexData);
 				vertexData.rewind();
 			}
@@ -239,15 +238,15 @@ public class ModelPusher {
 				FloatBuffer uvData = this.modelCache.getFloatBuffer(uvHash);
 				foundCachedUvData = uvData != null && uvData.remaining() == bufferSize;
 				if (foundCachedUvData) {
-					uvLength = faceCount * 3;
+					texturedFaceCount = faceCount;
 					sceneContext.stagingBufferUvs.put(uvData);
 					uvData.rewind();
 				}
 			}
 
 			if (foundCachedVertexData && foundCachedNormalData && foundCachedUvData) {
-				sceneContext.modelPusherResults[0] = vertexLength;
-				sceneContext.modelPusherResults[1] = uvLength;
+				sceneContext.modelPusherResults[0] = faceCount;
+				sceneContext.modelPusherResults[1] = texturedFaceCount;
 				return;
 			}
 		}
@@ -293,7 +292,6 @@ public class ModelPusher {
 			if (!foundCachedVertexData) {
 				getFaceVertices(sceneContext, tile, hash, model, modelOverride, objectType, face);
 				sceneContext.stagingBufferVertices.put(sceneContext.modelFaceVertices);
-				vertexLength += 3;
 
 				if (shouldCacheVertexData) {
 					fullVertexData.put(sceneContext.modelFaceVertices);
@@ -332,10 +330,10 @@ public class ModelPusher {
 				}
 
 				sceneContext.stagingBufferUvs.put(uvData);
-				if (shouldCacheUvData) {
+				if (shouldCacheUvData)
 					fullUvData.put(uvData);
-				}
-				uvLength += 3;
+
+				++texturedFaceCount;
 			}
 		}
 
@@ -351,8 +349,8 @@ public class ModelPusher {
 			fullUvData.flip();
 		}
 
-		sceneContext.modelPusherResults[0] = vertexLength;
-		sceneContext.modelPusherResults[1] = uvLength;
+		sceneContext.modelPusherResults[0] = faceCount;
+		sceneContext.modelPusherResults[1] = texturedFaceCount;
 	}
 
 	private void getNormalDataForFace(SceneContext sceneContext, Model model, @NonNull ModelOverride modelOverride, int face) {

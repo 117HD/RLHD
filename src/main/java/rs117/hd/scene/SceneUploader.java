@@ -723,6 +723,7 @@ class SceneUploader {
 		underwaterTerrain += bufferLengths[2];
 
 		bufferLengths = uploadHDTileModelUnderwater(sceneContext, tile, sceneTileModel);
+		assert bufferLengths[0] == bufferLength || bufferLengths[0] == 0;
 		bufferLength += bufferLengths[0];
 		uvBufferLength += bufferLengths[1];
 		underwaterTerrain += bufferLengths[2];
