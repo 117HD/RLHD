@@ -352,6 +352,14 @@ public enum Material {
 		.setSpecular(0.35f, 60)
 		.setBrightness(1.2f)
 	),
+	ROCK_3_D,
+	ROCK_3_N,
+	ROCK_3(p -> p
+		.setNormalMap(ROCK_3_N)
+		.setDisplacementMap(ROCK_3_D)
+		.setSpecular(0.35f, 60)
+		.setBrightness(1.2f)
+	),
 
 	CARPET,
 	FINE_CARPET(CARPET, p -> p
