@@ -1246,6 +1246,15 @@ public enum Environment
 		.setLightDirection(230, -45)
 		.setWaterColor(43, 43, 64)
 	),
+	ABYSS(Area.ABYSS, new Properties()
+		.setFogColor("#100707")
+		.setFogDepth(75)
+		.setAmbientColor("#AAAFB6")
+		.setAmbientStrength(2.2f)
+		.setDirectionalColor("#FFFFFF")
+		.setDirectionalStrength(1.0f)
+		.setLightDirection(260f, 10f)
+	),
 
 	// overrides 'ALL' to provide default daylight conditions for the overworld area
 	OVERWORLD(Area.OVERWORLD, new Properties()),

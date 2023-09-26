@@ -12355,5 +12355,152 @@
     "objectIds": [ 34533 ],
     "areas": [ [ 1288, 10205, 0 ] ],
     "rotate": 270
+  },
+  {
+    "description": "Abyss - Wall",
+    "baseMaterial": "ABYSSAL",
+    "objectIds": [
+      25382,
+      25384,
+      26150,
+      26151,
+      26152,
+      26153,
+      26154,
+      26155,
+      26156,
+      26157,
+      26158
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Abyss - Puddle",
+    "baseMaterial": "WATER_PUDDLE",
+    "objectIds": [
+      26174,
+      26176,
+      26177
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Abyss - Gap",
+    "baseMaterial": "ABYSSAL",
+    "objectIds": [
+      26192,
+      26208,
+      26250
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Abyss - Rocks",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      26188,
+      26574
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Abyss - Tendrils - Large",
+    "baseMaterial": "ABYSSAL",
+    "objectIds": [
+      26167,
+      26168,
+      26189
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Abyss - Eyes",
+    "baseMaterial": "ABYSSAL",
+    "objectIds": [
+      26251,
+      26253,
+      26191
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Abyss - Boil",
+    "baseMaterial": "ABYSSAL",
+    "objectIds": [
+      26190,
+      26252
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Abyss - Blockage",
+    "baseMaterial": "ABYSSAL",
+    "objectIds": [
+      26187
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Abyss - Object - Ground Sucker",
+    "baseMaterial": "ABYSSAL",
+    "objectIds": [
+      26159
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Abyss - Object - Ground Tendrils - Small",
+    "baseMaterial": "ABYSSAL",
+    "objectIds": [
+      26169
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Abyss - Object - Popped Pustules - Small",
+    "baseMaterial": "ABYSSAL",
+    "objectIds": [
+      26161,
+      26162,
+      26163,
+      26164,
+      26165,
+      26166
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.52,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Abyss - Decoration - Veins",
+    "baseMaterial": "ABYSSAL",
+    "objectIds": [
+      26170
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Walls - Law Altar",
+    "baseMaterial": "ROCK_2",
+    "objectIds": [
+      34806,
+      34807,
+      34808
+    ],
+    "uvType": "BOX"
   }
 ]
