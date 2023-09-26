@@ -8654,7 +8654,8 @@
       4847
     ],
     "uvType": "BOX",
-    "uvScale": 0.62
+    "uvScale": 0.62,
+    "uvOrientation": 512
   },
   {
     "description": "Tropical Tree Big - Leaning",
