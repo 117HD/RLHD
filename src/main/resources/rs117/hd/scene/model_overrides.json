@@ -10707,7 +10707,7 @@
   },
   {
     "description": "Ore - Tin - Rock",
-    "baseMaterial": "ROCK_2",
+    "baseMaterial": "ROCK_3_ORE",
     "objectIds": [
       11360,
       11361
@@ -10727,7 +10727,7 @@
   },
   {
     "description": "Ore - Iron - Rock",
-    "baseMaterial": "ROCK_2",
+    "baseMaterial": "ROCK_3",
     "objectIds": [
       11364,
       11365
@@ -10768,7 +10768,7 @@
   },
   {
     "description": "Ore - Coal - Rock",
-    "baseMaterial": "ROCK_2",
+    "baseMaterial": "ROCK_3",
     "objectIds": [
       11366,
       11367
@@ -10779,17 +10779,18 @@
   },
   {
     "description": "Ore - Silver - Rock",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "ROCK_4_ORE",
     "objectIds": [
       11368,
       11369
     ],
     "uvType": "BOX",
-    "uvScale": 0.33
+    "uvScale": 0.40,
+    "uvOrientation": 256
   },
   {
     "description": "Ore - Gold - Rock",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "ROCK_4_ORE",
     "objectIds": [
       11370,
       11371
@@ -10805,6 +10806,7 @@
       11363
     ],
     "uvType": "BOX",
-    "uvScale": 0.33
+    "uvScale": 0.33,
+    "uvOrientation": 256
   }
 ]
