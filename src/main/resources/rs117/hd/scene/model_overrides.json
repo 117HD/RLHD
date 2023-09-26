@@ -8665,8 +8665,7 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.62,
-    "uvOrientationY": 512,
-    "uvOrientationZ": 256
+    "uvOrientation": 768
   },
   {
     "description": "Sophamena Walls",
