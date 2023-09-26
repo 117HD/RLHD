@@ -2575,8 +2575,6 @@
       3613,
       3614,
       3615,
-      3948,
-      3950,
       7057,
       7103,
       7104,
@@ -2594,7 +2592,7 @@
       18934
     ],
     "inheritTileColorType": "OVERLAY",
-    "uvType": "WORLD_XZ",
+    "uvType": "BOX",
     "uvScale": 0.75
   },
   {
@@ -2897,7 +2895,7 @@
       25085,
       25161
     ],
-    "uvType": "WORLD_XZ",
+    "uvType": "BOX",
     "uvScale": 0.5,
     "flatNormals": true
   },
@@ -4093,10 +4091,11 @@
     "uvOrientation": 512
   },
   {
-    "description": "Wooden Benches",
+    "description": "Wooden Benches - Plank",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       1106,
+      3632,
       5615,
       9531,
       25601,
@@ -5549,7 +5548,7 @@
       18478,
       22350
     ],
-    "uvType": "WORLD_XZ",
+    "uvType": "BOX",
     "uvScale": 0.65,
     "hideInAreas": [
       [
@@ -5597,7 +5596,7 @@
       18894,
       18895
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "uvScale": 0.5
   },
   {
@@ -5643,6 +5642,8 @@
       3708,
       3710,
       3724,
+      3948,
+      3950,
       12910,
       12911,
       12912,
@@ -5769,6 +5770,56 @@
     "uvType": "BOX",
     "uvOrientation": 1536,
     "uvScale": 0.66
+  },
+  {
+    "description": "Barbarian Hall - Walls - Wooden - Planks",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      11562,
+      11563,
+      11564
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Barbarian Hall - Roof - Wooden - Planks",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      11565,
+      11566,
+      11567,
+      11568
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Barbarian Hall - Roof Corners - Wooden - Planks",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      11569,
+      11570,
+      11571,
+      11572,
+      11573,
+      11574,
+      11576,
+      11577,
+      11578,
+      11579,
+      11580,
+      11581,
+      11582,
+      11583,
+      11584
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512
   },
   {
     "description": "Round Rug",
@@ -6667,6 +6718,7 @@
       1102,
       7167,
       7168,
+      11603,
       12407,
       14872,
       15679,
@@ -6692,6 +6744,7 @@
     "description": "Objects - Table - Single - Wooden – Plank - Generic",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      11627,
       20351,
       23066,
       24360,
@@ -10452,6 +10505,7 @@
     "description": "Object - Wooden - Support Post",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
+      11628,
       23853
     ],
     "uvType": "BOX",
@@ -10522,5 +10576,66 @@
     "objectIds": [
       2073
     ]
+  },
+  {
+    "description": "Barbarian Village - Wall - Wooden - Log",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      11587,
+      11588,
+      11607,
+      11608,
+      11609,
+      11610,
+      11611,
+      11612,
+      11613
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Barbarian VIllage - Objects - Wooden - Crate",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      11599
+    ],
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512
+  },
+  {
+    "description": "Barbarian VIllage - Objects - Table - Double - Wooden – Plank",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      11619
+    ],
+    "uvType": "BOX",
+    "flatNormals": true
+  },
+  {
+    "description": "Barbarian VIllage - Objects - Table - Double - Wooden – Plank - With Shelfs",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      11626
+    ],
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvOrientationX": 512,
+    "uvOrientationY": 512
+  },
+  {
+    "description": "Barbarian VIllage - Wall  Longhall Door – Fake Plank",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      11620,
+      11621,
+      11624,
+      11625
+    ],
+    "uvType": "BOX",
+    "flatNormals": true
   }
 ]
