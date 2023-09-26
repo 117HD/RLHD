@@ -10702,7 +10702,7 @@
       11391
     ],
     "uvType": "BOX",
-    "uvScale": 0.6,
+    "uvScale": 0.33,
     "uvOrientation": 512
   },
   {
@@ -10713,7 +10713,7 @@
       11361
     ],
     "uvType": "BOX",
-    "uvScale": 0.7
+    "uvScale": 0.33
   },
   {
     "description": "Ore - Copper - Rock",
@@ -10723,18 +10723,18 @@
       11161
     ],
     "uvType": "BOX",
-    "uvScale": 0.7
+    "uvScale": 0.33
   },
   {
     "description": "Ore - Iron - Rock",
-    "baseMaterial": "ROCK_1",
+    "baseMaterial": "ROCK_2",
     "objectIds": [
       11364,
       11365
     ],
     "uvType": "BOX",
-    "uvScale": 0.6,
-    "uvOrientation": 512
+    "uvScale": 0.33,
+    "uvOrientation": 256
   },
   {
     "description": "Ore - Mithril - Rock",
@@ -10744,7 +10744,7 @@
       11373
     ],
     "uvType": "BOX",
-    "uvScale": 0.6
+    "uvScale": 0.33
   },
   {
     "description": "Ore - Adamantite - Rock",
@@ -10754,7 +10754,7 @@
       11375
     ],
     "uvType": "BOX",
-    "uvScale": 0.6
+    "uvScale": 0.33
   },
   {
     "description": "Ore - Runeite - Rock",
@@ -10764,7 +10764,7 @@
       11377
     ],
     "uvType": "BOX",
-    "uvScale": 0.6
+    "uvScale": 0.33
   },
   {
     "description": "Ore - Coal - Rock",
@@ -10774,7 +10774,7 @@
       11367
     ],
     "uvType": "BOX",
-    "uvScale": 0.6,
+    "uvScale": 0.33,
     "uvOrientation": 512
   },
   {
@@ -10785,7 +10785,7 @@
       11369
     ],
     "uvType": "BOX",
-    "uvScale": 0.7
+    "uvScale": 0.33
   },
   {
     "description": "Ore - Gold - Rock",
@@ -10795,16 +10795,16 @@
       11371
     ],
     "uvType": "BOX",
-    "uvScale": 0.7
+    "uvScale": 0.33
   },
   {
     "description": "Ore - Clay - Rock",
-    "baseMaterial": "ROCK_2",
+    "baseMaterial": "DIRT_2",
     "objectIds": [
       11362,
       11363
     ],
     "uvType": "BOX",
-    "uvScale": 0.7
+    "uvScale": 0.33
   }
 ]
