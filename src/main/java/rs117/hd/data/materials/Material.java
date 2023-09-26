@@ -33,6 +33,7 @@ import java.util.function.Function;
 import lombok.NonNull;
 import lombok.Setter;
 import rs117.hd.HdPluginConfig;
+import rs117.hd.utils.ColorUtils;
 
 public enum Material {
 	// - Each enum entry refers to a texture file by name, in lowercase. If a texture with the specified name is found,
@@ -202,12 +203,12 @@ public enum Material {
 	FOG_HEAVY_VERY_FAST(115),
 
 	SKULL_OBELISK(116),
-	WHITE,
-	GRAY_25,
-	GRAY_33,
-	GRAY_50,
-	GRAY_75,
-	BLACK,
+	WHITE(NONE, p -> {}),
+	GRAY_75(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(.75f))),
+	GRAY_65(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(.65f))),
+	GRAY_50(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(.5f))),
+	GRAY_25(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(.25f))),
+	BLACK(NONE, p -> p.setBrightness(0)),
 
 	BLANK_GLOSS(WHITE, p -> p
 		.setSpecular(0.9f, 280)),
