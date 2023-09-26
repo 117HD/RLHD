@@ -357,12 +357,12 @@ public enum Material {
 	ROCK_3(p -> p
 		.setNormalMap(ROCK_3_N)
 		.setDisplacementMap(ROCK_3_D)
+		.setDisplacementScale(.012f)
 		.setSpecular(0.35f, 40)
 		.setBrightness(1.2f)
 	),
 	ROCK_3_ORE(ROCK_3, p -> p
 		.setSpecular(0.45f, 20)
-		.setDisplacementScale(.012f)
 	),
 
 	ROCK_4_D,
@@ -370,12 +370,12 @@ public enum Material {
 	ROCK_4(p -> p
 		.setNormalMap(ROCK_4_N)
 		.setDisplacementMap(ROCK_4_D)
+		.setDisplacementScale(.012f)
 		.setSpecular(0.35f, 40)
 		.setBrightness(1.2f)
 	),
 	ROCK_4_ORE(ROCK_4, p -> p
 		.setSpecular(0.45f, 20)
-		.setDisplacementScale(.012f)
 	),
 
 	CARPET,
