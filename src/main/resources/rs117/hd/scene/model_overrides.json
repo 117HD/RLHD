@@ -1225,31 +1225,57 @@
     "description": "TREES",
     "baseMaterial": "BARK",
     "objectIds": [
-      1293,
-      1294,
-      1295,
+      1276,
+      1278,
+      2092,
+      5127,
+      10041,
+      10820,
       10823,
-      37329,
+      10832,
+      10834,
       16546,
       16547,
       16548,
-      2092,
-      10834,
-      10832,
-      10820,
-      1276,
-      1278,
-      10819,
-      10833
-    ]
+      23639,
+      37329
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "retainVanillaUvs": true
+  },
+  {
+    "description": "Spirit Trees",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      1293,
+      1294,
+      1295,
+      8338,
+      8382,
+      8383,
+      27116,
+      33733,
+      29229,
+      49598
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "retainVanillaUvs": true
   },
   {
     "description": "Fallen Tree",
     "baseMaterial": "BARK",
     "objectIds": [
+      1297,
       9661,
-      9663
-    ]
+      9663,
+      40347
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationY": 512,
+    "uvOrientationZ": 512
   },
   {
     "description": "DEAD_TREES",
@@ -1261,7 +1287,6 @@
       1285,
       1286,
       1289,
-      1297,
       1365,
       1383,
       1729,
@@ -1281,7 +1306,9 @@
       14565,
       14566,
       39679
-    ]
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
   },
   {
     "description": "TREE_STUMP",
@@ -1289,8 +1316,40 @@
     "objectIds": [
       1341,
       4328,
+      6212,
+      14516,
       14517
-    ]
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Objects - Tree - Yew",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      8390,
+      10822
+
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "retainVanillaUvs": true
+  },
+  {
+    "description": "Objects - Tree - Willow",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      9471,
+      10819,
+      10829,
+      10831,
+      10833
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationZ": 128,
+    "uvOrientationY": 512,
+    "retainVanillaUvs": true
   },
   {
     "description": "FARMING_PATCH_1",
@@ -4859,7 +4918,6 @@
     "baseMaterial": "DOCK_FENCE",
     "objectIds": [
       11797,
-      11798,
       11807
     ],
     "flatNormals": true
@@ -5808,7 +5866,7 @@
       1367,
       1368
     ],
-    "uvType": "MODEL_XY_MIRROR_B",
+    "uvType": "BOX",
     "uvScale": 0.6,
     "uvOrientation": 342
   },
@@ -5819,7 +5877,7 @@
       1363,
       1364
     ],
-    "uvType": "MODEL_XY_MIRROR_B",
+    "uvType": "BOX",
     "uvScale": 0.4,
     "uvOrientation": 342
   },
@@ -5844,7 +5902,6 @@
       6177,
       6178,
       7514,
-      9534,
       10374,
       10378,
       10379,
@@ -6784,7 +6841,7 @@
     "objectIds": [
       16639
     ],
-    "uvType": "MODEL_XY",
+    "uvType": "BOX",
     "uvOrientation": 64,
     "uvScale": 0.76
   },
@@ -7293,7 +7350,7 @@
       23530,
       23561
     ],
-    "uvType": "VANILLA"
+    "uvType": "BOX"
   },
   {
     "description": "Gnome Stronghold - Objects - Tree - Fake Dead Tree",
@@ -7301,18 +7358,18 @@
     "objectIds": [
       1706
     ],
-    "uvType": "VANILLA"
+    "uvType": "BOX"
   },
   {
     "description": "Ground Decoration - Sticks - Small",
     "baseMaterial": "BARK",
     "objectIds": [
+      1250,
       1251,
       1252
     ],
-    "uvType": "MODEL_XZ",
-    "uvScale": 0.6,
-    "uvOrientation": 300
+    "uvType": "BOX",
+    "uvScale": 0.4
   },
   {
     "description": "Gnome - Walls - Rope Rails",
@@ -8554,35 +8611,68 @@
     "uvType": "MODEL_XZ"
   },
   {
-    "description": "Jungle Tree Tiny",
+    "description": "Tree - Non interactable - Jungle",
     "baseMaterial": "PLANT_GRUNGE_2",
     "objectIds": [
-      1304
+      1301,
+      1302,
+      1303,
+      1304,
+      13703
     ],
-    "uvType": "MODEL_XZ",
-    "uvScale": 0.4
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 256
   },
   {
     "description": "Jungle Tree Small",
     "baseMaterial": "PLANT_GRUNGE_2",
     "objectIds": [
+      4818,
       6578
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "uvScale": 0.4,
     "uvOrientation": 256
   },
   {
-    "description": "Jungle Tree Big",
+    "description": "Jungle Tree Large - Unusual Plant",
     "baseMaterial": "PLANT_GRUNGE_2",
+    "objectIds": [
+      1314
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Tropical Tree Big",
+    "baseMaterial": "LIGHT_BARK",
     "objectIds": [
       1326,
       1327,
-      1328
+      1328,
+      1360,
+      1371,
+      1372,
+      1373,
+      4845,
+      4846,
+      4847
     ],
-    "uvType": "MODEL_XZ",
-    "uvScale": 0.2,
-    "uvOrientation": 256
+    "uvType": "BOX",
+    "uvScale": 0.62,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Tropical Tree Big - Leaning",
+    "baseMaterial": "LIGHT_BARK",
+    "objectIds": [
+      1361
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.62,
+    "uvOrientation": 768
   },
   {
     "description": "Sophamena Walls",
@@ -9569,7 +9659,9 @@
     "objectIds": [
       3514,
       3515
-    ]
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
   },
   {
     "description": "Morytania - Giant Tree",
@@ -9578,7 +9670,9 @@
       4048,
       4049,
       4050
-    ]
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
   },
   {
     "description": "Morytania - Tall Grass",
@@ -10408,7 +10502,8 @@
     "baseMaterial": "BARK",
     "objectIds": [
       3648
-    ]
+    ],
+    "uvType": "BOX"
   },
   {
     "description": "Varrock - Wall Decoration - Wooden - Plank",
@@ -10420,5 +10515,12 @@
     "uvType": "BOX",
     "uvOrientation": 562,
     "uvScale": 0.66
+  },
+  {
+    "description": "Objects - Tree - Banana Tree",
+    "baseMaterial": "GRAY_65",
+    "objectIds": [
+      2073
+    ]
   }
 ]
