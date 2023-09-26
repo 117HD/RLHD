@@ -10748,17 +10748,18 @@
   },
   {
     "description": "Ore - Adamantite - Rock",
-    "baseMaterial": "ROCK_1",
+    "baseMaterial": "ROCK_5_ORE",
     "objectIds": [
       11374,
       11375
     ],
     "uvType": "BOX",
-    "uvScale": 0.33
+    "uvScale": 0.33,
+    "uvOrientation": 512
   },
   {
     "description": "Ore - Runeite - Rock",
-    "baseMaterial": "ROCK_3_ORE",
+    "baseMaterial": "ROCK_5_ORE",
     "objectIds": [
       11376,
       11377
@@ -10775,7 +10776,7 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.33,
-    "uvOrientation": 512
+    "uvOrientation": 256
   },
   {
     "description": "Ore - Silver - Rock",
