@@ -139,12 +139,14 @@ public class ModelOverride
 				computeBoxUvw(out, model, orientation, face);
 				break;
 			case VANILLA: {
-				final int[] vertexX = model.getVerticesX();
-				final int[] vertexY = model.getVerticesY();
-				final int[] vertexZ = model.getVerticesZ();
-				final int texFace = model.getTextureFaces()[face] & 0xff;
+				final byte[] textureFaces = model.getTextureFaces();
+				int texFace = textureFaces == null ? -1 : textureFaces[face];
+				if (texFace != -1) {
+					texFace &= 0xff;
 
-				if (texFace != 255) {
+					final int[] vertexX = model.getVerticesX();
+					final int[] vertexY = model.getVerticesY();
+					final int[] vertexZ = model.getVerticesZ();
 					final int texA = model.getTexIndices1()[texFace];
 					final int texB = model.getTexIndices2()[texFace];
 					final int texC = model.getTexIndices3()[texFace];
@@ -158,9 +160,8 @@ public class ModelOverride
 					out[8] = vertexX[texC];
 					out[9] = vertexY[texC];
 					out[10] = vertexZ[texC];
-					break;
 				}
-				// fall back to geometry UVs
+				break;
 			}
 			case GEOMETRY:
 			default:
