@@ -10511,5 +10511,12 @@
     "uvType": "BOX",
     "uvOrientation": 562,
     "uvScale": 0.66
+  },
+  {
+    "description": "Objects - Tree - Banana Tree",
+    "baseMaterial": "GRAY_25",
+    "objectIds": [
+      2073
+    ]
   }
 ]
