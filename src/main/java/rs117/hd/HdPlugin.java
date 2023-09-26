@@ -2234,22 +2234,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	public void reuploadScene() {
-		assert client.isClientThread() : "Loading a scene is unsafe while the client can simultaneously initiate a scene load";
+		assert client.isClientThread() : "Loading a scene is unsafe while the client can modify it";
 		Scene scene = client.getScene();
-		if (skipScene == scene) {
-			loadScene(scene);
-			if (skipScene == scene)
-				skipScene = null;
-			swapScene(scene);
-		} else {
-			new Thread(
-				() -> {
-					loadScene(scene);
-					clientThread.invokeLater(() -> swapScene(scene));
-				},
-				"117 HD Scene Loader"
-			).start();
-		}
+		loadScene(scene);
+		if (skipScene == scene)
+			skipScene = null;
+		swapScene(scene);
 	}
 
 	@Override
