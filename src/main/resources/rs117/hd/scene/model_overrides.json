@@ -2933,8 +2933,8 @@
       39721,
       44635
     ],
-    "uvScale": 0.4,
-    "uvOrientation": 512
+    "uvType": "BOX",
+    "uvScale": 0.5
   },
   {
     "description": "CAVE_WALLS_BLEND",
@@ -3953,7 +3953,8 @@
       11389,
       11392,
       11393
-    ]
+    ],
+    "uvType": "BOX"
   },
   {
     "description": "Motherload Mine Rockfall",
@@ -6179,7 +6180,10 @@
       44717,
       44719,
       44720
-    ]
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 256
   },
   {
     "description": "Ground Decoration - Flat Stone - Small - Uncolored",
@@ -10332,7 +10336,9 @@
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       44683
-    ]
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
   },
   {
     "description": "Objects - Stone - Giants Foundry - Lavapool Rocks",
@@ -10367,7 +10373,7 @@
     "objectIds": [
       44729
     ],
-    "uvType": "MODEL_XZ_MIRROR_A",
+    "uvType": "BOX",
     "uvScale": 0.28
   },
   {
@@ -10400,7 +10406,7 @@
     "objectIds": [
       39724
     ],
-    "uvType": "GEOMETRY",
+    "uvType": "BOX",
     "uvScale": 0.28
   },
   {
