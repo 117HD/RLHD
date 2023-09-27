@@ -48,5 +48,8 @@ BARK and BARK_N textures from AmbientCG. All textures on this site are licensed 
 ROCK_3, ROCK_3_N, ROCK_3_D textures from AmbientCG. All textures on this site are licensed as CC0.
 -- https://ambientcg.com/view?id=ROCK032
 
-ROCK_4, ROCK_$_N, ROCK_4_D textures from AmbientCG. All textures on this site are licensed as CC0.
+ROCK_4, ROCK_4_N, ROCK_4_D textures from AmbientCG. All textures on this site are licensed as CC0.
 -- https://ambientcg.com/view?id=ROCK028
+
+ROCK_5, ROCK_5_N, ROCK_5_D textures from AmbientCG. All textures on this site are licensed as CC0.
+-- https://ambientcg.com/view?id=ROCK037
