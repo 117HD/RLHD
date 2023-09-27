@@ -8631,7 +8631,8 @@
     "objectIds": [
       10503
     ],
-    "uvType": "GEOMETRY"
+    "uvType": "BOX",
+    "uvScale": 0.6
   },
   {
     "description": "Objects - Wooden - Counter",
@@ -8770,7 +8771,7 @@
       6535,
       6536
     ],
-    "uvType": "MODEL_YZ",
+    "uvType": "BOX",
     "uvOrientation": 512,
     "uvScale": 0.6
   },
