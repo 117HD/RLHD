@@ -7193,7 +7193,8 @@
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
       16509
-    ]
+    ],
+    "uvType": "BOX"
   },
   {
     "description": "Objects - Rock Stairs - Large",
@@ -7201,7 +7202,9 @@
     "objectIds": [
       30189
     ],
-    "uvType": "GEOMETRY"
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "uvOrientation": 768
   },
   {
     "description": "Objects - Rockslide - Brown Rock - Rock - Medium",
