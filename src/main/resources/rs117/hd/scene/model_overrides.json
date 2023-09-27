@@ -2911,7 +2911,7 @@
       6659
     ],
     "flatNormals": true,
-    "uvType": "WORLD_XZ",
+    "uvType": "BOX",
     "uvScale": 0.5
   },
   {
@@ -2922,7 +2922,7 @@
       3213,
       40887
     ],
-    "uvType": "MODEL_YZ",
+    "uvType": "BOX",
     "uvScale": 0.4,
     "uvOrientation": 512
   },
@@ -2962,7 +2962,7 @@
       29634
     ],
     "flatNormals": true,
-    "uvType": "MODEL_XZ"
+    "uvType": "BOX"
   },
   {
     "description": "CAVE_WALL_ABOVE_FLOOR_TILE",
