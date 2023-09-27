@@ -1,6 +1,7 @@
 package rs117.hd.overlays;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -20,6 +21,7 @@ import net.runelite.api.*;
 import net.runelite.api.coords.*;
 import net.runelite.client.ui.FontManager;
 import net.runelite.client.ui.overlay.OverlayLayer;
+import net.runelite.client.ui.overlay.OverlayManager;
 import net.runelite.client.ui.overlay.OverlayPosition;
 import net.runelite.client.ui.overlay.OverlayUtil;
 import org.apache.commons.lang3.tuple.Pair;
@@ -34,26 +36,35 @@ import rs117.hd.utils.ModelHash;
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.*;
 
-public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay
-{
-	private final Client client;
-	private Point mousePos;
-	private boolean ctrlPressed;
+@Singleton
+public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay {
+	@Inject
+	private Client client;
+
+	@Inject
+	private OverlayManager overlayManager;
 
 	@Inject
 	private HdPlugin plugin;
 
+	private Point mousePos;
+	private boolean ctrlPressed;
+
 	@Inject
-	public TileInfoOverlay(Client client)
-	{
-		this.client = client;
+	public TileInfoOverlay() {
 		setPosition(OverlayPosition.DYNAMIC);
 		setLayer(OverlayLayer.ABOVE_SCENE);
 	}
 
+	public void setActive(boolean active) {
+		if (active)
+			overlayManager.add(this);
+		else
+			overlayManager.remove(this);
+	}
+
 	@Override
-	public Dimension render(Graphics2D g)
-	{
+	public Dimension render(Graphics2D g) {
 		ctrlPressed = client.isKeyPressed(KeyCode.KC_CONTROL);
 		mousePos = client.getMouseCanvasPosition();
 		if (mousePos != null && mousePos.getX() == -1 && mousePos.getY() == -1) {

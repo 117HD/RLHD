@@ -47,6 +47,8 @@ import net.runelite.client.plugins.PluginManager;
 import net.runelite.client.plugins.entityhider.EntityHiderConfig;
 import net.runelite.client.plugins.entityhider.EntityHiderPlugin;
 import rs117.hd.HdPlugin;
+import rs117.hd.HdPluginConfig;
+import rs117.hd.config.MaxDynamicLights;
 import rs117.hd.scene.lights.Alignment;
 import rs117.hd.scene.lights.Light;
 import rs117.hd.scene.lights.LightType;
@@ -84,6 +86,9 @@ public class LightManager {
 
 	@Inject
 	private HdPlugin plugin;
+
+	@Inject
+	private HdPluginConfig config;
 
 	@Inject
 	private EntityHiderPlugin entityHiderPlugin;
@@ -160,7 +165,7 @@ public class LightManager {
 	public void update(SceneContext sceneContext) {
 		assert client.isClientThread();
 
-		if (client.getGameState() != GameState.LOGGED_IN)
+		if (client.getGameState() != GameState.LOGGED_IN || config.maxDynamicLights() == MaxDynamicLights.NONE)
 			return;
 
 		if (configChanged) {

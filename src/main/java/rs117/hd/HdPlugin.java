@@ -58,7 +58,6 @@ import net.runelite.api.hooks.*;
 import net.runelite.client.RuneLite;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
-import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.plugins.Plugin;
@@ -91,6 +90,8 @@ import rs117.hd.opengl.compute.OpenCLManager;
 import rs117.hd.opengl.shader.Shader;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.Template;
+import rs117.hd.overlays.FrameTimer;
+import rs117.hd.overlays.Timer;
 import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.LightManager;
 import rs117.hd.scene.ModelOverrideManager;
@@ -164,9 +165,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private ClientThread clientThread;
 
 	@Inject
-	private EventBus eventBus;
-
-	@Inject
 	private DrawManager drawManager;
 
 	@Inject
@@ -205,6 +203,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Inject
 	private DeveloperTools developerTools;
+
+	@Inject
+	private FrameTimer frameTimer;
 
 	@Inject
 	private HdPluginConfig config;
@@ -406,6 +407,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	private boolean lwjglInitialized;
 	private boolean hasLoggedIn;
+	private boolean enableDrawRenderableTimers;
 	private boolean redrawPreviousFrame;
 	private Scene skipScene;
 
@@ -505,8 +507,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					}
 				}
 
-				if (developerMode)
+				if (developerMode) {
 					developerTools.activate();
+					enableDrawRenderableTimers = true;
+				}
 
 				modelPassthroughBuffer = new GpuIntBuffer();
 
@@ -1386,6 +1390,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (sceneContext == null)
 			return;
 
+		frameTimer.begin(Timer.DRAW_SCENE);
+
 		final Scene scene = client.getScene();
 		scene.setDrawDistance(getDrawDistance());
 
@@ -1491,6 +1497,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (sceneContext == null)
 			return;
 
+		frameTimer.begin(Timer.UPLOAD_GEOMETRY);
+
 		// The client only updates animations once per client tick, so we can skip updating geometry buffers,
 		// but the compute shaders should still be executed in case the camera angle has changed.
 		// Technically we could skip compute shaders as well when the camera is unchanged,
@@ -1562,6 +1570,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			updateSceneVao(hRenderBufferVertices, hRenderBufferUvs, hRenderBufferNormals);
 		}
 
+		frameTimer.end(Timer.UPLOAD_GEOMETRY);
+		frameTimer.begin(Timer.COMPUTE);
+
 		if (computeMode == ComputeMode.OPENCL) {
 			// The docs for clEnqueueAcquireGLObjects say all pending GL operations must be completed before calling
 			// clEnqueueAcquireGLObjects, and recommends calling glFinish() as the only portable way to do that.
@@ -1609,6 +1620,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			}
 		}
 
+		frameTimer.end(Timer.COMPUTE);
+
 		checkGLErrors();
 
 		if (!redrawPreviousFrame) {
@@ -1619,6 +1632,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		// Once geometry buffers have been updated, they can be reused until the client actually modifies the scene
 		if (config.furtherUnlockFps())
 			redrawPreviousFrame = true;
+
+		frameTimer.end(Timer.DRAW_SCENE);
 	}
 
 	@Override
@@ -1718,10 +1733,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		renderBufferOffset += bufferLength;
 	}
 
-	private void prepareInterfaceTexture(int canvasWidth, int canvasHeight)
-	{
-		if (canvasWidth != lastCanvasWidth || canvasHeight != lastCanvasHeight)
-		{
+	private void prepareInterfaceTexture(int canvasWidth, int canvasHeight) {
+		frameTimer.begin(Timer.UPLOAD_UI);
+
+		if (canvasWidth != lastCanvasWidth || canvasHeight != lastCanvasHeight) {
 			lastCanvasWidth = canvasWidth;
 			lastCanvasHeight = canvasHeight;
 
@@ -1741,12 +1756,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		glBindBuffer(GL_PIXEL_UNPACK_BUFFER, interfacePbo);
 		ByteBuffer mappedBuffer = glMapBuffer(GL_PIXEL_UNPACK_BUFFER, GL_WRITE_ONLY);
-		if (mappedBuffer == null)
-		{
+		if (mappedBuffer == null) {
 			log.error("Unable to map interface PBO. Skipping UI...");
-		}
-		else
-		{
+		} else {
 			mappedBuffer.asIntBuffer().put(pixels, 0, width * height);
 			glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
 			glBindTexture(GL_TEXTURE_2D, interfaceTexture);
@@ -1754,6 +1766,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		}
 		glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
 		glBindTexture(GL_TEXTURE_2D, 0);
+
+		frameTimer.end(Timer.UPLOAD_UI);
 	}
 
 	@Override
@@ -1858,6 +1872,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 			float[] lightProjectionMatrix = Mat4.identity();
 			if (configShadowsEnabled && fboShadowMap != 0 && environmentManager.currentDirectionalStrength > 0) {
+				frameTimer.begin(Timer.RENDER_SHADOWS);
+
 				// Render to the shadow depth map
 				glViewport(0, 0, shadowMapResolution, shadowMapResolution);
 				glBindFramebuffer(GL_FRAMEBUFFER, fboShadowMap);
@@ -1906,9 +1922,16 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
 
 				glUseProgram(0);
+
+				frameTimer.end(Timer.RENDER_SHADOWS);
 			}
 
-			glDpiAwareViewport(renderWidthOff, renderCanvasHeight - renderViewportHeight - renderHeightOff, renderViewportWidth, renderViewportHeight);
+			glDpiAwareViewport(
+				renderWidthOff,
+				renderCanvasHeight - renderViewportHeight - renderHeightOff,
+				renderViewportWidth,
+				renderViewportHeight
+			);
 
 			glUseProgram(glSceneProgram);
 
@@ -1954,10 +1977,15 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 			lastAntiAliasingMode = antiAliasingMode;
 
+			frameTimer.begin(Timer.CLEAR_SCENE);
+
 			// Clear scene
 			float[] fogColor = ColorUtils.linearToSrgb(environmentManager.currentFogColor);
 			glClearColor(fogColor[0], fogColor[1], fogColor[2], 1f);
 			glClear(GL_COLOR_BUFFER_BIT);
+
+			frameTimer.end(Timer.CLEAR_SCENE);
+			frameTimer.begin(Timer.RENDER_SCENE);
 
 			int fogDepth = 0;
 			switch (config.fogDepthMode()) {
@@ -2070,6 +2098,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 			glDrawArrays(GL_TRIANGLES, 0, renderBufferOffset);
 
+			frameTimer.end(Timer.RENDER_SCENE);
+
 			glDisable(GL_BLEND);
 			glDisable(GL_CULL_FACE);
 
@@ -2109,12 +2139,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		drawUi(overlayColor, canvasHeight, canvasWidth);
 
 		try {
+			frameTimer.begin(Timer.SWAP_BUFFERS);
 			awtContext.swapBuffers();
+			frameTimer.end(Timer.SWAP_BUFFERS);
 			drawManager.processDrawComplete(this::screenshot);
 		} catch (RuntimeException ex) {
 			// this is always fatal
-			if (!canvas.isValid())
-			{
+			if (!canvas.isValid()) {
 				// this might be AWT shutting down on VM shutdown, ignore it
 				return;
 			}
@@ -2124,10 +2155,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
 
+		frameTimer.endFrameAndReset();
+
 		checkGLErrors();
 	}
 
 	private void drawUi(int overlayColor, final int canvasHeight, final int canvasWidth) {
+		frameTimer.begin(Timer.RENDER_UI);
+
 		// Fix vanilla bug causing the overlay to remain on the login screen in areas like Fossil Island underwater
 		if (client.getGameState().getState() < GameState.LOADING.getState())
 			overlayColor = 0;
@@ -2165,6 +2200,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		// Texture on UI
 		glBindVertexArray(vaoUiHandle);
 		glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+
+		frameTimer.end(Timer.RENDER_UI);
 
 		// Reset
 		glBindTexture(GL_TEXTURE_2D, 0);
@@ -2536,7 +2573,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			Math.max(tileHeights[plane][tileExX + 1][tileExY], tileHeights[plane][tileExX + 1][tileExY + 1])
 		) + GROUND_MIN_Y;
 
-		if (sceneContext != null && sceneContext.scene == scene) {
+		if (sceneContext.scene == scene) {
 			int depthLevel = sceneContext.underwaterDepthLevels[plane][tileExX][tileExY];
 			if (depthLevel > 0)
 				y += ProceduralGenerator.DEPTH_LEVEL_SLOPE[depthLevel - 1] - GROUND_MIN_Y;
@@ -2648,6 +2685,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (sceneContext == null)
 			return;
 
+		if (enableDrawRenderableTimers)
+			frameTimer.begin(Timer.GET_MODEL);
+
 		Model model, offsetModel;
 		try {
 			// getModel may throw an exception from vanilla client code
@@ -2668,6 +2708,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		} catch (Exception ex) {
 			// Vanilla happens to handle exceptions thrown here gracefully, but we handle them explicitly anyway
 			return;
+		} finally {
+			if (enableDrawRenderableTimers)
+				frameTimer.end(Timer.GET_MODEL);
 		}
 
 		// Apply height to renderable from the model
@@ -2681,6 +2724,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		if (redrawPreviousFrame || modelOverrideManager.shouldHideModel(hash, x, z))
 			return;
+
+		if (enableDrawRenderableTimers)
+			frameTimer.begin(Timer.DRAW_RENDERABLE);
 
 		eightIntWrite[3] = renderBufferOffset;
 		eightIntWrite[4] = model.getRadius() << 12 | orientation;
@@ -2704,6 +2750,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			eightIntWrite[4] |= (hillskew ? 1 : 0) << 26 | plane << 24;
 		} else {
 			// Temporary model (animated or otherwise not a static Model already in the scene buffer)
+			if (enableDrawRenderableTimers)
+				frameTimer.begin(Timer.MODEL_BATCHING);
 			ModelOffsets modelOffsets = null;
 			long batchHash = 0;
 			if (configModelBatching || configModelCaching) {
@@ -2713,6 +2761,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					modelOffsets = frameModelInfoMap.get(batchHash);
 				}
 			}
+			if (enableDrawRenderableTimers)
+				frameTimer.end(Timer.MODEL_BATCHING);
 
 			if (modelOffsets != null && modelOffsets.faceCount == model.getFaceCount()) {
 				faceCount = modelOffsets.faceCount;
@@ -2722,7 +2772,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			} else {
 				int vertexOffset = dynamicOffsetVertices + sceneContext.getVertexOffset();
 				int uvOffset = dynamicOffsetUvs + sceneContext.getUvOffset();
+				if (enableDrawRenderableTimers)
+					frameTimer.begin(Timer.MODEL_PUSHING);
 				modelPusher.pushModel(sceneContext, null, hash, model, ObjectType.NONE, 0, true);
+				if (enableDrawRenderableTimers)
+					frameTimer.end(Timer.MODEL_PUSHING);
 				if (sceneContext.modelPusherResults[1] == 0)
 					uvOffset = -1;
 				faceCount = sceneContext.modelPusherResults[0];
@@ -2740,6 +2794,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.ensureCapacity(8)
 			.put(eightIntWrite);
 		renderBufferOffset += faceCount * 3;
+
+		if (enableDrawRenderableTimers)
+			frameTimer.end(Timer.DRAW_RENDERABLE);
 	}
 
 	/**
@@ -2792,27 +2849,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (useLowMemoryMode)
 			return 0;
 		return config.expandedMapLoadingChunks();
-	}
-
-	/**
-	 * Calculates the approximate position of the point on which the camera is focused.
-	 *
-	 * @return The camera target's x, y, z coordinates
-	 */
-	public int[] getCameraFocalPoint() {
-		int camX = client.getOculusOrbFocalPointX();
-		int camY = client.getOculusOrbFocalPointY();
-		// approximate the Z position of the point the camera is aimed at.
-		// the difference in height between the camera at lowest and highest pitch
-		int camPitch = client.getCameraPitch();
-		final int minCamPitch = 128;
-		final int maxCamPitch = 512;
-		int camPitchDiff = maxCamPitch - minCamPitch;
-		float camHeight = (camPitch - minCamPitch) / (float) camPitchDiff;
-		final int camHeightDiff = 2200;
-		int camZ = (int) (client.getCameraZ() + (camHeight * camHeightDiff));
-
-		return new int[] { camX, camY, camZ };
 	}
 
 	private void logBufferResize(GLBuffer glBuffer, long newSize) {
