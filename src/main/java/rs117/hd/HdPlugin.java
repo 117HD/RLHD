@@ -210,6 +210,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private HdPluginConfig config;
 
 	@Inject
+	private LowMemoryPlugin lowDetailPlugin;
+
+	@Inject
 	private LowMemoryConfig lowDetailPluginConfig;
 
 	@Inject
@@ -2919,8 +2922,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Subscribe(priority = -1) // Run after the low detail plugin
 	public void onBeforeRender(BeforeRender beforeRender) {
-		// The game runs significantly slower when drawing lower planes, even though it in certain areas makes useful visual difference
-		client.getScene().setMinLevel(isInChambersOfXeric || lowDetailPluginConfig.hideLowerPlanes() ? client.getPlane() : 0);
+		boolean shouldHideLowerPlanes =
+			isInChambersOfXeric || // The game runs significantly slower with lower planes in Chambers of Xeric
+			pluginManager.isPluginEnabled(lowDetailPlugin) && lowDetailPluginConfig.hideLowerPlanes();
+		client.getScene().setMinLevel(shouldHideLowerPlanes ? client.getPlane() : 0);
 	}
 
 	@Subscribe
