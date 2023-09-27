@@ -9161,7 +9161,8 @@
       18055,
       18056
     ],
-    "uvType": "GEOMETRY"
+    "uvType": "BOX",
+    "uvScale": 0.55
   },
   {
     "description": "Meiyerditch Walls Rubble",
@@ -9170,7 +9171,8 @@
       18037,
       18038
     ],
-    "uvType": "GEOMETRY"
+    "uvType": "BOX",
+    "uvScale": 0.55
   },
   {
     "description": "Meiyerditch Wall Plank Floors",
@@ -9446,7 +9448,8 @@
       17500,
       17501
     ],
-    "uvType": "GEOMETRY"
+    "uvType": "BOX",
+    "uvScale": 0.7
   },
   {
     "description": "Ver Sinhaza Walls",
@@ -9534,7 +9537,8 @@
       17829,
       17871
     ],
-    "uvType": "GEOMETRY"
+    "uvType": "BOX",
+    "uvScale": 0.7
   },
   {
     "description": "Meiyerditch Mine Walls - Daeyalt Rocks",
@@ -9545,7 +9549,8 @@
       17964,
       17965
     ],
-    "uvType": "GEOMETRY"
+    "uvType": "BOX",
+    "uvScale": 0.7
   },
   {
     "description": "Darkmeyer Stone Walls",
@@ -9573,7 +9578,8 @@
       39365,
       39478
     ],
-    "uvType": "GEOMETRY"
+    "uvType": "BOX",
+    "uvScale": 0.7
   },
   {
     "description": "Darkmeyer Stone Tiles",
@@ -10280,7 +10286,7 @@
       5198,
       5199
     ],
-    "uvType": "MODEL_YZ",
+    "uvType": "BOX",
     "uvOrientation": 1536,
     "uvScale": 0.66
   },
