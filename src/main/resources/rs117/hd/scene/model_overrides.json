@@ -3154,7 +3154,9 @@
       3774,
       2141,
       3770
-    ]
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7
   },
   {
     "description": "UNKNOWN_4",
@@ -3194,7 +3196,7 @@
       43759,
       679
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "uvScale": 0.5
   },
   {
