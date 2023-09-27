@@ -527,6 +527,7 @@ public class LightManager {
 			light.z = (int) projectile.getZ();
 			light.plane = projectile.getFloor();
 			light.fadeInDuration = 300;
+			light.visible = projectileLightVisible();
 
 			sceneContext.lights.add(light);
 		}
