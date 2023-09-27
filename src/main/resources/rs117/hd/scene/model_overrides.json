@@ -3096,7 +3096,9 @@
       5917,
       5918,
       6903
-    ]
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
   },
   {
     "description": "UNKNOWN_1",
