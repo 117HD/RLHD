@@ -5012,7 +5012,7 @@
       25656,
       25658
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "uvScale": 0.5,
     "uvOrientation": 512
   },
