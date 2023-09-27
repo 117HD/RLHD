@@ -3905,7 +3905,7 @@
       30374,
       31766
     ],
-    "uvType": "WORLD_XZ",
+    "uvType": "BOX",
     "uvScale": 0.5
   },
   {
@@ -5581,7 +5581,7 @@
       11092
     ],
     "inheritTileColorType": "OVERLAY",
-    "uvType": "WORLD_XZ",
+    "uvType": "BOX",
     "uvScale": 0.65
   },
   {
@@ -10766,7 +10766,8 @@
     "description": "Objects - Rock - Brown Rock - Medium",
     "baseMaterial": "ROCK_1",
     "objectIds": [
-      10782
+      10782,
+      10783
     ],
     "uvType": "BOX",
     "uvScale": 0.33
