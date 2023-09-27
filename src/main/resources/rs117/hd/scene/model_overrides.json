@@ -3930,7 +3930,9 @@
       30369,
       30370,
       30375
-    ]
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
   },
   {
     "description": "Motherload mine upper floor",
@@ -3956,7 +3958,7 @@
       26679,
       26680
     ],
-    "uvType": "MODEL_YZ_MIRROR_B",
+    "uvType": "BOX",
     "uvScale": 0.4,
     "uvOrientation": 400
   },
