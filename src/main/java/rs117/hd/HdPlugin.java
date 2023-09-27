@@ -66,8 +66,6 @@ import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.PluginInstantiationException;
 import net.runelite.client.plugins.PluginManager;
 import net.runelite.client.plugins.entityhider.EntityHiderPlugin;
-import net.runelite.client.plugins.lowmemory.LowMemoryConfig;
-import net.runelite.client.plugins.lowmemory.LowMemoryPlugin;
 import net.runelite.client.ui.ClientUI;
 import net.runelite.client.ui.DrawManager;
 import net.runelite.client.util.LinkBrowser;
@@ -126,7 +124,6 @@ import static rs117.hd.utils.ResourcePath.path;
 	conflicts = "GPU"
 )
 @PluginDependency(EntityHiderPlugin.class)
-@PluginDependency(LowMemoryPlugin.class)
 @Slf4j
 public class HdPlugin extends Plugin implements DrawCallbacks {
 	public static final String DISCORD_URL = "https://discord.gg/U4p6ChjgSE";
@@ -209,9 +206,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Inject
 	private HdPluginConfig config;
-
-	@Inject
-	private LowMemoryConfig lowDetailPluginConfig;
 
 	@Inject
 	private Gson rlGson;
@@ -2964,8 +2958,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Subscribe(priority = -1) // Run after the low detail plugin
 	public void onBeforeRender(BeforeRender beforeRender) {
-		// The game runs significantly slower when drawing lower planes, even though it in certain areas makes useful visual difference
-		client.getScene().setMinLevel(isInChambersOfXeric || lowDetailPluginConfig.hideLowerPlanes() ? client.getPlane() : 0);
+		// The game runs significantly slower with lower planes in Chambers of Xeric
+		client.getScene().setMinLevel(isInChambersOfXeric ? client.getPlane() : client.getScene().getMinLevel());
 	}
 
 	@Subscribe
