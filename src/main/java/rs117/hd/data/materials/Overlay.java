@@ -761,7 +761,6 @@ public enum Overlay {
 
 	// POHs
 	POH_DESERT_INDOORS(Area.PLAYER_OWNED_HOUSE, GroundMaterial.TILES_2x2_2, p -> p.blended(false).ids(26, 99)),
-	POH_BASEMENT_FLOOR_SHADOW_FIX(Area.PLAYER_OWNED_HOUSE, GroundMaterial.TRANSPARENT, p -> p.blended(false).ids(120)),
 
 	// Cutscenes
 	LAND_OF_GOBLINS_WATER_FIX(13, Area.LAND_OF_GOBLINS_CUTSCENE_WATER, WaterType.WATER),
