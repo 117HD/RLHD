@@ -3984,7 +3984,7 @@
       1454,
       1455
     ],
-    "uvType": "MODEL_XY",
+    "uvType": "BOX",
     "uvScale": 0.75
   },
   {
@@ -10761,5 +10761,14 @@
     "uvType": "BOX",
     "uvScale": 0.33,
     "uvOrientation": 256
+  },
+  {
+    "description": "Objects - Rock - Brown Rock - Medium",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      10782
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.33
   }
 ]
