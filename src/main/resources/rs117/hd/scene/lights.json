@@ -19227,7 +19227,7 @@
     "height": 80,
     "alignment": "CENTER",
     "radius": 400,
-    "strength": 15,
+    "strength": 8,
     "color": [
       0,
       100,
@@ -19243,11 +19243,26 @@
     ]
   },
   {
+    "description": "Ghostly thrall projectile",
+    "radius": 300,
+    "strength": 8,
+    "height": 140,
+    "color": [
+      49, 213, 217
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 5,
+    "projectileIds": [
+      1907
+    ]
+  },
+  {
     "description": "SKELETAL_THRALL",
     "height": 80,
     "alignment": "CENTER",
     "radius": 400,
-    "strength": 15,
+    "strength": 8,
     "color": [
       144,
       245,
@@ -19263,11 +19278,28 @@
     ]
   },
   {
+    "description": "Skeletal thrall projectile",
+    "radius": 300,
+    "strength": 8,
+    "height": 140,
+    "color": [
+      144,
+      245,
+      66
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 5,
+    "projectileIds": [
+      1906
+    ]
+  },
+  {
     "description": "ZOMBIE_THRALL",
     "height": 80,
     "alignment": "CENTER",
     "radius": 400,
-    "strength": 15,
+    "strength": 8,
     "color": [
       255,
       0,
@@ -30821,24 +30853,6 @@
     "range": 5,
     "npcIds": [
       12234
-    ],
-    "projectileIds": [
-      1907
-    ]
-  },
-  {
-    "description": "Lassar Undercity lost soul projectile",
-    "radius": 300,
-    "strength": 35,
-    "height": 140,
-    "color": [
-      49, 213, 217
-    ],
-    "type": "FLICKER",
-    "duration": 600,
-    "range": 5,
-    "projectileIds": [
-      1907
     ]
   }
 ]
