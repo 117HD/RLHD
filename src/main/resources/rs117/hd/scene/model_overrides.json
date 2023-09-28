@@ -1327,6 +1327,8 @@
     "description": "Objects - Tree - Yew",
     "baseMaterial": "BARK",
     "objectIds": [
+      8388,
+      8389,
       8390,
       10822
 
@@ -2911,7 +2913,7 @@
       6659
     ],
     "flatNormals": true,
-    "uvType": "WORLD_XZ",
+    "uvType": "BOX",
     "uvScale": 0.5
   },
   {
@@ -2922,7 +2924,7 @@
       3213,
       40887
     ],
-    "uvType": "MODEL_YZ",
+    "uvType": "BOX",
     "uvScale": 0.4,
     "uvOrientation": 512
   },
@@ -2933,8 +2935,8 @@
       39721,
       44635
     ],
-    "uvScale": 0.4,
-    "uvOrientation": 512
+    "uvType": "BOX",
+    "uvScale": 0.5
   },
   {
     "description": "CAVE_WALLS_BLEND",
@@ -2962,7 +2964,7 @@
       29634
     ],
     "flatNormals": true,
-    "uvType": "MODEL_XZ"
+    "uvType": "BOX"
   },
   {
     "description": "CAVE_WALL_ABOVE_FLOOR_TILE",
@@ -2981,14 +2983,14 @@
     "baseMaterial": "GRUNGE_1",
     "hideInAreas": [
       [ 3469, 9845 ]
-    ]
+    ],
+    "uvType": "BOX"
   },
   {
     "description": "ROUNDED_CAVE_WALLS",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
       1422,
-      1434,
       1435,
       1459,
       1460,
@@ -2997,6 +2999,14 @@
       9739,
       9740,
       16543
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "ROUNDED_CAVE_WALLS_TOP",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      1434
     ]
   },
   {
@@ -3088,7 +3098,9 @@
       5917,
       5918,
       6903
-    ]
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
   },
   {
     "description": "UNKNOWN_1",
@@ -3144,7 +3156,9 @@
       3774,
       2141,
       3770
-    ]
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7
   },
   {
     "description": "UNKNOWN_4",
@@ -3184,7 +3198,7 @@
       43759,
       679
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "uvScale": 0.5
   },
   {
@@ -3897,7 +3911,7 @@
       30374,
       31766
     ],
-    "uvType": "WORLD_XZ",
+    "uvType": "BOX",
     "uvScale": 0.5
   },
   {
@@ -3922,7 +3936,9 @@
       30369,
       30370,
       30375
-    ]
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
   },
   {
     "description": "Motherload mine upper floor",
@@ -3939,7 +3955,8 @@
       11389,
       11392,
       11393
-    ]
+    ],
+    "uvType": "BOX"
   },
   {
     "description": "Motherload Mine Rockfall",
@@ -3948,7 +3965,7 @@
       26679,
       26680
     ],
-    "uvType": "MODEL_YZ_MIRROR_B",
+    "uvType": "BOX",
     "uvScale": 0.4,
     "uvOrientation": 400
   },
@@ -3976,7 +3993,7 @@
       1454,
       1455
     ],
-    "uvType": "MODEL_XY",
+    "uvType": "BOX",
     "uvScale": 0.75
   },
   {
@@ -4997,7 +5014,7 @@
       25656,
       25658
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "uvScale": 0.5,
     "uvOrientation": 512
   },
@@ -5573,7 +5590,7 @@
       11092
     ],
     "inheritTileColorType": "OVERLAY",
-    "uvType": "WORLD_XZ",
+    "uvType": "BOX",
     "uvScale": 0.65
   },
   {
@@ -6165,7 +6182,10 @@
       44717,
       44719,
       44720
-    ]
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 256
   },
   {
     "description": "Ground Decoration - Flat Stone - Small - Uncolored",
@@ -7175,7 +7195,8 @@
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
       16509
-    ]
+    ],
+    "uvType": "BOX"
   },
   {
     "description": "Objects - Rock Stairs - Large",
@@ -7183,7 +7204,9 @@
     "objectIds": [
       30189
     ],
-    "uvType": "GEOMETRY"
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "uvOrientation": 768
   },
   {
     "description": "Objects - Rockslide - Brown Rock - Rock - Medium",
@@ -8608,7 +8631,8 @@
     "objectIds": [
       10503
     ],
-    "uvType": "GEOMETRY"
+    "uvType": "BOX",
+    "uvScale": 0.6
   },
   {
     "description": "Objects - Wooden - Counter",
@@ -8747,7 +8771,7 @@
       6535,
       6536
     ],
-    "uvType": "MODEL_YZ",
+    "uvType": "BOX",
     "uvOrientation": 512,
     "uvScale": 0.6
   },
@@ -9138,7 +9162,8 @@
       18055,
       18056
     ],
-    "uvType": "GEOMETRY"
+    "uvType": "BOX",
+    "uvScale": 0.55
   },
   {
     "description": "Meiyerditch Walls Rubble",
@@ -9147,7 +9172,8 @@
       18037,
       18038
     ],
-    "uvType": "GEOMETRY"
+    "uvType": "BOX",
+    "uvScale": 0.55
   },
   {
     "description": "Meiyerditch Wall Plank Floors",
@@ -9423,7 +9449,8 @@
       17500,
       17501
     ],
-    "uvType": "GEOMETRY"
+    "uvType": "BOX",
+    "uvScale": 0.7
   },
   {
     "description": "Ver Sinhaza Walls",
@@ -9511,7 +9538,8 @@
       17829,
       17871
     ],
-    "uvType": "GEOMETRY"
+    "uvType": "BOX",
+    "uvScale": 0.7
   },
   {
     "description": "Meiyerditch Mine Walls - Daeyalt Rocks",
@@ -9522,7 +9550,8 @@
       17964,
       17965
     ],
-    "uvType": "GEOMETRY"
+    "uvType": "BOX",
+    "uvScale": 0.7
   },
   {
     "description": "Darkmeyer Stone Walls",
@@ -9550,7 +9579,8 @@
       39365,
       39478
     ],
-    "uvType": "GEOMETRY"
+    "uvType": "BOX",
+    "uvScale": 0.7
   },
   {
     "description": "Darkmeyer Stone Tiles",
@@ -10257,7 +10287,7 @@
       5198,
       5199
     ],
-    "uvType": "MODEL_YZ",
+    "uvType": "BOX",
     "uvOrientation": 1536,
     "uvScale": 0.66
   },
@@ -10318,7 +10348,9 @@
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       44683
-    ]
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
   },
   {
     "description": "Objects - Stone - Giants Foundry - Lavapool Rocks",
@@ -10353,7 +10385,7 @@
     "objectIds": [
       44729
     ],
-    "uvType": "MODEL_XZ_MIRROR_A",
+    "uvType": "BOX",
     "uvScale": 0.28
   },
   {
@@ -10386,7 +10418,7 @@
     "objectIds": [
       39724
     ],
-    "uvType": "GEOMETRY",
+    "uvType": "BOX",
     "uvScale": 0.28
   },
   {
@@ -10637,5 +10669,15 @@
     ],
     "uvType": "BOX",
     "flatNormals": true
+  },
+  {
+    "description": "Objects - Rock - Brown Rock - Medium",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      10782,
+      10783
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.33
   }
 ]
