@@ -10679,5 +10679,14 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.33
+  },
+  {
+    "description": "Objects - Wood - Boofshelf - Double",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      381
+    ],
+    "uvType": "BOX",
+    "flatNormals": true
   }
 ]
