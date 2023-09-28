@@ -731,11 +731,11 @@ public enum Environment
 		.setWaterColor(185, 214, 255)
 	),
 	THE_STRANGLEWOOD(Area.THE_STRANGLEWOOD, new Properties()
-		.setFogColor("#af929c")
+		.setFogColor("#af979f")
 		.setFogDepth(35)
 		.setAmbientColor("#c0bde7")
 		.setAmbientStrength(2.f)
-		.setDirectionalColor("#ebc9f4")
+		.setDirectionalColor("#f2edf4")
 		.setDirectionalStrength(2.5f)
 	),
 	THE_STRANGLEWOOD_QUEST_UNDERGROUND_AREAS(Area.THE_STRANGLEWOOD_QUEST_UNDERGROUND_AREAS, new Properties()
