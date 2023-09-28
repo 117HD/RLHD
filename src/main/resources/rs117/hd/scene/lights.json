@@ -19248,7 +19248,9 @@
     "strength": 8,
     "height": 140,
     "color": [
-      49, 213, 217
+      0,
+      100,
+      255
     ],
     "type": "FLICKER",
     "duration": 600,
