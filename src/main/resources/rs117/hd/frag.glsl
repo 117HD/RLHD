@@ -496,11 +496,6 @@ void main() {
     // Apply saturation setting
     hsv.y *= saturation;
 
-    #if !VANILLA_COLOR_BANDING
-    // Reduce color banding in smooth gradients
-    hsv.z *= .97 + .06 * fract(sin(dot(gl_FragCoord.xy * .00035251, vec2(12.9898, 78.233))) * 43758.5453123);
-    #endif
-
     // Apply contrast setting
     if (hsv.z > 0.5) {
         hsv.z = 0.5 + ((hsv.z - 0.5) * contrast);
