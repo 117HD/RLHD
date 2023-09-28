@@ -605,6 +605,15 @@ public enum Environment
 		.setFogColor("#99D8C8")
 		.setFogDepth(15)
 	),
+	ZALCANO(Area.ZALCANO, new Properties()
+		.setFogColor(0.8f, 0.6f, 0.6f)
+		.setFogDepth(40)
+		.setAmbientColor("#AAAFB6")
+		.setAmbientStrength(1.5f)
+		.setDirectionalColor("#FFFFFF")
+		.setDirectionalStrength(1.0f)
+		.setLightDirection(260f, 10f)
+	),
 	SOTE_GRAND_LIBRARY(Area.SOTE_GRAND_LIBRARY, new Properties()
 		.setFogColor(18, 64, 83)
 		.setAmbientStrength(0.3f)
