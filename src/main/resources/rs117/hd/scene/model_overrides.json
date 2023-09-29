@@ -7376,7 +7376,8 @@
       406,
       1992
     ],
-    "uvType": "VANILLA",
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
     "flatNormals": true
   },
   {
@@ -10756,6 +10757,40 @@
     "textureMaterial": "HD_CONCRETE",
     "objectIds": [
       10355
+    ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "uvScale": 0.65
+  },
+  {
+    "description": "Objects - Concrete - Gravestone",
+    "textureMaterial": "HD_CONCRETE",
+    "objectIds": [
+      404,
+      405
+    ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "uvScale": 0.65
+  },
+  {
+    "description": "Objects - Concrete - Salve Tunnel Entrance",
+    "textureMaterial": "HD_CONCRETE",
+    "objectIds": [
+      3456,
+      3482,
+      3483,
+      3484
+    ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "uvScale": 0.65
+  },
+  {
+    "description": "Objects - Concrete - Deposit Box",
+    "textureMaterial": "HD_CONCRETE",
+    "objectIds": [
+      10529
     ],
     "uvType": "BOX",
     "retainVanillaUvs": false,
