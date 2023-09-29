@@ -10695,21 +10695,35 @@
     "flatNormals": true
   },
   {
-    "description": "Objects - Concrete - Cosmic Alter",
+    "description": "Objects - Concrete - Runecrafting Alters",
     "textureMaterial": "HD_CONCRETE",
     "objectIds": [
-      34766
+      34760,
+      34761,
+      34732,
+      34763,
+      34764,
+      34765,
+      34766,
+      34767,
+      34768,
+      34769,
+      34770,
+      34771
     ],
     "uvType": "BOX",
     "retainVanillaUvs": false
   },
   {
-    "description": "Objects - Concrete - Cosmic Alter Pillars",
+    "description": "Objects - Concrete - Runecrafting Alter Pillars",
     "textureMaterial": "HD_CONCRETE",
     "objectIds": [
       34780,
       34781,
-      34782
+      34782,
+      34783,
+      34784,
+      34785
     ],
     "uvType": "BOX",
     "retainVanillaUvs": false,
@@ -10717,10 +10731,31 @@
     "uvOrientation": 256
   },
   {
-    "description": "Objects - Concrete - Cosmic Alter Lights",
+    "description": "Objects - Concrete - Runecrafting Alter Lights",
     "textureMaterial": "HD_CONCRETE",
     "objectIds": [
-      34786
+      34786,
+      34787
+    ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "uvScale": 0.65
+  },
+  {
+    "description": "Objects - Concrete - Table",
+    "textureMaterial": "HD_CONCRETE",
+    "objectIds": [
+      590
+    ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "uvScale": 0.65
+  },
+  {
+    "description": "Objects - Concrete - Bank Booth",
+    "textureMaterial": "HD_CONCRETE",
+    "objectIds": [
+      10355
     ],
     "uvType": "BOX",
     "retainVanillaUvs": false,
