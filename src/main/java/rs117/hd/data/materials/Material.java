@@ -575,7 +575,7 @@ public enum Material {
 		.setNormalMap(HD_CONCRETE_N)
 		.setDisplacementMap(HD_CONCRETE_D)
 		.setSpecular(0.3f, 20)
-		.setBrightness(0.80f)
+		.setBrightness(0.75f)
 	),
 
 
