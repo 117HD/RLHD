@@ -10693,5 +10693,37 @@
     "description": "Water wheel in Lumbridge",
     "objectIds": [ 5589 ],
     "flatNormals": true
+  },
+  {
+    "description": "Objects - Concrete - Cosmic Alter",
+    "textureMaterial": "HD_CONCRETE",
+    "objectIds": [
+      34766
+    ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false
+  },
+  {
+    "description": "Objects - Concrete - Cosmic Alter Pillars",
+    "textureMaterial": "HD_CONCRETE",
+    "objectIds": [
+      34780,
+      34781,
+      34782
+    ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "uvScale": 0.7,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Objects - Concrete - Cosmic Alter Lights",
+    "textureMaterial": "HD_CONCRETE",
+    "objectIds": [
+      34786
+    ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "uvScale": 0.65
   }
 ]
