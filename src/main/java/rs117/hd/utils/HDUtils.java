@@ -115,6 +115,21 @@ public class HDUtils {
 		return out;
 	}
 
+	public static float hermite(float from, float to, float t) {
+		float t2 = t * t;
+		float t3 = t2 * t;
+		return
+			from * (1 - 3 * t2 + 2 * t3) +
+			to * (3 * t2 - 2 * t3);
+	}
+
+	public static float[] hermite(float[] from, float[] to, float t) {
+		float[] result = new float[from.length];
+		for (int i = 0; i < result.length; i++)
+			result[i] = hermite(from[i], to[i], t);
+		return result;
+	}
+
 	public static int clamp(int value, int min, int max) {
 		return Math.min(max, Math.max(min, value));
 	}

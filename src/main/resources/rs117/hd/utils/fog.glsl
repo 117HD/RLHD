@@ -71,7 +71,7 @@ float calculateFogAmount(vec3 position) {
 
     float minFogStart = 0.0;
     float maxFogStart = 0.3;
-    int fogDepth2 = int(fogDepth * drawDistance / (TILE_SIZE * 100.0));
+    float fogDepth2 = fogDepth * drawDistance / (TILE_SIZE * 100.0);
     float fogDepthMultiplier = clamp(fogDepth2, 0, 1000) / 1000.0;
     float fogStart2 = (maxFogStart - (fogDepthMultiplier * (maxFogStart - minFogStart))) * float(drawDistance);
     float camToVertex = length(vec3(cameraX, cameraY, cameraZ) - vec3(

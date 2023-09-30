@@ -39,7 +39,7 @@ out int gMaterialData;
 out int gTerrainData;
 
 uniform int useFog;
-uniform int fogDepth;
+uniform float fogDepth;
 uniform int drawDistance;
 uniform int expandedMapLoadingChunks;
 

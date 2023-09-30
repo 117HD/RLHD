@@ -1981,7 +1981,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			frameTimer.end(Timer.CLEAR_SCENE);
 			frameTimer.begin(Timer.RENDER_SCENE);
 
-			int fogDepth = 0;
+			float fogDepth = 0;
 			switch (config.fogDepthMode()) {
 				case USER_DEFINED:
 					fogDepth = config.fogDepth() * 10;
@@ -1991,7 +1991,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					break;
 			}
 			glUniform1i(uniUseFog, fogDepth > 0 ? 1 : 0);
-			glUniform1i(uniFogDepth, fogDepth);
+			glUniform1f(uniFogDepth, fogDepth);
 			glUniform3fv(uniFogColor, fogColor);
 
 			glUniform1i(uniDrawDistance, getDrawDistance() * LOCAL_TILE_SIZE);
