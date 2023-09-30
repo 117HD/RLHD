@@ -2178,7 +2178,8 @@
   },
   {
     "description": "STONE_WALL_FENCES",
-    "baseMaterial": "STONE",
+    "baseMaterial": "STONE_NORMALED",
+    "textureMaterial": "HD_CONCRETE",
     "objectIds": [
       979,
       5566,
@@ -2196,7 +2197,10 @@
       23892,
       5569
     ],
-    "flatNormals": true
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "flatNormals": true,
+    "uvScale": 0.8
   },
   {
     "description": "STATUE_OF_A_WARRIOR_1",
