@@ -605,6 +605,7 @@ public enum Overlay {
 
 	// Wilderness
 	WILDERNESS_NORTH_OF_RESOURCE_AREA_HILLS(11, Area.WILDERNESS_NORTH_OF_RESOURCE_AREA, GroundMaterial.VARIED_DIRT),
+	WILDERNESS_FOUNTAIN_OF_RUNE_BLOOD(p -> p.ids(86).area(Area.WILDERNESS_FOUNTAIN_OF_RUNE).waterType(WaterType.BLOOD)),
 
 	// Tirannwn
 	ARANDAR_PATHS(p -> p
