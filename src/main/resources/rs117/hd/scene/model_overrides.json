@@ -5433,14 +5433,13 @@
   {
     "description": "Objects - Mossy Rock - Medium",
     "baseMaterial": "ROCK_1",
+    "textureMaterial": "HD_CONCRETE",
     "objectIds": [
       3894,
       3895,
       3896,
       3897,
       5847,
-      11182,
-      11183,
       11425,
       27899,
       29856,
@@ -5461,8 +5460,9 @@
       40556,
       40557
     ],
+    "retainVanillaUvs": false,
     "uvType": "BOX",
-    "uvScale": 0.5
+    "uvScale": 0.65
   },
   {
     "description": "Objects - Mossy Rock - Rectangle",
@@ -10760,7 +10760,8 @@
     "description": "Objects - Concrete - Bank Booth",
     "textureMaterial": "HD_CONCRETE",
     "objectIds": [
-      10355
+      10355,
+      10527
     ],
     "uvType": "BOX",
     "retainVanillaUvs": false,
@@ -10815,7 +10816,8 @@
     "description": "Objects - Textured Rocks - Small",
     "textureMaterial": "HD_CONCRETE",
     "objectIds": [
-      10793
+      10793,
+      12570
     ],
     "uvType": "BOX",
     "retainVanillaUvs": false,
@@ -10830,6 +10832,18 @@
     ],
     "uvType": "BOX",
     "retainVanillaUvs": false,
+    "uvScale": 0.65
+  },
+  {
+    "description": "Objects - Textured Rock - Mossy Rock - Medium",
+    "baseMaterial": "GRASS_3",
+    "textureMaterial": "HD_CONCRETE",
+    "objectIds": [
+      11182,
+      11183
+    ],
+    "retainVanillaUvs": false,
+    "uvType": "BOX",
     "uvScale": 0.65
   }
 ]
