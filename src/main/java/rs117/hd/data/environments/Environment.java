@@ -1170,8 +1170,8 @@ public enum Environment
 	// overrides 'ALL' to provide default daylight conditions for the overworld area
 	OVERWORLD(Area.OVERWORLD, new Properties()),
 	// used for underground, instances, etc.
-	ALL(Area.ALL, new Properties()
-		.setFogColor("#241809")
+	DEFAULT(Area.ALL, new Properties()
+		.setFogColor("#000000")
 		.setFogDepth(40)
 		.setAmbientColor("#AAAFB6")
 		.setAmbientStrength(1.5f)
