@@ -10803,10 +10803,12 @@
   },
   {
     "description": "Objects - Textured Rocks - Rocks with Vines",
+    "baseMaterial": "PLANT_GRUNGE_1",
     "textureMaterial": "HD_CONCRETE",
     "objectIds": [
       10786,
-      10787
+      10787,
+      10788
     ],
     "uvType": "BOX",
     "retainVanillaUvs": false,
@@ -10841,6 +10843,18 @@
     "objectIds": [
       11182,
       11183
+    ],
+    "retainVanillaUvs": false,
+    "uvType": "BOX",
+    "uvScale": 0.65
+  },
+  {
+    "description": "Objects - Textured Rock - Nightmare Zone Rocks - Small",
+    "textureMaterial": "HD_CONCRETE",
+    "objectIds": [
+      26275,
+      26291,
+      26292
     ],
     "retainVanillaUvs": false,
     "uvType": "BOX",
