@@ -37,6 +37,7 @@ uniform float elapsedTime;
 #include utils/constants.glsl
 #define USE_VANILLA_UV_PROJECTION
 #include utils/uvs.glsl
+#include utils/color_utils.glsl
 
 in vec3 gPosition[3];
 in vec3 gUv[3];
@@ -90,10 +91,10 @@ void main() {
     vec3 N = normalize(cross(triToWorld[0], triToWorld[1]));
 
     for (int i = 0; i < 3; i++) {
+        // Flat normals must be applied separately per vertex
+        vec3 normal = gNormal[i];
         OUT.position = gPosition[i];
-        OUT.normal = gNormal[i];
-        if (OUT.normal == vec3(0))
-            OUT.normal = N;
+        OUT.normal = length(normal) == 0 ? N : normalize(normal);;
         OUT.texBlend = vec3(0);
         OUT.texBlend[i] = 1;
         OUT.fogAmount = gFogAmount[i];

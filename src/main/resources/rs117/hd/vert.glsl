@@ -68,14 +68,9 @@ void main() {
     int materialData = int(vUv.w);
     int terrainData = int(vNormal.w);
 
-    float normalMagnitude = length(vNormal.xyz);
-    bool flatNormal = // Flat normals must be applied separately per vertex
-        normalMagnitude == 0 ||
-        (materialData >> MATERIAL_FLAG_FLAT_NORMALS & 1) == 1;
-
     gPosition = position;
     gUv = vec3(vUv);
-    gNormal = flatNormal ? vec3(0) : vNormal.xyz / normalMagnitude;
+    gNormal = vNormal.xyz;
     gColor = color;
     gFogAmount = calculateFogAmount(gPosition);
     gMaterialData = materialData;

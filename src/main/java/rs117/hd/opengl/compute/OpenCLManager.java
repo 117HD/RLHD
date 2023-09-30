@@ -41,6 +41,7 @@ import org.lwjgl.opencl.*;
 import org.lwjgl.system.Configuration;
 import org.lwjgl.system.MemoryStack;
 import rs117.hd.HdPlugin;
+import rs117.hd.HdPluginConfig;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.Template;
 import rs117.hd.utils.buffer.GLBuffer;
@@ -71,6 +72,9 @@ public class OpenCLManager {
 
 	@Inject
 	private HdPlugin plugin;
+
+	@Inject
+	private HdPluginConfig config;
 
 	private boolean initialized;
 
@@ -314,7 +318,10 @@ public class OpenCLManager {
 
 	public void initPrograms() throws ShaderException, IOException {
 		try (var stack = MemoryStack.stackPush()) {
-			var template = new Template().addIncludePath(OpenCLManager.class);
+			var template = new Template()
+				.define("UNDO_VANILLA_SHADING", config.undoVanillaShadingInCompute())
+				.define("LEGACY_GREY_COLORS", config.legacyGreyColors())
+				.addIncludePath(OpenCLManager.class);
 			passthroughProgram = compileProgram(stack, template.load("comp_unordered.cl"));
 			passthroughKernel = getKernel(stack, passthroughProgram, KERNEL_NAME_PASSTHROUGH);
 
@@ -346,12 +353,14 @@ public class OpenCLManager {
 
 		if (sortingKernels != null)
 			for (var kernel : sortingKernels)
-				clReleaseKernel(kernel);
+				if (kernel != 0)
+					clReleaseKernel(kernel);
 		sortingKernels = null;
 
 		if (sortingPrograms != null)
 			for (var program : sortingPrograms)
-				clReleaseProgram(program);
+				if (program != 0)
+					clReleaseProgram(program);
 		sortingPrograms = null;
 	}
 
@@ -471,7 +480,8 @@ public class OpenCLManager {
 	}
 
 	public void finish() {
-		clFinish(commandQueue);
+		if (commandQueue != 0)
+			clFinish(commandQueue);
 	}
 
 	private static String getPlatformInfoStringUTF8(long cl_platform_id, int param_name) {

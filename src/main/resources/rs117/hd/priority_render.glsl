@@ -223,6 +223,38 @@ ivec4 hillskew_vertex(ivec4 v, int hillskew, int y, int plane) {
     return ivec4(v.x, v.y + h3 - y, v.z, v.w);
 }
 
+void undoVanillaShading(inout ivec4 vertex, vec3 unrotatedNormal) {
+    const vec3 LIGHT_DIR_MODEL = vec3(0.57735026, 0.57735026, 0.57735026);
+    // subtracts the X lowest lightness levels from the formula.
+    // helps keep darker colors appropriately dark
+    const int IGNORE_LOW_LIGHTNESS = 3;
+    // multiplier applied to vertex' lightness value.
+    // results in greater lightening of lighter colors
+    const float LIGHTNESS_MULTIPLIER = 3f;
+    // the minimum amount by which each color will be lightened
+    const int BASE_LIGHTEN = 10;
+
+    int hsl = vertex.w;
+    int saturation = hsl >> 7 & 0x7;
+    int lightness = hsl & 0x7F;
+    float vanillaLightDotNormals = dot(LIGHT_DIR_MODEL, unrotatedNormal);
+    if (vanillaLightDotNormals > 0) {
+        vanillaLightDotNormals /= length(unrotatedNormal);
+        float lighten = max(0, lightness - IGNORE_LOW_LIGHTNESS);
+        lightness += int((lighten * LIGHTNESS_MULTIPLIER + BASE_LIGHTEN - lightness) * vanillaLightDotNormals);
+    }
+    int maxLightness;
+    #if LEGACY_GREY_COLORS
+    maxLightness = 55;
+    #else
+    maxLightness = int(127 - 72 * pow(saturation / 7., .05));
+    #endif
+    lightness = min(lightness, maxLightness);
+    hsl &= ~0x7F;
+    hsl |= lightness;
+    vertex.w = hsl;
+}
+
 void sort_and_insert(uint localId, ModelInfo minfo, int thisPriority, int thisDistance, ivec4 thisrvA, ivec4 thisrvB, ivec4 thisrvC) {
     /* compute face distance */
     int offset = minfo.offset;
@@ -243,12 +275,29 @@ void sort_and_insert(uint localId, ModelInfo minfo, int thisPriority, int thisDi
         const uint renderPriority = uint(thisDistance << 16) | (~localId & 0xffffu);
         int myOffset = priorityOffset;
 
-        uint ssboOffset = localId;
-
         // calculate position this face will be in
         for (int i = start; i < end; ++i)
             if (renderPriority < renderPris[i])
                 ++myOffset;
+
+        // Grab vertex normals from the correct buffer
+        vec4 normA = normal[offset + localId * 3    ];
+        vec4 normB = normal[offset + localId * 3 + 1];
+        vec4 normC = normal[offset + localId * 3 + 2];
+
+        // Rotate normals to match model orientation
+        normalout[outOffset + myOffset * 3]     = rotate(normA, orientation);
+        normalout[outOffset + myOffset * 3 + 1] = rotate(normB, orientation);
+        normalout[outOffset + myOffset * 3 + 2] = rotate(normC, orientation);
+
+        #if UNDO_VANILLA_SHADING
+        // Compute flat normal if necessary
+        if (length(normA) == 0)
+            normA = normB = normC = vec4(cross(thisrvA.xyz - thisrvB.xyz, thisrvA.xyz - thisrvC.xyz), 0);
+        undoVanillaShading(thisrvA, normA.xyz);
+        undoVanillaShading(thisrvB, normB.xyz);
+        undoVanillaShading(thisrvC, normC.xyz);
+        #endif
 
         thisrvA += pos;
         thisrvB += pos;
@@ -291,15 +340,5 @@ void sort_and_insert(uint localId, ModelInfo minfo, int thisPriority, int thisDi
         uvout[outOffset + myOffset * 3]     = uvA;
         uvout[outOffset + myOffset * 3 + 1] = uvB;
         uvout[outOffset + myOffset * 3 + 2] = uvC;
-
-        // Grab vertex normals from the correct buffer
-        vec4 normA = normal[offset + ssboOffset * 3    ];
-        vec4 normB = normal[offset + ssboOffset * 3 + 1];
-        vec4 normC = normal[offset + ssboOffset * 3 + 2];
-
-        // Rotate normals to match model orientation
-        normalout[outOffset + myOffset * 3]     = rotate(normA, orientation);
-        normalout[outOffset + myOffset * 3 + 1] = rotate(normB, orientation);
-        normalout[outOffset + myOffset * 3 + 2] = rotate(normC, orientation);
     }
 }

@@ -39,7 +39,7 @@ uniform mat4 lightProjectionMatrix;
 uniform float elapsedTime;
 uniform float colorBlindnessIntensity;
 uniform vec3 fogColor;
-uniform int fogDepth;
+uniform float fogDepth;
 uniform vec3 waterColorLight;
 uniform vec3 waterColorMid;
 uniform vec3 waterColorDark;
@@ -110,9 +110,9 @@ void main() {
 
     // Water data
     bool isTerrain = (vTerrainData[0] & 1) != 0; // 1 = 0b1
-    int waterDepth1 = vTerrainData[0] >> 8;
-    int waterDepth2 = vTerrainData[1] >> 8;
-    int waterDepth3 = vTerrainData[2] >> 8;
+    int waterDepth1 = vTerrainData[0] >> 8 & 0x7FF;
+    int waterDepth2 = vTerrainData[1] >> 8 & 0x7FF;
+    int waterDepth3 = vTerrainData[2] >> 8 & 0x7FF;
     float waterDepth =
         waterDepth1 * IN.texBlend.x +
         waterDepth2 * IN.texBlend.y +

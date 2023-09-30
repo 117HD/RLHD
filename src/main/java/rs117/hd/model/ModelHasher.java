@@ -1,13 +1,18 @@
 package rs117.hd.model;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.NonNull;
 import net.runelite.api.*;
+import rs117.hd.HdPlugin;
 import rs117.hd.data.materials.UvType;
 import rs117.hd.scene.model_overrides.ModelOverride;
 
 @Singleton
 public class ModelHasher {
+	@Inject
+	private HdPlugin plugin;
+
 	private Model model;
 	private int faceCount;
 	private long faceColorsOneHash;
@@ -26,54 +31,106 @@ public class ModelHasher {
 	public void setModel(Model model) {
 		this.model = model;
 		faceCount = model.getFaceCount();
-		faceColorsOneHash = fastHash(model.getFaceColors1());
-		faceColorsTwoHash = fastHash(model.getFaceColors2());
-		faceColorsThreeHash = fastHash(model.getFaceColors3());
-		faceTransparenciesHash = fastByteHash(model.getFaceTransparencies());
-		faceTexturesHash = fastShortHash(model.getFaceTextures());
-		xVerticesHash = fastHash(model.getVerticesX(), model.getVerticesCount());
-		yVerticesHash = fastHash(model.getVerticesY(), model.getVerticesCount());
-		zVerticesHash = fastHash(model.getVerticesZ(), model.getVerticesCount());
-		faceIndicesOneHash = fastHash(model.getFaceIndices1());
-		faceIndicesTwoHash = fastHash(model.getFaceIndices2());
-		faceIndicesThreeHash = fastHash(model.getFaceIndices3());
-		textureTrianglesHash = 0;
-		final byte[] textureFaces = model.getTextureFaces();
-		if (textureFaces != null) {
-			boolean hasVanillaTexturedFaces = false;
-			for (int textureId : textureFaces) {
-				if (textureId != -1) {
-					hasVanillaTexturedFaces = true;
-					break;
+		if (plugin.configUseFasterModelHashing) {
+			faceColorsOneHash = fastHash(model.getFaceColors1());
+			faceColorsTwoHash = 0;
+			faceColorsThreeHash = 0;
+			faceTransparenciesHash = fastByteHash(model.getFaceTransparencies());
+			faceTexturesHash = fastShortHash(model.getFaceTextures());
+			xVerticesHash = fastHash(model.getVerticesX(), model.getVerticesCount());
+			yVerticesHash = fastHash(model.getVerticesY(), model.getVerticesCount());
+			zVerticesHash = fastHash(model.getVerticesZ(), model.getVerticesCount());
+			faceIndicesOneHash = fastHash(model.getFaceIndices1());
+			faceIndicesTwoHash = 0;
+			faceIndicesThreeHash = 0;
+			textureTrianglesHash = 0;
+			final byte[] textureFaces = model.getTextureFaces();
+			if (textureFaces != null) {
+				boolean hasVanillaTexturedFaces = false;
+				for (int textureId : textureFaces) {
+					if (textureId != -1) {
+						hasVanillaTexturedFaces = true;
+						break;
+					}
+				}
+				if (hasVanillaTexturedFaces) {
+					final int[] texIndices1 = model.getTexIndices1();
+					final int[] texIndices2 = model.getTexIndices2();
+					final int[] texIndices3 = model.getTexIndices3();
+					final int[] vertexX = model.getVerticesX();
+					final int[] vertexY = model.getVerticesY();
+					final int[] vertexZ = model.getVerticesZ();
+					long h = 0;
+					for (int i = 0; i < model.getFaceCount(); i++) {
+						int texFace = textureFaces[i];
+						if (texFace == -1)
+							continue;
+						texFace &= 0xff;
+						final int texA = texIndices1[texFace];
+						final int texB = texIndices2[texFace];
+						final int texC = texIndices3[texFace];
+						h = h * 31L + vertexX[texA];
+						h = h * 31L + vertexY[texA];
+						h = h * 31L + vertexZ[texA];
+						h = h * 31L + vertexX[texB];
+						h = h * 31L + vertexY[texB];
+						h = h * 31L + vertexZ[texB];
+						h = h * 31L + vertexX[texC];
+						h = h * 31L + vertexY[texC];
+						h = h * 31L + vertexZ[texC];
+					}
+					textureTrianglesHash = h;
 				}
 			}
-			if (hasVanillaTexturedFaces) {
-				final int[] texIndices1 = model.getTexIndices1();
-				final int[] texIndices2 = model.getTexIndices2();
-				final int[] texIndices3 = model.getTexIndices3();
-				final int[] vertexX = model.getVerticesX();
-				final int[] vertexY = model.getVerticesY();
-				final int[] vertexZ = model.getVerticesZ();
-				long h = 0;
-				for (int i = 0; i < model.getFaceCount(); i++) {
-					int texFace = textureFaces[i];
-					if (texFace == -1)
-						continue;
-					texFace &= 0xff;
-					final int texA = texIndices1[texFace];
-					final int texB = texIndices2[texFace];
-					final int texC = texIndices3[texFace];
-					h = h * 31L + vertexX[texA];
-					h = h * 31L + vertexY[texA];
-					h = h * 31L + vertexZ[texA];
-					h = h * 31L + vertexX[texB];
-					h = h * 31L + vertexY[texB];
-					h = h * 31L + vertexZ[texB];
-					h = h * 31L + vertexX[texC];
-					h = h * 31L + vertexY[texC];
-					h = h * 31L + vertexZ[texC];
+		} else {
+			faceColorsOneHash = fastHash(model.getFaceColors1());
+			faceColorsTwoHash = fastHash(model.getFaceColors2());
+			faceColorsThreeHash = fastHash(model.getFaceColors3());
+			faceTransparenciesHash = fastByteHash(model.getFaceTransparencies());
+			faceTexturesHash = fastShortHash(model.getFaceTextures());
+			xVerticesHash = fastHash(model.getVerticesX(), model.getVerticesCount());
+			yVerticesHash = fastHash(model.getVerticesY(), model.getVerticesCount());
+			zVerticesHash = fastHash(model.getVerticesZ(), model.getVerticesCount());
+			faceIndicesOneHash = fastHash(model.getFaceIndices1());
+			faceIndicesTwoHash = fastHash(model.getFaceIndices2());
+			faceIndicesThreeHash = fastHash(model.getFaceIndices3());
+			final byte[] textureFaces = model.getTextureFaces();
+			if (textureFaces != null) {
+				boolean hasVanillaTexturedFaces = false;
+				for (int textureId : textureFaces) {
+					if (textureId != -1) {
+						hasVanillaTexturedFaces = true;
+						break;
+					}
 				}
-				textureTrianglesHash = h;
+				if (hasVanillaTexturedFaces) {
+					final int[] texIndices1 = model.getTexIndices1();
+					final int[] texIndices2 = model.getTexIndices2();
+					final int[] texIndices3 = model.getTexIndices3();
+					final int[] vertexX = model.getVerticesX();
+					final int[] vertexY = model.getVerticesY();
+					final int[] vertexZ = model.getVerticesZ();
+					long h = 0;
+					for (int i = 0; i < model.getFaceCount(); i++) {
+						int texFace = textureFaces[i];
+						if (texFace == -1)
+							continue;
+						texFace &= 0xff;
+						final int texA = texIndices1[texFace];
+						final int texB = texIndices2[texFace];
+						final int texC = texIndices3[texFace];
+						h = h * 31L + vertexX[texA];
+						h = h * 31L + vertexY[texA];
+						h = h * 31L + vertexZ[texA];
+						h = h * 31L + vertexX[texB];
+						h = h * 31L + vertexY[texB];
+						h = h * 31L + vertexZ[texB];
+						h = h * 31L + vertexX[texC];
+						h = h * 31L + vertexY[texC];
+						h = h * 31L + vertexZ[texC];
+					}
+					textureTrianglesHash = h;
+				}
 			}
 		}
 	}

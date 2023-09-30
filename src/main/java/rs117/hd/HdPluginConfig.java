@@ -828,6 +828,42 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
+	String KEY_FASTER_MODEL_HASHING = "experimentalFasterModelHashing";
+	@ConfigItem(
+		keyName = KEY_FASTER_MODEL_HASHING,
+		name = "Use faster model hashing",
+		description = "Should increase performance at the expensive of potential graphical issues.",
+		position = 3,
+		section = experimentalSettings
+	)
+	default boolean fasterModelHashing() {
+		return true;
+	}
+
+	String KEY_UNDO_VANILLA_SHADING_IN_COMPUTE = "experimentalUndoVanillaShadingInCompute";
+	@ConfigItem(
+		keyName = KEY_UNDO_VANILLA_SHADING_IN_COMPUTE,
+		name = "Undo vanilla shading in compute",
+		description = "Should increase performance at the expensive of potential graphical issues.",
+		position = 4,
+		section = experimentalSettings
+	)
+	default boolean undoVanillaShadingInCompute() {
+		return true;
+	}
+
+	String KEY_PRESERVE_VANILLA_NORMALS = "experimentalPreserveVanillaNormals";
+	@ConfigItem(
+		keyName = KEY_PRESERVE_VANILLA_NORMALS,
+		name = "Preserve vanilla normals",
+		description = "Originally, 117 HD would respect vanilla normals, but these are often less accurate.",
+		position = 5,
+		section = experimentalSettings
+	)
+	default boolean preserveVanillaNormals() {
+		return false;
+	}
+
 
 	/*====== Internal settings ======*/
 

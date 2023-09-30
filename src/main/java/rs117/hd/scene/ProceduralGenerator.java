@@ -1028,17 +1028,25 @@ public class ProceduralGenerator {
 	private static final int gradientBottom = 200;
 	private static final int gradientTop = -200;
 
-	public static int[][] recolorTzHaar(ModelOverride modelOverride, int aY, int bY, int cY, int packedAlphaPriority, ObjectType objectType, int color1S, int color1L, int color2S, int color2L, int color3S, int color3L)
-	{
+	public static int[][] recolorTzHaar(
+		ModelOverride modelOverride,
+		Model model,
+		int face,
+		int packedAlphaPriority,
+		ObjectType objectType,
+		int color1S,
+		int color1L,
+		int color2S,
+		int color2L,
+		int color3S,
+		int color3L
+	) {
 		// recolor tzhaar to look like the 2008+ HD version
-		if (objectType == ObjectType.GROUND_OBJECT)
-		{
+		if (objectType == ObjectType.GROUND_OBJECT) {
 			// remove the black parts of floor objects to allow the ground to show
 			// so we can apply textures, ground blending, etc. to it
 			if (color1S <= 1)
-			{
 				packedAlphaPriority = 0xFF << 24;
-			}
 		}
 
 		// shift model hues from red->yellow
@@ -1047,20 +1055,26 @@ public class ProceduralGenerator {
 		int color2H = hue;
 		int color3H = hue;
 
-		if (modelOverride.tzHaarRecolorType == TzHaarRecolorType.GRADIENT)
-		{
+		if (modelOverride.tzHaarRecolorType == TzHaarRecolorType.GRADIENT) {
+			final int triA = model.getFaceIndices1()[face];
+			final int triB = model.getFaceIndices2()[face];
+			final int triC = model.getFaceIndices3()[face];
+			final int[] yVertices = model.getVerticesY();
+			int heightA = yVertices[triA];
+			int heightB = yVertices[triB];
+			int heightC = yVertices[triC];
+
 			// apply coloring to the rocky walls
-			if (color1L < 20)
-			{
-				float pos = HDUtils.clamp((float) (aY - gradientTop) / (float) gradientBottom, 0.0f, 1.0f);
-				color1H = (int)HDUtils.lerp(gradientDarkColor[0], gradientBaseColor[0], pos);
-				color1S = (int)HDUtils.lerp(gradientDarkColor[1], gradientBaseColor[1], pos);
-				color1L = (int)HDUtils.lerp(gradientDarkColor[2], gradientBaseColor[2], pos);
+			if (color1L < 20) {
+				float pos = HDUtils.clamp((float) (heightA - gradientTop) / (float) gradientBottom, 0.0f, 1.0f);
+				color1H = (int) HDUtils.lerp(gradientDarkColor[0], gradientBaseColor[0], pos);
+				color1S = (int) HDUtils.lerp(gradientDarkColor[1], gradientBaseColor[1], pos);
+				color1L = (int) HDUtils.lerp(gradientDarkColor[2], gradientBaseColor[2], pos);
 			}
 
 			if (color2L < 20)
 			{
-				float pos = HDUtils.clamp((float) (bY - gradientTop) / (float) gradientBottom, 0.0f, 1.0f);
+				float pos = HDUtils.clamp((float) (heightB - gradientTop) / (float) gradientBottom, 0.0f, 1.0f);
 				color2H = (int)HDUtils.lerp(gradientDarkColor[0], gradientBaseColor[0], pos);
 				color2S = (int)HDUtils.lerp(gradientDarkColor[1], gradientBaseColor[1], pos);
 				color2L = (int)HDUtils.lerp(gradientDarkColor[2], gradientBaseColor[2], pos);
@@ -1068,7 +1082,7 @@ public class ProceduralGenerator {
 
 			if (color3L < 20)
 			{
-				float pos = HDUtils.clamp((float) (cY - gradientTop) / (float) gradientBottom, 0.0f, 1.0f);
+				float pos = HDUtils.clamp((float) (heightC - gradientTop) / (float) gradientBottom, 0.0f, 1.0f);
 				color3H = (int)HDUtils.lerp(gradientDarkColor[0], gradientBaseColor[0], pos);
 				color3S = (int)HDUtils.lerp(gradientDarkColor[1], gradientBaseColor[1], pos);
 				color3L = (int)HDUtils.lerp(gradientDarkColor[2], gradientBaseColor[2], pos);

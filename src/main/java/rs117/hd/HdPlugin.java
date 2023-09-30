@@ -396,15 +396,18 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public boolean configModelCaching;
 	public boolean configShadowsEnabled;
 	public boolean configExpandShadowDraw;
+	public boolean configUseFasterModelHashing;
+	public boolean configUndoVanillaShadingInCompute;
+	public boolean configPreserveVanillaNormals;
 	public ShadowMode configShadowMode;
 	public int configMaxDynamicLights;
 
 	private boolean lwjglInitialized;
 	private boolean hasLoggedIn;
-	private boolean enableDrawRenderableTimers;
 	private boolean redrawPreviousFrame;
 	private Scene skipScene;
 
+	public boolean enableDetailedTimers;
 	public boolean useLowMemoryMode;
 	public boolean isInChambersOfXeric;
 
@@ -506,7 +509,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 				if (developerMode) {
 					developerTools.activate();
-					enableDrawRenderableTimers = true;
+					enableDetailedTimers = true;
 				}
 
 				modelPassthroughBuffer = new GpuIntBuffer();
@@ -730,6 +733,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.define("SHADOW_MODE", configShadowMode)
 			.define("SHADOW_TRANSPARENCY", config.enableShadowTransparency())
 			.define("VANILLA_COLOR_BANDING", config.vanillaColorBanding())
+			.define("UNDO_VANILLA_SHADING", config.undoVanillaShadingInCompute())
+			.define("LEGACY_GREY_COLORS", config.legacyGreyColors())
 			.addIncludePath(SHADER_PATH);
 
 		glSceneProgram = PROGRAM.compile(template);
@@ -885,6 +890,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	public void recompilePrograms() throws ShaderException, IOException {
+		waitUntilIdle();
 		destroyPrograms();
 		initPrograms();
 	}
@@ -1423,6 +1429,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (sceneContext == null)
 			return;
 
+		frameTimer.end(Timer.DRAW_SCENE);
 		frameTimer.begin(Timer.UPLOAD_GEOMETRY);
 
 		// The client only updates animations once per client tick, so we can skip updating geometry buffers,
@@ -1558,8 +1565,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		// Once geometry buffers have been updated, they can be reused until the client actually modifies the scene
 		if (config.furtherUnlockFps())
 			redrawPreviousFrame = true;
-
-		frameTimer.end(Timer.DRAW_SCENE);
 	}
 
 	@Override
@@ -2352,6 +2357,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		configModelCaching = config.modelCaching();
 		configMaxDynamicLights = config.maxDynamicLights().getValue();
 		configExpandShadowDraw = config.expandShadowDraw();
+		configUseFasterModelHashing = config.fasterModelHashing();
+		configUndoVanillaShadingInCompute = config.undoVanillaShadingInCompute();
+		configPreserveVanillaNormals = config.preserveVanillaNormals();
 	}
 
 	@Subscribe
@@ -2396,16 +2404,23 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 						environmentManager.reset();
 						// fall-through
 					case KEY_ANISOTROPIC_FILTERING_LEVEL:
-					case KEY_GROUND_BLENDING:
 					case KEY_GROUND_TEXTURES:
-					case KEY_HD_INFERNAL_CAPE:
-					case KEY_HD_TZHAAR_RESKIN:
-					case KEY_HIDE_FAKE_SHADOWS:
-					case KEY_LEGACY_GREY_COLORS:
 					case KEY_MODEL_TEXTURES:
 					case KEY_TEXTURE_RESOLUTION:
-					case KEY_FILL_GAPS_IN_TERRAIN:
+					case KEY_HD_INFERNAL_CAPE:
 						textureManager.reloadTextures();
+						// fall-through
+					case KEY_GROUND_BLENDING:
+					case KEY_FILL_GAPS_IN_TERRAIN:
+					case KEY_HD_TZHAAR_RESKIN:
+					case KEY_HIDE_FAKE_SHADOWS:
+						modelPusher.clearModelCache();
+						reuploadScene();
+						break;
+					case KEY_LEGACY_GREY_COLORS:
+					case KEY_UNDO_VANILLA_SHADING_IN_COMPUTE:
+					case KEY_PRESERVE_VANILLA_NORMALS:
+						recompilePrograms();
 						modelPusher.clearModelCache();
 						reuploadScene();
 						break;
@@ -2608,7 +2623,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (sceneContext == null)
 			return;
 
-		if (enableDrawRenderableTimers)
+		if (enableDetailedTimers)
 			frameTimer.begin(Timer.GET_MODEL);
 
 		Model model, offsetModel;
@@ -2632,7 +2647,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			// Vanilla happens to handle exceptions thrown here gracefully, but we handle them explicitly anyway
 			return;
 		} finally {
-			if (enableDrawRenderableTimers)
+			if (enableDetailedTimers)
 				frameTimer.end(Timer.GET_MODEL);
 		}
 
@@ -2648,7 +2663,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (redrawPreviousFrame || modelOverrideManager.shouldHideModel(hash, x, z))
 			return;
 
-		if (enableDrawRenderableTimers)
+		if (enableDetailedTimers)
 			frameTimer.begin(Timer.DRAW_RENDERABLE);
 
 		eightIntWrite[3] = renderBufferOffset;
@@ -2673,7 +2688,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			eightIntWrite[4] |= (hillskew ? 1 : 0) << 26 | plane << 24;
 		} else {
 			// Temporary model (animated or otherwise not a static Model already in the scene buffer)
-			if (enableDrawRenderableTimers)
+			if (enableDetailedTimers)
 				frameTimer.begin(Timer.MODEL_BATCHING);
 			ModelOffsets modelOffsets = null;
 			long batchHash = 0;
@@ -2684,7 +2699,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					modelOffsets = frameModelInfoMap.get(batchHash);
 				}
 			}
-			if (enableDrawRenderableTimers)
+			if (enableDetailedTimers)
 				frameTimer.end(Timer.MODEL_BATCHING);
 
 			if (modelOffsets != null && modelOffsets.faceCount == model.getFaceCount()) {
@@ -2695,10 +2710,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			} else {
 				int vertexOffset = dynamicOffsetVertices + sceneContext.getVertexOffset();
 				int uvOffset = dynamicOffsetUvs + sceneContext.getUvOffset();
-				if (enableDrawRenderableTimers)
+				if (enableDetailedTimers)
 					frameTimer.begin(Timer.MODEL_PUSHING);
 				modelPusher.pushModel(sceneContext, null, hash, model, ObjectType.NONE, 0, true);
-				if (enableDrawRenderableTimers)
+				if (enableDetailedTimers)
 					frameTimer.end(Timer.MODEL_PUSHING);
 				if (sceneContext.modelPusherResults[1] == 0)
 					uvOffset = -1;
@@ -2718,7 +2733,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.put(eightIntWrite);
 		renderBufferOffset += faceCount * 3;
 
-		if (enableDrawRenderableTimers)
+		if (enableDetailedTimers)
 			frameTimer.end(Timer.DRAW_RENDERABLE);
 	}
 
