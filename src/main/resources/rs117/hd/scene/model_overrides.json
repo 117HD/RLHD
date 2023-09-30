@@ -10799,5 +10799,37 @@
     "uvType": "BOX",
     "retainVanillaUvs": false,
     "uvScale": 0.65
+  },
+  {
+    "description": "Objects - Textured Rocks - Rocks with Vines",
+    "textureMaterial": "HD_CONCRETE",
+    "objectIds": [
+      10786,
+      10787
+    ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "uvScale": 0.65
+  },
+  {
+    "description": "Objects - Textured Rocks - Small",
+    "textureMaterial": "HD_CONCRETE",
+    "objectIds": [
+      10793
+    ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "uvScale": 0.65
+  },
+  {
+    "description": "Objects - Textured Rocks - Medium",
+    "textureMaterial": "HD_CONCRETE",
+    "objectIds": [
+      10790,
+      10791
+    ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "uvScale": 0.65
   }
 ]
