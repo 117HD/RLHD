@@ -4046,11 +4046,14 @@
   },
   {
     "description": "Textured - Crate 1",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       354,
       357
-    ]
+    ],
+    "uvType": "BOX",
+    "uvOrientationY": 256,
+    "uvOrientationZ": 800
   },
   {
     "description": "Falador - Marble - Saradomin Statue",
