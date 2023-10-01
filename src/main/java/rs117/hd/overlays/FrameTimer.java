@@ -23,6 +23,7 @@ public class FrameTimer {
 	private final ArrayDeque<Listener> listeners = new ArrayDeque<>();
 
 	private boolean isInactive = true;
+	private long cumulativeError = 0;
 
 	private void initialize() {
 		clientThread.invokeLater(() -> {
@@ -82,7 +83,7 @@ public class FrameTimer {
 				throw new UnsupportedOperationException("Cumulative GPU timing isn't supported");
 			glQueryCounter(gpuQueries[timer.ordinal() * 2], GL_TIMESTAMP);
 		} else if (!activeTimers[timer.ordinal()]) {
-			timings[timer.ordinal()] -= System.nanoTime();
+			timings[timer.ordinal()] -= System.nanoTime() - cumulativeError;
 		}
 		activeTimers[timer.ordinal()] = true;
 	}
@@ -95,7 +96,8 @@ public class FrameTimer {
 			glQueryCounter(gpuQueries[timer.ordinal() * 2 + 1], GL_TIMESTAMP);
 			// leave the GPU timer active, since it needs to be gathered at a later point
 		} else {
-			timings[timer.ordinal()] += System.nanoTime() - 17; // compensate slightly for the timer's own overhead
+			cumulativeError += 17; // compensate slightly for the timer's own overhead
+			timings[timer.ordinal()] += System.nanoTime() - cumulativeError;
 			activeTimers[timer.ordinal()] = false;
 		}
 	}
