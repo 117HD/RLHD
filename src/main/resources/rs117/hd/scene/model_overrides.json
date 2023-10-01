@@ -10735,5 +10735,14 @@
     ],
     "uvType": "BOX",
     "uvOrientation": 512
+  },
+  {
+    "description": "Objects - Wood - Danger Sign",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      1032
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512
   }
 ]
