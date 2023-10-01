@@ -6390,7 +6390,8 @@
     "objectIds": [
       1171
     ],
-    "uvType": "MODEL_XZ"
+    "uvType": "BOX",
+    "uvScale": 0.8
   },
   {
     "description": "Objects - Huge Mushroom - Medium",
@@ -6750,6 +6751,7 @@
       7167,
       7168,
       10780,
+      10642,
       11603,
       12407,
       14872,
