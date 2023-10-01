@@ -4603,7 +4603,8 @@
       23270,
       23271
     ],
-    "uvType": "WORLD_XZ"
+    "uvType": "BOX",
+    "uvScale": 0.8
   },
   {
     "description": "Wilderness Ditch Dirt clumps",
