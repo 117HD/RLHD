@@ -6829,11 +6829,13 @@
   },
   {
     "description": "Objects - Standing Torch -  Wood",
-    "baseMaterial": "WOOD_GRAIN",
+    "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       724
     ],
-    "uvType": "GEOMETRY"
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.4
   },
   {
     "description": "Objects - Stone - Stalagmites - Limestone",
