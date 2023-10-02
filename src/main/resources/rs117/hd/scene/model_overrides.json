@@ -10547,6 +10547,7 @@
     "description": "Object - Wooden - Support Post",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
+      1870,
       11628,
       23853
     ],
