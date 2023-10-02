@@ -479,7 +479,7 @@ public enum Material {
 		.replaceIf(HdPluginConfig::modelTextures, BRICK_BROWN)
 		.setNormalMap(HD_BRICK_BROWN_N)
 		.setDisplacementMap(HD_BRICK_BROWN_D)
-		.setDisplacementScale(.015f)
+		.setDisplacementScale(.027f)
 		.setSpecular(0.35f, 20)
 	),
 	HD_LAVA_3(p -> p
