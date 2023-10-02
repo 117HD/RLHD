@@ -10750,9 +10750,11 @@
   },
   {
     "description": "Objects - Concrete - Table",
+    "baseMaterial": "WOOD_GRAIN_3",
     "textureMaterial": "HD_CONCRETE",
     "objectIds": [
-      590
+      590,
+      591
     ],
     "uvType": "BOX",
     "retainVanillaUvs": false,
