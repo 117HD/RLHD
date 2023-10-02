@@ -10693,5 +10693,12 @@
     "description": "Water wheel in Lumbridge",
     "objectIds": [ 5589 ],
     "flatNormals": true
+  },
+  {
+    "description": "Walls - Bricks - Light Brick",
+    "objectIds": [
+      1902
+    ],
+    "flatNormals": true
   }
 ]
