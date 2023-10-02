@@ -10859,5 +10859,26 @@
     "retainVanillaUvs": false,
     "uvType": "BOX",
     "uvScale": 0.65
+  },
+  {
+    "description": "Objects - Concrete - Nature Alter Pillars",
+    "textureMaterial": "HD_CONCRETE",
+    "objectIds": [
+      407,
+      408,
+      409
+    ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false
+  },
+  {
+    "description": "Objects - Concrete - Nature Alter ",
+    "baseMaterial": "ROCK_1",
+    "textureMaterial": "HD_CONCRETE",
+    "objectIds": [
+      410
+    ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false
   }
 ]
