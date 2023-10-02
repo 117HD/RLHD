@@ -10704,5 +10704,17 @@
     "description": "Water wheel in Lumbridge",
     "objectIds": [ 5589 ],
     "flatNormals": true
+  },
+  {
+    "description": "Objects - Root - Small",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      1323,
+      1324,
+      1325
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 342
   }
 ]
