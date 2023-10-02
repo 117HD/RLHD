@@ -6154,7 +6154,9 @@
     "objectIds": [
       4303
     ],
-    "uvType": "MODEL_XZ"
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "flatNormals": true
   },
   {
     "description": "Walls - Stone - Giants Foundry",
