@@ -5152,11 +5152,12 @@
   },
   {
     "description": "Eagles Peak Cave",
-    "baseMaterial": "STONE",
+    "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       19790
     ],
-    "flatNormals": true
+    "uvType": "BOX",
+    "uvScale": 0.6
   },
   {
     "description": "Dagannoth Cave",
@@ -7225,6 +7226,15 @@
       12583,
       12584,
       12585
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.33
+  },
+  {
+    "description": "Objects - Rockslide - Gray Rock - Rock - Medium",
+    "baseMaterial": "ROCK_2",
+    "objectIds": [
+      11432
     ],
     "uvType": "BOX",
     "uvScale": 0.33
@@ -9954,6 +9964,8 @@
     "baseMaterial": "ROCK_1",
     "objectIds": [
       5309,
+      11436,
+      11437,
       24143,
       24144,
       24145
@@ -10716,7 +10728,10 @@
     "objectIds": [
       19438,
       19439,
-      19440
+      19440,
+      19492,
+      19493,
+      19494
     ],
     "uvType": "BOX",
     "uvScale": 0.6
@@ -10842,5 +10857,24 @@
     "uvScale": 0.66,
     "uvOrientationX": 512,
     "uvOrientationZ": 512
+  },
+  {
+    "description": "Eagles Peak Climbing Rocks",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      19849,
+      19850
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.3
+  },
+  {
+    "description": "Eagles Peak Cave Door",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      19845
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
   }
 ]
