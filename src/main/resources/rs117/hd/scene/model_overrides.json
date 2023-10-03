@@ -10697,7 +10697,8 @@
   {
     "description": "Walls - Bricks - Light Brick",
     "objectIds": [
-      1902
+      1902,
+      1920
     ],
     "flatNormals": true
   }
