@@ -10786,5 +10786,57 @@
     "flatNormals": true,
     "uvOrientationX": 512,
     "uvOrientationZ": 512
+  },
+  {
+    "description": "Piscatoris - Objects - Wooden - Plank Wall",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      10108,
+      10109
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 1536,
+    "uvScale": 0.66
+  },
+  {
+    "description": "Piscatoris - Roof - Wooden - Planks",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      10111,
+      10112,
+      10113
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Piscatoris - Roof - Wooden - Plank Doors",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      12657,
+      12658
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Piscatoris - Roof Corners - Wooden - Planks",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      4229,
+      4232,
+      4235,
+      4236,
+      4237,
+      4238,
+      4239,
+      4240
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512
   }
 ]
