@@ -10762,5 +10762,29 @@
     "uvType": "BOX",
     "uvScale": 0.8,
     "flatNormals": true
+  },
+  {
+    "description": "Piscatoris - Walls - Metallic - Doors",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      12723,
+      12724,
+      12725,
+      13475
+    ],
+    "uvType": "BOX",
+    "flatNormals": true
+  },
+  {
+    "description": "Piscatoris - Objects - Wooden - Crate Stack",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      13598,
+      13599
+    ],
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512
   }
 ]
