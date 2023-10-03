@@ -3378,7 +3378,7 @@
   },
   {
     "description": "RELLEKKA_FENCES",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       4262,
       8969,
@@ -3386,6 +3386,9 @@
       8971,
       25261
     ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.7,
     "flatNormals": true
   },
   {
@@ -10726,5 +10729,38 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.6
+  },
+  {
+    "description": "Piscatoris - Falconry - Walls - Wooden - Planks",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      4198,
+      4246
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 1536,
+    "uvScale": 0.66
+  },
+  {
+    "description": "Picatoris - Objects - Dirt - Entrance Hole",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [
+      12656
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Picatoris - Walls - Wood - Plank Fence",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      12659,
+      12660,
+      12661,
+      12722
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "flatNormals": true
   }
 ]
