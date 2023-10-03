@@ -44,3 +44,6 @@ HD_WOOD_PLANKS_1 texture from AmbientCG. All textures on this site are licensed 
 
 BARK and BARK_N textures from AmbientCG. All textures on this site are licensed as CC0.
 -- https://ambientcg.com/view?id=Bark012
+
+HD_SIMPLE_GRAIN_WOOD, HD_SIMPLE_GRAIN_WOOD_N and HD_SIMPLE_GRAIN_WOOD_D textures from AmbientCG. All textures on this site are licensed as CC0.
+-- https://ambientcg.com/view?id=Wood003
