@@ -1397,14 +1397,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			ArrayList<SceneLight> visibleLights = lightManager.getVisibleLights(configMaxDynamicLights);
 			sceneContext.visibleLightCount = visibleLights.size();
 			for (SceneLight light : visibleLights) {
-				uniformBufferLights.putInt(light.x + sceneContext.cameraShift[0]);
-				uniformBufferLights.putInt(light.y + sceneContext.cameraShift[1]);
-				uniformBufferLights.putInt(light.z);
-				uniformBufferLights.putFloat(light.currentSize);
-				uniformBufferLights.putFloat(light.currentColor[0]);
-				uniformBufferLights.putFloat(light.currentColor[1]);
-				uniformBufferLights.putFloat(light.currentColor[2]);
-				uniformBufferLights.putFloat(light.currentStrength);
+				uniformBufferLights.putFloat(light.x + sceneContext.cameraShift[0]);
+				uniformBufferLights.putFloat(light.z);
+				uniformBufferLights.putFloat(light.y + sceneContext.cameraShift[1]);
+				uniformBufferLights.putFloat(light.currentSize * light.currentSize);
+				uniformBufferLights.putFloat(light.currentColor[0] * light.currentStrength);
+				uniformBufferLights.putFloat(light.currentColor[1] * light.currentStrength);
+				uniformBufferLights.putFloat(light.currentColor[2] * light.currentStrength);
+				uniformBufferLights.putFloat(0); // pad
 			}
 			uniformBufferLights.flip();
 			if (configMaxDynamicLights > 0) {
