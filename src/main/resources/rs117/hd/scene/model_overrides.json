@@ -11320,6 +11320,9 @@
     "description": "Objects - Hay - Roof",
     "textureMaterial": "HD_HAY",
     "objectIds": [
+      1604,
+      1605,
+      1641,
       1926,
       3690,
       3691,
@@ -11329,6 +11332,16 @@
       4245
     ],
     "uvType": "BOX",
+    "retainVanillaUvs": false
+  },
+  {
+    "description": "Objects - Hay - Mat",
+    "textureMaterial": "HD_HAY",
+    "objectIds": [
+      920
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
     "retainVanillaUvs": false
   }
 ]
