@@ -11317,9 +11317,10 @@
     "flatNormals": true
   },
   {
-    "description": "Objects - Wood - Boofshelf - Double",
+    "description": "Objects - Hay - Roof",
     "textureMaterial": "HD_HAY",
     "objectIds": [
+      1926,
       3690,
       3691,
       4242,
