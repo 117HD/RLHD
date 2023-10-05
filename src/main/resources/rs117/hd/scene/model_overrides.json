@@ -11315,5 +11315,19 @@
     "description": "Crafting Guild Blacksmith's tools",
     "objectIds": [ 2098 ],
     "flatNormals": true
+  },
+  {
+    "description": "Objects - Wood - Boofshelf - Double",
+    "textureMaterial": "HD_HAY",
+    "objectIds": [
+      3690,
+      3691,
+      4242,
+      4243,
+      4244,
+      4245
+    ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false
   }
 ]
