@@ -7615,11 +7615,10 @@
     "objectIds": [
       5033,
       5034,
-      11437,
       21104
     ],
-    "uvType": "WORLD_XZ",
-    "uvScale": 1.64
+    "uvType": "BOX",
+    "uvScale": 0.8
   },
   {
     "description": "Objects - Snow Piles - Large",
