@@ -10688,5 +10688,10 @@
     ],
     "uvType": "BOX",
     "flatNormals": true
+  },
+  {
+    "description": "Water wheel in Lumbridge",
+    "objectIds": [ 5589 ],
+    "flatNormals": true
   }
 ]
