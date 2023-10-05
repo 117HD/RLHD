@@ -411,6 +411,14 @@ void main() {
         outputColor.a *= -256;
     }
 
+    #if ACCURATE_LIGHT_ATTENUATION
+    {
+        const float a = 0.3;
+        const float b = 1.5;
+        outputColor.rgb = pow(outputColor.rgb, vec3(b)) / (a + pow(outputColor.rgb, vec3(b)));
+    }
+    #endif
+
     outputColor.rgb = clamp(outputColor.rgb, 0, 1);
 
     // Skip unnecessary color conversion if possible
