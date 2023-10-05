@@ -1446,9 +1446,6 @@
     "baseMaterial": "GRAY_75",
     "objectIds": [
       1253,
-      1257,
-      1258,
-      1259,
       1272,
       1273,
       1274,
@@ -1541,9 +1538,6 @@
     "seasonalTheme": "WINTER",
     "objectIds": [
       1253,
-      1257,
-      1258,
-      1259,
       1272,
       1273,
       1274,
@@ -1627,6 +1621,19 @@
       34493
     ],
     "flatNormals": true,
+    "inheritTileColorType": "UNDERLAY",
+    "castShadows": false
+  },
+  {
+    "description": "Short grass that is constructed of to triangles at perpendicular angles from each other. Shouldn't cast shadows, and should use up as the normal direction to prevent lighting artifacts.",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [
+      1257,
+      1258,
+      1259
+    ],
+    "flatNormals": true,
+    "upwardsNormals": true,
     "inheritTileColorType": "UNDERLAY",
     "castShadows": false
   },

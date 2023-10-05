@@ -132,9 +132,12 @@ void main() {
 
     vec4 outputColor = vec4(1);
 
-    if (isWater) {
+    if (isWater)
+    {
         outputColor = sampleWater(waterTypeIndex, viewDir);
-    } else {
+    }
+    else
+    {
         vec2 uv1 = vUv[0].xy;
         vec2 uv2 = vUv[1].xy;
         vec2 uv3 = vUv[2].xy;
@@ -349,6 +352,10 @@ void main() {
         vec3 n3 = sampleNormalMap(material3, uv3, TBN);
         vec3 normals = normalize(n1 * IN.texBlend.x + n2 * IN.texBlend.y + n3 * IN.texBlend.z);
 
+        if((vMaterialData[0] >> MATERIAL_FLAG_UPWARDS_NORMALS & 1) == 1) {
+            normals = vec3(0.0, 0.0, 1.0);
+        }
+
         float lightDotNormals = dot(normals, lightDir);
         float downDotNormals = dot(downDir, normals);
         float viewDotNormals = dot(viewDir, normals);
@@ -362,8 +369,6 @@ void main() {
             shadow = sampleShadowMap(fragPos, waterTypeIndex, vec2(0), lightDotNormals);
         shadow = max(shadow, selfShadowing);
         float inverseShadow = 1 - shadow;
-
-
 
         // specular
         vec3 vSpecularGloss = vec3(material1.specularGloss, material2.specularGloss, material3.specularGloss);
@@ -497,7 +502,6 @@ void main() {
             sampleUnderwater(outputColor.rgb, waterType, waterDepth, lightDotNormals);
         }
     }
-
 
     outputColor.rgb = clamp(outputColor.rgb, 0, 1);
 
