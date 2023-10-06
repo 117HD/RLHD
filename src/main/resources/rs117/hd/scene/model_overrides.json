@@ -6312,10 +6312,10 @@
     "uvType": "GEOMETRY"
   },
   {
-    "description": "Mortton Shade Catacombs  - Objects - Stone - Alter",
+    "description": "Mortton Shade Catacombs  - Objects - Stone - Altar",
     "baseMaterial": "STONE",
     "objectIds": [
-       41222
+      41222
     ],
     "uvType": "GEOMETRY"
   },
@@ -6799,7 +6799,7 @@
     "flatNormals": true
   },
   {
-    "description": "Ground - Chaos Alter - Path -  Wooden – Plank",
+    "description": "Ground - Chaos Altar - Path -  Wooden – Plank",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       2669,
@@ -6816,7 +6816,7 @@
     "uvOrientation": 512
   },
   {
-    "description": "Chaos Alter - Walls - Path -  Wooden – Plank",
+    "description": "Chaos Altar - Walls - Path -  Wooden – Plank",
     "baseMaterial": "STONE",
     "objectIds": [
       169
@@ -9916,7 +9916,7 @@
     "uvScale": 0.17
   },
   {
-    "description": "Object - Desert Treasure Pyramid - Alter - Large",
+    "description": "Object - Desert Treasure Pyramid - Altar - Large",
     "baseMaterial": "GRAY_25",
     "objectIds": [
       6552
@@ -10818,7 +10818,7 @@
     "uvOrientation": 256
   },
   {
-    "description": "Objects - Concrete - Runecrafting Alters",
+    "description": "Objects - Concrete - Runecrafting Altars",
     "textureMaterial": "HD_CONCRETE",
     "objectIds": [
       34760,
@@ -10832,13 +10832,14 @@
       34768,
       34769,
       34770,
-      34771
+      34771,
+      43479
     ],
     "uvType": "BOX",
     "retainVanillaUvs": false
   },
   {
-    "description": "Objects - Concrete - Runecrafting Alter Pillars",
+    "description": "Objects - Concrete - Runecrafting Altar Pillars",
     "textureMaterial": "HD_CONCRETE",
     "objectIds": [
       34780,
@@ -10846,7 +10847,16 @@
       34782,
       34783,
       34784,
-      34785
+      34785,
+      43509,
+      43510,
+      43511,
+      43512,
+      43513,
+      43514,
+      43515,
+      43516,
+      43519
     ],
     "uvType": "BOX",
     "retainVanillaUvs": false,
@@ -10854,11 +10864,12 @@
     "uvOrientation": 256
   },
   {
-    "description": "Objects - Concrete - Runecrafting Alter Lights",
+    "description": "Objects - Concrete - Runecrafting Altar Lights",
     "textureMaterial": "HD_CONCRETE",
     "objectIds": [
       34786,
-      34787
+      34787,
+      43520
     ],
     "uvType": "BOX",
     "retainVanillaUvs": false,
@@ -10981,7 +10992,7 @@
     "uvScale": 0.65
   },
   {
-    "description": "Objects - Concrete - Nature Alter Pillars",
+    "description": "Objects - Concrete - Nature Altar Pillars",
     "textureMaterial": "HD_CONCRETE",
     "objectIds": [
       407,
@@ -10992,7 +11003,7 @@
     "retainVanillaUvs": false
   },
   {
-    "description": "Objects - Concrete - Nature Alter ",
+    "description": "Objects - Concrete - Nature Altar ",
     "baseMaterial": "ROCK_1",
     "textureMaterial": "HD_CONCRETE",
     "objectIds": [
