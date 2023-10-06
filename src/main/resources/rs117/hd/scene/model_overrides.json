@@ -10696,7 +10696,7 @@
   },
   {
     "description": "Ore - Empty - Rock",
-    "baseMaterial": "ROCK_2",
+    "baseMaterial": "ROCK_5_ORE",
     "objectIds": [
       11390,
       11391
@@ -10717,7 +10717,7 @@
   },
   {
     "description": "Ore - Copper - Rock",
-    "baseMaterial": "ROCK_2",
+    "baseMaterial": "ROCK_3_ORE",
     "objectIds": [
       10943,
       11161
