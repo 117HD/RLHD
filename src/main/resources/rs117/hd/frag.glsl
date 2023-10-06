@@ -178,7 +178,7 @@ void main() {
         #if PARALLAX_OCCLUSION_MAPPING
         mat3 invTBN = inverse(TBN);
         vec3 tsViewDir = invTBN * viewDir;
-        vec3 tsLightDir = invTBN * lightDir;
+        vec3 tsLightDir = invTBN * -lightDir;
 
         vec3 fragDelta = vec3(0);
 

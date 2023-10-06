@@ -10693,5 +10693,121 @@
     "description": "Water wheel in Lumbridge",
     "objectIds": [ 5589 ],
     "flatNormals": true
+  },
+  {
+    "description": "Ore - Empty - Rock",
+    "baseMaterial": "ROCK_5_ORE",
+    "objectIds": [
+      11390,
+      11391
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.33,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Ore - Tin - Rock",
+    "baseMaterial": "ROCK_3_ORE",
+    "objectIds": [
+      11360,
+      11361
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.33
+  },
+  {
+    "description": "Ore - Copper - Rock",
+    "baseMaterial": "ROCK_3_ORE",
+    "objectIds": [
+      10943,
+      11161
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.33
+  },
+  {
+    "description": "Ore - Iron - Rock",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      11364,
+      11365
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.33,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Ore - Mithril - Rock",
+    "baseMaterial": "ROCK_3_ORE",
+    "objectIds": [
+      11372,
+      11373
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.33
+  },
+  {
+    "description": "Ore - Adamantite - Rock",
+    "baseMaterial": "ROCK_5_ORE",
+    "objectIds": [
+      11374,
+      11375
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.33,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Ore - Runeite - Rock",
+    "baseMaterial": "ROCK_5_ORE",
+    "objectIds": [
+      11376,
+      11377
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.33
+  },
+  {
+    "description": "Ore - Coal - Rock",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      11366,
+      11367
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.33,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Ore - Silver - Rock",
+    "baseMaterial": "ROCK_4_ORE",
+    "objectIds": [
+      11368,
+      11369
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.40,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Ore - Gold - Rock",
+    "baseMaterial": "ROCK_4_ORE",
+    "objectIds": [
+      11370,
+      11371
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.33
+  },
+  {
+    "description": "Ore - Clay - Rock",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [
+      11362,
+      11363
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.33,
+    "uvOrientation": 256
   }
 ]
