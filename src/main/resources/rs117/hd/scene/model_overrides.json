@@ -9968,11 +9968,19 @@
   },
   {
     "description": "Crashed Star",
-    "baseMaterial": "ROCK_2",
+    "baseMaterial": "ROCK_5_ORE",
     "objectIds": [
+      41020,
+      41021,
+      41223,
+      41224,
+      41225,
+      41226,
       41227,
-      41228
-    ]
+      41228,
+      41229
+    ],
+    "uvType": "BOX"
   },
   {
     "description": "Seers Village Courthouse Metal Cage",
