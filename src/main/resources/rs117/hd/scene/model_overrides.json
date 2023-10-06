@@ -10821,9 +10821,10 @@
     "description": "Objects - Concrete - Runecrafting Altars",
     "textureMaterial": "HD_CONCRETE",
     "objectIds": [
+      29631,
       34760,
       34761,
-      34732,
+      34762,
       34763,
       34764,
       34765,
@@ -10833,6 +10834,7 @@
       34769,
       34770,
       34771,
+      34772,
       43479
     ],
     "uvType": "BOX",
@@ -10858,6 +10860,8 @@
       43514,
       43515,
       43516,
+      43517,
+      43518,
       43519
     ],
     "uvType": "BOX",
