@@ -837,7 +837,7 @@ public enum Material {
 
 	public static Material fromVanillaTexture(int vanillaTextureId) {
 		if (vanillaTextureId < 0 || vanillaTextureId >= VANILLA_TEXTURE_MAPPING.length)
-			return VANILLA;
+			return NONE;
 		return VANILLA_TEXTURE_MAPPING[vanillaTextureId].resolveReplacements();
 	}
 
