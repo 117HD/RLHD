@@ -610,6 +610,7 @@ public enum Material {
 		.replaceIf(HdPluginConfig::modelTextures, CONCRETE)
 		.setNormalMap(HD_CONCRETE_N)
 		.setDisplacementMap(HD_CONCRETE_D)
+		.setDisplacementScale(0.05f)
 		.setSpecular(0.3f, 20)
 		.setBrightness(0.75f)
 	),

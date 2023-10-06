@@ -10836,6 +10836,8 @@
       43479
     ],
     "uvType": "BOX",
+    "uvScale": 1.4,
+    "uvOrientationY": 725,
     "retainVanillaUvs": false
   },
   {
