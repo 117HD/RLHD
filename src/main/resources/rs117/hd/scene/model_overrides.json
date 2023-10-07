@@ -11134,7 +11134,7 @@
   },
   {
     "description": "Wooden crates, Wooden table, wooden rack",
-    "objectIds": [ 356, 357, 595, 647 ],
+    "objectIds": [ 356, 595, 647 ],
     "flatNormals": true,
     "uvType": "BOX",
     "retainVanillaUvs": false
