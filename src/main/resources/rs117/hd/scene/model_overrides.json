@@ -2202,6 +2202,7 @@
     "uvType": "BOX",
     "retainVanillaUvs": false,
     "flatNormals": true,
+    "uvOrientation": 250,
     "uvScale": 0.8
   },
   {
@@ -11017,5 +11018,13 @@
     ],
     "uvType": "BOX",
     "retainVanillaUvs": false
+  },
+  {
+    "description": "",
+    "objectIds": [ 29103 ],
+    "retainVanillaUvs": false,
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientationX": 512
   }
 ]
