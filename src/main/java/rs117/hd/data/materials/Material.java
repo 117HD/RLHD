@@ -352,7 +352,43 @@ public enum Material {
 		.setSpecular(0.35f, 60)
 		.setBrightness(1.2f)
 	),
+	ROCK_3_D,
+	ROCK_3_N,
+	ROCK_3(p -> p
+		.setNormalMap(ROCK_3_N)
+		.setDisplacementMap(ROCK_3_D)
+		.setDisplacementScale(.15f)
+		.setSpecular(0.4f, 20)
+		.setBrightness(1.2f)
+	),
+	ROCK_3_ORE(ROCK_3, p -> p
+		.setSpecular(1, 20)
+	),
 
+	ROCK_4_D,
+	ROCK_4_N,
+	ROCK_4(p -> p
+		.setNormalMap(ROCK_4_N)
+		.setDisplacementMap(ROCK_4_D)
+		.setDisplacementScale(.15f)
+		.setSpecular(0.4f, 20)
+		.setBrightness(1.2f)
+	),
+	ROCK_4_ORE(ROCK_4, p -> p
+		.setSpecular(1, 20)
+	),
+	ROCK_5_D,
+	ROCK_5_N,
+	ROCK_5(p -> p
+		.setNormalMap(ROCK_5_N)
+		.setDisplacementMap(ROCK_5_D)
+		.setDisplacementScale(.15f)
+		.setSpecular(0.4f, 20)
+		.setBrightness(1.2f)
+	),
+	ROCK_5_ORE(ROCK_5, p -> p
+		.setSpecular(1, 20)
+	),
 	CARPET,
 	FINE_CARPET(CARPET, p -> p
 		.setBrightness(1.4f)
@@ -429,9 +465,11 @@ public enum Material {
 		.setUnlit(true)
 		.setOverrideBaseColor(true)
 		.setFlowMap(LAVA_FLOW_MAP, 0.04f, 36, 12)),
-
 	BARK_N,
-	BARK(p -> p.setNormalMap(BARK_N)),
+	BARK(p -> p
+		.setNormalMap(BARK_N)
+		.setSpecular(0.3f, 30)
+	),
 	LIGHT_BARK(BARK, p -> p.setBrightness(1.75f)),
 	WOOD_GRAIN,
 	WOOD_GRAIN_2_N,
@@ -457,10 +495,13 @@ public enum Material {
 		.setScroll(0, 1 / 3f)),
 
 	HD_BRICK_N,
+	HD_BRICK_D,
 	HD_BRICK(p -> p
 		.replaceIf(HdPluginConfig::modelTextures, BRICK)
 		.setNormalMap(HD_BRICK_N)
-		.setSpecular(0.4f, 80)
+		.setDisplacementMap(HD_BRICK_D)
+		.setDisplacementScale(.05f)
+		.setSpecular(0.30f, 20)
 	),
 	HD_ROOF_SHINGLES_N,
 	HD_ROOF_SHINGLES_1(p -> p
@@ -471,10 +512,14 @@ public enum Material {
 	HD_MARBLE_DARK(p -> p
 		.replaceIf(HdPluginConfig::modelTextures, MARBLE_DARK)
 		.setSpecular(1.1f, 380)),
+	HD_BRICK_BROWN_N,
+	HD_BRICK_BROWN_D,
 	HD_BRICK_BROWN(p -> p
 		.replaceIf(HdPluginConfig::modelTextures, BRICK_BROWN)
-		.setNormalMap(HD_BRICK_N)
-		.setSpecular(0.4f, 80)
+		.setNormalMap(HD_BRICK_BROWN_N)
+		.setDisplacementMap(HD_BRICK_BROWN_D)
+		.setDisplacementScale(.05f)
+		.setSpecular(0.35f, 20)
 	),
 	HD_LAVA_3(p -> p
 		.replaceIf(HdPluginConfig::modelTextures, LAVA)
@@ -567,6 +612,16 @@ public enum Material {
 	),
 	HD_TROPICAL_LEAF(TROPICAL_LEAF, p -> p
 		.replaceIf(HdPluginConfig::modelTextures, TROPICAL_LEAF)
+	),
+	HD_CONCRETE_D,
+	HD_CONCRETE_N,
+	HD_CONCRETE(p -> p
+		.replaceIf(HdPluginConfig::modelTextures, CONCRETE)
+		.setNormalMap(HD_CONCRETE_N)
+		.setDisplacementMap(HD_CONCRETE_D)
+		.setDisplacementScale(0.05f)
+		.setSpecular(0.3f, 20)
+		.setBrightness(0.75f)
 	),
 
 
@@ -801,7 +856,7 @@ public enum Material {
 
 	public static Material fromVanillaTexture(int vanillaTextureId) {
 		if (vanillaTextureId < 0 || vanillaTextureId >= VANILLA_TEXTURE_MAPPING.length)
-			return VANILLA;
+			return NONE;
 		return VANILLA_TEXTURE_MAPPING[vanillaTextureId].resolveReplacements();
 	}
 
