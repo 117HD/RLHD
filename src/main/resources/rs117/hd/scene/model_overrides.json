@@ -2033,10 +2033,7 @@
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
       7386,
-      7387,
-      10729,
-      10730,
-      10731
+      7387
     ],
     "flatNormals": true
   },
@@ -10094,7 +10091,9 @@
     "objectIds": [
       23974,
       23975
-    ]
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
   },
   {
     "description": "Stone Wedge Stairs",
@@ -11388,5 +11387,17 @@
       10775
     ],
     "uvType": "BOX"
+  },
+  {
+    "description": "Falador - Mage Training Arena - Marble - Steps",
+    "baseMaterial": "MARBLE_3",
+    "objectIds": [
+      10729,
+      10730,
+      10731
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 640,
+    "flatNormals": true
   }
 ]
