@@ -31,6 +31,7 @@ import java.awt.image.DataBufferInt;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -175,6 +176,7 @@ public class TextureManager {
 		// Add texture layers for each base material with no parent
 		ArrayList<TextureLayer> textureLayers = new ArrayList<>();
 		materialOrdinalToTextureLayer = new int[Material.values().length];
+		Arrays.fill(materialOrdinalToTextureLayer, -1);
 		for (var textureMaterial : Material.getTextureMaterials()) {
 			int layer = textureLayers.size();
 			textureLayers.add(new TextureLayer(textureMaterial, textureMaterial.vanillaTextureIndex, layer));
@@ -182,6 +184,7 @@ public class TextureManager {
 		}
 		// Add material uniforms and texture layers for any vanilla textures lacking a material definition
 		vanillaTextureIndexToTextureLayer = new int[vanillaTextures.length];
+		Arrays.fill(vanillaTextureIndexToTextureLayer, -1);
 		for (int i = 0; i < vanillaTextures.length; i++) {
 			if (Material.fromVanillaTexture(i) == Material.VANILLA) {
 				materialUniformEntries.add(new MaterialEntry(Material.VANILLA, i));

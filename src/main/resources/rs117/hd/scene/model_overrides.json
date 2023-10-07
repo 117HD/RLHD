@@ -1564,7 +1564,9 @@
       1651,
       1911,
       1912,
-      1913
+      1913,
+      1943,
+      1944
     ],
     "flatNormals": true
   },
@@ -2178,7 +2180,8 @@
   },
   {
     "description": "STONE_WALL_FENCES",
-    "baseMaterial": "STONE",
+    "baseMaterial": "STONE_NORMALED",
+    "textureMaterial": "HD_CONCRETE",
     "objectIds": [
       979,
       5566,
@@ -2196,7 +2199,11 @@
       23892,
       5569
     ],
-    "flatNormals": true
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "flatNormals": true,
+    "uvOrientation": 250,
+    "uvScale": 0.8
   },
   {
     "description": "STATUE_OF_A_WARRIOR_1",
@@ -3998,19 +4005,22 @@
   },
   {
     "description": "Stalagmite - Tan",
-    "baseMaterial": "STONE",
+    "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       5047,
       12219,
       12575,
       12576,
+      12577,
       11184,
       11185,
       11186,
       18479,
       37816,
       37817
-    ]
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 256
   },
   {
     "description": "Wooden Wall Supports - Mines",
@@ -4022,7 +4032,7 @@
   },
   {
     "description": "Textured Ladder",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       11,
       2147,
@@ -4037,15 +4047,20 @@
       17385,
       17387,
       30367
-    ]
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512
   },
   {
     "description": "Textured - Crate 1",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       354,
       357
-    ]
+    ],
+    "uvType": "BOX",
+    "uvOrientationY": 256,
+    "uvOrientationZ": 800
   },
   {
     "description": "Falador - Marble - Saradomin Statue",
@@ -4160,7 +4175,6 @@
     "description": "Wooden - Plank - Tables",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
-      7175,
       10490,
       12450,
       12962,
@@ -4171,9 +4185,11 @@
       17145,
       20058,
       25603,
+      39989,
       40223,
       40224
     ],
+    "uvOrientationY": 512,
     "uvType": "BOX",
     "flatNormals": true,
     "uvScale": 0.6
@@ -4182,6 +4198,7 @@
     "description": "Wooden - Plank - Tables - Rotated",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
+      7175,
       23177,
       39716
     ],
@@ -4499,6 +4516,9 @@
       1572,
       1573,
       1574,
+      1570,
+      1727,
+      1728,
       3506,
       3507,
       11721,
@@ -4513,7 +4533,7 @@
       44598,
       44599
     ],
-    "uvType": "MODEL_XY"
+    "uvType": "GEOMETRY"
   },
   {
     "description": "Metal Fence",
@@ -4592,7 +4612,8 @@
       23270,
       23271
     ],
-    "uvType": "WORLD_XZ"
+    "uvType": "BOX",
+    "uvScale": 0.8
   },
   {
     "description": "Wilderness Ditch Dirt clumps",
@@ -4902,6 +4923,7 @@
       11778,
       11779,
       11780,
+      15056,
       44784,
       44785
     ],
@@ -4923,11 +4945,13 @@
   },
   {
     "description": "Varrock Castle Railing",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       11793,
       23852
-    ]
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512
   },
   {
     "description": "Varrock Castle and Museum Staircase",
@@ -5429,14 +5453,13 @@
   {
     "description": "Objects - Mossy Rock - Medium",
     "baseMaterial": "ROCK_1",
+    "textureMaterial": "HD_CONCRETE",
     "objectIds": [
       3894,
       3895,
       3896,
       3897,
       5847,
-      11182,
-      11183,
       11425,
       27899,
       29856,
@@ -5457,8 +5480,9 @@
       40556,
       40557
     ],
+    "retainVanillaUvs": false,
     "uvType": "BOX",
-    "uvScale": 0.5
+    "uvScale": 0.65
   },
   {
     "description": "Objects - Mossy Rock - Rectangle",
@@ -6154,7 +6178,9 @@
     "objectIds": [
       4303
     ],
-    "uvType": "MODEL_XZ"
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "flatNormals": true
   },
   {
     "description": "Walls - Stone - Giants Foundry",
@@ -6306,10 +6332,10 @@
     "uvType": "GEOMETRY"
   },
   {
-    "description": "Mortton Shade Catacombs  - Objects - Stone - Alter",
+    "description": "Mortton Shade Catacombs  - Objects - Stone - Altar",
     "baseMaterial": "STONE",
     "objectIds": [
-       41222
+      41222
     ],
     "uvType": "GEOMETRY"
   },
@@ -6379,7 +6405,8 @@
     "objectIds": [
       1171
     ],
-    "uvType": "MODEL_XZ"
+    "uvType": "BOX",
+    "uvScale": 0.8
   },
   {
     "description": "Objects - Huge Mushroom - Medium",
@@ -6738,6 +6765,8 @@
       1102,
       7167,
       7168,
+      10780,
+      10642,
       11603,
       12407,
       14872,
@@ -6764,6 +6793,7 @@
     "description": "Objects - Table - Single - Wooden – Plank - Generic",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      7169,
       11627,
       20351,
       23066,
@@ -6793,7 +6823,7 @@
     "flatNormals": true
   },
   {
-    "description": "Ground - Chaos Alter - Path -  Wooden – Plank",
+    "description": "Ground - Chaos Altar - Path -  Wooden – Plank",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       2669,
@@ -6810,7 +6840,7 @@
     "uvOrientation": 512
   },
   {
-    "description": "Chaos Alter - Walls - Path -  Wooden – Plank",
+    "description": "Chaos Altar - Walls - Path -  Wooden – Plank",
     "baseMaterial": "STONE",
     "objectIds": [
       169
@@ -6820,11 +6850,13 @@
   },
   {
     "description": "Objects - Standing Torch -  Wood",
-    "baseMaterial": "WOOD_GRAIN",
+    "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       724
     ],
-    "uvType": "GEOMETRY"
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.4
   },
   {
     "description": "Objects - Stone - Stalagmites - Limestone",
@@ -7317,7 +7349,7 @@
       17146,
       24335
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "uvOrientation": 512,
     "uvScale": 0.6
   },
@@ -7326,6 +7358,8 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       7182,
+      15681,
+      15682,
       27268
     ],
     "uvType": "BOX"
@@ -7355,13 +7389,6 @@
     "uvScale": 0.4
   },
   {
-    "description": "Objects - Wooden - Column",
-    "baseMaterial": "NONE",
-    "objectIds": [
-      1870
-    ]
-  },
-  {
     "description": "Ardougne - Objects - Metallic - Manhole",
     "baseMaterial": "METALLIC_2_SEMIGLOSS",
     "objectIds": [
@@ -7376,7 +7403,8 @@
       406,
       1992
     ],
-    "uvType": "VANILLA",
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
     "flatNormals": true
   },
   {
@@ -9909,7 +9937,7 @@
     "uvScale": 0.17
   },
   {
-    "description": "Object - Desert Treasure Pyramid - Alter - Large",
+    "description": "Object - Desert Treasure Pyramid - Altar - Large",
     "baseMaterial": "GRAY_25",
     "objectIds": [
       6552
@@ -9968,11 +9996,19 @@
   },
   {
     "description": "Crashed Star",
-    "baseMaterial": "ROCK_2",
+    "baseMaterial": "ROCK_5_ORE",
     "objectIds": [
+      41020,
+      41021,
+      41223,
+      41224,
+      41225,
+      41226,
       41227,
-      41228
-    ]
+      41228,
+      41229
+    ],
+    "uvType": "BOX"
   },
   {
     "description": "Seers Village Courthouse Metal Cage",
@@ -10537,6 +10573,7 @@
     "description": "Object - Wooden - Support Post",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
+      1870,
       11628,
       23853
     ],
@@ -10693,5 +10730,388 @@
     "description": "Water wheel in Lumbridge",
     "objectIds": [ 5589 ],
     "flatNormals": true
+  },
+  {
+    "description": "Ore - Empty - Rock",
+    "baseMaterial": "ROCK_5_ORE",
+    "objectIds": [
+      11390,
+      11391
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.33,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Ore - Tin - Rock",
+    "baseMaterial": "ROCK_3_ORE",
+    "objectIds": [
+      11360,
+      11361
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.33
+  },
+  {
+    "description": "Ore - Copper - Rock",
+    "baseMaterial": "ROCK_3_ORE",
+    "objectIds": [
+      10943,
+      11161
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.33
+  },
+  {
+    "description": "Ore - Iron - Rock",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      11364,
+      11365
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.33,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Ore - Mithril - Rock",
+    "baseMaterial": "ROCK_3_ORE",
+    "objectIds": [
+      11372,
+      11373
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.33
+  },
+  {
+    "description": "Ore - Adamantite - Rock",
+    "baseMaterial": "ROCK_5_ORE",
+    "objectIds": [
+      11374,
+      11375
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.33,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Ore - Runeite - Rock",
+    "baseMaterial": "ROCK_5_ORE",
+    "objectIds": [
+      11376,
+      11377
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.33
+  },
+  {
+    "description": "Ore - Coal - Rock",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      11366,
+      11367
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.33,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Ore - Silver - Rock",
+    "baseMaterial": "ROCK_4_ORE",
+    "objectIds": [
+      11368,
+      11369
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.40,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Ore - Gold - Rock",
+    "baseMaterial": "ROCK_4_ORE",
+    "objectIds": [
+      11370,
+      11371
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.33
+  },
+  {
+    "description": "Ore - Clay - Rock",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [
+      11362,
+      11363
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.33,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Objects - Concrete - Runecrafting Altars",
+    "textureMaterial": "HD_CONCRETE",
+    "objectIds": [
+      29631,
+      34760,
+      34761,
+      34762,
+      34763,
+      34764,
+      34765,
+      34766,
+      34767,
+      34768,
+      34769,
+      34770,
+      34771,
+      34772,
+      43479
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.4,
+    "uvOrientationY": 725,
+    "retainVanillaUvs": false
+  },
+  {
+    "description": "Objects - Concrete - Runecrafting Altar Pillars",
+    "textureMaterial": "HD_CONCRETE",
+    "objectIds": [
+      34780,
+      34781,
+      34782,
+      34783,
+      34784,
+      34785,
+      43509,
+      43510,
+      43511,
+      43512,
+      43513,
+      43514,
+      43515,
+      43516,
+      43517,
+      43518,
+      43519
+    ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "uvScale": 0.7,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Objects - Concrete - Runecrafting Altar Lights",
+    "textureMaterial": "HD_CONCRETE",
+    "objectIds": [
+      34786,
+      34787,
+      43520
+    ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "uvScale": 0.65
+  },
+  {
+    "description": "Objects - Concrete - Table",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "textureMaterial": "HD_CONCRETE",
+    "objectIds": [
+      590,
+      591
+    ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "uvScale": 0.65
+  },
+  {
+    "description": "Objects - Concrete - Bank Booth",
+    "textureMaterial": "HD_CONCRETE",
+    "objectIds": [
+      10355,
+      10527
+    ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "uvScale": 0.65
+  },
+  {
+    "description": "Objects - Concrete - Gravestone",
+    "textureMaterial": "HD_CONCRETE",
+    "objectIds": [
+      404,
+      405
+    ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "uvScale": 0.65
+  },
+  {
+    "description": "Objects - Concrete - Salve Tunnel Entrance",
+    "textureMaterial": "HD_CONCRETE",
+    "objectIds": [
+      3456,
+      3482,
+      3483,
+      3484
+    ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "uvScale": 0.65
+  },
+  {
+    "description": "Objects - Concrete - Deposit Box",
+    "textureMaterial": "HD_CONCRETE",
+    "objectIds": [
+      10529
+    ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "uvScale": 0.65
+  },
+  {
+    "description": "Objects - Textured Rocks - Rocks with Vines",
+    "baseMaterial": "PLANT_GRUNGE_1",
+    "textureMaterial": "HD_CONCRETE",
+    "objectIds": [
+      10786,
+      10787,
+      10788
+    ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "uvScale": 0.65
+  },
+  {
+    "description": "Objects - Textured Rocks - Small",
+    "textureMaterial": "HD_CONCRETE",
+    "objectIds": [
+      10793,
+      12570
+    ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "uvScale": 0.65
+  },
+  {
+    "description": "Objects - Textured Rocks - Medium",
+    "textureMaterial": "HD_CONCRETE",
+    "objectIds": [
+      10790,
+      10791
+    ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "uvScale": 0.65
+  },
+  {
+    "description": "Objects - Textured Rock - Mossy Rock - Medium",
+    "baseMaterial": "GRASS_3",
+    "textureMaterial": "HD_CONCRETE",
+    "objectIds": [
+      11182,
+      11183
+    ],
+    "retainVanillaUvs": false,
+    "uvType": "BOX",
+    "uvScale": 0.65
+  },
+  {
+    "description": "Objects - Textured Rock - Nightmare Zone Rocks - Small",
+    "textureMaterial": "HD_CONCRETE",
+    "objectIds": [
+      26275,
+      26291,
+      26292
+    ],
+    "retainVanillaUvs": false,
+    "uvType": "BOX",
+    "uvScale": 0.65
+  },
+  {
+    "description": "Objects - Concrete - Nature Altar Pillars",
+    "textureMaterial": "HD_CONCRETE",
+    "objectIds": [
+      407,
+      408,
+      409
+    ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false
+  },
+  {
+    "description": "Objects - Concrete - Nature Altar ",
+    "baseMaterial": "ROCK_1",
+    "textureMaterial": "HD_CONCRETE",
+    "objectIds": [
+      410
+    ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false
+  },
+  {
+    "description": "",
+    "objectIds": [ 29103 ],
+    "retainVanillaUvs": false,
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientationX": 512
+  },
+  {
+    "description": "Objects - Wood - Ladder - In Ground - Untextured",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      16680
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Objects - Wood - Ladder - Edgeville Dungeon Ladder",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      1581
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Objects - Wood - Trap Door",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      1579
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Objects - Wood - Danger Sign",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      1032
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Walls - Bricks - Light Brick",
+    "objectIds": [
+      1902,
+      1904,
+      1907,
+      1920,
+      17088
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "Objects - Root - Small",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      1323,
+      1324,
+      1325
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 342
   }
 ]
