@@ -532,6 +532,15 @@ public enum Material {
 		.setSpecular(0.3f, 30)
 		.setNormalMap(HD_ROOF_SHINGLES_N)
 	),
+	HD_SIMPLE_GRAIN_WOOD_D,
+	HD_SIMPLE_GRAIN_WOOD_N,
+	HD_SIMPLE_GRAIN_WOOD(p -> p
+		.replaceIf(HdPluginConfig::modelTextures, SIMPLE_GRAIN_WOOD)
+		.setSpecular(0.3f, 20)
+		.setNormalMap(HD_SIMPLE_GRAIN_WOOD_N)
+		.setDisplacementMap(HD_SIMPLE_GRAIN_WOOD_D)
+		.setDisplacementScale(.008f)
+	),
 
 	WORN_TILES,
 	STONE_N,

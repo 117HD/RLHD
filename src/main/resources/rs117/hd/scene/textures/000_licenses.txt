@@ -62,3 +62,6 @@ HD_BRICK, HD_BRICK_N, HD_BRICk_D textures from AmbientCG. All textures on this s
 
 HD_BRICK_BROWN, HD_BRICK_BROWN_N, HD_BRICK_BROWN_D textures from AmbientCG. All textures on this site are licensed as CC0.
 -- https://ambientcg.com/view?id=Bricks062
+
+HD_SIMPLE_GRAIN_WOOD, HD_SIMPLE_GRAIN_WOOD_N and HD_SIMPLE_GRAIN_WOOD_D textures from AmbientCG. All textures on this site are licensed as CC0.
+-- https://ambientcg.com/view?id=Wood003
