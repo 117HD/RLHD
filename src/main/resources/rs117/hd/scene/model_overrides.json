@@ -3385,7 +3385,7 @@
   },
   {
     "description": "RELLEKKA_FENCES",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       4262,
       8969,
@@ -3393,6 +3393,9 @@
       8971,
       25261
     ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.7,
     "flatNormals": true
   },
   {
@@ -5173,11 +5176,12 @@
   },
   {
     "description": "Eagles Peak Cave",
-    "baseMaterial": "STONE",
+    "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       19790
     ],
-    "flatNormals": true
+    "uvType": "BOX",
+    "uvScale": 0.6
   },
   {
     "description": "Dagannoth Cave",
@@ -7249,7 +7253,20 @@
       11191,
       11192,
       11195,
-      11193
+      11193,
+      12582,
+      12583,
+      12584,
+      12585
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.33
+  },
+  {
+    "description": "Objects - Rockslide - Gray Rock - Rock - Medium",
+    "baseMaterial": "ROCK_2",
+    "objectIds": [
+      11432
     ],
     "uvType": "BOX",
     "uvScale": 0.33
@@ -7626,11 +7643,10 @@
     "objectIds": [
       5033,
       5034,
-      11437,
       21104
     ],
-    "uvType": "WORLD_XZ",
-    "uvScale": 1.64
+    "uvType": "BOX",
+    "uvScale": 0.8
   },
   {
     "description": "Objects - Snow Piles - Large",
@@ -9975,6 +9991,8 @@
     "baseMaterial": "ROCK_1",
     "objectIds": [
       5309,
+      11436,
+      11437,
       24143,
       24144,
       24145
@@ -11116,7 +11134,7 @@
   },
   {
     "description": "Wooden crates, Wooden table, wooden rack",
-    "objectIds": [ 356, 357, 595, 647 ],
+    "objectIds": [ 356, 595, 647 ],
     "flatNormals": true,
     "uvType": "BOX",
     "retainVanillaUvs": false
@@ -11128,5 +11146,169 @@
     "uvType": "BOX",
     "uvOrientationY": 70,
     "retainVanillaUvs": false
+  },
+  {
+    "description": "Picatoris - Objects - Dirt - Rabbit Hole",
+    "baseMaterial": "DIRT_1",
+    "objectIds": [
+      19337
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Picatoris - Objects - Dirt - Ferret Burrow",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [
+      19438,
+      19439,
+      19440,
+      19492,
+      19493,
+      19494
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Picatoris - Walls - Colony Walls",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      13478,
+      13479,
+      13480,
+      13581,
+      13582
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Piscatoris - Falconry - Walls - Wooden - Planks",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      4198,
+      4246
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 1536,
+    "uvScale": 0.66
+  },
+  {
+    "description": "Picatoris - Objects - Dirt - Entrance Hole",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [
+      12656
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Picatoris - Walls - Wood - Plank Fence",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      12659,
+      12660,
+      12661,
+      12722
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "flatNormals": true
+  },
+  {
+    "description": "Piscatoris - Walls - Metallic - Doors",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      12723,
+      12724,
+      12725,
+      13475
+    ],
+    "uvType": "BOX",
+    "flatNormals": true
+  },
+  {
+    "description": "Piscatoris - Objects - Wooden - Crate Stack",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      13598,
+      13599
+    ],
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512
+  },
+  {
+    "description": "Piscatoris - Objects - Wooden - Plank Wall",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      10108,
+      10109
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 1536,
+    "uvScale": 0.66
+  },
+  {
+    "description": "Piscatoris - Roof - Wooden - Planks",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      10111,
+      10112,
+      10113
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Piscatoris - Roof - Wooden - Plank Doors",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      12657,
+      12658
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Piscatoris - Roof Corners - Wooden - Planks",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      4229,
+      4232,
+      4235,
+      4236,
+      4237,
+      4238,
+      4239,
+      4240
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512
+  },
+  {
+    "description": "Eagles Peak Climbing Rocks",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      19849,
+      19850
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.3
+  },
+  {
+    "description": "Eagles Peak Cave Door",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      19845
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
   }
 ]
