@@ -495,10 +495,13 @@ public enum Material {
 		.setScroll(0, 1 / 3f)),
 
 	HD_BRICK_N,
+	HD_BRICK_D,
 	HD_BRICK(p -> p
 		.replaceIf(HdPluginConfig::modelTextures, BRICK)
 		.setNormalMap(HD_BRICK_N)
-		.setSpecular(0.4f, 80)
+		.setDisplacementMap(HD_BRICK_D)
+		.setDisplacementScale(.05f)
+		.setSpecular(0.30f, 20)
 	),
 	HD_ROOF_SHINGLES_N,
 	HD_ROOF_SHINGLES_1(p -> p
@@ -509,10 +512,14 @@ public enum Material {
 	HD_MARBLE_DARK(p -> p
 		.replaceIf(HdPluginConfig::modelTextures, MARBLE_DARK)
 		.setSpecular(1.1f, 380)),
+	HD_BRICK_BROWN_N,
+	HD_BRICK_BROWN_D,
 	HD_BRICK_BROWN(p -> p
 		.replaceIf(HdPluginConfig::modelTextures, BRICK_BROWN)
-		.setNormalMap(HD_BRICK_N)
-		.setSpecular(0.4f, 80)
+		.setNormalMap(HD_BRICK_BROWN_N)
+		.setDisplacementMap(HD_BRICK_BROWN_D)
+		.setDisplacementScale(.05f)
+		.setSpecular(0.35f, 20)
 	),
 	HD_LAVA_3(p -> p
 		.replaceIf(HdPluginConfig::modelTextures, LAVA)
