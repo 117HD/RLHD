@@ -1564,7 +1564,9 @@
       1651,
       1911,
       1912,
-      1913
+      1913,
+      1943,
+      1944
     ],
     "flatNormals": true
   },
@@ -2178,7 +2180,8 @@
   },
   {
     "description": "STONE_WALL_FENCES",
-    "baseMaterial": "STONE",
+    "baseMaterial": "STONE_NORMALED",
+    "textureMaterial": "HD_CONCRETE",
     "objectIds": [
       979,
       5566,
@@ -2196,7 +2199,11 @@
       23892,
       5569
     ],
-    "flatNormals": true
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "flatNormals": true,
+    "uvOrientation": 250,
+    "uvScale": 0.8
   },
   {
     "description": "STATUE_OF_A_WARRIOR_1",
@@ -5429,14 +5436,13 @@
   {
     "description": "Objects - Mossy Rock - Medium",
     "baseMaterial": "ROCK_1",
+    "textureMaterial": "HD_CONCRETE",
     "objectIds": [
       3894,
       3895,
       3896,
       3897,
       5847,
-      11182,
-      11183,
       11425,
       27899,
       29856,
@@ -5457,8 +5463,9 @@
       40556,
       40557
     ],
+    "retainVanillaUvs": false,
     "uvType": "BOX",
-    "uvScale": 0.5
+    "uvScale": 0.65
   },
   {
     "description": "Objects - Mossy Rock - Rectangle",
@@ -6306,10 +6313,10 @@
     "uvType": "GEOMETRY"
   },
   {
-    "description": "Mortton Shade Catacombs  - Objects - Stone - Alter",
+    "description": "Mortton Shade Catacombs  - Objects - Stone - Altar",
     "baseMaterial": "STONE",
     "objectIds": [
-       41222
+      41222
     ],
     "uvType": "GEOMETRY"
   },
@@ -6793,7 +6800,7 @@
     "flatNormals": true
   },
   {
-    "description": "Ground - Chaos Alter - Path -  Wooden – Plank",
+    "description": "Ground - Chaos Altar - Path -  Wooden – Plank",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       2669,
@@ -6810,7 +6817,7 @@
     "uvOrientation": 512
   },
   {
-    "description": "Chaos Alter - Walls - Path -  Wooden – Plank",
+    "description": "Chaos Altar - Walls - Path -  Wooden – Plank",
     "baseMaterial": "STONE",
     "objectIds": [
       169
@@ -7376,7 +7383,8 @@
       406,
       1992
     ],
-    "uvType": "VANILLA",
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
     "flatNormals": true
   },
   {
@@ -9909,7 +9917,7 @@
     "uvScale": 0.17
   },
   {
-    "description": "Object - Desert Treasure Pyramid - Alter - Large",
+    "description": "Object - Desert Treasure Pyramid - Altar - Large",
     "baseMaterial": "GRAY_25",
     "objectIds": [
       6552
@@ -10817,5 +10825,214 @@
     "uvType": "BOX",
     "uvScale": 0.33,
     "uvOrientation": 256
+  },
+  {
+    "description": "Objects - Concrete - Runecrafting Altars",
+    "textureMaterial": "HD_CONCRETE",
+    "objectIds": [
+      29631,
+      34760,
+      34761,
+      34762,
+      34763,
+      34764,
+      34765,
+      34766,
+      34767,
+      34768,
+      34769,
+      34770,
+      34771,
+      34772,
+      43479
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.4,
+    "uvOrientationY": 725,
+    "retainVanillaUvs": false
+  },
+  {
+    "description": "Objects - Concrete - Runecrafting Altar Pillars",
+    "textureMaterial": "HD_CONCRETE",
+    "objectIds": [
+      34780,
+      34781,
+      34782,
+      34783,
+      34784,
+      34785,
+      43509,
+      43510,
+      43511,
+      43512,
+      43513,
+      43514,
+      43515,
+      43516,
+      43517,
+      43518,
+      43519
+    ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "uvScale": 0.7,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Objects - Concrete - Runecrafting Altar Lights",
+    "textureMaterial": "HD_CONCRETE",
+    "objectIds": [
+      34786,
+      34787,
+      43520
+    ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "uvScale": 0.65
+  },
+  {
+    "description": "Objects - Concrete - Table",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "textureMaterial": "HD_CONCRETE",
+    "objectIds": [
+      590,
+      591
+    ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "uvScale": 0.65
+  },
+  {
+    "description": "Objects - Concrete - Bank Booth",
+    "textureMaterial": "HD_CONCRETE",
+    "objectIds": [
+      10355,
+      10527
+    ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "uvScale": 0.65
+  },
+  {
+    "description": "Objects - Concrete - Gravestone",
+    "textureMaterial": "HD_CONCRETE",
+    "objectIds": [
+      404,
+      405
+    ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "uvScale": 0.65
+  },
+  {
+    "description": "Objects - Concrete - Salve Tunnel Entrance",
+    "textureMaterial": "HD_CONCRETE",
+    "objectIds": [
+      3456,
+      3482,
+      3483,
+      3484
+    ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "uvScale": 0.65
+  },
+  {
+    "description": "Objects - Concrete - Deposit Box",
+    "textureMaterial": "HD_CONCRETE",
+    "objectIds": [
+      10529
+    ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "uvScale": 0.65
+  },
+  {
+    "description": "Objects - Textured Rocks - Rocks with Vines",
+    "baseMaterial": "PLANT_GRUNGE_1",
+    "textureMaterial": "HD_CONCRETE",
+    "objectIds": [
+      10786,
+      10787,
+      10788
+    ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "uvScale": 0.65
+  },
+  {
+    "description": "Objects - Textured Rocks - Small",
+    "textureMaterial": "HD_CONCRETE",
+    "objectIds": [
+      10793,
+      12570
+    ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "uvScale": 0.65
+  },
+  {
+    "description": "Objects - Textured Rocks - Medium",
+    "textureMaterial": "HD_CONCRETE",
+    "objectIds": [
+      10790,
+      10791
+    ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "uvScale": 0.65
+  },
+  {
+    "description": "Objects - Textured Rock - Mossy Rock - Medium",
+    "baseMaterial": "GRASS_3",
+    "textureMaterial": "HD_CONCRETE",
+    "objectIds": [
+      11182,
+      11183
+    ],
+    "retainVanillaUvs": false,
+    "uvType": "BOX",
+    "uvScale": 0.65
+  },
+  {
+    "description": "Objects - Textured Rock - Nightmare Zone Rocks - Small",
+    "textureMaterial": "HD_CONCRETE",
+    "objectIds": [
+      26275,
+      26291,
+      26292
+    ],
+    "retainVanillaUvs": false,
+    "uvType": "BOX",
+    "uvScale": 0.65
+  },
+  {
+    "description": "Objects - Concrete - Nature Altar Pillars",
+    "textureMaterial": "HD_CONCRETE",
+    "objectIds": [
+      407,
+      408,
+      409
+    ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false
+  },
+  {
+    "description": "Objects - Concrete - Nature Altar ",
+    "baseMaterial": "ROCK_1",
+    "textureMaterial": "HD_CONCRETE",
+    "objectIds": [
+      410
+    ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false
+  },
+  {
+    "description": "",
+    "objectIds": [ 29103 ],
+    "retainVanillaUvs": false,
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientationX": 512
   }
 ]
