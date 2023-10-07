@@ -30913,7 +30913,7 @@
   },
   {
     "description": "MAGE_TRAIN_ARENA_CANDLEBRA",
-    "height": 256,
+    "height": 210,
     "alignment": "CENTER",
     "radius": 500,
     "strength": 10,
