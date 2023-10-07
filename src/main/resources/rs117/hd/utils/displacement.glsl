@@ -55,6 +55,7 @@ void sampleDisplacementMap(
 
     // Shift UVs so the displacement goes into the surface instead of coming out of it
     uv += deltaXyPerZ;
+    fragDelta -= vec3(deltaXyPerZ, scale);
 
     float height = 0;
     float prevHeight = 0;

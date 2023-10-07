@@ -500,6 +500,7 @@ public enum Material {
 		.replaceIf(HdPluginConfig::modelTextures, BRICK)
 		.setNormalMap(HD_BRICK_N)
 		.setDisplacementMap(HD_BRICK_D)
+		.setDisplacementScale(.05f)
 		.setSpecular(0.30f, 20)
 	),
 	HD_ROOF_SHINGLES_N,
@@ -517,7 +518,7 @@ public enum Material {
 		.replaceIf(HdPluginConfig::modelTextures, BRICK_BROWN)
 		.setNormalMap(HD_BRICK_BROWN_N)
 		.setDisplacementMap(HD_BRICK_BROWN_D)
-		.setDisplacementScale(.027f)
+		.setDisplacementScale(.05f)
 		.setSpecular(0.35f, 20)
 	),
 	HD_LAVA_3(p -> p
