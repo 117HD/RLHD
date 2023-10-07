@@ -11113,5 +11113,20 @@
     "uvType": "BOX",
     "uvScale": 0.6,
     "uvOrientation": 342
+  },
+  {
+    "description": "Wooden crates, Wooden table, wooden rack",
+    "objectIds": [ 356, 357, 595, 647 ],
+    "flatNormals": true,
+    "uvType": "BOX",
+    "retainVanillaUvs": false
+  },
+  {
+    "description": "Wooden crate",
+    "objectIds": [ 358 ],
+    "flatNormals": true,
+    "uvType": "BOX",
+    "uvOrientationY": 70,
+    "retainVanillaUvs": false
   }
 ]
