@@ -11350,6 +11350,19 @@
     "uvOrientation": 128
   },
   {
+    "description": "Mage Treaining Arena - Metal Fence",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      10740,
+      10741,
+      10742,
+      10773,
+      10776
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512
+  },
+  {
     "description": "Mage Treaining Arena - Telekinetic Fence",
     "baseMaterial": "MARBLE_1",
     "objectIds": [
@@ -11357,5 +11370,23 @@
     ],
     "uvType": "BOX",
     "uvOrientation": 128
+  },
+  {
+    "description": "Mage Treaining Arena - Entrance Statues",
+    "baseMaterial": "MARBLE_3",
+    "objectIds": [
+      10736,
+      10737
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Mage Treaining Arena - Stairs with metal rails",
+    "baseMaterial": "MARBLE_1",
+    "objectIds": [
+      10771,
+      10775
+    ],
+    "uvType": "BOX"
   }
 ]
