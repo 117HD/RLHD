@@ -4326,9 +4326,6 @@
       1605,
       1606,
       1608,
-      10743,
-      10744,
-      10749,
       10750,
       17349
     ],
@@ -11314,5 +11311,28 @@
     "description": "Crafting Guild Blacksmith's tools",
     "objectIds": [ 2098 ],
     "flatNormals": true
+  },
+  {
+    "description": "Mage Treaining Arena - Walls",
+    "baseMaterial": "MARBLE_2",
+    "objectIds": [
+      10743,
+      10744,
+      10767,
+      10768,
+      10769,
+      10770
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Mage Treaining Arena - Fence",
+    "baseMaterial": "MARBLE_1",
+    "objectIds": [
+      10748,
+      10749
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 128
   }
 ]
