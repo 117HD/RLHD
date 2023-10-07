@@ -3571,7 +3571,8 @@
       24560,
       24561,
       25796,
-      29110
+      29110,
+      44917
     ],
     "flatNormals": true,
     "uvType": "BOX",
@@ -11399,5 +11400,13 @@
     "uvType": "BOX",
     "uvOrientation": 640,
     "flatNormals": true
-  }
+  }, {
+  "description": "Objects - Bush - Dead",
+  "baseMaterial": "BARK",
+  "objectIds": [
+    1123
+  ],
+  "uvType": "BOX",
+  "uvOrientation": 600
+}
 ]
