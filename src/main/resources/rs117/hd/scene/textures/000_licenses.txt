@@ -45,6 +45,18 @@ HD_WOOD_PLANKS_1 texture from AmbientCG. All textures on this site are licensed 
 BARK and BARK_N textures from AmbientCG. All textures on this site are licensed as CC0.
 -- https://ambientcg.com/view?id=Bark012
 
+ROCK_3, ROCK_3_N, ROCK_3_D textures from AmbientCG. All textures on this site are licensed as CC0.
+-- https://ambientcg.com/view?id=ROCK032
+
+ROCK_4, ROCK_4_N, ROCK_4_D textures from AmbientCG. All textures on this site are licensed as CC0.
+-- https://ambientcg.com/view?id=ROCK028
+
+ROCK_5, ROCK_5_N, ROCK_5_D textures from AmbientCG. All textures on this site are licensed as CC0.
+-- https://ambientcg.com/view?id=ROCK037
+
+HD_CONCRETE, HD_CONCRETE_N  and HD_CONCRETE_D textures from AmbientCG. All textures on this site are licensed as CC0.
+-- https://ambientcg.com/view?id=Rock030
+
 HD_BRICK, HD_BRICK_N, HD_BRICk_D textures from AmbientCG. All textures on this site are licensed as CC0.
 -- https://ambientcg.com/view?id=Bricks061
 

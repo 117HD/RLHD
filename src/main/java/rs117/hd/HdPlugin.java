@@ -507,6 +507,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					}
 				}
 
+				updateCachedConfigs();
+
 				if (developerMode) {
 					developerTools.activate();
 					enableDetailedTimers = true;
@@ -523,10 +525,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				}
 				initModelSortingBins(maxComputeThreadCount);
 
-				updateCachedConfigs();
 				setupSyncMode();
 				initVaos();
 				initBuffers();
+
+				// Materials need to be initialized before compiling shader programs
+				textureManager.startUp();
+
 				initPrograms();
 				initShaderHotswapping();
 				initInterfaceTexture();
@@ -544,7 +549,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				lastStretchedCanvasWidth = lastStretchedCanvasHeight = 0;
 				lastAntiAliasingMode = null;
 
-				textureManager.startUp();
 				modelPusher.startUp();
 				modelOverrideManager.startUp();
 				lightManager.startUp();
