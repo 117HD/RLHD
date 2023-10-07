@@ -632,12 +632,10 @@ public enum Material {
 		.setSpecular(0.3f, 20)
 		.setBrightness(0.75f)
 	),
-	HD_HAY_D,
 	HD_HAY_N,
 	HD_HAY(p -> p
 		.replaceIf(HdPluginConfig::modelTextures, HAY)
 		.setSpecular(0.3f, 20)
-		.setDisplacementMap(HD_HAY_D)
 		.setNormalMap(HD_HAY_N)
 	),
 
