@@ -30893,5 +30893,23 @@
     "objectIds": [
       11601
     ]
+  },
+  {
+    "description": "MAGE_TRAIN_ARENA_WALL_CRYSTAL_TELE",
+    "height": 210,
+    "alignment": "FRONT",
+    "radius": 300,
+    "strength": 5.5,
+    "color": [
+      252,
+      252,
+      252
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "objectIds": [
+      10760
+    ]
   }
 ]
