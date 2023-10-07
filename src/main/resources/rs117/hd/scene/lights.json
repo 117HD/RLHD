@@ -19837,7 +19837,6 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      10720,
       10178,
       25122,
       10179,
@@ -30910,6 +30909,24 @@
     "range": 10,
     "objectIds": [
       10760
+    ]
+  },
+  {
+    "description": "MAGE_TRAIN_ARENA_CANDLEBRA",
+    "height": 256,
+    "alignment": "CENTER",
+    "radius": 500,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      10720
     ]
   }
 ]
