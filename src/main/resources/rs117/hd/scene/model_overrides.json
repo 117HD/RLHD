@@ -11318,6 +11318,10 @@
     "objectIds": [
       10743,
       10744,
+      10760,
+      10761,
+      10762,
+      10763,
       10767,
       10768,
       10769,
@@ -11331,6 +11335,15 @@
     "objectIds": [
       10748,
       10749
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 128
+  },
+  {
+    "description": "Mage Treaining Arena - Telekinetic Fence",
+    "baseMaterial": "MARBLE_1",
+    "objectIds": [
+      10755
     ],
     "uvType": "BOX",
     "uvOrientation": 128
