@@ -2573,11 +2573,9 @@
       340,
       341,
       342,
-      3171,
       3172,
       3173,
       3174,
-      3204,
       3613,
       3614,
       3615,
@@ -2689,12 +2687,16 @@
     "description": "GROUND_DECORATION_SAND",
     "baseMaterial": "SAND_1",
     "objectIds": [
+      3169,
+      3170,
+      3171,
       14914,
       15634,
       15635
     ],
-    "uvType": "WORLD_XZ",
-    "uvScale": 0.4
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 128
   },
   {
     "description": "GROUND_DECORATION_SNOW",
@@ -5065,10 +5067,12 @@
     "description": "Sandstone Rocks",
     "baseMaterial": "STONE",
     "objectIds": [
+      3204,
       11386
     ],
-    "uvType": "WORLD_XZ",
-    "uvScale": 0.4
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 256
   },
   {
     "description": "Granite Rocks",
@@ -5672,7 +5676,6 @@
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
       319,
-      3169,
       3705,
       3706,
       3707,
