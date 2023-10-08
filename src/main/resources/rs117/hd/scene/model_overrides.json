@@ -3125,9 +3125,6 @@
       3102,
       3103,
       3192,
-      10748,
-      10767,
-      10770,
       3111,
       3112,
       3113,
@@ -7378,6 +7375,15 @@
     "uvType": "BOX"
   },
   {
+    "description": "Objects - Wooden - Chair 3 - Mage Training Arena",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      10724
+    ],
+    "uvType": "BOX",
+    "flatNormals": true
+  },
+  {
     "description": "Objects - Wooden - Tables - Round",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
@@ -11413,12 +11419,35 @@
     "uvOrientation": 600
   },
   {
-    "description": "Mage Training Arena - Marble - Portal",
+    "description": "Mage Training Arena - Marble - Portal Pillars",
     "baseMaterial": "MARBLE_3_SEMIGLOSS",
     "objectIds": [
       44856
     ],
     "uvType": "BOX",
     "flatNormals": true
+  },
+  {
+    "description": "Mage Training Arena - Marble - Area Portals",
+    "baseMaterial": "MARBLE_3_SEMIGLOSS",
+    "objectIds": [
+      23673,
+      23674,
+      23675,
+      23676,
+      23677
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Mage Training Arena - Ground Decoration - Carpets",
+    "objectIds": [
+      10756
+    ],
+    "baseMaterial": "FINE_CARPET",
+    "uvType": "WORLD_XZ",
+    "flatNormals": true,
+    "castShadows": false,
+    "forceOverride": true
   }
 ]
