@@ -11324,6 +11324,7 @@
     "description": "Mage Treaining Arena - Walls",
     "baseMaterial": "MARBLE_2",
     "objectIds": [
+      10734,
       10743,
       10744,
       10760,
