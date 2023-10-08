@@ -11339,6 +11339,16 @@
     "uvType": "BOX"
   },
   {
+    "description": "Mage Treaining Arena - Walls - Dark",
+    "baseMaterial": "MARBLE_2",
+    "objectIds": [
+      10735,
+      10765,
+      10766
+    ],
+    "uvType": "BOX"
+  },
+  {
     "description": "Mage Treaining Arena - Roofs",
     "baseMaterial": "MARBLE_3",
     "objectIds": [
@@ -11464,5 +11474,21 @@
     "flatNormals": true,
     "castShadows": false,
     "forceOverride": true
+  },
+  {
+    "description": "Mage Training Arena - Marble - Area Portals",
+    "baseMaterial": "MARBLE_1_SEMIGLOSS",
+    "objectIds": [
+      10738
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Mage Training Arena - Marble - Area Portals",
+    "baseMaterial": "MARBLE_2_SEMIGLOSS",
+    "objectIds": [
+      10739
+    ],
+    "uvType": "BOX"
   }
 ]
