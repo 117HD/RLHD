@@ -11410,6 +11410,17 @@
     "flatNormals": true
   },
   {
+    "description": "Falador - Mage Training Arena - Marble - Steps - Corner",
+    "baseMaterial": "MARBLE_3",
+    "objectIds": [
+      10732
+    ],
+    "uvType": "BOX",
+    "uvOrientationZ": 640,
+    "uvOrientationX": 640,
+    "flatNormals": true
+  },
+  {
     "description": "Objects - Bush - Dead",
     "baseMaterial": "BARK",
     "objectIds": [
