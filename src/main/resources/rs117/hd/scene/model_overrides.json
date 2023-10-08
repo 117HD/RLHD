@@ -11442,7 +11442,10 @@
   {
     "description": "Mage Training Arena - Ground Decoration - Carpets",
     "objectIds": [
-      10756
+      10756,
+      10757,
+      10758,
+      10759
     ],
     "baseMaterial": "FINE_CARPET",
     "uvType": "WORLD_XZ",
