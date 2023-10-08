@@ -3289,7 +3289,8 @@
       3123,
       3124,
       9513,
-      9541
+      9541,
+      42349
     ],
     "uvType": "BOX"
   },
@@ -6025,7 +6026,8 @@
       25775,
       25776,
       25836,
-      25837
+      25837,
+      44854
     ],
     "uvType": "BOX",
     "flatNormals": true
@@ -11400,13 +11402,23 @@
     "uvType": "BOX",
     "uvOrientation": 640,
     "flatNormals": true
-  }, {
-  "description": "Objects - Bush - Dead",
-  "baseMaterial": "BARK",
-  "objectIds": [
-    1123
-  ],
-  "uvType": "BOX",
-  "uvOrientation": 600
-}
+  },
+  {
+    "description": "Objects - Bush - Dead",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      1123
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 600
+  },
+  {
+    "description": "Mage Training Arena - Marble - Portal",
+    "baseMaterial": "MARBLE_3_SEMIGLOSS",
+    "objectIds": [
+      44856
+    ],
+    "uvType": "BOX",
+    "flatNormals": true
+  }
 ]
