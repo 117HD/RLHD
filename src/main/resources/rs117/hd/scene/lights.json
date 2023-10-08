@@ -30953,6 +30953,24 @@
     ]
   },
   {
+    "description": "MAGE_TRAIN_ARENA_AREA_PORTAL_STATIC",
+    "height": 140,
+    "alignment": "CENTER",
+    "radius": 220,
+    "strength": 11,
+    "color": [
+      143,
+      0,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 1100,
+    "range": 20,
+    "objectIds": [
+      10733
+    ]
+  },
+  {
     "description": "MAGE_TRAIN_ARENA_EGG_STATUE",
     "height": 100,
     "alignment": "CENTER",
