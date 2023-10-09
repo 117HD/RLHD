@@ -125,11 +125,11 @@ class SceneUploader {
 						if (model == null) {
 							boolean hasTilePaint = paint != null && paint.getNeColor() != 12345678;
 							if (!hasTilePaint) {
-								var bridge = tile.getBridge();
-								if (bridge != null) {
-									renderLevel = bridge.getRenderLevel();
-									paint = bridge.getSceneTilePaint();
-									model = bridge.getSceneTileModel();
+								tile = tile.getBridge();
+								if (tile != null) {
+									renderLevel = tile.getRenderLevel();
+									paint = tile.getSceneTilePaint();
+									model = tile.getSceneTileModel();
 									hasTilePaint = paint != null && paint.getNeColor() != 12345678;
 								}
 							}

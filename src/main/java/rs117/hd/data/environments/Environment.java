@@ -405,6 +405,7 @@ public enum Environment
 		.setDirectionalColor("#FFFFFF")
 		.setDirectionalStrength(1.0f)
 		.setLightDirection(260f, 10f)
+		.setWaterColor(70, 146, 223)
 	),
 
 	GAMES_ROOM(Area.GAMES_ROOM, new Properties()
