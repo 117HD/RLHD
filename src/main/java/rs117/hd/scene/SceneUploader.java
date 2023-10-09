@@ -114,18 +114,32 @@ class SceneUploader {
 					int tileY = tileExY - SCENE_OFFSET;
 					Tile tile = extendedTiles[tileZ][tileExX][tileExY];
 
-					SceneTilePaint paint = null;
+					SceneTilePaint paint;
 					SceneTileModel model = null;
 					int renderLevel = tileZ;
 					if (tile != null) {
+						renderLevel = tile.getRenderLevel();
 						paint = tile.getSceneTilePaint();
 						model = tile.getSceneTileModel();
-						renderLevel = tile.getRenderLevel();
+
+						if (model == null) {
+							boolean hasTilePaint = paint != null && paint.getNeColor() != 12345678;
+							if (!hasTilePaint) {
+								var bridge = tile.getBridge();
+								if (bridge != null) {
+									renderLevel = bridge.getRenderLevel();
+									paint = bridge.getSceneTilePaint();
+									model = bridge.getSceneTileModel();
+									hasTilePaint = paint != null && paint.getNeColor() != 12345678;
+								}
+							}
+
+							if (hasTilePaint)
+								continue;
+						}
 					}
-					boolean hasTilePaint = paint != null && paint.getNeColor() != 12345678;
 
 					int[] worldPoint = sceneContext.sceneToWorld(tileX, tileY, tileZ);
-
 					boolean fillGaps =
 						tileZ == 0 &&
 						tileX > sceneMin &&
@@ -150,13 +164,11 @@ class SceneUploader {
 					if (fillGaps) {
 						int vertexOffset = sceneContext.getVertexOffset();
 						int uvOffset = sceneContext.getUvOffset();
-						int vertexCount = 0;
+						int vertexCount;
 
 						if (model == null) {
-							if (!hasTilePaint) {
-								uploadBlackTile(sceneContext, tileExX, tileExY, renderLevel);
-								vertexCount = 6;
-							}
+							uploadBlackTile(sceneContext, tileExX, tileExY, renderLevel);
+							vertexCount = 6;
 						} else {
 							int[] uploadedTileModelData = uploadHDTileModelSurface(sceneContext, tile, model, true);
 							vertexCount = uploadedTileModelData[0];
