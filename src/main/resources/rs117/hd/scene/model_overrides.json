@@ -4322,8 +4322,6 @@
     "objectIds": [
       1602,
       1603,
-      1604,
-      1605,
       1606,
       1608,
       10743,
@@ -11342,6 +11340,30 @@
     ],
     "uvType": "BOX",
     "uvOrientation": 512,
+    "retainVanillaUvs": false
+  },
+  {
+    "description": "Objects - Hay - Haystack",
+    "textureMaterial": "HD_HAY",
+    "objectIds": [
+      300
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.47,
+    "uvOrientation": 512,
+    "retainVanillaUvs": false
+  },
+  {
+    "description": "Objects - Hay - Hay Bale",
+    "textureMaterial": "HD_HAY",
+    "objectIds": [
+      298,
+      299
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientationY": 512,
+    "uvOrientationZ": 512,
     "retainVanillaUvs": false
   }
 ]
