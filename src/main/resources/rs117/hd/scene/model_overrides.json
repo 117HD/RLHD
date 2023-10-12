@@ -11315,5 +11315,13 @@
     "description": "Crafting Guild Blacksmith's tools",
     "objectIds": [ 2098 ],
     "flatNormals": true
+  },
+  {
+    "description": "Edgeville - Walls - Bank Front Windows",
+    "objectIds": [
+      1853,
+      1854
+    ],
+    "flatNormals": true
   }
 ]
