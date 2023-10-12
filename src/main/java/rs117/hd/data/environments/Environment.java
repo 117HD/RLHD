@@ -1052,9 +1052,14 @@ public enum Environment
 		.setWaterColor(102, 234, 255)
 	),
 	ELID_CAVE(Area.ELID_CAVE, new Properties()
-			.setWaterColor(102, 234, 255)
-			.setAmbientStrength(1.75f)
-			.setDirectionalStrength(1.0f)
+		.setFogColor("#000000")
+		.setFogDepth(40)
+		.setAmbientColor("#AAAFB6")
+		.setAmbientStrength(1.75f)
+		.setDirectionalColor("#FFFFFF")
+		.setDirectionalStrength(1.0f)
+		.setLightDirection(260f, 10f)
+		.setWaterColor(102, 234, 255)
 	),
 	ANCIENT_CAVERN_UPPER(Area.ANCIENT_CAVERN_UPPER, new Properties()
 			.setWaterColor(79, 178, 255)
