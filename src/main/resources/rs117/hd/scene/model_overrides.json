@@ -11493,5 +11493,17 @@
       10739
     ],
     "uvType": "BOX"
+  },
+  {
+    "description": "Mage Training Arena - Marble - Area Portals",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      10725,
+      10726,
+      10727,
+      10728
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
   }
 ]
