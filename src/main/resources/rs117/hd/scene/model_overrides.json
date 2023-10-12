@@ -11310,5 +11310,10 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.6
+  },
+  {
+    "description": "Crafting Guild Blacksmith's tools",
+    "objectIds": [ 2098 ],
+    "flatNormals": true
   }
 ]
