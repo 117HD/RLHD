@@ -31008,5 +31008,21 @@
       522,
       523
     ]
+  },
+  {
+    "description": "MAGE_TRAIN_ARENA_DOORWAY",
+    "height": 20,
+    "alignment": "CENTER",
+    "radius": 220,
+    "strength": 44,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      10721
+    ]
   }
 ]

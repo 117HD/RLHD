@@ -4324,7 +4324,6 @@
       1605,
       1606,
       1608,
-      10750,
       17349
     ],
     "flatNormals": true
@@ -11323,9 +11322,10 @@
     "flatNormals": true
   },
   {
-    "description": "Mage Treaining Arena - Walls",
+    "description": "Mage Training Arena - Walls",
     "baseMaterial": "MARBLE_2",
     "objectIds": [
+      10721,
       10734,
       10743,
       10744,
@@ -11338,10 +11338,19 @@
       10769,
       10770
     ],
-    "uvType": "BOX"
+    "uvType": "BOX",
+    "flatNormals": true
   },
   {
-    "description": "Mage Treaining Arena - Walls - Dark",
+    "description": "Mage Training Arena - Walls - Doorway of Light",
+    "objectIds": [
+      10721
+    ],
+    "uvType": "BOX",
+    "flatNormals": true
+  },
+  {
+    "description": "Mage Training Arena - Walls - Dark",
     "baseMaterial": "MARBLE_2",
     "objectIds": [
       10735,
@@ -11349,30 +11358,34 @@
       10765,
       10766
     ],
-    "uvType": "BOX"
+    "uvType": "BOX",
+    "flatNormals": true
   },
   {
-    "description": "Mage Treaining Arena - Roofs",
+    "description": "Mage Training Arena - Roofs",
     "baseMaterial": "MARBLE_3",
     "objectIds": [
       10745,
       10746,
       10747
     ],
-    "uvType": "BOX"
+    "uvType": "BOX",
+    "flatNormals": true
   },
   {
-    "description": "Mage Treaining Arena - Fence",
+    "description": "Mage Training Arena - Fence",
     "baseMaterial": "MARBLE_1",
     "objectIds": [
       10748,
-      10749
+      10749,
+      10750
     ],
     "uvType": "BOX",
-    "uvOrientation": 128
+    "uvOrientation": 128,
+    "flatNormals": true
   },
   {
-    "description": "Mage Treaining Arena - Metal Fence",
+    "description": "Mage Training Arena - Metal Fence",
     "baseMaterial": "METALLIC_2_SEMIGLOSS",
     "objectIds": [
       10740,
@@ -11385,7 +11398,7 @@
     "uvOrientation": 512
   },
   {
-    "description": "Mage Treaining Arena - Telekinetic Fence",
+    "description": "Mage Training Arena - Telekinetic Fence",
     "baseMaterial": "MARBLE_1",
     "objectIds": [
       10755
@@ -11394,7 +11407,7 @@
     "uvOrientation": 128
   },
   {
-    "description": "Mage Treaining Arena - Entrance Statues",
+    "description": "Mage Training Arena - Entrance Statues",
     "baseMaterial": "MARBLE_3",
     "objectIds": [
       10736,
@@ -11403,7 +11416,7 @@
     "uvType": "BOX"
   },
   {
-    "description": "Mage Treaining Arena - Stairs with metal rails",
+    "description": "Mage Training Arena - Stairs with metal rails",
     "baseMaterial": "MARBLE_1",
     "objectIds": [
       10771,
