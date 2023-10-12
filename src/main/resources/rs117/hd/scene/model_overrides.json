@@ -12360,6 +12360,7 @@
     "description": "Abyss - Wall",
     "baseMaterial": "ABYSSAL",
     "objectIds": [
+      20737,
       25382,
       25384,
       26150,
@@ -12422,6 +12423,9 @@
     "description": "Abyss - Eyes",
     "baseMaterial": "ABYSSAL",
     "objectIds": [
+      26146,
+      26147,
+      26148,
       26251,
       26253,
       26191
@@ -12433,6 +12437,8 @@
     "description": "Abyss - Boil",
     "baseMaterial": "ABYSSAL",
     "objectIds": [
+      26144,
+      26145,
       26190,
       26252
     ],
