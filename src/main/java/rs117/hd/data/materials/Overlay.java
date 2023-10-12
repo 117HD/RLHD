@@ -780,7 +780,7 @@ public enum Overlay {
 		.blended(false)),
 
 	// Ancient Cavern upper level water change
-	ANCIENT_CAVERN_UPPER_WATER(41, Area.ANCIENT_CAVERN_UPPER, WaterType.WATER_FLAT),
+	ANCIENT_CAVERN_WATER(41, Area.ANCIENT_CAVERN, WaterType.WATER_FLAT),
 
 	// Lunar Isles
 	LUNAR_ISLAND_HOUSES_DIRT_FLOOR(81, Area.LUNAR_VILLAGE_HOUSE_INTERIORS_GROUND, GroundMaterial.VARIED_DIRT, p -> p
