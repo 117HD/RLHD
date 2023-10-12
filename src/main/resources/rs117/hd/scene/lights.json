@@ -30141,7 +30141,8 @@
     "strength": 6.5,
     "color": [
       170,
-      200
+      200,
+      0
     ],
     "type": "PULSE",
     "duration": 1028,
@@ -30190,7 +30191,6 @@
   {
     "description": "LUNAR_LAMP",
     "height": 218,
-    "alignment": "BACK",
     "radius": 400,
     "strength": 10,
     "color": [
