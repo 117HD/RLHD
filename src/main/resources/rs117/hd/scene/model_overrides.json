@@ -8144,10 +8144,6 @@
       23095,
       23115,
       23707,
-      23727,
-      23728,
-      23729,
-      23730,
       23922,
       25014,
       26642,
@@ -11451,13 +11447,12 @@
       23658,
       23659,
       23660,
-      23661,
-      23662
+      23661
     ],
     "uvType": "BOX"
   },
   {
-    "description": "Stronghold Of Security Petilance Doors",
+    "description": "Stronghold Of Security Petilance - Doors",
     "baseMaterial": "OOZE",
     "objectIds": [
       23653,
@@ -11488,12 +11483,13 @@
   },
   {
     "description": "Stronghold Of Security Rock Entrance",
-    "baseMaterial": "ROCK_2",
+    "baseMaterial": "ROCK_5",
     "objectIds": [
       20790
     ],
     "uvType": "BOX",
-    "uvScale": 0.3
+    "uvScale": 0.38,
+    "uvOrientation": 128
   },
   {
     "description": "Stronghold Of Security War -  Metallic - Gift of Peace - Chest",
@@ -11528,6 +11524,7 @@
     "description": "Stronghold Of Security War - Objects - Wood - Sign",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      7054,
       19172,
       20787,
       23708
@@ -11576,7 +11573,8 @@
       23666,
       23667,
       23668,
-      23669
+      23669,
+      23923
     ],
     "uvType": "BOX",
     "uvScale": 0.7
@@ -11610,12 +11608,74 @@
     "uvType": "BOX"
   },
   {
-    "description": "Stronghold Of Security Petilance - Door",
-    "baseMaterial": "OOZE",
+    "description": "Stronghold Of Security Death - Walls",
+    "baseMaterial": "GRUNGE_2",
     "objectIds": [
-      23653,
-      23654
+      23711,
+      23712,
+      23713,
+      23714,
+      23715,
+      23716,
+      23717,
+      23718,
+      23719,
+      23720
     ],
-    "uvType": "BOX"
-  }
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 128
+  },
+  {
+    "description": "Stronghold Of Security Death - Objects - Bones",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      23924,
+      23925,
+      23926,
+      23927,
+      23928,
+      23929
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7
+  },
+  {
+    "description": "Stronghold Of Security Death - Objects - Boney Ladder",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      23921
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7
+  },
+  {
+    "description": "Stronghold Of Security Death - Objects - Escape Bone Chain",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      23732
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7
+  },
+  {
+    "description": "Stronghold Of Security Death - Doors",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      23727,
+      23728,
+      23729,
+      23730
+    ],
+    "shadowOpacityThreshold": 0.12,
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 512
+  }, {
+  "description": "Stronghold Of Security Death - Reward - Cradle of Life",
+  "baseMaterial": "GRUNGE_2",
+  "objectIds": [
+    23731
+  ]
+}
 ]
