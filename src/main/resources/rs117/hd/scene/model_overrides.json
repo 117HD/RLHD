@@ -11314,10 +11314,7 @@
   {
     "description": "Crafting Guild Blacksmith's tools",
     "objectIds": [ 2098 ],
-    "flatNormals": true,
-    "objectIds": [
-      1862
-    ]
+    "flatNormals": true
   },
   {
     "description": "Stronghold Of Security War Metallic Floor",
@@ -11325,7 +11322,8 @@
     "objectIds": [
       20655
     ],
-    "uvType": "MODEL_XZ"
+    "uvType": "BOX",
+    "flatNormals": true
   },
   {
     "description": "Stronghold Of Security War Metallic Walls",
@@ -11336,7 +11334,7 @@
       19208,
       20659
     ],
-    "uvType": "MODEL_YZ"
+    "uvType": "BOX"
   },
   {
     "description": "Stronghold Of Security War Metallic Ladder",
@@ -11345,7 +11343,7 @@
       20784,
       20785
     ],
-    "uvType": "MODEL_YZ"
+    "uvType": "BOX"
   },
   {
     "description": "Stronghold Of Security Famine Dirt Walls",
@@ -11364,7 +11362,7 @@
     "objectIds": [
       17006
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "uvScale": 0.4
   },
   {
@@ -11374,7 +11372,7 @@
       19003,
       19004
     ],
-    "uvType": "MODEL_XY",
+    "uvType": "BOX",
     "uvOrientation": 512,
     "uvScale": 0.4
   },
@@ -11403,7 +11401,7 @@
       23653,
       23654
     ],
-    "uvType": "MODEL_YZ",
+    "uvType": "BOX",
     "uvScale": 0.4,
     "uvOrientation": 512
   },
@@ -11421,7 +11419,7 @@
     "objectIds": [
       20790
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "uvScale": 0.3
   }
 ]
