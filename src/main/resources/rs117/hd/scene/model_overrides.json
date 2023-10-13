@@ -11476,6 +11476,17 @@
     ]
   },
   {
+    "description": "Stronghold Of Security Pestilence - Escape Goo Covered Vine ",
+    "baseMaterial": "OOZE",
+    "objectIds": [
+      23703,
+      23704
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 256
+  },
+  {
     "description": "Stronghold Of Security Rock Entrance",
     "baseMaterial": "ROCK_2",
     "objectIds": [
@@ -11504,11 +11515,22 @@
     "retainVanillaUvs": false
   },
   {
+    "description": "Stronghold Of Security War -  Metallic - Box of Health - Chest",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      23709
+    ],
+    "flatNormals": true,
+    "uvType": "BOX",
+    "uvOrientation": 512
+  },
+  {
     "description": "Stronghold Of Security War - Objects - Wood - Sign",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       19172,
-      20787
+      20787,
+      23708
     ],
     "flatNormals": true,
     "uvType": "BOX",
@@ -11543,5 +11565,57 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.7
+  },
+  {
+    "description": "Stronghold Of Security Pestilence - Objects - Bones",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      23663,
+      23664,
+      23665,
+      23666,
+      23667,
+      23668,
+      23669
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7
+  },
+  {
+    "description": "Stronghold Of Security Pestilence - Ground Objects - Rock Like Objects",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      23670,
+      23671,
+      23699
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7
+  },
+  {
+    "description": "Stronghold Of Security Petilance - Dripping Tendrils",
+    "baseMaterial": "OOZE",
+    "objectIds": [
+      23700,
+      23701
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Stronghold Of Security Petilance - Overdoor Tendrils",
+    "baseMaterial": "OOZE",
+    "objectIds": [
+      23662
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Stronghold Of Security Petilance - Door",
+    "baseMaterial": "OOZE",
+    "objectIds": [
+      23653,
+      23654
+    ],
+    "uvType": "BOX"
   }
 ]

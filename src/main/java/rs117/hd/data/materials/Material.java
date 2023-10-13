@@ -318,6 +318,10 @@ public enum Material {
 		.setSpecular(1.1f, 380)),
 	GRAVEL_SHINY(GRAVEL, p -> p
 		.setSpecular(1.1f, 380)),
+	GRAVEL_SHINY_LIGHT(GRAVEL, p -> p
+		.setSpecular(1.1f, 380)
+		.setBrightness(1.55f)
+	),
 	SAND_1_N,
 	SAND_1(p -> p
 		.setNormalMap(SAND_1_N)
@@ -334,7 +338,13 @@ public enum Material {
 		.setSpecular(0.2f, 10)
 	),
 	GRUNGE_1,
+	GRUNGE_1_SHINY(GRUNGE_1, p -> p
+		.setSpecular(0.7f, 300)
+	),
 	GRUNGE_2,
+	GRUNGE_2_SHINY(GRUNGE_2, p -> p
+		.setSpecular(0.7f, 300)
+	),
 	SUBMERGED_GRUNGE_2(GRUNGE_2, p -> p
 		.setFlowMap(UNDERWATER_FLOW_MAP)
 		.setFlowMapStrength(0.075f)

@@ -30985,8 +30985,25 @@
     ]
   },
   {
+    "description": "STRONGHOLD_OF_SECURITY_PESTILENCE_DOOR_LIGHT",
+    "height": 107,
+    "alignment": "CENTER",
+    "radius": 175,
+    "strength": 20.5,
+    "color": [
+      255,
+      80,
+      87
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      23653,
+      23654
+    ]
+  },
+  {
     "description": "STRONGHOLD_OF_SECURITY_DEATH_LIGHT",
-    "height": 190,
+    "height": 225,
     "alignment": "FRONT",
     "radius": 320,
     "strength": 12.5,
@@ -30996,7 +31013,7 @@
       3
     ],
     "type": "FLICKER",
-    "duration": 0,
+    "duration": 500,
     "range": 20,
     "objectIds": [
       23715
