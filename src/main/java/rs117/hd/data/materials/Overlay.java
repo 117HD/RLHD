@@ -692,6 +692,15 @@ public enum Overlay {
 
 	// Temple of the Eye
 	TEMPLE_OF_THE_EYE_INCORRECT_WATER(Area.TEMPLE_OF_THE_EYE, GroundMaterial.DIRT, p -> p.ids(-100)), // Only visible in low-detail mode
+	TEMPLE_OF_THE_EYE_PATH_BLENDING_FIX(p -> p
+		.ids(203)
+		.area(Area.TEMPLE_OF_THE_EYE_BLEND_FIX)
+		.groundMaterial(GroundMaterial.ROCKY_CAVE_FLOOR)
+		.blendedAsOpposite(true)
+		.shiftHue(27)
+		.saturation(5)
+		.shiftLightness(-31)
+	),
 	TEMPLE_OF_THE_EYE_DIRT(Area.TEMPLE_OF_THE_EYE, GroundMaterial.DIRT, p -> p.ids(202, 203)),
 
 	// God Wars Dungeon (GWD)
