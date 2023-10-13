@@ -11342,16 +11342,18 @@
     "uvType": "BOX"
   },
   {
-    "description": "Stronghold Of Security War Metallic Ladder",
+    "description": "Stronghold Of Security War - Metallic Ladder",
     "baseMaterial": "METALLIC_2_GLOSS",
     "objectIds": [
       20784,
       20785
     ],
-    "uvType": "BOX"
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "flatNormals": true
   },
   {
-    "description": "Stronghold Of Security Famine Dirt Walls",
+    "description": "Stronghold Of Security - Famine Dirt Walls",
     "baseMaterial": "DIRT_2",
     "objectIds": [
       17003,
@@ -11426,5 +11428,38 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.3
+  },
+  {
+    "description": "Stronghold Of Security War -  Metallic - Gift of Peace - Chest",
+    "baseMaterial": "METALLIC_1_GLOSS",
+    "objectIds": [
+      20656
+    ],
+    "flatNormals": true,
+    "uvType": "BOX"
+  },
+  {
+    "description": "Stronghold Of Security War - Objects - Wood - Sign",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      20787
+    ],
+    "flatNormals": true,
+    "uvType": "BOX",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Stronghold Of Security War - Objects - Bones",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      20661,
+      20662,
+      20663,
+      20664,
+      20665,
+      20781
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7
   }
 ]
