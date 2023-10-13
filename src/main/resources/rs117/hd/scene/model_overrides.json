@@ -11326,18 +11326,39 @@
     "flatNormals": true
   },
   {
+    "description": "Stronghold Of Security War Metallic Floor with fence",
+    "baseMaterial": "METALLIC_2_GLOSS",
+    "objectIds": [
+      20657,
+      20658
+    ],
+    "uvType": "BOX",
+    "flatNormals": true
+  },
+  {
     "description": "Stronghold Of Security War Metallic Walls",
     "baseMaterial": "METALLIC_2_GLOSS",
     "objectIds": [
       19173,
       19204,
+      19205,
       19208,
       19212,
       19213,
       19214,
       19173,
       20653,
-      20659
+      20655,
+      20659,
+      20660
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Stronghold Of Security War - Metallic Overdoor",
+    "baseMaterial": "METALLIC_2_GLOSS",
+    "objectIds": [
+      19211
     ],
     "uvType": "BOX"
   },
@@ -11351,6 +11372,16 @@
     "uvType": "BOX",
     "uvOrientation": 256,
     "flatNormals": true
+  },
+  {
+    "description": "Stronghold Of Security War - Metallic - Escape Chain",
+    "baseMaterial": "METALLIC_1_HIGHGLOSS",
+    "objectIds": [
+      20782,
+      20783
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 256
   },
   {
     "description": "Stronghold Of Security - Famine Dirt Walls",
@@ -11457,6 +11488,7 @@
       20663,
       20664,
       20665,
+      20780,
       20781
     ],
     "uvType": "BOX",
