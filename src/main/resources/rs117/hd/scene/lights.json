@@ -30969,8 +30969,8 @@
   },
   {
     "description": "STRONGHOLD_OF_SECURITY_PESTILENCE_LIGHT",
-    "height": 30,
-    "alignment": "FRONT",
+    "height": 64,
+    "alignment": "CENTER",
     "radius": 400,
     "strength": 7.5,
     "color": [
@@ -30978,8 +30978,7 @@
       233,
       87
     ],
-    "type": "PULSE",
-    "duration": 1,
+    "type": "STATIC",
     "range": 20,
     "objectIds": [
       23651

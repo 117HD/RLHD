@@ -632,9 +632,8 @@ public enum Material {
 		.setSpecular(0.3f, 20)
 		.setBrightness(0.75f)
 	),
-	OOZE(DIRT_1, p -> p
-			.setSpecular(1.5f, 8000)
-			.setBrightness(1.2f)
+	OOZE(GRAY_65, p -> p
+		.setSpecular(1.5f, 600)
 	),
 
 
