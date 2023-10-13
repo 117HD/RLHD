@@ -693,11 +693,12 @@ public enum Overlay {
 	// Temple of the Eye
 	TEMPLE_OF_THE_EYE_INCORRECT_WATER(p -> p
 		.ids(-100, 156)
-		.area(Area.TEMPLE_OF_THE_EYE_BLEND_FIX)
+		.area(Area.TEMPLE_OF_THE_EYE)
 		.groundMaterial(GroundMaterial.ROCKY_CAVE_FLOOR)
 		.blendedAsOpposite(true)
-		.shiftHue(14)
-		.saturation(5)
+		.shiftHue(8)
+		.shiftSaturation(3)
+		.shiftLightness(-20)
 
 
 	),
