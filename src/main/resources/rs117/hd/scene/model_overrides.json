@@ -11312,7 +11312,30 @@
     "flatNormals": true
   },
   {
-    "description": "Stronghold Of Security War Metallic Floor",
+    "description": "Stronghold Of Security Rock Entrance",
+    "baseMaterial": "ROCK_5",
+    "objectIds": [
+      20790
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.38,
+    "uvOrientation": 128
+  },
+  {
+    "description": "Stronghold Of Security - Objects - Wood - Signs",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      7054,
+      19172,
+      20787,
+      23708
+    ],
+    "flatNormals": true,
+    "uvType": "BOX",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Stronghold Of Security - War - Metallic Floor",
     "baseMaterial": "METALLIC_2_GLOSS",
     "objectIds": [
       20655
@@ -11321,7 +11344,7 @@
     "flatNormals": true
   },
   {
-    "description": "Stronghold Of Security War Metallic Floor with fence",
+    "description": "Stronghold Of Security - War - Metallic Floor with fence",
     "baseMaterial": "METALLIC_2_GLOSS",
     "objectIds": [
       20657,
@@ -11331,7 +11354,7 @@
     "flatNormals": true
   },
   {
-    "description": "Stronghold Of Security War Metallic Walls",
+    "description": "Stronghold Of Security - War - Metallic Walls",
     "baseMaterial": "METALLIC_2_GLOSS",
     "objectIds": [
       19173,
@@ -11350,7 +11373,7 @@
     "uvType": "BOX"
   },
   {
-    "description": "Stronghold Of Security War - Metallic Overdoor",
+    "description": "Stronghold Of Security - War - Metallic Overdoor",
     "baseMaterial": "METALLIC_2_GLOSS",
     "objectIds": [
       19211
@@ -11358,7 +11381,7 @@
     "uvType": "BOX"
   },
   {
-    "description": "Stronghold Of Security War - Metallic Ladder",
+    "description": "Stronghold Of Security - War - Metallic Ladder",
     "baseMaterial": "METALLIC_2_GLOSS",
     "objectIds": [
       20784,
@@ -11379,7 +11402,31 @@
     "uvOrientation": 256
   },
   {
-    "description": "Stronghold Of Security - Famine Dirt Walls",
+    "description": "Stronghold Of Security War - Objects - Bones",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      20661,
+      20662,
+      20663,
+      20664,
+      20665,
+      20780,
+      20781
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7
+  },
+  {
+    "description": "Stronghold Of Security War -  Metallic - Gift of Peace - Chest",
+    "baseMaterial": "METALLIC_1_GLOSS",
+    "objectIds": [
+      20656
+    ],
+    "flatNormals": true,
+    "uvType": "BOX"
+  },
+  {
+    "description": "Stronghold Of Security - Famine - Walls - Dirt",
     "baseMaterial": "DIRT_1",
     "objectIds": [
       17003,
@@ -11391,7 +11438,7 @@
     "uvScale": 0.44
   },
   {
-    "description": "Stronghold Of Security Famine - Bone Structures ",
+    "description": "Stronghold Of Security - Famine - Bone Structures ",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
       17006,
@@ -11402,7 +11449,7 @@
     "uvOrientation": 256
   },
   {
-    "description": "Stronghold Of Security Famine - Doors ",
+    "description": "Stronghold Of Security - Famine - Doors ",
     "baseMaterial": "GRUNGE_2",
     "objectIds": [
       17009,
@@ -11413,7 +11460,7 @@
     "uvOrientation": 256
   },
   {
-    "description": "Stronghold Of Security Famine - Ladder ",
+    "description": "Stronghold Of Security - Famine - Ladder ",
     "baseMaterial": "DIRT_2",
     "objectIds": [
       19003,
@@ -11424,7 +11471,22 @@
     "uvScale": 0.4
   },
   {
-    "description": "Stronghold Of Security Famine - Escape Rope ",
+    "description": "Stronghold Of Security - Famine - Objects - Bones",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      18993,
+      18994,
+      18995,
+      18996,
+      18997,
+      18998,
+      18999
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7
+  },
+  {
+    "description": "Stronghold Of Security - Famine - Escape Rope ",
     "baseMaterial": "GRUNGE_2",
     "objectIds": [
       19001,
@@ -11435,7 +11497,7 @@
     "uvOrientation": 256
   },
   {
-    "description": "Stronghold Of Security Petilance Walls",
+    "description": "Stronghold Of Security - Walls - Petilence",
     "baseMaterial": "OOZE",
     "objectIds": [
       23648,
@@ -11452,7 +11514,7 @@
     "uvType": "BOX"
   },
   {
-    "description": "Stronghold Of Security Petilance - Doors",
+    "description": "Stronghold Of Security - Petilence - Doors",
     "baseMaterial": "OOZE",
     "objectIds": [
       23653,
@@ -11463,7 +11525,7 @@
     "uvOrientation": 512
   },
   {
-    "description": "Stronghold Of Security Petilance Plant Ladder",
+    "description": "Stronghold Of Security - Petilence - Plant Ladder",
     "baseMaterial": "OOZE",
     "objectIds": [
       23705,
@@ -11471,7 +11533,7 @@
     ]
   },
   {
-    "description": "Stronghold Of Security Pestilence - Escape Goo Covered Vine ",
+    "description": "Stronghold Of Security - Pestilence - Escape Goo Covered Vine ",
     "baseMaterial": "OOZE",
     "objectIds": [
       23703,
@@ -11482,36 +11544,7 @@
     "uvOrientation": 256
   },
   {
-    "description": "Stronghold Of Security Rock Entrance",
-    "baseMaterial": "ROCK_5",
-    "objectIds": [
-      20790
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.38,
-    "uvOrientation": 128
-  },
-  {
-    "description": "Stronghold Of Security War -  Metallic - Gift of Peace - Chest",
-    "baseMaterial": "METALLIC_1_GLOSS",
-    "objectIds": [
-      20656
-    ],
-    "flatNormals": true,
-    "uvType": "BOX"
-  },
-  {
-    "description": "Stronghold Of Security War - Textured - Gift of Plenty - Sack",
-    "baseMaterial": "FINE_CARPET",
-    "objectIds": [
-      19000
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.85,
-    "retainVanillaUvs": false
-  },
-  {
-    "description": "Stronghold Of Security War -  Metallic - Box of Health - Chest",
+    "description": "Stronghold Of Security - Pestilence -  Metallic - Box of Health - Chest",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       23709
@@ -11521,50 +11554,17 @@
     "uvOrientation": 512
   },
   {
-    "description": "Stronghold Of Security War - Objects - Wood - Sign",
-    "baseMaterial": "WOOD_GRAIN_3",
+    "description": "Stronghold Of Security - Pestilence - Textured - Hay - Gift of Plenty - Sack",
+    "baseMaterial": "FINE_CARPET",
     "objectIds": [
-      7054,
-      19172,
-      20787,
-      23708
-    ],
-    "flatNormals": true,
-    "uvType": "BOX",
-    "uvOrientation": 512
-  },
-  {
-    "description": "Stronghold Of Security War - Objects - Bones",
-    "baseMaterial": "GRUNGE_2",
-    "objectIds": [
-      20661,
-      20662,
-      20663,
-      20664,
-      20665,
-      20780,
-      20781
+      19000
     ],
     "uvType": "BOX",
-    "uvScale": 0.7
+    "uvScale": 0.85,
+    "retainVanillaUvs": false
   },
   {
-    "description": "Stronghold Of Security Famine - Objects - Bones",
-    "baseMaterial": "GRUNGE_1",
-    "objectIds": [
-      18993,
-      18994,
-      18995,
-      18996,
-      18997,
-      18998,
-      18999
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.7
-  },
-  {
-    "description": "Stronghold Of Security Pestilence - Objects - Bones",
+    "description": "Stronghold Of Security - Pestilence - Objects - Bones",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
       23663,
@@ -11580,7 +11580,7 @@
     "uvScale": 0.7
   },
   {
-    "description": "Stronghold Of Security Pestilence - Ground Objects - Rock Like Objects",
+    "description": "Stronghold Of Security - Pestilence - Ground Objects - Rock Like Objects",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
       23670,
@@ -11600,7 +11600,7 @@
     "uvType": "BOX"
   },
   {
-    "description": "Stronghold Of Security Petilance - Overdoor Tendrils",
+    "description": "Stronghold Of Security - Petilance - Overdoor Tendrils",
     "baseMaterial": "OOZE",
     "objectIds": [
       23662
@@ -11608,7 +11608,7 @@
     "uvType": "BOX"
   },
   {
-    "description": "Stronghold Of Security Death - Walls",
+    "description": "Stronghold Of Security - Death - Walls",
     "baseMaterial": "GRUNGE_2",
     "objectIds": [
       23711,
@@ -11627,7 +11627,7 @@
     "uvOrientation": 128
   },
   {
-    "description": "Stronghold Of Security Death - Objects - Bones",
+    "description": "Stronghold Of Security - Death - Objects - Bones",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
       23924,
@@ -11641,7 +11641,7 @@
     "uvScale": 0.7
   },
   {
-    "description": "Stronghold Of Security Death - Objects - Boney Ladder",
+    "description": "Stronghold Of Security - Death - Objects - Boney Ladder",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
       23921
@@ -11650,7 +11650,7 @@
     "uvScale": 0.7
   },
   {
-    "description": "Stronghold Of Security Death - Objects - Escape Bone Chain",
+    "description": "Stronghold Of Security - Death - Objects - Escape Bone Chain",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
       23732
@@ -11659,7 +11659,7 @@
     "uvScale": 0.7
   },
   {
-    "description": "Stronghold Of Security Death - Doors",
+    "description": "Stronghold Of Security - Death - Doors",
     "baseMaterial": "GRUNGE_2",
     "objectIds": [
       23727,
@@ -11671,11 +11671,12 @@
     "uvType": "BOX",
     "uvScale": 0.4,
     "uvOrientation": 512
-  }, {
-  "description": "Stronghold Of Security Death - Reward - Cradle of Life",
-  "baseMaterial": "GRUNGE_2",
-  "objectIds": [
-    23731
-  ]
-}
+  },
+  {
+    "description": "Stronghold Of Security Death - Reward - Cradle of Life",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      23731
+    ]
+  }
 ]
