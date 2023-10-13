@@ -691,7 +691,16 @@ public enum Overlay {
 	STRANGLEWOOD_SNOW(p -> p.area(Area.THE_STRANGLEWOOD_EXTENDED).ids(271).groundMaterial(GroundMaterial.SNOW_2)),
 
 	// Temple of the Eye
-	TEMPLE_OF_THE_EYE_INCORRECT_WATER(Area.TEMPLE_OF_THE_EYE, GroundMaterial.DIRT, p -> p.ids(-100)), // Only visible in low-detail mode
+	TEMPLE_OF_THE_EYE_INCORRECT_WATER(p -> p
+		.ids(-100, 156)
+		.area(Area.TEMPLE_OF_THE_EYE_BLEND_FIX)
+		.groundMaterial(GroundMaterial.ROCKY_CAVE_FLOOR)
+		.blendedAsOpposite(true)
+		.shiftHue(14)
+		.saturation(5)
+
+
+	),
 	TEMPLE_OF_THE_EYE_PATH_BLENDING_FIX(p -> p
 		.ids(203)
 		.area(Area.TEMPLE_OF_THE_EYE_BLEND_FIX)
