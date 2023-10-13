@@ -30952,8 +30952,8 @@
   },
   {
     "description": "STRONGHOLD_OF_SECURITY_FAMINE_LIGHT",
-    "height": 186,
-    "alignment": "CENTER",
+    "height": 220,
+    "alignment": "RIGHT",
     "radius": 400,
     "strength": 7.5,
     "color": [
@@ -30961,8 +30961,7 @@
       216,
       87
     ],
-    "type": "PULSE",
-    "duration": 1,
+    "type": "STATIC",
     "range": 20,
     "objectIds": [
       17004

@@ -117,7 +117,7 @@ public enum Environment
 	STRONGHOLD_OF_SECURITY_FAMINE(Area.STRONGHOLD_OF_FAMINE, new Properties()
 			.setFogColor("#544222")
 			.setFogDepth(50)
-			.setAmbientStrength(1.5f)
+		.setAmbientStrength(1.3f)
 			.setAmbientColor("#C0AE94")
 			.setDirectionalStrength(1.0f)
 			.setDirectionalColor("#F5BC67")
