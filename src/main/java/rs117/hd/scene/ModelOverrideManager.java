@@ -12,7 +12,6 @@ import rs117.hd.HdPlugin;
 import rs117.hd.model.ModelPusher;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.AABB;
-import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
@@ -73,11 +72,11 @@ public class ModelOverrideManager {
     }
 
     private void addEntry(long uuid, ModelOverride entry) {
-        ModelOverride old = modelOverrides.put(uuid, entry);
-        modelsToHide.put(uuid, entry.hideInAreas);
+		ModelOverride old = modelOverrides.put(uuid, entry);
+		modelsToHide.put(uuid, entry.hideInAreas);
 
-        if (Props.DEVELOPMENT && old != null) {
-            if (entry.hideInAreas.length > 0) {
+		if (Props.DEVELOPMENT && old != null) {
+			if (entry.hideInAreas.length > 0) {
 				System.err.printf("Replacing ID %d from '%s' with hideInAreas-override '%s'. This is likely a mistake...\n",
 					ModelHash.getIdOrIndex(uuid), old.description, entry.description
 				);
@@ -86,24 +85,20 @@ public class ModelOverrideManager {
 					ModelHash.getIdOrIndex(uuid), old.description, entry.description
 				);
 			}
-        }
-    }
-
-    public boolean shouldHideModel(long hash, int x, int z) {
-        long uuid = ModelHash.getUuid(client, hash);
-        AABB[] aabbs = modelsToHide.get(uuid);
-        if (aabbs != null) {
-			int[] location = HDUtils.cameraSpaceToWorldPoint(client, x, z);
-			for (AABB aabb : aabbs)
-				if (aabb.contains(location[0], location[1], location[2]))
-					return true;
 		}
+	}
 
-        return false;
-    }
+	public boolean shouldHideModel(long hash, int[] location) {
+		AABB[] aabbs = modelsToHide.get(ModelHash.getUuid(client, hash));
+		if (aabbs != null)
+			for (AABB aabb : aabbs)
+				if (aabb.contains(location))
+					return true;
+		return false;
+	}
 
-    @NonNull
-    public ModelOverride getOverride(long hash) {
-        return modelOverrides.getOrDefault(ModelHash.getUuid(client, hash), ModelOverride.NONE);
-    }
+	@NonNull
+	public ModelOverride getOverride(long hash) {
+		return modelOverrides.getOrDefault(ModelHash.getUuid(client, hash), ModelOverride.NONE);
+	}
 }

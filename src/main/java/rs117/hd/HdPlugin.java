@@ -104,6 +104,7 @@ import rs117.hd.utils.DeveloperTools;
 import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.Mat4;
+import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.PopupUtils;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
@@ -2664,11 +2665,15 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		client.checkClickbox(model, orientation, pitchSin, pitchCos, yawSin, yawCos, x, y, z, hash);
 
-		if (redrawPreviousFrame || modelOverrideManager.shouldHideModel(hash, x, z))
+		if (redrawPreviousFrame)
 			return;
 
 		if (enableDetailedTimers)
 			frameTimer.begin(Timer.DRAW_RENDERABLE);
+
+		int[] worldPos = HDUtils.cameraSpaceToWorldPoint(client, x, z);
+		if (modelOverrideManager.shouldHideModel(hash, worldPos))
+			return;
 
 		eightIntWrite[3] = renderBufferOffset;
 		eightIntWrite[4] = model.getRadius() << 12 | orientation;
@@ -2679,6 +2684,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		int faceCount;
 		if (sceneContext.id == offsetModel.getSceneId()) {
 			assert model == renderable;
+
+			// Override orientation for incorrectly oriented tile model
+			if (worldPos[0] == 1288 && worldPos[1] == 10205 && ModelHash.getIdOrIndex(hash) == 34533)
+				eightIntWrite[4] = model.getRadius() << 12 | 1536;
 
 			// The model is part of the static scene buffer
 			faceCount = Math.min(MAX_FACE_COUNT, offsetModel.getFaceCount());

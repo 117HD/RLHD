@@ -136,19 +136,11 @@ public class AABB
 		return !isPoint();
 	}
 
-	public boolean contains(int x, int y)
-	{
+	public boolean contains(int... worldXYZ) {
 		return
-			minX <= x && x <= maxX &&
-			minY <= y && y <= maxY;
-	}
-
-	public boolean contains(int x, int y, int z)
-	{
-		return
-			minX <= x && x <= maxX &&
-			minY <= y && y <= maxY &&
-			minZ <= z && z <= maxZ;
+			minX <= worldXYZ[0] && worldXYZ[0] <= maxX &&
+			minY <= worldXYZ[1] && worldXYZ[1] <= maxY &&
+			(worldXYZ.length < 3 || minZ <= worldXYZ[2] && worldXYZ[2] <= maxZ);
 	}
 
 	public boolean contains(WorldPoint location) {

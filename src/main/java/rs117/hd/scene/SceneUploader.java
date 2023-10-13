@@ -204,12 +204,14 @@ class SceneUploader {
 
 		// pack a bit into bufferoffset that we can use later to hide
 		// some low-importance objects based on Level of Detail setting
-		model.setBufferOffset(sceneContext.getVertexOffset());
-		model.setUvBufferOffset(sceneContext.getUvOffset());
+		int vertexOffset = sceneContext.getVertexOffset();
+		int uvOffset = sceneContext.getUvOffset();
 		modelPusher.pushModel(sceneContext, tile, hash, model, objectType, orientation, false);
 		if (sceneContext.modelPusherResults[1] == 0)
-			model.setUvBufferOffset(-1);
+			uvOffset = -1;
 
+		model.setBufferOffset(vertexOffset);
+		model.setUvBufferOffset(uvOffset);
 		model.setSceneId(sceneContext.id);
 		++sceneContext.uniqueModels;
 	}
