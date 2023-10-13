@@ -709,7 +709,7 @@ public enum Overlay {
 		.blendedAsOpposite(true)
 		.shiftHue(27)
 		.saturation(5)
-		.shiftLightness(-31)
+		.lightness(34)
 	),
 	TEMPLE_OF_THE_EYE_DIRT(Area.TEMPLE_OF_THE_EYE, GroundMaterial.DIRT, p -> p.ids(202, 203)),
 	TEMPLE_OF_THE_EYE_ROCK(p -> p
