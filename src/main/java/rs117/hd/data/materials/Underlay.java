@@ -281,11 +281,19 @@ public enum Underlay {
 		.area(Area.TEMPLE_OF_THE_EYE)
 		.groundMaterial(GroundMaterial.EARTHEN_CAVE_FLOOR)
 	),
-	TEMPLE_OF_THE_EYE_ROCK_UNSHADED(p -> p
-		.ids(87, 88)
+	TEMPLE_OF_THE_EYE_ROCK_SHADE_FIX(p -> p
+		.ids()
 		.area(Area.TEMPLE_OF_THE_EYE_ENTRANCE_BRIGHTNESS_FIX)
 		.groundMaterial(GroundMaterial.ROCKY_CAVE_FLOOR)
 		.lightness(38)
+
+	),
+	TEMPLE_OF_THE_EYE_ROCK_SHADE_FIX_TOGGLE(p -> p
+		.ids(87, 88)
+		.area(Area.TEMPLE_OF_THE_EYE_ENTRANCE_BRIGHTNESS_FIX)
+		.groundMaterial(GroundMaterial.ROCKY_CAVE_FLOOR)
+		.replaceWithIf(TEMPLE_OF_THE_EYE_ROCK_SHADE_FIX, plugin -> plugin.configGroundBlending)
+
 	),
 	TEMPLE_OF_THE_EYE_ROCK(p -> p
 		.ids(87, 88, 89)

@@ -699,17 +699,21 @@ public enum Overlay {
 		.shiftHue(8)
 		.shiftSaturation(3)
 		.shiftLightness(-20)
-
-
 	),
 	TEMPLE_OF_THE_EYE_PATH_BLENDING_FIX(p -> p
-		.ids(203)
+		.ids()
 		.area(Area.TEMPLE_OF_THE_EYE_BLEND_FIX)
 		.groundMaterial(GroundMaterial.ROCKY_CAVE_FLOOR)
 		.blendedAsOpposite(true)
 		.shiftHue(27)
 		.saturation(5)
-		.lightness(34)
+		.lightness(38)
+	),
+	TEMPLE_OF_THE_EYE_PATH_BLENDING_FIX_TOGGLE(p -> p
+		.ids(203)
+		.area(Area.TEMPLE_OF_THE_EYE_BLEND_FIX)
+		.groundMaterial(GroundMaterial.DIRT)
+		.replaceWithIf(TEMPLE_OF_THE_EYE_PATH_BLENDING_FIX, plugin -> plugin.configGroundBlending)
 	),
 	TEMPLE_OF_THE_EYE_DIRT(Area.TEMPLE_OF_THE_EYE, GroundMaterial.DIRT, p -> p.ids(202, 203)),
 	TEMPLE_OF_THE_EYE_ROCK(p -> p
