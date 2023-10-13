@@ -11314,7 +11314,8 @@
   {
     "description": "Crafting Guild Blacksmith's tools",
     "objectIds": [ 2098 ],
-    "flatNormals": true
+    "flatNormals": true,
+    "objectIds": [
       1862
     ]
   },
