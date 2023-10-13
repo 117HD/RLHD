@@ -5799,7 +5799,8 @@
       12050,
       14486,
       20762,
-      25834
+      25834,
+      43627
     ],
     "uvType": "WORLD_XZ",
     "uvOrientation": 512,
@@ -5856,6 +5857,7 @@
       37804,
       37805,
       37806,
+      43628,
       44730,
       44733,
       44734,
@@ -12355,5 +12357,58 @@
     "objectIds": [ 34533 ],
     "areas": [ [ 1288, 10205, 0 ] ],
     "rotate": 270
+  },
+  {
+    "description": "Guardians Of the Rift - Rocks - Medium",
+    "baseMaterial": "ROCK_4",
+    "objectIds": [
+      43615
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.82,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Guardians Of the Rift - Rocks - Large",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      43613,
+      43614
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.72,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Guardians of the Rift - Marble - Steps",
+    "baseMaterial": "MARBLE_3_SEMIGLOSS",
+    "objectIds": [
+      43557,
+      43568,
+      43569
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 640,
+    "flatNormals": true
+  },
+  {
+    "description": "Guardians of the Rift - Dround Decoration Grunge - Shelf Coral ",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      43659,
+      43660,
+      43661,
+      43662,
+      43663,
+      43666,
+      43667,
+      43668,
+      43669,
+      43670,
+      43671,
+      43672
+    ],
+    "uvType": "GEOMETRY",
+    "flatNormals": true
   }
 ]
