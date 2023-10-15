@@ -12427,13 +12427,22 @@
     "flatNormals": true
   },
   {
+    "description": "Guardians of the Rift - Large Guardian Remains",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      43719
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.87
+  },
+  {
     "description": "Guardians of the Rift - Huge Guardian Remains",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       43720
     ],
     "uvType": "BOX",
-    "uvScale": 0.5
+    "uvScale": 0.87
   },
   {
     "description": "Guardians of the Rift - Guardian Remains",
@@ -12442,8 +12451,7 @@
       43717,
       43718
     ],
-    "uvType": "BOX",
-    "uvScale": 0.5
+    "uvType": "BOX"
   },
   {
     "description": "Guardians of the Rift - Guardian Parts",
@@ -12452,8 +12460,7 @@
       43715,
       43716
     ],
-    "uvType": "BOX",
-    "uvScale": 0.5
+    "uvType": "BOX"
   },
   {
     "description": "Guardians of the Rift - Catalytic and Elemental Guides",
@@ -12480,6 +12487,16 @@
       43563,
       43564,
       43567
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.87
+  },
+  {
+    "description": "Guardians of the Rift - Entrance Statues",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      43698,
+      43699
     ],
     "uvType": "BOX",
     "uvScale": 0.87
