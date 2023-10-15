@@ -5857,6 +5857,7 @@
       37804,
       37805,
       37806,
+      43626,
       43628,
       43724,
       43725,
@@ -12464,5 +12465,23 @@
     "uvType": "MODEL_XZ",
     "uvOrientation": 256,
     "uvScale": 0.5
+  },
+  {
+    "description": "Guardians of the Rift - Guardian Steps",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      43551,
+      43552,
+      43552,
+      43553,
+      43554,
+      43556,
+      43562,
+      43563,
+      43564,
+      43567
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.87
   }
 ]
