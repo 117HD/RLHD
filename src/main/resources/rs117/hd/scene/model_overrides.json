@@ -12500,5 +12500,25 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.87
+  },
+  {
+    "description": "Guardians of the Rift - Guardian Rune Portal Statues",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      43701,
+      43702,
+      43703,
+      43704,
+      43705,
+      43706,
+      43707,
+      43708,
+      43709,
+      43710,
+      43711,
+      43712
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7
   }
 ]
