@@ -5858,6 +5858,11 @@
       37805,
       37806,
       43628,
+      43724,
+      43725,
+      43726,
+      43727,
+      43728,
       44730,
       44733,
       44734,
@@ -12373,7 +12378,16 @@
     "baseMaterial": "ROCK_3",
     "objectIds": [
       43613,
-      43614
+      43614,
+      43616,
+      43617,
+      43618,
+      43619,
+      43620,
+      43621,
+      43622,
+      43623,
+      43624
     ],
     "uvType": "BOX",
     "uvScale": 0.72,
@@ -12410,5 +12424,45 @@
     ],
     "uvType": "GEOMETRY",
     "flatNormals": true
+  },
+  {
+    "description": "Guardians of the Rift - Huge Guardian Remains",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      43720
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Guardians of the Rift - Guardian Remains",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      43717,
+      43718
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Guardians of the Rift - Guardian Parts",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      43715,
+      43716
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Guardians of the Rift - Catalytic and Elemental Guides",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      43752,
+      43753
+    ],
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 256,
+    "uvScale": 0.5
   }
 ]
