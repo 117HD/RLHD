@@ -276,7 +276,7 @@ public enum Underlay {
 
 	// Mind Altar
 	MIND_ALTAR_TILE(55, Area.MIND_ALTAR, GroundMaterial.MARBLE_1_SEMIGLOSS, p -> p.blended(false)),
-	TEMPLE_OF_THE_EYE_BLEND(p -> p
+	TEMPLE_OF_THE_EYE_EARTH(p -> p
 		.ids(60)
 		.area(Area.TEMPLE_OF_THE_EYE)
 		.groundMaterial(GroundMaterial.EARTHEN_CAVE_FLOOR)
@@ -284,21 +284,21 @@ public enum Underlay {
 	TEMPLE_OF_THE_EYE_ROCK_SHADE_FIX(p -> p
 		.ids()
 		.area(Area.TEMPLE_OF_THE_EYE_ENTRANCE_BRIGHTNESS_FIX)
-		.groundMaterial(GroundMaterial.ROCKY_CAVE_FLOOR)
+		.groundMaterial(GroundMaterial.GUARDIANS_RIFT_CAVE_FLOOR)
 		.lightness(38)
 
 	),
 	TEMPLE_OF_THE_EYE_ROCK_SHADE_FIX_TOGGLE(p -> p
 		.ids(87, 88)
 		.area(Area.TEMPLE_OF_THE_EYE_ENTRANCE_BRIGHTNESS_FIX)
-		.groundMaterial(GroundMaterial.ROCKY_CAVE_FLOOR)
+		.groundMaterial(GroundMaterial.GUARDIANS_RIFT_CAVE_FLOOR)
 		.replaceWithIf(TEMPLE_OF_THE_EYE_ROCK_SHADE_FIX, plugin -> plugin.configGroundBlending)
 
 	),
 	TEMPLE_OF_THE_EYE_ROCK(p -> p
 		.ids(87, 88, 89)
 		.area(Area.TEMPLE_OF_THE_EYE)
-		.groundMaterial(GroundMaterial.ROCKY_CAVE_FLOOR)
+		.groundMaterial(GroundMaterial.GUARDIANS_RIFT_CAVE_FLOOR)
 	),
 	ARCEUUS_GROUND(Area.ARCEUUS, GroundMaterial.DIRT, p -> p.ids(2, 3, 17, 23, 24)),
 
