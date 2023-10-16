@@ -31005,11 +31005,11 @@
     "description": "STRONGHOLD_OF_SECURITY_DEATH_LIGHT",
     "height": 225,
     "alignment": "FRONT",
-    "radius": 320,
-    "strength": 12.5,
+    "radius": 550,
+    "strength": 10.5,
     "color": [
-      252,
-      148,
+      230,
+      92,
       3
     ],
     "type": "FLICKER",
