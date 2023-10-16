@@ -112,9 +112,7 @@ public enum GroundMaterial {
 	GUARDIANS_RIFT_CAVE_FLOOR(
 		Material.GRUNGE_1,
 		Material.GRAVEL_LIGHT,
-		Material.ROCK_1_LIGHT,
-		Material.GRUNGE_1,
-		Material.ROCK_1_LIGHT,
+		Material.GRUNGE_2,
 		Material.GRAVEL_LIGHT
 	)
 	;
