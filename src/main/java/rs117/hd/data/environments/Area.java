@@ -953,7 +953,15 @@ public enum Area
 		new AABB(2723, 3743, 2758, 3710)
 	),
 	// Trollweiss Region
-	TROLLHEIM(new AABB(11577), new AABB(11321)),
+	TROLLHEIM(
+		new AABB(11577),
+		new AABB(11321),
+		new AABB(11320),
+		new AABB(11576),
+		new AABB(11319),
+		new AABB(11063),
+		new AABB(11064) //Golden Apple Tree region
+	),
 
 	// Fremennik Province
 	MOUNTAIN_CAMP_LAKE(
