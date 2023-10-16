@@ -3140,7 +3140,6 @@
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
       3669,
-      3792,
       3793,
       3812,
       6820,
@@ -11588,7 +11587,7 @@
   },
   {
     "description": "Trollheim Cave Walls",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "GRUNGE_2",
     "objectIds": [
       3737,
       3738,
@@ -11603,8 +11602,15 @@
     "uvScale": 0.7
   },
   {
+    "description": "Trollheim Cave Walls",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [ 3790 ],
+    "uvType": "BOX",
+    "uvScale": 0.7
+  },
+  {
     "description": "Trollheim Eadgars Cave Exit",
-    "baseMaterial": "STONE_NORMALED_DARK",
+    "baseMaterial": "GRUNGE_2_EADGARS_CAVE_FIX",
     "objectIds": [ 3760 ],
     "uvType": "BOX",
     "uvScale": 0.7
@@ -11622,5 +11628,19 @@
     "uvOrientation": 128,
     "uvType": "BOX",
     "uvScale": 0.6
+  },
+  {
+    "description": "Trollheim Dark Wall in Doorway",
+    "baseMaterial": "GRUNGE_1_TROLLHEIM_WALL_FIX_1",
+    "objectIds": [ 3792 ],
+    "uvType": "BOX",
+    "uvScale": 0.7
+  },
+  {
+    "description": "Trollheim Dark Wall in Doorway",
+    "baseMaterial": "GRUNGE_1_TROLLHEIM_WALL_FIX_2",
+    "objectIds": [ 3793 ],
+    "uvType": "BOX",
+    "uvScale": 0.7
   }
 ]
