@@ -303,10 +303,12 @@ public enum Material {
 	DIRT_1(p -> p
 		.setNormalMap(DIRT_1_N)
 		.setSpecular(0.5f, 35)),
+	DIRT_1_VERT(DIRT_1, p -> p.setNormalMap(null)),
 	DIRT_2_N,
 	DIRT_2(p -> p
 		.setNormalMap(DIRT_2_N)
 		.setSpecular(0.4f, 30)),
+	DIRT_2_VERT(DIRT_2, p -> p.setNormalMap(null)),
 	GRAVEL_N,
 	GRAVEL(p -> p
 		.setNormalMap(GRAVEL_N)
@@ -335,6 +337,9 @@ public enum Material {
 	),
 	GRUNGE_1,
 	GRUNGE_2,
+	GRUNGE_2_EADGARS_CAVE_FIX(GRUNGE_2, p -> p.setBrightness(0.65f)),
+	GRUNGE_2_TROLLHEIM_WALL_FIX_1(GRUNGE_2, p -> p.setBrightness(2.3f)),
+	GRUNGE_2_TROLLHEIM_WALL_FIX_2(GRUNGE_2, p -> p.setBrightness(1.4f)),
 	SUBMERGED_GRUNGE_2(GRUNGE_2, p -> p
 		.setFlowMap(UNDERWATER_FLOW_MAP)
 		.setFlowMapStrength(0.075f)
@@ -548,11 +553,6 @@ public enum Material {
 	STONE_NORMALED(STONE, p -> p
 		.setNormalMap(STONE_N)
 		.setSpecular(0.3f, 30)
-	),
-	STONE_NORMALED_DARK(STONE, p -> p //Fixes over bright exit to Mad Eadgars Cave
-		.setNormalMap(STONE_N)
-		.setSpecular(0.3f, 30)
-		.setBrightness(0.65f)
 	),
 	STONE_LOWGLOSS(STONE, p -> p
 		.setSpecular(0.3f, 30)
