@@ -346,6 +346,8 @@ public enum Overlay {
 	WARRIORS_GUILD_FLOOR_1(11, Area.WARRIORS_GUILD, GroundMaterial.VARROCK_PATHS, p -> p.blended(false)),
 	WARRIORS_GUILD_CARPET(86, Area.WARRIORS_GUILD, GroundMaterial.CARPET, p -> p.blended(false)),
 
+	// Trollweiss Region
+	TROLLHEIM_WALLS(83, Area.TROLLHEIM, GroundMaterial.GRUNGE),
 	// Taverley Underground
 	TAVERLEY_DUNGEON_BLACK_KNIGHT_KITCHEN(GroundMaterial.TILES_2X2_2_SEMIGLOSS, p -> p
 		.area(Area.TAVERLEY_DUNGEON_BLACK_KNIGHT_KITCHEN)
