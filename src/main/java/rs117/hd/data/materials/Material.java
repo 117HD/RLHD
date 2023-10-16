@@ -549,6 +549,11 @@ public enum Material {
 		.setNormalMap(STONE_N)
 		.setSpecular(0.3f, 30)
 	),
+	STONE_NORMALED_DARK(STONE, p -> p //Fixes over bright exit to Mad Eadgars Cave
+		.setNormalMap(STONE_N)
+		.setSpecular(0.3f, 30)
+		.setBrightness(0.65f)
+	),
 	STONE_LOWGLOSS(STONE, p -> p
 		.setSpecular(0.3f, 30)
 	),

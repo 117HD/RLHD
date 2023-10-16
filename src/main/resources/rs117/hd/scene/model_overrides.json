@@ -3140,10 +3140,6 @@
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
       3669,
-      3737,
-      3738,
-      3739,
-      3740,
       3792,
       3793,
       3812,
@@ -3152,13 +3148,8 @@
       6826,
       6827,
       3759,
-      3760,
       3761,
-      3772,
-      3773,
-      3774,
-      2141,
-      3770
+      2141
     ],
     "uvType": "BOX",
     "uvScale": 0.7
@@ -11587,5 +11578,49 @@
     "uvType": "BOX",
     "uvScale": 0.68,
     "uvOrientationY": 768
+  },
+  {
+    "description": "Mad Eadgars Sign",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 3823 ],
+    "uvType": "BOX",
+    "flatNormals": true
+  },
+  {
+    "description": "Trollheim Cave Walls",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      3737,
+      3738,
+      3739,
+      3740,
+      3770,
+      3772,
+      3773,
+      3774
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7
+  },
+  {
+    "description": "Trollheim Eadgars Cave Exit",
+    "baseMaterial": "STONE_NORMALED_DARK",
+    "objectIds": [ 3760 ],
+    "uvType": "BOX",
+    "uvScale": 0.7
+  },
+  {
+    "description": "Trollheim Tents",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      3208,
+      3653,
+      3654,
+      3655,
+      3656
+    ],
+    "uvOrientation": 128,
+    "uvType": "BOX",
+    "uvScale": 0.6
   }
 ]
