@@ -810,7 +810,7 @@ public enum Overlay {
 	OVERLAY_CLEAN_WOOD_PLANKS(GroundMaterial.CLEAN_WOOD_FLOOR, p -> p.ids(52).shiftLightness(-4)),
 	OVERLAY_SAND(GroundMaterial.SAND, p -> p.ids(25, 26, 76)),
 	OVERLAY_BRICK_BROWN(GroundMaterial.BRICK_BROWN, p -> p.ids(27, 46).blended(false)),
-	OVERLAY_SNOW(GroundMaterial.SNOW_2, p -> p.ids(30, 33)),
+	OVERLAY_SNOW(GroundMaterial.SNOW_2, p -> p.ids(30, 33, 254)),
 	OVERLAY_VARIED_DIRT(GroundMaterial.VARIED_DIRT, p -> p.ids(49, 83, 91)),
 	OVERLAY_SAND_BRICK(GroundMaterial.SAND_BRICK, p -> p.ids(-49, 84)),
 	OVERLAY_N122(-122, GroundMaterial.TILES_2X2_2_GLOSS),
