@@ -79,6 +79,9 @@ public enum Underlay {
 	// Burthorpe
 	WARRIORS_GUILD_FLOOR_1(Area.WARRIORS_GUILD, GroundMaterial.VARROCK_PATHS, p -> p.ids(55, 56)),
 
+	// Trollweiss Region
+	TROLLHEIM_DIRT(p -> p.ids(63, 67).area(Area.TROLLHEIM).groundMaterial(GroundMaterial.DIRT)),
+
 	// Catherby
 	CATHERBY_BEACH_SAND(62, Area.CATHERBY, GroundMaterial.SAND),
 
