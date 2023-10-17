@@ -348,6 +348,7 @@ public enum Overlay {
 
 	// Trollweiss Region
 	TROLLHEIM_WALLS(83, Area.TROLLHEIM, GroundMaterial.DIRT_VERT),
+	WEISS_FIREPIT_FIX(171, Area.WEISS_FIRE_PIT, GroundMaterial.DIRT),
 	// Taverley Underground
 	TAVERLEY_DUNGEON_BLACK_KNIGHT_KITCHEN(GroundMaterial.TILES_2X2_2_SEMIGLOSS, p -> p
 		.area(Area.TAVERLEY_DUNGEON_BLACK_KNIGHT_KITCHEN)

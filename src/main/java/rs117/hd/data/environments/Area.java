@@ -964,6 +964,7 @@ public enum Area
 		new AABB(2780, 3647, 2815, 3584) //Mountains near Golden Apple Tree
 	),
 	WEISS_UNDERGROUND(10842),
+	WEISS_FIRE_PIT(2877, 3934, 2875, 3932),
 
 
 	// Fremennik Province
