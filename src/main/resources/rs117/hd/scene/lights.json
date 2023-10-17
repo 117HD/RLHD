@@ -31040,5 +31040,23 @@
     "duration": 0,
     "range": 20,
     "objectIds": [ 33333 ]
+  },
+  {
+    "description": "lava",
+    "worldX": 2843,
+    "worldY": 10358,
+    "plane": 0,
+    "height": 850,
+    "alignment": "CENTER",
+    "radius": 1900,
+    "strength": 30,
+    "color": [
+      252,
+      252,
+      252
+    ],
+    "type": "STATIC",
+    "duration": 7000,
+    "range": 10
   }
 ]

@@ -6183,7 +6183,6 @@
       44640,
       44641,
       44642,
-      44643,
       44644,
       44645,
       44646,
@@ -11856,6 +11855,13 @@
     "description": "White Bed with Fillow",
     "baseMaterial": "FINE_CARPET",
     "objectIds": [ 46841 ],
+    "uvType": "BOX",
+    "uvOrientation": 64
+  },
+  {
+    "description": "Black overhead object",
+    "baseMaterial": "GRAY_25",
+    "objectIds": [ 44643 ],
     "uvType": "BOX",
     "uvOrientation": 64
   }
