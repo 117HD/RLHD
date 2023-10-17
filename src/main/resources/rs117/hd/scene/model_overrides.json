@@ -11847,9 +11847,11 @@
   },
   {
     "description": "Weiss Saltmine Walls",
-    "baseMaterial": "GRUNGE_1",
+    "baseMaterial": "STONE_NORMALED",
     "objectIds": [ 46825, 46826, 46827, 46828, 46829, 46830, 43831, 46832, 46833, 46834, 46835, 46836, 46837, 46905 ],
-    "uvType": "BOX"
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 128
   },
   {
     "description": "White Bed with pillow",
