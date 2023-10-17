@@ -31024,5 +31024,21 @@
     "objectIds": [
       10721
     ]
+  },
+  {
+    "description": "Weiss Maigc Fire",
+    "height": 50,
+    "alignment": "CENTER",
+    "radius": 650,
+    "strength": 16.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [ 33333 ]
   }
 ]
