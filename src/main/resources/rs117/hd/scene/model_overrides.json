@@ -11766,7 +11766,7 @@
   {
     "description": "Bones - Medium",
     "baseMaterial": "GRUNGE_2",
-    "objectIds": [ 33323, 33324, 33325 ],
+    "objectIds": [ 33323, 33324, 33325, 33326 ],
     "uvType": "BOX",
     "uvOrientation": 768,
     "uvScale": 0.6
@@ -11866,5 +11866,13 @@
     "objectIds": [ 44643 ],
     "uvType": "BOX",
     "uvOrientation": 64
+  },
+  {
+    "description": "Throne of Weiss",
+    "baseMaterial": "ROCK_2",
+    "objectIds": [ 33330 ],
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "uvOrientation": 512
   }
 ]
