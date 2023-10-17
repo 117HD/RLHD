@@ -963,8 +963,10 @@ public enum Area
 		new AABB(2751, 3753, 2726, 3662), //Mountains near Keldagrim Entrance
 		new AABB(2780, 3647, 2815, 3584) //Mountains near Golden Apple Tree
 	),
+	WEISS_REGION(new AABB(11325), new AABB(11581)),
 	WEISS_UNDERGROUND(10842),
 	WEISS_FIRE_PIT(2877, 3934, 2875, 3932),
+	INTERIOR_WEISS_THRONE_TENT(2877, 3941, 2868, 3931),
 
 
 	// Fremennik Province
