@@ -952,7 +952,7 @@ public enum Area
 		new AABB(2714, 3803, 2757, 3767),
 		new AABB(2723, 3743, 2758, 3710)
 	),
-	// Trollweiss Region
+	// TrollHeim - Weiss Region
 	TROLLHEIM(
 		new AABB(11577),
 		new AABB(11321),
@@ -963,6 +963,8 @@ public enum Area
 		new AABB(2751, 3753, 2726, 3662), //Mountains near Keldagrim Entrance
 		new AABB(2780, 3647, 2815, 3584) //Mountains near Golden Apple Tree
 	),
+	WEISS_UNDERGROUND(10842),
+
 
 	// Fremennik Province
 	MOUNTAIN_CAMP_LAKE(
