@@ -3140,14 +3140,12 @@
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
       3669,
-      3793,
       3812,
       6820,
       6822,
       6826,
       6827,
       3759,
-      3761,
       2141
     ],
     "uvType": "BOX",
@@ -5395,6 +5393,8 @@
       2231,
       2232,
       2233,
+      3724,
+      3748,
       16521,
       16522,
       16523,
@@ -5667,7 +5667,6 @@
       3707,
       3708,
       3710,
-      3724,
       3948,
       3950,
       12910,
@@ -5676,7 +5675,7 @@
       3803,
       3804
     ],
-    "uvType": "WORLD_XZ",
+    "uvType": "BOX",
     "uvScale": 0.74
   },
   {
@@ -6022,6 +6021,9 @@
     "description": "Objects - Wooden - Crate",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      3813,
+      3814,
+      3815,
       9533
     ],
     "uvType": "BOX",
@@ -11611,7 +11613,7 @@
   {
     "description": "Trollheim Eadgars Cave Exit",
     "baseMaterial": "GRUNGE_2_EADGARS_CAVE_FIX",
-    "objectIds": [ 3760 ],
+    "objectIds": [ 3760, 3761 ],
     "uvType": "BOX",
     "uvScale": 0.7
   },
@@ -11642,5 +11644,84 @@
     "objectIds": [ 3793 ],
     "uvType": "BOX",
     "uvScale": 0.7
+  },
+  {
+    "description": "Trollheim Staircase Boarder",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [ 3796 ],
+    "uvType": "BOX",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Trollheim Stone Staircase",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [ 3788, 3789 ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Trollheim Stone Kitchen Drawers",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [ 3816 ],
+    "uvType": "BOX",
+    "uvOrientation": 768,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Trollheim Goat Poop",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [ 3818, 3819 ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Trollheim Food Trouph",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 3820 ],
+    "uvType": "BOX",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Trollheim - Wooden - Door",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 3776 ],
+    "uvType": "BOX",
+    "flatNormals": true
+  },
+  {
+    "description": "Trollheim - Stocks",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 648 ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "flatNormals": true
+  },
+  {
+    "description": "Trollheim Bones",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [ 3665 ],
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 0.75
+  },
+  {
+    "description": "Trollheim Skelleton Corpe",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [ 3797, 3798, 3799 ],
+    "uvType": "BOX",
+    "uvOrientation": 768,
+    "uvScale": 0.75
+  },
+  {
+    "description": "Trollheim Cell Walls",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [ 3764, 3765, 3778 ]
+  },
+  {
+    "description": "Trollheim Troll Ladder",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 18833, 18834 ],
+    "uvType": "BOX",
+    "uvOrientation": 512
   }
 ]
