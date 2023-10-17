@@ -7168,13 +7168,16 @@
   },
   {
     "description": "Objects - Rockslide - Snow Drift - Snow - Medium",
-    "baseMaterial": "SNOW_1",
+    "baseMaterial": "SNOW_4",
     "objectIds": [
       11920,
       11921,
+      33184,
+      33185,
       33220
     ],
-    "uvType": "GEOMETRY"
+    "uvType": "BOX",
+    "uvScale": 0.5
   },
   {
     "description": "Objects - Rockslide - Snow Drift - Snow - Small",
