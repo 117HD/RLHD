@@ -7345,6 +7345,7 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       1088,
+      3801,
       10491,
       12885,
       17146,
@@ -11662,7 +11663,7 @@
   {
     "description": "Trollheim Stone Kitchen Drawers",
     "baseMaterial": "STONE_NORMALED",
-    "objectIds": [ 3816 ],
+    "objectIds": [ 3800, 3816 ],
     "uvType": "BOX",
     "uvOrientation": 768,
     "uvScale": 0.6
