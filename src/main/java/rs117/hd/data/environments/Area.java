@@ -960,7 +960,8 @@ public enum Area
 		new AABB(11576),
 		new AABB(11319),
 		new AABB(11063),
-		new AABB(11064) //Golden Apple Tree region
+		new AABB(2751, 3753, 2726, 3662), //Mountains near Keldagrim Entrance
+		new AABB(2780, 3647, 2815, 3584) //Mountains near Golden Apple Tree
 	),
 
 	// Fremennik Province
