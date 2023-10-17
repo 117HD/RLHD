@@ -288,11 +288,15 @@ public enum Material {
 	BLANK_SEMIGLOSS(WHITE, p -> p
 		.setSpecular(0.35f, 80)),
 
-	SNOW_1,
-	SNOW_2,
+	SNOW_1_N,
+	SNOW_1(p -> p.setNormalMap(SNOW_1_N).setSpecular(0.4f, 20)),
+	SNOW_2_N,
+	SNOW_2(p -> p.setNormalMap(SNOW_2_N).setSpecular(0.4f, 20)),
 	SNOW_2_DARK(SNOW_2, p -> p.setBrightness(0.5f)),
-	SNOW_3,
-	SNOW_4,
+	SNOW_3_N,
+	SNOW_3(p -> p.setNormalMap(SNOW_3_N).setSpecular(0.4f, 20)),
+	SNOW_4_N,
+	SNOW_4(p -> p.setNormalMap(SNOW_4_N).setSpecular(0.4f, 20)),
 
 	GRASS_1,
 	GRASS_2,
