@@ -1270,6 +1270,7 @@
       1297,
       9661,
       9663,
+      33197,
       40347
     ],
     "uvType": "BOX",
@@ -1305,6 +1306,7 @@
       14564,
       14565,
       14566,
+      33327,
       39679
     ],
     "uvType": "BOX",
@@ -5662,6 +5664,9 @@
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
       319,
+      3803,
+      3804,
+      3169,
       3705,
       3706,
       3707,
@@ -5671,9 +5676,7 @@
       3950,
       12910,
       12911,
-      12912,
-      3803,
-      3804
+      12912
     ],
     "uvType": "BOX",
     "uvScale": 0.74
@@ -5776,7 +5779,9 @@
       44733,
       44734,
       44735,
-      44736
+      44736,
+      46822,
+      46821
     ],
     "uvType": "WORLD_XZ",
     "uvScale": 0.74
@@ -6838,13 +6843,12 @@
   },
   {
     "description": "Objects - Standing Torch -  Wood",
-    "baseMaterial": "WOOD_GRAIN_2",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       724
     ],
     "uvType": "BOX",
-    "uvOrientation": 512,
-    "uvScale": 0.4
+    "uvScale": 1.1
   },
   {
     "description": "Objects - Stone - Stalagmites - Limestone",
@@ -7187,7 +7191,7 @@
       11923,
       33221
     ],
-    "uvType": "GEOMETRY"
+    "uvType": "BOX"
   },
   {
     "description": "Ice Queens Dungeon - Objects - Ice Column - Ice",
@@ -7251,9 +7255,17 @@
   },
   {
     "description": "Objects - Rockslide - Gray Rock - Rock - Medium",
-    "baseMaterial": "ROCK_2",
+    "baseMaterial": "ROCK_4",
     "objectIds": [
-      11432
+      3657,
+      3658,
+      3659,
+      3660,
+      11432,
+      33191,
+      46818,
+      46819,
+      46820
     ],
     "uvType": "BOX",
     "uvScale": 0.33
@@ -11709,7 +11721,7 @@
     "uvScale": 0.75
   },
   {
-    "description": "Trollheim Skelleton Corpe",
+    "description": "Trollheim Skeleton Corpe",
     "baseMaterial": "GRUNGE_2",
     "objectIds": [ 3797, 3798, 3799 ],
     "uvType": "BOX",
@@ -11719,7 +11731,8 @@
   {
     "description": "Trollheim Cell Walls",
     "baseMaterial": "GRAY_75",
-    "objectIds": [ 3764, 3765, 3778 ]
+    "objectIds": [ 3764, 3765, 3778, 33217, 33218, 33219 ],
+    "flatNormals": true
   },
   {
     "description": "Trollheim Troll Ladder",
@@ -11727,5 +11740,123 @@
     "objectIds": [ 18833, 18834 ],
     "uvType": "BOX",
     "uvOrientation": 512
+  },
+  {
+    "description": "Trollweiss Wrecked Boat",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 33195 ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Trollweiss Cave Entrance",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [ 33329 ],
+    "uvType": "BOX",
+    "uvOrientation": 128,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Skeleton",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [ 33196 ],
+    "uvType": "BOX",
+    "uvOrientation": 768,
+    "uvScale": 0.75
+  },
+  {
+    "description": "Bones - Medium",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [ 33323, 33324, 33325 ],
+    "uvType": "BOX",
+    "uvOrientation": 768,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Weiss Snowy Rocks",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [ 33215, 33216 ],
+    "uvType": "BOX",
+    "uvOrientation": 128,
+    "uvScale": 0.3
+  },
+  {
+    "description": "Weiss Salts",
+    "baseMaterial": "DIRT_1",
+    "objectIds": [ 33222, 33223, 33224 ],
+    "uvType": "BOX",
+    "uvOrientation": 128,
+    "uvScale": 0.4
+  },
+  {
+    "description": "Weiss Salt Mine Walls",
+    "baseMaterial": "DIRT_1",
+    "objectIds": [ 21516, 21540, 33236, 33236, 33237, 33247 ],
+    "uvType": "BOX",
+    "uvOrientation": 128,
+    "uvScale": 0.4
+  },
+  {
+    "description": "Weiss Underground Ground Rubble",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [ 21545, 21546, 21547, 21548 ],
+    "uvType": "BOX",
+    "uvOrientation": 128
+  },
+  {
+    "description": "Weiss Underground Stalactites",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [ 21554, 21555 ],
+    "uvType": "BOX",
+    "uvOrientation": 128,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Weiss Staircase",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [ 33234 ],
+    "uvType": "BOX",
+    "uvOrientation": 768,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Wise Old Mans Coffin",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 33264, 33332 ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Weiss Smelly Hole",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [ 33262 ],
+    "uvType": "BOX",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Weiss Salt Rocks",
+    "baseMaterial": "ROCK_5",
+    "objectIds": [ 33255, 33257 ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Weiss Salt Rocks",
+    "baseMaterial": "ROCK_5",
+    "objectIds": [ 33254, 33256 ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Weiss Saltmine Walls",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [ 46825, 46826, 46827, 46828, 46829, 46830, 43831, 46832, 46833, 46834, 46835, 46836, 46837, 46905 ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "White Bed with Fillow",
+    "baseMaterial": "FINE_CARPET",
+    "objectIds": [ 46841 ],
+    "uvType": "BOX",
+    "uvOrientation": 64
   }
 ]
