@@ -11852,14 +11852,14 @@
     "uvType": "BOX"
   },
   {
-    "description": "White Bed with Fillow",
+    "description": "White Bed with pillow",
     "baseMaterial": "FINE_CARPET",
     "objectIds": [ 46841 ],
     "uvType": "BOX",
     "uvOrientation": 64
   },
   {
-    "description": "Black overhead object",
+    "description": "Black overhead tiles",
     "baseMaterial": "GRAY_25",
     "objectIds": [ 44643 ],
     "uvType": "BOX",
