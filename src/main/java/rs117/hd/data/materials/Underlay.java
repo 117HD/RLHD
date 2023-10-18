@@ -82,7 +82,7 @@ public enum Underlay {
 	// Trollweiss Region
 	TROLLHEIM_DIRT(p -> p.ids(63, 67).area(Area.TROLLHEIM).groundMaterial(GroundMaterial.DIRT)),
 	WEISS_UNDERGROUND_DIRT(94, Area.WEISS_UNDERGROUND, GroundMaterial.EARTHEN_CAVE_FLOOR),
-	WEISS_SALTMINE_GROUND(157, Area.WEISS_SALT_MINE, GroundMaterial.EARTHEN_CAVE_FLOOR),
+	WEISS_SALTMINE_GROUND(GroundMaterial.EARTHEN_CAVE_FLOOR, p -> p.ids(157, 158).area(Area.WEISS_SALT_MINE)),
 
 	// Catherby
 	CATHERBY_BEACH_SAND(62, Area.CATHERBY, GroundMaterial.SAND),
