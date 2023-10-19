@@ -1230,7 +1230,6 @@
       2092,
       5127,
       10041,
-      10820,
       10823,
       10832,
       10834,
@@ -11599,5 +11598,29 @@
     "uvType": "BOX",
     "uvScale": 0.68,
     "uvOrientationY": 768
+  },
+  {
+    "description": "Textured Bushes",
+    "textureMaterial": "EVERGREEN_LEAVES_1",
+    "objectIds": [ 1116, 1117, 1124, 10586, 10778, 29715, 44782 ]
+  },
+  {
+    "description": "Evergreen Trees",
+    "textureMaterial": "EVERGREEN_LEAVES_1",
+    "baseMaterial": "BARK",
+    "objectIds": [ 2091, 2092 ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "retainVanillaUvs": true
+  },
+  {
+    "description": "Oak Tree",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      10820
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "retainVanillaUvs": true
   }
 ]
