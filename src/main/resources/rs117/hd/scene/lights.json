@@ -31024,5 +31024,37 @@
     "objectIds": [
       10721
     ]
+  },
+  {
+    "description": "HALLOWEEN_PUMPKIN_LARGE",
+    "height": 30,
+    "alignment": "CENTER",
+    "radius": 150,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "objectIds": [ 46268 ]
+  },
+  {
+    "description": "HALLOWEEN_PUMPKIN_SMALL",
+    "height": 25,
+    "alignment": "CENTER",
+    "radius": 100,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "objectIds": [ 46269 ]
   }
 ]
