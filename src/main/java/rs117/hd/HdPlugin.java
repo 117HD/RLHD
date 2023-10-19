@@ -397,6 +397,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public boolean configNpcLights;
 	public boolean configHideFakeShadows;
 	public boolean configWinterTheme;
+	public boolean configAutumnTheme;
 	public boolean configLegacyGreyColors;
 	public boolean configModelBatching;
 	public boolean configModelCaching;
@@ -2356,6 +2357,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		configNpcLights = config.npcLights();
 		configHideFakeShadows = config.hideFakeShadows();
 		configWinterTheme = config.winterTheme();
+		configAutumnTheme = config.autumnTheme();
 		configLegacyGreyColors = config.legacyGreyColors();
 		configModelBatching = config.modelBatching();
 		configModelCaching = config.modelCaching();
@@ -2405,6 +2407,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 						environmentManager.reset();
 						break;
 					case KEY_WINTER_THEME:
+						environmentManager.reset();
+					case KEY_AUTUMN_THEME:
 						environmentManager.reset();
 						modelOverrideManager.reload();
 						// fall-through

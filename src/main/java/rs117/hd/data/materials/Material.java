@@ -638,6 +638,7 @@ public enum Material {
 		.setSpecular(0.3f, 20)
 		.setNormalMap(HD_HAY_N)
 	),
+	EVERGREEN_LEAVES_1,
 
 
 	// Seasonal
@@ -649,6 +650,7 @@ public enum Material {
 		.setTextureScale(1.3f, 1.0f)),
 	WINTER_LEAVES_1(p -> p
 		.replaceIf(HdPluginConfig::winterTheme, LEAVES_1)
+		.replaceIf(HdPluginConfig::winterTheme, EVERGREEN_LEAVES_1)
 		.setTextureScale(1.3f, 1.0f)),
 	WINTER_LEAVES_2(p -> p
 		.replaceIf(HdPluginConfig::winterTheme, LEAVES_2)
@@ -691,6 +693,14 @@ public enum Material {
 		.setNormalMap(JAGGED_STONE_TILE_N)
 		.setSpecular(0.6f, 30)
 		.setBrightness(12)),
+	AUTUMN_LEAVES_1(p -> p
+		.replaceIf(HdPluginConfig::autumnTheme, LEAVES_1)
+		.setTextureScale(1.3f, 1.0f)),
+	AUTUMN_LEAVES_2(p -> p
+		.replaceIf(HdPluginConfig::autumnTheme, LEAVES_2)
+		.setTextureScale(1.1f, 1.1f)),
+	AUTUMN_LEAVES_3(p -> p
+		.replaceIf(HdPluginConfig::autumnTheme, LEAVES_3)),
 	;
 
 	public final Material parent;

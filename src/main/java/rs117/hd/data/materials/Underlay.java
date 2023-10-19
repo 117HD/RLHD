@@ -54,6 +54,9 @@ public enum Underlay {
 		.saturation(0)
 		.groundMaterial(GroundMaterial.WINTER_JAGGED_STONE_TILE_LIGHT)
 	),
+	// Seasonal Autumn Textures
+	AUTUMN_GRASS(p -> p.ids().groundMaterial(GroundMaterial.OVERWORLD_GRASS_1).hue(6)),
+	AUTUMN_DIRT_GRASS(p -> p.ids().groundMaterial(GroundMaterial.DIRT).hue(6)),
 	// Default
 	// Lumbridge
 	LUMBRIDGE_CASTLE_TILE(56, Area.LUMBRIDGE_CASTLE_BASEMENT, GroundMaterial.MARBLE_2_SEMIGLOSS, p -> p.blended(false)),
@@ -304,10 +307,17 @@ public enum Underlay {
 	// Default underlays
 	OVERWORLD_GRASS(Area.OVERWORLD, GroundMaterial.OVERWORLD_GRASS_1, p -> p
 		.ids(25, 33, 34, 40, 48, 49, 50, 51, 52, 53, 54, 62, 63, 67, 70, 71, 75, 93, 96, 97, 99, 100, 103, 114, 115, 126)
-		.replaceWithIf(WINTER_GRASS, plugin -> plugin.configWinterTheme)),
+		.replaceWithIf(WINTER_GRASS, plugin -> plugin.configWinterTheme)
+		.replaceWithIf(AUTUMN_GRASS, plugin -> plugin.configAutumnTheme)
+	),
 	OVERWORLD_DIRT(Area.OVERWORLD, GroundMaterial.DIRT, p -> p
-		.ids(-111, -110, 19, 56, 57, 64, 65, 66, 80, 92, 94, 111, 118, 122, 139, 150)
+		.ids(-111, -110, 19, 56, 57, 80, 92, 111, 118, 122, 139, 150)
 		.replaceWithIf(WINTER_DIRT, plugin -> plugin.configWinterTheme)),
+	OVERWORLD_DIRT_GRASS(Area.OVERWORLD, GroundMaterial.DIRT, p -> p
+		.ids(64, 65, 66, 94)
+		.replaceWithIf(WINTER_DIRT, plugin -> plugin.configWinterTheme)
+		.replaceWithIf(AUTUMN_DIRT_GRASS, plugin -> plugin.configAutumnTheme)
+	),
 	OVERWORLD_SAND(Area.OVERWORLD, GroundMaterial.SAND, p -> p.ids(-127, -118, 61, 68)),
 	UNDERLAY_PACKED_EARTH(GroundMaterial.PACKED_EARTH, p -> p.ids(15)),
 
