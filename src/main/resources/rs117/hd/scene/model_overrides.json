@@ -5446,6 +5446,16 @@
     ]
   },
   {
+    "description": "Inconspicuous Bush",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      28964,
+      28999,
+      29048,
+      29018
+    ]
+  },
+  {
     "description": "Objects - Mossy Rock - Medium",
     "baseMaterial": "ROCK_1",
     "textureMaterial": "HD_CONCRETE",
@@ -11589,7 +11599,16 @@
   {
     "description": "Textured Bushes",
     "textureMaterial": "EVERGREEN_LEAVES_1",
-    "objectIds": [ 1116, 1117, 1124, 10586, 10778, 29715, 44782 ]
+    "objectIds": [
+      1116, 1117, 1118, 1119,
+      1120, 1121, 1124, 1125,
+      2357, 2358, 2798, 2799,
+      2800, 2802, 2803, 10586,
+      10778, 17988, 17990, 17991,
+      19427, 19428, 19429, 29715,
+      31571, 41456, 44782, 46584,
+      46585
+    ]
   },
   {
     "description": "Evergreen Trees",
