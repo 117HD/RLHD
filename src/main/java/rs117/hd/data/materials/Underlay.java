@@ -299,6 +299,13 @@ public enum Underlay {
 		.area(Area.ZEAH)
 		.ids(63)
 		.replaceWithIf(WINTER_DIRT, plugin -> plugin.configWinterTheme)
+		.replaceWithIf(AUTUMN_DIRT_GRASS, plugin -> plugin.configAutumnTheme)
+	),
+	NEEDS_HUE_FIX_SANDY_EARTH(GroundMaterial.SAND, p -> p
+		.area(Area.KARAMJA)
+		.ids(68)
+		.replaceWithIf(WINTER_GRASS, plugin -> plugin.configWinterTheme)
+		.replaceWithIf(AUTUMN_DIRT_GRASS, plugin -> plugin.configAutumnTheme)
 	),
 	TILE_NEEDS_HUE_DEFINED(GroundMaterial.VARIED_DIRT, p -> p
 		.ids(26)
