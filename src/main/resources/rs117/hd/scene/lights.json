@@ -31043,10 +31043,10 @@
   },
   {
     "description": "HALLOWEEN_PUMPKIN_SMALL",
-    "height": 25,
-    "alignment": "CENTER",
+    "height": 15,
+    "alignment": "RIGHT",
     "radius": 100,
-    "strength": 12.5,
+    "strength": 11.5,
     "color": [
       252,
       148,
