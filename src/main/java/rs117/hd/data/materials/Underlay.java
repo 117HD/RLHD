@@ -55,8 +55,8 @@ public enum Underlay {
 		.groundMaterial(GroundMaterial.WINTER_JAGGED_STONE_TILE_LIGHT)
 	),
 	// Seasonal Autumn Textures
-	AUTUMN_GRASS(p -> p.ids().groundMaterial(GroundMaterial.OVERWORLD_GRASS_1).hue(6)),
-	AUTUMN_DIRT_GRASS(p -> p.ids().groundMaterial(GroundMaterial.DIRT).hue(6)),
+	AUTUMN_GRASS(p -> p.ids().groundMaterial(GroundMaterial.OVERWORLD_GRASS_1).hue(6).shiftSaturation(2)),
+	AUTUMN_DIRT_GRASS(p -> p.ids().groundMaterial(GroundMaterial.DIRT).hue(4)),
 	// Default
 	// Lumbridge
 	LUMBRIDGE_CASTLE_TILE(56, Area.LUMBRIDGE_CASTLE_BASEMENT, GroundMaterial.MARBLE_2_SEMIGLOSS, p -> p.blended(false)),
