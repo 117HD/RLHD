@@ -739,7 +739,7 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = KEY_AUTUMN_THEME,
 		name = "Autumn Theme",
-		description = "Placehoder",
+		description = "Festive Fall color the trees and grass.",
 		position = 4,
 		section = miscellaneousSettings
 	)
