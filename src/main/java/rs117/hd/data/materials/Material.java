@@ -638,7 +638,7 @@ public enum Material {
 		.setSpecular(0.3f, 20)
 		.setNormalMap(HD_HAY_N)
 	),
-	EVERGREEN_LEAVES_1,
+	EVERGREEN_LEAVES_1(p -> p.setTextureScale(1.15f, 1.15f)),
 	OAK_LEAVES_1(p -> p.setParent(EVERGREEN_LEAVES_1)),
 
 
@@ -697,18 +697,20 @@ public enum Material {
 		.setBrightness(12)),
 	AUTUMN_LEAVES_1(p -> p
 		.replaceIf(HdPluginConfig::autumnTheme, LEAVES_1)
-		.setTextureScale(1.1f, 1.0f)
+		.setTextureScale(1.15f, 1.15f)
 	),
 	AUTUMN_LEAVES_2(p -> p
 		.replaceIf(HdPluginConfig::autumnTheme, LEAVES_2)
-		.setTextureScale(1.1f, 1.0f)
+		.setTextureScale(1.15f, 1.15f)
 	),
 	AUTUMN_LEAVES_3(p -> p
 		.replaceIf(HdPluginConfig::autumnTheme, LEAVES_3)
-		.setTextureScale(1.1f, 1.0f)
+		.setTextureScale(1.15f, 1.15f)
 	),
 	AUTUMN_OAK_LEAVES_1(p -> p
-		.replaceIf(HdPluginConfig::autumnTheme, OAK_LEAVES_1)),
+		.replaceIf(HdPluginConfig::autumnTheme, OAK_LEAVES_1)
+		.setTextureScale(1.15f, 1.15f)
+	),
 	;
 
 	public final Material parent;
