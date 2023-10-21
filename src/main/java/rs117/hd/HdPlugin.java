@@ -414,6 +414,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	private final Map<Long, ModelOffsets> frameModelInfoMap = new HashMap<>();
 
+	// Camera position and orientation may be reused from the old scene while hopping, prior to drawScene being called
+	public final int[] cameraPosition = new int[3];
+	public final int[] cameraOrientation = new int[2];
+	public final int[] cameraFocalPoint = new int[2];
+	public final int[] cameraShift = new int[2];
+
+	public int visibleLightCount;
+
 	@Provides
 	HdPluginConfig provideConfig(ConfigManager configManager) {
 		return configManager.getConfig(HdPluginConfig.class);
@@ -435,6 +443,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				numModelsToSort = null;
 				elapsedTime = 0;
 				lastFrameTime = 0;
+				visibleLightCount = 0;
 
 				AWTContext.loadNatives();
 				canvas = client.getCanvas();
@@ -1352,16 +1361,16 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			numPassthroughModels += staticUnordered.limit() / 8;
 		}
 
-		sceneContext.cameraPosition[0] = cameraX;
-		sceneContext.cameraPosition[1] = cameraY;
-		sceneContext.cameraPosition[2] = cameraZ;
-		sceneContext.cameraOrientation[0] = cameraYaw;
-		sceneContext.cameraOrientation[1] = cameraPitch;
+		cameraPosition[0] = cameraX;
+		cameraPosition[1] = cameraY;
+		cameraPosition[2] = cameraZ;
+		cameraOrientation[0] = cameraYaw;
+		cameraOrientation[1] = cameraPitch;
 
 		if (sceneContext.scene == scene) {
-			sceneContext.cameraFocalPoint[0] = client.getOculusOrbFocalPointX();
-			sceneContext.cameraFocalPoint[1] = client.getOculusOrbFocalPointY();
-			Arrays.fill(sceneContext.cameraShift, 0);
+			cameraFocalPoint[0] = client.getOculusOrbFocalPointX();
+			cameraFocalPoint[1] = client.getOculusOrbFocalPointY();
+			Arrays.fill(cameraShift, 0);
 
 			try {
 				environmentManager.update(sceneContext);
@@ -1372,10 +1381,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				return;
 			}
 		} else {
-			sceneContext.cameraShift[0] = sceneContext.cameraFocalPoint[0] - client.getOculusOrbFocalPointX();
-			sceneContext.cameraShift[1] = sceneContext.cameraFocalPoint[1] - client.getOculusOrbFocalPointY();
-			sceneContext.cameraPosition[0] += sceneContext.cameraShift[0];
-			sceneContext.cameraPosition[2] += sceneContext.cameraShift[1];
+			cameraShift[0] = cameraFocalPoint[0] - client.getOculusOrbFocalPointX();
+			cameraShift[1] = cameraFocalPoint[1] - client.getOculusOrbFocalPointY();
+			cameraPosition[0] += cameraShift[0];
+			cameraPosition[2] += cameraShift[1];
 		}
 
 		// UBO. Only the first 32 bytes get modified here, the rest is the constant sin/cos table.
@@ -1384,11 +1393,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		sceneContext.stagingBufferVertices.ensureCapacity(32);
 		IntBuffer uniformBuf = sceneContext.stagingBufferVertices.getBuffer();
 		uniformBuf
-			.put(sceneContext.cameraOrientation)
+			.put(cameraOrientation)
 			.put(client.getCenterX())
 			.put(client.getCenterY())
 			.put(client.getScale())
-			.put(sceneContext.cameraPosition)
+			.put(cameraPosition)
 			.flip();
 
 		glBindBuffer(GL_UNIFORM_BUFFER, hUniformBufferCamera.glBufferId);
@@ -1406,11 +1415,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			// Update lights UBO
 			uniformBufferLights.clear();
 			ArrayList<SceneLight> visibleLights = lightManager.getVisibleLights(configMaxDynamicLights);
-			sceneContext.visibleLightCount = visibleLights.size();
+			visibleLightCount = visibleLights.size();
 			for (SceneLight light : visibleLights) {
-				uniformBufferLights.putFloat(light.x + sceneContext.cameraShift[0]);
+				uniformBufferLights.putFloat(light.x + cameraShift[0]);
 				uniformBufferLights.putFloat(light.z);
-				uniformBufferLights.putFloat(light.y + sceneContext.cameraShift[1]);
+				uniformBufferLights.putFloat(light.y + cameraShift[1]);
 				uniformBufferLights.putFloat(light.currentSize * light.currentSize);
 				uniformBufferLights.putFloat(light.currentColor[0] * light.currentStrength);
 				uniformBufferLights.putFloat(light.currentColor[1] * light.currentStrength);
@@ -1816,8 +1825,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 				glUseProgram(glShadowProgram);
 
-				final int camX = sceneContext.cameraFocalPoint[0];
-				final int camY = sceneContext.cameraFocalPoint[1];
+				final int camX = cameraFocalPoint[0];
+				final int camY = cameraFocalPoint[1];
 
 				final int drawDistanceSceneUnits = Math.min(config.shadowDistance().getValue(), getDrawDistance()) * LOCAL_TILE_SIZE / 2;
 				final int east = Math.min(camX + drawDistanceSceneUnits, LOCAL_TILE_SIZE * SCENE_SIZE);
@@ -1974,7 +1983,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			glUniform1f(uniGroundFogOpacity, config.groundFog() ? environmentManager.currentGroundFogOpacity : 0);
 
 			// Lights & lightning
-			glUniform1i(uniPointLightsCount, sceneContext == null ? 0 : sceneContext.visibleLightCount);
+			glUniform1i(uniPointLightsCount, visibleLightCount);
 			glUniform1f(uniLightningBrightness, environmentManager.getLightningBrightness());
 
 			glUniform1f(uniSaturation, config.saturation() / 100f);
@@ -1998,12 +2007,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			// Calculate projection matrix
 			float[] projectionMatrix = Mat4.scale(client.getScale(), client.getScale(), 1);
 			Mat4.mul(projectionMatrix, Mat4.projection(viewportWidth, viewportHeight, NEAR_PLANE));
-			Mat4.mul(projectionMatrix, Mat4.rotateX((float) (sceneContext.cameraOrientation[1] * UNIT - Math.PI)));
-			Mat4.mul(projectionMatrix, Mat4.rotateY((float) (sceneContext.cameraOrientation[0] * UNIT)));
+			Mat4.mul(projectionMatrix, Mat4.rotateX((float) (cameraOrientation[1] * UNIT - Math.PI)));
+			Mat4.mul(projectionMatrix, Mat4.rotateY((float) (cameraOrientation[0] * UNIT)));
 			Mat4.mul(projectionMatrix, Mat4.translate(
-				-sceneContext.cameraPosition[0],
-				-sceneContext.cameraPosition[1],
-				-sceneContext.cameraPosition[2]
+				-cameraPosition[0],
+				-cameraPosition[1],
+				-cameraPosition[2]
 			));
 			glUniformMatrix4fv(uniProjectionMatrix, false, projectionMatrix);
 
@@ -2292,7 +2301,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			sceneContext.destroy();
 		}
 
-		assert nextSceneContext != null;
+		if (nextSceneContext == null)
+			return;
 		sceneContext = nextSceneContext;
 		nextSceneContext = null;
 
@@ -2522,9 +2532,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				y += ProceduralGenerator.DEPTH_LEVEL_SLOPE[depthLevel - 1] - GROUND_MIN_Y;
 		}
 
-		x -= sceneContext.cameraPosition[0];
-		y -= sceneContext.cameraPosition[1];
-		z -= sceneContext.cameraPosition[2];
+		x -= cameraPosition[0];
+		y -= cameraPosition[1];
+		z -= cameraPosition[2];
 
 		int radius = 96; // ~ 64 * sqrt(2)
 
@@ -2677,9 +2687,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		eightIntWrite[3] = renderBufferOffset;
 		eightIntWrite[4] = model.getRadius() << 12 | orientation;
-		eightIntWrite[5] = x + sceneContext.cameraPosition[0];
-		eightIntWrite[6] = y + sceneContext.cameraPosition[1];
-		eightIntWrite[7] = z + sceneContext.cameraPosition[2];
+		eightIntWrite[5] = x + cameraPosition[0];
+		eightIntWrite[6] = y + cameraPosition[1];
+		eightIntWrite[7] = z + cameraPosition[2];
 
 		int faceCount;
 		if (sceneContext.id == offsetModel.getSceneId()) {
