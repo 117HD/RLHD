@@ -705,7 +705,7 @@ public enum Material {
 	),
 	AUTUMN_LEAVES_3(p -> p
 		.replaceIf(HdPluginConfig::autumnTheme, LEAVES_3)
-		.setTextureScale(1.3f, 1.15f)
+		.setTextureScale(1.0f, 1.3f)
 	),
 	AUTUMN_OAK_LEAVES_1(p -> p
 		.replaceIf(HdPluginConfig::autumnTheme, OAK_LEAVES_1)
