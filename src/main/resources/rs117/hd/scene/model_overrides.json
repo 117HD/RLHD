@@ -1323,6 +1323,7 @@
   },
   {
     "description": "Objects - Tree - Yew",
+    "textureMaterial": "OAK_LEAVES_1",
     "baseMaterial": "BARK",
     "objectIds": [
       8388,
@@ -11621,6 +11622,7 @@
   },
   {
     "description": "Oak Tree",
+    "textureMaterial": "OAK_LEAVES_1",
     "baseMaterial": "BARK",
     "objectIds": [
       10820
