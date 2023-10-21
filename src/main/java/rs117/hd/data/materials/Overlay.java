@@ -64,6 +64,13 @@ public enum Overlay {
 	WINTER_CANIFIS_BAR_FLOOR_BLENDED(85, Area.CANIFIS_BAR_FLOOR_BLENDED, GroundMaterial.HD_WOOD_PLANKS_1, p -> p
 		.replaceWithIf(WINTER_DIRT, plugin -> plugin.configWinterTheme)
 	),
+	AUTUMN_GRASS(p -> p
+		.ids()
+		.groundMaterial(GroundMaterial.GRASS_1)
+		.hue(8)
+		.shiftSaturation(2)
+	),
+
 
 	// Tutorial Island
 	TUTORIAL_ISLAND_KITCHEN_TILE_1(9, Area.TUTORIAL_ISLAND_KITCHEN, GroundMaterial.MARBLE_1_SEMIGLOSS, p -> p.blended(false)),
@@ -821,7 +828,7 @@ public enum Overlay {
 	LAVA(19, GroundMaterial.HD_LAVA, p -> p.hue(0).saturation(0).shiftLightness(127).blended(false)),
 	OVERLAY_20(20, GroundMaterial.MARBLE_DARK),
 	OVERLAY_28(28, GroundMaterial.BRICK, p -> p.blended(false)),
-	OVERLAY_29(29, GroundMaterial.GRASS_1),
+	OVERLAY_29(29, GroundMaterial.GRASS_1, p -> p.replaceWithIf(AUTUMN_GRASS, plugin -> plugin.configAutumnTheme)),
 	OVERLAY_32(32, GroundMaterial.CONCRETE),
 	OVERLAY_90(90, GroundMaterial.DIRT), // Known locations: 90 = Dark Wizards Tower; Random shading in the overworld
 	OVERLAY_DIRT_PATH(GroundMaterial.VARIED_DIRT, p -> p

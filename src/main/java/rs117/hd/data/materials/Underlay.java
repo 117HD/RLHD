@@ -55,8 +55,8 @@ public enum Underlay {
 		.groundMaterial(GroundMaterial.WINTER_JAGGED_STONE_TILE_LIGHT)
 	),
 	// Seasonal Autumn Textures
-	AUTUMN_GRASS(p -> p.ids().groundMaterial(GroundMaterial.OVERWORLD_GRASS_1).hue(6).shiftSaturation(2)),
-	AUTUMN_DIRT_GRASS(p -> p.ids().groundMaterial(GroundMaterial.DIRT).hue(4)),
+	AUTUMN_GRASS(p -> p.ids().groundMaterial(GroundMaterial.OVERWORLD_GRASS_1).hue(8).shiftSaturation(2)),
+	AUTUMN_DIRT_GRASS(p -> p.ids().groundMaterial(GroundMaterial.DIRT).hue(5).shiftSaturation(-1)),
 	// Default
 	// Lumbridge
 	LUMBRIDGE_CASTLE_TILE(56, Area.LUMBRIDGE_CASTLE_BASEMENT, GroundMaterial.MARBLE_2_SEMIGLOSS, p -> p.blended(false)),
@@ -147,7 +147,12 @@ public enum Underlay {
 	),
 
 	// Ardougne
-	SOUTH_OF_ZOO_FIX(61, Area.ARDOUGNE_SOUTH_OF_ZOO, GroundMaterial.OVERWORLD_GRASS_1),
+	SOUTH_OF_ZOO_FIX(p -> p
+		.ids(61)
+		.area(Area.ARDOUGNE_SOUTH_OF_ZOO)
+		.groundMaterial(GroundMaterial.OVERWORLD_GRASS_1)
+		.replaceWithIf(AUTUMN_GRASS, plugin -> plugin.configAutumnTheme)
+	),
 	SHADOW_DUNGEON_FLOOR(63, Area.SHADOW_DUNGEON, GroundMaterial.EARTHEN_CAVE_FLOOR),
 	// Castle Wars
 	CENTER_SARADOMIN_SIDE_DIRT_1(98, Area.CASTLE_WARS_ARENA_SARADOMIN_SIDE, GroundMaterial.DIRT, p -> p
@@ -313,7 +318,7 @@ public enum Underlay {
 	),
 	// Default underlays
 	OVERWORLD_GRASS(Area.OVERWORLD, GroundMaterial.OVERWORLD_GRASS_1, p -> p
-		.ids(25, 33, 34, 40, 48, 49, 50, 51, 52, 53, 54, 62, 63, 67, 70, 71, 75, 93, 96, 97, 99, 100, 103, 114, 115, 126)
+		.ids(7, 25, 33, 34, 40, 48, 49, 50, 51, 52, 53, 54, 62, 63, 67, 70, 71, 75, 93, 96, 97, 99, 100, 103, 114, 115, 126)
 		.replaceWithIf(WINTER_GRASS, plugin -> plugin.configWinterTheme)
 		.replaceWithIf(AUTUMN_GRASS, plugin -> plugin.configAutumnTheme)
 	),
