@@ -5459,16 +5459,6 @@
     ]
   },
   {
-    "description": "Inconspicuous Bush",
-    "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [
-      28964,
-      28999,
-      29048,
-      29018
-    ]
-  },
-  {
     "description": "Objects - Mossy Rock - Medium",
     "baseMaterial": "ROCK_1",
     "textureMaterial": "HD_CONCRETE",
