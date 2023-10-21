@@ -1326,10 +1326,11 @@
     "textureMaterial": "EVERGREEN_LEAVES_1",
     "baseMaterial": "BARK",
     "objectIds": [
-      8388,
-      8389,
-      8390,
-      10822
+      4536, 5121, 8388, 8389,
+      8390, 8503, 8504, 8505,
+      8506, 8507, 8508, 8509,
+      8510, 8511, 8512, 8513,
+      10822, 42427
 
     ],
     "uvType": "BOX",
@@ -11605,17 +11606,28 @@
     "description": "Evergreen Trees",
     "textureMaterial": "EVERGREEN_LEAVES_1",
     "baseMaterial": "BARK",
-    "objectIds": [ 2091, 2092 ],
+    "objectIds": [ 2091, 2092, 27060 ],
     "uvType": "BOX",
     "uvScale": 0.8,
     "retainVanillaUvs": true
+  },
+  {
+    "description": "Snowcovered Evergreen Trees - Textured",
+    "textureMaterial": "EVERGREEN_LEAVES_1",
+    "objectIds": [
+      1318, 1319, 40932,
+      40933, 46509, 46510
+    ]
   },
   {
     "description": "Oak Tree",
     "textureMaterial": "OAK_LEAVES_1",
     "baseMaterial": "BARK",
     "objectIds": [
-      10820
+      4533, 4540, 8462, 8463,
+      8464, 8465, 8466, 6487,
+      9734, 10820, 20806, 37969,
+      37970, 42395, 42831
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
