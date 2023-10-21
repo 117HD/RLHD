@@ -69,3 +69,6 @@ HD_SIMPLE_GRAIN_WOOD, HD_SIMPLE_GRAIN_WOOD_N and HD_SIMPLE_GRAIN_WOOD_D textures
 
 HD_HAY, HD_HAY_N, HD_HAY_D textures from AmbientCG. All textures on this site are licensed as CC0.
 -- https://ambientcg.com/view?id=ThatchedRoof002A
+AUTUMN_LEAVES_1 and AUTUMN_LEAVES_3 are modified Leaves_1 and Leaves_3 made by Corbonzo Bean for use with 117HD/RLHD
+
+AUTUMN_LEAVES_2 is a modified Leaves_2 made by SirFancyBacon for use with 117HD/RLHD
