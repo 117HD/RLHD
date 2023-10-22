@@ -1225,16 +1225,24 @@
     "description": "TREES",
     "baseMaterial": "BARK",
     "objectIds": [
-      1276,
-      1278,
-      10041,
-      10823,
-      10832,
-      16546,
-      16547,
-      16548,
-      23639,
-      37329
+      1278, 1279, 2409, 9731,
+      10041, 10823, 10832, 14309,
+      16546, 16547, 16548, 19167,
+      20845, 23639, 37329, 37967,
+      37968, 42842
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "retainVanillaUvs": true
+  },
+  {
+    "description": "Trees - Double",
+    "textureMaterial": "DOUBLE_TREE_LEAVES",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      1276, 1277, 9730, 14308,
+      19165, 20803, 20844, 37965,
+      37966
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
