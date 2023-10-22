@@ -34,6 +34,7 @@ import lombok.NonNull;
 import lombok.Setter;
 import net.runelite.api.*;
 import rs117.hd.HdPluginConfig;
+import rs117.hd.config.SeasonalTheme;
 import rs117.hd.utils.ColorUtils;
 
 public enum Material {
@@ -576,10 +577,10 @@ public enum Material {
 		.setSpecular(0.7f, 80)),
 	WATTLE_1,
 	ICE_1(SNOW_4, p -> p
-		.replaceIf(HdPluginConfig::winterTheme, WATER_FLAT_2, WATER_FLAT)
+		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER_THEME, WATER_FLAT_2, WATER_FLAT)
 		.setSpecular(1.1f, 200)),
 	ICE_1_HIGHGLOSS(ICE_1, p -> p
-		.replaceIf(HdPluginConfig::winterTheme, WATER_FLAT_2, WATER_FLAT)
+		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER_THEME, WATER_FLAT_2, WATER_FLAT)
 		.setSpecular(3.1f, 30)),
 	ICE_2(SNOW_2, p -> p
 		.setSpecular(1.5f, 800)),
@@ -646,44 +647,53 @@ public enum Material {
 
 	// Seasonal
 	WINTER_WILLOW_LEAVES(p -> p
-		.replaceIf(HdPluginConfig::winterTheme, WILLOW_LEAVES)
+		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER_THEME, WILLOW_LEAVES)
 		.setTextureScale(1.025f, 1.0f)),
 	WINTER_MAPLE_LEAVES(p -> p
-		.replaceIf(HdPluginConfig::winterTheme, MAPLE_LEAVES)
+		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER_THEME, MAPLE_LEAVES)
 		.setTextureScale(1.3f, 1.0f)),
 	WINTER_LEAVES_1(p -> p
-		.replaceIf(HdPluginConfig::winterTheme, LEAVES_1)
-		.replaceIf(HdPluginConfig::winterTheme, EVERGREEN_LEAVES_1)
-		.replaceIf(HdPluginConfig::winterTheme, OAK_LEAVES_1)
+		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER_THEME, LEAVES_1)
+		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER_THEME, EVERGREEN_LEAVES_1)
+		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER_THEME, OAK_LEAVES_1)
 		.setTextureScale(1.3f, 1.0f)),
 	WINTER_LEAVES_2(p -> p
-		.replaceIf(HdPluginConfig::winterTheme, LEAVES_2)
+		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER_THEME, LEAVES_2)
 		.setTextureScale(1.1f, 1.1f)),
 	WINTER_LEAVES_3(p -> p
-		.replaceIf(HdPluginConfig::winterTheme, LEAVES_3)),
+		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER_THEME, LEAVES_3)
+	),
 	WINTER_PAINTING_LANDSCAPE(p -> p
-		.replaceIf(HdPluginConfig::winterTheme, PAINTING_LANDSCAPE)),
+		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER_THEME, PAINTING_LANDSCAPE)
+	),
 	WINTER_PAINTING_KING(p -> p
-		.replaceIf(HdPluginConfig::winterTheme, PAINTING_KING)),
+		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER_THEME, PAINTING_KING)
+	),
 	WINTER_PAINTING_ELF(p -> p
-		.replaceIf(HdPluginConfig::winterTheme, PAINTING_ELF)),
+		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER_THEME, PAINTING_ELF)
+	),
 	WINTER_HD_ROOF_SHINGLES_1(p -> p
-		.replaceIf(HdPluginConfig::winterTheme, ROOF_SHINGLES_1)
+		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER_THEME, ROOF_SHINGLES_1)
 		.setSpecular(0.5f, 30)
 		.setNormalMap(HD_ROOF_SHINGLES_N)),
 	WINTER_HD_ROOF_SHINGLES_2(p -> p
-		.replaceIf(HdPluginConfig::winterTheme, ROOF_SHINGLES_2)
+		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER_THEME, ROOF_SHINGLES_2)
 		.setSpecular(0.3f, 30)
 		.setNormalMap(HD_ROOF_SHINGLES_N)),
 	WINTER_HD_ROOF_BRICK_TILES(p -> p
-		.replaceIf(HdPluginConfig::winterTheme, ROOF_BRICK_TILE, ROOF_BRICK_TILE_GREEN, ROOF_BRICK_TILE_DARK)
+		.replaceIf(
+			config -> config.seasonalTheme() == SeasonalTheme.WINTER_THEME,
+			ROOF_BRICK_TILE,
+			ROOF_BRICK_TILE_GREEN,
+			ROOF_BRICK_TILE_DARK
+		)
 		.setSpecular(0.3f, 30)
 		.setNormalMap(HD_ROOF_BRICK_TILE_N)),
 	WINTER_HD_ROOF_SLATE(p -> p
-		.replaceIf(HdPluginConfig::winterTheme, ROOF_SLATE)
+		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER_THEME, ROOF_SLATE)
 		.setSpecular(0.5f, 30)),
 	WINTER_HD_ROOF_WOODEN_SLATE(p -> p
-		.replaceIf(HdPluginConfig::winterTheme, ROOF_WOODEN_SLATE)
+		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER_THEME, ROOF_WOODEN_SLATE)
 		.setSpecular(0.5f, 30)),
 	WINTER_JAGGED_STONE_TILE(p -> p
 		.setNormalMap(JAGGED_STONE_TILE_N)
@@ -698,23 +708,23 @@ public enum Material {
 		.setSpecular(0.6f, 30)
 		.setBrightness(12)),
 	AUTUMN_LEAVES_1(p -> p
-		.replaceIf(HdPluginConfig::autumnTheme, LEAVES_1)
+		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.AUTUMN_THEME, LEAVES_1)
 		.setTextureScale(1.3f, 1.15f)
 	),
 	AUTUMN_LEAVES_2(p -> p
-		.replaceIf(HdPluginConfig::autumnTheme, LEAVES_2)
+		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.AUTUMN_THEME, LEAVES_2)
 		.setTextureScale(1.15f, 1.15f)
 	),
 	AUTUMN_LEAVES_3(p -> p
-		.replaceIf(HdPluginConfig::autumnTheme, LEAVES_3)
+		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.AUTUMN_THEME, LEAVES_3)
 		.setTextureScale(1.0f, 1.3f)
 	),
 	AUTUMN_LEAVES_4(p -> p
-		.replaceIf(HdPluginConfig::autumnTheme, DOUBLE_TREE_LEAVES)
+		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.AUTUMN_THEME, DOUBLE_TREE_LEAVES)
 		.setTextureScale(1.2f, 1.2f)
 	),
 	AUTUMN_OAK_LEAVES_1(p -> p
-		.replaceIf(HdPluginConfig::autumnTheme, OAK_LEAVES_1)
+		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.AUTUMN_THEME, OAK_LEAVES_1)
 		.setTextureScale(1.4f, 1.3f)
 	),
 	;

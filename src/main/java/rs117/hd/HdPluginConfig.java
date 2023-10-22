@@ -38,6 +38,7 @@ import rs117.hd.config.DefaultSkyColor;
 import rs117.hd.config.FogDepthMode;
 import rs117.hd.config.MaxDynamicLights;
 import rs117.hd.config.Saturation;
+import rs117.hd.config.SeasonalTheme;
 import rs117.hd.config.ShadowDistance;
 import rs117.hd.config.ShadowMode;
 import rs117.hd.config.ShadowResolution;
@@ -725,28 +726,16 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
-	String KEY_WINTER_THEME = "winterTheme0";
+	String KEY_SEASONAL_THEME = "seasonalTheme";
 	@ConfigItem(
-		keyName = KEY_WINTER_THEME,
-		name = "Winter Theme",
-		description = "Covers the Gielinor overworld with a layer of snow!",
+		keyName = KEY_SEASONAL_THEME,
+		name = "Seasonal Theme",
+		description = "Festive themes for Gielinor",
 		position = 3,
 		section = miscellaneousSettings
 	)
-	default boolean winterTheme() {return false;}
-
-	String KEY_AUTUMN_THEME = "autumnTheme0";
-	@ConfigItem(
-		keyName = KEY_AUTUMN_THEME,
-		name = "Autumn Theme",
-		description = "Festive Fall color the trees and grass.",
-		position = 4,
-		section = miscellaneousSettings
-	)
-	default boolean autumnTheme()
-	{
-		return false;
-	}
+	default SeasonalTheme seasonalTheme() {return SeasonalTheme.DEFAULT_THEME;}
+	;
 
 	String KEY_LEGACY_GREY_COLORS = "reduceOverExposure";
 	@ConfigItem(

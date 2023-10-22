@@ -76,6 +76,7 @@ import org.lwjgl.opengl.*;
 import org.lwjgl.system.Callback;
 import org.lwjgl.system.Configuration;
 import rs117.hd.config.AntiAliasingMode;
+import rs117.hd.config.SeasonalTheme;
 import rs117.hd.config.ShadowMode;
 import rs117.hd.config.UIScalingMode;
 import rs117.hd.data.WaterType;
@@ -396,8 +397,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public boolean configProjectileLights;
 	public boolean configNpcLights;
 	public boolean configHideFakeShadows;
-	public boolean configWinterTheme;
-	public boolean configAutumnTheme;
+	public SeasonalTheme configSeasonalTheme;
 	public boolean configLegacyGreyColors;
 	public boolean configModelBatching;
 	public boolean configModelCaching;
@@ -2356,8 +2356,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		configProjectileLights = config.projectileLights();
 		configNpcLights = config.npcLights();
 		configHideFakeShadows = config.hideFakeShadows();
-		configWinterTheme = config.winterTheme();
-		configAutumnTheme = config.autumnTheme();
+		configSeasonalTheme = config.seasonalTheme();
 		configLegacyGreyColors = config.legacyGreyColors();
 		configModelBatching = config.modelBatching();
 		configModelCaching = config.modelCaching();
@@ -2406,9 +2405,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					case KEY_ATMOSPHERIC_LIGHTING:
 						environmentManager.reset();
 						break;
-					case KEY_WINTER_THEME:
-						environmentManager.reset();
-					case KEY_AUTUMN_THEME:
+					case KEY_SEASONAL_THEME:
 						environmentManager.reset();
 						modelOverrideManager.reload();
 						// fall-through

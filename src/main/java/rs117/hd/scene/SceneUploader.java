@@ -33,6 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
+import rs117.hd.config.SeasonalTheme;
 import rs117.hd.data.WaterType;
 import rs117.hd.data.environments.Area;
 import rs117.hd.data.materials.GroundMaterial;
@@ -502,8 +503,7 @@ class SceneUploader {
 					seMaterial = groundMaterial.getRandomMaterial(tileZ, baseX + tileX + 1, baseY + tileY);
 					nwMaterial = groundMaterial.getRandomMaterial(tileZ, baseX + tileX, baseY + tileY + 1);
 					neMaterial = groundMaterial.getRandomMaterial(tileZ, baseX + tileX + 1, baseY + tileY + 1);
-				}
-				else if (plugin.configWinterTheme)
+				} else if (plugin.configSeasonalTheme == SeasonalTheme.WINTER_THEME)
 				{
 					Overlay overlay = Overlay.getOverlay(scene, tile, plugin);
 					if (overlay != Overlay.NONE)
@@ -878,7 +878,7 @@ class SceneUploader {
 							baseX + tileX + (int) Math.floor((float) localVertices[2][0] / LOCAL_TILE_SIZE),
 							baseY + tileY + (int) Math.floor((float) localVertices[2][1] / LOCAL_TILE_SIZE)
 						);
-					} else if (plugin.configWinterTheme) {
+					} else if (plugin.configSeasonalTheme == SeasonalTheme.WINTER_THEME) {
 						if (ProceduralGenerator.isOverlayFace(tile, face)) {
 							Overlay overlay = Overlay.getOverlay(scene, tile, plugin);
 

@@ -33,6 +33,7 @@ import net.runelite.api.coords.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.config.DefaultSkyColor;
+import rs117.hd.config.SeasonalTheme;
 import rs117.hd.data.environments.Area;
 import rs117.hd.data.environments.Environment;
 import rs117.hd.utils.AABB;
@@ -423,6 +424,6 @@ public class EnvironmentManager {
 	 * This should not be used from the scene loader thread
 	 */
 	private boolean useWinterTheme() {
-		return plugin.configWinterTheme && isOverworld;
+		return plugin.configSeasonalTheme == SeasonalTheme.WINTER_THEME && isOverworld;
 	}
 }

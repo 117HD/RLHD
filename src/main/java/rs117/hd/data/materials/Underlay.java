@@ -36,6 +36,7 @@ import lombok.NonNull;
 import net.runelite.api.*;
 import net.runelite.api.coords.*;
 import rs117.hd.HdPlugin;
+import rs117.hd.config.SeasonalTheme;
 import rs117.hd.data.WaterType;
 import rs117.hd.data.environments.Area;
 import rs117.hd.scene.SceneUploader;
@@ -68,7 +69,7 @@ public enum Underlay {
 		.shiftLightness(8)
 		.saturation(0)
 		.ids(48, 50, 64)
-		.replaceWithIf(WINTER_EDGEVILLE_PATH, plugin -> plugin.configWinterTheme)
+		.replaceWithIf(WINTER_EDGEVILLE_PATH, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER_THEME)
 	),
 
 	// Varrock
@@ -148,7 +149,7 @@ public enum Underlay {
 		.ids(61)
 		.area(Area.ARDOUGNE_SOUTH_OF_ZOO)
 		.groundMaterial(GroundMaterial.OVERWORLD_GRASS_1)
-		.replaceWithIf(WINTER_GRASS, plugin -> plugin.configWinterTheme)
+		.replaceWithIf(WINTER_GRASS, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER_THEME)
 	),
 	SHADOW_DUNGEON_FLOOR(63, Area.SHADOW_DUNGEON, GroundMaterial.EARTHEN_CAVE_FLOOR),
 	// Castle Wars
@@ -176,19 +177,19 @@ public enum Underlay {
 		.area(Area.ZEAH)
 		.groundMaterial(GroundMaterial.VARIED_DIRT)
 		.ids(19, 148)
-		.replaceWithIf(WINTER_DIRT, plugin -> plugin.configWinterTheme)
+		.replaceWithIf(WINTER_DIRT, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER_THEME)
 	),
 	ZEAH_GRAVEL_HILLS(p -> p
 		.area(Area.ZEAH)
 		.groundMaterial(GroundMaterial.GRAVEL)
 		.ids(99)
-		.replaceWithIf(WINTER_GRUNGE, plugin -> plugin.configWinterTheme)
+		.replaceWithIf(WINTER_GRUNGE, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER_THEME)
 	),
 	ZEAH_ROCKY_GROUND(p -> p
 		.area(Area.ZEAH)
 		.groundMaterial(GroundMaterial.ROCKY_CAVE_FLOOR)
 		.ids(27, 29, 129)
-		.replaceWithIf(WINTER_GRUNGE, plugin -> plugin.configWinterTheme)
+		.replaceWithIf(WINTER_GRUNGE, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER_THEME)
 	),
 	STRANGLEWOOD_SNOW_DARK(p -> p.area(Area.THE_STRANGLEWOOD_EXTENDED).ids(174).groundMaterial(GroundMaterial.SNOW_1)),
 
@@ -300,28 +301,28 @@ public enum Underlay {
 	NEEDS_HUE_FIX_GRASSY_EARTH(GroundMaterial.GRASSY_DIRT, p -> p
 		.area(Area.ZEAH)
 		.ids(63)
-		.replaceWithIf(WINTER_GRASS, plugin -> plugin.configWinterTheme)
+		.replaceWithIf(WINTER_GRASS, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER_THEME)
 	),
 	NEEDS_HUE_FIX_SANDY_EARTH(GroundMaterial.SAND, p -> p
 		.area(Area.KARAMJA)
 		.ids(68)
-		.replaceWithIf(WINTER_GRASS, plugin -> plugin.configWinterTheme)
+		.replaceWithIf(WINTER_GRASS, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER_THEME)
 	),
 	TILE_NEEDS_HUE_DEFINED(GroundMaterial.VARIED_DIRT, p -> p
 		.ids(26)
-		.replaceWithIf(WINTER_DIRT, plugin -> plugin.configWinterTheme)
+		.replaceWithIf(WINTER_DIRT, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER_THEME)
 	),
 	// Default underlays
 	OVERWORLD_GRASS(Area.OVERWORLD, GroundMaterial.OVERWORLD_GRASS_1, p -> p
 		.ids(7, 25, 33, 34, 40, 48, 49, 50, 51, 52, 53, 54, 62, 63, 67, 70, 71, 75, 93, 96, 97, 99, 100, 103, 114, 115, 126)
-		.replaceWithIf(WINTER_GRASS, plugin -> plugin.configWinterTheme)
+		.replaceWithIf(WINTER_GRASS, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER_THEME)
 	),
 	OVERWORLD_DIRT(Area.OVERWORLD, GroundMaterial.DIRT, p -> p
 		.ids(-111, -110, 19, 56, 57, 80, 92, 111, 118, 122, 139, 150)
-		.replaceWithIf(WINTER_DIRT, plugin -> plugin.configWinterTheme)),
+		.replaceWithIf(WINTER_DIRT, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER_THEME)),
 	OVERWORLD_DIRT_GRASS(Area.OVERWORLD, GroundMaterial.GRASSY_DIRT, p -> p
 		.ids(64, 65, 66, 94)
-		.replaceWithIf(WINTER_GRASS, plugin -> plugin.configWinterTheme)
+		.replaceWithIf(WINTER_GRASS, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER_THEME)
 	),
 	OVERWORLD_SAND(Area.OVERWORLD, GroundMaterial.SAND, p -> p.ids(-127, -118, 61, 68)),
 	UNDERLAY_PACKED_EARTH(GroundMaterial.PACKED_EARTH, p -> p.ids(15)),
@@ -329,11 +330,11 @@ public enum Underlay {
 	UNDERLAY_SNOW(GroundMaterial.SNOW_1, p -> p.ids(16, 58, 59)),
 	UNDERLAY_72(GroundMaterial.VARIED_DIRT, p -> p
 		.ids(72, 73, 98, 112, 113) //112 == Lovakengj
-		.replaceWithIf(WINTER_DIRT, plugin -> plugin.configWinterTheme)
+		.replaceWithIf(WINTER_DIRT, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER_THEME)
 	),
 	UNDERLAY_OVERWORLD_GRUNGE(GroundMaterial.GRUNGE, p -> p
 		.ids(8, 10, 55, 60, 92) // 8 = Jatizso, 60 = GotR, 92 = Eadgars Cave
-		.replaceWithIf(WINTER_GRUNGE, plugin -> plugin.configWinterTheme)
+		.replaceWithIf(WINTER_GRUNGE, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER_THEME)
 	),
 
 	NONE(GroundMaterial.DIRT, p -> {});
