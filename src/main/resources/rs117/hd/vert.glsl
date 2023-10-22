@@ -42,6 +42,7 @@ uniform int useFog;
 uniform float fogDepth;
 uniform int drawDistance;
 uniform int expandedMapLoadingChunks;
+uniform vec3 cameraPos;
 
 #include uniforms/materials.glsl
 
@@ -55,7 +56,7 @@ void main() {
     vec3 rgb = packedHslToSrgb(ahsl);
     float alpha = 1 - float(ahsl >> 24 & 0xff) / 255.;
 
-    vec2 tiledist = abs(floor(position.xz / 128) - floor(vec2(cameraX, cameraZ) / 128));
+    vec2 tiledist = abs(floor(position.xz / 128) - floor(cameraPos.xz / 128));
     float maxDist = max(tiledist.x, tiledist.y);
     if (maxDist * 128 > drawDistance) {
         // Rapidly fade out any geometry that extends beyond the draw distance.
