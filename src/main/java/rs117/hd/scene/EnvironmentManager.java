@@ -294,6 +294,18 @@ public class EnvironmentManager {
 			if (!atmospheric.isCustomDirectionalColor())
 				targetDirectionalColor = Environment.WINTER.getDirectionalColor();
 		}
+		if (useAutumnTheme()) {
+			if (!atmospheric.isCustomAmbientStrength())
+				targetAmbientStrength = Environment.AUTUMN.getAmbientStrength();
+			if (!atmospheric.isCustomAmbientColor())
+				targetAmbientColor = Environment.AUTUMN.getAmbientColor();
+			if (!atmospheric.isCustomDirectionalStrength())
+				targetDirectionalStrength = Environment.AUTUMN.getDirectionalStrength();
+			if (!atmospheric.isCustomDirectionalColor())
+				targetDirectionalColor = Environment.AUTUMN.getDirectionalColor();
+			if (!atmospheric.isCustomFogColor())
+				targetFogColor = Environment.AUTUMN.getFogColor();
+		}
 
 		targetLightPitch = newEnvironment.getLightPitch();
 		targetLightYaw = newEnvironment.getLightYaw();
@@ -313,6 +325,7 @@ public class EnvironmentManager {
 			targetWaterColor = sky.getRgb(client);
 		} else {
 			targetFogColor = targetWaterColor = env.getFogColor();
+
 		}
 
 		// Override with decoupled water/sky color if present
@@ -425,5 +438,9 @@ public class EnvironmentManager {
 	 */
 	private boolean useWinterTheme() {
 		return plugin.configSeasonalTheme == SeasonalTheme.WINTER_THEME && isOverworld;
+	}
+
+	private boolean useAutumnTheme() {
+		return plugin.configSeasonalTheme == SeasonalTheme.AUTUMN_THEME && isOverworld;
 	}
 }
