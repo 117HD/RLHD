@@ -1211,6 +1211,14 @@ public enum Environment
 		.setDirectionalColor("#FFFFFF")
 		.setDirectionalStrength(1.5f)
 	),
+	AUTUMN(Area.NONE, new Properties()
+		.setFogColor("#898984")
+		.setFogDepth(35)
+		.setAmbientColor("#B7B7B3")
+		.setAmbientStrength(2.5f)
+		.setDirectionalColor("#FFFFFF")
+		.setDirectionalStrength(1.5f)
+	),
 	NONE(Area.NONE, new Properties()
 		.setFogColor("#ff00ff") // never meant to be rendered
 	),
