@@ -640,6 +640,8 @@ public enum Material {
 	),
 	EVERGREEN_LEAVES_1(p -> p.setTextureScale(1.15f, 1.15f)),
 	OAK_LEAVES_1(p -> p.setParent(EVERGREEN_LEAVES_1).setTextureScale(1.3f, 1.3f)),
+	DOUBLE_TREE_LEAVES(p -> p.setParent(EVERGREEN_LEAVES_1)),
+
 
 
 	// Seasonal
@@ -706,6 +708,10 @@ public enum Material {
 	AUTUMN_LEAVES_3(p -> p
 		.replaceIf(HdPluginConfig::autumnTheme, LEAVES_3)
 		.setTextureScale(1.0f, 1.3f)
+	),
+	AUTUMN_LEAVES_4(p -> p
+		.replaceIf(HdPluginConfig::autumnTheme, DOUBLE_TREE_LEAVES)
+		.setTextureScale(1.2f, 1.2f)
 	),
 	AUTUMN_OAK_LEAVES_1(p -> p
 		.replaceIf(HdPluginConfig::autumnTheme, OAK_LEAVES_1)
