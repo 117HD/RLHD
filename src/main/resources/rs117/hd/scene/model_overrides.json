@@ -11497,7 +11497,8 @@
     "objectIds": [
       10738
     ],
-    "uvType": "BOX"
+    "uvType": "BOX",
+    "retainVanillaUvs": false
   },
   {
     "description": "Mage Training Arena - Marble - Area Portals",
@@ -11505,7 +11506,8 @@
     "objectIds": [
       10739
     ],
-    "uvType": "BOX"
+    "uvType": "BOX",
+    "retainVanillaUvs": false
   },
   {
     "description": "Mage Training Arena - Marble - Area Portals",
