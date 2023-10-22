@@ -31044,12 +31044,12 @@
   {
     "description": "Weiss Saltmine Entrance",
     "worldX": 2843,
-    "worldY": 10358,
+    "worldY": 10352,
     "plane": 0,
     "height": 1200,
     "alignment": "CENTER",
-    "radius": 1950,
-    "strength": 7,
+    "radius": 2400,
+    "strength": 4.5,
     "color": [
       252,
       252,
