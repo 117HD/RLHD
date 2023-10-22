@@ -954,16 +954,18 @@ public enum Area
 	),
 	// TrollHeim - Weiss Region
 	TROLLHEIM(
-		new AABB(11577),
-		new AABB(11321),
-		new AABB(11320),
-		new AABB(11576),
-		new AABB(11319),
-		new AABB(11063),
-		new AABB(2751, 3753, 2726, 3662), //Mountains near Keldagrim Entrance
-		new AABB(2780, 3647, 2815, 3584) //Mountains near Golden Apple Tree
+		regions(
+			11577,
+			11321,
+			11320,
+			11576,
+			11319,
+			11063
+		),
+		new AABB(2751, 3753, 2726, 3662), // Mountains near Keldagrim Entrance
+		new AABB(2780, 3647, 2815, 3584)  // Mountains near Golden Apple Tree
 	),
-	WEISS_REGION(new AABB(11325), new AABB(11581)),
+	WEISS_REGION(regions(11325, 11581)),
 	WEISS_UNDERGROUND(10842),
 	WEISS_FIRE_PIT(2877, 3934, 2875, 3932),
 	INTERIOR_WEISS_THRONE_TENT(2877, 3941, 2868, 3931),
@@ -1674,26 +1676,28 @@ public enum Area
 
 	public final AABB[] aabbs;
 
-	Area(AABB... aabbs)
-	{
+	Area(AABB... aabbs) {
 		this.aabbs = aabbs;
 	}
 
-	Area(Area... areas)
-	{
+	Area(AABB[] aabbs1, AABB... aabbs2) {
+		this.aabbs = new AABB[aabbs1.length + aabbs2.length];
+		System.arraycopy(aabbs1, 0, this.aabbs, 0, aabbs1.length);
+		System.arraycopy(aabbs2, 0, this.aabbs, aabbs1.length, aabbs2.length);
+	}
+
+	Area(Area... areas) {
 		this.aabbs = Arrays.stream(areas)
 			.flatMap(a -> Arrays.stream(a.aabbs))
 			.toArray(AABB[]::new);
 	}
 
-	Area(int pointAX, int pointAY, int pointBX, int pointBY)
-	{
-		aabbs = new AABB[]{new AABB(pointAX, pointAY, pointBX, pointBY)};
+	Area(int pointAX, int pointAY, int pointBX, int pointBY) {
+		aabbs = new AABB[] { new AABB(pointAX, pointAY, pointBX, pointBY) };
 	}
 
-	Area(int pointAX, int pointAY, int pointBX, int pointBY, int plane)
-	{
-		aabbs = new AABB[]{new AABB(pointAX, pointAY, pointBX, pointBY, plane)};
+	Area(int pointAX, int pointAY, int pointBX, int pointBY, int plane) {
+		aabbs = new AABB[] { new AABB(pointAX, pointAY, pointBX, pointBY, plane) };
 	}
 
 	Area(int regionId) {
