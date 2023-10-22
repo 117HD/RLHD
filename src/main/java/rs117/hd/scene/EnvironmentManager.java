@@ -294,18 +294,6 @@ public class EnvironmentManager {
 			if (!atmospheric.isCustomDirectionalColor())
 				targetDirectionalColor = Environment.WINTER.getDirectionalColor();
 		}
-		if (useAutumnTheme()) {
-			if (!atmospheric.isCustomAmbientStrength())
-				targetAmbientStrength = Environment.AUTUMN.getAmbientStrength();
-			if (!atmospheric.isCustomAmbientColor())
-				targetAmbientColor = Environment.AUTUMN.getAmbientColor();
-			if (!atmospheric.isCustomDirectionalStrength())
-				targetDirectionalStrength = Environment.AUTUMN.getDirectionalStrength();
-			if (!atmospheric.isCustomDirectionalColor())
-				targetDirectionalColor = Environment.AUTUMN.getDirectionalColor();
-			if (!atmospheric.isCustomFogColor())
-				targetFogColor = Environment.AUTUMN.getFogColor();
-		}
 
 		targetLightPitch = newEnvironment.getLightPitch();
 		targetLightYaw = newEnvironment.getLightYaw();
@@ -319,9 +307,6 @@ public class EnvironmentManager {
 		Environment env = currentEnvironment;
 		if (useWinterTheme()) {
 			env = useWinterTheme() ? Environment.WINTER : currentEnvironment;
-		}
-		if (useAutumnTheme()) {
-			env = useAutumnTheme() ? Environment.AUTUMN : currentEnvironment;
 		}
 		if (!env.isCustomFogColor() || env.isAllowSkyOverride() && config.overrideSky()) {
 			DefaultSkyColor sky = config.defaultSkyColor();
