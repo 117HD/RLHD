@@ -108,6 +108,13 @@ public enum Underlay {
 	GAMES_ROOM_INNER_FLOOR(64, Area.GAMES_ROOM_INNER, GroundMaterial.CARPET, p -> p.blended(false)),
 	GAMES_ROOM_FLOOR(64, Area.GAMES_ROOM, GroundMaterial.WOOD_PLANKS_1, p -> p.blended(false)),
 
+	// Karamja
+	KARAMJA_VOCALNO_ROCK(p -> p
+		.ids(55, 63, 72)
+		.area(Area.KARAMJA_VOLCANO)
+		.groundMaterial(GroundMaterial.EARTHEN_CAVE_FLOOR)
+	),
+
 	// Crandor
 	CRANDOR_SAND(-110, Area.CRANDOR, GroundMaterial.SAND, p -> p.saturation(3).hue(6)),
 

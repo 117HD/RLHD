@@ -11579,5 +11579,13 @@
       1854
     ],
     "flatNormals": true
+  },
+  {
+    "description": "Karamja Volcano Entrance",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [ 11441 ],
+    "uvType": "BOX",
+    "uvScale": 0.68,
+    "uvOrientationY": 768
   }
 ]
