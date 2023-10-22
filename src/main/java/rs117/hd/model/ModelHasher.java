@@ -94,6 +94,7 @@ public class ModelHasher {
 			faceIndicesOneHash = fastHash(model.getFaceIndices1());
 			faceIndicesTwoHash = fastHash(model.getFaceIndices2());
 			faceIndicesThreeHash = fastHash(model.getFaceIndices3());
+			textureTrianglesHash = 0;
 			final byte[] textureFaces = model.getTextureFaces();
 			if (textureFaces != null) {
 				boolean hasVanillaTexturedFaces = false;
@@ -169,7 +170,7 @@ public class ModelHasher {
 
 	public long calculateUvCacheHash(int orientation, @NonNull ModelOverride modelOverride) {
 		long h = faceCount;
-		h = h * 31L + (modelOverride.uvType == UvType.VANILLA ? textureTrianglesHash : 0);
+		h = h * 31L + (modelOverride.uvType == UvType.VANILLA || modelOverride.retainVanillaUvs ? textureTrianglesHash : 0);
 		h = h * 31L + (modelOverride.uvType.orientationDependent ? orientation : 0);
 		h = h * 31L + modelOverride.hashCode();
 		h = h * 31L + faceTexturesHash;

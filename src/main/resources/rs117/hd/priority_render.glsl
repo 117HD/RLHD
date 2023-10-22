@@ -84,7 +84,7 @@ int count_prio_offset(int priority) {
 }
 
 void get_face(
-    uint localId, ModelInfo minfo, int cameraYaw, int cameraPitch,
+    uint localId, ModelInfo minfo,
     out int prio, out int dis, out ivec4 o1, out ivec4 o2, out ivec4 o3
 ) {
     int size = minfo.size;
@@ -122,7 +122,7 @@ void get_face(
         if (radius == 0) {
             thisDistance = 0;
         } else {
-            thisDistance = face_distance(thisrvA, thisrvB, thisrvC, cameraYaw, cameraPitch) + radius;
+            thisDistance = face_distance(thisrvA, thisrvB, thisrvC) + radius;
             // Clamping here *should* be unnecessary, but it prevents crashing in the unlikely event where we
             // somehow end up with negative numbers, which is known to happen with open-source AMD drivers.
             thisDistance = max(0, thisDistance);
