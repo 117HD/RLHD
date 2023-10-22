@@ -7356,7 +7356,8 @@
       10491,
       12885,
       17146,
-      24335
+      24335,
+      29716
     ],
     "uvType": "BOX",
     "uvOrientation": 512,
@@ -11570,5 +11571,13 @@
     "uvOrientationY": 512,
     "uvOrientationZ": 512,
     "retainVanillaUvs": false
+  },
+  {
+    "description": "Edgeville - Walls - Bank Front Windows",
+    "objectIds": [
+      1853,
+      1854
+    ],
+    "flatNormals": true
   }
 ]
