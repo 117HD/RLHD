@@ -32,6 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.api.coords.*;
 import rs117.hd.HdPlugin;
+import rs117.hd.config.SeasonalTheme;
 import rs117.hd.data.WaterType;
 import rs117.hd.data.materials.Material;
 import rs117.hd.data.materials.Overlay;
@@ -827,7 +828,7 @@ public class ProceduralGenerator {
 
 	private WaterType getSeasonalWaterType(WaterType waterType)
 	{
-		return plugin.configWinterTheme && waterType == WaterType.WATER ? WaterType.ICE : waterType;
+		return plugin.configSeasonalTheme == SeasonalTheme.WINTER_THEME && waterType == WaterType.WATER ? WaterType.ICE : waterType;
 	}
 
 	/**
