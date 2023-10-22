@@ -54,9 +54,6 @@ public enum Underlay {
 		.saturation(0)
 		.groundMaterial(GroundMaterial.WINTER_JAGGED_STONE_TILE_LIGHT)
 	),
-	// Seasonal Autumn Textures
-	AUTUMN_GRASS(p -> p.ids().groundMaterial(GroundMaterial.OVERWORLD_GRASS_1).hue(8).shiftSaturation(2)),
-	AUTUMN_DIRT_GRASS(p -> p.ids().groundMaterial(GroundMaterial.DIRT).hue(5).shiftSaturation(-1)),
 	// Default
 	// Lumbridge
 	LUMBRIDGE_CASTLE_TILE(56, Area.LUMBRIDGE_CASTLE_BASEMENT, GroundMaterial.MARBLE_2_SEMIGLOSS, p -> p.blended(false)),
@@ -151,7 +148,7 @@ public enum Underlay {
 		.ids(61)
 		.area(Area.ARDOUGNE_SOUTH_OF_ZOO)
 		.groundMaterial(GroundMaterial.OVERWORLD_GRASS_1)
-		.replaceWithIf(AUTUMN_GRASS, plugin -> plugin.configAutumnTheme)
+		.replaceWithIf(WINTER_GRASS, plugin -> plugin.configWinterTheme)
 	),
 	SHADOW_DUNGEON_FLOOR(63, Area.SHADOW_DUNGEON, GroundMaterial.EARTHEN_CAVE_FLOOR),
 	// Castle Wars
@@ -303,14 +300,12 @@ public enum Underlay {
 	NEEDS_HUE_FIX_GRASSY_EARTH(GroundMaterial.GRASSY_DIRT, p -> p
 		.area(Area.ZEAH)
 		.ids(63)
-		.replaceWithIf(WINTER_DIRT, plugin -> plugin.configWinterTheme)
-		.replaceWithIf(AUTUMN_DIRT_GRASS, plugin -> plugin.configAutumnTheme)
+		.replaceWithIf(WINTER_GRASS, plugin -> plugin.configWinterTheme)
 	),
 	NEEDS_HUE_FIX_SANDY_EARTH(GroundMaterial.SAND, p -> p
 		.area(Area.KARAMJA)
 		.ids(68)
 		.replaceWithIf(WINTER_GRASS, plugin -> plugin.configWinterTheme)
-		.replaceWithIf(AUTUMN_DIRT_GRASS, plugin -> plugin.configAutumnTheme)
 	),
 	TILE_NEEDS_HUE_DEFINED(GroundMaterial.VARIED_DIRT, p -> p
 		.ids(26)
@@ -320,15 +315,13 @@ public enum Underlay {
 	OVERWORLD_GRASS(Area.OVERWORLD, GroundMaterial.OVERWORLD_GRASS_1, p -> p
 		.ids(7, 25, 33, 34, 40, 48, 49, 50, 51, 52, 53, 54, 62, 63, 67, 70, 71, 75, 93, 96, 97, 99, 100, 103, 114, 115, 126)
 		.replaceWithIf(WINTER_GRASS, plugin -> plugin.configWinterTheme)
-		.replaceWithIf(AUTUMN_GRASS, plugin -> plugin.configAutumnTheme)
 	),
 	OVERWORLD_DIRT(Area.OVERWORLD, GroundMaterial.DIRT, p -> p
 		.ids(-111, -110, 19, 56, 57, 80, 92, 111, 118, 122, 139, 150)
 		.replaceWithIf(WINTER_DIRT, plugin -> plugin.configWinterTheme)),
-	OVERWORLD_DIRT_GRASS(Area.OVERWORLD, GroundMaterial.DIRT, p -> p
+	OVERWORLD_DIRT_GRASS(Area.OVERWORLD, GroundMaterial.GRASSY_DIRT, p -> p
 		.ids(64, 65, 66, 94)
-		.replaceWithIf(WINTER_DIRT, plugin -> plugin.configWinterTheme)
-		.replaceWithIf(AUTUMN_DIRT_GRASS, plugin -> plugin.configAutumnTheme)
+		.replaceWithIf(WINTER_GRASS, plugin -> plugin.configWinterTheme)
 	),
 	OVERWORLD_SAND(Area.OVERWORLD, GroundMaterial.SAND, p -> p.ids(-127, -118, 61, 68)),
 	UNDERLAY_PACKED_EARTH(GroundMaterial.PACKED_EARTH, p -> p.ids(15)),
