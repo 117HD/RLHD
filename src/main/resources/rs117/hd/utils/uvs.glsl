@@ -54,7 +54,7 @@ void computeUvs(const int materialData, const vec3 pos[3], inout vec3 uvw[3]) {
             vec3 p = pos[i];
             #ifdef USE_VANILLA_UV_PROJECTION
             // Project vertex positions onto a plane going through the texture triangle
-            vec3 vertexToCamera = vec3(cameraX, cameraY, cameraZ) - p;
+            vec3 vertexToCamera = cameraPos - p;
             p += vertexToCamera * dot(uvw[i] - p, uvNormal) / dot(vertexToCamera, uvNormal);
             #endif
 

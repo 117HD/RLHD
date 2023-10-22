@@ -25,7 +25,6 @@
  */
 #version 330
 
-#include uniforms/camera.glsl
 #include uniforms/materials.glsl
 #include uniforms/water_types.glsl
 #include uniforms/lights.glsl
@@ -35,6 +34,7 @@
 uniform sampler2DArray textureArray;
 uniform sampler2D shadowMap;
 
+uniform vec3 cameraPos;
 uniform mat4 lightProjectionMatrix;
 uniform float elapsedTime;
 uniform float colorBlindnessIntensity;
@@ -99,10 +99,9 @@ vec2 worldUvs(float scale) {
 #include utils/water.glsl
 
 void main() {
-    vec3 camPos = vec3(cameraX, cameraY, cameraZ);
     vec3 downDir = vec3(0, -1, 0);
     // View & light directions are from the fragment to the camera/light
-    vec3 viewDir = normalize(camPos - IN.position);
+    vec3 viewDir = normalize(cameraPos - IN.position);
 
     Material material1 = getMaterial(vMaterialData[0] >> MATERIAL_INDEX_SHIFT);
     Material material2 = getMaterial(vMaterialData[1] >> MATERIAL_INDEX_SHIFT);
@@ -512,7 +511,7 @@ void main() {
     // apply fog
     if (!isUnderwater) {
         // ground fog
-        float distance = distance(IN.position, camPos);
+        float distance = distance(IN.position, cameraPos);
         float closeFadeDistance = 1500;
         float groundFog = 1.0 - clamp((IN.position.y - groundFogStart) / (groundFogEnd - groundFogStart), 0.0, 1.0);
         groundFog = mix(0.0, groundFogOpacity, groundFog);

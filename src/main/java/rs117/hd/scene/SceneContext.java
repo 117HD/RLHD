@@ -27,11 +27,6 @@ public class SceneContext {
 	public final HashSet<Integer> regionIds;
 	public final int expandedMapLoadingChunks;
 
-	public final int[] cameraPosition = new int[3];
-	public final int[] cameraFocalPoint = new int[2];
-	public final int[] cameraShift = new int[2];
-	public final int[] cameraOrientation = new int[2];
-
 	public int staticVertexCount = 0;
 	public GpuIntBuffer staticUnorderedModelBuffer;
 	public GpuIntBuffer stagingBufferVertices;
@@ -58,7 +53,6 @@ public class SceneContext {
 	public Map<Integer, Integer> vertexUnderwaterDepth;
 	public int[][][] underwaterDepthLevels;
 
-	public int visibleLightCount = 0;
 	public final ArrayList<SceneLight> lights = new ArrayList<>();
 	public final HashSet<Projectile> projectiles = new HashSet<>();
 

@@ -32,7 +32,7 @@ void get_face(
   __local struct shared_data *shared,
   __constant struct uniform *uni,
   __global const int4 *vb,
-  uint localId, struct ModelInfo minfo, int cameraYaw, int cameraPitch,
+  uint localId, struct ModelInfo minfo,
   /* out */ int *prio, int *dis, int4 *o1, int4 *o2, int4 *o3);
 void add_face_prio_distance(
   __local struct shared_data *shared,
@@ -121,7 +121,7 @@ void get_face(
   __local struct shared_data *shared,
   __constant struct uniform *uni,
   __global const int4 *vb,
-  uint localId, struct ModelInfo minfo, int cameraYaw, int cameraPitch,
+  uint localId, struct ModelInfo minfo,
   /* out */ int *prio, int *dis, int4 *o1, int4 *o2, int4 *o3
 ) {
   uint size = minfo.size;
@@ -154,7 +154,7 @@ void get_face(
     if (radius == 0) {
       thisDistance = 0;
     } else {
-      thisDistance = face_distance(thisrvA, thisrvB, thisrvC, cameraYaw, cameraPitch) + radius;
+      thisDistance = face_distance(uni, thisrvA, thisrvB, thisrvC) + radius;
     }
 
     *o1 = thisrvA;

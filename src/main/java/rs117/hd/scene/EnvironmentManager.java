@@ -154,7 +154,7 @@ public class EnvironmentManager {
 		assert client.isClientThread();
 
 		WorldPoint position = sceneContext.localToWorld(
-			new LocalPoint(sceneContext.cameraFocalPoint[0], sceneContext.cameraFocalPoint[1]), client.getPlane());
+			new LocalPoint(plugin.cameraFocalPoint[0], plugin.cameraFocalPoint[1]), client.getPlane());
 
 		isOverworld = Area.OVERWORLD.containsPoint(position);
 
