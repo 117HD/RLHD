@@ -11857,8 +11857,16 @@
     "baseMaterial": "ROCK_4",
     "objectIds": [ 46825, 46826, 46827, 46828, 46829, 46830, 43831, 46832, 46833, 46834, 46835, 46836, 46837, 46905 ],
     "uvType": "BOX",
-    "uvScale": 0.4,
+    "uvScale": 0.45,
     "uvOrientation": 128
+  },
+  {
+    "description": "Weiss Saltmine Stairs",
+    "baseMaterial": "ROCK_4",
+    "objectIds": [ 33261 ],
+    "uvType": "BOX",
+    "uvScale": 0.45,
+    "uvOrientation": 384
   },
   {
     "description": "White Bed with pillow",

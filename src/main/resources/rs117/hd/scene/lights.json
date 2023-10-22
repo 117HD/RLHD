@@ -31042,14 +31042,14 @@
     "objectIds": [ 33333 ]
   },
   {
-    "description": "lava",
+    "description": "Weiss Saltmine Entrance",
     "worldX": 2843,
     "worldY": 10358,
     "plane": 0,
-    "height": 850,
+    "height": 1200,
     "alignment": "CENTER",
-    "radius": 1900,
-    "strength": 30,
+    "radius": 1950,
+    "strength": 7,
     "color": [
       252,
       252,
