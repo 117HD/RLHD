@@ -811,6 +811,7 @@ public enum Area
 		new AABB(3322, 2773, 3370, 2750)
 	),
 	RIVER_ELID_WATERFALL(3369, 3131, 3370, 3133),
+	KALPHITE_LAIR(13972),
 
 	// Sophanem and Menaphos
 	SOPHANEM_FLOORS(

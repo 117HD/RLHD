@@ -476,6 +476,16 @@ public enum Environment
 		.setDirectionalStrength(0.75f)
 		.setLightDirection(260f, 10f)
 	),
+	KALPHITE_LAIR(Area.KALPHITE_LAIR, new Properties()
+		.setFogColor("#161101")
+		.setFogDepth(35)
+		.setAmbientColor("#AAAFB6")
+		.setAmbientStrength(1.5f)
+		.setDirectionalColor("#FFFFFF")
+		.setDirectionalStrength(1.0f)
+		.setLightDirection(260f, 10f)
+		.setWaterColor(102, 234, 255)
+	),
 
 	GIELINOR_SNOWY_NORTHERN_REGION(Area.GIELINOR_SNOWY_NORTHERN_REGION, new Properties()
 		.setFogColor("#AEBDE0")
