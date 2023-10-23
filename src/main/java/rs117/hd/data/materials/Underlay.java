@@ -152,6 +152,7 @@ public enum Underlay {
 		.area(Area.ARDOUGNE_SOUTH_OF_ZOO)
 		.groundMaterial(GroundMaterial.OVERWORLD_GRASS_1)
 		.replaceWithIf(WINTER_GRASS, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER_THEME)
+		.replaceWithIf(AUTUMN_GRASS, plugin -> plugin.configSeasonalTheme == SeasonalTheme.AUTUMN_THEME)
 	),
 	SHADOW_DUNGEON_FLOOR(63, Area.SHADOW_DUNGEON, GroundMaterial.EARTHEN_CAVE_FLOOR),
 	// Castle Wars
