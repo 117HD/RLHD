@@ -9956,7 +9956,7 @@
   },
   {
     "description": "Object - Desert Treasure Pyramid - Altar - Large",
-    "baseMaterial": "GRAY_25",
+    "baseMaterial": "GRAY_75",
     "objectIds": [
       6552
     ],
@@ -9965,7 +9965,7 @@
   },
   {
     "description": "Object - Desert Treasure Pyramid - Lectern - Medium",
-    "baseMaterial": "GRAY_25",
+    "baseMaterial": "GRAY_75",
     "objectIds": [
       40357
     ],
