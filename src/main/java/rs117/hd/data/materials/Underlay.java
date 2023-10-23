@@ -31,8 +31,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import javax.annotation.Nullable;
+import lombok.NonNull;
 import net.runelite.api.*;
 import net.runelite.api.coords.*;
 import rs117.hd.HdPlugin;
@@ -336,8 +336,7 @@ public enum Underlay {
 	public final int shiftSaturation;
 	public final int lightness;
 	public final int shiftLightness;
-	public final Underlay replacementUnderlay;
-	public final Function<HdPlugin, Boolean> replacementCondition;
+	public final TileOverrideResolver<Underlay> replacementResolver;
 
 	Underlay(int id, Area area, GroundMaterial material) {
 		this(p -> p.ids(id).groundMaterial(material).area(area));
@@ -370,8 +369,7 @@ public enum Underlay {
 		this.shiftSaturation = builder.shiftSaturation;
 		this.lightness = builder.lightness;
 		this.shiftLightness = builder.shiftLightness;
-		this.replacementUnderlay = builder.replacement;
-		this.replacementCondition = builder.replacementCondition;
+		this.replacementResolver = builder.replacementResolver;
 	}
 
 	private static final Underlay[] ANY_MATCH;
@@ -395,6 +393,7 @@ public enum Underlay {
 			FILTERED_MAP.put(entry.getKey(), entry.getValue().toArray(new Underlay[0]));
 	}
 
+	@NonNull
 	public static Underlay getUnderlay(Scene scene, Tile tile, HdPlugin plugin) {
 		LocalPoint localLocation = tile.getLocalLocation();
 		int[] worldPoint = HDUtils.localToWorld(scene, localLocation.getX(), localLocation.getY(), tile.getRenderLevel());
@@ -422,7 +421,10 @@ public enum Underlay {
 			}
 		}
 
-		return match.replacementCondition.apply(plugin) ? match.replacementUnderlay : match;
+		if (match.replacementResolver != null)
+			return match.replacementResolver.resolve(plugin, scene, tile, match);
+
+		return match;
 	}
 
 	public int[] modifyColor(int[] colorHSL) {
