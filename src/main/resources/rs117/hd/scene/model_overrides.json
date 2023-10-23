@@ -5667,7 +5667,6 @@
       319,
       3803,
       3804,
-      3169,
       3705,
       3706,
       3707,
@@ -11332,7 +11331,6 @@
     "description": "Mage Training Arena - Walls",
     "baseMaterial": "MARBLE_2",
     "objectIds": [
-      10721,
       10734,
       10743,
       10744,
