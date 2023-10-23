@@ -69,6 +69,7 @@ float calculateFogAmount(vec3 position) {
 
     float minFogStart = 0.0;
     float maxFogStart = 0.3;
+    float drawDistance = min(drawDistance, 90 * TILE_SIZE);
     float fogDepth2 = fogDepth * drawDistance / (TILE_SIZE * 100.0);
     float fogDepthMultiplier = clamp(fogDepth2, 0, 1000) / 1000.0;
     float fogStart2 = (maxFogStart - (fogDepthMultiplier * (maxFogStart - minFogStart))) * float(drawDistance);
