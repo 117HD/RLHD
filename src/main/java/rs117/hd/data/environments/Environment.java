@@ -1211,7 +1211,7 @@ public enum Environment
 		.setDirectionalColor("#FFFFFF")
 		.setDirectionalStrength(1.5f)
 	),
-	AUTUMN(Area.NONE, new Properties()
+	AUTUMN_OVERCAST(Area.NONE, new Properties()
 		.setFogColor("#898984")
 		.setFogDepth(35)
 		.setAmbientColor("#B7B7B3")
