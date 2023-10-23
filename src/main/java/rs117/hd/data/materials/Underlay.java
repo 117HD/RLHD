@@ -55,7 +55,7 @@ public enum Underlay {
 		.saturation(0)
 		.groundMaterial(GroundMaterial.WINTER_JAGGED_STONE_TILE_LIGHT)
 	),
-	AUTUMN_GRASS(p -> p.ids().groundMaterial(GroundMaterial.OVERWORLD_GRASS_1).hue(10).shiftLightness(-1)),
+	AUTUMN_GRASS(p -> p.ids().groundMaterial(GroundMaterial.OVERWORLD_GRASS_1).shiftSaturation(1)),
 	AUTUMN_DIRT_GRASS(p -> p.ids().groundMaterial(GroundMaterial.GRASSY_DIRT).shiftHue(-1).shiftLightness(-1)),
 	// Default
 	// Lumbridge

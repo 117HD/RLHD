@@ -308,6 +308,9 @@ public class EnvironmentManager {
 		if (useWinterTheme()) {
 			env = useWinterTheme() ? Environment.WINTER : currentEnvironment;
 		}
+		if (useAutumnTheme()) {
+			env = useAutumnTheme() ? Environment.AUTUMN : currentEnvironment;
+		}
 		if (!env.isCustomFogColor() || env.isAllowSkyOverride() && config.overrideSky()) {
 			DefaultSkyColor sky = config.defaultSkyColor();
 			targetFogColor = sky.getRgb(client);
