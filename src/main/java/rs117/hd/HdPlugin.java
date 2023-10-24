@@ -397,7 +397,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public boolean configProjectileLights;
 	public boolean configNpcLights;
 	public boolean configHideFakeShadows;
-	public SeasonalTheme configSeasonalTheme;
 	public boolean configLegacyGreyColors;
 	public boolean configModelBatching;
 	public boolean configModelCaching;
@@ -407,6 +406,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public boolean configUndoVanillaShadingInCompute;
 	public boolean configPreserveVanillaNormals;
 	public ShadowMode configShadowMode;
+	public SeasonalTheme configSeasonalTheme;
 	public int configMaxDynamicLights;
 
 	private boolean lwjglInitialized;
@@ -2355,7 +2355,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		configProjectileLights = config.projectileLights();
 		configNpcLights = config.npcLights();
 		configHideFakeShadows = config.hideFakeShadows();
-		configSeasonalTheme = config.seasonalTheme();
 		configLegacyGreyColors = config.legacyGreyColors();
 		configModelBatching = config.modelBatching();
 		configModelCaching = config.modelCaching();
@@ -2364,6 +2363,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		configUseFasterModelHashing = config.fasterModelHashing();
 		configUndoVanillaShadingInCompute = config.undoVanillaShadingInCompute();
 		configPreserveVanillaNormals = config.preserveVanillaNormals();
+		configSeasonalTheme = config.seasonalTheme();
 	}
 
 	@Subscribe
