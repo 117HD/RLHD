@@ -306,11 +306,6 @@ public enum Underlay {
 		.ids(63)
 		.replaceWithIf(WINTER_GRASS, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER_THEME)
 	),
-	NEEDS_HUE_FIX_SANDY_EARTH(GroundMaterial.SAND, p -> p
-		.area(Area.KARAMJA)
-		.ids(68)
-		.replaceWithIf(WINTER_GRASS, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER_THEME)
-	),
 	TILE_NEEDS_HUE_DEFINED(GroundMaterial.VARIED_DIRT, p -> p
 		.ids(26)
 		.replaceWithIf(WINTER_DIRT, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER_THEME)
@@ -329,7 +324,7 @@ public enum Underlay {
 		.replaceWithIf(WINTER_GRASS, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER_THEME)
 		.replaceWithIf(AUTUMN_DIRT_GRASS, plugin -> plugin.configSeasonalTheme == SeasonalTheme.AUTUMN_THEME)
 	),
-	OVERWORLD_SAND(Area.OVERWORLD, GroundMaterial.SAND, p -> p.ids(-127, -118, 61, 68)),
+	OVERWORLD_SAND(Area.OVERWORLD, GroundMaterial.SAND, p -> p.ids(-127, -118)),
 	UNDERLAY_PACKED_EARTH(GroundMaterial.PACKED_EARTH, p -> p.ids(15)),
 
 	UNDERLAY_SNOW(GroundMaterial.SNOW_1, p -> p.ids(16, 58, 59)),
@@ -340,6 +335,31 @@ public enum Underlay {
 	UNDERLAY_OVERWORLD_GRUNGE(GroundMaterial.GRUNGE, p -> p
 		.ids(8, 10, 55, 60, 92) // 8 = Jatizso, 60 = GotR, 92 = Eadgars Cave
 		.replaceWithIf(WINTER_GRUNGE, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER_THEME)
+	),
+	NEEDS_HUE_FIX_SANDY_EARTH(GroundMaterial.SAND, p -> p
+		.area(Area.KARAMJA)
+		.ids(61, 68)
+		.replacementResolver(
+			(plugin, scene, tile, override) -> {
+				var paint = tile.getSceneTilePaint(); // get color
+				if (paint == null)
+					return OVERWORLD_DIRT;
+
+				int color = paint.getNwColor(); // tile corner direction
+				int hue = color >> 10 & 0x3F; // jagex color extractor
+				if (hue > 7)
+					switch (plugin.configSeasonalTheme()) {
+						case SeasonalTheme.WINTER_THEME:
+							return WINTER_GRASS;
+						case SeasonalTheme.AUTUMN_THEME:
+							return AUTUMN_GRASS;
+						case SeasonalTheme.DEFAULT_THEME:
+							return OVERWORLD_GRASS;
+					}
+				return OVERWORLD_SAND;
+			}
+		)
+		//.replaceWithIf(WINTER_GRASS, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER_THEME)
 	),
 
 	NONE(GroundMaterial.DIRT, p -> {});
