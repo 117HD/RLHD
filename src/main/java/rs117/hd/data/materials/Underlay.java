@@ -347,15 +347,16 @@ public enum Underlay {
 
 				int color = paint.getNwColor(); // tile corner direction
 				int hue = color >> 10 & 0x3F; // jagex color extractor
-				if (hue > 7)
-					switch (plugin.configSeasonalTheme()) {
-						case SeasonalTheme.WINTER_THEME:
+				if (hue > 7) {
+					switch (plugin.configSeasonalTheme) {
+						case WINTER_THEME:
 							return WINTER_GRASS;
-						case SeasonalTheme.AUTUMN_THEME:
+						case AUTUMN_THEME:
 							return AUTUMN_GRASS;
-						case SeasonalTheme.DEFAULT_THEME:
+						case DEFAULT_THEME:
 							return OVERWORLD_GRASS;
 					}
+				}
 				return OVERWORLD_SAND;
 			}
 		)
