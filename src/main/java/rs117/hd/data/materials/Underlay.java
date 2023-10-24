@@ -343,7 +343,6 @@ public enum Underlay {
 				var paint = tile.getSceneTilePaint(); // get color
 				if (paint == null)
 					return OVERWORLD_DIRT;
-				int water =
 				int color = paint.getNwColor(); // tile corner direction
 				int hue = color >> 10 & 0x3F; // jagex hsl extractor
 				int saturation = color >> 7 & 0x7; // jagex hsl extractor
