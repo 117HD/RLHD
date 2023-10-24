@@ -294,13 +294,26 @@ public class EnvironmentManager {
 			if (!atmospheric.isCustomDirectionalColor())
 				targetDirectionalColor = Environment.WINTER.getDirectionalColor();
 		}
-
+		if (useAutumnTheme()) {
+			if (!atmospheric.isCustomAmbientStrength())
+				targetAmbientStrength = Environment.AUTUMN.getAmbientStrength();
+			if (!atmospheric.isCustomAmbientColor())
+				targetAmbientColor = Environment.AUTUMN.getAmbientColor();
+			if (!atmospheric.isCustomDirectionalStrength())
+				targetDirectionalStrength = Environment.AUTUMN.getDirectionalStrength();
+			if (!atmospheric.isCustomDirectionalColor())
+				targetDirectionalColor = Environment.AUTUMN.getDirectionalColor();
+		}
 		targetLightPitch = newEnvironment.getLightPitch();
 		targetLightYaw = newEnvironment.getLightYaw();
 		targetGroundFogStart = newEnvironment.getGroundFogStart();
 		targetGroundFogEnd = newEnvironment.getGroundFogEnd();
 		targetGroundFogOpacity = newEnvironment.getGroundFogOpacity();
 		lightningEnabled = newEnvironment.isLightningEnabled();
+		if (useAutumnTheme()) {
+			targetLightPitch = Environment.AUTUMN.getLightPitch();
+			targetLightYaw = Environment.AUTUMN.getLightYaw();
+		}
 	}
 
 	public void updateTargetSkyColor() {
