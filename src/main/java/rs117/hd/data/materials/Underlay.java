@@ -343,6 +343,10 @@ public enum Underlay {
 				var paint = tile.getSceneTilePaint(); // get color
 				if (paint == null)
 					return OVERWORLD_DIRT;
+				LocalPoint localLocation = tile.getLocalLocation();
+				int tileExX = localLocation.getSceneX() + SceneUploader.SCENE_OFFSET;
+				int tileExY = localLocation.getSceneY() + SceneUploader.SCENE_OFFSET;
+				short overlayId = scene.getOverlayIds()[tile.getRenderLevel()][tileExX][tileExY];
 				int color = paint.getNwColor(); // tile corner direction
 				int hue = color >> 10 & 0x3F; // jagex hsl extractor
 				int saturation = color >> 7 & 0x7; // jagex hsl extractor
@@ -357,7 +361,7 @@ public enum Underlay {
 							return OVERWORLD_GRASS;
 					}
 				}
-				if (hue == 8 && saturation > 5) {
+				if (hue == 8 && saturation > 5 && overlayId != 6) {
 					switch (plugin.configSeasonalTheme) {
 						case WINTER_THEME:
 							return WINTER_GRASS;
@@ -367,7 +371,7 @@ public enum Underlay {
 							return OVERWORLD_GRASS;
 					}
 				}
-				if (hue < 8 && saturation > 4 && lightness < 50) {
+				if (hue < 8 && saturation > 4 && lightness < 45 && overlayId != 6) {
 					switch (plugin.configSeasonalTheme) {
 						case WINTER_THEME:
 							return WINTER_DIRT;
