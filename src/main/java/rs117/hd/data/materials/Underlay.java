@@ -58,6 +58,9 @@ public enum Underlay {
 	AUTUMN_GRASS(p -> p.ids().groundMaterial(GroundMaterial.OVERWORLD_GRASS_1).shiftSaturation(1)),
 	AUTUMN_DIRT_GRASS(p -> p.ids().groundMaterial(GroundMaterial.GRASSY_DIRT).shiftHue(-1).shiftLightness(-1)),
 	// Default
+	DEFAULT_SAND(p -> p.ids().groundMaterial(GroundMaterial.SAND)),
+	DEFAULT_GRASS(p -> p.ids().groundMaterial(GroundMaterial.OVERWORLD_GRASS_1)),
+	DEFAULT_DIRT(p -> p.ids().groundMaterial(GroundMaterial.DIRT)),
 	// Lumbridge
 	LUMBRIDGE_CASTLE_TILE(56, Area.LUMBRIDGE_CASTLE_BASEMENT, GroundMaterial.MARBLE_2_SEMIGLOSS, p -> p.blended(false)),
 
@@ -83,7 +86,42 @@ public enum Underlay {
 	WARRIORS_GUILD_FLOOR_1(Area.WARRIORS_GUILD, GroundMaterial.VARROCK_PATHS, p -> p.ids(55, 56)),
 
 	// Catherby
-	CATHERBY_BEACH_SAND(62, Area.CATHERBY, GroundMaterial.SAND),
+	CATHERBY_BEACH_SAND(p -> p
+		.ids(62)
+		.area(Area.CATHERBY)
+		.replacementResolver(
+			(plugin, scene, tile, override) -> {
+				var paint = tile.getSceneTilePaint(); // get color
+				if (paint == null)
+					return DEFAULT_SAND;
+				int color = paint.getNwColor(); // tile corner direction
+				int hue = color >> 10 & 0x3F; // jagex hsl extractor
+				int saturation = color >> 7 & 0x7; // jagex hsl extractor
+				int lightness = color & 0x7F; // jagex hsl extractor
+				if (hue >= 9) {
+					switch (plugin.configSeasonalTheme) {
+						case WINTER_THEME:
+							return WINTER_GRASS;
+						case AUTUMN_THEME:
+							return AUTUMN_GRASS;
+						case DEFAULT_THEME:
+							return DEFAULT_GRASS;
+					}
+				}
+				if (hue < 8) {
+					switch (plugin.configSeasonalTheme) {
+						case WINTER_THEME:
+							return WINTER_DIRT;
+						case AUTUMN_THEME:
+							return DEFAULT_DIRT;
+						case DEFAULT_THEME:
+							return DEFAULT_DIRT;
+					}
+				}
+				return DEFAULT_SAND;
+			}
+		)
+	),
 
 	// Al Kharid
 	MAGE_TRAINING_ARENA_FLOOR_PATTERN(56, Area.MAGE_TRAINING_ARENA, GroundMaterial.TILES_2X2_2_GLOSS, p -> p.blended(false)),
@@ -342,7 +380,7 @@ public enum Underlay {
 			(plugin, scene, tile, override) -> {
 				var paint = tile.getSceneTilePaint(); // get color
 				if (paint == null)
-					return OVERWORLD_DIRT;
+					return OVERWORLD_SAND;
 				LocalPoint localLocation = tile.getLocalLocation();
 				int tileExX = localLocation.getSceneX() + SceneUploader.SCENE_OFFSET;
 				int tileExY = localLocation.getSceneY() + SceneUploader.SCENE_OFFSET;
