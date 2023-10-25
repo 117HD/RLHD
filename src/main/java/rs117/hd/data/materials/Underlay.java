@@ -362,11 +362,6 @@ public enum Underlay {
 	// Cutscenes
 	CANOE_CUTSCENE_GRASS(Area.CANOE_CUTSCENE, GroundMaterial.GRASS_SCROLLING, p -> p.ids(48, 50, 63)),
 	// Items that cannot properly be fixed unless we can first detect the hue of the tile to set a texture.
-	NEEDS_HUE_FIX_GRASSY_EARTH(GroundMaterial.GRASSY_DIRT, p -> p
-		.area(Area.ZEAH)
-		.ids(63)
-		.replaceWithIf(WINTER_GRASS, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER_THEME)
-	),
 	TILE_NEEDS_HUE_DEFINED(GroundMaterial.VARIED_DIRT, p -> p
 		.ids(26)
 		.replaceWithIf(WINTER_DIRT, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER_THEME)
