@@ -378,14 +378,23 @@ public enum Underlay {
 		.ids(61, 62, 63, 66, 68)
 		.replacementResolver(
 			(plugin, scene, tile, override) -> {
-				var paint = tile.getSceneTilePaint(); // get color
-				if (paint == null)
+				// Grab the color from the south-western-most vertex, to try to match with tile blending
+				int color;
+				var paint = tile.getSceneTilePaint();
+				var model = tile.getSceneTileModel();
+				if (paint != null) {
+					color = paint.getSwColor();
+				} else if (model != null) {
+					color = model.getTriangleColorA()[0];
+				} else {
 					return OVERWORLD_SAND;
+				}
 				LocalPoint localLocation = tile.getLocalLocation();
 				int tileExX = localLocation.getSceneX() + SceneUploader.SCENE_OFFSET;
 				int tileExY = localLocation.getSceneY() + SceneUploader.SCENE_OFFSET;
 				short overlayId = scene.getOverlayIds()[tile.getRenderLevel()][tileExX][tileExY];
-				int color = paint.getNwColor(); // tile corner direction
+
+
 				int hue = color >> 10 & 0x3F; // jagex hsl extractor
 				int saturation = color >> 7 & 0x7; // jagex hsl extractor
 				int lightness = color & 0x7F; // jagex hsl extractor
