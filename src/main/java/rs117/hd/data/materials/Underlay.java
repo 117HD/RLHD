@@ -388,13 +388,13 @@ public enum Underlay {
 	OVERWORLD_SAND(Area.OVERWORLD, GroundMaterial.SAND, p -> p.ids(-127, -118)),
 	UNDERLAY_PACKED_EARTH(GroundMaterial.PACKED_EARTH, p -> p.ids(15)),
 
-	UNDERLAY_SNOW(GroundMaterial.SNOW_1, p -> p.ids(16, 58, 59)),
+	UNDERLAY_SNOW(p -> p.ids(16, 58, 59).area(Area.SNOW_REGIONS).groundMaterial(GroundMaterial.SNOW_1)),
 	UNDERLAY_72(GroundMaterial.VARIED_DIRT, p -> p
 		.ids(72, 73, 98, 112, 113) //112 == Lovakengj
 		.replaceWithIf(WINTER_DIRT, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER_THEME)
 	),
 	UNDERLAY_OVERWORLD_GRUNGE(GroundMaterial.GRUNGE, p -> p
-		.ids(8, 10, 55, 60, 92) // 8 = Jatizso, 60 = GotR, 92 = Eadgars Cave
+		.ids(8, 10, 55, 58, 60, 92) // 8 = Jatizso, 60 = GotR, 92 = Eadgars Cave
 		.replaceWithIf(WINTER_GRUNGE, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER_THEME)
 	),
 	COMPLEX_TILES(p -> p
