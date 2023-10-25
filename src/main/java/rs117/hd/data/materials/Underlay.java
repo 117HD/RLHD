@@ -215,13 +215,6 @@ public enum Underlay {
 	),
 
 	// Ardougne
-	SOUTH_OF_ZOO_FIX(p -> p
-		.ids(61)
-		.area(Area.ARDOUGNE_SOUTH_OF_ZOO)
-		.groundMaterial(GroundMaterial.OVERWORLD_GRASS_1)
-		.replaceWithIf(WINTER_GRASS, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER_THEME)
-		.replaceWithIf(AUTUMN_GRASS, plugin -> plugin.configSeasonalTheme == SeasonalTheme.AUTUMN_THEME)
-	),
 	SHADOW_DUNGEON_FLOOR(63, Area.SHADOW_DUNGEON, GroundMaterial.EARTHEN_CAVE_FLOOR),
 	// Castle Wars
 	CENTER_SARADOMIN_SIDE_DIRT_1(98, Area.CASTLE_WARS_ARENA_SARADOMIN_SIDE, GroundMaterial.DIRT, p -> p
