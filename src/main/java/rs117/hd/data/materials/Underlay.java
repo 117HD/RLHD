@@ -474,7 +474,7 @@ public enum Underlay {
 							return OVERWORLD_GRASS;
 					}
 				}
-				if (hue < 8 && saturation > 4 && lightness < 45 && overlayId != 6) {
+				if (hue <= 8 && saturation >= 4 && lightness <= 71) {
 					switch (plugin.configSeasonalTheme) {
 						case WINTER_THEME:
 							return WINTER_DIRT;
