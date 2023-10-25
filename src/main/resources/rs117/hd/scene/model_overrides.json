@@ -1379,6 +1379,7 @@
   },
   {
     "description": "GRASS",
+    "baseMaterial": "GRAY_75",
     "objectIds": [
       3547,
       3548,
