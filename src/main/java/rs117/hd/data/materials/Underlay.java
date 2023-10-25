@@ -378,7 +378,7 @@ public enum Underlay {
 		.replaceWithIf(AUTUMN_GRASS, plugin -> plugin.configSeasonalTheme == SeasonalTheme.AUTUMN_THEME)
 	),
 	OVERWORLD_DIRT(Area.OVERWORLD, GroundMaterial.DIRT, p -> p
-		.ids(-111, -110, 19, 56, 57, 80, 92, 111, 118, 122, 139, 150)
+		.ids(-111, -110, 19, 56, 57, 66, 80, 92, 111, 118, 122, 139, 150)
 		.replaceWithIf(WINTER_DIRT, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER_THEME)),
 	OVERWORLD_DIRT_GRASS(Area.OVERWORLD, GroundMaterial.GRASSY_DIRT, p -> p
 		.ids(64, 65, 94)
@@ -398,7 +398,7 @@ public enum Underlay {
 		.replaceWithIf(WINTER_GRUNGE, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER_THEME)
 	),
 	COMPLEX_TILES(p -> p
-		.ids(61, 62, 63, 66, 68)
+		.ids(61, 62, 63, 68)
 		.replacementResolver(
 			(plugin, scene, tile, override) -> {
 				// Grab the color from the south-western-most vertex, to try to match with tile blending
