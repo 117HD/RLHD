@@ -94,10 +94,9 @@ public enum Underlay {
 				var paint = tile.getSceneTilePaint(); // get color
 				if (paint == null)
 					return DEFAULT_SAND;
-				int color = paint.getNwColor(); // tile corner direction
+				int color = paint.getSwColor(); // tile corner direction
 				int hue = color >> 10 & 0x3F; // jagex hsl extractor
 				int saturation = color >> 7 & 0x7; // jagex hsl extractor
-				int lightness = color & 0x7F; // jagex hsl extractor
 				if (hue >= 9) {
 					switch (plugin.configSeasonalTheme) {
 						case WINTER_THEME:
@@ -108,7 +107,7 @@ public enum Underlay {
 							return DEFAULT_GRASS;
 					}
 				}
-				if (hue < 8) {
+				if (hue < 9 && saturation > 3) {
 					switch (plugin.configSeasonalTheme) {
 						case WINTER_THEME:
 							return WINTER_DIRT;
