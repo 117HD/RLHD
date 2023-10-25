@@ -91,12 +91,26 @@ public enum Underlay {
 		.area(Area.CATHERBY)
 		.replacementResolver(
 			(plugin, scene, tile, override) -> {
-				var paint = tile.getSceneTilePaint(); // get color
-				if (paint == null)
+				// Grab the color from the south-western-most vertex, to try to match with tile blending
+				int color;
+				var paint = tile.getSceneTilePaint();
+				var model = tile.getSceneTileModel();
+				if (paint != null) {
+					color = paint.getSwColor();
+				} else if (model != null) {
+					color = model.getTriangleColorA()[0];
+				} else {
 					return DEFAULT_SAND;
-				int color = paint.getSwColor(); // tile corner direction
+				}
+				LocalPoint localLocation = tile.getLocalLocation();
+				int tileExX = localLocation.getSceneX() + SceneUploader.SCENE_OFFSET;
+				int tileExY = localLocation.getSceneY() + SceneUploader.SCENE_OFFSET;
+				short overlayId = scene.getOverlayIds()[tile.getRenderLevel()][tileExX][tileExY];
+
+
 				int hue = color >> 10 & 0x3F; // jagex hsl extractor
 				int saturation = color >> 7 & 0x7; // jagex hsl extractor
+				int lightness = color & 0x7F; // jagex hsl extractor
 				if (hue >= 9) {
 					switch (plugin.configSeasonalTheme) {
 						case WINTER_THEME:
@@ -107,7 +121,17 @@ public enum Underlay {
 							return DEFAULT_GRASS;
 					}
 				}
-				if (hue < 9 && saturation > 3) {
+				if (hue == 8 && saturation > 5 && overlayId != 6) {
+					switch (plugin.configSeasonalTheme) {
+						case WINTER_THEME:
+							return WINTER_GRASS;
+						case AUTUMN_THEME:
+							return AUTUMN_GRASS;
+						case DEFAULT_THEME:
+							return DEFAULT_GRASS;
+					}
+				}
+				if (hue < 8 && saturation > 4 && lightness < 45 && overlayId != 6) {
 					switch (plugin.configSeasonalTheme) {
 						case WINTER_THEME:
 							return WINTER_DIRT;
