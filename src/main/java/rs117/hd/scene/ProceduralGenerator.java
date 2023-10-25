@@ -49,8 +49,8 @@ import static net.runelite.api.Constants.*;
 public class ProceduralGenerator {
 	public static final int[] DEPTH_LEVEL_SLOPE = new int[] { 150, 300, 470, 610, 700, 750, 820, 920, 1080, 1300, 1350, 1380 };
 
-	private static final int VERTICES_PER_FACE = 3;
-	private static final boolean[][] TILE_OVERLAY_TRIS = new boolean[][]
+	public static final int VERTICES_PER_FACE = 3;
+	public static final boolean[][] TILE_OVERLAY_TRIS = new boolean[][]
 		{
 			/*  0 */ { true, true, true, true }, // Used by tilemodels of varying tri counts?
 			/*  1 */ { false, true },

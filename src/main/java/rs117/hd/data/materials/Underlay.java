@@ -33,6 +33,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 import javax.annotation.Nullable;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.api.coords.*;
 import rs117.hd.HdPlugin;
@@ -42,6 +43,12 @@ import rs117.hd.data.environments.Area;
 import rs117.hd.scene.SceneUploader;
 import rs117.hd.utils.HDUtils;
 
+import static net.runelite.api.Perspective.*;
+import static rs117.hd.scene.ProceduralGenerator.VERTICES_PER_FACE;
+import static rs117.hd.scene.ProceduralGenerator.faceLocalVertices;
+import static rs117.hd.scene.ProceduralGenerator.isOverlayFace;
+
+@Slf4j
 public enum Underlay {
 	// Seasonal Winter Textures
 	WINTER_GRASS(p -> p.ids().groundMaterial(GroundMaterial.SNOW_1).hue(0).saturation(0).shiftLightness(40).blended(true)),
@@ -408,7 +415,33 @@ public enum Underlay {
 				if (paint != null) {
 					color = paint.getSwColor();
 				} else if (model != null) {
-					color = model.getTriangleColorA()[0];
+					int faceCount = tile.getSceneTileModel().getFaceX().length;
+					final int[] faceColorsA = model.getTriangleColorA();
+					final int[] faceColorsB = model.getTriangleColorB();
+					final int[] faceColorsC = model.getTriangleColorC();
+
+					color = 0;
+					outer:
+					for (int face = 0; face < faceCount; face++) {
+						if (isOverlayFace(tile, face))
+							continue;
+
+						int[][] vertices = faceLocalVertices(tile, face);
+						int[] faceColors = new int[] { faceColorsA[face], faceColorsB[face], faceColorsC[face] };
+
+						for (int vertex = 0; vertex < VERTICES_PER_FACE; vertex++) {
+							color = faceColors[vertex];
+//							log.debug(
+//								"x: {}, y: {}, vertex: {}, local: {}",
+//								tile.getSceneLocation().getX(),
+//								tile.getSceneLocation().getY(),
+//								vertex,
+//								vertices[vertex]
+//							);
+							if (vertices[vertex][0] != LOCAL_TILE_SIZE && vertices[vertex][1] != LOCAL_TILE_SIZE)
+								break outer;
+						}
+					}
 				} else {
 					return OVERWORLD_SAND;
 				}
