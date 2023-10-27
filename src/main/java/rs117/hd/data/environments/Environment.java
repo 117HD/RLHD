@@ -338,6 +338,7 @@ public enum Environment
 		.setGroundFog(-150, -350, 0.5f)
 	),
 
+	LUMBRIDGE(Area.LUMBRIDGE, new Properties()),
 	LUMBRIDGE_BASEMENT(Area.LUMBRIDGE_CASTLE_BASEMENT, new Properties()
 			.setFogColor("#070606")
 			.setFogDepth(84)
@@ -384,6 +385,7 @@ public enum Environment
 		.setDirectionalStrength(0.0f)
 		.setLightDirection(260f, 10f)
 	),
+	DRAYNOR(Area.DRAYNOR, new Properties()),
 
 	MISTHALIN_MYSTERY_MANOR(Area.MISTHALIN_MYSTERY_MANOR, new Properties()
 		.setFogColor(15, 14, 13)
@@ -422,6 +424,7 @@ public enum Environment
 	TUTORIAL_SOUL_WARS_RED_TEAM(Area.SOUL_WARS_RED_BASE_TUTORIAL, new Properties()
 		.setFogColor(28, 21, 13)
 	),
+	TUTORIAL_ISLE_OF_SOULS(Area.ISLE_OF_SOULS_TUTORIAL, new Properties()),
 
 	SMOKE_DUNGEON(Area.SMOKE_DUNGEON, new Properties()
 		.setFogColor(0, 0, 0)
@@ -492,6 +495,10 @@ public enum Environment
 		.setDirectionalColor("#F4E5C9")
 		.setDirectionalStrength(2.5f)
 	),
+
+	WHITE_WOLF_MOUNTAIN(Area.WHITE_WOLF_MOUNTAIN, new Properties()),
+
+	KEEP_LE_FAYE(Area.KEEP_LE_FAYE, new Properties()),
 
 	MOUNTAIN_CAMP_ENTRY_PATH(Area.MOUNTAIN_CAMP_ENTRY_PATH, new Properties()
 		.setFogColor(178, 187, 197)
@@ -700,6 +707,7 @@ public enum Environment
 		.setDirectionalColor("#FFFFFF")
 		.setDirectionalStrength(1.0f)
 	),
+	MOUNT_QUIDAMORTEM(Area.MOUNT_QUIDAMORTEM, new Properties()),
 	KEBOS_LOWLANDS(Area.KEBOS_LOWLANDS, new Properties()
 		.setFogColor(41, 44, 16)
 		.setFogDepth(50)
