@@ -444,8 +444,7 @@ public class EnvironmentManager {
 	 * This should not be used from the scene loader thread
 	 */
 	private boolean useWinterTheme() {
-		return plugin.configSeasonalTheme == SeasonalTheme.WINTER_THEME && isOverworld && currentEnvironment.name() == "OVERWORLD"
-			   || currentEnvironment.name() != "KARAMJA";
+		return plugin.configSeasonalTheme == SeasonalTheme.WINTER_THEME && isOverworld && currentEnvironment.name() == "OVERWORLD";
 	}
 
 	private boolean useAutumnTheme() {
