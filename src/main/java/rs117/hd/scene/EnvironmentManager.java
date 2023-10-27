@@ -444,10 +444,13 @@ public class EnvironmentManager {
 	 * This should not be used from the scene loader thread
 	 */
 	private boolean useWinterTheme() {
-		return plugin.configSeasonalTheme == SeasonalTheme.WINTER_THEME && isOverworld && currentEnvironment.name() == "OVERWORLD";
+		return plugin.configSeasonalTheme == SeasonalTheme.WINTER_THEME && isOverworld && currentEnvironment.name() != "MORYTANIA"
+			   && currentEnvironment.name() != "KHARID_DESERT_REGION" && currentEnvironment.name() != "WILDERNESS"
+			   && currentEnvironment.name() != "KARAMJA";
 	}
 
 	private boolean useAutumnTheme() {
-		return plugin.configSeasonalTheme == SeasonalTheme.AUTUMN_THEME && isOverworld && currentEnvironment.name() == "OVERWORLD";
+		return plugin.configSeasonalTheme == SeasonalTheme.AUTUMN_THEME && isOverworld && currentEnvironment.name() != "MORYTANIA"
+			   && currentEnvironment.name() != "KHARID_DESERT_REGION" && currentEnvironment.name() != "WILDERNESS";
 	}
 }
