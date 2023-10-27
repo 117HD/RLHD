@@ -74,7 +74,7 @@ public enum Material {
 		.setHasTransparency(true)),
 	LEAVES_1(8, p -> p
 		.setHasTransparency(true)
-		.setTextureScale(1.025f, 1.025f)
+//		.setTextureScale(1.025f, 1.025f)
 	),
 	TREE_RINGS(9, p -> p
 		.setHasTransparency(true)),
@@ -137,7 +137,7 @@ public enum Material {
 		.setScroll(0, 1 / -3f)),
 	LEAVES_2(41, p -> p
 		.setHasTransparency(true)
-		.setTextureScale(1.025f, 1.025f)
+//		.setTextureScale(1.025f, 1.025f)
 	),
 	MARBLE(42, p -> p
 		.setSpecular(1.0f, 400)),
@@ -226,7 +226,7 @@ public enum Material {
 		.setHasTransparency(true)),
 	SHAYZIEN_LEAVES_2(90, p -> p
 		.setHasTransparency(true)
-		.setTextureScale(1.025f, 1.025f)
+//		.setTextureScale(1.025f, 1.025f)
 	),
 	WATER_ICE(91),
 	SNOW_ROOF(92),
@@ -644,8 +644,8 @@ public enum Material {
 		.setSpecular(0.3f, 20)
 		.setNormalMap(HD_HAY_N)
 	),
-	EVERGREEN_LEAVES_1(p -> p.setTextureScale(1.025f, 1.025f)),
-	OAK_LEAVES_1(p -> p.setParent(EVERGREEN_LEAVES_1).setTextureScale(1.025f, 1.025f)),
+	EVERGREEN_LEAVES_1,//(p -> p).setTextureScale(1.025f, 1.025f)),
+	OAK_LEAVES_1(p -> p.setParent(EVERGREEN_LEAVES_1)),//.setTextureScale(1.025f, 1.025f)),
 	DOUBLE_TREE_LEAVES(p -> p.setParent(EVERGREEN_LEAVES_1)),
 
 
@@ -662,11 +662,11 @@ public enum Material {
 		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER_THEME, LEAVES_1)
 		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER_THEME, EVERGREEN_LEAVES_1)
 		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER_THEME, OAK_LEAVES_1)
-		.setTextureScale(1.025f, 1.025f)
+//		.setTextureScale(1.025f, 1.025f)
 	),
 	WINTER_LEAVES_2(p -> p
 		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER_THEME, LEAVES_2)
-		.setTextureScale(1.025f, 1.025f)
+//		.setTextureScale(1.025f, 1.025f)
 	),
 	WINTER_LEAVES_3(p -> p
 		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER_THEME, LEAVES_3)
@@ -717,23 +717,23 @@ public enum Material {
 		.setBrightness(12)),
 	AUTUMN_LEAVES_1(p -> p
 		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.AUTUMN_THEME, LEAVES_1)
-		.setTextureScale(1.025f, 1.025f)
+//		.setTextureScale(1.025f, 1.025f)
 	),
 	AUTUMN_LEAVES_2(p -> p
 		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.AUTUMN_THEME, LEAVES_2)
-		.setTextureScale(1.025f, 1.025f)
+//		.setTextureScale(1.025f, 1.025f)
 	),
 	AUTUMN_LEAVES_3(p -> p
 		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.AUTUMN_THEME, LEAVES_3)
-		.setTextureScale(1.025f, 1.025f)
+//		.setTextureScale(1.025f, 1.025f)
 	),
 	AUTUMN_LEAVES_4(p -> p
 		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.AUTUMN_THEME, DOUBLE_TREE_LEAVES)
-		.setTextureScale(1.025f, 1.025f)
+//		.setTextureScale(1.025f, 1.025f)
 	),
 	AUTUMN_OAK_LEAVES_1(p -> p
 		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.AUTUMN_THEME, OAK_LEAVES_1)
-		.setTextureScale(1.025f, 1.025f)
+//		.setTextureScale(1.025f, 1.025f)
 	),
 	;
 
