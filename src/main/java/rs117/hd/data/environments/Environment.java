@@ -641,7 +641,6 @@ public enum Environment
 	),
 
 	// Yanille
-	YANILLE(Area.YANILLE, new Properties()),
 	// Nightmare Zone
 	NIGHTMARE_ZONE(Area.NIGHTMARE_ZONE, new Properties()
 		.setFogColor("#190D02")
