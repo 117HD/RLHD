@@ -137,6 +137,8 @@ public class EnvironmentManager {
 
 	private boolean lightningEnabled = false;
 	private boolean isOverworld = false;
+	private boolean isThemeable = false;
+	private boolean isWinterThemeable = false;
 	// some necessary data for reloading the scene while in POH to fix major performance loss
 	private boolean isInHouse = false;
 	private int previousPlane;
@@ -158,6 +160,8 @@ public class EnvironmentManager {
 			new LocalPoint(plugin.cameraFocalPoint[0], plugin.cameraFocalPoint[1]), client.getPlane());
 
 		isOverworld = Area.OVERWORLD.containsPoint(position);
+		isThemeable = Area.THEMEABLE_ENVIRONMENTS.containsPoint(position);
+		isWinterThemeable = Area.SNOW_REGIONS.containsPoint(position);
 
 		// skip the transitional fade if the player has moved too far
 		// since the previous frame. results in an instant transition when
@@ -444,13 +448,10 @@ public class EnvironmentManager {
 	 * This should not be used from the scene loader thread
 	 */
 	private boolean useWinterTheme() {
-		return plugin.configSeasonalTheme == SeasonalTheme.WINTER_THEME && isOverworld && currentEnvironment.name() != "MORYTANIA"
-			   && currentEnvironment.name() != "KHARID_DESERT_REGION" && currentEnvironment.name() != "WILDERNESS"
-			   && currentEnvironment.name() != "KARAMJA";
+		return plugin.configSeasonalTheme == SeasonalTheme.WINTER_THEME && isOverworld && isThemeable || isWinterThemeable;
 	}
 
 	private boolean useAutumnTheme() {
-		return plugin.configSeasonalTheme == SeasonalTheme.AUTUMN_THEME && isOverworld && currentEnvironment.name() != "MORYTANIA"
-			   && currentEnvironment.name() != "KHARID_DESERT_REGION" && currentEnvironment.name() != "WILDERNESS";
+		return plugin.configSeasonalTheme == SeasonalTheme.AUTUMN_THEME && isOverworld && isThemeable;
 	}
 }
