@@ -1880,7 +1880,8 @@ public enum Area
 		NEITIZNOT,
 		JATIZSO,
 		TIRANNWN_REGION,
-		APE_ATOLL
+		APE_ATOLL,
+		ENTRANA
 
 	),
 	ALL(0, 0, Integer.MAX_VALUE, Integer.MAX_VALUE),
