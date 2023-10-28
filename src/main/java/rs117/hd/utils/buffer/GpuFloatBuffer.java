@@ -26,6 +26,7 @@ package rs117.hd.utils.buffer;
 
 import java.nio.FloatBuffer;
 import org.lwjgl.system.MemoryUtil;
+import rs117.hd.HdPlugin;
 
 public class GpuFloatBuffer
 {
@@ -36,8 +37,7 @@ public class GpuFloatBuffer
 		this(65536);
 	}
 
-	public GpuFloatBuffer(int initialCapacity)
-	{
+	public GpuFloatBuffer(int initialCapacity) {
 		buffer = MemoryUtil.memAllocFloat(initialCapacity);
 	}
 
@@ -47,8 +47,13 @@ public class GpuFloatBuffer
 		buffer = null;
 	}
 
-	public void put(float x, float y, float z, float w)
-	{
+	@Override
+	@SuppressWarnings("deprecation")
+	protected void finalize() {
+		destroy();
+	}
+
+	public void put(float x, float y, float z, float w) {
 		buffer.put(x).put(y).put(z).put(w);
 	}
 
@@ -65,25 +70,25 @@ public class GpuFloatBuffer
 		return buffer.position();
 	}
 
-	public void flip()
-	{
+	public void flip() {
 		buffer.flip();
 	}
 
-	public void clear()
-	{
+	public GpuFloatBuffer clear() {
 		buffer.clear();
+		return this;
 	}
 
-	public void ensureCapacity(int size)
-	{
+	public int capacity() {
+		return buffer.capacity();
+	}
+
+	public void ensureCapacity(int size) {
 		int capacity = buffer.capacity();
 		final int position = buffer.position();
-		if ((capacity - position) < size)
-		{
-			do
-			{
-				capacity *= 2;
+		if ((capacity - position) < size) {
+			do {
+				capacity *= HdPlugin.BUFFER_GROWTH_MULTIPLIER;
 			}
 			while ((capacity - position) < size);
 

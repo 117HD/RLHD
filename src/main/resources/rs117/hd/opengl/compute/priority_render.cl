@@ -32,7 +32,7 @@ void get_face(
   __local struct shared_data *shared,
   __constant struct uniform *uni,
   __global const int4 *vb,
-  uint localId, struct ModelInfo minfo, int cameraYaw, int cameraPitch,
+  uint localId, struct ModelInfo minfo,
   /* out */ int *prio, int *dis, int4 *o1, int4 *o2, int4 *o3);
 void add_face_prio_distance(
   __local struct shared_data *shared,
@@ -40,6 +40,9 @@ void add_face_prio_distance(
   uint localId, struct ModelInfo minfo, int4 thisrvA, int4 thisrvB, int4 thisrvC, int thisPriority, int thisDistance, int4 pos);
 int map_face_priority(__local struct shared_data *shared, uint localId, struct ModelInfo minfo, int thisPriority, int thisDistance, int *prio);
 void insert_dfs(__local struct shared_data *shared, uint localId, struct ModelInfo minfo, int adjPrio, int distance, int prioIdx);
+int tile_height(read_only image3d_t tileHeightMap, int z, int x, int y);
+int4 hillskew_vertex(read_only image3d_t tileHeightMap, int4 v, int hillskew, int y, int plane);
+void undoVanillaShading(int4 *vertex, float3 unrotatedNormal);
 void sort_and_insert(
   __local struct shared_data *shared,
   __global const float4 *uv,
@@ -118,7 +121,7 @@ void get_face(
   __local struct shared_data *shared,
   __constant struct uniform *uni,
   __global const int4 *vb,
-  uint localId, struct ModelInfo minfo, int cameraYaw, int cameraPitch,
+  uint localId, struct ModelInfo minfo,
   /* out */ int *prio, int *dis, int4 *o1, int4 *o2, int4 *o3
 ) {
   uint size = minfo.size;
@@ -151,7 +154,7 @@ void get_face(
     if (radius == 0) {
       thisDistance = 0;
     } else {
-      thisDistance = face_distance(thisrvA, thisrvB, thisrvC, cameraYaw, cameraPitch) + radius;
+      thisDistance = face_distance(uni, thisrvA, thisrvB, thisrvC) + radius;
     }
 
     *o1 = thisrvA;
@@ -254,6 +257,40 @@ int4 hillskew_vertex(read_only image3d_t tileHeightMap, int4 v, int hillskew, in
   }
 }
 
+void undoVanillaShading(int4 *vertex, float3 unrotatedNormal) {
+    unrotatedNormal = normalize(unrotatedNormal);
+
+    const float3 LIGHT_DIR_MODEL = (float3)(0.57735026, 0.57735026, 0.57735026);
+    // subtracts the X lowest lightness levels from the formula.
+    // helps keep darker colors appropriately dark
+    const int IGNORE_LOW_LIGHTNESS = 3;
+    // multiplier applied to vertex' lightness value.
+    // results in greater lightening of lighter colors
+    const float LIGHTNESS_MULTIPLIER = 3.f;
+    // the minimum amount by which each color will be lightened
+    const int BASE_LIGHTEN = 10;
+
+    int hsl = vertex->w;
+    int saturation = hsl >> 7 & 0x7;
+    int lightness = hsl & 0x7F;
+    float vanillaLightDotNormals = dot(LIGHT_DIR_MODEL, unrotatedNormal);
+    if (vanillaLightDotNormals > 0) {
+        float lighten = max(0, lightness - IGNORE_LOW_LIGHTNESS);
+        lightness += (int) ((lighten * LIGHTNESS_MULTIPLIER + BASE_LIGHTEN - lightness) * vanillaLightDotNormals);
+    }
+    int maxLightness;
+    #if LEGACY_GREY_COLORS
+    maxLightness = 55;
+    #else
+    const int MAX_BRIGHTNESS_LOOKUP_TABLE[8] = { 127, 61, 59, 57, 56, 56, 55, 55 };
+    maxLightness = MAX_BRIGHTNESS_LOOKUP_TABLE[saturation];
+    #endif
+    lightness = min(lightness, maxLightness);
+    hsl &= ~0x7F;
+    hsl |= lightness;
+    vertex->w = hsl;
+}
+
 void sort_and_insert(
   __local struct shared_data *shared,
   __global const float4 *uv,
@@ -288,8 +325,6 @@ void sort_and_insert(
     int end = priorityOffset + numOfPriority; // index of last face with this priority
     int myOffset = priorityOffset;
     
-    uint ssboOffset = localId;
-
     // we only have to order faces against others of the same priority
     // calculate position this face will be in
     for (int i = start; i < end; ++i) {
@@ -305,6 +340,23 @@ void sort_and_insert(
         ++myOffset;
       }
     }
+
+    float4 normA = normal[offset + localId * 3];
+    float4 normB = normal[offset + localId * 3 + 1];
+    float4 normC = normal[offset + localId * 3 + 2];
+
+    normalout[outOffset + myOffset * 3    ] = rotate_vec(normA, orientation);
+    normalout[outOffset + myOffset * 3 + 1] = rotate_vec(normB, orientation);
+    normalout[outOffset + myOffset * 3 + 2] = rotate_vec(normC, orientation);
+
+    #if UNDO_VANILLA_SHADING
+    // Compute flat normal if necessary
+    if (fast_length(normA) == 0)
+        normA.xyz = normB.xyz = normC.xyz = cross(convert_float3(thisrvA.xyz - thisrvB.xyz), convert_float3(thisrvA.xyz - thisrvC.xyz));
+    undoVanillaShading(&thisrvA, normA.xyz);
+    undoVanillaShading(&thisrvB, normB.xyz);
+    undoVanillaShading(&thisrvC, normC.xyz);
+    #endif
 
     thisrvA += pos;
     thisrvB += pos;
@@ -348,13 +400,5 @@ void sort_and_insert(
     uvout[outOffset + myOffset * 3]     = uvA;
     uvout[outOffset + myOffset * 3 + 1] = uvB;
     uvout[outOffset + myOffset * 3 + 2] = uvC;
-    
-    float4 normA = normal[offset + ssboOffset * 3    ];
-    float4 normB = normal[offset + ssboOffset * 3 + 1];
-    float4 normC = normal[offset + ssboOffset * 3 + 2];
-
-    normalout[outOffset + myOffset * 3    ] = rotate_vec(normA, orientation);
-    normalout[outOffset + myOffset * 3 + 1] = rotate_vec(normB, orientation);
-    normalout[outOffset + myOffset * 3 + 2] = rotate_vec(normC, orientation);
   }
 }

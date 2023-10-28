@@ -39,6 +39,7 @@ import rs117.hd.utils.AABB;
 import rs117.hd.utils.HDUtils;
 
 import static rs117.hd.utils.HDUtils.clamp;
+import static rs117.hd.utils.HDUtils.hermite;
 import static rs117.hd.utils.HDUtils.lerp;
 import static rs117.hd.utils.HDUtils.rand;
 
@@ -69,49 +70,49 @@ public class EnvironmentManager {
 
 	private WorldPoint previousPosition = new WorldPoint(0, 0, 0);
 
-	private float[] startFogColor = new float[]{0,0,0};
-	public float[] currentFogColor = new float[]{0,0,0};
-	private float[] targetFogColor = new float[]{0,0,0};
+	private float[] startFogColor = new float[] { 0, 0, 0 };
+	public float[] currentFogColor = new float[] { 0, 0, 0 };
+	private float[] targetFogColor = new float[] { 0, 0, 0 };
 
-	private float[] startWaterColor = new float[]{0,0,0};
-	public float[] currentWaterColor = new float[]{0,0,0};
-	private float[] targetWaterColor = new float[]{0,0,0};
+	private float[] startWaterColor = new float[] { 0, 0, 0 };
+	public float[] currentWaterColor = new float[] { 0, 0, 0 };
+	private float[] targetWaterColor = new float[] { 0, 0, 0 };
 
-	private int startFogDepth = 0;
-	public int currentFogDepth = 0;
-	private int targetFogDepth = 0;
+	private float startFogDepth = 0;
+	public float currentFogDepth = 0;
+	private float targetFogDepth = 0;
 
 	private float startAmbientStrength = 0f;
 	public float currentAmbientStrength = 0f;
 	private float targetAmbientStrength = 0f;
 
-	private float[] startAmbientColor = new float[]{0,0,0};
-	public float[] currentAmbientColor = new float[]{0,0,0};
-	private float[] targetAmbientColor = new float[]{0,0,0};
+	private float[] startAmbientColor = new float[] { 0, 0, 0 };
+	public float[] currentAmbientColor = new float[] { 0, 0, 0 };
+	private float[] targetAmbientColor = new float[] { 0, 0, 0 };
 
 	private float startDirectionalStrength = 0f;
 	public float currentDirectionalStrength = 0f;
 	private float targetDirectionalStrength = 0f;
 
-	private float[] startUnderwaterCausticsColor = new float[]{0,0,0};
-	public float[] currentUnderwaterCausticsColor = new float[]{0,0,0};
-	private float[] targetUnderwaterCausticsColor = new float[]{0,0,0};
+	private float[] startUnderwaterCausticsColor = new float[] { 0, 0, 0 };
+	public float[] currentUnderwaterCausticsColor = new float[] { 0, 0, 0 };
+	private float[] targetUnderwaterCausticsColor = new float[] { 0, 0, 0 };
 
 	private float startUnderwaterCausticsStrength = 1f;
 	public float currentUnderwaterCausticsStrength = 1f;
 	private float targetUnderwaterCausticsStrength = 1f;
 
-	private float[] startDirectionalColor = new float[]{0,0,0};
-	public float[] currentDirectionalColor = new float[]{0,0,0};
-	private float[] targetDirectionalColor = new float[]{0,0,0};
+	private float[] startDirectionalColor = new float[] { 0, 0, 0 };
+	public float[] currentDirectionalColor = new float[] { 0, 0, 0 };
+	private float[] targetDirectionalColor = new float[] { 0, 0, 0 };
 
 	private float startUnderglowStrength = 0f;
 	public float currentUnderglowStrength = 0f;
 	private float targetUnderglowStrength = 0f;
 
-	private float[] startUnderglowColor = new float[]{0,0,0};
-	public float[] currentUnderglowColor = new float[]{0,0,0};
-	private float[] targetUnderglowColor = new float[]{0,0,0};
+	private float[] startUnderglowColor = new float[] { 0, 0, 0 };
+	public float[] currentUnderglowColor = new float[] { 0, 0, 0 };
+	private float[] targetUnderglowColor = new float[] { 0, 0, 0 };
 
 	private float startGroundFogStart = 0f;
 	public float currentGroundFogStart = 0f;
@@ -148,11 +149,12 @@ public class EnvironmentManager {
 	 * Updates variables used in transition effects
 	 *
 	 * @param sceneContext to possible environments from
-	 * @param position     in world space that the camera is or will be looking at
 	 */
-	public void update(SceneContext sceneContext, WorldPoint position)
-	{
+	public void update(SceneContext sceneContext) {
 		assert client.isClientThread();
+
+		WorldPoint position = sceneContext.localToWorld(
+			new LocalPoint(plugin.cameraFocalPoint[0], plugin.cameraFocalPoint[1]), client.getPlane());
 
 		isOverworld = Area.OVERWORLD.containsPoint(position);
 
@@ -186,7 +188,7 @@ public class EnvironmentManager {
 						// POH takes 1 game tick to enter, then 2 game ticks to load per floor
 						plugin.reloadSceneIn(7);
 						isInHouse = true;
-					} else {
+					} else if (isInHouse) {
 						// Avoid an unnecessary scene reload if the player has already left the POH
 						plugin.abortSceneReload();
 						isInHouse = false;
@@ -194,7 +196,6 @@ public class EnvironmentManager {
 
 					// Since the environment which actually gets used may differ from the environment
 					// chosen based on position, update the plugin's area tracking here
-					plugin.isInGauntlet = environment == Environment.THE_GAUNTLET || environment == Environment.THE_GAUNTLET_CORRUPTED;
 					plugin.isInChambersOfXeric = environment == Environment.CHAMBERS_OF_XERIC;
 
 					changeEnvironment(environment, skipTransition);
@@ -208,22 +209,22 @@ public class EnvironmentManager {
 		// interpolate between start and target values
 		long currentTime = System.currentTimeMillis();
 		float t = clamp((currentTime - startTime) / (float) TRANSITION_DURATION, 0, 1);
-		currentFogColor = lerp(startFogColor, targetFogColor, t);
-		currentWaterColor = lerp(startWaterColor, targetWaterColor, t);
-		currentFogDepth = (int) lerp(startFogDepth, targetFogDepth, t);
-		currentAmbientStrength = lerp(startAmbientStrength, targetAmbientStrength, t);
-		currentAmbientColor = lerp(startAmbientColor, targetAmbientColor, t);
-		currentDirectionalStrength = lerp(startDirectionalStrength, targetDirectionalStrength, t);
-		currentDirectionalColor = lerp(startDirectionalColor, targetDirectionalColor, t);
-		currentUnderglowStrength = lerp(startUnderglowStrength, targetUnderglowStrength, t);
-		currentUnderglowColor = lerp(startUnderglowColor, targetUnderglowColor, t);
-		currentGroundFogStart = lerp(startGroundFogStart, targetGroundFogStart, t);
-		currentGroundFogEnd = lerp(startGroundFogEnd, targetGroundFogEnd, t);
-		currentGroundFogOpacity = lerp(startGroundFogOpacity, targetGroundFogOpacity, t);
-		currentLightPitch = lerp(startLightPitch, targetLightPitch, t);
-		currentLightYaw = lerp(startLightYaw, targetLightYaw, t);
-		currentUnderwaterCausticsColor = lerp(startUnderwaterCausticsColor, targetUnderwaterCausticsColor, t);
-		currentUnderwaterCausticsStrength = lerp(startUnderwaterCausticsStrength, targetUnderwaterCausticsStrength, t);
+		currentFogColor = hermite(startFogColor, targetFogColor, t);
+		currentWaterColor = hermite(startWaterColor, targetWaterColor, t);
+		currentFogDepth = hermite(startFogDepth, targetFogDepth, t);
+		currentAmbientStrength = hermite(startAmbientStrength, targetAmbientStrength, t);
+		currentAmbientColor = hermite(startAmbientColor, targetAmbientColor, t);
+		currentDirectionalStrength = hermite(startDirectionalStrength, targetDirectionalStrength, t);
+		currentDirectionalColor = hermite(startDirectionalColor, targetDirectionalColor, t);
+		currentUnderglowStrength = hermite(startUnderglowStrength, targetUnderglowStrength, t);
+		currentUnderglowColor = hermite(startUnderglowColor, targetUnderglowColor, t);
+		currentGroundFogStart = hermite(startGroundFogStart, targetGroundFogStart, t);
+		currentGroundFogEnd = hermite(startGroundFogEnd, targetGroundFogEnd, t);
+		currentGroundFogOpacity = hermite(startGroundFogOpacity, targetGroundFogOpacity, t);
+		currentLightPitch = hermite(startLightPitch, targetLightPitch, t);
+		currentLightYaw = hermite(startLightYaw, targetLightYaw, t);
+		currentUnderwaterCausticsColor = hermite(startUnderwaterCausticsColor, targetUnderwaterCausticsColor, t);
+		currentUnderwaterCausticsStrength = hermite(startUnderwaterCausticsStrength, targetUnderwaterCausticsStrength, t);
 
 		updateLightning();
 

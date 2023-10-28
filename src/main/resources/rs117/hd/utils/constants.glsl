@@ -34,3 +34,5 @@
 #endif
 
 #include VANILLA_COLOR_BANDING
+#include UNDO_VANILLA_SHADING
+#include LEGACY_GREY_COLORS

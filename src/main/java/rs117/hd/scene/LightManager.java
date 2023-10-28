@@ -25,7 +25,6 @@
  */
 package rs117.hd.scene;
 
-import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import com.google.gson.Gson;
@@ -48,6 +47,8 @@ import net.runelite.client.plugins.PluginManager;
 import net.runelite.client.plugins.entityhider.EntityHiderConfig;
 import net.runelite.client.plugins.entityhider.EntityHiderPlugin;
 import rs117.hd.HdPlugin;
+import rs117.hd.HdPluginConfig;
+import rs117.hd.config.MaxDynamicLights;
 import rs117.hd.scene.lights.Alignment;
 import rs117.hd.scene.lights.Light;
 import rs117.hd.scene.lights.LightType;
@@ -87,18 +88,16 @@ public class LightManager {
 	private HdPlugin plugin;
 
 	@Inject
+	private HdPluginConfig config;
+
+	@Inject
 	private EntityHiderPlugin entityHiderPlugin;
 
-	@VisibleForTesting
-	final ArrayList<SceneLight> WORLD_LIGHTS = new ArrayList<>();
-	@VisibleForTesting
-	final ListMultimap<Integer, Light> NPC_LIGHTS = ArrayListMultimap.create();
-	@VisibleForTesting
-	final ListMultimap<Integer, Light> OBJECT_LIGHTS = ArrayListMultimap.create();
-	@VisibleForTesting
-	final ListMultimap<Integer, Light> PROJECTILE_LIGHTS = ArrayListMultimap.create();
-	@VisibleForTesting
-	final ListMultimap<Integer, Light> GRAPHICS_OBJECT_LIGHTS = ArrayListMultimap.create();
+	public final ArrayList<SceneLight> WORLD_LIGHTS = new ArrayList<>();
+	public final ListMultimap<Integer, Light> NPC_LIGHTS = ArrayListMultimap.create();
+	public final ListMultimap<Integer, Light> OBJECT_LIGHTS = ArrayListMultimap.create();
+	public final ListMultimap<Integer, Light> PROJECTILE_LIGHTS = ArrayListMultimap.create();
+	public final ListMultimap<Integer, Light> GRAPHICS_OBJECT_LIGHTS = ArrayListMultimap.create();
 
 	long lastFrameTime = -1;
 	boolean configChanged = false;
@@ -107,12 +106,15 @@ public class LightManager {
 
 	static final float TWO_PI = (float) (2 * Math.PI);
 
-	@VisibleForTesting
-	void loadConfig(Gson gson, ResourcePath path) {
+	public void loadConfig(Gson gson, ResourcePath path) {
 		try {
 			Light[] lights;
 			try {
 				lights = path.loadJson(gson, Light[].class);
+				if (lights == null) {
+					log.warn("Skipping empty lights.json");
+					return;
+				}
 			} catch (IOException ex) {
 				log.error("Failed to load lights", ex);
 				return;
@@ -129,7 +131,7 @@ public class LightManager {
 				// Also ensure that each color always has 4 components with sensible defaults
 				float[] linearRGBA = { 0, 0, 0, 1 };
 				for (int i = 0; i < Math.min(lightDef.color.length, linearRGBA.length); i++)
-					linearRGBA[i] = ColorUtils.srgbToLinear(lightDef.color[i] /= 255f);
+					linearRGBA[i] = ColorUtils.srgbToLinear(lightDef.color[i] / 255f);
 				lightDef.color = linearRGBA;
 
 				if (lightDef.worldX != null && lightDef.worldY != null) {
@@ -163,7 +165,7 @@ public class LightManager {
 	public void update(SceneContext sceneContext) {
 		assert client.isClientThread();
 
-		if (client.getGameState() != GameState.LOGGED_IN)
+		if (client.getGameState() != GameState.LOGGED_IN || config.maxDynamicLights() == MaxDynamicLights.NONE)
 			return;
 
 		if (configChanged) {
@@ -182,7 +184,7 @@ public class LightManager {
 		Iterator<SceneLight> lightIterator = sceneContext.lights.iterator();
 		while (lightIterator.hasNext()) {
 			SceneLight light = lightIterator.next();
-			light.distance = Integer.MAX_VALUE;
+			light.distanceSquared = Integer.MAX_VALUE;
 
 			if (light.projectile != null) {
 				if (light.projectile.getRemainingCycles() <= 0) {
@@ -335,8 +337,7 @@ public class LightManager {
 				light.currentColor = light.color;
 			}
 			// Apply fade-in
-			if (light.fadeInDuration > 0)
-			{
+			if (light.fadeInDuration > 0) {
 				light.currentStrength *= Math.min((float) light.currentFadeIn / (float) light.fadeInDuration, 1.0f);
 
 				light.currentFadeIn += frameTime;
@@ -344,10 +345,9 @@ public class LightManager {
 
 			// Calculate the distance between the player and the light to determine which
 			// lights to display based on the 'max dynamic lights' config option
-			int camX = plugin.camTarget[0];
-			int camY = plugin.camTarget[1];
-			int camZ = plugin.camTarget[2];
-			light.distance = (int) Math.sqrt(Math.pow(camX - light.x, 2) + Math.pow(camY - light.y, 2) + Math.pow(camZ - light.z, 2));
+			int distX = plugin.cameraFocalPoint[0] - light.x;
+			int distY = plugin.cameraFocalPoint[1] - light.y;
+			light.distanceSquared = distX * distX + distY * distY + light.z * light.z;
 
 			int tileX = (int) Math.floor(light.x / 128f) + SceneUploader.SCENE_OFFSET;
 			int tileY = (int) Math.floor(light.y / 128f) + SceneUploader.SCENE_OFFSET;
@@ -370,7 +370,7 @@ public class LightManager {
 			}
 		}
 
-		sceneContext.lights.sort(Comparator.comparingInt(light -> light.distance));
+		sceneContext.lights.sort(Comparator.comparingInt(light -> light.distanceSquared));
 
 		lastFrameTime = System.currentTimeMillis();
 	}
@@ -474,29 +474,31 @@ public class LightManager {
 		}
 	}
 
-	public ArrayList<SceneLight> getVisibleLights(int maxDistance, int maxLights)
-	{
+	public ArrayList<SceneLight> getVisibleLights(int maxLights) {
 		SceneContext sceneContext = plugin.getSceneContext();
 		ArrayList<SceneLight> visibleLights = new ArrayList<>();
 
 		if (sceneContext == null)
 			return visibleLights;
 
-		for (SceneLight light : sceneContext.lights)
-		{
-			if (light.distance > maxDistance * LOCAL_TILE_SIZE)
+		int maxDistanceSquared = plugin.getDrawDistance() * LOCAL_TILE_SIZE;
+		maxDistanceSquared *= maxDistanceSquared;
+
+		for (SceneLight light : sceneContext.lights) {
+			if (light.distanceSquared > maxDistanceSquared)
 				break;
 
 			if (!light.visible)
 				continue;
 
-			// Hide certain lights on planes lower than the player to prevent light 'leaking' through the floor
-			if (light.plane < client.getPlane() && light.belowFloor)
-				continue;
-
-			// Hide any light that is above the current plane and is above a solid floor
-			if (light.plane > client.getPlane() && light.aboveFloor)
-				continue;
+			if (!light.visibleFromOtherPlanes) {
+				// Hide certain lights on planes lower than the player to prevent light 'leaking' through the floor
+				if (light.plane < client.getPlane() && light.belowFloor)
+					continue;
+				// Hide any light that is above the current plane and is above a solid floor
+				if (light.plane > client.getPlane() && light.aboveFloor)
+					continue;
+			}
 
 			visibleLights.add(light);
 
@@ -525,6 +527,7 @@ public class LightManager {
 			light.z = (int) projectile.getZ();
 			light.plane = projectile.getFloor();
 			light.fadeInDuration = 300;
+			light.visible = projectileLightVisible();
 
 			sceneContext.lights.add(light);
 		}

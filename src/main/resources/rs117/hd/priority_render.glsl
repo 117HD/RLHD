@@ -84,7 +84,7 @@ int count_prio_offset(int priority) {
 }
 
 void get_face(
-    uint localId, ModelInfo minfo, int cameraYaw, int cameraPitch,
+    uint localId, ModelInfo minfo,
     out int prio, out int dis, out ivec4 o1, out ivec4 o2, out ivec4 o3
 ) {
     int size = minfo.size;
@@ -122,7 +122,7 @@ void get_face(
         if (radius == 0) {
             thisDistance = 0;
         } else {
-            thisDistance = face_distance(thisrvA, thisrvB, thisrvC, cameraYaw, cameraPitch) + radius;
+            thisDistance = face_distance(thisrvA, thisrvB, thisrvC) + radius;
             // Clamping here *should* be unnecessary, but it prevents crashing in the unlikely event where we
             // somehow end up with negative numbers, which is known to happen with open-source AMD drivers.
             thisDistance = max(0, thisDistance);
@@ -191,14 +191,16 @@ int map_face_priority(uint localId, ModelInfo minfo, int thisPriority, int thisD
     return 0;
 }
 
-void insert_dfs(uint localId, ModelInfo minfo, int adjPrio, int distance, int prioIdx) {
+void insert_face(uint localId, ModelInfo minfo, int adjPrio, int distance, int prioIdx) {
     int size = minfo.size;
 
     if (localId < size) {
-        // calculate base offset into dfs based on number of faces with a lower priority
+        // calculate base offset into renderPris based on number of faces with a lower priority
         int baseOff = count_prio_offset(adjPrio);
-        // store into face array offset array by unique index
-        dfs[baseOff + prioIdx] = (int(localId) << 16) | distance;
+        // the furthest faces draw first, and have the highest value
+        // if two faces have the same distance, the one with the
+        // lower id draws first
+        renderPris[baseOff + prioIdx] = uint(distance << 16) | (~localId & 0xffffu);
     }
 }
 
@@ -215,10 +217,42 @@ ivec4 hillskew_vertex(ivec4 v, int hillskew, int y, int plane) {
     int pz = v.z & 127;
     int sx = v.x >> 7;
     int sz = v.z >> 7;
-    int h1 = px * tile_height(plane, sx + 1, sz) + (128 - px) * tile_height(plane, sx, sz) >> 7;
-    int h2 = px * tile_height(plane, sx + 1, sz + 1) + (128 - px) * tile_height(plane, sx, sz + 1) >> 7;
-    int h3 = pz * h2 + (128 - pz) * h1 >> 7;
+    int h1 = (px * tile_height(plane, sx + 1, sz) + (128 - px) * tile_height(plane, sx, sz)) >> 7;
+    int h2 = (px * tile_height(plane, sx + 1, sz + 1) + (128 - px) * tile_height(plane, sx, sz + 1)) >> 7;
+    int h3 = (pz * h2 + (128 - pz) * h1) >> 7;
     return ivec4(v.x, v.y + h3 - y, v.z, v.w);
+}
+
+void undoVanillaShading(inout ivec4 vertex, vec3 unrotatedNormal) {
+    const vec3 LIGHT_DIR_MODEL = vec3(0.57735026, 0.57735026, 0.57735026);
+    // subtracts the X lowest lightness levels from the formula.
+    // helps keep darker colors appropriately dark
+    const int IGNORE_LOW_LIGHTNESS = 3;
+    // multiplier applied to vertex' lightness value.
+    // results in greater lightening of lighter colors
+    const float LIGHTNESS_MULTIPLIER = 3f;
+    // the minimum amount by which each color will be lightened
+    const int BASE_LIGHTEN = 10;
+
+    int hsl = vertex.w;
+    int saturation = hsl >> 7 & 0x7;
+    int lightness = hsl & 0x7F;
+    float vanillaLightDotNormals = dot(LIGHT_DIR_MODEL, unrotatedNormal);
+    if (vanillaLightDotNormals > 0) {
+        vanillaLightDotNormals /= length(unrotatedNormal);
+        float lighten = max(0, lightness - IGNORE_LOW_LIGHTNESS);
+        lightness += int((lighten * LIGHTNESS_MULTIPLIER + BASE_LIGHTEN - lightness) * vanillaLightDotNormals);
+    }
+    int maxLightness;
+    #if LEGACY_GREY_COLORS
+    maxLightness = 55;
+    #else
+    maxLightness = int(127 - 72 * pow(saturation / 7., .05));
+    #endif
+    lightness = min(lightness, maxLightness);
+    hsl &= ~0x7F;
+    hsl |= lightness;
+    vertex.w = hsl;
 }
 
 void sort_and_insert(uint localId, ModelInfo minfo, int thisPriority, int thisDistance, ivec4 thisrvA, ivec4 thisrvB, ivec4 thisrvC) {
@@ -233,29 +267,37 @@ void sort_and_insert(uint localId, ModelInfo minfo, int thisPriority, int thisDi
         ivec4 pos = ivec4(minfo.x, minfo.y, minfo.z, 0);
         int orientation = flags & 0x7ff;
 
+        // we only have to order faces against others of the same priority
         const int priorityOffset = count_prio_offset(thisPriority);
         const int numOfPriority = totalMappedNum[thisPriority];
-        int start = priorityOffset; // index of first face with this priority
-        int end = priorityOffset + numOfPriority; // index of last face with this priority
+        const int start = priorityOffset; // index of first face with this priority
+        const int end = priorityOffset + numOfPriority; // index of last face with this priority
+        const uint renderPriority = uint(thisDistance << 16) | (~localId & 0xffffu);
         int myOffset = priorityOffset;
 
-        uint ssboOffset = localId;
-
-        // we only have to order faces against others of the same priority
         // calculate position this face will be in
-        for (int i = start; i < end; ++i) {
-            int d1 = dfs[i];
-            int theirId = d1 >> 16;
-            int theirDistance = d1 & 0xffff;
-
-            // the closest faces draw last, so have the highest index
-            // if two faces have the same distance, the one with the
-            // higher id draws last
-            if ((theirDistance > thisDistance)
-            || (theirDistance == thisDistance && theirId < localId)) {
+        for (int i = start; i < end; ++i)
+            if (renderPriority < renderPris[i])
                 ++myOffset;
-            }
-        }
+
+        // Grab vertex normals from the correct buffer
+        vec4 normA = normal[offset + localId * 3    ];
+        vec4 normB = normal[offset + localId * 3 + 1];
+        vec4 normC = normal[offset + localId * 3 + 2];
+
+        // Rotate normals to match model orientation
+        normalout[outOffset + myOffset * 3]     = rotate(normA, orientation);
+        normalout[outOffset + myOffset * 3 + 1] = rotate(normB, orientation);
+        normalout[outOffset + myOffset * 3 + 2] = rotate(normC, orientation);
+
+        #if UNDO_VANILLA_SHADING
+        // Compute flat normal if necessary
+        if (length(normA) == 0)
+            normA = normB = normC = vec4(cross(thisrvA.xyz - thisrvB.xyz, thisrvA.xyz - thisrvC.xyz), 0);
+        undoVanillaShading(thisrvA, normA.xyz);
+        undoVanillaShading(thisrvB, normB.xyz);
+        undoVanillaShading(thisrvC, normC.xyz);
+        #endif
 
         thisrvA += pos;
         thisrvB += pos;
@@ -298,15 +340,5 @@ void sort_and_insert(uint localId, ModelInfo minfo, int thisPriority, int thisDi
         uvout[outOffset + myOffset * 3]     = uvA;
         uvout[outOffset + myOffset * 3 + 1] = uvB;
         uvout[outOffset + myOffset * 3 + 2] = uvC;
-
-        // Grab vertex normals from the correct buffer
-        vec4 normA = normal[offset + ssboOffset * 3    ];
-        vec4 normB = normal[offset + ssboOffset * 3 + 1];
-        vec4 normC = normal[offset + ssboOffset * 3 + 2];
-
-        // Rotate normals to match model orientation
-        normalout[outOffset + myOffset * 3]     = rotate(normA, orientation);
-        normalout[outOffset + myOffset * 3 + 1] = rotate(normB, orientation);
-        normalout[outOffset + myOffset * 3 + 2] = rotate(normC, orientation);
     }
 }

@@ -4,8 +4,8 @@ import net.runelite.api.*;
 
 public class ModelHash {
 	// Model hashes are composed as follows:
-	// | 1111 1111 1111 111 | 1  1111 1111 1111 1111 1111 1111 1111 111 |               1 |   11 |    11 1111 1 |     111 1111 |
-	// |     15 unused bits |                        32-bit id or index | right-clickable | type | 7-bit sceneY | 7-bit sceneX |
+	// | 1111 1111 1111 1 |    11 | 1  1111 1111 1111 1111 1111 1111 1111 111 |               1 |   11 |    11 1111 1 |     111 1111 |
+	// |   13 unused bits | plane |                        32-bit id or index | right-clickable | type | 7-bit sceneY | 7-bit sceneX |
 	//
 	// type:
 	// - 0 = player
@@ -28,6 +28,7 @@ public class ModelHash {
 	private static final long SCENE_Y_MASK = 0x7f << 7;
 	private static final long TYPE_MASK = 3L << 14;
 	private static final long ID_OR_INDEX_MASK = 0xffffffffL << 17;
+	private static final long PLANE_MASK = 3L << 49;
 
 	public static long pack(int idOrIndex, boolean rightClickable, int type, int sceneY, int sceneX) {
 		return
@@ -44,6 +45,10 @@ public class ModelHash {
 
 	public static int getSceneY(long hash) {
 		return (int) ((hash & SCENE_Y_MASK) >> 7);
+	}
+
+	public static int getPlane(long hash) {
+		return (int) ((hash & PLANE_MASK) >> 49);
 	}
 
 	public static int getType(long hash) {

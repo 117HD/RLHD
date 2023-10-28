@@ -1,17 +1,14 @@
-package rs117.hd.scene;
+package rs117.hd.test;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import rs117.hd.lighting.ReformatLightsJson;
+import rs117.hd.scene.LightManager;
 import rs117.hd.scene.lights.Light;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
 
 import static org.junit.Assert.assertEquals;
 import static rs117.hd.utils.ResourcePath.path;
@@ -57,11 +54,4 @@ public class LightConfigTest {
         assertEquals(0.29613828659057617, spitRoastLight.color[1], 0.001);
         assertEquals(5.6921755E-5, spitRoastLight.color[2], 0.001);
     }
-
-	@Test
-	public void validateLightsConfig() throws IOException
-	{
-		ReformatLightsJson.main(new String[] { "--dry-run" });
-		Assert.assertEquals(stderr.toString(), "");
-	}
 }

@@ -31,938 +31,938 @@
       10866,
       10869,
       11237,
-      "ABHORRENT_SPECTRE",
-      "ADAMANT_DRAGON",
-      "ADAMANT_DRAGON_8090",
-      "AKKHA_11790",
-      "AKKHA_11791",
-      "AKKHA_11792",
-      "AKKHA_11793",
-      "AKKHA_11794",
-      "AKKHA_11795",
-      "ALBINO_BAT",
-      "ALCHEMICAL_HYDRA",
-      "ALCHEMICAL_HYDRA_8616",
-      "ALCHEMICAL_HYDRA_8620",
-      "ALCHEMICAL_HYDRA_8621",
-      "ANCIENT_GUARDIAN",
-      "ANCIENT_GUARDIAN_10665",
-      "ANCIENT_WYVERN",
-      "ANGRY_BEAR",
-      "ANGRY_BEAR_4692",
-      "ANGRY_GIANT_RAT",
-      "ANGRY_GIANT_RAT_4689",
-      "ANGRY_GIANT_RAT_4690",
-      "ANGRY_UNICORN",
-      "ANGRY_UNICORN_4688",
-      "ARCHPRIEST_OF_THE_UNICORN",
-      "ARC_TEST_01",
-      "ARC_TEST_02",
-      "ARMADYLEAN_GUARD",
-      "ARMOURED_FOE",
-      "ASYN_SHADOW_5632",
-      "AUTUMN_ELEMENTAL",
-      "AUTUMN_ELEMENTAL_5803",
-      "AUTUMN_ELEMENTAL_5804",
-      "AUTUMN_ELEMENTAL_5805",
-      "AUTUMN_ELEMENTAL_5806",
-      "AUTUMN_ELEMENTAL_5807",
-      "AVIANSIE",
-      "AVIANSIE_3170",
-      "AVIANSIE_3171",
-      "AVIANSIE_3172",
-      "AVIANSIE_3173",
-      "AVIANSIE_3174",
-      "AVIANSIE_3175",
-      "AVIANSIE_3176",
-      "AVIANSIE_3177",
-      "AVIANSIE_3178",
-      "AVIANSIE_3179",
-      "AVIANSIE_3180",
-      "AVIANSIE_3181",
-      "AVIANSIE_3182",
-      "AVIANSIE_3183",
-      "BABA_YAGA",
-      "BABY_BLACK_DRAGON",
-      "BABY_BLACK_DRAGON_1872",
-      "BABY_BLACK_DRAGON_7955",
-      "BABY_BLUE_DRAGON",
-      "BABY_BLUE_DRAGON_242",
-      "BABY_BLUE_DRAGON_243",
-      "BABY_GREEN_DRAGON",
-      "BABY_GREEN_DRAGON_5872",
-      "BABY_GREEN_DRAGON_5873",
-      "BABY_IMPLING",
-      "BABY_IMPLING_1645",
-      "BABY_RED_DRAGON",
-      "BABY_RED_DRAGON_244",
-      "BABY_RED_DRAGON_245",
-      "BABY_RED_DRAGON_246",
-      "BABY_ROC",
-      "BAKUNA",
-      "BALFRUG_KREEYATH",
-      "BANDOSIAN_GUARD",
-      "BANKER_3092",
-      "BANSHEE",
-      "BASILISK_KNIGHT",
-      "BASILISK_SENTINEL",
-      "BAT",
-      "BATT_MELLAMY",
-      "BAT_10888",
-      "BEAR_CUB",
-      "BEAR_CUB_3909",
-      "BEAR_CUB_9199",
-      "BIRD",
-      "BIRDSEYE_JACK",
-      "BIRD_10541",
-      "BIRD_5241",
-      "BLACK_BEAR",
-      "BLACK_DEMON",
-      "BLACK_DEMON_2048",
-      "BLACK_DEMON_2049",
-      "BLACK_DEMON_2050",
-      "BLACK_DEMON_2051",
-      "BLACK_DEMON_2052",
-      "BLACK_DEMON_5874",
-      "BLACK_DEMON_5875",
-      "BLACK_DEMON_5876",
-      "BLACK_DEMON_5877",
-      "BLACK_DEMON_7242",
-      "BLACK_DEMON_7243",
-      "BLACK_DEMON_7874",
-      "BLACK_DEMON_7875",
-      "BLACK_DEMON_7876",
-      "BLACK_DRAGON",
-      "BLACK_DRAGON_253",
-      "BLACK_DRAGON_254",
-      "BLACK_DRAGON_255",
-      "BLACK_DRAGON_256",
-      "BLACK_DRAGON_257",
-      "BLACK_DRAGON_258",
-      "BLACK_DRAGON_259",
-      "BLACK_DRAGON_7861",
-      "BLACK_DRAGON_7862",
-      "BLACK_DRAGON_7863",
-      "BLACK_DRAGON_8084",
-      "BLACK_DRAGON_8085",
-      "BLACK_UNICORN",
-      "BLACK_UNICORN_FOAL",
-      "BLESSED_GIANT_RAT",
-      "BLESSED_GIANT_RAT_4535",
-      "BLOOD_SPAWN",
-      "BLOOD_SPAWN_10821",
-      "BLOOD_SPAWN_10829",
-      "BLUE_DRAGON",
-      "BLUE_DRAGON_266",
-      "BLUE_DRAGON_267",
-      "BLUE_DRAGON_268",
-      "BLUE_DRAGON_269",
-      "BLUE_DRAGON_4385",
-      "BLUE_DRAGON_5878",
-      "BLUE_DRAGON_5879",
-      "BLUE_DRAGON_5880",
-      "BLUE_DRAGON_5881",
-      "BLUE_DRAGON_5882",
-      "BLUE_DRAGON_8074",
-      "BLUE_DRAGON_8077",
-      "BLUE_DRAGON_8083",
-      "BODY_GOLEM",
-      "BOULDER_8442",
-      "BOUQUET_MAC_HYACINTH",
-      "BRONZE_DRAGON",
-      "BRONZE_DRAGON_271",
-      "BRONZE_DRAGON_7253",
-      "BRUTAL_BLACK_DRAGON",
-      "BRUTAL_BLACK_DRAGON_8092",
-      "BRUTAL_BLACK_DRAGON_8093",
-      "BRUTAL_BLUE_DRAGON",
-      "BRUTAL_GREEN_DRAGON",
-      "BRUTAL_GREEN_DRAGON_8081",
-      "BRUTAL_RED_DRAGON",
-      "BRUTAL_RED_DRAGON_8087",
-      "BRYOPHYTA",
-      "BUTTERFLY_8456",
-      "BUTTERFLY_8459",
-      "CALLISTO",
-      "CALLISTO_6609",
-      "CART_CAMEL",
-      "CAVE_ABOMINATION",
-      "CENTAUR",
-      "CENTAUR_1844",
-      "CERULEAN_TWITCH",
-      "CHAELDAR",
-      "CHAOS_ELEMENTAL",
-      "CHAOS_ELEMENTAL_6505",
-      "CHAOS_GOLEM",
-      "CHAOTIC_DEATH_SPAWN",
-      "CHAOTIC_DEATH_SPAWN_6723",
-      "CHAOTIC_DEATH_SPAWN_7649",
-      "CHOKE_DEVIL",
-      "CLAN_GUARD",
-      "COB",
-      "COLOSSAL_HYDRA",
-      "COMMANDER_ZILYANA",
-      "COMMANDER_ZILYANA_6493",
-      "COORDINATOR",
-      "COPPER_LONGTAIL",
-      "CORKAT_QUO_SIHAR",
-      "CORRUPTED_BAT",
-      "CORRUPTED_BEAR",
-      "CORRUPTED_DARK_BEAST",
-      "CORRUPTED_DRAGON",
-      "CORRUPTED_HUNLLEF_9038",
-      "CORRUPTED_RAT",
-      "CORRUPTED_SCORPION",
-      "CORRUPTED_SPIDER",
-      "CORRUPTED_UNICORN",
-      "CORRUPTED_WOLF",
-      "CORRUPTED_YOUNGLLEF",
-      "CORRUPTED_YOUNGLLEF_8738",
-      "CRIMSON_SWIFT",
-      "CRYSTALLINE_BAT",
-      "CRYSTALLINE_BEAR",
-      "CRYSTALLINE_DARK_BEAST",
-      "CRYSTALLINE_DRAGON",
-      "CRYSTALLINE_HUNLLEF_9024",
-      "CRYSTALLINE_RAT",
-      "CRYSTALLINE_SCORPION",
-      "CRYSTALLINE_SPIDER",
-      "CRYSTALLINE_UNICORN",
-      "CRYSTALLINE_WOLF",
-      "CRYSTAL_IMPLING",
-      "CRYSTAL_IMPLING_8742",
-      "CRYSTAL_IMPLING_8743",
-      "CRYSTAL_IMPLING_8744",
-      "CRYSTAL_IMPLING_8745",
-      "CRYSTAL_IMPLING_8746",
-      "CRYSTAL_IMPLING_8747",
-      "CRYSTAL_IMPLING_8748",
-      "CRYSTAL_IMPLING_8749",
-      "CRYSTAL_IMPLING_8750",
-      "CRYSTAL_IMPLING_8751",
-      "CRYSTAL_IMPLING_8752",
-      "CRYSTAL_IMPLING_8753",
-      "CRYSTAL_IMPLING_8754",
-      "CRYSTAL_IMPLING_8755",
-      "CRYSTAL_IMPLING_8756",
-      "CRYSTAL_IMPLING_8757",
-      "CRYSTAL_WHIRLWIND",
-      "CYCLOPS",
-      "CYCLOPS_2137",
-      "CYCLOPS_2138",
-      "CYCLOPS_2139",
-      "CYCLOPS_2140",
-      "CYCLOPS_2141",
-      "CYCLOPS_2142",
-      "CYCLOPS_2235",
-      "CYCLOPS_2236",
-      "CYCLOPS_2463",
-      "CYCLOPS_2464",
-      "CYCLOPS_2465",
-      "CYCLOPS_2466",
-      "CYCLOPS_2467",
-      "CYCLOPS_2468",
-      "CYCLOPS_7270",
-      "CYCLOPS_7271",
-      "DARCOR_QUO_NARGA",
-      "DARK_MAGE",
-      "DEATH_SPAWN",
-      "DEATH_WING",
-      "DEMON",
-      "DERWEN",
-      "DERWEN_7859",
-      "DOMINIC_ONION",
-      "DONT_KNOW_WHAT",
-      "DONT_KNOW_WHAT_8439",
-      "DONT_KNOW_WHAT_8440",
-      "DOOMION",
-      "DRAGON_IMPLING",
-      "DRAGON_IMPLING_1654",
-      "DRIFTWOOD",
-      "DRIFTWOOD_8449",
-      "DUNGEON_RAT",
-      "DUNGEON_RAT_2866",
-      "DUNGEON_RAT_2867",
-      "DUNGEON_RAT_3607",
-      "DUNGEON_RAT_3608",
-      "DUNGEON_RAT_3609",
-      "DUST_DEVIL",
-      "DUST_DEVIL_11238",
-      "DUST_DEVIL_7249",
-      "EARTH_ELEMENTAL",
-      "EARTH_ELEMENTAL_1367",
-      "EARTH_IMPLING",
-      "EARTH_IMPLING_1648",
-      "ECHNED_ZEKIN",
-      "ECLECTIC_IMPLING",
-      "ECLECTIC_IMPLING_1650",
-      "ELEMENTAL_ROCK",
-      "ELVARG",
-      "ELVARG_6349",
-      "ELVARG_8033",
-      "ELVARG_HARD",
-      "ENT",
-      "ENT_7234",
-      "FAIRY",
-      "FAIRY_1849",
-      "FAIRY_1850",
-      "FAIRY_1851",
-      "FAIRY_2829",
-      "FAIRY_3204",
-      "FAIRY_7748",
-      "FAIRY_AERYKA",
-      "FAIRY_FIXIT",
-      "FAIRY_FIXIT_7333",
-      "FAIRY_GODFATHER",
-      "FAIRY_GODFATHER_5837",
-      "FAIRY_NUFF",
-      "FAIRY_NUFF_5836",
-      "FAIRY_QUEEN",
-      "FAIRY_QUEEN_1842",
-      "FAIRY_SHOP_ASSISTANT",
-      "FAIRY_SHOP_KEEPER",
-      "FAIRY_VERY_WISE",
-      "FAT_ROCCO",
-      "FLAMBEED",
-      "FLAMBEED_6370",
-      "FLAMBEED_HARD",
-      "FLAMING_PYRELORD",
-      "FLAWED_GOLEM",
-      "FLIGHT_KILISA",
-      "FLOCKLEADER_GEERIN",
-      "FORGOTTEN_SOUL",
-      "FORGOTTEN_SOUL_10524",
-      "FORGOTTEN_SOUL_10525",
-      "FORGOTTEN_SOUL_10526",
-      "FORGOTTEN_SOUL_10534",
-      "FORGOTTEN_SOUL_10535",
-      "FORGOTTEN_SOUL_10536",
-      "FORGOTTEN_SOUL_10537",
-      "FORGOTTEN_SOUL_10544",
-      "FORGOTTEN_SOUL_10545",
-      "FORNEK_QUO_MATEN",
-      "GARBEK_QUO_MATEN",
-      "GARGOYLE",
-      "GARGOYLE_1543",
-      "GARGOYLE_413",
-      "GENERAL_GRAARDOR",
-      "GENERAL_GRAARDOR_6494",
-      "GENERAL_GRAARDOR_JR",
-      "GENERAL_GRAARDOR_JR_6644",
-      "GENIE",
-      "GENIE_327",
-      "GENIE_4738",
-      "GHOST",
-      "GHOST_10538",
-      "GHOST_1786",
-      "GHOST_2527",
-      "GHOST_2528",
-      "GHOST_2529",
-      "GHOST_2530",
-      "GHOST_2531",
-      "GHOST_2532",
-      "GHOST_2533",
-      "GHOST_2534",
-      "GHOST_3617",
-      "GHOST_3625",
-      "GHOST_3975",
-      "GHOST_3976",
-      "GHOST_3977",
-      "GHOST_3978",
-      "GHOST_3979",
-      "GHOST_472",
-      "GHOST_473",
-      "GHOST_474",
-      "GHOST_505",
-      "GHOST_506",
-      "GHOST_507",
-      "GHOST_5370",
-      "GHOST_7263",
-      "GHOST_7264",
-      "GHOST_86",
-      "GHOST_87",
-      "GHOST_88",
-      "GHOST_89",
-      "GHOST_90",
-      "GHOST_91",
-      "GHOST_9194",
-      "GHOST_92",
-      "GHOST_920",
-      "GHOST_93",
-      "GHOST_94",
-      "GHOST_95",
-      "GHOST_96",
-      "GHOST_97",
-      "GHOST_98",
-      "GHOST_99",
-      "GIANT_BAT",
-      "GIANT_BAT_4504",
-      "GIANT_BAT_4562",
-      "GIANT_BAT_6824",
-      "GIANT_CRYPT_RAT",
-      "GIANT_CRYPT_RAT_1681",
-      "GIANT_CRYPT_RAT_1682",
-      "GIANT_RAT",
-      "GIANT_RAT_2511",
-      "GIANT_RAT_2512",
-      "GIANT_RAT_2856",
-      "GIANT_RAT_2857",
-      "GIANT_RAT_2858",
-      "GIANT_RAT_2859",
-      "GIANT_RAT_2860",
-      "GIANT_RAT_2861",
-      "GIANT_RAT_2862",
-      "GIANT_RAT_2863",
-      "GIANT_RAT_2864",
-      "GIANT_RAT_3313",
-      "GIANT_RAT_3314",
-      "GIANT_RAT_3315",
-      "GIANT_RAT_9483",
-      "GIANT_ROC",
-      "GIANT_ROC_6384",
-      "GIANT_ROC_HARD",
-      "GLOUGH_7101",
-      "GLOUGH_7102",
-      "GLOUGH_7103",
-      "GOAT_POO",
-      "GOAT_POO_8453",
-      "GOLDEN_WARBLER",
-      "GORHAK_QUO_NARGA",
-      "GOURMET_IMPLING",
-      "GOURMET_IMPLING_1647",
-      "GREATER_ABYSSAL_DEMON",
-      "GREATER_DEMON",
-      "GREATER_DEMON_2026",
-      "GREATER_DEMON_2027",
-      "GREATER_DEMON_2028",
-      "GREATER_DEMON_2029",
-      "GREATER_DEMON_2030",
-      "GREATER_DEMON_2031",
-      "GREATER_DEMON_2032",
-      "GREATER_DEMON_7244",
-      "GREATER_DEMON_7245",
-      "GREATER_DEMON_7246",
-      "GREATER_DEMON_7871",
-      "GREATER_DEMON_7872",
-      "GREATER_DEMON_7873",
-      "GREEN_DRAGON",
-      "GREEN_DRAGON_261",
-      "GREEN_DRAGON_262",
-      "GREEN_DRAGON_263",
-      "GREEN_DRAGON_264",
-      "GREEN_DRAGON_7868",
-      "GREEN_DRAGON_7869",
-      "GREEN_DRAGON_7870",
-      "GREEN_DRAGON_8073",
-      "GREEN_DRAGON_8076",
-      "GREEN_DRAGON_8082",
-      "GRIZZLY_BEAR",
-      "GRIZZLY_BEAR_3423",
-      "GRIZZLY_BEAR_CUB",
-      "GRIZZLY_BEAR_CUB_3425",
-      "GULL",
-      "GULL_11297",
-      "GULL_284",
-      "GULL_285",
-      "GULL_286",
-      "GULL_3904",
-      "GULL_3905",
-      "GULL_3906",
-      "GULL_3907",
-      "GULL_4053",
-      "GULL_4289",
-      "GULL_4290",
-      "GULL_4734",
-      "GULL_4735",
-      "HALDOR_QUO_KERAN",
-      "HAZE",
-      "HEADLESS_BEAST",
-      "HEADLESS_BEAST_10506",
-      "HEADLESS_BEAST_HARD",
-      "HELLCAT",
-      "HELLKITTEN",
-      "HELLRAT",
-      "HELLRAT_BEHEMOTH",
-      "HILL_GIANT",
-      "HILL_GIANT_10374",
-      "HILL_GIANT_10375",
-      "HILL_GIANT_10376",
-      "HILL_GIANT_11195",
-      "HILL_GIANT_2099",
-      "HILL_GIANT_2100",
-      "HILL_GIANT_2101",
-      "HILL_GIANT_2102",
-      "HILL_GIANT_2103",
-      "HILL_GIANT_7261",
-      "HOLTHION",
-      "HOMUNCULUS",
-      "HOMUNCULUS_3589",
-      "HOMUNCULUS_3590",
-      "HUSK",
-      "HUSK_9455",
-      "HUSK_9466",
-      "HUSK_9467",
-      "HYDRA",
-      "ICELORD",
-      "ICELORD_853",
-      "ICELORD_854",
-      "ICELORD_855",
-      "ICE_GIANT",
-      "ICE_GIANT_2086",
-      "ICE_GIANT_2087",
-      "ICE_GIANT_2088",
-      "ICE_GIANT_2089",
-      "ICE_GIANT_7878",
-      "ICE_GIANT_7879",
-      "ICE_GIANT_7880",
-      "ICICLE",
-      "ICICLE_8447",
-      "IKKLE_HYDRA",
-      "IKKLE_HYDRA_8494",
-      "IKKLE_HYDRA_8495",
-      "IKKLE_HYDRA_8517",
-      "IKKLE_HYDRA_8519",
-      "IKKLE_HYDRA_8520",
-      "IMMENIZZ",
-      "INFERNAL_PYRELORD",
-      "INSATIABLE_BLOODVELD",
-      "INSATIABLE_MUTATED_BLOODVELD",
-      "IRON_DRAGON",
-      "IRON_DRAGON_273",
-      "IRON_DRAGON_7254",
-      "IRON_DRAGON_8080",
-      "JALAK",
-      "JALAKREKKET",
-      "JALAKREKMEJ",
-      "JALAKREKXIL",
-      "JALIMKOT",
-      "JALMEJRAH",
-      "JALREKJAD",
-      "JALREKJAD_10625",
-      "JALTOKJAD",
-      "JALTOKJAD_10623",
-      "JALTOKJAD_7704",
-      "JALXIL",
-      "JALXIL_7702",
-      "JALZEK",
-      "JALZEK_7703",
-      "JEWELLED_CRAB",
-      "JEWELLED_CRAB_BLUE",
-      "JEWELLED_CRAB_GREEN",
-      "JEWELLED_CRAB_RED",
-      "JUKAT",
-      "KILLERWATT_470",
-      "KING_BLACK_DRAGON",
-      "KING_BLACK_DRAGON_2642",
-      "KING_BLACK_DRAGON_6502",
-      "KING_KURASK",
-      "KLENTER",
-      "KNIGHT_OF_THE_LION",
-      "KNIGHT_OF_THE_OWL",
-      "KNIGHT_OF_THE_UNICORN",
-      "KNIGHT_OF_THE_WOLF",
-      "KOLODION_1609",
-      "KONAR_QUO_MATEN",
-      "KORMAR_QUO_MATEN",
-      "KREEARRA",
-      "KREEARRA_6492",
-      "KREEARRA_JR",
-      "KREEARRA_JR_6643",
-      "KRIL_TSUTSAROTH",
-      "KRIL_TSUTSAROTH_6495",
-      "KRIL_TSUTSAROTH_JR",
-      "KRIL_TSUTSAROTH_JR_6647",
-      "LARRAN",
-      "LAVA_DRAGON",
-      "LAZY_HELLCAT",
-      "LAZY_HELLCAT_6689",
-      "LEKE_QUO_KERAN",
-      "LESSER_DEMON",
-      "LESSER_DEMON_2006",
-      "LESSER_DEMON_2007",
-      "LESSER_DEMON_2008",
-      "LESSER_DEMON_2018",
-      "LESSER_DEMON_7247",
-      "LESSER_DEMON_7248",
-      "LESSER_DEMON_7656",
-      "LESSER_DEMON_7657",
-      "LESSER_DEMON_7664",
-      "LESSER_DEMON_7865",
-      "LESSER_DEMON_7866",
-      "LESSER_DEMON_7867",
-      "LESSER_DEMON_CHAMPION",
-      "LIL_BLOAT",
-      "LIL_BLOAT_10871",
-      "LIL_XARP",
-      "LIL_XARP_10874",
-      "LOKRAA_QUO_SIHAR",
-      "LONGTAILED_WYVERN",
-      "LORD_TROBIN_ARCEUUS",
-      "LORD_TROBIN_ARCEUUS_10961",
-      "LORD_TROBIN_ARCEUUS_10962",
-      "LORD_TROBIN_ARCEUUS_8505",
-      "LORNOR_QUO_NARGA",
-      "LOVE_CATS",
-      "LUCKY_IMPLING",
-      "LUCKY_IMPLING_7302",
-      "LUNDERWIN",
-      "MAGPIE_IMPLING",
-      "MAGPIE_IMPLING_1652",
-      "MALLAK_QUO_KERAN",
-      "MARMOR_QUO_NARGA",
-      "MELANA_MOONLANDER",
-      "MEMORY_OF_SEREN",
-      "MEMORY_OF_SEREN_8777",
-      "MEMORY_OF_SEREN_8778",
-      "MEMORY_OF_SEREN_8779",
-      "MEMORY_OF_SEREN_8780",
-      "MEMORY_OF_SEREN_8781",
-      "MEMORY_OF_SEREN_8782",
-      "MEMORY_OF_SEREN_8783",
-      "MEMORY_OF_SEREN_8784",
-      "METEORA",
-      "MIND_GOLEM",
-      "MISCHIEVOUS_GHOST",
-      "MITHRIL_DRAGON",
-      "MITHRIL_DRAGON_8088",
-      "MITHRIL_DRAGON_8089",
-      "MOSS_GIANT",
-      "MOSS_GIANT_2091",
-      "MOSS_GIANT_2092",
-      "MOSS_GIANT_2093",
-      "MOSS_GIANT_3851",
-      "MOSS_GIANT_3852",
-      "MOSS_GIANT_7262",
-      "MOSS_GIANT_8736",
-      "MOSS_GUARDIAN",
-      "MOSS_GUARDIAN_6386",
-      "MOSS_GUARDIAN_HARD",
-      "MOTHER",
-      "MOTHER_8426",
-      "MOTHER_8428",
-      "MOTHER_8429",
-      "MOTHER_8430",
-      "MOTHER_MALLUM",
-      "MUDSKIPPER",
-      "MUDSKIPPER_4821",
-      "NATURE_IMPLING",
-      "NATURE_IMPLING_1651",
-      "NAZASTAROOL_5355",
-      "NAZASTAROOL_6400",
-      "NAZASTAROOL_HARD_6339",
-      "NECHRYARCH",
-      "NIGHT_BEAST",
-      "NINJA_IMPLING",
-      "NINJA_IMPLING_1653",
-      "NUCLEAR_SMOKE_DEVIL",
-      "NYLOCAS_ATHANATOS",
-      "NYLOCAS_ATHANATOS_10844",
-      "NYLOCAS_ATHANATOS_10861",
-      "NYLOCAS_ATHANATOS_11188",
-      "NYLOCAS_HAGIOS",
-      "NYLOCAS_HAGIOS_10776",
-      "NYLOCAS_HAGIOS_10779",
-      "NYLOCAS_HAGIOS_10782",
-      "NYLOCAS_HAGIOS_10785",
-      "NYLOCAS_HAGIOS_10793",
-      "NYLOCAS_HAGIOS_10796",
-      "NYLOCAS_HAGIOS_10799",
-      "NYLOCAS_HAGIOS_10802",
-      "NYLOCAS_HAGIOS_10843",
-      "NYLOCAS_HAGIOS_10860",
-      "NYLOCAS_HAGIOS_11191",
-      "NYLOCAS_HAGIOS_8347",
-      "NYLOCAS_HAGIOS_8350",
-      "NYLOCAS_HAGIOS_8353",
-      "NYLOCAS_HAGIOS_8383",
-      "NYLOCAS_MATOMENOS",
-      "NYLOCAS_MATOMENOS_10820",
-      "NYLOCAS_MATOMENOS_10828",
-      "NYLOCAS_MATOMENOS_10845",
-      "NYLOCAS_MATOMENOS_10862",
-      "NYLOCAS_MATOMENOS_8385",
-      "NYLOCAS_PRINKIPAS_10805",
-      "NYLOCAS_VASILIAS_10788",
-      "NYLOCAS_VASILIAS_10809",
-      "NYLOCAS_VASILIAS_8356",
-      "OBOR",
-      "ODD_MUSHROOM",
-      "ODD_MUSHROOM_8435",
-      "ODD_STONE",
-      "ODD_STONE_8463",
-      "ONEIROMANCER",
-      "ONEIROMANCER_8049",
-      "ONEIROMANCER_8158",
-      "ONEIROMANCER_8166",
-      "ONEIROMANCER_8174",
-      "ORK_2237",
-      "ORK_2238",
-      "ORK_2239",
-      "ORK_2240",
-      "ORRVOR_QUO_MATEN",
-      "OTHAINIAN",
-      "PAULINE_POLARIS",
-      "PEBBLE",
-      "PEBBLE_8451",
-      "PENANCE_PET",
-      "PENANCE_PET_6674",
-      "PENANCE_QUEEN",
-      "PENANCE_RANGER",
-      "PENANCE_RANGER_5757",
-      "PENANCE_RANGER_5758",
-      "PENANCE_RANGER_5759",
-      "PENANCE_RANGER_5760",
-      "PENANCE_RANGER_5761",
-      "PENANCE_RANGER_5762",
-      "PENANCE_RANGER_5763",
-      "PENANCE_RANGER_5764",
-      "PENANCE_RANGER_5765",
-      "PESTILENT_BLOAT",
-      "PESTILENT_BLOAT_10812",
-      "PESTILENT_BLOAT_10813",
-      "PESTILENT_BLOAT_11184",
-      "POSTIE_PETE",
-      "POSTIE_PETE_6738",
-      "PRINCE_BLACK_DRAGON",
-      "PRINCE_BLACK_DRAGON_6652",
-      "PYREFIEND",
-      "PYREFIEND_3139",
-      "PYREFIEND_434",
-      "PYREFIEND_435",
-      "PYREFIEND_436",
-      "PYRELORD",
-      "PYRELORD_6795",
-      "RASHILIYIA",
-      "REACHER_313",
-      "REANIMATED_AVIANSIE",
-      "REANIMATED_BEAR",
-      "REANIMATED_DEMON",
-      "REANIMATED_DEMON_SPAWN",
-      "REANIMATED_DRAGON",
-      "REANIMATED_GIANT",
-      "REANIMATED_UNICORN",
-      "RED_DRAGON",
-      "RED_DRAGON_248",
-      "RED_DRAGON_249",
-      "RED_DRAGON_250",
-      "RED_DRAGON_251",
-      "RED_DRAGON_8075",
-      "RED_DRAGON_8078",
-      "RED_DRAGON_8079",
-      "REPUGNANT_SPECTRE",
-      "REVENANT_DARK_BEAST",
-      "REVENANT_DEMON",
-      "REVENANT_DRAGON",
-      "REVENANT_PYREFIEND",
-      "RIMAE_SIRSALIS",
-      "RIYL_SHADOW_5631",
-      "ROCK_PILE",
-      "ROOT",
-      "ROOT_8445",
-      "RORY",
-      "RUBBLE",
-      "RUBBLE_10690",
-      "RUBBLE_10692",
-      "RUBBLE_10694",
-      "RUBBLE_10696",
-      "RUNE_DRAGON",
-      "RUNE_DRAGON_8031",
-      "RUNE_DRAGON_8091",
-      "SARACHNIS",
-      "SCREAMING_TWISTED_BANSHEE",
-      "SEAGULL_1554",
-      "SEAGULL_1555",
-      "SELENE",
-      "SEREN",
-      "SHADE",
-      "SHADE_7258",
-      "SHADOW",
-      "SHADOW_10628",
-      "SIRSAL_BANKER",
-      "SLAGILITH",
-      "SLAGILITH_1364",
-      "SLAGILITH_6385",
-      "SLAGILITH_HARD",
-      "SLIM_LOUIE",
-      "SLUG_PRINCE",
-      "SLUG_PRINCE_4798",
-      "SMOKE_DEVIL",
-      "SMOKE_DEVIL_6639",
-      "SMOKE_DEVIL_6655",
-      "SMOKE_DEVIL_8482",
-      "SMOKE_DEVIL_8483",
-      "SMOLCANO",
-      "SMOLCANO_8739",
-      "SNOWFLAKE",
-      "SPAWN_OF_SARACHNIS",
-      "SPAWN_OF_SARACHNIS_8715",
-      "SPIRITUAL_MAGE_2244",
-      "SPIRITUAL_MAGE_3168",
-      "SPIRITUAL_RANGER_2242",
-      "SPIRITUAL_RANGER_3167",
-      "SPIRITUAL_WARRIOR_2243",
-      "SPIRITUAL_WARRIOR_3166",
-      "SPIRIT_OF_SCORPIUS",
-      "SPIRIT_OF_ZADIMUS",
-      "SPITTING_WYVERN",
-      "SPLATTER",
-      "SPLATTER_1690",
-      "SPLATTER_1691",
-      "SPLATTER_1692",
-      "SPLATTER_1693",
-      "SPRING_ELEMENTAL",
-      "SPRING_ELEMENTAL_2957",
-      "SPRING_ELEMENTAL_2958",
-      "SPRING_ELEMENTAL_2959",
-      "SPRING_ELEMENTAL_2960",
-      "SPRING_ELEMENTAL_2961",
-      "SPRING_ELEMENTAL_2962",
-      "SPRING_ELEMENTAL_2963",
-      "SQUIRREL_8464",
-      "SQUIRREL_8467",
-      "SRARACHA",
-      "SRARACHA_11157",
-      "SRARACHA_11158",
-      "SRARACHA_11159",
-      "SRARACHA_11160",
-      "SRARACHA_2144",
-      "STAG",
-      "STARLIGHT",
-      "STEEL_DRAGON",
-      "STEEL_DRAGON_274",
-      "STEEL_DRAGON_275",
-      "STEEL_DRAGON_7255",
-      "STEEL_DRAGON_8086",
-      "STONE_GUARDIAN_8065",
-      "STONE_GUARDIAN_8066",
-      "SULPHUR_LIZARD",
-      "SUMMER_ELEMENTAL",
-      "SUMMER_ELEMENTAL_1802",
-      "SUMMER_ELEMENTAL_1803",
-      "SUMMER_ELEMENTAL_1804",
-      "SUMMER_ELEMENTAL_1805",
-      "SUMMER_ELEMENTAL_1806",
-      "SUMMONED_SOUL",
-      "SUMMONED_SOUL_5868",
-      "SUMMONED_SOUL_5869",
-      "TALONED_WYVERN",
-      "TARFOL_QUO_MATEN",
-      "THERMONUCLEAR_SMOKE_DEVIL",
-      "THE_EVERLASTING",
-      "THE_EVERLASTING_6351",
-      "THE_EVERLASTING_HARD",
-      "THRANTAX_THE_MIGHTY",
-      "TORMENTED_SOUL",
-      "TORMENTED_SOUL_8513",
-      "TREASURE_FAIRY",
-      "TREUS_DAYTH",
-      "TREUS_DAYTH_6359",
-      "TREUS_DAYTH_HARD",
-      "TROLL_8470",
-      "TROLL_8471",
-      "TROLL_8472",
-      "TROLL_8473",
-      "TROPICAL_WAGTAIL",
-      "TSTANON_KARLAK",
-      "TWISTED_BANSHEE",
-      "TYPHOR",
-      "TYPHOR_9296",
-      "TZKIH",
-      "TZKIH_2190",
-      "TZKIH_3116",
-      "TZKIH_3117",
-      "UNICORN",
-      "UNICORN_FOAL",
-      "UURRAK_QUO_NARGA",
-      "VERZIK_VITUR_10832",
-      "VERZIK_VITUR_10833",
-      "VERZIK_VITUR_10836",
-      "VERZIK_VITUR_10849",
-      "VERZIK_VITUR_10850",
-      "VERZIK_VITUR_10853",
-      "VERZIK_VITUR_11179",
-      "VERZIK_VITUR_8371",
-      "VERZIK_VITUR_8372",
-      "VERZIK_VITUR_8375",
-      "VOICE_OF_YAMA",
-      "VORNAS_QUO_MATEN",
-      "VORTAS_QUO_KERAN",
-      "VRITRA",
-      "VYREWATCH_3713",
-      "VYREWATCH_3714",
-      "VYREWATCH_3715",
-      "VYREWATCH_3716",
-      "VYREWATCH_3717",
-      "VYREWATCH_3718",
-      "VYREWATCH_3719",
-      "VYREWATCH_3720",
-      "VYREWATCH_3725",
-      "VYREWATCH_3726",
-      "VYREWATCH_3727",
-      "VYREWATCH_3728",
-      "VYREWATCH_3729",
-      "VYREWATCH_3730",
-      "VYREWATCH_3731",
-      "VYREWATCH_3732",
-      "WANDERING_IMPLING",
-      "WATERFIEND",
-      "WATERFIEND_2917",
-      "WENGRA_QUO_SIHAR",
-      "WILY_HELLCAT",
-      "WILY_HELLCAT_6696",
-      "WINGMAN_SKREE",
-      "WINTER_ELEMENTAL",
-      "WINTER_ELEMENTAL_5797",
-      "WINTER_ELEMENTAL_5798",
-      "WINTER_ELEMENTAL_5799",
-      "WINTER_ELEMENTAL_5800",
-      "WINTER_ELEMENTAL_5801",
-      "WITCHS_EXPERIMENT_THIRD_FORM",
-      "WITCHS_EXPERIMENT_THIRD_FORM_6396",
-      "WITCHS_EXPERIMENT_THIRD_FORM_HARD",
-      "WOLFBONE",
-      "XAMPHUR",
-      "XAMPHUR_10953",
-      "XAMPHUR_10954",
-      "XAMPHUR_10955",
-      "XAMPHUR_10956",
-      "XARPUS",
-      "XARPUS_10766",
-      "XARPUS_10767",
-      "XARPUS_10768",
-      "XARPUS_10769",
-      "XARPUS_10770",
-      "XARPUS_10771",
-      "XARPUS_10772",
-      "XARPUS_10773",
-      "XARPUS_11187",
-      "XARPUS_8339",
-      "XARPUS_8340",
-      "XARPUS_8341",
-      "XORRAH_QUO_SIHAR",
-      "YELLOW_SNOW",
-      "YELLOW_SNOW_8455",
-      "YOUNGLLEF",
-      "YOUNGLLEF_8737",
-      "YOUNG_IMPLING",
-      "YOUNG_IMPLING_1646",
-      "ZAKLN_GRITCH",
-      "ZALCANO",
-      "ZALCANO_9050",
-      "ZILYANA_JR",
-      "ZILYANA_JR_6646",
-      "ZOMBIE_RAT",
-      "ZOMBIE_RAT_3970",
-      "ZOMBIE_RAT_3971",
-      "YOUNGLLEF",
-      "CORRUPTED_YOUNGLLEF",
-      "YOUNGLLEF_8737",
-      "CORRUPTED_YOUNGLLEF_8738",
-      "HILL_GIANT_11467",
-      "KOVAC",
-      "KOVAC_11469",
-      "KOVAC_11470",
-      "KOVAC_11472"
+      7402,
+      8030,
+      8090,
+      11790,
+      11791,
+      11792,
+      11793,
+      11794,
+      11795,
+      1039,
+      8615,
+      8616,
+      8620,
+      8621,
+      10654,
+      10665,
+      7795,
+      1060,
+      4692,
+      1062,
+      4689,
+      4690,
+      1061,
+      4688,
+      9656,
+      8539,
+      8540,
+      6587,
+      7750,
+      5632,
+      5802,
+      5803,
+      5804,
+      5805,
+      5806,
+      5807,
+      3169,
+      3170,
+      3171,
+      3172,
+      3173,
+      3174,
+      3175,
+      3176,
+      3177,
+      3178,
+      3179,
+      3180,
+      3181,
+      3182,
+      3183,
+      3837,
+      1871,
+      1872,
+      7955,
+      241,
+      242,
+      243,
+      5194,
+      5872,
+      5873,
+      1635,
+      1645,
+      137,
+      244,
+      245,
+      246,
+      762,
+      9294,
+      3132,
+      6588,
+      3092,
+      414,
+      9293,
+      9258,
+      2827,
+      7061,
+      10888,
+      3908,
+      3909,
+      9199,
+      5240,
+      3472,
+      10541,
+      5241,
+      2839,
+      240,
+      2048,
+      2049,
+      2050,
+      2051,
+      2052,
+      5874,
+      5875,
+      5876,
+      5877,
+      7242,
+      7243,
+      7874,
+      7875,
+      7876,
+      252,
+      253,
+      254,
+      255,
+      256,
+      257,
+      258,
+      259,
+      7861,
+      7862,
+      7863,
+      8084,
+      8085,
+      2849,
+      3911,
+      4534,
+      4535,
+      8367,
+      10821,
+      10829,
+      265,
+      266,
+      267,
+      268,
+      269,
+      4385,
+      5878,
+      5879,
+      5880,
+      5881,
+      5882,
+      8074,
+      8077,
+      8083,
+      10691,
+      8442,
+      3850,
+      270,
+      271,
+      7253,
+      7275,
+      8092,
+      8093,
+      7273,
+      2918,
+      8081,
+      7274,
+      8087,
+      8195,
+      8456,
+      8459,
+      6503,
+      6609,
+      4674,
+      7401,
+      1843,
+      1844,
+      5550,
+      404,
+      2054,
+      6505,
+      10689,
+      6716,
+      6723,
+      7649,
+      7404,
+      3844,
+      7063,
+      10402,
+      2205,
+      6493,
+      5835,
+      5552,
+      8556,
+      9042,
+      9046,
+      9048,
+      9047,
+      9038,
+      9040,
+      9044,
+      9041,
+      9043,
+      9045,
+      8730,
+      8738,
+      5549,
+      9028,
+      9032,
+      9034,
+      9033,
+      9024,
+      9026,
+      9030,
+      9027,
+      9029,
+      9031,
+      8741,
+      8742,
+      8743,
+      8744,
+      8745,
+      8746,
+      8747,
+      8748,
+      8749,
+      8750,
+      8751,
+      8752,
+      8753,
+      8754,
+      8755,
+      8756,
+      8757,
+      8921,
+      2097,
+      2137,
+      2138,
+      2139,
+      2140,
+      2141,
+      2142,
+      2235,
+      2236,
+      2463,
+      2464,
+      2465,
+      2466,
+      2467,
+      2468,
+      7270,
+      7271,
+      8548,
+      2583,
+      10,
+      509,
+      142,
+      7513,
+      7859,
+      1120,
+      8438,
+      8439,
+      8440,
+      8995,
+      1644,
+      1654,
+      8448,
+      8449,
+      2865,
+      2866,
+      2867,
+      3607,
+      3608,
+      3609,
+      423,
+      11238,
+      7249,
+      1366,
+      1367,
+      1638,
+      1648,
+      3968,
+      1640,
+      1650,
+      1368,
+      817,
+      6349,
+      8033,
+      6118,
+      6594,
+      7234,
+      1848,
+      1849,
+      1850,
+      1851,
+      2829,
+      3204,
+      7748,
+      5736,
+      7332,
+      7333,
+      1840,
+      5837,
+      1841,
+      5836,
+      1161,
+      1842,
+      2869,
+      2868,
+      1847,
+      5839,
+      4881,
+      6370,
+      6309,
+      7394,
+      10695,
+      3165,
+      3164,
+      10523,
+      10524,
+      10525,
+      10526,
+      10534,
+      10535,
+      10536,
+      10537,
+      10544,
+      10545,
+      8553,
+      8607,
+      412,
+      1543,
+      413,
+      2215,
+      6494,
+      6632,
+      6644,
+      326,
+      327,
+      4738,
+      85,
+      10538,
+      1786,
+      2527,
+      2528,
+      2529,
+      2530,
+      2531,
+      2532,
+      2533,
+      2534,
+      3617,
+      3625,
+      3975,
+      3976,
+      3977,
+      3978,
+      3979,
+      472,
+      473,
+      474,
+      505,
+      506,
+      507,
+      5370,
+      7263,
+      7264,
+      86,
+      87,
+      88,
+      89,
+      90,
+      91,
+      9194,
+      92,
+      920,
+      93,
+      94,
+      95,
+      96,
+      97,
+      98,
+      99,
+      2834,
+      4504,
+      4562,
+      6824,
+      1680,
+      1681,
+      1682,
+      2510,
+      2511,
+      2512,
+      2856,
+      2857,
+      2858,
+      2859,
+      2860,
+      2861,
+      2862,
+      2863,
+      2864,
+      3313,
+      3314,
+      3315,
+      9483,
+      763,
+      6384,
+      6323,
+      7101,
+      7102,
+      7103,
+      8452,
+      8453,
+      5551,
+      8552,
+      1637,
+      1647,
+      7410,
+      2025,
+      2026,
+      2027,
+      2028,
+      2029,
+      2030,
+      2031,
+      2032,
+      7244,
+      7245,
+      7246,
+      7871,
+      7872,
+      7873,
+      260,
+      261,
+      262,
+      263,
+      264,
+      7868,
+      7869,
+      7870,
+      8073,
+      8076,
+      8082,
+      2838,
+      3423,
+      3424,
+      3425,
+      281,
+      11297,
+      284,
+      285,
+      286,
+      3904,
+      3905,
+      3906,
+      3907,
+      4053,
+      4289,
+      4290,
+      4734,
+      4735,
+      8559,
+      3626,
+      10493,
+      10506,
+      10492,
+      1625,
+      5597,
+      4809,
+      6793,
+      2098,
+      10374,
+      10375,
+      10376,
+      11195,
+      2099,
+      2100,
+      2101,
+      2102,
+      2103,
+      7261,
+      8996,
+      3588,
+      3589,
+      3590,
+      9454,
+      9455,
+      9466,
+      9467,
+      8609,
+      852,
+      853,
+      854,
+      855,
+      2085,
+      2086,
+      2087,
+      2088,
+      2089,
+      7878,
+      7879,
+      7880,
+      8446,
+      8447,
+      8492,
+      8494,
+      8495,
+      8517,
+      8519,
+      8520,
+      5735,
+      9465,
+      7397,
+      7398,
+      272,
+      273,
+      7254,
+      8080,
+      7693,
+      7696,
+      7694,
+      7695,
+      7697,
+      7692,
+      10620,
+      10625,
+      7700,
+      10623,
+      7704,
+      7698,
+      7702,
+      7699,
+      7703,
+      7576,
+      7579,
+      7578,
+      7577,
+      3201,
+      470,
+      239,
+      2642,
+      6502,
+      7405,
+      948,
+      9654,
+      9648,
+      9650,
+      9652,
+      1609,
+      8623,
+      8606,
+      3162,
+      6492,
+      6631,
+      6643,
+      3129,
+      6495,
+      6634,
+      6647,
+      8699,
+      6593,
+      1632,
+      6689,
+      8697,
+      2005,
+      2006,
+      2007,
+      2008,
+      2018,
+      7247,
+      7248,
+      7656,
+      7657,
+      7664,
+      7865,
+      7866,
+      7867,
+      3357,
+      10762,
+      10871,
+      10765,
+      10874,
+      8557,
+      7792,
+      8504,
+      10961,
+      10962,
+      8505,
+      8551,
+      2644,
+      7233,
+      7302,
+      3202,
+      1642,
+      1652,
+      8561,
+      8550,
+      3840,
+      8776,
+      8777,
+      8778,
+      8779,
+      8780,
+      8781,
+      8782,
+      8783,
+      8784,
+      3839,
+      10693,
+      3627,
+      2919,
+      8088,
+      8089,
+      2090,
+      2091,
+      2092,
+      2093,
+      3851,
+      3852,
+      7262,
+      8736,
+      891,
+      6386,
+      6325,
+      8425,
+      8426,
+      8428,
+      8429,
+      8430,
+      4796,
+      4820,
+      4821,
+      1641,
+      1651,
+      5355,
+      6400,
+      6339,
+      7411,
+      7409,
+      1643,
+      1653,
+      7406,
+      8384,
+      10844,
+      10861,
+      11188,
+      8344,
+      10776,
+      10779,
+      10782,
+      10785,
+      10793,
+      10796,
+      10799,
+      10802,
+      10843,
+      10860,
+      11191,
+      8347,
+      8350,
+      8353,
+      8383,
+      8366,
+      10820,
+      10828,
+      10845,
+      10862,
+      8385,
+      10805,
+      10788,
+      10809,
+      8356,
+      7416,
+      8434,
+      8435,
+      8460,
+      8463,
+      3835,
+      8049,
+      8158,
+      8166,
+      8174,
+      2237,
+      2238,
+      2239,
+      2240,
+      8608,
+      8994,
+      3838,
+      8450,
+      8451,
+      6642,
+      6674,
+      5775,
+      1668,
+      5757,
+      5758,
+      5759,
+      5760,
+      5761,
+      5762,
+      5763,
+      5764,
+      5765,
+      8359,
+      10812,
+      10813,
+      11184,
+      3291,
+      6738,
+      6636,
+      6652,
+      433,
+      3139,
+      434,
+      435,
+      436,
+      6762,
+      6795,
+      5352,
+      313,
+      7037,
+      7023,
+      7036,
+      7287,
+      7039,
+      7027,
+      7024,
+      247,
+      248,
+      249,
+      250,
+      251,
+      8075,
+      8078,
+      8079,
+      7403,
+      7938,
+      7936,
+      7940,
+      7932,
+      3842,
+      5631,
+      1363,
+      8444,
+      8445,
+      2136,
+      10666,
+      10690,
+      10692,
+      10694,
+      10696,
+      8027,
+      8031,
+      8091,
+      8713,
+      7391,
+      1554,
+      1555,
+      3841,
+      8775,
+      5633,
+      7258,
+      764,
+      10628,
+      3843,
+      1362,
+      1364,
+      6385,
+      6324,
+      5838,
+      4797,
+      4798,
+      498,
+      6639,
+      6655,
+      8482,
+      8483,
+      8731,
+      8739,
+      8431,
+      8714,
+      8715,
+      2244,
+      3168,
+      2242,
+      3167,
+      2243,
+      3166,
+      5371,
+      5341,
+      7794,
+      1689,
+      1690,
+      1691,
+      1692,
+      1693,
+      2956,
+      2957,
+      2958,
+      2959,
+      2960,
+      2961,
+      2962,
+      2963,
+      8464,
+      8467,
+      2143,
+      11157,
+      11158,
+      11159,
+      11160,
+      2144,
+      1845,
+      2206,
+      139,
+      274,
+      275,
+      7255,
+      8086,
+      8065,
+      8066,
+      8614,
+      1801,
+      1802,
+      1803,
+      1804,
+      1805,
+      1806,
+      5867,
+      5868,
+      5869,
+      7793,
+      8605,
+      499,
+      3474,
+      6351,
+      6120,
+      3518,
+      8512,
+      8513,
+      154,
+      3616,
+      6359,
+      6298,
+      8470,
+      8471,
+      8472,
+      8473,
+      5548,
+      3130,
+      7272,
+      9295,
+      9296,
+      2189,
+      2190,
+      3116,
+      3117,
+      2837,
+      3910,
+      8549,
+      10832,
+      10833,
+      10836,
+      10849,
+      10850,
+      10853,
+      11179,
+      8371,
+      8372,
+      8375,
+      7668,
+      8554,
+      8560,
+      9297,
+      3713,
+      3714,
+      3715,
+      3716,
+      3717,
+      3718,
+      3719,
+      3720,
+      3725,
+      3726,
+      3727,
+      3728,
+      3729,
+      3730,
+      3731,
+      3732,
+      5737,
+      2916,
+      2917,
+      8558,
+      5590,
+      6696,
+      3163,
+      5796,
+      5797,
+      5798,
+      5799,
+      5800,
+      5801,
+      3998,
+      6396,
+      6335,
+      8424,
+      10951,
+      10953,
+      10954,
+      10955,
+      10956,
+      8338,
+      10766,
+      10767,
+      10768,
+      10769,
+      10770,
+      10771,
+      10772,
+      10773,
+      11187,
+      8339,
+      8340,
+      8341,
+      8555,
+      8454,
+      8455,
+      8729,
+      8737,
+      1636,
+      1646,
+      3131,
+      9049,
+      9050,
+      6633,
+      6646,
+      3969,
+      3970,
+      3971,
+      8729,
+      8730,
+      8737,
+      8738,
+      11467,
+      11468,
+      11469,
+      11470,
+      11472
     ],
     "objectIds": [
       4502,
@@ -988,268 +988,294 @@
       41006,
       41007,
       41809,
-      "BASIC_JEWELLERY_BOX",
-      "BASIC_JEWELLERY_BOX_37493",
-      "BASIC_JEWELLERY_BOX_37494",
-      "BASIC_JEWELLERY_BOX_37495",
-      "BASIC_JEWELLERY_BOX_37496",
-      "BASIC_JEWELLERY_BOX_37497",
-      "BASIC_JEWELLERY_BOX_37498",
-      "BASIC_JEWELLERY_BOX_37499",
-      "BASIC_JEWELLERY_BOX_37500",
-      "BICLOPSE",
-      "BLACKSMITHS_TOOLS_10487",
-      "BLACKSMITHS_TOOLS_11876",
-      "BLACKSMITHS_TOOLS_14373",
-      "BLACKSMITHS_TOOLS_6188",
-      "BLACK_CRYSTAL",
-      "BOULDER_33201",
-      "BUTTERFLY",
-      "CAGE_3351",
-      "CAGE_3352",
-      "CART_CAMEL",
-      "CORRUPT_DEPOSIT",
-      "CORRUPT_DEPOSIT_DEPLETED",
-      "CRYSTAL_30015",
-      "CRYSTAL_30016",
-      "CRYSTAL_30017",
-      "CRYSTAL_30018",
-      "CYAN_CRYSTAL",
-      "CYAN_CRYSTAL_31957",
-      "DARK_CRYSTAL_29753",
-      "DAWN",
-      "DEMON",
-      "DIM_CRYSTAL",
-      "DONT_KNOW_WHAT",
-      "DRIFTWOOD_33204",
-      "EGGS_15182",
-      "EGGS_15183",
-      "EGGS_15184",
-      "FAIRLY_DARK_CRYSTAL",
-      "FANCY_JEWELLERY_BOX",
-      "FANCY_JEWELLERY_BOX_37502",
-      "FANCY_JEWELLERY_BOX_37503",
-      "FANCY_JEWELLERY_BOX_37504",
-      "FANCY_JEWELLERY_BOX_37505",
-      "FANCY_JEWELLERY_BOX_37506",
-      "FANCY_JEWELLERY_BOX_37507",
-      "FANCY_JEWELLERY_BOX_37508",
-      "FANCY_JEWELLERY_BOX_37509",
-      "FANCY_JEWELLERY_BOX_37510",
-      "FANCY_JEWELLERY_BOX_37511",
-      "FANCY_JEWELLERY_BOX_37512",
-      "FANCY_JEWELLERY_BOX_37513",
-      "FANCY_JEWELLERY_BOX_37514",
-      "FANCY_JEWELLERY_BOX_37515",
-      "FANCY_JEWELLERY_BOX_37516",
-      "FANCY_JEWELLERY_BOX_37517",
-      "FANCY_JEWELLERY_BOX_37518",
-      "FANCY_JEWELLERY_BOX_37519",
-      "FIRE_REMAINS_5252",
-      "FOUNTAIN_10436",
-      "FRAGMENT_OF_SEREN",
-      "FRAGMENT_OF_SEREN_35901",
-      "GATE_15510",
-      "GATE_15511",
-      "GATE_15514",
-      "GATE_15515",
-      "GENERAL_GRAARDOR_DISPLAY",
-      "GENERAL_GRAARDOR_JR",
-      "GIANT_ANVIL",
-      "GILDED_ADVENTURE_LOG",
-      "GILDED_ADVENTURE_LOG_31922",
-      "GLOWING_CRYSTAL",
-      "GOAT_POO",
-      "ICICLE_33203",
-      "LAMP_2491",
-      "LANTERN",
-      "LANTERN_11468",
-      "LARGE_CRYSTAL",
-      "LARGE_CRYSTALS",
-      "LAVA_MONSTER",
-      "LAZY_HELLCAT",
-      "LIZARDMAN_EGGS_34420",
-      "LIZARDMAN_EGGS_41875",
-      "LIZARDMAN_EGGS_41876",
-      "LOBSTROSITY",
-      "MAGENTA_CRYSTAL",
-      "MAGENTA_CRYSTAL_31958",
-      "MAHOGANY_ADVENTURE_LOG",
-      "MAKING_FRIENDS_WITH_MY_ARM_DISPLAY",
-      "MANDIBULAR_MAXIMUS",
-      "MARK_OF_DARKNESS",
-      "MEDIUM_FOSSIL_DISPLAY_31222",
-      "MEDIUM_FOSSIL_DISPLAY_31223",
-      "MEDIUM_FOSSIL_DISPLAY_31224",
-      "MEDIUM_FOSSIL_DISPLAY_31225",
-      "MEDIUM_FOSSIL_DISPLAY_31228",
-      "MEDIUM_FOSSIL_DISPLAY_31229",
-      "MEDIUM_FOSSIL_DISPLAY_31230",
-      "MEDIUM_FOSSIL_DISPLAY_31231",
-      "MEDIUM_FOSSIL_DISPLAY_31234",
-      "MEDIUM_FOSSIL_DISPLAY_31235",
-      "MEDIUM_FOSSIL_DISPLAY_31236",
-      "MEDIUM_FOSSIL_DISPLAY_31237",
-      "MEDIUM_FOSSIL_DISPLAY_31246",
-      "MEDIUM_FOSSIL_DISPLAY_31247",
-      "MEDIUM_FOSSIL_DISPLAY_31248",
-      "MEDIUM_FOSSIL_DISPLAY_31249",
-      "MEDIUM_FOSSIL_DISPLAY_31253",
-      "MEDIUM_FOSSIL_DISPLAY_31254",
-      "MEDIUM_FOSSIL_DISPLAY_31255",
-      "MEDIUM_FOSSIL_DISPLAY_31258",
-      "MEDIUM_FOSSIL_DISPLAY_31259",
-      "MEDIUM_FOSSIL_DISPLAY_31260",
-      "MEDIUM_FOSSIL_DISPLAY_31261",
-      "MEDIUM_FOSSIL_DISPLAY_31264",
-      "MEDIUM_FOSSIL_DISPLAY_31265",
-      "MEDIUM_FOSSIL_DISPLAY_31266",
-      "MEDIUM_FOSSIL_DISPLAY_31267",
-      "MEDIUM_FOSSIL_DISPLAY_31270",
-      "MEDIUM_FOSSIL_DISPLAY_31271",
-      "MEDIUM_FOSSIL_DISPLAY_31272",
-      "MEDIUM_FOSSIL_DISPLAY_31273",
-      "MEDIUM_FOSSIL_DISPLAY_31276",
-      "MEDIUM_FOSSIL_DISPLAY_31277",
-      "MEDIUM_FOSSIL_DISPLAY_31278",
-      "MEDIUM_FOSSIL_DISPLAY_31279",
-      "MEDIUM_FOSSIL_DISPLAY_31294",
-      "MEDIUM_FOSSIL_DISPLAY_31295",
-      "MEDIUM_FOSSIL_DISPLAY_31296",
-      "MEDIUM_FOSSIL_DISPLAY_31297",
-      "MONSTER_SPACE",
-      "MOTHER",
-      "MUSHROO",
-      "MUSHROOM_30520",
-      "MUSHROOM_TORCH",
-      "MUSHROOM_TORCH_12006",
-      "MUSHTOISE",
-      "NIGHTMARE",
-      "NIGHTMARE_ZONE_DISPLAY",
-      "ODD_STONE",
-      "ORNATE_JEWELLERY_BOX",
-      "ORNATE_JEWELLERY_BOX_37520",
-      "ORNATE_JEWELLERY_BOX_37521",
-      "ORNATE_JEWELLERY_BOX_37522",
-      "ORNATE_JEWELLERY_BOX_37523",
-      "ORNATE_JEWELLERY_BOX_37524",
-      "ORNATE_JEWELLERY_BOX_37525",
-      "ORNATE_JEWELLERY_BOX_37526",
-      "ORNATE_JEWELLERY_BOX_37527",
-      "ORNATE_JEWELLERY_BOX_37528",
-      "ORNATE_JEWELLERY_BOX_37529",
-      "ORNATE_JEWELLERY_BOX_37530",
-      "ORNATE_JEWELLERY_BOX_37531",
-      "ORNATE_JEWELLERY_BOX_37532",
-      "ORNATE_JEWELLERY_BOX_37533",
-      "ORNATE_JEWELLERY_BOX_37534",
-      "ORNATE_JEWELLERY_BOX_37535",
-      "ORNATE_JEWELLERY_BOX_37536",
-      "ORNATE_JEWELLERY_BOX_37537",
-      "ORNATE_JEWELLERY_BOX_37538",
-      "ORNATE_JEWELLERY_BOX_37539",
-      "ORNATE_JEWELLERY_BOX_37540",
-      "ORNATE_JEWELLERY_BOX_37541",
-      "ORNATE_JEWELLERY_BOX_37542",
-      "ORNATE_JEWELLERY_BOX_37543",
-      "ORNATE_JEWELLERY_BOX_37544",
-      "ORNATE_JEWELLERY_BOX_37545",
-      "ORNATE_JEWELLERY_BOX_37546",
-      "OTHERWORLDLY_THEME",
-      "PEBBLE",
-      "PETRIFIED_LARGE_MUSHROOM",
-      "PETRIFIED_MUSHTREE",
-      "PETRIFIED_PITCHER",
-      "PETRIFIED_PUFFERFISH",
-      "PETRIFIED_SPINE_PLANT",
-      "PLANT_FOSSIL_DISPLAY_31108",
-      "PLANT_FOSSIL_DISPLAY_31109",
-      "PLANT_FOSSIL_DISPLAY_31110",
-      "PLANT_FOSSIL_DISPLAY_31111",
-      "PLANT_FOSSIL_DISPLAY_31114",
-      "PLANT_FOSSIL_DISPLAY_31115",
-      "PLANT_FOSSIL_DISPLAY_31116",
-      "PLANT_FOSSIL_DISPLAY_31117",
-      "PLANT_FOSSIL_DISPLAY_31121",
-      "PLANT_FOSSIL_DISPLAY_31122",
-      "PLANT_FOSSIL_DISPLAY_31123",
-      "PLANT_FOSSIL_DISPLAY_31126",
-      "PLANT_FOSSIL_DISPLAY_31127",
-      "PLANT_FOSSIL_DISPLAY_31128",
-      "ROOT_33202",
-      "SABERTOOTH_SQUIRREL",
-      "SHARK_BEAST",
-      "SIGN_36501",
-      "SKROOM",
-      "SKROOM_30657",
-      "SKROOM_30658",
-      "SKROOM_30659",
-      "SKROOM_30660",
-      "SKROOM_30661",
-      "SKROOM_30868",
-      "SKROOM_31124",
-      "SLIGHTLY_DARK_CRYSTAL",
-      "SMALL_FOSSIL_DISPLAY_31144",
-      "SMALL_FOSSIL_DISPLAY_31145",
-      "SMALL_FOSSIL_DISPLAY_31146",
-      "SMALL_FOSSIL_DISPLAY_31147",
-      "SMALL_FOSSIL_DISPLAY_31156",
-      "SMALL_FOSSIL_DISPLAY_31157",
-      "SMALL_FOSSIL_DISPLAY_31158",
-      "SMALL_FOSSIL_DISPLAY_31159",
-      "SMALL_FOSSIL_DISPLAY_31181",
-      "SMALL_FOSSIL_DISPLAY_31212",
-      "SMALL_FOSSIL_DISPLAY_31213",
-      "SMALL_FOSSIL_DISPLAY_31216",
-      "SMALL_FOSSIL_DISPLAY_31217",
-      "SMALL_FOSSIL_DISPLAY_31218",
-      "SMALL_FOSSIL_DISPLAY_31219",
-      "SMOKE_DEVIL",
-      "SQUIRREL",
-      "SWAMPY_LAMP",
-      "TAR_THING",
-      "TERROR_SNAIL",
-      "TIP_JAR",
-      "UNICORN",
-      "WHITE_CRYSTAL",
-      "WHITE_CRYSTAL_31960",
-      "WILY_HELLCAT",
-      "WYVERN_EGG",
-      "WYVERN_SKULL",
-      "YELLOW_CRYSTAL",
-      "YELLOW_CRYSTAL_31959",
-      "YELLOW_SNOW"
+      37492,
+      37493,
+      37494,
+      37495,
+      37496,
+      37497,
+      37498,
+      37499,
+      37500,
+      31214,
+      10487,
+      11876,
+      14373,
+      6188,
+      29758,
+      33201,
+      33208,
+      3351,
+      3352,
+      18960,
+      35967,
+      35968,
+      30015,
+      30016,
+      30017,
+      30018,
+      29759,
+      31957,
+      29753,
+      31677,
+      13378,
+      29756,
+      33200,
+      33204,
+      15182,
+      15183,
+      15184,
+      29754,
+      37501,
+      37502,
+      37503,
+      37504,
+      37505,
+      37506,
+      37507,
+      37508,
+      37509,
+      37510,
+      37511,
+      37512,
+      37513,
+      37514,
+      37515,
+      37516,
+      37517,
+      37518,
+      37519,
+      5252,
+      10436,
+      35900,
+      35901,
+      15510,
+      15511,
+      15514,
+      15515,
+      31920,
+      40246,
+      29867,
+      29152,
+      31922,
+      29757,
+      33206,
+      33203,
+      2491,
+      2492,
+      11468,
+      29794,
+      30034,
+      31298,
+      40274,
+      34420,
+      41875,
+      41876,
+      31226,
+      29760,
+      31958,
+      29151,
+      34681,
+      31280,
+      41881,
+      31222,
+      31223,
+      31224,
+      31225,
+      31228,
+      31229,
+      31230,
+      31231,
+      31234,
+      31235,
+      31236,
+      31237,
+      31246,
+      31247,
+      31248,
+      31249,
+      31253,
+      31254,
+      31255,
+      31258,
+      31259,
+      31260,
+      31261,
+      31264,
+      31265,
+      31266,
+      31267,
+      31270,
+      31271,
+      31272,
+      31273,
+      31276,
+      31277,
+      31278,
+      31279,
+      31294,
+      31295,
+      31296,
+      31297,
+      15257,
+      33199,
+      31268,
+      30520,
+      12005,
+      12006,
+      31256,
+      37866,
+      31936,
+      33209,
+      31924,
+      37520,
+      37521,
+      37522,
+      37523,
+      37524,
+      37525,
+      37526,
+      37527,
+      37528,
+      37529,
+      37530,
+      37531,
+      37532,
+      37533,
+      37534,
+      37535,
+      37536,
+      37537,
+      37538,
+      37539,
+      37540,
+      37541,
+      37542,
+      37543,
+      37544,
+      37545,
+      37546,
+      29253,
+      33205,
+      31136,
+      31112,
+      31118,
+      31148,
+      31130,
+      31108,
+      31109,
+      31110,
+      31111,
+      31114,
+      31115,
+      31116,
+      31117,
+      31121,
+      31122,
+      31123,
+      31126,
+      31127,
+      31128,
+      33202,
+      31274,
+      31262,
+      36501,
+      30656,
+      30657,
+      30658,
+      30659,
+      30660,
+      30661,
+      30868,
+      31124,
+      29755,
+      31144,
+      31145,
+      31146,
+      31147,
+      31156,
+      31157,
+      31158,
+      31159,
+      31181,
+      31212,
+      31213,
+      31216,
+      31217,
+      31218,
+      31219,
+      40250,
+      33210,
+      29991,
+      31232,
+      31250,
+      29146,
+      40955,
+      29762,
+      31960,
+      40281,
+      31160,
+      31220,
+      29761,
+      31959,
+      33207
     ]
   },
   {
     "description": "TREES",
     "baseMaterial": "BARK",
     "objectIds": [
-      1293,
-      1294,
-      1295,
+      1276,
+      1278,
+      2092,
+      5127,
+      10041,
+      10820,
       10823,
-      37329,
+      10832,
+      10834,
       16546,
       16547,
       16548,
-      "EVERGREEN_2092",
-      "MAGIC_TREE_10834",
-      "MAPLE_TREE_10832",
-      "OAK_10820",
-      "TREE",
-      "TREE_1278",
-      "WILLOW",
-      "WILLOW_10833"
-    ]
+      23639,
+      37329
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "retainVanillaUvs": true
+  },
+  {
+    "description": "Spirit Trees",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      1293,
+      1294,
+      1295,
+      8338,
+      8382,
+      8383,
+      27116,
+      33733,
+      29229,
+      49598
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "retainVanillaUvs": true
   },
   {
     "description": "Fallen Tree",
     "baseMaterial": "BARK",
     "objectIds": [
+      1297,
       9661,
-      9663
-    ]
+      9663,
+      40347
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationY": 512,
+    "uvOrientationZ": 512
   },
   {
     "description": "DEAD_TREES",
@@ -1261,7 +1287,6 @@
       1285,
       1286,
       1289,
-      1297,
       1365,
       1383,
       1729,
@@ -1281,7 +1306,9 @@
       14565,
       14566,
       39679
-    ]
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
   },
   {
     "description": "TREE_STUMP",
@@ -1289,8 +1316,42 @@
     "objectIds": [
       1341,
       4328,
+      6212,
+      14516,
       14517
-    ]
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Objects - Tree - Yew",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      8388,
+      8389,
+      8390,
+      10822
+
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "retainVanillaUvs": true
+  },
+  {
+    "description": "Objects - Tree - Willow",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      9471,
+      10819,
+      10829,
+      10831,
+      10833
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationZ": 128,
+    "uvOrientationY": 512,
+    "retainVanillaUvs": true
   },
   {
     "description": "FARMING_PATCH_1",
@@ -1405,10 +1466,10 @@
       34491,
       34492,
       34493,
-      "FERN_19839",
-      "JUNGLE_GRASS",
-      "JUNGLE_GRASS_4813",
-      "JUNGLE_GRASS_4814"
+      19839,
+      4812,
+      4813,
+      4814
     ],
     "flatNormals": true,
     "inheritTileColorType": "UNDERLAY",
@@ -1464,18 +1525,18 @@
       9511,
       9623,
       25677,
-      "GATE_1558",
-      "GATE_1559",
-      "GATE_1560",
-      "GATE_1561",
-      "GATE_1562",
-      "GATE_1563",
-      "GATE_1564",
-      "GATE_1567",
-      "GATE_1739",
-      "GATE_1740",
-      "STILE",
-      "STILE_7527"
+      1558,
+      1559,
+      1560,
+      1561,
+      1562,
+      1563,
+      1564,
+      1567,
+      1739,
+      1740,
+      993,
+      7527
     ],
     "flatNormals": true
   },
@@ -1503,7 +1564,9 @@
       1651,
       1911,
       1912,
-      1913
+      1913,
+      1943,
+      1944
     ],
     "flatNormals": true
   },
@@ -1531,7 +1594,7 @@
     "description": "VARROCK_KNIGHT_STATUE",
     "baseMaterial": "MARBLE_1_SEMIGLOSS",
     "objectIds": [
-      "STATUE_3642"
+      3642
     ]
   },
   {
@@ -1597,7 +1660,7 @@
     "description": "GRAND_EXCHANGE_CLAN_PORTAL",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
-      "CLAN_HALL_PORTAL"
+      41724
     ],
     "flatNormals": true,
     "shadowOpacityThreshold": 0.12
@@ -1831,12 +1894,13 @@
       23883,
       23884,
       23885,
+      23904,
       23907,
       23908,
       23909,
       23910,
       40285,
-      "STAIRS_24428"
+      24428
     ],
     "flatNormals": true
   },
@@ -1932,19 +1996,19 @@
       24272,
       24273,
       24274,
-      "CITY_GATE_23982",
-      "CITY_GATE_23983",
-      "CITY_GATE_23984",
-      "CITY_GATE_23985",
-      "CITY_GATE_23986",
-      "CITY_GATE_23987",
-      "CITY_GATE_23988",
-      "CITY_GATE_23989",
-      "CITY_GATE_23990",
-      "CITY_GATE_23991",
-      "CITY_GATE_23992",
-      "CITY_GATE_23993",
-      "CRUMBLING_WALL_24222"
+      23982,
+      23983,
+      23984,
+      23985,
+      23986,
+      23987,
+      23988,
+      23989,
+      23990,
+      23991,
+      23992,
+      23993,
+      24222
     ],
     "flatNormals": true
   },
@@ -1952,16 +2016,16 @@
     "description": "STATUE_OF_SARADOMIN_1",
     "baseMaterial": "MARBLE_1_SEMIGLOSS",
     "objectIds": [
-      "STATUE_OF_SARADOMIN_24043",
-      "STATUE_OF_SARADOMIN_24044"
+      24043,
+      24044
     ]
   },
   {
     "description": "STONE_SIGNPOST",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
-      "STONE_SIGNPOST",
-      "STONE_SIGNPOST_23971"
+      23970,
+      23971
     ]
   },
   {
@@ -1969,10 +2033,7 @@
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
       7386,
-      7387,
-      10729,
-      10730,
-      10731
+      7387
     ],
     "flatNormals": true
   },
@@ -1987,13 +2048,13 @@
       3161,
       3162,
       21799,
-      "BIG_WINDOW",
+      33348,
       26585,
       26586,
       26587
     ],
     "flatNormals": true,
-    "uvType": "MODEL_XY"
+    "uvType": "BOX"
   },
   {
     "description": "CITHAREDE_ABBEY_WALLS",
@@ -2014,7 +2075,7 @@
       39737,
       39738,
       39739,
-      "STONE_PILE_39740"
+      39740
     ],
     "flatNormals": true
   },
@@ -2116,7 +2177,8 @@
   },
   {
     "description": "STONE_WALL_FENCES",
-    "baseMaterial": "STONE",
+    "baseMaterial": "STONE_NORMALED",
+    "textureMaterial": "HD_CONCRETE",
     "objectIds": [
       979,
       5566,
@@ -2132,16 +2194,20 @@
       23890,
       23891,
       23892,
-      "DRY_STONE_WALL"
+      5569
     ],
-    "flatNormals": true
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "flatNormals": true,
+    "uvOrientation": 250,
+    "uvScale": 0.8
   },
   {
     "description": "STATUE_OF_A_WARRIOR_1",
     "baseMaterial": "MARBLE_2_GLOSS",
     "objectIds": [
-      "STATUE_OF_A_WARRIOR",
-      "STATUE_OF_A_WARRIOR_566"
+      562,
+      566
     ]
   },
   {
@@ -2154,8 +2220,8 @@
       21730,
       21736,
       21737,
-      "STAIRS_21725",
-      "STAIRS_21726"
+      21725,
+      21726
     ]
   },
   {
@@ -2190,13 +2256,13 @@
       11985,
       30272,
       30273,
-      "CAVE_ENTRANCE_11833",
-      "CAVE_ENTRANCE_11834",
-      "CAVE_EXIT_11836",
-      "NODE",
-      "SCOREBOARD_41013",
-      "TERMINAL",
-      "TERMINAL_30270"
+      11833,
+      11834,
+      11836,
+      30271,
+      41013,
+      30269,
+      30270
     ],
     "tzHaarRecolorType": "GRADIENT"
   },
@@ -2271,47 +2337,47 @@
     "description": "SHAYZIEN_SHAY_SHRINE",
     "baseMaterial": "MARBLE_3_GLOSS",
     "objectIds": [
-      "CAT_SHRINE"
+      42160
     ]
   },
   {
     "description": "SHAYZIEN_HERO_STATUE",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
-      "DRAGON_STATUE"
+      25194
     ]
   },
   {
     "description": "SHAYZIEN_DRAGON_STATUE",
     "baseMaterial": "MARBLE_2_GLOSS",
     "objectIds": [
-      "SHAYZIEN_STATUE_42178"
+      42178
     ]
   },
   {
     "description": "SHAYZIEN_GRAVE",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
-      "GRAVE_28451"
+      28451
     ]
   },
   {
     "description": "SHAYZIEN_CEREMONIAL_PILLAR",
     "baseMaterial": "BLANK_GLOSS",
     "objectIds": [
-      "CEREMONIAL_PILLAR",
-      "CEREMONIAL_PILLAR_42168",
-      "CEREMONIAL_PILLAR_42169",
-      "CEREMONIAL_PILLAR_42170",
-      "CEREMONIAL_PILLAR_42171",
-      "CEREMONIAL_PILLAR_42172",
-      "CEREMONIAL_PILLAR_42173",
-      "CEREMONIAL_PILLAR_42174",
-      "CEREMONIAL_PILLAR_42175",
-      "CEREMONIAL_PILLAR_42176",
-      "CEREMONIAL_PILLAR_42177",
-      "CEREMONIAL_PILLAR_42179",
-      "CEREMONIAL_PILLAR_42180"
+      42167,
+      42168,
+      42169,
+      42170,
+      42171,
+      42172,
+      42173,
+      42174,
+      42175,
+      42176,
+      42177,
+      42179,
+      42180
     ],
     "flatNormals": true
   },
@@ -2330,7 +2396,7 @@
       14558,
       42110,
       42111,
-      "DOOR_42116"
+      42116
     ],
     "flatNormals": true
   },
@@ -2350,9 +2416,9 @@
     "description": "SHAYZIEN_STAIRS",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
-      "STAIRCASE_42193",
-      "STAIRCASE_42195",
-      "STAIRCASE_42196"
+      42193,
+      42195,
+      42196
     ],
     "flatNormals": true
   },
@@ -2395,8 +2461,8 @@
       4410,
       4445,
       4908,
-      "BATTLEMENTS",
-      "BATTLEMENTS_4447"
+      4446,
+      4447
     ],
     "flatNormals": true
   },
@@ -2425,8 +2491,8 @@
       2170,
       2172,
       4332,
-      "HEAP_OF_BRICKS",
-      "STAIRCASE"
+      2171,
+      2114
     ],
     "flatNormals": true
   },
@@ -2471,8 +2537,8 @@
       29940,
       29942,
       29943,
-      "ALTAR_29941",
-      "XERICIAN_STATUE"
+      29941,
+      29937
     ],
     "flatNormals": true
   },
@@ -2507,16 +2573,12 @@
       340,
       341,
       342,
-      3171,
       3172,
       3173,
       3174,
-      3204,
       3613,
       3614,
       3615,
-      3948,
-      3950,
       7057,
       7103,
       7104,
@@ -2534,7 +2596,7 @@
       18934
     ],
     "inheritTileColorType": "OVERLAY",
-    "uvType": "WORLD_XZ",
+    "uvType": "BOX",
     "uvScale": 0.75
   },
   {
@@ -2625,12 +2687,16 @@
     "description": "GROUND_DECORATION_SAND",
     "baseMaterial": "SAND_1",
     "objectIds": [
+      3169,
+      3170,
+      3171,
       14914,
       15634,
       15635
     ],
-    "uvType": "WORLD_XZ",
-    "uvScale": 0.4
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 128
   },
   {
     "description": "GROUND_DECORATION_SNOW",
@@ -2826,18 +2892,18 @@
       39745,
       39746,
       39747,
-      "COLUMN_25080",
-      "COLUMN_25081",
-      "COLUMN_25082",
-      "CONNECTED_STALAGMITES",
-      "LARGE_STALAGMITE",
-      "STALAGMITE_22541",
-      "STALAGMITE_25083",
-      "STALAGMITES_25084",
-      "STALAGMITES_25085",
-      "WALL_25161"
+      25080,
+      25081,
+      25082,
+      22543,
+      22542,
+      22541,
+      25083,
+      25084,
+      25085,
+      25161
     ],
-    "uvType": "WORLD_XZ",
+    "uvType": "BOX",
     "uvScale": 0.5,
     "flatNormals": true
   },
@@ -2848,12 +2914,12 @@
       12173,
       30176,
       30869,
-      "CAVE_ENTRANCE_11835",
-      "CRACK_29627",
-      "TUNNEL_6659"
+      11835,
+      29627,
+      6659
     ],
     "flatNormals": true,
-    "uvType": "WORLD_XZ",
+    "uvType": "BOX",
     "uvScale": 0.5
   },
   {
@@ -2864,7 +2930,7 @@
       3213,
       40887
     ],
-    "uvType": "MODEL_YZ",
+    "uvType": "BOX",
     "uvScale": 0.4,
     "uvOrientation": 512
   },
@@ -2875,8 +2941,8 @@
       39721,
       44635
     ],
-    "uvScale": 0.4,
-    "uvOrientation": 512
+    "uvType": "BOX",
+    "uvScale": 0.5
   },
   {
     "description": "CAVE_WALLS_BLEND",
@@ -2904,7 +2970,7 @@
       29634
     ],
     "flatNormals": true,
-    "uvType": "MODEL_XZ"
+    "uvType": "BOX"
   },
   {
     "description": "CAVE_WALL_ABOVE_FLOOR_TILE",
@@ -2923,14 +2989,14 @@
     "baseMaterial": "GRUNGE_1",
     "hideInAreas": [
       [ 3469, 9845 ]
-    ]
+    ],
+    "uvType": "BOX"
   },
   {
     "description": "ROUNDED_CAVE_WALLS",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
       1422,
-      1434,
       1435,
       1459,
       1460,
@@ -2939,13 +3005,21 @@
       9739,
       9740,
       16543
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "ROUNDED_CAVE_WALLS_TOP",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      1434
     ]
   },
   {
     "description": "TROLL_STRONGHOLD_HIDDEN_DOOR",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
-      "SECRET_DOOR"
+      3762
     ]
   },
   {
@@ -3019,24 +3093,26 @@
       6906,
       6912,
       6925,
-      "BIG_BIG_BOULDER",
-      "BONE_ARCH",
-      "BONE_ARCH_6932",
-      "BONE_ARCH_6933",
-      "BONE_ARCH_6939",
-      "BONE_ARCH_6940",
-      "BONE_SUPPORT",
-      "BONE_SUPPORT_6930",
-      "GAS_HOLE",
-      "GAS_HOLE_5918",
-      "RUBBLE"
-    ]
+      6927,
+      6931,
+      6932,
+      6933,
+      6939,
+      6940,
+      6929,
+      6930,
+      5917,
+      5918,
+      6903
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
   },
   {
     "description": "UNKNOWN_1",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
-      "PASSAGE"
+      677
     ],
     "flatNormals": true
   },
@@ -3051,14 +3127,11 @@
       3102,
       3103,
       3192,
-      10748,
-      10767,
-      10770,
-      "ENTRANCE_3111",
-      "ENTRANCE_3112",
-      "ENTRANCE_3113",
-      "ENTRANCE_3114",
-      "SAILS_2569"
+      3111,
+      3112,
+      3113,
+      3114,
+      2569
     ],
     "flatNormals": true
   },
@@ -3078,20 +3151,22 @@
       6822,
       6826,
       6827,
-      "CAVE_ENTRANCE_3759",
-      "CAVE_EXIT_3760",
-      "EXIT",
-      "EXIT_3772",
-      "EXIT_3773",
-      "EXIT_3774",
-      "TUNNEL",
-      "WINDOW_3770"
-    ]
+      3759,
+      3760,
+      3761,
+      3772,
+      3773,
+      3774,
+      2141,
+      3770
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7
   },
   {
     "description": "UNKNOWN_4",
     "objectIds": [
-      "CRYPT"
+      39617
     ],
     "flatNormals": true
   },
@@ -3124,9 +3199,9 @@
       31481,
       31482,
       43759,
-      "CAVE_EXIT"
+      679
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "uvScale": 0.5
   },
   {
@@ -3139,16 +3214,16 @@
   {
     "description": "Guardians of the Rift entrance",
     "objectIds": [
-      "BARRIER_43700",
-      "BARRIER_43849"
+      43700,
+      43849
     ],
     "baseMaterial": "UNLIT"
   },
   {
     "description": "Tombs of Amascut Baba boulders",
     "npcIds": [
-      "BOULDER_11782",
-      "BOULDER_11783"
+      11782,
+      11783
     ],
     "flatNormals": true
   },
@@ -3190,7 +3265,7 @@
       6548
     ],
     "flatNormals": true,
-    "uvType": "MODEL_XY"
+    "uvType": "BOX"
   },
   {
     "description": "Sophanem pyramid door",
@@ -3213,9 +3288,10 @@
       3123,
       3124,
       9513,
-      9541
+      9541,
+      42349
     ],
-    "uvType": "MODEL_XZ"
+    "uvType": "BOX"
   },
   {
     "description": "WOODEN_PLANK_DOCKS diagonal",
@@ -3271,7 +3347,7 @@
       39708,
       39709
     ],
-    "uvType": "MODEL_XZ"
+    "uvType": "BOX"
   },
   {
     "description": "WOODEN_PLANK_ROUGH",
@@ -3279,18 +3355,21 @@
     "objectIds": [
       42036
     ],
-    "uvType": "MODEL_XZ"
+    "uvType": "BOX"
   },
   {
     "description": "DOCK_FENCES",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       814,
       9539,
       11598,
       16004
     ],
-    "flatNormals": true
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvScale": 1.1,
+    "uvOrientation": 512
   },
   {
     "description": "DOCK_FENCES_TAN",
@@ -3303,7 +3382,7 @@
   },
   {
     "description": "RELLEKKA_FENCES",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       4262,
       8969,
@@ -3311,6 +3390,9 @@
       8971,
       25261
     ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.7,
     "flatNormals": true
   },
   {
@@ -3341,7 +3423,7 @@
       25619,
       31589
     ],
-    "uvType": "MODEL_XZ"
+    "uvType": "BOX"
   },
   {
     "description": "LIGHT_WOODEN_DOCKS_MIRRORED",
@@ -3373,7 +3455,7 @@
       22534,
       22535
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "uvScale": 0.88
   },
   {
@@ -3382,7 +3464,7 @@
     "objectIds": [
       16991
     ],
-    "uvType": "MODEL_XZ"
+    "uvType": "BOX"
   },
   {
     "description": "LUNAR_ISLE_DOCK_SUPPORTS",
@@ -3460,7 +3542,7 @@
   },
   {
     "description": "Single row fences",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       2050,
       2051,
@@ -3489,9 +3571,12 @@
       24560,
       24561,
       25796,
-      29110
+      29110,
+      44917
     ],
-    "flatNormals": true
+    "flatNormals": true,
+    "uvType": "BOX",
+    "uvOrientation": 512
   },
   {
     "description": "FENCES_3",
@@ -3500,7 +3585,7 @@
       994,
       995
     ],
-    "uvType": "MODEL_XY",
+    "uvType": "BOX",
     "uvScale": 0.4
   },
   {
@@ -3637,7 +3722,7 @@
       25923,
       25924
     ],
-    "uvType": "MODEL_XY",
+    "uvType": "BOX",
     "flatNormals": true,
     "uvOrientation": 512
   },
@@ -3669,8 +3754,9 @@
       25931
     ],
     "uvOrientation": 512,
-    "uvType": "MODEL_XZ",
-    "flatNormals": true
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvScale": 0.8
   },
   {
     "description": "Seers village wooden posts",
@@ -3678,10 +3764,11 @@
     "objectIds": [
       25777
     ],
-    "flatNormals": true
+    "flatNormals": true,
+    "uvType": "BOX"
   },
   {
-    "description": "Seets village chairs",
+    "description": "Seers village chairs",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       27276,
@@ -3691,7 +3778,7 @@
       25773,
       25783
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "flatNormals": true
   },
   {
@@ -3832,7 +3919,7 @@
       30374,
       31766
     ],
-    "uvType": "WORLD_XZ",
+    "uvType": "BOX",
     "uvScale": 0.5
   },
   {
@@ -3857,7 +3944,9 @@
       30369,
       30370,
       30375
-    ]
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
   },
   {
     "description": "Motherload mine upper floor",
@@ -3874,7 +3963,8 @@
       11389,
       11392,
       11393
-    ]
+    ],
+    "uvType": "BOX"
   },
   {
     "description": "Motherload Mine Rockfall",
@@ -3883,7 +3973,7 @@
       26679,
       26680
     ],
-    "uvType": "MODEL_YZ_MIRROR_B",
+    "uvType": "BOX",
     "uvScale": 0.4,
     "uvOrientation": 400
   },
@@ -3911,24 +4001,27 @@
       1454,
       1455
     ],
-    "uvType": "WORLD_XY",
+    "uvType": "BOX",
     "uvScale": 0.75
   },
   {
     "description": "Stalagmite - Tan",
-    "baseMaterial": "STONE",
+    "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       5047,
       12219,
       12575,
       12576,
+      12577,
       11184,
       11185,
       11186,
       18479,
       37816,
       37817
-    ]
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 256
   },
   {
     "description": "Wooden Wall Supports - Mines",
@@ -3940,7 +4033,7 @@
   },
   {
     "description": "Textured Ladder",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       11,
       2147,
@@ -3955,15 +4048,20 @@
       17385,
       17387,
       30367
-    ]
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512
   },
   {
     "description": "Textured - Crate 1",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       354,
       357
-    ]
+    ],
+    "uvType": "BOX",
+    "uvOrientationY": 256,
+    "uvOrientationZ": 800
   },
   {
     "description": "Falador - Marble - Saradomin Statue",
@@ -4013,7 +4111,8 @@
       24025,
       24081
     ],
-    "uvType": "MODEL_XZ"
+    "uvType": "BOX",
+    "uvScale": 0.8
   },
   {
     "description": "Falador - Tables - Rotated",
@@ -4025,15 +4124,18 @@
     "uvOrientation": 512
   },
   {
-    "description": "Wooden Benches",
-    "baseMaterial": "DOCK_FENCE",
+    "description": "Wooden Benches - Plank",
+    "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       1106,
+      3632,
       5615,
       9531,
       25601,
       25676
-    ]
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7
   },
   {
     "description": "Courthouse Basement stairs",
@@ -4082,11 +4184,14 @@
       14852,
       15684,
       17145,
+      20058,
       25603,
+      39989,
       40223,
       40224
     ],
-    "uvType": "MODEL_XZ",
+    "uvOrientationY": 512,
+    "uvType": "BOX",
     "flatNormals": true,
     "uvScale": 0.6
   },
@@ -4094,11 +4199,11 @@
     "description": "Wooden - Plank - Tables - Rotated",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
+      7175,
       23177,
       39716
     ],
-    "uvType": "MODEL_XZ",
-    "uvOrientation": 1536,
+    "uvType": "BOX",
     "flatNormals": true,
     "uvScale": 0.6
   },
@@ -4140,6 +4245,8 @@
       24351,
       24352,
       20675,
+      24082,
+      24084,
       25606,
       25663,
       25844,
@@ -4213,15 +4320,8 @@
     "objectIds": [
       1602,
       1603,
-      1604,
-      1605,
       1606,
       1608,
-      10743,
-      10744,
-      10749,
-      10750,
-      10769,
       17349
     ],
     "flatNormals": true
@@ -4410,6 +4510,9 @@
       1572,
       1573,
       1574,
+      1570,
+      1727,
+      1728,
       3506,
       3507,
       11721,
@@ -4424,7 +4527,7 @@
       44598,
       44599
     ],
-    "uvType": "MODEL_XY"
+    "uvType": "GEOMETRY"
   },
   {
     "description": "Metal Fence",
@@ -4450,7 +4553,8 @@
       24009,
       24010,
       24011
-    ]
+    ],
+    "uvType": "BOX"
   },
   {
     "description": "Mysterious Statue",
@@ -4502,7 +4606,8 @@
       23270,
       23271
     ],
-    "uvType": "WORLD_XZ"
+    "uvType": "BOX",
+    "uvScale": 0.8
   },
   {
     "description": "Wilderness Ditch Dirt clumps",
@@ -4694,7 +4799,7 @@
   },
   {
     "description": "Wooden Door 1 - Fake Plank",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       71,
       72,
@@ -4702,6 +4807,8 @@
       74,
       1527,
       1528,
+      1529,
+      1530,
       1535,
       1536,
       1732,
@@ -4764,14 +4871,14 @@
       25828,
       26207
     ],
-    "flatNormals": true,
-    "uvOrientation": 512,
-    "uvScale": 0.4
+    "uvType": "BOX",
+    "flatNormals": true
   },
   {
     "description": "Wooden Door 2 - 4 Panel",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      59,
       1521,
       1522,
       1524,
@@ -4784,17 +4891,17 @@
       25719
     ],
     "flatNormals": true,
-    "uvType": "MODEL_XY",
-    "uvOrientation": 1536,
+    "uvType": "BOX",
     "uvScale": 0.4
   },
   {
     "description": "Wooden Door 3",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       1540,
       1541
     ],
+    "uvType": "BOX",
     "flatNormals": true,
     "uvScale": 0.4
   },
@@ -4810,12 +4917,13 @@
       11778,
       11779,
       11780,
+      15056,
       44784,
       44785
     ],
     "uvOrientation": 512,
     "uvScale": 0.4,
-    "uvType": "MODEL_XY"
+    "uvType": "BOX"
   },
   {
     "description": "Varrock Castle Doors",
@@ -4831,22 +4939,33 @@
   },
   {
     "description": "Varrock Castle Railing",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       11793,
       23852
-    ]
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512
   },
   {
     "description": "Varrock Castle and Museum Staircase",
     "baseMaterial": "DOCK_FENCE",
     "objectIds": [
       11797,
-      11798,
-      11799,
       11807
     ],
     "flatNormals": true
+  },
+  {
+    "description": "Varrock Museum Staircase",
+    "baseMaterial": "WOOD_GRAIN_2_LIGHT",
+    "objectIds": [
+      11798
+    ],
+    "flatNormals": true,
+    "uvType": "BOX",
+    "uvScale": 0.45,
+    "uvOrientationX": 200
   },
   {
     "description": "Varrock - Saw Mill Walls",
@@ -4857,7 +4976,7 @@
       23901,
       23902
     ],
-    "uvType": "MODEL_XY",
+    "uvType": "BOX",
     "flatNormals": true,
     "uvScale": 0.6
   },
@@ -4913,7 +5032,7 @@
       25656,
       25658
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "uvScale": 0.5,
     "uvOrientation": 512
   },
@@ -4945,10 +5064,12 @@
     "description": "Sandstone Rocks",
     "baseMaterial": "STONE",
     "objectIds": [
+      3204,
       11386
     ],
-    "uvType": "WORLD_XZ",
-    "uvScale": 0.4
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 256
   },
   {
     "description": "Granite Rocks",
@@ -4970,7 +5091,7 @@
       26640,
       26641
     ],
-    "uvType": "WORLD_XZ",
+    "uvType": "BOX",
     "uvScale": 0.4
   },
   {
@@ -5048,11 +5169,12 @@
   },
   {
     "description": "Eagles Peak Cave",
-    "baseMaterial": "STONE",
+    "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       19790
     ],
-    "flatNormals": true
+    "uvType": "BOX",
+    "uvScale": 0.6
   },
   {
     "description": "Dagannoth Cave",
@@ -5273,7 +5395,7 @@
       42675,
       42376
     ],
-    "uvType": "WORLD_XZ",
+    "uvType": "BOX",
     "uvScale": 0.32
   },
   {
@@ -5290,7 +5412,7 @@
       16464,
       19065
     ],
-    "uvType": "WORLD_XZ",
+    "uvType": "BOX",
     "uvScale": 0.5
   },
   {
@@ -5312,7 +5434,7 @@
       29032,
       29044
     ],
-    "uvType": "MODEL_XZ_MIRROR_B",
+    "uvType": "BOX",
     "uvScale": 0.22
   },
   {
@@ -5328,14 +5450,13 @@
   {
     "description": "Objects - Mossy Rock - Medium",
     "baseMaterial": "ROCK_1",
+    "textureMaterial": "HD_CONCRETE",
     "objectIds": [
       3894,
       3895,
       3896,
       3897,
       5847,
-      11182,
-      11183,
       11425,
       27899,
       29856,
@@ -5356,8 +5477,9 @@
       40556,
       40557
     ],
-    "uvType": "WORLD_XZ",
-    "uvScale": 0.5
+    "retainVanillaUvs": false,
+    "uvType": "BOX",
+    "uvScale": 0.65
   },
   {
     "description": "Objects - Mossy Rock - Rectangle",
@@ -5365,7 +5487,7 @@
     "objectIds": [
       31784
     ],
-    "uvType": "MODEL_XZ_MIRROR_B",
+    "uvType": "BOX",
     "uvScale": 0.35
   },
   {
@@ -5376,7 +5498,7 @@
       31788,
       31789
     ],
-    "uvType": "WORLD_XZ",
+    "uvType": "BOX",
     "uvScale": 0.44
   },
   {
@@ -5464,7 +5586,7 @@
       18478,
       22350
     ],
-    "uvType": "WORLD_XZ",
+    "uvType": "BOX",
     "uvScale": 0.65,
     "hideInAreas": [
       [
@@ -5489,7 +5611,7 @@
       11092
     ],
     "inheritTileColorType": "OVERLAY",
-    "uvType": "WORLD_XZ",
+    "uvType": "BOX",
     "uvScale": 0.65
   },
   {
@@ -5512,7 +5634,7 @@
       18894,
       18895
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "uvScale": 0.5
   },
   {
@@ -5521,7 +5643,6 @@
     "objectIds": [
       320,
       2382,
-      3170,
       3709,
       3949,
       7106,
@@ -5551,18 +5672,19 @@
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
       319,
-      3169,
       3705,
       3706,
       3707,
       3708,
       3710,
       3724,
+      3948,
+      3950,
       12910,
       12911,
       12912,
-      "ROCKS_3803",
-      "ROCKS_3804"
+      3803,
+      3804
     ],
     "uvType": "WORLD_XZ",
     "uvScale": 0.74
@@ -5681,9 +5803,59 @@
       11560,
       11561
     ],
-    "uvType": "MODEL_XY",
+    "uvType": "BOX",
     "uvOrientation": 1536,
     "uvScale": 0.66
+  },
+  {
+    "description": "Barbarian Hall - Walls - Wooden - Planks",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      11562,
+      11563,
+      11564
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Barbarian Hall - Roof - Wooden - Planks",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      11565,
+      11566,
+      11567,
+      11568
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Barbarian Hall - Roof Corners - Wooden - Planks",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      11569,
+      11570,
+      11571,
+      11572,
+      11573,
+      11574,
+      11576,
+      11577,
+      11578,
+      11579,
+      11580,
+      11581,
+      11582,
+      11583,
+      11584
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512
   },
   {
     "description": "Round Rug",
@@ -5722,7 +5894,7 @@
       5443,
       5444
     ],
-    "uvType": "MODEL_XY",
+    "uvType": "BOX",
     "uvScale": 0.83
   },
   {
@@ -5781,7 +5953,7 @@
       1367,
       1368
     ],
-    "uvType": "MODEL_XY_MIRROR_B",
+    "uvType": "BOX",
     "uvScale": 0.6,
     "uvOrientation": 342
   },
@@ -5792,7 +5964,7 @@
       1363,
       1364
     ],
-    "uvType": "MODEL_XY_MIRROR_B",
+    "uvType": "BOX",
     "uvScale": 0.4,
     "uvOrientation": 342
   },
@@ -5807,18 +5979,16 @@
   },
   {
     "description": "Objects - Wooden - Crate",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       5106,
       5107,
       5110,
+      5330,
       6176,
       6177,
       6178,
       7514,
-      9533,
-      9534,
-      9535,
       10374,
       10378,
       10379,
@@ -5845,29 +6015,77 @@
       20367,
       20429,
       24344,
+      24088,
       25655,
       25660,
       25661,
       25775,
       25776,
       25836,
-      25837
+      25837,
+      44854
     ],
+    "uvType": "BOX",
     "flatNormals": true
   },
   {
-    "description": "Objects - Wooden - Boxes",
-    "baseMaterial": "DOCK_FENCE",
+    "description": "Objects - Wooden - Crate",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      9536,
+      9533
+    ],
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Objects - Wooden - Crate",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      9534
+    ],
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512
+  },
+  {
+    "description": "Objects - Wooden - Crate",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      9535
+    ],
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvOrientationY": 29,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512
+  },
+  {
+    "description": "Objects - Wooden - Stack of crates",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      9536
+    ],
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvOrientationY": 600,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512
+  },
+  {
+    "description": "Objects - Wooden - Boxes",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
       10380,
       20369
     ],
+    "uvType": "BOX",
     "flatNormals": true
   },
   {
     "description": "Wall - Decoration - Wooden - Crate",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       10130,
       10131,
@@ -5875,7 +6093,9 @@
       10133,
       10134
     ],
-    "flatNormals": true
+    "flatNormals": true,
+    "uvType": "BOX",
+    "uvOrientationY": 512
   },
   {
     "description": "Metallic - Ground - Armor",
@@ -5917,8 +6137,9 @@
       12278
     ],
     "uvScale": 0.4,
-    "uvType": "MODEL_XY",
-    "flatNormals": true
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvOrientation": 512
   },
   {
     "description": "Objects - Metallic - Pots",
@@ -5953,7 +6174,9 @@
     "objectIds": [
       4303
     ],
-    "uvType": "MODEL_XZ"
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "flatNormals": true
   },
   {
     "description": "Walls - Stone - Giants Foundry",
@@ -5981,7 +6204,10 @@
       44717,
       44719,
       44720
-    ]
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 256
   },
   {
     "description": "Ground Decoration - Flat Stone - Small - Uncolored",
@@ -6102,10 +6328,10 @@
     "uvType": "GEOMETRY"
   },
   {
-    "description": "Mortton Shade Catacombs  - Objects - Stone - Alter",
+    "description": "Mortton Shade Catacombs  - Objects - Stone - Altar",
     "baseMaterial": "STONE",
     "objectIds": [
-       41222
+      41222
     ],
     "uvType": "GEOMETRY"
   },
@@ -6175,7 +6401,8 @@
     "objectIds": [
       1171
     ],
-    "uvType": "MODEL_XZ"
+    "uvType": "BOX",
+    "uvScale": 0.8
   },
   {
     "description": "Objects - Huge Mushroom - Medium",
@@ -6252,7 +6479,7 @@
       5437,
       5438
     ],
-    "uvType": "MODEL_XY",
+    "uvType": "BOX",
     "uvScale": 0.78
   },
   {
@@ -6302,7 +6529,7 @@
       17717,
       17718
     ],
-    "uvType": "MODEL_XY",
+    "uvType": "BOX",
     "uvOrientation": 512,
     "uvScale": 0.76
   },
@@ -6350,8 +6577,8 @@
       12852,
       12853
     ],
-    "uvType": "MODEL_YZ",
-    "uvOrientation": -50,
+    "uvType": "BOX",
+    "uvOrientation": 560,
     "uvScale": 0.66
   },
   {
@@ -6361,7 +6588,7 @@
       12752,
       12760
     ],
-    "uvType": "MODEL_XY",
+    "uvType": "BOX",
     "uvOrientation": 512,
     "uvScale": 0.66
   },
@@ -6371,9 +6598,10 @@
     "objectIds": [
       5244,
       5245,
+      7503,
       20773
     ],
-    "uvType": "MODEL_XY",
+    "uvType": "BOX",
     "uvOrientation": 512,
     "uvScale": 0.56
   },
@@ -6400,7 +6628,7 @@
       12850,
       12851
     ],
-    "uvType": "MODEL_XY",
+    "uvType": "BOX",
     "uvOrientation": 512,
     "uvScale": 0.44
   },
@@ -6448,14 +6676,15 @@
   },
   {
     "description": "Morytania - Objects - Wooden - Crate",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       12876,
       12877,
       12878,
       12879
     ],
-    "uvType": "GEOMETRY"
+    "uvType": "BOX",
+    "uvScale": 0.7
   },
   {
     "description": "Morytania - Ground  - Water - Puddles - Burugh De Rott",
@@ -6531,6 +6760,10 @@
     "objectIds": [
       1102,
       7167,
+      7168,
+      10780,
+      10642,
+      11603,
       12407,
       14872,
       15679,
@@ -6540,12 +6773,15 @@
       17667,
       17909,
       17910,
+      20059,
       23065,
       23179,
+      24089,
+      27272,
       31483,
       39718
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "flatNormals": true,
     "uvScale": 0.80
   },
@@ -6553,11 +6789,14 @@
     "description": "Objects - Table - Single - Wooden – Plank - Generic",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      7169,
+      11627,
       20351,
       23066,
-      24360
+      24360,
+      40000
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "flatNormals": true
   },
   {
@@ -6566,7 +6805,7 @@
     "objectIds": [
       12734
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "uvOrientation": 512,
     "flatNormals": true
   },
@@ -6576,12 +6815,11 @@
     "objectIds": [
       17662
     ],
-    "uvType": "MODEL_XZ",
-    "uvOrientation": 512,
+    "uvType": "BOX",
     "flatNormals": true
   },
   {
-    "description": "Ground - Chaos Alter - Path -  Wooden – Plank",
+    "description": "Ground - Chaos Altar - Path -  Wooden – Plank",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       2669,
@@ -6598,7 +6836,7 @@
     "uvOrientation": 512
   },
   {
-    "description": "Chaos Alter - Walls - Path -  Wooden – Plank",
+    "description": "Chaos Altar - Walls - Path -  Wooden – Plank",
     "baseMaterial": "STONE",
     "objectIds": [
       169
@@ -6608,11 +6846,13 @@
   },
   {
     "description": "Objects - Standing Torch -  Wood",
-    "baseMaterial": "WOOD_GRAIN",
+    "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       724
     ],
-    "uvType": "GEOMETRY"
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.4
   },
   {
     "description": "Objects - Stone - Stalagmites - Limestone",
@@ -6702,7 +6942,7 @@
     "objectIds": [
       16639
     ],
-    "uvType": "MODEL_XY",
+    "uvType": "BOX",
     "uvOrientation": 64,
     "uvScale": 0.76
   },
@@ -6740,7 +6980,7 @@
     "objectIds": [
       16742
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "uvScale": 0.6
   },
   {
@@ -6778,7 +7018,7 @@
       24333,
       29712
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "uvScale": 0.4
   },
   {
@@ -6787,7 +7027,7 @@
     "objectIds": [
       12280
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "flatNormals": true
   },
   {
@@ -6797,7 +7037,7 @@
       12386,
       12416
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "uvOrientation": 512,
     "flatNormals": true,
     "uvScale": 0.6
@@ -6809,7 +7049,7 @@
       16737,
       16738
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "flatNormals": true,
     "uvScale": 0.8
   },
@@ -6854,13 +7094,14 @@
       16747,
       16748,
       16749,
+      16750,
       16759,
       16760,
       16770,
       16771,
       16772
     ],
-    "uvType": "MODEL_XY"
+    "uvType": "BOX"
   },
   {
     "description": "Lunar Isles - WALLS - Wooden - Plank - Windows",
@@ -6872,15 +7113,7 @@
       16768,
       16769
     ],
-    "uvType": "MODEL_XY"
-  },
-  {
-    "description": "Lunar Isles - WALLS - Wooden Railing",
-    "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [
-      16750
-    ],
-    "uvType": "MODEL_XY"
+    "uvType": "BOX"
   },
   {
     "description": "Lunar Isles - WALLS - Wooden - Plank - Door",
@@ -6889,7 +7122,7 @@
       16776,
       16777
     ],
-    "uvType": "MODEL_XY"
+    "uvType": "BOX"
   },
   {
     "description": "Lunar Isles - WALLS - Wooden - Door - Window",
@@ -6899,7 +7132,7 @@
       16778,
       16779
     ],
-    "uvType": "MODEL_XY"
+    "uvType": "BOX"
   },
   {
     "description": "Lunar Isles - WALLS - Wooden - Railing - Window",
@@ -6990,7 +7223,8 @@
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
       16509
-    ]
+    ],
+    "uvType": "BOX"
   },
   {
     "description": "Objects - Rock Stairs - Large",
@@ -6998,7 +7232,9 @@
     "objectIds": [
       30189
     ],
-    "uvType": "GEOMETRY"
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "uvOrientation": 768
   },
   {
     "description": "Objects - Rockslide - Brown Rock - Rock - Medium",
@@ -7009,9 +7245,22 @@
       11191,
       11192,
       11195,
-      11193
+      11193,
+      12582,
+      12583,
+      12584,
+      12585
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
+    "uvScale": 0.33
+  },
+  {
+    "description": "Objects - Rockslide - Gray Rock - Rock - Medium",
+    "baseMaterial": "ROCK_2",
+    "objectIds": [
+      11432
+    ],
+    "uvType": "BOX",
     "uvScale": 0.33
   },
   {
@@ -7085,7 +7334,7 @@
       6394,
       6395
     ],
-    "uvType": "MODEL_YZ_MIRROR_A",
+    "uvType": "BOX",
     "uvOrientation": 512,
     "uvScale": 0.6
   },
@@ -7107,11 +7356,32 @@
       10491,
       12885,
       17146,
-      24335
+      24335,
+      29716
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "uvOrientation": 512,
     "uvScale": 0.6
+  },
+  {
+    "description": "Objects - Wooden - Chair 2",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      7182,
+      15681,
+      15682,
+      27268
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Objects - Wooden - Chair 3 - Mage Training Arena",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      10724
+    ],
+    "uvType": "BOX",
+    "flatNormals": true
   },
   {
     "description": "Objects - Wooden - Tables - Round",
@@ -7119,9 +7389,10 @@
     "objectIds": [
       593,
       598,
+      2335,
       25733
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "flatNormals": true,
     "uvScale": 1.2
   },
@@ -7135,13 +7406,6 @@
     "uvType": "MODEL_XZ",
     "uvOrientation": 512,
     "uvScale": 0.4
-  },
-  {
-    "description": "Objects - Wooden - Column",
-    "baseMaterial": "NONE",
-    "objectIds": [
-      1870
-    ]
   },
   {
     "description": "Ardougne - Objects - Metallic - Manhole",
@@ -7158,7 +7422,8 @@
       406,
       1992
     ],
-    "uvType": "VANILLA",
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
     "flatNormals": true
   },
   {
@@ -7208,7 +7473,7 @@
       23530,
       23561
     ],
-    "uvType": "VANILLA"
+    "uvType": "BOX"
   },
   {
     "description": "Gnome Stronghold - Objects - Tree - Fake Dead Tree",
@@ -7216,18 +7481,18 @@
     "objectIds": [
       1706
     ],
-    "uvType": "VANILLA"
+    "uvType": "BOX"
   },
   {
     "description": "Ground Decoration - Sticks - Small",
     "baseMaterial": "BARK",
     "objectIds": [
+      1250,
       1251,
       1252
     ],
-    "uvType": "MODEL_XZ",
-    "uvScale": 0.6,
-    "uvOrientation": 300
+    "uvType": "BOX",
+    "uvScale": 0.4
   },
   {
     "description": "Gnome - Walls - Rope Rails",
@@ -7380,11 +7645,10 @@
     "objectIds": [
       5033,
       5034,
-      11437,
       21104
     ],
-    "uvType": "WORLD_XZ",
-    "uvScale": 1.64
+    "uvType": "BOX",
+    "uvScale": 0.8
   },
   {
     "description": "Objects - Snow Piles - Large",
@@ -8394,7 +8658,7 @@
       6600,
       6601
     ],
-    "uvType": "MODEL_XY",
+    "uvType": "BOX",
     "uvScale": 0.6
   },
   {
@@ -8404,7 +8668,7 @@
       6588,
       6589
     ],
-    "uvType": "MODEL_XY",
+    "uvType": "BOX",
     "uvScale": 0.6
   },
   {
@@ -8413,7 +8677,8 @@
     "objectIds": [
       10503
     ],
-    "uvType": "GEOMETRY"
+    "uvType": "BOX",
+    "uvScale": 0.6
   },
   {
     "description": "Objects - Wooden - Counter",
@@ -8429,7 +8694,9 @@
     "baseMaterial": "DOCK_FENCE",
     "objectIds": [
       10525,
-      10526
+      10526,
+      11796,
+      11799
     ],
     "uvType": "GEOMETRY"
   },
@@ -8467,35 +8734,68 @@
     "uvType": "MODEL_XZ"
   },
   {
-    "description": "Jungle Tree Tiny",
+    "description": "Tree - Non interactable - Jungle",
     "baseMaterial": "PLANT_GRUNGE_2",
     "objectIds": [
-      1304
+      1301,
+      1302,
+      1303,
+      1304,
+      13703
     ],
-    "uvType": "MODEL_XZ",
-    "uvScale": 0.4
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 256
   },
   {
     "description": "Jungle Tree Small",
     "baseMaterial": "PLANT_GRUNGE_2",
     "objectIds": [
+      4818,
       6578
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "uvScale": 0.4,
     "uvOrientation": 256
   },
   {
-    "description": "Jungle Tree Big",
+    "description": "Jungle Tree Large - Unusual Plant",
     "baseMaterial": "PLANT_GRUNGE_2",
+    "objectIds": [
+      1314
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Tropical Tree Big",
+    "baseMaterial": "LIGHT_BARK",
     "objectIds": [
       1326,
       1327,
-      1328
+      1328,
+      1360,
+      1371,
+      1372,
+      1373,
+      4845,
+      4846,
+      4847
     ],
-    "uvType": "MODEL_XZ",
-    "uvScale": 0.2,
-    "uvOrientation": 256
+    "uvType": "BOX",
+    "uvScale": 0.62,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Tropical Tree Big - Leaning",
+    "baseMaterial": "LIGHT_BARK",
+    "objectIds": [
+      1361
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.62,
+    "uvOrientation": 768
   },
   {
     "description": "Sophamena Walls",
@@ -8506,7 +8806,7 @@
       6564,
       6565
     ],
-    "uvType": "MODEL_XY",
+    "uvType": "BOX",
     "uvOrientation": 512,
     "uvScale": 0.6
   },
@@ -8517,7 +8817,7 @@
       6535,
       6536
     ],
-    "uvType": "MODEL_YZ",
+    "uvType": "BOX",
     "uvOrientation": 512,
     "uvScale": 0.6
   },
@@ -8563,7 +8863,7 @@
       44886,
       44887
     ],
-    "uvType": "MODEL_XY"
+    "uvType": "BOX"
   },
   {
     "description": "PvP Arena Walls - Corners",
@@ -8624,7 +8924,7 @@
       44038,
       44039
     ],
-    "uvType": "MODEL_XY",
+    "uvType": "BOX",
     "uvScale": 0.6
   },
   {
@@ -8720,7 +9020,7 @@
       23336,
       23337
     ],
-    "uvType": "MODEL_XY",
+    "uvType": "BOX",
     "uvOrientation": 1536,
     "uvScale": 0.36
   },
@@ -8731,7 +9031,7 @@
       12275,
       12429
     ],
-    "uvType": "MODEL_XY",
+    "uvType": "BOX",
     "uvOrientation": 512,
     "uvScale": 0.36
   },
@@ -8746,7 +9046,7 @@
       12448,
       12449
     ],
-    "uvType": "MODEL_XY",
+    "uvType": "BOX",
     "uvOrientation": 512,
     "uvScale": 0.36
   },
@@ -8756,7 +9056,7 @@
     "objectIds": [
       16567
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "uvOrientation": 256
   },
   {
@@ -8801,19 +9101,19 @@
       12384,
       12385
     ],
-    "uvType": "MODEL_XY",
+    "uvType": "BOX",
     "uvOrientation": 256,
     "uvScale": 0.4
   },
   {
     "description": "Goblin Battlements",
-    "baseMaterial": "WOOD_GRAIN",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       12439,
       12438,
       12441
     ],
-    "uvType": "GEOMETRY"
+    "uvType": "BOX"
   },
   {
     "description": "Sacks Pile",
@@ -8908,7 +9208,8 @@
       18055,
       18056
     ],
-    "uvType": "GEOMETRY"
+    "uvType": "BOX",
+    "uvScale": 0.55
   },
   {
     "description": "Meiyerditch Walls Rubble",
@@ -8917,7 +9218,8 @@
       18037,
       18038
     ],
-    "uvType": "GEOMETRY"
+    "uvType": "BOX",
+    "uvScale": 0.55
   },
   {
     "description": "Meiyerditch Wall Plank Floors",
@@ -9034,7 +9336,7 @@
       18091,
       18092
     ],
-    "uvType": "MODEL_XY",
+    "uvType": "BOX",
     "uvOrientation": 512,
     "uvScale": 0.66
   },
@@ -9072,7 +9374,7 @@
       18131,
       18134
     ],
-    "uvType": "MODEL_XY",
+    "uvType": "BOX",
     "uvOrientation": 1536,
     "uvScale": 0.58
   },
@@ -9193,7 +9495,8 @@
       17500,
       17501
     ],
-    "uvType": "GEOMETRY"
+    "uvType": "BOX",
+    "uvScale": 0.7
   },
   {
     "description": "Ver Sinhaza Walls",
@@ -9237,7 +9540,7 @@
       17651,
       17653
     ],
-    "uvType": "MODEL_XY",
+    "uvType": "BOX",
     "uvOrientation": 1536,
     "uvScale": 0.66
   },
@@ -9263,7 +9566,7 @@
     "objectIds": [
       23277
     ],
-    "uvType": "MODEL_XY"
+    "uvType": "BOX"
   },
   {
     "description": "Meiyerditch Mine Walls",
@@ -9281,7 +9584,8 @@
       17829,
       17871
     ],
-    "uvType": "GEOMETRY"
+    "uvType": "BOX",
+    "uvScale": 0.7
   },
   {
     "description": "Meiyerditch Mine Walls - Daeyalt Rocks",
@@ -9292,7 +9596,8 @@
       17964,
       17965
     ],
-    "uvType": "GEOMETRY"
+    "uvType": "BOX",
+    "uvScale": 0.7
   },
   {
     "description": "Darkmeyer Stone Walls",
@@ -9320,7 +9625,8 @@
       39365,
       39478
     ],
-    "uvType": "GEOMETRY"
+    "uvType": "BOX",
+    "uvScale": 0.7
   },
   {
     "description": "Darkmeyer Stone Tiles",
@@ -9427,7 +9733,7 @@
       17357,
       17358
     ],
-    "uvType": "GEOMETRY"
+    "uvType": "BOX"
   },
   {
     "description": "Bush Wall",
@@ -9474,7 +9780,7 @@
       11771
     ],
     "uvOrientation": 512,
-    "uvType": "MODEL_XY"
+    "uvType": "BOX"
   },
   {
     "description": "Morytania - Rotting Tree",
@@ -9482,7 +9788,9 @@
     "objectIds": [
       3514,
       3515
-    ]
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
   },
   {
     "description": "Morytania - Giant Tree",
@@ -9491,7 +9799,9 @@
       4048,
       4049,
       4050
-    ]
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
   },
   {
     "description": "Morytania - Tall Grass",
@@ -9509,11 +9819,20 @@
     "objectIds": [
       611,
       3834,
-      7430,
+      7430
+    ],
+    "flatNormals": true,
+    "uvType": "BOX"
+  },
+  {
+    "description": "Generic - Plank - Tables - Picnic Bench - Rotated",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
       39687
     ],
     "flatNormals": true,
-    "uvType": "MODEL_XZ"
+    "uvType": "BOX",
+    "uvOrientationY": 512
   },
   {
     "description": "Generic - Plank - Tables - Picnic Bench - Rotated",
@@ -9522,7 +9841,7 @@
       9532
     ],
     "flatNormals": true,
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "uvOrientation": 512
   },
   {
@@ -9570,7 +9889,7 @@
       25673,
       25674
     ],
-    "uvType": "MODEL_XY",
+    "uvType": "BOX",
     "flatNormals": true,
     "uvOrientation": 512
   },
@@ -9631,13 +9950,13 @@
       6516,
       6517
     ],
-    "uvType": "MODEL_XY",
+    "uvType": "BOX",
     "uvOrientation": 192,
     "uvScale": 0.17
   },
   {
-    "description": "Object - Desert Treasure Pyramid - Alter - Large",
-    "baseMaterial": "GRAY_25",
+    "description": "Object - Desert Treasure Pyramid - Altar - Large",
+    "baseMaterial": "GRAY_75",
     "objectIds": [
       6552
     ],
@@ -9646,7 +9965,7 @@
   },
   {
     "description": "Object - Desert Treasure Pyramid - Lectern - Medium",
-    "baseMaterial": "GRAY_25",
+    "baseMaterial": "GRAY_75",
     "objectIds": [
       40357
     ],
@@ -9666,7 +9985,7 @@
       24147,
       24148
     ],
-    "uvType": "MODEL_XZ_MIRROR_B",
+    "uvType": "BOX",
     "uvScale": 0.22
   },
   {
@@ -9674,11 +9993,13 @@
     "baseMaterial": "ROCK_1",
     "objectIds": [
       5309,
+      11436,
+      11437,
       24143,
       24144,
       24145
     ],
-    "uvType": "MODEL_XZ_MIRROR_B",
+    "uvType": "BOX",
     "uvScale": 0.22
   },
   {
@@ -9690,23 +10011,31 @@
       24141,
       24142
     ],
-    "uvType": "MODEL_XZ_MIRROR_A",
+    "uvType": "BOX",
     "uvScale": 0.22
   },
   {
     "description": "Crashed Star",
-    "baseMaterial": "ROCK_2",
+    "baseMaterial": "ROCK_5_ORE",
     "objectIds": [
+      41020,
+      41021,
+      41223,
+      41224,
+      41225,
+      41226,
       41227,
-      41228
-    ]
+      41228,
+      41229
+    ],
+    "uvType": "BOX"
   },
   {
     "description": "Seers Village Courthouse Metal Cage",
     "baseMaterial": "METALLIC_1_SEMIGLOSS",
     "objectIds": [
       25980,
-      "LOCKED_GATE"
+      25981
     ]
   },
   {
@@ -9746,7 +10075,7 @@
       5835,
       25845
     ],
-    "uvType": "MODEL_XY",
+    "uvType": "BOX",
     "uvScale": 0.34,
     "uvOrientation": 768
   },
@@ -9771,7 +10100,9 @@
     "objectIds": [
       23974,
       23975
-    ]
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
   },
   {
     "description": "Stone Wedge Stairs",
@@ -9796,7 +10127,7 @@
       39671,
       39672
     ],
-    "uvType": "MODEL_XY",
+    "uvType": "BOX",
     "uvScale": 0.6
   },
   {
@@ -9808,7 +10139,7 @@
       20774,
       20775
     ],
-    "uvType": "MODEL_XY",
+    "uvType": "BOX",
     "uvOrientation": 1536,
     "uvScale": 0.66
   },
@@ -9823,7 +10154,7 @@
       20732,
       20764
     ],
-    "uvType": "MODEL_XY",
+    "uvType": "BOX",
     "uvScale": 0.6
   },
   {
@@ -9889,7 +10220,7 @@
       20713,
       20714
     ],
-    "uvType": "MODEL_XY"
+    "uvType": "BOX"
   },
   {
     "description": "Barrows Chest",
@@ -9913,8 +10244,7 @@
     "objectIds": [
       39643
     ],
-    "uvType": "MODEL_XZ",
-    "uvOrientation": 1536
+    "uvType": "BOX"
   },
   {
     "description": "Ground Decoration - Flat Rocks - Small",
@@ -9961,7 +10291,7 @@
       3458,
       3459
     ],
-    "uvType": "MODEL_XY",
+    "uvType": "BOX",
     "uvOrientation": 256,
     "uvScale": 1.2
   },
@@ -10004,7 +10334,7 @@
       5200,
       5201
     ],
-    "uvType": "MODEL_XY",
+    "uvType": "BOX",
     "uvOrientation": 1536,
     "uvScale": 0.66
   },
@@ -10015,7 +10345,7 @@
       5198,
       5199
     ],
-    "uvType": "MODEL_YZ",
+    "uvType": "BOX",
     "uvOrientation": 1536,
     "uvScale": 0.66
   },
@@ -10029,7 +10359,7 @@
       26685,
       26686
     ],
-    "uvType": "MODEL_XY"
+    "uvType": "BOX"
   },
   {
     "description": "Motherload Mine - Cogs",
@@ -10076,7 +10406,9 @@
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       44683
-    ]
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
   },
   {
     "description": "Objects - Stone - Giants Foundry - Lavapool Rocks",
@@ -10103,7 +10435,7 @@
     "objectIds": [
       44680
     ],
-    "uvType": "MODEL_XY"
+    "uvType": "BOX"
   },
   {
     "description": "Giants Foundry Clamps",
@@ -10111,7 +10443,7 @@
     "objectIds": [
       44729
     ],
-    "uvType": "MODEL_XZ_MIRROR_A",
+    "uvType": "BOX",
     "uvScale": 0.28
   },
   {
@@ -10144,7 +10476,7 @@
     "objectIds": [
       39724
     ],
-    "uvType": "GEOMETRY",
+    "uvType": "BOX",
     "uvScale": 0.28
   },
   {
@@ -10174,5 +10506,1086 @@
     "objectIds": [ 754, 10459 ],
     "textureMaterial": "WATER_DROPLETS",
     "baseMaterial": "WATER_FLAT"
+  },
+  {
+    "description": "Poison Waste dungeon flowing tar (TODO)",
+    "objectIds": [
+      49789,
+      49790,
+      49791,
+      49792,
+      49793,
+      49794,
+      49795,
+      49797,
+      49798,
+      49799,
+      49800,
+      49801,
+      49802,
+      49803
+    ]
+  },
+  {
+    "description": "Disable shadows for shoreline sludge in The Scar",
+    "objectIds": [
+      49373,
+      49376,
+      49377,
+      49378,
+      49380,
+      49381,
+      49382,
+      49383,
+      49384,
+      49385
+    ],
+    "castShadows": false,
+    "baseMaterial": "TRANSPARENT",
+    "uvType": "WORLD_XZ"
+  },
+  {
+    "description": "The Scar stepping stones",
+    "objectIds": [
+      49209
+    ],
+    "castShadows": false,
+    "baseMaterial": "STONE",
+    "uvType": "WORLD_XZ"
+  },
+  {
+    "description": "Lassar Undercity floor tile texture",
+    "objectIds": [
+      48088,
+      48089,
+      48090,
+      48091,
+      48092,
+      48093
+    ]
+  },
+  {
+    "description": "Lassar Undercity fake tiles",
+    "objectIds": [ 46950 ],
+    "baseMaterial": "LASSAR_UNDERCITY_TILES",
+    "hideInAreas": [
+      "LASSAR_UNDERCITY"
+    ]
+  },
+  {
+    "description": "Objects - Wooden - Crate - Tall",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      3045,
+      3205
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "Wall - Decoration - Wooden - Post",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      439,
+      440
+    ],
+    "uvType": "BOX",
+    "flatNormals": true
+  },
+  {
+    "description": "Object - Wooden - Support Post",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      1870,
+      11628,
+      23853
+    ],
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvOrientation": 512,
+    "uvScale": 0.66
+  },
+  {
+    "description": "Object - Plank - Tables - Wooden Bench",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      2452
+    ],
+    "flatNormals": true,
+    "uvType": "BOX",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Object - Tables - Bar Table - Round",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      2332,
+      2333
+    ],
+    "flatNormals": true,
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Object - Wooden - Plank - Chest",
+    "baseMaterial": "DOCK_FENCE",
+    "objectIds": [
+      7192
+    ],
+    "flatNormals": true
+  }
+,
+  {
+    "description": "Object - Tables - Broken - Round",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      7446
+    ],
+    "flatNormals": true,
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Object - Dying Tree",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      3648
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Varrock - Wall Decoration - Wooden - Plank",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      5090,
+      5091
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 562,
+    "uvScale": 0.66
+  },
+  {
+    "description": "Objects - Tree - Banana Tree",
+    "baseMaterial": "GRAY_65",
+    "objectIds": [
+      2073
+    ]
+  },
+  {
+    "description": "Barbarian Village - Wall - Wooden - Log",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      11587,
+      11588,
+      11607,
+      11608,
+      11609,
+      11610,
+      11611,
+      11612,
+      11613
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Barbarian VIllage - Objects - Wooden - Crate",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      11599
+    ],
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512
+  },
+  {
+    "description": "Barbarian VIllage - Objects - Table - Double - Wooden – Plank",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      11619
+    ],
+    "uvType": "BOX",
+    "flatNormals": true
+  },
+  {
+    "description": "Barbarian VIllage - Objects - Table - Double - Wooden – Plank - With Shelfs",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      11626
+    ],
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvOrientationX": 512,
+    "uvOrientationY": 512
+  },
+  {
+    "description": "Barbarian VIllage - Wall  Longhall Door – Fake Plank",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      11620,
+      11621,
+      11624,
+      11625
+    ],
+    "uvType": "BOX",
+    "flatNormals": true
+  },
+  {
+    "description": "Objects - Rock - Brown Rock - Medium",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      10782,
+      10783
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.33
+  },
+  {
+    "description": "Objects - Wood - Boofshelf - Double",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      381
+    ],
+    "uvType": "BOX",
+    "flatNormals": true
+  },
+  {
+    "description": "Water wheel in Lumbridge",
+    "objectIds": [ 5589 ],
+    "flatNormals": true
+  },
+  {
+    "description": "Ore - Empty - Rock",
+    "baseMaterial": "ROCK_5_ORE",
+    "objectIds": [
+      11390,
+      11391
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.33,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Ore - Tin - Rock",
+    "baseMaterial": "ROCK_3_ORE",
+    "objectIds": [
+      11360,
+      11361
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.33
+  },
+  {
+    "description": "Ore - Copper - Rock",
+    "baseMaterial": "ROCK_3_ORE",
+    "objectIds": [
+      10943,
+      11161
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.33
+  },
+  {
+    "description": "Ore - Iron - Rock",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      11364,
+      11365
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.33,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Ore - Mithril - Rock",
+    "baseMaterial": "ROCK_3_ORE",
+    "objectIds": [
+      11372,
+      11373
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.33
+  },
+  {
+    "description": "Ore - Adamantite - Rock",
+    "baseMaterial": "ROCK_5_ORE",
+    "objectIds": [
+      11374,
+      11375
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.33,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Ore - Runeite - Rock",
+    "baseMaterial": "ROCK_5_ORE",
+    "objectIds": [
+      11376,
+      11377
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.33
+  },
+  {
+    "description": "Ore - Coal - Rock",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      11366,
+      11367
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.33,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Ore - Silver - Rock",
+    "baseMaterial": "ROCK_4_ORE",
+    "objectIds": [
+      11368,
+      11369
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.40,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Ore - Gold - Rock",
+    "baseMaterial": "ROCK_4_ORE",
+    "objectIds": [
+      11370,
+      11371
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.33
+  },
+  {
+    "description": "Ore - Clay - Rock",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [
+      11362,
+      11363
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.33,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Objects - Concrete - Runecrafting Altars",
+    "textureMaterial": "HD_CONCRETE",
+    "objectIds": [
+      29631,
+      34760,
+      34761,
+      34762,
+      34763,
+      34764,
+      34765,
+      34766,
+      34767,
+      34768,
+      34769,
+      34770,
+      34771,
+      34772,
+      43479
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.4,
+    "uvOrientationY": 725,
+    "retainVanillaUvs": false
+  },
+  {
+    "description": "Objects - Concrete - Runecrafting Altar Pillars",
+    "textureMaterial": "HD_CONCRETE",
+    "objectIds": [
+      34780,
+      34781,
+      34782,
+      34783,
+      34784,
+      34785,
+      43509,
+      43510,
+      43511,
+      43512,
+      43513,
+      43514,
+      43515,
+      43516,
+      43517,
+      43518,
+      43519
+    ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "uvScale": 0.7,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Objects - Concrete - Runecrafting Altar Lights",
+    "textureMaterial": "HD_CONCRETE",
+    "objectIds": [
+      34786,
+      34787,
+      43520
+    ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "uvScale": 0.65
+  },
+  {
+    "description": "Objects - Concrete - Table",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "textureMaterial": "HD_CONCRETE",
+    "objectIds": [
+      590,
+      591
+    ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "uvScale": 0.65
+  },
+  {
+    "description": "Objects - Concrete - Bank Booth",
+    "textureMaterial": "HD_CONCRETE",
+    "objectIds": [
+      10355,
+      10527
+    ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "uvScale": 0.65
+  },
+  {
+    "description": "Objects - Concrete - Gravestone",
+    "textureMaterial": "HD_CONCRETE",
+    "objectIds": [
+      404,
+      405
+    ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "uvScale": 0.65
+  },
+  {
+    "description": "Objects - Concrete - Salve Tunnel Entrance",
+    "textureMaterial": "HD_CONCRETE",
+    "objectIds": [
+      3456,
+      3482,
+      3483,
+      3484
+    ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "uvScale": 0.65
+  },
+  {
+    "description": "Objects - Concrete - Deposit Box",
+    "textureMaterial": "HD_CONCRETE",
+    "objectIds": [
+      10529
+    ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "uvScale": 0.65
+  },
+  {
+    "description": "Objects - Textured Rocks - Rocks with Vines",
+    "baseMaterial": "PLANT_GRUNGE_1",
+    "textureMaterial": "HD_CONCRETE",
+    "objectIds": [
+      10786,
+      10787,
+      10788
+    ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "uvScale": 0.65
+  },
+  {
+    "description": "Objects - Textured Rocks - Small",
+    "textureMaterial": "HD_CONCRETE",
+    "objectIds": [
+      10793,
+      12570
+    ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "uvScale": 0.65
+  },
+  {
+    "description": "Objects - Textured Rocks - Medium",
+    "textureMaterial": "HD_CONCRETE",
+    "objectIds": [
+      10790,
+      10791
+    ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "uvScale": 0.65
+  },
+  {
+    "description": "Objects - Textured Rock - Mossy Rock - Medium",
+    "baseMaterial": "GRASS_3",
+    "textureMaterial": "HD_CONCRETE",
+    "objectIds": [
+      11182,
+      11183
+    ],
+    "retainVanillaUvs": false,
+    "uvType": "BOX",
+    "uvScale": 0.65
+  },
+  {
+    "description": "Objects - Textured Rock - Nightmare Zone Rocks - Small",
+    "textureMaterial": "HD_CONCRETE",
+    "objectIds": [
+      26275,
+      26291,
+      26292
+    ],
+    "retainVanillaUvs": false,
+    "uvType": "BOX",
+    "uvScale": 0.65
+  },
+  {
+    "description": "Objects - Concrete - Nature Altar Pillars",
+    "textureMaterial": "HD_CONCRETE",
+    "objectIds": [
+      407,
+      408,
+      409
+    ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false
+  },
+  {
+    "description": "Objects - Concrete - Nature Altar ",
+    "baseMaterial": "ROCK_1",
+    "textureMaterial": "HD_CONCRETE",
+    "objectIds": [
+      410
+    ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false
+  },
+  {
+    "description": "",
+    "objectIds": [ 29103 ],
+    "retainVanillaUvs": false,
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientationX": 512
+  },
+  {
+    "description": "Objects - Wood - Ladder - In Ground - Untextured",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      16680
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Objects - Wood - Ladder - Edgeville Dungeon Ladder",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      1581
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Objects - Wood - Trap Door",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      1579
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Objects - Wood - Danger Sign",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      1032
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Walls - Bricks - Light Brick",
+    "objectIds": [
+      1902,
+      1904,
+      1907,
+      1920,
+      17088
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "Objects - Root - Small",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      1323,
+      1324,
+      1325
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 342
+  },
+  {
+    "description": "Wooden crates, Wooden table, wooden rack",
+    "objectIds": [ 356, 595, 647 ],
+    "flatNormals": true,
+    "uvType": "BOX",
+    "retainVanillaUvs": false
+  },
+  {
+    "description": "Wooden crate",
+    "objectIds": [ 358 ],
+    "flatNormals": true,
+    "uvType": "BOX",
+    "uvOrientationY": 70,
+    "retainVanillaUvs": false
+  },
+  {
+    "description": "Picatoris - Objects - Dirt - Rabbit Hole",
+    "baseMaterial": "DIRT_1",
+    "objectIds": [
+      19337
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Picatoris - Objects - Dirt - Ferret Burrow",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [
+      19438,
+      19439,
+      19440,
+      19492,
+      19493,
+      19494
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Picatoris - Walls - Colony Walls",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      13478,
+      13479,
+      13480,
+      13581,
+      13582
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Piscatoris - Falconry - Walls - Wooden - Planks",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      4198,
+      4246
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 1536,
+    "uvScale": 0.66
+  },
+  {
+    "description": "Picatoris - Objects - Dirt - Entrance Hole",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [
+      12656
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Picatoris - Walls - Wood - Plank Fence",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      12659,
+      12660,
+      12661,
+      12722
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "flatNormals": true
+  },
+  {
+    "description": "Piscatoris - Walls - Metallic - Doors",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      12723,
+      12724,
+      12725,
+      13475
+    ],
+    "uvType": "BOX",
+    "flatNormals": true
+  },
+  {
+    "description": "Piscatoris - Objects - Wooden - Crate Stack",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      13598,
+      13599
+    ],
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512
+  },
+  {
+    "description": "Piscatoris - Objects - Wooden - Plank Wall",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      10108,
+      10109
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 1536,
+    "uvScale": 0.66
+  },
+  {
+    "description": "Piscatoris - Roof - Wooden - Planks",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      10111,
+      10112,
+      10113
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Piscatoris - Roof - Wooden - Plank Doors",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      12657,
+      12658
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Piscatoris - Roof Corners - Wooden - Planks",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      4229,
+      4232,
+      4235,
+      4236,
+      4237,
+      4238,
+      4239,
+      4240
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512
+  },
+  {
+    "description": "Eagles Peak Climbing Rocks",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      19849,
+      19850
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.3
+  },
+  {
+    "description": "Eagles Peak Cave Door",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      19845
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Crafting Guild Blacksmith's tools",
+    "objectIds": [ 2098 ],
+    "flatNormals": true
+  },
+  {
+    "description": "Mage Training Arena - Walls",
+    "baseMaterial": "MARBLE_2",
+    "objectIds": [
+      10721,
+      10734,
+      10743,
+      10744,
+      10760,
+      10761,
+      10762,
+      10763,
+      10767,
+      10768,
+      10769,
+      10770
+    ],
+    "uvType": "BOX",
+    "flatNormals": true
+  },
+  {
+    "description": "Mage Training Arena - Walls - Doorway of Light",
+    "objectIds": [
+      10721
+    ],
+    "uvType": "BOX",
+    "flatNormals": true
+  },
+  {
+    "description": "Mage Training Arena - Walls - Dark",
+    "baseMaterial": "MARBLE_2",
+    "objectIds": [
+      10735,
+      10764,
+      10765,
+      10766
+    ],
+    "uvType": "BOX",
+    "flatNormals": true
+  },
+  {
+    "description": "Mage Training Arena - Roofs",
+    "baseMaterial": "MARBLE_3",
+    "objectIds": [
+      10745,
+      10746,
+      10747
+    ],
+    "uvType": "BOX",
+    "flatNormals": true
+  },
+  {
+    "description": "Mage Training Arena - Fence",
+    "baseMaterial": "MARBLE_1",
+    "objectIds": [
+      10748,
+      10749,
+      10750
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 128,
+    "flatNormals": true
+  },
+  {
+    "description": "Mage Training Arena - Metal Fence",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      10740,
+      10741,
+      10742,
+      10773,
+      10776
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Mage Training Arena - Telekinetic Fence",
+    "baseMaterial": "MARBLE_1",
+    "objectIds": [
+      10755
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 128
+  },
+  {
+    "description": "Mage Training Arena - Entrance Statues",
+    "baseMaterial": "MARBLE_3",
+    "objectIds": [
+      10736,
+      10737
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Mage Training Arena - Stairs with metal rails",
+    "baseMaterial": "MARBLE_1",
+    "objectIds": [
+      10771,
+      10775
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Falador - Mage Training Arena - Marble - Steps",
+    "baseMaterial": "MARBLE_3",
+    "objectIds": [
+      10729,
+      10730,
+      10731
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 640,
+    "flatNormals": true
+  },
+  {
+    "description": "Falador - Mage Training Arena - Marble - Steps - Corner",
+    "baseMaterial": "MARBLE_3",
+    "objectIds": [
+      10732
+    ],
+    "uvType": "BOX",
+    "uvOrientationZ": 640,
+    "uvOrientationX": 640,
+    "flatNormals": true
+  },
+  {
+    "description": "Objects - Bush - Dead",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      1123
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 600
+  },
+  {
+    "description": "Mage Training Arena - Marble - Portal Pillars",
+    "baseMaterial": "MARBLE_3_SEMIGLOSS",
+    "objectIds": [
+      44856
+    ],
+    "uvType": "BOX",
+    "flatNormals": true
+  },
+  {
+    "description": "Mage Training Arena - Marble - Area Portals",
+    "baseMaterial": "MARBLE_3_SEMIGLOSS",
+    "objectIds": [
+      23673,
+      23674,
+      23675,
+      23676,
+      23677
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Mage Training Arena - Ground Decoration - Carpets",
+    "objectIds": [
+      10756,
+      10757,
+      10758,
+      10759
+    ],
+    "baseMaterial": "FINE_CARPET",
+    "uvType": "WORLD_XZ",
+    "flatNormals": true,
+    "castShadows": false,
+    "forceOverride": true
+  },
+  {
+    "description": "Mage Training Arena - Marble - Area Portals",
+    "baseMaterial": "MARBLE_1_SEMIGLOSS",
+    "objectIds": [
+      10738
+    ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false
+  },
+  {
+    "description": "Mage Training Arena - Marble - Area Portals",
+    "baseMaterial": "MARBLE_2_SEMIGLOSS",
+    "objectIds": [
+      10739
+    ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false
+  },
+  {
+    "description": "Mage Training Arena - Marble - Area Portals",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      10725,
+      10726,
+      10727,
+      10728
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Objects - Hay - Roof",
+    "textureMaterial": "HD_HAY",
+    "objectIds": [
+      1604,
+      1605,
+      1641,
+      1926,
+      3690,
+      3691,
+      4242,
+      4243,
+      4244,
+      4245
+    ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false
+  },
+  {
+    "description": "Objects - Hay - Mat",
+    "textureMaterial": "HD_HAY",
+    "objectIds": [
+      920
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "retainVanillaUvs": false
+  },
+  {
+    "description": "Objects - Hay - Haystack",
+    "textureMaterial": "HD_HAY",
+    "objectIds": [
+      300
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.47,
+    "uvOrientation": 512,
+    "retainVanillaUvs": false
+  },
+  {
+    "description": "Objects - Hay - Hay Bale",
+    "textureMaterial": "HD_HAY",
+    "objectIds": [
+      298,
+      299
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientationY": 512,
+    "uvOrientationZ": 512,
+    "retainVanillaUvs": false
+  },
+  {
+    "description": "Edgeville - Walls - Bank Front Windows",
+    "objectIds": [
+      1853,
+      1854
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "Karamja Volcano Entrance",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [ 11441 ],
+    "uvType": "BOX",
+    "uvScale": 0.68,
+    "uvOrientationY": 768
   }
 ]

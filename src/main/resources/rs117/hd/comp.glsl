@@ -25,25 +25,39 @@
 
 #include VERSION_HEADER
 
+#include THREAD_COUNT
+#include FACES_PER_THREAD
+
 shared int totalNum[12]; // number of faces with a given priority
 shared int totalDistance[12]; // sum of distances to faces of a given priority
 
 shared int totalMappedNum[18]; // number of faces with a given adjusted priority
 
 shared int min10; // minimum distance to a face of priority 10
-shared int dfs[6144]; // packed face id and distance
+shared uint renderPris[THREAD_COUNT * FACES_PER_THREAD]; // packed distance and face id
 
-#include uniforms/camera.glsl
+layout(std140) uniform CameraUniforms {
+    float cameraYaw;
+    float cameraPitch;
+    int centerX;
+    int centerY;
+    int zoom;
+    float cameraX;
+    float cameraY;
+    float cameraZ;
+    ivec2 sinCosTable[2048];
+};
+
 #include comp_common.glsl
 
-layout(local_size_x = 1024) in;
+layout(local_size_x = THREAD_COUNT) in;
 
 #include common.glsl
 #include priority_render.glsl
 
 void main() {
     uint groupId = gl_WorkGroupID.x;
-    uint localId = gl_LocalInvocationID.x * 6;
+    uint localId = gl_LocalInvocationID.x * FACES_PER_THREAD;
     ModelInfo minfo = ol[groupId];
     ivec4 pos = ivec4(minfo.x, minfo.y, minfo.z, 0);
 
@@ -58,69 +72,38 @@ void main() {
         }
     }
 
-    int prio1, dis1;
-    ivec4 vA1, vA2, vA3;
+    int prio[FACES_PER_THREAD];
+    int dis[FACES_PER_THREAD];
+    ivec4 vA[FACES_PER_THREAD];
+    ivec4 vB[FACES_PER_THREAD];
+    ivec4 vC[FACES_PER_THREAD];
 
-    int prio2, dis2;
-    ivec4 vB1, vB2, vB3;
-
-    int prio3, dis3;
-    ivec4 vC1, vC2, vC3;
-
-    int prio4, dis4;
-    ivec4 vD1, vD2, vD3;
-
-    int prio5, dis5;
-    ivec4 vE1, vE2, vE3;
-
-    int prio6, dis6;
-    ivec4 vF1, vF2, vF3;
-
-    get_face(localId,     minfo, cameraYaw, cameraPitch, prio1, dis1, vA1, vA2, vA3);
-    get_face(localId + 1, minfo, cameraYaw, cameraPitch, prio2, dis2, vB1, vB2, vB3);
-    get_face(localId + 2, minfo, cameraYaw, cameraPitch, prio3, dis3, vC1, vC2, vC3);
-    get_face(localId + 3, minfo, cameraYaw, cameraPitch, prio4, dis4, vD1, vD2, vD3);
-    get_face(localId + 4, minfo, cameraYaw, cameraPitch, prio5, dis5, vE1, vE2, vE3);
-    get_face(localId + 5, minfo, cameraYaw, cameraPitch, prio6, dis6, vF1, vF2, vF3);
+    for (int i = 0; i < FACES_PER_THREAD; i++)
+        get_face(localId + i, minfo, prio[i], dis[i], vA[i], vB[i], vC[i]);
 
     memoryBarrierShared();
     barrier();
 
-    add_face_prio_distance(localId    , minfo, vA1, vA2, vA3, prio1, dis1, pos);
-    add_face_prio_distance(localId + 1, minfo, vB1, vB2, vB3, prio2, dis2, pos);
-    add_face_prio_distance(localId + 2, minfo, vC1, vC2, vC3, prio3, dis3, pos);
-    add_face_prio_distance(localId + 3, minfo, vD1, vD2, vD3, prio4, dis4, pos);
-    add_face_prio_distance(localId + 4, minfo, vE1, vE2, vE3, prio5, dis5, pos);
-    add_face_prio_distance(localId + 5, minfo, vF1, vF2, vF3, prio6, dis6, pos);
+    for (int i = 0; i < FACES_PER_THREAD; i++)
+        add_face_prio_distance(localId + i, minfo, vA[i], vB[i], vC[i], prio[i], dis[i], pos);
 
     memoryBarrierShared();
     barrier();
 
-    int prio1Adj, prio2Adj, prio3Adj, prio4Adj, prio5Adj, prio6Adj;
-    int idx1 = map_face_priority(localId,     minfo, prio1, dis1, prio1Adj);
-    int idx2 = map_face_priority(localId + 1, minfo, prio2, dis2, prio2Adj);
-    int idx3 = map_face_priority(localId + 2, minfo, prio3, dis3, prio3Adj);
-    int idx4 = map_face_priority(localId + 3, minfo, prio4, dis4, prio4Adj);
-    int idx5 = map_face_priority(localId + 4, minfo, prio5, dis5, prio5Adj);
-    int idx6 = map_face_priority(localId + 5, minfo, prio6, dis6, prio6Adj);
+    int prioAdj[FACES_PER_THREAD];
+    int idx[FACES_PER_THREAD];
+    for (int i = 0; i < FACES_PER_THREAD; i++)
+        idx[i] = map_face_priority(localId + i, minfo, prio[i], dis[i], prioAdj[i]);
 
     memoryBarrierShared();
     barrier();
 
-    insert_dfs(localId    , minfo, prio1Adj, dis1, idx1);
-    insert_dfs(localId + 1, minfo, prio2Adj, dis2, idx2);
-    insert_dfs(localId + 2, minfo, prio3Adj, dis3, idx3);
-    insert_dfs(localId + 3, minfo, prio4Adj, dis4, idx4);
-    insert_dfs(localId + 4, minfo, prio5Adj, dis5, idx5);
-    insert_dfs(localId + 5, minfo, prio6Adj, dis6, idx6);
+    for (int i = 0; i < FACES_PER_THREAD; i++)
+        insert_face(localId + i, minfo, prioAdj[i], dis[i], idx[i]);
 
     memoryBarrierShared();
     barrier();
 
-    sort_and_insert(localId    , minfo, prio1Adj, dis1, vA1, vA2, vA3);
-    sort_and_insert(localId + 1, minfo, prio2Adj, dis2, vB1, vB2, vB3);
-    sort_and_insert(localId + 2, minfo, prio3Adj, dis3, vC1, vC2, vC3);
-    sort_and_insert(localId + 3, minfo, prio4Adj, dis4, vD1, vD2, vD3);
-    sort_and_insert(localId + 4, minfo, prio5Adj, dis5, vE1, vE2, vE3);
-    sort_and_insert(localId + 5, minfo, prio6Adj, dis6, vF1, vF2, vF3);
+    for (int i = 0; i < FACES_PER_THREAD; i++)
+        sort_and_insert(localId + i, minfo, prioAdj[i], dis[i], vA[i], vB[i], vC[i]);
 }

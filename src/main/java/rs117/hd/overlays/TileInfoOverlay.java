@@ -1,6 +1,7 @@
 package rs117.hd.overlays;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -10,6 +11,7 @@ import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -19,6 +21,7 @@ import net.runelite.api.*;
 import net.runelite.api.coords.*;
 import net.runelite.client.ui.FontManager;
 import net.runelite.client.ui.overlay.OverlayLayer;
+import net.runelite.client.ui.overlay.OverlayManager;
 import net.runelite.client.ui.overlay.OverlayPosition;
 import net.runelite.client.ui.overlay.OverlayUtil;
 import org.apache.commons.lang3.tuple.Pair;
@@ -33,26 +36,35 @@ import rs117.hd.utils.ModelHash;
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.*;
 
-public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay
-{
-	private final Client client;
-	private Point mousePos;
-	private boolean ctrlPressed;
+@Singleton
+public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay {
+	@Inject
+	private Client client;
+
+	@Inject
+	private OverlayManager overlayManager;
 
 	@Inject
 	private HdPlugin plugin;
 
+	private Point mousePos;
+	private boolean ctrlPressed;
+
 	@Inject
-	public TileInfoOverlay(Client client)
-	{
-		this.client = client;
+	public TileInfoOverlay() {
 		setPosition(OverlayPosition.DYNAMIC);
 		setLayer(OverlayLayer.ABOVE_SCENE);
 	}
 
+	public void setActive(boolean active) {
+		if (active)
+			overlayManager.add(this);
+		else
+			overlayManager.remove(this);
+	}
+
 	@Override
-	public Dimension render(Graphics2D g)
-	{
+	public Dimension render(Graphics2D g) {
 		ctrlPressed = client.isKeyPressed(KeyCode.KC_CONTROL);
 		mousePos = client.getMouseCanvasPosition();
 		if (mousePos != null && mousePos.getX() == -1 && mousePos.getY() == -1) {
@@ -65,11 +77,26 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay
 		Scene scene = client.getScene();
 		Tile[][][] tiles = scene.getExtendedTiles();
 		int plane = ctrlPressed ? MAX_Z - 1 : client.getPlane();
-		for (; plane >= 0; plane--) {
+		for (int z = plane; z >= 0; z--) {
 			for (int isBridge = 1; isBridge >= 0; isBridge--) {
 				for (int x = 0; x < EXTENDED_SCENE_SIZE; x++) {
 					for (int y = 0; y < EXTENDED_SCENE_SIZE; y++) {
-						Tile tile = tiles[plane][x][y];
+						Tile tile = tiles[z][x][y];
+						boolean shouldDraw = tile != null && (isBridge == 0 || tile.getBridge() != null);
+						if (shouldDraw && drawTileInfo(g, scene, tile)) {
+							return null;
+						}
+					}
+				}
+			}
+		}
+
+		ctrlPressed = true;
+		for (int z = plane; z >= 0; z--) {
+			for (int isBridge = 1; isBridge >= 0; isBridge--) {
+				for (int x = 0; x < EXTENDED_SCENE_SIZE; x++) {
+					for (int y = 0; y < EXTENDED_SCENE_SIZE; y++) {
+						Tile tile = tiles[z][x][y];
 						boolean shouldDraw = tile != null && (isBridge == 0 || tile.getBridge() != null);
 						if (shouldDraw && drawTileInfo(g, scene, tile)) {
 							return null;
@@ -139,14 +166,14 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay
 
 		lines.add("Scene point: " + tileX + ", " + tileY + ", " + plane);
 
-		WorldPoint worldPoint = null;
+		int[] worldPoint = null;
 		var sceneContext = plugin.getSceneContext();
 		if (sceneContext != null) {
-			worldPoint = sceneContext.localToWorld(new LocalPoint(tileX, tileY), plane);
+			worldPoint = sceneContext.sceneToWorld(tileX, tileY, plane);
 		}
 		if (worldPoint != null) {
-			lines.add("World point: " + worldPoint.getX() + ", " + worldPoint.getY() + ", " + worldPoint.getPlane());
-			lines.add("Region ID: " + worldPoint.getRegionID());
+			lines.add("World point: " + Arrays.toString(worldPoint));
+			lines.add("Region ID: " + HDUtils.worldToRegionID(worldPoint));
 		}
 
 		Scene scene = client.getScene();
@@ -158,13 +185,13 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay
 		Underlay underlay = Underlay.getUnderlay(scene, tile, plugin);
 		lines.add(String.format("Underlay: %s (%d)", underlay.name(), underlayId));
 
-		Color polyColor = Color.BLACK;
+		Color polyColor = Color.LIGHT_GRAY;
 		if (paint != null)
 		{
 			// TODO: separate H, S and L to hopefully more easily match tiles that are different shades of the same hue
 			polyColor = Color.CYAN;
 			lines.add("Tile type: Paint");
-			Material material = Material.getTexture(paint.getTexture());
+			Material material = Material.fromVanillaTexture(paint.getTexture());
 			lines.add(String.format("Material: %s (%d)", material.name(), paint.getTexture()));
 			lines.add("JagexHSL: ");
 			lines.add("NW: " + (paint.getNwColor() == 12345678 ? "HIDDEN" : paint.getNwColor()));
@@ -184,7 +211,7 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay
 			{
 				for (int texture : model.getTriangleTextureId())
 				{
-					String material = String.format("%s (%d)", Material.getTexture(texture).name(), texture);
+					String material = String.format("%s (%d)", Material.fromVanillaTexture(texture).name(), texture);
 					boolean unique = uniqueMaterials.add(material);
 					if (unique)
 					{

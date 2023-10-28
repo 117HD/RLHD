@@ -39,9 +39,10 @@ out int gMaterialData;
 out int gTerrainData;
 
 uniform int useFog;
-uniform int fogDepth;
+uniform float fogDepth;
 uniform int drawDistance;
 uniform int expandedMapLoadingChunks;
+uniform vec3 cameraPos;
 
 #include uniforms/materials.glsl
 
@@ -55,7 +56,7 @@ void main() {
     vec3 rgb = packedHslToSrgb(ahsl);
     float alpha = 1 - float(ahsl >> 24 & 0xff) / 255.;
 
-    vec2 tiledist = abs(floor(position.xz / 128) - floor(vec2(cameraX, cameraZ) / 128));
+    vec2 tiledist = abs(floor(position.xz / 128) - floor(cameraPos.xz / 128));
     float maxDist = max(tiledist.x, tiledist.y);
     if (maxDist * 128 > drawDistance) {
         // Rapidly fade out any geometry that extends beyond the draw distance.
@@ -68,14 +69,9 @@ void main() {
     int materialData = int(vUv.w);
     int terrainData = int(vNormal.w);
 
-    float normalMagnitude = length(vNormal.xyz);
-    bool flatNormal = // Flat normals must be applied separately per vertex
-        normalMagnitude == 0 ||
-        (materialData >> MATERIAL_FLAG_FLAT_NORMALS & 1) == 1;
-
     gPosition = position;
     gUv = vec3(vUv);
-    gNormal = flatNormal ? vec3(0) : vNormal.xyz / normalMagnitude;
+    gNormal = vNormal.xyz;
     gColor = color;
     gFogAmount = calculateFogAmount(gPosition);
     gMaterialData = materialData;

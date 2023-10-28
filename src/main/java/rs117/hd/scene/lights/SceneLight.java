@@ -22,7 +22,7 @@ public class SceneLight extends Light
 	public int x;
 	public int y;
 	public int z;
-	public int distance = 0;
+	public int distanceSquared = 0;
 	public boolean belowFloor = false;
 	public boolean aboveFloor = false;
 
@@ -46,6 +46,7 @@ public class SceneLight extends Light
 			l.duration,
 			l.range,
 			l.fadeInDuration,
+			l.visibleFromOtherPlanes,
 			l.npcIds,
 			l.objectIds,
 			l.projectileIds,

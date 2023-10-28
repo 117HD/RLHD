@@ -31,8 +31,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import javax.annotation.Nullable;
+import lombok.NonNull;
 import net.runelite.api.*;
 import net.runelite.api.coords.*;
 import rs117.hd.HdPlugin;
@@ -605,6 +605,7 @@ public enum Overlay {
 
 	// Wilderness
 	WILDERNESS_NORTH_OF_RESOURCE_AREA_HILLS(11, Area.WILDERNESS_NORTH_OF_RESOURCE_AREA, GroundMaterial.VARIED_DIRT),
+	WILDERNESS_FOUNTAIN_OF_RUNE_BLOOD(p -> p.ids(86).area(Area.WILDERNESS_FOUNTAIN_OF_RUNE).waterType(WaterType.BLOOD)),
 
 	// Tirannwn
 	ARANDAR_PATHS(p -> p
@@ -622,6 +623,7 @@ public enum Overlay {
 		.shiftSaturation(-2)
 	),
 	POISON_WASTE(85, Area.POISON_WASTE, WaterType.POISON_WASTE),
+	POISON_WASTE_DUNGEON_TAR(p -> p.ids(304).area(Area.POISON_WASTE_DUNGEON).waterType(WaterType.BLACK_TAR_FLAT)),
 
 	// Fossil Island
 	ANCIENT_MUSHROOM_POOL(95, Area.FOSSIL_ISLAND, WaterType.SWAMP_WATER_FLAT),
@@ -673,6 +675,16 @@ public enum Overlay {
 		.replaceWithIf(WINTER_JAGGED_STONE_TILE, plugin -> plugin.configWinterTheme)
 		.ids(44)
 	),
+
+	OVERLAY_KOUREND_PATH(Area.ZEAH, GroundMaterial.MARBLE_1, p -> p.ids(133).blended(false)),
+	OVERLAY_ZEAH_PATHS(Area.ZEAH, GroundMaterial.VARROCK_PATHS, p -> p
+		.replaceWithIf(WINTER_JAGGED_STONE_TILE_LIGHT_2, plugin -> plugin.configWinterTheme)
+		.ids(11)
+	),
+
+	// The Stranglewood
+	STRANGLEWOOD_HILLSIDE(p -> p.area(Area.THE_STRANGLEWOOD_EXTENDED).ids(222).groundMaterial(GroundMaterial.DIRT).blended(false)),
+	STRANGLEWOOD_SNOW(p -> p.area(Area.THE_STRANGLEWOOD_EXTENDED).ids(271).groundMaterial(GroundMaterial.SNOW_2)),
 
 	// Temple of the Eye
 	TEMPLE_OF_THE_EYE_INCORRECT_WATER(Area.TEMPLE_OF_THE_EYE, GroundMaterial.DIRT, p -> p.ids(-100)), // Only visible in low-detail mode
@@ -733,13 +745,23 @@ public enum Overlay {
 
 	// Tombs of Amascut
 	TOA_CRONDIS_ROCK(Area.TOA_PATH_OF_CRONDIS_BOSS, GroundMaterial.GRUNGE_2, p -> p.ids(134, 182).blended(false)),
-	TOA_CRONDIS_ROCK_SUBMERGED(Area.TOA_CRONDIS_ISLAND_SUBMERGED, GroundMaterial.GRUNGE_2, p -> p.ids(133).blended(false)),
+	TOA_CRONDIS_ROCK_SUBMERGED(Area.TOA_CRONDIS_ISLAND_SUBMERGED, GroundMaterial.SUBMERGED_GRUNGE_2, p -> p.ids(133).blended(false)),
 	TOA_CRONDIS_SWAMP_SLUDGE(p -> p.ids(133, 245).area(Area.TOA_PATH_OF_CRONDIS_BOSS).waterType(WaterType.SWAMP_WATER).blended(false)),
 	TOA_CRONDIS_WATER(p -> p.ids(246).area(Area.TOA_CRONDIS_WATER).waterType(WaterType.SWAMP_WATER).blended(false)),
 
+	// Desert Treasure 2 areas
+	THE_SCAR_WATER(p -> p.ids(302).area(Area.THE_SCAR).waterType(WaterType.SCAR_SLUDGE).blended(false)),
+	LASSAR_UNDERCITY_HIDDEN(p -> p.ids(264, 286).area(Area.LASSAR_UNDERCITY).groundMaterial(GroundMaterial.NONE).blended(false)),
+	LASSAR_UNDERCITY_CARPET(285, Area.LASSAR_UNDERCITY, GroundMaterial.CARPET, p -> p.blended(false)),
+	LASSAR_UNDERCITY_TILES(p -> p
+		.ids(290, 291, 298)
+		.area(Area.LASSAR_UNDERCITY)
+		.groundMaterial(GroundMaterial.LASSAR_UNDERCITY_TILES)
+		.blended(false)),
+	LASSAR_UNDERCITY_WATER(p -> p.ids(292).area(Area.LASSAR_UNDERCITY).waterType(WaterType.LASSAR_UNDERCITY_WATER).blended(false)),
+
 	// POHs
 	POH_DESERT_INDOORS(Area.PLAYER_OWNED_HOUSE, GroundMaterial.TILES_2x2_2, p -> p.blended(false).ids(26, 99)),
-	POH_BASEMENT_FLOOR_SHADOW_FIX(Area.PLAYER_OWNED_HOUSE, GroundMaterial.TRANSPARENT, p -> p.blended(false).ids(120)),
 
 	// Cutscenes
 	LAND_OF_GOBLINS_WATER_FIX(13, Area.LAND_OF_GOBLINS_CUTSCENE_WATER, WaterType.WATER),
@@ -758,9 +780,7 @@ public enum Overlay {
 		.blended(false)),
 
 	// Ancient Cavern upper level water change
-	ANCIENT_CAVERN_UPPER_WATER(41, Area.ANCIENT_CAVERN_UPPER, WaterType.WATER_FLAT),
-
-	OVERLAY_KOUREND_PATH(Area.ZEAH, GroundMaterial.MARBLE_1, p -> p.ids(133).blended(false)),
+	ANCIENT_CAVERN_WATER(41, Area.ANCIENT_CAVERN, WaterType.WATER_FLAT),
 
 	// Lunar Isles
 	LUNAR_ISLAND_HOUSES_DIRT_FLOOR(81, Area.LUNAR_VILLAGE_HOUSE_INTERIORS_GROUND, GroundMaterial.VARIED_DIRT, p -> p
@@ -776,13 +796,9 @@ public enum Overlay {
 	OVERLAY_WATER(WaterType.WATER, p -> p.ids(-128, -105, -98, 6, 41, 104, 196)),
 	OVERLAY_DIRT(
 		GroundMaterial.DIRT,
-		p -> p.ids(-124, -84, -83, 14, 15, 21, 22, 23, 60, 77, 81, 82, 88, 89, 101, 102, 107, 108, 110, 115, 123, 227)
+		p -> p.ids(-124, -84, -83, 14, 15, 16, 21, 22, 23, 60, 77, 81, 82, 88, 89, 101, 102, 107, 108, 110, 115, 123, 227)
 	),
 	OVERLAY_GRAVEL(GroundMaterial.GRAVEL, p -> p.ids(-76, 2, 3, 4, 6, 8, 9, 10, 119, 127)),
-	OVERLAY_ZEAH_PATHS(Area.ZEAH, GroundMaterial.VARROCK_PATHS, p -> p
-		.replaceWithIf(WINTER_JAGGED_STONE_TILE_LIGHT_2, plugin -> plugin.configWinterTheme)
-		.ids(11)
-	),
 	OVERLAY_VARROCK_PATHS(GroundMaterial.VARROCK_PATHS, p -> p
 		.replaceWithIf(WINTER_JAGGED_STONE_TILE, plugin -> plugin.configWinterTheme)
 		.ids(-85, -77, 11)
@@ -828,8 +844,7 @@ public enum Overlay {
 	public final int shiftSaturation;
 	public final int lightness;
 	public final int shiftLightness;
-	public final Overlay replacementOverlay;
-	public final Function<HdPlugin, Boolean> replacementCondition;
+	public final TileOverrideResolver<Overlay> replacementResolver;
 
 	Overlay(int id, GroundMaterial material) {
 		this(p -> p.ids(id).groundMaterial(material));
@@ -867,8 +882,7 @@ public enum Overlay {
 		TileOverrideBuilder<Overlay> builder = new TileOverrideBuilder<>();
 		consumer.accept(builder);
 		this.filterIds = builder.ids;
-		this.replacementOverlay = builder.replacement;
-		this.replacementCondition = builder.replacementCondition;
+		this.replacementResolver = builder.replacementResolver;
 		this.waterType = builder.waterType;
 		this.groundMaterial = builder.groundMaterial;
 		this.area = builder.area;
@@ -903,9 +917,10 @@ public enum Overlay {
 			FILTERED_MAP.put(entry.getKey(), entry.getValue().toArray(new Overlay[0]));
 	}
 
+	@NonNull
 	public static Overlay getOverlay(Scene scene, Tile tile, HdPlugin plugin) {
 		LocalPoint localLocation = tile.getLocalLocation();
-		WorldPoint worldPoint = WorldPoint.fromLocalInstance(scene, localLocation, tile.getPlane());
+		int[] worldPoint = HDUtils.localToWorld(scene, localLocation.getX(), localLocation.getY(), tile.getRenderLevel());
 
 		Overlay match = Overlay.NONE;
 		for (Overlay overlay : ANY_MATCH) {
@@ -930,7 +945,10 @@ public enum Overlay {
 			}
 		}
 
-		return match.replacementCondition.apply(plugin) ? match.replacementOverlay : match;
+		if (match.replacementResolver != null)
+			return match.replacementResolver.resolve(plugin, scene, tile, match);
+
+		return match;
 	}
 
 	public int[] modifyColor(int[] colorHSL) {

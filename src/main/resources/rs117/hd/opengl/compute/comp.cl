@@ -23,15 +23,16 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include FACE_COUNT
+#include THREAD_COUNT
+#include FACES_PER_THREAD
 
 #include cl_types.cl
 #include common.cl
 #include priority_render.cl
 
 __kernel
-__attribute__((work_group_size_hint(256, 1, 1)))
-void computeLarge(
+__attribute__((work_group_size_hint(THREAD_COUNT, 1, 1)))
+void sortModel(
   __local struct shared_data *shared,
   __global const struct ModelInfo *ol,
   __global const int4 *vb,
@@ -44,7 +45,7 @@ void computeLarge(
   read_only image3d_t tileHeightMap
 ) {
   size_t groupId = get_group_id(0);
-  size_t localId = get_local_id(0) * FACE_COUNT;
+  size_t localId = get_local_id(0) * FACES_PER_THREAD;
   struct ModelInfo minfo = ol[groupId];
   int4 pos = (int4)(minfo.x, minfo.y, minfo.z, 0);
 
@@ -59,39 +60,39 @@ void computeLarge(
     }
   }
 
-  int prio[FACE_COUNT];
-  int dis[FACE_COUNT];
-  int4 v1[FACE_COUNT];
-  int4 v2[FACE_COUNT];
-  int4 v3[FACE_COUNT];
+  int prio[FACES_PER_THREAD];
+  int dis[FACES_PER_THREAD];
+  int4 v1[FACES_PER_THREAD];
+  int4 v2[FACES_PER_THREAD];
+  int4 v3[FACES_PER_THREAD];
 
-  for (int i = 0; i < FACE_COUNT; i++) {
-    get_face(shared, uni, vb, localId + i, minfo, uni->cameraYaw, uni->cameraPitch, &prio[i], &dis[i], &v1[i], &v2[i], &v3[i]);
+  for (int i = 0; i < FACES_PER_THREAD; i++) {
+    get_face(shared, uni, vb, localId + i, minfo, &prio[i], &dis[i], &v1[i], &v2[i], &v3[i]);
   }
 
   barrier(CLK_LOCAL_MEM_FENCE);
 
-  for (int i = 0; i < FACE_COUNT; i++) {
+  for (int i = 0; i < FACES_PER_THREAD; i++) {
     add_face_prio_distance(shared, uni, localId + i, minfo, v1[i], v2[i], v3[i], prio[i], dis[i], pos);
   }
 
   barrier(CLK_LOCAL_MEM_FENCE);
 
-  int prioAdj[FACE_COUNT];
-  int idx[FACE_COUNT];
-  for (int i = 0; i < FACE_COUNT; i++) {
+  int prioAdj[FACES_PER_THREAD];
+  int idx[FACES_PER_THREAD];
+  for (int i = 0; i < FACES_PER_THREAD; i++) {
     idx[i] = map_face_priority(shared, localId + i, minfo, prio[i], dis[i], &prioAdj[i]);
   }
 
   barrier(CLK_LOCAL_MEM_FENCE);
 
-  for (int i = 0; i < FACE_COUNT; i++) {
+  for (int i = 0; i < FACES_PER_THREAD; i++) {
     insert_dfs(shared, localId + i, minfo, prioAdj[i], dis[i], idx[i]);
   }
 
   barrier(CLK_LOCAL_MEM_FENCE);
 
-  for (int i = 0; i < FACE_COUNT; i++) {
+  for (int i = 0; i < FACES_PER_THREAD; i++) {
     sort_and_insert(shared, uv, normal, vout, uvout, normalout, uni, localId + i, minfo, prioAdj[i], dis[i], v1[i], v2[i], v3[i], tileHeightMap);
   }
 }

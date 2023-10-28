@@ -25,7 +25,6 @@
  */
 #version 330
 
-#include uniforms/camera.glsl
 #include uniforms/materials.glsl
 #include uniforms/water_types.glsl
 #include uniforms/lights.glsl
@@ -35,11 +34,12 @@
 uniform sampler2DArray textureArray;
 uniform sampler2D shadowMap;
 
+uniform vec3 cameraPos;
 uniform mat4 lightProjectionMatrix;
 uniform float elapsedTime;
 uniform float colorBlindnessIntensity;
 uniform vec3 fogColor;
-uniform int fogDepth;
+uniform float fogDepth;
 uniform vec3 waterColorLight;
 uniform vec3 waterColorMid;
 uniform vec3 waterColorDark;
@@ -99,10 +99,9 @@ vec2 worldUvs(float scale) {
 #include utils/water.glsl
 
 void main() {
-    vec3 camPos = vec3(cameraX, cameraY, cameraZ);
     vec3 downDir = vec3(0, -1, 0);
     // View & light directions are from the fragment to the camera/light
-    vec3 viewDir = normalize(camPos - IN.position);
+    vec3 viewDir = normalize(cameraPos - IN.position);
 
     Material material1 = getMaterial(vMaterialData[0] >> MATERIAL_INDEX_SHIFT);
     Material material2 = getMaterial(vMaterialData[1] >> MATERIAL_INDEX_SHIFT);
@@ -110,9 +109,9 @@ void main() {
 
     // Water data
     bool isTerrain = (vTerrainData[0] & 1) != 0; // 1 = 0b1
-    int waterDepth1 = vTerrainData[0] >> 8;
-    int waterDepth2 = vTerrainData[1] >> 8;
-    int waterDepth3 = vTerrainData[2] >> 8;
+    int waterDepth1 = vTerrainData[0] >> 8 & 0x7FF;
+    int waterDepth2 = vTerrainData[1] >> 8 & 0x7FF;
+    int waterDepth3 = vTerrainData[2] >> 8 & 0x7FF;
     float waterDepth =
         waterDepth1 * IN.texBlend.x +
         waterDepth2 * IN.texBlend.y +
@@ -140,6 +139,8 @@ void main() {
         vec2 uv2 = vUv[1].xy;
         vec2 uv3 = vUv[2].xy;
         vec2 blendedUv = uv1 * IN.texBlend.x + uv2 * IN.texBlend.y + uv3 * IN.texBlend.z;
+        if ((vMaterialData[0] >> MATERIAL_FLAG_IS_VANILLA_TEXTURED & 1) == 1)
+            blendedUv.x = clamp(blendedUv.x, 0, 1); // Vanilla textures rely on UVs being horizontally edge clamped
         uv1 = uv2 = uv3 = blendedUv;
 
         // Scroll UVs
@@ -176,7 +177,7 @@ void main() {
         #if PARALLAX_OCCLUSION_MAPPING
         mat3 invTBN = inverse(TBN);
         vec3 tsViewDir = invTBN * viewDir;
-        vec3 tsLightDir = invTBN * lightDir;
+        vec3 tsLightDir = invTBN * -lightDir;
 
         vec3 fragDelta = vec3(0);
 
@@ -259,9 +260,9 @@ void main() {
 
 
         // get fragment colors by combining vertex colors and texture samples
-        vec4 texA = material1.overrideBaseColor ? texColor1 : vec4(texColor1.rgb * baseColor1.rgb, min(texColor1.a, baseColor1.a));
-        vec4 texB = material2.overrideBaseColor ? texColor2 : vec4(texColor2.rgb * baseColor2.rgb, min(texColor2.a, baseColor2.a));
-        vec4 texC = material3.overrideBaseColor ? texColor3 : vec4(texColor3.rgb * baseColor3.rgb, min(texColor3.a, baseColor3.a));
+        vec4 texA = getMaterialShouldOverrideBaseColor(material1) ? texColor1 : vec4(texColor1.rgb * baseColor1.rgb, min(texColor1.a, baseColor1.a));
+        vec4 texB = getMaterialShouldOverrideBaseColor(material2) ? texColor2 : vec4(texColor2.rgb * baseColor2.rgb, min(texColor2.a, baseColor2.a));
+        vec4 texC = getMaterialShouldOverrideBaseColor(material3) ? texColor3 : vec4(texColor3.rgb * baseColor3.rgb, min(texColor3.a, baseColor3.a));
 
         // combine fragment colors based on each blend, creating
         // one color for each overlay/underlay 'layer'
@@ -422,31 +423,25 @@ void main() {
         // point lights
         vec3 pointLightsOut = vec3(0);
         vec3 pointLightsSpecularOut = vec3(0);
-        for (int i = 0; i < pointLightsCount; i++)
-        {
-            vec3 pointLightPos = vec3(PointLightArray[i].position.x, PointLightArray[i].position.z, PointLightArray[i].position.y);
-            float pointLightStrength = PointLightArray[i].strength;
-            vec3 pointLightColor = PointLightArray[i].color * pointLightStrength;
-            float pointLightSize = PointLightArray[i].size;
-            float distanceToLightSource = length(pointLightPos - IN.position);
-            vec3 pointLightDir = normalize(pointLightPos - IN.position);
+        for (int i = 0; i < pointLightsCount; i++) {
+            vec4 pos = PointLightArray[i].position;
+            vec3 lightToFrag = pos.xyz - IN.position;
+            float distanceSquared = dot(lightToFrag, lightToFrag);
+            float radiusSquared = pos.w;
+            if (distanceSquared <= radiusSquared) {
+                vec3 pointLightColor = PointLightArray[i].color;
+                vec3 pointLightDir = normalize(lightToFrag);
 
-            if (distanceToLightSource <= pointLightSize)
-            {
-                float pointLightDotNormals = dot(normals, pointLightDir);
-                vec3 pointLightOut = pointLightColor * max(pointLightDotNormals, 0.0);
+                float attenuation = 1 - min(distanceSquared / radiusSquared, 1);
+                pointLightColor *= attenuation * attenuation;
 
-                float attenuation = pow(clamp(1 - (distanceToLightSource / pointLightSize), 0.0, 1.0), 2.0);
-                pointLightOut *= attenuation;
-
-                pointLightsOut += pointLightOut;
+                float pointLightDotNormals = max(dot(normals, pointLightDir), 0);
+                pointLightsOut += pointLightColor * pointLightDotNormals;
 
                 vec3 pointLightReflectDir = reflect(-pointLightDir, normals);
-                pointLightsSpecularOut += pointLightColor * attenuation *
-                    specular(viewDir, pointLightReflectDir, vSpecularGloss, vSpecularStrength);;
+                pointLightsSpecularOut += pointLightColor * specular(viewDir, pointLightReflectDir, vSpecularGloss, vSpecularStrength);
             }
         }
-
 
         // sky light
         vec3 skyLightColor = fogColor;
@@ -478,7 +473,11 @@ void main() {
         vec3 compositeLight = ambientLightOut + lightOut + lightSpecularOut + skyLightOut + lightningOut +
         underglowOut + pointLightsOut + pointLightsSpecularOut + surfaceColorOut;
 
-        float unlit = dot(IN.texBlend, vec3(material1.unlit, material2.unlit, material3.unlit));
+        float unlit = dot(IN.texBlend, vec3(
+            getMaterialIsUnlit(material1),
+            getMaterialIsUnlit(material2),
+            getMaterialIsUnlit(material3)
+        ));
         outputColor.rgb *= mix(compositeLight, vec3(1), unlit);
         outputColor.rgb = linearToSrgb(outputColor.rgb);
 
@@ -489,25 +488,30 @@ void main() {
 
 
     outputColor.rgb = clamp(outputColor.rgb, 0, 1);
-    vec3 hsv = srgbToHsv(outputColor.rgb);
 
-    // Apply saturation setting
-    hsv.y *= saturation;
+    // Skip unnecessary color conversion if possible
+    if (saturation != 1 || contrast != 1) {
+        vec3 hsv = srgbToHsv(outputColor.rgb);
 
-    // Apply contrast setting
-    if (hsv.z > 0.5) {
-        hsv.z = 0.5 + ((hsv.z - 0.5) * contrast);
-    } else {
-        hsv.z = 0.5 - ((0.5 - hsv.z) * contrast);
+        // Apply saturation setting
+        hsv.y *= saturation;
+
+        // Apply contrast setting
+        if (hsv.z > 0.5) {
+            hsv.z = 0.5 + ((hsv.z - 0.5) * contrast);
+        } else {
+            hsv.z = 0.5 - ((0.5 - hsv.z) * contrast);
+        }
+
+        outputColor.rgb = hsvToSrgb(hsv);
     }
 
-    outputColor.rgb = hsvToSrgb(hsv);
     outputColor.rgb = colorBlindnessCompensation(outputColor.rgb);
 
     // apply fog
     if (!isUnderwater) {
         // ground fog
-        float distance = distance(IN.position, camPos);
+        float distance = distance(IN.position, cameraPos);
         float closeFadeDistance = 1500;
         float groundFog = 1.0 - clamp((IN.position.y - groundFogStart) / (groundFogEnd - groundFogStart), 0.0, 1.0);
         groundFog = mix(0.0, groundFogOpacity, groundFog);

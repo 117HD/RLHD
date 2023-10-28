@@ -31,8 +31,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import javax.annotation.Nullable;
+import lombok.NonNull;
 import net.runelite.api.*;
 import net.runelite.api.coords.*;
 import rs117.hd.HdPlugin;
@@ -93,6 +93,9 @@ public enum Underlay {
 		.ids(61, 64)
 	),
 
+	// Fix waterfall by entrance to River Elid Dungeon
+	RIVER_ELID_WATERFALL(p -> p.area(Area.RIVER_ELID_WATERFALL).waterType(WaterType.WATER).blended(false)),
+
 	SOPHANEM_TRAPDOOR(Area.SOPHANEM_TRAPDOOR, GroundMaterial.NONE, p -> {}),
 	KHARID_SAND_1(Area.KHARID_DESERT_REGION, GroundMaterial.SAND, p -> p
 		.saturation(3)
@@ -104,6 +107,13 @@ public enum Underlay {
 	// Burthorpe games room
 	GAMES_ROOM_INNER_FLOOR(64, Area.GAMES_ROOM_INNER, GroundMaterial.CARPET, p -> p.blended(false)),
 	GAMES_ROOM_FLOOR(64, Area.GAMES_ROOM, GroundMaterial.WOOD_PLANKS_1, p -> p.blended(false)),
+
+	// Karamja
+	KARAMJA_VOCALNO_ROCK(p -> p
+		.ids(55, 63, 72)
+		.area(Area.KARAMJA_VOLCANO)
+		.groundMaterial(GroundMaterial.EARTHEN_CAVE_FLOOR)
+	),
 
 	// Crandor
 	CRANDOR_SAND(-110, Area.CRANDOR, GroundMaterial.SAND, p -> p.saturation(3).hue(6)),
@@ -175,6 +185,7 @@ public enum Underlay {
 		.ids(27, 29, 129)
 		.replaceWithIf(WINTER_GRUNGE, plugin -> plugin.configWinterTheme)
 	),
+	STRANGLEWOOD_SNOW_DARK(p -> p.area(Area.THE_STRANGLEWOOD_EXTENDED).ids(174).groundMaterial(GroundMaterial.SNOW_1)),
 
 	// Zanaris
 	ZANARIS_GRASS(Area.ZANARIS, GroundMaterial.GRASS_1, p -> p.ids(143, 144)),
@@ -257,6 +268,27 @@ public enum Underlay {
 	TEMPLE_OF_THE_EYE(Area.TEMPLE_OF_THE_EYE, GroundMaterial.GRUNGE, p -> p.ids(87, 88, 89)),
 	ARCEUUS_GROUND(Area.ARCEUUS, GroundMaterial.DIRT, p -> p.ids(2, 3, 17, 23, 24)),
 
+	// Secrets of the North dungeon
+	ICY_UNDERGROUND_SNOW(p -> p.area(Area.ICY_UNDERGROUND_DARK).ids(159).groundMaterial(GroundMaterial.SNOW_1)),
+
+	// Desert Treasure 2 areas
+	LASSAR_UNDERCITY_SUNKEN_CATHEDRAL(p -> p
+		.ids(44, 45, 104, 181, 182)
+		.area(Area.LASSAR_UNDERCITY_SUNKEN_CATHEDRAL)
+		.groundMaterial(GroundMaterial.LASSAR_UNDERCITY_TILES_SUBMERGED)),
+	LASSAR_UNDERCITY_WATER(p -> p.ids(292).area(Area.LASSAR_UNDERCITY).waterType(WaterType.LASSAR_UNDERCITY_WATER).blended(false)),
+	LASSAR_UNDERCITY_MARBLE(p -> p.ids(45, 104).area(Area.LASSAR_UNDERCITY).groundMaterial(GroundMaterial.MARBLE_2_SEMIGLOSS)),
+	LASSAR_UNDERCITY_TILES(p -> p
+		.ids(182)
+		.area(Area.LASSAR_UNDERCITY)
+		.groundMaterial(GroundMaterial.LASSAR_UNDERCITY_TILES)
+		.blended(false)),
+	LASSAR_UNDERCITY_TILES_BLENDED(p -> p
+		.ids(46, 150)
+		.area(Area.LASSAR_UNDERCITY)
+		.groundMaterial(GroundMaterial.LASSAR_UNDERCITY_TILES)
+		.blended(true)),
+
 	// Cutscenes
 	CANOE_CUTSCENE_GRASS(Area.CANOE_CUTSCENE, GroundMaterial.GRASS_SCROLLING, p -> p.ids(48, 50, 63)),
 	// Items that cannot properly be fixed unless we can first detect the hue of the tile to set a texture.
@@ -304,8 +336,7 @@ public enum Underlay {
 	public final int shiftSaturation;
 	public final int lightness;
 	public final int shiftLightness;
-	public final Underlay replacementUnderlay;
-	public final Function<HdPlugin, Boolean> replacementCondition;
+	public final TileOverrideResolver<Underlay> replacementResolver;
 
 	Underlay(int id, Area area, GroundMaterial material) {
 		this(p -> p.ids(id).groundMaterial(material).area(area));
@@ -338,8 +369,7 @@ public enum Underlay {
 		this.shiftSaturation = builder.shiftSaturation;
 		this.lightness = builder.lightness;
 		this.shiftLightness = builder.shiftLightness;
-		this.replacementUnderlay = builder.replacement;
-		this.replacementCondition = builder.replacementCondition;
+		this.replacementResolver = builder.replacementResolver;
 	}
 
 	private static final Underlay[] ANY_MATCH;
@@ -363,9 +393,10 @@ public enum Underlay {
 			FILTERED_MAP.put(entry.getKey(), entry.getValue().toArray(new Underlay[0]));
 	}
 
+	@NonNull
 	public static Underlay getUnderlay(Scene scene, Tile tile, HdPlugin plugin) {
 		LocalPoint localLocation = tile.getLocalLocation();
-		WorldPoint worldPoint = WorldPoint.fromLocalInstance(scene, tile.getLocalLocation(), tile.getPlane());
+		int[] worldPoint = HDUtils.localToWorld(scene, localLocation.getX(), localLocation.getY(), tile.getRenderLevel());
 
 		Underlay match = Underlay.NONE;
 		for (Underlay underlay : ANY_MATCH) {
@@ -390,7 +421,10 @@ public enum Underlay {
 			}
 		}
 
-		return match.replacementCondition.apply(plugin) ? match.replacementUnderlay : match;
+		if (match.replacementResolver != null)
+			return match.replacementResolver.resolve(plugin, scene, tile, match);
+
+		return match;
 	}
 
 	public int[] modifyColor(int[] colorHSL) {

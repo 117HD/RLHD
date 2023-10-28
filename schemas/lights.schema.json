@@ -100,6 +100,10 @@
         "type": "number",
         "description": "The time in milliseconds until the light is fully active after spawning."
       },
+      "visibleFromOtherPlanes": {
+        "type": "boolean",
+        "description": "Whether the light should be hidden when it appears on a different plane than the current. Defaults to true."
+      },
       "npcIds": {
         "type": "array",
         "description": "A set of NPC IDs or NpcID keys to apply the light to.",

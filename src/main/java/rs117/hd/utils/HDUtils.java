@@ -31,7 +31,9 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.api.coords.*;
 
+import static net.runelite.api.Constants.SCENE_SIZE;
 import static net.runelite.api.Constants.*;
+import static net.runelite.api.Perspective.*;
 
 @Slf4j
 @Singleton
@@ -48,49 +50,51 @@ public class HDUtils {
 	// The epsilon for floating point values used by jogl
 	public static final float EPSILON = 1.1920929E-7f;
 
-	public static float[] vectorAdd(float[] vec1, float[] vec2) {
-		float[] out = new float[vec1.length];
-		for (int i = 0; i < vec1.length; i++)
-			out[i] = vec1[i] + vec2[i];
+	/**
+	 * Computes a + b, storing it in the out array
+	 */
+	public static float[] add(float[] out, float[] a, float[] b) {
+		for (int i = 0; i < out.length; i++)
+			out[i] = a[i] + b[i];
 		return out;
 	}
 
-	static float[] vectorAdd(float[] vec1, int[] vec2) {
-		float[] out = new float[vec1.length];
-		for (int i = 0; i < vec1.length; i++)
-			out[i] = vec1[i] + vec2[i];
+	/**
+	 * Computes a - b, storing it in the out array
+	 */
+	public static float[] subtract(float[] out, float[] a, float[] b) {
+		for (int i = 0; i < out.length; i++)
+			out[i] = a[i] - b[i];
 		return out;
 	}
 
-	static int[] vectorAdd(int[] vec1, int[] vec2)
-	{
-		int[] out = new int[vec1.length];
-		for (int i = 0; i < vec1.length; i++)
-			out[i] = vec1[i] + vec2[i];
+	public static float[] cross(float[] out, float[] a, float[] b) {
+		out[0] = a[1] * b[2] - a[2] * b[1];
+		out[1] = a[2] * b[0] - a[0] * b[2];
+		out[2] = a[0] * b[1] - a[1] * b[0];
 		return out;
 	}
 
-	static double[] vectorAdd(double[] vec1, double[] vec2)
-	{
-		double[] out = new double[vec1.length];
-		for (int i = 0; i < vec1.length; i++)
-			out[i] = vec1[i] + vec2[i];
+	public static float[] abs(float[] out, float[] v) {
+		for (int i = 0; i < out.length; i++)
+			out[i] = Math.abs(v[i]);
 		return out;
 	}
 
-	static Double[] vectorAdd(Double[] vec1, Double[] vec2)
-	{
-		Double[] out = new Double[vec1.length];
-		for (int i = 0; i < vec1.length; i++)
-			out[i] = vec1[i] + vec2[i];
-		return out;
+	public static float min(float... v) {
+		float min = v[0];
+		for (int i = 1; i < v.length; i++)
+			if (v[i] < min)
+				min = v[i];
+		return min;
 	}
 
-	static float[] vectorDivide(float[] vec1, float divide) {
-		float[] out = new float[vec1.length];
-		for (int i = 0; i < vec1.length; i++)
-			out[i] = divide == 0 ? 0 : vec1[i] / divide;
-		return out;
+	public static float max(float... v) {
+		float max = v[0];
+		for (int i = 1; i < v.length; i++)
+			if (v[i] > max)
+				max = v[i];
+		return max;
 	}
 
 	public static float lerp(float a, float b, float t) {
@@ -111,16 +115,44 @@ public class HDUtils {
 		return out;
 	}
 
-	public static int clamp(int value, int min, int max) {
-		return Math.min(max, Math.max(min, value));
+	public static float hermite(float from, float to, float t) {
+		float t2 = t * t;
+		float t3 = t2 * t;
+		return
+			from * (1 - 3 * t2 + 2 * t3) +
+			to * (3 * t2 - 2 * t3);
+	}
+
+	public static float[] hermite(float[] from, float[] to, float t) {
+		float[] result = new float[from.length];
+		for (int i = 0; i < result.length; i++)
+			result[i] = hermite(from[i], to[i], t);
+		return result;
+	}
+
+	/**
+	 * Modulo that returns the answer with the same sign as the modulus.
+	 */
+	public static float mod(float x, float modulus) {
+		return (float) (x - Math.floor(x / modulus) * modulus);
+	}
+
+	/**
+	 * Modulo that returns the answer with the same sign as the modulus.
+	 */
+	public static int mod(int x, int modulus) {
+		return x - (x / modulus) * modulus;
 	}
 
 	public static float clamp(float value, float min, float max) {
-		return Math.min(max, Math.max(min, value));
+		return Math.min(Math.max(value, min), max);
 	}
 
-	public static int vertexHash(int[] vPos)
-	{
+	public static int clamp(int value, int min, int max) {
+		return Math.min(Math.max(value, min), max);
+	}
+
+	public static int vertexHash(int[] vPos) {
 		// simple custom hashing function for vertex position data
 		StringBuilder s = new StringBuilder();
 		for (int part : vPos)
@@ -128,29 +160,14 @@ public class HDUtils {
 		return s.toString().hashCode();
 	}
 
-	public static float[] calculateSurfaceNormals(int[] vertexX, int[] vertexY, int[] vertexZ)
-	{
-		// calculate normals
-		float[] a = new float[3];
-		a[0] = vertexX[0] - vertexX[1];
-		a[1] = vertexY[0] - vertexY[1];
-		a[2] = vertexZ[0] - vertexZ[1];
-
-		float[] b = new float[3];
-		b[0] = vertexX[0] - vertexX[2];
-		b[1] = vertexY[0] - vertexY[2];
-		b[2] = vertexZ[0] - vertexZ[2];
-
-		// cross
+	public static float[] calculateSurfaceNormals(float[] a, float[] b, float[] c) {
+		subtract(b, a, b);
+		subtract(c, a, c);
 		float[] n = new float[3];
-		n[0] = a[1] * b[2] - a[2] * b[1];
-		n[1] = a[2] * b[0] - a[0] * b[2];
-		n[2] = a[0] * b[1] - a[1] * b[0];
-		return n;
+		return cross(n, b, c);
 	}
 
-	public static int[] colorIntToHSL(int colorInt)
-	{
+	public static int[] colorIntToHSL(int colorInt) {
 		int[] outHSL = new int[3];
 		outHSL[0] = colorInt >> 10 & 0x3F;
 		outHSL[1] = colorInt >> 7 & 0x7;
@@ -308,18 +325,22 @@ public class HDUtils {
 		return new WorldPoint(baseX, baseY, plane);
 	}
 
-	public static int[] cameraSpaceToWorldPoint(Client client, int localX, int localY) {
-		localX += client.getCameraX2();
-		localY += client.getCameraZ2();
+	public static int[] cameraSpaceToWorldPoint(Client client, int relativeX, int relativeZ) {
+		int localX = client.getCameraX2() + relativeX;
+		int localY = client.getCameraZ2() + relativeZ;
 		int plane = client.getPlane();
+		return localToWorld(client.getScene(), localX, localY, plane);
+	}
 
-		if (client.isInInstancedRegion()) {
-			int sceneX = localX >> 7;
-			int sceneY = localY >> 7;
+	public static int[] localToWorld(Scene scene, int localX, int localY, int plane) {
+		int sceneX = localX / LOCAL_TILE_SIZE;
+		int sceneY = localY / LOCAL_TILE_SIZE;
+
+		if (scene.isInstance() && sceneX >= 0 && sceneY >= 0 && sceneX < SCENE_SIZE && sceneY < SCENE_SIZE) {
 			int chunkX = sceneX / 8;
 			int chunkY = sceneY / 8;
-			int templateChunk = client.getInstanceTemplateChunks()[plane][chunkX][chunkY];
-			int rotation = templateChunk >> 1 & 3;
+			int templateChunk = scene.getInstanceTemplateChunks()[plane][chunkX][chunkY];
+			int rotation = 4 - (templateChunk >> 1 & 3);
 			int templateChunkY = (templateChunk >> 3 & 2047) * 8;
 			int templateChunkX = (templateChunk >> 14 & 1023) * 8;
 			int templateChunkPlane = templateChunk >> 24 & 3;
@@ -328,6 +349,8 @@ public class HDUtils {
 
 			int[] pos = { worldX, worldY, templateChunkPlane };
 
+			chunkX = pos[0] & -8;
+			chunkY = pos[1] & -8;
 			int x = pos[0] & 7;
 			int y = pos[1] & 7;
 			switch (rotation) {
@@ -348,10 +371,42 @@ public class HDUtils {
 			return pos;
 		}
 
-		return new int[] { (localX >>> 7) + client.getBaseX(), (localY >>> 7) + client.getBaseY(), plane };
+		return new int[] { scene.getBaseX() + sceneX, scene.getBaseY() + sceneY, plane };
+	}
+
+	public static int worldToRegionID(int[] worldPoint) {
+		return worldToRegionID(worldPoint[0], worldPoint[1]);
+	}
+
+	public static int worldToRegionID(int worldX, int worldY) {
+		return worldX >> 6 << 8 | worldY >> 6;
 	}
 
 	public static boolean is32Bit() {
 		return System.getProperty("sun.arch.data.model", "Unknown").equals("32");
+	}
+
+	public static boolean sceneIsTheGauntlet(Scene scene) {
+		if (!scene.isInstance())
+			return false;
+
+		var templateChunks = scene.getInstanceTemplateChunks();
+		for (var plane : templateChunks) {
+			for (var column : plane) {
+				for (int chunk : column) {
+					if (chunk == -1)
+						continue;
+
+					int worldX = (chunk >> 14 & 1023) * 8;
+					int worldY = (chunk >> 3 & 2047) * 8;
+					int regionId = HDUtils.worldToRegionID(worldX, worldY);
+
+					// The Gauntlet should only ever consist of chunks from these regions
+					return regionId == 7512 || regionId == 7768;
+				}
+			}
+		}
+
+		return false;
 	}
 }

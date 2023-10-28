@@ -30,7 +30,7 @@ import lombok.Getter;
 @Getter
 public enum GroundMaterial {
 	NONE(Material.NONE),
-	SKULL_OBELISK(Material.SKULL_OBELISK),
+	SKULL_OBELISK(Material.SKULLS),
 	TRANSPARENT(Material.TRANSPARENT),
 	GRASS_1(Material.GRASS_1, Material.GRASS_2, Material.GRASS_3),
 	OVERWORLD_GRASS_1(Material.GRASS_1, Material.GRASS_2, Material.GRASS_3),
@@ -50,6 +50,7 @@ public enum GroundMaterial {
 	BRICK_BROWN(Material.BRICK_BROWN),
 	GRUNGE(Material.GRUNGE_1, Material.GRUNGE_2, Material.GRUNGE_1),
 	GRUNGE_2(Material.GRUNGE_2),
+	SUBMERGED_GRUNGE_2(Material.SUBMERGED_GRUNGE_2),
 
 	TILES_2x2_1(Material.TILES_2X2_1),
 	TILES_2x2_2(Material.TILES_2X2_2),
@@ -65,6 +66,11 @@ public enum GroundMaterial {
 	MARBLE_1_SEMIGLOSS(Material.MARBLE_1_SEMIGLOSS, Material.MARBLE_2_SEMIGLOSS, Material.MARBLE_3_SEMIGLOSS),
 	MARBLE_2_SEMIGLOSS(Material.MARBLE_3_SEMIGLOSS, Material.MARBLE_1_SEMIGLOSS, Material.MARBLE_2_SEMIGLOSS),
 	MARBLE_DARK(Material.MARBLE_DARK),
+
+	LASSAR_UNDERCITY_TILES(Material.LASSAR_UNDERCITY_TILES),
+	LASSAR_UNDERCITY_TILES_SUBMERGED(Material.LASSAR_UNDERCITY_TILES_SUBMERGED),
+
+	BLANK_SEMIGLOSS(Material.BLANK_SEMIGLOSS),
 
 	SAND(Material.SAND_1, Material.SAND_2, Material.SAND_3),
 
