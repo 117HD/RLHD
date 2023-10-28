@@ -82,7 +82,23 @@ public enum Underlay {
 		.shiftLightness(8)
 		.saturation(0)
 		.ids(48, 50, 64)
-		.replaceWithIf(WINTER_EDGEVILLE_PATH, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER_THEME)
+		.replacementResolver(
+			(plugin, scene, tile, override) -> {
+				if (!plugin.configGroundBlending)
+					switch (plugin.configSeasonalTheme) {
+						case WINTER_THEME:
+							return WINTER_GRASS;
+						case AUTUMN_THEME:
+							return AUTUMN_GRASS;
+						case DEFAULT_THEME:
+							return DEFAULT_GRASS;
+					}
+				else if (plugin.configSeasonalTheme == SeasonalTheme.WINTER_THEME) {
+					return WINTER_EDGEVILLE_PATH;
+				}
+				return override;
+			}
+		)
 	),
 
 	// Varrock
