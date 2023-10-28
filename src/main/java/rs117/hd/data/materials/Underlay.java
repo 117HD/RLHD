@@ -73,6 +73,7 @@ public enum Underlay {
 
 	// Draynor
 	DRAYNOR_SEWERS(63, Area.DRAYNOR_SEWERS, GroundMaterial.DIRT),
+	DRAYNOR_63(63, Area.KINGDOM_OF_MISTHALIN_REGION, GroundMaterial.DIRT),
 
 	// Edgeville
 	EDGEVILLE_PATH_OVERLAY_48(Area.EDGEVILLE_PATH_OVERLAY, GroundMaterial.VARROCK_PATHS, p -> p
