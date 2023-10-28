@@ -336,7 +336,16 @@ public enum Underlay {
 	MIND_ALTAR_TILE(55, Area.MIND_ALTAR, GroundMaterial.MARBLE_1_SEMIGLOSS, p -> p.blended(false)),
 
 	TEMPLE_OF_THE_EYE(Area.TEMPLE_OF_THE_EYE, GroundMaterial.GRUNGE, p -> p.ids(87, 88, 89)),
-	ARCEUUS_GROUND(Area.ARCEUUS, GroundMaterial.DIRT, p -> p.ids(2, 3, 17, 23, 24)),
+	ARCEUUS_GROUND(
+		Area.ARCEUUS,
+		GroundMaterial.DIRT,
+		p -> p.ids(2, 3, 23, 24).replaceWithIf(WINTER_DIRT, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER_THEME)
+	),
+	ARCEUUS_GRASS(
+		Area.ARCEUUS,
+		GroundMaterial.GRASSY_DIRT,
+		p -> p.ids(17, 95).replaceWithIf(WINTER_GRASS, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER_THEME)
+	),
 
 	// Secrets of the North dungeon
 	ICY_UNDERGROUND_SNOW(p -> p.area(Area.ICY_UNDERGROUND_DARK).ids(159).groundMaterial(GroundMaterial.SNOW_1)),
