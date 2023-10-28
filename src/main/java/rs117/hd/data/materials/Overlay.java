@@ -619,7 +619,7 @@ public enum Overlay {
 		.shiftSaturation(-2)
 	),
 	TIRANNWN_PATHS(p -> p
-		.area(Area.TIRANNWN)
+		.area(Area.TIRANNWN_REGION)
 		.groundMaterial(GroundMaterial.SAND_BRICK)
 		.ids(106)
 		.shiftLightness(12)
