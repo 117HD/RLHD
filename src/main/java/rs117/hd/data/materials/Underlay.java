@@ -257,7 +257,7 @@ public enum Underlay {
 	ZEAH_DIRT(p -> p
 		.area(Area.ZEAH)
 		.groundMaterial(GroundMaterial.VARIED_DIRT)
-		.ids(19, 148)
+		.ids(19, 148, 149)
 		.replaceWithIf(WINTER_DIRT, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER_THEME)
 	),
 	ZEAH_GRAVEL_HILLS(p -> p
