@@ -528,11 +528,31 @@ public enum Overlay {
 		.hue(9)
 		.saturation(5)
 		.lightness(15)),
-	DRAYNOR_NEDS_PATH_FIX(10, Area.DRAYNOR_NEDS_PATH_FIXES, GroundMaterial.OVERWORLD_GRASS_1, p -> p
+	DRAYNOR_NEDS_PATH_FIX(p -> p
+		.ids()
+		.groundMaterial(GroundMaterial.OVERWORLD_GRASS_1)
 		.hue(9)
 		.saturation(5)
 		.lightness(18)
-		.replaceWithIf(WINTER_GRASS, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER_THEME)
+	),
+	DRAYNOR_NEDS_PATH_FIX_ENABLE(p -> p
+		.ids(10)
+		.groundMaterial(GroundMaterial.GRAVEL)
+		.area(Area.DRAYNOR_NEDS_PATH_FIXES)
+		.replacementResolver(
+			(plugin, scene, tile, override) -> {
+				if (plugin.configGroundBlending)
+					switch (plugin.configSeasonalTheme) {
+						case WINTER_THEME:
+							return WINTER_GRASS;
+						case AUTUMN_THEME:
+							return DRAYNOR_NEDS_PATH_FIX;
+						case DEFAULT_THEME:
+							return DRAYNOR_NEDS_PATH_FIX;
+					}
+				return override;
+			}
+		)
 	),
 	DRAYNOR_BANK_FLOOR(10, Area.DRAYNOR_BANK, GroundMaterial.WORN_TILES, p -> p.blended(false)),
 	DRAYNOR_BANK_ENTRANCE_PATH(p -> p
