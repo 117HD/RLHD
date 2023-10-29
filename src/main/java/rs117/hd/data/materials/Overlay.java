@@ -145,6 +145,11 @@ public enum Overlay {
 
 	// Varrock
 	VARROCK_HALLOWEEN_DIRT(81, Area.VARROCK_HALLOWEEN_EVENT_DIRT, GroundMaterial.DIRT),
+	VARROCK_GRAND_EXCHANGE_ROOF(p -> p
+		.ids(8)
+		.groundMaterial(GroundMaterial.GRAVEL)
+		.area(Area.VARROCK_GRAND_EXHCHANGE_ROOF)
+		.replaceWithIf(WINTER_GRASS, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER_THEME)),
 	VARROCK_MUSEUM_SOUTH_PATH_FIX_1(-85, Area.VARROCK_MUSEUM_SOUTH_PATH_FIX, GroundMaterial.DIRT, p -> p.shiftSaturation(2)),
 	VARROCK_MUSEUM_SOUTH_PATH_FIX_2(-84, Area.VARROCK_MUSEUM_SOUTH_PATH_FIX, GroundMaterial.DIRT, p -> p.shiftSaturation(1)),
 	VARROCK_MUSEUM_SOUTH_PATH_FIX_3(56, Area.VARROCK_MUSEUM_SOUTH_PATH_FIX, GroundMaterial.VARROCK_PATHS, p -> p.shiftLightness(4)),
