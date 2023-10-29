@@ -44,6 +44,7 @@ import rs117.hd.utils.HDUtils;
 
 public enum Overlay {
 	// Winter Theme fixes
+	WINTER_GRASS(p -> p.ids().groundMaterial(GroundMaterial.SNOW_1).hue(0).saturation(0).shiftLightness(40).blended(true)),
 	WINTER_DIRT(p -> p.ids().groundMaterial(GroundMaterial.DIRT).hue(0).saturation(0).shiftLightness(40).blended(true)),
 	WINTER_JAGGED_STONE_TILE(p -> p
 		.ids()
@@ -66,6 +67,7 @@ public enum Overlay {
 		.replaceWithIf(WINTER_DIRT, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER_THEME)
 	),
 	AUTUMN_GRASS(p -> p.ids().groundMaterial(GroundMaterial.OVERWORLD_GRASS_1).hue(10).shiftLightness(-1)),
+	DEFAULT_GRASS(p -> p.ids().groundMaterial(GroundMaterial.OVERWORLD_GRASS_1)),
 
 	// Tutorial Island
 	TUTORIAL_ISLAND_KITCHEN_TILE_1(9, Area.TUTORIAL_ISLAND_KITCHEN, GroundMaterial.MARBLE_1_SEMIGLOSS, p -> p.blended(false)),
@@ -509,11 +511,18 @@ public enum Overlay {
 	// Draynor
 	DRAYNOR_AGGIES_HOUSE(-93, Area.DRAYNOR_AGGIES_HOUSE, GroundMaterial.CARPET, p -> p.blended(false)),
 	WISE_OLD_MANS_HOUSE_CARPET(86, Area.DRAYNOR, GroundMaterial.CARPET, p -> p.blended(false)),
-	DRAYNOR_WOM_FRONT_FIX_0(0, Area.DRAYNOR_WOM_HOUSE_FRONT, GroundMaterial.OVERWORLD_GRASS_1),
+	DRAYNOR_WOM_FRONT_FIX_0(p -> p
+		.ids(0)
+		.area(Area.DRAYNOR_WOM_HOUSE_FRONT)
+		.groundMaterial(GroundMaterial.OVERWORLD_GRASS_1)
+		.replaceWithIf(WINTER_GRASS, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER_THEME)
+		.replaceWithIf(AUTUMN_GRASS, plugin -> plugin.configSeasonalTheme == SeasonalTheme.AUTUMN_THEME)
+	),
 	DRAYNOR_WOM_FRONT_FIX_10(10, Area.DRAYNOR_WOM_HOUSE_FRONT, GroundMaterial.OVERWORLD_GRASS_1, p -> p
 		.hue(8)
 		.saturation(4)
 		.lightness(15)
+
 	),
 	DRAYNOR_PATH_BLENDING_FIX(10, Area.DRAYNOR_PATH_BLENDING_FIXES, GroundMaterial.OVERWORLD_GRASS_1, p -> p
 		.hue(9)
@@ -523,24 +532,96 @@ public enum Overlay {
 		.hue(9)
 		.saturation(5)
 		.lightness(18)
+		.replaceWithIf(WINTER_GRASS, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER_THEME)
 	),
 	DRAYNOR_BANK_FLOOR(10, Area.DRAYNOR_BANK, GroundMaterial.WORN_TILES, p -> p.blended(false)),
-	DRAYNOR_BANK_FRONT_FIX(0, Area.DRAYNOR_BANK_FRONT_PATH, GroundMaterial.GRAVEL, p -> p
+	DRAYNOR_BANK_ENTRANCE_PATH(p -> p
+		.ids()
+		.groundMaterial(GroundMaterial.GRAVEL)
 		.hue(0)
 		.saturation(0)
 		.lightness(22)
 	),
-	DRAYNOR_BANK_PATH_FIX_10_DARK(10, Area.DRAYNOR_BANK_PATH_FIX_DARK, GroundMaterial.OVERWORLD_GRASS_1, p -> p
+	DRAYNOR_BANK_FRONT_FIX(p -> p
+		.ids(0)
+		.groundMaterial(GroundMaterial.OVERWORLD_GRASS_1)
+		.area(Area.DRAYNOR_BANK_FRONT_PATH)
+		.replacementResolver(
+			(plugin, scene, tile, override) -> {
+				if (!plugin.configGroundBlending)
+					switch (plugin.configSeasonalTheme) {
+						case WINTER_THEME:
+							return WINTER_GRASS;
+						case AUTUMN_THEME:
+							return AUTUMN_GRASS;
+						case DEFAULT_THEME:
+							return override;
+					}
+				return DRAYNOR_BANK_ENTRANCE_PATH;
+			}
+		)
+	),
+	DRAYNOR_BANK_PATH_FIX_10_DARK(p -> p
+		.ids()
+		.area(Area.DRAYNOR_BANK_PATH_FIX_DARK)
+		.groundMaterial(GroundMaterial.OVERWORLD_GRASS_1)
 		.hue(9)
 		.saturation(4)
 		.lightness(8)
 	),
-	DRAYNOR_BANK_PATH_FIX_10_LIGHT(10, Area.DRAYNOR_BANK_PATH_FIX_LIGHT, GroundMaterial.OVERWORLD_GRASS_1, p -> p
+	DRAYNOR_BANK_PATH_FIX_DARK_ENABLE(p -> p
+		.ids(10)
+		.groundMaterial(GroundMaterial.GRAVEL)
+		.area(Area.DRAYNOR_BANK_PATH_FIX_DARK)
+		.replacementResolver(
+			(plugin, scene, tile, override) -> {
+				if (plugin.configGroundBlending)
+					switch (plugin.configSeasonalTheme) {
+						case WINTER_THEME:
+							return WINTER_GRASS;
+						case AUTUMN_THEME:
+							return DRAYNOR_BANK_PATH_FIX_10_DARK;
+						case DEFAULT_THEME:
+							return DRAYNOR_BANK_PATH_FIX_10_DARK;
+					}
+				return override;
+			}
+		)
+	),
+	DRAYNOR_BANK_PATH_FIX_10_LIGHT(p -> p
+		.ids()
+		.groundMaterial(GroundMaterial.OVERWORLD_GRASS_1)
 		.hue(9)
 		.saturation(5)
 		.lightness(18)
+
 	),
-	DRAYNOR_BANK_PATH_FIX_0(0, Area.DRAYNOR_MARKET_PATH_FIX, GroundMaterial.OVERWORLD_GRASS_1),
+	DRAYNOR_BANK_PATH_FIX_LIGHT_ENABLE(p -> p
+		.ids(10)
+		.groundMaterial(GroundMaterial.GRAVEL)
+		.area(Area.DRAYNOR_BANK_PATH_FIX_LIGHT)
+		.replacementResolver(
+			(plugin, scene, tile, override) -> {
+				if (plugin.configGroundBlending)
+					switch (plugin.configSeasonalTheme) {
+						case WINTER_THEME:
+							return WINTER_GRASS;
+						case AUTUMN_THEME:
+							return DRAYNOR_BANK_PATH_FIX_10_LIGHT;
+						case DEFAULT_THEME:
+							return DRAYNOR_BANK_PATH_FIX_10_LIGHT;
+					}
+				return override;
+			}
+		)
+	),
+	DRAYNOR_BANK_PATH_FIX_0(p -> p
+		.ids(0)
+		.area(Area.DRAYNOR_PATH_BLENDING_FIXES)
+		.groundMaterial(GroundMaterial.OVERWORLD_GRASS_1)
+		.replaceWithIf(WINTER_GRASS, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER_THEME)
+		.replaceWithIf(AUTUMN_GRASS, plugin -> plugin.configSeasonalTheme == SeasonalTheme.AUTUMN_THEME)
+	),
 	DRAYNOR_MANS_HOUSE_FLOOR(14, Area.DRAYNOR_NORTHERN_HOUSE_FLOOR, GroundMaterial.WOOD_PLANKS_1, p -> p
 		.blended(false)
 		.lightness(74)

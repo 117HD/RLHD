@@ -73,7 +73,16 @@ public enum Underlay {
 
 	// Draynor
 	DRAYNOR_SEWERS(63, Area.DRAYNOR_SEWERS, GroundMaterial.DIRT),
-	DRAYNOR_63(63, Area.KINGDOM_OF_MISTHALIN_REGION, GroundMaterial.DIRT),
+	DRAYNOR_63(p -> p
+		.ids(63)
+		.area(Area.KINGDOM_OF_MISTHALIN_REGION)
+		.groundMaterial(GroundMaterial.DIRT)
+		.replaceWithIf(WINTER_DIRT, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER_THEME)),
+	DRAYNOR_72(p -> p
+		.ids(72)
+		.area(Area.DRAYNOR)
+		.groundMaterial(GroundMaterial.OVERWORLD_GRASS_1)
+		.replaceWithIf(WINTER_GRASS, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER_THEME)),
 
 	// Edgeville
 	EDGEVILLE_PATH_OVERLAY_48(Area.EDGEVILLE_PATH_OVERLAY, GroundMaterial.VARROCK_PATHS, p -> p
