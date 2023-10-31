@@ -409,7 +409,7 @@ public enum Underlay {
 		.replaceWithIf(AUTUMN_GRASS, plugin -> plugin.configSeasonalTheme == SeasonalTheme.AUTUMN_THEME)
 	),
 	OVERWORLD_DIRT(Area.OVERWORLD, GroundMaterial.DIRT, p -> p
-		.ids(-111, -110, 19, 56, 57, 66, 80, 92, 111, 118, 122, 139, 150)
+		.ids(-111, -110, 19, 56, 57, 66, 80, 111, 118, 122, 139, 150)
 		.replaceWithIf(WINTER_DIRT, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER_THEME)),
 	OVERWORLD_DIRT_GRASS(Area.OVERWORLD, GroundMaterial.GRASSY_DIRT, p -> p
 		.ids(64, 65, 94, 96)
@@ -420,7 +420,7 @@ public enum Underlay {
 	UNDERLAY_PACKED_EARTH(GroundMaterial.PACKED_EARTH, p -> p.ids(15)),
 
 	UNDERLAY_SNOW(p -> p
-		.ids(16, 55, 58, 59)
+		.ids(16, 55, 58, 59, 92)
 		.area(Area.SNOW_REGIONS)
 		.groundMaterial(GroundMaterial.SNOW_1)
 		.replacementResolver((plugin, scene, tile, override) -> {
