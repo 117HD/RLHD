@@ -54,8 +54,12 @@ public class ModelOverrideManager {
 				if (entries == null)
 					throw new IOException("Empty or invalid: " + path);
 				for (ModelOverride override : entries) {
+					if (override.seasonalTheme != null && override.seasonalTheme.equals("WINTER") && !plugin.configWinterTheme)
+						continue;
+
 					override.gsonReallyShouldSupportThis();
 					override.resolveMaterials();
+
 					for (int npcId : override.npcIds)
 						addEntry(ModelHash.packUuid(npcId, ModelHash.TYPE_NPC), override);
 					for (int objectId : override.objectIds)
@@ -86,8 +90,17 @@ public class ModelOverrideManager {
 		modelsToHide.clear();
 	}
 
+	public void reload() {
+		shutDown();
+		startUp();
+	}
+
 	private void addEntry(long uuid, ModelOverride entry) {
-		ModelOverride old = modelOverrides.put(uuid, entry);
+		ModelOverride old = modelOverrides.get(uuid);
+		if (old != null && old.seasonalTheme != null && entry.seasonalTheme == null)
+			return;
+
+		modelOverrides.put(uuid, entry);
 		modelsToHide.put(uuid, entry.hideInAreas);
 
 		if (Props.DEVELOPMENT && old != null) {

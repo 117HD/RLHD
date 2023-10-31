@@ -12,6 +12,13 @@
         "type": "string",
         "description": "Description of which objects the properties apply to."
       },
+      "seasonalTheme": {
+        "type": "string",
+        "description": "Which seasonal theme the model override should be active for.",
+        "enum": [
+          "WINTER"
+        ]
+      },
       "npcIds": {
         "type": "array",
         "description": "A set of NPC IDs or NpcID keys that the override should apply to.",

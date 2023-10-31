@@ -107,8 +107,7 @@ public class TextureManager {
 		clientThread.invoke(() -> {
 			freeTextures();
 			ensureMaterialsAreLoaded();
-			modelOverrideManager.shutDown();
-			modelOverrideManager.startUp();
+			modelOverrideManager.reload();
 		});
 	}
 

@@ -24,6 +24,7 @@ public class ModelOverride
 
 	public String description = "UNKNOWN";
 
+	public String seasonalTheme;
 	@JsonAdapter(GsonUtils.IntegerSetAdapter.class)
 	public Set<Integer> npcIds = EMPTY;
 	@JsonAdapter(GsonUtils.IntegerSetAdapter.class)
