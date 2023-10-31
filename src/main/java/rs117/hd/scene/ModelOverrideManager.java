@@ -12,6 +12,7 @@ import rs117.hd.HdPlugin;
 import rs117.hd.model.ModelPusher;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.AABB;
+import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
@@ -21,26 +22,30 @@ import static rs117.hd.utils.ResourcePath.path;
 @Singleton
 @Slf4j
 public class ModelOverrideManager {
-    private static final ResourcePath MODEL_OVERRIDES_PATH =  Props.getPathOrDefault("rlhd.model-overrides-path",
-        () -> path(ModelOverrideManager.class, "model_overrides.json"));
+	private static final ResourcePath MODEL_OVERRIDES_PATH = Props.getPathOrDefault(
+		"rlhd.model-overrides-path",
+		() -> path(ModelOverrideManager.class, "model_overrides.json")
+	);
 
-    @Inject
-    private Client client;
+	@Inject
+	private Client client;
 
-    @Inject
-    private ClientThread clientThread;
+	@Inject
+	private ClientThread clientThread;
 
-    @Inject
-    private HdPlugin plugin;
+	@Inject
+	private HdPlugin plugin;
 
-    @Inject
-    private ModelPusher modelPusher;
+	@Inject
+	private ModelPusher modelPusher;
 
-    private final HashMap<Long, ModelOverride> modelOverrides = new HashMap<>();
-    private final HashMap<Long, AABB[]> modelsToHide = new HashMap<>();
+	private final HashMap<Long, ModelOverride> modelOverrides = new HashMap<>();
+	private final HashMap<Long, AABB[]> modelsToHide = new HashMap<>();
 
-    public void startUp() {
-        MODEL_OVERRIDES_PATH.watch((path, first) -> {
+	private FileWatcher.UnregisterCallback fileWatcher;
+
+	public void startUp() {
+		fileWatcher = MODEL_OVERRIDES_PATH.watch((path, first) -> {
 			modelOverrides.clear();
 			modelsToHide.clear();
 
@@ -50,6 +55,7 @@ public class ModelOverrideManager {
 					throw new IOException("Empty or invalid: " + path);
 				for (ModelOverride override : entries) {
 					override.gsonReallyShouldSupportThis();
+					override.resolveMaterials();
 					for (int npcId : override.npcIds)
 						addEntry(ModelHash.packUuid(npcId, ModelHash.TYPE_NPC), override);
 					for (int objectId : override.objectIds)
@@ -69,9 +75,18 @@ public class ModelOverrideManager {
 				});
 			}
 		});
-    }
+	}
 
-    private void addEntry(long uuid, ModelOverride entry) {
+	public void shutDown() {
+		if (fileWatcher != null)
+			fileWatcher.unregister();
+		fileWatcher = null;
+
+		modelOverrides.clear();
+		modelsToHide.clear();
+	}
+
+	private void addEntry(long uuid, ModelOverride entry) {
 		ModelOverride old = modelOverrides.put(uuid, entry);
 		modelsToHide.put(uuid, entry.hideInAreas);
 
@@ -81,7 +96,8 @@ public class ModelOverrideManager {
 					ModelHash.getIdOrIndex(uuid), old.description, entry.description
 				);
 			} else if (old.hideInAreas.length == 0) {
-				System.err.printf("Replacing ID %d from '%s' with '%s'. The first-mentioned override should be removed.\n",
+				System.err.printf(
+					"Replacing ID %d from '%s' with '%s'. The first-mentioned override should be removed.\n",
 					ModelHash.getIdOrIndex(uuid), old.description, entry.description
 				);
 			}
