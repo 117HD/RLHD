@@ -610,18 +610,12 @@ public enum Overlay {
 	// Tirannwn
 	ARANDAR_PATHS(p -> p
 		.area(Area.ARANDAR)
-		.groundMaterial(GroundMaterial.SAND_BRICK)
 		.ids(106)
+		.groundMaterial(GroundMaterial.SAND_BRICK)
 		.shiftLightness(12)
 		.shiftSaturation(-2)
 	),
-	TIRANNWN_PATHS(p -> p
-		.area(Area.TIRANNWN)
-		.groundMaterial(GroundMaterial.SAND_BRICK)
-		.ids(106)
-		.shiftLightness(12)
-		.shiftSaturation(-2)
-	),
+	TIRANNWN_PATHS(p -> p.area(Area.TIRANNWN).ids(106).groundMaterial(GroundMaterial.GRASSY_DIRT)),
 	POISON_WASTE(85, Area.POISON_WASTE, WaterType.POISON_WASTE),
 	POISON_WASTE_DUNGEON_TAR(p -> p.ids(304).area(Area.POISON_WASTE_DUNGEON).waterType(WaterType.BLACK_TAR_FLAT)),
 
