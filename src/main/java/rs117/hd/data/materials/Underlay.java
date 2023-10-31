@@ -68,6 +68,7 @@ public enum Underlay {
 	DEFAULT_SAND(p -> p.ids().groundMaterial(GroundMaterial.SAND)),
 	DEFAULT_GRASS(p -> p.ids().groundMaterial(GroundMaterial.OVERWORLD_GRASS_1)),
 	DEFAULT_DIRT(p -> p.ids().groundMaterial(GroundMaterial.DIRT)),
+	DEFAULT_SNOW_1(p -> p.ids().groundMaterial(GroundMaterial.SNOW_1)),
 	// Lumbridge
 	LUMBRIDGE_CASTLE_TILE(56, Area.LUMBRIDGE_CASTLE_BASEMENT, GroundMaterial.MARBLE_2_SEMIGLOSS, p -> p.blended(false)),
 
@@ -418,7 +419,81 @@ public enum Underlay {
 	OVERWORLD_SAND(Area.OVERWORLD, GroundMaterial.SAND, p -> p.ids(-127, -118)),
 	UNDERLAY_PACKED_EARTH(GroundMaterial.PACKED_EARTH, p -> p.ids(15)),
 
-	UNDERLAY_SNOW(p -> p.ids(16, 58, 59).area(Area.SNOW_REGIONS).groundMaterial(GroundMaterial.SNOW_1)),
+	UNDERLAY_SNOW(p -> p
+		.ids(16, 55, 58, 59)
+		.area(Area.SNOW_REGIONS)
+		.groundMaterial(GroundMaterial.SNOW_1)
+		.replacementResolver((plugin, scene, tile, override) -> {
+				// Grab the color from the south-western-most vertex, to try to match with tile blending
+				int color;
+				var paint = tile.getSceneTilePaint();
+				var model = tile.getSceneTileModel();
+				if (paint != null) {
+					color = paint.getSwColor();
+				} else if (model != null) {
+					int faceCount = tile.getSceneTileModel().getFaceX().length;
+					final int[] faceColorsA = model.getTriangleColorA();
+					final int[] faceColorsB = model.getTriangleColorB();
+					final int[] faceColorsC = model.getTriangleColorC();
+
+					color = 0;
+					outer:
+					for (int face = 0; face < faceCount; face++) {
+						if (isOverlayFace(tile, face))
+							continue;
+
+						int[][] vertices = faceLocalVertices(tile, face);
+						int[] faceColors = new int[] { faceColorsA[face], faceColorsB[face], faceColorsC[face] };
+
+						for (int vertex = 0; vertex < VERTICES_PER_FACE; vertex++) {
+							color = faceColors[vertex];
+//							log.debug(
+//								"x: {}, y: {}, vertex: {}, local: {}",
+//								tile.getSceneLocation().getX(),
+//								tile.getSceneLocation().getY(),
+//								vertex,
+//								vertices[vertex]
+//							);
+							if (vertices[vertex][0] != LOCAL_TILE_SIZE && vertices[vertex][1] != LOCAL_TILE_SIZE)
+								break outer;
+						}
+					}
+				} else {
+					return OVERWORLD_SAND;
+				}
+				LocalPoint localLocation = tile.getLocalLocation();
+				int tileExX = localLocation.getSceneX() + SceneUploader.SCENE_OFFSET;
+				int tileExY = localLocation.getSceneY() + SceneUploader.SCENE_OFFSET;
+				short overlayId = scene.getOverlayIds()[tile.getRenderLevel()][tileExX][tileExY];
+
+
+				int hue = color >> 10 & 0x3F; // jagex hsl extractor
+				int saturation = color >> 7 & 0x7; // jagex hsl extractor
+				int lightness = color & 0x7F; // jagex hsl extractor
+				if (saturation >= 2) {
+					switch (plugin.configSeasonalTheme) {
+						case WINTER_THEME:
+							return WINTER_GRASS;
+						case AUTUMN_THEME:
+							return AUTUMN_GRASS;
+						case DEFAULT_THEME:
+							return OVERWORLD_GRASS;
+					}
+				}
+				if (saturation == 1) {
+					switch (plugin.configSeasonalTheme) {
+						case WINTER_THEME:
+							return WINTER_DIRT;
+						case AUTUMN_THEME:
+							return OVERWORLD_DIRT;
+						case DEFAULT_THEME:
+							return OVERWORLD_DIRT;
+					}
+				}
+				return DEFAULT_SNOW_1;
+			}
+		)
+	),
 	UNDERLAY_72(GroundMaterial.VARIED_DIRT, p -> p
 		.ids(72, 73, 98, 112, 113) //112 == Lovakengj
 		.replaceWithIf(WINTER_DIRT, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER_THEME)
