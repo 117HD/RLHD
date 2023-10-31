@@ -77,6 +77,9 @@ public class TextureManager {
 	@Inject
 	private ClientThread clientThread;
 
+	@Inject
+	private ModelOverrideManager modelOverrideManager;
+
 	private int textureArray;
 	private int textureSize;
 
@@ -104,6 +107,8 @@ public class TextureManager {
 		clientThread.invoke(() -> {
 			freeTextures();
 			ensureMaterialsAreLoaded();
+			modelOverrideManager.shutDown();
+			modelOverrideManager.startUp();
 		});
 	}
 

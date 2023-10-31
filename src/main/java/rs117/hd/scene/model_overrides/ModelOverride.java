@@ -1,7 +1,9 @@
 package rs117.hd.scene.model_overrides;
 
 import com.google.gson.annotations.JsonAdapter;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import lombok.NoArgsConstructor;
 import net.runelite.api.*;
@@ -48,6 +50,8 @@ public class ModelOverride
 	@JsonAdapter(AABB.JsonAdapter.class)
 	public AABB[] hideInAreas = {};
 
+	public Map<Material, ModelOverride> materialOverrides;
+
 	public void gsonReallyShouldSupportThis() {
 		// Ensure there are no nulls in case of invalid configuration during development
 		if (baseMaterial == null)
@@ -72,7 +76,20 @@ public class ModelOverride
 			uvOrientationZ = uvOrientation;
 	}
 
-    public void computeModelUvw(float[] out, int i, float x, float y, float z, int orientation) {
+	public void resolveMaterials() {
+		baseMaterial = baseMaterial.resolveReplacements();
+		textureMaterial = textureMaterial.resolveReplacements();
+		if (materialOverrides != null) {
+			var normalized = new HashMap<Material, ModelOverride>();
+			for (var entry : materialOverrides.entrySet()) {
+				entry.getValue().resolveMaterials();
+				normalized.put(entry.getKey().resolveReplacements(), entry.getValue());
+			}
+			materialOverrides = normalized;
+		}
+	}
+
+	public void computeModelUvw(float[] out, int i, float x, float y, float z, int orientation) {
 		double rad, cos, sin;
 		float temp;
 		if (orientation % 2048 != 0) {

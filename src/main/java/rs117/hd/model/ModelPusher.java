@@ -216,15 +216,13 @@ public class ModelPusher {
 		}
 		boolean skipUVs =
 			!isVanillaTextured &&
-			baseMaterial == Material.NONE &&
-			packMaterialData(Material.NONE, -1, modelOverride, UvType.GEOMETRY, false) == 0;
+			packMaterialData(baseMaterial, -1, modelOverride, UvType.GEOMETRY, false) == 0;
 
 		// ensure capacity upfront
 		sceneContext.stagingBufferVertices.ensureCapacity(bufferSize);
 		sceneContext.stagingBufferNormals.ensureCapacity(bufferSize);
-		if (!skipUVs) {
+		if (!skipUVs)
 			sceneContext.stagingBufferUvs.ensureCapacity(bufferSize);
-		}
 
 		boolean foundCachedVertexData = false;
 		boolean foundCachedNormalData = false;
@@ -349,17 +347,27 @@ public class ModelPusher {
 					if (material == Material.NONE)
 						material = Material.fromVanillaTexture(textureId);
 				}
-				UvType uvType = modelOverride.uvType;
-				if (uvType == UvType.VANILLA || (textureId != -1 && modelOverride.retainVanillaUvs))
-					uvType = isVanillaUVMapped && textureFaces[face] != -1 ? UvType.VANILLA : UvType.GEOMETRY;
 
-				int materialData = packMaterialData(material, textureId, modelOverride, uvType, false);
+				ModelOverride materialOverride = modelOverride;
+				if (modelOverride.materialOverrides != null) {
+					materialOverride = modelOverride.materialOverrides.getOrDefault(material, modelOverride);
+					material = materialOverride.textureMaterial;
+				}
+
+				UvType uvType = UvType.GEOMETRY;
+				if (material != Material.NONE) {
+					uvType = materialOverride.uvType;
+					if (uvType == UvType.VANILLA || (textureId != -1 && materialOverride.retainVanillaUvs))
+						uvType = isVanillaUVMapped && textureFaces[face] != -1 ? UvType.VANILLA : UvType.GEOMETRY;
+				}
+
+				int materialData = packMaterialData(material, textureId, materialOverride, uvType, false);
 
 				final float[] uvData = sceneContext.modelFaceNormals;
 				if (materialData == 0) {
 					Arrays.fill(uvData, 0);
 				} else {
-					modelOverride.fillUvsForFace(uvData, model, preOrientation, uvType, face);
+					materialOverride.fillUvsForFace(uvData, model, preOrientation, uvType, face);
 					uvData[3] = uvData[7] = uvData[11] = materialData;
 				}
 

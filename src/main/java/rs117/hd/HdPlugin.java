@@ -609,6 +609,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				developerTools.deactivate();
 
 			modelPusher.shutDown();
+			modelOverrideManager.shutDown();
 			lightManager.shutDown();
 			environmentManager.reset();
 
