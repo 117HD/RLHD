@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
+import rs117.hd.config.SeasonalTheme;
 import rs117.hd.model.ModelPusher;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.AABB;
@@ -54,7 +55,8 @@ public class ModelOverrideManager {
 				if (entries == null)
 					throw new IOException("Empty or invalid: " + path);
 				for (ModelOverride override : entries) {
-					if (override.seasonalTheme != null && override.seasonalTheme.equals("WINTER") && !plugin.configWinterTheme)
+					if (override.seasonalTheme != null && override.seasonalTheme.equals("WINTER")
+						&& plugin.configSeasonalTheme != SeasonalTheme.WINTER_THEME)
 						continue;
 
 					override.gsonReallyShouldSupportThis();

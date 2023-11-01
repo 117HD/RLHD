@@ -608,7 +608,7 @@ public enum Environment
 		.setDirectionalColor(173, 176, 139)
 		.setDirectionalStrength(2.0f)
 	),
-	TIRANNWN(Area.TIRANNWN_REGION, new Properties()
+	TIRANNWN(Area.TIRANNWN_MAINLAND, new Properties()
 		.setFogColor("#99D8C8")
 		.setFogDepth(15)
 	),
