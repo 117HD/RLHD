@@ -2,6 +2,7 @@ package rs117.hd.scene;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Objects;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.NonNull;
@@ -99,13 +100,14 @@ public class ModelOverrideManager {
 
 	private void addEntry(long uuid, ModelOverride entry) {
 		ModelOverride old = modelOverrides.get(uuid);
+		// Seasonal theme overrides should take precedence
 		if (old != null && old.seasonalTheme != null && entry.seasonalTheme == null)
 			return;
 
 		modelOverrides.put(uuid, entry);
 		modelsToHide.put(uuid, entry.hideInAreas);
 
-		if (Props.DEVELOPMENT && old != null) {
+		if (Props.DEVELOPMENT && old != null && Objects.equals(old.seasonalTheme, entry.seasonalTheme)) {
 			if (entry.hideInAreas.length > 0) {
 				System.err.printf("Replacing ID %d from '%s' with hideInAreas-override '%s'. This is likely a mistake...\n",
 					ModelHash.getIdOrIndex(uuid), old.description, entry.description
