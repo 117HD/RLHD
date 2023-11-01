@@ -720,11 +720,6 @@ public enum Overlay {
 	ARANDAR_PATHS(p -> p
 		.area(Area.ARANDAR)
 		.ids(106)
-		.shiftLightness(12)
-		.shiftSaturation(-2)
-	),
-	TIRANNWN_PATHS(p -> p
-		.area(Area.TIRANNWN_MAINLAND)
 		.groundMaterial(GroundMaterial.SAND_BRICK)
 		.shiftLightness(12)
 		.shiftSaturation(-2)
