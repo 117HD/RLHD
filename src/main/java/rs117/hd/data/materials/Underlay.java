@@ -69,22 +69,115 @@ public enum Underlay {
 	DEFAULT_GRASS(p -> p.ids().groundMaterial(GroundMaterial.OVERWORLD_GRASS_1)),
 	DEFAULT_DIRT(p -> p.ids().groundMaterial(GroundMaterial.DIRT)),
 	DEFAULT_SNOW_1(p -> p.ids().groundMaterial(GroundMaterial.SNOW_1)),
+	DEFAULT_GRUNGE(p -> p.ids().groundMaterial(GroundMaterial.GRUNGE)),
 	// Lumbridge
 	LUMBRIDGE_CASTLE_TILE(56, Area.LUMBRIDGE_CASTLE_BASEMENT, GroundMaterial.MARBLE_2_SEMIGLOSS, p -> p.blended(false)),
 
 	// Draynor
 	DRAYNOR_SEWERS(63, Area.DRAYNOR_SEWERS, GroundMaterial.DIRT),
-	DRAYNOR_63(p -> p
-		.ids(63)
-		.area(Area.KINGDOM_OF_MISTHALIN_REGION)
-		.groundMaterial(GroundMaterial.DIRT)
-		.replaceWithIf(WINTER_DIRT, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER_THEME)),
 	DRAYNOR_72(p -> p
 		.ids(72)
 		.area(Area.DRAYNOR)
 		.groundMaterial(GroundMaterial.OVERWORLD_GRASS_1)
 		.replaceWithIf(WINTER_GRASS, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER_THEME)),
 
+	COMPLEX_TILES_IMCANDO_PENINSULA(p -> p
+		.ids(55, 61, 62, 63, 68)
+		.area(Area.IMCANDO_PENINSULA)
+		.replacementResolver(
+			(plugin, scene, tile, override) -> {
+				// Grab the color from the south-western-most vertex, to try to match with tile blending
+				int color;
+				var paint = tile.getSceneTilePaint();
+				var model = tile.getSceneTileModel();
+				if (paint != null) {
+					color = paint.getSwColor();
+				} else if (model != null) {
+					int faceCount = tile.getSceneTileModel().getFaceX().length;
+					final int[] faceColorsA = model.getTriangleColorA();
+					final int[] faceColorsB = model.getTriangleColorB();
+					final int[] faceColorsC = model.getTriangleColorC();
+
+					color = 0;
+					outer:
+					for (int face = 0; face < faceCount; face++) {
+						if (isOverlayFace(tile, face))
+							continue;
+
+						int[][] vertices = faceLocalVertices(tile, face);
+						int[] faceColors = new int[] { faceColorsA[face], faceColorsB[face], faceColorsC[face] };
+
+						for (int vertex = 0; vertex < VERTICES_PER_FACE; vertex++) {
+							color = faceColors[vertex];
+//							log.debug(
+//								"x: {}, y: {}, vertex: {}, local: {}",
+//								tile.getSceneLocation().getX(),
+//								tile.getSceneLocation().getY(),
+//								vertex,
+//								vertices[vertex]
+//							);
+							if (vertices[vertex][0] != LOCAL_TILE_SIZE && vertices[vertex][1] != LOCAL_TILE_SIZE)
+								break outer;
+						}
+					}
+				} else {
+					return DEFAULT_SAND;
+				}
+				LocalPoint localLocation = tile.getLocalLocation();
+				int tileExX = localLocation.getSceneX() + SceneUploader.SCENE_OFFSET;
+				int tileExY = localLocation.getSceneY() + SceneUploader.SCENE_OFFSET;
+				short overlayId = scene.getOverlayIds()[tile.getRenderLevel()][tileExX][tileExY];
+
+
+				int hue = color >> 10 & 0x3F; // jagex hsl extractor
+				int saturation = color >> 7 & 0x7; // jagex hsl extractor
+				int lightness = color & 0x7F; // jagex hsl extractor
+				if (saturation == 0) {
+					switch (plugin.configSeasonalTheme) {
+						case WINTER_THEME:
+							return WINTER_GRUNGE;
+						case AUTUMN_THEME:
+							return DEFAULT_GRUNGE;
+						case DEFAULT_THEME:
+							return DEFAULT_GRUNGE;
+					}
+				}
+				if (hue <= 10 && saturation < 2) {
+					switch (plugin.configSeasonalTheme) {
+						case WINTER_THEME:
+							return WINTER_GRUNGE;
+						case AUTUMN_THEME:
+							return DEFAULT_GRUNGE;
+						case DEFAULT_THEME:
+							return DEFAULT_GRUNGE;
+					}
+				}
+				if ((hue >= 11 && saturation == 1) || (hue == 9 && saturation == 2) ||
+					(hue == 9 && saturation == 3 && lightness >= 49) || (hue >= 9 && saturation >= 4) ||
+					(hue >= 10 && saturation >= 2)) {
+					switch (plugin.configSeasonalTheme) {
+						case WINTER_THEME:
+							return WINTER_GRASS;
+						case AUTUMN_THEME:
+							return AUTUMN_GRASS;
+						case DEFAULT_THEME:
+							return DEFAULT_GRASS;
+					}
+				}
+				if (hue <= 8 && saturation >= 4 && lightness <= 71) {
+					switch (plugin.configSeasonalTheme) {
+						case WINTER_THEME:
+							return WINTER_DIRT;
+						case AUTUMN_THEME:
+							return DEFAULT_DIRT;
+						case DEFAULT_THEME:
+							return DEFAULT_DIRT;
+					}
+				}
+				return DEFAULT_SAND;
+			}
+		)
+	),
 	// Edgeville
 	EDGEVILLE_PATH_OVERLAY_48(Area.EDGEVILLE_PATH_OVERLAY, GroundMaterial.VARROCK_PATHS, p -> p
 		.blendedAsOpposite(true)
@@ -499,11 +592,108 @@ public enum Underlay {
 		.replaceWithIf(WINTER_DIRT, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER_THEME)
 	),
 	UNDERLAY_OVERWORLD_GRUNGE(GroundMaterial.GRUNGE, p -> p
-		.ids(8, 10, 55, 58, 60, 92) // 8 = Jatizso, 60 = GotR, 92 = Eadgars Cave
+		.ids(8, 10, 58, 60, 92) // 8 = Jatizso, 60 = GotR, 92 = Eadgars Cave
 		.replaceWithIf(WINTER_GRUNGE, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER_THEME)
 	),
 	COMPLEX_TILES(p -> p
+		.ids(55, 61, 62, 63, 68)
+		.replacementResolver(
+			(plugin, scene, tile, override) -> {
+				// Grab the color from the south-western-most vertex, to try to match with tile blending
+				int color;
+				var paint = tile.getSceneTilePaint();
+				var model = tile.getSceneTileModel();
+				if (paint != null) {
+					color = paint.getSwColor();
+				} else if (model != null) {
+					int faceCount = tile.getSceneTileModel().getFaceX().length;
+					final int[] faceColorsA = model.getTriangleColorA();
+					final int[] faceColorsB = model.getTriangleColorB();
+					final int[] faceColorsC = model.getTriangleColorC();
+
+					color = 0;
+					outer:
+					for (int face = 0; face < faceCount; face++) {
+						if (isOverlayFace(tile, face))
+							continue;
+
+						int[][] vertices = faceLocalVertices(tile, face);
+						int[] faceColors = new int[] { faceColorsA[face], faceColorsB[face], faceColorsC[face] };
+
+						for (int vertex = 0; vertex < VERTICES_PER_FACE; vertex++) {
+							color = faceColors[vertex];
+//							log.debug(
+//								"x: {}, y: {}, vertex: {}, local: {}",
+//								tile.getSceneLocation().getX(),
+//								tile.getSceneLocation().getY(),
+//								vertex,
+//								vertices[vertex]
+//							);
+							if (vertices[vertex][0] != LOCAL_TILE_SIZE && vertices[vertex][1] != LOCAL_TILE_SIZE)
+								break outer;
+						}
+					}
+				} else {
+					return DEFAULT_DIRT;
+				}
+				LocalPoint localLocation = tile.getLocalLocation();
+				int tileExX = localLocation.getSceneX() + SceneUploader.SCENE_OFFSET;
+				int tileExY = localLocation.getSceneY() + SceneUploader.SCENE_OFFSET;
+				short overlayId = scene.getOverlayIds()[tile.getRenderLevel()][tileExX][tileExY];
+
+
+				int hue = color >> 10 & 0x3F; // jagex hsl extractor
+				int saturation = color >> 7 & 0x7; // jagex hsl extractor
+				int lightness = color & 0x7F; // jagex hsl extractor
+				if (saturation == 0) {
+					switch (plugin.configSeasonalTheme) {
+						case WINTER_THEME:
+							return WINTER_GRUNGE;
+						case AUTUMN_THEME:
+							return UNDERLAY_OVERWORLD_GRUNGE;
+						case DEFAULT_THEME:
+							return UNDERLAY_OVERWORLD_GRUNGE;
+					}
+				}
+				if (hue <= 10 && saturation < 2) {
+					switch (plugin.configSeasonalTheme) {
+						case WINTER_THEME:
+							return WINTER_GRUNGE;
+						case AUTUMN_THEME:
+							return UNDERLAY_OVERWORLD_GRUNGE;
+						case DEFAULT_THEME:
+							return UNDERLAY_OVERWORLD_GRUNGE;
+					}
+				}
+				if ((hue >= 11 && saturation == 1) || (hue == 9 && saturation == 2) ||
+					(hue == 9 && saturation == 3 && lightness >= 49) || (hue >= 9 && saturation >= 4) ||
+					(hue >= 10 && saturation >= 2)) {
+					switch (plugin.configSeasonalTheme) {
+						case WINTER_THEME:
+							return WINTER_GRASS;
+						case AUTUMN_THEME:
+							return AUTUMN_GRASS;
+						case DEFAULT_THEME:
+							return DEFAULT_GRASS;
+					}
+				}
+				if (hue <= 8 && saturation >= 4 && lightness <= 71) {
+					switch (plugin.configSeasonalTheme) {
+						case WINTER_THEME:
+							return WINTER_DIRT;
+						case AUTUMN_THEME:
+							return DEFAULT_DIRT;
+						case DEFAULT_THEME:
+							return DEFAULT_DIRT;
+					}
+				}
+				return DEFAULT_DIRT;
+			}
+		)
+	),
+	COMPLEX_TILES_KARAMJA(p -> p
 		.ids(61, 62, 63, 68)
+		.area(Area.KARAMJA)
 		.replacementResolver(
 			(plugin, scene, tile, override) -> {
 				// Grab the color from the south-western-most vertex, to try to match with tile blending
