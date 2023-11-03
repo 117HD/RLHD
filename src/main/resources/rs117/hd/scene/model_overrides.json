@@ -1233,11 +1233,18 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
-    "retainVanillaUvs": true
+    "retainVanillaUvs": true,
+    "materialOverrides": {
+      "LEAVES_1": {
+        "textureMaterial": "LEAVES_1"
+      },
+      "LEAVES_3": {
+        "textureMaterial": "LEAVES_1"
+      }
+    }
   },
   {
-    "description": "Trees - Double",
-    "textureMaterial": "DOUBLE_TREE_LEAVES",
+    "description": "Tree - Double Tree",
     "baseMaterial": "BARK",
     "objectIds": [
       1276, 1277, 9730, 14308,
@@ -1246,7 +1253,15 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
-    "retainVanillaUvs": true
+    "retainVanillaUvs": true,
+    "materialOverrides": {
+      "LEAVES_1": {
+        "textureMaterial": "DOUBLE_TREE_LEAVES_1"
+      },
+      "LEAVES_3": {
+        "textureMaterial": "DOUBLE_TREE_LEAVES_3"
+      }
+    }
   },
   {
     "description": "Spirit Trees",
@@ -11702,7 +11717,6 @@
   },
   {
     "description": "Oak Tree",
-    "textureMaterial": "OAK_LEAVES_1",
     "baseMaterial": "BARK",
     "objectIds": [
       4533, 4540, 8462, 8463,
@@ -11712,7 +11726,15 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
-    "retainVanillaUvs": true
+    "retainVanillaUvs": true,
+    "materialOverrides": {
+      "LEAVES_1": {
+        "textureMaterial": "OAK_LEAVES_1"
+      },
+      "LEAVES_3": {
+        "textureMaterial": "OAK_LEAVES_3"
+      }
+    }
   },
   {
     "description": "Magic Tree",
