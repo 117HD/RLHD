@@ -1463,7 +1463,6 @@
       3547,
       3548,
       3549,
-      4530,
       4735,
       4736,
       4737,
@@ -1511,7 +1510,6 @@
       3547,
       3548,
       3549,
-      4530,
       4735,
       4736,
       4737,
@@ -1566,6 +1564,16 @@
       17449,
       34494,
       34496
+    ],
+    "flatNormals": true,
+    "castShadows": false,
+    "forceOverride": true
+  },
+  {
+    "description": "Fixes weird pattern made by grass in POH, NOTE: need to add area restrictions for model overrides",
+    "baseMaterial": "GRAY_65",
+    "objectIds": [
+      4530
     ],
     "flatNormals": true,
     "castShadows": false,
