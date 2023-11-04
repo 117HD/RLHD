@@ -138,7 +138,6 @@ public enum Underlay {
 						case WINTER_THEME:
 							return WINTER_GRUNGE;
 						case AUTUMN_THEME:
-							return DEFAULT_GRUNGE;
 						case DEFAULT_THEME:
 							return DEFAULT_GRUNGE;
 					}
@@ -162,7 +161,6 @@ public enum Underlay {
 						case WINTER_THEME:
 							return WINTER_DIRT;
 						case AUTUMN_THEME:
-							return DEFAULT_DIRT;
 						case DEFAULT_THEME:
 							return DEFAULT_DIRT;
 					}
@@ -256,7 +254,6 @@ public enum Underlay {
 						case WINTER_THEME:
 							return WINTER_DIRT;
 						case AUTUMN_THEME:
-							return DEFAULT_DIRT;
 						case DEFAULT_THEME:
 							return DEFAULT_DIRT;
 					}
@@ -571,7 +568,6 @@ public enum Underlay {
 						case WINTER_THEME:
 							return WINTER_DIRT;
 						case AUTUMN_THEME:
-							return OVERWORLD_DIRT;
 						case DEFAULT_THEME:
 							return OVERWORLD_DIRT;
 					}
@@ -643,7 +639,6 @@ public enum Underlay {
 						case WINTER_THEME:
 							return WINTER_GRUNGE;
 						case AUTUMN_THEME:
-							return UNDERLAY_OVERWORLD_GRUNGE;
 						case DEFAULT_THEME:
 							return UNDERLAY_OVERWORLD_GRUNGE;
 					}
@@ -653,7 +648,6 @@ public enum Underlay {
 						case WINTER_THEME:
 							return WINTER_GRUNGE;
 						case AUTUMN_THEME:
-							return UNDERLAY_OVERWORLD_GRUNGE;
 						case DEFAULT_THEME:
 							return UNDERLAY_OVERWORLD_GRUNGE;
 					}
@@ -675,7 +669,6 @@ public enum Underlay {
 						case WINTER_THEME:
 							return WINTER_DIRT;
 						case AUTUMN_THEME:
-							return DEFAULT_DIRT;
 						case DEFAULT_THEME:
 							return DEFAULT_DIRT;
 					}
@@ -741,7 +734,6 @@ public enum Underlay {
 						case WINTER_THEME:
 							return WINTER_GRASS;
 						case AUTUMN_THEME:
-							return AUTUMN_GRASS;
 						case DEFAULT_THEME:
 							return OVERWORLD_GRASS;
 					}
@@ -752,7 +744,6 @@ public enum Underlay {
 						case WINTER_THEME:
 							return WINTER_DIRT;
 						case AUTUMN_THEME:
-							return OVERWORLD_DIRT;
 						case DEFAULT_THEME:
 							return OVERWORLD_DIRT;
 					}
