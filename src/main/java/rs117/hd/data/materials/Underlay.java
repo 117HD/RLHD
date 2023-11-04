@@ -132,7 +132,8 @@ public enum Underlay {
 				int hue = color >> 10 & 0x3F; // jagex hsl extractor
 				int saturation = color >> 7 & 0x7; // jagex hsl extractor
 				int lightness = color & 0x7F; // jagex hsl extractor
-				if (saturation == 0) {
+				// Rocky Shoreline
+				if (saturation == 0 || (hue <= 10 && saturation < 2)) {
 					switch (plugin.configSeasonalTheme) {
 						case WINTER_THEME:
 							return WINTER_GRUNGE;
@@ -142,16 +143,7 @@ public enum Underlay {
 							return DEFAULT_GRUNGE;
 					}
 				}
-				if (hue <= 10 && saturation < 2) {
-					switch (plugin.configSeasonalTheme) {
-						case WINTER_THEME:
-							return WINTER_GRUNGE;
-						case AUTUMN_THEME:
-							return DEFAULT_GRUNGE;
-						case DEFAULT_THEME:
-							return DEFAULT_GRUNGE;
-					}
-				}
+				// Grass
 				if ((hue >= 11 && saturation == 1) || (hue == 9 && saturation == 2) ||
 					(hue == 9 && saturation == 3 && lightness >= 49) || (hue >= 9 && saturation >= 4) ||
 					(hue >= 10 && saturation >= 2)) {
@@ -164,6 +156,7 @@ public enum Underlay {
 							return DEFAULT_GRASS;
 					}
 				}
+				// Dirt
 				if (hue <= 8 && saturation >= 4 && lightness <= 71) {
 					switch (plugin.configSeasonalTheme) {
 						case WINTER_THEME:
@@ -742,7 +735,8 @@ public enum Underlay {
 				int hue = color >> 10 & 0x3F; // jagex hsl extractor
 				int saturation = color >> 7 & 0x7; // jagex hsl extractor
 				int lightness = color & 0x7F; // jagex hsl extractor
-				if (hue >= 9) {
+				// Grass
+				if ((hue >= 9) || (hue == 8 && saturation > 5 && overlayId != 6)) {
 					switch (plugin.configSeasonalTheme) {
 						case WINTER_THEME:
 							return WINTER_GRASS;
@@ -752,16 +746,7 @@ public enum Underlay {
 							return OVERWORLD_GRASS;
 					}
 				}
-				if (hue == 8 && saturation > 5 && overlayId != 6) {
-					switch (plugin.configSeasonalTheme) {
-						case WINTER_THEME:
-							return WINTER_GRASS;
-						case AUTUMN_THEME:
-							return AUTUMN_GRASS;
-						case DEFAULT_THEME:
-							return OVERWORLD_GRASS;
-					}
-				}
+				// Dirt
 				if (hue <= 8 && saturation >= 4 && lightness <= 71) {
 					switch (plugin.configSeasonalTheme) {
 						case WINTER_THEME:
