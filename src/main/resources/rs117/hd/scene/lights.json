@@ -31026,6 +31026,207 @@
     ]
   },
   {
+    "description": "Xamphur during cutscene",
+    "npcIds": [ 10951 ],
+    "radius": 400,
+    "strength": 50,
+    "height": 100,
+    "color": [
+      4,
+      168,
+      118
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 3
+  },
+  {
+    "description": "Xamphur during fight",
+    "npcIds": [ 10954, 10955, 10953, 10956 ],
+    "radius": 700,
+    "strength": 70,
+    "height": 100,
+    "color": [
+      4,
+      168,
+      118
+    ],
+    "type": "PULSE",
+    "duration": 1800,
+    "range": 5
+  },
+  {
+    "description": "Xamphur phantom hands",
+    "npcIds": [ 10957, 10958 ],
+    "radius": 300,
+    "strength": 40,
+    "height": 80,
+    "color": [
+      4,
+      168,
+      118
+    ]
+  },
+  {
+    "description": "Xamphur mark of darkness",
+    "objectIds": [ 41881 ],
+    "radius": 300,
+    "strength": 50,
+    "height": 40,
+    "color": [
+      67,
+      131,
+      192
+    ],
+    "fadeInDuration": 600
+  },
+  {
+    "description": "STRONGHOLD_OF_SECURITY_PORTALS",
+    "height": 30,
+    "alignment": "CENTER",
+    "radius": 500,
+    "strength": 7.5,
+    "color": [
+      255,
+      216,
+      87
+    ],
+    "type": "PULSE",
+    "duration": 1550,
+    "range": 20,
+    "objectIds": [
+      19005,
+      20786,
+      23707,
+      23922
+    ]
+  },
+  {
+    "description": "STRONGHOLD_OF_SECURITY_WAR_LIGHT",
+    "height": 90,
+    "alignment": "RIGHT",
+    "radius": 400,
+    "strength": 7.5,
+    "color": [
+      255,
+      80,
+      87
+    ],
+    "type": "STATIC",
+    "range": 20,
+    "objectIds": [
+      19204,
+      19205
+    ]
+  },
+  {
+    "description": "STRONGHOLD_OF_SECURITY_WAR_OVERDOOR_LIGHT",
+    "height": 90,
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 7.5,
+    "color": [
+      255,
+      80,
+      87
+    ],
+    "type": "STATIC",
+    "range": 20,
+    "objectIds": [
+      19211
+    ]
+  },
+  {
+    "description": "STRONGHOLD_OF_SECURITY_FAMINE_LIGHT",
+    "height": 220,
+    "alignment": "RIGHT",
+    "radius": 400,
+    "strength": 7.5,
+    "color": [
+      255,
+      216,
+      87
+    ],
+    "type": "STATIC",
+    "range": 20,
+    "objectIds": [
+      17004
+    ]
+  },
+  {
+    "description": "STRONGHOLD_OF_SECURITY_PESTILENCE_LIGHT",
+    "height": 64,
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 7.5,
+    "color": [
+      90,
+      233,
+      87
+    ],
+    "type": "STATIC",
+    "range": 20,
+    "objectIds": [
+      23651
+    ]
+  },
+  {
+    "description": "STRONGHOLD_OF_SECURITY_PESTILENCE_DOOR_LIGHT",
+    "height": 107,
+    "alignment": "CENTER",
+    "radius": 175,
+    "strength": 20.5,
+    "color": [
+      255,
+      80,
+      87
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      23653,
+      23654
+    ]
+  },
+  {
+    "description": "STRONGHOLD_OF_SECURITY_DEATH_LIGHT",
+    "height": 225,
+    "alignment": "FRONT",
+    "radius": 550,
+    "strength": 4,
+    "color": [
+      230,
+      82,
+      100
+    ],
+    "type": "FLICKER",
+    "duration": 500,
+    "range": 20,
+    "objectIds": [
+      23716
+    ]
+  },
+  {
+    "description": "STRONGHOLD_OF_SECURITY_REWARD_LIGHTS",
+    "height": 250,
+    "alignment": "CENTER",
+    "radius": 600,
+    "strength": 7.5,
+    "color": [
+      255,
+      243,
+      240
+    ],
+    "type": "PULSE",
+    "duration": 1200,
+    "range": 4,
+    "objectIds": [
+      19000,
+      20656,
+      23709,
+      23731
+    ]
+  },
+  {
     "description": "Weiss Maigc Fire",
     "height": 50,
     "alignment": "CENTER",

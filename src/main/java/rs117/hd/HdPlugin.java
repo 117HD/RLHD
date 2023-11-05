@@ -609,6 +609,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				developerTools.deactivate();
 
 			modelPusher.shutDown();
+			modelOverrideManager.shutDown();
 			lightManager.shutDown();
 			environmentManager.reset();
 
@@ -2405,6 +2406,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 						break;
 					case KEY_WINTER_THEME:
 						environmentManager.reset();
+						modelOverrideManager.reload();
 						// fall-through
 					case KEY_ANISOTROPIC_FILTERING_LEVEL:
 					case KEY_GROUND_TEXTURES:

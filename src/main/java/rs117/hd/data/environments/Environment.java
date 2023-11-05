@@ -104,6 +104,43 @@ public enum Environment
 		.setDirectionalStrength(0.5f)
 		.setLightDirection(260f, 10f)
 	),
+	// Stronghold of Security
+	STRONGHOLD_OF_SECURITY_WAR(Area.STRONGHOLD_OF_WAR, new Properties()
+		.setFogColor("#000000")
+		.setFogDepth(45)
+		.setAmbientStrength(1.5f)
+		.setAmbientColor("#AAAFB6")
+		.setDirectionalStrength(1.0f)
+		.setDirectionalColor("#FFFFFF")
+		.setLightDirection(260f, 10f)
+	),
+	STRONGHOLD_OF_SECURITY_FAMINE(Area.STRONGHOLD_OF_FAMINE, new Properties()
+		.setFogColor("#544222")
+		.setFogDepth(50)
+		.setAmbientStrength(1.3f)
+		.setAmbientColor("#C0AE94")
+		.setDirectionalStrength(1.0f)
+		.setDirectionalColor("#F5BC67")
+		.setLightDirection(260f, 10f)
+	),
+	STRONGHOLD_OF_SECURITY_PESTILENCE(Area.STRONGHOLD_OF_PESTILENCE, new Properties()
+		.setFogColor("#525e20")
+		.setFogDepth(50)
+		.setAmbientStrength(1.5f)
+		.setAmbientColor("#a2c35d")
+		.setDirectionalStrength(1.0f)
+		.setDirectionalColor("#FFFFFF")
+		.setLightDirection(260f, 10f)
+	),
+	STRONGHOLD_OF_SECURITY_DEATH(Area.STRONGHOLD_OF_DEATH, new Properties()
+		.setFogColor("#000000")
+		.setFogDepth(45)
+		.setAmbientStrength(1.5f)
+		.setAmbientColor("#542d22")
+		.setDirectionalStrength(1.0f)
+		.setDirectionalColor("#FFFFFF")
+		.setLightDirection(260f, 10f)
+	),
 	// A Soul's Bane
 	TOLNA_DUNGEON_ANGER(Area.TOLNA_DUNGEON_ANGER, new Properties()
 		.setFogColor("#290000")
@@ -766,6 +803,16 @@ public enum Environment
 		.setDirectionalColor("#FFFFFF")
 		.setDirectionalStrength(0.0f)
 		.setLightDirection(260f, 10f)
+		.setAllowSkyOverride(false)
+	),
+	JUDGE_OF_YAMA_BOSS(Area.JUDGE_OF_YAMA_BOSS, new Properties()
+		.setFogColor("#0e1826")
+		.setFogDepth(50)
+		.setAmbientColor("#8AABD5")
+		.setAmbientStrength(1.0f)
+		.setDirectionalColor("#62A3FF")
+		.setDirectionalStrength(4.0f)
+		.setGroundFog(-150, -350, 0.5f)
 		.setAllowSkyOverride(false)
 	),
 
