@@ -31024,5 +31024,60 @@
     "objectIds": [
       10721
     ]
+  },
+  {
+    "description": "Xamphur during cutscene",
+    "npcIds": [ 10951 ],
+    "radius": 400,
+    "strength": 50,
+    "height": 100,
+    "color": [
+      4,
+      168,
+      118
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 3
+  },
+  {
+    "description": "Xamphur during fight",
+    "npcIds": [ 10954, 10955, 10953, 10956 ],
+    "radius": 700,
+    "strength": 70,
+    "height": 100,
+    "color": [
+      4,
+      168,
+      118
+    ],
+    "type": "PULSE",
+    "duration": 1800,
+    "range": 5
+  },
+  {
+    "description": "Xamphur phantom hands",
+    "npcIds": [ 10957, 10958 ],
+    "radius": 300,
+    "strength": 40,
+    "height": 80,
+    "color": [
+      4,
+      168,
+      118
+    ]
+  },
+  {
+    "description": "Xamphur mark of darkness",
+    "objectIds": [ 41881 ],
+    "radius": 300,
+    "strength": 50,
+    "height": 40,
+    "color": [
+      67,
+      131,
+      192
+    ],
+    "fadeInDuration": 600
   }
 ]

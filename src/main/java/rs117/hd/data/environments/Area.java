@@ -1034,7 +1034,10 @@ public enum Area
 	),
 
 	// Zeah
-	KARUULM_SLAYER_DUNGEON(1112, 10295, 1384, 10124),
+	KARUULM_SLAYER_DUNGEON(
+		regions(5022, 5023, 5279, 5280, 5536),
+		new AABB(1344, 10239, 1354, 10231)
+	),
 	MOUNT_KARUULM(1245,3765,1358,3860),
 	LIZARDMAN_TEMPLE(1280, 10047, 1341, 10109),
 	XERICS_LOOKOUT(1580, 3526, 1596, 3534),
@@ -1101,6 +1104,8 @@ public enum Area
 	THE_STRANGLEWOOD_EXTENDED(1378, 3476, 1080, 3264),
 	THE_STRANGLEWOOD(regions(4403, 4404, 4405, 4659, 4660, 4661, 4916, 4917)),
 	THE_STRANGLEWOOD_QUEST_UNDERGROUND_AREAS(regions(4760, 4761)),
+	JUDGE_OF_YAMA_BOSS(regions(6492, 6748)),
+	XAMPHUR_BOSS(12124),
 	ZEAH(1152, 4078, 1938, 3270),
 
 	// Fossil Island
@@ -1648,7 +1653,8 @@ public enum Area
 		new AABB(2419, 5442, 2511, 5352),
 		new AABB(1939, 5363, 2002, 5300),
 		new AABB(3456, 6207, 3646, 6017),
-		new AABB(3137, 4862, 3199, 4800)
+		new AABB(3137, 4862, 3199, 4800),
+		new AABB(8288)
 	),
 
 	OVERWORLD(
@@ -1664,6 +1670,12 @@ public enum Area
 	Area(AABB... aabbs)
 	{
 		this.aabbs = aabbs;
+	}
+
+	Area(AABB[] aabbs1, AABB... aabbs2) {
+		this.aabbs = new AABB[aabbs1.length + aabbs2.length];
+		System.arraycopy(aabbs1, 0, this.aabbs, 0, aabbs1.length);
+		System.arraycopy(aabbs2, 0, this.aabbs, aabbs1.length, aabbs2.length);
 	}
 
 	Area(Area... areas)

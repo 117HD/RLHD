@@ -11661,5 +11661,17 @@
     "uvType": "BOX",
     "uvScale": 0.68,
     "uvOrientationY": 768
+  },
+  {
+    "description": "Judge of Yama boss entrance portal",
+    "objectIds": [ 42442 ],
+    "castShadows": false,
+    "receiveShadows": false
+  },
+  {
+    "description": "Judge of Yama boss flames",
+    "npcIds": [ 10939 ],
+    "baseMaterial": "UNLIT",
+    "castShadows": false
   }
 ]

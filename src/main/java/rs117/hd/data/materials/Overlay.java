@@ -669,6 +669,7 @@ public enum Overlay {
 		.replaceWithIf(WINTER_JAGGED_STONE_TILE, plugin -> plugin.configWinterTheme)
 		.ids(44)
 	),
+	XAMPHUR_BOSS_TILES(p -> p.ids(115, 133).area(Area.XAMPHUR_BOSS).groundMaterial(GroundMaterial.MARBLE_2_SEMIGLOSS).blended(false)),
 
 	OVERLAY_KOUREND_PATH(Area.ZEAH, GroundMaterial.MARBLE_1, p -> p.ids(133).blended(false)),
 	OVERLAY_ZEAH_PATHS(Area.ZEAH, GroundMaterial.VARROCK_PATHS, p -> p
