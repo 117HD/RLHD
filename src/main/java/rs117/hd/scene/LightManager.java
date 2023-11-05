@@ -345,8 +345,8 @@ public class LightManager {
 
 			// Calculate the distance between the player and the light to determine which
 			// lights to display based on the 'max dynamic lights' config option
-			int distX = sceneContext.cameraFocalPoint[0] - light.x;
-			int distY = sceneContext.cameraFocalPoint[1] - light.y;
+			int distX = plugin.cameraFocalPoint[0] - light.x;
+			int distY = plugin.cameraFocalPoint[1] - light.y;
 			light.distanceSquared = distX * distX + distY * distY + light.z * light.z;
 
 			int tileX = (int) Math.floor(light.x / 128f) + SceneUploader.SCENE_OFFSET;

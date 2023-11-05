@@ -138,6 +138,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public static final int TEXTURE_UNIT_SHADOW_MAP = GL_TEXTURE2;
 	public static final int TEXTURE_UNIT_TILE_HEIGHT_MAP = GL_TEXTURE3;
 
+	public static final int UNIFORM_BLOCK_CAMERA = 0;
+	public static final int UNIFORM_BLOCK_MATERIALS = 1;
+	public static final int UNIFORM_BLOCK_WATER_TYPES = 2;
+	public static final int UNIFORM_BLOCK_LIGHTS = 3;
+
 	public static final int MAX_FACE_COUNT = 6144;
 	public static final int MAX_DISTANCE = Constants.EXTENDED_SCENE_SIZE;
 	public static final int GROUND_MIN_Y = 350; // how far below the ground models extend
@@ -300,6 +305,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private final GLBuffer hUniformBufferMaterials = new GLBuffer();
 	private final GLBuffer hUniformBufferWaterTypes = new GLBuffer();
 	private final GLBuffer hUniformBufferLights = new GLBuffer();
+	private ByteBuffer uniformBufferCamera;
 	private ByteBuffer uniformBufferLights;
 
 	@Getter
@@ -350,10 +356,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private int uniUnderwaterCaustics;
 	private int uniUnderwaterCausticsColor;
 	private int uniUnderwaterCausticsStrength;
+	private int uniCameraPos;
 
 	// Shadow program uniforms
 	private int uniShadowLightProjectionMatrix;
 	private int uniShadowElapsedTime;
+	private int uniShadowCameraPos;
 
 	// Point light uniforms
 	private int uniPointLightsCount;
@@ -368,12 +376,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private int uniTextureArray;
 	private int uniElapsedTime;
 
-	private int uniBlockCamera;
 	private int uniBlockMaterials;
 	private int uniBlockWaterTypes;
 	private int uniBlockPointLights;
-
-	private int[] uniBlockModelSortingCamera;
 
 	// Animation things
 	private long lastFrameTime;
@@ -414,6 +419,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	private final Map<Long, ModelOffsets> frameModelInfoMap = new HashMap<>();
 
+	// Camera position and orientation may be reused from the old scene while hopping, prior to drawScene being called
+	public final float[] cameraPosition = new float[3];
+	public final float[] cameraOrientation = new float[2];
+	public final int[] cameraFocalPoint = new int[2];
+	public final int[] cameraShift = new int[2];
+
+	public int visibleLightCount;
+
 	@Provides
 	HdPluginConfig provideConfig(ConfigManager configManager) {
 		return configManager.getConfig(HdPluginConfig.class);
@@ -435,6 +448,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				numModelsToSort = null;
 				elapsedTime = 0;
 				lastFrameTime = 0;
+				visibleLightCount = 0;
 
 				AWTContext.loadNatives();
 				canvas = client.getCanvas();
@@ -595,6 +609,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				developerTools.deactivate();
 
 			modelPusher.shutDown();
+			modelOverrideManager.shutDown();
 			lightManager.shutDown();
 			environmentManager.reset();
 
@@ -828,6 +843,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		uniUnderwaterCaustics = glGetUniformLocation(glSceneProgram, "underwaterCaustics");
 		uniUnderwaterCausticsColor = glGetUniformLocation(glSceneProgram, "underwaterCausticsColor");
 		uniUnderwaterCausticsStrength = glGetUniformLocation(glSceneProgram, "underwaterCausticsStrength");
+		uniCameraPos = glGetUniformLocation(glSceneProgram, "cameraPos");
 		uniTextureArray = glGetUniformLocation(glSceneProgram, "textureArray");
 		uniElapsedTime = glGetUniformLocation(glSceneProgram, "elapsedTime");
 
@@ -837,15 +853,15 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		uniUiColorBlindnessIntensity = glGetUniformLocation(glUiProgram, "colorBlindnessIntensity");
 		uniUiAlphaOverlay = glGetUniformLocation(glUiProgram, "alphaOverlay");
 
-		uniBlockCamera = glGetUniformBlockIndex(glSceneProgram, "CameraUniforms");
 		uniBlockMaterials = glGetUniformBlockIndex(glSceneProgram, "MaterialUniforms");
 		uniBlockWaterTypes = glGetUniformBlockIndex(glSceneProgram, "WaterTypeUniforms");
 		uniBlockPointLights = glGetUniformBlockIndex(glSceneProgram, "PointLightUniforms");
 
 		if (computeMode == ComputeMode.OPENGL) {
-			uniBlockModelSortingCamera = new int[glModelSortingComputePrograms.length];
-			for (int i = 0; i < glModelSortingComputePrograms.length; i++)
-				uniBlockModelSortingCamera[i] = glGetUniformBlockIndex(glModelSortingComputePrograms[i], "CameraUniforms");
+			for (int sortingProgram : glModelSortingComputePrograms) {
+				int uniBlockCamera = glGetUniformBlockIndex(sortingProgram, "CameraUniforms");
+				glUniformBlockBinding(sortingProgram, uniBlockCamera, UNIFORM_BLOCK_CAMERA);
+			}
 		}
 
 		// Shadow program uniforms
@@ -857,6 +873,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				glUniform1i(uniShadowTextureArray, 1);
 				glUniformBlockBinding(glShadowProgram, uniShadowBlockMaterials, 1);
 				uniShadowElapsedTime = glGetUniformLocation(glShadowProgram, "elapsedTime");
+				uniShadowCameraPos = glGetUniformLocation(glShadowProgram, "cameraPos");
 				// fall-through
 			case FAST:
 				uniShadowLightProjectionMatrix = glGetUniformLocation(glShadowProgram, "lightProjectionMatrix");
@@ -910,13 +927,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			4096,
 			MAX_FACE_COUNT
 		};
-
-		if (config.useOldModelSortingConfiguration()) {
-			targetFaceCounts = new int[] {
-				512,
-				MAX_FACE_COUNT
-			};
-		}
 
 		int numBins = 0;
 		int[] binFaceCounts = new int[targetFaceCounts.length];
@@ -1047,6 +1057,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		initGlBuffer(hUniformBufferWaterTypes, GL_UNIFORM_BUFFER, GL_STATIC_DRAW, CL_MEM_READ_ONLY);
 		initGlBuffer(hUniformBufferLights, GL_UNIFORM_BUFFER, GL_STREAM_DRAW, CL_MEM_READ_ONLY);
 
+		glBindBufferBase(GL_UNIFORM_BUFFER, UNIFORM_BLOCK_CAMERA, hUniformBufferCamera.glBufferId);
+		glBindBufferBase(GL_UNIFORM_BUFFER, UNIFORM_BLOCK_MATERIALS, hUniformBufferMaterials.glBufferId);
+		glBindBufferBase(GL_UNIFORM_BUFFER, UNIFORM_BLOCK_WATER_TYPES, hUniformBufferWaterTypes.glBufferId);
+		glBindBufferBase(GL_UNIFORM_BUFFER, UNIFORM_BLOCK_LIGHTS, hUniformBufferLights.glBufferId);
+
 		initGlBuffer(hStagingBufferVertices, GL_ARRAY_BUFFER, GL_STREAM_DRAW, CL_MEM_READ_ONLY);
 		initGlBuffer(hStagingBufferUvs, GL_ARRAY_BUFFER, GL_STREAM_DRAW, CL_MEM_READ_ONLY);
 		initGlBuffer(hStagingBufferNormals, GL_ARRAY_BUFFER, GL_STREAM_DRAW, CL_MEM_READ_ONLY);
@@ -1081,6 +1096,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		destroyGlBuffer(hRenderBufferNormals);
 
 		destroyGlBuffer(hModelPassthroughBuffer);
+
+		uniformBufferCamera = null;
+		uniformBufferLights = null;
 	}
 
 	private void destroyGlBuffer(GLBuffer glBuffer) {
@@ -1139,6 +1157,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		updateBuffer(hUniformBufferCamera, GL_UNIFORM_BUFFER, uniformBuf, GL_DYNAMIC_DRAW, CL_MEM_READ_ONLY);
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+		uniformBufferCamera = BufferUtils.createByteBuffer(8 * SCALAR_BYTES);
 	}
 
 	public void updateMaterialUniformBuffer(ByteBuffer buffer) {
@@ -1323,7 +1343,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	@Override
-	public void drawScene(int cameraX, int cameraY, int cameraZ, int cameraPitch, int cameraYaw, int plane) {
+	public void drawScene(double cameraX, double cameraY, double cameraZ, double cameraPitch, double cameraYaw, int plane) {
 		if (sceneContext == null)
 			return;
 
@@ -1352,16 +1372,16 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			numPassthroughModels += staticUnordered.limit() / 8;
 		}
 
-		sceneContext.cameraPosition[0] = cameraX;
-		sceneContext.cameraPosition[1] = cameraY;
-		sceneContext.cameraPosition[2] = cameraZ;
-		sceneContext.cameraOrientation[0] = cameraYaw;
-		sceneContext.cameraOrientation[1] = cameraPitch;
+		cameraPosition[0] = (float) cameraX;
+		cameraPosition[1] = (float) cameraY;
+		cameraPosition[2] = (float) cameraZ;
+		cameraOrientation[0] = (float) cameraYaw;
+		cameraOrientation[1] = (float) cameraPitch;
 
 		if (sceneContext.scene == scene) {
-			sceneContext.cameraFocalPoint[0] = client.getOculusOrbFocalPointX();
-			sceneContext.cameraFocalPoint[1] = client.getOculusOrbFocalPointY();
-			Arrays.fill(sceneContext.cameraShift, 0);
+			cameraFocalPoint[0] = client.getOculusOrbFocalPointX();
+			cameraFocalPoint[1] = client.getOculusOrbFocalPointY();
+			Arrays.fill(cameraShift, 0);
 
 			try {
 				environmentManager.update(sceneContext);
@@ -1372,45 +1392,35 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				return;
 			}
 		} else {
-			sceneContext.cameraShift[0] = sceneContext.cameraFocalPoint[0] - client.getOculusOrbFocalPointX();
-			sceneContext.cameraShift[1] = sceneContext.cameraFocalPoint[1] - client.getOculusOrbFocalPointY();
-			sceneContext.cameraPosition[0] += sceneContext.cameraShift[0];
-			sceneContext.cameraPosition[2] += sceneContext.cameraShift[1];
+			cameraShift[0] = cameraFocalPoint[0] - client.getOculusOrbFocalPointX();
+			cameraShift[1] = cameraFocalPoint[1] - client.getOculusOrbFocalPointY();
+			cameraPosition[0] += cameraShift[0];
+			cameraPosition[2] += cameraShift[1];
 		}
 
-		// UBO. Only the first 32 bytes get modified here, the rest is the constant sin/cos table.
-		// We can reuse the vertex buffer since it isn't used yet.
-		sceneContext.stagingBufferVertices.clear();
-		sceneContext.stagingBufferVertices.ensureCapacity(32);
-		IntBuffer uniformBuf = sceneContext.stagingBufferVertices.getBuffer();
-		uniformBuf
-			.put(sceneContext.cameraOrientation)
-			.put(client.getCenterX())
-			.put(client.getCenterY())
-			.put(client.getScale())
-			.put(sceneContext.cameraPosition)
+		uniformBufferCamera
+			.clear()
+			.putFloat(cameraOrientation[0])
+			.putFloat(cameraOrientation[1])
+			.putInt(client.getCenterX())
+			.putInt(client.getCenterY())
+			.putInt(client.getScale())
+			.putFloat(cameraPosition[0])
+			.putFloat(cameraPosition[1])
+			.putFloat(cameraPosition[2])
 			.flip();
-
 		glBindBuffer(GL_UNIFORM_BUFFER, hUniformBufferCamera.glBufferId);
-		glBufferSubData(GL_UNIFORM_BUFFER, 0, sceneContext.stagingBufferVertices.getBuffer());
-		glBindBuffer(GL_UNIFORM_BUFFER, 0);
-
-		glBindBufferBase(GL_UNIFORM_BUFFER, 0, hUniformBufferCamera.glBufferId);
-		sceneContext.stagingBufferVertices.clear();
-
-		// Bind materials UBO
-		glBindBufferBase(GL_UNIFORM_BUFFER, 1, hUniformBufferMaterials.glBufferId);
-		glBindBufferBase(GL_UNIFORM_BUFFER, 2, hUniformBufferWaterTypes.glBufferId);
+		glBufferSubData(GL_UNIFORM_BUFFER, 0, uniformBufferCamera);
 
 		if (sceneContext.scene == scene) {
 			// Update lights UBO
 			uniformBufferLights.clear();
 			ArrayList<SceneLight> visibleLights = lightManager.getVisibleLights(configMaxDynamicLights);
-			sceneContext.visibleLightCount = visibleLights.size();
+			visibleLightCount = visibleLights.size();
 			for (SceneLight light : visibleLights) {
-				uniformBufferLights.putFloat(light.x + sceneContext.cameraShift[0]);
+				uniformBufferLights.putFloat(light.x + cameraShift[0]);
 				uniformBufferLights.putFloat(light.z);
-				uniformBufferLights.putFloat(light.y + sceneContext.cameraShift[1]);
+				uniformBufferLights.putFloat(light.y + cameraShift[1]);
 				uniformBufferLights.putFloat(light.currentSize * light.currentSize);
 				uniformBufferLights.putFloat(light.currentColor[0] * light.currentStrength);
 				uniformBufferLights.putFloat(light.currentColor[1] * light.currentStrength);
@@ -1423,9 +1433,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				glBufferSubData(GL_UNIFORM_BUFFER, 0, uniformBufferLights);
 				glBindBuffer(GL_UNIFORM_BUFFER, 0);
 			}
-			uniformBufferLights.clear();
-
-			glBindBufferBase(GL_UNIFORM_BUFFER, 3, hUniformBufferLights.glBufferId);
 		}
 	}
 
@@ -1528,10 +1535,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			// Compute is split into a passthrough shader for unsorted models,
 			// and multiple sizes of sorting shaders to better utilize the GPU
 
-			// Bind camera UBO to compute programs
-			for (int i = 0; i < glModelSortingComputePrograms.length; i++)
-				glUniformBlockBinding(glModelSortingComputePrograms[i], uniBlockModelSortingCamera[i], 0);
-
 			// Bind shared buffers
 			glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, hStagingBufferVertices.glBufferId);
 			glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, hStagingBufferUvs.glBufferId);
@@ -1549,9 +1552,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				if (numModelsToSort[i] == 0)
 					continue;
 
-				// Bind camera UBO to compute programs
-				glUniformBlockBinding(glModelSortingComputePrograms[i], uniBlockModelSortingCamera[i], 0);
-
 				glUseProgram(glModelSortingComputePrograms[i]);
 				glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, hModelSortingBuffers[i].glBufferId);
 				glDispatchCompute(numModelsToSort[i], 1, 1);
@@ -1566,10 +1566,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			numPassthroughModels = 0;
 			Arrays.fill(numModelsToSort, 0);
 		}
-
-		// Once geometry buffers have been updated, they can be reused until the client actually modifies the scene
-		if (config.furtherUnlockFps())
-			redrawPreviousFrame = true;
 	}
 
 	@Override
@@ -1816,8 +1812,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 				glUseProgram(glShadowProgram);
 
-				final int camX = sceneContext.cameraFocalPoint[0];
-				final int camY = sceneContext.cameraFocalPoint[1];
+				final int camX = cameraFocalPoint[0];
+				final int camY = cameraFocalPoint[1];
 
 				final int drawDistanceSceneUnits = Math.min(config.shadowDistance().getValue(), getDrawDistance()) * LOCAL_TILE_SIZE / 2;
 				final int east = Math.min(camX + drawDistanceSceneUnits, LOCAL_TILE_SIZE * SCENE_SIZE);
@@ -1840,8 +1836,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				glUniformMatrix4fv(uniShadowLightProjectionMatrix, false, lightProjectionMatrix);
 
 				// bind uniforms
-				if (configShadowMode == ShadowMode.DETAILED)
+				if (configShadowMode == ShadowMode.DETAILED) {
 					glUniform1f(uniShadowElapsedTime, elapsedTime);
+					glUniform3fv(uniShadowCameraPos, cameraPosition);
+				}
 
 				glEnable(GL_CULL_FACE);
 				glEnable(GL_DEPTH_TEST);
@@ -1974,7 +1972,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			glUniform1f(uniGroundFogOpacity, config.groundFog() ? environmentManager.currentGroundFogOpacity : 0);
 
 			// Lights & lightning
-			glUniform1i(uniPointLightsCount, sceneContext == null ? 0 : sceneContext.visibleLightCount);
+			glUniform1i(uniPointLightsCount, visibleLightCount);
 			glUniform1f(uniLightningBrightness, environmentManager.getLightningBrightness());
 
 			glUniform1f(uniSaturation, config.saturation() / 100f);
@@ -1983,6 +1981,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			glUniform1i(uniUnderwaterCaustics, config.underwaterCaustics() ? 1 : 0);
 			glUniform3fv(uniUnderwaterCausticsColor, environmentManager.currentUnderwaterCausticsColor);
 			glUniform1f(uniUnderwaterCausticsStrength, environmentManager.currentUnderwaterCausticsStrength);
+			glUniform1f(uniElapsedTime, elapsedTime);
+			glUniform3fv(uniCameraPos, cameraPosition);
 
 			// Extract the 3rd column from the light view matrix (the float array is column-major)
 			// This produces the light's forward direction vector in world space
@@ -1998,12 +1998,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			// Calculate projection matrix
 			float[] projectionMatrix = Mat4.scale(client.getScale(), client.getScale(), 1);
 			Mat4.mul(projectionMatrix, Mat4.projection(viewportWidth, viewportHeight, NEAR_PLANE));
-			Mat4.mul(projectionMatrix, Mat4.rotateX((float) (sceneContext.cameraOrientation[1] * UNIT - Math.PI)));
-			Mat4.mul(projectionMatrix, Mat4.rotateY((float) (sceneContext.cameraOrientation[0] * UNIT)));
+			Mat4.mul(projectionMatrix, Mat4.rotateX(cameraOrientation[1] - (float) Math.PI));
+			Mat4.mul(projectionMatrix, Mat4.rotateY(cameraOrientation[0]));
 			Mat4.mul(projectionMatrix, Mat4.translate(
-				-sceneContext.cameraPosition[0],
-				-sceneContext.cameraPosition[1],
-				-sceneContext.cameraPosition[2]
+				-cameraPosition[0],
+				-cameraPosition[1],
+				-cameraPosition[2]
 			));
 			glUniformMatrix4fv(uniProjectionMatrix, false, projectionMatrix);
 
@@ -2011,11 +2011,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			glUniformMatrix4fv(uniLightProjectionMatrix, false, lightProjectionMatrix);
 
 			// Bind uniforms
-			glUniformBlockBinding(glSceneProgram, uniBlockCamera, 0);
-			glUniformBlockBinding(glSceneProgram, uniBlockMaterials, 1);
-			glUniformBlockBinding(glSceneProgram, uniBlockWaterTypes, 2);
-			glUniformBlockBinding(glSceneProgram, uniBlockPointLights, 3);
-			glUniform1f(uniElapsedTime, elapsedTime);
+			glUniformBlockBinding(glSceneProgram, uniBlockMaterials, UNIFORM_BLOCK_MATERIALS);
+			glUniformBlockBinding(glSceneProgram, uniBlockWaterTypes, UNIFORM_BLOCK_WATER_TYPES);
+			glUniformBlockBinding(glSceneProgram, uniBlockPointLights, UNIFORM_BLOCK_LIGHTS);
 
 			// We just allow the GL to do face culling. Note this requires the priority renderer
 			// to have logic to disregard culled faces in the priority depth testing.
@@ -2292,7 +2290,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			sceneContext.destroy();
 		}
 
-		assert nextSceneContext != null;
+		if (nextSceneContext == null)
+			return;
 		sceneContext = nextSceneContext;
 		nextSceneContext = null;
 
@@ -2407,6 +2406,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 						break;
 					case KEY_WINTER_THEME:
 						environmentManager.reset();
+						modelOverrideManager.reload();
 						// fall-through
 					case KEY_ANISOTROPIC_FILTERING_LEVEL:
 					case KEY_GROUND_TEXTURES:
@@ -2438,12 +2438,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					case KEY_MODEL_CACHING:
 						modelPusher.shutDown();
 						modelPusher.startUp();
-						break;
-					case KEY_MODEL_SORTING_CONFIGURATION:
-						waitUntilIdle();
-						destroyModelSortingBins();
-						initModelSortingBins(maxComputeThreadCount);
-						recompilePrograms();
 						break;
 					case KEY_LOW_MEMORY_MODE:
 						shutDown();
@@ -2522,9 +2516,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				y += ProceduralGenerator.DEPTH_LEVEL_SLOPE[depthLevel - 1] - GROUND_MIN_Y;
 		}
 
-		x -= sceneContext.cameraPosition[0];
-		y -= sceneContext.cameraPosition[1];
-		z -= sceneContext.cameraPosition[2];
+		x -= cameraPosition[0];
+		y -= cameraPosition[1];
+		z -= cameraPosition[2];
 
 		int radius = 96; // ~ 64 * sqrt(2)
 
@@ -2677,9 +2671,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		eightIntWrite[3] = renderBufferOffset;
 		eightIntWrite[4] = model.getRadius() << 12 | orientation;
-		eightIntWrite[5] = x + sceneContext.cameraPosition[0];
-		eightIntWrite[6] = y + sceneContext.cameraPosition[1];
-		eightIntWrite[7] = z + sceneContext.cameraPosition[2];
+		eightIntWrite[5] = x + client.getCameraX2();
+		eightIntWrite[6] = y + client.getCameraY2();
+		eightIntWrite[7] = z + client.getCameraZ2();
 
 		int faceCount;
 		if (sceneContext.id == offsetModel.getSceneId()) {

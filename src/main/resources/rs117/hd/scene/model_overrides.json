@@ -1373,9 +1373,6 @@
   {
     "description": "GRASS",
     "objectIds": [
-      3547,
-      3548,
-      3549,
       4333,
       4334,
       4335,
@@ -1396,9 +1393,6 @@
       5212,
       5213,
       5335,
-      5336,
-      5337,
-      5338,
       5339,
       5340,
       5341,
@@ -1407,15 +1401,6 @@
       5534,
       5535,
       5536,
-      6817,
-      6818,
-      6819,
-      6835,
-      6836,
-      6837,
-      6838,
-      7049,
-      7050,
       9485,
       9486,
       9487,
@@ -1426,9 +1411,6 @@
       9502,
       9503,
       9504,
-      9505,
-      9506,
-      9507,
       13861,
       13862,
       13863,
@@ -1461,10 +1443,6 @@
       31778,
       31779,
       31780,
-      34490,
-      34491,
-      34492,
-      34493,
       19839,
       4812,
       4813,
@@ -1475,23 +1453,120 @@
     "forceOverride": true
   },
   {
-    "description": "Short grass that shouldn't cast shadows",
+    "description": "Short grass which shouldn't cast shadows",
+    "baseMaterial": "GRAY_75",
     "objectIds": [
       1257,
       1258,
       1259,
+      3547,
+      3548,
+      3549,
       4530,
       4735,
       4736,
       4737,
       4738,
+      5336,
+      5337,
+      5338,
+      6817,
+      6818,
+      6819,
+      6835,
+      6836,
+      6837,
+      6838,
+      7049,
+      7050,
+      9505,
+      9506,
+      9507,
       14775,
       14776,
       14777,
-      14778
+      14778,
+      30862,
+      30863,
+      30864,
+      34490,
+      34491,
+      34492,
+      34493
     ],
     "flatNormals": true,
     "inheritTileColorType": "UNDERLAY",
+    "castShadows": false,
+    "forceOverride": true
+  },
+  {
+    "description": "Short grass which shouldn't cast shadows for the winter theme, prevents grass from being too bright",
+    "baseMaterial": "GRAY_50",
+    "seasonalTheme": "WINTER",
+    "objectIds": [
+      1257,
+      1258,
+      1259,
+      3547,
+      3548,
+      3549,
+      4530,
+      4735,
+      4736,
+      4737,
+      4738,
+      5336,
+      5337,
+      5338,
+      6817,
+      6818,
+      6819,
+      6835,
+      6836,
+      6837,
+      6838,
+      7049,
+      7050,
+      9505,
+      9506,
+      9507,
+      14775,
+      14776,
+      14777,
+      14778,
+      30862,
+      30863,
+      30864,
+      34490,
+      34491,
+      34492,
+      34493,
+      7518,
+      17446,
+      17447,
+      17448,
+      17449,
+      34494,
+      34496
+    ],
+    "flatNormals": true,
+    "inheritTileColorType": "UNDERLAY",
+    "castShadows": false,
+    "forceOverride": true
+  },
+  {
+    "description": "Short grass which shouldn't cast shadows and shouldn't inherit tile color",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [
+      7518,
+      17446,
+      17447,
+      17448,
+      17449,
+      34494,
+      34496
+    ],
+    "flatNormals": true,
     "castShadows": false,
     "forceOverride": true
   },
@@ -2032,10 +2107,7 @@
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
       7386,
-      7387,
-      10729,
-      10730,
-      10731
+      7387
     ],
     "flatNormals": true
   },
@@ -2575,11 +2647,9 @@
       340,
       341,
       342,
-      3171,
       3172,
       3173,
       3174,
-      3204,
       3613,
       3614,
       3615,
@@ -2691,12 +2761,16 @@
     "description": "GROUND_DECORATION_SAND",
     "baseMaterial": "SAND_1",
     "objectIds": [
+      3169,
+      3170,
+      3171,
       14914,
       15634,
       15635
     ],
-    "uvType": "WORLD_XZ",
-    "uvScale": 0.4
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 128
   },
   {
     "description": "GROUND_DECORATION_SNOW",
@@ -3127,9 +3201,6 @@
       3102,
       3103,
       3192,
-      10748,
-      10767,
-      10770,
       3111,
       3112,
       3113,
@@ -3291,7 +3362,8 @@
       3123,
       3124,
       9513,
-      9541
+      9541,
+      42349
     ],
     "uvType": "BOX"
   },
@@ -3573,7 +3645,8 @@
       24560,
       24561,
       25796,
-      29110
+      29110,
+      44917
     ],
     "flatNormals": true,
     "uvType": "BOX",
@@ -4321,15 +4394,8 @@
     "objectIds": [
       1602,
       1603,
-      1604,
-      1605,
       1606,
       1608,
-      10743,
-      10744,
-      10749,
-      10750,
-      10769,
       17349
     ],
     "flatNormals": true
@@ -5072,10 +5138,12 @@
     "description": "Sandstone Rocks",
     "baseMaterial": "STONE",
     "objectIds": [
+      3204,
       11386
     ],
-    "uvType": "WORLD_XZ",
-    "uvScale": 0.4
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 256
   },
   {
     "description": "Granite Rocks",
@@ -5649,7 +5717,6 @@
     "objectIds": [
       320,
       2382,
-      3170,
       3709,
       3949,
       7106,
@@ -5679,7 +5746,6 @@
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
       319,
-      3169,
       3705,
       3706,
       3707,
@@ -6030,7 +6096,8 @@
       25775,
       25776,
       25836,
-      25837
+      25837,
+      44854
     ],
     "uvType": "BOX",
     "flatNormals": true
@@ -7363,7 +7430,8 @@
       10491,
       12885,
       17146,
-      24335
+      24335,
+      29716
     ],
     "uvType": "BOX",
     "uvOrientation": 512,
@@ -7379,6 +7447,15 @@
       27268
     ],
     "uvType": "BOX"
+  },
+  {
+    "description": "Objects - Wooden - Chair 3 - Mage Training Arena",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      10724
+    ],
+    "uvType": "BOX",
+    "flatNormals": true
   },
   {
     "description": "Objects - Wooden - Tables - Round",
@@ -9949,7 +10026,7 @@
   },
   {
     "description": "Object - Desert Treasure Pyramid - Altar - Large",
-    "baseMaterial": "GRAY_25",
+    "baseMaterial": "GRAY_75",
     "objectIds": [
       6552
     ],
@@ -9958,7 +10035,7 @@
   },
   {
     "description": "Object - Desert Treasure Pyramid - Lectern - Medium",
-    "baseMaterial": "GRAY_25",
+    "baseMaterial": "GRAY_75",
     "objectIds": [
       40357
     ],
@@ -10093,7 +10170,9 @@
     "objectIds": [
       23974,
       23975
-    ]
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
   },
   {
     "description": "Stone Wedge Stairs",
@@ -11310,6 +11389,285 @@
     "description": "Crafting Guild Blacksmith's tools",
     "objectIds": [ 2098 ],
     "flatNormals": true
+  },
+  {
+    "description": "Mage Training Arena - Walls",
+    "baseMaterial": "MARBLE_2",
+    "objectIds": [
+      10734,
+      10743,
+      10744,
+      10760,
+      10761,
+      10762,
+      10763,
+      10767,
+      10768,
+      10769,
+      10770
+    ],
+    "uvType": "BOX",
+    "flatNormals": true
+  },
+  {
+    "description": "Mage Training Arena - Walls - Doorway of Light",
+    "objectIds": [
+      10721
+    ],
+    "uvType": "BOX",
+    "flatNormals": true
+  },
+  {
+    "description": "Mage Training Arena - Walls - Dark",
+    "baseMaterial": "MARBLE_2",
+    "objectIds": [
+      10735,
+      10764,
+      10765,
+      10766
+    ],
+    "uvType": "BOX",
+    "flatNormals": true
+  },
+  {
+    "description": "Mage Training Arena - Roofs",
+    "baseMaterial": "MARBLE_3",
+    "objectIds": [
+      10745,
+      10746,
+      10747
+    ],
+    "uvType": "BOX",
+    "flatNormals": true
+  },
+  {
+    "description": "Mage Training Arena - Fence",
+    "baseMaterial": "MARBLE_1",
+    "objectIds": [
+      10748,
+      10749,
+      10750
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 128,
+    "flatNormals": true
+  },
+  {
+    "description": "Mage Training Arena - Metal Fence",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      10740,
+      10741,
+      10742,
+      10773,
+      10776
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Mage Training Arena - Telekinetic Fence",
+    "baseMaterial": "MARBLE_1",
+    "objectIds": [
+      10755
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 128
+  },
+  {
+    "description": "Mage Training Arena - Entrance Statues",
+    "baseMaterial": "MARBLE_3",
+    "objectIds": [
+      10736,
+      10737
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Mage Training Arena - Stairs with metal rails",
+    "baseMaterial": "MARBLE_1",
+    "objectIds": [
+      10771,
+      10775
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Falador - Mage Training Arena - Marble - Steps",
+    "baseMaterial": "MARBLE_3",
+    "objectIds": [
+      10729,
+      10730,
+      10731
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 640,
+    "flatNormals": true
+  },
+  {
+    "description": "Falador - Mage Training Arena - Marble - Steps - Corner",
+    "baseMaterial": "MARBLE_3",
+    "objectIds": [
+      10732
+    ],
+    "uvType": "BOX",
+    "uvOrientationZ": 640,
+    "uvOrientationX": 640,
+    "flatNormals": true
+  },
+  {
+    "description": "Objects - Bush - Dead",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      1123
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 600
+  },
+  {
+    "description": "Mage Training Arena - Marble - Portal Pillars",
+    "baseMaterial": "MARBLE_3_SEMIGLOSS",
+    "objectIds": [
+      44856
+    ],
+    "uvType": "BOX",
+    "flatNormals": true
+  },
+  {
+    "description": "Mage Training Arena - Marble - Area Portals",
+    "baseMaterial": "MARBLE_3_SEMIGLOSS",
+    "objectIds": [
+      23673,
+      23674,
+      23675,
+      23676,
+      23677
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Mage Training Arena - Ground Decoration - Carpets",
+    "objectIds": [
+      10756,
+      10757,
+      10758,
+      10759
+    ],
+    "baseMaterial": "FINE_CARPET",
+    "uvType": "WORLD_XZ",
+    "flatNormals": true,
+    "castShadows": false,
+    "forceOverride": true
+  },
+  {
+    "description": "Mage Training Arena - Marble - Area Portals",
+    "baseMaterial": "MARBLE_1_SEMIGLOSS",
+    "objectIds": [
+      10738
+    ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false
+  },
+  {
+    "description": "Mage Training Arena - Marble - Area Portals",
+    "baseMaterial": "MARBLE_2_SEMIGLOSS",
+    "objectIds": [
+      10739
+    ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false
+  },
+  {
+    "description": "Mage Training Arena - Marble - Area Portals",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      10725,
+      10726,
+      10727,
+      10728
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Objects - Hay - Roof",
+    "textureMaterial": "HD_HAY",
+    "objectIds": [
+      1604,
+      1605,
+      1641,
+      1926,
+      3690,
+      3691,
+      4242,
+      4243,
+      4244,
+      4245
+    ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false
+  },
+  {
+    "description": "Objects - Hay - Mat",
+    "textureMaterial": "HD_HAY",
+    "objectIds": [
+      920
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "retainVanillaUvs": false
+  },
+  {
+    "description": "Objects - Hay - Haystack",
+    "textureMaterial": "HD_HAY",
+    "objectIds": [
+      300
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.47,
+    "uvOrientation": 512,
+    "retainVanillaUvs": false
+  },
+  {
+    "description": "Objects - Hay - Hay Bale",
+    "textureMaterial": "HD_HAY",
+    "objectIds": [
+      298,
+      299
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientationY": 512,
+    "uvOrientationZ": 512,
+    "retainVanillaUvs": false
+  },
+  {
+    "description": "Edgeville - Walls - Bank Front Windows",
+    "objectIds": [
+      1853,
+      1854
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "Karamja Volcano Entrance",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [ 11441 ],
+    "uvType": "BOX",
+    "uvScale": 0.68,
+    "uvOrientationY": 768
+  },
+  {
+    "description": "Judge of Yama boss entrance portal",
+    "objectIds": [ 42442 ],
+    "castShadows": false,
+    "receiveShadows": false
+  },
+  {
+    "description": "Judge of Yama boss flames",
+    "npcIds": [ 10939 ],
+    "baseMaterial": "UNLIT",
+    "castShadows": false
   },
   {
     "description": "Stronghold Of Security Rock Entrance",

@@ -67,7 +67,7 @@ void sortModel(
   int4 v3[FACES_PER_THREAD];
 
   for (int i = 0; i < FACES_PER_THREAD; i++) {
-    get_face(shared, uni, vb, localId + i, minfo, uni->cameraYaw, uni->cameraPitch, &prio[i], &dis[i], &v1[i], &v2[i], &v3[i]);
+    get_face(shared, uni, vb, localId + i, minfo, &prio[i], &dis[i], &v1[i], &v2[i], &v3[i]);
   }
 
   barrier(CLK_LOCAL_MEM_FENCE);

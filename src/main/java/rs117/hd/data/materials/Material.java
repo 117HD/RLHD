@@ -642,6 +642,12 @@ public enum Material {
 		.setSpecular(0.3f, 20)
 		.setBrightness(0.75f)
 	),
+	HD_HAY_N,
+	HD_HAY(p -> p
+		.replaceIf(HdPluginConfig::modelTextures, HAY)
+		.setSpecular(0.3f, 20)
+		.setNormalMap(HD_HAY_N)
+	),
 	OOZE(GRAY_65, p -> p
 		.setSpecular(1.5f, 600)
 	),

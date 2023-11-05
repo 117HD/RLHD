@@ -36,7 +36,18 @@ shared int totalMappedNum[18]; // number of faces with a given adjusted priority
 shared int min10; // minimum distance to a face of priority 10
 shared uint renderPris[THREAD_COUNT * FACES_PER_THREAD]; // packed distance and face id
 
-#include uniforms/camera.glsl
+layout(std140) uniform CameraUniforms {
+    float cameraYaw;
+    float cameraPitch;
+    int centerX;
+    int centerY;
+    int zoom;
+    float cameraX;
+    float cameraY;
+    float cameraZ;
+    ivec2 sinCosTable[2048];
+};
+
 #include comp_common.glsl
 
 layout(local_size_x = THREAD_COUNT) in;
@@ -68,7 +79,7 @@ void main() {
     ivec4 vC[FACES_PER_THREAD];
 
     for (int i = 0; i < FACES_PER_THREAD; i++)
-        get_face(localId + i, minfo, cameraYaw, cameraPitch, prio[i], dis[i], vA[i], vB[i], vC[i]);
+        get_face(localId + i, minfo, prio[i], dis[i], vA[i], vB[i], vC[i]);
 
     memoryBarrierShared();
     barrier();

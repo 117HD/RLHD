@@ -19837,7 +19837,6 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      10720,
       10178,
       25122,
       10179,
@@ -30893,6 +30892,193 @@
     "objectIds": [
       11601
     ]
+  },
+  {
+    "description": "MAGE_TRAIN_ARENA_WALL_CRYSTALS",
+    "height": 210,
+    "alignment": "FRONT",
+    "radius": 300,
+    "strength": 5.5,
+    "color": [
+      252,
+      252,
+      252
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "objectIds": [
+      10760,
+      10766
+    ]
+  },
+  {
+    "description": "MAGE_TRAIN_ARENA_CANDLEBRA",
+    "height": 210,
+    "alignment": "CENTER",
+    "radius": 500,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      10720
+    ]
+  },
+  {
+    "description": "MAGE_TRAIN_ARENA_AREA_PORTALS",
+    "height": 140,
+    "alignment": "CENTER",
+    "radius": 220,
+    "strength": 11,
+    "color": [
+      143,
+      0,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 1100,
+    "range": 20,
+    "objectIds": [
+      23673,
+      23674,
+      23675,
+      23676,
+      23677
+    ]
+  },
+  {
+    "description": "MAGE_TRAIN_ARENA_AREA_PORTAL_STATIC",
+    "height": 140,
+    "alignment": "CENTER",
+    "radius": 220,
+    "strength": 11,
+    "color": [
+      143,
+      0,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 1100,
+    "range": 20,
+    "objectIds": [
+      10733
+    ]
+  },
+  {
+    "description": "MAGE_TRAIN_ARENA_EGG_STATUE",
+    "height": 100,
+    "alignment": "CENTER",
+    "radius": 220,
+    "strength": 11,
+    "color": [
+      43,
+      0,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 600,
+    "range": 20,
+    "objectIds": [
+      10738
+    ]
+  },
+  {
+    "description": "MAGE_TRAIN_ARENA_EGG_STATUE",
+    "height": 200,
+    "alignment": "CENTER",
+    "radius": 220,
+    "strength": 11,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 1254,
+    "range": 15,
+    "graphicsObjectIds": [
+      520,
+      521,
+      522,
+      523
+    ]
+  },
+  {
+    "description": "MAGE_TRAIN_ARENA_DOORWAY",
+    "height": 20,
+    "alignment": "CENTER",
+    "radius": 220,
+    "strength": 44,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      10721
+    ]
+  },
+  {
+    "description": "Xamphur during cutscene",
+    "npcIds": [ 10951 ],
+    "radius": 400,
+    "strength": 50,
+    "height": 100,
+    "color": [
+      4,
+      168,
+      118
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 3
+  },
+  {
+    "description": "Xamphur during fight",
+    "npcIds": [ 10954, 10955, 10953, 10956 ],
+    "radius": 700,
+    "strength": 70,
+    "height": 100,
+    "color": [
+      4,
+      168,
+      118
+    ],
+    "type": "PULSE",
+    "duration": 1800,
+    "range": 5
+  },
+  {
+    "description": "Xamphur phantom hands",
+    "npcIds": [ 10957, 10958 ],
+    "radius": 300,
+    "strength": 40,
+    "height": 80,
+    "color": [
+      4,
+      168,
+      118
+    ]
+  },
+  {
+    "description": "Xamphur mark of darkness",
+    "objectIds": [ 41881 ],
+    "radius": 300,
+    "strength": 50,
+    "height": 40,
+    "color": [
+      67,
+      131,
+      192
+    ],
+    "fadeInDuration": 600
   },
   {
     "description": "STRONGHOLD_OF_SECURITY_PORTALS",

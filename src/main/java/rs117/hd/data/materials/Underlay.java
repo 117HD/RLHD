@@ -31,8 +31,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import javax.annotation.Nullable;
+import lombok.NonNull;
 import net.runelite.api.*;
 import net.runelite.api.coords.*;
 import rs117.hd.HdPlugin;
@@ -113,6 +113,13 @@ public enum Underlay {
 	GAMES_ROOM_INNER_FLOOR(64, Area.GAMES_ROOM_INNER, GroundMaterial.CARPET, p -> p.blended(false)),
 	GAMES_ROOM_FLOOR(64, Area.GAMES_ROOM, GroundMaterial.WOOD_PLANKS_1, p -> p.blended(false)),
 
+	// Karamja
+	KARAMJA_VOCALNO_ROCK(p -> p
+		.ids(55, 63, 72)
+		.area(Area.KARAMJA_VOLCANO)
+		.groundMaterial(GroundMaterial.EARTHEN_CAVE_FLOOR)
+	),
+
 	// Crandor
 	CRANDOR_SAND(-110, Area.CRANDOR, GroundMaterial.SAND, p -> p.saturation(3).hue(6)),
 
@@ -184,6 +191,8 @@ public enum Underlay {
 		.replaceWithIf(WINTER_GRUNGE, plugin -> plugin.configWinterTheme)
 	),
 	STRANGLEWOOD_SNOW_DARK(p -> p.area(Area.THE_STRANGLEWOOD_EXTENDED).ids(174).groundMaterial(GroundMaterial.SNOW_1)),
+	JUDGE_OF_YAMA_BOSS_WATER(p -> p.ids(72, 76).area(Area.JUDGE_OF_YAMA_BOSS).waterType(WaterType.WATER)),
+	JUDGE_OF_YAMA_BOSS_BLACK_TILES(p -> p.ids(150).area(Area.JUDGE_OF_YAMA_BOSS).groundMaterial(GroundMaterial.TRANSPARENT)),
 
 	// Zanaris
 	ZANARIS_GRASS(Area.ZANARIS, GroundMaterial.GRASS_1, p -> p.ids(143, 144)),
@@ -334,8 +343,7 @@ public enum Underlay {
 	public final int shiftSaturation;
 	public final int lightness;
 	public final int shiftLightness;
-	public final Underlay replacementUnderlay;
-	public final Function<HdPlugin, Boolean> replacementCondition;
+	public final TileOverrideResolver<Underlay> replacementResolver;
 
 	Underlay(int id, Area area, GroundMaterial material) {
 		this(p -> p.ids(id).groundMaterial(material).area(area));
@@ -368,8 +376,7 @@ public enum Underlay {
 		this.shiftSaturation = builder.shiftSaturation;
 		this.lightness = builder.lightness;
 		this.shiftLightness = builder.shiftLightness;
-		this.replacementUnderlay = builder.replacement;
-		this.replacementCondition = builder.replacementCondition;
+		this.replacementResolver = builder.replacementResolver;
 	}
 
 	private static final Underlay[] ANY_MATCH;
@@ -393,6 +400,7 @@ public enum Underlay {
 			FILTERED_MAP.put(entry.getKey(), entry.getValue().toArray(new Underlay[0]));
 	}
 
+	@NonNull
 	public static Underlay getUnderlay(Scene scene, Tile tile, HdPlugin plugin) {
 		LocalPoint localLocation = tile.getLocalLocation();
 		int[] worldPoint = HDUtils.localToWorld(scene, localLocation.getX(), localLocation.getY(), tile.getRenderLevel());
@@ -420,7 +428,10 @@ public enum Underlay {
 			}
 		}
 
-		return match.replacementCondition.apply(plugin) ? match.replacementUnderlay : match;
+		if (match.replacementResolver != null)
+			return match.replacementResolver.resolve(plugin, scene, tile, match);
+
+		return match;
 	}
 
 	public int[] modifyColor(int[] colorHSL) {

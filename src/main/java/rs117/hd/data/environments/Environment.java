@@ -805,6 +805,16 @@ public enum Environment
 		.setLightDirection(260f, 10f)
 		.setAllowSkyOverride(false)
 	),
+	JUDGE_OF_YAMA_BOSS(Area.JUDGE_OF_YAMA_BOSS, new Properties()
+		.setFogColor("#0e1826")
+		.setFogDepth(50)
+		.setAmbientColor("#8AABD5")
+		.setAmbientStrength(1.0f)
+		.setDirectionalColor("#62A3FF")
+		.setDirectionalStrength(4.0f)
+		.setGroundFog(-150, -350, 0.5f)
+		.setAllowSkyOverride(false)
+	),
 
 	// Zanaris
 	COSMIC_ENTITYS_PLANE(Area.COSMIC_ENTITYS_PLANE, new Properties()
