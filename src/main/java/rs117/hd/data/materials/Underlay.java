@@ -659,10 +659,13 @@ public enum Underlay {
 							return UNDERLAY_OVERWORLD_GRUNGE;
 					}
 				}
+				if ((hue == 8 && saturation == 4 && lightness >= 71) || (hue == 8 && saturation == 3 && lightness >= 48)) {
+					return DEFAULT_SAND;
+				}
 				if ((hue >= 11 && saturation == 1) || (hue == 9 && saturation == 2) ||
 					(hue == 9 && saturation == 3 && lightness >= 49) || (hue >= 9 && saturation >= 4) ||
-					(hue == 9 && saturation == 3 && lightness <= 28) ||
-					(hue >= 10 && saturation >= 2) || (hue == 8 && saturation >= 5 && lightness >= 15)) {
+					(hue == 9 && saturation == 3 && lightness <= 28) || (hue >= 10 && saturation >= 2) ||
+					(hue == 8 && saturation == 5 && lightness >= 15) || (hue == 8 && saturation >= 6 && lightness >= 10)) {
 					switch (plugin.configSeasonalTheme) {
 						case WINTER_THEME:
 							return WINTER_GRASS;
@@ -672,12 +675,9 @@ public enum Underlay {
 							return DEFAULT_GRASS;
 					}
 				}
-				// Should be sand; but needs tile averaging to work
-				if ((hue == 8 && saturation == 4 && lightness >= 71) || (hue == 8 && saturation == 3 && lightness >= 48)) {
-					return DEFAULT_SAND;
-				}
 				if ((hue == 8 && saturation <= 4 && lightness <= 71) || (hue <= 7 && saturation <= 5 && lightness <= 57) ||
-					(hue <= 7 && saturation <= 7 && lightness <= 28) || (hue == 8 && saturation == 4 && lightness <= 15)) {
+					(hue <= 7 && saturation <= 7 && lightness <= 28) || (hue == 8 && saturation == 4 && lightness <= 15) ||
+					(hue == 8 && saturation == 5 && lightness <= 15)) {
 					switch (plugin.configSeasonalTheme) {
 						case WINTER_THEME:
 							return WINTER_DIRT;
