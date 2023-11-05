@@ -107,7 +107,7 @@ public enum Environment
 	// Stronghold of Security
 	STRONGHOLD_OF_SECURITY_WAR(Area.STRONGHOLD_OF_WAR, new Properties()
 		.setFogColor("#000000")
-		.setFogDepth(50)
+		.setFogDepth(45)
 		.setAmbientStrength(1.5f)
 		.setAmbientColor("#AAAFB6")
 		.setDirectionalStrength(1.0f)
@@ -134,7 +134,7 @@ public enum Environment
 	),
 	STRONGHOLD_OF_SECURITY_DEATH(Area.STRONGHOLD_OF_DEATH, new Properties()
 		.setFogColor("#000000")
-		.setFogDepth(50)
+		.setFogDepth(45)
 		.setAmbientStrength(1.5f)
 		.setAmbientColor("#542d22")
 		.setDirectionalStrength(1.0f)

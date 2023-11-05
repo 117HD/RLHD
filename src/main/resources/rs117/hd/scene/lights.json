@@ -31192,11 +31192,11 @@
     "height": 225,
     "alignment": "FRONT",
     "radius": 550,
-    "strength": 10.5,
+    "strength": 4,
     "color": [
       230,
       82,
-      3
+      100
     ],
     "type": "FLICKER",
     "duration": 500,
@@ -31209,7 +31209,7 @@
     "description": "STRONGHOLD_OF_SECURITY_REWARD_LIGHTS",
     "height": 250,
     "alignment": "CENTER",
-    "radius": 500,
+    "radius": 600,
     "strength": 7.5,
     "color": [
       255,
@@ -31217,8 +31217,8 @@
       240
     ],
     "type": "PULSE",
-    "duration": 1220,
-    "range": 20,
+    "duration": 1200,
+    "range": 4,
     "objectIds": [
       19000,
       20656,
