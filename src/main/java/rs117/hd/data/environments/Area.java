@@ -962,7 +962,7 @@ public enum Area
 		new AABB(2714, 3803, 2757, 3767),
 		new AABB(2723, 3743, 2758, 3710)
 	),
-	// TrollHeim - Weiss Region
+	// Trollheim - Weiss Region
 	TROLLHEIM(
 		regions(
 			11577,
