@@ -704,14 +704,17 @@ public enum Material {
 		.replaceIf(HdPluginConfig::winterTheme, ROOF_WOODEN_SLATE)
 		.setSpecular(0.5f, 30)),
 	WINTER_JAGGED_STONE_TILE(p -> p
+		.setDisplacementMap(JAGGED_STONE_TILE_D)
 		.setNormalMap(JAGGED_STONE_TILE_N)
 		.setSpecular(0.6f, 30)
 		.setBrightness(1.4f)),
 	WINTER_JAGGED_STONE_TILE_LIGHT(WINTER_JAGGED_STONE_TILE, p -> p
+		.setDisplacementMap(JAGGED_STONE_TILE_D)
 		.setNormalMap(JAGGED_STONE_TILE_N)
 		.setSpecular(0.6f, 30)
 		.setBrightness(4)),
 	WINTER_JAGGED_STONE_TILE_LIGHTER(WINTER_JAGGED_STONE_TILE, p -> p
+		.setDisplacementMap(JAGGED_STONE_TILE_D)
 		.setNormalMap(JAGGED_STONE_TILE_N)
 		.setSpecular(0.6f, 30)
 		.setBrightness(12)),
