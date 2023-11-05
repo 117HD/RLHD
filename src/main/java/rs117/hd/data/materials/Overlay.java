@@ -66,7 +66,7 @@ public enum Overlay {
 	WINTER_CANIFIS_BAR_FLOOR_BLENDED(85, Area.CANIFIS_BAR_FLOOR_BLENDED, GroundMaterial.HD_WOOD_PLANKS_1, p -> p
 		.replaceWithIf(WINTER_DIRT, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER_THEME)
 	),
-	AUTUMN_GRASS(p -> p.ids().groundMaterial(GroundMaterial.OVERWORLD_GRASS_1).hue(10).shiftLightness(-1)),
+	AUTUMN_GRASS(p -> p.ids().groundMaterial(GroundMaterial.OVERWORLD_GRASS_1).hue(10).shiftLightness(-10)),
 	DEFAULT_GRASS(p -> p.ids().groundMaterial(GroundMaterial.OVERWORLD_GRASS_1)),
 
 	// Tutorial Island
