@@ -506,11 +506,6 @@ public enum Underlay {
 	OVERWORLD_DIRT(Area.OVERWORLD, GroundMaterial.DIRT, p -> p
 		.ids(-111, -110, 19, 56, 57, 66, 80, 111, 118, 122, 139, 150)
 		.replaceWithIf(WINTER_DIRT, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER_THEME)),
-	OVERWORLD_DIRT_GRASS(Area.OVERWORLD, GroundMaterial.GRASSY_DIRT, p -> p
-		.ids(64, 65, 94, 96)
-		.replaceWithIf(WINTER_GRASS, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER_THEME)
-		.replaceWithIf(AUTUMN_DIRT_GRASS, plugin -> plugin.configSeasonalTheme == SeasonalTheme.AUTUMN_THEME)
-	),
 	OVERWORLD_SAND(Area.OVERWORLD, GroundMaterial.SAND, p -> p.ids(-127, -118)),
 	UNDERLAY_PACKED_EARTH(GroundMaterial.PACKED_EARTH, p -> p.ids(15)),
 
@@ -597,7 +592,7 @@ public enum Underlay {
 		.replaceWithIf(WINTER_GRUNGE, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER_THEME)
 	),
 	COMPLEX_TILES(p -> p
-		.ids(55, 61, 62, 63, 68)
+		.ids(55, 61, 62, 63, 64, 65, 68, 94, 96)
 		.replacementResolver(
 			(plugin, scene, tile, override) -> {
 				// Grab the color from the south-western-most vertex, to try to match with tile blending
@@ -605,7 +600,7 @@ public enum Underlay {
 				var paint = tile.getSceneTilePaint();
 				var model = tile.getSceneTileModel();
 				if (paint != null) {
-					color = paint.getSwColor();
+					color = ((paint.getSwColor() + paint.getSeColor() + paint.getNwColor() + paint.getNeColor()) / 4);
 				} else if (model != null) {
 					int faceCount = tile.getSceneTileModel().getFaceX().length;
 					final int[] faceColorsA = model.getTriangleColorA();
@@ -666,7 +661,8 @@ public enum Underlay {
 				}
 				if ((hue >= 11 && saturation == 1) || (hue == 9 && saturation == 2) ||
 					(hue == 9 && saturation == 3 && lightness >= 49) || (hue >= 9 && saturation >= 4) ||
-					(hue >= 10 && saturation >= 2)) {
+					(hue == 9 && saturation == 3 && lightness <= 28) ||
+					(hue >= 10 && saturation >= 2) || (hue == 8 && saturation >= 5 && lightness >= 15)) {
 					switch (plugin.configSeasonalTheme) {
 						case WINTER_THEME:
 							return WINTER_GRASS;
@@ -676,7 +672,12 @@ public enum Underlay {
 							return DEFAULT_GRASS;
 					}
 				}
-				if (hue <= 8 && saturation >= 4 && lightness <= 71) {
+				// Should be sand; but needs tile averaging to work
+				if ((hue == 8 && saturation == 4 && lightness >= 71) || (hue == 8 && saturation == 3 && lightness >= 48)) {
+					return DEFAULT_SAND;
+				}
+				if ((hue == 8 && saturation <= 4 && lightness <= 71) || (hue <= 7 && saturation <= 5 && lightness <= 57) ||
+					(hue <= 7 && saturation <= 7 && lightness <= 28) || (hue == 8 && saturation == 4 && lightness <= 15)) {
 					switch (plugin.configSeasonalTheme) {
 						case WINTER_THEME:
 							return WINTER_DIRT;
