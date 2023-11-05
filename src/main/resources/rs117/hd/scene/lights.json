@@ -31225,5 +31225,39 @@
       23709,
       23731
     ]
+  },
+  {
+    "description": "Weiss Magic Fire",
+    "height": 50,
+    "alignment": "CENTER",
+    "radius": 650,
+    "strength": 16.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [ 33333 ]
+  },
+  {
+    "description": "Weiss Saltmine Entrance",
+    "worldX": 2843,
+    "worldY": 10352,
+    "plane": 0,
+    "height": 1200,
+    "alignment": "CENTER",
+    "radius": 2400,
+    "strength": 4.5,
+    "color": [
+      252,
+      252,
+      252
+    ],
+    "type": "STATIC",
+    "duration": 7000,
+    "range": 10
   }
 ]
