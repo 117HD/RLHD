@@ -203,6 +203,16 @@ public enum Area
 	),
 	// Barbarian Village
 	BARBARIAN_VILLAGE_EAST_PATH_FIX(3111,3420,3112,3421),
+	STRONGHOLD_OF_WAR(7505),
+	STRONGHOLD_OF_FAMINE(8017),
+	STRONGHOLD_OF_PESTILENCE(8530),
+	STRONGHOLD_OF_DEATH(9297),
+	STRONGHOLD_OF_SECURITY(
+			STRONGHOLD_OF_WAR,
+			STRONGHOLD_OF_FAMINE,
+			STRONGHOLD_OF_PESTILENCE,
+			STRONGHOLD_OF_DEATH
+	),
 
 	// A Soul's Bane
 	TOLNA_DUNGEON_ANGER(
@@ -979,6 +989,24 @@ public enum Area
 		new AABB(2714, 3803, 2757, 3767),
 		new AABB(2723, 3743, 2758, 3710)
 	),
+	// Trollheim - Weiss Region
+	TROLLHEIM(
+		regions(
+			11577,
+			11321,
+			11320,
+			11576,
+			11319,
+			11063
+		),
+		new AABB(2751, 3753, 2726, 3662), // Mountains near Keldagrim Entrance
+		new AABB(2780, 3647, 2815, 3584)  // Mountains near Golden Apple Tree
+	),
+	WEISS_REGION(regions(11325, 11581)),
+	WEISS_UNDERGROUND(10842),
+	WEISS_FIRE_PIT(2877, 3934, 2875, 3932),
+	INTERIOR_WEISS_THRONE_TENT(2877, 3941, 2868, 3931),
+
 
 	// Fremennik Province
 	MOUNTAIN_CAMP_LAKE(
@@ -1081,7 +1109,10 @@ public enum Area
 	),
 
 	// Zeah
-	KARUULM_SLAYER_DUNGEON(1112, 10295, 1384, 10124),
+	KARUULM_SLAYER_DUNGEON(
+		regions(5022, 5023, 5279, 5280, 5536),
+		new AABB(1344, 10239, 1354, 10231)
+	),
 	MOUNT_KARUULM(1245,3765,1358,3860),
 	LIZARDMAN_TEMPLE(1280, 10047, 1341, 10109),
 	XERICS_LOOKOUT(1580, 3526, 1596, 3534),
@@ -1163,6 +1194,8 @@ public enum Area
 	THE_STRANGLEWOOD_EXTENDED(1378, 3476, 1080, 3264),
 	THE_STRANGLEWOOD(regions(4403, 4404, 4405, 4659, 4660, 4661, 4916, 4917)),
 	THE_STRANGLEWOOD_QUEST_UNDERGROUND_AREAS(regions(4760, 4761)),
+	JUDGE_OF_YAMA_BOSS(regions(6492, 6748)),
+	XAMPHUR_BOSS(12124),
 	ZEAH(1085, 4078, 1938, 2870),
 
 	// Fossil Island
@@ -1873,7 +1906,8 @@ public enum Area
 		new AABB(2419, 5442, 2511, 5352),
 		new AABB(1939, 5363, 2002, 5300),
 		new AABB(3456, 6207, 3646, 6017),
-		new AABB(3137, 4862, 3199, 4800)
+		new AABB(3137, 4862, 3199, 4800),
+		new AABB(8288)
 	),
 
 	OVERWORLD(
@@ -1911,26 +1945,28 @@ public enum Area
 
 	public final AABB[] aabbs;
 
-	Area(AABB... aabbs)
-	{
+	Area(AABB... aabbs) {
 		this.aabbs = aabbs;
 	}
 
-	Area(Area... areas)
-	{
+	Area(AABB[] aabbs1, AABB... aabbs2) {
+		this.aabbs = new AABB[aabbs1.length + aabbs2.length];
+		System.arraycopy(aabbs1, 0, this.aabbs, 0, aabbs1.length);
+		System.arraycopy(aabbs2, 0, this.aabbs, aabbs1.length, aabbs2.length);
+	}
+
+	Area(Area... areas)	{
 		this.aabbs = Arrays.stream(areas)
 			.flatMap(a -> Arrays.stream(a.aabbs))
 			.toArray(AABB[]::new);
 	}
 
-	Area(int pointAX, int pointAY, int pointBX, int pointBY)
-	{
-		aabbs = new AABB[]{new AABB(pointAX, pointAY, pointBX, pointBY)};
+	Area(int pointAX, int pointAY, int pointBX, int pointBY) {
+		aabbs = new AABB[] { new AABB(pointAX, pointAY, pointBX, pointBY) };
 	}
 
-	Area(int pointAX, int pointAY, int pointBX, int pointBY, int plane)
-	{
-		aabbs = new AABB[]{new AABB(pointAX, pointAY, pointBX, pointBY, plane)};
+	Area(int pointAX, int pointAY, int pointBX, int pointBY, int plane) {
+		aabbs = new AABB[] { new AABB(pointAX, pointAY, pointBX, pointBY, plane) };
 	}
 
 	Area(int regionId) {

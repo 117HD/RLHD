@@ -195,13 +195,23 @@ public enum Underlay {
 		)
 	),
 
-	// Varrock
-	VARROCK_JULIETS_HOUSE_UPSTAIRS(8, Area.VARROCK_JULIETS_HOUSE, GroundMaterial.NONE, p -> p.blended(false)),
-	// A Soul's Bane
-	TOLNA_DUNGEON_ANGER_FLOOR(Area.TOLNA_DUNGEON_ANGER, GroundMaterial.DIRT, p -> p.ids(58, 58)),
+    // Varrock
+    VARROCK_JULIETS_HOUSE_UPSTAIRS(8, Area.VARROCK_JULIETS_HOUSE, GroundMaterial.NONE, p -> p.blended(false)),
+    STRONGHOLD_OF_SECURITY_OOZE(Area.STRONGHOLD_OF_PESTILENCE, GroundMaterial.OOZE_FLOOR, p -> p.ids(48, 49, 61, 93)),
+    STRONGHOLD_OF_SECURITY_GRASS(Area.STRONGHOLD_OF_SECURITY, GroundMaterial.GRASS_1, p -> p.ids(48, 49, 58, 59, 124)),
+	STRONGHOLD_OF_SECURITY_WAR_GRAVEL(Area.STRONGHOLD_OF_SECURITY, GroundMaterial.GRAVEL, p -> p.ids(148)),
+	STRONGHOLD_OF_SECURITY_FAMINE_DIRT(Area.STRONGHOLD_OF_FAMINE, GroundMaterial.EARTHEN_CAVE_FLOOR, p -> p.ids(72, 118, 126)),
+	STRONGHOLD_OF_SECURITY_WAR_DIRT(Area.STRONGHOLD_OF_WAR, GroundMaterial.GRAVEL, p -> p.ids(72, 118, 126)),
+    // A Soul's Bane
+    TOLNA_DUNGEON_ANGER_FLOOR(Area.TOLNA_DUNGEON_ANGER, GroundMaterial.DIRT, p -> p.ids(58, 58)),
 
 	// Burthorpe
 	WARRIORS_GUILD_FLOOR_1(Area.WARRIORS_GUILD, GroundMaterial.VARROCK_PATHS, p -> p.ids(55, 56)),
+
+	// Trollweiss Region
+	TROLLHEIM_DIRT(p -> p.ids(63, 67).area(Area.TROLLHEIM).groundMaterial(GroundMaterial.DIRT)),
+	WEISS_UNDERGROUND_DIRT(94, Area.WEISS_UNDERGROUND, GroundMaterial.EARTHEN_CAVE_FLOOR),
+	WEISS_SALTMINE_GROUND(GroundMaterial.EARTHEN_CAVE_FLOOR, p -> p.ids(157, 158).area(Area.WEISS_SALT_MINE)),
 
 	// Catherby
 	CATHERBY_BEACH_SAND(p -> p
@@ -366,6 +376,8 @@ public enum Underlay {
 		.replaceWithIf(WINTER_GRUNGE, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER_THEME)
 	),
 	STRANGLEWOOD_SNOW_DARK(p -> p.area(Area.THE_STRANGLEWOOD_EXTENDED).ids(174).groundMaterial(GroundMaterial.SNOW_1)),
+	JUDGE_OF_YAMA_BOSS_WATER(p -> p.ids(72, 76).area(Area.JUDGE_OF_YAMA_BOSS).waterType(WaterType.WATER)),
+	JUDGE_OF_YAMA_BOSS_BLACK_TILES(p -> p.ids(150).area(Area.JUDGE_OF_YAMA_BOSS).groundMaterial(GroundMaterial.TRANSPARENT)),
 
 	// Zanaris
 	ZANARIS_GRASS(Area.ZANARIS, GroundMaterial.GRASS_1, p -> p.ids(143, 144)),

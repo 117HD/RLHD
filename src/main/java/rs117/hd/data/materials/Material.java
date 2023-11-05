@@ -294,11 +294,15 @@ public enum Material {
 	BLANK_SEMIGLOSS(WHITE, p -> p
 		.setSpecular(0.35f, 80)),
 
-	SNOW_1,
-	SNOW_2,
+	SNOW_1_N,
+	SNOW_1(p -> p.setNormalMap(SNOW_1_N).setSpecular(0.4f, 20)),
+	SNOW_2_N,
+	SNOW_2(p -> p.setNormalMap(SNOW_2_N).setSpecular(0.4f, 20)),
 	SNOW_2_DARK(SNOW_2, p -> p.setBrightness(0.5f)),
-	SNOW_3,
-	SNOW_4,
+	SNOW_3_N,
+	SNOW_3(p -> p.setNormalMap(SNOW_3_N).setSpecular(0.4f, 20)),
+	SNOW_4_N,
+	SNOW_4(p -> p.setNormalMap(SNOW_4_N).setSpecular(0.4f, 20)),
 
 	GRASS_1,
 	GRASS_2,
@@ -309,10 +313,12 @@ public enum Material {
 	DIRT_1(p -> p
 		.setNormalMap(DIRT_1_N)
 		.setSpecular(0.5f, 35)),
+	DIRT_1_VERT(DIRT_1, p -> p.setNormalMap(null)),
 	DIRT_2_N,
 	DIRT_2(p -> p
 		.setNormalMap(DIRT_2_N)
 		.setSpecular(0.4f, 30)),
+	DIRT_2_VERT(DIRT_2, p -> p.setNormalMap(null)),
 	GRAVEL_N,
 	GRAVEL(p -> p
 		.setNormalMap(GRAVEL_N)
@@ -324,6 +330,10 @@ public enum Material {
 		.setSpecular(1.1f, 380)),
 	GRAVEL_SHINY(GRAVEL, p -> p
 		.setSpecular(1.1f, 380)),
+	GRAVEL_SHINY_LIGHT(GRAVEL, p -> p
+		.setSpecular(1.1f, 380)
+		.setBrightness(1.55f)
+	),
 	SAND_1_N,
 	SAND_1(p -> p
 		.setNormalMap(SAND_1_N)
@@ -340,7 +350,16 @@ public enum Material {
 		.setSpecular(0.2f, 10)
 	),
 	GRUNGE_1,
+	GRUNGE_1_SHINY(GRUNGE_1, p -> p
+		.setSpecular(0.7f, 300)
+	),
 	GRUNGE_2,
+	GRUNGE_2_SHINY(GRUNGE_2, p -> p
+		.setSpecular(0.7f, 300)
+	),
+	GRUNGE_2_EADGARS_CAVE_FIX(GRUNGE_2, p -> p.setBrightness(0.65f)),
+	GRUNGE_2_TROLLHEIM_WALL_FIX_1(GRUNGE_2, p -> p.setBrightness(1.8f)),
+	GRUNGE_2_TROLLHEIM_WALL_FIX_2(GRUNGE_2, p -> p.setBrightness(1.2f)),
 	SUBMERGED_GRUNGE_2(GRUNGE_2, p -> p
 		.setFlowMap(UNDERWATER_FLOW_MAP)
 		.setFlowMapStrength(0.075f)
@@ -405,8 +424,10 @@ public enum Material {
 		.setNormalMap(FALADOR_PATH_BRICK_N)
 		.setSpecular(0.3f, 30)
 	),
+	JAGGED_STONE_TILE_D,
 	JAGGED_STONE_TILE_N,
 	JAGGED_STONE_TILE(p -> p
+		.setDisplacementMap(JAGGED_STONE_TILE_D)
 		.setNormalMap(JAGGED_STONE_TILE_N)
 		.setSpecular(0.5f, 30)
 	),
@@ -644,6 +665,9 @@ public enum Material {
 		.setSpecular(0.3f, 20)
 		.setNormalMap(HD_HAY_N)
 	),
+	OOZE(GRAY_65, p -> p
+		.setSpecular(1.5f, 600)
+	),
 	EVERGREEN_LEAVES_1(p -> p.setTextureScale(1.125f, 1.125f)),
 	EVERGREEN_LEAVES_3(p -> p.setTextureScale(1.125f, 1.125f)),
 	OAK_LEAVES_1(p -> p.setParent(EVERGREEN_LEAVES_1).setTextureScale(1.025f, 1.025f)),
@@ -709,14 +733,17 @@ public enum Material {
 		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER_THEME, ROOF_WOODEN_SLATE)
 		.setSpecular(0.5f, 30)),
 	WINTER_JAGGED_STONE_TILE(p -> p
+		.setDisplacementMap(JAGGED_STONE_TILE_D)
 		.setNormalMap(JAGGED_STONE_TILE_N)
 		.setSpecular(0.6f, 30)
 		.setBrightness(1.4f)),
 	WINTER_JAGGED_STONE_TILE_LIGHT(WINTER_JAGGED_STONE_TILE, p -> p
+		.setDisplacementMap(JAGGED_STONE_TILE_D)
 		.setNormalMap(JAGGED_STONE_TILE_N)
 		.setSpecular(0.6f, 30)
 		.setBrightness(4)),
 	WINTER_JAGGED_STONE_TILE_LIGHTER(WINTER_JAGGED_STONE_TILE, p -> p
+		.setDisplacementMap(JAGGED_STONE_TILE_D)
 		.setNormalMap(JAGGED_STONE_TILE_N)
 		.setSpecular(0.6f, 30)
 		.setBrightness(12)),
