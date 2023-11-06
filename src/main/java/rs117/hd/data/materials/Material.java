@@ -234,41 +234,56 @@ public enum Material {
 
 	FOG_STATIC(98, p -> p
 		.setHasTransparency(true)),
-	FOG_VERY_SLOW(99, p -> p
+	FOG_VERY_SLOW(FOG_STATIC, p -> p
+		.setVanillaTextureIndex(99)
 		.setHasTransparency(true)),
-	FOG_SLOW(100, p -> p
+	FOG_SLOW(FOG_STATIC, p -> p
+		.setVanillaTextureIndex(100)
 		.setHasTransparency(true)),
-	FOG_MEDIUM(101, p -> p
+	FOG_MEDIUM(FOG_STATIC, p -> p
+		.setVanillaTextureIndex(101)
 		.setHasTransparency(true)),
-	FOG_FAST(102, p -> p
+	FOG_FAST(FOG_STATIC, p -> p
+		.setVanillaTextureIndex(102)
 		.setHasTransparency(true)),
-	FOG_VERY_FAST(103, p -> p
+	FOG_VERY_FAST(FOG_STATIC, p -> p
+		.setVanillaTextureIndex(103)
 		.setHasTransparency(true)),
 
 	FOG_LIGHT_STATIC(104, p -> p
 		.setHasTransparency(true)),
-	FOG_LIGHT_VERY_SLOW(105, p -> p
+	FOG_LIGHT_VERY_SLOW(FOG_LIGHT_STATIC, p -> p
+		.setVanillaTextureIndex(105)
 		.setHasTransparency(true)),
-	FOG_LIGHT_SLOW(106, p -> p
+	FOG_LIGHT_SLOW(FOG_LIGHT_STATIC, p -> p
+		.setVanillaTextureIndex(106)
 		.setHasTransparency(true)),
-	FOG_LIGHT_MEDIUM(107, p -> p
+	FOG_LIGHT_MEDIUM(FOG_LIGHT_STATIC, p -> p
+		.setVanillaTextureIndex(107)
 		.setHasTransparency(true)),
-	FOG_LIGHT_FAST(108, p -> p
+	FOG_LIGHT_FAST(FOG_LIGHT_STATIC, p -> p
+		.setVanillaTextureIndex(108)
 		.setHasTransparency(true)),
-	FOG_LIGHT_VERY_FAST(109, p -> p
+	FOG_LIGHT_VERY_FAST(FOG_LIGHT_STATIC, p -> p
+		.setVanillaTextureIndex(109)
 		.setHasTransparency(true)),
 
 	FOG_HEAVY_STATIC(110, p -> p
 		.setHasTransparency(true)),
-	FOG_HEAVY_VERY_SLOW(111, p -> p
+	FOG_HEAVY_VERY_SLOW(FOG_HEAVY_STATIC, p -> p
+		.setVanillaTextureIndex(111)
 		.setHasTransparency(true)),
-	FOG_HEAVY_SLOW(112, p -> p
+	FOG_HEAVY_SLOW(FOG_HEAVY_STATIC, p -> p
+		.setVanillaTextureIndex(112)
 		.setHasTransparency(true)),
-	FOG_HEAVY_MEDIUM(113, p -> p
+	FOG_HEAVY_MEDIUM(FOG_HEAVY_STATIC, p -> p
+		.setVanillaTextureIndex(113)
 		.setHasTransparency(true)),
-	FOG_HEAVY_FAST(114, p -> p
+	FOG_HEAVY_FAST(FOG_HEAVY_STATIC, p -> p
+		.setVanillaTextureIndex(114)
 		.setHasTransparency(true)),
-	FOG_HEAVY_VERY_FAST(115, p -> p
+	FOG_HEAVY_VERY_FAST(FOG_HEAVY_STATIC, p -> p
+		.setVanillaTextureIndex(115)
 		.setHasTransparency(true)),
 
 	SKULLS(116),

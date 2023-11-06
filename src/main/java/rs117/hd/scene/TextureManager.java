@@ -294,15 +294,6 @@ public class TextureManager {
 					vanillaImage.setRGB(j % 128, j / 128, alpha << 24 | rgb & 0xFFFFFF);
 				}
 
-				// Convert vanilla texture animations to the same format as Material scroll parameters
-				int direction = texture.getAnimationDirection();
-				if (direction != 0) {
-					float speed = texture.getAnimationSpeed() * 50 / 128.f;
-					float radians = direction * -HALF_PI;
-					vanillaTextureAnimations[vanillaIndex * 2] = (float) Math.cos(radians) * speed;
-					vanillaTextureAnimations[vanillaIndex * 2 + 1] = (float) Math.sin(radians) * speed;
-				}
-
 				image = vanillaImage;
 				vanillaTextureCount++;
 			} else {
@@ -313,6 +304,21 @@ public class TextureManager {
 				uploadTexture(textureLayer, image);
 			} catch (Exception ex) {
 				log.error("Failed to load texture {}:", textureLayer.material, ex);
+			}
+		}
+
+		// Convert vanilla texture animations to the same format as Material scroll parameters
+		for (int i = 0; i < vanillaTextures.length; i++) {
+			var texture = vanillaTextures[i];
+			if (texture == null)
+				continue;
+
+			int direction = texture.getAnimationDirection();
+			if (direction != 0) {
+				float speed = texture.getAnimationSpeed() * 50 / 128.f;
+				float radians = direction * -HALF_PI;
+				vanillaTextureAnimations[i * 2] = (float) Math.cos(radians) * speed;
+				vanillaTextureAnimations[i * 2 + 1] = (float) Math.sin(radians) * speed;
 			}
 		}
 
