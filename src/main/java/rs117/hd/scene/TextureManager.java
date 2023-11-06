@@ -32,6 +32,9 @@ import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -66,16 +69,19 @@ public class TextureManager {
 	);
 
 	@Inject
-	private HdPlugin plugin;
-
-	@Inject
-	private HdPluginConfig config;
-
-	@Inject
 	private Client client;
 
 	@Inject
 	private ClientThread clientThread;
+
+	@Inject
+	private ScheduledExecutorService executorService;
+
+	@Inject
+	private HdPlugin plugin;
+
+	@Inject
+	private HdPluginConfig config;
 
 	@Inject
 	private ModelOverrideManager modelOverrideManager;
@@ -91,11 +97,17 @@ public class TextureManager {
 	private ArrayList<MaterialEntry> materialUniformEntries;
 	private int[] materialOrdinalToTextureLayer;
 	private int[] vanillaTextureIndexToTextureLayer;
+	private ScheduledFuture<?> pendingReload;
 
 	public void startUp() {
-		TEXTURE_PATH.watch(path -> {
+		clientThread.invoke(this::ensureMaterialsAreLoaded);
+
+		TEXTURE_PATH.watch((path, first) -> {
+			if (first) return;
 			log.debug("Texture changed: {}", path);
-			reloadTextures();
+
+			if (pendingReload == null || pendingReload.cancel(false) || pendingReload.isDone())
+				pendingReload = executorService.schedule(this::reloadTextures, 100, TimeUnit.MILLISECONDS);
 		});
 	}
 

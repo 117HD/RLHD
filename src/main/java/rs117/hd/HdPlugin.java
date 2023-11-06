@@ -546,6 +546,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 				// Materials need to be initialized before compiling shader programs
 				textureManager.startUp();
+				modelOverrideManager.startUp();
 
 				initPrograms();
 				initShaderHotswapping();
@@ -565,7 +566,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				lastAntiAliasingMode = null;
 
 				modelPusher.startUp();
-				modelOverrideManager.startUp();
 				lightManager.startUp();
 
 				hasLoggedIn = client.getGameState().getState() > GameState.LOGGING_IN.getState();
