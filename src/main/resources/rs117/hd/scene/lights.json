@@ -24228,7 +24228,7 @@
     "description": "TOG_BLUE_STREAM",
     "height": 100,
     "alignment": "CENTER",
-    "radius": 300,
+    "radius": 500,
     "strength": 22.5,
     "color": [
       89,
@@ -24247,7 +24247,7 @@
     "description": "TOG_GREEN_STREAM",
     "height": 100,
     "alignment": "CENTER",
-    "radius": 300,
+    "radius": 500,
     "strength": 15,
     "color": [
       141,

@@ -1171,7 +1171,7 @@ public enum Environment
 		.setFogColor("#060505")
 		.setFogDepth(50)
 		.setAmbientColor("#AAAFB6")
-		.setAmbientStrength(1.6f)
+		.setAmbientStrength(2.5f)
 		.setDirectionalColor("#878474")
 		.setDirectionalStrength(1.5f)
 		.setLightDirection(260f, 10f)
