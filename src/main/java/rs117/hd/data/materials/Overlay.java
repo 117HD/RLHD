@@ -803,7 +803,7 @@ public enum Overlay {
 		.replaceWithIf(WINTER_JAGGED_STONE_TILE, plugin -> plugin.configWinterTheme)
 		.ids(-85, -77, 11)
 	),
-	WIZARD_TOWER_ROOF(GroundMaterial.GRUNGE_2, p -> p
+	WIZARD_TOWER_ROOF(GroundMaterial.MARBLE_1_GLOSS, p -> p.blended(false)
 		.area(Area.WIZARD_TOWER_ROOF)
 		.ids(33).replaceWithIf(STRANGLEWOOD_SNOW,plugin -> plugin.configWinterTheme)
 	),
