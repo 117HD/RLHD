@@ -758,7 +758,12 @@ public enum Overlay {
 		.area(Area.LASSAR_UNDERCITY)
 		.groundMaterial(GroundMaterial.LASSAR_UNDERCITY_TILES)
 		.blended(false)),
-	LASSAR_UNDERCITY_WATER(p -> p.ids(292).area(Area.LASSAR_UNDERCITY).waterType(WaterType.LASSAR_UNDERCITY_WATER).blended(false)),
+	LASSAR_UNDERCITY_WATER(p -> p
+		.ids(292)
+		.area(Area.LASSAR_UNDERCITY_WATER)
+		.waterType(WaterType.PLAIN_WATER)
+		.blended(false)),
+	ANCIENT_VAULT_CARPET(283, Area.ANCIENT_VAULT, GroundMaterial.NONE, p -> p.blended(false)),
 
 	// POHs
 	POH_DESERT_INDOORS(Area.PLAYER_OWNED_HOUSE, GroundMaterial.TILES_2x2_2, p -> p.blended(false).ids(26, 99)),

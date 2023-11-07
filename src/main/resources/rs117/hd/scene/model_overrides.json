@@ -12354,5 +12354,10 @@
     "uvType": "BOX",
     "uvScale": 0.6,
     "uvOrientation": 64
+  },
+  {
+    "description": "Poison Waste Dungeon exit shading",
+    "objectIds": [ 49702 ],
+    "flatNormals": true
   }
 ]

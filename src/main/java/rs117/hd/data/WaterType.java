@@ -61,7 +61,6 @@ public enum WaterType
 		.depthColor(linearToSrgb(rgb(50, 52, 46)))
 		.causticsStrength(0)
 		.duration(1.6f)),
-	POISON_WASTE_FLAT(POISON_WASTE, true),
 	BLACK_TAR_FLAT(b -> b
 		.specularStrength(.05f)
 		.specularGloss(300)
@@ -119,17 +118,10 @@ public enum WaterType
 		.depthColor(linearToSrgb(rgb(0x69, 0x77, 0x5e)))
 		.causticsStrength(0)
 		.duration(1.2f)),
-	LASSAR_UNDERCITY_WATER(b -> b
-		.specularStrength(.5f)
-		.specularGloss(75)
-		.normalStrength(.01f)
-		.baseOpacity(0)
-		.fresnelAmount(1)
-		.surfaceColor(linearToSrgb(rgb(39, 38, 62)))
-		.foamColor(linearToSrgb(rgb(37, 37, 56)))
-		.depthColor(linearToSrgb(rgb(22, 21, 35)))
+	PLAIN_WATER(b -> b
+		.depthColor(rgb(0, 0, 0))
+		.foamColor(rgb(64, 64, 64))
 		.causticsStrength(0)
-		.duration(1)
 		.flat(true)),
 	;
 

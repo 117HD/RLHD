@@ -288,7 +288,11 @@ public enum Underlay {
 		.ids(44, 45, 104, 181, 182)
 		.area(Area.LASSAR_UNDERCITY_SUNKEN_CATHEDRAL)
 		.groundMaterial(GroundMaterial.LASSAR_UNDERCITY_TILES_SUBMERGED)),
-	LASSAR_UNDERCITY_WATER(p -> p.ids(292).area(Area.LASSAR_UNDERCITY).waterType(WaterType.LASSAR_UNDERCITY_WATER).blended(false)),
+	LASSAR_UNDERCITY_WATER(p -> p
+		.ids(292)
+		.area(Area.LASSAR_UNDERCITY_WATER)
+		.waterType(WaterType.PLAIN_WATER)
+		.blended(false)),
 	LASSAR_UNDERCITY_MARBLE(p -> p.ids(45, 104).area(Area.LASSAR_UNDERCITY).groundMaterial(GroundMaterial.MARBLE_2_SEMIGLOSS)),
 	LASSAR_UNDERCITY_TILES(p -> p
 		.ids(182)
