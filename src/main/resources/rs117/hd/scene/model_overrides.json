@@ -1570,6 +1570,16 @@
     "castShadows": false
   },
   {
+    "description": "Fixes weird pattern made by grass in POH",
+    "areas": [ "PLAYER_OWNED_HOUSE" ],
+    "objectIds": [
+      4530
+    ],
+    "baseMaterial": "GRAY_65",
+    "flatNormals": true,
+    "castShadows": false
+  },
+  {
     "description": "GRASS_MAINTAIN_ORIGINAL_COLOR",
     "objectIds": [
       16823,
@@ -10555,22 +10565,16 @@
     "uvScale": 0.28
   },
   {
-    "description": "Hide weird waterfall texture near Port Khazard spirit tree",
-    "objectIds": [
-      10459
-    ],
+    "description": "Replace vanilla scrolling waterfall texture with droplets, until a better solution is found",
+    "objectIds": [ 754, 10459 ],
+    "textureMaterial": "WATER_DROPLETS",
+    "baseMaterial": "WATER_FLAT",
     "hideInAreas": [
       [
         2558, 3249,
         2558, 3252
       ]
     ]
-  },
-  {
-    "description": "Replace vanilla scrolling waterfall texture with droplets, until a better solution is found",
-    "objectIds": [ 754, 10459 ],
-    "textureMaterial": "WATER_DROPLETS",
-    "baseMaterial": "WATER_FLAT"
   },
   {
     "description": "Poison Waste dungeon flowing tar (TODO)",
