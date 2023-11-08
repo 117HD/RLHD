@@ -56,6 +56,10 @@ public enum Overlay {
 		.ids()
 		.groundMaterial(GroundMaterial.WINTER_JAGGED_STONE_TILE_LIGHT_2)
 	),
+	SNOW_2(p -> p
+		.ids()
+		.groundMaterial(GroundMaterial.SNOW_2)
+	),
 	WINTER_EAST_ARDOUGNE_CASTLE_PATH_FIX(10, Area.EAST_ARDOUGNE_CASTLE_PATH_FIX, GroundMaterial.VARROCK_PATHS, p -> p
 		.replaceWithIf(WINTER_JAGGED_STONE_TILE_LIGHT, plugin -> plugin.configWinterTheme)
 		.shiftLightness(3)
@@ -807,6 +811,12 @@ public enum Overlay {
 	OVERLAY_VARROCK_PATHS(GroundMaterial.VARROCK_PATHS, p -> p
 		.replaceWithIf(WINTER_JAGGED_STONE_TILE, plugin -> plugin.configWinterTheme)
 		.ids(-85, -77, 11)
+	),
+	WIZARD_TOWER_ROOF(GroundMaterial.MARBLE_1_GLOSS, p -> p
+		.ids(33)
+		.blended(false)
+		.area(Area.WIZARD_TOWER_ROOF)
+		.replaceWithIf(SNOW_2, plugin -> plugin.configWinterTheme)
 	),
 	OVERLAY_SWAMP_WATER(WaterType.SWAMP_WATER, p -> p.ids(-100, 7)),
 	OVERLAY_WOOD_PLANKS(GroundMaterial.WOOD_PLANKS_1, p -> p.ids(5, 35)),

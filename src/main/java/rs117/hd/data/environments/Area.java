@@ -311,6 +311,7 @@ public enum Area
 		new AABB(3118,3166),
 		new AABB(3115,3166)
 	),
+	WIZARD_TOWER_ROOF(new AABB(3101, 3167, 3116, 3153)),
 
 	// Misthalin Mystery
 	MISTHALIN_MYSTERY_MANOR(1600, 4863, 1727, 4779),
