@@ -104,6 +104,7 @@ public enum Material {
 	MOSS(28, p -> p
 		.setHasTransparency(true)),
 	TROPICAL_LEAF(29, p -> p
+		.setBrightness(.5f)
 		.setHasTransparency(true)),
 	WILLOW_LEAVES(30, p -> p
 		.setHasTransparency(true)
@@ -654,9 +655,6 @@ public enum Material {
 	),
 	PLANT_GRUNGE_2(GRUNGE_2, p -> p
 		.setSpecular(0.20f, 20)
-	),
-	HD_TROPICAL_LEAF(TROPICAL_LEAF, p -> p
-		.replaceIf(HdPluginConfig::modelTextures, TROPICAL_LEAF)
 	),
 	HD_CONCRETE_D,
 	HD_CONCRETE_N,
