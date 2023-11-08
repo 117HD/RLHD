@@ -22,7 +22,7 @@ import static rs117.hd.HdPlugin.UV_SIZE;
 import static rs117.hd.HdPlugin.VERTEX_SIZE;
 
 public class SceneContext {
-	public final int id = HDUtils.rand.nextInt();
+	public final int id = HDUtils.rand.nextInt() & SceneUploader.SCENE_ID_MASK;
 	public final Scene scene;
 	public final HashSet<Integer> regionIds;
 	public final int expandedMapLoadingChunks;
@@ -127,11 +127,9 @@ public class SceneContext {
 	 * @param plane		 which the local coordinate is on
 	 * @return world coordinate
 	 */
-	public WorldPoint localToWorld(LocalPoint localPoint, int plane)
+	public int[] localToWorld(LocalPoint localPoint, int plane)
 	{
-		int[] pos = HDUtils.localToWorld(scene, localPoint.getX(), localPoint.getY(), plane);
-		return new WorldPoint(pos[0], pos[1], pos[2]);
-
+		return HDUtils.localToWorld(scene, localPoint.getX(), localPoint.getY(), plane);
 	}
 
 	public int[] localToWorld(int localX, int localY, int plane)

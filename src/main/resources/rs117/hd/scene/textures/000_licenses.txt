@@ -69,3 +69,14 @@ HD_SIMPLE_GRAIN_WOOD, HD_SIMPLE_GRAIN_WOOD_N and HD_SIMPLE_GRAIN_WOOD_D textures
 
 HD_HAY, HD_HAY_N, HD_HAY_D textures from AmbientCG. All textures on this site are licensed as CC0.
 -- https://ambientcg.com/view?id=ThatchedRoof002A
+SNOW_1 and SNOW_1_N textures from AmbientCG. All textures on this site are licensed as CC0.
+-- https://ambientCG.com/a/Snow001
+
+SNOW_2 and SNOW_2_N textures from AmbientCG. All textures on this site are licensed as CC0.
+-- https://ambientCG.com/a/Snow002
+
+SNOW_3 and SNOW_3_N textures from AmbientCG. All textures on this site are licensed as CC0.
+-- https://ambientCG.com/a/Snow003
+
+SNOW_4 and SNOW_4_N textures from AmbientCG. All textures on this site are licensed as CC0.
+-- https://ambientCG.com/a/Snow004
