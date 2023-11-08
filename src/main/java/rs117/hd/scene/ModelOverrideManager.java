@@ -2,6 +2,7 @@ package rs117.hd.scene;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Objects;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.NonNull;
@@ -106,22 +107,27 @@ public class ModelOverrideManager {
 		long uuid = ModelHash.packUuid(id, type);
 		ModelOverride current = modelOverrides.get(uuid);
 
-		// Seasonal theme overrides should take precedence
-		if (current != null && current.seasonalTheme != null && entry.seasonalTheme == null)
-			return;
+		if (current != null && !Objects.equals(current.seasonalTheme, entry.seasonalTheme)) {
+			// Seasonal theme overrides should take precedence
+			if (current.seasonalTheme != null)
+				return;
+			current = null;
+		}
 
 		boolean isDuplicate = false;
 
 		if (entry.areas.length == 0) {
 			// Non-area-restricted override, of which there can only be one per UUID
-			if (current == null) {
-				current = entry;
-			} else if (current.areas.length > 0) {
-				// A dummy override is used as the base if only area-specific overrides exist
-				isDuplicate = !current.isDummy;
+
+			// A dummy override is used as the base if only area-specific overrides exist
+			isDuplicate = current != null && !current.isDummy;
+
+			if (current != null && current.areas.length > 0) {
 				var areas = current.areas;
 				current = entry.copy();
 				current.areas = areas;
+			} else {
+				current = entry;
 			}
 
 			modelOverrides.put(uuid, current);
