@@ -29,7 +29,6 @@ import javax.inject.Singleton;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
-import net.runelite.api.coords.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.config.DefaultSkyColor;
@@ -68,7 +67,7 @@ public class EnvironmentManager {
 	// time of last frame; used for lightning
 	long lastFrameTime = -1;
 
-	private WorldPoint previousPosition = new WorldPoint(0, 0, 0);
+	private int[] previousPosition = new int[3];
 
 	private float[] startFogColor = new float[] { 0, 0, 0 };
 	public float[] currentFogColor = new float[] { 0, 0, 0 };
@@ -153,8 +152,7 @@ public class EnvironmentManager {
 	public void update(SceneContext sceneContext) {
 		assert client.isClientThread();
 
-		WorldPoint position = sceneContext.localToWorld(
-			new LocalPoint(plugin.cameraFocalPoint[0], plugin.cameraFocalPoint[1]), client.getPlane());
+		int[] position = sceneContext.localToWorld(plugin.cameraFocalPoint[0], plugin.cameraFocalPoint[1], client.getPlane());
 
 		isOverworld = Area.OVERWORLD.containsPoint(position);
 
@@ -162,8 +160,8 @@ public class EnvironmentManager {
 		// since the previous frame. results in an instant transition when
 		// teleporting, entering dungeons, etc.
 		int tileChange = Math.max(
-			Math.abs(position.getX() - previousPosition.getX()),
-			Math.abs(position.getY() - previousPosition.getY())
+			Math.abs(position[0] - previousPosition[0]),
+			Math.abs(position[1] - previousPosition[1])
 		);
 		previousPosition = position;
 

@@ -2,6 +2,7 @@ package rs117.hd.scene.lights;
 
 import net.runelite.api.*;
 import net.runelite.api.coords.*;
+import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.HDUtils;
 
 public class SceneLight extends Light
@@ -30,6 +31,8 @@ public class SceneLight extends Light
 	public NPC npc;
 	public TileObject object;
 	public GraphicsObject graphicsObject;
+
+	public ModelOverride modelOverride = ModelOverride.NONE;
 
 	public SceneLight(Light l) {
 		super(

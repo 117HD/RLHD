@@ -12345,5 +12345,11 @@
     "description": "Poison Waste Dungeon exit shading",
     "objectIds": [ 49702 ],
     "flatNormals": true
+  },
+  {
+    "description": "Fix incorrectly oriented tile model in Karuulm",
+    "objectIds": [ 34533 ],
+    "areas": [ [ 1288, 10205, 0 ] ],
+    "rotate": 270
   }
 ]
