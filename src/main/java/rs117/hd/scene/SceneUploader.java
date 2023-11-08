@@ -526,15 +526,12 @@ class SceneUploader {
 					neMaterial = groundMaterial.getRandomMaterial(tileZ, baseX + tileX + 1, baseY + tileY + 1);
 				} else if (plugin.configSeasonalTheme == SeasonalTheme.WINTER) {
 					Overlay overlay = Overlay.getOverlay(scene, tile, plugin);
-					if (overlay != Overlay.NONE)
-					{
+					if (overlay != Overlay.NONE) {
 						swColor = HDUtils.colorHSLToInt(overlay.modifyColor(HDUtils.colorIntToHSL(swColor)));
 						seColor = HDUtils.colorHSLToInt(overlay.modifyColor(HDUtils.colorIntToHSL(seColor)));
 						nwColor = HDUtils.colorHSLToInt(overlay.modifyColor(HDUtils.colorIntToHSL(nwColor)));
 						neColor = HDUtils.colorHSLToInt(overlay.modifyColor(HDUtils.colorIntToHSL(neColor)));
-					}
-					else
-					{
+					} else {
 						Underlay underlay = Underlay.getUnderlay(scene, tile, plugin);
 						swColor = HDUtils.colorHSLToInt(underlay.modifyColor(HDUtils.colorIntToHSL(swColor)));
 						seColor = HDUtils.colorHSLToInt(underlay.modifyColor(HDUtils.colorIntToHSL(seColor)));

@@ -536,7 +536,6 @@ public enum Overlay {
 		.hue(8)
 		.saturation(4)
 		.lightness(15)
-
 	),
 	DRAYNOR_PATH_BLENDING_FIX(10, Area.DRAYNOR_PATH_BLENDING_FIXES, GroundMaterial.OVERWORLD_GRASS_1, p -> p
 		.hue(9)

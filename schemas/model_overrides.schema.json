@@ -14,7 +14,7 @@
       },
       "seasonalTheme": {
         "type": "string",
-        "description": "Which seasonal theme the model override should be active for. Defaults to null.",
+        "description": "Which seasonal theme the model override should be active for, or null for all. Defaults to null.",
         "enum": [
           "SUMMER",
           "AUTUMN",

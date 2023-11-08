@@ -26,6 +26,7 @@ package rs117.hd.data.environments;
 
 import java.awt.Color;
 import lombok.Getter;
+import rs117.hd.utils.ColorUtils;
 
 import static rs117.hd.utils.ColorUtils.rgb;
 
@@ -1248,6 +1249,17 @@ public enum Environment
 
 	// overrides 'ALL' to provide default daylight conditions for the overworld area
 	OVERWORLD(Area.OVERWORLD, new Properties()),
+	// used for underground, instances, etc.
+	DEFAULT(Area.ALL, new Properties()
+		.setFogColor("#000000")
+		.setFogDepth(40)
+		.setAmbientColor("#AAAFB6")
+		.setAmbientStrength(1.5f)
+		.setDirectionalColor("#FFFFFF")
+		.setDirectionalStrength(1.0f)
+		.setLightDirection(260f, 10f)
+		.setWaterColor(102, 234, 255)
+	),
 	OVERCAST(Area.NONE, new Properties()
 		.setFogColor("#898984")
 		.setFogDepth(35)
@@ -1257,7 +1269,7 @@ public enum Environment
 		.setDirectionalStrength(1.5f)
 	),
 	AUTUMN(Area.NONE, new Properties()
-		.setFogColor("#FFC085")
+		.setFogColor(ColorUtils.colorTemperatureToLinearRgb(2500))
 		.setFogDepth(40)
 		.setAmbientColor("#AAAFB6")
 		.setAmbientStrength(2.5f)
@@ -1272,17 +1284,6 @@ public enum Environment
 		.setAmbientStrength(3.5f)
 		.setDirectionalColor("#FFFFFF")
 		.setDirectionalStrength(1.5f)
-	),
-	// used for underground, instances, etc.
-	DEFAULT(Area.ALL, new Properties()
-		.setFogColor("#000000")
-		.setFogDepth(40)
-		.setAmbientColor("#AAAFB6")
-		.setAmbientStrength(1.5f)
-		.setDirectionalColor("#FFFFFF")
-		.setDirectionalStrength(1.0f)
-		.setLightDirection(260f, 10f)
-		.setWaterColor(102, 234, 255)
 	),
 	NONE(Area.NONE, new Properties()
 		.setFogColor("#ff00ff") // never meant to be rendered
@@ -1353,16 +1354,18 @@ public enum Environment
 			return this;
 		}
 
-		public Properties setFogColor(float r, float g, float b) {
-			this.fogColor = rgb(r, g, b);
-			this.customFogColor = true;
-			return this;
-		}
-
 		public Properties setFogColor(String hex)
 		{
 			Color color = Color.decode(hex);
-			this.fogColor = rgb(color.getRed(), color.getGreen(), color.getBlue());
+			return setFogColor(color.getRed(), color.getGreen(), color.getBlue());
+		}
+
+		public Properties setFogColor(float r, float g, float b) {
+			return setFogColor(rgb(r, g, b));
+		}
+
+		public Properties setFogColor(float[] linearRgb) {
+			this.fogColor = linearRgb;
 			this.customFogColor = true;
 			return this;
 		}

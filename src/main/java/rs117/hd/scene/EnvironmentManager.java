@@ -273,9 +273,6 @@ public class EnvironmentManager {
 		updateTargetSkyColor();
 
 		targetFogDepth = newEnvironment.getFogDepth();
-		if (useWinterTheme() && !newEnvironment.isCustomFogDepth()) {
-			targetFogDepth = Environment.WINTER.getFogDepth();
-		}
 
 		Environment atmospheric = config.atmosphericLighting() ? newEnvironment : Environment.OVERWORLD;
 		targetAmbientStrength = atmospheric.getAmbientStrength();
@@ -287,6 +284,8 @@ public class EnvironmentManager {
 		targetUnderwaterCausticsColor = atmospheric.getUnderwaterCausticsColor();
 		targetUnderwaterCausticsStrength = atmospheric.getUnderwaterCausticsStrength();
 		if (useWinterTheme()) {
+			if (!newEnvironment.isCustomFogDepth())
+				targetFogDepth = Environment.WINTER.getFogDepth();
 			if (!atmospheric.isCustomAmbientStrength())
 				targetAmbientStrength = Environment.WINTER.getAmbientStrength();
 			if (!atmospheric.isCustomAmbientColor())
