@@ -783,13 +783,13 @@ public enum Material {
 		}
 
 		Builder setParent(Material parent) {
+			// Copy over defaults from the parent, except vanilla texture index
 			this.parent = parent;
 			this.normalMap = parent.normalMap;
 			this.displacementMap = parent.displacementMap;
 			this.roughnessMap = parent.roughnessMap;
 			this.ambientOcclusionMap = parent.ambientOcclusionMap;
 			this.flowMap = parent.flowMap;
-			this.vanillaTextureIndex = parent.vanillaTextureIndex;
 			this.hasTransparency = parent.hasTransparency;
 			this.overrideBaseColor = parent.overrideBaseColor;
 			this.unlit = parent.unlit;
@@ -884,18 +884,23 @@ public enum Material {
 		var materials = Material.values();
 		for (int i = 0; i < materials.length; i++) {
 			var material = materials[i];
-			// Apply the first successful replacement listed last
-			for (int j = materials.length - 1; j >= 0; j--) {
+			boolean wasReplaced = false;
+
+			// Apply the first successful replacement listed last, and keep going until all replacements have been resolved
+			for (int j = materials.length - 1; j > material.ordinal(); j--) {
 				var replacement = materials[j];
 				if (replacement.replacementCondition != null &&
 					replacement.replacementCondition.apply(config) &&
-					replacement.materialsToReplace.contains(material))
+					replacement.materialsToReplace.contains(material)) {
 					material = replacement;
+					wasReplaced = true;
+					break;
+				}
 			}
 
-			// If the final material is itself a conditional replacement material, and the condition
-			// is currently not met, the material won't be loaded, and should be mapped to NONE
-			if (material.replacementCondition != null && !material.replacementCondition.apply(config))
+			// If the material is itself a conditional replacement material, and the condition
+			// is not met, the material won't be loaded, and can be mapped to NONE
+			if (!wasReplaced && material.replacementCondition != null && !material.replacementCondition.apply(config))
 				material = NONE;
 
 			REPLACEMENT_MAPPING[i] = material;
@@ -903,16 +908,22 @@ public enum Material {
 
 		VANILLA_TEXTURE_MAPPING = new Material[textures.length];
 		Arrays.fill(VANILLA_TEXTURE_MAPPING, Material.VANILLA);
-		for (int i = 0; i < textures.length; i++)
-			for (var material : materials)
-				if (material.vanillaTextureIndex == i)
-					VANILLA_TEXTURE_MAPPING[i] = material.resolveTextureMaterial();
+		for (int i = 0; i < textures.length; i++) {
+			for (var material : materials) {
+				if (material.vanillaTextureIndex == i) {
+					assert VANILLA_TEXTURE_MAPPING[i] == VANILLA :
+						"Material " + material + " conflicts with vanilla ID " + material.vanillaTextureIndex + " of material "
+						+ VANILLA_TEXTURE_MAPPING[i];
+					VANILLA_TEXTURE_MAPPING[i] = material.resolveReplacements();
+				}
+			}
+		}
 	}
 
 	public static Material fromVanillaTexture(int vanillaTextureId) {
 		if (vanillaTextureId < 0 || vanillaTextureId >= VANILLA_TEXTURE_MAPPING.length)
 			return NONE;
-		return VANILLA_TEXTURE_MAPPING[vanillaTextureId].resolveReplacements();
+		return VANILLA_TEXTURE_MAPPING[vanillaTextureId];
 	}
 
 	/**
