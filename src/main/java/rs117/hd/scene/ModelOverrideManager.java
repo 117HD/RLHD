@@ -168,13 +168,10 @@ public class ModelOverrideManager {
 		if (override == null)
 			return ModelOverride.NONE;
 
-		if (override.areaOverrides != null) {
+		if (override.areaOverrides != null)
 			for (var entry : override.areaOverrides.entrySet())
 				if (entry.getKey().contains(worldPos))
 					return entry.getValue();
-
-			return ModelOverride.NONE;
-		}
 
 		return override;
 	}
