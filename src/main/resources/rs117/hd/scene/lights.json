@@ -24228,7 +24228,7 @@
     "description": "TOG_BLUE_STREAM",
     "height": 100,
     "alignment": "CENTER",
-    "radius": 300,
+    "radius": 500,
     "strength": 22.5,
     "color": [
       89,
@@ -24247,7 +24247,7 @@
     "description": "TOG_GREEN_STREAM",
     "height": 100,
     "alignment": "CENTER",
-    "radius": 300,
+    "radius": 500,
     "strength": 15,
     "color": [
       141,
@@ -31259,6 +31259,124 @@
     "type": "STATIC",
     "duration": 7000,
     "range": 10
+  },
+  {
+    "description": "Summoning circle powered - The Scar",
+    "objectIds": [ 49450 ],
+    "height": 200,
+    "color": [
+      196,
+      75,
+      132
+    ],
+    "strength": 20,
+    "radius": 800
+  },
+  {
+    "description": "Summoning circle - The Scar",
+    "objectIds": [ 49451 ],
+    "height": 200,
+    "color": [
+      196,
+      75,
+      132
+    ],
+    "strength": 5,
+    "radius": 800
+  },
+  {
+    "description": "Summoning circle powered - The Scar",
+    "npcIds": [ 12359 ],
+    "height": 200,
+    "color": [
+      196,
+      75,
+      132
+    ],
+    "strength": 10,
+    "radius": 800
+  },
+  {
+    "description": "Axon terminal powered - The Scar",
+    "objectIds": [ 49440, 49441, 49442, 49443 ],
+    "height": 200,
+    "color": [
+      196,
+      75,
+      132
+    ],
+    "strength": 10,
+    "radius": 800
+  },
+  {
+    "description": "Axon terminal - The Scar",
+    "objectIds": [ 49444 ],
+    "height": 200,
+    "color": [
+      196,
+      75,
+      132
+    ],
+    "strength": 5,
+    "radius": 800
+  },
+  {
+    "description": "Neural teleporter blue - The Scar",
+    "objectIds": [ 49413, 49414 ],
+    "height": 120,
+    "color": [
+      80,
+      87,
+      187
+    ],
+    "strength": 10,
+    "radius": 800
+  },
+  {
+    "description": "Neural teleporter green - The Scar",
+    "objectIds": [ 49415, 49416 ],
+    "height": 120,
+    "color": [
+      136,
+      195,
+      104
+    ],
+    "strength": 10,
+    "radius": 800
+  },
+  {
+    "description": "Damaged growth - light leech puzzle - The Scar",
+    "objectIds": [ 49437 ],
+    "height": 120,
+    "color": [
+      165,
+      195,
+      104
+    ],
+    "strength": 20,
+    "radius": 600
+  },
+  {
+    "description": "Neural gateway - The Scar",
+    "objectIds": [ 49407 ],
+    "height": 120,
+    "color": [
+      202,
+      76,
+      81
+    ],
+    "strength": 10,
+    "radius": 600
+  },
+  {
+    "description": "Ancient Vault brazier",
+    "objectIds": [ 48858 ],
+    "height": 200,
+    "color": [ 115, 50, 137 ],
+    "strength": 30,
+    "radius": 750,
+    "type": "FLICKER",
+    "range": 20
   },
   {
     "description": "HALLOWEEN_PUMPKIN_LARGE",

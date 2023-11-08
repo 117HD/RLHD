@@ -106,6 +106,7 @@ public enum Material {
 	MOSS(28, p -> p
 		.setHasTransparency(true)),
 	TROPICAL_LEAF(29, p -> p
+		.setBrightness(.5f)
 		.setHasTransparency(true)),
 	WILLOW_LEAVES(30, p -> p
 		.setHasTransparency(true)
@@ -240,41 +241,56 @@ public enum Material {
 
 	FOG_STATIC(98, p -> p
 		.setHasTransparency(true)),
-	FOG_VERY_SLOW(99, p -> p
+	FOG_VERY_SLOW(FOG_STATIC, p -> p
+		.setVanillaTextureIndex(99)
 		.setHasTransparency(true)),
-	FOG_SLOW(100, p -> p
+	FOG_SLOW(FOG_STATIC, p -> p
+		.setVanillaTextureIndex(100)
 		.setHasTransparency(true)),
-	FOG_MEDIUM(101, p -> p
+	FOG_MEDIUM(FOG_STATIC, p -> p
+		.setVanillaTextureIndex(101)
 		.setHasTransparency(true)),
-	FOG_FAST(102, p -> p
+	FOG_FAST(FOG_STATIC, p -> p
+		.setVanillaTextureIndex(102)
 		.setHasTransparency(true)),
-	FOG_VERY_FAST(103, p -> p
+	FOG_VERY_FAST(FOG_STATIC, p -> p
+		.setVanillaTextureIndex(103)
 		.setHasTransparency(true)),
 
 	FOG_LIGHT_STATIC(104, p -> p
 		.setHasTransparency(true)),
-	FOG_LIGHT_VERY_SLOW(105, p -> p
+	FOG_LIGHT_VERY_SLOW(FOG_LIGHT_STATIC, p -> p
+		.setVanillaTextureIndex(105)
 		.setHasTransparency(true)),
-	FOG_LIGHT_SLOW(106, p -> p
+	FOG_LIGHT_SLOW(FOG_LIGHT_STATIC, p -> p
+		.setVanillaTextureIndex(106)
 		.setHasTransparency(true)),
-	FOG_LIGHT_MEDIUM(107, p -> p
+	FOG_LIGHT_MEDIUM(FOG_LIGHT_STATIC, p -> p
+		.setVanillaTextureIndex(107)
 		.setHasTransparency(true)),
-	FOG_LIGHT_FAST(108, p -> p
+	FOG_LIGHT_FAST(FOG_LIGHT_STATIC, p -> p
+		.setVanillaTextureIndex(108)
 		.setHasTransparency(true)),
-	FOG_LIGHT_VERY_FAST(109, p -> p
+	FOG_LIGHT_VERY_FAST(FOG_LIGHT_STATIC, p -> p
+		.setVanillaTextureIndex(109)
 		.setHasTransparency(true)),
 
 	FOG_HEAVY_STATIC(110, p -> p
 		.setHasTransparency(true)),
-	FOG_HEAVY_VERY_SLOW(111, p -> p
+	FOG_HEAVY_VERY_SLOW(FOG_HEAVY_STATIC, p -> p
+		.setVanillaTextureIndex(111)
 		.setHasTransparency(true)),
-	FOG_HEAVY_SLOW(112, p -> p
+	FOG_HEAVY_SLOW(FOG_HEAVY_STATIC, p -> p
+		.setVanillaTextureIndex(112)
 		.setHasTransparency(true)),
-	FOG_HEAVY_MEDIUM(113, p -> p
+	FOG_HEAVY_MEDIUM(FOG_HEAVY_STATIC, p -> p
+		.setVanillaTextureIndex(113)
 		.setHasTransparency(true)),
-	FOG_HEAVY_FAST(114, p -> p
+	FOG_HEAVY_FAST(FOG_HEAVY_STATIC, p -> p
+		.setVanillaTextureIndex(114)
 		.setHasTransparency(true)),
-	FOG_HEAVY_VERY_FAST(115, p -> p
+	FOG_HEAVY_VERY_FAST(FOG_HEAVY_STATIC, p -> p
+		.setVanillaTextureIndex(115)
 		.setHasTransparency(true)),
 
 	SKULLS(116),
@@ -312,12 +328,12 @@ public enum Material {
 	DIRT_1_N,
 	DIRT_1(p -> p
 		.setNormalMap(DIRT_1_N)
-		.setSpecular(0.5f, 35)),
+		.setSpecular(0.25f, 18)),
 	DIRT_1_VERT(DIRT_1, p -> p.setNormalMap(null)),
 	DIRT_2_N,
 	DIRT_2(p -> p
 		.setNormalMap(DIRT_2_N)
-		.setSpecular(0.4f, 30)),
+		.setSpecular(0.25f, 18)),
 	DIRT_2_VERT(DIRT_2, p -> p.setNormalMap(null)),
 	GRAVEL_N,
 	GRAVEL(p -> p
@@ -603,10 +619,10 @@ public enum Material {
 		.setSpecular(0.7f, 80)),
 	WATTLE_1,
 	ICE_1(SNOW_4, p -> p
-		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER_THEME, WATER_FLAT_2, WATER_FLAT)
+		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER, WATER_FLAT_2, WATER_FLAT)
 		.setSpecular(1.1f, 200)),
 	ICE_1_HIGHGLOSS(ICE_1, p -> p
-		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER_THEME, WATER_FLAT_2, WATER_FLAT)
+		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER, WATER_FLAT_2, WATER_FLAT)
 		.setSpecular(3.1f, 30)),
 	ICE_2(SNOW_2, p -> p
 		.setSpecular(1.5f, 800)),
@@ -646,9 +662,6 @@ public enum Material {
 	PLANT_GRUNGE_2(GRUNGE_2, p -> p
 		.setSpecular(0.20f, 20)
 	),
-	HD_TROPICAL_LEAF(TROPICAL_LEAF, p -> p
-		.replaceIf(HdPluginConfig::modelTextures, TROPICAL_LEAF)
-	),
 	HD_CONCRETE_D,
 	HD_CONCRETE_N,
 	HD_CONCRETE(p -> p
@@ -678,53 +691,53 @@ public enum Material {
 
 	// Seasonal
 	WINTER_WILLOW_LEAVES(p -> p
-		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER_THEME, WILLOW_LEAVES)
+		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER, WILLOW_LEAVES)
 		.setTextureScale(1.025f, 1.025f)
 		.setHasTransparency(true)
 	),
 	WINTER_MAPLE_LEAVES(p -> p
-		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER_THEME, MAPLE_LEAVES)
+		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER, MAPLE_LEAVES)
 		.setTextureScale(1.3f, 1.025f)
 		.setHasTransparency(true)
 	),
 	WINTER_LEAVES_1(p -> p
-		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER_THEME, LEAVES_1)
-		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER_THEME, EVERGREEN_LEAVES_1)
-		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER_THEME, OAK_LEAVES_1)
+		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER, LEAVES_1)
+		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER, EVERGREEN_LEAVES_1)
+		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER, OAK_LEAVES_1)
 		.setTextureScale(1.025f, 1.025f)
 		.setHasTransparency(true)
 	),
 	WINTER_LEAVES_2(p -> p
-		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER_THEME, LEAVES_2)
+		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER, LEAVES_2)
 		.setTextureScale(1.025f, 1.025f)
 		.setHasTransparency(true)
 	),
 	WINTER_LEAVES_3(p -> p
-		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER_THEME, LEAVES_3)
-		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER_THEME, OAK_LEAVES_3)
-		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER_THEME, DOUBLE_TREE_LEAVES_3)
+		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER, LEAVES_3)
+		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER, OAK_LEAVES_3)
+		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER, DOUBLE_TREE_LEAVES_3)
 		.setHasTransparency(true)
 	),
 	WINTER_PAINTING_LANDSCAPE(p -> p
-		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER_THEME, PAINTING_LANDSCAPE)
+		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER, PAINTING_LANDSCAPE)
 	),
 	WINTER_PAINTING_KING(p -> p
-		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER_THEME, PAINTING_KING)
+		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER, PAINTING_KING)
 	),
 	WINTER_PAINTING_ELF(p -> p
-		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER_THEME, PAINTING_ELF)
+		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER, PAINTING_ELF)
 	),
 	WINTER_HD_ROOF_SHINGLES_1(p -> p
-		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER_THEME, ROOF_SHINGLES_1)
+		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER, ROOF_SHINGLES_1)
 		.setSpecular(0.5f, 30)
 		.setNormalMap(HD_ROOF_SHINGLES_N)),
 	WINTER_HD_ROOF_SHINGLES_2(p -> p
-		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER_THEME, ROOF_SHINGLES_2)
+		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER, ROOF_SHINGLES_2)
 		.setSpecular(0.3f, 30)
 		.setNormalMap(HD_ROOF_SHINGLES_N)),
 	WINTER_HD_ROOF_BRICK_TILES(p -> p
 		.replaceIf(
-			config -> config.seasonalTheme() == SeasonalTheme.WINTER_THEME,
+			config -> config.seasonalTheme() == SeasonalTheme.WINTER,
 			ROOF_BRICK_TILE,
 			ROOF_BRICK_TILE_GREEN,
 			ROOF_BRICK_TILE_DARK
@@ -732,10 +745,10 @@ public enum Material {
 		.setSpecular(0.3f, 30)
 		.setNormalMap(HD_ROOF_BRICK_TILE_N)),
 	WINTER_HD_ROOF_SLATE(p -> p
-		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER_THEME, ROOF_SLATE)
+		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER, ROOF_SLATE)
 		.setSpecular(0.5f, 30)),
 	WINTER_HD_ROOF_WOODEN_SLATE(p -> p
-		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER_THEME, ROOF_WOODEN_SLATE)
+		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER, ROOF_WOODEN_SLATE)
 		.setSpecular(0.5f, 30)),
 	WINTER_JAGGED_STONE_TILE(p -> p
 		.setDisplacementMap(JAGGED_STONE_TILE_D)
@@ -753,32 +766,32 @@ public enum Material {
 		.setSpecular(0.6f, 30)
 		.setBrightness(12)),
 	AUTUMN_LEAVES_1(p -> p
-		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.AUTUMN_THEME, DOUBLE_TREE_LEAVES_1)
+		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.AUTUMN, DOUBLE_TREE_LEAVES_1)
 		.setTextureScale(1.025f, 1.025f)
 		.setHasTransparency(true)
 	),
 	AUTUMN_LEAVES_2(p -> p
-		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.AUTUMN_THEME, LEAVES_2)
+		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.AUTUMN, LEAVES_2)
 		.setTextureScale(1.025f, 1.025f)
 		.setHasTransparency(true)
 	),
 	AUTUMN_LEAVES_3(p -> p
-		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.AUTUMN_THEME, DOUBLE_TREE_LEAVES_3)
+		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.AUTUMN, DOUBLE_TREE_LEAVES_3)
 		.setTextureScale(1.025f, 1.025f)
 		.setHasTransparency(true)
 	),
 	AUTUMN_LEAVES_1_GOLDEN(p -> p
-		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.AUTUMN_THEME, LEAVES_1)
+		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.AUTUMN, LEAVES_1)
 		.setTextureScale(1.025f, 1.025f)
 		.setHasTransparency(true)
 	),
 	AUTUMN_OAK_LEAVES_1(p -> p
-		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.AUTUMN_THEME, OAK_LEAVES_1)
+		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.AUTUMN, OAK_LEAVES_1)
 		.setTextureScale(1.025f, 1.025f)
 		.setHasTransparency(true)
 	),
 	AUTUMN_OAK_LEAVES_3(p -> p
-		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.AUTUMN_THEME, OAK_LEAVES_3)
+		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.AUTUMN, OAK_LEAVES_3)
 		.setTextureScale(1.025f, 1.025f)
 		.setHasTransparency(true)
 	),
@@ -794,6 +807,7 @@ public enum Material {
 	public final boolean hasTransparency;
 	public final boolean overrideBaseColor;
 	public final boolean unlit;
+	public final boolean hasTexture;
 	public final float brightness;
 	public final float displacementScale;
 	public final float flowMapStrength;
@@ -834,13 +848,13 @@ public enum Material {
 		}
 
 		Builder setParent(Material parent) {
+			// Copy over defaults from the parent, except vanilla texture index
 			this.parent = parent;
 			this.normalMap = parent.normalMap;
 			this.displacementMap = parent.displacementMap;
 			this.roughnessMap = parent.roughnessMap;
 			this.ambientOcclusionMap = parent.ambientOcclusionMap;
 			this.flowMap = parent.flowMap;
-			this.vanillaTextureIndex = parent.vanillaTextureIndex;
 			this.hasTransparency = parent.hasTransparency;
 			this.overrideBaseColor = parent.overrideBaseColor;
 			this.unlit = parent.unlit;
@@ -926,6 +940,18 @@ public enum Material {
 		textureScale = builder.textureScale;
 		materialsToReplace.addAll(builder.materialsToReplace);
 		replacementCondition = builder.replacementCondition;
+
+		// Determine whether the material contains some form of texture change
+		var base = this;
+		while (base.parent != null)
+			base = base.parent;
+		hasTexture =
+			base.ordinal() != 0 ||
+			normalMap != null ||
+			displacementMap != null ||
+			roughnessMap != null ||
+			ambientOcclusionMap != null ||
+			flowMap != null;
 	}
 
 	private static Material[] VANILLA_TEXTURE_MAPPING = {};
@@ -935,18 +961,23 @@ public enum Material {
 		var materials = Material.values();
 		for (int i = 0; i < materials.length; i++) {
 			var material = materials[i];
-			// Apply the first successful replacement listed last
-			for (int j = materials.length - 1; j >= 0; j--) {
+			boolean wasReplaced = false;
+
+			// Apply the first successful replacement listed last, and keep going until all replacements have been resolved
+			for (int j = materials.length - 1; j > material.ordinal(); j--) {
 				var replacement = materials[j];
 				if (replacement.replacementCondition != null &&
 					replacement.replacementCondition.apply(config) &&
-					replacement.materialsToReplace.contains(material))
+					replacement.materialsToReplace.contains(material)) {
 					material = replacement;
+					wasReplaced = true;
+					break;
+				}
 			}
 
-			// If the final material is itself a conditional replacement material, and the condition
-			// is currently not met, the material won't be loaded, and should be mapped to NONE
-			if (material.replacementCondition != null && !material.replacementCondition.apply(config))
+			// If the material is itself a conditional replacement material, and the condition
+			// is not met, the material won't be loaded, and can be mapped to NONE
+			if (!wasReplaced && material.replacementCondition != null && !material.replacementCondition.apply(config))
 				material = NONE;
 
 			REPLACEMENT_MAPPING[i] = material;
@@ -954,16 +985,22 @@ public enum Material {
 
 		VANILLA_TEXTURE_MAPPING = new Material[textures.length];
 		Arrays.fill(VANILLA_TEXTURE_MAPPING, Material.VANILLA);
-		for (int i = 0; i < textures.length; i++)
-			for (var material : materials)
-				if (material.vanillaTextureIndex == i)
-					VANILLA_TEXTURE_MAPPING[i] = material.resolveTextureMaterial();
+		for (int i = 0; i < textures.length; i++) {
+			for (var material : materials) {
+				if (material.vanillaTextureIndex == i) {
+					assert VANILLA_TEXTURE_MAPPING[i] == VANILLA :
+						"Material " + material + " conflicts with vanilla ID " + material.vanillaTextureIndex + " of material "
+						+ VANILLA_TEXTURE_MAPPING[i];
+					VANILLA_TEXTURE_MAPPING[i] = material.resolveReplacements();
+				}
+			}
+		}
 	}
 
 	public static Material fromVanillaTexture(int vanillaTextureId) {
 		if (vanillaTextureId < 0 || vanillaTextureId >= VANILLA_TEXTURE_MAPPING.length)
 			return NONE;
-		return VANILLA_TEXTURE_MAPPING[vanillaTextureId].resolveReplacements();
+		return VANILLA_TEXTURE_MAPPING[vanillaTextureId];
 	}
 
 	/**

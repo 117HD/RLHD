@@ -734,7 +734,7 @@ public interface HdPluginConfig extends Config
 		position = 3,
 		section = miscellaneousSettings
 	)
-	default SeasonalTheme seasonalTheme() {return SeasonalTheme.DEFAULT_THEME;}
+	default SeasonalTheme seasonalTheme() {return SeasonalTheme.SUMMER;}
 	;
 
 	String KEY_LEGACY_GREY_COLORS = "reduceOverExposure";

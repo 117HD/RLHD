@@ -14,10 +14,19 @@
       },
       "seasonalTheme": {
         "type": "string",
-        "description": "Which seasonal theme the model override should be active for.",
+        "description": "Which seasonal theme the model override should be active for. Defaults to null.",
         "enum": [
+          "SUMMER",
+          "AUTUMN",
           "WINTER"
         ]
+      },
+      "areas": {
+        "type": "array",
+        "description": "An array of bounding boxes, region IDs and/or area enums specifying which areas the override should be limited to.",
+        "items": {
+          "$ref": "aabb.schema.json"
+        }
       },
       "npcIds": {
         "type": "array",
@@ -82,11 +91,19 @@
         "type": "integer",
         "description": "Rotation around the Z axis, with 2048 corresponding to a complete rotation. Defaults to uvOrientation."
       },
+      "rotate": {
+        "type": "integer",
+        "description": "Counter-clockwise rotation around the up-axis in degrees, where only 0, 90, 180 and 270 are allowed. Defaults to 0."
+      },
+      "hide": {
+        "type": "boolean",
+        "description": "Whether any model this override applies to should be hidden. Defaults to false."
+      },
       "retainVanillaUvs": {
         "type": "boolean",
         "description": "Retain vanilla UVs on already textured areas of the model. Defaults to true."
       },
-      "forceOverride": {
+      "forceMaterialChanges": {
         "type": "boolean",
         "description": "Apply the override even when model textures are disabled in the config. Defaults to false."
       },

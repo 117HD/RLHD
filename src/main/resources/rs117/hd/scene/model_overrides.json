@@ -1473,8 +1473,7 @@
       4814
     ],
     "flatNormals": true,
-    "inheritTileColorType": "UNDERLAY",
-    "forceOverride": true
+    "inheritTileColorType": "UNDERLAY"
   },
   {
     "description": "Short grass which shouldn't cast shadows",
@@ -1520,8 +1519,7 @@
     ],
     "flatNormals": true,
     "inheritTileColorType": "UNDERLAY",
-    "castShadows": false,
-    "forceOverride": true
+    "castShadows": false
   },
   {
     "description": "Short grass which shouldn't cast shadows for the winter theme, prevents grass from being too bright",
@@ -1575,8 +1573,7 @@
     ],
     "flatNormals": true,
     "inheritTileColorType": "UNDERLAY",
-    "castShadows": false,
-    "forceOverride": true
+    "castShadows": false
   },
   {
     "description": "Short grass which shouldn't cast shadows and shouldn't inherit tile color",
@@ -1591,8 +1588,17 @@
       34496
     ],
     "flatNormals": true,
-    "castShadows": false,
-    "forceOverride": true
+    "castShadows": false
+  },
+  {
+    "description": "Fixes weird pattern made by grass in POH",
+    "areas": [ "PLAYER_OWNED_HOUSE" ],
+    "objectIds": [
+      4530
+    ],
+    "baseMaterial": "GRAY_65",
+    "flatNormals": true,
+    "castShadows": false
   },
   {
     "description": "GRASS_MAINTAIN_ORIGINAL_COLOR",
@@ -2271,7 +2277,7 @@
     "objectIds": [
       597
     ],
-    "baseMaterial": "GRAY_25"
+    "baseMaterial": "GRAY_75"
   },
   {
     "description": "STONE_WALL_FENCES",
@@ -2555,6 +2561,7 @@
       1620,
       1622,
       1631,
+      1940,
       4409,
       4410,
       4445,
@@ -6787,8 +6794,7 @@
     ],
     "uvType": "MODEL_XZ",
     "flatNormals": true,
-    "castShadows": false,
-    "forceOverride": true
+    "castShadows": false
   },
   {
     "description": "Chaos Tunnel - Walls - Cave Walls",
@@ -7925,8 +7931,7 @@
       21248
     ],
     "castShadows": false,
-    "receiveShadows": false,
-    "forceOverride": true
+    "receiveShadows": false
   },
   {
     "description": "Big Red Button",
@@ -7997,16 +8002,14 @@
     "objectIds": [
       2842
     ],
-    "baseMaterial": "UNLIT",
-    "forceOverride": true
+    "baseMaterial": "UNLIT"
   },
   {
     "description": "Jatizso banners",
     "baseMaterial": "UNLIT",
     "objectIds": [
       21637
-    ],
-    "forceOverride": true
+    ]
   },
   {
     "description": "Footprints on agility rooftops",
@@ -8020,8 +8023,7 @@
       39632
     ],
     "castShadows": false,
-    "receiveShadows": false,
-    "forceOverride": true
+    "receiveShadows": false
   },
   {
     "description": "Zanaris - Walls - Grass",
@@ -8128,8 +8130,7 @@
     "baseMaterial": "FINE_CARPET",
     "uvType": "WORLD_XZ",
     "flatNormals": true,
-    "castShadows": false,
-    "forceOverride": true
+    "castShadows": false
   },
   {
     "description": "POH superior garden zen theme carpet",
@@ -8140,10 +8141,8 @@
       29245,
       29246
     ],
-    "uvType": "WORLD_XZ",
     "flatNormals": true,
-    "castShadows": false,
-    "forceOverride": true
+    "castShadows": false
   },
   {
     "description": "POH basement filler objects",
@@ -9038,8 +9037,7 @@
       44172,
       44173
     ],
-    "uvType": "WORLD_XZ",
-    "forceOverride": true
+    "uvType": "WORLD_XZ"
   },
   {
     "description": "Ruins of Ullek flat normals on walls and other wall objects",
@@ -10588,22 +10586,16 @@
     "uvScale": 0.28
   },
   {
-    "description": "Hide weird waterfall texture near Port Khazard spirit tree",
-    "objectIds": [
-      10459
-    ],
+    "description": "Replace vanilla scrolling waterfall texture with droplets, until a better solution is found",
+    "objectIds": [ 754, 10459 ],
+    "textureMaterial": "WATER_DROPLETS",
+    "baseMaterial": "WATER_FLAT",
     "hideInAreas": [
       [
         2558, 3249,
         2558, 3252
       ]
     ]
-  },
-  {
-    "description": "Replace vanilla scrolling waterfall texture with droplets, until a better solution is found",
-    "objectIds": [ 754, 10459 ],
-    "textureMaterial": "WATER_DROPLETS",
-    "baseMaterial": "WATER_FLAT"
   },
   {
     "description": "Poison Waste dungeon flowing tar (TODO)",
@@ -11584,8 +11576,7 @@
     "baseMaterial": "FINE_CARPET",
     "uvType": "WORLD_XZ",
     "flatNormals": true,
-    "castShadows": false,
-    "forceOverride": true
+    "castShadows": false
   },
   {
     "description": "Mage Training Arena - Marble - Area Portals",
@@ -12374,6 +12365,17 @@
     "uvType": "BOX",
     "uvScale": 0.6,
     "uvOrientation": 64
+  },
+  {
+    "description": "Poison Waste Dungeon exit shading",
+    "objectIds": [ 49702 ],
+    "flatNormals": true
+  },
+  {
+    "description": "Fix incorrectly oriented tile model in Karuulm",
+    "objectIds": [ 34533 ],
+    "areas": [ [ 1288, 10205, 0 ] ],
+    "rotate": 270
   },
   {
     "description": "Textured Bushes",
