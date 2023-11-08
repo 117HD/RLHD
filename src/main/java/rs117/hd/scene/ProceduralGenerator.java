@@ -827,7 +827,9 @@ public class ProceduralGenerator {
 
 	private WaterType getSeasonalWaterType(WaterType waterType)
 	{
-		return plugin.configSeasonalTheme == SeasonalTheme.WINTER && waterType == WaterType.WATER ? WaterType.ICE : waterType;
+		if (waterType == WaterType.WATER && plugin.configSeasonalTheme == SeasonalTheme.WINTER)
+			return WaterType.ICE;
+		return waterType;
 	}
 
 	/**

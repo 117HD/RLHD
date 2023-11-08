@@ -178,16 +178,16 @@ public enum Underlay {
 		.ids(48, 50, 64)
 		.replacementResolver(
 			(plugin, scene, tile, override) -> {
-				if (!plugin.configGroundBlending)
+				if (!plugin.configGroundBlending) {
 					switch (plugin.configSeasonalTheme) {
-						case WINTER:
-							return WINTER_GRASS;
-						case AUTUMN:
-							return AUTUMN_GRASS;
 						case SUMMER:
 							return DEFAULT_GRASS;
+						case AUTUMN:
+							return AUTUMN_GRASS;
+						case WINTER:
+							return WINTER_GRASS;
 					}
-				else if (plugin.configSeasonalTheme == SeasonalTheme.WINTER) {
+				} else if (plugin.configSeasonalTheme == SeasonalTheme.WINTER) {
 					return WINTER_EDGEVILLE_PATH;
 				}
 				return override;
@@ -241,31 +241,31 @@ public enum Underlay {
 				int lightness = color & 0x7F; // jagex hsl extractor
 				if (hue >= 9) {
 					switch (plugin.configSeasonalTheme) {
-						case WINTER:
-							return WINTER_GRASS;
-						case AUTUMN:
-							return AUTUMN_GRASS;
 						case SUMMER:
 							return DEFAULT_GRASS;
+						case AUTUMN:
+							return AUTUMN_GRASS;
+						case WINTER:
+							return WINTER_GRASS;
 					}
 				}
 				if (hue == 8 && saturation > 5 && overlayId != 6) {
 					switch (plugin.configSeasonalTheme) {
-						case WINTER:
-							return WINTER_GRASS;
-						case AUTUMN:
-							return AUTUMN_GRASS;
 						case SUMMER:
 							return DEFAULT_GRASS;
+						case AUTUMN:
+							return AUTUMN_GRASS;
+						case WINTER:
+							return WINTER_GRASS;
 					}
 				}
 				if (hue < 8 && saturation > 4 && lightness < 45 && overlayId != 6) {
 					switch (plugin.configSeasonalTheme) {
+						case SUMMER:
+						case AUTUMN:
+							return DEFAULT_DIRT;
 						case WINTER:
 							return WINTER_DIRT;
-						case AUTUMN:
-						case SUMMER:
-							return DEFAULT_DIRT;
 					}
 				}
 				return DEFAULT_SAND;
@@ -458,15 +458,13 @@ public enum Underlay {
 	MIND_ALTAR_TILE(55, Area.MIND_ALTAR, GroundMaterial.MARBLE_1_SEMIGLOSS, p -> p.blended(false)),
 
 	TEMPLE_OF_THE_EYE(Area.TEMPLE_OF_THE_EYE, GroundMaterial.GRUNGE, p -> p.ids(87, 88, 89)),
-	ARCEUUS_GROUND(
-		Area.ARCEUUS,
-		GroundMaterial.DIRT,
-		p -> p.ids(2, 3, 23, 24).replaceWithIf(WINTER_DIRT, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER)
+	ARCEUUS_GROUND(Area.ARCEUUS, GroundMaterial.DIRT, p -> p
+		.ids(2, 3, 23, 24)
+		.replaceWithIf(WINTER_DIRT, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER)
 	),
-	ARCEUUS_GRASS(
-		Area.ARCEUUS,
-		GroundMaterial.GRASSY_DIRT,
-		p -> p.ids(17, 95).replaceWithIf(WINTER_GRASS, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER)
+	ARCEUUS_GRASS(Area.ARCEUUS, GroundMaterial.GRASSY_DIRT, p -> p
+		.ids(17, 95)
+		.replaceWithIf(WINTER_GRASS, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER)
 	),
 
 	// Secrets of the North dungeon
@@ -504,8 +502,8 @@ public enum Underlay {
 	// Default underlays
 	OVERWORLD_GRASS(Area.OVERWORLD, GroundMaterial.OVERWORLD_GRASS_1, p -> p
 		.ids(7, 25, 33, 34, 40, 48, 49, 50, 51, 52, 53, 54, 67, 70, 71, 75, 93, 97, 99, 100, 103, 114, 115, 126)
-		.replaceWithIf(WINTER_GRASS, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER)
 		.replaceWithIf(AUTUMN_GRASS, plugin -> plugin.configSeasonalTheme == SeasonalTheme.AUTUMN)
+		.replaceWithIf(WINTER_GRASS, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER)
 	),
 	OVERWORLD_DIRT(Area.OVERWORLD, GroundMaterial.DIRT, p -> p
 		.ids(-111, -110, 19, 56, 57, 66, 80, 111, 118, 122, 139, 150)
@@ -566,21 +564,21 @@ public enum Underlay {
 				int lightness = color & 0x7F; // jagex hsl extractor
 				if (saturation >= 2) {
 					switch (plugin.configSeasonalTheme) {
-						case WINTER:
-							return WINTER_GRASS;
-						case AUTUMN:
-							return AUTUMN_GRASS;
 						case SUMMER:
 							return OVERWORLD_GRASS;
+						case AUTUMN:
+							return AUTUMN_GRASS;
+						case WINTER:
+							return WINTER_GRASS;
 					}
 				}
 				if (saturation == 1) {
 					switch (plugin.configSeasonalTheme) {
+						case SUMMER:
+						case AUTUMN:
+							return OVERWORLD_DIRT;
 						case WINTER:
 							return WINTER_DIRT;
-						case AUTUMN:
-						case SUMMER:
-							return OVERWORLD_DIRT;
 					}
 				}
 				return DEFAULT_SNOW_1;
@@ -647,20 +645,20 @@ public enum Underlay {
 				int lightness = color & 0x7F; // jagex hsl extractor
 				if (saturation == 0) {
 					switch (plugin.configSeasonalTheme) {
+						case SUMMER:
+						case AUTUMN:
+							return UNDERLAY_OVERWORLD_GRUNGE;
 						case WINTER:
 							return WINTER_GRUNGE;
-						case AUTUMN:
-						case SUMMER:
-							return UNDERLAY_OVERWORLD_GRUNGE;
 					}
 				}
 				if (hue <= 10 && saturation < 2) {
 					switch (plugin.configSeasonalTheme) {
+						case SUMMER:
+						case AUTUMN:
+							return UNDERLAY_OVERWORLD_GRUNGE;
 						case WINTER:
 							return WINTER_GRUNGE;
-						case AUTUMN:
-						case SUMMER:
-							return UNDERLAY_OVERWORLD_GRUNGE;
 					}
 				}
 				if ((hue == 8 && saturation == 4 && lightness >= 71) || (hue == 8 && saturation == 3 && lightness >= 48)) {
@@ -671,23 +669,23 @@ public enum Underlay {
 					(hue == 9 && saturation == 3 && lightness <= 28) || (hue >= 10 && saturation >= 2) ||
 					(hue == 8 && saturation == 5 && lightness >= 15) || (hue == 8 && saturation >= 6 && lightness >= 10)) {
 					switch (plugin.configSeasonalTheme) {
-						case WINTER:
-							return WINTER_GRASS;
-						case AUTUMN:
-							return AUTUMN_GRASS;
 						case SUMMER:
 							return DEFAULT_GRASS;
+						case AUTUMN:
+							return AUTUMN_GRASS;
+						case WINTER:
+							return WINTER_GRASS;
 					}
 				}
 				if ((hue == 8 && saturation <= 4 && lightness <= 71) || (hue <= 7 && saturation <= 5 && lightness <= 57) ||
 					(hue <= 7 && saturation <= 7 && lightness <= 28) || (hue == 8 && saturation == 4 && lightness <= 15) ||
 					(hue == 8 && saturation == 5 && lightness <= 15)) {
 					switch (plugin.configSeasonalTheme) {
+						case SUMMER:
+						case AUTUMN:
+							return DEFAULT_DIRT;
 						case WINTER:
 							return WINTER_DIRT;
-						case AUTUMN:
-						case SUMMER:
-							return DEFAULT_DIRT;
 					}
 				}
 				return DEFAULT_DIRT;
@@ -748,21 +746,21 @@ public enum Underlay {
 				// Grass
 				if ((hue >= 9) || (hue == 8 && saturation > 5 && overlayId != 6)) {
 					switch (plugin.configSeasonalTheme) {
+						case SUMMER:
+						case AUTUMN:
+							return OVERWORLD_GRASS;
 						case WINTER:
 							return WINTER_GRASS;
-						case AUTUMN:
-						case SUMMER:
-							return OVERWORLD_GRASS;
 					}
 				}
 				// Dirt
 				if (hue <= 8 && saturation >= 4 && lightness <= 71) {
 					switch (plugin.configSeasonalTheme) {
+						case SUMMER:
+						case AUTUMN:
+							return OVERWORLD_DIRT;
 						case WINTER:
 							return WINTER_DIRT;
-						case AUTUMN:
-						case SUMMER:
-							return OVERWORLD_DIRT;
 					}
 				}
 				return OVERWORLD_SAND;

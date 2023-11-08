@@ -721,8 +721,7 @@ public interface HdPluginConfig extends Config
 		position = 2,
 		section = miscellaneousSettings
 	)
-	default boolean hdInfernalTexture()
-	{
+	default boolean hdInfernalTexture() {
 		return true;
 	}
 
@@ -734,8 +733,9 @@ public interface HdPluginConfig extends Config
 		position = 3,
 		section = miscellaneousSettings
 	)
-	default SeasonalTheme seasonalTheme() {return SeasonalTheme.SUMMER;}
-	;
+	default SeasonalTheme seasonalTheme() {
+		return SeasonalTheme.SUMMER;
+	}
 
 	String KEY_LEGACY_GREY_COLORS = "reduceOverExposure";
 	@ConfigItem(
@@ -744,7 +744,7 @@ public interface HdPluginConfig extends Config
 		description =
 			"Previously, HD attempted to reduce over-exposure by capping the maximum color brightness,<br>" +
 			"which changed white colors into dull shades of grey. This option brings back that old behaviour.",
-		position = 5,
+		position = 4,
 		section = miscellaneousSettings
 	)
 	default boolean legacyGreyColors() {
@@ -758,7 +758,7 @@ public interface HdPluginConfig extends Config
 		description =
 			"Blend between colors similarly to how it works in vanilla, with clearly defined bands of color.<br>" +
 			"This isn't really noticeable on textured surfaces, and is intended to be used without ground textures.",
-		position = 6,
+		position = 5,
 		section = miscellaneousSettings
 	)
 	default boolean vanillaColorBanding() {
@@ -773,7 +773,7 @@ public interface HdPluginConfig extends Config
 		warning =
 			"<html>This <b>will not</b> result in better performance. It is recommended only if you are unable to install<br>" +
 			"the 64-bit version of RuneLite, or if your computer has a very low amount of memory available.</html>",
-		position = 7,
+		position = 6,
 		section = miscellaneousSettings
 	)
 	default boolean lowMemoryMode() {

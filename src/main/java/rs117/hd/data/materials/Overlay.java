@@ -152,7 +152,7 @@ public enum Overlay {
 	VARROCK_GRAND_EXCHANGE_ROOF(p -> p
 		.ids(8)
 		.groundMaterial(GroundMaterial.GRAVEL)
-		.area(Area.VARROCK_GRAND_EXHCHANGE_ROOF)
+		.area(Area.VARROCK_GRAND_EXCHANGE_ROOF)
 		.replaceWithIf(WINTER_GRASS, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER)),
 	VARROCK_MUSEUM_SOUTH_PATH_FIX_1(-85, Area.VARROCK_MUSEUM_SOUTH_PATH_FIX, GroundMaterial.DIRT, p -> p.shiftSaturation(2)),
 	VARROCK_MUSEUM_SOUTH_PATH_FIX_2(-84, Area.VARROCK_MUSEUM_SOUTH_PATH_FIX, GroundMaterial.DIRT, p -> p.shiftSaturation(1)),
@@ -529,8 +529,8 @@ public enum Overlay {
 		.ids(0)
 		.area(Area.DRAYNOR_WOM_HOUSE_FRONT)
 		.groundMaterial(GroundMaterial.OVERWORLD_GRASS_1)
-		.replaceWithIf(WINTER_GRASS, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER)
 		.replaceWithIf(AUTUMN_GRASS, plugin -> plugin.configSeasonalTheme == SeasonalTheme.AUTUMN)
+		.replaceWithIf(WINTER_GRASS, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER)
 	),
 	DRAYNOR_WOM_FRONT_FIX_10(10, Area.DRAYNOR_WOM_HOUSE_FRONT, GroundMaterial.OVERWORLD_GRASS_1, p -> p
 		.hue(8)
@@ -555,16 +555,11 @@ public enum Overlay {
 		.area(Area.DRAYNOR_NEDS_PATH_FIXES)
 		.replacementResolver(
 			(plugin, scene, tile, override) -> {
-				if (plugin.configGroundBlending)
-					switch (plugin.configSeasonalTheme) {
-						case WINTER:
-							return WINTER_GRASS;
-						case AUTUMN:
-							return DRAYNOR_NEDS_PATH_FIX;
-						case SUMMER:
-							return DRAYNOR_NEDS_PATH_FIX;
-					}
-				return override;
+				if (!plugin.configGroundBlending)
+					return override;
+				if (plugin.configSeasonalTheme == SeasonalTheme.WINTER)
+					return WINTER_GRASS;
+				return DRAYNOR_NEDS_PATH_FIX;
 			}
 		)
 	),
@@ -582,16 +577,16 @@ public enum Overlay {
 		.area(Area.DRAYNOR_BANK_FRONT_PATH)
 		.replacementResolver(
 			(plugin, scene, tile, override) -> {
-				if (!plugin.configGroundBlending)
-					switch (plugin.configSeasonalTheme) {
-						case WINTER:
-							return WINTER_GRASS;
-						case AUTUMN:
-							return AUTUMN_GRASS;
-						case SUMMER:
-							return override;
-					}
-				return DRAYNOR_BANK_ENTRANCE_PATH;
+				if (plugin.configGroundBlending)
+					return DRAYNOR_BANK_ENTRANCE_PATH;
+				switch (plugin.configSeasonalTheme) {
+					case AUTUMN:
+						return AUTUMN_GRASS;
+					case WINTER:
+						return WINTER_GRASS;
+					default:
+						return override;
+				}
 			}
 		)
 	),
@@ -609,16 +604,11 @@ public enum Overlay {
 		.area(Area.DRAYNOR_BANK_PATH_FIX_DARK)
 		.replacementResolver(
 			(plugin, scene, tile, override) -> {
-				if (plugin.configGroundBlending)
-					switch (plugin.configSeasonalTheme) {
-						case WINTER:
-							return WINTER_GRASS;
-						case AUTUMN:
-							return DRAYNOR_BANK_PATH_FIX_10_DARK;
-						case SUMMER:
-							return DRAYNOR_BANK_PATH_FIX_10_DARK;
-					}
-				return override;
+				if (!plugin.configGroundBlending)
+					return override;
+				if (plugin.configSeasonalTheme == SeasonalTheme.WINTER)
+					return WINTER_GRASS;
+				return DRAYNOR_BANK_PATH_FIX_10_DARK;
 			}
 		)
 	),
@@ -636,16 +626,11 @@ public enum Overlay {
 		.area(Area.DRAYNOR_BANK_PATH_FIX_LIGHT)
 		.replacementResolver(
 			(plugin, scene, tile, override) -> {
-				if (plugin.configGroundBlending)
-					switch (plugin.configSeasonalTheme) {
-						case WINTER:
-							return WINTER_GRASS;
-						case AUTUMN:
-							return DRAYNOR_BANK_PATH_FIX_10_LIGHT;
-						case SUMMER:
-							return DRAYNOR_BANK_PATH_FIX_10_LIGHT;
-					}
-				return override;
+				if (!plugin.configGroundBlending)
+					return override;
+				if (plugin.configSeasonalTheme == SeasonalTheme.WINTER)
+					return WINTER_GRASS;
+				return DRAYNOR_BANK_PATH_FIX_10_LIGHT;
 			}
 		)
 	),
@@ -653,8 +638,8 @@ public enum Overlay {
 		.ids(0)
 		.area(Area.DRAYNOR_PATH_BLENDING_FIXES)
 		.groundMaterial(GroundMaterial.OVERWORLD_GRASS_1)
-		.replaceWithIf(WINTER_GRASS, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER)
 		.replaceWithIf(AUTUMN_GRASS, plugin -> plugin.configSeasonalTheme == SeasonalTheme.AUTUMN)
+		.replaceWithIf(WINTER_GRASS, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER)
 	),
 	DRAYNOR_MANS_HOUSE_FLOOR(14, Area.DRAYNOR_NORTHERN_HOUSE_FLOOR, GroundMaterial.WOOD_PLANKS_1, p -> p
 		.blended(false)
@@ -925,7 +910,7 @@ public enum Overlay {
 		.ids(33)
 		.blended(false)
 		.area(Area.WIZARD_TOWER_ROOF)
-		.replaceWithIf(SNOW_2, plugin -> plugin.configWinterTheme)
+		.replaceWithIf(SNOW_2, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER)
 	),
 	OVERLAY_SWAMP_WATER(WaterType.SWAMP_WATER, p -> p.ids(-100, 7)),
 	OVERLAY_WOOD_PLANKS(GroundMaterial.WOOD_PLANKS_1, p -> p.ids(5, 35)),

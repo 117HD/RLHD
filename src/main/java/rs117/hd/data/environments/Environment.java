@@ -1248,22 +1248,11 @@ public enum Environment
 
 	// overrides 'ALL' to provide default daylight conditions for the overworld area
 	OVERWORLD(Area.OVERWORLD, new Properties()),
-	// used for underground, instances, etc.
-	DEFAULT(Area.ALL, new Properties()
-		.setFogColor("#000000")
-		.setFogDepth(40)
-		.setAmbientColor("#AAAFB6")
-		.setAmbientStrength(1.5f)
-		.setDirectionalColor("#FFFFFF")
-		.setDirectionalStrength(1.0f)
-		.setLightDirection(260f, 10f)
-		.setWaterColor(102, 234, 255)
-	),
-	WINTER(Area.NONE, new Properties()
-		.setFogColor("#B8C5DB")
+	OVERCAST(Area.NONE, new Properties()
+		.setFogColor("#898984")
 		.setFogDepth(35)
-		.setAmbientColor("#8FCAFF")
-		.setAmbientStrength(3.5f)
+		.setAmbientColor("#B7B7B3")
+		.setAmbientStrength(2.5f)
 		.setDirectionalColor("#FFFFFF")
 		.setDirectionalStrength(1.5f)
 	),
@@ -1276,13 +1265,24 @@ public enum Environment
 		.setDirectionalStrength(1.5f)
 		.setLightDirection(310f, 11f)
 	),
-	OVERCAST(Area.NONE, new Properties()
-		.setFogColor("#898984")
+	WINTER(Area.NONE, new Properties()
+		.setFogColor("#B8C5DB")
 		.setFogDepth(35)
-		.setAmbientColor("#B7B7B3")
-		.setAmbientStrength(2.5f)
+		.setAmbientColor("#8FCAFF")
+		.setAmbientStrength(3.5f)
 		.setDirectionalColor("#FFFFFF")
 		.setDirectionalStrength(1.5f)
+	),
+	// used for underground, instances, etc.
+	DEFAULT(Area.ALL, new Properties()
+		.setFogColor("#000000")
+		.setFogDepth(40)
+		.setAmbientColor("#AAAFB6")
+		.setAmbientStrength(1.5f)
+		.setDirectionalColor("#FFFFFF")
+		.setDirectionalStrength(1.0f)
+		.setLightDirection(260f, 10f)
+		.setWaterColor(102, 234, 255)
 	),
 	NONE(Area.NONE, new Properties()
 		.setFogColor("#ff00ff") // never meant to be rendered

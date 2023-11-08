@@ -701,9 +701,7 @@ public enum Material {
 		.setHasTransparency(true)
 	),
 	WINTER_LEAVES_1(p -> p
-		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER, LEAVES_1)
-		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER, EVERGREEN_LEAVES_1)
-		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER, OAK_LEAVES_1)
+		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER, LEAVES_1, EVERGREEN_LEAVES_1, OAK_LEAVES_1)
 		.setTextureScale(1.025f, 1.025f)
 		.setHasTransparency(true)
 	),
@@ -713,9 +711,7 @@ public enum Material {
 		.setHasTransparency(true)
 	),
 	WINTER_LEAVES_3(p -> p
-		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER, LEAVES_3)
-		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER, OAK_LEAVES_3)
-		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER, DOUBLE_TREE_LEAVES_3)
+		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER, LEAVES_3, OAK_LEAVES_3, DOUBLE_TREE_LEAVES_3)
 		.setHasTransparency(true)
 	),
 	WINTER_PAINTING_LANDSCAPE(p -> p

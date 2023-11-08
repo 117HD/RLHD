@@ -320,12 +320,10 @@ public class EnvironmentManager {
 
 	public void updateTargetSkyColor() {
 		Environment env = currentEnvironment;
-		if (useWinterTheme()) {
-			env = useWinterTheme() ? Environment.WINTER : currentEnvironment;
-		}
-		if (useAutumnTheme()) {
-			env = useAutumnTheme() ? Environment.AUTUMN : currentEnvironment;
-		}
+		if (useWinterTheme())
+			env = Environment.WINTER;
+		else if (useAutumnTheme())
+			env = Environment.AUTUMN;
 		if (!env.isCustomFogColor() || env.isAllowSkyOverride() && config.overrideSky()) {
 			DefaultSkyColor sky = config.defaultSkyColor();
 			targetFogColor = sky.getRgb(client);
@@ -334,7 +332,6 @@ public class EnvironmentManager {
 			targetWaterColor = sky.getRgb(client);
 		} else {
 			targetFogColor = targetWaterColor = env.getFogColor();
-
 		}
 
 		// Override with decoupled water/sky color if present
@@ -442,14 +439,11 @@ public class EnvironmentManager {
 		return currentEnvironment.isUnderwater();
 	}
 
-	/**
-	 * This should not be used from the scene loader thread
-	 */
-	private boolean useWinterTheme() {
-		return plugin.configSeasonalTheme == SeasonalTheme.WINTER && isOverworld && (isThemeable || isWinterThemeable);
-	}
-
 	private boolean useAutumnTheme() {
 		return plugin.configSeasonalTheme == SeasonalTheme.AUTUMN && isOverworld && isThemeable;
+	}
+
+	private boolean useWinterTheme() {
+		return plugin.configSeasonalTheme == SeasonalTheme.WINTER && isOverworld && (isThemeable || isWinterThemeable);
 	}
 }

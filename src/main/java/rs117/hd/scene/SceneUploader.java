@@ -524,8 +524,7 @@ class SceneUploader {
 					seMaterial = groundMaterial.getRandomMaterial(tileZ, baseX + tileX + 1, baseY + tileY);
 					nwMaterial = groundMaterial.getRandomMaterial(tileZ, baseX + tileX, baseY + tileY + 1);
 					neMaterial = groundMaterial.getRandomMaterial(tileZ, baseX + tileX + 1, baseY + tileY + 1);
-				} else if (plugin.configSeasonalTheme == SeasonalTheme.WINTER)
-				{
+				} else if (plugin.configSeasonalTheme == SeasonalTheme.WINTER) {
 					Overlay overlay = Overlay.getOverlay(scene, tile, plugin);
 					if (overlay != Overlay.NONE)
 					{
