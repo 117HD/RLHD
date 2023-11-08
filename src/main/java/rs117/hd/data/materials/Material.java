@@ -743,6 +743,7 @@ public enum Material {
 	public final boolean hasTransparency;
 	public final boolean overrideBaseColor;
 	public final boolean unlit;
+	public final boolean hasTexture;
 	public final float brightness;
 	public final float displacementScale;
 	public final float flowMapStrength;
@@ -875,6 +876,18 @@ public enum Material {
 		textureScale = builder.textureScale;
 		materialsToReplace.addAll(builder.materialsToReplace);
 		replacementCondition = builder.replacementCondition;
+
+		// Determine whether the material contains some form of texture change
+		var base = this;
+		while (base.parent != null)
+			base = base.parent;
+		hasTexture =
+			base.ordinal() != 0 ||
+			normalMap != null ||
+			displacementMap != null ||
+			roughnessMap != null ||
+			ambientOcclusionMap != null ||
+			flowMap != null;
 	}
 
 	private static Material[] VANILLA_TEXTURE_MAPPING = {};

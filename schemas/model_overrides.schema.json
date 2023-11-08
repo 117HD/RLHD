@@ -86,7 +86,7 @@
         "type": "boolean",
         "description": "Retain vanilla UVs on already textured areas of the model. Defaults to true."
       },
-      "forceOverride": {
+      "forceMaterialChanges": {
         "type": "boolean",
         "description": "Apply the override even when model textures are disabled in the config. Defaults to false."
       },

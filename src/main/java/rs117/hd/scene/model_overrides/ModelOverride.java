@@ -39,7 +39,7 @@ public class ModelOverride
 	public int uvOrientationY = 0;
 	public int uvOrientationZ = 0;
 	public boolean retainVanillaUvs = true;
-	public boolean forceOverride = false;
+	public boolean forceMaterialChanges = false;
 	public boolean flatNormals = false;
 	public boolean removeBakedLighting = false;
 	public boolean castShadows = true;

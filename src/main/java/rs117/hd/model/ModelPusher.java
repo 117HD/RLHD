@@ -198,7 +198,6 @@ public class ModelPusher {
 		int texturedFaceCount = 0;
 
 		ModelOverride modelOverride = modelOverrideManager.getOverride(hash);
-		boolean useMaterialOverrides = plugin.configModelTextures || modelOverride.forceOverride;
 		final short[] faceTextures = model.getFaceTextures();
 		final byte[] textureFaces = model.getTextureFaces();
 		boolean isVanillaTextured = faceTextures != null;
@@ -208,11 +207,13 @@ public class ModelPusher {
 			model.getTexIndices2() != null &&
 			model.getTexIndices3() != null &&
 			model.getTextureFaces() != null;
-		Material baseMaterial = Material.NONE;
-		Material textureMaterial = Material.NONE;
-		if (useMaterialOverrides) {
-			baseMaterial = modelOverride.baseMaterial;
-			textureMaterial = modelOverride.textureMaterial;
+		Material baseMaterial = modelOverride.baseMaterial;
+		Material textureMaterial = modelOverride.textureMaterial;
+		if (!plugin.configModelTextures && !modelOverride.forceMaterialChanges) {
+			if (baseMaterial.hasTexture)
+				baseMaterial = Material.NONE;
+			if (textureMaterial.hasTexture)
+				textureMaterial = Material.NONE;
 		}
 		boolean skipUVs =
 			!isVanillaTextured &&
