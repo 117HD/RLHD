@@ -340,9 +340,12 @@ public class ModelPusher {
 				frameTimer.begin(Timer.MODEL_PUSHING_UV);
 
 			for (int face = 0; face < faceCount; face++) {
+				UvType uvType = UvType.GEOMETRY;
 				Material material = baseMaterial;
+
 				short textureId = isVanillaTextured ? faceTextures[face] : -1;
 				if (textureId != -1) {
+					uvType = UvType.VANILLA;
 					material = textureMaterial;
 					if (material == Material.NONE)
 						material = Material.fromVanillaTexture(textureId);
@@ -354,7 +357,6 @@ public class ModelPusher {
 					material = materialOverride.textureMaterial;
 				}
 
-				UvType uvType = UvType.GEOMETRY;
 				if (material != Material.NONE) {
 					uvType = materialOverride.uvType;
 					if (uvType == UvType.VANILLA || (textureId != -1 && materialOverride.retainVanillaUvs))
