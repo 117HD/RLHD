@@ -680,25 +680,30 @@ public enum Material {
 	WINTER_WILLOW_LEAVES(p -> p
 		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER_THEME, WILLOW_LEAVES)
 		.setTextureScale(1.025f, 1.025f)
+		.setHasTransparency(true)
 	),
 	WINTER_MAPLE_LEAVES(p -> p
 		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER_THEME, MAPLE_LEAVES)
 		.setTextureScale(1.3f, 1.025f)
+		.setHasTransparency(true)
 	),
 	WINTER_LEAVES_1(p -> p
 		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER_THEME, LEAVES_1)
 		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER_THEME, EVERGREEN_LEAVES_1)
 		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER_THEME, OAK_LEAVES_1)
 		.setTextureScale(1.025f, 1.025f)
+		.setHasTransparency(true)
 	),
 	WINTER_LEAVES_2(p -> p
 		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER_THEME, LEAVES_2)
 		.setTextureScale(1.025f, 1.025f)
+		.setHasTransparency(true)
 	),
 	WINTER_LEAVES_3(p -> p
 		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER_THEME, LEAVES_3)
 		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER_THEME, OAK_LEAVES_3)
 		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER_THEME, DOUBLE_TREE_LEAVES_3)
+		.setHasTransparency(true)
 	),
 	WINTER_PAINTING_LANDSCAPE(p -> p
 		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.WINTER_THEME, PAINTING_LANDSCAPE)
@@ -750,26 +755,32 @@ public enum Material {
 	AUTUMN_LEAVES_1(p -> p
 		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.AUTUMN_THEME, DOUBLE_TREE_LEAVES_1)
 		.setTextureScale(1.025f, 1.025f)
+		.setHasTransparency(true)
 	),
 	AUTUMN_LEAVES_2(p -> p
 		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.AUTUMN_THEME, LEAVES_2)
 		.setTextureScale(1.025f, 1.025f)
+		.setHasTransparency(true)
 	),
 	AUTUMN_LEAVES_3(p -> p
 		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.AUTUMN_THEME, DOUBLE_TREE_LEAVES_3)
 		.setTextureScale(1.025f, 1.025f)
+		.setHasTransparency(true)
 	),
 	AUTUMN_LEAVES_1_GOLDEN(p -> p
 		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.AUTUMN_THEME, LEAVES_1)
 		.setTextureScale(1.025f, 1.025f)
+		.setHasTransparency(true)
 	),
 	AUTUMN_OAK_LEAVES_1(p -> p
 		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.AUTUMN_THEME, OAK_LEAVES_1)
 		.setTextureScale(1.025f, 1.025f)
+		.setHasTransparency(true)
 	),
 	AUTUMN_OAK_LEAVES_3(p -> p
 		.replaceIf(config -> config.seasonalTheme() == SeasonalTheme.AUTUMN_THEME, OAK_LEAVES_3)
 		.setTextureScale(1.025f, 1.025f)
+		.setHasTransparency(true)
 	),
 	;
 
