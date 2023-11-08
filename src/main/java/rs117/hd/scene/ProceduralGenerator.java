@@ -30,7 +30,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
-import net.runelite.api.coords.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.data.WaterType;
 import rs117.hd.data.materials.Material;
@@ -148,7 +147,7 @@ public class ProceduralGenerator {
 
 		int tileExX = tile.getSceneLocation().getX() + SceneUploader.SCENE_OFFSET;
 		int tileExY = tile.getSceneLocation().getY() + SceneUploader.SCENE_OFFSET;
-		WorldPoint worldPos = sceneContext.localToWorld(tile.getLocalLocation(), tile.getRenderLevel());
+		int[] worldPos = sceneContext.localToWorld(tile.getLocalLocation(), tile.getRenderLevel());
 
 		Scene scene = sceneContext.scene;
 		if (tile.getSceneTilePaint() != null) {
@@ -280,12 +279,12 @@ public class ProceduralGenerator {
 			Material material = Material.DIRT_1;
 			Overlay overlay = vertexOverlays[vertex];
 			if (overlay != Overlay.NONE) {
-				material = overlay.groundMaterial.getRandomMaterial(worldPos.getPlane(), worldPos.getX(), worldPos.getY());
+				material = overlay.groundMaterial.getRandomMaterial(worldPos[2], worldPos[0], worldPos[1]);
 				isOverlay = !overlay.blendedAsUnderlay;
 				overlay.modifyColor(colorHSL);
 			} else if (vertexUnderlays[vertex] != Underlay.NONE) {
 				Underlay underlay = vertexUnderlays[vertex];
-				material = underlay.groundMaterial.getRandomMaterial(worldPos.getPlane(), worldPos.getX(), worldPos.getY());
+				material = underlay.groundMaterial.getRandomMaterial(worldPos[2], worldPos[0], worldPos[1]);
 				isOverlay = underlay.blendedAsOverlay;
 				underlay.modifyColor(colorHSL);
 			}

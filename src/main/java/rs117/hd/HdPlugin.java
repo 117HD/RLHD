@@ -98,13 +98,13 @@ import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.SceneUploader;
 import rs117.hd.scene.TextureManager;
 import rs117.hd.scene.lights.SceneLight;
+import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.scene.model_overrides.ObjectType;
 import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.DeveloperTools;
 import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.Mat4;
-import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.PopupUtils;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
@@ -2665,10 +2665,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (enableDetailedTimers)
 			frameTimer.begin(Timer.DRAW_RENDERABLE);
 
-		int[] worldPos = HDUtils.cameraSpaceToWorldPoint(client, x, z);
-		if (modelOverrideManager.shouldHideModel(hash, worldPos))
-			return;
-
 		eightIntWrite[3] = renderBufferOffset;
 		eightIntWrite[4] = model.getRadius() << 12 | orientation;
 		eightIntWrite[5] = x + client.getCameraX2();
@@ -2676,20 +2672,17 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		eightIntWrite[7] = z + client.getCameraZ2();
 
 		int faceCount;
-		if (sceneContext.id == offsetModel.getSceneId()) {
+		if (sceneContext.id == (offsetModel.getSceneId() & SceneUploader.SCENE_ID_MASK)) {
+			// The model is part of the static scene buffer
 			assert model == renderable;
 
-			// Override orientation for incorrectly oriented tile model
-			if (worldPos[0] == 1288 && worldPos[1] == 10205 && ModelHash.getIdOrIndex(hash) == 34533)
-				eightIntWrite[4] = model.getRadius() << 12 | 1536;
-
-			// The model is part of the static scene buffer
 			faceCount = Math.min(MAX_FACE_COUNT, offsetModel.getFaceCount());
+			int vertexOffset = offsetModel.getBufferOffset();
 			int uvOffset = offsetModel.getUvBufferOffset();
 			int plane = (int) ((hash >> 49) & 3);
 			boolean hillskew = offsetModel != model;
 
-			eightIntWrite[0] = offsetModel.getBufferOffset();
+			eightIntWrite[0] = vertexOffset;
 			eightIntWrite[1] = uvOffset;
 			eightIntWrite[2] = faceCount;
 			eightIntWrite[4] |= (hillskew ? 1 : 0) << 26 | plane << 24;
@@ -2701,8 +2694,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			long batchHash = 0;
 			if (configModelBatching || configModelCaching) {
 				modelHasher.setModel(model);
-				if (configModelBatching) {
-					batchHash = modelHasher.calculateVertexCacheHash();
+				// Disable model batching for models which have been excluded from the scene buffer,
+				// because we want to avoid having to fetch the model override
+				if (configModelBatching && offsetModel.getSceneId() != SceneUploader.EXCLUDED_FROM_SCENE_BUFFER) {
+					batchHash = modelHasher.calculateVertexCacheHash(ModelOverride.NONE);
 					modelOffsets = frameModelInfoMap.get(batchHash);
 				}
 			}
@@ -2715,16 +2710,22 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				eightIntWrite[1] = modelOffsets.uvOffset;
 				eightIntWrite[2] = modelOffsets.faceCount;
 			} else {
-				int vertexOffset = dynamicOffsetVertices + sceneContext.getVertexOffset();
-				int uvOffset = dynamicOffsetUvs + sceneContext.getUvOffset();
 				if (enableDetailedTimers)
 					frameTimer.begin(Timer.MODEL_PUSHING);
-				modelPusher.pushModel(sceneContext, null, hash, model, ObjectType.NONE, 0, true);
+
+				int vertexOffset = dynamicOffsetVertices + sceneContext.getVertexOffset();
+				int uvOffset = dynamicOffsetUvs + sceneContext.getUvOffset();
+				ModelOverride modelOverride = modelOverrideManager.getOverride(hash, HDUtils.cameraSpaceToWorldPoint(client, x, z));
+				modelPusher.pushModel(sceneContext, null, hash, model, modelOverride, ObjectType.NONE, 0, true);
 				if (enableDetailedTimers)
 					frameTimer.end(Timer.MODEL_PUSHING);
+
+				faceCount = sceneContext.modelPusherResults[0];
+				if (faceCount == 0)
+					vertexOffset = -1;
 				if (sceneContext.modelPusherResults[1] == 0)
 					uvOffset = -1;
-				faceCount = sceneContext.modelPusherResults[0];
+
 				eightIntWrite[0] = vertexOffset;
 				eightIntWrite[1] = uvOffset;
 				eightIntWrite[2] = faceCount;
@@ -2734,6 +2735,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					frameModelInfoMap.put(batchHash, new ModelOffsets(faceCount, vertexOffset, uvOffset));
 			}
 		}
+
+		if (eightIntWrite[0] == -1)
+			return; // Hidden model
 
 		bufferForTriangles(faceCount)
 			.ensureCapacity(8)

@@ -23,7 +23,6 @@ import rs117.hd.data.materials.Underlay;
 import rs117.hd.data.materials.UvType;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
-import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.SceneUploader;
@@ -62,9 +61,6 @@ public class ModelPusher {
 
 	@Inject
 	private ModelHasher modelHasher;
-
-	@Inject
-	private ModelOverrideManager modelOverrideManager;
 
 	@Inject
 	private FrameTimer frameTimer;
@@ -176,6 +172,7 @@ public class ModelPusher {
 	 * @param tile           that the model is associated with, if any
 	 * @param hash           of the model
 	 * @param model          to push data from
+	 * @param modelOverride  the active model override
 	 * @param objectType     of the specified model. Used for TzHaar recolor
 	 * @param preOrientation which the vertices have already been rotated by
 	 * @param shouldCache    whether the model should be cached for future reuse, if enabled
@@ -185,19 +182,18 @@ public class ModelPusher {
 		@Nullable Tile tile,
 		long hash,
 		Model model,
+		ModelOverride modelOverride,
 		ObjectType objectType,
 		int preOrientation,
 		boolean shouldCache
 	) {
-		if (modelCache == null) {
+		if (modelCache == null)
 			shouldCache = false;
-		}
 
 		final int faceCount = Math.min(model.getFaceCount(), MAX_FACE_COUNT);
 		final int bufferSize = faceCount * DATUM_PER_FACE;
 		int texturedFaceCount = 0;
 
-		ModelOverride modelOverride = modelOverrideManager.getOverride(hash);
 		final short[] faceTextures = model.getFaceTextures();
 		final byte[] textureFaces = model.getTextureFaces();
 		boolean isVanillaTextured = faceTextures != null;
@@ -235,7 +231,7 @@ public class ModelPusher {
 		if (shouldCache) {
 			assert client.isClientThread() : "Model caching isn't thread-safe";
 
-			vertexHash = modelHasher.calculateVertexCacheHash();
+			vertexHash = modelHasher.calculateVertexCacheHash(modelOverride);
 			IntBuffer vertexData = this.modelCache.getIntBuffer(vertexHash);
 			foundCachedVertexData = vertexData != null && vertexData.remaining() == bufferSize;
 			if (foundCachedVertexData) {
@@ -310,12 +306,14 @@ public class ModelPusher {
 			if (plugin.enableDetailedTimers)
 				frameTimer.begin(Timer.MODEL_PUSHING_VERTEX);
 
+			modelOverride.applyRotation(model);
 			for (int face = 0; face < faceCount; face++) {
 				int[] data = getFaceVertices(sceneContext, tile, hash, model, modelOverride, objectType, face);
 				sceneContext.stagingBufferVertices.put(data);
 				if (shouldCacheVertexData)
 					fullVertexData.put(data);
 			}
+			modelOverride.revertRotation(model);
 
 			if (plugin.enableDetailedTimers)
 				frameTimer.end(Timer.MODEL_PUSHING_VERTEX);

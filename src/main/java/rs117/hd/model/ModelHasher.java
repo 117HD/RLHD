@@ -136,7 +136,7 @@ public class ModelHasher {
 		}
 	}
 
-	public long calculateVertexCacheHash() {
+	public long calculateVertexCacheHash(@NonNull ModelOverride modelOverride) {
 		long h = faceCount;
 		h = h * 31L + faceColorsOneHash;
 		h = h * 31L + faceColorsTwoHash;
@@ -154,6 +154,7 @@ public class ModelHasher {
 		h = h * 31L + model.getOverrideHue();
 		h = h * 31L + model.getOverrideSaturation();
 		h = h * 31L + model.getOverrideLuminance();
+		h = h * 31L + modelOverride.rotate;
 		return h;
 	}
 
