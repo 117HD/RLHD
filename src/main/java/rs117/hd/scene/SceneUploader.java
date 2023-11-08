@@ -56,6 +56,8 @@ import static rs117.hd.HdPlugin.VERTEX_SIZE;
 @Slf4j
 public
 class SceneUploader {
+	public static final int SCENE_ID_MASK = 0xFFFF;
+	public static final int EXCLUDED_FROM_SCENE_BUFFER = 0xFFFFFFFF;
 	public static final int SCENE_OFFSET = (Constants.EXTENDED_SCENE_SIZE - Constants.SCENE_SIZE) / 2; // offset for sxy -> msxy
 
 	private static final float[] UP_NORMAL = { 0, -1, 0 };
@@ -74,6 +76,9 @@ class SceneUploader {
 
 	@Inject
 	private ModelPusher modelPusher;
+
+	@Inject
+	private ModelOverrideManager modelOverrideManager;
 
 	public void upload(SceneContext sceneContext) {
 		Stopwatch stopwatch = Stopwatch.createStarted();
@@ -199,20 +204,36 @@ class SceneUploader {
 		if (model.getUnskewedModel() != null)
 			model = model.getUnskewedModel();
 
-		if (model.getSceneId() == sceneContext.id)
-			return; // model has already been uploaded
+		if (model.getSceneId() == EXCLUDED_FROM_SCENE_BUFFER)
+			return;
 
-		// pack a bit into bufferoffset that we can use later to hide
-		// some low-importance objects based on Level of Detail setting
+		int[] worldPos = sceneContext.localToWorld(tile.getLocalLocation(), tile.getPlane());
+		ModelOverride modelOverride = modelOverrideManager.getOverride(hash, worldPos);
+		int sceneId = modelOverride.hashCode() << 16 | sceneContext.id;
+
+		// check if the model has already been uploaded
+		if ((model.getSceneId() & SCENE_ID_MASK) == sceneContext.id) {
+			// if the same model is being uploaded, but with a different area-specific model override,
+			// exclude it from the scene buffer to avoid conflicts
+			if (model.getSceneId() != sceneId)
+				model.setSceneId(EXCLUDED_FROM_SCENE_BUFFER);
+			return;
+		}
+
 		int vertexOffset = sceneContext.getVertexOffset();
 		int uvOffset = sceneContext.getUvOffset();
-		modelPusher.pushModel(sceneContext, tile, hash, model, objectType, orientation, false);
-		if (sceneContext.modelPusherResults[1] == 0)
-			uvOffset = -1;
+
+		if (modelOverride.hide) {
+			vertexOffset = -1;
+		} else {
+			modelPusher.pushModel(sceneContext, tile, hash, model, modelOverride, objectType, orientation, false);
+			if (sceneContext.modelPusherResults[1] == 0)
+				uvOffset = -1;
+		}
 
 		model.setBufferOffset(vertexOffset);
 		model.setUvBufferOffset(uvOffset);
-		model.setSceneId(sceneContext.id);
+		model.setSceneId(sceneId);
 		++sceneContext.uniqueModels;
 	}
 

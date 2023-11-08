@@ -5,7 +5,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.data.materials.Material;
 import rs117.hd.data.materials.UvType;
@@ -15,16 +17,21 @@ import rs117.hd.utils.HDUtils;
 
 import static net.runelite.api.Perspective.*;
 
+@Slf4j
 @NoArgsConstructor
+@AllArgsConstructor
 public class ModelOverride
 {
-    public static ModelOverride NONE = new ModelOverride();
+	public static ModelOverride NONE = new ModelOverride(true);
 
 	private static final Set<Integer> EMPTY = new HashSet<>();
 
 	public String description = "UNKNOWN";
 
+	// When, where or what the override should apply to
 	public String seasonalTheme;
+	@JsonAdapter(AABB.JsonAdapter.class)
+	public AABB[] areas = {};
 	@JsonAdapter(GsonUtils.IntegerSetAdapter.class)
 	public Set<Integer> npcIds = EMPTY;
 	@JsonAdapter(GsonUtils.IntegerSetAdapter.class)
@@ -38,6 +45,8 @@ public class ModelOverride
 	public int uvOrientationX = 0;
 	public int uvOrientationY = 0;
 	public int uvOrientationZ = 0;
+	public int rotate = 0;
+	public boolean hide = false;
 	public boolean retainVanillaUvs = true;
 	public boolean forceMaterialChanges = false;
 	public boolean flatNormals = false;
@@ -53,6 +62,9 @@ public class ModelOverride
 
 	public Map<Material, ModelOverride> materialOverrides;
 
+	public transient boolean isDummy;
+	public transient Map<AABB, ModelOverride> areaOverrides;
+
 	public void gsonReallyShouldSupportThis() {
 		// Ensure there are no nulls in case of invalid configuration during development
 		if (baseMaterial == null)
@@ -65,29 +77,72 @@ public class ModelOverride
 			tzHaarRecolorType = ModelOverride.NONE.tzHaarRecolorType;
 		if (inheritTileColorType == null)
 			inheritTileColorType = ModelOverride.NONE.inheritTileColorType;
+		if (areas == null)
+			areas = new AABB[0];
 		if (hideInAreas == null)
 			hideInAreas = new AABB[0];
-		if (!castShadows && shadowOpacityThreshold == 0)
-			shadowOpacityThreshold = 1;
+	}
+
+	public void normalize() {
+		baseMaterial = baseMaterial.resolveReplacements();
+		textureMaterial = textureMaterial.resolveReplacements();
+
+		if (materialOverrides != null) {
+			var normalized = new HashMap<Material, ModelOverride>();
+			for (var entry : materialOverrides.entrySet()) {
+				entry.getValue().normalize();
+				normalized.put(entry.getKey().resolveReplacements(), entry.getValue());
+			}
+			materialOverrides = normalized;
+		}
+
 		if (uvOrientationX == 0)
 			uvOrientationX = uvOrientation;
 		if (uvOrientationY == 0)
 			uvOrientationY = uvOrientation;
 		if (uvOrientationZ == 0)
 			uvOrientationZ = uvOrientation;
+
+		if (!castShadows && shadowOpacityThreshold == 0)
+			shadowOpacityThreshold = 1;
 	}
 
-	public void resolveMaterials() {
-		baseMaterial = baseMaterial.resolveReplacements();
-		textureMaterial = textureMaterial.resolveReplacements();
-		if (materialOverrides != null) {
-			var normalized = new HashMap<Material, ModelOverride>();
-			for (var entry : materialOverrides.entrySet()) {
-				entry.getValue().resolveMaterials();
-				normalized.put(entry.getKey().resolveReplacements(), entry.getValue());
-			}
-			materialOverrides = normalized;
-		}
+	public ModelOverride copy() {
+		return new ModelOverride(
+			description,
+			seasonalTheme,
+			areas,
+			npcIds,
+			objectIds,
+			baseMaterial,
+			textureMaterial,
+			uvType,
+			uvScale,
+			uvOrientation,
+			uvOrientationX,
+			uvOrientationY,
+			uvOrientationZ,
+			rotate,
+			hide,
+			retainVanillaUvs,
+			forceMaterialChanges,
+			flatNormals,
+			removeBakedLighting,
+			castShadows,
+			receiveShadows,
+			shadowOpacityThreshold,
+			tzHaarRecolorType,
+			inheritTileColorType,
+			hideInAreas,
+			materialOverrides,
+			isDummy,
+			areaOverrides
+		);
+	}
+
+	private ModelOverride(boolean isDummy) {
+		this();
+		this.isDummy = isDummy;
 	}
 
 	public void computeModelUvw(float[] out, int i, float x, float y, float z, int orientation) {
@@ -316,6 +371,43 @@ public class ModelOverride
 					out[j + 1] = v[i][2] + .5f;
 				}
 			}
+		}
+	}
+
+	public void applyRotation(Model model) {
+		switch (rotate) {
+			case 0:
+				break;
+			case 90:
+				model.rotateY90Ccw();
+				break;
+			case 180:
+				model.rotateY180Ccw();
+				break;
+			case 270:
+				model.rotateY270Ccw();
+				break;
+			default:
+				log.debug(
+					"Unsupported rotation of {} degrees in model override: '{}'",
+					rotate,
+					description
+				);
+				break;
+		}
+	}
+
+	public void revertRotation(Model model) {
+		switch (rotate) {
+			case 90:
+				model.rotateY270Ccw();
+				break;
+			case 180:
+				model.rotateY180Ccw();
+				break;
+			case 270:
+				model.rotateY90Ccw();
+				break;
 		}
 	}
 }

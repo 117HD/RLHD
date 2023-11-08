@@ -55,6 +55,7 @@ import rs117.hd.scene.lights.LightType;
 import rs117.hd.scene.lights.SceneLight;
 import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.HDUtils;
+import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
 
@@ -89,6 +90,9 @@ public class LightManager {
 
 	@Inject
 	private HdPluginConfig config;
+
+	@Inject
+	private ModelOverrideManager modelOverrideManager;
 
 	@Inject
 	private EntityHiderPlugin entityHiderPlugin;
@@ -488,7 +492,7 @@ public class LightManager {
 			if (light.distanceSquared > maxDistanceSquared)
 				break;
 
-			if (!light.visible)
+			if (!light.visible || light.modelOverride.hide)
 				continue;
 
 			if (!light.visibleFromOtherPlanes) {
@@ -547,6 +551,10 @@ public class LightManager {
 			light.plane = -1;
 			light.npc = npc;
 			light.visible = false;
+			light.modelOverride = modelOverrideManager.getOverride(
+				ModelHash.packUuid(npc.getId(), ModelHash.TYPE_NPC),
+				sceneContext.localToWorld(npc.getLocalLocation(), client.getPlane())
+			);
 
 			sceneContext.lights.add(light);
 		}
@@ -657,6 +665,10 @@ public class LightManager {
 			light.y = lightY;
 			light.z = (int) tileHeight - light.height - 1;
 			light.object = tileObject;
+			light.modelOverride = modelOverrideManager.getOverride(
+				ModelHash.packUuid(tileObject.getId(), ModelHash.TYPE_OBJECT),
+				sceneContext.localToWorld(light.x, light.y, light.plane)
+			);
 
 			sceneContext.lights.add(light);
 		}
@@ -686,11 +698,16 @@ public class LightManager {
 		for (Light lightDef : GRAPHICS_OBJECT_LIGHTS.get(graphicsObject.getId())) {
 			SceneLight light = new SceneLight(lightDef);
 			light.graphicsObject = graphicsObject;
-			light.x = graphicsObject.getLocation().getX();
-			light.y = graphicsObject.getLocation().getY();
+			var lp = graphicsObject.getLocation();
+			light.x = lp.getX();
+			light.y = lp.getY();
 			light.z = graphicsObject.getZ();
 			light.plane = graphicsObject.getLevel();
 			light.fadeInDuration = 300;
+			light.modelOverride = modelOverrideManager.getOverride(
+				ModelHash.packUuid(graphicsObject.getId(), ModelHash.TYPE_OBJECT),
+				sceneContext.localToWorld(light.x, light.y, light.plane)
+			);
 
 			sceneContext.lights.add(light);
 		}
