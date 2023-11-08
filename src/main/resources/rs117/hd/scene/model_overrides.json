@@ -1570,7 +1570,7 @@
     "castShadows": false
   },
   {
-    "description": "Fixes weird pattern made by grass in POH, NOTE: need to add area restrictions for model overrides",
+    "description": "Fixes weird pattern made by grass in POH",
     "areas": [ "PLAYER_OWNED_HOUSE" ],
     "objectIds": [
       4530
