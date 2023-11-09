@@ -683,13 +683,43 @@ public enum Material {
 	),
 	EVERGREEN_LEAVES_1(p -> p.setTextureScale(1.125f, 1.125f)),
 	EVERGREEN_LEAVES_3(p -> p.setTextureScale(1.125f, 1.125f)),
-	OAK_LEAVES_1(p -> p.setParent(EVERGREEN_LEAVES_1).setTextureScale(1.025f, 1.025f)),
-	OAK_LEAVES_3(p -> p.setParent(EVERGREEN_LEAVES_3).setTextureScale(1.025f, 1.025f)),
-	DOUBLE_TREE_LEAVES_1(p -> p.setParent(EVERGREEN_LEAVES_1)),
-	DOUBLE_TREE_LEAVES_3(p -> p.setParent(EVERGREEN_LEAVES_3)),
+	OAK_LEAVES_1(EVERGREEN_LEAVES_1, p -> p.setTextureScale(1.025f, 1.025f)),
+	OAK_LEAVES_3(EVERGREEN_LEAVES_3, p -> p.setTextureScale(1.025f, 1.025f)),
+	DOUBLE_TREE_LEAVES_1(EVERGREEN_LEAVES_1, p -> {}),
+	DOUBLE_TREE_LEAVES_3(EVERGREEN_LEAVES_3, p -> {}),
 
 
 	// Seasonal
+	AUTUMN_LEAVES_1(p -> p
+		.replaceIf(SeasonalTheme.AUTUMN, DOUBLE_TREE_LEAVES_1)
+		.setTextureScale(1.025f, 1.025f)
+		.setHasTransparency(true)
+	),
+	AUTUMN_LEAVES_2(p -> p
+		.replaceIf(SeasonalTheme.AUTUMN, LEAVES_2)
+		.setTextureScale(1.025f, 1.025f)
+		.setHasTransparency(true)
+	),
+	AUTUMN_LEAVES_3(p -> p
+		.replaceIf(SeasonalTheme.AUTUMN, DOUBLE_TREE_LEAVES_3)
+		.setTextureScale(1.025f, 1.025f)
+		.setHasTransparency(true)
+	),
+	AUTUMN_LEAVES_1_GOLDEN(p -> p
+		.replaceIf(SeasonalTheme.AUTUMN, LEAVES_1)
+		.setTextureScale(1.025f, 1.025f)
+		.setHasTransparency(true)
+	),
+	AUTUMN_OAK_LEAVES_1(p -> p
+		.replaceIf(SeasonalTheme.AUTUMN, OAK_LEAVES_1)
+		.setTextureScale(1.025f, 1.025f)
+		.setHasTransparency(true)
+	),
+	AUTUMN_OAK_LEAVES_3(p -> p
+		.replaceIf(SeasonalTheme.AUTUMN, OAK_LEAVES_3)
+		.setTextureScale(1.025f, 1.025f)
+		.setHasTransparency(true)
+	),
 	WINTER_WILLOW_LEAVES(p -> p
 		.replaceIf(SeasonalTheme.WINTER, WILLOW_LEAVES)
 		.setTextureScale(1.025f, 1.025f)
@@ -761,36 +791,6 @@ public enum Material {
 		.setNormalMap(JAGGED_STONE_TILE_N)
 		.setSpecular(0.6f, 30)
 		.setBrightness(12)),
-	AUTUMN_LEAVES_1(p -> p
-		.replaceIf(SeasonalTheme.AUTUMN, DOUBLE_TREE_LEAVES_1)
-		.setTextureScale(1.025f, 1.025f)
-		.setHasTransparency(true)
-	),
-	AUTUMN_LEAVES_2(p -> p
-		.replaceIf(SeasonalTheme.AUTUMN, LEAVES_2)
-		.setTextureScale(1.025f, 1.025f)
-		.setHasTransparency(true)
-	),
-	AUTUMN_LEAVES_3(p -> p
-		.replaceIf(SeasonalTheme.AUTUMN, DOUBLE_TREE_LEAVES_3)
-		.setTextureScale(1.025f, 1.025f)
-		.setHasTransparency(true)
-	),
-	AUTUMN_LEAVES_1_GOLDEN(p -> p
-		.replaceIf(SeasonalTheme.AUTUMN, LEAVES_1)
-		.setTextureScale(1.025f, 1.025f)
-		.setHasTransparency(true)
-	),
-	AUTUMN_OAK_LEAVES_1(p -> p
-		.replaceIf(SeasonalTheme.AUTUMN, OAK_LEAVES_1)
-		.setTextureScale(1.025f, 1.025f)
-		.setHasTransparency(true)
-	),
-	AUTUMN_OAK_LEAVES_3(p -> p
-		.replaceIf(SeasonalTheme.AUTUMN, OAK_LEAVES_3)
-		.setTextureScale(1.025f, 1.025f)
-		.setHasTransparency(true)
-	),
 	;
 
 	public final Material parent;

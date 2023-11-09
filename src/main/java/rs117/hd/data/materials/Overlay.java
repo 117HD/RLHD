@@ -920,10 +920,7 @@ public enum Overlay {
 	LAVA(19, GroundMaterial.HD_LAVA, p -> p.hue(0).saturation(0).shiftLightness(127).blended(false)),
 	OVERLAY_20(20, GroundMaterial.MARBLE_DARK),
 	OVERLAY_28(28, GroundMaterial.BRICK, p -> p.blended(false)),
-	OVERLAY_29(p -> p
-		.ids(29)
-		.groundMaterial(GroundMaterial.GRASS_1)
-	),
+	OVERLAY_29(29, GroundMaterial.GRASS_1),
 	OVERLAY_32(32, GroundMaterial.CONCRETE),
 	OVERLAY_90(90, GroundMaterial.DIRT), // Known locations: 90 = Dark Wizards Tower; Random shading in the overworld
 	OVERLAY_DIRT_PATH(GroundMaterial.VARIED_DIRT, p -> p
