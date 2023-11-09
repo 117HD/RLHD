@@ -1347,17 +1347,14 @@ public enum Environment
 		private float[] waterColor = rgb(185, 214, 255);
 		private boolean customWaterColor = false;
 
-		public Properties setFogDepth(int depth)
-		{
+		public Properties setFogDepth(int depth) {
 			this.fogDepth = depth * 10;
 			this.customFogDepth = true;
 			return this;
 		}
 
-		public Properties setFogColor(String hex)
-		{
-			Color color = Color.decode(hex);
-			return setFogColor(color.getRed(), color.getGreen(), color.getBlue());
+		public Properties setFogColor(String hex) {
+			return setFogColor(rgb(hex));
 		}
 
 		public Properties setFogColor(float r, float g, float b) {
@@ -1370,8 +1367,7 @@ public enum Environment
 			return this;
 		}
 
-		public Properties setAmbientStrength(float str)
-		{
+		public Properties setAmbientStrength(float str) {
 			this.ambientStrength = str;
 			this.customAmbientStrength = true;
 			return this;

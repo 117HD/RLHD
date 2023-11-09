@@ -1795,6 +1795,35 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 			glBindVertexArray(vaoSceneHandle);
 
+			// Option A
+//			if (configSeasonalTheme == SeasonalTheme.AUTUMN) {
+//				environmentManager.currentFogColor = ColorUtils.rgb(243, 229, 185);
+//				environmentManager.currentDirectionalColor = ColorUtils.colorTemperatureToLinearRgb(3750);
+//				environmentManager.currentDirectionalStrength = 3.0f;
+//				environmentManager.currentAmbientColor = environmentManager.currentFogColor;
+//				environmentManager.currentAmbientStrength = .75f;
+//				environmentManager.currentWaterColor = environmentManager.currentFogColor;
+//			}
+
+			// Option B
+//			if (configSeasonalTheme == SeasonalTheme.AUTUMN) {
+//				environmentManager.currentFogColor = ColorUtils.colorTemperatureToLinearRgb(3000);
+//				environmentManager.currentDirectionalColor = ColorUtils.colorTemperatureToLinearRgb(3750);
+//				environmentManager.currentDirectionalStrength = 3.0f;
+//				environmentManager.currentAmbientColor = environmentManager.currentFogColor;
+//				environmentManager.currentAmbientStrength = .75f;
+//				environmentManager.currentWaterColor = environmentManager.currentFogColor;
+//			}
+
+			// Option C
+			if (configSeasonalTheme == SeasonalTheme.AUTUMN) {
+				environmentManager.currentFogColor = ColorUtils.rgb("#FFC085");
+				environmentManager.currentWaterColor = environmentManager.currentFogColor;
+			}
+
+			environmentManager.currentLightYaw = 200;
+			environmentManager.currentLightPitch = 220;
+
 			float lightPitch = (float) Math.toRadians(environmentManager.currentLightPitch);
 			float lightYaw = (float) Math.toRadians(environmentManager.currentLightYaw);
 			float[] lightViewMatrix = Mat4.rotateX(lightPitch);
