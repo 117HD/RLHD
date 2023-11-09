@@ -681,68 +681,74 @@ public enum Material {
 	OOZE(GRAY_65, p -> p
 		.setSpecular(1.5f, 600)
 	),
-	EVERGREEN_LEAVES_1(p -> p.setTextureScale(1.125f, 1.125f)),
-	EVERGREEN_LEAVES_3(p -> p.setTextureScale(1.125f, 1.125f)),
-	OAK_LEAVES_1(EVERGREEN_LEAVES_1, p -> p.setTextureScale(1.025f, 1.025f)),
-	OAK_LEAVES_3(EVERGREEN_LEAVES_3, p -> p.setTextureScale(1.025f, 1.025f)),
+	EVERGREEN_LEAVES_1(p -> p
+		.setHasTransparency(true)
+		.setTextureScale(1.025f, 1.025f)
+	),
+	EVERGREEN_LEAVES_3(p -> p
+		.setHasTransparency(true)
+		.setTextureScale(1.025f, 1.025f)
+	),
+	OAK_LEAVES_1(EVERGREEN_LEAVES_1, p -> {}),
+	OAK_LEAVES_3(EVERGREEN_LEAVES_3, p -> {}),
 	DOUBLE_TREE_LEAVES_1(EVERGREEN_LEAVES_1, p -> {}),
 	DOUBLE_TREE_LEAVES_3(EVERGREEN_LEAVES_3, p -> {}),
 
 
 	// Seasonal
 	AUTUMN_LEAVES_1(p -> p
-		.replaceIf(SeasonalTheme.AUTUMN, DOUBLE_TREE_LEAVES_1)
-		.setTextureScale(1.025f, 1.025f)
 		.setHasTransparency(true)
+		.setTextureScale(1.025f, 1.025f)
+		.replaceIf(SeasonalTheme.AUTUMN, DOUBLE_TREE_LEAVES_1)
 	),
 	AUTUMN_LEAVES_2(p -> p
-		.replaceIf(SeasonalTheme.AUTUMN, LEAVES_2)
-		.setTextureScale(1.025f, 1.025f)
 		.setHasTransparency(true)
+		.setTextureScale(1.025f, 1.025f)
+		.replaceIf(SeasonalTheme.AUTUMN, LEAVES_2)
 	),
 	AUTUMN_LEAVES_3(p -> p
-		.replaceIf(SeasonalTheme.AUTUMN, DOUBLE_TREE_LEAVES_3)
-		.setTextureScale(1.025f, 1.025f)
 		.setHasTransparency(true)
+		.setTextureScale(1.025f, 1.025f)
+		.replaceIf(SeasonalTheme.AUTUMN, DOUBLE_TREE_LEAVES_3)
 	),
 	AUTUMN_LEAVES_1_GOLDEN(p -> p
-		.replaceIf(SeasonalTheme.AUTUMN, LEAVES_1)
-		.setTextureScale(1.025f, 1.025f)
 		.setHasTransparency(true)
+		.setTextureScale(1.025f, 1.025f)
+		.replaceIf(SeasonalTheme.AUTUMN, LEAVES_1)
 	),
 	AUTUMN_OAK_LEAVES_1(p -> p
-		.replaceIf(SeasonalTheme.AUTUMN, OAK_LEAVES_1)
-		.setTextureScale(1.025f, 1.025f)
 		.setHasTransparency(true)
+		.setTextureScale(1.025f, 1.025f)
+		.replaceIf(SeasonalTheme.AUTUMN, OAK_LEAVES_1)
 	),
 	AUTUMN_OAK_LEAVES_3(p -> p
-		.replaceIf(SeasonalTheme.AUTUMN, OAK_LEAVES_3)
-		.setTextureScale(1.025f, 1.025f)
 		.setHasTransparency(true)
+		.setTextureScale(1.025f, 1.025f)
+		.replaceIf(SeasonalTheme.AUTUMN, OAK_LEAVES_3)
 	),
 	WINTER_WILLOW_LEAVES(p -> p
-		.replaceIf(SeasonalTheme.WINTER, WILLOW_LEAVES)
-		.setTextureScale(1.025f, 1.025f)
 		.setHasTransparency(true)
+		.setTextureScale(1.025f, 1.025f)
+		.replaceIf(SeasonalTheme.WINTER, WILLOW_LEAVES)
 	),
 	WINTER_MAPLE_LEAVES(p -> p
-		.replaceIf(SeasonalTheme.WINTER, MAPLE_LEAVES)
-		.setTextureScale(1.3f, 1.025f)
 		.setHasTransparency(true)
+		.setTextureScale(1.3f, 1.025f)
+		.replaceIf(SeasonalTheme.WINTER, MAPLE_LEAVES)
 	),
 	WINTER_LEAVES_1(p -> p
-		.replaceIf(SeasonalTheme.WINTER, LEAVES_1, EVERGREEN_LEAVES_1, OAK_LEAVES_1)
-		.setTextureScale(1.025f, 1.025f)
 		.setHasTransparency(true)
+		.setTextureScale(1.025f, 1.025f)
+		.replaceIf(SeasonalTheme.WINTER, LEAVES_1, EVERGREEN_LEAVES_1, OAK_LEAVES_1)
 	),
 	WINTER_LEAVES_2(p -> p
-		.replaceIf(SeasonalTheme.WINTER, LEAVES_2)
-		.setTextureScale(1.025f, 1.025f)
 		.setHasTransparency(true)
+		.setTextureScale(1.025f, 1.025f)
+		.replaceIf(SeasonalTheme.WINTER, LEAVES_2)
 	),
 	WINTER_LEAVES_3(p -> p
-		.replaceIf(SeasonalTheme.WINTER, LEAVES_3, OAK_LEAVES_3, DOUBLE_TREE_LEAVES_3)
 		.setHasTransparency(true)
+		.replaceIf(SeasonalTheme.WINTER, LEAVES_3, OAK_LEAVES_3, DOUBLE_TREE_LEAVES_3)
 	),
 	WINTER_PAINTING_LANDSCAPE(p -> p
 		.replaceIf(SeasonalTheme.WINTER, PAINTING_LANDSCAPE)
@@ -762,35 +768,36 @@ public enum Material {
 		.setSpecular(0.3f, 30)
 		.setNormalMap(HD_ROOF_SHINGLES_N)),
 	WINTER_HD_ROOF_BRICK_TILES(p -> p
-		.replaceIf(
-			SeasonalTheme.WINTER,
-			ROOF_BRICK_TILE,
-			ROOF_BRICK_TILE_GREEN,
-			ROOF_BRICK_TILE_DARK
-		)
 		.setSpecular(0.3f, 30)
-		.setNormalMap(HD_ROOF_BRICK_TILE_N)),
+		.setNormalMap(HD_ROOF_BRICK_TILE_N)
+		.replaceIf(SeasonalTheme.WINTER, ROOF_BRICK_TILE, ROOF_BRICK_TILE_GREEN, ROOF_BRICK_TILE_DARK)
+	),
 	WINTER_HD_ROOF_SLATE(p -> p
+		.setSpecular(0.5f, 30)
 		.replaceIf(SeasonalTheme.WINTER, ROOF_SLATE)
-		.setSpecular(0.5f, 30)),
+	),
 	WINTER_HD_ROOF_WOODEN_SLATE(p -> p
+		.setSpecular(0.5f, 30)
 		.replaceIf(SeasonalTheme.WINTER, ROOF_WOODEN_SLATE)
-		.setSpecular(0.5f, 30)),
+	),
 	WINTER_JAGGED_STONE_TILE(p -> p
 		.setDisplacementMap(JAGGED_STONE_TILE_D)
 		.setNormalMap(JAGGED_STONE_TILE_N)
 		.setSpecular(0.6f, 30)
-		.setBrightness(1.4f)),
+		.setBrightness(1.4f)
+	),
 	WINTER_JAGGED_STONE_TILE_LIGHT(WINTER_JAGGED_STONE_TILE, p -> p
 		.setDisplacementMap(JAGGED_STONE_TILE_D)
 		.setNormalMap(JAGGED_STONE_TILE_N)
 		.setSpecular(0.6f, 30)
-		.setBrightness(4)),
+		.setBrightness(4)
+	),
 	WINTER_JAGGED_STONE_TILE_LIGHTER(WINTER_JAGGED_STONE_TILE, p -> p
 		.setDisplacementMap(JAGGED_STONE_TILE_D)
 		.setNormalMap(JAGGED_STONE_TILE_N)
 		.setSpecular(0.6f, 30)
-		.setBrightness(12)),
+		.setBrightness(12)
+	),
 	;
 
 	public final Material parent;
