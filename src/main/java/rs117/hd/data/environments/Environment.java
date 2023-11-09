@@ -1260,14 +1260,6 @@ public enum Environment
 		.setLightDirection(260f, 10f)
 		.setWaterColor(102, 234, 255)
 	),
-	OVERCAST(Area.NONE, new Properties()
-		.setFogColor("#898984")
-		.setFogDepth(35)
-		.setAmbientColor("#B7B7B3")
-		.setAmbientStrength(2.5f)
-		.setDirectionalColor("#FFFFFF")
-		.setDirectionalStrength(1.5f)
-	),
 	AUTUMN(Area.NONE, new Properties()
 		.setFogColor(ColorUtils.colorTemperatureToLinearRgb(2500))
 		.setFogDepth(40)
