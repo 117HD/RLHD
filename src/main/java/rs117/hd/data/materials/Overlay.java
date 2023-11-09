@@ -70,7 +70,6 @@ public enum Overlay {
 	WINTER_CANIFIS_BAR_FLOOR_BLENDED(85, Area.CANIFIS_BAR_FLOOR_BLENDED, GroundMaterial.HD_WOOD_PLANKS_1, p -> p
 		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_DIRT)
 	),
-	AUTUMN_GRASS(p -> p.ids().groundMaterial(GroundMaterial.OVERWORLD_GRASS_1).hue(10).shiftLightness(-7)),
 	DEFAULT_GRASS(p -> p.ids().groundMaterial(GroundMaterial.OVERWORLD_GRASS_1)),
 
 	// Tutorial Island
@@ -529,7 +528,6 @@ public enum Overlay {
 		.ids(0)
 		.area(Area.DRAYNOR_WOM_HOUSE_FRONT)
 		.groundMaterial(GroundMaterial.OVERWORLD_GRASS_1)
-		.seasonalReplacement(SeasonalTheme.AUTUMN, AUTUMN_GRASS)
 		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_GRASS)
 	),
 	DRAYNOR_WOM_FRONT_FIX_10(10, Area.DRAYNOR_WOM_HOUSE_FRONT, GroundMaterial.OVERWORLD_GRASS_1, p -> p
@@ -578,14 +576,9 @@ public enum Overlay {
 			(plugin, scene, tile, override) -> {
 				if (plugin.configGroundBlending)
 					return DRAYNOR_BANK_ENTRANCE_PATH;
-				switch (plugin.configSeasonalTheme) {
-					case AUTUMN:
-						return AUTUMN_GRASS;
-					case WINTER:
-						return WINTER_GRASS;
-					default:
-						return override;
-				}
+				if (plugin.configSeasonalTheme == SeasonalTheme.WINTER)
+					return WINTER_GRASS;
+				return override;
 			}
 		)
 	),
@@ -637,7 +630,6 @@ public enum Overlay {
 		.ids(0)
 		.area(Area.DRAYNOR_PATH_BLENDING_FIXES)
 		.groundMaterial(GroundMaterial.OVERWORLD_GRASS_1)
-		.seasonalReplacement(SeasonalTheme.AUTUMN, AUTUMN_GRASS)
 		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_GRASS)
 	),
 	DRAYNOR_MANS_HOUSE_FLOOR(14, Area.DRAYNOR_NORTHERN_HOUSE_FLOOR, GroundMaterial.WOOD_PLANKS_1, p -> p
@@ -931,7 +923,6 @@ public enum Overlay {
 	OVERLAY_29(p -> p
 		.ids(29)
 		.groundMaterial(GroundMaterial.GRASS_1)
-		.seasonalReplacement(SeasonalTheme.AUTUMN, AUTUMN_GRASS)
 	),
 	OVERLAY_32(32, GroundMaterial.CONCRETE),
 	OVERLAY_90(90, GroundMaterial.DIRT), // Known locations: 90 = Dark Wizards Tower; Random shading in the overworld
