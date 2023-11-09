@@ -63,12 +63,12 @@ public enum Overlay {
 		.groundMaterial(GroundMaterial.SNOW_2)
 	),
 	WINTER_EAST_ARDOUGNE_CASTLE_PATH_FIX(10, Area.EAST_ARDOUGNE_CASTLE_PATH_FIX, GroundMaterial.VARROCK_PATHS, p -> p
-		.replaceWithIf(WINTER_JAGGED_STONE_TILE_LIGHT, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER)
+		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_JAGGED_STONE_TILE_LIGHT)
 		.shiftLightness(3)
 		.blended(false)
 	),
 	WINTER_CANIFIS_BAR_FLOOR_BLENDED(85, Area.CANIFIS_BAR_FLOOR_BLENDED, GroundMaterial.HD_WOOD_PLANKS_1, p -> p
-		.replaceWithIf(WINTER_DIRT, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER)
+		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_DIRT)
 	),
 	AUTUMN_GRASS(p -> p.ids().groundMaterial(GroundMaterial.OVERWORLD_GRASS_1).hue(10).shiftLightness(-7)),
 	DEFAULT_GRASS(p -> p.ids().groundMaterial(GroundMaterial.OVERWORLD_GRASS_1)),
@@ -115,7 +115,7 @@ public enum Overlay {
 	),
 	LUMBRIDGE_TOWERS_EXTERIOR(10, Area.LUMBRIDGE_CASTLE, GroundMaterial.VARROCK_PATHS, p -> p
 		.shiftLightness(10)
-		.replaceWithIf(WINTER_JAGGED_STONE_TILE_LIGHT, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER)
+		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_JAGGED_STONE_TILE_LIGHT)
 	),
 	BLEND_IMPROVEMENT_1(10, Area.LUMBRIDGE_DRAYNOR_PATH_BLEND_1, GroundMaterial.GRAVEL, p -> p.shiftLightness(6).hue(7).saturation(1)),
 	BLEND_IMPROVEMENT_2(10, Area.LUMBRIDGE_DRAYNOR_PATH_BLEND_2, GroundMaterial.GRAVEL, p -> p.shiftLightness(9).hue(7).saturation(1)),
@@ -153,7 +153,7 @@ public enum Overlay {
 		.ids(8)
 		.groundMaterial(GroundMaterial.GRAVEL)
 		.area(Area.VARROCK_GRAND_EXCHANGE_ROOF)
-		.replaceWithIf(WINTER_GRASS, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER)),
+		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_GRASS)),
 	VARROCK_MUSEUM_SOUTH_PATH_FIX_1(-85, Area.VARROCK_MUSEUM_SOUTH_PATH_FIX, GroundMaterial.DIRT, p -> p.shiftSaturation(2)),
 	VARROCK_MUSEUM_SOUTH_PATH_FIX_2(-84, Area.VARROCK_MUSEUM_SOUTH_PATH_FIX, GroundMaterial.DIRT, p -> p.shiftSaturation(1)),
 	VARROCK_MUSEUM_SOUTH_PATH_FIX_3(56, Area.VARROCK_MUSEUM_SOUTH_PATH_FIX, GroundMaterial.VARROCK_PATHS, p -> p.shiftLightness(4)),
@@ -314,7 +314,7 @@ public enum Overlay {
 		.blendedAsOpposite(true)
 		.lightness(30)),
 	EDGEVILLE_BANK_SURROUNDING_PATH(10, Area.EDGEVILLE_BANK_SURROUNDING_PATH, GroundMaterial.VARROCK_PATHS, p -> p
-		.replaceWithIf(WINTER_JAGGED_STONE_TILE_LIGHT, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER)
+		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_JAGGED_STONE_TILE_LIGHT)
 	),
 	EDGEVILLE_DORIS_HOUSE_FLOOR(119, Area.EDGEVILLE_DORIS_HOUSE, GroundMaterial.TILE_SMALL),
 	EDGEVILLE_FURNACE_FLOOR(10, Area.EDGEVILLE_FURNACE_FLOOR, GroundMaterial.TILES_2x2_1, p -> p
@@ -460,7 +460,7 @@ public enum Overlay {
 	),
 	EAST_ARDOUGNE_PATHS_1(10, Area.EAST_ARDOUGNE, GroundMaterial.VARROCK_PATHS, p -> p
 		.shiftLightness(6)
-		.replaceWithIf(WINTER_JAGGED_STONE_TILE_LIGHT, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER)
+		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_JAGGED_STONE_TILE_LIGHT)
 	),
 	WIZARD_HOUSE_TILE_LIGHT(38, Area.EAST_ARDOUGNE, GroundMaterial.MARBLE_1_SEMIGLOSS, p -> p.blended(false)),
 	WIZARD_HOUSE_TILE_DARK(40, Area.EAST_ARDOUGNE, GroundMaterial.MARBLE_2_SEMIGLOSS, p -> p.blended(false)),
@@ -489,7 +489,7 @@ public enum Overlay {
 	),
 	KHAZARD_BATTLEFIELD_COBBLE_INDOORS(11, Area.KHAZARD_BATTLEFIELD_COBBLE, GroundMaterial.VARROCK_PATHS),
 	KHAZARD_BATTLEFIELD_COBBLE_OUTSIDE(11, Area.KHAZARD_BATTLEFIELD_COBBLE_OUTSIDE, GroundMaterial.VARROCK_PATHS, p -> p
-		.replaceWithIf(WINTER_JAGGED_STONE_TILE_LIGHT_2, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER)
+		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_JAGGED_STONE_TILE_LIGHT_2)
 	),
 	KANDARIN_MONISTARY_WINGS_TEXTURE_13(13, Area.KANDARIN_MONISTARY_WINGS, GroundMaterial.TILES_2X2_2_SEMIGLOSS),
 	KANDARIN_MONISTARY_FLOOR_TEXTURE(12, Area.KANDARIN_MONISTARY, GroundMaterial.VARROCK_PATHS, p -> p
@@ -529,8 +529,8 @@ public enum Overlay {
 		.ids(0)
 		.area(Area.DRAYNOR_WOM_HOUSE_FRONT)
 		.groundMaterial(GroundMaterial.OVERWORLD_GRASS_1)
-		.replaceWithIf(AUTUMN_GRASS, plugin -> plugin.configSeasonalTheme == SeasonalTheme.AUTUMN)
-		.replaceWithIf(WINTER_GRASS, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER)
+		.seasonalReplacement(SeasonalTheme.AUTUMN, AUTUMN_GRASS)
+		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_GRASS)
 	),
 	DRAYNOR_WOM_FRONT_FIX_10(10, Area.DRAYNOR_WOM_HOUSE_FRONT, GroundMaterial.OVERWORLD_GRASS_1, p -> p
 		.hue(8)
@@ -637,8 +637,8 @@ public enum Overlay {
 		.ids(0)
 		.area(Area.DRAYNOR_PATH_BLENDING_FIXES)
 		.groundMaterial(GroundMaterial.OVERWORLD_GRASS_1)
-		.replaceWithIf(AUTUMN_GRASS, plugin -> plugin.configSeasonalTheme == SeasonalTheme.AUTUMN)
-		.replaceWithIf(WINTER_GRASS, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER)
+		.seasonalReplacement(SeasonalTheme.AUTUMN, AUTUMN_GRASS)
+		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_GRASS)
 	),
 	DRAYNOR_MANS_HOUSE_FLOOR(14, Area.DRAYNOR_NORTHERN_HOUSE_FLOOR, GroundMaterial.WOOD_PLANKS_1, p -> p
 		.blended(false)
@@ -728,7 +728,7 @@ public enum Overlay {
 		.blended(false)),
 	FOSSIL_ISLAND_HILL_HOUSE_INTERIOR(11, Area.FOSSIL_ISLAND_HILL_HOUSE_INTERIOR, GroundMaterial.VARROCK_PATHS),
 	FOSSIL_ISLAND_HILL_HOUSE(11, Area.FOSSIL_ISLAND_HILL_HOUSE_FIX, GroundMaterial.VARROCK_PATHS, p -> p
-		.replaceWithIf(WINTER_JAGGED_STONE_TILE_LIGHT_2, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER)
+		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_JAGGED_STONE_TILE_LIGHT_2)
 	),
 	FOSSIL_ISLAND_HILL_TEXTURE_FIX(11, Area.FOSSIL_ISLAND_HILL_TEXTURE_FIX, GroundMaterial.VARIED_DIRT),
 
@@ -768,14 +768,14 @@ public enum Overlay {
 	// Kebos Lowlands
 	LIZARDMAN_TEMPLE_WATER(-100, Area.LIZARDMAN_TEMPLE, WaterType.SWAMP_WATER_FLAT),
 	NORTHERN_WASTES_COBBLE(GroundMaterial.VARROCK_PATHS, p -> p
-		.replaceWithIf(WINTER_JAGGED_STONE_TILE, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER)
+		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_JAGGED_STONE_TILE)
 		.ids(44)
 	),
 	XAMPHUR_BOSS_TILES(p -> p.ids(115, 133).area(Area.XAMPHUR_BOSS).groundMaterial(GroundMaterial.MARBLE_2_SEMIGLOSS).blended(false)),
 
 	OVERLAY_KOUREND_PATH(Area.ZEAH, GroundMaterial.MARBLE_1, p -> p.ids(133).blended(false)),
 	OVERLAY_ZEAH_PATHS(Area.ZEAH, GroundMaterial.VARROCK_PATHS, p -> p
-		.replaceWithIf(WINTER_JAGGED_STONE_TILE_LIGHT_2, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER)
+		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_JAGGED_STONE_TILE_LIGHT_2)
 		.ids(11)
 	),
 
@@ -797,7 +797,7 @@ public enum Overlay {
 		.area(Area.ZEAH)
 		.groundMaterial(GroundMaterial.VARIED_DIRT)
 		.ids(114, 148)
-		.replaceWithIf(WINTER_DIRT, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER)
+		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_DIRT)
 	),
 
 	// Burthorpe games room
@@ -902,14 +902,14 @@ public enum Overlay {
 	),
 	OVERLAY_GRAVEL(GroundMaterial.GRAVEL, p -> p.ids(-76, 2, 3, 4, 6, 8, 9, 10, 119, 127)),
 	OVERLAY_VARROCK_PATHS(GroundMaterial.VARROCK_PATHS, p -> p
-		.replaceWithIf(WINTER_JAGGED_STONE_TILE, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER)
+		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_JAGGED_STONE_TILE)
 		.ids(-85, -77, 11)
 	),
 	WIZARD_TOWER_ROOF(GroundMaterial.MARBLE_1_GLOSS, p -> p
 		.ids(33)
 		.blended(false)
 		.area(Area.WIZARD_TOWER_ROOF)
-		.replaceWithIf(SNOW_2, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER)
+		.seasonalReplacement(SeasonalTheme.WINTER, SNOW_2)
 	),
 	OVERLAY_SWAMP_WATER(WaterType.SWAMP_WATER, p -> p.ids(-100, 7)),
 	OVERLAY_WOOD_PLANKS(GroundMaterial.WOOD_PLANKS_1, p -> p.ids(5, 35)),
@@ -931,7 +931,7 @@ public enum Overlay {
 	OVERLAY_29(p -> p
 		.ids(29)
 		.groundMaterial(GroundMaterial.GRASS_1)
-		.replaceWithIf(AUTUMN_GRASS, plugin -> plugin.configSeasonalTheme == SeasonalTheme.AUTUMN)
+		.seasonalReplacement(SeasonalTheme.AUTUMN, AUTUMN_GRASS)
 	),
 	OVERLAY_32(32, GroundMaterial.CONCRETE),
 	OVERLAY_90(90, GroundMaterial.DIRT), // Known locations: 90 = Dark Wizards Tower; Random shading in the overworld

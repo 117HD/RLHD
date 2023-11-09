@@ -62,8 +62,6 @@ public enum Underlay {
 		.saturation(0)
 		.groundMaterial(GroundMaterial.WINTER_JAGGED_STONE_TILE_LIGHT)
 	),
-	AUTUMN_GRASS(p -> p.ids().groundMaterial(GroundMaterial.OVERWORLD_GRASS_1).shiftSaturation(1)),
-	AUTUMN_DIRT_GRASS(p -> p.ids().groundMaterial(GroundMaterial.GRASSY_DIRT).shiftHue(-1).shiftLightness(-1)),
 	// Default
 	DEFAULT_SAND(p -> p.ids().groundMaterial(GroundMaterial.SAND)),
 	DEFAULT_GRASS(p -> p.ids().groundMaterial(GroundMaterial.OVERWORLD_GRASS_1)),
@@ -79,7 +77,7 @@ public enum Underlay {
 		.ids(72)
 		.area(Area.DRAYNOR)
 		.groundMaterial(GroundMaterial.OVERWORLD_GRASS_1)
-		.replaceWithIf(WINTER_GRASS, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER)),
+		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_GRASS)),
 
 	COMPLEX_TILES_IMCANDO_PENINSULA(p -> p
 		.ids(55, 61, 62, 63, 68)
@@ -149,8 +147,6 @@ public enum Underlay {
 					switch (plugin.configSeasonalTheme) {
 						case WINTER:
 							return WINTER_GRASS;
-						case AUTUMN:
-							return AUTUMN_GRASS;
 						case SUMMER:
 							return DEFAULT_GRASS;
 					}
@@ -182,8 +178,6 @@ public enum Underlay {
 					switch (plugin.configSeasonalTheme) {
 						case SUMMER:
 							return DEFAULT_GRASS;
-						case AUTUMN:
-							return AUTUMN_GRASS;
 						case WINTER:
 							return WINTER_GRASS;
 					}
@@ -243,8 +237,6 @@ public enum Underlay {
 					switch (plugin.configSeasonalTheme) {
 						case SUMMER:
 							return DEFAULT_GRASS;
-						case AUTUMN:
-							return AUTUMN_GRASS;
 						case WINTER:
 							return WINTER_GRASS;
 					}
@@ -253,8 +245,6 @@ public enum Underlay {
 					switch (plugin.configSeasonalTheme) {
 						case SUMMER:
 							return DEFAULT_GRASS;
-						case AUTUMN:
-							return AUTUMN_GRASS;
 						case WINTER:
 							return WINTER_GRASS;
 					}
@@ -361,19 +351,19 @@ public enum Underlay {
 		.area(Area.ZEAH)
 		.groundMaterial(GroundMaterial.VARIED_DIRT)
 		.ids(19, 148, 149)
-		.replaceWithIf(WINTER_DIRT, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER)
+		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_DIRT)
 	),
 	ZEAH_GRAVEL_HILLS(p -> p
 		.area(Area.ZEAH)
 		.groundMaterial(GroundMaterial.GRAVEL)
 		.ids(99)
-		.replaceWithIf(WINTER_GRUNGE, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER)
+		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_GRUNGE)
 	),
 	ZEAH_ROCKY_GROUND(p -> p
 		.area(Area.ZEAH)
 		.groundMaterial(GroundMaterial.ROCKY_CAVE_FLOOR)
 		.ids(27, 29, 129)
-		.replaceWithIf(WINTER_GRUNGE, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER)
+		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_GRUNGE)
 	),
 	STRANGLEWOOD_SNOW_DARK(p -> p.area(Area.THE_STRANGLEWOOD_EXTENDED).ids(174).groundMaterial(GroundMaterial.SNOW_1)),
 	JUDGE_OF_YAMA_BOSS_WATER(p -> p.ids(72, 76).area(Area.JUDGE_OF_YAMA_BOSS).waterType(WaterType.WATER)),
@@ -460,11 +450,11 @@ public enum Underlay {
 	TEMPLE_OF_THE_EYE(Area.TEMPLE_OF_THE_EYE, GroundMaterial.GRUNGE, p -> p.ids(87, 88, 89)),
 	ARCEUUS_GROUND(Area.ARCEUUS, GroundMaterial.DIRT, p -> p
 		.ids(2, 3, 23, 24)
-		.replaceWithIf(WINTER_DIRT, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER)
+		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_DIRT)
 	),
 	ARCEUUS_GRASS(Area.ARCEUUS, GroundMaterial.GRASSY_DIRT, p -> p
 		.ids(17, 95)
-		.replaceWithIf(WINTER_GRASS, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER)
+		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_GRASS)
 	),
 
 	// Secrets of the North dungeon
@@ -497,17 +487,16 @@ public enum Underlay {
 	// Items that cannot properly be fixed unless we can first detect the hue of the tile to set a texture.
 	TILE_NEEDS_HUE_DEFINED(GroundMaterial.VARIED_DIRT, p -> p
 		.ids(26)
-		.replaceWithIf(WINTER_DIRT, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER)
+		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_DIRT)
 	),
 	// Default underlays
 	OVERWORLD_GRASS(Area.OVERWORLD, GroundMaterial.OVERWORLD_GRASS_1, p -> p
 		.ids(7, 25, 33, 34, 40, 48, 49, 50, 51, 52, 53, 54, 67, 70, 71, 75, 93, 97, 99, 100, 103, 114, 115, 126)
-		.replaceWithIf(AUTUMN_GRASS, plugin -> plugin.configSeasonalTheme == SeasonalTheme.AUTUMN)
-		.replaceWithIf(WINTER_GRASS, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER)
+		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_GRASS)
 	),
 	OVERWORLD_DIRT(Area.OVERWORLD, GroundMaterial.DIRT, p -> p
 		.ids(-111, -110, 19, 56, 57, 66, 80, 111, 118, 122, 139, 150)
-		.replaceWithIf(WINTER_DIRT, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER)),
+		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_DIRT)),
 	OVERWORLD_SAND(Area.OVERWORLD, GroundMaterial.SAND, p -> p.ids(-127, -118)),
 	UNDERLAY_PACKED_EARTH(GroundMaterial.PACKED_EARTH, p -> p.ids(15)),
 
@@ -566,8 +555,6 @@ public enum Underlay {
 					switch (plugin.configSeasonalTheme) {
 						case SUMMER:
 							return OVERWORLD_GRASS;
-						case AUTUMN:
-							return AUTUMN_GRASS;
 						case WINTER:
 							return WINTER_GRASS;
 					}
@@ -587,11 +574,11 @@ public enum Underlay {
 	),
 	UNDERLAY_72(GroundMaterial.VARIED_DIRT, p -> p
 		.ids(72, 73, 98, 112, 113) //112 == Lovakengj
-		.replaceWithIf(WINTER_DIRT, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER)
+		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_DIRT)
 	),
 	UNDERLAY_OVERWORLD_GRUNGE(GroundMaterial.GRUNGE, p -> p
 		.ids(8, 10, 58, 60, 92) // 8 = Jatizso, 60 = GotR, 92 = Eadgars Cave
-		.replaceWithIf(WINTER_GRUNGE, plugin -> plugin.configSeasonalTheme == SeasonalTheme.WINTER)
+		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_GRUNGE)
 	),
 	COMPLEX_TILES(p -> p
 		.ids(55, 61, 62, 63, 64, 65, 68, 94, 96)
@@ -671,8 +658,6 @@ public enum Underlay {
 					switch (plugin.configSeasonalTheme) {
 						case SUMMER:
 							return DEFAULT_GRASS;
-						case AUTUMN:
-							return AUTUMN_GRASS;
 						case WINTER:
 							return WINTER_GRASS;
 					}
