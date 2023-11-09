@@ -480,6 +480,18 @@ public interface HdPluginConfig extends Config
 	)
 	String environmentSettings = "environmentSettings";
 
+	String KEY_SEASONAL_THEME = "seasonalTheme";
+	@ConfigItem(
+		keyName = KEY_SEASONAL_THEME,
+		name = "Seasonal Theme",
+		description = "Festive themes for Gielinor.",
+		position = 0,
+		section = environmentSettings
+	)
+	default SeasonalTheme seasonalTheme() {
+		return SeasonalTheme.SUMMER;
+	}
+
 	@ConfigItem(
 		keyName = "fogDepthMode",
 		name = "Fog Depth Mode",
@@ -723,18 +735,6 @@ public interface HdPluginConfig extends Config
 	)
 	default boolean hdInfernalTexture() {
 		return true;
-	}
-
-	String KEY_SEASONAL_THEME = "seasonalTheme";
-	@ConfigItem(
-		keyName = KEY_SEASONAL_THEME,
-		name = "Seasonal Theme",
-		description = "Festive themes for Gielinor",
-		position = 3,
-		section = miscellaneousSettings
-	)
-	default SeasonalTheme seasonalTheme() {
-		return SeasonalTheme.SUMMER;
 	}
 
 	String KEY_LEGACY_GREY_COLORS = "reduceOverExposure";
