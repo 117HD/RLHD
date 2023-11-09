@@ -1816,8 +1816,48 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 //			}
 
 			// Option C
+//			if (configSeasonalTheme == SeasonalTheme.AUTUMN) {
+//				environmentManager.currentFogColor = ColorUtils.rgb("#FFC085");
+//				environmentManager.currentWaterColor = environmentManager.currentFogColor;
+//			}
+
+			// Option D
+//			if (configSeasonalTheme == SeasonalTheme.AUTUMN) {
+//				environmentManager.currentFogColor = ColorUtils.rgb(185, 214, 255);
+//				environmentManager.currentDirectionalColor = ColorUtils.colorTemperatureToLinearRgb(3750);
+//				environmentManager.currentDirectionalStrength = 3.0f;
+//				environmentManager.currentAmbientColor = environmentManager.currentFogColor;
+//				environmentManager.currentAmbientStrength = .5f;
+//				environmentManager.currentWaterColor = environmentManager.currentFogColor;
+//			}
+
+			// Option E
+//			if (configSeasonalTheme == SeasonalTheme.AUTUMN) {
+//				environmentManager.currentFogColor = ColorUtils.rgb(253, 220, 180);
+//				environmentManager.currentDirectionalColor = ColorUtils.colorTemperatureToLinearRgb(3500);
+//				environmentManager.currentDirectionalStrength = 1.5f;
+//				environmentManager.currentAmbientColor = environmentManager.currentFogColor;
+//				environmentManager.currentAmbientStrength = .5f;
+//				environmentManager.currentWaterColor = environmentManager.currentFogColor;
+//			}
+
+//			// Option F
+//			if (configSeasonalTheme == SeasonalTheme.AUTUMN) {
+//				environmentManager.currentFogColor = ColorUtils.colorTemperatureToLinearRgb(7300);
+//				environmentManager.currentDirectionalColor = ColorUtils.colorTemperatureToLinearRgb(3750);
+//				environmentManager.currentDirectionalStrength = 1.5f;
+//				environmentManager.currentAmbientColor = environmentManager.currentFogColor;
+//				environmentManager.currentAmbientStrength = .5f;
+//				environmentManager.currentWaterColor = environmentManager.currentFogColor;
+//			}
+
+			// Option G
 			if (configSeasonalTheme == SeasonalTheme.AUTUMN) {
-				environmentManager.currentFogColor = ColorUtils.rgb("#FFC085");
+				environmentManager.currentFogColor = ColorUtils.rgb("#cfd8ec");
+				environmentManager.currentDirectionalColor = ColorUtils.colorTemperatureToLinearRgb(3750);
+				environmentManager.currentDirectionalStrength = 3.0f;
+				environmentManager.currentAmbientColor = environmentManager.currentFogColor;
+				environmentManager.currentAmbientStrength = .75f;
 				environmentManager.currentWaterColor = environmentManager.currentFogColor;
 			}
 
