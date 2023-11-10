@@ -104,6 +104,43 @@ public enum Environment
 		.setDirectionalStrength(0.5f)
 		.setLightDirection(260f, 10f)
 	),
+	// Stronghold of Security
+	STRONGHOLD_OF_SECURITY_WAR(Area.STRONGHOLD_OF_WAR, new Properties()
+		.setFogColor("#000000")
+		.setFogDepth(45)
+		.setAmbientStrength(1.5f)
+		.setAmbientColor("#AAAFB6")
+		.setDirectionalStrength(1.0f)
+		.setDirectionalColor("#FFFFFF")
+		.setLightDirection(260f, 10f)
+	),
+	STRONGHOLD_OF_SECURITY_FAMINE(Area.STRONGHOLD_OF_FAMINE, new Properties()
+		.setFogColor("#544222")
+		.setFogDepth(50)
+		.setAmbientStrength(1.3f)
+		.setAmbientColor("#C0AE94")
+		.setDirectionalStrength(1.0f)
+		.setDirectionalColor("#F5BC67")
+		.setLightDirection(260f, 10f)
+	),
+	STRONGHOLD_OF_SECURITY_PESTILENCE(Area.STRONGHOLD_OF_PESTILENCE, new Properties()
+		.setFogColor("#525e20")
+		.setFogDepth(50)
+		.setAmbientStrength(1.5f)
+		.setAmbientColor("#a2c35d")
+		.setDirectionalStrength(1.0f)
+		.setDirectionalColor("#FFFFFF")
+		.setLightDirection(260f, 10f)
+	),
+	STRONGHOLD_OF_SECURITY_DEATH(Area.STRONGHOLD_OF_DEATH, new Properties()
+		.setFogColor("#000000")
+		.setFogDepth(45)
+		.setAmbientStrength(1.5f)
+		.setAmbientColor("#542d22")
+		.setDirectionalStrength(1.0f)
+		.setDirectionalColor("#FFFFFF")
+		.setLightDirection(260f, 10f)
+	),
 	// A Soul's Bane
 	TOLNA_DUNGEON_ANGER(Area.TOLNA_DUNGEON_ANGER, new Properties()
 		.setFogColor("#290000")
@@ -437,7 +474,7 @@ public enum Environment
 	),
 	KHARIDIAN_DESERT_DEEP(Area.KHARIDIAN_DESERT_DEEP, new Properties()
 		.setFogColor("#CDAF7A")
-		.setFogDepth(70)
+		.setFogDepth(50)
 		.setAmbientColor("#C0AE94")
 		.setAmbientStrength(3.0f)
 		.setDirectionalColor("#F5BC67")
@@ -445,7 +482,7 @@ public enum Environment
 	),
 	KHARIDIAN_DESERT_MID(Area.KHARIDIAN_DESERT_MID, new Properties()
 		.setFogColor("#C8B085")
-		.setFogDepth(50)
+		.setFogDepth(40)
 		.setAmbientColor("#C0AE94")
 		.setAmbientStrength(3.0f)
 		.setDirectionalColor("#F5BC67")
@@ -768,6 +805,16 @@ public enum Environment
 		.setLightDirection(260f, 10f)
 		.setAllowSkyOverride(false)
 	),
+	JUDGE_OF_YAMA_BOSS(Area.JUDGE_OF_YAMA_BOSS, new Properties()
+		.setFogColor("#0e1826")
+		.setFogDepth(50)
+		.setAmbientColor("#8AABD5")
+		.setAmbientStrength(1.0f)
+		.setDirectionalColor("#62A3FF")
+		.setDirectionalStrength(4.0f)
+		.setGroundFog(-150, -350, 0.5f)
+		.setAllowSkyOverride(false)
+	),
 
 	// Zanaris
 	COSMIC_ENTITYS_PLANE(Area.COSMIC_ENTITYS_PLANE, new Properties()
@@ -1073,18 +1120,18 @@ public enum Environment
 	),
 	ANCIENT_CAVERN(Area.ANCIENT_CAVERN, new Properties()
 		.setFogColor("#000000")
-		.setFogDepth(40)
+		.setFogDepth(25)
 		.setAmbientColor("#AAAFB6")
-		.setAmbientStrength(1.5f)
+		.setAmbientStrength(2.5f)
 		.setDirectionalColor("#FFFFFF")
-		.setDirectionalStrength(1.0f)
+		.setDirectionalStrength(1.5f)
 		.setLightDirection(260f, 10f)
 		.setWaterColor(79, 178, 255)
 	),
 
 	ICY_UNDERGROUND_DARK(Area.ICY_UNDERGROUND_DARK, new Properties()
 		.setFogColor("#030303")
-		.setFogDepth(40)
+		.setFogDepth(25)
 		.setAmbientColor("#AAAFB6")
 		.setAmbientStrength(.75f)
 		.setDirectionalColor("#FFFFFF")
@@ -1124,7 +1171,7 @@ public enum Environment
 		.setFogColor("#060505")
 		.setFogDepth(50)
 		.setAmbientColor("#AAAFB6")
-		.setAmbientStrength(1.6f)
+		.setAmbientStrength(2.5f)
 		.setDirectionalColor("#878474")
 		.setDirectionalStrength(1.5f)
 		.setLightDirection(260f, 10f)
@@ -1168,6 +1215,16 @@ public enum Environment
 		.setDirectionalColor("#fafaff")
 		.setDirectionalStrength(.5f)
 		.setLightDirection(270, 0)
+	),
+	LASSAR_UNDERCITY_WATER_CUTSCENE(Area.LASSAR_UNDERCITY_WATER_CUTSCENE, new Properties()
+		.setFogColor("#000000")
+		.setFogDepth(50)
+		.setAmbientColor("#AAAFB6")
+		.setAmbientStrength(1.5f)
+		.setDirectionalColor("#FFFFFF")
+		.setDirectionalStrength(1.0f)
+		.setLightDirection(480, -45)
+		.setWaterColor(43, 43, 64)
 	),
 	LASSAR_UNDERCITY(Area.LASSAR_UNDERCITY_NORMAL, new Properties()
 		.setFogColor("#000000")

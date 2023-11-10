@@ -968,7 +968,6 @@
       4502,
       17208,
       17324,
-      19204,
       20212,
       20213,
       20214,
@@ -1270,6 +1269,7 @@
       1297,
       9661,
       9663,
+      33197,
       40347
     ],
     "uvType": "BOX",
@@ -1305,6 +1305,7 @@
       14564,
       14565,
       14566,
+      33327,
       39679
     ],
     "uvType": "BOX",
@@ -1373,10 +1374,8 @@
   },
   {
     "description": "GRASS",
+    "baseMaterial": "GRAY_75",
     "objectIds": [
-      3547,
-      3548,
-      3549,
       4333,
       4334,
       4335,
@@ -1397,9 +1396,6 @@
       5212,
       5213,
       5335,
-      5336,
-      5337,
-      5338,
       5339,
       5340,
       5341,
@@ -1408,15 +1404,6 @@
       5534,
       5535,
       5536,
-      6817,
-      6818,
-      6819,
-      6835,
-      6836,
-      6837,
-      6838,
-      7049,
-      7050,
       9485,
       9486,
       9487,
@@ -1427,9 +1414,6 @@
       9502,
       9503,
       9504,
-      9505,
-      9506,
-      9507,
       13861,
       13862,
       13863,
@@ -1462,25 +1446,24 @@
       31778,
       31779,
       31780,
-      34490,
-      34491,
-      34492,
-      34493,
       19839,
       4812,
       4813,
       4814
     ],
     "flatNormals": true,
-    "inheritTileColorType": "UNDERLAY",
-    "forceOverride": true
+    "inheritTileColorType": "UNDERLAY"
   },
   {
-    "description": "Short grass that shouldn't cast shadows",
+    "description": "Short grass which shouldn't cast shadows",
+    "baseMaterial": "GRAY_75",
     "objectIds": [
       1257,
       1258,
       1259,
+      3547,
+      3548,
+      3549,
       4530,
       4735,
       4736,
@@ -1498,15 +1481,103 @@
       6838,
       7049,
       7050,
+      9505,
+      9506,
+      9507,
       14775,
       14776,
       14777,
-      14778
+      14778,
+      30862,
+      30863,
+      30864,
+      34490,
+      34491,
+      34492,
+      34493
     ],
     "flatNormals": true,
     "inheritTileColorType": "UNDERLAY",
-    "castShadows": false,
-    "forceOverride": true
+    "castShadows": false
+  },
+  {
+    "description": "Short grass which shouldn't cast shadows for the winter theme, prevents grass from being too bright",
+    "baseMaterial": "GRAY_50",
+    "seasonalTheme": "WINTER",
+    "objectIds": [
+      1257,
+      1258,
+      1259,
+      3547,
+      3548,
+      3549,
+      4530,
+      4735,
+      4736,
+      4737,
+      4738,
+      5336,
+      5337,
+      5338,
+      6817,
+      6818,
+      6819,
+      6835,
+      6836,
+      6837,
+      6838,
+      7049,
+      7050,
+      9505,
+      9506,
+      9507,
+      14775,
+      14776,
+      14777,
+      14778,
+      30862,
+      30863,
+      30864,
+      34490,
+      34491,
+      34492,
+      34493,
+      7518,
+      17446,
+      17447,
+      17448,
+      17449,
+      34494,
+      34496
+    ],
+    "flatNormals": true,
+    "inheritTileColorType": "UNDERLAY",
+    "castShadows": false
+  },
+  {
+    "description": "Short grass which shouldn't cast shadows and shouldn't inherit tile color",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [
+      7518,
+      17446,
+      17447,
+      17448,
+      17449,
+      34494,
+      34496
+    ],
+    "flatNormals": true,
+    "castShadows": false
+  },
+  {
+    "description": "Fixes weird pattern made by grass in POH",
+    "areas": [ "PLAYER_OWNED_HOUSE" ],
+    "objectIds": [
+      4530
+    ],
+    "baseMaterial": "GRAY_65",
+    "flatNormals": true,
+    "castShadows": false
   },
   {
     "description": "GRASS_MAINTAIN_ORIGINAL_COLOR",
@@ -2185,7 +2256,7 @@
     "objectIds": [
       597
     ],
-    "baseMaterial": "GRAY_25"
+    "baseMaterial": "GRAY_75"
   },
   {
     "description": "STONE_WALL_FENCES",
@@ -2469,6 +2540,7 @@
       1620,
       1622,
       1631,
+      1940,
       4409,
       4410,
       4445,
@@ -2609,7 +2681,7 @@
     ],
     "inheritTileColorType": "OVERLAY",
     "uvType": "BOX",
-    "uvScale": 0.75
+    "uvScale": 0.85
   },
   {
     "description": "GROUND_DECORATION_DIRT_UNCOLORED",
@@ -3151,26 +3223,14 @@
     "description": "UNKNOWN_3",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
+      2141,
       3669,
-      3737,
-      3738,
-      3739,
-      3740,
-      3792,
-      3793,
+      3759,
       3812,
       6820,
       6822,
       6826,
-      6827,
-      3759,
-      3760,
-      3761,
-      3772,
-      3773,
-      3774,
-      2141,
-      3770
+      6827
     ],
     "uvType": "BOX",
     "uvScale": 0.7
@@ -3541,7 +3601,7 @@
       25259,
       25260
     ],
-    "uvType": "MODEL_XZ"
+    "uvType": "BOX"
   },
   {
     "description": "RoU_DOCKS",
@@ -5417,6 +5477,8 @@
       2231,
       2232,
       2233,
+      3724,
+      3748,
       16521,
       16522,
       16523,
@@ -5689,16 +5751,15 @@
       3707,
       3708,
       3710,
-      3724,
+      3803,
+      3804,
       3948,
       3950,
       12910,
       12911,
-      12912,
-      3803,
-      3804
+      12912
     ],
-    "uvType": "WORLD_XZ",
+    "uvType": "BOX",
     "uvScale": 0.74
   },
   {
@@ -5799,7 +5860,9 @@
       44733,
       44734,
       44735,
-      44736
+      44736,
+      46822,
+      46821
     ],
     "uvType": "WORLD_XZ",
     "uvScale": 0.74
@@ -6044,6 +6107,9 @@
     "description": "Objects - Wooden - Crate",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      3813,
+      3814,
+      3815,
       9533
     ],
     "uvType": "BOX",
@@ -6198,7 +6264,6 @@
       44640,
       44641,
       44642,
-      44643,
       44644,
       44645,
       44646,
@@ -6708,8 +6773,7 @@
     ],
     "uvType": "MODEL_XZ",
     "flatNormals": true,
-    "castShadows": false,
-    "forceOverride": true
+    "castShadows": false
   },
   {
     "description": "Chaos Tunnel - Walls - Cave Walls",
@@ -6858,13 +6922,12 @@
   },
   {
     "description": "Objects - Standing Torch -  Wood",
-    "baseMaterial": "WOOD_GRAIN_2",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       724
     ],
     "uvType": "BOX",
-    "uvOrientation": 512,
-    "uvScale": 0.4
+    "uvScale": 1.1
   },
   {
     "description": "Objects - Stone - Stalagmites - Limestone",
@@ -7188,13 +7251,16 @@
   },
   {
     "description": "Objects - Rockslide - Snow Drift - Snow - Medium",
-    "baseMaterial": "SNOW_1",
+    "baseMaterial": "SNOW_4",
     "objectIds": [
       11920,
       11921,
+      33184,
+      33185,
       33220
     ],
-    "uvType": "GEOMETRY"
+    "uvType": "BOX",
+    "uvScale": 0.5
   },
   {
     "description": "Objects - Rockslide - Snow Drift - Snow - Small",
@@ -7204,7 +7270,7 @@
       11923,
       33221
     ],
-    "uvType": "GEOMETRY"
+    "uvType": "BOX"
   },
   {
     "description": "Ice Queens Dungeon - Objects - Ice Column - Ice",
@@ -7268,9 +7334,17 @@
   },
   {
     "description": "Objects - Rockslide - Gray Rock - Rock - Medium",
-    "baseMaterial": "ROCK_2",
+    "baseMaterial": "ROCK_4",
     "objectIds": [
-      11432
+      3657,
+      3658,
+      3659,
+      3660,
+      11432,
+      33191,
+      46818,
+      46819,
+      46820
     ],
     "uvType": "BOX",
     "uvScale": 0.33
@@ -7365,6 +7439,7 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       1088,
+      3801,
       10491,
       12885,
       17146,
@@ -7835,8 +7910,7 @@
       21248
     ],
     "castShadows": false,
-    "receiveShadows": false,
-    "forceOverride": true
+    "receiveShadows": false
   },
   {
     "description": "Big Red Button",
@@ -7907,16 +7981,14 @@
     "objectIds": [
       2842
     ],
-    "baseMaterial": "UNLIT",
-    "forceOverride": true
+    "baseMaterial": "UNLIT"
   },
   {
     "description": "Jatizso banners",
     "baseMaterial": "UNLIT",
     "objectIds": [
       21637
-    ],
-    "forceOverride": true
+    ]
   },
   {
     "description": "Footprints on agility rooftops",
@@ -7930,8 +8002,7 @@
       39632
     ],
     "castShadows": false,
-    "receiveShadows": false,
-    "forceOverride": true
+    "receiveShadows": false
   },
   {
     "description": "Zanaris - Walls - Grass",
@@ -8038,8 +8109,7 @@
     "baseMaterial": "FINE_CARPET",
     "uvType": "WORLD_XZ",
     "flatNormals": true,
-    "castShadows": false,
-    "forceOverride": true
+    "castShadows": false
   },
   {
     "description": "POH superior garden zen theme carpet",
@@ -8050,10 +8120,8 @@
       29245,
       29246
     ],
-    "uvType": "WORLD_XZ",
     "flatNormals": true,
-    "castShadows": false,
-    "forceOverride": true
+    "castShadows": false
   },
   {
     "description": "POH basement filler objects",
@@ -8159,10 +8227,6 @@
       23095,
       23115,
       23707,
-      23727,
-      23728,
-      23729,
-      23730,
       23922,
       25014,
       26642,
@@ -8952,8 +9016,7 @@
       44172,
       44173
     ],
-    "uvType": "WORLD_XZ",
-    "forceOverride": true
+    "uvType": "WORLD_XZ"
   },
   {
     "description": "Ruins of Ullek flat normals on walls and other wall objects",
@@ -10502,22 +10565,16 @@
     "uvScale": 0.28
   },
   {
-    "description": "Hide weird waterfall texture near Port Khazard spirit tree",
-    "objectIds": [
-      10459
-    ],
+    "description": "Replace vanilla scrolling waterfall texture with droplets, until a better solution is found",
+    "objectIds": [ 754, 10459 ],
+    "textureMaterial": "WATER_DROPLETS",
+    "baseMaterial": "WATER_FLAT",
     "hideInAreas": [
       [
         2558, 3249,
         2558, 3252
       ]
     ]
-  },
-  {
-    "description": "Replace vanilla scrolling waterfall texture with droplets, until a better solution is found",
-    "objectIds": [ 754, 10459 ],
-    "textureMaterial": "WATER_DROPLETS",
-    "baseMaterial": "WATER_FLAT"
   },
   {
     "description": "Poison Waste dungeon flowing tar (TODO)",
@@ -11336,7 +11393,6 @@
     "description": "Mage Training Arena - Walls",
     "baseMaterial": "MARBLE_2",
     "objectIds": [
-      10721,
       10734,
       10743,
       10744,
@@ -11499,8 +11555,7 @@
     "baseMaterial": "FINE_CARPET",
     "uvType": "WORLD_XZ",
     "flatNormals": true,
-    "castShadows": false,
-    "forceOverride": true
+    "castShadows": false
   },
   {
     "description": "Mage Training Arena - Marble - Area Portals",
@@ -11599,5 +11654,706 @@
     "uvType": "BOX",
     "uvScale": 0.68,
     "uvOrientationY": 768
+  },
+  {
+    "description": "Judge of Yama boss entrance portal",
+    "objectIds": [ 42442 ],
+    "castShadows": false,
+    "receiveShadows": false
+  },
+  {
+    "description": "Judge of Yama boss flames",
+    "npcIds": [ 10939 ],
+    "baseMaterial": "UNLIT",
+    "castShadows": false
+  },
+  {
+    "description": "Stronghold Of Security Rock Entrance",
+    "baseMaterial": "ROCK_5",
+    "objectIds": [
+      20790
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.38,
+    "uvOrientation": 128
+  },
+  {
+    "description": "Stronghold Of Security - Objects - Wood - Signs",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      7054,
+      19172,
+      20787,
+      23708
+    ],
+    "flatNormals": true,
+    "uvType": "BOX",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Stronghold Of Security - War - Metallic Floor",
+    "baseMaterial": "METALLIC_2_GLOSS",
+    "objectIds": [
+      20655
+    ],
+    "uvType": "BOX",
+    "flatNormals": true
+  },
+  {
+    "description": "Stronghold Of Security - War - Metallic Floor with fence",
+    "baseMaterial": "METALLIC_2_GLOSS",
+    "objectIds": [
+      20657,
+      20658
+    ],
+    "uvType": "BOX",
+    "flatNormals": true
+  },
+  {
+    "description": "Stronghold Of Security - War - Metallic Walls",
+    "baseMaterial": "METALLIC_2_GLOSS",
+    "objectIds": [
+      19173,
+      19204,
+      19205,
+      19208,
+      19212,
+      19213,
+      19214,
+      19173,
+      20653,
+      20659,
+      20660
+    ],
+    "removeBakedLighting": true,
+    "uvType": "BOX"
+  },
+  {
+    "description": "Stronghold Of Security - War - Metallic Overdoor",
+    "baseMaterial": "METALLIC_2_GLOSS",
+    "objectIds": [
+      19211
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Stronghold Of Security - War - Metallic Ladder",
+    "baseMaterial": "METALLIC_2_GLOSS",
+    "objectIds": [
+      20784,
+      20785
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "flatNormals": true
+  },
+  {
+    "description": "Stronghold Of Security War - Metallic - Escape Chain",
+    "baseMaterial": "METALLIC_1_HIGHGLOSS",
+    "objectIds": [
+      20782,
+      20783
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 256
+  },
+  {
+    "description": "Stronghold Of Security War - Objects - Bones",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      20661,
+      20662,
+      20663,
+      20664,
+      20665,
+      20780,
+      20781
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7
+  },
+  {
+    "description": "Stronghold Of Security War -  Metallic - Gift of Peace - Chest",
+    "baseMaterial": "METALLIC_1_GLOSS",
+    "objectIds": [
+      20656
+    ],
+    "flatNormals": true,
+    "uvType": "BOX"
+  },
+  {
+    "description": "Stronghold Of Security - Famine - Walls - Dirt",
+    "baseMaterial": "DIRT_1",
+    "objectIds": [
+      17003,
+      17004,
+      17005,
+      17007
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.44
+  },
+  {
+    "description": "Stronghold Of Security - Famine - Bone Structures ",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      17006,
+      18966
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Stronghold Of Security - Famine - Doors ",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      17009,
+      17100
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Stronghold Of Security - Famine - Ladder ",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [
+      19003,
+      19004
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 700,
+    "uvScale": 0.4
+  },
+  {
+    "description": "Stronghold Of Security - Famine - Objects - Bones",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      18993,
+      18994,
+      18995,
+      18996,
+      18997,
+      18998,
+      18999
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7
+  },
+  {
+    "description": "Stronghold Of Security - Famine - Escape Rope ",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      19001,
+      19002
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Stronghold Of Security - Walls - Petilence",
+    "baseMaterial": "OOZE",
+    "objectIds": [
+      23648,
+      23649,
+      23650,
+      23651,
+      23652,
+      23657,
+      23658,
+      23659,
+      23660,
+      23661
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Stronghold Of Security - Petilence - Doors",
+    "baseMaterial": "OOZE",
+    "objectIds": [
+      23653,
+      23654
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Stronghold Of Security - Petilence - Plant Ladder",
+    "baseMaterial": "OOZE",
+    "objectIds": [
+      23705,
+      23706
+    ]
+  },
+  {
+    "description": "Stronghold Of Security - Pestilence - Escape Goo Covered Vine ",
+    "baseMaterial": "OOZE",
+    "objectIds": [
+      23703,
+      23704
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Stronghold Of Security - Pestilence -  Metallic - Box of Health - Chest",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      23709
+    ],
+    "flatNormals": true,
+    "uvType": "BOX",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Stronghold Of Security - Pestilence - Textured - Hay - Gift of Plenty - Sack",
+    "baseMaterial": "FINE_CARPET",
+    "objectIds": [
+      19000
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.85,
+    "retainVanillaUvs": false
+  },
+  {
+    "description": "Stronghold Of Security - Pestilence - Objects - Bones",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      23663,
+      23664,
+      23665,
+      23666,
+      23667,
+      23668,
+      23669,
+      23923
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7
+  },
+  {
+    "description": "Stronghold Of Security - Pestilence - Ground Objects - Rock Like Objects",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      23670,
+      23671,
+      23699
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7
+  },
+  {
+    "description": "Stronghold Of Security Petilance - Dripping Tendrils",
+    "baseMaterial": "OOZE",
+    "objectIds": [
+      23700,
+      23701
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Stronghold Of Security - Petilance - Overdoor Tendrils",
+    "baseMaterial": "OOZE",
+    "objectIds": [
+      23662
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Stronghold Of Security - Death - Walls",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      23711,
+      23712,
+      23713,
+      23714,
+      23715,
+      23716,
+      23717,
+      23718,
+      23719,
+      23720
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 128
+  },
+  {
+    "description": "Stronghold Of Security - Death - Objects - Bones",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      23924,
+      23925,
+      23926,
+      23927,
+      23928,
+      23929
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7
+  },
+  {
+    "description": "Stronghold Of Security - Death - Objects - Boney Ladder",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      23921
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7
+  },
+  {
+    "description": "Stronghold Of Security - Death - Objects - Escape Bone Chain",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      23732
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7
+  },
+  {
+    "description": "Stronghold Of Security - Death - Doors",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      23727,
+      23728,
+      23729,
+      23730
+    ],
+    "shadowOpacityThreshold": 0.12,
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Stronghold Of Security Death - Reward - Cradle of Life",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      23731
+    ]
+  },
+  {
+    "description": "Mad Eadgars Sign",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 3823 ],
+    "uvType": "BOX",
+    "flatNormals": true
+  },
+  {
+    "description": "Trollheim Cave Walls",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      3737,
+      3738,
+      3739,
+      3740,
+      3770,
+      3772,
+      3773,
+      3774
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7
+  },
+  {
+    "description": "Trollheim Cave Walls",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [ 3790 ],
+    "uvType": "BOX",
+    "uvScale": 0.7
+  },
+  {
+    "description": "Trollheim Eadgars Cave Exit",
+    "baseMaterial": "GRUNGE_2_EADGARS_CAVE_FIX",
+    "objectIds": [ 3760, 3761 ],
+    "uvType": "BOX",
+    "uvScale": 0.7
+  },
+  {
+    "description": "Trollheim Tents",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      3208,
+      3653,
+      3654,
+      3655,
+      3656
+    ],
+    "uvOrientation": 128,
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Trollheim Dark Wall in Doorway",
+    "baseMaterial": "GRUNGE_2_TROLLHEIM_WALL_FIX_1",
+    "objectIds": [ 3792 ],
+    "uvType": "BOX",
+    "uvScale": 0.7
+  },
+  {
+    "description": "Trollheim Dark Wall in Doorway",
+    "baseMaterial": "GRUNGE_2_TROLLHEIM_WALL_FIX_2",
+    "objectIds": [ 3793 ],
+    "uvType": "BOX",
+    "uvScale": 0.7
+  },
+  {
+    "description": "Trollheim Staircase Boarder",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [ 3796 ],
+    "uvType": "BOX",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Trollheim Stone Staircase",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [ 3788, 3789 ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Trollheim Stone Kitchen Drawers",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [ 3800, 3816 ],
+    "uvType": "BOX",
+    "uvOrientation": 768,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Trollheim Goat Poop",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [ 3818, 3819 ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Trollheim Food Trouph",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 3820 ],
+    "uvType": "BOX",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Trollheim - Wooden - Door",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 3776 ],
+    "uvType": "BOX",
+    "flatNormals": true
+  },
+  {
+    "description": "Trollheim - Stocks",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 648 ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "flatNormals": true
+  },
+  {
+    "description": "Trollheim Bones",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [ 3665 ],
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 0.75
+  },
+  {
+    "description": "Trollheim Skeleton Corpe",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [ 3797, 3798, 3799 ],
+    "uvType": "BOX",
+    "uvOrientation": 768,
+    "uvScale": 0.75
+  },
+  {
+    "description": "Trollheim Cell Walls",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [ 3764, 3765, 3778, 33217, 33218, 33219, 46815 ],
+    "flatNormals": true
+  },
+  {
+    "description": "Trollheim Troll Ladder",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 18833, 18834 ],
+    "uvType": "BOX",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Trollweiss Wrecked Boat",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 33195 ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Trollweiss Cave Entrance",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [ 33329 ],
+    "uvType": "BOX",
+    "uvOrientation": 128,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Skeleton",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [ 33196 ],
+    "uvType": "BOX",
+    "uvOrientation": 768,
+    "uvScale": 0.75
+  },
+  {
+    "description": "Bones - Medium",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [ 33323, 33324, 33325, 33326 ],
+    "uvType": "BOX",
+    "uvOrientation": 768,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Weiss Snowy Rocks",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [ 33215, 33216 ],
+    "uvType": "BOX",
+    "uvOrientation": 128,
+    "uvScale": 0.3
+  },
+  {
+    "description": "Weiss Salts",
+    "baseMaterial": "DIRT_1",
+    "objectIds": [ 33222, 33223, 33224 ],
+    "uvType": "BOX",
+    "uvOrientation": 128,
+    "uvScale": 0.4
+  },
+  {
+    "description": "Weiss Salt Mine Walls",
+    "baseMaterial": "DIRT_1",
+    "objectIds": [ 21516, 21540, 33236, 33236, 33237, 33247 ],
+    "uvType": "BOX",
+    "uvOrientation": 128,
+    "uvScale": 0.4
+  },
+  {
+    "description": "Weiss Underground Ground Rubble",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [ 21545, 21546, 21547, 21548 ],
+    "uvType": "BOX",
+    "uvOrientation": 128
+  },
+  {
+    "description": "Weiss Underground Stalactites",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [ 21554, 21555 ],
+    "uvType": "BOX",
+    "uvOrientation": 128,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Weiss Staircase",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [ 33234 ],
+    "uvType": "BOX",
+    "uvOrientation": 768,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Wise Old Mans Coffin",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 33264, 33332 ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Weiss Smelly Hole",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [ 33262 ],
+    "uvType": "BOX",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Weiss Salt Rocks",
+    "baseMaterial": "ROCK_5",
+    "objectIds": [ 33255, 33257 ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Weiss Salt Rocks",
+    "baseMaterial": "ROCK_5",
+    "objectIds": [ 33254, 33256 ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Weiss Empty Rock",
+    "baseMaterial": "ROCK_5",
+    "objectIds": [ 33253 ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Weiss Saltmine Walls",
+    "baseMaterial": "ROCK_4",
+    "objectIds": [ 46825, 46826, 46827, 46828, 46829, 46830, 43831, 46832, 46833, 46834, 46835, 46836, 46837, 46905 ],
+    "uvType": "BOX",
+    "uvScale": 0.45,
+    "uvOrientation": 128
+  },
+  {
+    "description": "Weiss Saltmine Stairs",
+    "baseMaterial": "ROCK_4",
+    "objectIds": [ 33261 ],
+    "uvType": "BOX",
+    "uvScale": 0.45,
+    "uvOrientation": 384
+  },
+  {
+    "description": "White Bed with pillow",
+    "baseMaterial": "FINE_CARPET",
+    "objectIds": [ 46841 ],
+    "uvType": "BOX",
+    "uvOrientation": 64
+  },
+  {
+    "description": "Black overhead tiles",
+    "baseMaterial": "GRAY_25",
+    "objectIds": [ 44643 ],
+    "uvType": "BOX",
+    "uvOrientation": 64
+  },
+  {
+    "description": "Throne of Weiss",
+    "baseMaterial": "ROCK_2",
+    "objectIds": [ 33330 ],
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Goat Poo",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [ 33214 ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 128
+  },
+  {
+    "description": "Snowy Underground Entrance",
+    "baseMaterial": "SNOW_4",
+    "objectIds": [ 33227, 33228, 33229, 33230, 33231 ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 64
+  },
+  {
+    "description": "Poison Waste Dungeon exit shading",
+    "objectIds": [ 49702 ],
+    "flatNormals": true
+  },
+  {
+    "description": "Fix incorrectly oriented tile model in Karuulm",
+    "objectIds": [ 34533 ],
+    "areas": [ [ 1288, 10205, 0 ] ],
+    "rotate": 270
   }
 ]
