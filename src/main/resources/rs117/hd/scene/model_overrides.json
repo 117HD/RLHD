@@ -12432,10 +12432,22 @@
     "description": "Magic Tree",
     "baseMaterial": "BARK",
     "objectIds": [
-      4537, 5127, 8396, 8397, 8398, 8399, 8400, 8401, 8402, 8403, 8404, 8405, 8406, 8407, 8408, 8409, 10834
+      4537, 5127, 8396,
+      8397, 8398, 8399,
+      8400, 8401, 8402,
+      8403, 8404, 8405,
+      8406, 8407, 8408, 8409, 10834
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
-    "retainVanillaUvs": true
+    "retainVanillaUvs": true,
+    "materialOverrides": {
+      "LEAVES_1": {
+        "textureMaterial": "EVERGREEN_LEAVES_1"
+      },
+      "LEAVES_3": {
+        "textureMaterial": "EVERGREEN_LEAVES_3"
+      }
+    }
   }
 ]
