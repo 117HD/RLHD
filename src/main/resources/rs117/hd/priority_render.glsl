@@ -230,7 +230,7 @@ void undoVanillaShading(inout ivec4 vertex, vec3 unrotatedNormal) {
     const int IGNORE_LOW_LIGHTNESS = 3;
     // multiplier applied to vertex' lightness value.
     // results in greater lightening of lighter colors
-    const float LIGHTNESS_MULTIPLIER = 3f;
+    const float LIGHTNESS_MULTIPLIER = 3.f;
     // the minimum amount by which each color will be lightened
     const int BASE_LIGHTEN = 10;
 
