@@ -712,7 +712,7 @@ public enum Overlay {
 	TEMPLE_OF_THE_EYE_PATH_BLENDING_FIX_TOGGLE(p -> p
 		.ids(203)
 		.area(Area.TEMPLE_OF_THE_EYE_BLEND_FIX)
-		.groundMaterial(GroundMaterial.DIRT)
+		.groundMaterial(GroundMaterial.SAND)
 		.replaceWithIf(TEMPLE_OF_THE_EYE_PATH_BLENDING_FIX, plugin -> plugin.configGroundBlending)
 	),
 	TEMPLE_OF_THE_EYE_DIRT_202(Area.TEMPLE_OF_THE_EYE, GroundMaterial.SAND, p -> p.ids(202).shiftLightness(-4).blendedAsOpposite(true)),
