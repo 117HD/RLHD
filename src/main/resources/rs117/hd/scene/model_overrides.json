@@ -12520,5 +12520,39 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.7
+  },
+  {
+    "description": "Guardians of the Rift - Columns",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      43523,
+      43524,
+      43525,
+      43526,
+      43527
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Guardians of the Rift - Destroyed Columns Base",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      43528
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Guardians of the Rift - Destroyed Columns Ground",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      43529
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 512
   }
 ]
