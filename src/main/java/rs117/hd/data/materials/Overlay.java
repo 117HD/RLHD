@@ -715,26 +715,26 @@ public enum Overlay {
 		.groundMaterial(GroundMaterial.SAND)
 		.replaceWithIf(TEMPLE_OF_THE_EYE_PATH_BLENDING_FIX, plugin -> plugin.configGroundBlending)
 	),
-	TEMPLE_OF_THE_EYE_DIRT_202(Area.TEMPLE_OF_THE_EYE, GroundMaterial.SAND, p -> p.ids(202).shiftLightness(-4).blendedAsOpposite(true)),
-	EMPLE_OF_THE_EYE_DIRT_203(Area.TEMPLE_OF_THE_EYE, GroundMaterial.SAND, p -> p.ids(203).shiftLightness(-4)),
-	TEMPLE_OF_THE_EYE_ROCK(p -> p
-		.ids(181, 201)
-		.area(Area.TEMPLE_OF_THE_EYE)
-		.groundMaterial(GroundMaterial.ROCKY_CAVE_FLOOR)
-	),
 	TEMPLE_OF_THE_EYE_GUARDIAN_PLATFORM_204(p -> p
 		.ids(204)
 		.area(Area.TEMPLE_OF_THE_EYE_GUARDIANS_PLATFORM)
 		.groundMaterial(GroundMaterial.ROCKY_CAVE_FLOOR)
 		.blended(false)
-		.lightness(60)
+		.lightness(58)
 	),
 	TEMPLE_OF_THE_EYE_GUARDIAN_PLATFORM_181(p -> p
 		.ids(181)
 		.area(Area.TEMPLE_OF_THE_EYE_GUARDIANS_PLATFORM)
 		.groundMaterial(GroundMaterial.ROCKY_CAVE_FLOOR)
 		.blended(false)
-		.lightness(30)
+		.lightness(18)
+	),
+	TEMPLE_OF_THE_EYE_DIRT_202(Area.TEMPLE_OF_THE_EYE, GroundMaterial.SAND, p -> p.ids(202).shiftLightness(-4).blendedAsOpposite(true)),
+	EMPLE_OF_THE_EYE_DIRT_203(Area.TEMPLE_OF_THE_EYE, GroundMaterial.SAND, p -> p.ids(203).shiftLightness(-4)),
+	TEMPLE_OF_THE_EYE_ROCK(p -> p
+		.ids(181, 201)
+		.area(Area.TEMPLE_OF_THE_EYE)
+		.groundMaterial(GroundMaterial.ROCKY_CAVE_FLOOR)
 	),
 
 	// God Wars Dungeon (GWD)
