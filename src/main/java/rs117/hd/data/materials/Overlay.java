@@ -727,6 +727,7 @@ public enum Overlay {
 		.area(Area.TEMPLE_OF_THE_EYE)
 		.groundMaterial(GroundMaterial.ROCKY_CAVE_FLOOR)
 		.blended(false)
+		.lightness(60)
 	),
 
 	// God Wars Dungeon (GWD)
