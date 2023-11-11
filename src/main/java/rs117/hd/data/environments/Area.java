@@ -1474,7 +1474,7 @@ public enum Area
 
 	// POHs
 	PLAYER_OWNED_HOUSE_SNOWY(1984, 5696, 2047, 5767),
-	PLAYER_OWNED_HOUSE(1792, 5696, 2047, 5767),
+	PLAYER_OWNED_HOUSE(1792, 5696, 2047, 5823),
 
 	// Blackhole
 	BLACKHOLE(1616, 4728, 1623, 4735),
@@ -1974,9 +1974,7 @@ public enum Area
 	}
 
 	Area(Area... areas)	{
-		this.aabbs = Arrays.stream(areas)
-			.flatMap(a -> Arrays.stream(a.aabbs))
-			.toArray(AABB[]::new);
+		this.aabbs = areas(areas);
 	}
 
 	Area(int pointAX, int pointAY, int pointBX, int pointBY) {
@@ -1989,6 +1987,12 @@ public enum Area
 
 	Area(int regionId) {
 		this(regions(regionId));
+	}
+
+	private static AABB[] areas(Area... areas) {
+		return Arrays.stream(areas)
+			.flatMap(a -> Arrays.stream(a.aabbs))
+			.toArray(AABB[]::new);
 	}
 
 	private static AABB[] regions(int... regionIds) {
