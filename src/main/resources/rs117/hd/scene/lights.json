@@ -31621,16 +31621,14 @@
     "description": "ABYSS_PORTAL",
     "height": 160,
     "alignment": "CENTER",
-    "radius": 300,
+    "radius": 1000,
     "strength": 65,
     "color": [
       90,
       16,
       115
     ],
-    "type": "PULSE",
-    "duration": 2000,
-    "range": 300,
+    "type": "STATIC",
     "objectIds": [
       26149
     ]
