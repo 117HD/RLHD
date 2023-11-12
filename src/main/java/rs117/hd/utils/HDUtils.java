@@ -34,6 +34,9 @@ import net.runelite.api.coords.*;
 import static net.runelite.api.Constants.SCENE_SIZE;
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.*;
+import static rs117.hd.scene.ProceduralGenerator.VERTICES_PER_FACE;
+import static rs117.hd.scene.ProceduralGenerator.faceLocalVertices;
+import static rs117.hd.scene.ProceduralGenerator.isOverlayFace;
 
 @Slf4j
 @Singleton
@@ -408,5 +411,38 @@ public class HDUtils {
 		}
 
 		return false;
+	}
+
+	public static int[] getSouthWesternMostTileColor(Tile tile) {
+		var paint = tile.getSceneTilePaint();
+		var model = tile.getSceneTileModel();
+		if (paint != null) {
+			return HDUtils.colorIntToHSL(paint.getSwColor());
+		} else if (model != null) {
+			int faceCount = tile.getSceneTileModel().getFaceX().length;
+			final int[] faceColorsA = model.getTriangleColorA();
+			final int[] faceColorsB = model.getTriangleColorB();
+			final int[] faceColorsC = model.getTriangleColorC();
+
+			int hsl = 0;
+			outer:
+			for (int face = 0; face < faceCount; face++) {
+				if (isOverlayFace(tile, face))
+					continue;
+
+				int[][] vertices = faceLocalVertices(tile, face);
+				int[] faceColors = new int[] { faceColorsA[face], faceColorsB[face], faceColorsC[face] };
+
+				for (int vertex = 0; vertex < VERTICES_PER_FACE; vertex++) {
+					hsl = faceColors[vertex];
+					if (vertices[vertex][0] != LOCAL_TILE_SIZE && vertices[vertex][1] != LOCAL_TILE_SIZE)
+						break outer;
+				}
+			}
+
+			return HDUtils.colorIntToHSL(hsl);
+		}
+
+		return null;
 	}
 }

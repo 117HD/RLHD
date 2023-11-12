@@ -40,13 +40,9 @@ import rs117.hd.HdPlugin;
 import rs117.hd.config.SeasonalTheme;
 import rs117.hd.data.WaterType;
 import rs117.hd.data.environments.Area;
-import rs117.hd.scene.SceneUploader;
 import rs117.hd.utils.HDUtils;
 
-import static net.runelite.api.Perspective.*;
-import static rs117.hd.scene.ProceduralGenerator.VERTICES_PER_FACE;
-import static rs117.hd.scene.ProceduralGenerator.faceLocalVertices;
-import static rs117.hd.scene.ProceduralGenerator.isOverlayFace;
+import static rs117.hd.scene.SceneUploader.SCENE_OFFSET;
 
 @Slf4j
 public enum Underlay {
@@ -84,54 +80,12 @@ public enum Underlay {
 		.area(Area.IMCANDO_PENINSULA)
 		.replacementResolver(
 			(plugin, scene, tile, override) -> {
-				// Grab the color from the south-western-most vertex, to try to match with tile blending
-				int color;
-				var paint = tile.getSceneTilePaint();
-				var model = tile.getSceneTileModel();
-				if (paint != null) {
-					color = paint.getSwColor();
-				} else if (model != null) {
-					int faceCount = tile.getSceneTileModel().getFaceX().length;
-					final int[] faceColorsA = model.getTriangleColorA();
-					final int[] faceColorsB = model.getTriangleColorB();
-					final int[] faceColorsC = model.getTriangleColorC();
+				int[] hsl = HDUtils.getSouthWesternMostTileColor(tile);
+				if (hsl == null)
+					return override;
 
-					color = 0;
-					outer:
-					for (int face = 0; face < faceCount; face++) {
-						if (isOverlayFace(tile, face))
-							continue;
-
-						int[][] vertices = faceLocalVertices(tile, face);
-						int[] faceColors = new int[] { faceColorsA[face], faceColorsB[face], faceColorsC[face] };
-
-						for (int vertex = 0; vertex < VERTICES_PER_FACE; vertex++) {
-							color = faceColors[vertex];
-//							log.debug(
-//								"x: {}, y: {}, vertex: {}, local: {}",
-//								tile.getSceneLocation().getX(),
-//								tile.getSceneLocation().getY(),
-//								vertex,
-//								vertices[vertex]
-//							);
-							if (vertices[vertex][0] != LOCAL_TILE_SIZE && vertices[vertex][1] != LOCAL_TILE_SIZE)
-								break outer;
-						}
-					}
-				} else {
-					return DEFAULT_SAND;
-				}
-				LocalPoint localLocation = tile.getLocalLocation();
-				int tileExX = localLocation.getSceneX() + SceneUploader.SCENE_OFFSET;
-				int tileExY = localLocation.getSceneY() + SceneUploader.SCENE_OFFSET;
-				short overlayId = scene.getOverlayIds()[tile.getRenderLevel()][tileExX][tileExY];
-
-
-				int hue = color >> 10 & 0x3F; // jagex hsl extractor
-				int saturation = color >> 7 & 0x7; // jagex hsl extractor
-				int lightness = color & 0x7F; // jagex hsl extractor
 				// Rocky Shoreline
-				if (saturation == 0 || (hue <= 10 && saturation < 2)) {
+				if (hsl[1] == 0 || (hsl[0] <= 10 && hsl[1] < 2)) {
 					switch (plugin.configSeasonalTheme) {
 						case WINTER:
 							return WINTER_GRUNGE;
@@ -140,10 +94,11 @@ public enum Underlay {
 							return DEFAULT_GRUNGE;
 					}
 				}
+
 				// Grass
-				if ((hue >= 11 && saturation == 1) || (hue == 9 && saturation == 2) ||
-					(hue == 9 && saturation == 3 && lightness >= 49) || (hue >= 9 && saturation >= 4) ||
-					(hue >= 10 && saturation >= 2)) {
+				if ((hsl[0] >= 11 && hsl[1] == 1) || (hsl[0] == 9 && hsl[1] == 2) ||
+					(hsl[0] == 9 && hsl[1] == 3 && hsl[2] >= 49) || (hsl[0] >= 9 && hsl[1] >= 4) ||
+					(hsl[0] >= 10 && hsl[1] >= 2)) {
 					switch (plugin.configSeasonalTheme) {
 						case WINTER:
 							return WINTER_GRASS;
@@ -151,8 +106,9 @@ public enum Underlay {
 							return DEFAULT_GRASS;
 					}
 				}
+
 				// Dirt
-				if (hue <= 8 && saturation >= 4 && lightness <= 71) {
+				if (hsl[0] <= 8 && hsl[1] >= 4 && hsl[2] <= 71) {
 					switch (plugin.configSeasonalTheme) {
 						case WINTER:
 							return WINTER_DIRT;
@@ -213,27 +169,25 @@ public enum Underlay {
 		.area(Area.CATHERBY)
 		.replacementResolver(
 			(plugin, scene, tile, override) -> {
-				// Grab the color from the south-western-most vertex, to try to match with tile blending
-				int color;
-				var paint = tile.getSceneTilePaint();
-				var model = tile.getSceneTileModel();
-				if (paint != null) {
-					color = paint.getSwColor();
-				} else if (model != null) {
-					color = model.getTriangleColorA()[0];
-				} else {
-					return DEFAULT_SAND;
-				}
+				int[] hsl = HDUtils.getSouthWesternMostTileColor(tile);
+				if (hsl == null)
+					return override;
+
 				LocalPoint localLocation = tile.getLocalLocation();
-				int tileExX = localLocation.getSceneX() + SceneUploader.SCENE_OFFSET;
-				int tileExY = localLocation.getSceneY() + SceneUploader.SCENE_OFFSET;
+				int tileExX = localLocation.getSceneX() + SCENE_OFFSET;
+				int tileExY = localLocation.getSceneY() + SCENE_OFFSET;
 				short overlayId = scene.getOverlayIds()[tile.getRenderLevel()][tileExX][tileExY];
 
+				if (hsl[0] >= 9) {
+					switch (plugin.configSeasonalTheme) {
+						case SUMMER:
+							return DEFAULT_GRASS;
+						case WINTER:
+							return WINTER_GRASS;
+					}
+				}
 
-				int hue = color >> 10 & 0x3F; // jagex hsl extractor
-				int saturation = color >> 7 & 0x7; // jagex hsl extractor
-				int lightness = color & 0x7F; // jagex hsl extractor
-				if (hue >= 9) {
+				if (hsl[0] == 8 && hsl[1] > 5 && overlayId != 6) {
 					switch (plugin.configSeasonalTheme) {
 						case SUMMER:
 							return DEFAULT_GRASS;
@@ -241,15 +195,8 @@ public enum Underlay {
 							return WINTER_GRASS;
 					}
 				}
-				if (hue == 8 && saturation > 5 && overlayId != 6) {
-					switch (plugin.configSeasonalTheme) {
-						case SUMMER:
-							return DEFAULT_GRASS;
-						case WINTER:
-							return WINTER_GRASS;
-					}
-				}
-				if (hue < 8 && saturation > 4 && lightness < 45 && overlayId != 6) {
+
+				if (hsl[0] < 8 && hsl[1] > 4 && hsl[2] < 45 && overlayId != 6) {
 					switch (plugin.configSeasonalTheme) {
 						case SUMMER:
 						case AUTUMN:
@@ -258,6 +205,7 @@ public enum Underlay {
 							return WINTER_DIRT;
 					}
 				}
+
 				return DEFAULT_SAND;
 			}
 		)
@@ -505,72 +453,31 @@ public enum Underlay {
 		.area(Area.SNOW_REGIONS)
 		.groundMaterial(GroundMaterial.SNOW_1)
 		.replacementResolver((plugin, scene, tile, override) -> {
-				// Grab the color from the south-western-most vertex, to try to match with tile blending
-				int color;
-				var paint = tile.getSceneTilePaint();
-				var model = tile.getSceneTileModel();
-				if (paint != null) {
-					color = paint.getSwColor();
-				} else if (model != null) {
-					int faceCount = tile.getSceneTileModel().getFaceX().length;
-					final int[] faceColorsA = model.getTriangleColorA();
-					final int[] faceColorsB = model.getTriangleColorB();
-					final int[] faceColorsC = model.getTriangleColorC();
+			int[] hsl = HDUtils.getSouthWesternMostTileColor(tile);
+			if (hsl == null)
+				return override;
 
-					color = 0;
-					outer:
-					for (int face = 0; face < faceCount; face++) {
-						if (isOverlayFace(tile, face))
-							continue;
-
-						int[][] vertices = faceLocalVertices(tile, face);
-						int[] faceColors = new int[] { faceColorsA[face], faceColorsB[face], faceColorsC[face] };
-
-						for (int vertex = 0; vertex < VERTICES_PER_FACE; vertex++) {
-							color = faceColors[vertex];
-//							log.debug(
-//								"x: {}, y: {}, vertex: {}, local: {}",
-//								tile.getSceneLocation().getX(),
-//								tile.getSceneLocation().getY(),
-//								vertex,
-//								vertices[vertex]
-//							);
-							if (vertices[vertex][0] != LOCAL_TILE_SIZE && vertices[vertex][1] != LOCAL_TILE_SIZE)
-								break outer;
-						}
-					}
-				} else {
-					return OVERWORLD_SAND;
+			if (hsl[1] >= 2) {
+				switch (plugin.configSeasonalTheme) {
+					case SUMMER:
+						return OVERWORLD_GRASS;
+					case WINTER:
+						return WINTER_GRASS;
 				}
-				LocalPoint localLocation = tile.getLocalLocation();
-				int tileExX = localLocation.getSceneX() + SceneUploader.SCENE_OFFSET;
-				int tileExY = localLocation.getSceneY() + SceneUploader.SCENE_OFFSET;
-				short overlayId = scene.getOverlayIds()[tile.getRenderLevel()][tileExX][tileExY];
-
-
-				int hue = color >> 10 & 0x3F; // jagex hsl extractor
-				int saturation = color >> 7 & 0x7; // jagex hsl extractor
-				int lightness = color & 0x7F; // jagex hsl extractor
-				if (saturation >= 2) {
-					switch (plugin.configSeasonalTheme) {
-						case SUMMER:
-							return OVERWORLD_GRASS;
-						case WINTER:
-							return WINTER_GRASS;
-					}
-				}
-				if (saturation == 1) {
-					switch (plugin.configSeasonalTheme) {
-						case SUMMER:
-						case AUTUMN:
-							return OVERWORLD_DIRT;
-						case WINTER:
-							return WINTER_DIRT;
-					}
-				}
-				return DEFAULT_SNOW_1;
 			}
-		)
+
+			if (hsl[1] == 1) {
+				switch (plugin.configSeasonalTheme) {
+					case SUMMER:
+					case AUTUMN:
+						return OVERWORLD_DIRT;
+					case WINTER:
+						return WINTER_DIRT;
+				}
+			}
+
+			return DEFAULT_SNOW_1;
+		})
 	),
 	UNDERLAY_72(GroundMaterial.VARIED_DIRT, p -> p
 		.ids(72, 73, 98, 112, 113) //112 == Lovakengj
@@ -584,53 +491,11 @@ public enum Underlay {
 		.ids(55, 61, 62, 63, 64, 65, 68, 94, 96)
 		.replacementResolver(
 			(plugin, scene, tile, override) -> {
-				// Grab the color from the south-western-most vertex, to try to match with tile blending
-				int color;
-				var paint = tile.getSceneTilePaint();
-				var model = tile.getSceneTileModel();
-				if (paint != null) {
-					color = ((paint.getSwColor() + paint.getSeColor() + paint.getNwColor() + paint.getNeColor()) / 4);
-				} else if (model != null) {
-					int faceCount = tile.getSceneTileModel().getFaceX().length;
-					final int[] faceColorsA = model.getTriangleColorA();
-					final int[] faceColorsB = model.getTriangleColorB();
-					final int[] faceColorsC = model.getTriangleColorC();
+				int[] hsl = HDUtils.getSouthWesternMostTileColor(tile);
+				if (hsl == null)
+					return override;
 
-					color = 0;
-					outer:
-					for (int face = 0; face < faceCount; face++) {
-						if (isOverlayFace(tile, face))
-							continue;
-
-						int[][] vertices = faceLocalVertices(tile, face);
-						int[] faceColors = new int[] { faceColorsA[face], faceColorsB[face], faceColorsC[face] };
-
-						for (int vertex = 0; vertex < VERTICES_PER_FACE; vertex++) {
-							color = faceColors[vertex];
-//							log.debug(
-//								"x: {}, y: {}, vertex: {}, local: {}",
-//								tile.getSceneLocation().getX(),
-//								tile.getSceneLocation().getY(),
-//								vertex,
-//								vertices[vertex]
-//							);
-							if (vertices[vertex][0] != LOCAL_TILE_SIZE && vertices[vertex][1] != LOCAL_TILE_SIZE)
-								break outer;
-						}
-					}
-				} else {
-					return DEFAULT_DIRT;
-				}
-				LocalPoint localLocation = tile.getLocalLocation();
-				int tileExX = localLocation.getSceneX() + SceneUploader.SCENE_OFFSET;
-				int tileExY = localLocation.getSceneY() + SceneUploader.SCENE_OFFSET;
-				short overlayId = scene.getOverlayIds()[tile.getRenderLevel()][tileExX][tileExY];
-
-
-				int hue = color >> 10 & 0x3F; // jagex hsl extractor
-				int saturation = color >> 7 & 0x7; // jagex hsl extractor
-				int lightness = color & 0x7F; // jagex hsl extractor
-				if (saturation == 0) {
+				if (hsl[1] == 0) {
 					switch (plugin.configSeasonalTheme) {
 						case SUMMER:
 						case AUTUMN:
@@ -639,7 +504,7 @@ public enum Underlay {
 							return WINTER_GRUNGE;
 					}
 				}
-				if (hue <= 10 && saturation < 2) {
+				if (hsl[0] <= 10 && hsl[1] < 2) {
 					switch (plugin.configSeasonalTheme) {
 						case SUMMER:
 						case AUTUMN:
@@ -648,13 +513,19 @@ public enum Underlay {
 							return WINTER_GRUNGE;
 					}
 				}
-				if ((hue == 8 && saturation == 4 && lightness >= 71) || (hue == 8 && saturation == 3 && lightness >= 48)) {
+				if ((hsl[0] == 8 && hsl[1] == 4 && hsl[2] >= 71) || (hsl[0] == 8 && hsl[1] == 3 && hsl[2] >= 48))
 					return DEFAULT_SAND;
-				}
-				if ((hue >= 11 && saturation == 1) || (hue == 9 && saturation == 2) ||
-					(hue == 9 && saturation == 3 && lightness >= 49) || (hue >= 9 && saturation >= 4) ||
-					(hue == 9 && saturation == 3 && lightness <= 28) || (hue >= 10 && saturation >= 2) ||
-					(hue == 8 && saturation == 5 && lightness >= 15) || (hue == 8 && saturation >= 6 && lightness >= 10)) {
+
+				if (
+					hsl[0] >= 11 && hsl[1] == 1 ||
+					hsl[0] == 9 && hsl[1] == 2 ||
+					hsl[0] == 9 && hsl[1] == 3 && hsl[2] >= 49 ||
+					hsl[0] >= 9 && hsl[1] >= 4 ||
+					hsl[0] == 9 && hsl[1] == 3 && hsl[2] <= 28 ||
+					hsl[0] >= 10 && hsl[1] >= 2 ||
+					hsl[0] == 8 && hsl[1] == 5 && hsl[2] >= 15 ||
+					hsl[0] == 8 && hsl[1] >= 6 && hsl[2] >= 10
+				) {
 					switch (plugin.configSeasonalTheme) {
 						case SUMMER:
 							return DEFAULT_GRASS;
@@ -662,9 +533,13 @@ public enum Underlay {
 							return WINTER_GRASS;
 					}
 				}
-				if ((hue == 8 && saturation <= 4 && lightness <= 71) || (hue <= 7 && saturation <= 5 && lightness <= 57) ||
-					(hue <= 7 && saturation <= 7 && lightness <= 28) || (hue == 8 && saturation == 4 && lightness <= 15) ||
-					(hue == 8 && saturation == 5 && lightness <= 15)) {
+
+				if (
+					hsl[0] == 8 && hsl[1] <= 4 && hsl[2] <= 71 ||
+					hsl[0] <= 7 && hsl[1] <= 5 && hsl[2] <= 57 ||
+					hsl[0] <= 7 && hsl[1] <= 7 && hsl[2] <= 28 ||
+					hsl[0] == 8 && hsl[1] == 5 && hsl[2] <= 15
+				) {
 					switch (plugin.configSeasonalTheme) {
 						case SUMMER:
 						case AUTUMN:
@@ -682,54 +557,17 @@ public enum Underlay {
 		.area(Area.KARAMJA)
 		.replacementResolver(
 			(plugin, scene, tile, override) -> {
-				// Grab the color from the south-western-most vertex, to try to match with tile blending
-				int color;
-				var paint = tile.getSceneTilePaint();
-				var model = tile.getSceneTileModel();
-				if (paint != null) {
-					color = paint.getSwColor();
-				} else if (model != null) {
-					int faceCount = tile.getSceneTileModel().getFaceX().length;
-					final int[] faceColorsA = model.getTriangleColorA();
-					final int[] faceColorsB = model.getTriangleColorB();
-					final int[] faceColorsC = model.getTriangleColorC();
+				int[] hsl = HDUtils.getSouthWesternMostTileColor(tile);
+				if (hsl == null)
+					return override;
 
-					color = 0;
-					outer:
-					for (int face = 0; face < faceCount; face++) {
-						if (isOverlayFace(tile, face))
-							continue;
-
-						int[][] vertices = faceLocalVertices(tile, face);
-						int[] faceColors = new int[] { faceColorsA[face], faceColorsB[face], faceColorsC[face] };
-
-						for (int vertex = 0; vertex < VERTICES_PER_FACE; vertex++) {
-							color = faceColors[vertex];
-//							log.debug(
-//								"x: {}, y: {}, vertex: {}, local: {}",
-//								tile.getSceneLocation().getX(),
-//								tile.getSceneLocation().getY(),
-//								vertex,
-//								vertices[vertex]
-//							);
-							if (vertices[vertex][0] != LOCAL_TILE_SIZE && vertices[vertex][1] != LOCAL_TILE_SIZE)
-								break outer;
-						}
-					}
-				} else {
-					return OVERWORLD_SAND;
-				}
 				LocalPoint localLocation = tile.getLocalLocation();
-				int tileExX = localLocation.getSceneX() + SceneUploader.SCENE_OFFSET;
-				int tileExY = localLocation.getSceneY() + SceneUploader.SCENE_OFFSET;
+				int tileExX = localLocation.getSceneX() + SCENE_OFFSET;
+				int tileExY = localLocation.getSceneY() + SCENE_OFFSET;
 				short overlayId = scene.getOverlayIds()[tile.getRenderLevel()][tileExX][tileExY];
 
-
-				int hue = color >> 10 & 0x3F; // jagex hsl extractor
-				int saturation = color >> 7 & 0x7; // jagex hsl extractor
-				int lightness = color & 0x7F; // jagex hsl extractor
 				// Grass
-				if ((hue >= 9) || (hue == 8 && saturation > 5 && overlayId != 6)) {
+				if (hsl[0] >= 9 || hsl[0] == 8 && hsl[1] > 5 && overlayId != 6) {
 					switch (plugin.configSeasonalTheme) {
 						case SUMMER:
 						case AUTUMN:
@@ -738,8 +576,9 @@ public enum Underlay {
 							return WINTER_GRASS;
 					}
 				}
+
 				// Dirt
-				if (hue <= 8 && saturation >= 4 && lightness <= 71) {
+				if (hsl[0] <= 8 && hsl[1] >= 4 && hsl[2] <= 71) {
 					switch (plugin.configSeasonalTheme) {
 						case SUMMER:
 						case AUTUMN:
@@ -748,6 +587,7 @@ public enum Underlay {
 							return WINTER_DIRT;
 					}
 				}
+
 				return OVERWORLD_SAND;
 			}
 		)
@@ -838,8 +678,8 @@ public enum Underlay {
 			}
 		}
 
-		int tileExX = localLocation.getSceneX() + SceneUploader.SCENE_OFFSET;
-		int tileExY = localLocation.getSceneY() + SceneUploader.SCENE_OFFSET;
+		int tileExX = localLocation.getSceneX() + SCENE_OFFSET;
+		int tileExY = localLocation.getSceneY() + SCENE_OFFSET;
 		short underlayId = scene.getUnderlayIds()[tile.getRenderLevel()][tileExX][tileExY];
 		Underlay[] underlays = FILTERED_MAP.get((int) underlayId);
 		if (underlays != null) {
