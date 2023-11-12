@@ -886,8 +886,13 @@ public enum Overlay {
 	KELDAGRIM_PATHS(117, GroundMaterial.FALADOR_PATHS),
 
 	// Default overlays
-
-	OVERLAY_WATER(WaterType.WATER, p -> p.ids(-128, -105, -98, 6, 41, 104, 196)),
+	OVERLAY_WATER(p -> p.area(Area.OVERWORLD).ids(-128, -105, -98, 6, 41, 104, 196).waterType(WaterType.WATER)),
+	OVERWORLD_GRASS(p -> p
+		.area(Area.OVERWORLD)
+		.ids(29)
+		.groundMaterial(GroundMaterial.OVERWORLD_GRASS_1)
+		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_GRASS)
+	),
 	OVERLAY_DIRT(
 		GroundMaterial.DIRT,
 		p -> p.ids(-124, -84, -83, 14, 15, 16, 21, 22, 23, 60, 77, 81, 82, 88, 89, 101, 102, 107, 108, 110, 115, 123, 227)

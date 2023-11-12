@@ -32,7 +32,6 @@ import net.runelite.api.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.config.DefaultSkyColor;
-import rs117.hd.config.SeasonalTheme;
 import rs117.hd.data.environments.Area;
 import rs117.hd.data.environments.Environment;
 import rs117.hd.utils.AABB;
@@ -136,8 +135,6 @@ public class EnvironmentManager {
 
 	private boolean lightningEnabled = false;
 	private boolean isOverworld = false;
-	private boolean isThemeable = false;
-	private boolean isWinterThemeable = false;
 	// some necessary data for reloading the scene while in POH to fix major performance loss
 	private boolean isInHouse = false;
 	private int previousPlane;
@@ -156,10 +153,6 @@ public class EnvironmentManager {
 		assert client.isClientThread();
 
 		int[] position = sceneContext.localToWorld(plugin.cameraFocalPoint[0], plugin.cameraFocalPoint[1], client.getPlane());
-
-		isOverworld = Area.OVERWORLD.containsPoint(position);
-		isThemeable = Area.THEMEABLE_ENVIRONMENTS.containsPoint(position);
-		isWinterThemeable = Area.SNOW_REGIONS.containsPoint(position);
 
 		// skip the transitional fade if the player has moved too far
 		// since the previous frame. results in an instant transition when
@@ -187,7 +180,10 @@ public class EnvironmentManager {
 			{
 				if (environment != currentEnvironment)
 				{
-					if (environment == Environment.PLAYER_OWNED_HOUSE || environment == Environment.PLAYER_OWNED_HOUSE_SNOWY) {
+					if (
+						environment == Environment.PLAYER_OWNED_HOUSE ||
+						environment == Environment.PLAYER_OWNED_HOUSE_SNOWY
+					) {
 						// POH takes 1 game tick to enter, then 2 game ticks to load per floor
 						plugin.reloadSceneIn(7);
 						isInHouse = true;
@@ -206,6 +202,8 @@ public class EnvironmentManager {
 				break;
 			}
 		}
+
+		isOverworld = isInHouse && client.getPlane() > 0 || Area.OVERWORLD.containsPoint(position);
 
 		updateTargetSkyColor(); // Update every frame, since other plugins may control it
 
@@ -272,8 +270,6 @@ public class EnvironmentManager {
 
 		updateTargetSkyColor();
 
-		targetFogDepth = newEnvironment.getFogDepth();
-
 		Environment atmospheric = config.atmosphericLighting() ? newEnvironment : Environment.OVERWORLD;
 		targetAmbientStrength = atmospheric.getAmbientStrength();
 		targetAmbientColor = atmospheric.getAmbientColor();
@@ -283,46 +279,41 @@ public class EnvironmentManager {
 		targetUnderglowColor = atmospheric.getUnderglowColor();
 		targetUnderwaterCausticsColor = atmospheric.getUnderwaterCausticsColor();
 		targetUnderwaterCausticsStrength = atmospheric.getUnderwaterCausticsStrength();
-		if (useWinterTheme()) {
-			if (!newEnvironment.isCustomFogDepth())
-				targetFogDepth = Environment.WINTER.getFogDepth();
-			if (!atmospheric.isCustomAmbientStrength())
-				targetAmbientStrength = Environment.WINTER.getAmbientStrength();
-			if (!atmospheric.isCustomAmbientColor())
-				targetAmbientColor = Environment.WINTER.getAmbientColor();
-			if (!atmospheric.isCustomDirectionalStrength())
-				targetDirectionalStrength = Environment.WINTER.getDirectionalStrength();
-			if (!atmospheric.isCustomDirectionalColor())
-				targetDirectionalColor = Environment.WINTER.getDirectionalColor();
-		}
-		if (useAutumnTheme()) {
-			if (!atmospheric.isCustomAmbientStrength())
-				targetAmbientStrength = Environment.AUTUMN.getAmbientStrength();
-			if (!atmospheric.isCustomAmbientColor())
-				targetAmbientColor = Environment.AUTUMN.getAmbientColor();
-			if (!atmospheric.isCustomDirectionalStrength())
-				targetDirectionalStrength = Environment.AUTUMN.getDirectionalStrength();
-			if (!atmospheric.isCustomDirectionalColor())
-				targetDirectionalColor = Environment.AUTUMN.getDirectionalColor();
-		}
 		targetLightPitch = newEnvironment.getLightPitch();
 		targetLightYaw = newEnvironment.getLightYaw();
+		targetFogDepth = newEnvironment.getFogDepth();
 		targetGroundFogStart = newEnvironment.getGroundFogStart();
 		targetGroundFogEnd = newEnvironment.getGroundFogEnd();
 		targetGroundFogOpacity = newEnvironment.getGroundFogOpacity();
 		lightningEnabled = newEnvironment.isLightningEnabled();
-		if (useAutumnTheme()) {
-			targetLightPitch = Environment.AUTUMN.getLightPitch();
-			targetLightYaw = Environment.AUTUMN.getLightYaw();
+
+		// This is still kind of hacky, but the idea is to only change defaults stemming from the overworld environment
+		if (isOverworld) {
+			var env = getOverworldEnvironment();
+
+			if (!newEnvironment.isCustomFogDepth())
+				targetFogDepth = env.getFogDepth();
+			if (!atmospheric.isCustomAmbientStrength())
+				targetAmbientStrength = env.getAmbientStrength();
+			if (!atmospheric.isCustomAmbientColor())
+				targetAmbientColor = env.getAmbientColor();
+			if (!atmospheric.isCustomDirectionalStrength())
+				targetDirectionalStrength = env.getDirectionalStrength();
+			if (!atmospheric.isCustomDirectionalColor())
+				targetDirectionalColor = env.getDirectionalColor();
+
+			if (newEnvironment == Environment.OVERWORLD) {
+				targetLightPitch = env.getLightPitch();
+				targetLightYaw = env.getLightYaw();
+			}
 		}
 	}
 
 	public void updateTargetSkyColor() {
 		Environment env = currentEnvironment;
-		if (useWinterTheme())
-			env = Environment.WINTER;
-		else if (useAutumnTheme())
-			env = Environment.AUTUMN;
+		if (!env.isCustomFogColor())
+			env = getOverworldEnvironment();
+
 		if (!env.isCustomFogColor() || env.isAllowSkyOverride() && config.overrideSky()) {
 			DefaultSkyColor sky = config.defaultSkyColor();
 			targetFogColor = sky.getRgb(client);
@@ -434,15 +425,18 @@ public class EnvironmentManager {
 		}
 	}
 
+	private Environment getOverworldEnvironment() {
+		switch (plugin.configSeasonalTheme) {
+			case AUTUMN:
+				return Environment.AUTUMN;
+			case WINTER:
+				return Environment.WINTER;
+			default:
+				return Environment.OVERWORLD;
+		}
+	}
+
 	public boolean isUnderwater() {
 		return currentEnvironment.isUnderwater();
-	}
-
-	private boolean useAutumnTheme() {
-		return plugin.configSeasonalTheme == SeasonalTheme.AUTUMN && isOverworld && isThemeable;
-	}
-
-	private boolean useWinterTheme() {
-		return plugin.configSeasonalTheme == SeasonalTheme.WINTER && isOverworld && (isThemeable || isWinterThemeable);
 	}
 }
