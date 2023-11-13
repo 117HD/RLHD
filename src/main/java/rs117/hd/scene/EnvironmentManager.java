@@ -270,43 +270,25 @@ public class EnvironmentManager {
 
 		updateTargetSkyColor();
 
-		Environment atmospheric = config.atmosphericLighting() ? newEnvironment : Environment.OVERWORLD;
-		targetAmbientStrength = atmospheric.getAmbientStrength();
-		targetAmbientColor = atmospheric.getAmbientColor();
-		targetDirectionalStrength = atmospheric.getDirectionalStrength();
-		targetDirectionalColor = atmospheric.getDirectionalColor();
-		targetUnderglowStrength = atmospheric.getUnderglowStrength();
-		targetUnderglowColor = atmospheric.getUnderglowColor();
-		targetUnderwaterCausticsColor = atmospheric.getUnderwaterCausticsColor();
-		targetUnderwaterCausticsStrength = atmospheric.getUnderwaterCausticsStrength();
-		targetLightPitch = newEnvironment.getLightPitch();
-		targetLightYaw = newEnvironment.getLightYaw();
-		targetFogDepth = newEnvironment.getFogDepth();
-		targetGroundFogStart = newEnvironment.getGroundFogStart();
-		targetGroundFogEnd = newEnvironment.getGroundFogEnd();
-		targetGroundFogOpacity = newEnvironment.getGroundFogOpacity();
-		lightningEnabled = newEnvironment.isLightningEnabled();
+		var env = getCurrentEnvironment();
+		targetLightPitch = env.getLightPitch();
+		targetLightYaw = env.getLightYaw();
+		targetFogDepth = env.getFogDepth();
+		targetGroundFogStart = env.getGroundFogStart();
+		targetGroundFogEnd = env.getGroundFogEnd();
+		targetGroundFogOpacity = env.getGroundFogOpacity();
+		lightningEnabled = env.isLightningEnabled();
 
-		// This is still kind of hacky, but the idea is to only change defaults stemming from the overworld environment
-		if (isOverworld) {
-			var env = getOverworldEnvironment();
-
-			if (!newEnvironment.isCustomFogDepth())
-				targetFogDepth = env.getFogDepth();
-			if (!atmospheric.isCustomAmbientStrength())
-				targetAmbientStrength = env.getAmbientStrength();
-			if (!atmospheric.isCustomAmbientColor())
-				targetAmbientColor = env.getAmbientColor();
-			if (!atmospheric.isCustomDirectionalStrength())
-				targetDirectionalStrength = env.getDirectionalStrength();
-			if (!atmospheric.isCustomDirectionalColor())
-				targetDirectionalColor = env.getDirectionalColor();
-
-			if (newEnvironment == Environment.OVERWORLD) {
-				targetLightPitch = env.getLightPitch();
-				targetLightYaw = env.getLightYaw();
-			}
-		}
+		if (!config.atmosphericLighting())
+			env = getOverworldEnvironment();
+		targetAmbientStrength = env.getAmbientStrength();
+		targetAmbientColor = env.getAmbientColor();
+		targetDirectionalStrength = env.getDirectionalStrength();
+		targetDirectionalColor = env.getDirectionalColor();
+		targetUnderglowStrength = env.getUnderglowStrength();
+		targetUnderglowColor = env.getUnderglowColor();
+		targetUnderwaterCausticsColor = env.getUnderwaterCausticsColor();
+		targetUnderwaterCausticsStrength = env.getUnderwaterCausticsStrength();
 	}
 
 	public void updateTargetSkyColor() {
@@ -423,6 +405,12 @@ public class EnvironmentManager {
 			// cool-down period before a new lightning cluster
 			nextLightningTime += lerp(MIN_LIGHTNING_INTERVAL, MAX_LIGHTNING_INTERVAL, rand.nextFloat());
 		}
+	}
+
+	private Environment getCurrentEnvironment() {
+		if (currentEnvironment == Environment.OVERWORLD)
+			return getOverworldEnvironment();
+		return currentEnvironment;
 	}
 
 	private Environment getOverworldEnvironment() {

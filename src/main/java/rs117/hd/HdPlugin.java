@@ -1832,14 +1832,15 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 //			}
 
 			// Option E
-			if (configSeasonalTheme == SeasonalTheme.AUTUMN) {
-				environmentManager.currentFogColor = ColorUtils.rgb(253, 220, 180);
-				environmentManager.currentDirectionalColor = ColorUtils.colorTemperatureToLinearRgb(3500);
-				environmentManager.currentDirectionalStrength = 1.5f;
-				environmentManager.currentAmbientColor = environmentManager.currentFogColor;
-				environmentManager.currentAmbientStrength = .5f;
-				environmentManager.currentWaterColor = environmentManager.currentFogColor;
-			}
+//			if (configSeasonalTheme == SeasonalTheme.AUTUMN) {
+//				environmentManager.currentFogDepth = 22 * 10;
+//				environmentManager.currentFogColor = ColorUtils.rgb(253, 220, 180);
+//				environmentManager.currentDirectionalColor = ColorUtils.colorTemperatureToLinearRgb(3500);
+//				environmentManager.currentDirectionalStrength = 1.5f;
+//				environmentManager.currentAmbientColor = environmentManager.currentFogColor;
+//				environmentManager.currentAmbientStrength = .5f;
+//				environmentManager.currentWaterColor = environmentManager.currentFogColor;
+//			}
 
 //			// Option F
 //			if (configSeasonalTheme == SeasonalTheme.AUTUMN) {
@@ -1861,8 +1862,20 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 //				environmentManager.currentWaterColor = environmentManager.currentFogColor;
 //			}
 
-			environmentManager.currentLightYaw = 200;
-			environmentManager.currentLightPitch = 220;
+			// Option H
+//			if (configSeasonalTheme == SeasonalTheme.AUTUMN) {
+//				environmentManager.currentFogDepth = 18 * 10;
+//				environmentManager.currentFogColor = ColorUtils.rgb("#fddcb4");
+//				environmentManager.currentDirectionalColor = ColorUtils.colorTemperatureToLinearRgb(3500);
+//				environmentManager.currentDirectionalStrength = 2.f;
+////				environmentManager.currentAmbientColor = ColorUtils.rgb("#ffffff");
+//				environmentManager.currentAmbientColor = environmentManager.currentDirectionalColor;
+//				environmentManager.currentAmbientStrength = environmentManager.currentDirectionalStrength * .2f;
+//				environmentManager.currentWaterColor = environmentManager.currentDirectionalColor;
+//			}
+
+//			environmentManager.currentLightYaw = 200;
+//			environmentManager.currentLightPitch = 220;
 
 			float lightPitch = (float) Math.toRadians(environmentManager.currentLightPitch);
 			float lightYaw = (float) Math.toRadians(environmentManager.currentLightYaw);

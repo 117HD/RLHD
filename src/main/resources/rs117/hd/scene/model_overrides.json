@@ -1237,7 +1237,7 @@
         "textureMaterial": "LEAVES_1"
       },
       "LEAVES_3": {
-        "textureMaterial": "LEAVES_1"
+        "textureMaterial": "LEAVES_3"
       }
     }
   },
@@ -1344,7 +1344,6 @@
   {
     "description": "Objects - Tree - Yew",
     "baseMaterial": "BARK",
-    "textureMaterial": "EVERGREEN_LEAVES_1",
     "objectIds": [
       4536, 5121, 8388, 8389,
       8390, 8503, 8504, 8505,
@@ -1353,7 +1352,15 @@
       10822, 10823, 33732, 42427
     ],
     "uvType": "BOX",
-    "uvScale": 0.8
+    "uvScale": 0.8,
+    "materialOverrides": {
+      "LEAVES_1": {
+        "textureMaterial": "EVERGREEN_LEAVES_1"
+      },
+      "LEAVES_3": {
+        "textureMaterial": "EVERGREEN_LEAVES_3"
+      }
+    }
   },
   {
     "description": "Objects - Tree - Willow",
@@ -12375,7 +12382,6 @@
   },
   {
     "description": "Textured Bushes",
-    "textureMaterial": "EVERGREEN_LEAVES_1",
     "objectIds": [
       1116, 1117, 1118, 1119,
       1120, 1121, 1124, 1125,
@@ -12385,23 +12391,45 @@
       19427, 19428, 19429, 29715,
       31571, 41456, 44782, 46584,
       46585
-    ]
+    ],
+    "materialOverrides": {
+      "LEAVES_1": {
+        "textureMaterial": "EVERGREEN_LEAVES_1"
+      },
+      "LEAVES_3": {
+        "textureMaterial": "EVERGREEN_LEAVES_3"
+      }
+    }
   },
   {
     "description": "Evergreen Trees",
     "baseMaterial": "BARK",
-    "textureMaterial": "EVERGREEN_LEAVES_1",
     "objectIds": [ 2091, 2092, 27060 ],
     "uvType": "BOX",
-    "uvScale": 0.8
+    "uvScale": 0.8,
+    "materialOverrides": {
+      "LEAVES_1": {
+        "textureMaterial": "EVERGREEN_LEAVES_1"
+      },
+      "LEAVES_3": {
+        "textureMaterial": "EVERGREEN_LEAVES_3"
+      }
+    }
   },
   {
     "description": "Snowcovered Evergreen Trees - Textured",
-    "textureMaterial": "EVERGREEN_LEAVES_1",
     "objectIds": [
       1318, 1319, 40932,
       40933, 46509, 46510
-    ]
+    ],
+    "materialOverrides": {
+      "LEAVES_1": {
+        "textureMaterial": "EVERGREEN_LEAVES_1"
+      },
+      "LEAVES_3": {
+        "textureMaterial": "EVERGREEN_LEAVES_3"
+      }
+    }
   },
   {
     "description": "Oak Tree",

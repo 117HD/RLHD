@@ -739,7 +739,7 @@ public enum Material {
 	WINTER_LEAVES_1(p -> p
 		.setHasTransparency(true)
 		.setTextureScale(1.025f, 1.025f)
-		.replaceIf(SeasonalTheme.WINTER, LEAVES_1, EVERGREEN_LEAVES_1, OAK_LEAVES_1)
+		.replaceIf(SeasonalTheme.WINTER, LEAVES_1, EVERGREEN_LEAVES_1, OAK_LEAVES_1, DOUBLE_TREE_LEAVES_1)
 	),
 	WINTER_LEAVES_2(p -> p
 		.setHasTransparency(true)
@@ -748,7 +748,7 @@ public enum Material {
 	),
 	WINTER_LEAVES_3(p -> p
 		.setHasTransparency(true)
-		.replaceIf(SeasonalTheme.WINTER, LEAVES_3, OAK_LEAVES_3, DOUBLE_TREE_LEAVES_3)
+		.replaceIf(SeasonalTheme.WINTER, LEAVES_3, EVERGREEN_LEAVES_3, OAK_LEAVES_3, DOUBLE_TREE_LEAVES_3)
 	),
 	WINTER_PAINTING_LANDSCAPE(p -> p
 		.replaceIf(SeasonalTheme.WINTER, PAINTING_LANDSCAPE)

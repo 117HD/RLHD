@@ -24,7 +24,6 @@
  */
 package rs117.hd.data.environments;
 
-import java.awt.Color;
 import lombok.Getter;
 import rs117.hd.utils.ColorUtils;
 
@@ -1261,13 +1260,13 @@ public enum Environment
 		.setWaterColor(102, 234, 255)
 	),
 	AUTUMN(Area.NONE, new Properties()
-		.setFogColor(ColorUtils.colorTemperatureToLinearRgb(2500))
-		.setFogDepth(40)
-		.setAmbientColor("#AAAFB6")
-		.setAmbientStrength(2.5f)
-		.setDirectionalColor("#FFFFFF")
-		.setDirectionalStrength(1.5f)
-		.setLightDirection(310f, 11f)
+		.setFogColor("#fddcb4")
+		.setFogDepth(18)
+		.setAmbientColor(ColorUtils.colorTemperatureToLinearRgb(3500))
+		.setAmbientStrength(.4f)
+		.setDirectionalColor(ColorUtils.colorTemperatureToLinearRgb(3500))
+		.setDirectionalStrength(2.0f)
+		.setLightDirection(200, 220)
 	),
 	WINTER(Area.NONE, new Properties()
 		.setFogColor("#B8C5DB")
@@ -1371,17 +1370,23 @@ public enum Environment
 			return this;
 		}
 
-		public Properties setWaterColor(float r, float g, float b) {
-			this.waterColor = rgb(r, g, b);
-			this.customWaterColor = true;
+		public Properties setAmbientColor(String hex) {
+			return setAmbientColor(ColorUtils.rgb(hex));
+		}
+
+		public Properties setAmbientColor(float[] linearRgb) {
+			this.ambientColor = linearRgb;
+			this.customAmbientColor = true;
 			return this;
 		}
 
-		public Properties setAmbientColor(String hex)
-		{
-			Color color = Color.decode(hex);
-			this.ambientColor = rgb(color.getRed(), color.getGreen(), color.getBlue());
-			this.customAmbientColor = true;
+		public Properties setWaterColor(float r, float g, float b) {
+			return setWaterColor(rgb(r, g, b));
+		}
+
+		public Properties setWaterColor(float[] linearRgb) {
+			this.waterColor = linearRgb;
+			this.customWaterColor = true;
 			return this;
 		}
 
@@ -1393,15 +1398,16 @@ public enum Environment
 		}
 
 		public Properties setDirectionalColor(float r, float g, float b) {
-			this.directionalColor = rgb(r, g, b);
-			this.customDirectionalColor = true;
-			return this;
+			return setDirectionalColor(rgb(r, g, b));
 		}
 
 		public Properties setDirectionalColor(String hex)
 		{
-			Color color = Color.decode(hex);
-			this.directionalColor = rgb(color.getRed(), color.getGreen(), color.getBlue());
+			return setDirectionalColor(ColorUtils.rgb(hex));
+		}
+
+		public Properties setDirectionalColor(float[] linearRgb) {
+			this.directionalColor = linearRgb;
 			this.customDirectionalColor = true;
 			return this;
 		}
@@ -1414,13 +1420,6 @@ public enum Environment
 
 		public Properties setUnderglowColor(float r, float g, float b) {
 			this.underglowColor = rgb(r, g, b);
-			return this;
-		}
-
-		public Properties setUnderglowColor(String hex)
-		{
-			Color color = Color.decode(hex);
-			this.underglowColor = rgb(color.getRed(), color.getGreen(), color.getBlue());
 			return this;
 		}
 
@@ -1458,15 +1457,10 @@ public enum Environment
 		}
 
 		/**
-		 * Use a different color than the directional lighting color
-		 *
-		 * @param r 0-255 gamma
-		 * @param g 0-255 gamma
-		 * @param b 0-255 gamma
-		 * @return the same properties instance
+		 * Use a different color than the directional lighting color for underwater caustic effects
 		 */
-		public Properties setUnderwaterCausticsColor(float r, float g, float b) {
-			this.underwaterCausticsColor = rgb(r, g, b);
+		public Properties setUnderwaterCausticsColor(float[] linearRgb) {
+			this.underwaterCausticsColor = linearRgb;
 			return this;
 		}
 
