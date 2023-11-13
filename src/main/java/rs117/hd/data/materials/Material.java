@@ -691,21 +691,6 @@ public enum Material {
 	DOUBLE_TREE_LEAVES_3(LEAVES_3),
 
 	// Seasonal
-	LEAVES_1_ORANGE(p -> p
-		.setHasTransparency(true)
-		.setTextureScale(1.025f, 1.025f)
-		.replaceIf(SeasonalTheme.AUTUMN, DOUBLE_TREE_LEAVES_1)
-	),
-	AUTUMN_LEAVES_2(p -> p
-		.setHasTransparency(true)
-		.setTextureScale(1.025f, 1.025f)
-		.replaceIf(SeasonalTheme.AUTUMN, LEAVES_2)
-	),
-	LEAVES_3_ORANGE(p -> p
-		.setHasTransparency(true)
-		.setTextureScale(1.025f, 1.025f)
-		.replaceIf(SeasonalTheme.AUTUMN, DOUBLE_TREE_LEAVES_3)
-	),
 	LEAVES_1_YELLOW(p -> p
 		.setHasTransparency(true)
 		.setTextureScale(1.025f, 1.025f)
@@ -715,6 +700,16 @@ public enum Material {
 		.setHasTransparency(true)
 		.setTextureScale(1.025f, 1.025f)
 		.replaceIf(SeasonalTheme.AUTUMN, LEAVES_3)
+	),
+	LEAVES_1_ORANGE(p -> p
+		.setHasTransparency(true)
+		.setTextureScale(1.025f, 1.025f)
+		.replaceIf(SeasonalTheme.AUTUMN, DOUBLE_TREE_LEAVES_1)
+	),
+	LEAVES_3_ORANGE(p -> p
+		.setHasTransparency(true)
+		.setTextureScale(1.025f, 1.025f)
+		.replaceIf(SeasonalTheme.AUTUMN, DOUBLE_TREE_LEAVES_3)
 	),
 	LEAVES_1_RED(p -> p
 		.setHasTransparency(true)
