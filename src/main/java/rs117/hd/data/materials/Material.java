@@ -72,7 +72,7 @@ public enum Material {
 		.setSpecular(0.5f, 30)),
 	WOODEN_SCREEN(7, p -> p
 		.setHasTransparency(true)),
-	LEAVES_1(8, p -> p
+	LEAVES_SIDE(8, p -> p
 		.setHasTransparency(true)
 		.setTextureScale(1.025f, 1.025f)
 	),
@@ -136,7 +136,7 @@ public enum Material {
 		.setOverrideBaseColor(true)
 		.setFlowMap(LAVA_FLOW_MAP, 0.05f, 12, 4)
 		.setScroll(0, 1 / -3f)),
-	LEAVES_2(41, p -> p
+	LEAVES_DISEASED(41, p -> p
 		.setHasTransparency(true)
 		.setTextureScale(1.025f, 1.025f)
 	),
@@ -165,7 +165,7 @@ public enum Material {
 		.setOverrideBaseColor(true)
 		.setFlowMap(LAVA_FLOW_MAP, 0.02f, 12, 4)
 		.setScroll(0, 0)),
-	LEAVES_3(60, p -> p
+	LEAVES_TOP(60, p -> p
 		.setHasTransparency(true)),
 	CLAN_SKULL(61, p -> p
 		.setHasTransparency(true)),
@@ -223,9 +223,9 @@ public enum Material {
 		.setHasTransparency(true)),
 	CLAN_EMPTY(88, p -> p
 		.setHasTransparency(true)),
-	SHAYZIEN_LEAVES_1(89, p -> p
+	SHAYZIEN_LEAVES_TOP(89, p -> p
 		.setHasTransparency(true)),
-	SHAYZIEN_LEAVES_2(90, p -> p
+	SHAYZIEN_LEAVES_SIDE(90, p -> p
 		.setHasTransparency(true)
 		.setTextureScale(1.025f, 1.025f)
 	),
@@ -683,43 +683,43 @@ public enum Material {
 	),
 
 	// Aliases for separately replacing textures of different trees
-	EVERGREEN_LEAVES_1(LEAVES_1),
-	EVERGREEN_LEAVES_3(LEAVES_3),
-	OAK_LEAVES_1(LEAVES_1),
-	OAK_LEAVES_3(LEAVES_3),
-	DOUBLE_TREE_LEAVES_1(LEAVES_1),
-	DOUBLE_TREE_LEAVES_3(LEAVES_3),
+	LEAVES_YELLOW_SIDE(LEAVES_SIDE),
+	LEAVES_YELLOW_TOP(LEAVES_TOP),
+	LEAVES_RED_SIDE(LEAVES_SIDE),
+	LEAVES_RED_TOP(LEAVES_TOP),
+	LEAVES_ORANGE_SIDE(LEAVES_SIDE),
+	LEAVES_ORANGE_TOP(LEAVES_TOP),
 
 	// Seasonal
-	LEAVES_1_YELLOW(p -> p
+	AUTUMN_LEAVES_YELLOW_SIDE(p -> p
 		.setHasTransparency(true)
 		.setTextureScale(1.025f, 1.025f)
-		.replaceIf(SeasonalTheme.AUTUMN, LEAVES_1)
+		.replaceIf(SeasonalTheme.AUTUMN, LEAVES_YELLOW_SIDE)
 	),
-	LEAVES_3_YELLOW(p -> p
+	AUTUMN_LEAVES_YELLOW_TOP(p -> p
 		.setHasTransparency(true)
 		.setTextureScale(1.025f, 1.025f)
-		.replaceIf(SeasonalTheme.AUTUMN, LEAVES_3)
+		.replaceIf(SeasonalTheme.AUTUMN, LEAVES_YELLOW_TOP)
 	),
-	LEAVES_1_ORANGE(p -> p
+	AUTUMN_LEAVES_ORANGE_SIDE(p -> p
 		.setHasTransparency(true)
 		.setTextureScale(1.025f, 1.025f)
-		.replaceIf(SeasonalTheme.AUTUMN, DOUBLE_TREE_LEAVES_1)
+		.replaceIf(SeasonalTheme.AUTUMN, LEAVES_ORANGE_SIDE)
 	),
-	LEAVES_3_ORANGE(p -> p
+	AUTUMN_LEAVES_ORANGE_TOP(p -> p
 		.setHasTransparency(true)
 		.setTextureScale(1.025f, 1.025f)
-		.replaceIf(SeasonalTheme.AUTUMN, DOUBLE_TREE_LEAVES_3)
+		.replaceIf(SeasonalTheme.AUTUMN, LEAVES_ORANGE_TOP)
 	),
-	LEAVES_1_RED(p -> p
+	AUTUMN_LEAVES_RED_SIDE(p -> p
 		.setHasTransparency(true)
 		.setTextureScale(1.025f, 1.025f)
-		.replaceIf(SeasonalTheme.AUTUMN, OAK_LEAVES_1)
+		.replaceIf(SeasonalTheme.AUTUMN, LEAVES_RED_SIDE)
 	),
-	LEAVES_3_RED(p -> p
+	AUTUMN_LEAVES_RED_TOP(p -> p
 		.setHasTransparency(true)
 		.setTextureScale(1.025f, 1.025f)
-		.replaceIf(SeasonalTheme.AUTUMN, OAK_LEAVES_3)
+		.replaceIf(SeasonalTheme.AUTUMN, LEAVES_RED_TOP)
 	),
 	WINTER_WILLOW_LEAVES(p -> p
 		.setHasTransparency(true)
@@ -731,19 +731,19 @@ public enum Material {
 		.setTextureScale(1.3f, 1.025f)
 		.replaceIf(SeasonalTheme.WINTER, MAPLE_LEAVES)
 	),
-	WINTER_LEAVES_1(p -> p
+	WINTER_LEAVES_SIDE(p -> p
 		.setHasTransparency(true)
 		.setTextureScale(1.025f, 1.025f)
-		.replaceIf(SeasonalTheme.WINTER, LEAVES_1, EVERGREEN_LEAVES_1, OAK_LEAVES_1, DOUBLE_TREE_LEAVES_1)
+		.replaceIf(SeasonalTheme.WINTER, LEAVES_SIDE, LEAVES_YELLOW_SIDE, LEAVES_ORANGE_SIDE, LEAVES_RED_SIDE)
 	),
-	WINTER_LEAVES_2(p -> p
+	WINTER_LEAVES_TOP(p -> p
+		.setHasTransparency(true)
+		.replaceIf(SeasonalTheme.WINTER, LEAVES_TOP, LEAVES_YELLOW_TOP, LEAVES_ORANGE_TOP, LEAVES_RED_TOP)
+	),
+	WINTER_LEAVES_DISEASED(p -> p
 		.setHasTransparency(true)
 		.setTextureScale(1.025f, 1.025f)
-		.replaceIf(SeasonalTheme.WINTER, LEAVES_2)
-	),
-	WINTER_LEAVES_3(p -> p
-		.setHasTransparency(true)
-		.replaceIf(SeasonalTheme.WINTER, LEAVES_3, EVERGREEN_LEAVES_3, OAK_LEAVES_3, DOUBLE_TREE_LEAVES_3)
+		.replaceIf(SeasonalTheme.WINTER, LEAVES_DISEASED)
 	),
 	WINTER_PAINTING_LANDSCAPE(p -> p
 		.replaceIf(SeasonalTheme.WINTER, PAINTING_LANDSCAPE)

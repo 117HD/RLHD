@@ -15,6 +15,7 @@ import rs117.hd.data.materials.UvType;
 import rs117.hd.utils.AABB;
 import rs117.hd.utils.GsonUtils;
 import rs117.hd.utils.HDUtils;
+import rs117.hd.utils.Props;
 
 import static net.runelite.api.Perspective.*;
 
@@ -66,33 +67,51 @@ public class ModelOverride
 	public transient boolean isDummy;
 	public transient Map<AABB, ModelOverride> areaOverrides;
 
-	public void gsonReallyShouldSupportThis() {
+	public void normalize() {
 		// Ensure there are no nulls in case of invalid configuration during development
-		if (baseMaterial == null)
+		if (baseMaterial == null) {
+			if (Props.DEVELOPMENT)
+				throw new IllegalStateException("Invalid baseMaterial");
 			baseMaterial = ModelOverride.NONE.baseMaterial;
-		if (textureMaterial == null)
+		}
+		if (textureMaterial == null) {
+			if (Props.DEVELOPMENT)
+				throw new IllegalStateException("Invalid textureMaterial");
 			textureMaterial = ModelOverride.NONE.textureMaterial;
-		if (uvType == null)
+		}
+		if (uvType == null) {
+			if (Props.DEVELOPMENT)
+				throw new IllegalStateException("Invalid uvType");
 			uvType = ModelOverride.NONE.uvType;
-		if (tzHaarRecolorType == null)
+		}
+		if (tzHaarRecolorType == null) {
+			if (Props.DEVELOPMENT)
+				throw new IllegalStateException("Invalid tzHaarRecolorType");
 			tzHaarRecolorType = ModelOverride.NONE.tzHaarRecolorType;
-		if (inheritTileColorType == null)
+		}
+		if (inheritTileColorType == null) {
+			if (Props.DEVELOPMENT)
+				throw new IllegalStateException("Invalid inheritTileColorType");
 			inheritTileColorType = ModelOverride.NONE.inheritTileColorType;
+		}
+
 		if (areas == null)
 			areas = new AABB[0];
 		if (hideInAreas == null)
 			hideInAreas = new AABB[0];
-	}
 
-	public void normalize() {
+		if (Props.DEVELOPMENT && objectIds == null && npcIds == null)
+			throw new IllegalStateException("Model override doesn't specify any IDs to apply to");
+
 		baseMaterial = baseMaterial.resolveReplacements();
 		textureMaterial = textureMaterial.resolveReplacements();
 
 		if (materialOverrides != null) {
 			var normalized = new HashMap<Material, ModelOverride>();
 			for (var entry : materialOverrides.entrySet()) {
-				entry.getValue().normalize();
-				normalized.put(entry.getKey().resolveReplacements(), entry.getValue());
+				var override = entry.getValue();
+				override.normalize();
+				normalized.put(entry.getKey().resolveReplacements(), override);
 			}
 			materialOverrides = normalized;
 		}

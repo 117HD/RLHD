@@ -1233,11 +1233,11 @@
     "uvType": "BOX",
     "uvScale": 0.8,
     "materialOverrides": {
-      "LEAVES_1": {
-        "textureMaterial": "LEAVES_1"
+      "LEAVES_SIDE": {
+        "textureMaterial": "LEAVES_YELLOW_SIDE"
       },
-      "LEAVES_3": {
-        "textureMaterial": "LEAVES_3"
+      "LEAVES_TOP": {
+        "textureMaterial": "LEAVES_YELLOW_TOP"
       }
     }
   },
@@ -1252,11 +1252,11 @@
     "uvType": "BOX",
     "uvScale": 0.8,
     "materialOverrides": {
-      "LEAVES_1": {
-        "textureMaterial": "DOUBLE_TREE_LEAVES_1"
+      "LEAVES_SIDE": {
+        "textureMaterial": "LEAVES_ORANGE_SIDE"
       },
-      "LEAVES_3": {
-        "textureMaterial": "DOUBLE_TREE_LEAVES_3"
+      "LEAVES_TOP": {
+        "textureMaterial": "LEAVES_ORANGE_TOP"
       }
     }
   },
@@ -1352,15 +1352,7 @@
       10822, 10823, 33732, 42427
     ],
     "uvType": "BOX",
-    "uvScale": 0.8,
-    "materialOverrides": {
-      "LEAVES_1": {
-        "textureMaterial": "EVERGREEN_LEAVES_1"
-      },
-      "LEAVES_3": {
-        "textureMaterial": "EVERGREEN_LEAVES_3"
-      }
-    }
+    "uvScale": 0.8
   },
   {
     "description": "Objects - Tree - Willow",
@@ -4868,13 +4860,6 @@
     "baseMaterial": "ROCK_1",
     "objectIds": [
       714
-    ]
-  },
-  {
-    "description": "Fire - Static object",
-    "baseMaterial": "WOOD_GRAIN_1",
-    "objectIds": [
-      26185
     ]
   },
   {
@@ -12391,45 +12376,21 @@
       19427, 19428, 19429, 29715,
       31571, 41456, 44782, 46584,
       46585
-    ],
-    "materialOverrides": {
-      "LEAVES_1": {
-        "textureMaterial": "EVERGREEN_LEAVES_1"
-      },
-      "LEAVES_3": {
-        "textureMaterial": "EVERGREEN_LEAVES_3"
-      }
-    }
+    ]
   },
   {
     "description": "Evergreen Trees",
     "baseMaterial": "BARK",
     "objectIds": [ 2091, 2092, 27060 ],
     "uvType": "BOX",
-    "uvScale": 0.8,
-    "materialOverrides": {
-      "LEAVES_1": {
-        "textureMaterial": "EVERGREEN_LEAVES_1"
-      },
-      "LEAVES_3": {
-        "textureMaterial": "EVERGREEN_LEAVES_3"
-      }
-    }
+    "uvScale": 0.8
   },
   {
     "description": "Snowcovered Evergreen Trees - Textured",
     "objectIds": [
       1318, 1319, 40932,
       40933, 46509, 46510
-    ],
-    "materialOverrides": {
-      "LEAVES_1": {
-        "textureMaterial": "EVERGREEN_LEAVES_1"
-      },
-      "LEAVES_3": {
-        "textureMaterial": "EVERGREEN_LEAVES_3"
-      }
-    }
+    ]
   },
   {
     "description": "Oak Tree",
@@ -12443,11 +12404,11 @@
     "uvType": "BOX",
     "uvScale": 0.8,
     "materialOverrides": {
-      "LEAVES_1": {
-        "textureMaterial": "OAK_LEAVES_1"
+      "LEAVES_SIDE": {
+        "textureMaterial": "LEAVES_RED_SIDE"
       },
-      "LEAVES_3": {
-        "textureMaterial": "OAK_LEAVES_3"
+      "LEAVES_TOP": {
+        "textureMaterial": "LEAVES_RED_TOP"
       }
     }
   },
@@ -12462,14 +12423,6 @@
       8406, 8407, 8408, 8409, 10834
     ],
     "uvType": "BOX",
-    "uvScale": 0.8,
-    "materialOverrides": {
-      "LEAVES_1": {
-        "textureMaterial": "EVERGREEN_LEAVES_1"
-      },
-      "LEAVES_3": {
-        "textureMaterial": "EVERGREEN_LEAVES_3"
-      }
-    }
+    "uvScale": 0.8
   }
 ]
