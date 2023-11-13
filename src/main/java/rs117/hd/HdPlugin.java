@@ -1832,14 +1832,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 //			}
 
 			// Option E
-//			if (configSeasonalTheme == SeasonalTheme.AUTUMN) {
-//				environmentManager.currentFogColor = ColorUtils.rgb(253, 220, 180);
-//				environmentManager.currentDirectionalColor = ColorUtils.colorTemperatureToLinearRgb(3500);
-//				environmentManager.currentDirectionalStrength = 1.5f;
-//				environmentManager.currentAmbientColor = environmentManager.currentFogColor;
-//				environmentManager.currentAmbientStrength = .5f;
-//				environmentManager.currentWaterColor = environmentManager.currentFogColor;
-//			}
+			if (configSeasonalTheme == SeasonalTheme.AUTUMN) {
+				environmentManager.currentFogColor = ColorUtils.rgb(253, 220, 180);
+				environmentManager.currentDirectionalColor = ColorUtils.colorTemperatureToLinearRgb(3500);
+				environmentManager.currentDirectionalStrength = 1.5f;
+				environmentManager.currentAmbientColor = environmentManager.currentFogColor;
+				environmentManager.currentAmbientStrength = .5f;
+				environmentManager.currentWaterColor = environmentManager.currentFogColor;
+			}
 
 //			// Option F
 //			if (configSeasonalTheme == SeasonalTheme.AUTUMN) {
@@ -1852,14 +1852,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 //			}
 
 			// Option G
-			if (configSeasonalTheme == SeasonalTheme.AUTUMN) {
-				environmentManager.currentFogColor = ColorUtils.rgb("#cfd8ec");
-				environmentManager.currentDirectionalColor = ColorUtils.colorTemperatureToLinearRgb(3750);
-				environmentManager.currentDirectionalStrength = 3.0f;
-				environmentManager.currentAmbientColor = environmentManager.currentFogColor;
-				environmentManager.currentAmbientStrength = .75f;
-				environmentManager.currentWaterColor = environmentManager.currentFogColor;
-			}
+//			if (configSeasonalTheme == SeasonalTheme.AUTUMN) {
+//				environmentManager.currentFogColor = ColorUtils.rgb("#cfd8ec");
+//				environmentManager.currentDirectionalColor = ColorUtils.colorTemperatureToLinearRgb(3750);
+//				environmentManager.currentDirectionalStrength = 3.0f;
+//				environmentManager.currentAmbientColor = environmentManager.currentFogColor;
+//				environmentManager.currentAmbientStrength = .75f;
+//				environmentManager.currentWaterColor = environmentManager.currentFogColor;
+//			}
 
 			environmentManager.currentLightYaw = 200;
 			environmentManager.currentLightPitch = 220;
