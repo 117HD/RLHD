@@ -298,7 +298,7 @@ public enum Material {
 	SKULLS_FOG_LIGHT(118),
 	SKULLS_FOG_DARK(119),
 
-	WHITE(NONE, p -> {}),
+	WHITE(NONE),
 	GRAY_75(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(.75f))),
 	GRAY_65(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(.65f))),
 	GRAY_50(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(.5f))),
@@ -681,22 +681,17 @@ public enum Material {
 	OOZE(GRAY_65, p -> p
 		.setSpecular(1.5f, 600)
 	),
-	EVERGREEN_LEAVES_1(p -> p
-		.setHasTransparency(true)
-		.setTextureScale(1.025f, 1.025f)
-	),
-	EVERGREEN_LEAVES_3(p -> p
-		.setHasTransparency(true)
-		.setTextureScale(1.025f, 1.025f)
-	),
-	OAK_LEAVES_1(EVERGREEN_LEAVES_1, p -> {}),
-	OAK_LEAVES_3(EVERGREEN_LEAVES_3, p -> {}),
-	DOUBLE_TREE_LEAVES_1(EVERGREEN_LEAVES_1, p -> {}),
-	DOUBLE_TREE_LEAVES_3(EVERGREEN_LEAVES_3, p -> {}),
 
+	// Aliases for separately replacing textures of different trees
+	EVERGREEN_LEAVES_1(LEAVES_1),
+	EVERGREEN_LEAVES_3(LEAVES_3),
+	OAK_LEAVES_1(LEAVES_1),
+	OAK_LEAVES_3(LEAVES_3),
+	DOUBLE_TREE_LEAVES_1(LEAVES_1),
+	DOUBLE_TREE_LEAVES_3(LEAVES_3),
 
 	// Seasonal
-	AUTUMN_LEAVES_1(p -> p
+	LEAVES_1_ORANGE(p -> p
 		.setHasTransparency(true)
 		.setTextureScale(1.025f, 1.025f)
 		.replaceIf(SeasonalTheme.AUTUMN, DOUBLE_TREE_LEAVES_1)
@@ -706,22 +701,27 @@ public enum Material {
 		.setTextureScale(1.025f, 1.025f)
 		.replaceIf(SeasonalTheme.AUTUMN, LEAVES_2)
 	),
-	AUTUMN_LEAVES_3(p -> p
+	LEAVES_3_ORANGE(p -> p
 		.setHasTransparency(true)
 		.setTextureScale(1.025f, 1.025f)
 		.replaceIf(SeasonalTheme.AUTUMN, DOUBLE_TREE_LEAVES_3)
 	),
-	AUTUMN_LEAVES_1_GOLDEN(p -> p
+	LEAVES_1_YELLOW(p -> p
 		.setHasTransparency(true)
 		.setTextureScale(1.025f, 1.025f)
 		.replaceIf(SeasonalTheme.AUTUMN, LEAVES_1)
 	),
-	AUTUMN_OAK_LEAVES_1(p -> p
+	LEAVES_3_YELLOW(p -> p
+		.setHasTransparency(true)
+		.setTextureScale(1.025f, 1.025f)
+		.replaceIf(SeasonalTheme.AUTUMN, LEAVES_3)
+	),
+	LEAVES_1_RED(p -> p
 		.setHasTransparency(true)
 		.setTextureScale(1.025f, 1.025f)
 		.replaceIf(SeasonalTheme.AUTUMN, OAK_LEAVES_1)
 	),
-	AUTUMN_OAK_LEAVES_3(p -> p
+	LEAVES_3_RED(p -> p
 		.setHasTransparency(true)
 		.setTextureScale(1.025f, 1.025f)
 		.replaceIf(SeasonalTheme.AUTUMN, OAK_LEAVES_3)
@@ -760,17 +760,17 @@ public enum Material {
 		.replaceIf(SeasonalTheme.WINTER, PAINTING_ELF)
 	),
 	WINTER_HD_ROOF_SHINGLES_1(p -> p
-		.replaceIf(SeasonalTheme.WINTER, ROOF_SHINGLES_1)
+		.replaceIf(SeasonalTheme.WINTER, HD_ROOF_SHINGLES_1)
 		.setSpecular(0.5f, 30)
 		.setNormalMap(HD_ROOF_SHINGLES_N)),
 	WINTER_HD_ROOF_SHINGLES_2(p -> p
-		.replaceIf(SeasonalTheme.WINTER, ROOF_SHINGLES_2)
+		.replaceIf(SeasonalTheme.WINTER, HD_ROOF_SHINGLES_2)
 		.setSpecular(0.3f, 30)
 		.setNormalMap(HD_ROOF_SHINGLES_N)),
 	WINTER_HD_ROOF_BRICK_TILES(p -> p
 		.setSpecular(0.3f, 30)
 		.setNormalMap(HD_ROOF_BRICK_TILE_N)
-		.replaceIf(SeasonalTheme.WINTER, ROOF_BRICK_TILE, ROOF_BRICK_TILE_GREEN, ROOF_BRICK_TILE_DARK)
+		.replaceIf(SeasonalTheme.WINTER, HD_ROOF_BRICK_TILE, HD_ROOF_BRICK_TILE_GREEN, HD_ROOF_BRICK_TILE_DARK)
 	),
 	WINTER_HD_ROOF_SLATE(p -> p
 		.setSpecular(0.5f, 30)
@@ -786,18 +786,8 @@ public enum Material {
 		.setSpecular(0.6f, 30)
 		.setBrightness(1.4f)
 	),
-	WINTER_JAGGED_STONE_TILE_LIGHT(WINTER_JAGGED_STONE_TILE, p -> p
-		.setDisplacementMap(JAGGED_STONE_TILE_D)
-		.setNormalMap(JAGGED_STONE_TILE_N)
-		.setSpecular(0.6f, 30)
-		.setBrightness(4)
-	),
-	WINTER_JAGGED_STONE_TILE_LIGHTER(WINTER_JAGGED_STONE_TILE, p -> p
-		.setDisplacementMap(JAGGED_STONE_TILE_D)
-		.setNormalMap(JAGGED_STONE_TILE_N)
-		.setSpecular(0.6f, 30)
-		.setBrightness(12)
-	),
+	WINTER_JAGGED_STONE_TILE_LIGHT(WINTER_JAGGED_STONE_TILE, p -> p.setBrightness(4)),
+	WINTER_JAGGED_STONE_TILE_LIGHTER(WINTER_JAGGED_STONE_TILE, p -> p.setBrightness(12)),
 	;
 
 	public final Material parent;
@@ -916,6 +906,10 @@ public enum Material {
 		this(p -> p.setVanillaTextureIndex(vanillaTextureIndex));
 	}
 
+	Material(Material parent) {
+		this(parent, p -> {});
+	}
+
 	Material(Material parent, Consumer<Builder> consumer) {
 		this(b -> b.setParent(parent).apply(consumer));
 	}
@@ -968,24 +962,22 @@ public enum Material {
 		var materials = Material.values();
 		for (int i = 0; i < materials.length; i++) {
 			var material = materials[i];
-			boolean wasReplaced = false;
 
-			// Apply the first successful replacement listed last, and keep going until all replacements have been resolved
-			for (int j = materials.length - 1; j > material.ordinal(); j--) {
-				var replacement = materials[j];
-				if (replacement.replacementCondition != null &&
-					replacement.replacementCondition.apply(config) &&
-					replacement.materialsToReplace.contains(material)) {
-					material = replacement;
-					wasReplaced = true;
-					break;
+			// If the material is a conditional replacement material, and the condition is not met,
+			// the material shouldn't be loaded and can be mapped to NONE
+			if (material.replacementCondition != null && !material.replacementCondition.apply(config)) {
+				material = NONE;
+			} else {
+				// Apply material replacements from top to bottom
+				for (var replacement : materials) {
+					if (replacement.replacementCondition != null &&
+						replacement.replacementCondition.apply(config) &&
+						replacement.materialsToReplace.contains(material)) {
+						material = replacement;
+						break;
+					}
 				}
 			}
-
-			// If the material is itself a conditional replacement material, and the condition
-			// is not met, the material won't be loaded, and can be mapped to NONE
-			if (!wasReplaced && material.replacementCondition != null && !material.replacementCondition.apply(config))
-				material = NONE;
 
 			REPLACEMENT_MAPPING[i] = material;
 		}
