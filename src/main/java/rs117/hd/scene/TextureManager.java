@@ -189,31 +189,33 @@ public class TextureManager {
 		for (var material : Material.getActiveMaterials())
 			materialUniformEntries.add(new MaterialEntry(material, material.vanillaTextureIndex));
 
-		// Add texture layers for each base material with no parent
+		// Add texture layers for each material that adds its own texture, after resolving replacements
 		ArrayList<TextureLayer> textureLayers = new ArrayList<>();
 		materialOrdinalToTextureLayer = new int[Material.values().length];
 		Arrays.fill(materialOrdinalToTextureLayer, -1);
 		for (var textureMaterial : Material.getTextureMaterials()) {
-			int layer = textureLayers.size();
-			textureLayers.add(new TextureLayer(textureMaterial, textureMaterial.vanillaTextureIndex, layer));
-			materialOrdinalToTextureLayer[textureMaterial.ordinal()] = layer;
+			int layerIndex = textureLayers.size();
+			textureLayers.add(new TextureLayer(textureMaterial, textureMaterial.vanillaTextureIndex, layerIndex));
+			materialOrdinalToTextureLayer[textureMaterial.ordinal()] = layerIndex;
 		}
+
+		// Prepare mappings for materials that don't provide their own textures
+		for (var material : Material.values())
+			if (materialOrdinalToTextureLayer[material.ordinal()] == -1)
+				materialOrdinalToTextureLayer[material.ordinal()] =
+					materialOrdinalToTextureLayer[material.resolveTextureMaterial().ordinal()];
+
 		// Add material uniforms and texture layers for any vanilla textures lacking a material definition
 		vanillaTextureIndexToTextureLayer = new int[vanillaTextures.length];
 		Arrays.fill(vanillaTextureIndexToTextureLayer, -1);
 		for (int i = 0; i < vanillaTextures.length; i++) {
 			if (Material.fromVanillaTexture(i) == Material.VANILLA) {
 				materialUniformEntries.add(new MaterialEntry(Material.VANILLA, i));
-				int layer = textureLayers.size();
-				textureLayers.add(new TextureLayer(Material.VANILLA, i, layer));
-				vanillaTextureIndexToTextureLayer[i] = layer;
+				int layerIndex = textureLayers.size();
+				textureLayers.add(new TextureLayer(Material.VANILLA, i, layerIndex));
+				vanillaTextureIndexToTextureLayer[i] = layerIndex;
 			}
 		}
-
-		// Prepare fast mappings from all materials to texture array layers
-		for (var material : Material.values())
-			materialOrdinalToTextureLayer[material.ordinal()] =
-				materialOrdinalToTextureLayer[material.resolveTextureMaterial().ordinal()];
 
 		// Allocate texture array
 		textureSize = config.textureResolution().getSize();

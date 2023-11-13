@@ -841,13 +841,13 @@ public enum Material {
 		}
 
 		Builder setParent(Material parent) {
-			// Copy over defaults from the parent, except vanilla texture index
 			this.parent = parent;
 			this.normalMap = parent.normalMap;
 			this.displacementMap = parent.displacementMap;
 			this.roughnessMap = parent.roughnessMap;
 			this.ambientOcclusionMap = parent.ambientOcclusionMap;
 			this.flowMap = parent.flowMap;
+			this.vanillaTextureIndex = parent.vanillaTextureIndex;
 			this.hasTransparency = parent.hasTransparency;
 			this.overrideBaseColor = parent.overrideBaseColor;
 			this.unlit = parent.unlit;
@@ -960,7 +960,7 @@ public enum Material {
 
 	public static void updateMappings(Texture[] textures, HdPluginConfig config) {
 		var materials = Material.values();
-		for (int i = 0; i < materials.length; i++) {
+		for (int i = 0; i < materials.length; ++i) {
 			var material = materials[i];
 
 			// If the material is a conditional replacement material, and the condition is not met,
@@ -969,7 +969,8 @@ public enum Material {
 				material = NONE;
 			} else {
 				// Apply material replacements from top to bottom
-				for (var replacement : materials) {
+				for (int j = i + 1; j < materials.length; ++j) {
+					var replacement = materials[j];
 					if (replacement.replacementCondition != null &&
 						replacement.replacementCondition.apply(config) &&
 						replacement.materialsToReplace.contains(material)) {
@@ -986,7 +987,7 @@ public enum Material {
 		Arrays.fill(VANILLA_TEXTURE_MAPPING, Material.VANILLA);
 		for (int i = 0; i < textures.length; i++) {
 			for (var material : materials) {
-				if (material.vanillaTextureIndex == i) {
+				if (material.vanillaTextureIndex == i && material.parent == null) {
 					assert VANILLA_TEXTURE_MAPPING[i] == VANILLA :
 						"Material " + material + " conflicts with vanilla ID " + material.vanillaTextureIndex + " of material "
 						+ VANILLA_TEXTURE_MAPPING[i];
