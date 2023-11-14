@@ -918,6 +918,7 @@ public enum Area
 		new AABB(3422, 3442, 3399, 3321),
 		new AABB(3414, 3327, 3435, 3255),
 		new AABB(3469, 3209, 3726, 3161),
+		new AABB(3419, 3486, 3433, 3482),
 		new AABB(2087, 4903, 2064, 4880), // ver sinhaza cutscene
 		new AABB(1987, 4996, 2105, 5054), // temple trekking
 		new AABB(2118, 4994, 2171, 5036), // temple trekking
@@ -930,7 +931,7 @@ public enum Area
 		new AABB(2257, 5363, 2292, 5319),
 		new AABB(2466, 5053, 2523, 4994)
 	),
-	TZHAAR(2367, 5184, 2559, 4993),
+	TZHAAR(2368, 5183, 2558, 5056),
 
 	TREE_GNOME_STRONGHOLD(
 		new AABB(2368, 3525, 2496, 3387),
