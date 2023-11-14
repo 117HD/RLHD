@@ -181,7 +181,6 @@ public class EnvironmentManager {
 				if (environment != currentEnvironment)
 				{
 					if (
-						environment == Environment.PLAYER_OWNED_HOUSE ||
 						environment == Environment.PLAYER_OWNED_HOUSE_SNOWY
 					) {
 						// POH takes 1 game tick to enter, then 2 game ticks to load per floor
