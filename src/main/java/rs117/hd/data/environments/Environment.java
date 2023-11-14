@@ -881,6 +881,7 @@ public enum Environment
 	),
 
 	// POHs
+	PLAYER_OWNED_HOUSE(Area.PLAYER_OWNED_HOUSE, new Properties()),
 	PLAYER_OWNED_HOUSE_SNOWY(Area.PLAYER_OWNED_HOUSE_SNOWY, new Properties()
 		.setFogColor("#AEBDE0")
 		.setFogDepth(50)
