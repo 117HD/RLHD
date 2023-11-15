@@ -29,6 +29,10 @@ import lombok.Getter;
 import net.runelite.api.coords.*;
 import rs117.hd.utils.AABB;
 
+import static rs117.hd.utils.AABB.regionBox;
+import static rs117.hd.utils.AABB.regionOnPlane;
+import static rs117.hd.utils.AABB.regions;
+
 @Getter
 public enum Area
 {
@@ -1532,8 +1536,9 @@ public enum Area
 	// Chambers of Xeric
 	COX_SNOW(3262, 5341, 3360, 5373),
 	CHAMBERS_OF_XERIC(
-		new AABB(3120, 5694, 3360, 5760),
-		new AABB(3262, 5118, 3360, 5694)
+		regions(12889),
+		regionBox(13136, 13145),
+		regionBox(13393, 13401)
 	),
 
 	// Nightmare of Ashihama
@@ -1741,15 +1746,10 @@ public enum Area
 		this(regions(regionId));
 	}
 
-	private static AABB[] regions(int... regionIds) {
-		return Arrays.stream(regionIds)
-			.mapToObj(AABB::new)
+	private static AABB[] areas(Area... areas) {
+		return Arrays.stream(areas)
+			.flatMap(a -> Arrays.stream(a.aabbs))
 			.toArray(AABB[]::new);
-	}
-
-	private static AABB regionOnPlane(int regionId, int plane) {
-		var aabb = new AABB(regionId);
-		return new AABB(aabb.minX, aabb.minY, plane, aabb.maxX, aabb.maxY, plane);
 	}
 
 	public boolean containsPoint(int worldX, int worldY, int plane) {
