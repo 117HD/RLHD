@@ -1990,6 +1990,8 @@
   {
     "description": "FALADOR_WALLS",
     "baseMaterial": "GRUNGE_1",
+    "uvType": "BOX",
+    "uvScale": 0.3,
     "objectIds": [
       23834,
       23994,
