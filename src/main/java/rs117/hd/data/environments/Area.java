@@ -30,7 +30,6 @@ import net.runelite.api.coords.*;
 import rs117.hd.utils.AABB;
 
 import static rs117.hd.utils.AABB.regionBox;
-import static rs117.hd.utils.AABB.regionOnPlane;
 import static rs117.hd.utils.AABB.regions;
 
 @Getter
@@ -1472,14 +1471,14 @@ public enum Area
 	DS2_SHIPS(1600, 5503, 1727, 5758),
 
 	// The Gauntlet
-	THE_GAUNTLET_NORMAL(regionOnPlane(7512, 1)),
-	THE_GAUNTLET_CORRUPTED(regionOnPlane(7768, 1)),
+	THE_GAUNTLET_NORMAL(new AABB(7512).onPlane(1)),
+	THE_GAUNTLET_CORRUPTED(new AABB(7768).onPlane(1)),
 	THE_GAUNTLET(THE_GAUNTLET_NORMAL, THE_GAUNTLET_CORRUPTED),
 	THE_GAUNTLET_LOBBY(3025, 6131, 3040, 6116),
 
 	// POHs
-	PLAYER_OWNED_HOUSE_SNOWY(1984, 5696, 2047, 5767, 1),
-	PLAYER_OWNED_HOUSE(1792, 5696, 2047, 5823),
+	PLAYER_OWNED_HOUSE(regionBox(7257, 8026)),
+	PLAYER_OWNED_HOUSE_SNOWY(regionBox(8025, 8026).onPlane(1)),
 
 	// Blackhole
 	BLACKHOLE(1616, 4728, 1623, 4735),
