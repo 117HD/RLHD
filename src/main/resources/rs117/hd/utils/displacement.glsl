@@ -53,9 +53,10 @@ void sampleDisplacementMap(
 
     vec2 deltaXyPerZ = tsViewDir.xy / tsViewDir.z * scale;
 
-    // Shift UVs so the displacement goes into the surface instead of coming out of it
-    uv += deltaXyPerZ;
-    fragDelta -= vec3(deltaXyPerZ, scale);
+    // Shift UVs so half displacement is the same height as the surface
+    // This avoids some shadowing artifacts from the surface casting a shadow onto itself
+    uv += deltaXyPerZ * .5;
+    fragDelta -= vec3(deltaXyPerZ, scale) * .5;
 
     float height = 0;
     float prevHeight = 0;
