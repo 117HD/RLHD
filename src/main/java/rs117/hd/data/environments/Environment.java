@@ -1222,6 +1222,7 @@ public enum Environment
 		.setFogColor("#ff00ff") // never meant to be rendered
 	),
 
+	// Seasonal default environments
 	AUTUMN(Area.NONE, new Properties()
 		.setFogColor("#fddcb4")
 		.setFogDepth(18)
