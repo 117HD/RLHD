@@ -1230,7 +1230,7 @@ public enum Environment
 		.setAmbientStrength(.4f)
 		.setDirectionalColor(ColorUtils.colorTemperatureToLinearRgb(3500))
 		.setDirectionalStrength(2.0f)
-		.setLightDirection(200, 220)
+		.setLightDirection(200, -78)
 	),
 	WINTER(Area.NONE, new Properties()
 		.setFogColor("#B8C5DB")
