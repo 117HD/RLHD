@@ -32,7 +32,6 @@ import net.runelite.api.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.config.DefaultSkyColor;
-import rs117.hd.data.environments.Area;
 import rs117.hd.data.environments.Environment;
 import rs117.hd.utils.AABB;
 import rs117.hd.utils.HDUtils;
@@ -134,10 +133,6 @@ public class EnvironmentManager {
 	private float targetLightYaw = 0f;
 
 	private boolean lightningEnabled = false;
-	private boolean isOverworld = false;
-	// some necessary data for reloading the scene while in POH to fix major performance loss
-	private boolean isInHouse = false;
-	private int previousPlane;
 
 	public void reset() {
 		currentEnvironment = Environment.NONE;
@@ -152,58 +147,33 @@ public class EnvironmentManager {
 	public void update(SceneContext sceneContext) {
 		assert client.isClientThread();
 
-		int[] position = sceneContext.localToWorld(plugin.cameraFocalPoint[0], plugin.cameraFocalPoint[1], client.getPlane());
+		int[] focalPoint = sceneContext.localToWorld(
+			plugin.cameraFocalPoint[0],
+			plugin.cameraFocalPoint[1],
+			client.getPlane()
+		);
 
 		// skip the transitional fade if the player has moved too far
 		// since the previous frame. results in an instant transition when
 		// teleporting, entering dungeons, etc.
 		int tileChange = Math.max(
-			Math.abs(position[0] - previousPosition[0]),
-			Math.abs(position[1] - previousPosition[1])
+			Math.abs(focalPoint[0] - previousPosition[0]),
+			Math.abs(focalPoint[1] - previousPosition[1])
 		);
-		previousPosition = position;
-
-		// reload the scene if the player is in a house and their plane changed
-		// this greatly improves the performance as it keeps the scene buffer up to date
-		if (isInHouse) {
-			int plane = client.getPlane();
-			if (previousPlane != plane) {
-				plugin.reloadSceneNextGameTick();
-				previousPlane = plane;
-			}
-		}
+		previousPosition = focalPoint;
 
 		boolean skipTransition = tileChange >= SKIP_TRANSITION_DISTANCE;
 		for (Environment environment : sceneContext.environments)
 		{
-			if (environment.getArea().containsPoint(position))
+			if (environment.getArea().containsPoint(focalPoint))
 			{
 				if (environment != currentEnvironment)
 				{
-					if (
-						environment == Environment.PLAYER_OWNED_HOUSE ||
-						environment == Environment.PLAYER_OWNED_HOUSE_SNOWY
-					) {
-						// POH takes 1 game tick to enter, then 2 game ticks to load per floor
-						plugin.reloadSceneIn(7);
-						isInHouse = true;
-					} else if (isInHouse) {
-						// Avoid an unnecessary scene reload if the player has already left the POH
-						plugin.abortSceneReload();
-						isInHouse = false;
-					}
-
-					// Since the environment which actually gets used may differ from the environment
-					// chosen based on position, update the plugin's area tracking here
-					plugin.isInChambersOfXeric = environment == Environment.CHAMBERS_OF_XERIC;
-
 					changeEnvironment(environment, skipTransition);
 				}
 				break;
 			}
 		}
-
-		isOverworld = isInHouse && client.getPlane() > 0 || Area.OVERWORLD.containsPoint(position);
 
 		updateTargetSkyColor(); // Update every frame, since other plugins may control it
 

@@ -30,6 +30,7 @@ import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.api.coords.*;
+import rs117.hd.data.environments.Area;
 
 import static net.runelite.api.Constants.SCENE_SIZE;
 import static net.runelite.api.Constants.*;
@@ -389,25 +390,46 @@ public class HDUtils {
 		return System.getProperty("sun.arch.data.model", "Unknown").equals("32");
 	}
 
-	public static boolean sceneIsTheGauntlet(Scene scene) {
-		if (!scene.isInstance())
-			return false;
+	public static boolean sceneIntersects(Scene scene, int numChunksExtended, Area area) {
+		return sceneIntersects(scene, numChunksExtended, area.aabbs);
+	}
 
-		var templateChunks = scene.getInstanceTemplateChunks();
-		for (var plane : templateChunks) {
-			for (var column : plane) {
-				for (int chunk : column) {
-					if (chunk == -1)
-						continue;
+	public static boolean sceneIntersects(Scene scene, int numChunksExtended, AABB... aabbs) {
+		if (scene.isInstance()) {
+			var templateChunks = scene.getInstanceTemplateChunks();
+			for (var plane : templateChunks) {
+				for (var column : plane) {
+					for (int chunk : column) {
+						if (chunk == -1)
+							continue;
 
-					int worldX = (chunk >> 14 & 1023) * 8;
-					int worldY = (chunk >> 3 & 2047) * 8;
-					int regionId = HDUtils.worldToRegionID(worldX, worldY);
+						int chunkX = chunk >> 14 & 1023;
+						int chunkY = chunk >> 3 & 2047;
+						int minX = chunkX * CHUNK_SIZE;
+						int minY = chunkY * CHUNK_SIZE;
+						int maxX = (chunkX + 1) * CHUNK_SIZE - 1;
+						int maxY = (chunkY + 1) * CHUNK_SIZE - 1;
 
-					// The Gauntlet should only ever consist of chunks from these regions
-					return regionId == 7512 || regionId == 7768;
+						for (var aabb : aabbs)
+							if (aabb.intersects(minX, minY, maxX, maxY))
+								return true;
+					}
 				}
 			}
+		} else {
+			int baseX = scene.getBaseX();
+			int baseY = scene.getBaseX();
+			int extended = numChunksExtended * CHUNK_SIZE;
+			AABB sceneAabb = new AABB(
+				baseX - extended,
+				baseY - extended,
+				baseX + SCENE_SIZE + extended - 1,
+				baseY + SCENE_SIZE + extended - 1
+			);
+
+			for (var aabb : aabbs)
+				if (sceneAabb.intersects(aabb))
+					return true;
 		}
 
 		return false;
