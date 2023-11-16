@@ -40,6 +40,7 @@ import rs117.hd.utils.HDUtils;
 import static rs117.hd.utils.HDUtils.clamp;
 import static rs117.hd.utils.HDUtils.hermite;
 import static rs117.hd.utils.HDUtils.lerp;
+import static rs117.hd.utils.HDUtils.mod;
 import static rs117.hd.utils.HDUtils.rand;
 
 @Singleton
@@ -245,21 +246,28 @@ public class EnvironmentManager {
 		startGroundFogStart = currentGroundFogStart;
 		startGroundFogEnd = currentGroundFogEnd;
 		startGroundFogOpacity = currentGroundFogOpacity;
-		startLightPitch = currentLightPitch;
-		startLightYaw = currentLightYaw;
 		startUnderwaterCausticsColor = currentUnderwaterCausticsColor;
 		startUnderwaterCausticsStrength = currentUnderwaterCausticsStrength;
+		startLightPitch = mod(currentLightPitch, 360);
+		startLightYaw = mod(currentLightYaw, 360);
 
 		updateTargetSkyColor();
 
 		var env = getCurrentEnvironment();
-		targetLightPitch = env.getLightPitch();
-		targetLightYaw = env.getLightYaw();
 		targetFogDepth = env.getFogDepth();
 		targetGroundFogStart = env.getGroundFogStart();
 		targetGroundFogEnd = env.getGroundFogEnd();
 		targetGroundFogOpacity = env.getGroundFogOpacity();
 		lightningEnabled = env.isLightningEnabled();
+		targetLightPitch = mod(env.getLightPitch(), 360);
+		targetLightYaw = mod(env.getLightYaw(), 360);
+
+		float diff = startLightYaw - targetLightYaw;
+		if (Math.abs(diff) > 180)
+			targetLightYaw += 360 * Math.signum(diff);
+		diff = startLightPitch - targetLightPitch;
+		if (Math.abs(diff) > 180)
+			targetLightPitch += 360 * Math.signum(diff);
 
 		if (!config.atmosphericLighting())
 			env = getOverworldEnvironment();
