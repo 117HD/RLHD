@@ -10,9 +10,11 @@ import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 import net.runelite.api.*;
 import net.runelite.api.coords.*;
+import rs117.hd.data.environments.Area;
 import rs117.hd.data.environments.Environment;
 import rs117.hd.data.materials.Material;
 import rs117.hd.scene.lights.SceneLight;
+import rs117.hd.utils.AABB;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.buffer.GpuFloatBuffer;
 import rs117.hd.utils.buffer.GpuIntBuffer;
@@ -164,5 +166,13 @@ public class SceneContext {
 			(worldPoint.getX() - scene.getBaseX()) * LOCAL_TILE_SIZE,
 			(worldPoint.getY() - scene.getBaseY()) * LOCAL_TILE_SIZE
 		);
+	}
+
+	public boolean intersects(Area area) {
+		return intersects(area.aabbs);
+	}
+
+	public boolean intersects(AABB... aabbs) {
+		return HDUtils.sceneIntersects(scene, expandedMapLoadingChunks, aabbs);
 	}
 }
