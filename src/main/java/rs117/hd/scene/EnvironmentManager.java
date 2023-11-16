@@ -24,6 +24,7 @@
  */
 package rs117.hd.scene;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.Getter;
@@ -53,6 +54,7 @@ public class EnvironmentManager {
 	@Inject
 	private HdPluginConfig config;
 
+	@Nonnull
 	private Environment currentEnvironment = Environment.NONE;
 
 	// transition time
@@ -133,9 +135,16 @@ public class EnvironmentManager {
 	private float targetLightYaw = 0f;
 
 	private boolean lightningEnabled = false;
+	private boolean forceNextTransition = false;
 
 	public void reset() {
 		currentEnvironment = Environment.NONE;
+		forceNextTransition = false;
+	}
+
+	public void triggerTransition() {
+		reset();
+		forceNextTransition = true;
 	}
 
 
@@ -214,8 +223,11 @@ public class EnvironmentManager {
 			return;
 
 		startTime = System.currentTimeMillis();
-		if (skipTransition || currentEnvironment == Environment.NONE)
+		if (forceNextTransition) {
+			forceNextTransition = false;
+		} else if (skipTransition || currentEnvironment == Environment.NONE) {
 			startTime -= TRANSITION_DURATION;
+		}
 
 		log.debug("changing environment from {} to {} (instant: {})", currentEnvironment, newEnvironment, skipTransition);
 		currentEnvironment = newEnvironment;

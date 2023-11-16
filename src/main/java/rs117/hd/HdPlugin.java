@@ -2428,7 +2428,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 						environmentManager.reset();
 						break;
 					case KEY_SEASONAL_THEME:
-						environmentManager.reset();
+						environmentManager.triggerTransition();
 						modelOverrideManager.reload();
 						// fall-through
 					case KEY_ANISOTROPIC_FILTERING_LEVEL:
