@@ -395,6 +395,14 @@ public enum Underlay {
 	// Mind Altar
 	MIND_ALTAR_TILE(55, Area.MIND_ALTAR, GroundMaterial.MARBLE_1_SEMIGLOSS, p -> p.blended(false)),
 
+	TEMPLE_OF_THE_EYE_CENTER_PLATFORM_DIRT(p -> p
+		.ids(60)
+		.area(Area.TEMPLE_OF_THE_EYE_CENTER_PLATFORM)
+		.groundMaterial(GroundMaterial.VARIED_DIRT_SHINY)
+		.hue(4)
+		.saturation(1)
+		.lightness(64)
+	),
 	TEMPLE_OF_THE_EYE_DIRT(p -> p
 		.ids(60)
 		.area(Area.TEMPLE_OF_THE_EYE)

@@ -800,22 +800,22 @@ public enum Overlay {
 		.groundMaterial(GroundMaterial.SAND)
 		.replaceWithIf(TEMPLE_OF_THE_EYE_PATH_BLENDING_FIX, plugin -> plugin.configGroundBlending)
 	),
-	TEMPLE_OF_THE_EYE_GUARDIAN_PLATFORM_204(p -> p
-		.ids(204)
-		.area(Area.TEMPLE_OF_THE_EYE_GUARDIANS_PLATFORM)
-		.groundMaterial(GroundMaterial.ROCKY_CAVE_FLOOR)
-		.blended(false)
-		.lightness(58)
-	),
-	TEMPLE_OF_THE_EYE_GUARDIAN_PLATFORM_181(p -> p
+	TEMPLE_OF_THE_EYE_CENTER_PLATFORM_181(p -> p
 		.ids(181)
-		.area(Area.TEMPLE_OF_THE_EYE_GUARDIANS_PLATFORM)
+		.area(Area.TEMPLE_OF_THE_EYE_CENTER_PLATFORM)
 		.groundMaterial(GroundMaterial.ROCKY_CAVE_FLOOR)
 		.blended(false)
 		.lightness(18)
 	),
-	TEMPLE_OF_THE_EYE_DIRT_202(Area.TEMPLE_OF_THE_EYE, GroundMaterial.SAND, p -> p.ids(202).shiftLightness(-4).blendedAsOpposite(true)),
-	EMPLE_OF_THE_EYE_DIRT_203(Area.TEMPLE_OF_THE_EYE, GroundMaterial.SAND, p -> p.ids(203).shiftLightness(-4)),
+	TEMPLE_OF_THE_EYE_CENTER_PLATFORM_204(p -> p
+		.ids(204)
+		.area(Area.TEMPLE_OF_THE_EYE_CENTER_PLATFORM)
+		.groundMaterial(GroundMaterial.ROCKY_CAVE_FLOOR)
+		.blended(false)
+		.lightness(58)
+	),
+	TEMPLE_OF_THE_EYE_SAND_202(202, Area.TEMPLE_OF_THE_EYE, GroundMaterial.SAND, p -> p.shiftLightness(-4).blendedAsOpposite(true)),
+	EMPLE_OF_THE_EYE_SAND_203(203, Area.TEMPLE_OF_THE_EYE, GroundMaterial.SAND, p -> p.lightness(64)),
 	TEMPLE_OF_THE_EYE_ROCK(p -> p
 		.ids(181, 201)
 		.area(Area.TEMPLE_OF_THE_EYE)
