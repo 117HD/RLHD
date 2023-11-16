@@ -12499,7 +12499,7 @@
   },
   {
     "description": "Guardians of the Rift - Large Guardian Remains",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "ROCK_3_ORE",
     "objectIds": [
       43719
     ],
@@ -12508,7 +12508,7 @@
   },
   {
     "description": "Guardians of the Rift - Huge Guardian Remains",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "ROCK_3_ORE",
     "objectIds": [
       43720
     ],
@@ -12517,7 +12517,7 @@
   },
   {
     "description": "Guardians of the Rift - Guardian Remains",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "ROCK_3_ORE",
     "objectIds": [
       43717,
       43718
@@ -12526,7 +12526,7 @@
   },
   {
     "description": "Guardians of the Rift - Guardian Parts",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "ROCK_3_ORE",
     "objectIds": [
       43715,
       43716
@@ -12535,7 +12535,7 @@
   },
   {
     "description": "Guardians of the Rift - Catalytic and Elemental Guides",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "ROCK_3_ORE",
     "objectIds": [
       43752,
       43753
@@ -12546,7 +12546,7 @@
   },
   {
     "description": "Guardians of the Rift - Guardian Steps",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "ROCK_3_ORE",
     "objectIds": [
       43551,
       43552,
@@ -12564,17 +12564,17 @@
   },
   {
     "description": "Guardians of the Rift - Entrance Statues",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "ROCK_3_ORE",
     "objectIds": [
       43698,
       43699
     ],
     "uvType": "BOX",
-    "uvScale": 0.87
+    "uvScale": .7
   },
   {
     "description": "Guardians of the Rift - Guardian Rune Portal Statues",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "ROCK_3_ORE",
     "objectIds": [
       43701,
       43702,
@@ -12594,7 +12594,7 @@
   },
   {
     "description": "Guardians of the Rift - Columns",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "ROCK_3_ORE",
     "objectIds": [
       43523,
       43524,
@@ -12608,7 +12608,7 @@
   },
   {
     "description": "Guardians of the Rift - Destroyed Columns Base",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "ROCK_3_ORE",
     "objectIds": [
       43528
     ],
@@ -12618,7 +12618,7 @@
   },
   {
     "description": "Guardians of the Rift - Destroyed Columns Ground",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "ROCK_3_ORE",
     "objectIds": [
       43529
     ],
