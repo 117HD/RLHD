@@ -352,8 +352,11 @@ public class ModelPusher {
 
 				ModelOverride materialOverride = modelOverride;
 				if (modelOverride.materialOverrides != null) {
-					materialOverride = modelOverride.materialOverrides.getOrDefault(material, modelOverride);
-					material = materialOverride.textureMaterial;
+					var override = modelOverride.materialOverrides.get(material);
+					if (override != null) {
+						materialOverride = override;
+						material = materialOverride.textureMaterial;
+					}
 				}
 
 				if (material != Material.NONE) {

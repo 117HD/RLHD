@@ -34,6 +34,7 @@ import lombok.NonNull;
 import lombok.Setter;
 import net.runelite.api.*;
 import rs117.hd.HdPluginConfig;
+import rs117.hd.config.SeasonalTheme;
 import rs117.hd.utils.ColorUtils;
 
 public enum Material {
@@ -71,9 +72,10 @@ public enum Material {
 		.setSpecular(0.5f, 30)),
 	WOODEN_SCREEN(7, p -> p
 		.setHasTransparency(true)),
-	LEAVES_1(8, p -> p
+	LEAVES_SIDE(8, p -> p
 		.setHasTransparency(true)
-		.setTextureScale(1.3f, 1.0f)),
+		.setTextureScale(1.025f, 1.025f)
+	),
 	TREE_RINGS(9, p -> p
 		.setHasTransparency(true)),
 	MOSS_BRANCH(10),
@@ -108,7 +110,8 @@ public enum Material {
 		.setHasTransparency(true)),
 	WILLOW_LEAVES(30, p -> p
 		.setHasTransparency(true)
-		.setTextureScale(1.025f, 1.0f)),
+		.setTextureScale(1.025f, 1.0f)
+	),
 	LAVA(31, p -> p
 		.setUnlit(true)
 		.setOverrideBaseColor(true)
@@ -117,7 +120,8 @@ public enum Material {
 	TREE_DOOR_BROWN(32),
 	MAPLE_LEAVES(33, p -> p
 		.setHasTransparency(true)
-		.setTextureScale(1.3f, 1)),
+		.setTextureScale(1.3f, 1.025f)
+	),
 	MAGIC_STARS(34, p -> p
 		.setHasTransparency(true)
 		.setUnlit(true)
@@ -132,9 +136,10 @@ public enum Material {
 		.setOverrideBaseColor(true)
 		.setFlowMap(LAVA_FLOW_MAP, 0.05f, 12, 4)
 		.setScroll(0, 1 / -3f)),
-	LEAVES_2(41, p -> p
+	LEAVES_DISEASED(41, p -> p
 		.setHasTransparency(true)
-		.setTextureScale(1.1f, 1.1f)),
+		.setTextureScale(1.025f, 1.025f)
+	),
 	MARBLE(42, p -> p
 		.setSpecular(1.0f, 400)),
 	CLEAN_TILE(43),
@@ -160,7 +165,7 @@ public enum Material {
 		.setOverrideBaseColor(true)
 		.setFlowMap(LAVA_FLOW_MAP, 0.02f, 12, 4)
 		.setScroll(0, 0)),
-	LEAVES_3(60, p -> p
+	LEAVES_TOP(60, p -> p
 		.setHasTransparency(true)),
 	CLAN_SKULL(61, p -> p
 		.setHasTransparency(true)),
@@ -218,11 +223,12 @@ public enum Material {
 		.setHasTransparency(true)),
 	CLAN_EMPTY(88, p -> p
 		.setHasTransparency(true)),
-	SHAYZIEN_LEAVES_1(89, p -> p
+	SHAYZIEN_LEAVES_TOP(89, p -> p
 		.setHasTransparency(true)),
-	SHAYZIEN_LEAVES_2(90, p -> p
+	SHAYZIEN_LEAVES_SIDE(90, p -> p
 		.setHasTransparency(true)
-		.setTextureScale(1.1f, 1.1f)),
+		.setTextureScale(1.025f, 1.025f)
+	),
 	WATER_ICE(91),
 	SNOW_ROOF(92),
 	SMALL_SNOWFLAKES(93),
@@ -292,7 +298,7 @@ public enum Material {
 	SKULLS_FOG_LIGHT(118),
 	SKULLS_FOG_DARK(119),
 
-	WHITE(NONE, p -> {}),
+	WHITE(NONE),
 	GRAY_75(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(.75f))),
 	GRAY_65(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(.65f))),
 	GRAY_50(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(.5f))),
@@ -617,10 +623,10 @@ public enum Material {
 		.setSpecular(0.7f, 80)),
 	WATTLE_1,
 	ICE_1(SNOW_4, p -> p
-		.replaceIf(HdPluginConfig::winterTheme, WATER_FLAT_2, WATER_FLAT)
+		.replaceIf(SeasonalTheme.WINTER, WATER_FLAT_2, WATER_FLAT)
 		.setSpecular(1.1f, 200)),
 	ICE_1_HIGHGLOSS(ICE_1, p -> p
-		.replaceIf(HdPluginConfig::winterTheme, WATER_FLAT_2, WATER_FLAT)
+		.replaceIf(SeasonalTheme.WINTER, WATER_FLAT_2, WATER_FLAT)
 		.setSpecular(3.1f, 30)),
 	ICE_2(SNOW_2, p -> p
 		.setSpecular(1.5f, 800)),
@@ -680,61 +686,113 @@ public enum Material {
 		.setSpecular(1.5f, 600)
 	),
 
+	// Aliases for separately replacing textures of different trees
+	LEAVES_YELLOW_SIDE(LEAVES_SIDE),
+	LEAVES_YELLOW_TOP(LEAVES_TOP),
+	LEAVES_RED_SIDE(LEAVES_SIDE),
+	LEAVES_RED_TOP(LEAVES_TOP),
+	LEAVES_ORANGE_SIDE(LEAVES_SIDE),
+	LEAVES_ORANGE_TOP(LEAVES_TOP),
 
 	// Seasonal
+	AUTUMN_LEAVES_YELLOW_SIDE(p -> p
+		.setHasTransparency(true)
+		.setTextureScale(1.025f, 1.025f)
+		.replaceIf(SeasonalTheme.AUTUMN, LEAVES_YELLOW_SIDE)
+	),
+	AUTUMN_LEAVES_YELLOW_TOP(p -> p
+		.setHasTransparency(true)
+		.setTextureScale(1.025f, 1.025f)
+		.replaceIf(SeasonalTheme.AUTUMN, LEAVES_YELLOW_TOP)
+	),
+	AUTUMN_LEAVES_ORANGE_SIDE(p -> p
+		.setHasTransparency(true)
+		.setTextureScale(1.025f, 1.025f)
+		.replaceIf(SeasonalTheme.AUTUMN, LEAVES_ORANGE_SIDE)
+	),
+	AUTUMN_LEAVES_ORANGE_TOP(p -> p
+		.setHasTransparency(true)
+		.setTextureScale(1.025f, 1.025f)
+		.replaceIf(SeasonalTheme.AUTUMN, LEAVES_ORANGE_TOP)
+	),
+	AUTUMN_LEAVES_RED_SIDE(p -> p
+		.setHasTransparency(true)
+		.setTextureScale(1.025f, 1.025f)
+		.replaceIf(SeasonalTheme.AUTUMN, LEAVES_RED_SIDE)
+	),
+	AUTUMN_LEAVES_RED_TOP(p -> p
+		.setHasTransparency(true)
+		.setTextureScale(1.025f, 1.025f)
+		.replaceIf(SeasonalTheme.AUTUMN, LEAVES_RED_TOP)
+	),
+	AUTUMN_WILLOW_LEAVES(p -> p
+		.setHasTransparency(true)
+		.setTextureScale(1.025f, 1.025f)
+		.replaceIf(SeasonalTheme.AUTUMN, WILLOW_LEAVES)
+	),
+
 	WINTER_WILLOW_LEAVES(p -> p
-		.replaceIf(HdPluginConfig::winterTheme, WILLOW_LEAVES)
-		.setTextureScale(1.025f, 1.0f)),
+		.setHasTransparency(true)
+		.setTextureScale(1.025f, 1.025f)
+		.replaceIf(SeasonalTheme.WINTER, WILLOW_LEAVES)
+	),
 	WINTER_MAPLE_LEAVES(p -> p
-		.replaceIf(HdPluginConfig::winterTheme, MAPLE_LEAVES)
-		.setTextureScale(1.3f, 1.0f)),
-	WINTER_LEAVES_1(p -> p
-		.replaceIf(HdPluginConfig::winterTheme, LEAVES_1)
-		.setTextureScale(1.3f, 1.0f)),
-	WINTER_LEAVES_2(p -> p
-		.replaceIf(HdPluginConfig::winterTheme, LEAVES_2)
-		.setTextureScale(1.1f, 1.1f)),
-	WINTER_LEAVES_3(p -> p
-		.replaceIf(HdPluginConfig::winterTheme, LEAVES_3)),
+		.setHasTransparency(true)
+		.setTextureScale(1.3f, 1.025f)
+		.replaceIf(SeasonalTheme.WINTER, MAPLE_LEAVES)
+	),
+	WINTER_LEAVES_SIDE(p -> p
+		.setHasTransparency(true)
+		.setTextureScale(1.025f, 1.025f)
+		.replaceIf(SeasonalTheme.WINTER, LEAVES_SIDE, LEAVES_YELLOW_SIDE, LEAVES_ORANGE_SIDE, LEAVES_RED_SIDE)
+	),
+	WINTER_LEAVES_TOP(p -> p
+		.setHasTransparency(true)
+		.replaceIf(SeasonalTheme.WINTER, LEAVES_TOP, LEAVES_YELLOW_TOP, LEAVES_ORANGE_TOP, LEAVES_RED_TOP)
+	),
+	WINTER_LEAVES_DISEASED(p -> p
+		.setHasTransparency(true)
+		.setTextureScale(1.025f, 1.025f)
+		.replaceIf(SeasonalTheme.WINTER, LEAVES_DISEASED)
+	),
 	WINTER_PAINTING_LANDSCAPE(p -> p
-		.replaceIf(HdPluginConfig::winterTheme, PAINTING_LANDSCAPE)),
+		.replaceIf(SeasonalTheme.WINTER, PAINTING_LANDSCAPE)
+	),
 	WINTER_PAINTING_KING(p -> p
-		.replaceIf(HdPluginConfig::winterTheme, PAINTING_KING)),
+		.replaceIf(SeasonalTheme.WINTER, PAINTING_KING)
+	),
 	WINTER_PAINTING_ELF(p -> p
-		.replaceIf(HdPluginConfig::winterTheme, PAINTING_ELF)),
+		.replaceIf(SeasonalTheme.WINTER, PAINTING_ELF)
+	),
 	WINTER_HD_ROOF_SHINGLES_1(p -> p
-		.replaceIf(HdPluginConfig::winterTheme, ROOF_SHINGLES_1)
+		.replaceIf(SeasonalTheme.WINTER, HD_ROOF_SHINGLES_1)
 		.setSpecular(0.5f, 30)
 		.setNormalMap(HD_ROOF_SHINGLES_N)),
 	WINTER_HD_ROOF_SHINGLES_2(p -> p
-		.replaceIf(HdPluginConfig::winterTheme, ROOF_SHINGLES_2)
+		.replaceIf(SeasonalTheme.WINTER, HD_ROOF_SHINGLES_2)
 		.setSpecular(0.3f, 30)
 		.setNormalMap(HD_ROOF_SHINGLES_N)),
 	WINTER_HD_ROOF_BRICK_TILES(p -> p
-		.replaceIf(HdPluginConfig::winterTheme, ROOF_BRICK_TILE, ROOF_BRICK_TILE_GREEN, ROOF_BRICK_TILE_DARK)
 		.setSpecular(0.3f, 30)
-		.setNormalMap(HD_ROOF_BRICK_TILE_N)),
+		.setNormalMap(HD_ROOF_BRICK_TILE_N)
+		.replaceIf(SeasonalTheme.WINTER, HD_ROOF_BRICK_TILE, HD_ROOF_BRICK_TILE_GREEN, HD_ROOF_BRICK_TILE_DARK)
+	),
 	WINTER_HD_ROOF_SLATE(p -> p
-		.replaceIf(HdPluginConfig::winterTheme, ROOF_SLATE)
-		.setSpecular(0.5f, 30)),
+		.setSpecular(0.5f, 30)
+		.replaceIf(SeasonalTheme.WINTER, ROOF_SLATE)
+	),
 	WINTER_HD_ROOF_WOODEN_SLATE(p -> p
-		.replaceIf(HdPluginConfig::winterTheme, ROOF_WOODEN_SLATE)
-		.setSpecular(0.5f, 30)),
+		.setSpecular(0.5f, 30)
+		.replaceIf(SeasonalTheme.WINTER, ROOF_WOODEN_SLATE)
+	),
 	WINTER_JAGGED_STONE_TILE(p -> p
 		.setDisplacementMap(JAGGED_STONE_TILE_D)
 		.setNormalMap(JAGGED_STONE_TILE_N)
 		.setSpecular(0.6f, 30)
-		.setBrightness(1.4f)),
-	WINTER_JAGGED_STONE_TILE_LIGHT(WINTER_JAGGED_STONE_TILE, p -> p
-		.setDisplacementMap(JAGGED_STONE_TILE_D)
-		.setNormalMap(JAGGED_STONE_TILE_N)
-		.setSpecular(0.6f, 30)
-		.setBrightness(4)),
-	WINTER_JAGGED_STONE_TILE_LIGHTER(WINTER_JAGGED_STONE_TILE, p -> p
-		.setDisplacementMap(JAGGED_STONE_TILE_D)
-		.setNormalMap(JAGGED_STONE_TILE_N)
-		.setSpecular(0.6f, 30)
-		.setBrightness(12)),
+		.setBrightness(1.4f)
+	),
+	WINTER_JAGGED_STONE_TILE_LIGHT(WINTER_JAGGED_STONE_TILE, p -> p.setBrightness(4)),
+	WINTER_JAGGED_STONE_TILE_LIGHTER(WINTER_JAGGED_STONE_TILE, p -> p.setBrightness(12)),
 	;
 
 	public final Material parent;
@@ -788,13 +846,13 @@ public enum Material {
 		}
 
 		Builder setParent(Material parent) {
-			// Copy over defaults from the parent, except vanilla texture index
 			this.parent = parent;
 			this.normalMap = parent.normalMap;
 			this.displacementMap = parent.displacementMap;
 			this.roughnessMap = parent.roughnessMap;
 			this.ambientOcclusionMap = parent.ambientOcclusionMap;
 			this.flowMap = parent.flowMap;
+			this.vanillaTextureIndex = parent.vanillaTextureIndex;
 			this.hasTransparency = parent.hasTransparency;
 			this.overrideBaseColor = parent.overrideBaseColor;
 			this.unlit = parent.unlit;
@@ -839,6 +897,10 @@ public enum Material {
 			this.replacementCondition = condition;
 			return this;
 		}
+
+		Builder replaceIf(SeasonalTheme seasonalTheme, @NonNull Material... materialsToReplace) {
+			return replaceIf(config -> config.seasonalTheme() == seasonalTheme, materialsToReplace);
+		}
 	}
 
 	Material() {
@@ -847,6 +909,10 @@ public enum Material {
 
 	Material(int vanillaTextureIndex) {
 		this(p -> p.setVanillaTextureIndex(vanillaTextureIndex));
+	}
+
+	Material(Material parent) {
+		this(parent, p -> {});
 	}
 
 	Material(Material parent, Consumer<Builder> consumer) {
@@ -899,26 +965,25 @@ public enum Material {
 
 	public static void updateMappings(Texture[] textures, HdPluginConfig config) {
 		var materials = Material.values();
-		for (int i = 0; i < materials.length; i++) {
+		for (int i = 0; i < materials.length; ++i) {
 			var material = materials[i];
-			boolean wasReplaced = false;
 
-			// Apply the first successful replacement listed last, and keep going until all replacements have been resolved
-			for (int j = materials.length - 1; j > material.ordinal(); j--) {
-				var replacement = materials[j];
-				if (replacement.replacementCondition != null &&
-					replacement.replacementCondition.apply(config) &&
-					replacement.materialsToReplace.contains(material)) {
-					material = replacement;
-					wasReplaced = true;
-					break;
+			// If the material is a conditional replacement material, and the condition is not met,
+			// the material shouldn't be loaded and can be mapped to NONE
+			if (material.replacementCondition != null && !material.replacementCondition.apply(config)) {
+				material = NONE;
+			} else {
+				// Apply material replacements from top to bottom
+				for (int j = i + 1; j < materials.length; ++j) {
+					var replacement = materials[j];
+					if (replacement.replacementCondition != null &&
+						replacement.replacementCondition.apply(config) &&
+						replacement.materialsToReplace.contains(material)) {
+						material = replacement;
+						break;
+					}
 				}
 			}
-
-			// If the material is itself a conditional replacement material, and the condition
-			// is not met, the material won't be loaded, and can be mapped to NONE
-			if (!wasReplaced && material.replacementCondition != null && !material.replacementCondition.apply(config))
-				material = NONE;
 
 			REPLACEMENT_MAPPING[i] = material;
 		}
@@ -927,7 +992,7 @@ public enum Material {
 		Arrays.fill(VANILLA_TEXTURE_MAPPING, Material.VANILLA);
 		for (int i = 0; i < textures.length; i++) {
 			for (var material : materials) {
-				if (material.vanillaTextureIndex == i) {
+				if (material.vanillaTextureIndex == i && material.parent == null) {
 					assert VANILLA_TEXTURE_MAPPING[i] == VANILLA :
 						"Material " + material + " conflicts with vanilla ID " + material.vanillaTextureIndex + " of material "
 						+ VANILLA_TEXTURE_MAPPING[i];

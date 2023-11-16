@@ -32,7 +32,6 @@ import net.runelite.api.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.config.DefaultSkyColor;
-import rs117.hd.data.environments.Area;
 import rs117.hd.data.environments.Environment;
 import rs117.hd.utils.AABB;
 import rs117.hd.utils.HDUtils;
@@ -134,10 +133,6 @@ public class EnvironmentManager {
 	private float targetLightYaw = 0f;
 
 	private boolean lightningEnabled = false;
-	private boolean isOverworld = false;
-	// some necessary data for reloading the scene while in POH to fix major performance loss
-	private boolean isInHouse = false;
-	private int previousPlane;
 
 	public void reset() {
 		currentEnvironment = Environment.NONE;
@@ -152,50 +147,28 @@ public class EnvironmentManager {
 	public void update(SceneContext sceneContext) {
 		assert client.isClientThread();
 
-		int[] position = sceneContext.localToWorld(plugin.cameraFocalPoint[0], plugin.cameraFocalPoint[1], client.getPlane());
-
-		isOverworld = Area.OVERWORLD.containsPoint(position);
+		int[] focalPoint = sceneContext.localToWorld(
+			plugin.cameraFocalPoint[0],
+			plugin.cameraFocalPoint[1],
+			client.getPlane()
+		);
 
 		// skip the transitional fade if the player has moved too far
 		// since the previous frame. results in an instant transition when
 		// teleporting, entering dungeons, etc.
 		int tileChange = Math.max(
-			Math.abs(position[0] - previousPosition[0]),
-			Math.abs(position[1] - previousPosition[1])
+			Math.abs(focalPoint[0] - previousPosition[0]),
+			Math.abs(focalPoint[1] - previousPosition[1])
 		);
-		previousPosition = position;
-
-		// reload the scene if the player is in a house and their plane changed
-		// this greatly improves the performance as it keeps the scene buffer up to date
-		if (isInHouse) {
-			int plane = client.getPlane();
-			if (previousPlane != plane) {
-				plugin.reloadSceneNextGameTick();
-				previousPlane = plane;
-			}
-		}
+		previousPosition = focalPoint;
 
 		boolean skipTransition = tileChange >= SKIP_TRANSITION_DISTANCE;
 		for (Environment environment : sceneContext.environments)
 		{
-			if (environment.getArea().containsPoint(position))
+			if (environment.getArea().containsPoint(focalPoint))
 			{
 				if (environment != currentEnvironment)
 				{
-					if (environment == Environment.PLAYER_OWNED_HOUSE || environment == Environment.PLAYER_OWNED_HOUSE_SNOWY) {
-						// POH takes 1 game tick to enter, then 2 game ticks to load per floor
-						plugin.reloadSceneIn(7);
-						isInHouse = true;
-					} else if (isInHouse) {
-						// Avoid an unnecessary scene reload if the player has already left the POH
-						plugin.abortSceneReload();
-						isInHouse = false;
-					}
-
-					// Since the environment which actually gets used may differ from the environment
-					// chosen based on position, update the plugin's area tracking here
-					plugin.isInChambersOfXeric = environment == Environment.CHAMBERS_OF_XERIC;
-
 					changeEnvironment(environment, skipTransition);
 				}
 				break;
@@ -267,41 +240,32 @@ public class EnvironmentManager {
 
 		updateTargetSkyColor();
 
-		targetFogDepth = newEnvironment.getFogDepth();
-		if (useWinterTheme() && !newEnvironment.isCustomFogDepth()) {
-			targetFogDepth = Environment.WINTER.getFogDepth();
-		}
+		var env = getCurrentEnvironment();
+		targetLightPitch = env.getLightPitch();
+		targetLightYaw = env.getLightYaw();
+		targetFogDepth = env.getFogDepth();
+		targetGroundFogStart = env.getGroundFogStart();
+		targetGroundFogEnd = env.getGroundFogEnd();
+		targetGroundFogOpacity = env.getGroundFogOpacity();
+		lightningEnabled = env.isLightningEnabled();
 
-		Environment atmospheric = config.atmosphericLighting() ? newEnvironment : Environment.OVERWORLD;
-		targetAmbientStrength = atmospheric.getAmbientStrength();
-		targetAmbientColor = atmospheric.getAmbientColor();
-		targetDirectionalStrength = atmospheric.getDirectionalStrength();
-		targetDirectionalColor = atmospheric.getDirectionalColor();
-		targetUnderglowStrength = atmospheric.getUnderglowStrength();
-		targetUnderglowColor = atmospheric.getUnderglowColor();
-		targetUnderwaterCausticsColor = atmospheric.getUnderwaterCausticsColor();
-		targetUnderwaterCausticsStrength = atmospheric.getUnderwaterCausticsStrength();
-		if (useWinterTheme()) {
-			if (!atmospheric.isCustomAmbientStrength())
-				targetAmbientStrength = Environment.WINTER.getAmbientStrength();
-			if (!atmospheric.isCustomAmbientColor())
-				targetAmbientColor = Environment.WINTER.getAmbientColor();
-			if (!atmospheric.isCustomDirectionalStrength())
-				targetDirectionalStrength = Environment.WINTER.getDirectionalStrength();
-			if (!atmospheric.isCustomDirectionalColor())
-				targetDirectionalColor = Environment.WINTER.getDirectionalColor();
-		}
-
-		targetLightPitch = newEnvironment.getLightPitch();
-		targetLightYaw = newEnvironment.getLightYaw();
-		targetGroundFogStart = newEnvironment.getGroundFogStart();
-		targetGroundFogEnd = newEnvironment.getGroundFogEnd();
-		targetGroundFogOpacity = newEnvironment.getGroundFogOpacity();
-		lightningEnabled = newEnvironment.isLightningEnabled();
+		if (!config.atmosphericLighting())
+			env = getOverworldEnvironment();
+		targetAmbientStrength = env.getAmbientStrength();
+		targetAmbientColor = env.getAmbientColor();
+		targetDirectionalStrength = env.getDirectionalStrength();
+		targetDirectionalColor = env.getDirectionalColor();
+		targetUnderglowStrength = env.getUnderglowStrength();
+		targetUnderglowColor = env.getUnderglowColor();
+		targetUnderwaterCausticsColor = env.getUnderwaterCausticsColor();
+		targetUnderwaterCausticsStrength = env.getUnderwaterCausticsStrength();
 	}
 
 	public void updateTargetSkyColor() {
-		Environment env = useWinterTheme() ? Environment.WINTER : currentEnvironment;
+		Environment env = currentEnvironment;
+		if (!env.isCustomFogColor())
+			env = getOverworldEnvironment();
+
 		if (!env.isCustomFogColor() || env.isAllowSkyOverride() && config.overrideSky()) {
 			DefaultSkyColor sky = config.defaultSkyColor();
 			targetFogColor = sky.getRgb(client);
@@ -413,14 +377,24 @@ public class EnvironmentManager {
 		}
 	}
 
-	public boolean isUnderwater() {
-		return currentEnvironment.isUnderwater();
+	private Environment getCurrentEnvironment() {
+		if (currentEnvironment == Environment.OVERWORLD)
+			return getOverworldEnvironment();
+		return currentEnvironment;
 	}
 
-	/**
-	 * This should not be used from the scene loader thread
-	 */
-	private boolean useWinterTheme() {
-		return plugin.configWinterTheme && isOverworld;
+	private Environment getOverworldEnvironment() {
+		switch (plugin.configSeasonalTheme) {
+			case AUTUMN:
+				return Environment.AUTUMN;
+			case WINTER:
+				return Environment.WINTER;
+			default:
+				return Environment.OVERWORLD;
+		}
+	}
+
+	public boolean isUnderwater() {
+		return currentEnvironment.isUnderwater();
 	}
 }

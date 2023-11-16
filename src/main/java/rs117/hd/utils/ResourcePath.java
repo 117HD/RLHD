@@ -160,6 +160,10 @@ public class ResourcePath {
 		int i = path.lastIndexOf('.');
 		if (i != -1)
 			path = path.substring(0, i);
+
+		if (extension != null && !extension.isEmpty())
+			path += '.' + extension;
+
 		return new ResourcePath(root, path);
 	}
 
