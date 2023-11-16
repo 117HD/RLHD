@@ -710,6 +710,7 @@ public enum Overlay {
 		.shiftSaturation(-2)
 	),
 	TIRANNWN_PATHS(p -> p.area(Area.TIRANNWN).ids(106).groundMaterial(GroundMaterial.GRASSY_DIRT)),
+	PRIFDDINAS_POND_WATER(p -> p.area(Area.PRIFDDINAS).ids(151).waterType(WaterType.WATER)),
 	POISON_WASTE(85, Area.POISON_WASTE, WaterType.POISON_WASTE),
 	POISON_WASTE_DUNGEON_TAR(p -> p.ids(304).area(Area.POISON_WASTE_DUNGEON).waterType(WaterType.BLACK_TAR_FLAT)),
 
