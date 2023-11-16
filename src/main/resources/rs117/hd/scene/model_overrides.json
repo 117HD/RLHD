@@ -1224,24 +1224,41 @@
     "description": "TREES",
     "baseMaterial": "BARK",
     "objectIds": [
-      1276,
-      1278,
-      2092,
-      5127,
-      10041,
-      10820,
-      10823,
-      10832,
-      10834,
-      16546,
-      16547,
-      16548,
-      23639,
-      37329
+      1278, 1279, 2409, 9731,
+      10041, 10832, 14309,
+      16546, 16547, 16548, 19167,
+      20845, 23639, 37329, 37967,
+      37968, 42842
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
-    "retainVanillaUvs": true
+    "materialOverrides": {
+      "LEAVES_SIDE": {
+        "textureMaterial": "LEAVES_YELLOW_SIDE"
+      },
+      "LEAVES_TOP": {
+        "textureMaterial": "LEAVES_YELLOW_TOP"
+      }
+    }
+  },
+  {
+    "description": "Tree - Double Tree",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      1276, 1277, 9730, 14308,
+      19165, 20803, 20844, 37965,
+      37966
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "materialOverrides": {
+      "LEAVES_SIDE": {
+        "textureMaterial": "LEAVES_ORANGE_SIDE"
+      },
+      "LEAVES_TOP": {
+        "textureMaterial": "LEAVES_ORANGE_TOP"
+      }
+    }
   },
   {
     "description": "Spirit Trees",
@@ -1328,15 +1345,14 @@
     "description": "Objects - Tree - Yew",
     "baseMaterial": "BARK",
     "objectIds": [
-      8388,
-      8389,
-      8390,
-      10822
-
+      4536, 5121, 8388, 8389,
+      8390, 8503, 8504, 8505,
+      8506, 8507, 8508, 8509,
+      8510, 8511, 8512, 8513,
+      10822, 10823, 33732, 42427
     ],
     "uvType": "BOX",
-    "uvScale": 0.8,
-    "retainVanillaUvs": true
+    "uvScale": 0.8
   },
   {
     "description": "Objects - Tree - Willow",
@@ -4846,13 +4862,6 @@
     "baseMaterial": "ROCK_1",
     "objectIds": [
       714
-    ]
-  },
-  {
-    "description": "Fire - Static object",
-    "baseMaterial": "WOOD_GRAIN_1",
-    "objectIds": [
-      26185
     ]
   },
   {
@@ -12357,5 +12366,65 @@
     "objectIds": [ 34533 ],
     "areas": [ [ 1288, 10205, 0 ] ],
     "rotate": 270
+  },
+  {
+    "description": "Textured Bushes",
+    "objectIds": [
+      1116, 1117, 1118, 1119,
+      1120, 1121, 1124, 1125,
+      2357, 2358, 2798, 2799,
+      2800, 2802, 2803, 10586,
+      10778, 17988, 17990, 17991,
+      19427, 19428, 19429, 29715,
+      31571, 41456, 44782, 46584,
+      46585
+    ]
+  },
+  {
+    "description": "Evergreen Trees",
+    "baseMaterial": "BARK",
+    "objectIds": [ 2091, 2092, 27060 ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Snowcovered Evergreen Trees - Textured",
+    "objectIds": [
+      1318, 1319, 40932,
+      40933, 46509, 46510
+    ]
+  },
+  {
+    "description": "Oak Tree",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      4533, 4540, 8462, 8463,
+      8464, 8465, 8466, 6487,
+      9734, 10820, 20806, 37969,
+      37970, 42395, 42831
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "materialOverrides": {
+      "LEAVES_SIDE": {
+        "textureMaterial": "LEAVES_RED_SIDE"
+      },
+      "LEAVES_TOP": {
+        "textureMaterial": "LEAVES_RED_TOP"
+      }
+    }
+  },
+  {
+    "description": "Magic Tree",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      4537, 5127, 8396,
+      8397, 8398, 8399,
+      8400, 8401, 8402,
+      8403, 8404, 8405,
+      8406, 8407, 8408, 8409, 10834
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
   }
 ]

@@ -1,4 +1,4 @@
-package rs117.hd.test;
+package rs117.hd.test.utils;
 
 import rs117.hd.data.environments.Area;
 

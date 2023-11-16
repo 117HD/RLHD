@@ -19827,7 +19827,7 @@
     "height": 250,
     "alignment": "CENTER",
     "radius": 500,
-    "strength": 12.5,
+    "strength": 5,
     "color": [
       252,
       148,
@@ -31382,5 +31382,37 @@
     "radius": 750,
     "type": "FLICKER",
     "range": 20
+  },
+  {
+    "description": "HALLOWEEN_PUMPKIN_LARGE",
+    "height": 30,
+    "alignment": "CENTER",
+    "radius": 150,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "objectIds": [ 46268 ]
+  },
+  {
+    "description": "HALLOWEEN_PUMPKIN_SMALL",
+    "height": 15,
+    "alignment": "RIGHT",
+    "radius": 100,
+    "strength": 11.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "objectIds": [ 46269 ]
   }
 ]

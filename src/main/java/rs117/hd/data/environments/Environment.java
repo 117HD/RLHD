@@ -24,15 +24,14 @@
  */
 package rs117.hd.data.environments;
 
-import java.awt.Color;
 import lombok.Getter;
+import rs117.hd.utils.ColorUtils;
 
 import static rs117.hd.utils.ColorUtils.rgb;
 
 @Getter
 public enum Environment
 {
-
 	EVIL_BOB_ISLAND(Area.EVIL_BOB_ISLAND, new Properties()
 		.setFogColor("#B8D6FF")
 		.setFogDepth(70)
@@ -41,6 +40,7 @@ public enum Environment
 		.setDirectionalColor("#F5BC67")
 		.setDirectionalStrength(1.0f)
 	),
+
 	// Wilderness
 	REVENANT_CAVES(Area.REVENANT_CAVES, new Properties()
 		.setFogColor("#081F1C")
@@ -375,7 +375,6 @@ public enum Environment
 		.setGroundFog(-150, -350, 0.5f)
 	),
 
-	LUMBRIDGE(Area.LUMBRIDGE, new Properties()),
 	LUMBRIDGE_BASEMENT(Area.LUMBRIDGE_CASTLE_BASEMENT, new Properties()
 			.setFogColor("#070606")
 			.setFogDepth(84)
@@ -422,7 +421,6 @@ public enum Environment
 		.setDirectionalStrength(0.0f)
 		.setLightDirection(260f, 10f)
 	),
-	DRAYNOR(Area.DRAYNOR, new Properties()),
 
 	MISTHALIN_MYSTERY_MANOR(Area.MISTHALIN_MYSTERY_MANOR, new Properties()
 		.setFogColor(15, 14, 13)
@@ -461,7 +459,6 @@ public enum Environment
 	TUTORIAL_SOUL_WARS_RED_TEAM(Area.SOUL_WARS_RED_BASE_TUTORIAL, new Properties()
 		.setFogColor(28, 21, 13)
 	),
-	TUTORIAL_ISLE_OF_SOULS(Area.ISLE_OF_SOULS_TUTORIAL, new Properties()),
 
 	SMOKE_DUNGEON(Area.SMOKE_DUNGEON, new Properties()
 		.setFogColor(0, 0, 0)
@@ -533,10 +530,6 @@ public enum Environment
 		.setDirectionalStrength(2.5f)
 	),
 
-	WHITE_WOLF_MOUNTAIN(Area.WHITE_WOLF_MOUNTAIN, new Properties()),
-
-	KEEP_LE_FAYE(Area.KEEP_LE_FAYE, new Properties()),
-
 	MOUNTAIN_CAMP_ENTRY_PATH(Area.MOUNTAIN_CAMP_ENTRY_PATH, new Properties()
 		.setFogColor(178, 187, 197)
 		.setFogDepth(50)
@@ -591,8 +584,6 @@ public enum Environment
 		.setDirectionalStrength(1.0f)
 		.setLightDirection(240f, 190f)
 	),
-	KARAMJA(Area.KARAMJA, new Properties()),
-
 
 	UNGAEL(Area.UNGAEL, new Properties()
 		.setFogColor(226, 230, 237)
@@ -645,7 +636,7 @@ public enum Environment
 		.setDirectionalColor(173, 176, 139)
 		.setDirectionalStrength(2.0f)
 	),
-	TIRANNWN(Area.TIRANNWN, new Properties()
+	TIRANNWN(Area.TIRANNWN_MAINLAND, new Properties()
 		.setFogColor("#99D8C8")
 		.setFogDepth(15)
 	),
@@ -685,7 +676,6 @@ public enum Environment
 	),
 
 	// Yanille
-	YANILLE(Area.YANILLE, new Properties()),
 	// Nightmare Zone
 	NIGHTMARE_ZONE(Area.NIGHTMARE_ZONE, new Properties()
 		.setFogColor("#190D02")
@@ -696,9 +686,6 @@ public enum Environment
 		.setDirectionalStrength(1.0f)
 		.setLightDirection(260f, 10f)
 	),
-
-	// Tree Gnome Stronghold
-	TREE_GNOME_STRONGHOLD(Area.TREE_GNOME_STRONGHOLD, new Properties()),
 
 	// Castle Wars
 	CASTLE_WARS_UNDERGROUND(Area.CASTLE_WARS_UNDERGROUND, new Properties()
@@ -721,12 +708,11 @@ public enum Environment
 		.setDirectionalColor("#C5B8B6")
 		.setGroundFog(-0, -250, 0.3f)
 	),
-	LMS_ARENA_DESERTED_ISLAND(Area.LMS_ARENA_DESERTED_ISLAND, new Properties()),
 
 	// Zeah
 	MOUNT_KARUULM(Area.MOUNT_KARUULM, new Properties()
-			.setAmbientStrength(1.0f)
-			.setDirectionalStrength(3.0f)
+		.setAmbientStrength(1.0f)
+		.setDirectionalStrength(3.0f)
 	),
 	KARUULM_SLAYER_DUNGEON(Area.KARUULM_SLAYER_DUNGEON, new Properties()
 		.setFogColor("#051E22")
@@ -745,7 +731,6 @@ public enum Environment
 		.setDirectionalColor("#FFFFFF")
 		.setDirectionalStrength(1.0f)
 	),
-	MOUNT_QUIDAMORTEM(Area.MOUNT_QUIDAMORTEM, new Properties()),
 	KEBOS_LOWLANDS(Area.KEBOS_LOWLANDS, new Properties()
 		.setFogColor(41, 44, 16)
 		.setFogDepth(50)
@@ -865,7 +850,7 @@ public enum Environment
 	),
 
 	// The Gauntlet
-	THE_GAUNTLET(Area.THE_GAUNTLET, new Properties()
+	THE_GAUNTLET_NORMAL(Area.THE_GAUNTLET_NORMAL, new Properties()
 		.setFogColor("#090606")
 		.setFogDepth(20)
 		.setAmbientColor("#D2C0B7")
@@ -893,13 +878,6 @@ public enum Environment
 		.setLightDirection(260f, 10f)
 	),
 
-	// Islands
-	BRAINDEATH_ISLAND(Area.BRAINDEATH_ISLAND, new Properties()),
-
-	// Ape Atoll
-	// Monkey Madness 2
-	MM2_AIRSHIP_PLATFORM(Area.MM2_AIRSHIP_PLATFORM, new Properties()),
-
 	// POHs
 	PLAYER_OWNED_HOUSE_SNOWY(Area.PLAYER_OWNED_HOUSE_SNOWY, new Properties()
 		.setFogColor("#AEBDE0")
@@ -909,7 +887,6 @@ public enum Environment
 		.setDirectionalColor("#F4E5C9")
 		.setDirectionalStrength(2.5f)
 	),
-	PLAYER_OWNED_HOUSE(Area.PLAYER_OWNED_HOUSE, new Properties()),
 
 	// Blackhole
 	BLACKHOLE(Area.BLACKHOLE, new Properties()
@@ -921,9 +898,6 @@ public enum Environment
 		.setLightDirection(260f, 10f)
 		.setAllowSkyOverride(false)
 	),
-
-	// Fishing Trawler
-	FISHING_TRAWLER(Area.FISHING_TRAWLER, new Properties()),
 
 	// Camdozaal (Below Ice Mountain)
 	CAMDOZAAL(Area.CAMDOZAAL, new Properties()
@@ -1051,9 +1025,6 @@ public enum Environment
 	),
 
 	// Runecrafting altars
-	NATURE_ALTAR(Area.NATURE_ALTAR, new Properties()),
-	WATER_ALTAR(Area.WATER_ALTAR, new Properties()),
-	AIR_ALTAR(Area.AIR_ALTAR, new Properties()),
 	COSMIC_ALTAR(Area.COSMIC_ALTAR, new Properties()
 		.setFogColor("#000000")
 		.setFogDepth(40)
@@ -1080,24 +1051,11 @@ public enum Environment
 	),
 
 	// Random events
-	CLASSROOM(Area.RANDOM_EVENT_CLASSROOM, new Properties()),
-	FREAKY_FORESTER(Area.RANDOM_EVENT_FREAKY_FORESTER, new Properties()),
-	GRAVEDIGGER(Area.RANDOM_EVENT_GRAVEDIGGER, new Properties()),
 	DRILL_DEMON(Area.RANDOM_EVENT_DRILL_DEMON, new Properties()
 		.setFogColor("#696559")
 	),
 
-	// Clan halls
-	CLAN_HALL(Area.CLAN_HALL, new Properties()),
-
 	// Standalone and miscellaneous areas
-	LIGHTHOUSE(Area.LIGHTHOUSE, new Properties()),
-	SORCERESSS_GARDEN(Area.SORCERESSS_GARDEN, new Properties()),
-	PURO_PURO(Area.PURO_PURO, new Properties()),
-	RATCATCHERS_HOUSE(Area.RATCATCHERS_HOUSE, new Properties()),
-	CANOE_CUTSCENE(Area.CANOE_CUTSCENE, new Properties()),
-	FISHER_KINGS_REALM(Area.FISHER_KINGS_REALM, new Properties()),
-	ENCHANTED_VALLEY(Area.ENCHANTED_VALLEY, new Properties()),
 	GIANTS_FOUNDRY(Area.GIANTS_FOUNDRY, new Properties()
 		.setFogColor(0, 0, 0)
 		.setFogDepth(12)
@@ -1260,6 +1218,20 @@ public enum Environment
 		.setLightDirection(260f, 10f)
 		.setWaterColor(102, 234, 255)
 	),
+	NONE(Area.NONE, new Properties()
+		.setFogColor("#ff00ff") // never meant to be rendered
+	),
+
+	// Seasonal default environments
+	AUTUMN(Area.NONE, new Properties()
+		.setFogColor("#fddcb4")
+		.setFogDepth(18)
+		.setAmbientColor(ColorUtils.colorTemperatureToLinearRgb(3200))
+		.setAmbientStrength(.3f)
+		.setDirectionalColor(ColorUtils.colorTemperatureToLinearRgb(3200))
+		.setDirectionalStrength(1.7f)
+		.setLightDirection(215, -78)
+	),
 	WINTER(Area.NONE, new Properties()
 		.setFogColor("#B8C5DB")
 		.setFogDepth(35)
@@ -1267,9 +1239,6 @@ public enum Environment
 		.setAmbientStrength(3.5f)
 		.setDirectionalColor("#FFFFFF")
 		.setDirectionalStrength(1.5f)
-	),
-	NONE(Area.NONE, new Properties()
-		.setFogColor("#ff00ff") // never meant to be rendered
 	),
 	;
 
@@ -1330,29 +1299,27 @@ public enum Environment
 		private float[] waterColor = rgb(185, 214, 255);
 		private boolean customWaterColor = false;
 
-		public Properties setFogDepth(int depth)
-		{
+		public Properties setFogDepth(int depth) {
 			this.fogDepth = depth * 10;
 			this.customFogDepth = true;
 			return this;
 		}
 
+		public Properties setFogColor(String hex) {
+			return setFogColor(rgb(hex));
+		}
+
 		public Properties setFogColor(float r, float g, float b) {
-			this.fogColor = rgb(r, g, b);
+			return setFogColor(rgb(r, g, b));
+		}
+
+		public Properties setFogColor(float[] linearRgb) {
+			this.fogColor = linearRgb;
 			this.customFogColor = true;
 			return this;
 		}
 
-		public Properties setFogColor(String hex)
-		{
-			Color color = Color.decode(hex);
-			this.fogColor = rgb(color.getRed(), color.getGreen(), color.getBlue());
-			this.customFogColor = true;
-			return this;
-		}
-
-		public Properties setAmbientStrength(float str)
-		{
+		public Properties setAmbientStrength(float str) {
 			this.ambientStrength = str;
 			this.customAmbientStrength = true;
 			return this;
@@ -1364,17 +1331,23 @@ public enum Environment
 			return this;
 		}
 
-		public Properties setWaterColor(float r, float g, float b) {
-			this.waterColor = rgb(r, g, b);
-			this.customWaterColor = true;
+		public Properties setAmbientColor(String hex) {
+			return setAmbientColor(ColorUtils.rgb(hex));
+		}
+
+		public Properties setAmbientColor(float[] linearRgb) {
+			this.ambientColor = linearRgb;
+			this.customAmbientColor = true;
 			return this;
 		}
 
-		public Properties setAmbientColor(String hex)
-		{
-			Color color = Color.decode(hex);
-			this.ambientColor = rgb(color.getRed(), color.getGreen(), color.getBlue());
-			this.customAmbientColor = true;
+		public Properties setWaterColor(float r, float g, float b) {
+			return setWaterColor(rgb(r, g, b));
+		}
+
+		public Properties setWaterColor(float[] linearRgb) {
+			this.waterColor = linearRgb;
+			this.customWaterColor = true;
 			return this;
 		}
 
@@ -1386,15 +1359,16 @@ public enum Environment
 		}
 
 		public Properties setDirectionalColor(float r, float g, float b) {
-			this.directionalColor = rgb(r, g, b);
-			this.customDirectionalColor = true;
-			return this;
+			return setDirectionalColor(rgb(r, g, b));
 		}
 
 		public Properties setDirectionalColor(String hex)
 		{
-			Color color = Color.decode(hex);
-			this.directionalColor = rgb(color.getRed(), color.getGreen(), color.getBlue());
+			return setDirectionalColor(ColorUtils.rgb(hex));
+		}
+
+		public Properties setDirectionalColor(float[] linearRgb) {
+			this.directionalColor = linearRgb;
 			this.customDirectionalColor = true;
 			return this;
 		}
@@ -1407,13 +1381,6 @@ public enum Environment
 
 		public Properties setUnderglowColor(float r, float g, float b) {
 			this.underglowColor = rgb(r, g, b);
-			return this;
-		}
-
-		public Properties setUnderglowColor(String hex)
-		{
-			Color color = Color.decode(hex);
-			this.underglowColor = rgb(color.getRed(), color.getGreen(), color.getBlue());
 			return this;
 		}
 
@@ -1451,15 +1418,10 @@ public enum Environment
 		}
 
 		/**
-		 * Use a different color than the directional lighting color
-		 *
-		 * @param r 0-255 gamma
-		 * @param g 0-255 gamma
-		 * @param b 0-255 gamma
-		 * @return the same properties instance
+		 * Use a different color than the directional lighting color for underwater caustic effects
 		 */
-		public Properties setUnderwaterCausticsColor(float r, float g, float b) {
-			this.underwaterCausticsColor = rgb(r, g, b);
+		public Properties setUnderwaterCausticsColor(float[] linearRgb) {
+			this.underwaterCausticsColor = linearRgb;
 			return this;
 		}
 

@@ -100,11 +100,6 @@ public class AABB {
 			.toArray(AABB[]::new);
 	}
 
-	public static AABB regionOnPlane(int regionId, int plane) {
-		var aabb = new AABB(regionId);
-		return new AABB(aabb.minX, aabb.minY, plane, aabb.maxX, aabb.maxY, plane);
-	}
-
 	public static AABB regionBox(int fromRegionId, int toRegionId) {
 		return new AABB(
 			(fromRegionId >>> 8) << 6,
@@ -112,6 +107,10 @@ public class AABB {
 			((toRegionId >>> 8) + 1 << 6) - 1,
 			((toRegionId & 0xFF) + 1 << 6) - 1
 		);
+	}
+
+	public AABB onPlane(int plane) {
+		return new AABB(minX, minY, plane, maxX, maxY, plane);
 	}
 
 	public boolean hasZ() {
