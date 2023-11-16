@@ -7,6 +7,7 @@ import lombok.NonNull;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import rs117.hd.HdPlugin;
+import rs117.hd.config.SeasonalTheme;
 import rs117.hd.data.WaterType;
 import rs117.hd.data.environments.Area;
 
@@ -64,6 +65,10 @@ class TileOverrideBuilder<T> {
 			return override;
 		};
 		return this;
+	}
+
+	TileOverrideBuilder<T> seasonalReplacement(SeasonalTheme seasonalTheme, T replacement) {
+		return replaceWithIf(replacement, plugin -> plugin.configSeasonalTheme == seasonalTheme);
 	}
 
 	TileOverrideBuilder<T> resolver(@NonNull TileOverrideResolver<T> resolver) {

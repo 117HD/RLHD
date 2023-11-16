@@ -36,6 +36,6 @@ int getMaterialIsUnlit(const Material material) {
     return material.flags >> 1 & 1;
 }
 
-int getMaterialHasTransparency(const Material material) {
-    return material.flags & 1;
+bool getMaterialHasTransparency(const Material material) {
+    return (material.flags & 1) == 1;
 }
