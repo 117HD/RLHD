@@ -721,6 +721,12 @@ public enum Material {
 		.setTextureScale(1.025f, 1.025f)
 		.replaceIf(SeasonalTheme.AUTUMN, LEAVES_RED_TOP)
 	),
+	AUTUMN_WILLOW_LEAVES(p -> p
+		.setHasTransparency(true)
+		.setTextureScale(1.025f, 1.025f)
+		.replaceIf(SeasonalTheme.AUTUMN, WILLOW_LEAVES)
+	),
+
 	WINTER_WILLOW_LEAVES(p -> p
 		.setHasTransparency(true)
 		.setTextureScale(1.025f, 1.025f)
