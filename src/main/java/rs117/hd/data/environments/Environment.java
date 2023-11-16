@@ -614,7 +614,7 @@ public enum Environment
 		.setDirectionalStrength(1.25f)
 	),
 
-	SOTE_LLETYA_SMALL_FIRES(Area.SOTE_LLETYA_SMALL_FIRES, new Properties()
+	SOTE_LLETYA_SMALL_FIRES(Area.SOTE_LLETYA_MOSTLY_DONE_BURNING, new Properties()
 		.setFogColor(91, 139, 120)
 		.setFogDepth(30)
 		.setAmbientStrength(1.0f)
@@ -1013,7 +1013,7 @@ public enum Environment
 	),
 
 	// Lunar Isle
-	LUNAR_DIPLOMACY_DREAM_WORLD(Area.LUNAR_DIPLOMACY_DREAM_WORLD, new Properties()
+	LUNAR_DIPLOMACY_DREAM_WORLD(Area.LUNAR_DREAM_WORLD, new Properties()
 		.setFogColor("#000000")
 		.setFogDepth(40)
 		.setAmbientColor("#77A0FF")

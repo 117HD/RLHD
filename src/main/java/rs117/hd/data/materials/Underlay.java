@@ -379,8 +379,8 @@ public enum Underlay {
 	DEATHS_OFFICE_TILE(-110, Area.DEATHS_OFFICE, GroundMaterial.TILES_2X2_1_SEMIGLOSS),
 
 	// Chambers of Xeric
-	COX_SNOW_1(16, Area.COX_SNOW, GroundMaterial.SNOW_1),
-	COX_SNOW_2(59, Area.COX_SNOW, GroundMaterial.SNOW_2),
+	COX_SNOW_1(16, Area.CHAMBERS_OF_XERIC_ICE_DEMON, GroundMaterial.SNOW_1),
+	COX_SNOW_2(59, Area.CHAMBERS_OF_XERIC_ICE_DEMON, GroundMaterial.SNOW_2),
 
 	// Tombs of Amascut
 	TOA_CRONDIS_ISLAND(Area.TOA_PATH_OF_CRONDIS_BOSS, GroundMaterial.SAND, p -> p.ids(109, 117)),

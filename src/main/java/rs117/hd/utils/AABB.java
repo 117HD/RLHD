@@ -101,12 +101,21 @@ public class AABB {
 	}
 
 	public static AABB regionBox(int fromRegionId, int toRegionId) {
-		return new AABB(
-			(fromRegionId >>> 8) << 6,
-			(fromRegionId & 0xFF) << 6,
-			((toRegionId >>> 8) + 1 << 6) - 1,
-			((toRegionId & 0xFF) + 1 << 6) - 1
-		);
+		int x1 = fromRegionId >>> 8;
+		int y1 = fromRegionId & 0xFF;
+		int x2 = toRegionId >>> 8;
+		int y2 = toRegionId & 0xFF;
+		if (x1 > x2) {
+			int temp = x1;
+			x1 = x2;
+			x2 = temp;
+		}
+		if (y1 > y2) {
+			int temp = y1;
+			y1 = y2;
+			y2 = temp;
+		}
+		return new AABB((x1) << 6, (y1) << 6, ((x2) + 1 << 6) - 1, ((y2) + 1 << 6) - 1);
 	}
 
 	public AABB onPlane(int plane) {
