@@ -1518,7 +1518,7 @@
   },
   {
     "description": "Short grass which shouldn't cast shadows for the winter theme, prevents grass from being too bright",
-    "baseMaterial": "GRAY_50",
+    "baseMaterial": "GRAY_75",
     "seasonalTheme": "WINTER",
     "objectIds": [
       1257,
