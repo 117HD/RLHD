@@ -353,6 +353,9 @@ void main() {
         float downDotNormals = dot(downDir, normals);
         float viewDotNormals = dot(viewDir, normals);
 
+        #if (DISABLE_DIRECTIONAL_SHADING)
+        lightDotNormals = .7;
+        #endif
 
         float shadow = 0;
         if ((vMaterialData[0] >> MATERIAL_FLAG_DISABLE_SHADOW_RECEIVING & 1) == 0)

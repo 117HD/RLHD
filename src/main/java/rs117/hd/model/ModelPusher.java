@@ -536,14 +536,16 @@ public class ModelPusher {
 			// Without overriding the color for textured faces, vanilla shading remains pretty noticeable even after
 			// the approximate reversal above. Ardougne rooftops is a good example, where vanilla shading results in a
 			// weird-looking tint. The brightness clamp afterward is required to reduce the over-exposure introduced.
-			color1H = color2H = color3H = 0;
-			color1S = color2S = color3S = 0;
-			color1L = color2L = color3L = 90;
-
-			// Let the shader know vanilla shading reversal should be skipped for this face
-			packedAlphaPriorityFlags |= 1 << 20;
+			if (!plugin.configRetainVanillaShading) {
+				color1H = color2H = color3H = 0;
+				color1S = color2S = color3S = 0;
+				color1L = color2L = color3L = 90;
+				
+				// Let the shader know vanilla shading reversal should be skipped for this face
+				packedAlphaPriorityFlags |= 1 << 20;
+			}
 		} else {
-			if (!plugin.configUndoVanillaShadingInCompute) {
+			if (plugin.configUndoVanillaShadingOnCpu) {
 				// Approximately invert vanilla shading by brightening vertices that were likely darkened by vanilla based on
 				// vertex normals. This process is error-prone, as not all models are lit by vanilla with the same light
 				// direction, and some models even have baked lighting built into the model itself. In some cases, increasing
@@ -759,7 +761,7 @@ public class ModelPusher {
 				}
 			}
 
-			if (!plugin.configUndoVanillaShadingInCompute) {
+			if (plugin.configUndoVanillaShadingOnCpu) {
 				int maxBrightness1 = 55;
 				int maxBrightness2 = 55;
 				int maxBrightness3 = 55;

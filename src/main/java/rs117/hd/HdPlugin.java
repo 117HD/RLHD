@@ -77,6 +77,7 @@ import org.lwjgl.system.Callback;
 import org.lwjgl.system.Configuration;
 import rs117.hd.config.AntiAliasingMode;
 import rs117.hd.config.SeasonalTheme;
+import rs117.hd.config.ShadingMode;
 import rs117.hd.config.ShadowMode;
 import rs117.hd.config.UIScalingMode;
 import rs117.hd.data.WaterType;
@@ -404,7 +405,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public boolean configShadowsEnabled;
 	public boolean configExpandShadowDraw;
 	public boolean configUseFasterModelHashing;
+	public boolean configRetainVanillaShading;
 	public boolean configUndoVanillaShadingInCompute;
+	public boolean configUndoVanillaShadingOnCpu;
 	public boolean configPreserveVanillaNormals;
 	public ShadowMode configShadowMode;
 	public SeasonalTheme configSeasonalTheme;
@@ -758,8 +761,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.define("SHADOW_MODE", configShadowMode)
 			.define("SHADOW_TRANSPARENCY", config.enableShadowTransparency())
 			.define("VANILLA_COLOR_BANDING", config.vanillaColorBanding())
-			.define("UNDO_VANILLA_SHADING", config.undoVanillaShadingInCompute())
-			.define("LEGACY_GREY_COLORS", config.legacyGreyColors())
+			.define("UNDO_VANILLA_SHADING", configUndoVanillaShadingInCompute)
+			.define("LEGACY_GREY_COLORS", configLegacyGreyColors)
+			.define("DISABLE_DIRECTIONAL_SHADING", config.shadingMode() != ShadingMode.DEFAULT)
+			.define("FLAT_SHADING", config.flatShading())
 			.addIncludePath(SHADER_PATH);
 
 		glSceneProgram = PROGRAM.compile(template);
@@ -2387,6 +2392,15 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		configUndoVanillaShadingInCompute = config.undoVanillaShadingInCompute();
 		configPreserveVanillaNormals = config.preserveVanillaNormals();
 		configSeasonalTheme = config.seasonalTheme();
+		configRetainVanillaShading = config.shadingMode() == ShadingMode.VANILLA;
+		if (configRetainVanillaShading) {
+			// Disable shading reversal entirely
+			configUndoVanillaShadingOnCpu = false;
+			configUndoVanillaShadingInCompute = false;
+		} else {
+			// Do shading reversal on CPU if it's not being done in compute
+			configUndoVanillaShadingOnCpu = !configUndoVanillaShadingInCompute;
+		}
 	}
 
 	@Subscribe
@@ -2448,6 +2462,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					case KEY_LEGACY_GREY_COLORS:
 					case KEY_UNDO_VANILLA_SHADING_IN_COMPUTE:
 					case KEY_PRESERVE_VANILLA_NORMALS:
+					case KEY_SHADING_MODE:
+					case KEY_FLAT_SHADING:
 						recompilePrograms();
 						modelPusher.clearModelCache();
 						reuploadScene();

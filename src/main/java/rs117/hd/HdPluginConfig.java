@@ -39,6 +39,7 @@ import rs117.hd.config.FogDepthMode;
 import rs117.hd.config.MaxDynamicLights;
 import rs117.hd.config.Saturation;
 import rs117.hd.config.SeasonalTheme;
+import rs117.hd.config.ShadingMode;
 import rs117.hd.config.ShadowDistance;
 import rs117.hd.config.ShadowMode;
 import rs117.hd.config.ShadowResolution;
@@ -832,6 +833,28 @@ public interface HdPluginConfig extends Config
 		section = experimentalSettings
 	)
 	default boolean preserveVanillaNormals() {
+		return false;
+	}
+
+	String KEY_SHADING_MODE = "experimentalShadingMode";
+	@ConfigItem(
+		keyName = KEY_SHADING_MODE,
+		name = "Shading mode",
+		description = "If you prefer playing without shadows, maybe you'll prefer vanilla or no shading as well.",
+		section = experimentalSettings
+	)
+	default ShadingMode shadingMode() {
+		return ShadingMode.DEFAULT;
+	}
+
+	String KEY_FLAT_SHADING = "experimentalFlatShading";
+	@ConfigItem(
+		keyName = KEY_FLAT_SHADING,
+		name = "Flat shading",
+		description = "Gives a more low-poly look to the game.",
+		section = experimentalSettings
+	)
+	default boolean flatShading() {
 		return false;
 	}
 
