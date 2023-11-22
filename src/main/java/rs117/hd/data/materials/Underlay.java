@@ -528,6 +528,7 @@ public enum Underlay {
 				) {
 					switch (plugin.configSeasonalTheme) {
 						case SUMMER:
+						case AUTUMN:
 							return DEFAULT_GRASS;
 						case WINTER:
 							return WINTER_GRASS;
