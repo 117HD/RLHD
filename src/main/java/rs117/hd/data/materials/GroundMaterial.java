@@ -109,7 +109,7 @@ public enum GroundMaterial {
 	PACKED_EARTH(Material.DIRT_1, Material.GRAVEL, Material.DIRT_1, Material.DIRT_1, Material.DIRT_2),
 	GRASSY_DIRT(Material.GRASS_1, Material.DIRT_1, Material.GRASS_2, Material.DIRT_2, Material.GRASS_3),
 	OOZE_FLOOR(Material.GRUNGE_1_SHINY, Material.GRAVEL_SHINY_LIGHT, Material.GRUNGE_2_SHINY),
-	GUARDIANS_RIFT_CAVE_FLOOR(
+	TEMPLE_OF_THE_EYE_FLOOR(
 		Material.GRUNGE_1,
 		Material.GRAVEL_LIGHT,
 		Material.GRUNGE_2,

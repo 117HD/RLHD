@@ -779,7 +779,7 @@ public enum Overlay {
 	TEMPLE_OF_THE_EYE_INCORRECT_WATER(p -> p
 		.ids(-100, 156)
 		.area(Area.TEMPLE_OF_THE_EYE)
-		.groundMaterial(GroundMaterial.GUARDIANS_RIFT_CAVE_FLOOR)
+		.groundMaterial(GroundMaterial.TEMPLE_OF_THE_EYE_FLOOR)
 		.blendedAsOpposite(true)
 		.shiftHue(8)
 		.shiftSaturation(3)
@@ -788,7 +788,7 @@ public enum Overlay {
 	TEMPLE_OF_THE_EYE_PATH_BLENDING_FIX(p -> p
 		.ids()
 		.area(Area.TEMPLE_OF_THE_EYE_BLEND_FIX)
-		.groundMaterial(GroundMaterial.GUARDIANS_RIFT_CAVE_FLOOR)
+		.groundMaterial(GroundMaterial.TEMPLE_OF_THE_EYE_FLOOR)
 		.blendedAsOpposite(true)
 		.shiftHue(27)
 		.saturation(5)
@@ -815,7 +815,7 @@ public enum Overlay {
 		.lightness(58)
 	),
 	TEMPLE_OF_THE_EYE_SAND_202(202, Area.TEMPLE_OF_THE_EYE, GroundMaterial.SAND, p -> p.shiftLightness(-4).blendedAsOpposite(true)),
-	EMPLE_OF_THE_EYE_SAND_203(203, Area.TEMPLE_OF_THE_EYE, GroundMaterial.SAND, p -> p.lightness(64)),
+	TEMPLE_OF_THE_EYE_SAND_203(203, Area.TEMPLE_OF_THE_EYE, GroundMaterial.SAND, p -> p.lightness(64)),
 	TEMPLE_OF_THE_EYE_ROCK(p -> p
 		.ids(181, 201)
 		.area(Area.TEMPLE_OF_THE_EYE)
