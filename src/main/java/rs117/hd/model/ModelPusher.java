@@ -66,7 +66,7 @@ public class ModelPusher {
 	private FrameTimer frameTimer;
 
 	public static final int DATUM_PER_FACE = 12;
-	public static final int MAX_MATERIAL_COUNT = (1 << 10) - 1;
+	public static final int MAX_MATERIAL_COUNT = (1 << 12) - 1;
 	// subtracts the X lowest lightness levels from the formula.
 	// helps keep darker colors appropriately dark
 	private static final int IGNORE_LOW_LIGHTNESS = 3;
@@ -526,21 +526,26 @@ public class ModelPusher {
 		int color3S = color3 >> 7 & 0x7;
 		int color3L = color3 & 0x7F;
 
-		int packedAlphaPriority = 0;
+		int packedAlphaPriorityFlags = 0;
 		if (faceTransparencies != null && !isTextured)
-			packedAlphaPriority |= (faceTransparencies[face] & 0xFF) << 24;
+			packedAlphaPriorityFlags |= (faceTransparencies[face] & 0xFF) << 24;
 		if (facePriorities != null)
-			packedAlphaPriority |= (facePriorities[face] & 0xff) << 16;
+			packedAlphaPriorityFlags |= (facePriorities[face] & 0xF) << 16;
 
 		if (isTextured) {
 			// Without overriding the color for textured faces, vanilla shading remains pretty noticeable even after
 			// the approximate reversal above. Ardougne rooftops is a good example, where vanilla shading results in a
 			// weird-looking tint. The brightness clamp afterward is required to reduce the over-exposure introduced.
-			color1H = color2H = color3H = 0;
-			color1S = color2S = color3S = 0;
-			color1L = color2L = color3L = 90;
+			if (!plugin.configRetainVanillaShading) {
+				color1H = color2H = color3H = 0;
+				color1S = color2S = color3S = 0;
+				color1L = color2L = color3L = 90;
+				
+				// Let the shader know vanilla shading reversal should be skipped for this face
+				packedAlphaPriorityFlags |= 1 << 20;
+			}
 		} else {
-			if (!plugin.configUndoVanillaShadingInCompute) {
+			if (plugin.configUndoVanillaShadingOnCpu) {
 				// Approximately invert vanilla shading by brightening vertices that were likely darkened by vanilla based on
 				// vertex normals. This process is error-prone, as not all models are lit by vanilla with the same light
 				// direction, and some models even have baked lighting built into the model itself. In some cases, increasing
@@ -580,10 +585,10 @@ public class ModelPusher {
 
 					lightDotNormal = nx * L[0] + ny * L[1] + nz * L[2];
 					if (lightDotNormal > 0) {
-						lightDotNormal /= Math.sqrt(nx * nx + ny * ny + nz * nz);
-						color1L += lightDotNormal * color1Adjust;
-						color2L += lightDotNormal * color2Adjust;
-						color3L += lightDotNormal * color3Adjust;
+						lightDotNormal /= (float) Math.sqrt(nx * nx + ny * ny + nz * nz);
+						color1L += (int) (lightDotNormal * color1Adjust);
+						color2L += (int) (lightDotNormal * color2Adjust);
+						color3L += (int) (lightDotNormal * color3Adjust);
 					}
 				} else {
 					nx = xVertexNormals[triA];
@@ -591,8 +596,8 @@ public class ModelPusher {
 					nz = zVertexNormals[triA];
 					lightDotNormal = nx * L[0] + ny * L[1] + nz * L[2];
 					if (lightDotNormal > 0) {
-						lightDotNormal /= Math.sqrt(nx * nx + ny * ny + nz * nz);
-						color1L += lightDotNormal * color1Adjust;
+						lightDotNormal /= (float) Math.sqrt(nx * nx + ny * ny + nz * nz);
+						color1L += (int) (lightDotNormal * color1Adjust);
 					}
 
 					nx = xVertexNormals[triB];
@@ -600,8 +605,8 @@ public class ModelPusher {
 					nz = zVertexNormals[triB];
 					lightDotNormal = nx * L[0] + ny * L[1] + nz * L[2];
 					if (lightDotNormal > 0) {
-						lightDotNormal /= Math.sqrt(nx * nx + ny * ny + nz * nz);
-						color2L += lightDotNormal * color2Adjust;
+						lightDotNormal /= (float) Math.sqrt(nx * nx + ny * ny + nz * nz);
+						color2L += (int) (lightDotNormal * color2Adjust);
 					}
 
 					nx = xVertexNormals[triC];
@@ -609,8 +614,8 @@ public class ModelPusher {
 					nz = zVertexNormals[triC];
 					lightDotNormal = nx * L[0] + ny * L[1] + nz * L[2];
 					if (lightDotNormal > 0) {
-						lightDotNormal /= Math.sqrt(nx * nx + ny * ny + nz * nz);
-						color3L += lightDotNormal * color3Adjust;
+						lightDotNormal /= (float) Math.sqrt(nx * nx + ny * ny + nz * nz);
+						color3L += (int) (lightDotNormal * color3Adjust);
 					}
 				}
 			}
@@ -685,6 +690,8 @@ public class ModelPusher {
 							color1S = color2S = color3S = tileColorHSL[1];
 							color1L = color2L = color3L = tileColorHSL[2];
 
+							// Let the shader know vanilla shading reversal should be skipped for this face
+							packedAlphaPriorityFlags |= 1 << 20;
 						} else if (tileModel != null && tileModel.getTriangleTextureId() == null) {
 							int faceColorIndex = -1;
 							for (int i = 0; i < tileModel.getTriangleColorA().length; i++) {
@@ -718,6 +725,9 @@ public class ModelPusher {
 									color1H = color2H = color3H = tileColorHSL[0];
 									color1S = color2S = color3S = tileColorHSL[1];
 									color1L = color2L = color3L = tileColorHSL[2];
+
+									// Let the shader know vanilla shading reversal should be skipped for this face
+									packedAlphaPriorityFlags |= 1 << 20;
 								}
 							}
 						}
@@ -729,7 +739,7 @@ public class ModelPusher {
 						modelOverride,
 						model,
 						face,
-						packedAlphaPriority,
+						packedAlphaPriorityFlags,
 						objectType,
 						color1S,
 						color1L,
@@ -747,11 +757,11 @@ public class ModelPusher {
 					color3H = tzHaarRecolored[2][0];
 					color3S = tzHaarRecolored[2][1];
 					color3L = tzHaarRecolored[2][2];
-					packedAlphaPriority = tzHaarRecolored[3][0];
+					packedAlphaPriorityFlags = tzHaarRecolored[3][0];
 				}
 			}
 
-			if (!plugin.configUndoVanillaShadingInCompute) {
+			if (plugin.configUndoVanillaShadingOnCpu) {
 				int maxBrightness1 = 55;
 				int maxBrightness2 = 55;
 				int maxBrightness3 = 55;
@@ -768,9 +778,9 @@ public class ModelPusher {
 			}
 		}
 
-		color1 = packedAlphaPriority | color1H << 10 | color1S << 7 | color1L;
-		color2 = packedAlphaPriority | color2H << 10 | color2S << 7 | color2L;
-		color3 = packedAlphaPriority | color3H << 10 | color3S << 7 | color3L;
+		color1 = packedAlphaPriorityFlags | color1H << 10 | color1S << 7 | color1L;
+		color2 = packedAlphaPriorityFlags | color2H << 10 | color2S << 7 | color2L;
+		color3 = packedAlphaPriorityFlags | color3H << 10 | color3S << 7 | color3L;
 
 		int[] data = sceneContext.modelFaceVertices;
 		data[0] = xVertices[triA];

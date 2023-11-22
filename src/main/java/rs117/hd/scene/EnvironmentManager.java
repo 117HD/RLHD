@@ -253,24 +253,24 @@ public class EnvironmentManager {
 
 		updateTargetSkyColor();
 
+		var overworldEnv = getOverworldEnvironment();
 		var env = getCurrentEnvironment();
 		targetFogDepth = env.getFogDepth();
 		targetGroundFogStart = env.getGroundFogStart();
 		targetGroundFogEnd = env.getGroundFogEnd();
 		targetGroundFogOpacity = env.getGroundFogOpacity();
 		lightningEnabled = env.isLightningEnabled();
-		targetLightPitch = mod(env.getLightPitch(), 360);
-		targetLightYaw = mod(env.getLightYaw(), 360);
 
-		float diff = startLightYaw - targetLightYaw;
-		if (Math.abs(diff) > 180)
-			targetLightYaw += 360 * Math.signum(diff);
-		diff = startLightPitch - targetLightPitch;
-		if (Math.abs(diff) > 180)
-			targetLightPitch += 360 * Math.signum(diff);
+		if (env.isCustomLightDirection()) {
+			targetLightPitch = env.getLightPitch();
+			targetLightYaw = env.getLightYaw();
+		} else {
+			targetLightPitch = overworldEnv.getLightPitch();
+			targetLightYaw = overworldEnv.getLightYaw();
+		}
 
 		if (!config.atmosphericLighting())
-			env = getOverworldEnvironment();
+			env = overworldEnv;
 		targetAmbientStrength = env.getAmbientStrength();
 		targetAmbientColor = env.getAmbientColor();
 		targetDirectionalStrength = env.getDirectionalStrength();
@@ -279,6 +279,16 @@ public class EnvironmentManager {
 		targetUnderglowColor = env.getUnderglowColor();
 		targetUnderwaterCausticsColor = env.getUnderwaterCausticsColor();
 		targetUnderwaterCausticsStrength = env.getUnderwaterCausticsStrength();
+
+		// Prevent transitions from taking the long way around
+		targetLightPitch = mod(targetLightPitch, 360);
+		targetLightYaw = mod(targetLightYaw, 360);
+		float diff = startLightYaw - targetLightYaw;
+		if (Math.abs(diff) > 180)
+			targetLightYaw += 360 * Math.signum(diff);
+		diff = startLightPitch - targetLightPitch;
+		if (Math.abs(diff) > 180)
+			targetLightPitch += 360 * Math.signum(diff);
 	}
 
 	public void updateTargetSkyColor() {

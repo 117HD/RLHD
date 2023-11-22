@@ -319,8 +319,8 @@ public class OpenCLManager {
 	public void initPrograms() throws ShaderException, IOException {
 		try (var stack = MemoryStack.stackPush()) {
 			var template = new Template()
-				.define("UNDO_VANILLA_SHADING", config.undoVanillaShadingInCompute())
-				.define("LEGACY_GREY_COLORS", config.legacyGreyColors())
+				.define("UNDO_VANILLA_SHADING", plugin.configUndoVanillaShadingInCompute)
+				.define("LEGACY_GREY_COLORS", plugin.configLegacyGreyColors)
 				.addIncludePath(OpenCLManager.class);
 			passthroughProgram = compileProgram(stack, template.load("comp_unordered.cl"));
 			passthroughKernel = getKernel(stack, passthroughProgram, KERNEL_NAME_PASSTHROUGH);

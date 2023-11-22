@@ -57,6 +57,7 @@ public enum Environment
 		.setDirectionalStrength(0)
 		.setAmbientStrength(3)
 		.setAllowSkyOverride(false)
+		.setLightDirection(-128, 55)
 	),
 	FROZEN_WASTE_PLATEAU(Area.FROZEN_WASTE_PLATEAU, new Properties()
 		.setFogColor("#252C37")
@@ -284,6 +285,7 @@ public enum Environment
 		.setAmbientColor("#8282B0")
 		.setDirectionalStrength(5.0f)
 		.setDirectionalColor("#DFC0C0")
+		.setLightDirection(-128, 55)
 	),
 	TOA_LOOT_ROOM(Area.TOA_LOOT_ROOM, new Properties()
 		.setFogColor("#050505")
@@ -292,6 +294,7 @@ public enum Environment
 		.setAmbientColor("#ffffff")
 		.setDirectionalStrength(.5f)
 		.setDirectionalColor("#ffffff")
+		.setLightDirection(-128, 55)
 	),
 	TOMBS_OF_AMASCUT(Area.TOMBS_OF_AMASCUT, new Properties()
 		.setFogColor("#050505")
@@ -300,6 +303,7 @@ public enum Environment
 		.setAmbientColor("#ffffff")
 		.setDirectionalStrength(.75f)
 		.setDirectionalColor("#ffffff")
+		.setLightDirection(-128, 55)
 	),
 	BARROWS_CRYPTS(Area.BARROWS_CRYPTS, new Properties()
 		.setFogColor(0, 0, 0)
@@ -456,9 +460,6 @@ public enum Environment
 	SOUL_WARS_RED_TEAM(Area.SOUL_WARS_RED_BASE, new Properties()
 		.setFogColor(28, 21, 13)
 	),
-	TUTORIAL_SOUL_WARS_RED_TEAM(Area.SOUL_WARS_RED_BASE_TUTORIAL, new Properties()
-		.setFogColor(28, 21, 13)
-	),
 
 	SMOKE_DUNGEON(Area.SMOKE_DUNGEON, new Properties()
 		.setFogColor(0, 0, 0)
@@ -500,6 +501,7 @@ public enum Environment
 		.setAmbientStrength(1.0f)
 		.setDirectionalColor(138, 158, 182)
 		.setDirectionalStrength(0.25f)
+		.setLightDirection(-128, 55)
 	),
 	PYRAMID_PLUNDER(Area.PYRAMID_PLUNDER, new Properties()
 		.setFogColor("#190D02")
@@ -658,10 +660,12 @@ public enum Environment
 		.setAmbientStrength(0.3f)
 		.setDirectionalStrength(1.0f)
 		.setAllowSkyOverride(false)
+		.setLightDirection(-128, 55)
 	),
 	SOTE_FRAGMENT_OF_SEREN_ARENA(Area.SOTE_FRAGMENT_OF_SEREN_ARENA, new Properties()
 		.setFogColor(0, 0, 0)
 		.setAllowSkyOverride(false)
+		.setLightDirection(-128, 55)
 	),
 
 	// Ardougne
@@ -730,6 +734,7 @@ public enum Environment
 		.setAmbientStrength(3.5f)
 		.setDirectionalColor("#FFFFFF")
 		.setDirectionalStrength(1.0f)
+		.setLightDirection(-128, 55)
 	),
 	KEBOS_LOWLANDS(Area.KEBOS_LOWLANDS, new Properties()
 		.setFogColor(41, 44, 16)
@@ -746,6 +751,7 @@ public enum Environment
 		.setAmbientStrength(1.0f)
 		.setDirectionalColor(78, 238, 255)
 		.setDirectionalStrength(2.5f)
+		.setLightDirection(-128, 55)
 	),
 	ZEAH_SNOWY_NORTHERN_REGION(Area.ZEAH_SNOWY_NORTHERN_REGION, new Properties()
 		.setFogColor("#AEBDE0")
@@ -1036,8 +1042,9 @@ public enum Environment
 		.setAllowSkyOverride(false)
 	),
 	TRUE_BLOOD_ALTAR(Area.TRUE_BLOOD_ALTAR, new Properties()
-			.setFogColor("#000000")
-			.setFogDepth(25)
+		.setFogColor("#000000")
+		.setFogDepth(25)
+		.setLightDirection(-128, 55)
 	),
 
 	TARNS_LAIR(Area.TARNS_LAIR, new Properties()
@@ -1263,6 +1270,7 @@ public enum Environment
 	private final float groundFogOpacity;
 	private final float lightPitch;
 	private final float lightYaw;
+	private final boolean customLightDirection;
 	private final boolean allowSkyOverride;
 	private final boolean underwater;
 	private final float[] underwaterCausticsColor;
@@ -1292,6 +1300,7 @@ public enum Environment
 		private float groundFogOpacity = 0;
 		private float lightPitch = -128f;
 		private float lightYaw = 55f;
+		private boolean customLightDirection = false;
 		private boolean allowSkyOverride = true;
 		private boolean underwater = false;
 		private float[] underwaterCausticsColor = null;
@@ -1402,6 +1411,7 @@ public enum Environment
 		{
 			this.lightPitch = pitch;
 			this.lightYaw = yaw;
+			this.customLightDirection = true;
 			return this;
 		}
 
@@ -1460,6 +1470,7 @@ public enum Environment
 		this.groundFogOpacity = properties.groundFogOpacity;
 		this.lightPitch = properties.lightPitch;
 		this.lightYaw = properties.lightYaw;
+		this.customLightDirection = properties.customLightDirection;
 		this.allowSkyOverride = properties.allowSkyOverride;
 		this.underwater = properties.underwater;
 		this.underwaterCausticsColor = properties.underwaterCausticsColor == null ?
