@@ -776,8 +776,51 @@ public enum Overlay {
 	STRANGLEWOOD_SNOW(p -> p.area(Area.THE_STRANGLEWOOD_EXTENDED).ids(271).groundMaterial(GroundMaterial.SNOW_1)),
 
 	// Temple of the Eye
-	TEMPLE_OF_THE_EYE_INCORRECT_WATER(Area.TEMPLE_OF_THE_EYE, GroundMaterial.DIRT, p -> p.ids(-100)), // Only visible in low-detail mode
-	TEMPLE_OF_THE_EYE_DIRT(Area.TEMPLE_OF_THE_EYE, GroundMaterial.DIRT, p -> p.ids(202, 203)),
+	TEMPLE_OF_THE_EYE_INCORRECT_WATER(p -> p
+		.ids(-100, 156)
+		.area(Area.TEMPLE_OF_THE_EYE)
+		.groundMaterial(GroundMaterial.TEMPLE_OF_THE_EYE_FLOOR)
+		.blendedAsOpposite(true)
+		.shiftHue(8)
+		.shiftSaturation(3)
+		.shiftLightness(-20)
+	),
+	TEMPLE_OF_THE_EYE_PATH_BLENDING_FIX(p -> p
+		.ids()
+		.area(Area.TEMPLE_OF_THE_EYE_BLEND_FIX)
+		.groundMaterial(GroundMaterial.TEMPLE_OF_THE_EYE_FLOOR)
+		.blendedAsOpposite(true)
+		.shiftHue(27)
+		.saturation(5)
+		.lightness(38)
+	),
+	TEMPLE_OF_THE_EYE_PATH_BLENDING_FIX_TOGGLE(p -> p
+		.ids(203)
+		.area(Area.TEMPLE_OF_THE_EYE_BLEND_FIX)
+		.groundMaterial(GroundMaterial.SAND)
+		.replaceWithIf(TEMPLE_OF_THE_EYE_PATH_BLENDING_FIX, plugin -> plugin.configGroundBlending)
+	),
+	TEMPLE_OF_THE_EYE_CENTER_PLATFORM_181(p -> p
+		.ids(181)
+		.area(Area.TEMPLE_OF_THE_EYE_CENTER_PLATFORM)
+		.groundMaterial(GroundMaterial.ROCKY_CAVE_FLOOR)
+		.blended(false)
+		.lightness(18)
+	),
+	TEMPLE_OF_THE_EYE_CENTER_PLATFORM_204(p -> p
+		.ids(204)
+		.area(Area.TEMPLE_OF_THE_EYE_CENTER_PLATFORM)
+		.groundMaterial(GroundMaterial.ROCKY_CAVE_FLOOR)
+		.blended(false)
+		.lightness(58)
+	),
+	TEMPLE_OF_THE_EYE_SAND_202(202, Area.TEMPLE_OF_THE_EYE, GroundMaterial.SAND, p -> p.shiftLightness(-4).blendedAsOpposite(true)),
+	TEMPLE_OF_THE_EYE_SAND_203(203, Area.TEMPLE_OF_THE_EYE, GroundMaterial.SAND, p -> p.lightness(64)),
+	TEMPLE_OF_THE_EYE_ROCK(p -> p
+		.ids(181, 201)
+		.area(Area.TEMPLE_OF_THE_EYE)
+		.groundMaterial(GroundMaterial.ROCKY_CAVE_FLOOR)
+	),
 
 	// God Wars Dungeon (GWD)
 	GWD_WATER(104, Area.GOD_WARS_DUNGEON, WaterType.ICE_FLAT),

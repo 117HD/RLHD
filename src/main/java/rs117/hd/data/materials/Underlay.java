@@ -395,7 +395,39 @@ public enum Underlay {
 	// Mind Altar
 	MIND_ALTAR_TILE(55, Area.MIND_ALTAR, GroundMaterial.MARBLE_1_SEMIGLOSS, p -> p.blended(false)),
 
-	TEMPLE_OF_THE_EYE(Area.TEMPLE_OF_THE_EYE, GroundMaterial.GRUNGE, p -> p.ids(87, 88, 89)),
+	TEMPLE_OF_THE_EYE_CENTER_PLATFORM_DIRT(p -> p
+		.ids(60)
+		.area(Area.TEMPLE_OF_THE_EYE_CENTER_PLATFORM)
+		.groundMaterial(GroundMaterial.VARIED_DIRT_SHINY)
+		.hue(4)
+		.saturation(1)
+		.lightness(64)
+	),
+	TEMPLE_OF_THE_EYE_DIRT(p -> p
+		.ids(60)
+		.area(Area.TEMPLE_OF_THE_EYE)
+		.groundMaterial(GroundMaterial.VARIED_DIRT_SHINY)
+	),
+	TEMPLE_OF_THE_EYE_ROCK_SHADE_FIX(p -> p
+		.ids()
+		.area(Area.TEMPLE_OF_THE_EYE_ENTRANCE_BRIGHTNESS_FIX)
+		.groundMaterial(GroundMaterial.TEMPLE_OF_THE_EYE_FLOOR)
+		.lightness(38)
+
+	),
+	TEMPLE_OF_THE_EYE_ROCK_SHADE_FIX_TOGGLE(p -> p
+		.ids(87, 88)
+		.area(Area.TEMPLE_OF_THE_EYE_ENTRANCE_BRIGHTNESS_FIX)
+		.groundMaterial(GroundMaterial.TEMPLE_OF_THE_EYE_FLOOR)
+		.replaceWithIf(TEMPLE_OF_THE_EYE_ROCK_SHADE_FIX, plugin -> plugin.configGroundBlending)
+
+	),
+	TEMPLE_OF_THE_EYE_ROCK(p -> p
+		.ids(87, 88, 89)
+		.area(Area.TEMPLE_OF_THE_EYE)
+		.groundMaterial(GroundMaterial.TEMPLE_OF_THE_EYE_FLOOR)
+	),
+
 	ARCEUUS_GROUND(Area.ARCEUUS, GroundMaterial.DIRT, p -> p
 		.ids(2, 3, 23, 24)
 		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_DIRT)
