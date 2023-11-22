@@ -143,7 +143,7 @@ void main() {
         // Vanilla tree textures rely on UVs being clamped horizontally,
         // which HD doesn't do, so we instead opt to hide these fragments
         if (
-            (vMaterialData[0] >> MATERIAL_FLAG_IS_VANILLA_TEXTURED & 1) == 1 &&
+            (vMaterialData[0] >> MATERIAL_FLAG_VANILLA_UVS & 1) == 1 &&
             getMaterialHasTransparency(material1) &&
             (blendedUv.x < -0.01 || blendedUv.x > .99)
         ) {
