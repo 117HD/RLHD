@@ -1390,7 +1390,6 @@
   },
   {
     "description": "GRASS",
-    "baseMaterial": "GRAY_75",
     "objectIds": [
       4333,
       4334,
@@ -1472,7 +1471,6 @@
   },
   {
     "description": "Short grass which shouldn't cast shadows",
-    "baseMaterial": "GRAY_75",
     "objectIds": [
       1257,
       1258,
@@ -1518,7 +1516,7 @@
   },
   {
     "description": "Short grass which shouldn't cast shadows for the winter theme, prevents grass from being too bright",
-    "baseMaterial": "GRAY_50",
+    "baseMaterial": "GRAY_75",
     "seasonalTheme": "WINTER",
     "objectIds": [
       1257,
