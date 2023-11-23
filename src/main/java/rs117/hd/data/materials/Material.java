@@ -695,12 +695,14 @@ public enum Material {
 		.setDisplacementScale(0.2f)
 		.setBrightness(3f)
 	),
-	ABYSSAL_FLOOR(ABYSSAL, p -> p
-		.setSpecular(5f, 400)
-		.setNormalMap(ABYSSAL_N)
-		.setDisplacementMap(ABYSSAL_D)
-		.setDisplacementScale(0.25f)
-		.setBrightness(1.3f)
+	ABYSSAL_2_D,
+	ABYSSAL_2_N,
+	ABYSSAL_2(p -> p
+		.setSpecular(7f, 400)
+		.setNormalMap(ABYSSAL_2_N)
+		.setDisplacementMap(ABYSSAL_2_D)
+		.setDisplacementScale(0.1f)
+		.setBrightness(2f)
 	),
 
 

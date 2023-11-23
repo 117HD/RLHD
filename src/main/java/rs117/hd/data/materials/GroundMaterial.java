@@ -115,7 +115,7 @@ public enum GroundMaterial {
 		Material.GRUNGE_2,
 		Material.GRAVEL_LIGHT
 	),
-	ABYSSAL_FLOOR(Material.ABYSSAL_FLOOR)
+	ABYSSAL_FLOOR(Material.ABYSSAL_2, Material.ABYSSAL)
 	;
 
 	private final Material[] materials;
