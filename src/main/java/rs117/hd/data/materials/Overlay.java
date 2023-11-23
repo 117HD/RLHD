@@ -849,10 +849,7 @@ public enum Overlay {
 	// Runecrafting Alters
 	MIND_ALTAR_TILE_1(3, Area.MIND_ALTAR, GroundMaterial.MARBLE_1_SEMIGLOSS, p -> p.blended(false)),
 	MIND_ALTAR_TILE_4(Area.MIND_ALTAR, GroundMaterial.MARBLE_2_SEMIGLOSS, p -> p.blended(false).ids(4, 10)),
-	LAW_ALTAR_SYMBOL(87, Area.LAW_ALTAR, GroundMaterial.MARBLE_2_GLOSS),
-
-	// Law Altar
-	LAW_ALTAR_SYMBOL(87, Area.LAW_ALTAR, GroundMaterial.DIRT, p -> p.blended(false)),
+	LAW_ALTAR_SYMBOL(87, Area.LAW_ALTAR, GroundMaterial.MARBLE_2_GLOSS, p -> p.blended(false)),
 
 	// Dragon Slayer II
 	DS2_SHIPS_WATER(6, Area.DS2_SHIPS, WaterType.WATER_FLAT),

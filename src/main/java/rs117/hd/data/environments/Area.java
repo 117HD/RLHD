@@ -1965,10 +1965,10 @@ public enum Area
 		new AABB(2576, 3040, 2578, 3013),
 		new AABB(2579, 3036, 2652, 3013),
 		new AABB(2576, 3012, 2652, 2997),
-		new AABB(2438, 2996, 2657, 2816),
+		new AABB(2438, 2996, 2657, 2816)
 	),
 	// Abyss
-	ABYSS(regions(12106, 12107, 12108, 11850, 11851, 12362, 12363),
+	ABYSS(regions(12106, 12107, 12108, 11850, 11851, 12362, 12363)),
 
 	MAINLAND(1024, 4159, 3967, 2496),
 	MAINLAND_EXTENSIONS(merge(
@@ -2015,8 +2015,7 @@ public enum Area
 		MAINLAND_EXTENSIONS
 	),
 	ALL(0, 0, Integer.MAX_VALUE, Integer.MAX_VALUE),
-	NONE(0, 0, 0, 0),
-	;
+	NONE(0, 0, 0, 0);
 
 	public final AABB[] aabbs;
 
