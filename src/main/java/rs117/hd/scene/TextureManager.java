@@ -175,9 +175,9 @@ public class TextureManager {
 		return true;
 	}
 
-	private boolean ensureMaterialsAreLoaded() {
+	private void ensureMaterialsAreLoaded() {
 		if (textureArray != 0)
-			return true;
+			return;
 
 		assert vanillaTexturesAvailable();
 		var textureProvider = client.getTextureProvider();
@@ -342,8 +342,6 @@ public class TextureManager {
 		vanillaTextureIndexToTextureLayer = null;
 		textureProvider.setBrightness(vanillaBrightness);
 		glActiveTexture(TEXTURE_UNIT_UI);
-
-		return true;
 	}
 
 	private BufferedImage loadTextureImage(Material material) {
