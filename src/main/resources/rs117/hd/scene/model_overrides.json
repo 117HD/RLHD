@@ -1518,7 +1518,7 @@
   },
   {
     "description": "Short grass which shouldn't cast shadows for the winter theme, prevents grass from being too bright",
-    "baseMaterial": "GRAY_50",
+    "baseMaterial": "GRAY_75",
     "seasonalTheme": "WINTER",
     "objectIds": [
       1257,
@@ -1569,6 +1569,12 @@
     "flatNormals": true,
     "inheritTileColorType": "UNDERLAY",
     "castShadows": false
+  },
+  {
+    "description": "Kharidian Desert Grass",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [ 3547, 3548, 3549 ],
+    "areas": [ "KHARID_DESERT_REGION" ]
   },
   {
     "description": "Short grass which shouldn't cast shadows and shouldn't inherit tile color",

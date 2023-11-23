@@ -175,7 +175,7 @@ public class TextureManager {
 		return true;
 	}
 
-	public boolean ensureMaterialsAreLoaded() {
+	private boolean ensureMaterialsAreLoaded() {
 		if (textureArray != 0)
 			return true;
 
