@@ -2205,6 +2205,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	public void reuploadScene() {
 		assert client.isClientThread() : "Loading a scene is unsafe while the client can modify it";
+		if (client.getGameState().getState() < GameState.LOGGED_IN.getState())
+			return;
 		Scene scene = client.getScene();
 		loadScene(scene);
 		if (skipScene == scene)
