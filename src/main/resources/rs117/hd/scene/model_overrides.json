@@ -1575,7 +1575,7 @@
     "baseMaterial": "GRAY_75",
     "objectIds": [ 3547, 3548, 3549 ],
     "inheritTileColorType": "NONE",
-    "areas": [ KHARID_DESERT_REGION ]
+    "areas": [ "KHARID_DESERT_REGION" ]
   },
   {
     "description": "Short grass which shouldn't cast shadows and shouldn't inherit tile color",
