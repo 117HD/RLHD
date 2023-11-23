@@ -1224,24 +1224,41 @@
     "description": "TREES",
     "baseMaterial": "BARK",
     "objectIds": [
-      1276,
-      1278,
-      2092,
-      5127,
-      10041,
-      10820,
-      10823,
-      10832,
-      10834,
-      16546,
-      16547,
-      16548,
-      23639,
-      37329
+      1278, 1279, 2409, 9731,
+      10041, 10832, 14309,
+      16546, 16547, 16548, 19167,
+      20845, 23639, 37329, 37967,
+      37968, 42842
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
-    "retainVanillaUvs": true
+    "materialOverrides": {
+      "LEAVES_SIDE": {
+        "textureMaterial": "LEAVES_YELLOW_SIDE"
+      },
+      "LEAVES_TOP": {
+        "textureMaterial": "LEAVES_YELLOW_TOP"
+      }
+    }
+  },
+  {
+    "description": "Tree - Double Tree",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      1276, 1277, 9730, 14308,
+      19165, 20803, 20844, 37965,
+      37966
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "materialOverrides": {
+      "LEAVES_SIDE": {
+        "textureMaterial": "LEAVES_ORANGE_SIDE"
+      },
+      "LEAVES_TOP": {
+        "textureMaterial": "LEAVES_ORANGE_TOP"
+      }
+    }
   },
   {
     "description": "Spirit Trees",
@@ -1328,15 +1345,14 @@
     "description": "Objects - Tree - Yew",
     "baseMaterial": "BARK",
     "objectIds": [
-      8388,
-      8389,
-      8390,
-      10822
-
+      4536, 5121, 8388, 8389,
+      8390, 8503, 8504, 8505,
+      8506, 8507, 8508, 8509,
+      8510, 8511, 8512, 8513,
+      10822, 10823, 33732, 42427
     ],
     "uvType": "BOX",
-    "uvScale": 0.8,
-    "retainVanillaUvs": true
+    "uvScale": 0.8
   },
   {
     "description": "Objects - Tree - Willow",
@@ -1502,7 +1518,7 @@
   },
   {
     "description": "Short grass which shouldn't cast shadows for the winter theme, prevents grass from being too bright",
-    "baseMaterial": "GRAY_50",
+    "baseMaterial": "GRAY_75",
     "seasonalTheme": "WINTER",
     "objectIds": [
       1257,
@@ -1990,6 +2006,8 @@
   {
     "description": "FALADOR_WALLS",
     "baseMaterial": "GRUNGE_1",
+    "uvType": "BOX",
+    "uvScale": 0.3,
     "objectIds": [
       23834,
       23994,
@@ -4847,13 +4865,6 @@
     ]
   },
   {
-    "description": "Fire - Static object",
-    "baseMaterial": "WOOD_GRAIN_1",
-    "objectIds": [
-      26185
-    ]
-  },
-  {
     "description": "Metal Lanturn",
     "baseMaterial": "METALLIC_2_GLOSS",
     "objectIds": [
@@ -5799,7 +5810,8 @@
       12050,
       14486,
       20762,
-      25834
+      25834,
+      43627
     ],
     "uvType": "WORLD_XZ",
     "uvOrientation": 512,
@@ -5856,6 +5868,13 @@
       37804,
       37805,
       37806,
+      43626,
+      43628,
+      43724,
+      43725,
+      43726,
+      43727,
+      43728,
       44730,
       44733,
       44734,
@@ -12355,6 +12374,257 @@
     "objectIds": [ 34533 ],
     "areas": [ [ 1288, 10205, 0 ] ],
     "rotate": 270
+  },
+  {
+    "description": "Textured Bushes",
+    "objectIds": [
+      1116, 1117, 1118, 1119,
+      1120, 1121, 1124, 1125,
+      2357, 2358, 2798, 2799,
+      2800, 2802, 2803, 10586,
+      10778, 17988, 17990, 17991,
+      19427, 19428, 19429, 29715,
+      31571, 41456, 44782, 46584,
+      46585
+    ]
+  },
+  {
+    "description": "Evergreen Trees",
+    "baseMaterial": "BARK",
+    "objectIds": [ 2091, 2092, 27060 ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Snowcovered Evergreen Trees - Textured",
+    "objectIds": [
+      1318, 1319, 40932,
+      40933, 46509, 46510
+    ]
+  },
+  {
+    "description": "Oak Tree",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      4533, 4540, 8462, 8463,
+      8464, 8465, 8466, 6487,
+      9734, 10820, 20806, 37969,
+      37970, 42395, 42831
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "materialOverrides": {
+      "LEAVES_SIDE": {
+        "textureMaterial": "LEAVES_RED_SIDE"
+      },
+      "LEAVES_TOP": {
+        "textureMaterial": "LEAVES_RED_TOP"
+      }
+    }
+  },
+  {
+    "description": "Magic Tree",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      4537, 5127, 8396,
+      8397, 8398, 8399,
+      8400, 8401, 8402,
+      8403, 8404, 8405,
+      8406, 8407, 8408, 8409, 10834
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Guardians Of the Rift - Rocks - Medium",
+    "baseMaterial": "ROCK_4",
+    "objectIds": [
+      43615
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.82,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Guardians Of the Rift - Rocks - Large",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      43613,
+      43614,
+      43616,
+      43617,
+      43618,
+      43619,
+      43620,
+      43621,
+      43622,
+      43623,
+      43624
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.72,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Guardians of the Rift - Marble - Steps",
+    "baseMaterial": "MARBLE_3_SEMIGLOSS",
+    "objectIds": [
+      43557,
+      43568,
+      43569
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 640,
+    "flatNormals": true
+  },
+  {
+    "description": "Guardians of the Rift - Ground Decoration Grunge - Shelf Coral ",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      43659,
+      43660,
+      43661,
+      43662,
+      43663,
+      43666,
+      43667,
+      43668,
+      43669,
+      43670,
+      43671,
+      43672
+    ],
+    "uvType": "GEOMETRY",
+    "flatNormals": true
+  },
+  {
+    "description": "Guardians of the Rift - Large Guardian Remains",
+    "baseMaterial": "ROCK_3_ORE",
+    "objectIds": [
+      43719
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.87
+  },
+  {
+    "description": "Guardians of the Rift - Huge Guardian Remains",
+    "baseMaterial": "ROCK_3_ORE",
+    "objectIds": [
+      43720
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.87
+  },
+  {
+    "description": "Guardians of the Rift - Guardian Remains",
+    "baseMaterial": "ROCK_3_ORE",
+    "objectIds": [
+      43717,
+      43718
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Guardians of the Rift - Guardian Parts",
+    "baseMaterial": "ROCK_3_ORE",
+    "objectIds": [
+      43715,
+      43716
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Guardians of the Rift - Catalytic and Elemental Guides",
+    "baseMaterial": "ROCK_3_ORE",
+    "objectIds": [
+      43752,
+      43753
+    ],
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 256,
+    "uvScale": 0.5
+  },
+  {
+    "description": "Guardians of the Rift - Guardian Steps",
+    "baseMaterial": "ROCK_3_ORE",
+    "objectIds": [
+      43551,
+      43552,
+      43552,
+      43553,
+      43554,
+      43556,
+      43562,
+      43563,
+      43564,
+      43567
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.87
+  },
+  {
+    "description": "Guardians of the Rift - Entrance Statues",
+    "baseMaterial": "ROCK_3_ORE",
+    "objectIds": [
+      43698,
+      43699
+    ],
+    "uvType": "BOX",
+    "uvScale": .7
+  },
+  {
+    "description": "Guardians of the Rift - Guardian Rune Portal Statues",
+    "baseMaterial": "ROCK_3_ORE",
+    "objectIds": [
+      43701,
+      43702,
+      43703,
+      43704,
+      43705,
+      43706,
+      43707,
+      43708,
+      43709,
+      43710,
+      43711,
+      43712
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7
+  },
+  {
+    "description": "Guardians of the Rift - Columns",
+    "baseMaterial": "ROCK_3_ORE",
+    "objectIds": [
+      43523,
+      43524,
+      43525,
+      43526,
+      43527
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Guardians of the Rift - Destroyed Columns Base",
+    "baseMaterial": "ROCK_3_ORE",
+    "objectIds": [
+      43528
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Guardians of the Rift - Destroyed Columns Ground",
+    "baseMaterial": "ROCK_3_ORE",
+    "objectIds": [
+      43529
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 512
   },
   {
     "description": "Abyss - Wall",

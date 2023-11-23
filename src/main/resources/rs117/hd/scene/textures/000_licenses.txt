@@ -17,7 +17,6 @@ WOODEN_GRAIN & ROCK Texture 2021 j-meds.
 Caustics texture by leenor_net, licensed under CC0 1.0 Universal.
 -- https://opengameart.org/content/water-caustics-effect-small
 
-
 STONE Obtained from https://tiled-bg.blogspot.com/2012/11/gray-stone-web-background-texture.html by (V.Hartikainen), texture has been darken.
 -- https://github.com/j-meds
 
@@ -66,9 +65,9 @@ HD_BRICK_BROWN, HD_BRICK_BROWN_N, HD_BRICK_BROWN_D textures from AmbientCG. All 
 HD_SIMPLE_GRAIN_WOOD, HD_SIMPLE_GRAIN_WOOD_N and HD_SIMPLE_GRAIN_WOOD_D textures from AmbientCG. All textures on this site are licensed as CC0.
 -- https://ambientcg.com/view?id=Wood003
 
-
 HD_HAY, HD_HAY_N, HD_HAY_D textures from AmbientCG. All textures on this site are licensed as CC0.
 -- https://ambientcg.com/view?id=ThatchedRoof002A
+
 SNOW_1 and SNOW_1_N textures from AmbientCG. All textures on this site are licensed as CC0.
 -- https://ambientCG.com/a/Snow001
 
@@ -80,5 +79,6 @@ SNOW_3 and SNOW_3_N textures from AmbientCG. All textures on this site are licen
 
 SNOW_4 and SNOW_4_N textures from AmbientCG. All textures on this site are licensed as CC0.
 -- https://ambientCG.com/a/Snow004
+
 ABYSS_WALL_N texture from AmbientCG. All textures on this site are licensed as CC0; Texture is heavily altered; Using Normal Map and Displacement Map
 -- https://ambientcg.com/view?id=Foil001

@@ -9,6 +9,8 @@
 
 package rs117.hd.utils;
 
+import java.awt.Color;
+
 public class ColorUtils {
 	private static final float EPS = 1e-10f;
 
@@ -222,11 +224,18 @@ public class ColorUtils {
 	 * @return float[3] linear rgb values from 0-1
 	 */
 	public static float[] rgb(float r, float g, float b) {
-		return new float[] {
-			srgbToLinear(r / 255f),
-			srgbToLinear(g / 255f),
-			srgbToLinear(b / 255f)
-		};
+		return srgbToLinear(new float[] { r / 255f, g / 255f, b / 255f });
+	}
+
+	/**
+	 * Convert hex color from sRGB to linear RGB in the range 0-1.
+	 *
+	 * @param hex RGB hex color
+	 * @return float[3] linear rgb values from 0-1
+	 */
+	public static float[] rgb(String hex) {
+		Color color = Color.decode(hex);
+		return rgb(color.getRed(), color.getGreen(), color.getBlue());
 	}
 
 	public static int packHsl(float[] hsl) {

@@ -52,8 +52,12 @@ public class ModelOverrideManager {
 				if (entries == null)
 					throw new IOException("Empty or invalid: " + path);
 				for (ModelOverride override : entries) {
-					override.gsonReallyShouldSupportThis();
-					override.normalize();
+					try {
+						override.normalize();
+					} catch (IllegalStateException ex) {
+						log.error("Invalid model override '{}': {}", override.description, ex.getMessage());
+						continue;
+					}
 
 					addOverride(override);
 
@@ -94,7 +98,7 @@ public class ModelOverrideManager {
 	}
 
 	private void addOverride(ModelOverride override) {
-		if (override.seasonalTheme != null && override.seasonalTheme.equals("WINTER") && !plugin.configWinterTheme)
+		if (override.seasonalTheme != null && override.seasonalTheme != plugin.configSeasonalTheme)
 			return;
 
 		for (int npcId : override.npcIds)

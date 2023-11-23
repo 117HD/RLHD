@@ -93,7 +93,11 @@ void main() {
         // Flat normals must be applied separately per vertex
         vec3 normal = gNormal[i];
         OUT.position = gPosition[i];
-        OUT.normal = length(normal) == 0 ? N : normalize(normal);;
+        #if FLAT_SHADING
+        OUT.normal = N;
+        #else
+        OUT.normal = length(normal) == 0 ? N : normalize(normal);
+        #endif
         OUT.texBlend = vec3(0);
         OUT.texBlend[i] = 1;
         OUT.fogAmount = gFogAmount[i];

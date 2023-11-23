@@ -193,11 +193,11 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay {
 			lines.add("Tile type: Paint");
 			Material material = Material.fromVanillaTexture(paint.getTexture());
 			lines.add(String.format("Material: %s (%d)", material.name(), paint.getTexture()));
-			lines.add("JagexHSL: ");
-			lines.add("NW: " + (paint.getNwColor() == 12345678 ? "HIDDEN" : paint.getNwColor()));
-			lines.add("NE: " + (paint.getNeColor() == 12345678 ? "HIDDEN" : paint.getNeColor()));
-			lines.add("SE: " + (paint.getSeColor() == 12345678 ? "HIDDEN" : paint.getSeColor()));
-			lines.add("SW: " + (paint.getSwColor() == 12345678 ? "HIDDEN" : paint.getSwColor()));
+			lines.add("JagexHSL: packed (h, s, l)");
+			lines.add("NW: " + hslString(paint.getNwColor()));
+			lines.add("NE: " + hslString(paint.getNeColor()));
+			lines.add("SE: " + hslString(paint.getSeColor()));
+			lines.add("SW: " + hslString(paint.getSwColor()));
 		}
 		else if (model != null)
 		{
@@ -252,7 +252,7 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay {
 				}
 			}
 
-			lines.add("JagexHSL: ");
+			lines.add("JagexHSL: packed (h, s, l)");
 			int[] CA = model.getTriangleColorA();
 			int[] CB = model.getTriangleColorB();
 			int[] CC = model.getTriangleColorC();
@@ -262,13 +262,13 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay {
 				int b = CB[face];
 				int c = CC[face];
 				if (a == b && b == c) {
-					lines.add(face + ": " + (a == 12345678 ? "HIDDEN" : a));
+					lines.add(face + ": " + hslString(a));
 				} else {
 					lines.add(
 						face + ": [ " +
-						(a == 12345678 ? "HIDDEN" : a) + ", " +
-						(b == 12345678 ? "HIDDEN" : b) + ", " +
-						(c == 12345678 ? "HIDDEN" : c) +
+						hslString(a) + ", " +
+						hslString(b) + ", " +
+						hslString(c) +
 						" ]");
 				}
 			}
@@ -492,5 +492,12 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay {
 		}
 
 		return null;
+	}
+
+	private static String hslString(int color) {
+		if (color == 12345678)
+			return "HIDDEN";
+		int[] hsl = HDUtils.colorIntToHSL(color);
+		return color + " (" + hsl[0] + ", " + hsl[1] + ", " + hsl[2] + ")";
 	}
 }

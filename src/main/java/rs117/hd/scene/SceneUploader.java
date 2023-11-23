@@ -493,54 +493,32 @@ class SceneUploader {
 						neMaterial = sceneContext.vertexTerrainTexture.getOrDefault(neVertexKey, neMaterial);
 						nwMaterial = sceneContext.vertexTerrainTexture.getOrDefault(nwVertexKey, nwMaterial);
 					}
-				}
-				else if (plugin.configGroundTextures && !shouldSkipTile(baseX + tileX, baseY + tileY))
-				{
-					GroundMaterial groundMaterial;
-
+				} else {
+					GroundMaterial groundMaterial = null;
 					Overlay overlay = Overlay.getOverlay(scene, tile, plugin);
 					if (overlay != Overlay.NONE)
 					{
 						groundMaterial = overlay.groundMaterial;
-
 						swColor = HDUtils.colorHSLToInt(overlay.modifyColor(HDUtils.colorIntToHSL(swColor)));
 						seColor = HDUtils.colorHSLToInt(overlay.modifyColor(HDUtils.colorIntToHSL(seColor)));
 						nwColor = HDUtils.colorHSLToInt(overlay.modifyColor(HDUtils.colorIntToHSL(nwColor)));
 						neColor = HDUtils.colorHSLToInt(overlay.modifyColor(HDUtils.colorIntToHSL(neColor)));
-					}
-					else
-					{
+					} else {
 						Underlay underlay = Underlay.getUnderlay(scene, tile, plugin);
-						groundMaterial = underlay.groundMaterial;
-
-						swColor = HDUtils.colorHSLToInt(underlay.modifyColor(HDUtils.colorIntToHSL(swColor)));
-						seColor = HDUtils.colorHSLToInt(underlay.modifyColor(HDUtils.colorIntToHSL(seColor)));
-						nwColor = HDUtils.colorHSLToInt(underlay.modifyColor(HDUtils.colorIntToHSL(nwColor)));
-						neColor = HDUtils.colorHSLToInt(underlay.modifyColor(HDUtils.colorIntToHSL(neColor)));
+						if (underlay != Underlay.NONE) {
+							groundMaterial = underlay.groundMaterial;
+							swColor = HDUtils.colorHSLToInt(underlay.modifyColor(HDUtils.colorIntToHSL(swColor)));
+							seColor = HDUtils.colorHSLToInt(underlay.modifyColor(HDUtils.colorIntToHSL(seColor)));
+							nwColor = HDUtils.colorHSLToInt(underlay.modifyColor(HDUtils.colorIntToHSL(nwColor)));
+							neColor = HDUtils.colorHSLToInt(underlay.modifyColor(HDUtils.colorIntToHSL(neColor)));
+						}
 					}
 
-					swMaterial = groundMaterial.getRandomMaterial(tileZ, baseX + tileX, baseY + tileY);
-					seMaterial = groundMaterial.getRandomMaterial(tileZ, baseX + tileX + 1, baseY + tileY);
-					nwMaterial = groundMaterial.getRandomMaterial(tileZ, baseX + tileX, baseY + tileY + 1);
-					neMaterial = groundMaterial.getRandomMaterial(tileZ, baseX + tileX + 1, baseY + tileY + 1);
-				}
-				else if (plugin.configWinterTheme)
-				{
-					Overlay overlay = Overlay.getOverlay(scene, tile, plugin);
-					if (overlay != Overlay.NONE)
-					{
-						swColor = HDUtils.colorHSLToInt(overlay.modifyColor(HDUtils.colorIntToHSL(swColor)));
-						seColor = HDUtils.colorHSLToInt(overlay.modifyColor(HDUtils.colorIntToHSL(seColor)));
-						nwColor = HDUtils.colorHSLToInt(overlay.modifyColor(HDUtils.colorIntToHSL(nwColor)));
-						neColor = HDUtils.colorHSLToInt(overlay.modifyColor(HDUtils.colorIntToHSL(neColor)));
-					}
-					else
-					{
-						Underlay underlay = Underlay.getUnderlay(scene, tile, plugin);
-						swColor = HDUtils.colorHSLToInt(underlay.modifyColor(HDUtils.colorIntToHSL(swColor)));
-						seColor = HDUtils.colorHSLToInt(underlay.modifyColor(HDUtils.colorIntToHSL(seColor)));
-						nwColor = HDUtils.colorHSLToInt(underlay.modifyColor(HDUtils.colorIntToHSL(nwColor)));
-						neColor = HDUtils.colorHSLToInt(underlay.modifyColor(HDUtils.colorIntToHSL(neColor)));
+					if (plugin.configGroundTextures && groundMaterial != null) {
+						swMaterial = groundMaterial.getRandomMaterial(tileZ, baseX + tileX, baseY + tileY);
+						seMaterial = groundMaterial.getRandomMaterial(tileZ, baseX + tileX + 1, baseY + tileY);
+						nwMaterial = groundMaterial.getRandomMaterial(tileZ, baseX + tileX, baseY + tileY + 1);
+						neMaterial = groundMaterial.getRandomMaterial(tileZ, baseX + tileX + 1, baseY + tileY + 1);
 					}
 				}
 			}
@@ -863,55 +841,43 @@ class SceneUploader {
 							materialB = sceneContext.vertexTerrainTexture.getOrDefault(vertexKeyB, materialB);
 							materialC = sceneContext.vertexTerrainTexture.getOrDefault(vertexKeyC, materialC);
 						}
-					} else if (plugin.configGroundTextures) {
-						// ground textures without blending
-
-						GroundMaterial groundMaterial;
+					} else {
+						GroundMaterial groundMaterial = null;
 
 						if (ProceduralGenerator.isOverlayFace(tile, face)) {
 							Overlay overlay = Overlay.getOverlay(scene, tile, plugin);
-							groundMaterial = overlay.groundMaterial;
+							if (overlay != Overlay.NONE)
+								groundMaterial = overlay.groundMaterial;
 
 							colorA = HDUtils.colorHSLToInt(overlay.modifyColor(HDUtils.colorIntToHSL(colorA)));
 							colorB = HDUtils.colorHSLToInt(overlay.modifyColor(HDUtils.colorIntToHSL(colorB)));
 							colorC = HDUtils.colorHSLToInt(overlay.modifyColor(HDUtils.colorIntToHSL(colorC)));
 						} else {
 							Underlay underlay = Underlay.getUnderlay(scene, tile, plugin);
-							groundMaterial = underlay.groundMaterial;
+							if (underlay != Underlay.NONE)
+								groundMaterial = underlay.groundMaterial;
 
 							colorA = HDUtils.colorHSLToInt(underlay.modifyColor(HDUtils.colorIntToHSL(colorA)));
 							colorB = HDUtils.colorHSLToInt(underlay.modifyColor(HDUtils.colorIntToHSL(colorB)));
 							colorC = HDUtils.colorHSLToInt(underlay.modifyColor(HDUtils.colorIntToHSL(colorC)));
 						}
 
-						materialA = groundMaterial.getRandomMaterial(
-							tileZ,
-							baseX + tileX + (int) Math.floor((float) localVertices[0][0] / LOCAL_TILE_SIZE),
-							baseY + tileY + (int) Math.floor((float) localVertices[0][1] / LOCAL_TILE_SIZE)
-						);
-						materialB = groundMaterial.getRandomMaterial(
-							tileZ,
-							baseX + tileX + (int) Math.floor((float) localVertices[1][0] / LOCAL_TILE_SIZE),
-							baseY + tileY + (int) Math.floor((float) localVertices[1][1] / LOCAL_TILE_SIZE)
-						);
-						materialC = groundMaterial.getRandomMaterial(
-							tileZ,
-							baseX + tileX + (int) Math.floor((float) localVertices[2][0] / LOCAL_TILE_SIZE),
-							baseY + tileY + (int) Math.floor((float) localVertices[2][1] / LOCAL_TILE_SIZE)
-						);
-					} else if (plugin.configWinterTheme) {
-						if (ProceduralGenerator.isOverlayFace(tile, face)) {
-							Overlay overlay = Overlay.getOverlay(scene, tile, plugin);
-
-							colorA = HDUtils.colorHSLToInt(overlay.modifyColor(HDUtils.colorIntToHSL(colorA)));
-							colorB = HDUtils.colorHSLToInt(overlay.modifyColor(HDUtils.colorIntToHSL(colorB)));
-							colorC = HDUtils.colorHSLToInt(overlay.modifyColor(HDUtils.colorIntToHSL(colorC)));
-						} else {
-							Underlay underlay = Underlay.getUnderlay(scene, tile, plugin);
-
-							colorA = HDUtils.colorHSLToInt(underlay.modifyColor(HDUtils.colorIntToHSL(colorA)));
-							colorB = HDUtils.colorHSLToInt(underlay.modifyColor(HDUtils.colorIntToHSL(colorB)));
-							colorC = HDUtils.colorHSLToInt(underlay.modifyColor(HDUtils.colorIntToHSL(colorC)));
+						if (plugin.configGroundTextures && groundMaterial != null) {
+							materialA = groundMaterial.getRandomMaterial(
+								tileZ,
+								baseX + tileX + (int) Math.floor((float) localVertices[0][0] / LOCAL_TILE_SIZE),
+								baseY + tileY + (int) Math.floor((float) localVertices[0][1] / LOCAL_TILE_SIZE)
+							);
+							materialB = groundMaterial.getRandomMaterial(
+								tileZ,
+								baseX + tileX + (int) Math.floor((float) localVertices[1][0] / LOCAL_TILE_SIZE),
+								baseY + tileY + (int) Math.floor((float) localVertices[1][1] / LOCAL_TILE_SIZE)
+							);
+							materialC = groundMaterial.getRandomMaterial(
+								tileZ,
+								baseX + tileX + (int) Math.floor((float) localVertices[2][0] / LOCAL_TILE_SIZE),
+								baseY + tileY + (int) Math.floor((float) localVertices[2][1] / LOCAL_TILE_SIZE)
+							);
 						}
 					}
 				} else {
@@ -1124,12 +1090,6 @@ class SceneUploader {
 		sceneContext.stagingBufferUvs.put(1, 1, 0, packedMaterialData);
 		sceneContext.stagingBufferUvs.put(0, 1, 0, packedMaterialData);
 		sceneContext.stagingBufferUvs.put(1, 0, 0, packedMaterialData);
-	}
-
-	private boolean shouldSkipTile(int worldX, int worldY) {
-		// Horrible hack to solve for poorly textured bridge west of shilo
-		// https://github.com/RS117/RLHD/issues/166
-		return worldX == 2796 && worldY >= 2961 && worldY <= 2967;
 	}
 
 	public static int packTerrainData(boolean isTerrain, int waterDepth, WaterType waterType, int plane) {

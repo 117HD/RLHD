@@ -76,9 +76,12 @@ import org.lwjgl.opengl.*;
 import org.lwjgl.system.Callback;
 import org.lwjgl.system.Configuration;
 import rs117.hd.config.AntiAliasingMode;
+import rs117.hd.config.SeasonalTheme;
+import rs117.hd.config.ShadingMode;
 import rs117.hd.config.ShadowMode;
 import rs117.hd.config.UIScalingMode;
 import rs117.hd.data.WaterType;
+import rs117.hd.data.environments.Area;
 import rs117.hd.data.materials.Material;
 import rs117.hd.model.ModelHasher;
 import rs117.hd.model.ModelOffsets;
@@ -396,26 +399,30 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public boolean configProjectileLights;
 	public boolean configNpcLights;
 	public boolean configHideFakeShadows;
-	public boolean configWinterTheme;
 	public boolean configLegacyGreyColors;
 	public boolean configModelBatching;
 	public boolean configModelCaching;
 	public boolean configShadowsEnabled;
 	public boolean configExpandShadowDraw;
 	public boolean configUseFasterModelHashing;
+	public boolean configRetainVanillaShading;
 	public boolean configUndoVanillaShadingInCompute;
+	public boolean configUndoVanillaShadingOnCpu;
 	public boolean configPreserveVanillaNormals;
 	public ShadowMode configShadowMode;
+	public SeasonalTheme configSeasonalTheme;
 	public int configMaxDynamicLights;
+
+	public boolean enableDetailedTimers;
+	public boolean useLowMemoryMode;
 
 	private boolean lwjglInitialized;
 	private boolean hasLoggedIn;
 	private boolean redrawPreviousFrame;
+	private boolean isInChambersOfXeric;
+	private boolean isInHouse;
 	private Scene skipScene;
-
-	public boolean enableDetailedTimers;
-	public boolean useLowMemoryMode;
-	public boolean isInChambersOfXeric;
+	private int previousPlane;
 
 	private final Map<Long, ModelOffsets> frameModelInfoMap = new HashMap<>();
 
@@ -571,6 +578,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				hasLoggedIn = client.getGameState().getState() > GameState.LOGGING_IN.getState();
 				redrawPreviousFrame = false;
 				skipScene = null;
+				isInHouse = false;
 				isInChambersOfXeric = false;
 
 				if (client.getGameState() == GameState.LOGGED_IN) {
@@ -753,8 +761,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.define("SHADOW_MODE", configShadowMode)
 			.define("SHADOW_TRANSPARENCY", config.enableShadowTransparency())
 			.define("VANILLA_COLOR_BANDING", config.vanillaColorBanding())
-			.define("UNDO_VANILLA_SHADING", config.undoVanillaShadingInCompute())
-			.define("LEGACY_GREY_COLORS", config.legacyGreyColors())
+			.define("UNDO_VANILLA_SHADING", configUndoVanillaShadingInCompute)
+			.define("LEGACY_GREY_COLORS", configLegacyGreyColors)
+			.define("DISABLE_DIRECTIONAL_SHADING", config.shadingMode() != ShadingMode.DEFAULT)
+			.define("FLAT_SHADING", config.flatShading())
 			.addIncludePath(SHADER_PATH);
 
 		glSceneProgram = PROGRAM.compile(template);
@@ -2212,7 +2222,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Override
 	public void loadScene(Scene scene) {
-		if (skipScene != scene && HDUtils.sceneIsTheGauntlet(scene)) {
+		if (skipScene != scene && HDUtils.sceneIntersects(scene, getExpandedMapLoadingChunks(), Area.THE_GAUNTLET)) {
 			// Some game objects in The Gauntlet are spawned in too late for the initial scene load,
 			// so we skip the first scene load and trigger another scene load the next game tick
 			reloadSceneNextGameTick();
@@ -2330,6 +2340,24 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		sceneContext.stagingBufferVertices.clear();
 		sceneContext.stagingBufferUvs.clear();
 		sceneContext.stagingBufferNormals.clear();
+
+		if (sceneContext.intersects(Area.PLAYER_OWNED_HOUSE)) {
+			if (!isInHouse) {
+				// POH takes 1 game tick to enter, then 2 game ticks to load per floor
+				reloadSceneIn(7);
+				isInHouse = true;
+			}
+
+			isInChambersOfXeric = false;
+		} else {
+			// Avoid an unnecessary scene reload if the player is leaving the POH
+			if (isInHouse) {
+				abortSceneReload();
+				isInHouse = false;
+			}
+
+			isInChambersOfXeric = sceneContext.intersects(Area.CHAMBERS_OF_XERIC);
+		}
 	}
 
 	public void reloadSceneNextGameTick()
@@ -2355,7 +2383,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		configProjectileLights = config.projectileLights();
 		configNpcLights = config.npcLights();
 		configHideFakeShadows = config.hideFakeShadows();
-		configWinterTheme = config.winterTheme();
 		configLegacyGreyColors = config.legacyGreyColors();
 		configModelBatching = config.modelBatching();
 		configModelCaching = config.modelCaching();
@@ -2364,6 +2391,16 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		configUseFasterModelHashing = config.fasterModelHashing();
 		configUndoVanillaShadingInCompute = config.undoVanillaShadingInCompute();
 		configPreserveVanillaNormals = config.preserveVanillaNormals();
+		configSeasonalTheme = config.seasonalTheme();
+		configRetainVanillaShading = config.shadingMode() == ShadingMode.VANILLA;
+		if (configRetainVanillaShading) {
+			// Disable shading reversal entirely
+			configUndoVanillaShadingOnCpu = false;
+			configUndoVanillaShadingInCompute = false;
+		} else {
+			// Do shading reversal on CPU if it's not being done in compute
+			configUndoVanillaShadingOnCpu = !configUndoVanillaShadingInCompute;
+		}
 	}
 
 	@Subscribe
@@ -2404,8 +2441,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					case KEY_ATMOSPHERIC_LIGHTING:
 						environmentManager.reset();
 						break;
-					case KEY_WINTER_THEME:
-						environmentManager.reset();
+					case KEY_SEASONAL_THEME:
+						environmentManager.triggerTransition();
 						modelOverrideManager.reload();
 						// fall-through
 					case KEY_ANISOTROPIC_FILTERING_LEVEL:
@@ -2425,6 +2462,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					case KEY_LEGACY_GREY_COLORS:
 					case KEY_UNDO_VANILLA_SHADING_IN_COMPUTE:
 					case KEY_PRESERVE_VANILLA_NORMALS:
+					case KEY_SHADING_MODE:
+					case KEY_FLAT_SHADING:
 						recompilePrograms();
 						modelPusher.clearModelCache();
 						reuploadScene();
@@ -2929,6 +2968,16 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			if (gameTicksUntilSceneReload == 1)
 				reuploadScene();
 			--gameTicksUntilSceneReload;
+		}
+
+		// reload the scene if the player is in a house and their plane changed
+		// this greatly improves the performance as it keeps the scene buffer up to date
+		if (isInHouse) {
+			int plane = client.getPlane();
+			if (previousPlane != plane) {
+				reloadSceneNextGameTick();
+				previousPlane = plane;
+			}
 		}
 	}
 
