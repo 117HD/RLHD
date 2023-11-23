@@ -4,7 +4,10 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
+import net.runelite.api.events.*;
 import net.runelite.client.config.Keybind;
+import net.runelite.client.eventbus.EventBus;
+import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.input.KeyListener;
 import net.runelite.client.input.KeyManager;
 import rs117.hd.data.environments.Area;
@@ -16,6 +19,9 @@ public class DeveloperTools implements KeyListener {
 	// This could be part of the config if we had developer mode config sections
 	private static final Keybind KEY_TOGGLE_TILE_INFO = new Keybind(KeyEvent.VK_F3, InputEvent.CTRL_DOWN_MASK);
 	private static final Keybind KEY_TOGGLE_FRAME_TIMINGS = new Keybind(KeyEvent.VK_F4, InputEvent.CTRL_DOWN_MASK);
+
+	@Inject
+	private EventBus eventBus;
 
 	@Inject
 	private KeyManager keyManager;
@@ -30,7 +36,14 @@ public class DeveloperTools implements KeyListener {
 	private boolean frameTimingsOverlayEnabled = false;
 
 	public void activate() {
+		eventBus.register(this);
+
+		// Don't do anything else unless we're in the development environment
+		if (!Props.DEVELOPMENT)
+			return;
+
 		keyManager.registerKeyListener(this);
+
 		tileInfoOverlay.setActive(tileInfoOverlayEnabled);
 		frameTimingsOverlay.setActive(frameTimingsOverlayEnabled);
 
@@ -49,9 +62,30 @@ public class DeveloperTools implements KeyListener {
 	}
 
 	public void deactivate() {
+		eventBus.unregister(this);
 		keyManager.unregisterKeyListener(this);
 		tileInfoOverlay.setActive(false);
 		frameTimingsOverlay.setActive(false);
+	}
+
+	@Subscribe
+	public void onCommandExecuted(CommandExecuted commandExecuted) {
+		if (!commandExecuted.getCommand().equalsIgnoreCase("117hd"))
+			return;
+
+		String[] args = commandExecuted.getArguments();
+		if (args.length < 1)
+			return;
+
+		String action = args[0].toLowerCase();
+		switch (action) {
+			case "tileinfo":
+				tileInfoOverlay.setActive(tileInfoOverlayEnabled = !tileInfoOverlayEnabled);
+				break;
+			case "timers":
+				frameTimingsOverlay.setActive(frameTimingsOverlayEnabled = !frameTimingsOverlayEnabled);
+				break;
+		}
 	}
 
 	@Override
@@ -68,14 +102,8 @@ public class DeveloperTools implements KeyListener {
 	}
 
 	@Override
-	public void keyReleased(KeyEvent event)
-	{
-
-	}
+	public void keyReleased(KeyEvent event) {}
 
 	@Override
-	public void keyTyped(KeyEvent event)
-	{
-
-	}
+	public void keyTyped(KeyEvent event) {}
 }

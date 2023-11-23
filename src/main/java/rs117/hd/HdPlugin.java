@@ -48,7 +48,6 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.swing.SwingUtilities;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -202,10 +201,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Inject
 	private ModelHasher modelHasher;
-
-	@Inject
-	@Named("developerMode")
-	private boolean developerMode;
 
 	@Inject
 	private DeveloperTools developerTools;
@@ -530,11 +525,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				}
 
 				updateCachedConfigs();
-
-				if (developerMode) {
-					developerTools.activate();
-					enableDetailedTimers = true;
-				}
+				developerTools.activate();
 
 				modelPassthroughBuffer = new GpuIntBuffer();
 
@@ -613,9 +604,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			client.setUnlockedFps(false);
 			client.setExpandedMapLoading(0);
 
-			if (developerMode)
-				developerTools.deactivate();
-
+			developerTools.deactivate();
 			modelPusher.shutDown();
 			modelOverrideManager.shutDown();
 			lightManager.shutDown();
