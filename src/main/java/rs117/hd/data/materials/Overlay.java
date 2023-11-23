@@ -216,7 +216,7 @@ public enum Overlay {
 		.groundMaterial(GroundMaterial.MARBLE_2)
 		.area(Area.KHARID_DESERT_REGION)
 		.blended(false)
-		.shiftLightness(20)),
+		.shiftLightness(10)),
 	MAGE_TRAINING_ARENA_FLOOR(-122, Area.MAGE_TRAINING_ARENA, GroundMaterial.TILES_2X2_2_GLOSS, p -> p.blended(false)),
 	AL_KHARID_WELL_FIX(21, Area.AL_KHARID_WELL, GroundMaterial.DIRT, p -> p.blended(false)),
 	AL_KHARID_FLOOR_1(26, Area.AL_KHARID_BUILDINGS, GroundMaterial.TILES_2X2_2_SEMIGLOSS, p -> p
