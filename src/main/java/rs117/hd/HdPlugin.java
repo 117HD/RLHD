@@ -45,6 +45,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -411,6 +412,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public boolean enableDetailedTimers;
 	public boolean useLowMemoryMode;
 
+	private boolean isActive;
 	private boolean lwjglInitialized;
 	private boolean hasLoggedIn;
 	private boolean redrawPreviousFrame;
@@ -419,6 +421,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private Scene skipScene;
 	private int previousPlane;
 
+	private final ConcurrentHashMap.KeySetView<String, ?> pendingConfigChanges = ConcurrentHashMap.newKeySet();
 	private final Map<Long, ModelOffsets> frameModelInfoMap = new HashMap<>();
 
 	// Camera position and orientation may be reused from the old scene while hopping, prior to drawScene being called
@@ -566,6 +569,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				modelPusher.startUp();
 				lightManager.startUp();
 
+				isActive = true;
 				hasLoggedIn = client.getGameState().getState() > GameState.LOGGING_IN.getState();
 				redrawPreviousFrame = false;
 				skipScene = null;
@@ -592,6 +596,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Override
 	protected void shutDown() {
+		isActive = false;
 		FileWatcher.destroy();
 
 		clientThread.invoke(() -> {
@@ -611,6 +616,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			environmentManager.reset();
 
 			if (lwjglInitialized) {
+				lwjglInitialized = false;
 				waitUntilIdle();
 
 				textureManager.shutDown();
@@ -718,9 +724,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	private void initPrograms() throws ShaderException, IOException
 	{
-		configShadowMode = config.shadowMode();
-		configShadowsEnabled = configShadowMode != ShadowMode.OFF;
-
 		String versionHeader = OSType.getOSType() == OSType.Linux ? LINUX_VERSION_HEADER : WINDOWS_VERSION_HEADER;
 		Template template = new Template()
 			.addInclude("VERSION_HEADER", versionHeader)
@@ -911,7 +914,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	public void recompilePrograms() throws ShaderException, IOException {
-		waitUntilIdle();
 		destroyPrograms();
 		initPrograms();
 	}
@@ -1599,6 +1601,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			log.info("Recompiling shaders: {}", path);
 			clientThread.invoke(() -> {
 				try {
+					waitUntilIdle();
 					recompilePrograms();
 				} catch (ShaderException | IOException ex) {
 					log.error("Error while recompiling shaders:", ex);
@@ -2058,8 +2061,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				// Reset
 				glBindFramebuffer(GL_READ_FRAMEBUFFER, awtContext.getFramebuffer(false));
 			}
-
-			frameModelInfoMap.clear();
 		} else {
 			glClearColor(0, 0, 0, 1f);
 			glClear(GL_COLOR_BUFFER_BIT);
@@ -2086,8 +2087,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
 
 		frameTimer.endFrameAndReset();
-
+		frameModelInfoMap.clear();
 		checkGLErrors();
+
+		processPendingConfigChanges();
 	}
 
 	private void drawUi(int overlayColor, final int canvasHeight, final int canvasWidth) {
@@ -2365,6 +2368,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	private void updateCachedConfigs() {
+		configShadowMode = config.shadowMode();
+		configShadowsEnabled = configShadowMode != ShadowMode.OFF;
 		configGroundTextures = config.groundTextures();
 		configGroundBlending = config.groundBlending();
 		configModelTextures = config.modelTextures();
@@ -2394,87 +2399,144 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Subscribe
 	public void onConfigChanged(ConfigChanged event) {
-		if (!event.getGroup().equals(CONFIG_GROUP))
+		// Exit if the plugin is off, the config is unrelated to the plugin, or if switching to a profile with the plugin turned off
+		if (!isActive || !event.getGroup().equals(CONFIG_GROUP) || !pluginManager.isPluginEnabled(this))
 			return;
 
-		clientThread.invoke(() -> {
-			if (!lwjglInitialized)
-				return; // exit if the plugin has stopped
+		pendingConfigChanges.add(event.getKey());
+	}
+
+	private void processPendingConfigChanges() {
+		if (!SwingUtilities.isEventDispatchThread()) {
+			SwingUtilities.invokeLater(this::processPendingConfigChanges);
+			return;
+		}
+
+		clientThread.invokeLater(() -> {
+			if (pendingConfigChanges.isEmpty())
+				return;
 
 			try {
 				updateCachedConfigs();
 
-				switch (event.getKey()) {
-					case KEY_EXPANDED_MAP_LOADING_CHUNKS:
-						client.setExpandedMapLoading(getExpandedMapLoadingChunks());
-						if (client.getGameState() == GameState.LOGGED_IN)
-							client.setGameState(GameState.LOADING);
-						break;
-					case KEY_COLOR_BLINDNESS:
-					case KEY_MACOS_INTEL_WORKAROUND:
-					case KEY_MAX_DYNAMIC_LIGHTS:
-					case KEY_NORMAL_MAPPING:
-					case KEY_PARALLAX_OCCLUSION_MAPPING:
-					case KEY_UI_SCALING_MODE:
-					case KEY_VANILLA_COLOR_BANDING:
-						recompilePrograms();
-						break;
-					case KEY_SHADOW_MODE:
-					case KEY_SHADOW_TRANSPARENCY:
-						recompilePrograms();
-						// fall-through
-					case KEY_SHADOW_RESOLUTION:
-						destroyShadowMapFbo();
-						initShadowMapFbo();
-						break;
-					case KEY_ATMOSPHERIC_LIGHTING:
-						environmentManager.reset();
-						break;
-					case KEY_SEASONAL_THEME:
-						environmentManager.triggerTransition();
-						modelOverrideManager.reload();
-						// fall-through
-					case KEY_ANISOTROPIC_FILTERING_LEVEL:
-					case KEY_GROUND_TEXTURES:
-					case KEY_MODEL_TEXTURES:
-					case KEY_TEXTURE_RESOLUTION:
-					case KEY_HD_INFERNAL_CAPE:
-						textureManager.reloadTextures();
-						// fall-through
-					case KEY_GROUND_BLENDING:
-					case KEY_FILL_GAPS_IN_TERRAIN:
-					case KEY_HD_TZHAAR_RESKIN:
-					case KEY_HIDE_FAKE_SHADOWS:
-						modelPusher.clearModelCache();
-						reuploadScene();
-						break;
-					case KEY_LEGACY_GREY_COLORS:
-					case KEY_UNDO_VANILLA_SHADING_IN_COMPUTE:
-					case KEY_PRESERVE_VANILLA_NORMALS:
-					case KEY_SHADING_MODE:
-					case KEY_FLAT_SHADING:
-						recompilePrograms();
-						modelPusher.clearModelCache();
-						reuploadScene();
-						break;
-					case KEY_FPS_TARGET:
-					case KEY_UNLOCK_FPS:
-					case KEY_VSYNC_MODE:
-						setupSyncMode();
-						break;
-					case KEY_MODEL_CACHE_SIZE:
-					case KEY_MODEL_CACHING:
-						modelPusher.shutDown();
-						modelPusher.startUp();
-						break;
-					case KEY_LOW_MEMORY_MODE:
-						shutDown();
-						startUp();
-						break;
+				log.debug("Processing {} pending config changes: {}", pendingConfigChanges.size(), pendingConfigChanges);
+
+				boolean recompilePrograms = false;
+				boolean recreateShadowMapFbo = false;
+				boolean environmentManagerReload = false;
+				boolean modelOverrideManagerReload = false;
+				boolean reloadTexturesAndMaterials = false;
+				boolean modelPusherClearModelCache = false;
+				boolean modelPusherReallocate = false;
+				boolean reuploadScene = false;
+
+				for (var key : pendingConfigChanges) {
+					switch (key) {
+						case KEY_EXPANDED_MAP_LOADING_CHUNKS:
+							client.setExpandedMapLoading(getExpandedMapLoadingChunks());
+							if (client.getGameState() == GameState.LOGGED_IN)
+								client.setGameState(GameState.LOADING);
+							break;
+						case KEY_COLOR_BLINDNESS:
+						case KEY_MACOS_INTEL_WORKAROUND:
+						case KEY_MAX_DYNAMIC_LIGHTS:
+						case KEY_NORMAL_MAPPING:
+						case KEY_PARALLAX_OCCLUSION_MAPPING:
+						case KEY_UI_SCALING_MODE:
+						case KEY_VANILLA_COLOR_BANDING:
+							recompilePrograms = true;
+							break;
+						case KEY_SHADOW_MODE:
+						case KEY_SHADOW_TRANSPARENCY:
+							recompilePrograms = true;
+							// fall-through
+						case KEY_SHADOW_RESOLUTION:
+							recreateShadowMapFbo = true;
+							break;
+						case KEY_ATMOSPHERIC_LIGHTING:
+							environmentManagerReload = true;
+							break;
+						case KEY_SEASONAL_THEME:
+							environmentManagerReload = true;
+							modelOverrideManagerReload = true;
+							// fall-through
+						case KEY_ANISOTROPIC_FILTERING_LEVEL:
+						case KEY_GROUND_TEXTURES:
+						case KEY_MODEL_TEXTURES:
+						case KEY_TEXTURE_RESOLUTION:
+						case KEY_HD_INFERNAL_CAPE:
+							reloadTexturesAndMaterials = true;
+							// fall-through
+						case KEY_GROUND_BLENDING:
+						case KEY_FILL_GAPS_IN_TERRAIN:
+						case KEY_HD_TZHAAR_RESKIN:
+						case KEY_HIDE_FAKE_SHADOWS:
+							modelPusherClearModelCache = true;
+							reuploadScene = true;
+							break;
+						case KEY_LEGACY_GREY_COLORS:
+						case KEY_UNDO_VANILLA_SHADING_IN_COMPUTE:
+						case KEY_PRESERVE_VANILLA_NORMALS:
+						case KEY_SHADING_MODE:
+						case KEY_FLAT_SHADING:
+							recompilePrograms = true;
+							modelPusherClearModelCache = true;
+							reuploadScene = true;
+							break;
+						case KEY_FPS_TARGET:
+						case KEY_UNLOCK_FPS:
+						case KEY_VSYNC_MODE:
+							setupSyncMode();
+							break;
+						case KEY_MODEL_CACHE_SIZE:
+						case KEY_MODEL_CACHING:
+							modelPusherReallocate = true;
+							break;
+						case KEY_LOW_MEMORY_MODE:
+							shutDown();
+							startUp();
+							// since we restarted everything anyway, skip all other pending changes
+							return;
+					}
 				}
-			} catch (ShaderException | IOException ex) {
+
+				if (reloadTexturesAndMaterials || recompilePrograms)
+					waitUntilIdle();
+
+				if (reloadTexturesAndMaterials) {
+					textureManager.reloadTextures();
+					recompilePrograms = true;
+					modelPusherClearModelCache = true;
+				} else if (modelOverrideManagerReload) {
+					modelOverrideManager.reload();
+					modelPusherClearModelCache = true;
+				}
+
+				if (recompilePrograms)
+					recompilePrograms();
+
+				if (modelPusherReallocate) {
+					modelPusher.shutDown();
+					modelPusher.startUp();
+				} else if (modelPusherClearModelCache) {
+					modelPusher.clearModelCache();
+				}
+
+				if (reuploadScene)
+					reuploadScene();
+
+				if (recreateShadowMapFbo) {
+					destroyShadowMapFbo();
+					initShadowMapFbo();
+				}
+
+				if (environmentManagerReload)
+					environmentManager.triggerTransition();
+			} catch (Throwable ex) {
 				log.error("Error while changing settings:", ex);
 				stopPlugin();
+			} finally {
+				pendingConfigChanges.clear();
 			}
 		});
 	}
