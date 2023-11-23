@@ -409,7 +409,7 @@ public enum Environment
 
 	DRAYNOR_MANOR(Area.DRAYNOR_MANOR, new Properties()
 		.setFogColor(15, 14, 13)
-		.setFogDepth(30)
+		.setFogDepth(50)
 		.setAmbientColor("#615C57")
 		.setAmbientStrength(1.5f)
 		.setDirectionalColor("#FFBCB7")
