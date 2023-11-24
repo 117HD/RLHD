@@ -541,6 +541,7 @@ public interface HdPluginConfig extends Config
 		name = "Default Sky",
 		description =
 			"Specify a sky color to use when the current area doesn't have a sky color defined.<br>" +
+			"This only applies when the default summer seasonal theme is active.<br>" +
 			"If set to 'RuneLite Skybox', the sky color from RuneLite's Skybox plugin will be used.<br>" +
 			"If set to 'Old School Black', the sky will be black and water will remain blue, but for any<br>" +
 			"other option, the water color will be influenced by the sky color.",
@@ -840,7 +841,9 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = KEY_SHADING_MODE,
 		name = "Shading mode",
-		description = "If you prefer playing without shadows, maybe you'll prefer vanilla or no shading as well.",
+		description =
+			"If you prefer playing without shadows, maybe you'll prefer vanilla or no shading as well.<br>" +
+			"Keep in mind, with vanilla shading used alongside shadows, you can end up with double shading.",
 		section = experimentalSettings
 	)
 	default ShadingMode shadingMode() {
@@ -855,6 +858,17 @@ public interface HdPluginConfig extends Config
 		section = experimentalSettings
 	)
 	default boolean flatShading() {
+		return false;
+	}
+
+	String KEY_DECOUPLE_WATER_FROM_SKY_COLOR = "experimentalDecoupleWaterFromSkyColor";
+	@ConfigItem(
+		keyName = KEY_DECOUPLE_WATER_FROM_SKY_COLOR,
+		name = "Decouple water from sky color",
+		description = "Some people prefer the water staying blue even with a different sky color active.",
+		section = experimentalSettings
+	)
+	default boolean decoupleSkyAndWaterColor() {
 		return false;
 	}
 

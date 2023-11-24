@@ -12,6 +12,7 @@ import net.runelite.client.ui.overlay.OverlayPanel;
 import net.runelite.client.ui.overlay.OverlayPosition;
 import net.runelite.client.ui.overlay.components.LineComponent;
 import net.runelite.client.ui.overlay.components.TitleComponent;
+import rs117.hd.HdPlugin;
 
 @Singleton
 public class FrameTimingsOverlay extends OverlayPanel implements FrameTimer.Listener {
@@ -24,10 +25,11 @@ public class FrameTimingsOverlay extends OverlayPanel implements FrameTimer.List
 	private final ArrayDeque<FrameTimings> frames = new ArrayDeque<>();
 
 	@Inject
-	public FrameTimingsOverlay() {
+	public FrameTimingsOverlay(HdPlugin plugin) {
+		super(plugin);
 		setLayer(OverlayLayer.ABOVE_SCENE);
-		setPreferredPosition(OverlayPosition.CANVAS_TOP_RIGHT);
-		setPreferredSize(new Dimension(250, 200));
+		setPosition(OverlayPosition.TOP_RIGHT);
+		panelComponent.setPreferredSize(new Dimension(215, 200));
 	}
 
 	public void setActive(boolean active) {

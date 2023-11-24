@@ -50,10 +50,9 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay {
 	private Point mousePos;
 	private boolean ctrlPressed;
 
-	@Inject
 	public TileInfoOverlay() {
-		setPosition(OverlayPosition.DYNAMIC);
 		setLayer(OverlayLayer.ABOVE_SCENE);
+		setPosition(OverlayPosition.DYNAMIC);
 	}
 
 	public void setActive(boolean active) {

@@ -292,9 +292,7 @@ public class EnvironmentManager {
 	}
 
 	public void updateTargetSkyColor() {
-		Environment env = currentEnvironment;
-		if (!env.isCustomFogColor())
-			env = getOverworldEnvironment();
+		Environment env = getCurrentEnvironment();
 
 		if (!env.isCustomFogColor() || env.isAllowSkyOverride() && config.overrideSky()) {
 			DefaultSkyColor sky = config.defaultSkyColor();
@@ -307,8 +305,11 @@ public class EnvironmentManager {
 		}
 
 		// Override with decoupled water/sky color if present
-		if(currentEnvironment.isCustomWaterColor())
-			targetWaterColor = currentEnvironment.getWaterColor();
+		if (env.isCustomWaterColor()) {
+			targetWaterColor = env.getWaterColor();
+		} else if (config.decoupleSkyAndWaterColor()) {
+			targetWaterColor = DefaultSkyColor.DEFAULT.getRgb(client);
+		}
 	}
 
 	/**

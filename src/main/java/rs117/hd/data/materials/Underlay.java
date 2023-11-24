@@ -229,7 +229,7 @@ public enum Underlay {
 	KHARID_SAND_1(Area.KHARID_DESERT_REGION, GroundMaterial.SAND, p -> p
 		.saturation(3)
 		.hue(6)
-		.ids(61, 62, 67, 68, -127, 126, 49, 58, 63, 64, 50, 45)),
+		.ids(-127, 45, 49, 50, 58, 61, 62, 63, 64, 67, 68, 69, 126)),
 	NECROPOLIS_SAND(Area.NECROPOLIS, GroundMaterial.DIRT, p -> p.ids(124)),
 	SMOKE_DUNGEON(Area.SMOKE_DUNGEON, GroundMaterial.ROCKY_CAVE_FLOOR, p -> p.ids(56)),
 
@@ -553,7 +553,7 @@ public enum Underlay {
 					hsl[0] == 9 && hsl[1] == 2 ||
 					hsl[0] == 9 && hsl[1] == 3 && hsl[2] >= 49 ||
 					hsl[0] >= 9 && hsl[1] >= 4 ||
-					hsl[0] == 9 && hsl[1] == 3 && hsl[2] <= 28 ||
+					hsl[0] == 9 && hsl[1] == 3 && hsl[2] <= 38 ||
 					hsl[0] >= 10 && hsl[1] >= 2 ||
 					hsl[0] == 8 && hsl[1] == 5 && hsl[2] >= 15 ||
 					hsl[0] == 8 && hsl[1] >= 6 && hsl[2] >= 10
