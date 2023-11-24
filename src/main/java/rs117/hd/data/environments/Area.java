@@ -1073,6 +1073,7 @@ public enum Area
 		new AABB(2758, 3591, 2790, 3586),
 		new AABB(2765, 3585, 2786, 3577)
 	),
+	FREMENNIK_SLAYER_DUNGEON(regions(10907, 10908, 11164)),
 
 	// Tirannwn
 	GWENITH(2187, 3424, 2229, 3397),
