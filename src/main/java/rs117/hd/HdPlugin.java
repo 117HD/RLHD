@@ -136,10 +136,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public static final String INTEL_DRIVER_URL = "https://www.intel.com/content/www/us/en/support/detect.html";
 	public static final String NVIDIA_DRIVER_URL = "https://www.nvidia.com/en-us/geforce/drivers/";
 
-	public static final int TEXTURE_UNIT_UI = GL_TEXTURE0; // default state
-	public static final int TEXTURE_UNIT_GAME = GL_TEXTURE1;
-	public static final int TEXTURE_UNIT_SHADOW_MAP = GL_TEXTURE2;
-	public static final int TEXTURE_UNIT_TILE_HEIGHT_MAP = GL_TEXTURE3;
+	public static final int TEXTURE_UNIT_BASE = GL_TEXTURE0;
+	public static final int TEXTURE_UNIT_UI = TEXTURE_UNIT_BASE; // default state
+	public static final int TEXTURE_UNIT_GAME = TEXTURE_UNIT_BASE + 1;
+	public static final int TEXTURE_UNIT_SHADOW_MAP = TEXTURE_UNIT_BASE + 2;
+	public static final int TEXTURE_UNIT_TILE_HEIGHT_MAP = TEXTURE_UNIT_BASE + 3;
 
 	public static final int UNIFORM_BLOCK_CAMERA = 0;
 	public static final int UNIFORM_BLOCK_MATERIALS = 1;
@@ -212,8 +213,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	@Inject
 	private HdPluginConfig config;
 
-	@Inject
-	private Gson rlGson;
 	@Getter
 	private Gson gson;
 
@@ -258,11 +257,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		.getPathOrDefault("rlhd.shader-path", () -> path(HdPlugin.class))
 		.chroot();
 
-	private int glSceneProgram;
-	private int glUiProgram;
-	private int glShadowProgram;
-	private int glModelPassthroughComputeProgram;
-	private int[] glModelSortingComputePrograms = {};
+	public int glSceneProgram;
+	public int glUiProgram;
+	public int glShadowProgram;
+	public int glModelPassthroughComputeProgram;
+	public int[] glModelSortingComputePrograms = {};
 
 	private int interfaceTexture;
 	private int interfacePbo;
@@ -409,8 +408,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public SeasonalTheme configSeasonalTheme;
 	public int configMaxDynamicLights;
 
-	public boolean enableDetailedTimers;
 	public boolean useLowMemoryMode;
+	public boolean enableDetailedTimers;
+	public boolean enableShadowMapOverlay;
 
 	private boolean isActive;
 	private boolean lwjglInitialized;
@@ -439,7 +439,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Override
 	protected void startUp() {
-		gson = rlGson.newBuilder().setLenient().create();
+		gson = injector.getInstance(Gson.class).newBuilder().setLenient().create();
 
 		clientThread.invoke(() -> {
 			try {
@@ -757,6 +757,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.define("LEGACY_GREY_COLORS", configLegacyGreyColors)
 			.define("DISABLE_DIRECTIONAL_SHADING", config.shadingMode() != ShadingMode.DEFAULT)
 			.define("FLAT_SHADING", config.flatShading())
+			.define("SHADOW_MAP_OVERLAY", enableShadowMapOverlay)
 			.addIncludePath(SHADER_PATH);
 
 		glSceneProgram = PROGRAM.compile(template);
@@ -793,8 +794,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		// Bind texture samplers before validating, else the validation fails
 		glUseProgram(glSceneProgram);
-		glUniform1i(uniTextureArray, 1);
-		glUniform1i(uniShadowMap, 2);
+		glUniform1i(uniTextureArray, TEXTURE_UNIT_GAME - TEXTURE_UNIT_BASE);
+		glUniform1i(uniShadowMap, TEXTURE_UNIT_SHADOW_MAP - TEXTURE_UNIT_BASE);
 
 		// Bind a VOA, else validation may fail on older Intel-based Macs
 		glBindVertexArray(vaoSceneHandle);
@@ -807,7 +808,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		}
 
 		glUseProgram(glUiProgram);
-		glUniform1i(uniUiTexture, 0);
+		glUniform1i(uniUiTexture, TEXTURE_UNIT_UI - TEXTURE_UNIT_BASE);
 
 		glUseProgram(0);
 	}
@@ -914,6 +915,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	public void recompilePrograms() throws ShaderException, IOException {
+		// Avoid recompiling if we haven't already compiled once
+		if (glSceneProgram == 0)
+			return;
+
 		destroyPrograms();
 		initPrograms();
 	}

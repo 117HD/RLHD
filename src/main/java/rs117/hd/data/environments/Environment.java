@@ -654,6 +654,7 @@ public enum Environment
 	PRIFDDINAS(Area.PRIFDDINAS, new Properties()
 		.setFogColor("#99D8C8")
 		.setFogDepth(15)
+		.setLightDirection(-128, 55)
 	),
 	ZALCANO(Area.ZALCANO, new Properties()
 		.setFogColor(0.8f, 0.6f, 0.6f)
