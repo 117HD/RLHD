@@ -73,6 +73,7 @@ public class DeveloperTools implements KeyListener {
 		keyManager.unregisterKeyListener(this);
 		tileInfoOverlay.setActive(false);
 		frameTimingsOverlay.setActive(false);
+		shadowMapOverlay.setActive(false);
 	}
 
 	@Subscribe

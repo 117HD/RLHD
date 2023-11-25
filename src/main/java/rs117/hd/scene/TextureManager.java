@@ -464,8 +464,8 @@ public class TextureManager {
 			.putFloat(m.flowMapDuration[1])
 			.putFloat(scrollSpeedX)
 			.putFloat(scrollSpeedY)
-			.putFloat(m.textureScale[0])
-			.putFloat(m.textureScale[1])
+			.putFloat(1 / m.textureScale[0])
+			.putFloat(1 / m.textureScale[1])
 			.putFloat(0).putFloat(0); // align vec4
 	}
 

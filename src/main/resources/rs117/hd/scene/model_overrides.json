@@ -3314,8 +3314,10 @@
       3812,
       6820,
       6822,
+      6824,
       6826,
-      6827
+      6827,
+      16539
     ],
     "uvType": "BOX",
     "uvScale": 0.7
@@ -12692,5 +12694,14 @@
     "uvType": "BOX",
     "uvScale": 0.7,
     "uvOrientation": 512
+  },
+  {
+    "description": "Freminnik Slayer Dungeon - Stone Staircase",
+    "baseMaterial": "ROCK_5",
+    "objectIds": [
+      29992
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
   }
 ]

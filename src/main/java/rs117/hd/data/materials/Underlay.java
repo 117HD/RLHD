@@ -74,6 +74,7 @@ public enum Underlay {
 		.area(Area.DRAYNOR)
 		.groundMaterial(GroundMaterial.OVERWORLD_GRASS_1)
 		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_GRASS)),
+	WIZARD_TOWER_BASEMENT_DIRT(p -> p.ids(63, 66).area(Area.WIZARD_TOWER_BASEMENT).groundMaterial(GroundMaterial.DIRT)),
 
 	COMPLEX_TILES_IMCANDO_PENINSULA(p -> p
 		.ids(55, 61, 62, 63, 68)
@@ -272,6 +273,9 @@ public enum Underlay {
 		.area(Area.BARROWS_TUNNELS)
 	),
 
+	// Fremennik
+	FREMENNIK_SLAYER_DUNGEON(p -> p.ids(48, 63, 92).area(Area.FREMENNIK_SLAYER_DUNGEON).groundMaterial(GroundMaterial.EARTHEN_CAVE_FLOOR)),
+
 	// Ardougne
 	SHADOW_DUNGEON_FLOOR(63, Area.SHADOW_DUNGEON, GroundMaterial.EARTHEN_CAVE_FLOOR),
 	// Castle Wars
@@ -465,7 +469,7 @@ public enum Underlay {
 	// Cutscenes
 	CANOE_CUTSCENE_GRASS(Area.CANOE_CUTSCENE, GroundMaterial.GRASS_SCROLLING, p -> p.ids(48, 50, 63)),
 	// Items that cannot properly be fixed unless we can first detect the hue of the tile to set a texture.
-	TILE_NEEDS_HUE_DEFINED(GroundMaterial.VARIED_DIRT, p -> p
+	TILE_NEEDS_HUE_DEFINED(Area.OVERWORLD, GroundMaterial.VARIED_DIRT, p -> p
 		.ids(26)
 		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_DIRT)
 	),
@@ -475,7 +479,7 @@ public enum Underlay {
 		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_GRASS)
 	),
 	OVERWORLD_DIRT(Area.OVERWORLD, GroundMaterial.DIRT, p -> p
-		.ids(-111, -110, 19, 56, 57, 66, 80, 111, 118, 122, 139, 150)
+		.ids(-111, -110, 19, 56, 57, 66, 80, 111, 118, 122, 139, 149, 150)
 		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_DIRT)),
 	OVERWORLD_SAND(Area.OVERWORLD, GroundMaterial.SAND, p -> p.ids(-127, -118)),
 	UNDERLAY_PACKED_EARTH(GroundMaterial.PACKED_EARTH, p -> p.ids(15)),
@@ -511,15 +515,24 @@ public enum Underlay {
 			return DEFAULT_SNOW_1;
 		})
 	),
-	UNDERLAY_72(GroundMaterial.VARIED_DIRT, p -> p
-		.ids(72, 73, 98, 112, 113) //112 == Lovakengj
+	UNDERLAY_OVERWORLD_DIRT(GroundMaterial.VARIED_DIRT, p -> p
+		.area(Area.OVERWORLD)
+		.ids(72, 73, 98, 112, 113) // 112 == Lovakengj
 		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_DIRT)
 	),
+	UNDERLAY_DIRT(GroundMaterial.VARIED_DIRT, p -> p
+		.ids(72, 73, 98, 112, 113) // 112 == Lovakengj
+	),
 	UNDERLAY_OVERWORLD_GRUNGE(GroundMaterial.GRUNGE, p -> p
+		.area(Area.OVERWORLD)
 		.ids(8, 10, 58, 60, 92) // 8 = Jatizso, 60 = GotR, 92 = Eadgars Cave
 		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_GRUNGE)
 	),
+	UNDERLAY_GRUNGE(GroundMaterial.GRUNGE, p -> p
+		.ids(8, 10, 58, 60, 92) // 8 = Jatizso, 60 = GotR, 92 = Eadgars Cave
+	),
 	COMPLEX_TILES(p -> p
+		.area(Area.OVERWORLD)
 		.ids(55, 61, 62, 63, 64, 65, 68, 94, 96)
 		.replacementResolver(
 			(plugin, scene, tile, override) -> {

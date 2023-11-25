@@ -442,7 +442,7 @@ public class ModelPusher {
 		int materialIndex = textureManager.getMaterialIndex(material, vanillaTexture);
 		assert materialIndex <= MAX_MATERIAL_COUNT;
 		int materialData =
-			(materialIndex & MAX_MATERIAL_COUNT) << 12
+			(materialIndex & MAX_MATERIAL_COUNT) << 11
 			| ((int) (modelOverride.shadowOpacityThreshold * 0x3F) & 0x3F) << 5
 			| (!modelOverride.receiveShadows ? 1 : 0) << 4
 			| (modelOverride.flatNormals ? 1 : 0) << 3
