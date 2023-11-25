@@ -55,13 +55,15 @@ void main() {
     if (gCastShadow[0] + gCastShadow[1] + gCastShadow[2] == 0)
         return;
 
+    int materialData = gMaterialData[0];
+    Material material = getMaterial(materialData >> MATERIAL_INDEX_SHIFT);
+
     // MacOS doesn't allow assigning these arrays directly.
     // One of the many wonders of Apple software...
     vec3 uvw[3] = vec3[](gUv[0], gUv[1], gUv[2]);
-    computeUvs(gMaterialData[0], vec3[](gPosition[0], gPosition[1], gPosition[2]), uvw);
+    computeUvs(materialData, vec3[](gPosition[0], gPosition[1], gPosition[2]), uvw);
 
     for (int i = 0; i < 3; i++) {
-        Material material = getMaterial(gMaterialData[i] >> MATERIAL_INDEX_SHIFT);
         fUvw = vec3(uvw[i].xy, material.colorMap);
         // Scroll UVs
         fUvw.xy += material.scrollDuration * elapsedTime;
