@@ -273,6 +273,9 @@ public enum Underlay {
 		.area(Area.BARROWS_TUNNELS)
 	),
 
+	// Fremennik
+	FREMENNIK_SLAYER_DUNGEON(p -> p.ids(48, 63, 92).area(Area.FREMENNIK_SLAYER_DUNGEON).groundMaterial(GroundMaterial.EARTHEN_CAVE_FLOOR)),
+
 	// Ardougne
 	SHADOW_DUNGEON_FLOOR(63, Area.SHADOW_DUNGEON, GroundMaterial.EARTHEN_CAVE_FLOOR),
 	// Castle Wars
