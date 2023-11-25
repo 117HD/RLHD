@@ -475,7 +475,7 @@ public enum Underlay {
 		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_GRASS)
 	),
 	OVERWORLD_DIRT(Area.OVERWORLD, GroundMaterial.DIRT, p -> p
-		.ids(-111, -110, 19, 56, 57, 66, 80, 111, 118, 122, 139, 150)
+		.ids(-111, -110, 19, 56, 57, 66, 80, 111, 118, 122, 139, 149, 150)
 		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_DIRT)),
 	OVERWORLD_SAND(Area.OVERWORLD, GroundMaterial.SAND, p -> p.ids(-127, -118)),
 	UNDERLAY_PACKED_EARTH(GroundMaterial.PACKED_EARTH, p -> p.ids(15)),
