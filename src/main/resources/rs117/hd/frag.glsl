@@ -158,9 +158,9 @@ void main() {
         uv3 += material3.scrollDuration * elapsedTime;
 
         // Scale from the center
-        uv1 = (uv1 - .5) / material1.textureScale + .5;
-        uv2 = (uv2 - .5) / material2.textureScale + .5;
-        uv3 = (uv3 - .5) / material3.textureScale + .5;
+        uv1 = (uv1 - .5) * material1.textureScale + .5;
+        uv2 = (uv2 - .5) * material2.textureScale + .5;
+        uv3 = (uv3 - .5) * material3.textureScale + .5;
 
         // get flowMap map
         vec2 flowMapUv = uv1 - animationFrame(material1.flowMapDuration);
