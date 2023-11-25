@@ -74,6 +74,7 @@ public enum Underlay {
 		.area(Area.DRAYNOR)
 		.groundMaterial(GroundMaterial.OVERWORLD_GRASS_1)
 		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_GRASS)),
+	WIZARD_TOWER_BASEMENT_DIRT(p -> p.ids(63, 66).area(Area.WIZARD_TOWER_BASEMENT).groundMaterial(GroundMaterial.DIRT)),
 
 	COMPLEX_TILES_IMCANDO_PENINSULA(p -> p
 		.ids(55, 61, 62, 63, 68)
