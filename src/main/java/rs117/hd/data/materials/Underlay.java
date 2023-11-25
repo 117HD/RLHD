@@ -469,7 +469,7 @@ public enum Underlay {
 	// Cutscenes
 	CANOE_CUTSCENE_GRASS(Area.CANOE_CUTSCENE, GroundMaterial.GRASS_SCROLLING, p -> p.ids(48, 50, 63)),
 	// Items that cannot properly be fixed unless we can first detect the hue of the tile to set a texture.
-	TILE_NEEDS_HUE_DEFINED(GroundMaterial.VARIED_DIRT, p -> p
+	TILE_NEEDS_HUE_DEFINED(Area.OVERWORLD, GroundMaterial.VARIED_DIRT, p -> p
 		.ids(26)
 		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_DIRT)
 	),
@@ -515,15 +515,24 @@ public enum Underlay {
 			return DEFAULT_SNOW_1;
 		})
 	),
-	UNDERLAY_72(GroundMaterial.VARIED_DIRT, p -> p
-		.ids(72, 73, 98, 112, 113) //112 == Lovakengj
+	UNDERLAY_OVERWORLD_DIRT(GroundMaterial.VARIED_DIRT, p -> p
+		.area(Area.OVERWORLD)
+		.ids(72, 73, 98, 112, 113) // 112 == Lovakengj
 		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_DIRT)
 	),
+	UNDERLAY_DIRT(GroundMaterial.VARIED_DIRT, p -> p
+		.ids(72, 73, 98, 112, 113) // 112 == Lovakengj
+	),
 	UNDERLAY_OVERWORLD_GRUNGE(GroundMaterial.GRUNGE, p -> p
+		.area(Area.OVERWORLD)
 		.ids(8, 10, 58, 60, 92) // 8 = Jatizso, 60 = GotR, 92 = Eadgars Cave
 		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_GRUNGE)
 	),
+	UNDERLAY_GRUNGE(GroundMaterial.GRUNGE, p -> p
+		.ids(8, 10, 58, 60, 92) // 8 = Jatizso, 60 = GotR, 92 = Eadgars Cave
+	),
 	COMPLEX_TILES(p -> p
+		.area(Area.OVERWORLD)
 		.ids(55, 61, 62, 63, 64, 65, 68, 94, 96)
 		.replacementResolver(
 			(plugin, scene, tile, override) -> {
