@@ -400,9 +400,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public boolean configShadowsEnabled;
 	public boolean configExpandShadowDraw;
 	public boolean configUseFasterModelHashing;
-	public boolean configRetainVanillaShading;
-	public boolean configUndoVanillaShadingInCompute;
-	public boolean configUndoVanillaShadingOnCpu;
+	public boolean configUndoVanillaShading;
 	public boolean configPreserveVanillaNormals;
 	public ShadowMode configShadowMode;
 	public SeasonalTheme configSeasonalTheme;
@@ -753,7 +751,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.define("SHADOW_MODE", configShadowMode)
 			.define("SHADOW_TRANSPARENCY", config.enableShadowTransparency())
 			.define("VANILLA_COLOR_BANDING", config.vanillaColorBanding())
-			.define("UNDO_VANILLA_SHADING", configUndoVanillaShadingInCompute)
+			.define("UNDO_VANILLA_SHADING", configUndoVanillaShading)
 			.define("LEGACY_GREY_COLORS", configLegacyGreyColors)
 			.define("DISABLE_DIRECTIONAL_SHADING", config.shadingMode() != ShadingMode.DEFAULT)
 			.define("FLAT_SHADING", config.flatShading())
@@ -2114,7 +2112,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		glUseProgram(glUiProgram);
 		glUniform2i(uniTexSourceDimensions, canvasWidth, canvasHeight);
 		glUniform1f(uniUiColorBlindnessIntensity, config.colorBlindnessIntensity() / 100f);
-		glUniform4fv(uniUiAlphaOverlay, ColorUtils.unpackARGB(overlayColor));
+		glUniform4fv(uniUiAlphaOverlay, ColorUtils.srgba(overlayColor));
 
 		if (client.isStretchedEnabled()) {
 			Dimension dim = client.getStretchedDimensions();
@@ -2390,18 +2388,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		configMaxDynamicLights = config.maxDynamicLights().getValue();
 		configExpandShadowDraw = config.expandShadowDraw();
 		configUseFasterModelHashing = config.fasterModelHashing();
-		configUndoVanillaShadingInCompute = config.undoVanillaShadingInCompute();
+		configUndoVanillaShading = config.shadingMode() != ShadingMode.VANILLA;
 		configPreserveVanillaNormals = config.preserveVanillaNormals();
 		configSeasonalTheme = config.seasonalTheme();
-		configRetainVanillaShading = config.shadingMode() == ShadingMode.VANILLA;
-		if (configRetainVanillaShading) {
-			// Disable shading reversal entirely
-			configUndoVanillaShadingOnCpu = false;
-			configUndoVanillaShadingInCompute = false;
-		} else {
-			// Do shading reversal on CPU if it's not being done in compute
-			configUndoVanillaShadingOnCpu = !configUndoVanillaShadingInCompute;
-		}
 	}
 
 	@Subscribe
@@ -2482,7 +2471,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 							reuploadScene = true;
 							break;
 						case KEY_LEGACY_GREY_COLORS:
-						case KEY_UNDO_VANILLA_SHADING_IN_COMPUTE:
 						case KEY_PRESERVE_VANILLA_NORMALS:
 						case KEY_SHADING_MODE:
 						case KEY_FLAT_SHADING:

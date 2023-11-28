@@ -816,17 +816,6 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
-	String KEY_UNDO_VANILLA_SHADING_IN_COMPUTE = "experimentalUndoVanillaShadingInCompute";
-	@ConfigItem(
-		keyName = KEY_UNDO_VANILLA_SHADING_IN_COMPUTE,
-		name = "Undo vanilla shading in compute",
-		description = "Should increase performance at the expense of potential graphical issues.",
-		section = experimentalSettings
-	)
-	default boolean undoVanillaShadingInCompute() {
-		return true;
-	}
-
 	String KEY_PRESERVE_VANILLA_NORMALS = "experimentalPreserveVanillaNormals";
 	@ConfigItem(
 		keyName = KEY_PRESERVE_VANILLA_NORMALS,

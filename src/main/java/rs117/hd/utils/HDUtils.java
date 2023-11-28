@@ -49,7 +49,6 @@ public class HDUtils {
 
 	// directional vectors approximately opposite of the directional light used by the client
 	private static final float[] LIGHT_DIR_TILE = new float[] { 0.70710678f, 0.70710678f, 0f };
-	public static final float[] LIGHT_DIR_MODEL = new float[] { 0.57735026f, 0.57735026f, 0.57735026f };
 
 	// The epsilon for floating point values used by jogl
 	public static final float EPSILON = 1.1920929E-7f;
@@ -169,26 +168,6 @@ public class HDUtils {
 		subtract(c, a, c);
 		float[] n = new float[3];
 		return cross(n, b, c);
-	}
-
-	public static int[] colorIntToHSL(int colorInt) {
-		int[] outHSL = new int[3];
-		outHSL[0] = colorInt >> 10 & 0x3F;
-		outHSL[1] = colorInt >> 7 & 0x7;
-		outHSL[2] = colorInt & 0x7F;
-		return outHSL;
-	}
-
-	public static int colorHSLToInt(int[] colorHSL) {
-		return (colorHSL[0] << 3 | colorHSL[1]) << 7 | colorHSL[2];
-	}
-
-	public static float dotLightDirectionModel(float x, float y, float z) {
-		// Model normal vectors need to be normalized
-		float length = x * x + y * y + z * z;
-		if (length < EPSILON)
-			return 0;
-		return (x * LIGHT_DIR_MODEL[0] + y * LIGHT_DIR_MODEL[1] + z * LIGHT_DIR_MODEL[2]) / (float) Math.sqrt(length);
 	}
 
 	public static float dotLightDirectionTile(float x, float y, float z) {
@@ -439,7 +418,7 @@ public class HDUtils {
 		var paint = tile.getSceneTilePaint();
 		var model = tile.getSceneTileModel();
 		if (paint != null) {
-			return HDUtils.colorIntToHSL(paint.getSwColor());
+			return ColorUtils.unpackHslRaw(paint.getSwColor());
 		} else if (model != null) {
 			int faceCount = tile.getSceneTileModel().getFaceX().length;
 			final int[] faceColorsA = model.getTriangleColorA();
@@ -462,7 +441,7 @@ public class HDUtils {
 				}
 			}
 
-			return HDUtils.colorIntToHSL(hsl);
+			return ColorUtils.unpackHslRaw(hsl);
 		}
 
 		return null;

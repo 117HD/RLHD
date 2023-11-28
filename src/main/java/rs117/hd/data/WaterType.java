@@ -30,8 +30,8 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import rs117.hd.data.materials.Material;
 
-import static rs117.hd.utils.ColorUtils.linearToSrgb;
 import static rs117.hd.utils.ColorUtils.rgb;
+import static rs117.hd.utils.ColorUtils.srgb;
 
 public enum WaterType
 {
@@ -44,9 +44,9 @@ public enum WaterType
 		.normalStrength(.05f)
 		.baseOpacity(.8f)
 		.fresnelAmount(.3f)
-		.surfaceColor(linearToSrgb(rgb(23, 33, 20)))
-		.foamColor(linearToSrgb(rgb(115, 120, 101)))
-		.depthColor(linearToSrgb(rgb(41, 82, 26)))
+		.surfaceColor(srgb(23, 33, 20))
+		.foamColor(srgb(115, 120, 101))
+		.depthColor(srgb(41, 82, 26))
 		.causticsStrength(0)
 		.duration(1.2f)),
 	SWAMP_WATER_FLAT(SWAMP_WATER, true),
@@ -56,9 +56,9 @@ public enum WaterType
 		.normalStrength(.05f)
 		.baseOpacity(.9f)
 		.fresnelAmount(.3f)
-		.surfaceColor(linearToSrgb(rgb(22, 23, 13)))
-		.foamColor(linearToSrgb(rgb(106, 108, 100)))
-		.depthColor(linearToSrgb(rgb(50, 52, 46)))
+		.surfaceColor(srgb(22, 23, 13))
+		.foamColor(srgb(106, 108, 100))
+		.depthColor(srgb(50, 52, 46))
 		.causticsStrength(0)
 		.duration(1.6f)),
 	BLACK_TAR_FLAT(b -> b
@@ -79,9 +79,9 @@ public enum WaterType
 		.normalStrength(.05f)
 		.baseOpacity(.8f)
 		.fresnelAmount(.3f)
-		.surfaceColor(linearToSrgb(rgb(38, 0, 0)))
-		.foamColor(linearToSrgb(rgb(117, 63, 45)))
-		.depthColor(linearToSrgb(rgb(50, 26, 22)))
+		.surfaceColor(srgb(38, 0, 0))
+		.foamColor(srgb(117, 63, 45))
+		.depthColor(srgb(50, 26, 22))
 		.causticsStrength(0)
 		.duration(2)),
 	ICE(b -> b
@@ -90,8 +90,8 @@ public enum WaterType
 		.normalStrength(.04f)
 		.baseOpacity(.85f)
 		.fresnelAmount(1)
-		.foamColor(linearToSrgb(rgb(150, 150, 150)))
-		.depthColor(linearToSrgb(rgb(0, 117, 142)))
+		.foamColor(srgb(150, 150, 150))
+		.depthColor(srgb(0, 117, 142))
 		.causticsStrength(.4f)
 		.duration(0)
 		.normalMap(Material.WATER_NORMAL_MAP_2)),
@@ -102,9 +102,9 @@ public enum WaterType
 		.normalStrength(.05f)
 		.baseOpacity(.7f)
 		.fresnelAmount(.3f)
-		.surfaceColor(linearToSrgb(rgb(35, 10, 0)))
-		.foamColor(linearToSrgb(rgb(106, 108, 24)))
-		.depthColor(linearToSrgb(rgb(65, 23, 0)))
+		.surfaceColor(srgb(35, 10, 0))
+		.foamColor(srgb(106, 108, 24))
+		.depthColor(srgb(65, 23, 0))
 		.causticsStrength(0)
 		.duration(2.7f)),
 	SCAR_SLUDGE(b -> b
@@ -113,9 +113,9 @@ public enum WaterType
 		.normalStrength(.05f)
 		.baseOpacity(.85f)
 		.fresnelAmount(.3f)
-		.surfaceColor(linearToSrgb(rgb(0x26, 0x26, 0x23)))
-		.foamColor(linearToSrgb(rgb(0x69, 0x77, 0x5e)))
-		.depthColor(linearToSrgb(rgb(0x69, 0x77, 0x5e)))
+		.surfaceColor(srgb(0x26, 0x26, 0x23))
+		.foamColor(srgb(0x69, 0x77, 0x5e))
+		.depthColor(srgb(0x69, 0x77, 0x5e))
 		.causticsStrength(0)
 		.duration(1.2f)),
 	PLAIN_WATER(b -> b
@@ -151,8 +151,8 @@ public enum WaterType
 		private float fresnelAmount = 1;
 		private Material normalMap = Material.WATER_NORMAL_MAP_1;
 		private float[] surfaceColor = { 1, 1, 1 };
-		private float[] foamColor = linearToSrgb(rgb(176, 164, 146));
-		private float[] depthColor = linearToSrgb(rgb(0, 117, 142));
+		private float[] foamColor = srgb(176, 164, 146);
+		private float[] depthColor = srgb(0, 117, 142);
 		private float causticsStrength = 1;
 		private boolean hasFoam = true;
 		private float duration = 1;
