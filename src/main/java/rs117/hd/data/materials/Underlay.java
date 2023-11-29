@@ -569,7 +569,7 @@ public enum Underlay {
 					hsl[0] == 9 && hsl[1] == 3 && hsl[2] <= 38 ||
 					hsl[0] >= 10 && hsl[1] >= 2 ||
 					hsl[0] == 8 && hsl[1] == 5 && hsl[2] >= 15 ||
-					hsl[0] == 8 && hsl[1] >= 6 && hsl[2] >= 10
+					hsl[0] == 8 && hsl[1] >= 6 && hsl[2] >= 2
 				) {
 					switch (plugin.configSeasonalTheme) {
 						case SUMMER:
