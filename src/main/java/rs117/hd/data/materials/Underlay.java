@@ -260,7 +260,9 @@ public enum Underlay {
 
 				// Grass
 				if (hsl[0] >= 13 ||
-					hsl[0] >= 9 && hsl[1] >= 3 ||
+					hsl[0] >= 10 && hsl[1] >= 3 ||
+					hsl[0] == 9 && hsl[1] >= 4 ||
+					hsl[0] == 9 && hsl[1] == 3 && hsl[2] <= 45 || // Fixes the southernmost beach
 					hsl[0] == 8 && hsl[1] > 5 && hsl[2] >= 30 && overlayId != 6
 				) {
 					switch (plugin.configSeasonalTheme) {
