@@ -939,6 +939,8 @@ public enum Overlay {
 		.blended(true)),
 	KELDAGRIM_PATHS(117, GroundMaterial.FALADOR_PATHS),
 
+	CERBERUS_WATER(128, Area.CERBERUS, WaterType.SWAMP_WATER_FLAT),
+
 	// Default overlays
 	OVERLAY_WATER(p -> p.area(Area.OVERWORLD).ids(-128, -105, -98, 6, 41, 104, 196).waterType(WaterType.WATER)),
 	OVERWORLD_GRASS(p -> p
