@@ -761,7 +761,6 @@ public enum Environment
 		.setAmbientStrength(1.0f)
 		.setDirectionalColor(78, 238, 255)
 		.setDirectionalStrength(2.5f)
-		.setLightDirection(-128, 55)
 	),
 	ZEAH_SNOWY_NORTHERN_REGION(Area.ZEAH_SNOWY_NORTHERN_REGION, new Properties()
 		.setFogColor("#AEBDE0")
@@ -1054,7 +1053,6 @@ public enum Environment
 	TRUE_BLOOD_ALTAR(Area.TRUE_BLOOD_ALTAR, new Properties()
 		.setFogColor("#000000")
 		.setFogDepth(25)
-		.setLightDirection(-128, 55)
 	),
 
 	TARNS_LAIR(Area.TARNS_LAIR, new Properties()
