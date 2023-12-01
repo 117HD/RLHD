@@ -496,7 +496,6 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay {
 	private static String hslString(int color) {
 		if (color == 12345678)
 			return "HIDDEN";
-		int[] hsl = HDUtils.colorIntToHSL(color);
-		return color + " (" + hsl[0] + ", " + hsl[1] + ", " + hsl[2] + ")";
+		return color + " (" + (color >> 10 & 0x3F) + ", " + (color >> 7 & 7) + ", " + (color & 0x7F) + ")";
 	}
 }

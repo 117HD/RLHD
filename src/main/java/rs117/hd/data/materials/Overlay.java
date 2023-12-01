@@ -1110,19 +1110,19 @@ public enum Overlay {
 		return match;
 	}
 
-	public int[] modifyColor(int[] colorHSL) {
-		colorHSL[0] = hue >= 0 ? hue : colorHSL[0];
-		colorHSL[0] += shiftHue;
-		colorHSL[0] = HDUtils.clamp(colorHSL[0], 0, 63);
+	public int modifyColor(int jagexHsl) {
+		int h = hue != -1 ? hue : jagexHsl >> 10 & 0x3F;
+		h += shiftHue;
+		h = HDUtils.clamp(h, 0, 0x3F);
 
-		colorHSL[1] = saturation >= 0 ? saturation : colorHSL[1];
-		colorHSL[1] += shiftSaturation;
-		colorHSL[1] = HDUtils.clamp(colorHSL[1], 0, 7);
+		int s = saturation != -1 ? saturation : jagexHsl >> 7 & 7;
+		s += shiftSaturation;
+		s = HDUtils.clamp(s, 0, 7);
 
-		colorHSL[2] = lightness >= 0 ? lightness : colorHSL[2];
-		colorHSL[2] += shiftLightness;
-		colorHSL[2] = HDUtils.clamp(colorHSL[2], 0, 127);
+		int l = lightness != -1 ? lightness : jagexHsl & 0x7F;
+		l += shiftLightness;
+		l = HDUtils.clamp(l, 0, 0x7F);
 
-		return colorHSL;
+		return h << 10 | s << 7 | l;
 	}
 }
