@@ -499,18 +499,18 @@ class SceneUploader {
 					if (overlay != Overlay.NONE)
 					{
 						groundMaterial = overlay.groundMaterial;
-						swColor = HDUtils.colorHSLToInt(overlay.modifyColor(HDUtils.colorIntToHSL(swColor)));
-						seColor = HDUtils.colorHSLToInt(overlay.modifyColor(HDUtils.colorIntToHSL(seColor)));
-						nwColor = HDUtils.colorHSLToInt(overlay.modifyColor(HDUtils.colorIntToHSL(nwColor)));
-						neColor = HDUtils.colorHSLToInt(overlay.modifyColor(HDUtils.colorIntToHSL(neColor)));
+						swColor = overlay.modifyColor(swColor);
+						seColor = overlay.modifyColor(seColor);
+						nwColor = overlay.modifyColor(nwColor);
+						neColor = overlay.modifyColor(neColor);
 					} else {
 						Underlay underlay = Underlay.getUnderlay(scene, tile, plugin);
 						if (underlay != Underlay.NONE) {
 							groundMaterial = underlay.groundMaterial;
-							swColor = HDUtils.colorHSLToInt(underlay.modifyColor(HDUtils.colorIntToHSL(swColor)));
-							seColor = HDUtils.colorHSLToInt(underlay.modifyColor(HDUtils.colorIntToHSL(seColor)));
-							nwColor = HDUtils.colorHSLToInt(underlay.modifyColor(HDUtils.colorIntToHSL(nwColor)));
-							neColor = HDUtils.colorHSLToInt(underlay.modifyColor(HDUtils.colorIntToHSL(neColor)));
+							swColor = underlay.modifyColor(swColor);
+							seColor = underlay.modifyColor(seColor);
+							nwColor = underlay.modifyColor(nwColor);
+							neColor = underlay.modifyColor(neColor);
 						}
 					}
 
@@ -849,17 +849,17 @@ class SceneUploader {
 							if (overlay != Overlay.NONE)
 								groundMaterial = overlay.groundMaterial;
 
-							colorA = HDUtils.colorHSLToInt(overlay.modifyColor(HDUtils.colorIntToHSL(colorA)));
-							colorB = HDUtils.colorHSLToInt(overlay.modifyColor(HDUtils.colorIntToHSL(colorB)));
-							colorC = HDUtils.colorHSLToInt(overlay.modifyColor(HDUtils.colorIntToHSL(colorC)));
+							colorA = overlay.modifyColor(colorA);
+							colorB = overlay.modifyColor(colorB);
+							colorC = overlay.modifyColor(colorC);
 						} else {
 							Underlay underlay = Underlay.getUnderlay(scene, tile, plugin);
 							if (underlay != Underlay.NONE)
 								groundMaterial = underlay.groundMaterial;
 
-							colorA = HDUtils.colorHSLToInt(underlay.modifyColor(HDUtils.colorIntToHSL(colorA)));
-							colorB = HDUtils.colorHSLToInt(underlay.modifyColor(HDUtils.colorIntToHSL(colorB)));
-							colorC = HDUtils.colorHSLToInt(underlay.modifyColor(HDUtils.colorIntToHSL(colorC)));
+							colorA = underlay.modifyColor(colorA);
+							colorB = underlay.modifyColor(colorB);
+							colorC = underlay.modifyColor(colorC);
 						}
 
 						if (plugin.configGroundTextures && groundMaterial != null) {
