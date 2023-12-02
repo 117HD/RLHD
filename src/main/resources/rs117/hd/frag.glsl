@@ -441,11 +441,11 @@ void main() {
             float distanceSquared = dot(lightToFrag, lightToFrag);
             float radiusSquared = pos.w;
             if (distanceSquared <= radiusSquared) {
-                vec3 pointLightColor = PointLightArray[i].color;
-                vec3 pointLightDir = normalize(lightToFrag);
+                float attenuation = max(0, 1 - sqrt(distanceSquared / radiusSquared));
+                attenuation *= attenuation;
 
-                float attenuation = 1 - min(distanceSquared / radiusSquared, 1);
-                pointLightColor *= attenuation * attenuation;
+                vec3 pointLightColor = PointLightArray[i].color * attenuation;
+                vec3 pointLightDir = normalize(lightToFrag);
 
                 float pointLightDotNormals = max(dot(normals, pointLightDir), 0);
                 pointLightsOut += pointLightColor * pointLightDotNormals;
