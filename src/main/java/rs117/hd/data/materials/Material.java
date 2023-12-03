@@ -453,7 +453,7 @@ public enum Material {
 	),
 	POTTERY_OVEN_STONE(
 		JAGGED_STONE_TILE,
-		p -> p.setOverrideBaseColor(JAGGED_STONE_TILE.overrideBaseColor)
+		p -> p.setOverrideBaseColor(JAGGED_STONE_TILE.overrideBaseColor).setBrightness(0.4f)
 	),
 
 	TILE_SMALL_1(p -> p
