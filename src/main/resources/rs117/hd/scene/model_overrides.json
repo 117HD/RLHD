@@ -11471,7 +11471,7 @@
     "uvOrientation": 512
   },
   {
-    "description": "Piscatoris - Roof Corners - Wooden - Planks",
+    "description": "Piscatoris & Rellekka - Roof Corners - Wooden - Planks",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       4229,
@@ -12764,7 +12764,7 @@
   },
   {
     "description": "Freminnik - Walls - Wooden - Plank ",
-    "baseMaterial": "WOOD_GRAIN_3",
+    "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       4193,
       4194,
@@ -12779,11 +12779,12 @@
       21625
     ],
     "uvType": "BOX",
-    "uvScale": 0.66
+    "uvScale": 0.66,
+    "uvOrientation": 512
   },
   {
-    "description": "Freminnik - Wall Decoration Wooden - Plank ",
-    "baseMaterial": "WOOD_GRAIN_3",
+    "description": "Freminnik - Wall Decoration Wooden - Plank",
+    "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       4204,
       4205
@@ -12797,15 +12798,21 @@
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       4206,
+      4207,
+      4208,
+      4209,
       4210,
-      4214
+      4214,
+      4226,
+      4227,
+      26597
     ],
     "uvType": "BOX",
     "uvScale": 0.66,
     "uvOrientationY": 512
   },
   {
-    "description": "Freminnik - Roof Corners - Wooden - Planks",
+    "description": "Freminnik - Roof Corners/edges - Wooden - Planks",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       4218,
@@ -12815,12 +12822,23 @@
       4222,
       4223,
       4224,
-      4225
+      4225,
+      4241,
+      26599
     ],
     "uvType": "BOX",
     "uvScale": 0.66,
     "uvOrientationX": 512,
     "uvOrientationZ": 512
+  },
+  {
+    "description": "Freminnik - Roof Spire - Wooden - Planks",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      4228
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.66
   },
   {
     "description": "Freminnik - Wooden - Plank Stage",
