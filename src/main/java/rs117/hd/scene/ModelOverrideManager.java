@@ -126,10 +126,10 @@ public class ModelOverrideManager {
 			// A dummy override is used as the base if only area-specific overrides exist
 			isDuplicate = current != null && !current.isDummy;
 
-			if (current != null && current.areas.length > 0) {
-				var areas = current.areas;
+			if (current != null && current.areaOverrides != null && !current.areaOverrides.isEmpty()) {
+				var areaOverrides = current.areaOverrides;
 				current = entry.copy();
-				current.areas = areas;
+				current.areaOverrides = areaOverrides;
 			} else {
 				current = entry;
 			}

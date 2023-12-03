@@ -147,16 +147,17 @@ void main() {
         vec2 uv3 = vUv[2].xy;
         vec2 blendedUv = uv1 * IN.texBlend.x + uv2 * IN.texBlend.y + uv3 * IN.texBlend.z;
 
+        float mipBias = 0;
         // Vanilla tree textures rely on UVs being clamped horizontally,
         // which HD doesn't do, so we instead opt to hide these fragments
-        if (
-            (vMaterialData[0] >> MATERIAL_FLAG_VANILLA_UVS & 1) == 1 &&
-            getMaterialHasTransparency(material1) &&
-            (blendedUv.x < -0.01 || blendedUv.x > .99)
-        ) {
-            FragColor = vec4(0);
-            return;
+        if ((vMaterialData[0] >> MATERIAL_FLAG_VANILLA_UVS & 1) == 1) {
+            blendedUv.x = clamp(blendedUv.x, 0, .984375);
+
+            // Make fishing spots easier to see
+            if (colorMap1 == MAT_WATER_DROPLETS.colorMap)
+                mipBias = -100;
         }
+
         uv1 = uv2 = uv3 = blendedUv;
 
         // Scroll UVs
@@ -196,9 +197,9 @@ void main() {
         adjustVertexColors(baseColor1, baseColor2, baseColor3);
 
         // get diffuse textures
-        vec4 texColor1 = colorMap1 == -1 ? vec4(1) : texture(textureArray, vec3(uv1, colorMap1));
-        vec4 texColor2 = colorMap2 == -1 ? vec4(1) : texture(textureArray, vec3(uv2, colorMap2));
-        vec4 texColor3 = colorMap3 == -1 ? vec4(1) : texture(textureArray, vec3(uv3, colorMap3));
+        vec4 texColor1 = colorMap1 == -1 ? vec4(1) : texture(textureArray, vec3(uv1, colorMap1), mipBias);
+        vec4 texColor2 = colorMap2 == -1 ? vec4(1) : texture(textureArray, vec3(uv2, colorMap2), mipBias);
+        vec4 texColor3 = colorMap3 == -1 ? vec4(1) : texture(textureArray, vec3(uv3, colorMap3), mipBias);
         texColor1.rgb *= material1.brightness;
         texColor2.rgb *= material2.brightness;
         texColor3.rgb *= material3.brightness;

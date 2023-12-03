@@ -10664,12 +10664,15 @@
     "objectIds": [ 754, 10459 ],
     "textureMaterial": "WATER_DROPLETS",
     "baseMaterial": "WATER_FLAT",
-    "hideInAreas": [
-      [
-        2558, 3249,
-        2558, 3252
-      ]
+    "areas": [
+      "TIRANNWN",
+      "APE_ATOLL"
     ]
+  },
+  {
+    "description": "Hide vanilla scrolling water models, until a better solution is found",
+    "objectIds": [ 754, 10459, 18863 ],
+    "hide": true
   },
   {
     "description": "Poison Waste dungeon flowing tar (TODO)",

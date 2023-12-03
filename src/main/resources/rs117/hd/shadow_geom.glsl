@@ -45,6 +45,7 @@ flat in int gMaterialData[3];
 flat in int gCastShadow[3];
 
 out vec3 fUvw;
+flat out int fMaterialData;
 
 #if SHADOW_TRANSPARENCY
     flat in float gOpacity[3];
@@ -62,6 +63,8 @@ void main() {
     // One of the many wonders of Apple software...
     vec3 uvw[3] = vec3[](gUv[0], gUv[1], gUv[2]);
     computeUvs(materialData, vec3[](gPosition[0], gPosition[1], gPosition[2]), uvw);
+
+    fMaterialData = materialData;
 
     for (int i = 0; i < 3; i++) {
         fUvw = vec3(uvw[i].xy, material.colorMap);

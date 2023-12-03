@@ -41,14 +41,20 @@ public class ShadowMapOverlay extends Overlay {
 	@Inject
 	private HdPlugin plugin;
 
+	private boolean isActive;
+
 	public ShadowMapOverlay() {
 		setLayer(OverlayLayer.ABOVE_WIDGETS);
 		setPosition(OverlayPosition.TOP_LEFT);
 		setResizable(true);
 	}
 
-	public void setActive(boolean active) {
-		if (active) {
+	public void setActive(boolean activate) {
+		if (activate == isActive)
+			return;
+		isActive = activate;
+
+		if (activate) {
 			overlayManager.add(this);
 			plugin.enableShadowMapOverlay = true;
 			eventBus.register(this);

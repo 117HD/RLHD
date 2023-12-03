@@ -32,8 +32,8 @@ public class FrameTimingsOverlay extends OverlayPanel implements FrameTimer.List
 		panelComponent.setPreferredSize(new Dimension(215, 200));
 	}
 
-	public void setActive(boolean active) {
-		if (active) {
+	public void setActive(boolean activate) {
+		if (activate) {
 			frameTimer.addTimingsListener(this);
 			overlayManager.add(this);
 		} else {
