@@ -97,6 +97,7 @@ vec2 worldUvs(float scale) {
 #include utils/displacement.glsl
 #include utils/shadows.glsl
 #include utils/water.glsl
+#include utils/helpers.glsl
 
 void main() {
     vec3 downDir = vec3(0, -1, 0);
@@ -185,45 +186,14 @@ void main() {
         mat3 TBN = mat3(T, B, N * min(length(T), length(B)));
 
         float selfShadowing = 0;
-        vec3 fragPos = IN.position;
-        #if PARALLAX_OCCLUSION_MAPPING
-        mat3 invTBN = inverse(TBN);
-        vec3 tsViewDir = invTBN * viewDir;
-        vec3 tsLightDir = invTBN * -lightDir;
-
-        vec3 fragDelta = vec3(0);
-
-        sampleDisplacementMap(material1, tsViewDir, tsLightDir, uv1, fragDelta, selfShadowing);
-        sampleDisplacementMap(material2, tsViewDir, tsLightDir, uv2, fragDelta, selfShadowing);
-        sampleDisplacementMap(material3, tsViewDir, tsLightDir, uv3, fragDelta, selfShadowing);
-
-        // Average
-        fragDelta /= 3;
-        selfShadowing /= 3;
-
-        fragPos += TBN * fragDelta;
-        #endif
+        vec3 fragPos = adjustFragPos(IN.position);
 
         // get vertex colors
         vec4 flatColor = vec4(0.5, 0.5, 0.5, 1.0);
         vec4 baseColor1 = vColor[0];
         vec4 baseColor2 = vColor[1];
         vec4 baseColor3 = vColor[2];
-
-        #if VANILLA_COLOR_BANDING
-        vec4 baseColor =
-            IN.texBlend[0] * baseColor1 +
-            IN.texBlend[1] * baseColor2 +
-            IN.texBlend[2] * baseColor3;
-
-        baseColor.rgb = linearToSrgb(baseColor.rgb);
-        baseColor.rgb = srgbToHsv(baseColor.rgb);
-        baseColor.b = floor(baseColor.b * 127) / 127;
-        baseColor.rgb = hsvToSrgb(baseColor.rgb);
-        baseColor.rgb = srgbToLinear(baseColor.rgb);
-
-        baseColor1 = baseColor2 = baseColor3 = baseColor;
-        #endif
+        adjustVertexColors(baseColor1, baseColor2, baseColor3);
 
         // get diffuse textures
         vec4 texColor1 = colorMap1 == -1 ? vec4(1) : texture(textureArray, vec3(uv1, colorMap1));
@@ -233,116 +203,15 @@ void main() {
         texColor2.rgb *= material2.brightness;
         texColor3.rgb *= material3.brightness;
 
-        ivec3 isOverlay = ivec3(
-            vMaterialData[0] >> MATERIAL_FLAG_IS_OVERLAY & 1,
-            vMaterialData[1] >> MATERIAL_FLAG_IS_OVERLAY & 1,
-            vMaterialData[2] >> MATERIAL_FLAG_IS_OVERLAY & 1
-        );
-        int overlayCount = isOverlay[0] + isOverlay[1] + isOverlay[2];
-        ivec3 isUnderlay = ivec3(1) - isOverlay;
-        int underlayCount = isUnderlay[0] + isUnderlay[1] + isUnderlay[2];
-
-        // calculate blend amounts for overlay and underlay vertices
-        vec3 underlayBlend = IN.texBlend * isUnderlay;
-        vec3 overlayBlend = IN.texBlend * isOverlay;
-
-        if (underlayCount == 0 || overlayCount == 0)
-        {
-            // if a tile has all overlay or underlay vertices,
-            // use the default blend
-
-            underlayBlend = IN.texBlend;
-            overlayBlend = IN.texBlend;
-        }
-        else
-        {
-            // if there's a mix of overlay and underlay vertices,
-            // calculate custom blends for each 'layer'
-
-            float underlayBlendMultiplier = 1.0 / (underlayBlend[0] + underlayBlend[1] + underlayBlend[2]);
-            // adjust back to 1.0 total
-            underlayBlend *= underlayBlendMultiplier;
-            underlayBlend = clamp(underlayBlend, 0, 1);
-
-            float overlayBlendMultiplier = 1.0 / (overlayBlend[0] + overlayBlend[1] + overlayBlend[2]);
-            // adjust back to 1.0 total
-            overlayBlend *= overlayBlendMultiplier;
-            overlayBlend = clamp(overlayBlend, 0, 1);
-        }
-
-
         // get fragment colors by combining vertex colors and texture samples
         vec4 texA = getMaterialShouldOverrideBaseColor(material1) ? texColor1 : vec4(texColor1.rgb * baseColor1.rgb, min(texColor1.a, baseColor1.a));
         vec4 texB = getMaterialShouldOverrideBaseColor(material2) ? texColor2 : vec4(texColor2.rgb * baseColor2.rgb, min(texColor2.a, baseColor2.a));
         vec4 texC = getMaterialShouldOverrideBaseColor(material3) ? texColor3 : vec4(texColor3.rgb * baseColor3.rgb, min(texColor3.a, baseColor3.a));
 
-        // combine fragment colors based on each blend, creating
-        // one color for each overlay/underlay 'layer'
-        vec4 underlayColor = texA * underlayBlend.x + texB * underlayBlend.y + texC * underlayBlend.z;
-        vec4 overlayColor = texA * overlayBlend.x + texB * overlayBlend.y + texC * overlayBlend.z;
-
-        float overlayMix = 0;
-
-        if (overlayCount > 0 && underlayCount > 0)
-        {
-            // custom blending logic for blending overlays into underlays
-            // in a style similar to 2008+ HD
-
-            // fragment UV
-            vec2 fragUv = blendedUv;
-            // standalone UV
-            // e.g. if there are 2 overlays and 1 underlay, the underlay is the standalone
-            vec2 sUv[3];
-            bool inverted = false;
-
-            ivec3 isPrimary = isUnderlay;
-            if (overlayCount == 1) {
-                isPrimary = isOverlay;
-                // we use this at the end of this logic to invert
-                // the result if there's 1 overlay, 2 underlay
-                // vs the default result from 1 underlay, 2 overlay
-                inverted = true;
-            }
-
-            if (isPrimary[0] == 1) {
-                sUv = vec2[](vUv[0].xy, vUv[1].xy, vUv[2].xy);
-            } else if (isPrimary[1] == 1) {
-                sUv = vec2[](vUv[1].xy, vUv[0].xy, vUv[2].xy);
-            } else {
-                sUv = vec2[](vUv[2].xy, vUv[0].xy, vUv[1].xy);
-            }
-
-            // point on side perpendicular to sUv[0]
-            vec2 oppositePoint = sUv[1] + pointToLine(sUv[1], sUv[2], sUv[0]) * (sUv[2] - sUv[1]);
-
-            // calculate position of fragment's UV relative to
-            // line between sUv[0] and oppositePoint
-            float result = pointToLine(sUv[0], oppositePoint, fragUv);
-
-            if (inverted)
-            {
-                result = 1 - result;
-            }
-
-            result = clamp(result, 0, 1);
-
-            float distance = distance(sUv[0], oppositePoint);
-
-            float cutoff = 0.5;
-
-            result = (result - (1.0 - cutoff)) * (1.0 / cutoff);
-            result = clamp(result, 0, 1);
-
-            float maxDistance = 2.5;
-            if (distance > maxDistance)
-            {
-                float multi = distance / maxDistance;
-                result = 1.0 - ((1.0 - result) * multi);
-                result = clamp(result, 0, 1);
-            }
-
-            overlayMix = result;
-        }
+        vec4 underlayColor = vec4(0.0);
+        vec4 overlayColor = vec4(0.0);
+        float overlayMix = 0.0;
+        getOverlayUnderlayColorBlend(vMaterialData, blendedUv, IN.texBlend, texA, texB, texC, overlayColor, underlayColor, overlayMix);
 
         outputColor = mix(underlayColor, overlayColor, overlayMix);
 
