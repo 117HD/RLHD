@@ -1,3 +1,34 @@
+void populateLightVectors(inout Light light, vec3 dir, vec3 normals) {
+    light.direction = dir;
+    light.reflection = reflect(-light.direction, normals);
+}
+
+void populateLightDotProducts(inout Light light, Scene scene, vec3 normals) {
+    light.ndl = dot(normals, light.direction);
+}
+
+void populateSceneDotProducts(inout Scene scene, vec3 normals) {
+    scene.vdn = dot(scene.viewDir, normals);
+    scene.ddn = dot(scene.downDir, normals);
+}
+
+// structured like this in case we ever do shadowmaps for other lights.
+void applyShadowsToLight(inout Light light, Scene scene, int[3] vMaterialData, vec3 fragPos, int waterTypeIndex)
+{
+    // this is only here because its technically shadowing on the light.
+    #if (DISABLE_DIRECTIONAL_SHADING)
+        scene.sun.ndl = .7;
+    #endif
+
+    float shadow = 0;
+    if ((vMaterialData[0] >> MATERIAL_FLAG_DISABLE_SHADOW_RECEIVING & 1) == 0)
+        shadow = sampleShadowMap(fragPos, waterTypeIndex, vec2(0), scene.sun.ndl);
+
+    shadow = max(shadow, 0);
+    float inverseShadow = 1 - shadow;
+    light.color *= inverseShadow;
+}
+
 vec3 adjustFragPos(vec3 pos) {
     vec3 fragPos = pos;
     #if PARALLAX_OCCLUSION_MAPPING
@@ -37,7 +68,7 @@ void adjustVertexColors(inout vec4 baseColor1, inout vec4 baseColor2, inout vec4
     #endif
 }
 
-// wow this is complicated.
+// wow this is complicated. someone who understands this blending can refactor this if they want. I'll just move it to tidy things up for now.
 void getOverlayUnderlayColorBlend(int[3] vMaterialData, vec2 blendedUv, vec3 texBlend, vec4 texA, vec4 texB, vec4 texC, inout vec4 overlayColor, inout vec4 underlayColor, inout float overlayMix) {
     ivec3 isOverlay = ivec3(
         vMaterialData[0] >> MATERIAL_FLAG_IS_OVERLAY & 1,

@@ -97,12 +97,15 @@ vec2 worldUvs(float scale) {
 #include utils/displacement.glsl
 #include utils/shadows.glsl
 #include utils/water.glsl
+#include utils/structs.glsl
 #include utils/helpers.glsl
 
 void main() {
-    vec3 downDir = vec3(0, -1, 0);
-    // View & light directions are from the fragment to the camera/light
-    vec3 viewDir = normalize(cameraPos - IN.position);
+    Scene scene;
+    scene.viewDir = normalize(cameraPos - IN.position);
+    scene.downDir = vec3(0, -1, 0);
+    scene.sun.color = lightColor * lightStrength;
+    scene.sun.brightness = lightStrength;
 
     Material material1 = getMaterial(vMaterialData[0] >> MATERIAL_INDEX_SHIFT);
     Material material2 = getMaterial(vMaterialData[1] >> MATERIAL_INDEX_SHIFT);
@@ -135,7 +138,7 @@ void main() {
 
     if (isWater)
     {
-        outputColor = sampleWater(waterTypeIndex, viewDir);
+        outputColor = sampleWater(waterTypeIndex, scene.viewDir);
     }
     else
     {
@@ -185,7 +188,6 @@ void main() {
         vec3 N = normalize(IN.normal);
         mat3 TBN = mat3(T, B, N * min(length(T), length(B)));
 
-        float selfShadowing = 0;
         vec3 fragPos = adjustFragPos(IN.position);
 
         // get vertex colors
@@ -225,19 +227,9 @@ void main() {
             normals = vec3(0.0, 0.0, 1.0);
         }
 
-        float lightDotNormals = dot(normals, lightDir);
-        float downDotNormals = dot(downDir, normals);
-        float viewDotNormals = dot(viewDir, normals);
-
-        #if (DISABLE_DIRECTIONAL_SHADING)
-        lightDotNormals = .7;
-        #endif
-
-        float shadow = 0;
-        if ((vMaterialData[0] >> MATERIAL_FLAG_DISABLE_SHADOW_RECEIVING & 1) == 0)
-            shadow = sampleShadowMap(fragPos, waterTypeIndex, vec2(0), lightDotNormals);
-        shadow = max(shadow, selfShadowing);
-        float inverseShadow = 1 - shadow;
+        populateLightVectors(scene.sun, lightDir, normals);
+        populateLightDotProducts(scene.sun, scene, normals);
+        applyShadowsToLight(scene.sun, scene, vMaterialData, fragPos, waterTypeIndex);
 
         // specular
         vec3 vSpecularGloss = vec3(material1.specularGloss, material2.specularGloss, material3.specularGloss);
@@ -263,9 +255,9 @@ void main() {
 
 
         // calculate lighting
-
         // ambient light
-        vec3 ambientLightOut = ambientColor * ambientStrength;
+        vec3 skyLightOut = max(scene.ddn, 0.0) * fogColor;
+        vec3 ambientLightOut = (ambientColor + skyLightOut) * ambientStrength;
 
         float aoFactor =
             IN.texBlend.x * (material1.ambientOcclusionMap == -1 ? 1 : texture(textureArray, vec3(uv1, material1.ambientOcclusionMap)).r) +
@@ -273,16 +265,13 @@ void main() {
             IN.texBlend.z * (material3.ambientOcclusionMap == -1 ? 1 : texture(textureArray, vec3(uv3, material3.ambientOcclusionMap)).r);
         ambientLightOut *= aoFactor;
 
-        // directional light
-        vec3 dirLightColor = lightColor * lightStrength;
-
         // underwater caustics based on directional light
         if (underwaterCaustics && underwaterEnvironment) {
             float scale = 12.8;
             vec2 causticsUv = worldUvs(scale);
 
             // height offset
-            causticsUv += lightDir.xy * IN.position.y / (128 * scale);
+            causticsUv += scene.sun.direction.xy * IN.position.y / (128 * scale);
 
             const ivec2 direction = ivec2(1, -1);
             const int driftSpeed = 231;
@@ -293,18 +282,13 @@ void main() {
             vec3 caustics = sampleCaustics(flow1, flow2) * 2;
 
             vec3 causticsColor = underwaterCausticsColor * underwaterCausticsStrength;
-            dirLightColor += caustics * causticsColor * lightDotNormals * pow(lightStrength, 1.5);
+            scene.sun.color += caustics * causticsColor * scene.sun.ndl * pow(scene.sun.brightness, 1.5);
         }
 
-        // apply shadows
-        dirLightColor *= inverseShadow;
-
-        vec3 lightColor = dirLightColor;
-        vec3 lightOut = max(lightDotNormals, 0.0) * lightColor;
+        vec3 diffuseLight = max(scene.sun.ndl, 0.0) * scene.sun.color + ambientLightOut;
 
         // directional light specular
-        vec3 lightReflectDir = reflect(-lightDir, normals);
-        vec3 lightSpecularOut = lightColor * specular(viewDir, lightReflectDir, vSpecularGloss, vSpecularStrength);
+        vec3 lightSpecularOut = scene.sun.color * specular(scene.viewDir, scene.sun.reflection, vSpecularGloss, vSpecularStrength);
 
         // point lights
         vec3 pointLightsOut = vec3(0);
@@ -321,43 +305,25 @@ void main() {
                 float attenuation = 1 - min(distanceSquared / radiusSquared, 1);
                 pointLightColor *= attenuation * attenuation;
 
-                float pointLightDotNormals = max(dot(normals, pointLightDir), 0);
-                pointLightsOut += pointLightColor * pointLightDotNormals;
+                float ndl = max(dot(normals, pointLightDir), 0);
+                pointLightsOut += pointLightColor * ndl;
 
                 vec3 pointLightReflectDir = reflect(-pointLightDir, normals);
-                pointLightsSpecularOut += pointLightColor * specular(viewDir, pointLightReflectDir, vSpecularGloss, vSpecularStrength);
+                pointLightsSpecularOut += pointLightColor * specular(scene.viewDir, pointLightReflectDir, vSpecularGloss, vSpecularStrength);
             }
         }
-
-        // sky light
-        vec3 skyLightColor = fogColor;
-        float skyLightStrength = 0.5;
-        float skyDotNormals = downDotNormals;
-        vec3 skyLightOut = max(skyDotNormals, 0.0) * skyLightColor * skyLightStrength;
-
 
         // lightning
         vec3 lightningColor = vec3(.25, .25, .25);
         float lightningStrength = lightningBrightness;
-        float lightningDotNormals = downDotNormals;
+        float lightningDotNormals = scene.ddn;
         vec3 lightningOut = max(lightningDotNormals, 0.0) * lightningColor * lightningStrength;
-
 
         // underglow
         vec3 underglowOut = underglowColor * max(normals.y, 0) * underglowStrength;
 
-
-        // fresnel reflection
-        float baseOpacity = 0.4;
-        float fresnel = 1.0 - clamp(viewDotNormals, 0.0, 1.0);
-        float finalFresnel = clamp(mix(baseOpacity, 1.0, fresnel * 1.2), 0.0, 1.0);
-        vec3 surfaceColor = vec3(0);
-        vec3 surfaceColorOut = surfaceColor * max(combinedSpecularStrength, 0.2);
-
-
         // apply lighting
-        vec3 compositeLight = ambientLightOut + lightOut + lightSpecularOut + skyLightOut + lightningOut +
-        underglowOut + pointLightsOut + pointLightsSpecularOut + surfaceColorOut;
+        vec3 compositeLight = diffuseLight + lightSpecularOut + underglowOut + lightningOut + pointLightsOut;
 
         float unlit = dot(IN.texBlend, vec3(
             getMaterialIsUnlit(material1),
@@ -368,7 +334,7 @@ void main() {
         outputColor.rgb = linearToSrgb(outputColor.rgb);
 
         if (isUnderwater) {
-            sampleUnderwater(outputColor.rgb, waterType, waterDepth, lightDotNormals);
+            sampleUnderwater(outputColor.rgb, waterType, waterDepth, scene.sun.ndl);
         }
     }
 
