@@ -1399,6 +1399,7 @@ public enum Area
 		new AABB(2101, 3898, 2099, 3897, 1), // House 7
 		new AABB(2102, 3901, 2096, 3896, 1)  // House 7
 	),
+	LUNAR_ESSENCE_MINE(9377),
 	LUNAR_ISLE(regionBox(8252, 8509)),
 
 	// Ape Atoll
