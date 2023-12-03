@@ -64,6 +64,7 @@ public enum Underlay {
 	DEFAULT_DIRT(p -> p.ids().groundMaterial(GroundMaterial.DIRT)),
 	DEFAULT_SNOW_1(p -> p.ids().groundMaterial(GroundMaterial.SNOW_1)),
 	DEFAULT_GRUNGE(p -> p.ids().groundMaterial(GroundMaterial.GRUNGE)),
+	DEFAULT_ROCKY_GROUND(p -> p.ids().groundMaterial(GroundMaterial.ROCKY_CAVE_FLOOR)),
 	// Lumbridge
 	LUMBRIDGE_CASTLE_TILE(56, Area.LUMBRIDGE_CASTLE_BASEMENT, GroundMaterial.MARBLE_2_SEMIGLOSS, p -> p.blended(false)),
 
@@ -336,6 +337,47 @@ public enum Underlay {
 	),
 
 	// Fremennik
+	COMPLEX_TILES_ISLE_OF_STONE(p -> p
+		.ids(58, 97, 112)
+		.area(Area.ISLAND_OF_STONE)
+		.replacementResolver(
+			(plugin, scene, tile, override) -> {
+				int[] hsl = HDUtils.getSouthWesternMostTileColor(tile);
+				if (hsl == null)
+					return override;
+
+				LocalPoint localLocation = tile.getLocalLocation();
+				int tileExX = localLocation.getSceneX() + SCENE_OFFSET;
+				int tileExY = localLocation.getSceneY() + SCENE_OFFSET;
+
+
+				// Dirt
+				if (hsl[0] == 7 && hsl[1] >= 1 && hsl[2] <= 71) {
+					switch (plugin.configSeasonalTheme) {
+						case SUMMER:
+						case AUTUMN:
+							return DEFAULT_DIRT;
+						case WINTER:
+							return WINTER_DIRT;
+					}
+				}
+
+				// Stone
+				if (hsl[0] < 13 && hsl[1] == 0 && hsl[2] <= 40) {
+					switch (plugin.configSeasonalTheme) {
+						case SUMMER:
+						case AUTUMN:
+							return DEFAULT_ROCKY_GROUND;
+						case WINTER:
+							return WINTER_GRUNGE;
+					}
+				}
+
+				return DEFAULT_SNOW_1;
+			}
+		)
+	),
+
 	FREMENNIK_SLAYER_DUNGEON(p -> p.ids(48, 63, 92).area(Area.FREMENNIK_SLAYER_DUNGEON).groundMaterial(GroundMaterial.EARTHEN_CAVE_FLOOR)),
 
 	// Ardougne
