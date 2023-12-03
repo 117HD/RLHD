@@ -12790,7 +12790,8 @@
       21625
     ],
     "uvType": "BOX",
-    "uvScale": 1.0
+    "uvScale": 1.0,
+    "flatNormals": true
   },
   {
     "description": "Freminnik - Wall Decoration Wooden - Plank",
