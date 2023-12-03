@@ -11381,14 +11381,13 @@
   },
   {
     "description": "Piscatoris - Falconry - Walls - Wooden - Planks",
-    "baseMaterial": "WOOD_GRAIN_2",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       4198,
       4246
     ],
     "uvType": "BOX",
-    "uvOrientation": 1536,
-    "uvScale": 0.66
+    "uvScale": 1.4
   },
   {
     "description": "Picatoris - Objects - Dirt - Entrance Hole",
@@ -11438,25 +11437,24 @@
   },
   {
     "description": "Piscatoris - Objects - Wooden - Plank Wall",
-    "baseMaterial": "WOOD_GRAIN_2",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       10108,
       10109
     ],
     "uvType": "BOX",
-    "uvOrientation": 1536,
-    "uvScale": 0.66
+    "uvScale": 1.4
   },
   {
     "description": "Piscatoris - Roof - Wooden - Planks",
-    "baseMaterial": "WOOD_GRAIN_2",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       10111,
       10112,
       10113
     ],
     "uvType": "BOX",
-    "uvScale": 0.66,
+    "uvScale": 1.4,
     "uvOrientation": 512
   },
   {
@@ -11472,10 +11470,8 @@
   },
   {
     "description": "Piscatoris & Rellekka - Roof Corners - Wooden - Planks",
-    "baseMaterial": "WOOD_GRAIN_2",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      4229,
-      4232,
       4235,
       4236,
       4237,
@@ -11484,9 +11480,19 @@
       4240
     ],
     "uvType": "BOX",
-    "uvScale": 0.66,
-    "uvOrientationX": 512,
+    "uvScale": 1.4,
+    "uvOrientationY": 512,
     "uvOrientationZ": 512
+  },
+  {
+    "description": "Piscatoris - Roof Corners - Wooden - Planks - Rotated",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      4229,
+      4232
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.4
   },
   {
     "description": "Eagles Peak Climbing Rocks",
@@ -12764,7 +12770,7 @@
   },
   {
     "description": "Freminnik - Walls - Wooden - Plank ",
-    "baseMaterial": "WOOD_GRAIN_2",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       4193,
       4194,
@@ -12779,8 +12785,7 @@
       21625
     ],
     "uvType": "BOX",
-    "uvScale": 0.66,
-    "uvOrientation": 512
+    "uvScale": 1.0
   },
   {
     "description": "Freminnik - Wall Decoration Wooden - Plank",
@@ -12790,12 +12795,12 @@
       4205
     ],
     "uvType": "BOX",
-    "uvScale": 0.66,
+    "uvScale": 1.0,
     "uvOrientation": 512
   },
   {
     "description": "Freminnik - Roof - Wooden - Planks",
-    "baseMaterial": "WOOD_GRAIN_2",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       4206,
       4207,
@@ -12808,12 +12813,12 @@
       26597
     ],
     "uvType": "BOX",
-    "uvScale": 0.66,
-    "uvOrientationY": 512
+    "uvScale": 1.4,
+    "uvOrientationX": 512
   },
   {
     "description": "Freminnik - Roof Corners/edges - Wooden - Planks",
-    "baseMaterial": "WOOD_GRAIN_2",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       4218,
       4219,
@@ -12827,8 +12832,8 @@
       26599
     ],
     "uvType": "BOX",
-    "uvScale": 0.66,
-    "uvOrientationX": 512,
+    "uvScale": 1.4,
+    "uvOrientationY": 512,
     "uvOrientationZ": 512
   },
   {
@@ -12858,7 +12863,7 @@
       4197
     ],
     "uvType": "BOX",
-    "uvScale": 0.66
+    "uvScale": 1.0
   },
   {
     "description": "Freminnik - Game Objects - Wooden - Plank Tables",
