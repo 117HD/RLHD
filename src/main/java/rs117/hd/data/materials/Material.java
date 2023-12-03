@@ -451,6 +451,10 @@ public enum Material {
 		.setNormalMap(JAGGED_STONE_TILE_N)
 		.setSpecular(0.5f, 30)
 	),
+	POTTERY_OVEN_STONE(
+		JAGGED_STONE_TILE,
+		p -> p.setOverrideBaseColor(JAGGED_STONE_TILE.overrideBaseColor).setBrightness(0.3f)
+	),
 
 	TILE_SMALL_1(p -> p
 		.setSpecular(0.8f, 70)),
@@ -530,7 +534,13 @@ public enum Material {
 	WOOD_GRAIN_2_WIDE(WOOD_GRAIN_2, p -> p
 		.setTextureScale(1.5f, 0.5f)
 	),
-	WOOD_GRAIN_3,
+	WOOD_GRAIN_3_D,
+	WOOD_GRAIN_3_N,
+	WOOD_GRAIN_3(p -> p
+		.setDisplacementMap(WOOD_GRAIN_3_D)
+		.setNormalMap(WOOD_GRAIN_3_N)
+		.setSpecular(0.3f, 25)
+	),
 	DOCK_FENCE,
 	DOCK_FENCE_DARK(DOCK_FENCE, p -> p.setBrightness(0.6f)),
 
