@@ -12922,5 +12922,15 @@
       4309
     ],
     "uvType": "BOX"
+  },
+  {
+    "description": "Textured Pottery Oven",
+    "textureMaterial": "POTTERY_OVEN_STONE",
+    "objectIds": [
+      4308
+    ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "uvScale": 0.5
   }
 ]
