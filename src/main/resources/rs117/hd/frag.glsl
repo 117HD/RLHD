@@ -188,8 +188,6 @@ void main() {
         vec3 N = normalize(IN.normal);
         mat3 TBN = mat3(T, B, N * min(length(T), length(B)));
 
-        vec3 fragPos = adjustFragPos(IN.position);
-
         // get vertex colors
         vec4 flatColor = vec4(0.5, 0.5, 0.5, 1.0);
         vec4 baseColor1 = vColor[0];
@@ -229,6 +227,8 @@ void main() {
 
         populateLightVectors(scene.sun, lightDir, normals);
         populateLightDotProducts(scene.sun, scene, normals);
+
+        vec3 fragPos = adjustFragPos(IN.position);
         applyShadowsToLight(scene.sun, scene, vMaterialData, fragPos, waterTypeIndex);
 
         // specular
@@ -293,25 +293,7 @@ void main() {
         // point lights
         vec3 pointLightsOut = vec3(0);
         vec3 pointLightsSpecularOut = vec3(0);
-        for (int i = 0; i < pointLightsCount; i++) {
-            vec4 pos = PointLightArray[i].position;
-            vec3 lightToFrag = pos.xyz - IN.position;
-            float distanceSquared = dot(lightToFrag, lightToFrag);
-            float radiusSquared = pos.w;
-            if (distanceSquared <= radiusSquared) {
-                vec3 pointLightColor = PointLightArray[i].color;
-                vec3 pointLightDir = normalize(lightToFrag);
-
-                float attenuation = 1 - min(distanceSquared / radiusSquared, 1);
-                pointLightColor *= attenuation * attenuation;
-
-                float ndl = max(dot(normals, pointLightDir), 0);
-                pointLightsOut += pointLightColor * ndl;
-
-                vec3 pointLightReflectDir = reflect(-pointLightDir, normals);
-                pointLightsSpecularOut += pointLightColor * specular(scene.viewDir, pointLightReflectDir, vSpecularGloss, vSpecularStrength);
-            }
-        }
+        gatherAdditiveLights(scene, normals, vSpecularGloss, vSpecularStrength, pointLightsOut, pointLightsSpecularOut);
 
         // lightning
         vec3 lightningColor = vec3(.25, .25, .25);

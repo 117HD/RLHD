@@ -4,7 +4,7 @@ void populateLightVectors(inout Light light, vec3 dir, vec3 normals) {
 }
 
 void populateLightDotProducts(inout Light light, Scene scene, vec3 normals) {
-    light.ndl = dot(normals, light.direction);
+    light.ndl = max(dot(normals, light.direction), 0);
 }
 
 void populateSceneDotProducts(inout Scene scene, vec3 normals) {
@@ -27,6 +27,31 @@ void applyShadowsToLight(inout Light light, Scene scene, int[3] vMaterialData, v
     shadow = max(shadow, 0);
     float inverseShadow = 1 - shadow;
     light.color *= inverseShadow;
+}
+
+void gatherAdditiveLights(Scene scene, vec3 normals, vec3 vSpecularGloss, vec3 vSpecularStrength, inout vec3 additiveLights, inout vec3 additiveLightsSpecular)
+{
+    for (int i = 0; i < pointLightsCount; i++) {
+        Light light;
+        light.color = PointLightArray[i].color;
+
+        vec4 pos = PointLightArray[i].position;
+        vec3 lightToFrag = pos.xyz - IN.position;
+        float distanceSquared = dot(lightToFrag, lightToFrag);
+        float radiusSquared = pos.w;
+
+        if (distanceSquared <= radiusSquared) {
+            vec3 pointLightDir = normalize(lightToFrag);
+            populateLightVectors(light, pointLightDir, normals);
+            populateLightDotProducts(light, scene, normals);
+
+            float attenuation = 1 - min(distanceSquared / radiusSquared, 1);
+            light.color *= attenuation * attenuation;
+
+            additiveLights += light.color * light.ndl;
+            additiveLightsSpecular += light.color * specular(scene.viewDir, light.reflection, vSpecularGloss, vSpecularStrength);
+        }
+    }
 }
 
 vec3 adjustFragPos(vec3 pos) {
