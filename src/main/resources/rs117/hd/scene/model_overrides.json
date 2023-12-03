@@ -12685,7 +12685,7 @@
       43699
     ],
     "uvType": "BOX",
-    "uvScale": .7
+    "uvScale": 0.7
   },
   {
     "description": "Guardians of the Rift - Guardian Rune Portal Statues",
@@ -12790,7 +12790,6 @@
       21625
     ],
     "uvType": "BOX",
-    "uvScale": 1.0,
     "flatNormals": true
   },
   {
@@ -12820,7 +12819,6 @@
       26597
     ],
     "uvType": "BOX",
-    "uvScale": 1.4,
     "uvOrientationX": 512,
     "flatNormals": true
   },
@@ -12837,22 +12835,22 @@
       4224,
       4225,
       4241,
+      26598,
       26599
     ],
     "uvType": "BOX",
-    "uvScale": 1.4,
     "uvOrientationY": 512,
     "uvOrientationZ": 512,
     "flatNormals": true
   },
   {
     "description": "Freminnik - Roof Spire - Wooden - Planks",
-    "baseMaterial": "WOOD_GRAIN_2",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       4228
     ],
     "uvType": "BOX",
-    "uvScale": 0.66
+    "uvOrientation": 512
   },
   {
     "description": "Freminnik - Wooden - Plank Stage",
@@ -12871,8 +12869,7 @@
     "objectIds": [
       4197
     ],
-    "uvType": "BOX",
-    "uvScale": 1.0
+    "uvType": "BOX"
   },
   {
     "description": "Freminnik - Game Objects - Wooden - Plank Tables",
