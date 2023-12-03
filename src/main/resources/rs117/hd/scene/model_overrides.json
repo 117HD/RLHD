@@ -1717,12 +1717,15 @@
   },
   {
     "description": "STONE_STEPS",
-    "baseMaterial": "STONE",
+    "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       3684,
+      4279,
       20950,
       20951
-    ]
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75
   },
   {
     "description": "LUMBRIDGE_CASTLE_WALLS",
