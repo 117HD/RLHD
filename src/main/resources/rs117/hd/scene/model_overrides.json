@@ -11387,7 +11387,8 @@
       4246
     ],
     "uvType": "BOX",
-    "uvScale": 1.4
+    "uvScale": 1.4,
+    "flatNormals": true
   },
   {
     "description": "Picatoris - Objects - Dirt - Entrance Hole",
@@ -11443,7 +11444,8 @@
       10109
     ],
     "uvType": "BOX",
-    "uvScale": 1.4
+    "uvScale": 1.4,
+    "flatNormals": true
   },
   {
     "description": "Piscatoris - Roof - Wooden - Planks",
@@ -11455,7 +11457,8 @@
     ],
     "uvType": "BOX",
     "uvScale": 1.4,
-    "uvOrientation": 512
+    "uvOrientation": 512,
+    "flatNormals": true
   },
   {
     "description": "Piscatoris - Roof - Wooden - Plank Doors",
@@ -11482,7 +11485,8 @@
     "uvType": "BOX",
     "uvScale": 1.4,
     "uvOrientationY": 512,
-    "uvOrientationZ": 512
+    "uvOrientationZ": 512,
+    "flatNormals": true
   },
   {
     "description": "Piscatoris - Roof Corners - Wooden - Planks - Rotated",
@@ -11492,7 +11496,8 @@
       4232
     ],
     "uvType": "BOX",
-    "uvScale": 1.4
+    "uvScale": 1.4,
+    "flatNormals": true
   },
   {
     "description": "Eagles Peak Climbing Rocks",
@@ -12789,14 +12794,15 @@
   },
   {
     "description": "Freminnik - Wall Decoration Wooden - Plank",
-    "baseMaterial": "WOOD_GRAIN_2",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       4204,
       4205
     ],
     "uvType": "BOX",
-    "uvScale": 1.0,
-    "uvOrientation": 512
+    "uvScale": 1.1,
+    "uvOrientation": 512,
+    "flatNormals": true
   },
   {
     "description": "Freminnik - Roof - Wooden - Planks",
@@ -12814,7 +12820,8 @@
     ],
     "uvType": "BOX",
     "uvScale": 1.4,
-    "uvOrientationX": 512
+    "uvOrientationX": 512,
+    "flatNormals": true
   },
   {
     "description": "Freminnik - Roof Corners/edges - Wooden - Planks",
@@ -12834,7 +12841,8 @@
     "uvType": "BOX",
     "uvScale": 1.4,
     "uvOrientationY": 512,
-    "uvOrientationZ": 512
+    "uvOrientationZ": 512,
+    "flatNormals": true
   },
   {
     "description": "Freminnik - Roof Spire - Wooden - Planks",
