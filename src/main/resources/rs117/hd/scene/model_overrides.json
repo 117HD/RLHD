@@ -12887,7 +12887,8 @@
     "description": "Freminnik - Decorations - Metal Gutter",
     "baseMaterial": "METALLIC_2_SEMIGLOSS",
     "objectIds": [
-      4162
+      4162,
+      4327
     ],
     "uvType": "BOX",
     "uvOrientation": 272
