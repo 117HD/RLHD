@@ -3547,7 +3547,22 @@
       8969,
       8970,
       8971,
-      25261
+      25261,
+      41438
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.7,
+    "flatNormals": true
+  },
+  {
+    "description": "Rellekka Fences Gate",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      4311,
+      4312,
+      4313,
+      4314
     ],
     "uvType": "BOX",
     "uvOrientation": 512,
@@ -4385,8 +4400,12 @@
   },
   {
     "description": "Ladder - Untextured",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      4163,
+      4164,
+      4187,
+      4189,
       10493,
       10494,
       11794,
@@ -4410,7 +4429,9 @@
       25663,
       25844,
       26107
-    ]
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
   },
   {
     "description": "Camelot Stone",
@@ -4709,6 +4730,9 @@
     "description": "Metallic Furnace",
     "baseMaterial": "METALLIC_2_GLOSS",
     "objectIds": [
+      4304,
+      4305,
+      17029,
       24009,
       24010,
       24011
@@ -4735,8 +4759,10 @@
     "description": "Anvil",
     "baseMaterial": "METALLIC_2_SEMIGLOSS",
     "objectIds": [
-      2097
+      2097,
+      4306
     ],
+    "uvType": "BOX",
     "flatNormals": true
   },
   {
@@ -6905,6 +6931,7 @@
     "objectIds": [
       422,
       423,
+      4288,
       23067
     ],
     "uvType": "MODEL_XZ",
@@ -7429,6 +7456,7 @@
       3659,
       3660,
       11432,
+      20091,
       33191,
       46818,
       46819,
@@ -7523,11 +7551,12 @@
     "uvScale": 0.6
   },
   {
-    "description": "Objects - Wooden - Chair",
+    "description": "Objects - Wooden - Chair - No cushion",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       1088,
       3801,
+      4271,
       10491,
       12885,
       17146,
@@ -12706,5 +12735,168 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.8
+  },
+  {
+    "description": "Freminnik - Walls - Animal Skin Door",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      4250,
+      4251
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Freminnik - Walls - Wooden - Plank Doors",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      4148,
+      4165,
+      4166,
+      4247,
+      4248
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.66
+  },
+  {
+    "description": "Freminnik - Walls - Wooden - Plank ",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      4193,
+      4194,
+      4195,
+      4196,
+      4199,
+      4200,
+      4201,
+      4202,
+      4203,
+      21624,
+      21625
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.66
+  },
+  {
+    "description": "Freminnik - Wall Decoration Wooden - Plank ",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      4204,
+      4205
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Freminnik - Roof - Wooden - Planks",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      4206,
+      4210,
+      4214
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "uvOrientationY": 512
+  },
+  {
+    "description": "Freminnik - Roof Corners - Wooden - Planks",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      4218,
+      4219,
+      4220,
+      4221,
+      4222,
+      4223,
+      4224,
+      4225
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512
+  },
+  {
+    "description": "Freminnik - Wooden - Plank Stage",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      4254,
+      4255
+    ],
+    "uvType": "BOX",
+    "uvOrientationY": 512,
+    "uvScale": 0.66
+  },
+  {
+    "description": "Freminnik - Walls - Wooden - Post",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      4197
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.66
+  },
+  {
+    "description": "Freminnik - Game Objects - Wooden - Plank Tables",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      4269,
+      4270,
+      4272,
+      4372
+    ],
+    "uvType": "BOX",
+    "uvOrientationX": 512,
+    "uvScale": 0.66
+  },
+  {
+    "description": "Freminnik - Game Objects - Wooden Shelf Empty",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      4366,
+      4367
+    ],
+    "uvType": "BOX",
+    "uvOrientationX": 512
+  },
+  {
+    "description": "Freminnik - Game Objects - Wooden Shelf With Pots",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      4368
+    ],
+    "uvType": "BOX",
+    "uvOrientationX": 512
+  },
+  {
+    "description": "Freminnik - Game Objects - Wooden Shelf With Bucket",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      4370
+    ],
+    "uvType": "BOX",
+    "uvOrientationX": 512
+  },
+  {
+    "description": "Freminnik - Decorations - Metal Gutter",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      4162
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 272
+  },
+  {
+    "description": "Freminnik - Helmet Shop Sign",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      4280
+    ],
+    "uvType": "BOX",
+    "uvOrientationY": 512,
+    "uvOrientationZ": 512
   }
 ]
