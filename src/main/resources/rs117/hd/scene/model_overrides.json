@@ -12901,5 +12901,26 @@
     "uvType": "BOX",
     "uvOrientationY": 512,
     "uvOrientationZ": 512
+  },
+  {
+    "description": "Freminnik - Walls - Barricade",
+    "baseMaterial": "LIGHT_BARK",
+    "objectIds": [
+      4289,
+      4290,
+      4291,
+      4292,
+      4293
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 256
+  },
+  {
+    "description": "Spinning Wheel",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      4309
+    ],
+    "uvType": "BOX"
   }
 ]
