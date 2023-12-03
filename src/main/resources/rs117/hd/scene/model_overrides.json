@@ -12931,6 +12931,7 @@
     ],
     "uvType": "BOX",
     "retainVanillaUvs": false,
-    "uvScale": 0.5
+    "uvScale": 0.5,
+    "uvOrientation": 512
   }
 ]
