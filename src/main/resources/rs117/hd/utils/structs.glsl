@@ -22,4 +22,5 @@ struct Scene {
     float mipBias;
     vec3 normals;
     vec3 fragPos;
+    mat3 TBN;
 };

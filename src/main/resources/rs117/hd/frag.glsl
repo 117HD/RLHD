@@ -229,7 +229,7 @@ void main() {
         }
 
         vec3 ambientTerm = ambientTerm(scene, fogColor, ambientStrength);
-        vec3 diffuseTerm = max(scene.sun.ndl, 0.0) * scene.sun.color * lightAttenuation(scene.sun, scene.fragPos, waterTypeIndex, vMaterialData[0]);
+        vec3 diffuseTerm = max(scene.sun.ndl, 0.0) * vec3(0.0) * lightAttenuation(scene.sun, scene.fragPos, waterTypeIndex, vMaterialData[0]);
         vec3 specularTerm = scene.sun.color * specular(scene.viewDir, scene.sun.reflection, vSpecularGloss, vSpecularStrength);
 
         // point lights

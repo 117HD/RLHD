@@ -183,11 +183,11 @@ void adjustFragPos(inout Scene scene, vec3 pos) {
     scene.fragPos = pos;
     #if PARALLAX_OCCLUSION_MAPPING
         mat3 invTBN = inverse(scene.TBN);
-        vec3 tsViewDir = invTBN * viewDir;
-        vec3 tsLightDir = invTBN * -lightDir;
+        vec3 tsViewDir = invTBN * scene.viewDir;
+        vec3 tsLightDir = invTBN * -scene.sun.direction;
 
         vec3 fragDelta = vec3(0);
-
+        float selfShadowing = 0;
         sampleDisplacementMap(scene.materials[0], tsViewDir, tsLightDir, scene.uvs[0], fragDelta, selfShadowing);
         sampleDisplacementMap(scene.materials[1], tsViewDir, tsLightDir, scene.uvs[1], fragDelta, selfShadowing);
         sampleDisplacementMap(scene.materials[2], tsViewDir, tsLightDir, scene.uvs[2], fragDelta, selfShadowing);
@@ -214,6 +214,7 @@ void getSceneNormals(inout Scene scene, int flags) {
         vec3 n2 = sampleNormalMap(scene.materials[1], scene.uvs[1], TBN);
         vec3 n3 = sampleNormalMap(scene.materials[2], scene.uvs[2], TBN);
 
+        scene.TBN = TBN;
         scene.normals = normalize(n1 * scene.texBlend.x + n2 * scene.texBlend.y + n3 * scene.texBlend.z);
     }
 }
