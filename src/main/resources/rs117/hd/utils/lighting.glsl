@@ -32,11 +32,7 @@ float lightAttenuation(inout Light light, Scene scene, int flags)
         break;
 
         case LIGHT_POINT:
-            vec3 lightToFrag = light.position - scene.fragPos;
-            float distanceSquared = dot(lightToFrag, lightToFrag);
-            float radiusSquared = light.radius;
-            float falloff = 1 - min(distanceSquared / radiusSquared, 1);
-
+            float falloff = 1 - min(light.distance / light.radius, 1);
             atten = falloff * falloff;
         break;
     }
@@ -46,21 +42,25 @@ float lightAttenuation(inout Light light, Scene scene, int flags)
 
 void gatherAdditiveLights(inout vec3 additiveLights, inout vec3 additiveLightsSpecular, Scene scene, int flags)
 {
-    // Note: I actually saw a slight performance decrease when checking against light radius to distance, so I've removed that.
-    // branches in shaders are generally fine, as long as you're branching on something constant. If you branch on things that change from fragment to fragment, it can cause performance decreases.
     for (int i = 0; i < pointLightsCount; i++) {
         Light light;
         light.type = LIGHT_POINT; // Hardcoding point light type here for now. We will need a better way to define light type in the future if we ever add spot lights or something.
         light.color = PointLightArray[i].color;
         light.position = PointLightArray[i].position.xyz;
         light.radius = PointLightArray[i].position.w;
-        light.color = light.color * lightAttenuation(light, scene, flags);
 
-        vec3 pointLightDir = normalize(light.position - scene.fragPos);
-        populateLightVectors(light, pointLightDir, scene.normals);
-        populateLightDotProducts(light, scene, scene.normals);
+        vec3 lightToFrag = light.position - scene.fragPos;
+        light.distance = dot(lightToFrag, lightToFrag);
 
-        additiveLights += light.color * light.ndl;
-        additiveLightsSpecular += light.color * specular(scene.viewDir, light.reflection, scene.smoothness, scene.reflectivity);
+        if(light.distance <= light.radius) {
+            vec3 pointLightDir = normalize(light.position - scene.fragPos);
+            populateLightVectors(light, pointLightDir, scene.normals);
+            populateLightDotProducts(light, scene, scene.normals);
+
+            float attenuation = lightAttenuation(light, scene, flags);
+
+            additiveLights += light.color * light.ndl * attenuation;
+            additiveLightsSpecular += light.color * specular(scene.viewDir, light.reflection, scene.smoothness, scene.reflectivity) * attenuation;
+        }
     }
 }

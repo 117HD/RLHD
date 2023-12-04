@@ -7,6 +7,7 @@ struct Light {
     vec3 direction;
     vec3 reflection;
     float ndl; // normal.light
+    float distance;
 };
 
 // Dont know what else to call this. Just holds all the scene vars used for lighting and helper functions for quick access
