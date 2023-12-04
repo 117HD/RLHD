@@ -166,7 +166,6 @@ public class LightManager {
 		eventBus.unregister(this);
 	}
 
-
 	public void update(SceneContext sceneContext) {
 		assert client.isClientThread();
 
