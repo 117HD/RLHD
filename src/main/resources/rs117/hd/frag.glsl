@@ -107,6 +107,7 @@ void main() {
     scene.viewDir = normalize(cameraPos - IN.position);
     scene.downDir = vec3(0, -1, 0);
 
+    scene.sun.type = LIGHT_DIRECTIONAL;
     scene.sun.color = lightColor * lightStrength;
     scene.sun.brightness = lightStrength;
 
@@ -152,10 +153,10 @@ void main() {
     {
         adjustSceneUvs(scene);
         applyFlowmapToUvs(scene, isUnderwater, waterType);
-
-        // Set up tangent-space transformation matrix
-        vec3 N = normalize(IN.normal);
-        mat3 TBN = mat3(T, B, N * min(length(T), length(B)));
+        getSceneNormals(scene, vMaterialData[0]);
+        populateLightVectors(scene.sun, lightDir, scene.normals);
+        populateLightDotProducts(scene.sun, scene, scene.normals);
+        adjustFragPos(scene, IN.position);
 
         // get vertex colors
         vec4 flatColor = vec4(0.5, 0.5, 0.5, 1.0);
@@ -177,28 +178,13 @@ void main() {
         vec4 texB = getMaterialShouldOverrideBaseColor(scene.materials[1]) ? texColor2 : vec4(texColor2.rgb * baseColor2.rgb, min(texColor2.a, baseColor2.a));
         vec4 texC = getMaterialShouldOverrideBaseColor(scene.materials[2]) ? texColor3 : vec4(texColor3.rgb * baseColor3.rgb, min(texColor3.a, baseColor3.a));
 
+        // underlay / overlay color contribution
         vec4 underlayColor = vec4(0.0);
         vec4 overlayColor = vec4(0.0);
         float overlayMix = 0.0;
         getOverlayUnderlayColorBlend(vMaterialData, scene.uvs[3], IN.texBlend, texA, texB, texC, overlayColor, underlayColor, overlayMix);
 
         outputColor = mix(underlayColor, overlayColor, overlayMix);
-
-        // normals
-        vec3 n1 = sampleNormalMap(scene.materials[0], scene.uvs[0], TBN);
-        vec3 n2 = sampleNormalMap(scene.materials[1], scene.uvs[1], TBN);
-        vec3 n3 = sampleNormalMap(scene.materials[2], scene.uvs[2], TBN);
-        vec3 normals = normalize(n1 * IN.texBlend.x + n2 * IN.texBlend.y + n3 * IN.texBlend.z);
-
-        if((vMaterialData[0] >> MATERIAL_FLAG_UPWARDS_NORMALS & 1) == 1) {
-            normals = vec3(0.0, 0.0, 1.0);
-        }
-
-        populateLightVectors(scene.sun, lightDir, normals);
-        populateLightDotProducts(scene.sun, scene, normals);
-
-        vec3 fragPos = adjustFragPos(IN.position);
-        applyShadowsToLight(scene.sun, scene, vMaterialData, fragPos, waterTypeIndex);
 
         // specular
         vec3 vSpecularGloss = vec3(scene.materials[0].specularGloss, scene.materials[1].specularGloss, scene.materials[2].specularGloss);
@@ -222,9 +208,6 @@ void main() {
         }
         float combinedSpecularStrength = dot(vSpecularStrength, IN.texBlend);
 
-        // calculate lighting
-        vec3 ambientLighting = ambientTerm(scene, fogColor, ambientStrength);
-
         // underwater caustics based on directional light
         if (underwaterCaustics && underwaterEnvironment) {
             float scale = 12.8;
@@ -245,15 +228,14 @@ void main() {
             scene.sun.color += caustics * causticsColor * scene.sun.ndl * pow(scene.sun.brightness, 1.5);
         }
 
-        vec3 diffuseLight = max(scene.sun.ndl, 0.0) * scene.sun.color + ambientLighting;
-
-        // directional light specular
-        vec3 lightSpecularOut = scene.sun.color * specular(scene.viewDir, scene.sun.reflection, vSpecularGloss, vSpecularStrength);
+        vec3 ambientTerm = ambientTerm(scene, fogColor, ambientStrength);
+        vec3 diffuseTerm = max(scene.sun.ndl, 0.0) * scene.sun.color * lightAttenuation(scene.sun, scene.fragPos, waterTypeIndex, vMaterialData[0]);
+        vec3 specularTerm = scene.sun.color * specular(scene.viewDir, scene.sun.reflection, vSpecularGloss, vSpecularStrength);
 
         // point lights
-        vec3 pointLightsOut = vec3(0);
-        vec3 pointLightsSpecularOut = vec3(0);
-        gatherAdditiveLights(scene, normals, vSpecularGloss, vSpecularStrength, pointLightsOut, pointLightsSpecularOut);
+        vec3 additiveLights = vec3(0);
+        vec3 additiveLightsSpecular = vec3(0);
+        gatherAdditiveLights(additiveLights, additiveLightsSpecular, scene, vSpecularGloss, vSpecularStrength, waterTypeIndex, vMaterialData[0]);
 
         // lightning
         vec3 lightningColor = vec3(.25, .25, .25);
@@ -262,17 +244,12 @@ void main() {
         vec3 lightningOut = max(lightningDotNormals, 0.0) * lightningColor * lightningStrength;
 
         // underglow
-        vec3 underglowOut = underglowColor * max(normals.y, 0) * underglowStrength;
+        vec3 underglowOut = underglowColor * max(scene.normals.y, 0) * underglowStrength;
 
         // apply lighting
-        vec3 compositeLight = diffuseLight + lightSpecularOut + underglowOut + lightningOut + pointLightsOut;
+        vec3 compositeLight = diffuseTerm + ambientTerm + specularTerm + additiveLights + additiveLightsSpecular + underglowOut + lightningOut ;
 
-        float unlit = dot(IN.texBlend, vec3(
-            getMaterialIsUnlit(scene.materials[0]),
-            getMaterialIsUnlit(scene.materials[1]),
-            getMaterialIsUnlit(scene.materials[2])
-        ));
-        outputColor.rgb *= mix(compositeLight, vec3(1), unlit);
+        outputColor.rgb *= mix(compositeLight, vec3(1), isMaterialUnlit(scene));
         outputColor.rgb = linearToSrgb(outputColor.rgb);
 
         if (isUnderwater) {

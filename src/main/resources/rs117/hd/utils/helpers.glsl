@@ -179,26 +179,25 @@ void getOverlayUnderlayColorBlend(int[3] vMaterialData, vec2 blendedUv, vec3 tex
     }
 }
 
-vec3 adjustFragPos(vec3 pos) {
-    vec3 fragPos = pos;
+void adjustFragPos(inout Scene scene, vec3 pos) {
+    scene.fragPos = pos;
     #if PARALLAX_OCCLUSION_MAPPING
-        mat3 invTBN = inverse(TBN);
+        mat3 invTBN = inverse(scene.TBN);
         vec3 tsViewDir = invTBN * viewDir;
         vec3 tsLightDir = invTBN * -lightDir;
 
         vec3 fragDelta = vec3(0);
 
-        sampleDisplacementMap(material1, tsViewDir, tsLightDir, uv1, fragDelta, selfShadowing);
-        sampleDisplacementMap(material2, tsViewDir, tsLightDir, uv2, fragDelta, selfShadowing);
-        sampleDisplacementMap(material3, tsViewDir, tsLightDir, uv3, fragDelta, selfShadowing);
+        sampleDisplacementMap(scene.materials[0], tsViewDir, tsLightDir, scene.uvs[0], fragDelta, selfShadowing);
+        sampleDisplacementMap(scene.materials[1], tsViewDir, tsLightDir, scene.uvs[1], fragDelta, selfShadowing);
+        sampleDisplacementMap(scene.materials[2], tsViewDir, tsLightDir, scene.uvs[2], fragDelta, selfShadowing);
 
         // Average
         fragDelta /= 3;
         selfShadowing /= 3;
 
-        fragPos += TBN * fragDelta;
+        scene.fragPos += scene.TBN * fragDelta;
     #endif
-    return fragPos;
 }
 
 float getAmbientOcclusion(Scene scene) {
@@ -206,4 +205,32 @@ float getAmbientOcclusion(Scene scene) {
         scene.texBlend.x * (scene.materials[0].ambientOcclusionMap == -1 ? 1 : texture(textureArray, vec3(scene.uvs[0], scene.materials[0].ambientOcclusionMap)).r) +
         scene.texBlend.y * (scene.materials[1].ambientOcclusionMap == -1 ? 1 : texture(textureArray, vec3(scene.uvs[1], scene.materials[1].ambientOcclusionMap)).r) +
         scene.texBlend.z * (scene.materials[2].ambientOcclusionMap == -1 ? 1 : texture(textureArray, vec3(scene.uvs[2], scene.materials[2].ambientOcclusionMap)).r);
+}
+
+void getSceneNormals(inout Scene scene, int flags) {
+    if((flags >> MATERIAL_FLAG_UPWARDS_NORMALS & 1) == 1) {
+        scene.normals = vec3(0.0, 1.0, 0.0);
+    }
+    else
+    {
+        // Set up tangent-space transformation matrix
+        vec3 N = normalize(IN.normal);
+        mat3 TBN = mat3(T, B, N * min(length(T), length(B)));
+
+        vec3 n1 = sampleNormalMap(scene.materials[0], scene.uvs[0], TBN);
+        vec3 n2 = sampleNormalMap(scene.materials[1], scene.uvs[1], TBN);
+        vec3 n3 = sampleNormalMap(scene.materials[2], scene.uvs[2], TBN);
+
+        scene.normals = normalize(n1 * scene.texBlend.x + n2 * scene.texBlend.y + n3 * scene.texBlend.z);
+    }
+}
+
+float isMaterialUnlit(Scene scene) {
+    float unlit = dot(scene.texBlend, vec3(
+        getMaterialIsUnlit(scene.materials[0]),
+        getMaterialIsUnlit(scene.materials[1]),
+        getMaterialIsUnlit(scene.materials[2])
+    ));
+
+    return unlit;
 }

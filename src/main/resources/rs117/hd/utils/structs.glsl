@@ -1,4 +1,7 @@
 struct Light {
+    int type;
+    vec3 position;
+    float radius;
     vec3 color;
     float brightness;
     vec3 direction;
@@ -17,4 +20,6 @@ struct Scene {
     vec2[4] uvs; // 0, 1, 2 = standard uv, 3 = blended uv // modified by Helpers/adjustSceneUvs
     vec3 texBlend;
     float mipBias;
+    vec3 normals;
+    vec3 fragPos;
 };

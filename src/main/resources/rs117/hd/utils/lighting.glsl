@@ -12,44 +12,56 @@ vec3 specularTerm() {
     return vec3(0);
 }
 
-// structured like this in case we ever do shadowmaps for other lights.
-void applyShadowsToLight(inout Light light, Scene scene, int[3] vMaterialData, vec3 fragPos, int waterTypeIndex)
+// Generally in most engines, attenuation ends up being the shadowmap and the falloff, depending on the light type.
+// So we're going to do the same thing here to make it easy to access / modify
+float lightAttenuation(inout Light light, vec3 fragPos, int waterTypeIndex, int flags)
 {
-    // this is only here because its technically shadowing on the light.
-    #if (DISABLE_DIRECTIONAL_SHADING)
-        scene.sun.ndl = .7;
-    #endif
+    float atten = 1.0;
 
-    float shadow = 0;
-    if ((vMaterialData[0] >> MATERIAL_FLAG_DISABLE_SHADOW_RECEIVING & 1) == 0)
-        shadow = sampleShadowMap(fragPos, waterTypeIndex, vec2(0), scene.sun.ndl);
+    switch(light.type) {
+        case LIGHT_DIRECTIONAL:
+            #if (DISABLE_DIRECTIONAL_SHADING)
+                light.ndl = .7;
+            #endif
 
-    shadow = max(shadow, 0);
-    float inverseShadow = 1 - shadow;
-    light.color *= inverseShadow;
+            float shadow = 0;
+            if ((flags >> MATERIAL_FLAG_DISABLE_SHADOW_RECEIVING & 1) == 0) {
+                shadow = sampleShadowMap(fragPos, waterTypeIndex, vec2(0), light.ndl);
+            }
+
+            atten = 1 - max(shadow, 0);
+        break;
+
+        case LIGHT_POINT:
+            vec3 lightToFrag = light.position - fragPos;
+            float distanceSquared = dot(lightToFrag, lightToFrag);
+            float radiusSquared = light.radius;
+            float falloff = 1 - min(distanceSquared / radiusSquared, 1);
+
+            atten = falloff * falloff;
+        break;
+    }
+
+    return atten;
 }
 
-void gatherAdditiveLights(Scene scene, vec3 normals, vec3 vSpecularGloss, vec3 vSpecularStrength, inout vec3 additiveLights, inout vec3 additiveLightsSpecular)
+void gatherAdditiveLights(inout vec3 additiveLights, inout vec3 additiveLightsSpecular, Scene scene, vec3 vSpecularGloss, vec3 vSpecularStrength, int waterTypeIndex, int flags)
 {
+    // Note: I actually saw a slight performance decrease when checking against light radius to distance, so I've removed that.
+    // branches in shaders are generally fine, as long as you're branching on something constant. If you branch on things that change from fragment to fragment, it can cause performance decreases.
     for (int i = 0; i < pointLightsCount; i++) {
         Light light;
+        light.type = LIGHT_POINT;
         light.color = PointLightArray[i].color;
+        light.position = PointLightArray[i].position.xyz;
+        light.radius = PointLightArray[i].position.w;
+        light.color = light.color * lightAttenuation(light, scene.fragPos, waterTypeIndex, flags);
 
-        vec4 pos = PointLightArray[i].position;
-        vec3 lightToFrag = pos.xyz - IN.position;
-        float distanceSquared = dot(lightToFrag, lightToFrag);
-        float radiusSquared = pos.w;
+        vec3 pointLightDir = normalize(light.position - scene.fragPos);
+        populateLightVectors(light, pointLightDir, scene.normals);
+        populateLightDotProducts(light, scene, scene.normals);
 
-        if (distanceSquared <= radiusSquared) {
-            vec3 pointLightDir = normalize(lightToFrag);
-            populateLightVectors(light, pointLightDir, normals);
-            populateLightDotProducts(light, scene, normals);
-
-            float attenuation = 1 - min(distanceSquared / radiusSquared, 1);
-            light.color *= attenuation * attenuation;
-
-            additiveLights += light.color * light.ndl;
-            additiveLightsSpecular += light.color * specular(scene.viewDir, light.reflection, vSpecularGloss, vSpecularStrength);
-        }
+        additiveLights += light.color * light.ndl;
+        additiveLightsSpecular += light.color * specular(scene.viewDir, light.reflection, vSpecularGloss, vSpecularStrength);
     }
 }
