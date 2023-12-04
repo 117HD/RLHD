@@ -303,6 +303,7 @@ public class LightManager {
 				flicker = minFlicker + (maxFlicker - minFlicker) * flicker;
 
 				light.currentStrength = light.strength * flicker;
+				light.currentSize = (int) (light.radius * 1.5f);
 			}
 			else if (light.type == LightType.PULSE)
 			{
