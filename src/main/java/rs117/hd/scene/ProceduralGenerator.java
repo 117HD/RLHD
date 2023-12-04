@@ -856,9 +856,9 @@ public class ProceduralGenerator {
 	 * @param tile  to determine the WaterType of
 	 * @return the WaterType of the specified Tile
 	 */
-	WaterType tileWaterType(Scene scene, Tile tile, SceneTilePaint sceneTilePaint)
+	WaterType tileWaterType(Scene scene, Tile tile, SceneTilePaint paint)
 	{
-		if (sceneTilePaint == null)
+		if (paint == null)
 			return WaterType.NONE;
 
 		WaterType waterType;
@@ -868,6 +868,17 @@ public class ProceduralGenerator {
 		} else {
 			Underlay underlay = Underlay.getUnderlay(scene, tile, plugin);
 			waterType = underlay.waterType;
+		}
+
+		// As a fallback, always consider vanilla textured water tiles as water
+		// We purposefully ignore material replacements here such as ice from the winter theme
+		if (waterType == WaterType.NONE) {
+			int texture = paint.getTexture();
+			if (texture == Material.WATER_FLAT.vanillaTextureIndex || texture == Material.WATER_FLAT_2.vanillaTextureIndex) {
+				waterType = WaterType.WATER_FLAT;
+			} else if (texture == Material.SWAMP_WATER_FLAT.vanillaTextureIndex) {
+				waterType = WaterType.SWAMP_WATER_FLAT;
+			}
 		}
 
 		return getSeasonalWaterType(waterType);
@@ -881,27 +892,32 @@ public class ProceduralGenerator {
 	 * @param face  the index of the specified face
 	 * @return the WaterType of the specified face on the tile model
 	 */
-	WaterType faceWaterType(Scene scene, Tile tile, int face, SceneTileModel sceneTileModel)
+	WaterType faceWaterType(Scene scene, Tile tile, int face, SceneTileModel model)
 	{
-		WaterType waterType = WaterType.NONE;
+		if (model == null)
+			return WaterType.NONE;
 
-		if (sceneTileModel != null)
-		{
-			Overlay overlay = Overlay.getOverlay(scene, tile, plugin);
-			if (isOverlayFace(tile, face) && overlay != Overlay.NONE)
-			{
-				waterType = overlay.waterType;
-			}
-			else
-			{
-				Underlay underlay = Underlay.getUnderlay(scene, tile, plugin);
-				waterType = underlay.waterType;
+		WaterType waterType;
+		Overlay overlay = Overlay.getOverlay(scene, tile, plugin);
+		if (isOverlayFace(tile, face) && overlay != Overlay.NONE) {
+			waterType = overlay.waterType;
+		} else {
+			Underlay underlay = Underlay.getUnderlay(scene, tile, plugin);
+			waterType = underlay.waterType;
+		}
+
+		// As a fallback, always consider vanilla textured water tiles as water
+		// We purposefully ignore material replacements here such as ice from the winter theme
+		if (waterType == WaterType.NONE && model.getTriangleTextureId() != null) {
+			int texture = model.getTriangleTextureId()[face];
+			if (texture == Material.WATER_FLAT.vanillaTextureIndex || texture == Material.WATER_FLAT_2.vanillaTextureIndex) {
+				waterType = WaterType.WATER_FLAT;
+			} else if (texture == Material.SWAMP_WATER_FLAT.vanillaTextureIndex) {
+				waterType = WaterType.SWAMP_WATER_FLAT;
 			}
 		}
 
-		waterType = getSeasonalWaterType(waterType);
-
-		return waterType;
+		return getSeasonalWaterType(waterType);
 	}
 
 	private static boolean[] getTileOverlayTris(int tileShapeIndex)

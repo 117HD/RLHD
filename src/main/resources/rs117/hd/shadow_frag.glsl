@@ -30,6 +30,7 @@
 #if SHADOW_MODE == SHADOW_MODE_DETAILED
     uniform sampler2DArray textureArray;
     in vec3 fUvw;
+    flat in int fMaterialData;
 #endif
 
 #if SHADOW_TRANSPARENCY
@@ -44,11 +45,18 @@ void main() {
 
     #if SHADOW_MODE == SHADOW_MODE_DETAILED
         if (fUvw.z != -1) {
-            opacity = texture(textureArray, fUvw).a;
+            vec3 uvw = fUvw;
+
+            // Vanilla tree textures rely on UVs being clamped horizontally,
+            // which HD doesn't do, so we instead opt to hide these fragments
+            if ((fMaterialData >> MATERIAL_FLAG_VANILLA_UVS & 1) == 1)
+                uvw.x = clamp(uvw.x, 0, .984375);
+
+            opacity = texture(textureArray, uvw).a;
 
             #if !SHADOW_TRANSPARENCY
                 if (opacity < SHADOW_DEFAULT_OPACITY_THRESHOLD)
-                    discard; // TODO: compare performance between discard and writing to gl_FragDepth
+                    discard;
             #endif
         }
     #endif

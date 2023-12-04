@@ -30114,10 +30114,7 @@
     "type": "STATIC",
     "duration": 600,
     "range": 3,
-    "objectIds": [
-      44826,
-      44934
-    ]
+    "objectIds": [ ]
   },
   {
     "description": "CAVE_WALL_LANTERN",

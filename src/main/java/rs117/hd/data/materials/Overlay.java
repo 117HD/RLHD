@@ -860,7 +860,7 @@ public enum Overlay {
 
 	// Dragon Slayer II
 	DS2_SHIPS_WATER(6, Area.DS2_SHIPS, WaterType.WATER_FLAT),
-	DS2_FLEET_ATTACKED(6, Area.DS2_FLEET_ATTACKED, WaterType.WATER_FLAT),
+	DREAM_WORLD_GROUND(160, Area.LUNAR_DREAM_WORLD, GroundMaterial.NONE),
 
 	// Camdozaal (Below Ice Mountain)
 	CAMDOZAAL_WATER(-75, Area.CAMDOZAAL, WaterType.WATER),
@@ -937,9 +937,11 @@ public enum Overlay {
 		.blended(false)),
 	LUNAR_ISLAND_HOUSES_WOOD_FLOOR(81, Area.LUNAR_VILLAGE_HOUSE_INTERIORS_FIRST, GroundMaterial.HD_WOOD_PLANKS_1, p -> p
 		.blended(true)),
+	LUNAR_ESSENCE_MINE_WATER(p -> p.ids(151).area(Area.LUNAR_ESSENCE_MINE).waterType(WaterType.WATER)),
 	KELDAGRIM_PATHS(117, GroundMaterial.FALADOR_PATHS),
 
 	CERBERUS_WATER(128, Area.CERBERUS, WaterType.SWAMP_WATER_FLAT),
+	SHIP_SAILING_WATER(p -> p.area(Area.SHIP_SAILING).ids(6).waterType(WaterType.WATER_FLAT)),
 
 	// Default overlays
 	OVERLAY_WATER(p -> p.area(Area.OVERWORLD).ids(-128, -105, -98, 6, 41, 104, 196).waterType(WaterType.WATER)),

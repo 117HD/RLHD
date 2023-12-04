@@ -2756,7 +2756,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		eightIntWrite[6] = y + client.getCameraY2();
 		eightIntWrite[7] = z + client.getCameraZ2();
 
-		int faceCount;
+		int faceCount = 0;
 		if (sceneContext.id == (offsetModel.getSceneId() & SceneUploader.SCENE_ID_MASK)) {
 			// The model is part of the static scene buffer
 			assert model == renderable;
@@ -2801,15 +2801,17 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				int vertexOffset = dynamicOffsetVertices + sceneContext.getVertexOffset();
 				int uvOffset = dynamicOffsetUvs + sceneContext.getUvOffset();
 				ModelOverride modelOverride = modelOverrideManager.getOverride(hash, HDUtils.cameraSpaceToWorldPoint(client, x, z));
-				modelPusher.pushModel(sceneContext, null, hash, model, modelOverride, ObjectType.NONE, 0, true);
+				if (modelOverride.hide) {
+					vertexOffset = -1;
+				} else {
+					modelPusher.pushModel(sceneContext, null, hash, model, modelOverride, ObjectType.NONE, 0, true);
+					faceCount = sceneContext.modelPusherResults[0];
+					if (sceneContext.modelPusherResults[1] == 0)
+						uvOffset = -1;
+				}
+
 				if (enableDetailedTimers)
 					frameTimer.end(Timer.MODEL_PUSHING);
-
-				faceCount = sceneContext.modelPusherResults[0];
-				if (faceCount == 0)
-					vertexOffset = -1;
-				if (sceneContext.modelPusherResults[1] == 0)
-					uvOffset = -1;
 
 				eightIntWrite[0] = vertexOffset;
 				eightIntWrite[1] = uvOffset;
