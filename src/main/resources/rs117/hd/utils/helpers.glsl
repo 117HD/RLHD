@@ -300,7 +300,7 @@ void getSceneAlbedo(inout Scene scene)
 
 void getSceneNormals(inout Scene scene, int flags) {
     if((flags >> MATERIAL_FLAG_UPWARDS_NORMALS & 1) == 1) {
-        scene.normals = vec3(0.0, 1.0, 0.0);
+        scene.normals = vec3(0.0, -1.0, 0.0);
     }
     else
     {
