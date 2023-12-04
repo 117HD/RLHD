@@ -33,38 +33,36 @@ void populateSceneTerrainInformation(inout Scene scene) {
 }
 
 void adjustSceneUvs(inout Scene scene) {
-        // Vanilla tree textures rely on UVs being clamped horizontally,
-        // which HD doesn't do, so we instead opt to hide these fragments
-        if ((vMaterialData[0] >> MATERIAL_FLAG_VANILLA_UVS & 1) == 1) {
-            scene.uvs[3].x = clamp(scene.uvs[3].x, 0, .984375);
+    // Vanilla tree textures rely on UVs being clamped horizontally,
+    // which HD doesn't do, so we instead opt to hide these fragments
+    if ((vMaterialData[0] >> MATERIAL_FLAG_VANILLA_UVS & 1) == 1) {
+        scene.uvs[3].x = clamp(scene.uvs[3].x, 0, .984375);
 
-            // Make fishing spots easier to see
-            if (scene.materials[0].colorMap == MAT_WATER_DROPLETS.colorMap)
-                scene.mipBias = -100;
-        }
+        // Make fishing spots easier to see
+        if (scene.materials[0].colorMap == MAT_WATER_DROPLETS.colorMap)
+            scene.mipBias = -100;
+    }
 
-        // Not sure why we do this but i'll trust the process.
-        scene.uvs[0] = scene.uvs[3];
-        scene.uvs[1] = scene.uvs[3];
-        scene.uvs[2] = scene.uvs[3];
+    // Not sure why we do this but i'll trust the process.
+    scene.uvs[0] = scene.uvs[3];
+    scene.uvs[1] = scene.uvs[3];
+    scene.uvs[2] = scene.uvs[3];
 
-        // Scroll UVs
-        scene.uvs[0] += scene.materials[0].scrollDuration * elapsedTime;
-        scene.uvs[1] += scene.materials[1].scrollDuration * elapsedTime;
-        scene.uvs[2] += scene.materials[2].scrollDuration * elapsedTime;
+    // Scroll UVs
+    scene.uvs[0] += scene.materials[0].scrollDuration * elapsedTime;
+    scene.uvs[1] += scene.materials[1].scrollDuration * elapsedTime;
+    scene.uvs[2] += scene.materials[2].scrollDuration * elapsedTime;
 
-        // Scale from the center
-        scene.uvs[0] = (scene.uvs[0] - 0.5) * scene.materials[0].textureScale + 0.5;
-        scene.uvs[1] = (scene.uvs[1] - 0.5) * scene.materials[1].textureScale + 0.5;
-        scene.uvs[2] = (scene.uvs[2] - 0.5) * scene.materials[2].textureScale + 0.5;
+    // Scale from the center
+    scene.uvs[0] = (scene.uvs[0] - 0.5) * scene.materials[0].textureScale + 0.5;
+    scene.uvs[1] = (scene.uvs[1] - 0.5) * scene.materials[1].textureScale + 0.5;
+    scene.uvs[2] = (scene.uvs[2] - 0.5) * scene.materials[2].textureScale + 0.5;
 }
 
-void applyFlowmapToUvs(inout Scene scene)
-{
+void applyFlowmapToUvs(inout Scene scene) {
     vec2 flowMapUv = scene.uvs[0] - animationFrame(scene.materials[0].flowMapDuration);
     float flowMapStrength = scene.materials[0].flowMapStrength;
-    if (scene.isUnderwater)
-    {
+    if (scene.isUnderwater) {
         // Distort underwater textures
         flowMapUv = worldUvs(1.5) + animationFrame(10 * scene.waterType.duration) * vec2(1, -1);
         flowMapStrength = 0.075;
@@ -138,23 +136,24 @@ void postProcessImage(inout vec3 color) {
 }
 
 void applyFog(inout vec4 color, Scene scene, vec3 pos, vec3 camPos, float fogStart, float fogEnd, float fogOpacity) {
-    if (!scene.isUnderwater) {
-        // ground fog
-        float distance = distance(pos, camPos);
-        float closeFadeDistance = 1500;
-        float groundFog = 1.0 - clamp((pos.y - fogStart) / (fogEnd - fogStart), 0.0, 1.0);
-        groundFog = mix(0.0, fogOpacity, groundFog);
-        groundFog *= clamp(distance / closeFadeDistance, 0.0, 1.0);
+    if (scene.isUnderwater)
+        return;
 
-        // multiply the visibility of each fog
-        float combinedFog = 1 - (1 - IN.fogAmount) * (1 - groundFog);
+    // ground fog
+    float distance = distance(pos, camPos);
+    float closeFadeDistance = 1500;
+    float groundFog = 1.0 - clamp((pos.y - fogStart) / (fogEnd - fogStart), 0.0, 1.0);
+    groundFog = mix(0.0, fogOpacity, groundFog);
+    groundFog *= clamp(distance / closeFadeDistance, 0.0, 1.0);
 
-        if (scene.isWater) {
-            color.a = combinedFog + color.a * (1 - combinedFog);
-        }
+    // multiply the visibility of each fog
+    float combinedFog = 1 - (1 - IN.fogAmount) * (1 - groundFog);
 
-        color.rgb = mix(color.rgb, fogColor, combinedFog);
+    if (scene.isWater) {
+        color.a = combinedFog + color.a * (1 - combinedFog);
     }
+
+    color.rgb = mix(color.rgb, fogColor, combinedFog);
 }
 
 // wow this is complicated. someone who understands this blending can refactor this if they want. I'll just move it to tidy things up for now.
@@ -172,16 +171,13 @@ void getOverlayUnderlayColorBlend(int[3] vMaterialData, vec2 blendedUv, vec3 tex
     vec3 underlayBlend = texBlend * isUnderlay;
     vec3 overlayBlend = texBlend * isOverlay;
 
-    if (underlayCount == 0 || overlayCount == 0)
-    {
+    if (underlayCount == 0 || overlayCount == 0) {
         // if a tile has all overlay or underlay vertices,
         // use the default blend
 
         underlayBlend = IN.texBlend;
         overlayBlend = IN.texBlend;
-    }
-    else
-    {
+    } else {
         // if there's a mix of overlay and underlay vertices,
         // calculate custom blends for each 'layer'
 
@@ -201,8 +197,7 @@ void getOverlayUnderlayColorBlend(int[3] vMaterialData, vec2 blendedUv, vec3 tex
     underlayColor = texA * underlayBlend.x + texB * underlayBlend.y + texC * underlayBlend.z;
     overlayColor = texA * overlayBlend.x + texB * overlayBlend.y + texC * overlayBlend.z;
 
-    if (overlayCount > 0 && underlayCount > 0)
-    {
+    if (overlayCount > 0 && underlayCount > 0) {
         // custom blending logic for blending overlays into underlays
         // in a style similar to 2008+ HD
 
@@ -238,9 +233,7 @@ void getOverlayUnderlayColorBlend(int[3] vMaterialData, vec2 blendedUv, vec3 tex
         float result = pointToLine(sUv[0], oppositePoint, fragUv);
 
         if (inverted)
-        {
             result = 1 - result;
-        }
 
         result = clamp(result, 0, 1);
 
@@ -252,8 +245,7 @@ void getOverlayUnderlayColorBlend(int[3] vMaterialData, vec2 blendedUv, vec3 tex
         result = clamp(result, 0, 1);
 
         float maxDistance = 2.5;
-        if (distance > maxDistance)
-        {
+        if (distance > maxDistance) {
             float multi = distance / maxDistance;
             result = 1.0 - ((1.0 - result) * multi);
             result = clamp(result, 0, 1);
@@ -263,8 +255,7 @@ void getOverlayUnderlayColorBlend(int[3] vMaterialData, vec2 blendedUv, vec3 tex
     }
 }
 
-void getSceneAlbedo(inout Scene scene)
-{
+void getSceneAlbedo(inout Scene scene) {
     int colorMap1 = scene.materials[0].colorMap;
     int colorMap2 = scene.materials[1].colorMap;
     int colorMap3 = scene.materials[2].colorMap;
@@ -299,11 +290,9 @@ void getSceneAlbedo(inout Scene scene)
 }
 
 void getSceneNormals(inout Scene scene, int flags) {
-    if((flags >> MATERIAL_FLAG_UPWARDS_NORMALS & 1) == 1) {
+    if ((flags >> MATERIAL_FLAG_UPWARDS_NORMALS & 1) == 1) {
         scene.normals = vec3(0.0, -1.0, 0.0);
-    }
-    else
-    {
+    } else {
         // Set up tangent-space transformation matrix
         vec3 N = normalize(IN.normal);
         mat3 TBN = mat3(T, B, N * min(length(T), length(B)));
@@ -328,8 +317,7 @@ void getSmoothnessAndReflectivity(inout Scene scene) {
 
     // apply specular highlights to anything semi-transparent
     // this isn't always desirable but adds subtle light reflections to windows, etc.
-    if (vColor[0].a + vColor[1].a + vColor[2].a < 2.99)
-    {
+    if (vColor[0].a + vColor[1].a + vColor[2].a < 2.99) {
         smoothness = vec3(30);
         reflectivity = vec3(
             clamp((1 - vColor[0].a) * 2, 0, 1),

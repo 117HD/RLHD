@@ -171,7 +171,8 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
 }
 
 void sampleUnderwater(inout vec3 outputColor, Scene scene) {
-    if(!scene.isUnderwater) return;
+    if (!scene.isUnderwater)
+        return;
 
     // underwater terrain
     float lowestColorLevel = 500;

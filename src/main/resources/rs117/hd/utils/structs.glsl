@@ -1,13 +1,13 @@
 struct Light {
     int type;
     vec3 position;
-    float radius;
+    float radiusSquared;
     vec3 color;
     float brightness;
     vec3 direction;
     vec3 reflection;
     float ndl; // normal.light
-    float distance;
+    float distanceSquared;
 };
 
 // Dont know what else to call this. Just holds all the scene vars used for lighting and helper functions for quick access

@@ -1,8 +1,14 @@
+float sampleAmbientOcclusion(const Material mat, const vec2 uv) {
+    if (mat.ambientOcclusionMap == -1)
+        return 1;
+    return texture(textureArray, vec3(uv, mat.ambientOcclusionMap)).r;
+}
+
 float getAmbientOcclusion(Scene scene) {
     return
-        scene.texBlend.x * (scene.materials[0].ambientOcclusionMap == -1 ? 1 : texture(textureArray, vec3(scene.uvs[0], scene.materials[0].ambientOcclusionMap)).r) +
-        scene.texBlend.y * (scene.materials[1].ambientOcclusionMap == -1 ? 1 : texture(textureArray, vec3(scene.uvs[1], scene.materials[1].ambientOcclusionMap)).r) +
-        scene.texBlend.z * (scene.materials[2].ambientOcclusionMap == -1 ? 1 : texture(textureArray, vec3(scene.uvs[2], scene.materials[2].ambientOcclusionMap)).r);
+        scene.texBlend[0] * sampleAmbientOcclusion(scene.materials[0], scene.uvs[0]) +
+        scene.texBlend[1] * sampleAmbientOcclusion(scene.materials[1], scene.uvs[1]) +
+        scene.texBlend[2] * sampleAmbientOcclusion(scene.materials[2], scene.uvs[2]);
 }
 
 vec3 ambientTerm(Scene scene, vec3 fogColor, float strength) {
@@ -13,9 +19,8 @@ vec3 ambientTerm(Scene scene, vec3 fogColor, float strength) {
 
 // Generally in most engines, attenuation ends up being the shadowmap and the falloff, depending on the light type.
 // So we're going to do the same thing here to make it easy to access / modify
-float lightAttenuation(inout Light light, Scene scene, int flags)
-{
-    float atten = 1.0;
+float lightAttenuation(inout Light light, Scene scene, int flags) {
+    float atten = 1.0f;
 
     switch(light.type) {
         case LIGHT_DIRECTIONAL:
@@ -29,30 +34,29 @@ float lightAttenuation(inout Light light, Scene scene, int flags)
             }
 
             atten = 1 - max(shadow, 0);
-        break;
-
+            break;
         case LIGHT_POINT:
-            float falloff = 1 - min(light.distance / light.radius, 1);
+            float falloff = 1 - sqrt(min(light.distanceSquared / light.radiusSquared, 1));
             atten = falloff * falloff;
-        break;
+            break;
     }
 
     return atten;
 }
 
-void gatherAdditiveLights(inout vec3 additiveLights, inout vec3 additiveLightsSpecular, Scene scene, int flags)
-{
+void gatherAdditiveLights(inout vec3 additiveLights, inout vec3 additiveLightsSpecular, Scene scene, int flags) {
     for (int i = 0; i < pointLightsCount; i++) {
         Light light;
-        light.type = LIGHT_POINT; // Hardcoding point light type here for now. We will need a better way to define light type in the future if we ever add spot lights or something.
         light.color = PointLightArray[i].color;
         light.position = PointLightArray[i].position.xyz;
-        light.radius = PointLightArray[i].position.w;
+        light.radiusSquared = PointLightArray[i].position.w;
 
         vec3 lightToFrag = light.position - scene.fragPos;
-        light.distance = dot(lightToFrag, lightToFrag);
+        light.distanceSquared = dot(lightToFrag, lightToFrag);
 
-        if(light.distance <= light.radius) {
+        if (light.distanceSquared <= light.radiusSquared) {
+            light.type = LIGHT_POINT; // Hardcoding point light type here for now. We will need a better way to define light type in the future if we ever add spot lights or something.
+
             vec3 pointLightDir = normalize(light.position - scene.fragPos);
             populateLightVectors(light, pointLightDir, scene.normals);
             populateLightDotProducts(light, scene, scene.normals);

@@ -125,12 +125,9 @@ void main() {
     populateSceneTerrainInformation(scene);
 
     vec4 outputColor = vec4(1);
-    if (scene.isWater)
-    {
+    if (scene.isWater) {
         outputColor = sampleWater(scene.waterTypeIndex, scene.viewDir);
-    }
-    else
-    {
+    } else {
         adjustSceneUvs(scene);
         applyFlowmapToUvs(scene);
         getSceneAlbedo(scene);
