@@ -12,68 +12,48 @@ void populateSceneDotProducts(inout Scene scene, vec3 normals) {
     scene.ddn = dot(scene.downDir, normals);
 }
 
-// structured like this in case we ever do shadowmaps for other lights.
-void applyShadowsToLight(inout Light light, Scene scene, int[3] vMaterialData, vec3 fragPos, int waterTypeIndex)
-{
-    // this is only here because its technically shadowing on the light.
-    #if (DISABLE_DIRECTIONAL_SHADING)
-        scene.sun.ndl = .7;
-    #endif
+void adjustSceneUvs(inout Scene scene) {
+        // Vanilla tree textures rely on UVs being clamped horizontally,
+        // which HD doesn't do, so we instead opt to hide these fragments
+        if ((vMaterialData[0] >> MATERIAL_FLAG_VANILLA_UVS & 1) == 1) {
+            scene.uvs[3].x = clamp(scene.uvs[3].x, 0, .984375);
 
-    float shadow = 0;
-    if ((vMaterialData[0] >> MATERIAL_FLAG_DISABLE_SHADOW_RECEIVING & 1) == 0)
-        shadow = sampleShadowMap(fragPos, waterTypeIndex, vec2(0), scene.sun.ndl);
-
-    shadow = max(shadow, 0);
-    float inverseShadow = 1 - shadow;
-    light.color *= inverseShadow;
-}
-
-void gatherAdditiveLights(Scene scene, vec3 normals, vec3 vSpecularGloss, vec3 vSpecularStrength, inout vec3 additiveLights, inout vec3 additiveLightsSpecular)
-{
-    for (int i = 0; i < pointLightsCount; i++) {
-        Light light;
-        light.color = PointLightArray[i].color;
-
-        vec4 pos = PointLightArray[i].position;
-        vec3 lightToFrag = pos.xyz - IN.position;
-        float distanceSquared = dot(lightToFrag, lightToFrag);
-        float radiusSquared = pos.w;
-
-        if (distanceSquared <= radiusSquared) {
-            vec3 pointLightDir = normalize(lightToFrag);
-            populateLightVectors(light, pointLightDir, normals);
-            populateLightDotProducts(light, scene, normals);
-
-            float attenuation = 1 - min(distanceSquared / radiusSquared, 1);
-            light.color *= attenuation * attenuation;
-
-            additiveLights += light.color * light.ndl;
-            additiveLightsSpecular += light.color * specular(scene.viewDir, light.reflection, vSpecularGloss, vSpecularStrength);
+            // Make fishing spots easier to see
+            if (scene.materials[0].colorMap == MAT_WATER_DROPLETS.colorMap)
+                scene.mipBias = -100;
         }
-    }
+
+        // Not sure why we do this but i'll trust the process.
+        scene.uvs[0] = scene.uvs[3];
+        scene.uvs[1] = scene.uvs[3];
+        scene.uvs[2] = scene.uvs[3];
+
+        // Scroll UVs
+        scene.uvs[0] += scene.materials[0].scrollDuration * elapsedTime;
+        scene.uvs[1] += scene.materials[1].scrollDuration * elapsedTime;
+        scene.uvs[2] += scene.materials[2].scrollDuration * elapsedTime;
+
+        // Scale from the center
+        scene.uvs[0] = (scene.uvs[0] - 0.5) * scene.materials[0].textureScale + 0.5;
+        scene.uvs[1] = (scene.uvs[1] - 0.5) * scene.materials[1].textureScale + 0.5;
+        scene.uvs[2] = (scene.uvs[2] - 0.5) * scene.materials[2].textureScale + 0.5;
 }
 
-vec3 adjustFragPos(vec3 pos) {
-    vec3 fragPos = pos;
-    #if PARALLAX_OCCLUSION_MAPPING
-        mat3 invTBN = inverse(TBN);
-        vec3 tsViewDir = invTBN * viewDir;
-        vec3 tsLightDir = invTBN * -lightDir;
+void applyFlowmapToUvs(inout Scene scene, bool isUnderwater, WaterType waterType)
+{
+    vec2 flowMapUv = scene.uvs[0] - animationFrame(scene.materials[0].flowMapDuration);
+    float flowMapStrength = scene.materials[0].flowMapStrength;
+    if (isUnderwater)
+    {
+        // Distort underwater textures
+        flowMapUv = worldUvs(1.5) + animationFrame(10 * waterType.duration) * vec2(1, -1);
+        flowMapStrength = 0.075;
+    }
 
-        vec3 fragDelta = vec3(0);
-
-        sampleDisplacementMap(material1, tsViewDir, tsLightDir, uv1, fragDelta, selfShadowing);
-        sampleDisplacementMap(material2, tsViewDir, tsLightDir, uv2, fragDelta, selfShadowing);
-        sampleDisplacementMap(material3, tsViewDir, tsLightDir, uv3, fragDelta, selfShadowing);
-
-        // Average
-        fragDelta /= 3;
-        selfShadowing /= 3;
-
-        fragPos += TBN * fragDelta;
-    #endif
-    return fragPos;
+    vec2 uvFlow = texture(textureArray, vec3(flowMapUv, scene.materials[0].flowMap)).xy;
+    scene.uvs[0] += uvFlow * flowMapStrength;
+    scene.uvs[1] += uvFlow * flowMapStrength;
+    scene.uvs[2] += uvFlow * flowMapStrength;
 }
 
 void adjustVertexColors(inout vec4 baseColor1, inout vec4 baseColor2, inout vec4 baseColor3) {
@@ -197,4 +177,33 @@ void getOverlayUnderlayColorBlend(int[3] vMaterialData, vec2 blendedUv, vec3 tex
 
         overlayMix = result;
     }
+}
+
+vec3 adjustFragPos(vec3 pos) {
+    vec3 fragPos = pos;
+    #if PARALLAX_OCCLUSION_MAPPING
+        mat3 invTBN = inverse(TBN);
+        vec3 tsViewDir = invTBN * viewDir;
+        vec3 tsLightDir = invTBN * -lightDir;
+
+        vec3 fragDelta = vec3(0);
+
+        sampleDisplacementMap(material1, tsViewDir, tsLightDir, uv1, fragDelta, selfShadowing);
+        sampleDisplacementMap(material2, tsViewDir, tsLightDir, uv2, fragDelta, selfShadowing);
+        sampleDisplacementMap(material3, tsViewDir, tsLightDir, uv3, fragDelta, selfShadowing);
+
+        // Average
+        fragDelta /= 3;
+        selfShadowing /= 3;
+
+        fragPos += TBN * fragDelta;
+    #endif
+    return fragPos;
+}
+
+float getAmbientOcclusion(Scene scene) {
+    return
+        scene.texBlend.x * (scene.materials[0].ambientOcclusionMap == -1 ? 1 : texture(textureArray, vec3(scene.uvs[0], scene.materials[0].ambientOcclusionMap)).r) +
+        scene.texBlend.y * (scene.materials[1].ambientOcclusionMap == -1 ? 1 : texture(textureArray, vec3(scene.uvs[1], scene.materials[1].ambientOcclusionMap)).r) +
+        scene.texBlend.z * (scene.materials[2].ambientOcclusionMap == -1 ? 1 : texture(textureArray, vec3(scene.uvs[2], scene.materials[2].ambientOcclusionMap)).r);
 }

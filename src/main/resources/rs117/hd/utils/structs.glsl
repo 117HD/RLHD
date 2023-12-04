@@ -6,12 +6,15 @@ struct Light {
     float ndl; // normal.light
 };
 
-// Dont know what else to call this. Just holds all the scene vars used for lighting for quick access
+// Dont know what else to call this. Just holds all the scene vars used for lighting and helper functions for quick access
 struct Scene {
     Light sun;
-    Light[LIGHT_COUNT] lights;
     vec3 viewDir;
     vec3 downDir;
     float ddn; // down.normal
     float vdn; // view.normal
+    Material[3] materials;
+    vec2[4] uvs; // 0, 1, 2 = standard uv, 3 = blended uv // modified by Helpers/adjustSceneUvs
+    vec3 texBlend;
+    float mipBias;
 };
