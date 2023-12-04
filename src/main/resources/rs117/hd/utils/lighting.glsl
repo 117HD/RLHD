@@ -1,3 +1,10 @@
+float getAmbientOcclusion(Scene scene) {
+    return
+        scene.texBlend.x * (scene.materials[0].ambientOcclusionMap == -1 ? 1 : texture(textureArray, vec3(scene.uvs[0], scene.materials[0].ambientOcclusionMap)).r) +
+        scene.texBlend.y * (scene.materials[1].ambientOcclusionMap == -1 ? 1 : texture(textureArray, vec3(scene.uvs[1], scene.materials[1].ambientOcclusionMap)).r) +
+        scene.texBlend.z * (scene.materials[2].ambientOcclusionMap == -1 ? 1 : texture(textureArray, vec3(scene.uvs[2], scene.materials[2].ambientOcclusionMap)).r);
+}
+
 vec3 ambientTerm(Scene scene, vec3 fogColor, float strength) {
     vec3 skyLight = max(scene.ddn, 0.0) * fogColor;
     vec3 ambientLight = (ambientColor + skyLight) * strength;
@@ -51,7 +58,7 @@ void gatherAdditiveLights(inout vec3 additiveLights, inout vec3 additiveLightsSp
     // branches in shaders are generally fine, as long as you're branching on something constant. If you branch on things that change from fragment to fragment, it can cause performance decreases.
     for (int i = 0; i < pointLightsCount; i++) {
         Light light;
-        light.type = LIGHT_POINT;
+        light.type = LIGHT_POINT; // Hardcoding point light type here for now. We will need a better way to define light type in the future if we ever add spot lights or something.
         light.color = PointLightArray[i].color;
         light.position = PointLightArray[i].position.xyz;
         light.radius = PointLightArray[i].position.w;

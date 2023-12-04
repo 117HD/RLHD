@@ -200,13 +200,6 @@ void adjustFragPos(inout Scene scene, vec3 pos) {
     #endif
 }
 
-float getAmbientOcclusion(Scene scene) {
-    return
-        scene.texBlend.x * (scene.materials[0].ambientOcclusionMap == -1 ? 1 : texture(textureArray, vec3(scene.uvs[0], scene.materials[0].ambientOcclusionMap)).r) +
-        scene.texBlend.y * (scene.materials[1].ambientOcclusionMap == -1 ? 1 : texture(textureArray, vec3(scene.uvs[1], scene.materials[1].ambientOcclusionMap)).r) +
-        scene.texBlend.z * (scene.materials[2].ambientOcclusionMap == -1 ? 1 : texture(textureArray, vec3(scene.uvs[2], scene.materials[2].ambientOcclusionMap)).r);
-}
-
 void getSceneNormals(inout Scene scene, int flags) {
     if((flags >> MATERIAL_FLAG_UPWARDS_NORMALS & 1) == 1) {
         scene.normals = vec3(0.0, 1.0, 0.0);
