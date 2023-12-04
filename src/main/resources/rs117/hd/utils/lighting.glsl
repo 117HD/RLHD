@@ -11,17 +11,9 @@ vec3 ambientTerm(Scene scene, vec3 fogColor, float strength) {
     return ambientLight * getAmbientOcclusion(scene);
 }
 
-vec3 diffuseTerm() {
-    return vec3(0);
-}
-
-vec3 specularTerm() {
-    return vec3(0);
-}
-
 // Generally in most engines, attenuation ends up being the shadowmap and the falloff, depending on the light type.
 // So we're going to do the same thing here to make it easy to access / modify
-float lightAttenuation(inout Light light, vec3 fragPos, int waterTypeIndex, int flags)
+float lightAttenuation(inout Light light, Scene scene, int flags)
 {
     float atten = 1.0;
 
@@ -33,14 +25,14 @@ float lightAttenuation(inout Light light, vec3 fragPos, int waterTypeIndex, int 
 
             float shadow = 0;
             if ((flags >> MATERIAL_FLAG_DISABLE_SHADOW_RECEIVING & 1) == 0) {
-                shadow = sampleShadowMap(fragPos, waterTypeIndex, vec2(0), light.ndl);
+                shadow = sampleShadowMap(scene.fragPos, scene.waterTypeIndex, vec2(0), light.ndl);
             }
 
             atten = 1 - max(shadow, 0);
         break;
 
         case LIGHT_POINT:
-            vec3 lightToFrag = light.position - fragPos;
+            vec3 lightToFrag = light.position - scene.fragPos;
             float distanceSquared = dot(lightToFrag, lightToFrag);
             float radiusSquared = light.radius;
             float falloff = 1 - min(distanceSquared / radiusSquared, 1);
@@ -52,7 +44,7 @@ float lightAttenuation(inout Light light, vec3 fragPos, int waterTypeIndex, int 
     return atten;
 }
 
-void gatherAdditiveLights(inout vec3 additiveLights, inout vec3 additiveLightsSpecular, Scene scene, vec3 vSpecularGloss, vec3 vSpecularStrength, int waterTypeIndex, int flags)
+void gatherAdditiveLights(inout vec3 additiveLights, inout vec3 additiveLightsSpecular, Scene scene, int flags)
 {
     // Note: I actually saw a slight performance decrease when checking against light radius to distance, so I've removed that.
     // branches in shaders are generally fine, as long as you're branching on something constant. If you branch on things that change from fragment to fragment, it can cause performance decreases.
@@ -62,13 +54,13 @@ void gatherAdditiveLights(inout vec3 additiveLights, inout vec3 additiveLightsSp
         light.color = PointLightArray[i].color;
         light.position = PointLightArray[i].position.xyz;
         light.radius = PointLightArray[i].position.w;
-        light.color = light.color * lightAttenuation(light, scene.fragPos, waterTypeIndex, flags);
+        light.color = light.color * lightAttenuation(light, scene, flags);
 
         vec3 pointLightDir = normalize(light.position - scene.fragPos);
         populateLightVectors(light, pointLightDir, scene.normals);
         populateLightDotProducts(light, scene, scene.normals);
 
         additiveLights += light.color * light.ndl;
-        additiveLightsSpecular += light.color * specular(scene.viewDir, light.reflection, vSpecularGloss, vSpecularStrength);
+        additiveLightsSpecular += light.color * specular(scene.viewDir, light.reflection, scene.smoothness, scene.reflectivity);
     }
 }

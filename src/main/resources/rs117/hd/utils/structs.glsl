@@ -20,7 +20,15 @@ struct Scene {
     vec2[4] uvs; // 0, 1, 2 = standard uv, 3 = blended uv // modified by Helpers/adjustSceneUvs
     vec3 texBlend;
     float mipBias;
-    vec3 normals;
     vec3 fragPos;
     mat3 TBN;
+    vec4 albedo;
+    vec3 normals;
+    vec3 smoothness;
+    vec3 reflectivity;
+    bool isWater;
+    bool isUnderwater;
+    WaterType waterType;
+    int waterTypeIndex;
+    float waterDepth;
 };

@@ -170,16 +170,18 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     return vec4(baseColor, alpha);
 }
 
-void sampleUnderwater(inout vec3 outputColor, WaterType waterType, float depth, float lightDotNormals) {
+void sampleUnderwater(inout vec3 outputColor, Scene scene) {
+    if(!scene.isUnderwater) return;
+
     // underwater terrain
     float lowestColorLevel = 500;
     float midColorLevel = 150;
-    float surfaceLevel = IN.position.y - depth; // e.g. -1600
+    float surfaceLevel = IN.position.y - scene.waterDepth; // e.g. -1600
 
-    if (depth < midColorLevel) {
-        outputColor *= mix(vec3(1), waterType.depthColor, translateRange(0, midColorLevel, depth));
-    } else if (depth < lowestColorLevel) {
-        outputColor *= mix(waterType.depthColor, vec3(0), translateRange(midColorLevel, lowestColorLevel, depth));
+    if (scene.waterDepth < midColorLevel) {
+        outputColor *= mix(vec3(1), scene.waterType.depthColor, translateRange(0, midColorLevel, scene.waterDepth));
+    } else if (scene.waterDepth < lowestColorLevel) {
+        outputColor *= mix(scene.waterType.depthColor, vec3(0), translateRange(midColorLevel, lowestColorLevel, scene.waterDepth));
     } else {
         outputColor = vec3(0);
     }
@@ -202,6 +204,28 @@ void sampleUnderwater(inout vec3 outputColor, WaterType waterType, float depth, 
         vec3 caustics = sampleCaustics(flow1, flow2, .005);
 
         vec3 causticsColor = underwaterCausticsColor * underwaterCausticsStrength;
-        outputColor.rgb *= 1 + caustics * causticsColor * depthMultiplier * lightDotNormals * lightStrength;
+        outputColor.rgb *= 1 + caustics * causticsColor * depthMultiplier * scene.sun.ndl * scene.sun.brightness;
+    }
+}
+
+void applyWaterCaustics(inout Scene scene, bool underwaterCaustics, bool underwaterEnvironment) {
+    // underwater caustics based on directional light
+    if (underwaterCaustics && underwaterEnvironment) {
+        float scale = 12.8;
+        vec2 causticsUv = worldUvs(scale);
+
+        // height offset
+        causticsUv += scene.sun.direction.xy * IN.position.y / (128 * scale);
+
+        const ivec2 direction = ivec2(1, -1);
+        const int driftSpeed = 231;
+        vec2 drift = animationFrame(231) * ivec2(1, -2);
+        vec2 flow1 = causticsUv + animationFrame(19) * direction + drift;
+        vec2 flow2 = causticsUv * 1.25 + animationFrame(37) * -direction + drift;
+
+        vec3 caustics = sampleCaustics(flow1, flow2) * 2;
+
+        vec3 causticsColor = underwaterCausticsColor * underwaterCausticsStrength;
+        scene.sun.color += caustics * causticsColor * scene.sun.ndl * pow(scene.sun.brightness, 1.5);
     }
 }
