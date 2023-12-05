@@ -278,10 +278,7 @@ public enum Underlay {
 				// Dirt
 				if (hsl[0] <= 8 && hsl[1] >= 4 && hsl[2] <= 71 ||
 					hsl[0] == 9 && hsl[1] == 2 && hsl[2] <= 44 ||
-					hsl[0] == 8 && hsl[1] == 4 && hsl[2] <= 40 ||
 					hsl[0] == 8 && hsl[1] == 3 && hsl[2] <= 34 // Breaks Sand if higher than 34; Can be fixed with tile averages or medians
-
-
 				) {
 					switch (plugin.configSeasonalTheme) {
 						case SUMMER:
@@ -345,11 +342,6 @@ public enum Underlay {
 				int[] hsl = HDUtils.getSouthWesternMostTileColor(tile);
 				if (hsl == null)
 					return override;
-
-				LocalPoint localLocation = tile.getLocalLocation();
-				int tileExX = localLocation.getSceneX() + SCENE_OFFSET;
-				int tileExY = localLocation.getSceneY() + SCENE_OFFSET;
-
 
 				// Dirt
 				if (hsl[0] == 7 && hsl[1] >= 1 && hsl[2] <= 71) {
@@ -807,8 +799,11 @@ public enum Underlay {
 			}
 		}
 
-		if (match.replacementResolver != null)
-			return match.replacementResolver.resolve(plugin, scene, tile, match);
+		if (match.replacementResolver != null) {
+			match = match.replacementResolver.resolve(plugin, scene, tile, match);
+			if (match == null)
+				match = NONE;
+		}
 
 		return match;
 	}

@@ -404,6 +404,7 @@ public enum Overlay {
 	SEERS_BANK_TILE_2(4, Area.SEERS_BANK, GroundMaterial.MARBLE_2_GLOSS, p -> p.blended(false)),
 	SEERS_BANK_TILE_3(8, Area.SEERS_BANK, GroundMaterial.MARBLE_1_GLOSS, p -> p.blended(false)),
 	SEERS_HOUSE_FLOORS(22, Area.SEERS_HOUSES, GroundMaterial.WOOD_PLANKS_1, p -> p
+		.replaceWithIf(null, pl -> !pl.configGroundTextures)
 		.blended(false)
 		.lightness(45)
 		.saturation(2)
@@ -1108,8 +1109,11 @@ public enum Overlay {
 			}
 		}
 
-		if (match.replacementResolver != null)
-			return match.replacementResolver.resolve(plugin, scene, tile, match);
+		if (match.replacementResolver != null) {
+			match = match.replacementResolver.resolve(plugin, scene, tile, match);
+			if (match == null)
+				match = NONE;
+		}
 
 		return match;
 	}

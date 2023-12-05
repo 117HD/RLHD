@@ -3,7 +3,7 @@ package rs117.hd.data.materials;
 import java.util.Arrays;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import lombok.NonNull;
+import javax.annotation.Nonnull;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import rs117.hd.HdPlugin;
@@ -55,7 +55,7 @@ class TileOverrideBuilder<T> {
 		return this;
 	}
 
-	TileOverrideBuilder<T> replaceWithIf(@NonNull T replacement, @NonNull Function<HdPlugin, Boolean> condition) {
+	TileOverrideBuilder<T> replaceWithIf(T replacement, @Nonnull Function<HdPlugin, Boolean> condition) {
 		var previousResolver = replacementResolver;
 		replacementResolver = (plugin, scene, tile, override) -> {
 			if (condition.apply(plugin))
@@ -71,7 +71,7 @@ class TileOverrideBuilder<T> {
 		return replaceWithIf(replacement, plugin -> plugin.configSeasonalTheme == seasonalTheme);
 	}
 
-	TileOverrideBuilder<T> resolver(@NonNull TileOverrideResolver<T> resolver) {
+	TileOverrideBuilder<T> resolver(@Nonnull TileOverrideResolver<T> resolver) {
 		replacementResolver = resolver;
 		return this;
 	}
