@@ -34,8 +34,6 @@ uniform float elapsedTime;
 uniform vec3 cameraPos;
 
 #include utils/constants.glsl
-#define USE_VANILLA_UV_PROJECTION
-#include utils/uvs.glsl
 #include utils/color_utils.glsl
 
 in vec3 gPosition[3];
@@ -47,7 +45,7 @@ in int gMaterialData[3];
 in int gTerrainData[3];
 
 flat out vec4 vColor[3];
-flat out vec3 vUv[3];
+flat out vec2 vUv[3];
 flat out int vMaterialData[3];
 flat out int vTerrainData[3];
 flat out vec3 T;
@@ -60,17 +58,19 @@ out FragmentData {
     float fogAmount;
 } OUT;
 
+#define USE_VANILLA_UV_PROJECTION
+#include utils/uvs.glsl
+
 void main() {
     // MacOS doesn't allow assigning these arrays directly.
     // One of the many wonders of Apple software...
     for (int i = 0; i < 3; i++) {
         vColor[i] = gColor[i];
-        vUv[i] = gUv[i];
         vMaterialData[i] = gMaterialData[i];
         vTerrainData[i] = gTerrainData[i];
     }
 
-    computeUvs(vMaterialData[0], vec3[](gPosition[0], gPosition[1], gPosition[2]), vUv);
+    computeUvs(vUv);
 
     // Calculate tangent-space vectors
     mat2 triToUv = mat2(
@@ -91,13 +91,12 @@ void main() {
 
     for (int i = 0; i < 3; i++) {
         // Flat normals must be applied separately per vertex
-        vec3 normal = gNormal[i];
-        OUT.position = gPosition[i];
         #if FLAT_SHADING
-        OUT.normal = N;
+            OUT.normal = N;
         #else
-        OUT.normal = length(normal) == 0 ? N : normalize(normal);
+            OUT.normal = dot(gNormal[i], gNormal[i]) == 0 ? N : normalize(gNormal[i]);
         #endif
+        OUT.position = gPosition[i];
         OUT.texBlend = vec3(0);
         OUT.texBlend[i] = 1;
         OUT.fogAmount = gFogAmount[i];

@@ -288,12 +288,12 @@ public class LightManager {
 				float t = TWO_PI * ((System.currentTimeMillis() + offset) % repeatMs) / repeatMs;
 
 				float flicker = (float) (
-					pow(cos(11 * t), 2) +
-						pow(cos(17 * t), 4) +
-						pow(cos(23 * t), 6) +
-						pow(cos(31 * t), 2) +
-						pow(cos(71 * t), 2) / 3 +
-						pow(cos(151 * t), 2) / 7
+					pow(cos(11 * t), 3) +
+					pow(cos(17 * t), 6) +
+					pow(cos(23 * t), 2) +
+					pow(cos(31 * t), 6) +
+					pow(cos(71 * t), 4) +
+					pow(cos(151 * t), 6) / 2
 				) / 4.335f;
 
 				float maxFlicker = 1f + (light.range / 100f);
@@ -302,7 +302,7 @@ public class LightManager {
 				flicker = minFlicker + (maxFlicker - minFlicker) * flicker;
 
 				light.currentStrength = light.strength * flicker;
-				light.currentSize = (int) (light.radius * flicker * 1.5f);
+				light.currentSize = (int) (light.radius * 1.5f);
 			}
 			else if (light.type == LightType.PULSE)
 			{

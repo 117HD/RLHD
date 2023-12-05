@@ -52,6 +52,7 @@ public class ModelOverride
 	public boolean retainVanillaUvs = true;
 	public boolean forceMaterialChanges = false;
 	public boolean flatNormals = false;
+	public boolean upwardsNormals = false;
 	public boolean removeBakedLighting = false;
 	public boolean castShadows = true;
 	public boolean receiveShadows = true;
@@ -147,6 +148,7 @@ public class ModelOverride
 			retainVanillaUvs,
 			forceMaterialChanges,
 			flatNormals,
+			upwardsNormals,
 			removeBakedLighting,
 			castShadows,
 			receiveShadows,
