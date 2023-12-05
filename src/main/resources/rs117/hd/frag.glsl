@@ -68,7 +68,7 @@ uniform float contrast;
 uniform int pointLightsCount; // number of lights in current frame
 
 flat in vec4 vColor[3];
-flat in vec3 vUv[3];
+flat in vec2 vUv[3];
 flat in int vMaterialData[3];
 flat in int vTerrainData[3];
 flat in vec3 T;
@@ -102,68 +102,78 @@ vec2 worldUvs(float scale) {
 #include utils/lighting.glsl
 
 void main() {
-    Scene scene;
-    scene.texBlend = IN.texBlend;
-    scene.viewDir = normalize(cameraPos - IN.position);
-    scene.downDir = vec3(0, -1, 0);
+    Context ctx;
+    ctx.viewDir = normalize(cameraPos - IN.position);
+    ctx.fragPos = IN.position;
+    ctx.texBlend = IN.texBlend;
+    ctx.mipBias = 0;
 
-    scene.sun.type = LIGHT_DIRECTIONAL;
-    scene.sun.color = lightColor * lightStrength;
-    scene.sun.brightness = lightStrength;
+    ctx.sun.type = LIGHT_DIRECTIONAL;
+    ctx.sun.color = lightColor * lightStrength;
+    ctx.sun.brightness = lightStrength;
 
-    scene.materials[0] = getMaterial(vMaterialData[0] >> MATERIAL_INDEX_SHIFT);
-    scene.materials[1] = getMaterial(vMaterialData[1] >> MATERIAL_INDEX_SHIFT);
-    scene.materials[2] = getMaterial(vMaterialData[2] >> MATERIAL_INDEX_SHIFT);
+    ctx.materialData = vMaterialData[0];
+    ctx.materials[0] = getMaterial(vMaterialData[0] >> MATERIAL_INDEX_SHIFT);
+    ctx.materials[1] = getMaterial(vMaterialData[1] >> MATERIAL_INDEX_SHIFT);
+    ctx.materials[2] = getMaterial(vMaterialData[2] >> MATERIAL_INDEX_SHIFT);
 
-    scene.uvs[0] = vUv[0].xy;
-    scene.uvs[1] = vUv[1].xy;
-    scene.uvs[2] = vUv[2].xy;
-    scene.uvs[3] = scene.uvs[0] * scene.texBlend.x + scene.uvs[1] * scene.texBlend.y + scene.uvs[2] * scene.texBlend.z;
+    ctx.uvs[0] = vUv[0];
+    ctx.uvs[1] = vUv[1];
+    ctx.uvs[2] = vUv[2];
+    ctx.uvs[3] =
+        ctx.texBlend[0] * vUv[0] +
+        ctx.texBlend[1] * vUv[1] +
+        ctx.texBlend[2] * vUv[2];
 
-    scene.mipBias = 0;
-
-    populateSceneTerrainInformation(scene);
+    populateSceneTerrainInformation(ctx);
 
     vec4 outputColor = vec4(1);
-    if (scene.isWater) {
-        outputColor = sampleWater(scene.waterTypeIndex, scene.viewDir);
+    if (ctx.isWater) {
+        outputColor = sampleWater(ctx);
     } else {
-        adjustSceneUvs(scene);
-        applyFlowmapToUvs(scene);
-        getSceneAlbedo(scene);
-        getSceneNormals(scene, vMaterialData[0]);
-        populateLightVectors(scene.sun, lightDir, scene.normals);
-        populateLightDotProducts(scene.sun, scene, scene.normals);
-        adjustFragPos(scene, IN.position);
-        applyWaterCaustics(scene, underwaterCaustics, underwaterEnvironment);
-        getSmoothnessAndReflectivity(scene);
+        populateUvs(ctx);
+        applyUvFlow(ctx);
+        populateTangentSpaceMatrix(ctx);
+        applyUvDisplacement(ctx);
+        populateAlbedo(ctx);
+        populateNormals(ctx);
+        populateSmoothnessAndReflectivity(ctx);
+        populateContextDotProducts(ctx);
+        populateLightVectors(ctx.sun, lightDir, ctx.normals);
+        populateLightDotProducts(ctx.sun, ctx);
+        applyWaterCaustics(ctx, underwaterCaustics, underwaterEnvironment);
 
-        float attenuation = lightAttenuation(scene.sun, scene, vMaterialData[0]);
-        vec3 ambientTerm = ambientTerm(scene, fogColor, ambientStrength);
-        vec3 diffuseTerm = max(scene.sun.ndl, 0.0) * scene.sun.color * attenuation;
-        vec3 specularTerm = scene.sun.color * specular(scene.viewDir, scene.sun.reflection, scene.smoothness, scene.reflectivity) * attenuation;
+        float sunAttenuation = lightAttenuation(ctx.sun, ctx, vec2(0));
+        vec3 ambientTerm = ambientTerm(ctx, fogColor, ambientStrength);
+        vec3 diffuseTerm = ctx.sun.ndl * ctx.sun.color * sunAttenuation;
+        vec3 specularTerm = ctx.sun.color * getSpecular(ctx.viewDir, ctx.sun.reflection, ctx.smoothness, ctx.reflectivity) * sunAttenuation;
 
-        vec3 additiveLights = vec3(0);
-        vec3 additiveLightsSpecular = vec3(0);
-        gatherAdditiveLights(additiveLights, additiveLightsSpecular, scene, vMaterialData[0]);
+        vec3 lightsDiffuse = vec3(0);
+        vec3 lightsSpecular = vec3(0);
+        gatherLights(lightsDiffuse, lightsSpecular, ctx);
 
-        vec3 lightningColor = vec3(.25, .25, .25);
-        float lightningStrength = lightningBrightness;
-        vec3 lightning = scene.ddn * lightningColor * lightningStrength;
+        vec3 lightningEffect = ctx.udn * vec3(.25) * lightningBrightness;
 
-        vec3 underglow = underglowColor * max(scene.normals.y, 0) * underglowStrength;
+        vec3 underglow = underglowColor * max(ctx.normals.y, 0) * underglowStrength;
 
-        vec3 compositeLight = diffuseTerm + ambientTerm + additiveLights + underglow + lightning + specularTerm + additiveLightsSpecular;
+        vec3 compositeLight =
+            ambientTerm +
+            diffuseTerm +
+            specularTerm +
+            lightsDiffuse +
+            lightsSpecular +
+            underglow +
+            lightningEffect;
 
-        outputColor = scene.albedo;
-        outputColor.rgb *= mix(compositeLight, vec3(1), isMaterialUnlit(scene));
+        outputColor = ctx.albedo;
+        outputColor.rgb *= mix(compositeLight, vec3(1), isMaterialUnlit(ctx));
         outputColor.rgb = linearToSrgb(outputColor.rgb);
 
-        sampleUnderwater(outputColor.rgb, scene);
+        sampleUnderwater(outputColor.rgb, ctx);
     }
 
     postProcessImage(outputColor.rgb);
-    applyFog(outputColor, scene, IN.position, cameraPos, groundFogStart, groundFogEnd, groundFogOpacity);
+    applyFog(outputColor, ctx, IN.position, cameraPos, groundFogStart, groundFogEnd, groundFogOpacity);
 
     FragColor = outputColor;
 }

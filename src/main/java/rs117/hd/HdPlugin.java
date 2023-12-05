@@ -2823,6 +2823,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			}
 		}
 
+		if (enableDetailedTimers)
+			frameTimer.end(Timer.DRAW_RENDERABLE);
+
 		if (eightIntWrite[0] == -1)
 			return; // Hidden model
 
@@ -2830,9 +2833,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.ensureCapacity(8)
 			.put(eightIntWrite);
 		renderBufferOffset += faceCount * 3;
-
-		if (enableDetailedTimers)
-			frameTimer.end(Timer.DRAW_RENDERABLE);
 	}
 
 	/**
