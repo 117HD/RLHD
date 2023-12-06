@@ -32,6 +32,9 @@ import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -66,16 +69,22 @@ public class TextureManager {
 	);
 
 	@Inject
+	private Client client;
+
+	@Inject
+	private ClientThread clientThread;
+
+	@Inject
+	private ScheduledExecutorService executorService;
+
+	@Inject
 	private HdPlugin plugin;
 
 	@Inject
 	private HdPluginConfig config;
 
 	@Inject
-	private Client client;
-
-	@Inject
-	private ClientThread clientThread;
+	private ModelOverrideManager modelOverrideManager;
 
 	private int textureArray;
 	private int textureSize;
@@ -88,11 +97,17 @@ public class TextureManager {
 	private ArrayList<MaterialEntry> materialUniformEntries;
 	private int[] materialOrdinalToTextureLayer;
 	private int[] vanillaTextureIndexToTextureLayer;
+	private ScheduledFuture<?> pendingReload;
 
 	public void startUp() {
-		TEXTURE_PATH.watch(path -> {
+		clientThread.invoke(this::ensureMaterialsAreLoaded);
+
+		TEXTURE_PATH.watch((path, first) -> {
+			if (first) return;
 			log.debug("Texture changed: {}", path);
-			reloadTextures();
+
+			if (pendingReload == null || pendingReload.cancel(false) || pendingReload.isDone())
+				pendingReload = executorService.schedule(this::reloadTextures, 100, TimeUnit.MILLISECONDS);
 		});
 	}
 
@@ -104,6 +119,7 @@ public class TextureManager {
 		clientThread.invoke(() -> {
 			freeTextures();
 			ensureMaterialsAreLoaded();
+			modelOverrideManager.reload();
 		});
 	}
 
@@ -159,9 +175,9 @@ public class TextureManager {
 		return true;
 	}
 
-	public boolean ensureMaterialsAreLoaded() {
+	private void ensureMaterialsAreLoaded() {
 		if (textureArray != 0)
-			return true;
+			return;
 
 		assert vanillaTexturesAvailable();
 		var textureProvider = client.getTextureProvider();
@@ -173,31 +189,33 @@ public class TextureManager {
 		for (var material : Material.getActiveMaterials())
 			materialUniformEntries.add(new MaterialEntry(material, material.vanillaTextureIndex));
 
-		// Add texture layers for each base material with no parent
+		// Add texture layers for each material that adds its own texture, after resolving replacements
 		ArrayList<TextureLayer> textureLayers = new ArrayList<>();
 		materialOrdinalToTextureLayer = new int[Material.values().length];
 		Arrays.fill(materialOrdinalToTextureLayer, -1);
 		for (var textureMaterial : Material.getTextureMaterials()) {
-			int layer = textureLayers.size();
-			textureLayers.add(new TextureLayer(textureMaterial, textureMaterial.vanillaTextureIndex, layer));
-			materialOrdinalToTextureLayer[textureMaterial.ordinal()] = layer;
+			int layerIndex = textureLayers.size();
+			textureLayers.add(new TextureLayer(textureMaterial, textureMaterial.vanillaTextureIndex, layerIndex));
+			materialOrdinalToTextureLayer[textureMaterial.ordinal()] = layerIndex;
 		}
+
+		// Prepare mappings for materials that don't provide their own textures
+		for (var material : Material.values())
+			if (materialOrdinalToTextureLayer[material.ordinal()] == -1)
+				materialOrdinalToTextureLayer[material.ordinal()] =
+					materialOrdinalToTextureLayer[material.resolveTextureMaterial().ordinal()];
+
 		// Add material uniforms and texture layers for any vanilla textures lacking a material definition
 		vanillaTextureIndexToTextureLayer = new int[vanillaTextures.length];
 		Arrays.fill(vanillaTextureIndexToTextureLayer, -1);
 		for (int i = 0; i < vanillaTextures.length; i++) {
 			if (Material.fromVanillaTexture(i) == Material.VANILLA) {
 				materialUniformEntries.add(new MaterialEntry(Material.VANILLA, i));
-				int layer = textureLayers.size();
-				textureLayers.add(new TextureLayer(Material.VANILLA, i, layer));
-				vanillaTextureIndexToTextureLayer[i] = layer;
+				int layerIndex = textureLayers.size();
+				textureLayers.add(new TextureLayer(Material.VANILLA, i, layerIndex));
+				vanillaTextureIndexToTextureLayer[i] = layerIndex;
 			}
 		}
-
-		// Prepare fast mappings from all materials to texture array layers
-		for (var material : Material.values())
-			materialOrdinalToTextureLayer[material.ordinal()] =
-				materialOrdinalToTextureLayer[material.resolveTextureMaterial().ordinal()];
 
 		// Allocate texture array
 		textureSize = config.textureResolution().getSize();
@@ -278,15 +296,6 @@ public class TextureManager {
 					vanillaImage.setRGB(j % 128, j / 128, alpha << 24 | rgb & 0xFFFFFF);
 				}
 
-				// Convert vanilla texture animations to the same format as Material scroll parameters
-				int direction = texture.getAnimationDirection();
-				if (direction != 0) {
-					float speed = texture.getAnimationSpeed() * 50 / 128.f;
-					float radians = direction * -HALF_PI;
-					vanillaTextureAnimations[vanillaIndex * 2] = (float) Math.cos(radians) * speed;
-					vanillaTextureAnimations[vanillaIndex * 2 + 1] = (float) Math.sin(radians) * speed;
-				}
-
 				image = vanillaImage;
 				vanillaTextureCount++;
 			} else {
@@ -297,6 +306,21 @@ public class TextureManager {
 				uploadTexture(textureLayer, image);
 			} catch (Exception ex) {
 				log.error("Failed to load texture {}:", textureLayer.material, ex);
+			}
+		}
+
+		// Convert vanilla texture animations to the same format as Material scroll parameters
+		for (int i = 0; i < vanillaTextures.length; i++) {
+			var texture = vanillaTextures[i];
+			if (texture == null)
+				continue;
+
+			int direction = texture.getAnimationDirection();
+			if (direction != 0) {
+				float speed = texture.getAnimationSpeed() * 50 / 128.f;
+				float radians = direction * -HALF_PI;
+				vanillaTextureAnimations[i * 2] = (float) Math.cos(radians) * speed;
+				vanillaTextureAnimations[i * 2 + 1] = (float) Math.sin(radians) * speed;
 			}
 		}
 
@@ -318,8 +342,6 @@ public class TextureManager {
 		vanillaTextureIndexToTextureLayer = null;
 		textureProvider.setBrightness(vanillaBrightness);
 		glActiveTexture(TEXTURE_UNIT_UI);
-
-		return true;
 	}
 
 	private BufferedImage loadTextureImage(Material material) {
@@ -442,8 +464,8 @@ public class TextureManager {
 			.putFloat(m.flowMapDuration[1])
 			.putFloat(scrollSpeedX)
 			.putFloat(scrollSpeedY)
-			.putFloat(m.textureScale[0])
-			.putFloat(m.textureScale[1])
+			.putFloat(1 / m.textureScale[0])
+			.putFloat(1 / m.textureScale[1])
 			.putFloat(0).putFloat(0); // align vec4
 	}
 

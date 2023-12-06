@@ -26,6 +26,7 @@
 package rs117.hd.utils;
 
 import com.google.gson.Gson;
+import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
@@ -55,7 +56,7 @@ import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.RegEx;
-import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.BufferUtils;
@@ -159,6 +160,10 @@ public class ResourcePath {
 		int i = path.lastIndexOf('.');
 		if (i != -1)
 			path = path.substring(0, i);
+
+		if (extension != null && !extension.isEmpty())
+			path += '.' + extension;
+
 		return new ResourcePath(root, path);
 	}
 
@@ -327,9 +332,17 @@ public class ResourcePath {
 
 	public BufferedImage loadImage() throws IOException {
 		try (InputStream is = toInputStream()) {
-			synchronized (ImageIO.class) {
-				return ImageIO.read(is);
-			}
+			byte[] bytes = is.readAllBytes();
+			var icon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(bytes));
+			var bufferedImage = new BufferedImage(
+				icon.getIconWidth(),
+				icon.getIconHeight(),
+				BufferedImage.TYPE_INT_ARGB
+			);
+			var g = bufferedImage.createGraphics();
+			icon.paintIcon(null, g, 0, 0);
+			g.dispose();
+			return bufferedImage;
 		}
     }
 

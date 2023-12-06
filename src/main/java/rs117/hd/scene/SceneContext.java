@@ -10,9 +10,11 @@ import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 import net.runelite.api.*;
 import net.runelite.api.coords.*;
+import rs117.hd.data.environments.Area;
 import rs117.hd.data.environments.Environment;
 import rs117.hd.data.materials.Material;
 import rs117.hd.scene.lights.SceneLight;
+import rs117.hd.utils.AABB;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.buffer.GpuFloatBuffer;
 import rs117.hd.utils.buffer.GpuIntBuffer;
@@ -22,7 +24,7 @@ import static rs117.hd.HdPlugin.UV_SIZE;
 import static rs117.hd.HdPlugin.VERTEX_SIZE;
 
 public class SceneContext {
-	public final int id = HDUtils.rand.nextInt();
+	public final int id = HDUtils.rand.nextInt() & SceneUploader.SCENE_ID_MASK;
 	public final Scene scene;
 	public final HashSet<Integer> regionIds;
 	public final int expandedMapLoadingChunks;
@@ -127,11 +129,9 @@ public class SceneContext {
 	 * @param plane		 which the local coordinate is on
 	 * @return world coordinate
 	 */
-	public WorldPoint localToWorld(LocalPoint localPoint, int plane)
+	public int[] localToWorld(LocalPoint localPoint, int plane)
 	{
-		int[] pos = HDUtils.localToWorld(scene, localPoint.getX(), localPoint.getY(), plane);
-		return new WorldPoint(pos[0], pos[1], pos[2]);
-
+		return HDUtils.localToWorld(scene, localPoint.getX(), localPoint.getY(), plane);
 	}
 
 	public int[] localToWorld(int localX, int localY, int plane)
@@ -166,5 +166,13 @@ public class SceneContext {
 			(worldPoint.getX() - scene.getBaseX()) * LOCAL_TILE_SIZE,
 			(worldPoint.getY() - scene.getBaseY()) * LOCAL_TILE_SIZE
 		);
+	}
+
+	public boolean intersects(Area area) {
+		return intersects(area.aabbs);
+	}
+
+	public boolean intersects(AABB... aabbs) {
+		return HDUtils.sceneIntersects(scene, expandedMapLoadingChunks, aabbs);
 	}
 }

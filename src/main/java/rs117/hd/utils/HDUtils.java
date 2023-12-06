@@ -30,10 +30,14 @@ import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.api.coords.*;
+import rs117.hd.data.environments.Area;
 
 import static net.runelite.api.Constants.SCENE_SIZE;
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.*;
+import static rs117.hd.scene.ProceduralGenerator.VERTICES_PER_FACE;
+import static rs117.hd.scene.ProceduralGenerator.faceLocalVertices;
+import static rs117.hd.scene.ProceduralGenerator.isOverlayFace;
 
 @Slf4j
 @Singleton
@@ -45,7 +49,6 @@ public class HDUtils {
 
 	// directional vectors approximately opposite of the directional light used by the client
 	private static final float[] LIGHT_DIR_TILE = new float[] { 0.70710678f, 0.70710678f, 0f };
-	public static final float[] LIGHT_DIR_MODEL = new float[] { 0.57735026f, 0.57735026f, 0.57735026f };
 
 	// The epsilon for floating point values used by jogl
 	public static final float EPSILON = 1.1920929E-7f;
@@ -165,26 +168,6 @@ public class HDUtils {
 		subtract(c, a, c);
 		float[] n = new float[3];
 		return cross(n, b, c);
-	}
-
-	public static int[] colorIntToHSL(int colorInt) {
-		int[] outHSL = new int[3];
-		outHSL[0] = colorInt >> 10 & 0x3F;
-		outHSL[1] = colorInt >> 7 & 0x7;
-		outHSL[2] = colorInt & 0x7F;
-		return outHSL;
-	}
-
-	public static int colorHSLToInt(int[] colorHSL) {
-		return (colorHSL[0] << 3 | colorHSL[1]) << 7 | colorHSL[2];
-	}
-
-	public static float dotLightDirectionModel(float x, float y, float z) {
-		// Model normal vectors need to be normalized
-		float length = x * x + y * y + z * z;
-		if (length < EPSILON)
-			return 0;
-		return (x * LIGHT_DIR_MODEL[0] + y * LIGHT_DIR_MODEL[1] + z * LIGHT_DIR_MODEL[2]) / (float) Math.sqrt(length);
 	}
 
 	public static float dotLightDirectionTile(float x, float y, float z) {
@@ -386,27 +369,81 @@ public class HDUtils {
 		return System.getProperty("sun.arch.data.model", "Unknown").equals("32");
 	}
 
-	public static boolean sceneIsTheGauntlet(Scene scene) {
-		if (!scene.isInstance())
-			return false;
+	public static boolean sceneIntersects(Scene scene, int numChunksExtended, Area area) {
+		return sceneIntersects(scene, numChunksExtended, area.aabbs);
+	}
 
-		var templateChunks = scene.getInstanceTemplateChunks();
-		for (var plane : templateChunks) {
-			for (var column : plane) {
-				for (int chunk : column) {
-					if (chunk == -1)
-						continue;
+	public static boolean sceneIntersects(Scene scene, int numChunksExtended, AABB... aabbs) {
+		if (scene.isInstance()) {
+			var templateChunks = scene.getInstanceTemplateChunks();
+			for (var plane : templateChunks) {
+				for (var column : plane) {
+					for (int chunk : column) {
+						if (chunk == -1)
+							continue;
 
-					int worldX = (chunk >> 14 & 1023) * 8;
-					int worldY = (chunk >> 3 & 2047) * 8;
-					int regionId = HDUtils.worldToRegionID(worldX, worldY);
+						int chunkX = chunk >> 14 & 1023;
+						int chunkY = chunk >> 3 & 2047;
+						int minX = chunkX * CHUNK_SIZE;
+						int minY = chunkY * CHUNK_SIZE;
+						int maxX = (chunkX + 1) * CHUNK_SIZE - 1;
+						int maxY = (chunkY + 1) * CHUNK_SIZE - 1;
 
-					// The Gauntlet should only ever consist of chunks from these regions
-					return regionId == 7512 || regionId == 7768;
+						for (var aabb : aabbs)
+							if (aabb.intersects(minX, minY, maxX, maxY))
+								return true;
+					}
 				}
 			}
+		} else {
+			int baseX = scene.getBaseX();
+			int baseY = scene.getBaseX();
+			int extended = numChunksExtended * CHUNK_SIZE;
+			AABB sceneAabb = new AABB(
+				baseX - extended,
+				baseY - extended,
+				baseX + SCENE_SIZE + extended - 1,
+				baseY + SCENE_SIZE + extended - 1
+			);
+
+			for (var aabb : aabbs)
+				if (sceneAabb.intersects(aabb))
+					return true;
 		}
 
 		return false;
+	}
+
+	public static int[] getSouthWesternMostTileColor(Tile tile) {
+		var paint = tile.getSceneTilePaint();
+		var model = tile.getSceneTileModel();
+		if (paint != null) {
+			return ColorUtils.unpackHslRaw(paint.getSwColor());
+		} else if (model != null) {
+			int faceCount = tile.getSceneTileModel().getFaceX().length;
+			final int[] faceColorsA = model.getTriangleColorA();
+			final int[] faceColorsB = model.getTriangleColorB();
+			final int[] faceColorsC = model.getTriangleColorC();
+
+			int hsl = 0;
+			outer:
+			for (int face = 0; face < faceCount; face++) {
+				if (isOverlayFace(tile, face))
+					continue;
+
+				int[][] vertices = faceLocalVertices(tile, face);
+				int[] faceColors = new int[] { faceColorsA[face], faceColorsB[face], faceColorsC[face] };
+
+				for (int vertex = 0; vertex < VERTICES_PER_FACE; vertex++) {
+					hsl = faceColors[vertex];
+					if (vertices[vertex][0] != LOCAL_TILE_SIZE && vertices[vertex][1] != LOCAL_TILE_SIZE)
+						break outer;
+				}
+			}
+
+			return ColorUtils.unpackHslRaw(hsl);
+		}
+
+		return null;
 	}
 }

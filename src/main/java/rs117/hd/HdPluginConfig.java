@@ -38,6 +38,8 @@ import rs117.hd.config.DefaultSkyColor;
 import rs117.hd.config.FogDepthMode;
 import rs117.hd.config.MaxDynamicLights;
 import rs117.hd.config.Saturation;
+import rs117.hd.config.SeasonalTheme;
+import rs117.hd.config.ShadingMode;
 import rs117.hd.config.ShadowDistance;
 import rs117.hd.config.ShadowMode;
 import rs117.hd.config.ShadowResolution;
@@ -69,8 +71,8 @@ public interface HdPluginConfig extends Config
 		keyName = "drawDistance",
 		name = "Draw Distance",
 		description =
-			"The maximum number of tiles to draw in either direction from the camera.<br>" +
-			"Depending on where the scene was loaded from, you might only see as far as 16 tiles in some directions.",
+			"The number of tiles to draw in either direction from the camera, up to a maximum of 184.<br>" +
+			"Depending on where the scene is centered, you might only see 16 tiles in one direction, unless you extend map loading.",
 		position = 0,
 		section = generalSettings
 	)
@@ -85,7 +87,9 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = KEY_EXPANDED_MAP_LOADING_CHUNKS,
 		name = "Extended map loading",
-		description = "Extra map area to load, in 8 tile chunks.",
+		description =
+			"How much further the map should be loaded. The maximum is 5 extra chunks.<br>" +
+			"Note, extending the map can have a very high impact on performance.",
 		position = 1,
 		section = generalSettings
 	)
@@ -97,8 +101,8 @@ public interface HdPluginConfig extends Config
 		keyName = "antiAliasingMode",
 		name = "Anti-Aliasing",
 		description =
-			"Improves jagged/shimmering edges at the cost of GPU performance.<br>" +
-			"16x MSAA is highly expensive, so 8x is recommended if anti-aliasing is desired.",
+			"Improves pixelated edges at the cost of significantly higher GPU usage.<br>" +
+			"MSAA x16 is very expensive, so x8 is recommended if anti-aliasing is desired.",
 		position = 2,
 		section = generalSettings
 	)
@@ -392,7 +396,7 @@ public interface HdPluginConfig extends Config
 		name = "Shadow Quality",
 		description =
 			"The resolution of the shadow map.<br>" +
-			"Higher resolutions result in higher quality shadows, at the cost of GPU performance.",
+			"Higher resolutions result in higher quality shadows, at the cost of higher GPU usage.",
 		position = 7,
 		section = lightingSettings
 	)
@@ -421,7 +425,7 @@ public interface HdPluginConfig extends Config
 		name = "Expand Shadow Draw",
 		description =
 			"Reduces shadows popping in and out at the edge of the screen by rendering<br>" +
-			"shadows for a larger portion of the scene, at the cost of performance.",
+			"shadows for a larger portion of the scene, at the cost of higher GPU usage.",
 		position = 10,
 		section = lightingSettings
 	)
@@ -448,7 +452,7 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = KEY_NORMAL_MAPPING,
 		name = "Normal Mapping",
-		description = "Affects how light interacts with certain materials. Barely affects performance.",
+		description = "Affects how light interacts with certain materials. Barely impacts performance.",
 		position = 12,
 		section = lightingSettings
 	)
@@ -460,7 +464,7 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = KEY_PARALLAX_OCCLUSION_MAPPING,
 		name = "Parallax Occlusion Mapping",
-		description = "Adds more depth to supported materials, at the cost of performance.",
+		description = "Adds more depth to some materials, at the cost of higher GPU usage.",
 		position = 13,
 		section = lightingSettings
 	)
@@ -474,10 +478,21 @@ public interface HdPluginConfig extends Config
 	@ConfigSection(
 		name = "Environment",
 		description = "Environment settings",
-		position = 2,
-		closedByDefault = false
+		position = 2
 	)
 	String environmentSettings = "environmentSettings";
+
+	String KEY_SEASONAL_THEME = "seasonalThemePreAuto1";
+	@ConfigItem(
+		keyName = KEY_SEASONAL_THEME,
+		name = "Seasonal Theme",
+		description = "Festive themes for Gielinor.",
+		position = 0,
+		section = environmentSettings
+	)
+	default SeasonalTheme seasonalTheme() {
+		return SeasonalTheme.AUTUMN;
+	}
 
 	@ConfigItem(
 		keyName = "fogDepthMode",
@@ -527,6 +542,7 @@ public interface HdPluginConfig extends Config
 		name = "Default Sky",
 		description =
 			"Specify a sky color to use when the current area doesn't have a sky color defined.<br>" +
+			"This only applies when the default summer seasonal theme is active.<br>" +
 			"If set to 'RuneLite Skybox', the sky color from RuneLite's Skybox plugin will be used.<br>" +
 			"If set to 'Old School Black', the sky will be black and water will remain blue, but for any<br>" +
 			"other option, the water color will be influenced by the sky color.",
@@ -720,22 +736,8 @@ public interface HdPluginConfig extends Config
 		position = 2,
 		section = miscellaneousSettings
 	)
-	default boolean hdInfernalTexture()
-	{
+	default boolean hdInfernalTexture() {
 		return true;
-	}
-
-	String KEY_WINTER_THEME = "winterTheme0";
-	@ConfigItem(
-		keyName = KEY_WINTER_THEME,
-		name = "Winter Theme",
-		description = "Covers the Gielinor overworld with a layer of snow!",
-		position = 3,
-		section = miscellaneousSettings
-	)
-	default boolean winterTheme()
-	{
-		return false;
 	}
 
 	String KEY_LEGACY_GREY_COLORS = "reduceOverExposure";
@@ -807,21 +809,10 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = KEY_FASTER_MODEL_HASHING,
 		name = "Use faster model hashing",
-		description = "Should increase performance at the expensive of potential graphical issues.",
+		description = "Should increase performance at the expense of potential graphical issues.",
 		section = experimentalSettings
 	)
 	default boolean fasterModelHashing() {
-		return true;
-	}
-
-	String KEY_UNDO_VANILLA_SHADING_IN_COMPUTE = "experimentalUndoVanillaShadingInCompute";
-	@ConfigItem(
-		keyName = KEY_UNDO_VANILLA_SHADING_IN_COMPUTE,
-		name = "Undo vanilla shading in compute",
-		description = "Should increase performance at the expensive of potential graphical issues.",
-		section = experimentalSettings
-	)
-	default boolean undoVanillaShadingInCompute() {
 		return true;
 	}
 
@@ -833,6 +824,41 @@ public interface HdPluginConfig extends Config
 		section = experimentalSettings
 	)
 	default boolean preserveVanillaNormals() {
+		return false;
+	}
+
+	String KEY_SHADING_MODE = "experimentalShadingMode";
+	@ConfigItem(
+		keyName = KEY_SHADING_MODE,
+		name = "Shading mode",
+		description =
+			"If you prefer playing without shadows, maybe you'll prefer vanilla shading or no shading as well.<br>" +
+			"Keep in mind, with vanilla shading used alongside shadows, you can end up with double shading.",
+		section = experimentalSettings
+	)
+	default ShadingMode shadingMode() {
+		return ShadingMode.DEFAULT;
+	}
+
+	String KEY_FLAT_SHADING = "experimentalFlatShading";
+	@ConfigItem(
+		keyName = KEY_FLAT_SHADING,
+		name = "Flat shading",
+		description = "Gives a more low-poly look to the game.",
+		section = experimentalSettings
+	)
+	default boolean flatShading() {
+		return false;
+	}
+
+	String KEY_DECOUPLE_WATER_FROM_SKY_COLOR = "experimentalDecoupleWaterFromSkyColor";
+	@ConfigItem(
+		keyName = KEY_DECOUPLE_WATER_FROM_SKY_COLOR,
+		name = "Decouple water from sky color",
+		description = "Some people prefer the water staying blue even with a different sky color active.",
+		section = experimentalSettings
+	)
+	default boolean decoupleSkyAndWaterColor() {
 		return false;
 	}
 

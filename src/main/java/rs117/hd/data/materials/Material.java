@@ -34,6 +34,7 @@ import lombok.NonNull;
 import lombok.Setter;
 import net.runelite.api.*;
 import rs117.hd.HdPluginConfig;
+import rs117.hd.config.SeasonalTheme;
 import rs117.hd.utils.ColorUtils;
 
 public enum Material {
@@ -71,9 +72,10 @@ public enum Material {
 		.setSpecular(0.5f, 30)),
 	WOODEN_SCREEN(7, p -> p
 		.setHasTransparency(true)),
-	LEAVES_1(8, p -> p
+	LEAVES_SIDE(8, p -> p
 		.setHasTransparency(true)
-		.setTextureScale(1.3f, 1.0f)),
+		.setTextureScale(1.025f, 1.025f)
+	),
 	TREE_RINGS(9, p -> p
 		.setHasTransparency(true)),
 	MOSS_BRANCH(10),
@@ -104,10 +106,12 @@ public enum Material {
 	MOSS(28, p -> p
 		.setHasTransparency(true)),
 	TROPICAL_LEAF(29, p -> p
+		.setBrightness(.5f)
 		.setHasTransparency(true)),
 	WILLOW_LEAVES(30, p -> p
 		.setHasTransparency(true)
-		.setTextureScale(1.025f, 1.0f)),
+		.setTextureScale(1.025f, 1.0f)
+	),
 	LAVA(31, p -> p
 		.setUnlit(true)
 		.setOverrideBaseColor(true)
@@ -116,7 +120,8 @@ public enum Material {
 	TREE_DOOR_BROWN(32),
 	MAPLE_LEAVES(33, p -> p
 		.setHasTransparency(true)
-		.setTextureScale(1.3f, 1)),
+		.setTextureScale(1.3f, 1.025f)
+	),
 	MAGIC_STARS(34, p -> p
 		.setHasTransparency(true)
 		.setUnlit(true)
@@ -131,9 +136,10 @@ public enum Material {
 		.setOverrideBaseColor(true)
 		.setFlowMap(LAVA_FLOW_MAP, 0.05f, 12, 4)
 		.setScroll(0, 1 / -3f)),
-	LEAVES_2(41, p -> p
+	LEAVES_DISEASED(41, p -> p
 		.setHasTransparency(true)
-		.setTextureScale(1.1f, 1.1f)),
+		.setTextureScale(1.025f, 1.025f)
+	),
 	MARBLE(42, p -> p
 		.setSpecular(1.0f, 400)),
 	CLEAN_TILE(43),
@@ -159,7 +165,7 @@ public enum Material {
 		.setOverrideBaseColor(true)
 		.setFlowMap(LAVA_FLOW_MAP, 0.02f, 12, 4)
 		.setScroll(0, 0)),
-	LEAVES_3(60, p -> p
+	LEAVES_TOP(60, p -> p
 		.setHasTransparency(true)),
 	CLAN_SKULL(61, p -> p
 		.setHasTransparency(true)),
@@ -217,11 +223,12 @@ public enum Material {
 		.setHasTransparency(true)),
 	CLAN_EMPTY(88, p -> p
 		.setHasTransparency(true)),
-	SHAYZIEN_LEAVES_1(89, p -> p
+	SHAYZIEN_LEAVES_TOP(89, p -> p
 		.setHasTransparency(true)),
-	SHAYZIEN_LEAVES_2(90, p -> p
+	SHAYZIEN_LEAVES_SIDE(90, p -> p
 		.setHasTransparency(true)
-		.setTextureScale(1.1f, 1.1f)),
+		.setTextureScale(1.025f, 1.025f)
+	),
 	WATER_ICE(91),
 	SNOW_ROOF(92),
 	SMALL_SNOWFLAKES(93),
@@ -234,41 +241,56 @@ public enum Material {
 
 	FOG_STATIC(98, p -> p
 		.setHasTransparency(true)),
-	FOG_VERY_SLOW(99, p -> p
+	FOG_VERY_SLOW(FOG_STATIC, p -> p
+		.setVanillaTextureIndex(99)
 		.setHasTransparency(true)),
-	FOG_SLOW(100, p -> p
+	FOG_SLOW(FOG_STATIC, p -> p
+		.setVanillaTextureIndex(100)
 		.setHasTransparency(true)),
-	FOG_MEDIUM(101, p -> p
+	FOG_MEDIUM(FOG_STATIC, p -> p
+		.setVanillaTextureIndex(101)
 		.setHasTransparency(true)),
-	FOG_FAST(102, p -> p
+	FOG_FAST(FOG_STATIC, p -> p
+		.setVanillaTextureIndex(102)
 		.setHasTransparency(true)),
-	FOG_VERY_FAST(103, p -> p
+	FOG_VERY_FAST(FOG_STATIC, p -> p
+		.setVanillaTextureIndex(103)
 		.setHasTransparency(true)),
 
 	FOG_LIGHT_STATIC(104, p -> p
 		.setHasTransparency(true)),
-	FOG_LIGHT_VERY_SLOW(105, p -> p
+	FOG_LIGHT_VERY_SLOW(FOG_LIGHT_STATIC, p -> p
+		.setVanillaTextureIndex(105)
 		.setHasTransparency(true)),
-	FOG_LIGHT_SLOW(106, p -> p
+	FOG_LIGHT_SLOW(FOG_LIGHT_STATIC, p -> p
+		.setVanillaTextureIndex(106)
 		.setHasTransparency(true)),
-	FOG_LIGHT_MEDIUM(107, p -> p
+	FOG_LIGHT_MEDIUM(FOG_LIGHT_STATIC, p -> p
+		.setVanillaTextureIndex(107)
 		.setHasTransparency(true)),
-	FOG_LIGHT_FAST(108, p -> p
+	FOG_LIGHT_FAST(FOG_LIGHT_STATIC, p -> p
+		.setVanillaTextureIndex(108)
 		.setHasTransparency(true)),
-	FOG_LIGHT_VERY_FAST(109, p -> p
+	FOG_LIGHT_VERY_FAST(FOG_LIGHT_STATIC, p -> p
+		.setVanillaTextureIndex(109)
 		.setHasTransparency(true)),
 
 	FOG_HEAVY_STATIC(110, p -> p
 		.setHasTransparency(true)),
-	FOG_HEAVY_VERY_SLOW(111, p -> p
+	FOG_HEAVY_VERY_SLOW(FOG_HEAVY_STATIC, p -> p
+		.setVanillaTextureIndex(111)
 		.setHasTransparency(true)),
-	FOG_HEAVY_SLOW(112, p -> p
+	FOG_HEAVY_SLOW(FOG_HEAVY_STATIC, p -> p
+		.setVanillaTextureIndex(112)
 		.setHasTransparency(true)),
-	FOG_HEAVY_MEDIUM(113, p -> p
+	FOG_HEAVY_MEDIUM(FOG_HEAVY_STATIC, p -> p
+		.setVanillaTextureIndex(113)
 		.setHasTransparency(true)),
-	FOG_HEAVY_FAST(114, p -> p
+	FOG_HEAVY_FAST(FOG_HEAVY_STATIC, p -> p
+		.setVanillaTextureIndex(114)
 		.setHasTransparency(true)),
-	FOG_HEAVY_VERY_FAST(115, p -> p
+	FOG_HEAVY_VERY_FAST(FOG_HEAVY_STATIC, p -> p
+		.setVanillaTextureIndex(115)
 		.setHasTransparency(true)),
 
 	SKULLS(116),
@@ -276,7 +298,7 @@ public enum Material {
 	SKULLS_FOG_LIGHT(118),
 	SKULLS_FOG_DARK(119),
 
-	WHITE(NONE, p -> {}),
+	WHITE(NONE),
 	GRAY_75(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(.75f))),
 	GRAY_65(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(.65f))),
 	GRAY_50(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(.5f))),
@@ -288,11 +310,15 @@ public enum Material {
 	BLANK_SEMIGLOSS(WHITE, p -> p
 		.setSpecular(0.35f, 80)),
 
-	SNOW_1,
-	SNOW_2,
+	SNOW_1_N,
+	SNOW_1(p -> p.setNormalMap(SNOW_1_N).setSpecular(0.4f, 20)),
+	SNOW_2_N,
+	SNOW_2(p -> p.setNormalMap(SNOW_2_N).setSpecular(0.4f, 20)),
 	SNOW_2_DARK(SNOW_2, p -> p.setBrightness(0.5f)),
-	SNOW_3,
-	SNOW_4,
+	SNOW_3_N,
+	SNOW_3(p -> p.setNormalMap(SNOW_3_N).setSpecular(0.4f, 20)),
+	SNOW_4_N,
+	SNOW_4(p -> p.setNormalMap(SNOW_4_N).setSpecular(0.4f, 20)),
 
 	GRASS_1,
 	GRASS_2,
@@ -302,15 +328,21 @@ public enum Material {
 	DIRT_1_N,
 	DIRT_1(p -> p
 		.setNormalMap(DIRT_1_N)
-		.setSpecular(0.5f, 35)),
+		.setSpecular(0.25f, 18)),
+	DIRT_1_VERT(DIRT_1, p -> p.setNormalMap(null)),
 	DIRT_2_N,
 	DIRT_2(p -> p
 		.setNormalMap(DIRT_2_N)
-		.setSpecular(0.4f, 30)),
+		.setSpecular(0.25f, 18)),
+	DIRT_2_VERT(DIRT_2, p -> p.setNormalMap(null)),
 	GRAVEL_N,
 	GRAVEL(p -> p
 		.setNormalMap(GRAVEL_N)
-		.setSpecular(0.4f, 130)),
+		.setSpecular(0.4f, 130)
+	),
+	GRAVEL_LIGHT(GRAVEL, p -> p
+		.setBrightness(1.5f)
+	),
 
 	DIRT_1_SHINY(DIRT_1, p -> p
 		.setSpecular(1.1f, 380)),
@@ -318,6 +350,10 @@ public enum Material {
 		.setSpecular(1.1f, 380)),
 	GRAVEL_SHINY(GRAVEL, p -> p
 		.setSpecular(1.1f, 380)),
+	GRAVEL_SHINY_LIGHT(GRAVEL, p -> p
+		.setSpecular(1.1f, 380)
+		.setBrightness(1.55f)
+	),
 	SAND_1_N,
 	SAND_1(p -> p
 		.setNormalMap(SAND_1_N)
@@ -334,7 +370,16 @@ public enum Material {
 		.setSpecular(0.2f, 10)
 	),
 	GRUNGE_1,
+	GRUNGE_1_SHINY(GRUNGE_1, p -> p
+		.setSpecular(0.7f, 300)
+	),
 	GRUNGE_2,
+	GRUNGE_2_SHINY(GRUNGE_2, p -> p
+		.setSpecular(0.7f, 300)
+	),
+	GRUNGE_2_EADGARS_CAVE_FIX(GRUNGE_2, p -> p.setBrightness(0.65f)),
+	GRUNGE_2_TROLLHEIM_WALL_FIX_1(GRUNGE_2, p -> p.setBrightness(1.8f)),
+	GRUNGE_2_TROLLHEIM_WALL_FIX_2(GRUNGE_2, p -> p.setBrightness(1.2f)),
 	SUBMERGED_GRUNGE_2(GRUNGE_2, p -> p
 		.setFlowMap(UNDERWATER_FLOW_MAP)
 		.setFlowMapStrength(0.075f)
@@ -399,10 +444,16 @@ public enum Material {
 		.setNormalMap(FALADOR_PATH_BRICK_N)
 		.setSpecular(0.3f, 30)
 	),
+	JAGGED_STONE_TILE_D,
 	JAGGED_STONE_TILE_N,
 	JAGGED_STONE_TILE(p -> p
+		.setDisplacementMap(JAGGED_STONE_TILE_D)
 		.setNormalMap(JAGGED_STONE_TILE_N)
 		.setSpecular(0.5f, 30)
+	),
+	POTTERY_OVEN_STONE(
+		JAGGED_STONE_TILE,
+		p -> p.setOverrideBaseColor(JAGGED_STONE_TILE.overrideBaseColor).setBrightness(0.3f)
 	),
 
 	TILE_SMALL_1(p -> p
@@ -483,7 +534,13 @@ public enum Material {
 	WOOD_GRAIN_2_WIDE(WOOD_GRAIN_2, p -> p
 		.setTextureScale(1.5f, 0.5f)
 	),
-	WOOD_GRAIN_3,
+	WOOD_GRAIN_3_D,
+	WOOD_GRAIN_3_N,
+	WOOD_GRAIN_3(p -> p
+		.setDisplacementMap(WOOD_GRAIN_3_D)
+		.setNormalMap(WOOD_GRAIN_3_N)
+		.setSpecular(0.3f, 25)
+	),
 	DOCK_FENCE,
 	DOCK_FENCE_DARK(DOCK_FENCE, p -> p.setBrightness(0.6f)),
 
@@ -576,10 +633,10 @@ public enum Material {
 		.setSpecular(0.7f, 80)),
 	WATTLE_1,
 	ICE_1(SNOW_4, p -> p
-		.replaceIf(HdPluginConfig::winterTheme, WATER_FLAT_2, WATER_FLAT)
+		.replaceIf(SeasonalTheme.WINTER, WATER_FLAT_2, WATER_FLAT)
 		.setSpecular(1.1f, 200)),
 	ICE_1_HIGHGLOSS(ICE_1, p -> p
-		.replaceIf(HdPluginConfig::winterTheme, WATER_FLAT_2, WATER_FLAT)
+		.replaceIf(SeasonalTheme.WINTER, WATER_FLAT_2, WATER_FLAT)
 		.setSpecular(3.1f, 30)),
 	ICE_2(SNOW_2, p -> p
 		.setSpecular(1.5f, 800)),
@@ -619,9 +676,6 @@ public enum Material {
 	PLANT_GRUNGE_2(GRUNGE_2, p -> p
 		.setSpecular(0.20f, 20)
 	),
-	HD_TROPICAL_LEAF(TROPICAL_LEAF, p -> p
-		.replaceIf(HdPluginConfig::modelTextures, TROPICAL_LEAF)
-	),
 	HD_CONCRETE_D,
 	HD_CONCRETE_N,
 	HD_CONCRETE(p -> p
@@ -638,59 +692,117 @@ public enum Material {
 		.setSpecular(0.3f, 20)
 		.setNormalMap(HD_HAY_N)
 	),
+	OOZE(GRAY_65, p -> p
+		.setSpecular(1.5f, 600)
+	),
 
+	// Aliases for separately replacing textures of different trees
+	LEAVES_YELLOW_SIDE(LEAVES_SIDE),
+	LEAVES_YELLOW_TOP(LEAVES_TOP),
+	LEAVES_RED_SIDE(LEAVES_SIDE),
+	LEAVES_RED_TOP(LEAVES_TOP),
+	LEAVES_ORANGE_SIDE(LEAVES_SIDE),
+	LEAVES_ORANGE_TOP(LEAVES_TOP),
 
 	// Seasonal
+	AUTUMN_LEAVES_YELLOW_SIDE(p -> p
+		.setHasTransparency(true)
+		.setTextureScale(1.025f, 1.025f)
+		.replaceIf(SeasonalTheme.AUTUMN, LEAVES_YELLOW_SIDE)
+	),
+	AUTUMN_LEAVES_YELLOW_TOP(p -> p
+		.setHasTransparency(true)
+		.setTextureScale(1.025f, 1.025f)
+		.replaceIf(SeasonalTheme.AUTUMN, LEAVES_YELLOW_TOP)
+	),
+	AUTUMN_LEAVES_ORANGE_SIDE(p -> p
+		.setHasTransparency(true)
+		.setTextureScale(1.025f, 1.025f)
+		.replaceIf(SeasonalTheme.AUTUMN, LEAVES_ORANGE_SIDE)
+	),
+	AUTUMN_LEAVES_ORANGE_TOP(p -> p
+		.setHasTransparency(true)
+		.setTextureScale(1.025f, 1.025f)
+		.replaceIf(SeasonalTheme.AUTUMN, LEAVES_ORANGE_TOP)
+	),
+	AUTUMN_LEAVES_RED_SIDE(p -> p
+		.setHasTransparency(true)
+		.setTextureScale(1.025f, 1.025f)
+		.replaceIf(SeasonalTheme.AUTUMN, LEAVES_RED_SIDE)
+	),
+	AUTUMN_LEAVES_RED_TOP(p -> p
+		.setHasTransparency(true)
+		.setTextureScale(1.025f, 1.025f)
+		.replaceIf(SeasonalTheme.AUTUMN, LEAVES_RED_TOP)
+	),
+	AUTUMN_WILLOW_LEAVES(p -> p
+		.setHasTransparency(true)
+		.setTextureScale(1.025f, 1.025f)
+		.replaceIf(SeasonalTheme.AUTUMN, WILLOW_LEAVES)
+	),
+
 	WINTER_WILLOW_LEAVES(p -> p
-		.replaceIf(HdPluginConfig::winterTheme, WILLOW_LEAVES)
-		.setTextureScale(1.025f, 1.0f)),
+		.setHasTransparency(true)
+		.setTextureScale(1.025f, 1.025f)
+		.replaceIf(SeasonalTheme.WINTER, WILLOW_LEAVES)
+	),
 	WINTER_MAPLE_LEAVES(p -> p
-		.replaceIf(HdPluginConfig::winterTheme, MAPLE_LEAVES)
-		.setTextureScale(1.3f, 1.0f)),
-	WINTER_LEAVES_1(p -> p
-		.replaceIf(HdPluginConfig::winterTheme, LEAVES_1)
-		.setTextureScale(1.3f, 1.0f)),
-	WINTER_LEAVES_2(p -> p
-		.replaceIf(HdPluginConfig::winterTheme, LEAVES_2)
-		.setTextureScale(1.1f, 1.1f)),
-	WINTER_LEAVES_3(p -> p
-		.replaceIf(HdPluginConfig::winterTheme, LEAVES_3)),
+		.setHasTransparency(true)
+		.setTextureScale(1.3f, 1.025f)
+		.replaceIf(SeasonalTheme.WINTER, MAPLE_LEAVES)
+	),
+	WINTER_LEAVES_SIDE(p -> p
+		.setHasTransparency(true)
+		.setTextureScale(1.025f, 1.025f)
+		.replaceIf(SeasonalTheme.WINTER, LEAVES_SIDE, LEAVES_YELLOW_SIDE, LEAVES_ORANGE_SIDE, LEAVES_RED_SIDE)
+	),
+	WINTER_LEAVES_TOP(p -> p
+		.setHasTransparency(true)
+		.replaceIf(SeasonalTheme.WINTER, LEAVES_TOP, LEAVES_YELLOW_TOP, LEAVES_ORANGE_TOP, LEAVES_RED_TOP)
+	),
+	WINTER_LEAVES_DISEASED(p -> p
+		.setHasTransparency(true)
+		.setTextureScale(1.025f, 1.025f)
+		.replaceIf(SeasonalTheme.WINTER, LEAVES_DISEASED)
+	),
 	WINTER_PAINTING_LANDSCAPE(p -> p
-		.replaceIf(HdPluginConfig::winterTheme, PAINTING_LANDSCAPE)),
+		.replaceIf(SeasonalTheme.WINTER, PAINTING_LANDSCAPE)
+	),
 	WINTER_PAINTING_KING(p -> p
-		.replaceIf(HdPluginConfig::winterTheme, PAINTING_KING)),
+		.replaceIf(SeasonalTheme.WINTER, PAINTING_KING)
+	),
 	WINTER_PAINTING_ELF(p -> p
-		.replaceIf(HdPluginConfig::winterTheme, PAINTING_ELF)),
+		.replaceIf(SeasonalTheme.WINTER, PAINTING_ELF)
+	),
 	WINTER_HD_ROOF_SHINGLES_1(p -> p
-		.replaceIf(HdPluginConfig::winterTheme, ROOF_SHINGLES_1)
+		.replaceIf(SeasonalTheme.WINTER, HD_ROOF_SHINGLES_1)
 		.setSpecular(0.5f, 30)
 		.setNormalMap(HD_ROOF_SHINGLES_N)),
 	WINTER_HD_ROOF_SHINGLES_2(p -> p
-		.replaceIf(HdPluginConfig::winterTheme, ROOF_SHINGLES_2)
+		.replaceIf(SeasonalTheme.WINTER, HD_ROOF_SHINGLES_2)
 		.setSpecular(0.3f, 30)
 		.setNormalMap(HD_ROOF_SHINGLES_N)),
 	WINTER_HD_ROOF_BRICK_TILES(p -> p
-		.replaceIf(HdPluginConfig::winterTheme, ROOF_BRICK_TILE, ROOF_BRICK_TILE_GREEN, ROOF_BRICK_TILE_DARK)
 		.setSpecular(0.3f, 30)
-		.setNormalMap(HD_ROOF_BRICK_TILE_N)),
+		.setNormalMap(HD_ROOF_BRICK_TILE_N)
+		.replaceIf(SeasonalTheme.WINTER, HD_ROOF_BRICK_TILE, HD_ROOF_BRICK_TILE_GREEN, HD_ROOF_BRICK_TILE_DARK)
+	),
 	WINTER_HD_ROOF_SLATE(p -> p
-		.replaceIf(HdPluginConfig::winterTheme, ROOF_SLATE)
-		.setSpecular(0.5f, 30)),
+		.setSpecular(0.5f, 30)
+		.replaceIf(SeasonalTheme.WINTER, ROOF_SLATE)
+	),
 	WINTER_HD_ROOF_WOODEN_SLATE(p -> p
-		.replaceIf(HdPluginConfig::winterTheme, ROOF_WOODEN_SLATE)
-		.setSpecular(0.5f, 30)),
+		.setSpecular(0.5f, 30)
+		.replaceIf(SeasonalTheme.WINTER, ROOF_WOODEN_SLATE)
+	),
 	WINTER_JAGGED_STONE_TILE(p -> p
+		.setDisplacementMap(JAGGED_STONE_TILE_D)
 		.setNormalMap(JAGGED_STONE_TILE_N)
 		.setSpecular(0.6f, 30)
-		.setBrightness(1.4f)),
-	WINTER_JAGGED_STONE_TILE_LIGHT(WINTER_JAGGED_STONE_TILE, p -> p
-		.setNormalMap(JAGGED_STONE_TILE_N)
-		.setSpecular(0.6f, 30)
-		.setBrightness(4)),
-	WINTER_JAGGED_STONE_TILE_LIGHTER(WINTER_JAGGED_STONE_TILE, p -> p
-		.setNormalMap(JAGGED_STONE_TILE_N)
-		.setSpecular(0.6f, 30)
-		.setBrightness(12)),
+		.setBrightness(1.4f)
+	),
+	WINTER_JAGGED_STONE_TILE_LIGHT(WINTER_JAGGED_STONE_TILE, p -> p.setBrightness(4)),
+	WINTER_JAGGED_STONE_TILE_LIGHTER(WINTER_JAGGED_STONE_TILE, p -> p.setBrightness(12)),
 	;
 
 	public final Material parent;
@@ -703,6 +815,7 @@ public enum Material {
 	public final boolean hasTransparency;
 	public final boolean overrideBaseColor;
 	public final boolean unlit;
+	public final boolean hasTexture;
 	public final float brightness;
 	public final float displacementScale;
 	public final float flowMapStrength;
@@ -794,6 +907,10 @@ public enum Material {
 			this.replacementCondition = condition;
 			return this;
 		}
+
+		Builder replaceIf(SeasonalTheme seasonalTheme, @NonNull Material... materialsToReplace) {
+			return replaceIf(config -> config.seasonalTheme() == seasonalTheme, materialsToReplace);
+		}
 	}
 
 	Material() {
@@ -802,6 +919,10 @@ public enum Material {
 
 	Material(int vanillaTextureIndex) {
 		this(p -> p.setVanillaTextureIndex(vanillaTextureIndex));
+	}
+
+	Material(Material parent) {
+		this(parent, p -> {});
 	}
 
 	Material(Material parent, Consumer<Builder> consumer) {
@@ -835,6 +956,18 @@ public enum Material {
 		textureScale = builder.textureScale;
 		materialsToReplace.addAll(builder.materialsToReplace);
 		replacementCondition = builder.replacementCondition;
+
+		// Determine whether the material contains some form of texture change
+		var base = this;
+		while (base.parent != null)
+			base = base.parent;
+		hasTexture =
+			base.ordinal() != 0 ||
+			normalMap != null ||
+			displacementMap != null ||
+			roughnessMap != null ||
+			ambientOcclusionMap != null ||
+			flowMap != null;
 	}
 
 	private static Material[] VANILLA_TEXTURE_MAPPING = {};
@@ -842,37 +975,47 @@ public enum Material {
 
 	public static void updateMappings(Texture[] textures, HdPluginConfig config) {
 		var materials = Material.values();
-		for (int i = 0; i < materials.length; i++) {
+		for (int i = 0; i < materials.length; ++i) {
 			var material = materials[i];
-			// Apply the first successful replacement listed last
-			for (int j = materials.length - 1; j >= 0; j--) {
-				var replacement = materials[j];
-				if (replacement.replacementCondition != null &&
-					replacement.replacementCondition.apply(config) &&
-					replacement.materialsToReplace.contains(material))
-					material = replacement;
-			}
 
-			// If the final material is itself a conditional replacement material, and the condition
-			// is currently not met, the material won't be loaded, and should be mapped to NONE
-			if (material.replacementCondition != null && !material.replacementCondition.apply(config))
+			// If the material is a conditional replacement material, and the condition is not met,
+			// the material shouldn't be loaded and can be mapped to NONE
+			if (material.replacementCondition != null && !material.replacementCondition.apply(config)) {
 				material = NONE;
+			} else {
+				// Apply material replacements from top to bottom
+				for (int j = i + 1; j < materials.length; ++j) {
+					var replacement = materials[j];
+					if (replacement.replacementCondition != null &&
+						replacement.replacementCondition.apply(config) &&
+						replacement.materialsToReplace.contains(material)) {
+						material = replacement;
+						break;
+					}
+				}
+			}
 
 			REPLACEMENT_MAPPING[i] = material;
 		}
 
 		VANILLA_TEXTURE_MAPPING = new Material[textures.length];
 		Arrays.fill(VANILLA_TEXTURE_MAPPING, Material.VANILLA);
-		for (int i = 0; i < textures.length; i++)
-			for (var material : materials)
-				if (material.vanillaTextureIndex == i)
-					VANILLA_TEXTURE_MAPPING[i] = material.resolveTextureMaterial();
+		for (int i = 0; i < textures.length; i++) {
+			for (var material : materials) {
+				if (material.vanillaTextureIndex == i && material.parent == null) {
+					assert VANILLA_TEXTURE_MAPPING[i] == VANILLA :
+						"Material " + material + " conflicts with vanilla ID " + material.vanillaTextureIndex + " of material "
+						+ VANILLA_TEXTURE_MAPPING[i];
+					VANILLA_TEXTURE_MAPPING[i] = material.resolveReplacements();
+				}
+			}
+		}
 	}
 
 	public static Material fromVanillaTexture(int vanillaTextureId) {
 		if (vanillaTextureId < 0 || vanillaTextureId >= VANILLA_TEXTURE_MAPPING.length)
 			return NONE;
-		return VANILLA_TEXTURE_MAPPING[vanillaTextureId].resolveReplacements();
+		return VANILLA_TEXTURE_MAPPING[vanillaTextureId];
 	}
 
 	/**

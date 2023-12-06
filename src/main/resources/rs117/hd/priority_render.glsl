@@ -117,7 +117,7 @@ void get_face(
         ivec4 thisrvC = rotate(thisC, orientation);
 
         // calculate distance to face
-        int thisPriority = (thisA.w >> 16) & 0xff;// all vertices on the face have the same priority
+        int thisPriority = (thisA.w >> 16) & 0xF;// all vertices on the face have the same priority
         int thisDistance;
         if (radius == 0) {
             thisDistance = 0;
@@ -230,7 +230,7 @@ void undoVanillaShading(inout ivec4 vertex, vec3 unrotatedNormal) {
     const int IGNORE_LOW_LIGHTNESS = 3;
     // multiplier applied to vertex' lightness value.
     // results in greater lightening of lighter colors
-    const float LIGHTNESS_MULTIPLIER = 3f;
+    const float LIGHTNESS_MULTIPLIER = 3.f;
     // the minimum amount by which each color will be lightened
     const int BASE_LIGHTEN = 10;
 
@@ -291,12 +291,16 @@ void sort_and_insert(uint localId, ModelInfo minfo, int thisPriority, int thisDi
         normalout[outOffset + myOffset * 3 + 2] = rotate(normC, orientation);
 
         #if UNDO_VANILLA_SHADING
-        // Compute flat normal if necessary
-        if (length(normA) == 0)
-            normA = normB = normC = vec4(cross(thisrvA.xyz - thisrvB.xyz, thisrvA.xyz - thisrvC.xyz), 0);
-        undoVanillaShading(thisrvA, normA.xyz);
-        undoVanillaShading(thisrvB, normB.xyz);
-        undoVanillaShading(thisrvC, normC.xyz);
+        if ((int(thisrvA.w) >> 20 & 1) == 0) {
+            if (length(normA) == 0) {
+                // Compute flat normal if necessary, and rotate it back to match unrotated normals
+                vec4 N = vec4(cross(thisrvA.xyz - thisrvB.xyz, thisrvA.xyz - thisrvC.xyz), 0);
+                normA = normB = normC = rotate(N, -orientation);
+            }
+            undoVanillaShading(thisrvA, normA.xyz);
+            undoVanillaShading(thisrvB, normB.xyz);
+            undoVanillaShading(thisrvC, normC.xyz);
+        }
         #endif
 
         thisrvA += pos;
@@ -324,7 +328,7 @@ void sort_and_insert(uint localId, ModelInfo minfo, int thisPriority, int thisDi
             uvB = uv[uvOffset + localId * 3 + 1];
             uvC = uv[uvOffset + localId * 3 + 2];
 
-            if ((int(uvA.w) >> MATERIAL_FLAG_IS_VANILLA_TEXTURED & 1) == 1) {
+            if ((int(uvA.w) >> MATERIAL_FLAG_VANILLA_UVS & 1) == 1) {
                 // Rotate the texture triangles to match model orientation
                 uvA = rotate(uvA, orientation);
                 uvB = rotate(uvB, orientation);

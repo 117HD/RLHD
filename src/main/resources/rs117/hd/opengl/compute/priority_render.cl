@@ -149,7 +149,7 @@ void get_face(
     int4 thisrvC = rotate_ivec(uni, thisC, orientation);
 
     // calculate distance to face
-    int thisPriority = (thisA.w >> 16) & 0xff;// all vertices on the face have the same priority
+    int thisPriority = (thisA.w >> 16) & 0xF;// all vertices on the face have the same priority
     int thisDistance;
     if (radius == 0) {
       thisDistance = 0;
@@ -350,12 +350,16 @@ void sort_and_insert(
     normalout[outOffset + myOffset * 3 + 2] = rotate_vec(normC, orientation);
 
     #if UNDO_VANILLA_SHADING
-    // Compute flat normal if necessary
-    if (fast_length(normA) == 0)
-        normA.xyz = normB.xyz = normC.xyz = cross(convert_float3(thisrvA.xyz - thisrvB.xyz), convert_float3(thisrvA.xyz - thisrvC.xyz));
-    undoVanillaShading(&thisrvA, normA.xyz);
-    undoVanillaShading(&thisrvB, normB.xyz);
-    undoVanillaShading(&thisrvC, normC.xyz);
+    if ((((int)thisrvA.w) >> 20 & 1) == 0) {
+        if (fast_length(normA) == 0) {
+            // Compute flat normal if necessary, and rotate it back to match unrotated normals
+            float3 N = cross(convert_float3(thisrvA.xyz - thisrvB.xyz), convert_float3(thisrvA.xyz - thisrvC.xyz));
+            normA = normB = normC = (float4) (N, 1.f);
+        }
+        undoVanillaShading(&thisrvA, normA.xyz);
+        undoVanillaShading(&thisrvB, normB.xyz);
+        undoVanillaShading(&thisrvC, normC.xyz);
+    }
     #endif
 
     thisrvA += pos;
@@ -383,7 +387,7 @@ void sort_and_insert(
       uvB = uv[uvOffset + localId * 3 + 1];
       uvC = uv[uvOffset + localId * 3 + 2];
 
-      if ((((int)uvA.w) >> MATERIAL_FLAG_IS_VANILLA_TEXTURED & 1) == 1) {
+      if ((((int)uvA.w) >> MATERIAL_FLAG_VANILLA_UVS & 1) == 1) {
         // Rotate the texture triangles to match model orientation
         uvA = rotate_vec(uvA, orientation);
         uvB = rotate_vec(uvB, orientation);

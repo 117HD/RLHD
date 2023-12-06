@@ -12,6 +12,22 @@
         "type": "string",
         "description": "Description of which objects the properties apply to."
       },
+      "seasonalTheme": {
+        "type": "string",
+        "description": "Which seasonal theme the model override should be active for, or null for all. Defaults to null.",
+        "enum": [
+          "SUMMER",
+          "AUTUMN",
+          "WINTER"
+        ]
+      },
+      "areas": {
+        "type": "array",
+        "description": "An array of bounding boxes, region IDs and/or area enums specifying which areas the override should be limited to.",
+        "items": {
+          "$ref": "aabb.schema.json"
+        }
+      },
       "npcIds": {
         "type": "array",
         "description": "A set of NPC IDs or NpcID keys that the override should apply to.",
@@ -75,11 +91,19 @@
         "type": "integer",
         "description": "Rotation around the Z axis, with 2048 corresponding to a complete rotation. Defaults to uvOrientation."
       },
+      "rotate": {
+        "type": "integer",
+        "description": "Counter-clockwise rotation around the up-axis in degrees, where only 0, 90, 180 and 270 are allowed. Defaults to 0."
+      },
+      "hide": {
+        "type": "boolean",
+        "description": "Whether any model this override applies to should be hidden. Defaults to false."
+      },
       "retainVanillaUvs": {
         "type": "boolean",
         "description": "Retain vanilla UVs on already textured areas of the model. Defaults to true."
       },
-      "forceOverride": {
+      "forceMaterialChanges": {
         "type": "boolean",
         "description": "Apply the override even when model textures are disabled in the config. Defaults to false."
       },
@@ -118,6 +142,70 @@
         "description": "An array of bounding boxes, region IDs and/or area enums specifying where the model should be hidden.",
         "items": {
           "$ref": "aabb.schema.json"
+        }
+      },
+      "materialOverrides": {
+        "type": "object",
+        "description": "A subset of options can be tweaked separately for specific materials of the model.",
+        "additionalProperties": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [ "textureMaterial" ],
+          "properties": {
+            "description": {
+              "type": "string",
+              "description": "Description of which part of the object these properties apply to."
+            },
+            "textureMaterial": {
+              "type": "string",
+              "description": "Case-sensitive name of the material to apply to faces with this texture."
+            },
+            "uvType": {
+              "type": "string",
+              "description": "What to base UV coordinates on for object texturing. Defaults to GEOMETRY.",
+              "enum": [
+                "VANILLA",
+                "GEOMETRY",
+                "MODEL_XY",
+                "MODEL_XY_MIRROR_A",
+                "MODEL_XY_MIRROR_B",
+                "MODEL_XZ",
+                "MODEL_XZ_MIRROR_A",
+                "MODEL_XZ_MIRROR_B",
+                "MODEL_YZ",
+                "MODEL_YZ_MIRROR_A",
+                "MODEL_YZ_MIRROR_B",
+                "WORLD_XY",
+                "WORLD_XZ",
+                "WORLD_YZ",
+                "BOX"
+              ]
+            },
+            "uvScale": {
+              "type": "number",
+              "description": "A scaling factor to apply to UV coordinates. Defaults to 1."
+            },
+            "uvOrientation": {
+              "type": "integer",
+              "description": "Extra rotation to apply to UVs with 2048 corresponding to a complete rotation. Defaults to 0."
+            },
+            "uvOrientationX": {
+              "type": "integer",
+              "description": "Rotation around the X axis, with 2048 corresponding to a complete rotation. Defaults to uvOrientation."
+            },
+            "uvOrientationY": {
+              "type": "integer",
+              "description": "Rotation around the Y axis, with 2048 corresponding to a complete rotation. Defaults to uvOrientation."
+            },
+            "uvOrientationZ": {
+              "type": "integer",
+              "description": "Rotation around the Z axis, with 2048 corresponding to a complete rotation. Defaults to uvOrientation."
+            },
+            "retainVanillaUvs": {
+              "type": "boolean",
+              "description": "Retain vanilla UVs on already textured areas of the model. Defaults to true."
+            }
+          }
         }
       }
     }

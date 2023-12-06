@@ -6,6 +6,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.client.callback.ClientThread;
+import rs117.hd.HdPlugin;
 
 import static org.lwjgl.opengl.GL33C.*;
 
@@ -14,6 +15,9 @@ import static org.lwjgl.opengl.GL33C.*;
 public class FrameTimer {
 	@Inject
 	private ClientThread clientThread;
+
+	@Inject
+	private HdPlugin plugin;
 
 	private final int numTimers = Timer.values().length;
 	private final int numGpuTimers = (int) Arrays.stream(Timer.values()).filter(t -> t.isGpuTimer).count();
@@ -34,13 +38,17 @@ public class FrameTimer {
 				if (timer.isGpuTimer)
 					for (int j = 0; j < 2; ++j)
 						gpuQueries[timer.ordinal() * 2 + j] = queryNames[queryIndex++];
+
 			isInactive = false;
+			plugin.enableDetailedTimers = true;
 		});
 	}
 
 	private void destroy() {
-		isInactive = true;
 		clientThread.invokeLater(() -> {
+			isInactive = true;
+			plugin.enableDetailedTimers = false;
+
 			glDeleteQueries(gpuQueries);
 			Arrays.fill(gpuQueries, 0);
 			reset();
