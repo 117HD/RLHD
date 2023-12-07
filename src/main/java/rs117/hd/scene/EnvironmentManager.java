@@ -144,6 +144,8 @@ public class EnvironmentManager {
 	}
 
 	public void triggerTransition() {
+		if (currentEnvironment == Environment.NONE)
+			return;
 		reset();
 		forceNextTransition = true;
 	}
