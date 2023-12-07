@@ -40,7 +40,7 @@ out int gTerrainData;
 
 uniform int useFog;
 uniform float fogDepth;
-uniform int drawDistance;
+uniform float drawDistance;
 uniform int expandedMapLoadingChunks;
 uniform vec3 cameraPos;
 
@@ -58,7 +58,7 @@ void main() {
 
     vec2 tiledist = abs(floor(position.xz / 128) - floor(cameraPos.xz / 128));
     float maxDist = max(tiledist.x, tiledist.y);
-    if (maxDist * 128 > drawDistance) {
+    if (maxDist > drawDistance) {
         // Rapidly fade out any geometry that extends beyond the draw distance.
         // This is required since we always draw all underwater terrain.
         alpha *= -256;
