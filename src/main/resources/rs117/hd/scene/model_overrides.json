@@ -1502,7 +1502,6 @@
       7266,
       7267,
       7269,
-      7518,
       8724,
       9485,
       9486,
@@ -4110,6 +4109,12 @@
       11185,
       11186,
       18479,
+      37810,
+      37811,
+      37812,
+      37813,
+      37814,
+      37815,
       37816,
       37817
     ],
@@ -5851,7 +5856,7 @@
   },
   {
     "description": "Ground Decoration - Rock - Small - Uncolored",
-    "baseMaterial": "ROCK_1",
+    "baseMaterial": "ROCK_1_LIGHT",
     "objectIds": [
       2381,
       2383,
@@ -5875,13 +5880,6 @@
       23084,
       25833,
       25835,
-      37800,
-      37801,
-      37802,
-      37803,
-      37804,
-      37805,
-      37806,
       43626,
       43628,
       43724,
@@ -6446,13 +6444,24 @@
     "uvType": "GEOMETRY"
   },
   {
-    "description": "Mortton Shade Catacombs  - Objects - Stone - Hole",
+    "description": "Ground Decoration - Mortton Catacombs & Sisterhood Sanctuary - Rock Light - Small - Uncolored",
     "baseMaterial": "ROCK_1_LIGHT",
     "objectIds": [
+      37800,
+      37801,
+      37802,
+      37803,
+      37804,
+      37805,
+      37806,
+      37807,
+      37808,
+      37809,
       37862,
       37863
     ],
-    "uvType": "MODEL_XZ"
+    "uvType": "BOX",
+    "uvScale": 0.74
   },
   {
     "description": "Objects - Vines",
