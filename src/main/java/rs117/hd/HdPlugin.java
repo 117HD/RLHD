@@ -1926,17 +1926,18 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			float fogDepth = 0;
 			switch (config.fogDepthMode()) {
 				case USER_DEFINED:
-					fogDepth = config.fogDepth() * 10;
+					fogDepth = config.fogDepth();
 					break;
 				case DYNAMIC:
 					fogDepth = environmentManager.currentFogDepth;
 					break;
 			}
+			fogDepth *= Math.min(getDrawDistance(), 90) / 10.f;
 			glUniform1i(uniUseFog, fogDepth > 0 ? 1 : 0);
 			glUniform1f(uniFogDepth, fogDepth);
 			glUniform3fv(uniFogColor, fogColor);
 
-			glUniform1i(uniDrawDistance, getDrawDistance() * LOCAL_TILE_SIZE);
+			glUniform1f(uniDrawDistance, getDrawDistance());
 			glUniform1i(uniExpandedMapLoadingChunks, sceneContext.expandedMapLoadingChunks);
 			glUniform1f(uniColorBlindnessIntensity, config.colorBlindnessIntensity() / 100.f);
 
