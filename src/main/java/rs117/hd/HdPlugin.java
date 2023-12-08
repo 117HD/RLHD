@@ -567,6 +567,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 				modelPusher.startUp();
 				lightManager.startUp();
+				environmentManager.startUp();
 
 				isActive = true;
 				hasLoggedIn = client.getGameState().getState() > GameState.LOGGING_IN.getState();
@@ -612,7 +613,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			modelPusher.shutDown();
 			modelOverrideManager.shutDown();
 			lightManager.shutDown();
-			environmentManager.reset();
+			environmentManager.shutDown();
 
 			if (lwjglInitialized) {
 				lwjglInitialized = false;
