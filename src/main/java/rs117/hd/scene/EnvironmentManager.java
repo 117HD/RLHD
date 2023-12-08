@@ -312,7 +312,7 @@ public class EnvironmentManager {
 		targetGroundFogStart = env.groundFogStart;
 		targetGroundFogEnd = env.groundFogEnd;
 		targetGroundFogOpacity = env.groundFogOpacity;
-		lightningEnabled = env.lightningEnabled;
+		lightningEnabled = env.lightningEffects;
 
 		var overworldEnv = getOverworldEnvironment();
 		float[] sunAngles = env.sunAngles;

@@ -40,7 +40,7 @@
   },
   {
     "area": "WILDERNESS_HIGH",
-    "lightningEnabled": true,
+    "lightningEffects": true,
     "ambientColor": "#d7d2d2",
     "ambientStrength": 0.75,
     "directionalColor": "#c5b8b6",
@@ -360,7 +360,7 @@
   },
   {
     "area": "BARROWS",
-    "lightningEnabled": true,
+    "lightningEffects": true,
     "ambientColor": "#5b83b3",
     "ambientStrength": 2,
     "directionalColor": "#526e8b",
@@ -467,7 +467,7 @@
   },
   {
     "area": "DRAYNOR_MANOR",
-    "lightningEnabled": true,
+    "lightningEffects": true,
     "ambientColor": "#615c57",
     "ambientStrength": 1.5,
     "directionalColor": "#ffbcb7",
@@ -477,7 +477,7 @@
   },
   {
     "area": "DRAYNOR_MANOR_FOREST",
-    "lightningEnabled": true,
+    "lightningEffects": true,
     "ambientColor": "#615c57",
     "ambientStrength": 1.5,
     "directionalColor": "#ffbcb7",
@@ -499,7 +499,7 @@
   },
   {
     "area": "MISTHALIN_MYSTERY_MANOR",
-    "lightningEnabled": true,
+    "lightningEffects": true,
     "ambientColor": "#615c57",
     "ambientStrength": 1.5,
     "directionalColor": "#ffbcb7",
@@ -1034,7 +1034,7 @@
   },
   {
     "area": "TEMPOROSS_COVE",
-    "lightningEnabled": true,
+    "lightningEffects": true,
     "ambientColor": "#a5acbd",
     "ambientStrength": 2,
     "directionalColor": "#707070",
@@ -1336,8 +1336,8 @@
     "ambientStrength": 1.5,
     "directionalStrength": 1,
     "sunAngles": [
-      300,
-      135
+      30,
+      315
     ],
     "fogDepth": 50,
     "waterColor": "#2b2b40"

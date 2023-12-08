@@ -1167,7 +1167,7 @@ public enum Environment
 		.setAmbientStrength(1.5f)
 		.setDirectionalColor("#FFFFFF")
 		.setDirectionalStrength(1.0f)
-		.setLightDirection(480, -45)
+		.setLightDirection(210, 135)
 		.setWaterColor(43, 43, 64)
 	),
 	LASSAR_UNDERCITY_NORMAL(Area.LASSAR_UNDERCITY_NORMAL, new Properties()
@@ -1234,7 +1234,7 @@ public enum Environment
 	private final Area area;
 	private final boolean isUnderwater;
 	private final boolean allowSkyOverride;
-	private final boolean lightningEnabled;
+	private final boolean lightningEffects;
 	private final float[] ambientColor;
 	private final float ambientStrength;
 	private final float[] directionalColor;
@@ -1420,7 +1420,7 @@ public enum Environment
 		this.directionalColor = properties.directionalColor;
 		this.underglowColor = properties.underglowColor;
 		this.underglowStrength = properties.underglowStrength;
-		this.lightningEnabled = properties.lightningEnabled;
+		this.lightningEffects = properties.lightningEnabled;
 		this.groundFogStart = properties.groundFogStart;
 		this.groundFogEnd = properties.groundFogEnd;
 		this.groundFogOpacity = properties.groundFogOpacity;

@@ -23,7 +23,7 @@ public class Environment {
 	public Area area;
 	public boolean isUnderwater = false;
 	public boolean allowSkyOverride = true;
-	public boolean lightningEnabled = false;
+	public boolean lightningEffects = false;
 	@JsonAdapter(SrgbToLinearAdapter.class)
 	public float[] ambientColor = rgb("#ffffff");
 	public float ambientStrength = 1;

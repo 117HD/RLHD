@@ -1,0 +1,140 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "environments.schema.json",
+  "title": "Environments",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "key": {
+        "type": "string",
+        "description": "Identifier used for accessing specific environments from code."
+      },
+      "area": {
+        "type": "string",
+        "description": "The area the environment should apply in."
+      },
+      "isUnderwater": {
+        "type": "boolean",
+        "description": "."
+      },
+      "allowSkyOverride": {
+        "type": "boolean",
+        "description": "."
+      },
+      "lightningEffects": {
+        "type": "boolean",
+        "description": "."
+      },
+      "ambientColor": {
+        "type": [ "string", "array" ],
+        "description": "Ambient light color in sRGB, specified as a hex color code or an array in the range 0-255. Accepts decimals.",
+        "pattern": "^#[A-Fa-f0-9]{6}$",
+        "minItems": 3,
+        "maxItems": 3,
+        "items": {
+          "type": "number"
+        }
+      },
+      "ambientStrength": {
+        "type": "number",
+        "description": "Ambient light strength multiplier. Defaults to 1."
+      },
+      "directionalColor": {
+        "type": [ "string", "array" ],
+        "description": "Directional light color in sRGB, specified as a hex color code or an array in the range 0-255. Accepts decimals.",
+        "pattern": "^#[A-Fa-f0-9]{6}$",
+        "minItems": 3,
+        "maxItems": 3,
+        "items": {
+          "type": "number"
+        }
+      },
+      "directionalStrength": {
+        "type": "number",
+        "description": "Directional light strength multiplier. Defaults to 0.25."
+      },
+      "waterColor": {
+        "type": [ "string", "array" ],
+        "description": "Water color in sRGB, specified as a hex color code or an array in the range 0-255. Accepts decimals.",
+        "pattern": "^#[A-Fa-f0-9]{6}$",
+        "minItems": 3,
+        "maxItems": 3,
+        "items": {
+          "type": "number"
+        }
+      },
+      "waterCausticsColor": {
+        "type": [ "string", "array" ],
+        "description": "Water caustics color in sRGB (as hex or array). Defaults to the environment's directional light color.",
+        "pattern": "^#[A-Fa-f0-9]{6}$",
+        "minItems": 3,
+        "maxItems": 3,
+        "items": {
+          "type": "number"
+        }
+      },
+      "waterCausticsStrength": {
+        "type": "number",
+        "description": "Water caustics strength. Defaults to the environment's directional light strength."
+      },
+      "underglowColor": {
+        "type": [ "string", "array" ],
+        "description": "Underglow color in sRGB (as hex or array). Acts as light emanating from the ground.",
+        "pattern": "^#[A-Fa-f0-9]{6}$",
+        "minItems": 3,
+        "maxItems": 3,
+        "items": {
+          "type": "number"
+        }
+      },
+      "underglowStrength": {
+        "type": "number",
+        "description": "Underglow strength multiplier. Acts as light emanating from the ground."
+      },
+      "sunAngles": {
+        "type": "array",
+        "description": "The sun's altitude and azimuth specified in degrees in the horizontal coordinate system. Altitude is from the ground up, azimuth is clockwise from north.",
+        "items": [
+          {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 90
+          },
+          {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 360
+          }
+        ]
+      },
+      "fogColor": {
+        "type": [ "string", "array" ],
+        "description": "Sky/fog color in sRGB, specified as a hex color code or an array in the range 0-255. Accepts decimals.",
+        "pattern": "^#[A-Fa-f0-9]{6}$",
+        "minItems": 3,
+        "maxItems": 3,
+        "items": {
+          "type": "number"
+        }
+      },
+      "fogDepth": {
+        "type": "number",
+        "description": "Fog depth normally ranging from 0 to 100, which combined with draw distance decides the fog amount. Defaults to 25."
+      },
+      "groundFogStart": {
+        "type": "integer",
+        "description": "Only matters with groundFogOpacity > 0. Specified in local units (1 tile = 128 units), where zero is the lowest height, and larger negative numbers are further up. Defaults to -200."
+      },
+      "groundFogEnd": {
+        "type": "integer",
+        "description": "Only matters with groundFogOpacity > 0. Specified in local units (1 tile = 128 units), where zero is the lowest height, and larger negative numbers are further up. Defaults to -500."
+      },
+      "groundFogOpacity": {
+        "type": "number",
+        "description": "Ground fog opacity ranging from 0 to 1, meaning no ground fog and full ground fog respectively. Defaults to 0."
+      }
+    }
+  }
+}
