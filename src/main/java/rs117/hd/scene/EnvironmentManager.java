@@ -37,6 +37,8 @@ import rs117.hd.data.environments.Environment;
 import rs117.hd.utils.AABB;
 import rs117.hd.utils.HDUtils;
 
+import static rs117.hd.utils.HDUtils.PI;
+import static rs117.hd.utils.HDUtils.TWO_PI;
 import static rs117.hd.utils.HDUtils.clamp;
 import static rs117.hd.utils.HDUtils.hermite;
 import static rs117.hd.utils.HDUtils.lerp;
@@ -127,13 +129,9 @@ public class EnvironmentManager {
 	public float currentGroundFogOpacity = 0f;
 	private float targetGroundFogOpacity = 0f;
 
-	private float startLightPitch = 0f;
-	public float currentLightPitch = 0f;
-	private float targetLightPitch = 0f;
-
-	private float startLightYaw = 0f;
-	public float currentLightYaw = 0f;
-	private float targetLightYaw = 0f;
+	private final float[] startSunAngles = { 0, 0 };
+	public final float[] currentSunAngles = { 0, 0 };
+	private final float[] targetSunAngles = { 0, 0 };
 
 	private boolean lightningEnabled = false;
 	private boolean forceNextTransition = false;
@@ -204,8 +202,8 @@ public class EnvironmentManager {
 		currentGroundFogStart = hermite(startGroundFogStart, targetGroundFogStart, t);
 		currentGroundFogEnd = hermite(startGroundFogEnd, targetGroundFogEnd, t);
 		currentGroundFogOpacity = hermite(startGroundFogOpacity, targetGroundFogOpacity, t);
-		currentLightPitch = hermite(startLightPitch, targetLightPitch, t);
-		currentLightYaw = hermite(startLightYaw, targetLightYaw, t);
+		for (int i = 0; i < 2; i++)
+			currentSunAngles[i] = hermite(startSunAngles[i], targetSunAngles[i], t);
 		currentUnderwaterCausticsColor = hermite(startUnderwaterCausticsColor, targetUnderwaterCausticsColor, t);
 		currentUnderwaterCausticsStrength = hermite(startUnderwaterCausticsStrength, targetUnderwaterCausticsStrength, t);
 
@@ -250,8 +248,8 @@ public class EnvironmentManager {
 		startGroundFogOpacity = currentGroundFogOpacity;
 		startUnderwaterCausticsColor = currentUnderwaterCausticsColor;
 		startUnderwaterCausticsStrength = currentUnderwaterCausticsStrength;
-		startLightPitch = mod(currentLightPitch, 360);
-		startLightYaw = mod(currentLightYaw, 360);
+		for (int i = 0; i < 2; i++)
+			startSunAngles[i] = mod(currentSunAngles[i], TWO_PI);
 
 		updateTargetSkyColor();
 
@@ -263,13 +261,10 @@ public class EnvironmentManager {
 		targetGroundFogOpacity = env.getGroundFogOpacity();
 		lightningEnabled = env.isLightningEnabled();
 
-		if (env.isCustomLightDirection()) {
-			targetLightPitch = env.getLightPitch();
-			targetLightYaw = env.getLightYaw();
-		} else {
-			targetLightPitch = overworldEnv.getLightPitch();
-			targetLightYaw = overworldEnv.getLightYaw();
-		}
+		float[] sunAngles = env.getSunAngles();
+		if (sunAngles == null)
+			sunAngles = overworldEnv.getSunAngles();
+		System.arraycopy(sunAngles, 0, targetSunAngles, 0, 2);
 
 		if (!config.atmosphericLighting())
 			env = overworldEnv;
@@ -279,24 +274,21 @@ public class EnvironmentManager {
 		targetDirectionalColor = env.getDirectionalColor();
 		targetUnderglowStrength = env.getUnderglowStrength();
 		targetUnderglowColor = env.getUnderglowColor();
-		targetUnderwaterCausticsColor = env.getUnderwaterCausticsColor();
-		targetUnderwaterCausticsStrength = env.getUnderwaterCausticsStrength();
+		targetUnderwaterCausticsColor = env.getWaterCausticsColor();
+		targetUnderwaterCausticsStrength = env.getWaterCausticsStrength();
 
 		// Prevent transitions from taking the long way around
-		targetLightPitch = mod(targetLightPitch, 360);
-		targetLightYaw = mod(targetLightYaw, 360);
-		float diff = startLightYaw - targetLightYaw;
-		if (Math.abs(diff) > 180)
-			targetLightYaw += 360 * Math.signum(diff);
-		diff = startLightPitch - targetLightPitch;
-		if (Math.abs(diff) > 180)
-			targetLightPitch += 360 * Math.signum(diff);
+		for (int i = 0; i < 2; i++) {
+			float diff = startSunAngles[i] - targetSunAngles[i];
+			if (Math.abs(diff) > PI)
+				targetSunAngles[i] += TWO_PI * Math.signum(diff);
+		}
 	}
 
 	public void updateTargetSkyColor() {
 		Environment env = getCurrentEnvironment();
 
-		if (!env.isCustomFogColor() || env.isAllowSkyOverride() && config.overrideSky()) {
+		if (env.getFogColor() == null || env.isAllowSkyOverride() && config.overrideSky()) {
 			DefaultSkyColor sky = config.defaultSkyColor();
 			targetFogColor = sky.getRgb(client);
 			if (sky == DefaultSkyColor.OSRS)
@@ -307,7 +299,7 @@ public class EnvironmentManager {
 		}
 
 		// Override with decoupled water/sky color if present
-		if (env.isCustomWaterColor()) {
+		if (env.getWaterColor() != null) {
 			targetWaterColor = env.getWaterColor();
 		} else if (config.decoupleSkyAndWaterColor()) {
 			targetWaterColor = DefaultSkyColor.DEFAULT.getRgb(client);

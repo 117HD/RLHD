@@ -119,6 +119,7 @@ import static org.lwjgl.opencl.CL10.*;
 import static org.lwjgl.opengl.GL43C.*;
 import static rs117.hd.HdPluginConfig.*;
 import static rs117.hd.scene.SceneUploader.SCENE_OFFSET;
+import static rs117.hd.utils.HDUtils.PI;
 import static rs117.hd.utils.ResourcePath.path;
 
 @PluginDescriptor(
@@ -1799,10 +1800,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 			glBindVertexArray(vaoSceneHandle);
 
-			float lightPitch = (float) Math.toRadians(environmentManager.currentLightPitch);
-			float lightYaw = (float) Math.toRadians(environmentManager.currentLightYaw);
-			float[] lightViewMatrix = Mat4.rotateX(lightPitch);
-			Mat4.mul(lightViewMatrix, Mat4.rotateY(-lightYaw));
+			float[] lightViewMatrix = Mat4.rotateX(PI + environmentManager.currentSunAngles[0]);
+			Mat4.mul(lightViewMatrix, Mat4.rotateY(PI - environmentManager.currentSunAngles[1]));
 
 			float[] lightProjectionMatrix = Mat4.identity();
 			if (configShadowsEnabled && fboShadowMap != 0 && environmentManager.currentDirectionalStrength > 0) {
