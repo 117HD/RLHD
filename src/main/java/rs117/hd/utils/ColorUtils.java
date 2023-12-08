@@ -9,7 +9,14 @@
 
 package rs117.hd.utils;
 
+import com.google.gson.TypeAdapter;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonToken;
+import com.google.gson.stream.JsonWriter;
 import java.awt.Color;
+import java.io.IOException;
+import java.util.Arrays;
+import lombok.extern.slf4j.Slf4j;
 
 public class ColorUtils {
 	private static final float EPS = 1e-10f;
@@ -334,5 +341,111 @@ public class ColorUtils {
 
 	public static float[] packedHslToLinearRgb(int hsl) {
 		return srgbToLinear(packedHslToSrgb(hsl));
+	}
+
+	@Slf4j
+	public static class SrgbAdapter extends TypeAdapter<float[]> {
+		private final float[] rgba = { 0, 0, 0, 1 };
+		private final int[] rgbaInt = { 0, 0, 0, 255 };
+
+		@Override
+		public float[] read(JsonReader in) throws IOException {
+			var token = in.peek();
+			if (token == JsonToken.STRING)
+				return ColorUtils.srgb(in.nextString());
+
+			if (token != JsonToken.BEGIN_ARRAY)
+				throw new IOException("Expected hex color code or array of color channels");
+
+			in.beginArray();
+
+			int i = 0;
+			while (in.hasNext() && in.peek() != JsonToken.END_ARRAY) {
+				if (in.peek() == JsonToken.NULL) {
+					log.warn("Skipping null value in color array");
+					in.skipValue();
+					continue;
+				}
+
+				if (in.peek() == JsonToken.NUMBER) {
+					if (i > 3) {
+						log.warn("Skipping extra elements in color array");
+						break;
+					}
+
+					rgba[i++] = (float) in.nextDouble();
+					continue;
+				}
+
+				throw new IOException("Unexpected type in color array: " + in.peek());
+			}
+			in.endArray();
+
+			if (i < 3)
+				throw new IOException("Too few elements in color array: " + i);
+
+			for (int j = 0; j < i; j++)
+				rgba[j] /= 255;
+
+			if (i == 4)
+				return rgba;
+
+			float[] rgb = new float[3];
+			System.arraycopy(rgba, 0, rgb, 0, 3);
+			return rgb;
+		}
+
+		@Override
+		public void write(JsonWriter out, float[] src) throws IOException {
+			if (src == null || src.length == 0) {
+				out.nullValue();
+				return;
+			}
+
+			if (src.length != 3 && src.length != 4)
+				throw new IOException("The number of components must be 3 or 4 in a color array. Got " + Arrays.toString(src));
+
+			for (int i = 0; i < src.length; i++)
+				rgba[i] = src[i] * 255;
+
+			// See if it can fit in a hex color code
+			boolean canfit = true;
+			for (int i = 0; i < src.length; i++) {
+				float f = rgba[i];
+				rgbaInt[i] = Math.round(f);
+				if (Math.abs(f - rgbaInt[i]) > EPS) {
+					canfit = false;
+					break;
+				}
+			}
+
+			if (canfit) {
+				// Serialize it as a hex color code
+				if (src.length == 3) {
+					out.value(String.format("#%02x%02x%02x", rgbaInt[0], rgbaInt[1], rgbaInt[2]));
+				} else {
+					out.value(String.format("#%02x%02x%02x%02x", rgbaInt[0], rgbaInt[1], rgbaInt[2], rgbaInt[3]));
+				}
+			} else {
+				out.beginArray();
+				for (int i = 0; i < src.length; i++) {
+					out.value(rgba[i]);
+				}
+				out.endArray();
+			}
+		}
+	}
+
+	@Slf4j
+	public static class SrgbToLinearAdapter extends SrgbAdapter {
+		@Override
+		public float[] read(JsonReader in) throws IOException {
+			return srgbToLinear(super.read(in));
+		}
+
+		@Override
+		public void write(JsonWriter out, float[] src) throws IOException {
+			super.write(out, linearToSrgb(src));
+		}
 	}
 }
