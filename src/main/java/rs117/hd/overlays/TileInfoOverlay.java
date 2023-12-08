@@ -306,6 +306,7 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay {
 				counter++;
 				int id = gameObject.getId();
 				String type = "Unknown";
+				String extra = "";
 				switch (ModelHash.getType(gameObject.getHash())) {
 					case ModelHash.TYPE_PLAYER:
 						type = "Player";
@@ -316,12 +317,22 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay {
 						break;
 					case ModelHash.TYPE_OBJECT:
 						type = "Object";
+						var def = client.getObjectDefinition(id);
+						if (def.getImpostorIds() != null) {
+							var impostor = def.getImpostor();
+							if (impostor != null)
+								extra += String.format("⤷ : Impostor ID=%d name=%s", impostor.getId(), impostor.getName());
+						}
 						break;
 					case ModelHash.TYPE_GROUND_ITEM:
 						type = "Item";
 						break;
 				}
-				lines.add(String.format("%s: ID=%d orientation=%d", type, id, gameObject.getModelOrientation()));
+				lines.add(String.format("%s: ID=%d ori=%d", type, id, gameObject.getModelOrientation()));
+				if (!extra.isEmpty()) {
+					counter++;
+					lines.add(extra);
+				}
 			}
 			if (counter > 0)
 				lines.add(lines.size() - counter, "Game objects: ");

@@ -108,6 +108,7 @@ import rs117.hd.utils.DeveloperTools;
 import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.Mat4;
+import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.PopupUtils;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
@@ -2250,7 +2251,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				nextSceneContext = context;
 				proceduralGenerator.generateSceneData(context);
 				environmentManager.loadSceneEnvironments(context);
-				lightManager.loadSceneLights(context);
 				sceneUploader.upload(context);
 			}
 		} catch (OutOfMemoryError oom) {
@@ -2289,19 +2289,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			initTileHeightMap(scene);
 		}
 
-		if (sceneContext != null) {
-			// Copy over NPC and projectile lights
-			for (SceneLight light : sceneContext.lights)
-				if (light.npc != null || light.projectile != null)
-					nextSceneContext.lights.add(light);
+		assert nextSceneContext != null;
+		lightManager.loadSceneLights(nextSceneContext, sceneContext);
 
+		if (sceneContext != null)
 			sceneContext.destroy();
-		}
-
-		if (nextSceneContext == null)
-			return;
 		sceneContext = nextSceneContext;
 		nextSceneContext = null;
+		assert sceneContext != null;
 
 		// Gaps need to be filled in swapScene, since map regions aren't updated earlier
 		if (config.fillGapsInTerrain())
@@ -2602,9 +2597,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				y += ProceduralGenerator.DEPTH_LEVEL_SLOPE[depthLevel - 1] - GROUND_MIN_Y;
 		}
 
-		x -= cameraPosition[0];
-		y -= cameraPosition[1];
-		z -= cameraPosition[2];
+		x -= (int) cameraPosition[0];
+		y -= (int) cameraPosition[1];
+		z -= (int) cameraPosition[2];
 
 		int radius = 96; // ~ 64 * sqrt(2)
 
@@ -2798,6 +2793,15 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			} else {
 				if (enableDetailedTimers)
 					frameTimer.begin(Timer.MODEL_PUSHING);
+
+				if (renderable instanceof DynamicObject) {
+					var def = client.getObjectDefinition(ModelHash.getIdOrIndex(hash));
+					if (def.getImpostorIds() != null) {
+						var impostor = def.getImpostor();
+						if (impostor != null)
+							hash = hash & ~ModelHash.ID_OR_INDEX_MASK | (long) impostor.getId() << 17;
+					}
+				}
 
 				int vertexOffset = dynamicOffsetVertices + sceneContext.getVertexOffset();
 				int uvOffset = dynamicOffsetUvs + sceneContext.getUvOffset();
