@@ -1,7 +1,7 @@
 package rs117.hd.scene.environments;
 
 import com.google.gson.annotations.JsonAdapter;
-import lombok.Getter;
+import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import rs117.hd.data.environments.Area;
@@ -11,12 +11,11 @@ import rs117.hd.utils.HDUtils;
 import static rs117.hd.utils.ColorUtils.SrgbToLinearAdapter;
 import static rs117.hd.utils.ColorUtils.rgb;
 
-@Getter
-@Setter
+@Setter(value = AccessLevel.PRIVATE)
 @NoArgsConstructor
 public class Environment {
-	public static final Environment DEFAULT = new Environment();
-	public static final Environment NONE = new Environment().setFogColor(rgb("#ff00ff"));
+	public static final Environment DEFAULT = new Environment().setKey("DEFAULT");
+	public static final Environment NONE = new Environment().setKey("NONE").setFogColor(rgb("#ff00ff"));
 
 	public static Environment OVERWORLD, AUTUMN, WINTER;
 

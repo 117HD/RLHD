@@ -174,7 +174,7 @@ public class EnvironmentManager {
 				for (var env : environments)
 					env.normalize();
 
-				clientThread.invokeLater(() -> {
+				clientThread.invoke(() -> {
 					if (client.getGameState().getState() >= GameState.LOGGED_IN.getState() && plugin.getSceneContext() != null)
 						loadSceneEnvironments(plugin.getSceneContext());
 				});
@@ -229,7 +229,7 @@ public class EnvironmentManager {
 		boolean skipTransition = tileChange >= SKIP_TRANSITION_DISTANCE;
 		for (var environment : sceneContext.environments)
 		{
-			if (environment.getArea().containsPoint(focalPoint))
+			if (environment.area.containsPoint(focalPoint))
 			{
 				if (environment != currentEnvironment)
 				{
@@ -308,28 +308,28 @@ public class EnvironmentManager {
 		updateTargetSkyColor();
 
 		var env = getCurrentEnvironment();
-		targetFogDepth = env.getFogDepth();
-		targetGroundFogStart = env.getGroundFogStart();
-		targetGroundFogEnd = env.getGroundFogEnd();
-		targetGroundFogOpacity = env.getGroundFogOpacity();
-		lightningEnabled = env.isLightningEnabled();
+		targetFogDepth = env.fogDepth;
+		targetGroundFogStart = env.groundFogStart;
+		targetGroundFogEnd = env.groundFogEnd;
+		targetGroundFogOpacity = env.groundFogOpacity;
+		lightningEnabled = env.lightningEnabled;
 
 		var overworldEnv = getOverworldEnvironment();
-		float[] sunAngles = env.getSunAngles();
+		float[] sunAngles = env.sunAngles;
 		if (sunAngles == null)
-			sunAngles = overworldEnv.getSunAngles();
+			sunAngles = overworldEnv.sunAngles;
 		System.arraycopy(sunAngles, 0, targetSunAngles, 0, 2);
 
 		if (!config.atmosphericLighting())
 			env = overworldEnv;
-		targetAmbientStrength = env.getAmbientStrength();
-		targetAmbientColor = env.getAmbientColor();
-		targetDirectionalStrength = env.getDirectionalStrength();
-		targetDirectionalColor = env.getDirectionalColor();
-		targetUnderglowStrength = env.getUnderglowStrength();
-		targetUnderglowColor = env.getUnderglowColor();
-		targetUnderwaterCausticsColor = env.getWaterCausticsColor();
-		targetUnderwaterCausticsStrength = env.getWaterCausticsStrength();
+		targetAmbientStrength = env.ambientStrength;
+		targetAmbientColor = env.ambientColor;
+		targetDirectionalStrength = env.directionalStrength;
+		targetDirectionalColor = env.directionalColor;
+		targetUnderglowStrength = env.underglowStrength;
+		targetUnderglowColor = env.underglowColor;
+		targetUnderwaterCausticsColor = env.waterCausticsColor;
+		targetUnderwaterCausticsStrength = env.waterCausticsStrength;
 
 		// Prevent transitions from taking the long way around
 		for (int i = 0; i < 2; i++) {
@@ -342,19 +342,19 @@ public class EnvironmentManager {
 	public void updateTargetSkyColor() {
 		Environment env = getCurrentEnvironment();
 
-		if (env.getFogColor() == null || env.isAllowSkyOverride() && config.overrideSky()) {
+		if (env.fogColor == null || env.allowSkyOverride && config.overrideSky()) {
 			DefaultSkyColor sky = config.defaultSkyColor();
 			targetFogColor = sky.getRgb(client);
 			if (sky == DefaultSkyColor.OSRS)
 				sky = DefaultSkyColor.DEFAULT;
 			targetWaterColor = sky.getRgb(client);
 		} else {
-			targetFogColor = targetWaterColor = env.getFogColor();
+			targetFogColor = targetWaterColor = env.fogColor;
 		}
 
 		// Override with decoupled water/sky color if present
-		if (env.getWaterColor() != null) {
-			targetWaterColor = env.getWaterColor();
+		if (env.waterColor != null) {
+			targetWaterColor = env.waterColor;
 		} else if (config.decoupleSkyAndWaterColor()) {
 			targetWaterColor = DefaultSkyColor.DEFAULT.getRgb(client);
 		}
@@ -381,10 +381,10 @@ public class EnvironmentManager {
 		sceneContext.environments.clear();
 		outer:
 		for (var environment : environments) {
-			if (environment.getArea() == null)
+			if (environment.area == null)
 				continue;
 			for (AABB region : regions) {
-				for (AABB aabb : environment.getArea().getAabbs()) {
+				for (AABB aabb : environment.area.getAabbs()) {
 					if (region.intersects(aabb)) {
 						log.debug("Added environment: {}", environment);
 						sceneContext.environments.add(environment);
@@ -472,6 +472,6 @@ public class EnvironmentManager {
 	}
 
 	public boolean isUnderwater() {
-		return currentEnvironment.isUnderwater();
+		return currentEnvironment.isUnderwater;
 	}
 }
