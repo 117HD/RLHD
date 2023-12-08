@@ -53,6 +53,11 @@ public class HDUtils {
 	// The epsilon for floating point values used by jogl
 	public static final float EPSILON = 1.1920929E-7f;
 
+	public static final float PI = (float) Math.PI;
+	public static final float TWO_PI = PI * 2;
+	public static final float HALF_PI = PI / 2;
+	public static final float QUARTER_PI = PI / 2;
+
 	/**
 	 * Computes a + b, storing it in the out array
 	 */
