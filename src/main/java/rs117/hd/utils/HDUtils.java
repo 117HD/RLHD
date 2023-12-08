@@ -187,6 +187,10 @@ public class HDUtils {
 		return (long) Math.pow(2, Math.ceil(Math.log(x) / Math.log(2)));
 	}
 
+	public static float[] sunAngles(float altitude, float azimuth) {
+		return new float[] { (float) Math.toRadians(altitude), (float) Math.toRadians(azimuth) };
+	}
+
 	public static int convertWallObjectOrientation(int orientation) {
 		// Note: this is still imperfect, since the model rotation of a wall object depends on more than just the config orientation,
 		// 		 i.e. extra rotation depending on wall type whatever. I'm not sure.

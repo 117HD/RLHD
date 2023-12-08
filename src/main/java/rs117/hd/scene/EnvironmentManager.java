@@ -24,18 +24,24 @@
  */
 package rs117.hd.scene;
 
+import java.io.IOException;
+import java.util.HashMap;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
+import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.config.DefaultSkyColor;
-import rs117.hd.data.environments.Environment;
+import rs117.hd.scene.environments.Environment;
 import rs117.hd.utils.AABB;
+import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.HDUtils;
+import rs117.hd.utils.Props;
+import rs117.hd.utils.ResourcePath;
 
 import static rs117.hd.utils.HDUtils.PI;
 import static rs117.hd.utils.HDUtils.TWO_PI;
@@ -44,21 +50,27 @@ import static rs117.hd.utils.HDUtils.hermite;
 import static rs117.hd.utils.HDUtils.lerp;
 import static rs117.hd.utils.HDUtils.mod;
 import static rs117.hd.utils.HDUtils.rand;
+import static rs117.hd.utils.ResourcePath.path;
 
 @Singleton
 @Slf4j
 public class EnvironmentManager {
+	private static final ResourcePath ENVIRONMENTS_PATH = Props.getPathOrDefault(
+		"rlhd.environments-path",
+		() -> path(EnvironmentManager.class, "environments.json")
+	);
+
 	@Inject
 	private Client client;
+
+	@Inject
+	private ClientThread clientThread;
 
 	@Inject
 	private HdPlugin plugin;
 
 	@Inject
 	private HdPluginConfig config;
-
-	@Nonnull
-	private Environment currentEnvironment = Environment.NONE;
 
 	// transition time
 	private static final int TRANSITION_DURATION = 3000;
@@ -136,18 +148,60 @@ public class EnvironmentManager {
 	private boolean lightningEnabled = false;
 	private boolean forceNextTransition = false;
 
+	private rs117.hd.scene.environments.Environment[] environments;
+	private FileWatcher.UnregisterCallback fileWatcher;
+
+	@Nonnull
+	private Environment currentEnvironment = Environment.NONE;
+
+	public void startUp() {
+		fileWatcher = ENVIRONMENTS_PATH.watch((path, first) -> {
+			try {
+				environments = path.loadJson(plugin.getGson(), rs117.hd.scene.environments.Environment[].class);
+				if (environments == null)
+					throw new IOException("Empty or invalid: " + path);
+				log.debug("Loaded {} environments", environments.length);
+
+				HashMap<String, Environment> map = new HashMap<>();
+				for (var env : environments)
+					if (env.key != null)
+						map.put(env.key, env);
+
+				Environment.OVERWORLD = map.getOrDefault("OVERWORLD", Environment.DEFAULT);
+				Environment.AUTUMN = map.getOrDefault("AUTUMN", Environment.DEFAULT);
+				Environment.WINTER = map.getOrDefault("WINTER", Environment.DEFAULT);
+
+				for (var env : environments)
+					env.normalize();
+
+				clientThread.invokeLater(() -> {
+					if (client.getGameState().getState() >= GameState.LOGGED_IN.getState() && plugin.getSceneContext() != null)
+						loadSceneEnvironments(plugin.getSceneContext());
+				});
+			} catch (IOException ex) {
+				log.error("Failed to load environments:", ex);
+			}
+		});
+	}
+
+	public void shutDown() {
+		if (fileWatcher != null)
+			fileWatcher.unregister();
+		fileWatcher = null;
+		environments = null;
+		reset();
+	}
+
 	public void reset() {
 		currentEnvironment = Environment.NONE;
 		forceNextTransition = false;
 	}
 
 	public void triggerTransition() {
-		if (currentEnvironment == Environment.NONE)
-			return;
-		reset();
-		forceNextTransition = true;
+		if (currentEnvironment != Environment.NONE)
+			forceNextTransition = true;
+		currentEnvironment = Environment.NONE;
 	}
-
 
 	/**
 	 * Updates variables used in transition effects
@@ -173,7 +227,7 @@ public class EnvironmentManager {
 		previousPosition = focalPoint;
 
 		boolean skipTransition = tileChange >= SKIP_TRANSITION_DISTANCE;
-		for (Environment environment : sceneContext.environments)
+		for (var environment : sceneContext.environments)
 		{
 			if (environment.getArea().containsPoint(focalPoint))
 			{
@@ -253,7 +307,6 @@ public class EnvironmentManager {
 
 		updateTargetSkyColor();
 
-		var overworldEnv = getOverworldEnvironment();
 		var env = getCurrentEnvironment();
 		targetFogDepth = env.getFogDepth();
 		targetGroundFogStart = env.getGroundFogStart();
@@ -261,6 +314,7 @@ public class EnvironmentManager {
 		targetGroundFogOpacity = env.getGroundFogOpacity();
 		lightningEnabled = env.isLightningEnabled();
 
+		var overworldEnv = getOverworldEnvironment();
 		float[] sunAngles = env.getSunAngles();
 		if (sunAngles == null)
 			sunAngles = overworldEnv.getSunAngles();
@@ -326,14 +380,12 @@ public class EnvironmentManager {
 
 		sceneContext.environments.clear();
 		outer:
-		for (Environment environment : Environment.values())
-		{
-			for (AABB region : regions)
-			{
-				for (AABB aabb : environment.getArea().getAabbs())
-				{
-					if (region.intersects(aabb))
-					{
+		for (var environment : environments) {
+			if (environment.getArea() == null)
+				continue;
+			for (AABB region : regions) {
+				for (AABB aabb : environment.getArea().getAabbs()) {
+					if (region.intersects(aabb)) {
 						log.debug("Added environment: {}", environment);
 						sceneContext.environments.add(environment);
 						continue outer;

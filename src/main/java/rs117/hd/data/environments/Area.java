@@ -2101,4 +2101,17 @@ public enum Area
 	{
 		return containsPoint(worldPoint.getX(), worldPoint.getY(), worldPoint.getPlane());
 	}
+
+	public boolean intersects(Area otherArea) {
+		if (otherArea == null)
+			return false;
+		outer:
+		for (AABB other : otherArea.aabbs) {
+			for (AABB self : aabbs)
+				if (self.intersects(other))
+					continue outer;
+			return false;
+		}
+		return true;
+	}
 }
