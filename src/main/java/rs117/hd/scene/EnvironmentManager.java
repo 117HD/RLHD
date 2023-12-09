@@ -243,6 +243,9 @@ public class EnvironmentManager {
 
 		// interpolate between start and target values
 		long currentTime = System.currentTimeMillis();
+		// If time somehow skips backwards, abort the transition
+		if (currentTime < startTime)
+			startTime = 0;
 		float t = clamp((currentTime - startTime) / (float) TRANSITION_DURATION, 0, 1);
 		currentFogColor = hermite(startFogColor, targetFogColor, t);
 		currentWaterColor = hermite(startWaterColor, targetWaterColor, t);
@@ -364,14 +367,7 @@ public class EnvironmentManager {
 	 * Figures out which Areas exist in the current scene and
 	 * adds them to lists for easy access.
 	 */
-	public void loadSceneEnvironments(SceneContext sceneContext)
-	{
-		// loop through all Areas, check Rects of each Area. if any
-		// coordinates overlap scene coordinates, add them to a list.
-		// then loop through all Environments, checking to see if any
-		// of their Areas match any of the ones in the current scene.
-		// if so, add them to a list.
-
+	public void loadSceneEnvironments(SceneContext sceneContext) {
 		log.debug("Adding environments for scene with regions: {}", sceneContext.regionIds);
 
 		AABB[] regions = sceneContext.regionIds.stream()

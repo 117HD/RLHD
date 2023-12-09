@@ -182,7 +182,7 @@ public class TextureManager {
 		assert vanillaTexturesAvailable();
 		var textureProvider = client.getTextureProvider();
 		Texture[] vanillaTextures = textureProvider.getTextures();
-		Material.updateMappings(vanillaTextures, config);
+		Material.updateMappings(vanillaTextures, plugin);
 
 		// Add material uniforms for all active material definitions
 		materialUniformEntries = new ArrayList<>();

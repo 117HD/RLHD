@@ -482,7 +482,7 @@ public interface HdPluginConfig extends Config
 	)
 	String environmentSettings = "environmentSettings";
 
-	String KEY_SEASONAL_THEME = "seasonalThemePreAuto1";
+	String KEY_SEASONAL_THEME = "seasonalTheme";
 	@ConfigItem(
 		keyName = KEY_SEASONAL_THEME,
 		name = "Seasonal Theme",
@@ -491,7 +491,7 @@ public interface HdPluginConfig extends Config
 		section = environmentSettings
 	)
 	default SeasonalTheme seasonalTheme() {
-		return SeasonalTheme.AUTUMN;
+		return SeasonalTheme.AUTOMATIC;
 	}
 
 	@ConfigItem(

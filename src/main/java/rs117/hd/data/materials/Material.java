@@ -33,7 +33,7 @@ import java.util.function.Function;
 import lombok.NonNull;
 import lombok.Setter;
 import net.runelite.api.*;
-import rs117.hd.HdPluginConfig;
+import rs117.hd.HdPlugin;
 import rs117.hd.config.SeasonalTheme;
 import rs117.hd.utils.ColorUtils;
 
@@ -545,7 +545,7 @@ public enum Material {
 	DOCK_FENCE_DARK(DOCK_FENCE, p -> p.setBrightness(0.6f)),
 
 	HD_INFERNAL_CAPE(p -> p
-		.replaceIf(HdPluginConfig::hdInfernalTexture, INFERNAL_CAPE)
+		.replaceIf(plugin -> plugin.config.hdInfernalTexture(), INFERNAL_CAPE)
 		.setUnlit(true)
 		.setOverrideBaseColor(true)
 		.setFlowMap(LAVA_FLOW_MAP, 0.02f, 12, 4)
@@ -554,7 +554,7 @@ public enum Material {
 	HD_BRICK_N,
 	HD_BRICK_D,
 	HD_BRICK(p -> p
-		.replaceIf(HdPluginConfig::modelTextures, BRICK)
+		.replaceIf(plugin -> plugin.configModelTextures, BRICK)
 		.setNormalMap(HD_BRICK_N)
 		.setDisplacementMap(HD_BRICK_D)
 		.setDisplacementScale(.05f)
@@ -562,37 +562,37 @@ public enum Material {
 	),
 	HD_ROOF_SHINGLES_N,
 	HD_ROOF_SHINGLES_1(p -> p
-		.replaceIf(HdPluginConfig::modelTextures, ROOF_SHINGLES_1)
+		.replaceIf(plugin -> plugin.configModelTextures, ROOF_SHINGLES_1)
 		.setSpecular(0.5f, 30)
 		.setNormalMap(HD_ROOF_SHINGLES_N)
 	),
 	HD_MARBLE_DARK(p -> p
-		.replaceIf(HdPluginConfig::modelTextures, MARBLE_DARK)
+		.replaceIf(plugin -> plugin.configModelTextures, MARBLE_DARK)
 		.setSpecular(1.1f, 380)),
 	HD_BRICK_BROWN_N,
 	HD_BRICK_BROWN_D,
 	HD_BRICK_BROWN(p -> p
-		.replaceIf(HdPluginConfig::modelTextures, BRICK_BROWN)
+		.replaceIf(plugin -> plugin.configModelTextures, BRICK_BROWN)
 		.setNormalMap(HD_BRICK_BROWN_N)
 		.setDisplacementMap(HD_BRICK_BROWN_D)
 		.setDisplacementScale(.05f)
 		.setSpecular(0.35f, 20)
 	),
 	HD_LAVA_3(p -> p
-		.replaceIf(HdPluginConfig::modelTextures, LAVA)
+		.replaceIf(plugin -> plugin.configModelTextures, LAVA)
 		.setUnlit(true)
 		.setOverrideBaseColor(true)
 		.setFlowMap(LAVA_FLOW_MAP, 0.05f, 36, 22)
 		.setScroll(0, 1 / 3f)),
 	HD_ROOF_SHINGLES_2(p -> p
-		.replaceIf(HdPluginConfig::modelTextures, ROOF_SHINGLES_2)
+		.replaceIf(plugin -> plugin.configModelTextures, ROOF_SHINGLES_2)
 		.setSpecular(0.3f, 30)
 		.setNormalMap(HD_ROOF_SHINGLES_N)
 	),
 	HD_SIMPLE_GRAIN_WOOD_D,
 	HD_SIMPLE_GRAIN_WOOD_N,
 	HD_SIMPLE_GRAIN_WOOD(p -> p
-		.replaceIf(HdPluginConfig::modelTextures, SIMPLE_GRAIN_WOOD)
+		.replaceIf(plugin -> plugin.configModelTextures, SIMPLE_GRAIN_WOOD)
 		.setSpecular(0.3f, 20)
 		.setNormalMap(HD_SIMPLE_GRAIN_WOOD_N)
 		.setDisplacementMap(HD_SIMPLE_GRAIN_WOOD_D)
@@ -656,17 +656,17 @@ public enum Material {
 		.setBrightness(1.2f)),
 	HD_ROOF_BRICK_TILE_N,
 	HD_ROOF_BRICK_TILE(ROOF_BRICK_TILE, p -> p
-		.replaceIf(HdPluginConfig::modelTextures, ROOF_BRICK_TILE)
+		.replaceIf(plugin -> plugin.configModelTextures, ROOF_BRICK_TILE)
 		.setSpecular(0.3f, 30)
 		.setNormalMap(HD_ROOF_BRICK_TILE_N)
 	),
 	HD_ROOF_BRICK_TILE_GREEN(ROOF_BRICK_TILE_GREEN, p -> p
-		.replaceIf(HdPluginConfig::modelTextures, ROOF_BRICK_TILE_GREEN)
+		.replaceIf(plugin -> plugin.configModelTextures, ROOF_BRICK_TILE_GREEN)
 		.setSpecular(0.3f, 30)
 		.setNormalMap(HD_ROOF_BRICK_TILE_N)
 	),
 	HD_ROOF_BRICK_TILE_DARK(ROOF_BRICK_TILE_DARK, p -> p
-		.replaceIf(HdPluginConfig::modelTextures, ROOF_BRICK_TILE_DARK)
+		.replaceIf(plugin -> plugin.configModelTextures, ROOF_BRICK_TILE_DARK)
 		.setSpecular(0.3f, 30)
 		.setNormalMap(HD_ROOF_BRICK_TILE_N)
 	),
@@ -679,7 +679,7 @@ public enum Material {
 	HD_CONCRETE_D,
 	HD_CONCRETE_N,
 	HD_CONCRETE(p -> p
-		.replaceIf(HdPluginConfig::modelTextures, CONCRETE)
+		.replaceIf(plugin -> plugin.configModelTextures, CONCRETE)
 		.setNormalMap(HD_CONCRETE_N)
 		.setDisplacementMap(HD_CONCRETE_D)
 		.setDisplacementScale(0.05f)
@@ -688,7 +688,7 @@ public enum Material {
 	),
 	HD_HAY_N,
 	HD_HAY(p -> p
-		.replaceIf(HdPluginConfig::modelTextures, HAY)
+		.replaceIf(plugin -> plugin.configModelTextures, HAY)
 		.setSpecular(0.3f, 20)
 		.setNormalMap(HD_HAY_N)
 	),
@@ -825,7 +825,7 @@ public enum Material {
 	public final float[] scrollSpeed;
 	public final float[] textureScale;
 	public final List<Material> materialsToReplace = new ArrayList<>();
-	public final Function<HdPluginConfig, Boolean> replacementCondition;
+	public final Function<HdPlugin, Boolean> replacementCondition;
 
 	@Setter
 	private static class Builder {
@@ -848,7 +848,7 @@ public enum Material {
 		private float[] scrollSpeed = { 0, 0 };
 		private float[] textureScale = { 1, 1 };
 		private List<Material> materialsToReplace = new ArrayList<>();
-		private Function<HdPluginConfig, Boolean> replacementCondition;
+		private Function<HdPlugin, Boolean> replacementCondition;
 
 		Builder apply(Consumer<Builder> consumer) {
 			consumer.accept(this);
@@ -902,14 +902,14 @@ public enum Material {
 			return this;
 		}
 
-		Builder replaceIf(@NonNull Function<HdPluginConfig, Boolean> condition, @NonNull Material... materialsToReplace) {
+		Builder replaceIf(@NonNull Function<HdPlugin, Boolean> condition, @NonNull Material... materialsToReplace) {
 			Collections.addAll(this.materialsToReplace, materialsToReplace);
 			this.replacementCondition = condition;
 			return this;
 		}
 
 		Builder replaceIf(SeasonalTheme seasonalTheme, @NonNull Material... materialsToReplace) {
-			return replaceIf(config -> config.seasonalTheme() == seasonalTheme, materialsToReplace);
+			return replaceIf(plugin -> plugin.configSeasonalTheme == seasonalTheme, materialsToReplace);
 		}
 	}
 
@@ -973,21 +973,21 @@ public enum Material {
 	private static Material[] VANILLA_TEXTURE_MAPPING = {};
 	private static final Material[] REPLACEMENT_MAPPING = new Material[Material.values().length];
 
-	public static void updateMappings(Texture[] textures, HdPluginConfig config) {
+	public static void updateMappings(Texture[] textures, HdPlugin plugin) {
 		var materials = Material.values();
 		for (int i = 0; i < materials.length; ++i) {
 			var material = materials[i];
 
 			// If the material is a conditional replacement material, and the condition is not met,
 			// the material shouldn't be loaded and can be mapped to NONE
-			if (material.replacementCondition != null && !material.replacementCondition.apply(config)) {
+			if (material.replacementCondition != null && !material.replacementCondition.apply(plugin)) {
 				material = NONE;
 			} else {
 				// Apply material replacements from top to bottom
 				for (int j = i + 1; j < materials.length; ++j) {
 					var replacement = materials[j];
 					if (replacement.replacementCondition != null &&
-						replacement.replacementCondition.apply(config) &&
+						replacement.replacementCondition.apply(plugin) &&
 						replacement.materialsToReplace.contains(material)) {
 						material = replacement;
 						break;
