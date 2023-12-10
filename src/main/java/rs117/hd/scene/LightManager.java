@@ -190,7 +190,15 @@ public class LightManager {
 			SceneLight light = lightIterator.next();
 			light.distanceSquared = Integer.MAX_VALUE;
 
-			if (light.projectile != null) {
+			if (light.object != null) {
+				if (light.impostorObjectId != 0) {
+					var def = client.getObjectDefinition(light.object.getId());
+					if (def.getImpostorIds() != null) {
+						// Only show the light if the impostor is currently active
+						light.visible = def.getImpostor().getId() == light.impostorObjectId;
+					}
+				}
+			} else if (light.projectile != null) {
 				if (light.projectile.getRemainingCycles() <= 0) {
 					lightIterator.remove();
 					sceneContext.projectiles.remove(light.projectile);
@@ -211,10 +219,7 @@ public class LightManager {
 				light.x = light.graphicsObject.getLocation().getX();
 				light.y = light.graphicsObject.getLocation().getY();
 				light.z = light.graphicsObject.getZ() - light.height;
-			}
-
-			if (light.npc != null)
-			{
+			} else if (light.npc != null) {
 				if (light.npc != client.getCachedNPCs()[light.npc.getIndex()])
 				{
 					lightIterator.remove();
@@ -609,13 +614,26 @@ public class LightManager {
 		if (tileObject instanceof DynamicObject || tileObject instanceof GameObject) {
 			var def = client.getObjectDefinition(id);
 			if (def.getImpostorIds() != null) {
-				var impostor = def.getImpostor();
-				if (impostor != null)
-					id = impostor.getId();
+				// Add a light for every possible impostor object
+				for (int impostorId : def.getImpostorIds())
+					addObjectLight(sceneContext, tileObject, impostorId, plane, sizeX, sizeY, orientation);
+				return;
 			}
 		}
 
-		for (Light lightDef : OBJECT_LIGHTS.get(id)) {
+		addObjectLight(sceneContext, tileObject, tileObject.getId(), plane, sizeX, sizeY, orientation);
+	}
+
+	private void addObjectLight(
+		SceneContext sceneContext,
+		TileObject tileObject,
+		int objectId,
+		int plane,
+		int sizeX,
+		int sizeY,
+		int orientation
+	) {
+		for (Light lightDef : OBJECT_LIGHTS.get(objectId)) {
 			// prevent objects at plane -1 and below from having lights
 			if (tileObject.getPlane() <= -1)
 				continue;
@@ -630,6 +648,10 @@ public class LightManager {
 			int localPlane = tileObject.getPlane();
 			SceneLight light = new SceneLight(lightDef);
 			light.plane = localPlane;
+			if (objectId != tileObject.getId()) {
+				light.impostorObjectId = objectId;
+				light.visible = false;
+			}
 
 			LocalPoint localPoint = tileObject.getLocalLocation();
 			int lightX = localPoint.getX();
@@ -689,7 +711,7 @@ public class LightManager {
 			light.z = (int) tileHeight - light.height - 1;
 			light.object = tileObject;
 			light.modelOverride = modelOverrideManager.getOverride(
-				ModelHash.packUuid(id, ModelHash.TYPE_OBJECT),
+				ModelHash.packUuid(objectId, ModelHash.TYPE_OBJECT),
 				sceneContext.localToWorld(light.x, light.y, light.plane)
 			);
 

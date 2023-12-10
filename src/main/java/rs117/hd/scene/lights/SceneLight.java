@@ -17,6 +17,7 @@ public class SceneLight extends Light
 	public float[] currentColor;
 	public float currentAnimation = 0.5f;
 	public int currentFadeIn = 0;
+	public int impostorObjectId;
 	public boolean visible = true;
 
 	public WorldPoint worldPoint;
