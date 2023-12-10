@@ -24,39 +24,53 @@
  */
 package rs117.hd.scene;
 
+import java.io.IOException;
+import java.util.HashMap;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
+import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.config.DefaultSkyColor;
-import rs117.hd.data.environments.Environment;
+import rs117.hd.scene.environments.Environment;
 import rs117.hd.utils.AABB;
+import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.HDUtils;
+import rs117.hd.utils.Props;
+import rs117.hd.utils.ResourcePath;
 
+import static rs117.hd.utils.HDUtils.PI;
+import static rs117.hd.utils.HDUtils.TWO_PI;
 import static rs117.hd.utils.HDUtils.clamp;
 import static rs117.hd.utils.HDUtils.hermite;
 import static rs117.hd.utils.HDUtils.lerp;
 import static rs117.hd.utils.HDUtils.mod;
 import static rs117.hd.utils.HDUtils.rand;
+import static rs117.hd.utils.ResourcePath.path;
 
 @Singleton
 @Slf4j
 public class EnvironmentManager {
+	private static final ResourcePath ENVIRONMENTS_PATH = Props.getPathOrDefault(
+		"rlhd.environments-path",
+		() -> path(EnvironmentManager.class, "environments.json")
+	);
+
 	@Inject
 	private Client client;
+
+	@Inject
+	private ClientThread clientThread;
 
 	@Inject
 	private HdPlugin plugin;
 
 	@Inject
 	private HdPluginConfig config;
-
-	@Nonnull
-	private Environment currentEnvironment = Environment.NONE;
 
 	// transition time
 	private static final int TRANSITION_DURATION = 3000;
@@ -127,16 +141,56 @@ public class EnvironmentManager {
 	public float currentGroundFogOpacity = 0f;
 	private float targetGroundFogOpacity = 0f;
 
-	private float startLightPitch = 0f;
-	public float currentLightPitch = 0f;
-	private float targetLightPitch = 0f;
-
-	private float startLightYaw = 0f;
-	public float currentLightYaw = 0f;
-	private float targetLightYaw = 0f;
+	private final float[] startSunAngles = { 0, 0 };
+	public final float[] currentSunAngles = { 0, 0 };
+	private final float[] targetSunAngles = { 0, 0 };
 
 	private boolean lightningEnabled = false;
 	private boolean forceNextTransition = false;
+
+	private rs117.hd.scene.environments.Environment[] environments;
+	private FileWatcher.UnregisterCallback fileWatcher;
+
+	@Nonnull
+	private Environment currentEnvironment = Environment.NONE;
+
+	public void startUp() {
+		fileWatcher = ENVIRONMENTS_PATH.watch((path, first) -> {
+			try {
+				environments = path.loadJson(plugin.getGson(), rs117.hd.scene.environments.Environment[].class);
+				if (environments == null)
+					throw new IOException("Empty or invalid: " + path);
+				log.debug("Loaded {} environments", environments.length);
+
+				HashMap<String, Environment> map = new HashMap<>();
+				for (var env : environments)
+					if (env.key != null)
+						map.put(env.key, env);
+
+				Environment.OVERWORLD = map.getOrDefault("OVERWORLD", Environment.DEFAULT);
+				Environment.AUTUMN = map.getOrDefault("AUTUMN", Environment.DEFAULT);
+				Environment.WINTER = map.getOrDefault("WINTER", Environment.DEFAULT);
+
+				for (var env : environments)
+					env.normalize();
+
+				clientThread.invoke(() -> {
+					if (client.getGameState().getState() >= GameState.LOGGED_IN.getState() && plugin.getSceneContext() != null)
+						loadSceneEnvironments(plugin.getSceneContext());
+				});
+			} catch (IOException ex) {
+				log.error("Failed to load environments:", ex);
+			}
+		});
+	}
+
+	public void shutDown() {
+		if (fileWatcher != null)
+			fileWatcher.unregister();
+		fileWatcher = null;
+		environments = null;
+		reset();
+	}
 
 	public void reset() {
 		currentEnvironment = Environment.NONE;
@@ -144,10 +198,10 @@ public class EnvironmentManager {
 	}
 
 	public void triggerTransition() {
-		reset();
-		forceNextTransition = true;
+		if (currentEnvironment != Environment.NONE)
+			forceNextTransition = true;
+		currentEnvironment = Environment.NONE;
 	}
-
 
 	/**
 	 * Updates variables used in transition effects
@@ -173,9 +227,9 @@ public class EnvironmentManager {
 		previousPosition = focalPoint;
 
 		boolean skipTransition = tileChange >= SKIP_TRANSITION_DISTANCE;
-		for (Environment environment : sceneContext.environments)
+		for (var environment : sceneContext.environments)
 		{
-			if (environment.getArea().containsPoint(focalPoint))
+			if (environment.area.containsPoint(focalPoint))
 			{
 				if (environment != currentEnvironment)
 				{
@@ -189,6 +243,9 @@ public class EnvironmentManager {
 
 		// interpolate between start and target values
 		long currentTime = System.currentTimeMillis();
+		// If time somehow skips backwards, abort the transition
+		if (currentTime < startTime)
+			startTime = 0;
 		float t = clamp((currentTime - startTime) / (float) TRANSITION_DURATION, 0, 1);
 		currentFogColor = hermite(startFogColor, targetFogColor, t);
 		currentWaterColor = hermite(startWaterColor, targetWaterColor, t);
@@ -202,8 +259,8 @@ public class EnvironmentManager {
 		currentGroundFogStart = hermite(startGroundFogStart, targetGroundFogStart, t);
 		currentGroundFogEnd = hermite(startGroundFogEnd, targetGroundFogEnd, t);
 		currentGroundFogOpacity = hermite(startGroundFogOpacity, targetGroundFogOpacity, t);
-		currentLightPitch = hermite(startLightPitch, targetLightPitch, t);
-		currentLightYaw = hermite(startLightYaw, targetLightYaw, t);
+		for (int i = 0; i < 2; i++)
+			currentSunAngles[i] = hermite(startSunAngles[i], targetSunAngles[i], t);
 		currentUnderwaterCausticsColor = hermite(startUnderwaterCausticsColor, targetUnderwaterCausticsColor, t);
 		currentUnderwaterCausticsStrength = hermite(startUnderwaterCausticsStrength, targetUnderwaterCausticsStrength, t);
 
@@ -248,65 +305,59 @@ public class EnvironmentManager {
 		startGroundFogOpacity = currentGroundFogOpacity;
 		startUnderwaterCausticsColor = currentUnderwaterCausticsColor;
 		startUnderwaterCausticsStrength = currentUnderwaterCausticsStrength;
-		startLightPitch = mod(currentLightPitch, 360);
-		startLightYaw = mod(currentLightYaw, 360);
+		for (int i = 0; i < 2; i++)
+			startSunAngles[i] = mod(currentSunAngles[i], TWO_PI);
 
 		updateTargetSkyColor();
 
-		var overworldEnv = getOverworldEnvironment();
 		var env = getCurrentEnvironment();
-		targetFogDepth = env.getFogDepth();
-		targetGroundFogStart = env.getGroundFogStart();
-		targetGroundFogEnd = env.getGroundFogEnd();
-		targetGroundFogOpacity = env.getGroundFogOpacity();
-		lightningEnabled = env.isLightningEnabled();
+		targetFogDepth = env.fogDepth;
+		targetGroundFogStart = env.groundFogStart;
+		targetGroundFogEnd = env.groundFogEnd;
+		targetGroundFogOpacity = env.groundFogOpacity;
+		lightningEnabled = env.lightningEffects;
 
-		if (env.isCustomLightDirection()) {
-			targetLightPitch = env.getLightPitch();
-			targetLightYaw = env.getLightYaw();
-		} else {
-			targetLightPitch = overworldEnv.getLightPitch();
-			targetLightYaw = overworldEnv.getLightYaw();
-		}
+		var overworldEnv = getOverworldEnvironment();
+		float[] sunAngles = env.sunAngles;
+		if (sunAngles == null)
+			sunAngles = overworldEnv.sunAngles;
+		System.arraycopy(sunAngles, 0, targetSunAngles, 0, 2);
 
 		if (!config.atmosphericLighting())
 			env = overworldEnv;
-		targetAmbientStrength = env.getAmbientStrength();
-		targetAmbientColor = env.getAmbientColor();
-		targetDirectionalStrength = env.getDirectionalStrength();
-		targetDirectionalColor = env.getDirectionalColor();
-		targetUnderglowStrength = env.getUnderglowStrength();
-		targetUnderglowColor = env.getUnderglowColor();
-		targetUnderwaterCausticsColor = env.getUnderwaterCausticsColor();
-		targetUnderwaterCausticsStrength = env.getUnderwaterCausticsStrength();
+		targetAmbientStrength = env.ambientStrength;
+		targetAmbientColor = env.ambientColor;
+		targetDirectionalStrength = env.directionalStrength;
+		targetDirectionalColor = env.directionalColor;
+		targetUnderglowStrength = env.underglowStrength;
+		targetUnderglowColor = env.underglowColor;
+		targetUnderwaterCausticsColor = env.waterCausticsColor;
+		targetUnderwaterCausticsStrength = env.waterCausticsStrength;
 
 		// Prevent transitions from taking the long way around
-		targetLightPitch = mod(targetLightPitch, 360);
-		targetLightYaw = mod(targetLightYaw, 360);
-		float diff = startLightYaw - targetLightYaw;
-		if (Math.abs(diff) > 180)
-			targetLightYaw += 360 * Math.signum(diff);
-		diff = startLightPitch - targetLightPitch;
-		if (Math.abs(diff) > 180)
-			targetLightPitch += 360 * Math.signum(diff);
+		for (int i = 0; i < 2; i++) {
+			float diff = startSunAngles[i] - targetSunAngles[i];
+			if (Math.abs(diff) > PI)
+				targetSunAngles[i] += TWO_PI * Math.signum(diff);
+		}
 	}
 
 	public void updateTargetSkyColor() {
 		Environment env = getCurrentEnvironment();
 
-		if (!env.isCustomFogColor() || env.isAllowSkyOverride() && config.overrideSky()) {
+		if (env.fogColor == null || env.allowSkyOverride && config.overrideSky()) {
 			DefaultSkyColor sky = config.defaultSkyColor();
 			targetFogColor = sky.getRgb(client);
 			if (sky == DefaultSkyColor.OSRS)
 				sky = DefaultSkyColor.DEFAULT;
 			targetWaterColor = sky.getRgb(client);
 		} else {
-			targetFogColor = targetWaterColor = env.getFogColor();
+			targetFogColor = targetWaterColor = env.fogColor;
 		}
 
 		// Override with decoupled water/sky color if present
-		if (env.isCustomWaterColor()) {
-			targetWaterColor = env.getWaterColor();
+		if (env.waterColor != null) {
+			targetWaterColor = env.waterColor;
 		} else if (config.decoupleSkyAndWaterColor()) {
 			targetWaterColor = DefaultSkyColor.DEFAULT.getRgb(client);
 		}
@@ -316,14 +367,7 @@ public class EnvironmentManager {
 	 * Figures out which Areas exist in the current scene and
 	 * adds them to lists for easy access.
 	 */
-	public void loadSceneEnvironments(SceneContext sceneContext)
-	{
-		// loop through all Areas, check Rects of each Area. if any
-		// coordinates overlap scene coordinates, add them to a list.
-		// then loop through all Environments, checking to see if any
-		// of their Areas match any of the ones in the current scene.
-		// if so, add them to a list.
-
+	public void loadSceneEnvironments(SceneContext sceneContext) {
 		log.debug("Adding environments for scene with regions: {}", sceneContext.regionIds);
 
 		AABB[] regions = sceneContext.regionIds.stream()
@@ -332,14 +376,12 @@ public class EnvironmentManager {
 
 		sceneContext.environments.clear();
 		outer:
-		for (Environment environment : Environment.values())
-		{
-			for (AABB region : regions)
-			{
-				for (AABB aabb : environment.getArea().getAabbs())
-				{
-					if (region.intersects(aabb))
-					{
+		for (var environment : environments) {
+			if (environment.area == null)
+				continue;
+			for (AABB region : regions) {
+				for (AABB aabb : environment.area.getAabbs()) {
+					if (region.intersects(aabb)) {
 						log.debug("Added environment: {}", environment);
 						sceneContext.environments.add(environment);
 						continue outer;
@@ -426,6 +468,6 @@ public class EnvironmentManager {
 	}
 
 	public boolean isUnderwater() {
-		return currentEnvironment.isUnderwater();
+		return currentEnvironment.isUnderwater;
 	}
 }

@@ -174,7 +174,7 @@ public class LightManager {
 
 		if (configChanged) {
 			configChanged = false;
-			loadSceneLights(sceneContext);
+			loadSceneLights(sceneContext, sceneContext);
 
 			// check the NPCs in the scene to make sure they have lights assigned, if applicable,
 			// for scenarios in which HD mode or dynamic lights were disabled during NPC spawn
@@ -418,10 +418,23 @@ public class LightManager {
 		return plugin.configProjectileLights;
 	}
 
-	public void loadSceneLights(SceneContext sceneContext)
+	public void loadSceneLights(SceneContext sceneContext, @Nullable SceneContext oldSceneContext)
 	{
+		assert client.isClientThread();
+
+		// Copy over NPC and projectile lights from the old scene
+		ArrayList<SceneLight> lightsToKeep = new ArrayList<>();
+		if (oldSceneContext != null)
+			for (SceneLight light : oldSceneContext.lights)
+				if (light.npc != null || light.projectile != null)
+					lightsToKeep.add(light);
+
 		sceneContext.lights.clear();
+		sceneContext.lights.addAll(lightsToKeep);
 		sceneContext.projectiles.clear();
+		for (var l : lightsToKeep)
+			if (l.projectile != null)
+				sceneContext.projectiles.add(l.projectile);
 
 		for (SceneLight light : WORLD_LIGHTS)
 		{
@@ -592,7 +605,17 @@ public class LightManager {
 	}
 
 	private void addObjectLight(SceneContext sceneContext, TileObject tileObject, int plane, int sizeX, int sizeY, int orientation) {
-		for (Light lightDef : OBJECT_LIGHTS.get(tileObject.getId())) {
+		int id = tileObject.getId();
+		if (tileObject instanceof DynamicObject || tileObject instanceof GameObject) {
+			var def = client.getObjectDefinition(id);
+			if (def.getImpostorIds() != null) {
+				var impostor = def.getImpostor();
+				if (impostor != null)
+					id = impostor.getId();
+			}
+		}
+
+		for (Light lightDef : OBJECT_LIGHTS.get(id)) {
 			// prevent objects at plane -1 and below from having lights
 			if (tileObject.getPlane() <= -1)
 				continue;
@@ -666,7 +689,7 @@ public class LightManager {
 			light.z = (int) tileHeight - light.height - 1;
 			light.object = tileObject;
 			light.modelOverride = modelOverrideManager.getOverride(
-				ModelHash.packUuid(tileObject.getId(), ModelHash.TYPE_OBJECT),
+				ModelHash.packUuid(id, ModelHash.TYPE_OBJECT),
 				sceneContext.localToWorld(light.x, light.y, light.plane)
 			);
 

@@ -53,6 +53,11 @@ public class HDUtils {
 	// The epsilon for floating point values used by jogl
 	public static final float EPSILON = 1.1920929E-7f;
 
+	public static final float PI = (float) Math.PI;
+	public static final float TWO_PI = PI * 2;
+	public static final float HALF_PI = PI / 2;
+	public static final float QUARTER_PI = PI / 2;
+
 	/**
 	 * Computes a + b, storing it in the out array
 	 */
@@ -180,6 +185,10 @@ public class HDUtils {
 
 	public static long ceilPow2(long x) {
 		return (long) Math.pow(2, Math.ceil(Math.log(x) / Math.log(2)));
+	}
+
+	public static float[] sunAngles(float altitude, float azimuth) {
+		return new float[] { (float) Math.toRadians(altitude), (float) Math.toRadians(azimuth) };
 	}
 
 	public static int convertWallObjectOrientation(int orientation) {

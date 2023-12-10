@@ -505,8 +505,8 @@ class SceneUploader {
 						neColor = overlay.modifyColor(neColor);
 					} else {
 						Underlay underlay = Underlay.getUnderlay(scene, tile, plugin);
+						groundMaterial = underlay.groundMaterial;
 						if (underlay != Underlay.NONE) {
-							groundMaterial = underlay.groundMaterial;
 							swColor = underlay.modifyColor(swColor);
 							seColor = underlay.modifyColor(seColor);
 							nwColor = underlay.modifyColor(nwColor);
@@ -842,21 +842,16 @@ class SceneUploader {
 							materialC = sceneContext.vertexTerrainTexture.getOrDefault(vertexKeyC, materialC);
 						}
 					} else {
-						GroundMaterial groundMaterial = null;
-
+						GroundMaterial groundMaterial;
 						if (ProceduralGenerator.isOverlayFace(tile, face)) {
 							Overlay overlay = Overlay.getOverlay(scene, tile, plugin);
-							if (overlay != Overlay.NONE)
-								groundMaterial = overlay.groundMaterial;
-
+							groundMaterial = overlay.groundMaterial;
 							colorA = overlay.modifyColor(colorA);
 							colorB = overlay.modifyColor(colorB);
 							colorC = overlay.modifyColor(colorC);
 						} else {
 							Underlay underlay = Underlay.getUnderlay(scene, tile, plugin);
-							if (underlay != Underlay.NONE)
-								groundMaterial = underlay.groundMaterial;
-
+							groundMaterial = underlay.groundMaterial;
 							colorA = underlay.modifyColor(colorA);
 							colorB = underlay.modifyColor(colorB);
 							colorC = underlay.modifyColor(colorC);

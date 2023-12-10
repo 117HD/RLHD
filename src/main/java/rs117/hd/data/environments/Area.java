@@ -103,7 +103,7 @@ public enum Area
 	)),
 	GOBLIN_MAZE(3221 , 9660, 3307, 9602),
 	LUMBRIDGE_SWAMP_CAVES(3265, 9602, 3141, 9536),
-	TEARS_OF_GUTHIX_CAVES(12948),
+	TEARS_OF_GUTHIX(12948),
 
 	// Dorgesh-Kaan
 	DORGESHKAAN(
@@ -209,15 +209,15 @@ public enum Area
 	),
 	// Barbarian Village
 	BARBARIAN_VILLAGE_EAST_PATH_FIX(3111, 3420, 3112, 3421),
-	STRONGHOLD_OF_WAR(7505),
-	STRONGHOLD_OF_FAMINE(8017),
-	STRONGHOLD_OF_PESTILENCE(8530),
-	STRONGHOLD_OF_DEATH(9297),
+	STRONGHOLD_OF_SECURITY_WAR(7505),
+	STRONGHOLD_OF_SECURITY_FAMINE(8017),
+	STRONGHOLD_OF_SECURITY_PESTILENCE(8530),
+	STRONGHOLD_OF_SECURITY_DEATH(9297),
 	STRONGHOLD_OF_SECURITY(
-			STRONGHOLD_OF_WAR,
-			STRONGHOLD_OF_FAMINE,
-			STRONGHOLD_OF_PESTILENCE,
-			STRONGHOLD_OF_DEATH
+		STRONGHOLD_OF_SECURITY_WAR,
+		STRONGHOLD_OF_SECURITY_FAMINE,
+		STRONGHOLD_OF_SECURITY_PESTILENCE,
+		STRONGHOLD_OF_SECURITY_DEATH
 	),
 
 	// A Soul's Bane
@@ -2100,5 +2100,18 @@ public enum Area
 	public boolean containsPoint(WorldPoint worldPoint)
 	{
 		return containsPoint(worldPoint.getX(), worldPoint.getY(), worldPoint.getPlane());
+	}
+
+	public boolean intersects(Area otherArea) {
+		if (otherArea == null)
+			return false;
+		outer:
+		for (AABB other : otherArea.aabbs) {
+			for (AABB self : aabbs)
+				if (self.intersects(other))
+					continue outer;
+			return false;
+		}
+		return true;
 	}
 }
