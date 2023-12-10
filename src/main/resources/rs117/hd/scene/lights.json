@@ -20208,10 +20208,10 @@
   },
   {
     "description": "FIRE",
-    "height": 40,
+    "height": 300,
     "alignment": "CENTER",
     "radius": 450,
-    "strength": 12.5,
+    "strength": 2.5,
     "color": [
       252,
       148,
@@ -20238,7 +20238,6 @@
       5981,
       29085,
       25374,
-      33311,
       35810,
       35811,
       10660,
@@ -31379,19 +31378,18 @@
   },
   {
     "description": "Weiss Magic Fire",
-    "height": 50,
+    "height": 300,
     "alignment": "CENTER",
-    "radius": 650,
-    "strength": 16.5,
+    "radius": 500,
+    "strength": 1,
     "color": [
       252,
       148,
       3
     ],
     "type": "FLICKER",
-    "duration": 0,
-    "range": 20,
-    "objectIds": [ 33333 ]
+    "range": 10,
+    "objectIds": [ 33311 ]
   },
   {
     "description": "Weiss Saltmine Entrance",
@@ -31560,5 +31558,65 @@
     "duration": 0,
     "range": 25,
     "objectIds": [ 46269 ]
+  },
+  {
+    "description": "FIRE_OF_DOMINATION",
+    "height": 300,
+    "radius": 500,
+    "strength": 3,
+    "color": "#ea008e",
+    "type": "FLICKER",
+    "range": 10,
+    "objectIds": [
+      33318
+    ]
+  },
+  {
+    "description": "FIRE_OF_NOURISHMENT",
+    "height": 300,
+    "radius": 500,
+    "strength": 3,
+    "color": [ 11, 252, 3 ],
+    "type": "FLICKER",
+    "range": 10,
+    "objectIds": [
+      33319
+    ]
+  },
+  {
+    "description": "FIRE_OF_ETERNAL_LIGHT",
+    "height": 300,
+    "radius": 850,
+    "strength": 5,
+    "color": "#ffffff",
+    "type": "FLICKER",
+    "range": 10,
+    "objectIds": [
+      33320
+    ]
+  },
+  {
+    "description": "FIRE_OF_UNSEASONAL_WARMTH",
+    "height": 300,
+    "radius": 750,
+    "strength": 2.5,
+    "color": [ 255, 85, 0 ],
+    "type": "FLICKER",
+    "range": 10,
+    "objectIds": [
+      33321
+    ]
+  },
+  {
+    "description": "FIRE_OF_DEHUMIDIFICATION",
+    "height": 300,
+    "radius": 750,
+    "strength": 4,
+    "color": [ 219, 252, 3 ],
+    "type": "FLICKER",
+    "range": 10,
+    "objectIds": [
+      33322
+    ]
   }
 ]
