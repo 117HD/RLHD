@@ -19884,7 +19884,8 @@
       5881,
       38555,
       33454
-    ]
+    ],
+    "visibleFromOtherPlanes": true
   },
   {
     "description": "STANDING_TORCH_SHORT_LARGE",
@@ -24504,6 +24505,136 @@
     "range": 20,
     "objectIds": [
       38451
+    ],
+    "visibleFromOtherPlanes": true
+  },
+  {
+    "description": "HALLOWED_SEPULCHRE_PORTAL_FRAME",
+    "height": 200,
+    "alignment": "CENTER",
+    "radius": 800,
+    "strength": 5,
+    "color": [
+      0,
+      0,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 1000,
+    "range": 10,
+    "objectIds": [
+      38829
+    ]
+  },
+  {
+    "description": "HALLOWED_SEPULCHRE_BRAZIERS",
+    "height": 152,
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 5,
+    "color": [
+      0,
+      0,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 1000,
+    "range": 10,
+    "objectIds": [
+      38798,
+      38801
+    ]
+  },
+  {
+    "description": "HALLOWED_SEPULCHRE_BRAZIER_GATE",
+    "height": 150,
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 5,
+    "color": [
+      0,
+      0,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 600,
+    "range": 10,
+    "objectIds": [
+      38798,
+      38801,
+      38804,
+      39540
+    ]
+  },
+  {
+    "description": "HALLOWED_SEPULCHRE_STRANGE_TILE_BLUE",
+    "height": 50,
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 25,
+    "color": "#5577ff",
+    "graphicsObjectIds": [
+      1799
+    ]
+  },
+  {
+    "description": "HALLOWED_SEPULCHRE_STRANGE_TILE_YELLOW",
+    "height": 50,
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 5,
+    "color": "#ffff00",
+    "graphicsObjectIds": [
+      1800
+    ]
+  },
+  {
+    "description": "HALLOWED_SEPULCHRE_WIZARD_STATUE_FLAMES_START",
+    "height": 350,
+    "alignment": "CENTER",
+    "radius": 500,
+    "strength": 5,
+    "color": "#b15d00",
+    "type": "FLICKER",
+    "range": 50,
+    "objectIds": [
+      38427
+    ],
+    "animationIds": [
+      8660
+    ]
+  },
+  {
+    "description": "HALLOWED_SEPULCHRE_WIZARD_STATUE_FLAMES_MIDDLE",
+    "height": 350,
+    "alignment": "CENTER",
+    "radius": 500,
+    "strength": 15,
+    "color": "#b15d00",
+    "type": "FLICKER",
+    "range": 50,
+    "objectIds": [
+      38427
+    ],
+    "animationIds": [
+      8661,
+      8662
+    ]
+  },
+  {
+    "description": "HALLOWED_SEPULCHRE_WIZARD_STATUE_FLAMES_END",
+    "height": 350,
+    "alignment": "CENTER",
+    "radius": 500,
+    "strength": 10,
+    "color": "#b15d00",
+    "type": "FLICKER",
+    "range": 50,
+    "objectIds": [
+      38427
+    ],
+    "animationIds": [
+      8663
     ]
   },
   {
