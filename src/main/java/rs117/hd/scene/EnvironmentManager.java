@@ -198,9 +198,7 @@ public class EnvironmentManager {
 	}
 
 	public void triggerTransition() {
-		if (currentEnvironment != Environment.NONE)
-			forceNextTransition = true;
-		currentEnvironment = Environment.NONE;
+		forceNextTransition = true;
 	}
 
 	/**
@@ -227,14 +225,9 @@ public class EnvironmentManager {
 		previousPosition = focalPoint;
 
 		boolean skipTransition = tileChange >= SKIP_TRANSITION_DISTANCE;
-		for (var environment : sceneContext.environments)
-		{
-			if (environment.area.containsPoint(focalPoint))
-			{
-				if (environment != currentEnvironment)
-				{
-					changeEnvironment(environment, skipTransition);
-				}
+		for (var environment : sceneContext.environments) {
+			if (environment.area.containsPoint(focalPoint)) {
+				changeEnvironment(environment, skipTransition);
 				break;
 			}
 		}
@@ -277,20 +270,23 @@ public class EnvironmentManager {
 	 * @param skipTransition whether the transition should be done instantly
 	 */
 	private void changeEnvironment(Environment newEnvironment, boolean skipTransition) {
-		if (currentEnvironment == newEnvironment)
+		// Skip changing the environment unless the transition is forced, since reapplying
+		// the overworld environment is required when switching between seasonal themes
+		if (currentEnvironment == newEnvironment && !forceNextTransition)
 			return;
 
-		startTime = System.currentTimeMillis();
-		if (forceNextTransition) {
+		if (currentEnvironment == Environment.NONE) {
+			skipTransition = true;
+		} else if (forceNextTransition) {
 			forceNextTransition = false;
-		} else if (skipTransition || currentEnvironment == Environment.NONE) {
-			startTime -= TRANSITION_DURATION;
+			skipTransition = false;
 		}
 
 		log.debug("changing environment from {} to {} (instant: {})", currentEnvironment, newEnvironment, skipTransition);
 		currentEnvironment = newEnvironment;
+		startTime = skipTransition ? 0 : System.currentTimeMillis();
 
-		// set previous variables to current ones
+		// Start transitioning from the current values
 		startFogColor = currentFogColor;
 		startWaterColor = currentWaterColor;
 		startFogDepth = currentFogDepth;
@@ -377,8 +373,6 @@ public class EnvironmentManager {
 		sceneContext.environments.clear();
 		outer:
 		for (var environment : environments) {
-			if (environment.area == null)
-				continue;
 			for (AABB region : regions) {
 				for (AABB aabb : environment.area.getAabbs()) {
 					if (region.intersects(aabb)) {
@@ -389,6 +383,9 @@ public class EnvironmentManager {
 				}
 			}
 		}
+
+		// Fall back to the default environment
+		sceneContext.environments.add(Environment.DEFAULT);
 	}
 
 	/* lightning */

@@ -917,10 +917,11 @@ public enum Area
 		new AABB(3684, 3259, 3678, 3263),
 		new AABB(3683, 3258, 3683, 3258)
 	),
-	VER_SINHAZA(
-		new AABB(3641, 3236, 3684, 3202),
-		new AABB(2087, 4903, 2064, 4880) // cutscene
-	),
+	VER_SINHAZA_CUTSCENE(2087, 4903, 2064, 4880),
+	VER_SINHAZA(merge(
+		VER_SINHAZA_CUTSCENE,
+		new AABB(3641, 3236, 3684, 3202)
+	)),
 	MEIYERDITCH(
 		new AABB(3587, 3310, 3627, 3200),
 		new AABB(3618, 3327, 3647, 3311),
@@ -961,7 +962,6 @@ public enum Area
 	BURGH_DE_ROTT_BASEMENT(13974),
 	ABANDONED_MINE(3423, 3261, 3461, 3201),
 	GROTESQUE_GUARDIANS(6727),
-	VER_SINHAZA_CUTSCENE(2087, 4903, 2064, 4880),
 	MORYTANIA(merge(
 		new AABB(3432, 3486, 3775, 3167),
 		new AABB(3494, 3166, 3775, 3145),
@@ -2009,13 +2009,14 @@ public enum Area
 		TUTORIAL_ISLAND_INSTANCE,
 		TYRAS_CAMP_INSTANCE,
 		SHIP_SAILING,
+		VER_SINHAZA_CUTSCENE,
 		regions(8288, 8801, 11593)
 	)),
 	OVERWORLD(
 		MAINLAND,
 		MAINLAND_EXTENSIONS
 	),
-	ALL(0, 0, Integer.MAX_VALUE, Integer.MAX_VALUE),
+	ALL(Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE),
 	NONE(0, 0, 0, 0),
 	;
 
@@ -2105,13 +2106,10 @@ public enum Area
 	public boolean intersects(Area otherArea) {
 		if (otherArea == null)
 			return false;
-		outer:
-		for (AABB other : otherArea.aabbs) {
+		for (AABB other : otherArea.aabbs)
 			for (AABB self : aabbs)
 				if (self.intersects(other))
-					continue outer;
-			return false;
-		}
-		return true;
+					return true;
+		return false;
 	}
 }

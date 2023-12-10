@@ -148,6 +148,12 @@ public class AABB {
 		return contains(location.getX(), location.getY(), location.getPlane());
 	}
 
+	public boolean contains(AABB other) {
+		return
+			contains(other.minX, other.minY, other.minZ) &&
+			contains(other.maxX, other.maxY, other.maxZ);
+	}
+
 	public boolean intersects(int minX, int minY, int maxX, int maxY) {
 		return
 			minX < this.maxX && maxX > this.minX &&
