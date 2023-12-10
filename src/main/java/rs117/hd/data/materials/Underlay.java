@@ -773,6 +773,11 @@ public enum Underlay {
 
 	@NonNull
 	public static Underlay getUnderlay(Scene scene, Tile tile, HdPlugin plugin) {
+		return getUnderlayBeforeReplacements(scene, tile).resolveReplacements(scene, tile, plugin);
+	}
+
+	@NonNull
+	public static Underlay getUnderlayBeforeReplacements(Scene scene, Tile tile) {
 		LocalPoint localLocation = tile.getLocalLocation();
 		int[] worldPoint = HDUtils.localToWorld(scene, localLocation.getX(), localLocation.getY(), tile.getRenderLevel());
 
@@ -799,13 +804,18 @@ public enum Underlay {
 			}
 		}
 
-		if (match.replacementResolver != null) {
-			match = match.replacementResolver.resolve(plugin, scene, tile, match);
-			if (match == null)
-				match = NONE;
+		return match;
+	}
+
+	public Underlay resolveReplacements(Scene scene, Tile tile, HdPlugin plugin) {
+		if (replacementResolver != null) {
+			var replacement = replacementResolver.resolve(plugin, scene, tile, this);
+			if (replacement == null)
+				replacement = NONE;
+			return replacement;
 		}
 
-		return match;
+		return this;
 	}
 
 	public int modifyColor(int jagexHsl) {
