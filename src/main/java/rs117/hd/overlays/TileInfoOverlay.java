@@ -338,7 +338,11 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay {
 						type = "Item";
 						break;
 				}
-				lines.add(String.format("%s: ID=%d ori=%d", type, id, gameObject.getModelOrientation()));
+				int height = -1;
+				var renderable = gameObject.getRenderable();
+				if (renderable != null)
+					height = renderable.getModelHeight();
+				lines.add(String.format("%s: ID=%d ori=%d height=%d", type, id, gameObject.getModelOrientation(), height));
 				if (!extra.isEmpty()) {
 					counter++;
 					lines.add(extra);

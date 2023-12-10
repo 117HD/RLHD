@@ -68,15 +68,16 @@
       },
       "radius": {
         "type": "integer",
-        "description": "How far the light should reach in all directions."
+        "description": "How far the light should reach in all directions. Defaults to 300."
       },
       "strength": {
         "type": "number",
-        "description": "The intensity of the light."
+        "description": "Light strength multiplier. Defaults to 5."
       },
       "color": {
-        "type": "array",
-        "description": "The RGB color values of the light, normally in the range 0-255. Decimals are allowed. Color space: sRGB.",
+        "type": [ "string", "array" ],
+        "description": "Light color in sRGB, specified as a hex color code or an array in the range 0-255, which accepts decimals.",
+        "pattern": "^#[A-Fa-f0-9]{6}$",
         "minItems": 3,
         "maxItems": 3,
         "items": {
@@ -108,28 +109,35 @@
         "type": "array",
         "description": "A set of NPC IDs or NpcID keys to apply the light to.",
         "items": {
-          "type": [ "integer", "string" ]
+          "type": "integer"
         }
       },
       "objectIds": {
         "type": "array",
         "description": "A set of object IDs or ObjectID keys to apply the light to.",
         "items": {
-          "type": [ "integer", "string" ]
+          "type": "integer"
         }
       },
       "projectileIds": {
         "type": "array",
         "description": "A set of projectile IDs to apply the light to.",
         "items": {
-          "type": [ "integer", "string" ]
+          "type": "integer"
         }
       },
       "graphicsObjectIds": {
         "type": "array",
         "description": "A set of graphics object IDs to apply the light to.",
         "items": {
-          "type": [ "integer", "string" ]
+          "type": "integer"
+        }
+      },
+      "animationIds": {
+        "type": "array",
+        "description": "A set of animation IDs to display the light for. Must be specified alongside another kind of ID to apply to.",
+        "items": {
+          "type": "integer"
         }
       }
     }

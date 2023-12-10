@@ -53,7 +53,6 @@ import rs117.hd.scene.lights.Alignment;
 import rs117.hd.scene.lights.Light;
 import rs117.hd.scene.lights.LightType;
 import rs117.hd.scene.lights.SceneLight;
-import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.Props;
@@ -131,13 +130,6 @@ public class LightManager {
 			GRAPHICS_OBJECT_LIGHTS.clear();
 
 			for (Light lightDef : lights) {
-				// Map values from [0, 255] in gamma color space to [0, 1] in linear color space
-				// Also ensure that each color always has 4 components with sensible defaults
-				float[] linearRGBA = { 0, 0, 0, 1 };
-				for (int i = 0; i < Math.min(lightDef.color.length, linearRGBA.length); i++)
-					linearRGBA[i] = ColorUtils.srgbToLinear(lightDef.color[i] / 255f);
-				lightDef.color = linearRGBA;
-
 				if (lightDef.worldX != null && lightDef.worldY != null) {
 					SceneLight light = new SceneLight(lightDef);
 					light.worldPoint = new WorldPoint(lightDef.worldX, lightDef.worldY, lightDef.plane);
@@ -191,11 +183,24 @@ public class LightManager {
 			light.distanceSquared = Integer.MAX_VALUE;
 
 			if (light.object != null) {
+				light.visible = true;
 				if (light.impostorObjectId != 0) {
 					var def = client.getObjectDefinition(light.object.getId());
 					if (def.getImpostorIds() != null) {
 						// Only show the light if the impostor is currently active
 						light.visible = def.getImpostor().getId() == light.impostorObjectId;
+					}
+				}
+
+				if (light.visible && !light.animationIds.isEmpty()) {
+					light.visible = false;
+					if (light.object instanceof GameObject) {
+						var gameObject = (GameObject) light.object;
+						var renderable = gameObject.getRenderable();
+						if (renderable instanceof DynamicObject) {
+							var animation = ((DynamicObject) renderable).getAnimation();
+							light.visible = animation != null && light.animationIds.contains(animation.getId());
+						}
 					}
 				}
 			} else if (light.projectile != null) {
@@ -210,6 +215,10 @@ public class LightManager {
 				light.z = (int) light.projectile.getZ() - light.height;
 
 				light.visible = projectileLightVisible();
+				if (light.visible && !light.animationIds.isEmpty()) {
+					var animation = light.projectile.getAnimation();
+					light.visible = animation != null && light.animationIds.contains(animation.getId());
+				}
 			} else if (light.graphicsObject != null) {
 				if (light.graphicsObject.finished()) {
 					lightIterator.remove();
@@ -219,6 +228,12 @@ public class LightManager {
 				light.x = light.graphicsObject.getLocation().getX();
 				light.y = light.graphicsObject.getLocation().getY();
 				light.z = light.graphicsObject.getZ() - light.height;
+
+				light.visible = true;
+				if (!light.animationIds.isEmpty()) {
+					var animation = light.projectile.getAnimation();
+					light.visible = animation != null && light.animationIds.contains(animation.getId());
+				}
 			} else if (light.npc != null) {
 				if (light.npc != client.getCachedNPCs()[light.npc.getIndex()])
 				{
@@ -253,7 +268,9 @@ public class LightManager {
 				int npcTileY = light.npc.getLocalLocation().getSceneY() + SceneUploader.SCENE_OFFSET;
 
 				// Some NPCs, such as Crystalline Hunllef in The Gauntlet, sometimes return scene X/Y values far outside the possible range.
-				if (npcTileX < EXTENDED_SCENE_SIZE && npcTileY < EXTENDED_SCENE_SIZE && npcTileX >= 0 && npcTileY >= 0) {
+				if (npcTileX < 0 || npcTileY < 0 || npcTileX >= EXTENDED_SCENE_SIZE || npcTileY >= EXTENDED_SCENE_SIZE) {
+					light.visible = false;
+				} else {
 					// Tile null check is to prevent oddities caused by - once again - Crystalline Hunllef.
 					// May also apply to other NPCs in instances.
 					if (tiles[plane][npcTileX][npcTileY] != null && tiles[plane][npcTileX][npcTileY].getBridge() != null) {
@@ -279,10 +296,10 @@ public class LightManager {
 					light.z = (int) tileHeight - 1 - light.height;
 
 					light.visible = npcLightVisible(light.npc);
-				}
-				else
-				{
-					light.visible = false;
+					if (light.visible && !light.animationIds.isEmpty()) {
+						var animationId = light.npc.getAnimation();
+						light.visible = light.animationIds.contains(animationId);
+					}
 				}
 			}
 
@@ -548,7 +565,8 @@ public class LightManager {
 			light.y = (int) projectile.getY();
 			light.z = (int) projectile.getZ();
 			light.plane = projectile.getFloor();
-			light.fadeInDuration = 300;
+			if (light.fadeInDuration == -1)
+				light.fadeInDuration = 300;
 			light.visible = projectileLightVisible();
 
 			sceneContext.lights.add(light);
@@ -638,10 +656,10 @@ public class LightManager {
 			if (tileObject.getPlane() <= -1)
 				continue;
 
-			// prevent duplicate lights being spawned for the same object
-			int hash = tileObjectHash(tileObject);
+			// prevent the same light from being spawned more than once per object
+			long hash = tileObjectHash(lightDef, tileObject);
 			boolean isDuplicate = sceneContext.lights.stream()
-				.anyMatch(light -> light.object == tileObject || hash == tileObjectHash(light.object));
+				.anyMatch(light -> light.object == tileObject || hash == tileObjectHash(lightDef, light.object));
 			if (isDuplicate)
 				continue;
 
@@ -748,7 +766,8 @@ public class LightManager {
 			light.y = lp.getY();
 			light.z = graphicsObject.getZ();
 			light.plane = graphicsObject.getLevel();
-			light.fadeInDuration = 300;
+			if (light.fadeInDuration == -1)
+				light.fadeInDuration = 300;
 			light.modelOverride = modelOverrideManager.getOverride(
 				ModelHash.packUuid(graphicsObject.getId(), ModelHash.TYPE_OBJECT),
 				sceneContext.localToWorld(light.x, light.y, light.plane)
@@ -758,16 +777,18 @@ public class LightManager {
 		}
 	}
 
-	private int tileObjectHash(@Nullable TileObject tileObject)
+	private long tileObjectHash(Light light, @Nullable TileObject tileObject)
 	{
-		if (tileObject == null)
-			return 0;
+		long hash = light.hashCode();
 
-		LocalPoint local = tileObject.getLocalLocation();
-		int hash = local.getX();
-		hash = hash * 31 + local.getY();
-		hash = hash * 31 + tileObject.getPlane();
-		hash = hash * 31 + tileObject.getId();
+		if (tileObject != null) {
+			LocalPoint local = tileObject.getLocalLocation();
+			hash = hash * 31 + local.getX();
+			hash = hash * 31 + local.getY();
+			hash = hash * 31 + tileObject.getPlane();
+			hash = hash * 31 + tileObject.getId();
+		}
+
 		return hash;
 	}
 

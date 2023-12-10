@@ -54,7 +54,8 @@ public class SceneLight extends Light
 			l.npcIds,
 			l.objectIds,
 			l.projectileIds,
-			l.graphicsObjectIds
+			l.graphicsObjectIds,
+			l.animationIds
 		);
 
 		currentSize = radius;

@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.GsonUtils;
 
 @Slf4j
@@ -24,17 +25,18 @@ public class Light
 	@Nonnull
 	public Alignment alignment = Alignment.CENTER;
 	public int height;
-	public int radius;
-	public float strength;
+	public int radius = 300;
+	public float strength = 5;
 	/**
 	 * Linear color space RGBA in the range [0, 1]
 	 */
+	@JsonAdapter(ColorUtils.SrgbToLinearAdapter.class)
 	public float[] color;
 	@NonNull
 	public LightType type = LightType.STATIC;
 	public float duration;
 	public float range;
-	public int fadeInDuration;
+	public int fadeInDuration = -1;
 	public boolean visibleFromOtherPlanes = false;
 	@JsonAdapter(GsonUtils.IntegerSetAdapter.class)
 	public HashSet<Integer> npcIds = new HashSet<>();
@@ -44,6 +46,8 @@ public class Light
 	public HashSet<Integer> projectileIds = new HashSet<>();
 	@JsonAdapter(GsonUtils.IntegerSetAdapter.class)
 	public HashSet<Integer> graphicsObjectIds = new HashSet<>();
+	@JsonAdapter(GsonUtils.IntegerSetAdapter.class)
+	public HashSet<Integer> animationIds = new HashSet<>();
 
 	@Override
 	public boolean equals(Object obj) {
