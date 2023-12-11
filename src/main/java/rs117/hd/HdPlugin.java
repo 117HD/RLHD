@@ -46,7 +46,6 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.Nonnull;
@@ -387,7 +386,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	private float elapsedTime;
 	private long lastFrameTime;
-	private long nextSeasonalThemeUpdate;
 	private int gameTicksUntilSceneReload = 0;
 
 	// Configs used frequently enough to be worth caching
@@ -455,7 +453,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				numModelsToSort = null;
 				elapsedTime = 0;
 				lastFrameTime = 0;
-				nextSeasonalThemeUpdate = Long.MAX_VALUE;
 				visibleLightCount = 0;
 
 				AWTContext.loadNatives();
@@ -1741,12 +1738,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				return;
 			}
 
-			// Detect likely system clock changes
-			if (Math.abs(timeStep) > HALF_A_MINUTE) {
-				// Schedule a seasonal theme update, in case the new time should have a different season
-				nextSeasonalThemeUpdate = 0;
-			}
-
 			// shader variables for water, lava animations
 			long frameDeltaTime = System.currentTimeMillis() - lastFrameTime;
 			// if system time changes dramatically between frames,
@@ -2241,19 +2232,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Override
 	public void loadScene(Scene scene) {
-		// Automatically update the seasonal theme only while in the overworld, to avoid stutter during something important
-		if (nextSeasonalThemeUpdate < System.currentTimeMillis() && !scene.isInstance() && Area.OVERWORLD.containsPoint(
-			scene.getBaseX() + SCENE_SIZE / 2,
-			scene.getBaseY() + SCENE_SIZE / 2,
-			client.getPlane()
-		)) {
-			log.info("Automatically changing seasonal theme before loading new scene");
-			nextSeasonalThemeUpdate = Long.MAX_VALUE;
-			pendingConfigChanges.addAll(List.of(KEY_SKIP_SCENE_REUPLOAD, KEY_SEASONAL_THEME));
-			processPendingConfigChanges();
-			return;
-		}
-
 		if (skipScene != scene && HDUtils.sceneIntersects(scene, getExpandedMapLoadingChunks(), Area.THE_GAUNTLET)) {
 			// Some game objects in The Gauntlet are spawned in too late for the initial scene load,
 			// so we skip the first scene load and trigger another scene load the next game tick
@@ -2433,21 +2411,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					configSeasonalTheme = SeasonalTheme.SUMMER;
 					break;
 			}
-
-			int monthsUntilNextSeason = 3 - (time.getMonthValue() % 3);
-			var nextSeasonTime = time.plusMonths(monthsUntilNextSeason);
-			// Truncate to the start of the month
-			nextSeasonTime = ZonedDateTime.of(
-				nextSeasonTime.getYear(),
-				nextSeasonTime.getMonthValue(),
-				1,
-				0,
-				0,
-				0,
-				0,
-				nextSeasonTime.getZone()
-			);
-			nextSeasonalThemeUpdate = nextSeasonTime.toInstant().toEpochMilli();
 		}
 	}
 
@@ -3077,17 +3040,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Subscribe
 	public void onGameTick(GameTick gameTick) {
-		// Automatically update the seasonal theme only while in the overworld, to avoid stutter during something important
-		if (nextSeasonalThemeUpdate < System.currentTimeMillis() && Area.MAINLAND.containsPoint(
-			client.getBaseX() + SCENE_SIZE / 2,
-			client.getBaseY() + SCENE_SIZE / 2,
-			client.getPlane()
-		)) {
-			log.info("Automatically changing seasonal theme");
-			nextSeasonalThemeUpdate = Long.MAX_VALUE;
-			pendingConfigChanges.add(KEY_SEASONAL_THEME);
-		}
-
 		if (gameTicksUntilSceneReload > 0) {
 			if (gameTicksUntilSceneReload == 1)
 				reuploadScene();
