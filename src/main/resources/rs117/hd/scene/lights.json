@@ -24588,11 +24588,11 @@
     ]
   },
   {
-    "description": "HALLOWED_SEPULCHRE_WIZARD_STATUE_FLAMES_START",
+    "description": "HALLOWED_SEPULCHRE_WIZARD_STATUE_FLAMES_START_AND_END",
     "height": 350,
     "alignment": "CENTER",
     "radius": 500,
-    "strength": 5,
+    "strength": 3,
     "color": "#b15d00",
     "type": "FLICKER",
     "range": 50,
@@ -24600,7 +24600,8 @@
       38427
     ],
     "animationIds": [
-      8660
+      8660,
+      8663
     ]
   },
   {
@@ -24618,22 +24619,6 @@
     "animationIds": [
       8661,
       8662
-    ]
-  },
-  {
-    "description": "HALLOWED_SEPULCHRE_WIZARD_STATUE_FLAMES_END",
-    "height": 350,
-    "alignment": "CENTER",
-    "radius": 500,
-    "strength": 10,
-    "color": "#b15d00",
-    "type": "FLICKER",
-    "range": 50,
-    "objectIds": [
-      38427
-    ],
-    "animationIds": [
-      8663
     ]
   },
   {

@@ -103,7 +103,7 @@ import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.SceneUploader;
 import rs117.hd.scene.TextureManager;
-import rs117.hd.scene.lights.SceneLight;
+import rs117.hd.scene.lights.Light;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.scene.model_overrides.ObjectType;
 import rs117.hd.utils.ColorUtils;
@@ -1439,16 +1439,16 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (sceneContext.scene == scene) {
 			// Update lights UBO
 			uniformBufferLights.clear();
-			ArrayList<SceneLight> visibleLights = lightManager.getVisibleLights(configMaxDynamicLights);
+			ArrayList<Light> visibleLights = lightManager.getVisibleLights(configMaxDynamicLights);
 			visibleLightCount = visibleLights.size();
-			for (SceneLight light : visibleLights) {
+			for (Light light : visibleLights) {
 				uniformBufferLights.putFloat(light.x + cameraShift[0]);
 				uniformBufferLights.putFloat(light.z);
 				uniformBufferLights.putFloat(light.y + cameraShift[1]);
-				uniformBufferLights.putFloat(light.currentSize * light.currentSize);
-				uniformBufferLights.putFloat(light.currentColor[0] * light.currentStrength);
-				uniformBufferLights.putFloat(light.currentColor[1] * light.currentStrength);
-				uniformBufferLights.putFloat(light.currentColor[2] * light.currentStrength);
+				uniformBufferLights.putFloat(light.radius * light.radius);
+				uniformBufferLights.putFloat(light.color[0] * light.strength);
+				uniformBufferLights.putFloat(light.color[1] * light.strength);
+				uniformBufferLights.putFloat(light.color[2] * light.strength);
 				uniformBufferLights.putFloat(0); // pad
 			}
 			uniformBufferLights.flip();
