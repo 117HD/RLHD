@@ -6,14 +6,14 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import rs117.hd.data.environments.Area;
-import rs117.hd.utils.DegreesToRadiansAdapter;
+import rs117.hd.utils.GsonUtils;
 import rs117.hd.utils.HDUtils;
 
 import static rs117.hd.utils.ColorUtils.SrgbToLinearAdapter;
 import static rs117.hd.utils.ColorUtils.rgb;
 
 @Setter(value = AccessLevel.PRIVATE)
-@NoArgsConstructor
+@NoArgsConstructor // Called by GSON when parsing JSON
 public class Environment {
 	public static final Environment DEFAULT = new Environment()
 		.setKey("DEFAULT")
@@ -30,6 +30,7 @@ public class Environment {
 	public static Environment OVERWORLD, AUTUMN, WINTER;
 
 	public String key;
+	@JsonAdapter(Area.JsonAdapter.class)
 	public Area area = Area.NONE;
 	public boolean isOverworld = false;
 	public boolean isUnderwater = false;
@@ -49,7 +50,7 @@ public class Environment {
 	@JsonAdapter(SrgbToLinearAdapter.class)
 	public float[] underglowColor = rgb("#000000");
 	public float underglowStrength = 0;
-	@JsonAdapter(DegreesToRadiansAdapter.class)
+	@JsonAdapter(GsonUtils.DegreesToRadians.class)
 	public float[] sunAngles; // horizontal coordinate system, in radians
 	@JsonAdapter(SrgbToLinearAdapter.class)
 	public float[] fogColor;

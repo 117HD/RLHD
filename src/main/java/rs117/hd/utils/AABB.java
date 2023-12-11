@@ -195,11 +195,12 @@ public class AABB {
 	}
 
 	public static class JsonAdapter extends TypeAdapter<AABB[]> {
+		private final Area.JsonAdapter areaAdapter = new Area.JsonAdapter();
+
 		@Override
 		public AABB[] read(JsonReader in) throws IOException {
 			in.beginArray();
 			ArrayList<AABB> list = new ArrayList<>();
-			outer:
 			while (in.hasNext() && in.peek() != JsonToken.END_ARRAY) {
 				if (in.peek() == JsonToken.NULL) {
 					in.skipValue();
@@ -213,14 +214,9 @@ public class AABB {
 				}
 
 				if (in.peek() == JsonToken.STRING) {
-					String s = in.nextString();
-					for (Area area : Area.values()) {
-						if (area.name().equals(s)) {
-							Collections.addAll(list, area.aabbs);
-							continue outer;
-						}
-					}
-					throw new IOException("Unknown area specified in AABB array: " + s);
+					var area = areaAdapter.read(in);
+					Collections.addAll(list, area.aabbs);
+					continue;
 				}
 
 				in.beginArray();
@@ -231,7 +227,7 @@ public class AABB {
 						case NUMBER:
 							if (i >= ints.length)
 								throw new IOException(
-									"Too many numbers in AABB entry. Must be less than " + ints.length + ".");
+									"Too many numbers in AABB entry (> " + ints.length + ") at " + GsonUtils.location(in));
 							ints[i++] = in.nextInt();
 						case END_ARRAY:
 							break;
@@ -239,7 +235,7 @@ public class AABB {
 							in.skipValue();
 							continue;
 						default:
-							throw new IOException("Malformed AABB entry. Unexpected token: " + in.peek());
+							throw new IOException("Malformed AABB entry. Unexpected token: " + in.peek() + " at " + GsonUtils.location(in));
 					}
 				}
 				in.endArray();

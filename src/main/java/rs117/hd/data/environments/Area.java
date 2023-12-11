@@ -24,10 +24,17 @@
  */
 package rs117.hd.data.environments;
 
+import com.google.gson.TypeAdapter;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonToken;
+import com.google.gson.stream.JsonWriter;
+import java.io.IOException;
 import java.util.Arrays;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.coords.*;
 import rs117.hd.utils.AABB;
+import rs117.hd.utils.GsonUtils;
 
 import static rs117.hd.utils.AABB.regionBox;
 import static rs117.hd.utils.AABB.regions;
@@ -2111,5 +2118,37 @@ public enum Area
 				if (self.intersects(other))
 					return true;
 		return false;
+	}
+
+	@Slf4j
+	public static class JsonAdapter extends TypeAdapter<Area> {
+		@Override
+		public Area read(JsonReader in) throws IOException {
+			var token = in.peek();
+			if (token == JsonToken.NULL)
+				return null;
+
+			if (token != JsonToken.STRING) {
+				log.warn("Invalid type for area enum: '{}' at {}", token, GsonUtils.location(in), new Throwable());
+				return NONE;
+			}
+
+			var str = in.nextString();
+			try {
+				return Area.valueOf(str);
+			} catch (IllegalArgumentException ex) {
+				log.warn("Area enum '{}' does not exist at {}", str, GsonUtils.location(in), new Throwable());
+				return NONE;
+			}
+		}
+
+		@Override
+		public void write(JsonWriter out, Area area) throws IOException {
+			if (area == null) {
+				out.nullValue();
+			} else {
+				out.value(area.name());
+			}
+		}
 	}
 }
