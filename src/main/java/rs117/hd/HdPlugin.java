@@ -414,7 +414,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public boolean enableDetailedTimers;
 	public boolean enableShadowMapOverlay;
 
-	private boolean firstPluginStart = true;
 	private boolean isActive;
 	private boolean lwjglInitialized;
 	private boolean hasLoggedIn;
@@ -463,17 +462,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				canvas = client.getCanvas();
 
 				synchronized (canvas.getTreeLock()) {
-					if (!canvas.isValid()) {
-						// Delay plugin startup until the client's canvas is valid
-						if (firstPluginStart)
-							return false;
+					// Delay plugin startup until the client's canvas is valid
+					if (!canvas.isValid())
+						return false;
 
-						// For subsequent plugin startups, the canvas should be okay to use, but it can get stuck marked as invalid.
-						// This seems to happen when our automatic restart after probable OS suspend triggers.
-						canvas.revalidate();
-					}
-
-					firstPluginStart = false;
 					awtContext = new AWTContext(canvas);
 					awtContext.configurePixelFormat(0, 0, 0);
 				}
@@ -692,8 +684,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	public void restartPlugin() {
-		shutDown();
-		startUp();
+		// For some reason, it's necessary to delay this like below to prevent the canvas from locking up on Linux
+		SwingUtilities.invokeLater(() -> clientThread.invokeLater(() -> {
+			shutDown();
+			startUp();
+		}));
 	}
 
 	private String generateFetchCases(String array, int from, int to)
@@ -2551,7 +2546,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 							break;
 						case KEY_LOW_MEMORY_MODE:
 							restartPlugin();
-							// since we restarted everything anyway, skip all other pending changes
+							// since we'll be restarting the plugin anyway, skip pending changes
 							return;
 					}
 				}
