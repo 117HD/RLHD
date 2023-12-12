@@ -21521,8 +21521,9 @@
       0
     ],
     "type": "PULSE",
-    "duration": 2050,
     "range": 20,
+    "cyclesPerFrame": 6,
+    "startFrame": 0,
     "objectIds": [
       39656
     ]

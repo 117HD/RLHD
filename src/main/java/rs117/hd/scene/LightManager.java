@@ -58,10 +58,14 @@ import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
 
+import static java.lang.Math.abs;
 import static java.lang.Math.cos;
 import static java.lang.Math.pow;
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.*;
+import static rs117.hd.utils.HDUtils.TWO_PI;
+import static rs117.hd.utils.HDUtils.fract;
+import static rs117.hd.utils.HDUtils.mod;
 import static rs117.hd.utils.ResourcePath.path;
 
 @Singleton
@@ -102,14 +106,11 @@ public class LightManager {
 	public final ListMultimap<Integer, LightDefinition> PROJECTILE_LIGHTS = ArrayListMultimap.create();
 	public final ListMultimap<Integer, LightDefinition> GRAPHICS_OBJECT_LIGHTS = ArrayListMultimap.create();
 
-	long lastFrameTime = -1;
 	boolean configChanged = false;
 
 	private EntityHiderConfig entityHiderConfig;
 
-	static final float TWO_PI = (float) (2 * Math.PI);
-
-	public void loadConfig(Gson gson, ResourcePath path) {
+	public void loadConfig(Gson gson, ResourcePath path, boolean firstRun) {
 		try {
 			LightDefinition[] lights;
 			try {
@@ -142,7 +143,7 @@ public class LightManager {
 			}
 
 			log.debug("Loaded {} lights", lights.length);
-			configChanged = true;
+			configChanged = !firstRun;
 		} catch (Exception ex) {
 			log.error("Failed to parse light configuration", ex);
 		}
@@ -150,7 +151,7 @@ public class LightManager {
 
 	public void startUp() {
 		entityHiderConfig = configManager.getConfig(EntityHiderConfig.class);
-		LIGHTS_PATH.watch(path -> loadConfig(plugin.getGson(), path));
+		LIGHTS_PATH.watch((path, first) -> loadConfig(plugin.getGson(), path, first));
 		eventBus.register(this);
 	}
 
@@ -173,7 +174,6 @@ public class LightManager {
 			client.getNpcs().forEach(npc -> addNpcLights(sceneContext, npc));
 		}
 
-		int frameTimeMs = (int) (System.currentTimeMillis() - lastFrameTime);
 		Tile[][][] tiles = sceneContext.scene.getExtendedTiles();
 		int[][][] tileHeights = sceneContext.scene.getTileHeights();
 
@@ -303,12 +303,8 @@ public class LightManager {
 				}
 			}
 
-			if (light.def.type == LightType.FLICKER)
-			{
-				long repeatMs = 60000;
-				int offset = light.randomOffset;
-				float t = TWO_PI * ((System.currentTimeMillis() + offset) % repeatMs) / repeatMs;
-
+			if (light.def.type == LightType.FLICKER) {
+				double t = TWO_PI * (mod(plugin.elapsedTime, 60) / 60 + light.randomOffset);
 				float flicker = (float) (
 					pow(cos(11 * t), 3) +
 					pow(cos(17 * t), 6) +
@@ -325,38 +321,17 @@ public class LightManager {
 
 				light.strength = light.def.strength * flicker;
 				light.radius = (int) (light.def.radius * 1.5f);
-			} else if (light.def.type == LightType.PULSE)
-			{
-				float duration = light.def.duration / 1000f;
+			} else if (light.def.type == LightType.PULSE) {
+				light.animation = fract(light.animation + plugin.deltaClientTime / light.duration);
+
+				float output = 1 - 2 * abs(light.animation - .5f);
 				float range = light.def.range / 100f;
 				float fullRange = range * 2f;
-				float change = (frameTimeMs / 1000f) / duration;
-//				change = change % 1.0f;
-
-				light.animation += change % 1.0f;
-				// lock animation to 0-1
-				light.animation = light.animation % 1.0f;
-
-				float output;
-
-				if (light.animation > 0.5f)
-				{
-					// light is shrinking
-					output = 1f - (light.animation - 0.5f) * 2;
-				}
-				else
-				{
-					// light is expanding
-					output = light.animation * 2f;
-				}
-
 				float multiplier = (1.0f - range) + output * fullRange;
 
 				light.radius = (int) (light.def.radius * multiplier);
 				light.strength = light.def.strength * multiplier;
-			}
-			else
-			{
+			} else {
 				light.strength = light.def.strength;
 				light.radius = light.def.radius;
 				light.color = light.def.color;
@@ -364,8 +339,8 @@ public class LightManager {
 
 			// Apply fade
 			if (light.fadeInDuration > 0) {
-				light.strength *= Math.min((float) light.currentFadeIn / (float) light.fadeInDuration, 1.0f);
-				light.currentFadeIn += frameTimeMs;
+				light.strength *= Math.min(light.currentFadeIn / light.fadeInDuration, 1.0f);
+				light.currentFadeIn += plugin.deltaClientTime;
 			}
 
 			// Calculate the distance between the player and the light to determine which
@@ -396,8 +371,6 @@ public class LightManager {
 		}
 
 		sceneContext.lights.sort(Comparator.comparingInt(light -> light.distanceSquared));
-
-		lastFrameTime = System.currentTimeMillis();
 	}
 
 	private boolean npcLightVisible(NPC npc) {
@@ -492,11 +465,9 @@ public class LightManager {
 
 					for (GameObject gameObject : tile.getGameObjects()) {
 						if (gameObject != null) {
-							if (gameObject.getRenderable() instanceof Actor) {
-								// rarely these tile game objects are actors with weird properties
-								// we skip those
+							// Skip players & NPCs
+							if (gameObject.getRenderable() instanceof Actor)
 								continue;
-							}
 
 							addObjectLight(
 								sceneContext,
@@ -564,8 +535,8 @@ public class LightManager {
 			light.y = (int) projectile.getY();
 			light.z = (int) projectile.getZ();
 			light.plane = projectile.getFloor();
-			if (light.fadeInDuration == -1)
-				light.fadeInDuration = 300;
+			if (light.fadeInDuration < 0)
+				light.fadeInDuration = .3f;
 			light.visible = projectileLightVisible();
 
 			sceneContext.lights.add(light);
@@ -628,7 +599,7 @@ public class LightManager {
 
 	private void addObjectLight(SceneContext sceneContext, TileObject tileObject, int plane, int sizeX, int sizeY, int orientation) {
 		int id = tileObject.getId();
-		if (tileObject instanceof DynamicObject || tileObject instanceof GameObject) {
+		if (tileObject instanceof GameObject) {
 			var def = client.getObjectDefinition(id);
 			if (def.getImpostorIds() != null) {
 				// Add a light for every possible impostor object
@@ -769,8 +740,8 @@ public class LightManager {
 			light.y = lp.getY();
 			light.z = graphicsObject.getZ();
 			light.plane = graphicsObject.getLevel();
-			if (light.fadeInDuration == -1)
-				light.fadeInDuration = 300;
+			if (light.fadeInDuration < 0)
+				light.fadeInDuration = .3f;
 			light.modelOverride = modelOverrideManager.getOverride(
 				ModelHash.packUuid(graphicsObject.getId(), ModelHash.TYPE_OBJECT),
 				sceneContext.localToWorld(light.x, light.y, light.plane)

@@ -384,10 +384,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private int uniBlockWaterTypes;
 	private int uniBlockPointLights;
 
-	private float elapsedTime;
-	private long lastFrameTime;
-	private int gameTicksUntilSceneReload = 0;
-
 	// Configs used frequently enough to be worth caching
 	public boolean configGroundTextures;
 	public boolean configGroundBlending;
@@ -430,6 +426,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public final int[] cameraFocalPoint = new int[2];
 	public final int[] cameraShift = new int[2];
 
+	public float deltaTime;
+	public float elapsedTime;
+	public float deltaClientTime;
+	public float elapsedClientTime;
+	private long lastFrameTimeMillis;
+	private float lastFrameClientTime;
+	private int gameTicksUntilSceneReload = 0;
 	public int visibleLightCount;
 
 	@Provides
@@ -451,8 +454,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				fboShadowMap = 0;
 				numPassthroughModels = 0;
 				numModelsToSort = null;
+				deltaTime = 0;
 				elapsedTime = 0;
-				lastFrameTime = 0;
+				deltaClientTime = 0;
+				elapsedClientTime = 0;
+				lastFrameTimeMillis = 0;
+				lastFrameClientTime = 0;
 				visibleLightCount = 0;
 
 				AWTContext.loadNatives();
@@ -1726,29 +1733,26 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			return;
 		}
 
-		if (lastFrameTime > 0) {
-			final long FIVE_MINUTES = 300000;
-			final long HALF_A_MINUTE = 30000;
-			long timeStep = System.currentTimeMillis() - lastFrameTime;
+		if (lastFrameTimeMillis > 0) {
+			deltaTime = (float) ((System.currentTimeMillis() - lastFrameTimeMillis) / 1000.);
 
 			// Restart the plugin to avoid potential buffer corruption if the computer has likely resumed from suspension
-			if (timeStep > FIVE_MINUTES) {
-				log.debug("Restarting the plugin after probable OS suspend ({} ms time skip)", timeStep);
+			if (deltaTime > 300) {
+				log.debug("Restarting the plugin after probable OS suspend ({} second delta)", deltaTime);
 				restartPlugin();
 				return;
 			}
 
-			// shader variables for water, lava animations
-			long frameDeltaTime = System.currentTimeMillis() - lastFrameTime;
-			// if system time changes dramatically between frames,
-			// very large values may be added to elapsedTime,
-			// which causes floating point precision to break down,
-			// leading to texture animations and water appearing frozen
-			if (Math.abs(frameDeltaTime) > 10000)
-				frameDeltaTime = 16;
-			elapsedTime += frameDeltaTime / 1000f;
+			// If system time changes between frames, clamp the delta to a more sensible value
+			if (Math.abs(deltaTime) > 10)
+				deltaTime = 1 / 60.f;
+			elapsedTime += deltaTime;
+
+			// The client delta doesn't need clamping
+			deltaClientTime = elapsedClientTime - lastFrameClientTime;
 		}
-		lastFrameTime = System.currentTimeMillis();
+		lastFrameTimeMillis = System.currentTimeMillis();
+		lastFrameClientTime = elapsedClientTime;
 
 		final int canvasHeight = client.getCanvasHeight();
 		final int canvasWidth = client.getCanvasWidth();
@@ -3034,6 +3038,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Subscribe
 	public void onClientTick(ClientTick clientTick) {
+		elapsedClientTime += 1 / 50f;
+
 		if (skipScene != client.getScene())
 			redrawPreviousFrame = false;
 	}

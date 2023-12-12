@@ -97,6 +97,14 @@
         "type": "number",
         "description": "The distance range to vary the light's radius by according to the light's animation."
       },
+      "cyclesPerFrame": {
+        "type": "integer",
+        "description": "How many client ticks (20 ms) each animation frame lasts. Only applies if duration is zero."
+      },
+      "startFrame": {
+        "type": "integer",
+        "description": "The frame offset into the animation which the light's animation should start at. Only applies if duration is zero."
+      },
       "fadeInDuration": {
         "type": "number",
         "description": "The time in milliseconds until the light is fully active after spawning."

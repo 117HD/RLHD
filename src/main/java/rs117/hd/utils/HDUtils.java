@@ -138,6 +138,21 @@ public class HDUtils {
 		return result;
 	}
 
+	public static double fract(double x) {
+		return mod(x, 1);
+	}
+
+	public static float fract(float x) {
+		return mod(x, 1);
+	}
+
+	/**
+	 * Modulo that returns the answer with the same sign as the modulus.
+	 */
+	public static double mod(double x, double modulus) {
+		return (x - Math.floor(x / modulus) * modulus);
+	}
+
 	/**
 	 * Modulo that returns the answer with the same sign as the modulus.
 	 */

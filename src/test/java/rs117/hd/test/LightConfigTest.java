@@ -35,7 +35,7 @@ public class LightConfigTest {
     public void testLoad() {
 		Gson gson = new GsonBuilder().setLenient().create();
 		LightManager lightManager = new LightManager();
-		lightManager.loadConfig(gson, path(LightConfigTest.class, "lights.json"));
+		lightManager.loadConfig(gson, path(LightConfigTest.class, "lights.json"), true);
 
         // can we get the same light for both of its raw IDs?
 		LightDefinition spitRoastLight = lightManager.OBJECT_LIGHTS.get(5608).get(0);

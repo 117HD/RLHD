@@ -23,7 +23,6 @@ public class LightDefinition {
 	public float duration;
 	public float range;
 	public int fadeInDuration = -1;
-	public int fadeOutDuration = -1;
 	public boolean visibleFromOtherPlanes = false;
 	@JsonAdapter(GsonUtils.IntegerSetAdapter.class)
 	public HashSet<Integer> npcIds = new HashSet<>();

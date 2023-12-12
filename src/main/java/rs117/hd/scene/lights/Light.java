@@ -7,7 +7,7 @@ import rs117.hd.utils.HDUtils;
 
 public class Light
 {
-	public final int randomOffset = HDUtils.rand.nextInt();
+	public final float randomOffset = HDUtils.rand.nextFloat();
 	public final LightDefinition def;
 
 	public int radius;
@@ -17,7 +17,9 @@ public class Light
 	 */
 	public float[] color;
 	public float animation = 0.5f;
-	public int currentFadeIn = 0;
+	public float duration;
+	public float fadeInDuration;
+	public float currentFadeIn;
 	public int impostorObjectId;
 	public boolean visible = true;
 
@@ -27,8 +29,6 @@ public class Light
 	public int z;
 	public int plane;
 	public int distanceSquared = 0;
-	public int fadeInDuration;
-	public int fadeOutDuration;
 	public boolean belowFloor = false;
 	public boolean aboveFloor = false;
 
@@ -41,12 +41,12 @@ public class Light
 
 	public Light(LightDefinition def) {
 		this.def = def;
-		plane = def.plane;
-		fadeInDuration = def.fadeInDuration;
-		fadeOutDuration = def.fadeOutDuration;
+		duration = def.duration / 1000f;
+		fadeInDuration = def.fadeInDuration / 1000f;
+		color = def.color;
 		radius = def.radius;
 		strength = def.strength;
-		color = def.color;
+		plane = def.plane;
 		if (def.type == LightType.PULSE)
 			animation = (float) Math.random();
 	}
