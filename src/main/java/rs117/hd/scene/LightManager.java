@@ -188,7 +188,8 @@ public class LightManager {
 					var def = client.getObjectDefinition(light.object.getId());
 					if (def.getImpostorIds() != null) {
 						// Only show the light if the impostor is currently active
-						light.visible = def.getImpostor().getId() == light.impostorObjectId;
+						var impostor = def.getImpostor();
+						light.visible = impostor != null && impostor.getId() == light.impostorObjectId;
 					}
 				}
 
