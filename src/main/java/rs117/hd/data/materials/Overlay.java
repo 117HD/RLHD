@@ -133,6 +133,7 @@ public enum Overlay {
 	LUMBRIDGE_CASTLE_ENTRYWAY_2(3, Area.LUMBRIDGE_CASTLE_ENTRYWAY, GroundMaterial.MARBLE_2_GLOSS, p -> p.blended(false)),
 	LUMBRIDGE_CAVES_FLOOR(49, Area.LUMBRIDGE_SWAMP_CAVES, GroundMaterial.ROCKY_CAVE_FLOOR),
 	GOBLIN_MAZE_FLOOR(48, Area.GOBLIN_MAZE, GroundMaterial.ROCKY_CAVE_FLOOR),
+	LUMBRIDGE_CHRISTMAS_EVENT(263, Area.LUMBRIDGE, GroundMaterial.ICE_1),
 
 
 	//Varrock Indoors
@@ -384,7 +385,7 @@ public enum Overlay {
 		.area(Area.TAVERLEY_DUNGEON)
 		.ids(2, 10, 34)
 	),
-	ICE_QUEENS_SYMBOL(33, Area.ICE_QUEENS_DUNGEON, GroundMaterial.ICE_1),
+	ICE_QUEENS_SYMBOL(33, Area.ICE_QUEENS_DUNGEON, GroundMaterial.ICE_1_HIGHGLOSS),
 	ICE_QUEENS_DUNGEON_OVERLAY(Area.ICE_QUEENS_DUNGEON, GroundMaterial.SNOW_1, p -> p.ids(42).lightness(100).hue(0).saturation(0)),
 
 	// Seers Indoors
