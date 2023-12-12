@@ -23,16 +23,14 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#pragma once
 
-void computeUvs(out vec2 uvs[3]) {
-    int materialData = gMaterialData[0];
+void computeUvs(const int materialData, const vec3 pos[3], inout vec3 uvw[3]) {
     if ((materialData >> MATERIAL_FLAG_WORLD_UVS & 1) == 1) {
         // Treat the input uvw as a normal vector for a plane that goes through origo,
         // and find the distance from the point to the plane
-        float scale = 1. / length(gUv[0]);
+        float scale = 1. / length(uvw[0]);
 
-        vec3 N = gUv[0] * scale;
+        vec3 N = uvw[0] * scale;
         vec3 C1 = cross(vec3(0, 0, 1), N);
         vec3 C2 = cross(vec3(0, 1, 0), N);
         vec3 T = normalize(length(C1) > length(C2) ? C1 : C2);
@@ -40,11 +38,11 @@ void computeUvs(out vec2 uvs[3]) {
         mat3 TBN = mat3(T, B, N);
 
         for (int i = 0; i < 3; i++)
-            uvs[i] = (TBN * gPosition[i]).xy / 128. * scale;
+            uvw[i].xy = (TBN * pos[i]).xy / 128. * scale;
     } else if ((materialData >> MATERIAL_FLAG_VANILLA_UVS & 1) == 1) {
-        vec3 v1 = gUv[0];
-        vec3 v2 = gUv[1] - v1;
-        vec3 v3 = gUv[2] - v1;
+        vec3 v1 = uvw[0];
+        vec3 v2 = uvw[1] - v1;
+        vec3 v3 = uvw[2] - v1;
 
         vec3 uvNormal = cross(v2, v3);
         vec3 perpv2 = cross(v2, uvNormal);
@@ -53,23 +51,20 @@ void computeUvs(out vec2 uvs[3]) {
         float dv = 1.0f / dot(perpv2, v3);
 
         for (int i = 0; i < 3; i++) {
-            vec3 p = gPosition[i];
+            vec3 p = pos[i];
             #ifdef USE_VANILLA_UV_PROJECTION
             // Project vertex positions onto a plane going through the texture triangle
             vec3 vertexToCamera = cameraPos - p;
-            p += vertexToCamera * dot(gUv[i] - p, uvNormal) / dot(vertexToCamera, uvNormal);
+            p += vertexToCamera * dot(uvw[i] - p, uvNormal) / dot(vertexToCamera, uvNormal);
             #endif
 
             // uvw[i].x = (v4's distance along perpv3) / (v2's distance along perpv3)
             // uvw[i].y = (v4's distance along perpv2) / (v3's distance along perpv2)
             vec3 v = p - v1;
-            uvs[i] = vec2(
+            uvw[i].xy = vec2(
                 dot(perpv3, v) * du,
                 dot(perpv2, v) * dv
             );
         }
-    } else {
-        for (int i = 0; i < 3; i++)
-            uvs[i] = gUv[i].xy;
     }
 }
