@@ -290,7 +290,9 @@ public class ProceduralGenerator {
 					Math.abs(Math.min(dot, 0))
 				)
 			);
-			color = color & ~0x7F | clamp(lightness, 0, 0x7F);
+			final int maxBrightness = 55; // reduces overexposure
+			lightness = Math.min(lightness, maxBrightness);
+			color = color & ~0x7F | lightness;
 
 			boolean isOverlay = false;
 			Material material = Material.DIRT_1;
@@ -306,9 +308,6 @@ public class ProceduralGenerator {
 				color = underlay.modifyColor(color);
 			}
 
-			final int maxBrightness = 55; // reduces overexposure
-			if (lightness > maxBrightness)
-				color = color & ~0x7F | maxBrightness;
 			vertexColors[vertex] = color;
 
 			// mark the vertex as either an overlay or underlay.

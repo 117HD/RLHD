@@ -529,7 +529,7 @@ public enum Underlay {
 	),
 
 	ARCEUUS_GROUND(Area.ARCEUUS, GroundMaterial.DIRT, p -> p
-		.ids(2, 3, 23, 24)
+		.ids(2, 3, 21, 23, 24, 27)
 		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_DIRT)
 	),
 	ARCEUUS_GRASS(Area.ARCEUUS, GroundMaterial.GRASSY_DIRT, p -> p

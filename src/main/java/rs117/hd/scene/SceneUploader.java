@@ -494,7 +494,7 @@ class SceneUploader {
 						nwMaterial = sceneContext.vertexTerrainTexture.getOrDefault(nwVertexKey, nwMaterial);
 					}
 				} else {
-					GroundMaterial groundMaterial = null;
+					GroundMaterial groundMaterial;
 					Overlay overlay = Overlay.getOverlay(scene, tile, plugin);
 					if (overlay != Overlay.NONE)
 					{
