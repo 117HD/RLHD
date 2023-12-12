@@ -140,8 +140,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public static final String INTEL_DRIVER_URL = "https://www.intel.com/content/www/us/en/support/detect.html";
 	public static final String NVIDIA_DRIVER_URL = "https://www.nvidia.com/en-us/geforce/drivers/";
 
-	public static final String KEY_SKIP_SCENE_REUPLOAD = "skipSceneReupload";
-
 	public static final int TEXTURE_UNIT_BASE = GL_TEXTURE0;
 	public static final int TEXTURE_UNIT_UI = TEXTURE_UNIT_BASE; // default state
 	public static final int TEXTURE_UNIT_GAME = TEXTURE_UNIT_BASE + 1;
@@ -2445,13 +2443,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				boolean modelPusherClearModelCache = false;
 				boolean modelPusherReallocate = false;
 				boolean reuploadScene = false;
-				boolean skipSceneReupload = false;
 
 				for (var key : pendingConfigChanges) {
 					switch (key) {
-						case KEY_SKIP_SCENE_REUPLOAD:
-							skipSceneReupload = true;
-							break;
 						case KEY_EXPANDED_MAP_LOADING_CHUNKS:
 							client.setExpandedMapLoading(getExpandedMapLoadingChunks());
 							if (client.getGameState() == GameState.LOGGED_IN)
@@ -2540,7 +2534,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					modelPusher.clearModelCache();
 				}
 
-				if (reuploadScene && !skipSceneReupload)
+				if (reuploadScene)
 					reuploadScene();
 
 				if (recreateShadowMapFbo) {
