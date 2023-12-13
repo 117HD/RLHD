@@ -24858,11 +24858,55 @@
     "duration": 1550,
     "range": 20,
     "objectIds": [
-      34748
+      34748,
+      34749,
+      34752,
+      34751,
+      34754,
+      34756,
+      34755
     ]
   },
   {
-    "description": "AIR_ALTAR_PILLAR",
+    "description": "NATURE_WATER_ALTAR_PORTAL_AND_PILLARS",
+    "height": 250,
+    "alignment": "CENTER",
+    "radius": 450,
+    "strength": 10,
+    "color": [
+      50,
+      50,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 1550,
+    "range": 20,
+    "objectIds": [
+      34750,
+      34791
+    ]
+  },
+  {
+    "description": "BODY_ALTER_PILLARS_AND_PORTAL",
+    "height": 250,
+    "alignment": "CENTER",
+    "radius": 450,
+    "strength": 5,
+    "color": [
+      255,
+      50,
+      200
+    ],
+    "type": "PULSE",
+    "duration": 1550,
+    "range": 20,
+    "objectIds": [
+      34793,
+      34753
+    ]
+  },
+  {
+    "description": "COSMIC_AIR_ALTAR_PILLAR_AND_ORBS",
     "height": 250,
     "alignment": "CENTER",
     "radius": 300,
@@ -24877,6 +24921,42 @@
     "range": 20,
     "objectIds": [
       34790
+    ]
+  },
+  {
+    "description": "COSMIC_AIR_ALTAR_PILLAR_AND_ORBS",
+    "height": 250,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 5,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 1000,
+    "range": 20,
+    "objectIds": [
+      34794
+    ]
+  },
+  {
+    "description": "FIRE_ALTAR_ORBS",
+    "height": 250,
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 10,
+    "color": [
+      255,
+      20,
+      20
+    ],
+    "type": "PULSE",
+    "duration": 650,
+    "range": 20,
+    "objectIds": [
+      34792
     ]
   },
   {
@@ -24929,7 +25009,7 @@
     "description": "MAGIC_GUILD_ORBS",
     "height": 250,
     "alignment": "CENTER",
-    "radius": 250,
+    "radius": 300,
     "strength": 10,
     "color": [
       255,
@@ -24937,7 +25017,7 @@
       255
     ],
     "type": "PULSE",
-    "duration": 500,
+    "duration": 800,
     "range": 20,
     "objectIds": [
       34789
