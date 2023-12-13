@@ -633,7 +633,7 @@ public enum Underlay {
 	),
 	COMPLEX_TILES(p -> p
 		.area(Area.OVERWORLD)
-		.ids(55, 61, 62, 63, 64, 65, 68, 94, 96)
+		.ids(13, 55, 61, 62, 63, 64, 65, 68, 69, 94, 96)
 		.replacementResolver(
 			(plugin, scene, tile, override) -> {
 				int[] hsl = HDUtils.getSouthWesternMostTileColor(tile);
