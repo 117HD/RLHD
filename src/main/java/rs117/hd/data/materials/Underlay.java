@@ -389,7 +389,7 @@ public enum Underlay {
 	// Feldip Hills
 	FELDIP_HILLS_COMPLEX_TILES(p -> p
 		.area(Area.FELDIP_HILLS)
-		.ids(48, 50, 52, 62, 63, 67, 69, 70, 97, 99, 100)
+		.ids(48, 50, 52, 62, 63, 67, 68, 69, 70, 97, 99, 100)
 		.replacementResolver(
 			(plugin, scene, tile, override) -> {
 				int[] hsl = HDUtils.getSouthWesternMostTileColor(tile);
