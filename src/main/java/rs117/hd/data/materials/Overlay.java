@@ -62,11 +62,6 @@ public enum Overlay {
 		.ids()
 		.groundMaterial(GroundMaterial.SNOW_2)
 	),
-	WINTER_EAST_ARDOUGNE_CASTLE_PATH_FIX(10, Area.EAST_ARDOUGNE_CASTLE_PATH_FIX, GroundMaterial.VARROCK_PATHS, p -> p
-		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_JAGGED_STONE_TILE_LIGHT)
-		.shiftLightness(3)
-		.blended(false)
-	),
 	WINTER_CANIFIS_BAR_FLOOR_BLENDED(85, Area.CANIFIS_BAR_FLOOR_BLENDED, GroundMaterial.HD_WOOD_PLANKS_1, p -> p
 		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_DIRT)
 	),
@@ -456,7 +451,7 @@ public enum Overlay {
 		.shiftLightness(7)
 		.blended(false)),
 	EAST_ARDOUGNE_CASTLE_PATH_FIX(10, Area.EAST_ARDOUGNE_CASTLE_PATH_FIX, GroundMaterial.VARROCK_PATHS, p -> p
-		.shiftLightness(16)
+		.lightness(34)
 		.blended(false)
 
 	),
@@ -467,8 +462,7 @@ public enum Overlay {
 		p -> p.blended(false).lightness(40)
 	),
 	EAST_ARDOUGNE_PATHS_1(10, Area.EAST_ARDOUGNE, GroundMaterial.VARROCK_PATHS, p -> p
-		.shiftLightness(6)
-		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_JAGGED_STONE_TILE_LIGHT)
+		.lightness(34)
 	),
 	WIZARD_HOUSE_TILE_LIGHT(38, Area.EAST_ARDOUGNE, GroundMaterial.MARBLE_1_SEMIGLOSS, p -> p.blended(false)),
 	WIZARD_HOUSE_TILE_DARK(40, Area.EAST_ARDOUGNE, GroundMaterial.MARBLE_2_SEMIGLOSS, p -> p.blended(false)),
