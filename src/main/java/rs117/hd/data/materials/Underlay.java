@@ -414,15 +414,13 @@ public enum Underlay {
 							return WINTER_GRUNGE;
 					}
 				}
-				if ((hsl[0] == 8 && hsl[1] == 4 && hsl[2] >= 71) || (hsl[0] == 8 && hsl[1] == 3 && hsl[2] >= 48))
+				if ((hsl[0] == 8 && hsl[1] == 4 && hsl[2] >= 71) ||
+					(hsl[0] == 8 && hsl[1] == 3 && hsl[2] >= 21))
 					return DEFAULT_SAND;
 
 				if (
 					hsl[0] >= 11 && hsl[1] == 1 ||
-					hsl[0] == 9 && hsl[1] == 2 ||
-					hsl[0] == 9 && hsl[1] == 3 && hsl[2] >= 49 ||
 					hsl[0] >= 9 && hsl[1] >= 4 ||
-					hsl[0] == 9 && hsl[1] == 3 && hsl[2] <= 38 ||
 					hsl[0] >= 10 && hsl[1] >= 2 ||
 					hsl[0] == 8 && hsl[1] == 5 && hsl[2] >= 15 ||
 					hsl[0] == 8 && hsl[1] >= 6 && hsl[2] >= 2
@@ -440,7 +438,8 @@ public enum Underlay {
 					hsl[0] == 8 && hsl[1] <= 4 && hsl[2] <= 71 ||
 					hsl[0] <= 7 && hsl[1] <= 5 && hsl[2] <= 57 ||
 					hsl[0] <= 7 && hsl[1] <= 7 && hsl[2] <= 28 ||
-					hsl[0] == 8 && hsl[1] == 5 && hsl[2] <= 15
+					hsl[0] == 8 && hsl[1] == 5 && hsl[2] <= 15 ||
+					hsl[0] == 9 && hsl[1] >= 2 && hsl[1] <= 4
 				) {
 					switch (plugin.configSeasonalTheme) {
 						case SUMMER:
