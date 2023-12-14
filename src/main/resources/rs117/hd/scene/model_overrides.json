@@ -12949,5 +12949,17 @@
     "retainVanillaUvs": false,
     "uvScale": 1.26,
     "uvOrientation": 512
-  }
+  }, {
+  "description": "White Wolf Mountain Pass - Objects - Rock Stairs - Large",
+  "baseMaterial": "ROCK_3",
+  "objectIds": [
+    54,
+    55,
+    56,
+    57
+  ],
+  "uvType": "BOX",
+  "uvScale": 0.8,
+  "uvOrientationY": 256
+}
 ]
