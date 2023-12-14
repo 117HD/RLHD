@@ -5939,10 +5939,13 @@
     "description": "Barbarian Hall - Roof - Wooden - Planks",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
+      9590,
+      9591,
       11565,
       11566,
       11567,
-      11568
+      11568,
+      11878
     ],
     "uvType": "BOX",
     "uvScale": 0.66,
@@ -5952,6 +5955,8 @@
     "description": "Barbarian Hall - Roof Corners - Wooden - Planks",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
+      9593,
+      9594,
       11569,
       11570,
       11571,
@@ -5966,7 +5971,9 @@
       11581,
       11582,
       11583,
-      11584
+      11584,
+      11879,
+      11880
     ],
     "uvType": "BOX",
     "uvScale": 0.66,
