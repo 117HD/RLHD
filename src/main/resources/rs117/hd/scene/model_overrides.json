@@ -12937,68 +12937,63 @@
   },
   {
     "description": "Abyss - Gap",
-    "baseMaterial": "ABYSSAL",
+    "baseMaterial": "ABYSSAL_2",
     "objectIds": [
-      26192,
-      26208,
-      26250
+      25428,
+      25381
     ],
     "uvType": "BOX",
-    "uvScale": 0.6,
+    "uvScale": 0.8,
     "uvOrientation": 256
   },
   {
     "description": "Abyss - Rocks",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "ROCK_4",
     "objectIds": [
-      26188,
-      26574
+      25422,
+      25424
+
     ],
     "uvType": "BOX",
-    "uvScale": 0.5
+    "uvScale": 0.7,
+    "uvOrientation": 512
   },
   {
     "description": "Abyss - Tendrils - Large",
-    "baseMaterial": "ABYSSAL",
+    "baseMaterial": "ABYSSAL_2",
     "objectIds": [
-      26167,
-      26168,
-      26189
+      25425,
+      25427
     ],
     "uvType": "BOX",
-    "uvScale": 0.5
+    "uvScale": 0.8,
+    "uvOrientation": 512
   },
   {
     "description": "Abyss - Eyes",
-    "baseMaterial": "ABYSSAL",
+    "baseMaterial": "ABYSSAL_2",
     "objectIds": [
       26146,
-      26147,
-      26148,
-      26251,
-      26253,
-      26191
+      26148
     ],
     "uvType": "BOX",
     "uvScale": 0.5
   },
   {
     "description": "Abyss - Boil",
-    "baseMaterial": "ABYSSAL",
+    "baseMaterial": "ABYSSAL_2",
     "objectIds": [
-      26144,
-      26145,
-      26190,
-      26252
+      25590,
+      26144
     ],
     "uvType": "BOX",
-    "uvScale": 0.5
+    "uvScale": 0.8
   },
   {
     "description": "Abyss - Blockage",
     "baseMaterial": "ABYSSAL",
     "objectIds": [
-      26187
+      25383
     ],
     "uvType": "BOX",
     "uvScale": 0.5
@@ -13017,6 +13012,8 @@
     "description": "Abyss - Object - Ground Tendrils - Small",
     "baseMaterial": "ABYSSAL",
     "objectIds": [
+      26167,
+      26168,
       26169
     ],
     "uvType": "BOX",
