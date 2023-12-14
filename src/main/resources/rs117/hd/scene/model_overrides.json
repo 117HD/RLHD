@@ -4205,21 +4205,30 @@
   },
   {
     "description": "Falador - Tables",
-    "baseMaterial": "WOOD_GRAIN_2",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      24025,
-      24081
+      24025
     ],
     "uvType": "BOX",
     "uvScale": 0.8
   },
   {
     "description": "Falador - Tables - Rotated",
-    "baseMaterial": "WOOD_GRAIN_2",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      7331
+      7331,
+      24081
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Falador - Table Boxed Legs",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      24086
+    ],
+    "uvType": "BOX",
     "uvOrientation": 512
   },
   {
