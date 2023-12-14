@@ -8802,8 +8802,7 @@
       6270,
       6271
     ],
-    "uvType": "MODEL_XY",
-    "uvScale": 0.80
+    "uvType": "BOX"
   },
   {
     "description": "Metal Monkeybars",
