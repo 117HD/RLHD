@@ -4223,9 +4223,10 @@
     "uvOrientation": 512
   },
   {
-    "description": "Falador - Table Boxed Legs",
+    "description": "Generic - Table Boxed Legs",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      7496,
       24086
     ],
     "uvType": "BOX",
@@ -6960,6 +6961,7 @@
       7169,
       11627,
       12892,
+      14163,
       20351,
       23066,
       24360,
