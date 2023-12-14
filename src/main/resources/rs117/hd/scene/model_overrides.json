@@ -6804,14 +6804,36 @@
     "description": "Morytania - Objects - Wooden - Crate",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      12876,
       12877,
-      12878,
       12879
     ],
     "uvType": "BOX",
     "uvScale": 1.1,
     "uvOrientationX": 512
+  },
+  {
+    "description": "Morytania - Objects - Wooden - Stacked Crate - Angled",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      12876
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.1,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512,
+    "uvOrientationY": 1212
+  },
+  {
+    "description": "Morytania - Objects - Wooden - Stacked Tri Crate - Angled ",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      12878
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.1,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512,
+    "uvOrientationY": 555
   },
   {
     "description": "Morytania - Ground  - Water - Puddles - Burugh De Rott",
