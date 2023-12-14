@@ -4293,7 +4293,6 @@
       14852,
       15684,
       17145,
-      20058,
       25603,
       39989,
       40223,
@@ -4309,6 +4308,7 @@
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       7175,
+      20058,
       23177,
       39716
     ],
@@ -4337,6 +4337,9 @@
     "description": "Ladder - Untextured",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      2796,
+      2797,
+      2833,
       4163,
       4164,
       4187,
@@ -4348,6 +4351,7 @@
       12779,
       14745,
       14746,
+      17122,
       17148,
       17149,
       17159,
@@ -5532,8 +5536,9 @@
   },
   {
     "description": "Inconspicuous Rocks",
-    "baseMaterial": "ROCK_1",
+    "baseMaterial": "ROCK_4",
     "objectIds": [
+      16023,
       28961,
       28965,
       28966,
@@ -5550,7 +5555,8 @@
       29044
     ],
     "uvType": "BOX",
-    "uvScale": 0.22
+    "uvOrientationY": 512,
+    "uvScale": 0.8
   },
   {
     "description": "Inconspicuous Crate",
@@ -7540,6 +7546,7 @@
       10491,
       12885,
       17146,
+      20065,
       24335,
       29716
     ],
