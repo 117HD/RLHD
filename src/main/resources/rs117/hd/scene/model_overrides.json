@@ -6365,18 +6365,24 @@
   },
   {
     "description": "Mortton - Objects - Stone - Funeral Pyre",
-    "baseMaterial": "STONE",
+    "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       4093
-    ]
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512
   },
   {
     "description": "Mortton - Objects - Stone - Stone Stand",
-    "baseMaterial": "STONE",
+    "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       4065
     ],
-    "uvType": "GEOMETRY"
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationY": 512,
+    "uvOrientationX": 1024,
+    "uvOrientationZ": 1024
   },
   {
     "description": "Mortton - Objects - Stone - Temple Walls",
@@ -6531,7 +6537,8 @@
       4056,
       4057
     ],
-    "uvType": "MODEL_XZ"
+    "uvType": "BOX",
+    "uvScale": 0.6
   },
   {
     "description": "Mortton - Objects - Shade Chests - Medium - Bronze",
@@ -6795,7 +6802,7 @@
   },
   {
     "description": "Morytania - Objects - Wooden - Crate",
-    "baseMaterial": "WOOD_GRAIN_2",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       12876,
       12877,
@@ -6803,7 +6810,8 @@
       12879
     ],
     "uvType": "BOX",
-    "uvScale": 0.7
+    "uvScale": 1.1,
+    "uvOrientationX": 512
   },
   {
     "description": "Morytania - Ground  - Water - Puddles - Burugh De Rott",
@@ -6910,6 +6918,7 @@
     "objectIds": [
       7169,
       11627,
+      12892,
       20351,
       23066,
       24360,
