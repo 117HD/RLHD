@@ -10330,7 +10330,40 @@
     ],
     "uvType": "BOX",
     "uvOrientation": 1536,
-    "uvScale": 0.66
+    "uvScale": 0.66,
+    "flatNormals": true
+  },
+  {
+    "description": "Moritaynia - Walls - Wooden - Plank - Rotten Plank Roof",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      5363,
+      5364,
+      5365,
+      6831
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 1536,
+    "uvScale": 0.66,
+    "flatNormals": true
+  },
+  {
+    "description": "Moritaynia - Walls - Wooden - Plank - Rotten Plank Roof - Corner",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      5366,
+      5367,
+      5368,
+      6832,
+      6833,
+      6834
+    ],
+    "uvType": "BOX",
+    "uvOrientationX": 1536,
+    "uvOrientationZ": 1536,
+    "uvOrientationY": 1024,
+    "uvScale": 0.66,
+    "flatNormals": true
   },
   {
     "description": "Moritaynia - Walls - Stone - Barrows Crypt",
