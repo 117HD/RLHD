@@ -495,6 +495,9 @@ public enum Overlay {
 		.blended(false)
 		.ids(9, 11, 13, 18)
 	),
+
+	WITCHAVEN_PATHS(p -> p.ids(106).area(Area.WITCHAVEN).groundMaterial(GroundMaterial.VARIED_DIRT)),
+
 	KHAZARD_BATTLEFIELD_COBBLE_INDOORS(11, Area.KHAZARD_BATTLEFIELD_COBBLE, GroundMaterial.VARROCK_PATHS),
 	KHAZARD_BATTLEFIELD_COBBLE_OUTSIDE(11, Area.KHAZARD_BATTLEFIELD_COBBLE_OUTSIDE, GroundMaterial.VARROCK_PATHS, p -> p
 		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_JAGGED_STONE_TILE_LIGHT_2)
