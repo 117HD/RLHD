@@ -9999,6 +9999,17 @@
     "uvOrientation": 512
   },
   {
+    "description": "Falador - Plank - Tables - Picnic Bench",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      24107
+    ],
+    "flatNormals": true,
+    "uvType": "BOX",
+    "uvOrientationY": 512,
+    "uvOrientationZ": 512
+  },
+  {
     "description": "Objects -  - Wooden - Battlements",
     "baseMaterial": "WOOD_GRAIN",
     "objectIds": [
