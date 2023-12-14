@@ -2751,7 +2751,11 @@
       10471,
       10472,
       10473,
+      12196,
+      12197,
+      12198,
       12199,
+      12200,
       13409,
       20176,
       20177,
@@ -5415,6 +5419,7 @@
       11435,
       12216,
       12217,
+      12218,
       12588,
       12591,
       12592,
@@ -12888,5 +12893,28 @@
     "retainVanillaUvs": false,
     "uvScale": 1.26,
     "uvOrientation": 512
+  },
+  {
+    "description": "Giant Mole Lair - Object - Dirt Floor",
+    "baseMaterial": "DIRT_1",
+    "objectIds": [ 12185, 12187, 12188, 12189 ]
+  },
+  {
+    "description": "Giant Mole Lair - Walls - Dirt Walls",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [ 12175, 12176, 12177, 12180, 12184, 12190, 12209, 12214, 12215 ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Giant Mole Lair - Walls - Ramp 1",
+    "baseMaterial": "DIRT_1",
+    "objectIds": [ 12206, 12207 ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Giant Mole Lair - Walls - Ramp 2",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [ 12204, 12205, 12208, 12210, 12211 ],
+    "uvType": "BOX"
   }
 ]
