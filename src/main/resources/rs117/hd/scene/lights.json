@@ -25024,24 +25024,6 @@
     ]
   },
   {
-    "description": "MAGIC_GUILD_ORBS_BLUE",
-    "height": 250,
-    "alignment": "CENTER",
-    "radius": 250,
-    "strength": 10,
-    "color": [
-      0,
-      0,
-      255
-    ],
-    "type": "PULSE",
-    "duration": 500,
-    "range": 20,
-    "objectIds": [
-      34791
-    ]
-  },
-  {
     "description": "MAGIC_GUILD_PORTALS",
     "height": 100,
     "alignment": "CENTER",
