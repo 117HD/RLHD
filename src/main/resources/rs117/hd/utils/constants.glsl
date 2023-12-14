@@ -7,8 +7,9 @@
 // Any changes here may need to be reflected in OpenCL's constants.cl
 // They are kept separate to avoid accidentally breaking OpenCL compatibility
 #define MATERIAL_INDEX_SHIFT 12
-#define MATERIAL_SHADOW_OPACITY_THRESHOLD_SHIFT 5
-#define MATERIAL_FLAG_DISABLE_SHADOW_RECEIVING 4
+#define MATERIAL_SHADOW_OPACITY_THRESHOLD_SHIFT 6
+#define MATERIAL_FLAG_DISABLE_SHADOW_RECEIVING 5
+#define MATERIAL_FLAG_UPWARDS_NORMALS 4
 #define MATERIAL_FLAG_FLAT_NORMALS 3
 #define MATERIAL_FLAG_WORLD_UVS 2
 #define MATERIAL_FLAG_VANILLA_UVS 1
@@ -38,3 +39,9 @@
 #include LEGACY_GREY_COLORS
 #include DISABLE_DIRECTIONAL_SHADING
 #include FLAT_SHADING
+#include SHADOW_MAP_OVERLAY
+
+#define LIGHT_DIRECTIONAL 0
+#define LIGHT_POINT 1
+#define LIGHT_SPOT 2 // Not supported yet, but adding for future
+#define LIGHT_AREA 3 // Also not supported yet

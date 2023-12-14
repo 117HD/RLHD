@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum SeasonalTheme {
+	AUTOMATIC,
 	SUMMER,
 	AUTUMN,
 	WINTER,

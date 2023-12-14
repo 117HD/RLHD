@@ -5,6 +5,7 @@ build
 !.idea/runConfigurations/
 !.idea/inspectionProfiles/
 !.idea/jsonSchemas.xml
+!.idea/icon.png
 .project
 .settings/
 .classpath

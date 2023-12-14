@@ -24,10 +24,17 @@
  */
 package rs117.hd.data.environments;
 
+import com.google.gson.TypeAdapter;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonToken;
+import com.google.gson.stream.JsonWriter;
+import java.io.IOException;
 import java.util.Arrays;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.coords.*;
 import rs117.hd.utils.AABB;
+import rs117.hd.utils.GsonUtils;
 
 import static rs117.hd.utils.AABB.regionBox;
 import static rs117.hd.utils.AABB.regions;
@@ -103,7 +110,7 @@ public enum Area
 	)),
 	GOBLIN_MAZE(3221 , 9660, 3307, 9602),
 	LUMBRIDGE_SWAMP_CAVES(3265, 9602, 3141, 9536),
-	TEARS_OF_GUTHIX_CAVES(12948),
+	TEARS_OF_GUTHIX(12948),
 
 	// Dorgesh-Kaan
 	DORGESHKAAN(
@@ -209,15 +216,15 @@ public enum Area
 	),
 	// Barbarian Village
 	BARBARIAN_VILLAGE_EAST_PATH_FIX(3111, 3420, 3112, 3421),
-	STRONGHOLD_OF_WAR(7505),
-	STRONGHOLD_OF_FAMINE(8017),
-	STRONGHOLD_OF_PESTILENCE(8530),
-	STRONGHOLD_OF_DEATH(9297),
+	STRONGHOLD_OF_SECURITY_WAR(7505),
+	STRONGHOLD_OF_SECURITY_FAMINE(8017),
+	STRONGHOLD_OF_SECURITY_PESTILENCE(8530),
+	STRONGHOLD_OF_SECURITY_DEATH(9297),
 	STRONGHOLD_OF_SECURITY(
-			STRONGHOLD_OF_WAR,
-			STRONGHOLD_OF_FAMINE,
-			STRONGHOLD_OF_PESTILENCE,
-			STRONGHOLD_OF_DEATH
+		STRONGHOLD_OF_SECURITY_WAR,
+		STRONGHOLD_OF_SECURITY_FAMINE,
+		STRONGHOLD_OF_SECURITY_PESTILENCE,
+		STRONGHOLD_OF_SECURITY_DEATH
 	),
 
 	// A Soul's Bane
@@ -251,7 +258,20 @@ public enum Area
 		new AABB(3097, 3374, 3119, 3353),
 		new AABB(3120, 3360, 3126, 3353)
 	),
-	DRAYNOR_MANOR(3083, 3386, 3129, 3329),
+	DRAYNOR_MANOR(
+		new AABB(3084, 3382, 3120, 3330),
+		new AABB(3121, 3377, 3125, 3330),
+		new AABB(3126, 3375, 3127, 3344),
+		new AABB(3128, 3364, 3129, 3347),
+		new AABB(3107, 3385, 3090, 3383),
+		new AABB(3087, 3329, 3123, 3323),
+		new AABB(3126, 3339, 3126, 3335)
+	),
+	DRAYNOR_MANOR_FOREST(
+		new AABB(3076, 3393, 3119, 3315),
+		new AABB(3120, 3315, 3144, 3387),
+		new AABB(3145, 3376, 3150, 3315)
+	),
 	DRAYNOR_MANOR_BASEMENT(
 		new AABB(3073, 9780, 3082, 9766)
 	),
@@ -321,6 +341,7 @@ public enum Area
 		new AABB(3115,3166)
 	),
 	WIZARD_TOWER_ROOF(new AABB(3101, 3167, 3116, 3153)),
+	WIZARD_TOWER_BASEMENT(new AABB(3094, 9579, 3122, 9554)),
 
 	// Misthalin Mystery
 	MISTHALIN_MYSTERY_MANOR(1600, 4863, 1727, 4779),
@@ -903,10 +924,11 @@ public enum Area
 		new AABB(3684, 3259, 3678, 3263),
 		new AABB(3683, 3258, 3683, 3258)
 	),
-	VER_SINHAZA(
-		new AABB(3641, 3236, 3684, 3202),
-		new AABB(2087, 4903, 2064, 4880) // cutscene
-	),
+	VER_SINHAZA_CUTSCENE(2087, 4903, 2064, 4880),
+	VER_SINHAZA(merge(
+		VER_SINHAZA_CUTSCENE,
+		new AABB(3641, 3236, 3684, 3202)
+	)),
 	MEIYERDITCH(
 		new AABB(3587, 3310, 3627, 3200),
 		new AABB(3618, 3327, 3647, 3311),
@@ -947,7 +969,6 @@ public enum Area
 	BURGH_DE_ROTT_BASEMENT(13974),
 	ABANDONED_MINE(3423, 3261, 3461, 3201),
 	GROTESQUE_GUARDIANS(6727),
-	VER_SINHAZA_CUTSCENE(2087, 4903, 2064, 4880),
 	MORYTANIA(merge(
 		new AABB(3432, 3486, 3775, 3167),
 		new AABB(3494, 3166, 3775, 3145),
@@ -1060,6 +1081,7 @@ public enum Area
 		new AABB(2758, 3591, 2790, 3586),
 		new AABB(2765, 3585, 2786, 3577)
 	),
+	FREMENNIK_SLAYER_DUNGEON(regions(10907, 10908, 11164)),
 
 	// Tirannwn
 	GWENITH(2187, 3424, 2229, 3397),
@@ -1177,7 +1199,7 @@ public enum Area
 		new AABB(1598, 3854, 1730, 3731),
 		new AABB(1730, 3731, 1623, 3710),
 		new AABB(1616, 3874, 1658, 3842),
-		new AABB(1625, 3898, 1856, 3817)
+		new AABB(1625, 3905, 1856, 3817)
 	),
 	ZEAH_SNOWY_NORTHERN_REGION(
 		new AABB(1896, 3902, 1413, 4058),
@@ -1384,6 +1406,7 @@ public enum Area
 		new AABB(2101, 3898, 2099, 3897, 1), // House 7
 		new AABB(2102, 3901, 2096, 3896, 1)  // House 7
 	),
+	LUNAR_ESSENCE_MINE(9377),
 	LUNAR_ISLE(regionBox(8252, 8509)),
 
 	// Ape Atoll
@@ -1501,9 +1524,7 @@ public enum Area
 		regionBox(14242, 14243)
 	),
 	LITHKREN(3519, 4032, 3602, 3967),
-	DS2_FLASHBACK_PLATFORM(1800, 5277, 1814, 5250),
-	DS2_FLEET_ATTACKED(regionBox(6486, 6745)),
-	DS2_SHIPS(1600, 5503, 1727, 5758),
+	DS2_SHIPS(regionBox(6486, 6745)),
 
 	// The Gauntlet
 	THE_GAUNTLET_NORMAL(new AABB(7512).onPlane(1)),
@@ -1596,42 +1617,25 @@ public enum Area
 	TOA_PATH_OF_CRONDIS_BOSS(3904, 5439, 3967, 5376),
 	TOA_PATH_OF_CRONDIS(TOA_PATH_OF_CRONDIS_PUZZLE, TOA_PATH_OF_CRONDIS_BOSS),
 
-	TOA_CRONDIS_ISLAND_1(3942, 5403, 3942, 5413),
-	TOA_CRONDIS_ISLAND_2(3941, 5400, 3926, 5416),
-	TOA_CRONDIS_ISLAND_3(3939, 5399, 3939, 5417),
-	TOA_CRONDIS_ISLAND_4(3938, 5399, 3929, 5418),
-	TOA_CRONDIS_ISLAND_5(3925, 5403, 3923, 5413),
 	TOA_CRONDIS_ISLAND(
-		TOA_CRONDIS_ISLAND_1,
-		TOA_CRONDIS_ISLAND_2,
-		TOA_CRONDIS_ISLAND_3,
-		TOA_CRONDIS_ISLAND_4,
-		TOA_CRONDIS_ISLAND_5
+		new AABB(3942, 5403, 3942, 5413),
+		new AABB(3941, 5400, 3926, 5416),
+		new AABB(3939, 5399, 3939, 5417),
+		new AABB(3938, 5399, 3929, 5418),
+		new AABB(3925, 5403, 3923, 5413)
 	),
-
 	TOA_CRONDIS_ISLAND_SUBMERGED(3944, 5402, 3943, 5415),
-
-	TOA_CRONDIS_WATER_1(3957, 5387, 3948, 5429),
-	TOA_CRONDIS_WATER_2(3947, 5389, 3943, 5427),
-	TOA_CRONDIS_WATER_3(3942, 5387, 3921, 5429),
-	TOA_CRONDIS_WATER_4(3920, 5388, 3920, 5428),
-	TOA_CRONDIS_WATER_5(3919, 5389, 3916, 5427),
-	TOA_CRONDIS_WATER_6(3915, 5390, 3915, 5426),
-	TOA_CRONDIS_WATER_7(3914, 5391, 3914, 5425),
-	TOA_CRONDIS_WATER_8(3913, 5392, 3913, 5424),
-	TOA_CRONDIS_WATER_9(3912, 5398, 3912, 5418),
-	TOA_CRONDIS_WATER_10(3911, 5399, 3906, 5417),
 	TOA_CRONDIS_WATER(
-		TOA_CRONDIS_WATER_1,
-		TOA_CRONDIS_WATER_2,
-		TOA_CRONDIS_WATER_3,
-		TOA_CRONDIS_WATER_4,
-		TOA_CRONDIS_WATER_5,
-		TOA_CRONDIS_WATER_6,
-		TOA_CRONDIS_WATER_7,
-		TOA_CRONDIS_WATER_8,
-		TOA_CRONDIS_WATER_9,
-		TOA_CRONDIS_WATER_10
+		new AABB(3957, 5387, 3948, 5429),
+		new AABB(3947, 5389, 3943, 5427),
+		new AABB(3942, 5387, 3921, 5429),
+		new AABB(3920, 5388, 3920, 5428),
+		new AABB(3919, 5389, 3916, 5427),
+		new AABB(3915, 5390, 3915, 5426),
+		new AABB(3914, 5391, 3914, 5425),
+		new AABB(3913, 5392, 3913, 5424),
+		new AABB(3912, 5398, 3912, 5418),
+		new AABB(3911, 5399, 3906, 5417)
 	),
 
 //	TOA_RED_REGION_LEFT(3456, 5311, 3519, 5248),
@@ -1721,6 +1725,10 @@ public enum Area
 		regionBox(6994, 6995)
 	),
 	LAND_OF_GOBLINS_CUTSCENE_WATER(3903, 4352, 3840, 4415),
+	SHIP_SAILING(merge(
+		regions(7242, 7243, 7499, 7500, 7755, 8011, 8012),
+		DS2_SHIPS
+	)),
 
 	WEISS_SALT_MINE(11425),
 	SECRETS_OF_THE_NORTH_DUNGEON(
@@ -1967,6 +1975,7 @@ public enum Area
 		new AABB(2576, 3012, 2652, 2997),
 		new AABB(2438, 2996, 2657, 2816)
 	),
+	CERBERUS(1216, 1216, 1406, 1343),
 	// Abyss
 	ABYSS(regions(12106, 12107, 12108, 11850, 11851, 12362, 12363)),
 
@@ -2008,13 +2017,15 @@ public enum Area
 		TREE_GNOME_STRONGHOLD_INSTANCE,
 		TUTORIAL_ISLAND_INSTANCE,
 		TYRAS_CAMP_INSTANCE,
+		SHIP_SAILING,
+		VER_SINHAZA_CUTSCENE,
 		regions(8288, 8801, 11593)
 	)),
 	OVERWORLD(
 		MAINLAND,
 		MAINLAND_EXTENSIONS
 	),
-	ALL(0, 0, Integer.MAX_VALUE, Integer.MAX_VALUE),
+	ALL(Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE),
 	NONE(0, 0, 0, 0);
 
 	public final AABB[] aabbs;
@@ -2098,5 +2109,47 @@ public enum Area
 	public boolean containsPoint(WorldPoint worldPoint)
 	{
 		return containsPoint(worldPoint.getX(), worldPoint.getY(), worldPoint.getPlane());
+	}
+
+	public boolean intersects(Area otherArea) {
+		if (otherArea == null)
+			return false;
+		for (AABB other : otherArea.aabbs)
+			for (AABB self : aabbs)
+				if (self.intersects(other))
+					return true;
+		return false;
+	}
+
+	@Slf4j
+	public static class JsonAdapter extends TypeAdapter<Area> {
+		@Override
+		public Area read(JsonReader in) throws IOException {
+			var token = in.peek();
+			if (token == JsonToken.NULL)
+				return null;
+
+			if (token != JsonToken.STRING) {
+				log.warn("Invalid type for area enum: '{}' at {}", token, GsonUtils.location(in), new Throwable());
+				return NONE;
+			}
+
+			var str = in.nextString();
+			try {
+				return Area.valueOf(str);
+			} catch (IllegalArgumentException ex) {
+				log.warn("Area enum '{}' does not exist at {}", str, GsonUtils.location(in), new Throwable());
+				return NONE;
+			}
+		}
+
+		@Override
+		public void write(JsonWriter out, Area area) throws IOException {
+			if (area == null) {
+				out.nullValue();
+			} else {
+				out.value(area.name());
+			}
+		}
 	}
 }

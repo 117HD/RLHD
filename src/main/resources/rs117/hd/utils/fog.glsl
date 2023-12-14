@@ -23,6 +23,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+#pragma once
 
 #define TILE_SIZE 128
 #define FOG_SCENE_EDGE_MIN ((    - expandedMapLoadingChunks * 8 + 1) * TILE_SIZE)
@@ -38,12 +39,14 @@ float calculateFogAmount(vec3 position) {
     if (fogDepth == 0)
         return 0.f;
 
+    float drawDistance2 = drawDistance * TILE_SIZE;
+
     // the client draws one less tile to the north and east than it does to the south
     // and west, so subtract a tile's width from the north and east edges.
-    float fogWest = max(FOG_SCENE_EDGE_MIN, cameraPos.x - drawDistance);
-    float fogEast = min(FOG_SCENE_EDGE_MAX, cameraPos.x + drawDistance - TILE_SIZE);
-    float fogSouth = max(FOG_SCENE_EDGE_MIN, cameraPos.z - drawDistance);
-    float fogNorth = min(FOG_SCENE_EDGE_MAX, cameraPos.z + drawDistance - TILE_SIZE);
+    float fogWest = max(FOG_SCENE_EDGE_MIN, cameraPos.x - drawDistance2);
+    float fogEast = min(FOG_SCENE_EDGE_MAX, cameraPos.x + drawDistance2 - TILE_SIZE);
+    float fogSouth = max(FOG_SCENE_EDGE_MIN, cameraPos.z - drawDistance2);
+    float fogNorth = min(FOG_SCENE_EDGE_MAX, cameraPos.z + drawDistance2 - TILE_SIZE);
 
     // Calculate distance from the scene edge
     float xDist = min(position.x - fogWest, fogEast - position.x);
@@ -63,19 +66,18 @@ float calculateFogAmount(vec3 position) {
     // The is super arbitrary and is only eyeballed to provide a similar overall
     // appearance between equal fog depths at different draw distances.
 
-    float fogStart1 = drawDistance * 0.85;
+    float fogStart1 = drawDistance2 * 0.85;
     float distance1 = length(cameraPos.xz - position.xz);
-    float distanceFogAmount1 = clamp((distance1 - fogStart1) / (drawDistance - fogStart1), 0, 1);
+    float distanceFogAmount1 = clamp((distance1 - fogStart1) / (drawDistance2 * .15), 0, 1);
 
     float minFogStart = 0.0;
     float maxFogStart = 0.3;
-    float drawDistance = min(drawDistance, 90 * TILE_SIZE);
-    float fogDepth2 = fogDepth * drawDistance / (TILE_SIZE * 100.0);
-    float fogDepthMultiplier = clamp(fogDepth2, 0, 1000) / 1000.0;
-    float fogStart2 = (maxFogStart - (fogDepthMultiplier * (maxFogStart - minFogStart))) * float(drawDistance);
+    drawDistance2 = min(drawDistance, 90) * TILE_SIZE;
+    float fogDepthMultiplier = clamp(fogDepth, 0, 1000) / 1000.0;
+    float fogStart2 = (maxFogStart - (fogDepthMultiplier * (maxFogStart - minFogStart))) * drawDistance2;
     float camToVertex = length(cameraPos - vec3(position.x, (position.y + cameraPos.y) / 2, position.z));
-    float distance2 = max(camToVertex - fogStart2, 0) / max(drawDistance - fogStart2, 1);
-    float density = fogDepth2 / 100.0;
+    float distance2 = max(camToVertex - fogStart2, 0) / max(drawDistance2 - fogStart2, 1);
+    float density = fogDepth / 100.0;
     float distanceFogAmount2 = 1 - clamp(exp(-distance2 * density), 0, 1);
 
     // Combine distance fogs

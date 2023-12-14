@@ -175,14 +175,14 @@ public class TextureManager {
 		return true;
 	}
 
-	public boolean ensureMaterialsAreLoaded() {
+	private void ensureMaterialsAreLoaded() {
 		if (textureArray != 0)
-			return true;
+			return;
 
 		assert vanillaTexturesAvailable();
 		var textureProvider = client.getTextureProvider();
 		Texture[] vanillaTextures = textureProvider.getTextures();
-		Material.updateMappings(vanillaTextures, config);
+		Material.updateMappings(vanillaTextures, plugin);
 
 		// Add material uniforms for all active material definitions
 		materialUniformEntries = new ArrayList<>();
@@ -342,8 +342,6 @@ public class TextureManager {
 		vanillaTextureIndexToTextureLayer = null;
 		textureProvider.setBrightness(vanillaBrightness);
 		glActiveTexture(TEXTURE_UNIT_UI);
-
-		return true;
 	}
 
 	private BufferedImage loadTextureImage(Material material) {
@@ -466,8 +464,8 @@ public class TextureManager {
 			.putFloat(m.flowMapDuration[1])
 			.putFloat(scrollSpeedX)
 			.putFloat(scrollSpeedY)
-			.putFloat(m.textureScale[0])
-			.putFloat(m.textureScale[1])
+			.putFloat(1 / m.textureScale[0])
+			.putFloat(1 / m.textureScale[1])
 			.putFloat(0).putFloat(0); // align vec4
 	}
 

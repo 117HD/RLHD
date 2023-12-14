@@ -24,11 +24,11 @@ public class ModelHash {
 	public static final int TYPE_OBJECT = 2;
 	public static final int TYPE_GROUND_ITEM = 3;
 
-	private static final long SCENE_X_MASK = 0x7f;
-	private static final long SCENE_Y_MASK = 0x7f << 7;
-	private static final long TYPE_MASK = 3L << 14;
-	private static final long ID_OR_INDEX_MASK = 0xffffffffL << 17;
-	private static final long PLANE_MASK = 3L << 49;
+	public static final long SCENE_X_MASK = 0x7f;
+	public static final long SCENE_Y_MASK = 0x7f << 7;
+	public static final long TYPE_MASK = 3L << 14;
+	public static final long ID_OR_INDEX_MASK = 0xffffffffL << 17;
+	public static final long PLANE_MASK = 3L << 49;
 
 	public static long pack(int idOrIndex, boolean rightClickable, int type, int sceneY, int sceneX) {
 		return

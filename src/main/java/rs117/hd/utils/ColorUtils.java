@@ -9,7 +9,14 @@
 
 package rs117.hd.utils;
 
+import com.google.gson.TypeAdapter;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonToken;
+import com.google.gson.stream.JsonWriter;
 import java.awt.Color;
+import java.io.IOException;
+import java.util.Arrays;
+import lombok.extern.slf4j.Slf4j;
 
 public class ColorUtils {
 	private static final float EPS = 1e-10f;
@@ -224,7 +231,7 @@ public class ColorUtils {
 	 * @return float[3] linear rgb values from 0-1
 	 */
 	public static float[] rgb(float r, float g, float b) {
-		return srgbToLinear(new float[] { r / 255f, g / 255f, b / 255f });
+		return srgbToLinear(srgb(r, g, b));
 	}
 
 	/**
@@ -234,8 +241,63 @@ public class ColorUtils {
 	 * @return float[3] linear rgb values from 0-1
 	 */
 	public static float[] rgb(String hex) {
+		return srgbToLinear(srgb(hex));
+	}
+
+	/**
+	 * Convert sRGB color packed as an int to linear RGB in the range 0-1.
+	 *
+	 * @param rgbInt RGB hex color
+	 * @return float[3] linear rgb values from 0-1
+	 */
+	public static float[] rgb(int rgbInt) {
+		return srgbToLinear(srgb(rgbInt));
+	}
+
+	/**
+	 * Convert red, green and blue in the range 0-255 from sRGB to sRGB in the range 0-1.
+	 *
+	 * @param r red color
+	 * @param g green color
+	 * @param b blue color
+	 * @return float[3] non-linear srgb values from 0-1
+	 */
+	public static float[] srgb(float r, float g, float b) {
+		return new float[] { r / 255f, g / 255f, b / 255f };
+	}
+
+	/**
+	 * Convert hex color from sRGB to sRGB in the range 0-1.
+	 *
+	 * @param hex RGB hex color
+	 * @return float[3] non-linear srgb values from 0-1
+	 */
+	public static float[] srgb(String hex) {
 		Color color = Color.decode(hex);
-		return rgb(color.getRed(), color.getGreen(), color.getBlue());
+		return srgb(color.getRed(), color.getGreen(), color.getBlue());
+	}
+
+	/**
+	 * Convert sRGB color packed as an int to sRGB in the range 0-1.
+	 *
+	 * @param rgbInt RGB hex color
+	 * @return float[3] non-linear srgb values from 0-1
+	 */
+	public static float[] srgb(int rgbInt) {
+		return new float[] {
+			(rgbInt >> 16 & 0xFF) / (float) 0xFF,
+			(rgbInt >> 8 & 0xFF) / (float) 0xFF,
+			(rgbInt & 0xFF) / (float) 0xFF,
+		};
+	}
+
+	public static float[] srgba(int argbInt) {
+		return new float[] {
+			(argbInt >> 16 & 0xFF) / (float) 0xFF,
+			(argbInt >> 8 & 0xFF) / (float) 0xFF,
+			(argbInt & 0xFF) / (float) 0xFF,
+			(argbInt >> 24 & 0xFF) / (float) 0xFF
+		};
 	}
 
 	public static int packHsl(float[] hsl) {
@@ -253,6 +315,18 @@ public class ColorUtils {
 		return new float[] { H, S, L };
 	}
 
+	public static int[] unpackHslRaw(int hsl) {
+		// 6-bit hue | 3-bit saturation | 7-bit lightness
+		int H = clamp(hsl >> 10 & 0x3F, 0, 0x3F);
+		int S = clamp(hsl >> 7 & 0x7, 0, 0x7);
+		int L = clamp(hsl & 0x7F, 0, 0x7F);
+		return new int[] { H, S, L };
+	}
+
+	public static int packHslRaw(int... hsl) {
+		return hsl[0] << 10 | hsl[1] << 7 | hsl[2];
+	}
+
 	public static int srgbToPackedHsl(float[] srgb) {
 		return packHsl(srgbToHsl(srgb));
 	}
@@ -261,12 +335,117 @@ public class ColorUtils {
 		return hslToSrgb(unpackHsl(hsl));
 	}
 
-	public static float[] unpackARGB(int argb) {
-		return new float[] {
-			(argb >> 16 & 0xFF) / (float) 0xFF,
-			(argb >> 8 & 0xFF) / (float) 0xFF,
-			(argb & 0xFF) / (float) 0xFF,
-			(argb >> 24 & 0xFF) / (float) 0xFF
-		};
+	public static int linearRgbToPackedHsl(float[] srgb) {
+		return srgbToPackedHsl(linearToSrgb(srgb));
+	}
+
+	public static float[] packedHslToLinearRgb(int hsl) {
+		return srgbToLinear(packedHslToSrgb(hsl));
+	}
+
+	@Slf4j
+	public static class SrgbAdapter extends TypeAdapter<float[]> {
+		private final float[] rgba = { 0, 0, 0, 1 };
+		private final int[] rgbaInt = { 0, 0, 0, 255 };
+
+		@Override
+		public float[] read(JsonReader in) throws IOException {
+			var token = in.peek();
+			if (token == JsonToken.STRING)
+				return ColorUtils.srgb(in.nextString());
+
+			if (token != JsonToken.BEGIN_ARRAY)
+				throw new IOException("Expected hex color code or array of color channels at " + GsonUtils.location(in));
+
+			in.beginArray();
+
+			int i = 0;
+			while (in.hasNext() && in.peek() != JsonToken.END_ARRAY) {
+				if (in.peek() == JsonToken.NULL) {
+					log.warn("Skipping null value in color array at {}", GsonUtils.location(in));
+					in.skipValue();
+					continue;
+				}
+
+				if (in.peek() == JsonToken.NUMBER) {
+					if (i > 3) {
+						log.warn("Skipping extra elements in color array at {}", GsonUtils.location(in));
+						break;
+					}
+
+					rgba[i++] = (float) in.nextDouble();
+					continue;
+				}
+
+				throw new IOException("Unexpected type in color array: " + in.peek() + " at " + GsonUtils.location(in));
+			}
+			in.endArray();
+
+			if (i < 3)
+				throw new IOException("Too few elements in color array: " + i + " at " + GsonUtils.location(in));
+
+			for (int j = 0; j < i; j++)
+				rgba[j] /= 255;
+
+			if (i == 4)
+				return rgba;
+
+			float[] rgb = new float[3];
+			System.arraycopy(rgba, 0, rgb, 0, 3);
+			return rgb;
+		}
+
+		@Override
+		public void write(JsonWriter out, float[] src) throws IOException {
+			if (src == null || src.length == 0) {
+				out.nullValue();
+				return;
+			}
+
+			if (src.length != 3 && src.length != 4)
+				throw new IOException("The number of components must be 3 or 4 in a color array. Got " + Arrays.toString(src));
+
+			for (int i = 0; i < src.length; i++)
+				rgba[i] = src[i] * 255;
+
+			// See if it can fit in a hex color code
+			boolean canfit = true;
+			for (int i = 0; i < src.length; i++) {
+				float f = rgba[i];
+				rgbaInt[i] = Math.round(f);
+				if (Math.abs(f - rgbaInt[i]) > EPS) {
+					canfit = false;
+					break;
+				}
+			}
+
+			if (canfit) {
+				// Serialize it as a hex color code
+				if (src.length == 3) {
+					out.value(String.format("#%02x%02x%02x", rgbaInt[0], rgbaInt[1], rgbaInt[2]));
+				} else {
+					out.value(String.format("#%02x%02x%02x%02x", rgbaInt[0], rgbaInt[1], rgbaInt[2], rgbaInt[3]));
+				}
+			} else {
+				out.beginArray();
+				for (int i = 0; i < src.length; i++) {
+					out.value(rgba[i]);
+				}
+				out.endArray();
+			}
+		}
+	}
+
+	@Slf4j
+	public static class SrgbToLinearAdapter extends SrgbAdapter {
+		@Override
+		public float[] read(JsonReader in) throws IOException {
+			return srgbToLinear(super.read(in));
+		}
+
+		@Override
+		public void write(JsonWriter out, float[] src) throws IOException {
+			super.write(out, linearToSrgb(src));
+		}
 	}
 }

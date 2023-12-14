@@ -41,14 +41,16 @@ import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.swing.SwingUtilities;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -100,7 +102,7 @@ import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.SceneUploader;
 import rs117.hd.scene.TextureManager;
-import rs117.hd.scene.lights.SceneLight;
+import rs117.hd.scene.lights.Light;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.scene.model_overrides.ObjectType;
 import rs117.hd.utils.ColorUtils;
@@ -108,6 +110,7 @@ import rs117.hd.utils.DeveloperTools;
 import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.Mat4;
+import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.PopupUtils;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
@@ -119,6 +122,7 @@ import static org.lwjgl.opencl.CL10.*;
 import static org.lwjgl.opengl.GL43C.*;
 import static rs117.hd.HdPluginConfig.*;
 import static rs117.hd.scene.SceneUploader.SCENE_OFFSET;
+import static rs117.hd.utils.HDUtils.PI;
 import static rs117.hd.utils.ResourcePath.path;
 
 @PluginDescriptor(
@@ -136,10 +140,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public static final String INTEL_DRIVER_URL = "https://www.intel.com/content/www/us/en/support/detect.html";
 	public static final String NVIDIA_DRIVER_URL = "https://www.nvidia.com/en-us/geforce/drivers/";
 
-	public static final int TEXTURE_UNIT_UI = GL_TEXTURE0; // default state
-	public static final int TEXTURE_UNIT_GAME = GL_TEXTURE1;
-	public static final int TEXTURE_UNIT_SHADOW_MAP = GL_TEXTURE2;
-	public static final int TEXTURE_UNIT_TILE_HEIGHT_MAP = GL_TEXTURE3;
+	public static final int TEXTURE_UNIT_BASE = GL_TEXTURE0;
+	public static final int TEXTURE_UNIT_UI = TEXTURE_UNIT_BASE; // default state
+	public static final int TEXTURE_UNIT_GAME = TEXTURE_UNIT_BASE + 1;
+	public static final int TEXTURE_UNIT_SHADOW_MAP = TEXTURE_UNIT_BASE + 2;
+	public static final int TEXTURE_UNIT_TILE_HEIGHT_MAP = TEXTURE_UNIT_BASE + 3;
 
 	public static final int UNIFORM_BLOCK_CAMERA = 0;
 	public static final int UNIFORM_BLOCK_MATERIALS = 1;
@@ -204,20 +209,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private ModelHasher modelHasher;
 
 	@Inject
-	@Named("developerMode")
-	private boolean developerMode;
-
-	@Inject
 	private DeveloperTools developerTools;
 
 	@Inject
 	private FrameTimer frameTimer;
 
 	@Inject
-	private HdPluginConfig config;
+	public HdPluginConfig config;
 
-	@Inject
-	private Gson rlGson;
 	@Getter
 	private Gson gson;
 
@@ -262,11 +261,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		.getPathOrDefault("rlhd.shader-path", () -> path(HdPlugin.class))
 		.chroot();
 
-	private int glSceneProgram;
-	private int glUiProgram;
-	private int glShadowProgram;
-	private int glModelPassthroughComputeProgram;
-	private int[] glModelSortingComputePrograms = {};
+	public int glSceneProgram;
+	public int glUiProgram;
+	public int glShadowProgram;
+	public int glModelPassthroughComputeProgram;
+	public int[] glModelSortingComputePrograms = {};
 
 	private int interfaceTexture;
 	private int interfacePbo;
@@ -383,14 +382,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private int uniBlockWaterTypes;
 	private int uniBlockPointLights;
 
-	// Animation things
-	private long lastFrameTime;
-
-	// Generic scalable animation timer used in shaders
-	private float elapsedTime;
-
-	private int gameTicksUntilSceneReload = 0;
-
 	// Configs used frequently enough to be worth caching
 	public boolean configGroundTextures;
 	public boolean configGroundBlending;
@@ -405,17 +396,17 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public boolean configShadowsEnabled;
 	public boolean configExpandShadowDraw;
 	public boolean configUseFasterModelHashing;
-	public boolean configRetainVanillaShading;
-	public boolean configUndoVanillaShadingInCompute;
-	public boolean configUndoVanillaShadingOnCpu;
+	public boolean configUndoVanillaShading;
 	public boolean configPreserveVanillaNormals;
 	public ShadowMode configShadowMode;
 	public SeasonalTheme configSeasonalTheme;
 	public int configMaxDynamicLights;
 
-	public boolean enableDetailedTimers;
 	public boolean useLowMemoryMode;
+	public boolean enableDetailedTimers;
+	public boolean enableShadowMapOverlay;
 
+	private boolean isActive;
 	private boolean lwjglInitialized;
 	private boolean hasLoggedIn;
 	private boolean redrawPreviousFrame;
@@ -424,6 +415,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private Scene skipScene;
 	private int previousPlane;
 
+	private final ConcurrentHashMap.KeySetView<String, ?> pendingConfigChanges = ConcurrentHashMap.newKeySet();
 	private final Map<Long, ModelOffsets> frameModelInfoMap = new HashMap<>();
 
 	// Camera position and orientation may be reused from the old scene while hopping, prior to drawScene being called
@@ -432,6 +424,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public final int[] cameraFocalPoint = new int[2];
 	public final int[] cameraShift = new int[2];
 
+	public float deltaTime;
+	public float elapsedTime;
+	public float deltaClientTime;
+	public float elapsedClientTime;
+	private long lastFrameTimeMillis;
+	private float lastFrameClientTime;
+	private int gameTicksUntilSceneReload = 0;
 	public int visibleLightCount;
 
 	@Provides
@@ -441,7 +440,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Override
 	protected void startUp() {
-		gson = rlGson.newBuilder().setLenient().create();
+		gson = injector.getInstance(Gson.class).newBuilder().setLenient().create();
 
 		clientThread.invoke(() -> {
 			try {
@@ -453,14 +452,19 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				fboShadowMap = 0;
 				numPassthroughModels = 0;
 				numModelsToSort = null;
+				deltaTime = 0;
 				elapsedTime = 0;
-				lastFrameTime = 0;
+				deltaClientTime = 0;
+				elapsedClientTime = 0;
+				lastFrameTimeMillis = 0;
+				lastFrameClientTime = 0;
 				visibleLightCount = 0;
 
 				AWTContext.loadNatives();
 				canvas = client.getCanvas();
 
 				synchronized (canvas.getTreeLock()) {
+					// Delay plugin startup until the client's canvas is valid
 					if (!canvas.isValid())
 						return false;
 
@@ -530,11 +534,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				}
 
 				updateCachedConfigs();
-
-				if (developerMode) {
-					developerTools.activate();
-					enableDetailedTimers = true;
-				}
+				developerTools.activate();
 
 				modelPassthroughBuffer = new GpuIntBuffer();
 
@@ -574,7 +574,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 				modelPusher.startUp();
 				lightManager.startUp();
+				environmentManager.startUp();
 
+				isActive = true;
 				hasLoggedIn = client.getGameState().getState() > GameState.LOGGING_IN.getState();
 				redrawPreviousFrame = false;
 				skipScene = null;
@@ -601,6 +603,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Override
 	protected void shutDown() {
+		isActive = false;
 		FileWatcher.destroy();
 
 		clientThread.invoke(() -> {
@@ -613,15 +616,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			client.setUnlockedFps(false);
 			client.setExpandedMapLoading(0);
 
-			if (developerMode)
-				developerTools.deactivate();
-
+			developerTools.deactivate();
 			modelPusher.shutDown();
 			modelOverrideManager.shutDown();
 			lightManager.shutDown();
-			environmentManager.reset();
+			environmentManager.shutDown();
 
 			if (lwjglInitialized) {
+				lwjglInitialized = false;
 				waitUntilIdle();
 
 				textureManager.shutDown();
@@ -683,6 +685,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		shutDown();
 	}
 
+	public void restartPlugin() {
+		// For some reason, it's necessary to delay this like below to prevent the canvas from locking up on Linux
+		SwingUtilities.invokeLater(() -> clientThread.invokeLater(() -> {
+			shutDown();
+			startUp();
+		}));
+	}
+
 	private String generateFetchCases(String array, int from, int to)
 	{
 		int length = to - from;
@@ -729,9 +739,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	private void initPrograms() throws ShaderException, IOException
 	{
-		configShadowMode = config.shadowMode();
-		configShadowsEnabled = configShadowMode != ShadowMode.OFF;
-
 		String versionHeader = OSType.getOSType() == OSType.Linux ? LINUX_VERSION_HEADER : WINDOWS_VERSION_HEADER;
 		Template template = new Template()
 			.addInclude("VERSION_HEADER", versionHeader)
@@ -761,10 +768,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.define("SHADOW_MODE", configShadowMode)
 			.define("SHADOW_TRANSPARENCY", config.enableShadowTransparency())
 			.define("VANILLA_COLOR_BANDING", config.vanillaColorBanding())
-			.define("UNDO_VANILLA_SHADING", configUndoVanillaShadingInCompute)
+			.define("UNDO_VANILLA_SHADING", configUndoVanillaShading)
 			.define("LEGACY_GREY_COLORS", configLegacyGreyColors)
 			.define("DISABLE_DIRECTIONAL_SHADING", config.shadingMode() != ShadingMode.DEFAULT)
 			.define("FLAT_SHADING", config.flatShading())
+			.define("SHADOW_MAP_OVERLAY", enableShadowMapOverlay)
 			.addIncludePath(SHADER_PATH);
 
 		glSceneProgram = PROGRAM.compile(template);
@@ -801,8 +809,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		// Bind texture samplers before validating, else the validation fails
 		glUseProgram(glSceneProgram);
-		glUniform1i(uniTextureArray, 1);
-		glUniform1i(uniShadowMap, 2);
+		glUniform1i(uniTextureArray, TEXTURE_UNIT_GAME - TEXTURE_UNIT_BASE);
+		glUniform1i(uniShadowMap, TEXTURE_UNIT_SHADOW_MAP - TEXTURE_UNIT_BASE);
 
 		// Bind a VOA, else validation may fail on older Intel-based Macs
 		glBindVertexArray(vaoSceneHandle);
@@ -815,7 +823,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		}
 
 		glUseProgram(glUiProgram);
-		glUniform1i(uniUiTexture, 0);
+		glUniform1i(uniUiTexture, TEXTURE_UNIT_UI - TEXTURE_UNIT_BASE);
 
 		glUseProgram(0);
 	}
@@ -880,8 +888,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				int uniShadowBlockMaterials = glGetUniformBlockIndex(glShadowProgram, "MaterialUniforms");
 				int uniShadowTextureArray = glGetUniformLocation(glShadowProgram, "textureArray");
 				glUseProgram(glShadowProgram);
-				glUniform1i(uniShadowTextureArray, 1);
-				glUniformBlockBinding(glShadowProgram, uniShadowBlockMaterials, 1);
+				glUniform1i(uniShadowTextureArray, TEXTURE_UNIT_GAME - TEXTURE_UNIT_BASE);
+				glUniformBlockBinding(glShadowProgram, uniShadowBlockMaterials, UNIFORM_BLOCK_MATERIALS);
 				uniShadowElapsedTime = glGetUniformLocation(glShadowProgram, "elapsedTime");
 				uniShadowCameraPos = glGetUniformLocation(glShadowProgram, "cameraPos");
 				// fall-through
@@ -922,7 +930,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	public void recompilePrograms() throws ShaderException, IOException {
-		waitUntilIdle();
+		// Avoid recompiling if we haven't already compiled once
+		if (glSceneProgram == 0)
+			return;
+
 		destroyPrograms();
 		initPrograms();
 	}
@@ -1425,16 +1436,16 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (sceneContext.scene == scene) {
 			// Update lights UBO
 			uniformBufferLights.clear();
-			ArrayList<SceneLight> visibleLights = lightManager.getVisibleLights(configMaxDynamicLights);
+			ArrayList<Light> visibleLights = lightManager.getVisibleLights(configMaxDynamicLights);
 			visibleLightCount = visibleLights.size();
-			for (SceneLight light : visibleLights) {
+			for (Light light : visibleLights) {
 				uniformBufferLights.putFloat(light.x + cameraShift[0]);
 				uniformBufferLights.putFloat(light.z);
 				uniformBufferLights.putFloat(light.y + cameraShift[1]);
-				uniformBufferLights.putFloat(light.currentSize * light.currentSize);
-				uniformBufferLights.putFloat(light.currentColor[0] * light.currentStrength);
-				uniformBufferLights.putFloat(light.currentColor[1] * light.currentStrength);
-				uniformBufferLights.putFloat(light.currentColor[2] * light.currentStrength);
+				uniformBufferLights.putFloat(light.radius * light.radius);
+				uniformBufferLights.putFloat(light.color[0] * light.strength);
+				uniformBufferLights.putFloat(light.color[1] * light.strength);
+				uniformBufferLights.putFloat(light.color[2] * light.strength);
 				uniformBufferLights.putFloat(0); // pad
 			}
 			uniformBufferLights.flip();
@@ -1610,6 +1621,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			log.info("Recompiling shaders: {}", path);
 			clientThread.invoke(() -> {
 				try {
+					waitUntilIdle();
 					recompilePrograms();
 				} catch (ShaderException | IOException ex) {
 					log.error("Error while recompiling shaders:", ex);
@@ -1719,27 +1731,26 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			return;
 		}
 
-		// reset the plugin if the last frame took >1min to draw
-		// why? because the user's computer was probably suspended and the buffers are no longer valid
-		if (lastFrameTime > 0) {
-			if (System.currentTimeMillis() - lastFrameTime > 300000) {
-				log.debug("resetting the plugin after probable OS suspend");
-				shutDown();
-				startUp();
+		if (lastFrameTimeMillis > 0) {
+			deltaTime = (float) ((System.currentTimeMillis() - lastFrameTimeMillis) / 1000.);
+
+			// Restart the plugin to avoid potential buffer corruption if the computer has likely resumed from suspension
+			if (deltaTime > 300) {
+				log.debug("Restarting the plugin after probable OS suspend ({} second delta)", deltaTime);
+				restartPlugin();
 				return;
 			}
 
-			// shader variables for water, lava animations
-			long frameDeltaTime = System.currentTimeMillis() - lastFrameTime;
-			// if system time changes dramatically between frames,
-			// very large values may be added to elapsedTime,
-			// which causes floating point precision to break down,
-			// leading to texture animations and water appearing frozen
-			if (Math.abs(frameDeltaTime) > 10000)
-				frameDeltaTime = 16;
-			elapsedTime += frameDeltaTime / 1000f;
+			// If system time changes between frames, clamp the delta to a more sensible value
+			if (Math.abs(deltaTime) > 10)
+				deltaTime = 1 / 60.f;
+			elapsedTime += deltaTime;
+
+			// The client delta doesn't need clamping
+			deltaClientTime = elapsedClientTime - lastFrameClientTime;
 		}
-		lastFrameTime = System.currentTimeMillis();
+		lastFrameTimeMillis = System.currentTimeMillis();
+		lastFrameClientTime = elapsedClientTime;
 
 		final int canvasHeight = client.getCanvasHeight();
 		final int canvasWidth = client.getCanvasWidth();
@@ -1750,8 +1761,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			// Fixes: https://github.com/runelite/runelite/issues/12930
 			// Gracefully Handle loss of opengl buffers and context
 			log.warn("prepareInterfaceTexture exception", ex);
-			shutDown();
-			startUp();
+			restartPlugin();
 			return;
 		}
 
@@ -1804,10 +1814,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 			glBindVertexArray(vaoSceneHandle);
 
-			float lightPitch = (float) Math.toRadians(environmentManager.currentLightPitch);
-			float lightYaw = (float) Math.toRadians(environmentManager.currentLightYaw);
-			float[] lightViewMatrix = Mat4.rotateX(lightPitch);
-			Mat4.mul(lightViewMatrix, Mat4.rotateY(-lightYaw));
+			float[] lightViewMatrix = Mat4.rotateX(PI + environmentManager.currentSunAngles[0]);
+			Mat4.mul(lightViewMatrix, Mat4.rotateY(PI - environmentManager.currentSunAngles[1]));
 
 			float[] lightProjectionMatrix = Mat4.identity();
 			if (configShadowsEnabled && fboShadowMap != 0 && environmentManager.currentDirectionalStrength > 0) {
@@ -1931,17 +1939,18 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			float fogDepth = 0;
 			switch (config.fogDepthMode()) {
 				case USER_DEFINED:
-					fogDepth = config.fogDepth() * 10;
+					fogDepth = config.fogDepth();
 					break;
 				case DYNAMIC:
 					fogDepth = environmentManager.currentFogDepth;
 					break;
 			}
+			fogDepth *= Math.min(getDrawDistance(), 90) / 10.f;
 			glUniform1i(uniUseFog, fogDepth > 0 ? 1 : 0);
 			glUniform1f(uniFogDepth, fogDepth);
 			glUniform3fv(uniFogColor, fogColor);
 
-			glUniform1i(uniDrawDistance, getDrawDistance() * LOCAL_TILE_SIZE);
+			glUniform1f(uniDrawDistance, getDrawDistance());
 			glUniform1i(uniExpandedMapLoadingChunks, sceneContext.expandedMapLoadingChunks);
 			glUniform1f(uniColorBlindnessIntensity, config.colorBlindnessIntensity() / 100.f);
 
@@ -2069,8 +2078,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				// Reset
 				glBindFramebuffer(GL_READ_FRAMEBUFFER, awtContext.getFramebuffer(false));
 			}
-
-			frameModelInfoMap.clear();
 		} else {
 			glClearColor(0, 0, 0, 1f);
 			glClear(GL_COLOR_BUFFER_BIT);
@@ -2097,8 +2104,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
 
 		frameTimer.endFrameAndReset();
-
+		frameModelInfoMap.clear();
 		checkGLErrors();
+
+		// Process pending config changes after the EDT is done with any pending work, which could include further config changes
+		SwingUtilities.invokeLater(this::processPendingConfigChanges);
 	}
 
 	private void drawUi(int overlayColor, final int canvasHeight, final int canvasWidth) {
@@ -2117,7 +2127,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		glUseProgram(glUiProgram);
 		glUniform2i(uniTexSourceDimensions, canvasWidth, canvasHeight);
 		glUniform1f(uniUiColorBlindnessIntensity, config.colorBlindnessIntensity() / 100f);
-		glUniform4fv(uniUiAlphaOverlay, ColorUtils.unpackARGB(overlayColor));
+		glUniform4fv(uniUiAlphaOverlay, ColorUtils.srgba(overlayColor));
 
 		if (client.isStretchedEnabled()) {
 			Dimension dim = client.getStretchedDimensions();
@@ -2213,6 +2223,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	public void reuploadScene() {
 		assert client.isClientThread() : "Loading a scene is unsafe while the client can modify it";
+		if (client.getGameState().getState() < GameState.LOGGED_IN.getState())
+			return;
 		Scene scene = client.getScene();
 		loadScene(scene);
 		if (skipScene == scene)
@@ -2252,7 +2264,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				nextSceneContext = context;
 				proceduralGenerator.generateSceneData(context);
 				environmentManager.loadSceneEnvironments(context);
-				lightManager.loadSceneLights(context);
 				sceneUploader.upload(context);
 			}
 		} catch (OutOfMemoryError oom) {
@@ -2274,15 +2285,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			return;
 		}
 
+		// If the scene wasn't loaded by a call to loadScene, load it synchronously instead
 		if (nextSceneContext == null) {
-			if (useLowMemoryMode) {
-				// Load the scene synchronously on the client thread, so we can reuse the old scene context
-				loadSceneInternal(scene);
-			} else {
-				log.error("No new scene to swap to", new Throwable());
-				stopPlugin();
-				return;
-			}
+			loadSceneInternal(scene);
+			if (nextSceneContext == null)
+				return; // Return early if scene loading failed
 		}
 
 		if (computeMode == ComputeMode.OPENCL) {
@@ -2291,19 +2298,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			initTileHeightMap(scene);
 		}
 
-		if (sceneContext != null) {
-			// Copy over NPC and projectile lights
-			for (SceneLight light : sceneContext.lights)
-				if (light.npc != null || light.projectile != null)
-					nextSceneContext.lights.add(light);
+		lightManager.loadSceneLights(nextSceneContext, sceneContext);
 
+		if (sceneContext != null)
 			sceneContext.destroy();
-		}
-
-		if (nextSceneContext == null)
-			return;
 		sceneContext = nextSceneContext;
 		nextSceneContext = null;
+		assert sceneContext != null;
 
 		// Gaps need to be filled in swapScene, since map regions aren't updated earlier
 		if (config.fillGapsInTerrain())
@@ -2376,6 +2377,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	private void updateCachedConfigs() {
+		configShadowMode = config.shadowMode();
+		configShadowsEnabled = configShadowMode != ShadowMode.OFF;
 		configGroundTextures = config.groundTextures();
 		configGroundBlending = config.groundBlending();
 		configModelTextures = config.modelTextures();
@@ -2389,103 +2392,163 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		configMaxDynamicLights = config.maxDynamicLights().getValue();
 		configExpandShadowDraw = config.expandShadowDraw();
 		configUseFasterModelHashing = config.fasterModelHashing();
-		configUndoVanillaShadingInCompute = config.undoVanillaShadingInCompute();
+		configUndoVanillaShading = config.shadingMode() != ShadingMode.VANILLA;
 		configPreserveVanillaNormals = config.preserveVanillaNormals();
 		configSeasonalTheme = config.seasonalTheme();
-		configRetainVanillaShading = config.shadingMode() == ShadingMode.VANILLA;
-		if (configRetainVanillaShading) {
-			// Disable shading reversal entirely
-			configUndoVanillaShadingOnCpu = false;
-			configUndoVanillaShadingInCompute = false;
-		} else {
-			// Do shading reversal on CPU if it's not being done in compute
-			configUndoVanillaShadingOnCpu = !configUndoVanillaShadingInCompute;
+
+		if (configSeasonalTheme == SeasonalTheme.AUTOMATIC) {
+			var time = ZonedDateTime.now(ZoneOffset.UTC);
+			switch (time.getMonth()) {
+				case SEPTEMBER:
+				case OCTOBER:
+				case NOVEMBER:
+					configSeasonalTheme = SeasonalTheme.AUTUMN;
+					break;
+				case DECEMBER:
+				case JANUARY:
+				case FEBRUARY:
+					configSeasonalTheme = SeasonalTheme.WINTER;
+					break;
+				default:
+					configSeasonalTheme = SeasonalTheme.SUMMER;
+					break;
+			}
 		}
 	}
 
 	@Subscribe
 	public void onConfigChanged(ConfigChanged event) {
-		if (!event.getGroup().equals(CONFIG_GROUP))
+		// Exit if the plugin is off, the config is unrelated to the plugin, or if switching to a profile with the plugin turned off
+		if (!isActive || !event.getGroup().equals(CONFIG_GROUP) || !pluginManager.isPluginEnabled(this))
 			return;
 
+		pendingConfigChanges.add(event.getKey());
+	}
+
+	private void processPendingConfigChanges() {
 		clientThread.invoke(() -> {
-			if (!lwjglInitialized)
-				return; // exit if the plugin has stopped
+			if (pendingConfigChanges.isEmpty())
+				return;
 
 			try {
 				updateCachedConfigs();
 
-				switch (event.getKey()) {
-					case KEY_EXPANDED_MAP_LOADING_CHUNKS:
-						client.setExpandedMapLoading(getExpandedMapLoadingChunks());
-						if (client.getGameState() == GameState.LOGGED_IN)
-							client.setGameState(GameState.LOADING);
-						break;
-					case KEY_COLOR_BLINDNESS:
-					case KEY_MACOS_INTEL_WORKAROUND:
-					case KEY_MAX_DYNAMIC_LIGHTS:
-					case KEY_NORMAL_MAPPING:
-					case KEY_PARALLAX_OCCLUSION_MAPPING:
-					case KEY_UI_SCALING_MODE:
-					case KEY_VANILLA_COLOR_BANDING:
-						recompilePrograms();
-						break;
-					case KEY_SHADOW_MODE:
-					case KEY_SHADOW_TRANSPARENCY:
-						recompilePrograms();
-						// fall-through
-					case KEY_SHADOW_RESOLUTION:
-						destroyShadowMapFbo();
-						initShadowMapFbo();
-						break;
-					case KEY_ATMOSPHERIC_LIGHTING:
-						environmentManager.reset();
-						break;
-					case KEY_SEASONAL_THEME:
-						environmentManager.triggerTransition();
-						modelOverrideManager.reload();
-						// fall-through
-					case KEY_ANISOTROPIC_FILTERING_LEVEL:
-					case KEY_GROUND_TEXTURES:
-					case KEY_MODEL_TEXTURES:
-					case KEY_TEXTURE_RESOLUTION:
-					case KEY_HD_INFERNAL_CAPE:
-						textureManager.reloadTextures();
-						// fall-through
-					case KEY_GROUND_BLENDING:
-					case KEY_FILL_GAPS_IN_TERRAIN:
-					case KEY_HD_TZHAAR_RESKIN:
-					case KEY_HIDE_FAKE_SHADOWS:
-						modelPusher.clearModelCache();
-						reuploadScene();
-						break;
-					case KEY_LEGACY_GREY_COLORS:
-					case KEY_UNDO_VANILLA_SHADING_IN_COMPUTE:
-					case KEY_PRESERVE_VANILLA_NORMALS:
-					case KEY_SHADING_MODE:
-					case KEY_FLAT_SHADING:
-						recompilePrograms();
-						modelPusher.clearModelCache();
-						reuploadScene();
-						break;
-					case KEY_FPS_TARGET:
-					case KEY_UNLOCK_FPS:
-					case KEY_VSYNC_MODE:
-						setupSyncMode();
-						break;
-					case KEY_MODEL_CACHE_SIZE:
-					case KEY_MODEL_CACHING:
-						modelPusher.shutDown();
-						modelPusher.startUp();
-						break;
-					case KEY_LOW_MEMORY_MODE:
-						shutDown();
-						startUp();
-						break;
+				log.debug("Processing {} pending config changes: {}", pendingConfigChanges.size(), pendingConfigChanges);
+
+				boolean recompilePrograms = false;
+				boolean recreateShadowMapFbo = false;
+				boolean environmentManagerReload = false;
+				boolean modelOverrideManagerReload = false;
+				boolean reloadTexturesAndMaterials = false;
+				boolean modelPusherClearModelCache = false;
+				boolean modelPusherReallocate = false;
+				boolean reuploadScene = false;
+
+				for (var key : pendingConfigChanges) {
+					switch (key) {
+						case KEY_EXPANDED_MAP_LOADING_CHUNKS:
+							client.setExpandedMapLoading(getExpandedMapLoadingChunks());
+							if (client.getGameState() == GameState.LOGGED_IN)
+								client.setGameState(GameState.LOADING);
+							break;
+						case KEY_COLOR_BLINDNESS:
+						case KEY_MACOS_INTEL_WORKAROUND:
+						case KEY_MAX_DYNAMIC_LIGHTS:
+						case KEY_NORMAL_MAPPING:
+						case KEY_PARALLAX_OCCLUSION_MAPPING:
+						case KEY_UI_SCALING_MODE:
+						case KEY_VANILLA_COLOR_BANDING:
+							recompilePrograms = true;
+							break;
+						case KEY_SHADOW_MODE:
+						case KEY_SHADOW_TRANSPARENCY:
+							recompilePrograms = true;
+							// fall-through
+						case KEY_SHADOW_RESOLUTION:
+							recreateShadowMapFbo = true;
+							break;
+						case KEY_ATMOSPHERIC_LIGHTING:
+							environmentManagerReload = true;
+							break;
+						case KEY_SEASONAL_THEME:
+							environmentManagerReload = true;
+							modelOverrideManagerReload = true;
+							// fall-through
+						case KEY_ANISOTROPIC_FILTERING_LEVEL:
+						case KEY_GROUND_TEXTURES:
+						case KEY_MODEL_TEXTURES:
+						case KEY_TEXTURE_RESOLUTION:
+						case KEY_HD_INFERNAL_CAPE:
+							reloadTexturesAndMaterials = true;
+							// fall-through
+						case KEY_GROUND_BLENDING:
+						case KEY_FILL_GAPS_IN_TERRAIN:
+						case KEY_HD_TZHAAR_RESKIN:
+						case KEY_HIDE_FAKE_SHADOWS:
+							modelPusherClearModelCache = true;
+							reuploadScene = true;
+							break;
+						case KEY_LEGACY_GREY_COLORS:
+						case KEY_PRESERVE_VANILLA_NORMALS:
+						case KEY_SHADING_MODE:
+						case KEY_FLAT_SHADING:
+							recompilePrograms = true;
+							modelPusherClearModelCache = true;
+							reuploadScene = true;
+							break;
+						case KEY_FPS_TARGET:
+						case KEY_UNLOCK_FPS:
+						case KEY_VSYNC_MODE:
+							setupSyncMode();
+							break;
+						case KEY_MODEL_CACHE_SIZE:
+						case KEY_MODEL_CACHING:
+							modelPusherReallocate = true;
+							break;
+						case KEY_LOW_MEMORY_MODE:
+							restartPlugin();
+							// since we'll be restarting the plugin anyway, skip pending changes
+							return;
+					}
 				}
-			} catch (ShaderException | IOException ex) {
+
+				if (reloadTexturesAndMaterials || recompilePrograms)
+					waitUntilIdle();
+
+				if (reloadTexturesAndMaterials) {
+					textureManager.reloadTextures();
+					recompilePrograms = true;
+					modelPusherClearModelCache = true;
+				} else if (modelOverrideManagerReload) {
+					modelOverrideManager.reload();
+					modelPusherClearModelCache = true;
+				}
+
+				if (recompilePrograms)
+					recompilePrograms();
+
+				if (modelPusherReallocate) {
+					modelPusher.shutDown();
+					modelPusher.startUp();
+				} else if (modelPusherClearModelCache) {
+					modelPusher.clearModelCache();
+				}
+
+				if (reuploadScene)
+					reuploadScene();
+
+				if (recreateShadowMapFbo) {
+					destroyShadowMapFbo();
+					initShadowMapFbo();
+				}
+
+				if (environmentManagerReload)
+					environmentManager.triggerTransition();
+			} catch (Throwable ex) {
 				log.error("Error while changing settings:", ex);
 				stopPlugin();
+			} finally {
+				pendingConfigChanges.clear();
 			}
 		});
 	}
@@ -2555,9 +2618,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				y += ProceduralGenerator.DEPTH_LEVEL_SLOPE[depthLevel - 1] - GROUND_MIN_Y;
 		}
 
-		x -= cameraPosition[0];
-		y -= cameraPosition[1];
-		z -= cameraPosition[2];
+		x -= (int) cameraPosition[0];
+		y -= (int) cameraPosition[1];
+		z -= (int) cameraPosition[2];
 
 		int radius = 96; // ~ 64 * sqrt(2)
 
@@ -2710,7 +2773,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		eightIntWrite[6] = y + client.getCameraY2();
 		eightIntWrite[7] = z + client.getCameraZ2();
 
-		int faceCount;
+		int faceCount = 0;
 		if (sceneContext.id == (offsetModel.getSceneId() & SceneUploader.SCENE_ID_MASK)) {
 			// The model is part of the static scene buffer
 			assert model == renderable;
@@ -2752,18 +2815,29 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				if (enableDetailedTimers)
 					frameTimer.begin(Timer.MODEL_PUSHING);
 
+				if (renderable instanceof DynamicObject) {
+					var def = client.getObjectDefinition(ModelHash.getIdOrIndex(hash));
+					if (def.getImpostorIds() != null) {
+						var impostor = def.getImpostor();
+						if (impostor != null)
+							hash = hash & ~ModelHash.ID_OR_INDEX_MASK | (long) impostor.getId() << 17;
+					}
+				}
+
 				int vertexOffset = dynamicOffsetVertices + sceneContext.getVertexOffset();
 				int uvOffset = dynamicOffsetUvs + sceneContext.getUvOffset();
 				ModelOverride modelOverride = modelOverrideManager.getOverride(hash, HDUtils.cameraSpaceToWorldPoint(client, x, z));
-				modelPusher.pushModel(sceneContext, null, hash, model, modelOverride, ObjectType.NONE, 0, true);
+				if (modelOverride.hide) {
+					vertexOffset = -1;
+				} else {
+					modelPusher.pushModel(sceneContext, null, hash, model, modelOverride, ObjectType.NONE, 0, true);
+					faceCount = sceneContext.modelPusherResults[0];
+					if (sceneContext.modelPusherResults[1] == 0)
+						uvOffset = -1;
+				}
+
 				if (enableDetailedTimers)
 					frameTimer.end(Timer.MODEL_PUSHING);
-
-				faceCount = sceneContext.modelPusherResults[0];
-				if (faceCount == 0)
-					vertexOffset = -1;
-				if (sceneContext.modelPusherResults[1] == 0)
-					uvOffset = -1;
 
 				eightIntWrite[0] = vertexOffset;
 				eightIntWrite[1] = uvOffset;
@@ -2775,6 +2849,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			}
 		}
 
+		if (enableDetailedTimers)
+			frameTimer.end(Timer.DRAW_RENDERABLE);
+
 		if (eightIntWrite[0] == -1)
 			return; // Hidden model
 
@@ -2782,9 +2859,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.ensureCapacity(8)
 			.put(eightIntWrite);
 		renderBufferOffset += faceCount * 3;
-
-		if (enableDetailedTimers)
-			frameTimer.end(Timer.DRAW_RENDERABLE);
 	}
 
 	/**
@@ -2958,6 +3032,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Subscribe
 	public void onClientTick(ClientTick clientTick) {
+		elapsedClientTime += 1 / 50f;
+
 		if (skipScene != client.getScene())
 			redrawPreviousFrame = false;
 	}

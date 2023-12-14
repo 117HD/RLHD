@@ -8,7 +8,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import rs117.hd.scene.LightManager;
-import rs117.hd.scene.lights.Light;
+import rs117.hd.scene.lights.LightDefinition;
 
 import static org.junit.Assert.assertEquals;
 import static rs117.hd.utils.ResourcePath.path;
@@ -35,10 +35,10 @@ public class LightConfigTest {
     public void testLoad() {
 		Gson gson = new GsonBuilder().setLenient().create();
 		LightManager lightManager = new LightManager();
-		lightManager.loadConfig(gson, path(LightConfigTest.class, "lights.json"));
+		lightManager.loadConfig(gson, path(LightConfigTest.class, "lights.json"), true);
 
         // can we get the same light for both of its raw IDs?
-        Light spitRoastLight = lightManager.OBJECT_LIGHTS.get(5608).get(0);
+		LightDefinition spitRoastLight = lightManager.OBJECT_LIGHTS.get(5608).get(0);
         assertEquals(spitRoastLight, lightManager.OBJECT_LIGHTS.get(4267).get(0));
 
         // is its data correct?
