@@ -426,6 +426,9 @@ public enum Overlay {
 		p -> p.area(Area.KEEP_LE_FAYE_INSTANCE).blended(false).ids(120)
 	),
 
+	// Seers Exterior
+	SEERS_CHURCH_DIRT_OVERLAY(p -> p.ids(14).area(Area.SEERS_CHURCH_EXTERIOR).groundMaterial(GroundMaterial.DIRT).seasonalReplacement(SeasonalTheme.WINTER, WINTER_DIRT)),
+
 	// Catherby
 	CATHERBY_BEACH_OBELISK_WATER_FIX(6, Area.CATHERBY_BEACH_OBELISK_WATER_FIX, WaterType.WATER_FLAT),
 	CATHERBY_BEACH_LADDER_FIX(11, Area.CATHERBY_BEACH_LADDER_FIX, GroundMaterial.NONE, p -> p.blended(false)),
