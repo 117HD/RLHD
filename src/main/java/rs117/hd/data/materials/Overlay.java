@@ -658,6 +658,7 @@ public enum Overlay {
 		.area(Area.DRAYNOR_MANOR)
 		.ids(2, 90, 117, 120, 127, 132)
 		.groundMaterial(GroundMaterial.VARROCK_PATHS)
+		.seasonalReplacement(SeasonalTheme.WINTER,WINTER_JAGGED_STONE_TILE)
 	),
 
 
