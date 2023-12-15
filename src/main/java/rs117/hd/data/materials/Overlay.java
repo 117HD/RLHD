@@ -47,10 +47,7 @@ public enum Overlay {
 	WINTER_GRASS(p -> p.ids().groundMaterial(GroundMaterial.SNOW_1).hue(0).saturation(0).shiftLightness(40).blended(true)),
 	WINTER_DIRT(p -> p.ids().groundMaterial(GroundMaterial.SNOW_2).hue(0).saturation(0).shiftLightness(40).blended(true)),
 	WINTER_GRAVEL(p -> p.ids().groundMaterial(GroundMaterial.WINTER_GRAVEL).shiftSaturation(-2).shiftLightness(16).blended(true)),
-	WINTER_JAGGED_STONE_TILE(p -> p
-		.ids()
-		.groundMaterial(GroundMaterial.WINTER_JAGGED_STONE_TILE)
-	),
+	WINTER_JAGGED_STONE_TILE(p -> p.ids().groundMaterial(GroundMaterial.WINTER_JAGGED_STONE_TILE).hue(0).saturation(0).blended(true)),
 	WINTER_JAGGED_STONE_TILE_LIGHT(p -> p
 		.ids()
 		.groundMaterial(GroundMaterial.WINTER_JAGGED_STONE_TILE_LIGHT)
