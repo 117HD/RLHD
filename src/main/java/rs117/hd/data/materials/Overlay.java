@@ -46,6 +46,7 @@ public enum Overlay {
 	// Winter Theme fixes
 	WINTER_GRASS(p -> p.ids().groundMaterial(GroundMaterial.SNOW_1).hue(0).saturation(0).shiftLightness(40).blended(true)),
 	WINTER_DIRT(p -> p.ids().groundMaterial(GroundMaterial.SNOW_2).hue(0).saturation(0).shiftLightness(40).blended(true)),
+	WINTER_GRAVEL(p -> p.ids().groundMaterial(GroundMaterial.WINTER_GRAVEL).hue(0).saturation(0).shiftLightness(28).blended(true)),
 	WINTER_JAGGED_STONE_TILE(p -> p
 		.ids()
 		.groundMaterial(GroundMaterial.WINTER_JAGGED_STONE_TILE)
@@ -428,6 +429,7 @@ public enum Overlay {
 
 	// Seers Exterior
 	SEERS_CHURCH_DIRT_OVERLAY(p -> p.ids(14).area(Area.SEERS_CHURCH_EXTERIOR).groundMaterial(GroundMaterial.DIRT).seasonalReplacement(SeasonalTheme.WINTER, WINTER_DIRT)),
+	SEERS_VILLAGE_PATHS(p -> p.ids(10).area(Area.SEERS_VILLAGE).groundMaterial(GroundMaterial.GRAVEL)),
 
 	// Catherby
 	CATHERBY_BEACH_OBELISK_WATER_FIX(6, Area.CATHERBY_BEACH_OBELISK_WATER_FIX, WaterType.WATER_FLAT),
@@ -964,6 +966,7 @@ public enum Overlay {
 		GroundMaterial.DIRT,
 		p -> p.ids(-124, -84, -83, 14, 15, 16, 21, 22, 23, 60, 77, 81, 82, 88, 89, 101, 102, 107, 108, 110, 115, 123, 227)
 	),
+	OVERWORLD_GRAVEL_PATH(p -> p.ids(10).area(Area.OVERWORLD).groundMaterial(GroundMaterial.GRAVEL).seasonalReplacement(SeasonalTheme.WINTER, WINTER_GRAVEL)),
 	OVERLAY_GRAVEL(GroundMaterial.GRAVEL, p -> p.ids(-76, 2, 3, 4, 6, 8, 9, 10, 119, 127)),
 	OVERLAY_JAGGED_STONE_TILE(Area.OVERWORLD, GroundMaterial.VARROCK_PATHS, p -> p
 		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_JAGGED_STONE_TILE)

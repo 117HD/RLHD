@@ -560,6 +560,10 @@ public enum Area
 		new AABB(2697, 3468, 2691, 3468),
 		new AABB(2704, 3467, 2716, 3457)
 	),
+	SEERS_VILLAGE(
+		new AABB(2687, 3510, 2743, 3456),
+		new AABB(2744, 3482, 2760, 3474)
+	),
 
 	// Murder Mystery Mansion
 	SINCLAIR_MANSION(
