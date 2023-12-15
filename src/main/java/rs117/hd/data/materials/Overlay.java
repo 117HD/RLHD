@@ -56,6 +56,7 @@ public enum Overlay {
 		.ids()
 		.groundMaterial(GroundMaterial.WINTER_JAGGED_STONE_TILE_LIGHT_2)
 	),
+	WINTER_DIRT_PATH(p -> p.ids().groundMaterial(GroundMaterial.WINTER_DIRT_PATH).hue(0).saturation(0).shiftLightness(32).blended(true)),
 	SNOW_2(p -> p
 		.ids()
 		.groundMaterial(GroundMaterial.SNOW_2)
@@ -960,9 +961,10 @@ public enum Overlay {
 		.groundMaterial(GroundMaterial.OVERWORLD_GRASS_1)
 		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_GRASS)
 	),
+	OVERLAY_OVERWORLD_DIRT_PATH(p -> p.ids(14).area(Area.OVERWORLD).groundMaterial(GroundMaterial.DIRT).seasonalReplacement(SeasonalTheme.WINTER, WINTER_DIRT_PATH)),
 	OVERLAY_DIRT(
 		GroundMaterial.DIRT,
-		p -> p.ids(-124, -84, -83, 14, 15, 16, 21, 22, 23, 60, 77, 81, 82, 88, 89, 101, 102, 107, 108, 110, 115, 123, 227)
+		p -> p.ids(-124, -84, -83, 15, 16, 21, 22, 23, 60, 77, 81, 82, 88, 89, 101, 102, 107, 108, 110, 115, 123, 227)
 	),
 	OVERWORLD_GRAVEL_PATH(p -> p.ids(10).area(Area.OVERWORLD).groundMaterial(GroundMaterial.GRAVEL).seasonalReplacement(SeasonalTheme.WINTER, WINTER_GRAVEL)),
 	OVERLAY_GRAVEL(GroundMaterial.GRAVEL, p -> p.ids(-76, 2, 3, 4, 6, 8, 9, 10, 119, 127)),
