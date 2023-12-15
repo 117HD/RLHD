@@ -293,6 +293,12 @@ public enum Overlay {
 	BRIMHAVEN_DOCKS_TEXTURE_REMOVAL(5, Area.BRIMHAVEN_DOCKS_TEXTURED, GroundMaterial.TRANSPARENT),
 
 	// Rimmington
+	RIMMINGTON_FALADOR_PATH_BLENDING_FIX(p -> p
+		.ids(81, 83, 88)
+		.area(Area.RIMMINGTON_FALADOR_PATH_BLEND)
+		.groundMaterial(GroundMaterial.DIRT)
+		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_DIRT_PATH)
+	),
 	CRAFTING_GUILD_TILE_1(2, Area.CRAFTING_GUILD, GroundMaterial.MARBLE_1_GLOSS, p -> p.blended(false)),
 	CRAFTING_GUILD_TILE_2(3, Area.CRAFTING_GUILD, GroundMaterial.MARBLE_2_GLOSS, p -> p.blended(false)),
 	CRAFTING_GUILD_TILE_3(4, Area.CRAFTING_GUILD, GroundMaterial.MARBLE_1_GLOSS, p -> p.blended(false)),
@@ -961,10 +967,10 @@ public enum Overlay {
 		.groundMaterial(GroundMaterial.OVERWORLD_GRASS_1)
 		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_GRASS)
 	),
-	OVERLAY_OVERWORLD_DIRT_PATH(p -> p.ids(14).area(Area.OVERWORLD).groundMaterial(GroundMaterial.DIRT).seasonalReplacement(SeasonalTheme.WINTER, WINTER_DIRT_PATH)),
+	OVERLAY_OVERWORLD_DIRT_PATH(p -> p.ids(14, 15).area(Area.OVERWORLD).groundMaterial(GroundMaterial.DIRT).seasonalReplacement(SeasonalTheme.WINTER, WINTER_DIRT_PATH)),
 	OVERLAY_DIRT(
 		GroundMaterial.DIRT,
-		p -> p.ids(-124, -84, -83, 15, 16, 21, 22, 23, 60, 77, 81, 82, 88, 89, 101, 102, 107, 108, 110, 115, 123, 227)
+		p -> p.ids(-124, -84, -83, 16, 21, 22, 23, 60, 77, 81, 82, 88, 89, 101, 102, 107, 108, 110, 115, 123, 227)
 	),
 	OVERWORLD_GRAVEL_PATH(p -> p.ids(10).area(Area.OVERWORLD).groundMaterial(GroundMaterial.GRAVEL).seasonalReplacement(SeasonalTheme.WINTER, WINTER_GRAVEL)),
 	OVERLAY_GRAVEL(GroundMaterial.GRAVEL, p -> p.ids(-76, 2, 3, 4, 6, 8, 9, 10, 119, 127)),

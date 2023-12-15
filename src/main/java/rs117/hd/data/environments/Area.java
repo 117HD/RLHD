@@ -617,6 +617,10 @@ public enum Area
 	),
 
 	// South Falador
+	RIMMINGTON_FALADOR_PATH_BLEND(
+		new AABB(2962, 3252, 2959, 3249), // Path to Falador
+		new AABB(2971, 3229, 2966,3225) // Path to Mine
+	),
 	RIMMINGTON(
 		new AABB(2905, 3265, 2995, 3195),
 		new AABB(2989, 3195, 2945, 3186)
