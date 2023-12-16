@@ -563,7 +563,7 @@ public enum Underlay {
 		.blended(true)),
 
 	SHIP_SAILING_WATER(p -> p.area(Area.SHIP_SAILING).ids(75).waterType(WaterType.WATER_FLAT)),
-	MOLES_LAIR_GROUND(p -> p.ids(63, 65).area(Area.GIANT_MOLES_LAIR).groundMaterial(GroundMaterial.VARIED_DIRT)),
+	GIANT_MOLE_LAIR_DIRT(p -> p.ids(63, 65).area(Area.GIANT_MOLE_LAIR).groundMaterial(GroundMaterial.VARIED_DIRT)),
 
 	// Cutscenes
 	CANOE_CUTSCENE_GRASS(Area.CANOE_CUTSCENE, GroundMaterial.GRASS_SCROLLING, p -> p.ids(48, 50, 63)),

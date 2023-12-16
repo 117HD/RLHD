@@ -2702,7 +2702,6 @@
       12117,
       12118,
       12119,
-      12192,
       12191,
       12192,
       12193,
@@ -6356,16 +6355,16 @@
     "flatNormals": true
   },
   {
-  "description": "Objects - Stone - Stalagmite",
-  "baseMaterial": "STONE_NORMALED",
-  "objectIds": [
-    4600,
-    5231,
-    5232,
-    17876,
-    17877,
-    44744,
-    44745
+    "description": "Objects - Stone - Stalagmite",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      4600,
+      5231,
+      5232,
+      17876,
+      17877,
+      44744,
+      44745
     ]
   },
   {
@@ -6427,14 +6426,14 @@
     "description": "Mortton Shade Catacombs  - Walls - Metallic - Doors",
     "baseMaterial": "METALLIC_2_SEMIGLOSS",
     "objectIds": [
-       4106,
-       4107,
-       4108,
-       4109,
-       18147,
-       18148,
-       18149,
-       18150
+      4106,
+      4107,
+      4108,
+      4109,
+      18147,
+      18148,
+      18149,
+      18150
     ],
     "uvType": "MODEL_XY",
     "uvScale": 0.5
@@ -6443,8 +6442,8 @@
     "description": "Mortton Shade Catacombs  - Objects - Stone - Grave Stone",
     "baseMaterial": "STONE",
     "objectIds": [
-       40471,
-       40472
+      40471,
+      40472
     ],
     "uvType": "GEOMETRY"
   },
@@ -6480,14 +6479,14 @@
     "description": "Objects - Vines",
     "baseMaterial": "GRUNGE_2",
     "objectIds": [
-       41201,
-       41202,
-       41203,
-       41204,
-       41205,
-       41207,
-       41208,
-       41209
+      41201,
+      41202,
+      41203,
+      41204,
+      41205,
+      41207,
+      41208,
+      41209
     ],
     "uvType": "GEOMETRY"
   },
@@ -6505,7 +6504,7 @@
     "description": "Mortton Shade Catacombs - Decoration - Stone - Brick rubble",
     "baseMaterial": "STONE",
     "objectIds": [
-       38028
+      38028
     ],
     "uvType": "MODEL_XZ_MIRROR_B"
   },
@@ -7065,8 +7064,7 @@
     "uvType": "MODEL_XY",
     "uvOrientation": 512,
     "uvScale": 0.76
-  }
-,
+  },
   {
     "description": "Lunar Island - Objects - Bark - Windswept Tree",
     "baseMaterial": "BARK",
@@ -10761,8 +10759,7 @@
       7192
     ],
     "flatNormals": true
-  }
-,
+  },
   {
     "description": "Object - Tables - Broken - Round",
     "baseMaterial": "WOOD_GRAIN_3",
