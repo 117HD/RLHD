@@ -714,6 +714,7 @@ public enum Overlay {
 		.ids(110)
 		.area(Area.BARROWS)
 		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_DIRT)),
+	TEMPLE_TREKKING_SWAMP_WATER(p -> p.ids(85).area(Area.TEMPLE_TREKKING_INSTANCES).waterType(WaterType.SWAMP_WATER)),
 
 	// Wilderness
 	WILDERNESS_NORTH_OF_RESOURCE_AREA_HILLS(11, Area.WILDERNESS_NORTH_OF_RESOURCE_AREA, GroundMaterial.VARIED_DIRT),

@@ -2772,6 +2772,7 @@
       20777,
       20778,
       20779,
+      22496,
       44740,
       44741,
       44742,
@@ -9982,6 +9983,25 @@
     "uvScale": 0.8
   },
   {
+    "description": "Morytania - Small Bush",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      3512,
+      13840
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Morytania - Rotting Log",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      3508
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
     "description": "Morytania - Giant Tree",
     "baseMaterial": "BARK",
     "objectIds": [
@@ -9999,7 +10019,12 @@
       3501,
       3502,
       3503,
-      3504
+      3504,
+      13851,
+      13852,
+      13853,
+      13854,
+      13855
     ]
   },
   {

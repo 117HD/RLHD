@@ -318,7 +318,6 @@ public enum Underlay {
 
 	// Morytania
 	VER_SINHAZA_WATER_FIX(p -> p.ids(54).area(Area.VER_SINHAZA_WATER_FIX).waterType(WaterType.WATER).blended(false)),
-	TEMPLE_TREKKING_GRASS(p -> p.ids(53, 103).area(Area.TEMPLE_TREKKING_INSTANCES)),
 	MEIYERDITCH_MINES(111, Area.MEIYERDITCH_MINES, GroundMaterial.ROCKY_CAVE_FLOOR),
 	BARROWS_DIRT(GroundMaterial.DIRT, p -> p
 		.ids(96)
@@ -332,6 +331,40 @@ public enum Underlay {
 	BARROWS_TUNNELS_FLOOR(GroundMaterial.EARTHEN_CAVE_FLOOR, p -> p
 		.ids(96, 103)
 		.area(Area.BARROWS_TUNNELS)
+	),
+	TEMPLE_TREKKING_GROUND_COMPLEX(p -> p
+		.ids(48, 53, 54, 64, 103)
+		.area(Area.TEMPLE_TREKKING_INSTANCES)
+		.replacementResolver(
+			(plugin, scene, tile, override) -> {
+				int[] hsl = HDUtils.getSouthWesternMostTileColor(tile);
+				if (hsl == null)
+					return override;
+
+				// Dirt
+				if (hsl[0] <= 8 && hsl[1] <= 2) {
+					switch (plugin.configSeasonalTheme) {
+						case SUMMER:
+						case AUTUMN:
+							return DEFAULT_DIRT;
+						case WINTER:
+							return WINTER_DIRT;
+					}
+				}
+				// Grass
+				if (hsl[0] >= 9 && hsl[1] >= 3) {
+					switch (plugin.configSeasonalTheme) {
+						case SUMMER:
+						case AUTUMN:
+							return DEFAULT_GRASS;
+						case WINTER:
+							return WINTER_GRASS;
+					}
+				}
+
+				return DEFAULT_DIRT;
+			}
+		)
 	),
 
 	// Fremennik
