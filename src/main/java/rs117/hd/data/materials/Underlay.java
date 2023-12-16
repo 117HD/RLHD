@@ -323,6 +323,7 @@ public enum Underlay {
 	BARROWS_DIRT(GroundMaterial.DIRT, p -> p
 		.ids(96)
 		.area(Area.BARROWS)
+		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_DIRT)
 	),
 	BARROWS_CRYPT_FLOOR(GroundMaterial.EARTHEN_CAVE_FLOOR, p -> p
 		.ids(96, 103)
