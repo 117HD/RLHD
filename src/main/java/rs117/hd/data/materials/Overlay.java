@@ -281,6 +281,7 @@ public enum Overlay {
 	FALADOR_BUILDING_FLOOR_2(33, Area.FALADOR, GroundMaterial.MARBLE_1_GLOSS, p -> p.blended(false)),
 	FALADOR_BUILDING_FLOOR_3(77, Area.FALADOR, GroundMaterial.MARBLE_2_GLOSS, p -> p.blended(false)),
 	FALADOR_BUILDING_FLOOR_4(13, Area.FALADOR, GroundMaterial.NONE, p -> p.blended(false)),
+	GIANT_MOLE_LAIR_DIRT(p -> p.ids(42, 161).area(Area.GIANT_MOLE_LAIR).groundMaterial(GroundMaterial.VARIED_DIRT)),
 
 	// Port Sarim
 	PORT_SARIM_BETTYS_HOUSE_1(11, Area.PORT_SARIM_BETTYS_HOUSE, GroundMaterial.MARBLE_DARK, p -> p
@@ -495,6 +496,9 @@ public enum Overlay {
 		.blended(false)
 		.ids(9, 11, 13, 18)
 	),
+
+	WITCHAVEN_PATHS(p -> p.ids(106).area(Area.WITCHAVEN).groundMaterial(GroundMaterial.VARIED_DIRT)),
+
 	KHAZARD_BATTLEFIELD_COBBLE_INDOORS(11, Area.KHAZARD_BATTLEFIELD_COBBLE, GroundMaterial.VARROCK_PATHS),
 	KHAZARD_BATTLEFIELD_COBBLE_OUTSIDE(11, Area.KHAZARD_BATTLEFIELD_COBBLE_OUTSIDE, GroundMaterial.VARROCK_PATHS, p -> p
 		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_JAGGED_STONE_TILE_LIGHT_2)
@@ -706,6 +710,10 @@ public enum Overlay {
 	MORYTANIA_FENKENSTRAINS_CASTLE(102, Area.FENKENSTRAINS_CASTLE, GroundMaterial.VARROCK_PATHS),
 	ABANDONED_MINE_ROCK(11, Area.MORYTANIA, GroundMaterial.DIRT),
 	TRUE_BLOOD_ALTAR_BLOOD(72, Area.TRUE_BLOOD_ALTAR, WaterType.BLOOD),
+	BARROWS_PATH(GroundMaterial.DIRT, p -> p
+		.ids(110)
+		.area(Area.BARROWS)
+		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_DIRT)),
 	TEMPLE_TREKKING_SWAMP_WATER(p -> p.ids(85).area(Area.TEMPLE_TREKKING_INSTANCES).waterType(WaterType.SWAMP_WATER)),
 
 	// Wilderness

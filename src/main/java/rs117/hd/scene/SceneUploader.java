@@ -26,7 +26,7 @@
 package rs117.hd.scene;
 
 import com.google.common.base.Stopwatch;
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
@@ -87,7 +87,8 @@ class SceneUploader {
 			for (int x = 0; x < Constants.EXTENDED_SCENE_SIZE; ++x) {
 				for (int y = 0; y < Constants.EXTENDED_SCENE_SIZE; ++y) {
 					Tile tile = sceneContext.scene.getExtendedTiles()[z][x][y];
-					upload(sceneContext, tile, x, y, z);
+					if (tile != null)
+						upload(sceneContext, tile, x, y);
 				}
 			}
 		}
@@ -237,146 +238,139 @@ class SceneUploader {
 		++sceneContext.uniqueModels;
 	}
 
-	private void upload(SceneContext sceneContext, @Nullable Tile tile, int tileExX, int tileExY, int tileZ) {
-		int tileX = tileExX - SCENE_OFFSET;
-		int tileY = tileExY - SCENE_OFFSET;
-		int renderLevel = tileZ;
-		boolean hasTilePaint = false;
-		SceneTileModel sceneTileModel = null;
+	private void upload(SceneContext sceneContext, @Nonnull Tile tile, int tileExX, int tileExY) {
+		Tile bridge = tile.getBridge();
+		if (bridge != null)
+			upload(sceneContext, bridge, tileExX, tileExY);
 
-		if (tile != null) {
-			Tile bridge = tile.getBridge();
-			if (bridge != null)
-				upload(sceneContext, bridge, tileExX, tileExY, tileZ);
+		SceneTilePaint sceneTilePaint = tile.getSceneTilePaint();
+		if (sceneTilePaint != null) {
+			// Set offsets before pushing new data
+			int vertexOffset = sceneContext.getVertexOffset();
+			int uvOffset = sceneContext.getUvOffset();
+			int[] uploadedTilePaintData = upload(sceneContext, tile, sceneTilePaint);
 
-			renderLevel = tile.getRenderLevel();
-			SceneTilePaint sceneTilePaint = tile.getSceneTilePaint();
-			hasTilePaint = sceneTilePaint != null && sceneTilePaint.getNeColor() != 12345678;
-			if (hasTilePaint) {
-				// Set offsets before pushing new data
-				int vertexOffset = sceneContext.getVertexOffset();
-				int uvOffset = sceneContext.getUvOffset();
-				int[] uploadedTilePaintData = upload(sceneContext, tile, sceneTilePaint);
+			int vertexCount = uploadedTilePaintData[0];
+			int uvCount = uploadedTilePaintData[1];
+			int hasUnderwaterTerrain = uploadedTilePaintData[2];
 
-				int vertexCount = uploadedTilePaintData[0];
-				int uvCount = uploadedTilePaintData[1];
-				int hasUnderwaterTerrain = uploadedTilePaintData[2];
+			// Opening the right-click menu causes the game to stop drawing hidden tiles, which prevents us from drawing underwater tiles
+			// below the boats at Pest Control. To work around this, we can instead draw all water tiles that never appear on top of any
+			// other model, all at once at the start of the frame. This bypasses any issues with draw order, and even partially solves the
+			// draw order artifacts resulting from skipped geometry updates for our extension to unlocked FPS.
+			final int[][][] tileHeights = sceneContext.scene.getTileHeights();
+			if (hasUnderwaterTerrain == 1 && tileHeights[tile.getRenderLevel()][tileExX][tileExY] >= -16) {
+				int tileX = tileExX - SCENE_OFFSET;
+				int tileY = tileExY - SCENE_OFFSET;
 
-				// Opening the right-click menu causes the game to stop drawing hidden tiles, which prevents us from drawing underwater tiles
-				// below the boats at Pest Control. To work around this, we can instead draw all water tiles that never appear on top of any
-				// other model, all at once at the start of the frame. This bypasses any issues with draw order, and even partially solves the
-				// draw order artifacts resulting from skipped geometry updates for our extension to unlocked FPS.
-				final int[][][] tileHeights = sceneContext.scene.getTileHeights();
-				if (hasUnderwaterTerrain == 1 && tileHeights[renderLevel][tileExX][tileExY] >= -16) {
-					// Draw the underwater tile at the start of each frame
-					sceneContext.staticUnorderedModelBuffer
-						.ensureCapacity(8)
-						.getBuffer()
-						.put(vertexOffset)
-						.put(uvOffset)
-						.put(2) // 2 faces
-						.put(sceneContext.staticVertexCount)
-						.put(0)
-						.put(tileX * LOCAL_TILE_SIZE)
-						.put(0)
-						.put(tileY * LOCAL_TILE_SIZE);
-					sceneContext.staticVertexCount += 6;
+				// Draw the underwater tile at the start of each frame
+				sceneContext.staticUnorderedModelBuffer
+					.ensureCapacity(8)
+					.getBuffer()
+					.put(vertexOffset)
+					.put(uvOffset)
+					.put(2) // 2 faces
+					.put(sceneContext.staticVertexCount)
+					.put(0)
+					.put(tileX * LOCAL_TILE_SIZE)
+					.put(0)
+					.put(tileY * LOCAL_TILE_SIZE);
+				sceneContext.staticVertexCount += 6;
 
-					// Since we're now drawing this tile's underwater geometry at the beginning of the frame, remove it from the draw callback
-					vertexCount -= 6;
-					uvCount -= 6;
-					vertexOffset += 6;
-					uvOffset += 6;
-				}
-
-				if (uvCount <= 0)
-					uvOffset = -1;
-
-				sceneTilePaint.setBufferLen(vertexCount);
-				sceneTilePaint.setBufferOffset(vertexOffset);
-				sceneTilePaint.setUvBufferOffset(uvOffset);
+				// Since we're now drawing this tile's underwater geometry at the beginning of the frame, remove it from the draw callback
+				vertexCount -= 6;
+				uvCount -= 6;
+				vertexOffset += 6;
+				uvOffset += 6;
 			}
 
-			sceneTileModel = tile.getSceneTileModel();
-			if (sceneTileModel != null) {
-				// Set offsets before pushing new data
-				sceneTileModel.setBufferOffset(sceneContext.getVertexOffset());
-				sceneTileModel.setUvBufferOffset(sceneContext.getUvOffset());
-				int[] uploadedTileModelData = upload(sceneContext, tile, sceneTileModel);
+			if (uvCount <= 0)
+				uvOffset = -1;
 
-				final int bufferLength = uploadedTileModelData[0];
-				final int uvBufferLength = uploadedTileModelData[1];
-				final int underwaterTerrain = uploadedTileModelData[2];
-				if (uvBufferLength <= 0)
-					sceneTileModel.setUvBufferOffset(-1);
-				// pack a boolean into the buffer length of tiles so we can tell
-				// which tiles have procedurally-generated underwater terrain
-				int packedBufferLength = bufferLength << 1 | underwaterTerrain;
+			sceneTilePaint.setBufferLen(vertexCount);
+			sceneTilePaint.setBufferOffset(vertexOffset);
+			sceneTilePaint.setUvBufferOffset(uvOffset);
+		}
 
-				sceneTileModel.setBufferLen(packedBufferLength);
+		var sceneTileModel = tile.getSceneTileModel();
+		if (sceneTileModel != null) {
+			// Set offsets before pushing new data
+			sceneTileModel.setBufferOffset(sceneContext.getVertexOffset());
+			sceneTileModel.setUvBufferOffset(sceneContext.getUvOffset());
+			int[] uploadedTileModelData = upload(sceneContext, tile, sceneTileModel);
+
+			final int bufferLength = uploadedTileModelData[0];
+			final int uvBufferLength = uploadedTileModelData[1];
+			final int underwaterTerrain = uploadedTileModelData[2];
+			if (uvBufferLength <= 0)
+				sceneTileModel.setUvBufferOffset(-1);
+			// pack a boolean into the buffer length of tiles so we can tell
+			// which tiles have procedurally-generated underwater terrain
+			int packedBufferLength = bufferLength << 1 | underwaterTerrain;
+
+			sceneTileModel.setBufferLen(packedBufferLength);
+		}
+
+		WallObject wallObject = tile.getWallObject();
+		if (wallObject != null) {
+			Renderable renderable1 = wallObject.getRenderable1();
+			if (renderable1 instanceof Model) {
+				uploadModel(sceneContext, tile, wallObject.getHash(), (Model) renderable1,
+					HDUtils.convertWallObjectOrientation(wallObject.getOrientationA()),
+					ObjectType.WALL_OBJECT
+				);
 			}
 
-			WallObject wallObject = tile.getWallObject();
-			if (wallObject != null) {
-				Renderable renderable1 = wallObject.getRenderable1();
-				if (renderable1 instanceof Model) {
-					uploadModel(sceneContext, tile, wallObject.getHash(), (Model) renderable1,
-						HDUtils.convertWallObjectOrientation(wallObject.getOrientationA()),
-						ObjectType.WALL_OBJECT
-					);
-				}
+			Renderable renderable2 = wallObject.getRenderable2();
+			if (renderable2 instanceof Model) {
+				uploadModel(sceneContext, tile, wallObject.getHash(), (Model) renderable2,
+					HDUtils.convertWallObjectOrientation(wallObject.getOrientationB()),
+					ObjectType.WALL_OBJECT
+				);
+			}
+		}
 
-				Renderable renderable2 = wallObject.getRenderable2();
-				if (renderable2 instanceof Model) {
-					uploadModel(sceneContext, tile, wallObject.getHash(), (Model) renderable2,
-						HDUtils.convertWallObjectOrientation(wallObject.getOrientationB()),
-						ObjectType.WALL_OBJECT
-					);
-				}
+		GroundObject groundObject = tile.getGroundObject();
+		if (groundObject != null) {
+			Renderable renderable = groundObject.getRenderable();
+			if (renderable instanceof Model) {
+				uploadModel(sceneContext, tile, groundObject.getHash(), (Model) renderable,
+					HDUtils.getBakedOrientation(groundObject.getConfig()),
+					ObjectType.GROUND_OBJECT
+				);
+			}
+		}
+
+		DecorativeObject decorativeObject = tile.getDecorativeObject();
+		if (decorativeObject != null) {
+			Renderable renderable = decorativeObject.getRenderable();
+			if (renderable instanceof Model) {
+				uploadModel(sceneContext, tile, decorativeObject.getHash(), (Model) renderable,
+					HDUtils.getBakedOrientation(decorativeObject.getConfig()),
+					ObjectType.DECORATIVE_OBJECT
+				);
 			}
 
-			GroundObject groundObject = tile.getGroundObject();
-			if (groundObject != null) {
-				Renderable renderable = groundObject.getRenderable();
-				if (renderable instanceof Model) {
-					uploadModel(sceneContext, tile, groundObject.getHash(), (Model) renderable,
-						HDUtils.getBakedOrientation(groundObject.getConfig()),
-						ObjectType.GROUND_OBJECT
-					);
-				}
+			Renderable renderable2 = decorativeObject.getRenderable2();
+			if (renderable2 instanceof Model) {
+				uploadModel(sceneContext, tile, decorativeObject.getHash(), (Model) renderable2,
+					HDUtils.getBakedOrientation(decorativeObject.getConfig()),
+					ObjectType.DECORATIVE_OBJECT
+				);
+			}
+		}
+
+		GameObject[] gameObjects = tile.getGameObjects();
+		for (GameObject gameObject : gameObjects) {
+			if (gameObject == null) {
+				continue;
 			}
 
-			DecorativeObject decorativeObject = tile.getDecorativeObject();
-			if (decorativeObject != null) {
-				Renderable renderable = decorativeObject.getRenderable();
-				if (renderable instanceof Model) {
-					uploadModel(sceneContext, tile, decorativeObject.getHash(), (Model) renderable,
-						HDUtils.getBakedOrientation(decorativeObject.getConfig()),
-						ObjectType.DECORATIVE_OBJECT
-					);
-				}
-
-				Renderable renderable2 = decorativeObject.getRenderable2();
-				if (renderable2 instanceof Model) {
-					uploadModel(sceneContext, tile, decorativeObject.getHash(), (Model) renderable2,
-						HDUtils.getBakedOrientation(decorativeObject.getConfig()),
-						ObjectType.DECORATIVE_OBJECT
-					);
-				}
-			}
-
-			GameObject[] gameObjects = tile.getGameObjects();
-			for (GameObject gameObject : gameObjects) {
-				if (gameObject == null) {
-					continue;
-				}
-
-				Renderable renderable = gameObject.getRenderable();
-				if (renderable instanceof Model) {
-					uploadModel(sceneContext, tile, gameObject.getHash(), (Model) gameObject.getRenderable(),
-						HDUtils.getBakedOrientation(gameObject.getConfig()), ObjectType.GAME_OBJECT
-					);
-				}
+			Renderable renderable = gameObject.getRenderable();
+			if (renderable instanceof Model) {
+				uploadModel(sceneContext, tile, gameObject.getHash(), (Model) gameObject.getRenderable(),
+					HDUtils.getBakedOrientation(gameObject.getConfig()), ObjectType.GAME_OBJECT
+				);
 			}
 		}
 	}
