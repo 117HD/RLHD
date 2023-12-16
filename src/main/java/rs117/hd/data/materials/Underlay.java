@@ -591,6 +591,7 @@ public enum Underlay {
 							return WINTER_DIRT;
 					}
 				}
+
 				// Grass
 				if (hsl[0] >= 8 && hsl[1] >= 5 && hsl[2] >= 20 || hsl[0] >= 9 && hsl[1] >= 3 || hsl[0] > 20) {
 					switch (plugin.configSeasonalTheme) {
