@@ -58,7 +58,7 @@ public enum Underlay {
 		.saturation(0)
 		.groundMaterial(GroundMaterial.WINTER_JAGGED_STONE_TILE_LIGHT)
 	),
-	// Default
+	// Default underlays; these are referenced when using resolved to replace tiles.
 	DEFAULT_SAND(p -> p.ids().groundMaterial(GroundMaterial.SAND)),
 	DEFAULT_GRASS(p -> p.ids().groundMaterial(GroundMaterial.OVERWORLD_GRASS_1)),
 	DEFAULT_DIRT(p -> p.ids().groundMaterial(GroundMaterial.DIRT)),
@@ -323,6 +323,7 @@ public enum Underlay {
 	BARROWS_DIRT(GroundMaterial.DIRT, p -> p
 		.ids(96)
 		.area(Area.BARROWS)
+		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_DIRT)
 	),
 	BARROWS_CRYPT_FLOOR(GroundMaterial.EARTHEN_CAVE_FLOOR, p -> p
 		.ids(96, 103)
@@ -374,6 +375,66 @@ public enum Underlay {
 
 	// Ardougne
 	SHADOW_DUNGEON_FLOOR(63, Area.SHADOW_DUNGEON, GroundMaterial.EARTHEN_CAVE_FLOOR),
+	WITCHAVEN_DIRT(p -> p
+		.ids(50)
+		.area(Area.WITCHAVEN)
+		.groundMaterial(GroundMaterial.VARIED_DIRT)
+		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_DIRT)),
+	WITCHAVEN_COMPLEX(p -> p
+		.area(Area.WITCHAVEN)
+		.ids(94, 129)
+		.replacementResolver(
+			(plugin, scene, tile, override) -> {
+				int[] hsl = HDUtils.getSouthWesternMostTileColor(tile);
+				if (hsl == null)
+					return override;
+
+				if (hsl[1] == 0 || (hsl[0] <= 10 && hsl[1] < 2)) {
+					switch (plugin.configSeasonalTheme) {
+						case SUMMER:
+						case AUTUMN:
+							return DEFAULT_GRUNGE;
+						case WINTER:
+							return WINTER_GRUNGE;
+					}
+				}
+
+				if ((hsl[0] == 8 && hsl[1] == 2))
+					switch (plugin.configSeasonalTheme) {
+						case SUMMER:
+						case AUTUMN:
+							return DEFAULT_SAND;
+						case WINTER:
+							return WINTER_DIRT;
+					}
+
+				if (hsl[0] >= 10 && hsl[1] >= 2) {
+					switch (plugin.configSeasonalTheme) {
+						case SUMMER:
+						case AUTUMN:
+							return DEFAULT_GRASS;
+						case WINTER:
+							return WINTER_GRASS;
+					}
+				}
+
+				if (
+					(hsl[0] == 8 && hsl[1] == 3) ||
+					(hsl[0] == 8 && hsl[1] == 4) ||
+					(hsl[0] == 9 && hsl[1] == 2) ||
+					(hsl[0] == 9 && hsl[1] <= 4)
+				)
+					switch (plugin.configSeasonalTheme) {
+						case SUMMER:
+						case AUTUMN:
+							return DEFAULT_DIRT;
+						case WINTER:
+							return WINTER_DIRT;
+					}
+				return DEFAULT_DIRT;
+			}
+		)
+	),
 	// Castle Wars
 	CENTER_SARADOMIN_SIDE_DIRT_1(98, Area.CASTLE_WARS_ARENA_SARADOMIN_SIDE, GroundMaterial.DIRT, p -> p
 		.hue(7)
@@ -385,6 +446,74 @@ public enum Underlay {
 
 	// Yanille
 	YANILLE_AGILITY_DUNGEON_ENTRANCE_FIX(63, Area.YANILLE_AGILITY_DUNGEON_ENTRANCE, GroundMaterial.NONE, p -> p.blended(false)),
+
+	// Feldip Hills
+	FELDIP_HILLS_COMPLEX_TILES(p -> p
+		.area(Area.FELDIP_HILLS)
+		.ids(48, 50, 52, 62, 63, 67, 68, 69, 70, 97, 99, 100)
+		.replacementResolver(
+			(plugin, scene, tile, override) -> {
+				int[] hsl = HDUtils.getSouthWesternMostTileColor(tile);
+				if (hsl == null)
+					return override;
+
+				if (hsl[1] == 0) {
+					switch (plugin.configSeasonalTheme) {
+						case SUMMER:
+						case AUTUMN:
+							return DEFAULT_GRUNGE;
+						case WINTER:
+							return WINTER_GRUNGE;
+					}
+				}
+				if (hsl[0] <= 10 && hsl[1] < 2) {
+					switch (plugin.configSeasonalTheme) {
+						case SUMMER:
+						case AUTUMN:
+							return DEFAULT_GRUNGE;
+						case WINTER:
+							return WINTER_GRUNGE;
+					}
+				}
+				if ((hsl[0] == 8 && hsl[1] == 4 && hsl[2] >= 71) ||
+					(hsl[0] == 8 && hsl[1] == 3 && hsl[2] >= 21))
+					return DEFAULT_SAND;
+
+				if (
+					hsl[0] >= 11 && hsl[1] == 1 ||
+					hsl[0] >= 9 && hsl[1] >= 4 ||
+					hsl[0] >= 10 && hsl[1] >= 2 ||
+					hsl[0] == 8 && hsl[1] == 5 && hsl[2] >= 15 ||
+					hsl[0] == 8 && hsl[1] >= 6 && hsl[2] >= 2
+				) {
+					switch (plugin.configSeasonalTheme) {
+						case SUMMER:
+						case AUTUMN:
+							return DEFAULT_GRASS;
+						case WINTER:
+							return WINTER_GRASS;
+					}
+				}
+
+				if (
+					hsl[0] == 8 && hsl[1] <= 4 && hsl[2] <= 71 ||
+					hsl[0] <= 7 && hsl[1] <= 5 && hsl[2] <= 57 ||
+					hsl[0] <= 7 && hsl[1] <= 7 && hsl[2] <= 28 ||
+					hsl[0] == 8 && hsl[1] == 5 && hsl[2] <= 15 ||
+					hsl[0] == 9 && hsl[1] >= 2 && hsl[1] <= 4
+				) {
+					switch (plugin.configSeasonalTheme) {
+						case SUMMER:
+						case AUTUMN:
+							return DEFAULT_DIRT;
+						case WINTER:
+							return WINTER_DIRT;
+					}
+				}
+				return DEFAULT_DIRT;
+			}
+		)
+	),
 
 	// Iceberg
 	ICEBERG_TEXTURE(p -> p
@@ -634,7 +763,7 @@ public enum Underlay {
 	),
 	COMPLEX_TILES(p -> p
 		.area(Area.OVERWORLD)
-		.ids(55, 61, 62, 63, 64, 65, 68, 94, 96)
+		.ids(13, 55, 61, 62, 63, 64, 65, 68, 69, 94, 96)
 		.replacementResolver(
 			(plugin, scene, tile, override) -> {
 				int[] hsl = HDUtils.getSouthWesternMostTileColor(tile);
