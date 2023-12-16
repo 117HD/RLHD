@@ -1477,6 +1477,7 @@
       5213,
       5533,
       5534,
+      5535,
       5335,
       5336,
       5337,
@@ -3838,7 +3839,7 @@
   },
   {
     "description": "Seers Village tables",
-    "baseMaterial": "WOOD_GRAIN_2",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       25774,
       25778,
@@ -4204,21 +4205,31 @@
   },
   {
     "description": "Falador - Tables",
-    "baseMaterial": "WOOD_GRAIN_2",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      24025,
-      24081
+      24025
     ],
     "uvType": "BOX",
     "uvScale": 0.8
   },
   {
     "description": "Falador - Tables - Rotated",
-    "baseMaterial": "WOOD_GRAIN_2",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      7331
+      7331,
+      24081
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Generic - Table Boxed Legs",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      7496,
+      24086
+    ],
+    "uvType": "BOX",
     "uvOrientation": 512
   },
   {
@@ -4282,7 +4293,6 @@
       14852,
       15684,
       17145,
-      20058,
       25603,
       39989,
       40223,
@@ -4298,6 +4308,7 @@
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       7175,
+      20058,
       23177,
       39716
     ],
@@ -4326,6 +4337,9 @@
     "description": "Ladder - Untextured",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      2796,
+      2797,
+      2833,
       4163,
       4164,
       4187,
@@ -4337,6 +4351,7 @@
       12779,
       14745,
       14746,
+      17122,
       17148,
       17149,
       17159,
@@ -5521,8 +5536,9 @@
   },
   {
     "description": "Inconspicuous Rocks",
-    "baseMaterial": "ROCK_1",
+    "baseMaterial": "ROCK_4",
     "objectIds": [
+      16023,
       28961,
       28965,
       28966,
@@ -5539,7 +5555,8 @@
       29044
     ],
     "uvType": "BOX",
-    "uvScale": 0.22
+    "uvOrientationY": 512,
+    "uvScale": 0.8
   },
   {
     "description": "Inconspicuous Crate",
@@ -5929,10 +5946,13 @@
     "description": "Barbarian Hall - Roof - Wooden - Planks",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
+      9590,
+      9591,
       11565,
       11566,
       11567,
-      11568
+      11568,
+      11878
     ],
     "uvType": "BOX",
     "uvScale": 0.66,
@@ -5942,6 +5962,8 @@
     "description": "Barbarian Hall - Roof Corners - Wooden - Planks",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
+      9593,
+      9594,
       11569,
       11570,
       11571,
@@ -5956,7 +5978,9 @@
       11581,
       11582,
       11583,
-      11584
+      11584,
+      11879,
+      11880
     ],
     "uvType": "BOX",
     "uvScale": 0.66,
@@ -6125,8 +6149,6 @@
       25655,
       25660,
       25661,
-      25775,
-      25776,
       25836,
       25837,
       44854
@@ -6141,7 +6163,10 @@
       3813,
       3814,
       3815,
-      9533
+      9533,
+      25775,
+      25776,
+      25928
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -6343,16 +6368,16 @@
     "flatNormals": true
   },
   {
-  "description": "Objects - Stone - Stalagmite",
-  "baseMaterial": "STONE_NORMALED",
-  "objectIds": [
-    4600,
-    5231,
-    5232,
-    17876,
-    17877,
-    44744,
-    44745
+    "description": "Objects - Stone - Stalagmite",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      4600,
+      5231,
+      5232,
+      17876,
+      17877,
+      44744,
+      44745
     ]
   },
   {
@@ -6365,18 +6390,24 @@
   },
   {
     "description": "Mortton - Objects - Stone - Funeral Pyre",
-    "baseMaterial": "STONE",
+    "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       4093
-    ]
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512
   },
   {
     "description": "Mortton - Objects - Stone - Stone Stand",
-    "baseMaterial": "STONE",
+    "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       4065
     ],
-    "uvType": "GEOMETRY"
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationY": 512,
+    "uvOrientationX": 1024,
+    "uvOrientationZ": 1024
   },
   {
     "description": "Mortton - Objects - Stone - Temple Walls",
@@ -6414,14 +6445,14 @@
     "description": "Mortton Shade Catacombs  - Walls - Metallic - Doors",
     "baseMaterial": "METALLIC_2_SEMIGLOSS",
     "objectIds": [
-       4106,
-       4107,
-       4108,
-       4109,
-       18147,
-       18148,
-       18149,
-       18150
+      4106,
+      4107,
+      4108,
+      4109,
+      18147,
+      18148,
+      18149,
+      18150
     ],
     "uvType": "MODEL_XY",
     "uvScale": 0.5
@@ -6430,8 +6461,8 @@
     "description": "Mortton Shade Catacombs  - Objects - Stone - Grave Stone",
     "baseMaterial": "STONE",
     "objectIds": [
-       40471,
-       40472
+      40471,
+      40472
     ],
     "uvType": "GEOMETRY"
   },
@@ -6467,14 +6498,14 @@
     "description": "Objects - Vines",
     "baseMaterial": "GRUNGE_2",
     "objectIds": [
-       41201,
-       41202,
-       41203,
-       41204,
-       41205,
-       41207,
-       41208,
-       41209
+      41201,
+      41202,
+      41203,
+      41204,
+      41205,
+      41207,
+      41208,
+      41209
     ],
     "uvType": "GEOMETRY"
   },
@@ -6492,7 +6523,7 @@
     "description": "Mortton Shade Catacombs - Decoration - Stone - Brick rubble",
     "baseMaterial": "STONE",
     "objectIds": [
-       38028
+      38028
     ],
     "uvType": "MODEL_XZ_MIRROR_B"
   },
@@ -6531,7 +6562,8 @@
       4056,
       4057
     ],
-    "uvType": "MODEL_XZ"
+    "uvType": "BOX",
+    "uvScale": 0.6
   },
   {
     "description": "Mortton - Objects - Shade Chests - Medium - Bronze",
@@ -6745,7 +6777,8 @@
       12848,
       12849,
       12850,
-      12851
+      12851,
+      12859
     ],
     "uvType": "BOX",
     "uvOrientation": 512,
@@ -6795,15 +6828,38 @@
   },
   {
     "description": "Morytania - Objects - Wooden - Crate",
-    "baseMaterial": "WOOD_GRAIN_2",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      12876,
       12877,
-      12878,
       12879
     ],
     "uvType": "BOX",
-    "uvScale": 0.7
+    "uvScale": 1.1,
+    "uvOrientationX": 512
+  },
+  {
+    "description": "Morytania - Objects - Wooden - Stacked Crate - Angled",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      12876
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.1,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512,
+    "uvOrientationY": 1212
+  },
+  {
+    "description": "Morytania - Objects - Wooden - Stacked Tri Crate - Angled ",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      12878
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.1,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512,
+    "uvOrientationY": 555
   },
   {
     "description": "Morytania - Ground  - Water - Puddles - Burugh De Rott",
@@ -6910,6 +6966,8 @@
     "objectIds": [
       7169,
       11627,
+      12892,
+      14163,
       20351,
       23066,
       24360,
@@ -7052,8 +7110,7 @@
     "uvType": "MODEL_XY",
     "uvOrientation": 512,
     "uvScale": 0.76
-  }
-,
+  },
   {
     "description": "Lunar Island - Objects - Bark - Windswept Tree",
     "baseMaterial": "BARK",
@@ -7488,6 +7545,7 @@
       10491,
       12885,
       17146,
+      20065,
       24335,
       29716
     ],
@@ -8743,8 +8801,7 @@
       6270,
       6271
     ],
-    "uvType": "MODEL_XY",
-    "uvScale": 0.80
+    "uvType": "BOX"
   },
   {
     "description": "Metal Monkeybars",
@@ -9965,6 +10022,17 @@
     "uvOrientation": 512
   },
   {
+    "description": "Falador - Plank - Tables - Picnic Bench",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      24107
+    ],
+    "flatNormals": true,
+    "uvType": "BOX",
+    "uvOrientationY": 512,
+    "uvOrientationZ": 512
+  },
+  {
     "description": "Objects -  - Wooden - Battlements",
     "baseMaterial": "WOOD_GRAIN",
     "objectIds": [
@@ -10261,7 +10329,40 @@
     ],
     "uvType": "BOX",
     "uvOrientation": 1536,
-    "uvScale": 0.66
+    "uvScale": 0.66,
+    "flatNormals": true
+  },
+  {
+    "description": "Moritaynia - Walls - Wooden - Plank - Rotten Plank Roof",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      5363,
+      5364,
+      5365,
+      6831
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 1536,
+    "uvScale": 0.66,
+    "flatNormals": true
+  },
+  {
+    "description": "Moritaynia - Walls - Wooden - Plank - Rotten Plank Roof - Corner",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      5366,
+      5367,
+      5368,
+      6832,
+      6833,
+      6834
+    ],
+    "uvType": "BOX",
+    "uvOrientationX": 1536,
+    "uvOrientationZ": 1536,
+    "uvOrientationY": 1024,
+    "uvScale": 0.66,
+    "flatNormals": true
   },
   {
     "description": "Moritaynia - Walls - Stone - Barrows Crypt",
@@ -10748,8 +10849,7 @@
       7192
     ],
     "flatNormals": true
-  }
-,
+  },
   {
     "description": "Object - Tables - Broken - Round",
     "baseMaterial": "WOOD_GRAIN_3",
@@ -12888,5 +12988,18 @@
     "retainVanillaUvs": false,
     "uvScale": 1.26,
     "uvOrientation": 512
+  },
+  {
+    "description": "White Wolf Mountain Pass - Objects - Rock Stairs - Large",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      54,
+      55,
+      56,
+      57
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationY": 256
   }
 ]
