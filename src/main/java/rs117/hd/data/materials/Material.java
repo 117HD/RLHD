@@ -803,6 +803,9 @@ public enum Material {
 	),
 	WINTER_JAGGED_STONE_TILE_LIGHT(WINTER_JAGGED_STONE_TILE, p -> p.setBrightness(4)),
 	WINTER_JAGGED_STONE_TILE_LIGHTER(WINTER_JAGGED_STONE_TILE, p -> p.setBrightness(12)),
+	WINTER_GRAVEL(SNOW_1,p -> p.setNormalMap(GRAVEL_N).setSpecular(0.6f,30)),
+	WINTER_DIRT_PATH(SNOW_1, p -> p.setNormalMap(DIRT_1_N).setSpecular(0.5f,28)),
+	WINTER_DIRT_PATH_2(DIRT_2, p -> p.setBrightness(1.58f).setSpecular(0.4f,35))
 	;
 
 	public final Material parent;

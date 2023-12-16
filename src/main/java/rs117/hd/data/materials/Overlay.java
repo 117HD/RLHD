@@ -46,10 +46,8 @@ public enum Overlay {
 	// Winter Theme fixes
 	WINTER_GRASS(p -> p.ids().groundMaterial(GroundMaterial.SNOW_1).hue(0).saturation(0).shiftLightness(40).blended(true)),
 	WINTER_DIRT(p -> p.ids().groundMaterial(GroundMaterial.SNOW_2).hue(0).saturation(0).shiftLightness(40).blended(true)),
-	WINTER_JAGGED_STONE_TILE(p -> p
-		.ids()
-		.groundMaterial(GroundMaterial.WINTER_JAGGED_STONE_TILE)
-	),
+	WINTER_GRAVEL(p -> p.ids().groundMaterial(GroundMaterial.WINTER_GRAVEL).shiftSaturation(-2).shiftLightness(16).blended(true)),
+	WINTER_JAGGED_STONE_TILE(p -> p.ids().groundMaterial(GroundMaterial.WINTER_JAGGED_STONE_TILE).hue(0).saturation(0).blended(true)),
 	WINTER_JAGGED_STONE_TILE_LIGHT(p -> p
 		.ids()
 		.groundMaterial(GroundMaterial.WINTER_JAGGED_STONE_TILE_LIGHT)
@@ -58,14 +56,10 @@ public enum Overlay {
 		.ids()
 		.groundMaterial(GroundMaterial.WINTER_JAGGED_STONE_TILE_LIGHT_2)
 	),
+	WINTER_DIRT_PATH(p -> p.ids().groundMaterial(GroundMaterial.WINTER_DIRT_PATH).hue(0).saturation(0).shiftLightness(32).blended(true)),
 	SNOW_2(p -> p
 		.ids()
 		.groundMaterial(GroundMaterial.SNOW_2)
-	),
-	WINTER_EAST_ARDOUGNE_CASTLE_PATH_FIX(10, Area.EAST_ARDOUGNE_CASTLE_PATH_FIX, GroundMaterial.VARROCK_PATHS, p -> p
-		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_JAGGED_STONE_TILE_LIGHT)
-		.shiftLightness(3)
-		.blended(false)
 	),
 	WINTER_CANIFIS_BAR_FLOOR_BLENDED(85, Area.CANIFIS_BAR_FLOOR_BLENDED, GroundMaterial.HD_WOOD_PLANKS_1, p -> p
 		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_DIRT)
@@ -195,6 +189,8 @@ public enum Overlay {
 	VARROCK_DIRT_BLENDING_IMPROVEMENT(-84, Area.VARROCK, GroundMaterial.DIRT, p -> p.shiftSaturation(1)),
 	// this tile is used by jagex to blend between dirt paths and regular paths; blending desaturates the dirt and looks bad, extra saturation cancels out the effect
 
+	VARROCK_PATHS(p -> p.ids(171).area(Area.VARROCK).groundMaterial(GroundMaterial.VARROCK_PATHS)),
+
 	// Barbarian Village
 	BARBARIAN_VILLAGE_EAST_PATH_FIX_1(83, Area.BARBARIAN_VILLAGE_EAST_PATH_FIX, GroundMaterial.DIRT, p -> p.shiftSaturation(2)),
 	BARBARIAN_VILLAGE_EAST_PATH_FIX_2(
@@ -297,6 +293,12 @@ public enum Overlay {
 	BRIMHAVEN_DOCKS_TEXTURE_REMOVAL(5, Area.BRIMHAVEN_DOCKS_TEXTURED, GroundMaterial.TRANSPARENT),
 
 	// Rimmington
+	RIMMINGTON_FALADOR_PATH_BLENDING_FIX(p -> p
+		.ids(81, 83, 88)
+		.area(Area.RIMMINGTON_FALADOR_PATH_BLEND)
+		.groundMaterial(GroundMaterial.DIRT)
+		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_DIRT_PATH)
+	),
 	CRAFTING_GUILD_TILE_1(2, Area.CRAFTING_GUILD, GroundMaterial.MARBLE_1_GLOSS, p -> p.blended(false)),
 	CRAFTING_GUILD_TILE_2(3, Area.CRAFTING_GUILD, GroundMaterial.MARBLE_2_GLOSS, p -> p.blended(false)),
 	CRAFTING_GUILD_TILE_3(4, Area.CRAFTING_GUILD, GroundMaterial.MARBLE_1_GLOSS, p -> p.blended(false)),
@@ -429,6 +431,10 @@ public enum Overlay {
 		p -> p.area(Area.KEEP_LE_FAYE_INSTANCE).blended(false).ids(120)
 	),
 
+	// Seers Exterior
+	SEERS_CHURCH_DIRT_OVERLAY(p -> p.ids(14).area(Area.SEERS_CHURCH_EXTERIOR).groundMaterial(GroundMaterial.DIRT).seasonalReplacement(SeasonalTheme.WINTER, WINTER_DIRT)),
+	SEERS_VILLAGE_PATHS(p -> p.ids(10).area(Area.SEERS_VILLAGE).groundMaterial(GroundMaterial.GRAVEL)),
+
 	// Catherby
 	CATHERBY_BEACH_OBELISK_WATER_FIX(6, Area.CATHERBY_BEACH_OBELISK_WATER_FIX, WaterType.WATER_FLAT),
 	CATHERBY_BEACH_LADDER_FIX(11, Area.CATHERBY_BEACH_LADDER_FIX, GroundMaterial.NONE, p -> p.blended(false)),
@@ -456,7 +462,7 @@ public enum Overlay {
 		.shiftLightness(7)
 		.blended(false)),
 	EAST_ARDOUGNE_CASTLE_PATH_FIX(10, Area.EAST_ARDOUGNE_CASTLE_PATH_FIX, GroundMaterial.VARROCK_PATHS, p -> p
-		.shiftLightness(16)
+		.lightness(34)
 		.blended(false)
 
 	),
@@ -467,8 +473,7 @@ public enum Overlay {
 		p -> p.blended(false).lightness(40)
 	),
 	EAST_ARDOUGNE_PATHS_1(10, Area.EAST_ARDOUGNE, GroundMaterial.VARROCK_PATHS, p -> p
-		.shiftLightness(6)
-		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_JAGGED_STONE_TILE_LIGHT)
+		.lightness(34)
 	),
 	WIZARD_HOUSE_TILE_LIGHT(38, Area.EAST_ARDOUGNE, GroundMaterial.MARBLE_1_SEMIGLOSS, p -> p.blended(false)),
 	WIZARD_HOUSE_TILE_DARK(40, Area.EAST_ARDOUGNE, GroundMaterial.MARBLE_2_SEMIGLOSS, p -> p.blended(false)),
@@ -648,6 +653,7 @@ public enum Overlay {
 		.shiftSaturation(-7)),
 	// Draynor
 	DRAYNOR_SEWERS(p -> p.area(Area.DRAYNOR_SEWERS).ids(89).waterType(WaterType.MUDDY_WATER)),
+	DRAYNOR_PATHS(p -> p.ids(10).area(Area.DRAYNOR).groundMaterial(GroundMaterial.GRAVEL)),
 
 	// Draynor manor
 	DRAYNOR_MANOR_TILE_DARK(2, Area.DRAYNOR_MANOR_INTERIOR, GroundMaterial.MARBLE_1, p -> p.blended(false)),
@@ -659,6 +665,13 @@ public enum Overlay {
 		.area(Area.DRAYNOR_MANOR)
 		.ids(2, 90, 117, 120, 127, 132)
 		.groundMaterial(GroundMaterial.VARROCK_PATHS)
+		.seasonalReplacement(SeasonalTheme.WINTER,WINTER_JAGGED_STONE_TILE_LIGHT)
+	),
+	DRAYNOR_MANOR_ENTRANCE_PATH_DARK(p -> p
+		.area(Area.DRAYNOR_MANOR)
+		.ids(11)
+		.groundMaterial(GroundMaterial.VARROCK_PATHS)
+		.seasonalReplacement(SeasonalTheme.WINTER,WINTER_JAGGED_STONE_TILE_LIGHT_2)
 	),
 
 
@@ -954,12 +967,14 @@ public enum Overlay {
 		.groundMaterial(GroundMaterial.OVERWORLD_GRASS_1)
 		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_GRASS)
 	),
+	OVERLAY_OVERWORLD_DIRT_PATH(p -> p.ids(14, 15).area(Area.OVERWORLD).groundMaterial(GroundMaterial.DIRT).seasonalReplacement(SeasonalTheme.WINTER, WINTER_DIRT_PATH)),
 	OVERLAY_DIRT(
 		GroundMaterial.DIRT,
-		p -> p.ids(-124, -84, -83, 14, 15, 16, 21, 22, 23, 60, 77, 81, 82, 88, 89, 101, 102, 107, 108, 110, 115, 123, 227)
+		p -> p.ids(-124, -84, -83, 16, 21, 22, 23, 60, 77, 81, 82, 88, 89, 101, 102, 107, 108, 110, 115, 123, 227)
 	),
+	OVERWORLD_GRAVEL_PATH(p -> p.ids(10).area(Area.OVERWORLD).groundMaterial(GroundMaterial.GRAVEL).seasonalReplacement(SeasonalTheme.WINTER, WINTER_GRAVEL)),
 	OVERLAY_GRAVEL(GroundMaterial.GRAVEL, p -> p.ids(-76, 2, 3, 4, 6, 8, 9, 10, 119, 127)),
-	OVERLAY_VARROCK_PATHS(Area.OVERWORLD, GroundMaterial.VARROCK_PATHS, p -> p
+	OVERLAY_JAGGED_STONE_TILE(Area.OVERWORLD, GroundMaterial.VARROCK_PATHS, p -> p
 		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_JAGGED_STONE_TILE)
 		.ids(-85, -77, 11)
 	),
