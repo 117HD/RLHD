@@ -375,6 +375,66 @@ public enum Underlay {
 
 	// Ardougne
 	SHADOW_DUNGEON_FLOOR(63, Area.SHADOW_DUNGEON, GroundMaterial.EARTHEN_CAVE_FLOOR),
+	WITCHAVEN_DIRT(p -> p
+		.ids(50)
+		.area(Area.WITCHAVEN)
+		.groundMaterial(GroundMaterial.VARIED_DIRT)
+		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_DIRT)),
+	WITCHAVEN_COMPLEX(p -> p
+		.area(Area.WITCHAVEN)
+		.ids(94, 129)
+		.replacementResolver(
+			(plugin, scene, tile, override) -> {
+				int[] hsl = HDUtils.getSouthWesternMostTileColor(tile);
+				if (hsl == null)
+					return override;
+
+				if (hsl[1] == 0 || (hsl[0] <= 10 && hsl[1] < 2)) {
+					switch (plugin.configSeasonalTheme) {
+						case SUMMER:
+						case AUTUMN:
+							return DEFAULT_GRUNGE;
+						case WINTER:
+							return WINTER_GRUNGE;
+					}
+				}
+
+				if ((hsl[0] == 8 && hsl[1] == 2))
+					switch (plugin.configSeasonalTheme) {
+						case SUMMER:
+						case AUTUMN:
+							return DEFAULT_SAND;
+						case WINTER:
+							return WINTER_DIRT;
+					}
+
+				if (hsl[0] >= 10 && hsl[1] >= 2) {
+					switch (plugin.configSeasonalTheme) {
+						case SUMMER:
+						case AUTUMN:
+							return DEFAULT_GRASS;
+						case WINTER:
+							return WINTER_GRASS;
+					}
+				}
+
+				if (
+					(hsl[0] == 8 && hsl[1] == 3) ||
+					(hsl[0] == 8 && hsl[1] == 4) ||
+					(hsl[0] == 9 && hsl[1] == 2) ||
+					(hsl[0] == 9 && hsl[1] <= 4)
+				)
+					switch (plugin.configSeasonalTheme) {
+						case SUMMER:
+						case AUTUMN:
+							return DEFAULT_DIRT;
+						case WINTER:
+							return WINTER_DIRT;
+					}
+				return DEFAULT_DIRT;
+			}
+		)
+	),
 	// Castle Wars
 	CENTER_SARADOMIN_SIDE_DIRT_1(98, Area.CASTLE_WARS_ARENA_SARADOMIN_SIDE, GroundMaterial.DIRT, p -> p
 		.hue(7)
