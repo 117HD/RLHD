@@ -568,7 +568,7 @@ public enum Underlay {
 	CANOE_CUTSCENE_GRASS(Area.CANOE_CUTSCENE, GroundMaterial.GRASS_SCROLLING, p -> p.ids(48, 50, 63)),
 
 	ISLE_OF_SOULS_HOTZONE_COMPLEX(p -> p
-		.ids(8, 27, 35, 36, 37, 38, 63, 72, 143, 144, 145, 146, 147, 148, 149, 150, 152)
+		.ids(8, 27, 33, 35, 36, 37, 38, 63, 72, 118, 143, 144, 145, 146, 147, 148, 149, 150, 152)
 		.area(Area.ISLE_OF_SOULS_HOTZONES)
 		.replacementResolver(
 			(plugin, scene, tile, override) -> {
