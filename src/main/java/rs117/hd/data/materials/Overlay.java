@@ -702,6 +702,7 @@ public enum Overlay {
 
 	// Zanaris
 	COSMIC_ENTITYS_PLANE_ABYSS(37, Area.COSMIC_ENTITYS_PLANE, GroundMaterial.NONE, p -> p.lightness(0).blended(false)),
+	ZANARIS_POND_WATER(p -> p.ids(151).area(Area.ZANARIS).waterType(WaterType.WATER)),
 
 	// Morytania
 	CANIFIS_FLOORS(85, Area.CANIFIS, GroundMaterial.HD_WOOD_PLANKS_1),
