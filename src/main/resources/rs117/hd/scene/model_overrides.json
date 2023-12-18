@@ -6143,6 +6143,8 @@
       12961,
       14395,
       15692,
+      16251,
+      16252,
       16560,
       16561,
       17305,
@@ -13074,5 +13076,16 @@
     "baseMaterial": "DIRT_2",
     "objectIds": [ 12204, 12205, 12208, 12210, 12211 ],
     "uvType": "BOX"
+  },
+  {
+    "description": "Zanaris - Objects - Wooden - Stacked Crate - Angled",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      16250
+    ],
+    "uvType": "BOX",
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512,
+    "uvOrientationY": 170
   }
 ]
