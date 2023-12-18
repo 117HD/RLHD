@@ -8135,11 +8135,24 @@
       12016,
       12017,
       12018,
+      12026,
       12027,
       12029,
       17001,
       17002
-    ]
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Zanaris - Objects - Mushroom Ceiling Objects",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      12019,
+      12020,
+      12021
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 256
   },
   {
     "description": "Zanaris - Walls - Dirt",
