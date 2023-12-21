@@ -31683,5 +31683,22 @@
     "objectIds": [
       33322
     ]
+  },
+  {
+    "description": "WALL_TORCH_DAGANNOTH_KINGS",
+    "height": 200,
+    "radius": 1000,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 23,
+    "objectIds": [
+      10185
+    ]
   }
 ]

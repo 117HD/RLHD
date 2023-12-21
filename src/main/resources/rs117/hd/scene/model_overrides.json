@@ -2314,6 +2314,8 @@
   {
     "description": "TZHAAR_ROCK_GRADIENT",
     "baseMaterial": "ROCK_1",
+    "uvType": "BOX",
+    "tzHaarRecolorType": "GRADIENT",
     "objectIds": [
       11818,
       11819,
@@ -2350,8 +2352,7 @@
       41013,
       30269,
       30270
-    ],
-    "tzHaarRecolorType": "GRADIENT"
+    ]
   },
   {
     "description": "TZHAAR_GRADIENT",
@@ -2367,6 +2368,8 @@
   {
     "description": "TZHAAR_ROCK_HUESHIFT",
     "baseMaterial": "ROCK_1",
+    "uvType": "BOX",
+    "tzHaarRecolorType": "HUE_SHIFT",
     "objectIds": [
       26723,
       26724,
@@ -2374,8 +2377,7 @@
       30263,
       30264,
       30265
-    ],
-    "tzHaarRecolorType": "HUE_SHIFT"
+    ]
   },
   {
     "description": "APE_ATOLL_DUNGEON_WALLS",
