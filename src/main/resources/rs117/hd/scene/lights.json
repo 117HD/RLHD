@@ -20263,6 +20263,24 @@
     ]
   },
   {
+    "description": "BRYOPHYTA_CAMPFIRE",
+    "height": 70,
+    "alignment": "CENTER",
+    "radius": 450,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      26185
+    ]
+  },
+  {
     "description": "FIRE_LARGE",
     "height": 80,
     "alignment": "CENTER",
