@@ -20231,6 +20231,7 @@
       35913,
       26577,
       26578,
+      26185,
       43475,
       13337,
       14169,
@@ -20259,24 +20260,6 @@
       12796,
       3775,
       49927
-    ]
-  },
-  {
-    "description": "BRYOPHYTA_CAMPFIRE",
-    "height": 70,
-    "alignment": "CENTER",
-    "radius": 450,
-    "strength": 12.5,
-    "color": [
-      252,
-      148,
-      3
-    ],
-    "type": "FLICKER",
-    "duration": 0,
-    "range": 20,
-    "objectIds": [
-      26185
     ]
   },
   {
