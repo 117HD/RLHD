@@ -336,7 +336,7 @@ public enum Area
 		new AABB(3107,3186),
 		new AABB(3114,3167),
 		new AABB(3112,3167),
-		new AABB(3107,3167),
+		new AABB(3107,3167, 3107, 3168),
 		new AABB(3118,3166),
 		new AABB(3115,3166)
 	),
