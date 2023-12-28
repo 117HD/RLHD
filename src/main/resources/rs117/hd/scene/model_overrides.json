@@ -13155,5 +13155,15 @@
     ],
     "uvType": "BOX",
     "uvOrientation": 512
+  },
+  {
+    "description": "Scarab Lair Stairs - Stone Slab",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      20293
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 512
   }
 ]
