@@ -557,6 +557,7 @@ public enum Underlay {
 	),
 
 	// Zeah
+	INTERIOR_FARMING_GUILD_GRASS(p -> p.ids(48, 49, 50, 63, 66, 68, 96).area(Area.FARMING_GUILD_INTERIOR).groundMaterial(GroundMaterial.OVERWORLD_GRASS_1)),
 	ZEAH_DIRT(p -> p
 		.area(Area.ZEAH)
 		.groundMaterial(GroundMaterial.VARIED_DIRT)
