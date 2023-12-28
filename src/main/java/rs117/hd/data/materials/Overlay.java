@@ -667,7 +667,7 @@ public enum Overlay {
 
 
 	// Wizards Tower
-	WIZARDS_TOWER_PATH(164, Area.WIZARDS_TOWER_PATH, GroundMaterial.FALADOR_PATHS, p -> p.shiftSaturation(-1)),
+	WIZARDS_TOWER_PATH(p -> p.ids(164).area(Area.WIZARDS_TOWER_PATH).groundMaterial(GroundMaterial.FALADOR_PATHS).shiftSaturation(-1)),
 	WIZARDS_TOWER_PATH_BLEND_FIX(p -> p
 		.ids()
 		.groundMaterial(GroundMaterial.OVERWORLD_GRASS_1)
