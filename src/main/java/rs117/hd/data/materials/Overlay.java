@@ -221,8 +221,9 @@ public enum Overlay {
 	AL_KHARID_FLOOR_MARBLE_2(4, Area.AL_KHARID_BUILDINGS, GroundMaterial.MARBLE_1_SEMIGLOSS, p -> p.blended(false)),
 	// SOPHANEM
 	SOPHANEM_PYRAMID_UNDERSIDE(p -> p.ids(26).area(Area.SOPHANEM_PYRAMIDS).groundMaterial(GroundMaterial.SAND).hue(6).saturation(3).shiftLightness(-10)),
-	OVERRIDE_SOPHANEM_CHURCH_FLOOR_FIX_1(21, Area.SOPHANEM_FLOORS, GroundMaterial.TILES_2X2_2_SEMIGLOSS, p -> p.blended(false)),
-	OVERRIDE_SOPHANEM_CHURCH_FLOOR_FIX_2(26, Area.SOPHANEM_FLOORS, GroundMaterial.TILES_2X2_2_SEMIGLOSS, p -> p.blended(false)),
+	OVERRIDE_SOPHANEM_CHURCH_FLOOR_21(21, Area.SOPHANEM_TEMPLE_FLOORS, GroundMaterial.TILES_2X2_2_SEMIGLOSS, p -> p.blended(false)),
+	OVERRIDE_SOPHANEM_CHURCH_FLOOR_26(26, Area.SOPHANEM_TEMPLE_FLOORS, GroundMaterial.TILES_2X2_2_SEMIGLOSS, p -> p.blended(false)),
+	SOPHANEM_INTERIOR_FLOORS(p -> p.ids(26).area(Area.SOPHANEM_BUILDING_FLOORS).groundMaterial(GroundMaterial.FALADOR_PATHS).shiftLightness(5).blended(false)),
 	SOPHANEM_SUNTRAP(p -> p
 		.ids(1)
 		.groundMaterial(GroundMaterial.MARBLE_2)
@@ -237,8 +238,8 @@ public enum Overlay {
 		.shiftLightness(23)
 		.shiftSaturation(-5)
 	),
-	SOPHANEM_TEMPLE_UGLY_FLOORS_FIX_25(p -> p.ids(25).area(Area.SOPHANEM_TEMPLE_UPPERFLOORS).groundMaterial(GroundMaterial.FALADOR_PATHS).shiftHue(1).shiftSaturation(-1).lightness(40)),
-	SOPHANEM_TEMPLE_UGLY_FLOORS_FIX_26(p -> p.ids(26).area(Area.SOPHANEM_TEMPLE_UPPERFLOORS).groundMaterial(GroundMaterial.FALADOR_PATHS).lightness(40)),
+	SOPHANEM_TEMPLE_LIGHTNESS_FIX_25(p -> p.ids(25).area(Area.SOPHANEM_TEMPLE_UPPERFLOORS).groundMaterial(GroundMaterial.FALADOR_PATHS).shiftHue(1).shiftSaturation(-1).lightness(40)),
+	SOPHANEM_TEMPLE_LIGHTNESS_FIX_26(p -> p.ids(26).area(Area.SOPHANEM_TEMPLE_UPPERFLOORS).groundMaterial(GroundMaterial.FALADOR_PATHS).lightness(40)),
 	SOPHANEM_UPPERFLOORS(p -> p.ids(25).area(Area.SOPHANEM).groundMaterial(GroundMaterial.FALADOR_PATHS).shiftSaturation(-1)),
 	SOPHANEM_PATH(p -> p.ids(26).area(Area.SOPHANEM).groundMaterial(GroundMaterial.FALADOR_PATHS)),
 	// Kharidian Region
