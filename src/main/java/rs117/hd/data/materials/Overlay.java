@@ -667,11 +667,29 @@ public enum Overlay {
 
 
 	// Wizards Tower
-	WIZARDS_TOWER_PATH_FIX1(164, Area.WIZARDS_TOWER_PATH, GroundMaterial.FALADOR_PATHS, p -> p.shiftSaturation(-1)),
-	WIZARDS_TOWER_PATH_FIX2(164, Area.WIZARD_TOWER_PATH_PARTIAL_TILES, GroundMaterial.OVERWORLD_GRASS_1, p -> p
+	WIZARDS_TOWER_PATH(164, Area.WIZARDS_TOWER_PATH, GroundMaterial.FALADOR_PATHS, p -> p.shiftSaturation(-1)),
+	WIZARDS_TOWER_PATH_BLEND_FIX(p -> p
+		.ids()
+		.groundMaterial(GroundMaterial.OVERWORLD_GRASS_1)
 		.hue(10)
 		.saturation(5)
 		.lightness(19)
+
+	),
+	WIZARDS_TOWER_PATH_BLEND_FIX_WINTER(p -> p
+		.ids()
+		.area(Area.WIZARD_TOWER_PATH_PARTIAL_TILES)
+		.groundMaterial(GroundMaterial.FALADOR_PATHS)
+		.shiftSaturation(-1)
+		.replaceWithIf(WINTER_GRASS, plugin -> plugin.configGroundBlending)
+	),
+	WIZARDS_TOWER_PATH_BLEND_FIX_TOGGLE(p -> p
+		.ids(164)
+		.area(Area.WIZARD_TOWER_PATH_PARTIAL_TILES)
+		.groundMaterial(GroundMaterial.FALADOR_PATHS)
+		.shiftSaturation(-1)
+		.replaceWithIf(WIZARDS_TOWER_PATH_BLEND_FIX, plugin -> plugin.configGroundBlending)
+		.seasonalReplacement(SeasonalTheme.WINTER, WIZARDS_TOWER_PATH_BLEND_FIX_WINTER)
 	),
 
 	// Misthalin Mystery
