@@ -13106,6 +13106,7 @@
       20305,
       20306,
       20307,
+      20309,
       20310
     ],
     "uvType": "BOX",
@@ -13131,5 +13132,16 @@
     "uvType": "BOX",
     "uvOrientation": 512,
     "uvScale": 1.1
+  },
+  {
+    "description": "Scarab Lair - Walls",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      20289,
+      20290,
+      20291
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 256
   }
 ]
