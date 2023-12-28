@@ -3328,15 +3328,17 @@
   },
   {
     "description": "Desert pyramid walls - Interior",
-    "baseMaterial": "ROCK_2",
+    "baseMaterial": "ROCK_3",
     "objectIds": [
       6505,
       6525,
       6526,
+      6527,
       6529,
       6530,
       6531
-    ]
+    ],
+    "uvType": "BOX"
   },
   {
     "description": "Desert pyramid Tunnel",
