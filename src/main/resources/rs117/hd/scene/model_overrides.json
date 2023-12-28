@@ -13077,5 +13077,16 @@
     "baseMaterial": "DIRT_2",
     "objectIds": [ 12204, 12205, 12208, 12210, 12211 ],
     "uvType": "BOX"
+  },
+  {
+    "description": "Objects - Wooden - Private Bank Booth Destroyed",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      20324
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.9,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512
   }
 ]
