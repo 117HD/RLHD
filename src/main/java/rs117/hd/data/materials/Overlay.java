@@ -281,6 +281,7 @@ public enum Overlay {
 	FALADOR_BUILDING_FLOOR_2(33, Area.FALADOR, GroundMaterial.MARBLE_1_GLOSS, p -> p.blended(false)),
 	FALADOR_BUILDING_FLOOR_3(77, Area.FALADOR, GroundMaterial.MARBLE_2_GLOSS, p -> p.blended(false)),
 	FALADOR_BUILDING_FLOOR_4(13, Area.FALADOR, GroundMaterial.NONE, p -> p.blended(false)),
+	GIANT_MOLE_LAIR_DIRT(p -> p.ids(42, 161).area(Area.GIANT_MOLE_LAIR).groundMaterial(GroundMaterial.VARIED_DIRT)),
 
 	// Port Sarim
 	PORT_SARIM_BETTYS_HOUSE_1(11, Area.PORT_SARIM_BETTYS_HOUSE, GroundMaterial.MARBLE_DARK, p -> p
@@ -495,6 +496,9 @@ public enum Overlay {
 		.blended(false)
 		.ids(9, 11, 13, 18)
 	),
+
+	WITCHAVEN_PATHS(p -> p.ids(106).area(Area.WITCHAVEN).groundMaterial(GroundMaterial.VARIED_DIRT)),
+
 	KHAZARD_BATTLEFIELD_COBBLE_INDOORS(11, Area.KHAZARD_BATTLEFIELD_COBBLE, GroundMaterial.VARROCK_PATHS),
 	KHAZARD_BATTLEFIELD_COBBLE_OUTSIDE(11, Area.KHAZARD_BATTLEFIELD_COBBLE_OUTSIDE, GroundMaterial.VARROCK_PATHS, p -> p
 		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_JAGGED_STONE_TILE_LIGHT_2)
@@ -706,6 +710,11 @@ public enum Overlay {
 	MORYTANIA_FENKENSTRAINS_CASTLE(102, Area.FENKENSTRAINS_CASTLE, GroundMaterial.VARROCK_PATHS),
 	ABANDONED_MINE_ROCK(11, Area.MORYTANIA, GroundMaterial.DIRT),
 	TRUE_BLOOD_ALTAR_BLOOD(72, Area.TRUE_BLOOD_ALTAR, WaterType.BLOOD),
+	BARROWS_PATH(GroundMaterial.DIRT, p -> p
+		.ids(110)
+		.area(Area.BARROWS)
+		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_DIRT)),
+	TEMPLE_TREKKING_SWAMP_WATER(p -> p.ids(85).area(Area.TEMPLE_TREKKING_INSTANCES).waterType(WaterType.SWAMP_WATER)),
 
 	// Wilderness
 	WILDERNESS_NORTH_OF_RESOURCE_AREA_HILLS(11, Area.WILDERNESS_NORTH_OF_RESOURCE_AREA, GroundMaterial.VARIED_DIRT),
@@ -946,31 +955,34 @@ public enum Overlay {
 	CERBERUS_WATER(128, Area.CERBERUS, WaterType.SWAMP_WATER_FLAT),
 	SHIP_SAILING_WATER(p -> p.area(Area.SHIP_SAILING).ids(6).waterType(WaterType.WATER_FLAT)),
 
-	// Default overlays
-	OVERLAY_WATER(p -> p.area(Area.OVERWORLD).ids(-128, -105, -98, 6, 41, 104, 196).waterType(WaterType.WATER)),
-	OVERWORLD_GRASS(p -> p
-		.area(Area.OVERWORLD)
-		.ids(29)
-		.groundMaterial(GroundMaterial.OVERWORLD_GRASS_1)
-		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_GRASS)
-	),
-	OVERLAY_DIRT(
-		GroundMaterial.DIRT,
-		p -> p.ids(-124, -84, -83, 14, 15, 16, 21, 22, 23, 60, 77, 81, 82, 88, 89, 101, 102, 107, 108, 110, 115, 123, 227)
-	),
-	OVERLAY_GRAVEL(GroundMaterial.GRAVEL, p -> p.ids(-76, 2, 3, 4, 6, 8, 9, 10, 119, 127)),
-	OVERLAY_VARROCK_PATHS(Area.OVERWORLD, GroundMaterial.VARROCK_PATHS, p -> p
-		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_JAGGED_STONE_TILE)
-		.ids(-85, -77, 11)
-	),
 	WIZARD_TOWER_ROOF(GroundMaterial.MARBLE_1_GLOSS, p -> p
 		.ids(33)
 		.blended(false)
 		.area(Area.WIZARD_TOWER_ROOF)
 		.seasonalReplacement(SeasonalTheme.WINTER, SNOW_2)
 	),
+	VARROCK_PATHS(Area.OVERWORLD, GroundMaterial.VARROCK_PATHS, p -> p
+		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_JAGGED_STONE_TILE)
+		.ids(-85, -77, 11)
+	),
+
+	// Default overworld overlays
+	OVERWORLD_GRASS(p -> p
+		.area(Area.OVERWORLD)
+		.ids(29)
+		.groundMaterial(GroundMaterial.OVERWORLD_GRASS_1)
+		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_GRASS)
+	),
+
+	// Fallback overlays
+	OVERLAY_WATER(p -> p.ids(-105, -98, 6, 41, 104, 196).waterType(WaterType.WATER)),
+	OVERLAY_DIRT(
+		GroundMaterial.DIRT,
+		p -> p.ids(-124, -84, -83, 14, 15, 16, 21, 22, 23, 60, 77, 81, 82, 88, 89, 101, 102, 107, 108, 110, 115, 123, 227)
+	),
+	OVERLAY_SWAMP_WATER(WaterType.SWAMP_WATER, p -> p.ids(-100, 7, 128)),
+	OVERLAY_GRAVEL(GroundMaterial.GRAVEL, p -> p.ids(-76, 2, 3, 4, 6, 8, 9, 10, 119, 127)),
 	SOUL_WARS_DIRT_PATH(p -> p.ids(106).area(Area.ISLE_OF_SOULS).groundMaterial(GroundMaterial.DIRT)),
-	OVERLAY_SWAMP_WATER(WaterType.SWAMP_WATER, p -> p.ids(-100, 7)),
 	OVERLAY_WOOD_PLANKS(GroundMaterial.WOOD_PLANKS_1, p -> p.ids(5, 35)),
 	OVERLAY_CLEAN_WOOD_PLANKS(GroundMaterial.CLEAN_WOOD_FLOOR, p -> p.ids(52).shiftLightness(-4)),
 	OVERLAY_SAND(GroundMaterial.SAND, p -> p.ids(25, 26, 76)),
