@@ -5860,7 +5860,8 @@
     "baseMaterial": "ROCK_1",
     "objectIds": [
       14501,
-      15630
+      15630,
+      20295
     ],
     "inheritTileColorType": "OVERLAY",
     "uvType": "WORLD_XZ",
@@ -5894,7 +5895,9 @@
       17865,
       17868,
       17869,
-      17870
+      17870,
+      20294,
+      20296
     ],
     "inheritTileColorType": "OVERLAY",
     "uvType": "WORLD_XZ",
@@ -13143,5 +13146,14 @@
     ],
     "uvType": "BOX",
     "uvOrientation": 256
+  },
+  {
+    "description": "Sophanem Bank - Plank Trap Door",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      20340
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512
   }
 ]
