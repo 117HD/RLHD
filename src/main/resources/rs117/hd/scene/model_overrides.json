@@ -13098,5 +13098,38 @@
     "uvScale": 0.9,
     "uvOrientationX": 512,
     "uvOrientationZ": 512
+  },
+  {
+    "description": "Scarab Lair - Objects - Stone - Stalagmite - Huge",
+    "baseMaterial": "ROCK_4",
+    "objectIds": [
+      20305,
+      20306,
+      20307,
+      20310
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Scarab Lair - Objects - Stone - Stalagmite - Large",
+    "baseMaterial": "ROCK_4",
+    "objectIds": [
+      20301,
+      20302,
+      20303
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Scarab Lair - Objects - Stone - Stalagmite - Small",
+    "baseMaterial": "ROCK_5",
+    "objectIds": [
+      20304,
+      20308
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 1.1
   }
 ]
