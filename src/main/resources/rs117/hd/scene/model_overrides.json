@@ -13063,5 +13063,25 @@
     "baseMaterial": "DIRT_2",
     "objectIds": [ 12204, 12205, 12208, 12210, 12211 ],
     "uvType": "BOX"
+  },
+  {
+    "description": "Fossil Island - Wyvern Task Area - Objects - Stone - Stalagmite - Large",
+    "baseMaterial": "ROCK_4",
+    "objectIds": [
+      25342,
+      25343
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 128,
+    "uvScale": 0.78
+  },
+  {
+    "description": "Fossil Island - Wyvern Task Area - Objects - Stone - Stalagmite - Small",
+    "baseMaterial": "ROCK_5",
+    "objectIds": [
+      25345
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512
   }
 ]
