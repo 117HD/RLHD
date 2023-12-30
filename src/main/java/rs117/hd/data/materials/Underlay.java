@@ -556,6 +556,9 @@ public enum Underlay {
 		.shiftLightness(5)
 	),
 
+	//
+	FOSSIL_ISLAND_WYVERN_DIRT(p -> p.ids(17).area(Area.FOSSIL_ISLAND_WYVERN_TASK_CAVE).groundMaterial(GroundMaterial.EARTHEN_CAVE_FLOOR)),
+
 	// Zeah
 	ZEAH_DIRT(p -> p
 		.area(Area.ZEAH)
