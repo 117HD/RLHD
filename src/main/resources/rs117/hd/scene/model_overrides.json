@@ -13151,5 +13151,33 @@
     "uvType": "BOX",
     "uvScale": 0.6,
     "uvOrientation": 386
+  },
+  {
+    "description": "Fossil Island - Wyvern Task Area - Objects - Stone - Water Rocks - Large",
+    "baseMaterial": "ROCK_5",
+    "objectIds": [
+      25344
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 128,
+    "uvScale": 0.78
+  },
+  {
+    "description": "Bones - Medium",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [ 14028 ],
+    "uvType": "BOX",
+    "uvOrientation": 768,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Fossil Island - Wyvern Task Area - Objects - Stone - Shrine",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      30851
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 128,
+    "uvScale": 0.78
   }
 ]
