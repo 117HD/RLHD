@@ -13113,5 +13113,15 @@
     "uvType": "BOX",
     "uvScale": 0.6,
     "uvOrientation": 256
+  },
+  {
+    "description": "Fossil Island - Wyvern Task Area - Rock stairs",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      31485
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 256
   }
 ]
