@@ -13083,5 +13083,35 @@
     ],
     "uvType": "BOX",
     "uvOrientation": 512
+  },
+  {
+    "description": "Fossil Island - Wyvern Task Area - Walls - Stone",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      25296,
+      25297,
+      25311,
+      25312,
+      25313,
+      25314,
+      25315,
+      25316,
+      25317,
+      25318
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Fossil Island - Wyvern Task Area - Wall Lip",
+    "baseMaterial": "ROCK_4",
+    "objectIds": [
+      25321,
+      25323
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 256
   }
 ]
