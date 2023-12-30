@@ -13123,5 +13123,22 @@
     "uvType": "BOX",
     "uvScale": 0.6,
     "uvOrientation": 256
+  },
+  {
+    "description": "Fossil Island - Wyvern Task Area - Objects - Mushroom - Medium",
+    "baseMaterial": "PLANT_GRUNGE_2",
+    "objectIds": [
+      14538,
+      14539,
+      14541,
+      14589,
+      14591,
+      14617,
+      14618,
+      14619
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 386
   }
 ]
