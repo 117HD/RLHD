@@ -13097,7 +13097,18 @@
       25315,
       25316,
       25317,
-      25318
+      25318,
+      25352
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Fossil Island - Wyvern Task Area - Walls - Stone",
+    "baseMaterial": "STONE_NORMALED_DARK",
+    "objectIds": [
+      25352
     ],
     "uvType": "BOX",
     "uvScale": 0.6,
