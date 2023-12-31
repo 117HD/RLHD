@@ -13063,5 +13063,25 @@
     "baseMaterial": "DIRT_2",
     "objectIds": [ 12204, 12205, 12208, 12210, 12211 ],
     "uvType": "BOX"
+  },
+  {
+    "description": "Fossil Island - Objects - Giant Yellow Mushtree",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [ 30838, 30839 ]
+  },
+  {
+    "description": "Fossil Island - Objects - Yellow Mushtree",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [ 30834 ]
+  },
+  {
+    "description": "Fossil Island - Objects - White Mushtree",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [ 30835 ]
+  },
+  {
+    "description": "Fossil Island - Objects - Lifelilly",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [ 30841 ]
   }
 ]
