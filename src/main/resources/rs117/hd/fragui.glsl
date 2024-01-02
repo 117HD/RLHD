@@ -39,7 +39,13 @@ uniform float colorBlindnessIntensity;
 uniform vec4 alphaOverlay;
 
 #include scaling/bicubic.glsl
+#include utils/constants.glsl
 #include utils/color_blindness.glsl
+
+#if SHADOW_MAP_OVERLAY
+uniform sampler2D shadowMap;
+uniform ivec4 shadowMapOverlayDimensions;
+#endif
 
 #if UI_SCALING_MODE == SAMPLING_XBR
 #include scaling/xbr_lv2_frag.glsl
@@ -59,6 +65,16 @@ vec4 alphaBlend(vec4 src, vec4 dst) {
 }
 
 void main() {
+    #if SHADOW_MAP_OVERLAY
+    {
+        vec2 uv = (gl_FragCoord.xy - shadowMapOverlayDimensions.xy) / shadowMapOverlayDimensions.zw;
+        if (0 <= uv.x && uv.x <= 1 && 0 <= uv.y && uv.y <= 1) {
+            FragColor = texture(shadowMap, uv);
+            return;
+        }
+    }
+    #endif
+
     #if UI_SCALING_MODE == SAMPLING_MITCHELL || UI_SCALING_MODE == SAMPLING_CATROM
     vec4 c = textureCubic(uiTexture, TexCoord);
     #elif UI_SCALING_MODE == SAMPLING_XBR

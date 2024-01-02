@@ -15,7 +15,7 @@ public enum TimeOfDay
 	NIGHT,
 	;
 
-	public static final float MINUTES_PER_DAY = 1f;
+	public static final float MINUTES_PER_DAY = 30 / 60.f;
 
 	/**
 	 * Get the current sun or moon angles for a given set of coordinates and simulated day length in minutes.

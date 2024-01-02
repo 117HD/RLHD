@@ -26,6 +26,7 @@
 package rs117.hd.utils;
 
 import com.google.gson.Gson;
+import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
@@ -55,7 +56,7 @@ import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.RegEx;
-import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.BufferUtils;
@@ -152,64 +153,75 @@ public class ResourcePath {
     }
 
     public ResourcePath setExtension(String extension) {
-        if (path == null)
-            throw new IllegalStateException("Cannot set extension for root path: " + this);
+		if (path == null)
+			throw new IllegalStateException("Cannot set extension for root path: " + this);
 
-        String path = this.path;
-        int i = path.lastIndexOf('.');
-        if (i != -1)
-            path = path.substring(0, i);
-        return new ResourcePath(root, path);
-    }
+		String path = this.path;
+		int i = path.lastIndexOf('.');
+		if (i != -1)
+			path = path.substring(0, i);
 
-    public boolean matches(@RegEx String posixPathRegex) {
-        Pattern p = Pattern.compile(posixPathRegex);
-        Matcher m = p.matcher(toPosixPath());
-        return m.find();
-    }
+		if (extension != null && !extension.isEmpty())
+			path += '.' + extension;
 
-    @Override
-    public String toString() {
-        String path = toPosixPath();
-        if (root != null)
-            path = normalize(root.toPosixPath(), path.startsWith("/") ? path.substring(1) : path);
-        return path.length() == 0 ? "." : path;
-    }
+		return new ResourcePath(root, path);
+	}
 
-    public ResourcePath toAbsolute() {
-        if (root != null) {
-            Path rootPath = root.toPath().toAbsolutePath();
-            Path path = toPath().toAbsolutePath();
-            return new ResourcePath(root, rootPath.relativize(path).toString());
-        }
-        return path(toPath().toAbsolutePath());
-    }
+	public boolean matches(@RegEx String posixPathRegex) {
+		Pattern p = Pattern.compile(posixPathRegex);
+		Matcher m = p.matcher(toPosixPath());
+		return m.find();
+	}
 
-    public String toPosixPath() {
-        if (root != null)
-            return normalize(root.toPosixPath(), new String[] { path });
-        return path;
-    }
+	@Override
+	public boolean equals(Object other) {
+		return
+			other instanceof ResourcePath &&
+			toAbsolute().toPosixPath().equals(((ResourcePath) other).toAbsolute().toPosixPath());
+	}
 
-    public Path toPath() {
-        if (root == null) {
-            assert path != null;
-            return Paths.get(path);
-        }
+	@Override
+	public String toString() {
+		String path = toPosixPath();
+		if (root != null)
+			path = normalize(root.toPosixPath(), path.startsWith("/") ? path.substring(1) : path);
+		return path.length() == 0 ? "." : path;
+	}
 
-        Path basePath = root.toPath();
-        if (path == null)
-            return basePath;
+	public ResourcePath toAbsolute() {
+		if (root != null) {
+			Path rootPath = root.toPath().toAbsolutePath();
+			Path path = toPath().toAbsolutePath();
+			return new ResourcePath(root, rootPath.relativize(path).toString());
+		}
+		return path(toPath().toAbsolutePath());
+	}
 
-        String relativePath = path.startsWith("/") ? path.substring(1) : path;
-        return basePath.resolve(relativePath);
-    }
+	public String toPosixPath() {
+		if (root != null)
+			return normalize(root.toPosixPath(), new String[] { path });
+		return path;
+	}
 
-    public File toFile() {
+	public Path toPath() {
+		if (root == null) {
+			assert path != null;
+			return Paths.get(path);
+		}
+
+		Path basePath = root.toPath();
+		if (path == null)
+			return basePath;
+
+		String relativePath = path.startsWith("/") ? path.substring(1) : path;
+		return basePath.resolve(relativePath);
+	}
+
+	public File toFile() {
 		if (!isFileSystemResource())
 			throw new IllegalStateException("Not a file: " + this);
-        return toPath().toFile();
-    }
+		return toPath().toFile();
+	}
 
     @NonNull
     public URL toURL() throws IOException {
@@ -272,17 +284,13 @@ public class ResourcePath {
 	 */
 	public FileWatcher.UnregisterCallback watch(BiConsumer<ResourcePath, Boolean> changeHandler) {
 		// Only watch files on the file system
-		if (!isFileSystemResource() || RESOURCE_PATH == null) {
+		if (RESOURCE_PATH == null) {
 			changeHandler.accept(this, true);
 			return NOOP;
 		}
 
-		ResourcePath path = this;
-		// If the resource is loaded by a class or class loader, attempt to redirect it to the main resource directory
-		if (isClassResource()) {
-			// Assume the project's resource directory lies at "src/main/resources" in the process working directory
-			path = RESOURCE_PATH.chroot().resolve(toAbsolute().toPath().toString());
-		}
+		// Attempt to redirect to the resource directory
+		ResourcePath path = RESOURCE_PATH.chroot().resolve(toAbsolute().toPath().toString());
 
 		// Load once up front
 		changeHandler.accept(path, true);
@@ -324,9 +332,17 @@ public class ResourcePath {
 
 	public BufferedImage loadImage() throws IOException {
 		try (InputStream is = toInputStream()) {
-			synchronized (ImageIO.class) {
-				return ImageIO.read(is);
-			}
+			byte[] bytes = is.readAllBytes();
+			var icon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(bytes));
+			var bufferedImage = new BufferedImage(
+				icon.getIconWidth(),
+				icon.getIconHeight(),
+				BufferedImage.TYPE_INT_ARGB
+			);
+			var g = bufferedImage.createGraphics();
+			icon.paintIcon(null, g, 0, 0);
+			g.dispose();
+			return bufferedImage;
 		}
     }
 
@@ -547,7 +563,7 @@ public class ResourcePath {
             assert path != null;
 
             // Attempt to load resource from project resource folder if it's on the file system
-			if (RESOURCE_PATH != null && isFileSystemResource()) {
+			if (RESOURCE_PATH != null) {
 				ResourcePath path = null;
 				try {
 					path = RESOURCE_PATH.chroot().resolve(toAbsolute().toPath().toString());
@@ -624,15 +640,15 @@ public class ResourcePath {
             assert path != null;
 
             // Attempt to load resource from project resource folder if it's not located in a jar
-            if (RESOURCE_PATH != null && isFileSystemResource()) {
-                ResourcePath path = null;
-                try {
-                    path = RESOURCE_PATH.chroot().resolve(toAbsolute().toPath().toString());
-                    return path.toInputStream();
-                } catch (Exception ex) {
-                    log.warn("Failed to load resource from project resource folder: {}", path, ex);
-                }
-            }
+			if (RESOURCE_PATH != null) {
+				ResourcePath path = null;
+				try {
+					path = RESOURCE_PATH.chroot().resolve(toAbsolute().toPath().toString());
+					return path.toInputStream();
+				} catch (Exception ex) {
+					log.warn("Failed to load resource from project resource folder: {}", path, ex);
+				}
+			}
 
             InputStream is = root.getResourceAsStream(path);
             if (is == null)

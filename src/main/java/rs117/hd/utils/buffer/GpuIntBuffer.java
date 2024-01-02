@@ -26,6 +26,7 @@ package rs117.hd.utils.buffer;
 
 import java.nio.IntBuffer;
 import org.lwjgl.system.MemoryUtil;
+import rs117.hd.HdPlugin;
 
 public class GpuIntBuffer
 {
@@ -36,8 +37,7 @@ public class GpuIntBuffer
 		this(65536);
 	}
 
-	public GpuIntBuffer(int initialCapacity)
-	{
+	public GpuIntBuffer(int initialCapacity) {
 		buffer = MemoryUtil.memAllocInt(initialCapacity);
 	}
 
@@ -47,13 +47,17 @@ public class GpuIntBuffer
 		buffer = null;
 	}
 
-	public void put(int x, int y, int z)
-	{
+	@Override
+	@SuppressWarnings("deprecation")
+	protected void finalize() {
+		destroy();
+	}
+
+	public void put(int x, int y, int z) {
 		buffer.put(x).put(y).put(z);
 	}
 
-	public void put(int x, int y, int z, int w)
-	{
+	public void put(int x, int y, int z, int w) {
 		buffer.put(x).put(y).put(z).put(w);
 	}
 
@@ -70,25 +74,25 @@ public class GpuIntBuffer
 		return buffer.position();
 	}
 
-	public void flip()
-	{
+	public void flip() {
 		buffer.flip();
 	}
 
-	public void clear()
-	{
+	public GpuIntBuffer clear() {
 		buffer.clear();
+		return this;
 	}
 
-	public GpuIntBuffer ensureCapacity(int size)
-	{
+	public int capacity() {
+		return buffer.capacity();
+	}
+
+	public GpuIntBuffer ensureCapacity(int size) {
 		int capacity = buffer.capacity();
 		final int position = buffer.position();
-		if ((capacity - position) < size)
-		{
-			do
-			{
-				capacity *= 2;
+		if ((capacity - position) < size) {
+			do {
+				capacity *= HdPlugin.BUFFER_GROWTH_MULTIPLIER;
 			}
 			while ((capacity - position) < size);
 

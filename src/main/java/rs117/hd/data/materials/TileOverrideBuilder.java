@@ -3,10 +3,11 @@ package rs117.hd.data.materials;
 import java.util.Arrays;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import lombok.NonNull;
+import javax.annotation.Nonnull;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import rs117.hd.HdPlugin;
+import rs117.hd.config.SeasonalTheme;
 import rs117.hd.data.WaterType;
 import rs117.hd.data.environments.Area;
 
@@ -25,8 +26,7 @@ class TileOverrideBuilder<T> {
     public int shiftSaturation = 0;
     public int lightness = -1;
     public int shiftLightness = 0;
-    public T replacement;
-    public Function<HdPlugin, Boolean> replacementCondition = c -> false;
+	public TileOverrideResolver<T> replacementResolver;
 
     TileOverrideBuilder<T> apply(Consumer<TileOverrideBuilder<T>> consumer) {
         consumer.accept(this);
@@ -49,15 +49,30 @@ class TileOverrideBuilder<T> {
         return this;
     }
 
-    TileOverrideBuilder<T> waterType(WaterType waterType) {
-        this.waterType = waterType;
-        this.groundMaterial = GroundMaterial.NONE;
-        return this;
-    }
+	TileOverrideBuilder<T> waterType(WaterType waterType) {
+		this.waterType = waterType;
+		this.groundMaterial = GroundMaterial.NONE;
+		return this;
+	}
 
-    TileOverrideBuilder<T> replaceWithIf(@NonNull T replacement, @NonNull Function<HdPlugin, Boolean> condition) {
-        this.replacement = replacement;
-        this.replacementCondition = condition;
-        return this;
-    }
+	TileOverrideBuilder<T> replaceWithIf(T replacement, @Nonnull Function<HdPlugin, Boolean> condition) {
+		var previousResolver = replacementResolver;
+		replacementResolver = (plugin, scene, tile, override) -> {
+			if (condition.apply(plugin))
+				return replacement;
+			if (previousResolver != null)
+				return previousResolver.resolve(plugin, scene, tile, override);
+			return override;
+		};
+		return this;
+	}
+
+	TileOverrideBuilder<T> seasonalReplacement(SeasonalTheme seasonalTheme, T replacement) {
+		return replaceWithIf(replacement, plugin -> plugin.configSeasonalTheme == seasonalTheme);
+	}
+
+	TileOverrideBuilder<T> resolver(@Nonnull TileOverrideResolver<T> resolver) {
+		replacementResolver = resolver;
+		return this;
+	}
 }

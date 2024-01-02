@@ -26,22 +26,15 @@
  */
 package rs117.hd.utils;
 
-import java.awt.Color;
 import lombok.extern.slf4j.Slf4j;
 import rs117.hd.scene.TimeOfDay;
 
+import java.awt.*;
+
 import static java.lang.Math.PI;
-import static java.lang.Math.acos;
-import static java.lang.Math.asin;
-import static java.lang.Math.atan2;
-import static java.lang.Math.cos;
-import static java.lang.Math.sin;
-import static java.lang.Math.tan;
+import static java.lang.Math.*;
 import static rs117.hd.utils.ColorUtils.rgb;
-import static rs117.hd.utils.HDUtils.add;
-import static rs117.hd.utils.HDUtils.clamp;
-import static rs117.hd.utils.HDUtils.lerp;
-import static rs117.hd.utils.HDUtils.multiply;
+import static rs117.hd.utils.HDUtils.*;
 
 @Slf4j
 public class SunCalc
@@ -109,7 +102,7 @@ public class SunCalc
 			strength *= 3;
 			float[] sunIllumination = ColorUtils.colorTemperatureToLinearRgb(temperature);
 			sunIllumination = multiply(sunIllumination, strength);
-			rgb = add(rgb, sunIllumination);
+			add(rgb, rgb, sunIllumination);
 		}
 
 		return rgb;
