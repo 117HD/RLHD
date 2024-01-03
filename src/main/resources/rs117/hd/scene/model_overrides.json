@@ -13063,5 +13063,30 @@
     "baseMaterial": "DIRT_2",
     "objectIds": [ 12204, 12205, 12208, 12210, 12211 ],
     "uvType": "BOX"
+  },
+  {
+    "description": "Sorceress Garden Shurb Walls - Spring",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [
+      12721, 12726, 12727, 12728, 12729
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Sorceress Garden Shurb Walls - Summer",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [
+      11989, 11990, 11991, 11992,
+      11993, 11994, 11995
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Sorceress Garden Shurb Walls - Winter",
+    "baseMaterial": "GRAY_65",
+    "objectIds": [
+      12619, 12620, 12621, 12622
+    ],
+    "uvType": "BOX"
   }
 ]
