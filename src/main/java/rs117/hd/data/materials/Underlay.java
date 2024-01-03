@@ -219,6 +219,8 @@ public enum Underlay {
 		.area(Area.PVP_ARENA)
 		.ids(66, 68)
 	),
+	SORCERESS_GUARDEN_GRASS(P -> P.ids(7, 48, 51, 66, 93).area(Area.SORCERESS_GARDEN).groundMaterial(GroundMaterial.GRASS_1)),
+	SORCERESS_GUARDEN_SNOW(P -> P.ids(9, 30, 111).area(Area.SORCERESS_GARDEN).groundMaterial(GroundMaterial.SNOW_2)),
 	DESERT_TREASURE_INTERIOR_FLOOR(GroundMaterial.SANDY_STONE_FLOOR, p -> p
 		.area(Area.DESERT_TREASURE_PYRAMID)
 		.ids(61, 64)
