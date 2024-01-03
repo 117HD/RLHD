@@ -210,6 +210,7 @@ public enum Overlay {
 	DIGSITE_DOCK(93, Area.DIGSITE_DOCK, GroundMaterial.TILES_2X2_1_GLOSS, p -> p.blended(false)),
 
 	// Al Kharid
+	SORCERESS_GUARDEN_UNDERWALL(P -> P.ids(26).area(Area.SORCERESS_GARDEN).blended(false)),
 	OVERRIDE_SOPHANEM_CHURCH_FLOOR_FIX_1(21, Area.SOPHANEM_FLOORS, GroundMaterial.TILES_2X2_2_SEMIGLOSS, p -> p.blended(false)),
 	OVERRIDE_SOPHANEM_CHURCH_FLOOR_FIX_2(26, Area.SOPHANEM_FLOORS, GroundMaterial.TILES_2X2_2_SEMIGLOSS, p -> p.blended(false)),
 	SOPHANEM_SUNTRAP(p -> p
