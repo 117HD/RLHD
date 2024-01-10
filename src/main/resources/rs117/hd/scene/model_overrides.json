@@ -2930,6 +2930,8 @@
       25326,
       25327,
       25328,
+      25329,
+      25330,
       28500,
       28501,
       28502,
@@ -13218,5 +13220,91 @@
     "uvType": "BOX",
     "uvScale": 0.8,
     "uvOrientation": 512
+  },
+  {
+    "description": "Fossil Island - Wyvern Task Area - Objects - Stone - Stalagmite - Large",
+    "baseMaterial": "ROCK_4",
+    "objectIds": [ 25342, 25343 ],
+    "uvType": "BOX",
+    "uvOrientation": 128,
+    "uvScale": 0.78
+  },
+  {
+    "description": "Fossil Island - Wyvern Task Area - Objects - Stone - Stalagmite - Small",
+    "baseMaterial": "ROCK_5",
+    "objectIds": [ 25345 ],
+    "uvType": "BOX",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Fossil Island - Wyvern Task Area - Walls - Stone",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      25296, 25297, 25311, 25312,
+      25313, 25314, 25315, 25316,
+      25317, 25318
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Fossil Island - Wyvern Task Area - Walls - Stone",
+    "baseMaterial": "STONE_NORMALED_DARK",
+    "objectIds": [ 25352 ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Fossil Island - Wyvern Task Area - Wall Lip",
+    "baseMaterial": "ROCK_4",
+    "objectIds": [ 25321, 25323 ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Fossil Island - Wyvern Task Area - Rock stairs",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [ 31485 ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Fossil Island - Wyvern Task Area - Objects - Mushroom - Medium",
+    "baseMaterial": "PLANT_GRUNGE_2",
+    "objectIds": [
+      14538, 14539, 14541, 14589,
+      14591, 14617, 14618, 14619
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 386
+  },
+  {
+    "description": "Fossil Island - Wyvern Task Area - Objects - Stone - Water Rocks - Large",
+    "baseMaterial": "ROCK_5",
+    "objectIds": [ 25344 ],
+    "uvType": "BOX",
+    "uvOrientation": 128,
+    "uvScale": 0.78
+  },
+  {
+    "description": "Fossil Island - Wyvern Task Area - Wyvern Bones - Large",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [ 14028 ],
+    "uvType": "BOX",
+    "uvOrientation": 768,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Fossil Island - Wyvern Task Area - Objects - Stone - Shrine",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [ 30851 ],
+    "uvType": "BOX",
+    "uvOrientation": 128,
+    "uvScale": 0.78
   }
 ]
