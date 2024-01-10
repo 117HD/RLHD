@@ -734,6 +734,75 @@ public enum Underlay {
 	// Cutscenes
 	CANOE_CUTSCENE_GRASS(Area.CANOE_CUTSCENE, GroundMaterial.GRASS_SCROLLING, p -> p.ids(48, 50, 63)),
 
+	ISLE_OF_SOULS_HOT_ZONE_COMPLEX(p -> p
+		.ids(8, 27, 33, 35, 36, 37, 38, 63, 72, 118, 143, 144, 145, 146, 147, 148, 149, 150, 152)
+		.area(Area.ISLE_OF_SOULS_HOT_ZONES)
+		.replacementResolver(
+			(plugin, scene, tile, override) -> {
+				int[] hsl = HDUtils.getSouthWesternMostTileColor(tile);
+				if (hsl == null)
+					return override;
+
+				// Ash or stone
+				if (hsl[0] < 10 && hsl[1] <= 1 && hsl[2] <= 20) {
+					return DEFAULT_ROCKY_GROUND;
+				}
+
+				// Dirt
+				if (hsl[0] <= 8 && hsl[1] >= 1 && hsl[2] <= 71) {
+					return DEFAULT_DIRT;
+				}
+
+				// Grass
+				if (hsl[0] >= 8 && hsl[1] >= 5 && hsl[2] >= 20 || hsl[0] >= 9 && hsl[1] >= 3 || hsl[0] > 20) {
+					return DEFAULT_GRASS;
+				}
+
+				return DEFAULT_DIRT;
+			}
+		)
+	),
+	ISLE_OF_SOULS_COMPLEX(p -> p
+		.ids(27, 35, 36, 37, 38, 63, 72, 143, 144, 145, 146, 147, 148, 149, 150, 152)
+		.area(Area.ISLE_OF_SOULS)
+		.replacementResolver(
+			(plugin, scene, tile, override) -> {
+				int[] hsl = HDUtils.getSouthWesternMostTileColor(tile);
+				if (hsl == null)
+					return override;
+
+				// Ash or stone
+				if (hsl[0] < 10 && hsl[1] <= 1 && hsl[2] <= 20) {
+					return DEFAULT_ROCKY_GROUND;
+				}
+
+				// Dirt
+				if (hsl[0] <= 8 && hsl[1] >= 1 && hsl[2] <= 71) {
+					switch (plugin.configSeasonalTheme) {
+						case SUMMER:
+						case AUTUMN:
+							return DEFAULT_DIRT;
+						case WINTER:
+							return WINTER_DIRT;
+					}
+				}
+
+				// Grass
+				if (hsl[0] >= 8 && hsl[1] >= 5 && hsl[2] >= 20 || hsl[0] >= 9 && hsl[1] >= 3 || hsl[0] > 20) {
+					switch (plugin.configSeasonalTheme) {
+						case SUMMER:
+						case AUTUMN:
+							return DEFAULT_GRASS;
+						case WINTER:
+							return WINTER_GRASS;
+					}
+				}
+
+				return DEFAULT_DIRT;
+			}
+		)
+	),
+
 	// Items that cannot properly be fixed unless we can first detect the hue of the tile to set a texture.
 	TILE_NEEDS_HUE_DEFINED(Area.OVERWORLD, GroundMaterial.VARIED_DIRT, p -> p
 		.ids(26)

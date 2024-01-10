@@ -729,6 +729,7 @@ public enum Overlay {
 
 	// Zanaris
 	COSMIC_ENTITYS_PLANE_ABYSS(37, Area.COSMIC_ENTITYS_PLANE, GroundMaterial.NONE, p -> p.lightness(0).blended(false)),
+	ZANARIS_POND_WATER(p -> p.ids(151).area(Area.ZANARIS).waterType(WaterType.WATER)),
 
 	// Morytania
 	CANIFIS_FLOORS(85, Area.CANIFIS, GroundMaterial.HD_WOOD_PLANKS_1),
@@ -992,6 +993,7 @@ public enum Overlay {
 		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_JAGGED_STONE_TILE)
 		.ids(-85, -77, 11)
 	),
+	SOUL_WARS_DIRT_PATH(p -> p.ids(106).area(Area.ISLE_OF_SOULS).groundMaterial(GroundMaterial.DIRT)),
 
 	// Default overworld overlays
 	OVERWORLD_GRASS(p -> p
