@@ -10575,10 +10575,13 @@
   },
   {
     "description": "Wooden Wedge Stairs",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       24361
-    ]
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 1.2
   },
   {
     "description": "Morytania - Frankenstrains Castle - Walls - Brick Stone",
@@ -13063,5 +13066,15 @@
     "baseMaterial": "DIRT_2",
     "objectIds": [ 12204, 12205, 12208, 12210, 12211 ],
     "uvType": "BOX"
+  },
+  {
+    "description": "Crombwick Maynor - Ground Object - Deck",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      32616
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 1.2
   }
 ]
