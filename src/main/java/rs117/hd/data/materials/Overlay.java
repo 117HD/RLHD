@@ -479,19 +479,19 @@ public enum Overlay {
 		.saturation(4)
 		.lightness(21)
 	),
-	EAST_ARDOUGNE_PATH_BLENDING_FIX_WINTER(p -> p // This exists because there is no logic written for an override that users replaceWithif AND seasonalReplacement.
+	EAST_ARDOUGNE_PATH_BLENDING_FIX_TOGGLE_WINTER(p -> p
 		.ids()
 		.area(Area.EAST_ARDOUGNE_PATHING_FIXES)
 		.groundMaterial(GroundMaterial.WINTER_JAGGED_STONE_TILE_LIGHT)
 		.replaceWithIf(WINTER_GRASS, plugin -> plugin.configGroundBlending)
 	),
-	EAST_ARDOUGNE_PATH_BLENDING_FIX_TOGGLE(p -> p // Mimics the default path except two differences; the first replaces it with another overlay defined above, and the second replaces it if it is winter
+	EAST_ARDOUGNE_PATH_BLENDING_FIX_TOGGLE(p -> p
 		.ids(10)
 		.area(Area.EAST_ARDOUGNE_PATHING_FIXES)
 		.groundMaterial(GroundMaterial.VARROCK_PATHS)
 		.shiftLightness(6)
+		.seasonalReplacement(SeasonalTheme.WINTER, EAST_ARDOUGNE_PATH_BLENDING_FIX_TOGGLE_WINTER)
 		.replaceWithIf(EAST_ARDOUGNE_PATH_BLENDING_FIX, plugin -> plugin.configGroundBlending)
-		.seasonalReplacement(SeasonalTheme.WINTER, EAST_ARDOUGNE_PATH_BLENDING_FIX_WINTER)
 	),
 	EAST_ARDOUGNE_DOCKS_FIX_5(5, Area.EAST_ARDOUGNE_DOCKS_FIX, GroundMaterial.WOOD_PLANKS_1, p -> p.lightness(65)),
 	EAST_ARDOUGNE_DOCKS_FIX_35(35, Area.EAST_ARDOUGNE_DOCKS_FIX, GroundMaterial.WOOD_PLANKS_1, p -> p.lightness(65)),
@@ -717,7 +717,6 @@ public enum Overlay {
 		.hue(10)
 		.saturation(5)
 		.lightness(19)
-
 	),
 	WIZARDS_TOWER_PATH_BLEND_FIX_WINTER(p -> p
 		.ids()
@@ -731,8 +730,8 @@ public enum Overlay {
 		.area(Area.WIZARD_TOWER_PATH_PARTIAL_TILES)
 		.groundMaterial(GroundMaterial.FALADOR_PATHS)
 		.shiftSaturation(-1)
-		.replaceWithIf(WIZARDS_TOWER_PATH_BLEND_FIX, plugin -> plugin.configGroundBlending)
 		.seasonalReplacement(SeasonalTheme.WINTER, WIZARDS_TOWER_PATH_BLEND_FIX_WINTER)
+		.replaceWithIf(WIZARDS_TOWER_PATH_BLEND_FIX, plugin -> plugin.configGroundBlending)
 	),
 
 	// Misthalin Mystery
