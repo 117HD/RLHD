@@ -230,12 +230,16 @@ public enum Underlay {
 	RIVER_ELID_WATERFALL(p -> p.area(Area.RIVER_ELID_WATERFALL).waterType(WaterType.WATER).blended(false)),
 
 	SOPHANEM_TRAPDOOR(Area.SOPHANEM_TRAPDOOR, GroundMaterial.NONE, p -> {}),
+	SOPHANEM_UNDERGROUND_BANK(p -> p.ids(61,64).area(Area.SOPHANEM_TEMPLE_BANK).groundMaterial(GroundMaterial.FALADOR_PATHS).hue(7).saturation(3).shiftLightness(5)),
 	KHARID_SAND_1(Area.KHARID_DESERT_REGION, GroundMaterial.SAND, p -> p
 		.saturation(3)
 		.hue(6)
 		.ids(-127, 45, 49, 50, 58, 61, 62, 63, 64, 67, 68, 69, 126)),
 	NECROPOLIS_SAND(Area.NECROPOLIS, GroundMaterial.DIRT, p -> p.ids(124)),
 	SMOKE_DUNGEON(Area.SMOKE_DUNGEON, GroundMaterial.ROCKY_CAVE_FLOOR, p -> p.ids(56)),
+	SCARAB_LAIR_TILE_FLOOR(p -> p.ids(61, 64).area(Area.SCARAB_LAIR_TEMPLE).groundMaterial(GroundMaterial.FALADOR_PATHS).hue(7).saturation(3).shiftLightness(5)),
+	SCARAB_LAIR_ROCKY_FLOOR(p -> p.ids(141).area(Area.SCARAB_LAIR_BOTTOM).groundMaterial(GroundMaterial.STONE_CAVE_FLOOR).shiftLightness(4)),
+
 
 	// Burthorpe games room
 	GAMES_ROOM_INNER_FLOOR(64, Area.GAMES_ROOM_INNER, GroundMaterial.CARPET, p -> p.blended(false)),
@@ -558,6 +562,9 @@ public enum Underlay {
 		.shiftLightness(5)
 	),
 
+	//
+	FOSSIL_ISLAND_WYVERN_DIRT(p -> p.ids(17).area(Area.FOSSIL_ISLAND_WYVERN_TASK_CAVE).groundMaterial(GroundMaterial.EARTHEN_CAVE_FLOOR)),
+
 	// Zeah
 	ZEAH_DIRT(p -> p
 		.area(Area.ZEAH)
@@ -731,6 +738,75 @@ public enum Underlay {
 
 	// Cutscenes
 	CANOE_CUTSCENE_GRASS(Area.CANOE_CUTSCENE, GroundMaterial.GRASS_SCROLLING, p -> p.ids(48, 50, 63)),
+
+	ISLE_OF_SOULS_HOT_ZONE_COMPLEX(p -> p
+		.ids(8, 27, 33, 35, 36, 37, 38, 63, 72, 118, 143, 144, 145, 146, 147, 148, 149, 150, 152)
+		.area(Area.ISLE_OF_SOULS_HOT_ZONES)
+		.replacementResolver(
+			(plugin, scene, tile, override) -> {
+				int[] hsl = HDUtils.getSouthWesternMostTileColor(tile);
+				if (hsl == null)
+					return override;
+
+				// Ash or stone
+				if (hsl[0] < 10 && hsl[1] <= 1 && hsl[2] <= 20) {
+					return DEFAULT_ROCKY_GROUND;
+				}
+
+				// Dirt
+				if (hsl[0] <= 8 && hsl[1] >= 1 && hsl[2] <= 71) {
+					return DEFAULT_DIRT;
+				}
+
+				// Grass
+				if (hsl[0] >= 8 && hsl[1] >= 5 && hsl[2] >= 20 || hsl[0] >= 9 && hsl[1] >= 3 || hsl[0] > 20) {
+					return DEFAULT_GRASS;
+				}
+
+				return DEFAULT_DIRT;
+			}
+		)
+	),
+	ISLE_OF_SOULS_COMPLEX(p -> p
+		.ids(27, 35, 36, 37, 38, 63, 72, 143, 144, 145, 146, 147, 148, 149, 150, 152)
+		.area(Area.ISLE_OF_SOULS)
+		.replacementResolver(
+			(plugin, scene, tile, override) -> {
+				int[] hsl = HDUtils.getSouthWesternMostTileColor(tile);
+				if (hsl == null)
+					return override;
+
+				// Ash or stone
+				if (hsl[0] < 10 && hsl[1] <= 1 && hsl[2] <= 20) {
+					return DEFAULT_ROCKY_GROUND;
+				}
+
+				// Dirt
+				if (hsl[0] <= 8 && hsl[1] >= 1 && hsl[2] <= 71) {
+					switch (plugin.configSeasonalTheme) {
+						case SUMMER:
+						case AUTUMN:
+							return DEFAULT_DIRT;
+						case WINTER:
+							return WINTER_DIRT;
+					}
+				}
+
+				// Grass
+				if (hsl[0] >= 8 && hsl[1] >= 5 && hsl[2] >= 20 || hsl[0] >= 9 && hsl[1] >= 3 || hsl[0] > 20) {
+					switch (plugin.configSeasonalTheme) {
+						case SUMMER:
+						case AUTUMN:
+							return DEFAULT_GRASS;
+						case WINTER:
+							return WINTER_GRASS;
+					}
+				}
+
+				return DEFAULT_DIRT;
+			}
+		)
+	),
 
 	// Items that cannot properly be fixed unless we can first detect the hue of the tile to set a texture.
 	TILE_NEEDS_HUE_DEFINED(Area.OVERWORLD, GroundMaterial.VARIED_DIRT, p -> p
