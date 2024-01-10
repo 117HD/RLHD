@@ -20203,15 +20203,16 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      26180
+      26180,
+      30932
     ]
   },
   {
     "description": "FIRE",
-    "height": 300,
+    "height": 40,
     "alignment": "CENTER",
     "radius": 450,
-    "strength": 2.5,
+    "strength": 12.5,
     "color": [
       252,
       148,
@@ -26750,6 +26751,50 @@
     ]
   },
   {
+    "description": "ABYSSAL_NEXUS_TENDRILS_THRONE",
+    "height": 65,
+    "alignment": "CENTER",
+    "radius": 600,
+    "strength": 5,
+    "color": [
+      70,
+      242,
+      31
+    ],
+    "type": "FLICKER",
+    "duration": 2000,
+    "range": 20,
+    "objectIds": [
+      27005,
+      26984,
+      26985,
+      26986,
+      27004,
+      27006,
+      27014,
+      27015,
+      27016
+    ]
+  },
+  {
+    "description": "ABYSSAL_NEXUS_FONT",
+    "height": 200,
+    "alignment": "CENTER",
+    "radius": 1200,
+    "strength": 12.5,
+    "color": [
+      70,
+      242,
+      31
+    ],
+    "type": "PULSE",
+    "duration": 5000,
+    "range": 25,
+    "objectIds": [
+      27029
+    ]
+  },
+  {
     "description": "GOTR_ABYSSAL_RIFT",
     "height": 250,
     "alignment": "SOUTH",
@@ -30638,6 +30683,42 @@
     ]
   },
   {
+    "description": "ZANARIS_GREEN_MUSHROOM_CEILING",
+    "height": 290,
+    "alignment": "CENTER",
+    "radius": 100,
+    "strength": 6.25,
+    "color": [
+      180,
+      255,
+      175
+    ],
+    "type": "FLICKER",
+    "duration": 1250,
+    "range": 20,
+    "objectIds": [
+      12020
+    ]
+  },
+  {
+    "description": "ZANARIS_GREEN_LAMP_CEILING",
+    "height": 315,
+    "alignment": "CENTER",
+    "radius": 100,
+    "strength": 7.25,
+    "color": [
+      180,
+      255,
+      175
+    ],
+    "type": "FLICKER",
+    "duration": 1250,
+    "range": 20,
+    "objectIds": [
+      12021
+    ]
+  },
+  {
     "description": "RED_MUSHROOM_WALL",
     "height": 132,
     "alignment": "FRONT",
@@ -30654,6 +30735,24 @@
     "objectIds": [
       12010,
       12012
+    ]
+  },
+  {
+    "description": "ZANARIS_RED_MUSHROOM_CEILING",
+    "height": 290,
+    "alignment": "CENTER",
+    "radius": 110,
+    "strength": 29.25,
+    "color": [
+      225,
+      30,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 1250,
+    "range": 20,
+    "objectIds": [
+      12019
     ]
   },
   {
@@ -31700,5 +31799,23 @@
     "objectIds": [
       10185
     ]
+  },
+  {
+    "description": "Weiss Saltmine Entrance",
+    "worldX": 3595,
+    "worldY": 10292,
+    "plane": 2,
+    "height": 144,
+    "alignment": "NORTHEAST_CORNER",
+    "radius": 550,
+    "strength": 10.5,
+    "color": [
+      252,
+      252,
+      252
+    ],
+    "type": "STATIC",
+    "duration": 7000,
+    "range": 10
   }
 ]
