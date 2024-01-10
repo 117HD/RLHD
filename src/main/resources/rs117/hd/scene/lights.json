@@ -26750,6 +26750,50 @@
     ]
   },
   {
+    "description": "ABYSSAL_NEXUS_TENDRILS_THRONE",
+    "height": 65,
+    "alignment": "CENTER",
+    "radius": 600,
+    "strength": 5,
+    "color": [
+      70,
+      242,
+      31
+    ],
+    "type": "FLICKER",
+    "duration": 2000,
+    "range": 20,
+    "objectIds": [
+      27005,
+      26984,
+      26985,
+      26986,
+      27004,
+      27006,
+      27014,
+      27015,
+      27016
+    ]
+  },
+  {
+    "description": "ABYSSAL_NEXUS_FONT",
+    "height": 200,
+    "alignment": "CENTER",
+    "radius": 1200,
+    "strength": 12.5,
+    "color": [
+      70,
+      242,
+      31
+    ],
+    "type": "PULSE",
+    "duration": 5000,
+    "range": 25,
+    "objectIds": [
+      27029
+    ]
+  },
+  {
     "description": "GOTR_ABYSSAL_RIFT",
     "height": 250,
     "alignment": "SOUTH",
