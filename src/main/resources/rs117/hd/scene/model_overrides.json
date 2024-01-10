@@ -6145,6 +6145,8 @@
       12961,
       14395,
       15692,
+      16251,
+      16252,
       16560,
       16561,
       17305,
@@ -6957,6 +6959,7 @@
       12407,
       14872,
       15679,
+      16246,
       17306,
       17551,
       17552,
@@ -8137,11 +8140,24 @@
       12016,
       12017,
       12018,
+      12026,
       12027,
       12029,
       17001,
       17002
-    ]
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Zanaris - Objects - Mushroom Ceiling Objects",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      12019,
+      12020,
+      12021
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 256
   },
   {
     "description": "Zanaris - Walls - Dirt",
@@ -13062,6 +13078,43 @@
     "description": "Giant Mole Lair - Walls - Ramp 2",
     "baseMaterial": "DIRT_2",
     "objectIds": [ 12204, 12205, 12208, 12210, 12211 ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Zanaris - Objects - Wooden - Stacked Crate - Angled",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      16250
+    ],
+    "uvType": "BOX",
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512,
+    "uvOrientationY": 170
+  },
+  {
+    "description": "Zanaris - Objects - Tree Houses",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      12070,
+      12071,
+      12072,
+      12073,
+      12074,
+      12075,
+      12076,
+      12077,
+      12078,
+      12079,
+      12080,
+      12081,
+      12082,
+      12083,
+      12084,
+      12085,
+      12086,
+      12087,
+      12088
+    ],
     "uvType": "BOX"
   }
 ]
