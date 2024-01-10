@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import rs117.hd.HdPlugin;
@@ -55,13 +56,19 @@ class TileOverrideBuilder<T> {
 		return this;
 	}
 
-	TileOverrideBuilder<T> replaceWithIf(T replacement, @Nonnull Function<HdPlugin, Boolean> condition) {
+	TileOverrideBuilder<T> replaceWithIf(@Nullable T replacement, @Nonnull Function<HdPlugin, Boolean> condition) {
 		var previousResolver = replacementResolver;
 		replacementResolver = (plugin, scene, tile, override) -> {
+			// Earlier replacements take precedence
+			if (previousResolver != null) {
+				var resolved = previousResolver.resolve(plugin, scene, tile, override);
+				if (resolved != override)
+					return resolved;
+			}
+
 			if (condition.apply(plugin))
 				return replacement;
-			if (previousResolver != null)
-				return previousResolver.resolve(plugin, scene, tile, override);
+
 			return override;
 		};
 		return this;
