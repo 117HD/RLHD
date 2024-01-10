@@ -13306,5 +13306,25 @@
     "uvType": "BOX",
     "uvOrientation": 128,
     "uvScale": 0.78
+  },
+  {
+    "description": "Fossil Island - Objects - Giant Yellow Mushtree",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [ 30838, 30839 ]
+  },
+  {
+    "description": "Fossil Island - Objects - Yellow Mushtree",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [ 30834 ]
+  },
+  {
+    "description": "Fossil Island - Objects - White Mushtree",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [ 30835 ]
+  },
+  {
+    "description": "Fossil Island - Objects - Lifelilly",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [ 30841 ]
   }
 ]
