@@ -31700,5 +31700,41 @@
     "objectIds": [
       10185
     ]
+  },
+  {
+    "description": "SIMPLE_STOVE",
+    "height": 20,
+    "alignment": "CENTER",
+    "radius": 450,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      32631
+    ]
+  },
+  {
+    "description": "SLEPE_WALL_CANDLE",
+    "height": 220,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 8.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      13053
+    ]
   }
 ]
