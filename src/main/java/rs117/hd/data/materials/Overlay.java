@@ -210,14 +210,6 @@ public enum Overlay {
 	DIGSITE_DOCK(93, Area.DIGSITE_DOCK, GroundMaterial.TILES_2X2_1_GLOSS, p -> p.blended(false)),
 
 	// Al Kharid
-	OVERRIDE_SOPHANEM_CHURCH_FLOOR_FIX_1(21, Area.SOPHANEM_FLOORS, GroundMaterial.TILES_2X2_2_SEMIGLOSS, p -> p.blended(false)),
-	OVERRIDE_SOPHANEM_CHURCH_FLOOR_FIX_2(26, Area.SOPHANEM_FLOORS, GroundMaterial.TILES_2X2_2_SEMIGLOSS, p -> p.blended(false)),
-	SOPHANEM_SUNTRAP(p -> p
-		.ids(1)
-		.groundMaterial(GroundMaterial.MARBLE_2)
-		.area(Area.KHARID_DESERT_REGION)
-		.blended(false)
-		.shiftLightness(10)),
 	MAGE_TRAINING_ARENA_FLOOR(-122, Area.MAGE_TRAINING_ARENA, GroundMaterial.TILES_2X2_2_GLOSS, p -> p.blended(false)),
 	AL_KHARID_WELL_FIX(21, Area.AL_KHARID_WELL, GroundMaterial.DIRT, p -> p.blended(false)),
 	AL_KHARID_FLOOR_1(26, Area.AL_KHARID_BUILDINGS, GroundMaterial.TILES_2X2_2_SEMIGLOSS, p -> p
@@ -227,6 +219,41 @@ public enum Overlay {
 	AL_KHARID_FLOOR_2(1, Area.AL_KHARID_BUILDINGS, GroundMaterial.TILES_2X2_2_SEMIGLOSS, p -> p.blended(false)),
 	AL_KHARID_FLOOR_MARBLE_1(3, Area.AL_KHARID_BUILDINGS, GroundMaterial.MARBLE_2_SEMIGLOSS, p -> p.blended(false)),
 	AL_KHARID_FLOOR_MARBLE_2(4, Area.AL_KHARID_BUILDINGS, GroundMaterial.MARBLE_1_SEMIGLOSS, p -> p.blended(false)),
+	// Sophanem
+	SOPHANEM_PYRAMID_UNDERSIDE(p -> p.ids(26).area(Area.SOPHANEM_PYRAMIDS).groundMaterial(GroundMaterial.SAND).hue(6).saturation(3).shiftLightness(-10)),
+	OVERRIDE_SOPHANEM_CHURCH_FLOOR_21(21, Area.SOPHANEM_TEMPLE_FLOORS, GroundMaterial.TILES_2X2_2_SEMIGLOSS, p -> p.blended(false)),
+	OVERRIDE_SOPHANEM_CHURCH_FLOOR_26(26, Area.SOPHANEM_TEMPLE_FLOORS, GroundMaterial.TILES_2X2_2_SEMIGLOSS, p -> p.blended(false)),
+	SOPHANEM_INTERIOR_FLOORS(p -> p.ids(26).area(Area.SOPHANEM_BUILDING_FLOORS).groundMaterial(GroundMaterial.FALADOR_PATHS).shiftLightness(5).blended(false)),
+	SOPHANEM_SUNTRAP(p -> p
+		.ids(1)
+		.groundMaterial(GroundMaterial.MARBLE_2)
+		.area(Area.KHARID_DESERT_REGION)
+		.blended(false)
+		.shiftLightness(10)),
+	SOPHANEM_UPPER_FLOORS_CORRECTION(p -> p // The tiles in this area are supposed to be shaded, so the tiles are darker than intended as a result, this corrects it.
+		.ids(21)
+		.area(Area.SOPHANEM)
+		.groundMaterial(GroundMaterial.FALADOR_PATHS)
+		.shiftHue(1)
+		.shiftLightness(23)
+		.shiftSaturation(-5)
+	),
+	SOPHANEM_TEMPLE_LIGHTNESS_FIX_25(p -> p
+		.ids(25)
+		.area(Area.SOPHANEM_TEMPLE_UPPER_FLOORS)
+		.groundMaterial(GroundMaterial.FALADOR_PATHS)
+		.shiftHue(1)
+		.shiftSaturation(-1)
+		.lightness(40)),
+	SOPHANEM_TEMPLE_LIGHTNESS_FIX_26(p -> p
+		.ids(26)
+		.area(Area.SOPHANEM_TEMPLE_UPPER_FLOORS)
+		.groundMaterial(GroundMaterial.FALADOR_PATHS)
+		.lightness(40)),
+	SOPHANEM_UPPER_FLOORS(p -> p.ids(25).area(Area.SOPHANEM).groundMaterial(GroundMaterial.FALADOR_PATHS).shiftSaturation(-1)),
+	SOPHANEM_PATH(p -> p.ids(26).area(Area.SOPHANEM).groundMaterial(GroundMaterial.FALADOR_PATHS)),
+	SOPHANEM_UNDERGROUND_BANK_MARBLE(p -> p.ids(26).area(Area.SOPHANEM_TEMPLE_BANK).groundMaterial(GroundMaterial.MARBLE_2_SEMIGLOSS).blended(false).shiftLightness(10)),
+	// Kharidian Region
 	KHARID_PATHS_1(26, Area.KHARID_DESERT_REGION, GroundMaterial.DIRT, p -> p.saturation(2).hue(6).shiftLightness(5)),
 	KHARID_PATHS_2(76, Area.KHARID_DESERT_REGION, GroundMaterial.DIRT, p -> p.saturation(3).hue(6).shiftLightness(-10)),
 	KHARID_PATHS_3(25, Area.KHARID_DESERT_REGION, GroundMaterial.DIRT, p -> p.saturation(3).hue(6)),
@@ -667,11 +694,29 @@ public enum Overlay {
 
 
 	// Wizards Tower
-	WIZARDS_TOWER_PATH_FIX1(164, Area.WIZARDS_TOWER_PATH, GroundMaterial.FALADOR_PATHS, p -> p.shiftSaturation(-1)),
-	WIZARDS_TOWER_PATH_FIX2(164, Area.WIZARD_TOWER_PATH_PARTIAL_TILES, GroundMaterial.OVERWORLD_GRASS_1, p -> p
+	WIZARDS_TOWER_PATH(p -> p.ids(164).area(Area.WIZARDS_TOWER_PATH).groundMaterial(GroundMaterial.FALADOR_PATHS).shiftSaturation(-1)),
+	WIZARDS_TOWER_PATH_BLEND_FIX(p -> p
+		.ids()
+		.groundMaterial(GroundMaterial.OVERWORLD_GRASS_1)
 		.hue(10)
 		.saturation(5)
 		.lightness(19)
+
+	),
+	WIZARDS_TOWER_PATH_BLEND_FIX_WINTER(p -> p
+		.ids()
+		.area(Area.WIZARD_TOWER_PATH_PARTIAL_TILES)
+		.groundMaterial(GroundMaterial.FALADOR_PATHS)
+		.shiftSaturation(-1)
+		.replaceWithIf(WINTER_GRASS, plugin -> plugin.configGroundBlending)
+	),
+	WIZARDS_TOWER_PATH_BLEND_FIX_TOGGLE(p -> p
+		.ids(164)
+		.area(Area.WIZARD_TOWER_PATH_PARTIAL_TILES)
+		.groundMaterial(GroundMaterial.FALADOR_PATHS)
+		.shiftSaturation(-1)
+		.replaceWithIf(WIZARDS_TOWER_PATH_BLEND_FIX, plugin -> plugin.configGroundBlending)
+		.seasonalReplacement(SeasonalTheme.WINTER, WIZARDS_TOWER_PATH_BLEND_FIX_WINTER)
 	),
 
 	// Misthalin Mystery
@@ -702,6 +747,7 @@ public enum Overlay {
 
 	// Zanaris
 	COSMIC_ENTITYS_PLANE_ABYSS(37, Area.COSMIC_ENTITYS_PLANE, GroundMaterial.NONE, p -> p.lightness(0).blended(false)),
+	ZANARIS_POND_WATER(p -> p.ids(151).area(Area.ZANARIS).waterType(WaterType.WATER)),
 
 	// Morytania
 	CANIFIS_FLOORS(85, Area.CANIFIS, GroundMaterial.HD_WOOD_PLANKS_1),
@@ -734,6 +780,7 @@ public enum Overlay {
 	POISON_WASTE_DUNGEON_TAR(p -> p.ids(304).area(Area.POISON_WASTE_DUNGEON).waterType(WaterType.BLACK_TAR_FLAT)),
 
 	// Fossil Island
+	FOSSIL_ISLAND_WYVERN_DIRT(p -> p.ids(63).area(Area.FOSSIL_ISLAND_WYVERN_TASK_CAVE).groundMaterial(GroundMaterial.EARTHEN_CAVE_FLOOR)),
 	ANCIENT_MUSHROOM_POOL(95, Area.FOSSIL_ISLAND, WaterType.SWAMP_WATER_FLAT),
 	FOSSIL_ISLAND_CENTRAL_BANK_FIX(11, Area.FOSSIL_ISLAND_CENTRAL_BANK_FIX, GroundMaterial.GRAVEL, p -> p
 		.shiftLightness(-2)
@@ -965,6 +1012,7 @@ public enum Overlay {
 		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_JAGGED_STONE_TILE)
 		.ids(-85, -77, 11)
 	),
+	SOUL_WARS_DIRT_PATH(p -> p.ids(106).area(Area.ISLE_OF_SOULS).groundMaterial(GroundMaterial.DIRT)),
 
 	// Default overworld overlays
 	OVERWORLD_GRASS(p -> p
