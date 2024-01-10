@@ -965,6 +965,7 @@ public enum Overlay {
 		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_JAGGED_STONE_TILE)
 		.ids(-85, -77, 11)
 	),
+	SOUL_WARS_DIRT_PATH(p -> p.ids(106).area(Area.ISLE_OF_SOULS).groundMaterial(GroundMaterial.DIRT)),
 
 	// Default overworld overlays
 	OVERWORLD_GRASS(p -> p
@@ -982,7 +983,6 @@ public enum Overlay {
 	),
 	OVERLAY_SWAMP_WATER(WaterType.SWAMP_WATER, p -> p.ids(-100, 7, 128)),
 	OVERLAY_GRAVEL(GroundMaterial.GRAVEL, p -> p.ids(-76, 2, 3, 4, 6, 8, 9, 10, 119, 127)),
-	SOUL_WARS_DIRT_PATH(p -> p.ids(106).area(Area.ISLE_OF_SOULS).groundMaterial(GroundMaterial.DIRT)),
 	OVERLAY_WOOD_PLANKS(GroundMaterial.WOOD_PLANKS_1, p -> p.ids(5, 35)),
 	OVERLAY_CLEAN_WOOD_PLANKS(GroundMaterial.CLEAN_WOOD_FLOOR, p -> p.ids(52).shiftLightness(-4)),
 	OVERLAY_SAND(GroundMaterial.SAND, p -> p.ids(25, 26, 76)),
