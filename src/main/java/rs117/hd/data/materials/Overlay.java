@@ -62,8 +62,8 @@ public enum Overlay {
 		.ids()
 		.groundMaterial(GroundMaterial.SNOW_2)
 	),
-	WINTER_EAST_ARDOUGNE_CASTLE_PATH_FIX(10, Area.EAST_ARDOUGNE_CASTLE_PATH_FIX, GroundMaterial.VARROCK_PATHS, p -> p
-		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_JAGGED_STONE_TILE_LIGHT)
+	WINTER_EAST_ARDOUGNE_CASTLE_PATH_FIX(p -> p
+		.ids()
 		.shiftLightness(3)
 		.blended(false)
 	),
@@ -499,16 +499,26 @@ public enum Overlay {
 	EAST_ARDOUGNE_CASTLE_DIRT_FIX(14, Area.EAST_ARDOUGNE_CASTLE_DIRT_FIX, GroundMaterial.DIRT, p -> p
 		.shiftLightness(7)
 		.blended(false)),
-	EAST_ARDOUGNE_CASTLE_PATH_FIX(10, Area.EAST_ARDOUGNE_CASTLE_PATH_FIX, GroundMaterial.VARROCK_PATHS, p -> p
-		.shiftLightness(16)
-		.blended(false)
-
-	),
 	EAST_ARDOUGNE_CASTLE_FLOOR_TEXTURE(
 		11,
 		Area.EAST_ARDOUGNE_CASTLE_DIRT_FIX,
 		GroundMaterial.CONCRETE,
 		p -> p.blended(false).lightness(40)
+	),
+	EAST_ARDOUGNE_CASTLE_PATH_FIX_BLENDING(p -> p
+		.ids()
+		.groundMaterial(GroundMaterial.VARROCK_PATHS)
+		.shiftLightness(16) // Disabling blending requires shifting the lightness up further, to match the color of paths with blending
+		.blended(false)
+	),
+	EAST_ARDOUGNE_CASTLE_PATH_FIX(p -> p
+		.ids(10)
+		.area(Area.EAST_ARDOUGNE_CASTLE_PATH_FIX)
+		.groundMaterial(GroundMaterial.VARROCK_PATHS)
+		.shiftLightness(6)
+		.blended(false)
+		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_JAGGED_STONE_TILE_LIGHT)
+		.replaceWithIf(EAST_ARDOUGNE_CASTLE_PATH_FIX_BLENDING, plugin -> plugin.configGroundBlending)
 	),
 	EAST_ARDOUGNE_PATHS_1(10, Area.EAST_ARDOUGNE, GroundMaterial.VARROCK_PATHS, p -> p
 		.shiftLightness(6)
