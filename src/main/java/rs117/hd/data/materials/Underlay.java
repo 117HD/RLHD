@@ -228,12 +228,16 @@ public enum Underlay {
 	RIVER_ELID_WATERFALL(p -> p.area(Area.RIVER_ELID_WATERFALL).waterType(WaterType.WATER).blended(false)),
 
 	SOPHANEM_TRAPDOOR(Area.SOPHANEM_TRAPDOOR, GroundMaterial.NONE, p -> {}),
+	SOPHANEM_UNDERGROUND_BANK(p -> p.ids(61,64).area(Area.SOPHANEM_TEMPLE_BANK).groundMaterial(GroundMaterial.FALADOR_PATHS).hue(7).saturation(3).shiftLightness(5)),
 	KHARID_SAND_1(Area.KHARID_DESERT_REGION, GroundMaterial.SAND, p -> p
 		.saturation(3)
 		.hue(6)
 		.ids(-127, 45, 49, 50, 58, 61, 62, 63, 64, 67, 68, 69, 126)),
 	NECROPOLIS_SAND(Area.NECROPOLIS, GroundMaterial.DIRT, p -> p.ids(124)),
 	SMOKE_DUNGEON(Area.SMOKE_DUNGEON, GroundMaterial.ROCKY_CAVE_FLOOR, p -> p.ids(56)),
+	SCARAB_LAIR_TILE_FLOOR(p -> p.ids(61, 64).area(Area.SCARAB_LAIR_TEMPLE).groundMaterial(GroundMaterial.FALADOR_PATHS).hue(7).saturation(3).shiftLightness(5)),
+	SCARAB_LAIR_ROCKY_FLOOR(p -> p.ids(141).area(Area.SCARAB_LAIR_BOTTOM).groundMaterial(GroundMaterial.STONE_CAVE_FLOOR).shiftLightness(4)),
+
 
 	// Burthorpe games room
 	GAMES_ROOM_INNER_FLOOR(64, Area.GAMES_ROOM_INNER, GroundMaterial.CARPET, p -> p.blended(false)),

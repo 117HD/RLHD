@@ -210,14 +210,6 @@ public enum Overlay {
 	DIGSITE_DOCK(93, Area.DIGSITE_DOCK, GroundMaterial.TILES_2X2_1_GLOSS, p -> p.blended(false)),
 
 	// Al Kharid
-	OVERRIDE_SOPHANEM_CHURCH_FLOOR_FIX_1(21, Area.SOPHANEM_FLOORS, GroundMaterial.TILES_2X2_2_SEMIGLOSS, p -> p.blended(false)),
-	OVERRIDE_SOPHANEM_CHURCH_FLOOR_FIX_2(26, Area.SOPHANEM_FLOORS, GroundMaterial.TILES_2X2_2_SEMIGLOSS, p -> p.blended(false)),
-	SOPHANEM_SUNTRAP(p -> p
-		.ids(1)
-		.groundMaterial(GroundMaterial.MARBLE_2)
-		.area(Area.KHARID_DESERT_REGION)
-		.blended(false)
-		.shiftLightness(10)),
 	MAGE_TRAINING_ARENA_FLOOR(-122, Area.MAGE_TRAINING_ARENA, GroundMaterial.TILES_2X2_2_GLOSS, p -> p.blended(false)),
 	AL_KHARID_WELL_FIX(21, Area.AL_KHARID_WELL, GroundMaterial.DIRT, p -> p.blended(false)),
 	AL_KHARID_FLOOR_1(26, Area.AL_KHARID_BUILDINGS, GroundMaterial.TILES_2X2_2_SEMIGLOSS, p -> p
@@ -227,6 +219,41 @@ public enum Overlay {
 	AL_KHARID_FLOOR_2(1, Area.AL_KHARID_BUILDINGS, GroundMaterial.TILES_2X2_2_SEMIGLOSS, p -> p.blended(false)),
 	AL_KHARID_FLOOR_MARBLE_1(3, Area.AL_KHARID_BUILDINGS, GroundMaterial.MARBLE_2_SEMIGLOSS, p -> p.blended(false)),
 	AL_KHARID_FLOOR_MARBLE_2(4, Area.AL_KHARID_BUILDINGS, GroundMaterial.MARBLE_1_SEMIGLOSS, p -> p.blended(false)),
+	// Sophanem
+	SOPHANEM_PYRAMID_UNDERSIDE(p -> p.ids(26).area(Area.SOPHANEM_PYRAMIDS).groundMaterial(GroundMaterial.SAND).hue(6).saturation(3).shiftLightness(-10)),
+	OVERRIDE_SOPHANEM_CHURCH_FLOOR_21(21, Area.SOPHANEM_TEMPLE_FLOORS, GroundMaterial.TILES_2X2_2_SEMIGLOSS, p -> p.blended(false)),
+	OVERRIDE_SOPHANEM_CHURCH_FLOOR_26(26, Area.SOPHANEM_TEMPLE_FLOORS, GroundMaterial.TILES_2X2_2_SEMIGLOSS, p -> p.blended(false)),
+	SOPHANEM_INTERIOR_FLOORS(p -> p.ids(26).area(Area.SOPHANEM_BUILDING_FLOORS).groundMaterial(GroundMaterial.FALADOR_PATHS).shiftLightness(5).blended(false)),
+	SOPHANEM_SUNTRAP(p -> p
+		.ids(1)
+		.groundMaterial(GroundMaterial.MARBLE_2)
+		.area(Area.KHARID_DESERT_REGION)
+		.blended(false)
+		.shiftLightness(10)),
+	SOPHANEM_UPPER_FLOORS_CORRECTION(p -> p // The tiles in this area are supposed to be shaded, so the tiles are darker than intended as a result, this corrects it.
+		.ids(21)
+		.area(Area.SOPHANEM)
+		.groundMaterial(GroundMaterial.FALADOR_PATHS)
+		.shiftHue(1)
+		.shiftLightness(23)
+		.shiftSaturation(-5)
+	),
+	SOPHANEM_TEMPLE_LIGHTNESS_FIX_25(p -> p
+		.ids(25)
+		.area(Area.SOPHANEM_TEMPLE_UPPER_FLOORS)
+		.groundMaterial(GroundMaterial.FALADOR_PATHS)
+		.shiftHue(1)
+		.shiftSaturation(-1)
+		.lightness(40)),
+	SOPHANEM_TEMPLE_LIGHTNESS_FIX_26(p -> p
+		.ids(26)
+		.area(Area.SOPHANEM_TEMPLE_UPPER_FLOORS)
+		.groundMaterial(GroundMaterial.FALADOR_PATHS)
+		.lightness(40)),
+	SOPHANEM_UPPER_FLOORS(p -> p.ids(25).area(Area.SOPHANEM).groundMaterial(GroundMaterial.FALADOR_PATHS).shiftSaturation(-1)),
+	SOPHANEM_PATH(p -> p.ids(26).area(Area.SOPHANEM).groundMaterial(GroundMaterial.FALADOR_PATHS)),
+	SOPHANEM_UNDERGROUND_BANK_MARBLE(p -> p.ids(26).area(Area.SOPHANEM_TEMPLE_BANK).groundMaterial(GroundMaterial.MARBLE_2_SEMIGLOSS).blended(false).shiftLightness(10)),
+	// Kharidian Region
 	KHARID_PATHS_1(26, Area.KHARID_DESERT_REGION, GroundMaterial.DIRT, p -> p.saturation(2).hue(6).shiftLightness(5)),
 	KHARID_PATHS_2(76, Area.KHARID_DESERT_REGION, GroundMaterial.DIRT, p -> p.saturation(3).hue(6).shiftLightness(-10)),
 	KHARID_PATHS_3(25, Area.KHARID_DESERT_REGION, GroundMaterial.DIRT, p -> p.saturation(3).hue(6)),
