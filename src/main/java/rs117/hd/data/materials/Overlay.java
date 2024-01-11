@@ -821,6 +821,8 @@ public enum Overlay {
 	APE_ATOLL_WATERFALLS(p -> p.area(Area.APE_ATOLL_WATERFALLS).waterType(WaterType.WATER).blended(false)),
 
 	// Zeah
+	LOVAKENGJ_GROUND(p -> p.ids(11).area(Area.LOVAKENGJ).groundMaterial(GroundMaterial.ROCKY_CAVE_FLOOR)),
+	LOVAKENGJ_PATH(p -> p.ids(132).area(Area.LOVAKENGJ).groundMaterial(GroundMaterial.PACKED_EARTH)),
 	// Great Kourend
 	KOUREND_CASTLE_BLEND_FIX(11, Area.KOUREND_CASTLE_ENTRANCE_FIX, GroundMaterial.VARROCK_PATHS, p -> p.blended(false)),
 	KOUREND_CASTLE_FLOOR(11, Area.KOUREND_CASTLE, GroundMaterial.VARROCK_PATHS),
