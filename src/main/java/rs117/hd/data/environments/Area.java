@@ -956,6 +956,13 @@ public enum Area
 		new AABB(3701, 3305, 3710, 3296),
 		new AABB(3714, 3308, 3721, 3301)
 	),
+	SLEPE(
+		new AABB(3705, 3396, 3772, 3289),
+		new AABB(3689, 3342, 3704, 3292),
+		new AABB(3685, 3317, 3688, 3311),
+		new AABB(3709, 3401, 3729, 3397),
+		new AABB(3730, 3414, 3769, 3397)
+	),
 
 	// Hallowed Sepulchre
 	HALLOWED_SEPULCHRE_LOBBY(2380, 5958, 2420, 6000),
