@@ -1375,6 +1375,19 @@
     "retainVanillaUvs": true
   },
   {
+    "description": "Objects - Trees - Tirannwn Leafless Tree ",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      3886, 3887, 3888, 3889,
+      3890, 3939
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientationY": 1162,
+    "uvOrientationX": 128,
+    "uvOrientationZ": 1162
+  },
+  {
     "description": "FARMING_PATCH_1",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
