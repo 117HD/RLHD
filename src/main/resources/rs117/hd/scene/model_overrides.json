@@ -3091,6 +3091,13 @@
     "uvType": "BOX"
   },
   {
+    "description": "CAVE_WALLS_BLEND_TUNNEL",
+    "baseMaterial": "ROCK_2",
+    "objectIds": [ 30174, 30175 ],
+    "flatNormals": true,
+    "uvType": "BOX"
+  },
+  {
     "description": "CAVE_WALL_ABOVE_FLOOR_TILE",
     "baseMaterial": "ROCK_2",
     "objectIds": [
@@ -5712,7 +5719,8 @@
     "description": "Ground Decoration - Dirt Clump - Tiny - Uncolored",
     "baseMaterial": "DIRT_2",
     "objectIds": [
-      4343
+      4343,
+      17227
     ],
     "uvType": "WORLD_XZ",
     "uvScale": 0.65,
@@ -5752,6 +5760,8 @@
       11094,
       11095,
       11098,
+      17226,
+      17228,
       18474,
       18478,
       22350
