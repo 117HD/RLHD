@@ -10999,7 +10999,8 @@
     "description": "Barbarian VIllage - Objects - Wooden - Crate",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      11599
+      11599,
+      20216
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -13369,5 +13370,17 @@
     "uvType": "BOX",
     "uvOrientation": 512,
     "uvScale": 1.2
+  },
+  {
+    "description": "Barbarian Outpost - Objects - Wooden - Crate Stack - Small",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      11600
+    ],
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvOrientationY": 182,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512
   }
 ]
