@@ -13512,5 +13512,14 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.68
+  },
+  {
+    "description": "Object - Apple Tree",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      8842,
+      8843
+    ],
+    "uvType": "BOX"
   }
 ]
