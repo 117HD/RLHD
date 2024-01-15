@@ -800,6 +800,7 @@ public enum Overlay {
 		.shiftLightness(12)
 		.shiftSaturation(-2)
 	),
+	LLETYA_WOOD_FLOORS(p -> p.ids(22).area(Area.LLETYA_UPPER_LEVELS).groundMaterial(GroundMaterial.HD_WOOD_PLANKS_1)),
 	TIRANNWN_PATHS(p -> p.area(Area.TIRANNWN).ids(106).groundMaterial(GroundMaterial.GRASSY_DIRT)),
 	PRIFDDINAS_POND_WATER(p -> p.area(Area.PRIFDDINAS).ids(151).waterType(WaterType.WATER)),
 	POISON_WASTE(85, Area.POISON_WASTE, WaterType.POISON_WASTE),
