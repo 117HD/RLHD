@@ -13521,5 +13521,17 @@
       8843
     ],
     "uvType": "BOX"
+  },
+  {
+    "description": "West Ardougne - Walls - Wooden - Plank",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      11407,
+      11408
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.2,
+    "flatNormals": true,
+    "uvOrientationY": 512
   }
 ]
