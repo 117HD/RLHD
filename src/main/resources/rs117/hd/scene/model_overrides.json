@@ -3129,9 +3129,12 @@
       4448,
       9739,
       9740,
-      16543
+      16543,
+      26712
     ],
-    "uvType": "BOX"
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 100
   },
   {
     "description": "ROUNDED_CAVE_WALLS_TOP",
@@ -4163,6 +4166,7 @@
       11185,
       11186,
       18479,
+      18480,
       37810,
       37811,
       37812,
