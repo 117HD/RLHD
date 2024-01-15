@@ -4264,17 +4264,18 @@
   },
   {
     "description": "Wooden Benches - Plank",
-    "baseMaterial": "WOOD_GRAIN_2",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       1106,
       3632,
       5615,
+      8772,
       9531,
       25601,
       25676
     ],
     "uvType": "BOX",
-    "uvScale": 0.7
+    "uvOrientation": 512
   },
   {
     "description": "Courthouse Basement stairs",
@@ -4374,6 +4375,9 @@
       4164,
       4187,
       4189,
+      8744,
+      8745,
+      8746,
       10493,
       10494,
       11794,
@@ -13364,5 +13368,97 @@
     "uvType": "BOX",
     "uvOrientation": 512,
     "uvScale": 1.2
+  },
+  {
+    "description": "Tirannwn - Lletya - Walls - Wooden - Planks",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      8755,
+      8759
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.92,
+    "flatNormals": true
+  },
+  {
+    "description": "Tirannwn - Lletya - Walls - Wooden",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      8763,
+      8764
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.92,
+    "flatNormals": true,
+    "uvOrientationY": 512
+  },
+  {
+    "description": "Tirannwn - Lletya - Walls - Wooden - Angled",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      8765
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "flatNormals": true,
+    "uvOrientationY": 256,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512
+  },
+  {
+    "description": "Tirannwn - Lletya - Fence - Wooden",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      8756,
+      8758
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.92,
+    "flatNormals": true,
+    "uvOrientationY": 512
+  },
+  {
+    "description": "Tirannwn - Lletya - Objects - Wooden - Tables - Fine",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      8751,
+      20127
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationY": 512
+  },
+  {
+    "description": "Tirannwn - Lletya - Objects - Wooden - Tables - Fine - Rounded",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      8768
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationY": 512
+  },
+  {
+    "description": "Tirannwn - Lletya - Objects - Wooden - Chair - Pointed",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      8770
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.0,
+    "uvOrientationY": 512
+  },
+  {
+    "description": "Tirannwn - Lletya - Objects - Wooden - Bookcase - Textured",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      8752,
+      8753,
+      8754
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "flatNormals": true
   }
 ]
