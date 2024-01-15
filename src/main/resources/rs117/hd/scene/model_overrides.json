@@ -4168,6 +4168,7 @@
       2147,
       2148,
       2884,
+      8785,
       16679,
       16683,
       16684,
@@ -4668,6 +4669,8 @@
       1728,
       3506,
       3507,
+      8788,
+      8792,
       11721,
       11722,
       23866,
@@ -4680,7 +4683,8 @@
       44598,
       44599
     ],
-    "uvType": "GEOMETRY"
+    "uvType": "BOX",
+    "uvOrientation": 463
   },
   {
     "description": "Metal Fence",
@@ -4967,13 +4971,24 @@
       1743,
       2036,
       2037,
+      2038,
       2337,
       2338,
       2339,
       2340,
       2416,
       2417,
+      2537,
+      2528,
+      2529,
+      2546,
+      2547,
+      2548,
+      2549,
       5667,
+      8787,
+      8789,
+      8791,
       11728,
       11774,
       11775,
@@ -13462,5 +13477,40 @@
     "uvScale": 0.8,
     "uvOrientationX": 512,
     "flatNormals": true
+  },
+  {
+    "description": "Mourners Tunnels - Walls - Dirt",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [
+      8822,
+      8823,
+      9746,
+      9747,
+      24977,
+      24978
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.68,
+    "uvOrientationX": 400
+  },
+  {
+    "description": "Mourners Tunnels - Wall Caps - Dirt",
+    "baseMaterial": "DIRT_1",
+    "objectIds": [
+      24980,
+      24981,
+      24983
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.68
+  },
+  {
+    "description": "Mourners Tunnels - Metallic - Minecart",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "objectIds": [
+      8831
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.68
   }
 ]
