@@ -57,7 +57,22 @@ void gatherLights(inout vec3 diffuse, inout vec3 specular, const Context ctx) {
         vec3 lightToFrag = light.position - ctx.fragPos;
         light.distance = dot(lightToFrag, lightToFrag); // compute distance squared
 
-        if (light.distance <= light.radius) {
+        light.radius *= 5;
+
+        vec3 c = light.position;
+        float r = sqrt(light.radius);
+        vec3 o = ctx.fragPos;
+        vec3 u = ctx.viewDir;
+        float udotomc = dot(-ctx.viewDir, o - c);
+        float nabla = udotomc * udotomc - dot(o - c, o - c) + light.radius;
+
+        if (nabla > 0) {
+            nabla = sqrt(nabla);
+            float t1 = max(0, -udotomc - nabla);
+            float t2 = max(0, -udotomc + nabla);
+            float d = 2 * nabla;
+
+//        if (light.distance <= light.radius) {
             // Hardcoding point light type here for now.
             // We will need a better way to define light type in the future if we ever add spot lights or something.
             light.type = LIGHT_POINT;
@@ -67,10 +82,17 @@ void gatherLights(inout vec3 diffuse, inout vec3 specular, const Context ctx) {
             populateLightVectors(light, pointLightDir, ctx.normals);
             populateLightDotProducts(light, ctx);
 
-            float attenuation = lightAttenuation(light, ctx, vec2(0));
+            float a = sqrt(-udotomc * udotomc - 2 * dot(o, c) + dot(o, o) + dot(c, c));
+            a *= 128 * 4 * PI;
+            a = clamp(a, 100, 500000);
+            float integral = (atan(t2 + udotomc, a) - atan(t1 + udotomc, a)) / a;
 
-            diffuse += light.color * attenuation * light.ndl;
+            float attenuation = lightAttenuation(light, ctx, vec2(0));
             specular += light.color * attenuation * getSpecular(ctx.viewDir, light.reflection, ctx.smoothness, ctx.reflectivity);
+
+            attenuation = integral * 5000000;
+
+            diffuse += light.color * attenuation;// * light.ndl;
         }
     }
 }
