@@ -862,6 +862,33 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
+	String KEY_EXPERIMENTAL_LIGHT_SCATTERING = "experimentalLightScattering";
+	@ConfigItem(
+		keyName = KEY_EXPERIMENTAL_LIGHT_SCATTERING,
+		name = "Imitate fog light scattering",
+		description = "",
+		position = 100,
+		section = experimentalSettings
+	)
+	default boolean experimentalLightScattering() {
+		return true;
+	}
+
+	String KEY_EXPERIMENTAL_LIGHT_SCATTERING_FACTOR = "experimentalLightScatteringFactor";
+	@Range(
+		min = Integer.MIN_VALUE
+	)
+	@ConfigItem(
+		keyName = KEY_EXPERIMENTAL_LIGHT_SCATTERING_FACTOR,
+		name = "Scattering strength",
+		description = "",
+		position = 101,
+		section = experimentalSettings
+	)
+	default int experimentalLightScatteringFactor() {
+		return 135;
+	}
+
 
 	/*====== Internal settings ======*/
 

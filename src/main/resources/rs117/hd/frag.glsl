@@ -60,6 +60,7 @@ uniform bool underwaterEnvironment;
 uniform bool underwaterCaustics;
 uniform vec3 underwaterCausticsColor;
 uniform float underwaterCausticsStrength;
+uniform float experimentalFogLightScatteringFactor;
 
 // general HD settings
 uniform float saturation;

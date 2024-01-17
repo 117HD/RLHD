@@ -367,6 +367,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	// Point light uniforms
 	private int uniPointLightsCount;
+	private int uniExperimentalFogLightScatteringFactor;
 
 	private int uniProjectionMatrix;
 	private int uniLightProjectionMatrix;
@@ -773,6 +774,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.define("DISABLE_DIRECTIONAL_SHADING", config.shadingMode() != ShadingMode.DEFAULT)
 			.define("FLAT_SHADING", config.flatShading())
 			.define("SHADOW_MAP_OVERLAY", enableShadowMapOverlay)
+			.define("EXPERIMENTAL_LIGHT_SCATTERING", config.experimentalLightScattering())
+			.define("EXPERIMENTAL_LIGHT_SCATTERING_FACTOR", config.experimentalLightScatteringFactor())
 			.addIncludePath(SHADER_PATH);
 
 		glSceneProgram = PROGRAM.compile(template);
@@ -853,6 +856,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		uniGroundFogOpacity = glGetUniformLocation(glSceneProgram, "groundFogOpacity");
 		uniLightningBrightness = glGetUniformLocation(glSceneProgram, "lightningBrightness");
 		uniPointLightsCount = glGetUniformLocation(glSceneProgram, "pointLightsCount");
+		uniExperimentalFogLightScatteringFactor = glGetUniformLocation(glSceneProgram, "experimentalFogLightScatteringFactor");
 		uniColorBlindnessIntensity = glGetUniformLocation(glSceneProgram, "colorBlindnessIntensity");
 		uniLightDir = glGetUniformLocation(glSceneProgram, "lightDir");
 		uniShadowMaxBias = glGetUniformLocation(glSceneProgram, "shadowMaxBias");
@@ -1992,6 +1996,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 			// Lights & lightning
 			glUniform1i(uniPointLightsCount, visibleLightCount);
+			glUniform1f(uniExperimentalFogLightScatteringFactor, config.experimentalLightScatteringFactor() / 10.f);
 			glUniform1f(uniLightningBrightness, environmentManager.getLightningBrightness());
 
 			glUniform1f(uniSaturation, config.saturation() / 100f);
@@ -2461,6 +2466,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 						case KEY_PARALLAX_OCCLUSION_MAPPING:
 						case KEY_UI_SCALING_MODE:
 						case KEY_VANILLA_COLOR_BANDING:
+						case KEY_EXPERIMENTAL_LIGHT_SCATTERING:
 							recompilePrograms = true;
 							break;
 						case KEY_SHADOW_MODE:
