@@ -816,6 +816,8 @@ public enum Overlay {
 		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_JAGGED_STONE_TILE_LIGHT_2)
 	),
 	FOSSIL_ISLAND_HILL_TEXTURE_FIX(11, Area.FOSSIL_ISLAND_HILL_TEXTURE_FIX, GroundMaterial.VARIED_DIRT),
+	FOSSIL_ISLAND_VOLCANO_PATH(p -> p.ids(94).area(Area.FOSSIL_ISLAND).groundMaterial(GroundMaterial.GRAVEL)),
+	FOSSIL_ISLAND_SWAMP_WATER(p -> p.ids(59).area(Area.FOSSIL_ISLAND).waterType(WaterType.SWAMP_WATER)),
 
 	// Ape Atoll
 	APE_ATOLL_WATERFALLS(p -> p.area(Area.APE_ATOLL_WATERFALLS).waterType(WaterType.WATER).blended(false)),
