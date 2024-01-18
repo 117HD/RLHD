@@ -252,7 +252,7 @@ public enum Underlay {
 		.groundMaterial(GroundMaterial.EARTHEN_CAVE_FLOOR)
 	),
 	COMPLEX_TILES_KARAMJA(p -> p
-		.ids(50, 55, 61, 62, 63, 68)
+		.ids(48, 50, 52, 53, 55, 61, 62, 63, 64, 65, 68)
 		.area(Area.KARAMJA)
 		.replacementResolver(
 			(plugin, scene, tile, override) -> {
@@ -266,45 +266,23 @@ public enum Underlay {
 				short overlayId = scene.getOverlayIds()[tile.getRenderLevel()][tileExX][tileExY];
 
 				// Grass
-				if (hsl[0] >= 13 ||
-					hsl[0] >= 10 && hsl[1] >= 3 ||
-					hsl[0] == 9 && hsl[1] >= 4 ||
-					hsl[0] == 9 && hsl[1] == 3 && hsl[2] <= 45 || // Fixes the southernmost beach
-					hsl[0] == 8 && hsl[1] > 5 && hsl[2] >= 30 && overlayId != 6
-				) {
-					switch (plugin.configSeasonalTheme) {
-						case SUMMER:
-						case AUTUMN:
-							return DEFAULT_GRASS;
-						case WINTER:
-							return WINTER_GRASS;
-					}
-				}
+				if (
+					(hsl[0] >= 13) ||
+					(hsl[0] >= 10 && hsl[1] >= 3) ||
+					(hsl[0] == 9 && hsl[1] >= 4) ||
+					(hsl[0] == 9 && hsl[1] == 3 && hsl[2] <= 45) || // Fixes the southernmost beach
+					(hsl[0] == 8 && hsl[1] > 5 && hsl[2] >= 30 && overlayId != 6)
+				) {return DEFAULT_GRASS;}
 
 				// Dirt
-				if (hsl[0] <= 8 && hsl[1] >= 4 && hsl[2] <= 71 ||
-					hsl[0] == 9 && hsl[1] == 2 && hsl[2] <= 44 ||
-					hsl[0] == 8 && hsl[1] == 3 && hsl[2] <= 34 // Breaks Sand if higher than 34; Can be fixed with tile averages or medians
-				) {
-					switch (plugin.configSeasonalTheme) {
-						case SUMMER:
-						case AUTUMN:
-							return DEFAULT_DIRT;
-						case WINTER:
-							return WINTER_DIRT;
-					}
-				}
+				if (
+					(hsl[0] <= 8 && hsl[1] >= 4 && hsl[2] <= 71) ||
+					(hsl[0] == 9 && hsl[1] == 2 && hsl[2] <= 44) ||
+					(hsl[0] == 8 && hsl[1] == 3 && hsl[2] <= 34) // Breaks Sand if higher than 34; Can be fixed with tile averages or medians
+				) {return DEFAULT_DIRT;}
 
 				// Stone
-				if (hsl[0] < 13 && hsl[1] <= 2 && hsl[2] <= 40) {
-					switch (plugin.configSeasonalTheme) {
-						case SUMMER:
-						case AUTUMN:
-							return DEFAULT_GRUNGE;
-						case WINTER:
-							return WINTER_GRUNGE;
-					}
-				}
+				if (hsl[0] < 13 && hsl[1] <= 2 && hsl[2] <= 40) {return	DEFAULT_ROCKY_GROUND;}
 
 				return DEFAULT_SAND;
 			}
