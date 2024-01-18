@@ -466,6 +466,44 @@ public enum Underlay {
 	YANILLE_AGILITY_DUNGEON_ENTRANCE_FIX(63, Area.YANILLE_AGILITY_DUNGEON_ENTRANCE, GroundMaterial.NONE, p -> p.blended(false)),
 
 	// Feldip Hills
+	FELDIP_HILLS_SOUTH_COMPLEX_TILES(p -> p
+		.area(Area.FELDIP_HILLS_SOUTHERN_REGION)
+		.ids(48, 49, 50, 51, 52, 53, 56, 61, 62, 63, 64, 65, 67, 68, 69, 70, 97, 98, 99, 100)
+		.replacementResolver(
+			(plugin, scene, tile, override) -> {
+				int[] hsl = HDUtils.getSouthWesternMostTileColor(tile);
+				if (hsl == null)
+					return override;
+
+				if ((hsl[1] == 0) || (hsl[0] <= 10 && hsl[1] < 2)) {
+					return DEFAULT_GRUNGE;
+				}
+				if ((hsl[0] == 8 && hsl[1] == 4 && hsl[2] >= 71) || (hsl[0] == 8 && hsl[1] == 3 && hsl[2] >= 21))
+					return DEFAULT_SAND;
+
+				if (
+					hsl[0] >= 11 && hsl[1] == 1 ||
+					hsl[0] >= 9 && hsl[1] >= 4 ||
+					hsl[0] >= 10 && hsl[1] >= 2 ||
+					hsl[0] == 8 && hsl[1] == 5 && hsl[2] >= 15 ||
+					hsl[0] == 8 && hsl[1] >= 6 && hsl[2] >= 2
+				) {
+					return DEFAULT_GRASS;
+				}
+
+				if (
+					hsl[0] == 8 && hsl[1] <= 4 && hsl[2] <= 71 ||
+					hsl[0] <= 7 && hsl[1] <= 5 && hsl[2] <= 57 ||
+					hsl[0] <= 7 && hsl[1] <= 7 && hsl[2] <= 28 ||
+					hsl[0] == 8 && hsl[1] == 5 && hsl[2] <= 15 ||
+					hsl[0] == 9 && hsl[1] >= 2 && hsl[1] <= 4
+				) {
+					return DEFAULT_DIRT;
+				}
+				return DEFAULT_DIRT;
+			}
+		)
+	),
 	FELDIP_HILLS_COMPLEX_TILES(p -> p
 		.area(Area.FELDIP_HILLS)
 		.ids(48, 50, 52, 62, 63, 67, 68, 69, 70, 97, 99, 100)
