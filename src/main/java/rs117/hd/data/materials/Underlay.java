@@ -566,8 +566,18 @@ public enum Underlay {
 
 	// Fossil Island
 	FOSSIL_ISLAND_WYVERN_DIRT(p -> p.ids(17).area(Area.FOSSIL_ISLAND_WYVERN_TASK_CAVE).groundMaterial(GroundMaterial.EARTHEN_CAVE_FLOOR)),
+	FOSSIL_ISLAND_VOLCANO_SAND(p -> p
+		.ids(138)
+		.area(Area.FOSSIL_ISLAND_VOLCANO)
+		.groundMaterial(GroundMaterial.SAND)
+	),
+	FOSSIL_ISLAND_VOLCANO_ROCK(p -> p
+		.ids(56, 72, 148, 150)
+		.area(Area.FOSSIL_ISLAND_VOLCANO)
+		.groundMaterial(GroundMaterial.OVERWORLD_ROCKY)
+	),
 	FOSSIL_ISLAND_ROCK(p -> p
-		.ids(72, 148)
+		.ids(72, 148, 150)
 		.area(Area.FOSSIL_ISLAND)
 		.groundMaterial(GroundMaterial.OVERWORLD_ROCKY)
 		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_GRUNGE)
