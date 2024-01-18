@@ -2234,6 +2234,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Override
 	public void loadScene(Scene scene) {
+		if (!isActive)
+			return;
+
 		if (skipScene != scene && HDUtils.sceneIntersects(scene, getExpandedMapLoadingChunks(), Area.THE_GAUNTLET)) {
 			// Some game objects in The Gauntlet are spawned in too late for the initial scene load,
 			// so we skip the first scene load and trigger another scene load the next game tick

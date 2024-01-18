@@ -606,6 +606,9 @@ public enum Material {
 		.setNormalMap(STONE_N)
 		.setSpecular(0.3f, 30)
 	),
+	STONE_NORMALED_DARK(STONE_NORMALED, p -> p
+		.setBrightness(0.88f)
+	),
 	STONE_LOWGLOSS(STONE, p -> p
 		.setSpecular(0.3f, 30)
 	),
