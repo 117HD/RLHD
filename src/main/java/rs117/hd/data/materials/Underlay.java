@@ -65,6 +65,7 @@ public enum Underlay {
 	DEFAULT_SNOW_1(p -> p.ids().groundMaterial(GroundMaterial.SNOW_1)),
 	DEFAULT_GRUNGE(p -> p.ids().groundMaterial(GroundMaterial.GRUNGE)),
 	DEFAULT_ROCKY_GROUND(p -> p.ids().groundMaterial(GroundMaterial.ROCKY_CAVE_FLOOR)),
+	GREEN_SAND_HUE_CORRECTION(p -> p.ids().groundMaterial(GroundMaterial.SAND).hue(8)),
 	// Lumbridge
 	LUMBRIDGE_CASTLE_TILE(56, Area.LUMBRIDGE_CASTLE_BASEMENT, GroundMaterial.MARBLE_2_SEMIGLOSS, p -> p.blended(false)),
 
@@ -561,6 +562,42 @@ public enum Underlay {
 		.groundMaterial(GroundMaterial.SNOW_2)
 		.ids(59)
 		.shiftLightness(5)
+	),
+
+	// Ape Atoll
+	APE_ATOLL_COMPLEX_TILES(p -> p
+		.ids(48, 50, 56, 61, 62, 63, 65, 67, 99, 100)
+		.area(Area.APE_ATOLL)
+		.replacementResolver(
+			(plugin, scene, tile, override) -> {
+				int[] hsl = HDUtils.getSouthWesternMostTileColor(tile);
+				if (hsl == null)
+					return override;
+
+				LocalPoint localLocation = tile.getLocalLocation();
+				int tileExX = localLocation.getSceneX() + SCENE_OFFSET;
+				int tileExY = localLocation.getSceneY() + SCENE_OFFSET;
+				short overlayId = scene.getOverlayIds()[tile.getRenderLevel()][tileExX][tileExY];
+
+				// Grass
+				if (
+					(hsl[0] >= 11  && hsl[1] >= 4 && hsl[2] <= 39)
+				) {return DEFAULT_GRASS;}
+
+				// Dirt
+				if (
+					(hsl[0] == 8 && hsl[1] >= 6 && hsl[2] <= 30) || (hsl[0] == 10 && hsl[1] >= 3 && hsl[2] <= 35)
+				) {return DEFAULT_DIRT;}
+
+				// Sand
+				if (hsl[0] == 9 && hsl[1] <= 3 && hsl[2] >= 34 || (hsl[0] == 8 && (hsl[1] == 3 || hsl[1] == 4) && hsl[2] >= 20)) {return DEFAULT_SAND;}
+
+				// Ugly green sand fix
+				if (hsl[0] == 9 && (hsl[1] == 3 || hsl[1] == 4) && hsl[2] >= 34) {return GREEN_SAND_HUE_CORRECTION;}
+
+				return DEFAULT_DIRT;
+			}
+		)
 	),
 
 	//
