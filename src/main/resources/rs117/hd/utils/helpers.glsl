@@ -286,7 +286,7 @@ void populateNormals(inout Context ctx) {
 
 float sampleRoughness(const Material mat, const vec2 uv) {
     if (mat.roughnessMap == -1)
-        return 1;
+        return 1.f;
     return linearToSrgb(texture(textureArray, vec3(uv, mat.roughnessMap)).r);
 }
 
