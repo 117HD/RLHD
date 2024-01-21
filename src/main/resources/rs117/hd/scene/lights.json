@@ -19884,7 +19884,8 @@
       5881,
       38555,
       33454
-    ]
+    ],
+    "visibleFromOtherPlanes": true
   },
   {
     "description": "STANDING_TORCH_SHORT_LARGE",
@@ -20202,7 +20203,8 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      26180
+      26180,
+      30932
     ]
   },
   {
@@ -20237,7 +20239,6 @@
       5981,
       29085,
       25374,
-      33311,
       35810,
       35811,
       10660,
@@ -20645,7 +20646,7 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      12805
+      12809
     ]
   },
   {
@@ -24504,6 +24505,121 @@
     "range": 20,
     "objectIds": [
       38451
+    ],
+    "visibleFromOtherPlanes": true
+  },
+  {
+    "description": "HALLOWED_SEPULCHRE_PORTAL_FRAME",
+    "height": 200,
+    "alignment": "CENTER",
+    "radius": 800,
+    "strength": 5,
+    "color": [
+      0,
+      0,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 1000,
+    "range": 10,
+    "objectIds": [
+      38829
+    ]
+  },
+  {
+    "description": "HALLOWED_SEPULCHRE_BRAZIERS",
+    "height": 152,
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 5,
+    "color": [
+      0,
+      0,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 1000,
+    "range": 10,
+    "objectIds": [
+      38798,
+      38801
+    ]
+  },
+  {
+    "description": "HALLOWED_SEPULCHRE_BRAZIER_GATE",
+    "height": 150,
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 5,
+    "color": [
+      0,
+      0,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 600,
+    "range": 10,
+    "objectIds": [
+      38798,
+      38801,
+      38804,
+      39540
+    ]
+  },
+  {
+    "description": "HALLOWED_SEPULCHRE_STRANGE_TILE_BLUE",
+    "height": 50,
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 25,
+    "color": "#5577ff",
+    "graphicsObjectIds": [
+      1799
+    ]
+  },
+  {
+    "description": "HALLOWED_SEPULCHRE_STRANGE_TILE_YELLOW",
+    "height": 50,
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 5,
+    "color": "#ffff00",
+    "graphicsObjectIds": [
+      1800
+    ]
+  },
+  {
+    "description": "HALLOWED_SEPULCHRE_WIZARD_STATUE_FLAMES_START_AND_END",
+    "height": 350,
+    "alignment": "CENTER",
+    "radius": 500,
+    "strength": 3,
+    "color": "#b15d00",
+    "type": "FLICKER",
+    "range": 50,
+    "objectIds": [
+      38427
+    ],
+    "animationIds": [
+      8660,
+      8663
+    ]
+  },
+  {
+    "description": "HALLOWED_SEPULCHRE_WIZARD_STATUE_FLAMES_MIDDLE",
+    "height": 350,
+    "alignment": "CENTER",
+    "radius": 500,
+    "strength": 15,
+    "color": "#b15d00",
+    "type": "FLICKER",
+    "range": 50,
+    "objectIds": [
+      38427
+    ],
+    "animationIds": [
+      8661,
+      8662
     ]
   },
   {
@@ -24743,11 +24859,55 @@
     "duration": 1550,
     "range": 20,
     "objectIds": [
-      34748
+      34748,
+      34749,
+      34752,
+      34751,
+      34754,
+      34756,
+      34755
     ]
   },
   {
-    "description": "AIR_ALTAR_PILLAR",
+    "description": "NATURE_WATER_ALTAR_PORTAL_AND_PILLARS",
+    "height": 250,
+    "alignment": "CENTER",
+    "radius": 450,
+    "strength": 10,
+    "color": [
+      50,
+      50,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 1550,
+    "range": 20,
+    "objectIds": [
+      34750,
+      34791
+    ]
+  },
+  {
+    "description": "BODY_ALTER_PILLARS_AND_PORTAL",
+    "height": 250,
+    "alignment": "CENTER",
+    "radius": 450,
+    "strength": 5,
+    "color": [
+      255,
+      50,
+      200
+    ],
+    "type": "PULSE",
+    "duration": 1550,
+    "range": 20,
+    "objectIds": [
+      34793,
+      34753
+    ]
+  },
+  {
+    "description": "COSMIC_AIR_ALTAR_PILLAR_AND_ORBS",
     "height": 250,
     "alignment": "CENTER",
     "radius": 300,
@@ -24762,6 +24922,42 @@
     "range": 20,
     "objectIds": [
       34790
+    ]
+  },
+  {
+    "description": "COSMIC_AIR_ALTAR_PILLAR_AND_ORBS",
+    "height": 250,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 5,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 1000,
+    "range": 20,
+    "objectIds": [
+      34794
+    ]
+  },
+  {
+    "description": "FIRE_ALTAR_ORBS",
+    "height": 250,
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 10,
+    "color": [
+      255,
+      20,
+      20
+    ],
+    "type": "PULSE",
+    "duration": 650,
+    "range": 20,
+    "objectIds": [
+      34792
     ]
   },
   {
@@ -24814,7 +25010,7 @@
     "description": "MAGIC_GUILD_ORBS",
     "height": 250,
     "alignment": "CENTER",
-    "radius": 250,
+    "radius": 300,
     "strength": 10,
     "color": [
       255,
@@ -24822,7 +25018,7 @@
       255
     ],
     "type": "PULSE",
-    "duration": 500,
+    "duration": 800,
     "range": 20,
     "objectIds": [
       34789
@@ -26552,6 +26748,50 @@
     "objectIds": [
       43729,
       38044
+    ]
+  },
+  {
+    "description": "ABYSSAL_NEXUS_TENDRILS_THRONE",
+    "height": 65,
+    "alignment": "CENTER",
+    "radius": 600,
+    "strength": 5,
+    "color": [
+      70,
+      242,
+      31
+    ],
+    "type": "FLICKER",
+    "duration": 2000,
+    "range": 20,
+    "objectIds": [
+      27005,
+      26984,
+      26985,
+      26986,
+      27004,
+      27006,
+      27014,
+      27015,
+      27016
+    ]
+  },
+  {
+    "description": "ABYSSAL_NEXUS_FONT",
+    "height": 200,
+    "alignment": "CENTER",
+    "radius": 1200,
+    "strength": 12.5,
+    "color": [
+      70,
+      242,
+      31
+    ],
+    "type": "PULSE",
+    "duration": 5000,
+    "range": 25,
+    "objectIds": [
+      27029
     ]
   },
   {
@@ -30443,6 +30683,42 @@
     ]
   },
   {
+    "description": "ZANARIS_GREEN_MUSHROOM_CEILING",
+    "height": 290,
+    "alignment": "CENTER",
+    "radius": 100,
+    "strength": 6.25,
+    "color": [
+      180,
+      255,
+      175
+    ],
+    "type": "FLICKER",
+    "duration": 1250,
+    "range": 20,
+    "objectIds": [
+      12020
+    ]
+  },
+  {
+    "description": "ZANARIS_GREEN_LAMP_CEILING",
+    "height": 315,
+    "alignment": "CENTER",
+    "radius": 100,
+    "strength": 7.25,
+    "color": [
+      180,
+      255,
+      175
+    ],
+    "type": "FLICKER",
+    "duration": 1250,
+    "range": 20,
+    "objectIds": [
+      12021
+    ]
+  },
+  {
     "description": "RED_MUSHROOM_WALL",
     "height": 132,
     "alignment": "FRONT",
@@ -30459,6 +30735,24 @@
     "objectIds": [
       12010,
       12012
+    ]
+  },
+  {
+    "description": "ZANARIS_RED_MUSHROOM_CEILING",
+    "height": 290,
+    "alignment": "CENTER",
+    "radius": 110,
+    "strength": 29.25,
+    "color": [
+      225,
+      30,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 1250,
+    "range": 20,
+    "objectIds": [
+      12019
     ]
   },
   {
@@ -31248,19 +31542,18 @@
   },
   {
     "description": "Weiss Magic Fire",
-    "height": 50,
+    "height": 300,
     "alignment": "CENTER",
-    "radius": 650,
-    "strength": 16.5,
+    "radius": 500,
+    "strength": 1,
     "color": [
       252,
       148,
       3
     ],
     "type": "FLICKER",
-    "duration": 0,
-    "range": 20,
-    "objectIds": [ 33333 ]
+    "range": 10,
+    "objectIds": [ 33311 ]
   },
   {
     "description": "Weiss Saltmine Entrance",
@@ -31429,5 +31722,136 @@
     "duration": 0,
     "range": 25,
     "objectIds": [ 46269 ]
+  },
+  {
+    "description": "FIRE_OF_DOMINATION",
+    "height": 300,
+    "radius": 500,
+    "strength": 3,
+    "color": "#ea008e",
+    "type": "FLICKER",
+    "range": 10,
+    "objectIds": [
+      33318
+    ]
+  },
+  {
+    "description": "FIRE_OF_NOURISHMENT",
+    "height": 300,
+    "radius": 500,
+    "strength": 3,
+    "color": [ 11, 252, 3 ],
+    "type": "FLICKER",
+    "range": 10,
+    "objectIds": [
+      33319
+    ]
+  },
+  {
+    "description": "FIRE_OF_ETERNAL_LIGHT",
+    "height": 300,
+    "radius": 850,
+    "strength": 5,
+    "color": "#ffffff",
+    "type": "FLICKER",
+    "range": 10,
+    "objectIds": [
+      33320
+    ]
+  },
+  {
+    "description": "FIRE_OF_UNSEASONAL_WARMTH",
+    "height": 300,
+    "radius": 750,
+    "strength": 2.5,
+    "color": [ 255, 85, 0 ],
+    "type": "FLICKER",
+    "range": 10,
+    "objectIds": [
+      33321
+    ]
+  },
+  {
+    "description": "FIRE_OF_DEHUMIDIFICATION",
+    "height": 300,
+    "radius": 750,
+    "strength": 4,
+    "color": [ 219, 252, 3 ],
+    "type": "FLICKER",
+    "range": 10,
+    "objectIds": [
+      33322
+    ]
+  },
+  {
+    "description": "WALL_TORCH_DAGANNOTH_KINGS",
+    "height": 200,
+    "radius": 1000,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 23,
+    "objectIds": [
+      10185
+    ]
+  },
+  {
+    "description": "Weiss Saltmine Entrance",
+    "worldX": 3595,
+    "worldY": 10292,
+    "plane": 2,
+    "height": 144,
+    "alignment": "NORTHEAST_CORNER",
+    "radius": 550,
+    "strength": 10.5,
+    "color": [
+      252,
+      252,
+      252
+    ],
+    "type": "STATIC",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "SIMPLE_STOVE",
+    "height": 20,
+    "alignment": "CENTER",
+    "radius": 450,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      32631
+    ]
+  },
+  {
+    "description": "SLEPE_WALL_CANDLE",
+    "height": 220,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 8.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      13053
+    ]
   }
 ]

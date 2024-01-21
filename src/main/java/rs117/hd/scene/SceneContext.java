@@ -13,7 +13,7 @@ import net.runelite.api.coords.*;
 import rs117.hd.data.environments.Area;
 import rs117.hd.data.materials.Material;
 import rs117.hd.scene.environments.Environment;
-import rs117.hd.scene.lights.SceneLight;
+import rs117.hd.scene.lights.Light;
 import rs117.hd.utils.AABB;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.buffer.GpuFloatBuffer;
@@ -55,7 +55,7 @@ public class SceneContext {
 	public Map<Integer, Integer> vertexUnderwaterDepth;
 	public int[][][] underwaterDepthLevels;
 
-	public final ArrayList<SceneLight> lights = new ArrayList<>();
+	public final ArrayList<Light> lights = new ArrayList<>();
 	public final HashSet<Projectile> projectiles = new HashSet<>();
 
 	public final ArrayList<Environment> environments = new ArrayList<>();

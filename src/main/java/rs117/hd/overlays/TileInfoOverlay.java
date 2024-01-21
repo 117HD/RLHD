@@ -177,12 +177,22 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay {
 
 		Scene scene = client.getScene();
 		short overlayId = scene.getOverlayIds()[plane][tileExX][tileExY];
-		Overlay overlay = Overlay.getOverlay(scene, tile, plugin);
-		lines.add(String.format("Overlay: %s (%d)", overlay.name(), overlayId));
+		Overlay overlay = Overlay.getOverlayBeforeReplacements(scene, tile);
+		Overlay replacementOverlay = overlay.resolveReplacements(scene, tile, plugin);
+		if (replacementOverlay != overlay) {
+			lines.add(String.format("Overlay: %s -> %s (%d)", overlay.name(), replacementOverlay.name(), overlayId));
+		} else {
+			lines.add(String.format("Overlay: %s (%d)", overlay.name(), overlayId));
+		}
 
 		short underlayId = scene.getUnderlayIds()[plane][tileExX][tileExY];
-		Underlay underlay = Underlay.getUnderlay(scene, tile, plugin);
-		lines.add(String.format("Underlay: %s (%d)", underlay.name(), underlayId));
+		Underlay underlay = Underlay.getUnderlayBeforeReplacements(scene, tile);
+		Underlay replacementUnderlay = underlay.resolveReplacements(scene, tile, plugin);
+		if (replacementUnderlay != underlay) {
+			lines.add(String.format("Underlay: %s -> %s (%d)", underlay.name(), replacementUnderlay.name(), underlayId));
+		} else {
+			lines.add(String.format("Underlay: %s (%d)", underlay.name(), underlayId));
+		}
 
 		Color polyColor = Color.LIGHT_GRAY;
 		if (paint != null)
@@ -328,7 +338,11 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay {
 						type = "Item";
 						break;
 				}
-				lines.add(String.format("%s: ID=%d ori=%d", type, id, gameObject.getModelOrientation()));
+				int height = -1;
+				var renderable = gameObject.getRenderable();
+				if (renderable != null)
+					height = renderable.getModelHeight();
+				lines.add(String.format("%s: ID=%d ori=%d height=%d", type, id, gameObject.getModelOrientation(), height));
 				if (!extra.isEmpty()) {
 					counter++;
 					lines.add(extra);

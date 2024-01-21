@@ -355,21 +355,21 @@ public class ColorUtils {
 				return ColorUtils.srgb(in.nextString());
 
 			if (token != JsonToken.BEGIN_ARRAY)
-				throw new IOException("Expected hex color code or array of color channels");
+				throw new IOException("Expected hex color code or array of color channels at " + GsonUtils.location(in));
 
 			in.beginArray();
 
 			int i = 0;
 			while (in.hasNext() && in.peek() != JsonToken.END_ARRAY) {
 				if (in.peek() == JsonToken.NULL) {
-					log.warn("Skipping null value in color array");
+					log.warn("Skipping null value in color array at {}", GsonUtils.location(in));
 					in.skipValue();
 					continue;
 				}
 
 				if (in.peek() == JsonToken.NUMBER) {
 					if (i > 3) {
-						log.warn("Skipping extra elements in color array");
+						log.warn("Skipping extra elements in color array at {}", GsonUtils.location(in));
 						break;
 					}
 
@@ -377,12 +377,12 @@ public class ColorUtils {
 					continue;
 				}
 
-				throw new IOException("Unexpected type in color array: " + in.peek());
+				throw new IOException("Unexpected type in color array: " + in.peek() + " at " + GsonUtils.location(in));
 			}
 			in.endArray();
 
 			if (i < 3)
-				throw new IOException("Too few elements in color array: " + i);
+				throw new IOException("Too few elements in color array: " + i + " at " + GsonUtils.location(in));
 
 			for (int j = 0; j < i; j++)
 				rgba[j] /= 255;

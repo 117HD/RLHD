@@ -24,10 +24,17 @@
  */
 package rs117.hd.data.environments;
 
+import com.google.gson.TypeAdapter;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonToken;
+import com.google.gson.stream.JsonWriter;
+import java.io.IOException;
 import java.util.Arrays;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.coords.*;
 import rs117.hd.utils.AABB;
+import rs117.hd.utils.GsonUtils;
 
 import static rs117.hd.utils.AABB.regionBox;
 import static rs117.hd.utils.AABB.regions;
@@ -311,27 +318,27 @@ public enum Area
 
 	// Wizards Tower
 	WIZARDS_TOWER_PATH(
-		new AABB(3115,3171,3112,3168),
-		new AABB(3117,3169,3116,3166),
-		new AABB(3111,3169,3110,3167),
-		new AABB(3115,3167),
-		new AABB(3118,3168,3118,3167),
-		new AABB(3109,3168,3108,3168),
-		new AABB(3109,3167,3108,3167),
+		new AABB(3115, 3171, 3112, 3168),
+		new AABB(3117, 3169, 3116, 3166),
+		new AABB(3111, 3169, 3110, 3167),
+		new AABB(3115, 3167),
+		new AABB(3118, 3168, 3118, 3167),
+		new AABB(3109, 3168, 3108, 3168),
+		new AABB(3109, 3167, 3108, 3167),
 		// Partial tiles
-		new AABB(3116,3170),
-		new AABB(3118,3169),
-		new AABB(3108,3169),
-		new AABB(3109,3169)
+		new AABB(3116, 3170),
+		new AABB(3118, 3169),
+		new AABB(3108, 3169),
+		new AABB(3109, 3169)
 	),
 	WIZARD_TOWER_PATH_PARTIAL_TILES(
-		new AABB(3111,3170),
-		new AABB(3107,3186),
-		new AABB(3114,3167),
-		new AABB(3112,3167),
-		new AABB(3107,3167),
-		new AABB(3118,3166),
-		new AABB(3115,3166)
+		new AABB(3111, 3170),
+		new AABB(3107, 3186),
+		new AABB(3114, 3167),
+		new AABB(3112, 3167),
+		new AABB(3107, 3167, 3107, 3168),
+		new AABB(3118, 3166),
+		new AABB(3115, 3166)
 	),
 	WIZARD_TOWER_ROOF(new AABB(3101, 3167, 3116, 3153)),
 	WIZARD_TOWER_BASEMENT(new AABB(3094, 9579, 3122, 9554)),
@@ -689,6 +696,13 @@ public enum Area
 		new AABB(2689,3276,2667,3264)
 	),
 	CLOCK_TOWER_DUNGEON_COLORED_TILES(2579,9650,2578,9649),
+
+	WITCHAVEN(
+		new AABB(2693, 3298, 2744, 3262),
+		new AABB(2702, 3299, 2744, 3310),
+		new AABB(2714, 3311, 2744, 3320)
+	),
+
 	KHAZARD_BATTLEFIELD_COBBLE_OUTSIDE(
 		new AABB(2512, 3259, 2507, 3254),
 		new AABB(2509, 3251, 2508, 3250),
@@ -827,6 +841,36 @@ public enum Area
 	AL_KHARID_MINE(3270, 3322, 3337, 3258),
 	DESERT_MINING_CAMP(3272, 3042, 3306, 3011),
 	AGILITY_PYRAMID_TOP(12105),
+	// Sophanem and Menaphos
+	SOPHANEM_TEMPLE_FLOORS(
+		new AABB(3316, 2803, 3308, 2796, 0),
+		new AABB(3307, 2803, 3307, 2801, 0),
+		new AABB(3307, 2798, 3307, 2796, 0),
+		new AABB(3285, 2777, 3277, 2765, 0),
+		new AABB(3277, 2764, 3279, 2764, 0),
+		new AABB(3285, 2764, 3283, 2764, 0)
+	),
+	SOPHANEM_BUILDING_FLOORS(
+		new AABB(3313, 2792, 3318, 2782, 0),
+		new AABB(3312, 2777, 3317, 2763, 0),
+		new AABB(3312, 2758, 3316, 2753, 0),
+		new AABB(3288, 2756, 3280, 2753, 0),
+		new AABB(3280, 2757, 3284, 2757, 0)
+	),
+	SOPHANEM_UPPER_FLOORS(3268, 2810, 3322, 2747, 1),
+	SOPHANEM_TEMPLE_UPPER_FLOORS(
+		new AABB(3306, 2803, 3316, 2796, 1),
+		new AABB(3306, 2803, 3316, 2796, 2),
+		new AABB(3306, 2803, 3316, 2796, 3)
+	),
+	SOPHANEM_PYRAMIDS(
+		new AABB(3282, 2801, 3295, 2788),
+		new AABB(3287, 2780, 3302, 2765)
+	),
+	SOPHANEM_TEMPLE_BANK(11088),
+	SOPHANEM_TRAPDOOR(new AABB(3315, 2797, 0)),
+	SOPHANEM(3268, 2810, 3322, 2747),
+
 	KHARIDIAN_DESERT_DEEP(merge(
 		new AABB(3198, 2989, 3322, 2817),
 		new AABB(3315, 2928, 3469, 2812),
@@ -871,23 +915,14 @@ public enum Area
 		new AABB(2894, 4972, 2933, 4941)
 	),
 	PYRAMID_PLUNDER(7749),
-	SOPHANEM_TRAPDOOR(new AABB(3315, 2797, 0)),
 	NECROPOLIS(
 		new AABB(3275, 2749, 3405, 2670),
 		new AABB(3322, 2773, 3370, 2750)
 	),
 	RIVER_ELID_WATERFALL(3369, 3131, 3370, 3133),
 	KALPHITE_LAIR(13972),
-
-	// Sophanem and Menaphos
-	SOPHANEM_FLOORS(
-		new AABB(3316, 2803, 3308, 2796, 0),
-		new AABB(3307, 2803, 3307, 2801, 0),
-		new AABB(3307, 2798, 3307, 2796, 0),
-		new AABB(3285, 2777, 3277, 2765, 0),
-		new AABB(3277, 2764, 3279, 2764, 0),
-		new AABB(3285, 2764, 3283, 2764, 0)
-	),
+	SCARAB_LAIR_TEMPLE(8516),
+	SCARAB_LAIR_BOTTOM(9027),
 
 	// Morytania
 	CANIFIS_BAR_FLOOR(
@@ -904,6 +939,7 @@ public enum Area
 		new AABB(3501, 3496),
 		new AABB(3500, 3468)
 	),
+	CROMBWICK_MANOR(new AABB(3713, 3350, 1, 3738, 3367, 3)),
 	// Hallowed Sepulchre
 	HALLOWED_SEPULCHRE_LOBBY(2380, 5958, 2420, 6000),
 	HALLOWED_SEPULCHRE_FLOOR_1(2220, 5938, 2325, 6032),
@@ -917,10 +953,11 @@ public enum Area
 		new AABB(3684, 3259, 3678, 3263),
 		new AABB(3683, 3258, 3683, 3258)
 	),
-	VER_SINHAZA(
-		new AABB(3641, 3236, 3684, 3202),
-		new AABB(2087, 4903, 2064, 4880) // cutscene
-	),
+	VER_SINHAZA_CUTSCENE(2087, 4903, 2064, 4880),
+	VER_SINHAZA(merge(
+		VER_SINHAZA_CUTSCENE,
+		new AABB(3641, 3236, 3684, 3202)
+	)),
 	MEIYERDITCH(
 		new AABB(3587, 3310, 3627, 3200),
 		new AABB(3618, 3327, 3647, 3311),
@@ -961,7 +998,6 @@ public enum Area
 	BURGH_DE_ROTT_BASEMENT(13974),
 	ABANDONED_MINE(3423, 3261, 3461, 3201),
 	GROTESQUE_GUARDIANS(6727),
-	VER_SINHAZA_CUTSCENE(2087, 4903, 2064, 4880),
 	MORYTANIA(merge(
 		new AABB(3432, 3486, 3775, 3167),
 		new AABB(3494, 3166, 3775, 3145),
@@ -1118,6 +1154,25 @@ public enum Area
 	// Soul Wars
 	ISLE_OF_SOULS_MAINLAND(regionBox(8235, 9262)),
 	ISLE_OF_SOULS_INSTANCE(regionBox(7515, 8542)),
+	ISLE_OF_SOULS(ISLE_OF_SOULS_MAINLAND, ISLE_OF_SOULS_INSTANCE),
+	ISLE_OF_SOULS_HOT_ZONES(
+		new AABB(2270, 2944, 2301, 2884), // Red Base
+		new AABB(2269, 2912, 2265, 2890),
+		new AABB(2261, 2912, 2264, 2892),
+		new AABB(2262, 2914, 2249, 2913),
+		new AABB(2253, 2912, 2260, 2894),
+		new AABB(2248, 2912, 2252, 2895),
+		new AABB(2246, 2910, 2247, 2899),
+		new AABB(2244, 2909, 2245, 2900),
+		new AABB(2240, 2968, 2264, 2961), // Pyre Fiends
+		new AABB(2268, 2960, 2241, 2957),
+		new AABB(2266, 2956, 2245, 2952),
+		new AABB(2239, 2967, 2239, 2964),
+		new AABB(2266, 2963, 2266, 2961),
+		new AABB(2248, 2969, 2260, 2969),
+		new AABB(2250, 2970, 2253, 2970),
+		new AABB(2265, 2967, 2265, 2961)
+	),
 	SOUL_WARS_ARENA_TUTORIAL(1921, 6018, 2110, 5950),
 	SOUL_WARS_RED_BASE_TUTORIAL(
 		new AABB(2080, 6018, 2110, 5982),
@@ -1192,7 +1247,7 @@ public enum Area
 		new AABB(1598, 3854, 1730, 3731),
 		new AABB(1730, 3731, 1623, 3710),
 		new AABB(1616, 3874, 1658, 3842),
-		new AABB(1625, 3898, 1856, 3817)
+		new AABB(1625, 3905, 1856, 3817)
 	),
 	ZEAH_SNOWY_NORTHERN_REGION(
 		new AABB(1896, 3902, 1413, 4058),
@@ -1246,6 +1301,7 @@ public enum Area
 	ZEAH(1085, 4078, 1938, 2870),
 
 	// Fossil Island
+	FOSSIL_ISLAND_WYVERN_TASK_CAVE(14496),
 	TAR_SWAMP(
 		new AABB(3712, 3800, 3632, 3694),
 		new AABB(3697, 3809, 3631, 3782)
@@ -1701,7 +1757,7 @@ public enum Area
 		new AABB(2564, 3582, 2600, 3613)
 	),
 	LIGHTHOUSE_INSTANCE(2432, 4544, 2495, 4624),
-	SORCERESSS_GARDEN(11605),
+	SORCERESS_GARDEN(11605),
 	PURO_PURO(10307),
 	RATCATCHERS_HOUSE(2821, 5059, 2875, 5114),
 	CANOE_CUTSCENE(7238),
@@ -1810,6 +1866,24 @@ public enum Area
 	GLOD_INSTANCE(8534),
 	PROBABLY_CUTSCENE_GRASS(3392, 4807, 3399, 4800),
 	YU_BIUSK(15428),
+	GIANT_MOLE_LAIR(regions(6992, 6993)),
+
+	WATERBIRTH_DUNGEON_LEVEL_1(regionBox(9886, 10142).onPlane(0)),
+	WATERBIRTH_DUNGEON_LEVEL_2(regionBox(7236, 7748).onPlane(1)),
+	WATERBIRTH_DUNGEON_LEVEL_3(regionBox(7236, 7748).onPlane(2)),
+	WATERBIRTH_DUNGEON_LEVEL_4(regionBox(7236, 7748).onPlane(3)),
+	WATERBIRTH_DUNGEON_LEVEL_5(regionBox(7492, 7748).onPlane(0)),
+	DAGANNOTH_KINGS_REGULAR_CAVE(new AABB(11589).onPlane(0)),
+	DAGANNOTH_KINGS_SLAYER_CAVE(new AABB(11588).onPlane(0)),
+	WATERBIRTH_DUNGEON(merge(
+		WATERBIRTH_DUNGEON_LEVEL_1,
+		WATERBIRTH_DUNGEON_LEVEL_2,
+		WATERBIRTH_DUNGEON_LEVEL_3,
+		WATERBIRTH_DUNGEON_LEVEL_4,
+		WATERBIRTH_DUNGEON_LEVEL_5,
+		DAGANNOTH_KINGS_REGULAR_CAVE,
+		DAGANNOTH_KINGS_SLAYER_CAVE
+	)),
 
 	// SNOWY REGIONS
 	ESSENCE_MINE(11595),
@@ -1986,7 +2060,7 @@ public enum Area
 		RANDOM_EVENT_DRILL_DEMON,
 		RANDOM_EVENT_FREAKY_FORESTER,
 		RANDOM_EVENT_GRAVEDIGGER,
-		SORCERESSS_GARDEN,
+		SORCERESS_GARDEN,
 		TIRANNWN_MAINLAND,
 		YU_BIUSK,
 		AIR_ALTAR,
@@ -2009,13 +2083,14 @@ public enum Area
 		TUTORIAL_ISLAND_INSTANCE,
 		TYRAS_CAMP_INSTANCE,
 		SHIP_SAILING,
+		VER_SINHAZA_CUTSCENE,
 		regions(8288, 8801, 11593)
 	)),
 	OVERWORLD(
 		MAINLAND,
 		MAINLAND_EXTENSIONS
 	),
-	ALL(0, 0, Integer.MAX_VALUE, Integer.MAX_VALUE),
+	ALL(Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE),
 	NONE(0, 0, 0, 0),
 	;
 
@@ -2105,13 +2180,42 @@ public enum Area
 	public boolean intersects(Area otherArea) {
 		if (otherArea == null)
 			return false;
-		outer:
-		for (AABB other : otherArea.aabbs) {
+		for (AABB other : otherArea.aabbs)
 			for (AABB self : aabbs)
 				if (self.intersects(other))
-					continue outer;
-			return false;
+					return true;
+		return false;
+	}
+
+	@Slf4j
+	public static class JsonAdapter extends TypeAdapter<Area> {
+		@Override
+		public Area read(JsonReader in) throws IOException {
+			var token = in.peek();
+			if (token == JsonToken.NULL)
+				return null;
+
+			if (token != JsonToken.STRING) {
+				log.warn("Invalid type for area enum: '{}' at {}", token, GsonUtils.location(in), new Throwable());
+				return NONE;
+			}
+
+			var str = in.nextString();
+			try {
+				return Area.valueOf(str);
+			} catch (IllegalArgumentException ex) {
+				log.warn("Area enum '{}' does not exist at {}", str, GsonUtils.location(in), new Throwable());
+				return NONE;
+			}
 		}
-		return true;
+
+		@Override
+		public void write(JsonWriter out, Area area) throws IOException {
+			if (area == null) {
+				out.nullValue();
+			} else {
+				out.value(area.name());
+			}
+		}
 	}
 }
