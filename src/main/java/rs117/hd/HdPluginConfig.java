@@ -862,31 +862,45 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
+	enum LightScattering {NONE, SINGLE}
+
 	String KEY_EXPERIMENTAL_LIGHT_SCATTERING = "experimentalLightScattering";
 	@ConfigItem(
 		keyName = KEY_EXPERIMENTAL_LIGHT_SCATTERING,
-		name = "Imitate fog light scattering",
+		name = "Light scattering",
 		description = "",
 		position = 100,
 		section = experimentalSettings
 	)
-	default boolean experimentalLightScattering() {
-		return true;
+	default LightScattering experimentalLightScattering() {
+		return LightScattering.SINGLE;
 	}
 
-	String KEY_EXPERIMENTAL_LIGHT_SCATTERING_FACTOR = "experimentalLightScatteringFactor";
+	String KEY_EXPERIMENTAL_LIGHT_SCATTERING_FACTOR = "experimentalLightScatteringFactor2";
 	@Range(
 		min = Integer.MIN_VALUE
 	)
 	@ConfigItem(
 		keyName = KEY_EXPERIMENTAL_LIGHT_SCATTERING_FACTOR,
-		name = "Scattering strength",
+		name = "Scattering factor",
 		description = "",
 		position = 101,
 		section = experimentalSettings
 	)
 	default int experimentalLightScatteringFactor() {
-		return 135;
+		return 25;
+	}
+
+	String KEY_EXPERIMENTAL_TONE_MAPPING = "experimentalToneMapping";
+	@ConfigItem(
+		keyName = KEY_EXPERIMENTAL_TONE_MAPPING,
+		name = "Tone mapping",
+		description = "",
+		position = 102,
+		section = experimentalSettings
+	)
+	default boolean experimentalToneMapping() {
+		return true;
 	}
 
 

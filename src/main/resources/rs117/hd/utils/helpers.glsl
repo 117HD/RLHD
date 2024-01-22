@@ -96,8 +96,11 @@ float aces(float x) {
 }
 
 void postProcessImage(inout vec3 color) {
+    #if EXPERIMENTAL_TONE_MAPPING
     color = aces(color);
+    #else
     color = clamp(color.rgb, 0, 1);
+    #endif
 
     // Skip unnecessary color conversion if possible
     if (saturation != 1 || contrast != 1) {

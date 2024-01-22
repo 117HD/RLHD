@@ -776,6 +776,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.define("SHADOW_MAP_OVERLAY", enableShadowMapOverlay)
 			.define("EXPERIMENTAL_LIGHT_SCATTERING", config.experimentalLightScattering())
 			.define("EXPERIMENTAL_LIGHT_SCATTERING_FACTOR", config.experimentalLightScatteringFactor())
+			.define("EXPERIMENTAL_TONE_MAPPING", config.experimentalToneMapping())
 			.addIncludePath(SHADER_PATH);
 
 		glSceneProgram = PROGRAM.compile(template);
@@ -2467,6 +2468,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 						case KEY_UI_SCALING_MODE:
 						case KEY_VANILLA_COLOR_BANDING:
 						case KEY_EXPERIMENTAL_LIGHT_SCATTERING:
+						case KEY_EXPERIMENTAL_TONE_MAPPING:
 							recompilePrograms = true;
 							break;
 						case KEY_SHADOW_MODE:
