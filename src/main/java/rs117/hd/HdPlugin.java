@@ -368,6 +368,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	// Point light uniforms
 	private int uniPointLightsCount;
 	private int uniExperimentalFogLightScatteringFactor;
+	private int uniExperimentalToneMappingBrightnessMultiplier;
 
 	private int uniProjectionMatrix;
 	private int uniLightProjectionMatrix;
@@ -775,7 +776,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.define("FLAT_SHADING", config.flatShading())
 			.define("SHADOW_MAP_OVERLAY", enableShadowMapOverlay)
 			.define("EXPERIMENTAL_LIGHT_SCATTERING", config.experimentalLightScattering())
-			.define("EXPERIMENTAL_LIGHT_SCATTERING_FACTOR", config.experimentalLightScatteringFactor())
 			.define("EXPERIMENTAL_TONE_MAPPING", config.experimentalToneMapping())
 			.addIncludePath(SHADER_PATH);
 
@@ -858,6 +858,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		uniLightningBrightness = glGetUniformLocation(glSceneProgram, "lightningBrightness");
 		uniPointLightsCount = glGetUniformLocation(glSceneProgram, "pointLightsCount");
 		uniExperimentalFogLightScatteringFactor = glGetUniformLocation(glSceneProgram, "experimentalFogLightScatteringFactor");
+		uniExperimentalToneMappingBrightnessMultiplier = glGetUniformLocation(
+			glSceneProgram,
+			"experimentalToneMappingBrightnessMultiplier"
+		);
 		uniColorBlindnessIntensity = glGetUniformLocation(glSceneProgram, "colorBlindnessIntensity");
 		uniLightDir = glGetUniformLocation(glSceneProgram, "lightDir");
 		uniShadowMaxBias = glGetUniformLocation(glSceneProgram, "shadowMaxBias");
@@ -1998,6 +2002,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			// Lights & lightning
 			glUniform1i(uniPointLightsCount, visibleLightCount);
 			glUniform1f(uniExperimentalFogLightScatteringFactor, config.experimentalLightScatteringFactor() / 10.f);
+			glUniform1f(uniExperimentalToneMappingBrightnessMultiplier, config.experimentalToneMappingBrightnessMultiplier() / 100.f);
 			glUniform1f(uniLightningBrightness, environmentManager.getLightningBrightness());
 
 			glUniform1f(uniSaturation, config.saturation() / 100f);

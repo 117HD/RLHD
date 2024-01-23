@@ -883,7 +883,7 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = KEY_EXPERIMENTAL_LIGHT_SCATTERING_FACTOR,
 		name = "Scattering factor",
-		description = "",
+		description = "Arbitrary scattering strength factor.",
 		position = 101,
 		section = experimentalSettings
 	)
@@ -903,6 +903,23 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
+	String KEY_EXPERIMENTAL_TONE_MAPPING_BRIGHTNESS_MULTIPLIER = "experimentalToneMappingBrightnessMultiplier";
+	@Range(
+		min = Integer.MIN_VALUE
+	)
+	@Units(Units.PERCENT)
+	@ConfigItem(
+		keyName = KEY_EXPERIMENTAL_TONE_MAPPING_BRIGHTNESS_MULTIPLIER,
+		name = "Tone mapping multiplier",
+		description =
+			"Tone mapping impacts the overall brightness.<br>" +
+			"This adds an adjustable brightness multiplier when tone mapping is applied.",
+		position = 103,
+		section = experimentalSettings
+	)
+	default int experimentalToneMappingBrightnessMultiplier() {
+		return 100;
+	}
 
 	/*====== Internal settings ======*/
 

@@ -124,9 +124,6 @@ vec4 sampleWater(inout Context ctx) {
 }
 
 void sampleUnderwater(inout vec3 outputColor, Context ctx) {
-    if (!ctx.isUnderwater)
-        return;
-
     // underwater terrain
     float lowestColorLevel = 500;
     float midColorLevel = 150;

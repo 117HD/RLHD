@@ -61,6 +61,7 @@ uniform bool underwaterCaustics;
 uniform vec3 underwaterCausticsColor;
 uniform float underwaterCausticsStrength;
 uniform float experimentalFogLightScatteringFactor;
+uniform float experimentalToneMappingBrightnessMultiplier;
 
 // general HD settings
 uniform float saturation;
@@ -131,6 +132,11 @@ void main() {
     vec4 outputColor = vec4(1);
     if (ctx.isWater) {
         outputColor = sampleWater(ctx);
+
+        #if EXPERIMENTAL_TONE_MAPPING
+        // hacky stuff, since our water is interpreted directly as sRGB
+        outputColor.rgb = linearToSrgb(aces(srgbToLinear(outputColor.rgb) * experimentalToneMappingBrightnessMultiplier));
+        #endif
     } else {
         populateUvs(ctx);
         applyUvFlow(ctx);
@@ -168,9 +174,21 @@ void main() {
 
         outputColor = ctx.albedo;
         outputColor.rgb *= mix(compositeLight, vec3(1), isMaterialUnlit(ctx));
-        outputColor.rgb = linearToSrgb(outputColor.rgb);
 
-        sampleUnderwater(outputColor.rgb, ctx);
+        if (ctx.isUnderwater) {
+            // hacky stuff, since our water is interpreted directly as sRGB
+            outputColor.rgb = linearToSrgb(outputColor.rgb);
+            sampleUnderwater(outputColor.rgb, ctx);
+
+            #if EXPERIMENTAL_TONE_MAPPING
+            outputColor.rgb = linearToSrgb(aces(srgbToLinear(outputColor.rgb) * experimentalToneMappingBrightnessMultiplier));
+            #endif
+        } else {
+            #if EXPERIMENTAL_TONE_MAPPING
+            outputColor.rgb = aces(outputColor.rgb * experimentalToneMappingBrightnessMultiplier);
+            #endif
+            outputColor.rgb = linearToSrgb(outputColor.rgb);
+        }
     }
 
     postProcessImage(outputColor.rgb);
