@@ -65,6 +65,7 @@ public enum Underlay {
 	DEFAULT_SNOW_1(p -> p.ids().groundMaterial(GroundMaterial.SNOW_1)),
 	DEFAULT_GRUNGE(p -> p.ids().groundMaterial(GroundMaterial.GRUNGE)),
 	DEFAULT_ROCKY_GROUND(p -> p.ids().groundMaterial(GroundMaterial.ROCKY_CAVE_FLOOR)),
+	DEFAULT_DIRT_VERT(p -> p.ids().groundMaterial(GroundMaterial.DIRT_VERT)),
 	// Lumbridge
 	LUMBRIDGE_CASTLE_TILE(56, Area.LUMBRIDGE_CASTLE_BASEMENT, GroundMaterial.MARBLE_2_SEMIGLOSS, p -> p.blended(false)),
 
@@ -156,6 +157,40 @@ public enum Underlay {
 	STRONGHOLD_OF_SECURITY_WAR_DIRT(Area.STRONGHOLD_OF_SECURITY_WAR, GroundMaterial.GRAVEL, p -> p.ids(72, 118, 126)),
     // A Soul's Bane
     TOLNA_DUNGEON_ANGER_FLOOR(Area.TOLNA_DUNGEON_ANGER, GroundMaterial.DIRT, p -> p.ids(58, 58)),
+
+	// Falador Region
+	ICE_MOUNTAIN_COMPLEX_TILES(p -> p
+		.area(Area.ICE_MOUNTAIN)
+		.ids(58, 64)
+		.replacementResolver(
+			(plugin, scene, tile, override) -> {
+				int[] hsl = HDUtils.getSouthWesternMostTileColor(tile);
+				if (hsl == null)
+					return override;
+
+				if (hsl[1] == 0) {return DEFAULT_SNOW_1;}
+				if (hsl[1] >= 5) {
+					switch (plugin.configSeasonalTheme) {
+						case SUMMER:
+							return DEFAULT_GRASS;
+						case WINTER:
+							return WINTER_GRASS;
+					}
+				}
+
+				if (hsl[1] > 0 || hsl[1] < 5) {
+					switch (plugin.configSeasonalTheme) {
+						case SUMMER:
+						case AUTUMN:
+							return DEFAULT_DIRT_VERT;
+						case WINTER:
+							return WINTER_DIRT;
+					}
+				}
+				return DEFAULT_DIRT;
+			}
+		)
+	),
 
 	// Burthorpe
 	WARRIORS_GUILD_FLOOR_1(Area.WARRIORS_GUILD, GroundMaterial.VARROCK_PATHS, p -> p.ids(55, 56)),
