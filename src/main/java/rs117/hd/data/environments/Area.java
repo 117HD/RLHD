@@ -44,6 +44,7 @@ public enum Area
 {
 	// items higher on the list take precedent over those below
 	EVIL_BOB_ISLAND(2496, 4748, 2559, 4801),
+	VERT_DIRT_FIX_NEAR_FALADOR(2941, 3548, 3072, 3402),
 	// Tutorial Island
 	TUTORIAL_ISLAND_WIZARD_BUILDING(3136, 3097, 3144, 3076),
 	TUTORIAL_ISLAND_CHURCH(3114, 3111, 3129, 3102),

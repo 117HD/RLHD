@@ -71,6 +71,7 @@ public enum Overlay {
 		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_DIRT)
 	),
 	DEFAULT_GRASS(p -> p.ids().groundMaterial(GroundMaterial.OVERWORLD_GRASS_1)),
+	FALLY_REGION_DIRT_OVERLAY_VERT_FIX(p -> p.ids(22).area(Area.VERT_DIRT_FIX_NEAR_FALADOR).groundMaterial(GroundMaterial.DIRT_VERT)),
 
 	// Tutorial Island
 	TUTORIAL_ISLAND_KITCHEN_TILE_1(9, Area.TUTORIAL_ISLAND_KITCHEN, GroundMaterial.MARBLE_1_SEMIGLOSS, p -> p.blended(false)),
@@ -376,8 +377,6 @@ public enum Overlay {
 		.blended(true)
 	),
 
-	// Ice Mountain
-	ICE_MOUNTAIN_DIRT_OVERLAY(p -> p.ids(22).area(Area.ICE_MOUNTAIN).groundMaterial(GroundMaterial.DIRT_VERT)),
 
 	// Goblin Village
 	GOBLIN_VILLAGE_TILES_BLEND_FIX_OVERLAY(
