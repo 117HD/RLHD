@@ -376,6 +376,9 @@ public enum Overlay {
 		.blended(true)
 	),
 
+	// Ice Mountain
+	ICE_MOUNTAIN_DIRT_OVERLAY(p -> p.ids(22).area(Area.ICE_MOUNTAIN).groundMaterial(GroundMaterial.DIRT_VERT)),
+
 	// Goblin Village
 	GOBLIN_VILLAGE_TILES_BLEND_FIX_OVERLAY(
 		Area.GOBLIN_VILLAGE_COOKS_CHAMBER_BLEND_FIX,
@@ -414,6 +417,7 @@ public enum Overlay {
 		.area(Area.TAVERLEY_DUNGEON)
 		.ids(2, 10, 34)
 	),
+	WHITE_WOLF_MOUNTAIN_DIRT_OVERLAY(p -> p.ids(22).area(Area.ICE_MOUNTAIN).groundMaterial(GroundMaterial.DIRT_VERT)),
 	ICE_QUEENS_SYMBOL(33, Area.ICE_QUEENS_DUNGEON, GroundMaterial.ICE_1_HIGHGLOSS),
 	ICE_QUEENS_DUNGEON_OVERLAY(Area.ICE_QUEENS_DUNGEON, GroundMaterial.SNOW_1, p -> p.ids(42).lightness(100).hue(0).saturation(0)),
 
