@@ -1003,6 +1003,7 @@ public enum Overlay {
 	// Random events
 	PRISON_PETE_TILE_1(2, Area.RANDOM_EVENT_PRISON_PETE, GroundMaterial.MARBLE_1, p -> p.blended(false)),
 	PRISON_PETE_TILE_2(-125, Area.RANDOM_EVENT_PRISON_PETE, GroundMaterial.MARBLE_2, p -> p.blended(false)),
+	CLASSROOM(p -> p.ids(102).area(Area.RANDOM_EVENT_CLASSROOM).groundMaterial(GroundMaterial.HD_WOOD_PLANKS_1)),
 
 	// Elid Cave fix
 	ELID_CAVE_WATER_FIX(-126, Area.ELID_CAVE, WaterType.WATER),
