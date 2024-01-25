@@ -4,7 +4,7 @@
 
 float sampleAmbientOcclusion(const Material mat, const vec2 uv) {
     if (mat.ambientOcclusionMap == -1)
-        return 1;
+        return 1.f;
     return texture(textureArray, vec3(uv, mat.ambientOcclusionMap)).r;
 }
 
