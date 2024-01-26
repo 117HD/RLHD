@@ -31855,10 +31855,10 @@
   },
   {
     "description": "SCURRIUS_RANGE_PROJECTILE",
-    "height": 150,
+    "height": -10,
     "alignment": "CENTER",
-    "radius": 200,
-    "strength": 12.5,
+    "radius": 150,
+    "strength": 10,
     "color": [
       148,
       278,
@@ -31866,7 +31866,7 @@
     ],
     "type": "STATIC",
     "duration": 0,
-    "range": 20,
+    "range": 0,
     "projectileIds": [
       2642,
       2647
@@ -31874,9 +31874,9 @@
   },
   {
     "description": "SCURRIUS_MAGE_PROJECTILE",
-    "height": 50,
+    "height": -10,
     "alignment": "CENTER",
-    "radius": 150,
+    "radius": 175,
     "strength": 12.5,
     "color": [
       8,
