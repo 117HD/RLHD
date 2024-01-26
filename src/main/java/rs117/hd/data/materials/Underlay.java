@@ -149,6 +149,7 @@ public enum Underlay {
 
     // Varrock
     VARROCK_JULIETS_HOUSE_UPSTAIRS(8, Area.VARROCK_JULIETS_HOUSE, GroundMaterial.NONE, p -> p.blended(false)),
+	VARROCK_SEWERS_DIRT(p -> p.ids(10, 63, 64).area(Area.VARROCK_SEWERS).groundMaterial(GroundMaterial.PACKED_EARTH)),
 	STRONGHOLD_OF_SECURITY_OOZE(Area.STRONGHOLD_OF_SECURITY_PESTILENCE, GroundMaterial.OOZE_FLOOR, p -> p.ids(48, 49, 61, 93)),
     STRONGHOLD_OF_SECURITY_GRASS(Area.STRONGHOLD_OF_SECURITY, GroundMaterial.GRASS_1, p -> p.ids(48, 49, 58, 59, 124)),
 	STRONGHOLD_OF_SECURITY_WAR_GRAVEL(Area.STRONGHOLD_OF_SECURITY, GroundMaterial.GRAVEL, p -> p.ids(148)),
