@@ -11772,6 +11772,7 @@
     "description": "Objects - Bush - Dead",
     "baseMaterial": "BARK",
     "objectIds": [
+      1122,
       1123
     ],
     "uvType": "BOX",
@@ -12468,7 +12469,7 @@
   {
     "description": "Ground Objects - Bones",
     "baseMaterial": "BONE",
-    "objectIds": [ 44837, 44839, 44840 ],
+    "objectIds": [ 44837, 44838, 44839, 44840 ],
     "uvType": "BOX",
     "uvOrientation": 256
   },
@@ -13423,5 +13424,21 @@
     "uvType": "BOX",
     "uvOrientation": 256,
     "uvScale": 1.1
+  },
+  {
+    "description": "Objects - Scurrius Ceiling Roots",
+    "baseMaterial": "LIGHT_BARK",
+    "objectIds": [ 50001, 50002 ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 342
+  },
+  {
+    "description": "Objects - Scurrius Roots",
+    "baseMaterial": "LIGHT_BARK",
+    "objectIds": [ 50005, 50006, 50007, 50008, 50009, 50010 ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 342
   }
 ]
