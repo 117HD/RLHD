@@ -31852,5 +31852,42 @@
     "objectIds": [
       13053
     ]
+  },
+  {
+    "description": "SCURRIUS_RANGE_PROJECTILE",
+    "height": -10,
+    "alignment": "CENTER",
+    "radius": 150,
+    "strength": 10,
+    "color": [
+      148,
+      278,
+      28
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "projectileIds": [
+      2642,
+      2647
+    ]
+  },
+  {
+    "description": "SCURRIUS_MAGE_PROJECTILE",
+    "height": -10,
+    "alignment": "CENTER",
+    "radius": 175,
+    "strength": 12.5,
+    "color": [
+      8,
+      180,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 40,
+    "projectileIds": [
+      2640
+    ]
   }
 ]
