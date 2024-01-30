@@ -32015,7 +32015,7 @@
     ],
     "type": "FLICKER",
     "duration": 0,
-    "range": 20,
+    "range": 100,
     "projectileIds": [
       557
     ]
@@ -32033,7 +32033,7 @@
     ],
     "type": "FLICKER",
     "duration": 0,
-    "range": 20,
+    "range": 100,
     "projectileIds": [
       557
     ]
@@ -32042,16 +32042,16 @@
     "description": "CHAOS_ELEMENTAL_DAMAGE_PROJECTILE_3",
     "height": -10,
     "alignment": "CENTER",
-    "radius": 50,
+    "radius": 125,
     "strength": 10,
     "color": [
       0,
-      255,
-      0
+      0,
+      255
     ],
     "type": "FLICKER",
     "duration": 0,
-    "range": 20,
+    "range": 100,
     "projectileIds": [
       557
     ]
