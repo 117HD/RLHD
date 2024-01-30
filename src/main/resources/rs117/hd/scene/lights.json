@@ -31947,5 +31947,113 @@
     "objectIds": [
       13053
     ]
+  },
+  {
+    "description": "CHAOS_ELEMENTAL",
+    "height": 100,
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 10,
+    "color": [
+      150,
+      120,
+      200
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "npcIds": [
+      2054
+    ]
+  },
+  {
+    "description": "CHAOS_ELEMENTAL_TELE_PROJECTILE",
+    "height": 0,
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 10,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "projectileIds": [
+      554
+    ]
+  },
+  {
+    "description": "CHAOS_ELEMENTAL_UNEQUIP_PROJECTILE",
+    "height": 0,
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 10,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "projectileIds": [
+      551
+    ]
+  },
+  {
+    "description": "CHAOS_ELEMENTAL_DAMAGE_PROJECTILE",
+    "height": -10,
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 10,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "projectileIds": [
+      557
+    ]
+  },
+  {
+    "description": "CHAOS_ELEMENTAL_DAMAGE_PROJECTILE_2",
+    "height": -10,
+    "alignment": "CENTER",
+    "radius": 150,
+    "strength": 10,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "projectileIds": [
+      557
+    ]
+  },
+  {
+    "description": "CHAOS_ELEMENTAL_DAMAGE_PROJECTILE_3",
+    "height": -10,
+    "alignment": "CENTER",
+    "radius": 50,
+    "strength": 10,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "projectileIds": [
+      557
+    ]
   }
 ]
