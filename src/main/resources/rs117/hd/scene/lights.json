@@ -18145,18 +18145,18 @@
   },
   {
     "description": "CHAOS_ELEMENTAL_JR",
-    "height": 250,
+    "height": 182,
     "alignment": "CENTER",
-    "radius": 150,
-    "strength": 20,
+    "radius": 60,
+    "strength": 30,
     "color": [
-      255,
-      255,
-      255
+      150,
+      120,
+      200
     ],
     "type": "FLICKER",
-    "duration": 0,
-    "range": 80,
+    "duration": 20,
+    "range": 0,
     "npcIds": [
       5907,
       2055
@@ -21118,9 +21118,9 @@
       79,
       177
     ],
-    "type": "STATIC",
+    "type": "FLICKER",
     "duration": 0,
-    "range": 0,
+    "range": 30,
     "objectIds": [
       26765
     ]
@@ -31893,7 +31893,7 @@
     "description": "CHAOS_ELEMENTAL_UNEQUIP_PROJECTILE",
     "height": 0,
     "alignment": "CENTER",
-    "radius": 200,
+    "radius": 175,
     "strength": 10,
     "color": [
       0,
@@ -31959,6 +31959,24 @@
     "range": 100,
     "projectileIds": [
       557
+    ]
+  },
+  {
+    "description": "MINIATURE_CHAOTIC_CLOUDS",
+    "height": 150,
+    "alignment": "CENTER",
+    "radius": 150,
+    "strength": 12,
+    "color": [
+      150,
+      120,
+      200
+    ],
+    "type": "FLICKER",
+    "duration": 20,
+    "range": 0,
+    "npcIds": [
+      6620
     ]
   }
 ]
