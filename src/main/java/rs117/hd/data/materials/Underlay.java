@@ -252,7 +252,7 @@ public enum Underlay {
 		.groundMaterial(GroundMaterial.EARTHEN_CAVE_FLOOR)
 	),
 	COMPLEX_TILES_KARAMJA(p -> p
-		.ids(48, 50, 52, 53, 55, 61, 62, 63, 64, 65, 68)
+		.ids(48, 49, 50, 51, 52, 53, 55, 57, 61, 62, 63, 64, 65, 66, 67, 68, 72, 100)
 		.area(Area.KARAMJA)
 		.replacementResolver(
 			(plugin, scene, tile, override) -> {
