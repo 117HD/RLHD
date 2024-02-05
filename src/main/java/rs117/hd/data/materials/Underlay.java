@@ -928,7 +928,7 @@ public enum Underlay {
 				if (
 					hsl[0] == 8 && hsl[1] <= 4 && hsl[2] <= 71 ||
 					hsl[0] <= 7 && hsl[1] <= 5 && hsl[2] <= 57 ||
-					hsl[0] <= 7 && hsl[1] <= 7 && hsl[2] <= 28 ||
+					hsl[0] <= 7 && hsl[1] <= 7 && hsl[2] <= 34 ||
 					hsl[0] == 8 && hsl[1] == 5 && hsl[2] <= 15
 				) {
 					switch (plugin.configSeasonalTheme) {
