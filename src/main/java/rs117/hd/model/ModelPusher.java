@@ -215,7 +215,7 @@ public class ModelPusher {
 		if (shouldCache) {
 			assert client.isClientThread() : "Model caching isn't thread-safe";
 
-			vertexHash = modelHasher.calculateVertexCacheHash(modelOverride);
+			vertexHash = modelHasher.vertexHash;
 			IntBuffer vertexData = this.modelCache.getIntBuffer(vertexHash);
 			foundCachedVertexData = vertexData != null && vertexData.remaining() == bufferSize;
 			if (foundCachedVertexData) {

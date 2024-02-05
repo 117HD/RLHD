@@ -58,6 +58,7 @@ public enum Underlay {
 		.saturation(0)
 		.groundMaterial(GroundMaterial.WINTER_JAGGED_STONE_TILE_LIGHT)
 	),
+
 	// Default underlays; these are referenced when using resolved to replace tiles.
 	DEFAULT_SAND(p -> p.ids().groundMaterial(GroundMaterial.SAND)),
 	DEFAULT_GRASS(p -> p.ids().groundMaterial(GroundMaterial.OVERWORLD_GRASS_1)),
@@ -65,6 +66,9 @@ public enum Underlay {
 	DEFAULT_SNOW_1(p -> p.ids().groundMaterial(GroundMaterial.SNOW_1)),
 	DEFAULT_GRUNGE(p -> p.ids().groundMaterial(GroundMaterial.GRUNGE)),
 	DEFAULT_ROCKY_GROUND(p -> p.ids().groundMaterial(GroundMaterial.ROCKY_CAVE_FLOOR)),
+	DEFAULT_OVERWORLD_ROCK(p -> p.ids().groundMaterial(GroundMaterial.OVERWORLD_ROCKY)),
+	GREEN_SAND_HUE_CORRECTION(p -> p.ids().groundMaterial(GroundMaterial.SAND).hue(8)),
+
 	// Lumbridge
 	LUMBRIDGE_CASTLE_TILE(56, Area.LUMBRIDGE_CASTLE_BASEMENT, GroundMaterial.MARBLE_2_SEMIGLOSS, p -> p.blended(false)),
 
@@ -219,6 +223,8 @@ public enum Underlay {
 		.area(Area.PVP_ARENA)
 		.ids(66, 68)
 	),
+	SORCERESS_GUARDEN_GRASS(P -> P.ids(7, 48, 51, 66, 93).area(Area.SORCERESS_GARDEN).groundMaterial(GroundMaterial.GRASS_1)),
+	SORCERESS_GUARDEN_SNOW(P -> P.ids(9, 30, 111).area(Area.SORCERESS_GARDEN).groundMaterial(GroundMaterial.SNOW_2)),
 	DESERT_TREASURE_INTERIOR_FLOOR(GroundMaterial.SANDY_STONE_FLOOR, p -> p
 		.area(Area.DESERT_TREASURE_PYRAMID)
 		.ids(61, 64)
@@ -228,12 +234,16 @@ public enum Underlay {
 	RIVER_ELID_WATERFALL(p -> p.area(Area.RIVER_ELID_WATERFALL).waterType(WaterType.WATER).blended(false)),
 
 	SOPHANEM_TRAPDOOR(Area.SOPHANEM_TRAPDOOR, GroundMaterial.NONE, p -> {}),
+	SOPHANEM_UNDERGROUND_BANK(p -> p.ids(61,64).area(Area.SOPHANEM_TEMPLE_BANK).groundMaterial(GroundMaterial.FALADOR_PATHS).hue(7).saturation(3).shiftLightness(5)),
 	KHARID_SAND_1(Area.KHARID_DESERT_REGION, GroundMaterial.SAND, p -> p
 		.saturation(3)
 		.hue(6)
 		.ids(-127, 45, 49, 50, 58, 61, 62, 63, 64, 67, 68, 69, 126)),
 	NECROPOLIS_SAND(Area.NECROPOLIS, GroundMaterial.DIRT, p -> p.ids(124)),
 	SMOKE_DUNGEON(Area.SMOKE_DUNGEON, GroundMaterial.ROCKY_CAVE_FLOOR, p -> p.ids(56)),
+	SCARAB_LAIR_TILE_FLOOR(p -> p.ids(61, 64).area(Area.SCARAB_LAIR_TEMPLE).groundMaterial(GroundMaterial.FALADOR_PATHS).hue(7).saturation(3).shiftLightness(5)),
+	SCARAB_LAIR_ROCKY_FLOOR(p -> p.ids(141).area(Area.SCARAB_LAIR_BOTTOM).groundMaterial(GroundMaterial.STONE_CAVE_FLOOR).shiftLightness(4)),
+
 
 	// Burthorpe games room
 	GAMES_ROOM_INNER_FLOOR(64, Area.GAMES_ROOM_INNER, GroundMaterial.CARPET, p -> p.blended(false)),
@@ -246,7 +256,7 @@ public enum Underlay {
 		.groundMaterial(GroundMaterial.EARTHEN_CAVE_FLOOR)
 	),
 	COMPLEX_TILES_KARAMJA(p -> p
-		.ids(50, 55, 61, 62, 63, 68)
+		.ids(48, 49, 50, 51, 52, 53, 55, 57, 61, 62, 63, 64, 65, 66, 67, 68, 72, 100)
 		.area(Area.KARAMJA)
 		.replacementResolver(
 			(plugin, scene, tile, override) -> {
@@ -264,41 +274,18 @@ public enum Underlay {
 					hsl[0] >= 10 && hsl[1] >= 3 ||
 					hsl[0] == 9 && hsl[1] >= 4 ||
 					hsl[0] == 9 && hsl[1] == 3 && hsl[2] <= 45 || // Fixes the southernmost beach
-					hsl[0] == 8 && hsl[1] > 5 && hsl[2] >= 30 && overlayId != 6
-				) {
-					switch (plugin.configSeasonalTheme) {
-						case SUMMER:
-						case AUTUMN:
-							return DEFAULT_GRASS;
-						case WINTER:
-							return WINTER_GRASS;
-					}
-				}
+					hsl[0] == 8 && hsl[1] > 5 && hsl[2] >= 30 && overlayId != 6)
+					return DEFAULT_GRASS;
 
 				// Dirt
 				if (hsl[0] <= 8 && hsl[1] >= 4 && hsl[2] <= 71 ||
 					hsl[0] == 9 && hsl[1] == 2 && hsl[2] <= 44 ||
-					hsl[0] == 8 && hsl[1] == 3 && hsl[2] <= 34 // Breaks Sand if higher than 34; Can be fixed with tile averages or medians
-				) {
-					switch (plugin.configSeasonalTheme) {
-						case SUMMER:
-						case AUTUMN:
-							return DEFAULT_DIRT;
-						case WINTER:
-							return WINTER_DIRT;
-					}
-				}
+					hsl[0] == 8 && hsl[1] == 3 && hsl[2] <= 34) // Breaks Sand if higher than 34; Can be fixed with tile averages or medians
+					return DEFAULT_DIRT;
 
 				// Stone
-				if (hsl[0] < 13 && hsl[1] <= 2 && hsl[2] <= 40) {
-					switch (plugin.configSeasonalTheme) {
-						case SUMMER:
-						case AUTUMN:
-							return DEFAULT_GRUNGE;
-						case WINTER:
-							return WINTER_GRUNGE;
-					}
-				}
+				if (hsl[1] <= 2 && hsl[2] <= 40)
+					return DEFAULT_ROCKY_GROUND;
 
 				return DEFAULT_SAND;
 			}
@@ -317,6 +304,9 @@ public enum Underlay {
 	TZHAAR(72, Area.TZHAAR, GroundMaterial.VARIED_DIRT_SHINY, p -> p.shiftLightness(2)),
 
 	// Morytania
+	CROMBWICK_MANOR_FLOOR(p -> p.ids(10).area(Area.CROMBWICK_MANOR).groundMaterial(GroundMaterial.HD_WOOD_PLANKS_1)),
+	SLEPE_CHURCH_FLOOR(p -> p.ids(94).area(Area.SLEPE_CHURCH).groundMaterial(GroundMaterial.HD_WOOD_PLANKS_1)),
+	SLEPE_HOUSES_WOODEN_FLOOR(p -> p.ids(10).area(Area.SLEPE_HOUSES).groundMaterial(GroundMaterial.HD_WOOD_PLANKS_1)),
 	VER_SINHAZA_WATER_FIX(p -> p.ids(54).area(Area.VER_SINHAZA_WATER_FIX).waterType(WaterType.WATER).blended(false)),
 	MEIYERDITCH_MINES(111, Area.MEIYERDITCH_MINES, GroundMaterial.ROCKY_CAVE_FLOOR),
 	BARROWS_DIRT(GroundMaterial.DIRT, p -> p
@@ -351,6 +341,7 @@ public enum Underlay {
 							return WINTER_DIRT;
 					}
 				}
+
 				// Grass
 				if (hsl[0] >= 9 && hsl[1] >= 3) {
 					switch (plugin.configSeasonalTheme) {
@@ -361,6 +352,35 @@ public enum Underlay {
 							return WINTER_GRASS;
 					}
 				}
+
+				return DEFAULT_DIRT;
+			}
+		)
+	),
+
+	// Mos Le Harmless
+	MOS_LE_HARMLESS_COMPLEX_TILES(p -> p
+		.ids(48, 49, 50, 51, 52, 61, 62, 63, 67, 68)
+		.area(Area.MOS_LE_HARMLESS_ALL)
+		.replacementResolver(
+			(plugin, scene, tile, override) -> {
+				int[] hsl = HDUtils.getSouthWesternMostTileColor(tile);
+				if (hsl == null)
+					return override;
+
+				// Grass
+				if (hsl[0] >= 11 && hsl[1] >= 4 && hsl[2] <= 39)
+					return DEFAULT_GRASS;
+
+				// Dirt
+				if (hsl[0] == 8 && hsl[1] >= 6 && hsl[2] <= 30 ||
+					hsl[0] == 10 && hsl[1] >= 3 && hsl[2] <= 35)
+					return DEFAULT_DIRT;
+
+				// Sand
+				if (hsl[0] <= 9 && hsl[1] <= 3 && hsl[2] >= 34 ||
+					hsl[0] == 8 && hsl[1] == 3 && hsl[2] >= 20)
+					return DEFAULT_SAND;
 
 				return DEFAULT_DIRT;
 			}
@@ -481,6 +501,33 @@ public enum Underlay {
 	YANILLE_AGILITY_DUNGEON_ENTRANCE_FIX(63, Area.YANILLE_AGILITY_DUNGEON_ENTRANCE, GroundMaterial.NONE, p -> p.blended(false)),
 
 	// Feldip Hills
+	FELDIP_HILLS_SOUTH_COMPLEX_TILES(p -> p
+		.area(Area.FELDIP_HILLS_SOUTHERN_REGION)
+		.ids(48, 49, 50, 51, 52, 53, 56, 61, 62, 63, 64, 65, 67, 68, 69, 70, 97, 98, 99, 100)
+		.replacementResolver(
+			(plugin, scene, tile, override) -> {
+				int[] hsl = HDUtils.getSouthWesternMostTileColor(tile);
+				if (hsl == null)
+					return override;
+
+				if (hsl[1] == 0 || hsl[0] <= 10 && hsl[1] < 2)
+					return DEFAULT_GRUNGE;
+
+				if (hsl[0] == 8 && hsl[1] == 4 && hsl[2] >= 71 ||
+					hsl[0] == 8 && hsl[1] == 3 && hsl[2] >= 21)
+					return DEFAULT_SAND;
+
+				if (hsl[0] >= 11 && hsl[1] == 1 ||
+					hsl[0] >= 9 && hsl[1] >= 4 ||
+					hsl[0] >= 10 && hsl[1] >= 2 ||
+					hsl[0] == 8 && hsl[1] == 5 && hsl[2] >= 15 ||
+					hsl[0] == 8 && hsl[1] >= 6 && hsl[2] >= 2)
+					return DEFAULT_GRASS;
+
+				return DEFAULT_DIRT;
+			}
+		)
+	),
 	FELDIP_HILLS_COMPLEX_TILES(p -> p
 		.area(Area.FELDIP_HILLS)
 		.ids(48, 50, 52, 62, 63, 67, 68, 69, 70, 97, 99, 100)
@@ -556,8 +603,123 @@ public enum Underlay {
 		.shiftLightness(5)
 	),
 
+	// Ape Atoll
+	APE_ATOLL_COMPLEX_TILES(p -> p
+		.ids(48, 50, 56, 61, 62, 63, 65, 67, 68, 99, 100)
+		.area(Area.APE_ATOLL)
+		.replacementResolver(
+			(plugin, scene, tile, override) -> {
+				int[] hsl = HDUtils.getSouthWesternMostTileColor(tile);
+				if (hsl == null)
+					return override;
+
+				// Grass
+				if (hsl[0] >= 11 && hsl[1] >= 4 && hsl[2] <= 39)
+					return DEFAULT_GRASS;
+
+				// Dirt
+				if (hsl[0] == 8 && hsl[1] >= 6 && hsl[2] <= 30 ||
+					hsl[0] == 10 && hsl[1] >= 3 && hsl[2] <= 35)
+					return DEFAULT_DIRT;
+
+				// Sand
+				if (hsl[0] == 9 && hsl[1] <= 3 && hsl[2] >= 34 ||
+					hsl[0] == 8 && (hsl[1] == 3 || hsl[1] == 4) && hsl[2] >= 20)
+					return DEFAULT_SAND;
+
+				// Ugly green sand fix
+				if (hsl[0] == 9 && (hsl[1] == 3 || hsl[1] == 4) && hsl[2] >= 34)
+					return GREEN_SAND_HUE_CORRECTION;
+
+				return DEFAULT_DIRT;
+			}
+		)
+	),
+
+	// Fossil Island
+	FOSSIL_ISLAND_WYVERN_DIRT(p -> p.ids(17).area(Area.FOSSIL_ISLAND_WYVERN_TASK_CAVE).groundMaterial(GroundMaterial.EARTHEN_CAVE_FLOOR)),
+	FOSSIL_ISLAND_VOLCANO_SAND(p -> p
+		.ids(138)
+		.area(Area.FOSSIL_ISLAND_VOLCANO)
+		.groundMaterial(GroundMaterial.SAND)
+	),
+	FOSSIL_ISLAND_VOLCANO_ROCK(p -> p
+		.ids(56, 72, 148, 150)
+		.area(Area.FOSSIL_ISLAND_VOLCANO)
+		.groundMaterial(GroundMaterial.OVERWORLD_ROCKY)
+	),
+	FOSSIL_ISLAND_ROCK(p -> p
+		.ids(72, 148, 150)
+		.area(Area.FOSSIL_ISLAND)
+		.groundMaterial(GroundMaterial.OVERWORLD_ROCKY)
+		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_GRUNGE)
+	),
+	FOSSIL_ISLAND_GRASS(p -> p.ids(48, 54, 103).area(Area.FOSSIL_ISLAND).groundMaterial(GroundMaterial.OVERWORLD_GRASS_1).seasonalReplacement(SeasonalTheme.WINTER, WINTER_GRASS)),
+	FOSSIL_ISLAND_COMPLEX(p -> p
+		.ids(56, 63, 66, 68, 138)
+		.area(Area.FOSSIL_ISLAND)
+		.groundMaterial(GroundMaterial.OVERWORLD_GRASS_1)
+		.replacementResolver(
+			(plugin, scene, tile, override) -> {
+				int[] hsl = HDUtils.getSouthWesternMostTileColor(tile);
+				if (hsl == null)
+					return override;
+
+				// Rock
+				if (hsl[1] == 0 && hsl[2] <= 44) {
+					switch (plugin.configSeasonalTheme) {
+						case SUMMER:
+						case AUTUMN:
+							return DEFAULT_OVERWORLD_ROCK;
+						case WINTER:
+							return WINTER_GRUNGE;
+					}
+				}
+
+				// Dirt
+				if (
+					(hsl[0] <= 8 && hsl[1] >= 4 && hsl[2] <= 71) ||
+					hsl[0] <= 11 && hsl[1] == 1 ||
+					(hsl[0] <= 4 && hsl[1] <= 3 && hsl[1] >= 1 && hsl[2] <= 36)
+				) {
+					switch (plugin.configSeasonalTheme) {
+						case SUMMER:
+						case AUTUMN:
+							return DEFAULT_DIRT;
+						case WINTER:
+							return WINTER_DIRT;
+					}
+				}
+
+				// Sand
+				if (hsl[0] >= 4 && hsl[0] <= 9 && hsl[1] <= 3 && hsl[2] >= 29 && hsl[2] <= 60 ||
+					(hsl[0] >= 5 && hsl[0] <= 6) && hsl[1] == 3 && hsl[2] >= 50)
+					return DEFAULT_SAND;
+
+				// Grass
+				if (
+					hsl[0] >= 8 && hsl[1] >= 5 && hsl[2] >= 20 ||
+					hsl[0] >= 9 && hsl[1] >= 2 ||
+					hsl[0] > 20 ||
+					hsl[0] >= 12 && hsl[1] == 1 ||
+					(hsl[0] == 7 || hsl[0] == 8) && hsl[1] == 3 && hsl[2] >= 60
+				) {
+					switch (plugin.configSeasonalTheme) {
+						case SUMMER:
+						case AUTUMN:
+							return DEFAULT_GRASS;
+						case WINTER:
+							return WINTER_GRASS;
+					}
+				}
+
+				return DEFAULT_DIRT;
+			}
+		)
+	),
+
 	// Zeah
-	INTERIOR_FARMING_GUILD_GRASS(p -> p.ids(48, 49, 50, 63, 66, 68, 96).area(Area.FARMING_GUILD_INTERIOR).groundMaterial(GroundMaterial.OVERWORLD_GRASS_1)),
+	LOVAKENGJ_GROUND(p -> p.ids(10, 55, 56, 57, 63, 64, 67, 68, 72, 96, 111, 112, 149, 150).area(Area.LOVAKENGJ).groundMaterial(GroundMaterial.EARTHEN_CAVE_FLOOR)),
 	ZEAH_DIRT(p -> p
 		.area(Area.ZEAH)
 		.groundMaterial(GroundMaterial.VARIED_DIRT)
@@ -579,6 +741,7 @@ public enum Underlay {
 	STRANGLEWOOD_SNOW_DARK(p -> p.area(Area.THE_STRANGLEWOOD_EXTENDED).ids(174).groundMaterial(GroundMaterial.SNOW_1)),
 	JUDGE_OF_YAMA_BOSS_WATER(p -> p.ids(72, 76).area(Area.JUDGE_OF_YAMA_BOSS).waterType(WaterType.WATER)),
 	JUDGE_OF_YAMA_BOSS_BLACK_TILES(p -> p.ids(150).area(Area.JUDGE_OF_YAMA_BOSS).groundMaterial(GroundMaterial.TRANSPARENT)),
+	INTERIOR_FARMING_GUILD_GRASS(p -> p.ids(48, 49, 50, 63, 66, 68, 96).area(Area.FARMING_GUILD_INTERIOR).groundMaterial(GroundMaterial.OVERWORLD_GRASS_1)),
 
 	// Zanaris
 	ZANARIS_GRASS(Area.ZANARIS, GroundMaterial.GRASS_1, p -> p.ids(143, 144)),
@@ -731,6 +894,75 @@ public enum Underlay {
 	// Cutscenes
 	CANOE_CUTSCENE_GRASS(Area.CANOE_CUTSCENE, GroundMaterial.GRASS_SCROLLING, p -> p.ids(48, 50, 63)),
 
+	ISLE_OF_SOULS_HOT_ZONE_COMPLEX(p -> p
+		.ids(8, 27, 33, 35, 36, 37, 38, 63, 72, 118, 143, 144, 145, 146, 147, 148, 149, 150, 152)
+		.area(Area.ISLE_OF_SOULS_HOT_ZONES)
+		.replacementResolver(
+			(plugin, scene, tile, override) -> {
+				int[] hsl = HDUtils.getSouthWesternMostTileColor(tile);
+				if (hsl == null)
+					return override;
+
+				// Ash or stone
+				if (hsl[0] < 10 && hsl[1] <= 1 && hsl[2] <= 20) {
+					return DEFAULT_ROCKY_GROUND;
+				}
+
+				// Dirt
+				if (hsl[0] <= 8 && hsl[1] >= 1 && hsl[2] <= 71) {
+					return DEFAULT_DIRT;
+				}
+
+				// Grass
+				if (hsl[0] >= 8 && hsl[1] >= 5 && hsl[2] >= 20 || hsl[0] >= 9 && hsl[1] >= 3 || hsl[0] > 20) {
+					return DEFAULT_GRASS;
+				}
+
+				return DEFAULT_DIRT;
+			}
+		)
+	),
+	ISLE_OF_SOULS_COMPLEX(p -> p
+		.ids(27, 35, 36, 37, 38, 63, 72, 143, 144, 145, 146, 147, 148, 149, 150, 152)
+		.area(Area.ISLE_OF_SOULS)
+		.replacementResolver(
+			(plugin, scene, tile, override) -> {
+				int[] hsl = HDUtils.getSouthWesternMostTileColor(tile);
+				if (hsl == null)
+					return override;
+
+				// Ash or stone
+				if (hsl[0] < 10 && hsl[1] <= 1 && hsl[2] <= 20) {
+					return DEFAULT_ROCKY_GROUND;
+				}
+
+				// Dirt
+				if (hsl[0] <= 8 && hsl[1] >= 1 && hsl[2] <= 71) {
+					switch (plugin.configSeasonalTheme) {
+						case SUMMER:
+						case AUTUMN:
+							return DEFAULT_DIRT;
+						case WINTER:
+							return WINTER_DIRT;
+					}
+				}
+
+				// Grass
+				if (hsl[0] >= 8 && hsl[1] >= 5 && hsl[2] >= 20 || hsl[0] >= 9 && hsl[1] >= 3 || hsl[0] > 20) {
+					switch (plugin.configSeasonalTheme) {
+						case SUMMER:
+						case AUTUMN:
+							return DEFAULT_GRASS;
+						case WINTER:
+							return WINTER_GRASS;
+					}
+				}
+
+				return DEFAULT_DIRT;
+			}
+		)
+	),
+
 	// Items that cannot properly be fixed unless we can first detect the hue of the tile to set a texture.
 	TILE_NEEDS_HUE_DEFINED(Area.OVERWORLD, GroundMaterial.VARIED_DIRT, p -> p
 		.ids(26)
@@ -847,7 +1079,7 @@ public enum Underlay {
 				if (
 					hsl[0] == 8 && hsl[1] <= 4 && hsl[2] <= 71 ||
 					hsl[0] <= 7 && hsl[1] <= 5 && hsl[2] <= 57 ||
-					hsl[0] <= 7 && hsl[1] <= 7 && hsl[2] <= 28 ||
+					hsl[0] <= 7 && hsl[1] <= 7 && hsl[2] <= 34 ||
 					hsl[0] == 8 && hsl[1] == 5 && hsl[2] <= 15
 				) {
 					switch (plugin.configSeasonalTheme) {
