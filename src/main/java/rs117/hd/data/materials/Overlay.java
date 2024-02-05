@@ -578,6 +578,7 @@ public enum Overlay {
 	),
 	YANILLE_MAGIC_GUILD_FLOOR_FIX(10, Area.YANILLE_MAGIC_GUILD_FLOORS, GroundMaterial.TILES_2X2_1_SEMIGLOSS, p -> p.lightness(30)),
 	GUTANOTH_CAVE(29, Area.GUTANOTH_CAVE, WaterType.SWAMP_WATER_FLAT),
+	FELDIP_HILLS_HUNTER_OVERLAY(p -> p.ids(29).area(Area.FELDIP_HILLS_SOUTHERN_REGION).groundMaterial(GroundMaterial.GRASS_1)),
 
 	// Watchtower
 	YANILLE_WATCHTOWER_ARCHWAY_FIX_1(3, Area.YANILLE_WATCHTOWER_BOTTOM_DOORWAY, GroundMaterial.WORN_TILES),
@@ -782,6 +783,7 @@ public enum Overlay {
 
 	MORYTANIA_SLAYER_TOWER(102, Area.MORYTANIA_SLAYER_TOWER, GroundMaterial.VARROCK_PATHS),
 	MORYTANIA_FENKENSTRAINS_CASTLE(102, Area.FENKENSTRAINS_CASTLE, GroundMaterial.VARROCK_PATHS),
+	SLEPE_PATHS(p -> p.ids(11).area(Area.SLEPE).groundMaterial(GroundMaterial.GRAVEL)),
 	ABANDONED_MINE_ROCK(11, Area.MORYTANIA, GroundMaterial.DIRT),
 	TRUE_BLOOD_ALTAR_BLOOD(72, Area.TRUE_BLOOD_ALTAR, WaterType.BLOOD),
 	BARROWS_PATH(GroundMaterial.DIRT, p -> p
@@ -802,6 +804,7 @@ public enum Overlay {
 		.shiftLightness(12)
 		.shiftSaturation(-2)
 	),
+	LLETYA_WOOD_FLOORS(p -> p.ids(22).area(Area.LLETYA_UPPER_LEVELS).groundMaterial(GroundMaterial.HD_WOOD_PLANKS_1)),
 	TIRANNWN_PATHS(p -> p.area(Area.TIRANNWN).ids(106).groundMaterial(GroundMaterial.GRASSY_DIRT)),
 	PRIFDDINAS_POND_WATER(p -> p.area(Area.PRIFDDINAS).ids(151).waterType(WaterType.WATER)),
 	POISON_WASTE(85, Area.POISON_WASTE, WaterType.POISON_WASTE),
@@ -818,11 +821,15 @@ public enum Overlay {
 		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_JAGGED_STONE_TILE_LIGHT_2)
 	),
 	FOSSIL_ISLAND_HILL_TEXTURE_FIX(11, Area.FOSSIL_ISLAND_HILL_TEXTURE_FIX, GroundMaterial.VARIED_DIRT),
+	FOSSIL_ISLAND_VOLCANO_PATH(p -> p.ids(94).area(Area.FOSSIL_ISLAND).groundMaterial(GroundMaterial.GRAVEL)),
+	FOSSIL_ISLAND_SWAMP_WATER(p -> p.ids(59).area(Area.FOSSIL_ISLAND).waterType(WaterType.SWAMP_WATER)),
 
 	// Ape Atoll
 	APE_ATOLL_WATERFALLS(p -> p.area(Area.APE_ATOLL_WATERFALLS).waterType(WaterType.WATER).blended(false)),
 
 	// Zeah
+	LOVAKENGJ_GROUND(p -> p.ids(11).area(Area.LOVAKENGJ).groundMaterial(GroundMaterial.ROCKY_CAVE_FLOOR)),
+	LOVAKENGJ_PATH(p -> p.ids(132).area(Area.LOVAKENGJ).groundMaterial(GroundMaterial.PACKED_EARTH)),
 	// Great Kourend
 	KOUREND_CASTLE_BLEND_FIX(11, Area.KOUREND_CASTLE_ENTRANCE_FIX, GroundMaterial.VARROCK_PATHS, p -> p.blended(false)),
 	KOUREND_CASTLE_FLOOR(11, Area.KOUREND_CASTLE, GroundMaterial.VARROCK_PATHS),
