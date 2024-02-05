@@ -13,6 +13,8 @@ public class ModelHasher {
 	@Inject
 	private HdPlugin plugin;
 
+	public long vertexHash;
+
 	private Model model;
 	private int faceCount;
 	private long faceColorsOneHash;
@@ -134,9 +136,11 @@ public class ModelHasher {
 				}
 			}
 		}
+
+		vertexHash = calculateVertexCacheHash();
 	}
 
-	public long calculateVertexCacheHash(@NonNull ModelOverride modelOverride) {
+	public long calculateVertexCacheHash() {
 		long h = faceCount;
 		h = h * 31L + faceColorsOneHash;
 		h = h * 31L + faceColorsTwoHash;
@@ -154,7 +158,6 @@ public class ModelHasher {
 		h = h * 31L + model.getOverrideHue();
 		h = h * 31L + model.getOverrideSaturation();
 		h = h * 31L + model.getOverrideLuminance();
-		h = h * 31L + modelOverride.rotate;
 		return h;
 	}
 
@@ -173,6 +176,7 @@ public class ModelHasher {
 		long h = faceCount;
 		h = h * 31L + (modelOverride.uvType == UvType.VANILLA || modelOverride.retainVanillaUvs ? textureTrianglesHash : 0);
 		h = h * 31L + (modelOverride.uvType.orientationDependent ? orientation : 0);
+		h = h * 31L + (modelOverride.uvType == UvType.BOX ? vertexHash : 0);
 		h = h * 31L + modelOverride.hashCode();
 		h = h * 31L + faceTexturesHash;
 		return h;

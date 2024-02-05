@@ -780,6 +780,7 @@ public enum Overlay {
 
 	MORYTANIA_SLAYER_TOWER(102, Area.MORYTANIA_SLAYER_TOWER, GroundMaterial.VARROCK_PATHS),
 	MORYTANIA_FENKENSTRAINS_CASTLE(102, Area.FENKENSTRAINS_CASTLE, GroundMaterial.VARROCK_PATHS),
+	SLEPE_PATHS(p -> p.ids(11).area(Area.SLEPE).groundMaterial(GroundMaterial.GRAVEL)),
 	ABANDONED_MINE_ROCK(11, Area.MORYTANIA, GroundMaterial.DIRT),
 	TRUE_BLOOD_ALTAR_BLOOD(72, Area.TRUE_BLOOD_ALTAR, WaterType.BLOOD),
 	BARROWS_PATH(GroundMaterial.DIRT, p -> p
@@ -822,6 +823,8 @@ public enum Overlay {
 	APE_ATOLL_WATERFALLS(p -> p.area(Area.APE_ATOLL_WATERFALLS).waterType(WaterType.WATER).blended(false)),
 
 	// Zeah
+	LOVAKENGJ_GROUND(p -> p.ids(11).area(Area.LOVAKENGJ).groundMaterial(GroundMaterial.ROCKY_CAVE_FLOOR)),
+	LOVAKENGJ_PATH(p -> p.ids(132).area(Area.LOVAKENGJ).groundMaterial(GroundMaterial.PACKED_EARTH)),
 	// Great Kourend
 	KOUREND_CASTLE_BLEND_FIX(11, Area.KOUREND_CASTLE_ENTRANCE_FIX, GroundMaterial.VARROCK_PATHS, p -> p.blended(false)),
 	KOUREND_CASTLE_FLOOR(11, Area.KOUREND_CASTLE, GroundMaterial.VARROCK_PATHS),

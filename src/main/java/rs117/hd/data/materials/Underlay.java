@@ -324,6 +324,8 @@ public enum Underlay {
 
 	// Morytania
 	CROMBWICK_MANOR_FLOOR(p -> p.ids(10).area(Area.CROMBWICK_MANOR).groundMaterial(GroundMaterial.HD_WOOD_PLANKS_1)),
+	SLEPE_CHURCH_FLOOR(p -> p.ids(94).area(Area.SLEPE_CHURCH).groundMaterial(GroundMaterial.HD_WOOD_PLANKS_1)),
+	SLEPE_HOUSES_WOODEN_FLOOR(p -> p.ids(10).area(Area.SLEPE_HOUSES).groundMaterial(GroundMaterial.HD_WOOD_PLANKS_1)),
 	VER_SINHAZA_WATER_FIX(p -> p.ids(54).area(Area.VER_SINHAZA_WATER_FIX).waterType(WaterType.WATER).blended(false)),
 	MEIYERDITCH_MINES(111, Area.MEIYERDITCH_MINES, GroundMaterial.ROCKY_CAVE_FLOOR),
 	BARROWS_DIRT(GroundMaterial.DIRT, p -> p
@@ -567,6 +569,7 @@ public enum Underlay {
 	FOSSIL_ISLAND_WYVERN_DIRT(p -> p.ids(17).area(Area.FOSSIL_ISLAND_WYVERN_TASK_CAVE).groundMaterial(GroundMaterial.EARTHEN_CAVE_FLOOR)),
 
 	// Zeah
+	LOVAKENGJ_GROUND(p -> p.ids(10, 55, 56, 57, 63, 64, 67, 68, 72, 96, 111, 112, 149, 150).area(Area.LOVAKENGJ).groundMaterial(GroundMaterial.EARTHEN_CAVE_FLOOR)),
 	ZEAH_DIRT(p -> p
 		.area(Area.ZEAH)
 		.groundMaterial(GroundMaterial.VARIED_DIRT)
