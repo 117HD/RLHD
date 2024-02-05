@@ -605,7 +605,7 @@ public enum Underlay {
 
 	// Ape Atoll
 	APE_ATOLL_COMPLEX_TILES(p -> p
-		.ids(48, 50, 56, 61, 62, 63, 65, 67, 99, 100)
+		.ids(48, 50, 56, 61, 62, 63, 65, 67, 68, 99, 100)
 		.area(Area.APE_ATOLL)
 		.replacementResolver(
 			(plugin, scene, tile, override) -> {
@@ -613,26 +613,23 @@ public enum Underlay {
 				if (hsl == null)
 					return override;
 
-				LocalPoint localLocation = tile.getLocalLocation();
-				int tileExX = localLocation.getSceneX() + SCENE_OFFSET;
-				int tileExY = localLocation.getSceneY() + SCENE_OFFSET;
-				short overlayId = scene.getOverlayIds()[tile.getRenderLevel()][tileExX][tileExY];
-
 				// Grass
-				if (
-					(hsl[0] >= 11  && hsl[1] >= 4 && hsl[2] <= 39)
-				) {return DEFAULT_GRASS;}
+				if (hsl[0] >= 11 && hsl[1] >= 4 && hsl[2] <= 39)
+					return DEFAULT_GRASS;
 
 				// Dirt
-				if (
-					(hsl[0] == 8 && hsl[1] >= 6 && hsl[2] <= 30) || (hsl[0] == 10 && hsl[1] >= 3 && hsl[2] <= 35)
-				) {return DEFAULT_DIRT;}
+				if (hsl[0] == 8 && hsl[1] >= 6 && hsl[2] <= 30 ||
+					hsl[0] == 10 && hsl[1] >= 3 && hsl[2] <= 35)
+					return DEFAULT_DIRT;
 
 				// Sand
-				if (hsl[0] == 9 && hsl[1] <= 3 && hsl[2] >= 34 || (hsl[0] == 8 && (hsl[1] == 3 || hsl[1] == 4) && hsl[2] >= 20)) {return DEFAULT_SAND;}
+				if (hsl[0] == 9 && hsl[1] <= 3 && hsl[2] >= 34 ||
+					hsl[0] == 8 && (hsl[1] == 3 || hsl[1] == 4) && hsl[2] >= 20)
+					return DEFAULT_SAND;
 
 				// Ugly green sand fix
-				if (hsl[0] == 9 && (hsl[1] == 3 || hsl[1] == 4) && hsl[2] >= 34) {return GREEN_SAND_HUE_CORRECTION;}
+				if (hsl[0] == 9 && (hsl[1] == 3 || hsl[1] == 4) && hsl[2] >= 34)
+					return GREEN_SAND_HUE_CORRECTION;
 
 				return DEFAULT_DIRT;
 			}
