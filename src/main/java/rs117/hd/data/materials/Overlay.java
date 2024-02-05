@@ -377,7 +377,6 @@ public enum Overlay {
 		.blended(true)
 	),
 
-
 	// Goblin Village
 	GOBLIN_VILLAGE_TILES_BLEND_FIX_OVERLAY(
 		Area.GOBLIN_VILLAGE_COOKS_CHAMBER_BLEND_FIX,

@@ -172,7 +172,9 @@ public enum Underlay {
 				if (hsl == null)
 					return override;
 
-				if (hsl[1] == 0) {return DEFAULT_SNOW_1;}
+				if (hsl[1] == 0)
+					return DEFAULT_SNOW_1;
+
 				if (hsl[1] >= 5) {
 					switch (plugin.configSeasonalTheme) {
 						case SUMMER:
@@ -182,7 +184,7 @@ public enum Underlay {
 					}
 				}
 
-				if (hsl[1] > 0 || hsl[1] < 5) {
+				if (hsl[1] >= 1 && hsl[1] <= 5) {
 					switch (plugin.configSeasonalTheme) {
 						case SUMMER:
 						case AUTUMN:
@@ -191,6 +193,7 @@ public enum Underlay {
 							return WINTER_DIRT;
 					}
 				}
+
 				return DEFAULT_DIRT;
 			}
 		)
