@@ -266,23 +266,22 @@ public enum Underlay {
 				short overlayId = scene.getOverlayIds()[tile.getRenderLevel()][tileExX][tileExY];
 
 				// Grass
-				if (
-					(hsl[0] >= 13) ||
-					(hsl[0] >= 10 && hsl[1] >= 3) ||
-					(hsl[0] == 9 && hsl[1] >= 4) ||
-					(hsl[0] == 9 && hsl[1] == 3 && hsl[2] <= 45) || // Fixes the southernmost beach
-					(hsl[0] == 8 && hsl[1] > 5 && hsl[2] >= 30 && overlayId != 6)
-				) {return DEFAULT_GRASS;}
+				if (hsl[0] >= 13 ||
+					hsl[0] >= 10 && hsl[1] >= 3 ||
+					hsl[0] == 9 && hsl[1] >= 4 ||
+					hsl[0] == 9 && hsl[1] == 3 && hsl[2] <= 45 || // Fixes the southernmost beach
+					hsl[0] == 8 && hsl[1] > 5 && hsl[2] >= 30 && overlayId != 6)
+					return DEFAULT_GRASS;
 
 				// Dirt
-				if (
-					(hsl[0] <= 8 && hsl[1] >= 4 && hsl[2] <= 71) ||
-					(hsl[0] == 9 && hsl[1] == 2 && hsl[2] <= 44) ||
-					(hsl[0] == 8 && hsl[1] == 3 && hsl[2] <= 34) // Breaks Sand if higher than 34; Can be fixed with tile averages or medians
-				) {return DEFAULT_DIRT;}
+				if (hsl[0] <= 8 && hsl[1] >= 4 && hsl[2] <= 71 ||
+					hsl[0] == 9 && hsl[1] == 2 && hsl[2] <= 44 ||
+					hsl[0] == 8 && hsl[1] == 3 && hsl[2] <= 34) // Breaks Sand if higher than 34; Can be fixed with tile averages or medians
+					return DEFAULT_DIRT;
 
 				// Stone
-				if (hsl[0] < 13 && hsl[1] <= 2 && hsl[2] <= 40) {return	DEFAULT_ROCKY_GROUND;}
+				if (hsl[1] <= 2 && hsl[2] <= 40)
+					return DEFAULT_ROCKY_GROUND;
 
 				return DEFAULT_SAND;
 			}
@@ -475,31 +474,20 @@ public enum Underlay {
 				if (hsl == null)
 					return override;
 
-				if ((hsl[1] == 0) || (hsl[0] <= 10 && hsl[1] < 2)) {
+				if (hsl[1] == 0 || hsl[0] <= 10 && hsl[1] < 2)
 					return DEFAULT_GRUNGE;
-				}
-				if ((hsl[0] == 8 && hsl[1] == 4 && hsl[2] >= 71) || (hsl[0] == 8 && hsl[1] == 3 && hsl[2] >= 21))
+
+				if (hsl[0] == 8 && hsl[1] == 4 && hsl[2] >= 71 ||
+					hsl[0] == 8 && hsl[1] == 3 && hsl[2] >= 21)
 					return DEFAULT_SAND;
 
-				if (
-					hsl[0] >= 11 && hsl[1] == 1 ||
+				if (hsl[0] >= 11 && hsl[1] == 1 ||
 					hsl[0] >= 9 && hsl[1] >= 4 ||
 					hsl[0] >= 10 && hsl[1] >= 2 ||
 					hsl[0] == 8 && hsl[1] == 5 && hsl[2] >= 15 ||
-					hsl[0] == 8 && hsl[1] >= 6 && hsl[2] >= 2
-				) {
+					hsl[0] == 8 && hsl[1] >= 6 && hsl[2] >= 2)
 					return DEFAULT_GRASS;
-				}
 
-				if (
-					hsl[0] == 8 && hsl[1] <= 4 && hsl[2] <= 71 ||
-					hsl[0] <= 7 && hsl[1] <= 5 && hsl[2] <= 57 ||
-					hsl[0] <= 7 && hsl[1] <= 7 && hsl[2] <= 28 ||
-					hsl[0] == 8 && hsl[1] == 5 && hsl[2] <= 15 ||
-					hsl[0] == 9 && hsl[1] >= 2 && hsl[1] <= 4
-				) {
-					return DEFAULT_DIRT;
-				}
 				return DEFAULT_DIRT;
 			}
 		)
