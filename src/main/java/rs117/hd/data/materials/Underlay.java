@@ -338,6 +338,7 @@ public enum Underlay {
 							return WINTER_DIRT;
 					}
 				}
+
 				// Grass
 				if (hsl[0] >= 9 && hsl[1] >= 3) {
 					switch (plugin.configSeasonalTheme) {
@@ -348,6 +349,35 @@ public enum Underlay {
 							return WINTER_GRASS;
 					}
 				}
+
+				return DEFAULT_DIRT;
+			}
+		)
+	),
+
+	// Mos Le Harmless
+	MOS_LE_HARMLESS_COMPLEX_TILES(p -> p
+		.ids(48, 49, 50, 51, 52, 61, 62, 63, 67, 68)
+		.area(Area.MOS_LE_HARMLESS_ALL)
+		.replacementResolver(
+			(plugin, scene, tile, override) -> {
+				int[] hsl = HDUtils.getSouthWesternMostTileColor(tile);
+				if (hsl == null)
+					return override;
+
+				// Grass
+				if (hsl[0] >= 11 && hsl[1] >= 4 && hsl[2] <= 39)
+					return DEFAULT_GRASS;
+
+				// Dirt
+				if (hsl[0] == 8 && hsl[1] >= 6 && hsl[2] <= 30 ||
+					hsl[0] == 10 && hsl[1] >= 3 && hsl[2] <= 35)
+					return DEFAULT_DIRT;
+
+				// Sand
+				if (hsl[0] <= 9 && hsl[1] <= 3 && hsl[2] >= 34 ||
+					hsl[0] == 8 && hsl[1] == 3 && hsl[2] >= 20)
+					return DEFAULT_SAND;
 
 				return DEFAULT_DIRT;
 			}
