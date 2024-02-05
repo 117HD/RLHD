@@ -65,6 +65,7 @@ public enum Underlay {
 	DEFAULT_SNOW_1(p -> p.ids().groundMaterial(GroundMaterial.SNOW_1)),
 	DEFAULT_GRUNGE(p -> p.ids().groundMaterial(GroundMaterial.GRUNGE)),
 	DEFAULT_ROCKY_GROUND(p -> p.ids().groundMaterial(GroundMaterial.ROCKY_CAVE_FLOOR)),
+	DEFAULT_OVERWORLD_ROCK(p -> p.ids().groundMaterial(GroundMaterial.OVERWORLD_ROCKY)),
 	// Lumbridge
 	LUMBRIDGE_CASTLE_TILE(56, Area.LUMBRIDGE_CASTLE_BASEMENT, GroundMaterial.MARBLE_2_SEMIGLOSS, p -> p.blended(false)),
 
@@ -565,8 +566,87 @@ public enum Underlay {
 		.shiftLightness(5)
 	),
 
-	//
+	// Fossil Island
 	FOSSIL_ISLAND_WYVERN_DIRT(p -> p.ids(17).area(Area.FOSSIL_ISLAND_WYVERN_TASK_CAVE).groundMaterial(GroundMaterial.EARTHEN_CAVE_FLOOR)),
+	FOSSIL_ISLAND_VOLCANO_SAND(p -> p
+		.ids(138)
+		.area(Area.FOSSIL_ISLAND_VOLCANO)
+		.groundMaterial(GroundMaterial.SAND)
+	),
+	FOSSIL_ISLAND_VOLCANO_ROCK(p -> p
+		.ids(56, 72, 148, 150)
+		.area(Area.FOSSIL_ISLAND_VOLCANO)
+		.groundMaterial(GroundMaterial.OVERWORLD_ROCKY)
+	),
+	FOSSIL_ISLAND_ROCK(p -> p
+		.ids(72, 148, 150)
+		.area(Area.FOSSIL_ISLAND)
+		.groundMaterial(GroundMaterial.OVERWORLD_ROCKY)
+		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_GRUNGE)
+	),
+	FOSSIL_ISLAND_GRASS(p -> p.ids(48, 54, 103).area(Area.FOSSIL_ISLAND).groundMaterial(GroundMaterial.OVERWORLD_GRASS_1).seasonalReplacement(SeasonalTheme.WINTER, WINTER_GRASS)),
+	FOSSIL_ISLAND_COMPLEX(p -> p
+		.ids(56, 63, 66, 68, 138)
+		.area(Area.FOSSIL_ISLAND)
+		.groundMaterial(GroundMaterial.OVERWORLD_GRASS_1)
+		.replacementResolver(
+			(plugin, scene, tile, override) -> {
+				int[] hsl = HDUtils.getSouthWesternMostTileColor(tile);
+				if (hsl == null)
+					return override;
+
+				// Rock
+				if (hsl[1] == 0 && hsl[2] <= 44) {
+					switch (plugin.configSeasonalTheme) {
+						case SUMMER:
+						case AUTUMN:
+							return DEFAULT_OVERWORLD_ROCK;
+						case WINTER:
+							return WINTER_GRUNGE;
+					}
+				}
+
+				// Dirt
+				if (
+					(hsl[0] <= 8 && hsl[1] >= 4 && hsl[2] <= 71) ||
+					hsl[0] <= 11 && hsl[1] == 1 ||
+					(hsl[0] <= 4 && hsl[1] <= 3 && hsl[1] >= 1 && hsl[2] <= 36)
+				) {
+					switch (plugin.configSeasonalTheme) {
+						case SUMMER:
+						case AUTUMN:
+							return DEFAULT_DIRT;
+						case WINTER:
+							return WINTER_DIRT;
+					}
+				}
+
+				// Sand
+				if (hsl[0] >= 4 && hsl[0] <= 9 && hsl[1] <= 3 && hsl[2] >= 29 && hsl[2] <= 60 ||
+					(hsl[0] >= 5 && hsl[0] <= 6) && hsl[1] == 3 && hsl[2] >= 50)
+					return DEFAULT_SAND;
+
+				// Grass
+				if (
+					hsl[0] >= 8 && hsl[1] >= 5 && hsl[2] >= 20 ||
+					hsl[0] >= 9 && hsl[1] >= 2 ||
+					hsl[0] > 20 ||
+					hsl[0] >= 12 && hsl[1] == 1 ||
+					(hsl[0] == 7 || hsl[0] == 8) && hsl[1] == 3 && hsl[2] >= 60
+				) {
+					switch (plugin.configSeasonalTheme) {
+						case SUMMER:
+						case AUTUMN:
+							return DEFAULT_GRASS;
+						case WINTER:
+							return WINTER_GRASS;
+					}
+				}
+
+				return DEFAULT_DIRT;
+			}
+		)
+	),
 
 	// Zeah
 	LOVAKENGJ_GROUND(p -> p.ids(10, 55, 56, 57, 63, 64, 67, 68, 72, 96, 111, 112, 149, 150).area(Area.LOVAKENGJ).groundMaterial(GroundMaterial.EARTHEN_CAVE_FLOOR)),
