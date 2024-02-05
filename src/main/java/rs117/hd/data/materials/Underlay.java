@@ -605,7 +605,11 @@ public enum Underlay {
 				}
 
 				// Dirt
-				if ((hsl[0] <= 8 && hsl[1] >= 4 && hsl[2] <= 71) || (hsl[0] <= 11 && hsl[1] == 1) || (hsl[0] <= 4 && (hsl[1] <= 3 && hsl[1] >=1) && hsl[2] <= 36)) {
+				if (
+					(hsl[0] <= 8 && hsl[1] >= 4 && hsl[2] <= 71) ||
+					hsl[0] <= 11 && hsl[1] == 1 ||
+					(hsl[0] <= 4 && hsl[1] <= 3 && hsl[1] >= 1 && hsl[2] <= 36)
+				) {
 					switch (plugin.configSeasonalTheme) {
 						case SUMMER:
 						case AUTUMN:
@@ -616,12 +620,18 @@ public enum Underlay {
 				}
 
 				// Sand
-				if (((hsl[0] >= 4  && hsl[0] <= 9) && (hsl[1] <= 3) && (hsl[2] >= 29 && hsl[2] <= 60)) || ((hsl[0] == 5 || hsl[0] == 6) && (hsl[1] == 3 && hsl[1] >=1) && hsl[2] >= 50)) {
+				if (hsl[0] >= 4 && hsl[0] <= 9 && hsl[1] <= 3 && hsl[2] >= 29 && hsl[2] <= 60 ||
+					(hsl[0] >= 5 && hsl[0] <= 6) && hsl[1] == 3 && hsl[2] >= 50)
 					return DEFAULT_SAND;
-				}
 
 				// Grass
-				if ((hsl[0] >= 8 && hsl[1] >= 5 && hsl[2] >= 20) || (hsl[0] >= 9 && hsl[1] >= 2 || hsl[0] > 20) || (hsl[0] >= 12 && hsl[1] >= 1) || ((hsl[0] == 7 || hsl[0] == 8) && hsl[1] == 3) && hsl[2] >= 60) {
+				if (
+					hsl[0] >= 8 && hsl[1] >= 5 && hsl[2] >= 20 ||
+					hsl[0] >= 9 && hsl[1] >= 2 ||
+					hsl[0] > 20 ||
+					hsl[0] >= 12 && hsl[1] == 1 ||
+					(hsl[0] == 7 || hsl[0] == 8) && hsl[1] == 3 && hsl[2] >= 60
+				) {
 					switch (plugin.configSeasonalTheme) {
 						case SUMMER:
 						case AUTUMN:
