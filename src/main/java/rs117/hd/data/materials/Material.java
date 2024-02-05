@@ -651,8 +651,7 @@ public enum Material {
 	SLIME_GRUNGE(GRUNGE_1, p -> p
 		.setSpecular(4.1f, 60)),
 	WATER_PUDDLE(NONE, p -> p
-		.setSpecular(1.5f, 80)
-	),
+		.setSpecular(1.5f, 80)),
 	HD_WOOD_PLANKS_1_N,
 	HD_WOOD_PLANKS_1(p -> p
 		.setNormalMap(HD_WOOD_PLANKS_1_N)
