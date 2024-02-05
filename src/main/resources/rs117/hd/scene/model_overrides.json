@@ -4383,6 +4383,7 @@
       2147,
       2148,
       2884,
+      8785,
       16679,
       16683,
       16684,
@@ -4480,17 +4481,18 @@
   },
   {
     "description": "Wooden Benches - Plank",
-    "baseMaterial": "WOOD_GRAIN_2",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       1106,
       3632,
       5615,
+      8772,
       9531,
       25601,
       25676
     ],
     "uvType": "BOX",
-    "uvScale": 0.7
+    "uvOrientation": 512
   },
   {
     "description": "Courthouse Basement stairs",
@@ -4596,6 +4598,9 @@
       4164,
       4187,
       4189,
+      8744,
+      8745,
+      8746,
       10493,
       10494,
       11794,
@@ -4886,6 +4891,8 @@
       1728,
       3506,
       3507,
+      8788,
+      8792,
       11721,
       11722,
       23866,
@@ -4900,7 +4907,8 @@
       44052,
       44053
     ],
-    "uvType": "GEOMETRY"
+    "uvType": "BOX",
+    "uvOrientation": 463
   },
   {
     "description": "Metal Fence",
@@ -5189,13 +5197,26 @@
       1732,
       1733,
       1743,
+      2036,
+      2037,
+      2038,
       2337,
       2338,
       2339,
       2340,
       2416,
       2417,
+      2537,
+      2528,
+      2529,
+      2546,
+      2547,
+      2548,
+      2549,
       5667,
+      8787,
+      8789,
+      8791,
       20197,
       20198,
       11728,
@@ -13623,5 +13644,153 @@
     "uvOrientationY": 182,
     "uvOrientationX": 512,
     "uvOrientationZ": 512
+  },
+  {
+    "description": "Tirannwn - Lletya - Walls - Wooden - Planks",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      8755,
+      8759
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.92,
+    "flatNormals": true
+  },
+  {
+    "description": "Tirannwn - Lletya - Walls - Wooden",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      8763,
+      8764
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.92,
+    "flatNormals": true,
+    "uvOrientationY": 512
+  },
+  {
+    "description": "Tirannwn - Lletya - Walls - Wooden - Angled",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      8765
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "flatNormals": true,
+    "uvOrientationY": 256,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512
+  },
+  {
+    "description": "Tirannwn - Lletya - Fence - Wooden",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      8756,
+      8758
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.92,
+    "flatNormals": true,
+    "uvOrientationY": 512
+  },
+  {
+    "description": "Tirannwn - Lletya - Objects - Wooden - Tables - Fine",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      8751,
+      20127
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationY": 512
+  },
+  {
+    "description": "Tirannwn - Lletya - Objects - Wooden - Tables - Fine - Rounded",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      8768
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationY": 512
+  },
+  {
+    "description": "Tirannwn - Lletya - Objects - Wooden - Chair - Pointed",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      8770
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.0,
+    "uvOrientationY": 512
+  },
+  {
+    "description": "Tirannwn - Lletya - Objects - Wooden - Bookcase - Textured",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      8752,
+      8753,
+      8754
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "flatNormals": true
+  },
+  {
+    "description": "Mourners Tunnels - Walls - Dirt",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [
+      8822,
+      8823,
+      9746,
+      9747,
+      24977,
+      24978
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.68,
+    "uvOrientationX": 400
+  },
+  {
+    "description": "Mourners Tunnels - Wall Caps - Dirt",
+    "baseMaterial": "DIRT_1",
+    "objectIds": [
+      24980,
+      24981,
+      24983
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.68
+  },
+  {
+    "description": "Mourners Tunnels - Metallic - Minecart",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "objectIds": [
+      8831
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.68
+  },
+  {
+    "description": "Object - Apple Tree",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      8842,
+      8843
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "West Ardougne - Walls - Wooden - Plank",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      11407,
+      11408
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.2,
+    "flatNormals": true,
+    "uvOrientationY": 512
   }
 ]
