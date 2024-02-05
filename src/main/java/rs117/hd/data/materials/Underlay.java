@@ -358,6 +358,7 @@ public enum Underlay {
 							return WINTER_DIRT;
 					}
 				}
+
 				// Grass
 				if (hsl[0] >= 9 && hsl[1] >= 3) {
 					switch (plugin.configSeasonalTheme) {
@@ -384,23 +385,19 @@ public enum Underlay {
 				if (hsl == null)
 					return override;
 
-				LocalPoint localLocation = tile.getLocalLocation();
-				int tileExX = localLocation.getSceneX() + SCENE_OFFSET;
-				int tileExY = localLocation.getSceneY() + SCENE_OFFSET;
-				short overlayId = scene.getOverlayIds()[tile.getRenderLevel()][tileExX][tileExY];
-
 				// Grass
-				if (
-					(hsl[0] >= 11  && hsl[1] >= 4 && hsl[2] <= 39)
-				) {return DEFAULT_GRASS;}
+				if (hsl[0] >= 11 && hsl[1] >= 4 && hsl[2] <= 39)
+					return DEFAULT_GRASS;
 
 				// Dirt
-				if (
-					(hsl[0] == 8 && hsl[1] >= 6 && hsl[2] <= 30) || (hsl[0] == 10 && hsl[1] >= 3 && hsl[2] <= 35)
-				) {return DEFAULT_DIRT;}
+				if (hsl[0] == 8 && hsl[1] >= 6 && hsl[2] <= 30 ||
+					hsl[0] == 10 && hsl[1] >= 3 && hsl[2] <= 35)
+					return DEFAULT_DIRT;
 
 				// Sand
-				if (hsl[0] <= 9 && hsl[1] <= 3 && hsl[2] >= 34 || (hsl[0] == 8 && hsl[1] == 3 && hsl[2] >= 20)) {return DEFAULT_SAND;}
+				if (hsl[0] <= 9 && hsl[1] <= 3 && hsl[2] >= 34 ||
+					hsl[0] == 8 && hsl[1] == 3 && hsl[2] >= 20)
+					return DEFAULT_SAND;
 
 				return DEFAULT_DIRT;
 			}
