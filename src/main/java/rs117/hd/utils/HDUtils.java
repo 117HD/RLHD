@@ -47,9 +47,6 @@ public class HDUtils {
 	public static final long GiB = MiB * KiB;
 	public static final Random rand = new Random();
 
-	// directional vectors approximately opposite of the directional light used by the client
-	private static final float[] LIGHT_DIR_TILE = new float[] { 0.70710678f, 0.70710678f, 0f };
-
 	// The epsilon for floating point values used by jogl
 	public static final float EPSILON = 1.1920929E-7f;
 
@@ -57,6 +54,11 @@ public class HDUtils {
 	public static final float TWO_PI = PI * 2;
 	public static final float HALF_PI = PI / 2;
 	public static final float QUARTER_PI = PI / 2;
+
+	public static final int MAX_SNOW_LIGHTNESS = 70;
+
+	// directional vectors approximately opposite of the directional light used by the client
+	private static final float[] LIGHT_DIR_TILE = new float[] { 0.70710678f, 0.70710678f, 0f };
 
 	/**
 	 * Computes a + b, storing it in the out array
