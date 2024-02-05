@@ -377,7 +377,7 @@ public enum Underlay {
 
 	// Mos Le Harmless
 	MOS_LE_HARMLESS_COMPLEX_TILES(p -> p
-		.ids(48, 50, 52, 61, 62, 68)
+		.ids(48, 49, 50, 51, 52, 61, 62, 63, 67, 68)
 		.area(Area.MOS_LE_HARMLESS_ALL)
 		.replacementResolver(
 			(plugin, scene, tile, override) -> {
