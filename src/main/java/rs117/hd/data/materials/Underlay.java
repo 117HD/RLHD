@@ -951,6 +951,11 @@ public enum Underlay {
 
 	SHIP_SAILING_WATER(p -> p.area(Area.SHIP_SAILING).ids(75).waterType(WaterType.WATER_FLAT)),
 	GIANT_MOLE_LAIR_DIRT(p -> p.ids(63, 65).area(Area.GIANT_MOLE_LAIR).groundMaterial(GroundMaterial.VARIED_DIRT)),
+	PEST_CONTROL(p -> p
+		.ids(59, 121, 142)
+		.area(Area.PEST_CONTROL)
+		.groundMaterial(GroundMaterial.DIRT)
+		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_DIRT)),
 
 	// Cutscenes
 	CANOE_CUTSCENE_GRASS(Area.CANOE_CUTSCENE, GroundMaterial.GRASS_SCROLLING, p -> p.ids(48, 50, 63)),
