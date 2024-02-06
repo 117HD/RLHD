@@ -12,6 +12,8 @@ import rs117.hd.config.SeasonalTheme;
 import rs117.hd.data.WaterType;
 import rs117.hd.data.environments.Area;
 
+import static rs117.hd.utils.HDUtils.clamp;
+
 @Setter
 @Accessors(fluent = true)
 class TileOverrideBuilder<T> {
@@ -21,13 +23,41 @@ class TileOverrideBuilder<T> {
     public WaterType waterType = WaterType.NONE;
     public boolean blended = true;
     public boolean blendedAsOpposite = false;
-    public int hue = -1;
+	private int hue = -1;
     public int shiftHue = 0;
-    public int saturation = -1;
-    public int shiftSaturation = 0;
-    public int lightness = -1;
-    public int shiftLightness = 0;
+	public int minHue = 0;
+	public int maxHue = 63;
+	private int saturation = -1;
+	public int shiftSaturation = 0;
+	public int minSaturation = 0;
+	public int maxSaturation = 7;
+	private int lightness = -1;
+	public int shiftLightness = 0;
+	public int minLightness = 0;
+	public int maxLightness = 127;
 	public TileOverrideResolver<T> replacementResolver;
+
+	void normalize() {
+		// Ensure values are within valid ranges
+		if (hue != -1) {
+			minHue = maxHue = clamp(hue, 0, 63);
+		} else {
+			minHue = clamp(minHue, 0, 63);
+			maxHue = clamp(maxHue, 0, 63);
+		}
+		if (saturation != -1) {
+			minSaturation = maxSaturation = clamp(saturation, 0, 7);
+		} else {
+			minSaturation = clamp(minSaturation, 0, 7);
+			maxSaturation = clamp(maxSaturation, 0, 7);
+		}
+		if (lightness != -1) {
+			minLightness = maxLightness = clamp(lightness, 0, 127);
+		} else {
+			minLightness = clamp(minLightness, 0, 127);
+			maxLightness = clamp(maxLightness, 0, 127);
+		}
+	}
 
     TileOverrideBuilder<T> apply(Consumer<TileOverrideBuilder<T>> consumer) {
         consumer.accept(this);

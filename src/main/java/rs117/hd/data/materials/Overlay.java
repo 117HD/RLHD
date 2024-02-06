@@ -40,12 +40,29 @@ import rs117.hd.config.SeasonalTheme;
 import rs117.hd.data.WaterType;
 import rs117.hd.data.environments.Area;
 import rs117.hd.scene.SceneUploader;
-import rs117.hd.utils.HDUtils;
+
+import static rs117.hd.utils.HDUtils.MAX_SNOW_LIGHTNESS;
+import static rs117.hd.utils.HDUtils.clamp;
+import static rs117.hd.utils.HDUtils.localToWorld;
 
 public enum Overlay {
 	// Winter Theme fixes
-	WINTER_GRASS(p -> p.ids().groundMaterial(GroundMaterial.SNOW_1).hue(0).saturation(0).shiftLightness(40).blended(true)),
-	WINTER_DIRT(p -> p.ids().groundMaterial(GroundMaterial.SNOW_2).hue(0).saturation(0).shiftLightness(40).blended(true)),
+	WINTER_GRASS(p -> p
+		.ids()
+		.groundMaterial(GroundMaterial.SNOW_1)
+		.hue(0)
+		.saturation(0)
+		.shiftLightness(40)
+		.maxLightness(MAX_SNOW_LIGHTNESS)
+		.blended(true)),
+	WINTER_DIRT(p -> p
+		.ids()
+		.groundMaterial(GroundMaterial.SNOW_2)
+		.hue(0)
+		.saturation(0)
+		.shiftLightness(40)
+		.maxLightness(MAX_SNOW_LIGHTNESS)
+		.blended(true)),
 	WINTER_JAGGED_STONE_TILE(p -> p
 		.ids()
 		.groundMaterial(GroundMaterial.WINTER_JAGGED_STONE_TILE)
@@ -71,6 +88,7 @@ public enum Overlay {
 		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_DIRT)
 	),
 	DEFAULT_GRASS(p -> p.ids().groundMaterial(GroundMaterial.OVERWORLD_GRASS_1)),
+	VERTICAL_DIRT_FIX_NEAR_FALADOR(p -> p.ids(22).area(Area.VERTICAL_DIRT_FIX_NEAR_FALADOR).groundMaterial(GroundMaterial.VERTICAL_DIRT)),
 
 	// Tutorial Island
 	TUTORIAL_ISLAND_KITCHEN_TILE_1(9, Area.TUTORIAL_ISLAND_KITCHEN, GroundMaterial.MARBLE_1_SEMIGLOSS, p -> p.blended(false)),
@@ -378,6 +396,7 @@ public enum Overlay {
 		.blended(true)
 	),
 
+
 	// Goblin Village
 	GOBLIN_VILLAGE_TILES_BLEND_FIX_OVERLAY(
 		Area.GOBLIN_VILLAGE_COOKS_CHAMBER_BLEND_FIX,
@@ -398,7 +417,7 @@ public enum Overlay {
 	WARRIORS_GUILD_CARPET(86, Area.WARRIORS_GUILD, GroundMaterial.CARPET, p -> p.blended(false)),
 
 	// Trollweiss Region
-	TROLLHEIM_WALLS(83, Area.TROLLHEIM, GroundMaterial.DIRT_VERT),
+	TROLLHEIM_WALLS(83, Area.TROLLHEIM, GroundMaterial.VERTICAL_DIRT),
 	WEISS_FIREPIT_FIX(171, Area.WEISS_FIRE_PIT, GroundMaterial.DIRT),
 	WEISS_TENT_INTERIOR(171, Area.INTERIOR_WEISS_THRONE_TENT, GroundMaterial.VARROCK_PATHS),
 	WEISS_SNOWY_PATH(171, Area.WEISS_REGION, GroundMaterial.WINTER_JAGGED_STONE_TILE),
@@ -416,6 +435,7 @@ public enum Overlay {
 		.area(Area.TAVERLEY_DUNGEON)
 		.ids(2, 10, 34)
 	),
+	ASGARNIA_MOUNTAINS_VERTICAL_DIRT_FIX(p -> p.ids(22).area(Area.ASGARNIA_MOUNTAINS).groundMaterial(GroundMaterial.VERTICAL_DIRT)),
 	ICE_QUEENS_SYMBOL(33, Area.ICE_QUEENS_DUNGEON, GroundMaterial.ICE_1_HIGHGLOSS),
 	ICE_QUEENS_DUNGEON_OVERLAY(Area.ICE_QUEENS_DUNGEON, GroundMaterial.SNOW_1, p -> p.ids(42).lightness(100).hue(0).saturation(0)),
 
@@ -1012,6 +1032,7 @@ public enum Overlay {
 	// Random events
 	PRISON_PETE_TILE_1(2, Area.RANDOM_EVENT_PRISON_PETE, GroundMaterial.MARBLE_1, p -> p.blended(false)),
 	PRISON_PETE_TILE_2(-125, Area.RANDOM_EVENT_PRISON_PETE, GroundMaterial.MARBLE_2, p -> p.blended(false)),
+	CLASSROOM(p -> p.ids(102).area(Area.RANDOM_EVENT_CLASSROOM).groundMaterial(GroundMaterial.HD_WOOD_PLANKS_1)),
 
 	// Elid Cave fix
 	ELID_CAVE_WATER_FIX(-126, Area.ELID_CAVE, WaterType.WATER),
@@ -1099,12 +1120,15 @@ public enum Overlay {
 	public final WaterType waterType;
 	public final boolean blended;
 	public final boolean blendedAsUnderlay;
-	public final int hue;
 	public final int shiftHue;
-	public final int saturation;
+	public final int minHue;
+	public final int maxHue;
 	public final int shiftSaturation;
-	public final int lightness;
+	public final int minSaturation;
+	public final int maxSaturation;
 	public final int shiftLightness;
+	public final int minLightness;
+	public final int maxLightness;
 	public final TileOverrideResolver<Overlay> replacementResolver;
 
 	Overlay(int id, GroundMaterial material) {
@@ -1142,19 +1166,23 @@ public enum Overlay {
 	Overlay(Consumer<TileOverrideBuilder<Overlay>> consumer) {
 		TileOverrideBuilder<Overlay> builder = new TileOverrideBuilder<>();
 		consumer.accept(builder);
+		builder.normalize();
 		this.filterIds = builder.ids;
 		this.replacementResolver = builder.replacementResolver;
-		this.waterType = builder.waterType;
-		this.groundMaterial = builder.groundMaterial;
 		this.area = builder.area;
+		this.groundMaterial = builder.groundMaterial;
+		this.waterType = builder.waterType;
 		this.blended = builder.blended;
 		this.blendedAsUnderlay = builder.blendedAsOpposite;
-		this.hue = builder.hue;
 		this.shiftHue = builder.shiftHue;
-		this.saturation = builder.saturation;
+		this.minHue = builder.minHue;
+		this.maxHue = builder.maxHue;
 		this.shiftSaturation = builder.shiftSaturation;
-		this.lightness = builder.lightness;
+		this.minSaturation = builder.minSaturation;
+		this.maxSaturation = builder.maxSaturation;
 		this.shiftLightness = builder.shiftLightness;
+		this.minLightness = builder.minLightness;
+		this.maxLightness = builder.maxLightness;
 	}
 
 	private static final Overlay[] ANY_MATCH;
@@ -1186,7 +1214,7 @@ public enum Overlay {
 	@NonNull
 	public static Overlay getOverlayBeforeReplacements(Scene scene, Tile tile) {
 		LocalPoint localLocation = tile.getLocalLocation();
-		int[] worldPoint = HDUtils.localToWorld(scene, localLocation.getX(), localLocation.getY(), tile.getRenderLevel());
+		int[] worldPoint = localToWorld(scene, localLocation.getX(), localLocation.getY(), tile.getRenderLevel());
 
 		Overlay match = Overlay.NONE;
 		for (Overlay overlay : ANY_MATCH) {
@@ -1226,17 +1254,17 @@ public enum Overlay {
 	}
 
 	public int modifyColor(int jagexHsl) {
-		int h = hue != -1 ? hue : jagexHsl >> 10 & 0x3F;
+		int h = jagexHsl >> 10 & 0x3F;
 		h += shiftHue;
-		h = HDUtils.clamp(h, 0, 0x3F);
+		h = clamp(h, minHue, maxHue);
 
-		int s = saturation != -1 ? saturation : jagexHsl >> 7 & 7;
+		int s = jagexHsl >> 7 & 7;
 		s += shiftSaturation;
-		s = HDUtils.clamp(s, 0, 7);
+		s = clamp(s, minSaturation, maxSaturation);
 
-		int l = lightness != -1 ? lightness : jagexHsl & 0x7F;
+		int l = jagexHsl & 0x7F;
 		l += shiftLightness;
-		l = HDUtils.clamp(l, 0, 0x7F);
+		l = clamp(l, minLightness, maxLightness);
 
 		return h << 10 | s << 7 | l;
 	}

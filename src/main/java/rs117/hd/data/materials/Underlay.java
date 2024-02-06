@@ -40,16 +40,40 @@ import rs117.hd.HdPlugin;
 import rs117.hd.config.SeasonalTheme;
 import rs117.hd.data.WaterType;
 import rs117.hd.data.environments.Area;
-import rs117.hd.utils.HDUtils;
 
 import static rs117.hd.scene.SceneUploader.SCENE_OFFSET;
+import static rs117.hd.utils.HDUtils.MAX_SNOW_LIGHTNESS;
+import static rs117.hd.utils.HDUtils.clamp;
+import static rs117.hd.utils.HDUtils.getSouthWesternMostTileColor;
+import static rs117.hd.utils.HDUtils.localToWorld;
 
 @Slf4j
 public enum Underlay {
 	// Seasonal Winter Textures
-	WINTER_GRASS(p -> p.ids().groundMaterial(GroundMaterial.SNOW_1).hue(0).saturation(0).shiftLightness(40).blended(true)),
-	WINTER_DIRT(p -> p.ids().groundMaterial(GroundMaterial.SNOW_2).hue(0).saturation(0).shiftLightness(40).blended(true)),
-	WINTER_GRUNGE(p -> p.ids().groundMaterial(GroundMaterial.SNOW_2).hue(0).saturation(0).shiftLightness(40).blended(true)),
+	WINTER_GRASS(p -> p
+		.ids()
+		.groundMaterial(GroundMaterial.SNOW_1)
+		.hue(0)
+		.saturation(0)
+		.shiftLightness(40)
+		.maxLightness(MAX_SNOW_LIGHTNESS)
+		.blended(true)),
+	WINTER_DIRT(p -> p
+		.ids()
+		.groundMaterial(GroundMaterial.SNOW_2)
+		.hue(0)
+		.saturation(0)
+		.shiftLightness(40)
+		.maxLightness(MAX_SNOW_LIGHTNESS)
+		.blended(true)),
+	WINTER_GRUNGE(p -> p
+		.ids()
+		.groundMaterial(GroundMaterial.SNOW_2)
+		.hue(0)
+		.saturation(0)
+		.shiftLightness(40)
+		.maxLightness(MAX_SNOW_LIGHTNESS)
+		.blended(true)),
 	WINTER_EDGEVILLE_PATH(p -> p
 		.ids()
 		.blendedAsOpposite(true)
@@ -63,13 +87,13 @@ public enum Underlay {
 	DEFAULT_SAND(p -> p.ids().groundMaterial(GroundMaterial.SAND)),
 	DEFAULT_GRASS(p -> p.ids().groundMaterial(GroundMaterial.OVERWORLD_GRASS_1)),
 	DEFAULT_DIRT(p -> p.ids().groundMaterial(GroundMaterial.DIRT)),
-	DEFAULT_SNOW_1(p -> p.ids().groundMaterial(GroundMaterial.SNOW_1)),
 	DEFAULT_GRUNGE(p -> p.ids().groundMaterial(GroundMaterial.GRUNGE)),
 	DEFAULT_ROCKY_GROUND(p -> p.ids().groundMaterial(GroundMaterial.ROCKY_CAVE_FLOOR)),
 	DEFAULT_OVERWORLD_ROCK(p -> p.ids().groundMaterial(GroundMaterial.OVERWORLD_ROCKY)),
 	DEFAULT_PACKED_EARTH(p -> p.ids().groundMaterial(GroundMaterial.PACKED_EARTH)),
 
 	GREEN_SAND_HUE_CORRECTION(p -> p.ids().groundMaterial(GroundMaterial.SAND).hue(8)),
+	VERTICAL_DIRT_FIX(p -> p.ids().groundMaterial(GroundMaterial.VERTICAL_DIRT)),
 
 	// Lumbridge
 	LUMBRIDGE_CASTLE_TILE(56, Area.LUMBRIDGE_CASTLE_BASEMENT, GroundMaterial.MARBLE_2_SEMIGLOSS, p -> p.blended(false)),
@@ -88,7 +112,7 @@ public enum Underlay {
 		.area(Area.IMCANDO_PENINSULA)
 		.replacementResolver(
 			(plugin, scene, tile, override) -> {
-				int[] hsl = HDUtils.getSouthWesternMostTileColor(tile);
+				int[] hsl = getSouthWesternMostTileColor(tile);
 				if (hsl == null)
 					return override;
 
@@ -182,6 +206,43 @@ public enum Underlay {
     // A Soul's Bane
     TOLNA_DUNGEON_ANGER_FLOOR(Area.TOLNA_DUNGEON_ANGER, GroundMaterial.DIRT, p -> p.ids(58, 58)),
 
+	// Asgarnia region
+	ASGARNIA_SNOWY_MOUNTAINS_COMPLEX_TILES(p -> p
+		.area(Area.ASGARNIA_MOUNTAINS)
+		.ids(58, 64)
+		.replacementResolver(
+			(plugin, scene, tile, override) -> {
+				int[] hsl = getSouthWesternMostTileColor(tile);
+				if (hsl == null)
+					return override;
+
+				if (hsl[1] == 0)
+					return WINTER_DIRT;
+
+				if (hsl[1] >= 5) {
+					switch (plugin.configSeasonalTheme) {
+						case SUMMER:
+							return DEFAULT_GRASS;
+						case WINTER:
+							return WINTER_GRASS;
+					}
+				}
+
+				if (hsl[1] >= 1 && hsl[1] <= 5) {
+					switch (plugin.configSeasonalTheme) {
+						case SUMMER:
+						case AUTUMN:
+							return VERTICAL_DIRT_FIX;
+						case WINTER:
+							return WINTER_DIRT;
+					}
+				}
+
+				return WINTER_DIRT;
+			}
+		)
+	),
+
 	// Burthorpe
 	WARRIORS_GUILD_FLOOR_1(Area.WARRIORS_GUILD, GroundMaterial.VARROCK_PATHS, p -> p.ids(55, 56)),
 
@@ -196,7 +257,7 @@ public enum Underlay {
 		.area(Area.CATHERBY)
 		.replacementResolver(
 			(plugin, scene, tile, override) -> {
-				int[] hsl = HDUtils.getSouthWesternMostTileColor(tile);
+				int[] hsl = getSouthWesternMostTileColor(tile);
 				if (hsl == null)
 					return override;
 
@@ -281,7 +342,7 @@ public enum Underlay {
 		.area(Area.KARAMJA)
 		.replacementResolver(
 			(plugin, scene, tile, override) -> {
-				int[] hsl = HDUtils.getSouthWesternMostTileColor(tile);
+				int[] hsl = getSouthWesternMostTileColor(tile);
 				if (hsl == null)
 					return override;
 
@@ -348,7 +409,7 @@ public enum Underlay {
 		.area(Area.TEMPLE_TREKKING_INSTANCES)
 		.replacementResolver(
 			(plugin, scene, tile, override) -> {
-				int[] hsl = HDUtils.getSouthWesternMostTileColor(tile);
+				int[] hsl = getSouthWesternMostTileColor(tile);
 				if (hsl == null)
 					return override;
 
@@ -385,7 +446,7 @@ public enum Underlay {
 		.area(Area.MOS_LE_HARMLESS_ALL)
 		.replacementResolver(
 			(plugin, scene, tile, override) -> {
-				int[] hsl = HDUtils.getSouthWesternMostTileColor(tile);
+				int[] hsl = getSouthWesternMostTileColor(tile);
 				if (hsl == null)
 					return override;
 
@@ -414,7 +475,7 @@ public enum Underlay {
 		.area(Area.ISLAND_OF_STONE)
 		.replacementResolver(
 			(plugin, scene, tile, override) -> {
-				int[] hsl = HDUtils.getSouthWesternMostTileColor(tile);
+				int[] hsl = getSouthWesternMostTileColor(tile);
 				if (hsl == null)
 					return override;
 
@@ -440,7 +501,7 @@ public enum Underlay {
 					}
 				}
 
-				return DEFAULT_SNOW_1;
+				return WINTER_DIRT;
 			}
 		)
 	),
@@ -459,7 +520,7 @@ public enum Underlay {
 		.ids(94, 129)
 		.replacementResolver(
 			(plugin, scene, tile, override) -> {
-				int[] hsl = HDUtils.getSouthWesternMostTileColor(tile);
+				int[] hsl = getSouthWesternMostTileColor(tile);
 				if (hsl == null)
 					return override;
 
@@ -527,7 +588,7 @@ public enum Underlay {
 		.ids(48, 49, 50, 51, 52, 53, 56, 61, 62, 63, 64, 65, 67, 68, 69, 70, 97, 98, 99, 100)
 		.replacementResolver(
 			(plugin, scene, tile, override) -> {
-				int[] hsl = HDUtils.getSouthWesternMostTileColor(tile);
+				int[] hsl = getSouthWesternMostTileColor(tile);
 				if (hsl == null)
 					return override;
 
@@ -554,7 +615,7 @@ public enum Underlay {
 		.ids(48, 50, 52, 62, 63, 67, 68, 69, 70, 97, 99, 100)
 		.replacementResolver(
 			(plugin, scene, tile, override) -> {
-				int[] hsl = HDUtils.getSouthWesternMostTileColor(tile);
+				int[] hsl = getSouthWesternMostTileColor(tile);
 				if (hsl == null)
 					return override;
 
@@ -630,7 +691,7 @@ public enum Underlay {
 		.area(Area.APE_ATOLL)
 		.replacementResolver(
 			(plugin, scene, tile, override) -> {
-				int[] hsl = HDUtils.getSouthWesternMostTileColor(tile);
+				int[] hsl = getSouthWesternMostTileColor(tile);
 				if (hsl == null)
 					return override;
 
@@ -682,7 +743,7 @@ public enum Underlay {
 		.groundMaterial(GroundMaterial.OVERWORLD_GRASS_1)
 		.replacementResolver(
 			(plugin, scene, tile, override) -> {
-				int[] hsl = HDUtils.getSouthWesternMostTileColor(tile);
+				int[] hsl = getSouthWesternMostTileColor(tile);
 				if (hsl == null)
 					return override;
 
@@ -919,7 +980,7 @@ public enum Underlay {
 		.area(Area.ISLE_OF_SOULS_HOT_ZONES)
 		.replacementResolver(
 			(plugin, scene, tile, override) -> {
-				int[] hsl = HDUtils.getSouthWesternMostTileColor(tile);
+				int[] hsl = getSouthWesternMostTileColor(tile);
 				if (hsl == null)
 					return override;
 
@@ -947,7 +1008,7 @@ public enum Underlay {
 		.area(Area.ISLE_OF_SOULS)
 		.replacementResolver(
 			(plugin, scene, tile, override) -> {
-				int[] hsl = HDUtils.getSouthWesternMostTileColor(tile);
+				int[] hsl = getSouthWesternMostTileColor(tile);
 				if (hsl == null)
 					return override;
 
@@ -1005,7 +1066,7 @@ public enum Underlay {
 		.area(Area.SNOW_REGIONS)
 		.groundMaterial(GroundMaterial.SNOW_1)
 		.replacementResolver((plugin, scene, tile, override) -> {
-			int[] hsl = HDUtils.getSouthWesternMostTileColor(tile);
+			int[] hsl = getSouthWesternMostTileColor(tile);
 			if (hsl == null)
 				return override;
 
@@ -1028,7 +1089,7 @@ public enum Underlay {
 				}
 			}
 
-			return DEFAULT_SNOW_1;
+			return WINTER_DIRT;
 		})
 	),
 	UNDERLAY_OVERWORLD_DIRT(GroundMaterial.VARIED_DIRT, p -> p
@@ -1052,7 +1113,7 @@ public enum Underlay {
 		.ids(13, 55, 61, 62, 63, 64, 65, 68, 69, 94, 96)
 		.replacementResolver(
 			(plugin, scene, tile, override) -> {
-				int[] hsl = HDUtils.getSouthWesternMostTileColor(tile);
+				int[] hsl = getSouthWesternMostTileColor(tile);
 				if (hsl == null)
 					return override;
 
@@ -1124,12 +1185,15 @@ public enum Underlay {
 	public final WaterType waterType;
 	public final boolean blended;
 	public final boolean blendedAsOverlay;
-	public final int hue;
 	public final int shiftHue;
-	public final int saturation;
+	public final int minHue;
+	public final int maxHue;
 	public final int shiftSaturation;
-	public final int lightness;
+	public final int minSaturation;
+	public final int maxSaturation;
 	public final int shiftLightness;
+	public final int minLightness;
+	public final int maxLightness;
 	public final TileOverrideResolver<Underlay> replacementResolver;
 
 	Underlay(int id, Area area, GroundMaterial material) {
@@ -1151,19 +1215,23 @@ public enum Underlay {
 	Underlay(Consumer<TileOverrideBuilder<Underlay>> consumer) {
 		TileOverrideBuilder<Underlay> builder = new TileOverrideBuilder<>();
 		consumer.accept(builder);
+		builder.normalize();
 		this.filterIds = builder.ids;
+		this.replacementResolver = builder.replacementResolver;
 		this.area = builder.area;
 		this.groundMaterial = builder.groundMaterial;
 		this.waterType = builder.waterType;
 		this.blended = builder.blended;
 		this.blendedAsOverlay = builder.blendedAsOpposite;
-		this.hue = builder.hue;
 		this.shiftHue = builder.shiftHue;
-		this.saturation = builder.saturation;
+		this.minHue = builder.minHue;
+		this.maxHue = builder.maxHue;
 		this.shiftSaturation = builder.shiftSaturation;
-		this.lightness = builder.lightness;
+		this.minSaturation = builder.minSaturation;
+		this.maxSaturation = builder.maxSaturation;
 		this.shiftLightness = builder.shiftLightness;
-		this.replacementResolver = builder.replacementResolver;
+		this.minLightness = builder.minLightness;
+		this.maxLightness = builder.maxLightness;
 	}
 
 	private static final Underlay[] ANY_MATCH;
@@ -1195,7 +1263,7 @@ public enum Underlay {
 	@NonNull
 	public static Underlay getUnderlayBeforeReplacements(Scene scene, Tile tile) {
 		LocalPoint localLocation = tile.getLocalLocation();
-		int[] worldPoint = HDUtils.localToWorld(scene, localLocation.getX(), localLocation.getY(), tile.getRenderLevel());
+		int[] worldPoint = localToWorld(scene, localLocation.getX(), localLocation.getY(), tile.getRenderLevel());
 
 		Underlay match = Underlay.NONE;
 		for (Underlay underlay : ANY_MATCH) {
@@ -1235,17 +1303,17 @@ public enum Underlay {
 	}
 
 	public int modifyColor(int jagexHsl) {
-		int h = hue != -1 ? hue : jagexHsl >> 10 & 0x3F;
+		int h = jagexHsl >> 10 & 0x3F;
 		h += shiftHue;
-		h = HDUtils.clamp(h, 0, 0x3F);
+		h = clamp(h, minHue, maxHue);
 
-		int s = saturation != -1 ? saturation : jagexHsl >> 7 & 7;
+		int s = jagexHsl >> 7 & 7;
 		s += shiftSaturation;
-		s = HDUtils.clamp(s, 0, 7);
+		s = clamp(s, minSaturation, maxSaturation);
 
-		int l = lightness != -1 ? lightness : jagexHsl & 0x7F;
+		int l = jagexHsl & 0x7F;
 		l += shiftLightness;
-		l = HDUtils.clamp(l, 0, 0x7F);
+		l = clamp(l, minLightness, maxLightness);
 
 		return h << 10 | s << 7 | l;
 	}
