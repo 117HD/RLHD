@@ -87,12 +87,11 @@ public enum Underlay {
 	DEFAULT_SAND(p -> p.ids().groundMaterial(GroundMaterial.SAND)),
 	DEFAULT_GRASS(p -> p.ids().groundMaterial(GroundMaterial.OVERWORLD_GRASS_1)),
 	DEFAULT_DIRT(p -> p.ids().groundMaterial(GroundMaterial.DIRT)),
-	DEFAULT_SNOW_1(p -> p.ids().groundMaterial(GroundMaterial.SNOW_1)),
 	DEFAULT_GRUNGE(p -> p.ids().groundMaterial(GroundMaterial.GRUNGE)),
 	DEFAULT_ROCKY_GROUND(p -> p.ids().groundMaterial(GroundMaterial.ROCKY_CAVE_FLOOR)),
 	DEFAULT_OVERWORLD_ROCK(p -> p.ids().groundMaterial(GroundMaterial.OVERWORLD_ROCKY)),
 	GREEN_SAND_HUE_CORRECTION(p -> p.ids().groundMaterial(GroundMaterial.SAND).hue(8)),
-	DEFAULT_DIRT_VERT(p -> p.ids().groundMaterial(GroundMaterial.DIRT_VERT)),
+	DEFAULT_DIRT_VERT(p -> p.ids().groundMaterial(GroundMaterial.VERTICAL_DIRT)),
 
 	// Lumbridge
 	LUMBRIDGE_CASTLE_TILE(56, Area.LUMBRIDGE_CASTLE_BASEMENT, GroundMaterial.MARBLE_2_SEMIGLOSS, p -> p.blended(false)),
@@ -186,18 +185,18 @@ public enum Underlay {
     // A Soul's Bane
     TOLNA_DUNGEON_ANGER_FLOOR(Area.TOLNA_DUNGEON_ANGER, GroundMaterial.DIRT, p -> p.ids(58, 58)),
 
-	// Falador Region
-	ICE_MOUNTAIN_COMPLEX_TILES(p -> p
-		.area(Area.ICE_MOUNTAIN)
+	// Asgarnia region
+	ASGARNIA_SNOWY_MOUNTAINS_COMPLEX_TILES(p -> p
+		.area(Area.ASGARNIA_MOUNTAINS)
 		.ids(58, 64)
 		.replacementResolver(
 			(plugin, scene, tile, override) -> {
-				int[] hsl = HDUtils.getSouthWesternMostTileColor(tile);
+				int[] hsl = getSouthWesternMostTileColor(tile);
 				if (hsl == null)
 					return override;
 
 				if (hsl[1] == 0)
-					return DEFAULT_SNOW_1;
+					return WINTER_DIRT;
 
 				if (hsl[1] >= 5) {
 					switch (plugin.configSeasonalTheme) {
@@ -218,7 +217,7 @@ public enum Underlay {
 					}
 				}
 
-				return DEFAULT_DIRT;
+				return WINTER_DIRT;
 			}
 		)
 	),
@@ -426,7 +425,7 @@ public enum Underlay {
 		.area(Area.MOS_LE_HARMLESS_ALL)
 		.replacementResolver(
 			(plugin, scene, tile, override) -> {
-				int[] hsl = HDUtils.getSouthWesternMostTileColor(tile);
+				int[] hsl = getSouthWesternMostTileColor(tile);
 				if (hsl == null)
 					return override;
 
@@ -481,7 +480,7 @@ public enum Underlay {
 					}
 				}
 
-				return DEFAULT_SNOW_1;
+				return WINTER_DIRT;
 			}
 		)
 	),
@@ -568,7 +567,7 @@ public enum Underlay {
 		.ids(48, 49, 50, 51, 52, 53, 56, 61, 62, 63, 64, 65, 67, 68, 69, 70, 97, 98, 99, 100)
 		.replacementResolver(
 			(plugin, scene, tile, override) -> {
-				int[] hsl = HDUtils.getSouthWesternMostTileColor(tile);
+				int[] hsl = getSouthWesternMostTileColor(tile);
 				if (hsl == null)
 					return override;
 
@@ -671,7 +670,7 @@ public enum Underlay {
 		.area(Area.APE_ATOLL)
 		.replacementResolver(
 			(plugin, scene, tile, override) -> {
-				int[] hsl = HDUtils.getSouthWesternMostTileColor(tile);
+				int[] hsl = getSouthWesternMostTileColor(tile);
 				if (hsl == null)
 					return override;
 
@@ -723,7 +722,7 @@ public enum Underlay {
 		.groundMaterial(GroundMaterial.OVERWORLD_GRASS_1)
 		.replacementResolver(
 			(plugin, scene, tile, override) -> {
-				int[] hsl = HDUtils.getSouthWesternMostTileColor(tile);
+				int[] hsl = getSouthWesternMostTileColor(tile);
 				if (hsl == null)
 					return override;
 
@@ -1069,7 +1068,7 @@ public enum Underlay {
 				}
 			}
 
-			return DEFAULT_SNOW_1;
+			return WINTER_DIRT;
 		})
 	),
 	UNDERLAY_OVERWORLD_DIRT(GroundMaterial.VARIED_DIRT, p -> p
