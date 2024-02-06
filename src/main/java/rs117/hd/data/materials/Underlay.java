@@ -185,14 +185,14 @@ public enum Underlay {
 		.groundMaterial(GroundMaterial.PACKED_EARTH)
 		.replacementResolver(
 			(plugin, scene, tile, override) -> {
-				int[] hsl = HDUtils.getSouthWesternMostTileColor(tile);
+				int[] hsl = getSouthWesternMostTileColor(tile);
 				if (hsl == null)
 					return override;
 
 				// Grass
-				if (hsl[0] >= 9) {
+				if (hsl[0] >= 9)
 					return DEFAULT_GRASS;
-				}
+
 				return DEFAULT_PACKED_EARTH;
 			}
 		)
