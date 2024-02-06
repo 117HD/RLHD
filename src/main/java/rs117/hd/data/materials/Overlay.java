@@ -88,7 +88,7 @@ public enum Overlay {
 		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_DIRT)
 	),
 	DEFAULT_GRASS(p -> p.ids().groundMaterial(GroundMaterial.OVERWORLD_GRASS_1)),
-	FALLY_REGION_DIRT_OVERLAY_VERT_FIX(p -> p.ids(22).area(Area.VERT_DIRT_FIX_NEAR_FALADOR).groundMaterial(GroundMaterial.DIRT_VERT)),
+	VERTICAL_DIRT_FIX_NEAR_FALADOR(p -> p.ids(22).area(Area.VERTICAL_DIRT_FIX_NEAR_FALADOR).groundMaterial(GroundMaterial.VERTICAL_DIRT)),
 
 	// Tutorial Island
 	TUTORIAL_ISLAND_KITCHEN_TILE_1(9, Area.TUTORIAL_ISLAND_KITCHEN, GroundMaterial.MARBLE_1_SEMIGLOSS, p -> p.blended(false)),
@@ -415,7 +415,7 @@ public enum Overlay {
 	WARRIORS_GUILD_CARPET(86, Area.WARRIORS_GUILD, GroundMaterial.CARPET, p -> p.blended(false)),
 
 	// Trollweiss Region
-	TROLLHEIM_WALLS(83, Area.TROLLHEIM, GroundMaterial.DIRT_VERT),
+	TROLLHEIM_WALLS(83, Area.TROLLHEIM, GroundMaterial.VERTICAL_DIRT),
 	WEISS_FIREPIT_FIX(171, Area.WEISS_FIRE_PIT, GroundMaterial.DIRT),
 	WEISS_TENT_INTERIOR(171, Area.INTERIOR_WEISS_THRONE_TENT, GroundMaterial.VARROCK_PATHS),
 	WEISS_SNOWY_PATH(171, Area.WEISS_REGION, GroundMaterial.WINTER_JAGGED_STONE_TILE),
@@ -433,7 +433,7 @@ public enum Overlay {
 		.area(Area.TAVERLEY_DUNGEON)
 		.ids(2, 10, 34)
 	),
-	WHITE_WOLF_MOUNTAIN_DIRT_OVERLAY(p -> p.ids(22).area(Area.WHITE_WOLF_MOUNTAIN).groundMaterial(GroundMaterial.DIRT_VERT)),
+	ASGARNIA_MOUNTAINS_VERTICAL_DIRT_FIX(p -> p.ids(22).area(Area.ASGARNIA_MOUNTAINS).groundMaterial(GroundMaterial.VERTICAL_DIRT)),
 	ICE_QUEENS_SYMBOL(33, Area.ICE_QUEENS_DUNGEON, GroundMaterial.ICE_1_HIGHGLOSS),
 	ICE_QUEENS_DUNGEON_OVERLAY(Area.ICE_QUEENS_DUNGEON, GroundMaterial.SNOW_1, p -> p.ids(42).lightness(100).hue(0).saturation(0)),
 
