@@ -88,6 +88,7 @@ public enum Overlay {
 		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_DIRT)
 	),
 	DEFAULT_GRASS(p -> p.ids().groundMaterial(GroundMaterial.OVERWORLD_GRASS_1)),
+	FALLY_REGION_DIRT_OVERLAY_VERT_FIX(p -> p.ids(22).area(Area.VERT_DIRT_FIX_NEAR_FALADOR).groundMaterial(GroundMaterial.DIRT_VERT)),
 
 	// Tutorial Island
 	TUTORIAL_ISLAND_KITCHEN_TILE_1(9, Area.TUTORIAL_ISLAND_KITCHEN, GroundMaterial.MARBLE_1_SEMIGLOSS, p -> p.blended(false)),
@@ -393,6 +394,7 @@ public enum Overlay {
 		.blended(true)
 	),
 
+
 	// Goblin Village
 	GOBLIN_VILLAGE_TILES_BLEND_FIX_OVERLAY(
 		Area.GOBLIN_VILLAGE_COOKS_CHAMBER_BLEND_FIX,
@@ -431,6 +433,7 @@ public enum Overlay {
 		.area(Area.TAVERLEY_DUNGEON)
 		.ids(2, 10, 34)
 	),
+	WHITE_WOLF_MOUNTAIN_DIRT_OVERLAY(p -> p.ids(22).area(Area.WHITE_WOLF_MOUNTAIN).groundMaterial(GroundMaterial.DIRT_VERT)),
 	ICE_QUEENS_SYMBOL(33, Area.ICE_QUEENS_DUNGEON, GroundMaterial.ICE_1_HIGHGLOSS),
 	ICE_QUEENS_DUNGEON_OVERLAY(Area.ICE_QUEENS_DUNGEON, GroundMaterial.SNOW_1, p -> p.ids(42).lightness(100).hue(0).saturation(0)),
 
@@ -1027,6 +1030,7 @@ public enum Overlay {
 	// Random events
 	PRISON_PETE_TILE_1(2, Area.RANDOM_EVENT_PRISON_PETE, GroundMaterial.MARBLE_1, p -> p.blended(false)),
 	PRISON_PETE_TILE_2(-125, Area.RANDOM_EVENT_PRISON_PETE, GroundMaterial.MARBLE_2, p -> p.blended(false)),
+	CLASSROOM(p -> p.ids(102).area(Area.RANDOM_EVENT_CLASSROOM).groundMaterial(GroundMaterial.HD_WOOD_PLANKS_1)),
 
 	// Elid Cave fix
 	ELID_CAVE_WATER_FIX(-126, Area.ELID_CAVE, WaterType.WATER),
