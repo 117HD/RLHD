@@ -476,9 +476,41 @@ class SceneUploader {
 				neNormals = sceneContext.vertexTerrainNormals.getOrDefault(neVertexKey, neNormals);
 				nwNormals = sceneContext.vertexTerrainNormals.getOrDefault(nwVertexKey, nwNormals);
 
-				if (plugin.configGroundBlending && !proceduralGenerator.useDefaultColor(scene, tile) && tileTexture == -1) {
-					// get the vertices' colors and textures from hashmaps
+				boolean useBlendedMaterialAndColor =
+					plugin.configGroundBlending && !proceduralGenerator.useDefaultColor(scene, tile) && tileTexture == -1;
 
+				GroundMaterial groundMaterial = null;
+				Overlay overlay = Overlay.getOverlay(scene, tile, plugin);
+				if (overlay != Overlay.NONE) {
+					groundMaterial = overlay.groundMaterial;
+					uvOrientation = overlay.uvOrientation;
+					uvScale = overlay.uvScale;
+					if (!useBlendedMaterialAndColor) {
+						swColor = overlay.modifyColor(swColor);
+						seColor = overlay.modifyColor(seColor);
+						nwColor = overlay.modifyColor(nwColor);
+						neColor = overlay.modifyColor(neColor);
+					}
+				} else {
+					Underlay underlay = Underlay.getUnderlay(scene, tile, plugin);
+					if (underlay != Underlay.NONE) {
+						groundMaterial = underlay.groundMaterial;
+						uvOrientation = underlay.uvOrientation;
+						uvScale = underlay.uvScale;
+						if (!useBlendedMaterialAndColor) {
+							swColor = underlay.modifyColor(swColor);
+							seColor = underlay.modifyColor(seColor);
+							nwColor = underlay.modifyColor(nwColor);
+							neColor = underlay.modifyColor(neColor);
+						}
+					} else if (tileTexture == -1) {
+						// Fall back to the default ground material if the tile is untextured
+						groundMaterial = underlay.groundMaterial;
+					}
+				}
+
+				if (useBlendedMaterialAndColor) {
+					// get the vertices' colors and textures from hashmaps
 					swColor = sceneContext.vertexTerrainColor.getOrDefault(swVertexKey, swColor);
 					seColor = sceneContext.vertexTerrainColor.getOrDefault(seVertexKey, seColor);
 					neColor = sceneContext.vertexTerrainColor.getOrDefault(neVertexKey, neColor);
@@ -490,40 +522,11 @@ class SceneUploader {
 						neMaterial = sceneContext.vertexTerrainTexture.getOrDefault(neVertexKey, neMaterial);
 						nwMaterial = sceneContext.vertexTerrainTexture.getOrDefault(nwVertexKey, nwMaterial);
 					}
-				} else {
-					GroundMaterial groundMaterial = null;
-					Overlay overlay = Overlay.getOverlay(scene, tile, plugin);
-					if (overlay != Overlay.NONE)
-					{
-						groundMaterial = overlay.groundMaterial;
-						uvOrientation = overlay.uvOrientation;
-						uvScale = overlay.uvScale;
-						swColor = overlay.modifyColor(swColor);
-						seColor = overlay.modifyColor(seColor);
-						nwColor = overlay.modifyColor(nwColor);
-						neColor = overlay.modifyColor(neColor);
-					} else {
-						Underlay underlay = Underlay.getUnderlay(scene, tile, plugin);
-						if (underlay != Underlay.NONE) {
-							groundMaterial = underlay.groundMaterial;
-							uvOrientation = underlay.uvOrientation;
-							uvScale = underlay.uvScale;
-							swColor = underlay.modifyColor(swColor);
-							seColor = underlay.modifyColor(seColor);
-							nwColor = underlay.modifyColor(nwColor);
-							neColor = underlay.modifyColor(neColor);
-						} else if (tileTexture == -1) {
-							// Fall back to the default ground material if the tile is untextured
-							groundMaterial = underlay.groundMaterial;
-						}
-					}
-
-					if (plugin.configGroundTextures && groundMaterial != null) {
-						swMaterial = groundMaterial.getRandomMaterial(tileZ, baseX + tileX, baseY + tileY);
-						seMaterial = groundMaterial.getRandomMaterial(tileZ, baseX + tileX + 1, baseY + tileY);
-						nwMaterial = groundMaterial.getRandomMaterial(tileZ, baseX + tileX, baseY + tileY + 1);
-						neMaterial = groundMaterial.getRandomMaterial(tileZ, baseX + tileX + 1, baseY + tileY + 1);
-					}
+				} else if (plugin.configGroundTextures && groundMaterial != null) {
+					swMaterial = groundMaterial.getRandomMaterial(tileZ, baseX + tileX, baseY + tileY);
+					seMaterial = groundMaterial.getRandomMaterial(tileZ, baseX + tileX + 1, baseY + tileY);
+					nwMaterial = groundMaterial.getRandomMaterial(tileZ, baseX + tileX, baseY + tileY + 1);
+					neMaterial = groundMaterial.getRandomMaterial(tileZ, baseX + tileX + 1, baseY + tileY + 1);
 				}
 			}
 			else
@@ -845,12 +848,46 @@ class SceneUploader {
 					normalsB = sceneContext.vertexTerrainNormals.getOrDefault(vertexKeyB, normalsB);
 					normalsC = sceneContext.vertexTerrainNormals.getOrDefault(vertexKeyC, normalsC);
 
-					if (plugin.configGroundBlending &&
+					boolean useBlendedMaterialAndColor =
+						plugin.configGroundBlending &&
 						!(ProceduralGenerator.isOverlayFace(tile, face) && proceduralGenerator.useDefaultColor(scene, tile)) &&
-						textureIndex == -1
-					) {
-						// get the vertices' colors and textures from hashmaps
+						textureIndex == -1;
 
+					GroundMaterial groundMaterial = null;
+					if (ProceduralGenerator.isOverlayFace(tile, face)) {
+						Overlay overlay = Overlay.getOverlay(scene, tile, plugin);
+						if (overlay != Overlay.NONE) {
+							groundMaterial = overlay.groundMaterial;
+							uvOrientation = overlay.uvOrientation;
+							uvScale = overlay.uvScale;
+							if (!useBlendedMaterialAndColor) {
+								colorA = overlay.modifyColor(colorA);
+								colorB = overlay.modifyColor(colorB);
+								colorC = overlay.modifyColor(colorC);
+							}
+						} else if (textureIndex == -1) {
+							// Fall back to the default ground material if the tile is untextured
+							groundMaterial = overlay.groundMaterial;
+						}
+					} else {
+						Underlay underlay = Underlay.getUnderlay(scene, tile, plugin);
+						if (underlay != Underlay.NONE) {
+							groundMaterial = underlay.groundMaterial;
+							uvOrientation = underlay.uvOrientation;
+							uvScale = underlay.uvScale;
+							if (!useBlendedMaterialAndColor) {
+								colorA = underlay.modifyColor(colorA);
+								colorB = underlay.modifyColor(colorB);
+								colorC = underlay.modifyColor(colorC);
+							}
+						} else if (textureIndex == -1) {
+							// Fall back to the default ground material if the tile is untextured
+							groundMaterial = underlay.groundMaterial;
+						}
+					}
+
+					if (useBlendedMaterialAndColor) {
+						// get the vertices' colors and textures from hashmaps
 						colorA = sceneContext.vertexTerrainColor.getOrDefault(vertexKeyA, colorA);
 						colorB = sceneContext.vertexTerrainColor.getOrDefault(vertexKeyB, colorB);
 						colorC = sceneContext.vertexTerrainColor.getOrDefault(vertexKeyC, colorC);
@@ -860,53 +897,22 @@ class SceneUploader {
 							materialB = sceneContext.vertexTerrainTexture.getOrDefault(vertexKeyB, materialB);
 							materialC = sceneContext.vertexTerrainTexture.getOrDefault(vertexKeyC, materialC);
 						}
-					} else {
-						GroundMaterial groundMaterial = null;
-						if (ProceduralGenerator.isOverlayFace(tile, face)) {
-							Overlay overlay = Overlay.getOverlay(scene, tile, plugin);
-							if (overlay != Overlay.NONE) {
-								groundMaterial = overlay.groundMaterial;
-								uvOrientation = overlay.uvOrientation;
-								uvScale = overlay.uvScale;
-								colorA = overlay.modifyColor(colorA);
-								colorB = overlay.modifyColor(colorB);
-								colorC = overlay.modifyColor(colorC);
-							} else if (textureIndex == -1) {
-								// Fall back to the default ground material if the tile is untextured
-								groundMaterial = overlay.groundMaterial;
-							}
-						} else {
-							Underlay underlay = Underlay.getUnderlay(scene, tile, plugin);
-							if (underlay != Underlay.NONE) {
-								groundMaterial = underlay.groundMaterial;
-								uvOrientation = underlay.uvOrientation;
-								uvScale = underlay.uvScale;
-								colorA = underlay.modifyColor(colorA);
-								colorB = underlay.modifyColor(colorB);
-								colorC = underlay.modifyColor(colorC);
-							} else if (textureIndex == -1) {
-								// Fall back to the default ground material if the tile is untextured
-								groundMaterial = underlay.groundMaterial;
-							}
-						}
-
-						if (plugin.configGroundTextures && groundMaterial != null) {
-							materialA = groundMaterial.getRandomMaterial(
-								tileZ,
-								baseX + tileX + (int) Math.floor((float) localVertices[0][0] / LOCAL_TILE_SIZE),
-								baseY + tileY + (int) Math.floor((float) localVertices[0][1] / LOCAL_TILE_SIZE)
-							);
-							materialB = groundMaterial.getRandomMaterial(
-								tileZ,
-								baseX + tileX + (int) Math.floor((float) localVertices[1][0] / LOCAL_TILE_SIZE),
-								baseY + tileY + (int) Math.floor((float) localVertices[1][1] / LOCAL_TILE_SIZE)
-							);
-							materialC = groundMaterial.getRandomMaterial(
-								tileZ,
-								baseX + tileX + (int) Math.floor((float) localVertices[2][0] / LOCAL_TILE_SIZE),
-								baseY + tileY + (int) Math.floor((float) localVertices[2][1] / LOCAL_TILE_SIZE)
-							);
-						}
+					} else if (plugin.configGroundTextures && groundMaterial != null) {
+						materialA = groundMaterial.getRandomMaterial(
+							tileZ,
+							baseX + tileX + (int) Math.floor((float) localVertices[0][0] / LOCAL_TILE_SIZE),
+							baseY + tileY + (int) Math.floor((float) localVertices[0][1] / LOCAL_TILE_SIZE)
+						);
+						materialB = groundMaterial.getRandomMaterial(
+							tileZ,
+							baseX + tileX + (int) Math.floor((float) localVertices[1][0] / LOCAL_TILE_SIZE),
+							baseY + tileY + (int) Math.floor((float) localVertices[1][1] / LOCAL_TILE_SIZE)
+						);
+						materialC = groundMaterial.getRandomMaterial(
+							tileZ,
+							baseX + tileX + (int) Math.floor((float) localVertices[2][0] / LOCAL_TILE_SIZE),
+							baseY + tileY + (int) Math.floor((float) localVertices[2][1] / LOCAL_TILE_SIZE)
+						);
 					}
 				} else {
 					// set colors for the shoreline to create a foam effect in the water shader
