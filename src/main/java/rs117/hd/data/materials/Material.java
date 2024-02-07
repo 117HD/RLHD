@@ -698,7 +698,7 @@ public enum Material {
 	OOZE(GRAY_65, p -> p
 		.setSpecular(1.5f, 600)
 	),
-	BONE(GRUNGE_2, p -> p.setSpecular(0.25f,20)),
+	BONE(GRUNGE_2, p -> p.setSpecular(0.25f, 20)),
 
 	// Aliases for separately replacing textures of different trees
 	LEAVES_YELLOW_SIDE(LEAVES_SIDE),
