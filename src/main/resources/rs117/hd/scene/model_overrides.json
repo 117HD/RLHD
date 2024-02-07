@@ -2987,6 +2987,12 @@
       3169,
       3170,
       3171,
+      5271,
+      5272,
+      5273,
+      5274,
+      5275,
+      5276,
       14914,
       15634,
       15635
@@ -6483,7 +6489,10 @@
       20367,
       25775,
       25776,
-      25928
+      25928,
+      30810,
+      30812,
+      30814
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -6533,6 +6542,19 @@
     ],
     "uvType": "BOX",
     "flatNormals": true
+  },
+  {
+    "description": "Fossil Island - Objects - Wooden - Boxes",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      30816,
+      30817
+    ],
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512,
+    "uvOrientationY": 768
   },
   {
     "description": "Wall - Decoration - Wooden - Crate",
@@ -7866,6 +7888,7 @@
       4271,
       10491,
       12885,
+      15981,
       17146,
       20065,
       24335
@@ -9267,6 +9290,18 @@
     "uvOrientation": 256
   },
   {
+    "description": "Jungle Tree Large",
+    "baseMaterial": "PLANT_GRUNGE_2",
+    "objectIds": [
+      15948,
+      15951,
+      15954
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 256
+  },
+  {
     "description": "Jungle Tree Large - Unusual Plant",
     "baseMaterial": "PLANT_GRUNGE_2",
     "objectIds": [
@@ -9287,9 +9322,15 @@
       1371,
       1372,
       1373,
+      1375,
+      1376,
+      1377,
       4845,
       4846,
-      4847
+      4847,
+      15957,
+      15958,
+      15959
     ],
     "uvType": "BOX",
     "uvScale": 0.62,
@@ -13808,6 +13849,42 @@
     "uvScale": 1.2,
     "flatNormals": true,
     "uvOrientationY": 512
+  },
+  {
+    "description": "Mos Le Harmless - Objects - Cave Entrance",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [ 3650, 3651, 3652, 3752, 3753, 3754 ],
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 0.9
+  },
+  {
+    "description": "Fossil Island - Outhouse Walls",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 10372, 11763 ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Fossil Island - Outhouse Top",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 12284 ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512
+  },
+  {
+    "description": "Fossil Island - Stone - Manor Walls",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [ 30672, 30675, 30676, 30677 ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 768
+  },
+  {
+    "description": "Pest Control boat flags",
+    "objectIds": [ 25621, 25622, 25625 ],
+    "flatNormals": true
   },
   {
     "description": "Objects - Stone - Large Gravestone - Large",
