@@ -13864,5 +13864,10 @@
     "uvType": "BOX",
     "uvScale": 0.5,
     "uvOrientation": 768
+  },
+  {
+    "description": "Pest Control boat flags",
+    "objectIds": [ 25621, 25622, 25625 ],
+    "flatNormals": true
   }
 ]

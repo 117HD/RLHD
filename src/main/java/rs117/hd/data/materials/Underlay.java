@@ -971,6 +971,11 @@ public enum Underlay {
 
 	SHIP_SAILING_WATER(p -> p.area(Area.SHIP_SAILING).ids(75).waterType(WaterType.WATER_FLAT)),
 	GIANT_MOLE_LAIR_DIRT(p -> p.ids(63, 65).area(Area.GIANT_MOLE_LAIR).groundMaterial(GroundMaterial.VARIED_DIRT)),
+	PEST_CONTROL(p -> p
+		.ids(59, 121, 142)
+		.area(Area.PEST_CONTROL)
+		.groundMaterial(GroundMaterial.DIRT)
+		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_DIRT)),
 
 	// Cutscenes
 	CANOE_CUTSCENE_GRASS(Area.CANOE_CUTSCENE, GroundMaterial.GRASS_SCROLLING, p -> p.ids(48, 50, 63)),
@@ -1194,6 +1199,8 @@ public enum Underlay {
 	public final int shiftLightness;
 	public final int minLightness;
 	public final int maxLightness;
+	public final int uvOrientation;
+	public final float uvScale;
 	public final TileOverrideResolver<Underlay> replacementResolver;
 
 	Underlay(int id, Area area, GroundMaterial material) {
@@ -1232,6 +1239,8 @@ public enum Underlay {
 		this.shiftLightness = builder.shiftLightness;
 		this.minLightness = builder.minLightness;
 		this.maxLightness = builder.maxLightness;
+		this.uvOrientation = builder.uvOrientation;
+		this.uvScale = builder.uvScale;
 	}
 
 	private static final Underlay[] ANY_MATCH;
