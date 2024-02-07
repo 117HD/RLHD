@@ -4906,6 +4906,7 @@
       26131,
       26132,
       26133,
+      32534,
       39685,
       39686,
       44050,
@@ -6196,7 +6197,11 @@
       2383,
       6397,
       6399,
+      7113,
+      7114,
       7115,
+      7116,
+      7119,
       12049,
       12051,
       12706,
@@ -7946,12 +7951,13 @@
     "uvScale": 0.4
   },
   {
-    "description": "Ardougne - Objects - Metallic - Manhole",
+    "description": "Objects - Metallic - Manhole",
     "baseMaterial": "METALLIC_2_SEMIGLOSS",
     "objectIds": [
-      881
+      881,
+      882
     ],
-    "uvType": "MODEL_XZ"
+    "uvType": "BOX"
   },
   {
     "description": "Objects - Stone - Large Gravestone - Large",
@@ -8027,7 +8033,8 @@
     "objectIds": [
       1250,
       1251,
-      1252
+      1252,
+      48467
     ],
     "uvType": "BOX",
     "uvScale": 0.4
@@ -10458,9 +10465,10 @@
   },
   {
     "description": "Metallic Pipes",
-    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
     "objectIds": [
       872,
+      877,
       3421,
       6480
     ]
@@ -12072,6 +12080,7 @@
     "description": "Objects - Bush - Dead",
     "baseMaterial": "BARK",
     "objectIds": [
+      1122,
       1123
     ],
     "uvType": "BOX",
@@ -12752,19 +12761,26 @@
   },
   {
     "description": "Skeleton",
-    "baseMaterial": "GRUNGE_2",
-    "objectIds": [ 33196 ],
+    "baseMaterial": "BONE",
+    "objectIds": [ 660, 663, 33196, 50003, 50004 ],
     "uvType": "BOX",
     "uvOrientation": 768,
     "uvScale": 0.75
   },
   {
     "description": "Bones - Medium",
-    "baseMaterial": "GRUNGE_2",
+    "baseMaterial": "BONE",
     "objectIds": [ 33323, 33324, 33325, 33326 ],
     "uvType": "BOX",
     "uvOrientation": 768,
     "uvScale": 0.6
+  },
+  {
+    "description": "Ground Objects - Bones",
+    "baseMaterial": "BONE",
+    "objectIds": [ 44837, 44838, 44839, 44840 ],
+    "uvType": "BOX",
+    "uvOrientation": 256
   },
   {
     "description": "Weiss Snowy Rocks",
@@ -13869,5 +13885,54 @@
     "description": "Pest Control boat flags",
     "objectIds": [ 25621, 25622, 25625 ],
     "flatNormals": true
+  },
+  {
+    "description": "Objects - Metallic - Metallic Ladder",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [ 11806 ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Varrock Sewers - Objects - Metallic - Scurrius Entrance Bars",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      14203, 14207, 14208, 14839,
+      27120, 27123, 27124, 27125,
+      27126, 27127, 27128
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 128
+  },
+  {
+    "description": "Ground Objects - Wooden - Planks",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 42416, 42417 ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 1.1
+  },
+  {
+    "description": "Ground Objects - Wooden - Planks - Diag",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 42423 ],
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 1.1
+  },
+  {
+    "description": "Objects - Scurrius Ceiling Roots",
+    "baseMaterial": "LIGHT_BARK",
+    "objectIds": [ 50001, 50002 ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 342
+  },
+  {
+    "description": "Objects - Scurrius Roots",
+    "baseMaterial": "LIGHT_BARK",
+    "objectIds": [ 50005, 50006, 50007, 50008, 50009, 50010 ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 342
   }
 ]
