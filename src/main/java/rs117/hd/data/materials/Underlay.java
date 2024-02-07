@@ -1179,6 +1179,8 @@ public enum Underlay {
 	public final int shiftLightness;
 	public final int minLightness;
 	public final int maxLightness;
+	public final int uvOrientation;
+	public final float uvScale;
 	public final TileOverrideResolver<Underlay> replacementResolver;
 
 	Underlay(int id, Area area, GroundMaterial material) {
@@ -1217,6 +1219,8 @@ public enum Underlay {
 		this.shiftLightness = builder.shiftLightness;
 		this.minLightness = builder.minLightness;
 		this.maxLightness = builder.maxLightness;
+		this.uvOrientation = builder.uvOrientation;
+		this.uvScale = builder.uvScale;
 	}
 
 	private static final Underlay[] ANY_MATCH;

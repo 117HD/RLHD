@@ -35,6 +35,8 @@ class TileOverrideBuilder<T> {
 	public int shiftLightness = 0;
 	public int minLightness = 0;
 	public int maxLightness = 127;
+	public int uvOrientation = 0;
+	public float uvScale = 1;
 	public TileOverrideResolver<T> replacementResolver;
 
 	void normalize() {
@@ -83,6 +85,11 @@ class TileOverrideBuilder<T> {
 	TileOverrideBuilder<T> waterType(WaterType waterType) {
 		this.waterType = waterType;
 		this.groundMaterial = GroundMaterial.NONE;
+		return this;
+	}
+
+	TileOverrideBuilder<T> uvScale(float uvScale) {
+		this.uvScale = 1 / uvScale;
 		return this;
 	}
 

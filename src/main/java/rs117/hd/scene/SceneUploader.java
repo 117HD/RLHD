@@ -435,6 +435,9 @@ class SceneUploader {
 		int nwVertexKey = vertexKeys[2];
 		int neVertexKey = vertexKeys[3];
 
+		int uvOrientation = 0;
+		float uvScale = 1;
+
 		// Ignore certain tiles that aren't supposed to be visible,
 		// but which we can still make a height-adjusted version of for underwater
 		if (sceneTilePaint.getNeColor() != 12345678)
@@ -493,6 +496,8 @@ class SceneUploader {
 					if (overlay != Overlay.NONE)
 					{
 						groundMaterial = overlay.groundMaterial;
+						uvOrientation = overlay.uvOrientation;
+						uvScale = overlay.uvScale;
 						swColor = overlay.modifyColor(swColor);
 						seColor = overlay.modifyColor(seColor);
 						nwColor = overlay.modifyColor(nwColor);
@@ -501,6 +506,8 @@ class SceneUploader {
 						Underlay underlay = Underlay.getUnderlay(scene, tile, plugin);
 						if (underlay != Underlay.NONE) {
 							groundMaterial = underlay.groundMaterial;
+							uvOrientation = underlay.uvOrientation;
+							uvScale = underlay.uvScale;
 							swColor = underlay.modifyColor(swColor);
 							seColor = underlay.modifyColor(seColor);
 							nwColor = underlay.modifyColor(nwColor);
@@ -581,14 +588,26 @@ class SceneUploader {
 			int packedMaterialDataNE = modelPusher.packMaterialData(
 				neMaterial, tileTexture, ModelOverride.NONE, UvType.GEOMETRY, neVertexIsOverlay);
 
-			sceneContext.stagingBufferUvs.ensureCapacity(24);
-			sceneContext.stagingBufferUvs.put(0, 0, 0, packedMaterialDataNE);
-			sceneContext.stagingBufferUvs.put(1, 0, 0, packedMaterialDataNW);
-			sceneContext.stagingBufferUvs.put(0, 1, 0, packedMaterialDataSE);
+			float uvcos = -uvScale, uvsin = 0;
+			if (uvOrientation % 2048 != 0) {
+				float rad = -uvOrientation * (float) UNIT;
+				uvcos = (float) Math.cos(rad) * -uvScale;
+				uvsin = (float) Math.sin(rad) * -uvScale;
+			}
+			float uvx = baseX + tileX;
+			float uvy = baseY + tileY;
+			float tmp = uvx;
+			uvx = uvx * uvcos - uvy * uvsin;
+			uvy = tmp * uvsin + uvy * uvcos;
 
-			sceneContext.stagingBufferUvs.put(1, 1, 0, packedMaterialDataSW);
-			sceneContext.stagingBufferUvs.put(0, 1, 0, packedMaterialDataSE);
-			sceneContext.stagingBufferUvs.put(1, 0, 0, packedMaterialDataNW);
+			sceneContext.stagingBufferUvs.ensureCapacity(24);
+			sceneContext.stagingBufferUvs.put(uvx, uvy, 0, packedMaterialDataNE);
+			sceneContext.stagingBufferUvs.put(uvx - uvcos, uvy - uvsin, 0, packedMaterialDataNW);
+			sceneContext.stagingBufferUvs.put(uvx + uvsin, uvy - uvcos, 0, packedMaterialDataSE);
+
+			sceneContext.stagingBufferUvs.put(uvx - uvcos + uvsin, uvy - uvsin - uvcos, 0, packedMaterialDataSW);
+			sceneContext.stagingBufferUvs.put(uvx + uvsin, uvy - uvcos, 0, packedMaterialDataSE);
+			sceneContext.stagingBufferUvs.put(uvx - uvcos, uvy - uvsin, 0, packedMaterialDataNW);
 
 			uvBufferLength += 6;
 		}
@@ -795,6 +814,9 @@ class SceneUploader {
 			Material materialB = Material.NONE;
 			Material materialC = Material.NONE;
 
+			int uvOrientation = 0;
+			float uvScale = 1;
+
 			float[] normalsA = UP_NORMAL;
 			float[] normalsB = UP_NORMAL;
 			float[] normalsC = UP_NORMAL;
@@ -844,6 +866,8 @@ class SceneUploader {
 							Overlay overlay = Overlay.getOverlay(scene, tile, plugin);
 							if (overlay != Overlay.NONE) {
 								groundMaterial = overlay.groundMaterial;
+								uvOrientation = overlay.uvOrientation;
+								uvScale = overlay.uvScale;
 								colorA = overlay.modifyColor(colorA);
 								colorB = overlay.modifyColor(colorB);
 								colorC = overlay.modifyColor(colorC);
@@ -855,6 +879,8 @@ class SceneUploader {
 							Underlay underlay = Underlay.getUnderlay(scene, tile, plugin);
 							if (underlay != Underlay.NONE) {
 								groundMaterial = underlay.groundMaterial;
+								uvOrientation = underlay.uvOrientation;
+								uvScale = underlay.uvScale;
 								colorA = underlay.modifyColor(colorA);
 								colorB = underlay.modifyColor(colorB);
 								colorC = underlay.modifyColor(colorC);
@@ -917,17 +943,29 @@ class SceneUploader {
 
 			bufferLength += 3;
 
-			int packedMaterialDataA = modelPusher.packMaterialData(
-				materialA, textureIndex, ModelOverride.NONE, UvType.GEOMETRY, vertexAIsOverlay);
-			int packedMaterialDataB = modelPusher.packMaterialData(
-				materialB, textureIndex, ModelOverride.NONE, UvType.GEOMETRY, vertexBIsOverlay);
-			int packedMaterialDataC = modelPusher.packMaterialData(
-				materialC, textureIndex, ModelOverride.NONE, UvType.GEOMETRY, vertexCIsOverlay);
+			int[] packedMaterialData = {
+				modelPusher.packMaterialData(materialA, textureIndex, ModelOverride.NONE, UvType.GEOMETRY, vertexAIsOverlay),
+				modelPusher.packMaterialData(materialB, textureIndex, ModelOverride.NONE, UvType.GEOMETRY, vertexBIsOverlay),
+				modelPusher.packMaterialData(materialC, textureIndex, ModelOverride.NONE, UvType.GEOMETRY, vertexCIsOverlay)
+			};
+
+			float uvcos = -uvScale, uvsin = 0;
+			if (uvOrientation % 2048 != 0) {
+				float rad = -uvOrientation * (float) UNIT;
+				uvcos = (float) Math.cos(rad) * -uvScale;
+				uvsin = (float) Math.sin(rad) * -uvScale;
+			}
 
 			sceneContext.stagingBufferUvs.ensureCapacity(12);
-			sceneContext.stagingBufferUvs.put(1 - localVertices[0][0] / 128f, 1 - localVertices[0][1] / 128f, 0, packedMaterialDataA);
-			sceneContext.stagingBufferUvs.put(1 - localVertices[1][0] / 128f, 1 - localVertices[1][1] / 128f, 0, packedMaterialDataB);
-			sceneContext.stagingBufferUvs.put(1 - localVertices[2][0] / 128f, 1 - localVertices[2][1] / 128f, 0, packedMaterialDataC);
+			for (int i = 0; i < 3; i++) {
+				float uvx = baseX + tileX + localVertices[i][0] / 128f - 1;
+				float uvy = baseY + tileY + localVertices[i][1] / 128f - 1;
+				float tmp = uvx;
+				uvx = uvx * uvcos - uvy * uvsin;
+				uvy = tmp * uvsin + uvy * uvcos;
+
+				sceneContext.stagingBufferUvs.put(uvx, uvy, 0, packedMaterialData[i]);
+			}
 
 			uvBufferLength += 3;
 		}
