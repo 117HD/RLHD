@@ -958,7 +958,7 @@ public enum Underlay {
 		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_DIRT)),
 
 	ABYSSAL_FLOOR(p -> p
-		.ids(121, 122)
+		.ids(2, 121, 122)
 		.area(Area.ABYSS)
 		.groundMaterial(GroundMaterial.ABYSSAL_FLOOR)
 	),
