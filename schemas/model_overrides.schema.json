@@ -93,7 +93,7 @@
       },
       "rotate": {
         "type": "integer",
-        "description": "Counter-clockwise rotation around the up-axis in degrees, where only 0, 90, 180 and 270 are allowed. Defaults to 0."
+        "description": "Counter-clockwise rotation around the up-axis in degrees, where only 0, 90, 180 and 270 are allowed. Defaults to 0. Only works for static scene models."
       },
       "hide": {
         "type": "boolean",

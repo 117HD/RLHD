@@ -301,11 +301,13 @@ public class ProceduralGenerator {
 				material = overlay.groundMaterial.getRandomMaterial(worldPos[2], worldPos[0], worldPos[1]);
 				isOverlay = !overlay.blendedAsUnderlay;
 				color = overlay.modifyColor(color);
-			} else if (vertexUnderlays[vertex] != Underlay.NONE) {
+			} else {
 				Underlay underlay = vertexUnderlays[vertex];
-				material = underlay.groundMaterial.getRandomMaterial(worldPos[2], worldPos[0], worldPos[1]);
-				isOverlay = underlay.blendedAsOverlay;
-				color = underlay.modifyColor(color);
+				if (underlay != Underlay.NONE) {
+					material = underlay.groundMaterial.getRandomMaterial(worldPos[2], worldPos[0], worldPos[1]);
+					isOverlay = underlay.blendedAsOverlay;
+					color = underlay.modifyColor(color);
+				}
 			}
 
 			vertexColors[vertex] = color;
