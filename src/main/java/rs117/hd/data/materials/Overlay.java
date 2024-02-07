@@ -213,6 +213,8 @@ public enum Overlay {
 	VARROCK_DIRT_BLENDING_IMPROVEMENT(-84, Area.VARROCK, GroundMaterial.DIRT, p -> p.shiftSaturation(1)),
 	// this tile is used by jagex to blend between dirt paths and regular paths; blending desaturates the dirt and looks bad, extra saturation cancels out the effect
 
+	VARROCK_SEWERS_BRICK_FLOOR(p -> p.ids(27, 306).area(Area.VARROCK_SEWERS).groundMaterial(GroundMaterial.HD_BRICK_BROWN).lightness(86)),
+
 	// Barbarian Village
 	BARBARIAN_VILLAGE_EAST_PATH_FIX_1(83, Area.BARBARIAN_VILLAGE_EAST_PATH_FIX, GroundMaterial.DIRT, p -> p.shiftSaturation(2)),
 	BARBARIAN_VILLAGE_EAST_PATH_FIX_2(

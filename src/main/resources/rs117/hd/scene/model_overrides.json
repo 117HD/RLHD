@@ -6539,7 +6539,7 @@
     "flatNormals": true
   },
   {
-    "description": " - Fossil Island - Objects - Wooden - Boxes",
+    "description": "Fossil Island - Objects - Wooden - Boxes",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       30816,
@@ -9283,7 +9283,7 @@
     "uvOrientation": 256
   },
   {
-    "description": "Jungle Tree Large ",
+    "description": "Jungle Tree Large",
     "baseMaterial": "PLANT_GRUNGE_2",
     "objectIds": [
       15948,

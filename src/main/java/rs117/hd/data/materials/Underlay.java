@@ -90,6 +90,7 @@ public enum Underlay {
 	DEFAULT_GRUNGE(p -> p.ids().groundMaterial(GroundMaterial.GRUNGE)),
 	DEFAULT_ROCKY_GROUND(p -> p.ids().groundMaterial(GroundMaterial.ROCKY_CAVE_FLOOR)),
 	DEFAULT_OVERWORLD_ROCK(p -> p.ids().groundMaterial(GroundMaterial.OVERWORLD_ROCKY)),
+	DEFAULT_PACKED_EARTH(p -> p.ids().groundMaterial(GroundMaterial.PACKED_EARTH)),
 
 	GREEN_SAND_HUE_CORRECTION(p -> p.ids().groundMaterial(GroundMaterial.SAND).hue(8)),
 	VERTICAL_DIRT_FIX(p -> p.ids().groundMaterial(GroundMaterial.VERTICAL_DIRT)),
@@ -178,6 +179,25 @@ public enum Underlay {
 
     // Varrock
     VARROCK_JULIETS_HOUSE_UPSTAIRS(8, Area.VARROCK_JULIETS_HOUSE, GroundMaterial.NONE, p -> p.blended(false)),
+	VARROCK_SEWERS_DIRT(p -> p
+		.ids(10, 63, 64)
+		.area(Area.VARROCK_SEWERS)
+		.groundMaterial(GroundMaterial.PACKED_EARTH)
+		.replacementResolver(
+			(plugin, scene, tile, override) -> {
+				int[] hsl = getSouthWesternMostTileColor(tile);
+				if (hsl == null)
+					return override;
+
+				// Grass
+				if (hsl[0] >= 9)
+					return DEFAULT_GRASS;
+
+				return DEFAULT_PACKED_EARTH;
+			}
+		)
+	),
+	VARROCK_SEWERS_GRASS(p -> p.ids(49).area(Area.VARROCK_SEWERS).groundMaterial(GroundMaterial.GRASS_1)),
 	STRONGHOLD_OF_SECURITY_OOZE(Area.STRONGHOLD_OF_SECURITY_PESTILENCE, GroundMaterial.OOZE_FLOOR, p -> p.ids(48, 49, 61, 93)),
     STRONGHOLD_OF_SECURITY_GRASS(Area.STRONGHOLD_OF_SECURITY, GroundMaterial.GRASS_1, p -> p.ids(48, 49, 58, 59, 124)),
 	STRONGHOLD_OF_SECURITY_WAR_GRAVEL(Area.STRONGHOLD_OF_SECURITY, GroundMaterial.GRAVEL, p -> p.ids(148)),
