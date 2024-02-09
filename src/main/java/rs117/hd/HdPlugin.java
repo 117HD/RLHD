@@ -2114,7 +2114,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		checkGLErrors();
 
 		// Process pending config changes after the EDT is done with any pending work, which could include further config changes
-		SwingUtilities.invokeLater(this::processPendingConfigChanges);
+		if (!pendingConfigChanges.isEmpty())
+			SwingUtilities.invokeLater(this::processPendingConfigChanges);
 	}
 
 	private void drawUi(int overlayColor, final int canvasHeight, final int canvasWidth) {
@@ -2440,119 +2441,122 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				return;
 
 			try {
-				updateCachedConfigs();
+				// Synchronize with scene loading
+				synchronized (this) {
+					updateCachedConfigs();
 
-				log.debug("Processing {} pending config changes: {}", pendingConfigChanges.size(), pendingConfigChanges);
+					log.debug("Processing {} pending config changes: {}", pendingConfigChanges.size(), pendingConfigChanges);
 
-				boolean recompilePrograms = false;
-				boolean recreateShadowMapFbo = false;
-				boolean environmentManagerReload = false;
-				boolean modelOverrideManagerReload = false;
-				boolean reloadTexturesAndMaterials = false;
-				boolean modelPusherClearModelCache = false;
-				boolean modelPusherReallocate = false;
-				boolean reuploadScene = false;
+					boolean recompilePrograms = false;
+					boolean recreateShadowMapFbo = false;
+					boolean environmentManagerReload = false;
+					boolean modelOverrideManagerReload = false;
+					boolean reloadTexturesAndMaterials = false;
+					boolean modelPusherClearModelCache = false;
+					boolean modelPusherReallocate = false;
+					boolean reuploadScene = false;
 
-				for (var key : pendingConfigChanges) {
-					switch (key) {
-						case KEY_EXPANDED_MAP_LOADING_CHUNKS:
-							client.setExpandedMapLoading(getExpandedMapLoadingChunks());
-							if (client.getGameState() == GameState.LOGGED_IN)
-								client.setGameState(GameState.LOADING);
-							break;
-						case KEY_COLOR_BLINDNESS:
-						case KEY_MACOS_INTEL_WORKAROUND:
-						case KEY_MAX_DYNAMIC_LIGHTS:
-						case KEY_NORMAL_MAPPING:
-						case KEY_PARALLAX_OCCLUSION_MAPPING:
-						case KEY_UI_SCALING_MODE:
-						case KEY_VANILLA_COLOR_BANDING:
-							recompilePrograms = true;
-							break;
-						case KEY_SHADOW_MODE:
-						case KEY_SHADOW_TRANSPARENCY:
-							recompilePrograms = true;
-							// fall-through
-						case KEY_SHADOW_RESOLUTION:
-							recreateShadowMapFbo = true;
-							break;
-						case KEY_ATMOSPHERIC_LIGHTING:
-							environmentManagerReload = true;
-							break;
-						case KEY_SEASONAL_THEME:
-							environmentManagerReload = true;
-							modelOverrideManagerReload = true;
-							// fall-through
-						case KEY_ANISOTROPIC_FILTERING_LEVEL:
-						case KEY_GROUND_TEXTURES:
-						case KEY_MODEL_TEXTURES:
-						case KEY_TEXTURE_RESOLUTION:
-						case KEY_HD_INFERNAL_CAPE:
-							reloadTexturesAndMaterials = true;
-							// fall-through
-						case KEY_GROUND_BLENDING:
-						case KEY_FILL_GAPS_IN_TERRAIN:
-						case KEY_HD_TZHAAR_RESKIN:
-						case KEY_HIDE_FAKE_SHADOWS:
-							modelPusherClearModelCache = true;
-							reuploadScene = true;
-							break;
-						case KEY_LEGACY_GREY_COLORS:
-						case KEY_PRESERVE_VANILLA_NORMALS:
-						case KEY_SHADING_MODE:
-						case KEY_FLAT_SHADING:
-							recompilePrograms = true;
-							modelPusherClearModelCache = true;
-							reuploadScene = true;
-							break;
-						case KEY_FPS_TARGET:
-						case KEY_UNLOCK_FPS:
-						case KEY_VSYNC_MODE:
-							setupSyncMode();
-							break;
-						case KEY_MODEL_CACHE_SIZE:
-						case KEY_MODEL_CACHING:
-							modelPusherReallocate = true;
-							break;
-						case KEY_LOW_MEMORY_MODE:
-							restartPlugin();
-							// since we'll be restarting the plugin anyway, skip pending changes
-							return;
+					for (var key : pendingConfigChanges) {
+						switch (key) {
+							case KEY_EXPANDED_MAP_LOADING_CHUNKS:
+								client.setExpandedMapLoading(getExpandedMapLoadingChunks());
+								if (client.getGameState() == GameState.LOGGED_IN)
+									client.setGameState(GameState.LOADING);
+								break;
+							case KEY_COLOR_BLINDNESS:
+							case KEY_MACOS_INTEL_WORKAROUND:
+							case KEY_MAX_DYNAMIC_LIGHTS:
+							case KEY_NORMAL_MAPPING:
+							case KEY_PARALLAX_OCCLUSION_MAPPING:
+							case KEY_UI_SCALING_MODE:
+							case KEY_VANILLA_COLOR_BANDING:
+								recompilePrograms = true;
+								break;
+							case KEY_SHADOW_MODE:
+							case KEY_SHADOW_TRANSPARENCY:
+								recompilePrograms = true;
+								// fall-through
+							case KEY_SHADOW_RESOLUTION:
+								recreateShadowMapFbo = true;
+								break;
+							case KEY_ATMOSPHERIC_LIGHTING:
+								environmentManagerReload = true;
+								break;
+							case KEY_SEASONAL_THEME:
+								environmentManagerReload = true;
+								modelOverrideManagerReload = true;
+								// fall-through
+							case KEY_ANISOTROPIC_FILTERING_LEVEL:
+							case KEY_GROUND_TEXTURES:
+							case KEY_MODEL_TEXTURES:
+							case KEY_TEXTURE_RESOLUTION:
+							case KEY_HD_INFERNAL_CAPE:
+								reloadTexturesAndMaterials = true;
+								// fall-through
+							case KEY_GROUND_BLENDING:
+							case KEY_FILL_GAPS_IN_TERRAIN:
+							case KEY_HD_TZHAAR_RESKIN:
+							case KEY_HIDE_FAKE_SHADOWS:
+								modelPusherClearModelCache = true;
+								reuploadScene = true;
+								break;
+							case KEY_LEGACY_GREY_COLORS:
+							case KEY_PRESERVE_VANILLA_NORMALS:
+							case KEY_SHADING_MODE:
+							case KEY_FLAT_SHADING:
+								recompilePrograms = true;
+								modelPusherClearModelCache = true;
+								reuploadScene = true;
+								break;
+							case KEY_FPS_TARGET:
+							case KEY_UNLOCK_FPS:
+							case KEY_VSYNC_MODE:
+								setupSyncMode();
+								break;
+							case KEY_MODEL_CACHE_SIZE:
+							case KEY_MODEL_CACHING:
+								modelPusherReallocate = true;
+								break;
+							case KEY_LOW_MEMORY_MODE:
+								restartPlugin();
+								// since we'll be restarting the plugin anyway, skip pending changes
+								return;
+						}
 					}
+
+					if (reloadTexturesAndMaterials || recompilePrograms)
+						waitUntilIdle();
+
+					if (reloadTexturesAndMaterials) {
+						textureManager.reloadTextures();
+						recompilePrograms = true;
+						modelPusherClearModelCache = true;
+					} else if (modelOverrideManagerReload) {
+						modelOverrideManager.reload();
+						modelPusherClearModelCache = true;
+					}
+
+					if (recompilePrograms)
+						recompilePrograms();
+
+					if (modelPusherReallocate) {
+						modelPusher.shutDown();
+						modelPusher.startUp();
+					} else if (modelPusherClearModelCache) {
+						modelPusher.clearModelCache();
+					}
+
+					if (reuploadScene)
+						reuploadScene();
+
+					if (recreateShadowMapFbo) {
+						destroyShadowMapFbo();
+						initShadowMapFbo();
+					}
+
+					if (environmentManagerReload)
+						environmentManager.triggerTransition();
 				}
-
-				if (reloadTexturesAndMaterials || recompilePrograms)
-					waitUntilIdle();
-
-				if (reloadTexturesAndMaterials) {
-					textureManager.reloadTextures();
-					recompilePrograms = true;
-					modelPusherClearModelCache = true;
-				} else if (modelOverrideManagerReload) {
-					modelOverrideManager.reload();
-					modelPusherClearModelCache = true;
-				}
-
-				if (recompilePrograms)
-					recompilePrograms();
-
-				if (modelPusherReallocate) {
-					modelPusher.shutDown();
-					modelPusher.startUp();
-				} else if (modelPusherClearModelCache) {
-					modelPusher.clearModelCache();
-				}
-
-				if (reuploadScene)
-					reuploadScene();
-
-				if (recreateShadowMapFbo) {
-					destroyShadowMapFbo();
-					initShadowMapFbo();
-				}
-
-				if (environmentManagerReload)
-					environmentManager.triggerTransition();
 			} catch (Throwable ex) {
 				log.error("Error while changing settings:", ex);
 				stopPlugin();
