@@ -60,7 +60,7 @@ public enum Material {
 	WATER_NORMAL_MAP_2,
 	WATER_FOAM,
 
-	// Reserve first 129 materials for vanilla OSRS texture ids
+	// Reserve materials for known vanilla texture IDs
 	WOODEN_DOOR_HANDLE(0),
 	WATER_FLAT(1),
 	BRICK(2),
