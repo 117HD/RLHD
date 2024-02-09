@@ -60,7 +60,7 @@ public enum Material {
 	WATER_NORMAL_MAP_2,
 	WATER_FOAM,
 
-	// Reserve first 128 materials for vanilla OSRS texture ids
+	// Reserve materials for known vanilla texture IDs
 	WOODEN_DOOR_HANDLE(0),
 	WATER_FLAT(1),
 	BRICK(2),
@@ -297,6 +297,7 @@ public enum Material {
 	SKULLS_FOG(117),
 	SKULLS_FOG_LIGHT(118),
 	SKULLS_FOG_DARK(119),
+	BRICK_BROWN_HORIZONTAL(120),
 
 	WHITE(NONE),
 	GRAY_75(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(.75f))),
