@@ -701,7 +701,7 @@ public enum Material {
 	ABYSSAL_D,
 	ABYSSAL_N,
 	ABYSSAL(p -> p
-		.setSpecular(7f, 400)
+		.setSpecular(4.5f, 400)
 		.setNormalMap(ABYSSAL_N)
 		.setDisplacementMap(ABYSSAL_D)
 		.setDisplacementScale(0.2f)
@@ -714,7 +714,7 @@ public enum Material {
 		.setNormalMap(ABYSSAL_2_N)
 		.setDisplacementMap(ABYSSAL_2_D)
 		.setDisplacementScale(0.1f)
-		.setBrightness(2f)
+		.setBrightness(1.9f)
 	),
 
 
