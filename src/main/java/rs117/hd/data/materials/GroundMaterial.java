@@ -117,7 +117,7 @@ public enum GroundMaterial {
 		Material.GRAVEL_LIGHT
 	),
 	OVERWORLD_ROCKY(Material.ROCK_2, Material.STONE_NORMALED_DARK, Material.ROCK_1, Material.GRAVEL),
-	ABYSSAL_FLOOR(Material.ABYSSAL_2, Material.ABYSSAL),
+	ABYSSAL_FLOOR(Material.ABYSSAL_2, Material.ABYSSAL, Material.ABYSSAL),
 	;
 
 	private final Material[] materials;
