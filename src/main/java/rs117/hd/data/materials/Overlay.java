@@ -395,7 +395,8 @@ public enum Overlay {
 	),
 
 	// Abyss
-	ABYSSAL_FLOOR(p -> p.ids(42, 66).area(Area.ABYSS).groundMaterial(GroundMaterial.ABYSSAL_FLOOR)),
+	ABYSSAL_FLOOR(p -> p.ids(42).area(Area.ABYSS).groundMaterial(GroundMaterial.ABYSSAL_FLOOR)),
+	ABYSSAL_LIQUID(p -> p.ids(66, 67).area(Area.ABYSS).waterType(WaterType.ABYSS_BILE)),
 
 
 	// Goblin Village
