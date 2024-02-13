@@ -26759,8 +26759,8 @@
   },
   {
     "description": "ABYSSAL_NEXUS_FONT",
-    "height": 200,
-    "alignment": "CENTER",
+    "height": 140,
+    "alignment": "BACK",
     "radius": 1200,
     "strength": 12.5,
     "color": [
@@ -26769,8 +26769,8 @@
       31
     ],
     "type": "PULSE",
-    "duration": 5000,
-    "range": 25,
+    "duration": 4000,
+    "range": 28,
     "objectIds": [
       27029
     ]
