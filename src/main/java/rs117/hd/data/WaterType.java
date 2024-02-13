@@ -119,15 +119,15 @@ public enum WaterType
 		.causticsStrength(0)
 		.duration(1.2f)),
 	ABYSS_BILE(b -> b
-		.specularStrength(0.1f)
+		.specularStrength(0.2f)
 		.specularGloss(100)
 		.normalStrength(.08f)
 		.baseOpacity(.85f)
 		.fresnelAmount(.3f)
-		.surfaceColor(rgb(60, 91, 0))
-		.foamColor(rgb(60, 81, 0))
-		.depthColor(rgb(50, 59, 0))
-		.causticsStrength(0.5f)
+		.surfaceColor(rgb(120, 91, 0))
+		.foamColor(rgb(120, 81, 0))
+		.depthColor(rgb(120, 59, 0))
+		.causticsStrength(0.4f)
 		.duration(2.2f)),
 	PLAIN_WATER(b -> b
 		.depthColor(rgb(0, 0, 0))
