@@ -13364,5 +13364,16 @@
     "uvType": "BOX",
     "uvOrientation": 512,
     "uvScale": 1.2
+  },
+  {
+    "description": "Disable shadow casting for Pest Control center platform to help with transparent shadows",
+    "objectIds": [ 14282 ],
+    "castShadows": false
+  },
+  {
+    "description": "Disable shadow casting for Pest Control center platform to help with transparent shadows",
+    "objectIds": [ 14282 ],
+    "seasonalTheme": "AUTUMN",
+    "castShadows": true
   }
 ]
