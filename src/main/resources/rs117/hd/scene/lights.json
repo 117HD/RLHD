@@ -25950,12 +25950,12 @@
   },
   {
     "description": "IBAN_BLAST",
-    "radius": 200,
-    "strength": 7.5,
+    "radius": 250,
+    "strength": 8.8,
     "color": [
       255,
-      175,
-      84
+      0,
+      0
     ],
     "type": "STATIC",
     "duration": 0,
