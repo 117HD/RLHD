@@ -6606,8 +6606,7 @@
     "description": "Wall - Wooden - Post",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
-      10106,
-      12278
+      10106
     ],
     "uvScale": 0.4,
     "uvType": "BOX",
@@ -13866,12 +13865,30 @@
     "uvScale": 0.8
   },
   {
-    "description": "Fossil Island - Outhouse Top",
+    "description": "Fossil Island - Outhouse Top and Evil Daves Moms house",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 12284 ],
+    "objectIds": [ 12283, 12284, 12285, 12286, 12287, 12288, 12290 ],
     "uvType": "BOX",
     "uvScale": 0.8,
     "uvOrientationX": 512
+  },
+  {
+    "description": "Daves Moms House Roof - Corner",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 12288, 12289 ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512
+  },
+  {
+    "description": "Daves Moms House Walls",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 12278 ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512
   },
   {
     "description": "Fossil Island - Stone - Manor Walls",
