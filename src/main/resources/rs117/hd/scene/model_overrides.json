@@ -13898,7 +13898,7 @@
     ]
   },
   {
-    "description": "Fishing Trawler Boat - Walls - Minigame Walls",
+    "description": "Fishing Trawler Boat - Walls - Minigame Hull",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [ 37351, 37352 ],
     "uvType": "BOX",
@@ -13906,7 +13906,7 @@
     "uvOrientation": 512
   },
   {
-    "description": "Plank Boat - Walls - Wooden Hull",
+    "description": "Plank Boat - Walls - Wooden - Hull",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [ 234, 235, 236, 237, 238, 242, 253, 281, 37350, 37353, 37354, 37356, 37365 ],
     "uvType": "BOX",
@@ -13915,7 +13915,7 @@
     "uvOrientationX": 512
   },
   {
-    "description": "Fishing Trawler Boat Deck - Wooden",
+    "description": "Fishing Trawler Boat - Wooden - Deck",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [ 9453, 9454, 9457, 9458 ],
     "uvType": "BOX",
@@ -13923,7 +13923,7 @@
     "uvOrientation": 512
   },
   {
-    "description": "Fishing Trawler Boat Rails - Wooden",
+    "description": "Fishing Trawler Boat - Wooden - Rails",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [ 249, 261, 2197, 2213, 9512, 41401 ],
     "uvType": "BOX",
@@ -13931,7 +13931,7 @@
     "uvOrientation": 512
   },
   {
-    "description": "Fishing Trawler Boat Deck Opening - Wooden",
+    "description": "Fishing Trawler Boat - Wooden - Deck Opening",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [ 291, 292, 9459 ],
     "uvType": "BOX",
@@ -13939,7 +13939,7 @@
     "uvOrientation": 512
   },
   {
-    "description": "Gang Plank",
+    "description": "Object - Wooden - Gang Plank",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [ 4977, 4978 ],
     "uvType": "BOX",
