@@ -13915,7 +13915,25 @@
     "uvOrientationX": 512
   },
   {
-    "description": "Fishing Trawler Boat - Wooden - Deck",
+    "description": "Plank Boat - Walls - Wooden - Hull with Porthole",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 243 ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientationZ": 512,
+    "uvOrientationX": 512
+  },
+  {
+    "description": "Plank Boat - Walls - Wooden - Hull with Bow Supports",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 257, 258 ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientationZ": 512,
+    "uvOrientationX": 512
+  },
+  {
+    "description": "Plank Boat - Wooden - Deck",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [ 9453, 9454, 9457, 9458 ],
     "uvType": "BOX",
@@ -13923,9 +13941,9 @@
     "uvOrientation": 512
   },
   {
-    "description": "Fishing Trawler Boat - Wooden - Rails",
+    "description": "Plank Boat - Wooden - Rails",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 249, 261, 2197, 2213, 9512, 41401 ],
+    "objectIds": [ 249, 2197, 2213, 9512, 41401, 11258 ],
     "uvType": "BOX",
     "uvScale": 1.1,
     "uvOrientation": 512
@@ -13941,9 +13959,52 @@
   {
     "description": "Object - Wooden - Gang Plank",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 4977, 4978 ],
+    "objectIds": [ 4977, 4978, 11211, 11212, 17406, 17407, 17408, 17409, 31756, 34667, 34668, 34669, 34670 ],
     "uvType": "BOX",
     "uvScale": 1.1,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Mos LeHarmless - Large Boat - Walls - Wooden - Hull",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 11251, 11252, 11255, 11257, 11259, 11260 ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientationZ": 512,
+    "uvOrientationX": 512
+  },
+  {
+    "description": "Mos LeHarmless - Large Boat - Walls - Wooden - Hull Aft",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 11261, 11262, 11263 ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Mos LeHarmless - Large Boat - Walls - Wooden - Hull with Porthole",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 11253 ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientationZ": 512,
+    "uvOrientationX": 512
+  },
+  {
+    "description": "Mos LeHarmless - Large Boat - Walls - Wooden - Hull with Bow Supports",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 11284, 11285 ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientationZ": 512,
+    "uvOrientationX": 512
+  },
+  {
+    "description": "Mos LeHarmless - Large Boat - Wooden - Deck",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 11264 ],
+    "uvType": "BOX",
+    "uvScale": 1.0,
     "uvOrientation": 512
   }
 ]
