@@ -26017,6 +26017,23 @@
     ]
   },
   {
+    "description": "WARPED_SCEPTER_SPELL",
+    "alignment": "CENTER",
+    "radius": 150,
+    "strength": 10,
+    "color": [
+      170,
+      20,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "projectileIds": [
+      2569
+    ]
+  },
+  {
     "description": "SMOKE_RUSH",
     "radius": 250,
     "strength": 1.3,
