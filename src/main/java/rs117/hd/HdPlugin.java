@@ -2817,8 +2817,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				modelHasher.setModel(model);
 				// Disable model batching for models which have been excluded from the scene buffer,
 				// because we want to avoid having to fetch the model override
-				if (configModelBatching && offsetModel.getSceneId() != SceneUploader.EXCLUDED_FROM_SCENE_BUFFER)
+				if (configModelBatching && offsetModel.getSceneId() != SceneUploader.EXCLUDED_FROM_SCENE_BUFFER) {
+					batchHash = modelHasher.vertexHash;
 					modelOffsets = frameModelInfoMap.get(batchHash);
+				}
 			}
 			if (enableDetailedTimers)
 				frameTimer.end(Timer.MODEL_BATCHING);
