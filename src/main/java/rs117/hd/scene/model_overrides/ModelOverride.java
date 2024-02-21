@@ -38,6 +38,10 @@ public class ModelOverride
 	public Set<Integer> npcIds = EMPTY;
 	@JsonAdapter(GsonUtils.IntegerSetAdapter.class)
 	public Set<Integer> objectIds = EMPTY;
+	@JsonAdapter(GsonUtils.IntegerSetAdapter.class)
+	public Set<Integer> projectileIds = EMPTY;
+	@JsonAdapter(GsonUtils.IntegerSetAdapter.class)
+	public Set<Integer> graphicsObjectIds = EMPTY;
 
 	public Material baseMaterial = Material.NONE;
 	public Material textureMaterial = Material.NONE;
@@ -101,9 +105,6 @@ public class ModelOverride
 		if (hideInAreas == null)
 			hideInAreas = new AABB[0];
 
-		if (Props.DEVELOPMENT && objectIds == null && npcIds == null)
-			throw new IllegalStateException("Model override doesn't specify any IDs to apply to");
-
 		baseMaterial = baseMaterial.resolveReplacements();
 		textureMaterial = textureMaterial.resolveReplacements();
 
@@ -135,6 +136,8 @@ public class ModelOverride
 			areas,
 			npcIds,
 			objectIds,
+			projectileIds,
+			graphicsObjectIds,
 			baseMaterial,
 			textureMaterial,
 			uvType,

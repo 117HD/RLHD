@@ -2826,26 +2826,18 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				if (enableDetailedTimers)
 					frameTimer.begin(Timer.MODEL_PUSHING);
 
-				if (renderable instanceof DynamicObject) {
-					var def = client.getObjectDefinition(ModelHash.getIdOrIndex(hash));
-					if (def.getImpostorIds() != null) {
-						var impostor = def.getImpostor();
-						if (impostor != null)
-							hash = hash & ~ModelHash.ID_OR_INDEX_MASK | (long) impostor.getId() << 17;
-					}
-				}
+				int uuid = ModelHash.generateUuid(client, hash, renderable);
+				int[] worldPos = HDUtils.cameraSpaceToWorldPoint(client, x, z);
+				ModelOverride modelOverride = modelOverrideManager.getOverride(uuid, worldPos);
+				if (modelOverride.hide)
+					return;
 
 				int vertexOffset = dynamicOffsetVertices + sceneContext.getVertexOffset();
 				int uvOffset = dynamicOffsetUvs + sceneContext.getUvOffset();
-				ModelOverride modelOverride = modelOverrideManager.getOverride(hash, HDUtils.cameraSpaceToWorldPoint(client, x, z));
-				if (modelOverride.hide) {
-					vertexOffset = -1;
-				} else {
-					modelPusher.pushModel(sceneContext, null, hash, model, modelOverride, ObjectType.NONE, 0, true);
-					faceCount = sceneContext.modelPusherResults[0];
-					if (sceneContext.modelPusherResults[1] == 0)
-						uvOffset = -1;
-				}
+				modelPusher.pushModel(sceneContext, null, uuid, model, modelOverride, ObjectType.NONE, 0, true);
+				faceCount = sceneContext.modelPusherResults[0];
+				if (sceneContext.modelPusherResults[1] == 0)
+					uvOffset = -1;
 
 				if (enableDetailedTimers)
 					frameTimer.end(Timer.MODEL_PUSHING);

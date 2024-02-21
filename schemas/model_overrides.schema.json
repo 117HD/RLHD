@@ -30,16 +30,30 @@
       },
       "npcIds": {
         "type": "array",
-        "description": "A set of NPC IDs or NpcID keys that the override should apply to.",
+        "description": "A set of NPC IDs which the override should apply to.",
         "items": {
-          "type": [ "integer", "string" ]
+          "type": "integer"
         }
       },
       "objectIds": {
         "type": "array",
-        "description": "A set of object IDs or ObjectID keys that the override should apply to.",
+        "description": "A set of object IDs which the override should apply to.",
         "items": {
-          "type": [ "integer", "string" ]
+          "type": "integer"
+        }
+      },
+      "projectileIds": {
+        "type": "array",
+        "description": "A set of projectile IDs which the override should apply to.",
+        "items": {
+          "type": "integer"
+        }
+      },
+      "graphicsObjectIds": {
+        "type": "array",
+        "description": "A set of graphics object IDs which the override should apply to.",
+        "items": {
+          "type": "integer"
         }
       },
       "baseMaterial": {
