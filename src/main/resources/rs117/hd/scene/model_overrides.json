@@ -10321,12 +10321,15 @@
     "uvOrientationZ": 512
   },
   {
-    "description": "Objects -  - Wooden - Battlements",
-    "baseMaterial": "WOOD_GRAIN",
+    "description": "Objects - Wooden - Battlements and Scaffold",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       1612
     ],
-    "uvType": "GEOMETRY"
+    "uvType": "BOX",
+    "uvScale": 0.85,
+    "uvOrientationZ": 512,
+    "uvOrientationX": 512
   },
   {
     "description": "Hadleys House - Wattle",
@@ -13908,9 +13911,18 @@
   {
     "description": "Plank Boat - Walls - Wooden - Hull",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 234, 235, 236, 237, 238, 242, 253, 281, 37350, 37353, 37354, 37356, 37365 ],
+    "objectIds": [ 230, 234, 235, 236, 237, 238, 242, 253, 281, 283, 284, 37350, 37353, 37354, 37356, 37365 ],
     "uvType": "BOX",
     "uvScale": 0.7,
+    "uvOrientationZ": 512,
+    "uvOrientationX": 512
+  },
+  {
+    "description": "Plank Boat - Walls - Wooden - Hull Aft",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 231, 232, 233 ],
+    "uvType": "BOX",
+    "uvScale": 0.85,
     "uvOrientationZ": 512,
     "uvOrientationX": 512
   },
@@ -13933,9 +13945,18 @@
     "uvOrientationX": 512
   },
   {
+    "description": "Plank Boat - Walls - Wooden - Hull Bow with Woman",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 260 ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientationZ": 512,
+    "uvOrientationX": 512
+  },
+  {
     "description": "Plank Boat - Wooden - Deck",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 9453, 9454, 9457, 9458 ],
+    "objectIds": [ 9453, 9454, 9457, 9458, 9460, 9461, 9462 ],
     "uvType": "BOX",
     "uvScale": 1.0,
     "uvOrientation": 512
@@ -13959,10 +13980,17 @@
   {
     "description": "Object - Wooden - Gang Plank",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 4977, 4978, 11211, 11212, 17406, 17407, 17408, 17409, 31756, 34667, 34668, 34669, 34670 ],
+    "objectIds": [ 4977, 4978, 11211, 11212, 17392, 17393, 17396, 17397, 17406, 17407, 17408, 17409, 31756, 34667, 34668, 34669, 34670 ],
     "uvType": "BOX",
     "uvScale": 1.1,
     "uvOrientation": 512
+  },
+  {
+    "description": "Port Phasmatys - Object - Wooden - Rotting Gang Plank",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [ 5304, 5305 ],
+    "uvType": "BOX",
+    "uvScale": 0.75
   },
   {
     "description": "Mos LeHarmless - Large Boat - Walls - Wooden - Hull",
@@ -14006,5 +14034,52 @@
     "uvType": "BOX",
     "uvScale": 1.0,
     "uvOrientation": 512
+  },
+  {
+    "description": "Port Phasmatys - Large Boat - Walls - Wooden - Hull",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [ 5385, 5386, 5387, 5388, 5399 ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientationY": 512
+  },
+  {
+    "description": "Port Phasmatys - Large Boat - Walls - Wooden - Hull Aft",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [ 5389 ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientationY": 512
+  },
+  {
+    "description": "Port Phasmatys - Large Boat - Walls - Wooden - Hull with Porthole",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [ 5386 ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientationY": 512
+  },
+  {
+    "description": "Port Phasmatys - Large Boat - Walls - Wooden - Hull with Bow Supports",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [ 5395, 5396 ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientationY": 512
+  },
+  {
+    "description": "Port Phasmatys - Large Boat - Wooden - Deck",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [ 5389, 5390, 5391 ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Port Phasmatys - Large Boat - Wooden - Rails",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [ 5398 ],
+    "uvType": "BOX",
+    "uvScale": 0.8
   }
 ]
