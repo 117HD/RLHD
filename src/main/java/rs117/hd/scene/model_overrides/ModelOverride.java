@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.config.SeasonalTheme;
+import rs117.hd.config.VanillaShadowMode;
 import rs117.hd.data.materials.Material;
 import rs117.hd.data.materials.UvType;
 import rs117.hd.utils.AABB;
@@ -57,7 +58,8 @@ public class ModelOverride
 	public boolean forceMaterialChanges = false;
 	public boolean flatNormals = false;
 	public boolean upwardsNormals = false;
-	public boolean removeBakedLighting = false;
+	public boolean hideVanillaShadows = false;
+	public boolean retainVanillaShadowsInPvm = false;
 	public boolean castShadows = true;
 	public boolean receiveShadows = true;
 	public float shadowOpacityThreshold = 0;
@@ -72,7 +74,7 @@ public class ModelOverride
 	public transient boolean isDummy;
 	public transient Map<AABB, ModelOverride> areaOverrides;
 
-	public void normalize() {
+	public void normalize(VanillaShadowMode vanillaShadowMode) {
 		// Ensure there are no nulls in case of invalid configuration during development
 		if (baseMaterial == null) {
 			if (Props.DEVELOPMENT)
@@ -112,7 +114,7 @@ public class ModelOverride
 			var normalized = new HashMap<Material, ModelOverride>();
 			for (var entry : materialOverrides.entrySet()) {
 				var override = entry.getValue();
-				override.normalize();
+				override.normalize(vanillaShadowMode);
 				normalized.put(entry.getKey().resolveReplacements(), override);
 			}
 			materialOverrides = normalized;
@@ -124,6 +126,13 @@ public class ModelOverride
 			uvOrientationY = uvOrientation;
 		if (uvOrientationZ == 0)
 			uvOrientationZ = uvOrientation;
+
+		if (retainVanillaShadowsInPvm) {
+			if (vanillaShadowMode.retainInPvm)
+				hideVanillaShadows = false;
+			if (vanillaShadowMode == VanillaShadowMode.PREFER_IN_PVM)
+				castShadows = false;
+		}
 
 		if (!castShadows && shadowOpacityThreshold == 0)
 			shadowOpacityThreshold = 1;
@@ -152,7 +161,8 @@ public class ModelOverride
 			forceMaterialChanges,
 			flatNormals,
 			upwardsNormals,
-			removeBakedLighting,
+			hideVanillaShadows,
+			retainVanillaShadowsInPvm,
 			castShadows,
 			receiveShadows,
 			shadowOpacityThreshold,

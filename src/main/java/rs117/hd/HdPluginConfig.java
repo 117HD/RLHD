@@ -45,6 +45,7 @@ import rs117.hd.config.ShadowMode;
 import rs117.hd.config.ShadowResolution;
 import rs117.hd.config.TextureResolution;
 import rs117.hd.config.UIScalingMode;
+import rs117.hd.config.VanillaShadowMode;
 
 import static rs117.hd.HdPlugin.MAX_DISTANCE;
 import static rs117.hd.HdPlugin.MAX_FOG_DEPTH;
@@ -434,18 +435,19 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
-	String KEY_HIDE_FAKE_SHADOWS = "hideBakedEffects";
+	String KEY_VANILLA_SHADOW_MODE = "vanillaShadowMode";
 	@ConfigItem(
-		keyName = KEY_HIDE_FAKE_SHADOWS,
-		name = "Hide Fake Shadows",
+		keyName = KEY_VANILLA_SHADOW_MODE,
+		name = "Vanilla Shadows",
 		description =
-			"Hide fake shadows and lighting which is often built into models by Jagex.<br>" +
-			"This does not affect the hitbox of NPCs, so you can still click where the fake shadow would normally be.",
+			"Choose whether shadows built into models by Jagex should be hidden. This does not affect clickboxes.<br>" +
+			"'Show in PvM' will retain shadows for falling crystals during the Olm fight and other useful cases.<br>" +
+			"'Prefer in PvM' will do the above and also disable 117 HD's dynamic shadows in such cases.",
 		position = 11,
 		section = lightingSettings
 	)
-	default boolean hideFakeShadows() {
-		return true;
+	default VanillaShadowMode vanillaShadowMode() {
+		return VanillaShadowMode.SHOW_IN_PVM;
 	}
 
 	String KEY_NORMAL_MAPPING = "normalMapping";

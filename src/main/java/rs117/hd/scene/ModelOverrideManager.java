@@ -53,7 +53,7 @@ public class ModelOverrideManager {
 					throw new IOException("Empty or invalid: " + path);
 				for (ModelOverride override : entries) {
 					try {
-						override.normalize();
+						override.normalize(plugin.configVanillaShadowMode);
 					} catch (IllegalStateException ex) {
 						log.error("Invalid model override '{}': {}", override.description, ex.getMessage());
 						continue;

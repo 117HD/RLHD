@@ -472,7 +472,7 @@ public class ModelPusher {
 
 		// Hide fake shadows or lighting that is often baked into models by making the fake shadow transparent
 		if (plugin.configHideFakeShadows && isBakedGroundShading(model, face)) {
-			if (modelOverride.removeBakedLighting)
+			if (modelOverride.hideVanillaShadows)
 				return ZEROED_INTS; // Hide the face
 
 			if (ModelHash.getUuidType(uuid) == ModelHash.TYPE_PLAYER) {

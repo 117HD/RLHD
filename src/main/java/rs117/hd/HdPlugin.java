@@ -83,6 +83,7 @@ import rs117.hd.config.SeasonalTheme;
 import rs117.hd.config.ShadingMode;
 import rs117.hd.config.ShadowMode;
 import rs117.hd.config.UIScalingMode;
+import rs117.hd.config.VanillaShadowMode;
 import rs117.hd.data.WaterType;
 import rs117.hd.data.environments.Area;
 import rs117.hd.data.materials.Material;
@@ -401,6 +402,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public boolean configPreserveVanillaNormals;
 	public ShadowMode configShadowMode;
 	public SeasonalTheme configSeasonalTheme;
+	public VanillaShadowMode configVanillaShadowMode;
 	public int configMaxDynamicLights;
 
 	public boolean useLowMemoryMode;
@@ -2395,7 +2397,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		configTzhaarHD = config.hdTzHaarReskin();
 		configProjectileLights = config.projectileLights();
 		configNpcLights = config.npcLights();
-		configHideFakeShadows = config.hideFakeShadows();
+		configVanillaShadowMode = config.vanillaShadowMode();
+		configHideFakeShadows = configVanillaShadowMode != VanillaShadowMode.SHOW;
 		configLegacyGreyColors = config.legacyGreyColors();
 		configModelBatching = config.modelBatching();
 		configModelCaching = config.modelCaching();
@@ -2496,8 +2499,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 							case KEY_GROUND_BLENDING:
 							case KEY_FILL_GAPS_IN_TERRAIN:
 							case KEY_HD_TZHAAR_RESKIN:
-							case KEY_HIDE_FAKE_SHADOWS:
 								modelPusherClearModelCache = true;
+								reuploadScene = true;
+								break;
+							case KEY_VANILLA_SHADOW_MODE:
+								modelOverrideManagerReload = true;
 								reuploadScene = true;
 								break;
 							case KEY_LEGACY_GREY_COLORS:

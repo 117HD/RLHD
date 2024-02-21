@@ -125,9 +125,13 @@
         "type": "boolean",
         "description": "Whether flat normals should be used instead of smooth normals. Defaults to false."
       },
-      "removeBakedLighting": {
+      "hideVanillaShadows": {
         "type": "boolean",
-        "description": "Whether the model has fake shadows or baked lighting that should be removed. Defaults to false."
+        "description": "Whether the model has fake shadows which should be removed. Defaults to false."
+      },
+      "retainVanillaShadowsInPvm": {
+        "type": "boolean",
+        "description": "Whether the model has fake shadows which are potentially useful for PvM. Defaults to false."
       },
       "castShadows": {
         "type": "boolean",
