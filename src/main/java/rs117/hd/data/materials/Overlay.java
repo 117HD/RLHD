@@ -733,7 +733,9 @@ public enum Overlay {
 		.blended(false)
 		.lightness(74)
 		.shiftHue(-3)
-		.shiftSaturation(-7)),
+		.shiftSaturation(-7)
+		.replaceWithIf(null, b -> !b.configGroundTextures)
+	),
 	// Draynor
 	DRAYNOR_SEWERS(p -> p.area(Area.DRAYNOR_SEWERS).ids(89).waterType(WaterType.MUDDY_WATER)),
 
