@@ -37,7 +37,7 @@ public enum GroundMaterial {
 	GRASS_SCROLLING(Material.GRASS_SCROLLING),
 	STONE_SCROLLING(Material.STONE_SCROLLING),
 	DIRT(Material.DIRT_1, Material.DIRT_2),
-	DIRT_VERT(Material.DIRT_1_VERT, Material.DIRT_2_VERT),
+	VERTICAL_DIRT(Material.DIRT_1_VERT, Material.DIRT_2_VERT),
 	SNOW_1(Material.SNOW_1, Material.SNOW_1, Material.SNOW_2, Material.SNOW_3, Material.SNOW_3, Material.SNOW_4),
 	SNOW_2(Material.SNOW_2, Material.SNOW_4),
 	GRAVEL(Material.GRAVEL),
@@ -115,7 +115,9 @@ public enum GroundMaterial {
 		Material.GRAVEL_LIGHT,
 		Material.GRUNGE_2,
 		Material.GRAVEL_LIGHT
-	)
+	),
+	OVERWORLD_ROCKY(Material.ROCK_2, Material.STONE_NORMALED_DARK, Material.ROCK_1, Material.GRAVEL),
+	HD_BRICK_BROWN(Material.HD_BRICK_BROWN),
 	;
 
 	private final Material[] materials;

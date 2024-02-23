@@ -154,7 +154,7 @@ public class ModelPusher {
 	 *
 	 * @param sceneContext   object for the scene to push model data for
 	 * @param tile           that the model is associated with, if any
-	 * @param hash           of the model
+	 * @param uuid           of the model
 	 * @param model          to push data from
 	 * @param modelOverride  the active model override
 	 * @param objectType     of the specified model. Used for TzHaar recolor
@@ -164,7 +164,7 @@ public class ModelPusher {
 	public void pushModel(
 		SceneContext sceneContext,
 		@Nullable Tile tile,
-		long hash,
+		int uuid,
 		Model model,
 		ModelOverride modelOverride,
 		ObjectType objectType,
@@ -215,7 +215,7 @@ public class ModelPusher {
 		if (shouldCache) {
 			assert client.isClientThread() : "Model caching isn't thread-safe";
 
-			vertexHash = modelHasher.calculateVertexCacheHash(modelOverride);
+			vertexHash = modelHasher.vertexHash;
 			IntBuffer vertexData = this.modelCache.getIntBuffer(vertexHash);
 			foundCachedVertexData = vertexData != null && vertexData.remaining() == bufferSize;
 			if (foundCachedVertexData) {
@@ -292,7 +292,7 @@ public class ModelPusher {
 
 			modelOverride.applyRotation(model);
 			for (int face = 0; face < faceCount; face++) {
-				int[] data = getFaceVertices(sceneContext, tile, hash, model, modelOverride, objectType, face);
+				int[] data = getFaceVertices(sceneContext, tile, uuid, model, modelOverride, objectType, face);
 				sceneContext.stagingBufferVertices.put(data);
 				if (shouldCacheVertexData)
 					fullVertexData.put(data);
@@ -461,7 +461,7 @@ public class ModelPusher {
 	private int[] getFaceVertices(
 		SceneContext sceneContext,
 		Tile tile,
-		long hash,
+		int uuid,
 		Model model,
 		@NonNull ModelOverride modelOverride,
 		ObjectType objectType,
@@ -472,15 +472,17 @@ public class ModelPusher {
 
 		// Hide fake shadows or lighting that is often baked into models by making the fake shadow transparent
 		if (plugin.configHideFakeShadows && isBakedGroundShading(model, face)) {
-			if (modelOverride.removeBakedLighting)
+			if (modelOverride.hideVanillaShadows)
 				return ZEROED_INTS; // Hide the face
 
-			if (ModelHash.getType(hash) == ModelHash.TYPE_PLAYER) {
-				int index = ModelHash.getIdOrIndex(hash);
+			if (ModelHash.getUuidType(uuid) == ModelHash.TYPE_PLAYER) {
+				int index = ModelHash.getUuidId(uuid);
 				Player[] players = client.getCachedPlayers();
-				Player player = index >= 0 && index < players.length ? players[index] : null;
-				if (player != null && player.getPlayerComposition().getEquipmentId(KitType.WEAPON) == ItemID.MAGIC_CARPET)
-					return ZEROED_INTS; // Hide the face
+				if (index >= 0 && index < players.length) {
+					Player player = players[index];
+					if (player != null && player.getPlayerComposition().getEquipmentId(KitType.WEAPON) == ItemID.MAGIC_CARPET)
+						return ZEROED_INTS; // Hide the face
+				}
 			}
 		}
 

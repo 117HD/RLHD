@@ -22,7 +22,6 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#pragma once
 
 #include PARALLAX_OCCLUSION_MAPPING
 
@@ -114,24 +113,6 @@ void sampleDisplacementMap(
         #endif
     #endif
 }
+#else
+#define sampleDisplacementMap(mat, viewDir, lightDir, fragDelta, selfShadowing) uv
 #endif
-
-void applyUvDisplacement(inout Context ctx) {
-    #if PARALLAX_OCCLUSION_MAPPING
-        mat3 invTBN = inverse(ctx.TBN);
-        vec3 tsViewDir = invTBN * ctx.viewDir;
-        vec3 tsLightDir = invTBN * -ctx.sun.direction;
-
-        vec3 fragDelta = vec3(0);
-        float selfShadowing = 0;
-        sampleDisplacementMap(ctx.materials[0], tsViewDir, tsLightDir, ctx.uvs[0], fragDelta, selfShadowing);
-        sampleDisplacementMap(ctx.materials[1], tsViewDir, tsLightDir, ctx.uvs[1], fragDelta, selfShadowing);
-        sampleDisplacementMap(ctx.materials[2], tsViewDir, tsLightDir, ctx.uvs[2], fragDelta, selfShadowing);
-
-        // Average
-        fragDelta /= 3;
-        selfShadowing /= 3;
-
-        ctx.fragPos += ctx.TBN * fragDelta;
-    #endif
-}
