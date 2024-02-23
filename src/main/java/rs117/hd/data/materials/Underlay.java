@@ -858,9 +858,25 @@ public enum Underlay {
 		.area(Area.MOTHERLODE_MINE)
 		.ids(63, 64, 71)
 	),
-	GIANTS_FOUNDRY(GroundMaterial.EARTHEN_CAVE_FLOOR, p -> p
-		.area(Area.GIANTS_FOUNDRY)
+	GIANTS_FOUNDRY_DESATURATION(p -> p.ids().groundMaterial(GroundMaterial.EARTHEN_CAVE_FLOOR).shiftSaturation(-1)),
+	GIANTS_FOUNDRY(p -> p
 		.ids(91, 101)
+		.area(Area.GIANTS_FOUNDRY)
+		.groundMaterial(GroundMaterial.EARTHEN_CAVE_FLOOR)
+		.replacementResolver(
+			(plugin, scene, tile, override) -> {
+				int[] hsl = getSouthWesternMostTileColor(tile);
+				if (hsl == null)
+					return override;
+
+				// Ash or stone
+				if (hsl[1] > 1 ) {
+					return GIANTS_FOUNDRY_DESATURATION;
+				}
+
+				return override;
+			}
+		)
 	),
 	MEIYERDITCH_MYREQUE_HIDEOUT(GroundMaterial.VARIED_DIRT, p -> p
 		.area(Area.MEIYERDITCH_MYREQUE_HIDEOUT)
