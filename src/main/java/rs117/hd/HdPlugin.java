@@ -3037,6 +3037,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Subscribe(priority = -1) // Run after the low detail plugin
 	public void onBeforeRender(BeforeRender beforeRender) {
+		if (client.getScene() == null)
+			return;
 		// The game runs significantly slower with lower planes in Chambers of Xeric
 		client.getScene().setMinLevel(isInChambersOfXeric ? client.getPlane() : client.getScene().getMinLevel());
 	}
