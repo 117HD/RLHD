@@ -6545,7 +6545,6 @@
       44652,
       44681,
       44682,
-      44684,
       44713,
       44714,
       44715,
@@ -6593,8 +6592,7 @@
       17877,
       44744,
       44745
-    ],
-    "uvType": "BOX"
+    ]
   },
   {
     "description": "Objects - Stone - Mountain Daughter Burial",
@@ -10921,28 +10919,6 @@
     "uvScale": 0.6
   },
   {
-    "description": "Objects - Stone - Giants Foundry - Mould Jig",
-    "baseMaterial": "ROCK_3",
-    "objectIds": [
-      44625,
-      44626,
-      44627
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.7,
-    "uvOrientation": 128
-  },
-  {
-    "description": "Objects - Stone - Giants Foundry - Preform storage",
-    "baseMaterial": "ROCK_3",
-    "objectIds": [
-      44633
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.6,
-    "uvOrientation": 1024
-  },
-  {
     "description": "Objects - Stone - Giants Foundry - Lavapool Rocks",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
@@ -10962,23 +10938,12 @@
     "uvScale": 0.6
   },
   {
-    "description": "Objects - Wooden - Steps",
-    "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [
-      44679
-    ],
-    "uvType": "BOX",
-    "uvScale": 1.1,
-    "uvOrientationY": 512
-  },
-  {
     "description": "Giants Foundry Single row fences",
-    "baseMaterial": "WOOD_GRAIN_3",
+    "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       44680
     ],
-    "uvType": "BOX",
-    "uvOrientation": 512
+    "uvType": "BOX"
   },
   {
     "description": "Giants Foundry Clamps",
@@ -10988,17 +10953,6 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.28
-  },
-  {
-    "description": "Giants Foundry Crucible",
-    "baseMaterial": "METALLIC_2_SEMIGLOSS",
-    "objectIds": [
-      44622,
-      44623,
-      44624
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.5
   },
   {
     "description": "Objects - Stone - Giants Foundry - Lava Rocks",
@@ -11042,28 +10996,6 @@
     ],
     "uvType": "GEOMETRY",
     "uvScale": 0.28
-  },
-  {
-    "description": "Giants Foundry -  Wooden - Chest",
-    "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 44726 ],
-    "uvType": "BOX",
-    "uvOrientation": 512
-  },
-  {
-    "description": "Giants Foundry -  Wooden - Bank Chest",
-    "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 44630 ],
-    "uvType": "BOX",
-    "uvOrientation": 512
-  },
-  {
-    "description": "Giants Foundry -  Wooden - WheelBarrow",
-    "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 44728 ],
-    "uvType": "BOX",
-    "uvOrientationX": 576,
-    "uvOrientationZ": 512
   },
   {
     "description": "Replace vanilla scrolling waterfall texture with droplets, until a better solution is found",
@@ -13976,7 +13908,15 @@
   {
     "description": "Temple of Light Walls",
     "baseMaterial": "STONE_NORMALED",
-    "objectIds": [ 10024, 10025, 10026, 10027, 10032 ],
+    "objectIds": [ 9748, 9977, 9978, 9979, 10023, 10024, 10025, 10026, 10027, 10032 ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 128
+  },
+  {
+    "description": "Temple of Light Walls - Trapt",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [ 10034],
     "uvType": "BOX",
     "uvScale": 0.7,
     "uvOrientation": 128
@@ -13991,8 +13931,43 @@
   },
   {
     "description": "Temple of Light - Objects - Stairs - Wide",
-    "baseMaterial": "MARBLE_1_SEMIGLOSS",
+    "baseMaterial": "MARBLE_1",
     "objectIds": [ 10015, 10016 ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Temple of Light - Objects - Wall Rubble - Huge",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [ 9990 ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 370
+  },
+  {
+    "description": "Temple of Light - Objects - Wall Rubble - Medium",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [ 10028 ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Temple of Light - Objects - Low Wall",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [ 10035 ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Temple of Light - Objects - Rope Rock",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [ 10036 ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Temple of Light - Objects - Stone Pillars",
+    "baseMaterial": "MARBLE_1_SEMIGLOSS",
+    "objectIds": [ 10019, 10020, 10021, 10022 ],
     "uvType": "BOX"
   }
 ]
