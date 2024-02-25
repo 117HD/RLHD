@@ -31882,7 +31882,7 @@
       252,
       252
     ],
-    "type": "static",
+    "type": "STATIC",
     "duration": 0,
     "range": 15,
     "objectIds": [
@@ -31900,7 +31900,7 @@
       252,
       252
     ],
-    "type": "static",
+    "type": "STATIC",
     "duration": 0,
     "range": 15,
     "objectIds": [
@@ -31918,7 +31918,7 @@
       173,
       253
     ],
-    "type": "static",
+    "type": "STATIC",
     "duration": 0,
     "range": 15,
     "objectIds": [ 9803 ]
@@ -31934,7 +31934,7 @@
       252,
       0
     ],
-    "type": "static",
+    "type": "STATIC",
     "duration": 0,
     "range": 15,
     "objectIds": [ 9802 ]
@@ -31950,7 +31950,7 @@
       0,
       252
     ],
-    "type": "static",
+    "type": "STATIC",
     "duration": 0,
     "range": 15,
     "objectIds": [ 9804 ]
@@ -31966,7 +31966,7 @@
       0,
       0
     ],
-    "type": "static",
+    "type": "STATIC",
     "duration": 0,
     "range": 15,
     "objectIds": [ 9800 ]
@@ -31982,7 +31982,7 @@
       252,
       252
     ],
-    "type": "static",
+    "type": "STATIC",
     "duration": 0,
     "range": 20,
     "objectIds": [
