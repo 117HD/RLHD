@@ -950,6 +950,7 @@ public enum Overlay {
 		.area(Area.TEMPLE_OF_THE_EYE)
 		.groundMaterial(GroundMaterial.ROCKY_CAVE_FLOOR)
 	),
+	TEMPLE_OF_LIGHT_FLOOR(p -> p.ids(106).area(Area.TEMPLE_OF_LIGHT).groundMaterial(GroundMaterial.WORN_TILES).blended(false).shiftLightness(15)),
 
 	// God Wars Dungeon (GWD)
 	GWD_WATER(104, Area.GOD_WARS_DUNGEON, WaterType.ICE_FLAT),
