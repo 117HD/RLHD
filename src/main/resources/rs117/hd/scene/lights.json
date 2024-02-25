@@ -31852,5 +31852,41 @@
     "objectIds": [
       13053
     ]
+  },
+  {
+    "description": "TEMPLE_OF_LIGHT_WALL_LIGHT",
+    "height": 220,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 7.5,
+    "color": [
+      252,
+      252,
+      252
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      9992
+    ]
+  },
+  {
+    "description": "TEMPLE_OF_LIGHT_BLUE_LIGHT_DOOR",
+    "height": 220,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 17.5,
+    "color": [
+      0,
+      87,
+      252
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      9771
+    ]
   }
 ]
