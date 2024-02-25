@@ -31857,8 +31857,8 @@
     "description": "TEMPLE_OF_LIGHT_WALL_LIGHT",
     "height": 220,
     "alignment": "CENTER",
-    "radius": 300,
-    "strength": 7.5,
+    "radius": 600,
+    "strength": 4.5,
     "color": [
       252,
       252,
@@ -31872,21 +31872,121 @@
     ]
   },
   {
-    "description": "TEMPLE_OF_LIGHT_BLUE_LIGHT_DOOR",
-    "height": 220,
+    "description": "TEMPLE_OF_LIGHT_LIGHTBEAM_WHITE",
+    "height": 150,
     "alignment": "CENTER",
     "radius": 300,
-    "strength": 17.5,
+    "strength": 3.5,
     "color": [
-      0,
-      87,
+      252,
+      252,
       252
     ],
-    "type": "FLICKER",
+    "type": "static",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      9799
+    ]
+  },
+  {
+    "description": "TEMPLE_OF_LIGHT_LIGHTBEAM_YELLOW",
+    "height": 150,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 3.5,
+    "color": [
+      204,
+      252,
+      252
+    ],
+    "type": "static",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      9801
+    ]
+  },
+  {
+    "description": "TEMPLE_OF_LIGHT_LIGHTBEAM_CYAN",
+    "height": 150,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 5,
+    "color": [
+      0,
+      173,
+      253
+    ],
+    "type": "static",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [ 9803 ]
+  },
+  {
+    "description": "TEMPLE_OF_LIGHT_LIGHTBEAM_GREEN",
+    "height": 150,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 2.5,
+    "color": [
+      0,
+      252,
+      0
+    ],
+    "type": "static",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [ 9802 ]
+  },
+  {
+    "description": "TEMPLE_OF_LIGHT_LIGHTBEAM_BLUE",
+    "height": 150,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 7.5,
+    "color": [
+      0,
+      0,
+      252
+    ],
+    "type": "static",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [ 9804 ]
+  },
+  {
+    "description": "TEMPLE_OF_LIGHT_LIGHTBEAM_RED",
+    "height": 150,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 4,
+    "color": [
+      252,
+      0,
+      0
+    ],
+    "type": "static",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [ 9800 ]
+  },
+  {
+    "description": "TEMPLE_OF_LIGHT_DOOR_OPEN",
+    "height": 200,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 7.5,
+    "color": [
+      252,
+      252,
+      252
+    ],
+    "type": "static",
     "duration": 0,
     "range": 20,
     "objectIds": [
-      9771
+      9775
     ]
   }
 ]
