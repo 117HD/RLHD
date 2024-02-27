@@ -172,6 +172,10 @@ public class EnvironmentManager {
 					env.normalize();
 
 				clientThread.invoke(() -> {
+					// Force instant transition during development
+					if (!first)
+						reset();
+
 					if (client.getGameState().getState() >= GameState.LOGGED_IN.getState() && plugin.getSceneContext() != null)
 						loadSceneEnvironments(plugin.getSceneContext());
 				});
