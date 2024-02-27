@@ -897,6 +897,10 @@ public enum Underlay {
 		.groundMaterial(GroundMaterial.ICE_4)
 		.ids(59)
 	),
+	// Mournings End 2 Areas
+	EAST_ARDOUGNE_ROCKY_SLOPE(p -> p.ids(57).area(Area.EAST_ARDOUGNE_UNDERGROUND).groundMaterial(GroundMaterial.ROCKY_CAVE_FLOOR)),
+	EAST_ARDOUGNE_CAVE_FLOOD(p -> p.ids(96, 98).area(Area.EAST_ARDOUGNE_UNDERGROUND).groundMaterial(GroundMaterial.EARTHEN_CAVE_FLOOR)),
+	TEMPLE_OF_LIGHT_MARBLE(p -> p.ids(68).area(Area.TEMPLE_OF_LIGHT).groundMaterial(GroundMaterial.MARBLE_1_GLOSS).blended(false).lightness(52)),
 
 	// Isle of Souls Dungeon
 	ISLE_OF_SOULS_DUNGEON_FLOOR(p -> p.ids(98).area(Area.ISLE_OF_SOULS_DUNGEON).groundMaterial(GroundMaterial.STONE_CAVE_FLOOR)),

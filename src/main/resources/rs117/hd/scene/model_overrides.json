@@ -13923,6 +13923,7 @@
     "objectIds": [
       24980,
       24981,
+      24982,
       24983
     ],
     "uvType": "MODEL_XZ",
@@ -14367,5 +14368,77 @@
     "uvType": "BOX",
     "uvScale": 0.75,
     "uvOrientation": 768
+  },
+  {
+    "description": "Objects - Rock - Brown Rock - Mineable rock models",
+    "baseMaterial": "ROCK_5",
+    "objectIds": [ 8828, 8829, 8830 ],
+    "uvType": "BOX",
+    "uvOrientation": 128
+  },
+  {
+    "description": "Temple of Light Walls",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [ 9748, 9977, 9978, 9979, 10023, 10024, 10025, 10026, 10027, 10032 ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 128
+  },
+  {
+    "description": "Temple of Light Walls - Trapt",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [ 10034],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 128
+  },
+  {
+    "description": "Temple of Light - Objects - Stairs - Narrow",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [ 10017, 10018 ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 338
+  },
+  {
+    "description": "Temple of Light - Objects - Stairs - Wide",
+    "baseMaterial": "MARBLE_1",
+    "objectIds": [ 10015, 10016 ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Temple of Light - Objects - Wall Rubble - Huge",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [ 9990 ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 370
+  },
+  {
+    "description": "Temple of Light - Objects - Wall Rubble - Medium",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [ 10028 ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Temple of Light - Objects - Low Wall",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [ 10035 ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Temple of Light - Objects - Rope Rock",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [ 10036 ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Temple of Light - Objects - Stone Pillars",
+    "baseMaterial": "MARBLE_1_SEMIGLOSS",
+    "objectIds": [ 10019, 10020, 10021, 10022 ],
+    "uvType": "BOX"
   }
 ]
