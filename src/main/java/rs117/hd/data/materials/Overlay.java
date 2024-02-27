@@ -213,6 +213,15 @@ public enum Overlay {
 	VARROCK_DIRT_BLENDING_IMPROVEMENT(-84, Area.VARROCK, GroundMaterial.DIRT, p -> p.shiftSaturation(1)),
 	// this tile is used by jagex to blend between dirt paths and regular paths; blending desaturates the dirt and looks bad, extra saturation cancels out the effect
 
+	VARROCK_SEWERS_BRICK_FLOOR(p -> p
+		.ids(27, 306)
+		.area(Area.VARROCK_SEWERS)
+		.groundMaterial(GroundMaterial.HD_BRICK_BROWN)
+		.lightness(86)
+		.uvOrientation(512)
+		.uvScale(1.5f)
+	),
+
 	// Barbarian Village
 	BARBARIAN_VILLAGE_EAST_PATH_FIX_1(83, Area.BARBARIAN_VILLAGE_EAST_PATH_FIX, GroundMaterial.DIRT, p -> p.shiftSaturation(2)),
 	BARBARIAN_VILLAGE_EAST_PATH_FIX_2(
@@ -728,7 +737,9 @@ public enum Overlay {
 		.blended(false)
 		.lightness(74)
 		.shiftHue(-3)
-		.shiftSaturation(-7)),
+		.shiftSaturation(-7)
+		.replaceWithIf(null, b -> !b.configGroundTextures)
+	),
 	// Draynor
 	DRAYNOR_SEWERS(p -> p.area(Area.DRAYNOR_SEWERS).ids(89).waterType(WaterType.MUDDY_WATER)),
 
@@ -945,6 +956,7 @@ public enum Overlay {
 		.area(Area.TEMPLE_OF_THE_EYE)
 		.groundMaterial(GroundMaterial.ROCKY_CAVE_FLOOR)
 	),
+	TEMPLE_OF_LIGHT_FLOOR(p -> p.ids(106).area(Area.TEMPLE_OF_LIGHT).groundMaterial(GroundMaterial.WORN_TILES).blended(false).shiftLightness(15)),
 
 	// God Wars Dungeon (GWD)
 	GWD_WATER(104, Area.GOD_WARS_DUNGEON, WaterType.ICE_FLAT),
@@ -964,7 +976,7 @@ public enum Overlay {
 
 	CRANDOR_GROUND_1(11, Area.CRANDOR, GroundMaterial.GRAVEL),
 
-	FISHING_TRAWLER_BOAT_PORT_KHAZARD_FIX(42, Area.FISHING_TRAWLER_BOAT_PORT_KHAZARD, WaterType.WATER),
+	FISHING_TRAWLER_BOAT_PORT_KHAZARD_FIX(42, Area.FISHING_TRAWLER_BOAT_PORT_KHAZARD, GroundMaterial.TRANSPARENT),
 	FISHING_TRAWLER_BOAT_FLOODED(6, Area.FISHING_TRAWLER_BOAT_FLOODED, WaterType.WATER_FLAT),
 
 	// Runecrafting Altars

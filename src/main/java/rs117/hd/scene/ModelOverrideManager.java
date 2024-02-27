@@ -39,7 +39,7 @@ public class ModelOverrideManager {
 	@Inject
 	private ModelPusher modelPusher;
 
-	private final HashMap<Long, ModelOverride> modelOverrides = new HashMap<>();
+	private final HashMap<Integer, ModelOverride> modelOverrides = new HashMap<>();
 
 	private FileWatcher.UnregisterCallback fileWatcher;
 
@@ -53,7 +53,7 @@ public class ModelOverrideManager {
 					throw new IOException("Empty or invalid: " + path);
 				for (ModelOverride override : entries) {
 					try {
-						override.normalize();
+						override.normalize(plugin.configVanillaShadowMode);
 					} catch (IllegalStateException ex) {
 						log.error("Invalid model override '{}': {}", override.description, ex.getMessage());
 						continue;
@@ -101,14 +101,18 @@ public class ModelOverrideManager {
 		if (override.seasonalTheme != null && override.seasonalTheme != plugin.configSeasonalTheme)
 			return;
 
-		for (int npcId : override.npcIds)
-			addEntry(ModelHash.TYPE_NPC, npcId, override);
-		for (int objectId : override.objectIds)
-			addEntry(ModelHash.TYPE_OBJECT, objectId, override);
+		for (int id : override.npcIds)
+			addEntry(ModelHash.TYPE_NPC, id, override);
+		for (int id : override.objectIds)
+			addEntry(ModelHash.TYPE_OBJECT, id, override);
+		for (int id : override.projectileIds)
+			addEntry(ModelHash.TYPE_PROJECTILE, id, override);
+		for (int id : override.graphicsObjectIds)
+			addEntry(ModelHash.TYPE_GRAPHICS_OBJECT, id, override);
 	}
 
 	private void addEntry(int type, int id, ModelOverride entry) {
-		long uuid = ModelHash.packUuid(id, type);
+		int uuid = ModelHash.packUuid(type, id);
 		ModelOverride current = modelOverrides.get(uuid);
 
 		if (current != null && !Objects.equals(current.seasonalTheme, entry.seasonalTheme)) {
@@ -167,8 +171,8 @@ public class ModelOverrideManager {
 	}
 
 	@NonNull
-	public ModelOverride getOverride(long hash, int[] worldPos) {
-		var override = modelOverrides.get(ModelHash.getUuid(client, hash));
+	public ModelOverride getOverride(int uuid, int[] worldPos) {
+		var override = modelOverrides.get(uuid);
 		if (override == null)
 			return ModelOverride.NONE;
 

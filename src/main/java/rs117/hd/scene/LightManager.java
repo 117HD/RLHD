@@ -559,7 +559,7 @@ public class LightManager {
 			light.npc = npc;
 			light.visible = false;
 			light.modelOverride = modelOverrideManager.getOverride(
-				ModelHash.packUuid(npc.getId(), ModelHash.TYPE_NPC),
+				ModelHash.packUuid(ModelHash.TYPE_NPC, npc.getId()),
 				sceneContext.localToWorld(npc.getLocalLocation(), client.getPlane())
 			);
 
@@ -704,7 +704,7 @@ public class LightManager {
 			light.z = (int) tileHeight - light.def.height - 1;
 			light.object = tileObject;
 			light.modelOverride = modelOverrideManager.getOverride(
-				ModelHash.packUuid(objectId, ModelHash.TYPE_OBJECT),
+				ModelHash.packUuid(ModelHash.TYPE_OBJECT, objectId),
 				sceneContext.localToWorld(light.x, light.y, light.plane)
 			);
 
@@ -744,7 +744,7 @@ public class LightManager {
 			if (light.fadeInDuration < 0)
 				light.fadeInDuration = .3f;
 			light.modelOverride = modelOverrideManager.getOverride(
-				ModelHash.packUuid(graphicsObject.getId(), ModelHash.TYPE_OBJECT),
+				ModelHash.packUuid(ModelHash.TYPE_OBJECT, graphicsObject.getId()),
 				sceneContext.localToWorld(light.x, light.y, light.plane)
 			);
 
