@@ -858,9 +858,25 @@ public enum Underlay {
 		.area(Area.MOTHERLODE_MINE)
 		.ids(63, 64, 71)
 	),
-	GIANTS_FOUNDRY(GroundMaterial.EARTHEN_CAVE_FLOOR, p -> p
-		.area(Area.GIANTS_FOUNDRY)
+	GIANTS_FOUNDRY_DESATURATION(p -> p.ids().groundMaterial(GroundMaterial.EARTHEN_CAVE_FLOOR).shiftSaturation(-1)),
+	GIANTS_FOUNDRY(p -> p
 		.ids(91, 101)
+		.area(Area.GIANTS_FOUNDRY)
+		.groundMaterial(GroundMaterial.EARTHEN_CAVE_FLOOR)
+		.replacementResolver(
+			(plugin, scene, tile, override) -> {
+				int[] hsl = getSouthWesternMostTileColor(tile);
+				if (hsl == null)
+					return override;
+
+				// Ash or stone
+				if (hsl[1] > 1 ) {
+					return GIANTS_FOUNDRY_DESATURATION;
+				}
+
+				return override;
+			}
+		)
 	),
 	MEIYERDITCH_MYREQUE_HIDEOUT(GroundMaterial.VARIED_DIRT, p -> p
 		.area(Area.MEIYERDITCH_MYREQUE_HIDEOUT)
@@ -885,6 +901,9 @@ public enum Underlay {
 	EAST_ARDOUGNE_ROCKY_SLOPE(p -> p.ids(57).area(Area.EAST_ARDOUGNE_UNDERGROUND).groundMaterial(GroundMaterial.ROCKY_CAVE_FLOOR)),
 	EAST_ARDOUGNE_CAVE_FLOOD(p -> p.ids(96, 98).area(Area.EAST_ARDOUGNE_UNDERGROUND).groundMaterial(GroundMaterial.EARTHEN_CAVE_FLOOR)),
 	TEMPLE_OF_LIGHT_MARBLE(p -> p.ids(68).area(Area.TEMPLE_OF_LIGHT).groundMaterial(GroundMaterial.MARBLE_1_GLOSS).blended(false).lightness(52)),
+
+	// Isle of Souls Dungeon
+	ISLE_OF_SOULS_DUNGEON_FLOOR(p -> p.ids(98).area(Area.ISLE_OF_SOULS_DUNGEON).groundMaterial(GroundMaterial.STONE_CAVE_FLOOR)),
 
 	// Death's office
 	DEATHS_OFFICE_TILE(-110, Area.DEATHS_OFFICE, GroundMaterial.TILES_2X2_1_SEMIGLOSS),

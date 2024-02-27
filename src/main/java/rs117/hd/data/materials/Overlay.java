@@ -733,7 +733,9 @@ public enum Overlay {
 		.blended(false)
 		.lightness(74)
 		.shiftHue(-3)
-		.shiftSaturation(-7)),
+		.shiftSaturation(-7)
+		.replaceWithIf(null, b -> !b.configGroundTextures)
+	),
 	// Draynor
 	DRAYNOR_SEWERS(p -> p.area(Area.DRAYNOR_SEWERS).ids(89).waterType(WaterType.MUDDY_WATER)),
 
@@ -970,7 +972,7 @@ public enum Overlay {
 
 	CRANDOR_GROUND_1(11, Area.CRANDOR, GroundMaterial.GRAVEL),
 
-	FISHING_TRAWLER_BOAT_PORT_KHAZARD_FIX(42, Area.FISHING_TRAWLER_BOAT_PORT_KHAZARD, WaterType.WATER),
+	FISHING_TRAWLER_BOAT_PORT_KHAZARD_FIX(42, Area.FISHING_TRAWLER_BOAT_PORT_KHAZARD, GroundMaterial.TRANSPARENT),
 	FISHING_TRAWLER_BOAT_FLOODED(6, Area.FISHING_TRAWLER_BOAT_FLOODED, WaterType.WATER_FLAT),
 
 	// Mind Altar
