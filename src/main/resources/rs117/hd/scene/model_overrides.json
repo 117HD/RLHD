@@ -3993,7 +3993,7 @@
   },
   {
     "description": "Seer's Village Ladder",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       25938,
       25939,
@@ -4001,7 +4001,10 @@
       25941,
       26118,
       26119
-    ]
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 1024
   },
   {
     "description": "Worn Carpet",
@@ -4759,7 +4762,13 @@
     "objectIds": [
       37,
       39,
+      1546,
+      1547,
       1548,
+      1549,
+      1550,
+      1551,
+      1552,
       1568,
       1569,
       1571,
@@ -4769,18 +4778,33 @@
       1570,
       1727,
       1728,
+      2631,
       3506,
       3507,
+      5501,
       8788,
       8792,
+      8820,
+      8821,
+      9565,
+      11449,
+      11450,
       11721,
       11722,
+      11726,
+      14751,
+      14752,
+      14753,
+      14754,
+      2355,
       23866,
       26130,
       26131,
       26132,
       26133,
       32534,
+      34844,
+      34931,
       39685,
       39686,
       44050,
@@ -5065,73 +5089,216 @@
     "description": "Wooden Door 1 - Fake Plank",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      71,
-      72,
-      73,
-      74,
-      1527,
-      1528,
-      1529,
-      1530,
+      3,
+      4,
+      24,
+      81,
+      82,
+      93,
+      99,
+      102,
       1535,
       1536,
       1732,
-      1733,
+      1722,
+      1726,
       1743,
+      2034,
+      2035,
       2036,
       2037,
       2038,
+      2054,
+      2069,
+      2184,
       2337,
       2338,
       2339,
       2340,
-      2416,
-      2417,
+      2427,
+      2428,
+      2429,
+      2430,
+      2431,
+      2526,
+      2527,
+      2528,
+      2529,
       2537,
       2528,
       2529,
-      2546,
-      2547,
-      2548,
-      2549,
-      5667,
+      2621,
+      2622,
+      2626,
+      2627,
+      2628,
+      2863,
+      3270,
+      3271,
+      3745,
+      3746,
+      4465,
+      4466,
+      4467,
+      4468,
+      4962,
+      7259,
+      7260,
+      8786,
       8787,
       8789,
+      8790,
       8791,
-      20197,
-      20198,
+      8793,
+      8818,
+      8819,
+      9398,
+      9709,
+      9710,
+      9716,
+      9721,
+      9723,
+      9724,
+      10045,
+      10260,
+      10261,
+      11483,
+      11719,
+      11720,
+      11723,
+      11725,
+      11727,
       11728,
       11774,
       11775,
       11776,
       11777,
-      11784,
-      11785,
-      11786,
-      11787,
+      11788,
+      13001,
+      13002,
       14749,
       14750,
+      15759,
+      23338,
+      23339,
+      23378,
+      23379,
+      23631,
       23972,
       23973,
       24050,
       24051,
+      24052,
+      24053,
+      24054,
       24055,
       24056,
       24057,
       24058,
-      24123,
-      24124,
       24363,
       24366,
       24367,
       24368,
       24369,
-      24565,
-      24566,
-      24567,
-      24568,
+      24958,
+      25417,
+      25418,
       25716,
       25717,
+      25819,
+      25820,
+      29066,
+      29067,
+      30164,
+      30167,
+      30364,
+      30365,
+      30366,
+      34927,
+      34929,
+      34932,
+      35932,
+      35934,
+      37940,
+      37941,
+      37961,
+      40178,
+      40382,
+      46253,
+      46254,
+      46563
+    ],
+    "uvType": "BOX",
+    "flatNormals": true
+  },
+  {
+    "description": "Wooden Door 2 - 4 Panel",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      22,
+      59,
+      92,
+      1540,
+      1541,
+      1542,
+      2705,
+      2706,
+      3747,
+      17316,
+      17317,
+      20925,
+      25642,
+      25643,
+      25718,
+      25719,
+      25799,
+      25800,
+      46862,
+      46863,
+      46864
+    ],
+    "flatNormals": true,
+    "uvType": "BOX",
+    "uvScale": 0.4
+  },
+  {
+    "description": "Wooden Door 3 - Fake Plank Golden Handle",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      71,
+      72,
+      73,
+      74,
+      1521,
+      1522,
+      1524,
+      1525,
+      1527,
+      1528,
+      1529,
+      1530,
+      1733,
+      2416,
+      2417,
+      2546,
+      2547,
+      2548,
+      2549,
+      2624,
+      2625,
+      5667,
+      10262,
+      10263,
+      10264,
+      10265,
+      20197,
+      20198,
+      24123,
+      24124,
+      25825,
+      25826,
+      25827,
+      25828,
       25748,
       25749,
       25750,
@@ -5142,46 +5309,43 @@
       25791,
       25802,
       25803,
-      25819,
-      25820,
-      25825,
-      25826,
-      25827,
-      25828,
-      26207
+      26205,
+      26207,
+      35935,
+      35936,
+      37963,
+      37964
     ],
     "uvType": "BOX",
     "flatNormals": true
   },
   {
-    "description": "Wooden Door 2 - 4 Panel",
+    "description": "Wooden Door 4 - Fake Plank with Silver Handle",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      59,
-      1521,
-      1522,
-      1524,
-      1525,
-      1542,
-      17316,
-      17317,
-      20925,
-      25718,
-      25719
+      11784,
+      11785,
+      11786,
+      11787,
+      24565,
+      24566,
+      24567,
+      24568
     ],
-    "flatNormals": true,
     "uvType": "BOX",
-    "uvScale": 0.4
+    "flatNormals": true
   },
   {
-    "description": "Wooden Door 3",
+    "description": "Wooden Door - Surprise Exam",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      1540,
-      1541
+      9316,
+      9317,
+      9318,
+      9319
     ],
-    "uvType": "BOX",
     "flatNormals": true,
+    "uvType": "BOX",
     "uvScale": 0.4
   },
   {
@@ -6480,8 +6644,7 @@
     "description": "Wall - Wooden - Post",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
-      10106,
-      12278
+      10106
     ],
     "uvScale": 0.4,
     "uvType": "BOX",
@@ -6545,6 +6708,7 @@
       44652,
       44681,
       44682,
+      44684,
       44713,
       44714,
       44715,
@@ -6592,7 +6756,8 @@
       17877,
       44744,
       44745
-    ]
+    ],
+    "uvType": "BOX"
   },
   {
     "description": "Objects - Stone - Mountain Daughter Burial",
@@ -10321,12 +10486,15 @@
     "uvOrientationZ": 512
   },
   {
-    "description": "Objects -  - Wooden - Battlements",
-    "baseMaterial": "WOOD_GRAIN",
+    "description": "Objects - Wooden - Battlements and Scaffold",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       1612
     ],
-    "uvType": "GEOMETRY"
+    "uvType": "BOX",
+    "uvScale": 0.85,
+    "uvOrientationZ": 512,
+    "uvOrientationX": 512
   },
   {
     "description": "Hadleys House - Wattle",
@@ -10919,6 +11087,28 @@
     "uvScale": 0.6
   },
   {
+    "description": "Objects - Stone - Giants Foundry - Mould Jig",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      44625,
+      44626,
+      44627
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 128
+  },
+  {
+    "description": "Objects - Stone - Giants Foundry - Preform storage",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      44633
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 1024
+  },
+  {
     "description": "Objects - Stone - Giants Foundry - Lavapool Rocks",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
@@ -10938,12 +11128,23 @@
     "uvScale": 0.6
   },
   {
+    "description": "Objects - Wooden - Steps",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      44679
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.1,
+    "uvOrientationY": 512
+  },
+  {
     "description": "Giants Foundry Single row fences",
-    "baseMaterial": "WOOD_GRAIN_2",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       44680
     ],
-    "uvType": "BOX"
+    "uvType": "BOX",
+    "uvOrientation": 512
   },
   {
     "description": "Giants Foundry Clamps",
@@ -10953,6 +11154,17 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.28
+  },
+  {
+    "description": "Giants Foundry Crucible",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      44622,
+      44623,
+      44624
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
   },
   {
     "description": "Objects - Stone - Giants Foundry - Lava Rocks",
@@ -10996,6 +11208,28 @@
     ],
     "uvType": "GEOMETRY",
     "uvScale": 0.28
+  },
+  {
+    "description": "Giants Foundry -  Wooden - Chest",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 44726 ],
+    "uvType": "BOX",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Giants Foundry -  Wooden - Bank Chest",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 44630 ],
+    "uvType": "BOX",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Giants Foundry -  Wooden - WheelBarrow",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 44728 ],
+    "uvType": "BOX",
+    "uvOrientationX": 576,
+    "uvOrientationZ": 512
   },
   {
     "description": "Replace vanilla scrolling waterfall texture with droplets, until a better solution is found",
@@ -13740,12 +13974,30 @@
     "uvScale": 0.8
   },
   {
-    "description": "Fossil Island - Outhouse Top",
+    "description": "Fossil Island - Outhouse Top and Evil Daves Moms house",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 12284 ],
+    "objectIds": [ 12283, 12284, 12285, 12286, 12287, 12288, 12290 ],
     "uvType": "BOX",
     "uvScale": 0.8,
     "uvOrientationX": 512
+  },
+  {
+    "description": "Daves Moms House Roof - Corner",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 12288, 12289 ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512
+  },
+  {
+    "description": "Daves Moms House Walls",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 12278 ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512
   },
   {
     "description": "Fossil Island - Stone - Manor Walls",
@@ -13896,6 +14148,209 @@
       11794,
       11795
     ]
+  },
+  {
+    "description": "Fishing Trawler Boat - Walls - Minigame Hull",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 37351, 37352 ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Plank Boat - Walls - Wooden - Hull",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      230, 234, 235, 236,
+      237, 238, 240, 242,
+      253, 281, 283, 284,
+      37350, 37353, 37354,
+      37356, 37365
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientationZ": 512,
+    "uvOrientationX": 512
+  },
+  {
+    "description": "Plank Boat - Walls - Wooden - Hull Aft",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 231, 232, 233 ],
+    "uvType": "BOX",
+    "uvScale": 0.85,
+    "uvOrientationZ": 512,
+    "uvOrientationX": 512
+  },
+  {
+    "description": "Plank Boat - Walls - Wooden - Hull with Porthole",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 243 ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientationZ": 512,
+    "uvOrientationX": 512
+  },
+  {
+    "description": "Plank Boat - Walls - Wooden - Hull with Bow Supports",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 257, 258 ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientationZ": 512,
+    "uvOrientationX": 512
+  },
+  {
+    "description": "Plank Boat - Walls - Wooden - Hull Bow with Woman",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 260 ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientationZ": 512,
+    "uvOrientationX": 512
+  },
+  {
+    "description": "Plank Boat - Wooden - Deck",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 9453, 9454, 9457, 9458, 9460, 9461, 9462 ],
+    "uvType": "BOX",
+    "uvScale": 1.0,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Plank Boat - Wooden - Rails",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 249, 2197, 2213, 9512, 41401, 11258 ],
+    "uvType": "BOX",
+    "uvScale": 1.1,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Fishing Trawler Boat - Wooden - Deck Opening",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 291, 292, 9459 ],
+    "uvType": "BOX",
+    "uvScale": 1.1,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Object - Wooden - Gang Plank",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      69, 70, 2081, 2082,
+      2083, 2084, 2085, 2086,
+      2087, 2088, 2412, 2413,
+      2593, 2594, 4977, 4978,
+      11211, 11212, 14304, 14305,
+      17392, 17393, 17394, 17395,
+      17396, 17397, 17398, 17399,
+      17400, 17401, 17402, 17403,
+      17404, 17405, 17406, 17407,
+      17408, 17409, 27777, 27778,
+      29723, 29724, 31756, 34667,
+      34668, 34669, 34670, 34671,
+      34672, 50063, 50064, 50065,
+      50066
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.1,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Port Phasmatys - Object - Wooden - Rotting Gang Plank",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [ 5304, 5305 ],
+    "uvType": "BOX",
+    "uvScale": 0.75
+  },
+  {
+    "description": "Mos LeHarmless - Large Boat - Walls - Wooden - Hull",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 11251, 11252, 11255, 11257, 11259, 11260 ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientationZ": 512,
+    "uvOrientationX": 512
+  },
+  {
+    "description": "Mos LeHarmless - Large Boat - Walls - Wooden - Hull Aft",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 11261, 11262, 11263 ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Mos LeHarmless - Large Boat - Walls - Wooden - Hull with Porthole",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 11253 ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientationZ": 512,
+    "uvOrientationX": 512
+  },
+  {
+    "description": "Mos LeHarmless - Large Boat - Walls - Wooden - Hull with Bow Supports",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 11284, 11285 ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientationZ": 512,
+    "uvOrientationX": 512
+  },
+  {
+    "description": "Mos LeHarmless - Large Boat - Wooden - Deck",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 11264 ],
+    "uvType": "BOX",
+    "uvScale": 1.0,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Port Phasmatys - Large Boat - Walls - Wooden - Hull",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [ 5385, 5386, 5387, 5388, 5399 ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientationY": 512
+  },
+  {
+    "description": "Port Phasmatys - Large Boat - Walls - Wooden - Hull Aft",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [ 5389 ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientationY": 512
+  },
+  {
+    "description": "Port Phasmatys - Large Boat - Walls - Wooden - Hull with Porthole",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [ 5386 ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientationY": 512
+  },
+  {
+    "description": "Port Phasmatys - Large Boat - Walls - Wooden - Hull with Bow Supports",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [ 5395, 5396 ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientationY": 512
+  },
+  {
+    "description": "Port Phasmatys - Large Boat - Wooden - Deck",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [ 5389, 5390, 5391 ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Port Phasmatys - Large Boat - Wooden - Rails",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [ 5398 ],
+    "uvType": "BOX",
+    "uvScale": 0.8
   },
   {
     "description": "Isle of Souls Dungeon - Walls - Rock Walls",

@@ -28820,7 +28820,7 @@
     "worldX": 3375,
     "worldY": 11489,
     "plane": 0,
-    "height": 200,
+    "height": 500,
     "alignment": "CENTER",
     "radius": 2400,
     "strength": 3,
@@ -28831,14 +28831,14 @@
     ],
     "type": "PULSE",
     "duration": 7000,
-    "range": 10
+    "range": 30
   },
   {
     "description": "GIANTS_FOUNDRY_LAVA_2",
     "worldX": 3379,
     "worldY": 11490,
     "plane": 0,
-    "height": 200,
+    "height": 500,
     "alignment": "CENTER",
     "radius": 2400,
     "strength": 3,
@@ -28849,14 +28849,14 @@
     ],
     "type": "PULSE",
     "duration": 7000,
-    "range": 10
+    "range": 30
   },
   {
     "description": "GIANTS_FOUNDRY_LAVA_3",
     "worldX": 3385,
     "worldY": 11490,
     "plane": 0,
-    "height": 200,
+    "height": 500,
     "alignment": "CENTER",
     "radius": 2400,
     "strength": 3,
@@ -28867,16 +28867,16 @@
     ],
     "type": "PULSE",
     "duration": 7000,
-    "range": 10
+    "range": 30
   },
   {
     "description": "GIANTS_FOUNDRY_LAVA_4",
     "worldX": 3374,
     "worldY": 11497,
     "plane": 0,
-    "height": 200,
+    "height": 500,
     "alignment": "CENTER",
-    "radius": 2400,
+    "radius": 800,
     "strength": 3,
     "color": [
       255,
@@ -28885,14 +28885,14 @@
     ],
     "type": "PULSE",
     "duration": 7000,
-    "range": 10
+    "range": 30
   },
   {
     "description": "GIANTS_FOUNDRY_LAVA_5",
     "worldX": 3374,
     "worldY": 11501,
     "plane": 0,
-    "height": 200,
+    "height": 500,
     "alignment": "CENTER",
     "radius": 2400,
     "strength": 3,
@@ -28903,14 +28903,14 @@
     ],
     "type": "PULSE",
     "duration": 7000,
-    "range": 10
+    "range": 30
   },
   {
     "description": "GIANTS_FOUNDRY_LAVA_6",
     "worldX": 3374,
     "worldY": 11505,
     "plane": 0,
-    "height": 200,
+    "height": 500,
     "alignment": "CENTER",
     "radius": 2400,
     "strength": 3,
@@ -28921,14 +28921,14 @@
     ],
     "type": "PULSE",
     "duration": 7000,
-    "range": 10
+    "range": 30
   },
   {
     "description": "GIANTS_FOUNDRY_LAVA_7",
     "worldX": 3368,
     "worldY": 11503,
     "plane": 0,
-    "height": 200,
+    "height": 500,
     "alignment": "CENTER",
     "radius": 2400,
     "strength": 3,
@@ -28939,14 +28939,14 @@
     ],
     "type": "PULSE",
     "duration": 7000,
-    "range": 10
+    "range": 30
   },
   {
     "description": "GIANTS_FOUNDRY_LAVA_8",
     "worldX": 3378,
     "worldY": 11508,
     "plane": 0,
-    "height": 200,
+    "height": 500,
     "alignment": "CENTER",
     "radius": 2400,
     "strength": 3,
@@ -28957,14 +28957,14 @@
     ],
     "type": "PULSE",
     "duration": 7000,
-    "range": 10
+    "range": 30
   },
   {
     "description": "GIANTS_FOUNDRY_LAVA_9",
     "worldX": 3378,
     "worldY": 11503,
     "plane": 0,
-    "height": 200,
+    "height": 500,
     "alignment": "CENTER",
     "radius": 2400,
     "strength": 3,
@@ -28975,7 +28975,143 @@
     ],
     "type": "PULSE",
     "duration": 7000,
-    "range": 10
+    "range": 30
+  },
+  {
+    "description": "GIANTS_FOUNDRY_LAVA_SHORE_1",
+    "worldX": 3372,
+    "worldY": 11496,
+    "plane": 0,
+    "height": 250,
+    "alignment": "CENTER",
+    "radius": 1200,
+    "strength": 8,
+    "color": [
+      235,
+      20,
+      0
+    ],
+    "type": "STATIC",
+    "range": 200
+  },
+  {
+    "description": "GIANTS_FOUNDRY_LAVA_SHORE_2",
+    "worldX": 3372,
+    "worldY": 11499,
+    "plane": 0,
+    "height": 250,
+    "alignment": "CENTER",
+    "radius": 1200,
+    "strength": 8,
+    "color": [
+      235,
+      20,
+      0
+    ],
+    "type": "STATIC",
+    "range": 200
+  },
+  {
+    "description": "GIANTS_FOUNDRY_LAVA_SHORE_3",
+    "worldX": 3371,
+    "worldY": 11501,
+    "plane": 0,
+    "height": 250,
+    "alignment": "CENTER",
+    "radius": 1200,
+    "strength": 8,
+    "color": [
+      235,
+      20,
+      0
+    ],
+    "type": "STATIC",
+    "range": 200
+  },
+  {
+    "description": "GIANTS_FOUNDRY_LAVA_SHORE_4",
+    "worldX": 3373,
+    "worldY": 11496,
+    "plane": 0,
+    "height": 150,
+    "alignment": "CENTER",
+    "radius": 1000,
+    "strength": 15,
+    "color": [
+      235,
+      20,
+      0
+    ],
+    "type": "STATIC",
+    "range": 200
+  },
+  {
+    "description": "GIANTS_FOUNDRY_LAVA_SHORE_5",
+    "worldX": 3374,
+    "worldY": 11495,
+    "plane": 0,
+    "height": 65,
+    "alignment": "CENTER",
+    "radius": 450,
+    "strength": 15,
+    "color": [
+      235,
+      20,
+      0
+    ],
+    "type": "STATIC",
+    "range": 150
+  },
+  {
+    "description": "GIANTS_FOUNDRY_LAVA_SHORE_6",
+    "worldX": 3373,
+    "worldY": 11490,
+    "plane": 0,
+    "height": 85,
+    "alignment": "CENTER",
+    "radius": 1000,
+    "strength": 15,
+    "color": [
+      235,
+      20,
+      0
+    ],
+    "type": "STATIC",
+    "range": 250
+  },
+  {
+    "description": "GIANTS_FOUNDRY_LAVA_SHORE_7",
+    "worldX": 3374,
+    "worldY": 11488,
+    "plane": 0,
+    "height": 100,
+    "alignment": "CENTER",
+    "radius": 1000,
+    "strength": 15,
+    "color": [
+      235,
+      20,
+      0
+    ],
+    "type": "STATIC",
+    "range": 200
+  },
+  {
+    "description": "GIANTS_FOUNDRY_LAVA_SHORE_8",
+    "worldX": 3376,
+    "worldY": 11488,
+    "plane": 0,
+    "height": 150,
+    "alignment": "CENTER",
+    "radius": 1000,
+    "strength": 15,
+    "color": [
+      235,
+      20,
+      0
+    ],
+    "type": "STATIC",
+    "range": 200
   },
   {
     "description": "GIANTS_FOUNDRY_DOORWAY",
@@ -28994,6 +29130,42 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 0
+  },
+  {
+    "description": "GIANTS_FOUNDRY_CRUCIBLE",
+    "height": 270,
+    "alignment": "CENTER",
+    "radius": 130,
+    "strength": 40,
+    "color": [
+      255,
+      182,
+      38
+    ],
+    "objectIds": [
+      44624
+    ],
+    "type": "PULSE",
+    "duration": 7000,
+    "range": 30
+  },
+  {
+    "description": "GIANTS_FOUNDRY_POURED_METAL_MOULD_JIG",
+    "height": 100,
+    "alignment": "CENTER",
+    "radius": 130,
+    "strength": 12,
+    "color": [
+      255,
+      182,
+      38
+    ],
+    "objectIds": [
+      44627
+    ],
+    "type": "PULSE",
+    "duration": 7000,
+    "range": 30
   },
   {
     "description": "LOVAKITE_FURNACE",
