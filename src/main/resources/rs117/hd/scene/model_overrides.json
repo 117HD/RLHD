@@ -14628,5 +14628,28 @@
     "objectIds": [ 14282 ],
     "seasonalTheme": "AUTUMN",
     "castShadows": true
+  },
+  {
+    "description": "The Scar brain matter",
+    "objectIds": [
+      47592,
+      49206,
+      49223,
+      49224,
+      49225,
+      49226,
+      49227,
+      49232,
+      49233,
+      49234,
+      49235,
+      49236,
+      49918,
+      49919,
+      49920,
+      49922,
+      49925
+    ],
+    "baseMaterial": "BLANK_GLOSS"
   }
 ]
