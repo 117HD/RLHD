@@ -14351,5 +14351,21 @@
     "objectIds": [ 5398 ],
     "uvType": "BOX",
     "uvScale": 0.8
+  },
+  {
+    "description": "Isle of Souls Dungeon - Walls - Rock Walls",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [ 37854, 37859 ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 768
+  },
+  {
+    "description": "Isle of Souls Dungeon - Objects - Dungeon Entrance",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [ 40737 ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 768
   }
 ]

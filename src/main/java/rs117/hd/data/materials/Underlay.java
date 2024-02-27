@@ -898,6 +898,9 @@ public enum Underlay {
 		.ids(59)
 	),
 
+	// Isle of Souls Dungeon
+	ISLE_OF_SOULS_DUNGEON_FLOOR(p -> p.ids(98).area(Area.ISLE_OF_SOULS_DUNGEON).groundMaterial(GroundMaterial.STONE_CAVE_FLOOR)),
+
 	// Death's office
 	DEATHS_OFFICE_TILE(-110, Area.DEATHS_OFFICE, GroundMaterial.TILES_2X2_1_SEMIGLOSS),
 
