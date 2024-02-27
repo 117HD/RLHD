@@ -999,6 +999,20 @@ public enum Underlay {
 		.area(Area.PEST_CONTROL)
 		.groundMaterial(GroundMaterial.DIRT)
 		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_DIRT)),
+	ABYSSAL_FLOOR(p -> p
+		.ids(2, 121, 122)
+		.area(Area.ABYSS)
+		.groundMaterial(GroundMaterial.ABYSSAL_FLOOR)
+		.uvScale(1.85f)
+		.uvOrientation(39)
+		.hue(1) // fixes baked in lighting effects
+		//.lightness(22) // removes baked in shading
+	),
+	LAW_ALTAR_FLOOR(p -> p
+		.ids(56, 57, 95)
+		.area(Area.LAW_ALTAR)
+		.groundMaterial(GroundMaterial.ROCKY_CAVE_FLOOR)
+	),
 
 	// Cutscenes
 	CANOE_CUTSCENE_GRASS(Area.CANOE_CUTSCENE, GroundMaterial.GRASS_SCROLLING, p -> p.ids(48, 50, 63)),

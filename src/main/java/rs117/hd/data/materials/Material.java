@@ -700,6 +700,25 @@ public enum Material {
 		.setSpecular(1.5f, 600)
 	),
 	BONE(GRUNGE_2, p -> p.setSpecular(0.25f, 20)),
+	ABYSSAL_D,
+	ABYSSAL_N,
+	ABYSSAL(p -> p
+		.setSpecular(4.5f, 400)
+		.setNormalMap(ABYSSAL_N)
+		.setDisplacementMap(ABYSSAL_D)
+		.setDisplacementScale(0.2f)
+		.setBrightness(3f)
+	),
+	ABYSSAL_2_D,
+	ABYSSAL_2_N,
+	ABYSSAL_2(p -> p
+		.setSpecular(7f, 400)
+		.setNormalMap(ABYSSAL_2_N)
+		.setDisplacementMap(ABYSSAL_2_D)
+		.setDisplacementScale(0.1f)
+		.setBrightness(1.9f)
+	),
+
 
 	// Aliases for separately replacing textures of different trees
 	LEAVES_YELLOW_SIDE(LEAVES_SIDE),

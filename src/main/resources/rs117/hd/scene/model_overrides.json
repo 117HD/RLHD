@@ -12606,12 +12606,14 @@
   },
   {
     "description": "Stronghold Of Security Petilance - Dripping Tendrils",
-    "baseMaterial": "OOZE",
+    "baseMaterial": "ABYSSAL_2",
     "objectIds": [
       23700,
-      23701
+      23701,
+      23702
     ],
-    "uvType": "BOX"
+    "uvType": "BOX",
+    "uvScale": 0.5
   },
   {
     "description": "Stronghold Of Security - Petilance - Overdoor Tendrils",
@@ -14417,6 +14419,203 @@
     "description": "Temple of Light - Objects - Stone Pillars",
     "baseMaterial": "MARBLE_1_SEMIGLOSS",
     "objectIds": [ 10019, 10020, 10021, 10022 ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Abyss - Wall",
+    "baseMaterial": "ABYSSAL",
+    "objectIds": [
+      20737,
+      25382,
+      25384,
+      26150,
+      26151,
+      26152,
+      26153,
+      26154,
+      26155,
+      26156,
+      26157,
+      26158,
+      26961,
+      26962,
+      26963,
+      26964,
+      26965,
+      26966,
+      26967,
+      26968,
+      26969,
+      26970,
+      26971,
+      26972,
+      26973,
+      27027,
+      27054,
+      27055
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Abyss - Puddle",
+    "baseMaterial": "WATER_PUDDLE",
+    "objectIds": [
+      26174,
+      26176,
+      26177
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Abyss - Gap",
+    "baseMaterial": "ABYSSAL_2",
+    "objectIds": [
+      25428,
+      25381
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Abyss - Rocks",
+    "baseMaterial": "ROCK_4",
+    "objectIds": [
+      25422,
+      25424
+
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Abyss - Tendrils - Large",
+    "baseMaterial": "ABYSSAL_2",
+    "objectIds": [
+      25425,
+      25427
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Abyss - Eyes",
+    "baseMaterial": "ABYSSAL_2",
+    "objectIds": [
+      26146,
+      26148
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Abyss - Boil",
+    "baseMaterial": "ABYSSAL_2",
+    "objectIds": [
+      25590,
+      26144
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Abyss - Blockage",
+    "baseMaterial": "ABYSSAL",
+    "objectIds": [
+      25383
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Abyss - Object - Ground Sucker",
+    "baseMaterial": "ABYSSAL",
+    "objectIds": [
+      26159
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Abyss - Object - Ground Tendrils - Small",
+    "baseMaterial": "ABYSSAL",
+    "objectIds": [
+      26167,
+      26168,
+      26169
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Abyss - Object - Popped Pustules - Small",
+    "baseMaterial": "ABYSSAL",
+    "objectIds": [
+      26161,
+      26162,
+      26163,
+      26164,
+      26165,
+      26166,
+      27021,
+      27022,
+      27023,
+      27024
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.52,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Abyss - Decoration - Veins",
+    "baseMaterial": "ABYSSAL_2",
+    "objectIds": [
+      26170,
+      26173
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Abyss - Peak Eye",
+    "baseMaterial": "ABYSSAL_2",
+    "objectIds": [
+      27048,
+      27049,
+      27050,
+      27051,
+      27052,
+      27053
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Abyss - Green-tipped Tendrils",
+    "baseMaterial": "ABYSSAL_2",
+    "objectIds": [
+      27014,
+      27015,
+      27016
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Walls - Law Altar",
+    "baseMaterial": "ROCK_2",
+    "objectIds": [
+      34806,
+      34807,
+      34808
+    ],
     "uvType": "BOX"
   }
 ]

@@ -403,6 +403,10 @@ public enum Overlay {
 		.blended(true)
 	),
 
+	// Abyss
+	ABYSSAL_FLOOR(p -> p.ids(42).area(Area.ABYSS).groundMaterial(GroundMaterial.ABYSSAL_FLOOR)),
+	ABYSSAL_LIQUID(p -> p.ids(66, 67).area(Area.ABYSS).waterType(WaterType.ABYSS_BILE)),
+
 
 	// Goblin Village
 	GOBLIN_VILLAGE_TILES_BLEND_FIX_OVERLAY(
@@ -975,12 +979,10 @@ public enum Overlay {
 	FISHING_TRAWLER_BOAT_PORT_KHAZARD_FIX(42, Area.FISHING_TRAWLER_BOAT_PORT_KHAZARD, GroundMaterial.TRANSPARENT),
 	FISHING_TRAWLER_BOAT_FLOODED(6, Area.FISHING_TRAWLER_BOAT_FLOODED, WaterType.WATER_FLAT),
 
-	// Mind Altar
+	// Runecrafting Altars
 	MIND_ALTAR_TILE_1(3, Area.MIND_ALTAR, GroundMaterial.MARBLE_1_SEMIGLOSS, p -> p.blended(false)),
 	MIND_ALTAR_TILE_4(Area.MIND_ALTAR, GroundMaterial.MARBLE_2_SEMIGLOSS, p -> p.blended(false).ids(4, 10)),
-
-	// Law Altar
-	LAW_ALTAR_SYMBOL(87, Area.LAW_ALTAR, GroundMaterial.DIRT, p -> p.blended(false)),
+	LAW_ALTAR_SYMBOL(87, Area.LAW_ALTAR, GroundMaterial.MARBLE_2_GLOSS, p -> p.blended(false)),
 
 	// Dragon Slayer II
 	DS2_SHIPS_WATER(6, Area.DS2_SHIPS, WaterType.WATER_FLAT),
