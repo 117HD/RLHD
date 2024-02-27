@@ -30,16 +30,30 @@
       },
       "npcIds": {
         "type": "array",
-        "description": "A set of NPC IDs or NpcID keys that the override should apply to.",
+        "description": "A set of NPC IDs which the override should apply to.",
         "items": {
-          "type": [ "integer", "string" ]
+          "type": "integer"
         }
       },
       "objectIds": {
         "type": "array",
-        "description": "A set of object IDs or ObjectID keys that the override should apply to.",
+        "description": "A set of object IDs which the override should apply to.",
         "items": {
-          "type": [ "integer", "string" ]
+          "type": "integer"
+        }
+      },
+      "projectileIds": {
+        "type": "array",
+        "description": "A set of projectile IDs which the override should apply to.",
+        "items": {
+          "type": "integer"
+        }
+      },
+      "graphicsObjectIds": {
+        "type": "array",
+        "description": "A set of graphics object IDs which the override should apply to.",
+        "items": {
+          "type": "integer"
         }
       },
       "baseMaterial": {
@@ -93,7 +107,7 @@
       },
       "rotate": {
         "type": "integer",
-        "description": "Counter-clockwise rotation around the up-axis in degrees, where only 0, 90, 180 and 270 are allowed. Defaults to 0."
+        "description": "Counter-clockwise rotation around the up-axis in degrees, where only 0, 90, 180 and 270 are allowed. Defaults to 0. Only works for static scene models."
       },
       "hide": {
         "type": "boolean",
@@ -111,9 +125,13 @@
         "type": "boolean",
         "description": "Whether flat normals should be used instead of smooth normals. Defaults to false."
       },
-      "removeBakedLighting": {
+      "hideVanillaShadows": {
         "type": "boolean",
-        "description": "Whether the model has fake shadows or baked lighting that should be removed. Defaults to false."
+        "description": "Whether the model has fake shadows which should be removed. Defaults to false."
+      },
+      "retainVanillaShadowsInPvm": {
+        "type": "boolean",
+        "description": "Whether the model has fake shadows which are potentially useful for PvM. Defaults to false."
       },
       "castShadows": {
         "type": "boolean",

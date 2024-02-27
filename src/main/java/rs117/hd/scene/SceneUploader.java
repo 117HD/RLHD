@@ -44,6 +44,7 @@ import rs117.hd.model.ModelPusher;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.scene.model_overrides.ObjectType;
 import rs117.hd.utils.HDUtils;
+import rs117.hd.utils.ModelHash;
 
 import static net.runelite.api.Perspective.*;
 import static rs117.hd.HdPlugin.NORMAL_SIZE;
@@ -200,7 +201,7 @@ class SceneUploader {
 		}
 	}
 
-	private void uploadModel(SceneContext sceneContext, Tile tile, long hash, Model model, int orientation, ObjectType objectType) {
+	private void uploadModel(SceneContext sceneContext, Tile tile, int uuid, Model model, int orientation, ObjectType objectType) {
 		// deduplicate hillskewed models
 		if (model.getUnskewedModel() != null)
 			model = model.getUnskewedModel();
@@ -209,7 +210,7 @@ class SceneUploader {
 			return;
 
 		int[] worldPos = sceneContext.localToWorld(tile.getLocalLocation(), tile.getPlane());
-		ModelOverride modelOverride = modelOverrideManager.getOverride(hash, worldPos);
+		ModelOverride modelOverride = modelOverrideManager.getOverride(uuid, worldPos);
 		int sceneId = modelOverride.hashCode() << 16 | sceneContext.id;
 
 		// check if the model has already been uploaded
@@ -227,7 +228,7 @@ class SceneUploader {
 		if (modelOverride.hide) {
 			vertexOffset = -1;
 		} else {
-			modelPusher.pushModel(sceneContext, tile, hash, model, modelOverride, objectType, orientation, false);
+			modelPusher.pushModel(sceneContext, tile, uuid, model, modelOverride, objectType, orientation, false);
 			if (sceneContext.modelPusherResults[1] == 0)
 				uvOffset = -1;
 		}
@@ -315,7 +316,7 @@ class SceneUploader {
 		if (wallObject != null) {
 			Renderable renderable1 = wallObject.getRenderable1();
 			if (renderable1 instanceof Model) {
-				uploadModel(sceneContext, tile, wallObject.getHash(), (Model) renderable1,
+				uploadModel(sceneContext, tile, ModelHash.packUuid(ModelHash.TYPE_OBJECT, wallObject.getId()), (Model) renderable1,
 					HDUtils.convertWallObjectOrientation(wallObject.getOrientationA()),
 					ObjectType.WALL_OBJECT
 				);
@@ -323,7 +324,7 @@ class SceneUploader {
 
 			Renderable renderable2 = wallObject.getRenderable2();
 			if (renderable2 instanceof Model) {
-				uploadModel(sceneContext, tile, wallObject.getHash(), (Model) renderable2,
+				uploadModel(sceneContext, tile, ModelHash.packUuid(ModelHash.TYPE_OBJECT, wallObject.getId()), (Model) renderable2,
 					HDUtils.convertWallObjectOrientation(wallObject.getOrientationB()),
 					ObjectType.WALL_OBJECT
 				);
@@ -334,7 +335,7 @@ class SceneUploader {
 		if (groundObject != null) {
 			Renderable renderable = groundObject.getRenderable();
 			if (renderable instanceof Model) {
-				uploadModel(sceneContext, tile, groundObject.getHash(), (Model) renderable,
+				uploadModel(sceneContext, tile, ModelHash.packUuid(ModelHash.TYPE_OBJECT, groundObject.getId()), (Model) renderable,
 					HDUtils.getBakedOrientation(groundObject.getConfig()),
 					ObjectType.GROUND_OBJECT
 				);
@@ -345,7 +346,7 @@ class SceneUploader {
 		if (decorativeObject != null) {
 			Renderable renderable = decorativeObject.getRenderable();
 			if (renderable instanceof Model) {
-				uploadModel(sceneContext, tile, decorativeObject.getHash(), (Model) renderable,
+				uploadModel(sceneContext, tile, ModelHash.packUuid(ModelHash.TYPE_OBJECT, decorativeObject.getId()), (Model) renderable,
 					HDUtils.getBakedOrientation(decorativeObject.getConfig()),
 					ObjectType.DECORATIVE_OBJECT
 				);
@@ -353,7 +354,7 @@ class SceneUploader {
 
 			Renderable renderable2 = decorativeObject.getRenderable2();
 			if (renderable2 instanceof Model) {
-				uploadModel(sceneContext, tile, decorativeObject.getHash(), (Model) renderable2,
+				uploadModel(sceneContext, tile, ModelHash.packUuid(ModelHash.TYPE_OBJECT, decorativeObject.getId()), (Model) renderable2,
 					HDUtils.getBakedOrientation(decorativeObject.getConfig()),
 					ObjectType.DECORATIVE_OBJECT
 				);
@@ -368,7 +369,10 @@ class SceneUploader {
 
 			Renderable renderable = gameObject.getRenderable();
 			if (renderable instanceof Model) {
-				uploadModel(sceneContext, tile, gameObject.getHash(), (Model) gameObject.getRenderable(),
+				uploadModel(sceneContext,
+					tile,
+					ModelHash.packUuid(ModelHash.TYPE_OBJECT, gameObject.getId()),
+					(Model) gameObject.getRenderable(),
 					HDUtils.getBakedOrientation(gameObject.getConfig()), ObjectType.GAME_OBJECT
 				);
 			}
@@ -435,6 +439,9 @@ class SceneUploader {
 		int nwVertexKey = vertexKeys[2];
 		int neVertexKey = vertexKeys[3];
 
+		int uvOrientation = 0;
+		float uvScale = 1;
+
 		// Ignore certain tiles that aren't supposed to be visible,
 		// but which we can still make a height-adjusted version of for underwater
 		if (sceneTilePaint.getNeColor() != 12345678)
@@ -473,9 +480,41 @@ class SceneUploader {
 				neNormals = sceneContext.vertexTerrainNormals.getOrDefault(neVertexKey, neNormals);
 				nwNormals = sceneContext.vertexTerrainNormals.getOrDefault(nwVertexKey, nwNormals);
 
-				if (plugin.configGroundBlending && !proceduralGenerator.useDefaultColor(scene, tile) && tileTexture == -1) {
-					// get the vertices' colors and textures from hashmaps
+				boolean useBlendedMaterialAndColor =
+					plugin.configGroundBlending && !proceduralGenerator.useDefaultColor(scene, tile) && tileTexture == -1;
 
+				GroundMaterial groundMaterial = null;
+				Overlay overlay = Overlay.getOverlay(scene, tile, plugin);
+				if (overlay != Overlay.NONE) {
+					groundMaterial = overlay.groundMaterial;
+					uvOrientation = overlay.uvOrientation;
+					uvScale = overlay.uvScale;
+					if (!useBlendedMaterialAndColor) {
+						swColor = overlay.modifyColor(swColor);
+						seColor = overlay.modifyColor(seColor);
+						nwColor = overlay.modifyColor(nwColor);
+						neColor = overlay.modifyColor(neColor);
+					}
+				} else {
+					Underlay underlay = Underlay.getUnderlay(scene, tile, plugin);
+					if (underlay != Underlay.NONE) {
+						groundMaterial = underlay.groundMaterial;
+						uvOrientation = underlay.uvOrientation;
+						uvScale = underlay.uvScale;
+						if (!useBlendedMaterialAndColor) {
+							swColor = underlay.modifyColor(swColor);
+							seColor = underlay.modifyColor(seColor);
+							nwColor = underlay.modifyColor(nwColor);
+							neColor = underlay.modifyColor(neColor);
+						}
+					} else if (tileTexture == -1) {
+						// Fall back to the default ground material if the tile is untextured
+						groundMaterial = underlay.groundMaterial;
+					}
+				}
+
+				if (useBlendedMaterialAndColor) {
+					// get the vertices' colors and textures from hashmaps
 					swColor = sceneContext.vertexTerrainColor.getOrDefault(swVertexKey, swColor);
 					seColor = sceneContext.vertexTerrainColor.getOrDefault(seVertexKey, seColor);
 					neColor = sceneContext.vertexTerrainColor.getOrDefault(neVertexKey, neColor);
@@ -487,36 +526,11 @@ class SceneUploader {
 						neMaterial = sceneContext.vertexTerrainTexture.getOrDefault(neVertexKey, neMaterial);
 						nwMaterial = sceneContext.vertexTerrainTexture.getOrDefault(nwVertexKey, nwMaterial);
 					}
-				} else {
-					GroundMaterial groundMaterial = null;
-					Overlay overlay = Overlay.getOverlay(scene, tile, plugin);
-					if (overlay != Overlay.NONE)
-					{
-						groundMaterial = overlay.groundMaterial;
-						swColor = overlay.modifyColor(swColor);
-						seColor = overlay.modifyColor(seColor);
-						nwColor = overlay.modifyColor(nwColor);
-						neColor = overlay.modifyColor(neColor);
-					} else {
-						Underlay underlay = Underlay.getUnderlay(scene, tile, plugin);
-						if (underlay != Underlay.NONE) {
-							groundMaterial = underlay.groundMaterial;
-							swColor = underlay.modifyColor(swColor);
-							seColor = underlay.modifyColor(seColor);
-							nwColor = underlay.modifyColor(nwColor);
-							neColor = underlay.modifyColor(neColor);
-						} else if (tileTexture == -1) {
-							// Fall back to the default ground material if the tile is untextured
-							groundMaterial = underlay.groundMaterial;
-						}
-					}
-
-					if (plugin.configGroundTextures && groundMaterial != null) {
-						swMaterial = groundMaterial.getRandomMaterial(tileZ, baseX + tileX, baseY + tileY);
-						seMaterial = groundMaterial.getRandomMaterial(tileZ, baseX + tileX + 1, baseY + tileY);
-						nwMaterial = groundMaterial.getRandomMaterial(tileZ, baseX + tileX, baseY + tileY + 1);
-						neMaterial = groundMaterial.getRandomMaterial(tileZ, baseX + tileX + 1, baseY + tileY + 1);
-					}
+				} else if (plugin.configGroundTextures && groundMaterial != null) {
+					swMaterial = groundMaterial.getRandomMaterial(tileZ, baseX + tileX, baseY + tileY);
+					seMaterial = groundMaterial.getRandomMaterial(tileZ, baseX + tileX + 1, baseY + tileY);
+					nwMaterial = groundMaterial.getRandomMaterial(tileZ, baseX + tileX, baseY + tileY + 1);
+					neMaterial = groundMaterial.getRandomMaterial(tileZ, baseX + tileX + 1, baseY + tileY + 1);
 				}
 			}
 			else
@@ -581,14 +595,26 @@ class SceneUploader {
 			int packedMaterialDataNE = modelPusher.packMaterialData(
 				neMaterial, tileTexture, ModelOverride.NONE, UvType.GEOMETRY, neVertexIsOverlay);
 
-			sceneContext.stagingBufferUvs.ensureCapacity(24);
-			sceneContext.stagingBufferUvs.put(0, 0, 0, packedMaterialDataNE);
-			sceneContext.stagingBufferUvs.put(1, 0, 0, packedMaterialDataNW);
-			sceneContext.stagingBufferUvs.put(0, 1, 0, packedMaterialDataSE);
+			float uvcos = -uvScale, uvsin = 0;
+			if (uvOrientation % 2048 != 0) {
+				float rad = -uvOrientation * (float) UNIT;
+				uvcos = (float) Math.cos(rad) * -uvScale;
+				uvsin = (float) Math.sin(rad) * -uvScale;
+			}
+			float uvx = baseX + tileX;
+			float uvy = baseY + tileY;
+			float tmp = uvx;
+			uvx = uvx * uvcos - uvy * uvsin;
+			uvy = tmp * uvsin + uvy * uvcos;
 
-			sceneContext.stagingBufferUvs.put(1, 1, 0, packedMaterialDataSW);
-			sceneContext.stagingBufferUvs.put(0, 1, 0, packedMaterialDataSE);
-			sceneContext.stagingBufferUvs.put(1, 0, 0, packedMaterialDataNW);
+			sceneContext.stagingBufferUvs.ensureCapacity(24);
+			sceneContext.stagingBufferUvs.put(uvx, uvy, 0, packedMaterialDataNE);
+			sceneContext.stagingBufferUvs.put(uvx - uvcos, uvy - uvsin, 0, packedMaterialDataNW);
+			sceneContext.stagingBufferUvs.put(uvx + uvsin, uvy - uvcos, 0, packedMaterialDataSE);
+
+			sceneContext.stagingBufferUvs.put(uvx - uvcos + uvsin, uvy - uvsin - uvcos, 0, packedMaterialDataSW);
+			sceneContext.stagingBufferUvs.put(uvx + uvsin, uvy - uvcos, 0, packedMaterialDataSE);
+			sceneContext.stagingBufferUvs.put(uvx - uvcos, uvy - uvsin, 0, packedMaterialDataNW);
 
 			uvBufferLength += 6;
 		}
@@ -795,6 +821,9 @@ class SceneUploader {
 			Material materialB = Material.NONE;
 			Material materialC = Material.NONE;
 
+			int uvOrientation = 0;
+			float uvScale = 1;
+
 			float[] normalsA = UP_NORMAL;
 			float[] normalsB = UP_NORMAL;
 			float[] normalsC = UP_NORMAL;
@@ -823,12 +852,46 @@ class SceneUploader {
 					normalsB = sceneContext.vertexTerrainNormals.getOrDefault(vertexKeyB, normalsB);
 					normalsC = sceneContext.vertexTerrainNormals.getOrDefault(vertexKeyC, normalsC);
 
-					if (plugin.configGroundBlending &&
+					boolean useBlendedMaterialAndColor =
+						plugin.configGroundBlending &&
 						!(ProceduralGenerator.isOverlayFace(tile, face) && proceduralGenerator.useDefaultColor(scene, tile)) &&
-						textureIndex == -1
-					) {
-						// get the vertices' colors and textures from hashmaps
+						textureIndex == -1;
 
+					GroundMaterial groundMaterial = null;
+					if (ProceduralGenerator.isOverlayFace(tile, face)) {
+						Overlay overlay = Overlay.getOverlay(scene, tile, plugin);
+						if (overlay != Overlay.NONE) {
+							groundMaterial = overlay.groundMaterial;
+							uvOrientation = overlay.uvOrientation;
+							uvScale = overlay.uvScale;
+							if (!useBlendedMaterialAndColor) {
+								colorA = overlay.modifyColor(colorA);
+								colorB = overlay.modifyColor(colorB);
+								colorC = overlay.modifyColor(colorC);
+							}
+						} else if (textureIndex == -1) {
+							// Fall back to the default ground material if the tile is untextured
+							groundMaterial = overlay.groundMaterial;
+						}
+					} else {
+						Underlay underlay = Underlay.getUnderlay(scene, tile, plugin);
+						if (underlay != Underlay.NONE) {
+							groundMaterial = underlay.groundMaterial;
+							uvOrientation = underlay.uvOrientation;
+							uvScale = underlay.uvScale;
+							if (!useBlendedMaterialAndColor) {
+								colorA = underlay.modifyColor(colorA);
+								colorB = underlay.modifyColor(colorB);
+								colorC = underlay.modifyColor(colorC);
+							}
+						} else if (textureIndex == -1) {
+							// Fall back to the default ground material if the tile is untextured
+							groundMaterial = underlay.groundMaterial;
+						}
+					}
+
+					if (useBlendedMaterialAndColor) {
+						// get the vertices' colors and textures from hashmaps
 						colorA = sceneContext.vertexTerrainColor.getOrDefault(vertexKeyA, colorA);
 						colorB = sceneContext.vertexTerrainColor.getOrDefault(vertexKeyB, colorB);
 						colorC = sceneContext.vertexTerrainColor.getOrDefault(vertexKeyC, colorC);
@@ -838,49 +901,22 @@ class SceneUploader {
 							materialB = sceneContext.vertexTerrainTexture.getOrDefault(vertexKeyB, materialB);
 							materialC = sceneContext.vertexTerrainTexture.getOrDefault(vertexKeyC, materialC);
 						}
-					} else {
-						GroundMaterial groundMaterial = null;
-						if (ProceduralGenerator.isOverlayFace(tile, face)) {
-							Overlay overlay = Overlay.getOverlay(scene, tile, plugin);
-							if (overlay != Overlay.NONE) {
-								groundMaterial = overlay.groundMaterial;
-								colorA = overlay.modifyColor(colorA);
-								colorB = overlay.modifyColor(colorB);
-								colorC = overlay.modifyColor(colorC);
-							} else if (textureIndex == -1) {
-								// Fall back to the default ground material if the tile is untextured
-								groundMaterial = overlay.groundMaterial;
-							}
-						} else {
-							Underlay underlay = Underlay.getUnderlay(scene, tile, plugin);
-							if (underlay != Underlay.NONE) {
-								groundMaterial = underlay.groundMaterial;
-								colorA = underlay.modifyColor(colorA);
-								colorB = underlay.modifyColor(colorB);
-								colorC = underlay.modifyColor(colorC);
-							} else if (textureIndex == -1) {
-								// Fall back to the default ground material if the tile is untextured
-								groundMaterial = underlay.groundMaterial;
-							}
-						}
-
-						if (plugin.configGroundTextures && groundMaterial != null) {
-							materialA = groundMaterial.getRandomMaterial(
-								tileZ,
-								baseX + tileX + (int) Math.floor((float) localVertices[0][0] / LOCAL_TILE_SIZE),
-								baseY + tileY + (int) Math.floor((float) localVertices[0][1] / LOCAL_TILE_SIZE)
-							);
-							materialB = groundMaterial.getRandomMaterial(
-								tileZ,
-								baseX + tileX + (int) Math.floor((float) localVertices[1][0] / LOCAL_TILE_SIZE),
-								baseY + tileY + (int) Math.floor((float) localVertices[1][1] / LOCAL_TILE_SIZE)
-							);
-							materialC = groundMaterial.getRandomMaterial(
-								tileZ,
-								baseX + tileX + (int) Math.floor((float) localVertices[2][0] / LOCAL_TILE_SIZE),
-								baseY + tileY + (int) Math.floor((float) localVertices[2][1] / LOCAL_TILE_SIZE)
-							);
-						}
+					} else if (plugin.configGroundTextures && groundMaterial != null) {
+						materialA = groundMaterial.getRandomMaterial(
+							tileZ,
+							baseX + tileX + (int) Math.floor((float) localVertices[0][0] / LOCAL_TILE_SIZE),
+							baseY + tileY + (int) Math.floor((float) localVertices[0][1] / LOCAL_TILE_SIZE)
+						);
+						materialB = groundMaterial.getRandomMaterial(
+							tileZ,
+							baseX + tileX + (int) Math.floor((float) localVertices[1][0] / LOCAL_TILE_SIZE),
+							baseY + tileY + (int) Math.floor((float) localVertices[1][1] / LOCAL_TILE_SIZE)
+						);
+						materialC = groundMaterial.getRandomMaterial(
+							tileZ,
+							baseX + tileX + (int) Math.floor((float) localVertices[2][0] / LOCAL_TILE_SIZE),
+							baseY + tileY + (int) Math.floor((float) localVertices[2][1] / LOCAL_TILE_SIZE)
+						);
 					}
 				} else {
 					// set colors for the shoreline to create a foam effect in the water shader
@@ -917,17 +953,29 @@ class SceneUploader {
 
 			bufferLength += 3;
 
-			int packedMaterialDataA = modelPusher.packMaterialData(
-				materialA, textureIndex, ModelOverride.NONE, UvType.GEOMETRY, vertexAIsOverlay);
-			int packedMaterialDataB = modelPusher.packMaterialData(
-				materialB, textureIndex, ModelOverride.NONE, UvType.GEOMETRY, vertexBIsOverlay);
-			int packedMaterialDataC = modelPusher.packMaterialData(
-				materialC, textureIndex, ModelOverride.NONE, UvType.GEOMETRY, vertexCIsOverlay);
+			int[] packedMaterialData = {
+				modelPusher.packMaterialData(materialA, textureIndex, ModelOverride.NONE, UvType.GEOMETRY, vertexAIsOverlay),
+				modelPusher.packMaterialData(materialB, textureIndex, ModelOverride.NONE, UvType.GEOMETRY, vertexBIsOverlay),
+				modelPusher.packMaterialData(materialC, textureIndex, ModelOverride.NONE, UvType.GEOMETRY, vertexCIsOverlay)
+			};
+
+			float uvcos = -uvScale, uvsin = 0;
+			if (uvOrientation % 2048 != 0) {
+				float rad = -uvOrientation * (float) UNIT;
+				uvcos = (float) Math.cos(rad) * -uvScale;
+				uvsin = (float) Math.sin(rad) * -uvScale;
+			}
 
 			sceneContext.stagingBufferUvs.ensureCapacity(12);
-			sceneContext.stagingBufferUvs.put(1 - localVertices[0][0] / 128f, 1 - localVertices[0][1] / 128f, 0, packedMaterialDataA);
-			sceneContext.stagingBufferUvs.put(1 - localVertices[1][0] / 128f, 1 - localVertices[1][1] / 128f, 0, packedMaterialDataB);
-			sceneContext.stagingBufferUvs.put(1 - localVertices[2][0] / 128f, 1 - localVertices[2][1] / 128f, 0, packedMaterialDataC);
+			for (int i = 0; i < 3; i++) {
+				float uvx = baseX + tileX + localVertices[i][0] / 128f - 1;
+				float uvy = baseY + tileY + localVertices[i][1] / 128f - 1;
+				float tmp = uvx;
+				uvx = uvx * uvcos - uvy * uvsin;
+				uvy = tmp * uvsin + uvy * uvcos;
+
+				sceneContext.stagingBufferUvs.put(uvx, uvy, 0, packedMaterialData[i]);
+			}
 
 			uvBufferLength += 3;
 		}

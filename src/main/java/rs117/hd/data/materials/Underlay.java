@@ -40,16 +40,40 @@ import rs117.hd.HdPlugin;
 import rs117.hd.config.SeasonalTheme;
 import rs117.hd.data.WaterType;
 import rs117.hd.data.environments.Area;
-import rs117.hd.utils.HDUtils;
 
 import static rs117.hd.scene.SceneUploader.SCENE_OFFSET;
+import static rs117.hd.utils.HDUtils.MAX_SNOW_LIGHTNESS;
+import static rs117.hd.utils.HDUtils.clamp;
+import static rs117.hd.utils.HDUtils.getSouthWesternMostTileColor;
+import static rs117.hd.utils.HDUtils.localToWorld;
 
 @Slf4j
 public enum Underlay {
 	// Seasonal Winter Textures
-	WINTER_GRASS(p -> p.ids().groundMaterial(GroundMaterial.SNOW_1).hue(0).saturation(0).shiftLightness(40).blended(true)),
-	WINTER_DIRT(p -> p.ids().groundMaterial(GroundMaterial.SNOW_2).hue(0).saturation(0).shiftLightness(40).blended(true)),
-	WINTER_GRUNGE(p -> p.ids().groundMaterial(GroundMaterial.SNOW_2).hue(0).saturation(0).shiftLightness(40).blended(true)),
+	WINTER_GRASS(p -> p
+		.ids()
+		.groundMaterial(GroundMaterial.SNOW_1)
+		.hue(0)
+		.saturation(0)
+		.shiftLightness(40)
+		.maxLightness(MAX_SNOW_LIGHTNESS)
+		.blended(true)),
+	WINTER_DIRT(p -> p
+		.ids()
+		.groundMaterial(GroundMaterial.SNOW_2)
+		.hue(0)
+		.saturation(0)
+		.shiftLightness(40)
+		.maxLightness(MAX_SNOW_LIGHTNESS)
+		.blended(true)),
+	WINTER_GRUNGE(p -> p
+		.ids()
+		.groundMaterial(GroundMaterial.SNOW_2)
+		.hue(0)
+		.saturation(0)
+		.shiftLightness(40)
+		.maxLightness(MAX_SNOW_LIGHTNESS)
+		.blended(true)),
 	WINTER_EDGEVILLE_PATH(p -> p
 		.ids()
 		.blendedAsOpposite(true)
@@ -58,13 +82,19 @@ public enum Underlay {
 		.saturation(0)
 		.groundMaterial(GroundMaterial.WINTER_JAGGED_STONE_TILE_LIGHT)
 	),
+
 	// Default underlays; these are referenced when using resolved to replace tiles.
 	DEFAULT_SAND(p -> p.ids().groundMaterial(GroundMaterial.SAND)),
 	DEFAULT_GRASS(p -> p.ids().groundMaterial(GroundMaterial.OVERWORLD_GRASS_1)),
 	DEFAULT_DIRT(p -> p.ids().groundMaterial(GroundMaterial.DIRT)),
-	DEFAULT_SNOW_1(p -> p.ids().groundMaterial(GroundMaterial.SNOW_1)),
 	DEFAULT_GRUNGE(p -> p.ids().groundMaterial(GroundMaterial.GRUNGE)),
 	DEFAULT_ROCKY_GROUND(p -> p.ids().groundMaterial(GroundMaterial.ROCKY_CAVE_FLOOR)),
+	DEFAULT_OVERWORLD_ROCK(p -> p.ids().groundMaterial(GroundMaterial.OVERWORLD_ROCKY)),
+	DEFAULT_PACKED_EARTH(p -> p.ids().groundMaterial(GroundMaterial.PACKED_EARTH)),
+
+	GREEN_SAND_HUE_CORRECTION(p -> p.ids().groundMaterial(GroundMaterial.SAND).hue(8)),
+	VERTICAL_DIRT_FIX(p -> p.ids().groundMaterial(GroundMaterial.VERTICAL_DIRT)),
+
 	// Lumbridge
 	LUMBRIDGE_CASTLE_TILE(56, Area.LUMBRIDGE_CASTLE_BASEMENT, GroundMaterial.MARBLE_2_SEMIGLOSS, p -> p.blended(false)),
 
@@ -82,7 +112,7 @@ public enum Underlay {
 		.area(Area.IMCANDO_PENINSULA)
 		.replacementResolver(
 			(plugin, scene, tile, override) -> {
-				int[] hsl = HDUtils.getSouthWesternMostTileColor(tile);
+				int[] hsl = getSouthWesternMostTileColor(tile);
 				if (hsl == null)
 					return override;
 
@@ -149,6 +179,25 @@ public enum Underlay {
 
     // Varrock
     VARROCK_JULIETS_HOUSE_UPSTAIRS(8, Area.VARROCK_JULIETS_HOUSE, GroundMaterial.NONE, p -> p.blended(false)),
+	VARROCK_SEWERS_DIRT(p -> p
+		.ids(10, 63, 64)
+		.area(Area.VARROCK_SEWERS)
+		.groundMaterial(GroundMaterial.PACKED_EARTH)
+		.replacementResolver(
+			(plugin, scene, tile, override) -> {
+				int[] hsl = getSouthWesternMostTileColor(tile);
+				if (hsl == null)
+					return override;
+
+				// Grass
+				if (hsl[0] >= 9)
+					return DEFAULT_GRASS;
+
+				return DEFAULT_PACKED_EARTH;
+			}
+		)
+	),
+	VARROCK_SEWERS_GRASS(p -> p.ids(49).area(Area.VARROCK_SEWERS).groundMaterial(GroundMaterial.GRASS_1)),
 	STRONGHOLD_OF_SECURITY_OOZE(Area.STRONGHOLD_OF_SECURITY_PESTILENCE, GroundMaterial.OOZE_FLOOR, p -> p.ids(48, 49, 61, 93)),
     STRONGHOLD_OF_SECURITY_GRASS(Area.STRONGHOLD_OF_SECURITY, GroundMaterial.GRASS_1, p -> p.ids(48, 49, 58, 59, 124)),
 	STRONGHOLD_OF_SECURITY_WAR_GRAVEL(Area.STRONGHOLD_OF_SECURITY, GroundMaterial.GRAVEL, p -> p.ids(148)),
@@ -156,6 +205,43 @@ public enum Underlay {
 	STRONGHOLD_OF_SECURITY_WAR_DIRT(Area.STRONGHOLD_OF_SECURITY_WAR, GroundMaterial.GRAVEL, p -> p.ids(72, 118, 126)),
     // A Soul's Bane
     TOLNA_DUNGEON_ANGER_FLOOR(Area.TOLNA_DUNGEON_ANGER, GroundMaterial.DIRT, p -> p.ids(58, 58)),
+
+	// Asgarnia region
+	ASGARNIA_SNOWY_MOUNTAINS_COMPLEX_TILES(p -> p
+		.area(Area.ASGARNIA_MOUNTAINS)
+		.ids(58, 64)
+		.replacementResolver(
+			(plugin, scene, tile, override) -> {
+				int[] hsl = getSouthWesternMostTileColor(tile);
+				if (hsl == null)
+					return override;
+
+				if (hsl[1] == 0)
+					return WINTER_DIRT;
+
+				if (hsl[1] >= 5) {
+					switch (plugin.configSeasonalTheme) {
+						case SUMMER:
+							return DEFAULT_GRASS;
+						case WINTER:
+							return WINTER_GRASS;
+					}
+				}
+
+				if (hsl[1] >= 1 && hsl[1] <= 5) {
+					switch (plugin.configSeasonalTheme) {
+						case SUMMER:
+						case AUTUMN:
+							return VERTICAL_DIRT_FIX;
+						case WINTER:
+							return WINTER_DIRT;
+					}
+				}
+
+				return WINTER_DIRT;
+			}
+		)
+	),
 
 	// Burthorpe
 	WARRIORS_GUILD_FLOOR_1(Area.WARRIORS_GUILD, GroundMaterial.VARROCK_PATHS, p -> p.ids(55, 56)),
@@ -171,7 +257,7 @@ public enum Underlay {
 		.area(Area.CATHERBY)
 		.replacementResolver(
 			(plugin, scene, tile, override) -> {
-				int[] hsl = HDUtils.getSouthWesternMostTileColor(tile);
+				int[] hsl = getSouthWesternMostTileColor(tile);
 				if (hsl == null)
 					return override;
 
@@ -252,11 +338,11 @@ public enum Underlay {
 		.groundMaterial(GroundMaterial.EARTHEN_CAVE_FLOOR)
 	),
 	COMPLEX_TILES_KARAMJA(p -> p
-		.ids(50, 55, 61, 62, 63, 68)
+		.ids(48, 49, 50, 51, 52, 53, 55, 57, 61, 62, 63, 64, 65, 66, 67, 68, 72, 100)
 		.area(Area.KARAMJA)
 		.replacementResolver(
 			(plugin, scene, tile, override) -> {
-				int[] hsl = HDUtils.getSouthWesternMostTileColor(tile);
+				int[] hsl = getSouthWesternMostTileColor(tile);
 				if (hsl == null)
 					return override;
 
@@ -270,41 +356,18 @@ public enum Underlay {
 					hsl[0] >= 10 && hsl[1] >= 3 ||
 					hsl[0] == 9 && hsl[1] >= 4 ||
 					hsl[0] == 9 && hsl[1] == 3 && hsl[2] <= 45 || // Fixes the southernmost beach
-					hsl[0] == 8 && hsl[1] > 5 && hsl[2] >= 30 && overlayId != 6
-				) {
-					switch (plugin.configSeasonalTheme) {
-						case SUMMER:
-						case AUTUMN:
-							return DEFAULT_GRASS;
-						case WINTER:
-							return WINTER_GRASS;
-					}
-				}
+					hsl[0] == 8 && hsl[1] > 5 && hsl[2] >= 30 && overlayId != 6)
+					return DEFAULT_GRASS;
 
 				// Dirt
 				if (hsl[0] <= 8 && hsl[1] >= 4 && hsl[2] <= 71 ||
 					hsl[0] == 9 && hsl[1] == 2 && hsl[2] <= 44 ||
-					hsl[0] == 8 && hsl[1] == 3 && hsl[2] <= 34 // Breaks Sand if higher than 34; Can be fixed with tile averages or medians
-				) {
-					switch (plugin.configSeasonalTheme) {
-						case SUMMER:
-						case AUTUMN:
-							return DEFAULT_DIRT;
-						case WINTER:
-							return WINTER_DIRT;
-					}
-				}
+					hsl[0] == 8 && hsl[1] == 3 && hsl[2] <= 34) // Breaks Sand if higher than 34; Can be fixed with tile averages or medians
+					return DEFAULT_DIRT;
 
 				// Stone
-				if (hsl[0] < 13 && hsl[1] <= 2 && hsl[2] <= 40) {
-					switch (plugin.configSeasonalTheme) {
-						case SUMMER:
-						case AUTUMN:
-							return DEFAULT_GRUNGE;
-						case WINTER:
-							return WINTER_GRUNGE;
-					}
-				}
+				if (hsl[1] <= 2 && hsl[2] <= 40)
+					return DEFAULT_ROCKY_GROUND;
 
 				return DEFAULT_SAND;
 			}
@@ -324,6 +387,8 @@ public enum Underlay {
 
 	// Morytania
 	CROMBWICK_MANOR_FLOOR(p -> p.ids(10).area(Area.CROMBWICK_MANOR).groundMaterial(GroundMaterial.HD_WOOD_PLANKS_1)),
+	SLEPE_CHURCH_FLOOR(p -> p.ids(94).area(Area.SLEPE_CHURCH).groundMaterial(GroundMaterial.HD_WOOD_PLANKS_1)),
+	SLEPE_HOUSES_WOODEN_FLOOR(p -> p.ids(10).area(Area.SLEPE_HOUSES).groundMaterial(GroundMaterial.HD_WOOD_PLANKS_1)),
 	VER_SINHAZA_WATER_FIX(p -> p.ids(54).area(Area.VER_SINHAZA_WATER_FIX).waterType(WaterType.WATER).blended(false)),
 	MEIYERDITCH_MINES(111, Area.MEIYERDITCH_MINES, GroundMaterial.ROCKY_CAVE_FLOOR),
 	BARROWS_DIRT(GroundMaterial.DIRT, p -> p
@@ -344,7 +409,7 @@ public enum Underlay {
 		.area(Area.TEMPLE_TREKKING_INSTANCES)
 		.replacementResolver(
 			(plugin, scene, tile, override) -> {
-				int[] hsl = HDUtils.getSouthWesternMostTileColor(tile);
+				int[] hsl = getSouthWesternMostTileColor(tile);
 				if (hsl == null)
 					return override;
 
@@ -358,6 +423,7 @@ public enum Underlay {
 							return WINTER_DIRT;
 					}
 				}
+
 				// Grass
 				if (hsl[0] >= 9 && hsl[1] >= 3) {
 					switch (plugin.configSeasonalTheme) {
@@ -374,13 +440,42 @@ public enum Underlay {
 		)
 	),
 
+	// Mos Le Harmless
+	MOS_LE_HARMLESS_COMPLEX_TILES(p -> p
+		.ids(48, 49, 50, 51, 52, 61, 62, 63, 67, 68)
+		.area(Area.MOS_LE_HARMLESS_ALL)
+		.replacementResolver(
+			(plugin, scene, tile, override) -> {
+				int[] hsl = getSouthWesternMostTileColor(tile);
+				if (hsl == null)
+					return override;
+
+				// Grass
+				if (hsl[0] >= 11 && hsl[1] >= 4 && hsl[2] <= 39)
+					return DEFAULT_GRASS;
+
+				// Dirt
+				if (hsl[0] == 8 && hsl[1] >= 6 && hsl[2] <= 30 ||
+					hsl[0] == 10 && hsl[1] >= 3 && hsl[2] <= 35)
+					return DEFAULT_DIRT;
+
+				// Sand
+				if (hsl[0] <= 9 && hsl[1] <= 3 && hsl[2] >= 34 ||
+					hsl[0] == 8 && hsl[1] == 3 && hsl[2] >= 20)
+					return DEFAULT_SAND;
+
+				return DEFAULT_DIRT;
+			}
+		)
+	),
+
 	// Fremennik
 	COMPLEX_TILES_ISLE_OF_STONE(p -> p
 		.ids(58, 97, 112)
 		.area(Area.ISLAND_OF_STONE)
 		.replacementResolver(
 			(plugin, scene, tile, override) -> {
-				int[] hsl = HDUtils.getSouthWesternMostTileColor(tile);
+				int[] hsl = getSouthWesternMostTileColor(tile);
 				if (hsl == null)
 					return override;
 
@@ -406,7 +501,7 @@ public enum Underlay {
 					}
 				}
 
-				return DEFAULT_SNOW_1;
+				return WINTER_DIRT;
 			}
 		)
 	),
@@ -425,7 +520,7 @@ public enum Underlay {
 		.ids(94, 129)
 		.replacementResolver(
 			(plugin, scene, tile, override) -> {
-				int[] hsl = HDUtils.getSouthWesternMostTileColor(tile);
+				int[] hsl = getSouthWesternMostTileColor(tile);
 				if (hsl == null)
 					return override;
 
@@ -488,12 +583,39 @@ public enum Underlay {
 	YANILLE_AGILITY_DUNGEON_ENTRANCE_FIX(63, Area.YANILLE_AGILITY_DUNGEON_ENTRANCE, GroundMaterial.NONE, p -> p.blended(false)),
 
 	// Feldip Hills
+	FELDIP_HILLS_SOUTH_COMPLEX_TILES(p -> p
+		.area(Area.FELDIP_HILLS_SOUTHERN_REGION)
+		.ids(48, 49, 50, 51, 52, 53, 56, 61, 62, 63, 64, 65, 67, 68, 69, 70, 97, 98, 99, 100)
+		.replacementResolver(
+			(plugin, scene, tile, override) -> {
+				int[] hsl = getSouthWesternMostTileColor(tile);
+				if (hsl == null)
+					return override;
+
+				if (hsl[1] == 0 || hsl[0] <= 10 && hsl[1] < 2)
+					return DEFAULT_GRUNGE;
+
+				if (hsl[0] == 8 && hsl[1] == 4 && hsl[2] >= 71 ||
+					hsl[0] == 8 && hsl[1] == 3 && hsl[2] >= 21)
+					return DEFAULT_SAND;
+
+				if (hsl[0] >= 11 && hsl[1] == 1 ||
+					hsl[0] >= 9 && hsl[1] >= 4 ||
+					hsl[0] >= 10 && hsl[1] >= 2 ||
+					hsl[0] == 8 && hsl[1] == 5 && hsl[2] >= 15 ||
+					hsl[0] == 8 && hsl[1] >= 6 && hsl[2] >= 2)
+					return DEFAULT_GRASS;
+
+				return DEFAULT_DIRT;
+			}
+		)
+	),
 	FELDIP_HILLS_COMPLEX_TILES(p -> p
 		.area(Area.FELDIP_HILLS)
 		.ids(48, 50, 52, 62, 63, 67, 68, 69, 70, 97, 99, 100)
 		.replacementResolver(
 			(plugin, scene, tile, override) -> {
-				int[] hsl = HDUtils.getSouthWesternMostTileColor(tile);
+				int[] hsl = getSouthWesternMostTileColor(tile);
 				if (hsl == null)
 					return override;
 
@@ -563,10 +685,123 @@ public enum Underlay {
 		.shiftLightness(5)
 	),
 
-	//
+	// Ape Atoll
+	APE_ATOLL_COMPLEX_TILES(p -> p
+		.ids(48, 50, 56, 61, 62, 63, 65, 67, 68, 99, 100)
+		.area(Area.APE_ATOLL)
+		.replacementResolver(
+			(plugin, scene, tile, override) -> {
+				int[] hsl = getSouthWesternMostTileColor(tile);
+				if (hsl == null)
+					return override;
+
+				// Grass
+				if (hsl[0] >= 11 && hsl[1] >= 4 && hsl[2] <= 39)
+					return DEFAULT_GRASS;
+
+				// Dirt
+				if (hsl[0] == 8 && hsl[1] >= 6 && hsl[2] <= 30 ||
+					hsl[0] == 10 && hsl[1] >= 3 && hsl[2] <= 35)
+					return DEFAULT_DIRT;
+
+				// Sand
+				if (hsl[0] == 9 && hsl[1] <= 3 && hsl[2] >= 34 ||
+					hsl[0] == 8 && (hsl[1] == 3 || hsl[1] == 4) && hsl[2] >= 20)
+					return DEFAULT_SAND;
+
+				// Ugly green sand fix
+				if (hsl[0] == 9 && (hsl[1] == 3 || hsl[1] == 4) && hsl[2] >= 34)
+					return GREEN_SAND_HUE_CORRECTION;
+
+				return DEFAULT_DIRT;
+			}
+		)
+	),
+
+	// Fossil Island
 	FOSSIL_ISLAND_WYVERN_DIRT(p -> p.ids(17).area(Area.FOSSIL_ISLAND_WYVERN_TASK_CAVE).groundMaterial(GroundMaterial.EARTHEN_CAVE_FLOOR)),
+	FOSSIL_ISLAND_VOLCANO_SAND(p -> p
+		.ids(138)
+		.area(Area.FOSSIL_ISLAND_VOLCANO)
+		.groundMaterial(GroundMaterial.SAND)
+	),
+	FOSSIL_ISLAND_VOLCANO_ROCK(p -> p
+		.ids(56, 72, 148, 150)
+		.area(Area.FOSSIL_ISLAND_VOLCANO)
+		.groundMaterial(GroundMaterial.OVERWORLD_ROCKY)
+	),
+	FOSSIL_ISLAND_ROCK(p -> p
+		.ids(72, 148, 150)
+		.area(Area.FOSSIL_ISLAND)
+		.groundMaterial(GroundMaterial.OVERWORLD_ROCKY)
+		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_GRUNGE)
+	),
+	FOSSIL_ISLAND_GRASS(p -> p.ids(48, 54, 103).area(Area.FOSSIL_ISLAND).groundMaterial(GroundMaterial.OVERWORLD_GRASS_1).seasonalReplacement(SeasonalTheme.WINTER, WINTER_GRASS)),
+	FOSSIL_ISLAND_COMPLEX(p -> p
+		.ids(56, 63, 66, 68, 138)
+		.area(Area.FOSSIL_ISLAND)
+		.groundMaterial(GroundMaterial.OVERWORLD_GRASS_1)
+		.replacementResolver(
+			(plugin, scene, tile, override) -> {
+				int[] hsl = getSouthWesternMostTileColor(tile);
+				if (hsl == null)
+					return override;
+
+				// Rock
+				if (hsl[1] == 0 && hsl[2] <= 44) {
+					switch (plugin.configSeasonalTheme) {
+						case SUMMER:
+						case AUTUMN:
+							return DEFAULT_OVERWORLD_ROCK;
+						case WINTER:
+							return WINTER_GRUNGE;
+					}
+				}
+
+				// Dirt
+				if (
+					(hsl[0] <= 8 && hsl[1] >= 4 && hsl[2] <= 71) ||
+					hsl[0] <= 11 && hsl[1] == 1 ||
+					(hsl[0] <= 4 && hsl[1] <= 3 && hsl[1] >= 1 && hsl[2] <= 36)
+				) {
+					switch (plugin.configSeasonalTheme) {
+						case SUMMER:
+						case AUTUMN:
+							return DEFAULT_DIRT;
+						case WINTER:
+							return WINTER_DIRT;
+					}
+				}
+
+				// Sand
+				if (hsl[0] >= 4 && hsl[0] <= 9 && hsl[1] <= 3 && hsl[2] >= 29 && hsl[2] <= 60 ||
+					(hsl[0] >= 5 && hsl[0] <= 6) && hsl[1] == 3 && hsl[2] >= 50)
+					return DEFAULT_SAND;
+
+				// Grass
+				if (
+					hsl[0] >= 8 && hsl[1] >= 5 && hsl[2] >= 20 ||
+					hsl[0] >= 9 && hsl[1] >= 2 ||
+					hsl[0] > 20 ||
+					hsl[0] >= 12 && hsl[1] == 1 ||
+					(hsl[0] == 7 || hsl[0] == 8) && hsl[1] == 3 && hsl[2] >= 60
+				) {
+					switch (plugin.configSeasonalTheme) {
+						case SUMMER:
+						case AUTUMN:
+							return DEFAULT_GRASS;
+						case WINTER:
+							return WINTER_GRASS;
+					}
+				}
+
+				return DEFAULT_DIRT;
+			}
+		)
+	),
 
 	// Zeah
+	LOVAKENGJ_GROUND(p -> p.ids(10, 55, 56, 57, 63, 64, 67, 68, 72, 96, 111, 112, 149, 150).area(Area.LOVAKENGJ).groundMaterial(GroundMaterial.EARTHEN_CAVE_FLOOR)),
 	ZEAH_DIRT(p -> p
 		.area(Area.ZEAH)
 		.groundMaterial(GroundMaterial.VARIED_DIRT)
@@ -623,9 +858,25 @@ public enum Underlay {
 		.area(Area.MOTHERLODE_MINE)
 		.ids(63, 64, 71)
 	),
-	GIANTS_FOUNDRY(GroundMaterial.EARTHEN_CAVE_FLOOR, p -> p
-		.area(Area.GIANTS_FOUNDRY)
+	GIANTS_FOUNDRY_DESATURATION(p -> p.ids().groundMaterial(GroundMaterial.EARTHEN_CAVE_FLOOR).shiftSaturation(-1)),
+	GIANTS_FOUNDRY(p -> p
 		.ids(91, 101)
+		.area(Area.GIANTS_FOUNDRY)
+		.groundMaterial(GroundMaterial.EARTHEN_CAVE_FLOOR)
+		.replacementResolver(
+			(plugin, scene, tile, override) -> {
+				int[] hsl = getSouthWesternMostTileColor(tile);
+				if (hsl == null)
+					return override;
+
+				// Ash or stone
+				if (hsl[1] > 1 ) {
+					return GIANTS_FOUNDRY_DESATURATION;
+				}
+
+				return override;
+			}
+		)
 	),
 	MEIYERDITCH_MYREQUE_HIDEOUT(GroundMaterial.VARIED_DIRT, p -> p
 		.area(Area.MEIYERDITCH_MYREQUE_HIDEOUT)
@@ -646,6 +897,13 @@ public enum Underlay {
 		.groundMaterial(GroundMaterial.ICE_4)
 		.ids(59)
 	),
+	// Mournings End 2 Areas
+	EAST_ARDOUGNE_ROCKY_SLOPE(p -> p.ids(57).area(Area.EAST_ARDOUGNE_UNDERGROUND).groundMaterial(GroundMaterial.ROCKY_CAVE_FLOOR)),
+	EAST_ARDOUGNE_CAVE_FLOOD(p -> p.ids(96, 98).area(Area.EAST_ARDOUGNE_UNDERGROUND).groundMaterial(GroundMaterial.EARTHEN_CAVE_FLOOR)),
+	TEMPLE_OF_LIGHT_MARBLE(p -> p.ids(68).area(Area.TEMPLE_OF_LIGHT).groundMaterial(GroundMaterial.MARBLE_1_GLOSS).blended(false).lightness(52)),
+
+	// Isle of Souls Dungeon
+	ISLE_OF_SOULS_DUNGEON_FLOOR(p -> p.ids(98).area(Area.ISLE_OF_SOULS_DUNGEON).groundMaterial(GroundMaterial.STONE_CAVE_FLOOR)),
 
 	// Death's office
 	DEATHS_OFFICE_TILE(-110, Area.DEATHS_OFFICE, GroundMaterial.TILES_2X2_1_SEMIGLOSS),
@@ -736,6 +994,25 @@ public enum Underlay {
 
 	SHIP_SAILING_WATER(p -> p.area(Area.SHIP_SAILING).ids(75).waterType(WaterType.WATER_FLAT)),
 	GIANT_MOLE_LAIR_DIRT(p -> p.ids(63, 65).area(Area.GIANT_MOLE_LAIR).groundMaterial(GroundMaterial.VARIED_DIRT)),
+	PEST_CONTROL(p -> p
+		.ids(59, 121, 142)
+		.area(Area.PEST_CONTROL)
+		.groundMaterial(GroundMaterial.DIRT)
+		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_DIRT)),
+	ABYSSAL_FLOOR(p -> p
+		.ids(2, 121, 122)
+		.area(Area.ABYSS)
+		.groundMaterial(GroundMaterial.ABYSSAL_FLOOR)
+		.uvScale(1.85f)
+		.uvOrientation(39)
+		.hue(1) // fixes baked in lighting effects
+		//.lightness(22) // removes baked in shading
+	),
+	LAW_ALTAR_FLOOR(p -> p
+		.ids(56, 57, 95)
+		.area(Area.LAW_ALTAR)
+		.groundMaterial(GroundMaterial.ROCKY_CAVE_FLOOR)
+	),
 
 	// Cutscenes
 	CANOE_CUTSCENE_GRASS(Area.CANOE_CUTSCENE, GroundMaterial.GRASS_SCROLLING, p -> p.ids(48, 50, 63)),
@@ -745,7 +1022,7 @@ public enum Underlay {
 		.area(Area.ISLE_OF_SOULS_HOT_ZONES)
 		.replacementResolver(
 			(plugin, scene, tile, override) -> {
-				int[] hsl = HDUtils.getSouthWesternMostTileColor(tile);
+				int[] hsl = getSouthWesternMostTileColor(tile);
 				if (hsl == null)
 					return override;
 
@@ -773,7 +1050,7 @@ public enum Underlay {
 		.area(Area.ISLE_OF_SOULS)
 		.replacementResolver(
 			(plugin, scene, tile, override) -> {
-				int[] hsl = HDUtils.getSouthWesternMostTileColor(tile);
+				int[] hsl = getSouthWesternMostTileColor(tile);
 				if (hsl == null)
 					return override;
 
@@ -831,7 +1108,7 @@ public enum Underlay {
 		.area(Area.SNOW_REGIONS)
 		.groundMaterial(GroundMaterial.SNOW_1)
 		.replacementResolver((plugin, scene, tile, override) -> {
-			int[] hsl = HDUtils.getSouthWesternMostTileColor(tile);
+			int[] hsl = getSouthWesternMostTileColor(tile);
 			if (hsl == null)
 				return override;
 
@@ -854,7 +1131,7 @@ public enum Underlay {
 				}
 			}
 
-			return DEFAULT_SNOW_1;
+			return WINTER_DIRT;
 		})
 	),
 	UNDERLAY_OVERWORLD_DIRT(GroundMaterial.VARIED_DIRT, p -> p
@@ -878,7 +1155,7 @@ public enum Underlay {
 		.ids(13, 55, 61, 62, 63, 64, 65, 68, 69, 94, 96)
 		.replacementResolver(
 			(plugin, scene, tile, override) -> {
-				int[] hsl = HDUtils.getSouthWesternMostTileColor(tile);
+				int[] hsl = getSouthWesternMostTileColor(tile);
 				if (hsl == null)
 					return override;
 
@@ -925,7 +1202,7 @@ public enum Underlay {
 				if (
 					hsl[0] == 8 && hsl[1] <= 4 && hsl[2] <= 71 ||
 					hsl[0] <= 7 && hsl[1] <= 5 && hsl[2] <= 57 ||
-					hsl[0] <= 7 && hsl[1] <= 7 && hsl[2] <= 28 ||
+					hsl[0] <= 7 && hsl[1] <= 7 && hsl[2] <= 34 ||
 					hsl[0] == 8 && hsl[1] == 5 && hsl[2] <= 15
 				) {
 					switch (plugin.configSeasonalTheme) {
@@ -950,12 +1227,17 @@ public enum Underlay {
 	public final WaterType waterType;
 	public final boolean blended;
 	public final boolean blendedAsOverlay;
-	public final int hue;
 	public final int shiftHue;
-	public final int saturation;
+	public final int minHue;
+	public final int maxHue;
 	public final int shiftSaturation;
-	public final int lightness;
+	public final int minSaturation;
+	public final int maxSaturation;
 	public final int shiftLightness;
+	public final int minLightness;
+	public final int maxLightness;
+	public final int uvOrientation;
+	public final float uvScale;
 	public final TileOverrideResolver<Underlay> replacementResolver;
 
 	Underlay(int id, Area area, GroundMaterial material) {
@@ -977,19 +1259,25 @@ public enum Underlay {
 	Underlay(Consumer<TileOverrideBuilder<Underlay>> consumer) {
 		TileOverrideBuilder<Underlay> builder = new TileOverrideBuilder<>();
 		consumer.accept(builder);
+		builder.normalize();
 		this.filterIds = builder.ids;
+		this.replacementResolver = builder.replacementResolver;
 		this.area = builder.area;
 		this.groundMaterial = builder.groundMaterial;
 		this.waterType = builder.waterType;
 		this.blended = builder.blended;
 		this.blendedAsOverlay = builder.blendedAsOpposite;
-		this.hue = builder.hue;
 		this.shiftHue = builder.shiftHue;
-		this.saturation = builder.saturation;
+		this.minHue = builder.minHue;
+		this.maxHue = builder.maxHue;
 		this.shiftSaturation = builder.shiftSaturation;
-		this.lightness = builder.lightness;
+		this.minSaturation = builder.minSaturation;
+		this.maxSaturation = builder.maxSaturation;
 		this.shiftLightness = builder.shiftLightness;
-		this.replacementResolver = builder.replacementResolver;
+		this.minLightness = builder.minLightness;
+		this.maxLightness = builder.maxLightness;
+		this.uvOrientation = builder.uvOrientation;
+		this.uvScale = builder.uvScale;
 	}
 
 	private static final Underlay[] ANY_MATCH;
@@ -1021,7 +1309,7 @@ public enum Underlay {
 	@NonNull
 	public static Underlay getUnderlayBeforeReplacements(Scene scene, Tile tile) {
 		LocalPoint localLocation = tile.getLocalLocation();
-		int[] worldPoint = HDUtils.localToWorld(scene, localLocation.getX(), localLocation.getY(), tile.getRenderLevel());
+		int[] worldPoint = localToWorld(scene, localLocation.getX(), localLocation.getY(), tile.getRenderLevel());
 
 		Underlay match = Underlay.NONE;
 		for (Underlay underlay : ANY_MATCH) {
@@ -1061,17 +1349,17 @@ public enum Underlay {
 	}
 
 	public int modifyColor(int jagexHsl) {
-		int h = hue != -1 ? hue : jagexHsl >> 10 & 0x3F;
+		int h = jagexHsl >> 10 & 0x3F;
 		h += shiftHue;
-		h = HDUtils.clamp(h, 0, 0x3F);
+		h = clamp(h, minHue, maxHue);
 
-		int s = saturation != -1 ? saturation : jagexHsl >> 7 & 7;
+		int s = jagexHsl >> 7 & 7;
 		s += shiftSaturation;
-		s = HDUtils.clamp(s, 0, 7);
+		s = clamp(s, minSaturation, maxSaturation);
 
-		int l = lightness != -1 ? lightness : jagexHsl & 0x7F;
+		int l = jagexHsl & 0x7F;
 		l += shiftLightness;
-		l = HDUtils.clamp(l, 0, 0x7F);
+		l = clamp(l, minLightness, maxLightness);
 
 		return h << 10 | s << 7 | l;
 	}
