@@ -22,6 +22,7 @@ import rs117.hd.utils.buffer.GpuIntBuffer;
 import static net.runelite.api.Perspective.*;
 import static rs117.hd.HdPlugin.UV_SIZE;
 import static rs117.hd.HdPlugin.VERTEX_SIZE;
+import static rs117.hd.scene.SceneUploader.SCENE_OFFSET;
 
 public class SceneContext {
 	public final int id = HDUtils.rand.nextInt() & SceneUploader.SCENE_ID_MASK;
@@ -142,6 +143,10 @@ public class SceneContext {
 	public int[] sceneToWorld(int sceneX, int sceneY, int plane)
 	{
 		return HDUtils.localToWorld(scene, sceneX * LOCAL_TILE_SIZE, sceneY * LOCAL_TILE_SIZE, plane);
+	}
+
+	public int[] extendedSceneToWorld(int sceneExX, int sceneExY, int plane) {
+		return sceneToWorld(sceneExX - SCENE_OFFSET, sceneExY - SCENE_OFFSET, plane);
 	}
 
 	public Collection<LocalPoint> worldInstanceToLocals(WorldPoint worldPoint)

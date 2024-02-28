@@ -26,6 +26,7 @@ package rs117.hd.utils;
 
 import java.util.HashSet;
 import java.util.Random;
+import javax.annotation.Nonnull;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
@@ -341,6 +342,9 @@ public class HDUtils {
 		return localToWorld(client.getScene(), localX, localY, plane);
 	}
 
+	/**
+	 * The returned plane may be different, so it's not safe to use for indexing into overlay IDs for instance
+	 */
 	public static int[] localToWorld(Scene scene, int localX, int localY, int plane) {
 		int sceneX = localX / LOCAL_TILE_SIZE;
 		int sceneY = localY / LOCAL_TILE_SIZE;
@@ -440,6 +444,7 @@ public class HDUtils {
 		return false;
 	}
 
+	@Nonnull
 	public static int[] getSouthWesternMostTileColor(Tile tile) {
 		var paint = tile.getSceneTilePaint();
 		var model = tile.getSceneTileModel();
@@ -470,6 +475,6 @@ public class HDUtils {
 			return ColorUtils.unpackHslRaw(hsl);
 		}
 
-		return null;
+		return new int[3];
 	}
 }

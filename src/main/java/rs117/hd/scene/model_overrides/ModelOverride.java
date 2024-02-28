@@ -25,7 +25,7 @@ import static net.runelite.api.Perspective.*;
 @AllArgsConstructor
 public class ModelOverride
 {
-	public static ModelOverride NONE = new ModelOverride(true);
+	public static final ModelOverride NONE = new ModelOverride(true);
 
 	private static final Set<Integer> EMPTY = new HashSet<>();
 
