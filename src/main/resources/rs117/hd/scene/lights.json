@@ -19625,6 +19625,42 @@
     ]
   },
   {
+    "description": "PEST_CONTROL_TORCHER_PROJECTILE",
+    "height": -150,
+    "alignment": "CENTER",
+    "radius": 150,
+    "strength": 8.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "projectileIds": [
+      647
+    ]
+  },
+  {
+    "description": "PEST_CONTROL_SHIFTER_PORTAL",
+    "height": 10,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 12,
+    "color": [
+      120,
+      24,
+      237
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "graphicsObjectIds": [
+      654
+    ]
+  },
+  {
     "description": "REVENANT_CYCLOPS",
     "height": 150,
     "alignment": "CENTER",
@@ -25896,12 +25932,12 @@
   },
   {
     "description": "IBAN_BLAST",
-    "radius": 200,
-    "strength": 7.5,
+    "radius": 250,
+    "strength": 8.8,
     "color": [
       255,
-      175,
-      84
+      0,
+      0
     ],
     "type": "STATIC",
     "duration": 0,
@@ -25960,6 +25996,23 @@
     "fadeInDuration": 1000,
     "projectileIds": [
       1252
+    ]
+  },
+  {
+    "description": "WARPED_SCEPTER_SPELL",
+    "alignment": "CENTER",
+    "radius": 150,
+    "strength": 10,
+    "color": [
+      170,
+      20,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "projectileIds": [
+      2569
     ]
   },
   {
