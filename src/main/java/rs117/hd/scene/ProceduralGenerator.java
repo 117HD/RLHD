@@ -38,6 +38,7 @@ import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.scene.model_overrides.ObjectType;
 import rs117.hd.scene.model_overrides.TzHaarRecolorType;
 import rs117.hd.scene.tile_overrides.TileOverride;
+import rs117.hd.utils.ColorUtils;
 
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.*;
@@ -56,27 +57,45 @@ public class ProceduralGenerator {
 	public static final int[] DEPTH_LEVEL_SLOPE = new int[] { 150, 300, 470, 610, 700, 750, 820, 920, 1080, 1300, 1350, 1380 };
 
 	public static final int VERTICES_PER_FACE = 3;
-	public static final boolean[][] TILE_OVERLAY_TRIS = new boolean[][]
-		{
-			/*  0 */ { true, true, true, true }, // Used by tilemodels of varying tri counts?
-			/*  1 */ { false, true },
-			/*  2 */ { false, false, true },
-			/*  3 */ { false, false, true },
-			/*  4 */ { false, true, true },
-			/*  5 */ { false, true, true },
-			/*  6 */ { false, false, true, true },
-			/*  7 */ { false, false, false, true },
-			/*  8 */ { false, true, true, true },
-			/*  9 */ { false, false, false, true, true, true },
-			/* 10 */ { true, true, true, false, false, false },
-			/* 11 */ { true, true, false, false, false, false },
-		};
+	public static final boolean[][] TILE_OVERLAY_TRIS = new boolean[][] {
+		/*  0 */ { true, true, true, true }, // Used by tilemodels of varying tri counts?
+		/*  1 */ { false, true },
+		/*  2 */ { false, false, true },
+		/*  3 */ { false, false, true },
+		/*  4 */ { false, true, true },
+		/*  5 */ { false, true, true },
+		/*  6 */ { false, false, true, true },
+		/*  7 */ { false, false, false, true },
+		/*  8 */ { false, true, true, true },
+		/*  9 */ { false, false, false, true, true, true },
+		/* 10 */ { true, true, true, false, false, false },
+		/* 11 */ { true, true, false, false, false, false },
+	};
+
+	private static final int[] MAX_BRIGHTNESS_LOOKUP_TABLE = new int[8];
+
+	static {
+		for (int i = 0; i < 8; i++)
+			MAX_BRIGHTNESS_LOOKUP_TABLE[i] = (int) (127 - 72 * Math.pow(i / 7f, .115));
+	}
 
 	@Inject
 	private HdPlugin plugin;
 
 	@Inject
 	private TileOverrideManager tileOverrideManager;
+
+	public int clampBrightness(int color) {
+		if (true) return color;
+		int maxBrightness;
+		if (plugin.configLegacyGreyColors) {
+			maxBrightness = 55;
+		} else {
+			maxBrightness = MAX_BRIGHTNESS_LOOKUP_TABLE[color >> 7 & 7];
+		}
+
+		return color & ~0x7F | Math.min(color & 0x7F, maxBrightness);
+	}
 
 	public void generateSceneData(SceneContext sceneContext)
 	{
@@ -171,30 +190,34 @@ public class ProceduralGenerator {
 				return;
 			}
 
-			int swColor = tile.getSceneTilePaint().getSwColor();
-			int seColor = tile.getSceneTilePaint().getSeColor();
-			int nwColor = tile.getSceneTilePaint().getNwColor();
-			int neColor = tile.getSceneTilePaint().getNeColor();
-
 			vertexHashes = tileVertexKeys(scene, tile);
 
-			if (tileExX >= EXTENDED_SCENE_SIZE - 2 && tileExY >= EXTENDED_SCENE_SIZE - 2) {
-				// reduce the black scene edges by assigning surrounding colors
-				neColor = swColor;
-				nwColor = swColor;
-				seColor = swColor;
-			} else if (tileExY >= EXTENDED_SCENE_SIZE - 2) {
-				nwColor = swColor;
-				neColor = seColor;
-			} else if (tileExX >= EXTENDED_SCENE_SIZE - 2) {
-				neColor = nwColor;
-				seColor = swColor;
-			}
+//			int swColor = tile.getSceneTilePaint().getSwColor();
+//			int seColor = tile.getSceneTilePaint().getSeColor();
+//			int nwColor = tile.getSceneTilePaint().getNwColor();
+//			int neColor = tile.getSceneTilePaint().getNeColor();
+//
+//			if (tileExX >= EXTENDED_SCENE_SIZE - 2 && tileExY >= EXTENDED_SCENE_SIZE - 2) {
+//				// reduce the black scene edges by assigning surrounding colors
+//				neColor = swColor;
+//				nwColor = swColor;
+//				seColor = swColor;
+//			} else if (tileExY >= EXTENDED_SCENE_SIZE - 2) {
+//				nwColor = swColor;
+//				neColor = seColor;
+//			} else if (tileExX >= EXTENDED_SCENE_SIZE - 2) {
+//				neColor = nwColor;
+//				seColor = swColor;
+//			}
+//
+//			vertexColors[0] = swColor;
+//			vertexColors[1] = seColor;
+//			vertexColors[2] = nwColor;
+//			vertexColors[3] = neColor;
 
-			vertexColors[0] = swColor;
-			vertexColors[1] = seColor;
-			vertexColors[2] = nwColor;
-			vertexColors[3] = neColor;
+			int color = ColorUtils.srgbToPackedHsl(ColorUtils.srgb(tile.getSceneTilePaint().getRBG()));
+			for (int i = 0; i < 4; i++)
+				vertexColors[i] = color;
 
 			for (int i = 0; i < 4; i++) {
 				vertexOverrides[i] = override;
@@ -208,14 +231,17 @@ public class ProceduralGenerator {
 		{
 			// tile model
 
-			SceneTileModel sceneTileModel = tile.getSceneTileModel();
+			SceneTileModel model = tile.getSceneTileModel();
 
-			final int[] faceColorsA = sceneTileModel.getTriangleColorA();
-			final int[] faceColorsB = sceneTileModel.getTriangleColorB();
-			final int[] faceColorsC = sceneTileModel.getTriangleColorC();
+			final int[] faceColorsA = model.getTriangleColorA();
+			final int[] faceColorsB = model.getTriangleColorB();
+			final int[] faceColorsC = model.getTriangleColorC();
 
 			int overlayId = OVERLAY_FLAG | scene.getOverlayIds()[tileZ][tileExX][tileExY];
 			int underlayId = scene.getUnderlayIds()[tileZ][tileExX][tileExY];
+
+			int overlayColor = ColorUtils.srgbToPackedHsl(ColorUtils.srgb(model.getModelOverlay()));
+			int underlayColor = ColorUtils.srgbToPackedHsl(ColorUtils.srgb(model.getModelUnderlay()));
 
 			for (int face = 0; face < faceCount; face++)
 			{
@@ -237,6 +263,7 @@ public class ProceduralGenerator {
 					vertexHashes[face * VERTICES_PER_FACE + vertex] = vertexKeys[vertex];
 
 					int color = faceColors[vertex];
+					color = isOverlay ? overlayColor : underlayColor;
 					vertexColors[face * VERTICES_PER_FACE + vertex] = color;
 
 					vertexOverrides[face * VERTICES_PER_FACE + vertex] = override;
@@ -277,25 +304,26 @@ public class ProceduralGenerator {
 
 			float[] vNormals = sceneContext.vertexTerrainNormals.getOrDefault(vertexHashes[vertex], new float[] { 0, 0, 0 });
 
-			float dot = dotLightDirectionTile(vNormals[0], vNormals[1], vNormals[2]);
-			int lightness = color & 0x7F;
-			lightness = (int) lerp(
-				lightness,
-				(int) (
-					Math.max((lightness - lightenAdd), 0) * lightenMultiplier
-				) + lightenBase,
-				Math.max(dot, 0)
-			);
-			lightness = (int) (
-				1.25f * lerp(
+			if (false) {
+				float dot = dotLightDirectionTile(vNormals[0], vNormals[1], vNormals[2]);
+				int lightness = color & 0x7F;
+				lightness = (int) lerp(
 					lightness,
-					(int) (Math.max((lightness - darkenAdd), 0) * darkenMultiplier) + darkenBase,
-					Math.abs(Math.min(dot, 0))
-				)
-			);
-			final int maxBrightness = 55; // reduces overexposure
-			lightness = Math.min(lightness, maxBrightness);
-			color = color & ~0x7F | lightness;
+					(int) (
+						Math.max((lightness - lightenAdd), 0) * lightenMultiplier
+					) + lightenBase,
+					Math.max(dot, 0)
+				);
+				lightness = (int) (
+					1.25f * lerp(
+						lightness,
+						(int) (Math.max((lightness - darkenAdd), 0) * darkenMultiplier) + darkenBase,
+						Math.abs(Math.min(dot, 0))
+					)
+				);
+				color = color & ~0x7F | lightness;
+				color = clampBrightness(color);
+			}
 
 			boolean isOverlay = false;
 			Material material = Material.DIRT_1;

@@ -32,15 +32,15 @@ public class TileOverride {
 	public WaterType waterType = WaterType.NONE;
 	public boolean blended = true;
 	public boolean blendedAsOpposite = false;
-	public int shiftHue;
-	public int minHue;
-	public int maxHue = 63;
-	public int shiftSaturation;
-	public int minSaturation;
-	public int maxSaturation = 7;
-	public int shiftLightness;
-	public int minLightness;
-	public int maxLightness = 127;
+	private int shiftHue;
+	private int minHue;
+	private int maxHue = 63;
+	private int shiftSaturation;
+	private int minSaturation;
+	private int maxSaturation = 7;
+	private int shiftLightness;
+	private int minLightness;
+	private int maxLightness = 127;
 	public int uvOrientation;
 	public float uvScale = 1;
 	@SerializedName("replacements")
@@ -134,6 +134,7 @@ public class TileOverride {
 	}
 
 	public int modifyColor(int jagexHsl) {
+		if (true) return jagexHsl;
 		int h = jagexHsl >> 10 & 0x3F;
 		h += shiftHue;
 		h = clamp(h, minHue, maxHue);

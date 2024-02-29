@@ -340,8 +340,8 @@ public class ColorUtils {
 		return hslToSrgb(unpackHsl(hsl));
 	}
 
-	public static int linearRgbToPackedHsl(float[] srgb) {
-		return srgbToPackedHsl(linearToSrgb(srgb));
+	public static int linearRgbToPackedHsl(float[] rgb) {
+		return srgbToPackedHsl(linearToSrgb(rgb));
 	}
 
 	public static float[] packedHslToLinearRgb(int hsl) {

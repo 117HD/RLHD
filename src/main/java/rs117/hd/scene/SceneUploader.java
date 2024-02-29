@@ -493,6 +493,15 @@ class SceneUploader {
 					plugin.configGroundBlending &&
 					textureId == -1 &&
 					!proceduralGenerator.useDefaultColor(tile, override);
+
+				if (!useBlendedMaterialAndColor) {
+					// Apply brightness clamping also with blending disabled
+					swColor = proceduralGenerator.clampBrightness(swColor);
+					seColor = proceduralGenerator.clampBrightness(seColor);
+					nwColor = proceduralGenerator.clampBrightness(nwColor);
+					neColor = proceduralGenerator.clampBrightness(neColor);
+				}
+
 				GroundMaterial groundMaterial = null;
 				if (override != TileOverride.NONE) {
 					groundMaterial = override.groundMaterial;
@@ -856,6 +865,14 @@ class SceneUploader {
 						plugin.configGroundBlending &&
 						textureId == -1 &&
 						!(isOverlay && proceduralGenerator.useDefaultColor(tile, override));
+
+					if (!useBlendedMaterialAndColor) {
+						// Apply brightness clamping also with blending disabled
+						colorA = proceduralGenerator.clampBrightness(colorA);
+						colorB = proceduralGenerator.clampBrightness(colorB);
+						colorC = proceduralGenerator.clampBrightness(colorC);
+					}
+
 					if (override != TileOverride.NONE) {
 						groundMaterial = override.groundMaterial;
 						uvOrientation = override.uvOrientation;
