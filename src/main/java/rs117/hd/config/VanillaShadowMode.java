@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Hooder <ahooder@protonmail.com>
+ * Copyright (c) 2024, Hooder <ahooder@protonmail.com>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -22,25 +22,26 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package rs117.hd.config;
 
-float sampleCausticsChannel(const vec2 flow1, const vec2 flow2) {
-    return min(
-        texture(textureArray, vec3(flow1, MAT_CAUSTICS_MAP.colorMap)).r,
-        texture(textureArray, vec3(flow2, MAT_CAUSTICS_MAP.colorMap)).r
-    );
-}
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
-float sampleCausticsChannel(const vec2 flow1, const vec2 flow2, const vec2 aberration) {
-    return sampleCausticsChannel(flow1 + aberration, flow2 + aberration);
-}
+@Getter
+@RequiredArgsConstructor
+public enum VanillaShadowMode {
+	SHOW("Show", true),
+	SHOW_IN_PVM("Show in PvM", true),
+	PREFER_IN_PVM("Prefer in PvM", true),
+	HIDE("Hide", false),
+	;
 
-vec3 sampleCaustics(const vec2 flow1, const vec2 flow2, const float aberration) {
-    float r = sampleCausticsChannel(flow1, flow2, aberration * vec2( 1,  1));
-    float g = sampleCausticsChannel(flow1, flow2, aberration * vec2( 1, -1));
-    float b = sampleCausticsChannel(flow1, flow2, aberration * vec2(-1, -1));
-    return vec3(r, g, b);
-}
+	private final String name;
 
-vec3 sampleCaustics(const vec2 flow1, const vec2 flow2) {
-    return vec3(sampleCausticsChannel(flow1, flow2));
+	public final boolean retainInPvm;
+
+	@Override
+	public String toString() {
+		return name;
+	}
 }

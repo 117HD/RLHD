@@ -118,6 +118,17 @@ public enum WaterType
 		.depthColor(srgb(0x69, 0x77, 0x5e))
 		.causticsStrength(0)
 		.duration(1.2f)),
+	ABYSS_BILE(b -> b
+		.specularStrength(0.2f)
+		.specularGloss(100)
+		.normalStrength(.08f)
+		.baseOpacity(.85f)
+		.fresnelAmount(.3f)
+		.surfaceColor(rgb(120, 91, 0))
+		.foamColor(rgb(120, 81, 0))
+		.depthColor(rgb(120, 59, 0))
+		.causticsStrength(0.4f)
+		.duration(2.2f)),
 	PLAIN_WATER(b -> b
 		.depthColor(rgb(0, 0, 0))
 		.foamColor(rgb(64, 64, 64))

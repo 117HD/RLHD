@@ -1,6 +1,9 @@
 package rs117.hd.utils;
 
+import javax.annotation.Nullable;
 import net.runelite.api.*;
+
+import static rs117.hd.utils.HDUtils.clamp;
 
 public class ModelHash {
 	// Model hashes are composed as follows:
@@ -23,12 +26,45 @@ public class ModelHash {
 	public static final int TYPE_NPC = 1;
 	public static final int TYPE_OBJECT = 2;
 	public static final int TYPE_GROUND_ITEM = 3;
+	// 117 HD custom types
+	public static final int TYPE_PROJECTILE = 4;
+	public static final int TYPE_GRAPHICS_OBJECT = 5;
+	public static final int TYPE_UNKNOWN = 0xF;
+
+	public static final int UNKNOWN_ID = 0xFFFFFF;
 
 	public static final long SCENE_X_MASK = 0x7f;
 	public static final long SCENE_Y_MASK = 0x7f << 7;
 	public static final long TYPE_MASK = 3L << 14;
 	public static final long ID_OR_INDEX_MASK = 0xffffffffL << 17;
 	public static final long PLANE_MASK = 3L << 49;
+
+	private static final String[] TYPE_NAMES = {
+		"Player",
+		"NPC",
+		"Object",
+		"Ground item",
+		"Projectile",
+		"Graphics object",
+		"Unknown"
+	};
+	private static final String[] TYPE_NAMES_SHORT = {
+		"PLR",
+		"NPC",
+		"OBJ",
+		"ITM",
+		"PRJ",
+		"GFX",
+		"N/A"
+	};
+
+	public static String getTypeName(int type) {
+		return TYPE_NAMES[clamp(type, 0, TYPE_NAMES.length - 1)];
+	}
+
+	public static String getTypeNameShort(int type) {
+		return TYPE_NAMES_SHORT[clamp(type, 0, TYPE_NAMES_SHORT.length - 1)];
+	}
 
 	public static long pack(int idOrIndex, boolean rightClickable, int type, int sceneY, int sceneX) {
 		return
@@ -59,24 +95,68 @@ public class ModelHash {
 		return (int) ((hash & ID_OR_INDEX_MASK) >>> 17);
 	}
 
-	public static long getUuid(Client client, long hash) {
-		int type = getType(hash);
-		int idOrIndex = getIdOrIndex(hash);
-		int id = idOrIndex;
-		if (type == TYPE_NPC) {
-			id = -1;
-			NPC[] npcs = client.getCachedNPCs();
-			if (idOrIndex >= 0 && idOrIndex < npcs.length) {
-				NPC npc = npcs[idOrIndex];
-				if (npc != null) {
-					id = npcs[idOrIndex].getId();
+	/**
+	 * Generate an identifier of a Renderable, consisting of the type and ID.
+	 *
+	 * @param client     RuneLite client instance
+	 * @param hash       RuneLite draw call hash
+	 * @param renderable the Renderable passed into the draw callback
+	 * @return a combined identifier
+	 */
+	public static int generateUuid(Client client, long hash, @Nullable Renderable renderable) {
+		int type = TYPE_UNKNOWN;
+		int id = UNKNOWN_ID;
+
+		if (hash == -1) {
+			if (renderable instanceof Projectile) {
+				type = TYPE_PROJECTILE;
+				id = ((Projectile) renderable).getId();
+			} else if (renderable instanceof GraphicsObject) {
+				type = TYPE_GRAPHICS_OBJECT;
+				id = ((GraphicsObject) renderable).getId();
+			}
+		} else {
+			type = ModelHash.getType(hash);
+			id = ModelHash.getIdOrIndex(hash);
+
+			if (renderable instanceof DynamicObject) {
+				var def = client.getObjectDefinition(id);
+				if (def.getImpostorIds() != null) {
+					var impostor = def.getImpostor();
+					if (impostor != null)
+						id = impostor.getId();
+				}
+			} else if (type == TYPE_NPC) {
+				int index = id;
+				id = UNKNOWN_ID;
+				NPC[] npcs = client.getCachedNPCs();
+				if (index >= 0 && index < npcs.length) {
+					NPC npc = npcs[index];
+					if (npc != null)
+						id = npc.getId();
 				}
 			}
 		}
-		return packUuid(id, type);
+
+		return packUuid(type, id);
 	}
 
-	public static long packUuid(int id, int type) {
-		return pack(id, false, type, 0, 0);
+	/**
+	 * Pack a type ID and object/NPC/projectile/other ID into an int for use with 117 HD functions.
+	 *
+	 * @param type ModelHash type ID
+	 * @param id   object/NPC/projectile/other ID
+	 * @return a combined identifier
+	 */
+	public static int packUuid(int type, int id) {
+		return type << 24 | id;
+	}
+
+	public static int getUuidType(int uuid) {
+		return uuid >> 24;
+	}
+
+	public static int getUuidId(int uuid) {
+		return uuid & 0xFFFFFF;
 	}
 }
