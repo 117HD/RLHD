@@ -79,3 +79,9 @@ SNOW_3 and SNOW_3_N textures from AmbientCG. All textures on this site are licen
 
 SNOW_4 and SNOW_4_N textures from AmbientCG. All textures on this site are licensed as CC0.
 -- https://ambientCG.com/a/Snow004
+
+ABYSSAL, ABYSSAL_N, and ABYSSAL_D texture from TextureCan. All textures on this site are licensed as CC0;
+-- https://www.texturecan.com/details/137/
+
+ABYSSAL_2, ABYSSAL_2_N, and ABYSSAL_2_D texture from 3d Textures. All textures on this site are licensed as CC0;
+-- https://3dtextures.me/2019/03/11/abstract-organic-002/

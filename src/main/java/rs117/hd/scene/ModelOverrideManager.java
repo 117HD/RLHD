@@ -3,9 +3,9 @@ package rs117.hd.scene;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Objects;
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.client.callback.ClientThread;
@@ -170,7 +170,7 @@ public class ModelOverrideManager {
 		}
 	}
 
-	@NonNull
+	@Nonnull
 	public ModelOverride getOverride(int uuid, int[] worldPos) {
 		var override = modelOverrides.get(uuid);
 		if (override == null)

@@ -1,6 +1,10 @@
 package rs117.hd.data.materials;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import javax.annotation.Nonnull;
@@ -11,12 +15,15 @@ import rs117.hd.HdPlugin;
 import rs117.hd.config.SeasonalTheme;
 import rs117.hd.data.WaterType;
 import rs117.hd.data.environments.Area;
+import rs117.hd.scene.tile_overrides.ExpressionBasedReplacement;
+import rs117.hd.scene.tile_overrides.TileOverride;
 
 import static rs117.hd.utils.HDUtils.clamp;
 
 @Setter
 @Accessors(fluent = true)
-class TileOverrideBuilder<T> {
+@Deprecated
+public class TileOverrideBuilder<T> {
     public Integer[] ids = null;
     public Area area = Area.ALL;
     public GroundMaterial groundMaterial = GroundMaterial.NONE;
@@ -37,9 +44,9 @@ class TileOverrideBuilder<T> {
 	public int maxLightness = 127;
 	public int uvOrientation = 0;
 	public float uvScale = 1;
-	public TileOverrideResolver<T> replacementResolver;
+	public List<TileOverride.IReplacement<T>> replacements = new ArrayList<>();
 
-	void normalize() {
+	public void normalize() {
 		// Ensure values are within valid ranges
 		if (hue != -1) {
 			minHue = maxHue = clamp(hue, 0, 63);
@@ -94,29 +101,32 @@ class TileOverrideBuilder<T> {
 	}
 
 	TileOverrideBuilder<T> replaceWithIf(@Nullable T replacement, @Nonnull Function<HdPlugin, Boolean> condition) {
-		var previousResolver = replacementResolver;
-		replacementResolver = (plugin, scene, tile, override) -> {
-			// Earlier replacements take precedence
-			if (previousResolver != null) {
-				var resolved = previousResolver.resolve(plugin, scene, tile, override);
-				if (resolved != override)
-					return resolved;
-			}
-
-			if (condition.apply(plugin))
-				return replacement;
-
-			return override;
-		};
+		replacements.add((plugin, scene, tile, original) -> condition.apply(plugin) ? replacement : original);
 		return this;
 	}
 
-	TileOverrideBuilder<T> seasonalReplacement(SeasonalTheme seasonalTheme, T replacement) {
-		return replaceWithIf(replacement, plugin -> plugin.configSeasonalTheme == seasonalTheme);
+	TileOverrideBuilder<T> replacementResolver(TileOverride.IReplacement<T> resolver) {
+		replacements.add(resolver);
+		return this;
 	}
 
-	TileOverrideBuilder<T> resolver(@Nonnull TileOverrideResolver<T> resolver) {
-		replacementResolver = resolver;
+	public static Map<String, Object> SEASON_CONSTANTS = new HashMap<>() {{
+		for (var season : SeasonalTheme.values())
+			put(season.name(), season.ordinal());
+	}};
+
+	TileOverrideBuilder<T> seasonalReplacement(SeasonalTheme season, T replacement) {
+		replacements.add(new ExpressionBasedReplacement<T>(replacement, SEASON_CONSTANTS, "season == " + season.name()));
+		return this;
+	}
+
+	TileOverrideBuilder<T> fallBackTo(T replacement) {
+		replacements.add(new ExpressionBasedReplacement<>(replacement, null, "true"));
+		return this;
+	}
+
+	TileOverrideBuilder<T> replaceWithIf(T replacement, String... cases) {
+		replacements.add(new ExpressionBasedReplacement<>(replacement, null, cases));
 		return this;
 	}
 }

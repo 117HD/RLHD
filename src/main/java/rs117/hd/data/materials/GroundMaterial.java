@@ -118,6 +118,7 @@ public enum GroundMaterial {
 	),
 	OVERWORLD_ROCKY(Material.ROCK_2, Material.STONE_NORMALED_DARK, Material.ROCK_1, Material.GRAVEL),
 	HD_BRICK_BROWN(Material.HD_BRICK_BROWN),
+	ABYSSAL_FLOOR(Material.ABYSSAL_2, Material.ABYSSAL, Material.ABYSSAL),
 	;
 
 	private final Material[] materials;

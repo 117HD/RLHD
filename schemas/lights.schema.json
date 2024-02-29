@@ -99,7 +99,27 @@
       },
       "fadeInDuration": {
         "type": "number",
-        "description": "The time in milliseconds until the light is fully active after spawning."
+        "description": "The time in milliseconds until the light is fully active after spawning. May overlap with fade-out if overlap is enabled."
+      },
+      "fadeOutDuration": {
+        "type": "number",
+        "description": "The time in milliseconds until the light is fully inactive after despawning. May overlap with fade-in if overlap is enabled."
+      },
+      "fadeOverlap": {
+        "type": "boolean",
+        "description": "If enabled, fade-in and fade-out can overlap multiplicatively if spaced close enough together."
+      },
+      "spawnDelay": {
+        "type": "number",
+        "description": "The time in milliseconds between the light spawning and the light beginning to fade in."
+      },
+      "despawnDelay": {
+        "type": "number",
+        "description": "The time in milliseconds between the light despawning and the light beginning to fade out."
+      },
+      "fixedDespawnTime": {
+        "type": "boolean",
+        "description": "If enabled, the light will have faded out completely after spawnDelay + despawnDelay milliseconds."
       },
       "visibleFromOtherPlanes": {
         "type": "boolean",
