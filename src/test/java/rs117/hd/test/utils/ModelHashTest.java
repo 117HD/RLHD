@@ -20,10 +20,10 @@ public class ModelHashTest {
 		long uuid = 0x15cac8000L;
 		long hash = 0x15cac9ab7L;
 		assertEquals(id, ModelHash.getIdOrIndex(uuid));
-		assertEquals(uuid, ModelHash.packUuid(id, ModelHash.TYPE_OBJECT));
+		assertEquals(uuid, ModelHash.packUuid(ModelHash.TYPE_OBJECT, id));
 		assertEquals(id, ModelHash.getIdOrIndex(uuid));
 		assertEquals(ModelHash.TYPE_OBJECT, ModelHash.getType(uuid));
-		assertEquals(uuid, ModelHash.getUuid(client, hash));
-		assertEquals(id, ModelHash.getIdOrIndex(ModelHash.getUuid(client, hash)));
+		assertEquals(uuid, ModelHash.generateUuid(client, hash, null));
+		assertEquals(id, ModelHash.getIdOrIndex(ModelHash.generateUuid(client, hash, null)));
 	}
 }

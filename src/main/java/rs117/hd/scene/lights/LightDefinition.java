@@ -22,7 +22,12 @@ public class LightDefinition {
 	public LightType type = LightType.STATIC;
 	public float duration;
 	public float range;
-	public int fadeInDuration = -1;
+	public int fadeInDuration = 50;
+	public int fadeOutDuration = 50;
+	public boolean fadeOverlap;
+	public int spawnDelay;
+	public int despawnDelay;
+	public boolean fixedDespawnTime;
 	public boolean visibleFromOtherPlanes = false;
 	@JsonAdapter(GsonUtils.IntegerSetAdapter.class)
 	public HashSet<Integer> npcIds = new HashSet<>();

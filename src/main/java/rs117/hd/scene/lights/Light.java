@@ -2,7 +2,6 @@ package rs117.hd.scene.lights;
 
 import net.runelite.api.*;
 import net.runelite.api.coords.*;
-import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.HDUtils;
 
 public class Light
@@ -19,9 +18,15 @@ public class Light
 	public float animation = 0.5f;
 	public float duration;
 	public float fadeInDuration;
-	public float currentFadeIn;
+	public float fadeOutDuration;
+	public float spawnDelay;
+	public float despawnDelay;
+
+	public float elapsedTime;
 	public int impostorObjectId;
 	public boolean visible = true;
+	public boolean markedForRemoval = false;
+	public float scheduledDespawnTime = -1;
 
 	public WorldPoint worldPoint;
 	public int x;
@@ -32,22 +37,29 @@ public class Light
 	public boolean belowFloor = false;
 	public boolean aboveFloor = false;
 
+	public Actor actor;
 	public Projectile projectile;
-	public NPC npc;
 	public TileObject object;
 	public GraphicsObject graphicsObject;
-
-	public ModelOverride modelOverride = ModelOverride.NONE;
+	public int spotAnimId = -1;
 
 	public Light(LightDefinition def) {
 		this.def = def;
 		duration = def.duration / 1000f;
 		fadeInDuration = def.fadeInDuration / 1000f;
+		fadeOutDuration = def.fadeOutDuration / 1000f;
+		spawnDelay = def.spawnDelay / 1000f;
+		despawnDelay = def.despawnDelay / 1000f;
 		color = def.color;
 		radius = def.radius;
 		strength = def.strength;
 		plane = def.plane;
 		if (def.type == LightType.PULSE)
 			animation = (float) Math.random();
+
+		if (def.fixedDespawnTime) {
+			markedForRemoval = true;
+			scheduledDespawnTime = spawnDelay + despawnDelay;
+		}
 	}
 }

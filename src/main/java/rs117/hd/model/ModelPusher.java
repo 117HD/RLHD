@@ -18,8 +18,6 @@ import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.data.WaterType;
 import rs117.hd.data.materials.Material;
-import rs117.hd.data.materials.Overlay;
-import rs117.hd.data.materials.Underlay;
 import rs117.hd.data.materials.UvType;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
@@ -27,6 +25,7 @@ import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.SceneUploader;
 import rs117.hd.scene.TextureManager;
+import rs117.hd.scene.TileOverrideManager;
 import rs117.hd.scene.model_overrides.InheritTileColorType;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.scene.model_overrides.ObjectType;
@@ -36,6 +35,7 @@ import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.PopupUtils;
 
 import static rs117.hd.HdPlugin.MAX_FACE_COUNT;
+import static rs117.hd.scene.tile_overrides.TileOverride.OVERLAY_FLAG;
 
 /**
  * Pushes models
@@ -57,6 +57,9 @@ public class ModelPusher {
 
 	@Inject
 	private TextureManager textureManager;
+
+	@Inject
+	private TileOverrideManager tileOverrideManager;
 
 	@Inject
 	private ModelHasher modelHasher;
@@ -154,7 +157,7 @@ public class ModelPusher {
 	 *
 	 * @param sceneContext   object for the scene to push model data for
 	 * @param tile           that the model is associated with, if any
-	 * @param hash           of the model
+	 * @param uuid           of the model
 	 * @param model          to push data from
 	 * @param modelOverride  the active model override
 	 * @param objectType     of the specified model. Used for TzHaar recolor
@@ -164,7 +167,7 @@ public class ModelPusher {
 	public void pushModel(
 		SceneContext sceneContext,
 		@Nullable Tile tile,
-		long hash,
+		int uuid,
 		Model model,
 		ModelOverride modelOverride,
 		ObjectType objectType,
@@ -292,7 +295,7 @@ public class ModelPusher {
 
 			modelOverride.applyRotation(model);
 			for (int face = 0; face < faceCount; face++) {
-				int[] data = getFaceVertices(sceneContext, tile, hash, model, modelOverride, objectType, face);
+				int[] data = getFaceVertices(sceneContext, tile, uuid, model, modelOverride, objectType, face);
 				sceneContext.stagingBufferVertices.put(data);
 				if (shouldCacheVertexData)
 					fullVertexData.put(data);
@@ -457,11 +460,11 @@ public class ModelPusher {
 		return heightA == heightB && heightA == heightC;
 	}
 
-	@SuppressWarnings({ "ReassignedVariable", "ManualMinMaxCalculation" })
+	@SuppressWarnings({ "ReassignedVariable" })
 	private int[] getFaceVertices(
 		SceneContext sceneContext,
 		Tile tile,
-		long hash,
+		int uuid,
 		Model model,
 		@NonNull ModelOverride modelOverride,
 		ObjectType objectType,
@@ -472,15 +475,17 @@ public class ModelPusher {
 
 		// Hide fake shadows or lighting that is often baked into models by making the fake shadow transparent
 		if (plugin.configHideFakeShadows && isBakedGroundShading(model, face)) {
-			if (modelOverride.removeBakedLighting)
+			if (modelOverride.hideVanillaShadows)
 				return ZEROED_INTS; // Hide the face
 
-			if (ModelHash.getType(hash) == ModelHash.TYPE_PLAYER) {
-				int index = ModelHash.getIdOrIndex(hash);
+			if (ModelHash.getUuidType(uuid) == ModelHash.TYPE_PLAYER) {
+				int index = ModelHash.getUuidId(uuid);
 				Player[] players = client.getCachedPlayers();
-				Player player = index >= 0 && index < players.length ? players[index] : null;
-				if (player != null && player.getPlayerComposition().getEquipmentId(KitType.WEAPON) == ItemID.MAGIC_CARPET)
-					return ZEROED_INTS; // Hide the face
+				if (index >= 0 && index < players.length) {
+					Player player = players[index];
+					if (player != null && player.getPlayerComposition().getEquipmentId(KitType.WEAPON) == ItemID.MAGIC_CARPET)
+						return ZEROED_INTS; // Hide the face
+				}
 			}
 		}
 
@@ -567,14 +572,8 @@ public class ModelPusher {
 									tilePaint.getSeColor()
 								) / 4;
 
-							Overlay overlay = Overlay.getOverlay(scene, tile, plugin);
-							if (overlay != Overlay.NONE) {
-								averageColor = overlay.modifyColor(averageColor);
-							} else {
-								Underlay underlay = Underlay.getUnderlay(scene, tile, plugin);
-								averageColor = underlay.modifyColor(averageColor);
-							}
-
+							var override = tileOverrideManager.getOverride(scene, tile);
+							averageColor = override.modifyColor(averageColor);
 							color1 = color2 = color3 = averageColor;
 
 							// Let the shader know vanilla shading reversal should be skipped for this face
@@ -582,18 +581,18 @@ public class ModelPusher {
 						} else if (tileModel != null && tileModel.getTriangleTextureId() == null) {
 							int faceColorIndex = -1;
 							for (int i = 0; i < tileModel.getTriangleColorA().length; i++) {
-								boolean isOverlayFace = ProceduralGenerator.isOverlayFace(tile, i);
+								boolean isOverlay = ProceduralGenerator.isOverlayFace(tile, i);
 								// Use underlay if the tile does not have an overlay, useful for rocks in cave corners.
 								if (modelOverride.inheritTileColorType == InheritTileColorType.UNDERLAY
 									|| tileModel.getModelOverlay() == 0) {
 									// pulling the color from UNDERLAY is more desirable for green grass tiles
 									// OVERLAY pulls in path color which is not desirable for grass next to paths
-									if (!isOverlayFace) {
+									if (!isOverlay) {
 										faceColorIndex = i;
 										break;
 									}
 								} else if (modelOverride.inheritTileColorType == InheritTileColorType.OVERLAY) {
-									if (isOverlayFace) {
+									if (isOverlay) {
 										// OVERLAY used in dirt/path/house tile color blend better with rubbles/rocks
 										faceColorIndex = i;
 										break;
@@ -604,8 +603,19 @@ public class ModelPusher {
 							if (faceColorIndex != -1) {
 								int color = tileModel.getTriangleColorA()[faceColorIndex];
 								if (color != 12345678) {
-									Underlay underlay = Underlay.getUnderlay(scene, tile, plugin);
-									color = underlay.modifyColor(color);
+									var scenePos = tile.getSceneLocation();
+									int tileX = scenePos.getX();
+									int tileY = scenePos.getY();
+									int tileZ = tile.getRenderLevel();
+									int tileExX = tileX + SceneUploader.SCENE_OFFSET;
+									int tileExY = tileY + SceneUploader.SCENE_OFFSET;
+									int[] worldPos = sceneContext.sceneToWorld(tileX, tileY, tileZ);
+									var override = tileOverrideManager.getOverride(scene, tile, worldPos,
+										modelOverride.inheritTileColorType == InheritTileColorType.OVERLAY ?
+											OVERLAY_FLAG | scene.getOverlayIds()[tileZ][tileExX][tileExY] :
+											scene.getUnderlayIds()[tileZ][tileExX][tileExY]
+									);
+									color = override.modifyColor(color);
 									color1 = color2 = color3 = color;
 
 									// Let the shader know vanilla shading reversal should be skipped for this face
