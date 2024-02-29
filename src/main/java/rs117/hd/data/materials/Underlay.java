@@ -1094,6 +1094,12 @@ public enum Underlay {
 		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_DIRT)
 	),
 
+	DEFENDER_OF_VARROCK_CAVE_FLOOR(p -> p
+		.ids(189, 191)
+		.area(Area.DEFENDER_OF_VARROCK_DUNGEON)
+		.groundMaterial(GroundMaterial.ROCKY_CAVE_FLOOR)
+	),
+
 	// Default underlays
 	OVERWORLD_GRASS(Area.OVERWORLD, GroundMaterial.OVERWORLD_GRASS_1, p -> p
 		.ids(7, 25, 33, 34, 40, 48, 49, 50, 51, 52, 53, 54, 67, 70, 71, 75, 93, 97, 99, 100, 103, 114, 115, 126)

@@ -917,7 +917,8 @@
       11468,
       11469,
       11470,
-      11472
+      11472,
+      12617
     ],
     "objectIds": [
       2491,
@@ -4245,7 +4246,51 @@
     "flatNormals": true
   },
   {
-    "description": "Textured Ladder",
+    "description": "Ladder",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      2796,
+      2797,
+      2833,
+      4163,
+      4164,
+      4187,
+      4189,
+      8744,
+      8745,
+      8746,
+      10493,
+      10494,
+      11794,
+      11795,
+      12779,
+      14745,
+      14746,
+      17122,
+      17148,
+      17149,
+      17159,
+      17999,
+      18000,
+      18001,
+      18002,
+      24351,
+      24352,
+      20673,
+      24082,
+      24084,
+      25606,
+      25663,
+      25844,
+      26107,
+      50143,
+      50144
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Ladder, rotated UVs",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       11,
@@ -4455,48 +4500,6 @@
       25616
     ],
     "flatNormals": true
-  },
-  {
-    "description": "Ladder - Untextured",
-    "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [
-      2796,
-      2797,
-      2833,
-      4163,
-      4164,
-      4187,
-      4189,
-      8744,
-      8745,
-      8746,
-      10493,
-      10494,
-      11794,
-      11795,
-      12779,
-      14745,
-      14746,
-      17122,
-      17148,
-      17149,
-      17159,
-      17999,
-      18000,
-      18001,
-      18002,
-      24351,
-      24352,
-      20673,
-      24082,
-      24084,
-      25606,
-      25663,
-      25844,
-      26107
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.8
   },
   {
     "description": "Camelot Stone",
@@ -14651,5 +14654,60 @@
       49925
     ],
     "baseMaterial": "BLANK_GLOSS"
+  },
+  {
+    "description": "Disable shadows for footprints in Defender of Varrock",
+    "castShadows": false,
+    "objectIds": [
+      50098,
+      50099,
+      50100
+    ]
+  },
+  {
+    "description": "Defender of Varrock dungeon rocky walls, stalagmites & braziers",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "objectIds": [
+      50154,
+      50155,
+      50156,
+      50159,
+      50160,
+      50164,
+      50165,
+      50166,
+      50167,
+      50168,
+      50170,
+      50171,
+      50172,
+      50174,
+      50175,
+      50176,
+      50177,
+      50178,
+      50179,
+      50180,
+      50185,
+      50544,
+      50553,
+      50554,
+      50555,
+      50556,
+      50557,
+      50558,
+      50559,
+      50560,
+      50561
+    ]
+  },
+  {
+    "description": "Defender of Varrock dungeon doors",
+    "baseMaterial": "METALLIC_1",
+    "flatNormals": true,
+    "objectIds": [
+      50152
+    ]
   }
 ]

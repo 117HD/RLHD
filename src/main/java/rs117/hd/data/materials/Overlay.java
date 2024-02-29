@@ -1068,6 +1068,9 @@ public enum Overlay {
 		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_GRASS)
 	),
 
+	// Black tiles
+	VANILLA_BLACK_TILE(37, GroundMaterial.NONE, p -> p.lightness(0).blended(false)),
+
 	// Fallback overlays
 	OVERLAY_WATER(p -> p.ids(-105, -98, 6, 41, 104, 196).waterType(WaterType.WATER)),
 	OVERLAY_DIRT(

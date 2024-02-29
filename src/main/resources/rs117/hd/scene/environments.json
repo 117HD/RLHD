@@ -1377,6 +1377,14 @@
     "sunAngles": [ 80, 190 ]
   },
   {
+    "area": "DEFENDER_OF_VARROCK_CASTLE_UNDER_ATTACK",
+    "ambientColor": "#97baff",
+    "ambientStrength": 1.5,
+    "directionalStrength": 2,
+    "fogColor": "#00000B",
+    "fogDepth": 45
+  },
+  {
     "key": "OVERWORLD",
     "area": "OVERWORLD",
     "ambientColor": "#97baff",

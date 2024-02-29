@@ -32547,5 +32547,89 @@
       71.4
     ],
     "type": "STATIC"
+  },
+  {
+    "description": "Defender of Varrock dungeon braziers",
+    "objectIds": [ 50170 ],
+    "height": 200,
+    "alignment": "CENTER",
+    "radius": 1200,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "range": 7
+  },
+  {
+    "description": "Imcando Dream Theatre forge - Camdozaal",
+    "height": 100,
+    "alignment": "CENTER",
+    "radius": 1400,
+    "strength": 12.5,
+    "color": [ 10, 80, 190 ],
+    "type": "FLICKER",
+    "range": 30,
+    "objectIds": [
+      50101
+    ]
+  },
+  {
+    "description": "Defender of Varrock shield responds lightning spotanim",
+    "graphicsObjectIds": [ 2656 ],
+    "height": 200,
+    "alignment": "CENTER",
+    "radius": 500,
+    "strength": 12.5,
+    "color": [ 60, 110, 190 ],
+    "type": "FLICKER",
+    "range": 20
+  },
+  {
+    "description": "Defender of Varrock shield lightning attack - first part",
+    "height": 200,
+    "radius": 500,
+    "strength": 200,
+    "color": [ 60, 110, 190 ],
+    "type": "FLICKER",
+    "range": 20,
+    "objectIds": [ 50108 ],
+    "fadeInDuration": 150,
+    "fadeOutDuration": 300,
+    "spawnDelay": 3600,
+    "despawnDelay": 2100,
+    "fixedDespawnTime": true
+  },
+  {
+    "description": "Defender of Varrock shield lightning attack - second part",
+    "height": 200,
+    "radius": 500,
+    "strength": 200,
+    "color": [ 60, 110, 190 ],
+    "type": "FLICKER",
+    "range": 20,
+    "objectIds": [ 50109 ],
+    "fadeInDuration": 150,
+    "fadeOutDuration": 300,
+    "spawnDelay": 4050,
+    "despawnDelay": 1950,
+    "fixedDespawnTime": true
+  },
+  {
+    "description": "Defender of Varrock shield lightning attack - third part",
+    "height": 200,
+    "radius": 500,
+    "strength": 200,
+    "color": [ 60, 110, 190 ],
+    "type": "FLICKER",
+    "range": 20,
+    "objectIds": [ 50110 ],
+    "fadeInDuration": 150,
+    "fadeOutDuration": 300,
+    "spawnDelay": 4400,
+    "despawnDelay": 2050,
+    "fixedDespawnTime": true
   }
 ]

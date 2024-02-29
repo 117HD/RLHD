@@ -3784,6 +3784,15 @@
     }
   },
   {
+    "name": "VANILLA_BLACK_TILE",
+    "area": "ALL",
+    "overlayIds": [
+      37
+    ],
+    "blended": false,
+    "maxLightness": 0
+  },
+  {
     "name": "OVERLAY_WATER",
     "area": "ALL",
     "overlayIds": [
@@ -5704,6 +5713,15 @@
     "replacements": {
       "WINTER_DIRT": "season == WINTER"
     }
+  },
+  {
+    "name": "DEFENDER_OF_VARROCK_CAVE_FLOOR",
+    "area": "DEFENDER_OF_VARROCK_DUNGEON",
+    "underlayIds": [
+      189,
+      191
+    ],
+    "groundMaterial": "ROCKY_CAVE_FLOOR"
   },
   {
     "name": "OVERWORLD_GRASS_UNDERLAY",
