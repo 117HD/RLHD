@@ -283,10 +283,6 @@ public class LightManager {
 					light.z = (int) tileHeight - 1 - light.def.height;
 
 					light.visible = actorLightVisible(light.actor);
-					if (light.visible && !light.def.animationIds.isEmpty()) {
-						var animationId = light.actor.getAnimation();
-						light.visible = light.def.animationIds.contains(animationId);
-					}
 				}
 			}
 
@@ -309,7 +305,7 @@ public class LightManager {
 				}
 			}
 
-			if (light.actor != null && !light.actor.hasSpotAnim(light.spotAnimId))
+			if (light.spotAnimId != -1 && light.actor != null && !light.actor.hasSpotAnim(light.spotAnimId))
 				light.markedForRemoval = true;
 
 			if (light.def.type == LightType.FLICKER) {
