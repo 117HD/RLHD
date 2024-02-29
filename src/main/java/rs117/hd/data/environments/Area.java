@@ -1285,21 +1285,21 @@ public enum Area
 		new AABB(1344, 10239, 1354, 10231)
 	),
 	FARMING_GUILD_INTERIOR(
-		// Northern Room //
+		// Northern Room
 		new AABB(1242, 3763, 1255, 3746),
 		new AABB(1241, 3762, 1241, 3747),
 		new AABB(1240, 3761, 1240, 3748),
 		new AABB(1239, 3760, 1239, 3749),
 		new AABB(1256, 3762, 1256, 3747),
 		new AABB(1257, 3761, 1257, 3748),
-		// Hallways //
+		// Hallways
 		new AABB(1247, 3745, 1250, 3744),
 		new AABB(1254, 3742, 1242, 3738),
 		new AABB(1242, 3743, 1250, 3743),
 		new AABB(1245, 3737, 1251, 3723),
 		new AABB(1252, 3731, 1254, 3728),
 		new AABB(1242, 3731, 1244, 3728),
-		// Western Room //
+		// Western Room
 		new AABB(1228, 3739, 1237, 3720),
 		new AABB(1227, 3738, 1227, 3721),
 		new AABB(1226, 3737, 1226, 3722),
@@ -1311,7 +1311,7 @@ public enum Area
 		new AABB(1240, 3735, 1240, 3723),
 		new AABB(1241, 3734, 1241, 3724),
 		new AABB(1242, 3733, 1242, 3725),
-		// Eastern Room //
+		// Eastern Room
 		new AABB(1261, 3750, 1268, 3745),
 		new AABB(1262, 3745, 1267, 3745),
 		new AABB(1263, 3744, 1267, 3744),
@@ -1327,7 +1327,7 @@ public enum Area
 		new AABB(1257, 3736, 1257, 3723),
 		new AABB(1256, 3724, 1256, 3735),
 		new AABB(1255, 3734, 1255, 3725),
-		// Fire Area - Exterior //
+		// Fire Area - Exterior
 		new AABB(1251, 3745, 1260, 3743),
 		new AABB(1255, 3742, 1262, 3740),
 		new AABB(1261, 3745, 1261, 3743),
@@ -1341,8 +1341,6 @@ public enum Area
 		new AABB(1252, 3736, 1256, 3736),
 		new AABB(1252, 3735, 1255, 3735),
 		new AABB(1252, 3734, 1254, 3731)
-
-
 	),
 	MOUNT_KARUULM(1245,3765,1358,3860),
 	LIZARDMAN_TEMPLE(5277),

@@ -5166,6 +5166,20 @@
     "groundMaterial": "TRANSPARENT"
   },
   {
+    "name": "INTERIOR_FARMING_GUILD_GRASS",
+    "area": "FARMING_GUILD_INTERIOR",
+    "underlayIds": [
+      48,
+      49,
+      50,
+      63,
+      66,
+      68,
+      96
+    ],
+    "groundMaterial": "OVERWORLD_GRASS_1"
+  },
+  {
     "name": "ZANARIS_GRASS",
     "area": "ZANARIS",
     "underlayIds": [
