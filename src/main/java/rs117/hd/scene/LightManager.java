@@ -33,6 +33,8 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Optional;
+import java.util.function.Predicate;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -171,16 +173,23 @@ public class LightManager {
 
 			// check the NPCs in the scene to make sure they have lights assigned, if applicable,
 			// for scenarios in which HD mode or dynamic lights were disabled during NPC spawn
-			client.getNpcs().forEach(npc -> addNpcLights(sceneContext, npc));
+			client.getNpcs().forEach(this::addNpcLights);
 		}
 
 		Tile[][][] tiles = sceneContext.scene.getExtendedTiles();
 		int[][][] tileHeights = sceneContext.scene.getTileHeights();
 
-		Iterator<Light> lightIterator = sceneContext.lights.iterator();
-		while (lightIterator.hasNext()) {
-			Light light = lightIterator.next();
+		for (Light light : sceneContext.lights) {
 			light.distanceSquared = Integer.MAX_VALUE;
+
+			light.elapsedTime += plugin.deltaClientTime;
+			if (light.elapsedTime < light.spawnDelay) {
+				light.visible = false;
+				continue;
+			}
+
+			if (light.def.fixedDespawnTime && light.elapsedTime >= light.spawnDelay + light.despawnDelay)
+				light.markedForRemoval = true;
 
 			if (light.object != null) {
 				light.visible = true;
@@ -192,58 +201,35 @@ public class LightManager {
 						light.visible = impostor != null && impostor.getId() == light.impostorObjectId;
 					}
 				}
-
-				if (light.visible && !light.def.animationIds.isEmpty()) {
-					light.visible = false;
-					if (light.object instanceof GameObject) {
-						var gameObject = (GameObject) light.object;
-						var renderable = gameObject.getRenderable();
-						if (renderable instanceof DynamicObject) {
-							var animation = ((DynamicObject) renderable).getAnimation();
-							light.visible = animation != null && light.def.animationIds.contains(animation.getId());
-						}
-					}
-				}
 			} else if (light.projectile != null) {
 				if (light.projectile.getRemainingCycles() <= 0) {
-					lightIterator.remove();
-					sceneContext.projectiles.remove(light.projectile);
-					continue;
-				}
-
-				light.x = (int) light.projectile.getX();
-				light.y = (int) light.projectile.getY();
-				light.z = (int) light.projectile.getZ() - light.def.height;
-
-				light.visible = projectileLightVisible();
-				if (light.visible && !light.def.animationIds.isEmpty()) {
-					var animation = light.projectile.getAnimation();
-					light.visible = animation != null && light.def.animationIds.contains(animation.getId());
+					light.markedForRemoval = true;
+				} else {
+					light.x = (int) light.projectile.getX();
+					light.y = (int) light.projectile.getY();
+					light.z = (int) light.projectile.getZ() - light.def.height;
+					light.visible = projectileLightVisible();
 				}
 			} else if (light.graphicsObject != null) {
 				if (light.graphicsObject.finished()) {
-					lightIterator.remove();
+					light.markedForRemoval = true;
+				} else {
+					light.x = light.graphicsObject.getLocation().getX();
+					light.y = light.graphicsObject.getLocation().getY();
+					light.z = light.graphicsObject.getZ() - light.def.height;
+					light.visible = true;
+				}
+			} else if (light.actor != null) {
+				if (light.actor instanceof NPC && light.actor != client.getCachedNPCs()[((NPC) light.actor).getIndex()] ||
+					light.actor instanceof Player && light.actor != client.getCachedPlayers()[((Player) light.actor).getId()]
+				) {
+					light.markedForRemoval = true;
 					continue;
 				}
 
-				light.x = light.graphicsObject.getLocation().getX();
-				light.y = light.graphicsObject.getLocation().getY();
-				light.z = light.graphicsObject.getZ() - light.def.height;
-
-				light.visible = true;
-				if (!light.def.animationIds.isEmpty()) {
-					var animation = light.projectile.getAnimation();
-					light.visible = animation != null && light.def.animationIds.contains(animation.getId());
-				}
-			} else if (light.npc != null) {
-				if (light.npc != client.getCachedNPCs()[light.npc.getIndex()])
-				{
-					lightIterator.remove();
-					continue;
-				}
-
-				light.x = light.npc.getLocalLocation().getX();
-				light.y = light.npc.getLocalLocation().getY();
+				var lp = light.actor.getLocalLocation();
+				light.x = lp.getX();
+				light.y = lp.getY();
 
 				// Offset the light's position based on its Alignment
 				if (light.def.alignment == Alignment.NORTH ||
@@ -265,10 +251,10 @@ public class LightManager {
 
 				int plane = client.getPlane();
 				light.plane = plane;
-				int npcTileX = light.npc.getLocalLocation().getSceneX() + SceneUploader.SCENE_OFFSET;
-				int npcTileY = light.npc.getLocalLocation().getSceneY() + SceneUploader.SCENE_OFFSET;
 
 				// Some NPCs, such as Crystalline Hunllef in The Gauntlet, sometimes return scene X/Y values far outside the possible range.
+				int npcTileX = lp.getSceneX() + SceneUploader.SCENE_OFFSET;
+				int npcTileY = lp.getSceneY() + SceneUploader.SCENE_OFFSET;
 				if (npcTileX < 0 || npcTileY < 0 || npcTileX >= EXTENDED_SCENE_SIZE || npcTileY >= EXTENDED_SCENE_SIZE) {
 					light.visible = false;
 				} else {
@@ -296,13 +282,35 @@ public class LightManager {
 					float tileHeight = HDUtils.lerp(heightSouth, heightNorth, lerpY);
 					light.z = (int) tileHeight - 1 - light.def.height;
 
-					light.visible = npcLightVisible(light.npc);
+					light.visible = actorLightVisible(light.actor);
 					if (light.visible && !light.def.animationIds.isEmpty()) {
-						var animationId = light.npc.getAnimation();
+						var animationId = light.actor.getAnimation();
 						light.visible = light.def.animationIds.contains(animationId);
 					}
 				}
 			}
+
+			if (light.visible && !light.def.animationIds.isEmpty()) {
+				light.visible = false;
+				if (light.actor != null) {
+					light.visible = light.def.animationIds.contains(light.actor.getAnimation());
+				} else if (light.object instanceof GameObject) {
+					var renderable = ((GameObject) light.object).getRenderable();
+					if (renderable instanceof DynamicObject) {
+						var animation = ((DynamicObject) renderable).getAnimation();
+						light.visible = animation != null && light.def.animationIds.contains(animation.getId());
+					}
+				} else if (light.projectile != null) {
+					var animation = light.projectile.getAnimation();
+					light.visible = animation != null && light.def.animationIds.contains(animation.getId());
+				} else if (light.graphicsObject != null) {
+					var animation = light.graphicsObject.getAnimation();
+					light.visible = animation != null && light.def.animationIds.contains(animation.getId());
+				}
+			}
+
+			if (light.actor != null && !light.actor.hasSpotAnim(light.spotAnimId))
+				light.markedForRemoval = true;
 
 			if (light.def.type == LightType.FLICKER) {
 				double t = TWO_PI * (mod(plugin.elapsedTime, 60) / 60 + light.randomOffset);
@@ -338,11 +346,8 @@ public class LightManager {
 				light.color = light.def.color;
 			}
 
-			// Apply fade
-			if (light.fadeInDuration > 0) {
-				light.strength *= Math.min(light.currentFadeIn / light.fadeInDuration, 1.0f);
-				light.currentFadeIn += plugin.deltaClientTime;
-			}
+			if (light.fadeInDuration > 0)
+				light.strength *= Math.min(1, (light.elapsedTime - light.spawnDelay) / light.fadeInDuration);
 
 			// Calculate the distance between the player and the light to determine which
 			// lights to display based on the 'max dynamic lights' config option
@@ -371,33 +376,91 @@ public class LightManager {
 			}
 		}
 
+		Iterator<Light> lightIterator = sceneContext.lights.iterator();
+		while (lightIterator.hasNext()) {
+			var light = lightIterator.next();
+			if (!light.markedForRemoval)
+				continue;
+
+			// If the light's despawn time isn't fixed, calculate when it should finish despawning
+			if (light.scheduledDespawnTime == -1) {
+				float minFadeTime = light.def.fadeOverlap ?
+					Math.max(light.fadeInDuration, light.fadeOutDuration) :
+					light.fadeInDuration + light.fadeOutDuration;
+				float minLifetime = light.spawnDelay + minFadeTime;
+				float lifetime = Math.max(minLifetime, light.elapsedTime);
+				light.scheduledDespawnTime = lifetime + Math.max(light.despawnDelay, light.fadeOutDuration);
+			}
+
+			float timeUntilDespawn = light.scheduledDespawnTime - light.elapsedTime;
+			if (light.fadeOutDuration > 0)
+				light.strength *= Math.min(1, timeUntilDespawn / light.fadeOutDuration);
+
+			// Despawn the light
+			if (timeUntilDespawn <= 0) {
+				sceneContext.projectiles.remove(light.projectile);
+				lightIterator.remove();
+			}
+		}
+
 		sceneContext.lights.sort(Comparator.comparingInt(light -> light.distanceSquared));
 	}
 
-	private boolean npcLightVisible(NPC npc) {
+	private boolean actorLightVisible(@Nonnull Actor actor) {
 		try {
 			// getModel may throw an exception from vanilla client code
-			if (npc.getModel() == null)
+			if (actor.getModel() == null)
 				return false;
 		} catch (Exception ex) {
 			// Vanilla handles exceptions thrown in `DrawCallbacks#draw` gracefully, but here we have to handle them
 			return false;
 		}
 
-		if (pluginManager.isPluginEnabled(entityHiderPlugin)) {
-			boolean isPet = npc.getComposition().isFollower();
+		boolean entityHiderEnabled = pluginManager.isPluginEnabled(entityHiderPlugin);
 
-			if (client.getFollower() != null && client.getFollower().getIndex() == npc.getIndex())
-				return true;
-
-			if (entityHiderConfig.hideNPCs() && !isPet)
+		if (actor instanceof NPC) {
+			if (!plugin.configNpcLights)
 				return false;
 
-			if (entityHiderConfig.hidePets() && isPet)
-				return false;
+			if (entityHiderEnabled) {
+				var npc = (NPC) actor;
+				boolean isPet = npc.getComposition().isFollower();
+
+				if (client.getFollower() != null && client.getFollower().getIndex() == npc.getIndex())
+					return true;
+
+				if (entityHiderConfig.hideNPCs() && !isPet)
+					return false;
+
+				return !entityHiderConfig.hidePets() || !isPet;
+			}
+		} else if (actor instanceof Player) {
+			if (entityHiderEnabled) {
+				var player = (Player) actor;
+				Player local = client.getLocalPlayer();
+				if (local == null || player.getName() == null)
+					return true;
+
+				if (player == local)
+					return !entityHiderConfig.hideLocalPlayer();
+
+				if (entityHiderConfig.hideAttackers() && player.getInteracting() == local)
+					return false;
+
+				if (player.isFriend())
+					return !entityHiderConfig.hideFriends();
+				if (player.isFriendsChatMember())
+					return !entityHiderConfig.hideFriendsChatMembers();
+				if (player.isClanMember())
+					return !entityHiderConfig.hideClanChatMembers();
+				if (client.getIgnoreContainer().findByName(player.getName()) != null)
+					return !entityHiderConfig.hideIgnores();
+
+				return !entityHiderConfig.hideOthers();
+			}
 		}
 
-		return plugin.configNpcLights;
+		return true;
 	}
 
 	private boolean projectileLightVisible()
@@ -421,7 +484,7 @@ public class LightManager {
 		ArrayList<Light> lightsToKeep = new ArrayList<>();
 		if (oldSceneContext != null)
 			for (Light light : oldSceneContext.lights)
-				if (light.npc != null || light.projectile != null)
+				if (light.actor != null || light.projectile != null)
 					lightsToKeep.add(light);
 
 		sceneContext.lights.clear();
@@ -498,7 +561,7 @@ public class LightManager {
 			if (light.distanceSquared > maxDistanceSquared)
 				break;
 
-			if (!light.visible || light.modelOverride.hide)
+			if (!light.visible)
 				continue;
 
 			if (!light.def.visibleFromOtherPlanes) {
@@ -519,6 +582,16 @@ public class LightManager {
 		return visibleLights;
 	}
 
+	private void removeLightIf(Predicate<Light> predicate) {
+		var sceneContext = plugin.getSceneContext();
+		if (sceneContext != null) {
+			sceneContext.lights.forEach(light -> {
+				if (predicate.test(light))
+					light.markedForRemoval = true;
+			});
+		}
+	}
+
 	@Subscribe
 	public void onProjectileMoved(ProjectileMoved projectileMoved) {
 		SceneContext sceneContext = plugin.getSceneContext();
@@ -536,65 +609,106 @@ public class LightManager {
 			light.y = (int) projectile.getY();
 			light.z = (int) projectile.getZ();
 			light.plane = projectile.getFloor();
-			if (light.fadeInDuration < 0)
-				light.fadeInDuration = .3f;
 			light.visible = projectileLightVisible();
 
 			sceneContext.lights.add(light);
 		}
 	}
 
-	private void addNpcLights(SceneContext sceneContext, NPC npc)
-	{
+	private void addSpotAnimLights(Actor actor) {
+		var sceneContext = plugin.getSceneContext();
 		if (sceneContext == null)
 			return;
 
+		for (var spotAnim : actor.getSpotAnims()) {
+			for (var lightDef : GRAPHICS_OBJECT_LIGHTS.get(spotAnim.getId())) {
+				Light light = new Light(lightDef);
+				light.plane = -1;
+				light.spotAnimId = spotAnim.getId();
+				light.actor = actor;
+				light.visible = false;
+				sceneContext.lights.add(light);
+			}
+		}
+	}
+
+	public void removeSpotAnimLights(Actor actor) {
+		removeLightIf(light -> light.actor == actor);
+	}
+
+	private void addNpcLights(NPC npc)
+	{
+		var sceneContext = plugin.getSceneContext();
+		if (sceneContext == null)
+			return;
+
+		var modelOverride = modelOverrideManager.getOverride(
+			ModelHash.packUuid(ModelHash.TYPE_NPC, npc.getId()),
+			sceneContext.localToWorld(npc.getLocalLocation(), client.getPlane())
+		);
+		if (modelOverride.hide)
+			return;
+
 		for (LightDefinition lightDef : NPC_LIGHTS.get(npc.getId())) {
-			// prevent duplicate lights being spawned for the same NPC
-			if (sceneContext.lights.stream().anyMatch(x -> x.npc == npc))
+			// Prevent duplicate lights from being spawned for the same NPC
+			if (sceneContext.lights.stream().anyMatch(x -> x.actor == npc && x.def == lightDef))
 				continue;
 
 			Light light = new Light(lightDef);
 			light.plane = -1;
-			light.npc = npc;
+			light.actor = npc;
 			light.visible = false;
-			light.modelOverride = modelOverrideManager.getOverride(
-				ModelHash.packUuid(ModelHash.TYPE_NPC, npc.getId()),
-				sceneContext.localToWorld(npc.getLocalLocation(), client.getPlane())
-			);
-
 			sceneContext.lights.add(light);
 		}
+
+		addSpotAnimLights(npc);
 	}
 
-	public void removeNpcLight(SceneContext sceneContext, NPC npc)
-	{
-		if (sceneContext != null)
-			sceneContext.lights.removeIf(light -> light.npc == npc);
-	}
-
-	@Subscribe
-	public void onNpcSpawned(NpcSpawned npcSpawned)
-	{
-		addNpcLights(plugin.getSceneContext(), npcSpawned.getNpc());
+	public void removeNpcLight(NPC npc) {
+		removeLightIf(light -> light.actor == npc);
 	}
 
 	@Subscribe
-	public void onNpcChanged(NpcChanged npcChanged)
-	{
-		SceneContext sceneContext = plugin.getSceneContext();
-		removeNpcLight(sceneContext, npcChanged.getNpc());
-		addNpcLights(sceneContext, npcChanged.getNpc());
+	public void onNpcSpawned(NpcSpawned npcSpawned) {
+		addNpcLights(npcSpawned.getNpc());
+	}
+
+	@Subscribe
+	public void onNpcChanged(NpcChanged npcChanged) {
+		removeNpcLight(npcChanged.getNpc());
+		addNpcLights(npcChanged.getNpc());
 	}
 
 	@Subscribe
 	public void onNpcDespawned(NpcDespawned npcDespawned)
 	{
-		removeNpcLight(plugin.getSceneContext(), npcDespawned.getNpc());
+		removeNpcLight(npcDespawned.getNpc());
 	}
 
-	private void addObjectLight(SceneContext sceneContext, TileObject tileObject, int plane)
-	{
+	@Subscribe
+	public void onPlayerSpawned(PlayerSpawned playerSpawned) {
+		addSpotAnimLights(playerSpawned.getPlayer());
+	}
+
+	@Subscribe
+	public void onPlayerChanged(PlayerChanged playerChanged) {
+		removeSpotAnimLights(playerChanged.getPlayer());
+		addSpotAnimLights(playerChanged.getPlayer());
+	}
+
+	@Subscribe
+	public void onGraphicChanged(GraphicChanged graphicChanged) {
+		var actor = graphicChanged.getActor();
+		removeSpotAnimLights(actor);
+		addSpotAnimLights(actor);
+	}
+
+	@Subscribe
+	public void onPlayerDespawned(PlayerDespawned playerDespawned) {
+		removeSpotAnimLights(playerDespawned.getPlayer());
+	}
+
+	private void addObjectLight(SceneContext sceneContext, TileObject tileObject, int plane) {
 		addObjectLight(sceneContext, tileObject, plane, 1, 1, -1);
 	}
 
@@ -703,10 +817,6 @@ public class LightManager {
 			light.y = lightY;
 			light.z = (int) tileHeight - light.def.height - 1;
 			light.object = tileObject;
-			light.modelOverride = modelOverrideManager.getOverride(
-				ModelHash.packUuid(ModelHash.TYPE_OBJECT, objectId),
-				sceneContext.localToWorld(light.x, light.y, light.plane)
-			);
 
 			sceneContext.lights.add(light);
 		}
@@ -714,12 +824,8 @@ public class LightManager {
 
 	private void removeObjectLight(TileObject tileObject)
 	{
-		SceneContext sceneContext = plugin.getSceneContext();
-		if (sceneContext == null)
-			return;
-
 		LocalPoint localLocation = tileObject.getLocalLocation();
-		sceneContext.lights.removeIf(light ->
+		removeLightIf(light ->
 			light.object == tileObject &&
 			light.x == localLocation.getX() &&
 			light.y == localLocation.getY() &&
@@ -741,12 +847,6 @@ public class LightManager {
 			light.y = lp.getY();
 			light.z = graphicsObject.getZ();
 			light.plane = graphicsObject.getLevel();
-			if (light.fadeInDuration < 0)
-				light.fadeInDuration = .3f;
-			light.modelOverride = modelOverrideManager.getOverride(
-				ModelHash.packUuid(ModelHash.TYPE_OBJECT, graphicsObject.getId()),
-				sceneContext.localToWorld(light.x, light.y, light.plane)
-			);
 
 			sceneContext.lights.add(light);
 		}
