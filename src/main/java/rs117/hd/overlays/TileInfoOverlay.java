@@ -27,14 +27,16 @@ import net.runelite.client.ui.overlay.OverlayUtil;
 import org.apache.commons.lang3.tuple.Pair;
 import rs117.hd.HdPlugin;
 import rs117.hd.data.materials.Material;
-import rs117.hd.data.materials.Overlay;
-import rs117.hd.data.materials.Underlay;
+import rs117.hd.scene.ProceduralGenerator;
+import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.SceneUploader;
+import rs117.hd.scene.TileOverrideManager;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ModelHash;
 
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.*;
+import static rs117.hd.scene.tile_overrides.TileOverride.OVERLAY_FLAG;
 
 @Singleton
 public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay {
@@ -47,6 +49,12 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay {
 	@Inject
 	private HdPlugin plugin;
 
+	@Inject
+	private TileOverrideManager tileOverrideManager;
+
+	@Inject
+	private ProceduralGenerator proceduralGenerator;
+
 	private Point mousePos;
 	private boolean ctrlPressed;
 
@@ -56,25 +64,29 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay {
 	}
 
 	public void setActive(boolean activate) {
-		if (activate)
+		if (activate) {
 			overlayManager.add(this);
-		else
+		} else {
 			overlayManager.remove(this);
+		}
+		tileOverrideManager.setTrackReplacements(activate);
 	}
 
 	@Override
 	public Dimension render(Graphics2D g) {
+		var sceneContext = plugin.getSceneContext();
+		if (sceneContext == null)
+			return null;
+
 		ctrlPressed = client.isKeyPressed(KeyCode.KC_CONTROL);
 		mousePos = client.getMouseCanvasPosition();
-		if (mousePos != null && mousePos.getX() == -1 && mousePos.getY() == -1) {
+		if (mousePos != null && mousePos.getX() == -1 && mousePos.getY() == -1)
 			return null;
-		}
 
 		g.setFont(FontManager.getRunescapeFont());
 		g.setStroke(new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND));
 
-		Scene scene = client.getScene();
-		Tile[][][] tiles = scene.getExtendedTiles();
+		Tile[][][] tiles = sceneContext.scene.getExtendedTiles();
 		int plane = ctrlPressed ? MAX_Z - 1 : client.getPlane();
 		for (int z = plane; z >= 0; z--) {
 			for (int isBridge = 1; isBridge >= 0; isBridge--) {
@@ -82,7 +94,7 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay {
 					for (int y = 0; y < EXTENDED_SCENE_SIZE; y++) {
 						Tile tile = tiles[z][x][y];
 						boolean shouldDraw = tile != null && (isBridge == 0 || tile.getBridge() != null);
-						if (shouldDraw && drawTileInfo(g, scene, tile)) {
+						if (shouldDraw && drawTileInfo(g, sceneContext, tile)) {
 							return null;
 						}
 					}
@@ -97,7 +109,7 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay {
 					for (int y = 0; y < EXTENDED_SCENE_SIZE; y++) {
 						Tile tile = tiles[z][x][y];
 						boolean shouldDraw = tile != null && (isBridge == 0 || tile.getBridge() != null);
-						if (shouldDraw && drawTileInfo(g, scene, tile)) {
+						if (shouldDraw && drawTileInfo(g, sceneContext, tile)) {
 							return null;
 						}
 					}
@@ -108,7 +120,7 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay {
 		return null;
 	}
 
-	private boolean drawTileInfo(Graphics2D g, Scene scene, Tile tile) {
+	private boolean drawTileInfo(Graphics2D g, SceneContext sceneContext, Tile tile) {
 		boolean infoDrawn = false;
 
 		if (tile != null) {
@@ -117,18 +129,18 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay {
 
 			Tile bridge = tile.getBridge();
 			if (bridge != null) {
-				poly = getCanvasTilePoly(client, scene, bridge);
+				poly = getCanvasTilePoly(client, sceneContext.scene, bridge);
 				if (poly != null && poly.contains(mousePos.getX(), mousePos.getY())) {
-					rect = drawTileInfo(g, bridge, poly, null);
+					rect = drawTileInfo(g, sceneContext, bridge, poly, null);
 					if (rect != null) {
 						infoDrawn = true;
 					}
 				}
 			}
 
-			poly = getCanvasTilePoly(client, scene, tile);
+			poly = getCanvasTilePoly(client, sceneContext.scene, tile);
 			if (poly != null && poly.contains(mousePos.getX(), mousePos.getY())) {
-				rect = drawTileInfo(g, tile, poly, rect);
+				rect = drawTileInfo(g, sceneContext, tile, poly, rect);
 				if (rect != null) {
 					infoDrawn = true;
 				}
@@ -138,66 +150,52 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay {
 		return infoDrawn;
 	}
 
-	private Rectangle drawTileInfo(Graphics2D g, Tile tile, Polygon poly, Rectangle dodgeRect)
+	private Rectangle drawTileInfo(Graphics2D g, SceneContext sceneContext, Tile tile, Polygon poly, Rectangle dodgeRect)
 	{
 		SceneTilePaint paint = tile.getSceneTilePaint();
 		SceneTileModel model = tile.getSceneTileModel();
 
 		if (!ctrlPressed && (paint == null || (paint.getNeColor() == 12345678 && tile.getBridge() == null)) && model == null)
-		{
 			return null;
-		}
-
-		Rectangle2D polyBounds = poly.getBounds2D();
-		Point tileCenter = new Point((int) polyBounds.getCenterX(), (int) polyBounds.getCenterY());
 
 		ArrayList<String> lines = new ArrayList<>();
 
-		if (tile.getBridge() != null) {
+		if (tile.getBridge() != null)
 			lines.add("Bridge");
-		}
 
+		Scene scene = sceneContext.scene;
 		int tileX = tile.getSceneLocation().getX();
 		int tileY = tile.getSceneLocation().getY();
+		int tileZ = tile.getRenderLevel();
 		int tileExX = tileX + SceneUploader.SCENE_OFFSET;
 		int tileExY = tileY + SceneUploader.SCENE_OFFSET;
-		int plane = tile.getRenderLevel();
+		int[] worldPos = sceneContext.sceneToWorld(tileX, tileY, tileZ);
 
-		lines.add("Scene point: " + tileX + ", " + tileY + ", " + plane);
+		lines.add("Scene point: " + tileX + ", " + tileY + ", " + tileZ);
+		lines.add("World point: " + Arrays.toString(worldPos));
+		lines.add("Region ID: " + HDUtils.worldToRegionID(worldPos));
 
-		int[] worldPoint = null;
-		var sceneContext = plugin.getSceneContext();
-		if (sceneContext != null) {
-			worldPoint = sceneContext.sceneToWorld(tileX, tileY, plane);
-		}
-		if (worldPoint != null) {
-			lines.add("World point: " + Arrays.toString(worldPoint));
-			lines.add("Region ID: " + HDUtils.worldToRegionID(worldPoint));
-		}
-
-		Scene scene = client.getScene();
-		short overlayId = scene.getOverlayIds()[plane][tileExX][tileExY];
-		Overlay overlay = Overlay.getOverlayBeforeReplacements(scene, tile);
-		Overlay replacementOverlay = overlay.resolveReplacements(scene, tile, plugin);
+		int overlayId = scene.getOverlayIds()[tileZ][tileExX][tileExY];
+		var overlay = tileOverrideManager.getOverrideBeforeReplacements(worldPos, OVERLAY_FLAG | overlayId);
+		var replacementOverlay = overlay.resolveReplacements(scene, tile, plugin);
 		if (replacementOverlay != overlay) {
-			lines.add(String.format("Overlay: %s -> %s (%d)", overlay.name(), replacementOverlay.name(), overlayId));
+			lines.add(String.format("Overlay: %s -> %s (%d)", overlay.name, replacementOverlay.name, overlayId));
 		} else {
-			lines.add(String.format("Overlay: %s (%d)", overlay.name(), overlayId));
+			lines.add(String.format("Overlay: %s (%d)", overlay.name, overlayId));
 		}
 
-		short underlayId = scene.getUnderlayIds()[plane][tileExX][tileExY];
-		Underlay underlay = Underlay.getUnderlayBeforeReplacements(scene, tile);
-		Underlay replacementUnderlay = underlay.resolveReplacements(scene, tile, plugin);
+		int underlayId = scene.getUnderlayIds()[tileZ][tileExX][tileExY];
+		var underlay = tileOverrideManager.getOverrideBeforeReplacements(worldPos, underlayId);
+		var replacementUnderlay = underlay.resolveReplacements(scene, tile, plugin);
 		if (replacementUnderlay != underlay) {
-			lines.add(String.format("Underlay: %s -> %s (%d)", underlay.name(), replacementUnderlay.name(), underlayId));
+			lines.add(String.format("Underlay: %s -> %s (%d)", underlay.name, replacementUnderlay.name, underlayId));
 		} else {
-			lines.add(String.format("Underlay: %s (%d)", underlay.name(), underlayId));
+			lines.add(String.format("Underlay: %s (%d)", underlay.name, underlayId));
 		}
 
 		Color polyColor = Color.LIGHT_GRAY;
 		if (paint != null)
 		{
-			// TODO: separate H, S and L to hopefully more easily match tiles that are different shades of the same hue
 			polyColor = Color.CYAN;
 			lines.add("Tile type: Paint");
 			Material material = Material.fromVanillaTexture(paint.getTexture());
@@ -207,6 +205,9 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay {
 			lines.add("NE: " + hslString(paint.getNeColor()));
 			lines.add("SE: " + hslString(paint.getSeColor()));
 			lines.add("SW: " + hslString(paint.getSwColor()));
+
+			var override = tileOverrideManager.getOverride(scene, tile, worldPos, OVERLAY_FLAG | overlayId, underlayId);
+			lines.add("WaterType: " + proceduralGenerator.seasonalWaterType(override, paint.getTexture()));
 		}
 		else if (model != null)
 		{
@@ -235,7 +236,7 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay {
 			if (materials.size() <= 1 || numChars < 26)
 			{
 				StringBuilder sb = new StringBuilder("Materials: { ");
-				if (materials.size() == 0)
+				if (materials.isEmpty())
 				{
 					sb.append("null");
 				}
@@ -384,7 +385,7 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay {
 		for (String line : lines)
 		{
 			Pair<String, String> pair = splitter.apply(line);
-			if (pair.getRight().length() == 0)
+			if (pair.getRight().isEmpty())
 			{
 				int halfWidth = fm.stringWidth(pair.getLeft()) / 2;
 				leftWidth = Math.max(leftWidth, halfWidth);
@@ -396,6 +397,9 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay {
 				rightWidth = Math.max(rightWidth, fm.stringWidth(pair.getRight()));
 			}
 		}
+
+		Rectangle2D polyBounds = poly.getBounds2D();
+		Point tileCenter = new Point((int) polyBounds.getCenterX(), (int) polyBounds.getCenterY());
 
 		int totalWidth = leftWidth + rightWidth + space + xPadding * 2;
 		Rectangle rect = new Rectangle(
@@ -423,7 +427,7 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay {
 			Pair<String, String> pair = splitter.apply(line);
 			offsetY += lineHeight;
 			Point p;
-			if (pair.getRight().length() == 0)
+			if (pair.getRight().isEmpty())
 			{
 				// centered
 				p = new Point(

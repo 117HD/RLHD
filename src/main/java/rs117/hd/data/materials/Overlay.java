@@ -29,6 +29,7 @@ import com.google.common.collect.ListMultimap;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import javax.annotation.Nullable;
@@ -40,11 +41,13 @@ import rs117.hd.config.SeasonalTheme;
 import rs117.hd.data.WaterType;
 import rs117.hd.data.environments.Area;
 import rs117.hd.scene.SceneUploader;
+import rs117.hd.scene.tile_overrides.TileOverride;
 
 import static rs117.hd.utils.HDUtils.MAX_SNOW_LIGHTNESS;
 import static rs117.hd.utils.HDUtils.clamp;
 import static rs117.hd.utils.HDUtils.localToWorld;
 
+@Deprecated
 public enum Overlay {
 	// Winter Theme fixes
 	WINTER_GRASS(p -> p
@@ -467,7 +470,7 @@ public enum Overlay {
 	SEERS_BANK_TILE_2(4, Area.SEERS_BANK, GroundMaterial.MARBLE_2_GLOSS, p -> p.blended(false)),
 	SEERS_BANK_TILE_3(8, Area.SEERS_BANK, GroundMaterial.MARBLE_1_GLOSS, p -> p.blended(false)),
 	SEERS_HOUSE_FLOORS(22, Area.SEERS_HOUSES, GroundMaterial.WOOD_PLANKS_1, p -> p
-		.replaceWithIf(null, pl -> !pl.configGroundTextures)
+		.replaceWithIf(null, "!textures")
 		.blended(false)
 		.lightness(45)
 		.saturation(2)
@@ -476,7 +479,7 @@ public enum Overlay {
 	SEERS_CHURCH_2(8, Area.SEERS_CHURCH, GroundMaterial.MARBLE_2, p -> p.blended(false)),
 	SEERS_COURTHOUSE_FLOOR(p -> p.area(Area.SEERS_COURTHOUSE).ids(110, 123).groundMaterial(GroundMaterial.FALADOR_PATHS)),
 	SINCLAIR_MANSION_FLOOR(173, Area.SINCLAIR_MANSION, GroundMaterial.WOOD_PLANKS_1, p -> p
-		.replaceWithIf(null, pl -> !pl.configGroundTextures)
+		.replaceWithIf(null, "!textures")
 		.lightness(40)
 		.hue(10)
 		.saturation(5)
@@ -517,7 +520,7 @@ public enum Overlay {
 		.ids()
 		.area(Area.EAST_ARDOUGNE_PATHING_FIXES)
 		.groundMaterial(GroundMaterial.WINTER_JAGGED_STONE_TILE_LIGHT)
-		.replaceWithIf(WINTER_GRASS, plugin -> plugin.configGroundBlending)
+		.replaceWithIf(WINTER_GRASS, "blending")
 	),
 	EAST_ARDOUGNE_PATH_BLENDING_FIX_TOGGLE(p -> p
 		.ids(10)
@@ -525,7 +528,7 @@ public enum Overlay {
 		.groundMaterial(GroundMaterial.VARROCK_PATHS)
 		.shiftLightness(6)
 		.seasonalReplacement(SeasonalTheme.WINTER, EAST_ARDOUGNE_PATH_BLENDING_FIX_TOGGLE_WINTER)
-		.replaceWithIf(EAST_ARDOUGNE_PATH_BLENDING_FIX, plugin -> plugin.configGroundBlending)
+		.replaceWithIf(EAST_ARDOUGNE_PATH_BLENDING_FIX, "blending")
 	),
 	EAST_ARDOUGNE_DOCKS_FIX_5(5, Area.EAST_ARDOUGNE_DOCKS_FIX, GroundMaterial.WOOD_PLANKS_1, p -> p.lightness(65)),
 	EAST_ARDOUGNE_DOCKS_FIX_35(35, Area.EAST_ARDOUGNE_DOCKS_FIX, GroundMaterial.WOOD_PLANKS_1, p -> p.lightness(65)),
@@ -552,7 +555,7 @@ public enum Overlay {
 		.shiftLightness(6)
 		.blended(false)
 		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_JAGGED_STONE_TILE_LIGHT)
-		.replaceWithIf(EAST_ARDOUGNE_CASTLE_PATH_FIX_BLENDING, plugin -> plugin.configGroundBlending)
+		.replaceWithIf(EAST_ARDOUGNE_CASTLE_PATH_FIX_BLENDING, "blending")
 	),
 	EAST_ARDOUGNE_PATHS_1(10, Area.EAST_ARDOUGNE, GroundMaterial.VARROCK_PATHS, p -> p
 		.shiftLightness(6)
@@ -646,20 +649,13 @@ public enum Overlay {
 		.hue(9)
 		.saturation(5)
 		.lightness(18)
+		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_GRASS)
 	),
 	DRAYNOR_NEDS_PATH_FIX_ENABLE(p -> p
 		.ids(10)
 		.groundMaterial(GroundMaterial.GRAVEL)
 		.area(Area.DRAYNOR_NEDS_PATH_FIXES)
-		.replacementResolver(
-			(plugin, scene, tile, override) -> {
-				if (!plugin.configGroundBlending)
-					return override;
-				if (plugin.configSeasonalTheme == SeasonalTheme.WINTER)
-					return WINTER_GRASS;
-				return DRAYNOR_NEDS_PATH_FIX;
-			}
-		)
+		.replaceWithIf(DRAYNOR_NEDS_PATH_FIX, "blending")
 	),
 	DRAYNOR_BANK_FLOOR(10, Area.DRAYNOR_BANK, GroundMaterial.WORN_TILES, p -> p.blended(false)),
 	DRAYNOR_BANK_ENTRANCE_PATH(p -> p
@@ -673,15 +669,8 @@ public enum Overlay {
 		.ids(0)
 		.groundMaterial(GroundMaterial.OVERWORLD_GRASS_1)
 		.area(Area.DRAYNOR_BANK_FRONT_PATH)
-		.replacementResolver(
-			(plugin, scene, tile, override) -> {
-				if (plugin.configGroundBlending)
-					return DRAYNOR_BANK_ENTRANCE_PATH;
-				if (plugin.configSeasonalTheme == SeasonalTheme.WINTER)
-					return WINTER_GRASS;
-				return override;
-			}
-		)
+		.replaceWithIf(DRAYNOR_BANK_ENTRANCE_PATH, "blending")
+		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_GRASS)
 	),
 	DRAYNOR_BANK_PATH_FIX_10_DARK(p -> p
 		.ids()
@@ -690,20 +679,13 @@ public enum Overlay {
 		.hue(9)
 		.saturation(4)
 		.lightness(8)
+		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_GRASS)
 	),
 	DRAYNOR_BANK_PATH_FIX_DARK_ENABLE(p -> p
 		.ids(10)
 		.groundMaterial(GroundMaterial.GRAVEL)
 		.area(Area.DRAYNOR_BANK_PATH_FIX_DARK)
-		.replacementResolver(
-			(plugin, scene, tile, override) -> {
-				if (!plugin.configGroundBlending)
-					return override;
-				if (plugin.configSeasonalTheme == SeasonalTheme.WINTER)
-					return WINTER_GRASS;
-				return DRAYNOR_BANK_PATH_FIX_10_DARK;
-			}
-		)
+		.replaceWithIf(DRAYNOR_BANK_PATH_FIX_10_DARK, "blending")
 	),
 	DRAYNOR_BANK_PATH_FIX_10_LIGHT(p -> p
 		.ids()
@@ -711,21 +693,13 @@ public enum Overlay {
 		.hue(9)
 		.saturation(5)
 		.lightness(18)
-
+		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_GRASS)
 	),
 	DRAYNOR_BANK_PATH_FIX_LIGHT_ENABLE(p -> p
 		.ids(10)
 		.groundMaterial(GroundMaterial.GRAVEL)
 		.area(Area.DRAYNOR_BANK_PATH_FIX_LIGHT)
-		.replacementResolver(
-			(plugin, scene, tile, override) -> {
-				if (!plugin.configGroundBlending)
-					return override;
-				if (plugin.configSeasonalTheme == SeasonalTheme.WINTER)
-					return WINTER_GRASS;
-				return DRAYNOR_BANK_PATH_FIX_10_LIGHT;
-			}
-		)
+		.replaceWithIf(DRAYNOR_BANK_PATH_FIX_10_LIGHT, "blending")
 	),
 	DRAYNOR_BANK_PATH_FIX_0(p -> p
 		.ids(0)
@@ -738,7 +712,7 @@ public enum Overlay {
 		.lightness(74)
 		.shiftHue(-3)
 		.shiftSaturation(-7)
-		.replaceWithIf(null, b -> !b.configGroundTextures)
+		.replaceWithIf(null, "!textures")
 	),
 	// Draynor
 	DRAYNOR_SEWERS(p -> p.area(Area.DRAYNOR_SEWERS).ids(89).waterType(WaterType.MUDDY_WATER)),
@@ -770,7 +744,7 @@ public enum Overlay {
 		.area(Area.WIZARD_TOWER_PATH_PARTIAL_TILES)
 		.groundMaterial(GroundMaterial.FALADOR_PATHS)
 		.shiftSaturation(-1)
-		.replaceWithIf(WINTER_GRASS, plugin -> plugin.configGroundBlending)
+		.replaceWithIf(WINTER_GRASS, "blending")
 	),
 	WIZARDS_TOWER_PATH_BLEND_FIX_TOGGLE(p -> p
 		.ids(164)
@@ -778,7 +752,7 @@ public enum Overlay {
 		.groundMaterial(GroundMaterial.FALADOR_PATHS)
 		.shiftSaturation(-1)
 		.seasonalReplacement(SeasonalTheme.WINTER, WIZARDS_TOWER_PATH_BLEND_FIX_WINTER)
-		.replaceWithIf(WIZARDS_TOWER_PATH_BLEND_FIX, plugin -> plugin.configGroundBlending)
+		.replaceWithIf(WIZARDS_TOWER_PATH_BLEND_FIX, "blending")
 	),
 
 	// Misthalin Mystery
@@ -874,6 +848,10 @@ public enum Overlay {
 	KOUREND_GREAT_STATUE_BLEND_FIX_2(11, Area.GREAT_KOUREND_STATUE, GroundMaterial.GRASS_1, p -> p.blended(false)),
 	HOSIDIUS_WELL_BLEND_FIX(-119, Area.HOSIDIUS_WELL, GroundMaterial.FALADOR_PATHS, p -> p.blended(false)),
 	HOSIDIUS_STAIRS_BLEND_FIX(-119, Area.HOSIDIUS_STAIRS, GroundMaterial.FALADOR_PATHS, p -> p.blended(false)),
+	HOSIDIUS_MAGIC_TREE_BLEND_FIX(159, Area.HOSIDIUS, GroundMaterial.DIRT, p -> p
+		.blended(false)
+		.seasonalReplacement(SeasonalTheme.WINTER, WINTER_DIRT)
+	),
 	SHAYZIEN_EAST_PATH_FIX(11, Area.SHAYZIEN_EAST_ENTRANCE_BLEND_FIX, GroundMaterial.VARROCK_PATHS, p -> p.blended(false)),
 	XERICS_LOOKOUT_TILE(Area.XERICS_LOOKOUT, GroundMaterial.TILES_2x2_2, p -> p.blended(false).ids(50, 2)),
 
@@ -933,7 +911,7 @@ public enum Overlay {
 		.ids(203)
 		.area(Area.TEMPLE_OF_THE_EYE_BLEND_FIX)
 		.groundMaterial(GroundMaterial.SAND)
-		.replaceWithIf(TEMPLE_OF_THE_EYE_PATH_BLENDING_FIX, plugin -> plugin.configGroundBlending)
+		.replaceWithIf(TEMPLE_OF_THE_EYE_PATH_BLENDING_FIX, "blending")
 	),
 	TEMPLE_OF_THE_EYE_CENTER_PLATFORM_181(p -> p
 		.ids(181)
@@ -1143,7 +1121,7 @@ public enum Overlay {
 	public final int maxLightness;
 	public final int uvOrientation;
 	public final float uvScale;
-	public final TileOverrideResolver<Overlay> replacementResolver;
+	public final List<TileOverride.IReplacement<Overlay>> replacements;
 
 	Overlay(int id, GroundMaterial material) {
 		this(p -> p.ids(id).groundMaterial(material));
@@ -1182,7 +1160,7 @@ public enum Overlay {
 		consumer.accept(builder);
 		builder.normalize();
 		this.filterIds = builder.ids;
-		this.replacementResolver = builder.replacementResolver;
+		this.replacements = builder.replacements;
 		this.area = builder.area;
 		this.groundMaterial = builder.groundMaterial;
 		this.waterType = builder.waterType;
@@ -1259,11 +1237,14 @@ public enum Overlay {
 	}
 
 	public Overlay resolveReplacements(Scene scene, Tile tile, HdPlugin plugin) {
-		if (replacementResolver != null) {
-			var replacement = replacementResolver.resolve(plugin, scene, tile, this);
-			if (replacement == null)
-				replacement = NONE;
-			return replacement;
+		if (replacements != null) {
+			for (var resolver : replacements) {
+				var replacement = resolver.resolve(plugin, scene, tile, this);
+				if (replacement == null)
+					return NONE;
+				if (replacement != this)
+					return replacement;
+			}
 		}
 
 		return this;

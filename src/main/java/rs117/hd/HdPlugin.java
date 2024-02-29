@@ -104,6 +104,7 @@ import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.SceneUploader;
 import rs117.hd.scene.TextureManager;
+import rs117.hd.scene.TileOverrideManager;
 import rs117.hd.scene.lights.Light;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.scene.model_overrides.ObjectType;
@@ -194,6 +195,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Inject
 	private EnvironmentManager environmentManager;
+
+	@Inject
+	private TileOverrideManager tileOverrideManager;
 
 	@Inject
 	private ModelOverrideManager modelOverrideManager;
@@ -561,7 +565,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 				// Materials need to be initialized before compiling shader programs
 				textureManager.startUp();
-				modelOverrideManager.startUp();
 
 				initPrograms();
 				initShaderHotswapping();
@@ -580,6 +583,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				lastStretchedCanvasWidth = lastStretchedCanvasHeight = 0;
 				lastAntiAliasingMode = null;
 
+				tileOverrideManager.startUp();
+				modelOverrideManager.startUp();
 				modelPusher.startUp();
 				lightManager.startUp();
 				environmentManager.startUp();
@@ -626,6 +631,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 			developerTools.deactivate();
 			modelPusher.shutDown();
+			tileOverrideManager.shutDown();
 			modelOverrideManager.shutDown();
 			lightManager.shutDown();
 			environmentManager.shutDown();
@@ -2452,14 +2458,23 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 					boolean recompilePrograms = false;
 					boolean recreateShadowMapFbo = false;
-					boolean environmentManagerReload = false;
-					boolean modelOverrideManagerReload = false;
 					boolean reloadTexturesAndMaterials = false;
-					boolean modelPusherClearModelCache = false;
-					boolean modelPusherReallocate = false;
-					boolean reuploadScene = false;
+					boolean reloadEnvironments = false;
+					boolean reloadModelOverrides = false;
+					boolean reloadTileOverrides = false;
+					boolean reloadScene = false;
+					boolean clearModelCache = false;
+					boolean resizeModelCache = false;
 
 					for (var key : pendingConfigChanges) {
+						switch (key) {
+							case KEY_SEASONAL_THEME:
+							case KEY_GROUND_BLENDING:
+							case KEY_GROUND_TEXTURES:
+								reloadTileOverrides = true;
+								break;
+						}
+
 						switch (key) {
 							case KEY_EXPANDED_MAP_LOADING_CHUNKS:
 								client.setExpandedMapLoading(getExpandedMapLoadingChunks());
@@ -2483,11 +2498,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 								recreateShadowMapFbo = true;
 								break;
 							case KEY_ATMOSPHERIC_LIGHTING:
-								environmentManagerReload = true;
+								reloadEnvironments = true;
 								break;
 							case KEY_SEASONAL_THEME:
-								environmentManagerReload = true;
-								modelOverrideManagerReload = true;
+								reloadEnvironments = true;
+								reloadModelOverrides = true;
 								// fall-through
 							case KEY_ANISOTROPIC_FILTERING_LEVEL:
 							case KEY_GROUND_TEXTURES:
@@ -2499,20 +2514,20 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 							case KEY_GROUND_BLENDING:
 							case KEY_FILL_GAPS_IN_TERRAIN:
 							case KEY_HD_TZHAAR_RESKIN:
-								modelPusherClearModelCache = true;
-								reuploadScene = true;
+								clearModelCache = true;
+								reloadScene = true;
 								break;
 							case KEY_VANILLA_SHADOW_MODE:
-								modelOverrideManagerReload = true;
-								reuploadScene = true;
+								reloadModelOverrides = true;
+								reloadScene = true;
 								break;
 							case KEY_LEGACY_GREY_COLORS:
 							case KEY_PRESERVE_VANILLA_NORMALS:
 							case KEY_SHADING_MODE:
 							case KEY_FLAT_SHADING:
 								recompilePrograms = true;
-								modelPusherClearModelCache = true;
-								reuploadScene = true;
+								clearModelCache = true;
+								reloadScene = true;
 								break;
 							case KEY_FPS_TARGET:
 							case KEY_UNLOCK_FPS:
@@ -2521,7 +2536,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 								break;
 							case KEY_MODEL_CACHE_SIZE:
 							case KEY_MODEL_CACHING:
-								modelPusherReallocate = true;
+								resizeModelCache = true;
 								break;
 							case KEY_LOW_MEMORY_MODE:
 								restartPlugin();
@@ -2536,23 +2551,28 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					if (reloadTexturesAndMaterials) {
 						textureManager.reloadTextures();
 						recompilePrograms = true;
-						modelPusherClearModelCache = true;
-					} else if (modelOverrideManagerReload) {
+						clearModelCache = true;
+					} else if (reloadModelOverrides) {
 						modelOverrideManager.reload();
-						modelPusherClearModelCache = true;
+						clearModelCache = true;
+					}
+
+					if (reloadTileOverrides) {
+						tileOverrideManager.reload(false);
+						reloadScene = true;
 					}
 
 					if (recompilePrograms)
 						recompilePrograms();
 
-					if (modelPusherReallocate) {
+					if (resizeModelCache) {
 						modelPusher.shutDown();
 						modelPusher.startUp();
-					} else if (modelPusherClearModelCache) {
+					} else if (clearModelCache) {
 						modelPusher.clearModelCache();
 					}
 
-					if (reuploadScene)
+					if (reloadScene)
 						reuploadScene();
 
 					if (recreateShadowMapFbo) {
@@ -2560,7 +2580,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 						initShadowMapFbo();
 					}
 
-					if (environmentManagerReload)
+					if (reloadEnvironments)
 						environmentManager.triggerTransition();
 				}
 			} catch (Throwable ex) {
