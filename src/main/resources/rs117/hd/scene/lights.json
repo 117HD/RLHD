@@ -18144,22 +18144,41 @@
     ]
   },
   {
-    "description": "CHAOS_ELEMENTAL_JR",
-    "height": 250,
+    "description": "CHAOS_ELEMENTAL_JR_TOP",
+    "height": 225,
     "alignment": "CENTER",
-    "radius": 150,
-    "strength": 20,
+    "radius": 50,
+    "strength": 15,
     "color": [
       255,
       255,
       255
     ],
     "type": "FLICKER",
-    "duration": 0,
-    "range": 80,
+    "duration": 20,
+    "range": 20,
     "npcIds": [
-      5907,
-      2055
+      2055,
+      5907
+    ]
+  },
+  {
+    "description": "CHAOS_ELEMENTAL_JR_BOTTOM",
+    "height": 182,
+    "alignment": "CENTER",
+    "radius": 75,
+    "strength": 15,
+    "color": [
+      150,
+      120,
+      200
+    ],
+    "type": "FLICKER",
+    "duration": 20,
+    "range": 0,
+    "npcIds": [
+      2055,
+      5907
     ]
   },
   {
@@ -21154,9 +21173,9 @@
       79,
       177
     ],
-    "type": "STATIC",
+    "type": "FLICKER",
     "duration": 0,
-    "range": 0,
+    "range": 30,
     "objectIds": [
       26765
     ]
@@ -32653,5 +32672,149 @@
     "color": [ 218, 100, 207 ],
     "type": "FLICKER",
     "range": 20
+  },
+  {
+    "description": "CHAOS_ELEMENTAL_TOP_LIGHT",
+    "height": 325,
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 5,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 4,
+    "range": 75,
+    "npcIds": [
+      2054
+    ]
+  },
+  {
+    "description": "CHAOS_ELEMENTAL_BOTTOM_LIGHT",
+    "height": 50,
+    "alignment": "CENTER",
+    "radius": 450,
+    "strength": 20,
+    "color": [
+      150,
+      120,
+      200
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "npcIds": [
+      2054
+    ]
+  },
+  {
+    "description": "CHAOS_ELEMENTAL_TELE_PROJECTILE",
+    "height": 0,
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 10,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "projectileIds": [
+      554
+    ]
+  },
+  {
+    "description": "CHAOS_ELEMENTAL_UNEQUIP_PROJECTILE",
+    "height": 0,
+    "alignment": "CENTER",
+    "radius": 175,
+    "strength": 10,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "projectileIds": [
+      551
+    ]
+  },
+  {
+    "description": "CHAOS_ELEMENTAL_DAMAGE_PROJECTILE",
+    "height": -10,
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 10,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 100,
+    "projectileIds": [
+      557
+    ]
+  },
+  {
+    "description": "CHAOS_ELEMENTAL_DAMAGE_PROJECTILE_2",
+    "height": -10,
+    "alignment": "CENTER",
+    "radius": 150,
+    "strength": 10,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 100,
+    "projectileIds": [
+      557
+    ]
+  },
+  {
+    "description": "CHAOS_ELEMENTAL_DAMAGE_PROJECTILE_3",
+    "height": -10,
+    "alignment": "CENTER",
+    "radius": 125,
+    "strength": 10,
+    "color": [
+      0,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 100,
+    "projectileIds": [
+      557
+    ]
+  },
+  {
+    "description": "MINIATURE_CHAOTIC_CLOUDS",
+    "height": 150,
+    "alignment": "CENTER",
+    "radius": 150,
+    "strength": 12,
+    "color": [
+      150,
+      120,
+      200
+    ],
+    "type": "FLICKER",
+    "duration": 20,
+    "range": 0,
+    "npcIds": [
+      6620
+    ]
   }
 ]
