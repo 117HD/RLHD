@@ -3715,6 +3715,30 @@
     "waterType": "WATER"
   },
   {
+    "name": "LUNAR_ISLAND_BLUE_SNOW",
+    "area": "LUNAR_ISLE",
+    "underlayIds": [
+      73,
+      75,
+      95
+    ],
+    "groundMaterial": "SNOW_2"
+  },
+  {
+    "name": "LUNAR_ISLAND_COMPLEX",
+    "area": "LUNAR_ISLE",
+    "underlayIds": [
+      58,
+      59,
+      97,
+      98
+    ],
+    "replacements": {
+      "DEFAULT_SNOW": [ "h >= 17", "s == 0" ],
+      "DEFAULT_DIRT": [ "h == 7", "s == 1" ]
+    }
+  },
+  {
     "name": "KELDAGRIM_PATHS",
     "area": "ALL",
     "overlayIds": [
@@ -4106,6 +4130,10 @@
     "maxHue": 0,
     "maxSaturation": 0,
     "shiftLightness": 8
+  },
+  {
+    "name": "DEFAULT_SNOW",
+    "groundMaterial": "SNOW_1"
   },
   {
     "name": "DEFAULT_SAND",
@@ -5811,7 +5839,7 @@
     "replacements": {
       "SEASONAL_GRASS": "s >= 2",
       "SEASONAL_DIRT": "s == 1",
-      "WINTER_DIRT": true
+      "WINTER_DIRT": "season == WINTER"
     }
   },
   {
