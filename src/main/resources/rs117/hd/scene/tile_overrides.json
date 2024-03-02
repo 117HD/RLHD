@@ -3734,8 +3734,8 @@
       98
     ],
     "replacements": {
-      "DEFAULT_SNOW": [ "h >= 17", "s == 0" ],
-      "DEFAULT_DIRT": [ "h == 7", "s == 1" ]
+      "DEFAULT_SNOW":  "h >= 17 || s == 0",
+      "DEFAULT_DIRT":  "h == 7 || s == 1"
     }
   },
   {
