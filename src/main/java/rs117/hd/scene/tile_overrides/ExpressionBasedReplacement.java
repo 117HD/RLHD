@@ -16,14 +16,19 @@ import static rs117.hd.utils.ExpressionParser.asExpression;
 import static rs117.hd.utils.ExpressionParser.parseExpression;
 
 @Slf4j
-public class ExpressionBasedReplacement<T> extends TileOverride.Replacement<T> {
+public class ExpressionBasedReplacement {
+	public final TileOverride replacement;
 	public final String[] expressions;
 	public final transient Predicate<VariableSupplier> predicate;
 
 	private transient boolean isConstant;
 
-	public ExpressionBasedReplacement(T replacement, @Nullable Map<String, Object> constants, JsonElement jsonExpressions) {
-		super(replacement);
+	public boolean isConstant() {
+		return isConstant;
+	}
+
+	public ExpressionBasedReplacement(TileOverride replacement, @Nullable Map<String, Object> constants, JsonElement jsonExpressions) {
+		this.replacement = replacement;
 
 		if (jsonExpressions.isJsonPrimitive()) {
 			var primitive = jsonExpressions.getAsJsonPrimitive();
@@ -41,8 +46,8 @@ public class ExpressionBasedReplacement<T> extends TileOverride.Replacement<T> {
 		predicate = parse(constants);
 	}
 
-	public ExpressionBasedReplacement(T replacement, @Nullable Map<String, Object> constants, String... cases) {
-		super(replacement);
+	public ExpressionBasedReplacement(TileOverride replacement, @Nullable Map<String, Object> constants, String... cases) {
+		this.replacement = replacement;
 		this.expressions = cases;
 		predicate = parse(constants);
 	}
@@ -77,13 +82,8 @@ public class ExpressionBasedReplacement<T> extends TileOverride.Replacement<T> {
 		return predicate;
 	}
 
-	public boolean isConstant() {
-		return isConstant;
-	}
-
 	@Nullable
-	@Override
-	public T resolve(HdPlugin plugin, Scene scene, Tile tile, T original) {
+	public TileOverride resolve(HdPlugin plugin, Scene scene, Tile tile, TileOverride original) {
 		final String[] HSL_VARS = { "h", "s", "l" };
 		int[][] hsl = new int[1][];
 		VariableSupplier vars = name -> {

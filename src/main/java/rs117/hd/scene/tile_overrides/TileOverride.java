@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import javax.annotation.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -50,7 +49,7 @@ public class TileOverride {
 	private LinkedHashMap<String, JsonElement> replacementExpressions;
 
 	public transient int[] ids;
-	public transient List<Replacement<TileOverride>> replacements;
+	public transient List<ExpressionBasedReplacement> replacements;
 	public transient boolean queriedAsOverlay;
 
 	// Used in conversion from old format
@@ -96,7 +95,7 @@ public class TileOverride {
 	}
 
 	@NonNull
-	private static ExpressionBasedReplacement<TileOverride> parseReplacementExpressions(
+	private static ExpressionBasedReplacement parseReplacementExpressions(
 		Map.Entry<String, JsonElement> expressions,
 		TileOverride[] allOverrides,
 		Map<String, Object> constants
@@ -119,24 +118,18 @@ public class TileOverride {
 			}
 		}
 
-		return new ExpressionBasedReplacement<>(replacement, constants, expressions.getValue());
+		return new ExpressionBasedReplacement(replacement, constants, expressions.getValue());
 	}
 
 	public TileOverride resolveConstantReplacements() {
 		if (replacements != null) {
 			// Check if the override always resolves to the same replacement override
 			for (var replacement : replacements) {
-				if (!(replacement instanceof ExpressionBasedReplacement))
+				if (!replacement.isConstant())
 					break;
 
-				var expr = (ExpressionBasedReplacement<TileOverride>) replacement;
-				if (!expr.isConstant())
-					break;
-
-				if (expr.predicate.test(null)) {
-					log.debug("Statically replacing override {} with {}", name, expr.replacement.name);
-					return expr.replacement;
-				}
+				if (replacement.predicate.test(null))
+					return replacement.replacement;
 			}
 		}
 
@@ -173,20 +166,5 @@ public class TileOverride {
 		l = clamp(l, minLightness, maxLightness);
 
 		return h << 10 | s << 7 | l;
-	}
-
-	@Deprecated
-	@FunctionalInterface
-	public interface IReplacement<T> {
-		@Nullable
-		T resolve(HdPlugin plugin, Scene scene, Tile tile, T original);
-	}
-
-	public abstract static class Replacement<T> implements IReplacement<T> {
-		public final T replacement;
-
-		public Replacement(T replacement) {
-			this.replacement = replacement;
-		}
 	}
 }
