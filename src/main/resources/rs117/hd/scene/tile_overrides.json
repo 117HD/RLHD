@@ -3715,6 +3715,17 @@
     "waterType": "WATER"
   },
   {
+    "name": "LADY_ZAY_DECK",
+    "area": "LADY_ZAY",
+    "overlayIds": [
+      14
+    ],
+    "underlayIds": [
+      63
+    ],
+    "groundMaterial": "HD_WOOD_PLANKS_1"
+  },
+  {
     "name": "KELDAGRIM_PATHS",
     "area": "ALL",
     "overlayIds": [
@@ -4106,6 +4117,10 @@
     "maxHue": 0,
     "maxSaturation": 0,
     "shiftLightness": 8
+  },
+  {
+    "name": "DEFAULT_SNOW",
+    "groundMaterial": "SNOW_1"
   },
   {
     "name": "DEFAULT_SAND",
@@ -5811,7 +5826,7 @@
     "replacements": {
       "SEASONAL_GRASS": "s >= 2",
       "SEASONAL_DIRT": "s == 1",
-      "WINTER_DIRT": true
+      "WINTER_DIRT": "season == WINTER"
     }
   },
   {
