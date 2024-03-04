@@ -22244,6 +22244,24 @@
     ]
   },
   {
+    "description": "POH_TRAILBLAZER_RELOADED_TROPHY",
+    "height": 190,
+    "alignment": "CENTER",
+    "radius": 50,
+    "strength": 50,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "objectIds": [
+      49963
+    ]
+  },
+  {
     "description": "POH_PORTAL_ARCEUUS_LIBRARY",
     "height": 120,
     "alignment": "CENTER",
