@@ -316,11 +316,16 @@ public class ColorUtils {
 	}
 
 	public static int[] unpackHslRaw(int hsl) {
+		var out = new int[3];
+		unpackHslRaw(out, hsl);
+		return out;
+	}
+
+	public static void unpackHslRaw(int[] out, int hsl) {
 		// 6-bit hue | 3-bit saturation | 7-bit lightness
-		int H = clamp(hsl >> 10 & 0x3F, 0, 0x3F);
-		int S = clamp(hsl >> 7 & 0x7, 0, 0x7);
-		int L = clamp(hsl & 0x7F, 0, 0x7F);
-		return new int[] { H, S, L };
+		out[0] = clamp(hsl >> 10 & 0x3F, 0, 0x3F);
+		out[1] = clamp(hsl >> 7 & 0x7, 0, 0x7);
+		out[2] = clamp(hsl & 0x7F, 0, 0x7F);
 	}
 
 	public static int packHslRaw(int... hsl) {

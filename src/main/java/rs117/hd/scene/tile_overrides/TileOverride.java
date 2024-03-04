@@ -10,8 +10,6 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import net.runelite.api.*;
-import rs117.hd.HdPlugin;
 import rs117.hd.data.WaterType;
 import rs117.hd.data.environments.Area;
 import rs117.hd.data.materials.GroundMaterial;
@@ -46,15 +44,12 @@ public class TileOverride {
 	public int uvOrientation;
 	public float uvScale = 1;
 	@SerializedName("replacements")
-	private LinkedHashMap<String, JsonElement> replacementExpressions;
+	public LinkedHashMap<String, JsonElement> rawReplacements;
 
+	public transient int index;
 	public transient int[] ids;
 	public transient List<ExpressionBasedReplacement> replacements;
 	public transient boolean queriedAsOverlay;
-
-	// Used in conversion from old format
-	public transient int index;
-	public boolean REQUIRES_MANUAL_TRANSLATION = false;
 
 	private TileOverride(String name, GroundMaterial groundMaterial) {
 		this.name = name;
@@ -75,15 +70,17 @@ public class TileOverride {
 			ids[i++] = id;
 		}
 
-		if (replacementExpressions != null) {
+		if (rawReplacements != null) {
 			replacements = new ArrayList<>();
-			for (var entry : replacementExpressions.entrySet()) {
+			for (var entry : rawReplacements.entrySet()) {
 				var expr = parseReplacementExpressions(entry, allOverrides, constants);
 
 				if (expr.isConstant()) {
 					if (expr.predicate.test(null)) {
 						replacements.add(expr);
-						break;
+						// Parse unnecessary replacements only during development
+						if (!Props.DEVELOPMENT)
+							break;
 					} else {
 						continue;
 					}
@@ -130,22 +127,6 @@ public class TileOverride {
 
 				if (replacement.predicate.test(null))
 					return replacement.replacement;
-			}
-		}
-
-		return this;
-	}
-
-	public TileOverride resolveReplacements(Scene scene, Tile tile, HdPlugin plugin) {
-		if (replacements != null) {
-			for (var resolver : replacements) {
-				TileOverride replacement = resolver.resolve(plugin, scene, tile, this);
-				if (replacement == null)
-					replacement = NONE;
-				if (replacement != this) {
-					replacement.queriedAsOverlay = queriedAsOverlay;
-					return replacement.resolveReplacements(scene, tile, plugin);
-				}
 			}
 		}
 
