@@ -3823,11 +3823,19 @@
   },
   {
     "name": "KELDAGRIM_PATHS",
-    "area": "ALL",
+    "area": "KELDAGRIM",
     "overlayIds": [
       117
     ],
     "groundMaterial": "FALADOR_PATHS"
+  },
+  {
+    "name": "KELDAGRIM_UNDERWALL",
+    "area": "KELDAGRIM",
+    "overlayIds": [
+      9
+    ],
+    "blended": false
   },
   {
     "name": "CERBERUS_WATER",
