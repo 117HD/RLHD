@@ -3681,7 +3681,9 @@
       16961,
       16962
     ],
-    "uvType": "GEOMETRY"
+    "uvType": "BOX",
+    "uvScale": 1.1,
+    "uvOrientationZ": 128
   },
   {
     "description": "LUNAR_ISLE_BRIDGES",
@@ -3700,15 +3702,18 @@
       16992,
       16993
     ],
-    "uvType": "MODEL_XZ"
+    "uvType": "BOX"
   },
   {
     "description": "LUNAR_ISLE_DOCK_SUPPORTS",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       16963,
       16965
-    ]
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.1,
+    "uvOrientation": 128
   },
   {
     "description": "RELLEKKA_DOCKS",
@@ -6549,6 +6554,15 @@
     "uvOrientationZ": 512
   },
   {
+    "description": "Objects - Wooden - Open Crate",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 16888 ],
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512
+  },
+  {
     "description": "Objects - Wooden - Stack of crates",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
@@ -6568,6 +6582,15 @@
       20369
     ],
     "uvType": "BOX",
+    "flatNormals": true
+  },
+  {
+    "description": "Objects - Wooden - Doublewide Crate",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 16863, 16864, 16865 ],
+    "uvType": "BOX",
+    "uvOrientationZ": 512,
+    "uvOrientationX": 512,
     "flatNormals": true
   },
   {
