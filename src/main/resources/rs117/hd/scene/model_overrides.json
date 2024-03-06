@@ -7581,14 +7581,13 @@
   },
   {
     "description": "Objects - Wooden - Plank tables - Medium",
-    "baseMaterial": "WOOD_GRAIN_2",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       12884,
       16974,
       24333
     ],
-    "uvType": "BOX",
-    "uvScale": 0.4
+    "uvType": "BOX"
   },
   {
     "description": "Objects - Wooden - Plank tables - Wide",
