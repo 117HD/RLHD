@@ -3723,7 +3723,8 @@
     "underlayIds": [
       63
     ],
-    "groundMaterial": "HD_WOOD_PLANKS_1"
+    "groundMaterial": "HD_WOOD_PLANKS_1",
+    "uvOrientation": 90
   },
   {
     "name": "KELDAGRIM_PATHS",
