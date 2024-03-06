@@ -1385,6 +1385,18 @@
     "fogDepth": 45
   },
   {
+    "area": "MIND_ALTAR",
+    "fogColor": "#000000",
+    "ambientStrength": 0.3,
+    "ambientColor": "#AAAFB6",
+    "directionalStrength": 1.6,
+    "sunAngles": [
+      76,
+      222
+    ],
+    "fogDepth": 50
+  },
+  {
     "area": "EARTH_ALTAR",
     "fogColor": "#000000",
     "ambientStrength": 0.3,
