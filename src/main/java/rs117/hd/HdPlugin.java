@@ -413,6 +413,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public boolean enableDetailedTimers;
 	public boolean enableShadowMapOverlay;
 
+	@Getter
 	private boolean isActive;
 	private boolean lwjglInitialized;
 	private boolean hasLoggedIn;

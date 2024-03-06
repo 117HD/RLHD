@@ -6,13 +6,10 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import javax.annotation.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import net.runelite.api.*;
-import rs117.hd.HdPlugin;
 import rs117.hd.data.WaterType;
 import rs117.hd.data.environments.Area;
 import rs117.hd.data.materials.GroundMaterial;
@@ -47,15 +44,12 @@ public class TileOverride {
 	public int uvOrientation;
 	public float uvScale = 1;
 	@SerializedName("replacements")
-	private LinkedHashMap<String, JsonElement> replacementExpressions;
+	public LinkedHashMap<String, JsonElement> rawReplacements;
 
-	public transient int[] ids;
-	public transient List<Replacement<TileOverride>> replacements;
-	public transient boolean queriedAsOverlay;
-
-	// Used in conversion from old format
 	public transient int index;
-	public boolean REQUIRES_MANUAL_TRANSLATION = false;
+	public transient int[] ids;
+	public transient List<ExpressionBasedReplacement> replacements;
+	public transient boolean queriedAsOverlay;
 
 	private TileOverride(String name, GroundMaterial groundMaterial) {
 		this.name = name;
@@ -76,15 +70,17 @@ public class TileOverride {
 			ids[i++] = id;
 		}
 
-		if (replacementExpressions != null) {
+		if (rawReplacements != null) {
 			replacements = new ArrayList<>();
-			for (var entry : replacementExpressions.entrySet()) {
+			for (var entry : rawReplacements.entrySet()) {
 				var expr = parseReplacementExpressions(entry, allOverrides, constants);
 
 				if (expr.isConstant()) {
 					if (expr.predicate.test(null)) {
 						replacements.add(expr);
-						break;
+						// Parse unnecessary replacements only during development
+						if (!Props.DEVELOPMENT)
+							break;
 					} else {
 						continue;
 					}
@@ -96,7 +92,7 @@ public class TileOverride {
 	}
 
 	@NonNull
-	private static ExpressionBasedReplacement<TileOverride> parseReplacementExpressions(
+	private static ExpressionBasedReplacement parseReplacementExpressions(
 		Map.Entry<String, JsonElement> expressions,
 		TileOverride[] allOverrides,
 		Map<String, Object> constants
@@ -119,40 +115,18 @@ public class TileOverride {
 			}
 		}
 
-		return new ExpressionBasedReplacement<>(replacement, constants, expressions.getValue());
+		return new ExpressionBasedReplacement(replacement, constants, expressions.getValue());
 	}
 
 	public TileOverride resolveConstantReplacements() {
 		if (replacements != null) {
 			// Check if the override always resolves to the same replacement override
 			for (var replacement : replacements) {
-				if (!(replacement instanceof ExpressionBasedReplacement))
+				if (!replacement.isConstant())
 					break;
 
-				var expr = (ExpressionBasedReplacement<TileOverride>) replacement;
-				if (!expr.isConstant())
-					break;
-
-				if (expr.predicate.test(null)) {
-					log.debug("Statically replacing override {} with {}", name, expr.replacement.name);
-					return expr.replacement;
-				}
-			}
-		}
-
-		return this;
-	}
-
-	public TileOverride resolveReplacements(Scene scene, Tile tile, HdPlugin plugin) {
-		if (replacements != null) {
-			for (var resolver : replacements) {
-				TileOverride replacement = resolver.resolve(plugin, scene, tile, this);
-				if (replacement == null)
-					replacement = NONE;
-				if (replacement != this) {
-					replacement.queriedAsOverlay = queriedAsOverlay;
-					return replacement.resolveReplacements(scene, tile, plugin);
-				}
+				if (replacement.predicate.test(null))
+					return replacement.replacement;
 			}
 		}
 
@@ -173,20 +147,5 @@ public class TileOverride {
 		l = clamp(l, minLightness, maxLightness);
 
 		return h << 10 | s << 7 | l;
-	}
-
-	@Deprecated
-	@FunctionalInterface
-	public interface IReplacement<T> {
-		@Nullable
-		T resolve(HdPlugin plugin, Scene scene, Tile tile, T original);
-	}
-
-	public abstract static class Replacement<T> implements IReplacement<T> {
-		public final T replacement;
-
-		public Replacement(T replacement) {
-			this.replacement = replacement;
-		}
 	}
 }

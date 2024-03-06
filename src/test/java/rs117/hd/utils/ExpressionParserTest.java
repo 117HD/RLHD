@@ -47,9 +47,12 @@ public class ExpressionParserTest {
 		Assert.assertEquals(.5f, parseExpression("+++--.5"));
 		Assert.assertEquals(.5f, parseExpression("+-++-.5"));
 		Assert.assertEquals(17.f, parseFunction("5 + 12").apply(null));
+		Assert.assertFalse(parsePredicate("!( blending )").test(vars));
 		Assert.assertEquals(false, parseExpression("!true"));
-		Assert.assertEquals(false, parsePredicate("!( blending )").test(vars));
 		Assert.assertEquals(true, parseExpression("SUMMER == 1", constants));
+
+		// TODO: Known corner case: / and * should have equal precedence, and be evaluated left to right
+		Assert.assertNotEquals(16, parseExpression("8 / 2 * (2 + 2)"));
 
 		assertThrows(() -> parseExpression("unexpected ( indeed"));
 		assertThrows(() -> parseExpression("(5 + ( missing paren)"));
