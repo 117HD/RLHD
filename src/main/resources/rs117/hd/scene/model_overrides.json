@@ -14710,5 +14710,14 @@
     "objectIds": [
       50152
     ]
+  },
+  {
+    "description": "Keldagrim Stone Walls",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      6000, 6001, 6002, 6003, 6004, 6005, 6006, 6010, 6011
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 128
   }
 ]
