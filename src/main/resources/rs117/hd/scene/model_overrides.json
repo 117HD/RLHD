@@ -9723,18 +9723,28 @@
     "uvType": "BOX"
   },
   {
-    "description": "Sacks Pile",
+    "description": "Sacks - Yellow",
     "baseMaterial": "CARPET",
     "objectIds": [
       23,
       365,
       2354,
       2356,
-      2663,
+      2663
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Sacks Pile",
+    "baseMaterial": "CARPET",
+    "objectIds": [
       12394,
+      16867,
       39696
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "uvOrientation": 256,
     "uvScale": 0.6
   },
@@ -9742,9 +9752,10 @@
     "description": "Sacks with Sword",
     "baseMaterial": "CARPET",
     "objectIds": [
-      12392
+      12392,
+      16871
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "uvOrientation": 256,
     "uvScale": 0.6
   },
@@ -9754,9 +9765,17 @@
     "objectIds": [
       12396
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "uvOrientation": 256,
     "uvScale": 0.4
+  },
+  {
+    "description": "Object - Sack with Hey or Grain",
+    "baseMaterial": "FINE_CARPET",
+    "objectIds": [ 16878 ],
+    "uvType": "BOX",
+    "uvScale": 0.85,
+    "retainVanillaUvs": false
   },
   {
     "description": "Culinaromancers Floor",
