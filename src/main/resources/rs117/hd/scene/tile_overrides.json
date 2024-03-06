@@ -3724,7 +3724,8 @@
       63
     ],
     "groundMaterial": "HD_WOOD_PLANKS_1",
-    "uvOrientation": 90
+    "uvOrientation": 512,
+    "uvScale": 0.75
   },
   {
     "name": "KELDAGRIM_PATHS",
