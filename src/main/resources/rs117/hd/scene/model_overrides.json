@@ -6466,8 +6466,6 @@
       5110,
       5330,
       6176,
-      6177,
-      6178,
       7514,
       10374,
       10378,
@@ -6513,6 +6511,7 @@
       3813,
       3814,
       3815,
+      6177,
       9533,
       20367,
       25775,
@@ -6553,7 +6552,8 @@
     "description": "Objects - Wooden - Stack of crates",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      9536
+      9536,
+      6178
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -14719,5 +14719,13 @@
     ],
     "uvType": "BOX",
     "uvOrientation": 128
+  },
+  {
+    "description": "Keldagrim Wooden Supports",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      5993, 5994, 5995, 5996, 5997
+    ],
+    "uvType": "BOX"
   }
 ]
