@@ -3830,6 +3830,22 @@
     "groundMaterial": "FALADOR_PATHS"
   },
   {
+    "name": "KELDAGRIM_ROCKY_GROUND",
+    "area": "KELDAGRIM",
+    "underlayIds": [
+      113
+    ],
+    "groundMaterial": "STONE_CAVE_FLOOR"
+  },
+  {
+    "name": "KELDAGRIM_DIRT",
+    "area": "KELDAGRIM",
+    "underlayIds": [
+      111, 112, 118
+    ],
+    "groundMaterial": "DIRT"
+  },
+  {
     "name": "KELDAGRIM_UNDERWALL",
     "area": "KELDAGRIM",
     "overlayIds": [
