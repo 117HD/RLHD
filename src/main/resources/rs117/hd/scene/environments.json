@@ -1395,6 +1395,16 @@
     "fogDepth": 46
   },
   {
+    "area": "DEATH_ALTAR",
+    "ambientStrength": 0.3,
+    "directionalStrength": 2,
+    "sunAngles": [
+      74,
+      215
+    ],
+    "fogDepth": 46
+  },
+  {
     "key": "OVERWORLD",
     "area": "OVERWORLD",
     "ambientColor": "#97baff",

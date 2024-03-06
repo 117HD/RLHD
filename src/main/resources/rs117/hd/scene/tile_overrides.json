@@ -3362,6 +3362,14 @@
     "blended": false
   },
   {
+    "name": "DEATH_ALTAR_GROUND",
+    "area": "DEATH_ALTAR",
+    "underlayIds": [
+      55
+    ],
+    "groundMaterial": "DIRT"
+  },
+  {
     "name": "DS2_SHIPS_WATER",
     "area": "DS2_SHIPS",
     "overlayIds": [
