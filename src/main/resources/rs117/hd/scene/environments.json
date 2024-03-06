@@ -1385,6 +1385,19 @@
     "fogDepth": 45
   },
   {
+    "area": "BODY_ALTAR",
+    "fogColor": "#100707",
+    "fogDepth": 65,
+    "ambientStrength": 0.3,
+    "ambientColor": "#AAAFB6",
+    "directionalStrength": 1.7,
+    "sunAngles": [
+      66,
+      250
+    ],
+    "fogDepth": 46
+  },
+  {
     "area": "LAW_ALTAR",
     "ambientStrength": 0.3,
     "directionalStrength": 2,
