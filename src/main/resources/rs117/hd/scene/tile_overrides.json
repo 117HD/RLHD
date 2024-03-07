@@ -3847,7 +3847,8 @@
     "overlayIds": [
       117
     ],
-    "groundMaterial": "FALADOR_PATHS"
+    "groundMaterial": "GRAVEL",
+    "uvScale": 0.6
   },
   {
     "name": "KELDAGRIM_ROCKY_GROUND",
