@@ -433,12 +433,13 @@
     "area": "LUMBRIDGE_CASTLE_BASEMENT",
     "directionalColor": "#a29b71",
     "directionalStrength": 1.5,
+    "ambientStrength": 1.5,
     "sunAngles": [
       80,
       190
     ],
     "fogColor": "#070606",
-    "fogDepth": 84
+    "fogDepth": 65
   },
   {
     "area": "GOBLIN_MAZE",
