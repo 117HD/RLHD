@@ -4857,7 +4857,8 @@
     "baseMaterial": "METALLIC_2_SEMIGLOSS",
     "objectIds": [
       2097,
-      4306
+      4306,
+      6150
     ],
     "uvType": "BOX",
     "flatNormals": true
@@ -14915,5 +14916,42 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.8
+  },
+  {
+    "description": "Blast Furnace - Objects - Metallic - Sink",
+    "baseMaterial": "METALLIC_2",
+    "objectIds": [
+      9143
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Blast Furnace - Objects - Metallic - Scaffolding",
+    "baseMaterial": "METALLIC_2",
+    "objectIds": [
+      9109, 9110, 9111, 9112, 9113
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 174
+  },
+  {
+    "description": "Blast Furnace - Walls - Wooden - Double Slat Fence",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      9139
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.1,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Blast Furnace - Walls - Wooden - Gate",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      9141
+    ],
+    "uvType": "BOX"
   }
 ]
