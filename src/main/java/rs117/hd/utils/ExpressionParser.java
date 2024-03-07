@@ -28,17 +28,12 @@ public class ExpressionParser {
 	}
 
 	public static Object parseExpression(String expression) {
-		var expr = parseExpression(expression, null);
-		if (expr instanceof Expression)
-			return ((Expression) expr).simplify(Collections.emptyMap());
-		return expr;
+		return parseExpression(expression, null);
 	}
 
 	public static Object parseExpression(String expression, @Nullable Map<String, Object> constants) {
-		Object obj = parseExpression(expression, 0, expression.length());
-		if (obj instanceof Expression)
-			return ((Expression) obj).simplify(constants == null ? Collections.emptyMap() : constants);
-		return obj;
+		return asExpression(parseExpression(expression, 0, expression.length()))
+			.simplify(constants == null ? Collections.emptyMap() : constants);
 	}
 
 	public static Expression asExpression(Object object) {

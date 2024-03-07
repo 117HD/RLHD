@@ -77,7 +77,7 @@ public class ExpressionBasedReplacement {
 
 			if (Props.DEVELOPMENT) {
 				// Ensure all variables are defined
-				final Set<String> knownVariables = Set.of("h", "s", "l", "blending", "textures", "season");
+				final Set<String> knownVariables = Set.of("h", "s", "l");
 				for (var variable : expr.variables)
 					if (!knownVariables.contains(variable))
 						throw new IllegalStateException("Expression '" + expression + "' contains unknown variable '" + variable + "'");
