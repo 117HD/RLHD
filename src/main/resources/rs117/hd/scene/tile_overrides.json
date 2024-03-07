@@ -3836,9 +3836,27 @@
     "name": "KELDAGRIM_CARPET",
     "area": "KELDAGRIM",
     "overlayIds": [
-      86
+      82, 83, 86
     ],
     "groundMaterial": "CARPET",
+    "blended": false
+  },
+  {
+    "name": "KELDAGRIM_MARBLE",
+    "area": "KELDAGRIM_INTERIORS",
+    "overlayIds": [
+      117
+    ],
+    "groundMaterial": "FALADOR_PATHS",
+    "blended": false
+  },
+  {
+    "name": "KELDAGRIM_MARBLE",
+    "area": "KELDAGRIM",
+    "overlayIds": [
+      11
+    ],
+    "groundMaterial": "MARBLE_2",
     "blended": false
   },
   {
