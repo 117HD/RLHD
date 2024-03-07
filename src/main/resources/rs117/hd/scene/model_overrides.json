@@ -14953,5 +14953,14 @@
       9141
     ],
     "uvType": "BOX"
+  },
+  {
+    "description": "Objects - Wooden - Keldagrim Cart Trapdoor",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      16168
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.86
   }
 ]
