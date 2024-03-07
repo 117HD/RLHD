@@ -3822,6 +3822,17 @@
     "waterType": "WATER"
   },
   {
+    "name": "KELDAGRIM_SHIP_DECK",
+    "area": "KELDAGRIM",
+    "overlayIds": [
+      36
+    ],
+    "groundMaterial": "HD_WOOD_PLANKS_1",
+    "uvOrientation": 512,
+    "uvScale": 0.75,
+    "shiftLightness": 5
+  },
+  {
     "name": "KELDAGRIM_CARPET",
     "area": "KELDAGRIM",
     "overlayIds": [
