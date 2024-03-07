@@ -14901,7 +14901,7 @@
     "description": "Objects - Metallic - Keldagrim Roof",
     "baseMaterial": "METALLIC_1_SEMIGLOSS",
     "objectIds": [
-      6116, 6119, 6120, 6121, 6122, 6123, 6124, 6125, 6126, 6127, 6128, 6129, 6130, 6131
+      6116, 6118, 6119, 6120, 6121, 6122, 6123, 6124, 6125, 6126, 6127, 6128, 6129, 6130, 6131
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
