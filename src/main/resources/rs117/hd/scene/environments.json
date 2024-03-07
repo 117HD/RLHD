@@ -794,11 +794,8 @@
     "ambientColor": "#ababab",
     "directionalColor": "#565656",
     "directionalStrength": 1,
-    "sunAngles": [
-      80,
-      190
-    ],
-    "fogDepth": 60
+    "ambientStrength": 2,
+    "fogDepth": 40
   },
   {
     "area": "NIGHTMARE_ZONE",
