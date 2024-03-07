@@ -4828,6 +4828,7 @@
     "objectIds": [
       4304,
       4305,
+      6189,
       17029,
       24009,
       24010,
@@ -6646,6 +6647,8 @@
     "baseMaterial": "METALLIC_2_SEMIGLOSS",
     "objectIds": [
       5609,
+      6179,
+      6180,
       10504,
       10505,
       17561,
@@ -7954,6 +7957,24 @@
     ],
     "uvType": "BOX",
     "flatNormals": true
+  },
+  {
+    "description": "Objects - Stone - Chair 4 - Stone Chairs",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      6194
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Objects - Stone - Chair 5 - Stone Chair with cushion",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      6195
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
   },
   {
     "description": "Objects - Wooden - Tables - Round",
@@ -14721,11 +14742,178 @@
     "uvOrientation": 128
   },
   {
+    "description": "Keldagrim - Metallic - Metal Walls - Exterior",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      6981, 6982, 6098, 6099
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 1224,
+    "uvScale": 0.8
+  },
+  {
+    "description": "Keldagrim Stone House Walls - Exterior",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      6132, 6133, 6134, 6135, 6136, 6137, 6983
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 1224,
+    "uvScale": 0.8
+  },
+  {
+    "description": "Keldagrim Stone House Walls - Interior",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      6145
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 768,
+    "uvScale": 0.7
+  },
+  {
     "description": "Keldagrim Wooden Supports",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       5993, 5994, 5995, 5996, 5997
     ],
     "uvType": "BOX"
+  },
+  {
+    "description": "Objects - Stone - Table - Keldagrim Table",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [ 6198 ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 128
+  },
+  {
+    "description": "Objects - Stone - Table - Keldagrim Large Square Table",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [ 6200 ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Objects - Stone - Table - Keldagrim Large Square Table with lamp",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [ 6201 ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Objects - Stone - Table - Keldagrim Small Square Table",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [ 6196 ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Objects - Stone - Table - Keldagrim Small Square Table with Lamp",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [ 6197 ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Objects - Stone - Table - Keldagrim Table with Cutting Board",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [ 6211 ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 128
+  },
+  {
+    "description": "Objects - Stone - Table - Keldagrim Table with Lamp",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [ 6199 ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 128
+  },
+  {
+    "description": "Objects - Stone - Stairs - Keldagrim Single Staircase",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [ 6085, 6086, 10287, 10288 ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Objects - Stone - Stairs - Keldagrim Double Staircase",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [ 6087, 6088, 6089, 6090, 9084, 9138 ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Objects - Stone - Dwarf Statue",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [ 7006, 7007 ],
+    "uvType": "BOX",
+    "uvScale": 0.7
+  },
+  {
+    "description": "Objects - Metallic - Door",
+    "baseMaterial": "METALLIC_2",
+    "objectIds": [ 6102, 6103, 6104, 6105, 6106, 6107, 6108, 6109, 6110, 6111 ],
+    "uvType": "BOX",
+    "uvOrientation": 128
+  },
+  {
+    "description": "Objects - Metallic - Door",
+    "baseMaterial": "METALLIC_2",
+    "objectIds": [ 1742, 6100, 6101, 6138, 6139, 6140, 6141, 6142, 6975, 6976, 6977, 6978 ],
+    "uvType": "BOX",
+    "uvOrientation": 128
+  },
+  {
+    "description": "Objects - Cloth - Bentamirs Bed ",
+    "baseMaterial": "FINE_CARPET",
+    "objectIds": [ 6184 ],
+    "uvType": "BOX",
+    "uvOrientation": 88
+  },
+  {
+    "description": "Objects - Rock Column - Huge",
+    "baseMaterial": "ROCK_4",
+    "objectIds": [
+      6148, 6149
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Objects - Stone - Stone Slab Bridge Guards",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      6143, 6144
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Objects - Metallic - Keldagrim Roof",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "objectIds": [
+      6116, 6119, 6120, 6121, 6122, 6123, 6124, 6125, 6126, 6127, 6128, 6129, 6130, 6131
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "flatNormals": true
+  },
+  {
+    "description": "Objects - Rock - Unfinished Statues",
+    "baseMaterial": "ROCK_5",
+    "objectIds": [
+      7008, 7009
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
   }
 ]
