@@ -85,6 +85,22 @@ public class HDUtils {
 		return out;
 	}
 
+	public static float length(float... vector) {
+		float lengthSquared = 0;
+		for (float v : vector)
+			lengthSquared += v * v;
+		return (float) Math.sqrt(lengthSquared);
+	}
+
+	public static void normalize(float[] vector) {
+		float length = length(vector);
+		if (length == 0)
+			return;
+		length = 1 / length;
+		for (int i = 0; i < vector.length; i++)
+			vector[i] *= length;
+	}
+
 	public static float[] abs(float[] out, float[] v) {
 		for (int i = 0; i < out.length; i++)
 			out[i] = Math.abs(v[i]);

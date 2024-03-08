@@ -1,6 +1,5 @@
 package rs117.hd.overlays;
 
-import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -23,6 +22,8 @@ import java.util.List;
 import java.util.function.Function;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.swing.SwingUtilities;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.api.coords.*;
@@ -30,6 +31,7 @@ import net.runelite.client.callback.ClientThread;
 import net.runelite.client.input.MouseListener;
 import net.runelite.client.input.MouseManager;
 import net.runelite.client.ui.FontManager;
+import net.runelite.client.ui.overlay.Overlay;
 import net.runelite.client.ui.overlay.OverlayLayer;
 import net.runelite.client.ui.overlay.OverlayManager;
 import net.runelite.client.ui.overlay.OverlayPosition;
@@ -53,7 +55,7 @@ import static rs117.hd.utils.HDUtils.clamp;
 
 @Slf4j
 @Singleton
-public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay implements MouseListener {
+public class TileInfoOverlay extends Overlay implements MouseListener {
 	@Inject
 	private Client client;
 
@@ -653,11 +655,15 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay impl
 
 	@Override
 	public MouseEvent mouseClicked(MouseEvent e) {
+		return e;
+	}
+
+	@Override
+	public MouseEvent mousePressed(MouseEvent e) {
 		if (shiftToggled)
 			return e;
 
-		// Right-click
-		if (e.getButton() == MouseEvent.BUTTON3) {
+		if (SwingUtilities.isRightMouseButton(e)) {
 			e.consume();
 			aabbMarkingStage = (aabbMarkingStage + 1) % 3;
 			if (aabbMarkingStage == 2) {
@@ -674,11 +680,6 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay impl
 			}
 		}
 
-		return e;
-	}
-
-	@Override
-	public MouseEvent mousePressed(MouseEvent e) {
 		return e;
 	}
 
