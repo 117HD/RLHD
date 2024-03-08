@@ -26,7 +26,6 @@ package rs117.hd.utils;
 
 import java.util.HashSet;
 import java.util.Random;
-import javax.annotation.Nonnull;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
@@ -444,12 +443,11 @@ public class HDUtils {
 		return false;
 	}
 
-	@Nonnull
-	public static int[] getSouthWesternMostTileColor(Tile tile) {
+	public static void getSouthWesternMostTileColor(int[] out, Tile tile) {
 		var paint = tile.getSceneTilePaint();
 		var model = tile.getSceneTileModel();
 		if (paint != null) {
-			return ColorUtils.unpackHslRaw(paint.getSwColor());
+			ColorUtils.unpackHslRaw(out, paint.getSwColor());
 		} else if (model != null) {
 			int faceCount = tile.getSceneTileModel().getFaceX().length;
 			final int[] faceColorsA = model.getTriangleColorA();
@@ -472,9 +470,7 @@ public class HDUtils {
 				}
 			}
 
-			return ColorUtils.unpackHslRaw(hsl);
+			ColorUtils.unpackHslRaw(out, hsl);
 		}
-
-		return new int[3];
 	}
 }
