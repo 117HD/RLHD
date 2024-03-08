@@ -42,7 +42,7 @@
     "area": "WILDERNESS_HIGH",
     "lightningEffects": true,
     "ambientColor": "#d7d2d2",
-    "ambientStrength": 0.75,
+    "ambientStrength": 1,
     "directionalColor": "#c5b8b6",
     "directionalStrength": 1.75,
     "fogColor": "#101012",
