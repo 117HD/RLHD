@@ -5684,6 +5684,12 @@
     }
   },
   {
+    "description": "Fix blending issues on blue tiles in Prifddinas center",
+    "area": "PRIFDDINAS_TOWER_OF_VOICES_BLUE_TILES",
+    "underlayIds": [ 143 ],
+    "blended": false
+  },
+  {
     "name": "TILE_NEEDS_HUE_DEFINED",
     "area": "OVERWORLD",
     "underlayIds": [

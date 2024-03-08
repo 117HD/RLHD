@@ -242,7 +242,7 @@ public class ProceduralGenerator {
 					vertexOverrides[face * VERTICES_PER_FACE + vertex] = override;
 					vertexIsOverlay[face * VERTICES_PER_FACE + vertex] = isOverlay;
 
-					if (isOverlay && useDefaultColor(tile, override))
+					if (useDefaultColor(tile, override))
 					{
 						vertexDefaultColor[face * VERTICES_PER_FACE + vertex] = true;
 					}

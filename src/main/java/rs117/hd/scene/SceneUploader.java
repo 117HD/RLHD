@@ -855,7 +855,7 @@ class SceneUploader {
 					boolean useBlendedMaterialAndColor =
 						plugin.configGroundBlending &&
 						textureId == -1 &&
-						!(isOverlay && proceduralGenerator.useDefaultColor(tile, override));
+						!proceduralGenerator.useDefaultColor(tile, override);
 					if (override != TileOverride.NONE) {
 						groundMaterial = override.groundMaterial;
 						uvOrientation = override.uvOrientation;
