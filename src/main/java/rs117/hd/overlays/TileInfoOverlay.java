@@ -143,7 +143,7 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay impl
 							Tile tile = tiles[z][x][y];
 							boolean shouldDraw = tile != null && (isBridge == 0 || tile.getBridge() != null);
 							if (shouldDraw && drawTileInfo(g, sceneContext, tile)) {
-								if (isBridge == 0 && aabbMarkingStage < 2) {
+								if (aabbMarkingStage < 2) {
 									int tileZ = tile.getRenderLevel();
 									markedWorldPoints[aabbMarkingStage] = sceneContext.extendedSceneToWorld(x, y, tileZ);
 									markedHeights[aabbMarkingStage] = heights[tileZ][x][y];

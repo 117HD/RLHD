@@ -713,7 +713,7 @@ public class LightManager {
 		if (tileObject instanceof GameObject) {
 			var def = client.getObjectDefinition(id);
 			if (def.getImpostorIds() != null) {
-				// Add a light for every possible impostor object
+				// Add a light for every possible impostor, and make the currently active one visible
 				for (int impostorId : def.getImpostorIds())
 					addObjectLight(sceneContext, tileObject, impostorId, plane, sizeX, sizeY, orientation);
 				return;
@@ -737,13 +737,14 @@ public class LightManager {
 			if (tileObject.getPlane() <= -1)
 				continue;
 
-			// prevent the same light from being spawned more than once per object
+			// prevent duplicate lights from being spawned for the same object & impostor combination
 			long hash = tileObjectHash(tileObject);
 			boolean isDuplicate = sceneContext.lights.stream()
 				.anyMatch(light -> {
 					boolean sameObject = light.object == tileObject || hash == tileObjectHash(light.object);
 					boolean sameLight = light.def == lightDef;
-					return sameObject && sameLight;
+					boolean sameImpostor = light.impostorObjectId == objectId;
+					return sameObject && sameLight && sameImpostor;
 				});
 			if (isDuplicate)
 				continue;
