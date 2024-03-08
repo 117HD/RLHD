@@ -42,7 +42,7 @@
     "area": "WILDERNESS_HIGH",
     "lightningEffects": true,
     "ambientColor": "#d7d2d2",
-    "ambientStrength": 0.75,
+    "ambientStrength": 1,
     "directionalColor": "#c5b8b6",
     "directionalStrength": 1.75,
     "fogColor": "#101012",
@@ -433,12 +433,13 @@
     "area": "LUMBRIDGE_CASTLE_BASEMENT",
     "directionalColor": "#a29b71",
     "directionalStrength": 1.5,
+    "ambientStrength": 1.5,
     "sunAngles": [
       80,
       190
     ],
     "fogColor": "#070606",
-    "fogDepth": 84
+    "fogDepth": 65
   },
   {
     "area": "GOBLIN_MAZE",
@@ -793,11 +794,8 @@
     "ambientColor": "#ababab",
     "directionalColor": "#565656",
     "directionalStrength": 1,
-    "sunAngles": [
-      80,
-      190
-    ],
-    "fogDepth": 60
+    "ambientStrength": 2,
+    "fogDepth": 40
   },
   {
     "area": "NIGHTMARE_ZONE",

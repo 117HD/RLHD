@@ -32,10 +32,8 @@ public class ExpressionParser {
 	}
 
 	public static Object parseExpression(String expression, @Nullable Map<String, Object> constants) {
-		Object obj = parseExpression(expression, 0, expression.length());
-		if (obj instanceof Expression)
-			return ((Expression) obj).simplify(constants == null ? Collections.emptyMap() : constants);
-		return obj;
+		return asExpression(parseExpression(expression, 0, expression.length()))
+			.simplify(constants == null ? Collections.emptyMap() : constants);
 	}
 
 	public static Expression asExpression(Object object) {
@@ -62,44 +60,46 @@ public class ExpressionParser {
 		}
 	}
 
-	// Operators in reverse order of precedence
 	@RequiredArgsConstructor
 	private enum Operator {
-		TERNARY("?"),
-		OR("||"),
-		AND("&&"),
-		EQUAL("=="),
-		NOTEQUAL("!="),
-		GEQUAL(">="),
-		GREATER(">"),
-		LEQUAL("<="),
-		LESS("<"),
-		SUB("-"),
-		ADD("+"),
-		DIV("/"),
-		MUL("*"),
-		MOD("%"),
-		NOT("!")
-		;
+		NOT("!", 7, 1),
+		MOD("%", 6, 2),
+		MUL("*", 6, 2),
+		DIV("/", 6, 2),
+		ADD("+", 5, 2),
+		SUB("-", 5, 2),
+		LEQUAL("<=", 4, 2),
+		LESS("<", 4, 2),
+		GEQUAL(">=", 4, 2),
+		GREATER(">", 4, 2),
+		NOTEQUAL("!=", 3, 2),
+		EQUAL("==", 3, 2),
+		AND("&&", 2, 2),
+		OR("||", 1, 2),
+		TERNARY("?", 0, 3);
 
 		final String symbol;
+		final int precedence;
+		final int numOperands;
 	}
 
 	@AllArgsConstructor
-	private static class ParserContext {
+	public static class ParserContext {
 		final String expr;
 		int index, endIndex;
 		char c;
-		Object left, right;
 		Operator op;
-		boolean zeroIfEmpty;
+		Object[] operands = new Object[2];
+		boolean isInParentheses;
+		boolean isTopLevelParser;
+		int minPrecedence;
 
-		ParserContext(String expression, int startIndex, int endIndex, boolean zeroIfEmpty) {
+		ParserContext(String expression, int startIndex, int endIndex, boolean isTopLevelParser, int minPrecedence) {
 			this.expr = expression;
 			this.index = startIndex;
 			this.endIndex = endIndex;
-			this.zeroIfEmpty = zeroIfEmpty;
-			trim();
+			this.isTopLevelParser = isTopLevelParser;
+			this.minPrecedence = minPrecedence;
 		}
 
 		boolean done() {
@@ -121,7 +121,7 @@ public class ExpressionParser {
 		}
 
 		void readIgnoringWhitespace() {
-			trimWhitespace();
+			skipWhitespace();
 			read();
 		}
 
@@ -132,7 +132,7 @@ public class ExpressionParser {
 
 		void advanceIgnoringWhitespace() {
 			advance();
-			trimWhitespace();
+			skipWhitespace();
 		}
 
 		void trim() {
@@ -145,20 +145,37 @@ public class ExpressionParser {
 		}
 
 		void trimParentheses() {
+			isInParentheses = false;
 			while (!done() && c == '(' && readEnd() == ')') {
+				int i = index + 1;
+				int levels = 1;
+				while (i < endIndex - 2) {
+					char c = expr.charAt(i++);
+					if (c == '(') {
+						levels++;
+					} else if (c == ')') {
+						levels--;
+						if (levels == 0)
+							return;
+					}
+				}
+
 				advance();
 				endIndex--;
+				isInParentheses = true;
 			}
 		}
 
-		void trimWhitespace() {
+		void skipWhitespace() {
 			while (!done()) {
 				readSafe();
 				if (c != ' ')
 					break;
 				index++;
 			}
+		}
 
+		void trimWhitespaceEnd() {
 			while (!done()) {
 				var end = expr.charAt(endIndex - 1);
 				if (end != ' ')
@@ -167,26 +184,175 @@ public class ExpressionParser {
 			}
 		}
 
+		void trimWhitespace() {
+			skipWhitespace();
+			trimWhitespaceEnd();
+		}
+
 		int remaining() {
 			return endIndex - index;
+		}
+
+		int indexOfClosingParenthesis(int openingParenthesis) {
+			int i = openingParenthesis;
+			int levels = 1;
+			while (++i < endIndex) {
+				char c = expr.charAt(i);
+				if (c == '(') {
+					levels++;
+				} else if (c == ')' && --levels == 0) {
+					return i;
+				}
+			}
+			throw new SyntaxError(this, "Missing closing parenthesis");
+		}
+
+		Object parseOperand() {
+			if (!done()) {
+				skipWhitespace();
+
+				// Always parse parentheses in a new parsing context
+				if (c == '(') {
+					int end = indexOfClosingParenthesis(index);
+					var exprInParentheses = parseExpression(expr, index, end + 1);
+					index = end + 1;
+					readSafe();
+					return exprInParentheses;
+				}
+
+				// Parse all following operations with higher precedence than the current, and return that as the operand
+				if (op != null) {
+					var higherPrecedenceParser = new ParserContext(expr, index, endIndex, false, op.precedence + 1);
+					var expr = parseExpression(higherPrecedenceParser);
+					if (expr != null) {
+						index = higherPrecedenceParser.index;
+						endIndex = higherPrecedenceParser.endIndex;
+						return expr;
+					}
+				}
+
+				if (c == '+' || c == '-' || c == '.' || ('0' <= c && c <= '9'))
+					return readNumber();
+				if ('A' <= c && c <= 'Z' || 'a' <= c && c <= 'z' || c == '_')
+					return readIdentifier();
+			}
+			return null;
+		}
+
+		float readNumber() {
+			// Parse sign
+			int sign = 1;
+			while (!done()) {
+				if (c == '-') {
+					sign *= -1;
+				} else if (c != '+') {
+					break;
+				}
+				advanceIgnoringWhitespace();
+			}
+
+			// Parse whole part
+			int wholePart = 0;
+			int numDigits = 0;
+			while (!done()) {
+				if ('0' <= c && c <= '9') {
+					wholePart *= 10;
+					wholePart += c - '0';
+					numDigits++;
+					advance();
+				} else {
+					break;
+				}
+			}
+
+			// Parse fractional part
+			if (!done() && c == '.') {
+				advance();
+				int fractionalPart = 0;
+				int divisor = 1;
+				while (!done()) {
+					if ('0' <= c && c <= '9') {
+						fractionalPart += c - '0';
+						divisor *= 10;
+						advance();
+					} else {
+						break;
+					}
+				}
+
+				if (divisor > 1)
+					return sign * ((float) fractionalPart / divisor + wholePart);
+			}
+
+			if (numDigits == 0)
+				throw new SyntaxError(this, "Expected a number");
+
+			return sign * wholePart;
+		}
+
+		Object readIdentifier() {
+			StringBuilder sb = new StringBuilder();
+			while (!done()) {
+				if ('A' <= c && c <= 'Z' ||
+					'a' <= c && c <= 'z' ||
+					'0' <= c && c <= '9' ||
+					c == '_'
+				) {
+					sb.append(c);
+					advance();
+				} else {
+					break;
+				}
+			}
+
+			assert sb.length() > 0;
+			var str = sb.toString();
+
+			// Convert string constants
+			if (str.equalsIgnoreCase("true"))
+				return true;
+			if (str.equalsIgnoreCase("false"))
+				return false;
+
+			return str;
+		}
+
+		Expression createExpression(Object leftOperand, Operator op, Object rightOperand) {
+			if (!(leftOperand instanceof Expression)) {
+				// Simple combination of left & right operands
+				return new Expression(op, leftOperand, rightOperand, null, false);
+			}
+
+			Expression left = (Expression) leftOperand;
+			// If the left expression is in parentheses, or has the same or higher operator precedence,
+			// it should be evaluated first, so use it as the left operand in a new expression
+			if (left.isInParentheses || left.op.precedence >= op.precedence)
+				return new Expression(op, left, rightOperand, null, false);
+
+			// The new operator should act on the left expression's right-most operand,
+			// and should replace the right-most operand with the resulting expression
+			left.right = createExpression(left.right, op, rightOperand);
+			return left;
 		}
 	}
 
 	public static class Expression {
-		final Operator op;
-		final Object left, right;
-		final Expression ternary;
+		Operator op;
+		Object left, right;
+		Object ternary;
+		boolean isInParentheses;
 		public final HashSet<String> variables = new HashSet<>();
 
 		Expression(Object value) {
-			this(null, value, null, null);
+			this(null, value, null, null, false);
 		}
 
-		Expression(Operator op, Object left, Object right, Expression ternary) {
+		Expression(Operator op, Object left, Object right, Object ternary, boolean isInParentheses) {
 			this.op = op;
 			this.left = left;
 			this.right = right;
 			this.ternary = ternary;
+			this.isInParentheses = isInParentheses;
 			registerVariables(left);
 			registerVariables(right);
 			registerVariables(ternary);
@@ -202,15 +368,15 @@ public class ExpressionParser {
 				r = sanitizeValue(constants.getOrDefault(r, r));
 
 			if (op == Operator.TERNARY) {
-				Object t = ternary.simplify(constants);
+				Object t = asExpression(ternary).simplify(constants);
 				if (t instanceof Boolean)
 					return (boolean) t ? l : r;
-				return new Expression(op, l, r, asExpression(t));
+				return new Expression(op, l, r, asExpression(t), isInParentheses);
 			}
 
 			var expr = this;
 			if (l != left || r != right)
-				expr = new Expression(op, l, r, null);
+				expr = new Expression(op, l, r, null, isInParentheses);
 
 			if (isPrimitive(l) && isPrimitive(r))
 				return expr.toFunctionInternal().apply(null);
@@ -336,7 +502,7 @@ public class ExpressionParser {
 		}
 
 		private boolean isPrimitive(Object obj) {
-			return obj instanceof Float || obj instanceof Boolean;
+			return obj == null || obj instanceof Float || obj instanceof Boolean;
 		}
 
 		private void registerVariables(@Nullable Object dependency) {
@@ -349,171 +515,85 @@ public class ExpressionParser {
 	}
 
 	private static Object parseExpression(String expression, int startIndex, int endIndex) {
-		return parseExpression(expression, startIndex, endIndex, false);
-	}
-
-	private static Object parseExpression(String expression, int startIndex, int endIndex, boolean zeroIfEmpty) {
-		var ctx = new ParserContext(expression, startIndex, endIndex, zeroIfEmpty);
-		return parseExpression(ctx);
+		return parseExpression(new ParserContext(expression, startIndex, endIndex, true, 0));
 	}
 
 	private static Object parseExpression(ParserContext ctx) {
-		if (ctx.done()) {
-			if (ctx.zeroIfEmpty)
-				return 0.f;
-			throw new SyntaxError(ctx, "Empty expressions are not supported");
-		}
+		ctx.trimWhitespace();
+		if (ctx.done())
+			throw new SyntaxError(ctx, "Empty expression");
 
-		// Search for operators in order of precedence, and assume operators that are subsequences of others are ordered later
-		opSearch:
-		for (var op : Operator.values()) {
-			int opIndex = ctx.index;
-			topLevelSearch:
-			while (true) {
-				opIndex = ctx.expr.indexOf(op.symbol, opIndex);
-				if (opIndex == -1 || opIndex >= ctx.endIndex)
-					continue opSearch;
+		ctx.trimParentheses();
+		boolean wasInParentheses = ctx.isInParentheses;
+		boolean wasTopLevelParser = ctx.isTopLevelParser;
+		// Since we'll be reusing the same parser context for parsing sub-expressions, mark it as not top-level
+		ctx.isTopLevelParser = false;
 
-				// Check if the operator is contained within parentheses
-				int openingParen = ctx.expr.lastIndexOf('(', opIndex - 1);
-				int closingParenSearch = openingParen + 1;
-				while (openingParen >= ctx.index) {
-					int closingParen = ctx.expr.indexOf(')', closingParenSearch);
-					if (closingParen == -1)
-						throw new SyntaxError(ctx, "No matching closing parenthesis for parenthesis at index " + openingParen);
+		// The general gist:
+		// 1. Begin parsing from left to right until any operator is reached
+		// 2. Parse all following higher precedence operations
+		// 3. Continue parsing operators regardless of precedence
+		// 4. If a lower precedence operator is reached, make that the new parent node, and return to step 2
+		// 5. At the end, return the left operand and parenthesis information
 
-					// If the parentheses are closed before the operator, keep searching for higher level parentheses
-					if (closingParen < opIndex) {
-						closingParenSearch++;
-						openingParen = ctx.expr.lastIndexOf('(', openingParen - 1);
-						continue;
+		ctx.operands[0] = ctx.parseOperand();
+
+		parsing:
+		while (!ctx.done()) {
+			ctx.skipWhitespace();
+			ctx.op = null;
+			for (var op : Operator.values()) {
+				// Skip lower precedence operators
+				if (op.precedence >= ctx.minPrecedence && ctx.expr.startsWith(op.symbol, ctx.index)) {
+					if (op == Operator.TERNARY) {
+						// Parse the ternary into an expression to be the new left operand, and keep parsing
+						var condition = ctx.operands[0];
+						if (condition == null)
+							throw new SyntaxError(ctx, "Unexpected operator '" + op.symbol + "' without preceding condition");
+						ctx.index += op.symbol.length();
+						var ifTrue = parseExpression(ctx);
+						ctx.trim();
+						if (ctx.c != ':')
+							throw new SyntaxError(ctx, "Expected ':' in ternary expression");
+						ctx.advance();
+						var ifFalse = parseExpression(ctx);
+						ctx.operands[0] = new Expression(op, ifTrue, ifFalse, condition, wasInParentheses);
+						continue parsing;
 					}
 
-					// The operator is in parentheses, so it's not at the top level
-					opIndex += op.symbol.length();
-					continue topLevelSearch;
-				}
+					if (ctx.operands[0] == null) {
+						if (op.numOperands > 1)
+							throw new SyntaxError(ctx, "Missing left operand for operator '" + op.symbol + "'");
+					} else if (op.numOperands == 1) {
+						throw new SyntaxError(ctx, "Unexpected left operand before '" + op.symbol + "'");
+					}
 
-				// The operator is at the top level. Begin processing it
-
-				// The ternary operator consists of 3 parts, instead of the usual 2
-				if (op == Operator.TERNARY) {
-					int colon = ctx.expr.indexOf(':', opIndex + 1);
-					if (colon >= ctx.endIndex)
-						throw new SyntaxError(ctx, "Expected colon following ternary operator '?' at index " + opIndex);
-
-					var ternary = parseExpression(ctx.expr, ctx.index, opIndex);
-					var ifTrue = parseExpression(ctx.expr, opIndex + op.symbol.length(), colon);
-					var ifFalse = parseExpression(ctx.expr, colon + 1, ctx.endIndex);
-					if (ternary instanceof Boolean)
-						return (boolean) ternary ? ifTrue : ifFalse;
-					return new Expression(op, ifTrue, ifFalse, asExpression(ternary));
-				} else if (op == Operator.NOT) {
-					var right = parseExpression(ctx.expr, opIndex + op.symbol.length(), ctx.endIndex);
-					if (right instanceof Boolean)
-						return !(boolean) right;
-					if (Expression.isPossiblyBoolean(right))
-						return new Expression(op, null, right, null);
-					throw new SyntaxError(ctx, "Expected boolean expression");
-				}
-
-				boolean zeroIfEmpty = op == Operator.ADD || op == Operator.SUB;
-				var left = parseExpression(ctx.expr, ctx.index, opIndex, zeroIfEmpty);
-				var right = parseExpression(ctx.expr, opIndex + op.symbol.length(), ctx.endIndex, zeroIfEmpty);
-				return new Expression(op, left, right, null);
-			}
-		}
-
-		// Found no top-level operators, so this should be a value expression
-		if (ctx.c == '+' || ctx.c == '-' || ctx.c == '.' || ('0' <= ctx.c && ctx.c <= '9'))
-			return parseNumber(ctx);
-		if ('A' <= ctx.c && ctx.c <= 'Z' || 'a' <= ctx.c && ctx.c <= 'z' || ctx.c == '_')
-			return parseIdentifier(ctx);
-
-		throw new SyntaxError(ctx, "Unexpected character '" + ctx.c + "'");
-	}
-
-	private static float parseNumber(ParserContext ctx) {
-		// Parse sign
-		int sign = 1;
-		while (!ctx.done()) {
-			if (ctx.c == '-') {
-				sign *= -1;
-			} else if (ctx.c != '+') {
-				break;
-			}
-			ctx.advanceIgnoringWhitespace();
-		}
-
-		// Parse whole part
-		int wholePart = 0;
-		int numDigits = 0;
-		while (!ctx.done()) {
-			if ('0' <= ctx.c && ctx.c <= '9') {
-				wholePart *= 10;
-				wholePart += ctx.c - '0';
-				numDigits++;
-				ctx.advance();
-			} else {
-				break;
-			}
-		}
-
-		// Parse fractional part
-		if (!ctx.done() && ctx.c == '.') {
-			ctx.advance();
-			int fractionalPart = 0;
-			int divisor = 1;
-			while (!ctx.done()) {
-				if ('0' <= ctx.c && ctx.c <= '9') {
-					fractionalPart += ctx.c - '0';
-					divisor *= 10;
-					ctx.advance();
-				} else {
+					ctx.op = op;
+					ctx.index += op.symbol.length();
 					break;
 				}
 			}
 
-			if (divisor > 1)
-				return sign * ((float) fractionalPart / divisor + wholePart);
-		}
-
-		if (!ctx.done())
-			throw new SyntaxError(ctx, "Unexpected character '" + ctx.c + "'");
-
-		if (numDigits == 0)
-			throw new SyntaxError(ctx, "Expected a number");
-
-		return sign * wholePart;
-	}
-
-	private static Object parseIdentifier(ParserContext ctx) {
-		StringBuilder sb = new StringBuilder();
-		while (!ctx.done()) {
-			if ('A' <= ctx.c && ctx.c <= 'Z' ||
-				'a' <= ctx.c && ctx.c <= 'z' ||
-				'0' <= ctx.c && ctx.c <= '9' ||
-				ctx.c == '_'
-			) {
-				sb.append(ctx.c);
-				ctx.advance();
-			} else {
+			if (ctx.op == null)
 				break;
-			}
+
+			if (ctx.op != Operator.NOT && ctx.operands[0] == null)
+				throw new SyntaxError(ctx, "Missing left operand for operator '" + ctx.op.symbol + "'");
+
+			// Will parse all following higher precedence operations, or a single value or identifier
+			ctx.operands[1] = ctx.parseOperand();
+			if (ctx.operands[1] == null)
+				throw new SyntaxError(ctx, "Missing right operand for operator '" + ctx.op.symbol + "'");
+
+			ctx.operands[0] = ctx.createExpression(ctx.operands[0], ctx.op, ctx.operands[1]);
 		}
 
-		if (!ctx.done())
+		if (wasTopLevelParser && !ctx.done())
 			throw new SyntaxError(ctx, "Unexpected character '" + ctx.c + "'");
 
-		assert sb.length() > 0;
-		var str = sb.toString();
+		if (ctx.operands[0] instanceof Expression)
+			((Expression) ctx.operands[0]).isInParentheses = wasInParentheses;
 
-		// Convert string constants
-		if (str.equalsIgnoreCase("true"))
-			return true;
-		if (str.equalsIgnoreCase("false"))
-			return false;
-
-		return str;
+		return ctx.operands[0];
 	}
 }

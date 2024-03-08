@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import net.runelite.api.*;
 import net.runelite.api.coords.*;
@@ -159,7 +160,7 @@ public class SceneContext {
 	}
 
 	/**
-	 * Gets the local coordinate at the center of the passed tile.
+	 * Gets the local coordinate at the south-western corner of the passed tile.
 	 *
 	 * @param worldPoint the passed tile
 	 * @return coordinate if the tile is in the current scene, otherwise null
@@ -171,6 +172,13 @@ public class SceneContext {
 			(worldPoint.getX() - scene.getBaseX()) * LOCAL_TILE_SIZE,
 			(worldPoint.getY() - scene.getBaseY()) * LOCAL_TILE_SIZE
 		);
+	}
+
+	/**
+	 * Gets the local coordinate at the south-western corner of the passed tile.
+	 */
+	public int[] worldToLocal(@Nonnull int[] worldPoint) {
+		return new int[] { (worldPoint[0] - scene.getBaseX()) * LOCAL_TILE_SIZE, (worldPoint[1] - scene.getBaseY()) * LOCAL_TILE_SIZE };
 	}
 
 	public boolean intersects(Area area) {
