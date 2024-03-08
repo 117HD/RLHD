@@ -6,9 +6,6 @@ import java.util.Set;
 import java.util.function.Predicate;
 import javax.annotation.Nullable;
 import lombok.extern.slf4j.Slf4j;
-import net.runelite.api.*;
-import rs117.hd.HdPlugin;
-import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.VariableSupplier;
 
@@ -16,38 +13,49 @@ import static rs117.hd.utils.ExpressionParser.asExpression;
 import static rs117.hd.utils.ExpressionParser.parseExpression;
 
 @Slf4j
-public class ExpressionBasedReplacement<T> extends TileOverride.Replacement<T> {
-	public final String[] expressions;
+public class ExpressionBasedReplacement {
+	public final TileOverride replacement;
 	public final transient Predicate<VariableSupplier> predicate;
 
 	private transient boolean isConstant;
 
-	public ExpressionBasedReplacement(T replacement, @Nullable Map<String, Object> constants, JsonElement jsonExpressions) {
-		super(replacement);
+	public boolean isConstant() {
+		return isConstant;
+	}
 
-		if (jsonExpressions.isJsonPrimitive()) {
-			var primitive = jsonExpressions.getAsJsonPrimitive();
-			expressions = new String[] { primitive.getAsString() };
-		} else if (jsonExpressions.isJsonArray()) {
+	public ExpressionBasedReplacement(
+		@Nullable TileOverride replacement,
+		@Nullable Map<String, Object> constants,
+		JsonElement jsonExpressions
+	) {
+		this(replacement, constants, jsonToStringExpressions(jsonExpressions));
+	}
+
+	public ExpressionBasedReplacement(@Nullable TileOverride replacement, @Nullable Map<String, Object> constants, String... cases) {
+		this.replacement = replacement;
+		predicate = parse(constants, cases);
+	}
+
+	private static String[] jsonToStringExpressions(JsonElement jsonExpressions) {
+		if (jsonExpressions == null || jsonExpressions.isJsonNull())
+			return new String[0];
+
+		if (jsonExpressions.isJsonPrimitive())
+			return new String[] { jsonExpressions.getAsJsonPrimitive().getAsString() };
+
+		if (jsonExpressions.isJsonArray()) {
 			var array = jsonExpressions.getAsJsonArray();
-			expressions = new String[array.size()];
+			var expressions = new String[array.size()];
 			int i = 0;
 			for (var primitive : array)
 				expressions[i++] = primitive.getAsString();
-		} else {
-			throw new IllegalStateException("Unsupported expression format: '" + jsonExpressions + "'");
+			return expressions;
 		}
 
-		predicate = parse(constants);
+		throw new IllegalStateException("Unsupported expression format: '" + jsonExpressions + "'");
 	}
 
-	public ExpressionBasedReplacement(T replacement, @Nullable Map<String, Object> constants, String... cases) {
-		super(replacement);
-		this.expressions = cases;
-		predicate = parse(constants);
-	}
-
-	private Predicate<VariableSupplier> parse(@Nullable Map<String, Object> constants) {
+	private Predicate<VariableSupplier> parse(@Nullable Map<String, Object> constants, String... expressions) {
 		if (expressions.length == 0) {
 			isConstant = true;
 			return vars -> false;
@@ -68,45 +76,12 @@ public class ExpressionBasedReplacement<T> extends TileOverride.Replacement<T> {
 
 			if (Props.DEVELOPMENT) {
 				// Ensure all variables are defined
-				final Set<String> knownVariables = Set.of("h", "s", "l", "blending", "textures", "season");
+				final Set<String> knownVariables = Set.of("h", "s", "l");
 				for (var variable : expr.variables)
 					if (!knownVariables.contains(variable))
 						throw new IllegalStateException("Expression '" + expression + "' contains unknown variable '" + variable + "'");
 			}
 		}
 		return predicate;
-	}
-
-	public boolean isConstant() {
-		return isConstant;
-	}
-
-	@Nullable
-	@Override
-	public T resolve(HdPlugin plugin, Scene scene, Tile tile, T original) {
-		final String[] HSL_VARS = { "h", "s", "l" };
-		int[][] hsl = new int[1][];
-		VariableSupplier vars = name -> {
-			for (int i = 0; i < HSL_VARS.length; i++) {
-				if (HSL_VARS[i].equals(name)) {
-					if (hsl[0] == null)
-						hsl[0] = HDUtils.getSouthWesternMostTileColor(tile);
-					return hsl[0][i];
-				}
-			}
-
-			switch (name) {
-				case "blending":
-					return plugin.configGroundBlending;
-				case "textures":
-					return plugin.configGroundTextures;
-				case "season":
-					return plugin.configSeasonalTheme.ordinal();
-			}
-
-			throw new IllegalArgumentException("Undefined variable '" + name + "'");
-		};
-
-		return predicate.test(vars) ? replacement : original;
 	}
 }

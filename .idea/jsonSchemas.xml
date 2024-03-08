@@ -51,6 +51,23 @@
             </SchemaInfo>
           </value>
         </entry>
+        <entry key="Tile Overrides">
+          <value>
+            <SchemaInfo>
+              <option name="generatedName" value="New Schema" />
+              <option name="name" value="Tile Overrides" />
+              <option name="relativePathToSchema" value="schemas/tile_overrides.schema.json" />
+              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="path" value="src/main/resources/rs117/hd/scene/tile_overrides.json" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
       </map>
     </state>
   </component>
