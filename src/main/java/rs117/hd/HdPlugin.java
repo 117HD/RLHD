@@ -154,6 +154,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public static final int UNIFORM_BLOCK_WATER_TYPES = 2;
 	public static final int UNIFORM_BLOCK_LIGHTS = 3;
 
+	public static final float NEAR_PLANE = 1;
 	public static final int MAX_FACE_COUNT = 6144;
 	public static final int MAX_DISTANCE = Constants.EXTENDED_SCENE_SIZE;
 	public static final int GROUND_MIN_Y = 350; // how far below the ground models extend
@@ -164,8 +165,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public static final int NORMAL_SIZE = 4; // 4 floats per vertex
 
 	public static float BUFFER_GROWTH_MULTIPLIER = 2; // can be less than 2 if trying to conserve memory
-
-	private static final float NEAR_PLANE = 1;
 
 	private static final int[] eightIntWrite = new int[8];
 
@@ -413,6 +412,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public boolean enableDetailedTimers;
 	public boolean enableShadowMapOverlay;
 
+	@Getter
 	private boolean isActive;
 	private boolean lwjglInitialized;
 	private boolean hasLoggedIn;

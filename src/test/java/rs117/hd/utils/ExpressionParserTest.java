@@ -44,17 +44,26 @@ public class ExpressionParserTest {
 		Assert.assertEquals(.5f, parseExpression(".5"));
 		Assert.assertEquals(.5f, parseExpression("+.5"));
 		Assert.assertEquals(.5f, parseExpression("++ +.5"));
-		Assert.assertEquals(.5f, parseExpression("+++--.5"));
+		Assert.assertEquals(1f, parseExpression("--1"));
 		Assert.assertEquals(.5f, parseExpression("+-++-.5"));
 		Assert.assertEquals(17.f, parseFunction("5 + 12").apply(null));
+		Assert.assertEquals(16.f, parseExpression("8 / 2 * (2 + 2)"));
+		Assert.assertEquals(32.f, parseExpression("2 * 8 / 2 * (2 + 2)"));
+		Assert.assertEquals(3.f, parseExpression("2 * 3 / 2"));
+		Assert.assertEquals(0.f, parseExpression("2 * 8 - 4 * 4"));
+		Assert.assertEquals(29.f, parseExpression("2 + 3 * (8 + 5 / 5)"));
+		Assert.assertEquals(40.f, parseExpression("(8 - 1 + 3) * 6 - ((3 + 7) * 2)"));
+		Assert.assertEquals(21.f, parseExpression("(1 + 2) * (3 + 4)"));
+		Assert.assertFalse(parsePredicate("!( blending )").test(vars));
 		Assert.assertEquals(false, parseExpression("!true"));
-		Assert.assertEquals(false, parsePredicate("!( blending )").test(vars));
 		Assert.assertEquals(true, parseExpression("SUMMER == 1", constants));
 
+		System.out.println("Intentional errors:");
 		assertThrows(() -> parseExpression("unexpected ( indeed"));
 		assertThrows(() -> parseExpression("(5 + ( missing paren)"));
 
 		LinkedHashMap<String, Boolean> testCases = new LinkedHashMap<>();
+		testCases.put("s == 0 || h <= 10 && s < 2", false);
 		testCases.put("h == 8 && (s == 3 || s == 4) && l >= 20", false);
 		testCases.put("h > 3 && s < 15 && l < 21", true);
 		testCases.put("h < 3 && s < 15 && l < 21", false);

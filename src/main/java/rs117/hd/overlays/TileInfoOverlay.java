@@ -1,6 +1,5 @@
 package rs117.hd.overlays;
 
-import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -9,43 +8,65 @@ import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
 import java.awt.Rectangle;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
+import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.function.Function;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.swing.SwingUtilities;
+import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.api.coords.*;
+import net.runelite.client.callback.ClientThread;
+import net.runelite.client.input.MouseListener;
+import net.runelite.client.input.MouseManager;
 import net.runelite.client.ui.FontManager;
+import net.runelite.client.ui.overlay.Overlay;
 import net.runelite.client.ui.overlay.OverlayLayer;
 import net.runelite.client.ui.overlay.OverlayManager;
 import net.runelite.client.ui.overlay.OverlayPosition;
 import net.runelite.client.ui.overlay.OverlayUtil;
+import net.runelite.client.util.ColorUtil;
 import org.apache.commons.lang3.tuple.Pair;
 import rs117.hd.HdPlugin;
 import rs117.hd.data.materials.Material;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SceneContext;
-import rs117.hd.scene.SceneUploader;
 import rs117.hd.scene.TileOverrideManager;
+import rs117.hd.utils.AABB;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ModelHash;
 
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.*;
+import static rs117.hd.scene.SceneUploader.SCENE_OFFSET;
 import static rs117.hd.scene.tile_overrides.TileOverride.OVERLAY_FLAG;
+import static rs117.hd.utils.HDUtils.clamp;
 
+@Slf4j
 @Singleton
-public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay {
+public class TileInfoOverlay extends Overlay implements MouseListener {
 	@Inject
 	private Client client;
 
 	@Inject
+	private ClientThread clientThread;
+
+	@Inject
 	private OverlayManager overlayManager;
+
+	@Inject
+	private MouseManager mouseManager;
 
 	@Inject
 	private HdPlugin plugin;
@@ -64,16 +85,22 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay {
 	private float fontSize = 12;
 	private float zoom = 1;
 
+	private int aabbMarkingStage = 0;
+	private final int[][] markedWorldPoints = new int[2][3];
+	private final int[] markedHeights = new int[2];
+
 	public TileInfoOverlay() {
-		setLayer(OverlayLayer.ABOVE_SCENE);
+		setLayer(OverlayLayer.ABOVE_WIDGETS);
 		setPosition(OverlayPosition.DYNAMIC);
 	}
 
 	public void setActive(boolean activate) {
 		if (activate) {
 			overlayManager.add(this);
+			mouseManager.registerMouseListener(this);
 		} else {
 			overlayManager.remove(this);
+			mouseManager.unregisterMouseListener(this);
 		}
 		tileOverrideManager.setTrackReplacements(activate);
 	}
@@ -103,26 +130,57 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay {
 		}
 
 		mousePos = client.getMouseCanvasPosition();
-		if (mousePos != null && mousePos.getX() == -1 && mousePos.getY() == -1)
-			return null;
+		if (mousePos == null || mousePos.getX() != -1 || mousePos.getY() != -1) {
+			g.setFont(FontManager.getRunescapeFont());
+			g.setStroke(new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND));
 
-		g.setFont(FontManager.getRunescapeFont());
-		g.setStroke(new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND));
-
-		Tile[][][] tiles = sceneContext.scene.getExtendedTiles();
-		int plane = ctrlHeld ? MAX_Z - 1 : client.getPlane();
-		for (int z = plane; z >= 0; z--) {
-			for (int isBridge = 1; isBridge >= 0; isBridge--) {
-				for (int x = 0; x < EXTENDED_SCENE_SIZE; x++) {
-					for (int y = 0; y < EXTENDED_SCENE_SIZE; y++) {
-						Tile tile = tiles[z][x][y];
-						boolean shouldDraw = tile != null && (isBridge == 0 || tile.getBridge() != null);
-						if (shouldDraw && drawTileInfo(g, sceneContext, tile)) {
-							return null;
+			Tile[][][] tiles = sceneContext.scene.getExtendedTiles();
+			var heights = sceneContext.scene.getTileHeights();
+			int plane = ctrlHeld ? MAX_Z - 1 : client.getPlane();
+			tileLoop:
+			for (int z = plane; z >= 0; z--) {
+				for (int isBridge = 1; isBridge >= 0; isBridge--) {
+					for (int x = 0; x < EXTENDED_SCENE_SIZE; x++) {
+						for (int y = 0; y < EXTENDED_SCENE_SIZE; y++) {
+							Tile tile = tiles[z][x][y];
+							boolean shouldDraw = tile != null && (isBridge == 0 || tile.getBridge() != null);
+							if (shouldDraw && drawTileInfo(g, sceneContext, tile)) {
+								if (aabbMarkingStage < 2) {
+									int tileZ = tile.getRenderLevel();
+									markedWorldPoints[aabbMarkingStage] = sceneContext.extendedSceneToWorld(x, y, tileZ);
+									markedHeights[aabbMarkingStage] = heights[tileZ][x][y];
+								}
+								break tileLoop;
+							}
 						}
 					}
 				}
 			}
+		}
+
+		if (aabbMarkingStage > 0) {
+			g.setColor(Color.RED);
+
+			int[] from = sceneContext.worldToLocal(markedWorldPoints[0]);
+			int[] to = sceneContext.worldToLocal(markedWorldPoints[1]);
+			int x1 = Math.min(from[0], to[0]);
+			int y1 = Math.min(from[1], to[1]);
+			int z1 = Math.min(markedHeights[0], markedHeights[1]);
+			int x2 = Math.max(from[0], to[0]) + LOCAL_TILE_SIZE;
+			int y2 = Math.max(from[1], to[1]) + LOCAL_TILE_SIZE;
+			int z2 = Math.max(markedHeights[0], markedHeights[1]);
+			var sw = localToCanvas(client, x1, y1, z1);
+			var nw = localToCanvas(client, x1, y2, (z1 + z2) / 2);
+			var ne = localToCanvas(client, x2, y2, z2);
+			var se = localToCanvas(client, x2, y1, (z1 + z2) / 2);
+			if (sw != null && nw != null)
+				g.drawLine(sw.getX(), sw.getY(), nw.getX(), nw.getY());
+			if (nw != null && ne != null)
+				g.drawLine(nw.getX(), nw.getY(), ne.getX(), ne.getY());
+			if (ne != null && se != null)
+				g.drawLine(ne.getX(), ne.getY(), se.getX(), se.getY());
+			if (se != null && sw != null)
+				g.drawLine(se.getX(), se.getY(), sw.getX(), sw.getY());
 		}
 
 		return null;
@@ -175,8 +233,8 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay {
 		int tileX = tile.getSceneLocation().getX();
 		int tileY = tile.getSceneLocation().getY();
 		int tileZ = tile.getRenderLevel();
-		int tileExX = tileX + SceneUploader.SCENE_OFFSET;
-		int tileExY = tileY + SceneUploader.SCENE_OFFSET;
+		int tileExX = tileX + SCENE_OFFSET;
+		int tileExY = tileY + SCENE_OFFSET;
 		int[] worldPos = sceneContext.sceneToWorld(tileX, tileY, tileZ);
 
 		lines.add("Scene point: " + tileX + ", " + tileY + ", " + tileZ);
@@ -185,21 +243,29 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay {
 
 		int overlayId = scene.getOverlayIds()[tileZ][tileExX][tileExY];
 		var overlay = tileOverrideManager.getOverrideBeforeReplacements(worldPos, OVERLAY_FLAG | overlayId);
-		var replacementOverlay = overlay.resolveReplacements(scene, tile, plugin);
-		if (replacementOverlay != overlay) {
-			lines.add(String.format("Overlay: %s -> %s (%d)", overlay.name, replacementOverlay.name, overlayId));
-		} else {
-			lines.add(String.format("Overlay: %s (%d)", overlay.name, overlayId));
+		var replacementPath = new StringBuilder(overlay.toString());
+		while (true) {
+			var replacement = tileOverrideManager.resolveNextReplacement(overlay, tile);
+			if (replacement == overlay)
+				break;
+			replacementPath.append("\n\t⤷ ").append(replacement);
+			overlay = replacement;
 		}
+		lines.add(String.format("Overlay: ID %d -> %s", overlayId, replacementPath));
+		lines.add("GroundMaterial: " + overlay.groundMaterial);
 
 		int underlayId = scene.getUnderlayIds()[tileZ][tileExX][tileExY];
 		var underlay = tileOverrideManager.getOverrideBeforeReplacements(worldPos, underlayId);
-		var replacementUnderlay = underlay.resolveReplacements(scene, tile, plugin);
-		if (replacementUnderlay != underlay) {
-			lines.add(String.format("Underlay: %s -> %s (%d)", underlay.name, replacementUnderlay.name, underlayId));
-		} else {
-			lines.add(String.format("Underlay: %s (%d)", underlay.name, underlayId));
+		replacementPath = new StringBuilder(underlay.toString());
+		while (true) {
+			var replacement = tileOverrideManager.resolveNextReplacement(underlay, tile);
+			if (replacement == underlay)
+				break;
+			replacementPath.append("\n\t⤷ ").append(replacement);
+			underlay = replacement;
 		}
+		lines.add(String.format("Underlay: ID %d -> %s", underlayId, replacementPath));
+		lines.add("GroundMaterial: " + underlay.groundMaterial);
 
 		Color polyColor = Color.LIGHT_GRAY;
 		if (paint != null)
@@ -208,11 +274,9 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay {
 			lines.add("Tile type: Paint");
 			Material material = Material.fromVanillaTexture(paint.getTexture());
 			lines.add(String.format("Material: %s (%d)", material.name(), paint.getTexture()));
-			lines.add("JagexHSL: packed (h, s, l)");
-			lines.add("NW: " + hslString(paint.getNwColor()));
-			lines.add("NE: " + hslString(paint.getNeColor()));
-			lines.add("SE: " + hslString(paint.getSeColor()));
-			lines.add("SW: " + hslString(paint.getSwColor()));
+			int[] hsl = new int[3];
+			HDUtils.getSouthWesternMostTileColor(hsl, tile);
+			lines.add(String.format("HSL: %s", Arrays.toString(hsl)));
 
 			var override = tileOverrideManager.getOverride(scene, tile, worldPos, OVERLAY_FLAG | overlayId, underlayId);
 			lines.add("WaterType: " + proceduralGenerator.seasonalWaterType(override, paint.getTexture()));
@@ -270,26 +334,9 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay {
 				}
 			}
 
-			lines.add("JagexHSL: packed (h, s, l)");
-			int[] CA = model.getTriangleColorA();
-			int[] CB = model.getTriangleColorB();
-			int[] CC = model.getTriangleColorC();
-			for (int face = 0; face < model.getFaceX().length; face++)
-			{
-				int a = CA[face];
-				int b = CB[face];
-				int c = CC[face];
-				if (a == b && b == c) {
-					lines.add(face + ": " + hslString(a));
-				} else {
-					lines.add(
-						face + ": [ " +
-						hslString(a) + ", " +
-						hslString(b) + ", " +
-						hslString(c) +
-						" ]");
-				}
-			}
+			int[] hsl = new int[3];
+			HDUtils.getSouthWesternMostTileColor(hsl, tile);
+			lines.add(String.format("HSL: %s", Arrays.toString(hsl)));
 		}
 
 		GroundObject groundObject = tile.getGroundObject();
@@ -335,8 +382,15 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay {
 					height
 				));
 			}
-			if (counter > 0)
-				lines.add(lines.size() - counter, "Game objects: ");
+		}
+
+		for (int i = 0; i < lines.size(); i++) {
+			var moreLines = lines.get(i).split("\\n");
+			if (moreLines.length > 1) {
+				//noinspection SuspiciousListRemoveInLoop
+				lines.remove(i);
+				lines.addAll(i, List.of(moreLines));
+			}
 		}
 
 		int padding = 4;
@@ -344,7 +398,7 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay {
 		FontMetrics fm = g.getFontMetrics();
 		int lineHeight = fm.getHeight();
 		int totalHeight = lineHeight * lines.size() + padding * 3;
-		int space = fm.charWidth(':');
+		int space = fm.stringWidth(": ");
 		int indent = fm.stringWidth("{ ");
 
 		int leftWidth = 0;
@@ -387,10 +441,15 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay {
 		Rectangle2D polyBounds = poly.getBounds2D();
 		Point tileCenter = new Point((int) polyBounds.getCenterX(), (int) polyBounds.getCenterY());
 
+		var bounds = g.getClipBounds();
+
 		int totalWidth = leftWidth + rightWidth + space + xPadding * 2;
 		Rectangle rect = new Rectangle(
-			tileCenter.getX() - totalWidth / 2,
-			tileCenter.getY() - totalHeight - padding, totalWidth, totalHeight);
+			clamp(tileCenter.getX() - totalWidth / 2, bounds.x, bounds.x + bounds.width - totalWidth),
+			clamp(tileCenter.getY() - totalHeight - padding, bounds.y, bounds.y + bounds.height - totalHeight),
+			totalWidth,
+			totalHeight
+		);
 		if (dodgeRect != null && dodgeRect.intersects(rect))
 		{
 			// Avoid overlapping with other tile info
@@ -404,7 +463,7 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay {
 		g.setColor(polyColor);
 		g.drawPolygon(poly);
 
-		g.setColor(new Color(0, 0, 0, 150));
+		g.setColor(new Color(0, 0, 0, 100));
 		g.fillRect(rect.x, rect.y, rect.width, rect.height);
 
 		int offsetY = 0;
@@ -452,8 +511,8 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay {
 	 */
 	public static Polygon getCanvasTilePoly(@Nonnull Client client, Scene scene, Tile tile) {
 		LocalPoint lp = tile.getLocalLocation();
-		int tileExX = lp.getSceneX() + SceneUploader.SCENE_OFFSET;
-		int tileExY = lp.getSceneY() + SceneUploader.SCENE_OFFSET;
+		int tileExX = lp.getSceneX() + SCENE_OFFSET;
+		int tileExY = lp.getSceneY() + SCENE_OFFSET;
 		int plane = tile.getRenderLevel();
 		if (tileExX < 0 || tileExY < 0 || tileExX >= EXTENDED_SCENE_SIZE || tileExY >= EXTENDED_SCENE_SIZE) {
 			return null;
@@ -489,8 +548,8 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay {
 	}
 
 	private static int getHeight(Scene scene, int localX, int localY, int plane) {
-		int sceneX = (localX >> LOCAL_COORD_BITS) + SceneUploader.SCENE_OFFSET;
-		int sceneY = (localY >> LOCAL_COORD_BITS) + SceneUploader.SCENE_OFFSET;
+		int sceneX = (localX >> LOCAL_COORD_BITS) + SCENE_OFFSET;
+		int sceneY = (localY >> LOCAL_COORD_BITS) + SCENE_OFFSET;
 		if (sceneX < 0 || sceneY < 0 || sceneX >= EXTENDED_SCENE_SIZE || sceneY >= EXTENDED_SCENE_SIZE)
 			return 0;
 
@@ -518,7 +577,7 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay {
 		int y1 = y * yawCos - x * yawSin >> 16;
 		int y2 = z * pitchCos - y1 * pitchSin >> 16;
 		int z1 = y1 * pitchCos + z * pitchSin >> 16;
-		if (z1 >= 50) {
+		if (z1 >= 1) {
 			int scale = client.getScale();
 			int pointX = client.getViewportWidth() / 2 + x1 * scale / z1;
 			int pointY = client.getViewportHeight() / 2 + y2 * scale / z1;
@@ -592,5 +651,60 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay {
 		if (p == null)
 			return;
 		g.drawString(str, p.getX(), p.getY() + line * fontSize);
+	}
+
+	@Override
+	public MouseEvent mouseClicked(MouseEvent e) {
+		return e;
+	}
+
+	@Override
+	public MouseEvent mousePressed(MouseEvent e) {
+		if (shiftToggled)
+			return e;
+
+		if (SwingUtilities.isRightMouseButton(e)) {
+			e.consume();
+			aabbMarkingStage = (aabbMarkingStage + 1) % 3;
+			if (aabbMarkingStage == 2) {
+				var markedAabb = new AABB(markedWorldPoints[0], markedWorldPoints[1]);
+				Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+				StringSelection string = new StringSelection("new AABB(" + markedAabb.toArgs() + "),\n");
+				clipboard.setContents(string, null);
+				clientThread.invoke(() -> client.addChatMessage(
+					ChatMessageType.GAMEMESSAGE,
+					"117 HD",
+					ColorUtil.wrapWithColorTag("[117 HD] Copied AABB to clipboard: " + markedAabb.toArgs(), Color.GREEN),
+					"117 HD"
+				));
+			}
+		}
+
+		return e;
+	}
+
+	@Override
+	public MouseEvent mouseReleased(MouseEvent e) {
+		return e;
+	}
+
+	@Override
+	public MouseEvent mouseEntered(MouseEvent e) {
+		return e;
+	}
+
+	@Override
+	public MouseEvent mouseExited(MouseEvent e) {
+		return e;
+	}
+
+	@Override
+	public MouseEvent mouseDragged(MouseEvent e) {
+		return e;
+	}
+
+	@Override
+	public MouseEvent mouseMoved(MouseEvent e) {
+		return e;
 	}
 }

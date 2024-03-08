@@ -94,6 +94,10 @@ public class AABB {
 		maxZ = Math.max(z1, z2);
 	}
 
+	public AABB(int[] from, int[] to) {
+		this(from[0], from[1], from[2], to[0], to[1], to[2]);
+	}
+
 	public static AABB[] regions(int... regionIds) {
 		return Arrays.stream(regionIds)
 			.mapToObj(AABB::new)
@@ -180,6 +184,14 @@ public class AABB {
 		if (hasZ())
 			return String.format("AABB{min=(%d,%d,%d), max=(%d,%d,%d)}", minX, minY, minZ, maxX, maxY, maxZ);
 		return String.format("AABB{min=(%d,%d), max=(%d,%d)}", minX, minY, maxX, maxY);
+	}
+
+	public String toArgs() {
+		if (isPoint())
+			return String.format("%d, %d", minX, minY);
+		if (minZ == maxZ)
+			return String.format("%d, %d, %d, %d, %d", minX, minY, maxX, maxY, minZ);
+		return String.format("%d, %d, %d, %d, %d, %d", minX, minY, minZ, maxX, maxY, maxZ);
 	}
 
 	@Override
