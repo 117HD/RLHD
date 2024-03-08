@@ -21818,7 +21818,7 @@
     "description": "POH_EXIT_PORTAL",
     "height": 160,
     "alignment": "CENTER",
-    "radius": 700,
+    "radius": 350,
     "strength": 15,
     "color": [
       93,
@@ -21994,18 +21994,18 @@
     ]
   },
   {
-    "description": "POH_RESTORATION_POOL",
+    "description": "POH_RESTORATION_POOL_INNER",
     "height": 150,
     "alignment": "CENTER",
-    "radius": 400,
-    "strength": 10,
+    "radius": 110,
+    "strength": 3.5,
     "color": [
-      255,
+      200,
       0,
       85
     ],
     "type": "PULSE",
-    "duration": 1250,
+    "duration": 800,
     "range": 20,
     "objectIds": [
       29237,
@@ -22013,18 +22013,37 @@
     ]
   },
   {
-    "description": "POH_REVITALISATION_POOL",
+    "description": "POH_RESTORATION_POOL_WIDE",
+    "height": 100,
+    "alignment": "CENTER",
+    "radius": 235,
+    "strength": 3.5,
+    "color": [
+      255,
+      0,
+      85
+    ],
+    "type": "PULSE",
+    "duration": 1200,
+    "range": 6,
+    "objectIds": [
+      29237,
+      40844
+    ]
+  },
+  {
+    "description": "POH_REVITALISATION_POOL_INNER",
     "height": 150,
     "alignment": "CENTER",
-    "radius": 400,
-    "strength": 10,
+    "radius": 110,
+    "strength": 6,
     "color": [
       255,
       179,
       0
     ],
     "type": "PULSE",
-    "duration": 1250,
+    "duration": 800,
     "range": 20,
     "objectIds": [
       29238,
@@ -22032,18 +22051,37 @@
     ]
   },
   {
-    "description": "POH_REJUVENATION_POOL",
+    "description": "POH_REVITALISATION_POOL_WIDE",
+    "height": 100,
+    "alignment": "CENTER",
+    "radius": 235,
+    "strength": 3.5,
+    "color": [
+      255,
+      179,
+      0
+    ],
+    "type": "PULSE",
+    "duration": 1200,
+    "range": 6,
+    "objectIds": [
+      29238,
+      40845
+    ]
+  },
+  {
+    "description": "POH_REJUVENATION_POOL_INNER",
     "height": 150,
     "alignment": "CENTER",
-    "radius": 400,
-    "strength": 10,
+    "radius": 110,
+    "strength": 3.5,
     "color": [
       31,
       225,
       255
     ],
     "type": "PULSE",
-    "duration": 1250,
+    "duration": 800,
     "range": 20,
     "objectIds": [
       29239,
@@ -22051,18 +22089,37 @@
     ]
   },
   {
-    "description": "POH_FANCY_REJUVENATION_POOL",
+    "description": "POH_REJUVENATION_POOL_WIDE",
+    "height": 100,
+    "alignment": "CENTER",
+    "radius": 235,
+    "strength": 3.5,
+    "color": [
+      31,
+      225,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 1200,
+    "range": 6,
+    "objectIds": [
+      29239,
+      40846
+    ]
+  },
+  {
+    "description": "POH_FANCY_REJUVENATION_POOL_INNER",
     "height": 150,
     "alignment": "CENTER",
-    "radius": 400,
-    "strength": 10,
+    "radius": 110,
+    "strength": 6,
     "color": [
       255,
       0,
       179
     ],
     "type": "PULSE",
-    "duration": 1250,
+    "duration": 800,
     "range": 20,
     "objectIds": [
       29240,
@@ -22070,11 +22127,30 @@
     ]
   },
   {
-    "description": "POH_ORNATE_REJUVENATION_POOL",
+    "description": "POH_FANCY_REJUVENATION_POOL_WIDE",
+    "height": 100,
+    "alignment": "CENTER",
+    "radius": 225,
+    "strength": 2.5,
+    "color": [
+      255,
+      0,
+      179
+    ],
+    "type": "PULSE",
+    "duration": 1200,
+    "range": 6,
+    "objectIds": [
+      29240,
+      40847
+    ]
+  },
+  {
+    "description": "POH_ORNATE_REJUVENATION_POOL_INNER",
     "height": 150,
     "alignment": "CENTER",
-    "radius": 400,
-    "strength": 10,
+    "radius": 110,
+    "strength": 45,
     "color": [
       144,
       0,
@@ -22086,6 +22162,79 @@
     "objectIds": [
       40848,
       29241
+    ]
+  },
+  {
+    "description": "POH_ORNATE_REJUVENATION_POOL_WIDE",
+    "height": 100,
+    "alignment": "CENTER",
+    "radius": 225,
+    "strength": 7.5,
+    "color": [
+      144,
+      0,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 1200,
+    "range": 6,
+    "objectIds": [
+      40848,
+      29241
+    ]
+  },
+  {
+    "description": "POH_FIERY_ORNATE_REJUVENATION_POOL_WIDE",
+    "height": 75,
+    "alignment": "CENTER",
+    "radius": 225,
+    "strength": 13.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      49993
+    ]
+  },
+  {
+    "description": "POH_FIERY_ORNATE_REJUVENATION_POOL_RIM",
+    "height": 160,
+    "alignment": "CENTER",
+    "radius": 75,
+    "strength": 200,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 40,
+    "objectIds": [
+      49993
+    ]
+  },
+  {
+    "description": "POH_FIERY_ORNATE_REJUVENATION_POOL_INNER",
+    "height": 140,
+    "alignment": "CENTER",
+    "radius": 35,
+    "strength": 10000,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 40,
+    "objectIds": [
+      49993
     ]
   },
   {
@@ -22106,6 +22255,24 @@
       13639,
       13640,
       13641
+    ]
+  },
+  {
+    "description": "POH_TRAILBLAZER_RELOADED_TROPHY",
+    "height": 190,
+    "alignment": "CENTER",
+    "radius": 50,
+    "strength": 50,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "objectIds": [
+      49963
     ]
   },
   {
@@ -24789,25 +24956,6 @@
     ]
   },
   {
-    "description": "SARADOMIN_BRAZIER_LIT",
-    "height": 200,
-    "alignment": "CENTER",
-    "radius": 500,
-    "strength": 10,
-    "color": [
-      0,
-      0,
-      255
-    ],
-    "type": "FLICKER",
-    "duration": 0,
-    "range": 20,
-    "objectIds": [
-      //      38798,
-      //      38801
-    ]
-  },
-  {
     "description": "SARADOMIN_BRAZIER_LIT_DIM",
     "height": 200,
     "alignment": "CENTER",
@@ -26086,7 +26234,7 @@
   {
     "description": "WARPED_SCEPTER_SPELL",
     "alignment": "CENTER",
-    "radius": 150,
+    "radius": 175,
     "strength": 10,
     "color": [
       170,
