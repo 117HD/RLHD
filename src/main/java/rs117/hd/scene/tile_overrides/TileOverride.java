@@ -63,6 +63,8 @@ public class TileOverride {
 	public String toString() {
 		if (name != null)
 			return name;
+		if (description != null)
+			return description;
 		return "Unnamed";
 	}
 
@@ -78,6 +80,19 @@ public class TileOverride {
 		for (int j = 0; j < numUnderlays; j++) {
 			int id = underlayIds[j];
 			ids[i++] = id;
+		}
+
+		if (area == null) {
+			log.warn("Undefined area in tile override: {}", this);
+			area = Area.NONE;
+		}
+		if (groundMaterial == null) {
+			log.warn("Undefined ground material in tile override: {}", this);
+			groundMaterial = GroundMaterial.NONE;
+		}
+		if (waterType == null) {
+			log.warn("Undefined water type in tile override: {}", this);
+			waterType = WaterType.NONE;
 		}
 
 		if (rawReplacements != null) {
