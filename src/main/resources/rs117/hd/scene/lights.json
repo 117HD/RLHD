@@ -25671,6 +25671,180 @@
     ]
   },
   {
+    "description": "HOME_TELEPORT",
+    "height": 20,
+    "alignment": "CENTER",
+    "radius": 135,
+    "strength": 55,
+    "color": [
+      35,
+      46,
+      149
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeInDuration": 1500,
+    "fadeInDuration": 1000,
+    "graphicsObjectIds": [
+      803
+    ]
+  },
+  {
+    "description": "TWISTED_HOME_TELEPORT",
+    "height": 20,
+    "alignment": "CENTER",
+    "radius": 135,
+    "strength": 55,
+    "color": [
+      69,
+      120,
+      4
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeInDuration": 1500,
+    "fadeInDuration": 1000,
+    "graphicsObjectIds": [
+      1753
+    ]
+  },
+  {
+    "description": "TRAILBLAZER_HOME_TELEPORT_START",
+    "height": 20,
+    "alignment": "CENTER",
+    "radius": 350,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeInDuration": 1000,
+    "graphicsObjectIds": [
+      2619
+    ]
+  },
+  {
+    "description": "TRAILBLAZER_HOME_TELEPORT_MIDDLE",
+    "height": 20,
+    "alignment": "CENTER",
+    "radius": 350,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeOutDuration": 1500,
+    "graphicsObjectIds": [
+      2620
+    ]
+  },
+  {
+    "description": "SHATTERED_HOME_TELEPORT_START",
+    "height": 20,
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 25,
+    "color": [
+      37,
+      148,
+      225
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeInDuration": 1500,
+    "graphicsObjectIds": [
+      2028
+    ]
+  },
+  {
+    "description": "SHATTERED_HOME_TELEPORT_END",
+    "height": 20,
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 25,
+    "color": [
+      37,
+      148,
+      225
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeOutDuration": 1000,
+    "graphicsObjectIds": [
+      2029
+    ]
+  },
+  {
+    "description": "TRAILBLAZER_ALCH",
+    "height": 140,
+    "alignment": "CENTER",
+    "radius": 150,
+    "strength": 20,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 30,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 150,
+    "graphicsObjectIds": [
+      2608,
+      2609
+    ]
+  },
+  {
+    "description": "SUPERHEAT_ITEM",
+    "height": 200,
+    "alignment": "CENTER",
+    "radius": 85,
+    "strength": 16.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 75,
+    "graphicsObjectIds": [
+      148
+    ]
+  },  {
+  "description": "TELEGRAB_PROJECTILE",
+  "alignment": "CENTER",
+  "height": 20,
+  "radius": 125,
+  "strength": 12,
+  "color": [
+    170,
+    20,
+    255
+  ],
+  "type": "FLICKER",
+  "duration": 0,
+  "range": 10,
+  "projectileIds": [
+    143
+  ]
+},
+  {
     "description": "WIND_STRIKE",
     "radius": 175,
     "strength": 2.5,
@@ -25683,6 +25857,7 @@
     "duration": 0,
     "range": 0,
     "fadeInDuration": 1000,
+    "fadeOutDuration": 250,
     "projectileIds": [
       91
     ]
@@ -25700,6 +25875,7 @@
     "duration": 0,
     "range": 0,
     "fadeInDuration": 1000,
+    "fadeOutDuration": 250,
     "projectileIds": [
       94
     ]
@@ -25717,6 +25893,7 @@
     "duration": 0,
     "range": 0,
     "fadeInDuration": 1000,
+    "fadeOutDuration": 250,
     "projectileIds": [
       97
     ]
@@ -25734,6 +25911,7 @@
     "duration": 0,
     "range": 0,
     "fadeInDuration": 1000,
+    "fadeOutDuration": 250,
     "projectileIds": [
       100
     ]
@@ -25751,6 +25929,7 @@
     "duration": 0,
     "range": 0,
     "fadeInDuration": 1000,
+    "fadeOutDuration": 250,
     "projectileIds": [
       118
     ]
@@ -25768,6 +25947,7 @@
     "duration": 0,
     "range": 0,
     "fadeInDuration": 1000,
+    "fadeOutDuration": 250,
     "projectileIds": [
       121
     ]
@@ -25785,6 +25965,7 @@
     "duration": 0,
     "range": 0,
     "fadeInDuration": 1000,
+    "fadeOutDuration": 250,
     "projectileIds": [
       124
     ]
@@ -25801,6 +25982,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
+    "fadeOutDuration": 250,
     "fadeInDuration": 1000,
     "projectileIds": [
       127
@@ -25819,6 +26001,7 @@
     "duration": 0,
     "range": 0,
     "fadeInDuration": 1000,
+    "fadeOutDuration": 250,
     "projectileIds": [
       133
     ]
@@ -25836,6 +26019,7 @@
     "duration": 0,
     "range": 0,
     "fadeInDuration": 1000,
+    "fadeOutDuration": 250,
     "projectileIds": [
       136
     ]
@@ -25853,6 +26037,7 @@
     "duration": 0,
     "range": 0,
     "fadeInDuration": 1000,
+    "fadeOutDuration": 250,
     "projectileIds": [
       139
     ]
@@ -25870,6 +26055,7 @@
     "duration": 0,
     "range": 0,
     "fadeInDuration": 1000,
+    "fadeOutDuration": 250,
     "projectileIds": [
       130
     ]
@@ -25887,6 +26073,7 @@
     "duration": 0,
     "range": 0,
     "fadeInDuration": 1000,
+    "fadeOutDuration": 250,
     "projectileIds": [
       159
     ]
@@ -25904,6 +26091,7 @@
     "duration": 0,
     "range": 0,
     "fadeInDuration": 1000,
+    "fadeOutDuration": 250,
     "projectileIds": [
       162
     ]
@@ -25921,6 +26109,7 @@
     "duration": 0,
     "range": 0,
     "fadeInDuration": 1000,
+    "fadeOutDuration": 250,
     "projectileIds": [
       165
     ]
@@ -25938,6 +26127,7 @@
     "duration": 0,
     "range": 0,
     "fadeInDuration": 1000,
+    "fadeOutDuration": 250,
     "projectileIds": [
       156
     ]
@@ -25955,6 +26145,7 @@
     "duration": 0,
     "range": 0,
     "fadeInDuration": 1000,
+    "fadeOutDuration": 250,
     "projectileIds": [
       1456
     ]
@@ -25972,6 +26163,7 @@
     "duration": 0,
     "range": 0,
     "fadeInDuration": 1000,
+    "fadeOutDuration": 250,
     "projectileIds": [
       1459
     ]
@@ -25989,6 +26181,7 @@
     "duration": 0,
     "range": 0,
     "fadeInDuration": 1000,
+    "fadeOutDuration": 250,
     "projectileIds": [
       1462
     ]
@@ -26006,6 +26199,7 @@
     "duration": 0,
     "range": 0,
     "fadeInDuration": 1000,
+    "fadeOutDuration": 250,
     "projectileIds": [
       1465
     ]
@@ -26234,7 +26428,7 @@
   {
     "description": "WARPED_SCEPTER_SPELL",
     "alignment": "CENTER",
-    "radius": 175,
+    "radius": 200,
     "strength": 10,
     "color": [
       170,
@@ -26244,6 +26438,7 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 10,
+    "fadeOutDuration": 250,
     "projectileIds": [
       2569
     ]
