@@ -3902,7 +3902,7 @@
     "blended": false
   },
   {
-    "name": "KELDAGRIM_MARBLE",
+    "name": "KELDAGRIM_INTERIOR_PATHS",
     "area": "KELDAGRIM_INTERIORS",
     "overlayIds": [
       117
