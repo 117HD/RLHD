@@ -95,6 +95,9 @@ public class TileOverride {
 			waterType = WaterType.NONE;
 		}
 
+		// Convert UV scale to reciprocal, so we can multiply instead of dividing later
+		uvScale = 1 / uvScale;
+
 		if (rawReplacements != null) {
 			replacements = new ArrayList<>();
 			for (var entry : rawReplacements.entrySet()) {

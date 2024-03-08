@@ -42,7 +42,7 @@ public class ModelHash {
 	private static final String[] TYPE_NAMES = {
 		"Player",
 		"NPC",
-		"Object",
+		"Game Object",
 		"Ground item",
 		"Projectile",
 		"Graphics object",
