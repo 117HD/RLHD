@@ -187,27 +187,27 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay {
 
 		int overlayId = scene.getOverlayIds()[tileZ][tileExX][tileExY];
 		var overlay = tileOverrideManager.getOverrideBeforeReplacements(worldPos, OVERLAY_FLAG | overlayId);
-		var replacementPath = new StringBuilder(overlay.name);
+		var replacementPath = new StringBuilder(overlay.toString());
 		while (true) {
 			var replacement = tileOverrideManager.resolveNextReplacement(overlay, tile);
 			if (replacement == overlay)
 				break;
-			replacementPath.append("\n\t⤷ ").append(replacement.name);
+			replacementPath.append("\n\t⤷ ").append(replacement);
 			overlay = replacement;
 		}
-		lines.add(String.format("Overlay %d: %s", overlayId, replacementPath));
+		lines.add(String.format("Overlay: ID %d -> %s", overlayId, replacementPath));
 
 		int underlayId = scene.getUnderlayIds()[tileZ][tileExX][tileExY];
 		var underlay = tileOverrideManager.getOverrideBeforeReplacements(worldPos, underlayId);
-		replacementPath = new StringBuilder(underlay.name);
+		replacementPath = new StringBuilder(underlay.toString());
 		while (true) {
 			var replacement = tileOverrideManager.resolveNextReplacement(underlay, tile);
 			if (replacement == underlay)
 				break;
-			replacementPath.append("\n\t⤷ ").append(replacement.name);
+			replacementPath.append("\n\t⤷ ").append(replacement);
 			underlay = replacement;
 		}
-		lines.add(String.format("Underlay %d: %s", underlayId, replacementPath));
+		lines.add(String.format("Underlay: ID %d -> %s", underlayId, replacementPath));
 
 		Color polyColor = Color.LIGHT_GRAY;
 		if (paint != null)
