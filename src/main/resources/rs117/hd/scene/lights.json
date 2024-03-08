@@ -32983,5 +32983,41 @@
     "strength": 200,
     "radius": 600,
     "color": "#00a2ff"
+  },
+  {
+    "description": "SCURRIUS_MAGIC_ATTACK",
+    "radius": 250,
+    "strength": 35,
+    "color": [
+      60,
+      110,
+      190
+    ],
+    "type": "FLICKER",
+    "duration": 30,
+    "range": 10,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 500,
+    "projectileIds": [
+      2640
+    ]
+  },
+  {
+    "description": "SCURRIUS_RANGE_ATTACK",
+    "radius": 200,
+    "strength": 15,
+    "color": [
+      131,
+      250,
+      63
+    ],
+    "type": "STATIC",
+    "duration": 30,
+    "range": 10,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 100,
+    "projectileIds": [
+      2642
+    ]
   }
 ]
