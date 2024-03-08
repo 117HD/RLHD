@@ -23,9 +23,9 @@ public class Light
 	public float despawnDelay;
 
 	public float elapsedTime;
-	public int impostorObjectId;
 	public boolean visible = true;
-	public boolean markedForRemoval = false;
+	public boolean isImpostor;
+	public boolean markedForRemoval;
 	public float scheduledDespawnTime = -1;
 
 	public WorldPoint worldPoint;
@@ -34,13 +34,14 @@ public class Light
 	public int z;
 	public int plane;
 	public int distanceSquared = 0;
-	public boolean belowFloor = false;
-	public boolean aboveFloor = false;
+	public boolean belowFloor;
+	public boolean aboveFloor;
 
 	public Actor actor;
 	public Projectile projectile;
 	public TileObject object;
 	public GraphicsObject graphicsObject;
+	public int objectId = -1;
 	public int spotAnimId = -1;
 
 	public Light(LightDefinition def) {
