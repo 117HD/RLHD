@@ -3681,7 +3681,9 @@
       16961,
       16962
     ],
-    "uvType": "GEOMETRY"
+    "uvType": "BOX",
+    "uvScale": 1.1,
+    "uvOrientationZ": 128
   },
   {
     "description": "LUNAR_ISLE_BRIDGES",
@@ -3700,15 +3702,18 @@
       16992,
       16993
     ],
-    "uvType": "MODEL_XZ"
+    "uvType": "BOX"
   },
   {
     "description": "LUNAR_ISLE_DOCK_SUPPORTS",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       16963,
       16965
-    ]
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.1,
+    "uvOrientation": 128
   },
   {
     "description": "RELLEKKA_DOCKS",
@@ -6483,6 +6488,7 @@
       16252,
       16560,
       16561,
+      16887,
       17305,
       17655,
       17656,
@@ -6549,6 +6555,15 @@
     "uvOrientationZ": 512
   },
   {
+    "description": "Objects - Wooden - Open Crate",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 16888 ],
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512
+  },
+  {
     "description": "Objects - Wooden - Stack of crates",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
@@ -6568,6 +6583,15 @@
       20369
     ],
     "uvType": "BOX",
+    "flatNormals": true
+  },
+  {
+    "description": "Objects - Wooden - Doublewide Crate",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 16863, 16864, 16865 ],
+    "uvType": "BOX",
+    "uvOrientationZ": 512,
+    "uvOrientationX": 512,
     "flatNormals": true
   },
   {
@@ -7311,6 +7335,7 @@
       14872,
       15679,
       16246,
+      16875,
       17306,
       17551,
       17552,
@@ -7558,14 +7583,13 @@
   },
   {
     "description": "Objects - Wooden - Plank tables - Medium",
-    "baseMaterial": "WOOD_GRAIN_2",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       12884,
       16974,
       24333
     ],
-    "uvType": "BOX",
-    "uvScale": 0.4
+    "uvType": "BOX"
   },
   {
     "description": "Objects - Wooden - Plank tables - Wide",
@@ -9700,18 +9724,30 @@
     "uvType": "BOX"
   },
   {
-    "description": "Sacks Pile",
+    "description": "Sacks - Yellow",
     "baseMaterial": "CARPET",
     "objectIds": [
       23,
       365,
       2354,
       2356,
-      2663,
+      2663
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Sacks Pile",
+    "baseMaterial": "CARPET",
+    "objectIds": [
       12394,
+      16867,
+      16868,
+      16870,
       39696
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "uvOrientation": 256,
     "uvScale": 0.6
   },
@@ -9719,9 +9755,10 @@
     "description": "Sacks with Sword",
     "baseMaterial": "CARPET",
     "objectIds": [
-      12392
+      12392,
+      16871
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "uvOrientation": 256,
     "uvScale": 0.6
   },
@@ -9731,9 +9768,17 @@
     "objectIds": [
       12396
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "uvOrientation": 256,
     "uvScale": 0.4
+  },
+  {
+    "description": "Object - Sack with Hey or Grain",
+    "baseMaterial": "FINE_CARPET",
+    "objectIds": [ 16878 ],
+    "uvType": "BOX",
+    "uvScale": 0.85,
+    "retainVanillaUvs": false
   },
   {
     "description": "Culinaromancers Floor",
@@ -11302,11 +11347,13 @@
   },
   {
     "description": "Objects - Wooden - Crate - Tall",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       3045,
-      3205
+      3205,
+      16862
     ],
+    "uvType": "BOX",
     "flatNormals": true
   },
   {
@@ -11405,7 +11452,7 @@
     "uvOrientation": 512
   },
   {
-    "description": "Barbarian VIllage - Objects - Wooden - Crate",
+    "description": "Barbarian Village - Objects - Wooden - Crate",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       11599,
