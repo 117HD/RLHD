@@ -12,6 +12,10 @@
     "groundMaterial": "SAND"
   },
   {
+    "name": "DEFAULT_SNOW",
+    "groundMaterial": "SNOW_1"
+  },
+  {
     "name": "DEFAULT_GRUNGE",
     "groundMaterial": "GRUNGE"
   },
@@ -806,7 +810,7 @@
     "minLightness": 86,
     "maxLightness": 86,
     "uvOrientation": 512,
-    "uvScale": 0.6666667
+    "uvScale": 1.5
   },
   {
     "name": "BARBARIAN_VILLAGE_EAST_PATH_FIX_1",
@@ -3460,6 +3464,17 @@
     "blended": false
   },
   {
+    "name": "BODY_ALTAR_GROUND",
+    "area": "BODY_ALTAR",
+    "underlayIds": [
+      74
+    ],
+    "groundMaterial": "ABYSSAL_FLOOR",
+    "uvOrientation": 39,
+    "uvScale": 0.5405405
+
+  },
+  {
     "name": "LAW_ALTAR_SYMBOL",
     "area": "LAW_ALTAR",
     "overlayIds": [
@@ -3467,6 +3482,14 @@
     ],
     "groundMaterial": "MARBLE_2_GLOSS",
     "blended": false
+  },
+  {
+    "name": "DEATH_ALTAR_GROUND",
+    "area": "DEATH_ALTAR",
+    "underlayIds": [
+      55
+    ],
+    "groundMaterial": "DIRT"
   },
   {
     "name": "DS2_SHIPS_WATER",
@@ -3820,6 +3843,43 @@
       151
     ],
     "waterType": "WATER"
+  },
+  {
+    "name": "LUNAR_ISLAND_BLUE_SNOW",
+    "area": "LUNAR_ISLE",
+    "underlayIds": [
+      73,
+      75,
+      95
+    ],
+    "groundMaterial": "SNOW_2"
+  },
+  {
+    "name": "LUNAR_ISLAND_COMPLEX",
+    "area": "LUNAR_ISLE",
+    "underlayIds": [
+      58,
+      59,
+      97,
+      98
+    ],
+    "replacements": {
+      "DEFAULT_SNOW": "h >= 17 || s == 0",
+      "DEFAULT_DIRT": "h == 7 || s == 1"
+    }
+  },
+  {
+    "name": "LADY_ZAY_DECK",
+    "area": "LADY_ZAY",
+    "overlayIds": [
+      14
+    ],
+    "underlayIds": [
+      63
+    ],
+    "groundMaterial": "HD_WOOD_PLANKS_1",
+    "uvOrientation": 512,
+    "uvScale": 1.333
   },
   {
     "name": "KELDAGRIM_SHIP_DECK",
@@ -5666,7 +5726,7 @@
     "minHue": 1,
     "maxHue": 1,
     "uvOrientation": 39,
-    "uvScale": 0.5405405
+    "uvScale": 1.85
   },
   {
     "name": "LAW_ALTAR_FLOOR",
@@ -5854,7 +5914,7 @@
     "replacements": {
       "SEASONAL_GRASS": "s >= 2",
       "SEASONAL_DIRT": "s == 1",
-      "WINTER_DIRT": true
+      "WINTER_DIRT": "season == WINTER"
     }
   },
   {

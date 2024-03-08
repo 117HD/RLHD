@@ -4,7 +4,6 @@ import com.google.gson.JsonElement;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import lombok.extern.slf4j.Slf4j;
 import rs117.hd.utils.Props;
@@ -25,14 +24,14 @@ public class ExpressionBasedReplacement {
 	}
 
 	public ExpressionBasedReplacement(
-		@Nonnull TileOverride replacement,
+		@Nullable TileOverride replacement,
 		@Nullable Map<String, Object> constants,
 		JsonElement jsonExpressions
 	) {
 		this(replacement, constants, jsonToStringExpressions(jsonExpressions));
 	}
 
-	public ExpressionBasedReplacement(@Nonnull TileOverride replacement, @Nullable Map<String, Object> constants, String... cases) {
+	public ExpressionBasedReplacement(@Nullable TileOverride replacement, @Nullable Map<String, Object> constants, String... cases) {
 		this.replacement = replacement;
 		predicate = parse(constants, cases);
 	}

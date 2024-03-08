@@ -1607,6 +1607,10 @@ public enum Area
 		new AABB(2102, 3901, 2096, 3896, 1)  // House 7
 	),
 	LUNAR_ESSENCE_MINE(9377),
+	LADY_ZAY(
+		new AABB(2135, 3917, 2145, 3887), // Lunar Isle
+		new AABB(2219, 3814, 2229, 3784) // Pirates Cove
+	),
 	LUNAR_ISLE(regionBox(8252, 8509)),
 
 	// Ape Atoll

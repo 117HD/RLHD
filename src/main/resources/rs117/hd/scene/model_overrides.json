@@ -3682,7 +3682,9 @@
       16961,
       16962
     ],
-    "uvType": "GEOMETRY"
+    "uvType": "BOX",
+    "uvScale": 1.1,
+    "uvOrientationZ": 128
   },
   {
     "description": "LUNAR_ISLE_BRIDGES",
@@ -3701,15 +3703,18 @@
       16992,
       16993
     ],
-    "uvType": "MODEL_XZ"
+    "uvType": "BOX"
   },
   {
     "description": "LUNAR_ISLE_DOCK_SUPPORTS",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       16963,
       16965
-    ]
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.1,
+    "uvOrientation": 128
   },
   {
     "description": "RELLEKKA_DOCKS",
@@ -6484,6 +6489,7 @@
       16252,
       16560,
       16561,
+      16887,
       17305,
       17655,
       17656,
@@ -6551,6 +6557,15 @@
     "uvOrientationZ": 512
   },
   {
+    "description": "Objects - Wooden - Open Crate",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 16888 ],
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512
+  },
+  {
     "description": "Objects - Wooden - Stack of crates",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
@@ -6571,6 +6586,15 @@
       20369
     ],
     "uvType": "BOX",
+    "flatNormals": true
+  },
+  {
+    "description": "Objects - Wooden - Doublewide Crate",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 16863, 16864, 16865 ],
+    "uvType": "BOX",
+    "uvOrientationZ": 512,
+    "uvOrientationX": 512,
     "flatNormals": true
   },
   {
@@ -7316,6 +7340,7 @@
       14872,
       15679,
       16246,
+      16875,
       17306,
       17551,
       17552,
@@ -7563,14 +7588,13 @@
   },
   {
     "description": "Objects - Wooden - Plank tables - Medium",
-    "baseMaterial": "WOOD_GRAIN_2",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       12884,
       16974,
       24333
     ],
-    "uvType": "BOX",
-    "uvScale": 0.4
+    "uvType": "BOX"
   },
   {
     "description": "Objects - Wooden - Plank tables - Wide",
@@ -9723,18 +9747,30 @@
     "uvType": "BOX"
   },
   {
-    "description": "Sacks Pile",
+    "description": "Sacks - Yellow",
     "baseMaterial": "CARPET",
     "objectIds": [
       23,
       365,
       2354,
       2356,
-      2663,
+      2663
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Sacks Pile",
+    "baseMaterial": "CARPET",
+    "objectIds": [
       12394,
+      16867,
+      16868,
+      16870,
       39696
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "uvOrientation": 256,
     "uvScale": 0.6
   },
@@ -9742,9 +9778,10 @@
     "description": "Sacks with Sword",
     "baseMaterial": "CARPET",
     "objectIds": [
-      12392
+      12392,
+      16871
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "uvOrientation": 256,
     "uvScale": 0.6
   },
@@ -9754,9 +9791,17 @@
     "objectIds": [
       12396
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "uvOrientation": 256,
     "uvScale": 0.4
+  },
+  {
+    "description": "Object - Sack with Hey or Grain",
+    "baseMaterial": "FINE_CARPET",
+    "objectIds": [ 16878 ],
+    "uvType": "BOX",
+    "uvScale": 0.85,
+    "retainVanillaUvs": false
   },
   {
     "description": "Culinaromancers Floor",
@@ -11325,11 +11370,13 @@
   },
   {
     "description": "Objects - Wooden - Crate - Tall",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       3045,
-      3205
+      3205,
+      16862
     ],
+    "uvType": "BOX",
     "flatNormals": true
   },
   {
@@ -11428,7 +11475,7 @@
     "uvOrientation": 512
   },
   {
-    "description": "Barbarian VIllage - Objects - Wooden - Crate",
+    "description": "Barbarian Village - Objects - Wooden - Crate",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       11599,
@@ -14532,6 +14579,7 @@
     "baseMaterial": "ABYSSAL_2",
     "objectIds": [
       26146,
+      26147,
       26148
     ],
     "uvType": "BOX",
@@ -14732,6 +14780,86 @@
     "objectIds": [
       50152
     ]
+  },
+  {
+    "description": "Body Altar - Veins - Huge",
+    "baseMaterial": "ABYSSAL_2",
+    "objectIds": [
+      1388
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 156
+  },
+  {
+    "description": "Body Altar - Veins - Double",
+    "baseMaterial": "ABYSSAL_2",
+    "objectIds": [
+      1389
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 156
+  },
+  {
+    "description": "Body Altar - Veins - Medium",
+    "baseMaterial": "ABYSSAL",
+    "objectIds": [
+      1385
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 200
+  },
+  {
+    "description": "Body Altar - Veins - Small Loop",
+    "baseMaterial": "ABYSSAL",
+    "objectIds": [
+      1386
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Body Altar - Veins - Ground",
+    "baseMaterial": "ABYSSAL_2",
+    "objectIds": [
+      1232, 1233, 1234, 1235, 1236, 1237, 1238, 1239, 1240
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Body Altar - Pink Rock like Object 1 - Diamond",
+    "baseMaterial": "ABYSSAL",
+    "objectIds": [ 343 ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 2187
+  },
+  {
+    "description": "Body Altar - Pink Rock like Object 2 - Tiny",
+    "baseMaterial": "ABYSSAL",
+    "objectIds": [ 344 ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Body Altar - Pink Rock like Object 3",
+    "baseMaterial": "ABYSSAL_2",
+    "objectIds": [ 345 ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Body Altar - Walls",
+    "baseMaterial": "ABYSSAL_2",
+    "objectIds": [ 1479, 1484 ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 256
   },
   {
     "description": "Keldagrim Stone Walls",

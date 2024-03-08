@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -24,7 +25,9 @@ public class TileOverride {
 	public static final int OVERLAY_FLAG = 1 << 31;
 	public static final TileOverride NONE = new TileOverride("NONE", GroundMaterial.DIRT);
 
-	public String name = "Unnamed";
+	@Nullable
+	public String name;
+	public String description;
 	public Area area = Area.NONE;
 	public int[] overlayIds;
 	public int[] underlayIds;
@@ -51,9 +54,18 @@ public class TileOverride {
 	public transient List<ExpressionBasedReplacement> replacements;
 	public transient boolean queriedAsOverlay;
 
-	private TileOverride(String name, GroundMaterial groundMaterial) {
+	private TileOverride(@Nullable String name, GroundMaterial groundMaterial) {
 		this.name = name;
 		this.groundMaterial = groundMaterial;
+	}
+
+	@Override
+	public String toString() {
+		if (name != null)
+			return name;
+		if (description != null)
+			return description;
+		return "Unnamed";
 	}
 
 	public void normalize(TileOverride[] allOverrides, Map<String, Object> constants) {
@@ -69,6 +81,22 @@ public class TileOverride {
 			int id = underlayIds[j];
 			ids[i++] = id;
 		}
+
+		if (area == null) {
+			log.warn("Undefined area in tile override: {}", this);
+			area = Area.NONE;
+		}
+		if (groundMaterial == null) {
+			log.warn("Undefined ground material in tile override: {}", this);
+			groundMaterial = GroundMaterial.NONE;
+		}
+		if (waterType == null) {
+			log.warn("Undefined water type in tile override: {}", this);
+			waterType = WaterType.NONE;
+		}
+
+		// Convert UV scale to reciprocal, so we can multiply instead of dividing later
+		uvScale = 1 / uvScale;
 
 		if (rawReplacements != null) {
 			replacements = new ArrayList<>();
@@ -99,19 +127,24 @@ public class TileOverride {
 	) {
 		var name = expressions.getKey();
 		TileOverride replacement = null;
-		if (name == null || name.equals(NONE.name)) {
+		if (name == null) {
+			log.warn("Null is reserved for future use");
 			replacement = NONE;
 		} else {
-			for (var other : allOverrides) {
-				if (name.equals(other.name)) {
-					replacement = other;
-					break;
-				}
-			}
-			if (replacement == null) {
+			if (name.equals(NONE.name)) {
 				replacement = NONE;
-				if (Props.DEVELOPMENT)
-					throw new IllegalStateException("Unknown tile override: '" + name + "'");
+			} else {
+				for (var other : allOverrides) {
+					if (name.equals(other.name)) {
+						replacement = other;
+						break;
+					}
+				}
+				if (replacement == null) {
+					replacement = NONE;
+					if (Props.DEVELOPMENT)
+						throw new IllegalStateException("Unknown tile override: '" + name + "'");
+				}
 			}
 		}
 

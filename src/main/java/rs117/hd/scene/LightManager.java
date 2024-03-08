@@ -193,12 +193,12 @@ public class LightManager {
 
 			if (light.object != null) {
 				light.visible = true;
-				if (light.impostorObjectId != 0) {
+				if (light.isImpostor) {
 					var def = client.getObjectDefinition(light.object.getId());
 					if (def.getImpostorIds() != null) {
 						// Only show the light if the impostor is currently active
 						var impostor = def.getImpostor();
-						light.visible = impostor != null && impostor.getId() == light.impostorObjectId;
+						light.visible = impostor != null && impostor.getId() == light.objectId;
 					}
 				}
 			} else if (light.projectile != null) {
@@ -713,20 +713,21 @@ public class LightManager {
 		if (tileObject instanceof GameObject) {
 			var def = client.getObjectDefinition(id);
 			if (def.getImpostorIds() != null) {
-				// Add a light for every possible impostor object
+				// Add a light for every possible impostor, and make the currently active one visible
 				for (int impostorId : def.getImpostorIds())
-					addObjectLight(sceneContext, tileObject, impostorId, plane, sizeX, sizeY, orientation);
+					addObjectLight(sceneContext, tileObject, impostorId, true, plane, sizeX, sizeY, orientation);
 				return;
 			}
 		}
 
-		addObjectLight(sceneContext, tileObject, tileObject.getId(), plane, sizeX, sizeY, orientation);
+		addObjectLight(sceneContext, tileObject, tileObject.getId(), false, plane, sizeX, sizeY, orientation);
 	}
 
 	private void addObjectLight(
 		SceneContext sceneContext,
 		TileObject tileObject,
 		int objectId,
+		boolean isImpostor,
 		int plane,
 		int sizeX,
 		int sizeY,
@@ -737,13 +738,14 @@ public class LightManager {
 			if (tileObject.getPlane() <= -1)
 				continue;
 
-			// prevent the same light from being spawned more than once per object
+			// prevent duplicate lights from being spawned for the same object & impostor combination
 			long hash = tileObjectHash(tileObject);
 			boolean isDuplicate = sceneContext.lights.stream()
 				.anyMatch(light -> {
 					boolean sameObject = light.object == tileObject || hash == tileObjectHash(light.object);
 					boolean sameLight = light.def == lightDef;
-					return sameObject && sameLight;
+					boolean sameObjectId = light.objectId == objectId;
+					return sameObject && sameLight && sameObjectId;
 				});
 			if (isDuplicate)
 				continue;
@@ -751,8 +753,9 @@ public class LightManager {
 			int localPlane = tileObject.getPlane();
 			Light light = new Light(lightDef);
 			light.plane = localPlane;
-			if (objectId != tileObject.getId()) {
-				light.impostorObjectId = objectId;
+			light.objectId = objectId;
+			if (isImpostor) {
+				light.isImpostor = true;
 				light.visible = false;
 			}
 
