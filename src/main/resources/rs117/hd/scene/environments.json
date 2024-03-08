@@ -1383,6 +1383,84 @@
     "fogDepth": 45
   },
   {
+    "area": "MIND_ALTAR",
+    "fogColor": "#000000",
+    "ambientStrength": 0.3,
+    "ambientColor": "#AAAFB6",
+    "directionalStrength": 1.6,
+    "sunAngles": [
+      76,
+      222
+    ],
+    "fogDepth": 50
+  },
+  {
+    "area": "EARTH_ALTAR",
+    "fogColor": "#000000",
+    "ambientStrength": 0.3,
+    "ambientColor": "#AAAFB6",
+    "directionalStrength": 1.6,
+    "sunAngles": [
+      76,
+      222
+    ],
+    "fogDepth": 50
+  },
+  {
+    "area": "FIRE_ALTAR",
+    "fogColor": "#100707",
+    "ambientStrength": 0.3,
+    "ambientColor": "#AAAFB6",
+    "directionalStrength": 1.8,
+    "sunAngles": [
+      66,
+      195
+    ],
+    "fogDepth": 35
+  },
+  {
+    "area": "BODY_ALTAR",
+    "fogColor": "#100707",
+    "ambientStrength": 0.3,
+    "ambientColor": "#AAAFB6",
+    "directionalStrength": 1.7,
+    "sunAngles": [
+      66,
+      250
+    ],
+    "fogDepth": 46
+  },
+  {
+    "area": "CHAOS_ALTAR",
+    "ambientStrength": 0.3,
+    "directionalStrength": 1.7,
+    "sunAngles": [
+      66,
+      210
+    ],
+    "fogDepth": 46
+  },
+  {
+    "area": "LAW_ALTAR",
+    "ambientStrength": 0.3,
+    "directionalStrength": 2,
+    "sunAngles": [
+      74,
+      215
+    ],
+    "fogDepth": 46
+  },
+  {
+    "area": "DEATH_ALTAR",
+    "ambientStrength": 0.3,
+    "directionalStrength": 2,
+    "sunAngles": [
+      74,
+      215
+    ],
+    "fogDepth": 46
+  },
+  {
     "key": "OVERWORLD",
     "area": "OVERWORLD",
     "ambientColor": "#97baff",

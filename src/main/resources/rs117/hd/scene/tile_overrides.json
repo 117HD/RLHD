@@ -3464,6 +3464,17 @@
     "blended": false
   },
   {
+    "name": "BODY_ALTAR_GROUND",
+    "area": "BODY_ALTAR",
+    "underlayIds": [
+      74
+    ],
+    "groundMaterial": "ABYSSAL_FLOOR",
+    "uvOrientation": 39,
+    "uvScale": 0.5405405
+
+  },
+  {
     "name": "LAW_ALTAR_SYMBOL",
     "area": "LAW_ALTAR",
     "overlayIds": [
@@ -3471,6 +3482,14 @@
     ],
     "groundMaterial": "MARBLE_2_GLOSS",
     "blended": false
+  },
+  {
+    "name": "DEATH_ALTAR_GROUND",
+    "area": "DEATH_ALTAR",
+    "underlayIds": [
+      55
+    ],
+    "groundMaterial": "DIRT"
   },
   {
     "name": "DS2_SHIPS_WATER",
