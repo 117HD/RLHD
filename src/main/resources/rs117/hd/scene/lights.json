@@ -19998,7 +19998,7 @@
   },
   {
     "description": "STANDING_TORCH_KELDAGRIM",
-    "height": 250,
+    "height": 226,
     "alignment": "CENTER",
     "radius": 600,
     "strength": 12.5,

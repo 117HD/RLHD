@@ -3882,12 +3882,75 @@
     "uvScale": 1.333
   },
   {
-    "name": "KELDAGRIM_PATHS",
-    "area": "ALL",
+    "name": "KELDAGRIM_SHIP_DECK",
+    "area": "KELDAGRIM",
+    "overlayIds": [
+      36
+    ],
+    "groundMaterial": "HD_WOOD_PLANKS_1",
+    "uvOrientation": 512,
+    "uvScale": 0.75,
+    "shiftLightness": 5
+  },
+  {
+    "name": "KELDAGRIM_CARPET",
+    "area": "KELDAGRIM",
+    "overlayIds": [
+      82, 83, 86
+    ],
+    "groundMaterial": "CARPET",
+    "blended": false
+  },
+  {
+    "name": "KELDAGRIM_INTERIOR_PATHS",
+    "area": "KELDAGRIM_INTERIORS",
     "overlayIds": [
       117
     ],
-    "groundMaterial": "FALADOR_PATHS"
+    "groundMaterial": "FALADOR_PATHS",
+    "blended": false
+  },
+  {
+    "name": "KELDAGRIM_MARBLE",
+    "area": "KELDAGRIM",
+    "overlayIds": [
+      11
+    ],
+    "groundMaterial": "MARBLE_2",
+    "blended": false
+  },
+  {
+    "name": "KELDAGRIM_PATHS",
+    "area": "KELDAGRIM",
+    "overlayIds": [
+      117
+    ],
+    "groundMaterial": "GRAVEL",
+    "uvScale": 0.6
+  },
+  {
+    "name": "KELDAGRIM_ROCKY_GROUND",
+    "area": "KELDAGRIM",
+    "underlayIds": [
+      113
+    ],
+    "groundMaterial": "STONE_CAVE_FLOOR"
+  },
+  {
+    "name": "KELDAGRIM_DIRT",
+    "area": "KELDAGRIM",
+    "underlayIds": [
+      111, 112, 118
+    ],
+    "groundMaterial": "DIRT"
+  },
+  {
+    "name": "KELDAGRIM_UNDERWALL",
+    "area": "KELDAGRIM",
+    "overlayIds": [
+      9
+    ],
+    "blended": false
   },
   {
     "name": "CERBERUS_WATER",
