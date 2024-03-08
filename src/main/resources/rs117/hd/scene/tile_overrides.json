@@ -3850,6 +3850,19 @@
     }
   },
   {
+    "name": "LADY_ZAY_DECK",
+    "area": "LADY_ZAY",
+    "overlayIds": [
+      14
+    ],
+    "underlayIds": [
+      63
+    ],
+    "groundMaterial": "HD_WOOD_PLANKS_1",
+    "uvOrientation": 512,
+    "uvScale": 1.333
+  },
+  {
     "name": "KELDAGRIM_PATHS",
     "area": "ALL",
     "overlayIds": [
