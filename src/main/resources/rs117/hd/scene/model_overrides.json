@@ -9782,6 +9782,16 @@
     "uvScale": 0.6
   },
   {
+    "description": "Sacks - Grey",
+    "baseMaterial": "CARPET",
+    "objectIds": [
+      10304, 10305
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 0.6
+  },
+  {
     "description": "Sacks Pile",
     "baseMaterial": "CARPET",
     "objectIds": [
@@ -9819,7 +9829,7 @@
   {
     "description": "Object - Sack with Hey or Grain",
     "baseMaterial": "FINE_CARPET",
-    "objectIds": [ 5574, 16878 ],
+    "objectIds": [ 5574, 10306, 16878 ],
     "uvType": "BOX",
     "uvScale": 0.85,
     "retainVanillaUvs": false
@@ -15124,7 +15134,7 @@
     "uvScale": 0.86
   },
   {
-    "description": "Objects - Stone - Keldagrim Pillars",
+    "description": "Objects - Stone - Keldagrim Pillars - Twisted",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       7016
@@ -15132,6 +15142,16 @@
     "uvType": "BOX",
     "uvScale": 0.86,
     "uvOrientation": 66
+  },
+  {
+    "description": "Objects - Stone - Keldagrim Pillars - Straight",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      7017
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.86,
+    "uvOrientation": 300
   },
   {
     "description": "Metal Street Lanturn",
