@@ -62,6 +62,10 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 	private boolean hideInvisibleLights = true;
 	private boolean hideRadiusRings = true;
 	private boolean hideAnimLights;
+	private boolean hideLabels;
+	private boolean hideInfo;
+	private boolean toggleBlackColor;
+	private boolean liveInfo = false;
 
 	public LightGizmoOverlay() {
 		setLayer(OverlayLayer.ABOVE_SCENE);
@@ -163,12 +167,13 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 			boolean isHovered = hovered == l;
 			boolean isSelected = selected == l;
 
-			int mainOpacity = l.visible ? 255 : 128;
+			int mainOpacity = l.visible ? 255 : 100;
 			int rangeOpacity = 70;
-			Color radiusRingColor = alpha(Color.WHITE, mainOpacity);
-			Color rangeRingsColor = alpha(Color.WHITE, rangeOpacity);
+			Color baseColor = toggleBlackColor ? Color.BLACK : Color.WHITE;
+			Color radiusRingColor = alpha(baseColor, mainOpacity);
+			Color rangeRingsColor = alpha(baseColor, rangeOpacity);
 			Color handleRingsColor = radiusRingColor;
-			Color textColor = radiusRingColor;
+			Color textColor = alpha(Color.WHITE, mainOpacity);
 
 			if (isSelected) {
 				handleRingsColor = radiusRingColor = rangeRingsColor = ORANGE;
@@ -198,9 +203,13 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 			}
 
 			g.setColor(textColor);
-			drawCenteredString(g, l.def.description, x, y + 25, TextAlignment.CENTER);
-			if (isSelected) {
-				drawCenteredString(g, String.format("radius: %d", l.radius), x, y + 35, TextAlignment.CENTER_ON_COLON);
+			if (!hideLabels || isSelected) {
+				String info = l.def.description;
+				if (isSelected && !hideInfo) {
+					info += String.format("\nradius: %d", liveInfo ? l.radius : l.def.radius);
+					info += String.format("\nstrength: %.1f", liveInfo ? l.strength : l.def.strength);
+				}
+				drawAlignedString(g, info, x, y + 25, TextAlignment.CENTER_ON_COLONS);
 			}
 		}
 
@@ -240,18 +249,31 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 	}
 
 	private enum TextAlignment {
-		LEFT, RIGHT, CENTER, CENTER_ON_COLON
+		LEFT, RIGHT, CENTER, CENTER_ON_COLONS
 	}
 
 	private void drawCenteredString(Graphics g, String text, int centerX, int centerY, TextAlignment alignment) {
+		drawCenteredString(g, text.split("\\n"), centerX, centerY, alignment);
+	}
+
+	private void drawCenteredString(Graphics g, String[] lines, int centerX, int centerY, TextAlignment alignment) {
+		FontMetrics metrics = g.getFontMetrics();
+		int yOffset = metrics.getAscent() - (lines.length * metrics.getHeight()) / 2;
+		drawAlignedString(g, lines, centerX, centerY + yOffset, alignment);
+	}
+
+	private void drawAlignedString(Graphics g, String text, int centerX, int topY, TextAlignment alignment) {
+		drawAlignedString(g, text.split("\\n"), centerX, topY, alignment);
+	}
+
+	private void drawAlignedString(Graphics g, String[] lines, int centerX, int topY, TextAlignment alignment) {
 		var color = g.getColor();
 		var shadow = alpha(Color.BLACK, color.getAlpha());
 		FontMetrics metrics = g.getFontMetrics();
 		int fontHeight = metrics.getHeight();
-		String[] lines = text.split("\n");
-		int yOffset = metrics.getAscent() - (lines.length * fontHeight) / 2;
+		int yOffset = 0;
 
-		if (alignment == TextAlignment.CENTER_ON_COLON) {
+		if (alignment == TextAlignment.CENTER_ON_COLONS) {
 			int longestLeft = 0, longestRight = 0;
 			for (String line : lines) {
 				int dotIndex = line.indexOf(":");
@@ -279,14 +301,14 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 				int dotIndex = line.indexOf(":");
 				int xOffset = dotOffset;
 				if (dotIndex == -1) {
-					line = ":" + line;
+					xOffset -= metrics.stringWidth(line) / 2;
 				} else {
 					xOffset -= metrics.stringWidth(line.substring(0, dotIndex));
 				}
 				g.setColor(shadow);
-				g.drawString(line, centerX + xOffset + 1, centerY + yOffset + 1);
+				g.drawString(line, centerX + xOffset + 1, topY + yOffset + 1);
 				g.setColor(color);
-				g.drawString(line, centerX + xOffset, centerY + yOffset);
+				g.drawString(line, centerX + xOffset, topY + yOffset);
 				yOffset += fontHeight;
 			}
 		} else {
@@ -316,9 +338,9 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 						throw new NotImplementedException("Alignment " + alignment + " has not been implemented");
 				}
 				g.setColor(shadow);
-				g.drawString(line, centerX + xOffset + 1, centerY + yOffset + 1);
+				g.drawString(line, centerX + xOffset + 1, topY + yOffset + 1);
 				g.setColor(color);
-				g.drawString(line, centerX + xOffset, centerY + yOffset);
+				g.drawString(line, centerX + xOffset, topY + yOffset);
 				yOffset += fontHeight;
 			}
 		}
@@ -392,11 +414,23 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 			case KeyEvent.VK_A:
 				hideAnimLights = !hideAnimLights;
 				break;
-			case KeyEvent.VK_R:
-				hideRadiusRings = !hideRadiusRings;
+			case KeyEvent.VK_B:
+				toggleBlackColor = !toggleBlackColor;
 				break;
 			case KeyEvent.VK_H:
 				hideInvisibleLights = !hideInvisibleLights;
+				break;
+			case KeyEvent.VK_I:
+				hideInfo = !hideInfo;
+				break;
+			case KeyEvent.VK_L:
+				hideLabels = !hideLabels;
+				break;
+			case KeyEvent.VK_R:
+				hideRadiusRings = !hideRadiusRings;
+				break;
+			case KeyEvent.VK_U:
+				liveInfo = !liveInfo;
 				break;
 		}
 
