@@ -14896,7 +14896,7 @@
     "description": "Keldagrim Stone Walls",
     "baseMaterial": "ROCK_3",
     "objectIds": [
-      6000, 6001, 6002, 6003, 6004, 6005, 6006, 6010, 6011
+      6000, 6001, 6002, 6003, 6004, 6005, 6006, 6010, 6011, 8881, 8905, 8907
     ],
     "uvType": "BOX",
     "uvOrientation": 128
@@ -15233,5 +15233,25 @@
     "uvType": "BOX",
     "uvScale": 1.1,
     "uvOrientation": 512
+  },
+  {
+    "description": "Strange Box - Metal",
+    "baseMaterial": "METALLIC_2",
+    "objectIds": [
+      8879, 8880
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 12
+  },
+  {
+    "description": "Scaffolding - Metal",
+    "baseMaterial": "METALLIC_2",
+    "objectIds": [
+      8899, 8900, 8901, 8902, 8903, 8904
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 346
   }
 ]
