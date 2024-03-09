@@ -59,6 +59,10 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 	private Light selected;
 	private Light hovered;
 
+	private boolean hideInvisibleLights = true;
+	private boolean hideRadiusRings = true;
+	private boolean hideAnimLights;
+
 	public LightGizmoOverlay() {
 		setLayer(OverlayLayer.ABOVE_SCENE);
 		setPosition(OverlayPosition.DYNAMIC);
@@ -124,7 +128,14 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 
 		hovered = null;
 		final float[] lightToCamera = new float[3];
-		for (Light l : lightManager.getVisibleLights(plugin.configMaxDynamicLights)) {
+		for (Light l : sceneContext.lights) {
+			if (hideInvisibleLights && !l.def.visibleFromOtherPlanes &&
+				(l.plane < client.getPlane() && l.belowFloor || l.plane > client.getPlane() && l.aboveFloor))
+				continue;
+
+			if (hideAnimLights && !l.def.animationIds.isEmpty() && !l.visible)
+				continue;
+
 			float[] lightPos = new float[] { l.x, l.y, l.z, 1 };
 			float[] point = projectPoint(projectionMatrix, lightPos);
 			if (point[3] <= 0)
@@ -144,14 +155,15 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 
 			if (mousePos != null && hovered == null) {
 				float d = HDUtils.length(mousePos.getX() - x, mousePos.getY() - y);
-				if (d <= outerHandleRingDiameter / 2f + hoverDistanceMargin || Math.abs(d - currentDiameter / 2f) < hoverDistanceMargin * 2)
+				if (d <= outerHandleRingDiameter / 2f + hoverDistanceMargin ||
+					!hideRadiusRings && Math.abs(d - currentDiameter / 2f) < hoverDistanceMargin * 2)
 					hovered = l;
 			}
 
 			boolean isHovered = hovered == l;
 			boolean isSelected = selected == l;
 
-			int mainOpacity = 127;
+			int mainOpacity = l.visible ? 255 : 128;
 			int rangeOpacity = 70;
 			Color radiusRingColor = alpha(Color.WHITE, mainOpacity);
 			Color rangeRingsColor = alpha(Color.WHITE, rangeOpacity);
@@ -170,10 +182,12 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 			drawRing(g, x, y, outerHandleRingDiameter, handleRingsColor, thinDashedLine);
 
 			// Draw radius rings
-			drawRing(g, x, y, currentDiameter, radiusRingColor, thinnerLine);
-			if (l.def.type == LightType.PULSE && Math.abs(currentDiameter) > .001f) {
-				drawRing(g, x, y, minDiameter, rangeRingsColor, thinLongDashedLine);
-				drawRing(g, x, y, maxDiameter, rangeRingsColor, thinLongDashedLine);
+			if (!hideRadiusRings) {
+				drawRing(g, x, y, currentDiameter, radiusRingColor, thinnerLine);
+				if (l.def.type == LightType.PULSE && Math.abs(currentDiameter) > .001f) {
+					drawRing(g, x, y, minDiameter, rangeRingsColor, thinLongDashedLine);
+					drawRing(g, x, y, maxDiameter, rangeRingsColor, thinLongDashedLine);
+				}
 			}
 
 			// Only the selected dot has a filled dot in the center
@@ -370,12 +384,22 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 	}
 
 	@Override
-	public void keyTyped(KeyEvent e) {
-
-	}
+	public void keyTyped(KeyEvent e) {}
 
 	@Override
 	public void keyPressed(KeyEvent e) {
+		switch (e.getKeyCode()) {
+			case KeyEvent.VK_A:
+				hideAnimLights = !hideAnimLights;
+				break;
+			case KeyEvent.VK_R:
+				hideRadiusRings = !hideRadiusRings;
+				break;
+			case KeyEvent.VK_H:
+				hideInvisibleLights = !hideInvisibleLights;
+				break;
+		}
+
 //		if (e.isControlDown() && e.isShiftDown() && e.getKeyCode() == KeyCode.KC_S) {
 //			// TODO: Save changes to JSON
 //			// Every time the JSON is updated, either through the file system or exporting changes,
@@ -393,7 +417,5 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 	}
 
 	@Override
-	public void keyReleased(KeyEvent e) {
-
-	}
+	public void keyReleased(KeyEvent e) {}
 }
