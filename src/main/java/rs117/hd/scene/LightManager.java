@@ -133,6 +133,7 @@ public class LightManager {
 			GRAPHICS_OBJECT_LIGHTS.clear();
 
 			for (LightDefinition lightDef : lights) {
+				lightDef.normalize();
 				if (lightDef.worldX != null && lightDef.worldY != null) {
 					Light light = new Light(lightDef);
 					light.worldPoint = new WorldPoint(lightDef.worldX, lightDef.worldY, lightDef.plane);
