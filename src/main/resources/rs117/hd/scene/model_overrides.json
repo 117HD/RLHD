@@ -3178,7 +3178,19 @@
       9739,
       9740,
       16543,
+      17086,
+      17087,
       26712
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 100
+  },
+  {
+    "description": "Rounded Cave Wall Entrance with Tracks",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      6971
     ],
     "uvType": "BOX",
     "uvScale": 0.75,
@@ -4225,9 +4237,6 @@
       12575,
       12576,
       12577,
-      11184,
-      11185,
-      11186,
       18479,
       18480,
       37810,
@@ -15020,6 +15029,16 @@
     "uvScale": 0.8
   },
   {
+    "description": "Objects - Rock Column - Tan - Huge",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      11184, 11185, 11186
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 132
+  },
+  {
     "description": "Objects - Stone - Stone Slab Bridge Guards",
     "baseMaterial": "ROCK_3",
     "objectIds": [
@@ -15144,5 +15163,15 @@
     "uvType": "BOX",
     "uvScale": 0.8,
     "uvOrientation": 42
+  },
+  {
+    "description": "White Wolf Mountain Wall Supports",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      17082, 17083, 17084, 17085
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 88
   }
 ]
