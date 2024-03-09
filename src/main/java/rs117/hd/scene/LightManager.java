@@ -648,8 +648,19 @@ public class LightManager {
 
 		for (LightDefinition lightDef : NPC_LIGHTS.get(npc.getId())) {
 			// Prevent duplicate lights from being spawned for the same NPC
-			if (sceneContext.lights.stream().anyMatch(x -> x.actor == npc && x.def == lightDef))
-				continue;
+			var duplicate = sceneContext.lights.stream()
+				.filter(light -> light.actor == npc && light.def == lightDef)
+				.findFirst();
+			if (duplicate.isPresent()) {
+				var l = duplicate.get();
+				// If the light was marked for removal, but hasn't been removed yet, reuse it
+				if (l.markedForRemoval) {
+					l.markedForRemoval = false;
+					l.scheduledDespawnTime = -1;
+				} else {
+					continue;
+				}
+			}
 
 			Light light = new Light(lightDef);
 			light.plane = -1;
@@ -740,15 +751,24 @@ public class LightManager {
 
 			// prevent duplicate lights from being spawned for the same object & impostor combination
 			long hash = tileObjectHash(tileObject);
-			boolean isDuplicate = sceneContext.lights.stream()
-				.anyMatch(light -> {
+			var duplicate = sceneContext.lights.stream()
+				.filter(light -> {
 					boolean sameObject = light.object == tileObject || hash == tileObjectHash(light.object);
 					boolean sameLight = light.def == lightDef;
 					boolean sameObjectId = light.objectId == objectId;
 					return sameObject && sameLight && sameObjectId;
-				});
-			if (isDuplicate)
-				continue;
+				})
+				.findFirst();
+			if (duplicate.isPresent()) {
+				var l = duplicate.get();
+				// If the light was marked for removal, but hasn't been removed yet, reuse it
+				if (l.markedForRemoval) {
+					l.markedForRemoval = false;
+					l.scheduledDespawnTime = -1;
+				} else {
+					continue;
+				}
+			}
 
 			int localPlane = tileObject.getPlane();
 			Light light = new Light(lightDef);

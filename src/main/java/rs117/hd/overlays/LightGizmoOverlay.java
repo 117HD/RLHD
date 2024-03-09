@@ -337,7 +337,7 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 	@Override
 	public MouseEvent mousePressed(MouseEvent e) {
 		if (SwingUtilities.isRightMouseButton(e)) {
-			if (hovered != null)
+			if (hovered != null && selected != hovered)
 				e.consume();
 			selected = hovered;
 		}
