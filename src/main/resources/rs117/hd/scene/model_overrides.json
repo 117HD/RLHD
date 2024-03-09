@@ -15223,5 +15223,15 @@
     "uvType": "BOX",
     "uvScale": 0.75,
     "uvOrientation": 2022
+  },
+  {
+    "description": "Rat Wall",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      10342, 10343
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.1,
+    "uvOrientation": 512
   }
 ]
