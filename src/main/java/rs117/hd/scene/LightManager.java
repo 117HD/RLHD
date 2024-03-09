@@ -688,8 +688,7 @@ public class LightManager {
 
 	@Subscribe
 	public void onPlayerChanged(PlayerChanged playerChanged) {
-		removeSpotAnimLights(playerChanged.getPlayer());
-		addSpotAnimLights(playerChanged.getPlayer());
+		// Don't add spotAnim lights on player change events, since it breaks death & respawn lights
 	}
 
 	@Subscribe
