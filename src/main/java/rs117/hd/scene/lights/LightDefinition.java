@@ -43,7 +43,7 @@ public class LightDefinition {
 	public void normalize() {
 		if (description == null)
 			description = "N/A";
-		if (alignment != null)
+		if (alignment == null)
 			alignment = Alignment.CENTER;
 		if (color == null)
 			color = new float[3];
