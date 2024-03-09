@@ -5207,6 +5207,17 @@
     "groundMaterial": "EARTHEN_CAVE_FLOOR"
   },
   {
+    "name": "ZEAH_GRAVEL_PATH",
+    "area": "ZEAH",
+    "overlayIds": [
+      99
+    ],
+    "groundMaterial": "VARIED_DIRT",
+    "replacements": {
+      "WINTER_DIRT": "season == WINTER"
+    }
+  },
+  {
     "name": "ZEAH_DIRT_UNDERLAY",
     "area": "ZEAH",
     "underlayIds": [
