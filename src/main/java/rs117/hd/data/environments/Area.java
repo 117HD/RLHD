@@ -1195,6 +1195,7 @@ public enum Area
 		new AABB(2903, 10208, 2910, 10201), // Scluptors
 		new AABB(2848, 10227, 2853, 10221)
 	),
+	RED_AXE_REGION(7501),
 	KELDAGRIM(regions(11422, 11423, 11678, 11679)),
 
 	// Tirannwn
