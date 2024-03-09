@@ -15183,5 +15183,25 @@
     "uvType": "BOX",
     "uvScale": 0.6,
     "uvOrientation": 88
+  },
+  {
+    "description": "Wooden Cupboard Empty",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      7018
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 22
+  },
+  {
+    "description": "Wooden Cabinet Empty",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      7019
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 2022
   }
 ]
