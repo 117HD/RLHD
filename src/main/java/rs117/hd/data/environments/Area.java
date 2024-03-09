@@ -1299,6 +1299,7 @@ public enum Area
 	)),
 
 	// Zeah
+	GARDEN_OF_DEATH_DUNGEON(5274),
 	KARUULM_SLAYER_DUNGEON(
 		regions(5536),
 		regionBox(5022, 5023),
