@@ -823,12 +823,7 @@ public class LightManager {
 
 	private void removeObjectLight(TileObject tileObject)
 	{
-		LocalPoint localLocation = tileObject.getLocalLocation();
-		removeLightIf(light ->
-			light.object == tileObject &&
-			light.x == localLocation.getX() &&
-			light.y == localLocation.getY() &&
-			light.plane == tileObject.getPlane());
+		removeLightIf(light -> light.object == tileObject && light.plane == tileObject.getPlane());
 	}
 
 	@Subscribe
