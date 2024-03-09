@@ -25826,24 +25826,25 @@
     "graphicsObjectIds": [
       148
     ]
-  },  {
-  "description": "TELEGRAB_PROJECTILE",
-  "alignment": "CENTER",
-  "height": 20,
-  "radius": 125,
-  "strength": 12,
-  "color": [
-    170,
-    20,
-    255
-  ],
-  "type": "FLICKER",
-  "duration": 0,
-  "range": 10,
-  "projectileIds": [
-    143
-  ]
-},
+  },
+  {
+    "description": "TELEGRAB_PROJECTILE",
+    "alignment": "CENTER",
+    "height": 20,
+    "radius": 125,
+    "strength": 12,
+    "color": [
+      170,
+      20,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "projectileIds": [
+      143
+    ]
+  },
   {
     "description": "WIND_STRIKE",
     "radius": 175,
@@ -30011,7 +30012,9 @@
     "type": "FLICKER",
     "duration": 600,
     "range": 3,
-    "worldX": 3362, "worldY": 9115, "plane": 0,
+    "worldX": 3362,
+    "worldY": 9115,
+    "plane": 0,
     "fadeInDuration": 0
   },
   {
@@ -30028,7 +30031,9 @@
     "type": "FLICKER",
     "duration": 600,
     "range": 3,
-    "worldX": 3363, "worldY": 9115, "plane": 0,
+    "worldX": 3363,
+    "worldY": 9115,
+    "plane": 0,
     "fadeInDuration": 0
   },
   {
@@ -30045,7 +30050,9 @@
     "type": "FLICKER",
     "duration": 600,
     "range": 3,
-    "worldX": 3364, "worldY": 9115, "plane": 0,
+    "worldX": 3364,
+    "worldY": 9115,
+    "plane": 0,
     "fadeInDuration": 0
   },
   {
@@ -30062,7 +30069,9 @@
     "type": "PULSE",
     "duration": 1800,
     "range": 9,
-    "worldX": 3360, "worldY": 9121, "plane": 0,
+    "worldX": 3360,
+    "worldY": 9121,
+    "plane": 0,
     "fadeInDuration": 0
   },
   {
@@ -30079,7 +30088,9 @@
     "type": "PULSE",
     "duration": 1800,
     "range": 9,
-    "worldX": 3360, "worldY": 9119, "plane": 0,
+    "worldX": 3360,
+    "worldY": 9119,
+    "plane": 0,
     "fadeInDuration": 0
   },
   {
@@ -30096,7 +30107,9 @@
     "type": "PULSE",
     "duration": 1800,
     "range": 9,
-    "worldX": 3358, "worldY": 9119, "plane": 0,
+    "worldX": 3358,
+    "worldY": 9119,
+    "plane": 0,
     "fadeInDuration": 0
   },
   {
@@ -30113,7 +30126,9 @@
     "type": "PULSE",
     "duration": 1800,
     "range": 9,
-    "worldX": 3358, "worldY": 9121, "plane": 0,
+    "worldX": 3358,
+    "worldY": 9121,
+    "plane": 0,
     "fadeInDuration": 0
   },
   {
@@ -30846,7 +30861,6 @@
       11775,
       11776,
       11777
-
     ]
   },
   {
