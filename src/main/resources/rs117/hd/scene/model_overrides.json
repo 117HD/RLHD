@@ -1346,6 +1346,7 @@
     "baseMaterial": "BARK",
     "objectIds": [
       1341,
+      1353,
       4328,
       6212,
       14516,
@@ -15194,5 +15195,34 @@
     "uvType": "BOX",
     "uvOrientation": 88,
     "uvScale": 0.8
+  },
+  {
+    "description": "Garden of Death Tent",
+    "baseMaterial": "FINE_CARPET",
+    "objectIds": [
+      46324
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 256
+  },
+  {
+    "description": "Hollow Log 1",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      1378
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 480
+  },
+  {
+    "description": "Garden of Death Hole",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [
+      46326
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 480
   }
 ]
