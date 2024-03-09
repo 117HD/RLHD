@@ -25685,7 +25685,7 @@
     "duration": 0,
     "range": 20,
     "fadeInDuration": 1500,
-    "fadeOutDuration": 1500,
+    "fadeOutDuration": 1300,
     "graphicsObjectIds": [
       803
     ]
@@ -25705,7 +25705,7 @@
     "duration": 0,
     "range": 20,
     "fadeInDuration": 1500,
-    "fadeOutDuration": 1500,
+    "fadeOutDuration": 1300,
     "graphicsObjectIds": [
       1753
     ]
