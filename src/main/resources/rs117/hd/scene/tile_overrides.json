@@ -3953,6 +3953,24 @@
     "blended": false
   },
   {
+    "name": "KELDAGRIM_RED_AXE_CAVES_GRAVEL",
+    "area": "RED_AXE_REGION",
+    "overlayIds": [
+      117
+    ],
+    "groundMaterial": "GRAVEL",
+    "uvScale": 0.6
+  },
+  {
+    "name": "KELDAGRIM_RED_AXE_CAVES_GROUND",
+    "area": "RED_AXE_REGION",
+    "underlayIds": [
+      111
+    ],
+    "groundMaterial": "ROCKY_CAVE_FLOOR",
+    "uvScale": 0.6
+  },
+  {
     "name": "CERBERUS_WATER",
     "area": "CERBERUS",
     "overlayIds": [
