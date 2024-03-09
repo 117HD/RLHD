@@ -5207,6 +5207,23 @@
     "groundMaterial": "EARTHEN_CAVE_FLOOR"
   },
   {
+    "name": "GARDEN_OF_DEATH_TILES",
+    "area": "GARDEN_OF_DEATH_DUNGEON",
+    "overlayIds": [
+      133
+    ],
+    "groundMaterial": "MARBLE_2",
+    "shiftLightness": -4
+  },
+  {
+    "name": "GARDEN_OF_DEATH_GRASSY_DIRT",
+    "area": "GARDEN_OF_DEATH_DUNGEON",
+    "underlayIds": [
+      53, 54
+    ],
+    "groundMaterial": "GRASSY_DIRT"
+  },
+  {
     "name": "ZEAH_GRAVEL_PATH",
     "area": "ZEAH",
     "overlayIds": [
