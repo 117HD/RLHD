@@ -12,6 +12,7 @@ import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,6 +31,7 @@ import net.runelite.api.coords.*;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.input.MouseListener;
 import net.runelite.client.input.MouseManager;
+import net.runelite.client.input.MouseWheelListener;
 import net.runelite.client.ui.FontManager;
 import net.runelite.client.ui.overlay.Overlay;
 import net.runelite.client.ui.overlay.OverlayLayer;
@@ -55,7 +57,7 @@ import static rs117.hd.utils.HDUtils.clamp;
 
 @Slf4j
 @Singleton
-public class TileInfoOverlay extends Overlay implements MouseListener {
+public class TileInfoOverlay extends Overlay implements MouseListener, MouseWheelListener {
 	@Inject
 	private Client client;
 
@@ -86,8 +88,11 @@ public class TileInfoOverlay extends Overlay implements MouseListener {
 	private float zoom = 1;
 
 	private int aabbMarkingStage = 0;
-	private final int[][] markedWorldPoints = new int[2][3];
+	private final int[][] markedWorldPoints = new int[2][];
 	private final int[] markedHeights = new int[2];
+	private int[] hoveredWorldPoint = new int[3];
+	private int hoveredHeight;
+	private int targetPlane = MAX_Z - 1;
 
 	public TileInfoOverlay() {
 		setLayer(OverlayLayer.ABOVE_WIDGETS);
@@ -98,9 +103,11 @@ public class TileInfoOverlay extends Overlay implements MouseListener {
 		if (activate) {
 			overlayManager.add(this);
 			mouseManager.registerMouseListener(this);
+			mouseManager.registerMouseWheelListener(this);
 		} else {
 			overlayManager.remove(this);
 			mouseManager.unregisterMouseListener(this);
+			mouseManager.unregisterMouseWheelListener(this);
 		}
 		tileOverrideManager.setTrackReplacements(activate);
 	}
@@ -136,20 +143,21 @@ public class TileInfoOverlay extends Overlay implements MouseListener {
 
 			Tile[][][] tiles = sceneContext.scene.getExtendedTiles();
 			var heights = sceneContext.scene.getTileHeights();
-			int plane = ctrlHeld ? MAX_Z - 1 : client.getPlane();
+			int maxPlane = client.getPlane();
+			int minPlane = 0;
+			if (ctrlHeld)
+				minPlane = maxPlane = targetPlane;
 			tileLoop:
-			for (int z = plane; z >= 0; z--) {
+			for (int z = maxPlane; z >= minPlane; z--) {
 				for (int isBridge = 1; isBridge >= 0; isBridge--) {
 					for (int x = 0; x < EXTENDED_SCENE_SIZE; x++) {
 						for (int y = 0; y < EXTENDED_SCENE_SIZE; y++) {
 							Tile tile = tiles[z][x][y];
 							boolean shouldDraw = tile != null && (isBridge == 0 || tile.getBridge() != null);
 							if (shouldDraw && drawTileInfo(g, sceneContext, tile)) {
-								if (aabbMarkingStage < 2) {
-									int tileZ = tile.getRenderLevel();
-									markedWorldPoints[aabbMarkingStage] = sceneContext.extendedSceneToWorld(x, y, tileZ);
-									markedHeights[aabbMarkingStage] = heights[tileZ][x][y];
-								}
+								int tileZ = tile.getRenderLevel();
+								hoveredWorldPoint = sceneContext.extendedSceneToWorld(x, y, tileZ);
+								hoveredHeight = heights[tileZ][x][y];
 								break tileLoop;
 							}
 						}
@@ -158,9 +166,15 @@ public class TileInfoOverlay extends Overlay implements MouseListener {
 			}
 		}
 
-		if (aabbMarkingStage > 0) {
-			g.setColor(Color.RED);
+		// Update second selection point each frame
+		if (aabbMarkingStage == 1) {
+			markedWorldPoints[1] = hoveredWorldPoint;
+			markedHeights[1] = hoveredHeight;
+		}
 
+		// Draw selection box
+		if (markedWorldPoints[0] != null) {
+			g.setColor(Color.RED);
 			int[] from = sceneContext.worldToLocal(markedWorldPoints[0]);
 			int[] to = sceneContext.worldToLocal(markedWorldPoints[1]);
 			int x1 = Math.min(from[0], to[0]);
@@ -169,18 +183,41 @@ public class TileInfoOverlay extends Overlay implements MouseListener {
 			int x2 = Math.max(from[0], to[0]) + LOCAL_TILE_SIZE;
 			int y2 = Math.max(from[1], to[1]) + LOCAL_TILE_SIZE;
 			int z2 = Math.max(markedHeights[0], markedHeights[1]);
-			var sw = localToCanvas(client, x1, y1, z1);
-			var nw = localToCanvas(client, x1, y2, (z1 + z2) / 2);
-			var ne = localToCanvas(client, x2, y2, z2);
-			var se = localToCanvas(client, x2, y1, (z1 + z2) / 2);
-			if (sw != null && nw != null)
-				g.drawLine(sw.getX(), sw.getY(), nw.getX(), nw.getY());
-			if (nw != null && ne != null)
-				g.drawLine(nw.getX(), nw.getY(), ne.getX(), ne.getY());
-			if (ne != null && se != null)
-				g.drawLine(ne.getX(), ne.getY(), se.getX(), se.getY());
-			if (se != null && sw != null)
-				g.drawLine(se.getX(), se.getY(), sw.getX(), sw.getY());
+			var bsw = localToCanvas(client, x1, y1, z1);
+			var bnw = localToCanvas(client, x1, y2, z1);
+			var bne = localToCanvas(client, x2, y2, z1);
+			var bse = localToCanvas(client, x2, y1, z1);
+			var tsw = localToCanvas(client, x1, y1, z2);
+			var tnw = localToCanvas(client, x1, y2, z2);
+			var tne = localToCanvas(client, x2, y2, z2);
+			var tse = localToCanvas(client, x2, y1, z2);
+			// Draw bottom rect
+			if (bsw != null && bnw != null)
+				g.drawLine(bsw.getX(), bsw.getY(), bnw.getX(), bnw.getY());
+			if (bnw != null && bne != null)
+				g.drawLine(bnw.getX(), bnw.getY(), bne.getX(), bne.getY());
+			if (bne != null && bse != null)
+				g.drawLine(bne.getX(), bne.getY(), bse.getX(), bse.getY());
+			if (bse != null && bsw != null)
+				g.drawLine(bse.getX(), bse.getY(), bsw.getX(), bsw.getY());
+			// Draw top rect
+			if (tsw != null && tnw != null)
+				g.drawLine(tsw.getX(), tsw.getY(), tnw.getX(), tnw.getY());
+			if (tnw != null && tne != null)
+				g.drawLine(tnw.getX(), tnw.getY(), tne.getX(), tne.getY());
+			if (tne != null && tse != null)
+				g.drawLine(tne.getX(), tne.getY(), tse.getX(), tse.getY());
+			if (tse != null && tsw != null)
+				g.drawLine(tse.getX(), tse.getY(), tsw.getX(), tsw.getY());
+			// Connect rect corners
+			if (bsw != null && tsw != null)
+				g.drawLine(bsw.getX(), bsw.getY(), tsw.getX(), tsw.getY());
+			if (bnw != null && tnw != null)
+				g.drawLine(bnw.getX(), bnw.getY(), tnw.getX(), tnw.getY());
+			if (bne != null && tne != null)
+				g.drawLine(bne.getX(), bne.getY(), tne.getX(), tne.getY());
+			if (bse != null && tse != null)
+				g.drawLine(bse.getX(), bse.getY(), tse.getX(), tse.getY());
 		}
 
 		return null;
@@ -663,20 +700,32 @@ public class TileInfoOverlay extends Overlay implements MouseListener {
 		if (shiftToggled)
 			return e;
 
-		if (SwingUtilities.isRightMouseButton(e)) {
+		if (e.isAltDown()) {
 			e.consume();
-			aabbMarkingStage = (aabbMarkingStage + 1) % 3;
-			if (aabbMarkingStage == 2) {
-				var markedAabb = new AABB(markedWorldPoints[0], markedWorldPoints[1]);
-				Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-				StringSelection string = new StringSelection("new AABB(" + markedAabb.toArgs() + "),\n");
-				clipboard.setContents(string, null);
-				clientThread.invoke(() -> client.addChatMessage(
-					ChatMessageType.GAMEMESSAGE,
-					"117 HD",
-					ColorUtil.wrapWithColorTag("[117 HD] Copied AABB to clipboard: " + markedAabb.toArgs(), Color.GREEN),
-					"117 HD"
-				));
+
+			if (SwingUtilities.isRightMouseButton(e)) {
+				// Reset selection
+				aabbMarkingStage = 0;
+				markedWorldPoints[0] = null;
+			} else if (SwingUtilities.isLeftMouseButton(e)) {
+				if (aabbMarkingStage == 0) {
+					// Marking first
+					markedWorldPoints[0] = hoveredWorldPoint;
+					markedHeights[0] = hoveredHeight;
+				} else {
+					// Done marking
+					var markedAabb = new AABB(markedWorldPoints[0], markedWorldPoints[1]);
+					Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+					StringSelection string = new StringSelection("new AABB(" + markedAabb.toArgs() + "),\n");
+					clipboard.setContents(string, null);
+					clientThread.invoke(() -> client.addChatMessage(
+						ChatMessageType.GAMEMESSAGE,
+						"117 HD",
+						ColorUtil.wrapWithColorTag("[117 HD] Copied AABB to clipboard: " + markedAabb.toArgs(), Color.GREEN),
+						"117 HD"
+					));
+				}
+				aabbMarkingStage = (aabbMarkingStage + 1) % 2;
 			}
 		}
 
@@ -705,6 +754,16 @@ public class TileInfoOverlay extends Overlay implements MouseListener {
 
 	@Override
 	public MouseEvent mouseMoved(MouseEvent e) {
+		return e;
+	}
+
+	@Override
+	public MouseWheelEvent mouseWheelMoved(MouseWheelEvent e) {
+		if (ctrlHeld && !shiftToggled) {
+			e.consume();
+			targetPlane = HDUtils.clamp(targetPlane + e.getWheelRotation(), 0, MAX_Z - 1);
+		}
+
 		return e;
 	}
 }
