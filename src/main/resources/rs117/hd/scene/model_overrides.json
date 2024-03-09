@@ -1446,6 +1446,16 @@
     "uvType": "MODEL_XZ"
   },
   {
+    "description": "Farming Patch 3 - Keldagrim",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [
+      8861, 8862, 8863, 8864, 8876
+    ],
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 55,
+    "uvScale": 0.75
+  },
+  {
     "description": "GRASS",
     "baseMaterial": "GRAY_75",
     "objectIds": [
