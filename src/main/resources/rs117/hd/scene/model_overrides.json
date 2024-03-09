@@ -2545,10 +2545,14 @@
       14550,
       14551,
       14558,
+      14559,
+      14560,
+      14632,
       42110,
       42111,
       42116
     ],
+    "uvType": "BOX",
     "flatNormals": true
   },
   {
@@ -5005,7 +5009,8 @@
     "objectIds": [
       2341,
       14543
-    ]
+    ],
+    "uvType": "BOX"
   },
   {
     "description": "Black Knight Fortress Wood Rails",
