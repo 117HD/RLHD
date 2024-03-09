@@ -1647,7 +1647,7 @@
   },
   {
     "description": "WOODEN_FENCES",
-    "baseMaterial": "WOOD_GRAIN",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       166,
       167,
@@ -1677,6 +1677,8 @@
       993,
       7527
     ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
     "flatNormals": true
   },
   {
@@ -15090,5 +15092,54 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.86
+  },
+  {
+    "description": "Zeah Battlefield - Objects - Stone - Pillars",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      34358
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75
+  },
+  {
+    "description": "Zeah Battlefield - Objects - Stone - Tiles",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      23106
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 220
+  },
+  {
+    "description": "Zeah Battlefield - Objects - Stone - Ancient Grave",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      33579
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientationZ": 560,
+    "uvOrientationY": 1000
+  },
+  {
+    "description": "Zeah Battlefield - Objects - Stone - Ornate Fountain",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      10827
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientationZ": 560,
+    "uvOrientationY": 1000
+  },
+  {
+    "description": "Zeah Battlefield - Walls - Metal Fence",
+    "baseMaterial": "METALLIC_1",
+    "objectIds": [
+      27926
+    ],
+    "uvType": "BOX"
   }
 ]
