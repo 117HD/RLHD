@@ -9800,7 +9800,7 @@
   {
     "description": "Object - Sack with Hey or Grain",
     "baseMaterial": "FINE_CARPET",
-    "objectIds": [ 16878 ],
+    "objectIds": [ 5574, 16878 ],
     "uvType": "BOX",
     "uvScale": 0.85,
     "retainVanillaUvs": false
@@ -15141,5 +15141,58 @@
       27926
     ],
     "uvType": "BOX"
+  },
+  {
+    "description": "Zeah - Rough Plank Walls",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      8695, 8704
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 1024,
+    "uvScale": 1.1
+  },
+  {
+    "description": "Zeah - Rough Plank Roofs",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      8705, 8706, 8707
+    ],
+    "uvType": "BOX",
+    "uvOrientationY": 1024,
+    "uvOrientationX": 512,
+    "uvScale": 1.1
+  },
+  {
+    "description": "Zeah - Rough Plank Roofs - Corners",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      8708, 8709, 8710, 8711
+    ],
+    "uvType": "BOX",
+    "uvOrientationX": 1024,
+    "uvOrientationZ": 512,
+    "uvOrientationY": 512,
+    "uvScale": 1.1
+  },
+  {
+    "description": "Objects - Metal Milk Urn",
+    "baseMaterial": "METALLIC_2",
+    "objectIds": [
+      8690
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 42
+  },
+  {
+    "description": "Zeah - Wooden Spiral Staircase",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      34502
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 88,
+    "uvScale": 0.8
   }
 ]
