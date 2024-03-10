@@ -3783,6 +3783,7 @@
       24561,
       25796,
       29110,
+      42114,
       44917
     ],
     "flatNormals": true,
@@ -4135,7 +4136,8 @@
       26709,
       30177,
       30374,
-      31766
+      31766,
+      42248
     ],
     "uvType": "BOX",
     "uvScale": 0.5
@@ -15237,7 +15239,7 @@
     "description": "Garden of Death Hole",
     "baseMaterial": "DIRT_2",
     "objectIds": [
-      46326
+      46326, 46329
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
