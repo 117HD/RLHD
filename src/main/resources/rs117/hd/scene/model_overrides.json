@@ -15242,5 +15242,33 @@
     "uvType": "BOX",
     "uvScale": 0.8,
     "uvOrientation": 480
+  },
+  {
+    "description": "Objects - Yellow Rocks - Rock - Small",
+    "baseMaterial": "ROCK_5",
+    "objectIds": [
+      7116, 7117, 7118
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.25
+  },
+  {
+    "description": "Objects - Yellow Rocks - Rock - Medium",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      30787, 30788, 30789
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 42
+  },
+  {
+    "description": "Objects - Yellow Rocks - Rock - Large",
+    "baseMaterial": "ROCK_4",
+    "objectIds": [
+      30784, 30785, 30786
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.33
   }
 ]
