@@ -6984,7 +6984,9 @@
     "objectIds": [
       4055,
       4056,
-      4057
+      4057,
+      46344,
+      46346
     ],
     "uvType": "BOX",
     "uvScale": 0.6
@@ -7341,7 +7343,8 @@
       422,
       423,
       4288,
-      23067
+      23067,
+      27664
     ],
     "uvType": "MODEL_XZ",
     "uvScale": 0.60
@@ -15220,7 +15223,7 @@
     "uvScale": 0.8
   },
   {
-    "description": "Garden of Death Tent",
+    "description": "Old Ones Tent",
     "baseMaterial": "FINE_CARPET",
     "objectIds": [
       46324
@@ -15239,10 +15242,10 @@
     "uvOrientation": 480
   },
   {
-    "description": "Garden of Death Hole",
+    "description": "Old Ones Hole",
     "baseMaterial": "DIRT_2",
     "objectIds": [
-      46326, 46329
+      46326, 46329, 46332, 46335
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -15277,15 +15280,15 @@
     "uvScale": 0.33
   },
   {
-    "description": "Garden of Death Dungeon Runed Walls",
+    "description": "Old Ones Dungeon Ruined Walls",
     "baseMaterial": "ROCK_3",
     "objectIds": [
-      5475, 5477, 5478, 5479, 5481
+      5475, 5477, 5478, 5479, 5480, 5481, 46337
     ],
     "uvType": "BOX"
   },
   {
-    "description": "Garden of Death Dungeon Walls",
+    "description": "Old Ones Dungeon Walls",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       8931, 8935
@@ -15297,12 +15300,12 @@
     "description": "Stone-  Ruined Steps",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
-      34355, 46407
+      34354, 34355, 46407
     ],
     "uvType": "BOX"
   },
   {
-    "description": "Garden of Death Vines",
+    "description": "Old Ones Vines",
     "baseMaterial": "PLANT_GRUNGE_1",
     "objectIds": [
       41817, 41818, 46381, 46382
@@ -15312,7 +15315,7 @@
     "uvOrientation": 42
   },
   {
-    "description": "Garden of Death Stone Pillar",
+    "description": "Old Ones Stone Pillar",
     "baseMaterial": "ROCK_3",
     "objectIds": [
       46415
@@ -15321,7 +15324,7 @@
     "uvOrientation": 202
   },
   {
-    "description": "Garden of Death Stone Table",
+    "description": "Old Ones Stone Table",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       46361
@@ -15330,16 +15333,25 @@
     "uvOrientation": 202
   },
   {
-    "description": "Garden of Death Stone Table - Big with objects",
+    "description": "Old Ones Stone Table - Big",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
-      46371
+      46356
     ],
     "uvType": "BOX",
     "uvOrientation": 88
   },
   {
-    "description": "Garden of Death Stone Table - Long",
+    "description": "Old Ones Stone Table - Big with objects",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      46357, 46358, 46360, 46371
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 88
+  },
+  {
+    "description": "Old Ones Stone Table - Long",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       46348
@@ -15348,28 +15360,28 @@
     "uvOrientation": 202
   },
   {
-    "description": "Garden of Death Stone Table - Long with Objects",
+    "description": "Old Ones Stone Table - Long with Objects",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
-      46355, 46377
+      46349, 46350, 46355, 46365, 46366, 46376, 46377, 46378, 46379
     ],
     "uvType": "BOX",
     "uvOrientation": 202
   },
   {
-    "description": "Garden of Death Stone Chest",
+    "description": "Old Ones Stone Chest",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
-      46340, 46341
+      46339, 46340, 46341
     ],
     "uvType": "BOX",
     "uvOrientation": 202
   },
   {
-    "description": "Garden of Death Stone Vase",
+    "description": "Old Ones Stone Vase",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
-      46342
+      46342, 46343
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -15394,5 +15406,25 @@
     "uvType": "BOX",
     "uvScale": 0.8,
     "uvOrientation": 100
+  },
+  {
+    "description": "Olmic Halfwall",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      46425
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 200
+  },
+  {
+    "description": "Old Ones Pyramid",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      42097, 42098, 42099, 42100, 42101, 42102
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 200,
+    "uvScale": 0.6
   }
 ]
