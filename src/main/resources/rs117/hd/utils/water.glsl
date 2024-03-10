@@ -193,8 +193,7 @@ void sampleUnderwater(inout vec3 outputColor, WaterType waterType, float depth, 
         float depthMultiplier = (IN.position.y - surfaceLevel - maxCausticsDepth) / -maxCausticsDepth;
         depthMultiplier *= depthMultiplier;
 
-        // height offset
-        causticsUv += lightDir.xy * IN.position.y / (128 * scale);
+        causticsUv *= .75;
 
         const ivec2 direction = ivec2(1, -2);
         vec2 flow1 = causticsUv + animationFrame(17) * direction;

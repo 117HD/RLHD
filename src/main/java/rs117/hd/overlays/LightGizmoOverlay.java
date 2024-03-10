@@ -59,6 +59,14 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 	private Light selected;
 	private Light hovered;
 
+	private boolean hideInvisibleLights = true;
+	private boolean hideRadiusRings = true;
+	private boolean hideAnimLights;
+	private boolean hideLabels;
+	private boolean hideInfo;
+	private boolean toggleBlackColor;
+	private boolean liveInfo = false;
+
 	public LightGizmoOverlay() {
 		setLayer(OverlayLayer.ABOVE_SCENE);
 		setPosition(OverlayPosition.DYNAMIC);
@@ -124,7 +132,14 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 
 		hovered = null;
 		final float[] lightToCamera = new float[3];
-		for (Light l : lightManager.getVisibleLights(plugin.configMaxDynamicLights)) {
+		for (Light l : sceneContext.lights) {
+			if (hideInvisibleLights && !l.def.visibleFromOtherPlanes &&
+				(l.plane < client.getPlane() && l.belowFloor || l.plane > client.getPlane() && l.aboveFloor))
+				continue;
+
+			if (hideAnimLights && !l.def.animationIds.isEmpty() && !l.visible)
+				continue;
+
 			float[] lightPos = new float[] { l.x, l.y, l.z, 1 };
 			float[] point = projectPoint(projectionMatrix, lightPos);
 			if (point[3] <= 0)
@@ -144,19 +159,21 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 
 			if (mousePos != null && hovered == null) {
 				float d = HDUtils.length(mousePos.getX() - x, mousePos.getY() - y);
-				if (d <= outerHandleRingDiameter / 2f + hoverDistanceMargin || Math.abs(d - currentDiameter / 2f) < hoverDistanceMargin * 2)
+				if (d <= outerHandleRingDiameter / 2f + hoverDistanceMargin ||
+					!hideRadiusRings && Math.abs(d - currentDiameter / 2f) < hoverDistanceMargin * 2)
 					hovered = l;
 			}
 
 			boolean isHovered = hovered == l;
 			boolean isSelected = selected == l;
 
-			int mainOpacity = 127;
+			int mainOpacity = l.visible ? 255 : 100;
 			int rangeOpacity = 70;
-			Color radiusRingColor = alpha(Color.WHITE, mainOpacity);
-			Color rangeRingsColor = alpha(Color.WHITE, rangeOpacity);
+			Color baseColor = toggleBlackColor ? Color.BLACK : Color.WHITE;
+			Color radiusRingColor = alpha(baseColor, mainOpacity);
+			Color rangeRingsColor = alpha(baseColor, rangeOpacity);
 			Color handleRingsColor = radiusRingColor;
-			Color textColor = radiusRingColor;
+			Color textColor = alpha(Color.WHITE, mainOpacity);
 
 			if (isSelected) {
 				handleRingsColor = radiusRingColor = rangeRingsColor = ORANGE;
@@ -170,10 +187,12 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 			drawRing(g, x, y, outerHandleRingDiameter, handleRingsColor, thinDashedLine);
 
 			// Draw radius rings
-			drawRing(g, x, y, currentDiameter, radiusRingColor, thinnerLine);
-			if (l.def.type == LightType.PULSE && Math.abs(currentDiameter) > .001f) {
-				drawRing(g, x, y, minDiameter, rangeRingsColor, thinLongDashedLine);
-				drawRing(g, x, y, maxDiameter, rangeRingsColor, thinLongDashedLine);
+			if (!hideRadiusRings) {
+				drawRing(g, x, y, currentDiameter, radiusRingColor, thinnerLine);
+				if (l.def.type == LightType.PULSE && Math.abs(currentDiameter) > .001f) {
+					drawRing(g, x, y, minDiameter, rangeRingsColor, thinLongDashedLine);
+					drawRing(g, x, y, maxDiameter, rangeRingsColor, thinLongDashedLine);
+				}
 			}
 
 			// Only the selected dot has a filled dot in the center
@@ -184,9 +203,13 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 			}
 
 			g.setColor(textColor);
-			drawCenteredString(g, l.def.description, x, y + 25, TextAlignment.CENTER);
-			if (isSelected) {
-				drawCenteredString(g, String.format("radius: %d", l.radius), x, y + 35, TextAlignment.CENTER_ON_COLON);
+			if (!hideLabels || isSelected) {
+				String info = l.def.description;
+				if (isSelected && !hideInfo) {
+					info += String.format("\nradius: %d", liveInfo ? l.radius : l.def.radius);
+					info += String.format("\nstrength: %.1f", liveInfo ? l.strength : l.def.strength);
+				}
+				drawAlignedString(g, info, x, y + 25, TextAlignment.CENTER_ON_COLONS);
 			}
 		}
 
@@ -226,18 +249,31 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 	}
 
 	private enum TextAlignment {
-		LEFT, RIGHT, CENTER, CENTER_ON_COLON
+		LEFT, RIGHT, CENTER, CENTER_ON_COLONS
 	}
 
 	private void drawCenteredString(Graphics g, String text, int centerX, int centerY, TextAlignment alignment) {
+		drawCenteredString(g, text.split("\\n"), centerX, centerY, alignment);
+	}
+
+	private void drawCenteredString(Graphics g, String[] lines, int centerX, int centerY, TextAlignment alignment) {
+		FontMetrics metrics = g.getFontMetrics();
+		int yOffset = metrics.getAscent() - (lines.length * metrics.getHeight()) / 2;
+		drawAlignedString(g, lines, centerX, centerY + yOffset, alignment);
+	}
+
+	private void drawAlignedString(Graphics g, String text, int centerX, int topY, TextAlignment alignment) {
+		drawAlignedString(g, text.split("\\n"), centerX, topY, alignment);
+	}
+
+	private void drawAlignedString(Graphics g, String[] lines, int centerX, int topY, TextAlignment alignment) {
 		var color = g.getColor();
 		var shadow = alpha(Color.BLACK, color.getAlpha());
 		FontMetrics metrics = g.getFontMetrics();
 		int fontHeight = metrics.getHeight();
-		String[] lines = text.split("\n");
-		int yOffset = metrics.getAscent() - (lines.length * fontHeight) / 2;
+		int yOffset = 0;
 
-		if (alignment == TextAlignment.CENTER_ON_COLON) {
+		if (alignment == TextAlignment.CENTER_ON_COLONS) {
 			int longestLeft = 0, longestRight = 0;
 			for (String line : lines) {
 				int dotIndex = line.indexOf(":");
@@ -265,14 +301,14 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 				int dotIndex = line.indexOf(":");
 				int xOffset = dotOffset;
 				if (dotIndex == -1) {
-					line = ":" + line;
+					xOffset -= metrics.stringWidth(line) / 2;
 				} else {
 					xOffset -= metrics.stringWidth(line.substring(0, dotIndex));
 				}
 				g.setColor(shadow);
-				g.drawString(line, centerX + xOffset + 1, centerY + yOffset + 1);
+				g.drawString(line, centerX + xOffset + 1, topY + yOffset + 1);
 				g.setColor(color);
-				g.drawString(line, centerX + xOffset, centerY + yOffset);
+				g.drawString(line, centerX + xOffset, topY + yOffset);
 				yOffset += fontHeight;
 			}
 		} else {
@@ -302,9 +338,9 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 						throw new NotImplementedException("Alignment " + alignment + " has not been implemented");
 				}
 				g.setColor(shadow);
-				g.drawString(line, centerX + xOffset + 1, centerY + yOffset + 1);
+				g.drawString(line, centerX + xOffset + 1, topY + yOffset + 1);
 				g.setColor(color);
-				g.drawString(line, centerX + xOffset, centerY + yOffset);
+				g.drawString(line, centerX + xOffset, topY + yOffset);
 				yOffset += fontHeight;
 			}
 		}
@@ -337,7 +373,7 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 	@Override
 	public MouseEvent mousePressed(MouseEvent e) {
 		if (SwingUtilities.isRightMouseButton(e)) {
-			if (hovered != null)
+			if (hovered != null && selected != hovered)
 				e.consume();
 			selected = hovered;
 		}
@@ -370,12 +406,34 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 	}
 
 	@Override
-	public void keyTyped(KeyEvent e) {
-
-	}
+	public void keyTyped(KeyEvent e) {}
 
 	@Override
 	public void keyPressed(KeyEvent e) {
+		switch (e.getKeyCode()) {
+			case KeyEvent.VK_A:
+				hideAnimLights = !hideAnimLights;
+				break;
+			case KeyEvent.VK_B:
+				toggleBlackColor = !toggleBlackColor;
+				break;
+			case KeyEvent.VK_H:
+				hideInvisibleLights = !hideInvisibleLights;
+				break;
+			case KeyEvent.VK_I:
+				hideInfo = !hideInfo;
+				break;
+			case KeyEvent.VK_L:
+				hideLabels = !hideLabels;
+				break;
+			case KeyEvent.VK_R:
+				hideRadiusRings = !hideRadiusRings;
+				break;
+			case KeyEvent.VK_U:
+				liveInfo = !liveInfo;
+				break;
+		}
+
 //		if (e.isControlDown() && e.isShiftDown() && e.getKeyCode() == KeyCode.KC_S) {
 //			// TODO: Save changes to JSON
 //			// Every time the JSON is updated, either through the file system or exporting changes,
@@ -393,7 +451,5 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 	}
 
 	@Override
-	public void keyReleased(KeyEvent e) {
-
-	}
+	public void keyReleased(KeyEvent e) {}
 }

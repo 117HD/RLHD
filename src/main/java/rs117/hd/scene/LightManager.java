@@ -133,6 +133,7 @@ public class LightManager {
 			GRAPHICS_OBJECT_LIGHTS.clear();
 
 			for (LightDefinition lightDef : lights) {
+				lightDef.normalize();
 				if (lightDef.worldX != null && lightDef.worldY != null) {
 					Light light = new Light(lightDef);
 					light.worldPoint = new WorldPoint(lightDef.worldX, lightDef.worldY, lightDef.plane);
@@ -647,7 +648,19 @@ public class LightManager {
 
 		for (LightDefinition lightDef : NPC_LIGHTS.get(npc.getId())) {
 			// Prevent duplicate lights from being spawned for the same NPC
-			if (sceneContext.lights.stream().anyMatch(x -> x.actor == npc && x.def == lightDef))
+			boolean isDuplicate = sceneContext.lights.stream()
+				.anyMatch(light -> {
+					if (light.markedForRemoval) {
+						// Despawn it right away, since we're replacing it
+						light.visible = false;
+						light.scheduledDespawnTime = 0;
+						return false;
+					}
+					boolean sameLight = light.def == lightDef;
+					boolean sameNpc = light.actor == npc;
+					return sameLight && sameNpc;
+				});
+			if (isDuplicate)
 				continue;
 
 			Light light = new Light(lightDef);
@@ -688,8 +701,7 @@ public class LightManager {
 
 	@Subscribe
 	public void onPlayerChanged(PlayerChanged playerChanged) {
-		removeSpotAnimLights(playerChanged.getPlayer());
-		addSpotAnimLights(playerChanged.getPlayer());
+		// Don't add spotAnim lights on player change events, since it breaks death & respawn lights
 	}
 
 	@Subscribe
@@ -742,6 +754,12 @@ public class LightManager {
 			long hash = tileObjectHash(tileObject);
 			boolean isDuplicate = sceneContext.lights.stream()
 				.anyMatch(light -> {
+					if (light.markedForRemoval) {
+						// Despawn it right away, since we're replacing it
+						light.visible = false;
+						light.scheduledDespawnTime = 0;
+						return false;
+					}
 					boolean sameObject = light.object == tileObject || hash == tileObjectHash(light.object);
 					boolean sameLight = light.def == lightDef;
 					boolean sameObjectId = light.objectId == objectId;
@@ -823,12 +841,7 @@ public class LightManager {
 
 	private void removeObjectLight(TileObject tileObject)
 	{
-		LocalPoint localLocation = tileObject.getLocalLocation();
-		removeLightIf(light ->
-			light.object == tileObject &&
-			light.x == localLocation.getX() &&
-			light.y == localLocation.getY() &&
-			light.plane == tileObject.getPlane());
+		removeLightIf(light -> light.object == tileObject);// && light.plane == tileObject.getPlane());
 	}
 
 	@Subscribe
