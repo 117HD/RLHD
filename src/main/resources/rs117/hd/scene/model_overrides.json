@@ -15294,10 +15294,10 @@
     "uvOrientation": 100
   },
   {
-    "description": "Garden of Death Dungeon Ruined Steps",
+    "description": "Stone-  Ruined Steps",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
-      46407
+      34355, 46407
     ],
     "uvType": "BOX"
   },
@@ -15310,5 +15310,89 @@
     "uvType": "BOX",
     "uvScale": 0.6,
     "uvOrientation": 42
+  },
+  {
+    "description": "Garden of Death Stone Pillar",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      46415
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 202
+  },
+  {
+    "description": "Garden of Death Stone Table",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      46361
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 202
+  },
+  {
+    "description": "Garden of Death Stone Table - Big with objects",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      46371
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 88
+  },
+  {
+    "description": "Garden of Death Stone Table - Long",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      46348
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 202
+  },
+  {
+    "description": "Garden of Death Stone Table - Long with Objects",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      46355, 46377
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 202
+  },
+  {
+    "description": "Garden of Death Stone Chest",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      46340, 46341
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 202
+  },
+  {
+    "description": "Garden of Death Stone Vase",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      46342
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 42
+  },
+  {
+    "description": "Stone Olmic Pillar",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      34401
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 42
+  },
+  {
+    "description": "Molch Ruins Floor",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      34413, 34414, 34415, 34416
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 100
   }
 ]
