@@ -5216,6 +5216,14 @@
     "shiftLightness": -4
   },
   {
+    "name": "GARDEN_OF_DEATH_DIRT",
+    "area": "GARDEN_OF_DEATH_DUNGEON",
+    "underlayIds": [
+      63, 118, 146
+    ],
+    "groundMaterial": "DIRT"
+  },
+  {
     "name": "GARDEN_OF_DEATH_GRASSY_DIRT",
     "area": "GARDEN_OF_DEATH_DUNGEON",
     "underlayIds": [
