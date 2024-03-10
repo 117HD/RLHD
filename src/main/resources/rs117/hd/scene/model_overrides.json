@@ -1443,7 +1443,8 @@
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
       7522,
-      7523
+      7523,
+      46420
     ],
     "uvType": "MODEL_XZ"
   },
@@ -6796,7 +6797,9 @@
       17876,
       17877,
       44744,
-      44745
+      44745,
+      46408,
+      46409
     ],
     "uvType": "BOX"
   },
@@ -15272,5 +15275,40 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.33
+  },
+  {
+    "description": "Garden of Death Dungeon Runed Walls",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      5475, 5477, 5478, 5479, 5481
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Garden of Death Dungeon Walls",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      8931, 8935
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 100
+  },
+  {
+    "description": "Garden of Death Dungeon Ruined Steps",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      46407
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Garden of Death Vines",
+    "baseMaterial": "PLANT_GRUNGE_1",
+    "objectIds": [
+      41817, 41818, 46381, 46382
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 42
   }
 ]
