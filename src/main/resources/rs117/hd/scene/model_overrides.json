@@ -6514,6 +6514,7 @@
       25661,
       25836,
       25837,
+      42066,
       44854
     ],
     "uvType": "BOX",
@@ -6583,6 +6584,18 @@
     "uvType": "BOX",
     "flatNormals": true,
     "uvOrientationY": 600,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512
+  },
+  {
+    "description": "Objects - Wooden - Stack of crates - Rotated",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      42068
+    ],
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvOrientationY": 88,
     "uvOrientationX": 512,
     "uvOrientationZ": 512
   },
