@@ -19073,8 +19073,30 @@
     "type": "PULSE",
     "duration": 3200,
     "range": 20,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 300,
     "npcIds": [
       10572
+    ]
+  },
+  {
+    "description": "TEMPOROSS_ACCENT",
+    "height": 800,
+    "alignment": "SOUTH",
+    "radius": 700,
+    "strength": 6,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 3200,
+    "range": 20,
+    "npcIds": [
+      10572,
+      10573,
+      10574
     ]
   },
   {
@@ -19198,7 +19220,7 @@
     "height": 250,
     "alignment": "CENTER",
     "radius": 1000,
-    "strength": 10,
+    "strength": 8,
     "color": "#91c7ff",
     "type": "FLICKER",
     "duration": 0,
