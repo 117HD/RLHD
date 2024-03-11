@@ -1625,7 +1625,7 @@
     "castShadows": false
   },
   {
-    "description": "Short grass which shouldn't cast shadows and shouldn't inherit tile color, this is required to make the grass around the edges white and not green",
+    "description": "Short grass which shouldn't cast shadows but should inherit tile color, this is required to make the grass around the edges white and not green in winter",
     "baseMaterial": "GRAY_75",
     "seasonalTheme": "WINTER",
     "objectIds": [
