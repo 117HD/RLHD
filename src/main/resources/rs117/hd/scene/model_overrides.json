@@ -1459,7 +1459,6 @@
       4987,
       4988,
       5341,
-      5536,
       9502,
       9503,
       9504,
@@ -1552,7 +1551,6 @@
       6838,
       7049,
       7050,
-      7129,
       7262,
       7263,
       7264,
@@ -1613,6 +1611,7 @@
     "description": "Short grass which shouldn't cast shadows and shouldn't inherit tile color",
     "baseMaterial": "GRAY_75",
     "objectIds": [
+      7129,
       7518,
       7520,
       17446,
@@ -1623,6 +1622,19 @@
       34496
     ],
     "flatNormals": true,
+    "castShadows": false
+  },
+  {
+    "description": "Short grass which shouldn't cast shadows and shouldn't inherit tile color, this is required to make the grass around the edges white and not green",
+    "baseMaterial": "GRAY_75",
+    "seasonalTheme": "WINTER",
+    "objectIds": [
+      7129,
+      7518,
+      7520
+    ],
+    "flatNormals": true,
+    "inheritTileColorType": "UNDERLAY",
     "castShadows": false
   },
   {
