@@ -19109,6 +19109,8 @@
     ],
     "type": "PULSE",
     "duration": 3200,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 150,
     "range": 20,
     "npcIds": [
       10571
@@ -24733,6 +24735,8 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 20,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 150,
     "objectIds": [
       37582
     ]
