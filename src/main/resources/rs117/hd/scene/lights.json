@@ -19225,6 +19225,8 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 40,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 100,
     "objectIds": [
       41242,
       41243,
