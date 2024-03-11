@@ -19137,10 +19137,10 @@
   },
   {
     "description": "TEMPOROSS_SPIRIT_POOL_ACTIVE",
-    "height": 5,
+    "height": 20,
     "alignment": "CENTER",
-    "radius": 500,
-    "strength": 17.5,
+    "radius": 400,
+    "strength": 10.5,
     "color": [
       0,
       255,
@@ -19148,8 +19148,8 @@
     ],
     "type": "PULSE",
     "duration": 3200,
-    "fadeInDuration": 150,
-    "fadeOutDuration": 150,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 300,
     "range": 20,
     "npcIds": [
       10571
@@ -19199,11 +19199,7 @@
     "alignment": "CENTER",
     "radius": 1000,
     "strength": 10,
-    "color": [
-      0,
-      90,
-      120
-    ],
+    "color": "#91c7ff",
     "type": "FLICKER",
     "duration": 0,
     "range": 20,
