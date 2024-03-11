@@ -18504,6 +18504,29 @@
     ]
   },
   {
+    "description": "ECTOPHIAL",
+    "height": 50,
+    "alignment": "CENTER",
+    "radius": 100,
+    "strength": 50,
+    "fixedDespawnTime": true,
+    "color": [
+      100,
+      255,
+      100
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 300,
+    "despawnDelay": 1400,
+    "spawnDelay": 450,
+    "graphicsObjectIds": [
+      1273
+    ]
+  },
+  {
     "description": "ABERRANT_SPECTRES",
     "height": 110,
     "alignment": "CENTER",
