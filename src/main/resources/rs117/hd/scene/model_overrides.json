@@ -928,6 +928,7 @@
       4502,
       5252,
       6188,
+      6202,
       10436,
       10487,
       11468,
@@ -3681,7 +3682,9 @@
       16961,
       16962
     ],
-    "uvType": "GEOMETRY"
+    "uvType": "BOX",
+    "uvScale": 1.1,
+    "uvOrientationZ": 128
   },
   {
     "description": "LUNAR_ISLE_BRIDGES",
@@ -3700,15 +3703,18 @@
       16992,
       16993
     ],
-    "uvType": "MODEL_XZ"
+    "uvType": "BOX"
   },
   {
     "description": "LUNAR_ISLE_DOCK_SUPPORTS",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       16963,
       16965
-    ]
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.1,
+    "uvOrientation": 128
   },
   {
     "description": "RELLEKKA_DOCKS",
@@ -4827,6 +4833,7 @@
     "objectIds": [
       4304,
       4305,
+      6189,
       17029,
       24009,
       24010,
@@ -4855,7 +4862,8 @@
     "baseMaterial": "METALLIC_2_SEMIGLOSS",
     "objectIds": [
       2097,
-      4306
+      4306,
+      6150
     ],
     "uvType": "BOX",
     "flatNormals": true
@@ -6464,9 +6472,6 @@
       5107,
       5110,
       5330,
-      6176,
-      6177,
-      6178,
       7514,
       10374,
       10378,
@@ -6483,6 +6488,7 @@
       16252,
       16560,
       16561,
+      16887,
       17305,
       17655,
       17656,
@@ -6512,6 +6518,8 @@
       3813,
       3814,
       3815,
+      6176,
+      6177,
       9533,
       20367,
       25775,
@@ -6549,10 +6557,20 @@
     "uvOrientationZ": 512
   },
   {
+    "description": "Objects - Wooden - Open Crate",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 16888 ],
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512
+  },
+  {
     "description": "Objects - Wooden - Stack of crates",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      9536
+      9536,
+      6178
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -6568,6 +6586,15 @@
       20369
     ],
     "uvType": "BOX",
+    "flatNormals": true
+  },
+  {
+    "description": "Objects - Wooden - Doublewide Crate",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 16863, 16864, 16865 ],
+    "uvType": "BOX",
+    "uvOrientationZ": 512,
+    "uvOrientationX": 512,
     "flatNormals": true
   },
   {
@@ -6645,6 +6672,8 @@
     "baseMaterial": "METALLIC_2_SEMIGLOSS",
     "objectIds": [
       5609,
+      6179,
+      6180,
       10504,
       10505,
       17561,
@@ -7311,6 +7340,7 @@
       14872,
       15679,
       16246,
+      16875,
       17306,
       17551,
       17552,
@@ -7558,14 +7588,13 @@
   },
   {
     "description": "Objects - Wooden - Plank tables - Medium",
-    "baseMaterial": "WOOD_GRAIN_2",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       12884,
       16974,
       24333
     ],
-    "uvType": "BOX",
-    "uvScale": 0.4
+    "uvType": "BOX"
   },
   {
     "description": "Objects - Wooden - Plank tables - Wide",
@@ -7953,6 +7982,24 @@
     ],
     "uvType": "BOX",
     "flatNormals": true
+  },
+  {
+    "description": "Objects - Stone - Chair 4 - Stone Chairs",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      6194
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Objects - Stone - Chair 5 - Stone Chair with cushion",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      6195
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
   },
   {
     "description": "Objects - Wooden - Tables - Round",
@@ -9700,18 +9747,30 @@
     "uvType": "BOX"
   },
   {
-    "description": "Sacks Pile",
+    "description": "Sacks - Yellow",
     "baseMaterial": "CARPET",
     "objectIds": [
       23,
       365,
       2354,
       2356,
-      2663,
+      2663
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Sacks Pile",
+    "baseMaterial": "CARPET",
+    "objectIds": [
       12394,
+      16867,
+      16868,
+      16870,
       39696
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "uvOrientation": 256,
     "uvScale": 0.6
   },
@@ -9719,9 +9778,10 @@
     "description": "Sacks with Sword",
     "baseMaterial": "CARPET",
     "objectIds": [
-      12392
+      12392,
+      16871
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "uvOrientation": 256,
     "uvScale": 0.6
   },
@@ -9731,9 +9791,17 @@
     "objectIds": [
       12396
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "uvOrientation": 256,
     "uvScale": 0.4
+  },
+  {
+    "description": "Object - Sack with Hey or Grain",
+    "baseMaterial": "FINE_CARPET",
+    "objectIds": [ 16878 ],
+    "uvType": "BOX",
+    "uvScale": 0.85,
+    "retainVanillaUvs": false
   },
   {
     "description": "Culinaromancers Floor",
@@ -11302,11 +11370,13 @@
   },
   {
     "description": "Objects - Wooden - Crate - Tall",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       3045,
-      3205
+      3205,
+      16862
     ],
+    "uvType": "BOX",
     "flatNormals": true
   },
   {
@@ -11405,7 +11475,7 @@
     "uvOrientation": 512
   },
   {
-    "description": "Barbarian VIllage - Objects - Wooden - Crate",
+    "description": "Barbarian Village - Objects - Wooden - Crate",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       11599,
@@ -14509,6 +14579,7 @@
     "baseMaterial": "ABYSSAL_2",
     "objectIds": [
       26146,
+      26147,
       26148
     ],
     "uvType": "BOX",
@@ -14709,5 +14780,315 @@
     "objectIds": [
       50152
     ]
+  },
+  {
+    "description": "Body Altar - Veins - Huge",
+    "baseMaterial": "ABYSSAL_2",
+    "objectIds": [
+      1388
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 156
+  },
+  {
+    "description": "Body Altar - Veins - Double",
+    "baseMaterial": "ABYSSAL_2",
+    "objectIds": [
+      1389
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 156
+  },
+  {
+    "description": "Body Altar - Veins - Medium",
+    "baseMaterial": "ABYSSAL",
+    "objectIds": [
+      1385
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 200
+  },
+  {
+    "description": "Body Altar - Veins - Small Loop",
+    "baseMaterial": "ABYSSAL",
+    "objectIds": [
+      1386
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Body Altar - Veins - Ground",
+    "baseMaterial": "ABYSSAL_2",
+    "objectIds": [
+      1232, 1233, 1234, 1235, 1236, 1237, 1238, 1239, 1240
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Body Altar - Pink Rock like Object 1 - Diamond",
+    "baseMaterial": "ABYSSAL",
+    "objectIds": [ 343 ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 2187
+  },
+  {
+    "description": "Body Altar - Pink Rock like Object 2 - Tiny",
+    "baseMaterial": "ABYSSAL",
+    "objectIds": [ 344 ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Body Altar - Pink Rock like Object 3",
+    "baseMaterial": "ABYSSAL_2",
+    "objectIds": [ 345 ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Body Altar - Walls",
+    "baseMaterial": "ABYSSAL_2",
+    "objectIds": [ 1479, 1484 ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Keldagrim Stone Walls",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      6000, 6001, 6002, 6003, 6004, 6005, 6006, 6010, 6011
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 128
+  },
+  {
+    "description": "Keldagrim - Metallic - Metal Walls - Exterior",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      6981, 6982, 6098, 6099
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 1224,
+    "uvScale": 0.8
+  },
+  {
+    "description": "Keldagrim Stone House Walls - Exterior",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      6132, 6133, 6134, 6135, 6136, 6137, 6983
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 1224,
+    "uvScale": 0.8
+  },
+  {
+    "description": "Keldagrim Stone House Walls - Interior",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      6145
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 768,
+    "uvScale": 0.7
+  },
+  {
+    "description": "Keldagrim Wooden Supports",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      5993, 5994, 5995, 5996, 5997
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Objects - Stone - Table - Keldagrim Table",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [ 6198 ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 128
+  },
+  {
+    "description": "Objects - Stone - Table - Keldagrim Large Square Table",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [ 6200 ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Objects - Stone - Table - Keldagrim Large Square Table with lamp",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [ 6201 ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Objects - Stone - Table - Keldagrim Small Square Table",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [ 6196 ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Objects - Stone - Table - Keldagrim Small Square Table with Lamp",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [ 6197 ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Objects - Stone - Table - Keldagrim Table with Cutting Board",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [ 6211 ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 128
+  },
+  {
+    "description": "Objects - Stone - Table - Keldagrim Table with Lamp",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [ 6199 ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 128
+  },
+  {
+    "description": "Objects - Stone - Stairs - Keldagrim Single Staircase",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [ 6085, 6086, 10287, 10288 ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Objects - Stone - Stairs - Keldagrim Double Staircase",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [ 6087, 6088, 6089, 6090, 9084, 9138 ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Objects - Stone - Dwarf Statue",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [ 7006, 7007 ],
+    "uvType": "BOX",
+    "uvScale": 0.7
+  },
+  {
+    "description": "Objects - Metallic - Door",
+    "baseMaterial": "METALLIC_2",
+    "objectIds": [ 6102, 6103, 6104, 6105, 6106, 6107, 6108, 6109, 6110, 6111 ],
+    "uvType": "BOX",
+    "uvOrientation": 128
+  },
+  {
+    "description": "Objects - Metallic - Door",
+    "baseMaterial": "METALLIC_2",
+    "objectIds": [ 1742, 6100, 6101, 6138, 6139, 6140, 6141, 6142, 6975, 6976, 6977, 6978 ],
+    "uvType": "BOX",
+    "uvOrientation": 128
+  },
+  {
+    "description": "Objects - Cloth - Bentamirs Bed ",
+    "baseMaterial": "FINE_CARPET",
+    "objectIds": [ 6184 ],
+    "uvType": "BOX",
+    "uvOrientation": 88
+  },
+  {
+    "description": "Objects - Rock Column - Huge",
+    "baseMaterial": "ROCK_4",
+    "objectIds": [
+      6148, 6149
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Objects - Stone - Stone Slab Bridge Guards",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      6143, 6144
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Objects - Metallic - Keldagrim Roof",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "objectIds": [
+      6116, 6118, 6119, 6120, 6121, 6122, 6123, 6124, 6125, 6126, 6127, 6128, 6129, 6130, 6131
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "flatNormals": true
+  },
+  {
+    "description": "Objects - Rock - Unfinished Statues",
+    "baseMaterial": "ROCK_5",
+    "objectIds": [
+      7008, 7009
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Blast Furnace - Objects - Metallic - Sink",
+    "baseMaterial": "METALLIC_2",
+    "objectIds": [
+      9143
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Blast Furnace - Objects - Metallic - Scaffolding",
+    "baseMaterial": "METALLIC_2",
+    "objectIds": [
+      9109, 9110, 9111, 9112, 9113
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 174
+  },
+  {
+    "description": "Blast Furnace - Walls - Wooden - Double Slat Fence",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      9139
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.1,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Blast Furnace - Walls - Wooden - Gate",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      9141
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Objects - Wooden - Keldagrim Cart Trapdoor",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      16168
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.86
   }
 ]

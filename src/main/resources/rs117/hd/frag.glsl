@@ -413,9 +413,6 @@ void main() {
             float scale = 12.8;
             vec2 causticsUv = worldUvs(scale);
 
-            // height offset
-            causticsUv += lightDir.xy * IN.position.y / (128 * scale);
-
             const ivec2 direction = ivec2(1, -1);
             const int driftSpeed = 231;
             vec2 drift = animationFrame(231) * ivec2(1, -2);

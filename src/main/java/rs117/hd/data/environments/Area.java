@@ -1178,6 +1178,27 @@ public enum Area
 		new AABB(2765, 3585, 2786, 3577)
 	),
 	FREMENNIK_SLAYER_DUNGEON(regions(10907, 10908, 11164)),
+	KELDAGRIM_INTERIORS(
+		new AABB(2841, 10215, 2834, 10204), // Bank
+		new AABB(2834, 10199, 2844, 10191), // Bar
+		new AABB(2861, 10212, 2897, 10185), // Palace
+		new AABB(2857, 10228, 2865, 10221), // Library
+		new AABB(2903, 10219, 2907, 10213), // Food Shop
+		new AABB(2922, 10214, 2926, 10209), // Mining Shop
+		new AABB(2909, 10196, 2918, 10192), // Brewery 1
+		new AABB(2913, 10191, 2918, 10187), // Brewery 2
+		new AABB(2927, 10198, 2936, 10185), // Blast Furnace 1
+		new AABB(2932, 10200, 2936, 10199), // Blast Furnace 2
+		new AABB(2846, 10186, 2851, 10182), // Stone Mason
+		new AABB(2823, 10233, 2831, 10228), // Sword Shop 1
+		new AABB(2824, 10227, 2830, 10223), // Sworp Shop 2
+		new AABB(2903, 10208, 2910, 10201), // Scluptors
+		new AABB(2848, 10227, 2853, 10221)
+
+
+
+	),
+	KELDAGRIM(regions(11422, 11423, 11678, 11679)),
 
 	// Tirannwn
 	GWENITH(2187, 3424, 2229, 3397),
@@ -1586,6 +1607,10 @@ public enum Area
 		new AABB(2102, 3901, 2096, 3896, 1)  // House 7
 	),
 	LUNAR_ESSENCE_MINE(9377),
+	LADY_ZAY(
+		new AABB(2135, 3917, 2145, 3887), // Lunar Isle
+		new AABB(2219, 3814, 2229, 3784) // Pirates Cove
+	),
 	LUNAR_ISLE(regionBox(8252, 8509)),
 
 	// Ape Atoll

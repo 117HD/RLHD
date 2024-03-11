@@ -39,4 +39,15 @@ public class LightDefinition {
 	public HashSet<Integer> graphicsObjectIds = new HashSet<>();
 	@JsonAdapter(GsonUtils.IntegerSetAdapter.class)
 	public HashSet<Integer> animationIds = new HashSet<>();
+
+	public void normalize() {
+		if (description == null)
+			description = "N/A";
+		if (alignment == null)
+			alignment = Alignment.CENTER;
+		if (color == null)
+			color = new float[3];
+		if (type == null)
+			type = LightType.STATIC;
+	}
 }
