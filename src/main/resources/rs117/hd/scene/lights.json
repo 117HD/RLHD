@@ -19286,9 +19286,8 @@
   },
   {
     "description": "Ghostly thrall projectile",
-    "radius": 300,
+    "radius": 200,
     "strength": 8,
-    "height": 140,
     "color": [
       0,
       100,
@@ -19297,6 +19296,8 @@
     "type": "FLICKER",
     "duration": 600,
     "range": 5,
+    "fadeOutDuration": 200,
+    "fadeInDuration": 150,
     "projectileIds": [
       1907
     ]
@@ -19323,9 +19324,8 @@
   },
   {
     "description": "Skeletal thrall projectile",
-    "radius": 300,
+    "radius": 200,
     "strength": 8,
-    "height": 140,
     "color": [
       144,
       245,
@@ -19334,6 +19334,7 @@
     "type": "FLICKER",
     "duration": 600,
     "range": 5,
+    "fadeOutDuration": 100,
     "projectileIds": [
       1906
     ]
