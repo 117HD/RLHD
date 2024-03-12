@@ -25775,6 +25775,26 @@
     ]
   },
   {
+    "description": "DRAGON_HARPOON_SPECIAL",
+    "height": 20,
+    "alignment": "CENTER",
+    "radius": 150,
+    "strength": 10,
+    "color": [
+      255,
+      15,
+      15
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 40,
+    "fadeInDuration": 250,
+    "fadeOutDuration": 125,
+    "graphicsObjectIds": [
+      246
+    ]
+  },
+  {
     "description": "shattered cannon N",
     "height": 160,
     "alignment": "NORTH",
