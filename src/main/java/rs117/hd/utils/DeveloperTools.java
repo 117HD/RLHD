@@ -23,12 +23,16 @@ public class DeveloperTools implements KeyListener {
 	private static final Keybind KEY_TOGGLE_FRAME_TIMINGS = new Keybind(KeyEvent.VK_F4, InputEvent.CTRL_DOWN_MASK);
 	private static final Keybind KEY_TOGGLE_SHADOW_MAP_OVERLAY = new Keybind(KeyEvent.VK_F5, InputEvent.CTRL_DOWN_MASK);
 	private static final Keybind KEY_TOGGLE_LIGHT_GIZMO_OVERLAY = new Keybind(KeyEvent.VK_F6, InputEvent.CTRL_DOWN_MASK);
+	private static final Keybind KEY_TOGGLE_FREEZE_FRAME = new Keybind(KeyEvent.VK_ESCAPE, InputEvent.SHIFT_DOWN_MASK);
 
 	@Inject
 	private EventBus eventBus;
 
 	@Inject
 	private KeyManager keyManager;
+
+	@Inject
+	private HdPlugin plugin;
 
 	@Inject
 	private TileInfoOverlay tileInfoOverlay;
@@ -111,26 +115,21 @@ public class DeveloperTools implements KeyListener {
 	}
 
 	@Override
-	public void keyPressed(KeyEvent event) {
-		if (KEY_TOGGLE_TILE_INFO.matches(event)) {
-			event.consume();
+	public void keyPressed(KeyEvent e) {
+		if (KEY_TOGGLE_TILE_INFO.matches(e)) {
 			tileInfoOverlay.setActive(tileInfoOverlayEnabled = !tileInfoOverlayEnabled);
-		}
-
-		if (KEY_TOGGLE_FRAME_TIMINGS.matches(event)) {
-			event.consume();
+		} else if (KEY_TOGGLE_FRAME_TIMINGS.matches(e)) {
 			frameTimingsOverlay.setActive(frameTimingsOverlayEnabled = !frameTimingsOverlayEnabled);
-		}
-
-		if (KEY_TOGGLE_SHADOW_MAP_OVERLAY.matches(event)) {
-			event.consume();
+		} else if (KEY_TOGGLE_SHADOW_MAP_OVERLAY.matches(e)) {
 			shadowMapOverlay.setActive(shadowMapOverlayEnabled = !shadowMapOverlayEnabled);
-		}
-
-		if (KEY_TOGGLE_LIGHT_GIZMO_OVERLAY.matches(event)) {
-			event.consume();
+		} else if (KEY_TOGGLE_LIGHT_GIZMO_OVERLAY.matches(e)) {
 			lightGizmoOverlay.setActive(lightGizmoOverlayEnabled = !lightGizmoOverlayEnabled);
+		} else if (KEY_TOGGLE_FREEZE_FRAME.matches(e)) {
+			plugin.toggleFreezeFrame();
+		} else {
+			return;
 		}
+		e.consume();
 	}
 
 	@Override
