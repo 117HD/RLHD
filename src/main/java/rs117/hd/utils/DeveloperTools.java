@@ -10,6 +10,7 @@ import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.input.KeyListener;
 import net.runelite.client.input.KeyManager;
+import rs117.hd.HdPlugin;
 import rs117.hd.data.environments.Area;
 import rs117.hd.overlays.FrameTimingsOverlay;
 import rs117.hd.overlays.LightGizmoOverlay;
@@ -46,18 +47,22 @@ public class DeveloperTools implements KeyListener {
 	@Inject
 	private LightGizmoOverlay lightGizmoOverlay;
 
+	private boolean keyBindingsEnabled = false;
 	private boolean tileInfoOverlayEnabled = false;
 	private boolean frameTimingsOverlayEnabled = false;
 	private boolean shadowMapOverlayEnabled = false;
 	private boolean lightGizmoOverlayEnabled = false;
 
 	public void activate() {
+		// Listen for commands
 		eventBus.register(this);
 
 		// Don't do anything else unless we're in the development environment
 		if (!Props.DEVELOPMENT)
 			return;
 
+		// Enable 117 HD's keybindings by default during development
+		keyBindingsEnabled = true;
 		keyManager.registerKeyListener(this);
 
 		tileInfoOverlay.setActive(tileInfoOverlayEnabled);
@@ -110,6 +115,14 @@ public class DeveloperTools implements KeyListener {
 				break;
 			case "lights":
 				lightGizmoOverlay.setActive(lightGizmoOverlayEnabled = !lightGizmoOverlayEnabled);
+				break;
+			case "keybindings":
+				keyBindingsEnabled = !keyBindingsEnabled;
+				if (keyBindingsEnabled) {
+					keyManager.registerKeyListener(this);
+				} else {
+					keyManager.unregisterKeyListener(this);
+				}
 				break;
 		}
 	}
