@@ -185,7 +185,7 @@ public class ResourcePath {
 		String path = toPosixPath();
 		if (root != null)
 			path = normalize(root.toPosixPath(), path.startsWith("/") ? path.substring(1) : path);
-		return path.length() == 0 ? "." : path;
+		return path.isEmpty() ? "." : path;
 	}
 
 	public ResourcePath toAbsolute() {
@@ -283,18 +283,21 @@ public class ResourcePath {
 	 * @return A runnable that can be called to unregister the watch callback
 	 */
 	public FileWatcher.UnregisterCallback watch(BiConsumer<ResourcePath, Boolean> changeHandler) {
-		// Only watch files on the file system
-		if (RESOURCE_PATH == null) {
-			changeHandler.accept(this, true);
-			return NOOP;
-		}
+		var path = this;
 
-		// Attempt to redirect to the resource directory
-		ResourcePath path = RESOURCE_PATH.chroot().resolve(toAbsolute().toPath().toString());
+		// Redirect to the project folder during development
+		if (RESOURCE_PATH != null)
+			path = RESOURCE_PATH.chroot().resolve(toAbsolute().toPath().toString());
 
 		// Load once up front
 		changeHandler.accept(path, true);
-		return FileWatcher.watchPath(path, p -> changeHandler.accept(p, false));
+
+		// Watch for changes if the resource is on the file system, which will exclude paths pointing into the JAR
+		// By default, unless paths are overridden by VM arguments, all of 117 HD's paths point into the JAR
+		if (isFileSystemResource())
+			return FileWatcher.watchPath(path, p -> changeHandler.accept(p, false));
+
+		return NOOP;
 	}
 
 	public FileWatcher.UnregisterCallback watch(Consumer<ResourcePath> changeHandler) {
@@ -433,14 +436,14 @@ public class ResourcePath {
 
     private static String normalize(@Nullable String workingDirectory, String[] parts) {
         Stack<String> resolvedParts = new Stack<>();
-        if (workingDirectory != null && workingDirectory.length() > 0 && !workingDirectory.equals("."))
+		if (workingDirectory != null && !workingDirectory.isEmpty() && !workingDirectory.equals("."))
             resolvedParts.addAll(Arrays.asList(normalizeSlashes(workingDirectory).split("/")));
 
         if (parts.length > 0)
             parts[0] = resolveTilde(parts[0]);
 
         for (String part : parts) {
-            if (part == null || part.length() == 0 || part.equals("."))
+			if (part == null || part.isEmpty() || part.equals("."))
                 continue;
 
             part = normalizeSlashes(part);
@@ -450,7 +453,7 @@ public class ResourcePath {
 
             for (String normalizedPart : part.split("/")) {
                 if (normalizedPart.equals("..") &&
-                    resolvedParts.size() > 0 &&
+					!resolvedParts.isEmpty() &&
                     !resolvedParts.peek().equals("..")
                 ) {
                     resolvedParts.pop();
