@@ -25837,7 +25837,7 @@
     "description": "DRAGON_HARPOON_SPECIAL",
     "height": 20,
     "alignment": "CENTER",
-    "radius": 150,
+    "radius": 140,
     "strength": 10,
     "color": [
       255,
@@ -25846,7 +25846,7 @@
     ],
     "type": "FLICKER",
     "duration": 0,
-    "range": 40,
+    "range": 20,
     "fadeInDuration": 250,
     "fadeOutDuration": 125,
     "graphicsObjectIds": [
