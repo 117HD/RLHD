@@ -19179,8 +19179,8 @@
   {
     "description": "TEMPOROSS_SHRINE",
     "height": 150,
-    "alignment": "CENTER",
-    "radius": 300,
+    "alignment": "FRONT",
+    "radius": 200,
     "strength": 8.8,
     "color": [
       252,
@@ -19251,6 +19251,65 @@
       41245
     ]
   },
+  {
+    "description": "TEMPOROSS_REWARD_POOL_FULL",
+    "height": 50 ,
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 5.5,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 3200,
+    "range": 20,
+    "objectIds": [
+      41302,
+      41301
+    ]
+  },
+  {
+    "description": "TEMPOROSS_REWARD_POOL_HALF",
+    "height": 50 ,
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 3,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 3200,
+    "range": 20,
+    "objectIds": [
+      41300,
+      41299,
+      41298
+    ]
+  },
+  {
+    "description": "TEMPOROSS_REWARD_POOL_LOW",
+    "height": 50 ,
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 3,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 3200,
+    "range": 20,
+    "objectIds": [
+      41297,
+      41296
+    ]
+  },
+
   {
     "description": "CROSSBOWMAN_STATUE_BOLT",
     "height": 220,
