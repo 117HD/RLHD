@@ -28,8 +28,8 @@ import rs117.hd.HdPlugin;
 import rs117.hd.scene.LightManager;
 import rs117.hd.scene.lights.Light;
 import rs117.hd.scene.lights.LightType;
-import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.Mat4;
+import rs117.hd.utils.Vector;
 
 import static rs117.hd.HdPlugin.NEAR_PLANE;
 
@@ -147,8 +147,8 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 			int x = Math.round(point[0]);
 			int y = Math.round(point[1]);
 
-			HDUtils.subtract(lightToCamera, plugin.cameraPosition, lightPos);
-			float distanceFromCamera = HDUtils.length(lightToCamera);
+			Vector.subtract(lightToCamera, plugin.cameraPosition, lightPos);
+			float distanceFromCamera = Vector.length(lightToCamera);
 
 			// Take perspective depth into account
 			int currentDiameter = Math.round(l.radius * 2 / distanceFromCamera * client.getScale());
@@ -158,7 +158,7 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 			int maxDiameter = Math.round(definedDiameter * (1 + fRange));
 
 			if (mousePos != null && hovered == null) {
-				float d = HDUtils.length(mousePos.getX() - x, mousePos.getY() - y);
+				float d = Vector.length(mousePos.getX() - x, mousePos.getY() - y);
 				if (d <= outerHandleRingDiameter / 2f + hoverDistanceMargin ||
 					!hideRadiusRings && Math.abs(d - currentDiameter / 2f) < hoverDistanceMargin * 2)
 					hovered = l;

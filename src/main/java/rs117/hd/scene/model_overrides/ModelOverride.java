@@ -15,8 +15,8 @@ import rs117.hd.data.materials.Material;
 import rs117.hd.data.materials.UvType;
 import rs117.hd.utils.AABB;
 import rs117.hd.utils.GsonUtils;
-import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.Props;
+import rs117.hd.utils.Vector;
 
 import static net.runelite.api.Perspective.*;
 
@@ -327,11 +327,12 @@ public class ModelOverride
 		// Compute face normal
 		float[] a = new float[3];
 		float[] b = new float[3];
-		HDUtils.subtract(a, v[1], v[0]);
-		HDUtils.subtract(b, v[2], v[0]);
+		Vector.subtract(a, v[1], v[0]);
+		Vector.subtract(b, v[2], v[0]);
 		float[] n = new float[3];
-		HDUtils.cross(n, a, b);
-		float[] absN = HDUtils.abs(a, n);
+		Vector.cross(n, a, b);
+		float[] absN = new float[3];
+		Vector.abs(absN, n);
 
 		out[2] = out[6] = out[10] = 0;
 		if (absN[0] > absN[1] && absN[0] > absN[2]) {

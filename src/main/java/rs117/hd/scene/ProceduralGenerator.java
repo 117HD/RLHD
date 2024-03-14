@@ -43,12 +43,12 @@ import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.*;
 import static rs117.hd.scene.SceneUploader.SCENE_OFFSET;
 import static rs117.hd.scene.tile_overrides.TileOverride.OVERLAY_FLAG;
-import static rs117.hd.utils.HDUtils.add;
 import static rs117.hd.utils.HDUtils.calculateSurfaceNormals;
 import static rs117.hd.utils.HDUtils.clamp;
 import static rs117.hd.utils.HDUtils.dotLightDirectionTile;
 import static rs117.hd.utils.HDUtils.lerp;
 import static rs117.hd.utils.HDUtils.vertexHash;
+import static rs117.hd.utils.Vector.add;
 
 @Slf4j
 @Singleton
