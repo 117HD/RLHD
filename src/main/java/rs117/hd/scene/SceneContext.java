@@ -1,12 +1,13 @@
 package rs117.hd.scene;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ListMultimap;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import net.runelite.api.*;
@@ -15,6 +16,7 @@ import rs117.hd.data.environments.Area;
 import rs117.hd.data.materials.Material;
 import rs117.hd.scene.environments.Environment;
 import rs117.hd.scene.lights.Light;
+import rs117.hd.scene.lights.TileObjectImpostorTracker;
 import rs117.hd.utils.AABB;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.buffer.GpuFloatBuffer;
@@ -57,8 +59,12 @@ public class SceneContext {
 	public Map<Integer, Integer> vertexUnderwaterDepth;
 	public int[][][] underwaterDepthLevels;
 
+	public int numVisibleLights = 0;
 	public final ArrayList<Light> lights = new ArrayList<>();
-	public final HashSet<Projectile> projectiles = new HashSet<>();
+	public final HashSet<Projectile> knownProjectiles = new HashSet<>();
+	public final HashMap<TileObject, TileObjectImpostorTracker> trackedTileObjects = new HashMap<>();
+	public final ListMultimap<Integer, TileObjectImpostorTracker> trackedVarps = ArrayListMultimap.create();
+	public final ListMultimap<Integer, TileObjectImpostorTracker> trackedVarbits = ArrayListMultimap.create();
 
 	public final ArrayList<Environment> environments = new ArrayList<>();
 
@@ -150,13 +156,12 @@ public class SceneContext {
 		return sceneToWorld(sceneExX - SCENE_OFFSET, sceneExY - SCENE_OFFSET, plane);
 	}
 
-	public Collection<LocalPoint> worldInstanceToLocals(WorldPoint worldPoint)
+	public Stream<LocalPoint> worldInstanceToLocals(WorldPoint worldPoint)
 	{
 		return WorldPoint.toLocalInstance(scene, worldPoint)
 			.stream()
 			.map(this::worldToLocal)
-			.filter(Objects::nonNull)
-			.collect(Collectors.toList());
+			.filter(Objects::nonNull);
 	}
 
 	/**

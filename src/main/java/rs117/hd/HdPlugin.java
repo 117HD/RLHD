@@ -43,7 +43,6 @@ import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -439,7 +438,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private long lastFrameTimeMillis;
 	private float lastFrameClientTime;
 	private int gameTicksUntilSceneReload = 0;
-	public int visibleLightCount;
 
 	@Provides
 	HdPluginConfig provideConfig(ConfigManager configManager) {
@@ -466,7 +464,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				elapsedClientTime = 0;
 				lastFrameTimeMillis = 0;
 				lastFrameClientTime = 0;
-				visibleLightCount = 0;
 
 				AWTContext.loadNatives();
 				canvas = client.getCanvas();
@@ -1429,8 +1426,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				Arrays.fill(cameraShift, 0);
 
 				try {
+					frameTimer.begin(Timer.UPDATE_ENVIRONMENT);
 					environmentManager.update(sceneContext);
+					frameTimer.end(Timer.UPDATE_ENVIRONMENT);
+					frameTimer.begin(Timer.UPDATE_LIGHTS);
 					lightManager.update(sceneContext);
+					frameTimer.end(Timer.UPDATE_LIGHTS);
 				} catch (Exception ex) {
 					log.error("Error while updating environment or lights:", ex);
 					stopPlugin();
@@ -1461,12 +1462,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (sceneContext.scene == scene) {
 			// Update lights UBO
 			uniformBufferLights.clear();
-			ArrayList<Light> visibleLights = lightManager.getVisibleLights(configMaxDynamicLights);
-			visibleLightCount = visibleLights.size();
-			for (Light light : visibleLights) {
-				uniformBufferLights.putFloat(light.x + cameraShift[0]);
-				uniformBufferLights.putFloat(light.z);
-				uniformBufferLights.putFloat(light.y + cameraShift[1]);
+			for (int i = 0; i < sceneContext.numVisibleLights; i++) {
+				Light light = sceneContext.lights.get(i);
+				uniformBufferLights.putFloat(light.pos[0] + cameraShift[0]);
+				uniformBufferLights.putFloat(light.pos[1]);
+				uniformBufferLights.putFloat(light.pos[2] + cameraShift[1]);
 				uniformBufferLights.putFloat(light.radius * light.radius);
 				uniformBufferLights.putFloat(light.color[0] * light.strength);
 				uniformBufferLights.putFloat(light.color[1] * light.strength);
@@ -2016,7 +2016,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			glUniform1f(uniGroundFogOpacity, config.groundFog() ? environmentManager.currentGroundFogOpacity : 0);
 
 			// Lights & lightning
-			glUniform1i(uniPointLightsCount, visibleLightCount);
+			glUniform1i(uniPointLightsCount, sceneContext.numVisibleLights);
 			glUniform1f(uniLightningBrightness, environmentManager.getLightningBrightness());
 
 			glUniform1f(uniSaturation, config.saturation() / 100f);

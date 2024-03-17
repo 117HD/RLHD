@@ -17,6 +17,7 @@ public enum Timer {
 	MODEL_PUSHING_UV(false, "Model Pushing UV"),
 	UPDATE_ENVIRONMENT,
 	UPDATE_LIGHTS,
+	OBJECT_TRACKING,
 	UPLOAD_GEOMETRY(true),
 	UPLOAD_UI(true, "Upload UI"),
 	COMPUTE(true),

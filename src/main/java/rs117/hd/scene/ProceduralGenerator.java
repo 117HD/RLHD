@@ -607,18 +607,8 @@ public class ProceduralGenerator {
 					{
 						continue;
 					}
-					int maxRange = DEPTH_LEVEL_SLOPE[sceneContext.underwaterDepthLevels[z][x][y] - 1];
-					int minRange = (int) (DEPTH_LEVEL_SLOPE[sceneContext.underwaterDepthLevels[z][x][y] - 1] * 0.1f);
-					// Range from noise-generated terrain is 10-60.
-					// Translate the result from range 0-1.
-//					float noiseOffset = (HeightCalc.calculate(baseX + x + 0xe3b7b, baseY + y + 0x87cce) - 10) / 50f;
-					float noiseOffset = 0.5f;
-					// limit range of variation
-					float minOffset = 0.25f;
-					float maxOffset = 0.75f;
-					noiseOffset = lerp(minOffset, maxOffset, noiseOffset);
-					// apply offset to vertex height range
-					int heightOffset = (int) lerp(minRange, maxRange, noiseOffset);
+					int depth = DEPTH_LEVEL_SLOPE[sceneContext.underwaterDepthLevels[z][x][y] - 1];
+					int heightOffset = (int) (depth * .55f); // legacy weirdness
 					underwaterDepths[z][x][y] = heightOffset;
 				}
 			}
