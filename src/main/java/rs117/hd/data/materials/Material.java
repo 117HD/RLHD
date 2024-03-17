@@ -653,8 +653,11 @@ public enum Material {
 		.setSpecular(4.1f, 60)),
 	WATER_PUDDLE(NONE, p -> p
 		.setSpecular(1.5f, 80)),
+	HD_WOOD_PLANKS_1_N,
 	HD_WOOD_PLANKS_1(p -> p
 		.replaceIf(plugin -> plugin.configModelTextures, WOOD_PLANKS_1)
+		.setNormalMap(HD_WOOD_PLANKS_1_N)
+		.setSpecular(0.3f, 30)
 	),
 	HD_WOOD_PLANKS_2_N,
 	HD_WOOD_PLANKS_2(p -> p
