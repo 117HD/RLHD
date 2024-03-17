@@ -653,11 +653,15 @@ public enum Material {
 		.setSpecular(4.1f, 60)),
 	WATER_PUDDLE(NONE, p -> p
 		.setSpecular(1.5f, 80)),
-	HD_WOOD_PLANKS_1_N,
 	HD_WOOD_PLANKS_1(p -> p
-		.setNormalMap(HD_WOOD_PLANKS_1_N)
+		.replaceIf(plugin -> plugin.configModelTextures, WOOD_PLANKS_1)
+	),
+	HD_WOOD_PLANKS_2_N,
+	HD_WOOD_PLANKS_2(p -> p
+		.setNormalMap(HD_WOOD_PLANKS_2_N)
 		.setSpecular(0.3f, 40)
 		.setBrightness(1.2f)),
+
 	HD_ROOF_BRICK_TILE_N,
 	HD_ROOF_BRICK_TILE(ROOF_BRICK_TILE, p -> p
 		.replaceIf(plugin -> plugin.configModelTextures, ROOF_BRICK_TILE)
