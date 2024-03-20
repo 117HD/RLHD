@@ -146,7 +146,7 @@ public class TextureManager {
 	private int[] vanillaTextureIndexToMaterialUniformIndex = {};
 
 	public int getMaterialIndex(@Nonnull Material material, int vanillaTextureIndex) {
-		if (material == Material.NONE &&
+		if (material == Material.VANILLA &&
 			vanillaTextureIndex >= 0 &&
 			vanillaTextureIndex < vanillaTextureIndexToMaterialUniformIndex.length)
 			return vanillaTextureIndexToMaterialUniformIndex[vanillaTextureIndex];
