@@ -35,6 +35,7 @@ import rs117.hd.config.AntiAliasingMode;
 import rs117.hd.config.ColorBlindMode;
 import rs117.hd.config.Contrast;
 import rs117.hd.config.DefaultSkyColor;
+import rs117.hd.config.Filters;
 import rs117.hd.config.FogDepthMode;
 import rs117.hd.config.MaxDynamicLights;
 import rs117.hd.config.Saturation;
@@ -640,6 +641,18 @@ public interface HdPluginConfig extends Config
 	)
 	default boolean hdTzHaarReskin() {
 		return true;
+	}
+
+	String KEY_HD_FILTER = "filters";
+	@ConfigItem(
+		keyName = KEY_HD_FILTER,
+		name = "Effect Filters",
+		description = "Adds Fun Effects.",
+		position = 12,
+		section = environmentSettings
+	)
+	default Filters effect() {
+		return Filters.NONE;
 	}
 
 

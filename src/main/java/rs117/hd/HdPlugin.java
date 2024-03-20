@@ -48,6 +48,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -79,6 +80,7 @@ import org.lwjgl.opengl.*;
 import org.lwjgl.system.Callback;
 import org.lwjgl.system.Configuration;
 import rs117.hd.config.AntiAliasingMode;
+import rs117.hd.config.Filters;
 import rs117.hd.config.SeasonalTheme;
 import rs117.hd.config.ShadingMode;
 import rs117.hd.config.ShadowMode;
@@ -359,6 +361,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private int uniLightDir;
 	private int uniShadowMaxBias;
 	private int uniShadowsEnabled;
+	private int uniFilterType;
+	private int uniFilterTypePrevious;
+	private int uniFadeProgress;
 	private int uniUnderwaterEnvironment;
 	private int uniUnderwaterCaustics;
 	private int uniUnderwaterCausticsColor;
@@ -871,6 +876,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		uniLightDir = glGetUniformLocation(glSceneProgram, "lightDir");
 		uniShadowMaxBias = glGetUniformLocation(glSceneProgram, "shadowMaxBias");
 		uniShadowsEnabled = glGetUniformLocation(glSceneProgram, "shadowsEnabled");
+		uniFilterType = glGetUniformLocation(glSceneProgram, "filterType");
+		uniFilterTypePrevious = glGetUniformLocation(glSceneProgram, "filterTypePrevious");
+		uniFadeProgress = glGetUniformLocation(glSceneProgram, "fadeProgress");
 		uniUnderwaterEnvironment = glGetUniformLocation(glSceneProgram, "underwaterEnvironment");
 		uniUnderwaterCaustics = glGetUniformLocation(glSceneProgram, "underwaterCaustics");
 		uniUnderwaterCausticsColor = glGetUniformLocation(glSceneProgram, "underwaterCausticsColor");
@@ -1738,6 +1746,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		frameTimer.end(Timer.UPLOAD_UI);
 	}
 
+	public int fadeProgress;
+	public int lastFilterType;
+
 	@Override
 	public void draw(int overlayColor) {
 		final GameState gameState = client.getGameState();
@@ -2027,7 +2038,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			glUniform1f(uniShadowMaxBias, maxBias / 10000f);
 
 			glUniform1i(uniShadowsEnabled, configShadowsEnabled ? 1 : 0);
-
+			glUniform1i(uniFilterType, config.effect().ordinal());
+			glUniform1i(uniFilterTypePrevious, lastFilterType);
+			glUniform1i(uniFadeProgress, fadeProgress);
 			// Calculate projection matrix
 			float[] projectionMatrix = Mat4.scale(client.getScale(), client.getScale(), 1);
 			Mat4.mul(projectionMatrix, Mat4.projection(viewportWidth, viewportHeight, NEAR_PLANE));
@@ -2440,6 +2453,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		// Exit if the plugin is off, the config is unrelated to the plugin, or if switching to a profile with the plugin turned off
 		if (!isActive || !event.getGroup().equals(CONFIG_GROUP) || !pluginManager.isPluginEnabled(this))
 			return;
+
+		if (Objects.equals(event.getKey(), KEY_HD_FILTER)) {
+			lastFilterType = Filters.valueOf(event.getOldValue()).ordinal();
+			fadeProgress = 4;
+		}
 
 		pendingConfigChanges.add(event.getKey());
 	}
@@ -3077,6 +3095,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			if (gameTicksUntilSceneReload == 1)
 				reuploadScene();
 			--gameTicksUntilSceneReload;
+		}
+
+		if (fadeProgress > 0) {
+			System.out.println(fadeProgress);
+			--fadeProgress;
 		}
 
 		// reload the scene if the player is in a house and their plane changed

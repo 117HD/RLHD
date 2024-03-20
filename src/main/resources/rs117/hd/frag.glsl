@@ -56,6 +56,12 @@ uniform float lightningBrightness;
 uniform vec3 lightDir;
 uniform float shadowMaxBias;
 uniform int shadowsEnabled;
+uniform int filterTypePrevious;
+uniform int filterType;
+uniform int fadeProgress;
+uniform float startTimeMillis;
+uniform float endTimeMillis;
+uniform float currentTimeMillis;
 uniform bool underwaterEnvironment;
 uniform bool underwaterCaustics;
 uniform vec3 underwaterCausticsColor;
@@ -97,6 +103,61 @@ vec2 worldUvs(float scale) {
 #include utils/displacement.glsl
 #include utils/shadows.glsl
 #include utils/water.glsl
+
+vec3 getFilter(int index, vec3 color) {
+    if (index == 1) {
+        return vec3(dot(color, vec3(0.2126, 0.7152, 0.0722)));
+    } else if (index == 2) {
+        return vec3(
+            dot(color, vec3(0.393, 0.769, 0.189)),
+            dot(color, vec3(0.349, 0.686, 0.168)),
+            dot(color, vec3(0.272, 0.534, 0.131))
+        );
+    } else if (index == 3) {
+        float intensity = dot(color, vec3(0.2126, 0.7152, 0.0722));
+        float modifier = 2.2;
+        return vec3(
+            intensity + (color.r - intensity) * modifier,
+            intensity + (color.g - intensity) * modifier,
+            intensity + (color.b - intensity) * modifier
+        );
+    } else if(index == 4) {
+       float threshold = 0.5;
+       float smoothness = 0.2;
+       vec3 shadedColor = smoothstep(threshold - smoothness, threshold + smoothness, color);
+       return mix(color, shadedColor, 0.6);
+    } else if(index == 5) {
+
+        float quantizationLevels = 7.0;
+        vec3 quantizedColor = floor(color * quantizationLevels) / quantizationLevels;
+        return quantizedColor;
+    }
+    return color;
+}
+
+vec3 applyFilter(vec3 color) {
+    vec3 filteredColor = color;
+
+    vec3 previousFilteredColor = getFilter(filterTypePrevious, color);
+    vec3 newFilteredColor = getFilter(filterType, color);
+
+    // Convert fadeProgress from 3 ticks to milliseconds
+    float fadeMilliseconds = fadeProgress * 600.0; // 600 ms/tick
+
+    // Convert fadeMilliseconds to 0-1 range
+    float fadeAmount = clamp(fadeMilliseconds / 1800.0, 0.0, 1.0); // 3 seconds * 600 ms/tick
+
+    // Smooth out the fadeAmount using cubic interpolation
+    float smoothedFade = smoothstep(0.0, 1.0, fadeAmount);
+    smoothedFade = smoothstep(0.0, 1.0, smoothedFade);
+
+    // Interpolate between old and new filter types based on fade progress
+    filteredColor = mix(previousFilteredColor, newFilteredColor, 1.0 - smoothedFade); // Invert smoothedFade for correct fading
+
+    return filteredColor;
+}
+
+
 
 void main() {
     vec3 downDir = vec3(0, -1, 0);
@@ -522,7 +583,7 @@ void main() {
     }
 
     outputColor.rgb = colorBlindnessCompensation(outputColor.rgb);
-
+    outputColor.rgb = applyFilter(outputColor.rgb);
     // apply fog
     if (!isUnderwater) {
         // ground fog
@@ -540,7 +601,10 @@ void main() {
         }
 
         outputColor.rgb = mix(outputColor.rgb, fogColor, combinedFog);
+
     }
 
     FragColor = outputColor;
 }
+
+
