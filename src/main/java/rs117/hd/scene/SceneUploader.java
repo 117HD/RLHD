@@ -470,10 +470,14 @@ class SceneUploader {
 
 			WaterType waterType = proceduralGenerator.tileWaterType(scene, tile, sceneTilePaint);
 			if (waterType == WaterType.NONE) {
-				swMaterial = Material.fromVanillaTexture(tileTexture);
-				seMaterial = Material.fromVanillaTexture(tileTexture);
-				neMaterial = Material.fromVanillaTexture(tileTexture);
-				nwMaterial = Material.fromVanillaTexture(tileTexture);
+				boolean disableTileOverrides = false;
+				if (tileTexture != -1) {
+					var material = Material.fromVanillaTexture(tileTexture);
+					// Disable tile overrides for newly introduced vanilla textures
+					if (material == Material.VANILLA)
+						disableTileOverrides = true;
+					swMaterial = seMaterial = neMaterial = nwMaterial = material;
+				}
 
 				swNormals = sceneContext.vertexTerrainNormals.getOrDefault(swVertexKey, swNormals);
 				seNormals = sceneContext.vertexTerrainNormals.getOrDefault(seVertexKey, seNormals);
@@ -484,32 +488,34 @@ class SceneUploader {
 					plugin.configGroundBlending && !proceduralGenerator.useDefaultColor(scene, tile) && tileTexture == -1;
 
 				GroundMaterial groundMaterial = null;
-				Overlay overlay = Overlay.getOverlay(scene, tile, plugin);
-				if (overlay != Overlay.NONE) {
-					groundMaterial = overlay.groundMaterial;
-					uvOrientation = overlay.uvOrientation;
-					uvScale = overlay.uvScale;
-					if (!useBlendedMaterialAndColor) {
-						swColor = overlay.modifyColor(swColor);
-						seColor = overlay.modifyColor(seColor);
-						nwColor = overlay.modifyColor(nwColor);
-						neColor = overlay.modifyColor(neColor);
-					}
-				} else {
-					Underlay underlay = Underlay.getUnderlay(scene, tile, plugin);
-					if (underlay != Underlay.NONE) {
-						groundMaterial = underlay.groundMaterial;
-						uvOrientation = underlay.uvOrientation;
-						uvScale = underlay.uvScale;
+				if (!disableTileOverrides) {
+					Overlay overlay = Overlay.getOverlay(scene, tile, plugin);
+					if (overlay != Overlay.NONE) {
+						groundMaterial = overlay.groundMaterial;
+						uvOrientation = overlay.uvOrientation;
+						uvScale = overlay.uvScale;
 						if (!useBlendedMaterialAndColor) {
-							swColor = underlay.modifyColor(swColor);
-							seColor = underlay.modifyColor(seColor);
-							nwColor = underlay.modifyColor(nwColor);
-							neColor = underlay.modifyColor(neColor);
+							swColor = overlay.modifyColor(swColor);
+							seColor = overlay.modifyColor(seColor);
+							nwColor = overlay.modifyColor(nwColor);
+							neColor = overlay.modifyColor(neColor);
 						}
-					} else if (tileTexture == -1) {
-						// Fall back to the default ground material if the tile is untextured
-						groundMaterial = underlay.groundMaterial;
+					} else {
+						Underlay underlay = Underlay.getUnderlay(scene, tile, plugin);
+						if (underlay != Underlay.NONE) {
+							groundMaterial = underlay.groundMaterial;
+							uvOrientation = underlay.uvOrientation;
+							uvScale = underlay.uvScale;
+							if (!useBlendedMaterialAndColor) {
+								swColor = underlay.modifyColor(swColor);
+								seColor = underlay.modifyColor(seColor);
+								nwColor = underlay.modifyColor(nwColor);
+								neColor = underlay.modifyColor(neColor);
+							}
+						} else if (tileTexture == -1) {
+							// Fall back to the default ground material if the tile is untextured
+							groundMaterial = underlay.groundMaterial;
+						}
 					}
 				}
 
@@ -841,11 +847,14 @@ class SceneUploader {
 
 				waterType = proceduralGenerator.faceWaterType(scene, tile, face, sceneTileModel);
 				if (waterType == WaterType.NONE) {
+					boolean disableTileOverrides = false;
 					if (faceTextures != null) {
 						textureIndex = faceTextures[face];
-						materialA = Material.fromVanillaTexture(textureIndex);
-						materialB = Material.fromVanillaTexture(textureIndex);
-						materialC = Material.fromVanillaTexture(textureIndex);
+						var material = Material.fromVanillaTexture(textureIndex);
+						// Disable tile overrides for newly introduced vanilla textures
+						if (material == Material.VANILLA)
+							disableTileOverrides = true;
+						materialA = materialB = materialC = material;
 					}
 
 					normalsA = sceneContext.vertexTerrainNormals.getOrDefault(vertexKeyA, normalsA);
@@ -858,35 +867,37 @@ class SceneUploader {
 						textureIndex == -1;
 
 					GroundMaterial groundMaterial = null;
-					if (ProceduralGenerator.isOverlayFace(tile, face)) {
-						Overlay overlay = Overlay.getOverlay(scene, tile, plugin);
-						if (overlay != Overlay.NONE) {
-							groundMaterial = overlay.groundMaterial;
-							uvOrientation = overlay.uvOrientation;
-							uvScale = overlay.uvScale;
-							if (!useBlendedMaterialAndColor) {
-								colorA = overlay.modifyColor(colorA);
-								colorB = overlay.modifyColor(colorB);
-								colorC = overlay.modifyColor(colorC);
+					if (!disableTileOverrides) {
+						if (ProceduralGenerator.isOverlayFace(tile, face)) {
+							Overlay overlay = Overlay.getOverlay(scene, tile, plugin);
+							if (overlay != Overlay.NONE) {
+								groundMaterial = overlay.groundMaterial;
+								uvOrientation = overlay.uvOrientation;
+								uvScale = overlay.uvScale;
+								if (!useBlendedMaterialAndColor) {
+									colorA = overlay.modifyColor(colorA);
+									colorB = overlay.modifyColor(colorB);
+									colorC = overlay.modifyColor(colorC);
+								}
+							} else if (textureIndex == -1) {
+								// Fall back to the default ground material if the tile is untextured
+								groundMaterial = overlay.groundMaterial;
 							}
-						} else if (textureIndex == -1) {
-							// Fall back to the default ground material if the tile is untextured
-							groundMaterial = overlay.groundMaterial;
-						}
-					} else {
-						Underlay underlay = Underlay.getUnderlay(scene, tile, plugin);
-						if (underlay != Underlay.NONE) {
-							groundMaterial = underlay.groundMaterial;
-							uvOrientation = underlay.uvOrientation;
-							uvScale = underlay.uvScale;
-							if (!useBlendedMaterialAndColor) {
-								colorA = underlay.modifyColor(colorA);
-								colorB = underlay.modifyColor(colorB);
-								colorC = underlay.modifyColor(colorC);
+						} else {
+							Underlay underlay = Underlay.getUnderlay(scene, tile, plugin);
+							if (underlay != Underlay.NONE) {
+								groundMaterial = underlay.groundMaterial;
+								uvOrientation = underlay.uvOrientation;
+								uvScale = underlay.uvScale;
+								if (!useBlendedMaterialAndColor) {
+									colorA = underlay.modifyColor(colorA);
+									colorB = underlay.modifyColor(colorB);
+									colorC = underlay.modifyColor(colorC);
+								}
+							} else if (textureIndex == -1) {
+								// Fall back to the default ground material if the tile is untextured
+								groundMaterial = underlay.groundMaterial;
 							}
-						} else if (textureIndex == -1) {
-							// Fall back to the default ground material if the tile is untextured
-							groundMaterial = underlay.groundMaterial;
 						}
 					}
 
