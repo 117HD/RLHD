@@ -49,6 +49,7 @@ import static rs117.hd.HdPlugin.NORMAL_SIZE;
 import static rs117.hd.HdPlugin.SCALAR_BYTES;
 import static rs117.hd.HdPlugin.UV_SIZE;
 import static rs117.hd.HdPlugin.VERTEX_SIZE;
+import static rs117.hd.scene.tile_overrides.TileOverride.NONE;
 import static rs117.hd.scene.tile_overrides.TileOverride.OVERLAY_FLAG;
 
 @SuppressWarnings("UnnecessaryLocalVariable")
@@ -478,10 +479,11 @@ class SceneUploader {
 
 			if (waterType == WaterType.NONE) {
 				if (textureId != -1) {
-					swMaterial = Material.fromVanillaTexture(textureId);
-					seMaterial = Material.fromVanillaTexture(textureId);
-					neMaterial = Material.fromVanillaTexture(textureId);
-					nwMaterial = Material.fromVanillaTexture(textureId);
+					var material = Material.fromVanillaTexture(textureId);
+					// Disable tile overrides for newly introduced vanilla textures
+					if (material == Material.VANILLA)
+						override = NONE;
+					swMaterial = seMaterial = neMaterial = nwMaterial = material;
 				}
 
 				swNormals = sceneContext.vertexTerrainNormals.getOrDefault(swVertexKey, swNormals);
@@ -841,9 +843,11 @@ class SceneUploader {
 				waterType = proceduralGenerator.seasonalWaterType(override, textureId);
 				if (waterType == WaterType.NONE) {
 					if (textureId != -1) {
-						materialA = Material.fromVanillaTexture(textureId);
-						materialB = Material.fromVanillaTexture(textureId);
-						materialC = Material.fromVanillaTexture(textureId);
+						var material = Material.fromVanillaTexture(textureId);
+						// Disable tile overrides for newly introduced vanilla textures
+						if (material == Material.VANILLA)
+							override = NONE;
+						materialA = materialB = materialC = material;
 					}
 
 					normalsA = sceneContext.vertexTerrainNormals.getOrDefault(vertexKeyA, normalsA);
