@@ -15131,5 +15131,35 @@
         "retainVanillaUvs": false
       }
     }
+  },
+  {
+    "description": "Varlamore - Objects - Stone - Stone block walls",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "objectIds": [
+      42097, 42098, 42099, 42100, 42101, 52795, 52796
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 147
+  },
+  {
+    "description": "Varlamore - Objects - Stone - Stone block steps",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      52345
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 777
+  },
+  {
+    "description": "Varlamore - Objects - Stone - Short column railing",
+    "baseMaterial": "MARBLE_2_SEMIGLOSS",
+    "objectIds": [
+      52032
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 530
   }
 ]
