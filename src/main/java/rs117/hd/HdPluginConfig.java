@@ -647,7 +647,7 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = KEY_HD_FILTER,
 		name = "Effect Filters",
-		description = "Adds Fun Effects.",
+		description = "Adds visual filters.",
 		position = 12,
 		section = environmentSettings
 	)

@@ -58,10 +58,8 @@ uniform float shadowMaxBias;
 uniform int shadowsEnabled;
 uniform int filterTypePrevious;
 uniform int filterType;
-uniform int fadeProgress;
-uniform float startTimeMillis;
-uniform float endTimeMillis;
-uniform float currentTimeMillis;
+uniform float fadeProgress;
+
 uniform bool underwaterEnvironment;
 uniform bool underwaterCaustics;
 uniform vec3 underwaterCausticsColor;
@@ -104,31 +102,6 @@ vec2 worldUvs(float scale) {
 #include utils/shadows.glsl
 #include utils/water.glsl
 #include utils/filters.glsl
-
-
-vec3 applyFilter(vec3 color) {
-    vec3 filteredColor = color;
-
-    vec3 previousFilteredColor = getFilter(filterTypePrevious, color);
-    vec3 newFilteredColor = getFilter(filterType, color);
-
-    // Convert fadeProgress from 3 ticks to milliseconds
-    float fadeMilliseconds = fadeProgress * 600.0; // 600 ms/tick
-
-    // Convert fadeMilliseconds to 0-1 range
-    float fadeAmount = clamp(fadeMilliseconds / 1800.0, 0.0, 1.0); // 3 seconds * 600 ms/tick
-
-    // Smooth out the fadeAmount using cubic interpolation
-    float smoothedFade = smoothstep(0.0, 1.0, fadeAmount);
-    smoothedFade = smoothstep(0.0, 1.0, smoothedFade);
-
-    // Interpolate between old and new filter types based on fade progress
-    filteredColor = mix(previousFilteredColor, newFilteredColor, 1.0 - smoothedFade); // Invert smoothedFade for correct fading
-
-    return filteredColor;
-}
-
-
 
 void main() {
     vec3 downDir = vec3(0, -1, 0);
@@ -554,7 +527,7 @@ void main() {
     }
 
     outputColor.rgb = colorBlindnessCompensation(outputColor.rgb);
-    outputColor.rgb = applyFilter(outputColor.rgb);
+    outputColor.rgb = applyFilter(outputColor.rgb, filterTypePrevious, fadeProgress);
     // apply fog
     if (!isUnderwater) {
         // ground fog
