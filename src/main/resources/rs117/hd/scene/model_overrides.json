@@ -15090,5 +15090,26 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.86
+  },
+  {
+    "description": "Hunter Guild cave walls",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      42251,
+      42266,
+      42267,
+      42268,
+      42270,
+      42272,
+      50906,
+      50907,
+      50908,
+      50909,
+      50910,
+      50911,
+      50922
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.86
   }
 ]
