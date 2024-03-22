@@ -15138,5 +15138,36 @@
         "retainVanillaUvs": false
       }
     }
+  },
+  {
+    "description": "Object - Textured Brick Fireplace",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      24969
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 42
+  },
+  {
+    "description": "Objects - Wooden - Hat Rack",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      374
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 84
+  },
+  {
+    "description": "Objects - Wooden - Bookcase - Textured - Wide",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      380
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "flatNormals": true
   }
 ]
