@@ -4791,6 +4791,8 @@
       8820,
       8821,
       9565,
+      9717,
+      1918,
       11449,
       11450,
       11721,
@@ -11567,6 +11569,7 @@
     "description": "Ore - Tin - Rock",
     "baseMaterial": "ROCK_3_ORE",
     "objectIds": [
+      10080,
       11360,
       11361
     ],
@@ -11577,6 +11580,7 @@
     "description": "Ore - Copper - Rock",
     "baseMaterial": "ROCK_3_ORE",
     "objectIds": [
+      10079,
       10943,
       11161
     ],
@@ -11927,7 +11931,8 @@
     "objectIds": [
       1323,
       1324,
-      1325
+      1325,
+      1458
     ],
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -15179,5 +15184,15 @@
     "objectIds": [
       9736
     ]
+  },
+  {
+    "description": "Objects - WOODEN - Textured Torch",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      198
+    ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "uvScale": 0.4
   }
 ]
