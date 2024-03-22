@@ -54,7 +54,7 @@ public class ModelCache {
 
 	private static class Buffer {
 		final boolean endMarker;
-		final int hash;
+		final long hash;
 		final long byteCapacity;
 		final IntBuffer intBuffer;
 		final FloatBuffer floatBuffer;
@@ -67,7 +67,7 @@ public class ModelCache {
 			floatBuffer = null;
 		}
 
-		public Buffer(int hash, IntBuffer buffer) {
+		public Buffer(long hash, IntBuffer buffer) {
 			endMarker = false;
 			this.hash = hash;
 			byteCapacity = buffer.capacity() * 4L;
@@ -75,7 +75,7 @@ public class ModelCache {
 			floatBuffer = null;
 		}
 
-		public Buffer(int hash, FloatBuffer buffer) {
+		public Buffer(long hash, FloatBuffer buffer) {
 			endMarker = false;
 			this.hash = hash;
 			byteCapacity = buffer.capacity() * 4L;
@@ -85,7 +85,7 @@ public class ModelCache {
 	}
 
 	private final Runnable terminationHook;
-	private final HashMap<Integer, Buffer> cache = new HashMap<>();
+	private final HashMap<Long, Buffer> cache = new HashMap<>();
 	private final ArrayDeque<Buffer> buffers = new ArrayDeque<>();
 	private final Allocation[] allocations;
 	private Allocation currentAllocation;
@@ -179,7 +179,7 @@ public class ModelCache {
 		}
 	}
 
-	private Buffer get(int hash) {
+	private Buffer get(long hash) {
 		return cache.get(hash);
 	}
 
@@ -274,21 +274,21 @@ public class ModelCache {
 		return buffer;
 	}
 
-	public IntBuffer getIntBuffer(int hash) {
+	public IntBuffer getIntBuffer(long hash) {
 		Buffer buffer = get(hash);
 		if (buffer == null)
 			return null;
 		return buffer.intBuffer;
 	}
 
-	public FloatBuffer getFloatBuffer(int hash) {
+	public FloatBuffer getFloatBuffer(long hash) {
 		Buffer buffer = get(hash);
 		if (buffer == null)
 			return null;
 		return buffer.floatBuffer;
 	}
 
-	public IntBuffer reserveIntBuffer(int hash, int capacity) {
+	public IntBuffer reserveIntBuffer(long hash, int capacity) {
 		long address = reserve(capacity * 4L);
 		if (address == 0L)
 			return null;
@@ -298,7 +298,7 @@ public class ModelCache {
 		return buffer.intBuffer;
 	}
 
-	public FloatBuffer reserveFloatBuffer(int hash, int capacity) {
+	public FloatBuffer reserveFloatBuffer(long hash, int capacity) {
 		long address = reserve(capacity * 4L);
 		if (address == 0L)
 			return null;

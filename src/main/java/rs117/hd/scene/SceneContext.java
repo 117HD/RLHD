@@ -7,12 +7,15 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import net.runelite.api.*;
 import net.runelite.api.coords.*;
-import rs117.hd.data.environments.Environment;
+import rs117.hd.data.environments.Area;
 import rs117.hd.data.materials.Material;
-import rs117.hd.scene.lights.SceneLight;
+import rs117.hd.scene.environments.Environment;
+import rs117.hd.scene.lights.Light;
+import rs117.hd.utils.AABB;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.buffer.GpuFloatBuffer;
 import rs117.hd.utils.buffer.GpuIntBuffer;
@@ -20,15 +23,16 @@ import rs117.hd.utils.buffer.GpuIntBuffer;
 import static net.runelite.api.Perspective.*;
 import static rs117.hd.HdPlugin.UV_SIZE;
 import static rs117.hd.HdPlugin.VERTEX_SIZE;
+import static rs117.hd.scene.SceneUploader.SCENE_OFFSET;
 
 public class SceneContext {
-	public final int id = HDUtils.rand.nextInt();
+	public final int id = HDUtils.rand.nextInt() & SceneUploader.SCENE_ID_MASK;
 	public final Scene scene;
 	public final HashSet<Integer> regionIds;
 	public final int expandedMapLoadingChunks;
 
 	public int staticVertexCount = 0;
-	public GpuIntBuffer staticUnorderedModelBuffer = new GpuIntBuffer();
+	public GpuIntBuffer staticUnorderedModelBuffer;
 	public GpuIntBuffer stagingBufferVertices;
 	public GpuFloatBuffer stagingBufferUvs;
 	public GpuFloatBuffer stagingBufferNormals;
@@ -53,8 +57,7 @@ public class SceneContext {
 	public Map<Integer, Integer> vertexUnderwaterDepth;
 	public int[][][] underwaterDepthLevels;
 
-	public int visibleLightCount = 0;
-	public final ArrayList<SceneLight> lights = new ArrayList<>();
+	public final ArrayList<Light> lights = new ArrayList<>();
 	public final HashSet<Projectile> projectiles = new HashSet<>();
 
 	public final ArrayList<Environment> environments = new ArrayList<>();
@@ -64,19 +67,31 @@ public class SceneContext {
 	public final float[] modelFaceNormals = new float[12];
 	public final int[] modelPusherResults = new int[2];
 
-	public SceneContext(Scene scene, int expandedMapLoadingChunks, @Nullable SceneContext previousSceneContext) {
+	public SceneContext(Scene scene, int expandedMapLoadingChunks, boolean reuseBuffers, @Nullable SceneContext previous) {
 		this.scene = scene;
 		this.regionIds = HDUtils.getSceneRegionIds(scene);
 		this.expandedMapLoadingChunks = expandedMapLoadingChunks;
 
-		if (previousSceneContext == null) {
+		if (previous == null) {
+			staticUnorderedModelBuffer = new GpuIntBuffer();
 			stagingBufferVertices = new GpuIntBuffer();
 			stagingBufferUvs = new GpuFloatBuffer();
 			stagingBufferNormals = new GpuFloatBuffer();
+		} else if (reuseBuffers) {
+			// Avoid reallocating buffers whenever possible
+			staticUnorderedModelBuffer = previous.staticUnorderedModelBuffer.clear();
+			stagingBufferVertices = previous.stagingBufferVertices.clear();
+			stagingBufferUvs = previous.stagingBufferUvs.clear();
+			stagingBufferNormals = previous.stagingBufferNormals.clear();
+			previous.staticUnorderedModelBuffer = null;
+			previous.stagingBufferVertices = null;
+			previous.stagingBufferUvs = null;
+			previous.stagingBufferNormals = null;
 		} else {
-			stagingBufferVertices = new GpuIntBuffer(previousSceneContext.stagingBufferVertices.getBuffer().capacity());
-			stagingBufferUvs = new GpuFloatBuffer(previousSceneContext.stagingBufferUvs.getBuffer().capacity());
-			stagingBufferNormals = new GpuFloatBuffer(previousSceneContext.stagingBufferNormals.getBuffer().capacity());
+			staticUnorderedModelBuffer = new GpuIntBuffer(previous.staticUnorderedModelBuffer.capacity());
+			stagingBufferVertices = new GpuIntBuffer(previous.stagingBufferVertices.capacity());
+			stagingBufferUvs = new GpuFloatBuffer(previous.stagingBufferUvs.capacity());
+			stagingBufferNormals = new GpuFloatBuffer(previous.stagingBufferNormals.capacity());
 		}
 	}
 
@@ -116,11 +131,23 @@ public class SceneContext {
 	 * @param plane		 which the local coordinate is on
 	 * @return world coordinate
 	 */
-	public WorldPoint localToWorld(LocalPoint localPoint, int plane)
+	public int[] localToWorld(LocalPoint localPoint, int plane)
 	{
-		if (scene.isInstance() && !localPoint.isInScene())
-			return WorldPoint.fromLocal(scene, localPoint.getX(), localPoint.getY(), plane);
-		return WorldPoint.fromLocalInstance(scene, localPoint, plane);
+		return HDUtils.localToWorld(scene, localPoint.getX(), localPoint.getY(), plane);
+	}
+
+	public int[] localToWorld(int localX, int localY, int plane)
+	{
+		return HDUtils.localToWorld(scene, localX, localY, plane);
+	}
+
+	public int[] sceneToWorld(int sceneX, int sceneY, int plane)
+	{
+		return HDUtils.localToWorld(scene, sceneX * LOCAL_TILE_SIZE, sceneY * LOCAL_TILE_SIZE, plane);
+	}
+
+	public int[] extendedSceneToWorld(int sceneExX, int sceneExY, int plane) {
+		return sceneToWorld(sceneExX - SCENE_OFFSET, sceneExY - SCENE_OFFSET, plane);
 	}
 
 	public Collection<LocalPoint> worldInstanceToLocals(WorldPoint worldPoint)
@@ -133,7 +160,7 @@ public class SceneContext {
 	}
 
 	/**
-	 * Gets the local coordinate at the center of the passed tile.
+	 * Gets the local coordinate at the south-western corner of the passed tile.
 	 *
 	 * @param worldPoint the passed tile
 	 * @return coordinate if the tile is in the current scene, otherwise null
@@ -145,5 +172,20 @@ public class SceneContext {
 			(worldPoint.getX() - scene.getBaseX()) * LOCAL_TILE_SIZE,
 			(worldPoint.getY() - scene.getBaseY()) * LOCAL_TILE_SIZE
 		);
+	}
+
+	/**
+	 * Gets the local coordinate at the south-western corner of the passed tile.
+	 */
+	public int[] worldToLocal(@Nonnull int[] worldPoint) {
+		return new int[] { (worldPoint[0] - scene.getBaseX()) * LOCAL_TILE_SIZE, (worldPoint[1] - scene.getBaseY()) * LOCAL_TILE_SIZE };
+	}
+
+	public boolean intersects(Area area) {
+		return intersects(area.aabbs);
+	}
+
+	public boolean intersects(AABB... aabbs) {
+		return HDUtils.sceneIntersects(scene, expandedMapLoadingChunks, aabbs);
 	}
 }

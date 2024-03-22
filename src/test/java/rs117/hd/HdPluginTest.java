@@ -19,6 +19,7 @@ public class HdPluginTest
 	{
 		Props.DEVELOPMENT = true;
 		ResourcePath.RESOURCE_PATH = path("src/main/resources");
+		ClassLoader.getSystemClassLoader().setDefaultAssertionStatus(true);
 		useLatestPluginHub();
 		ExternalPluginManager.loadBuiltin(HdPlugin.class);
 		RuneLite.main(args);

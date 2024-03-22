@@ -29,14 +29,16 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
-import net.runelite.api.Constants;
-import net.runelite.api.coords.WorldPoint;
-
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import net.runelite.api.coords.*;
+import rs117.hd.data.environments.Area;
 
-public class AABB
-{
+import static net.runelite.api.Constants.*;
+
+public class AABB {
 	public final int minX;
 	public final int minY;
 	public final int minZ;
@@ -44,33 +46,29 @@ public class AABB
 	public final int maxY;
 	public final int maxZ;
 
-	public AABB(int regionId)
-	{
+	public AABB(int regionId) {
 		minX = (regionId >>> 8) << 6;
 		minY = (regionId & 0xFF) << 6;
-		maxX = minX + Constants.REGION_SIZE;
-		maxY = minY + Constants.REGION_SIZE;
+		maxX = minX + REGION_SIZE - 1;
+		maxY = minY + REGION_SIZE - 1;
 		minZ = Integer.MIN_VALUE;
 		maxZ = Integer.MAX_VALUE;
 	}
 
-	public AABB(int x, int y)
-	{
+	public AABB(int x, int y) {
 		minX = maxX = x;
 		minY = maxY = y;
 		minZ = Integer.MIN_VALUE;
 		maxZ = Integer.MAX_VALUE;
 	}
 
-	public AABB(int x, int y, int z)
-	{
+	public AABB(int x, int y, int z) {
 		minX = maxX = x;
 		minY = maxY = y;
 		minZ = maxZ = z;
 	}
 
-	public AABB(int x1, int y1, int x2, int y2)
-	{
+	public AABB(int x1, int y1, int x2, int y2) {
 		minX = Math.min(x1, x2);
 		minY = Math.min(y1, y2);
 		minZ = Integer.MIN_VALUE;
@@ -79,8 +77,7 @@ public class AABB
 		maxZ = Integer.MAX_VALUE;
 	}
 
-	public AABB(int x1, int y1, int x2, int y2, int z1)
-	{
+	public AABB(int x1, int y1, int x2, int y2, int z1) {
 		minX = Math.min(x1, x2);
 		minY = Math.min(y1, y2);
 		maxX = Math.max(x1, x2);
@@ -88,8 +85,7 @@ public class AABB
 		minZ = maxZ = z1;
 	}
 
-	public AABB(int x1, int y1, int z1, int x2, int y2, int z2)
-	{
+	public AABB(int x1, int y1, int z1, int x2, int y2, int z2) {
 		minX = Math.min(x1, x2);
 		minY = Math.min(y1, y2);
 		minZ = Math.min(z1, z2);
@@ -98,83 +94,89 @@ public class AABB
 		maxZ = Math.max(z1, z2);
 	}
 
-	public static AABB parse(int... ints)
-	{
-		switch (ints.length)
-		{
-			case 2:
-				return new AABB(ints[0], ints[1]);
-			case 3:
-				return new AABB(ints[0], ints[1], ints[2]);
-			case 4:
-				return new AABB(ints[0], ints[1], ints[2], ints[3]);
-			case 5:
-				return new AABB(ints[0], ints[2], ints[1], ints[3], ints[4]);
-			case 6:
-				return new AABB(ints[0], ints[1], ints[2], ints[3], ints[4], ints[5]);
-		}
-		throw new IllegalArgumentException(
-			"AABB must be one of: (x,y), (x,y,z), (x1,y1,x2,y2), (x1,y1,x2,y2,z), (x1,y1,x2,y2,z1,z2)");
+	public AABB(int[] from, int[] to) {
+		this(from[0], from[1], from[2], to[0], to[1], to[2]);
 	}
 
-	public boolean hasZ()
-	{
+	public static AABB[] regions(int... regionIds) {
+		return Arrays.stream(regionIds)
+			.mapToObj(AABB::new)
+			.toArray(AABB[]::new);
+	}
+
+	public static AABB regionBox(int fromRegionId, int toRegionId) {
+		int x1 = fromRegionId >>> 8;
+		int y1 = fromRegionId & 0xFF;
+		int x2 = toRegionId >>> 8;
+		int y2 = toRegionId & 0xFF;
+		if (x1 > x2) {
+			int temp = x1;
+			x1 = x2;
+			x2 = temp;
+		}
+		if (y1 > y2) {
+			int temp = y1;
+			y1 = y2;
+			y2 = temp;
+		}
+		return new AABB((x1) << 6, (y1) << 6, ((x2) + 1 << 6) - 1, ((y2) + 1 << 6) - 1);
+	}
+
+	public AABB onPlane(int plane) {
+		return new AABB(minX, minY, plane, maxX, maxY, plane);
+	}
+
+	public boolean hasZ() {
 		return minZ != Integer.MIN_VALUE || maxZ != Integer.MAX_VALUE;
 	}
 
-	public boolean isPoint()
-	{
+	public boolean isPoint() {
 		return
 			minX == maxX &&
 			minY == maxY &&
 			(!hasZ() || minZ == maxZ);
 	}
 
-	public boolean isVolume()
-	{
+	public boolean isVolume() {
 		return !isPoint();
 	}
 
-	public boolean contains(int x, int y)
-	{
+	public boolean contains(int... worldXYZ) {
 		return
-			minX <= x && x <= maxX &&
-			minY <= y && y <= maxY;
-	}
-
-	public boolean contains(int x, int y, int z)
-	{
-		return
-			minX <= x && x <= maxX &&
-			minY <= y && y <= maxY &&
-			minZ <= z && z <= maxZ;
+			minX <= worldXYZ[0] && worldXYZ[0] <= maxX &&
+			minY <= worldXYZ[1] && worldXYZ[1] <= maxY &&
+			(worldXYZ.length < 3 || minZ <= worldXYZ[2] && worldXYZ[2] <= maxZ);
 	}
 
 	public boolean contains(WorldPoint location) {
 		return contains(location.getX(), location.getY(), location.getPlane());
 	}
 
-	public boolean intersects(int minX, int minY, int maxX, int maxY)
-	{
+	public boolean contains(AABB other) {
+		return
+			contains(other.minX, other.minY, other.minZ) &&
+			contains(other.maxX, other.maxY, other.maxZ);
+	}
+
+	public boolean intersects(int minX, int minY, int maxX, int maxY) {
 		return
 			minX < this.maxX && maxX > this.minX &&
 			minY < this.maxY && maxY > this.minY;
 	}
 
-	public boolean intersects(int minX, int maxX, int minY, int maxY, int minZ, int maxZ)
-	{
+	public boolean intersects(int minX, int maxX, int minY, int maxY, int minZ, int maxZ) {
 		return
 			minX < this.maxX && maxX > this.minX &&
 			minY < this.maxY && maxY > this.minY &&
 			minZ < this.maxZ && maxZ > this.minZ;
 	}
 
-	public boolean intersects(AABB other)
-	{
+	public boolean intersects(AABB other) {
 		return intersects(
 			other.minX, other.maxX,
 			other.minY, other.maxY,
-			other.minZ, other.maxZ);
+			other.minZ, other.maxZ
+		);
 	}
 
 	@Override
@@ -184,32 +186,60 @@ public class AABB
 		return String.format("AABB{min=(%d,%d), max=(%d,%d)}", minX, minY, maxX, maxY);
 	}
 
-	public static class JsonAdapter extends TypeAdapter<AABB[]>
-	{
+	public String toArgs() {
+		if (isPoint())
+			return String.format("%d, %d", minX, minY);
+		if (minZ == maxZ)
+			return String.format("%d, %d, %d, %d, %d", minX, minY, maxX, maxY, minZ);
+		return String.format("%d, %d, %d, %d, %d, %d", minX, minY, minZ, maxX, maxY, maxZ);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof AABB))
+			return false;
+
+		AABB other = (AABB) obj;
+		return
+			other.minX == minX && other.maxX == maxX &&
+			other.minY == minY && other.maxY == maxY &&
+			other.minZ == minZ && other.maxZ == maxZ;
+	}
+
+	public static class JsonAdapter extends TypeAdapter<AABB[]> {
+		private final Area.JsonAdapter areaAdapter = new Area.JsonAdapter();
+
 		@Override
-		public AABB[] read(JsonReader in) throws IOException
-		{
+		public AABB[] read(JsonReader in) throws IOException {
 			in.beginArray();
 			ArrayList<AABB> list = new ArrayList<>();
-			while (in.hasNext() && in.peek() != JsonToken.END_ARRAY)
-			{
-				if (in.peek() == JsonToken.NULL)
-				{
+			while (in.hasNext() && in.peek() != JsonToken.END_ARRAY) {
+				if (in.peek() == JsonToken.NULL) {
 					in.skipValue();
+					continue;
+				}
+
+				// Parse numbers as region IDs
+				if (in.peek() == JsonToken.NUMBER) {
+					list.add(new AABB(in.nextInt()));
+					continue;
+				}
+
+				if (in.peek() == JsonToken.STRING) {
+					var area = areaAdapter.read(in);
+					Collections.addAll(list, area.aabbs);
 					continue;
 				}
 
 				in.beginArray();
 				int[] ints = new int[6];
 				int i = 0;
-				while (in.hasNext())
-				{
-					switch (in.peek())
-					{
+				while (in.hasNext()) {
+					switch (in.peek()) {
 						case NUMBER:
 							if (i >= ints.length)
 								throw new IOException(
-									"Too many numbers in AABB entry. Must be less than " + ints.length + ".");
+									"Too many numbers in AABB entry (> " + ints.length + ") at " + GsonUtils.location(in));
 							ints[i++] = in.nextInt();
 						case END_ARRAY:
 							break;
@@ -217,13 +247,15 @@ public class AABB
 							in.skipValue();
 							continue;
 						default:
-							throw new IOException("Malformed AABB entry. Unexpected token: " + in.peek());
+							throw new IOException("Malformed AABB entry. Unexpected token: " + in.peek() + " at " + GsonUtils.location(in));
 					}
 				}
 				in.endArray();
 
-				switch (i)
-				{
+				switch (i) {
+					case 1:
+						list.add(new AABB(ints[0]));
+						break;
 					case 2:
 						list.add(new AABB(ints[0], ints[1]));
 						break;
@@ -246,24 +278,20 @@ public class AABB
 		}
 
 		@Override
-		public void write(JsonWriter out, AABB[] aabbs) throws IOException
-		{
-			if (aabbs == null || aabbs.length == 0)
-			{
+		public void write(JsonWriter out, AABB[] aabbs) throws IOException {
+			if (aabbs == null || aabbs.length == 0) {
 				out.nullValue();
 				return;
 			}
 
 			out.beginArray();
-			for (AABB aabb : aabbs)
-			{
+			for (AABB aabb : aabbs) {
 				out.beginArray();
 				out.value(aabb.minX);
 				out.value(aabb.minY);
 				if (aabb.hasZ())
 					out.value(aabb.minZ);
-				if (aabb.isVolume())
-				{
+				if (aabb.isVolume()) {
 					out.value(aabb.maxX);
 					out.value(aabb.maxY);
 					if (aabb.hasZ())

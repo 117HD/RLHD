@@ -40,7 +40,11 @@ import java.nio.file.WatchService;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.DelayQueue;
+import java.util.concurrent.Delayed;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
+import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
@@ -51,14 +55,40 @@ import static java.nio.file.StandardWatchEventKinds.OVERFLOW;
 import static rs117.hd.utils.ResourcePath.path;
 
 @Slf4j
-public class FileWatcher
-{
+public class FileWatcher {
 	private static final WatchEvent.Kind<?>[] eventKinds = { ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY };
 
 	private static Thread watcherThread;
+	private static Thread runnerThread;
 	private static WatchService watchService;
 	private static final HashMap<WatchKey, Path> watchKeys = new HashMap<>();
 	private static final ListMultimap<String, Consumer<ResourcePath>> changeHandlers = ArrayListMultimap.create();
+	private static final DelayQueue<PendingChange> pendingChanges = new DelayQueue<>();
+
+	@AllArgsConstructor
+	private static class PendingChange implements Delayed {
+		final ResourcePath path;
+		final Consumer<ResourcePath> handler;
+		long delayUntilMillis;
+
+		@Override
+		public boolean equals(Object obj) {
+			return
+				obj instanceof PendingChange &&
+				path.equals(((PendingChange) obj).path) &&
+				handler.equals(((PendingChange) obj).handler);
+		}
+
+		@Override
+		public long getDelay(TimeUnit timeUnit) {
+			return timeUnit.convert(delayUntilMillis - System.currentTimeMillis(), TimeUnit.MILLISECONDS);
+		}
+
+		@Override
+		public int compareTo(Delayed delayed) {
+			return (int) (getDelay(TimeUnit.MILLISECONDS) - delayed.getDelay(TimeUnit.MILLISECONDS));
+		}
+	}
 
 	private static void initialize() throws IOException {
 		watchService = FileSystems.getDefault().newWatchService();
@@ -91,29 +121,44 @@ public class FileWatcher
 							if (path.toFile().isDirectory())
 								key += File.separator;
 
-							for (Map.Entry<String, Consumer<ResourcePath>> entry : changeHandlers.entries()) {
-								if (key.startsWith(entry.getKey())) {
-									try {
-										entry.getValue().accept(resourcePath);
-									} catch (Throwable throwable) {
-										log.error("Error in change handler for path: {}", dir, throwable);
-									}
-								}
-							}
+							for (Map.Entry<String, Consumer<ResourcePath>> entry : changeHandlers.entries())
+								if (key.startsWith(entry.getKey()))
+									queuePendingChange(resourcePath, entry.getValue());
 						} catch (Exception ex) {
 							log.error("Error while handling file change event:", ex);
 						}
 					}
 					watchKey.reset();
 				}
-			}
-			catch (ClosedWatchServiceException ignored) {}
-			catch (InterruptedException ex) {
+			} catch (ClosedWatchServiceException ignored) {
+			} catch (InterruptedException ex) {
 				log.error("Watcher thread interrupted", ex);
 			}
-		},  FileWatcher.class.getSimpleName() + " Thread");
+		}, FileWatcher.class.getSimpleName() + " Watcher");
 		watcherThread.setDaemon(true);
 		watcherThread.start();
+
+		runnerThread = new Thread(() -> {
+			try {
+				PendingChange pending;
+				while ((pending = pendingChanges.poll(100, TimeUnit.DAYS)) != null) {
+					try {
+						pending.handler.accept(pending.path);
+					} catch (Throwable throwable) {
+						log.error("Error in change handler for path: {}", pending.path, throwable);
+					}
+				}
+			} catch (InterruptedException ignored) {
+			}
+		}, FileWatcher.class.getSimpleName() + " Runner");
+		runnerThread.setDaemon(true);
+		runnerThread.start();
+	}
+
+	private static void queuePendingChange(ResourcePath path, Consumer<ResourcePath> handler) {
+		var pendingChange = new PendingChange(path, handler, System.currentTimeMillis() + 200);
+		var ignored = pendingChanges.remove(pendingChange);
+		pendingChanges.add(pendingChange);
 	}
 
 	public static void destroy() {
@@ -128,6 +173,9 @@ public class FileWatcher
 			watchService = null;
 			if (watcherThread.isAlive())
 				watcherThread.join();
+			runnerThread.interrupt();
+			if (runnerThread.isAlive())
+				runnerThread.join();
 		} catch (IOException | InterruptedException ex) {
 			throw new RuntimeException("Error while closing " + FileWatcher.class.getSimpleName(), ex);
 		}

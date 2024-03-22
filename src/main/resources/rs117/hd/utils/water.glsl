@@ -84,28 +84,23 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     // point lights
     vec3 pointLightsOut = vec3(0);
     vec3 pointLightsSpecularOut = vec3(0);
-    for (int i = 0; i < pointLightsCount; i++)
-    {
-        vec3 pointLightPos = vec3(PointLightArray[i].position.x, PointLightArray[i].position.z, PointLightArray[i].position.y);
-        float pointLightStrength = PointLightArray[i].strength;
-        vec3 pointLightColor = PointLightArray[i].color * pointLightStrength;
-        float pointLightSize = PointLightArray[i].size;
-        float distanceToLightSource = length(pointLightPos - IN.position);
-        vec3 pointLightDir = normalize(pointLightPos - IN.position);
+    for (int i = 0; i < pointLightsCount; i++) {
+        vec4 pos = PointLightArray[i].position;
+        vec3 lightToFrag = pos.xyz - IN.position;
+        float distanceSquared = dot(lightToFrag, lightToFrag);
+        float radiusSquared = pos.w;
+        if (distanceSquared <= radiusSquared) {
+            vec3 pointLightColor = PointLightArray[i].color;
+            vec3 pointLightDir = normalize(lightToFrag);
 
-        if (distanceToLightSource <= pointLightSize)
-        {
-            float pointLightDotNormals = dot(normals, pointLightDir);
-            vec3 pointLightOut = pointLightColor * max(pointLightDotNormals, 0.0);
+            float attenuation = 1 - min(distanceSquared / radiusSquared, 1);
+            pointLightColor *= attenuation * attenuation;
 
-            float attenuation = pow(clamp(1 - (distanceToLightSource / pointLightSize), 0.0, 1.0), 2.0);
-            pointLightOut *= attenuation;
-
-            pointLightsOut += pointLightOut;
+            float pointLightDotNormals = max(dot(normals, pointLightDir), 0);
+            pointLightsOut += pointLightColor * pointLightDotNormals;
 
             vec3 pointLightReflectDir = reflect(-pointLightDir, normals);
-            pointLightsSpecularOut += pointLightColor * attenuation *
-                specular(viewDir, pointLightReflectDir, vSpecularGloss, vSpecularStrength);
+            pointLightsSpecularOut += pointLightColor * specular(viewDir, pointLightReflectDir, vSpecularGloss, vSpecularStrength);
         }
     }
 
@@ -165,9 +160,11 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     finalFresnel -= finalFresnel * shadow * 0.2;
     baseColor += pointLightsSpecularOut + lightSpecularOut / 3;
 
-    float alpha = 1;
-    if (!waterType.isFlat) {
-        alpha = max(waterType.baseOpacity, max(foamAmount, max(finalFresnel, length(specularComposite / 3))));
+    float alpha = max(waterType.baseOpacity, max(foamAmount, max(finalFresnel, length(specularComposite / 3))));
+
+    if (waterType.isFlat) {
+        baseColor = mix(waterType.depthColor, baseColor, alpha);
+        alpha = 1;
     }
 
     return vec4(baseColor, alpha);
@@ -196,8 +193,7 @@ void sampleUnderwater(inout vec3 outputColor, WaterType waterType, float depth, 
         float depthMultiplier = (IN.position.y - surfaceLevel - maxCausticsDepth) / -maxCausticsDepth;
         depthMultiplier *= depthMultiplier;
 
-        // height offset
-        causticsUv += lightDir.xy * IN.position.y / (128 * scale);
+        causticsUv *= .75;
 
         const ivec2 direction = ivec2(1, -2);
         vec2 flow1 = causticsUv + animationFrame(17) * direction;

@@ -48,28 +48,44 @@ vec4 rotate(vec4 vertex, int orientation) {
 /*
  * Calculate the distance to a vertex given the camera angle
  */
-int distance(ivec4 vertex, int cameraYaw, int cameraPitch) {
-  int yawSin = int(65536.0f * sin(cameraYaw * UNIT));
-  int yawCos = int(65536.0f * cos(cameraYaw * UNIT));
-
-  int pitchSin = int(65536.0f * sin(cameraPitch * UNIT));
-  int pitchCos = int(65536.0f * cos(cameraPitch * UNIT));
-
-  int j = vertex.z * yawCos - vertex.x * yawSin >> 16;
-  int l = vertex.y * pitchSin + j * pitchCos >> 16;
-
-  return l;
+int distance(ivec4 vertex) {
+  float j = vertex.z * cos(cameraYaw) - vertex.x * sin(cameraYaw);
+  float l = vertex.y * sin(cameraPitch) + j * cos(cameraPitch);
+  return int(l);
 }
 
 /*
  * Calculate the distance to a face
  */
-int face_distance(ivec4 vA, ivec4 vB, ivec4 vC, int cameraYaw, int cameraPitch) {
-  int dvA = distance(vA, cameraYaw, cameraPitch);
-  int dvB = distance(vB, cameraYaw, cameraPitch);
-  int dvC = distance(vC, cameraYaw, cameraPitch);
+int face_distance(ivec4 vA, ivec4 vB, ivec4 vC) {
+  int dvA = distance(vA);
+  int dvB = distance(vB);
+  int dvC = distance(vC);
   int faceDistance = (dvA + dvB + dvC) / 3;
   return faceDistance;
+}
+
+/*
+ * Convert a vertex to screen space
+ */
+vec3 toScreen(ivec3 vertex) {
+  float yawSin = sin(cameraYaw);
+  float yawCos = cos(cameraYaw);
+
+  float pitchSin = sin(cameraPitch);
+  float pitchCos = cos(cameraPitch);
+
+  float rotatedX = (vertex.z * yawSin) + (vertex.x * yawCos);
+  float rotatedZ = (vertex.z * yawCos) - (vertex.x * yawSin);
+
+  float var13 = (vertex.y * pitchCos) - (rotatedZ * pitchSin);
+  float var12 = (vertex.y * pitchSin) + (rotatedZ * pitchCos);
+
+  float x = rotatedX * zoom / var12 + centerX;
+  float y = var13 * zoom / var12 + centerY;
+  float z = -var12; // in OpenGL depth is negative
+
+  return vec3(x, y, z);
 }
 
 /*
@@ -82,9 +98,9 @@ bool face_visible(ivec4 vA, ivec4 vB, ivec4 vC, ivec4 position) {
   vB += position - cameraPos;
   vC += position - cameraPos;
 
-  vec3 sA = toScreen(vA.xyz, cameraYaw, cameraPitch, centerX, centerY, zoom);
-  vec3 sB = toScreen(vB.xyz, cameraYaw, cameraPitch, centerX, centerY, zoom);
-  vec3 sC = toScreen(vC.xyz, cameraYaw, cameraPitch, centerX, centerY, zoom);
+  vec3 sA = toScreen(vA.xyz);
+  vec3 sB = toScreen(vB.xyz);
+  vec3 sC = toScreen(vC.xyz);
 
   return (sA.x - sB.x) * (sC.y - sB.y) - (sC.x - sB.x) * (sA.y - sB.y) > 0;
 }

@@ -1,6 +1,6 @@
 package rs117.hd.overlays;
 
-import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -8,81 +8,222 @@ import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
 import java.awt.Rectangle;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.function.Function;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.swing.SwingUtilities;
+import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.api.coords.*;
+import net.runelite.client.callback.ClientThread;
+import net.runelite.client.input.MouseListener;
+import net.runelite.client.input.MouseManager;
+import net.runelite.client.input.MouseWheelListener;
 import net.runelite.client.ui.FontManager;
+import net.runelite.client.ui.overlay.Overlay;
 import net.runelite.client.ui.overlay.OverlayLayer;
+import net.runelite.client.ui.overlay.OverlayManager;
 import net.runelite.client.ui.overlay.OverlayPosition;
 import net.runelite.client.ui.overlay.OverlayUtil;
+import net.runelite.client.util.ColorUtil;
 import org.apache.commons.lang3.tuple.Pair;
 import rs117.hd.HdPlugin;
 import rs117.hd.data.materials.Material;
-import rs117.hd.data.materials.Overlay;
-import rs117.hd.data.materials.Underlay;
-import rs117.hd.scene.SceneUploader;
+import rs117.hd.scene.ProceduralGenerator;
+import rs117.hd.scene.SceneContext;
+import rs117.hd.scene.TileOverrideManager;
+import rs117.hd.utils.AABB;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ModelHash;
 
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.*;
+import static rs117.hd.scene.SceneUploader.SCENE_OFFSET;
+import static rs117.hd.scene.tile_overrides.TileOverride.OVERLAY_FLAG;
+import static rs117.hd.utils.HDUtils.clamp;
 
-public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay
-{
-	private final Client client;
-	private Point mousePos;
-	private boolean ctrlPressed;
+@Slf4j
+@Singleton
+public class TileInfoOverlay extends Overlay implements MouseListener, MouseWheelListener {
+	@Inject
+	private Client client;
+
+	@Inject
+	private ClientThread clientThread;
+
+	@Inject
+	private OverlayManager overlayManager;
+
+	@Inject
+	private MouseManager mouseManager;
 
 	@Inject
 	private HdPlugin plugin;
 
 	@Inject
-	public TileInfoOverlay(Client client)
-	{
-		this.client = client;
+	private TileOverrideManager tileOverrideManager;
+
+	@Inject
+	private ProceduralGenerator proceduralGenerator;
+
+	private Point mousePos;
+	private boolean ctrlHeld;
+	private boolean ctrlToggled;
+	private boolean shiftHeld;
+	private boolean shiftToggled;
+	private float fontSize = 12;
+	private float zoom = 1;
+
+	private int aabbMarkingStage = 0;
+	private final int[][] markedWorldPoints = new int[2][];
+	private final int[] markedHeights = new int[2];
+	private int[] hoveredWorldPoint = new int[3];
+	private int hoveredHeight;
+	private int targetPlane = MAX_Z - 1;
+
+	public TileInfoOverlay() {
+		setLayer(OverlayLayer.ABOVE_WIDGETS);
 		setPosition(OverlayPosition.DYNAMIC);
-		setLayer(OverlayLayer.ABOVE_SCENE);
+	}
+
+	public void setActive(boolean activate) {
+		if (activate) {
+			overlayManager.add(this);
+			mouseManager.registerMouseListener(this);
+			mouseManager.registerMouseWheelListener(this);
+		} else {
+			overlayManager.remove(this);
+			mouseManager.unregisterMouseListener(this);
+			mouseManager.unregisterMouseWheelListener(this);
+		}
+		tileOverrideManager.setTrackReplacements(activate);
 	}
 
 	@Override
-	public Dimension render(Graphics2D g)
-	{
-		ctrlPressed = client.isKeyPressed(KeyCode.KC_CONTROL);
-		mousePos = client.getMouseCanvasPosition();
-		if (mousePos != null && mousePos.getX() == -1 && mousePos.getY() == -1) {
+	public Dimension render(Graphics2D g) {
+		var sceneContext = plugin.getSceneContext();
+		if (sceneContext == null)
+			return null;
+
+		boolean ctrlPressed = client.isKeyPressed(KeyCode.KC_CONTROL);
+		if (ctrlHeld != ctrlPressed) {
+			ctrlHeld = ctrlPressed;
+			if (ctrlPressed)
+				ctrlToggled = !ctrlToggled;
+		}
+		boolean shiftPressed = client.isKeyPressed(KeyCode.KC_SHIFT);
+		if (shiftHeld != shiftPressed) {
+			shiftHeld = shiftPressed;
+			if (shiftPressed)
+				shiftToggled = !shiftToggled;
+		}
+
+		if (shiftToggled) {
+			drawAllIds(g, sceneContext);
 			return null;
 		}
 
-		g.setFont(FontManager.getRunescapeFont());
-		g.setStroke(new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND));
+		mousePos = client.getMouseCanvasPosition();
+		if (mousePos == null || mousePos.getX() != -1 || mousePos.getY() != -1) {
+			g.setFont(FontManager.getRunescapeFont());
+			g.setStroke(new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND));
 
-		Scene scene = client.getScene();
-		Tile[][][] tiles = scene.getExtendedTiles();
-		int plane = ctrlPressed ? MAX_Z - 1 : client.getPlane();
-		for (; plane >= 0; plane--) {
-			for (int isBridge = 1; isBridge >= 0; isBridge--) {
-				for (int x = 0; x < EXTENDED_SCENE_SIZE; x++) {
-					for (int y = 0; y < EXTENDED_SCENE_SIZE; y++) {
-						Tile tile = tiles[plane][x][y];
-						boolean shouldDraw = tile != null && (isBridge == 0 || tile.getBridge() != null);
-						if (shouldDraw && drawTileInfo(g, scene, tile)) {
-							return null;
+			Tile[][][] tiles = sceneContext.scene.getExtendedTiles();
+			var heights = sceneContext.scene.getTileHeights();
+			int maxPlane = client.getPlane();
+			int minPlane = 0;
+			if (ctrlHeld)
+				minPlane = maxPlane = targetPlane;
+			tileLoop:
+			for (int z = maxPlane; z >= minPlane; z--) {
+				for (int isBridge = 1; isBridge >= 0; isBridge--) {
+					for (int x = 0; x < EXTENDED_SCENE_SIZE; x++) {
+						for (int y = 0; y < EXTENDED_SCENE_SIZE; y++) {
+							Tile tile = tiles[z][x][y];
+							boolean shouldDraw = tile != null && (isBridge == 0 || tile.getBridge() != null);
+							if (shouldDraw && drawTileInfo(g, sceneContext, tile)) {
+								int tileZ = tile.getRenderLevel();
+								hoveredWorldPoint = sceneContext.extendedSceneToWorld(x, y, tileZ);
+								hoveredHeight = heights[tileZ][x][y];
+								break tileLoop;
+							}
 						}
 					}
 				}
 			}
 		}
 
+		// Update second selection point each frame
+		if (aabbMarkingStage == 1) {
+			markedWorldPoints[1] = hoveredWorldPoint;
+			markedHeights[1] = hoveredHeight;
+		}
+
+		// Draw selection box
+		if (markedWorldPoints[0] != null) {
+			g.setColor(Color.RED);
+			int[] from = sceneContext.worldToLocal(markedWorldPoints[0]);
+			int[] to = sceneContext.worldToLocal(markedWorldPoints[1]);
+			int x1 = Math.min(from[0], to[0]);
+			int y1 = Math.min(from[1], to[1]);
+			int z1 = Math.min(markedHeights[0], markedHeights[1]);
+			int x2 = Math.max(from[0], to[0]) + LOCAL_TILE_SIZE;
+			int y2 = Math.max(from[1], to[1]) + LOCAL_TILE_SIZE;
+			int z2 = Math.max(markedHeights[0], markedHeights[1]);
+			var bsw = localToCanvas(client, x1, y1, z1);
+			var bnw = localToCanvas(client, x1, y2, z1);
+			var bne = localToCanvas(client, x2, y2, z1);
+			var bse = localToCanvas(client, x2, y1, z1);
+			var tsw = localToCanvas(client, x1, y1, z2);
+			var tnw = localToCanvas(client, x1, y2, z2);
+			var tne = localToCanvas(client, x2, y2, z2);
+			var tse = localToCanvas(client, x2, y1, z2);
+			// Draw bottom rect
+			if (bsw != null && bnw != null)
+				g.drawLine(bsw.getX(), bsw.getY(), bnw.getX(), bnw.getY());
+			if (bnw != null && bne != null)
+				g.drawLine(bnw.getX(), bnw.getY(), bne.getX(), bne.getY());
+			if (bne != null && bse != null)
+				g.drawLine(bne.getX(), bne.getY(), bse.getX(), bse.getY());
+			if (bse != null && bsw != null)
+				g.drawLine(bse.getX(), bse.getY(), bsw.getX(), bsw.getY());
+			// Draw top rect
+			if (tsw != null && tnw != null)
+				g.drawLine(tsw.getX(), tsw.getY(), tnw.getX(), tnw.getY());
+			if (tnw != null && tne != null)
+				g.drawLine(tnw.getX(), tnw.getY(), tne.getX(), tne.getY());
+			if (tne != null && tse != null)
+				g.drawLine(tne.getX(), tne.getY(), tse.getX(), tse.getY());
+			if (tse != null && tsw != null)
+				g.drawLine(tse.getX(), tse.getY(), tsw.getX(), tsw.getY());
+			// Connect rect corners
+			if (bsw != null && tsw != null)
+				g.drawLine(bsw.getX(), bsw.getY(), tsw.getX(), tsw.getY());
+			if (bnw != null && tnw != null)
+				g.drawLine(bnw.getX(), bnw.getY(), tnw.getX(), tnw.getY());
+			if (bne != null && tne != null)
+				g.drawLine(bne.getX(), bne.getY(), tne.getX(), tne.getY());
+			if (bse != null && tse != null)
+				g.drawLine(bse.getX(), bse.getY(), tse.getX(), tse.getY());
+		}
+
 		return null;
 	}
 
-	private boolean drawTileInfo(Graphics2D g, Scene scene, Tile tile) {
+	private boolean drawTileInfo(Graphics2D g, SceneContext sceneContext, Tile tile) {
 		boolean infoDrawn = false;
 
 		if (tile != null) {
@@ -91,18 +232,18 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay
 
 			Tile bridge = tile.getBridge();
 			if (bridge != null) {
-				poly = getCanvasTilePoly(client, scene, bridge);
+				poly = getCanvasTilePoly(client, sceneContext.scene, bridge);
 				if (poly != null && poly.contains(mousePos.getX(), mousePos.getY())) {
-					rect = drawTileInfo(g, bridge, poly, null);
+					rect = drawTileInfo(g, sceneContext, bridge, poly, null);
 					if (rect != null) {
 						infoDrawn = true;
 					}
 				}
 			}
 
-			poly = getCanvasTilePoly(client, scene, tile);
+			poly = getCanvasTilePoly(client, sceneContext.scene, tile);
 			if (poly != null && poly.contains(mousePos.getX(), mousePos.getY())) {
-				rect = drawTileInfo(g, tile, poly, rect);
+				rect = drawTileInfo(g, sceneContext, tile, poly, rect);
 				if (rect != null) {
 					infoDrawn = true;
 				}
@@ -112,65 +253,70 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay
 		return infoDrawn;
 	}
 
-	private Rectangle drawTileInfo(Graphics2D g, Tile tile, Polygon poly, Rectangle dodgeRect)
+	private Rectangle drawTileInfo(Graphics2D g, SceneContext sceneContext, Tile tile, Polygon poly, Rectangle dodgeRect)
 	{
 		SceneTilePaint paint = tile.getSceneTilePaint();
 		SceneTileModel model = tile.getSceneTileModel();
 
-		if (!ctrlPressed && (paint == null || (paint.getNeColor() == 12345678 && tile.getBridge() == null)) && model == null)
-		{
+		if (!ctrlHeld && (paint == null || (paint.getNeColor() == 12345678 && tile.getBridge() == null)) && model == null)
 			return null;
-		}
-
-		Rectangle2D polyBounds = poly.getBounds2D();
-		Point tileCenter = new Point((int) polyBounds.getCenterX(), (int) polyBounds.getCenterY());
 
 		ArrayList<String> lines = new ArrayList<>();
 
-		if (tile.getBridge() != null) {
+		if (tile.getBridge() != null)
 			lines.add("Bridge");
-		}
 
+		Scene scene = sceneContext.scene;
 		int tileX = tile.getSceneLocation().getX();
 		int tileY = tile.getSceneLocation().getY();
-		int tileExX = tileX + SceneUploader.SCENE_OFFSET;
-		int tileExY = tileY + SceneUploader.SCENE_OFFSET;
-		int plane = tile.getRenderLevel();
+		int tileZ = tile.getRenderLevel();
+		int tileExX = tileX + SCENE_OFFSET;
+		int tileExY = tileY + SCENE_OFFSET;
+		int[] worldPos = sceneContext.sceneToWorld(tileX, tileY, tileZ);
 
-		lines.add("Scene point: " + tileX + ", " + tileY + ", " + plane);
+		lines.add("Scene point: " + tileX + ", " + tileY + ", " + tileZ);
+		lines.add("World point: " + Arrays.toString(worldPos));
+		lines.add("Region ID: " + HDUtils.worldToRegionID(worldPos));
 
-		WorldPoint worldPoint = null;
-		var sceneContext = plugin.getSceneContext();
-		if (sceneContext != null) {
-			worldPoint = sceneContext.localToWorld(new LocalPoint(tileX, tileY), plane);
+		int overlayId = scene.getOverlayIds()[tileZ][tileExX][tileExY];
+		var overlay = tileOverrideManager.getOverrideBeforeReplacements(worldPos, OVERLAY_FLAG | overlayId);
+		var replacementPath = new StringBuilder(overlay.toString());
+		while (true) {
+			var replacement = tileOverrideManager.resolveNextReplacement(overlay, tile);
+			if (replacement == overlay)
+				break;
+			replacementPath.append("\n\t⤷ ").append(replacement);
+			overlay = replacement;
 		}
-		if (worldPoint != null) {
-			lines.add("World point: " + worldPoint.getX() + ", " + worldPoint.getY() + ", " + worldPoint.getPlane());
-			lines.add("Region ID: " + worldPoint.getRegionID());
+		lines.add(String.format("Overlay: ID %d -> %s", overlayId, replacementPath));
+		lines.add("GroundMaterial: " + overlay.groundMaterial);
+
+		int underlayId = scene.getUnderlayIds()[tileZ][tileExX][tileExY];
+		var underlay = tileOverrideManager.getOverrideBeforeReplacements(worldPos, underlayId);
+		replacementPath = new StringBuilder(underlay.toString());
+		while (true) {
+			var replacement = tileOverrideManager.resolveNextReplacement(underlay, tile);
+			if (replacement == underlay)
+				break;
+			replacementPath.append("\n\t⤷ ").append(replacement);
+			underlay = replacement;
 		}
+		lines.add(String.format("Underlay: ID %d -> %s", underlayId, replacementPath));
+		lines.add("GroundMaterial: " + underlay.groundMaterial);
 
-		Scene scene = client.getScene();
-		short overlayId = scene.getOverlayIds()[plane][tileExX][tileExY];
-		Overlay overlay = Overlay.getOverlay(scene, tile, plugin);
-		lines.add(String.format("Overlay: %s (%d)", overlay.name(), overlayId));
-
-		short underlayId = scene.getUnderlayIds()[plane][tileExX][tileExY];
-		Underlay underlay = Underlay.getUnderlay(scene, tile, plugin);
-		lines.add(String.format("Underlay: %s (%d)", underlay.name(), underlayId));
-
-		Color polyColor = Color.BLACK;
+		Color polyColor = Color.LIGHT_GRAY;
 		if (paint != null)
 		{
-			// TODO: separate H, S and L to hopefully more easily match tiles that are different shades of the same hue
 			polyColor = Color.CYAN;
 			lines.add("Tile type: Paint");
-			Material material = Material.getTexture(paint.getTexture());
+			Material material = Material.fromVanillaTexture(paint.getTexture());
 			lines.add(String.format("Material: %s (%d)", material.name(), paint.getTexture()));
-			lines.add("JagexHSL: ");
-			lines.add("NW: " + (paint.getNwColor() == 12345678 ? "HIDDEN" : paint.getNwColor()));
-			lines.add("NE: " + (paint.getNeColor() == 12345678 ? "HIDDEN" : paint.getNeColor()));
-			lines.add("SE: " + (paint.getSeColor() == 12345678 ? "HIDDEN" : paint.getSeColor()));
-			lines.add("SW: " + (paint.getSwColor() == 12345678 ? "HIDDEN" : paint.getSwColor()));
+			int[] hsl = new int[3];
+			HDUtils.getSouthWesternMostTileColor(hsl, tile);
+			lines.add(String.format("HSL: %s", Arrays.toString(hsl)));
+
+			var override = tileOverrideManager.getOverride(scene, tile, worldPos, OVERLAY_FLAG | overlayId, underlayId);
+			lines.add("WaterType: " + proceduralGenerator.seasonalWaterType(override, paint.getTexture()));
 		}
 		else if (model != null)
 		{
@@ -184,7 +330,7 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay
 			{
 				for (int texture : model.getTriangleTextureId())
 				{
-					String material = String.format("%s (%d)", Material.getTexture(texture).name(), texture);
+					String material = String.format("%s (%d)", Material.fromVanillaTexture(texture).name(), texture);
 					boolean unique = uniqueMaterials.add(material);
 					if (unique)
 					{
@@ -199,7 +345,7 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay
 			if (materials.size() <= 1 || numChars < 26)
 			{
 				StringBuilder sb = new StringBuilder("Materials: { ");
-				if (materials.size() == 0)
+				if (materials.isEmpty())
 				{
 					sb.append("null");
 				}
@@ -225,33 +371,16 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay
 				}
 			}
 
-			lines.add("JagexHSL: ");
-			int[] CA = model.getTriangleColorA();
-			int[] CB = model.getTriangleColorB();
-			int[] CC = model.getTriangleColorC();
-			for (int face = 0; face < model.getFaceX().length; face++)
-			{
-				int a = CA[face];
-				int b = CB[face];
-				int c = CC[face];
-				if (a == b && b == c) {
-					lines.add(face + ": " + (a == 12345678 ? "HIDDEN" : a));
-				} else {
-					lines.add(
-						face + ": [ " +
-						(a == 12345678 ? "HIDDEN" : a) + ", " +
-						(b == 12345678 ? "HIDDEN" : b) + ", " +
-						(c == 12345678 ? "HIDDEN" : c) +
-						" ]");
-				}
-			}
+			int[] hsl = new int[3];
+			HDUtils.getSouthWesternMostTileColor(hsl, tile);
+			lines.add(String.format("HSL: %s", Arrays.toString(hsl)));
 		}
 
 		GroundObject groundObject = tile.getGroundObject();
 		if (groundObject != null) {
 			lines.add(String.format(
-				"Ground Object: ID=%d x=%d y=%d ori=%d",
-				groundObject.getId(),
+				"Ground Object: ID=%s x=%d y=%d ori=%d",
+				getIdAndImpostorId(groundObject, groundObject.getRenderable()),
 				ModelHash.getSceneX(groundObject.getHash()),
 				ModelHash.getSceneY(groundObject.getHash()),
 				HDUtils.getBakedOrientation(groundObject.getConfig())
@@ -261,8 +390,8 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay
 		WallObject wallObject = tile.getWallObject();
 		if (wallObject != null) {
 			lines.add(String.format(
-				"Wall Object: ID=%d x=%d y=%d bakedOri=%d oriA=%d oriB=%d",
-				wallObject.getId(),
+				"Wall Object: ID=%s x=%d y=%d bakedOri=%d oriA=%d oriB=%d",
+				getIdAndImpostorId(wallObject, wallObject.getRenderable1()),
 				ModelHash.getSceneX(wallObject.getHash()),
 				ModelHash.getSceneY(wallObject.getHash()),
 				HDUtils.getBakedOrientation(wallObject.getConfig()),
@@ -278,17 +407,27 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay
 				if (gameObject == null)
 					continue;
 				counter++;
+				int height = -1;
+				var renderable = gameObject.getRenderable();
+				if (renderable != null)
+					height = renderable.getModelHeight();
 				lines.add(String.format(
-					"ID %d: x=%d y=%d bakedOri=%d ori=%d",
-					gameObject.getId(),
-					ModelHash.getSceneX(gameObject.getHash()),
-					ModelHash.getSceneY(gameObject.getHash()),
-					HDUtils.getBakedOrientation(gameObject.getConfig()),
-					gameObject.getModelOrientation()
+					"%s: ID=%s ori=%d height=%d",
+					ModelHash.getTypeName(ModelHash.getType(gameObject.getHash())),
+					getIdAndImpostorId(gameObject, renderable),
+					gameObject.getModelOrientation(),
+					height
 				));
 			}
-			if (counter > 0)
-				lines.add(lines.size() - counter, "Game objects: ");
+		}
+
+		for (int i = 0; i < lines.size(); i++) {
+			var moreLines = lines.get(i).split("\\n");
+			if (moreLines.length > 1) {
+				//noinspection SuspiciousListRemoveInLoop
+				lines.remove(i);
+				lines.addAll(i, List.of(moreLines));
+			}
 		}
 
 		int padding = 4;
@@ -296,7 +435,7 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay
 		FontMetrics fm = g.getFontMetrics();
 		int lineHeight = fm.getHeight();
 		int totalHeight = lineHeight * lines.size() + padding * 3;
-		int space = fm.charWidth(':');
+		int space = fm.stringWidth(": ");
 		int indent = fm.stringWidth("{ ");
 
 		int leftWidth = 0;
@@ -323,7 +462,7 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay
 		for (String line : lines)
 		{
 			Pair<String, String> pair = splitter.apply(line);
-			if (pair.getRight().length() == 0)
+			if (pair.getRight().isEmpty())
 			{
 				int halfWidth = fm.stringWidth(pair.getLeft()) / 2;
 				leftWidth = Math.max(leftWidth, halfWidth);
@@ -336,10 +475,18 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay
 			}
 		}
 
+		Rectangle2D polyBounds = poly.getBounds2D();
+		Point tileCenter = new Point((int) polyBounds.getCenterX(), (int) polyBounds.getCenterY());
+
+		var bounds = g.getClipBounds();
+
 		int totalWidth = leftWidth + rightWidth + space + xPadding * 2;
 		Rectangle rect = new Rectangle(
-			tileCenter.getX() - totalWidth / 2,
-			tileCenter.getY() - totalHeight - padding, totalWidth, totalHeight);
+			clamp(tileCenter.getX() - totalWidth / 2, bounds.x, bounds.x + bounds.width - totalWidth),
+			clamp(tileCenter.getY() - totalHeight - padding, bounds.y, bounds.y + bounds.height - totalHeight),
+			totalWidth,
+			totalHeight
+		);
 		if (dodgeRect != null && dodgeRect.intersects(rect))
 		{
 			// Avoid overlapping with other tile info
@@ -353,7 +500,7 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay
 		g.setColor(polyColor);
 		g.drawPolygon(poly);
 
-		g.setColor(new Color(0, 0, 0, 150));
+		g.setColor(new Color(0, 0, 0, 100));
 		g.fillRect(rect.x, rect.y, rect.width, rect.height);
 
 		int offsetY = 0;
@@ -362,7 +509,7 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay
 			Pair<String, String> pair = splitter.apply(line);
 			offsetY += lineHeight;
 			Point p;
-			if (pair.getRight().length() == 0)
+			if (pair.getRight().isEmpty())
 			{
 				// centered
 				p = new Point(
@@ -382,6 +529,16 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay
 		return rect;
 	}
 
+	private String getIdAndImpostorId(TileObject object, @Nullable Renderable renderable) {
+		int id = object.getId();
+		int impostorId = getIdOrImpostorId(object, renderable);
+		return id + (id == impostorId ? "" : " -> " + impostorId);
+	}
+
+	private int getIdOrImpostorId(TileObject object, @Nullable Renderable renderable) {
+		return ModelHash.getUuidId(ModelHash.generateUuid(client, object.getHash(), renderable));
+	}
+
 	/**
 	 * Returns a polygon representing a tile.
 	 *
@@ -391,8 +548,8 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay
 	 */
 	public static Polygon getCanvasTilePoly(@Nonnull Client client, Scene scene, Tile tile) {
 		LocalPoint lp = tile.getLocalLocation();
-		int tileExX = lp.getSceneX() + SceneUploader.SCENE_OFFSET;
-		int tileExY = lp.getSceneY() + SceneUploader.SCENE_OFFSET;
+		int tileExX = lp.getSceneX() + SCENE_OFFSET;
+		int tileExY = lp.getSceneY() + SCENE_OFFSET;
 		int plane = tile.getRenderLevel();
 		if (tileExX < 0 || tileExY < 0 || tileExX >= EXTENDED_SCENE_SIZE || tileExY >= EXTENDED_SCENE_SIZE) {
 			return null;
@@ -428,8 +585,8 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay
 	}
 
 	private static int getHeight(Scene scene, int localX, int localY, int plane) {
-		int sceneX = (localX >> LOCAL_COORD_BITS) + SceneUploader.SCENE_OFFSET;
-		int sceneY = (localY >> LOCAL_COORD_BITS) + SceneUploader.SCENE_OFFSET;
+		int sceneX = (localX >> LOCAL_COORD_BITS) + SCENE_OFFSET;
+		int sceneY = (localY >> LOCAL_COORD_BITS) + SCENE_OFFSET;
 		if (sceneX < 0 || sceneY < 0 || sceneX >= EXTENDED_SCENE_SIZE || sceneY >= EXTENDED_SCENE_SIZE)
 			return 0;
 
@@ -449,21 +606,164 @@ public class TileInfoOverlay extends net.runelite.client.ui.overlay.Overlay
 		z -= client.getCameraZ();
 		int cameraPitch = client.getCameraPitch();
 		int cameraYaw = client.getCameraYaw();
-		int pitchSin = SINE[cameraPitch];
-		int pitchCos = COSINE[cameraPitch];
-		int yawSin = SINE[cameraYaw];
-		int yawCos = COSINE[cameraYaw];
-		int x1 = x * yawCos + y * yawSin >> 16;
-		int y1 = y * yawCos - x * yawSin >> 16;
-		int y2 = z * pitchCos - y1 * pitchSin >> 16;
-		int z1 = y1 * pitchCos + z * pitchSin >> 16;
-		if (z1 >= 50) {
-			int scale = client.getScale();
-			int pointX = client.getViewportWidth() / 2 + x1 * scale / z1;
-			int pointY = client.getViewportHeight() / 2 + y2 * scale / z1;
-			return new Point(pointX + client.getViewportXOffset(), pointY + client.getViewportYOffset());
+		long pitchSin = SINE[cameraPitch];
+		long pitchCos = COSINE[cameraPitch];
+		long yawSin = SINE[cameraYaw];
+		long yawCos = COSINE[cameraYaw];
+		long x1 = x * yawCos + y * yawSin >> 16;
+		long y1 = y * yawCos - x * yawSin >> 16;
+		long y2 = z * pitchCos - y1 * pitchSin >> 16;
+		long z1 = y1 * pitchCos + z * pitchSin >> 16;
+		if (z1 >= 1) {
+			long scale = client.getScale();
+			long pointX = client.getViewportWidth() / 2 + x1 * scale / z1;
+			long pointY = client.getViewportHeight() / 2 + y2 * scale / z1;
+			return new Point((int) (pointX + client.getViewportXOffset()), (int) (pointY + client.getViewportYOffset()));
 		}
 
 		return null;
+	}
+
+	private static String hslString(int color) {
+		if (color == 12345678)
+			return "HIDDEN";
+		return color + " (" + (color >> 10 & 0x3F) + ", " + (color >> 7 & 7) + ", " + (color & 0x7F) + ")";
+	}
+
+	private void drawAllIds(Graphics2D g, SceneContext ctx) {
+		zoom = client.get3dZoom() / 1000.f;
+		if (zoom > 1.2f) {
+			fontSize = Math.min(16, 11 * zoom);
+		} else {
+			fontSize = Math.max(7.8f, 14 * (float) Math.sqrt(zoom));
+		}
+		g.setFont(FontManager.getDefaultFont().deriveFont(fontSize));
+		g.setColor(new Color(255, 255, 255, 127));
+
+		Tile[][][] tiles = ctx.scene.getExtendedTiles();
+		int plane = ctrlHeld ? MAX_Z - 1 : client.getPlane();
+		for (int z = plane; z >= 0; z--) {
+			for (int x = 0; x < EXTENDED_SCENE_SIZE; x++) {
+				for (int y = 0; y < EXTENDED_SCENE_SIZE; y++) {
+					Tile tile = tiles[z][x][y];
+					if (tile == null)
+						continue;
+
+					var lp = tile.getLocalLocation();
+					int lines = 0;
+					for (int isBridge = 1; isBridge >= 0; isBridge--) {
+						var t = tile;
+						if (isBridge == 1) {
+							t = tile.getBridge();
+							if (t == null)
+								continue;
+						}
+
+						GroundObject groundObject = t.getGroundObject();
+						if (groundObject != null)
+							drawTileObjectInfo(g, lp, groundObject, groundObject.getRenderable(), lines++);
+
+						WallObject wallObject = t.getWallObject();
+						if (wallObject != null)
+							drawTileObjectInfo(g, lp, wallObject, wallObject.getRenderable1(), lines++);
+
+						for (GameObject gameObject : t.getGameObjects())
+							if (gameObject != null)
+								drawTileObjectInfo(g, lp, gameObject, gameObject.getRenderable(), lines++);
+					}
+				}
+			}
+		}
+	}
+
+	private void drawTileObjectInfo(Graphics2D g, LocalPoint lp, TileObject object, Renderable renderable, int line) {
+		int type = ModelHash.getType(object.getHash());
+		String str;
+		if (zoom > 1.2f) {
+			str = ModelHash.getTypeName(type) + ": " + getIdAndImpostorId(object, renderable);
+		} else {
+			str = ModelHash.getTypeNameShort(type) + ": " + getIdOrImpostorId(object, renderable);
+		}
+		var p = Perspective.getCanvasTextLocation(client, g, lp, str, object.getPlane() * 240);
+		if (p == null)
+			return;
+		g.drawString(str, p.getX(), p.getY() + line * fontSize);
+	}
+
+	@Override
+	public MouseEvent mouseClicked(MouseEvent e) {
+		return e;
+	}
+
+	@Override
+	public MouseEvent mousePressed(MouseEvent e) {
+		if (shiftToggled)
+			return e;
+
+		if (e.isAltDown()) {
+			e.consume();
+
+			if (SwingUtilities.isRightMouseButton(e)) {
+				// Reset selection
+				aabbMarkingStage = 0;
+				markedWorldPoints[0] = null;
+			} else if (SwingUtilities.isLeftMouseButton(e)) {
+				if (aabbMarkingStage == 0) {
+					// Marking first
+					markedWorldPoints[0] = hoveredWorldPoint;
+					markedHeights[0] = hoveredHeight;
+				} else {
+					// Done marking
+					var markedAabb = new AABB(markedWorldPoints[0], markedWorldPoints[1]);
+					Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+					StringSelection string = new StringSelection("new AABB(" + markedAabb.toArgs() + "),\n");
+					clipboard.setContents(string, null);
+					clientThread.invoke(() -> client.addChatMessage(
+						ChatMessageType.GAMEMESSAGE,
+						"117 HD",
+						ColorUtil.wrapWithColorTag("[117 HD] Copied AABB to clipboard: " + markedAabb.toArgs(), Color.GREEN),
+						"117 HD"
+					));
+				}
+				aabbMarkingStage = (aabbMarkingStage + 1) % 2;
+			}
+		}
+
+		return e;
+	}
+
+	@Override
+	public MouseEvent mouseReleased(MouseEvent e) {
+		return e;
+	}
+
+	@Override
+	public MouseEvent mouseEntered(MouseEvent e) {
+		return e;
+	}
+
+	@Override
+	public MouseEvent mouseExited(MouseEvent e) {
+		return e;
+	}
+
+	@Override
+	public MouseEvent mouseDragged(MouseEvent e) {
+		return e;
+	}
+
+	@Override
+	public MouseEvent mouseMoved(MouseEvent e) {
+		return e;
+	}
+
+	@Override
+	public MouseWheelEvent mouseWheelMoved(MouseWheelEvent e) {
+		if (ctrlHeld && !shiftToggled) {
+			e.consume();
+			targetPlane = HDUtils.clamp(targetPlane + e.getWheelRotation(), 0, MAX_Z - 1);
+		}
+
+		return e;
 	}
 }

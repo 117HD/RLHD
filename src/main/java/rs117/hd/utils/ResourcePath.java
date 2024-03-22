@@ -26,6 +26,7 @@
 package rs117.hd.utils;
 
 import com.google.gson.Gson;
+import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
@@ -35,7 +36,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.lang.reflect.Type;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
@@ -56,7 +56,7 @@ import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.RegEx;
-import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.BufferUtils;
@@ -78,19 +78,19 @@ public class ResourcePath {
 		return path(path.toString());
 	}
 
-	public static ResourcePath path(String... parts) {
-		return new ResourcePath(parts);
-	}
-
 	public static ResourcePath path(File root, String... parts) {
 		return new ResourcePath(root.getPath()).resolve(parts);
+	}
+
+	public static ResourcePath path(String... parts) {
+		return new ResourcePath(parts);
 	}
 
 	public static ResourcePath path(Class<?> root, String... parts) {
 		return new ClassResourcePath(root, parts);
 	}
 
-	public static ResourcePath path(ClassLoader root, String... parts) {
+	public static ResourcePath path(ClassLoader root, String... parts)  {
 		return new ClassLoaderResourcePath(root, parts);
 	}
 
@@ -118,16 +118,9 @@ public class ResourcePath {
 		return new ResourcePath(root, normalize(path, parts));
 	}
 
-	public ResourcePath mkdirs() throws IOException {
-		var dir = toFile();
-		if (!getExtension().isEmpty())
-			dir = dir.getParentFile();
-		try {
-			// noinspection ResultOfMethodCallIgnored
-			dir.mkdirs();
-		} catch (Exception ex) {
-			throw new IOException("Unable to create directories for path: " + this);
-		}
+	@SuppressWarnings("ResultOfMethodCallIgnored")
+	public ResourcePath mkdirs() {
+		toFile().getParentFile().mkdirs();
 		return this;
 	}
 
@@ -135,14 +128,6 @@ public class ResourcePath {
 		if (root == null)
 			return toFile().exists();
 		return root.resolve(path).exists();
-	}
-
-	public boolean isDirectory() {
-		return toFile().isDirectory();
-	}
-
-	public boolean isFile() {
-		return toFile().isFile();
 	}
 
 	public String getFilename() {
@@ -154,35 +139,21 @@ public class ResourcePath {
 		return path;
 	}
 
-	/**
-	 * Get the last file extension (after "."), or an empty string if the file has no extension.
-	 */
 	public String getExtension() {
 		return getExtension(0);
 	}
 
-	/**
-	 * Split the filename on periods and find the nth string from the right.
-	 * If the filename contains no periods, this will return an empty string.
-	 *
-	 * @param nthLast the zero-based index of the extension, starting at the end of the string.
-	 * @return the nth file extension, or an empty string if the file has no extension.
-	 */
 	public String getExtension(int nthLast) {
 		String filename = getFilename();
-
-		int i = filename.length();
-		int j = i;
-		while (true) {
-			i = filename.lastIndexOf('.', i - 1);
+		String extension = "";
+		while (nthLast-- >= 0) {
+			int i = filename.lastIndexOf('.');
 			if (i == -1)
-				break;
-			if (nthLast-- == 0)
-				return filename.substring(i + 1, j).toLowerCase();
-			j = i;
+				return nthLast >= 0 ? "" : filename;
+			extension = filename.substring(i + 1);
+			filename = filename.substring(0, i);
 		}
-
-		return "";
+		return extension;
 	}
 
 	public ResourcePath setExtension(String extension) {
@@ -193,6 +164,10 @@ public class ResourcePath {
 		int i = path.lastIndexOf('.');
 		if (i != -1)
 			path = path.substring(0, i);
+
+		if (extension != null && !extension.isEmpty())
+			path += '.' + extension;
+
 		return new ResourcePath(root, path);
 	}
 
@@ -203,11 +178,18 @@ public class ResourcePath {
 	}
 
 	@Override
+	public boolean equals(Object other) {
+		return
+			other instanceof ResourcePath &&
+			toAbsolute().toPosixPath().equals(((ResourcePath) other).toAbsolute().toPosixPath());
+	}
+
+	@Override
 	public String toString() {
 		String path = toPosixPath();
 		if (root != null)
 			path = normalize(root.toPosixPath(), path.startsWith("/") ? path.substring(1) : path);
-		return path.length() == 0 ? "." : path;
+		return path.isEmpty() ? "." : path;
 	}
 
 	public ResourcePath toAbsolute() {
@@ -245,45 +227,45 @@ public class ResourcePath {
 		return toPath().toFile();
 	}
 
-    @NonNull
-    public URL toURL() throws IOException {
-        if (root == null) {
-            String path = toPath().toString();
-            return new URL("file:" + (isAbsolute(path) ? path : "./" + path));
-        }
-        URL rootURL = root.toURL();
-        return new URL(rootURL, rootURL.getProtocol() + ":" + normalize(rootURL.getPath(), new String[] { path }));
-    }
+	@NonNull
+	public URL toURL() throws IOException {
+		if (root == null) {
+			String path = toPath().toString();
+			return new URL("file:" + (isAbsolute(path) ? path : "./" + path));
+		}
+		URL rootURL = root.toURL();
+		return new URL(rootURL, rootURL.getProtocol() + ":" + normalize(rootURL.getPath(), new String[] { path }));
+	}
 
-    public BufferedReader toReader() throws IOException {
-        return new BufferedReader(new InputStreamReader(toInputStream(), StandardCharsets.UTF_8));
-    }
+	public BufferedReader toReader() throws IOException {
+		return new BufferedReader(new InputStreamReader(toInputStream(), StandardCharsets.UTF_8));
+	}
 
-    public InputStream toInputStream() throws IOException {
-        if (path == null)
-            throw new IllegalStateException("Cannot get InputStream for root path: " + this);
+	public InputStream toInputStream() throws IOException {
+		if (path == null)
+			throw new IllegalStateException("Cannot get InputStream for root path: " + this);
 
-        if (root != null) {
-            String path = this.path;
-            if (path.startsWith("/"))
-                path = path.substring(1);
-            return root.resolve(path).toInputStream();
-        }
+		if (root != null) {
+			String path = this.path;
+			if (path.startsWith("/"))
+				path = path.substring(1);
+			return root.resolve(path).toInputStream();
+		}
 
-        try {
-            return Files.newInputStream(toPath());
-        } catch (IOException ex) {
-            throw new IOException("Unable to load resource: " + this, ex);
-        }
-    }
+		try {
+			return Files.newInputStream(toPath());
+		} catch (IOException ex) {
+			throw new IOException("Unable to load resource: " + this, ex);
+		}
+	}
 
-    public FileOutputStream toOutputStream() throws FileNotFoundException {
-        return new FileOutputStream(toFile());
-    }
+	public FileOutputStream toOutputStream() throws FileNotFoundException {
+		return new FileOutputStream(toFile());
+	}
 
-    public boolean isClassResource() {
-        if (root != null)
-            return root.isClassResource();
+	public boolean isClassResource() {
+		if (root != null)
+			return root.isClassResource();
 		return false;
 	}
 
@@ -298,10 +280,6 @@ public class ResourcePath {
 		}
 	}
 
-	public void forEachFile(Consumer<ResourcePath> fileConsumer) {
-
-	}
-
 	/**
 	 * Run the callback once at the start & every time the resource (or sub resource) changes.
 	 *
@@ -309,22 +287,21 @@ public class ResourcePath {
 	 * @return A runnable that can be called to unregister the watch callback
 	 */
 	public FileWatcher.UnregisterCallback watch(BiConsumer<ResourcePath, Boolean> changeHandler) {
-		// Only watch files on the file system
-		if (!isFileSystemResource() || RESOURCE_PATH == null) {
-			changeHandler.accept(this, true);
-			return NOOP;
-		}
+		var path = this;
 
-		ResourcePath path = this;
-		// If the resource is loaded by a class or class loader, attempt to redirect it to the main resource directory
-		if (isClassResource()) {
-			// Assume the project's resource directory lies at "src/main/resources" in the process working directory
+		// Redirect to the project folder during development
+		if (RESOURCE_PATH != null)
 			path = RESOURCE_PATH.chroot().resolve(toAbsolute().toPath().toString());
-		}
 
 		// Load once up front
 		changeHandler.accept(path, true);
-		return FileWatcher.watchPath(path, p -> changeHandler.accept(p, false));
+
+		// Watch for changes if the resource is on the file system, which will exclude paths pointing into the JAR
+		// By default, unless paths are overridden by VM arguments, all of 117 HD's paths point into the JAR
+		if (isFileSystemResource())
+			return FileWatcher.watchPath(path, p -> changeHandler.accept(p, false));
+
+		return NOOP;
 	}
 
 	public FileWatcher.UnregisterCallback watch(Consumer<ResourcePath> changeHandler) {
@@ -360,39 +337,41 @@ public class ResourcePath {
 		}
 	}
 
-	public <T> T loadJson(Gson gson, Type type) throws IOException {
-		try (BufferedReader reader = toReader()) {
-			return gson.fromJson(reader, type);
-		}
-	}
-
 	public BufferedImage loadImage() throws IOException {
 		try (InputStream is = toInputStream()) {
-			synchronized (ImageIO.class) {
-				return ImageIO.read(is);
-			}
+			byte[] bytes = is.readAllBytes();
+			var icon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(bytes));
+			var bufferedImage = new BufferedImage(
+				icon.getIconWidth(),
+				icon.getIconHeight(),
+				BufferedImage.TYPE_INT_ARGB
+			);
+			var g = bufferedImage.createGraphics();
+			icon.paintIcon(null, g, 0, 0);
+			g.dispose();
+			return bufferedImage;
 		}
 	}
 
 	/**
-     * Reads the full InputStream into a garbage-collected ByteBuffer allocated with BufferUtils.
-     * @return a ByteBuffer
-     * @throws IOException if the InputStream cannot be read
-     */
-    public ByteBuffer loadByteBuffer() throws IOException {
-        return readInputStream(toInputStream(), BufferUtils::createByteBuffer, null);
-    }
+	 * Reads the full InputStream into a garbage-collected ByteBuffer allocated with BufferUtils.
+	 * @return a ByteBuffer
+	 * @throws IOException if the InputStream cannot be read
+	 */
+	public ByteBuffer loadByteBuffer() throws IOException {
+		return readInputStream(toInputStream(), BufferUtils::createByteBuffer, null);
+	}
 
-    /**
-     * Reads the full InputStream into a ByteBuffer allocated with malloc, which must be explicitly freed.
-     * @return a ByteBuffer
-     * @throws IOException if the InputStream cannot be read
-     */
-    public ByteBuffer loadByteBufferMalloc() throws IOException {
-        return readInputStream(toInputStream(), MemoryUtil::memAlloc, MemoryUtil::memRealloc);
-    }
+	/**
+	 * Reads the full InputStream into a ByteBuffer allocated with malloc, which must be explicitly freed.
+	 * @return a ByteBuffer
+	 * @throws IOException if the InputStream cannot be read
+	 */
+	public ByteBuffer loadByteBufferMalloc() throws IOException {
+		return readInputStream(toInputStream(), MemoryUtil::memAlloc, MemoryUtil::memRealloc);
+	}
 
-    public ResourcePath writeByteBuffer(ByteBuffer buffer) throws IOException {
+	public ResourcePath writeByteBuffer(ByteBuffer buffer) throws IOException {
 		try (var os = toOutputStream(); var channel = os.getChannel()) {
 			int bytesToWrite = buffer.remaining();
 			int bytesWritten = channel.write(buffer);
@@ -403,146 +382,146 @@ public class ResourcePath {
 				));
 			}
 		}
-        return this;
-    }
+		return this;
+	}
 
-    public ResourcePath writeString(String string) throws IOException {
-        try (OutputStream os = toOutputStream()) {
-            os.write(string.getBytes(StandardCharsets.UTF_8));
-        }
-        return this;
-    }
+	public ResourcePath writeString(String string) throws IOException {
+		try (OutputStream os = toOutputStream()) {
+			os.write(string.getBytes(StandardCharsets.UTF_8));
+		}
+		return this;
+	}
 
-    /**
-     * Reads the full InputStream into a garbage-collected ByteBuffer allocated with BufferUtils.
-     * @param is the InputStream
-     * @return a ByteBuffer
-     * @throws IOException if the InputStream cannot be read
-     */
-    private static ByteBuffer readInputStream(
-        InputStream is,
-        Function<Integer, ByteBuffer> alloc,
-        @Nullable BiFunction<ByteBuffer, Integer, ByteBuffer> realloc
-    ) throws IOException {
-        if (realloc == null) {
-            realloc = (ByteBuffer oldBuffer, Integer newSize) -> {
-                ByteBuffer newBuffer = alloc.apply(newSize);
-                newBuffer.put(oldBuffer);
-                return newBuffer;
-            };
-        }
+	/**
+	 * Reads the full InputStream into a garbage-collected ByteBuffer allocated with BufferUtils.
+	 * @param is the InputStream
+	 * @return a ByteBuffer
+	 * @throws IOException if the InputStream cannot be read
+	 */
+	private static ByteBuffer readInputStream(
+		InputStream is,
+		Function<Integer, ByteBuffer> alloc,
+		@Nullable BiFunction<ByteBuffer, Integer, ByteBuffer> realloc
+	) throws IOException {
+		if (realloc == null) {
+			realloc = (ByteBuffer oldBuffer, Integer newSize) -> {
+				ByteBuffer newBuffer = alloc.apply(newSize);
+				newBuffer.put(oldBuffer);
+				return newBuffer;
+			};
+		}
 
-        try (ReadableByteChannel channel = Channels.newChannel(is)) {
-            // Read all currently buffered data into a ByteBuffer
-            ByteBuffer buffer = alloc.apply(is.available());
-            channel.read(buffer);
+		try (ReadableByteChannel channel = Channels.newChannel(is)) {
+			// Read all currently buffered data into a ByteBuffer
+			ByteBuffer buffer = alloc.apply(is.available());
+			channel.read(buffer);
 
-            // If there's more data available, double the buffer size and round up to the nearest power of 2
-            if (is.available() > buffer.remaining()) {
-                int newSize = (buffer.position() + is.available()) * 2;
-                int nearestPow2 = 2 << (31 - Integer.numberOfLeadingZeros(newSize - 1));
-                buffer = realloc.apply(buffer, nearestPow2);
-            }
+			// If there's more data available, double the buffer size and round up to the nearest power of 2
+			if (is.available() > buffer.remaining()) {
+				int newSize = (buffer.position() + is.available()) * 2;
+				int nearestPow2 = 2 << (31 - Integer.numberOfLeadingZeros(newSize - 1));
+				buffer = realloc.apply(buffer, nearestPow2);
+			}
 
-            // Continue reading all bytes, doubling the buffer each time it runs out of space
-            while (is.available() > 0)
-                if (buffer.remaining() == channel.read(buffer))
-                    buffer = realloc.apply(buffer, buffer.capacity() * 2);
+			// Continue reading all bytes, doubling the buffer each time it runs out of space
+			while (is.available() > 0)
+				if (buffer.remaining() == channel.read(buffer))
+					buffer = realloc.apply(buffer, buffer.capacity() * 2);
 
-            channel.close();
-            buffer.flip();
-            return buffer;
-        }
-    }
+			channel.close();
+			buffer.flip();
+			return buffer;
+		}
+	}
 
-    private static String normalize(String... parts) {
-        return normalize(null, parts);
-    }
+	private static String normalize(String... parts) {
+		return normalize(null, parts);
+	}
 
-    private static String normalize(@Nullable String workingDirectory, String[] parts) {
-        Stack<String> resolvedParts = new Stack<>();
-        if (workingDirectory != null && workingDirectory.length() > 0 && !workingDirectory.equals("."))
-            resolvedParts.addAll(Arrays.asList(normalizeSlashes(workingDirectory).split("/")));
+	private static String normalize(@Nullable String workingDirectory, String[] parts) {
+		Stack<String> resolvedParts = new Stack<>();
+		if (workingDirectory != null && !workingDirectory.isEmpty() && !workingDirectory.equals("."))
+			resolvedParts.addAll(Arrays.asList(normalizeSlashes(workingDirectory).split("/")));
 
-        if (parts.length > 0)
-            parts[0] = resolveTilde(parts[0]);
+		if (parts.length > 0)
+			parts[0] = resolveTilde(parts[0]);
 
-        for (String part : parts) {
-            if (part == null || part.length() == 0 || part.equals("."))
-                continue;
+		for (String part : parts) {
+			if (part == null || part.isEmpty() || part.equals("."))
+				continue;
 
-            part = normalizeSlashes(part);
+			part = normalizeSlashes(part);
 
-            if (isAbsolute(part))
-                resolvedParts.clear();
+			if (isAbsolute(part))
+				resolvedParts.clear();
 
-            for (String normalizedPart : part.split("/")) {
-                if (normalizedPart.equals("..") &&
-                    resolvedParts.size() > 0 &&
-                    !resolvedParts.peek().equals("..")
-                ) {
-                    resolvedParts.pop();
-                } else {
-                    resolvedParts.push(normalizedPart);
-                }
-            }
-        }
+			for (String normalizedPart : part.split("/")) {
+				if (normalizedPart.equals("..") &&
+					!resolvedParts.isEmpty() &&
+					!resolvedParts.peek().equals("..")
+				) {
+					resolvedParts.pop();
+				} else {
+					resolvedParts.push(normalizedPart);
+				}
+			}
+		}
 
-        return String.join("/", resolvedParts);
-    }
+		return String.join("/", resolvedParts);
+	}
 
-    private static String normalizeSlashes(String path) {
-        if (Platform.get() == Platform.WINDOWS)
-            return path.replace("\\", "/");
-        return path;
-    }
+	private static String normalizeSlashes(String path) {
+		if (Platform.get() == Platform.WINDOWS)
+			return path.replace("\\", "/");
+		return path;
+	}
 
-    private static String resolveTilde(String path) {
-        // Note: We only support ~ and ~user tilde expansion
-        if (path == null || !path.startsWith("~"))
-            return path;
+	private static String resolveTilde(String path) {
+		// Note: We only support ~ and ~user tilde expansion
+		if (path == null || !path.startsWith("~"))
+			return path;
 
-        int slashIndex = path.indexOf('/');
-        String specifiedUser = path.substring(1, slashIndex == -1 ? path.length() : slashIndex);
-        String userHome = System.getProperty("user.home");
-        if (userHome == null)
-            throw new RuntimeException("Unable to resolve tilde path: " + path);
+		int slashIndex = path.indexOf('/');
+		String specifiedUser = path.substring(1, slashIndex == -1 ? path.length() : slashIndex);
+		String userHome = System.getProperty("user.home");
+		if (userHome == null)
+			throw new RuntimeException("Unable to resolve tilde path: " + path);
 
-        Path home = Paths.get(userHome);
+		Path home = Paths.get(userHome);
 
-        // Check if the home path of a different user was specified
-        if (!specifiedUser.isEmpty()) {
-            // Assume the username matches the home folder name,
-            // and that it's located next to the current user's home directory
-            home = home.resolve("../" + specifiedUser);
-        }
+		// Check if the home path of a different user was specified
+		if (!specifiedUser.isEmpty()) {
+			// Assume the username matches the home folder name,
+			// and that it's located next to the current user's home directory
+			home = home.resolve("../" + specifiedUser);
+		}
 
-        if (slashIndex == -1)
-            return home.toString();
-        return home.resolve(path.substring(slashIndex + 1)).toString();
-    }
+		if (slashIndex == -1)
+			return home.toString();
+		return home.resolve(path.substring(slashIndex + 1)).toString();
+	}
 
-    /**
-     * Expects forward slashes as path delimiter, but accepts Windows-style drive letter prefixes.
-     */
-    private static boolean isAbsolute(String path) {
-        if (Platform.get() == Platform.WINDOWS)
-            path = path.replaceFirst("^\\w:", "");
-        return path.startsWith("/");
-    }
+	/**
+	 * Expects forward slashes as path delimiter, but accepts Windows-style drive letter prefixes.
+	 */
+	private static boolean isAbsolute(String path) {
+		if (Platform.get() == Platform.WINDOWS)
+			path = path.replaceFirst("^\\w:", "");
+		return path.startsWith("/");
+	}
 
-    private static class ClassResourcePath extends ResourcePath {
-        public final Class<?> root;
+	private static class ClassResourcePath extends ResourcePath {
+		public final Class<?> root;
 
-        public ClassResourcePath(@NonNull Class<?> root, String... parts) {
-            super(parts);
-            this.root = root;
-        }
+		public ClassResourcePath(@NonNull Class<?> root, String... parts) {
+			super(parts);
+			this.root = root;
+		}
 
-        @Override
-        public ResourcePath resolve(String... parts) {
-            return new ClassResourcePath(root, normalize(path, parts));
-        }
+		@Override
+		public ResourcePath resolve(String... parts) {
+			return new ClassResourcePath(root, normalize(path, parts));
+		}
 
 		@Override
 		public boolean exists()
@@ -552,46 +531,46 @@ public class ResourcePath {
 		}
 
 		@Override
-        public String toString() {
-            return super.toString() + " from class " + root.getName();
-        }
+		public String toString() {
+			return super.toString() + " from class " + root.getName();
+		}
 
-        @Override
-        public ResourcePath toAbsolute() {
-            return path(root, normalize("/" + root.getPackage().getName().replace(".", "/"), path));
-        }
+		@Override
+		public ResourcePath toAbsolute() {
+			return path(root, normalize("/" + root.getPackage().getName().replace(".", "/"), path));
+		}
 
-        @Override
-        public boolean isClassResource() {
-            return true;
-        }
+		@Override
+		public boolean isClassResource() {
+			return true;
+		}
 
-        /**
-         * Check if the resource root is actually on the file system.
-         */
-        public boolean isFileSystemResource() {
-            URL url = root.getResource("/");
-            if (url == null)
-                return false;
-            return url.getProtocol().equals("file");
-        }
+		/**
+		 * Check if the resource root is actually on the file system.
+		 */
+		public boolean isFileSystemResource() {
+			URL url = root.getResource("/");
+			if (url == null)
+				return false;
+			return url.getProtocol().equals("file");
+		}
 
-        @Override
-        @NonNull
-        public URL toURL() throws IOException {
-            assert path != null;
-            URL url = root.getResource(path);
-            if (url == null)
-                throw new IOException("No resource found for path " + this);
-            return url;
-        }
+		@Override
+		@NonNull
+		public URL toURL() throws IOException {
+			assert path != null;
+			URL url = root.getResource(path);
+			if (url == null)
+				throw new IOException("No resource found for path " + this);
+			return url;
+		}
 
-        @Override
-        public InputStream toInputStream() throws IOException {
-            assert path != null;
+		@Override
+		public InputStream toInputStream() throws IOException {
+			assert path != null;
 
-            // Attempt to load resource from project resource folder if it's on the file system
-			if (RESOURCE_PATH != null && isFileSystemResource()) {
+			// Attempt to load resource from project resource folder if it's on the file system
+			if (RESOURCE_PATH != null) {
 				ResourcePath path = null;
 				try {
 					path = RESOURCE_PATH.chroot().resolve(toAbsolute().toPath().toString());
@@ -605,21 +584,21 @@ public class ResourcePath {
 					throw new IOException("Missing resource: " + this);
 				return is;
 			}
-        }
-    }
+		}
+	}
 
-    private static class ClassLoaderResourcePath extends ResourcePath {
-        public final ClassLoader root;
+	private static class ClassLoaderResourcePath extends ResourcePath {
+		public final ClassLoader root;
 
-        public ClassLoaderResourcePath(ClassLoader root, String... parts) {
-            super(parts);
-            this.root = root;
-        }
+		public ClassLoaderResourcePath(ClassLoader root, String... parts) {
+			super(parts);
+			this.root = root;
+		}
 
-        @Override
-        public ResourcePath resolve(String... parts) {
-            return new ClassLoaderResourcePath(root, normalize(path, parts));
-        }
+		@Override
+		public ResourcePath resolve(String... parts) {
+			return new ClassLoaderResourcePath(root, normalize(path, parts));
+		}
 
 		@Override
 		public boolean exists()
@@ -628,60 +607,60 @@ public class ResourcePath {
 			return root.getResource(path) != null;
 		}
 
-        @Override
-        public String toString() {
-            return super.toString() + " from class loader " + root;
-        }
+		@Override
+		public String toString() {
+			return super.toString() + " from class loader " + root;
+		}
 
-        @Override
-        public ResourcePath toAbsolute() {
-            assert path != null;
-            return path.startsWith("/") ? this : path(root, "/", path);
-        }
+		@Override
+		public ResourcePath toAbsolute() {
+			assert path != null;
+			return path.startsWith("/") ? this : path(root, "/", path);
+		}
 
-        @Override
-        public boolean isClassResource() {
-            return true;
-        }
+		@Override
+		public boolean isClassResource() {
+			return true;
+		}
 
-        /**
-         * Check if the resource pointed to is actually on the file system, even if it is loaded as a class resource.
-         */
-        public boolean isFileSystemResource() {
-            URL url = root.getResource("/");
-            if (url == null)
-                return false;
-            return url.getProtocol().equals("file");
-        }
+		/**
+		 * Check if the resource pointed to is actually on the file system, even if it is loaded as a class resource.
+		 */
+		public boolean isFileSystemResource() {
+			URL url = root.getResource("/");
+			if (url == null)
+				return false;
+			return url.getProtocol().equals("file");
+		}
 
-        @Override
-        @NonNull
-        public URL toURL() throws IOException {
-            URL url = root.getResource(path);
-            if (url == null)
-                throw new IOException("No resource found for path " + this);
-            return url;
-        }
+		@Override
+		@NonNull
+		public URL toURL() throws IOException {
+			URL url = root.getResource(path);
+			if (url == null)
+				throw new IOException("No resource found for path " + this);
+			return url;
+		}
 
-        @Override
-        public InputStream toInputStream() throws IOException {
-            assert path != null;
+		@Override
+		public InputStream toInputStream() throws IOException {
+			assert path != null;
 
-            // Attempt to load resource from project resource folder if it's not located in a jar
-            if (RESOURCE_PATH != null && isFileSystemResource()) {
-                ResourcePath path = null;
-                try {
-                    path = RESOURCE_PATH.chroot().resolve(toAbsolute().toPath().toString());
-                    return path.toInputStream();
-                } catch (Exception ex) {
-                    log.warn("Failed to load resource from project resource folder: {}", path, ex);
-                }
-            }
+			// Attempt to load resource from project resource folder if it's not located in a jar
+			if (RESOURCE_PATH != null) {
+				ResourcePath path = null;
+				try {
+					path = RESOURCE_PATH.chroot().resolve(toAbsolute().toPath().toString());
+					return path.toInputStream();
+				} catch (Exception ex) {
+					log.warn("Failed to load resource from project resource folder: {}", path, ex);
+				}
+			}
 
-            InputStream is = root.getResourceAsStream(path);
-            if (is == null)
-                throw new IOException("Missing resource: " + this);
-            return is;
-        }
-    }
+			InputStream is = root.getResourceAsStream(path);
+			if (is == null)
+				throw new IOException("Missing resource: " + this);
+			return is;
+		}
+	}
 }

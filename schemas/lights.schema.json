@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "lights.schema.json",
-  "title": "Light",
+  "title": "Lights",
   "type": "array",
   "items": {
     "type": "object",
@@ -68,15 +68,16 @@
       },
       "radius": {
         "type": "integer",
-        "description": "How far the light should reach in all directions."
+        "description": "How far the light should reach in all directions. Defaults to 300."
       },
       "strength": {
         "type": "number",
-        "description": "The intensity of the light."
+        "description": "Light strength multiplier. Defaults to 5."
       },
       "color": {
-        "type": "array",
-        "description": "The RGB color values of the light, normally in the range 0-255. Decimals are allowed. Color space: sRGB.",
+        "type": [ "string", "array" ],
+        "description": "Light color in sRGB, specified as a hex color code or an array in the range 0-255, which accepts decimals.",
+        "pattern": "^#[A-Fa-f0-9]{6}$",
         "minItems": 3,
         "maxItems": 3,
         "items": {
@@ -98,34 +99,65 @@
       },
       "fadeInDuration": {
         "type": "number",
-        "description": "The time in milliseconds until the light is fully active after spawning."
+        "description": "The time in milliseconds until the light is fully active after spawning. May overlap with fade-out if overlap is enabled."
+      },
+      "fadeOutDuration": {
+        "type": "number",
+        "description": "The time in milliseconds until the light is fully inactive after despawning. May overlap with fade-in if overlap is enabled."
+      },
+      "fadeOverlap": {
+        "type": "boolean",
+        "description": "If enabled, fade-in and fade-out can overlap multiplicatively if spaced close enough together."
+      },
+      "spawnDelay": {
+        "type": "number",
+        "description": "The time in milliseconds between the light spawning and the light beginning to fade in."
+      },
+      "despawnDelay": {
+        "type": "number",
+        "description": "The time in milliseconds between the light despawning and the light beginning to fade out."
+      },
+      "fixedDespawnTime": {
+        "type": "boolean",
+        "description": "If enabled, the light will have faded out completely after spawnDelay + despawnDelay milliseconds."
+      },
+      "visibleFromOtherPlanes": {
+        "type": "boolean",
+        "description": "Whether the light should be hidden when it appears on a different plane than the current. Defaults to true."
       },
       "npcIds": {
         "type": "array",
         "description": "A set of NPC IDs or NpcID keys to apply the light to.",
         "items": {
-          "type": [ "integer", "string" ]
+          "type": "integer"
         }
       },
       "objectIds": {
         "type": "array",
         "description": "A set of object IDs or ObjectID keys to apply the light to.",
         "items": {
-          "type": [ "integer", "string" ]
+          "type": "integer"
         }
       },
       "projectileIds": {
         "type": "array",
         "description": "A set of projectile IDs to apply the light to.",
         "items": {
-          "type": [ "integer", "string" ]
+          "type": "integer"
         }
       },
       "graphicsObjectIds": {
         "type": "array",
         "description": "A set of graphics object IDs to apply the light to.",
         "items": {
-          "type": [ "integer", "string" ]
+          "type": "integer"
+        }
+      },
+      "animationIds": {
+        "type": "array",
+        "description": "A set of animation IDs to display the light for. Must be specified alongside another kind of ID to apply to.",
+        "items": {
+          "type": "integer"
         }
       }
     }
