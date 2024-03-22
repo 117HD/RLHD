@@ -171,11 +171,13 @@ public class LightManager {
 		eventBus.unregister(this);
 	}
 
-	public void update(SceneContext sceneContext) {
+	public void update(@Nonnull SceneContext sceneContext) {
 		assert client.isClientThread();
 
-		if (client.getGameState() != GameState.LOGGED_IN || config.maxDynamicLights() == MaxDynamicLights.NONE)
+		if (client.getGameState() != GameState.LOGGED_IN || config.maxDynamicLights() == MaxDynamicLights.NONE) {
+			sceneContext.numVisibleLights = 0;
 			return;
+		}
 
 		if (reloadLights) {
 			reloadLights = false;
