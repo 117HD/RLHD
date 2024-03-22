@@ -1647,10 +1647,11 @@
   },
   {
     "description": "WOODEN_FENCES",
-    "baseMaterial": "WOOD_GRAIN",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       166,
       167,
+      980,
       981,
       991,
       992,
@@ -1663,6 +1664,8 @@
       7055,
       9511,
       9623,
+      9470,
+      9708,
       25677,
       1558,
       1559,
@@ -1677,6 +1680,9 @@
       993,
       7527
     ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 512,
     "flatNormals": true
   },
   {
@@ -5073,14 +5079,6 @@
       205,
       24172
     ]
-  },
-  {
-    "description": "Butler's House",
-    "baseMaterial": "DOCK_FENCE",
-    "objectIds": [
-      980
-    ],
-    "flatNormals": true
   },
   {
     "description": "Wooden Door 1 - Fake Plank",
@@ -11052,6 +11050,7 @@
     "description": "Wooden Wedge Stairs",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      1863,
       24361
     ],
     "uvType": "BOX",
@@ -12378,7 +12377,7 @@
     "retainVanillaUvs": false
   },
   {
-    "description": "Edgeville - Walls - Bank Front Windows",
+    "description": "Edgeville - Walls - Bank Front Windows - Tutorial Island Walls",
     "objectIds": [
       1853,
       1854
