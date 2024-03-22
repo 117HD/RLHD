@@ -6018,6 +6018,7 @@
     "baseMaterial": "DIRT_2",
     "objectIds": [
       4343,
+      5520,
       17227
     ],
     "uvType": "WORLD_XZ",
@@ -6050,6 +6051,8 @@
       321,
       4342,
       4344,
+      5519,
+      5521,
       11084,
       11085,
       11086,
@@ -6513,6 +6516,7 @@
       25661,
       25836,
       25837,
+      41738,
       44854
     ],
     "uvType": "BOX",
@@ -6552,10 +6556,11 @@
     "uvOrientationZ": 512
   },
   {
-    "description": "Objects - Wooden - Crate",
+    "description": "Objects - Wooden - Crate - Angled",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      9535
+      9535,
+      41739
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -10974,11 +10979,14 @@
   },
   {
     "description": "Wooden Bank Chest",
-    "baseMaterial": "WOOD_GRAIN",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      2090,
       26711
     ],
-    "uvType": "GEOMETRY"
+    "uvType": "BOX",
+    "uvOrientation": 512
+
   },
   {
     "description": "Ferox Enclave - Wooden Plank Stairs ",
@@ -11596,7 +11604,8 @@
     "baseMaterial": "ROCK_3",
     "objectIds": [
       11364,
-      11365
+      11365,
+      42833
     ],
     "uvType": "BOX",
     "uvScale": 0.33,
