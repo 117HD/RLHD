@@ -25856,11 +25856,11 @@
     ]
   },
   {
-    "description": "shattered cannon N",
+    "description": "SHATTERED_CANNON_IDLE_N",
     "height": 160,
-    "alignment": "NORTH",
-    "radius": 150,
+    "radius": 200,
     "strength": 50,
+    "offset": [ 0, 35, 133 ],
     "color": [
       4,
       205,
@@ -25869,14 +25869,36 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 30,
+    "fadeInDuration": 10,
+    "fadeOutDuration": 500,
     "objectIds": [ 43027 ],
     "animationIds": [ 9239 ]
   },
   {
-    "description": "shattered cannon NE",
+    "description": "SHATTERED_CANNON_FIRING_N",
     "height": 160,
-    "alignment": "NORTHEAST",
-    "radius": 150,
+    "radius": 200,
+    "strength": 500,
+    "offset": [ 0, 35, 133 ],
+    "color": [
+      4,
+      205,
+      228
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 30,
+    "spawnDelay": 300,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 500,
+    "objectIds": [ 43027 ],
+    "animationIds": [ 9230 ]
+  },
+  {
+    "description": "SHATTERED_CANNON_IDLE_NE",
+    "height": 160,
+    "offset": [ 96, 35, 105 ],
+    "radius": 200,
     "strength": 50,
     "color": [
       4,
@@ -25884,18 +25906,38 @@
       228
     ],
     "type": "FLICKER",
-    "fadeInDuration": 1000,
-    "fadeOutDuration": 100,
+    "fadeInDuration": 10,
+    "fadeOutDuration": 500,
     "duration": 0,
     "range": 30,
     "objectIds": [ 43027 ],
     "animationIds": [ 9240 ]
   },
   {
-    "description": "shattered cannon E",
+    "description": "SHATTERED_CANNON_FIRING_NE",
     "height": 160,
-    "alignment": "EAST",
-    "radius": 150,
+    "offset": [ 96, 35, 105 ],
+    "radius": 200,
+    "strength": 500,
+    "color": [
+      4,
+      205,
+      228
+    ],
+    "type": "FLICKER",
+    "fadeInDuration": 150,
+    "fadeOutDuration": 500,
+    "duration": 0,
+    "range": 30,
+    "spawnDelay": 300,
+    "objectIds": [ 43027 ],
+    "animationIds": [ 9231 ]
+  },
+  {
+    "description": "SHATTERED_CANNON_IDLE_E",
+    "height": 160,
+    "offset": [ 135, 35, -1 ],
+    "radius": 200,
     "strength": 50,
     "color": [
       4,
@@ -25903,18 +25945,38 @@
       228
     ],
     "type": "FLICKER",
-    "fadeInDuration": 1000,
-    "fadeOutDuration": 100,
+    "fadeInDuration": 10,
+    "fadeOutDuration": 500,
     "duration": 0,
     "range": 30,
     "objectIds": [ 43027 ],
     "animationIds": [ 9241 ]
   },
   {
-    "description": "shattered cannon SE",
+    "description": "SHATTERED_CANNON_FIRING_E",
     "height": 160,
-    "alignment": "SOUTHEAST",
-    "radius": 150,
+    "offset": [ 135, 35, -1 ],
+    "radius": 200,
+    "strength": 500,
+    "color": [
+      4,
+      205,
+      228
+    ],
+    "type": "FLICKER",
+    "fadeInDuration": 10,
+    "fadeOutDuration": 500,
+    "duration": 0,
+    "range": 30,
+    "spawnDelay": 300,
+    "objectIds": [ 43027 ],
+    "animationIds": [ 9232 ]
+  },
+  {
+    "description": "SHATTERED_CANNON_IDLE_SE",
+    "height": 160,
+    "offset": [ 102, 35, -100 ],
+    "radius": 200,
     "strength": 50,
     "color": [
       4,
@@ -25922,18 +25984,38 @@
       228
     ],
     "type": "FLICKER",
-    "fadeInDuration": 1000,
-    "fadeOutDuration": 100,
+    "fadeInDuration": 10,
+    "fadeOutDuration": 500,
     "duration": 0,
     "range": 30,
     "objectIds": [ 43027 ],
     "animationIds": [ 9242 ]
   },
   {
-    "description": "shattered cannon S",
+    "description": "SHATTERED_CANNON_FIRING_SE",
     "height": 160,
-    "alignment": "SOUTH",
-    "radius": 150,
+    "offset": [ 102, 35, -100 ],
+    "radius": 200,
+    "strength": 500,
+    "color": [
+      4,
+      205,
+      228
+    ],
+    "type": "FLICKER",
+    "fadeInDuration": 10,
+    "fadeOutDuration": 500,
+    "duration": 0,
+    "range": 30,
+    "spawnDelay": 300,
+    "objectIds": [ 43027 ],
+    "animationIds": [ 9233 ]
+  },
+  {
+    "description": "SHATTERED_CANNON_IDLE_S",
+    "height": 160,
+    "offset": [ 2, 35, -136 ],
+    "radius": 200,
     "strength": 50,
     "color": [
       4,
@@ -25941,18 +26023,38 @@
       228
     ],
     "type": "FLICKER",
-    "fadeInDuration": 1000,
-    "fadeOutDuration": 100,
+    "fadeInDuration": 10,
+    "fadeOutDuration": 500,
     "duration": 0,
     "range": 30,
     "objectIds": [ 43027 ],
     "animationIds": [ 9243 ]
   },
   {
-    "description": "shattered cannon SW",
+    "description": "SHATTERED_CANNON_FIRING_S",
     "height": 160,
-    "alignment": "SOUTHWEST",
-    "radius": 150,
+    "offset": [ 2, 35, -136 ],
+    "radius": 200,
+    "strength": 500,
+    "color": [
+      4,
+      205,
+      228
+    ],
+    "type": "FLICKER",
+    "fadeInDuration": 10,
+    "fadeOutDuration": 500,
+    "duration": 0,
+    "range": 30,
+    "spawnDelay": 300,
+    "objectIds": [ 43027 ],
+    "animationIds": [ 9234 ]
+  },
+  {
+    "description": "SHATTERED_CANNON_IDLE_SW",
+    "height": 160,
+    "offset": [ -97, 35, -96 ],
+    "radius": 200,
     "strength": 50,
     "color": [
       4,
@@ -25960,18 +26062,38 @@
       228
     ],
     "type": "FLICKER",
-    "fadeInDuration": 1000,
-    "fadeOutDuration": 100,
+    "fadeInDuration": 10,
+    "fadeOutDuration": 500,
     "duration": 0,
     "range": 30,
     "objectIds": [ 43027 ],
     "animationIds": [ 9244 ]
   },
   {
-    "description": "shattered cannon W",
+    "description": "SHATTERED_CANNON_FIRING_SW",
     "height": 160,
-    "alignment": "WEST",
-    "radius": 150,
+    "offset": [ -97, 35, -96 ],
+    "radius": 200,
+    "strength": 500,
+    "color": [
+      4,
+      205,
+      228
+    ],
+    "type": "FLICKER",
+    "fadeInDuration": 10,
+    "fadeOutDuration": 500,
+    "duration": 0,
+    "range": 30,
+    "spawnDelay": 5300,
+    "objectIds": [ 43027 ],
+    "animationIds": [ 9235 ]
+  },
+  {
+    "description": "SHATTERED_CANNON_IDLE_W",
+    "height": 160,
+    "offset": [ -132, 35, -1 ],
+    "radius": 200,
     "strength": 50,
     "color": [
       4,
@@ -25979,18 +26101,38 @@
       228
     ],
     "type": "FLICKER",
-    "fadeInDuration": 1000,
-    "fadeOutDuration": 100,
+    "fadeInDuration": 10,
+    "fadeOutDuration": 500,
     "duration": 0,
     "range": 30,
     "objectIds": [ 43027 ],
     "animationIds": [ 9245 ]
   },
   {
-    "description": "shattered cannon NW",
+    "description": "SHATTERED_CANNON_FIRING_W",
     "height": 160,
-    "alignment": "NORTHWEST",
-    "radius": 150,
+    "offset": [ -132, 35, -1 ],
+    "radius": 200,
+    "strength": 500,
+    "color": [
+      4,
+      205,
+      228
+    ],
+    "type": "FLICKER",
+    "fadeInDuration": 10,
+    "fadeOutDuration": 500,
+    "duration": 0,
+    "range": 30,
+    "spawnDelay": 300,
+    "objectIds": [ 43027 ],
+    "animationIds": [ 9236 ]
+  },
+  {
+    "description": "SHATTERED_CANNON_IDLE_NW",
+    "height": 160,
+    "offset": [ -94, 35, 92 ],
+    "radius": 200,
     "strength": 50,
     "color": [
       4,
@@ -25998,18 +26140,38 @@
       228
     ],
     "type": "FLICKER",
-    "fadeInDuration": 1000,
-    "fadeOutDuration": 100,
+    "fadeInDuration": 10,
+    "fadeOutDuration": 500,
     "duration": 0,
     "range": 30,
     "objectIds": [ 43027 ],
     "animationIds": [ 9246 ]
   },
   {
+    "description": "SHATTERED_CANNON_FIRING_NW",
+    "height": 160,
+    "offset": [ -94, 35, 92 ],
+    "radius": 200,
+    "strength": 300,
+    "color": [
+      4,
+      205,
+      228
+    ],
+    "type": "FLICKER",
+    "fadeInDuration": 10,
+    "fadeOutDuration": 500,
+    "duration": 0,
+    "range": 30,
+    "spawnDelay": 500,
+    "objectIds": [ 43027 ],
+    "animationIds": [ 9237 ]
+  },
+  {
     "description": "shattered cannon top",
     "height": 250,
     "alignment": "CENTER",
-    "radius": 200,
+    "radius": 0,
     "strength": 10,
     "color": [
       4,
@@ -26026,9 +26188,8 @@
   {
     "description": "shattered cannon candle",
     "height": 20,
-    "alignment": "SOUTH",
-    "radius": 150,
-    "strength": 20,
+    "radius": 100,
+    "strength": 30,
     "color": [
       4,
       205,
@@ -26039,7 +26200,25 @@
     "fadeOutDuration": 100,
     "duration": 0,
     "range": 30,
+    "offset": [ 0, 38, -99 ],
     "objectIds": [ 43027 ]
+  },
+  {
+    "description": "SHATTERED_CANNON_BALL",
+    "height": 0,
+    "radius": 200,
+    "strength": 30,
+    "color": [
+      4,
+      205,
+      228
+    ],
+    "type": "FLICKER",
+    "fadeInDuration": 1000,
+    "fadeOutDuration": 100,
+    "duration": 0,
+    "range": 30,
+    "projectileIds": [ 2018 ]
   },
   {
     "description": "TRAILBLAZER_DEATH",
@@ -26203,12 +26382,12 @@
     ]
   },
   {
-    "description": "TRAILBLAZER_ALCH",
+    "description": "TRAILBLAZER_LOW_ALCH",
     "height": 140,
     "alignment": "CENTER",
-    "radius": 150,
-    "fixedDespawnTime": true,
-    "strength": 20,
+    "offset": [ 0, 20, 35 ],
+    "radius": 170,
+    "strength": 30,
     "color": [
       252,
       148,
@@ -26217,9 +26396,130 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 30,
+    "fadeInDuration": 50,
+    "spawnDelay": 600,
+    "despawnDelay": 100,
+    "fadeOutDuration": 150,
+    "graphicsObjectIds": [
+      2608
+    ]
+  },
+  {
+    "description": "TRAILBLAZER_HIGH_ALCH",
+    "height": 140,
+    "alignment": "CENTER",
+    "offset": [ 0, 20, 35 ],
+    "radius": 170,
+    "fixedDespawnTime": true,
+    "strength": 30,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 30,
+    "fadeInDuration": 50,
+    "spawnDelay": 600,
+    "despawnDelay": 2200,
+    "fadeOutDuration": 150,
+    "graphicsObjectIds": [
+      2609
+    ]
+  },
+  {
+    "description": "TRAILBLAZER_LOW_ALCH_HOTSPOT",
+    "height": 140,
+    "alignment": "CENTER",
+    "offset": [ 0, 20, 70 ],
+    "radius": 30,
+    "fixedDespawnTime": true,
+    "strength": 30,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 60,
     "fadeInDuration": 100,
-    "spawnDelay": 150,
-    "despawnDelay": 2600,
+    "spawnDelay": 600,
+    "despawnDelay": 100,
+    "fadeOutDuration": 150,
+    "graphicsObjectIds": [
+      2608
+    ]
+  },
+  {
+    "description": "TRAILBLAZER_HIGH_ALCH_HOTSPOT",
+    "height": 140,
+    "alignment": "CENTER",
+    "offset": [ 0, 20, 70 ],
+    "radius": 30,
+    "fixedDespawnTime": true,
+    "strength": 30,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 60,
+    "fadeInDuration": 100,
+    "spawnDelay": 600,
+    "despawnDelay": 2300,
+    "fadeOutDuration": 150,
+    "graphicsObjectIds": [
+      2609
+    ]
+  },
+  {
+    "description": "TRAILBLAZER_ALCH_HOTSPOT_RIGHT_HAND",
+    "height": 140,
+    "alignment": "CENTER",
+    "offset": [ 65, 20, 0 ],
+    "radius": 200,
+    "fixedDespawnTime": true,
+    "strength": 3,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeInDuration": 200,
+    "spawnDelay": 200,
+    "despawnDelay": 550,
+    "fadeOutDuration": 150,
+    "graphicsObjectIds": [
+      2608,
+      2609
+    ]
+  },
+  {
+    "description": "TRAILBLAZER_ALCH_LEFT_HAND",
+    "height": 140,
+    "alignment": "CENTER",
+    "offset": [ -65, 20, 0 ],
+    "radius": 200,
+    "fixedDespawnTime": true,
+    "strength": 3,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeInDuration": 200,
+    "spawnDelay": 200,
+    "despawnDelay": 550,
     "fadeOutDuration": 150,
     "graphicsObjectIds": [
       2608,
@@ -26230,7 +26530,8 @@
     "description": "SUPERHEAT_ITEM",
     "height": 200,
     "alignment": "CENTER",
-    "radius": 85,
+    "offset": [ 0, 0, 20 ],
+    "radius": 75,
     "fixedDespawnTime": true,
     "strength": 16.5,
     "color": [
@@ -26242,8 +26543,8 @@
     "duration": 0,
     "range": 20,
     "fadeInDuration": 100,
-    "spawnDelay": 100,
-    "despawnDelay": 1200,
+    "spawnDelay": 355,
+    "despawnDelay": 875,
     "fadeOutDuration": 75,
     "graphicsObjectIds": [
       148
