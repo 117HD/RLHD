@@ -3982,6 +3982,23 @@
     }
   },
   {
+    "name": "TUTORIAL_ISLAND_TILE",
+    "area": "TUTORIAL_ISLAND",
+    "overlayIds": [
+      10
+    ],
+    "groundMaterial": "WORN_TILES"
+  },
+  {
+    "name": "TUTORIAL_ISLAND_CAVE_FLOOR",
+    "area": "TUTORIAL_ISLAND_CAVES",
+    "underlayIds": [
+      63,
+      67
+    ],
+    "groundMaterial": "EARTHEN_CAVE_FLOOR"
+  },
+  {
     "name": "VARROCK_PATHS",
     "area": "OVERWORLD",
     "overlayIds": [
@@ -5814,15 +5831,6 @@
       191
     ],
     "groundMaterial": "ROCKY_CAVE_FLOOR"
-  },
-  {
-    "name": "TUTORIAL_ISLAND_CAVE_FLOOR",
-    "area": "TUTORIAL_ISLAND_CAVES",
-    "underlayIds": [
-      63,
-      67
-    ],
-    "groundMaterial": "EARTHEN_CAVE_FLOOR"
   },
   {
     "name": "OVERWORLD_GRASS_UNDERLAY",
