@@ -5816,6 +5816,15 @@
     "groundMaterial": "ROCKY_CAVE_FLOOR"
   },
   {
+    "name": "TUTORIAL_ISLAND_CAVE_FLOOR",
+    "area": "TUTORIAL_ISLAND_CAVES",
+    "underlayIds": [
+      63,
+      67
+    ],
+    "groundMaterial": "EARTHEN_CAVE_FLOOR"
+  },
+  {
     "name": "OVERWORLD_GRASS_UNDERLAY",
     "area": "OVERWORLD",
     "underlayIds": [
