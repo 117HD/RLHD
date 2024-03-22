@@ -12,7 +12,7 @@ import net.runelite.client.input.KeyListener;
 import net.runelite.client.input.KeyManager;
 import rs117.hd.HdPlugin;
 import rs117.hd.data.environments.Area;
-import rs117.hd.overlays.FrameTimingsOverlay;
+import rs117.hd.overlays.FrameTimerOverlay;
 import rs117.hd.overlays.LightGizmoOverlay;
 import rs117.hd.overlays.ShadowMapOverlay;
 import rs117.hd.overlays.TileInfoOverlay;
@@ -39,7 +39,7 @@ public class DeveloperTools implements KeyListener {
 	private TileInfoOverlay tileInfoOverlay;
 
 	@Inject
-	private FrameTimingsOverlay frameTimingsOverlay;
+	private FrameTimerOverlay frameTimerOverlay;
 
 	@Inject
 	private ShadowMapOverlay shadowMapOverlay;
@@ -66,7 +66,7 @@ public class DeveloperTools implements KeyListener {
 		keyManager.registerKeyListener(this);
 
 		tileInfoOverlay.setActive(tileInfoOverlayEnabled);
-		frameTimingsOverlay.setActive(frameTimingsOverlayEnabled);
+		frameTimerOverlay.setActive(frameTimingsOverlayEnabled);
 		shadowMapOverlay.setActive(shadowMapOverlayEnabled);
 		lightGizmoOverlay.setActive(lightGizmoOverlayEnabled);
 
@@ -88,7 +88,7 @@ public class DeveloperTools implements KeyListener {
 		eventBus.unregister(this);
 		keyManager.unregisterKeyListener(this);
 		tileInfoOverlay.setActive(false);
-		frameTimingsOverlay.setActive(false);
+		frameTimerOverlay.setActive(false);
 		shadowMapOverlay.setActive(false);
 		lightGizmoOverlay.setActive(false);
 	}
@@ -108,7 +108,7 @@ public class DeveloperTools implements KeyListener {
 				tileInfoOverlay.setActive(tileInfoOverlayEnabled = !tileInfoOverlayEnabled);
 				break;
 			case "timers":
-				frameTimingsOverlay.setActive(frameTimingsOverlayEnabled = !frameTimingsOverlayEnabled);
+				frameTimerOverlay.setActive(frameTimingsOverlayEnabled = !frameTimingsOverlayEnabled);
 				break;
 			case "shadowmap":
 				shadowMapOverlay.setActive(shadowMapOverlayEnabled = !shadowMapOverlayEnabled);
@@ -132,7 +132,7 @@ public class DeveloperTools implements KeyListener {
 		if (KEY_TOGGLE_TILE_INFO.matches(e)) {
 			tileInfoOverlay.setActive(tileInfoOverlayEnabled = !tileInfoOverlayEnabled);
 		} else if (KEY_TOGGLE_FRAME_TIMINGS.matches(e)) {
-			frameTimingsOverlay.setActive(frameTimingsOverlayEnabled = !frameTimingsOverlayEnabled);
+			frameTimerOverlay.setActive(frameTimingsOverlayEnabled = !frameTimingsOverlayEnabled);
 		} else if (KEY_TOGGLE_SHADOW_MAP_OVERLAY.matches(e)) {
 			shadowMapOverlay.setActive(shadowMapOverlayEnabled = !shadowMapOverlayEnabled);
 		} else if (KEY_TOGGLE_LIGHT_GIZMO_OVERLAY.matches(e)) {

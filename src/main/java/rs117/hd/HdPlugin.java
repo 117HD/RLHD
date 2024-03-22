@@ -1388,6 +1388,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (sceneContext == null)
 			return;
 
+		frameTimer.begin(Timer.DRAW_FRAME);
 		frameTimer.begin(Timer.DRAW_SCENE);
 
 		final Scene scene = client.getScene();
@@ -1753,6 +1754,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public void draw(int overlayColor) {
 		final GameState gameState = client.getGameState();
 		if (gameState == GameState.STARTING) {
+			frameTimer.end(Timer.DRAW_FRAME);
 			return;
 		}
 
@@ -2128,6 +2130,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
 
+		frameTimer.end(Timer.DRAW_FRAME);
 		frameTimer.endFrameAndReset();
 		frameModelInfoMap.clear();
 		checkGLErrors();
