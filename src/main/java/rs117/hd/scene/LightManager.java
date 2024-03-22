@@ -346,7 +346,7 @@ public class LightManager {
 			} else {
 				light.orientation = 0;
 			}
-			light.orientation %= 2048;
+			light.orientation = HDUtils.mod(light.orientation, 2048);
 
 			if (light.alignment == Alignment.CUSTOM) {
 				// orientation 0 = south
