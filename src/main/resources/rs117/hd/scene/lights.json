@@ -25724,6 +25724,7 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 20,
+    "spawnDelay": 850,
     "fadeInDuration": 1000,
     "graphicsObjectIds": [
       2619
@@ -25787,11 +25788,12 @@
     ]
   },
   {
-    "description": "TRAILBLAZER_ALCH",
+    "description": "TRAILBLAZER_LOW_ALCH",
     "height": 140,
     "alignment": "CENTER",
-    "radius": 150,
-    "strength": 20,
+    "offset": [ 0, 20, 35 ],
+    "radius": 170,
+    "strength": 30,
     "color": [
       252,
       148,
@@ -25800,7 +25802,130 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 30,
+    "fadeInDuration": 50,
+    "spawnDelay": 600,
+    "despawnDelay": 100,
+    "fadeOutDuration": 150,
+    "graphicsObjectIds": [
+      2608
+    ]
+  },
+  {
+    "description": "TRAILBLAZER_HIGH_ALCH",
+    "height": 140,
+    "alignment": "CENTER",
+    "offset": [ 0, 20, 35 ],
+    "radius": 170,
+    "fixedDespawnTime": true,
+    "strength": 30,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 30,
+    "fadeInDuration": 50,
+    "spawnDelay": 600,
+    "despawnDelay": 2200,
+    "fadeOutDuration": 150,
+    "graphicsObjectIds": [
+      2609
+    ]
+  },
+  {
+    "description": "TRAILBLAZER_LOW_ALCH_HOTSPOT",
+    "height": 140,
+    "alignment": "CENTER",
+    "offset": [ 0, 20, 70 ],
+    "radius": 30,
+    "fixedDespawnTime": true,
+    "strength": 30,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 60,
     "fadeInDuration": 100,
+    "spawnDelay": 600,
+    "despawnDelay": 100,
+    "fadeOutDuration": 150,
+    "graphicsObjectIds": [
+      2608
+    ]
+  },
+  {
+    "description": "TRAILBLAZER_HIGH_ALCH_HOTSPOT",
+    "height": 140,
+    "alignment": "CENTER",
+    "offset": [ 0, 20, 70 ],
+    "radius": 30,
+    "fixedDespawnTime": true,
+    "strength": 30,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 60,
+    "fadeInDuration": 100,
+    "spawnDelay": 600,
+    "despawnDelay": 2300,
+    "fadeOutDuration": 150,
+    "graphicsObjectIds": [
+      2609
+    ]
+  },
+  {
+    "description": "TRAILBLAZER_ALCH_HOTSPOT_RIGHT_HAND",
+    "height": 140,
+    "alignment": "CENTER",
+    "offset": [ 65, 20, 0 ],
+    "radius": 200,
+    "fixedDespawnTime": true,
+    "strength": 3,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeInDuration": 200,
+    "spawnDelay": 200,
+    "despawnDelay": 550,
+    "fadeOutDuration": 150,
+    "graphicsObjectIds": [
+      2608,
+      2609
+    ]
+  },
+  {
+    "description": "TRAILBLAZER_ALCH_LEFT_HAND",
+    "height": 140,
+    "alignment": "CENTER",
+    "offset": [ -65, 20, 0 ],
+    "radius": 200,
+    "fixedDespawnTime": true,
+    "strength": 3,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeInDuration": 200,
+    "spawnDelay": 200,
+    "despawnDelay": 550,
     "fadeOutDuration": 150,
     "graphicsObjectIds": [
       2608,
@@ -25811,7 +25936,9 @@
     "description": "SUPERHEAT_ITEM",
     "height": 200,
     "alignment": "CENTER",
-    "radius": 85,
+    "offset": [ 0, 0, 20 ],
+    "radius": 75,
+    "fixedDespawnTime": true,
     "strength": 16.5,
     "color": [
       252,
@@ -25822,6 +25949,8 @@
     "duration": 0,
     "range": 20,
     "fadeInDuration": 100,
+    "spawnDelay": 355,
+    "despawnDelay": 875,
     "fadeOutDuration": 75,
     "graphicsObjectIds": [
       148
@@ -26544,6 +26673,387 @@
     "fadeInDuration": 1000,
     "projectileIds": [
       374
+    ]
+  },
+  {
+    "description": "GHOSTLY_GRASP_PLAYER",
+    "height": 20,
+    "alignment": "CENTER",
+    "radius": 150,
+    "strength": 15,
+    "fixedDespawnTime": true,
+    "color": [
+      3,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "despawnDelay": 1250,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "graphicsObjectIds": [
+      1856
+    ]
+  },
+  {
+    "description": "GHOSTLY_GRASP_NPC",
+    "height": 20,
+    "alignment": "CENTER",
+    "radius": 115,
+    "strength": 7.5,
+    "fixedDespawnTime": true,
+    "color": [
+      3,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "spawnDelay": 600,
+    "despawnDelay": 750,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "graphicsObjectIds": [
+      1857,
+      1858
+    ]
+  },
+  {
+    "description": "GHOSTLY_GRASP_NPC_2",
+    "height": 20,
+    "alignment": "CENTER",
+    "radius": 95,
+    "strength": 7.5,
+    "fixedDespawnTime": true,
+    "color": [
+      3,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "spawnDelay": 1500,
+    "despawnDelay": 325,
+    "fadeInDuration": 75,
+    "fadeOutDuration": 150,
+    "graphicsObjectIds": [
+      1857,
+      1858
+    ]
+  },
+  {
+    "description": "SKELETAL_GRASP_PLAYER",
+    "height": 10,
+    "alignment": "CENTER",
+    "radius": 150,
+    "strength": 15,
+    "fixedDespawnTime": true,
+    "color": [
+      205,
+      205,
+      205
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "despawnDelay": 1250,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "graphicsObjectIds": [
+      1859
+    ]
+  },
+  {
+    "description": "SKELETAL_GRASP_NPC",
+    "height": 10,
+    "alignment": "CENTER",
+    "radius": 115,
+    "strength": 12.5,
+    "fixedDespawnTime": true,
+    "color": [
+      205,
+      205,
+      205
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 40,
+    "spawnDelay": 600,
+    "despawnDelay": 750,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "graphicsObjectIds": [
+      1860,
+      1861
+    ]
+  },
+  {
+    "description": "SKELETAL_GRASP_NPC_2",
+    "height": 20,
+    "alignment": "CENTER",
+    "radius": 95,
+    "strength": 12.5,
+    "fixedDespawnTime": true,
+    "color": [
+      205,
+      205,
+      205
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 40,
+    "spawnDelay": 1500,
+    "despawnDelay": 325,
+    "fadeInDuration": 75,
+    "fadeOutDuration": 150,
+    "graphicsObjectIds": [
+      1860,
+      1861
+    ]
+  },
+  {
+    "description": "UNDEAD_GRASP_PLAYER",
+    "height": 20,
+    "alignment": "CENTER",
+    "radius": 150,
+    "strength": 15,
+    "fixedDespawnTime": true,
+    "color": [
+      205,
+      0,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "despawnDelay": 1250,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "graphicsObjectIds": [
+      1862
+    ]
+  },
+  {
+    "description": "UNDEAD_GRASP_NPC",
+    "height": 20,
+    "alignment": "CENTER",
+    "radius": 115,
+    "strength": 15.5,
+    "fixedDespawnTime": true,
+    "color": [
+      205,
+      0,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 40,
+    "spawnDelay": 600,
+    "despawnDelay": 750,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "graphicsObjectIds": [
+      1863,
+      1864
+    ]
+  },
+  {
+    "description": "UNDEAD_GRASP_NPC_2",
+    "height": 20,
+    "alignment": "CENTER",
+    "radius": 95,
+    "strength": 15.5,
+    "fixedDespawnTime": true,
+    "color": [
+      205,
+      0,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 40,
+    "spawnDelay": 1500,
+    "despawnDelay": 325,
+    "fadeInDuration": 75,
+    "fadeOutDuration": 150,
+    "graphicsObjectIds": [
+      1863,
+      1864
+    ]
+  },
+  {
+    "description": "LESSER_CORRUPTION_START",
+    "height": 20,
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 12.5,
+    "fixedDespawnTime": true,
+    "color": [
+      100,
+      205,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 40,
+    "fadeInDuration": 250,
+    "fadeOutDuration": 250,
+    "despawnDelay": 1000,
+    "graphicsObjectIds": [
+      1877
+    ]
+  },
+  {
+    "description": "LESSER_CORRUPTION_END",
+    "height": 20,
+    "alignment": "CENTER",
+    "radius": 250,
+    "strength": 25.5,
+    "fixedDespawnTime": true,
+    "color": [
+      50,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 40,
+    "fadeInDuration": 75,
+    "fadeOutDuration": 75,
+    "spawnDelay": 1000,
+    "despawnDelay": 600,
+    "graphicsObjectIds": [
+      1877
+    ]
+  },
+  {
+    "description": "GREATER_CORRUPTION",
+    "height": 20,
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 12.5,
+    "color": [
+      255,
+      15,
+      15
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 40,
+    "fadeInDuration": 250,
+    "fadeOutDuration": 125,
+    "graphicsObjectIds": [
+      1878
+    ]
+  },
+  {
+    "description": "DARK_LURE",
+    "alignment": "CENTER",
+    "radius": 150,
+    "strength": 15,
+    "color": [
+      77,
+      13,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "fadeInDuration": 250,
+    "fadeOutDuration": 250,
+    "projectileIds": [
+      1883
+    ]
+  },
+  {
+    "description": "VILE_VIGOUR",
+    "alignment": "CENTER",
+    "height": 50,
+    "radius": 150,
+    "strength": 15,
+    "fixedDespawnTime": true,
+    "color": [
+      0,
+      255,
+      175
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "fadeInDuration": 150,
+    "spawnDelay": 1050,
+    "despawnDelay": 1350,
+    "fadeOutDuration": 200,
+    "graphicsObjectIds": [
+      1876
+    ]
+  },
+  {
+    "description": "MARK_OF_DARKNESS_START",
+    "alignment": "CENTER",
+    "height": 50,
+    "radius": 200,
+    "strength": 15,
+    "fixedDespawnTime": true,
+    "color": [
+      77,
+      13,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "fadeInDuration": 150,
+    "spawnDelay": 100,
+    "despawnDelay": 1350,
+    "fadeOutDuration": 200,
+    "graphicsObjectIds": [
+      1852
+    ]
+  },
+  {
+    "description": "MARK_OF_DARKNESS_END",
+    "alignment": "CENTER",
+    "height": 40,
+    "radius": 170,
+    "strength": 15,
+    "color": [
+      77,
+      13,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 150,
+    "graphicsObjectIds": [
+      1886
+    ]
+  },
+  {
+    "description": "DEATH_CHARGE",
+    "alignment": "CENTER",
+    "height": 50,
+    "radius": 200,
+    "strength": 15,
+    "color": [
+      77,
+      13,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "fadeInDuration": 150,
+    "spawnDelay": 500,
+    "fadeOutDuration": 200,
+    "graphicsObjectIds": [
+      1854
     ]
   },
   {
