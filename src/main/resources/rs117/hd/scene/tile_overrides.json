@@ -5807,17 +5807,6 @@
     }
   },
   {
-    "name": "TILE_NEEDS_HUE_DEFINED",
-    "area": "OVERWORLD",
-    "underlayIds": [
-      26
-    ],
-    "groundMaterial": "VARIED_DIRT",
-    "replacements": {
-      "WINTER_DIRT": "season == WINTER"
-    }
-  },
-  {
     "name": "DEFENDER_OF_VARROCK_CAVE_FLOOR",
     "area": "DEFENDER_OF_VARROCK_DUNGEON",
     "underlayIds": [
@@ -5976,6 +5965,7 @@
     "area": "OVERWORLD",
     "underlayIds": [
       13,
+      26,
       55,
       61,
       62,
