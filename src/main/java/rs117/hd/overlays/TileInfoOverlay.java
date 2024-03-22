@@ -401,24 +401,20 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 		}
 
 		GameObject[] gameObjects = tile.getGameObjects();
-		if (gameObjects.length > 0) {
-			int counter = 0;
-			for (GameObject gameObject : gameObjects) {
-				if (gameObject == null)
-					continue;
-				counter++;
-				int height = -1;
-				var renderable = gameObject.getRenderable();
-				if (renderable != null)
-					height = renderable.getModelHeight();
-				lines.add(String.format(
-					"%s: ID=%s ori=%d height=%d",
-					ModelHash.getTypeName(ModelHash.getType(gameObject.getHash())),
-					getIdAndImpostorId(gameObject, renderable),
-					gameObject.getModelOrientation(),
-					height
-				));
-			}
+		for (GameObject gameObject : gameObjects) {
+			if (gameObject == null)
+				continue;
+			int height = -1;
+			var renderable = gameObject.getRenderable();
+			if (renderable != null)
+				height = renderable.getModelHeight();
+			lines.add(String.format(
+				"%s: ID=%s ori=%d height=%d",
+				ModelHash.getTypeName(ModelHash.getType(gameObject.getHash())),
+				getIdAndImpostorId(gameObject, renderable),
+				gameObject.getModelOrientation(),
+				height
+			));
 		}
 
 		for (int i = 0; i < lines.size(); i++) {

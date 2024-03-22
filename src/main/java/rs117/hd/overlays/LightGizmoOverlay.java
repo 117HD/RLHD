@@ -429,8 +429,8 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 			}
 
 			int mainOpacity = toggleOpacity ?
-				(l.parentExists ? 255 : 100) :
-				(l.parentExists ? 100 : 30);
+				(l.visible ? 255 : 100) :
+				(l.visible ? 100 : 30);
 			int rangeOpacity = 70;
 			Color baseColor = toggleBlackColor ? Color.BLACK : Color.WHITE;
 			Color radiusRingColor = alpha(baseColor, mainOpacity);

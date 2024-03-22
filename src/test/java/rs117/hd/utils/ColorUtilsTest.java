@@ -1,8 +1,7 @@
-package rs117.hd.test.utils;
+package rs117.hd.utils;
 
 import java.util.Arrays;
 import org.junit.Test;
-import rs117.hd.utils.ColorUtils;
 
 import static junit.framework.TestCase.assertEquals;
 

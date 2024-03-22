@@ -1388,6 +1388,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (sceneContext == null)
 			return;
 
+		frameTimer.begin(Timer.DRAW_FRAME);
 		frameTimer.begin(Timer.DRAW_SCENE);
 
 		final Scene scene = client.getScene();
@@ -1429,6 +1430,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					frameTimer.begin(Timer.UPDATE_ENVIRONMENT);
 					environmentManager.update(sceneContext);
 					frameTimer.end(Timer.UPDATE_ENVIRONMENT);
+
 					frameTimer.begin(Timer.UPDATE_LIGHTS);
 					lightManager.update(sceneContext);
 					frameTimer.end(Timer.UPDATE_LIGHTS);
@@ -1462,7 +1464,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (sceneContext.scene == scene) {
 			// Update lights UBO
 			uniformBufferLights.clear();
-			for (int i = 0; i < sceneContext.numVisibleLights; i++) {
+			// Clamp the number of lights in case the dynamic light limit just changed
+			int numLights = Math.min(sceneContext.numVisibleLights, configMaxDynamicLights);
+			for (int i = 0; i < numLights; i++) {
 				Light light = sceneContext.lights.get(i);
 				uniformBufferLights.putFloat(light.pos[0] + cameraShift[0]);
 				uniformBufferLights.putFloat(light.pos[1]);
@@ -1753,6 +1757,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public void draw(int overlayColor) {
 		final GameState gameState = client.getGameState();
 		if (gameState == GameState.STARTING) {
+			frameTimer.end(Timer.DRAW_FRAME);
 			return;
 		}
 
@@ -2128,6 +2133,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
 
+		frameTimer.end(Timer.DRAW_FRAME);
 		frameTimer.endFrameAndReset();
 		frameModelInfoMap.clear();
 		checkGLErrors();
