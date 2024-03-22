@@ -664,7 +664,13 @@ public enum Material {
 		.setNormalMap(HD_WOOD_PLANKS_2_N)
 		.setSpecular(0.3f, 40)
 		.setBrightness(1.2f)),
-
+	HD_CRATE_N,
+	HD_CRATE(p -> p
+		.replaceIf(plugin -> plugin.configModelTextures, CRATE)
+		.setNormalMap(HD_CRATE_N)
+		.setSpecular(0.25f, 30)
+		.setBrightness(0.9f)
+	),
 	HD_ROOF_BRICK_TILE_N,
 	HD_ROOF_BRICK_TILE(ROOF_BRICK_TILE, p -> p
 		.replaceIf(plugin -> plugin.configModelTextures, ROOF_BRICK_TILE)
