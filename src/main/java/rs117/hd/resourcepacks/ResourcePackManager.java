@@ -6,7 +6,10 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -24,12 +27,14 @@ import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 import org.apache.commons.lang3.StringUtils;
 import rs117.hd.HdPlugin;
 import rs117.hd.gui.components.MessagePanel;
 import rs117.hd.resourcepacks.data.Manifest;
 import rs117.hd.resourcepacks.impl.DefaultResourcePack;
 import rs117.hd.resourcepacks.impl.FileResourcePack;
+import rs117.hd.utils.FileDownloader;
 import rs117.hd.utils.ResourcePath;
 
 import static rs117.hd.utils.ResourcePath.path;
@@ -176,63 +181,9 @@ public class ResourcePackManager {
 	}
 
 	public void downloadResourcePack(Manifest manifest) {
-		final ProgressListener progressListener = new ProgressListener() {
-
-			@Override
-			public void finishedDownloading() {
-				var path = RESOURCE_PACK_DIR.resolve("pack-" + manifest.getInternalName());
-				try {
-					path.mkdirs();
-					unZipAll(RESOURCE_PACK_DIR.resolve(manifest.getInternalName() + ".zip").toFile(), path.toFile());
-				} catch (IOException ex) {
-					log.error("Unable to unzip resource pack to the following path: {}", path, ex);
-					return;
-				}
-
-				SwingUtilities.invokeLater(() -> {
-					var pack = new FileResourcePack(path.toFile());
-					String internalName = pack.getManifest().getInternalName();
-
-					var localPack = getInstalledPack(internalName);
-					if (localPack == null)
-						installedPacks.add(pack);
-
-					plugin.getSidebar().refresh();
-				});
-			}
-
-			@Override
-			public void progress(long bytesRead, long contentLength) {
-				SwingUtilities.invokeLater(() -> {
-					long progress = (100 * bytesRead) / contentLength;
-					//if (panel != null)
-					//panel.progressBar.setValue((int) progress);
-				});
-			}
-
-			@Override
-			public void started() {
-				SwingUtilities.invokeLater(() -> {
-					//if (panel != null)
-					//panel.progressBar.setValue(0);
-					//if (panel != null)
-					//panel.dropdownPanel.setVisible(false);
-					//if (panel != null)
-					//panel.progressPanel.setVisible(true);
-				});
-			}
-		};
-
-		OkHttpClient client = okHttpClient.newBuilder()
-			.cache(null)
-			.addNetworkInterceptor(chain -> {
-				try (var res = chain.proceed(chain.request())) {
-					return res.newBuilder()
-						.body(new ProgressManager(res.body(), progressListener))
-						.build();
-				}
-			})
-			.build();
+		if (!RESOURCE_PACK_DIR.exists()) {
+			RESOURCE_PACK_DIR.toFile().mkdir();
+		}
 
 		URL url = HttpUrl.parse(manifest.getLink())
 			.newBuilder()
@@ -240,43 +191,62 @@ public class ResourcePackManager {
 			.addPathSegment(manifest.getCommit() + ".zip")
 			.build()
 			.url();
-		log.info("Downloading resource pack '{}' from {}", manifest.getInternalName(), url);
 
-		client
-			.newCall(new Request.Builder()
-				.url(url)
-				.build())
-			.enqueue(new Callback() {
+
+		FileDownloader downloader = new FileDownloader();
+		downloader.downloadFile(
+			url.toString(),
+			RESOURCE_PACK_DIR.resolve(manifest.getInternalName() + ".zip").toFile(),
+			new FileDownloader.DownloadListener() {
 				@Override
-				public void onFailure(Call call, IOException ex) {
-					log.info("Error while downloading resource pack '{}' from {}:", manifest.getInternalName(), url, ex);
+				public void onStarted() {
+					log.info("Downloading resource pack '{}' from {}", manifest.getInternalName(), url);
 				}
 
 				@Override
-				public void onResponse(Call call, Response res) throws IOException {
-					if (!res.isSuccessful()) {
-						log.info(
-							"Error while downloading resource pack '{}' from {}: HTTP {}",
-							manifest.getInternalName(),
-							url,
-							res.code()
-						);
-					} else if (res.body() == null) {
-						log.info("Error while downloading resource pack '{}' from {}: empty body", manifest.getInternalName(), url);
-					} else {
-						var path = RESOURCE_PACK_DIR.resolve(manifest.getInternalName() + ".zip");
-						try (var os = path.toOutputStream()) {
-							res.body().byteStream().transferTo(os);
-						}
+				public void onFailure(Call call, IOException e) {
+					log.info("Error while downloading resource pack '{}' from {}:", manifest.getInternalName(), url, e);
+				}
+
+				@Override
+				public void onProgress(int progress) {
+					System.out.println("Progress: " + progress);
+
+				}
+
+				@Override
+				public void onFinished() {
+					var path = RESOURCE_PACK_DIR.resolve("pack-" + manifest.getInternalName());
+					try {
+						path.mkdirs();
+						unZipAll(RESOURCE_PACK_DIR.resolve(manifest.getInternalName() + ".zip").toFile(), path.toFile());
+					} catch (IOException ex) {
+						log.error("Unable to unzip resource pack to the following path: {}", path, ex);
+						return;
 					}
-					progressListener.finishedDownloading();
+
+					SwingUtilities.invokeLater(() -> {
+						var pack = new FileResourcePack(path.toFile());
+						String internalName = pack.getManifest().getInternalName();
+
+						var localPack = getInstalledPack(internalName);
+						if (localPack == null)
+							installedPacks.add(pack);
+
+						plugin.getSidebar().refresh();
+					});
 				}
-			});
+			}
+		);
 	}
 
 	public static void unZipAll(File source, File destination) throws IOException {
 		log.debug("Unzipping - " + source.getName());
 		int BUFFER = 2048;
+
+		if (!destination.exists()) {
+			destination.mkdir();
+		}
 
 		ZipFile zip = new ZipFile(source);
 		try {

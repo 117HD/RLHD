@@ -406,7 +406,6 @@ public class ResourcePackPanel extends JPanel {
 
 						if (img != null) {
 							SwingUtilities.invokeLater(() -> {
-								log.info("Showing icon");
 								icon.setIcon(new ImageIcon(img));
 								icon.setVisible(true);
 								blackBox.setVisible(true);
