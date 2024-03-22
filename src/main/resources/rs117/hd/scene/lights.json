@@ -33228,5 +33228,23 @@
     "projectileIds": [
       2642
     ]
+  },
+  {
+    "description": "Tutorial Island Cooking Range",
+    "height": 100,
+    "alignment": "LEFT",
+    "radius": 400,
+    "strength": 6,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 5,
+    "objectIds": [
+      9736
+    ]
   }
 ]

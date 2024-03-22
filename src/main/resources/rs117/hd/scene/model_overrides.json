@@ -1326,6 +1326,7 @@
       5903,
       5904,
       5905,
+      9733,
       14513,
       14514,
       14515,
@@ -15169,5 +15170,12 @@
     "uvScale": 0.8,
     "uvOrientationX": 512,
     "flatNormals": true
+  },
+  {
+    "description": "Objects - Metallic - Range on textured bricks - Textured",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      9736
+    ]
   }
 ]
