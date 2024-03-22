@@ -135,7 +135,7 @@ public class HDUtils {
 	 * Modulo that returns the answer with the same sign as the modulus.
 	 */
 	public static int mod(int x, int modulus) {
-		return x - (x / modulus) * modulus;
+		return ((x % modulus) + modulus) % modulus;
 	}
 
 	public static float clamp(float value, float min, float max) {
