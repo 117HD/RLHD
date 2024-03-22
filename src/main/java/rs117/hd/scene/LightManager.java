@@ -171,11 +171,13 @@ public class LightManager {
 		eventBus.unregister(this);
 	}
 
-	public void update(SceneContext sceneContext) {
+	public void update(@Nonnull SceneContext sceneContext) {
 		assert client.isClientThread();
 
-		if (client.getGameState() != GameState.LOGGED_IN || config.maxDynamicLights() == MaxDynamicLights.NONE)
+		if (client.getGameState() != GameState.LOGGED_IN || config.maxDynamicLights() == MaxDynamicLights.NONE) {
+			sceneContext.numVisibleLights = 0;
 			return;
+		}
 
 		if (reloadLights) {
 			reloadLights = false;
@@ -346,7 +348,7 @@ public class LightManager {
 			} else {
 				light.orientation = 0;
 			}
-			light.orientation %= 2048;
+			light.orientation = HDUtils.mod(light.orientation, 2048);
 
 			if (light.alignment == Alignment.CUSTOM) {
 				// orientation 0 = south

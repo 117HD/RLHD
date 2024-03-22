@@ -1464,9 +1464,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (sceneContext.scene == scene) {
 			// Update lights UBO
 			uniformBufferLights.clear();
-			// Clamp the number of lights in case the dynamic light limit just changed
-			int numLights = Math.min(sceneContext.numVisibleLights, configMaxDynamicLights);
-			for (int i = 0; i < numLights; i++) {
+			assert sceneContext.numVisibleLights <= configMaxDynamicLights;
+			for (int i = 0; i < sceneContext.numVisibleLights; i++) {
 				Light light = sceneContext.lights.get(i);
 				uniformBufferLights.putFloat(light.pos[0] + cameraShift[0]);
 				uniformBufferLights.putFloat(light.pos[1]);
