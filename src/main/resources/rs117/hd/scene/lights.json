@@ -20015,6 +20015,24 @@
     ]
   },
   {
+    "description": "TEXTURED_WALL_TORCH",
+    "height": 235,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      198
+    ]
+  },
+  {
     "description": "WALL_TORCH",
     "height": 235,
     "alignment": "CENTER",
@@ -20029,7 +20047,6 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      198,
       6537,
       18891,
       12300,
