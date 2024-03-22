@@ -32,6 +32,7 @@
       "alignment": {
         "type": "string",
         "enum": [
+          "CUSTOM",
           "CENTER",
 
           "NORTH",
@@ -61,6 +62,15 @@
           "BACKRIGHT_CORNER"
         ],
         "description": "Where to place the light in relation to what it's attached to, be it an NPC, object or world location."
+      },
+      "offset": {
+        "type": "array",
+        "description": "The light's position relative to the center of the model it's attached to, before rotation. Only applies if alignment is set to CUSTOM, which is the default.",
+        "minItems": 3,
+        "maxItems": 3,
+        "items": {
+          "type": "integer"
+        }
       },
       "height": {
         "type": "integer",
@@ -107,7 +117,7 @@
       },
       "fadeOverlap": {
         "type": "boolean",
-        "description": "If enabled, fade-in and fade-out can overlap multiplicatively if spaced close enough together."
+        "description": "If enabled, fade-in and fade-out can overlap if spaced close enough together."
       },
       "spawnDelay": {
         "type": "number",

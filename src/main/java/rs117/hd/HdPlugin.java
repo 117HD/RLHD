@@ -43,7 +43,6 @@ import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -411,6 +410,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public boolean useLowMemoryMode;
 	public boolean enableDetailedTimers;
 	public boolean enableShadowMapOverlay;
+	public boolean enableFreezeFrame;
 
 	@Getter
 	private boolean isActive;
@@ -438,7 +438,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private long lastFrameTimeMillis;
 	private float lastFrameClientTime;
 	private int gameTicksUntilSceneReload = 0;
-	public int visibleLightCount;
 
 	@Provides
 	HdPluginConfig provideConfig(ConfigManager configManager) {
@@ -465,7 +464,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				elapsedClientTime = 0;
 				lastFrameTimeMillis = 0;
 				lastFrameClientTime = 0;
-				visibleLightCount = 0;
 
 				AWTContext.loadNatives();
 				canvas = client.getCanvas();
@@ -705,6 +703,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			shutDown();
 			startUp();
 		}));
+	}
+
+	public void toggleFreezeFrame() {
+		clientThread.invoke(() -> {
+			enableFreezeFrame = !enableFreezeFrame;
+			if (enableFreezeFrame)
+				redrawPreviousFrame = true;
+		});
 	}
 
 	private String generateFetchCases(String array, int from, int to)
@@ -1390,72 +1396,77 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		viewportOffsetX = client.getViewportXOffset();
 		viewportOffsetY = client.getViewportYOffset();
 
-		if (!redrawPreviousFrame) {
-			// Only reset the target buffer offset right before drawing the scene. That way if there are frames
-			// after this that don't involve a scene draw, like during LOADING/HOPPING/CONNECTION_LOST, we can
-			// still redraw the previous frame's scene to emulate the client behavior of not painting over the
-			// viewport buffer.
-			renderBufferOffset = sceneContext.staticVertexCount;
+		if (!enableFreezeFrame) {
+			if (!redrawPreviousFrame) {
+				// Only reset the target buffer offset right before drawing the scene. That way if there are frames
+				// after this that don't involve a scene draw, like during LOADING/HOPPING/CONNECTION_LOST, we can
+				// still redraw the previous frame's scene to emulate the client behavior of not painting over the
+				// viewport buffer.
+				renderBufferOffset = sceneContext.staticVertexCount;
 
-			// Push unordered models that should always be drawn at the start of each frame.
-			// Used to fix issues like the right-click menu causing underwater tiles to disappear.
-			var staticUnordered = sceneContext.staticUnorderedModelBuffer.getBuffer();
-			modelPassthroughBuffer
-				.ensureCapacity(staticUnordered.limit())
-				.put(staticUnordered);
-			staticUnordered.rewind();
-			numPassthroughModels += staticUnordered.limit() / 8;
-		}
-
-		cameraPosition[0] = (float) cameraX;
-		cameraPosition[1] = (float) cameraY;
-		cameraPosition[2] = (float) cameraZ;
-		cameraOrientation[0] = (float) cameraYaw;
-		cameraOrientation[1] = (float) cameraPitch;
-
-		if (sceneContext.scene == scene) {
-			cameraFocalPoint[0] = client.getOculusOrbFocalPointX();
-			cameraFocalPoint[1] = client.getOculusOrbFocalPointY();
-			Arrays.fill(cameraShift, 0);
-
-			try {
-				environmentManager.update(sceneContext);
-				lightManager.update(sceneContext);
-			} catch (Exception ex) {
-				log.error("Error while updating environment or lights:", ex);
-				stopPlugin();
-				return;
+				// Push unordered models that should always be drawn at the start of each frame.
+				// Used to fix issues like the right-click menu causing underwater tiles to disappear.
+				var staticUnordered = sceneContext.staticUnorderedModelBuffer.getBuffer();
+				modelPassthroughBuffer
+					.ensureCapacity(staticUnordered.limit())
+					.put(staticUnordered);
+				staticUnordered.rewind();
+				numPassthroughModels += staticUnordered.limit() / 8;
 			}
-		} else {
-			cameraShift[0] = cameraFocalPoint[0] - client.getOculusOrbFocalPointX();
-			cameraShift[1] = cameraFocalPoint[1] - client.getOculusOrbFocalPointY();
-			cameraPosition[0] += cameraShift[0];
-			cameraPosition[2] += cameraShift[1];
-		}
 
-		uniformBufferCamera
-			.clear()
-			.putFloat(cameraOrientation[0])
-			.putFloat(cameraOrientation[1])
-			.putInt(client.getCenterX())
-			.putInt(client.getCenterY())
-			.putInt(client.getScale())
-			.putFloat(cameraPosition[0])
-			.putFloat(cameraPosition[1])
-			.putFloat(cameraPosition[2])
-			.flip();
-		glBindBuffer(GL_UNIFORM_BUFFER, hUniformBufferCamera.glBufferId);
-		glBufferSubData(GL_UNIFORM_BUFFER, 0, uniformBufferCamera);
+			cameraPosition[0] = (float) cameraX;
+			cameraPosition[1] = (float) cameraY;
+			cameraPosition[2] = (float) cameraZ;
+			cameraOrientation[0] = (float) cameraYaw;
+			cameraOrientation[1] = (float) cameraPitch;
+
+			if (sceneContext.scene == scene) {
+				cameraFocalPoint[0] = client.getOculusOrbFocalPointX();
+				cameraFocalPoint[1] = client.getOculusOrbFocalPointY();
+				Arrays.fill(cameraShift, 0);
+
+				try {
+					frameTimer.begin(Timer.UPDATE_ENVIRONMENT);
+					environmentManager.update(sceneContext);
+					frameTimer.end(Timer.UPDATE_ENVIRONMENT);
+					frameTimer.begin(Timer.UPDATE_LIGHTS);
+					lightManager.update(sceneContext);
+					frameTimer.end(Timer.UPDATE_LIGHTS);
+				} catch (Exception ex) {
+					log.error("Error while updating environment or lights:", ex);
+					stopPlugin();
+					return;
+				}
+			} else {
+				cameraShift[0] = cameraFocalPoint[0] - client.getOculusOrbFocalPointX();
+				cameraShift[1] = cameraFocalPoint[1] - client.getOculusOrbFocalPointY();
+				cameraPosition[0] += cameraShift[0];
+				cameraPosition[2] += cameraShift[1];
+			}
+
+			uniformBufferCamera
+				.clear()
+				.putFloat(cameraOrientation[0])
+				.putFloat(cameraOrientation[1])
+				.putInt(client.getCenterX())
+				.putInt(client.getCenterY())
+				.putInt(client.getScale())
+				.putFloat(cameraPosition[0])
+				.putFloat(cameraPosition[1])
+				.putFloat(cameraPosition[2])
+				.flip();
+			glBindBuffer(GL_UNIFORM_BUFFER, hUniformBufferCamera.glBufferId);
+			glBufferSubData(GL_UNIFORM_BUFFER, 0, uniformBufferCamera);
+		}
 
 		if (sceneContext.scene == scene) {
 			// Update lights UBO
 			uniformBufferLights.clear();
-			ArrayList<Light> visibleLights = lightManager.getVisibleLights(configMaxDynamicLights);
-			visibleLightCount = visibleLights.size();
-			for (Light light : visibleLights) {
-				uniformBufferLights.putFloat(light.x + cameraShift[0]);
-				uniformBufferLights.putFloat(light.z);
-				uniformBufferLights.putFloat(light.y + cameraShift[1]);
+			for (int i = 0; i < sceneContext.numVisibleLights; i++) {
+				Light light = sceneContext.lights.get(i);
+				uniformBufferLights.putFloat(light.pos[0] + cameraShift[0]);
+				uniformBufferLights.putFloat(light.pos[1]);
+				uniformBufferLights.putFloat(light.pos[2] + cameraShift[1]);
 				uniformBufferLights.putFloat(light.radius * light.radius);
 				uniformBufferLights.putFloat(light.color[0] * light.strength);
 				uniformBufferLights.putFloat(light.color[1] * light.strength);
@@ -2005,7 +2016,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			glUniform1f(uniGroundFogOpacity, config.groundFog() ? environmentManager.currentGroundFogOpacity : 0);
 
 			// Lights & lightning
-			glUniform1i(uniPointLightsCount, visibleLightCount);
+			glUniform1i(uniPointLightsCount, sceneContext.numVisibleLights);
 			glUniform1f(uniLightningBrightness, environmentManager.getLightningBrightness());
 
 			glUniform1f(uniSaturation, config.saturation() / 100f);
@@ -3067,7 +3078,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public void onClientTick(ClientTick clientTick) {
 		elapsedClientTime += 1 / 50f;
 
-		if (skipScene != client.getScene())
+		if (!enableFreezeFrame && skipScene != client.getScene())
 			redrawPreviousFrame = false;
 	}
 

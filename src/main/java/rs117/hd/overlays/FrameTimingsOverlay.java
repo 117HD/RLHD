@@ -46,7 +46,7 @@ public class FrameTimingsOverlay extends OverlayPanel implements FrameTimer.List
 	@Override
 	public void onFrameCompletion(FrameTimings timings) {
 		long now = System.nanoTime();
-		while (frames.size() > 0) {
+		while (!frames.isEmpty()) {
 			if (now - frames.peekFirst().frameTimestamp < 3e9) // remove entries older than 3 seconds
 				break;
 			frames.removeFirst();
@@ -92,7 +92,7 @@ public class FrameTimingsOverlay extends OverlayPanel implements FrameTimer.List
 	}
 
 	private long[] getAverageTimings() {
-		if (frames.size() == 0)
+		if (frames.isEmpty())
 			return new long[0];
 
 		long[] timers = new long[Timer.values().length];
