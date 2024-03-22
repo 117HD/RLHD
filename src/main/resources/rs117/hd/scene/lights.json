@@ -33263,5 +33263,23 @@
     "objectIds": [
       9736
     ]
+  },
+  {
+    "description": "Tutorial Island Ironman Portal",
+    "height": 100,
+    "offset": [ -6, 28, -20 ],
+    "radius": 400,
+    "strength": 20,
+    "color": [
+      3,
+      50,
+      252
+    ],
+    "type": "PULSE",
+    "duration": 1000,
+    "range": 12,
+    "objectIds": [
+      42819
+    ]
   }
 ]
