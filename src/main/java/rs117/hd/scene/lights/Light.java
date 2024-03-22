@@ -25,6 +25,7 @@ public class Light
 	public boolean visible;
 	public boolean parentExists;
 	public boolean withinViewingDistance = true;
+	public boolean hiddenTemporarily;
 	public boolean markedForRemoval;
 	public boolean persistent;
 	public boolean replayable;
@@ -33,7 +34,7 @@ public class Light
 	public final boolean dynamicLifetime;
 
 	public float elapsedTime;
-	public float enteredViewingDistanceAt = -1;
+	public float changedVisibilityAt = -1;
 	public float lifetime = -1;
 
 	public WorldPoint worldPoint;

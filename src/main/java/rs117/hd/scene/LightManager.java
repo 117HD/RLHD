@@ -75,6 +75,7 @@ import static rs117.hd.utils.ResourcePath.path;
 @Singleton
 @Slf4j
 public class LightManager {
+	private static final float VISIBILITY_FADE = 0.1f;
 	private static final ResourcePath LIGHTS_PATH = Props.getPathOrDefault(
 		"rlhd.lights-path",
 		() -> path(LightManager.class, "lights.json")
@@ -107,16 +108,16 @@ public class LightManager {
 	@Inject
 	private FrameTimer frameTimer;
 
-	public final ArrayList<Light> WORLD_LIGHTS = new ArrayList<>();
-	public final ListMultimap<Integer, LightDefinition> NPC_LIGHTS = ArrayListMultimap.create();
-	public final ListMultimap<Integer, LightDefinition> OBJECT_LIGHTS = ArrayListMultimap.create();
-	public final ListMultimap<Integer, LightDefinition> PROJECTILE_LIGHTS = ArrayListMultimap.create();
-	public final ListMultimap<Integer, LightDefinition> SPOT_ANIM_LIGHTS = ArrayListMultimap.create();
+	private final ArrayList<Light> WORLD_LIGHTS = new ArrayList<>();
+	private final ListMultimap<Integer, LightDefinition> NPC_LIGHTS = ArrayListMultimap.create();
+	private final ListMultimap<Integer, LightDefinition> OBJECT_LIGHTS = ArrayListMultimap.create();
+	private final ListMultimap<Integer, LightDefinition> PROJECTILE_LIGHTS = ArrayListMultimap.create();
+	private final ListMultimap<Integer, LightDefinition> SPOT_ANIM_LIGHTS = ArrayListMultimap.create();
 
 	private boolean reloadLights;
 	private EntityHiderConfig entityHiderConfig;
 
-	public void loadConfig(Gson gson, ResourcePath path, boolean firstRun) {
+	public void loadConfig(Gson gson, ResourcePath path) {
 		try {
 			LightDefinition[] lights;
 			try {
@@ -162,7 +163,7 @@ public class LightManager {
 
 	public void startUp() {
 		entityHiderConfig = configManager.getConfig(EntityHiderConfig.class);
-		LIGHTS_PATH.watch((path, first) -> loadConfig(plugin.getGson(), path, first));
+		LIGHTS_PATH.watch(path -> loadConfig(plugin.getGson(), path));
 		eventBus.register(this);
 	}
 
@@ -197,9 +198,10 @@ public class LightManager {
 		}
 
 		int drawDistance = plugin.getDrawDistance() * LOCAL_TILE_SIZE;
-
 		Tile[][][] tiles = sceneContext.scene.getExtendedTiles();
 		int[][][] tileHeights = sceneContext.scene.getTileHeights();
+		var cachedNpcs = client.getCachedNPCs();
+		var cachedPlayers = client.getCachedPlayers();
 
 		for (Light light : sceneContext.lights) {
 			// Ways lights may get deleted:
@@ -220,6 +222,8 @@ public class LightManager {
 
 			// Whatever the light is attached to is presumed to exist if it's not marked for removal yet
 			boolean parentExists = !light.markedForRemoval;
+			boolean hiddenTemporarily = light.hiddenTemporarily;
+			light.orientation = 0;
 
 			if (light.tileObject != null) {
 				if (!light.markedForRemoval && light.animationSpecific && light.tileObject instanceof GameObject) {
@@ -239,8 +243,8 @@ public class LightManager {
 				if (light.projectile.getRemainingCycles() <= 0) {
 					light.markedForRemoval = true;
 				} else {
-					parentExists = shouldShowProjectileLights();
-					if (parentExists && light.animationSpecific) {
+					hiddenTemporarily = !shouldShowProjectileLights();
+					if (light.animationSpecific) {
 						var animation = light.projectile.getAnimation();
 						parentExists = animation != null && light.def.animationIds.contains(animation.getId());
 					}
@@ -258,37 +262,63 @@ public class LightManager {
 					parentExists = animation != null && light.def.animationIds.contains(animation.getId());
 				}
 			} else if (light.actor != null && !light.markedForRemoval) {
-				// TODO: check if the actor is hidden by another actor on the same tile
-				if (light.actor instanceof NPC && light.actor != client.getCachedNPCs()[((NPC) light.actor).getIndex()] ||
-					light.actor instanceof Player && light.actor != client.getCachedPlayers()[((Player) light.actor).getId()] ||
+				if (light.actor instanceof NPC && light.actor != cachedNpcs[((NPC) light.actor).getIndex()] ||
+					light.actor instanceof Player && light.actor != cachedPlayers[((Player) light.actor).getId()] ||
 					light.spotAnimId != -1 && !light.actor.hasSpotAnim(light.spotAnimId)
 				) {
+					parentExists = false;
 					light.markedForRemoval = true;
 				} else {
 					var lp = light.actor.getLocalLocation();
 					light.origin[0] = lp.getX();
 					light.origin[2] = lp.getY();
-
 					int plane = client.getPlane();
 					light.plane = plane;
+					light.orientation = light.actor.getCurrentOrientation();
+
+					if (light.animationSpecific)
+						parentExists = light.def.animationIds.contains(light.actor.getAnimation());
+
+					int tileExX = light.origin[0] / LOCAL_TILE_SIZE + SceneUploader.SCENE_OFFSET;
+					int tileExY = light.origin[2] / LOCAL_TILE_SIZE + SceneUploader.SCENE_OFFSET;
 
 					// Some NPCs, such as Crystalline Hunllef in The Gauntlet, sometimes return scene X/Y values far outside the possible range.
-					int npcTileX = light.origin[0] / LOCAL_TILE_SIZE + SceneUploader.SCENE_OFFSET;
-					int npcTileY = light.origin[2] / LOCAL_TILE_SIZE + SceneUploader.SCENE_OFFSET;
-					if (npcTileX != light.prevTileX || npcTileY != light.prevTileY) {
-						light.prevTileX = npcTileX;
-						light.prevTileY = npcTileY;
-						if (npcTileX >= 0 && npcTileY >= 0 && npcTileX < EXTENDED_SCENE_SIZE && npcTileY < EXTENDED_SCENE_SIZE) {
+					Tile tile;
+					if (tileExX >= 0 && tileExY >= 0 &&
+						tileExX < EXTENDED_SCENE_SIZE && tileExY < EXTENDED_SCENE_SIZE &&
+						(tile = tiles[plane][tileExX][tileExY]) != null
+					) {
+						// Check if the actor is hidden by another actor on the same tile
+						for (var gameObject : tile.getGameObjects()) {
+							if (gameObject == null || !(gameObject.getRenderable() instanceof Actor))
+								continue;
+
+							// Assume only the first actor at the same exact location will be rendered
+							if (gameObject.getX() == light.origin[0] && gameObject.getY() == light.origin[2]) {
+								hiddenTemporarily = gameObject.getRenderable() != light.actor;
+								break;
+							}
+						}
+
+						if (!hiddenTemporarily)
+							hiddenTemporarily = !isActorLightVisible(light.actor);
+
+						if (tileExX != light.prevTileX || tileExY != light.prevTileY) {
+							light.prevTileX = tileExX;
+							light.prevTileY = tileExY;
+
 							// Tile null check is to prevent oddities caused by - once again - Crystalline Hunllef.
 							// May also apply to other NPCs in instances.
-							if (tiles[plane][npcTileX][npcTileY] != null && tiles[plane][npcTileX][npcTileY].getBridge() != null)
+							if (tile.getBridge() != null)
 								plane++;
 
 							// Interpolate between tile heights based on specific scene coordinates
 							float lerpX = (light.origin[0] % LOCAL_TILE_SIZE) / (float) LOCAL_TILE_SIZE;
 							float lerpY = (light.origin[2] % LOCAL_TILE_SIZE) / (float) LOCAL_TILE_SIZE;
-							int baseTileX = (int) Math.floor(light.origin[0] / (float) LOCAL_TILE_SIZE) + SceneUploader.SCENE_OFFSET;
-							int baseTileY = (int) Math.floor(light.origin[2] / (float) LOCAL_TILE_SIZE) + SceneUploader.SCENE_OFFSET;
+							int baseTileX =
+								(int) Math.floor(light.origin[0] / (float) LOCAL_TILE_SIZE) + SceneUploader.SCENE_OFFSET;
+							int baseTileY =
+								(int) Math.floor(light.origin[2] / (float) LOCAL_TILE_SIZE) + SceneUploader.SCENE_OFFSET;
 							float heightNorth = HDUtils.lerp(
 								tileHeights[plane][baseTileX][baseTileY + 1],
 								tileHeights[plane][baseTileX + 1][baseTileY + 1],
@@ -301,14 +331,8 @@ public class LightManager {
 							);
 							float tileHeight = HDUtils.lerp(heightSouth, heightNorth, lerpY);
 							light.origin[1] = (int) tileHeight - 1 - light.def.height;
-
-							parentExists = isActorLightVisible(light.actor);
-							if (parentExists && light.animationSpecific)
-								parentExists = light.def.animationIds.contains(light.actor.getAnimation());
 						}
 					}
-
-					light.orientation = light.actor.getCurrentOrientation();
 				}
 			}
 
@@ -373,10 +397,10 @@ public class LightManager {
 			if (!light.def.visibleFromOtherPlanes) {
 				// Hide certain lights on planes lower than the player to prevent light 'leaking' through the floor
 				if (light.plane < client.getPlane() && light.belowFloor)
-					parentExists = false;
+					hiddenTemporarily = true;
 				// Hide any light that is above the current plane and is above a solid floor
 				if (light.plane > client.getPlane() && light.aboveFloor)
-					parentExists = false;
+					hiddenTemporarily = true;
 			}
 
 			if (parentExists != light.parentExists) {
@@ -395,9 +419,20 @@ public class LightManager {
 				}
 			}
 
+			if (hiddenTemporarily != light.hiddenTemporarily) {
+				light.hiddenTemporarily = hiddenTemporarily;
+				// If becoming temporarily hidden from a visible state, fade the light out
+				if (hiddenTemporarily && light.visible)
+					light.changedVisibilityAt = light.elapsedTime;
+			}
+
 			light.elapsedTime += plugin.deltaClientTime;
 
 			light.visible = light.spawnDelay < light.elapsedTime && (light.lifetime == -1 || light.elapsedTime < light.lifetime);
+			if (light.visible && light.hiddenTemporarily) {
+				// When the light is becoming hidden temporarily, it should remain visible until it has faded out
+				light.visible = light.changedVisibilityAt != -1 && light.elapsedTime - light.changedVisibilityAt < VISIBILITY_FADE;
+			}
 
 			if (light.visible) {
 				// Hide lights which cannot possibly affect the visible scene
@@ -437,8 +472,10 @@ public class LightManager {
 
 			sceneContext.numVisibleLights++;
 
-			if (!light.withinViewingDistance)
-				light.enteredViewingDistanceAt = light.elapsedTime;
+			if (!light.withinViewingDistance && light.hiddenTemporarily) {
+				light.hiddenTemporarily = false;
+				light.changedVisibilityAt = light.elapsedTime;
+			}
 			light.withinViewingDistance = true;
 
 			if (light.def.type == LightType.FLICKER) {
@@ -482,16 +519,18 @@ public class LightManager {
 				light.strength *= HDUtils.clamp((light.lifetime - light.elapsedTime) / light.fadeOutDuration, 0, 1);
 
 			// Overriding fade-in when becoming visible due to distance re-prioritization
-			if (light.enteredViewingDistanceAt != -1) {
-				final float fadeInDuration = 0.1f;
-				light.strength *= HDUtils.clamp((light.elapsedTime - light.enteredViewingDistanceAt) / fadeInDuration, 0, 1);
+			if (light.changedVisibilityAt != -1) {
+				float fade = HDUtils.clamp((light.elapsedTime - light.changedVisibilityAt) / VISIBILITY_FADE, 0, 1);
+				if (light.hiddenTemporarily)
+					fade = 1 - fade; // Fade out instead
+				light.strength *= fade;
 			}
 		}
 
 		for (int i = sceneContext.lights.size() - 1; i >= sceneContext.numVisibleLights; i--) {
 			Light light = sceneContext.lights.get(i);
 			light.withinViewingDistance = false;
-			light.enteredViewingDistanceAt = -1;
+			light.changedVisibilityAt = -1;
 
 			// Automatically despawn non-replayable fixed lifetime lights when they expire
 			if (!light.replayable && light.lifetime != -1 && light.lifetime < light.elapsedTime)
@@ -825,23 +864,28 @@ public class LightManager {
 				LocalPoint lp = tileObject.getLocalLocation();
 				int lightX = lp.getX();
 				int lightZ = lp.getY();
-				int localPlane = tileObject.getPlane();
+				int plane = tileObject.getPlane();
 
-				int tileX = HDUtils.clamp(lp.getSceneX() + SceneUploader.SCENE_OFFSET, 0, EXTENDED_SCENE_SIZE - 2);
-				int tileY = HDUtils.clamp(lp.getSceneY() + SceneUploader.SCENE_OFFSET, 0, EXTENDED_SCENE_SIZE - 2);
+				int tileExX = HDUtils.clamp(lp.getSceneX() + SceneUploader.SCENE_OFFSET, 0, EXTENDED_SCENE_SIZE - 2);
+				int tileExY = HDUtils.clamp(lp.getSceneY() + SceneUploader.SCENE_OFFSET, 0, EXTENDED_SCENE_SIZE - 2);
 				float lerpX = (lightX % LOCAL_TILE_SIZE) / (float) LOCAL_TILE_SIZE;
 				float lerpZ = (lightZ % LOCAL_TILE_SIZE) / (float) LOCAL_TILE_SIZE;
+				int tileZ = HDUtils.clamp(plane, 0, MAX_Z - 1);
+
+				Tile[][][] tiles = sceneContext.scene.getExtendedTiles();
+				Tile tile = tiles[tileZ][tileExX][tileExY];
+				if (tile != null && tile.getBridge() != null && tileZ < MAX_Z - 1)
+					tileZ++;
 
 				int[][][] tileHeights = sceneContext.scene.getTileHeights();
-				int tileZ = HDUtils.clamp(localPlane, 0, MAX_Z - 1);
 				float heightNorth = HDUtils.lerp(
-					tileHeights[tileZ][tileX][tileY + 1],
-					tileHeights[tileZ][tileX + 1][tileY + 1],
+					tileHeights[tileZ][tileExX][tileExY + 1],
+					tileHeights[tileZ][tileExX + 1][tileExY + 1],
 					lerpX
 				);
 				float heightSouth = HDUtils.lerp(
-					tileHeights[tileZ][tileX][tileY],
-					tileHeights[tileZ][tileX + 1][tileY],
+					tileHeights[tileZ][tileExX][tileExY],
+					tileHeights[tileZ][tileExX + 1][tileExY],
 					lerpX
 				);
 				float tileHeight = HDUtils.lerp(heightSouth, heightNorth, lerpZ);
@@ -849,7 +893,7 @@ public class LightManager {
 				Light light = new Light(def);
 				light.hash = newHash;
 				light.tileObject = tileObject;
-				light.plane = localPlane;
+				light.plane = plane;
 				light.preOrientation = orientations[i];
 				light.origin[0] = lightX;
 				light.origin[1] = (int) tileHeight - light.def.height - 1;
