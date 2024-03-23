@@ -15147,6 +15147,7 @@
       899, 901
     ],
     "uvType": "BOX",
+    "uvScale": 0.8,
     "retainVanillaUvs": false
   }
 ]
