@@ -360,6 +360,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private int uniShadowsEnabled;
 	private int uniUnderwaterEnvironment;
 	private int uniUnderwaterCaustics;
+	private int uniShorelineCaustics;
 	private int uniUnderwaterCausticsColor;
 	private int uniUnderwaterCausticsStrength;
 	private int uniCameraPos;
@@ -879,6 +880,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		uniShadowsEnabled = glGetUniformLocation(glSceneProgram, "shadowsEnabled");
 		uniUnderwaterEnvironment = glGetUniformLocation(glSceneProgram, "underwaterEnvironment");
 		uniUnderwaterCaustics = glGetUniformLocation(glSceneProgram, "underwaterCaustics");
+		uniShorelineCaustics = glGetUniformLocation(glSceneProgram, "shorelineCaustics");
 		uniUnderwaterCausticsColor = glGetUniformLocation(glSceneProgram, "underwaterCausticsColor");
 		uniUnderwaterCausticsStrength = glGetUniformLocation(glSceneProgram, "underwaterCausticsStrength");
 		uniCameraPos = glGetUniformLocation(glSceneProgram, "cameraPos");
@@ -2025,6 +2027,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			glUniform1f(uniContrast, config.contrast() / 100f);
 			glUniform1i(uniUnderwaterEnvironment, environmentManager.isUnderwater() ? 1 : 0);
 			glUniform1i(uniUnderwaterCaustics, config.underwaterCaustics() ? 1 : 0);
+			glUniform1i(uniShorelineCaustics, config.shorelineCaustics() ? 1 : 0);
 			glUniform3fv(uniUnderwaterCausticsColor, environmentManager.currentUnderwaterCausticsColor);
 			glUniform1f(uniUnderwaterCausticsStrength, environmentManager.currentUnderwaterCausticsStrength);
 			glUniform1f(uniElapsedTime, elapsedTime);

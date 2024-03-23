@@ -58,6 +58,7 @@ uniform float shadowMaxBias;
 uniform int shadowsEnabled;
 uniform bool underwaterEnvironment;
 uniform bool underwaterCaustics;
+uniform bool shorelineCaustics;
 uniform vec3 underwaterCausticsColor;
 uniform float underwaterCausticsStrength;
 

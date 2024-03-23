@@ -184,7 +184,7 @@ void sampleUnderwater(inout vec3 outputColor, WaterType waterType, float depth, 
         outputColor = vec3(0);
     }
 
-    if (underwaterCaustics) {
+    if (shorelineCaustics) {
         const float scale = 1.75;
         const float maxCausticsDepth = 128 * 4;
 

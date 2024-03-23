@@ -619,10 +619,22 @@ public interface HdPluginConfig extends Config
 	}
 
 	@ConfigItem(
+		keyName = "shorelineCaustics",
+		name = "Shoreline Caustics",
+		description = "Apply underwater lighting effects to imitate sunlight passing through waves on the surface.",
+		position = 10,
+		section = environmentSettings
+	)
+	default boolean shorelineCaustics()
+	{
+		return true;
+	}
+
+	@ConfigItem(
 		keyName = "underwaterCaustics",
 		name = "Underwater Caustics",
 		description = "Apply underwater lighting effects to imitate sunlight passing through waves on the surface.",
-		position = 10,
+		position = 11,
 		section = environmentSettings
 	)
 	default boolean underwaterCaustics()
@@ -635,7 +647,7 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_HD_TZHAAR_RESKIN,
 		name = "HD TzHaar Reskin",
 		description = "Recolors the TzHaar city of Mor Ul Rek to give it an appearance similar to that of its 2008 HD variant.",
-		position = 11,
+		position = 12,
 		section = environmentSettings
 	)
 	default boolean hdTzHaarReskin() {
