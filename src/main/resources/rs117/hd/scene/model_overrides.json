@@ -7937,15 +7937,6 @@
     "uvScale": 0.6
   },
   {
-    "description": "Objects - Wooden - Rocking Chair",
-    "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [
-      1096,
-      15681
-    ],
-    "uvType": "BOX"
-  },
-  {
     "description": "Objects - Wooden - Chair - No cushion",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
@@ -7968,6 +7959,7 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       7182,
+      15681,
       15682
     ],
     "uvType": "BOX"
