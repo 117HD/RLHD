@@ -15139,5 +15139,14 @@
         "retainVanillaUvs": false
       }
     }
+  },
+  {
+    "description": "Decoration - Textured Lumbridge Heraldry",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      899, 901
+    ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false
   }
 ]
