@@ -3270,9 +3270,16 @@
   },
   {
     "name": "FORTIS_WOOD_FLOOR",
-    "area": "ZEAH",
+    "area": "ZEAH_UPPER_LEVELS",
     "overlayIds": [ 324 ],
     "groundMaterial": "HD_WOOD_PLANKS_1",
+    "uvScale": 1.1
+  },
+  {
+    "name": "FORTIS_RED_DIRT",
+    "area": "ZEAH",
+    "overlayIds": [ 324 ],
+    "groundMaterial": "DIRT",
     "uvScale": 1.1
   },
   {
