@@ -25694,6 +25694,29 @@
     ]
   },
   {
+    "description": "TELEPORT_TABLET",
+    "height": 50,
+    "alignment": "CENTER",
+    "radius": 90,
+    "strength": 75,
+    "fixedDespawnTime": true,
+    "color": [
+      35,
+      46,
+      179
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "spawnDelay": 100,
+    "despawnDelay": 800,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 150,
+    "graphicsObjectIds": [
+      678
+    ]
+  },
+  {
     "description": "TWISTED_HOME_TELEPORT",
     "height": 20,
     "alignment": "CENTER",
@@ -27292,8 +27315,8 @@
     "description": "ARCEUUS_SPELLBOOK_TELEPORTS",
     "alignment": "CENTER",
     "height": 50,
-    "radius": 170,
-    "strength": 15,
+    "radius": 190,
+    "strength": 20,
     "fixedDespawnTime": true,
     "color": [
       77,
