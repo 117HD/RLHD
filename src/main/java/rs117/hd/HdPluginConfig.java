@@ -618,12 +618,33 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
+	String KEY_HD_TZHAAR_RESKIN = "tzhaarHD";
+	@ConfigItem(
+		keyName = KEY_HD_TZHAAR_RESKIN,
+		name = "HD TzHaar Reskin",
+		description = "Recolors the TzHaar city of Mor Ul Rek to give it an appearance similar to that of its 2008 HD variant.",
+		position = 10,
+		section = environmentSettings
+	)
+	default boolean hdTzHaarReskin() {
+		return true;
+	}
+
+	/*====== Water settings ======*/
+
+	@ConfigSection(
+		name = "Water",
+		description = "Water settings",
+		position = 3
+	)
+	String waterSettings = "waterSettings";
+
 	@ConfigItem(
 		keyName = "shorelineCaustics",
 		name = "Shoreline Caustics",
 		description = "Apply underwater lighting effects to imitate sunlight passing through waves on the surface.",
-		position = 10,
-		section = environmentSettings
+		position = 0,
+		section = waterSettings
 	)
 	default boolean shorelineCaustics()
 	{
@@ -634,33 +655,44 @@ public interface HdPluginConfig extends Config
 		keyName = "underwaterCaustics",
 		name = "Underwater Caustics",
 		description = "Apply underwater lighting effects to imitate sunlight passing through waves on the surface.",
-		position = 11,
-		section = environmentSettings
+		position = 1,
+		section = waterSettings
 	)
 	default boolean underwaterCaustics()
 	{
 		return true;
 	}
-
-	String KEY_HD_TZHAAR_RESKIN = "tzhaarHD";
+	
 	@ConfigItem(
-		keyName = KEY_HD_TZHAAR_RESKIN,
-		name = "HD TzHaar Reskin",
-		description = "Recolors the TzHaar city of Mor Ul Rek to give it an appearance similar to that of its 2008 HD variant.",
-		position = 12,
-		section = environmentSettings
+		keyName = "foamAmount",
+		name = "Foam Amount",
+		description = "The Max amount of foam.",
+		position = 2,
+		section = waterSettings
 	)
-	default boolean hdTzHaarReskin() {
-		return true;
+	default double foamAmount()
+	{
+		return 0.8;
 	}
 
+	@ConfigItem(
+		keyName = "foamDistance",
+		name = "Foam Distance",
+		description = "The Distance foam effects.",
+		position = 3,
+		section = waterSettings
+	)
+	default double foamDistance()
+	{
+		return 0.7;
+	}
 
 	/*====== Model caching settings ======*/
 
 	@ConfigSection(
 		name = "Model caching",
 		description = "Improve performance by reusing model data",
-		position = 3,
+		position = 4,
 		closedByDefault = true
 	)
 	String modelCachingSettings = "modelCachingSettings";
@@ -719,7 +751,7 @@ public interface HdPluginConfig extends Config
 	@ConfigSection(
 		name = "Miscellaneous",
 		description = "Miscellaneous settings",
-		position = 4,
+		position = 5,
 		closedByDefault = true
 	)
 	String miscellaneousSettings = "miscellaneousSettings";
@@ -803,7 +835,7 @@ public interface HdPluginConfig extends Config
 	@ConfigSection(
 		name = "Experimental",
 		description = "Experimental features - if you're experiencing issues you should consider disabling these",
-		position = 5,
+		position = 6,
 		closedByDefault = true
 	)
 	String experimentalSettings = "experimentalSettings";
