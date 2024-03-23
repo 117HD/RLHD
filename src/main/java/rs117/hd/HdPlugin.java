@@ -97,6 +97,7 @@ import rs117.hd.opengl.shader.Template;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 import rs117.hd.scene.EnvironmentManager;
+import rs117.hd.scene.FinishingSpotHandler;
 import rs117.hd.scene.LightManager;
 import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.ProceduralGenerator;
@@ -318,6 +319,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	@Nullable
 	private SceneContext sceneContext;
 	private SceneContext nextSceneContext;
+
+	@Inject
+	private FinishingSpotHandler finishingSpotHandler;
 
 	private int dynamicOffsetVertices;
 	private int dynamicOffsetUvs;
@@ -561,6 +565,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				initVaos();
 				initBuffers();
 
+				finishingSpotHandler.start();
+
 				// Materials need to be initialized before compiling shader programs
 				textureManager.startUp();
 
@@ -629,6 +635,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 			developerTools.deactivate();
 			modelPusher.shutDown();
+			finishingSpotHandler.reset();
 			tileOverrideManager.shutDown();
 			modelOverrideManager.shutDown();
 			lightManager.shutDown();
@@ -2299,6 +2306,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				proceduralGenerator.generateSceneData(context);
 				environmentManager.loadSceneEnvironments(context);
 				sceneUploader.upload(context);
+				finishingSpotHandler.respawn = true;
 			}
 		} catch (OutOfMemoryError oom) {
 			log.error("Ran out of memory while loading scene (32-bit: {}, low memory mode: {})",
@@ -3094,6 +3102,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				reuploadScene();
 			--gameTicksUntilSceneReload;
 		}
+
+		finishingSpotHandler.spawnAllFishingSpots(WaterType.BLOOD);
+		finishingSpotHandler.updateFishingSpotObjects();
 
 		// reload the scene if the player is in a house and their plane changed
 		// this greatly improves the performance as it keeps the scene buffer up to date
