@@ -25936,6 +25936,50 @@
     ]
   },
   {
+    "description": "TRAILBLAZER_DEATH",
+    "height": 20,
+    "alignment": "CENTER",
+    "radius": 250,
+    "strength": 25,
+    "fixedDespawnTime": true,
+    "despawnDelay" : 2400,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeInDuration": 1350,
+    "fadeOutDuration": 450,
+    "graphicsObjectIds": [
+      2610
+    ]
+  },
+  {
+    "description": "TRAILBLAZER_RESPAWN",
+    "height": 20,
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 25,
+    "fixedDespawnTime": true,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeInDuration": 125,
+    "fadeOutDuration": 450,
+    "despawnDelay" : 900,
+    "graphicsObjectIds": [
+      2611
+    ]
+  },
+  {
     "description": "SUPERHEAT_ITEM",
     "height": 200,
     "alignment": "CENTER",
