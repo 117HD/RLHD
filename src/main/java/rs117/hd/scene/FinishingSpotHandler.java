@@ -90,7 +90,7 @@ public class FinishingSpotHandler {
 		fishingSpot.setActive(true);
 		fishingSpot.setShouldLoop(true);
 
-		ModelData data = color != null ? fishingSpotNormal.cloneColors() : fishingSpotNormal;
+		ModelData data = fishingSpotNormal.cloneColors().cloneVertices().cloneTextures().cloneTransparencies();
 		if (color != null) {
 			applyColorToModel(data, color);
 		}
