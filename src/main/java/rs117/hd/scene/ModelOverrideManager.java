@@ -73,7 +73,7 @@ public class ModelOverrideManager {
 			} catch (IOException ex) {
 				log.error("Failed to load model overrides:", ex);
 			}
-
+			plugin.finishingSpotHandler.loadModelOverride(plugin.config.fishingSpots());
 			if (!first) {
 				clientThread.invoke(() -> {
 					modelPusher.clearModelCache();
@@ -111,7 +111,7 @@ public class ModelOverrideManager {
 			addEntry(ModelHash.TYPE_GRAPHICS_OBJECT, id, override);
 	}
 
-	private void addEntry(int type, int id, ModelOverride entry) {
+	void addEntry(int type, int id, ModelOverride entry) {
 		int uuid = ModelHash.packUuid(type, id);
 		ModelOverride current = modelOverrides.get(uuid);
 

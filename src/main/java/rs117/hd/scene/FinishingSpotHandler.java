@@ -9,97 +9,112 @@ import java.util.Map;
 import javax.inject.Inject;
 import net.runelite.api.*;
 import net.runelite.api.coords.*;
-import net.runelite.client.ui.overlay.Overlay;
 import rs117.hd.HdPlugin;
 import rs117.hd.data.WaterType;
-import rs117.hd.utils.ColorUtils;
+import rs117.hd.scene.model_overrides.ModelOverride;
+import rs117.hd.utils.ModelHash;
 
 public class FinishingSpotHandler {
 
-	List<Integer> npcs = new ArrayList<>(Arrays.asList(
+	private static final List<Integer> NPC_IDS = Arrays.asList(
 		394, 635, 1506, 1507, 1508, 1509, 1510, 1511, 1512, 1513, 1514, 1515, 1516, 1517, 1518, 1519, 1520,
 		1521, 1522, 1523, 1524, 1525, 1526, 1527, 1528, 1529, 1530, 1531, 1532, 1533, 1534, 1535, 1536, 1542,
 		1544, 2146, 2653, 2654, 2655, 3317, 3417, 3418, 3419, 3657, 3913, 3914, 3915, 4079, 4080, 4081, 4082,
 		4316, 4476, 4477, 4710, 4711, 4712, 4713, 4714, 5233, 5234, 5820, 5821, 6731, 6825, 7155, 7199, 7200,
 		7323, 7459, 7460, 7461, 7462, 7463, 7464, 7465, 7466, 7467, 7468, 7469, 7470, 7946, 7947, 8524, 8525,
 		8526, 8527, 9171, 9172, 9173, 9174, 9478, 12267
-	));
+	);
+	private static final int FISHING_SPOT_MODEL = 41238;
+	private static final int FISHING_SPOT_ANIMATION = 10793;
 
-	public final int FISHING_SPOT_MODEL = 41238;
-	public final int FISHING_SPOT_ANIMATION = 10793;
-
-	private ModelData FISHING_SPOT_NORMAL;
-
-	private Animation FISHING_ANIMATION;
+	private ModelData fishingSpotNormal;
+	private Animation fishingAnimation;
 
 	@Inject
 	private TileOverrideManager tileOverrideManager;
-
-	Map<Integer,RuneLiteObject> npcIndexToModel = new HashMap<>();
 
 	@Inject
 	private Client client;
 
 	@Inject
-	private EnvironmentManager environmentManager;
+	private ModelOverrideManager modelOverrideManager;
 
+	@Inject
+	private HdPlugin plugin;
+
+	private final Map<Integer, RuneLiteObject> npcIndexToModel = new HashMap<>();
 	public boolean respawn = false;
 
 	public void start() {
-		FISHING_SPOT_NORMAL = createFishingModel();
-		FISHING_ANIMATION = client.loadAnimation(FISHING_SPOT_ANIMATION);
+		this.fishingSpotNormal = client.loadModelData(FISHING_SPOT_MODEL).cloneVertices();
+		this.fishingAnimation = client.loadAnimation(FISHING_SPOT_ANIMATION);
 	}
 
-	public ModelData createFishingModel() {
-		return client.loadModelData(FISHING_SPOT_MODEL).cloneVertices();
+	public void loadModelOverride(boolean hidden) {
+		ModelOverride override = new ModelOverride();
+		override.hide = hidden;
+		NPC_IDS.forEach(npc -> modelOverrideManager.addEntry(ModelHash.TYPE_NPC, npc, override));
 	}
 
+	public void spawnAllFishingSpots() {
+		if (!plugin.config.fishingSpots() || !respawn) {
+			return;
+		}
 
+		reset();
+		client.getNpcs().forEach(this::spawnFishingSpot);
+		respawn = false;
+	}
 
-	public void spawnAllFishingSpots(WaterType type) {
-		if (respawn) {
-			reset();
-			client.getNpcs().forEach(npc -> {
-				if (!npcs.contains(npc.getId())) return;
-				RuneLiteObject fishingSpot = client.createRuneLiteObject();
-				fishingSpot.setAnimation(FISHING_ANIMATION);
-				fishingSpot.setLocation(npc.getLocalLocation(), 0);
-				fishingSpot.setDrawFrontTilesFirst(false);
-				fishingSpot.setActive(true);
-				fishingSpot.setShouldLoop(true);
-				LocalPoint pos = npc.getLocalLocation();
-				Tile tile = client.getScene().getTiles()[npc.getWorldLocation().getPlane()][pos.getSceneX()][pos.getSceneY()];
-				WaterType waterType = tileOverrideManager.getOverride(client.getScene(),tile).waterType;
+	public void spawnFishingSpot(NPC npc) {
+		if (!plugin.config.fishingSpots()) {
+			return;
+		}
+		if (!NPC_IDS.contains(npc.getId())) {
+			return;
+		}
 
-				if (waterType.fishingColor != null) {
-					System.out.println(waterType.fishingColor.toString());
-					ModelData data = FISHING_SPOT_NORMAL.cloneColors();
-					short[] faceColors = data.getFaceColors();
-					short recolor = JagexColor.rgbToHSL(waterType.fishingColor.getRGB(),100);
-					for (int i = 0; i < data.getFaceColors().length; i++) {
-						data.recolor(faceColors[i], recolor);
-					}
-					fishingSpot.setModel(data.light());
-				} else {
-					fishingSpot.setModel(FISHING_SPOT_NORMAL.light());
-				}
-				npcIndexToModel.put(npc.getIndex(), fishingSpot);
-			});
-			respawn = false;
+		LocalPoint pos = npc.getLocalLocation();
+		Tile tile = client.getScene().getTiles()[npc.getWorldLocation().getPlane()][pos.getSceneX()][pos.getSceneY()];
+		WaterType waterType = tileOverrideManager.getOverride(client.getScene(), tile).waterType;
+
+		RuneLiteObject fishingSpot = createRuneLiteObject(waterType.fishingColor);
+		fishingSpot.setLocation(npc.getLocalLocation(), 0);
+		npcIndexToModel.put(npc.getIndex(), fishingSpot);
+	}
+
+	private RuneLiteObject createRuneLiteObject(Color color) {
+		RuneLiteObject fishingSpot = client.createRuneLiteObject();
+		fishingSpot.setAnimation(fishingAnimation);
+		fishingSpot.setDrawFrontTilesFirst(false);
+		fishingSpot.setActive(true);
+		fishingSpot.setShouldLoop(true);
+
+		ModelData data = color != null ? fishingSpotNormal.cloneColors() : fishingSpotNormal;
+		if (color != null) {
+			applyColorToModel(data, color);
+		}
+		fishingSpot.setModel(data.light());
+
+		return fishingSpot;
+	}
+
+	private void applyColorToModel(ModelData modelData, Color color) {
+		short recolor = JagexColor.rgbToHSL(color.getRGB(), 100);
+		for (int i = 0; i < modelData.getFaceColors().length; i++) {
+			modelData.recolor(modelData.getFaceColors()[i], recolor);
 		}
 	}
 
 	public void reset() {
-		npcIndexToModel.forEach((index,object) -> {
-			object.setActive(false);
-		});
+		npcIndexToModel.values().forEach(object -> object.setActive(false));
 		npcIndexToModel.clear();
 	}
 
 	public void updateFishingSpotObjects() {
-		npcIndexToModel.forEach((index,object) -> {
-			object.setLocation(client.getNpcs().stream().filter(npc -> npc.getIndex() == index).findFirst().get().getLocalLocation(),0);
-		});
+		npcIndexToModel.forEach((index, object) -> client.getNpcs().stream()
+			.filter(npc -> npc.getIndex() == index)
+			.findFirst()
+			.ifPresentOrElse(npc -> object.setLocation(npc.getLocalLocation(), 0), () -> npcIndexToModel.remove(index)));
 	}
-
 }

@@ -321,7 +321,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private SceneContext nextSceneContext;
 
 	@Inject
-	private FinishingSpotHandler finishingSpotHandler;
+	public FinishingSpotHandler finishingSpotHandler;
 
 	private int dynamicOffsetVertices;
 	private int dynamicOffsetUvs;
@@ -565,8 +565,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				initVaos();
 				initBuffers();
 
-				finishingSpotHandler.start();
-
 				// Materials need to be initialized before compiling shader programs
 				textureManager.startUp();
 
@@ -586,7 +584,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				lastCanvasWidth = lastCanvasHeight = 0;
 				lastStretchedCanvasWidth = lastStretchedCanvasHeight = 0;
 				lastAntiAliasingMode = null;
-
+				finishingSpotHandler.start();
 				tileOverrideManager.startUp();
 				modelOverrideManager.startUp();
 				modelPusher.startUp();
@@ -2247,6 +2245,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		return image;
 	}
 
+	@Subscribe
+	public void onNpcSpawned(NpcSpawned npcSpawned) {
+		finishingSpotHandler.spawnFishingSpot(npcSpawned.getNpc());
+	}
+
 	@Override
 	public void animate(Texture texture, int diff) {}
 
@@ -2504,6 +2507,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 								client.setExpandedMapLoading(getExpandedMapLoadingChunks());
 								if (client.getGameState() == GameState.LOGGED_IN)
 									client.setGameState(GameState.LOADING);
+								break;
+							case FISHINGSPOTS:
+								reloadModelOverrides = true;
+								if (config.fishingSpots()) {
+									finishingSpotHandler.respawn = true;
+								} else  {
+									finishingSpotHandler.reset();
+								}
 								break;
 							case KEY_COLOR_BLINDNESS:
 							case KEY_MACOS_INTEL_WORKAROUND:
@@ -3103,7 +3114,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			--gameTicksUntilSceneReload;
 		}
 
-		finishingSpotHandler.spawnAllFishingSpots(WaterType.BLOOD);
+		finishingSpotHandler.spawnAllFishingSpots();
 		finishingSpotHandler.updateFishingSpotObjects();
 
 		// reload the scene if the player is in a house and their plane changed
