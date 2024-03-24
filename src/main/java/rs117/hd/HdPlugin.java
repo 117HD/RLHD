@@ -2309,7 +2309,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				proceduralGenerator.generateSceneData(context);
 				environmentManager.loadSceneEnvironments(context);
 				sceneUploader.upload(context);
-				finishingSpotHandler.respawn = true;
+				clientThread.invoke(() -> finishingSpotHandler.spawnAllFishingSpots());
 			}
 		} catch (OutOfMemoryError oom) {
 			log.error("Ran out of memory while loading scene (32-bit: {}, low memory mode: {})",
@@ -2511,7 +2511,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 							case FISHINGSPOTS:
 								reloadModelOverrides = true;
 								if (config.fishingSpots()) {
-									finishingSpotHandler.respawn = true;
+									finishingSpotHandler.spawnAllFishingSpots();
 								} else  {
 									finishingSpotHandler.reset();
 								}
@@ -3114,7 +3114,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			--gameTicksUntilSceneReload;
 		}
 
-		finishingSpotHandler.spawnAllFishingSpots();
 		finishingSpotHandler.updateFishingSpotObjects();
 
 		// reload the scene if the player is in a house and their plane changed

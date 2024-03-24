@@ -43,7 +43,6 @@ public class FinishingSpotHandler {
 	private HdPlugin plugin;
 
 	private final Map<Integer, RuneLiteObject> npcIndexToModel = new HashMap<>();
-	public boolean respawn = false;
 
 	public void start() {
 		this.fishingSpotNormal = client.loadModelData(FISHING_SPOT_MODEL).cloneVertices();
@@ -57,23 +56,22 @@ public class FinishingSpotHandler {
 	}
 
 	public void spawnAllFishingSpots() {
-		if (!plugin.config.fishingSpots() || !respawn) {
+		if (!plugin.config.fishingSpots()) {
 			return;
 		}
 
 		reset();
 		client.getNpcs().forEach(this::spawnFishingSpot);
-		respawn = false;
 	}
 
 	public void spawnFishingSpot(NPC npc) {
-		if (!plugin.config.fishingSpots()) {
-			return;
-		}
 		if (!NPC_IDS.contains(npc.getId())) {
 			return;
 		}
 
+		if (!plugin.config.fishingSpots()) {
+			return;
+		}
 		LocalPoint pos = npc.getLocalLocation();
 		Tile tile = client.getScene().getTiles()[npc.getWorldLocation().getPlane()][pos.getSceneX()][pos.getSceneY()];
 		WaterType waterType = tileOverrideManager.getOverride(client.getScene(), tile).waterType;
