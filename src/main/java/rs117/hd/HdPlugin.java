@@ -2309,7 +2309,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				proceduralGenerator.generateSceneData(context);
 				environmentManager.loadSceneEnvironments(context);
 				sceneUploader.upload(context);
-				finishingSpotHandler.respawn = true;
 			}
 		} catch (OutOfMemoryError oom) {
 			log.error("Ran out of memory while loading scene (32-bit: {}, low memory mode: {})",
@@ -2386,7 +2385,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		sceneContext.stagingBufferVertices.clear();
 		sceneContext.stagingBufferUvs.clear();
 		sceneContext.stagingBufferNormals.clear();
-
+		finishingSpotHandler.reset();
 		if (sceneContext.intersects(Area.PLAYER_OWNED_HOUSE)) {
 			if (!isInHouse) {
 				// POH takes 1 game tick to enter, then 2 game ticks to load per floor
@@ -2510,11 +2509,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 								break;
 							case FISHINGSPOTS:
 								reloadModelOverrides = true;
-								if (config.fishingSpots()) {
-									finishingSpotHandler.respawn = true;
-								} else  {
-									finishingSpotHandler.reset();
-								}
+								finishingSpotHandler.reset();
 								break;
 							case KEY_COLOR_BLINDNESS:
 							case KEY_MACOS_INTEL_WORKAROUND:
@@ -3114,8 +3109,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			--gameTicksUntilSceneReload;
 		}
 
-		finishingSpotHandler.spawnAllFishingSpots();
-		finishingSpotHandler.updateFishingSpotObjects();
+		finishingSpotHandler.updateFishingSpots();
 
 		// reload the scene if the player is in a house and their plane changed
 		// this greatly improves the performance as it keeps the scene buffer up to date

@@ -1,7 +1,6 @@
 package rs117.hd.scene;
 
 import java.awt.Color;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -11,6 +10,8 @@ import net.runelite.api.*;
 import net.runelite.api.coords.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.data.WaterType;
+import rs117.hd.overlays.FrameTimer;
+import rs117.hd.overlays.Timer;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.ModelHash;
 
@@ -41,8 +42,10 @@ public class FinishingSpotHandler {
 	@Inject
 	private HdPlugin plugin;
 
+	@Inject
+	private FrameTimer frameTimer;
+
 	private final Map<Integer, RuneLiteObject> npcIndexToModel = new HashMap<>();
-	public boolean respawn = false;
 
 	public void start() {
 		this.fishingAnimation = client.loadAnimation(FISHING_SPOT_ANIMATION);
@@ -54,35 +57,32 @@ public class FinishingSpotHandler {
 		NPC_IDS.forEach(npc -> modelOverrideManager.addEntry(ModelHash.TYPE_NPC, npc, override));
 	}
 
-	public void spawnAllFishingSpots() {
+	public void updateFishingSpots() {
 		if (!plugin.config.fishingSpots()) {
 			return;
 		}
+		frameTimer.begin(Timer.FISHING_SPOTS);
 
-		if (!respawn) {
-			return;
-		}
-
-		reset();
+		updateFishingSpotObjects();
 		client.getNpcs().forEach(this::spawnFishingSpot);
-		respawn = false;
+		frameTimer.end(Timer.FISHING_SPOTS);
 	}
 
 	public void spawnFishingSpot(NPC npc) {
-		if (!plugin.config.fishingSpots()) {
-			return;
-		}
+
 		if (!NPC_IDS.contains(npc.getId())) {
 			return;
 		}
 
-		LocalPoint pos = npc.getLocalLocation();
-		Tile tile = client.getScene().getTiles()[npc.getWorldLocation().getPlane()][pos.getSceneX()][pos.getSceneY()];
-		WaterType waterType = tileOverrideManager.getOverride(client.getScene(), tile).waterType;
+		if (!npcIndexToModel.containsKey(npc.getIndex())) {
+			LocalPoint pos = npc.getLocalLocation();
+			Tile tile = client.getScene().getTiles()[npc.getWorldLocation().getPlane()][pos.getSceneX()][pos.getSceneY()];
+			WaterType waterType = tileOverrideManager.getOverride(client.getScene(), tile).waterType;
 
-		RuneLiteObject fishingSpot = createRuneLiteObject(waterType.fishingColor);
-		fishingSpot.setLocation(npc.getLocalLocation(), 0);
-		npcIndexToModel.put(npc.getIndex(), fishingSpot);
+			RuneLiteObject fishingSpot = createRuneLiteObject(waterType.fishingColor);
+			fishingSpot.setLocation(npc.getLocalLocation(), 0);
+			npcIndexToModel.put(npc.getIndex(), fishingSpot);
+		}
 	}
 
 	private RuneLiteObject createRuneLiteObject(Color color) {
@@ -114,6 +114,7 @@ public class FinishingSpotHandler {
 	}
 
 	public void updateFishingSpotObjects() {
+
 		npcIndexToModel.forEach((index, object) -> client.getNpcs().stream()
 			.filter(npc -> npc.getIndex() == index)
 			.findFirst()
