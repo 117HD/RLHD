@@ -2255,6 +2255,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Subscribe
 	public void onGameStateChanged(GameStateChanged gameStateChanged) {
+		if (gameStateChanged.getGameState() == GameState.LOADING) {
+			clientThread.invoke(() -> finishingSpotHandler.spawnAllFishingSpots());
+		}
 		if (gameStateChanged.getGameState() == GameState.LOGIN_SCREEN) {
 			renderBufferOffset = 0;
 			hasLoggedIn = false;
