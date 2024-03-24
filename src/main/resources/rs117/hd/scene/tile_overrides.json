@@ -3269,6 +3269,13 @@
     }
   },
   {
+    "name": "FORTIS_MARBLE_FLOOR",
+    "area": "ZEAH",
+    "overlayIds": [ 327 ],
+    "groundMaterial": "MARBLE_2",
+    "uvScale": 1.1
+  },
+  {
     "name": "FORTIS_WOOD_FLOOR",
     "area": "ZEAH_UPPER_LEVELS",
     "overlayIds": [ 324 ],
