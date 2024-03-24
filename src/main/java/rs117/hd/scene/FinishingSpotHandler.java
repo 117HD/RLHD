@@ -55,7 +55,11 @@ public class FinishingSpotHandler {
 	}
 
 	public void spawnAllFishingSpots() {
-		if (!plugin.config.fishingSpots() || !respawn) {
+		if (!plugin.config.fishingSpots()) {
+			return;
+		}
+
+		if (!respawn) {
 			return;
 		}
 
