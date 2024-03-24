@@ -1,6 +1,7 @@
 package rs117.hd.scene;
 
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -115,9 +116,21 @@ public class FinishingSpotHandler {
 
 	public void updateFishingSpotObjects() {
 
-		npcIndexToModel.forEach((index, object) -> client.getNpcs().stream()
-			.filter(npc -> npc.getIndex() == index)
-			.findFirst()
-			.ifPresentOrElse(npc -> object.setLocation(npc.getLocalLocation(), 0), () -> npcIndexToModel.remove(index)));
+		List<Integer> toRemove = new ArrayList<>();
+
+		npcIndexToModel.forEach((index, object) ->
+			client.getNpcs().stream()
+				.filter(npc -> npc.getIndex() == index)
+				.findFirst()
+				.ifPresentOrElse(
+					npc -> object.setLocation(npc.getLocalLocation(), 0),
+					() -> toRemove.add(index)
+				)
+		);
+
+		toRemove.forEach( remove -> {
+			npcIndexToModel.get(remove).setActive(false);
+			npcIndexToModel.remove(remove);
+		});
 	}
 }
