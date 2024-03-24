@@ -27,7 +27,6 @@ public class FinishingSpotHandler {
 	private static final int FISHING_SPOT_MODEL = 41238;
 	private static final int FISHING_SPOT_ANIMATION = 10793;
 
-	private ModelData fishingSpotNormal;
 	private Animation fishingAnimation;
 
 	@Inject
@@ -46,7 +45,6 @@ public class FinishingSpotHandler {
 	public boolean respawn = false;
 
 	public void start() {
-		this.fishingSpotNormal = client.loadModelData(FISHING_SPOT_MODEL).cloneVertices();
 		this.fishingAnimation = client.loadAnimation(FISHING_SPOT_ANIMATION);
 	}
 
@@ -89,8 +87,8 @@ public class FinishingSpotHandler {
 		fishingSpot.setDrawFrontTilesFirst(false);
 		fishingSpot.setActive(true);
 		fishingSpot.setShouldLoop(true);
-
-		ModelData data = fishingSpotNormal.cloneColors().cloneVertices().cloneTextures().cloneTransparencies();
+		ModelData modelData = client.loadModelData(FISHING_SPOT_MODEL).cloneVertices();
+		ModelData data = color != null ? modelData.cloneColors() : modelData;
 		if (color != null) {
 			applyColorToModel(data, color);
 		}
