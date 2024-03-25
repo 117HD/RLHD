@@ -149,20 +149,18 @@ public class FinishingSpotHandler {
 		fishingSpot.setActive(true);
 		fishingSpot.setShouldLoop(true);
 		ModelData modelData = client.loadModelData(2331).cloneVertices();
-		ModelData data = color != null ? modelData.cloneColors() : modelData;
 		if (color != null) {
-			applyColorToModel(data, color,brightness);
+			applyColorToModel(modelData, color,brightness);
 		}
-		fishingSpot.setModel(data.light());
+		fishingSpot.setModel(modelData.light());
 
 		return fishingSpot;
 	}
 
 	private void applyColorToModel(ModelData modelData, Color color, double brightness) {
 		short recolor = JagexColor.rgbToHSL(color.getRGB(), brightness);
-		for (int i = 0; i < modelData.getFaceColors().length; i++) {
-			modelData.recolor(modelData.getFaceColors()[i], recolor);
-		}
+		modelData = modelData.cloneColors();
+		Arrays.fill(modelData.getFaceColors(), recolor);
 	}
 
 	public void reset() {
