@@ -6,6 +6,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 import javax.inject.Inject;
 import net.runelite.api.*;
 import net.runelite.api.coords.*;
@@ -15,6 +17,9 @@ import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.ModelHash;
+
+import static rs117.hd.utils.ColorUtils.srgb;
+import static rs117.hd.utils.ColorUtils.srgbToPackedHsl;
 
 public class FinishingSpotHandler {
 
@@ -59,30 +64,30 @@ public class FinishingSpotHandler {
 	);
 
 	private static final int FISHING_SPOT_MODEL = 41238;
+
+	private static final int LAVA_SPOT_MODEL = 2331;
+
 	private static final int FISHING_SPOT_ANIMATION = 10793;
 
-	private Animation fishingAnimation;
+	private static final int LAVA_SPOT_ANIMATION = 525;
 
-	@Inject
-	private TileOverrideManager tileOverrideManager;
+	private static final int LAVA_SPOT_COLOR = srgbToPackedHsl(srgb("#141414", 2.5));
 
-	@Inject
-	private Client client;
-
-	@Inject
-	private ModelOverrideManager modelOverrideManager;
-
-	@Inject
-	private HdPlugin plugin;
-
-	@Inject
-	private FrameTimer frameTimer;
+	@Inject private TileOverrideManager tileOverrideManager;
+	@Inject private Client client;
+	@Inject private ModelOverrideManager modelOverrideManager;
+	@Inject private HdPlugin plugin;
+	@Inject private FrameTimer frameTimer;
 
 	private final Map<Integer, RuneLiteObject> npcIndexToModel = new HashMap<>();
+	private Animation fishingAnimation;
+	private Animation lavaSpotAnimation;
+	private ModelData lavaSpotModel;
 
 	public void start() {
 		NPC_IDS.addAll(LAVA_SPOTS);
 		this.fishingAnimation = client.loadAnimation(FISHING_SPOT_ANIMATION);
+		this.lavaSpotAnimation = client.loadAnimation(LAVA_SPOT_ANIMATION);
 	}
 
 	public void loadModelOverride(boolean hidden) {
@@ -91,74 +96,65 @@ public class FinishingSpotHandler {
 		NPC_IDS.forEach(npc -> modelOverrideManager.addEntry(ModelHash.TYPE_NPC, npc, override));
 	}
 
-	public void updateFishingSpots() {
-		if (!plugin.config.fishingSpots()) {
-			return;
-		}
-		frameTimer.begin(Timer.FISHING_SPOTS);
 
+	public void updateFishingSpots() {
+		if (!plugin.config.fishingSpots()) return;
+
+		frameTimer.begin(Timer.FISHING_SPOTS);
 		updateFishingSpotObjects();
 		client.getNpcs().forEach(this::spawnFishingSpot);
 		frameTimer.end(Timer.FISHING_SPOTS);
 	}
 
+
 	public void spawnFishingSpot(NPC npc) {
+		if (!NPC_IDS.contains(npc.getId())) return;
 
-		if (!NPC_IDS.contains(npc.getId())) {
-			return;
-		}
-
-		if (!npcIndexToModel.containsKey(npc.getIndex())) {
+		npcIndexToModel.computeIfAbsent(npc.getIndex(), index -> {
 			LocalPoint pos = npc.getLocalLocation();
-
-			RuneLiteObject fishingSpot;
-
-			if (LAVA_SPOTS.contains(npc.getId())) {
-				fishingSpot = createRuneLiteObjectLava(Color.decode("#141414"),3.5);
-			} else {
-				Tile tile = client.getScene().getTiles()[npc.getWorldLocation().getPlane()][pos.getSceneX()][pos.getSceneY()];
-				WaterType waterType = tileOverrideManager.getOverride(client.getScene(), tile).waterType;
-				fishingSpot = createRuneLiteObject(waterType.fishingColor,100);
-			}
-
-			fishingSpot.setLocation(npc.getLocalLocation(), 0);
-			npcIndexToModel.put(npc.getIndex(), fishingSpot);
-		}
+			return LAVA_SPOTS.contains(npc.getId()) ? createRuneLiteObjectLava(Color.decode("#141414")) : createRuneLiteObjectForWater(pos);
+		});
 	}
 
-	private RuneLiteObject createRuneLiteObject(Color color,double brightness) {
+	private RuneLiteObject createRuneLiteObjectForWater(LocalPoint pos) {
+		Tile tile = client.getScene().getTiles()[client.getPlane()][pos.getSceneX()][pos.getSceneY()];
+		WaterType waterType = tileOverrideManager.getOverride(client.getScene(), tile).waterType;
+		int color = waterType.fishingColor;
+
+
 		RuneLiteObject fishingSpot = client.createRuneLiteObject();
 		fishingSpot.setAnimation(fishingAnimation);
 		fishingSpot.setDrawFrontTilesFirst(false);
 		fishingSpot.setActive(true);
 		fishingSpot.setShouldLoop(true);
 		ModelData modelData = client.loadModelData(FISHING_SPOT_MODEL).cloneVertices();
-		ModelData data = color != null ? modelData.cloneColors() : modelData;
-		if (color != null) {
-			applyColorToModel(data, color,brightness);
+		ModelData data = color != 0 ? modelData.cloneColors() : modelData;
+
+		if (color != 0) {
+			applyColorToModel(data, color);
 		}
 		fishingSpot.setModel(data.light());
 
 		return fishingSpot;
 	}
 
-	private RuneLiteObject createRuneLiteObjectLava(Color color,double brightness) {
+	private RuneLiteObject createRuneLiteObjectLava(Color color) {
 		RuneLiteObject fishingSpot = client.createRuneLiteObject();
-		fishingSpot.setAnimation(client.loadAnimation(525));
+		fishingSpot.setAnimation(lavaSpotAnimation);
 		fishingSpot.setDrawFrontTilesFirst(false);
 		fishingSpot.setActive(true);
 		fishingSpot.setShouldLoop(true);
-		ModelData modelData = client.loadModelData(2331).cloneVertices();
+		ModelData modelData = client.loadModelData(LAVA_SPOT_MODEL).cloneVertices();
 		if (color != null) {
-			applyColorToModel(modelData, color,brightness);
+			applyColorToModel(modelData, LAVA_SPOT_COLOR);
 		}
 		fishingSpot.setModel(modelData.light());
 
 		return fishingSpot;
 	}
 
-	private void applyColorToModel(ModelData modelData, Color color, double brightness) {
-		short recolor = JagexColor.rgbToHSL(color.getRGB(), brightness);
+	private void applyColorToModel(ModelData modelData, int color) {
+		short recolor = (short) color;
 		modelData = modelData.cloneColors();
 		Arrays.fill(modelData.getFaceColors(), recolor);
 	}
@@ -169,22 +165,22 @@ public class FinishingSpotHandler {
 	}
 
 	public void updateFishingSpotObjects() {
+		Set<Integer> npcIndices = client.getNpcs().stream().map(NPC::getIndex).collect(Collectors.toSet());
+		npcIndexToModel.entrySet().removeIf(entry -> {
+			if (!npcIndices.contains(entry.getKey())) {
+				entry.getValue().setActive(false);
+				return true;
+			}
+			return false;
+		});
 
-		List<Integer> toRemove = new ArrayList<>();
-
-		npcIndexToModel.forEach((index, object) ->
-			client.getNpcs().stream()
-				.filter(npc -> npc.getIndex() == index)
-				.findFirst()
-				.ifPresentOrElse(
-					npc -> object.setLocation(npc.getLocalLocation(), 0),
-					() -> toRemove.add(index)
-				)
-		);
-
-		toRemove.forEach( remove -> {
-			npcIndexToModel.get(remove).setActive(false);
-			npcIndexToModel.remove(remove);
+		// Update the location of active fishing spots to match their corresponding NPC's current position
+		npcIndexToModel.forEach((index, runeLiteObject) -> {
+			NPC npc = client.getCachedNPCs()[index];
+			if (npc != null) {
+				LocalPoint localPoint = npc.getLocalLocation();
+				runeLiteObject.setLocation(localPoint, client.getPlane());
+			}
 		});
 	}
 }
