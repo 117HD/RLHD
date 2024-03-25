@@ -11361,11 +11361,12 @@
     ]
   },
   {
-    "description": "Lassar Undercity fake tiles",
-    "objectIds": [ 46950 ],
+    "description": "Lassar Undercity & Varlamore temple crypt fake brick tiles",
+    "objectIds": [ 46950, 46951 ],
     "baseMaterial": "LASSAR_UNDERCITY_TILES",
     "hideInAreas": [
-      "LASSAR_UNDERCITY"
+      "LASSAR_UNDERCITY",
+      "VARLAMORE_TEMPLE_CRYPT"
     ]
   },
   {
