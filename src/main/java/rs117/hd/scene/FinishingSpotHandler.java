@@ -71,7 +71,7 @@ public class FinishingSpotHandler {
 
 	private static final int LAVA_SPOT_ANIMATION = 525;
 
-	private static final int LAVA_SPOT_COLOR = srgbToPackedHsl(srgb("#141414", 2.5));
+	private static final int LAVA_SPOT_COLOR = srgbToPackedHsl(srgb("#837574"));
 
 	@Inject private TileOverrideManager tileOverrideManager;
 	@Inject private Client client;

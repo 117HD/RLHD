@@ -277,21 +277,6 @@ public class ColorUtils {
 		return srgb(color.getRed(), color.getGreen(), color.getBlue());
 	}
 
-	public static float[] srgb(String hex, double brightness) {
-		Color color = Color.decode(hex);
-		// Ensure brightness is not zero to avoid division by zero
-		if (brightness == 0) {
-			throw new IllegalArgumentException("Brightness cannot be zero.");
-		}
-
-		double adjustedBrightness = 1.0 / brightness;
-		double r = Math.pow(color.getRed() / 255.0, adjustedBrightness);
-		double g = Math.pow(color.getGreen() / 255.0, adjustedBrightness);
-		double b = Math.pow(color.getBlue() / 255.0, adjustedBrightness);
-
-		return srgb((int)(r * 255), (int)(g * 255), (int)(b * 255));
-	}
-
 	/**
 	 * Convert sRGB color packed as an int to sRGB in the range 0-1.
 	 *
