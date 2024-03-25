@@ -5226,7 +5226,7 @@
   },
   {
     "name": "GARDEN_OF_DEATH_TILES",
-    "area": "GARDEN_OF_DEATH_DUNGEON",
+    "area": "UNDERGROUND_OLD_ONES_RUINS",
     "overlayIds": [
       133
     ],
@@ -5235,7 +5235,7 @@
   },
   {
     "name": "GARDEN_OF_DEATH_DIRT",
-    "area": "GARDEN_OF_DEATH_DUNGEON",
+    "area": "UNDERGROUND_OLD_ONES_RUINS",
     "underlayIds": [
       63, 118, 146
     ],
@@ -5243,7 +5243,7 @@
   },
   {
     "name": "GARDEN_OF_DEATH_GRASSY_DIRT",
-    "area": "GARDEN_OF_DEATH_DUNGEON",
+    "area": "UNDERGROUND_OLD_ONES_RUINS",
     "underlayIds": [
       53, 54
     ],
