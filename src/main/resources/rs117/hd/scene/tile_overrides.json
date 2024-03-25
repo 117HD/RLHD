@@ -3953,6 +3953,24 @@
     "blended": false
   },
   {
+    "name": "KELDAGRIM_RED_AXE_CAVES_GRAVEL",
+    "area": "RED_AXE_REGION",
+    "overlayIds": [
+      117
+    ],
+    "groundMaterial": "GRAVEL",
+    "uvScale": 0.6
+  },
+  {
+    "name": "KELDAGRIM_RED_AXE_CAVES_GROUND",
+    "area": "RED_AXE_REGION",
+    "underlayIds": [
+      111
+    ],
+    "groundMaterial": "ROCKY_CAVE_FLOOR",
+    "uvScale": 0.6
+  },
+  {
     "name": "CERBERUS_WATER",
     "area": "CERBERUS",
     "overlayIds": [
@@ -5841,6 +5859,39 @@
       "SEASONAL_GRASS": "h >= 8 && s >= 5 && l >= 20 || h >= 9 && s >= 3 || h > 20",
       "DEFAULT_DIRT": true
     }
+  },
+  {
+    "name": "VARLAMORE_TEMPLE_CRYPT_CENTER_BLENDING_FIX",
+    "area": "VARLAMORE_TEMPLE_CRYPT_CENTER",
+    "overlayIds": [ 11 ],
+    "blended": false,
+    "groundMaterial": "DIRT"
+  },
+  {
+    "name": "VARLAMORE_TEMPLE_CRYPT_BRICK_TILES",
+    "area": "VARLAMORE_TEMPLE_CRYPT_FAKE_BRICK_TILES",
+    "overlayIds": [ 139 ],
+    "groundMaterial": "LASSAR_UNDERCITY_TILES",
+    "blended": false
+  },
+  {
+    "name": "VARLAMORE_TEMPLE_CRYPT_SQUARE_TILES",
+    "area": "VARLAMORE_TEMPLE_CRYPT_FAKE_SQUARE_TILES",
+    "overlayIds": [ 139 ],
+    "groundMaterial": "MARBLE_2_SEMIGLOSS",
+    "blended": false
+  },
+  {
+    "name": "VARLAMORE_TEMPLE_CRYPT_MARBLE",
+    "area": "VARLAMORE_TEMPLE_CRYPT",
+    "overlayIds": [ 228 ],
+    "groundMaterial": "MARBLE_2_SEMIGLOSS"
+  },
+  {
+    "name": "VARLAMORE_TEMPLE_CRYPT_WATER",
+    "area": "VARLAMORE_TEMPLE_CRYPT",
+    "overlayIds": [ 181, 201 ],
+    "waterType": "DARK_BLUE_WATER"
   },
   {
     "name": "TILE_NEEDS_HUE_DEFINED",

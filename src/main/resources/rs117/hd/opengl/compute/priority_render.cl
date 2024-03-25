@@ -41,7 +41,8 @@ void add_face_prio_distance(
 int map_face_priority(__local struct shared_data *shared, uint localId, struct ModelInfo minfo, int thisPriority, int thisDistance, int *prio);
 void insert_dfs(__local struct shared_data *shared, uint localId, struct ModelInfo minfo, int adjPrio, int distance, int prioIdx);
 int tile_height(read_only image3d_t tileHeightMap, int z, int x, int y);
-int4 hillskew_vertex(read_only image3d_t tileHeightMap, int4 v, int hillskew, int y, int plane);
+void hillskew_vertex(read_only image3d_t tileHeightMap, int4 *v, int hillskew, int y, int plane);
+void hillskew_vertexf(read_only image3d_t tileHeightMap, float4 *v, int hillskew, int y, int plane);
 void undoVanillaShading(int4 *vertex, float3 unrotatedNormal);
 void sort_and_insert(
   __local struct shared_data *shared,
@@ -242,19 +243,28 @@ int tile_height(read_only image3d_t tileHeightMap, int z, int x, int y) {
   return read_imagei(tileHeightMap, tileHeightSampler, coord).x << 3;
 }
 
-int4 hillskew_vertex(read_only image3d_t tileHeightMap, int4 v, int hillskew, int y, int plane) {
-  if (hillskew == 1) {
-    int px = v.x & 127;
-    int pz = v.z & 127;
-    int sx = v.x >> 7;
-    int sz = v.z >> 7;
+void hillskew_vertex(read_only image3d_t tileHeightMap, int4 *v, int hillskew, int y, int plane) {
+    int px = v->x & 127;
+    int pz = v->z & 127;
+    int sx = v->x >> 7;
+    int sz = v->z >> 7;
     int h1 = (px * tile_height(tileHeightMap, plane, sx + 1, sz) + (128 - px) * tile_height(tileHeightMap, plane, sx, sz)) >> 7;
     int h2 = (px * tile_height(tileHeightMap, plane, sx + 1, sz + 1) + (128 - px) * tile_height(tileHeightMap, plane, sx, sz + 1)) >> 7;
     int h3 = (pz * h2 + (128 - pz) * h1) >> 7;
-    return (int4)(v.x, v.y + h3 - y, v.z, v.w);
-  } else {
-    return v;
-  }
+    v->y += h3 - y;
+}
+
+void hillskew_vertexf(read_only image3d_t tileHeightMap, float4 *v, int hillskew, int y, int plane) {
+    int x = (int) v->x;
+    int z = (int) v->z;
+    int px = x & 127;
+    int pz = z & 127;
+    int sx = x >> 7;
+    int sz = z >> 7;
+    int h1 = (px * tile_height(tileHeightMap, plane, sx + 1, sz) + (128 - px) * tile_height(tileHeightMap, plane, sx, sz)) >> 7;
+    int h2 = (px * tile_height(tileHeightMap, plane, sx + 1, sz + 1) + (128 - px) * tile_height(tileHeightMap, plane, sx, sz + 1)) >> 7;
+    int h3 = (pz * h2 + (128 - pz) * h1) >> 7;
+    v->y += h3 - y;
 }
 
 void undoVanillaShading(int4 *vertex, float3 unrotatedNormal) {
@@ -369,9 +379,11 @@ void sort_and_insert(
     // apply hillskew
     int plane = (flags >> 24) & 3;
     int hillskew = (flags >> 26) & 1;
-    thisrvA = hillskew_vertex(tileHeightMap, thisrvA, hillskew, minfo.y, plane);
-    thisrvB = hillskew_vertex(tileHeightMap, thisrvB, hillskew, minfo.y, plane);
-    thisrvC = hillskew_vertex(tileHeightMap, thisrvC, hillskew, minfo.y, plane);
+    if (hillskew == 1) {
+        hillskew_vertex(tileHeightMap, &thisrvA, hillskew, minfo.y, plane);
+        hillskew_vertex(tileHeightMap, &thisrvB, hillskew, minfo.y, plane);
+        hillskew_vertex(tileHeightMap, &thisrvC, hillskew, minfo.y, plane);
+    }
 
     // position vertices in scene and write to out buffer
     vout[outOffset + myOffset * 3]     = thisrvA;
@@ -398,6 +410,13 @@ void sort_and_insert(
         uvA.xyz += modelPos;
         uvB.xyz += modelPos;
         uvC.xyz += modelPos;
+
+        // For vanilla UVs, the first 3 components are an integer position vector
+        if (hillskew == 1) {
+            hillskew_vertexf(tileHeightMap, &uvA, hillskew, minfo.y, plane);
+            hillskew_vertexf(tileHeightMap, &uvB, hillskew, minfo.y, plane);
+            hillskew_vertexf(tileHeightMap, &uvC, hillskew, minfo.y, plane);
+        }
       }
     }
 

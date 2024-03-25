@@ -61,14 +61,14 @@ public class FrameTimer {
 	}
 
 	public void addTimingsListener(Listener listener) {
-		if (listeners.size() == 0)
+		if (listeners.isEmpty())
 			initialize();
 		listeners.add(listener);
 	}
 
 	public void removeTimingsListener(Listener listener) {
 		listeners.remove(listener);
-		if (listeners.size() == 0)
+		if (listeners.isEmpty())
 			destroy();
 	}
 

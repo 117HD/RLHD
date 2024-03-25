@@ -1,8 +1,7 @@
-package rs117.hd.test.utils;
+package rs117.hd.utils;
 
 import org.junit.Assert;
 import org.junit.Test;
-import rs117.hd.utils.AABB;
 
 public class AABBTest {
 	@Test

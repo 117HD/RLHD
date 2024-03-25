@@ -28,7 +28,7 @@ package rs117.hd.utils;
 public class Mat4
 {
 	/**
-	 * Utility class to work with column-major 4x4 matrices.
+	 * Utility class for working with column-major 4 x 4 matrices.
 	 */
 
 	public static float[] identity()
@@ -222,10 +222,51 @@ public class Mat4
 	public static void projectVec(float[] out, float[] mat4, float[] vec4) {
 		mulVec(out, mat4, vec4);
 		if (out[3] != 0) {
-			float reciprocal = 1 / out[3];
-			for (int i = 0; i < 3; i++)
+			// The 4th component should retain information about whether the
+			// point lies behind the camera
+			float reciprocal = 1 / Math.abs(out[3]);
+			for (int i = 0; i < 4; i++)
 				out[i] *= reciprocal;
-//			out[3] = 1;
 		}
 	}
+
+	public static void transpose(float[] m) {
+		for (int i = 0; i < 4; i++) {
+			for (int j = i + 1; j < 4; j++) {
+				int a = i * 4 + j;
+				int b = j * 4 + i;
+				float temp = m[a];
+				m[a] = m[b];
+				m[b] = temp;
+			}
+		}
+	}
+
+	public static float[] inverse(float[] m) {
+		float[] augmented = new float[32];
+		System.arraycopy(m, 0, augmented, 0, 16);
+		for (int i = 0; i < 4; i++)
+			augmented[16 + i * 5] = 1;
+
+		Matrix.solve(augmented, 4, 8);
+
+		float[] inverse = new float[16];
+		System.arraycopy(augmented, 16, inverse, 0, 16);
+		return inverse;
+	}
+
+	public static void extractRow(float[] out, float[] mat4, int rowIndex) {
+		System.arraycopy(mat4, 4 * rowIndex, out, 0, out.length);
+	}
+
+	public static void extractColumn(float[] out, float[] mat4, int columnIndex) {
+		for (int i = 0; i < out.length; i++)
+			out[i] = mat4[4 * i + columnIndex];
+	}
+
+	public static String format(float[] m) {
+		assert m.length == 16;
+		return Matrix.format(m, 4, 4);
+	}
+
 }

@@ -49,6 +49,7 @@ import static rs117.hd.HdPlugin.NORMAL_SIZE;
 import static rs117.hd.HdPlugin.SCALAR_BYTES;
 import static rs117.hd.HdPlugin.UV_SIZE;
 import static rs117.hd.HdPlugin.VERTEX_SIZE;
+import static rs117.hd.scene.tile_overrides.TileOverride.NONE;
 import static rs117.hd.scene.tile_overrides.TileOverride.OVERLAY_FLAG;
 
 @SuppressWarnings("UnnecessaryLocalVariable")
@@ -344,9 +345,10 @@ class SceneUploader {
 		DecorativeObject decorativeObject = tile.getDecorativeObject();
 		if (decorativeObject != null) {
 			Renderable renderable = decorativeObject.getRenderable();
+			int orientation = HDUtils.getBakedOrientation(decorativeObject.getConfig());
 			if (renderable instanceof Model) {
 				uploadModel(sceneContext, tile, ModelHash.packUuid(ModelHash.TYPE_OBJECT, decorativeObject.getId()), (Model) renderable,
-					HDUtils.getBakedOrientation(decorativeObject.getConfig()),
+					orientation,
 					ObjectType.DECORATIVE_OBJECT
 				);
 			}
@@ -354,7 +356,7 @@ class SceneUploader {
 			Renderable renderable2 = decorativeObject.getRenderable2();
 			if (renderable2 instanceof Model) {
 				uploadModel(sceneContext, tile, ModelHash.packUuid(ModelHash.TYPE_OBJECT, decorativeObject.getId()), (Model) renderable2,
-					HDUtils.getBakedOrientation(decorativeObject.getConfig()),
+					orientation,
 					ObjectType.DECORATIVE_OBJECT
 				);
 			}
@@ -478,10 +480,11 @@ class SceneUploader {
 
 			if (waterType == WaterType.NONE) {
 				if (textureId != -1) {
-					swMaterial = Material.fromVanillaTexture(textureId);
-					seMaterial = Material.fromVanillaTexture(textureId);
-					neMaterial = Material.fromVanillaTexture(textureId);
-					nwMaterial = Material.fromVanillaTexture(textureId);
+					var material = Material.fromVanillaTexture(textureId);
+					// Disable tile overrides for newly introduced vanilla textures
+					if (material == Material.VANILLA)
+						override = NONE;
+					swMaterial = seMaterial = neMaterial = nwMaterial = material;
 				}
 
 				swNormals = sceneContext.vertexTerrainNormals.getOrDefault(swVertexKey, swNormals);
@@ -841,9 +844,11 @@ class SceneUploader {
 				waterType = proceduralGenerator.seasonalWaterType(override, textureId);
 				if (waterType == WaterType.NONE) {
 					if (textureId != -1) {
-						materialA = Material.fromVanillaTexture(textureId);
-						materialB = Material.fromVanillaTexture(textureId);
-						materialC = Material.fromVanillaTexture(textureId);
+						var material = Material.fromVanillaTexture(textureId);
+						// Disable tile overrides for newly introduced vanilla textures
+						if (material == Material.VANILLA)
+							override = NONE;
+						materialA = materialB = materialC = material;
 					}
 
 					normalsA = sceneContext.vertexTerrainNormals.getOrDefault(vertexKeyA, normalsA);

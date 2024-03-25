@@ -125,6 +125,10 @@
         "type": "boolean",
         "description": "Whether flat normals should be used instead of smooth normals. Defaults to false."
       },
+      "upwardsNormals": {
+        "type": "boolean",
+        "description": "Whether normals should always point directly up. Defaults to false."
+      },
       "hideVanillaShadows": {
         "type": "boolean",
         "description": "Whether the model has fake shadows which should be removed. Defaults to false."
