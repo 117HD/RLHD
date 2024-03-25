@@ -59,7 +59,7 @@ public class FinishingSpotHandler {
 		NpcID.FISHING_SPOT_12267
 	));
 
-	private static final List<Integer> LAVA_SPOTS = Arrays.asList(
+	private static final List<Integer> LAVA_SPOTS = List.of(
 		NpcID.FISHING_SPOT_4928
 	);
 
@@ -73,11 +73,16 @@ public class FinishingSpotHandler {
 
 	private static final int LAVA_SPOT_COLOR = srgbToPackedHsl(srgb("#837574"));
 
-	@Inject private TileOverrideManager tileOverrideManager;
-	@Inject private Client client;
-	@Inject private ModelOverrideManager modelOverrideManager;
-	@Inject private HdPlugin plugin;
-	@Inject private FrameTimer frameTimer;
+	@Inject
+	private TileOverrideManager tileOverrideManager;
+	@Inject
+	private Client client;
+	@Inject
+	private ModelOverrideManager modelOverrideManager;
+	@Inject
+	private HdPlugin plugin;
+	@Inject
+	private FrameTimer frameTimer;
 
 	private final Map<Integer, RuneLiteObject> npcIndexToModel = new HashMap<>();
 	private Animation fishingAnimation;
