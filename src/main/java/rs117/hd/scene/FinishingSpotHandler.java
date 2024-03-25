@@ -19,7 +19,7 @@ import rs117.hd.utils.ModelHash;
 public class FinishingSpotHandler {
 
 
-	private static final List<Integer> NPC_IDS = Arrays.asList(
+	private static final List<Integer> NPC_IDS = new ArrayList<>(Arrays.asList(
 		NpcID.ROD_FISHING_SPOT, NpcID.FISHING_SPOT, NpcID.ROD_FISHING_SPOT_1506,
 		NpcID.ROD_FISHING_SPOT_1507, NpcID.ROD_FISHING_SPOT_1508, NpcID.ROD_FISHING_SPOT_1509,
 		NpcID.FISHING_SPOT_1510, NpcID.FISHING_SPOT_1511, NpcID.ROD_FISHING_SPOT_1512,
@@ -52,8 +52,11 @@ public class FinishingSpotHandler {
 		NpcID.FISHING_SPOT_8527, NpcID.FISHING_SPOT_9171, NpcID.FISHING_SPOT_9172,
 		NpcID.FISHING_SPOT_9173, NpcID.FISHING_SPOT_9174, NpcID.FISHING_SPOT_9478,
 		NpcID.FISHING_SPOT_12267
-	);
+	));
 
+	private static final List<Integer> LAVA_SPOTS = Arrays.asList(
+		NpcID.FISHING_SPOT_4928
+	);
 
 	private static final int FISHING_SPOT_MODEL = 41238;
 	private static final int FISHING_SPOT_ANIMATION = 10793;
@@ -78,6 +81,7 @@ public class FinishingSpotHandler {
 	private final Map<Integer, RuneLiteObject> npcIndexToModel = new HashMap<>();
 
 	public void start() {
+		NPC_IDS.addAll(LAVA_SPOTS);
 		this.fishingAnimation = client.loadAnimation(FISHING_SPOT_ANIMATION);
 	}
 
@@ -106,16 +110,23 @@ public class FinishingSpotHandler {
 
 		if (!npcIndexToModel.containsKey(npc.getIndex())) {
 			LocalPoint pos = npc.getLocalLocation();
-			Tile tile = client.getScene().getTiles()[npc.getWorldLocation().getPlane()][pos.getSceneX()][pos.getSceneY()];
-			WaterType waterType = tileOverrideManager.getOverride(client.getScene(), tile).waterType;
 
-			RuneLiteObject fishingSpot = createRuneLiteObject(waterType.fishingColor);
+			RuneLiteObject fishingSpot;
+
+			if (LAVA_SPOTS.contains(npc.getId())) {
+				fishingSpot = createRuneLiteObjectLava(Color.decode("#141414"),3.5);
+			} else {
+				Tile tile = client.getScene().getTiles()[npc.getWorldLocation().getPlane()][pos.getSceneX()][pos.getSceneY()];
+				WaterType waterType = tileOverrideManager.getOverride(client.getScene(), tile).waterType;
+				fishingSpot = createRuneLiteObject(waterType.fishingColor,100);
+			}
+
 			fishingSpot.setLocation(npc.getLocalLocation(), 0);
 			npcIndexToModel.put(npc.getIndex(), fishingSpot);
 		}
 	}
 
-	private RuneLiteObject createRuneLiteObject(Color color) {
+	private RuneLiteObject createRuneLiteObject(Color color,double brightness) {
 		RuneLiteObject fishingSpot = client.createRuneLiteObject();
 		fishingSpot.setAnimation(fishingAnimation);
 		fishingSpot.setDrawFrontTilesFirst(false);
@@ -124,15 +135,31 @@ public class FinishingSpotHandler {
 		ModelData modelData = client.loadModelData(FISHING_SPOT_MODEL).cloneVertices();
 		ModelData data = color != null ? modelData.cloneColors() : modelData;
 		if (color != null) {
-			applyColorToModel(data, color);
+			applyColorToModel(data, color,brightness);
 		}
 		fishingSpot.setModel(data.light());
 
 		return fishingSpot;
 	}
 
-	private void applyColorToModel(ModelData modelData, Color color) {
-		short recolor = JagexColor.rgbToHSL(color.getRGB(), 100);
+	private RuneLiteObject createRuneLiteObjectLava(Color color,double brightness) {
+		RuneLiteObject fishingSpot = client.createRuneLiteObject();
+		fishingSpot.setAnimation(client.loadAnimation(525));
+		fishingSpot.setDrawFrontTilesFirst(false);
+		fishingSpot.setActive(true);
+		fishingSpot.setShouldLoop(true);
+		ModelData modelData = client.loadModelData(2331).cloneVertices();
+		ModelData data = color != null ? modelData.cloneColors() : modelData;
+		if (color != null) {
+			applyColorToModel(data, color,brightness);
+		}
+		fishingSpot.setModel(data.light());
+
+		return fishingSpot;
+	}
+
+	private void applyColorToModel(ModelData modelData, Color color, double brightness) {
+		short recolor = JagexColor.rgbToHSL(color.getRGB(), brightness);
 		for (int i = 0; i < modelData.getFaceColors().length; i++) {
 			modelData.recolor(modelData.getFaceColors()[i], recolor);
 		}
