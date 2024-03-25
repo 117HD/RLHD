@@ -151,7 +151,7 @@
     "overlayIds": [
       85
     ],
-    "groundMaterial": "HD_WOOD_PLANKS_1",
+    "groundMaterial": "HD_WOOD_PLANKS_2",
     "replacements": {
       "WINTER_DIRT": "season == WINTER"
     }
@@ -2798,7 +2798,7 @@
     "overlayIds": [
       85
     ],
-    "groundMaterial": "HD_WOOD_PLANKS_1"
+    "groundMaterial": "HD_WOOD_PLANKS_2"
   },
   {
     "name": "MORYTANIA_SLAYER_TOWER",
@@ -2892,7 +2892,7 @@
     "overlayIds": [
       22
     ],
-    "groundMaterial": "HD_WOOD_PLANKS_1"
+    "groundMaterial": "HD_WOOD_PLANKS_2"
   },
   {
     "name": "TIRANNWN_PATHS",
@@ -3781,7 +3781,7 @@
     "overlayIds": [
       102
     ],
-    "groundMaterial": "HD_WOOD_PLANKS_1"
+    "groundMaterial": "HD_WOOD_PLANKS_2"
   },
   {
     "name": "ELID_CAVE_WATER_FIX",
@@ -3834,7 +3834,7 @@
     "overlayIds": [
       81
     ],
-    "groundMaterial": "HD_WOOD_PLANKS_1"
+    "groundMaterial": "HD_WOOD_PLANKS_2"
   },
   {
     "name": "LUNAR_ESSENCE_MINE_WATER",
@@ -3877,7 +3877,7 @@
     "underlayIds": [
       63
     ],
-    "groundMaterial": "HD_WOOD_PLANKS_1",
+    "groundMaterial": "HD_WOOD_PLANKS_2",
     "uvOrientation": 512,
     "uvScale": 1.333
   },
@@ -3887,7 +3887,7 @@
     "overlayIds": [
       36
     ],
-    "groundMaterial": "HD_WOOD_PLANKS_1",
+    "groundMaterial": "HD_WOOD_PLANKS_2",
     "uvOrientation": 512,
     "uvScale": 0.75,
     "shiftLightness": 5
@@ -4804,7 +4804,7 @@
     "underlayIds": [
       10
     ],
-    "groundMaterial": "HD_WOOD_PLANKS_1"
+    "groundMaterial": "HD_WOOD_PLANKS_2"
   },
   {
     "name": "SLEPE_CHURCH_FLOOR",
@@ -4812,7 +4812,7 @@
     "underlayIds": [
       94
     ],
-    "groundMaterial": "HD_WOOD_PLANKS_1"
+    "groundMaterial": "HD_WOOD_PLANKS_2"
   },
   {
     "name": "SLEPE_HOUSES_WOODEN_FLOOR",
@@ -4820,7 +4820,7 @@
     "underlayIds": [
       10
     ],
-    "groundMaterial": "HD_WOOD_PLANKS_1"
+    "groundMaterial": "HD_WOOD_PLANKS_2"
   },
   {
     "name": "VER_SINHAZA_WATER_FIX",

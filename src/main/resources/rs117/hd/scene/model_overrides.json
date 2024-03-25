@@ -7701,31 +7701,31 @@
     "objectIds": [
       16740
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "flatNormals": true,
     "uvOrientation": 512,
     "uvScale": 0.8
   },
   {
     "description": "Lunar Isles - Objects - Wooden staircase",
-    "baseMaterial": "HD_WOOD_PLANKS_1",
+    "baseMaterial": "HD_WOOD_PLANKS_2",
     "objectIds": [
       16732,
       16733,
       16734
     ],
-    "uvType": "MODEL_XZ"
+    "uvType": "BOX"
   },
   {
     "description": "Lunar Isles - WALLS - Wooden Railing",
-    "baseMaterial": "HD_WOOD_PLANKS_1",
+    "baseMaterial": "HD_WOOD_PLANKS_2",
     "objectIds": [
       16761,
       16762,
       16763,
       16767
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "flatNormals": true
   },
   {
@@ -8004,6 +8004,15 @@
     "uvScale": 0.6
   },
   {
+    "description": "Objects - Wooden - Rocking Chair",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      1096,
+      15681
+    ],
+    "uvType": "BOX"
+  },
+  {
     "description": "Objects - Wooden - Chair - No cushion",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
@@ -8026,7 +8035,6 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       7182,
-      15681,
       15682
     ],
     "uvType": "BOX"
