@@ -1,4 +1,4 @@
-package rs117.hd.test;
+package rs117.hd.tools;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -6,7 +6,7 @@ import java.util.Random;
 import junit.framework.TestCase;
 import rs117.hd.model.ModelHasher;
 
-public class ModelHasherTest extends TestCase {
+public class ModelHasherPerformanceTest extends TestCase {
     private final ArrayList<int[]> intArrays;
     private final Random random;
     private final int testDataCount;
@@ -14,7 +14,7 @@ public class ModelHasherTest extends TestCase {
 
     private long accumulatedHash = 0;
 
-    public ModelHasherTest() {
+	public ModelHasherPerformanceTest() {
         this.intArrays = new ArrayList<>();
         this.random = new Random(1337);
         this.testDataCount = 1000;

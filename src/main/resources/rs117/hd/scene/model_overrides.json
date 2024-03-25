@@ -11392,11 +11392,12 @@
     ]
   },
   {
-    "description": "Lassar Undercity fake tiles",
-    "objectIds": [ 46950 ],
+    "description": "Lassar Undercity & Varlamore temple crypt fake brick tiles",
+    "objectIds": [ 46950, 46951 ],
     "baseMaterial": "LASSAR_UNDERCITY_TILES",
     "hideInAreas": [
-      "LASSAR_UNDERCITY"
+      "LASSAR_UNDERCITY",
+      "VARLAMORE_TEMPLE_CRYPT"
     ]
   },
   {
@@ -15132,6 +15133,47 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.86
+  },
+  {
+    "description": "Obelisk of Earth",
+    "objectIds": [ 2150 ],
+    "baseMaterial": "ROCK_5",
+    "uvType": "BOX",
+    "uvOrientation": 700,
+    "flatNormals": true
+  },
+  {
+    "description": "Obelisk of Water",
+    "objectIds": [ 2151 ],
+    "flatNormals": true,
+    "retainVanillaUvs": false,
+    "materialOverrides": {
+      "WATER_FLAT": {
+        "textureMaterial": "TRANSPARENT",
+        "uvType": "WORLD_XZ",
+        "uvScale": 1,
+        "retainVanillaUvs": false
+      }
+    }
+  },
+  {
+    "description": "Obelisk of Air",
+    "objectIds": [ 2152 ],
+    "flatNormals": true,
+    "receiveShadows": false
+  },
+  {
+    "description": "Obelisk of Fire",
+    "objectIds": [ 2153 ],
+    "flatNormals": true,
+    "retainVanillaUvs": false,
+    "materialOverrides": {
+      "LAVA": {
+        "textureMaterial": "HD_MAGMA_2",
+        "uvType": "WORLD_XZ",
+        "retainVanillaUvs": false
+      }
+    }
   },
   {
     "description": "Objects - Stone - Keldagrim Pillars - Twisted",

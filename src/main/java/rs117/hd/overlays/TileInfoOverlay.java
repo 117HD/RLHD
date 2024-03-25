@@ -401,24 +401,20 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 		}
 
 		GameObject[] gameObjects = tile.getGameObjects();
-		if (gameObjects.length > 0) {
-			int counter = 0;
-			for (GameObject gameObject : gameObjects) {
-				if (gameObject == null)
-					continue;
-				counter++;
-				int height = -1;
-				var renderable = gameObject.getRenderable();
-				if (renderable != null)
-					height = renderable.getModelHeight();
-				lines.add(String.format(
-					"%s: ID=%s ori=%d height=%d",
-					ModelHash.getTypeName(ModelHash.getType(gameObject.getHash())),
-					getIdAndImpostorId(gameObject, renderable),
-					gameObject.getModelOrientation(),
-					height
-				));
-			}
+		for (GameObject gameObject : gameObjects) {
+			if (gameObject == null)
+				continue;
+			int height = -1;
+			var renderable = gameObject.getRenderable();
+			if (renderable != null)
+				height = renderable.getModelHeight();
+			lines.add(String.format(
+				"%s: ID=%s ori=%d height=%d",
+				ModelHash.getTypeName(ModelHash.getType(gameObject.getHash())),
+				getIdAndImpostorId(gameObject, renderable),
+				gameObject.getModelOrientation(),
+				height
+			));
 		}
 
 		for (int i = 0; i < lines.size(); i++) {
@@ -606,19 +602,19 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 		z -= client.getCameraZ();
 		int cameraPitch = client.getCameraPitch();
 		int cameraYaw = client.getCameraYaw();
-		int pitchSin = SINE[cameraPitch];
-		int pitchCos = COSINE[cameraPitch];
-		int yawSin = SINE[cameraYaw];
-		int yawCos = COSINE[cameraYaw];
-		int x1 = x * yawCos + y * yawSin >> 16;
-		int y1 = y * yawCos - x * yawSin >> 16;
-		int y2 = z * pitchCos - y1 * pitchSin >> 16;
-		int z1 = y1 * pitchCos + z * pitchSin >> 16;
+		long pitchSin = SINE[cameraPitch];
+		long pitchCos = COSINE[cameraPitch];
+		long yawSin = SINE[cameraYaw];
+		long yawCos = COSINE[cameraYaw];
+		long x1 = x * yawCos + y * yawSin >> 16;
+		long y1 = y * yawCos - x * yawSin >> 16;
+		long y2 = z * pitchCos - y1 * pitchSin >> 16;
+		long z1 = y1 * pitchCos + z * pitchSin >> 16;
 		if (z1 >= 1) {
-			int scale = client.getScale();
-			int pointX = client.getViewportWidth() / 2 + x1 * scale / z1;
-			int pointY = client.getViewportHeight() / 2 + y2 * scale / z1;
-			return new Point(pointX + client.getViewportXOffset(), pointY + client.getViewportYOffset());
+			long scale = client.getScale();
+			long pointX = client.getViewportWidth() / 2 + x1 * scale / z1;
+			long pointY = client.getViewportHeight() / 2 + y2 * scale / z1;
+			return new Point((int) (pointX + client.getViewportXOffset()), (int) (pointY + client.getViewportYOffset()));
 		}
 
 		return null;
