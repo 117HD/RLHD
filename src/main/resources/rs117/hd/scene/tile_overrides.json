@@ -5225,6 +5225,42 @@
     "groundMaterial": "EARTHEN_CAVE_FLOOR"
   },
   {
+    "name": "GARDEN_OF_DEATH_TILES",
+    "area": "UNDERGROUND_OLD_ONES_RUINS",
+    "overlayIds": [
+      133
+    ],
+    "groundMaterial": "MARBLE_2",
+    "shiftLightness": -4
+  },
+  {
+    "name": "GARDEN_OF_DEATH_DIRT",
+    "area": "UNDERGROUND_OLD_ONES_RUINS",
+    "underlayIds": [
+      63, 118, 146
+    ],
+    "groundMaterial": "DIRT"
+  },
+  {
+    "name": "GARDEN_OF_DEATH_GRASSY_DIRT",
+    "area": "UNDERGROUND_OLD_ONES_RUINS",
+    "underlayIds": [
+      53, 54
+    ],
+    "groundMaterial": "GRASSY_DIRT"
+  },
+  {
+    "name": "ZEAH_GRAVEL_PATH",
+    "area": "ZEAH",
+    "overlayIds": [
+      99
+    ],
+    "groundMaterial": "VARIED_DIRT",
+    "replacements": {
+      "WINTER_DIRT": "season == WINTER"
+    }
+  },
+  {
     "name": "ZEAH_DIRT_UNDERLAY",
     "area": "ZEAH",
     "underlayIds": [

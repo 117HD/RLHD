@@ -1297,6 +1297,7 @@ public enum Area
 	)),
 
 	// Zeah
+	UNDERGROUND_OLD_ONES_RUINS(regions(5274, 5276, 5532, 5785)),
 	KARUULM_SLAYER_DUNGEON(
 		regions(5536),
 		regionBox(5022, 5023),
