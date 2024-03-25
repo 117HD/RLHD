@@ -928,7 +928,6 @@
       4502,
       5252,
       6188,
-      6202,
       10436,
       10487,
       11468,
@@ -1445,6 +1444,16 @@
       7523
     ],
     "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Farming Patch 3 - Keldagrim",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [
+      8861, 8862, 8863, 8864, 8876
+    ],
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 55,
+    "uvScale": 0.75
   },
   {
     "description": "GRASS",
@@ -3179,7 +3188,19 @@
       9739,
       9740,
       16543,
+      17086,
+      17087,
       26712
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 100
+  },
+  {
+    "description": "Rounded Cave Wall Entrance with Tracks",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      6971
     ],
     "uvType": "BOX",
     "uvScale": 0.75,
@@ -4226,9 +4247,6 @@
       12575,
       12576,
       12577,
-      11184,
-      11185,
-      11186,
       18479,
       18480,
       37810,
@@ -5071,6 +5089,7 @@
     "baseMaterial": "METALLIC_2_GLOSS",
     "objectIds": [
       205,
+      3474,
       24172
     ]
   },
@@ -6521,6 +6540,7 @@
       6176,
       6177,
       9533,
+      17033,
       20367,
       25775,
       25776,
@@ -9195,6 +9215,7 @@
     "description": "Metal Birdcage",
     "baseMaterial": "METALLIC_1_SEMIGLOSS",
     "objectIds": [
+      6146,
       6264,
       6265,
       6266,
@@ -9761,6 +9782,16 @@
     "uvScale": 0.6
   },
   {
+    "description": "Sacks - Grey",
+    "baseMaterial": "CARPET",
+    "objectIds": [
+      10304, 10305
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 0.6
+  },
+  {
     "description": "Sacks Pile",
     "baseMaterial": "CARPET",
     "objectIds": [
@@ -9798,7 +9829,7 @@
   {
     "description": "Object - Sack with Hey or Grain",
     "baseMaterial": "FINE_CARPET",
-    "objectIds": [ 16878 ],
+    "objectIds": [ 5574, 10306, 16878 ],
     "uvType": "BOX",
     "uvScale": 0.85,
     "retainVanillaUvs": false
@@ -14866,7 +14897,7 @@
     "description": "Keldagrim Stone Walls",
     "baseMaterial": "ROCK_3",
     "objectIds": [
-      6000, 6001, 6002, 6003, 6004, 6005, 6006, 6010, 6011
+      6000, 6001, 6002, 6003, 6004, 6005, 6006, 6010, 6011, 8881, 8882, 8883, 8884, 8905, 8907, 8909
     ],
     "uvType": "BOX",
     "uvOrientation": 128
@@ -15019,6 +15050,16 @@
     "uvScale": 0.8
   },
   {
+    "description": "Objects - Rock Column - Tan - Huge",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      11184, 11185, 11186
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 132
+  },
+  {
     "description": "Objects - Stone - Stone Slab Bridge Guards",
     "baseMaterial": "ROCK_3",
     "objectIds": [
@@ -15041,7 +15082,7 @@
     "description": "Objects - Rock - Unfinished Statues",
     "baseMaterial": "ROCK_5",
     "objectIds": [
-      7008, 7009
+      7008, 7009, 7010
     ],
     "uvType": "BOX",
     "uvScale": 0.8
@@ -15050,6 +15091,7 @@
     "description": "Blast Furnace - Objects - Metallic - Sink",
     "baseMaterial": "METALLIC_2",
     "objectIds": [
+      6151,
       9143
     ],
     "uvType": "BOX",
@@ -15132,5 +15174,136 @@
         "retainVanillaUvs": false
       }
     }
+  },
+  {
+    "description": "Objects - Stone - Keldagrim Pillars - Twisted",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      7016
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.86,
+    "uvOrientation": 66
+  },
+  {
+    "description": "Objects - Stone - Keldagrim Pillars - Straight",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      7017
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.86,
+    "uvOrientation": 300
+  },
+  {
+    "description": "Metal Street Lanturn",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      6202
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 96,
+    "uvScale": 0.6,
+    "hideVanillaShadows": true
+  },
+  {
+    "description": "Keldagrim Fireplace",
+    "baseMaterial": "METALLIC_2",
+    "objectIds": [
+      6093
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 42
+  },
+  {
+    "description": "Keldagrim Fireplace with Spit - Empty",
+    "baseMaterial": "METALLIC_2",
+    "objectIds": [
+      6094
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 42
+  },
+  {
+    "description": "Keldagrim Fireplace with Spit and Meat",
+    "baseMaterial": "METALLIC_2",
+    "objectIds": [
+      6095
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 42
+  },
+  {
+    "description": "White Wolf Mountain Wall Supports",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      17082, 17083, 17084, 17085
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 88
+  },
+  {
+    "description": "Wooden Cupboard Empty",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      7018
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 22
+  },
+  {
+    "description": "Wooden Cabinet Empty",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      7019
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 2022
+  },
+  {
+    "description": "Rat Wall",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      10342, 10343
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.1,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Strange Box - Metal",
+    "baseMaterial": "METALLIC_2",
+    "objectIds": [
+      8879, 8880
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 12
+  },
+  {
+    "description": "Scaffolding - Metal",
+    "baseMaterial": "METALLIC_2",
+    "objectIds": [
+      8899, 8900, 8901, 8902, 8903, 8904
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 346
+  },
+  {
+    "description": "Struts - Metal",
+    "baseMaterial": "METALLIC_2",
+    "objectIds": [
+      8917
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 346
   }
 ]
