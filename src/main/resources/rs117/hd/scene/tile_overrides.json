@@ -3307,7 +3307,7 @@
   },
   {
     "name": "Hunter Guild Water",
-    "area": "HUNTERS_GUILD",
+    "area": "HUNTER_GUILD",
     "overlayIds": [ 181 ],
     "waterType": "PLAIN_WATER"
   },
