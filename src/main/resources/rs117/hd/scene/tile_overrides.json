@@ -151,7 +151,7 @@
     "overlayIds": [
       85
     ],
-    "groundMaterial": "HD_WOOD_PLANKS_1",
+    "groundMaterial": "HD_WOOD_PLANKS_2",
     "replacements": {
       "WINTER_DIRT": "season == WINTER"
     }
@@ -2798,7 +2798,7 @@
     "overlayIds": [
       85
     ],
-    "groundMaterial": "HD_WOOD_PLANKS_1"
+    "groundMaterial": "HD_WOOD_PLANKS_2"
   },
   {
     "name": "MORYTANIA_SLAYER_TOWER",
@@ -2892,7 +2892,7 @@
     "overlayIds": [
       22
     ],
-    "groundMaterial": "HD_WOOD_PLANKS_1"
+    "groundMaterial": "HD_WOOD_PLANKS_2"
   },
   {
     "name": "TIRANNWN_PATHS",
@@ -3267,6 +3267,49 @@
     "replacements": {
       "WINTER_JAGGED_STONE_TILE_LIGHT_2": "season == WINTER"
     }
+  },
+  {
+    "name": "FORTIS_MARBLE_FLOOR",
+    "area": "ZEAH",
+    "overlayIds": [ 327 ],
+    "groundMaterial": "MARBLE_2",
+    "uvScale": 1.1
+  },
+  {
+    "name": "FORTIS_WOOD_FLOOR",
+    "area": "ZEAH_UPPER_LEVELS",
+    "overlayIds": [ 324 ],
+    "groundMaterial": "HD_WOOD_PLANKS_1",
+    "uvScale": 1.1
+  },
+  {
+    "name": "FORTIS_RED_DIRT",
+    "area": "ZEAH",
+    "overlayIds": [ 324 ],
+    "groundMaterial": "DIRT",
+    "uvScale": 1.1
+  },
+  {
+    "name": "FORTIS_HOUSE_TILE_FLOOR",
+    "area": "ZEAH",
+    "overlayIds": [ 123 ],
+    "groundMaterial": "TILES_2X2_1_SEMIGLOSS",
+    "uvScale": 1.1,
+    "uvOrientation": 256
+  },
+  {
+    "name": "FORTIS_CASTLE_WALLS_BRICK_FLOOR",
+    "area": "ZEAH",
+    "overlayIds": [ 159 ],
+    "groundMaterial": "FALADOR_PATHS",
+    "uvScale": 1.1,
+    "uvOrientation": 256
+  },
+  {
+    "name": "Hunter Guild Water",
+    "area": "HUNTER_GUILD",
+    "overlayIds": [ 181 ],
+    "waterType": "PLAIN_WATER"
   },
   {
     "name": "STRANGLEWOOD_HILLSIDE",
@@ -3781,7 +3824,7 @@
     "overlayIds": [
       102
     ],
-    "groundMaterial": "HD_WOOD_PLANKS_1"
+    "groundMaterial": "HD_WOOD_PLANKS_2"
   },
   {
     "name": "ELID_CAVE_WATER_FIX",
@@ -3834,7 +3877,7 @@
     "overlayIds": [
       81
     ],
-    "groundMaterial": "HD_WOOD_PLANKS_1"
+    "groundMaterial": "HD_WOOD_PLANKS_2"
   },
   {
     "name": "LUNAR_ESSENCE_MINE_WATER",
@@ -3877,7 +3920,7 @@
     "underlayIds": [
       63
     ],
-    "groundMaterial": "HD_WOOD_PLANKS_1",
+    "groundMaterial": "HD_WOOD_PLANKS_2",
     "uvOrientation": 512,
     "uvScale": 1.333
   },
@@ -3887,7 +3930,7 @@
     "overlayIds": [
       36
     ],
-    "groundMaterial": "HD_WOOD_PLANKS_1",
+    "groundMaterial": "HD_WOOD_PLANKS_2",
     "uvOrientation": 512,
     "uvScale": 0.75,
     "shiftLightness": 5
@@ -3953,6 +3996,24 @@
     "blended": false
   },
   {
+    "name": "KELDAGRIM_RED_AXE_CAVES_GRAVEL",
+    "area": "RED_AXE_REGION",
+    "overlayIds": [
+      117
+    ],
+    "groundMaterial": "GRAVEL",
+    "uvScale": 0.6
+  },
+  {
+    "name": "KELDAGRIM_RED_AXE_CAVES_GROUND",
+    "area": "RED_AXE_REGION",
+    "underlayIds": [
+      111
+    ],
+    "groundMaterial": "ROCKY_CAVE_FLOOR",
+    "uvScale": 0.6
+  },
+  {
     "name": "CERBERUS_WATER",
     "area": "CERBERUS",
     "overlayIds": [
@@ -3980,6 +4041,23 @@
     "replacements": {
       "SNOW_2": "season == WINTER"
     }
+  },
+  {
+    "name": "TUTORIAL_ISLAND_TILE",
+    "area": "TUTORIAL_ISLAND",
+    "overlayIds": [
+      10
+    ],
+    "groundMaterial": "WORN_TILES"
+  },
+  {
+    "name": "TUTORIAL_ISLAND_CAVE_FLOOR",
+    "area": "TUTORIAL_ISLAND_CAVES",
+    "underlayIds": [
+      63,
+      67
+    ],
+    "groundMaterial": "EARTHEN_CAVE_FLOOR"
   },
   {
     "name": "VARROCK_PATHS",
@@ -4786,7 +4864,7 @@
     "underlayIds": [
       10
     ],
-    "groundMaterial": "HD_WOOD_PLANKS_1"
+    "groundMaterial": "HD_WOOD_PLANKS_2"
   },
   {
     "name": "SLEPE_CHURCH_FLOOR",
@@ -4794,7 +4872,7 @@
     "underlayIds": [
       94
     ],
-    "groundMaterial": "HD_WOOD_PLANKS_1"
+    "groundMaterial": "HD_WOOD_PLANKS_2"
   },
   {
     "name": "SLEPE_HOUSES_WOODEN_FLOOR",
@@ -4802,7 +4880,7 @@
     "underlayIds": [
       10
     ],
-    "groundMaterial": "HD_WOOD_PLANKS_1"
+    "groundMaterial": "HD_WOOD_PLANKS_2"
   },
   {
     "name": "VER_SINHAZA_WATER_FIX",
@@ -5205,6 +5283,42 @@
       150
     ],
     "groundMaterial": "EARTHEN_CAVE_FLOOR"
+  },
+  {
+    "name": "GARDEN_OF_DEATH_TILES",
+    "area": "UNDERGROUND_OLD_ONES_RUINS",
+    "overlayIds": [
+      133
+    ],
+    "groundMaterial": "MARBLE_2",
+    "shiftLightness": -4
+  },
+  {
+    "name": "GARDEN_OF_DEATH_DIRT",
+    "area": "UNDERGROUND_OLD_ONES_RUINS",
+    "underlayIds": [
+      63, 118, 146
+    ],
+    "groundMaterial": "DIRT"
+  },
+  {
+    "name": "GARDEN_OF_DEATH_GRASSY_DIRT",
+    "area": "UNDERGROUND_OLD_ONES_RUINS",
+    "underlayIds": [
+      53, 54
+    ],
+    "groundMaterial": "GRASSY_DIRT"
+  },
+  {
+    "name": "ZEAH_GRAVEL_PATH",
+    "area": "ZEAH",
+    "overlayIds": [
+      99
+    ],
+    "groundMaterial": "VARIED_DIRT",
+    "replacements": {
+      "WINTER_DIRT": "season == WINTER"
+    }
   },
   {
     "name": "ZEAH_DIRT_UNDERLAY",
@@ -5807,15 +5921,37 @@
     }
   },
   {
-    "name": "TILE_NEEDS_HUE_DEFINED",
-    "area": "OVERWORLD",
-    "underlayIds": [
-      26
-    ],
-    "groundMaterial": "VARIED_DIRT",
-    "replacements": {
-      "WINTER_DIRT": "season == WINTER"
-    }
+    "name": "VARLAMORE_TEMPLE_CRYPT_CENTER_BLENDING_FIX",
+    "area": "VARLAMORE_TEMPLE_CRYPT_CENTER",
+    "overlayIds": [ 11 ],
+    "blended": false,
+    "groundMaterial": "DIRT"
+  },
+  {
+    "name": "VARLAMORE_TEMPLE_CRYPT_BRICK_TILES",
+    "area": "VARLAMORE_TEMPLE_CRYPT_FAKE_BRICK_TILES",
+    "overlayIds": [ 139 ],
+    "groundMaterial": "LASSAR_UNDERCITY_TILES",
+    "blended": false
+  },
+  {
+    "name": "VARLAMORE_TEMPLE_CRYPT_SQUARE_TILES",
+    "area": "VARLAMORE_TEMPLE_CRYPT_FAKE_SQUARE_TILES",
+    "overlayIds": [ 139 ],
+    "groundMaterial": "MARBLE_2_SEMIGLOSS",
+    "blended": false
+  },
+  {
+    "name": "VARLAMORE_TEMPLE_CRYPT_MARBLE",
+    "area": "VARLAMORE_TEMPLE_CRYPT",
+    "overlayIds": [ 228 ],
+    "groundMaterial": "MARBLE_2_SEMIGLOSS"
+  },
+  {
+    "name": "VARLAMORE_TEMPLE_CRYPT_WATER",
+    "area": "VARLAMORE_TEMPLE_CRYPT",
+    "overlayIds": [ 181, 201 ],
+    "waterType": "DARK_BLUE_WATER"
   },
   {
     "name": "DEFENDER_OF_VARROCK_CAVE_FLOOR",
@@ -5976,6 +6112,7 @@
     "area": "OVERWORLD",
     "underlayIds": [
       13,
+      26,
       55,
       61,
       62,

@@ -20015,6 +20015,24 @@
     ]
   },
   {
+    "description": "TEXTURED_WALL_TORCH",
+    "height": 235,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      198
+    ]
+  },
+  {
     "description": "WALL_TORCH",
     "height": 235,
     "alignment": "CENTER",
@@ -20029,7 +20047,6 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      198,
       6537,
       18891,
       12300,
@@ -33227,6 +33244,130 @@
     "fadeOutDuration": 100,
     "projectileIds": [
       2642
+    ]
+  },
+  {
+    "description": "VARLAMORE_TEMPLE_CRYPT_BRAZIER",
+    "height": 150,
+    "alignment": "CENTER",
+    "radius": 600,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 30,
+    "objectIds": [
+      51906
+    ]
+  },
+  {
+    "description": "VARLAMORE_TEMPLE_CRYPT_CEILING_BRAZIER",
+    "height": 300,
+    "alignment": "CENTER",
+    "radius": 1500,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "range": 10,
+    "objectIds": [
+      51578
+    ],
+    "visibleFromOtherPlanes": true
+  },
+  {
+    "description": "VARLAMORE_TEMPLE_CRYPT_CANDLES",
+    "height": 50,
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 4,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "range": 10,
+    "objectIds": [
+      47446,
+      47447
+    ],
+    "visibleFromOtherPlanes": true
+  },
+  {
+    "description": "GARDEN_OF_DEATH_DUNGEON_ENTRANCE",
+    "height": 370,
+    "alignment": "CENTER",
+    "radius": 650,
+    "strength": 15,
+    "color": [
+      200,
+      220,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "objectIds": [
+      46327,
+      46330,
+      46333,
+      46336
+    ]
+  },
+  {
+    "description": "Hunter Guild ceiling lantern",
+    "radius": 600,
+    "strength": 5,
+    "color": "#fcb703",
+    "type": "FLICKER",
+    "range": 13,
+    "offset": [ 0, 406, 0 ],
+    "objectIds": [
+      51731
+    ]
+  },
+  {
+    "description": "Tutorial Island Cooking Range",
+    "height": 100,
+    "offset": [ 53, -53, 48 ],
+    "radius": 400,
+    "strength": 6,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 5,
+    "objectIds": [
+      9736
+    ]
+  },
+  {
+    "description": "Tutorial Island Ironman Portal",
+    "height": 100,
+    "offset": [ -6, 28, -20 ],
+    "radius": 400,
+    "strength": 20,
+    "color": [
+      3,
+      50,
+      252
+    ],
+    "type": "PULSE",
+    "duration": 1000,
+    "range": 12,
+    "objectIds": [
+      42819
     ]
   }
 ]
