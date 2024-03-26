@@ -209,10 +209,7 @@ int tile_height(int z, int x, int y) {
     return texelFetch(tileHeightMap, ivec3(x + ESCENE_OFFSET, y + ESCENE_OFFSET, z), 0).r << 3;
 }
 
-ivec4 hillskew_vertex(ivec4 v, int hillskew, int y, int plane) {
-    if (hillskew == 0)
-        return v;
-
+void hillskew_vertex(inout ivec4 v, int hillskew, int y, int plane) {
     int px = v.x & 127;
     int pz = v.z & 127;
     int sx = v.x >> 7;
@@ -220,7 +217,20 @@ ivec4 hillskew_vertex(ivec4 v, int hillskew, int y, int plane) {
     int h1 = (px * tile_height(plane, sx + 1, sz) + (128 - px) * tile_height(plane, sx, sz)) >> 7;
     int h2 = (px * tile_height(plane, sx + 1, sz + 1) + (128 - px) * tile_height(plane, sx, sz + 1)) >> 7;
     int h3 = (pz * h2 + (128 - pz) * h1) >> 7;
-    return ivec4(v.x, v.y + h3 - y, v.z, v.w);
+    v.y += h3 - y;
+}
+
+void hillskew_vertex(inout vec4 v, int hillskew, int y, int plane) {
+    int x = int(v.x);
+    int z = int(v.z);
+    int px = x & 127;
+    int pz = z & 127;
+    int sx = x >> 7;
+    int sz = z >> 7;
+    int h1 = (px * tile_height(plane, sx + 1, sz) + (128 - px) * tile_height(plane, sx, sz)) >> 7;
+    int h2 = (px * tile_height(plane, sx + 1, sz + 1) + (128 - px) * tile_height(plane, sx, sz + 1)) >> 7;
+    int h3 = (pz * h2 + (128 - pz) * h1) >> 7;
+    v.y += h3 - y;
 }
 
 void undoVanillaShading(inout ivec4 vertex, vec3 unrotatedNormal) {
@@ -310,9 +320,11 @@ void sort_and_insert(uint localId, ModelInfo minfo, int thisPriority, int thisDi
         // apply hillskew
         int plane = (flags >> 24) & 3;
         int hillskew = (flags >> 26) & 1;
-        thisrvA = hillskew_vertex(thisrvA, hillskew, pos.y, plane);
-        thisrvB = hillskew_vertex(thisrvB, hillskew, pos.y, plane);
-        thisrvC = hillskew_vertex(thisrvC, hillskew, pos.y, plane);
+        if (hillskew == 1) {
+            hillskew_vertex(thisrvA, hillskew, pos.y, plane);
+            hillskew_vertex(thisrvB, hillskew, pos.y, plane);
+            hillskew_vertex(thisrvC, hillskew, pos.y, plane);
+        }
 
         // position vertices in scene and write to out buffer
         vout[outOffset + myOffset * 3]     = thisrvA;
@@ -338,6 +350,13 @@ void sort_and_insert(uint localId, ModelInfo minfo, int thisPriority, int thisDi
                 uvA.xyz += pos.xyz;
                 uvB.xyz += pos.xyz;
                 uvC.xyz += pos.xyz;
+
+                // For vanilla UVs, the first 3 components are an integer position vector
+                if (hillskew == 1) {
+                    hillskew_vertex(uvA, hillskew, pos.y, plane);
+                    hillskew_vertex(uvB, hillskew, pos.y, plane);
+                    hillskew_vertex(uvC, hillskew, pos.y, plane);
+                }
             }
         }
 
