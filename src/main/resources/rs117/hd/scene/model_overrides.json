@@ -4504,7 +4504,6 @@
     "objectIds": [
       10490,
       12450,
-      12962,
       14762,
       14851,
       14852,
@@ -4531,6 +4530,7 @@
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       7175,
+      12962,
       20058,
       23177,
       39716
@@ -5218,6 +5218,8 @@
       11776,
       11777,
       11788,
+      12349,
+      12350,
       13001,
       13002,
       14749,
@@ -5247,6 +5249,7 @@
       24958,
       25417,
       25418,
+      25637,
       25716,
       25717,
       25819,
@@ -15779,5 +15782,15 @@
     "uvType": "BOX",
     "retainVanillaUvs": false,
     "uvScale": 0.4
+  },
+  {
+    "description": "Decoration - Textured Lumbridge Heraldry",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      899, 901
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "retainVanillaUvs": false
   }
 ]
