@@ -400,7 +400,6 @@ public enum Material {
 	),
 	ROCK_3_D,
 	ROCK_3_N,
-	ROCK_3_N_SMOOTH,
 	ROCK_3(p -> p
 		.setNormalMap(ROCK_3_N)
 		.setDisplacementMap(ROCK_3_D)
@@ -409,8 +408,8 @@ public enum Material {
 		.setBrightness(1.2f)
 	),
 	ROCK_3_SMOOTH(ROCK_3, p -> p
-		.setNormalMap(ROCK_3_N_SMOOTH)
-		.setDisplacementScale(0f)
+		.setDisplacementScale(0)
+		.setTextureScale(1, 1, .15f)
 		.setSpecular(0.3f, 40)
 	),
 	ROCK_3_ORE(ROCK_3, p -> p

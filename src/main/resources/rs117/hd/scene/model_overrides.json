@@ -15659,20 +15659,10 @@
     "uvOrientation": 200
   },
   {
-    "description": "Old Ones Pyramid",
-    "baseMaterial": "ROCK_3",
-    "objectIds": [
-      42097, 42098, 42099, 42100, 42101, 42102
-    ],
-    "uvType": "BOX",
-    "uvOrientation": 200,
-    "uvScale": 0.6
-  },
-  {
     "description": "Varlamore - Objects - Stone - Stone block walls",
     "baseMaterial": "ROCK_3_SMOOTH",
     "objectIds": [
-      42097, 42098, 42099, 42100, 42101, 52795, 52796
+      42097, 42098, 42099, 42100, 42101, 42102, 52795, 52796
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
