@@ -4160,13 +4160,6 @@
     "flatNormals": true
   },
   {
-    "description": "Brass coat rack",
-    "baseMaterial": "NONE",
-    "objectIds": [
-      374
-    ]
-  },
-  {
     "description": "Dirt Cave Entrance",
     "baseMaterial": "DIRT_2",
     "objectIds": [
@@ -11068,7 +11061,6 @@
     ],
     "uvType": "BOX",
     "uvOrientation": 512
-
   },
   {
     "description": "Ferox Enclave - Wooden Plank Stairs ",
