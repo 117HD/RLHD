@@ -928,7 +928,6 @@
       4502,
       5252,
       6188,
-      6202,
       10436,
       10487,
       11468,
@@ -1326,6 +1325,7 @@
       5903,
       5904,
       5905,
+      9733,
       14513,
       14514,
       14515,
@@ -1346,6 +1346,7 @@
     "baseMaterial": "BARK",
     "objectIds": [
       1341,
+      1353,
       4328,
       6212,
       14516,
@@ -1442,9 +1443,20 @@
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
       7522,
-      7523
+      7523,
+      46420
     ],
     "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Farming Patch 3 - Keldagrim",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [
+      8861, 8862, 8863, 8864, 8876
+    ],
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 55,
+    "uvScale": 0.75
   },
   {
     "description": "GRASS",
@@ -1459,7 +1471,6 @@
       4987,
       4988,
       5341,
-      5536,
       9502,
       9503,
       9504,
@@ -1543,6 +1554,7 @@
       5340,
       5342,
       5338,
+      5536,
       6817,
       6818,
       6819,
@@ -1552,7 +1564,6 @@
       6838,
       7049,
       7050,
-      7129,
       7262,
       7263,
       7264,
@@ -1613,16 +1624,36 @@
     "description": "Short grass which shouldn't cast shadows and shouldn't inherit tile color",
     "baseMaterial": "GRAY_75",
     "objectIds": [
+      7129,
       7518,
+      7519,
       7520,
+      7521,
       17446,
       17447,
       17448,
       17449,
       34494,
-      34496
+      34496,
+      46411,
+      46412
     ],
     "flatNormals": true,
+    "castShadows": false
+  },
+  {
+    "description": "Short grass which shouldn't cast shadows but should inherit tile color, this is required to make the grass around the edges white and not green in winter",
+    "baseMaterial": "GRAY_75",
+    "seasonalTheme": "WINTER",
+    "objectIds": [
+      7129,
+      7518,
+      7519,
+      7520,
+      7521
+    ],
+    "flatNormals": true,
+    "inheritTileColorType": "UNDERLAY",
     "castShadows": false
   },
   {
@@ -1647,10 +1678,11 @@
   },
   {
     "description": "WOODEN_FENCES",
-    "baseMaterial": "WOOD_GRAIN",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       166,
       167,
+      980,
       981,
       991,
       992,
@@ -1663,6 +1695,8 @@
       7055,
       9511,
       9623,
+      9470,
+      9708,
       25677,
       1558,
       1559,
@@ -1677,6 +1711,9 @@
       993,
       7527
     ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 512,
     "flatNormals": true
   },
   {
@@ -2542,10 +2579,14 @@
       14550,
       14551,
       14558,
+      14559,
+      14560,
+      14632,
       42110,
       42111,
       42116
     ],
+    "uvType": "BOX",
     "flatNormals": true
   },
   {
@@ -3179,7 +3220,19 @@
       9739,
       9740,
       16543,
+      17086,
+      17087,
       26712
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 100
+  },
+  {
+    "description": "Rounded Cave Wall Entrance with Tracks",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      6971
     ],
     "uvType": "BOX",
     "uvScale": 0.75,
@@ -3776,6 +3829,7 @@
       24561,
       25796,
       29110,
+      42114,
       44917
     ],
     "flatNormals": true,
@@ -4106,13 +4160,6 @@
     "flatNormals": true
   },
   {
-    "description": "Brass coat rack",
-    "baseMaterial": "NONE",
-    "objectIds": [
-      374
-    ]
-  },
-  {
     "description": "Dirt Cave Entrance",
     "baseMaterial": "DIRT_2",
     "objectIds": [
@@ -4128,7 +4175,8 @@
       26709,
       30177,
       30374,
-      31766
+      31766,
+      42248
     ],
     "uvType": "BOX",
     "uvScale": 0.5
@@ -4226,9 +4274,6 @@
       12575,
       12576,
       12577,
-      11184,
-      11185,
-      11186,
       18479,
       18480,
       37810,
@@ -4304,6 +4349,10 @@
       2148,
       2884,
       8785,
+      9725,
+      9726,
+      9727,
+      9728,
       16679,
       16683,
       16684,
@@ -4455,7 +4504,6 @@
     "objectIds": [
       10490,
       12450,
-      12962,
       14762,
       14851,
       14852,
@@ -4482,6 +4530,7 @@
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       7175,
+      12962,
       20058,
       23177,
       39716
@@ -4782,6 +4831,8 @@
       8820,
       8821,
       9565,
+      9717,
+      9718,
       11449,
       11450,
       11721,
@@ -5002,7 +5053,8 @@
     "objectIds": [
       2341,
       14543
-    ]
+    ],
+    "uvType": "BOX"
   },
   {
     "description": "Black Knight Fortress Wood Rails",
@@ -5071,16 +5123,9 @@
     "baseMaterial": "METALLIC_2_GLOSS",
     "objectIds": [
       205,
+      3474,
       24172
     ]
-  },
-  {
-    "description": "Butler's House",
-    "baseMaterial": "DOCK_FENCE",
-    "objectIds": [
-      980
-    ],
-    "flatNormals": true
   },
   {
     "description": "Wooden Door 1 - Fake Plank",
@@ -5096,6 +5141,7 @@
       102,
       1535,
       1536,
+      1539,
       1732,
       1722,
       1726,
@@ -5154,6 +5200,7 @@
       9710,
       9716,
       9721,
+      9722,
       9723,
       9724,
       10045,
@@ -5171,6 +5218,8 @@
       11776,
       11777,
       11788,
+      12349,
+      12350,
       13001,
       13002,
       14749,
@@ -5200,6 +5249,7 @@
       24958,
       25417,
       25418,
+      25637,
       25716,
       25717,
       25819,
@@ -6011,6 +6061,7 @@
     "baseMaterial": "DIRT_2",
     "objectIds": [
       4343,
+      5520,
       17227
     ],
     "uvType": "WORLD_XZ",
@@ -6043,6 +6094,8 @@
       321,
       4342,
       4344,
+      5519,
+      5521,
       11084,
       11085,
       11086,
@@ -6235,7 +6288,6 @@
       7113,
       7114,
       7115,
-      7116,
       7119,
       12049,
       12051,
@@ -6506,6 +6558,8 @@
       25661,
       25836,
       25837,
+      41738,
+      42066,
       44854
     ],
     "uvType": "BOX",
@@ -6523,6 +6577,7 @@
       9533,
       12977,
       12978,
+      17033,
       20367,
       25775,
       25776,
@@ -6547,10 +6602,11 @@
     "uvOrientationZ": 512
   },
   {
-    "description": "Objects - Wooden - Crate",
+    "description": "Objects - Wooden - Crate - Angled",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      9535
+      9535,
+      41739
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -6577,6 +6633,18 @@
     "uvType": "BOX",
     "flatNormals": true,
     "uvOrientationY": 600,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512
+  },
+  {
+    "description": "Objects - Wooden - Stack of crates - Rotated",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      42068
+    ],
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvOrientationY": 88,
     "uvOrientationX": 512,
     "uvOrientationZ": 512
   },
@@ -6774,8 +6842,12 @@
       5232,
       17876,
       17877,
+      42263,
+      42264,
       44744,
-      44745
+      44745,
+      46408,
+      46409
     ],
     "uvType": "BOX"
   },
@@ -6960,7 +7032,9 @@
     "objectIds": [
       4055,
       4056,
-      4057
+      4057,
+      46344,
+      46346
     ],
     "uvType": "BOX",
     "uvScale": 0.6
@@ -7317,7 +7391,8 @@
       422,
       423,
       4288,
-      23067
+      23067,
+      27664
     ],
     "uvType": "MODEL_XZ",
     "uvScale": 0.60
@@ -7646,31 +7721,31 @@
     "objectIds": [
       16740
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "flatNormals": true,
     "uvOrientation": 512,
     "uvScale": 0.8
   },
   {
     "description": "Lunar Isles - Objects - Wooden staircase",
-    "baseMaterial": "HD_WOOD_PLANKS_1",
+    "baseMaterial": "HD_WOOD_PLANKS_2",
     "objectIds": [
       16732,
       16733,
       16734
     ],
-    "uvType": "MODEL_XZ"
+    "uvType": "BOX"
   },
   {
     "description": "Lunar Isles - WALLS - Wooden Railing",
-    "baseMaterial": "HD_WOOD_PLANKS_1",
+    "baseMaterial": "HD_WOOD_PLANKS_2",
     "objectIds": [
       16761,
       16762,
       16763,
       16767
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "flatNormals": true
   },
   {
@@ -7858,7 +7933,11 @@
       37396,
       46818,
       46819,
-      46820
+      46820,
+      47161,
+      47162,
+      47163,
+      47164
     ],
     "uvType": "BOX",
     "uvScale": 0.33
@@ -7949,6 +8028,15 @@
     "uvScale": 0.6
   },
   {
+    "description": "Objects - Wooden - Rocking Chair",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      1096,
+      15681
+    ],
+    "uvType": "BOX"
+  },
+  {
     "description": "Objects - Wooden - Rocking Chair - Combined back",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
@@ -7987,7 +8075,6 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       7182,
-      15681,
       15682
     ],
     "uvType": "BOX"
@@ -9224,6 +9311,7 @@
     "description": "Metal Birdcage",
     "baseMaterial": "METALLIC_1_SEMIGLOSS",
     "objectIds": [
+      6146,
       6264,
       6265,
       6266,
@@ -9790,6 +9878,16 @@
     "uvScale": 0.6
   },
   {
+    "description": "Sacks - Grey",
+    "baseMaterial": "CARPET",
+    "objectIds": [
+      10304, 10305
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 0.6
+  },
+  {
     "description": "Sacks Pile",
     "baseMaterial": "CARPET",
     "objectIds": [
@@ -9827,7 +9925,7 @@
   {
     "description": "Object - Sack with Hey or Grain",
     "baseMaterial": "FINE_CARPET",
-    "objectIds": [ 16878 ],
+    "objectIds": [ 5574, 10306, 16878 ],
     "uvType": "BOX",
     "uvScale": 0.85,
     "retainVanillaUvs": false
@@ -10988,11 +11086,13 @@
   },
   {
     "description": "Wooden Bank Chest",
-    "baseMaterial": "WOOD_GRAIN",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      2090,
       26711
     ],
-    "uvType": "GEOMETRY"
+    "uvType": "BOX",
+    "uvOrientation": 512
   },
   {
     "description": "Ferox Enclave - Wooden Plank Stairs ",
@@ -11073,6 +11173,7 @@
     "description": "Wooden Wedge Stairs",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      1863,
       24361
     ],
     "uvType": "BOX",
@@ -11390,11 +11491,12 @@
     ]
   },
   {
-    "description": "Lassar Undercity fake tiles",
-    "objectIds": [ 46950 ],
+    "description": "Lassar Undercity & Varlamore temple crypt fake brick tiles",
+    "objectIds": [ 46950, 46951 ],
     "baseMaterial": "LASSAR_UNDERCITY_TILES",
     "hideInAreas": [
-      "LASSAR_UNDERCITY"
+      "LASSAR_UNDERCITY",
+      "VARLAMORE_TEMPLE_CRYPT"
     ]
   },
   {
@@ -11586,6 +11688,7 @@
     "description": "Ore - Tin - Rock",
     "baseMaterial": "ROCK_3_ORE",
     "objectIds": [
+      10080,
       11360,
       11361
     ],
@@ -11596,6 +11699,7 @@
     "description": "Ore - Copper - Rock",
     "baseMaterial": "ROCK_3_ORE",
     "objectIds": [
+      10079,
       10943,
       11161
     ],
@@ -11607,7 +11711,8 @@
     "baseMaterial": "ROCK_3",
     "objectIds": [
       11364,
-      11365
+      11365,
+      42833
     ],
     "uvType": "BOX",
     "uvScale": 0.33,
@@ -11946,7 +12051,8 @@
     "objectIds": [
       1323,
       1324,
-      1325
+      1325,
+      1458
     ],
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -12399,7 +12505,7 @@
     "retainVanillaUvs": false
   },
   {
-    "description": "Edgeville - Walls - Bank Front Windows",
+    "description": "Edgeville - Walls - Bank Front Windows - Tutorial Island Walls",
     "objectIds": [
       1853,
       1854
@@ -14894,7 +15000,7 @@
     "description": "Keldagrim Stone Walls",
     "baseMaterial": "ROCK_3",
     "objectIds": [
-      6000, 6001, 6002, 6003, 6004, 6005, 6006, 6010, 6011
+      6000, 6001, 6002, 6003, 6004, 6005, 6006, 6010, 6011, 8881, 8882, 8883, 8884, 8905, 8907, 8909
     ],
     "uvType": "BOX",
     "uvOrientation": 128
@@ -15047,6 +15153,16 @@
     "uvScale": 0.8
   },
   {
+    "description": "Objects - Rock Column - Tan - Huge",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      11184, 11185, 11186
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 132
+  },
+  {
     "description": "Objects - Stone - Stone Slab Bridge Guards",
     "baseMaterial": "ROCK_3",
     "objectIds": [
@@ -15069,7 +15185,7 @@
     "description": "Objects - Rock - Unfinished Statues",
     "baseMaterial": "ROCK_5",
     "objectIds": [
-      7008, 7009
+      7008, 7009, 7010
     ],
     "uvType": "BOX",
     "uvScale": 0.8
@@ -15078,6 +15194,7 @@
     "description": "Blast Furnace - Objects - Metallic - Sink",
     "baseMaterial": "METALLIC_2",
     "objectIds": [
+      6151,
       9143
     ],
     "uvType": "BOX",
@@ -15116,6 +15233,28 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       16168
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.86
+  },
+  {
+    "description": "Hunter Guild cave walls",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      42251,
+      42266,
+      42267,
+      42268,
+      42269,
+      42270,
+      42272,
+      50906,
+      50907,
+      50908,
+      50909,
+      50910,
+      50911,
+      50922
     ],
     "uvType": "BOX",
     "uvScale": 0.86
@@ -15160,6 +15299,528 @@
         "retainVanillaUvs": false
       }
     }
+  },
+  {
+    "description": "Objects - Stone - Keldagrim Pillars - Twisted",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      7016
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.86,
+    "uvOrientation": 66
+  },
+  {
+    "description": "Objects - Stone - Keldagrim Pillars - Straight",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      7017
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.86,
+    "uvOrientation": 300
+  },
+  {
+    "description": "Metal Street Lanturn",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      6202
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 96,
+    "uvScale": 0.6,
+    "hideVanillaShadows": true
+  },
+  {
+    "description": "Keldagrim Fireplace",
+    "baseMaterial": "METALLIC_2",
+    "objectIds": [
+      6093
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 42
+  },
+  {
+    "description": "Keldagrim Fireplace with Spit - Empty",
+    "baseMaterial": "METALLIC_2",
+    "objectIds": [
+      6094
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 42
+  },
+  {
+    "description": "Keldagrim Fireplace with Spit and Meat",
+    "baseMaterial": "METALLIC_2",
+    "objectIds": [
+      6095
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 42
+  },
+  {
+    "description": "White Wolf Mountain Wall Supports",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      17082, 17083, 17084, 17085
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 88
+  },
+  {
+    "description": "Wooden Cupboard Empty",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      7018
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 22
+  },
+  {
+    "description": "Wooden Cabinet Empty",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      7019
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 2022
+  },
+  {
+    "description": "Rat Wall",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      10342, 10343
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.1,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Strange Box - Metal",
+    "baseMaterial": "METALLIC_2",
+    "objectIds": [
+      8879, 8880
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 12
+  },
+  {
+    "description": "Scaffolding - Metal",
+    "baseMaterial": "METALLIC_2",
+    "objectIds": [
+      8899, 8900, 8901, 8902, 8903, 8904
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 346
+  },
+  {
+    "description": "Struts - Metal",
+    "baseMaterial": "METALLIC_2",
+    "objectIds": [
+      8917
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 346
+  },
+  {
+    "description": "Zeah Battlefield - Objects - Stone - Pillars",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      34358
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75
+  },
+  {
+    "description": "Zeah Battlefield - Objects - Stone - Tiles",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      23106
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 220
+  },
+  {
+    "description": "Zeah Battlefield - Objects - Stone - Ancient Grave",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      33579
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientationZ": 560,
+    "uvOrientationY": 1000
+  },
+  {
+    "description": "Zeah Battlefield - Objects - Stone - Ornate Fountain",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      10827
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientationZ": 560,
+    "uvOrientationY": 1000
+  },
+  {
+    "description": "Zeah Battlefield - Walls - Metal Fence",
+    "baseMaterial": "METALLIC_1",
+    "objectIds": [
+      27926
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Zeah - Rough Plank Walls",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      8695, 8704
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 1024,
+    "uvScale": 1.1
+  },
+  {
+    "description": "Zeah - Rough Plank Roofs",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      8705, 8706, 8707
+    ],
+    "uvType": "BOX",
+    "uvOrientationY": 1024,
+    "uvOrientationX": 512,
+    "uvScale": 1.1
+  },
+  {
+    "description": "Zeah - Rough Plank Roofs - Corners",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      8708, 8709, 8710, 8711
+    ],
+    "uvType": "BOX",
+    "uvOrientationX": 1024,
+    "uvOrientationZ": 512,
+    "uvOrientationY": 512,
+    "uvScale": 1.1
+  },
+  {
+    "description": "Objects - Metal Milk Urn",
+    "baseMaterial": "METALLIC_2",
+    "objectIds": [
+      8690
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 42
+  },
+  {
+    "description": "Zeah - Wooden Spiral Staircase",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      34502
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 88,
+    "uvScale": 0.8
+  },
+  {
+    "description": "Old Ones Tent",
+    "baseMaterial": "FINE_CARPET",
+    "objectIds": [
+      46324
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 256
+  },
+  {
+    "description": "Hollow Log 1",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      1378
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 480
+  },
+  {
+    "description": "Old Ones Hole",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [
+      46326, 46329, 46332, 46335
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 480
+  },
+  {
+    "description": "Objects - Yellow Rocks - Rock - Small",
+    "baseMaterial": "ROCK_5",
+    "objectIds": [
+      7116, 7117, 7118
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.25
+  },
+  {
+    "description": "Objects - Yellow Rocks - Rock - Medium",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      30787, 30788, 30789
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 42
+  },
+  {
+    "description": "Objects - Yellow Rocks - Rock - Large",
+    "baseMaterial": "ROCK_4",
+    "objectIds": [
+      30784, 30785, 30786
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.33
+  },
+  {
+    "description": "Old Ones Dungeon Ruined Walls",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      5475, 5477, 5478, 5479, 5480, 5481, 46337
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Old Ones Dungeon Walls",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      8931, 8935
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 100
+  },
+  {
+    "description": "Stone-  Ruined Steps",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      34354, 34355, 46407
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Old Ones Vines",
+    "baseMaterial": "PLANT_GRUNGE_1",
+    "objectIds": [
+      41817, 41818, 46381, 46382
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 42
+  },
+  {
+    "description": "Old Ones Stone Pillar",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      46415
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 202
+  },
+  {
+    "description": "Old Ones Stone Table",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      46361
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 202
+  },
+  {
+    "description": "Old Ones Stone Table - Big",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      46356
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 88
+  },
+  {
+    "description": "Old Ones Stone Table - Big with objects",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      46357, 46358, 46360, 46371
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 88
+  },
+  {
+    "description": "Old Ones Stone Table - Long",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      46348
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 202
+  },
+  {
+    "description": "Old Ones Stone Table - Long with Objects",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      46349, 46350, 46355, 46365, 46366, 46376, 46377, 46378, 46379
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 202
+  },
+  {
+    "description": "Old Ones Stone Chest",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      46339, 46340, 46341
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 202
+  },
+  {
+    "description": "Old Ones Stone Vase",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      46342, 46343
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 42
+  },
+  {
+    "description": "Stone Olmic Pillar",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      34401
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 42
+  },
+  {
+    "description": "Molch Ruins Floor",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      34413, 34414, 34415, 34416
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 100
+  },
+  {
+    "description": "Olmic Halfwall",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      46425
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 200
+  },
+  {
+    "description": "Varlamore - Objects - Stone - Stone block walls",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "objectIds": [
+      42097, 42098, 42099, 42100, 42101, 42102, 52795, 52796
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 147
+  },
+  {
+    "description": "Varlamore - Objects - Stone - Stone block steps",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      52345
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 777
+  },
+  {
+    "description": "Varlamore - Objects - Stone - Short column railing",
+    "baseMaterial": "MARBLE_2_SEMIGLOSS",
+    "objectIds": [
+      52032
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 530
+  },
+  {
+    "description": "Hunter Guild ceiling lantern",
+    "objectIds": [ 51731 ],
+    "flatNormals": true,
+    "hideVanillaShadows": true
+  },
+  {
+    "description": "Object - Textured Brick Fireplace",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      24969
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 42
+  },
+  {
+    "description": "Objects - Wooden - Hat Rack",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      374
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 84
+  },
+  {
+    "description": "Objects - Wooden - Bookcase - Textured - Wide",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      380
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "flatNormals": true
+  },
+  {
+    "description": "Objects - Metallic - Range on textured bricks - Textured",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      9736
+    ]
+  },
+  {
+    "description": "Objects - WOODEN - Textured Torch",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      198
+    ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "uvScale": 0.4
+  },
+  {
+    "description": "Decoration - Textured Lumbridge Heraldry",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      899, 901
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "retainVanillaUvs": false
   },
   {
     "description": "Wooden Step Ladder",

@@ -112,14 +112,14 @@ public class ColorUtils {
 			(float) Math.pow((c + 0.055) / 1.055, 2.4);
 	}
 
-	public static float[] linearToSrgb(float[] c) {
+	public static float[] linearToSrgb(float... c) {
 		float[] result = new float[c.length];
 		for (int i = 0; i < c.length; i++)
 			result[i] = linearToSrgb(c[i]);
 		return result;
 	}
 
-	public static float[] srgbToLinear(float[] c) {
+	public static float[] srgbToLinear(float... c) {
 		float[] result = new float[c.length];
 		for (int i = 0; i < c.length; i++)
 			result[i] = srgbToLinear(c[i]);
@@ -142,7 +142,7 @@ public class ColorUtils {
 	}
 
 	/**
-	 * Convert sRGB in the range 0-1 from sRGB to HSL in the range 0-1.
+	 * Convert sRGB in the range 0-1 to HSL in the range 0-1.
 	 *
 	 * @param srgb float[3]
 	 * @return hsl float[3]
@@ -189,11 +189,23 @@ public class ColorUtils {
 		return new float[] { r, g, b };
 	}
 
+	/**
+	 * Convert HSL in the range 0-1 to HSV in the range 0-1.
+	 *
+	 * @param hsl float[3]
+	 * @return hsv float[3]
+	 */
 	public static float[] hslToHsv(float[] hsl) {
 		float v = hsl[2] + hsl[1] * Math.min(hsl[2], 1 - hsl[2]);
 		return new float[] { hsl[0], Math.abs(v) < EPS ? 0 : 2 * (1 - hsl[2] / v), v };
 	}
 
+	/**
+	 * Convert HSV in the range 0-1 to HSL in the range 0-1.
+	 *
+	 * @param hsv float[3]
+	 * @return hsl float[3]
+	 */
 	public static float[] hsvToHsl(float[] hsv) {
 		float l = hsv[2] * (1 - hsv[1] / 2);
 		float divisor = Math.min(l, 1 - l);
@@ -222,6 +234,8 @@ public class ColorUtils {
 		return hslToSrgb(hsvToHsl(hsv));
 	}
 
+	// Convenience functions for converting different formats into linear RGB, sRGB or packed HSL
+
 	/**
 	 * Convert red, green and blue in the range 0-255 from sRGB to linear RGB in the range 0-1.
 	 *
@@ -247,11 +261,11 @@ public class ColorUtils {
 	/**
 	 * Convert sRGB color packed as an int to linear RGB in the range 0-1.
 	 *
-	 * @param rgbInt RGB hex color
+	 * @param srgb packed sRGB
 	 * @return float[3] linear rgb values from 0-1
 	 */
-	public static float[] rgb(int rgbInt) {
-		return srgbToLinear(srgb(rgbInt));
+	public static float[] rgb(int srgb) {
+		return srgbToLinear(srgb(srgb));
 	}
 
 	/**
@@ -260,7 +274,7 @@ public class ColorUtils {
 	 * @param r red color
 	 * @param g green color
 	 * @param b blue color
-	 * @return float[3] non-linear srgb values from 0-1
+	 * @return float[3] non-linear sRGB values from 0-1
 	 */
 	public static float[] srgb(float r, float g, float b) {
 		return new float[] { r / 255f, g / 255f, b / 255f };
@@ -270,7 +284,7 @@ public class ColorUtils {
 	 * Convert hex color from sRGB to sRGB in the range 0-1.
 	 *
 	 * @param hex RGB hex color
-	 * @return float[3] non-linear srgb values from 0-1
+	 * @return float[3] non-linear sRGB values from 0-1
 	 */
 	public static float[] srgb(String hex) {
 		Color color = Color.decode(hex);
@@ -280,72 +294,131 @@ public class ColorUtils {
 	/**
 	 * Convert sRGB color packed as an int to sRGB in the range 0-1.
 	 *
-	 * @param rgbInt RGB hex color
-	 * @return float[3] non-linear srgb values from 0-1
+	 * @param srgb packed sRGB
+	 * @return float[3] non-linear sRGB values from 0-1
 	 */
-	public static float[] srgb(int rgbInt) {
+	public static float[] srgb(int srgb) {
 		return new float[] {
-			(rgbInt >> 16 & 0xFF) / (float) 0xFF,
-			(rgbInt >> 8 & 0xFF) / (float) 0xFF,
-			(rgbInt & 0xFF) / (float) 0xFF,
+			(srgb >> 16 & 0xFF) / (float) 0xFF,
+			(srgb >> 8 & 0xFF) / (float) 0xFF,
+			(srgb & 0xFF) / (float) 0xFF,
 		};
 	}
 
-	public static float[] srgba(int argbInt) {
+	/**
+	 * Convert alpha and sRGB color packed in an int as ARGB to sRGB in the range 0-1.
+	 *
+	 * @param alphaSrgb packed sRGB with a preceding alpha channel
+	 * @return float[4] non-linear sRGB and alpha in the range 0-1
+	 */
+	public static float[] srgba(int alphaSrgb) {
 		return new float[] {
-			(argbInt >> 16 & 0xFF) / (float) 0xFF,
-			(argbInt >> 8 & 0xFF) / (float) 0xFF,
-			(argbInt & 0xFF) / (float) 0xFF,
-			(argbInt >> 24 & 0xFF) / (float) 0xFF
+			(alphaSrgb >> 16 & 0xFF) / (float) 0xFF,
+			(alphaSrgb >> 8 & 0xFF) / (float) 0xFF,
+			(alphaSrgb & 0xFF) / (float) 0xFF,
+			(alphaSrgb >> 24 & 0xFF) / (float) 0xFF
 		};
 	}
 
-	public static int packHsl(float[] hsl) {
+	/**
+	 * Convert red, green and blue in the range 0-255 from sRGB to packed HSL.
+	 *
+	 * @param r red color
+	 * @param g green color
+	 * @param b blue color
+	 * @return int packed HSL
+	 */
+	public static int hsl(float r, float g, float b) {
+		return srgbToPackedHsl(srgb(r, g, b));
+	}
+
+	/**
+	 * Convert hex color from sRGB to packed HSL.
+	 *
+	 * @param rgbHex RGB hex color
+	 * @return int packed HSL
+	 */
+	public static int hsl(String rgbHex) {
+		return srgbToPackedHsl(srgb(rgbHex));
+	}
+
+	/**
+	 * Convert sRGB color packed as an int to packed HSL.
+	 *
+	 * @param packedSrgb RGB hex color
+	 * @return int packed HSL
+	 */
+	public static int hsl(int packedSrgb) {
+		return srgbToPackedHsl(srgb(packedSrgb));
+	}
+
+	// Integer packing and unpacking functions
+
+	public static int packRawRgb(int... rgb) {
+		return rgb[0] << 16 | rgb[1] << 8 | rgb[2];
+	}
+
+	public static int packSrgb(float[] srgb) {
+		int[] ints = new int[3];
+		for (int i = 0; i < 3; i++)
+			ints[i] = clamp(Math.round(srgb[i] * 0xFF), 0, 0xFF);
+		return packRawRgb(ints);
+	}
+
+	public static int packRawHsl(int... hsl) {
+		return hsl[0] << 10 | hsl[1] << 7 | hsl[2];
+	}
+
+	public static void unpackRawHsl(int[] out, int hsl) {
+		// 6-bit hue | 3-bit saturation | 7-bit lightness
+		out[0] = hsl >>> 10 & 0x3F;
+		out[1] = hsl >>> 7 & 0x7;
+		out[2] = hsl & 0x7F;
+	}
+
+	public static int[] unpackRawHsl(int hsl) {
+		int[] out = new int[3];
+		unpackRawHsl(out, hsl);
+		return out;
+	}
+
+	public static int packHsl(float... hsl) {
 		int H = clamp(Math.round((hsl[0] - .0078125f) * (0x3F + 1)), 0, 0x3F);
 		int S = clamp(Math.round((hsl[1] - .0625f) * (0x7 + 1)), 0, 0x7);
 		int L = clamp(Math.round(hsl[2] * (0x7F + 1)), 0, 0x7F);
-		return H << 10 | S << 7 | L;
+		return packRawHsl(H, S, L);
 	}
 
 	public static float[] unpackHsl(int hsl) {
 		// 6-bit hue | 3-bit saturation | 7-bit lightness
-		float H = (hsl >> 10 & 0x3F) / (0x3F + 1f) + .0078125f;
-		float S = (hsl >> 7 & 0x7) / (0x7 + 1f) + .0625f;
+		float H = (hsl >>> 10 & 0x3F) / (0x3F + 1f) + .0078125f;
+		float S = (hsl >>> 7 & 0x7) / (0x7 + 1f) + .0625f;
 		float L = (hsl & 0x7F) / (0x7F + 1f);
 		return new float[] { H, S, L };
-	}
-
-	public static int[] unpackHslRaw(int hsl) {
-		var out = new int[3];
-		unpackHslRaw(out, hsl);
-		return out;
-	}
-
-	public static void unpackHslRaw(int[] out, int hsl) {
-		// 6-bit hue | 3-bit saturation | 7-bit lightness
-		out[0] = clamp(hsl >> 10 & 0x3F, 0, 0x3F);
-		out[1] = clamp(hsl >> 7 & 0x7, 0, 0x7);
-		out[2] = clamp(hsl & 0x7F, 0, 0x7F);
-	}
-
-	public static int packHslRaw(int... hsl) {
-		return hsl[0] << 10 | hsl[1] << 7 | hsl[2];
 	}
 
 	public static int srgbToPackedHsl(float[] srgb) {
 		return packHsl(srgbToHsl(srgb));
 	}
 
-	public static float[] packedHslToSrgb(int hsl) {
-		return hslToSrgb(unpackHsl(hsl));
+	public static float[] packedHslToSrgb(int packedHsl) {
+		return hslToSrgb(unpackHsl(packedHsl));
 	}
 
-	public static int linearRgbToPackedHsl(float[] srgb) {
-		return srgbToPackedHsl(linearToSrgb(srgb));
+	public static int linearRgbToPackedHsl(float[] linearRgb) {
+		return srgbToPackedHsl(linearToSrgb(linearRgb));
 	}
 
 	public static float[] packedHslToLinearRgb(int hsl) {
 		return srgbToLinear(packedHslToSrgb(hsl));
+	}
+
+	public static String srgbToHex(float... srgb) {
+		return String.format("#%h", packSrgb(srgb));
+	}
+
+	public static String rgbToHex(float... linearRgb) {
+		return srgbToHex(linearToSrgb(linearRgb));
 	}
 
 	@Slf4j
