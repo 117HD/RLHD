@@ -1,6 +1,7 @@
 package rs117.hd.scene.lights;
 
 import com.google.gson.annotations.JsonAdapter;
+import com.google.gson.annotations.SerializedName;
 import java.util.HashSet;
 import javax.annotation.Nullable;
 import lombok.NoArgsConstructor;
@@ -13,7 +14,8 @@ public class LightDefinition {
 	@Nullable
 	public Integer worldX, worldY;
 	public int plane;
-	public Alignment alignment = Alignment.CENTER;
+	public Alignment alignment = Alignment.CUSTOM;
+	public int[] offset = new int[3];
 	public int height;
 	public int radius = 300;
 	public float strength = 5;
@@ -24,11 +26,11 @@ public class LightDefinition {
 	public float range;
 	public int fadeInDuration = 50;
 	public int fadeOutDuration = 50;
-	public boolean fadeOverlap;
 	public int spawnDelay;
 	public int despawnDelay;
 	public boolean fixedDespawnTime;
-	public boolean visibleFromOtherPlanes = false;
+	public boolean visibleFromOtherPlanes;
+	public int renderableIndex = -1;
 	@JsonAdapter(GsonUtils.IntegerSetAdapter.class)
 	public HashSet<Integer> npcIds = new HashSet<>();
 	@JsonAdapter(GsonUtils.IntegerSetAdapter.class)
@@ -36,16 +38,22 @@ public class LightDefinition {
 	@JsonAdapter(GsonUtils.IntegerSetAdapter.class)
 	public HashSet<Integer> projectileIds = new HashSet<>();
 	@JsonAdapter(GsonUtils.IntegerSetAdapter.class)
-	public HashSet<Integer> graphicsObjectIds = new HashSet<>();
+	@SerializedName("graphicsObjectIds") // TODO: rename this
+	public HashSet<Integer> spotAnimIds = new HashSet<>();
 	@JsonAdapter(GsonUtils.IntegerSetAdapter.class)
 	public HashSet<Integer> animationIds = new HashSet<>();
 
 	public void normalize() {
 		if (description == null)
 			description = "N/A";
-		if (alignment == null)
-			alignment = Alignment.CENTER;
-		if (color == null)
+		if (alignment == null || alignment == Alignment.CENTER)
+			alignment = Alignment.CUSTOM;
+		if (offset == null || offset.length != 3) {
+			offset = new int[3];
+		} else {
+			offset[1] *= -1;
+		}
+		if (color == null || color.length != 3)
 			color = new float[3];
 		if (type == null)
 			type = LightType.STATIC;

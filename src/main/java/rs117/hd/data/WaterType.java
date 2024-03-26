@@ -134,6 +134,17 @@ public enum WaterType
 		.foamColor(rgb(64, 64, 64))
 		.causticsStrength(0)
 		.flat(true)),
+	DARK_BLUE_WATER(b -> b
+		.specularStrength(.1f)
+		.specularGloss(100)
+		.normalStrength(.1f)
+		.baseOpacity(.8f)
+		.fresnelAmount(.2f)
+		.surfaceColor(rgb("#07292f"))
+		.foamColor(rgb(64, 64, 64))
+		.depthColor(rgb("#000000"))
+		.causticsStrength(0)
+		.flat(true)),
 	;
 
 	public final boolean flat;
