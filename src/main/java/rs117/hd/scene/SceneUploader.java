@@ -345,9 +345,10 @@ class SceneUploader {
 		DecorativeObject decorativeObject = tile.getDecorativeObject();
 		if (decorativeObject != null) {
 			Renderable renderable = decorativeObject.getRenderable();
+			int orientation = HDUtils.getBakedOrientation(decorativeObject.getConfig());
 			if (renderable instanceof Model) {
 				uploadModel(sceneContext, tile, ModelHash.packUuid(ModelHash.TYPE_OBJECT, decorativeObject.getId()), (Model) renderable,
-					HDUtils.getBakedOrientation(decorativeObject.getConfig()),
+					orientation,
 					ObjectType.DECORATIVE_OBJECT
 				);
 			}
@@ -355,7 +356,7 @@ class SceneUploader {
 			Renderable renderable2 = decorativeObject.getRenderable2();
 			if (renderable2 instanceof Model) {
 				uploadModel(sceneContext, tile, ModelHash.packUuid(ModelHash.TYPE_OBJECT, decorativeObject.getId()), (Model) renderable2,
-					HDUtils.getBakedOrientation(decorativeObject.getConfig()),
+					orientation,
 					ObjectType.DECORATIVE_OBJECT
 				);
 			}

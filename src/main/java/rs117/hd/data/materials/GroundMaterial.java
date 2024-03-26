@@ -96,7 +96,7 @@ public enum GroundMaterial {
 	CLEAN_TILE(Material.CLEAN_TILE),
 	WORN_TILES(Material.WORN_TILES),
 	WATER_FLAT(Material.WATER_FLAT),
-	HD_WOOD_PLANKS_1(Material.HD_WOOD_PLANKS_1),
+	HD_WOOD_PLANKS_2(Material.HD_WOOD_PLANKS_2),
 	ICE_1(Material.ICE_1),
 	ICE_1_HIGHGLOSS(Material.ICE_1_HIGHGLOSS),
 	ICE_4(Material.ICE_4),

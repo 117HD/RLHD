@@ -1,4 +1,4 @@
-package rs117.hd.test.utils;
+package rs117.hd.tools;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
