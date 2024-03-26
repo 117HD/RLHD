@@ -20015,6 +20015,24 @@
     ]
   },
   {
+    "description": "TEXTURED_WALL_TORCH",
+    "height": 235,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      198
+    ]
+  },
+  {
     "description": "WALL_TORCH",
     "height": 235,
     "alignment": "CENTER",
@@ -20029,7 +20047,6 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      198,
       6537,
       18891,
       12300,
@@ -33315,6 +33332,42 @@
     "offset": [ 0, 406, 0 ],
     "objectIds": [
       51731
+    ]
+  },
+  {
+    "description": "Tutorial Island Cooking Range",
+    "height": 100,
+    "offset": [ 53, -53, 48 ],
+    "radius": 400,
+    "strength": 6,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 5,
+    "objectIds": [
+      9736
+    ]
+  },
+  {
+    "description": "Tutorial Island Ironman Portal",
+    "height": 100,
+    "offset": [ -6, 28, -20 ],
+    "radius": 400,
+    "strength": 20,
+    "color": [
+      3,
+      50,
+      252
+    ],
+    "type": "PULSE",
+    "duration": 1000,
+    "range": 12,
+    "objectIds": [
+      42819
     ]
   }
 ]

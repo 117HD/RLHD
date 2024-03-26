@@ -4043,6 +4043,23 @@
     }
   },
   {
+    "name": "TUTORIAL_ISLAND_TILE",
+    "area": "TUTORIAL_ISLAND",
+    "overlayIds": [
+      10
+    ],
+    "groundMaterial": "WORN_TILES"
+  },
+  {
+    "name": "TUTORIAL_ISLAND_CAVE_FLOOR",
+    "area": "TUTORIAL_ISLAND_CAVES",
+    "underlayIds": [
+      63,
+      67
+    ],
+    "groundMaterial": "EARTHEN_CAVE_FLOOR"
+  },
+  {
     "name": "VARROCK_PATHS",
     "area": "OVERWORLD",
     "overlayIds": [
@@ -5937,17 +5954,6 @@
     "waterType": "DARK_BLUE_WATER"
   },
   {
-    "name": "TILE_NEEDS_HUE_DEFINED",
-    "area": "OVERWORLD",
-    "underlayIds": [
-      26
-    ],
-    "groundMaterial": "VARIED_DIRT",
-    "replacements": {
-      "WINTER_DIRT": "season == WINTER"
-    }
-  },
-  {
     "name": "DEFENDER_OF_VARROCK_CAVE_FLOOR",
     "area": "DEFENDER_OF_VARROCK_DUNGEON",
     "underlayIds": [
@@ -6106,6 +6112,7 @@
     "area": "OVERWORLD",
     "underlayIds": [
       13,
+      26,
       55,
       61,
       62,

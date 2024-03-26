@@ -60,6 +60,7 @@ public enum Area
 		new AABB(3084, 3048, 3124, 3006), // the node
 		TUTORIAL_ISLAND_INSTANCE
 	)),
+	TUTORIAL_ISLAND_CAVES(12436),
 
 	// Lumbridge Interior
 	LUMBRIDGE_CASTLE_BASEMENT(3205, 9613, 3220, 9626),
