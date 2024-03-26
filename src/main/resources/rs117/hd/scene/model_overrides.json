@@ -6575,6 +6575,8 @@
       6176,
       6177,
       9533,
+      12977,
+      12978,
       17033,
       20367,
       25775,
@@ -7666,10 +7668,20 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       12884,
+      12972,
       16974,
       24333
     ],
     "uvType": "BOX"
+  },
+  {
+    "description": "Objects - Wooden - Plank tables - Long",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      12971
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512
   },
   {
     "description": "Objects - Wooden - Plank tables - Wide",
@@ -8025,6 +8037,14 @@
     "uvType": "BOX"
   },
   {
+    "description": "Objects - Wooden - Rocking Chair - Combined back",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      12979
+    ],
+    "uvType": "BOX"
+  },
+  {
     "description": "Objects - Wooden - Chair - No cushion",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
@@ -8043,6 +8063,14 @@
     "uvScale": 0.6
   },
   {
+    "description": "Objects - Wooden - Chair - No cushion - Smashed",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 1089 ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.6
+  },
+  {
     "description": "Objects - Wooden - Chair 2",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
@@ -8055,6 +8083,7 @@
     "description": "Objects - Wooden - Chair - Plank Highback",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      12973,
       20352
     ],
     "uvType": "BOX",
@@ -12442,16 +12471,6 @@
     "retainVanillaUvs": false
   },
   {
-    "description": "Objects - Hay - Mat",
-    "textureMaterial": "HD_HAY",
-    "objectIds": [
-      920
-    ],
-    "uvType": "BOX",
-    "uvOrientation": 512,
-    "retainVanillaUvs": false
-  },
-  {
     "description": "Objects - Hay - Haystack",
     "textureMaterial": "HD_HAY",
     "objectIds": [
@@ -15791,6 +15810,80 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
+    "retainVanillaUvs": false
+  },
+  {
+    "description": "Wooden Step Ladder",
+    "objectIds": [ 17390 ],
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX"
+  },
+  {
+    "description": "Ceramic Big Vase",
+    "objectIds": [ 5621 ],
+    "baseMaterial": "GRUNGE_1",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 462
+  },
+  {
+    "description": "Sheep Shearer fence and gate",
+    "objectIds": [ 12982, 12983, 12986, 12987, 12988, 12989 ],
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Wooden food trough",
+    "objectIds": [ 301 ],
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Sheep Shearer Fred the Farmers house walls",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 12990, 12991 ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "flatNormals": true,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Textured hay carpet",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 920, 921 ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "retainVanillaUvs": false
+  },
+  {
+    "description": "Wooden shelves - Empty",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 12980 ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "retainVanillaUvs": false
+  },
+  {
+    "description": "Wooden hat stand",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 12981 ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "retainVanillaUvs": false
+  },
+  {
+    "description": "Wooden shelf wall mounted",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 12976 ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientationX": 512,
     "retainVanillaUvs": false
   }
 ]
