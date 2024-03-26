@@ -4081,6 +4081,75 @@
     "groundMaterial": "DIRT"
   },
   {
+    "name": "VARLAMORE_TEMPLE_CRYPT_CENTER_BLENDING_FIX",
+    "area": "VARLAMORE_TEMPLE_CRYPT_CENTER",
+    "overlayIds": [ 11 ],
+    "blended": false,
+    "groundMaterial": "DIRT"
+  },
+  {
+    "name": "VARLAMORE_TEMPLE_CRYPT_BRICK_TILES",
+    "area": "VARLAMORE_TEMPLE_CRYPT_FAKE_BRICK_TILES",
+    "overlayIds": [ 139 ],
+    "groundMaterial": "LASSAR_UNDERCITY_TILES",
+    "blended": false
+  },
+  {
+    "name": "VARLAMORE_TEMPLE_CRYPT_SQUARE_TILES",
+    "area": "VARLAMORE_TEMPLE_CRYPT_FAKE_SQUARE_TILES",
+    "overlayIds": [ 139 ],
+    "groundMaterial": "MARBLE_2_SEMIGLOSS",
+    "blended": false
+  },
+  {
+    "name": "VARLAMORE_TEMPLE_CRYPT_MARBLE",
+    "area": "VARLAMORE_TEMPLE_CRYPT",
+    "overlayIds": [ 228 ],
+    "groundMaterial": "MARBLE_2_SEMIGLOSS"
+  },
+  {
+    "name": "VARLAMORE_TEMPLE_CRYPT_WATER",
+    "area": "VARLAMORE_TEMPLE_CRYPT",
+    "overlayIds": [ 181, 201 ],
+    "waterType": "DARK_BLUE_WATER"
+  },
+  {
+    "name": "RALOS_RISE_SNOW_PATH",
+    "area": "VARLAMORE_SNOWY_MOUNTAINS",
+    "overlayIds": [ 271 ],
+    "groundMaterial": "SNOW_2"
+  },
+  {
+    "name": "RALOS_RISE_SNOW",
+    "area": "VARLAMORE_SNOWY_MOUNTAINS",
+    "underlayIds": [ 58, 94 ],
+    "groundMaterial": "SNOW_1",
+    "shiftLightness": 10,
+    "replacements": {
+      "RALOS_RISE_SNOW_DARKER": "l < 55 && s == 0",
+      "OVERWORLD_GRASS_UNDERLAY": "l < 15 || s > 0"
+    }
+  },
+  {
+    "name": "RALOS_RISE_SNOW_DARKER",
+    "groundMaterial": "SNOW_1",
+    "shiftLightness": 0
+  },
+  {
+    "name": "RALOS_RISE_GRAY_PATH_BLENDING_FIX",
+    "area": "VARLAMORE_CAM_TORUM_ENTRANCE_PATH_BLENDING_FIX",
+    "overlayIds": [ 3 ],
+    "groundMaterial": "DIRT",
+    "shiftLightness": -8
+  },
+  {
+    "name": "RALOS_RISE_GRAY_PATH",
+    "area": "VARLAMORE_SNOWY_MOUNTAINS",
+    "overlayIds": [ 3 ],
+    "groundMaterial": "DIRT",
+    "blended": false
+  },
+  {
     "name": "OVERWORLD_GRASS_OVERLAY",
     "area": "OVERWORLD",
     "overlayIds": [
@@ -5921,39 +5990,6 @@
     }
   },
   {
-    "name": "VARLAMORE_TEMPLE_CRYPT_CENTER_BLENDING_FIX",
-    "area": "VARLAMORE_TEMPLE_CRYPT_CENTER",
-    "overlayIds": [ 11 ],
-    "blended": false,
-    "groundMaterial": "DIRT"
-  },
-  {
-    "name": "VARLAMORE_TEMPLE_CRYPT_BRICK_TILES",
-    "area": "VARLAMORE_TEMPLE_CRYPT_FAKE_BRICK_TILES",
-    "overlayIds": [ 139 ],
-    "groundMaterial": "LASSAR_UNDERCITY_TILES",
-    "blended": false
-  },
-  {
-    "name": "VARLAMORE_TEMPLE_CRYPT_SQUARE_TILES",
-    "area": "VARLAMORE_TEMPLE_CRYPT_FAKE_SQUARE_TILES",
-    "overlayIds": [ 139 ],
-    "groundMaterial": "MARBLE_2_SEMIGLOSS",
-    "blended": false
-  },
-  {
-    "name": "VARLAMORE_TEMPLE_CRYPT_MARBLE",
-    "area": "VARLAMORE_TEMPLE_CRYPT",
-    "overlayIds": [ 228 ],
-    "groundMaterial": "MARBLE_2_SEMIGLOSS"
-  },
-  {
-    "name": "VARLAMORE_TEMPLE_CRYPT_WATER",
-    "area": "VARLAMORE_TEMPLE_CRYPT",
-    "overlayIds": [ 181, 201 ],
-    "waterType": "DARK_BLUE_WATER"
-  },
-  {
     "name": "DEFENDER_OF_VARROCK_CAVE_FLOOR",
     "area": "DEFENDER_OF_VARROCK_DUNGEON",
     "underlayIds": [
@@ -6038,7 +6074,7 @@
   },
   {
     "name": "UNDERLAY_SNOW",
-    "area": "SNOW_REGIONS",
+    "area": "SNOWY_REGIONS",
     "underlayIds": [
       16,
       55,
