@@ -975,7 +975,7 @@ public enum Material {
 		consumer.accept(builder);
 		parent = builder.parent;
 		normalMap = builder.normalMap;
-		displacementMap = builder.displacementMap;
+		displacementMap = builder.displacementScale == 0 ? null : builder.displacementMap;
 		roughnessMap = builder.roughnessMap;
 		ambientOcclusionMap = builder.ambientOcclusionMap;
 		flowMap = builder.flowMap;
