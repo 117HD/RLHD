@@ -135,7 +135,7 @@ public class HDUtils {
 	 * Modulo that returns the answer with the same sign as the modulus.
 	 */
 	public static int mod(int x, int modulus) {
-		return x - (x / modulus) * modulus;
+		return ((x % modulus) + modulus) % modulus;
 	}
 
 	public static float clamp(float value, float min, float max) {
@@ -416,7 +416,7 @@ public class HDUtils {
 		var paint = tile.getSceneTilePaint();
 		var model = tile.getSceneTileModel();
 		if (paint != null) {
-			ColorUtils.unpackHslRaw(out, paint.getSwColor());
+			ColorUtils.unpackRawHsl(out, paint.getSwColor());
 		} else if (model != null) {
 			int faceCount = tile.getSceneTileModel().getFaceX().length;
 			final int[] faceColorsA = model.getTriangleColorA();
@@ -439,7 +439,7 @@ public class HDUtils {
 				}
 			}
 
-			ColorUtils.unpackHslRaw(out, hsl);
+			ColorUtils.unpackRawHsl(out, hsl);
 		}
 	}
 }
