@@ -36,6 +36,7 @@ public class Environment {
 	public boolean isUnderwater = false;
 	public boolean allowSkyOverride = true;
 	public boolean lightningEffects = false;
+	public boolean instantTransition = false;
 	@JsonAdapter(SrgbToLinearAdapter.class)
 	public float[] ambientColor = rgb("#ffffff");
 	public float ambientStrength = 1;
