@@ -597,6 +597,30 @@
     "fogDepth": 40
   },
   {
+    "area": "SOPHANEM_TEMPLE_BANK",
+    "ambientColor": "#b59b79",
+    "directionalColor": "#8a9eb6",
+    "directionalStrength": 0.75,
+    "sunAngles": [
+      80,
+      190
+    ],
+    "fogColor": "#190d02",
+    "fogDepth": 65
+  },
+  {
+    "area": "SCARAB_LAIR_TEMPLE",
+    "ambientColor": "#b59b79",
+    "directionalColor": "#8a9eb6",
+    "directionalStrength": 0.75,
+    "sunAngles": [
+      80,
+      190
+    ],
+    "fogColor": "#190d02",
+    "fogDepth": 40
+  },
+  {
     "area": "KALPHITE_LAIR",
     "ambientColor": "#aaafb6",
     "ambientStrength": 1.5,
