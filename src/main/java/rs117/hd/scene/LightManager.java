@@ -756,7 +756,7 @@ public class LightManager {
 		tracker.impostorIds = def.getImpostorIds();
 		if (tracker.impostorIds != null) {
 			tracker.impostorVarbit = def.getVarbitId();
-			tracker.impostorVarbit = def.getVarPlayerId();
+			tracker.impostorVarp = def.getVarPlayerId();
 			if (tracker.impostorVarbit != -1)
 				sceneContext.trackedVarbits.put(tracker.impostorVarbit, tracker);
 			if (tracker.impostorVarp != -1)
