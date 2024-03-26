@@ -883,7 +883,7 @@ public enum Material {
 		private float specularStrength;
 		private float specularGloss;
 		private float[] scrollSpeed = { 0, 0 };
-		private float[] textureScale = { 1, 1 };
+		private float[] textureScale = { 1, 1, 1 };
 		private List<Material> materialsToReplace = new ArrayList<>();
 		private Function<HdPlugin, Boolean> replacementCondition;
 
@@ -934,8 +934,9 @@ public enum Material {
 			return this;
 		}
 
-		Builder setTextureScale(float x, float y) {
-			this.textureScale = new float[] { x, y };
+		Builder setTextureScale(float... xyz) {
+			textureScale = Arrays.copyOf(textureScale, 3);
+			System.arraycopy(xyz, 0, textureScale, 0, Math.min(3, xyz.length));
 			return this;
 		}
 
