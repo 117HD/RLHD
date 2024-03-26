@@ -224,7 +224,7 @@ public class LightManager {
 
 			// Whatever the light is attached to is presumed to exist if it's not marked for removal yet
 			boolean parentExists = !light.markedForRemoval;
-			boolean hiddenTemporarily = light.hiddenTemporarily;
+			boolean hiddenTemporarily = false;
 			light.orientation = 0;
 
 			if (light.tileObject != null) {
@@ -396,7 +396,7 @@ public class LightManager {
 				}
 			}
 
-			if (!light.def.visibleFromOtherPlanes) {
+			if (!hiddenTemporarily && !light.def.visibleFromOtherPlanes) {
 				// Hide certain lights on planes lower than the player to prevent light 'leaking' through the floor
 				if (light.plane < client.getPlane() && light.belowFloor)
 					hiddenTemporarily = true;
