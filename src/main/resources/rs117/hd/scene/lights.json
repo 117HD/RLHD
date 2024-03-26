@@ -33304,5 +33304,17 @@
       46333,
       46336
     ]
+  },
+  {
+    "description": "Hunter's Guild ceiling lantern",
+    "radius": 600,
+    "strength": 5,
+    "color": "#fcb703",
+    "type": "FLICKER",
+    "range": 13,
+    "offset": [ 0, 406, 0 ],
+    "objectIds": [
+      51731
+    ]
   }
 ]

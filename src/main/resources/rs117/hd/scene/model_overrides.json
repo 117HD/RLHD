@@ -15715,5 +15715,11 @@
     "uvType": "BOX",
     "uvScale": 0.5,
     "uvOrientation": 530
+  },
+  {
+    "description": "Hunter's Guild ceiling lantern",
+    "objectIds": [ 51731 ],
+    "flatNormals": true,
+    "hideVanillaShadows": true
   }
 ]
