@@ -12471,16 +12471,6 @@
     "retainVanillaUvs": false
   },
   {
-    "description": "Objects - Hay - Mat",
-    "textureMaterial": "HD_HAY",
-    "objectIds": [
-      920
-    ],
-    "uvType": "BOX",
-    "uvOrientation": 512,
-    "retainVanillaUvs": false
-  },
-  {
     "description": "Objects - Hay - Haystack",
     "textureMaterial": "HD_HAY",
     "objectIds": [
