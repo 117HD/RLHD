@@ -3306,6 +3306,12 @@
     "uvOrientation": 256
   },
   {
+    "name": "Hunter Guild Water",
+    "area": "HUNTER_GUILD",
+    "overlayIds": [ 181 ],
+    "waterType": "PLAIN_WATER"
+  },
+  {
     "name": "STRANGLEWOOD_HILLSIDE",
     "area": "THE_STRANGLEWOOD_EXTENDED",
     "overlayIds": [

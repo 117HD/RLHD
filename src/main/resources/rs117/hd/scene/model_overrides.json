@@ -6834,6 +6834,8 @@
       5232,
       17876,
       17877,
+      42263,
+      42264,
       44744,
       44745,
       46408,
@@ -7913,7 +7915,11 @@
       37396,
       46818,
       46819,
-      46820
+      46820,
+      47161,
+      47162,
+      47163,
+      47164
     ],
     "uvType": "BOX",
     "uvScale": 0.33
@@ -15190,6 +15196,28 @@
     "uvScale": 0.86
   },
   {
+    "description": "Hunter Guild cave walls",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      42251,
+      42266,
+      42267,
+      42268,
+      42269,
+      42270,
+      42272,
+      50906,
+      50907,
+      50908,
+      50909,
+      50910,
+      50911,
+      50922
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.86
+  },
+  {
     "description": "Obelisk of Earth",
     "objectIds": [ 2150 ],
     "baseMaterial": "ROCK_5",
@@ -15687,5 +15715,11 @@
     "uvType": "BOX",
     "uvScale": 0.5,
     "uvOrientation": 530
+  },
+  {
+    "description": "Hunter Guild ceiling lantern",
+    "objectIds": [ 51731 ],
+    "flatNormals": true,
+    "hideVanillaShadows": true
   }
 ]
