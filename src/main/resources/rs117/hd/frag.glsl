@@ -56,6 +56,10 @@ uniform float lightningBrightness;
 uniform vec3 lightDir;
 uniform float shadowMaxBias;
 uniform int shadowsEnabled;
+uniform int filterTypePrevious;
+uniform int filterType;
+uniform float fadeProgress;
+
 uniform bool underwaterEnvironment;
 uniform bool underwaterCaustics;
 uniform vec3 underwaterCausticsColor;
@@ -97,6 +101,7 @@ vec2 worldUvs(float scale) {
 #include utils/displacement.glsl
 #include utils/shadows.glsl
 #include utils/water.glsl
+#include utils/filters.glsl
 
 void main() {
     vec3 downDir = vec3(0, -1, 0);
@@ -522,7 +527,7 @@ void main() {
     }
 
     outputColor.rgb = colorBlindnessCompensation(outputColor.rgb);
-
+    outputColor.rgb = applyFilter(outputColor.rgb, filterTypePrevious, fadeProgress);
     // apply fog
     if (!isUnderwater) {
         // ground fog
@@ -540,7 +545,10 @@ void main() {
         }
 
         outputColor.rgb = mix(outputColor.rgb, fogColor, combinedFog);
+
     }
 
     FragColor = outputColor;
 }
+
+

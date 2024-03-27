@@ -47,6 +47,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -78,6 +79,7 @@ import org.lwjgl.opengl.*;
 import org.lwjgl.system.Callback;
 import org.lwjgl.system.Configuration;
 import rs117.hd.config.AntiAliasingMode;
+import rs117.hd.config.Filters;
 import rs117.hd.config.SeasonalTheme;
 import rs117.hd.config.ShadingMode;
 import rs117.hd.config.ShadowMode;
@@ -358,6 +360,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private int uniLightDir;
 	private int uniShadowMaxBias;
 	private int uniShadowsEnabled;
+	private int uniFilterType;
+	private int uniFilterTypePrevious;
+	private int uniFilterFadeDuration;
+
 	private int uniUnderwaterEnvironment;
 	private int uniUnderwaterCaustics;
 	private int uniUnderwaterCausticsColor;
@@ -877,6 +883,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		uniLightDir = glGetUniformLocation(glSceneProgram, "lightDir");
 		uniShadowMaxBias = glGetUniformLocation(glSceneProgram, "shadowMaxBias");
 		uniShadowsEnabled = glGetUniformLocation(glSceneProgram, "shadowsEnabled");
+		uniFilterType = glGetUniformLocation(glSceneProgram, "filterType");
+		uniFilterTypePrevious = glGetUniformLocation(glSceneProgram, "filterTypePrevious");
+		uniFilterFadeDuration = glGetUniformLocation(glSceneProgram, "fadeProgress");
+
 		uniUnderwaterEnvironment = glGetUniformLocation(glSceneProgram, "underwaterEnvironment");
 		uniUnderwaterCaustics = glGetUniformLocation(glSceneProgram, "underwaterCaustics");
 		uniUnderwaterCausticsColor = glGetUniformLocation(glSceneProgram, "underwaterCausticsColor");
@@ -1752,6 +1762,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		frameTimer.end(Timer.UPLOAD_UI);
 	}
 
+	public int lastFilterType;
+
+	public long filterFadeDuration;
+
 	@Override
 	public void draw(int overlayColor) {
 		final GameState gameState = client.getGameState();
@@ -2042,7 +2056,21 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			glUniform1f(uniShadowMaxBias, maxBias / 10000f);
 
 			glUniform1i(uniShadowsEnabled, configShadowsEnabled ? 1 : 0);
+			glUniform1i(uniFilterType, config.effect().ordinal());
+			glUniform1i(uniFilterTypePrevious, lastFilterType);
 
+			if (filterFadeDuration != 0) {
+				long timeLeft = filterFadeDuration - System.currentTimeMillis();
+				if (timeLeft >= 0) {
+					glUniform1f(uniFilterFadeDuration, timeLeft);
+				} else {
+					filterFadeDuration = 0;
+				}
+			} else {
+				glUniform1f(uniFilterFadeDuration, 0);
+			}
+
+			//System.out.println("Fade Start: " + fadeStart + " Fade End: " + fadeEnd + " Current: " + System.currentTimeMillis());
 			// Calculate projection matrix
 			float[] projectionMatrix = Mat4.scale(client.getScale(), client.getScale(), 1);
 			Mat4.mul(projectionMatrix, Mat4.projection(viewportWidth, viewportHeight, NEAR_PLANE));
@@ -2456,6 +2484,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		// Exit if the plugin is off, the config is unrelated to the plugin, or if switching to a profile with the plugin turned off
 		if (!isActive || !event.getGroup().equals(CONFIG_GROUP) || !pluginManager.isPluginEnabled(this))
 			return;
+
+		if (Objects.equals(event.getKey(), KEY_HD_FILTER)) {
+			lastFilterType = Filters.valueOf(event.getOldValue()).ordinal();
+			filterFadeDuration = System.currentTimeMillis() + 3000;
+		}
 
 		pendingConfigChanges.add(event.getKey());
 	}
