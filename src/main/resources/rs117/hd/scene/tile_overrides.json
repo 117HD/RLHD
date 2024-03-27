@@ -4114,6 +4114,13 @@
     "waterType": "DARK_BLUE_WATER"
   },
   {
+    "name": "VARLAMORE_SAVANNA_HUNTER_PIT_TRAPS",
+    "area": "VARLAMORE_SAVANNA_HUNTER_PIT_TRAPS",
+    "overlayIds": [ 336 ],
+    "groundMaterial": "GRASS_1",
+    "blended": false
+  },
+  {
     "name": "RALOS_RISE_SNOW_PATH",
     "area": "VARLAMORE_SNOWY_MOUNTAINS",
     "overlayIds": [ 271 ],
