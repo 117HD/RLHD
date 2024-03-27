@@ -8141,7 +8141,7 @@
       16667,
       16668
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "uvOrientation": 512,
     "uvScale": 0.4
   },
@@ -9947,7 +9947,7 @@
     "objectIds": [
       17955
     ],
-    "uvType": "MODEL_XY",
+    "uvType": "BOX",
     "uvOrientation": 512,
     "uvScale": 0.77
   },
@@ -10084,7 +10084,7 @@
       18117,
       18118
     ],
-    "uvType": "MODEL_XZ"
+    "uvType": "BOX"
   },
   {
     "description": "Meiyerditch Wall Plank Roofs",
@@ -10095,7 +10095,7 @@
       17711,
       17712
     ],
-    "uvType": "MODEL_XZ"
+    "uvType": "BOX"
   },
   {
     "description": "Meiyerditch Wall Plank Floors - Kicked",
@@ -10103,8 +10103,9 @@
     "objectIds": [
       18036
     ],
-    "uvType": "MODEL_XZ",
-    "uvScale": 0.66
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "uvOrientation": 512
   },
   {
     "description": "Meiyerditch Plank Door",
@@ -10180,7 +10181,7 @@
       18063,
       18064
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "uvScale": 0.6
   },
   {
@@ -10189,7 +10190,7 @@
     "objectIds": [
       17896
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "uvOrientation": 512,
     "uvScale": 0.6
   },
@@ -10199,7 +10200,7 @@
     "objectIds": [
       32577
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "uvScale": 0.86
   },
   {
@@ -10209,7 +10210,7 @@
       17548,
       17549
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "uvOrientation": 512,
     "uvScale": 0.6
   },
@@ -10247,8 +10248,8 @@
       18107,
       18108
     ],
-    "uvType": "MODEL_XZ",
-    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvOrientationY": 512,
     "uvScale": 0.86
   },
   {
@@ -10269,7 +10270,7 @@
       17644,
       17645
     ],
-    "uvType": "MODEL_XY_MIRROR_A",
+    "uvType": "BOX",
     "uvOrientation": 512,
     "uvScale": 0.32
   },
@@ -10322,7 +10323,7 @@
       18049,
       18050
     ],
-    "uvType": "GEOMETRY"
+    "uvType": "BOX"
   },
   {
     "description": "Meiyerditch Myreque Hideout Brick Stone Walls",
