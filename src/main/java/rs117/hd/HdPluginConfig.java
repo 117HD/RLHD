@@ -651,7 +651,7 @@ public interface HdPluginConfig extends Config
 		position = 12,
 		section = environmentSettings
 	)
-	default Filters effect() {
+	default Filters filterType() {
 		return Filters.NONE;
 	}
 

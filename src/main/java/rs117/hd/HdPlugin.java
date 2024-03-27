@@ -764,6 +764,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.addInclude("VERSION_HEADER", versionHeader)
 			.define("UI_SCALING_MODE", config.uiScalingMode().getMode())
 			.define("COLOR_BLINDNESS", config.colorBlindness())
+			.define("FILTER_TYPE", config.filterType().ordinal())
 			.define("MATERIAL_CONSTANTS", () -> {
 				StringBuilder include = new StringBuilder();
 				for (Material m : Material.values())
@@ -877,9 +878,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		uniLightDir = glGetUniformLocation(glSceneProgram, "lightDir");
 		uniShadowMaxBias = glGetUniformLocation(glSceneProgram, "shadowMaxBias");
 		uniShadowsEnabled = glGetUniformLocation(glSceneProgram, "shadowsEnabled");
-		uniFilterType = glGetUniformLocation(glSceneProgram, "filterType");
-		uniFilterTypePrevious = glGetUniformLocation(glSceneProgram, "filterTypePrevious");
-		uniFilterFadeDuration = glGetUniformLocation(glSceneProgram, "fadeProgress");
+
+		if (config.filterType() != Filters.NONE) {
+			uniFilterType = glGetUniformLocation(glSceneProgram, "filterType");
+			uniFilterTypePrevious = glGetUniformLocation(glSceneProgram, "filterTypePrevious");
+			uniFilterFadeDuration = glGetUniformLocation(glSceneProgram, "fadeProgress");
+		}
 
 		uniUnderwaterEnvironment = glGetUniformLocation(glSceneProgram, "underwaterEnvironment");
 		uniUnderwaterCaustics = glGetUniformLocation(glSceneProgram, "underwaterCaustics");
@@ -2041,19 +2045,22 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			glUniform1f(uniShadowMaxBias, maxBias / 10000f);
 
 			glUniform1i(uniShadowsEnabled, configShadowsEnabled ? 1 : 0);
-			glUniform1i(uniFilterType, config.effect().ordinal());
-			glUniform1i(uniFilterTypePrevious, lastFilterType);
+			if (config.filterType() != Filters.NONE) {
+				glUniform1i(uniFilterType, config.filterType().ordinal());
+				glUniform1i(uniFilterTypePrevious, lastFilterType);
 
-			if (filterFadeDuration != 0) {
-				long timeLeft = filterFadeDuration - System.currentTimeMillis();
-				if (timeLeft >= 0) {
-					glUniform1f(uniFilterFadeDuration, timeLeft);
+				if (filterFadeDuration != 0) {
+					long timeLeft = filterFadeDuration - System.currentTimeMillis();
+					if (timeLeft >= 0) {
+						glUniform1f(uniFilterFadeDuration, timeLeft);
+					} else {
+						filterFadeDuration = 0;
+					}
 				} else {
-					filterFadeDuration = 0;
+					glUniform1f(uniFilterFadeDuration, 0);
 				}
-			} else {
-				glUniform1f(uniFilterFadeDuration, 0);
 			}
+
 
 			//System.out.println("Fade Start: " + fadeStart + " Fade End: " + fadeEnd + " Current: " + System.currentTimeMillis());
 			// Calculate projection matrix
@@ -2521,6 +2528,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 							case KEY_PARALLAX_OCCLUSION_MAPPING:
 							case KEY_UI_SCALING_MODE:
 							case KEY_VANILLA_COLOR_BANDING:
+							case KEY_HD_FILTER:
 								recompilePrograms = true;
 								break;
 							case KEY_SHADOW_MODE:

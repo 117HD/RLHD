@@ -1,5 +1,9 @@
 #pragma once
 
+uniform int filterTypePrevious;
+uniform int filterType;
+uniform float fadeProgress;
+
 #define NONE 0
 #define GREYSCALE 1
 #define SEPIA 2
@@ -59,7 +63,7 @@ vec3 getFilter(int index, vec3 color) {
     return color;
 }
 
-vec3 applyFilter(vec3 color, int filterTypePrevious, float fadeProgress) {
+vec3 applyFilter(vec3 color) {
     if(filterType == NONE) {
         return color;
     }
