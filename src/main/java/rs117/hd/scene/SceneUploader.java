@@ -81,9 +81,16 @@ class SceneUploader {
 	@Inject
 	private ModelPusher modelPusher;
 
+	@Inject
+	private AreaManager areaManager;
+
 	public void upload(SceneContext sceneContext) {
 		Stopwatch stopwatch = Stopwatch.createStarted();
+		prepare(sceneContext);
+		stopwatch.stop();
+		log.info("Scene preparation time: {}", stopwatch);
 
+		stopwatch = Stopwatch.createStarted();
 		for (int z = 0; z < Constants.MAX_Z; ++z) {
 			for (int x = 0; x < Constants.EXTENDED_SCENE_SIZE; ++x) {
 				for (int y = 0; y < Constants.EXTENDED_SCENE_SIZE; ++y) {
@@ -107,6 +114,28 @@ class SceneUploader {
 				) / 1e6
 			)
 		);
+	}
+
+	private void prepare(SceneContext sceneContext)
+	{
+		if (sceneContext.scene.isInstance() || !plugin.config.hideUnrelatedMaps())
+		{
+			return;
+		}
+
+		for (int z = 0; z < Constants.MAX_Z; ++z) {
+			for (int x = 0; x < Constants.EXTENDED_SCENE_SIZE; ++x) {
+				for (int y = 0; y < Constants.EXTENDED_SCENE_SIZE; ++y) {
+					Tile tile = sceneContext.scene.getExtendedTiles()[z][x][y];
+					if (tile != null) {
+						if (areaManager.shouldHideTile(tile.getWorldLocation().getX(), tile.getWorldLocation().getY())) {
+							sceneContext.scene.removeTile(tile);
+						}
+					}
+				}
+			}
+		}
+
 	}
 
 	public void fillGaps(SceneContext sceneContext) {

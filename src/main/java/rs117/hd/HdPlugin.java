@@ -96,6 +96,7 @@ import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.Template;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
+import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.LightManager;
 import rs117.hd.scene.ModelOverrideManager;
@@ -223,6 +224,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Getter
 	private Gson gson;
+
+	@Inject
+	private AreaManager areaManager;
 
 	public GLCapabilities glCaps;
 	private Canvas canvas;
@@ -585,6 +589,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				modelOverrideManager.startUp();
 				modelPusher.startUp();
 				lightManager.startUp();
+				areaManager.startUp();
 				environmentManager.startUp();
 
 				isActive = true;

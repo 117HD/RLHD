@@ -1,0 +1,2216 @@
+[
+  {
+    "description": "Prifddinas Instance",
+    "aabbs": [
+      [ 3135, 6207, 3391, 5952 ]
+    ]
+  },
+  {
+    "description": "Lms Arena Wild Varrock",
+    "aabbs": [
+      [ 3455, 6206, 3646, 6016 ]
+    ]
+  },
+  {
+    "description": "Lms Arena Wild Varrock",
+    "aabbs": [
+      [ 3647, 6142, 3774, 6016 ]
+    ]
+  },
+  {
+    "description": "Last Man Standing",
+    "aabbs": [
+      [ 3583, 5696, 3455, 5823 ],
+      [ 3455, 5760, 3392, 5951 ],
+      [ 3519, 5951, 3456, 5824 ]
+    ]
+  },
+  {
+    "description": "Ardougne Instance",
+    "aabbs": [
+      [ 3327, 5951, 3455, 5889 ]
+    ]
+  },
+  {
+    "description": "Chambers Of Xeric",
+    "aabbs": [
+      [ 3337, 5760, 3361, 5729 ]
+    ]
+  },
+  {
+    "description": "Chambers Of Xeric",
+    "aabbs": [
+      [ 3337, 5727, 3360, 5697 ]
+    ]
+  },
+  {
+    "description": "Chambers Of Xeric",
+    "aabbs": [
+      [ 3320, 5733, 3298, 5761 ]
+    ]
+  },
+  {
+    "description": "Chambers Of Xeric",
+    "aabbs": [
+      [ 3321, 5700, 3298, 5730 ]
+    ]
+  },
+  {
+    "description": "Chambers Of Xeric",
+    "aabbs": [
+      [ 3286, 5701, 3262, 5718 ]
+    ]
+  },
+  {
+    "description": "Chambers Of Xeric",
+    "aabbs": [
+      [ 3261, 5753, 3285, 5735 ]
+    ]
+  },
+  {
+    "region": 12889
+  },
+  {
+    "description": "Deaths Office",
+    "region": 12633
+  },
+  {
+    "region": 12126
+  },
+  {
+    "region": 12124
+  },
+  {
+    "region": 10842
+  },
+  {
+    "aabbs": [
+      [ 2562, 6207, 2682, 6084 ]
+    ]
+  },
+  {
+    "aabbs": [
+      [ 2431, 6208, 2494, 6080 ]
+    ]
+  },
+  {
+    "description": "Kourend Instance",
+    "aabbs": [
+      [ 2111, 6151, 2047, 6184 ]
+    ]
+  },
+  {
+    "region": 6997
+  },
+  {
+    "region": 6489
+  },
+  {
+    "description": "Ds2 Ships",
+    "region": 6745
+  },
+  {
+    "region": 6488
+  },
+  {
+    "region": 6744
+  },
+  {
+    "region": 6487
+  },
+  {
+    "region": 6743
+  },
+  {
+    "region": 6486
+  },
+  {
+    "region": 6742
+  },
+  {
+    "description": "Gnome Stronghold Surface Instance",
+    "aabbs": [
+      [ 1919, 5631, 2047, 5504 ]
+    ]
+  },
+  {
+    "aabbs": [
+      [ 2066, 5689, 2170, 5635 ]
+    ]
+  },
+  {
+    "description": "Guardians of the Rift 1",
+    "aabbs": [
+      [ 2432, 5759, 2495, 5664 ]
+    ]
+  },
+  {
+    "description": "Guardians of the Rift 2",
+    "aabbs": [
+      [ 2367, 5695, 2431, 5599 ]
+    ]
+  },
+  {
+    "description": "Ruins of Camdozaal",
+    "aabbs": [
+      [ 2367, 5695, 2431, 5599 ],
+      [ 2367, 5695, 2431, 5599 ],
+      [ 2367, 5695, 2431, 5599 ]
+    ]
+  },
+  {
+    "description": "Ourania Cave",
+    "region": 12119
+  },
+  {
+    "description": "Sorceress Garden",
+    "region": 11605
+  },
+  {
+    "description": "",
+    "region": 12115
+  },
+  {
+    "description": "Tolna Dungeon Fear",
+    "aabbs": [
+      [ 3008, 5247, 3040, 5216 ]
+    ]
+  },
+  {
+    "description": "Tolna Dungeon Fear",
+    "aabbs": [
+      [ 3041, 5216, 3070, 5247 ]
+    ]
+  },
+  {
+    "description": "Tolna Dungeon Confusion",
+    "aabbs": [
+      [ 3041, 5215, 3070, 5184 ]
+    ]
+  },
+  {
+    "description": "Tolna Dungeon Confusion",
+    "aabbs": [
+      [ 3008, 5215, 3040, 5184 ]
+    ]
+  },
+  {
+    "description": "Tolna Dungeon Fear",
+    "aabbs": [
+      [ 3072, 5215, 3101, 5184 ]
+    ]
+  },
+  {
+    "description": "God Wars Dungeon",
+    "aabbs": [
+      [ 2847, 5233, 2943, 5186 ]
+    ]
+  },
+  {
+    "description": "Dorgesh-Kaan",
+    "aabbs": [
+      [ 2688, 5376, 2750, 5252 ]
+    ]
+  },
+  {
+    "region": 10833
+  },
+  {
+    "region": 8789
+  },
+  {
+    "region": 7509
+  },
+  {
+    "region": 7508
+  },
+  {
+    "description": "Mouse Hole",
+    "region": 9046
+  },
+  {
+    "region": 9558
+  },
+  {
+    "description": "Mouse Hole",
+    "region": 9814
+  },
+  {
+    "description": "RAIDS",
+    "aabbs": [
+      [ 3263, 5469, 3291, 5440 ]
+    ]
+  },
+  {
+    "description": "RAIDS",
+    "aabbs": [
+      [ 3295, 5472, 3321, 5440 ]
+    ]
+  },
+  {
+    "description": "RAIDS",
+    "aabbs": [
+      [ 3330, 5470, 3359, 5440 ]
+    ]
+  },
+  {
+    "description": "RAIDS",
+    "aabbs": [
+      [ 3263, 5393, 3268, 5388 ],
+      [ 3269, 5405, 3292, 5376 ]
+    ]
+  },
+  {
+    "description": "RAIDS",
+    "aabbs": [
+      [ 3297, 5408, 3325, 5343 ]
+    ]
+  },
+  {
+    "description": "RAIDS",
+    "aabbs": [
+      [ 3328, 5408, 3359, 5376 ]
+    ]
+  },
+  {
+    "description": "RAIDS",
+    "aabbs": [
+      [ 3328, 5342, 3360, 5311 ]
+    ]
+  },
+  {
+    "description": "RAIDS",
+    "aabbs": [
+      [ 3328, 5371, 3361, 5343 ]
+    ]
+  },
+  {
+    "description": "RAIDS",
+    "aabbs": [
+      [ 3263, 5342, 3294, 5312 ]
+    ]
+  },
+  {
+    "description": "RAIDS",
+    "aabbs": [
+      [ 3263, 5375, 3294, 5343 ]
+    ]
+  },
+  {
+    "description": "RAIDS",
+    "aabbs": [
+      [ 3297, 5342, 3326, 5310 ]
+    ]
+  },
+  {
+    "description": "RAIDS",
+    "aabbs": [
+      [ 3263, 5310, 3294, 5279 ]
+    ]
+  },
+  {
+    "description": "RAIDS",
+    "aabbs": [
+      [ 3296, 5309, 3326, 5278 ]
+    ]
+  },
+  {
+    "description": "RAIDS",
+    "aabbs": [
+      [ 3328, 5310, 3360, 5280 ]
+    ]
+  },
+  {
+    "description": "RAIDS",
+    "aabbs": [
+      [ 3330, 5278, 3359, 5248 ]
+    ]
+  },
+  {
+    "description": "RAIDS",
+    "aabbs": [
+      [ 3262, 5278, 3295, 5247 ]
+    ]
+  },
+  {
+    "description": "RAIDS",
+    "aabbs": [
+      [ 3295, 5278, 3325, 5248 ]
+    ]
+  },
+  {
+    "description": "RAIDS",
+    "aabbs": [
+      [ 3295, 5278, 3325, 5184 ]
+    ]
+  },
+  {
+    "description": "RAIDS",
+    "aabbs": [
+      [ 3264, 5247, 3291, 5214 ]
+    ]
+  },
+  {
+    "description": "RAIDS",
+    "aabbs": [
+      [ 3262, 5211, 3290, 5183 ]
+    ]
+  },
+  {
+    "description": "RAIDS",
+    "aabbs": [
+      [ 3329, 5244, 3361, 5213 ]
+    ]
+  },
+  {
+    "description": "RAIDS",
+    "aabbs": [
+      [ 3328, 5211, 3360, 5185 ]
+    ]
+  },
+  {
+    "description": "RAIDS",
+    "aabbs": [
+      [ 3266, 5181, 3291, 5151 ]
+    ]
+  },
+  {
+    "description": "RAIDS",
+    "aabbs": [
+      [ 3294, 5182, 3326, 5151 ]
+    ]
+  },
+  {
+    "description": "RAIDS",
+    "aabbs": [
+      [ 3264, 5149, 3291, 5120 ]
+    ]
+  },
+  {
+    "description": "TzHaar Region",
+    "aabbs": [
+      [ 2372, 5183, 2431, 5125 ],
+      [ 2432, 5183, 2558, 5056 ]
+    ]
+  },
+  {
+    "description": "Fight Pits",
+    "region": 9551
+  },
+  {
+    "description": "Witchaven Dungeon",
+    "region": 9295
+  },
+  {
+    "description": "Train Tunnel",
+    "aabbs": [
+      [ 2508, 5630, 2525, 5529 ]
+    ]
+  },
+  {
+    "description": "Goblin Village Instance",
+    "region": 9812
+  },
+  {
+    "description": "The Inferno",
+    "region": 9043
+  },
+  {
+    "description": "SoS Pestilence",
+    "region": 8530
+  },
+  {
+    "description": "SoS Famine",
+    "region": 8017
+  },
+  {
+    "description": "SoS War",
+    "region": 7505
+  },
+  {
+    "description": "SoS Death",
+    "region": 7297
+  },
+  {
+    "description": "Elemental Workshop - Basement",
+    "region": 7760
+  },
+  {
+    "description": "Mole Lair",
+    "aabbs": [
+      [ 1728, 5250, 1788, 5131 ]
+    ]
+  },
+  {
+    "description": "Ancient Cavern Upper",
+    "region": 6995
+  },
+  {
+    "description": "Ancient Cavern 2",
+    "region": 6483
+  },
+  {
+    "description": "Braindeath Island",
+    "aabbs": [
+      [ 2175, 5042, 2112, 5183 ],
+      [ 2176, 5183, 2239, 5120 ]
+    ]
+  },
+  {
+    "description": "Trekking",
+    "aabbs": [
+      [ 2441, 5047, 2476, 5014 ]
+    ]
+  },
+  {
+    "description": "Trekking",
+    "aabbs": [
+      [ 2399, 5054, 2428, 5024 ]
+    ]
+  },
+  {
+    "description": "Trekking",
+    "aabbs": [
+      [ 2385, 5024, 2409, 5000 ]
+    ]
+  },
+  {
+    "description": "Trekking",
+    "aabbs": [
+      [ 2371, 5054, 2396, 5025 ]
+    ]
+  },
+  {
+    "description": "Trekking",
+    "aabbs": [
+      [ 2334, 5053, 2365, 5025 ]
+    ]
+  },
+  {
+    "description": "Trekking",
+    "aabbs": [
+      [ 2305, 5053, 2330, 5027 ]
+    ]
+  },
+  {
+    "description": "Trekking",
+    "aabbs": [
+      [ 2320, 5023, 2342, 5000 ]
+    ]
+  },
+  {
+    "description": "Trekking",
+    "aabbs": [
+      [ 2270, 5052, 2296, 5025 ]
+    ]
+  },
+  {
+    "description": "Trekking",
+    "aabbs": [
+      [ 2244, 5053, 2267, 5026 ]
+    ]
+  },
+  {
+    "description": "Trekking",
+    "aabbs": [
+      [ 2256, 5023, 2279, 5002 ]
+    ]
+  },
+  {
+    "description": "Trekking",
+    "aabbs": [
+      [ 2206, 5053, 2233, 5027 ]
+    ]
+  },
+  {
+    "description": "Trekking",
+    "aabbs": [
+      [ 2179, 5053, 2202, 5027 ]
+    ]
+  },
+  {
+    "description": "Trekking",
+    "aabbs": [
+      [ 2189, 5024, 2214, 5002 ]
+    ]
+  },
+  {
+    "description": "Draynor Instance",
+    "aabbs": [
+      [ 2112, 4927, 2156, 4895 ]
+    ]
+  },
+  {
+    "description": "Trekking",
+    "aabbs": [
+      [ 2077, 5049, 2104, 5031 ]
+    ]
+  },
+  {
+    "description": "Trekking",
+    "aabbs": [
+      [ 2079, 5025, 2099, 5001 ]
+    ]
+  },
+  {
+    "description": "Trekking",
+    "aabbs": [
+      [ 2054, 5015, 2066, 4998 ]
+    ]
+  },
+  {
+    "description": "Trekking",
+    "aabbs": [
+      [ 2056, 5043, 2068, 5026 ]
+    ]
+  },
+  {
+    "description": "Trekking",
+    "aabbs": [
+      [ 2179, 5053, 2202, 5027 ]
+    ]
+  },
+  {
+    "description": "Trekking",
+    "aabbs": [
+      [ 2047, 5048, 2055, 5039 ]
+    ]
+  },
+  {
+    "description": "Trekking",
+    "aabbs": [
+      [ 2014, 5051, 2041, 5026 ]
+    ]
+  },
+  {
+    "description": "Trekking",
+    "aabbs": [
+      [ 1999, 5023, 2022, 5003 ]
+    ]
+  },
+  {
+    "description": "Trekking",
+    "aabbs": [
+      [ 1987, 5052, 2010, 5026 ]
+    ]
+  },
+  {
+    "aabbs": [
+      [ 1963, 5054, 1981, 5037 ]
+    ]
+  },
+  {
+    "description": "Random Event Gravedigger",
+    "aabbs": [
+      [ 1919, 5055, 1958, 5031 ],
+      [ 1918, 5030, 1984, 4991 ]
+    ]
+  },
+  {
+    "description": "Random Event Classroom",
+    "aabbs": [
+      [ 1875, 5038, 1897, 5011 ]
+    ]
+  },
+  {
+    "description": "Tai Bwo Wannai Instance",
+    "aabbs": [
+      [ 1951, 5344, 1983, 5312 ]
+    ]
+  },
+  {
+    "aabbs": [
+      [ 1989, 5099, 2027, 5078 ],
+      [ 2010, 5077, 2032, 5055 ]
+    ]
+  },
+  {
+    "description": "Blast Furnace",
+    "region": 7757
+  },
+  {
+    "aabbs": [
+      [ 1854, 4671, 2047, 4608 ]
+    ]
+  },
+  {
+    "aabbs": [
+      [ 1925, 4717, 1966, 4678 ]
+    ]
+  },
+  {
+    "description": "Waterbirth Dungeon (2)",
+    "aabbs": [
+      [ 1872, 4415, 1919, 4351 ],
+      [ 1919, 4376, 1968, 4351 ]
+    ]
+  },
+  {
+    "description": "Zanaris",
+    "aabbs": [
+      [ 2368, 4479, 2495, 4415 ],
+      [ 2373, 4414, 2422, 4398 ],
+      [ 2381, 4397, 2414, 4390 ],
+      [ 2398, 4389, 2426, 4367 ]
+    ]
+  },
+  {
+    "description": "Zanaris",
+    "region": 9285
+  },
+  {
+    "description": "Zanaris",
+    "aabbs": [
+      [ 2399, 4366, 2401, 4355 ],
+      [ 2381, 4390, 2398, 4355 ],
+      [ 2368, 4398, 2380, 4355 ]
+    ]
+  },
+  {
+    "region": 9796
+  },
+  {
+    "region": 8516
+  },
+  {
+    "region": 9027
+  },
+  {
+    "region": 9538
+  },
+  {
+    "description": "Keep Le Faye",
+    "region": 6722
+  },
+  {
+    "region": 7234
+  },
+  {
+    "description": "Region 7749",
+    "aabbs": [
+      [ 1860, 4250, 1872, 4231 ]
+    ]
+  },
+  {
+    "description": "Region 7749",
+    "aabbs": [
+      [ 1877, 4286, 1916, 4256 ]
+    ]
+  },
+  {
+    "description": "Region 7749",
+    "aabbs": [
+      [ 1921, 4478, 1933, 4463 ]
+    ]
+  },
+  {
+    "description": "Region 7749",
+    "aabbs": [
+      [ 1946, 4479, 1963, 4463 ]
+    ]
+  },
+  {
+    "description": "Region 7749",
+    "aabbs": [
+      [ 1967, 4473, 1981, 4453 ]
+    ]
+  },
+  {
+    "description": "Region 7749",
+    "aabbs": [
+      [ 1923, 4460, 1942, 4447 ]
+    ]
+  },
+  {
+    "description": "Region 7749",
+    "aabbs": [
+      [ 1950, 4455, 1966, 4442 ]
+    ]
+  },
+  {
+    "description": "Region 7749",
+    "aabbs": [
+      [ 1966, 4438, 1979, 4419 ]
+    ]
+  },
+  {
+    "description": "Region 7749",
+    "aabbs": [
+      [ 1940, 4436, 1955, 4419 ]
+    ]
+  },
+  {
+    "description": "Region 7749",
+    "aabbs": [
+      [ 1921, 4441, 1932, 4421 ]
+    ]
+  },
+  {
+    "description": "Puro-Puro",
+    "region": 10307
+  },
+  {
+    "description": "Waterbirth Lighthouse - Instance",
+    "aabbs": [
+      [ 2414, 4624, 2431, 4608 ],
+      [ 2432, 4624, 2495, 4544 ]
+    ]
+  },
+  {
+    "description": "Viyeldi Caves",
+    "region": 9545
+  },
+  {
+    "description": "Cosmic Entitys Plane",
+    "region": 8267
+  },
+  {
+    "region": 8523
+  },
+  {
+    "description": "Cosmic Altar",
+    "region": 8779
+  },
+  {
+    "description": "Death Altar",
+    "region": 9035
+  },
+  {
+    "description": "Chaos Altar",
+    "region": 9291
+  },
+  {
+    "description": "Law Altar",
+    "region": 9803
+  },
+  {
+    "description": "Evil Bobs Island",
+    "aabbs": [
+      [ 2495, 4800, 2559, 4748 ]
+    ]
+  },
+  {
+    "description": "Mage Arena Bank",
+    "aabbs": [
+      [ 2526, 4726, 2552, 4707 ]
+    ]
+  },
+  {
+    "aabbs": [
+      [ 2496, 4730, 2520, 4683 ]
+    ]
+  },
+  {
+    "region": 10056
+  },
+  {
+    "description": "Fisher Kings Realm",
+    "aabbs": [
+      [ 2575, 4799, 2815, 4655 ],
+      [ 2623, 4654, 2815, 4624 ],
+      [ 2688, 4608, 2622, 4623 ]
+    ]
+  },
+  {
+    "region": 10055
+  },
+  {
+    "description": "Ship Yard Instance ",
+    "aabbs": [
+      [ 2560, 4607, 2641, 4544 ]
+    ]
+  },
+  {
+    "description": "Misthalin Mystery Manor",
+    "aabbs": [
+      [ 1599, 4863, 1727, 4781 ]
+    ]
+  },
+  {
+    "aabbs": [
+      [ 2643, 4607, 2686, 4545 ]
+    ]
+  },
+  {
+    "aabbs": [
+      [ 2821, 4601, 2847, 4575 ]
+    ]
+  },
+  {
+    "aabbs": [
+      [ 2847, 4575, 2872, 4551 ]
+    ]
+  },
+  {
+    "region": 10310
+  },
+  {
+    "region": 10566
+  },
+  {
+    "region": 10309
+  },
+  {
+    "region": 10823
+  },
+  {
+    "region": 11079
+  },
+  {
+    "region": 10822
+  },
+  {
+    "region": 11078
+  },
+  {
+    "region": 10821
+  },
+  {
+    "region": 11077
+  },
+  {
+    "description": "Waterbirth Dungeon (6)",
+    "region": 11589
+  },
+  {
+    "description": "Waterbirth Dungeon (6) - Instance",
+    "region": 11589
+  },
+  {
+    "description": "Creature Creation",
+    "region": 12100
+  },
+  {
+    "description": "Essence Mine",
+    "region": 11595
+  },
+  {
+    "description": "The Abyss",
+    "aabbs": [
+      [ 2944, 4927, 3135, 4736 ]
+    ]
+  },
+  {
+    "description": "Blood Altar",
+    "aabbs": [
+      [ 3202, 4802, 3260, 4860 ]
+    ],
+    "horizonTile": {
+      "waterType": "BLOOD",
+      "waterHeight": -120,
+      "waterDepth": 335,
+      "material": "DIRT_1",
+      "materialBelow": "DIRT_1"
+    }
+  },
+  {
+    "aabbs": [
+      [ 3263, 4863, 3390, 4735 ]
+    ]
+  },
+  {
+    "region": 12619
+  },
+  {
+    "region": 12105
+  },
+  {
+    "description": "Yanille Watertower Topfloor",
+    "region": 11593
+  },
+  {
+    "description": "Body Altar",
+    "aabbs": [
+      [ 2501, 4859, 2540, 4819 ]
+    ]
+  },
+  {
+    "description": "Fire Altar",
+    "aabbs": [
+      [ 2553, 4863, 2623, 4804 ]
+    ]
+  },
+  {
+    "description": "Earth Altar",
+    "region": 10571
+  },
+  {
+    "description": "Water Altar ",
+    "region": 10827
+  },
+  {
+    "description": "Mind Altar",
+    "region": 11083
+  },
+  {
+    "description": "Air Altar ",
+    "region": 11339
+  },
+  {
+    "description": "Mysterious Maze",
+    "region": 11591
+  },
+  {
+    "region": 12102
+  },
+  {
+    "aabbs": [
+      [ 3161, 4641, 3135, 4672 ]
+    ]
+  },
+  {
+    "description": "Tarns Lair",
+    "aabbs": [
+      [ 3175, 4638, 3199, 4609 ]
+    ]
+  },
+  {
+    "region": 12615
+  },
+  {
+    "region": 13128
+  },
+  {
+    "description": "Clan Wars",
+    "aabbs": [
+      [ 3392, 4799, 3455, 4672 ]
+    ]
+  },
+  {
+    "description": "Falador Garden Instance",
+    "aabbs": [
+      [ 3456, 4783, 3527, 4736 ]
+    ]
+  },
+  {
+    "description": "Deaths Office",
+    "aabbs": [
+      [ 3135, 5112, 3200, 5000 ]
+    ]
+  },
+  {
+    "description": "Deaths Office",
+    "aabbs": [
+      [ 3135, 4999, 3199, 4928 ]
+    ]
+  },
+  {
+    "region": 13133
+  },
+  {
+    "description": "Chambers Of Xeric",
+    "aabbs": [
+      [ 3264, 5119, 3327, 4992 ]
+    ]
+  },
+  {
+    "region": 13647
+  },
+  {
+    "region": 13646
+  },
+  {
+    "region": 13645
+  },
+  {
+    "region": 13644
+  },
+  {
+    "description": "Lumbridge - Instance",
+    "region": 13643
+  },
+  {
+    "aabbs": [
+      [ 3648, 6143, 3774, 6016 ]
+    ]
+  },
+  {
+    "description": "Underground Pass - Bottom",
+    "aabbs": [
+      [ 2431, 6207, 2495, 6080 ]
+    ]
+  },
+  {
+    "description": "Elf lands - Instance",
+    "aabbs": [
+      [ 2688, 6207, 2879, 6016 ]
+    ]
+  },
+  {
+    "description": "Elf Camp - Instance",
+    "aabbs": [
+      [ 2880, 6207, 2943, 6144 ]
+    ]
+  },
+  {
+    "description": "Sote Fragment Of Seren Arena",
+    "region": 13404
+  },
+  {
+    "region": 13148
+  },
+  {
+    "description": "Sote Temple Of Light Seren Cutscene",
+    "region": 12892
+  },
+  {
+    "region": 12636
+  },
+  {
+    "description": "Theatre Of Blood",
+    "aabbs": [
+      [ 3153, 4464, 3199, 4421 ],
+      [ 3200, 4463, 3226, 4444 ]
+    ]
+  },
+  {
+    "description": "Theatre Of Blood",
+    "region": 13125
+  },
+  {
+    "description": "Tob Room Xarpus",
+    "region": 12612
+  },
+  {
+    "description": "Tob Room Verzik",
+    "region": 12611
+  },
+  {
+    "description": "Tob Room Vault",
+    "region": 12867
+  },
+  {
+    "description": "Tob Room Sotetseg",
+    "region": 13123
+  },
+  {
+    "region": 13122
+  },
+  {
+    "region": 14916
+  },
+  {
+    "region": 14915
+  },
+  {
+    "description": "Land of Goblins Quest Area ",
+    "region": 15428
+  },
+  {
+    "description": "Guardian's of the Rift - Game Area",
+    "aabbs": [
+      [ 3550, 9545, 3674, 9433 ]
+    ]
+  },
+  {
+    "aabbs": [
+      [ 3714, 9469, 3838, 9409 ],
+      [ 3714, 9408, 3770, 9348 ]
+    ]
+  },
+  {
+    "region": 13972
+  },
+  {
+    "aabbs": [
+      [ 3364, 9278, 3444, 9217 ]
+    ]
+  },
+  {
+    "aabbs": [
+      [ 3775, 9152, 3904, 9023 ]
+    ]
+  },
+  {
+    "aabbs": [
+      [ 3965, 9152, 4097, 9022 ]
+    ]
+  },
+  {
+    "aabbs": [
+      [ 4034, 9014, 4091, 8968 ]
+    ]
+  },
+  {
+    "aabbs": [
+      [ 3975, 9011, 4024, 8967 ]
+    ]
+  },
+  {
+    "aabbs": [
+      [ 4157, 9153, 4289, 9021 ]
+    ]
+  },
+  {
+    "aabbs": [
+      [ 3584, 9150, 3710, 8961 ]
+    ]
+  },{
+  "aabbs": [
+    [
+      3594,
+      8936,
+      3627,
+      8902
+    ]
+  ],
+  "description": ""
+},
+  {
+    "aabbs": [
+      [ 3647, 8767, 3775, 8576 ]
+    ]
+  },
+  {
+    "region": 12425
+  },
+  {
+    "region": 12424
+  },
+  {
+    "region": 12423
+  },
+  {
+    "region": 12422
+  },
+  {
+    "region": 12681
+  },
+  {
+    "region": 12680
+  },
+  {
+    "region": 12679
+  },
+  {
+    "region": 12678
+  },
+  {
+    "region": 12937
+  },
+  {
+    "region": 12936
+  },
+  {
+    "region": 12935
+  },
+  {
+    "region": 12934
+  },
+  {
+    "region": 13193
+  },
+  {
+    "region": 13192
+  },
+  {
+    "region": 13191
+  },
+  {
+    "region": 13190
+  },
+  {
+    "region": 13449
+  },
+  {
+    "region": 13448
+  },
+  {
+    "region": 13447
+  },
+  {
+    "region": 13446
+  },
+  {
+    "region": 13705
+  },
+  {
+    "region": 13704
+  },
+  {
+    "region": 13703
+  },
+  {
+    "region": 13702
+  },
+  {
+    "region": 13961
+  },
+  {
+    "region": 13960
+  },
+  {
+    "region": 13959
+  },
+  {
+    "region": 13958
+  },
+  {
+    "region": 14217
+  },
+  {
+    "region": 14216
+  },
+  {
+    "region": 14215
+  },
+  {
+    "region": 14214
+  },
+  {
+    "region": 13199
+  },
+  {
+    "region": 13457
+  },
+  {
+    "region": 12945
+  },
+  {
+    "description": "Enakhras Temple Bottom Floor",
+    "region": 12433
+  },
+  {
+    "description": "Smoke Dungeon",
+    "aabbs": [
+      [ 3165, 9407, 3327, 9345 ]
+    ]
+  },
+  {
+    "region": 13972
+  },
+  {
+    "description": "Elid Cave",
+    "aabbs": [
+      [ 3333, 9595, 3383, 9532 ]
+    ]
+  },
+  {
+    "region": 13717
+  },
+  {
+    "description": "Elid Cave",
+    "aabbs": [
+      [ 3353, 9472, 3265, 9531 ],
+      [ 3329, 9532, 3265, 9551 ]
+    ]
+  },
+  {
+    "description": "Smoke Dungeon",
+    "aabbs": [
+      [ 3262, 9471, 3327, 9409 ]
+    ]
+  },
+  {
+    "region": 11666
+  },
+  {
+    "description": "Ah Za Rhoon",
+    "region": 11665
+  },
+  {
+    "region": 11410
+  },
+  {
+    "description": "Cairn Island Dungeon",
+    "region": 11154
+  },
+  {
+    "region": 11662
+  },
+  {
+    "description": "Viyeldi Caves (2)",
+    "region": 11153
+  },
+  {
+    "description": "Monkey Madness Rock Cave",
+    "aabbs": [
+      [ 2815, 9088, 2688, 9151 ]
+    ]
+  },
+  {
+    "description": "Temple of Marimbo Dungeon",
+    "region": 11151
+  },
+  {
+    "region": 10895
+  },
+  {
+    "aabbs": [
+      [ 2623, 9210, 2677, 9189 ],
+      [ 2633, 9188, 2671, 9123 ],
+      [ 2624, 9122, 2666, 9080 ]
+    ]
+  },
+  {
+    "aabbs": [
+      [ 2640, 9062, 2683, 9034 ]
+    ]
+  },
+  {
+    "aabbs": [
+      [ 2496, 9088, 2601, 9035 ]
+    ]
+  },
+  {
+    "aabbs": [
+      [ 2497, 9205, 2509, 9187 ]
+    ]
+  },
+  {
+    "aabbs": [
+      [ 2496, 9088, 2601, 9035 ],
+      [ 2497, 9205, 2509, 9187 ],
+      [ 2512, 9187, 2632, 9132 ],
+      [ 2623, 9188, 2562, 9264 ],
+      [ 2522, 9260, 2560, 9223 ]
+    ]
+  },
+  {
+    "aabbs": [
+      [ 2616, 9276, 2640, 9223 ]
+    ]
+  },
+  {
+    "aabbs": [
+      [ 2505, 9332, 2529, 9312 ]
+    ]
+  },
+  {
+    "aabbs": [
+      [ 2507, 9309, 2534, 9286 ]
+    ]
+  },
+  {
+    "aabbs": [
+      [ 2630, 9401, 2661, 9375 ]
+    ]
+  },
+  {
+    "description": "Obsevatory Dungeon",
+    "region": 9362
+  },
+
+  {
+    "region": 8593
+  },
+  {
+    "region": 9116
+  },
+  {
+    "description": "The Warrens",
+    "aabbs": [
+      [ 1728, 10178, 1815, 10112 ]
+    ]
+  },
+  {
+    "description": "Forthos Dungeon",
+    "aabbs": [
+      [ 1773, 10002, 1879, 9876 ]
+    ]
+  },
+  {
+    "description": "Crabclaw Cave",
+    "aabbs": [
+      [ 1632, 9853, 1729, 9771 ]
+    ]
+  },
+  {
+    "description": "Crabclaw Cave 2",
+    "aabbs": [
+      [ 1670, 9767, 1726, 9729 ]
+    ]
+  },
+  {
+    "region": 6298
+  },
+  {
+    "region": 6555
+  },
+  {
+    "region": 6299
+  },
+  {
+    "region": 6043
+  },
+  {
+    "description": "Shayzien Prison",
+    "region": 5787
+  },
+  {
+    "region": 5786
+  },
+  {
+    "description": "Catacombs of Kourend",
+    "aabbs": [
+      [ 1587, 10111, 1750, 9978 ]
+    ]
+  },
+  {
+    "region": 6303
+  },
+  {
+    "description": "Chasm Fire",
+    "region": 5789
+  },
+  {
+    "description": "Lizardman Temple",
+    "region": 5277
+  },
+  {
+    "region": 5021
+  },
+  {
+    "region": 4764
+  },
+  {
+    "region": 4763
+  },
+  {
+    "region": 5275
+  },
+  {
+    "description": "Karuulm Slayer Dungeon",
+    "aabbs": [
+      [ 1369, 10234, 1398, 10208 ]
+    ]
+  },
+  {
+    "description": "Karuulm Slayer Dungeon",
+    "aabbs": [
+      [ 1386, 10235, 1297, 10281 ],
+      [ 1355, 10234, 1280, 10177 ],
+      [ 1279, 10173, 1254, 10203 ],
+      [ 1279, 10172, 1250, 10146 ]
+    ]
+  },
+  {
+    "region": 4768
+  },
+  {
+    "aabbs": [
+      [ 1535, 10240, 1566, 10208 ]
+    ]
+  },
+  {
+    "aabbs": [
+      [ 1562, 10216, 1592, 10184 ]
+    ]
+  },
+  {
+    "description": "Fossil Island Underwater Area",
+    "aabbs": [
+      [ 3711, 10304, 3839, 10240 ],
+      [ 3711, 10239, 3775, 10176 ]
+    ]
+  },
+  {
+    "aabbs": [
+      [ 3776, 10239, 3839, 10112 ]
+    ]
+  },
+  {
+    "region": 14496
+  },
+  {
+    "region": 14495
+  },
+  {
+    "region": 14242
+  },
+  {
+    "description": "Lithkren Dungeon",
+    "aabbs": [
+      [ 3534, 10488, 3564, 10439 ]
+    ]
+  },
+  {
+    "description": "Nightmare Of Ashihama Arena",
+    "region": 15515
+  },
+  {
+    "description": "Wilderness Slayer Cave",
+    "aabbs": [
+      [ 3327, 10177, 3455, 10048 ]
+    ]
+  },
+  {
+    "description": "Frankenstrains Dungeon",
+    "aabbs": [
+      [ 3468, 9983, 3582, 9920 ]
+    ]
+  },
+  {
+    "region": 14747
+  },
+  {
+    "region": 14746
+  },
+  {
+    "region": 14745
+  },
+  {
+    "region": 14234
+  },
+
+  {
+    "region": 13978
+  },
+
+  {
+    "region": 13772
+  },
+
+  {
+    "region": 13466
+  },
+
+  {
+    "region": 13465
+  },
+
+  {
+    "region": 16464
+  },
+  {
+    "region": 13721
+  },
+  {
+    "region": 13720
+  },
+  {
+    "description": "13977",
+    "aabbs": [
+      [ 3499, 9848, 3517, 9828 ]
+    ]
+  },
+  {
+    "description": "13977",
+    "aabbs": [
+      [ 3458, 9823, 3466, 9809 ],
+      [ 3467, 9822, 3472, 9811 ]
+    ]
+  },
+  {
+    "description": "13977",
+    "aabbs": [
+      [ 3472, 9802, 3476, 9810 ],
+      [ 3471, 9810, 3467, 9801 ]
+    ]
+  },
+  {
+    "description": "13977",
+    "aabbs": [
+      [ 3472, 9801, 3477, 9794 ],
+      [ 3471, 9800, 3464, 9794 ]
+    ]
+  },
+  {
+    "aabbs": [
+      [ 3468, 9848, 3493, 9823 ],
+      [ 3479, 9822, 3505, 9801 ]
+    ]
+  },
+  {
+    "description": "Barrows Tunnels",
+    "aabbs": [
+      [ 3511, 9827, 3582, 9729 ],
+      [ 3584, 9791, 3640, 9687 ],
+      [ 3641, 9686, 3603, 9670 ]
+    ]
+  },
+  {
+    "aabbs": [
+      [ 3588, 9685, 3600, 9670 ]
+    ]
+  },
+  {
+    "description": "Barrows Crypt",
+    "region": 14231
+  },
+  {
+    "region": 13975
+  },
+  {
+    "region": 13974
+  },
+  {
+    "description": "Elid Cave",
+    "region": 13718
+  },
+  {
+    "description": "Mage Training Area Room",
+    "aabbs": [
+      [ 3338, 9663, 3388, 9616 ]
+    ]
+  },
+  {
+    "description": "Mage Training Area Room",
+    "aabbs": [
+      [ 3358, 9696, 3331, 9669 ]
+    ]
+  },
+  {
+    "description": "Mage Training Area Room",
+    "aabbs": [
+      [ 3389, 9664, 3359, 9700 ],
+      [ 3364, 9701, 3383, 9701 ],
+      [ 3365, 9702, 3381, 9703 ]
+    ]
+  },
+  {
+    "description": "Mage Training Area Room",
+    "aabbs": [
+      [ 3328, 9727, 3358, 9698 ],
+      [ 3359, 9701, 3362, 9727 ],
+      [ 3363, 9727, 3363, 9701 ],
+      [ 3364, 9727, 3364, 9702 ],
+      [ 3365, 9704, 3388, 9727 ]
+    ]
+  },
+  {
+    "description": "Lumbridge Swamp Caves",
+    "aabbs": [
+      [ 3202, 9660, 3327, 9600 ],
+      [ 3136, 9599, 3259, 9537 ]
+    ]
+  },
+  {
+    "aabbs": [
+      [ 3202, 9709, 3252, 9661 ]
+    ]
+  },
+  {
+    "description": "Tears of Guthix",
+    "aabbs": [
+      [ 3136, 9535, 3263, 9409 ]
+    ]
+  },
+  {
+    "description": "Ham Hideout",
+    "region": 12694
+  },
+
+  {
+    "region": 12695
+  },
+
+  {
+    "region": 12696
+  },
+
+  {
+    "region": 12697
+  },
+
+  {
+    "region": 12953
+  },
+
+  {
+    "region": 12952
+  },
+
+  {
+    "description": "Tolna Dungeon Confusion",
+    "region": 13209
+  },
+  {
+    "description": "Draynor Sewers",
+    "aabbs": [
+      [ 3077, 9699, 3130, 9642 ]
+    ]
+  },
+  {
+    "aabbs": [
+      [ 3092, 9586, 3124, 9548 ]
+    ]
+  },
+  {
+    "description": "Tutorial Island Underground",
+    "region": 12436
+  },
+  {
+    "description": "Asgarnian Ice Dungeon ",
+    "aabbs": [
+      [ 2982, 9599, 3016, 9536 ],
+      [ 3017, 9604, 3083, 9532 ]
+    ]
+  },
+  {
+    "description": "Karamaja and Crandor Dungeon",
+    "aabbs": [
+      [ 2819, 9663, 2867, 9545 ]
+    ]
+  },
+  {
+    "description": "Pothole Dungeon",
+    "region": 11412
+  },
+  {
+    "region": 11668
+  },
+  {
+    "region": 11942
+  },
+  {
+    "region": 11926
+  },
+  {
+    "region": 11415
+  },
+  {
+    "aabbs": [
+      [ 2954, 9855, 3062, 9802 ],
+      [ 2992, 9801, 3070, 9696 ]
+    ]
+  },
+  {
+    "description": "Edgeville Dungeon",
+    "aabbs": [
+      [ 3065, 9919, 3294, 9856 ],
+      [ 3072, 10008, 3135, 9920 ],
+      [ 3072, 10008, 3135, 9920 ]
+    ]
+  },
+  {
+    "description": "12441",
+    "aabbs": [
+      [ 3076, 9819, 3104, 9793 ]
+    ]
+  },
+  {
+    "description": "12955",
+    "aabbs": [
+      [ 3199, 9952, 3236, 9920 ]
+    ]
+  },
+  {
+    "description": "12697",
+    "aabbs": [
+      [ 3147, 9837, 3167, 9814 ]
+    ]
+  },
+  {
+    "description": "12697",
+    "aabbs": [
+      [ 3182, 9838, 3198, 9814 ]
+    ]
+  },
+  {
+    "region": 12187
+  },
+  {
+    "region": 12700
+  },
+  {
+    "description": "Revenant Caves ",
+    "aabbs": [
+      [ 3136, 10239, 3264, 10051 ]
+    ]
+  },
+  {
+    "region": 12961
+  },
+
+  {
+    "description": "Deep Wilderness Dungeon",
+    "region": 12193
+  },
+
+  {
+    "region": 11937
+  },
+
+  {
+    "description": "Lava Maze Dungeon",
+    "region": 12192
+  },
+
+  {
+    "region": 12190
+  },
+
+  {
+    "region":  11425
+  },
+  {
+    "region": 11658
+  },
+  {
+    "aabbs": [
+      [ 2384, 10477, 2493, 10370 ]
+    ]
+  },
+  {
+    "aabbs": [
+      [ 2251, 10496, 2296, 10447 ]
+    ]
+  },
+  {
+    "description": "Miscellania Underground",
+    "aabbs": [
+      [ 2496, 10281, 2526, 10242 ],
+      [ 2527, 10268, 2540, 10242 ],
+      [ 2502, 10291, 2508, 10282 ]
+    ]
+  },
+  {
+    "description": "Miscellania and Etceteria Dungeon",
+    "aabbs": [
+      [ 2509, 10303, 2623, 10288 ],
+      [ 2528, 10287, 2623, 10269 ],
+      [ 2542, 10268, 2623, 10242 ]
+    ]
+  },
+  {
+    "region": 9631
+  },
+  {
+    "aabbs": [
+      [ 2432, 10175, 2558, 10112 ]
+    ]
+  },
+  {
+    "region": 11167
+  },
+  {
+    "region": 10911
+  },
+  {
+    "description": "Brine Rat Cavern",
+    "region": 10910
+  },
+  {
+    "region": 11166
+  },
+  {
+    "region": 11165
+  },
+  {
+    "region": 11421
+  },
+  {
+    "region": 11677
+  },
+  {
+    "region": 11676
+  },
+  {
+    "region": 10653
+  },
+  {
+    "region": 10652
+  },
+  {
+    "description": "Lighthouse Dungeon",
+    "region": 10140
+  },
+  {
+    "region": 10139
+  },
+  {
+    "region": 9116
+  },
+  {
+    "description": "Keldagrim",
+    "aabbs": [
+      [ 2815, 10239, 2946, 10113 ]
+    ]
+  },
+  {
+    "description": "Fremennik Slayer Dungeon ",
+    "aabbs": [
+      [ 2687, 10047, 2815, 9984 ],
+      [ 2689, 9983, 2722, 9951 ]
+    ]
+  },
+  {
+    "description": "Warriors Guild Basement",
+    "aabbs": [
+      [ 2900, 9977, 2942, 9952 ]
+    ]
+  },
+  {
+    "description": "Ice Queens Lair",
+    "aabbs": [
+      [ 2816, 9977, 2896, 9920 ],
+      [ 2815, 9919, 2877, 9896 ]
+    ]
+  },
+  {
+    "description": "11930",
+    "aabbs": [
+      [ 2969, 9918, 2992, 9903 ]
+    ]
+  },
+  {
+    "description": "11930",
+    "aabbs": [
+      [ 2971, 9879, 2991, 9863 ]
+    ]
+  },
+  {
+    "description": "Heros Guild Basement",
+    "aabbs": [
+      [ 2881, 9919, 2941, 9881 ]
+    ]
+  },
+  {
+    "aabbs": [
+      [ 2893, 9879, 2926, 9858 ]
+    ]
+  },
+  {
+    "description": "Fishing Contest Tunnel",
+    "aabbs": [
+      [ 2815, 9890, 2878, 9859 ]
+    ]
+  },
+  {
+    "description": "Taverley Dungeon",
+    "aabbs": [
+      [ 2812, 9855, 2952, 9695 ],
+      [ 2953, 9800, 2972, 9768 ],
+      [ 2880, 9694, 2936, 9670 ]
+    ]
+  },
+  {
+    "description": "Deaths Domain",
+    "aabbs": [
+      [ 2954, 9748, 2980, 9729 ]
+    ]
+  },
+  {
+    "description": "Elemental Workshop",
+    "region": 10906
+  },
+  {
+    "description": "Temple of Ikov",
+    "aabbs": [
+      [ 2880, 9694, 2936, 9670 ],
+      [ 2954, 9748, 2980, 9729 ],
+      [ 2624, 9919, 2674, 9792 ],
+      [ 2675, 9847, 2749, 9792 ],
+      [ 2688, 9855, 2749, 9848 ],
+      [ 2679, 9791, 2687, 9784 ]
+    ]
+  },
+  {
+    "description": "Legends Guild Dungeon",
+    "region": 10904
+  },
+  {
+    "description": "Witchaven Dungeon",
+    "region": 10903
+  },
+  {
+    "description": "Waterfall Dungeon",
+    "region": 10394
+  },
+  {
+    "description": "Goblin Cave",
+    "region": 10393
+  },
+  {
+    "description": "Chaos Druuid Tower Dungeon",
+    "region": 10392
+  },
+  {
+    "region": 10138
+  },
+  {
+    "description": "Glarial's Tomb",
+    "region": 10137
+  },
+  {
+    "description": "Grand Tree Tunnels",
+    "region": 9882
+  },
+  {
+    "description": "Ardougne Sewers Mine",
+    "aabbs": [
+      [ 2624, 9727, 2687, 9616 ]
+    ]
+  },
+  {
+    "description": "Brimhaven Agility Dungeon",
+    "aabbs": [
+      [ 2738, 9611, 2815, 9527 ]
+    ]
+  },
+  {
+    "description": "Clocktower Dungeon",
+    "region": 10390
+  },
+  {
+    "description": "Ardougne Sewers",
+    "aabbs": [
+      [ 2580, 9727, 2623, 9664 ],
+      [ 2560, 9700, 2579, 9676 ],
+      [ 2545, 9681, 2559, 9666 ],
+      [ 2510, 9663, 2557, 9637 ]
+    ]
+  },
+  {
+    "description": "10391",
+    "aabbs": [
+      [ 2533, 9676, 2543, 9667 ]
+    ]
+  },
+  {
+    "description": "10135",
+    "aabbs": [
+      [ 2561, 9674, 2577, 9665 ]
+    ]
+  },
+  {
+    "description": "Yanille Agility Dungeon (2)",
+    "aabbs": [
+      [ 2562, 9596, 2607, 9546 ]
+    ]
+  },
+  {
+    "description": "Yanille Agility Dungeon",
+    "region": 10388
+  },
+  {
+    "description": "10389",
+    "aabbs": [
+      [ 2611, 9575, 2624, 9559 ]
+    ]
+  },
+  {
+    "region":  10133
+  },
+  {
+    "description": "Brimhaven Dungeon",
+    "aabbs": [
+      [ 2626, 9599, 2732, 9472 ],
+      [ 2733, 9501, 2751, 9473 ],
+      [ 2733, 9515, 2744, 9502 ],
+      [ 2745, 9510, 2746, 9502 ],
+      [ 2688, 9471, 2750, 9409 ]
+    ]
+  },
+  {
+    "region": 10643
+  },
+  {
+    "description": "Ogre Enclave ",
+    "region": 10387
+  },
+  {
+    "region": 10131
+  },
+  {
+    "description": "Jigging Dungeon (Bottom)",
+    "region": 9875
+  },
+  {
+    "aabbs": [
+      [ 2337, 9472, 2431, 9408 ]
+    ]
+  },
+  {
+    "region": 9620
+  },
+  {
+    "region": 8855
+  },
+  {
+    "region": 9366
+  },
+  {
+    "region": 9365
+  },
+  {
+    "description": "Underground Pass 1",
+    "aabbs": [
+      [ 2429, 9736, 2499, 9664 ],
+      [ 2412, 9701, 2428, 9664 ],
+      [ 2379, 9689, 2411, 9664 ]
+    ]
+  },
+  {
+    "description": "Underground Pass 2",
+    "aabbs": [
+      [ 2367, 9662, 2431, 9588 ]
+    ]
+  },
+  {
+    "description": "Underground Pass 3",
+    "aabbs": [
+      [ 2368, 9727, 2428, 9702 ],
+      [ 2368, 9701, 2411, 9690 ],
+      [ 2368, 9689, 2378, 9663 ]
+    ]
+  },
+  {
+    "description": "Iban's Lair - Lower",
+    "aabbs": [
+      [ 2303, 9920, 2368, 9792 ]
+    ]
+  },
+  {
+    "region": 9878
+  },
+  {
+    "description": "Secret Hanger",
+    "aabbs": [
+      [ 2379, 9913, 2408, 9864 ]
+    ]
+  },
+  {
+    "description": "9626",
+    "aabbs": [
+      [ 2410, 9916, 2420, 9906 ]
+    ]
+  },
+  {
+    "description": "Stronghold Slayer Cave",
+    "aabbs": [
+      [ 2416, 9855, 2495, 9756 ],
+      [ 2386, 9803, 2415, 9761 ],
+      [ 2404, 9810, 2415, 9804 ]
+    ]
+  },
+  {
+    "description": "9625",
+    "aabbs": [
+      [ 2415, 9811, 2378, 9833 ],
+      [ 2398, 9810, 2379, 9804 ]
+    ]
+  },
+  {
+    "description": "Karamja island",
+    "aabbs": [
+      [ 2689, 3257, 2809, 2822 ],
+      [ 2809, 3124, 2917, 3209 ],
+      [ 2917, 3184, 2964, 3132 ],
+      [ 2746, 3151, 2973, 2822 ],
+      [ 2973, 2822, 3012, 3100 ],
+      [ 2496, 4542, 2642, 4606 ]
+    ],
+    "horizonTile": {
+      "waterType": "WATER",
+      "waterHeight": 0,
+      "waterDepth": 759,
+      "material": "DIRT_1",
+      "materialBelow": "DIRT_1"
+    }
+  },
+  {
+    "aabbs": [
+      [ 1152, 2496, 3903, 4159 ]
+    ],
+    "description": "Overworld",
+    "horizonTile": {
+      "waterType": "WATER",
+      "waterHeight": 0,
+      "waterDepth": 759,
+      "material": "DIRT_1",
+      "materialBelow": "DIRT_1"
+    }
+  }
+]
