@@ -3511,6 +3511,77 @@
     ]
   },
   {
+    "description": "Pyramid Plunder Walls - Interior",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      20932,
+      20933,
+      20939,
+      20937,
+      20948,
+      20949,
+      20931,
+      21280,
+      20934,
+      20944,
+      20943,
+      20945
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Pyramid Plunder Obelisk Bust and Wall symbol",
+    "baseMaterial": "MARBLE_1_GLOSS",
+    "objectIds": [
+      20955,
+      20954,
+      20953,
+      20941
+    ],
+    "uvType": "BOX",
+    "uvScale": "1.2"
+  },
+  {
+    "description": "Pyramid Plunder Metallic Objects",
+    "baseMaterial": "METALLIC_2_SUPER_HIGHGLOSS",
+    "objectIds": [
+      26616,
+      20946,
+      20947,
+      26613,
+      21263,
+      21267,
+      26608,
+      21262,
+      21266,
+      26580,
+      21261,
+      21265
+    ],
+    "uvType": "BOX",
+    "uvScale": "1.5"
+  },
+  {
+    "description": "Pyramid Plunder Wall Torch",
+    "baseMaterial": "MARBLE_1",
+    "objectIds": [
+      20942
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Pyramid Plunder Sarcophagus",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      26626,
+      21255,
+      21256,
+      21257
+    ],
+    "uvType": "BOX",
+    "uvScale": "1.2"
+  },
+  {
     "description": "Lighthouse underground door",
     "objectIds": [
       4543, 4544, 4545, 4546
