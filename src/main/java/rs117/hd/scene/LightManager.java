@@ -1064,11 +1064,13 @@ public class LightManager {
 
 		if (plugin.enableDetailedTimers)
 			frameTimer.begin(Timer.OBJECT_TRACKING);
-		if (event.getVarpId() != -1) {
-			for (var tracker : sceneContext.trackedVarps.get(event.getVarpId()))
-				trackImpostorChanges(sceneContext, tracker);
-		} else if (event.getVarbitId() != -1) {
+		// Check if the event is specifically a varbit change first,
+		// since all varbit changes are necessarily also varp changes
+		if (event.getVarbitId() != -1) {
 			for (var tracker : sceneContext.trackedVarbits.get(event.getVarbitId()))
+				trackImpostorChanges(sceneContext, tracker);
+		} else if (event.getVarpId() != -1) {
+			for (var tracker : sceneContext.trackedVarps.get(event.getVarpId()))
 				trackImpostorChanges(sceneContext, tracker);
 		}
 		if (plugin.enableDetailedTimers)
