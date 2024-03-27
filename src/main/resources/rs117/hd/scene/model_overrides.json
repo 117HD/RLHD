@@ -15885,5 +15885,22 @@
     "uvScale": 0.5,
     "uvOrientationX": 512,
     "retainVanillaUvs": false
+  },
+  {
+    "description": "Perilous Moons entrances & black walls",
+    "objectIds": [ 42260, 51376, 51461 ],
+    "baseMaterial": "PURE_BLACK"
+  },
+  {
+    "description": "Earthbound Cavern rock traps",
+    "objectIds": [ 51359 ],
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX"
+  },
+  {
+    "description": "The Blood, Blue & Eclipse Moon statues respectively",
+    "objectIds": [ 51372, 51373, 51374 ],
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvType": "BOX"
   }
 ]

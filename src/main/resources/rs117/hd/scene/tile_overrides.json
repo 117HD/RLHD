@@ -4150,6 +4150,129 @@
     "blended": false
   },
   {
+    "name": "CAM_TORUM_WATER",
+    "area": "CAM_TORUM",
+    "overlayIds": [ 201 ],
+    "waterType": "DARK_BLUE_WATER"
+  },
+  {
+    "name": "EARTHBOUND_CAVERN_WATER_DARKER",
+    "area": "EARTHBOUND_CAVERN",
+    "overlayIds": [ 201 ],
+    "waterType": "DARK_BLUE_WATER"
+  },
+  {
+    "name": "EARTHBOUND_CAVERN_WATER",
+    "area": "EARTHBOUND_CAVERN",
+    "overlayIds": [ 158, 181, 201 ],
+    "waterType": "PLAIN_WATER"
+  },
+  {
+    "name": "EARTHBOUND_CAVERN_GRASS",
+    "area": "EARTHBOUND_CAVERN",
+    "underlayIds": [ 54, 105 ],
+    "groundMaterial": "GRASS_1"
+  },
+  {
+    "name": "EARTHBOUND_CAVERN_ROCK",
+    "area": "EARTHBOUND_CAVERN",
+    "underlayIds": [ 56, 72 ],
+    "groundMaterial": "ROCKY_CAVE_FLOOR"
+  },
+  {
+    "name": "STREAMBOUND_CAVERN_GRASS",
+    "area": "STREAMBOUND_CAVERN",
+    "underlayIds": [ 53 ],
+    "groundMaterial": "GRASS_1"
+  },
+  {
+    "name": "STREAMBOUND_CAVERN_ROCK",
+    "area": "STREAMBOUND_CAVERN",
+    "underlayIds": [ 56, 72 ],
+    "groundMaterial": "ROCKY_CAVE_FLOOR"
+  },
+  {
+    "name": "STREAMBOUND_CAVERN_WATER",
+    "area": "STREAMBOUND_CAVERN",
+    "overlayIds": [ 156 ],
+    "waterType": "SWAMP_WATER_FLAT"
+  },
+  {
+    "name": "ANCIENT_SHRINE_DIRT",
+    "area": "ANCIENT_SHRINE",
+    "underlayIds": [ 227 ],
+    "groundMaterial": "DIRT",
+    "blended": false
+  },
+  {
+    "name": "ANCIENT_SHRINE_GRASS",
+    "area": "ANCIENT_SHRINE",
+    "underlayIds": [ 36, 81 ],
+    "groundMaterial": "GRASS_1"
+  },
+  {
+    "name": "THE_BLUE_MOON_ENTRANCE",
+    "area": "THE_BLUE_MOON",
+    "underlayIds": [ 73 ],
+    "groundMaterial": "MARBLE_2_SEMIGLOSS"
+  },
+  {
+    "name": "THE_BLUE_MOON_NEAR_WALLS",
+    "area": "THE_BLUE_MOON",
+    "overlayIds": [ 333 ],
+    "groundMaterial": "ICE_1",
+    "blended": false
+  },
+  {
+    "name": "THE_BLUE_MOON_FLOOR",
+    "area": "THE_BLUE_MOON",
+    "underlayIds": [ 16, 59, 204, 205, 206, 207 ],
+    "groundMaterial": "SNOW_1"
+  },
+  {
+    "name": "THE_BLOOD_MOON_ENTRANCE",
+    "area": "THE_BLOOD_MOON_ENTRANCE",
+    "underlayIds": [ 118 ],
+    "groundMaterial": "MARBLE_2_SEMIGLOSS"
+  },
+  {
+    "name": "THE_BLOOD_MOON_BLOOD",
+    "area": "THE_BLOOD_MOON",
+    "overlayIds": [ 331 ],
+    "waterType": "BLOOD"
+  },
+  {
+    "name": "THE_BLOOD_MOON_FLOOR",
+    "area": "THE_BLOOD_MOON",
+    "underlayIds": [ 116, 118, 142 ],
+    "groundMaterial": "DIRT"
+  },
+  {
+    "name": "THE_ECLIPSE_MOON_LAVA",
+    "area": "THE_ECLIPSE_MOON",
+    "overlayIds": [ 334 ],
+    "groundMaterial": "HD_LAVA",
+    "blended": false
+  },
+  {
+    "name": "THE_ECLIPSE_MOON_ENTRANCE",
+    "area": "THE_ECLIPSE_MOON_ENTRANCE",
+    "underlayIds": [ 212 ],
+    "groundMaterial": "MARBLE_2_SEMIGLOSS"
+  },
+  {
+    "name": "THE_ECLIPSE_MOON_FLOOR_BLENDING_FIX",
+    "area": "THE_ECLIPSE_MOON",
+    "overlayIds": [ 335 ],
+    "blended": false
+  },
+  {
+    "name": "THE_ECLIPSE_MOON_FLOOR",
+    "area": "THE_ECLIPSE_MOON",
+    "underlayIds": [ 212, 213 ],
+    "groundMaterial": "DIRT"
+  },
+  {
     "name": "OVERWORLD_GRASS_OVERLAY",
     "area": "OVERWORLD",
     "overlayIds": [

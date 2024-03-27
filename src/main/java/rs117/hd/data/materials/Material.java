@@ -305,6 +305,7 @@ public enum Material {
 	GRAY_50(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(.5f))),
 	GRAY_25(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(.25f))),
 	BLACK(NONE, p -> p.setBrightness(0)),
+	PURE_BLACK(NONE, p -> p.setOverrideBaseColor(true).setBrightness(0)),
 
 	BLANK_GLOSS(WHITE, p -> p
 		.setSpecular(0.9f, 280)),

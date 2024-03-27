@@ -33247,7 +33247,7 @@
     ]
   },
   {
-    "description": "VARLAMORE_TEMPLE_CRYPT_BRAZIER",
+    "description": "VARLAMORE_ORANGE_BRAZIER",
     "height": 150,
     "alignment": "CENTER",
     "radius": 600,
@@ -33265,7 +33265,7 @@
     ]
   },
   {
-    "description": "VARLAMORE_TEMPLE_CRYPT_CEILING_BRAZIER",
+    "description": "VARLAMORE_CRYPT_AND_CAM_TORUM_HANGING_BRAZIER",
     "height": 300,
     "alignment": "CENTER",
     "radius": 1500,
@@ -33276,7 +33276,7 @@
       3
     ],
     "type": "FLICKER",
-    "range": 10,
+    "range": 15,
     "objectIds": [
       51578
     ],
@@ -33300,6 +33300,198 @@
       47447
     ],
     "visibleFromOtherPlanes": true
+  },
+  {
+    "description": "CAM_TORUM_TORCH_STATUE",
+    "offset": [ 0, 138, -38 ],
+    "radius": 600,
+    "strength": 15,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "range": 7.5,
+    "objectIds": [
+      51009
+    ]
+  },
+  {
+    "description": "ANTECHAMBER_CEILING_LIGHT",
+    "worldX": 1440,
+    "worldY": 9632,
+    "plane": 1,
+    "radius": 1600,
+    "strength": 200,
+    "color": "#ffffff",
+    "offset": [ 0, 1820, 0 ]
+  },
+  {
+    "description": "ANCIENT_SHRINE_CEILING_LIGHT",
+    "worldX": 1513,
+    "worldY": 9580,
+    "plane": 1,
+    "radius": 1600,
+    "strength": 100,
+    "color": "#ffffff",
+    "offset": [ 0, 1360, 0 ]
+  },
+  {
+    "description": "ANTECHAMBER_ORANGE_BRAZIERS",
+    "objectIds": [ 51342 ],
+    "color": "#e58500",
+    "strength": 20,
+    "radius": 1000,
+    "offset": [ 0, 227, 0 ]
+  },
+  {
+    "description": "ANTECHAMBER_BLOOD_MOON_BRAZIERS",
+    "objectIds": [ 51343 ],
+    "color": "#df002e",
+    "strength": 10,
+    "radius": 1000,
+    "offset": [ 0, 227, 0 ]
+  },
+  {
+    "description": "ANTECHAMBER_BLUE_MOON_BRAZIERS",
+    "objectIds": [ 51344 ],
+    "color": "#3571a7",
+    "strength": 25,
+    "radius": 1000,
+    "offset": [ 0, 227, 0 ]
+  },
+  {
+    "description": "ANTECHAMBER_ECLIPSE_MOON_BRAZIERS",
+    "objectIds": [ 51345 ],
+    "color": "#ffa41b",
+    "strength": 2,
+    "radius": 1000,
+    "offset": [ 0, 227, 0 ]
+  },
+  {
+    "description": "SULPHUR_NAGA",
+    "npcIds": [ 13033 ],
+    "color": "#cd7c00",
+    "strength": 20,
+    "radius": 600,
+    "offset": [ 0, 47, 0 ]
+  },
+  {
+    "description": "PERILOUS_MOONS_COOKING_STOVE",
+    "objectIds": [ 51362 ],
+    "color": "#e58500",
+    "strength": 30,
+    "radius": 400,
+    "offset": [ 0, 42, 0 ]
+  },
+  {
+    "description": "PERILOUS_MOONS_SURFACE_OPENING_VINES",
+    "objectIds": [ 51441 ],
+    "radius": 1300,
+    "strength": 25,
+    "color": "#ffffff",
+    "offset": [ 0, 540, 0 ]
+  },
+  {
+    "description": "CAM_TORUM_FORGE",
+    "height": 50,
+    "alignment": "CENTER",
+    "radius": 500,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 30,
+    "objectIds": [
+      51496
+    ]
+  },
+  {
+    "description": "EYATLALLI",
+    "npcIds": [ 12869 ],
+    "color": "#00c7c1",
+    "strength": 25,
+    "radius": 700,
+    "offset": [ 0, 47, 0 ]
+  },
+  {
+    "description": "EYATLALLI_RIGHT_HAND",
+    "npcIds": [ 12869 ],
+    "color": "#00c7c1",
+    "strength": 25,
+    "radius": 250,
+    "offset": [ 112, 620, 2 ]
+  },
+  {
+    "description": "EYATLALLI_LEFT_HAND",
+    "npcIds": [ 12869 ],
+    "color": "#00c7c1",
+    "strength": 15,
+    "radius": 250,
+    "offset": [ -108, 391, 11 ]
+  },
+  {
+    "description": "THE_BLUE_MOON_BRAZIERS",
+    "objectIds": [ 52992, 52993 ],
+    "color": "#3571a7",
+    "strength": 25,
+    "radius": 1000,
+    "offset": [ 0, 199, -31 ]
+  },
+  {
+    "description": "ECLIPSE_MOON",
+    "npcIds": [ 13012, 13019 ],
+    "color": "#cd7c00",
+    "strength": 50,
+    "radius": 1200,
+    "offset": [ 0, 47, 0 ],
+    "fadeInDuration": 150
+  },
+  {
+    "description": "BLOOD_MOON",
+    "npcIds": [ 13011 ],
+    "color": "#df002e",
+    "strength": 10,
+    "radius": 1200,
+    "offset": [ 0, 47, 0 ],
+    "fadeInDuration": 300,
+    "spawnDelay": 600
+  },
+  {
+    "description": "BLUE_MOON",
+    "npcIds": [ 13013 ],
+    "color": "#3571a7",
+    "strength": 20,
+    "radius": 1200,
+    "offset": [ 0, 47, 0 ],
+    "fadeInDuration": 300,
+    "spawnDelay": 600
+  },
+  {
+    "description": "CURRENT_MOON_PHASE",
+    "npcIds": [ 13015 ],
+    "objectIds": [
+      51042
+    ],
+    "color": "#00c7c1",
+    "strength": 25,
+    "radius": 320,
+    "offset": [ 0, 47, 0 ],
+    "fadeInDuration": 600
+  },
+  {
+    "description": "SMALL_MOON_PHASE",
+    "objectIds": [ 51041 ],
+    "color": "#00c7c1",
+    "strength": 25,
+    "radius": 128,
+    "offset": [ 0, 47, 0 ],
+    "fadeInDuration": 1200
   },
   {
     "description": "GARDEN_OF_DEATH_DUNGEON_ENTRANCE",
