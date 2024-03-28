@@ -25,10 +25,12 @@
  */
 package rs117.hd.data;
 
+import java.awt.Color;
 import java.util.function.Consumer;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import rs117.hd.data.materials.Material;
+import rs117.hd.utils.ColorUtils;
 
 import static rs117.hd.utils.ColorUtils.rgb;
 import static rs117.hd.utils.ColorUtils.srgb;
@@ -48,7 +50,7 @@ public enum WaterType
 		.foamColor(srgb(115, 120, 101))
 		.depthColor(srgb(41, 82, 26))
 		.causticsStrength(0)
-		.duration(1.2f)),
+		.duration(1.2f).fishingColor(srgb("#04730d"))),
 	SWAMP_WATER_FLAT(SWAMP_WATER, true),
 	POISON_WASTE(b -> b
 		.specularStrength(.1f)
@@ -149,6 +151,7 @@ public enum WaterType
 
 	public final boolean flat;
 	public final float specularStrength;
+	public final int fishingColor;
 	public final float specularGloss;
 	public final float normalStrength;
 	public final float baseOpacity;
@@ -167,6 +170,7 @@ public enum WaterType
 	{
 		private boolean flat = false;
 		private float specularStrength = .5f;
+		private float[] fishingColor = null;
 		private float specularGloss = 500;
 		private float normalStrength = .09f;
 		private float baseOpacity = .5f;
@@ -191,6 +195,11 @@ public enum WaterType
 		consumer.accept(builder);
 		flat = builder.flat;
 		specularStrength = builder.specularStrength;
+		if (builder.fishingColor != null) {
+			fishingColor = ColorUtils.srgbToPackedHsl(builder.fishingColor);
+		} else {
+			fishingColor = 0;
+		}
 		specularGloss = builder.specularGloss;
 		normalStrength = builder.normalStrength;
 		baseOpacity = builder.baseOpacity;
@@ -213,6 +222,7 @@ public enum WaterType
 		baseOpacity = parent.baseOpacity;
 		fresnelAmount = parent.fresnelAmount;
 		normalMap = parent.normalMap;
+		fishingColor = parent.fishingColor;
 		surfaceColor = parent.surfaceColor;
 		foamColor = parent.foamColor;
 		depthColor = parent.depthColor;
