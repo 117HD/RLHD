@@ -1,11 +1,5 @@
 [
   {
-    "description": "Prifddinas Instance",
-    "aabbs": [
-      [ 3135, 6207, 3391, 5952 ]
-    ]
-  },
-  {
     "description": "Lms Arena Wild Varrock",
     "aabbs": [
       [ 3455, 6206, 3646, 6016 ]
@@ -24,51 +18,6 @@
       [ 3455, 5760, 3392, 5951 ],
       [ 3519, 5951, 3456, 5824 ]
     ]
-  },
-  {
-    "description": "Ardougne Instance",
-    "aabbs": [
-      [ 3327, 5951, 3455, 5889 ]
-    ]
-  },
-  {
-    "description": "Chambers Of Xeric",
-    "aabbs": [
-      [ 3337, 5760, 3361, 5729 ]
-    ]
-  },
-  {
-    "description": "Chambers Of Xeric",
-    "aabbs": [
-      [ 3337, 5727, 3360, 5697 ]
-    ]
-  },
-  {
-    "description": "Chambers Of Xeric",
-    "aabbs": [
-      [ 3320, 5733, 3298, 5761 ]
-    ]
-  },
-  {
-    "description": "Chambers Of Xeric",
-    "aabbs": [
-      [ 3321, 5700, 3298, 5730 ]
-    ]
-  },
-  {
-    "description": "Chambers Of Xeric",
-    "aabbs": [
-      [ 3286, 5701, 3262, 5718 ]
-    ]
-  },
-  {
-    "description": "Chambers Of Xeric",
-    "aabbs": [
-      [ 3261, 5753, 3285, 5735 ]
-    ]
-  },
-  {
-    "region": 12889
   },
   {
     "description": "Deaths Office",
@@ -94,20 +43,10 @@
     ]
   },
   {
-    "description": "Kourend Instance",
-    "aabbs": [
-      [ 2111, 6151, 2047, 6184 ]
-    ]
-  },
-  {
     "region": 6997
   },
   {
     "region": 6489
-  },
-  {
-    "description": "Ds2 Ships",
-    "region": 6745
   },
   {
     "region": 6488
@@ -126,12 +65,6 @@
   },
   {
     "region": 6742
-  },
-  {
-    "description": "Gnome Stronghold Surface Instance",
-    "aabbs": [
-      [ 1919, 5631, 2047, 5504 ]
-    ]
   },
   {
     "aabbs": [
@@ -236,157 +169,6 @@
     "region": 9814
   },
   {
-    "description": "RAIDS",
-    "aabbs": [
-      [ 3263, 5469, 3291, 5440 ]
-    ]
-  },
-  {
-    "description": "RAIDS",
-    "aabbs": [
-      [ 3295, 5472, 3321, 5440 ]
-    ]
-  },
-  {
-    "description": "RAIDS",
-    "aabbs": [
-      [ 3330, 5470, 3359, 5440 ]
-    ]
-  },
-  {
-    "description": "RAIDS",
-    "aabbs": [
-      [ 3263, 5393, 3268, 5388 ],
-      [ 3269, 5405, 3292, 5376 ]
-    ]
-  },
-  {
-    "description": "RAIDS",
-    "aabbs": [
-      [ 3297, 5408, 3325, 5343 ]
-    ]
-  },
-  {
-    "description": "RAIDS",
-    "aabbs": [
-      [ 3328, 5408, 3359, 5376 ]
-    ]
-  },
-  {
-    "description": "RAIDS",
-    "aabbs": [
-      [ 3328, 5342, 3360, 5311 ]
-    ]
-  },
-  {
-    "description": "RAIDS",
-    "aabbs": [
-      [ 3328, 5371, 3361, 5343 ]
-    ]
-  },
-  {
-    "description": "RAIDS",
-    "aabbs": [
-      [ 3263, 5342, 3294, 5312 ]
-    ]
-  },
-  {
-    "description": "RAIDS",
-    "aabbs": [
-      [ 3263, 5375, 3294, 5343 ]
-    ]
-  },
-  {
-    "description": "RAIDS",
-    "aabbs": [
-      [ 3297, 5342, 3326, 5310 ]
-    ]
-  },
-  {
-    "description": "RAIDS",
-    "aabbs": [
-      [ 3263, 5310, 3294, 5279 ]
-    ]
-  },
-  {
-    "description": "RAIDS",
-    "aabbs": [
-      [ 3296, 5309, 3326, 5278 ]
-    ]
-  },
-  {
-    "description": "RAIDS",
-    "aabbs": [
-      [ 3328, 5310, 3360, 5280 ]
-    ]
-  },
-  {
-    "description": "RAIDS",
-    "aabbs": [
-      [ 3330, 5278, 3359, 5248 ]
-    ]
-  },
-  {
-    "description": "RAIDS",
-    "aabbs": [
-      [ 3262, 5278, 3295, 5247 ]
-    ]
-  },
-  {
-    "description": "RAIDS",
-    "aabbs": [
-      [ 3295, 5278, 3325, 5248 ]
-    ]
-  },
-  {
-    "description": "RAIDS",
-    "aabbs": [
-      [ 3295, 5278, 3325, 5184 ]
-    ]
-  },
-  {
-    "description": "RAIDS",
-    "aabbs": [
-      [ 3264, 5247, 3291, 5214 ]
-    ]
-  },
-  {
-    "description": "RAIDS",
-    "aabbs": [
-      [ 3262, 5211, 3290, 5183 ]
-    ]
-  },
-  {
-    "description": "RAIDS",
-    "aabbs": [
-      [ 3329, 5244, 3361, 5213 ]
-    ]
-  },
-  {
-    "description": "RAIDS",
-    "aabbs": [
-      [ 3328, 5211, 3360, 5185 ]
-    ]
-  },
-  {
-    "description": "RAIDS",
-    "aabbs": [
-      [ 3266, 5181, 3291, 5151 ]
-    ]
-  },
-  {
-    "description": "RAIDS",
-    "aabbs": [
-      [ 3294, 5182, 3326, 5151 ]
-    ]
-  },
-  {
-    "description": "RAIDS",
-    "aabbs": [
-      [ 3264, 5149, 3291, 5120 ]
-    ]
-  },
-  {
     "description": "TzHaar Region",
     "aabbs": [
       [ 2372, 5183, 2431, 5125 ],
@@ -406,14 +188,6 @@
     "aabbs": [
       [ 2508, 5630, 2525, 5529 ]
     ]
-  },
-  {
-    "description": "Goblin Village Instance",
-    "region": 9812
-  },
-  {
-    "description": "The Inferno",
-    "region": 9043
   },
   {
     "description": "SoS Pestilence",
@@ -457,144 +231,6 @@
     ]
   },
   {
-    "description": "Trekking",
-    "aabbs": [
-      [ 2441, 5047, 2476, 5014 ]
-    ]
-  },
-  {
-    "description": "Trekking",
-    "aabbs": [
-      [ 2399, 5054, 2428, 5024 ]
-    ]
-  },
-  {
-    "description": "Trekking",
-    "aabbs": [
-      [ 2385, 5024, 2409, 5000 ]
-    ]
-  },
-  {
-    "description": "Trekking",
-    "aabbs": [
-      [ 2371, 5054, 2396, 5025 ]
-    ]
-  },
-  {
-    "description": "Trekking",
-    "aabbs": [
-      [ 2334, 5053, 2365, 5025 ]
-    ]
-  },
-  {
-    "description": "Trekking",
-    "aabbs": [
-      [ 2305, 5053, 2330, 5027 ]
-    ]
-  },
-  {
-    "description": "Trekking",
-    "aabbs": [
-      [ 2320, 5023, 2342, 5000 ]
-    ]
-  },
-  {
-    "description": "Trekking",
-    "aabbs": [
-      [ 2270, 5052, 2296, 5025 ]
-    ]
-  },
-  {
-    "description": "Trekking",
-    "aabbs": [
-      [ 2244, 5053, 2267, 5026 ]
-    ]
-  },
-  {
-    "description": "Trekking",
-    "aabbs": [
-      [ 2256, 5023, 2279, 5002 ]
-    ]
-  },
-  {
-    "description": "Trekking",
-    "aabbs": [
-      [ 2206, 5053, 2233, 5027 ]
-    ]
-  },
-  {
-    "description": "Trekking",
-    "aabbs": [
-      [ 2179, 5053, 2202, 5027 ]
-    ]
-  },
-  {
-    "description": "Trekking",
-    "aabbs": [
-      [ 2189, 5024, 2214, 5002 ]
-    ]
-  },
-  {
-    "description": "Draynor Instance",
-    "aabbs": [
-      [ 2112, 4927, 2156, 4895 ]
-    ]
-  },
-  {
-    "description": "Trekking",
-    "aabbs": [
-      [ 2077, 5049, 2104, 5031 ]
-    ]
-  },
-  {
-    "description": "Trekking",
-    "aabbs": [
-      [ 2079, 5025, 2099, 5001 ]
-    ]
-  },
-  {
-    "description": "Trekking",
-    "aabbs": [
-      [ 2054, 5015, 2066, 4998 ]
-    ]
-  },
-  {
-    "description": "Trekking",
-    "aabbs": [
-      [ 2056, 5043, 2068, 5026 ]
-    ]
-  },
-  {
-    "description": "Trekking",
-    "aabbs": [
-      [ 2179, 5053, 2202, 5027 ]
-    ]
-  },
-  {
-    "description": "Trekking",
-    "aabbs": [
-      [ 2047, 5048, 2055, 5039 ]
-    ]
-  },
-  {
-    "description": "Trekking",
-    "aabbs": [
-      [ 2014, 5051, 2041, 5026 ]
-    ]
-  },
-  {
-    "description": "Trekking",
-    "aabbs": [
-      [ 1999, 5023, 2022, 5003 ]
-    ]
-  },
-  {
-    "description": "Trekking",
-    "aabbs": [
-      [ 1987, 5052, 2010, 5026 ]
-    ]
-  },
-  {
     "aabbs": [
       [ 1963, 5054, 1981, 5037 ]
     ]
@@ -610,12 +246,6 @@
     "description": "Random Event Classroom",
     "aabbs": [
       [ 1875, 5038, 1897, 5011 ]
-    ]
-  },
-  {
-    "description": "Tai Bwo Wannai Instance",
-    "aabbs": [
-      [ 1951, 5344, 1983, 5312 ]
     ]
   },
   {
@@ -750,13 +380,6 @@
     "region": 10307
   },
   {
-    "description": "Waterbirth Lighthouse - Instance",
-    "aabbs": [
-      [ 2414, 4624, 2431, 4608 ],
-      [ 2432, 4624, 2495, 4544 ]
-    ]
-  },
-  {
     "description": "Viyeldi Caves",
     "region": 9545
   },
@@ -815,12 +438,6 @@
     "region": 10055
   },
   {
-    "description": "Ship Yard Instance ",
-    "aabbs": [
-      [ 2560, 4607, 2641, 4544 ]
-    ]
-  },
-  {
     "description": "Misthalin Mystery Manor",
     "aabbs": [
       [ 1599, 4863, 1727, 4781 ]
@@ -870,10 +487,6 @@
   },
   {
     "description": "Waterbirth Dungeon (6)",
-    "region": 11589
-  },
-  {
-    "description": "Waterbirth Dungeon (6) - Instance",
     "region": 11589
   },
   {
@@ -979,12 +592,6 @@
     ]
   },
   {
-    "description": "Falador Garden Instance",
-    "aabbs": [
-      [ 3456, 4783, 3527, 4736 ]
-    ]
-  },
-  {
     "description": "Deaths Office",
     "aabbs": [
       [ 3135, 5112, 3200, 5000 ]
@@ -1000,12 +607,6 @@
     "region": 13133
   },
   {
-    "description": "Chambers Of Xeric",
-    "aabbs": [
-      [ 3264, 5119, 3327, 4992 ]
-    ]
-  },
-  {
     "region": 13647
   },
   {
@@ -1018,10 +619,6 @@
     "region": 13644
   },
   {
-    "description": "Lumbridge - Instance",
-    "region": 13643
-  },
-  {
     "aabbs": [
       [ 3648, 6143, 3774, 6016 ]
     ]
@@ -1030,18 +627,6 @@
     "description": "Underground Pass - Bottom",
     "aabbs": [
       [ 2431, 6207, 2495, 6080 ]
-    ]
-  },
-  {
-    "description": "Elf lands - Instance",
-    "aabbs": [
-      [ 2688, 6207, 2879, 6016 ]
-    ]
-  },
-  {
-    "description": "Elf Camp - Instance",
-    "aabbs": [
-      [ 2880, 6207, 2943, 6144 ]
     ]
   },
   {
@@ -1057,33 +642,6 @@
   },
   {
     "region": 12636
-  },
-  {
-    "description": "Theatre Of Blood",
-    "aabbs": [
-      [ 3153, 4464, 3199, 4421 ],
-      [ 3200, 4463, 3226, 4444 ]
-    ]
-  },
-  {
-    "description": "Theatre Of Blood",
-    "region": 13125
-  },
-  {
-    "description": "Tob Room Xarpus",
-    "region": 12612
-  },
-  {
-    "description": "Tob Room Verzik",
-    "region": 12611
-  },
-  {
-    "description": "Tob Room Vault",
-    "region": 12867
-  },
-  {
-    "description": "Tob Room Sotetseg",
-    "region": 13123
   },
   {
     "region": 13122
@@ -1527,16 +1085,6 @@
     ]
   },
   {
-    "description": "Nightmare Of Ashihama Arena",
-    "region": 15515
-  },
-  {
-    "description": "Wilderness Slayer Cave",
-    "aabbs": [
-      [ 3327, 10177, 3455, 10048 ]
-    ]
-  },
-  {
     "description": "Frankenstrains Dungeon",
     "aabbs": [
       [ 3468, 9983, 3582, 9920 ]
@@ -1814,12 +1362,6 @@
   {
     "region": 12961
   },
-
-  {
-    "description": "Deep Wilderness Dungeon",
-    "region": 12193
-  },
-
   {
     "region": 11937
   },
@@ -2118,9 +1660,6 @@
     "region": 9620
   },
   {
-    "region": 8855
-  },
-  {
     "region": 9366
   },
   {
@@ -2183,36 +1722,5 @@
       [ 2415, 9811, 2378, 9833 ],
       [ 2398, 9810, 2379, 9804 ]
     ]
-  },
-  {
-    "description": "Karamja island",
-    "aabbs": [
-      [ 2689, 3257, 2809, 2822 ],
-      [ 2809, 3124, 2917, 3209 ],
-      [ 2917, 3184, 2964, 3132 ],
-      [ 2746, 3151, 2973, 2822 ],
-      [ 2973, 2822, 3012, 3100 ],
-      [ 2496, 4542, 2642, 4606 ]
-    ],
-    "horizonTile": {
-      "waterType": "WATER",
-      "waterHeight": 0,
-      "waterDepth": 759,
-      "material": "DIRT_1",
-      "materialBelow": "DIRT_1"
-    }
-  },
-  {
-    "aabbs": [
-      [ 1152, 2496, 3903, 4159 ]
-    ],
-    "description": "Overworld",
-    "horizonTile": {
-      "waterType": "WATER",
-      "waterHeight": 0,
-      "waterDepth": 759,
-      "material": "DIRT_1",
-      "materialBelow": "DIRT_1"
-    }
   }
 ]
