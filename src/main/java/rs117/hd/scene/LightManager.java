@@ -614,6 +614,8 @@ public class LightManager {
 		if (oldSceneContext == null) {
 			sceneContext.lights.clear();
 			sceneContext.trackedTileObjects.clear();
+			sceneContext.trackedVarps.clear();
+			sceneContext.trackedVarbits.clear();
 			sceneContext.knownProjectiles.clear();
 		} else {
 			// Copy over NPC and projectile lights from the old scene
