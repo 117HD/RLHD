@@ -23750,10 +23750,10 @@
     ]
   },
   {
-    "description": "PYRAMID_PLUNDER_GOLD_CHEST_SHINE",
+    "description": "Pyramid Plunder Gold Chest Shine",
     "height": 150,
     "offset": [ 0, 0, 0 ],
-    "radius": 100,
+    "radius": 130,
     "strength": 12.5,
     "color": [
       252,
