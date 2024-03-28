@@ -588,7 +588,7 @@
     "area": "PYRAMID_PLUNDER",
     "ambientColor": "#b59b79",
     "directionalColor": "#8a9eb6",
-    "directionalStrength": 0.75,
+    "directionalStrength": 0.5,
     "sunAngles": [
       80,
       190
