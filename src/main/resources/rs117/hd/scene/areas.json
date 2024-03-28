@@ -936,7 +936,9 @@
   },
   {
     "description": "Water Altar ",
-    "region": 10827
+    "aabbs": [
+      [ 2689, 4860, 2749, 4801 ]
+    ]
   },
   {
     "description": "Mind Altar",

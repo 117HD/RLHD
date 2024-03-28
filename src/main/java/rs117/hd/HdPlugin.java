@@ -2303,6 +2303,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				nextSceneContext = context;
 				proceduralGenerator.generateSceneData(context);
 				environmentManager.loadSceneEnvironments(context);
+				areaManager.update(client.getLocalPlayer().getWorldLocation());
 				sceneUploader.upload(context);
 			}
 		} catch (OutOfMemoryError oom) {
@@ -2541,6 +2542,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 							case KEY_VANILLA_SHADOW_MODE:
 								reloadModelOverrides = true;
 								reloadScene = true;
+								break;
+							case KEY_HIDE_UNRELATED_MAPS_HD:
+								if (client.getGameState() == GameState.LOGGED_IN)
+								{
+									client.setGameState(GameState.LOADING);
+								}
 								break;
 							case KEY_LEGACY_GREY_COLORS:
 							case KEY_PRESERVE_VANILLA_NORMALS:

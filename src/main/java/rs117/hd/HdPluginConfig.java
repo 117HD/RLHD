@@ -86,7 +86,8 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_HIDE_UNRELATED_MAPS_HD,
 		name = "Hide unrelated maps",
 		description = "Hide unrelated map areas you shouldn't see.",
-		position = 1
+		position = 1,
+		section = generalSettings
 	)
 	default boolean hideUnrelatedMaps()
 	{

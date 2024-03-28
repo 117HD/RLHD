@@ -77,12 +77,17 @@ public class AreaManager {
 		}
 	}
 
-	public boolean shouldHideTile(int tileX, int tileY) {
-		return shouldHide(WorldPoint.fromLocalInstance(client, LocalPoint.fromWorld(client, tileX, tileY)));
+	public boolean shouldHideTile(LocalPoint point) {
+		if (client.getScene().isInstance() || !plugin.config.hideUnrelatedMaps())
+		{
+			return false;
+		}
+
+		return shouldHide(WorldPoint.fromLocalInstance(client, point));
 	}
 
 	public boolean shouldHide(WorldPoint location) {
-		if (currentArea != null && plugin.config.hideUnrelatedMaps() && currentArea.hideOtherRegions) {
+		if (currentArea != null && currentArea.hideOtherRegions) {
 			for (AABB aabbs : currentArea.aabbs) {
 				if (aabbs.contains(location)) {
 					return false;
@@ -93,5 +98,4 @@ public class AreaManager {
 
 		return false;
 	}
-
 }
