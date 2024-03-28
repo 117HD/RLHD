@@ -2631,6 +2631,133 @@
     "flatNormals": true
   },
   {
+    "description": "Wintertodt Terrain",
+    "baseMaterial": "SNOW_4",
+    "objectIds": [
+      29297,
+      29293,
+      29296,
+      29295,
+      29298,
+      29294,
+      29279,
+      29265,
+      29280,
+      29265,
+      15258,
+      15451,
+      29135,
+      29134,
+      29281,
+      29282,
+      29286,
+      29285,
+      29278,
+      29283,
+      29284,
+      29266
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.25
+  },
+  {
+    "description": "Wintertodt Railings",
+    "baseMaterial": "SNOW_4",
+    "objectIds": [
+      29288,
+      29287,
+      29289,
+      29290,
+      29291
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.25
+  },
+  {
+    "description": "Wintertodt Wooden Objects",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH_LIGHT",
+    "objectIds": [
+      29319,
+      29320,
+      29317,
+      29318,
+      29316,
+      29301,
+      29305,
+      29302,
+      29321,
+      26330
+    ],
+    "uvType": "WORLD_XY",
+    "uvScale": 1.5
+  },
+  {
+    "description": "Wintertodt Wooden Objects rotated",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH_LIGHT",
+    "objectIds": [
+      29303,
+      29304
+    ],
+    "uvType": "WORLD_XY",
+    "uvScale": 1.5
+  },
+  {
+    "description": "Wintertodt Bruma Roots",
+    "baseMaterial": "VERY_LIGHT_BARK",
+    "objectIds": [
+      29311
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Wintertodt Herb Roots",
+    "baseMaterial": "LIGHT_BARK",
+    "objectIds": [
+      29315
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Wintertodt Brazier",
+    "baseMaterial": "METALLIC_2_HIGHGLOSS",
+    "objectIds": [
+      29312,
+      29313,
+      29314
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Wintertodt Tents",
+    "baseMaterial": "FINE_CARPET",
+    "objectIds": [
+      29307,
+      29306,
+      17359,
+      17360,
+      17361
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Wintertodt Wooden Cart",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      27364
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 1.5
+  },
+  {
+    "description": "Wintertodt Snow Pile with Wooden Wheel",
+    "baseMaterial": "SNOW_4",
+    "objectIds": [
+      26314
+    ],
+    "uvType": "BOX"
+  },
+  {
     "description": "STATUE_BUST",
     "baseMaterial": "MARBLE_1_GLOSS",
     "objectIds": [
