@@ -20052,7 +20052,6 @@
       12300,
       31628,
       12238,
-      20942,
       3474,
       43122,
       43123,
@@ -23730,6 +23729,44 @@
     "objectIds": [
       20931,
       20932
+    ]
+  },
+  {
+    "description": "PYRAMID_PLUNDER_WALL_TORCH",
+    "height": 205,
+    "offset": [ -15, 0, 0 ],
+    "radius": 350,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      20942
+    ]
+  },
+  {
+    "description": "Pyramid Plunder Gold Chest Shine",
+    "height": 150,
+    "offset": [ 0, 0, 0 ],
+    "radius": 130,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      26616,
+      20946,
+      20947
     ]
   },
   {
