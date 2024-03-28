@@ -413,10 +413,12 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			var renderable = gameObject.getRenderable();
 			if (renderable != null)
 				height = renderable.getModelHeight();
+
 			lines.add(String.format(
-				"%s: ID=%s ori=%d height=%d",
+				"%s: ID=%s preori=%d ori=%d height=%d",
 				ModelHash.getTypeName(ModelHash.getType(gameObject.getHash())),
 				getIdAndImpostorId(gameObject, renderable),
+				HDUtils.getBakedOrientation(gameObject.getConfig()),
 				gameObject.getModelOrientation(),
 				height
 			));
