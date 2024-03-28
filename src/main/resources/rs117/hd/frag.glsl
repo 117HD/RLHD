@@ -58,8 +58,11 @@ uniform float shadowMaxBias;
 uniform int shadowsEnabled;
 uniform bool underwaterEnvironment;
 uniform bool underwaterCaustics;
+uniform bool shorelineCaustics;
 uniform vec3 underwaterCausticsColor;
 uniform float underwaterCausticsStrength;
+uniform float foamDistance;
+uniform float foamAmount;
 
 // general HD settings
 uniform float saturation;
