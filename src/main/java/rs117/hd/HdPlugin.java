@@ -2884,11 +2884,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				int uvOffset = dynamicOffsetUvs + sceneContext.getUvOffset();
 
 				int preOrientation = 0;
-				int tileExX = localPos[0] / LOCAL_TILE_SIZE + SCENE_OFFSET;
-				int tileExY = localPos[1] / LOCAL_TILE_SIZE + SCENE_OFFSET;
-				if (0 <= tileExX && tileExX < EXTENDED_SCENE_SIZE && 0 <= tileExY && tileExY < EXTENDED_SCENE_SIZE) {
-					int config = sceneContext.getObjectConfig(plane, tileExX, tileExY, hash);
-					preOrientation = HDUtils.getBakedOrientation(config);
+				if (ModelHash.getType(hash) == ModelHash.TYPE_OBJECT) {
+					int tileExX = localPos[0] / LOCAL_TILE_SIZE + SCENE_OFFSET;
+					int tileExY = localPos[1] / LOCAL_TILE_SIZE + SCENE_OFFSET;
+					if (0 <= tileExX && tileExX < EXTENDED_SCENE_SIZE && 0 <= tileExY && tileExY < EXTENDED_SCENE_SIZE) {
+						int config = sceneContext.getObjectConfig(plane, tileExX, tileExY, hash);
+						preOrientation = HDUtils.getBakedOrientation(config);
+					}
 				}
 
 				modelPusher.pushModel(sceneContext, null, uuid, model, modelOverride, ObjectType.NONE, preOrientation, true);
