@@ -96,6 +96,7 @@ import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.Template;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
+import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.LightManager;
 import rs117.hd.scene.ModelOverrideManager;
@@ -225,6 +226,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Getter
 	private Gson gson;
+
+	@Inject
+	private AreaManager areaManager;
 
 	public GLCapabilities glCaps;
 	private Canvas canvas;
@@ -587,6 +591,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				modelOverrideManager.startUp();
 				modelPusher.startUp();
 				lightManager.startUp();
+				areaManager.startUp();
 				environmentManager.startUp();
 
 				isActive = true;
@@ -2300,6 +2305,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				nextSceneContext = context;
 				proceduralGenerator.generateSceneData(context);
 				environmentManager.loadSceneEnvironments(context);
+				areaManager.update(client.getLocalPlayer().getWorldLocation());
 				sceneUploader.upload(context);
 			}
 		} catch (OutOfMemoryError oom) {
@@ -2538,6 +2544,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 							case KEY_VANILLA_SHADOW_MODE:
 								reloadModelOverrides = true;
 								reloadScene = true;
+								break;
+							case KEY_HIDE_UNRELATED_MAPS_HD:
+								if (client.getGameState() == GameState.LOGGED_IN)
+								{
+									client.setGameState(GameState.LOADING);
+								}
 								break;
 							case KEY_LEGACY_GREY_COLORS:
 							case KEY_PRESERVE_VANILLA_NORMALS:

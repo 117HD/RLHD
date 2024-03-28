@@ -1,0 +1,79 @@
+[
+  {
+    "description": "Water Altar ",
+    "aabbs": [
+      [ 2689, 4860, 2749, 4801 ]
+    ]
+  },
+  {
+    "description": "Cosmic Altar",
+    "region": 8779
+  },
+  {
+    "description": "Death Altar",
+    "region": 9035
+  },
+  {
+    "description": "Chaos Altar",
+    "region": 9291
+  },
+  {
+    "description": "Law Altar",
+    "region": 9803
+  },
+  {
+    "description": "Blood Altar",
+    "aabbs": [
+      [ 3202, 4802, 3260, 4860 ]
+    ]
+  },
+  {
+    "description": "Body Altar",
+    "aabbs": [
+      [ 2501, 4859, 2540, 4819 ]
+    ]
+  },
+  {
+    "description": "Fire Altar",
+    "aabbs": [
+      [ 2553, 4863, 2623, 4804 ]
+    ]
+  },
+  {
+    "description": "Earth Altar",
+    "region": 10571
+  },
+  {
+    "description": "Water Altar ",
+    "region": 10827
+  },
+  {
+    "description": "Mind Altar",
+    "region": 11083
+  },
+  {
+    "description": "Air Altar ",
+    "region": 11339
+  },
+  {
+  "description": "Death Altar",
+  "region": 9035
+  },
+  {
+    "description": "Chaos Altar",
+    "region": 9291
+  },
+  {
+    "description": "Law Altar",
+    "region": 9803
+  },
+  {
+    "description": "Varrock & Edge Dungeon",
+    "aabbs": [
+      [ 3294, 9856, 3058, 9921 ],
+      [ 3143, 9919, 3068, 10006 ],
+      [ 3295, 9913, 3128, 9984 ],
+      [ 3075, 9864, 3142, 9820 ]
+    ]
+  }
+]
