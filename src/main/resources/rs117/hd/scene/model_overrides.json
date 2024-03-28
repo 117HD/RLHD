@@ -3539,27 +3539,23 @@
       20941
     ],
     "uvType": "BOX",
-    "uvScale": "1.2"
+    "uvScale": 1.2
   },
   {
     "description": "Pyramid Plunder Metallic Objects",
     "baseMaterial": "METALLIC_2_SUPER_HIGHGLOSS",
     "objectIds": [
-      26616,
       20946,
       20947,
-      26613,
       21263,
       21267,
-      26608,
       21262,
       21266,
-      26580,
       21261,
       21265
     ],
     "uvType": "BOX",
-    "uvScale": "1.5"
+    "uvScale": 1.5
   },
   {
     "description": "Pyramid Plunder Wall Torch",
@@ -3573,13 +3569,20 @@
     "description": "Pyramid Plunder Sarcophagus",
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [
-      26626,
       21255,
       21256,
-      21257
+      21257,
+      21259
     ],
     "uvType": "BOX",
-    "uvScale": "1.2"
+    "uvScale": 1.2
+  },
+  {
+    "description": "Pyramid Plunder Pot",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      21268
+    ]
   },
   {
     "description": "Lighthouse underground door",
