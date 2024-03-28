@@ -3570,12 +3570,22 @@
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [
       21255,
+      21257
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.2,
+    "uvOrientation": 1142
+  },
+  {
+    "description": "Pyramid Plunder Sarcophagus Opened",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
       21256,
-      21257,
       21259
     ],
     "uvType": "BOX",
-    "uvScale": 1.2
+    "uvScale": 1.2,
+    "uvOrientation": 1012
   },
   {
     "description": "Pyramid Plunder Pot",
