@@ -33282,6 +33282,24 @@
     ]
   },
   {
+    "description": "VALAMORE_FURNACE_GLOW",
+    "height": 150,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 7.5,
+    "color": [
+      252,
+      90,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "objectIds": [
+      50698
+    ]
+  },
+  {
     "description": "VARLAMORE_CRYPT_AND_CAM_TORUM_HANGING_BRAZIER",
     "height": 300,
     "alignment": "CENTER",
