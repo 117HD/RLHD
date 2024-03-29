@@ -15293,6 +15293,17 @@
     "uvScale": 0.86
   },
   {
+    "description": "Hunter Guild wooden fence walls",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      51639,
+      51663,
+      51668,
+      51672
+    ],
+    "uvType": "BOX"
+  },
+  {
     "description": "Hunter Guild big tree",
     "baseMaterial": "BARK",
     "objectIds": [
