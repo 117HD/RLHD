@@ -15262,6 +15262,15 @@
   },
   {
     "description": "Hunter Guild cave walls",
+    "baseMaterial": "HAY",
+    "objectIds": [
+      52815
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Hunter Guild cave walls",
     "baseMaterial": "ROCK_3",
     "objectIds": [
       42251,
