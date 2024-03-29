@@ -13097,7 +13097,7 @@
   {
     "description": "Bones - Medium",
     "baseMaterial": "BONE",
-    "objectIds": [ 33323, 33324, 33325, 33326 ],
+    "objectIds": [ 33323, 33324, 33325, 33326,51657,51658 ],
     "uvType": "BOX",
     "uvOrientation": 768,
     "uvScale": 0.6
@@ -15293,7 +15293,17 @@
     "uvScale": 0.86
   },
   {
-    "description": "Hunter Guild wooden fence walls",
+    "description": "Hunter Guild Entrance Bone Arches",
+    "baseMaterial": "BONE",
+    "objectIds": [
+      51657,
+      51658
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Hunter Guild Wooden Fence Walls",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       51639,
@@ -15304,7 +15314,7 @@
     "uvType": "BOX"
   },
   {
-    "description": "Hunter Guild big tree",
+    "description": "Hunter Guild Big Tree",
     "baseMaterial": "BARK",
     "objectIds": [
       51619,
@@ -15345,7 +15355,7 @@
     "uvScale": 1.2
   },
   {
-    "description": "Hunter Guild rugs",
+    "description": "Hunter Guild Rugs",
     "baseMaterial": "FINE_CARPET",
     "objectIds": [
       51737,
@@ -15361,7 +15371,7 @@
     "uvScale": 1.5
   },
   {
-    "description": "Hunter guild counter",
+    "description": "Hunter Guild Cavern Counter",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       51718,
@@ -15373,7 +15383,7 @@
     "uvOrientationY": 512
   },
   {
-    "description": "Hunter guild wooden objects",
+    "description": "Hunter Guild Wooden Objects",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       51745,
@@ -15384,7 +15394,7 @@
     "uvOrientation": 512
   },
   {
-    "description": "Hunter guild caverns stairs",
+    "description": "Hunter Guild Caverns Stairs",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       51642
@@ -15393,7 +15403,7 @@
     "uvScale": 1.5
   },
   {
-    "description": "Bear rugs",
+    "description": "Bear Rugs",
     "baseMaterial": "FINE_CARPET",
     "objectIds": [
       950,
