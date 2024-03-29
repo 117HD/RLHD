@@ -1636,13 +1636,29 @@
       34494,
       34496,
       46411,
-      46412,
+      46412
+    ],
+    "flatNormals": true,
+    "castShadows": false
+  },
+  {
+    "description": "Fortis and Avium Grass",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [
       51804,
       51805,
       51806,
       51808,
       51809,
-      51807
+      51807,
+      51810,
+      51811,
+      51812,
+      51813,
+      51814,
+      51815,
+      51816,
+      51817
     ],
     "flatNormals": true,
     "castShadows": false
@@ -1680,7 +1696,8 @@
       16825,
       16826
     ],
-    "flatNormals": true
+    "flatNormals": true,
+    "castShadows": false
   },
   {
     "description": "WOODEN_FENCES",
