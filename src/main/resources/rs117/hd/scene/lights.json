@@ -33264,6 +33264,24 @@
     ]
   },
   {
+    "description": "Valamore Colosseum Wall Torch",
+    "height": 235,
+    "alignment": "CENTER",
+    "radius": 275,
+    "strength": 11.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      15253
+    ]
+  },
+  {
     "description": "VARLAMORE_CRYPT_AND_CAM_TORUM_HANGING_BRAZIER",
     "height": 300,
     "alignment": "CENTER",
