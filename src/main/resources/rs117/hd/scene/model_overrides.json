@@ -1642,7 +1642,7 @@
     "castShadows": false
   },
   {
-    "description": "Fortis and Avium Grass",
+    "description": "Valamore, Fortis and Avium Grass",
     "baseMaterial": "GRAY_75",
     "objectIds": [
       51804,
@@ -13097,7 +13097,7 @@
   {
     "description": "Bones - Medium",
     "baseMaterial": "BONE",
-    "objectIds": [ 33323, 33324, 33325, 33326,51657,51658 ],
+    "objectIds": [ 33323, 33324, 33325, 33326 ],
     "uvType": "BOX",
     "uvOrientation": 768,
     "uvScale": 0.6
