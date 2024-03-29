@@ -15284,6 +15284,47 @@
     "uvScale": 0.86
   },
   {
+    "description": "Hunter Guild big tree",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      51619,
+      51620,
+      51621,
+      51622,
+      51623,
+      51624,
+      51625,
+      51627,
+      51628,
+      51629,
+      51630,
+      51631,
+      51632,
+      51632,
+      51633,
+      51634,
+      51635,
+      51636,
+      51637,
+      51638,
+      51641,
+      51646,
+      51646,
+      51647,
+      51648,
+      51649,
+      51650,
+      51651,
+      51652,
+      51653,
+      51654,
+      51655,
+      51656
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.2
+  },
+  {
     "description": "Hunter Guild rugs",
     "baseMaterial": "FINE_CARPET",
     "objectIds": [
@@ -15312,11 +15353,12 @@
     "uvOrientationY": 512
   },
   {
-    "description": "Hunter guild caverns wooden objects",
+    "description": "Hunter guild wooden objects",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       51745,
-      52425
+      52425,
+      52430
     ],
     "uvType": "BOX",
     "uvOrientation": 512
