@@ -5899,6 +5899,7 @@
       19215,
       19216,
       19217,
+      19218,
       20648,
       20753,
       20754,
@@ -15354,6 +15355,15 @@
     ],
     "uvType": "BOX",
     "uvScale": 1.2
+  },
+  {
+    "description": "Hunter Guild Big Tree Rope",
+    "baseMaterial": "FINE_CARPET",
+    "objectIds": [
+      51643
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75
   },
   {
     "description": "Hunter Guild Rugs",
