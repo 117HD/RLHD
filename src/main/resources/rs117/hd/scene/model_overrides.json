@@ -3437,7 +3437,23 @@
       43700,
       43849
     ],
-    "baseMaterial": "UNLIT"
+    "baseMaterial": "UNLIT",
+    "castShadows": false
+  },
+  {
+    "description": "Guardians of the Rift barriers",
+    "objectIds": [
+      43744,
+      43745,
+      43746,
+      43747,
+      43748,
+      43749,
+      43750,
+      43751
+    ],
+    "baseMaterial": "UNLIT",
+    "castShadows": false
   },
   {
     "description": "Tombs of Amascut Baba boulders",
@@ -15907,5 +15923,10 @@
     "objectIds": [ 51372, 51373, 51374 ],
     "baseMaterial": "ROCK_3_SMOOTH",
     "uvType": "BOX"
+  },
+  {
+    "description": "Disable shadows for fishing spots at Molch",
+    "npcIds": [ 8523 ],
+    "castShadows": false
   }
 ]
