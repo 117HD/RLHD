@@ -15272,6 +15272,37 @@
     "uvScale": 0.6
   },
   {
+    "description": "Valamore Rugs and carpets",
+    "baseMaterial": "FINE_CARPET",
+    "objectIds": [
+      52467,
+      52468,
+      52469,
+      52470,
+      52471,
+      52472,
+      52473,
+      52474,
+      52475,
+      52476,
+      52573,
+      52574,
+      52575
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Valamore Banners",
+    "baseMaterial": "FINE_CARPET",
+    "objectIds": [
+      51946,
+      51947,
+      51948,
+      52314
+    ],
+    "uvType": "MODEL_YZ"
+  },
+  {
     "description": "Hunter Guild cave walls",
     "baseMaterial": "ROCK_3",
     "objectIds": [
@@ -16012,7 +16043,7 @@
   },
   {
     "description": "Wooden food trough",
-    "objectIds": [ 301 ],
+    "objectIds": [ 301, 3644 ],
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.8,
