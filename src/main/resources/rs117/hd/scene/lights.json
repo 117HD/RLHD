@@ -27278,7 +27278,7 @@
     "height": 200,
     "alignment": "CENTER",
     "radius": 250,
-    "strength": 0.75,
+    "strength": 1.25,
     "color": [
       255,
       255,
