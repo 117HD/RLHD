@@ -5900,7 +5900,9 @@
       19216,
       19217,
       19218,
+      19851,
       20648,
+      20649,
       20753,
       20754,
       20755,
@@ -15443,6 +15445,18 @@
     ],
     "uvType": "BOX",
     "uvScale": 1.5
+  },
+  {
+    "description": "Hunter Pitfall Spiked Pit - Snowy",
+    "baseMaterial": "SNOW_2",
+    "objectIds": [
+      19249,
+      19250,
+      19251,
+      19252
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.2
   },
   {
     "description": "Bear Rugs",
