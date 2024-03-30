@@ -644,9 +644,18 @@
   {
     "area": "RELLEKKA_SNOWY_REGION",
     "ambientColor": "#6fb0ff",
+    "ambientStrength": 1,
+    "directionalColor": "#f4e5c9",
+    "directionalStrength": 2,
+    "fogColor": "#aebde0",
+    "fogDepth": 70
+  },
+  {
+    "area": "RELLEKKA_HUNTER_ICEBERG",
+    "ambientColor": "#6fb0ff",
     "ambientStrength": 0.75,
     "directionalColor": "#f4e5c9",
-    "directionalStrength": 1.1,
+    "directionalStrength": 1,
     "fogColor": "#aebde0",
     "fogDepth": 70
   },
