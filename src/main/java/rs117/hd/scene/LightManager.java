@@ -75,7 +75,6 @@ import static rs117.hd.utils.ResourcePath.path;
 @Singleton
 @Slf4j
 public class LightManager {
-	private static final float VISIBILITY_FADE = 0.1f;
 	private static final ResourcePath LIGHTS_PATH = Props.getPathOrDefault(
 		"rlhd.lights-path",
 		() -> path(LightManager.class, "lights.json")
@@ -421,20 +420,16 @@ public class LightManager {
 				}
 			}
 
-			if (hiddenTemporarily != light.hiddenTemporarily) {
-				light.hiddenTemporarily = hiddenTemporarily;
-				// If becoming temporarily hidden from a visible state, fade the light out
-				if (hiddenTemporarily && light.visible)
-					light.changedVisibilityAt = light.elapsedTime;
-			}
+			if (hiddenTemporarily != light.hiddenTemporarily)
+				light.toggleTemporaryVisibility();
 
 			light.elapsedTime += plugin.deltaClientTime;
 
 			light.visible = light.spawnDelay < light.elapsedTime && (light.lifetime == -1 || light.elapsedTime < light.lifetime);
-			if (light.visible && light.hiddenTemporarily) {
-				// When the light is becoming hidden temporarily, it should remain visible until it has faded out
-				light.visible = light.changedVisibilityAt != -1 && light.elapsedTime - light.changedVisibilityAt < VISIBILITY_FADE;
-			}
+
+			// If the light is temporarily hidden, keep it visible only while fading out
+			if (light.visible && light.hiddenTemporarily)
+				light.visible = light.changedVisibilityAt != -1 && light.elapsedTime - light.changedVisibilityAt < Light.VISIBILITY_FADE;
 
 			if (light.visible) {
 				// Hide lights which cannot possibly affect the visible scene
@@ -474,10 +469,9 @@ public class LightManager {
 
 			sceneContext.numVisibleLights++;
 
-			if (!light.withinViewingDistance && light.hiddenTemporarily) {
-				light.hiddenTemporarily = false;
-				light.changedVisibilityAt = light.elapsedTime;
-			}
+			// If the light was temporarily hidden, begin fading in
+			if (!light.withinViewingDistance && light.hiddenTemporarily)
+				light.toggleTemporaryVisibility();
 			light.withinViewingDistance = true;
 
 			if (light.def.type == LightType.FLICKER) {
@@ -520,19 +514,12 @@ public class LightManager {
 			if (light.fadeOutDuration > 0 && light.lifetime != -1)
 				light.strength *= HDUtils.clamp((light.lifetime - light.elapsedTime) / light.fadeOutDuration, 0, 1);
 
-			// Overriding fade-in when becoming visible due to distance re-prioritization
-			if (light.changedVisibilityAt != -1) {
-				float fade = HDUtils.clamp((light.elapsedTime - light.changedVisibilityAt) / VISIBILITY_FADE, 0, 1);
-				if (light.hiddenTemporarily)
-					fade = 1 - fade; // Fade out instead
-				light.strength *= fade;
-			}
+			light.applyTemporaryVisibilityFade();
 		}
 
 		for (int i = sceneContext.lights.size() - 1; i >= sceneContext.numVisibleLights; i--) {
 			Light light = sceneContext.lights.get(i);
 			light.withinViewingDistance = false;
-			light.changedVisibilityAt = -1;
 
 			// Automatically despawn non-replayable fixed lifetime lights when they expire
 			if (!light.replayable && light.lifetime != -1 && light.lifetime < light.elapsedTime)
