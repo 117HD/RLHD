@@ -216,7 +216,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private ModelHasher modelHasher;
 
 	@Inject
-	public FishingSpotReplacer fishingSpotReplacer;
+	private FishingSpotReplacer fishingSpotReplacer;
 
 	@Inject
 	private DeveloperTools developerTools;
