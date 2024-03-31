@@ -29,8 +29,8 @@ import java.util.function.Consumer;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import rs117.hd.data.materials.Material;
-import rs117.hd.utils.ColorUtils;
 
+import static rs117.hd.utils.ColorUtils.hsl;
 import static rs117.hd.utils.ColorUtils.rgb;
 import static rs117.hd.utils.ColorUtils.srgb;
 
@@ -50,7 +50,7 @@ public enum WaterType
 		.depthColor(srgb(41, 82, 26))
 		.causticsStrength(0)
 		.duration(1.2f)
-		.fishingSpotColor(srgb("#04730d"))),
+		.fishingSpotColor(hsl("#04730d"))),
 	SWAMP_WATER_FLAT(SWAMP_WATER, true),
 	POISON_WASTE(b -> b
 		.specularStrength(.1f)
@@ -151,7 +151,6 @@ public enum WaterType
 
 	public final boolean flat;
 	public final float specularStrength;
-	public final int fishingSpotColor;
 	public final float specularGloss;
 	public final float normalStrength;
 	public final float baseOpacity;
@@ -163,6 +162,7 @@ public enum WaterType
 	public final float causticsStrength;
 	public final boolean hasFoam;
 	public final float duration;
+	public final int fishingSpotColor;
 
 	@Setter
 	@Accessors(fluent = true)
@@ -170,7 +170,6 @@ public enum WaterType
 	{
 		private boolean flat = false;
 		private float specularStrength = .5f;
-		private float[] fishingSpotColor = null;
 		private float specularGloss = 500;
 		private float normalStrength = .09f;
 		private float baseOpacity = .5f;
@@ -182,6 +181,7 @@ public enum WaterType
 		private float causticsStrength = 1;
 		private boolean hasFoam = true;
 		private float duration = 1;
+		private int fishingSpotColor = -1;
 	}
 
 	WaterType()
@@ -195,11 +195,6 @@ public enum WaterType
 		consumer.accept(builder);
 		flat = builder.flat;
 		specularStrength = builder.specularStrength;
-		if (builder.fishingSpotColor != null) {
-			fishingSpotColor = ColorUtils.srgbToPackedHsl(builder.fishingSpotColor);
-		} else {
-			fishingSpotColor = 0;
-		}
 		specularGloss = builder.specularGloss;
 		normalStrength = builder.normalStrength;
 		baseOpacity = builder.baseOpacity;
@@ -211,6 +206,7 @@ public enum WaterType
 		causticsStrength = builder.causticsStrength;
 		hasFoam = builder.hasFoam;
 		duration = builder.duration;
+		fishingSpotColor = builder.fishingSpotColor;
 	}
 
 	WaterType(WaterType parent, boolean flat)
@@ -222,12 +218,12 @@ public enum WaterType
 		baseOpacity = parent.baseOpacity;
 		fresnelAmount = parent.fresnelAmount;
 		normalMap = parent.normalMap;
-		fishingSpotColor = parent.fishingSpotColor;
 		surfaceColor = parent.surfaceColor;
 		foamColor = parent.foamColor;
 		depthColor = parent.depthColor;
 		causticsStrength = parent.causticsStrength;
 		hasFoam = parent.hasFoam;
 		duration = parent.duration;
+		fishingSpotColor = parent.fishingSpotColor;
 	}
 }

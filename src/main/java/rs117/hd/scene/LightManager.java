@@ -1052,7 +1052,7 @@ public class LightManager {
 			return;
 
 		if (plugin.enableDetailedTimers)
-			frameTimer.begin(Timer.OBJECT_TRACKING);
+			frameTimer.begin(Timer.IMPOSTOR_TRACKING);
 		// Check if the event is specifically a varbit change first,
 		// since all varbit changes are necessarily also varp changes
 		if (event.getVarbitId() != -1) {
@@ -1063,6 +1063,6 @@ public class LightManager {
 				trackImpostorChanges(sceneContext, tracker);
 		}
 		if (plugin.enableDetailedTimers)
-			frameTimer.end(Timer.OBJECT_TRACKING);
+			frameTimer.end(Timer.IMPOSTOR_TRACKING);
 	}
 }

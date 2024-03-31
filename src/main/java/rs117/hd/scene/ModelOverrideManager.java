@@ -73,7 +73,7 @@ public class ModelOverrideManager {
 			} catch (IOException ex) {
 				log.error("Failed to load model overrides:", ex);
 			}
-			plugin.finishingSpotHandler.loadModelOverride(plugin.config.fishingSpots());
+			plugin.fishingSpotReplacer.loadModelOverride(plugin.config.replaceFishingSpots());
 			if (!first) {
 				clientThread.invoke(() -> {
 					modelPusher.clearModelCache();

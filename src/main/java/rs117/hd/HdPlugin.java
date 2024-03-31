@@ -97,7 +97,7 @@ import rs117.hd.opengl.shader.Template;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 import rs117.hd.scene.EnvironmentManager;
-import rs117.hd.scene.FinishingSpotHandler;
+import rs117.hd.scene.FishingSpotReplacer;
 import rs117.hd.scene.LightManager;
 import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.ProceduralGenerator;
@@ -216,6 +216,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private ModelHasher modelHasher;
 
 	@Inject
+	public FishingSpotReplacer fishingSpotReplacer;
+
+	@Inject
 	private DeveloperTools developerTools;
 
 	@Inject
@@ -321,9 +324,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	@Nullable
 	private SceneContext sceneContext;
 	private SceneContext nextSceneContext;
-
-	@Inject
-	public FinishingSpotHandler finishingSpotHandler;
 
 	private int dynamicOffsetVertices;
 	private int dynamicOffsetUvs;
@@ -586,12 +586,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				lastCanvasWidth = lastCanvasHeight = 0;
 				lastStretchedCanvasWidth = lastStretchedCanvasHeight = 0;
 				lastAntiAliasingMode = null;
-				finishingSpotHandler.start();
+
 				tileOverrideManager.startUp();
 				modelOverrideManager.startUp();
 				modelPusher.startUp();
 				lightManager.startUp();
 				environmentManager.startUp();
+				fishingSpotReplacer.startUp();
 
 				isActive = true;
 				hasLoggedIn = client.getGameState().getState() > GameState.LOGGING_IN.getState();
@@ -635,11 +636,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 			developerTools.deactivate();
 			modelPusher.shutDown();
-			finishingSpotHandler.reset();
 			tileOverrideManager.shutDown();
 			modelOverrideManager.shutDown();
 			lightManager.shutDown();
 			environmentManager.shutDown();
+			fishingSpotReplacer.shutDown();
 
 			if (lwjglInitialized) {
 				lwjglInitialized = false;
@@ -2247,11 +2248,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		return image;
 	}
 
-	@Subscribe
-	public void onNpcSpawned(NpcSpawned npcSpawned) {
-		finishingSpotHandler.spawnFishingSpot(npcSpawned.getNpc());
-	}
-
 	@Override
 	public void animate(Texture texture, int diff) {}
 
@@ -2345,6 +2341,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		}
 
 		lightManager.loadSceneLights(nextSceneContext, sceneContext);
+		fishingSpotReplacer.despawnRuneLiteObjects();
 
 		if (sceneContext != null)
 			sceneContext.destroy();
@@ -2387,7 +2384,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		sceneContext.stagingBufferVertices.clear();
 		sceneContext.stagingBufferUvs.clear();
 		sceneContext.stagingBufferNormals.clear();
-		finishingSpotHandler.reset();
+
 		if (sceneContext.intersects(Area.PLAYER_OWNED_HOUSE)) {
 			if (!isInHouse) {
 				// POH takes 1 game tick to enter, then 2 game ticks to load per floor
@@ -2509,10 +2506,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 								if (client.getGameState() == GameState.LOGGED_IN)
 									client.setGameState(GameState.LOADING);
 								break;
-							case FISHINGSPOTS:
-								reloadModelOverrides = true;
-								finishingSpotHandler.reset();
-								break;
 							case KEY_COLOR_BLINDNESS:
 							case KEY_MACOS_INTEL_WORKAROUND:
 							case KEY_MAX_DYNAMIC_LIGHTS:
@@ -2574,6 +2567,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 								restartPlugin();
 								// since we'll be restarting the plugin anyway, skip pending changes
 								return;
+							case KEY_REPLACE_FISHING_SPOTS:
+								reloadModelOverrides = true; // TODO: this is maybe not needed
+								fishingSpotReplacer.despawnRuneLiteObjects();
+								break;
 						}
 					}
 
@@ -3125,7 +3122,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			--gameTicksUntilSceneReload;
 		}
 
-		finishingSpotHandler.updateFishingSpots();
+		fishingSpotReplacer.update();
 
 		// reload the scene if the player is in a house and their plane changed
 		// this greatly improves the performance as it keeps the scene buffer up to date

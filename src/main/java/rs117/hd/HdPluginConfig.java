@@ -785,18 +785,17 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
-	String FISHINGSPOTS = "fishingspots";
+	String KEY_REPLACE_FISHING_SPOTS = "replaceFishingSpots";
 	@ConfigItem(
-		keyName = FISHINGSPOTS,
-		name = "Improved FishingSpots",
-		description = "Replaces the normal fishing spots with something custom to make them more visible.",
+		keyName = KEY_REPLACE_FISHING_SPOTS,
+		name = "Replace Fishing Spots",
+		description = "Replace certain fishing spots with more appropriate models that are easier to see.",
 		position = 7,
 		section = miscellaneousSettings
 	)
-	default boolean fishingSpots() {
+	default boolean replaceFishingSpots() {
 		return true;
 	}
-
 
 
 	/*====== Experimental settings ======*/
@@ -876,6 +875,7 @@ public interface HdPluginConfig extends Config
 	default boolean decoupleSkyAndWaterColor() {
 		return false;
 	}
+
 
 	/*====== Internal settings ======*/
 
