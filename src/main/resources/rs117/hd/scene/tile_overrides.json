@@ -4114,6 +4114,13 @@
     "waterType": "DARK_BLUE_WATER"
   },
   {
+    "name": "COLOSSEUM_TILES",
+    "area": "COLOSSEUM",
+    "overlayIds": [ 137, 198, 199 ],
+    "underlayIds": [ 12, 187, 202 ],
+    "groundMaterial": "MARBLE_2"
+  },
+  {
     "name": "VARLAMORE_SAVANNA_HUNTER_PIT_TRAPS",
     "area": "VARLAMORE_SAVANNA_HUNTER_PIT_TRAPS",
     "overlayIds": [ 336 ],

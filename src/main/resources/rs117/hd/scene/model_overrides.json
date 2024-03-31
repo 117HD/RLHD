@@ -16362,5 +16362,17 @@
     "description": "Disable shadows for fishing spots at Molch",
     "npcIds": [ 8523 ],
     "castShadows": false
+  },
+  {
+    "description": "Disable shadows for Colosseum entrance walls",
+    "objectIds": [ 38847, 50764, 50765, 50766, 50767 ],
+    "receiveShadows": false,
+    "flatNormals": true
+  },
+  {
+    "description": "Disable shadows for Colosseum entrance white backdrop",
+    "objectIds": [ 50769 ],
+    "receiveShadows": false,
+    "flatNormals": true
   }
 ]

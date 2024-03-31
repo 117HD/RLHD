@@ -33412,6 +33412,36 @@
     ]
   },
   {
+    "description": "Colosseum northern entrance",
+    "worldX": 1824,
+    "worldY": 9521,
+    "plane": 0,
+    "radius": 600,
+    "strength": 10,
+    "color": "#ffffff",
+    "offset": [ -64, 160, -64 ]
+  },
+  {
+    "description": "Colosseum eastern entrance",
+    "worldX": 1840,
+    "worldY": 9506,
+    "plane": 0,
+    "radius": 600,
+    "strength": 10,
+    "color": "#ffffff",
+    "offset": [ -64, 160, -64 ]
+  },
+  {
+    "description": "Colosseum western entrance",
+    "worldX": 1810,
+    "worldY": 9506,
+    "plane": 0,
+    "radius": 600,
+    "strength": 10,
+    "color": "#ffffff",
+    "offset": [ 64, 160, -64 ]
+  },
+  {
     "description": "VARLAMORE_CRYPT_AND_CAM_TORUM_HANGING_BRAZIER",
     "height": 300,
     "alignment": "CENTER",

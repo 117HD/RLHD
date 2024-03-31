@@ -1129,7 +1129,7 @@ public enum Area
 		new AABB(2699, 3839, 2741, 3810),
 		new AABB(2711, 3809, 2725, 3801),
 		new AABB(2726, 3809, 2738, 3803)
-		),
+	),
 	// Trollheim - Weiss Region
 	TROLLHEIM(
 		regions(
@@ -2283,6 +2283,7 @@ public enum Area
 		THE_ECLIPSE_MOON_ENTRANCE,
 		new AABB(1472, 9610, 1510, 9654, 0)
 	)),
+	COLOSSEUM(7316),
 
 	SNOWY_REGIONS(
 		ASGARNIA_ICE_DUNGEON_SNOWY,
