@@ -124,7 +124,7 @@ public class FinishingSpotHandler {
 	private RuneLiteObject createRuneLiteObjectForWater(LocalPoint pos) {
 		Tile tile = client.getScene().getTiles()[client.getPlane()][pos.getSceneX()][pos.getSceneY()];
 		WaterType waterType = tileOverrideManager.getOverride(client.getScene(), tile).waterType;
-		int color = waterType.fishingColor;
+		int color = waterType.fishingSpotColor;
 
 
 		RuneLiteObject fishingSpot = client.createRuneLiteObject();
