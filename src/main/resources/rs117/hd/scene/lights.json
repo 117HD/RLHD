@@ -26027,7 +26027,7 @@
   {
     "description": "TRAILBLAZER_VENGENCE_ACCENT",
     "offset": [ 0, 40, 0 ],
-    "radius": 200,
+    "radius": 220,
     "fixedDespawnTime": true,
     "strength": 12,
     "color": [
