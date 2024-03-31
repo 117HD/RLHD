@@ -785,6 +785,18 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
+	String KEY_REPLACE_FISHING_SPOTS = "replaceFishingSpots";
+	@ConfigItem(
+		keyName = KEY_REPLACE_FISHING_SPOTS,
+		name = "Replace Fishing Spots",
+		description = "Replace certain fishing spots with more appropriate models that are easier to see.",
+		position = 7,
+		section = miscellaneousSettings
+	)
+	default boolean replaceFishingSpots() {
+		return true;
+	}
+
 
 	/*====== Experimental settings ======*/
 

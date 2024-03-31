@@ -97,6 +97,7 @@ import rs117.hd.opengl.shader.Template;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 import rs117.hd.scene.EnvironmentManager;
+import rs117.hd.scene.FishingSpotReplacer;
 import rs117.hd.scene.LightManager;
 import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.ProceduralGenerator;
@@ -213,6 +214,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Inject
 	private ModelHasher modelHasher;
+
+	@Inject
+	private FishingSpotReplacer fishingSpotReplacer;
 
 	@Inject
 	private DeveloperTools developerTools;
@@ -588,6 +592,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				modelPusher.startUp();
 				lightManager.startUp();
 				environmentManager.startUp();
+				fishingSpotReplacer.startUp();
 
 				isActive = true;
 				hasLoggedIn = client.getGameState().getState() > GameState.LOGGING_IN.getState();
@@ -635,6 +640,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			modelOverrideManager.shutDown();
 			lightManager.shutDown();
 			environmentManager.shutDown();
+			fishingSpotReplacer.shutDown();
 
 			if (lwjglInitialized) {
 				lwjglInitialized = false;
@@ -2335,6 +2341,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		}
 
 		lightManager.loadSceneLights(nextSceneContext, sceneContext);
+		fishingSpotReplacer.despawnRuneLiteObjects();
 
 		if (sceneContext != null)
 			sceneContext.destroy();
@@ -2560,6 +2567,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 								restartPlugin();
 								// since we'll be restarting the plugin anyway, skip pending changes
 								return;
+							case KEY_REPLACE_FISHING_SPOTS:
+								reloadModelOverrides = true;
+								fishingSpotReplacer.despawnRuneLiteObjects();
+								clientThread.invokeLater(fishingSpotReplacer::update);
+								break;
 						}
 					}
 
@@ -3110,6 +3122,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				reuploadScene();
 			--gameTicksUntilSceneReload;
 		}
+
+		fishingSpotReplacer.update();
 
 		// reload the scene if the player is in a house and their plane changed
 		// this greatly improves the performance as it keeps the scene buffer up to date
