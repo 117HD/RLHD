@@ -20015,6 +20015,24 @@
     ]
   },
   {
+    "description": "TEXTURED_WALL_TORCH",
+    "height": 235,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      198
+    ]
+  },
+  {
     "description": "WALL_TORCH",
     "height": 235,
     "alignment": "CENTER",
@@ -20029,13 +20047,11 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      198,
       6537,
       18891,
       12300,
       31628,
       12238,
-      20942,
       3474,
       43122,
       43123,
@@ -23712,9 +23728,45 @@
     "range": 0,
     "objectIds": [
       20931,
-      20932,
-      20948,
-      20949
+      20932
+    ]
+  },
+  {
+    "description": "PYRAMID_PLUNDER_WALL_TORCH",
+    "height": 205,
+    "offset": [ -15, 0, 0 ],
+    "radius": 350,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      20942
+    ]
+  },
+  {
+    "description": "Pyramid Plunder Gold Chest Shine",
+    "height": 150,
+    "offset": [ 0, 0, 0 ],
+    "radius": 130,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      26616,
+      20946,
+      20947
     ]
   },
   {
@@ -27263,7 +27315,7 @@
     "height": 200,
     "alignment": "CENTER",
     "radius": 250,
-    "strength": 0.75,
+    "strength": 1.25,
     "color": [
       255,
       255,
@@ -28959,7 +29011,7 @@
     "height": 300,
     "alignment": "CENTER",
     "radius": 600,
-    "strength": 15,
+    "strength": 10,
     "color": [
       165,
       255,
@@ -28968,17 +29020,73 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 15,
+    "fadeInDuration": 50,
+    "fadeOutDuration": 100,
     "objectIds": [
       29314,
       31926
     ]
   },
   {
-    "description": "WINTERTODT_DOOR",
+    "description": "WINTERTODT_DOOR_INSIDE_1",
     "height": 500,
     "alignment": "SOUTH",
-    "radius": 1500,
-    "strength": 15,
+    "radius": 5500,
+    "strength": 1,
+    "color": [
+      165,
+      255,
+      56
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "objectIds": [
+      29322
+    ]
+  },
+  {
+    "description": "WINTERTODT_DOOR_INSIDE_2",
+    "height": 500,
+    "alignment": "SOUTH",
+    "radius": 500,
+    "strength": 100,
+    "color": [
+      165,
+      255,
+      56
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "objectIds": [
+      29322
+    ]
+  },
+  {
+    "description": "WINTERTODT_DOOR_OUTSIDE_1",
+    "height": 500,
+    "offset": [245,0,0 ],
+    "radius": 2000,
+    "strength": 2,
+    "color": [
+      165,
+      255,
+      56
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "objectIds": [
+      29322
+    ]
+  },
+  {
+    "description": "WINTERTODT_DOOR_OUTSIDE_2",
+    "height": 500,
+    "offset": [245,0,0 ],
+    "radius": 500,
+    "strength": 80,
     "color": [
       165,
       255,
@@ -33230,7 +33338,7 @@
     ]
   },
   {
-    "description": "VARLAMORE_TEMPLE_CRYPT_BRAZIER",
+    "description": "VARLAMORE_ORANGE_BRAZIER",
     "height": 150,
     "alignment": "CENTER",
     "radius": 600,
@@ -33244,11 +33352,97 @@
     "duration": 0,
     "range": 30,
     "objectIds": [
-      51906
+      51906,
+      51907
     ]
   },
   {
-    "description": "VARLAMORE_TEMPLE_CRYPT_CEILING_BRAZIER",
+    "description": "Valamore Colosseum Wall Torch",
+    "height": 235,
+    "alignment": "CENTER",
+    "radius": 275,
+    "strength": 11.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      15253
+    ]
+  },
+  {
+    "description": "VALAMORE_FURNACE_GLOW",
+    "height": 150,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 7.5,
+    "color": [
+      252,
+      90,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "objectIds": [
+      50698
+    ]
+  },
+  {
+    "description": "VALAMORE_OVEN_GLOW",
+    "height": 120,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      52647,
+      52648
+    ]
+  },
+  {
+    "description": "Colosseum northern entrance",
+    "worldX": 1824,
+    "worldY": 9521,
+    "plane": 0,
+    "radius": 600,
+    "strength": 10,
+    "color": "#ffffff",
+    "offset": [ -64, 160, -64 ]
+  },
+  {
+    "description": "Colosseum eastern entrance",
+    "worldX": 1840,
+    "worldY": 9506,
+    "plane": 0,
+    "radius": 600,
+    "strength": 10,
+    "color": "#ffffff",
+    "offset": [ -64, 160, -64 ]
+  },
+  {
+    "description": "Colosseum western entrance",
+    "worldX": 1810,
+    "worldY": 9506,
+    "plane": 0,
+    "radius": 600,
+    "strength": 10,
+    "color": "#ffffff",
+    "offset": [ 64, 160, -64 ]
+  },
+  {
+    "description": "VARLAMORE_CRYPT_AND_CAM_TORUM_HANGING_BRAZIER",
     "height": 300,
     "alignment": "CENTER",
     "radius": 1500,
@@ -33259,7 +33453,7 @@
       3
     ],
     "type": "FLICKER",
-    "range": 10,
+    "range": 15,
     "objectIds": [
       51578
     ],
@@ -33285,6 +33479,198 @@
     "visibleFromOtherPlanes": true
   },
   {
+    "description": "CAM_TORUM_TORCH_STATUE",
+    "offset": [ 0, 138, -38 ],
+    "radius": 600,
+    "strength": 15,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "range": 7.5,
+    "objectIds": [
+      51009
+    ]
+  },
+  {
+    "description": "ANTECHAMBER_CEILING_LIGHT",
+    "worldX": 1440,
+    "worldY": 9632,
+    "plane": 1,
+    "radius": 1600,
+    "strength": 200,
+    "color": "#ffffff",
+    "offset": [ 0, 1820, 0 ]
+  },
+  {
+    "description": "ANCIENT_SHRINE_CEILING_LIGHT",
+    "worldX": 1513,
+    "worldY": 9580,
+    "plane": 1,
+    "radius": 1600,
+    "strength": 100,
+    "color": "#ffffff",
+    "offset": [ 0, 1360, 0 ]
+  },
+  {
+    "description": "ANTECHAMBER_ORANGE_BRAZIERS",
+    "objectIds": [ 51342 ],
+    "color": "#e58500",
+    "strength": 20,
+    "radius": 1000,
+    "offset": [ 0, 227, 0 ]
+  },
+  {
+    "description": "ANTECHAMBER_BLOOD_MOON_BRAZIERS",
+    "objectIds": [ 51343 ],
+    "color": "#df002e",
+    "strength": 10,
+    "radius": 1000,
+    "offset": [ 0, 227, 0 ]
+  },
+  {
+    "description": "ANTECHAMBER_BLUE_MOON_BRAZIERS",
+    "objectIds": [ 51344 ],
+    "color": "#3571a7",
+    "strength": 25,
+    "radius": 1000,
+    "offset": [ 0, 227, 0 ]
+  },
+  {
+    "description": "ANTECHAMBER_ECLIPSE_MOON_BRAZIERS",
+    "objectIds": [ 51345 ],
+    "color": "#ffa41b",
+    "strength": 2,
+    "radius": 1000,
+    "offset": [ 0, 227, 0 ]
+  },
+  {
+    "description": "SULPHUR_NAGA",
+    "npcIds": [ 13033 ],
+    "color": "#cd7c00",
+    "strength": 20,
+    "radius": 600,
+    "offset": [ 0, 47, 0 ]
+  },
+  {
+    "description": "PERILOUS_MOONS_COOKING_STOVE",
+    "objectIds": [ 51362 ],
+    "color": "#e58500",
+    "strength": 30,
+    "radius": 400,
+    "offset": [ 0, 42, 0 ]
+  },
+  {
+    "description": "PERILOUS_MOONS_SURFACE_OPENING_VINES",
+    "objectIds": [ 51441 ],
+    "radius": 1300,
+    "strength": 25,
+    "color": "#ffffff",
+    "offset": [ 0, 540, 0 ]
+  },
+  {
+    "description": "CAM_TORUM_FORGE",
+    "height": 50,
+    "alignment": "CENTER",
+    "radius": 500,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 30,
+    "objectIds": [
+      51496
+    ]
+  },
+  {
+    "description": "EYATLALLI",
+    "npcIds": [ 12869 ],
+    "color": "#00c7c1",
+    "strength": 25,
+    "radius": 700,
+    "offset": [ 0, 47, 0 ]
+  },
+  {
+    "description": "EYATLALLI_RIGHT_HAND",
+    "npcIds": [ 12869 ],
+    "color": "#00c7c1",
+    "strength": 25,
+    "radius": 250,
+    "offset": [ 112, 620, 2 ]
+  },
+  {
+    "description": "EYATLALLI_LEFT_HAND",
+    "npcIds": [ 12869 ],
+    "color": "#00c7c1",
+    "strength": 15,
+    "radius": 250,
+    "offset": [ -108, 391, 11 ]
+  },
+  {
+    "description": "THE_BLUE_MOON_BRAZIERS",
+    "objectIds": [ 52992, 52993 ],
+    "color": "#3571a7",
+    "strength": 25,
+    "radius": 1000,
+    "offset": [ 0, 199, -31 ]
+  },
+  {
+    "description": "ECLIPSE_MOON",
+    "npcIds": [ 13012, 13019 ],
+    "color": "#cd7c00",
+    "strength": 50,
+    "radius": 1200,
+    "offset": [ 0, 47, 0 ],
+    "fadeInDuration": 150
+  },
+  {
+    "description": "BLOOD_MOON",
+    "npcIds": [ 13011 ],
+    "color": "#df002e",
+    "strength": 10,
+    "radius": 1200,
+    "offset": [ 0, 47, 0 ],
+    "fadeInDuration": 300,
+    "spawnDelay": 600
+  },
+  {
+    "description": "BLUE_MOON",
+    "npcIds": [ 13013 ],
+    "color": "#3571a7",
+    "strength": 20,
+    "radius": 1200,
+    "offset": [ 0, 47, 0 ],
+    "fadeInDuration": 300,
+    "spawnDelay": 600
+  },
+  {
+    "description": "CURRENT_MOON_PHASE",
+    "npcIds": [ 13015 ],
+    "objectIds": [
+      51042
+    ],
+    "color": "#00c7c1",
+    "strength": 25,
+    "radius": 320,
+    "offset": [ 0, 47, 0 ],
+    "fadeInDuration": 600
+  },
+  {
+    "description": "SMALL_MOON_PHASE",
+    "objectIds": [ 51041 ],
+    "color": "#00c7c1",
+    "strength": 25,
+    "radius": 128,
+    "offset": [ 0, 47, 0 ],
+    "fadeInDuration": 1200
+  },
+  {
     "description": "GARDEN_OF_DEATH_DUNGEON_ENTRANCE",
     "height": 370,
     "alignment": "CENTER",
@@ -33303,6 +33689,89 @@
       46330,
       46333,
       46336
+    ]
+  },
+  {
+    "description": "Hunter Guild ceiling lantern",
+    "radius": 600,
+    "strength": 5,
+    "color": "#fcb703",
+    "type": "FLICKER",
+    "range": 13,
+    "offset": [ 0, 406, 0 ],
+    "objectIds": [
+      51731
+    ]
+  },
+  {
+    "description": "Red Chinchompa Hunting Grounds Exit",
+    "offset": [ 6, 40, 36 ],
+    "radius": 350,
+    "strength": 35,
+    "color": "#ffffff",
+    "type": "FLICKER",
+    "range": 13,
+    "objectIds": [
+      19037
+    ]
+  },
+  {
+    "description": "Tutorial Island Cooking Range",
+    "height": 100,
+    "offset": [ 53, -53, 48 ],
+    "radius": 400,
+    "strength": 6,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 5,
+    "objectIds": [
+      9736
+    ]
+  },
+  {
+    "description": "Tutorial Island Ironman Portal",
+    "height": 100,
+    "offset": [ -6, 28, -20 ],
+    "radius": 400,
+    "strength": 20,
+    "color": [
+      3,
+      50,
+      252
+    ],
+    "type": "PULSE",
+    "duration": 1000,
+    "range": 12,
+    "objectIds": [
+      42819
+    ]
+  },
+  {
+    "description": "Easter event 2024 brazier",
+    "objectIds": [ 53050 ],
+    "radius": 500,
+    "strength": 20,
+    "color": "#dc5600",
+    "type": "FLICKER",
+    "range": 10,
+    "offset": [ 0, 208, 0 ]
+  },
+  {
+    "description": "Hunter Guild fire",
+    "radius": 200,
+    "strength": 15,
+    "color": "#fc9403",
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 15,
+    "offset": [ 0, 52, 0 ],
+    "objectIds": [
+      51728
     ]
   }
 ]

@@ -588,6 +588,30 @@
     "area": "PYRAMID_PLUNDER",
     "ambientColor": "#b59b79",
     "directionalColor": "#8a9eb6",
+    "directionalStrength": 0.5,
+    "sunAngles": [
+      80,
+      190
+    ],
+    "fogColor": "#190d02",
+    "fogDepth": 40
+  },
+  {
+    "area": "SOPHANEM_TEMPLE_BANK",
+    "ambientColor": "#b59b79",
+    "directionalColor": "#8a9eb6",
+    "directionalStrength": 0.75,
+    "sunAngles": [
+      80,
+      190
+    ],
+    "fogColor": "#190d02",
+    "fogDepth": 65
+  },
+  {
+    "area": "SCARAB_LAIR_TEMPLE",
+    "ambientColor": "#b59b79",
+    "directionalColor": "#8a9eb6",
     "directionalStrength": 0.75,
     "sunAngles": [
       80,
@@ -614,6 +638,24 @@
     "ambientStrength": 1.5,
     "directionalColor": "#f4e5c9",
     "directionalStrength": 2.5,
+    "fogColor": "#aebde0",
+    "fogDepth": 70
+  },
+  {
+    "area": "RELLEKKA_SNOWY_REGION",
+    "ambientColor": "#6fb0ff",
+    "ambientStrength": 1,
+    "directionalColor": "#f4e5c9",
+    "directionalStrength": 2,
+    "fogColor": "#aebde0",
+    "fogDepth": 70
+  },
+  {
+    "area": "RELLEKKA_HUNTER_ICEBERG",
+    "ambientColor": "#6fb0ff",
+    "ambientStrength": 0.75,
+    "directionalColor": "#f4e5c9",
+    "directionalStrength": 1,
     "fogColor": "#aebde0",
     "fogDepth": 70
   },
@@ -875,11 +917,22 @@
   {
     "area": "ZEAH_SNOWY_NORTHERN_REGION",
     "ambientColor": "#6fb0ff",
-    "ambientStrength": 1.5,
+    "ambientStrength": 0.85,
     "directionalColor": "#f4e5c9",
-    "directionalStrength": 2.5,
+    "directionalStrength": 1.5,
     "fogColor": "#aebde0",
     "fogDepth": 70
+  },
+  {
+    "area": "WINTERTODT_ARENA",
+    "instantTransition": true,
+    "ambientColor": "#6fb0ff",
+    "ambientStrength": 1,
+    "sunAngles": [ 72, 235 ],
+    "directionalColor": "#f4e5c9",
+    "directionalStrength": 0.75,
+    "fogColor": "#aebde3",
+    "fogDepth": 75
   },
   {
     "area": "ARCEUUS",
@@ -1459,6 +1512,23 @@
       215
     ],
     "fogDepth": 46
+  },
+  {
+    "area": "EARTHBOUND_CAVERN",
+    "sunAngles": [ 62, 210 ],
+    "waterColor": "#477d95"
+  },
+  {
+    "area": "RED_CHINCHOMPA_HUNTING_GROUND",
+    "ambientColor": "#FFFEB0",
+    "ambientStrength": 0.45,
+    "directionalColor": "#FFFEB0",
+    "directionalStrength": 0.65,
+    "sunAngles": [
+      65,
+      102
+    ],
+    "fogDepth": 30
   },
   {
     "key": "OVERWORLD",

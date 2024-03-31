@@ -305,6 +305,7 @@ public enum Material {
 	GRAY_50(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(.5f))),
 	GRAY_25(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(.25f))),
 	BLACK(NONE, p -> p.setBrightness(0)),
+	PURE_BLACK(NONE, p -> p.setOverrideBaseColor(true).setBrightness(0)),
 
 	BLANK_GLOSS(WHITE, p -> p
 		.setSpecular(0.9f, 280)),
@@ -406,6 +407,11 @@ public enum Material {
 		.setDisplacementScale(.15f)
 		.setSpecular(0.4f, 20)
 		.setBrightness(1.2f)
+	),
+	ROCK_3_SMOOTH(ROCK_3, p -> p
+		.setDisplacementScale(0)
+		.setTextureScale(1, 1, .15f)
+		.setSpecular(0.3f, 40)
 	),
 	ROCK_3_ORE(ROCK_3, p -> p
 		.setSpecular(1, 20)
@@ -523,14 +529,23 @@ public enum Material {
 		.setSpecular(0.3f, 30)
 	),
 	LIGHT_BARK(BARK, p -> p.setBrightness(1.75f)),
+	VERY_LIGHT_BARK(BARK, p -> p.setBrightness(2.75f)),
 	WOOD_GRAIN,
 	WOOD_GRAIN_2_N,
 	WOOD_GRAIN_2(p -> p
 		.setNormalMap(WOOD_GRAIN_2_N)
 		.setSpecular(0.3f, 30)
 	),
+	WOOD_GRAIN_2_SMOOTH(WOOD_GRAIN_2, p -> p
+		.setBrightness(1.1f)
+		.setTextureScale(1, 1, .2f)
+	),
 	WOOD_GRAIN_2_LIGHT(WOOD_GRAIN_2, p -> p
 		.setBrightness(1.1f)
+	),
+	WOOD_GRAIN_2_SMOOTH_LIGHT(WOOD_GRAIN_2, p -> p
+		.setBrightness(1.3f)
+		.setTextureScale(1, 1, .2f)
 	),
 	WOOD_GRAIN_2_WIDE(WOOD_GRAIN_2, p -> p
 		.setTextureScale(1.5f, 0.5f)
@@ -633,6 +648,8 @@ public enum Material {
 		.setSpecular(0.7f, 80)),
 	METALLIC_2_HIGHGLOSS(METALLIC_2, p -> p
 		.setSpecular(1.1f, 80)),
+	METALLIC_2_SUPER_HIGHGLOSS(METALLIC_2, p -> p
+		.setSpecular(2.25f, 65)),
 	METALLIC_NONE_GLOSS(NONE, p -> p
 		.setSpecular(0.7f, 80)),
 	WATTLE_1,
@@ -883,7 +900,7 @@ public enum Material {
 		private float specularStrength;
 		private float specularGloss;
 		private float[] scrollSpeed = { 0, 0 };
-		private float[] textureScale = { 1, 1 };
+		private float[] textureScale = { 1, 1, 1 };
 		private List<Material> materialsToReplace = new ArrayList<>();
 		private Function<HdPlugin, Boolean> replacementCondition;
 
@@ -934,8 +951,9 @@ public enum Material {
 			return this;
 		}
 
-		Builder setTextureScale(float x, float y) {
-			this.textureScale = new float[] { x, y };
+		Builder setTextureScale(float... xyz) {
+			textureScale = Arrays.copyOf(textureScale, 3);
+			System.arraycopy(xyz, 0, textureScale, 0, Math.min(3, xyz.length));
 			return this;
 		}
 
@@ -975,7 +993,7 @@ public enum Material {
 		consumer.accept(builder);
 		parent = builder.parent;
 		normalMap = builder.normalMap;
-		displacementMap = builder.displacementMap;
+		displacementMap = builder.displacementScale == 0 ? null : builder.displacementMap;
 		roughnessMap = builder.roughnessMap;
 		ambientOcclusionMap = builder.ambientOcclusionMap;
 		flowMap = builder.flowMap;

@@ -143,13 +143,8 @@ void main() {
         float mipBias = 0;
         // Vanilla tree textures rely on UVs being clamped horizontally,
         // which HD doesn't do, so we instead opt to hide these fragments
-        if ((vMaterialData[0] >> MATERIAL_FLAG_VANILLA_UVS & 1) == 1) {
+        if ((vMaterialData[0] >> MATERIAL_FLAG_VANILLA_UVS & 1) == 1)
             blendedUv.x = clamp(blendedUv.x, 0, .984375);
-
-            // Make fishing spots easier to see
-            if (colorMap1 == MAT_WATER_DROPLETS.colorMap)
-                mipBias = -100;
-        }
 
         uv1 = uv2 = uv3 = blendedUv;
 
@@ -159,9 +154,9 @@ void main() {
         uv3 += material3.scrollDuration * elapsedTime;
 
         // Scale from the center
-        uv1 = (uv1 - .5) * material1.textureScale + .5;
-        uv2 = (uv2 - .5) * material2.textureScale + .5;
-        uv3 = (uv3 - .5) * material3.textureScale + .5;
+        uv1 = (uv1 - .5) * material1.textureScale.xy + .5;
+        uv2 = (uv2 - .5) * material2.textureScale.xy + .5;
+        uv3 = (uv3 - .5) * material3.textureScale.xy + .5;
 
         // get flowMap map
         vec2 flowMapUv = uv1 - animationFrame(material1.flowMapDuration);

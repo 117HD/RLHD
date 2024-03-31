@@ -75,7 +75,6 @@ import static rs117.hd.utils.ResourcePath.path;
 @Singleton
 @Slf4j
 public class LightManager {
-	private static final float VISIBILITY_FADE = 0.1f;
 	private static final ResourcePath LIGHTS_PATH = Props.getPathOrDefault(
 		"rlhd.lights-path",
 		() -> path(LightManager.class, "lights.json")
@@ -224,7 +223,7 @@ public class LightManager {
 
 			// Whatever the light is attached to is presumed to exist if it's not marked for removal yet
 			boolean parentExists = !light.markedForRemoval;
-			boolean hiddenTemporarily = light.hiddenTemporarily;
+			boolean hiddenTemporarily = false;
 			light.orientation = 0;
 
 			if (light.tileObject != null) {
@@ -396,7 +395,7 @@ public class LightManager {
 				}
 			}
 
-			if (!light.def.visibleFromOtherPlanes) {
+			if (!hiddenTemporarily && !light.def.visibleFromOtherPlanes) {
 				// Hide certain lights on planes lower than the player to prevent light 'leaking' through the floor
 				if (light.plane < client.getPlane() && light.belowFloor)
 					hiddenTemporarily = true;
@@ -421,20 +420,16 @@ public class LightManager {
 				}
 			}
 
-			if (hiddenTemporarily != light.hiddenTemporarily) {
-				light.hiddenTemporarily = hiddenTemporarily;
-				// If becoming temporarily hidden from a visible state, fade the light out
-				if (hiddenTemporarily && light.visible)
-					light.changedVisibilityAt = light.elapsedTime;
-			}
+			if (hiddenTemporarily != light.hiddenTemporarily)
+				light.toggleTemporaryVisibility();
 
 			light.elapsedTime += plugin.deltaClientTime;
 
 			light.visible = light.spawnDelay < light.elapsedTime && (light.lifetime == -1 || light.elapsedTime < light.lifetime);
-			if (light.visible && light.hiddenTemporarily) {
-				// When the light is becoming hidden temporarily, it should remain visible until it has faded out
-				light.visible = light.changedVisibilityAt != -1 && light.elapsedTime - light.changedVisibilityAt < VISIBILITY_FADE;
-			}
+
+			// If the light is temporarily hidden, keep it visible only while fading out
+			if (light.visible && light.hiddenTemporarily)
+				light.visible = light.changedVisibilityAt != -1 && light.elapsedTime - light.changedVisibilityAt < Light.VISIBILITY_FADE;
 
 			if (light.visible) {
 				// Hide lights which cannot possibly affect the visible scene
@@ -474,10 +469,9 @@ public class LightManager {
 
 			sceneContext.numVisibleLights++;
 
-			if (!light.withinViewingDistance && light.hiddenTemporarily) {
-				light.hiddenTemporarily = false;
-				light.changedVisibilityAt = light.elapsedTime;
-			}
+			// If the light was temporarily hidden, begin fading in
+			if (!light.withinViewingDistance && light.hiddenTemporarily)
+				light.toggleTemporaryVisibility();
 			light.withinViewingDistance = true;
 
 			if (light.def.type == LightType.FLICKER) {
@@ -520,19 +514,12 @@ public class LightManager {
 			if (light.fadeOutDuration > 0 && light.lifetime != -1)
 				light.strength *= HDUtils.clamp((light.lifetime - light.elapsedTime) / light.fadeOutDuration, 0, 1);
 
-			// Overriding fade-in when becoming visible due to distance re-prioritization
-			if (light.changedVisibilityAt != -1) {
-				float fade = HDUtils.clamp((light.elapsedTime - light.changedVisibilityAt) / VISIBILITY_FADE, 0, 1);
-				if (light.hiddenTemporarily)
-					fade = 1 - fade; // Fade out instead
-				light.strength *= fade;
-			}
+			light.applyTemporaryVisibilityFade();
 		}
 
 		for (int i = sceneContext.lights.size() - 1; i >= sceneContext.numVisibleLights; i--) {
 			Light light = sceneContext.lights.get(i);
 			light.withinViewingDistance = false;
-			light.changedVisibilityAt = -1;
 
 			// Automatically despawn non-replayable fixed lifetime lights when they expire
 			if (!light.replayable && light.lifetime != -1 && light.lifetime < light.elapsedTime)
@@ -614,6 +601,8 @@ public class LightManager {
 		if (oldSceneContext == null) {
 			sceneContext.lights.clear();
 			sceneContext.trackedTileObjects.clear();
+			sceneContext.trackedVarps.clear();
+			sceneContext.trackedVarbits.clear();
 			sceneContext.knownProjectiles.clear();
 		} else {
 			// Copy over NPC and projectile lights from the old scene
@@ -756,7 +745,7 @@ public class LightManager {
 		tracker.impostorIds = def.getImpostorIds();
 		if (tracker.impostorIds != null) {
 			tracker.impostorVarbit = def.getVarbitId();
-			tracker.impostorVarbit = def.getVarPlayerId();
+			tracker.impostorVarp = def.getVarPlayerId();
 			if (tracker.impostorVarbit != -1)
 				sceneContext.trackedVarbits.put(tracker.impostorVarbit, tracker);
 			if (tracker.impostorVarp != -1)
@@ -1063,15 +1052,17 @@ public class LightManager {
 			return;
 
 		if (plugin.enableDetailedTimers)
-			frameTimer.begin(Timer.OBJECT_TRACKING);
-		if (event.getVarpId() != -1) {
-			for (var tracker : sceneContext.trackedVarps.get(event.getVarpId()))
-				trackImpostorChanges(sceneContext, tracker);
-		} else if (event.getVarbitId() != -1) {
+			frameTimer.begin(Timer.IMPOSTOR_TRACKING);
+		// Check if the event is specifically a varbit change first,
+		// since all varbit changes are necessarily also varp changes
+		if (event.getVarbitId() != -1) {
 			for (var tracker : sceneContext.trackedVarbits.get(event.getVarbitId()))
+				trackImpostorChanges(sceneContext, tracker);
+		} else if (event.getVarpId() != -1) {
+			for (var tracker : sceneContext.trackedVarps.get(event.getVarpId()))
 				trackImpostorChanges(sceneContext, tracker);
 		}
 		if (plugin.enableDetailedTimers)
-			frameTimer.end(Timer.OBJECT_TRACKING);
+			frameTimer.end(Timer.IMPOSTOR_TRACKING);
 	}
 }
