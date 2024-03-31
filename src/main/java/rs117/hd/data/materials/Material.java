@@ -379,7 +379,6 @@ public enum Material {
 	GRUNGE_2_SHINY(GRUNGE_2, p -> p
 		.setSpecular(0.7f, 300)
 	),
-	GRUNGE_2_EADGARS_CAVE_FIX(GRUNGE_2, p -> p.setBrightness(0.65f)),
 	GRUNGE_2_TROLLHEIM_WALL_FIX_1(GRUNGE_2, p -> p.setBrightness(1.8f)),
 	GRUNGE_2_TROLLHEIM_WALL_FIX_2(GRUNGE_2, p -> p.setBrightness(1.2f)),
 	SUBMERGED_GRUNGE_2(GRUNGE_2, p -> p
@@ -416,6 +415,7 @@ public enum Material {
 	ROCK_3_ORE(ROCK_3, p -> p
 		.setSpecular(1, 20)
 	),
+	EADGARS_CAVE_FIX(ROCK_3, p -> p.setBrightness(0.65f)),
 
 	ROCK_4_D,
 	ROCK_4_N,

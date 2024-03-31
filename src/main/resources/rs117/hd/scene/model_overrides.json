@@ -3521,7 +3521,13 @@
     "objectIds": [
       2141,
       3669,
+      3737,
+      3740,
       3759,
+      3770,
+      3772,
+      3773,
+      3774,
       3812,
       6820,
       6822,
@@ -3537,6 +3543,8 @@
     "description": "Pale rock walls - Top",
     "baseMaterial": "ROCK_3",
     "objectIds": [
+      3738,
+      3739,
       6827
     ],
     "uvType": "WORLD_XZ",
@@ -13183,29 +13191,13 @@
   {
     "description": "Trollheim Cave Walls",
     "baseMaterial": "GRUNGE_2",
-    "objectIds": [
-      3737,
-      3738,
-      3739,
-      3740,
-      3770,
-      3772,
-      3773,
-      3774
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.7
-  },
-  {
-    "description": "Trollheim Cave Walls",
-    "baseMaterial": "GRUNGE_2",
     "objectIds": [ 3790 ],
     "uvType": "BOX",
     "uvScale": 0.7
   },
   {
     "description": "Trollheim Eadgars Cave Exit",
-    "baseMaterial": "GRUNGE_2_EADGARS_CAVE_FIX",
+    "baseMaterial": "EADGARS_CAVE_FIX",
     "objectIds": [ 3760, 3761 ],
     "uvType": "BOX",
     "uvScale": 0.7
