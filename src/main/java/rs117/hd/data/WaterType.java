@@ -50,7 +50,7 @@ public enum WaterType
 		.depthColor(srgb(41, 82, 26))
 		.causticsStrength(0)
 		.duration(1.2f)
-		.fishingSpotColor(hsl("#04730d"))),
+		.fishingSpotRecolor(hsl("#04730d"))),
 	SWAMP_WATER_FLAT(SWAMP_WATER, true),
 	POISON_WASTE(b -> b
 		.specularStrength(.1f)
@@ -162,7 +162,7 @@ public enum WaterType
 	public final float causticsStrength;
 	public final boolean hasFoam;
 	public final float duration;
-	public final int fishingSpotColor;
+	public final int fishingSpotRecolor;
 
 	@Setter
 	@Accessors(fluent = true)
@@ -181,7 +181,7 @@ public enum WaterType
 		private float causticsStrength = 1;
 		private boolean hasFoam = true;
 		private float duration = 1;
-		private int fishingSpotColor = -1;
+		private int fishingSpotRecolor = -1;
 	}
 
 	WaterType()
@@ -206,7 +206,7 @@ public enum WaterType
 		causticsStrength = builder.causticsStrength;
 		hasFoam = builder.hasFoam;
 		duration = builder.duration;
-		fishingSpotColor = builder.fishingSpotColor;
+		fishingSpotRecolor = builder.fishingSpotRecolor;
 	}
 
 	WaterType(WaterType parent, boolean flat)
@@ -224,6 +224,6 @@ public enum WaterType
 		causticsStrength = parent.causticsStrength;
 		hasFoam = parent.hasFoam;
 		duration = parent.duration;
-		fishingSpotColor = parent.fishingSpotColor;
+		fishingSpotRecolor = parent.fishingSpotRecolor;
 	}
 }
