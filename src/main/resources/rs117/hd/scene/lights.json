@@ -33357,7 +33357,7 @@
     ]
   },
   {
-    "description": "Valamore Colosseum Wall Torch",
+    "description": "Varlamore Colosseum Wall Torch",
     "height": 235,
     "alignment": "CENTER",
     "radius": 275,
@@ -33375,7 +33375,7 @@
     ]
   },
   {
-    "description": "VALAMORE_FURNACE_GLOW",
+    "description": "VARLAMORE_FURNACE_GLOW",
     "height": 150,
     "alignment": "CENTER",
     "radius": 300,
@@ -33393,7 +33393,7 @@
     ]
   },
   {
-    "description": "VALAMORE_OVEN_GLOW",
+    "description": "VARLAMORE_OVEN_GLOW",
     "height": 120,
     "alignment": "CENTER",
     "radius": 300,

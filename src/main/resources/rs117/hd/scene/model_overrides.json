@@ -1642,7 +1642,7 @@
     "castShadows": false
   },
   {
-    "description": "Valamore, Fortis and Avium Grass",
+    "description": "Varlamore, Fortis and Avium Grass",
     "baseMaterial": "GRAY_75",
     "objectIds": [
       51804,
@@ -15499,7 +15499,7 @@
     "uvScale": 0.86
   },
   {
-    "description": "Valamore - quetzal landing site",
+    "description": "Varlamore - quetzal landing site",
     "baseMaterial": "HAY",
     "objectIds": [
       52815
@@ -15508,7 +15508,7 @@
     "uvScale": 0.6
   },
   {
-    "description": "Valamore Rugs and carpets",
+    "description": "Varlamore Rugs and carpets",
     "baseMaterial": "FINE_CARPET",
     "objectIds": [
       52467,
@@ -15528,7 +15528,7 @@
     "uvType": "MODEL_XZ"
   },
   {
-    "description": "Valamore Banners",
+    "description": "Varlamore Banners",
     "baseMaterial": "FINE_CARPET",
     "objectIds": [
       51946,
