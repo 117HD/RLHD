@@ -27315,7 +27315,7 @@
     "description": "ARCEUUS_SPELLBOOK_TELEPORTS",
     "alignment": "CENTER",
     "height": 50,
-    "radius": 190,
+    "radius": 250,
     "strength": 20,
     "fixedDespawnTime": true,
     "color": [
