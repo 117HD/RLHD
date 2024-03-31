@@ -15682,6 +15682,20 @@
     "uvScale": 1.5
   },
   {
+    "description": "Varlamore, Stools and tables covered in furs, MODEL_XZ is used with intent",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      51722,
+      51723,
+      51724,
+      51725,
+      51726,
+      51727
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.4
+  },
+  {
     "description": "Hunter Pitfall Spiked Pit - Snowy",
     "baseMaterial": "SNOW_2",
     "objectIds": [
@@ -15695,7 +15709,7 @@
   },
   {
     "description": "Bear Rugs",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "GRUNGE_2",
     "objectIds": [
       950,
       951,
@@ -15703,7 +15717,7 @@
       953
     ],
     "uvType": "MODEL_XZ",
-    "uvScale": 1.5
+    "uvScale": 0.4
   },
   {
     "description": "Obelisk of Earth",
