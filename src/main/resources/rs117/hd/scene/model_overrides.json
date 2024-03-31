@@ -3516,8 +3516,8 @@
     "flatNormals": true
   },
   {
-    "description": "UNKNOWN_3",
-    "baseMaterial": "GRUNGE_1",
+    "description": "Pale rock walls",
+    "baseMaterial": "ROCK_3",
     "objectIds": [
       2141,
       3669,
@@ -3527,11 +3527,20 @@
       6822,
       6824,
       6826,
-      6827,
       16539
     ],
     "uvType": "BOX",
-    "uvScale": 0.7
+    "uvScale": 0.7,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Pale rock walls - Top",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      6827
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 1.3
   },
   {
     "description": "UNKNOWN_4",
