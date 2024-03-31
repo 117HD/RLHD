@@ -28974,7 +28974,7 @@
     "height": 300,
     "alignment": "CENTER",
     "radius": 600,
-    "strength": 15,
+    "strength": 10,
     "color": [
       165,
       255,
@@ -28983,17 +28983,73 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 15,
+    "fadeInDuration": 50,
+    "fadeOutDuration": 100,
     "objectIds": [
       29314,
       31926
     ]
   },
   {
-    "description": "WINTERTODT_DOOR",
+    "description": "WINTERTODT_DOOR_INSIDE_1",
     "height": 500,
     "alignment": "SOUTH",
-    "radius": 1500,
-    "strength": 15,
+    "radius": 5500,
+    "strength": 1,
+    "color": [
+      165,
+      255,
+      56
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "objectIds": [
+      29322
+    ]
+  },
+  {
+    "description": "WINTERTODT_DOOR_INSIDE_2",
+    "height": 500,
+    "alignment": "SOUTH",
+    "radius": 500,
+    "strength": 100,
+    "color": [
+      165,
+      255,
+      56
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "objectIds": [
+      29322
+    ]
+  },
+  {
+    "description": "WINTERTODT_DOOR_OUTSIDE_1",
+    "height": 500,
+    "offset": [245,0,0 ],
+    "radius": 2000,
+    "strength": 2,
+    "color": [
+      165,
+      255,
+      56
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "objectIds": [
+      29322
+    ]
+  },
+  {
+    "description": "WINTERTODT_DOOR_OUTSIDE_2",
+    "height": 500,
+    "offset": [245,0,0 ],
+    "radius": 500,
+    "strength": 80,
     "color": [
       165,
       255,
