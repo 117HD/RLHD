@@ -15696,6 +15696,16 @@
     "uvScale": 0.4
   },
   {
+    "description": "Varlamore, Log Roots in Hunter Guild Caverns",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      51746,
+      51747
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
     "description": "Hunter Pitfall Spiked Pit - Snowy",
     "baseMaterial": "SNOW_2",
     "objectIds": [
