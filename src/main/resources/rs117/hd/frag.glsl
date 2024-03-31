@@ -143,13 +143,8 @@ void main() {
         float mipBias = 0;
         // Vanilla tree textures rely on UVs being clamped horizontally,
         // which HD doesn't do, so we instead opt to hide these fragments
-        if ((vMaterialData[0] >> MATERIAL_FLAG_VANILLA_UVS & 1) == 1) {
+        if ((vMaterialData[0] >> MATERIAL_FLAG_VANILLA_UVS & 1) == 1)
             blendedUv.x = clamp(blendedUv.x, 0, .984375);
-
-            // Make fishing spots easier to see
-            if (colorMap1 == MAT_WATER_DROPLETS.colorMap)
-                mipBias = -100;
-        }
 
         uv1 = uv2 = uv3 = blendedUv;
 
