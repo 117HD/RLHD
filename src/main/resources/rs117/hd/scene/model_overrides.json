@@ -2654,6 +2654,133 @@
     "flatNormals": true
   },
   {
+    "description": "Wintertodt Terrain",
+    "baseMaterial": "SNOW_4",
+    "objectIds": [
+      29297,
+      29293,
+      29296,
+      29295,
+      29298,
+      29294,
+      29279,
+      29265,
+      29280,
+      29265,
+      15258,
+      15451,
+      29135,
+      29134,
+      29281,
+      29282,
+      29286,
+      29285,
+      29278,
+      29283,
+      29284,
+      29266
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.25
+  },
+  {
+    "description": "Wintertodt Railings",
+    "baseMaterial": "SNOW_4",
+    "objectIds": [
+      29288,
+      29287,
+      29289,
+      29290,
+      29291
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.25
+  },
+  {
+    "description": "Wintertodt Wooden Objects",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH_LIGHT",
+    "objectIds": [
+      29319,
+      29320,
+      29317,
+      29318,
+      29316,
+      29301,
+      29305,
+      29302,
+      29321,
+      26330
+    ],
+    "uvType": "WORLD_XY",
+    "uvScale": 1.5
+  },
+  {
+    "description": "Wintertodt Wooden Objects rotated",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH_LIGHT",
+    "objectIds": [
+      29303,
+      29304
+    ],
+    "uvType": "WORLD_XY",
+    "uvScale": 1.5
+  },
+  {
+    "description": "Wintertodt Bruma Roots",
+    "baseMaterial": "VERY_LIGHT_BARK",
+    "objectIds": [
+      29311
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Wintertodt Herb Roots",
+    "baseMaterial": "LIGHT_BARK",
+    "objectIds": [
+      29315
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Wintertodt Brazier",
+    "baseMaterial": "METALLIC_2_HIGHGLOSS",
+    "objectIds": [
+      29312,
+      29313,
+      29314
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Wintertodt Tents",
+    "baseMaterial": "FINE_CARPET",
+    "objectIds": [
+      29307,
+      29306,
+      17359,
+      17360,
+      17361
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Wintertodt Wooden Cart",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      27364
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 1.5
+  },
+  {
+    "description": "Wintertodt Snow Pile with Wooden Wheel",
+    "baseMaterial": "SNOW_4",
+    "objectIds": [
+      26314
+    ],
+    "uvType": "BOX"
+  },
+  {
     "description": "STATUE_BUST",
     "baseMaterial": "MARBLE_1_GLOSS",
     "objectIds": [
@@ -3460,7 +3587,23 @@
       43700,
       43849
     ],
-    "baseMaterial": "UNLIT"
+    "baseMaterial": "UNLIT",
+    "castShadows": false
+  },
+  {
+    "description": "Guardians of the Rift barriers",
+    "objectIds": [
+      43744,
+      43745,
+      43746,
+      43747,
+      43748,
+      43749,
+      43750,
+      43751
+    ],
+    "baseMaterial": "UNLIT",
+    "castShadows": false
   },
   {
     "description": "Tombs of Amascut Baba boulders",
@@ -3531,6 +3674,90 @@
       21252, 21253, 21254,
       20956, 20974, 20975,
       20976, 20977, 20978
+    ]
+  },
+  {
+    "description": "Pyramid Plunder Walls - Interior",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      20932,
+      20933,
+      20939,
+      20937,
+      20948,
+      20949,
+      20931,
+      21280,
+      20934,
+      20944,
+      20943,
+      20945
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Pyramid Plunder Obelisk, Busts and Wall symbol",
+    "baseMaterial": "MARBLE_1_GLOSS",
+    "objectIds": [
+      20955,
+      20954,
+      20953,
+      20941
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.2
+  },
+  {
+    "description": "Pyramid Plunder Metallic Objects",
+    "baseMaterial": "METALLIC_2_SUPER_HIGHGLOSS",
+    "objectIds": [
+      20946,
+      20947,
+      21263,
+      21267,
+      21262,
+      21266,
+      21261,
+      21265
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.5
+  },
+  {
+    "description": "Pyramid Plunder Wall Torch",
+    "baseMaterial": "MARBLE_1",
+    "objectIds": [
+      20942
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Pyramid Plunder Sarcophagus",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      21255,
+      21257
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.2,
+    "uvOrientation": 1142
+  },
+  {
+    "description": "Pyramid Plunder Sarcophagus Opened",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      21256,
+      21259
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.2,
+    "uvOrientation": 1012
+  },
+  {
+    "description": "Pyramid Plunder Pot",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      21268
     ]
   },
   {
@@ -16130,5 +16357,10 @@
     "objectIds": [ 51372, 51373, 51374 ],
     "baseMaterial": "ROCK_3_SMOOTH",
     "uvType": "BOX"
+  },
+  {
+    "description": "Disable shadows for fishing spots at Molch",
+    "npcIds": [ 8523 ],
+    "castShadows": false
   }
 ]

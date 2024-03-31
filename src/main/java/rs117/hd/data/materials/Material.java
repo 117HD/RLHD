@@ -529,14 +529,23 @@ public enum Material {
 		.setSpecular(0.3f, 30)
 	),
 	LIGHT_BARK(BARK, p -> p.setBrightness(1.75f)),
+	VERY_LIGHT_BARK(BARK, p -> p.setBrightness(2.75f)),
 	WOOD_GRAIN,
 	WOOD_GRAIN_2_N,
 	WOOD_GRAIN_2(p -> p
 		.setNormalMap(WOOD_GRAIN_2_N)
 		.setSpecular(0.3f, 30)
 	),
+	WOOD_GRAIN_2_SMOOTH(WOOD_GRAIN_2, p -> p
+		.setBrightness(1.1f)
+		.setTextureScale(1, 1, .2f)
+	),
 	WOOD_GRAIN_2_LIGHT(WOOD_GRAIN_2, p -> p
 		.setBrightness(1.1f)
+	),
+	WOOD_GRAIN_2_SMOOTH_LIGHT(WOOD_GRAIN_2, p -> p
+		.setBrightness(1.3f)
+		.setTextureScale(1, 1, .2f)
 	),
 	WOOD_GRAIN_2_WIDE(WOOD_GRAIN_2, p -> p
 		.setTextureScale(1.5f, 0.5f)
@@ -639,6 +648,8 @@ public enum Material {
 		.setSpecular(0.7f, 80)),
 	METALLIC_2_HIGHGLOSS(METALLIC_2, p -> p
 		.setSpecular(1.1f, 80)),
+	METALLIC_2_SUPER_HIGHGLOSS(METALLIC_2, p -> p
+		.setSpecular(2.25f, 65)),
 	METALLIC_NONE_GLOSS(NONE, p -> p
 		.setSpecular(0.7f, 80)),
 	WATTLE_1,

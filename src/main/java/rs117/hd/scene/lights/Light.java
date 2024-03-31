@@ -6,6 +6,8 @@ import rs117.hd.utils.HDUtils;
 
 public class Light
 {
+	public static final float VISIBILITY_FADE = 0.1f;
+
 	public final float randomOffset = HDUtils.rand.nextFloat();
 	public final LightDefinition def;
 
@@ -101,5 +103,27 @@ public class Light
 				elapsedTime = lifetime;
 			}
 		}
+	}
+
+	public void toggleTemporaryVisibility() {
+		hiddenTemporarily = !hiddenTemporarily;
+		// Begin fading in or out, while accounting for time already spent fading out or in respectively
+		float beginFadeAt = elapsedTime;
+		if (changedVisibilityAt != -1)
+			beginFadeAt -= Math.max(0, VISIBILITY_FADE - (elapsedTime - changedVisibilityAt));
+		changedVisibilityAt = beginFadeAt;
+	}
+
+	public float getTemporaryVisibilityFade() {
+		float fade = 1;
+		if (changedVisibilityAt != -1)
+			fade = HDUtils.clamp((elapsedTime - changedVisibilityAt) / Light.VISIBILITY_FADE, 0, 1);
+		if (hiddenTemporarily)
+			fade = 1 - fade; // Fade out instead
+		return fade;
+	}
+
+	public void applyTemporaryVisibilityFade() {
+		strength *= getTemporaryVisibilityFade();
 	}
 }

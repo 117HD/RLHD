@@ -20052,7 +20052,6 @@
       12300,
       31628,
       12238,
-      20942,
       3474,
       43122,
       43123,
@@ -23733,6 +23732,44 @@
     ]
   },
   {
+    "description": "PYRAMID_PLUNDER_WALL_TORCH",
+    "height": 205,
+    "offset": [ -15, 0, 0 ],
+    "radius": 350,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      20942
+    ]
+  },
+  {
+    "description": "Pyramid Plunder Gold Chest Shine",
+    "height": 150,
+    "offset": [ 0, 0, 0 ],
+    "radius": 130,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      26616,
+      20946,
+      20947
+    ]
+  },
+  {
     "description": "ARCEUUS_BRIGHT_CRYSTAL_LARGE",
     "height": 200,
     "alignment": "CENTER",
@@ -27278,7 +27315,7 @@
     "height": 200,
     "alignment": "CENTER",
     "radius": 250,
-    "strength": 0.75,
+    "strength": 1.25,
     "color": [
       255,
       255,
@@ -28974,7 +29011,7 @@
     "height": 300,
     "alignment": "CENTER",
     "radius": 600,
-    "strength": 15,
+    "strength": 10,
     "color": [
       165,
       255,
@@ -28983,17 +29020,73 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 15,
+    "fadeInDuration": 50,
+    "fadeOutDuration": 100,
     "objectIds": [
       29314,
       31926
     ]
   },
   {
-    "description": "WINTERTODT_DOOR",
+    "description": "WINTERTODT_DOOR_INSIDE_1",
     "height": 500,
     "alignment": "SOUTH",
-    "radius": 1500,
-    "strength": 15,
+    "radius": 5500,
+    "strength": 1,
+    "color": [
+      165,
+      255,
+      56
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "objectIds": [
+      29322
+    ]
+  },
+  {
+    "description": "WINTERTODT_DOOR_INSIDE_2",
+    "height": 500,
+    "alignment": "SOUTH",
+    "radius": 500,
+    "strength": 100,
+    "color": [
+      165,
+      255,
+      56
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "objectIds": [
+      29322
+    ]
+  },
+  {
+    "description": "WINTERTODT_DOOR_OUTSIDE_1",
+    "height": 500,
+    "offset": [245,0,0 ],
+    "radius": 2000,
+    "strength": 2,
+    "color": [
+      165,
+      255,
+      56
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "objectIds": [
+      29322
+    ]
+  },
+  {
+    "description": "WINTERTODT_DOOR_OUTSIDE_2",
+    "height": 500,
+    "offset": [245,0,0 ],
+    "radius": 500,
+    "strength": 80,
     "color": [
       165,
       255,

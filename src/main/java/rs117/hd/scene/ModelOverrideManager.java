@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Objects;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
@@ -38,6 +39,9 @@ public class ModelOverrideManager {
 
 	@Inject
 	private ModelPusher modelPusher;
+
+	@Inject
+	private FishingSpotReplacer fishingSpotReplacer;
 
 	private final HashMap<Integer, ModelOverride> modelOverrides = new HashMap<>();
 
@@ -74,6 +78,8 @@ public class ModelOverrideManager {
 				log.error("Failed to load model overrides:", ex);
 			}
 
+			addOverride(fishingSpotReplacer.getModelOverride());
+
 			if (!first) {
 				clientThread.invoke(() -> {
 					modelPusher.clearModelCache();
@@ -97,8 +103,8 @@ public class ModelOverrideManager {
 		startUp();
 	}
 
-	private void addOverride(ModelOverride override) {
-		if (override.seasonalTheme != null && override.seasonalTheme != plugin.configSeasonalTheme)
+	private void addOverride(@Nullable ModelOverride override) {
+		if (override == null || override.seasonalTheme != null && override.seasonalTheme != plugin.configSeasonalTheme)
 			return;
 
 		for (int id : override.npcIds)

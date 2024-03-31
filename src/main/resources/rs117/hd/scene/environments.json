@@ -588,7 +588,7 @@
     "area": "PYRAMID_PLUNDER",
     "ambientColor": "#b59b79",
     "directionalColor": "#8a9eb6",
-    "directionalStrength": 0.75,
+    "directionalStrength": 0.5,
     "sunAngles": [
       80,
       190
@@ -917,11 +917,22 @@
   {
     "area": "ZEAH_SNOWY_NORTHERN_REGION",
     "ambientColor": "#6fb0ff",
-    "ambientStrength": 1.5,
+    "ambientStrength": 0.85,
     "directionalColor": "#f4e5c9",
-    "directionalStrength": 2.5,
+    "directionalStrength": 1.5,
     "fogColor": "#aebde0",
     "fogDepth": 70
+  },
+  {
+    "area": "WINTERTODT_ARENA",
+    "instantTransition": true,
+    "ambientColor": "#6fb0ff",
+    "ambientStrength": 1,
+    "sunAngles": [ 72, 235 ],
+    "directionalColor": "#f4e5c9",
+    "directionalStrength": 0.75,
+    "fogColor": "#aebde3",
+    "fogDepth": 75
   },
   {
     "area": "ARCEUUS",
