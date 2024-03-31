@@ -57,6 +57,7 @@ public class TileOverride {
 	private TileOverride(@Nullable String name, GroundMaterial groundMaterial) {
 		this.name = name;
 		this.groundMaterial = groundMaterial;
+		this.index = Integer.MAX_VALUE; // Prioritize any-match overrides over this
 	}
 
 	@Override
@@ -65,21 +66,26 @@ public class TileOverride {
 			return name;
 		if (description != null)
 			return description;
+		if (area != null)
+			return area.name();
 		return "Unnamed";
 	}
 
 	public void normalize(TileOverride[] allOverrides, Map<String, Object> constants) {
 		int numOverlays = overlayIds == null ? 0 : overlayIds.length;
 		int numUnderlays = underlayIds == null ? 0 : underlayIds.length;
-		ids = new int[numOverlays + numUnderlays];
-		int i = 0;
-		for (int j = 0; j < numOverlays; j++) {
-			int id = overlayIds[j];
-			ids[i++] = OVERLAY_FLAG | id;
-		}
-		for (int j = 0; j < numUnderlays; j++) {
-			int id = underlayIds[j];
-			ids[i++] = id;
+		int numIds = numOverlays + numUnderlays;
+		if (numIds > 0) {
+			ids = new int[numOverlays + numUnderlays];
+			int i = 0;
+			for (int j = 0; j < numOverlays; j++) {
+				int id = overlayIds[j];
+				ids[i++] = OVERLAY_FLAG | id;
+			}
+			for (int j = 0; j < numUnderlays; j++) {
+				int id = underlayIds[j];
+				ids[i++] = id;
+			}
 		}
 
 		if (area == null) {

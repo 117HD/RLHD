@@ -123,6 +123,8 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 			overlayManager.remove(this);
 			mouseManager.unregisterMouseListener(this);
 			keyManager.unregisterKeyListener(this);
+			action = Action.SELECT;
+			selections.clear();
 		}
 	}
 

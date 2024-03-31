@@ -305,6 +305,7 @@ public enum Material {
 	GRAY_50(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(.5f))),
 	GRAY_25(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(.25f))),
 	BLACK(NONE, p -> p.setBrightness(0)),
+	PURE_BLACK(NONE, p -> p.setOverrideBaseColor(true).setBrightness(0)),
 
 	BLANK_GLOSS(WHITE, p -> p
 		.setSpecular(0.9f, 280)),
@@ -406,6 +407,11 @@ public enum Material {
 		.setDisplacementScale(.15f)
 		.setSpecular(0.4f, 20)
 		.setBrightness(1.2f)
+	),
+	ROCK_3_SMOOTH(ROCK_3, p -> p
+		.setDisplacementScale(0)
+		.setTextureScale(1, 1, .15f)
+		.setSpecular(0.3f, 40)
 	),
 	ROCK_3_ORE(ROCK_3, p -> p
 		.setSpecular(1, 20)
@@ -655,9 +661,22 @@ public enum Material {
 		.setSpecular(1.5f, 80)),
 	HD_WOOD_PLANKS_1_N,
 	HD_WOOD_PLANKS_1(p -> p
+		.replaceIf(plugin -> plugin.configModelTextures, WOOD_PLANKS_1)
 		.setNormalMap(HD_WOOD_PLANKS_1_N)
+		.setSpecular(0.3f, 30)
+	),
+	HD_WOOD_PLANKS_2_N,
+	HD_WOOD_PLANKS_2(p -> p
+		.setNormalMap(HD_WOOD_PLANKS_2_N)
 		.setSpecular(0.3f, 40)
 		.setBrightness(1.2f)),
+	HD_CRATE_N,
+	HD_CRATE(p -> p
+		.replaceIf(plugin -> plugin.configModelTextures, CRATE)
+		.setNormalMap(HD_CRATE_N)
+		.setSpecular(0.25f, 30)
+		.setBrightness(0.9f)
+	),
 	HD_ROOF_BRICK_TILE_N,
 	HD_ROOF_BRICK_TILE(ROOF_BRICK_TILE, p -> p
 		.replaceIf(plugin -> plugin.configModelTextures, ROOF_BRICK_TILE)
@@ -870,7 +889,7 @@ public enum Material {
 		private float specularStrength;
 		private float specularGloss;
 		private float[] scrollSpeed = { 0, 0 };
-		private float[] textureScale = { 1, 1 };
+		private float[] textureScale = { 1, 1, 1 };
 		private List<Material> materialsToReplace = new ArrayList<>();
 		private Function<HdPlugin, Boolean> replacementCondition;
 
@@ -921,8 +940,9 @@ public enum Material {
 			return this;
 		}
 
-		Builder setTextureScale(float x, float y) {
-			this.textureScale = new float[] { x, y };
+		Builder setTextureScale(float... xyz) {
+			textureScale = Arrays.copyOf(textureScale, 3);
+			System.arraycopy(xyz, 0, textureScale, 0, Math.min(3, xyz.length));
 			return this;
 		}
 
@@ -962,7 +982,7 @@ public enum Material {
 		consumer.accept(builder);
 		parent = builder.parent;
 		normalMap = builder.normalMap;
-		displacementMap = builder.displacementMap;
+		displacementMap = builder.displacementScale == 0 ? null : builder.displacementMap;
 		roughnessMap = builder.roughnessMap;
 		ambientOcclusionMap = builder.ambientOcclusionMap;
 		flowMap = builder.flowMap;

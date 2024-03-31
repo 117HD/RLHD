@@ -17,15 +17,19 @@
       },
       "isUnderwater": {
         "type": "boolean",
-        "description": "."
+        "description": "Whether the area is an underwater area, such as Guardians of the Rift."
       },
       "allowSkyOverride": {
         "type": "boolean",
-        "description": "."
+        "description": "Whether to allow overriding the sky with default sky."
       },
       "lightningEffects": {
         "type": "boolean",
-        "description": "."
+        "description": "Whether the area should have flashing lightning effects."
+      },
+      "instantTransition": {
+        "type": "boolean",
+        "description": "Whether transitions to and from this area should always be instant."
       },
       "ambientColor": {
         "type": [ "string", "array" ],

@@ -62,7 +62,6 @@ public class ExpressionParser {
 
 	@RequiredArgsConstructor
 	private enum Operator {
-		NOT("!", 7, 1),
 		MOD("%", 6, 2),
 		MUL("*", 6, 2),
 		DIV("/", 6, 2),
@@ -73,6 +72,7 @@ public class ExpressionParser {
 		GEQUAL(">=", 4, 2),
 		GREATER(">", 4, 2),
 		NOTEQUAL("!=", 3, 2),
+		NOT("!", 7, 1),
 		EQUAL("==", 3, 2),
 		AND("&&", 2, 2),
 		OR("||", 1, 2),

@@ -120,6 +120,8 @@ import rs117.hd.utils.ResourcePath;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 
+import static net.runelite.api.Constants.SCENE_SIZE;
+import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.*;
 import static org.lwjgl.opencl.CL10.*;
 import static org.lwjgl.opengl.GL43C.*;
@@ -156,7 +158,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	public static final float NEAR_PLANE = 1;
 	public static final int MAX_FACE_COUNT = 6144;
-	public static final int MAX_DISTANCE = Constants.EXTENDED_SCENE_SIZE;
+	public static final int MAX_DISTANCE = EXTENDED_SCENE_SIZE;
 	public static final int GROUND_MIN_Y = 350; // how far below the ground models extend
 	public static final int MAX_FOG_DEPTH = 100;
 	public static final int SCALAR_BYTES = 4;
@@ -1347,7 +1349,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	private void initTileHeightMap(Scene scene) {
-		final int TILE_HEIGHT_BUFFER_SIZE = Constants.MAX_Z * Constants.EXTENDED_SCENE_SIZE * Constants.EXTENDED_SCENE_SIZE * Short.BYTES;
+		final int TILE_HEIGHT_BUFFER_SIZE = Constants.MAX_Z * EXTENDED_SCENE_SIZE * EXTENDED_SCENE_SIZE * Short.BYTES;
 		ShortBuffer tileBuffer = ByteBuffer
 			.allocateDirect(TILE_HEIGHT_BUFFER_SIZE)
 			.order(ByteOrder.nativeOrder())
@@ -1355,8 +1357,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		int[][][] tileHeights = scene.getTileHeights();
 		for (int z = 0; z < Constants.MAX_Z; ++z) {
-			for (int y = 0; y < Constants.EXTENDED_SCENE_SIZE; ++y) {
-				for (int x = 0; x < Constants.EXTENDED_SCENE_SIZE; ++x) {
+			for (int y = 0; y < EXTENDED_SCENE_SIZE; ++y) {
+				for (int x = 0; x < EXTENDED_SCENE_SIZE; ++x) {
 					int h = tileHeights[z][x][y];
 					assert (h & 0b111) == 0;
 					h >>= 3;
@@ -1375,7 +1377,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexImage3D(GL_TEXTURE_3D, 0, GL_R16I,
-			Constants.EXTENDED_SCENE_SIZE, Constants.EXTENDED_SCENE_SIZE, Constants.MAX_Z,
+			EXTENDED_SCENE_SIZE, EXTENDED_SCENE_SIZE, Constants.MAX_Z,
 			0, GL_RED_INTEGER, GL_SHORT, tileBuffer
 		);
 
@@ -2842,7 +2844,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		eightIntWrite[6] = y + client.getCameraY2();
 		eightIntWrite[7] = z + client.getCameraZ2();
 
-		int faceCount = 0;
+		int plane = ModelHash.getPlane(hash);
+
+		int faceCount;
 		if (sceneContext.id == (offsetModel.getSceneId() & SceneUploader.SCENE_ID_MASK)) {
 			// The model is part of the static scene buffer
 			assert model == renderable;
@@ -2850,7 +2854,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			faceCount = Math.min(MAX_FACE_COUNT, offsetModel.getFaceCount());
 			int vertexOffset = offsetModel.getBufferOffset();
 			int uvOffset = offsetModel.getUvBufferOffset();
-			int plane = (int) ((hash >> 49) & 3);
 			boolean hillskew = offsetModel != model;
 
 			eightIntWrite[0] = vertexOffset;
@@ -2885,14 +2888,27 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					frameTimer.begin(Timer.MODEL_PUSHING);
 
 				int uuid = ModelHash.generateUuid(client, hash, renderable);
-				int[] worldPos = HDUtils.cameraSpaceToWorldPoint(client, x, z);
+				int[] localPos = HDUtils.cameraSpaceToLocalPoint(client, x, z);
+				int[] worldPos = HDUtils.localToWorld(sceneContext.scene, localPos[0], localPos[1], plane);
 				ModelOverride modelOverride = modelOverrideManager.getOverride(uuid, worldPos);
 				if (modelOverride.hide)
 					return;
 
 				int vertexOffset = dynamicOffsetVertices + sceneContext.getVertexOffset();
 				int uvOffset = dynamicOffsetUvs + sceneContext.getUvOffset();
-				modelPusher.pushModel(sceneContext, null, uuid, model, modelOverride, ObjectType.NONE, 0, true);
+
+				int preOrientation = 0;
+				if (ModelHash.getType(hash) == ModelHash.TYPE_OBJECT) {
+					int tileExX = localPos[0] / LOCAL_TILE_SIZE + SCENE_OFFSET;
+					int tileExY = localPos[1] / LOCAL_TILE_SIZE + SCENE_OFFSET;
+					if (0 <= tileExX && tileExX < EXTENDED_SCENE_SIZE && 0 <= tileExY && tileExY < EXTENDED_SCENE_SIZE) {
+						int config = sceneContext.getObjectConfig(plane, tileExX, tileExY, hash);
+						preOrientation = HDUtils.getBakedOrientation(config);
+					}
+				}
+
+				modelPusher.pushModel(sceneContext, null, uuid, model, modelOverride, ObjectType.NONE, preOrientation, true);
+
 				faceCount = sceneContext.modelPusherResults[0];
 				if (sceneContext.modelPusherResults[1] == 0)
 					uvOffset = -1;

@@ -119,13 +119,11 @@ public class SceneContext {
 		stagingBufferNormals = null;
 	}
 
-	public int getVertexOffset()
-	{
+	public int getVertexOffset() {
 		return stagingBufferVertices.position() / VERTEX_SIZE;
 	}
 
-	public int getUvOffset()
-	{
+	public int getUvOffset() {
 		return stagingBufferUvs.position() / UV_SIZE;
 	}
 
@@ -134,21 +132,18 @@ public class SceneContext {
 	 * If the {@link LocalPoint} is not in the scene, this returns untranslated coordinates when in instances.
 	 *
 	 * @param localPoint to transform
-	 * @param plane		 which the local coordinate is on
+	 * @param plane      which the local coordinate is on
 	 * @return world coordinate
 	 */
-	public int[] localToWorld(LocalPoint localPoint, int plane)
-	{
+	public int[] localToWorld(LocalPoint localPoint, int plane) {
 		return HDUtils.localToWorld(scene, localPoint.getX(), localPoint.getY(), plane);
 	}
 
-	public int[] localToWorld(int localX, int localY, int plane)
-	{
+	public int[] localToWorld(int localX, int localY, int plane) {
 		return HDUtils.localToWorld(scene, localX, localY, plane);
 	}
 
-	public int[] sceneToWorld(int sceneX, int sceneY, int plane)
-	{
+	public int[] sceneToWorld(int sceneX, int sceneY, int plane) {
 		return HDUtils.localToWorld(scene, sceneX * LOCAL_TILE_SIZE, sceneY * LOCAL_TILE_SIZE, plane);
 	}
 
@@ -192,5 +187,21 @@ public class SceneContext {
 
 	public boolean intersects(AABB... aabbs) {
 		return HDUtils.sceneIntersects(scene, expandedMapLoadingChunks, aabbs);
+	}
+
+	public int getObjectConfig(int tileZ, int tileExX, int tileExY, long hash) {
+		Tile tile = scene.getExtendedTiles()[tileZ][tileExX][tileExY];
+		if (tile == null)
+			return 0;
+		if (tile.getWallObject() != null && tile.getWallObject().getHash() == hash)
+			return tile.getWallObject().getConfig();
+		if (tile.getDecorativeObject() != null && tile.getDecorativeObject().getHash() == hash)
+			return tile.getDecorativeObject().getConfig();
+		if (tile.getGroundObject() != null && tile.getGroundObject().getHash() == hash)
+			return tile.getGroundObject().getConfig();
+		for (GameObject gameObject : tile.getGameObjects())
+			if (gameObject != null && gameObject.getHash() == hash)
+				return gameObject.getConfig();
+		return 0;
 	}
 }

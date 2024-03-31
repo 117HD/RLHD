@@ -284,6 +284,9 @@ public class EnvironmentManager {
 			skipTransition = false;
 		}
 
+		if (currentEnvironment.instantTransition || newEnvironment.instantTransition)
+			skipTransition = true;
+
 		log.debug("changing environment from {} to {} (instant: {})", currentEnvironment, newEnvironment, skipTransition);
 		currentEnvironment = newEnvironment;
 		transitionComplete = false;
