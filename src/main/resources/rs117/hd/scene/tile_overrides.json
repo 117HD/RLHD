@@ -5201,7 +5201,9 @@
       63,
       92
     ],
-    "groundMaterial": "EARTHEN_CAVE_FLOOR"
+    "groundMaterial": "EARTHEN_CAVE_FLOOR",
+    "uvOrientation": 144,
+    "uvScale": 1.25
   },
   {
     "name": "SHADOW_DUNGEON_FLOOR",
