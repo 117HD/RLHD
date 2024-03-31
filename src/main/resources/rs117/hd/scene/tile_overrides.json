@@ -4114,11 +4114,24 @@
     "waterType": "DARK_BLUE_WATER"
   },
   {
+    "name": "COLOSSEUM_TILES",
+    "area": "COLOSSEUM",
+    "overlayIds": [ 137, 198, 199 ],
+    "underlayIds": [ 12, 187, 202 ],
+    "groundMaterial": "MARBLE_2"
+  },
+  {
     "name": "VARLAMORE_SAVANNA_HUNTER_PIT_TRAPS",
     "area": "VARLAMORE_SAVANNA_HUNTER_PIT_TRAPS",
     "overlayIds": [ 336 ],
     "groundMaterial": "GRASS_1",
     "blended": false
+  },
+  {
+    "name": "HUNTER_GUILD_POND",
+    "area": "HUNTER_GUILD_SURFACE",
+    "overlayIds": [ 151 ],
+    "waterType": "WATER_FLAT"
   },
   {
     "name": "RALOS_RISE_SNOW_PATH",

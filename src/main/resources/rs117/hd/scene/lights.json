@@ -33352,8 +33352,94 @@
     "duration": 0,
     "range": 30,
     "objectIds": [
-      51906
+      51906,
+      51907
     ]
+  },
+  {
+    "description": "Valamore Colosseum Wall Torch",
+    "height": 235,
+    "alignment": "CENTER",
+    "radius": 275,
+    "strength": 11.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      15253
+    ]
+  },
+  {
+    "description": "VALAMORE_FURNACE_GLOW",
+    "height": 150,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 7.5,
+    "color": [
+      252,
+      90,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "objectIds": [
+      50698
+    ]
+  },
+  {
+    "description": "VALAMORE_OVEN_GLOW",
+    "height": 120,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      52647,
+      52648
+    ]
+  },
+  {
+    "description": "Colosseum northern entrance",
+    "worldX": 1824,
+    "worldY": 9521,
+    "plane": 0,
+    "radius": 600,
+    "strength": 10,
+    "color": "#ffffff",
+    "offset": [ -64, 160, -64 ]
+  },
+  {
+    "description": "Colosseum eastern entrance",
+    "worldX": 1840,
+    "worldY": 9506,
+    "plane": 0,
+    "radius": 600,
+    "strength": 10,
+    "color": "#ffffff",
+    "offset": [ -64, 160, -64 ]
+  },
+  {
+    "description": "Colosseum western entrance",
+    "worldX": 1810,
+    "worldY": 9506,
+    "plane": 0,
+    "radius": 600,
+    "strength": 10,
+    "color": "#ffffff",
+    "offset": [ 64, 160, -64 ]
   },
   {
     "description": "VARLAMORE_CRYPT_AND_CAM_TORUM_HANGING_BRAZIER",
@@ -33618,6 +33704,18 @@
     ]
   },
   {
+    "description": "Red Chinchompa Hunting Grounds Exit",
+    "offset": [ 6, 40, 36 ],
+    "radius": 350,
+    "strength": 35,
+    "color": "#ffffff",
+    "type": "FLICKER",
+    "range": 13,
+    "objectIds": [
+      19037
+    ]
+  },
+  {
     "description": "Tutorial Island Cooking Range",
     "height": 100,
     "offset": [ 53, -53, 48 ],
@@ -33662,5 +33760,18 @@
     "type": "FLICKER",
     "range": 10,
     "offset": [ 0, 208, 0 ]
+  },
+  {
+    "description": "Hunter Guild fire",
+    "radius": 200,
+    "strength": 15,
+    "color": "#fc9403",
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 15,
+    "offset": [ 0, 52, 0 ],
+    "objectIds": [
+      51728
+    ]
   }
 ]

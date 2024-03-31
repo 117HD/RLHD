@@ -1642,6 +1642,28 @@
     "castShadows": false
   },
   {
+    "description": "Valamore, Fortis and Avium Grass",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [
+      51804,
+      51805,
+      51806,
+      51808,
+      51809,
+      51807,
+      51810,
+      51811,
+      51812,
+      51813,
+      51814,
+      51815,
+      51816,
+      51817
+    ],
+    "flatNormals": true,
+    "castShadows": false
+  },
+  {
     "description": "Short grass which shouldn't cast shadows but should inherit tile color, this is required to make the grass around the edges white and not green in winter",
     "baseMaterial": "GRAY_75",
     "seasonalTheme": "WINTER",
@@ -1674,7 +1696,8 @@
       16825,
       16826
     ],
-    "flatNormals": true
+    "flatNormals": true,
+    "castShadows": false
   },
   {
     "description": "WOODEN_FENCES",
@@ -3784,6 +3807,10 @@
       801,
       802,
       803,
+      804,
+      805,
+      806,
+      807,
       808,
       809,
       810,
@@ -6099,6 +6126,17 @@
       19215,
       19216,
       19217,
+      19218,
+      19219,
+      19851,
+      20129,
+      20130,
+      20131,
+      20648,
+      20649,
+      20650,
+      20651,
+      20652,
       20753,
       20754,
       20755,
@@ -6837,7 +6875,8 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       9535,
-      41739
+      41739,
+      52432
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -15460,6 +15499,46 @@
     "uvScale": 0.86
   },
   {
+    "description": "Valamore - quetzal landing site",
+    "baseMaterial": "HAY",
+    "objectIds": [
+      52815
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Valamore Rugs and carpets",
+    "baseMaterial": "FINE_CARPET",
+    "objectIds": [
+      52467,
+      52468,
+      52469,
+      52470,
+      52471,
+      52472,
+      52473,
+      52474,
+      52475,
+      52476,
+      52573,
+      52574,
+      52575
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Valamore Banners",
+    "baseMaterial": "FINE_CARPET",
+    "objectIds": [
+      51946,
+      51947,
+      51948,
+      52314
+    ],
+    "uvType": "MODEL_YZ"
+  },
+  {
     "description": "Hunter Guild cave walls",
     "baseMaterial": "ROCK_3",
     "objectIds": [
@@ -15476,10 +15555,154 @@
       50909,
       50910,
       50911,
-      50922
+      50922,
+      51405
     ],
     "uvType": "BOX",
     "uvScale": 0.86
+  },
+  {
+    "description": "Hunter Guild Entrance Bone Arches",
+    "baseMaterial": "BONE",
+    "objectIds": [
+      51657,
+      51658
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Hunter Guild Wooden Fence Walls",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      51639,
+      51663,
+      51668,
+      51672
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Hunter Guild Big Tree",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      51619,
+      51620,
+      51621,
+      51622,
+      51623,
+      51624,
+      51625,
+      51627,
+      51628,
+      51629,
+      51630,
+      51631,
+      51632,
+      51632,
+      51633,
+      51634,
+      51635,
+      51636,
+      51637,
+      51638,
+      51641,
+      51646,
+      51646,
+      51647,
+      51648,
+      51649,
+      51650,
+      51651,
+      51652,
+      51653,
+      51654,
+      51655,
+      51656
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.2
+  },
+  {
+    "description": "Hunter Guild Big Tree Rope",
+    "baseMaterial": "FINE_CARPET",
+    "objectIds": [
+      51643
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75
+  },
+  {
+    "description": "Hunter Guild blue rug",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      51737,
+      51738,
+      51739,
+      51740,
+      51741,
+      51742,
+      51743,
+      51744
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.3
+  },
+  {
+    "description": "Hunter Guild Cavern Counter",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      51718,
+      51719,
+      51720,
+      51721
+    ],
+    "uvType": "BOX",
+    "uvOrientationY": 512
+  },
+  {
+    "description": "Hunter Guild Wooden Objects",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      51745,
+      52425,
+      52430
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Hunter Guild Caverns Stairs",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      51642
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.5
+  },
+  {
+    "description": "Hunter Pitfall Spiked Pit - Snowy",
+    "baseMaterial": "SNOW_2",
+    "objectIds": [
+      19249,
+      19250,
+      19251,
+      19252
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.2
+  },
+  {
+    "description": "Bear Rugs",
+    "baseMaterial": "FINE_CARPET",
+    "objectIds": [
+      950,
+      951,
+      952,
+      953
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 1.5
   },
   {
     "description": "Obelisk of Earth",
@@ -16068,7 +16291,7 @@
   },
   {
     "description": "Wooden food trough",
-    "objectIds": [ 301 ],
+    "objectIds": [ 301, 3644 ],
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -16139,5 +16362,17 @@
     "description": "Disable shadows for fishing spots at Molch",
     "npcIds": [ 8523 ],
     "castShadows": false
+  },
+  {
+    "description": "Disable shadows for Colosseum entrance walls",
+    "objectIds": [ 38847, 50764, 50765, 50766, 50767 ],
+    "receiveShadows": false,
+    "flatNormals": true
+  },
+  {
+    "description": "Disable shadows for Colosseum entrance white backdrop",
+    "objectIds": [ 50769 ],
+    "receiveShadows": false,
+    "flatNormals": true
   }
 ]

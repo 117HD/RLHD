@@ -642,6 +642,24 @@
     "fogDepth": 70
   },
   {
+    "area": "RELLEKKA_SNOWY_REGION",
+    "ambientColor": "#6fb0ff",
+    "ambientStrength": 1,
+    "directionalColor": "#f4e5c9",
+    "directionalStrength": 2,
+    "fogColor": "#aebde0",
+    "fogDepth": 70
+  },
+  {
+    "area": "RELLEKKA_HUNTER_ICEBERG",
+    "ambientColor": "#6fb0ff",
+    "ambientStrength": 0.75,
+    "directionalColor": "#f4e5c9",
+    "directionalStrength": 1,
+    "fogColor": "#aebde0",
+    "fogDepth": 70
+  },
+  {
     "area": "MOUNTAIN_CAMP_ENTRY_PATH",
     "ambientColor": "#97baff",
     "ambientStrength": 0.9,
@@ -1499,6 +1517,18 @@
     "area": "EARTHBOUND_CAVERN",
     "sunAngles": [ 62, 210 ],
     "waterColor": "#477d95"
+  },
+  {
+    "area": "RED_CHINCHOMPA_HUNTING_GROUND",
+    "ambientColor": "#FFFEB0",
+    "ambientStrength": 0.45,
+    "directionalColor": "#FFFEB0",
+    "directionalStrength": 0.65,
+    "sunAngles": [
+      65,
+      102
+    ],
+    "fogDepth": 30
   },
   {
     "key": "OVERWORLD",
