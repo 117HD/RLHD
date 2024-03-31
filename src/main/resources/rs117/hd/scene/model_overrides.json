@@ -13218,14 +13218,14 @@
   },
   {
     "description": "Trollheim Dark Wall in Doorway",
-    "baseMaterial": "GRUNGE_2_TROLLHEIM_WALL_FIX_1",
+    "baseMaterial": "TROLLHEIM_WALL_FIX_1",
     "objectIds": [ 3792 ],
     "uvType": "BOX",
     "uvScale": 0.7
   },
   {
     "description": "Trollheim Dark Wall in Doorway",
-    "baseMaterial": "GRUNGE_2_TROLLHEIM_WALL_FIX_2",
+    "baseMaterial": "TROLLHEIM_WALL_FIX_2",
     "objectIds": [ 3793 ],
     "uvType": "BOX",
     "uvScale": 0.7
