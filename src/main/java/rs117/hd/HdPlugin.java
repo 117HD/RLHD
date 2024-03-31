@@ -2568,8 +2568,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 								// since we'll be restarting the plugin anyway, skip pending changes
 								return;
 							case KEY_REPLACE_FISHING_SPOTS:
-								reloadModelOverrides = true; // TODO: this is maybe not needed
+								reloadModelOverrides = true;
 								fishingSpotReplacer.despawnRuneLiteObjects();
+								clientThread.invokeLater(fishingSpotReplacer::update);
 								break;
 						}
 					}
