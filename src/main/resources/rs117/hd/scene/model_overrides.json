@@ -15633,8 +15633,8 @@
     "uvScale": 0.75
   },
   {
-    "description": "Hunter Guild Rugs",
-    "baseMaterial": "FINE_CARPET",
+    "description": "Hunter Guild blue rug",
+    "baseMaterial": "GRUNGE_2",
     "objectIds": [
       51737,
       51738,
@@ -15645,8 +15645,8 @@
       51743,
       51744
     ],
-    "uvType": "MODEL_XZ",
-    "uvScale": 1.5
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.3
   },
   {
     "description": "Hunter Guild Cavern Counter",
