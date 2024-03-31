@@ -33760,5 +33760,18 @@
     "type": "FLICKER",
     "range": 10,
     "offset": [ 0, 208, 0 ]
+  },
+  {
+    "description": "Hunter Guild fire",
+    "radius": 200,
+    "strength": 15,
+    "color": "#fc9403",
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 15,
+    "offset": [ 0, 52, 0 ],
+    "objectIds": [
+      51728
+    ]
   }
 ]

@@ -4128,6 +4128,12 @@
     "blended": false
   },
   {
+    "name": "HUNTER_GUILD_POND",
+    "area": "HUNTER_GUILD_SURFACE",
+    "overlayIds": [ 151 ],
+    "waterType": "WATER_FLAT"
+  },
+  {
     "name": "RALOS_RISE_SNOW_PATH",
     "area": "VARLAMORE_SNOWY_MOUNTAINS",
     "overlayIds": [ 271 ],
