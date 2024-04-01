@@ -16374,5 +16374,13 @@
     "objectIds": [ 50769 ],
     "receiveShadows": false,
     "flatNormals": true
+  },
+  {
+    "description": "Marble statues at Lumbridge Entrance - Textured",
+    "objectIds": [ 5789, 9292],
+    "baseMaterial": "MARBLE_2_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 144
   }
 ]
