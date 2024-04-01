@@ -26710,6 +26710,42 @@
     ]
   },
   {
+    "description": "Tumeken's Shadow Projectile",
+    "alignment": "CENTER",
+    "height": -100,
+    "radius": 200,
+    "strength": 20,
+    "color": "#ffb570",
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 30,
+    "spawnDelay": 700,
+    "fadeInDuration": 400,
+    "fadeOutDuration": 600,
+    "projectileIds": [
+      2126
+    ]
+  },
+  {
+    "description": "Tumeken's Shadow Cast",
+    "alignment": "CENTER",
+    "height": 210,
+    "radius": 250,
+    "fixedDespawnTime": false,
+    "strength": 15,
+    "color": "#FFA756",
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 0,
+    "spawnDelay": 700,
+    "despawnDelay": 25,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 175,
+    "graphicsObjectIds": [
+      2125
+    ]
+  },
+  {
     "description": "SMOKE_RUSH",
     "radius": 250,
     "strength": 1.3,
