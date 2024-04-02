@@ -13364,6 +13364,13 @@
     "uvOrientation": 256
   },
   {
+    "description": "Bone Objects",
+    "baseMaterial": "BONE",
+    "objectIds": [ 668, 697, 699, 700, 701, 702, 703, 736, 737 ],
+    "uvType": "BOX",
+    "uvScale": 0.4
+  },
+  {
     "description": "Weiss Snowy Rocks",
     "baseMaterial": "ROCK_3",
     "objectIds": [ 33215, 33216 ],
