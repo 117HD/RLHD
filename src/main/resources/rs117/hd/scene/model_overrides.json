@@ -15714,8 +15714,62 @@
       19251,
       19252
     ],
-    "uvType": "BOX",
+    "uvType": "MODEL_XZ",
     "uvScale": 1.2
+  },
+  {
+    "description": "Hunter Pitfall Spiked Pit - Mossy",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      19241,
+      19242,
+      19243,
+      19244,
+      53029,
+      53030,
+      53031,
+      53032
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.25
+  },
+  {
+    "description": "Hunter Pitfall Spiked Pit - Wooden",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      53025,
+      53026,
+      53027,
+      53028
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.65,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Hunter Pitfall Spiked Pit - Sandy",
+    "baseMaterial": "SAND_3",
+    "objectIds": [
+      19245,
+      19246,
+      19247,
+      19248
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.25,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Hunter Guild Pitfall - Pit",
+    "baseMaterial": "DIRT_1",
+    "objectIds": [
+      53033,
+      53034,
+      53035
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.65,
+    "uvOrientation": 512
   },
   {
     "description": "Bear Rugs",
