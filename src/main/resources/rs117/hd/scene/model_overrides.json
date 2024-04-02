@@ -16394,5 +16394,13 @@
     "uvScale": 0.5,
     "uvOrientation": 42,
     "hideVanillaShadows": true
+  },
+  {
+    "description": "Murder Mystery Wooden Door",
+    "objectIds": [ 30110, 30111 ],
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "flatNormals": true
   }
 ]
