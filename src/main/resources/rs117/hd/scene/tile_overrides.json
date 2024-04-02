@@ -2727,6 +2727,16 @@
     "blended": false
   },
   {
+    "name": "Misthalin Mystery Path",
+    "area": "MISTHALIN_MYSTERY_MANOR_REGION",
+    "overlayIds": [
+      11, 90
+    ],
+    "groundMaterial": "GRAVEL",
+    "uvScale": 1.2,
+    "uvOrientation": 42
+  },
+  {
     "name": "CASTLE_WARS_LOBBY_FLOOR",
     "area": "CASTLE_WARS_LOBBY",
     "overlayIds": [
