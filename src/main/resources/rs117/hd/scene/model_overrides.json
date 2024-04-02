@@ -16426,5 +16426,13 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.7
+  },
+  {
+    "description": "Fancy wooden table with alternating lines",
+    "objectIds": [ 11504 ],
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 512
   }
 ]
