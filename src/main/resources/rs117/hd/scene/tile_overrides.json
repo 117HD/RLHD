@@ -2737,6 +2737,27 @@
     "uvOrientation": 42
   },
   {
+    "name": "Misthalin Mystery Rotated Sand",
+    "groundMaterial": "SAND",
+    "uvScale": 1.2,
+    "uvOrientation": 256
+  },
+  {
+    "name": "Misthalin Mystery Complex",
+    "area": "MISTHALIN_MYSTERY_MANOR_REGION",
+    "underlayIds": [
+      49, 50, 57, 63, 64, 129
+    ],
+    "replacements": {
+      "DEFAULT_GRASS": ["h >= 8 && s >= 3"],
+      "DEFAULT_DIRT": [
+        "h <= 6",
+        "h == 7 && s <= 5"
+      ],
+      "Misthalin Mystery Rotated Sand": [ "h == 8 && s == 2" ]
+    }
+  },
+  {
     "name": "CASTLE_WARS_LOBBY_FLOOR",
     "area": "CASTLE_WARS_LOBBY",
     "overlayIds": [
