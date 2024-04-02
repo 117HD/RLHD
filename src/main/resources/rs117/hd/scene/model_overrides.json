@@ -4799,6 +4799,7 @@
     "description": "Wooden tables - Solid - Cobwebs",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      11490,
       25615
     ],
     "flatNormals": true
@@ -4810,6 +4811,7 @@
       1111,
       25616
     ],
+    "uvType": "BOX",
     "flatNormals": true
   },
   {
@@ -6865,7 +6867,9 @@
     "description": "Objects - Wooden - Crate",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      9534
+      9534,
+      11485,
+      11486
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -6929,6 +6933,18 @@
     ],
     "uvType": "BOX",
     "flatNormals": true
+  },
+  {
+    "description": "Stacks of wooden boxes - Rotated",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      11487
+    ],
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvOrientationY": 600,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512
   },
   {
     "description": "Objects - Wooden - Doublewide Crate",
@@ -7294,6 +7310,7 @@
     "baseMaterial": "GRUNGE_2",
     "objectIds": [
       1171,
+      21742,
       21743
     ],
     "uvType": "BOX",
@@ -8325,6 +8342,7 @@
       3801,
       4271,
       10491,
+      11489,
       12885,
       15981,
       17146,
@@ -16396,11 +16414,17 @@
     "hideVanillaShadows": true
   },
   {
-    "description": "Murder Mystery Wooden Door",
-    "objectIds": [ 30110, 30111 ],
+    "description": "Murder Mystery Wooden Double Doors",
+    "objectIds": [ 1146, 11447, 30110, 30111 ],
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
-    "uvScale": 0.8,
-    "flatNormals": true
+    "uvScale": 0.8
+  },
+  {
+    "description": "Murder Mystery Wooden Doors",
+    "objectIds": [ 11470, 30112, 30114, 30115, 30116, 30117, 30118 ],
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7
   }
 ]
