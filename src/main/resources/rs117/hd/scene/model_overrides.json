@@ -1333,6 +1333,7 @@
       14564,
       14565,
       14566,
+      30150,
       33186,
       33187,
       34933,
@@ -7004,6 +7005,7 @@
     "baseMaterial": "METALLIC_2_SEMIGLOSS",
     "objectIds": [
       7183,
+      7184,
       25730
     ]
   },
@@ -16422,7 +16424,7 @@
   },
   {
     "description": "Murder Mystery Wooden Doors",
-    "objectIds": [ 11470, 30112, 30114, 30115, 30116, 30117, 30118 ],
+    "objectIds": [ 11470, 11471, 30112, 30113, 30114, 30115, 30116, 30117, 30118, 30119, 34650, 34651 ],
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.7
@@ -16434,5 +16436,19 @@
     "uvType": "BOX",
     "uvScale": 0.7,
     "uvOrientation": 512
+  },
+  {
+    "description": "Murder Mystery wooden wardrobes",
+    "objectIds": [ 5622, 5623, 5624 ],
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7
+  },
+  {
+    "description": "Murder Mystery wooden wardrobes Golden Trim",
+    "objectIds": [ 388, 389, 30141, 30142 ],
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7
   }
 ]
