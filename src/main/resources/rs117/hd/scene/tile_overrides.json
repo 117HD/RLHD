@@ -2752,9 +2752,10 @@
       "DEFAULT_GRASS": ["h >= 8 && s >= 3"],
       "DEFAULT_DIRT": [
         "h <= 6",
-        "h == 7 && s <= 5"
+        "h == 7 && s <= 5",
+        "h <= 9 && s <= 2 && l <= 15"
       ],
-      "Misthalin Mystery Rotated Sand": [ "h == 8 && s == 2" ]
+      "Misthalin Mystery Rotated Sand": [ "h == 8 && s == 2 && l >= 20" ]
     }
   },
   {
