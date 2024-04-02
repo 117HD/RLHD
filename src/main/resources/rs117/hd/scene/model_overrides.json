@@ -9508,7 +9508,8 @@
     "baseMaterial": "PLANT_GRUNGE_2",
     "objectIds": [
       1396,
-      2670
+      2670,
+      2671
     ]
   },
   {
@@ -15834,6 +15835,50 @@
   ],
   "uvType": "BOX",
   "uvScale": 0.3
+  },
+  {
+    "description": "Hunter Tracking Burrows",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [
+      19593,
+      19552
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Hunter Kharidian Desert Tracking Disturbed Sand",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [
+      19430
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.4
+  },
+  {
+    "description": "Hunter Kharidian Desert Tracking Cacti",
+    "baseMaterial": "PLANT_GRUNGE_2",
+    "objectIds": [
+      19389,
+      19391,
+      19392,
+      19394,
+      19395,
+      19398,
+      19399,
+      19401
+    ]
+  },
+  {
+    "description": "Hunter Kharidian Desert Tracking Brown Rock",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      19396,
+      19400,
+      19402
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.33
   },
   {
     "description": "Bear Rugs",
