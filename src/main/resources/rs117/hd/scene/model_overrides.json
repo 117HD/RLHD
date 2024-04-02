@@ -12691,7 +12691,8 @@
     "baseMaterial": "BARK",
     "objectIds": [
       1122,
-      1123
+      1123,
+      11911
     ],
     "uvType": "BOX",
     "uvOrientation": 600
@@ -15574,6 +15575,14 @@
     "uvScale": 1.2
   },
   {
+    "description": "Varlamore - Avium Savannah - Plants",
+    "baseMaterial": "PLANT_GRUNGE_1",
+    "objectIds": [
+      47370,
+      51819
+    ]
+  },
+  {
     "description": "Varlamore Rugs and carpets",
     "baseMaterial": "FINE_CARPET",
     "objectIds": [
@@ -16242,6 +16251,19 @@
     "uvType": "BOX",
     "uvOrientation": 88,
     "uvScale": 0.8
+  },
+  {
+    "description": "Zeah - Kourend - Plants",
+    "baseMaterial": "PLANT_GRUNGE_1",
+    "objectIds": [
+      42398,
+      42399,
+      42400,
+      42401,
+      42402,
+      42403,
+      42404
+    ]
   },
   {
     "description": "Old Ones Tent",
