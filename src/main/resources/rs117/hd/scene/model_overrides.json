@@ -8212,7 +8212,19 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.33
-  },
+  },  {
+  "description": "Objects - Rockslide - Orange Rock - Rock - Medium",
+  "baseMaterial": "ROCK_1_LIGHT",
+  "objectIds": [
+    51850,
+    51851,
+    51847,
+    51849,
+    51848
+  ],
+  "uvType": "BOX",
+  "uvScale": 0.33
+},
   {
     "description": "Objects - Stone - Column - Limestone",
     "baseMaterial": "STONE",
@@ -8477,7 +8489,8 @@
       1143,
       23559,
       23530,
-      23561
+      23561,
+      51766
     ],
     "uvType": "BOX"
   },
@@ -9747,7 +9760,14 @@
     "baseMaterial": "PLANT_GRUNGE_2",
     "objectIds": [
       4818,
-      6578
+      6578,
+      51762,
+      51763,
+      51764,
+      51765,
+      51853,
+      53188,
+      53189
     ],
     "uvType": "BOX",
     "uvScale": 0.4,
@@ -13550,7 +13570,7 @@
       4533, 4540, 8462, 8463,
       8464, 8465, 8466,
       9734, 10820, 20806, 37969,
-      37970, 42395, 42831
+      37970, 42395, 42831, 51772
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -15532,6 +15552,28 @@
     "uvScale": 0.6
   },
   {
+    "description": "Acacia Tree",
+    "baseMaterial": "LIGHT_BARK",
+    "objectIds": [
+      51768,
+      51769
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Stonepine Tree",
+    "baseMaterial": "LIGHT_BARK",
+    "objectIds": [
+      51464,
+      51465,
+      51770,
+      51771
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.2
+  },
+  {
     "description": "Varlamore Rugs and carpets",
     "baseMaterial": "FINE_CARPET",
     "objectIds": [
@@ -15563,6 +15605,18 @@
     "uvType": "MODEL_YZ"
   },
   {
+    "description": "Colossal Wyrm Remains Skull",
+    "baseMaterial": "BONE",
+    "objectIds": [
+      51910,
+      51911,
+      51912,
+      51913
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.85
+  },
+  {
     "description": "Hunter Guild cave walls",
     "baseMaterial": "ROCK_3",
     "objectIds": [
@@ -15586,11 +15640,12 @@
     "uvScale": 0.86
   },
   {
-    "description": "Hunter Guild Entrance Bone Arches",
+    "description": "Hunter Guild Entrance Bone Arches, Colossal Wyrm Ribs",
     "baseMaterial": "BONE",
     "objectIds": [
       51657,
-      51658
+      51658,
+      51659
     ],
     "uvType": "BOX",
     "uvOrientation": 512
@@ -15725,6 +15780,15 @@
       51727
     ],
     "uvType": "MODEL_XZ",
+    "uvScale": 0.4
+  },
+  {
+    "description": "Varlamore, Well, MODEL_YZ is used with intent",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      46805
+    ],
+    "uvType": "MODEL_YZ",
     "uvScale": 0.4
   },
   {
