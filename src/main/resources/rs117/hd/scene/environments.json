@@ -1531,6 +1531,13 @@
     "fogDepth": 30
   },
   {
+    "area": "HUNTER_GUILD",
+    "description": "Disable shadows due to major performance issue with shadow transparency.",
+    "directionalStrength": 0,
+    "ambientStrength": 1.25,
+    "force": true
+  },
+  {
     "key": "OVERWORLD",
     "area": "OVERWORLD",
     "ambientColor": "#97baff",
