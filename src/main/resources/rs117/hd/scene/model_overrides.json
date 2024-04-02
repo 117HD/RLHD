@@ -15696,6 +15696,15 @@
     "uvOrientation": 512
   },
   {
+    "description": "Hunter Guild Bank Chest",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      53015
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75
+  },
+  {
     "description": "Hunter Guild Caverns Stairs",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
