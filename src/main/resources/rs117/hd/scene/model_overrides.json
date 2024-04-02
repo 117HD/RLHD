@@ -11006,6 +11006,21 @@
     "uvScale": 0.5
   },
   {
+    "description": "Snow Heap",
+    "baseMaterial": "SNOW_4",
+    "objectIds": [
+      19692
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Remove the shadow cast by the exit crack of the brine rat cave",
+    "objectIds": [
+      23159
+    ],
+    "castShadows": false
+  },
+  {
     "description": "Objects - Desert Treasure Pyramid Obilisk - Large",
     "baseMaterial": "ROCK_2",
     "objectIds": [
