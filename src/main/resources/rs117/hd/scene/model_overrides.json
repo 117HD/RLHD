@@ -930,7 +930,6 @@
       6188,
       10436,
       10487,
-      11468,
       11876,
       12005,
       12006,
@@ -7292,7 +7291,8 @@
     "description": "Objects - Fungus - Medium",
     "baseMaterial": "GRUNGE_2",
     "objectIds": [
-      1171
+      1171,
+      21743
     ],
     "uvType": "BOX",
     "uvScale": 0.8
@@ -16383,5 +16383,14 @@
     "uvType": "BOX",
     "uvScale": 0.5,
     "uvOrientation": 144
+  },
+  {
+    "description": "Metal lamp post with candle lanturn",
+    "objectIds": [ 11468 ],
+    "baseMaterial": "METALLIC_2",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 42,
+    "hideVanillaShadows": true
   }
 ]
