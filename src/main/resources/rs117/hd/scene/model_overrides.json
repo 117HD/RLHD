@@ -12360,7 +12360,9 @@
       1323,
       1324,
       1325,
-      1458
+      1458,
+      51787,
+      51788
     ],
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -15579,7 +15581,11 @@
     "baseMaterial": "PLANT_GRUNGE_1",
     "objectIds": [
       47370,
-      51819
+      51819,
+      51070,
+      51071,
+      51072,
+      51073
     ]
   },
   {
@@ -15801,7 +15807,7 @@
     "uvScale": 0.4
   },
   {
-    "description": "Varlamore, Log Roots in Hunter Guild Caverns",
+    "description": "Varlamore, 'Take-log' Roots in Hunter Guild Caverns",
     "baseMaterial": "BARK",
     "objectIds": [
       51746,
