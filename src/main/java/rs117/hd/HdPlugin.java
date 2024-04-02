@@ -2902,12 +2902,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					if (0 <= tileExX && tileExX < EXTENDED_SCENE_SIZE && 0 <= tileExY && tileExY < EXTENDED_SCENE_SIZE) {
 						Tile tile = sceneContext.scene.getExtendedTiles()[plane][tileExX][tileExY];
 						int config;
-						if (tile != null && (config = sceneContext.getObjectConfig(tile, hash)) == -1) {
+						if (tile != null && (config = sceneContext.getObjectConfig(tile, hash)) != -1) {
 							preOrientation = HDUtils.getBakedOrientation(config);
 						} else if (plane > 0) {
 							// Might be on a bridge tile
 							tile = sceneContext.scene.getExtendedTiles()[plane - 1][tileExX][tileExY];
-							if (tile.getBridge() != null && (config = sceneContext.getObjectConfig(tile.getBridge(), hash)) != -1)
+							if (tile.getBridge() != null && (config = sceneContext.getObjectConfig(tile, hash)) != -1)
 								preOrientation = HDUtils.getBakedOrientation(config);
 						}
 					}
