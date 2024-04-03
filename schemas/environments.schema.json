@@ -15,9 +15,17 @@
         "type": "string",
         "description": "The area the environment should apply in."
       },
+      "description": {
+        "type": "string",
+        "description": "Optional description of what this changes or why."
+      },
       "isUnderwater": {
         "type": "boolean",
         "description": "Whether the area is an underwater area, such as Guardians of the Rift."
+      },
+      "force": {
+        "type": "boolean",
+        "description": "Whether to force the environment to apply, even if atmospheric lighting is disabled."
       },
       "allowSkyOverride": {
         "type": "boolean",

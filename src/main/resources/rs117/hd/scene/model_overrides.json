@@ -2508,7 +2508,7 @@
   },
   {
     "description": "KOUREND_PATHS",
-    "baseMaterial": "GRUNGE_1",
+    "baseMaterial": "STONE_NORMALED_DARK",
     "objectIds": [
       13705,
       13706,
@@ -2524,7 +2524,9 @@
       13716,
       13717,
       42722
-    ]
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 1.2
   },
   {
     "description": "KOUREND_PATH_STEPS",
@@ -3517,22 +3519,39 @@
     "flatNormals": true
   },
   {
-    "description": "UNKNOWN_3",
-    "baseMaterial": "GRUNGE_1",
+    "description": "Pale rock walls",
+    "baseMaterial": "ROCK_3",
     "objectIds": [
       2141,
       3669,
+      3737,
+      3740,
       3759,
+      3770,
+      3772,
+      3773,
+      3774,
       3812,
       6820,
       6822,
       6824,
       6826,
-      6827,
       16539
     ],
     "uvType": "BOX",
-    "uvScale": 0.7
+    "uvScale": 0.7,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Pale rock walls - Top",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      3738,
+      3739,
+      6827
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 1.3
   },
   {
     "description": "UNKNOWN_4",
@@ -13197,29 +13216,13 @@
   {
     "description": "Trollheim Cave Walls",
     "baseMaterial": "GRUNGE_2",
-    "objectIds": [
-      3737,
-      3738,
-      3739,
-      3740,
-      3770,
-      3772,
-      3773,
-      3774
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.7
-  },
-  {
-    "description": "Trollheim Cave Walls",
-    "baseMaterial": "GRUNGE_2",
     "objectIds": [ 3790 ],
     "uvType": "BOX",
     "uvScale": 0.7
   },
   {
     "description": "Trollheim Eadgars Cave Exit",
-    "baseMaterial": "GRUNGE_2_EADGARS_CAVE_FIX",
+    "baseMaterial": "EADGARS_CAVE_FIX",
     "objectIds": [ 3760, 3761 ],
     "uvType": "BOX",
     "uvScale": 0.7
@@ -13240,14 +13243,14 @@
   },
   {
     "description": "Trollheim Dark Wall in Doorway",
-    "baseMaterial": "GRUNGE_2_TROLLHEIM_WALL_FIX_1",
+    "baseMaterial": "TROLLHEIM_WALL_FIX_1",
     "objectIds": [ 3792 ],
     "uvType": "BOX",
     "uvScale": 0.7
   },
   {
     "description": "Trollheim Dark Wall in Doorway",
-    "baseMaterial": "GRUNGE_2_TROLLHEIM_WALL_FIX_2",
+    "baseMaterial": "TROLLHEIM_WALL_FIX_2",
     "objectIds": [ 3793 ],
     "uvType": "BOX",
     "uvScale": 0.7
@@ -16365,11 +16368,6 @@
     "retainVanillaUvs": false
   },
   {
-    "description": "Perilous Moons entrances & black walls",
-    "objectIds": [ 42260, 51376, 51461 ],
-    "baseMaterial": "PURE_BLACK"
-  },
-  {
     "description": "Earthbound Cavern rock traps",
     "objectIds": [ 51359 ],
     "baseMaterial": "ROCK_3",
@@ -16397,6 +16395,26 @@
     "objectIds": [ 50769 ],
     "receiveShadows": false,
     "flatNormals": true
+  },
+  {
+    "description": "Make Perilous Moons entrances pure black",
+    "objectIds": [ 51376 ],
+    "baseMaterial": "PURE_BLACK",
+    "castShadows": false,
+    "receiveShadows": false
+  },
+  {
+    "description": "Fix shadow transparency performance with black boxes in the Hunter Guild & Perilous Moons, and improve looks",
+    "objectIds": [ 42260, 51461, 51462 ],
+    "baseMaterial": "PURE_BLACK",
+    "castShadows": false,
+    "receiveShadows": false
+  },
+  {
+    "description": "Stop floating crystals in the Hunter Guild from casting shadows",
+    "objectIds": [ 51442, 51443, 51444, 51445 ],
+    "castShadows": false,
+    "receiveShadows": false
   },
   {
     "description": "Marble statues at Lumbridge Entrance - Textured",
