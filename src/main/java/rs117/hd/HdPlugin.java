@@ -2467,7 +2467,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		configUndoVanillaShading = config.shadingMode() != ShadingMode.VANILLA;
 		configPreserveVanillaNormals = config.preserveVanillaNormals();
 		configSeasonalTheme = config.seasonalTheme();
-		configColorFilter = config.colorFilter();
+
+		var newColorFilter = config.colorFilter();
+		if (newColorFilter != configColorFilter) {
+			configColorFilterPrevious = configColorFilter;
+			configColorFilter = newColorFilter;
+			colorFilterFadeDuration = System.currentTimeMillis() + 3000;
+		}
 
 		if (configSeasonalTheme == SeasonalTheme.AUTOMATIC) {
 			var time = ZonedDateTime.now(ZoneOffset.UTC);
@@ -2526,10 +2532,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 							case KEY_GROUND_BLENDING:
 							case KEY_GROUND_TEXTURES:
 								reloadTileOverrides = true;
-								break;
-							case KEY_HD_FILTER:
-								configColorFilterPrevious = configColorFilter;
-								colorFilterFadeDuration = System.currentTimeMillis() + 3000;
 								break;
 						}
 
