@@ -8194,7 +8194,7 @@
   },
   {
     "description": "Objects - Rockslide - Gray Rock - Rock - Medium",
-    "baseMaterial": "ROCK_4",
+    "baseMaterial": "ROCK_1_LIGHT",
     "objectIds": [
       3657,
       3658,
@@ -8210,7 +8210,21 @@
       47161,
       47162,
       47163,
-      47164
+      47164,
+      51795,
+      51796,
+      51797
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.33
+  },
+  {
+    "description": "Objects - Rockslide - Darker Gray Rock - Rock - Medium",
+    "baseMaterial": "ROCK_1_LIGHT",
+    "objectIds": [
+      51795,
+      51796,
+      51797
     ],
     "uvType": "BOX",
     "uvScale": 0.33
