@@ -8,11 +8,10 @@ uniform float fadeProgress;
 #define GREYSCALE 1
 #define SEPIA 2
 #define HIGH_CONTRAST 3
-#define CELL_SHADING 4
-#define CARTOON 5
-#define INVERT 6
-#define BLACK_AND_WHITE 7
-#define NO_IDEA 8
+#define CARTOON 4
+#define INVERT 5
+#define BLACK_AND_WHITE 6
+#define NO_IDEA 7
 
 vec3 getFilter(int index, vec3 color) {
     if (index == GREYSCALE) {
@@ -31,11 +30,6 @@ vec3 getFilter(int index, vec3 color) {
             intensity + (color.g - intensity) * modifier,
             intensity + (color.b - intensity) * modifier
         );
-    } else if(index == CELL_SHADING) {
-       float threshold = 0.5;
-       float smoothness = 0.2;
-       vec3 shadedColor = smoothstep(threshold - smoothness, threshold + smoothness, color);
-       return mix(color, shadedColor, 0.6);
     } else if(index == CARTOON) {
         float quantizationLevels = 7.0;
         vec3 quantizedColor = floor(color * quantizationLevels) / quantizationLevels;
