@@ -6911,6 +6911,7 @@
     "description": "Objects - Wooden - Stack of crates - Rotated",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      15693,
       42068
     ],
     "uvType": "BOX",
@@ -14429,14 +14430,14 @@
   {
     "description": "Fossil Island - Outhouse Walls and Lumbriodge Swamp Shack",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 10372, 10373, 11763 ],
+    "objectIds": [ 10372, 10373, 11763, 15054 ],
     "uvType": "BOX",
     "uvScale": 0.8
   },
   {
     "description": "Lumbridge Shack Roof - Corners",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 10367, 10368, 10369, 10370 ],
+    "objectIds": [ 10367, 10368, 10369, 10370, 15055 ],
     "uvType": "BOX",
     "uvScale": 0.8,
     "uvOrientationZ": 512
