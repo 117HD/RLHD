@@ -8214,7 +8214,8 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.33
-  },  {
+  },
+  {
   "description": "Objects - Rockslide - Orange Rock - Rock - Medium",
   "baseMaterial": "ROCK_1_LIGHT",
   "objectIds": [
@@ -8226,7 +8227,7 @@
   ],
   "uvType": "BOX",
   "uvScale": 0.33
-},
+  },
   {
     "description": "Objects - Stone - Column - Limestone",
     "baseMaterial": "STONE",
