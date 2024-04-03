@@ -63,6 +63,7 @@ public class ExpressionParserTest {
 		assertThrows(() -> parseExpression("(5 + ( missing paren)"));
 
 		LinkedHashMap<String, Boolean> testCases = new LinkedHashMap<>();
+		testCases.put("h != 0", true);
 		testCases.put("s == 0 || h <= 10 && s < 2", false);
 		testCases.put("h == 8 && (s == 3 || s == 4) && l >= 20", false);
 		testCases.put("h > 3 && s < 15 && l < 21", true);

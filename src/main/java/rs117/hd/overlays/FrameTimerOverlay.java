@@ -15,7 +15,7 @@ import net.runelite.client.ui.overlay.components.TitleComponent;
 import rs117.hd.HdPlugin;
 
 @Singleton
-public class FrameTimingsOverlay extends OverlayPanel implements FrameTimer.Listener {
+public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listener {
 	@Inject
 	private OverlayManager overlayManager;
 
@@ -25,7 +25,7 @@ public class FrameTimingsOverlay extends OverlayPanel implements FrameTimer.List
 	private final ArrayDeque<FrameTimings> frames = new ArrayDeque<>();
 
 	@Inject
-	public FrameTimingsOverlay(HdPlugin plugin) {
+	public FrameTimerOverlay(HdPlugin plugin) {
 		super(plugin);
 		setLayer(OverlayLayer.ABOVE_SCENE);
 		setPosition(OverlayPosition.TOP_RIGHT);
@@ -46,7 +46,7 @@ public class FrameTimingsOverlay extends OverlayPanel implements FrameTimer.List
 	@Override
 	public void onFrameCompletion(FrameTimings timings) {
 		long now = System.nanoTime();
-		while (frames.size() > 0) {
+		while (!frames.isEmpty()) {
 			if (now - frames.peekFirst().frameTimestamp < 3e9) // remove entries older than 3 seconds
 				break;
 			frames.removeFirst();
@@ -62,19 +62,16 @@ public class FrameTimingsOverlay extends OverlayPanel implements FrameTimer.List
 				.text("Waiting for data...")
 				.build());
 		} else {
-			long cpuTime = timings[Timer.DRAW_SCENE.ordinal()];
+			long cpuTime = timings[Timer.DRAW_FRAME.ordinal()];
 			addTiming("CPU", cpuTime, true);
 			for (var t : Timer.values())
-				if (!t.isGpuTimer)
+				if (!t.isGpuTimer && t != Timer.DRAW_FRAME)
 					addTiming(t, timings);
 
-			long gpuTime =
-				timings[Timer.UPLOAD_GEOMETRY.ordinal()] +
-				timings[Timer.UPLOAD_UI.ordinal()] +
-				timings[Timer.COMPUTE.ordinal()] +
-				timings[Timer.RENDER_SHADOWS.ordinal()] +
-				timings[Timer.RENDER_SCENE.ordinal()] +
-				timings[Timer.RENDER_UI.ordinal()];
+			long gpuTime = 0;
+			for (var t : Timer.values())
+				if (t.isGpuTimer)
+					gpuTime += timings[t.ordinal()];
 			addTiming("GPU", gpuTime, true);
 			for (var t : Timer.values())
 				if (t.isGpuTimer)
@@ -82,7 +79,14 @@ public class FrameTimingsOverlay extends OverlayPanel implements FrameTimer.List
 
 			panelComponent.getChildren().add(LineComponent.builder()
 				.leftFont(FontManager.getRunescapeBoldFont())
-				.left("Max Frame Rate:")
+				.left("Estimated bottleneck:")
+				.rightFont(FontManager.getRunescapeBoldFont())
+				.right(cpuTime > gpuTime ? "CPU" : "GPU")
+				.build());
+
+			panelComponent.getChildren().add(LineComponent.builder()
+				.leftFont(FontManager.getRunescapeBoldFont())
+				.left("Estimated FPS:")
 				.rightFont(FontManager.getRunescapeBoldFont())
 				.right(String.format("%.1f FPS", 1 / (Math.max(cpuTime, gpuTime) / 1e9)))
 				.build());
@@ -92,7 +96,7 @@ public class FrameTimingsOverlay extends OverlayPanel implements FrameTimer.List
 	}
 
 	private long[] getAverageTimings() {
-		if (frames.size() == 0)
+		if (frames.isEmpty())
 			return new long[0];
 
 		long[] timers = new long[Timer.values().length];

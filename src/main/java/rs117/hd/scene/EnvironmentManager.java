@@ -284,6 +284,9 @@ public class EnvironmentManager {
 			skipTransition = false;
 		}
 
+		if (currentEnvironment.instantTransition || newEnvironment.instantTransition)
+			skipTransition = true;
+
 		log.debug("changing environment from {} to {} (instant: {})", currentEnvironment, newEnvironment, skipTransition);
 		currentEnvironment = newEnvironment;
 		transitionComplete = false;
@@ -322,7 +325,7 @@ public class EnvironmentManager {
 			sunAngles = overworldEnv.sunAngles;
 		System.arraycopy(sunAngles, 0, targetSunAngles, 0, 2);
 
-		if (!config.atmosphericLighting())
+		if (!config.atmosphericLighting() && !env.force)
 			env = overworldEnv;
 		targetAmbientStrength = env.ambientStrength;
 		targetAmbientColor = env.ambientColor;

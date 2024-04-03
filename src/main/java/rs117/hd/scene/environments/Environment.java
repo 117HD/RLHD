@@ -34,8 +34,10 @@ public class Environment {
 	public Area area = Area.NONE;
 	public boolean isOverworld = false;
 	public boolean isUnderwater = false;
+	public boolean force = false;
 	public boolean allowSkyOverride = true;
 	public boolean lightningEffects = false;
+	public boolean instantTransition = false;
 	@JsonAdapter(SrgbToLinearAdapter.class)
 	public float[] ambientColor = rgb("#ffffff");
 	public float ambientStrength = 1;
