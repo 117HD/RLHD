@@ -15630,6 +15630,7 @@
     "description": "Varlamore Cushions",
     "baseMaterial": "FINE_CARPET",
     "objectIds": [
+      53012,
       52436
     ],
     "uvType": "BOX",
