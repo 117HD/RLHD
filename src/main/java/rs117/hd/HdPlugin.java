@@ -2585,10 +2585,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 								reloadScene = true;
 								break;
 							case KEY_HIDE_UNRELATED_MAPS_HD:
-								if (client.getGameState() == GameState.LOGGED_IN)
-								{
-									client.setGameState(GameState.LOADING);
-								}
+								// TODO: confirm whether this actually needs to reload in a different way
+//								if (client.getGameState() == GameState.LOGGED_IN)
+//								{
+//									client.setGameState(GameState.LOADING);
+//								}
+								reloadScene = true;
 								break;
 							case KEY_LEGACY_GREY_COLORS:
 							case KEY_PRESERVE_VANILLA_NORMALS:
