@@ -1535,7 +1535,7 @@
     "description": "Disable shadows due to major performance issue with shadow transparency.",
     "directionalStrength": 0,
     "ambientStrength": 1.25,
-    "force": true
+    "force": false
   },
   {
     "key": "OVERWORLD",
