@@ -1666,6 +1666,16 @@
     "castShadows": false
   },
   {
+    "description": "Hunter guild grass, that's also used elsewhere so restrict this to Varlamore",
+    "baseMaterial": "GRAY_75",
+    "areas": [ "VARLAMORE" ],
+    "objectIds": [
+      19829
+    ],
+    "flatNormals": true,
+    "castShadows": false
+  },
+  {
     "description": "Short grass which shouldn't cast shadows but should inherit tile color, this is required to make the grass around the edges white and not green in winter",
     "baseMaterial": "GRAY_75",
     "seasonalTheme": "WINTER",
@@ -15628,17 +15638,17 @@
   },
   {
     "description": "Acacia Tree",
-    "baseMaterial": "LIGHT_BARK",
+    "baseMaterial": "LIGHT_BARK_STONEPINE",
     "objectIds": [
       51768,
       51769
     ],
     "uvType": "BOX",
-    "uvScale": 0.8
+    "uvScale": 0.5
   },
   {
     "description": "Stonepine Tree",
-    "baseMaterial": "LIGHT_BARK",
+    "baseMaterial": "LIGHT_BARK_STONEPINE",
     "objectIds": [
       51464,
       51465,
@@ -15646,7 +15656,7 @@
       51771
     ],
     "uvType": "BOX",
-    "uvScale": 1.2
+    "uvScale": 0.7
   },
   {
     "description": "Varlamore - Avium Savannah - Plants",
