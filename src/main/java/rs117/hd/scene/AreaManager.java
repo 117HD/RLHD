@@ -69,6 +69,7 @@ public class AreaManager {
 	}
 
 	public boolean shouldHideTile(LocalPoint point) {
+		// TODO: since this is used during scene uploading, it's wrong to use the client's current scene
 		if (client.getScene().isInstance() || !plugin.config.hideUnrelatedMaps())
 		{
 			return false;

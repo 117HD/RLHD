@@ -2334,8 +2334,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			synchronized (context) {
 				nextSceneContext = context;
 				proceduralGenerator.generateSceneData(context);
-				environmentManager.loadSceneEnvironments(context);
+				// TODO: why is this not being fed the context?
 				areaManager.update(client.getLocalPlayer().getWorldLocation());
+				environmentManager.loadSceneEnvironments(context);
 				sceneUploader.upload(context);
 			}
 		} catch (OutOfMemoryError oom) {
