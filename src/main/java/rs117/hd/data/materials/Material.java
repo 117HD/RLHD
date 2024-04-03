@@ -557,12 +557,7 @@ public enum Material {
 		.setNormalMap(WOOD_GRAIN_3_N)
 		.setSpecular(0.3f, 25)
 	),
-	WOOD_GRAIN_3_LIGHT(WOOD_GRAIN_3, p -> p
-		.setBrightness(1.6f)
-		.setDisplacementMap(WOOD_GRAIN_3_D)
-		.setNormalMap(WOOD_GRAIN_3_N)
-		.setSpecular(0.3f, 25)
-	),
+	WOOD_GRAIN_3_LIGHT(WOOD_GRAIN_3, p -> p.setBrightness(1.6f)),
 	DOCK_FENCE,
 	DOCK_FENCE_DARK(DOCK_FENCE, p -> p.setBrightness(0.6f)),
 
