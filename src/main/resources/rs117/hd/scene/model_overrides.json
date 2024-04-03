@@ -8243,6 +8243,19 @@
   "uvScale": 0.33
   },
   {
+    "description": "Big Crack Near Pyre Foxes",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [
+      51857,
+      51858,
+      51860,
+      51862,
+      51864
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
+  },
+  {
     "description": "Objects - Stone - Column - Limestone",
     "baseMaterial": "STONE",
     "objectIds": [
