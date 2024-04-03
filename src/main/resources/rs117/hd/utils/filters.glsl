@@ -1,5 +1,8 @@
 #pragma once
 
+#include utils/constants.glsl
+
+#if APPLY_COLOR_FILTER
 uniform int colorFilterPrevious;
 uniform int colorFilter;
 uniform float colorFilterFade;
@@ -67,3 +70,4 @@ vec3 applyFilter(vec3 color) {
 
     return filteredColor;
 }
+#endif
