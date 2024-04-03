@@ -5655,6 +5655,7 @@
     "objectIds": [
       1749,
       2398,
+      2406,
       11616,
       11617,
       11765,
@@ -10186,6 +10187,7 @@
     "description": "Sack",
     "baseMaterial": "CARPET",
     "objectIds": [
+      7512,
       12396
     ],
     "uvType": "BOX",
@@ -14425,16 +14427,24 @@
     "uvScale": 0.9
   },
   {
-    "description": "Fossil Island - Outhouse Walls",
+    "description": "Fossil Island - Outhouse Walls and Lumbriodge Swamp Shack",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 10372, 11763 ],
+    "objectIds": [ 10372, 10373, 11763 ],
     "uvType": "BOX",
     "uvScale": 0.8
   },
   {
-    "description": "Fossil Island - Outhouse Top and Evil Daves Moms house",
+    "description": "Lumbridge Shack Roof - Corners",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 12283, 12284, 12285, 12286, 12287, 12290 ],
+    "objectIds": [ 10367, 10368, 10369, 10370 ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationZ": 512
+  },
+  {
+    "description": "Fossil Island - Outhouse Top and Evil Daves Moms house, Lumbridge Shack",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 10364, 10365, 10366, 12283, 12284, 12285, 12286, 12287, 12290],
     "uvType": "BOX",
     "uvScale": 0.8,
     "uvOrientationX": 512
@@ -16317,7 +16327,7 @@
   {
     "description": "Wooden shelves - Empty",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 12980 ],
+    "objectIds": [ 7506, 12980 ],
     "uvType": "BOX",
     "uvScale": 0.8,
     "uvOrientationX": 512,
