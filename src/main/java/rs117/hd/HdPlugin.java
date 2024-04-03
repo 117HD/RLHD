@@ -417,6 +417,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public SeasonalTheme configSeasonalTheme;
 	public VanillaShadowMode configVanillaShadowMode;
 	public ColorFilter configColorFilter;
+	public ColorFilter configColorFilterPrevious = ColorFilter.NONE;
 
 	public boolean useLowMemoryMode;
 	public boolean enableDetailedTimers;
@@ -449,6 +450,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private long lastFrameTimeMillis;
 	private float lastFrameClientTime;
 	private int gameTicksUntilSceneReload = 0;
+	private long colorFilterFadeDuration;
 
 	@Provides
 	HdPluginConfig provideConfig(ConfigManager configManager) {
@@ -1771,10 +1773,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		frameTimer.end(Timer.UPLOAD_UI);
 	}
 
-	public ColorFilter lastFilterType = ColorFilter.NONE;
-
-	public long filterFadeDuration;
-
 	@Override
 	public void draw(int overlayColor) {
 		final GameState gameState = client.getGameState();
@@ -2067,14 +2065,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			glUniform1i(uniShadowsEnabled, configShadowsEnabled ? 1 : 0);
 			if (configColorFilter != ColorFilter.NONE) {
 				glUniform1i(uniFilterType, config.colorFilter().ordinal());
-				glUniform1i(uniFilterTypePrevious, lastFilterType.ordinal());
+				glUniform1i(uniFilterTypePrevious, configColorFilterPrevious.ordinal());
 
-				if (filterFadeDuration != 0) {
-					long timeLeft = filterFadeDuration - System.currentTimeMillis();
+				if (colorFilterFadeDuration != 0) {
+					long timeLeft = colorFilterFadeDuration - System.currentTimeMillis();
 					if (timeLeft >= 0) {
 						glUniform1f(uniFilterFadeDuration, timeLeft);
 					} else {
-						filterFadeDuration = 0;
+						colorFilterFadeDuration = 0;
 					}
 				} else {
 					glUniform1f(uniFilterFadeDuration, 0);
@@ -2530,8 +2528,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 								reloadTileOverrides = true;
 								break;
 							case KEY_HD_FILTER:
-								lastFilterType = configColorFilter;
-								filterFadeDuration = System.currentTimeMillis() + 3000;
+								configColorFilterPrevious = configColorFilter;
+								colorFilterFadeDuration = System.currentTimeMillis() + 3000;
 								break;
 						}
 
