@@ -16374,5 +16374,17 @@
     "objectIds": [ 50769 ],
     "receiveShadows": false,
     "flatNormals": true
+  },
+  {
+    "description": "Perf fix for invisible object in hunters guild",
+    "objectIds": [ 42260 ],
+    "receiveShadows": false,
+    "flatNormals": true
+  },
+  {
+    "description": "Perf fix for floating crystal objects in the hunters guild",
+    "objectIds": [ 51442, 51443, 51444, 51445 ],
+    "receiveShadows": false,
+    "flatNormals": true
   }
 ]
