@@ -458,10 +458,7 @@ public enum Material {
 		.setNormalMap(JAGGED_STONE_TILE_N)
 		.setSpecular(0.5f, 30)
 	),
-	POTTERY_OVEN_STONE(
-		JAGGED_STONE_TILE,
-		p -> p.setOverrideBaseColor(JAGGED_STONE_TILE.overrideBaseColor).setBrightness(0.3f)
-	),
+	POTTERY_OVEN_STONE(JAGGED_STONE_TILE, p -> p.setBrightness(0.3f)),
 
 	TILE_SMALL_1(p -> p
 		.setSpecular(0.8f, 70)),
