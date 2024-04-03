@@ -16374,5 +16374,17 @@
     "objectIds": [ 50769 ],
     "receiveShadows": false,
     "flatNormals": true
+  },
+  {
+    "description": "Fix major performance issue with shadow transparency due to black boxes in the Hunter Guild",
+    "objectIds": [ 42260, 51462 ],
+    "castShadows": false,
+    "receiveShadows": false
+  },
+  {
+    "description": "Stop floating crystals in the Hunter Guild from casting shadows",
+    "objectIds": [ 51442, 51443, 51444, 51445 ],
+    "castShadows": false,
+    "receiveShadows": false
   }
 ]
