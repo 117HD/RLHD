@@ -16376,15 +16376,15 @@
     "flatNormals": true
   },
   {
-    "description": "Perf fix for invisible object in hunters guild",
-    "objectIds": [ 42260 ],
-    "receiveShadows": false,
-    "flatNormals": true
+    "description": "Fix major performance issue with shadow transparency due to black boxes in the Hunter Guild",
+    "objectIds": [ 42260, 51462 ],
+    "castShadows": false,
+    "receiveShadows": false
   },
   {
-    "description": "Perf fix for floating crystal objects in the hunters guild",
+    "description": "Stop floating crystals in the Hunter Guild from casting shadows",
     "objectIds": [ 51442, 51443, 51444, 51445 ],
-    "receiveShadows": false,
-    "flatNormals": true
+    "castShadows": false,
+    "receiveShadows": false
   }
 ]
