@@ -6931,9 +6931,9 @@
     "description": "Objects - Wooden - Stack of crates",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      6178,
       9536,
-      12545,
-      6178
+      12545
     ],
     "uvType": "BOX",
     "flatNormals": true,
