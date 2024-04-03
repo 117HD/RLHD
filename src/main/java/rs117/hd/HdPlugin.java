@@ -47,7 +47,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -79,7 +78,7 @@ import org.lwjgl.opengl.*;
 import org.lwjgl.system.Callback;
 import org.lwjgl.system.Configuration;
 import rs117.hd.config.AntiAliasingMode;
-import rs117.hd.config.Filter;
+import rs117.hd.config.ColorFilter;
 import rs117.hd.config.SeasonalTheme;
 import rs117.hd.config.ShadingMode;
 import rs117.hd.config.ShadowMode;
@@ -413,10 +412,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public boolean configUseFasterModelHashing;
 	public boolean configUndoVanillaShading;
 	public boolean configPreserveVanillaNormals;
+	public int configMaxDynamicLights;
 	public ShadowMode configShadowMode;
 	public SeasonalTheme configSeasonalTheme;
 	public VanillaShadowMode configVanillaShadowMode;
-	public int configMaxDynamicLights;
+	public ColorFilter configColorFilter;
 
 	public boolean useLowMemoryMode;
 	public boolean enableDetailedTimers;
@@ -777,7 +777,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.addInclude("VERSION_HEADER", versionHeader)
 			.define("UI_SCALING_MODE", config.uiScalingMode().getMode())
 			.define("COLOR_BLINDNESS", config.colorBlindness())
-			.define("FILTER_TYPE", config.filterType())
+			.define("FILTER_TYPE", configColorFilter)
 			.define("MATERIAL_CONSTANTS", () -> {
 				StringBuilder include = new StringBuilder();
 				for (Material m : Material.values())
@@ -898,7 +898,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		uniCameraPos = glGetUniformLocation(glSceneProgram, "cameraPos");
 		uniTextureArray = glGetUniformLocation(glSceneProgram, "textureArray");
 		uniElapsedTime = glGetUniformLocation(glSceneProgram, "elapsedTime");
-		if (config.filterType() != Filter.NONE) {
+		if (configColorFilter != ColorFilter.NONE) {
 			uniFilterType = glGetUniformLocation(glSceneProgram, "filterType");
 			uniFilterTypePrevious = glGetUniformLocation(glSceneProgram, "filterTypePrevious");
 			uniFilterFadeDuration = glGetUniformLocation(glSceneProgram, "fadeProgress");
@@ -1771,7 +1771,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		frameTimer.end(Timer.UPLOAD_UI);
 	}
 
-	public int lastFilterType;
+	public ColorFilter lastFilterType = ColorFilter.NONE;
 
 	public long filterFadeDuration;
 
@@ -2065,9 +2065,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			glUniform1f(uniShadowMaxBias, maxBias / 10000f);
 
 			glUniform1i(uniShadowsEnabled, configShadowsEnabled ? 1 : 0);
-			if (config.filterType() != Filter.NONE) {
-				glUniform1i(uniFilterType, config.filterType().ordinal());
-				glUniform1i(uniFilterTypePrevious, lastFilterType);
+			if (configColorFilter != ColorFilter.NONE) {
+				glUniform1i(uniFilterType, config.colorFilter().ordinal());
+				glUniform1i(uniFilterTypePrevious, lastFilterType.ordinal());
 
 				if (filterFadeDuration != 0) {
 					long timeLeft = filterFadeDuration - System.currentTimeMillis();
@@ -2469,6 +2469,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		configUndoVanillaShading = config.shadingMode() != ShadingMode.VANILLA;
 		configPreserveVanillaNormals = config.preserveVanillaNormals();
 		configSeasonalTheme = config.seasonalTheme();
+		configColorFilter = config.colorFilter();
 
 		if (configSeasonalTheme == SeasonalTheme.AUTOMATIC) {
 			var time = ZonedDateTime.now(ZoneOffset.UTC);
@@ -2495,11 +2496,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		// Exit if the plugin is off, the config is unrelated to the plugin, or if switching to a profile with the plugin turned off
 		if (!isActive || !event.getGroup().equals(CONFIG_GROUP) || !pluginManager.isPluginEnabled(this))
 			return;
-
-		if (Objects.equals(event.getKey(), KEY_HD_FILTER)) {
-			lastFilterType = Filter.valueOf(event.getOldValue()).ordinal();
-			filterFadeDuration = System.currentTimeMillis() + 3000;
-		}
 
 		pendingConfigChanges.add(event.getKey());
 	}
@@ -2532,6 +2528,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 							case KEY_GROUND_BLENDING:
 							case KEY_GROUND_TEXTURES:
 								reloadTileOverrides = true;
+								break;
+							case KEY_HD_FILTER:
+								lastFilterType = configColorFilter;
+								filterFadeDuration = System.currentTimeMillis() + 3000;
 								break;
 						}
 

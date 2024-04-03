@@ -33,9 +33,9 @@ import net.runelite.client.config.Range;
 import net.runelite.client.config.Units;
 import rs117.hd.config.AntiAliasingMode;
 import rs117.hd.config.ColorBlindMode;
+import rs117.hd.config.ColorFilter;
 import rs117.hd.config.Contrast;
 import rs117.hd.config.DefaultSkyColor;
-import rs117.hd.config.Filter;
 import rs117.hd.config.FogDepthMode;
 import rs117.hd.config.MaxDynamicLights;
 import rs117.hd.config.Saturation;
@@ -651,8 +651,8 @@ public interface HdPluginConfig extends Config
 		position = 12,
 		section = environmentSettings
 	)
-	default Filter filterType() {
-		return Filter.NONE;
+	default ColorFilter colorFilter() {
+		return ColorFilter.NONE;
 	}
 
 
