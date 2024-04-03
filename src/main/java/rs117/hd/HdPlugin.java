@@ -416,8 +416,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public ShadowMode configShadowMode;
 	public SeasonalTheme configSeasonalTheme;
 	public VanillaShadowMode configVanillaShadowMode;
-	public ColorFilter configColorFilter;
-	public ColorFilter configColorFilterPrevious = ColorFilter.NONE;
+	public ColorFilter configColorFilter = ColorFilter.NONE;
+	public ColorFilter configColorFilterPrevious;
 
 	public boolean useLowMemoryMode;
 	public boolean enableDetailedTimers;
