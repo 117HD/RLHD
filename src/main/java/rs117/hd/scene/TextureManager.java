@@ -68,7 +68,6 @@ public class TextureManager {
 		() -> path(TextureManager.class, "textures")
 	);
 
-
 	@Inject
 	private Client client;
 
