@@ -384,10 +384,8 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 		GroundObject groundObject = tile.getGroundObject();
 		if (groundObject != null) {
 			lines.add(String.format(
-				"Ground Object: ID=%s x=%d y=%d ori=%d",
+				"Ground Object: ID=%s preori=%d",
 				getIdAndImpostorId(groundObject, groundObject.getRenderable()),
-				ModelHash.getSceneX(groundObject.getHash()),
-				ModelHash.getSceneY(groundObject.getHash()),
 				HDUtils.getBakedOrientation(groundObject.getConfig())
 			));
 		}
@@ -395,10 +393,8 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 		WallObject wallObject = tile.getWallObject();
 		if (wallObject != null) {
 			lines.add(String.format(
-				"Wall Object: ID=%s x=%d y=%d bakedOri=%d oriA=%d oriB=%d",
+				"Wall Object: ID=%s bakedOri=%d oriA=%d oriB=%d",
 				getIdAndImpostorId(wallObject, wallObject.getRenderable1()),
-				ModelHash.getSceneX(wallObject.getHash()),
-				ModelHash.getSceneY(wallObject.getHash()),
 				HDUtils.getBakedOrientation(wallObject.getConfig()),
 				wallObject.getOrientationA(),
 				wallObject.getOrientationB()
@@ -413,10 +409,12 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			var renderable = gameObject.getRenderable();
 			if (renderable != null)
 				height = renderable.getModelHeight();
+
 			lines.add(String.format(
-				"%s: ID=%s ori=%d height=%d",
+				"%s: ID=%s preori=%d ori=%d height=%d",
 				ModelHash.getTypeName(ModelHash.getType(gameObject.getHash())),
 				getIdAndImpostorId(gameObject, renderable),
+				HDUtils.getBakedOrientation(gameObject.getConfig()),
 				gameObject.getModelOrientation(),
 				height
 			));

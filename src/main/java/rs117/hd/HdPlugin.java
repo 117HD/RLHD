@@ -78,6 +78,7 @@ import org.lwjgl.opengl.*;
 import org.lwjgl.system.Callback;
 import org.lwjgl.system.Configuration;
 import rs117.hd.config.AntiAliasingMode;
+import rs117.hd.config.ColorFilter;
 import rs117.hd.config.SeasonalTheme;
 import rs117.hd.config.ShadingMode;
 import rs117.hd.config.ShadowMode;
@@ -98,6 +99,7 @@ import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.EnvironmentManager;
+import rs117.hd.scene.FishingSpotReplacer;
 import rs117.hd.scene.LightManager;
 import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.ProceduralGenerator;
@@ -120,12 +122,15 @@ import rs117.hd.utils.ResourcePath;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 
+import static net.runelite.api.Constants.SCENE_SIZE;
+import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.*;
 import static org.lwjgl.opencl.CL10.*;
 import static org.lwjgl.opengl.GL43C.*;
 import static rs117.hd.HdPluginConfig.*;
 import static rs117.hd.scene.SceneUploader.SCENE_OFFSET;
 import static rs117.hd.utils.HDUtils.PI;
+import static rs117.hd.utils.HDUtils.clamp;
 import static rs117.hd.utils.ResourcePath.path;
 
 @PluginDescriptor(
@@ -156,7 +161,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	public static final float NEAR_PLANE = 1;
 	public static final int MAX_FACE_COUNT = 6144;
-	public static final int MAX_DISTANCE = Constants.EXTENDED_SCENE_SIZE;
+	public static final int MAX_DISTANCE = EXTENDED_SCENE_SIZE;
 	public static final int GROUND_MIN_Y = 350; // how far below the ground models extend
 	public static final int MAX_FOG_DEPTH = 100;
 	public static final int SCALAR_BYTES = 4;
@@ -165,6 +170,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public static final int NORMAL_SIZE = 4; // 4 floats per vertex
 
 	public static float BUFFER_GROWTH_MULTIPLIER = 2; // can be less than 2 if trying to conserve memory
+
+	private static final float COLOR_FILTER_FADE_DURATION = 3000;
 
 	private static final int[] eightIntWrite = new int[8];
 
@@ -212,6 +219,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Inject
 	private ModelHasher modelHasher;
+
+	@Inject
+	private FishingSpotReplacer fishingSpotReplacer;
 
 	@Inject
 	private DeveloperTools developerTools;
@@ -367,6 +377,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private int uniUnderwaterCausticsColor;
 	private int uniUnderwaterCausticsStrength;
 	private int uniCameraPos;
+	private int uniColorFilter;
+	private int uniColorFilterPrevious;
+	private int uniColorFilterFade;
 
 	// Shadow program uniforms
 	private int uniShadowLightProjectionMatrix;
@@ -406,10 +419,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public boolean configUseFasterModelHashing;
 	public boolean configUndoVanillaShading;
 	public boolean configPreserveVanillaNormals;
+	public int configMaxDynamicLights;
 	public ShadowMode configShadowMode;
 	public SeasonalTheme configSeasonalTheme;
 	public VanillaShadowMode configVanillaShadowMode;
-	public int configMaxDynamicLights;
+	public ColorFilter configColorFilter = ColorFilter.NONE;
+	public ColorFilter configColorFilterPrevious;
 
 	public boolean useLowMemoryMode;
 	public boolean enableDetailedTimers;
@@ -442,6 +457,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private long lastFrameTimeMillis;
 	private float lastFrameClientTime;
 	private int gameTicksUntilSceneReload = 0;
+	private long colorFilterChangedAt;
 
 	@Provides
 	HdPluginConfig provideConfig(ConfigManager configManager) {
@@ -591,6 +607,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				lightManager.startUp();
 				areaManager.startUp();
 				environmentManager.startUp();
+				fishingSpotReplacer.startUp();
 
 				isActive = true;
 				hasLoggedIn = client.getGameState().getState() > GameState.LOGGING_IN.getState();
@@ -638,6 +655,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			modelOverrideManager.shutDown();
 			lightManager.shutDown();
 			environmentManager.shutDown();
+			fishingSpotReplacer.shutDown();
 
 			if (lwjglInitialized) {
 				lwjglInitialized = false;
@@ -769,6 +787,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.addInclude("VERSION_HEADER", versionHeader)
 			.define("UI_SCALING_MODE", config.uiScalingMode().getMode())
 			.define("COLOR_BLINDNESS", config.colorBlindness())
+			.define("APPLY_COLOR_FILTER", configColorFilter != ColorFilter.NONE)
 			.define("MATERIAL_CONSTANTS", () -> {
 				StringBuilder include = new StringBuilder();
 				for (Material m : Material.values())
@@ -889,6 +908,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		uniCameraPos = glGetUniformLocation(glSceneProgram, "cameraPos");
 		uniTextureArray = glGetUniformLocation(glSceneProgram, "textureArray");
 		uniElapsedTime = glGetUniformLocation(glSceneProgram, "elapsedTime");
+
+		if (configColorFilter != ColorFilter.NONE) {
+			uniColorFilter = glGetUniformLocation(glSceneProgram, "colorFilter");
+			uniColorFilterPrevious = glGetUniformLocation(glSceneProgram, "colorFilterPrevious");
+			uniColorFilterFade = glGetUniformLocation(glSceneProgram, "colorFilterFade");
+		}
 
 		uniUiTexture = glGetUniformLocation(glUiProgram, "uiTexture");
 		uniTexTargetDimensions = glGetUniformLocation(glUiProgram, "targetDimensions");
@@ -1347,7 +1372,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	private void initTileHeightMap(Scene scene) {
-		final int TILE_HEIGHT_BUFFER_SIZE = Constants.MAX_Z * Constants.EXTENDED_SCENE_SIZE * Constants.EXTENDED_SCENE_SIZE * Short.BYTES;
+		final int TILE_HEIGHT_BUFFER_SIZE = Constants.MAX_Z * EXTENDED_SCENE_SIZE * EXTENDED_SCENE_SIZE * Short.BYTES;
 		ShortBuffer tileBuffer = ByteBuffer
 			.allocateDirect(TILE_HEIGHT_BUFFER_SIZE)
 			.order(ByteOrder.nativeOrder())
@@ -1355,8 +1380,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		int[][][] tileHeights = scene.getTileHeights();
 		for (int z = 0; z < Constants.MAX_Z; ++z) {
-			for (int y = 0; y < Constants.EXTENDED_SCENE_SIZE; ++y) {
-				for (int x = 0; x < Constants.EXTENDED_SCENE_SIZE; ++x) {
+			for (int y = 0; y < EXTENDED_SCENE_SIZE; ++y) {
+				for (int x = 0; x < EXTENDED_SCENE_SIZE; ++x) {
 					int h = tileHeights[z][x][y];
 					assert (h & 0b111) == 0;
 					h >>= 3;
@@ -1375,7 +1400,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexImage3D(GL_TEXTURE_3D, 0, GL_R16I,
-			Constants.EXTENDED_SCENE_SIZE, Constants.EXTENDED_SCENE_SIZE, Constants.MAX_Z,
+			EXTENDED_SCENE_SIZE, EXTENDED_SCENE_SIZE, Constants.MAX_Z,
 			0, GL_RED_INTEGER, GL_SHORT, tileBuffer
 		);
 
@@ -2048,6 +2073,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 			glUniform1i(uniShadowsEnabled, configShadowsEnabled ? 1 : 0);
 
+			if (configColorFilter != ColorFilter.NONE) {
+				glUniform1i(uniColorFilter, configColorFilter.ordinal());
+				glUniform1i(uniColorFilterPrevious, configColorFilterPrevious.ordinal());
+				long timeSinceChange = System.currentTimeMillis() - colorFilterChangedAt;
+				glUniform1f(uniColorFilterFade, clamp(timeSinceChange / COLOR_FILTER_FADE_DURATION, 0, 1));
+			}
+
 			// Calculate projection matrix
 			float[] projectionMatrix = Mat4.scale(client.getScale(), client.getScale(), 1);
 			Mat4.mul(projectionMatrix, Mat4.projection(viewportWidth, viewportHeight, NEAR_PLANE));
@@ -2339,6 +2371,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		}
 
 		lightManager.loadSceneLights(nextSceneContext, sceneContext);
+		fishingSpotReplacer.despawnRuneLiteObjects();
 
 		if (sceneContext != null)
 			sceneContext.destroy();
@@ -2437,6 +2470,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		configPreserveVanillaNormals = config.preserveVanillaNormals();
 		configSeasonalTheme = config.seasonalTheme();
 
+		var newColorFilter = config.colorFilter();
+		if (newColorFilter != configColorFilter) {
+			configColorFilterPrevious = configColorFilter;
+			configColorFilter = newColorFilter;
+			colorFilterChangedAt = System.currentTimeMillis();
+		}
+
 		if (configSeasonalTheme == SeasonalTheme.AUTOMATIC) {
 			var time = ZonedDateTime.now(ZoneOffset.UTC);
 			switch (time.getMonth()) {
@@ -2510,6 +2550,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 							case KEY_PARALLAX_OCCLUSION_MAPPING:
 							case KEY_UI_SCALING_MODE:
 							case KEY_VANILLA_COLOR_BANDING:
+							case KEY_COLOR_FILTER:
 								recompilePrograms = true;
 								break;
 							case KEY_SHADOW_MODE:
@@ -2570,6 +2611,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 								restartPlugin();
 								// since we'll be restarting the plugin anyway, skip pending changes
 								return;
+							case KEY_REPLACE_FISHING_SPOTS:
+								reloadModelOverrides = true;
+								fishingSpotReplacer.despawnRuneLiteObjects();
+								clientThread.invokeLater(fishingSpotReplacer::update);
+								break;
 						}
 					}
 
@@ -2840,7 +2886,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		eightIntWrite[6] = y + client.getCameraY2();
 		eightIntWrite[7] = z + client.getCameraZ2();
 
-		int faceCount = 0;
+		int plane = ModelHash.getPlane(hash);
+
+		int faceCount;
 		if (sceneContext.id == (offsetModel.getSceneId() & SceneUploader.SCENE_ID_MASK)) {
 			// The model is part of the static scene buffer
 			assert model == renderable;
@@ -2848,7 +2896,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			faceCount = Math.min(MAX_FACE_COUNT, offsetModel.getFaceCount());
 			int vertexOffset = offsetModel.getBufferOffset();
 			int uvOffset = offsetModel.getUvBufferOffset();
-			int plane = (int) ((hash >> 49) & 3);
 			boolean hillskew = offsetModel != model;
 
 			eightIntWrite[0] = vertexOffset;
@@ -2883,14 +2930,35 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					frameTimer.begin(Timer.MODEL_PUSHING);
 
 				int uuid = ModelHash.generateUuid(client, hash, renderable);
-				int[] worldPos = HDUtils.cameraSpaceToWorldPoint(client, x, z);
+				int[] localPos = HDUtils.cameraSpaceToLocalPoint(client, x, z);
+				int[] worldPos = HDUtils.localToWorld(sceneContext.scene, localPos[0], localPos[1], plane);
 				ModelOverride modelOverride = modelOverrideManager.getOverride(uuid, worldPos);
 				if (modelOverride.hide)
 					return;
 
 				int vertexOffset = dynamicOffsetVertices + sceneContext.getVertexOffset();
 				int uvOffset = dynamicOffsetUvs + sceneContext.getUvOffset();
-				modelPusher.pushModel(sceneContext, null, uuid, model, modelOverride, ObjectType.NONE, 0, true);
+
+				int preOrientation = 0;
+				if (ModelHash.getType(hash) == ModelHash.TYPE_OBJECT) {
+					int tileExX = localPos[0] / LOCAL_TILE_SIZE + SCENE_OFFSET;
+					int tileExY = localPos[1] / LOCAL_TILE_SIZE + SCENE_OFFSET;
+					if (0 <= tileExX && tileExX < EXTENDED_SCENE_SIZE && 0 <= tileExY && tileExY < EXTENDED_SCENE_SIZE) {
+						Tile tile = sceneContext.scene.getExtendedTiles()[plane][tileExX][tileExY];
+						int config;
+						if (tile != null && (config = sceneContext.getObjectConfig(tile, hash)) != -1) {
+							preOrientation = HDUtils.getBakedOrientation(config);
+						} else if (plane > 0) {
+							// Might be on a bridge tile
+							tile = sceneContext.scene.getExtendedTiles()[plane - 1][tileExX][tileExY];
+							if (tile != null && tile.getBridge() != null && (config = sceneContext.getObjectConfig(tile, hash)) != -1)
+								preOrientation = HDUtils.getBakedOrientation(config);
+						}
+					}
+				}
+
+				modelPusher.pushModel(sceneContext, null, uuid, model, modelOverride, ObjectType.NONE, preOrientation, true);
+
 				faceCount = sceneContext.modelPusherResults[0];
 				if (sceneContext.modelPusherResults[1] == 0)
 					uvOffset = -1;
@@ -2963,7 +3031,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	public int getDrawDistance() {
-		return HDUtils.clamp(config.drawDistance(), 0, MAX_DISTANCE);
+		return clamp(config.drawDistance(), 0, MAX_DISTANCE);
 	}
 
 	private int getExpandedMapLoadingChunks() {
@@ -3106,6 +3174,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				reuploadScene();
 			--gameTicksUntilSceneReload;
 		}
+
+		fishingSpotReplacer.update();
 
 		// reload the scene if the player is in a house and their plane changed
 		// this greatly improves the performance as it keeps the scene buffer up to date

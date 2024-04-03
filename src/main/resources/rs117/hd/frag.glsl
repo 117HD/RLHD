@@ -97,6 +97,7 @@ vec2 worldUvs(float scale) {
 #include utils/displacement.glsl
 #include utils/shadows.glsl
 #include utils/water.glsl
+#include utils/color_filters.glsl
 
 void main() {
     vec3 downDir = vec3(0, -1, 0);
@@ -143,13 +144,8 @@ void main() {
         float mipBias = 0;
         // Vanilla tree textures rely on UVs being clamped horizontally,
         // which HD doesn't do, so we instead opt to hide these fragments
-        if ((vMaterialData[0] >> MATERIAL_FLAG_VANILLA_UVS & 1) == 1) {
+        if ((vMaterialData[0] >> MATERIAL_FLAG_VANILLA_UVS & 1) == 1)
             blendedUv.x = clamp(blendedUv.x, 0, .984375);
-
-            // Make fishing spots easier to see
-            if (colorMap1 == MAT_WATER_DROPLETS.colorMap)
-                mipBias = -100;
-        }
 
         uv1 = uv2 = uv3 = blendedUv;
 
@@ -522,6 +518,10 @@ void main() {
     }
 
     outputColor.rgb = colorBlindnessCompensation(outputColor.rgb);
+
+    #if APPLY_COLOR_FILTER
+    outputColor.rgb = applyColorFilter(outputColor.rgb);
+    #endif
 
     // apply fog
     if (!isUnderwater) {
