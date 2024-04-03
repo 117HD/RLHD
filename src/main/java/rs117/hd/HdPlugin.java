@@ -2084,8 +2084,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				}
 			}
 
-
-			//System.out.println("Fade Start: " + fadeStart + " Fade End: " + fadeEnd + " Current: " + System.currentTimeMillis());
 			// Calculate projection matrix
 			float[] projectionMatrix = Mat4.scale(client.getScale(), client.getScale(), 1);
 			Mat4.mul(projectionMatrix, Mat4.projection(viewportWidth, viewportHeight, NEAR_PLANE));
