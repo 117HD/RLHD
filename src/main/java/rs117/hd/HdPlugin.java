@@ -366,15 +366,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private int uniLightDir;
 	private int uniShadowMaxBias;
 	private int uniShadowsEnabled;
-	private int uniFilterType;
-	private int uniFilterTypePrevious;
-	private int uniFilterFadeDuration;
-
 	private int uniUnderwaterEnvironment;
 	private int uniUnderwaterCaustics;
 	private int uniUnderwaterCausticsColor;
 	private int uniUnderwaterCausticsStrength;
 	private int uniCameraPos;
+	private int uniFilterType;
+	private int uniFilterTypePrevious;
+	private int uniFilterFadeDuration;
 
 	// Shadow program uniforms
 	private int uniShadowLightProjectionMatrix;
@@ -778,7 +777,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.addInclude("VERSION_HEADER", versionHeader)
 			.define("UI_SCALING_MODE", config.uiScalingMode().getMode())
 			.define("COLOR_BLINDNESS", config.colorBlindness())
-			.define("FILTER_TYPE", config.filterType().ordinal())
+			.define("FILTER_TYPE", config.filterType())
 			.define("MATERIAL_CONSTANTS", () -> {
 				StringBuilder include = new StringBuilder();
 				for (Material m : Material.values())
@@ -892,13 +891,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		uniLightDir = glGetUniformLocation(glSceneProgram, "lightDir");
 		uniShadowMaxBias = glGetUniformLocation(glSceneProgram, "shadowMaxBias");
 		uniShadowsEnabled = glGetUniformLocation(glSceneProgram, "shadowsEnabled");
-
-		if (config.filterType() != Filters.NONE) {
-			uniFilterType = glGetUniformLocation(glSceneProgram, "filterType");
-			uniFilterTypePrevious = glGetUniformLocation(glSceneProgram, "filterTypePrevious");
-			uniFilterFadeDuration = glGetUniformLocation(glSceneProgram, "fadeProgress");
-		}
-
 		uniUnderwaterEnvironment = glGetUniformLocation(glSceneProgram, "underwaterEnvironment");
 		uniUnderwaterCaustics = glGetUniformLocation(glSceneProgram, "underwaterCaustics");
 		uniUnderwaterCausticsColor = glGetUniformLocation(glSceneProgram, "underwaterCausticsColor");
@@ -906,6 +898,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		uniCameraPos = glGetUniformLocation(glSceneProgram, "cameraPos");
 		uniTextureArray = glGetUniformLocation(glSceneProgram, "textureArray");
 		uniElapsedTime = glGetUniformLocation(glSceneProgram, "elapsedTime");
+		if (config.filterType() != Filters.NONE) {
+			uniFilterType = glGetUniformLocation(glSceneProgram, "filterType");
+			uniFilterTypePrevious = glGetUniformLocation(glSceneProgram, "filterTypePrevious");
+			uniFilterFadeDuration = glGetUniformLocation(glSceneProgram, "fadeProgress");
+		}
 
 		uniUiTexture = glGetUniformLocation(glUiProgram, "uiTexture");
 		uniTexTargetDimensions = glGetUniformLocation(glUiProgram, "targetDimensions");
