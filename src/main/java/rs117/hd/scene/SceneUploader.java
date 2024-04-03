@@ -71,6 +71,9 @@ class SceneUploader {
 	private HdPlugin plugin;
 
 	@Inject
+	private AreaManager areaManager;
+
+	@Inject
 	private TileOverrideManager tileOverrideManager;
 
 	@Inject
@@ -81,9 +84,6 @@ class SceneUploader {
 
 	@Inject
 	private ModelPusher modelPusher;
-
-	@Inject
-	private AreaManager areaManager;
 
 	public void upload(SceneContext sceneContext) {
 		Stopwatch stopwatch = Stopwatch.createStarted();
