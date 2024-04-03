@@ -56,7 +56,6 @@ uniform float lightningBrightness;
 uniform vec3 lightDir;
 uniform float shadowMaxBias;
 uniform int shadowsEnabled;
-
 uniform bool underwaterEnvironment;
 uniform bool underwaterCaustics;
 uniform vec3 underwaterCausticsColor;
