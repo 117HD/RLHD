@@ -7,25 +7,24 @@ uniform int colorFilterPrevious;
 uniform int colorFilter;
 uniform float colorFilterFade;
 
-#define NONE 0
-#define GREYSCALE 1
-#define SEPIA 2
-#define HIGH_CONTRAST 3
-#define CARTOON 4
-#define INVERT 5
-#define BLACK_AND_WHITE 6
-#define NO_IDEA 7
+#define COLOR_FILTER_NONE 0
+#define COLOR_FILTER_GREYSCALE 1
+#define COLOR_FILTER_SEPIA 2
+#define COLOR_FILTER_HIGH_CONTRAST 3
+#define COLOR_FILTER_CARTOON 4
+#define COLOR_FILTER_INVERT 5
+#define COLOR_FILTER_BLACK_AND_WHITE 6
 
 vec3 getFilter(int index, vec3 color) {
-    if (index == GREYSCALE) {
+    if (index == COLOR_FILTER_GREYSCALE) {
         return vec3(dot(color, vec3(0.2126, 0.7152, 0.0722)));
-    } else if (index == SEPIA) {
+    } else if (index == COLOR_FILTER_SEPIA) {
         return vec3(
             dot(color, vec3(0.393, 0.769, 0.189)),
             dot(color, vec3(0.349, 0.686, 0.168)),
             dot(color, vec3(0.272, 0.534, 0.131))
         );
-    } else if (index == HIGH_CONTRAST) {
+    } else if (index == COLOR_FILTER_HIGH_CONTRAST) {
         float intensity = dot(color, vec3(0.2126, 0.7152, 0.0722));
         float modifier = 2.2;
         return vec3(
@@ -33,13 +32,13 @@ vec3 getFilter(int index, vec3 color) {
             intensity + (color.g - intensity) * modifier,
             intensity + (color.b - intensity) * modifier
         );
-    } else if(index == CARTOON) {
+    } else if(index == COLOR_FILTER_CARTOON) {
         float quantizationLevels = 7.0;
         vec3 quantizedColor = floor(color * quantizationLevels) / quantizationLevels;
         return quantizedColor;
-    } else if(index == INVERT) {
+    } else if(index == COLOR_FILTER_INVERT) {
         return vec3(1.0) - color;
-    } else if(index == BLACK_AND_WHITE) {
+    } else if(index == COLOR_FILTER_BLACK_AND_WHITE) {
         float threshold = 0.4;
         vec3 shadedColor = vec3(0.0);
 
@@ -53,7 +52,7 @@ vec3 getFilter(int index, vec3 color) {
 }
 
 vec3 applyFilter(vec3 color) {
-    if(colorFilter == NONE) {
+    if(colorFilter == COLOR_FILTER_NONE) {
         return color;
     }
 
