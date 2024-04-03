@@ -4758,6 +4758,7 @@
     "objectIds": [
       10490,
       12450,
+      12544,
       14762,
       14851,
       14852,
@@ -4784,6 +4785,7 @@
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       7175,
+      12543,
       12962,
       20058,
       23177,
@@ -16413,5 +16415,27 @@
     "uvType": "MODEL_YZ",
     "uvOrientation": 144,
     "uvScale": 0.6
+  },
+  {
+    "description": "Objects - Wooden - Brown Drawers with metallic handles",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      350,
+      351
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512
+  },
+  {
+    "description": "Objects - Wooden - Brown Drawers with golden handles",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      352,
+      353
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512
   }
 ]
