@@ -6864,7 +6864,8 @@
     "description": "Objects - Wooden - Crate",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      9534
+      9534,
+      52431
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -15609,7 +15610,7 @@
     "uvType": "MODEL_XZ"
   },
   {
-    "description": "Varlamore Cushion",
+    "description": "Varlamore Cushions",
     "baseMaterial": "FINE_CARPET",
     "objectIds": [
       52436
@@ -15617,6 +15618,32 @@
     "uvType": "BOX",
     "uvOrientation": 256,
     "uvScale": 0.8
+  },
+  {
+    "description": "Varlamore Awnings Small Red",
+    "baseMaterial": "FINE_CARPET",
+    "objectIds": [
+      51944
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Varlamore Awnings Large Red, MODEL_XZ is used with intent",
+    "baseMaterial": "FINE_CARPET",
+    "objectIds": [
+      51940,
+      51941,
+      51942
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Varlamore Circular Awning, MODEL_XZ is used with intent",
+    "baseMaterial": "FINE_CARPET",
+    "objectIds": [
+      51943
+    ],
+    "uvType": "MODEL_XZ"
   },
   {
     "description": "Varlamore Banners",
@@ -15765,10 +15792,18 @@
     "uvOrientationY": 512
   },
   {
-    "description": "Hunter Guild Wooden Objects",
+    "description": "Hunter Guild Wooden Pillars",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
-      51745,
+      51745
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Varlamore and Hunter Guild Wooden Barrels",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
       52425,
       52430
     ],
@@ -15785,10 +15820,11 @@
     "uvScale": 0.75
   },
   {
-    "description": "Hunter Guild Caverns Stairs",
-    "baseMaterial": "WOOD_GRAIN_2",
+    "description": "Civitas and Hunter Guild Caverns Stairs",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [
-      51642
+      51642,
+      52635
     ],
     "uvType": "BOX",
     "uvScale": 1.5
