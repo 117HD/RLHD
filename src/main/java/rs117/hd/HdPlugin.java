@@ -129,6 +129,7 @@ import static org.lwjgl.opengl.GL43C.*;
 import static rs117.hd.HdPluginConfig.*;
 import static rs117.hd.scene.SceneUploader.SCENE_OFFSET;
 import static rs117.hd.utils.HDUtils.PI;
+import static rs117.hd.utils.HDUtils.clamp;
 import static rs117.hd.utils.ResourcePath.path;
 
 @PluginDescriptor(
@@ -168,6 +169,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public static final int NORMAL_SIZE = 4; // 4 floats per vertex
 
 	public static float BUFFER_GROWTH_MULTIPLIER = 2; // can be less than 2 if trying to conserve memory
+
+	private static final float COLOR_FILTER_FADE_DURATION = 3000;
 
 	private static final int[] eightIntWrite = new int[8];
 
@@ -372,7 +375,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private int uniCameraPos;
 	private int uniColorFilter;
 	private int uniColorFilterPrevious;
-	private int uniColorFilterFadeDuration;
+	private int uniColorFilterFade;
 
 	// Shadow program uniforms
 	private int uniShadowLightProjectionMatrix;
@@ -450,7 +453,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private long lastFrameTimeMillis;
 	private float lastFrameClientTime;
 	private int gameTicksUntilSceneReload = 0;
-	private long colorFilterFadeDuration;
+	private long colorFilterChangedAt;
 
 	@Provides
 	HdPluginConfig provideConfig(ConfigManager configManager) {
@@ -903,7 +906,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (configColorFilter != ColorFilter.NONE) {
 			uniColorFilter = glGetUniformLocation(glSceneProgram, "colorFilter");
 			uniColorFilterPrevious = glGetUniformLocation(glSceneProgram, "colorFilterPrevious");
-			uniColorFilterFadeDuration = glGetUniformLocation(glSceneProgram, "colorFilterFadeDuration");
+			uniColorFilterFade = glGetUniformLocation(glSceneProgram, "colorFilterFade");
 		}
 
 		uniUiTexture = glGetUniformLocation(glUiProgram, "uiTexture");
@@ -2063,20 +2066,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			glUniform1f(uniShadowMaxBias, maxBias / 10000f);
 
 			glUniform1i(uniShadowsEnabled, configShadowsEnabled ? 1 : 0);
+
 			if (configColorFilter != ColorFilter.NONE) {
 				glUniform1i(uniColorFilter, configColorFilter.ordinal());
 				glUniform1i(uniColorFilterPrevious, configColorFilterPrevious.ordinal());
-
-				if (colorFilterFadeDuration != 0) {
-					long timeLeft = colorFilterFadeDuration - System.currentTimeMillis();
-					if (timeLeft >= 0) {
-						glUniform1f(uniColorFilterFadeDuration, timeLeft);
-					} else {
-						colorFilterFadeDuration = 0;
-					}
-				} else {
-					glUniform1f(uniColorFilterFadeDuration, 0);
-				}
+				long timeSinceChange = System.currentTimeMillis() - colorFilterChangedAt;
+				glUniform1f(uniColorFilterFade, clamp(timeSinceChange / COLOR_FILTER_FADE_DURATION, 0, 1));
 			}
 
 			// Calculate projection matrix
@@ -2472,7 +2467,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (newColorFilter != configColorFilter) {
 			configColorFilterPrevious = configColorFilter;
 			configColorFilter = newColorFilter;
-			colorFilterFadeDuration = System.currentTimeMillis() + 3000;
+			colorFilterChangedAt = System.currentTimeMillis();
 		}
 
 		if (configSeasonalTheme == SeasonalTheme.AUTOMATIC) {
@@ -3023,7 +3018,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	public int getDrawDistance() {
-		return HDUtils.clamp(config.drawDistance(), 0, MAX_DISTANCE);
+		return clamp(config.drawDistance(), 0, MAX_DISTANCE);
 	}
 
 	private int getExpandedMapLoadingChunks() {

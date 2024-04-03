@@ -2,7 +2,7 @@
 
 uniform int colorFilterPrevious;
 uniform int colorFilter;
-uniform float colorFilterFadeDuration;
+uniform float colorFilterFade;
 
 #define NONE 0
 #define GREYSCALE 1
@@ -59,17 +59,11 @@ vec3 applyFilter(vec3 color) {
     vec3 previousFilteredColor = getFilter(colorFilterPrevious, color);
     vec3 newFilteredColor = getFilter(colorFilter, color);
 
-    float fadeMilliseconds = colorFilterFadeDuration;
-
-    // Convert fadeMilliseconds to 0-1 range
-    float fadeAmount = clamp(fadeMilliseconds / 4000.0, 0.0, 1.0);
-
     // Smooth out the fadeAmount using cubic interpolation
-    float smoothedFade = smoothstep(0.0, 1.0, fadeAmount);
-    smoothedFade = smoothstep(0.0, 1.0, smoothedFade);
+    float smoothedFade = smoothstep(0.0, 1.0, colorFilterFade);
 
     // Interpolate between old and new filter types based on fade progress
-    filteredColor = mix(previousFilteredColor, newFilteredColor, 1.0 - smoothedFade); // Invert smoothedFade for correct fading
+    filteredColor = mix(previousFilteredColor, newFilteredColor, smoothedFade);
 
     return filteredColor;
 }
