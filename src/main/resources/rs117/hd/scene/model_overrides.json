@@ -15643,7 +15643,8 @@
     "baseMaterial": "FINE_CARPET",
     "objectIds": [
       53012,
-      52436
+      52436,
+      52437
     ],
     "uvType": "BOX",
     "uvOrientation": 256,
