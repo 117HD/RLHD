@@ -33,6 +33,7 @@ import net.runelite.client.config.Range;
 import net.runelite.client.config.Units;
 import rs117.hd.config.AntiAliasingMode;
 import rs117.hd.config.ColorBlindMode;
+import rs117.hd.config.ColorFilter;
 import rs117.hd.config.Contrast;
 import rs117.hd.config.DefaultSkyColor;
 import rs117.hd.config.FogDepthMode;
@@ -795,6 +796,18 @@ public interface HdPluginConfig extends Config
 	)
 	default boolean replaceFishingSpots() {
 		return true;
+	}
+
+	String KEY_COLOR_FILTER = "colorFilter";
+	@ConfigItem(
+		keyName = KEY_COLOR_FILTER,
+		name = "Color Filter",
+		description = "Apply a color filter to the game as a post-processing effect.",
+		position = 8,
+		section = miscellaneousSettings
+	)
+	default ColorFilter colorFilter() {
+		return ColorFilter.NONE;
 	}
 
 

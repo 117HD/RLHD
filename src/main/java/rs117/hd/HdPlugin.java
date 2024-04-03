@@ -78,6 +78,7 @@ import org.lwjgl.opengl.*;
 import org.lwjgl.system.Callback;
 import org.lwjgl.system.Configuration;
 import rs117.hd.config.AntiAliasingMode;
+import rs117.hd.config.ColorFilter;
 import rs117.hd.config.SeasonalTheme;
 import rs117.hd.config.ShadingMode;
 import rs117.hd.config.ShadowMode;
@@ -128,6 +129,7 @@ import static org.lwjgl.opengl.GL43C.*;
 import static rs117.hd.HdPluginConfig.*;
 import static rs117.hd.scene.SceneUploader.SCENE_OFFSET;
 import static rs117.hd.utils.HDUtils.PI;
+import static rs117.hd.utils.HDUtils.clamp;
 import static rs117.hd.utils.ResourcePath.path;
 
 @PluginDescriptor(
@@ -167,6 +169,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public static final int NORMAL_SIZE = 4; // 4 floats per vertex
 
 	public static float BUFFER_GROWTH_MULTIPLIER = 2; // can be less than 2 if trying to conserve memory
+
+	private static final float COLOR_FILTER_FADE_DURATION = 3000;
 
 	private static final int[] eightIntWrite = new int[8];
 
@@ -369,6 +373,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private int uniUnderwaterCausticsColor;
 	private int uniUnderwaterCausticsStrength;
 	private int uniCameraPos;
+	private int uniColorFilter;
+	private int uniColorFilterPrevious;
+	private int uniColorFilterFade;
 
 	// Shadow program uniforms
 	private int uniShadowLightProjectionMatrix;
@@ -408,10 +415,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public boolean configUseFasterModelHashing;
 	public boolean configUndoVanillaShading;
 	public boolean configPreserveVanillaNormals;
+	public int configMaxDynamicLights;
 	public ShadowMode configShadowMode;
 	public SeasonalTheme configSeasonalTheme;
 	public VanillaShadowMode configVanillaShadowMode;
-	public int configMaxDynamicLights;
+	public ColorFilter configColorFilter = ColorFilter.NONE;
+	public ColorFilter configColorFilterPrevious;
 
 	public boolean useLowMemoryMode;
 	public boolean enableDetailedTimers;
@@ -444,6 +453,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private long lastFrameTimeMillis;
 	private float lastFrameClientTime;
 	private int gameTicksUntilSceneReload = 0;
+	private long colorFilterChangedAt;
 
 	@Provides
 	HdPluginConfig provideConfig(ConfigManager configManager) {
@@ -772,6 +782,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.addInclude("VERSION_HEADER", versionHeader)
 			.define("UI_SCALING_MODE", config.uiScalingMode().getMode())
 			.define("COLOR_BLINDNESS", config.colorBlindness())
+			.define("APPLY_COLOR_FILTER", configColorFilter != ColorFilter.NONE)
 			.define("MATERIAL_CONSTANTS", () -> {
 				StringBuilder include = new StringBuilder();
 				for (Material m : Material.values())
@@ -892,6 +903,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		uniCameraPos = glGetUniformLocation(glSceneProgram, "cameraPos");
 		uniTextureArray = glGetUniformLocation(glSceneProgram, "textureArray");
 		uniElapsedTime = glGetUniformLocation(glSceneProgram, "elapsedTime");
+
+		if (configColorFilter != ColorFilter.NONE) {
+			uniColorFilter = glGetUniformLocation(glSceneProgram, "colorFilter");
+			uniColorFilterPrevious = glGetUniformLocation(glSceneProgram, "colorFilterPrevious");
+			uniColorFilterFade = glGetUniformLocation(glSceneProgram, "colorFilterFade");
+		}
 
 		uniUiTexture = glGetUniformLocation(glUiProgram, "uiTexture");
 		uniTexTargetDimensions = glGetUniformLocation(glUiProgram, "targetDimensions");
@@ -2051,6 +2068,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 			glUniform1i(uniShadowsEnabled, configShadowsEnabled ? 1 : 0);
 
+			if (configColorFilter != ColorFilter.NONE) {
+				glUniform1i(uniColorFilter, configColorFilter.ordinal());
+				glUniform1i(uniColorFilterPrevious, configColorFilterPrevious.ordinal());
+				long timeSinceChange = System.currentTimeMillis() - colorFilterChangedAt;
+				glUniform1f(uniColorFilterFade, clamp(timeSinceChange / COLOR_FILTER_FADE_DURATION, 0, 1));
+			}
+
 			// Calculate projection matrix
 			float[] projectionMatrix = Mat4.scale(client.getScale(), client.getScale(), 1);
 			Mat4.mul(projectionMatrix, Mat4.projection(viewportWidth, viewportHeight, NEAR_PLANE));
@@ -2440,6 +2464,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		configPreserveVanillaNormals = config.preserveVanillaNormals();
 		configSeasonalTheme = config.seasonalTheme();
 
+		var newColorFilter = config.colorFilter();
+		if (newColorFilter != configColorFilter) {
+			configColorFilterPrevious = configColorFilter;
+			configColorFilter = newColorFilter;
+			colorFilterChangedAt = System.currentTimeMillis();
+		}
+
 		if (configSeasonalTheme == SeasonalTheme.AUTOMATIC) {
 			var time = ZonedDateTime.now(ZoneOffset.UTC);
 			switch (time.getMonth()) {
@@ -2513,6 +2544,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 							case KEY_PARALLAX_OCCLUSION_MAPPING:
 							case KEY_UI_SCALING_MODE:
 							case KEY_VANILLA_COLOR_BANDING:
+							case KEY_COLOR_FILTER:
 								recompilePrograms = true;
 								break;
 							case KEY_SHADOW_MODE:
@@ -2987,7 +3019,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	public int getDrawDistance() {
-		return HDUtils.clamp(config.drawDistance(), 0, MAX_DISTANCE);
+		return clamp(config.drawDistance(), 0, MAX_DISTANCE);
 	}
 
 	private int getExpandedMapLoadingChunks() {
