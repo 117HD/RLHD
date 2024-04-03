@@ -15609,6 +15609,16 @@
     "uvType": "MODEL_XZ"
   },
   {
+    "description": "Varlamore Cushion",
+    "baseMaterial": "FINE_CARPET",
+    "objectIds": [
+      52436
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 0.8
+  },
+  {
     "description": "Varlamore Banners",
     "baseMaterial": "FINE_CARPET",
     "objectIds": [
