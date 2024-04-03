@@ -15875,6 +15875,15 @@
     "uvScale": 0.75
   },
   {
+    "description": "Hunter Guild Caverns Stairs",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      51642
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.5
+  },
+  {
     "description": "Civitas House Stairs",
     "baseMaterial": "WOOD_GRAIN_3_LIGHT",
     "objectIds": [
@@ -15883,15 +15892,6 @@
     "uvType": "BOX",
     "uvScale": 1.3,
     "uvOrientation": 512
-  },
-  {
-    "description": "Hunter Guild Caverns Stairs",
-    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
-    "objectIds": [
-      51642
-    ],
-    "uvType": "BOX",
-    "uvScale": 1.5
   },
   {
     "description": "Varlamore, Stools and tables covered in furs, MODEL_XZ is used with intent",
