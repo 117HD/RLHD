@@ -16399,7 +16399,7 @@
     "description": "Lumbridge crypt ivy",
     "baseMaterial": "PLANT_GRUNGE_2",
     "objectIds": [ 24160, 24161, 24162, 24163, 24164 ],
-    "uvType": "BOX",
+    "uvType": "MODEL_YZ",
     "uvOrientation": 144,
     "uvScale": 0.6
   }
