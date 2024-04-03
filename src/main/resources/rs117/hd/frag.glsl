@@ -97,7 +97,7 @@ vec2 worldUvs(float scale) {
 #include utils/displacement.glsl
 #include utils/shadows.glsl
 #include utils/water.glsl
-#include utils/filters.glsl
+#include utils/color_filters.glsl
 
 void main() {
     vec3 downDir = vec3(0, -1, 0);
@@ -520,7 +520,7 @@ void main() {
     outputColor.rgb = colorBlindnessCompensation(outputColor.rgb);
 
     #if APPLY_COLOR_FILTER
-    outputColor.rgb = applyFilter(outputColor.rgb);
+    outputColor.rgb = applyColorFilter(outputColor.rgb);
     #endif
 
     // apply fog
