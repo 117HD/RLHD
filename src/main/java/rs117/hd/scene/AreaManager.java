@@ -7,34 +7,23 @@ import java.util.Collections;
 import javax.inject.Singleton;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import net.runelite.api.Client;
-import net.runelite.api.coords.LocalPoint;
-import net.runelite.api.coords.WorldPoint;
-import net.runelite.client.callback.ClientThread;
+import net.runelite.api.*;
+import net.runelite.api.coords.*;
 import rs117.hd.HdPlugin;
-import rs117.hd.HdPluginConfig;
 import rs117.hd.data.AreaDefinition;
 import rs117.hd.utils.AABB;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
+
 import static rs117.hd.utils.ResourcePath.path;
 
 @Singleton
 @Slf4j
 public class AreaManager {
-	@Getter
-	private AreaDefinition currentArea = null;
-
 	private static final ResourcePath AREA_DATA_PATH = Props.getPathOrDefault(
 		"rlhd.area-path",
 		() -> path(AreaManager.class, "areas.json")
 	);
-
-
-	public ArrayList<AreaDefinition> areas = new ArrayList<>();
-
-	@Inject
-	private ClientThread clientThread;
 
 	@Inject
 	private Client client;
@@ -42,8 +31,10 @@ public class AreaManager {
 	@Inject
 	private HdPlugin plugin;
 
-	@Inject
-	private HdPluginConfig config;
+	@Getter
+	private AreaDefinition currentArea = null;
+
+	public ArrayList<AreaDefinition> areas = new ArrayList<>();
 
 	public void startUp() {
 		AREA_DATA_PATH.watch(path -> {
