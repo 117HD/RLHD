@@ -45,14 +45,6 @@ vec3 getFilter(int index, vec3 color) {
         }
 
         return mix(vec3(0.0), vec3(1.0), shadedColor);
-    } else if(index == NO_IDEA) {
-            float intensity = dot(color, vec3(0.2126, 0.7152, 0.0722));
-              float modifier = 8.0; // Adjust this value for desired contrast
-              return vec3(
-                  intensity + (color.r - intensity) * modifier,
-                  intensity + (color.g - intensity) * modifier,
-                  intensity + (color.b - intensity) * modifier
-              );
     }
     return color;
 }
