@@ -643,18 +643,6 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
-	String KEY_HD_FILTER = "filters";
-	@ConfigItem(
-		keyName = KEY_HD_FILTER,
-		name = "Effect Filters",
-		description = "Adds visual filters.",
-		position = 12,
-		section = environmentSettings
-	)
-	default ColorFilter colorFilter() {
-		return ColorFilter.NONE;
-	}
-
 
 	/*====== Model caching settings ======*/
 
@@ -808,6 +796,18 @@ public interface HdPluginConfig extends Config
 	)
 	default boolean replaceFishingSpots() {
 		return true;
+	}
+
+	String KEY_COLOR_FILTER = "colorFilter";
+	@ConfigItem(
+		keyName = KEY_COLOR_FILTER,
+		name = "Color Filter",
+		description = "Apply a color filter to the game as a post-processing effect.",
+		position = 8,
+		section = miscellaneousSettings
+	)
+	default ColorFilter colorFilter() {
+		return ColorFilter.NONE;
 	}
 
 
