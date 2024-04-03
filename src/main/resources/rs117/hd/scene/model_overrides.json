@@ -4312,6 +4312,7 @@
     "baseMaterial": "CARPET",
     "objectIds": [
       7481,
+      9680,
       14046,
       14047,
       14048,
@@ -4334,6 +4335,8 @@
     "baseMaterial": "CARPET",
     "objectIds": [
       7480,
+      9679,
+      9681,
       24094,
       40234,
       40241
@@ -6866,7 +6869,9 @@
     "description": "Objects - Wooden - Crate",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      9534
+      9534,
+      12547,
+      12548
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -6901,6 +6906,7 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       9536,
+      12545,
       6178
     ],
     "uvType": "BOX",
