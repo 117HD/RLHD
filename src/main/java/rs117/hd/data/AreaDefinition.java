@@ -12,5 +12,4 @@ public class AreaDefinition {
 	public AABB[] aabbs = {};
 	public int region = -1;
 	public boolean hideOtherRegions = true;
-
 }
