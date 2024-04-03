@@ -8253,6 +8253,7 @@
       51864
     ],
     "uvType": "BOX",
+    "upwardsNormals": true,
     "uvScale": 0.5
   },
   {
