@@ -16386,5 +16386,21 @@
     "objectIds": [ 51442, 51443, 51444, 51445 ],
     "castShadows": false,
     "receiveShadows": false
+  },
+  {
+    "description": "Lumbridge crypt stone block walls",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "objectIds": [ 15058 ],
+    "uvType": "BOX",
+    "uvOrientation": 144,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Lumbridge crypt ivy",
+    "baseMaterial": "PLANT_GRUNGE_2",
+    "objectIds": [ 24160, 24161, 24162, 24163, 24164 ],
+    "uvType": "BOX",
+    "uvOrientation": 144,
+    "uvScale": 0.6
   }
 ]
