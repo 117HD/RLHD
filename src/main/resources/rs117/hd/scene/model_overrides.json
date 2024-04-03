@@ -930,7 +930,6 @@
       6188,
       10436,
       10487,
-      11468,
       11876,
       12005,
       12006,
@@ -1326,6 +1325,7 @@
       5904,
       5905,
       9733,
+      11510,
       14513,
       14514,
       14515,
@@ -1333,6 +1333,7 @@
       14564,
       14565,
       14566,
+      30150,
       33186,
       33187,
       34933,
@@ -4353,6 +4354,7 @@
     "baseMaterial": "CARPET",
     "objectIds": [
       7480,
+      11482,
       24094,
       40234,
       40241
@@ -4366,6 +4368,7 @@
     "baseMaterial": "CARPET",
     "objectIds": [
       7447,
+      11481,
       24093,
       40235,
       40242
@@ -4825,8 +4828,10 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       1111,
+      11490,
       25616
     ],
+    "uvType": "BOX",
     "flatNormals": true
   },
   {
@@ -6882,7 +6887,9 @@
     "description": "Objects - Wooden - Crate",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      9534
+      9534,
+      11485,
+      11486
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -6948,6 +6955,18 @@
     "flatNormals": true
   },
   {
+    "description": "Stacks of wooden boxes - Rotated",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      11487
+    ],
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvOrientationY": 600,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512
+  },
+  {
     "description": "Objects - Wooden - Doublewide Crate",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [ 16863, 16864, 16865 ],
@@ -7005,6 +7024,7 @@
     "baseMaterial": "METALLIC_2_SEMIGLOSS",
     "objectIds": [
       7183,
+      7184,
       25730
     ]
   },
@@ -7310,7 +7330,9 @@
     "description": "Objects - Fungus - Medium",
     "baseMaterial": "GRUNGE_2",
     "objectIds": [
-      1171
+      1171,
+      21742,
+      21743
     ],
     "uvType": "BOX",
     "uvScale": 0.8
@@ -8341,6 +8363,7 @@
       3801,
       4271,
       10491,
+      11489,
       12885,
       15981,
       17146,
@@ -16392,5 +16415,58 @@
     "objectIds": [ 51442, 51443, 51444, 51445 ],
     "castShadows": false,
     "receiveShadows": false
+  },
+  {
+    "description": "Marble statues at Lumbridge Entrance - Textured",
+    "objectIds": [ 5789, 9292],
+    "baseMaterial": "MARBLE_2_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 144
+  },
+  {
+    "description": "Metal lamp post with candle lanturn",
+    "objectIds": [ 11468 ],
+    "baseMaterial": "METALLIC_2",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 42,
+    "hideVanillaShadows": true
+  },
+  {
+    "description": "Murder Mystery Wooden Double Doors",
+    "objectIds": [ 1146, 11447, 30110, 30111 ],
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Murder Mystery Wooden Doors",
+    "objectIds": [ 11470, 11471, 30112, 30113, 30114, 30115, 30116, 30117, 30118, 30119, 34650, 34651 ],
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7
+  },
+  {
+    "description": "Fancy wooden table with alternating lines",
+    "objectIds": [ 11504 ],
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Murder Mystery wooden wardrobes",
+    "objectIds": [ 5622, 5623, 5624 ],
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7
+  },
+  {
+    "description": "Murder Mystery wooden wardrobes Golden Trim",
+    "objectIds": [ 388, 389, 30141, 30142 ],
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7
   }
 ]

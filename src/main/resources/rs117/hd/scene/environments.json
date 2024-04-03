@@ -499,7 +499,7 @@
     "fogDepth": 40
   },
   {
-    "area": "MISTHALIN_MYSTERY_MANOR",
+    "area": "MISTHALIN_MYSTERY_MANOR_REGION",
     "lightningEffects": true,
     "ambientColor": "#615c57",
     "ambientStrength": 1.5,
