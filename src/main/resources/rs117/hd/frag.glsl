@@ -540,10 +540,7 @@ void main() {
         }
 
         outputColor.rgb = mix(outputColor.rgb, fogColor, combinedFog);
-
     }
 
     FragColor = outputColor;
 }
-
-
