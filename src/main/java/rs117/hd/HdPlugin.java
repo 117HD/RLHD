@@ -200,6 +200,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private LightManager lightManager;
 
 	@Inject
+	private AreaManager areaManager;
+
+	@Inject
 	private EnvironmentManager environmentManager;
 
 	@Inject
@@ -234,9 +237,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Getter
 	private Gson gson;
-
-	@Inject
-	private AreaManager areaManager;
 
 	public GLCapabilities glCaps;
 	private Canvas canvas;
