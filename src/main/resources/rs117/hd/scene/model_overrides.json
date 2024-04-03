@@ -8225,17 +8225,17 @@
     "uvScale": 0.33
   },
   {
-  "description": "Objects - Rockslide - Orange Rock - Rock - Medium",
-  "baseMaterial": "ROCK_1_LIGHT",
-  "objectIds": [
-    51850,
-    51851,
-    51847,
-    51849,
-    51848
-  ],
-  "uvType": "BOX",
-  "uvScale": 0.33
+    "description": "Objects - Rockslide - Orange Rock - Rock - Medium",
+    "baseMaterial": "ROCK_1_LIGHT",
+    "objectIds": [
+      51850,
+      51851,
+      51847,
+      51849,
+      51848
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.33
   },
   {
     "description": "Big Crack Near Pyre Foxes",
