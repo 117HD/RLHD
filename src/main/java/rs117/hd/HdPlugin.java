@@ -79,7 +79,7 @@ import org.lwjgl.opengl.*;
 import org.lwjgl.system.Callback;
 import org.lwjgl.system.Configuration;
 import rs117.hd.config.AntiAliasingMode;
-import rs117.hd.config.Filters;
+import rs117.hd.config.Filter;
 import rs117.hd.config.SeasonalTheme;
 import rs117.hd.config.ShadingMode;
 import rs117.hd.config.ShadowMode;
@@ -898,7 +898,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		uniCameraPos = glGetUniformLocation(glSceneProgram, "cameraPos");
 		uniTextureArray = glGetUniformLocation(glSceneProgram, "textureArray");
 		uniElapsedTime = glGetUniformLocation(glSceneProgram, "elapsedTime");
-		if (config.filterType() != Filters.NONE) {
+		if (config.filterType() != Filter.NONE) {
 			uniFilterType = glGetUniformLocation(glSceneProgram, "filterType");
 			uniFilterTypePrevious = glGetUniformLocation(glSceneProgram, "filterTypePrevious");
 			uniFilterFadeDuration = glGetUniformLocation(glSceneProgram, "fadeProgress");
@@ -2065,7 +2065,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			glUniform1f(uniShadowMaxBias, maxBias / 10000f);
 
 			glUniform1i(uniShadowsEnabled, configShadowsEnabled ? 1 : 0);
-			if (config.filterType() != Filters.NONE) {
+			if (config.filterType() != Filter.NONE) {
 				glUniform1i(uniFilterType, config.filterType().ordinal());
 				glUniform1i(uniFilterTypePrevious, lastFilterType);
 
@@ -2497,7 +2497,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			return;
 
 		if (Objects.equals(event.getKey(), KEY_HD_FILTER)) {
-			lastFilterType = Filters.valueOf(event.getOldValue()).ordinal();
+			lastFilterType = Filter.valueOf(event.getOldValue()).ordinal();
 			filterFadeDuration = System.currentTimeMillis() + 3000;
 		}
 

@@ -24,7 +24,7 @@
  */
 package rs117.hd.config;
 
-public enum Filters {
+public enum Filter {
 	NONE,
 	GREYSCALE,
 	SEPIA,
