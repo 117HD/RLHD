@@ -1346,6 +1346,7 @@
     "baseMaterial": "BARK",
     "objectIds": [
       1341,
+      1342,
       1353,
       4328,
       6212,
@@ -9760,6 +9761,7 @@
     "description": "Jungle Tree Small",
     "baseMaterial": "PLANT_GRUNGE_2",
     "objectIds": [
+      2887,
       4818,
       6578,
       51762,
