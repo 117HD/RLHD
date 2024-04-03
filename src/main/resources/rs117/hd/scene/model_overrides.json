@@ -16342,11 +16342,6 @@
     "retainVanillaUvs": false
   },
   {
-    "description": "Perilous Moons entrances & black walls",
-    "objectIds": [ 42260, 51376, 51461 ],
-    "baseMaterial": "PURE_BLACK"
-  },
-  {
     "description": "Earthbound Cavern rock traps",
     "objectIds": [ 51359 ],
     "baseMaterial": "ROCK_3",
@@ -16376,8 +16371,16 @@
     "flatNormals": true
   },
   {
-    "description": "Fix major performance issue with shadow transparency due to black boxes in the Hunter Guild",
-    "objectIds": [ 42260, 51462 ],
+    "description": "Make Perilous Moons entrances pure black",
+    "objectIds": [ 51376 ],
+    "baseMaterial": "PURE_BLACK",
+    "castShadows": false,
+    "receiveShadows": false
+  },
+  {
+    "description": "Fix shadow transparency performance with black boxes in the Hunter Guild & Perilous Moons, and improve looks",
+    "objectIds": [ 42260, 51461, 51462 ],
+    "baseMaterial": "PURE_BLACK",
     "castShadows": false,
     "receiveShadows": false
   },
