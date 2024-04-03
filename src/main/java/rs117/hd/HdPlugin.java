@@ -903,6 +903,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		uniCameraPos = glGetUniformLocation(glSceneProgram, "cameraPos");
 		uniTextureArray = glGetUniformLocation(glSceneProgram, "textureArray");
 		uniElapsedTime = glGetUniformLocation(glSceneProgram, "elapsedTime");
+
 		if (configColorFilter != ColorFilter.NONE) {
 			uniColorFilter = glGetUniformLocation(glSceneProgram, "colorFilter");
 			uniColorFilterPrevious = glGetUniformLocation(glSceneProgram, "colorFilterPrevious");
