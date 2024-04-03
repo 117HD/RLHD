@@ -15885,16 +15885,6 @@
     "uvScale": 1.5
   },
   {
-    "description": "Civitas House Stairs",
-    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
-    "objectIds": [
-      52635
-    ],
-    "uvType": "BOX",
-    "uvScale": 1.3,
-    "uvOrientation": 512
-  },
-  {
     "description": "Varlamore, Stools and tables covered in furs, MODEL_XZ is used with intent",
     "baseMaterial": "GRUNGE_2",
     "objectIds": [
