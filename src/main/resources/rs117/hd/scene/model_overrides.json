@@ -15948,7 +15948,7 @@
   },
   {
     "description": "Hunter - Young trees, Net traps",
-    "baseMaterial": "BARK",
+    "baseMaterial": "LIGHT_BARK",
     "objectIds": [
       8730,
       8732,
@@ -15986,7 +15986,7 @@
       50722
   ],
   "uvType": "BOX",
-  "uvScale": 0.3
+  "uvScale": 0.5
   },
   {
     "description": "Hunter Tracking Burrows",
