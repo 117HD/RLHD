@@ -2584,7 +2584,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 								reloadModelOverrides = true;
 								reloadScene = true;
 								break;
-							case KEY_HIDE_UNRELATED_MAPS_HD:
+							case KEY_HIDE_UNRELATED_MAPS:
 								// TODO: confirm whether this actually needs to reload in a different way
 //								if (client.getGameState() == GameState.LOGGED_IN)
 //								{

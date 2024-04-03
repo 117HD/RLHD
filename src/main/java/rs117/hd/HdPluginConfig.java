@@ -82,19 +82,6 @@ public interface HdPluginConfig extends Config
 		return 50;
 	}
 
-	String KEY_HIDE_UNRELATED_MAPS_HD = "hideUnrelatedMapsHD";
-	@ConfigItem(
-		keyName = KEY_HIDE_UNRELATED_MAPS_HD,
-		name = "Hide unrelated maps",
-		description = "Hide unrelated map areas you shouldn't see.",
-		position = 1,
-		section = generalSettings
-	)
-	default boolean hideUnrelatedMaps()
-	{
-		return true;
-	}
-
 	String KEY_EXPANDED_MAP_LOADING_CHUNKS = "expandedMapLoadingChunks";
 	@Range(
 		max = 5
@@ -105,11 +92,23 @@ public interface HdPluginConfig extends Config
 		description =
 			"How much further the map should be loaded. The maximum is 5 extra chunks.<br>" +
 			"Note, extending the map can have a very high impact on performance.",
-		position = 2,
+		position = 1,
 		section = generalSettings
 	)
 	default int expandedMapLoadingChunks() {
 		return 3;
+	}
+
+	String KEY_HIDE_UNRELATED_MAPS = "hideUnrelatedMaps";
+	@ConfigItem(
+		keyName = KEY_HIDE_UNRELATED_MAPS,
+		name = "Hide unrelated maps",
+		description = "Hide areas which you aren't meant to see from your current position.",
+		position = 2,
+		section = generalSettings
+	)
+	default boolean hideUnrelatedMaps() {
+		return true;
 	}
 
 	@ConfigItem(
