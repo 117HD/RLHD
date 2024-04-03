@@ -1,8 +1,8 @@
 #pragma once
 
-uniform int filterTypePrevious;
-uniform int filterType;
-uniform float fadeProgress;
+uniform int colorFilterPrevious;
+uniform int colorFilter;
+uniform float colorFilterFadeDuration;
 
 #define NONE 0
 #define GREYSCALE 1
@@ -50,16 +50,16 @@ vec3 getFilter(int index, vec3 color) {
 }
 
 vec3 applyFilter(vec3 color) {
-    if(filterType == NONE) {
+    if(colorFilter == NONE) {
         return color;
     }
 
     vec3 filteredColor = color;
 
-    vec3 previousFilteredColor = getFilter(filterTypePrevious, color);
-    vec3 newFilteredColor = getFilter(filterType, color);
+    vec3 previousFilteredColor = getFilter(colorFilterPrevious, color);
+    vec3 newFilteredColor = getFilter(colorFilter, color);
 
-    float fadeMilliseconds = fadeProgress;
+    float fadeMilliseconds = colorFilterFadeDuration;
 
     // Convert fadeMilliseconds to 0-1 range
     float fadeAmount = clamp(fadeMilliseconds / 4000.0, 0.0, 1.0);

@@ -370,9 +370,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private int uniUnderwaterCausticsColor;
 	private int uniUnderwaterCausticsStrength;
 	private int uniCameraPos;
-	private int uniFilterType;
-	private int uniFilterTypePrevious;
-	private int uniFilterFadeDuration;
+	private int uniColorFilter;
+	private int uniColorFilterPrevious;
+	private int uniColorFilterFadeDuration;
 
 	// Shadow program uniforms
 	private int uniShadowLightProjectionMatrix;
@@ -901,9 +901,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		uniTextureArray = glGetUniformLocation(glSceneProgram, "textureArray");
 		uniElapsedTime = glGetUniformLocation(glSceneProgram, "elapsedTime");
 		if (configColorFilter != ColorFilter.NONE) {
-			uniFilterType = glGetUniformLocation(glSceneProgram, "filterType");
-			uniFilterTypePrevious = glGetUniformLocation(glSceneProgram, "filterTypePrevious");
-			uniFilterFadeDuration = glGetUniformLocation(glSceneProgram, "fadeProgress");
+			uniColorFilter = glGetUniformLocation(glSceneProgram, "colorFilter");
+			uniColorFilterPrevious = glGetUniformLocation(glSceneProgram, "colorFilterPrevious");
+			uniColorFilterFadeDuration = glGetUniformLocation(glSceneProgram, "colorFilterFadeDuration");
 		}
 
 		uniUiTexture = glGetUniformLocation(glUiProgram, "uiTexture");
@@ -2064,18 +2064,18 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 			glUniform1i(uniShadowsEnabled, configShadowsEnabled ? 1 : 0);
 			if (configColorFilter != ColorFilter.NONE) {
-				glUniform1i(uniFilterType, config.colorFilter().ordinal());
-				glUniform1i(uniFilterTypePrevious, configColorFilterPrevious.ordinal());
+				glUniform1i(uniColorFilter, configColorFilter.ordinal());
+				glUniform1i(uniColorFilterPrevious, configColorFilterPrevious.ordinal());
 
 				if (colorFilterFadeDuration != 0) {
 					long timeLeft = colorFilterFadeDuration - System.currentTimeMillis();
 					if (timeLeft >= 0) {
-						glUniform1f(uniFilterFadeDuration, timeLeft);
+						glUniform1f(uniColorFilterFadeDuration, timeLeft);
 					} else {
 						colorFilterFadeDuration = 0;
 					}
 				} else {
-					glUniform1f(uniFilterFadeDuration, 0);
+					glUniform1f(uniColorFilterFadeDuration, 0);
 				}
 			}
 
