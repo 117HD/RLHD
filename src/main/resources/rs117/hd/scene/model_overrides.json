@@ -7822,13 +7822,15 @@
   },
   {
     "description": "Ground - Chaos Altar - Path -  Wooden – Plank",
-    "baseMaterial": "WOOD_GRAIN_2",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       2669,
       4033,
       11557,
       11915,
       11916,
+      11917,
+      11918,
       11919,
       11554,
       11555,
