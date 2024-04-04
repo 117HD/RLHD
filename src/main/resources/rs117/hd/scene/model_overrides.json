@@ -16931,5 +16931,12 @@
     "objectIds": [ 9514 ],
     "uvType": "BOX",
     "uvScale": 0.9
+  },
+  {
+    "description": "Port Sarim - Grums front deck",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 9453 ],
+    "uvType": "WORLD_XZ",
+    "uvOrientation": 512
   }
 ]
