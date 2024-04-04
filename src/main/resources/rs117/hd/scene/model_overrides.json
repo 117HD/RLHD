@@ -5317,12 +5317,16 @@
   },
   {
     "description": "STONE Staircase Spiral",
-    "baseMaterial": "STONE",
+    "baseMaterial": "STONE_NORMALED",
     "objectIds": [
+      9582,
       11789,
       11790,
       17143
-    ]
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 765,
+    "uvScale": 0.4
   },
   {
     "description": "Metal Chimney",
