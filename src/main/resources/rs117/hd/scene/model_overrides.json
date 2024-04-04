@@ -16920,7 +16920,7 @@
   {
     "description": "Flip UVs for HD Shingle full tiles ",
     "objectIds": [
-      1642
+      1642, 1924
     ],
     "uvType": "BOX",
     "retainVanillaUvs": false,
