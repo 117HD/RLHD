@@ -16916,5 +16916,20 @@
     "uvType": "BOX",
     "uvScale": 0.8,
     "uvOrientationX": 512
+  },
+  {
+    "description": "Objects - Wooden - Bettys Desk",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 9516 ],
+    "uvType": "BOX",
+    "uvScale": 0.9,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Objects - Wooden - Bettys Chair",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 9514 ],
+    "uvType": "BOX",
+    "uvScale": 0.9
   }
 ]
