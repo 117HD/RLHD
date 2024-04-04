@@ -11956,10 +11956,12 @@
   },
   {
     "description": "Object - Wooden - Plank - Chest",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       7192
     ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
     "flatNormals": true
   },
   {
