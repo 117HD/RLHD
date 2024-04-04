@@ -6977,6 +6977,7 @@
     "description": "Stacks of wooden boxes - Rotated",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      5111,
       11487,
       24087,
       40284
@@ -7762,6 +7763,17 @@
       24089,
       39718,
       43766
+    ],
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvScale": 0.80
+  },
+  {
+    "description": "Objects - Stool - Wooden – Generic - Broken",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      7482,
+      40215
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -10281,6 +10293,7 @@
     "description": "Sacks Pile",
     "baseMaterial": "CARPET",
     "objectIds": [
+      3025,
       12394,
       16867,
       16868,
@@ -12285,6 +12298,7 @@
   },
   {
     "description": "Objects - Concrete - Bank Booth",
+    "baseMaterial": "WOOD_GRAIN_3",
     "textureMaterial": "HD_CONCRETE",
     "objectIds": [
       10355,
@@ -16800,7 +16814,7 @@
   {
     "description": "Wooden shelf wall mounted",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 12976 ],
+    "objectIds": [ 4513, 12976 ],
     "uvType": "BOX",
     "uvScale": 0.5,
     "uvOrientationX": 512,
