@@ -4812,6 +4812,7 @@
     "description": "Wooden - Plank - Tables - Rotated",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
+      2649,
       7175,
       12543,
       12962,
@@ -6833,6 +6834,7 @@
       5106,
       5107,
       5110,
+      5113,
       5330,
       7514,
       10374,
