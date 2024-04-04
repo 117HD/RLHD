@@ -687,20 +687,28 @@ public enum Material {
 		.setBrightness(0.9f)
 	),
 	HD_ROOF_BRICK_TILE_N,
+	HD_ROOF_BRICK_TILE_D,
 	HD_ROOF_BRICK_TILE(p -> p
 		.replaceIf(plugin -> plugin.configModelTextures, ROOF_BRICK_TILE)
 		.setSpecular(0.3f, 30)
 		.setNormalMap(HD_ROOF_BRICK_TILE_N)
+		.setDisplacementMap(HD_ROOF_BRICK_TILE_D)
+		.setDisplacementScale(0.15f)
 	),
 	HD_ROOF_BRICK_TILE_GREEN(ROOF_BRICK_TILE_GREEN, p -> p
 		.replaceIf(plugin -> plugin.configModelTextures, ROOF_BRICK_TILE_GREEN)
 		.setSpecular(0.3f, 30)
 		.setNormalMap(HD_ROOF_BRICK_TILE_N)
+		.setDisplacementMap(HD_ROOF_BRICK_TILE_D)
+		.setDisplacementScale(0.15f)
+
 	),
 	HD_ROOF_BRICK_TILE_DARK(ROOF_BRICK_TILE_DARK, p -> p
 		.replaceIf(plugin -> plugin.configModelTextures, ROOF_BRICK_TILE_DARK)
 		.setSpecular(0.3f, 30)
 		.setNormalMap(HD_ROOF_BRICK_TILE_N)
+		.setDisplacementMap(HD_ROOF_BRICK_TILE_D)
+		.setDisplacementScale(0.15f)
 	),
 	PLANT_GRUNGE_1(GRUNGE_1, p -> p
 		.setSpecular(0.25f, 25)
