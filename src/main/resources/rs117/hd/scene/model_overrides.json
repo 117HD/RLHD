@@ -16620,6 +16620,16 @@
     "uvOrientation": 200
   },
   {
+    "description": "Varlamore stone chips on the ground",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      51826,
+      51827
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.2
+  },
+  {
     "description": "Varlamore - Objects - Stone - Stone block walls",
     "baseMaterial": "ROCK_3_SMOOTH",
     "objectIds": [
