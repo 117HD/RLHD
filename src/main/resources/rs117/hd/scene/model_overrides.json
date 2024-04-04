@@ -4771,11 +4771,15 @@
   },
   {
     "description": "Wooden Staircase",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      18991,
+      18992,
       25604,
       26106
     ],
+    "uvType": "BOX",
+    "uvOrientationY": 512,
     "flatNormals": true
   },
   {
