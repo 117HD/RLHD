@@ -1531,14 +1531,6 @@
     "fogDepth": 30
   },
   {
-    "key": "VARLAMORE",
-    "area": "VARLAMORE",
-    "ambientColor": "#97baff",
-    "directionalStrength": 4,
-    "sunAngles": [ 42, 235 ],
-    "fogDepth": 8.5
-  },
-  {
     "key": "OVERWORLD",
     "area": "OVERWORLD",
     "ambientColor": "#97baff",
