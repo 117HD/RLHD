@@ -11961,7 +11961,8 @@
       7192
     ],
     "uvType": "BOX",
-    "uvOrientation": 512,
+    "uvOrientationZ": 512,
+    "uvOrientationX": 512,
     "flatNormals": true
   },
   {
