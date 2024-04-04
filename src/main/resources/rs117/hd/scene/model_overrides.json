@@ -6969,7 +6969,9 @@
     "description": "Stacks of wooden boxes - Rotated",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      11487
+      11487,
+      24087,
+      40284
     ],
     "uvType": "BOX",
     "flatNormals": true,
