@@ -6882,6 +6882,7 @@
       9533,
       12977,
       12978,
+      15030,
       17033,
       20367,
       25775,
@@ -6899,11 +6900,13 @@
     "description": "Objects - Wooden - Crate",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      2071,
       9534,
       11485,
       11486,
       12547,
-      12548
+      12548,
+      15031
     ],
     "uvType": "BOX",
     "flatNormals": true,
