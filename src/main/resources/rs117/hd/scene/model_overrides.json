@@ -16958,7 +16958,7 @@
   {
     "description": "Remmington House Walls",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 9626, 20002, 20003 ],
+    "objectIds": [ 9626, 9627, 20002, 20003 ],
     "uvType": "BOX",
     "uvScale": 0.8,
     "uvOrientationZ": 512,
