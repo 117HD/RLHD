@@ -4590,6 +4590,8 @@
       8744,
       8745,
       8746,
+      9558,
+      9559,
       10493,
       10494,
       11794,
@@ -8425,6 +8427,7 @@
       1088,
       3801,
       4271,
+      9621,
       10491,
       11489,
       12885,
@@ -9782,12 +9785,14 @@
   },
   {
     "description": "Objects - Wooden - Counter",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      9616,
       10485,
       10486
     ],
-    "uvType": "GEOMETRY"
+    "uvType": "BOX",
+    "uvOrientationY": 512
   },
   {
     "description": "Objects - Wooden - Stairs",
