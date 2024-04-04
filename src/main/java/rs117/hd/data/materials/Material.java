@@ -581,7 +581,7 @@ public enum Material {
 		.setSpecular(0.35f, 40)
 		.setNormalMap(HD_ROOF_SHINGLES_N)
 		.setDisplacementMap(HD_ROOF_SHINGLES_D)
-		.setDisplacementScale(0.12f)
+		.setDisplacementScale(0.11f)
 	),
 	HD_MARBLE_DARK(p -> p
 		.replaceIf(plugin -> plugin.configModelTextures, MARBLE_DARK)
