@@ -5699,7 +5699,8 @@
       11780,
       15056,
       44784,
-      44785
+      44785,
+      50048
     ],
     "uvOrientation": 512,
     "uvScale": 0.4,
@@ -8485,6 +8486,14 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.8
+  },
+  {
+    "description": "Objects - Wooden - Ugly combined backed wooden chair",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      14853
+    ],
+    "uvType": "BOX"
   },
   {
     "description": "Objects - Wooden - Tables - Round",
@@ -16934,5 +16943,14 @@
     "uvType": "BOX",
     "uvScale": 0.8,
     "uvOrientationX": 512
+  },
+  {
+    "description": "Objects - Wooden - Wooden Chest - Broken",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      14854
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512
   }
 ]
