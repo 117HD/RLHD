@@ -4782,6 +4782,8 @@
     "description": "Wooden - Plank - Tables",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
+      9614,
+      9615,
       10490,
       12450,
       12544,
