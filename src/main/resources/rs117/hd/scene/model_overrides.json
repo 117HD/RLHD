@@ -16938,5 +16938,12 @@
     "objectIds": [ 9453 ],
     "uvType": "WORLD_XZ",
     "uvOrientation": 512
+  },
+  {
+    "description": "Flip UVs for HD wood grain",
+    "objectIds": [ 1793 ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "uvOrientation": 1024
   }
 ]
