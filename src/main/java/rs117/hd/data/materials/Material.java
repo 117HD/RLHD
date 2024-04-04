@@ -687,7 +687,7 @@ public enum Material {
 		.setBrightness(0.9f)
 	),
 	HD_ROOF_BRICK_TILE_N,
-	HD_ROOF_BRICK_TILE(ROOF_BRICK_TILE, p -> p
+	HD_ROOF_BRICK_TILE(p -> p
 		.replaceIf(plugin -> plugin.configModelTextures, ROOF_BRICK_TILE)
 		.setSpecular(0.3f, 30)
 		.setNormalMap(HD_ROOF_BRICK_TILE_N)
