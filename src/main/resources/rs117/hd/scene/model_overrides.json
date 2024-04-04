@@ -4691,13 +4691,16 @@
   },
   {
     "description": "Falador - Light Wooden Stairs",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       24077,
       24078,
       24079,
       24080
-    ]
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.9,
+    "uvOrientationY": 512
   },
   {
     "description": "Falador - Tables",
