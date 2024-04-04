@@ -1734,7 +1734,8 @@
       1739,
       1740,
       993,
-      7527
+      7527,
+      20857
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -16964,6 +16965,15 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       14854
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Objects - Wooden - Beehive",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      20859
     ],
     "uvType": "BOX",
     "uvOrientation": 512
