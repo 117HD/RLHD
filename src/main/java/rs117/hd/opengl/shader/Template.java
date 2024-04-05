@@ -76,6 +76,9 @@ public class Template
 				String includeContents = loadInternal(includeFile);
 				includeStack.pop();
 
+				if (Shader.DUMP_SHADERS)
+					sb.append("// Including ").append(includeFile).append('\n');
+
 				switch (includeType)
 				{
 					case GLSL:
@@ -122,13 +125,17 @@ public class Template
 						sb.append(includeContents);
 						break;
 				}
+
+				if (Shader.DUMP_SHADERS)
+					sb.append("// End include of ").append(includeFile).append('\n');
 			}
 			else if (trimmed.startsWith("#pragma once"))
 			{
 				int currentIndex = includeList.size() - 1;
 				String currentInclude = includeList.get(currentIndex);
 				if (includeList.indexOf(currentInclude) != currentIndex) {
-					sb.append("// Already included\n");
+					if (Shader.DUMP_SHADERS)
+						sb.append("// Skipping already included ").append(currentInclude).append('\n');
 					break;
 				}
 			}
