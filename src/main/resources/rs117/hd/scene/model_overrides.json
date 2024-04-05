@@ -8510,6 +8510,7 @@
     "description": "Objects - Wooden - Ugly combined backed wooden chair",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      7433,
       14853
     ],
     "uvType": "BOX"
