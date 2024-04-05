@@ -5723,12 +5723,14 @@
     "uvOrientation": 512
   },
   {
-    "description": "Varrock Castle and Museum Staircase",
-    "baseMaterial": "DOCK_FENCE",
+    "description": "Varrock Castle - Juliets House - Museum Staircase",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       11797,
       11807
     ],
+    "uvType": "BOX",
+    "uvOrientationY": 512,
     "flatNormals": true
   },
   {
