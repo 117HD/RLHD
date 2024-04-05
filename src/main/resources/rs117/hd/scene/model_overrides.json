@@ -5715,13 +5715,14 @@
   },
   {
     "description": "Varrock Castle Doors",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       11772,
       11773,
       32463,
       32464
     ],
+    "uvType": "BOX",
     "flatNormals": true,
     "uvScale": 0.4
   },
