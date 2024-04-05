@@ -4712,6 +4712,17 @@
     "uvOrientation": 256
   },
   {
+    "name": "Varrock Family Crypt",
+    "groundMaterial": "TILES_2X2_2_SEMIGLOSS",
+    "area": "VARROCK_JULIETS_FAMILY_CRYPT",
+    "underlayIds": [
+      56, 57, 72, 94
+    ],
+    "blended": false,
+    "uvScale": 0.85,
+    "uvOrientation": 256
+  },
+  {
     "name": "VARROCK_SEWERS_DIRT",
     "area": "VARROCK_SEWERS",
     "underlayIds": [
