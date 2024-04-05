@@ -16610,6 +16610,21 @@
     "uvOrientation": 200
   },
   {
+    "description": "Ralos rise, Big door",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [
+      50959,
+      50960,
+      50962,
+      50963,
+      50964,
+      50965
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 200
+  },
+  {
     "description": "Varlamore - Objects - Stone - Stone block walls",
     "baseMaterial": "ROCK_3_SMOOTH",
     "objectIds": [
