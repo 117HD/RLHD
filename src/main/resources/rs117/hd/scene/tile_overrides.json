@@ -4702,11 +4702,14 @@
   },
   {
     "name": "VARROCK_JULIETS_HOUSE_UPSTAIRS",
+    "groundMaterial": "TILES_2X2_2_SEMIGLOSS",
     "area": "VARROCK_JULIETS_HOUSE",
     "underlayIds": [
       8
     ],
-    "blended": false
+    "blended": false,
+    "uvScale": 0.85,
+    "uvOrientation": 256
   },
   {
     "name": "VARROCK_SEWERS_DIRT",
