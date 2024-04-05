@@ -16971,5 +16971,38 @@
     "uvType": "BOX",
     "uvScale": 0.66,
     "uvOrientationY": 512
+  },
+  {
+    "description": "Wooden cabinet - Wide",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      2721
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Stone slab",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      12132
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Stone slab with Juliet",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      12133
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Brown brick textured Stone Steps",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      12131
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
   }
 ]
