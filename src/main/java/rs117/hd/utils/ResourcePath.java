@@ -116,7 +116,10 @@ public class ResourcePath {
     
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public ResourcePath mkdirs() {
-        toFile().getParentFile().mkdirs();
+		var file = toFile();
+		if (file.isFile())
+			file = file.getParentFile();
+		file.mkdirs();
         return this;
     }
 
