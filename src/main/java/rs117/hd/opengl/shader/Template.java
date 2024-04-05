@@ -76,8 +76,11 @@ public class Template
 				String includeContents = loadInternal(includeFile);
 				includeStack.pop();
 
-				if (Shader.DUMP_SHADERS)
+				int nextLineOffset = 1;
+				if (Shader.DUMP_SHADERS) {
 					sb.append("// Including ").append(includeFile).append('\n');
+					nextLineOffset = 0;
+				}
 
 				switch (includeType)
 				{
@@ -99,7 +102,7 @@ public class Template
 								.append("\n")
 								.append(includeContents)
 								.append("#line ") // Return to the next line of the current file
-								.append(lineCount + 1)
+								.append(lineCount + nextLineOffset)
 								.append(" ")
 								.append(currentIndex)
 								.append("\n");
@@ -116,7 +119,7 @@ public class Template
 							.append("\"\n")
 							.append(includeContents)
 							.append("#line ") // Return to the next line in the parent include
-							.append(lineCount + 1)
+							.append(lineCount + nextLineOffset)
 							.append(" \"")
 							.append(currentFile)
 							.append("\"\n");
