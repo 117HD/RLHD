@@ -4429,6 +4429,9 @@
       17229,
       17230,
       17231,
+      23621,
+      23622,
+      23623,
       25596,
       25597,
       25598,
@@ -4827,6 +4830,16 @@
     "objectIds": [
       25615
     ],
+    "flatNormals": true
+  },
+  {
+    "description": "Wooden tables - Solid",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      7401
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
     "flatNormals": true
   },
   {
@@ -7064,6 +7077,7 @@
     "baseMaterial": "METALLIC_2_SEMIGLOSS",
     "objectIds": [
       5609,
+      5610,
       6179,
       6180,
       10504,
@@ -16918,5 +16932,43 @@
     "uvType": "BOX",
     "uvScale": 0.8,
     "uvOrientationX": 512
+  },
+  {
+    "description": "Objects - Wooden - Juliets house hand rails",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      23847
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationZ": 512,
+    "uvOrientationY": 512
+  },
+  {
+    "description": "Wooden Wardrobe",
+    "objectIds": [ 7198 ],
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7
+  },
+  {
+    "description": "Drawers with backsplash",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      7442
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationY": 512
+  },
+  {
+    "description": "Large Teak Table",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      7405
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "uvOrientationY": 512
   }
 ]
