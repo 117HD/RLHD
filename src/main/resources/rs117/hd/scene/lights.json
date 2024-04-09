@@ -20090,7 +20090,6 @@
     "objectIds": [
       196,
       197,
-      2501,
       7432,
       202,
       203,
@@ -34662,6 +34661,24 @@
     "offset": [ 0, 52, 0 ],
     "objectIds": [
       51728
+    ]
+  },
+  {
+    "description": "Juliets Wall Torch",
+    "height": 200,
+    "offset": [ 3, -49, -7 ],
+    "radius": 300,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      2501
     ]
   }
 ]

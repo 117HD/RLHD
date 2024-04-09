@@ -455,6 +455,7 @@ public enum Material {
 	JAGGED_STONE_TILE_N,
 	JAGGED_STONE_TILE(p -> p
 		.setDisplacementMap(JAGGED_STONE_TILE_D)
+		.setDisplacementScale(.05f)
 		.setNormalMap(JAGGED_STONE_TILE_N)
 		.setSpecular(0.5f, 30)
 	),
@@ -527,6 +528,12 @@ public enum Material {
 	),
 	LIGHT_BARK(BARK, p -> p.setBrightness(1.75f)),
 	VERY_LIGHT_BARK(BARK, p -> p.setBrightness(2.75f)),
+	BARK_STONEPINE_N,
+	BARK_STONEPINE(p -> p
+		.setNormalMap(BARK_STONEPINE_N)
+		.setSpecular(0.3f, 30)
+	),
+	LIGHT_BARK_STONEPINE(BARK_STONEPINE, p -> p.setBrightness(1.75f)),
 	WOOD_GRAIN,
 	WOOD_GRAIN_2_N,
 	WOOD_GRAIN_2(p -> p
@@ -575,10 +582,13 @@ public enum Material {
 		.setSpecular(0.30f, 20)
 	),
 	HD_ROOF_SHINGLES_N,
+	HD_ROOF_SHINGLES_D,
 	HD_ROOF_SHINGLES_1(p -> p
 		.replaceIf(plugin -> plugin.configModelTextures, ROOF_SHINGLES_1)
-		.setSpecular(0.5f, 30)
+		.setSpecular(0.35f, 40)
 		.setNormalMap(HD_ROOF_SHINGLES_N)
+		.setDisplacementMap(HD_ROOF_SHINGLES_D)
+		.setDisplacementScale(0.11f)
 	),
 	HD_MARBLE_DARK(p -> p
 		.replaceIf(plugin -> plugin.configModelTextures, MARBLE_DARK)
@@ -687,7 +697,7 @@ public enum Material {
 		.setBrightness(0.9f)
 	),
 	HD_ROOF_BRICK_TILE_N,
-	HD_ROOF_BRICK_TILE(ROOF_BRICK_TILE, p -> p
+	HD_ROOF_BRICK_TILE(p -> p
 		.replaceIf(plugin -> plugin.configModelTextures, ROOF_BRICK_TILE)
 		.setSpecular(0.3f, 30)
 		.setNormalMap(HD_ROOF_BRICK_TILE_N)
