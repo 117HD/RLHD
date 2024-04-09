@@ -14813,7 +14813,7 @@
   {
     "description": "Plank Boat - Wooden - Deck",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 9453, 9454, 9457, 9458, 9460, 9461, 9462 ],
+    "objectIds": [ 9454, 9457, 9458, 9460, 9461, 9462 ],
     "uvType": "BOX",
     "uvScale": 1.0,
     "uvOrientation": 512
