@@ -4441,6 +4441,9 @@
       17229,
       17230,
       17231,
+      23621,
+      23622,
+      23623,
       25596,
       25597,
       25598,
@@ -4853,6 +4856,16 @@
       616,
       25615
     ],
+    "flatNormals": true
+  },
+  {
+    "description": "Wooden tables - Solid",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      7401
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
     "flatNormals": true
   },
   {
@@ -5737,13 +5750,14 @@
   },
   {
     "description": "Varrock Castle Doors",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       11772,
       11773,
       32463,
       32464
     ],
+    "uvType": "BOX",
     "flatNormals": true,
     "uvScale": 0.4
   },
@@ -5758,12 +5772,14 @@
     "uvOrientation": 512
   },
   {
-    "description": "Varrock Castle and Museum Staircase",
-    "baseMaterial": "DOCK_FENCE",
+    "description": "Varrock Castle - Juliets House - Museum Staircase",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       11797,
       11807
     ],
+    "uvType": "BOX",
+    "uvOrientationY": 512,
     "flatNormals": true
   },
   {
@@ -7105,6 +7121,7 @@
     "baseMaterial": "METALLIC_2_SEMIGLOSS",
     "objectIds": [
       5609,
+      5610,
       6179,
       6180,
       10504,
@@ -17108,5 +17125,68 @@
     ],
     "uvType": "BOX",
     "uvOrientation": 512
+  },
+  {
+    "description": "Objects - Wooden - Juliets house hand rails",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      23847
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationZ": 512,
+    "uvOrientationY": 512
+  },
+  {
+    "description": "Wooden Wardrobe",
+    "objectIds": [ 7198 ],
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7
+  },
+  {
+    "description": "Drawers with backsplash",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      7442
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationY": 512
+  },
+  {
+    "description": "Large Teak Table",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      7405
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "uvOrientationY": 512
+  },
+  {
+    "description": "Wooden cabinet - Wide",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      2721
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Stone slab",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      12132
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Brown brick textured Stone Steps",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      12131
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
   }
 ]
