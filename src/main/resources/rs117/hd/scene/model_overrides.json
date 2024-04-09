@@ -17181,14 +17181,6 @@
     "uvType": "BOX"
   },
   {
-    "description": "Stone slab with Juliet",
-    "baseMaterial": "STONE_NORMALED",
-    "objectIds": [
-      12133
-    ],
-    "uvType": "BOX"
-  },
-  {
     "description": "Brown brick textured Stone Steps",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
