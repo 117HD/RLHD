@@ -941,8 +941,6 @@
       15257,
       15510,
       15511,
-      15514,
-      15515,
       17208,
       17324,
       18960,
@@ -1744,7 +1742,8 @@
       1739,
       1740,
       993,
-      7527
+      7527,
+      20857
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -4103,7 +4102,6 @@
       12430,
       12431,
       20366,
-      23848,
       23849,
       23850,
       23851,
@@ -4707,13 +4705,16 @@
   },
   {
     "description": "Falador - Light Wooden Stairs",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       24077,
       24078,
       24079,
       24080
-    ]
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.9,
+    "uvOrientationY": 512
   },
   {
     "description": "Falador - Tables",
@@ -4808,7 +4809,6 @@
       12450,
       12544,
       14762,
-      14851,
       14852,
       15684,
       17145,
@@ -4832,10 +4832,12 @@
     "description": "Wooden - Plank - Tables - Rotated",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
+      2649,
       7175,
       9613,
       12543,
       12962,
+      14851,
       20058,
       23177,
       39716
@@ -5328,7 +5330,8 @@
     "objectIds": [
       12536,
       11792,
-      12537
+      12537,
+      24075
     ]
   },
   {
@@ -5582,6 +5585,7 @@
       37941,
       37961,
       40178,
+      40353,
       40382,
       46253,
       46254,
@@ -5602,6 +5606,7 @@
       1542,
       2705,
       2706,
+      3744,
       3747,
       17316,
       17317,
@@ -5722,7 +5727,9 @@
       11780,
       15056,
       44784,
-      44785
+      44785,
+      50048,
+      50049
     ],
     "uvOrientation": 512,
     "uvScale": 0.4,
@@ -6292,7 +6299,8 @@
       28941,
       28956,
       28957
-    ]
+    ],
+    "uvType": "BOX"
   },
   {
     "description": "Objects - Mossy Rock - Medium",
@@ -6852,6 +6860,7 @@
       5106,
       5107,
       5110,
+      5113,
       5330,
       7514,
       10374,
@@ -6862,7 +6871,6 @@
       11228,
       12442,
       12443,
-      12961,
       14395,
       15692,
       16251,
@@ -6904,6 +6912,7 @@
       6176,
       6177,
       9533,
+      12961,
       12977,
       12978,
       15030,
@@ -7000,7 +7009,10 @@
     "description": "Stacks of wooden boxes - Rotated",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      11487
+      5111,
+      11487,
+      24087,
+      40284
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -7781,7 +7793,19 @@
       23065,
       23179,
       24089,
-      39718
+      39718,
+      43766
+    ],
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvScale": 0.80
+  },
+  {
+    "description": "Objects - Stool - Wooden – Generic - Broken",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      7482,
+      40215
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -7829,13 +7853,15 @@
   },
   {
     "description": "Ground - Chaos Altar - Path -  Wooden – Plank",
-    "baseMaterial": "WOOD_GRAIN_2",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       2669,
       4033,
       11557,
       11915,
       11916,
+      11917,
+      11918,
       11919,
       11554,
       11555,
@@ -8509,6 +8535,15 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.8
+  },
+  {
+    "description": "Objects - Wooden - Ugly combined backed wooden chair",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      7433,
+      14853
+    ],
+    "uvType": "BOX"
   },
   {
     "description": "Objects - Wooden - Tables - Round",
@@ -10296,6 +10331,7 @@
     "description": "Sacks Pile",
     "baseMaterial": "CARPET",
     "objectIds": [
+      3025,
       12394,
       16867,
       16868,
@@ -11120,6 +11156,11 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       3729,
+      15514,
+      15515,
+      15516,
+      15517,
+      23848,
       25671,
       25672,
       25673,
@@ -11977,10 +12018,13 @@
   },
   {
     "description": "Object - Wooden - Plank - Chest",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       7192
     ],
+    "uvType": "BOX",
+    "uvOrientationZ": 512,
+    "uvOrientationX": 512,
     "flatNormals": true
   },
   {
@@ -16462,6 +16506,8 @@
     "description": "Hollow Log 1",
     "baseMaterial": "BARK",
     "objectIds": [
+      1334,
+      1335,
       1378
     ],
     "uvType": "BOX",
@@ -16816,7 +16862,7 @@
   {
     "description": "Wooden shelf wall mounted",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 12976 ],
+    "objectIds": [ 4513, 12976 ],
     "uvType": "BOX",
     "uvScale": 0.5,
     "uvOrientationX": 512,
@@ -17044,5 +17090,23 @@
     "uvType": "BOX",
     "uvScale": 0.8,
     "flatNormals": true
+  },
+  {
+    "description": "Objects - Wooden - Wooden Chest - Broken",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      14854
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Objects - Wooden - Beehive",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      20859
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512
   }
 ]
