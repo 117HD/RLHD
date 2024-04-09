@@ -16918,7 +16918,7 @@
     "uvOrientationX": 512
   },
   {
-    "description": "Flip UVs for HD Shingle full tiles ",
+    "description": "Flip UVs for HD Shingle full tiles",
     "objectIds": [
       1642, 1924
     ],
@@ -16929,7 +16929,7 @@
   {
     "description": "Flip UVs for HD Shingle trim",
     "objectIds": [
-     1790, 1791, 5647, 5648, 5662, 5663, 5671, 5686, 5687, 5756, 5757
+      1790, 1791, 5647, 5648, 5662, 5663, 5671, 5686, 5687, 5756, 5757
     ],
     "uvType": "BOX",
     "retainVanillaUvs": false,
