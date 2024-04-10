@@ -137,9 +137,10 @@ public class Template
 				int currentIndex = includeList.size() - 1;
 				String currentInclude = includeList.get(currentIndex);
 				if (includeList.indexOf(currentInclude) != currentIndex) {
-					if (Shader.DUMP_SHADERS)
-						sb.append("// Skipping already included ").append(currentInclude).append('\n');
+					sb.append("// #pragma once - already included\n");
 					break;
+				} else {
+					sb.append("// #pragma once - first include\n");
 				}
 			}
 			else
