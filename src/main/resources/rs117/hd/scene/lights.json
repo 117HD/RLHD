@@ -34409,7 +34409,7 @@
     "color": "#e58500",
     "strength": 20,
     "radius": 1000,
-    "offset": [ 0, 227, 0 ]
+    "offset": [ 0, 287, 0 ]
   },
   {
     "description": "ANTECHAMBER_BLOOD_MOON_BRAZIERS",
@@ -34417,7 +34417,7 @@
     "color": "#df002e",
     "strength": 10,
     "radius": 1000,
-    "offset": [ 0, 227, 0 ]
+    "offset": [ 0, 287, 0 ]
   },
   {
     "description": "ANTECHAMBER_BLUE_MOON_BRAZIERS",
@@ -34425,15 +34425,23 @@
     "color": "#3571a7",
     "strength": 25,
     "radius": 1000,
-    "offset": [ 0, 227, 0 ]
+    "offset": [ 0, 287, 0 ]
   },
   {
     "description": "ANTECHAMBER_ECLIPSE_MOON_BRAZIERS",
     "objectIds": [ 51345 ],
     "color": "#ffa41b",
-    "strength": 2,
+    "strength": 3.5,
     "radius": 1000,
-    "offset": [ 0, 227, 0 ]
+    "offset": [ 0, 257, 0 ]
+  },
+  {
+    "description": "ANTECHAMBER_ECLIPSE_MOON_BRAZIERS",
+    "objectIds": [ 51345 ],
+    "color": "#ffa41b",
+    "strength": 250,
+    "radius": 100,
+    "offset": [ 15, 287, -15 ]
   },
   {
     "description": "SULPHUR_NAGA",
