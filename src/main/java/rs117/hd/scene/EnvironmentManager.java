@@ -325,7 +325,7 @@ public class EnvironmentManager {
 			sunAngles = overworldEnv.sunAngles;
 		System.arraycopy(sunAngles, 0, targetSunAngles, 0, 2);
 
-		if (!config.atmosphericLighting())
+		if (!config.atmosphericLighting() && !env.force)
 			env = overworldEnv;
 		targetAmbientStrength = env.ambientStrength;
 		targetAmbientColor = env.ambientColor;

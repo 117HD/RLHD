@@ -930,7 +930,6 @@
       6188,
       10436,
       10487,
-      11468,
       11876,
       12005,
       12006,
@@ -942,8 +941,6 @@
       15257,
       15510,
       15511,
-      15514,
-      15515,
       17208,
       17324,
       18960,
@@ -1326,6 +1323,7 @@
       5904,
       5905,
       9733,
+      11510,
       14513,
       14514,
       14515,
@@ -1333,6 +1331,7 @@
       14564,
       14565,
       14566,
+      30150,
       33186,
       33187,
       34933,
@@ -1346,6 +1345,7 @@
     "baseMaterial": "BARK",
     "objectIds": [
       1341,
+      1342,
       1353,
       4328,
       6212,
@@ -1642,7 +1642,7 @@
     "castShadows": false
   },
   {
-    "description": "Valamore, Fortis and Avium Grass",
+    "description": "Varlamore, Fortis and Avium Grass",
     "baseMaterial": "GRAY_75",
     "objectIds": [
       51804,
@@ -1659,6 +1659,16 @@
       51815,
       51816,
       51817
+    ],
+    "flatNormals": true,
+    "castShadows": false
+  },
+  {
+    "description": "Hunter guild grass, that's also used elsewhere so restrict this to Varlamore",
+    "baseMaterial": "GRAY_75",
+    "areas": [ "VARLAMORE" ],
+    "objectIds": [
+      19829
     ],
     "flatNormals": true,
     "castShadows": false
@@ -1732,7 +1742,8 @@
       1739,
       1740,
       993,
-      7527
+      7527,
+      20857
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -1754,6 +1765,10 @@
     "objectIds": [
       3684,
       4279,
+      9675,
+      9676,
+      9677,
+      9678,
       20950,
       20951
     ],
@@ -2507,7 +2522,7 @@
   },
   {
     "description": "KOUREND_PATHS",
-    "baseMaterial": "GRUNGE_1",
+    "baseMaterial": "STONE_NORMALED_DARK",
     "objectIds": [
       13705,
       13706,
@@ -2523,7 +2538,9 @@
       13716,
       13717,
       42722
-    ]
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 1.2
   },
   {
     "description": "KOUREND_PATH_STEPS",
@@ -3516,22 +3533,39 @@
     "flatNormals": true
   },
   {
-    "description": "UNKNOWN_3",
-    "baseMaterial": "GRUNGE_1",
+    "description": "Pale rock walls",
+    "baseMaterial": "ROCK_3",
     "objectIds": [
       2141,
       3669,
+      3737,
+      3740,
       3759,
+      3770,
+      3772,
+      3773,
+      3774,
       3812,
       6820,
       6822,
       6824,
       6826,
-      6827,
       16539
     ],
     "uvType": "BOX",
-    "uvScale": 0.7
+    "uvScale": 0.7,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Pale rock walls - Top",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      3738,
+      3739,
+      6827
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 1.3
   },
   {
     "description": "UNKNOWN_4",
@@ -4068,7 +4102,6 @@
       12430,
       12431,
       20366,
-      23848,
       23849,
       23850,
       23851,
@@ -4312,6 +4345,7 @@
     "baseMaterial": "CARPET",
     "objectIds": [
       7481,
+      9680,
       14046,
       14047,
       14048,
@@ -4334,6 +4368,9 @@
     "baseMaterial": "CARPET",
     "objectIds": [
       7480,
+      9679,
+      9681,
+      11482,
       24094,
       40234,
       40241
@@ -4347,6 +4384,7 @@
     "baseMaterial": "CARPET",
     "objectIds": [
       7447,
+      11481,
       24093,
       40235,
       40242
@@ -4403,6 +4441,9 @@
       17229,
       17230,
       17231,
+      23621,
+      23622,
+      23623,
       25596,
       25597,
       25598,
@@ -4564,6 +4605,8 @@
       8744,
       8745,
       8746,
+      9558,
+      9559,
       10493,
       10494,
       11794,
@@ -4665,13 +4708,16 @@
   },
   {
     "description": "Falador - Light Wooden Stairs",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       24077,
       24078,
       24079,
       24080
-    ]
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.9,
+    "uvOrientationY": 512
   },
   {
     "description": "Falador - Tables",
@@ -4745,21 +4791,27 @@
   },
   {
     "description": "Wooden Staircase",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      18991,
+      18992,
       25604,
       26106
     ],
+    "uvType": "BOX",
+    "uvOrientationY": 512,
     "flatNormals": true
   },
   {
     "description": "Wooden - Plank - Tables",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
+      9614,
+      9615,
       10490,
       12450,
+      12544,
       14762,
-      14851,
       14852,
       15684,
       17145,
@@ -4783,8 +4835,12 @@
     "description": "Wooden - Plank - Tables - Rotated",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
+      2649,
       7175,
+      9613,
+      12543,
       12962,
+      14851,
       20058,
       23177,
       39716
@@ -4797,8 +4853,19 @@
     "description": "Wooden tables - Solid - Cobwebs",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      616,
       25615
     ],
+    "flatNormals": true
+  },
+  {
+    "description": "Wooden tables - Solid",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      7401
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
     "flatNormals": true
   },
   {
@@ -4806,8 +4873,10 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       1111,
+      11490,
       25616
     ],
+    "uvType": "BOX",
     "flatNormals": true
   },
   {
@@ -5274,7 +5343,8 @@
     "objectIds": [
       12536,
       11792,
-      12537
+      12537,
+      24075
     ]
   },
   {
@@ -5287,12 +5357,16 @@
   },
   {
     "description": "STONE Staircase Spiral",
-    "baseMaterial": "STONE",
+    "baseMaterial": "STONE_NORMALED",
     "objectIds": [
+      9582,
       11789,
       11790,
       17143
-    ]
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 765,
+    "uvScale": 0.4
   },
   {
     "description": "Metal Chimney",
@@ -5524,6 +5598,7 @@
       37941,
       37961,
       40178,
+      40353,
       40382,
       46253,
       46254,
@@ -5544,6 +5619,7 @@
       1542,
       2705,
       2706,
+      3744,
       3747,
       17316,
       17317,
@@ -5655,6 +5731,7 @@
     "objectIds": [
       1749,
       2398,
+      2406,
       11616,
       11617,
       11765,
@@ -5663,7 +5740,9 @@
       11780,
       15056,
       44784,
-      44785
+      44785,
+      50048,
+      50049
     ],
     "uvOrientation": 512,
     "uvScale": 0.4,
@@ -5671,13 +5750,14 @@
   },
   {
     "description": "Varrock Castle Doors",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       11772,
       11773,
       32463,
       32464
     ],
+    "uvType": "BOX",
     "flatNormals": true,
     "uvScale": 0.4
   },
@@ -5692,12 +5772,14 @@
     "uvOrientation": 512
   },
   {
-    "description": "Varrock Castle and Museum Staircase",
-    "baseMaterial": "DOCK_FENCE",
+    "description": "Varrock Castle - Juliets House - Museum Staircase",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       11797,
       11807
     ],
+    "uvType": "BOX",
+    "uvOrientationY": 512,
     "flatNormals": true
   },
   {
@@ -6176,6 +6258,7 @@
       42374,
       42675,
       42376,
+      50724,
       50725,
       50726
     ],
@@ -6232,7 +6315,8 @@
       28941,
       28956,
       28957
-    ]
+    ],
+    "uvType": "BOX"
   },
   {
     "description": "Objects - Mossy Rock - Medium",
@@ -6792,6 +6876,7 @@
       5106,
       5107,
       5110,
+      5113,
       5330,
       7514,
       10374,
@@ -6802,7 +6887,6 @@
       11228,
       12442,
       12443,
-      12961,
       14395,
       15692,
       16251,
@@ -6844,8 +6928,10 @@
       6176,
       6177,
       9533,
+      12961,
       12977,
       12978,
+      15030,
       17033,
       20367,
       25775,
@@ -6863,7 +6949,13 @@
     "description": "Objects - Wooden - Crate",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      9534
+      2071,
+      9534,
+      11485,
+      11486,
+      12547,
+      12548,
+      15031
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -6875,8 +6967,7 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       9535,
-      41739,
-      52432
+      41739
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -6897,8 +6988,9 @@
     "description": "Objects - Wooden - Stack of crates",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      6178,
       9536,
-      6178
+      12545
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -6910,6 +7002,7 @@
     "description": "Objects - Wooden - Stack of crates - Rotated",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      15693,
       42068
     ],
     "uvType": "BOX",
@@ -6927,6 +7020,21 @@
     ],
     "uvType": "BOX",
     "flatNormals": true
+  },
+  {
+    "description": "Stacks of wooden boxes - Rotated",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      5111,
+      11487,
+      24087,
+      40284
+    ],
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvOrientationY": 600,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512
   },
   {
     "description": "Objects - Wooden - Doublewide Crate",
@@ -6986,6 +7094,7 @@
     "baseMaterial": "METALLIC_2_SEMIGLOSS",
     "objectIds": [
       7183,
+      7184,
       25730
     ]
   },
@@ -7012,6 +7121,7 @@
     "baseMaterial": "METALLIC_2_SEMIGLOSS",
     "objectIds": [
       5609,
+      5610,
       6179,
       6180,
       10504,
@@ -7291,7 +7401,9 @@
     "description": "Objects - Fungus - Medium",
     "baseMaterial": "GRUNGE_2",
     "objectIds": [
-      1171
+      1171,
+      21742,
+      21743
     ],
     "uvType": "BOX",
     "uvScale": 0.8
@@ -7698,7 +7810,19 @@
       23065,
       23179,
       24089,
-      39718
+      39718,
+      43766
+    ],
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvScale": 0.80
+  },
+  {
+    "description": "Objects - Stool - Wooden – Generic - Broken",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      7482,
+      40215
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -7746,13 +7870,15 @@
   },
   {
     "description": "Ground - Chaos Altar - Path -  Wooden – Plank",
-    "baseMaterial": "WOOD_GRAIN_2",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       2669,
       4033,
       11557,
       11915,
       11916,
+      11917,
+      11918,
       11919,
       11554,
       11555,
@@ -8191,7 +8317,7 @@
   },
   {
     "description": "Objects - Rockslide - Gray Rock - Rock - Medium",
-    "baseMaterial": "ROCK_4",
+    "baseMaterial": "ROCK_1_LIGHT",
     "objectIds": [
       3657,
       3658,
@@ -8211,6 +8337,44 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.33
+  },
+  {
+    "description": "Objects - Rockslide - Darker Gray Rock - Rock - Medium",
+    "baseMaterial": "ROCK_1_LIGHT",
+    "objectIds": [
+      51795,
+      51796,
+      51797
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.33
+  },
+  {
+    "description": "Objects - Rockslide - Orange Rock - Rock - Medium",
+    "baseMaterial": "ROCK_1_LIGHT",
+    "objectIds": [
+      51850,
+      51851,
+      51847,
+      51849,
+      51848
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.33
+  },
+  {
+    "description": "Big Crack Near Pyre Foxes",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [
+      51857,
+      51858,
+      51860,
+      51862,
+      51864
+    ],
+    "uvType": "BOX",
+    "upwardsNormals": true,
+    "uvScale": 0.5
   },
   {
     "description": "Objects - Stone - Column - Limestone",
@@ -8321,7 +8485,9 @@
       1088,
       3801,
       4271,
+      9621,
       10491,
+      11489,
       12885,
       15981,
       17146,
@@ -8386,6 +8552,15 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.8
+  },
+  {
+    "description": "Objects - Wooden - Ugly combined backed wooden chair",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      7433,
+      14853
+    ],
+    "uvType": "BOX"
   },
   {
     "description": "Objects - Wooden - Tables - Round",
@@ -8476,7 +8651,8 @@
       1143,
       23559,
       23530,
-      23561
+      23561,
+      51766
     ],
     "uvType": "BOX"
   },
@@ -9507,7 +9683,8 @@
     "baseMaterial": "PLANT_GRUNGE_2",
     "objectIds": [
       1396,
-      2670
+      2670,
+      2671
     ]
   },
   {
@@ -9675,12 +9852,14 @@
   },
   {
     "description": "Objects - Wooden - Counter",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      9616,
       10485,
       10486
     ],
-    "uvType": "GEOMETRY"
+    "uvType": "BOX",
+    "uvOrientationY": 512
   },
   {
     "description": "Objects - Wooden - Stairs",
@@ -9744,8 +9923,16 @@
     "description": "Jungle Tree Small",
     "baseMaterial": "PLANT_GRUNGE_2",
     "objectIds": [
+      2887,
       4818,
-      6578
+      6578,
+      51762,
+      51763,
+      51764,
+      51765,
+      51853,
+      53188,
+      53189
     ],
     "uvType": "BOX",
     "uvScale": 0.4,
@@ -10161,6 +10348,7 @@
     "description": "Sacks Pile",
     "baseMaterial": "CARPET",
     "objectIds": [
+      3025,
       12394,
       16867,
       16868,
@@ -10186,6 +10374,7 @@
     "description": "Sack",
     "baseMaterial": "CARPET",
     "objectIds": [
+      7512,
       12396
     ],
     "uvType": "BOX",
@@ -10984,6 +11173,11 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       3729,
+      15514,
+      15515,
+      15516,
+      15517,
+      23848,
       25671,
       25672,
       25673,
@@ -11003,6 +11197,21 @@
     ],
     "uvType": "WORLD_XZ",
     "uvScale": 0.5
+  },
+  {
+    "description": "Snow Heap",
+    "baseMaterial": "SNOW_4",
+    "objectIds": [
+      19692
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Remove the shadow cast by the exit crack of the brine rat cave",
+    "objectIds": [
+      23159
+    ],
+    "castShadows": false
   },
   {
     "description": "Objects - Desert Treasure Pyramid Obilisk - Large",
@@ -11826,10 +12035,13 @@
   },
   {
     "description": "Object - Wooden - Plank - Chest",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       7192
     ],
+    "uvType": "BOX",
+    "uvOrientationZ": 512,
+    "uvOrientationX": 512,
     "flatNormals": true
   },
   {
@@ -12323,7 +12535,9 @@
       1323,
       1324,
       1325,
-      1458
+      1458,
+      51787,
+      51788
     ],
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -12331,6 +12545,7 @@
   },
   {
     "description": "Wooden crates, Wooden table, wooden rack",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [ 356, 595, 647 ],
     "flatNormals": true,
     "uvType": "BOX",
@@ -12654,7 +12869,8 @@
     "baseMaterial": "BARK",
     "objectIds": [
       1122,
-      1123
+      1123,
+      11911
     ],
     "uvType": "BOX",
     "uvOrientation": 600
@@ -13174,29 +13390,13 @@
   {
     "description": "Trollheim Cave Walls",
     "baseMaterial": "GRUNGE_2",
-    "objectIds": [
-      3737,
-      3738,
-      3739,
-      3740,
-      3770,
-      3772,
-      3773,
-      3774
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.7
-  },
-  {
-    "description": "Trollheim Cave Walls",
-    "baseMaterial": "GRUNGE_2",
     "objectIds": [ 3790 ],
     "uvType": "BOX",
     "uvScale": 0.7
   },
   {
     "description": "Trollheim Eadgars Cave Exit",
-    "baseMaterial": "GRUNGE_2_EADGARS_CAVE_FIX",
+    "baseMaterial": "EADGARS_CAVE_FIX",
     "objectIds": [ 3760, 3761 ],
     "uvType": "BOX",
     "uvScale": 0.7
@@ -13217,14 +13417,14 @@
   },
   {
     "description": "Trollheim Dark Wall in Doorway",
-    "baseMaterial": "GRUNGE_2_TROLLHEIM_WALL_FIX_1",
+    "baseMaterial": "TROLLHEIM_WALL_FIX_1",
     "objectIds": [ 3792 ],
     "uvType": "BOX",
     "uvScale": 0.7
   },
   {
     "description": "Trollheim Dark Wall in Doorway",
-    "baseMaterial": "GRUNGE_2_TROLLHEIM_WALL_FIX_2",
+    "baseMaterial": "TROLLHEIM_WALL_FIX_2",
     "objectIds": [ 3793 ],
     "uvType": "BOX",
     "uvScale": 0.7
@@ -13346,6 +13546,13 @@
     "objectIds": [ 44837, 44838, 44839, 44840 ],
     "uvType": "BOX",
     "uvOrientation": 256
+  },
+  {
+    "description": "Bone Objects",
+    "baseMaterial": "BONE",
+    "objectIds": [ 668, 697, 699, 700, 701, 702, 703, 736, 737 ],
+    "uvType": "BOX",
+    "uvScale": 0.4
   },
   {
     "description": "Weiss Snowy Rocks",
@@ -13526,7 +13733,7 @@
       4533, 4540, 8462, 8463,
       8464, 8465, 8466,
       9734, 10820, 20806, 37969,
-      37970, 42395, 42831
+      37970, 42395, 42831, 51772
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -14425,16 +14632,24 @@
     "uvScale": 0.9
   },
   {
-    "description": "Fossil Island - Outhouse Walls",
+    "description": "Fossil Island - Outhouse Walls and Lumbriodge Swamp Shack",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 10372, 11763 ],
+    "objectIds": [ 10372, 10373, 11763, 15054 ],
     "uvType": "BOX",
     "uvScale": 0.8
   },
   {
-    "description": "Fossil Island - Outhouse Top and Evil Daves Moms house",
+    "description": "Lumbridge Shack Roof - Corners",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 12283, 12284, 12285, 12286, 12287, 12290 ],
+    "objectIds": [ 10367, 10368, 10369, 10370, 15055 ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationZ": 512
+  },
+  {
+    "description": "Fossil Island - Outhouse Top and Evil Daves Moms house, Lumbridge Shack",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 10364, 10365, 10366, 12283, 12284, 12285, 12286, 12287, 12290],
     "uvType": "BOX",
     "uvScale": 0.8,
     "uvOrientationX": 512
@@ -14669,7 +14884,7 @@
   {
     "description": "Plank Boat - Wooden - Deck",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 9453, 9454, 9457, 9458, 9460, 9461, 9462 ],
+    "objectIds": [ 9454, 9457, 9458, 9460, 9461, 9462 ],
     "uvType": "BOX",
     "uvScale": 1.0,
     "uvOrientation": 512
@@ -15499,7 +15714,7 @@
     "uvScale": 0.86
   },
   {
-    "description": "Valamore - quetzal landing site",
+    "description": "Varlamore - quetzal landing site",
     "baseMaterial": "HAY",
     "objectIds": [
       52815
@@ -15508,7 +15723,41 @@
     "uvScale": 0.6
   },
   {
-    "description": "Valamore Rugs and carpets",
+    "description": "Acacia Tree",
+    "baseMaterial": "LIGHT_BARK_STONEPINE",
+    "objectIds": [
+      51768,
+      51769
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.55
+  },
+  {
+    "description": "Stonepine Tree",
+    "baseMaterial": "LIGHT_BARK_STONEPINE",
+    "objectIds": [
+      51464,
+      51465,
+      51770,
+      51771
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7
+  },
+  {
+    "description": "Varlamore - Avium Savannah - Plants",
+    "baseMaterial": "PLANT_GRUNGE_1",
+    "objectIds": [
+      47370,
+      51819,
+      51070,
+      51071,
+      51072,
+      51073
+    ]
+  },
+  {
+    "description": "Varlamore Rugs and carpets",
     "baseMaterial": "FINE_CARPET",
     "objectIds": [
       52467,
@@ -15528,7 +15777,60 @@
     "uvType": "MODEL_XZ"
   },
   {
-    "description": "Valamore Banners",
+    "description": "Varlamore Cushions",
+    "baseMaterial": "FINE_CARPET",
+    "objectIds": [
+      53012,
+      52436,
+      52437
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 0.8
+  },
+  {
+    "description": "Varlamore Awnings Small Red",
+    "baseMaterial": "FINE_CARPET",
+    "objectIds": [
+      51944
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Varlamore Awnings Large Red, MODEL_XZ is used with intent",
+    "baseMaterial": "FINE_CARPET",
+    "objectIds": [
+      51940,
+      51941,
+      51942,
+      44896,
+      44897,
+      44898,
+      44899,
+      44900,
+      44901,
+      44902,
+      44903,
+      44904,
+      44905,
+      44906,
+      44907,
+      44908,
+      44909,
+      44910
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Varlamore Circular Awning, MODEL_XZ is used with intent",
+    "baseMaterial": "FINE_CARPET",
+    "objectIds": [
+      51943
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Varlamore Banners",
     "baseMaterial": "FINE_CARPET",
     "objectIds": [
       51946,
@@ -15537,6 +15839,18 @@
       52314
     ],
     "uvType": "MODEL_YZ"
+  },
+  {
+    "description": "Colossal Wyrm Remains Skull",
+    "baseMaterial": "BONE",
+    "objectIds": [
+      51910,
+      51911,
+      51912,
+      51913
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.85
   },
   {
     "description": "Hunter Guild cave walls",
@@ -15562,11 +15876,12 @@
     "uvScale": 0.86
   },
   {
-    "description": "Hunter Guild Entrance Bone Arches",
+    "description": "Hunter Guild Entrance Bone Arches, Colossal Wyrm Ribs",
     "baseMaterial": "BONE",
     "objectIds": [
       51657,
-      51658
+      51658,
+      51659
     ],
     "uvType": "BOX",
     "uvOrientation": 512
@@ -15661,10 +15976,18 @@
     "uvOrientationY": 512
   },
   {
-    "description": "Hunter Guild Wooden Objects",
+    "description": "Hunter Guild Wooden Pillars",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
-      51745,
+      51745
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Varlamore and Hunter Guild Wooden Barrels",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
       52425,
       52430
     ],
@@ -15672,13 +15995,65 @@
     "uvOrientation": 512
   },
   {
+    "description": "Varlamore and Hunter Guild Wooden Crates",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "objectIds": [
+      52431,
+      52432
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Hunter Guild Bank Chest",
+    "baseMaterial": "WOOD_GRAIN_2_LIGHT",
+    "objectIds": [
+      53015
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75
+  },
+  {
     "description": "Hunter Guild Caverns Stairs",
-    "baseMaterial": "WOOD_GRAIN_2",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [
       51642
     ],
     "uvType": "BOX",
     "uvScale": 1.5
+  },
+  {
+    "description": "Varlamore, Stools and tables covered in furs, MODEL_XZ is used with intent",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      51722,
+      51723,
+      51724,
+      51725,
+      51726,
+      51727
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.4
+  },
+  {
+    "description": "Varlamore, Well, MODEL_YZ is used with intent",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      46805
+    ],
+    "uvType": "MODEL_YZ",
+    "uvScale": 0.4
+  },
+  {
+    "description": "Varlamore, 'Take-log' Roots in Hunter Guild Caverns",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      51746,
+      51747
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
   },
   {
     "description": "Hunter Pitfall Spiked Pit - Snowy",
@@ -15689,20 +16064,164 @@
       19251,
       19252
     ],
-    "uvType": "BOX",
+    "uvType": "MODEL_XZ",
     "uvScale": 1.2
   },
   {
-    "description": "Bear Rugs",
-    "baseMaterial": "FINE_CARPET",
+    "description": "Hunter Pitfall Spiked Pit - Mossy",
+    "baseMaterial": "GRUNGE_2",
     "objectIds": [
+      19241,
+      19242,
+      19243,
+      19244,
+      53029,
+      53030,
+      53031,
+      53032
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.25
+  },
+  {
+    "description": "Hunter Pitfall Spiked Pit - Wooden",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      53025,
+      53026,
+      53027,
+      53028
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.65,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Hunter Pitfall Spiked Pit - Sandy",
+    "baseMaterial": "SAND_3",
+    "objectIds": [
+      19245,
+      19246,
+      19247,
+      19248
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.25,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Hunter Guild Pitfall - Pit",
+    "baseMaterial": "DIRT_1",
+    "objectIds": [
+      53033,
+      53034,
+      53035
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.65,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Hunter - Young trees, Net traps",
+    "baseMaterial": "LIGHT_BARK",
+    "objectIds": [
+      8730,
+      8732,
+      8733,
+      8734,
+      8972,
+      8973,
+      8974,
+      8985,
+      8986,
+      8987,
+      8988,
+      8989,
+      8990,
+      8991,
+      8993,
+      8996,
+      8997,
+      8998,
+      8999,
+      9000,
+      9001,
+      9003,
+      9004,
+      9005,
+      9158,
+      9257,
+      9341,
+      9342,
+      50716,
+      50717,
+      50719,
+      50720,
+      50721,
+      50722
+  ],
+  "uvType": "BOX",
+  "uvScale": 0.5
+  },
+  {
+    "description": "Hunter Tracking Burrows",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [
+      19593,
+      19552
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Hunter Kharidian Desert Tracking Disturbed Sand",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [
+      19430
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.4
+  },
+  {
+    "description": "Hunter Kharidian Desert Tracking Cacti",
+    "baseMaterial": "PLANT_GRUNGE_2",
+    "objectIds": [
+      19389,
+      19391,
+      19392,
+      19394,
+      19395,
+      19398,
+      19399,
+      19401
+    ]
+  },
+  {
+    "description": "Hunter Kharidian Desert Tracking Brown Rock",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      19396,
+      19400,
+      19402
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.33
+  },
+  {
+    "description": "Bear Rugs",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      946,
+      947,
+      948,
+      949,
       950,
       951,
       952,
       953
     ],
     "uvType": "MODEL_XZ",
-    "uvScale": 1.5
+    "uvScale": 0.4
   },
   {
     "description": "Obelisk of Earth",
@@ -15979,6 +16498,19 @@
     "uvScale": 0.8
   },
   {
+    "description": "Zeah - Kourend - Plants",
+    "baseMaterial": "PLANT_GRUNGE_1",
+    "objectIds": [
+      42398,
+      42399,
+      42400,
+      42401,
+      42402,
+      42403,
+      42404
+    ]
+  },
+  {
     "description": "Old Ones Tent",
     "baseMaterial": "FINE_CARPET",
     "objectIds": [
@@ -15991,6 +16523,8 @@
     "description": "Hollow Log 1",
     "baseMaterial": "BARK",
     "objectIds": [
+      1334,
+      1335,
       1378
     ],
     "uvType": "BOX",
@@ -16174,6 +16708,31 @@
     "uvOrientation": 200
   },
   {
+    "description": "Varlamore stone chips on the ground",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      51826,
+      51827
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.2
+  },
+  {
+    "description": "Ralos rise, Big door",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [
+      50959,
+      50960,
+      50962,
+      50963,
+      50964,
+      50965
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 200
+  },
+  {
     "description": "Varlamore - Objects - Stone - Stone block walls",
     "baseMaterial": "ROCK_3_SMOOTH",
     "objectIds": [
@@ -16317,7 +16876,7 @@
   {
     "description": "Wooden shelves - Empty",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 12980 ],
+    "objectIds": [ 7506, 12980 ],
     "uvType": "BOX",
     "uvScale": 0.8,
     "uvOrientationX": 512,
@@ -16335,16 +16894,11 @@
   {
     "description": "Wooden shelf wall mounted",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 12976 ],
+    "objectIds": [ 4513, 12976 ],
     "uvType": "BOX",
     "uvScale": 0.5,
     "uvOrientationX": 512,
     "retainVanillaUvs": false
-  },
-  {
-    "description": "Perilous Moons entrances & black walls",
-    "objectIds": [ 42260, 51376, 51461 ],
-    "baseMaterial": "PURE_BLACK"
   },
   {
     "description": "Earthbound Cavern rock traps",
@@ -16374,5 +16928,280 @@
     "objectIds": [ 50769 ],
     "receiveShadows": false,
     "flatNormals": true
+  },
+  {
+    "description": "Make Perilous Moons entrances pure black",
+    "objectIds": [ 51376 ],
+    "baseMaterial": "PURE_BLACK",
+    "castShadows": false,
+    "receiveShadows": false
+  },
+  {
+    "description": "Fix shadow transparency performance with black boxes in the Hunter Guild & Perilous Moons, and improve looks",
+    "objectIds": [ 42260, 51461, 51462 ],
+    "baseMaterial": "PURE_BLACK",
+    "castShadows": false,
+    "receiveShadows": false
+  },
+  {
+    "description": "Stop floating crystals in the Hunter Guild from casting shadows",
+    "objectIds": [ 51442, 51443, 51444, 51445 ],
+    "castShadows": false,
+    "receiveShadows": false
+  },
+  {
+    "description": "Marble statues at Lumbridge Entrance - Textured",
+    "objectIds": [ 5789, 9292],
+    "baseMaterial": "MARBLE_2_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 144
+  },
+  {
+    "description": "Metal lamp post with candle lanturn",
+    "objectIds": [ 11468 ],
+    "baseMaterial": "METALLIC_2",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 42,
+    "hideVanillaShadows": true
+  },
+  {
+    "description": "Murder Mystery Wooden Double Doors",
+    "objectIds": [ 1146, 11447, 30110, 30111 ],
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Murder Mystery Wooden Doors",
+    "objectIds": [ 11470, 11471, 30112, 30113, 30114, 30115, 30116, 30117, 30118, 30119, 34650, 34651 ],
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7
+  },
+  {
+    "description": "Fancy wooden table with alternating lines",
+    "objectIds": [ 11504 ],
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Murder Mystery wooden wardrobes",
+    "objectIds": [ 5622, 5623, 5624 ],
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7
+  },
+  {
+    "description": "Murder Mystery wooden wardrobes Golden Trim",
+    "objectIds": [ 388, 389, 30141, 30142 ],
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7
+  },
+  {
+    "description": "Lumbridge crypt stone block walls",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "objectIds": [ 15058 ],
+    "uvType": "BOX",
+    "uvOrientation": 144,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Lumbridge crypt ivy",
+    "baseMaterial": "PLANT_GRUNGE_2",
+    "objectIds": [ 24160, 24161, 24162, 24163, 24164 ],
+    "uvType": "MODEL_YZ",
+    "uvOrientation": 144,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Objects - Wooden - Brown Drawers with metallic handles",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      350,
+      351
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512
+  },
+  {
+    "description": "Objects - Wooden - Brown Drawers with golden handles",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      352,
+      353
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512
+  },
+  {
+    "description": "Flip UVs for HD Shingle full tiles",
+    "objectIds": [
+      1642, 1924
+    ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "uvOrientation": 1024
+  },
+  {
+    "description": "Flip UVs for HD Shingle trim",
+    "objectIds": [
+      1790, 1791, 5647, 5648, 5662, 5663, 5671, 5686, 5687, 5756, 5757
+    ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "uvOrientation": 1024
+  },
+  {
+    "description": "Flip UVs for HD Shingle trim and rotate 45 degrees",
+    "objectIds": [
+      5672
+    ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "uvOrientation": 1536
+  },
+  {
+    "description": "Objects - Wooden - Bettys Desk",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 9516 ],
+    "uvType": "BOX",
+    "uvScale": 0.9,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Objects - Wooden - Bettys Chair",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 9514 ],
+    "uvType": "BOX",
+    "uvScale": 0.9
+  },
+  {
+    "description": "Port Sarim - Grums front deck",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 9453 ],
+    "uvType": "WORLD_XZ",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Flip UVs for HD wood grain",
+    "objectIds": [ 1793 ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "uvOrientation": 1024
+  },
+  {
+    "description": "Remmington House Walls",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 9626, 9627, 20002, 20003 ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationZ": 512,
+    "uvOrientationY": 512 ,
+    "flatNormals": true
+  },
+  {
+    "description": "Remmington House Roof - Corner",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 9633, 9634, 9635, 9636, 9644, 9646, 9647, 9648, 9649, 9656, 9657, 9658, 9659 ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "flatNormals": true
+  },
+  {
+    "description": "Remmington House Roof - some models have weird rotations",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 9629, 9628, 9630, 9637, 9640, 9641, 9642, 9643, 9645, 9650, 9651, 9652, 9653, 9654, 9655, 9660 ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "flatNormals": true
+  },
+  {
+    "description": "Objects - Wooden - Wooden Chest - Broken",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      14854
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Objects - Wooden - Beehive",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      20859
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Objects - Wooden - Juliets house hand rails",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      23847
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationZ": 512,
+    "uvOrientationY": 512
+  },
+  {
+    "description": "Wooden Wardrobe",
+    "objectIds": [ 7198 ],
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7
+  },
+  {
+    "description": "Drawers with backsplash",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      7442
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationY": 512
+  },
+  {
+    "description": "Large Teak Table",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      7405
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "uvOrientationY": 512
+  },
+  {
+    "description": "Wooden cabinet - Wide",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      2721
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Stone slab",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      12132
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Brown brick textured Stone Steps",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      12131
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
   }
 ]

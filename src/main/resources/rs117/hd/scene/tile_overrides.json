@@ -2723,8 +2723,40 @@
     "overlayIds": [
       119
     ],
-    "groundMaterial": "WOOD_PLANKS_1",
+    "groundMaterial": "HD_WOOD_PLANKS_2",
     "blended": false
+  },
+  {
+    "name": "Misthalin Mystery Path",
+    "area": "MISTHALIN_MYSTERY_MANOR_REGION",
+    "overlayIds": [
+      11, 90
+    ],
+    "groundMaterial": "GRAVEL",
+    "uvScale": 1.2,
+    "uvOrientation": 42
+  },
+  {
+    "name": "Misthalin Mystery Rotated Sand",
+    "groundMaterial": "SAND",
+    "uvScale": 1.2,
+    "uvOrientation": 256
+  },
+  {
+    "name": "Misthalin Mystery Complex",
+    "area": "MISTHALIN_MYSTERY_MANOR_REGION",
+    "underlayIds": [
+      49, 50, 57, 63, 64, 129
+    ],
+    "replacements": {
+      "DEFAULT_GRASS": ["h >= 8 && s >= 3"],
+      "DEFAULT_DIRT": [
+        "h <= 6",
+        "h == 7 && s <= 5",
+        "h <= 9 && s <= 2 && l <= 15"
+      ],
+      "Misthalin Mystery Rotated Sand": [ "h == 8 && s == 2 && l >= 20" ]
+    }
   },
   {
     "name": "CASTLE_WARS_LOBBY_FLOOR",
@@ -4670,11 +4702,25 @@
   },
   {
     "name": "VARROCK_JULIETS_HOUSE_UPSTAIRS",
+    "groundMaterial": "TILES_2X2_2_SEMIGLOSS",
     "area": "VARROCK_JULIETS_HOUSE",
     "underlayIds": [
       8
     ],
-    "blended": false
+    "blended": false,
+    "uvScale": 0.85,
+    "uvOrientation": 256
+  },
+  {
+    "name": "Varrock Family Crypt",
+    "groundMaterial": "TILES_2X2_2_SEMIGLOSS",
+    "area": "VARROCK_JULIETS_FAMILY_CRYPT",
+    "underlayIds": [
+      56, 57, 72, 94
+    ],
+    "blended": false,
+    "uvScale": 0.85,
+    "uvOrientation": 256
   },
   {
     "name": "VARROCK_SEWERS_DIRT",
@@ -5201,7 +5247,9 @@
       63,
       92
     ],
-    "groundMaterial": "EARTHEN_CAVE_FLOOR"
+    "groundMaterial": "EARTHEN_CAVE_FLOOR",
+    "uvOrientation": 144,
+    "uvScale": 1.25
   },
   {
     "name": "SHADOW_DUNGEON_FLOOR",

@@ -189,10 +189,7 @@ public class SceneContext {
 		return HDUtils.sceneIntersects(scene, expandedMapLoadingChunks, aabbs);
 	}
 
-	public int getObjectConfig(int tileZ, int tileExX, int tileExY, long hash) {
-		Tile tile = scene.getExtendedTiles()[tileZ][tileExX][tileExY];
-		if (tile == null)
-			return 0;
+	public int getObjectConfig(Tile tile, long hash) {
 		if (tile.getWallObject() != null && tile.getWallObject().getHash() == hash)
 			return tile.getWallObject().getConfig();
 		if (tile.getDecorativeObject() != null && tile.getDecorativeObject().getHash() == hash)
@@ -202,6 +199,6 @@ public class SceneContext {
 		for (GameObject gameObject : tile.getGameObjects())
 			if (gameObject != null && gameObject.getHash() == hash)
 				return gameObject.getConfig();
-		return 0;
+		return -1;
 	}
 }

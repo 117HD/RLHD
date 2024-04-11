@@ -294,6 +294,8 @@ public class TileOverrideManager {
 					return replacement;
 				}
 			}
+			// Avoid accidentally keeping the old scene in memory
+			hslVars.setTile(null);
 		}
 
 		return override;
