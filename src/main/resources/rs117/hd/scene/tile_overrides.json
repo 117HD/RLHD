@@ -4208,6 +4208,13 @@
     "waterType": "DARK_BLUE_WATER"
   },
   {
+    "name": "CAM_TORUM_INSIDE_PATH",
+    "area": "CAM_TORUM",
+    "overlayIds": [ 90, 278, 132 ],
+    "blended": false,
+    "groundMaterial": "NONE"
+  },
+  {
     "name": "EARTHBOUND_CAVERN_WATER_DARKER",
     "area": "EARTHBOUND_CAVERN",
     "overlayIds": [ 201 ],
