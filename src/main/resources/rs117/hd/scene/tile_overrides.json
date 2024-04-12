@@ -4208,10 +4208,37 @@
     "waterType": "DARK_BLUE_WATER"
   },
   {
-    "name": "Cam Torum Inside Path",
+    "name": "Cam Torum Smith & Bank Tiles Fix",
+    "area": "CAM_TORUM_BUILDING_TILES",
+    "overlayIds": [ 132 ],
+    "underlayIds": [ 45 ],
+    "blended": false,
+    "groundMaterial": "MARBLE_1"
+  },
+  {
+    "name": "Cam Torum Bank Entrance Fix",
+    "area": "CAM_TORUM_BANK_ENTRANCE_FIX",
+    "overlayIds": [ 339 ],
+    "blended": false,
+    "groundMaterial": "MARBLE_1",
+    "minHue": 39,
+    "maxHue": 39,
+    "minSaturation": 2,
+    "maxSaturation": 2,
+    "minLightness": 9,
+    "maxLightness": 9
+  },
+  {
+    "name": "Cam Torum Fix Dirt on tiles in front of furnace",
+    "area": "CAM_TORUM_BLACKSMITH_FURNACE_FIX",
+    "underlayIds": [ 26, 123 ],
+    "blended": false,
+    "groundMaterial": "MARBLE_1"
+  },
+  {
+    "name": "Cam Torum Paths",
     "area": "CAM_TORUM",
-    "overlayIds": [ 338, 339, 219,222 ],
-    "underlayIds": [ 123 ],
+    "overlayIds": [ 338, 339, 219, 222 ],
     "blended": false,
     "groundMaterial": "CAM_TORUM_TILES",
     "minHue": 6,
@@ -4222,18 +4249,31 @@
     "maxLightness": 15
   },
   {
-    "name": "Cam Torum Inside Path Keep Colour",
+    "name": "Cam Torum Paths Keep Vanilla Colour",
     "area": "CAM_TORUM",
     "blended": false,
     "overlayIds": [ 102, 132, 133, 85, 278, 90 ],
     "groundMaterial": "CAM_TORUM_TILES"
   },
   {
-    "name": "Cam Torum Entrance fix",
+    "name": "Cam Torum Entrance Fix",
     "area": "CAM_TORUM_ENTRANCE_FIX",
     "blended": false,
     "overlayIds": [ 11, 228 ],
     "groundMaterial": "CAM_TORUM_TILES"
+  },
+  {
+    "name": "Cam Torum Bridge Fix",
+    "area": "CAM_TORUM_BRIDGE_FIX",
+    "underlayIds": [ 123 ],
+    "blended": false,
+    "groundMaterial": "CAM_TORUM_TILES",
+    "minHue": 6,
+    "maxHue": 6,
+    "minSaturation": 1,
+    "maxSaturation": 1,
+    "minLightness": 15,
+    "maxLightness": 15
   },
   {
     "name": "EARTHBOUND_CAVERN_WATER_DARKER",
