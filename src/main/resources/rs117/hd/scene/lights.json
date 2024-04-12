@@ -31898,7 +31898,7 @@
     ]
   },
   {
-    "description": "TOA_WARDEN_P3_SKULL_CHARGE_PROJECTILE",
+    "description": "TOA_WARDEN_P3_SKULL_CHARGE_PROJECTILE_&_BLOOD_MOON_PROJECTILE",
     "height": 25,
     "radius": 400,
     "strength": 7,
