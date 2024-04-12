@@ -15882,7 +15882,9 @@
       51339,
       51309,
       51311,
-      51310
+      51310,
+      51341,
+      51340
     ],
     "uvType": "BOX",
     "uvScale": 0.5
@@ -15986,7 +15988,7 @@
     "uvScale": 0.5
   },
   {
-    "description": "Perilous Moons Ancient Shrine ???",
+    "description": "Perilous Moons Ancient Shrine Dirt",
     "baseMaterial": "DIRT_2",
     "objectIds": [
       51279,
@@ -16100,7 +16102,19 @@
       51111,
       51112,
       51113,
-      51460
+      51460,
+      51110,
+      51446,
+      53003,
+      51432,
+      51317,
+      51320,
+      51319,
+      51313,
+      51316,
+      51318,
+      51315,
+      51314
     ],
     "uvType": "BOX",
     "uvScale": 0.86
