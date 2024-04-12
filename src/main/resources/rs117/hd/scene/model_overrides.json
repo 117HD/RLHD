@@ -15884,7 +15884,10 @@
       51311,
       51310,
       51341,
-      51340
+      51340,
+      51372,
+      51373,
+      51374
     ],
     "uvType": "BOX",
     "uvScale": 0.5
@@ -16025,13 +16028,25 @@
     "uvScale": 0.75
   },
   {
-    "description": "Perilous Moons Ancient Shrine Dirt Decorations",
+    "description": "Perilous Moons Ancient Shrine stone chips, Hide them they are ugly here",
     "baseMaterial": "TRANSPARENT",
     "castShadows": false,
     "receiveShadows": false,
     "objectIds": [
       51097,
       51098
+    ]
+  },
+  {
+    "description": "Blue Moon Arena Ice Spikes",
+    "baseMaterial": "ICE_4",
+    "objectIds": [
+      51302,
+      51301,
+      51304,
+      51306,
+      51303,
+      51305
     ]
   },
   {
@@ -16114,7 +16129,9 @@
       51316,
       51318,
       51315,
-      51314
+      51314,
+      51452,
+      51109
     ],
     "uvType": "BOX",
     "uvScale": 0.86
@@ -17145,12 +17162,6 @@
     "description": "Earthbound Cavern rock traps",
     "objectIds": [ 51359 ],
     "baseMaterial": "ROCK_3",
-    "uvType": "BOX"
-  },
-  {
-    "description": "The Blood, Blue & Eclipse Moon statues respectively",
-    "objectIds": [ 51372, 51373, 51374 ],
-    "baseMaterial": "ROCK_3_SMOOTH",
     "uvType": "BOX"
   },
   {

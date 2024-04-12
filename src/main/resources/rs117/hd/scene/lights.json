@@ -34604,6 +34604,26 @@
     "spawnDelay": 600
   },
   {
+    "description": "BLUE_MOON_ARENA_BURNING_BRAZIERS",
+    "objectIds": [ 51052 ],
+    "color": "#3571a7",
+    "strength": 25,
+    "radius": 1000,
+    "offset": [ 0, 300, -60 ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200
+  },
+  {
+    "description": "BLUE_MOON_ARENA_BURNING_LINE",
+    "objectIds": [ 51053 ],
+    "color": "#3571a7",
+    "strength": 25,
+    "radius": 220,
+    "offset": [ -30, 100, 0 ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200
+  },
+  {
     "description": "CURRENT_MOON_PHASE",
     "npcIds": [ 13015 ],
     "objectIds": [
