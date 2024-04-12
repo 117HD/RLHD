@@ -15881,9 +15881,10 @@
   },
   {
     "description": "Perilous Moons Braziers and Chains",
-    "baseMaterial": "METALLIC_2_SUPER_HIGHGLOSS",
+    "baseMaterial": "GRUNGE_2",
     "objectIds": [
       25121,
+      51342,
       51343,
       51345,
       51345,
