@@ -34544,7 +34544,7 @@
   },
   {
     "description": "EYATLALLI",
-    "npcIds": [ 12869 ],
+    "npcIds": [ 12869, 12870 ],
     "color": "#00c7c1",
     "strength": 25,
     "radius": 700,
@@ -34552,7 +34552,7 @@
   },
   {
     "description": "EYATLALLI_RIGHT_HAND",
-    "npcIds": [ 12869 ],
+    "npcIds": [ 12869, 12870 ],
     "color": "#00c7c1",
     "strength": 25,
     "radius": 250,
@@ -34560,7 +34560,7 @@
   },
   {
     "description": "EYATLALLI_LEFT_HAND",
-    "npcIds": [ 12869 ],
+    "npcIds": [ 12869, 12870 ],
     "color": "#00c7c1",
     "strength": 15,
     "radius": 250,

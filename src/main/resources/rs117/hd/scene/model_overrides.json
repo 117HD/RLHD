@@ -15757,7 +15757,9 @@
       51070,
       51071,
       51072,
-      51073
+      51073,
+      51085,
+      51086
     ]
   },
   {
@@ -15877,7 +15879,10 @@
       51336,
       51337,
       51338,
-      51339
+      51339,
+      51309,
+      51311,
+      51310
     ],
     "uvType": "BOX",
     "uvScale": 0.5
@@ -15928,7 +15933,20 @@
       51435,
       51365,
       51585,
-      51586
+      51586,
+      51257,
+      51258,
+      51261,
+      51262,
+      51263,
+      51264,
+      51328,
+      51327,
+      51326,
+      51083,
+      51081,
+      51082,
+      51084
     ]
   },
   {
@@ -15966,6 +15984,53 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.5
+  },
+  {
+    "description": "Perilous Moons Ancient Shrine ???",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [
+      51279,
+      51294,
+      51277,
+      51293,
+      51275,
+      51297,
+      51276,
+      51288,
+      51285,
+      51295,
+      51286,
+      51274,
+      51280,
+      51292,
+      51291,
+      51273,
+      51298,
+      51296,
+      51287,
+      51299,
+      51284,
+      51290,
+      51282,
+      51281,
+      51289,
+      51283,
+      51272,
+      51097,
+      51098
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.75
+  },
+  {
+    "description": "Perilous Moons Ancient Shrine Dirt Decorations",
+    "baseMaterial": "TRANSPARENT",
+    "castShadows": false,
+    "receiveShadows": false,
+    "objectIds": [
+      51097,
+      51098
+    ]
   },
   {
     "description": "Hunter Guild cave, Perilous Moons and Giants Den - Walls, Rocky objects and Stairs",
@@ -16031,7 +16096,11 @@
       51476,
       51477,
       51479,
-      51482
+      51482,
+      51111,
+      51112,
+      51113,
+      51460
     ],
     "uvType": "BOX",
     "uvScale": 0.86
