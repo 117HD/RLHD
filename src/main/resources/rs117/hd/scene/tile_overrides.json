@@ -4208,12 +4208,32 @@
     "waterType": "DARK_BLUE_WATER"
   },
   {
-    "name": "CAM_TORUM_INSIDE_PATH",
+    "name": "Cam Torum Inside Path",
     "area": "CAM_TORUM",
-    "overlayIds": [ 90, 278, 132 ],
+    "overlayIds": [ 338, 339, 219,222 ],
     "underlayIds": [ 123 ],
     "blended": false,
-    "groundMaterial": "NONE"
+    "groundMaterial": "CAM_TORUM_TILES",
+    "minHue": 6,
+    "maxHue": 6,
+    "minSaturation": 1,
+    "maxSaturation": 1,
+    "minLightness": 15,
+    "maxLightness": 15
+  },
+  {
+    "name": "Cam Torum Inside Path Keep Colour",
+    "area": "CAM_TORUM",
+    "blended": false,
+    "overlayIds": [ 102, 132, 133, 85, 278, 90 ],
+    "groundMaterial": "CAM_TORUM_TILES"
+  },
+  {
+    "name": "Cam Torum Entrance fix",
+    "area": "CAM_TORUM_ENTRANCE_FIX",
+    "blended": false,
+    "overlayIds": [ 11, 228 ],
+    "groundMaterial": "CAM_TORUM_TILES"
   },
   {
     "name": "EARTHBOUND_CAVERN_WATER_DARKER",

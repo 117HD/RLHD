@@ -11975,12 +11975,13 @@
     ]
   },
   {
-    "description": "Lassar Undercity & Varlamore temple crypt fake brick tiles",
+    "description": "Lassar Undercity, Cam Torum & Varlamore temple crypt fake brick tiles",
     "objectIds": [ 46950, 46951 ],
     "baseMaterial": "LASSAR_UNDERCITY_TILES",
     "hideInAreas": [
       "LASSAR_UNDERCITY",
-      "VARLAMORE_TEMPLE_CRYPT"
+      "VARLAMORE_TEMPLE_CRYPT",
+      "CAM_TORUM"
     ]
   },
   {
@@ -16065,6 +16066,29 @@
     "uvType": "MODEL_XY",
     "uvOrientation": 512,
     "uvScale": 0.5
+  },
+  {
+    "description": "Cam Torum Dirt Decorations",
+    "baseMaterial": "GRAVEL_LIGHT",
+    "objectIds": [
+      51592,
+      51593,
+      51594,
+      51595,
+      51596,
+      51597
+    ],
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 512,
+    "uvScale": 0.75
+  },
+  {
+    "description": "Cam Torum Stairs",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      51606
+    ],
+    "uvType": "BOX"
   },
   {
     "description": "Hunter Guild cave, Cam Torum, Perilous Moons and Giants Den - Walls, Rocky objects and Stairs",
