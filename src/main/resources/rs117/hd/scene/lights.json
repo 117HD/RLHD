@@ -31910,6 +31910,7 @@
     "type": "PULSE",
     "duration": 300,
     "range": 2,
+    "fadeOutDuration": 200,
     "projectileIds": [
       2226,
       2227
@@ -34619,6 +34620,16 @@
     "color": "#3571a7",
     "strength": 25,
     "radius": 220,
+    "offset": [ -30, 100, 0 ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200
+  },
+  {
+    "description": "BLOOD_MOON_ARENA_BURNING_LINE",
+    "objectIds": [ 51054 ],
+    "color": "#6f2375",
+    "strength": 15,
+    "radius": 250,
     "offset": [ -30, 100, 0 ],
     "fadeInDuration": 200,
     "fadeOutDuration": 200

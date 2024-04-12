@@ -16050,6 +16050,23 @@
     ]
   },
   {
+    "description": "Blood Moon Arena Bloody Wall",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      51252,
+      51251,
+      51253,
+      51254,
+      51249,
+      51250,
+      51256,
+      51255
+    ],
+    "uvType": "MODEL_XY",
+    "uvOrientation": 512,
+    "uvScale": 0.5
+  },
+  {
     "description": "Hunter Guild cave, Perilous Moons and Giants Den - Walls, Rocky objects and Stairs",
     "baseMaterial": "ROCK_3",
     "objectIds": [
@@ -16131,7 +16148,11 @@
       51315,
       51314,
       51452,
-      51109
+      51109,
+      51457,
+      51458,
+      51108,
+      32380
     ],
     "uvType": "BOX",
     "uvScale": 0.86
