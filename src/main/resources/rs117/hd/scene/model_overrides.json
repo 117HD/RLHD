@@ -15869,31 +15869,40 @@
     "description": "Perilous Moons Statues",
     "baseMaterial": "MARBLE_2_GLOSS",
     "objectIds": [
+      51329,
       51330,
       51332,
-      51334
+      51334,
+      51336,
+      51337
     ],
     "uvType": "BOX",
     "uvScale": 0.5
   },
   {
-    "description": "Perilous Moons Braziers",
-    "baseMaterial": "GRUNGE_2",
+    "description": "Perilous Moons Braziers and Chains",
+    "baseMaterial": "METALLIC_2_SUPER_HIGHGLOSS",
     "objectIds": [
+      25121,
       51343,
       51345,
-      51345
+      51345,
+      51398,
+      51399
     ]
   },
   {
     "description": "Perilous Moons Plants",
     "baseMaterial": "PLANT_GRUNGE_1",
     "objectIds": [
+      39681,
+      39682,
       51434,
       51436,
       51437,
       51438,
       51466,
+      51467,
       51468,
       51470,
       51471,
@@ -15911,7 +15920,16 @@
     ]
   },
   {
-    "description": "Hunter Guild cave, Perilous Moons and Giants Den - Walls, Ground and Stairs",
+    "description": "Perilous Moons Carvings",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      51400
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Hunter Guild cave, Perilous Moons and Giants Den - Walls, Rocky objects and Stairs",
     "baseMaterial": "ROCK_3",
     "objectIds": [
       42250,
@@ -15967,7 +15985,9 @@
       51418,
       51421,
       51475,
+      51474,
       51476,
+      51477,
       51479,
       51482
     ],

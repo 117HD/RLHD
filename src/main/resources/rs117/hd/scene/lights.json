@@ -34385,6 +34385,16 @@
   },
   {
     "description": "ANTECHAMBER_CEILING_LIGHT",
+    "worldX": 1388,
+    "worldY": 9591,
+    "plane": 0,
+    "radius": 1600,
+    "strength": 15,
+    "color": "#de0000",
+    "offset": [ 0,350,70 ]
+  },
+  {
+    "description": "ANTECHAMBER_CEILING_LIGHT",
     "worldX": 1440,
     "worldY": 9632,
     "plane": 1,
