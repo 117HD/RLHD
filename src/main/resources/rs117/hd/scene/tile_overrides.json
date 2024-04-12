@@ -4211,6 +4211,7 @@
     "name": "CAM_TORUM_INSIDE_PATH",
     "area": "CAM_TORUM",
     "overlayIds": [ 90, 278, 132 ],
+    "underlayIds": [ 123 ],
     "blended": false,
     "groundMaterial": "NONE"
   },
