@@ -15871,7 +15871,6 @@
     "objectIds": [
       51329,
       51330,
-      51331,
       51332,
       51333,
       51334,
@@ -15882,6 +15881,15 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.5
+  },
+  {
+    "description": "Perilous Moons Giant Eagle Statue, separate because for no gloss",
+    "baseMaterial": "MARBLE_2",
+    "objectIds": [
+      51331
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7
   },
   {
     "description": "Perilous Moons Braziers and Chains",
