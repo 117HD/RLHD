@@ -16086,7 +16086,8 @@
     "description": "Cam Torum Stairs",
     "baseMaterial": "ROCK_3",
     "objectIds": [
-      51606
+      51606,
+      51607
     ],
     "uvType": "BOX"
   },
