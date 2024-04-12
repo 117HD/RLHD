@@ -19946,6 +19946,26 @@
     "visibleFromOtherPlanes": true
   },
   {
+    "description": "STANDING_TORCH_VARLAMORE",
+    "height": 230,
+    "offset": [ 10, 0, 55 ],
+    "alignment": "CENTER",
+    "radius": 450,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      51759
+    ],
+    "visibleFromOtherPlanes": true
+  },
+  {
     "description": "STANDING_TORCH_SHORT_LARGE",
     "height": 250,
     "alignment": "CENTER",
@@ -34382,7 +34402,16 @@
     "objectIds": [
       51009
     ]
-  },
+  },  {
+  "description": "Eclipse Moon Entrance",
+  "worldX": 1510,
+  "worldY": 9673,
+  "plane": 1,
+  "radius": 750,
+  "strength": 15,
+  "color": "#ff8000",
+  "offset": [ 70, 250, 0 ]
+},
   {
     "description": "Blue Moon Entrance",
     "worldX": 1405,

@@ -15871,7 +15871,9 @@
     "objectIds": [
       51329,
       51330,
+      51331,
       51332,
+      51333,
       51334,
       51336,
       51337,
@@ -15920,6 +15922,24 @@
       51585,
       51586
     ]
+  },
+  {
+    "description": "Streambound Cavern Bridges",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      51349,
+      51354,
+      51356,
+      51351,
+      51352,
+      51348,
+      51357,
+      51355,
+      51353,
+      51350
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.9
   },
   {
     "description": "Perilous Moons Monolith and Gates",
