@@ -10821,6 +10821,17 @@
     "uvOrientation": 512
   },
   {
+    "description": "Temple Trekking - Swamp  - Water - Bubbles",
+    "baseMaterial": "GRAY_50",
+    "objectIds": [
+      13858,
+      13859,
+      13860
+    ],
+    "uvType": "MODEL_XZ",
+    "castShadows": false
+  },
+  {
     "description": "Temple Trekking & Kebos Swamp Trees",
     "baseMaterial": "BARK",
     "objectIds": [
@@ -14658,7 +14669,7 @@
     "uvScale": 0.9
   },
   {
-    "description": "Fossil Island - Outhouse Walls and Lumbriodge Swamp Shack",
+    "description": "Fossil Island - Outhouse Walls and Lumbridge Swamp Shack",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [ 10372, 10373, 11763, 15054 ],
     "uvType": "BOX",
