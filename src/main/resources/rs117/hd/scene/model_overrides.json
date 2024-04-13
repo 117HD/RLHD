@@ -11034,7 +11034,14 @@
     "description": "Generic - Plant - Leafy Shrub",
     "baseMaterial": "PLANT_GRUNGE_1",
     "objectIds": [
-      1392
+      1392,
+      5331,
+      5332,
+      5333,
+      5334,
+      9604,
+      9605,
+      9606
     ]
   },
   {
