@@ -1474,9 +1474,6 @@
       9502,
       9503,
       9504,
-      13861,
-      13862,
-      13863,
       16382,
       16383,
       16384,
@@ -1582,6 +1579,9 @@
       9505,
       9506,
       9507,
+      13861,
+      13862,
+      13863,
       14775,
       14776,
       14777,
@@ -7502,7 +7502,7 @@
     "uvType": "GEOMETRY"
   },
   {
-    "description": "Morytania - Walls - Wooden - Plank - Burugh De Rott",
+    "description": "Morytania - Walls - Wooden - Plank - Burgh De Rott",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       12821,
@@ -7541,7 +7541,7 @@
     "uvScale": 0.76
   },
   {
-    "description": "Morytania - Floor - Wooden - Plank - Burugh De Rott",
+    "description": "Morytania - Floor - Wooden - Plank - Burgh De Rott",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       12898,
@@ -7567,7 +7567,7 @@
     "uvType": "MODEL_XZ"
   },
   {
-    "description": "Morytania - Floor - Wooden - Ladder - Burugh De Rott - Meiyerditch",
+    "description": "Morytania - Floor - Wooden - Ladder - Burgh De Rott - Meiyerditch",
     "baseMaterial": "WOOD_GRAIN",
     "objectIds": [
       12780,
@@ -7578,7 +7578,7 @@
     ]
   },
   {
-    "description": "Morytania - Wall Decoration - Wooden - Plank - Burugh De Rott",
+    "description": "Morytania - Wall Decoration - Wooden - Plank - Burgh De Rott",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       12852,
@@ -7589,7 +7589,7 @@
     "uvScale": 0.66
   },
   {
-    "description": "Morytania - Wall  - Wooden - Plank - Repaired Wall - Burugh De Rott",
+    "description": "Morytania - Wall  - Wooden - Plank - Repaired Wall - Burgh De Rott",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       12786
@@ -7612,7 +7612,7 @@
     "uvScale": 0.56
   },
   {
-    "description": "Morytania - Wall  - Stone - Stone Brick Wall - Burugh De Rott",
+    "description": "Morytania - Wall  - Stone - Stone Brick Wall - Burgh De Rott",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       12737,
@@ -7655,7 +7655,7 @@
     "uvType": "GEOMETRY"
   },
   {
-    "description": "Morytania - Ground  - Wooden - Boat Launch - Burugh De Rott",
+    "description": "Morytania - Ground  - Wooden - Boat Launch - Burgh De Rott",
     "baseMaterial": "DOCK_FENCE_DARK",
     "objectIds": [
       12946,
@@ -7666,7 +7666,7 @@
     "uvType": "GEOMETRY"
   },
   {
-    "description": "Burugh De Rott - Objects - Dirt - Rubble Pile",
+    "description": "Burgh De Rott - Objects - Dirt - Rubble Pile",
     "baseMaterial": "DIRT_2",
     "objectIds": [
       12749
@@ -7719,7 +7719,7 @@
     "uvOrientationY": 555
   },
   {
-    "description": "Morytania - Ground  - Water - Puddles - Burugh De Rott",
+    "description": "Morytania - Ground  - Water - Puddles - Burgh De Rott",
     "baseMaterial": "WATER_PUDDLE",
     "objectIds": [
       12860,
@@ -10813,9 +10813,26 @@
     "description": "Temple Trekking Sign",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      13873,
       23275
     ],
-    "uvType": "BOX"
+    "uvType": "BOX",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Temple Trekking & Kebos Swamp Trees",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      13843,
+      13844,
+      13845,
+      13846,
+      13847,
+      13849,
+      13850
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.85
   },
   {
     "description": "Meiyerditch Mine Walls",
