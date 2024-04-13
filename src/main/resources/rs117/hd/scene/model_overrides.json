@@ -10814,7 +10814,8 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       13873,
-      23275
+      23275,
+      23276
     ],
     "uvType": "BOX",
     "uvOrientation": 512
@@ -11070,13 +11071,14 @@
     "uvScale": 0.8
   },
   {
-    "description": "Morytania - Rotting Log",
-    "baseMaterial": "BARK",
+    "description": "Morytania - Rotting Log & Branch",
+    "baseMaterial": "LIGHT_BARK",
     "objectIds": [
-      3508
+      3508,
+      3510
     ],
     "uvType": "BOX",
-    "uvScale": 0.8
+    "uvScale": 0.75
   },
   {
     "description": "Morytania - Giant Tree",
