@@ -3375,6 +3375,13 @@
     "uvType": "BOX"
   },
   {
+    "description": "Canifis Rooftop Agility Course Tall Tree",
+    "objectIds": [ 14843 ],
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvOrientation": 512
+  },
+  {
     "description": "ROUNDED_CAVE_WALLS",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [

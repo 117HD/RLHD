@@ -19882,10 +19882,10 @@
   },
   {
     "description": "STANDING_TORCH",
-    "height": 250,
+    "height": 200,
     "alignment": "CENTER",
     "radius": 500,
-    "strength": 5,
+    "strength": 9,
     "color": [
       252,
       148,
@@ -20213,7 +20213,24 @@
       10307,
       16901,
       23577,
-      2492,
+      2492
+    ]
+  },
+  {
+    "description": "LANTERN_CANDLE",
+    "offset": [ 10, 260, -12 ],
+    "alignment": "CENTER",
+    "radius": 550,
+    "strength": 15.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
       11468
     ]
   },
