@@ -7007,7 +7007,8 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       15693,
-      42068
+      42068,
+      42070
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -17261,7 +17262,8 @@
     "description": "Tent - High poly mesh",
     "baseMaterial": "FINE_CARPET",
     "objectIds": [
-      23061
+      23061,
+      42044
     ],
     "uvType": "BOX"
   }
