@@ -2544,14 +2544,6 @@
     "uvScale": 1.2
   },
   {
-    "description": "KOUREND_PATH_STEPS",
-    "baseMaterial": "GRUNGE_2",
-    "objectIds": [
-      30599,
-      30600
-    ]
-  },
-  {
     "description": "KOUREND_WALLS",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
@@ -4461,7 +4453,8 @@
       25678,
       25679,
       25680,
-      41765
+      41765,
+      50054
     ],
     "uvType": "WORLD_XZ",
     "flatNormals": true
@@ -6829,7 +6822,10 @@
     "baseMaterial": "STONE",
     "objectIds": [
       5307,
-      5460
+      5460,
+      30599,
+      30600,
+      30601
     ]
   },
   {
