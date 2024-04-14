@@ -3878,9 +3878,20 @@
     "description": "WOODEN_PLANK_ROUGH",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
-      42036
+      42036,
+      42223,
+      42224
     ],
     "uvType": "BOX"
+  },
+  {
+    "description": "Rough Wooden Plant - Rotated",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      42037
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512
   },
   {
     "description": "DOCK_FENCES",
