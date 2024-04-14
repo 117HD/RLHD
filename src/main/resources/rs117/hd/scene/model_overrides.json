@@ -7815,6 +7815,7 @@
       11603,
       12407,
       14872,
+      15039,
       15679,
       16246,
       16875,
@@ -7882,6 +7883,7 @@
     "description": "Objects - Table - Single - Wooden – Plank - Generic",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      15044,
       17662
     ],
     "uvType": "BOX",
@@ -9885,7 +9887,8 @@
     "objectIds": [
       9616,
       10485,
-      10486
+      10486,
+      15040
     ],
     "uvType": "BOX",
     "uvOrientationY": 512
@@ -11132,7 +11135,8 @@
     "description": "Generic - Plank - Tables - Picnic Bench - Rotated",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      39687
+      39687,
+      15041
     ],
     "flatNormals": true,
     "uvType": "BOX",
