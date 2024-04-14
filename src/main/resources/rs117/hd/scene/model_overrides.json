@@ -17238,5 +17238,13 @@
     "flatNormals": true,
     "uvOrientationY": 600,
     "uvOrientationZ": 512
+  },
+  {
+    "description": "Tent - High poly mesh",
+    "baseMaterial": "FINE_CARPET",
+    "objectIds": [
+      23061
+    ],
+    "uvType": "BOX"
   }
 ]
