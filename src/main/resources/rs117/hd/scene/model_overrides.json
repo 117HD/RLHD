@@ -11602,12 +11602,15 @@
     "uvOrientation": 512
   },
   {
-    "description": "Ferox Enclave - Wooden Plank Stairs ",
-    "baseMaterial": "WOOD_GRAIN_2",
+    "description": "Rough Wooden Plank Stairs ",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      39643
+      39643,
+      42040
     ],
-    "uvType": "BOX"
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 1.1
   },
   {
     "description": "Ground Decoration - Flat Rocks - Small",
