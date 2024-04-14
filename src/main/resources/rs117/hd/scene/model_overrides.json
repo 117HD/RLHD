@@ -8566,6 +8566,16 @@
     "uvType": "BOX"
   },
   {
+    "description": "Objects - Wooden - Chair - High poly mesh",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      27513
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.6
+  },
+  {
     "description": "Objects - Wooden - Tables - Round",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
