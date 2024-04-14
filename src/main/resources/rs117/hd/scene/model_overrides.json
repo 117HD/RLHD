@@ -4920,13 +4920,16 @@
     "flatNormals": true
   },
   {
-    "description": "Camelot stone wall",
-    "baseMaterial": "STONE",
+    "description": "Stone block wall - Light",
+    "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       26134,
       26135,
       26136
-    ]
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 256
   },
   {
     "description": "West Ardougne Carpet",
