@@ -6180,6 +6180,7 @@
       14384,
       14385,
       14386,
+      14387,
       14389,
       14450,
       14451,
@@ -14719,15 +14720,31 @@
   {
     "description": "Ground Objects - Wooden - Planks",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 42416, 42417 ],
+    "objectIds": [ 42416, 42417, 42418, 42419 ],
     "uvType": "BOX",
     "uvOrientation": 512,
     "uvScale": 1.1
   },
   {
+    "description": "Ground Objects - Wooden - Planks - Rotated",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 42420 ],
+    "uvType": "BOX",
+    "uvOrientation": 320,
+    "uvScale": 1.1
+  },
+  {
+    "description": "Ground Objects - Wooden - Planks - Rotated",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 42421 ],
+    "uvType": "BOX",
+    "uvOrientation": 700,
+    "uvScale": 1.1
+  },
+  {
     "description": "Ground Objects - Wooden - Planks - Diag",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 42423 ],
+    "objectIds": [  42422, 42423 ],
     "uvType": "BOX",
     "uvOrientation": 256,
     "uvScale": 1.1
