@@ -11160,7 +11160,9 @@
     "description": "Objects - Wooden - Battlements and Scaffold",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      1612
+      1612,
+      42076,
+      42078
     ],
     "uvType": "BOX",
     "uvScale": 0.85,
