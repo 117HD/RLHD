@@ -17216,5 +17216,27 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.6
+  },
+  {
+    "description": "Objects - Wooden - Crate - High poly mesh",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      27532
+    ],
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvOrientationY": 475,
+    "uvOrientationZ": 512
+  },
+  {
+    "description": "Objects - Wooden - Stacked Crates - High poly mesh",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      27533
+    ],
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvOrientationY": 600,
+    "uvOrientationZ": 512
   }
 ]
