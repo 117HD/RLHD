@@ -55,6 +55,8 @@ public class HDUtils {
 	public static final float HALF_PI = PI / 2;
 	public static final float QUARTER_PI = PI / 2;
 
+	public static final float MAX_FLOAT_WITH_128TH_PRECISION = 1 << 16;
+
 	public static final int MAX_SNOW_LIGHTNESS = 70;
 
 	// directional vectors approximately opposite of the directional light used by the client
