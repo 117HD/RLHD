@@ -6826,7 +6826,10 @@
       30599,
       30600,
       30601
-    ]
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 602,
+    "uvScale": 0.85
   },
   {
     "description": "Stone - Stairs - Stone Brick",
