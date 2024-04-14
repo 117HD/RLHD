@@ -6982,7 +6982,8 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       9535,
-      41739
+      41739,
+      42069
     ],
     "uvType": "BOX",
     "flatNormals": true,
