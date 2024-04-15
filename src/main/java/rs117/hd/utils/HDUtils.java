@@ -148,6 +148,10 @@ public class HDUtils {
 		return Math.min(Math.max(value, min), max);
 	}
 
+	public static double log2(double x) {
+		return Math.log(x) / Math.log(2);
+	}
+
 	public static int vertexHash(int[] vPos) {
 		// simple custom hashing function for vertex position data
 		StringBuilder s = new StringBuilder();
