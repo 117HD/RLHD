@@ -6873,6 +6873,7 @@
     "description": "Objects - Wooden - Crate",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      2620,
       5106,
       5107,
       5110,
@@ -17203,5 +17204,14 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.6
+  },
+  {
+    "description": "Lumber Yard  Crate NPC",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "npcIds": [
+      3499
+    ],
+    "uvType": "BOX",
+    "flatNormals": true
   }
 ]
