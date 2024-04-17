@@ -5795,7 +5795,7 @@
   },
   {
     "description": "Varrock - Saw Mill Walls",
-    "baseMaterial": "WOOD_GRAIN_2",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       533,
       23900,
@@ -5803,8 +5803,9 @@
       23902
     ],
     "uvType": "BOX",
+    "uvOrientation": 512,
     "flatNormals": true,
-    "uvScale": 0.6
+    "uvScale": 1.1
   },
   {
     "description": "Varrock - Saw Mill floors",
