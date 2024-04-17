@@ -17214,5 +17214,27 @@
     ],
     "uvType": "BOX",
     "flatNormals": true
+  },
+  {
+    "description": "pile of logs - Banded",
+    "baseMaterial": "BARK",
+    "objectIds": [ 23614 ],
+    "uvType": "BOX",
+    "uvOrientationX": 512,
+    "uvScale": 0.8
+  },
+  {
+    "description": "Barrel with metal bands",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 2619 ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Wooden Cart - Empty",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 3633 ],
+    "uvType": "BOX",
+    "uvScale": 0.8
   }
 ]
