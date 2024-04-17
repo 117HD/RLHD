@@ -17236,5 +17236,13 @@
     "objectIds": [ 3633 ],
     "uvType": "BOX",
     "uvScale": 0.8
+  },
+  {
+    "description": "Lumbar yard - Pile of Wood",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 3209 ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 128
   }
 ]
