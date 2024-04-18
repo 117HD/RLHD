@@ -3648,6 +3648,64 @@
     "flatNormals": true
   },
   {
+    "description": "Desert Quarry Fence",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      11109,
+      11110,
+      11111
+    ],
+    "uvScale": 0.15
+  },
+  {
+    "description": "Desert Quarry Table",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      8700
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Desert Quarry Crates & Tent posts",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      7515,
+      14033
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Desert Quarry Grinder",
+    "baseMaterial": "METALLIC_2_GLOSS",
+    "objectIds": [
+      26199
+    ]
+  },
+  {
+    "description": "Desert Quarry Wheelbarrow & Ladder",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      11081,
+      11082
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Desert Quarry Scaffold",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      11080
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.15,
+    "uvOrientation": 512
+  },
+  {
     "description": "Desert pyramid walls",
     "baseMaterial": "WALL_STONE",
     "objectIds": [
@@ -6456,6 +6514,7 @@
       11093,
       11094,
       11095,
+      11097,
       11098,
       17226,
       17228,
@@ -12870,6 +12929,7 @@
     "objectIds": [
       1122,
       1123,
+      11113,
       11911
     ],
     "uvType": "BOX",
