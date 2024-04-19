@@ -622,7 +622,15 @@ public enum Material {
 		.setDisplacementMap(HD_SIMPLE_GRAIN_WOOD_D)
 		.setDisplacementScale(.008f)
 	),
-
+	HD_STONE_PATTERN_N,
+	HD_STONE_PATTERN_D,
+	HD_STONE_PATTERN(p -> p
+		.replaceIf(plugin -> plugin.configModelTextures, STONE_PATTERN)
+		.setNormalMap(HD_STONE_PATTERN_N)
+		.setDisplacementMap(HD_STONE_PATTERN_D)
+		.setDisplacementScale(0.08f)
+		.setSpecular(0.25f, 30)
+	),
 	WORN_TILES,
 	STONE_N,
 	STONE,
