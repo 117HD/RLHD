@@ -159,7 +159,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public static final int UNIFORM_BLOCK_WATER_TYPES = 2;
 	public static final int UNIFORM_BLOCK_LIGHTS = 3;
 
-	public static final float NEAR_PLANE = 1;
+	public static final float NEAR_PLANE = 50;
 	public static final int MAX_FACE_COUNT = 6144;
 	public static final int MAX_DISTANCE = EXTENDED_SCENE_SIZE;
 	public static final int GROUND_MIN_Y = 350; // how far below the ground models extend
@@ -2102,7 +2102,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			// Calculate projection matrix
 			float[] projectionMatrix = Mat4.scale(client.getScale(), client.getScale(), 1);
 			Mat4.mul(projectionMatrix, Mat4.projection(viewportWidth, viewportHeight, NEAR_PLANE));
-			Mat4.mul(projectionMatrix, Mat4.rotateX(cameraOrientation[1] - (float) Math.PI));
+			Mat4.mul(projectionMatrix, Mat4.rotateX(cameraOrientation[1]));
 			Mat4.mul(projectionMatrix, Mat4.rotateY(cameraOrientation[0]));
 			Mat4.mul(projectionMatrix, Mat4.translate(
 				-cameraPosition[0],
