@@ -175,6 +175,24 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	private static final int[] eightIntWrite = new int[8];
 
+	private static final int[] RENDERBUFFER_FORMATS_SRGB = {
+		GL_SRGB8,
+		GL_SRGB8_ALPHA8 // should be guaranteed
+	};
+	private static final int[] RENDERBUFFER_FORMATS_SRGB_WITH_ALPHA = {
+		GL_SRGB8_ALPHA8 // should be guaranteed
+	};
+	private static final int[] RENDERBUFFER_FORMATS_LINEAR = {
+		GL_RGB8,
+		GL_RGBA8,
+		GL_RGB, // should be guaranteed
+		GL_RGBA // should be guaranteed
+	};
+	private static final int[] RENDERBUFFER_FORMATS_LINEAR_WITH_ALPHA = {
+		GL_RGBA8,
+		GL_RGBA // should be guaranteed
+	};
+
 	@Inject
 	private Client client;
 
@@ -339,6 +357,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private int lastStretchedCanvasWidth;
 	private int lastStretchedCanvasHeight;
 	private AntiAliasingMode lastAntiAliasingMode;
+	private int numSamples;
 
 	private int viewportOffsetX;
 	private int viewportOffsetY;
@@ -663,7 +682,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				destroyInterfaceTexture();
 				destroyPrograms();
 				destroyVaos();
-				destroyAAFbo();
+				destroySceneFbo();
 				destroyShadowMapFbo();
 				destroyTileHeightMap();
 				destroyModelSortingBins();
@@ -709,7 +728,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			}
 			catch (PluginInstantiationException ex)
 			{
-				log.error("Error while stopping 117HD", ex);
+				log.error("Error while stopping 117HD:", ex);
 			}
 		});
 
@@ -753,7 +772,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (config.macosIntelWorkaround() && !isAppleM1)
 		{
 			// Workaround wrapper for drivers that do not support dynamic indexing,
-			// particularly Intel drivers on MacOS
+			// particularly Intel drivers on macOS
 			include
 				.append(type)
 				.append(" ")
@@ -1243,13 +1262,32 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		updateBuffer(hUniformBufferLights, GL_UNIFORM_BUFFER, uniformBufferLights, GL_STREAM_DRAW, CL_MEM_READ_ONLY);
 	}
 
-	private void initAAFbo(int width, int height, int aaSamples)
-	{
-		final GraphicsConfiguration graphicsConfiguration = clientUI.getGraphicsConfiguration();
-		final AffineTransform transform = graphicsConfiguration.getDefaultTransform();
+	private void initSceneFbo(int width, int height, AntiAliasingMode antiAliasingMode) {
+		// Bind default FBO to check whether anti-aliasing is forced
+		int defaultFramebuffer = awtContext.getFramebuffer(false);
+		glBindFramebuffer(GL_FRAMEBUFFER, defaultFramebuffer);
+		final int forcedAASamples = glGetInteger(GL_SAMPLES);
+		final int maxSamples = glGetInteger(GL_MAX_SAMPLES);
+		numSamples = forcedAASamples != 0 ? forcedAASamples :
+			Math.min(antiAliasingMode.getSamples(), maxSamples);
 
-		width = getScaledValue(transform.getScaleX(), width);
-		height = getScaledValue(transform.getScaleY(), height);
+		// Since there's seemingly no reliable way to check if the default framebuffer will do sRGB conversions with GL_FRAMEBUFFER_SRGB
+		// enabled, we always replace the default framebuffer with an sRGB one. We could technically support rendering to the default
+		// framebuffer when sRGB conversions aren't needed, but the goal is to transition to linear blending in the future anyway.
+		boolean sRGB = false; // This is currently unused
+
+		// Some implementations (*cough* Apple) complain when blitting from an FBO without an alpha channel to a (default) FBO with alpha.
+		// To work around this, we select a format which includes an alpha channel, even though we don't need it.
+		int defaultColorAttachment = defaultFramebuffer == 0 ? GL_BACK_LEFT : GL_COLOR_ATTACHMENT0;
+		int alphaBits = glGetFramebufferAttachmentParameteri(GL_FRAMEBUFFER, defaultColorAttachment, GL_FRAMEBUFFER_ATTACHMENT_ALPHA_SIZE);
+		checkGLErrors();
+		boolean alpha = alphaBits > 0;
+
+		int[] desiredFormats = sRGB ?
+			alpha ? RENDERBUFFER_FORMATS_SRGB_WITH_ALPHA : RENDERBUFFER_FORMATS_SRGB :
+			alpha ? RENDERBUFFER_FORMATS_LINEAR_WITH_ALPHA : RENDERBUFFER_FORMATS_LINEAR;
+
+		int[] resolution = applyDpiScaling(width, height);
 
 		// Create and bind the FBO
 		fboSceneHandle = glGenFramebuffers();
@@ -1258,15 +1296,29 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		// Create color render buffer
 		rboSceneHandle = glGenRenderbuffers();
 		glBindRenderbuffer(GL_RENDERBUFFER, rboSceneHandle);
-		glRenderbufferStorageMultisample(GL_RENDERBUFFER, aaSamples, GL_RGBA, width, height);
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, rboSceneHandle);
 
-		// Reset
-		glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
-		glBindRenderbuffer(GL_RENDERBUFFER, 0);
+		// Flush out all pending errors, so we can check whether the next step succeeds
+		clearGLErrors();
+
+		for (int format : desiredFormats) {
+			glRenderbufferStorageMultisample(GL_RENDERBUFFER, numSamples, format, resolution[0], resolution[1]);
+
+			if (glGetError() == GL_NO_ERROR) {
+				// Found a usable format. Bind the RBO to the scene FBO
+				glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, rboSceneHandle);
+				checkGLErrors();
+
+				// Reset
+				glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
+				glBindRenderbuffer(GL_RENDERBUFFER, 0);
+				return;
+			}
+		}
+
+		throw new RuntimeException("No supported " + (sRGB ? "sRGB" : "linear") + " formats");
 	}
 
-	private void destroyAAFbo()
+	private void destroySceneFbo()
 	{
 		if (fboSceneHandle != 0)
 		{
@@ -1804,8 +1856,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		lastFrameTimeMillis = System.currentTimeMillis();
 		lastFrameClientTime = elapsedClientTime;
 
-		final int canvasHeight = client.getCanvasHeight();
 		final int canvasWidth = client.getCanvasWidth();
+		final int canvasHeight = client.getCanvasHeight();
 
 		try {
 			prepareInterfaceTexture(canvasWidth, canvasHeight);
@@ -1856,6 +1908,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				renderHeightOff      = (int) Math.floor(scaleFactorY * (renderHeightOff)) - padding;
 				renderWidthOff       = (int) Math.floor(scaleFactorX * (renderWidthOff )) - padding;
 			}
+
+			int[] dpiViewport = applyDpiScaling(
+				renderWidthOff,
+				renderCanvasHeight - renderViewportHeight - renderHeightOff,
+				renderViewportWidth,
+				renderViewportHeight
+			);
 
 			// Before reading the SSBOs written to from postDrawScene() we must insert a barrier
 			if (computeMode == ComputeMode.OPENCL) {
@@ -1927,67 +1986,33 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				frameTimer.end(Timer.RENDER_SHADOWS);
 			}
 
-			glDpiAwareViewport(
-				renderWidthOff,
-				renderCanvasHeight - renderViewportHeight - renderHeightOff,
-				renderViewportWidth,
-				renderViewportHeight
-			);
-
 			glUseProgram(glSceneProgram);
 
-			// Setup anti-aliasing
 			final AntiAliasingMode antiAliasingMode = config.antiAliasingMode();
-			final boolean aaEnabled = antiAliasingMode != AntiAliasingMode.DISABLED;
-			if (aaEnabled) {
-				glEnable(GL_MULTISAMPLE);
+			final Dimension stretchedDimensions = client.getStretchedDimensions();
+			final int stretchedCanvasWidth = client.isStretchedEnabled() ? stretchedDimensions.width : canvasWidth;
+			final int stretchedCanvasHeight = client.isStretchedEnabled() ? stretchedDimensions.height : canvasHeight;
 
-				final Dimension stretchedDimensions = client.getStretchedDimensions();
+			// Check if scene FBO needs to be recreated
+			if (lastAntiAliasingMode != antiAliasingMode ||
+				lastStretchedCanvasWidth != stretchedCanvasWidth ||
+				lastStretchedCanvasHeight != stretchedCanvasHeight
+			) {
+				lastAntiAliasingMode = antiAliasingMode;
+				lastStretchedCanvasWidth = stretchedCanvasWidth;
+				lastStretchedCanvasHeight = stretchedCanvasHeight;
 
-				final int stretchedCanvasWidth = client.isStretchedEnabled() ? stretchedDimensions.width : canvasWidth;
-				final int stretchedCanvasHeight = client.isStretchedEnabled() ? stretchedDimensions.height : canvasHeight;
-
-				// Re-create fbo
-				if (
-					lastStretchedCanvasWidth != stretchedCanvasWidth ||
-					lastStretchedCanvasHeight != stretchedCanvasHeight ||
-					lastAntiAliasingMode != antiAliasingMode
-				) {
-					destroyAAFbo();
-
-					// Bind default FBO to check whether anti-aliasing is forced
-					glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
-					final int forcedAASamples = glGetInteger(GL_SAMPLES);
-					final int maxSamples = glGetInteger(GL_MAX_SAMPLES);
-					final int samples = forcedAASamples != 0 ? forcedAASamples :
-						Math.min(antiAliasingMode.getSamples(), maxSamples);
-
-					log.debug("AA samples: {}, max samples: {}, forced samples: {}", samples, maxSamples, forcedAASamples);
-
-					initAAFbo(stretchedCanvasWidth, stretchedCanvasHeight, samples);
-
-					lastStretchedCanvasWidth = stretchedCanvasWidth;
-					lastStretchedCanvasHeight = stretchedCanvasHeight;
+				destroySceneFbo();
+				try {
+					initSceneFbo(stretchedCanvasWidth, stretchedCanvasHeight, antiAliasingMode);
+				} catch (Exception ex) {
+					log.error("Error while initializing scene FBO:", ex);
+					stopPlugin();
+					return;
 				}
-
-				glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fboSceneHandle);
-			} else {
-				glDisable(GL_MULTISAMPLE);
-				destroyAAFbo();
 			}
 
-			lastAntiAliasingMode = antiAliasingMode;
-
-			frameTimer.begin(Timer.CLEAR_SCENE);
-
-			// Clear scene
 			float[] fogColor = ColorUtils.linearToSrgb(environmentManager.currentFogColor);
-			glClearColor(fogColor[0], fogColor[1], fogColor[2], 1f);
-			glClear(GL_COLOR_BUFFER_BIT);
-
-			frameTimer.end(Timer.CLEAR_SCENE);
-			frameTimer.begin(Timer.RENDER_SCENE);
-
 			float fogDepth = 0;
 			switch (config.fogDepthMode()) {
 				case USER_DEFINED:
@@ -2056,7 +2081,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			glUniform3fv(uniCameraPos, cameraPosition);
 
 			// Extract the 3rd column from the light view matrix (the float array is column-major)
-			// This produces the light's forward direction vector in world space
+			// This produces the view matrix's forward direction vector in world space,
+			// which in our case is the negative of the light's direction
 			glUniform3f(uniLightDir, lightViewMatrix[2], lightViewMatrix[6], lightViewMatrix[10]);
 
 			// use a curve to calculate max bias value based on the density of the shadow map
@@ -2093,6 +2119,18 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			glUniformBlockBinding(glSceneProgram, uniBlockWaterTypes, UNIFORM_BLOCK_WATER_TYPES);
 			glUniformBlockBinding(glSceneProgram, uniBlockPointLights, UNIFORM_BLOCK_LIGHTS);
 
+			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fboSceneHandle);
+			glToggle(GL_MULTISAMPLE, numSamples > 1);
+			glViewport(dpiViewport[0], dpiViewport[1], dpiViewport[2], dpiViewport[3]);
+
+			// Clear scene
+			frameTimer.begin(Timer.CLEAR_SCENE);
+			glClearColor(fogColor[0], fogColor[1], fogColor[2], 1f);
+			glClear(GL_COLOR_BUFFER_BIT);
+			frameTimer.end(Timer.CLEAR_SCENE);
+
+			frameTimer.begin(Timer.RENDER_SCENE);
+
 			// We just allow the GL to do face culling. Note this requires the priority renderer
 			// to have logic to disregard culled faces in the priority depth testing.
 			glEnable(GL_CULL_FACE);
@@ -2111,29 +2149,22 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 			glDisable(GL_BLEND);
 			glDisable(GL_CULL_FACE);
+			glDisable(GL_MULTISAMPLE);
 
 			glUseProgram(0);
 
-			if (aaEnabled) {
-				int width = lastStretchedCanvasWidth;
-				int height = lastStretchedCanvasHeight;
+			// Blit from the scene FBO to the default FBO
+			int[] dimensions = applyDpiScaling(stretchedCanvasWidth, stretchedCanvasHeight);
+			glBindFramebuffer(GL_READ_FRAMEBUFFER, fboSceneHandle);
+			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, awtContext.getFramebuffer(false));
+			glBlitFramebuffer(
+				0, 0, dimensions[0], dimensions[1],
+				0, 0, dimensions[0], dimensions[1],
+				GL_COLOR_BUFFER_BIT, GL_NEAREST
+			);
 
-				final GraphicsConfiguration graphicsConfiguration = clientUI.getGraphicsConfiguration();
-				final AffineTransform transform = graphicsConfiguration.getDefaultTransform();
-				width = getScaledValue(transform.getScaleX(), width);
-				height = getScaledValue(transform.getScaleY(), height);
-
-				glBindFramebuffer(GL_READ_FRAMEBUFFER, fboSceneHandle);
-				glBindFramebuffer(GL_DRAW_FRAMEBUFFER, awtContext.getFramebuffer(false));
-				glBlitFramebuffer(
-					0, 0, width, height,
-					0, 0, width, height,
-					GL_COLOR_BUFFER_BIT, GL_NEAREST
-				);
-
-				// Reset
-				glBindFramebuffer(GL_READ_FRAMEBUFFER, awtContext.getFramebuffer(false));
-			}
+			// Reset
+			glBindFramebuffer(GL_READ_FRAMEBUFFER, awtContext.getFramebuffer(false));
 		} else {
 			glClearColor(0, 0, 0, 1f);
 			glClear(GL_COLOR_BUFFER_BIT);
@@ -2650,9 +2681,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		client.setUnlockedFps(unlockFps);
 
 		// Without unlocked fps, the client manages sync on its 20ms timer
-		HdPluginConfig.SyncMode syncMode = unlockFps
-				? this.config.syncMode()
-				: HdPluginConfig.SyncMode.OFF;
+		HdPluginConfig.SyncMode syncMode = unlockFps ? config.syncMode() : HdPluginConfig.SyncMode.OFF;
 
 		int swapInterval;
 		switch (syncMode)
@@ -2982,22 +3011,25 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			triangles + " > " + MAX_FACE_COUNT + ")");
 	}
 
-	private int getScaledValue(final double scale, final int value)
-	{
+	private int getScaledValue(final double scale, final int value) {
 		return (int) (value * scale + .5);
 	}
 
-	private void glDpiAwareViewport(final int x, final int y, final int width, final int height)
-	{
+	// Assumes alternating x/y
+	private int[] applyDpiScaling(int... coordinates) {
 		final GraphicsConfiguration graphicsConfiguration = clientUI.getGraphicsConfiguration();
-		if (graphicsConfiguration == null) return;
+		if (graphicsConfiguration == null)
+			return coordinates;
+
 		final AffineTransform t = graphicsConfiguration.getDefaultTransform();
-		glViewport(
-			getScaledValue(t.getScaleX(), x),
-			getScaledValue(t.getScaleY(), y),
-			getScaledValue(t.getScaleX(), width),
-			getScaledValue(t.getScaleY(), height)
-		);
+		for (int i = 0; i < coordinates.length; i++)
+			coordinates[i] = getScaledValue(i % 2 == 0 ? t.getScaleX() : t.getScaleY(), coordinates[i]);
+		return coordinates;
+	}
+
+	private void glDpiAwareViewport(int... xywh) {
+		applyDpiScaling(xywh);
+		glViewport(xywh[0], xywh[1], xywh[2], xywh[3]);
 	}
 
 	public int getDrawDistance() {
@@ -3139,6 +3171,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Subscribe
 	public void onGameTick(GameTick gameTick) {
+		if (!isActive)
+			return;
+
 		if (gameTicksUntilSceneReload > 0) {
 			if (gameTicksUntilSceneReload == 1)
 				reuploadScene();
@@ -3164,11 +3199,26 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		glFinish();
 	}
 
+	private void glToggle(int target, boolean enable) {
+		if (enable) {
+			glEnable(target);
+		} else {
+			glDisable(target);
+		}
+	}
+
+	@SuppressWarnings("StatementWithEmptyBody")
+	public void clearGLErrors() {
+		// @formatter:off
+		while (glGetError() != GL_NO_ERROR);
+		// @formatter:on
+	}
+
 	public void checkGLErrors() {
 		if (!log.isDebugEnabled())
 			return;
 
-		for (; ; ) {
+		while (true) {
 			int err = glGetError();
 			if (err == GL_NO_ERROR)
 				return;
