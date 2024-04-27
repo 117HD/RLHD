@@ -37,12 +37,17 @@ struct ModelInfo {
     int z;        // scene position z
 };
 
+struct vert {
+    vec3 pos;
+    int ahsl;
+};
+
 layout(std430, binding = 0) readonly buffer ModelInfoBuffer {
     ModelInfo ol[];
 };
 
 layout(std430, binding = 1) readonly buffer StagingBufferVertices {
-    ivec4 vb[];
+    vert vb[];
 };
 
 layout(std430, binding = 2) readonly buffer StagingBufferUvs {
@@ -54,7 +59,7 @@ layout(std430, binding = 3) readonly buffer StagingBufferNormals {
 };
 
 layout(std430, binding = 4) writeonly buffer RenderBufferVertices {
-    ivec4 vout[];
+    vert vout[];
 };
 
 layout(std430, binding = 5) writeonly buffer RenderBufferUvs {

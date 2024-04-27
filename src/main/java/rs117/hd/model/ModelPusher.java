@@ -650,17 +650,17 @@ public class ModelPusher {
 		color3 |= packedAlphaPriorityFlags;
 
 		int[] data = sceneContext.modelFaceVertices;
-		data[0] = xVertices[triA];
-		data[1] = yVertices[triA];
-		data[2] = zVertices[triA];
+		data[0] = Float.floatToIntBits(xVertices[triA]);
+		data[1] = Float.floatToIntBits(yVertices[triA]);
+		data[2] = Float.floatToIntBits(zVertices[triA]);
 		data[3] = color1;
-		data[4] = xVertices[triB];
-		data[5] = yVertices[triB];
-		data[6] = zVertices[triB];
+		data[4] = Float.floatToIntBits(xVertices[triB]);
+		data[5] = Float.floatToIntBits(yVertices[triB]);
+		data[6] = Float.floatToIntBits(zVertices[triB]);
 		data[7] = color2;
-		data[8] = xVertices[triC];
-		data[9] = yVertices[triC];
-		data[10] = zVertices[triC];
+		data[8] = Float.floatToIntBits(xVertices[triC]);
+		data[9] = Float.floatToIntBits(yVertices[triC]);
+		data[10] = Float.floatToIntBits(zVertices[triC]);
 		data[11] = color3;
 		return data;
 	}
