@@ -26,9 +26,10 @@
 
 #version 330
 
-layout (location = 0) in ivec4 vPosition;
-layout (location = 1) in vec4 vUv;
-layout (location = 2) in vec4 vNormal;
+layout (location = 0) in vec3 vPosition;
+layout (location = 1) in int vHsl;
+layout (location = 2) in vec4 vUv;
+layout (location = 3) in vec4 vNormal;
 
 out vec3 gPosition;
 out vec3 gUv;
@@ -51,8 +52,8 @@ uniform vec3 cameraPos;
 #include utils/fog.glsl
 
 void main() {
-    int ahsl = vPosition.w;
-    vec3 position = vec3(vPosition.xyz);
+    int ahsl = vHsl;
+    vec3 position = vPosition;
     vec3 rgb = packedHslToSrgb(ahsl);
     float alpha = 1 - float(ahsl >> 24 & 0xff) / 255.;
 
@@ -73,7 +74,7 @@ void main() {
     gUv = vec3(vUv);
     gNormal = vNormal.xyz;
     gColor = color;
-    gFogAmount = calculateFogAmount(gPosition);
+    gFogAmount = calculateFogAmount(position);
     gMaterialData = materialData;
     gTerrainData = terrainData;
 }

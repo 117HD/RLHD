@@ -26,14 +26,13 @@
 #define PI 3.1415926535897932384626433832795f
 #define UNIT PI / 1024.0f
 
-float3 toScreen(__constant struct uniform *uni, int4 vertex);
-int4 rotate_ivec(__constant struct uniform *uni, int4 vector, int orientation);
-float4 rotate_vec(float4 vector, int orientation);
-int vertex_distance(__constant struct uniform *uni, int4 vertex);
-int face_distance(__constant struct uniform *uni, int4 vA, int4 vB, int4 vC);
-bool face_visible(__constant struct uniform *uni, int4 vA, int4 vB, int4 vC, int4 position);
+float3 to_screen(__constant struct uniform *uni, float3 vertex);
+float4 rotate_vertex(float4 vector, int orientation);
+float vertex_distance(__constant struct uniform *uni, float4 vertex);
+int face_distance(__constant struct uniform *uni, float4 vA, float4 vB, float4 vC);
+bool face_visible(__constant struct uniform *uni, float3 vA, float3 vB, float3 vC, int4 position);
 
-float3 toScreen(__constant struct uniform *uni, int4 vertex) {
+float3 to_screen(__constant struct uniform *uni, float3 vertex) {
   float yawSin = sin(uni->cameraYaw);
   float yawCos = cos(uni->cameraYaw);
 
@@ -56,16 +55,7 @@ float3 toScreen(__constant struct uniform *uni, int4 vertex) {
 /*
  * Rotate a vertex by a given orientation in JAU
  */
-int4 rotate_ivec(__constant struct uniform *uni, int4 vector, int orientation) {
-  int4 sinCos = uni->sinCosTable[orientation];
-  int s = sinCos.x;
-  int c = sinCos.y;
-  int x = (vector.z * s + vector.x * c) >> 16;
-  int z = (vector.z * c - vector.x * s) >> 16;
-  return (int4)(x, vector.y, z, vector.w);
-}
-
-float4 rotate_vec(float4 vector, int orientation) {
+float4 rotate_vertex(float4 vector, int orientation) {
   float rad = orientation * UNIT;
   float s = sin(rad);
   float c = cos(rad);
@@ -77,36 +67,38 @@ float4 rotate_vec(float4 vector, int orientation) {
 /*
  * Calculate the distance to a vertex given the camera angle
  */
-int vertex_distance(__constant struct uniform *uni, int4 vertex) {
+float vertex_distance(__constant struct uniform *uni, float4 vertex) {
   float j = vertex.z * cos(uni->cameraYaw) - vertex.x * sin(uni->cameraYaw);
   float l = vertex.y * sin(uni->cameraPitch) + j * cos(uni->cameraPitch);
-  return (int) l;
+  return l;
 }
 
 /*
  * Calculate the distance to a face
  */
-int face_distance(__constant struct uniform *uni, int4 vA, int4 vB, int4 vC) {
-  int dvA = vertex_distance(uni, vA);
-  int dvB = vertex_distance(uni, vB);
-  int dvC = vertex_distance(uni, vC);
-  int faceDistance = (dvA + dvB + dvC) / 3;
-  return faceDistance;
+int face_distance(__constant struct uniform *uni, float4 vA, float4 vB, float4 vC) {
+  float dvA = vertex_distance(uni, vA);
+  float dvB = vertex_distance(uni, vB);
+  float dvC = vertex_distance(uni, vC);
+  float faceDistance = (dvA + dvB + dvC) / 3;
+  return (int) faceDistance;
 }
 
 /*
  * Test if a face is visible (not backward facing)
  */
-bool face_visible(__constant struct uniform *uni, int4 vA, int4 vB, int4 vC, int4 position) {
+bool face_visible(__constant struct uniform *uni, float3 vA, float3 vB, float3 vC, int4 position) {
   // Move model to scene location, and account for camera offset
-  int4 cameraPos = (int4)(uni->cameraX, uni->cameraY, uni->cameraZ, 0);
-  vA += position - cameraPos;
-  vB += position - cameraPos;
-  vC += position - cameraPos;
+  float3 cameraPos = (float3)(uni->cameraX, uni->cameraY, uni->cameraZ);
+  float3 modelPos = convert_float3(position.xyz);
 
-  float3 sA = toScreen(uni, vA);
-  float3 sB = toScreen(uni, vB);
-  float3 sC = toScreen(uni, vC);
+  float3 lA = vA + modelPos - cameraPos;
+  float3 lB = vB + modelPos - cameraPos;
+  float3 lC = vC + modelPos - cameraPos;
+
+  float3 sA = to_screen(uni, lA);
+  float3 sB = to_screen(uni, lB);
+  float3 sC = to_screen(uni, lC);
 
   return (sA.x - sB.x) * (sC.y - sB.y) - (sC.x - sB.x) * (sA.y - sB.y) > 0;
 }
