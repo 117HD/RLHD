@@ -309,17 +309,6 @@ public class HDUtils {
 		return new WorldPoint(baseX, baseY, plane);
 	}
 
-	public static int[] cameraSpaceToLocalPoint(Client client, int relativeX, int relativeZ) {
-		int localX = client.getCameraX2() + relativeX;
-		int localY = client.getCameraZ2() + relativeZ;
-		return new int[] { localX, localY };
-	}
-
-	public static int[] cameraSpaceToWorldPoint(Client client, int relativeX, int relativeZ) {
-		int[] local = cameraSpaceToLocalPoint(client, relativeX, relativeZ);
-		return localToWorld(client.getScene(), local[0], local[1], client.getPlane());
-	}
-
 	/**
 	 * The returned plane may be different, so it's not safe to use for indexing into overlay IDs for instance
 	 */

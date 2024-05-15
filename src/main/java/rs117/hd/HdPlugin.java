@@ -1693,11 +1693,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	@Override
-	public void drawScenePaint(
-		int orientation, int pitchSin, int pitchCos, int yawSin, int yawCos, int x, int y, int z,
-		SceneTilePaint paint, int tileZ, int tileX, int tileY,
-		int zoom, int centerX, int centerY
-	) {
+	public void drawScenePaint(Scene scene, SceneTilePaint paint, int plane, int tileX, int tileY) {
 		if (redrawPreviousFrame || paint.getBufferLen() <= 0)
 			return;
 
@@ -1735,11 +1731,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	@Override
-	public void drawSceneModel(
-		int orientation, int pitchSin, int pitchCos, int yawSin, int yawCos, int x, int y, int z,
-		SceneTileModel model, int tileZ, int tileX, int tileY,
-		int zoom, int centerX, int centerY
-	) {
+	public void drawSceneTileModel(Scene scene, SceneTileModel model, int tileX, int tileY) {
 		if (redrawPreviousFrame || model.getBufferLen() <= 0)
 			return;
 
@@ -2777,8 +2769,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (sceneContext == null)
 			return true;
 
-		model.calculateBoundsCylinder();
-
 		final int XYZMag = model.getXYZMag();
 		final int bottomY = model.getBottomY();
 		final int zoom = (configShadowsEnabled && configExpandShadowDraw) ? client.get3dZoom() / 2 : client.get3dZoom();
@@ -2817,30 +2807,17 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	/**
 	 * Draw a Renderable in the scene
 	 *
+	 * @param projection
+	 * @param scene
 	 * @param renderable  Can be an Actor (Player or NPC), DynamicObject, GraphicsObject, TileItem, Projectile or a raw Model.
 	 * @param orientation Rotation around the up-axis, from 0 to 2048 exclusive, 2048 indicating a complete rotation.
-	 * @param pitchSin    The sine of the camera's rotation about the horizontal axis, in the range from -65536 to 65536.
-	 * @param pitchCos    The cosine of the camera's rotation about the horizontal axis, in the range from -65536 to 65536.
-	 * @param yawSin      The sine of the camera's rotation about the vertical axis, in the range from -65536 to 65536.
-	 * @param yawCos      The cosine of the camera's rotation about the vertical axis, in the range from -65536 to 65536.
-	 * @param x           The Renderable's X offset relative to {@link Client#getCameraX2()}.
-	 * @param y           The Renderable's Y offset relative to {@link Client#getCameraY2()}.
-	 * @param z           The Renderable's Z offset relative to {@link Client#getCameraZ2()}.
+	 * @param x           The Renderable's X offset relative to {@link Client#getCameraX()}.
+	 * @param y           The Renderable's Y offset relative to {@link Client#getCameraZ()}.
+	 * @param z           The Renderable's Z offset relative to {@link Client#getCameraY()}.
 	 * @param hash        A unique hash of the renderable consisting of some useful information. See {@link rs117.hd.utils.ModelHash} for more details.
 	 */
 	@Override
-	public void draw(
-		Renderable renderable,
-		int orientation,
-		int pitchSin,
-		int pitchCos,
-		int yawSin,
-		int yawCos,
-		int x,
-		int y,
-		int z,
-		long hash
-	) {
+	public void draw(Projection projection, Scene scene, Renderable renderable, int orientation, int x, int y, int z, long hash) {
 		if (sceneContext == null)
 			return;
 
@@ -2876,10 +2853,25 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (model != renderable)
 			renderable.setModelHeight(model.getModelHeight());
 
-		if (isOutsideViewport(model, pitchSin, pitchCos, yawSin, yawCos, x, y, z))
-			return;
+		model.calculateBoundsCylinder();
 
-		client.checkClickbox(model, orientation, pitchSin, pitchCos, yawSin, yawCos, x, y, z, hash);
+		if (projection instanceof IntProjection) {
+			var p = (IntProjection) projection;
+			if (isOutsideViewport(
+				model,
+				p.getPitchSin(),
+				p.getPitchCos(),
+				p.getYawSin(),
+				p.getYawCos(),
+				x - p.getCameraX(),
+				y - p.getCameraY(),
+				z - p.getCameraZ()
+			)) {
+				return;
+			}
+		}
+
+		client.checkClickbox(projection, model, orientation, x, y, z, hash);
 
 		if (redrawPreviousFrame)
 			return;
@@ -2889,9 +2881,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		eightIntWrite[3] = renderBufferOffset;
 		eightIntWrite[4] = model.getRadius() << 12 | orientation;
-		eightIntWrite[5] = x + client.getCameraX2();
-		eightIntWrite[6] = y + client.getCameraY2();
-		eightIntWrite[7] = z + client.getCameraZ2();
+		eightIntWrite[5] = x;
+		eightIntWrite[6] = y;
+		eightIntWrite[7] = z;
 
 		int plane = ModelHash.getPlane(hash);
 
@@ -2937,8 +2929,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					frameTimer.begin(Timer.MODEL_PUSHING);
 
 				int uuid = ModelHash.generateUuid(client, hash, renderable);
-				int[] localPos = HDUtils.cameraSpaceToLocalPoint(client, x, z);
-				int[] worldPos = HDUtils.localToWorld(sceneContext.scene, localPos[0], localPos[1], plane);
+				int[] worldPos = HDUtils.localToWorld(sceneContext.scene, x, z, plane);
 				ModelOverride modelOverride = modelOverrideManager.getOverride(uuid, worldPos);
 				if (modelOverride.hide)
 					return;
@@ -2948,8 +2939,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 				int preOrientation = 0;
 				if (ModelHash.getType(hash) == ModelHash.TYPE_OBJECT) {
-					int tileExX = localPos[0] / LOCAL_TILE_SIZE + SCENE_OFFSET;
-					int tileExY = localPos[1] / LOCAL_TILE_SIZE + SCENE_OFFSET;
+					int tileExX = x / LOCAL_TILE_SIZE + SCENE_OFFSET;
+					int tileExY = z / LOCAL_TILE_SIZE + SCENE_OFFSET;
 					if (0 <= tileExX && tileExX < EXTENDED_SCENE_SIZE && 0 <= tileExY && tileExY < EXTENDED_SCENE_SIZE) {
 						Tile tile = sceneContext.scene.getExtendedTiles()[plane][tileExX][tileExY];
 						int config;
