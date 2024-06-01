@@ -4898,6 +4898,7 @@
   {
     "name": "PVP_ARENA_PITFLOOR_SAND_REMOVAL",
     "area": "PVP_ARENA",
+    "area": "PVP_ARENA",
     "underlayIds": [
       66,
       68

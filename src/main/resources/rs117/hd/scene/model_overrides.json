@@ -12843,6 +12843,13 @@
     "uvType": "BOX"
   },
   {
+    "description": "Mage Training Arena - Candelabra",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      10720
+    ]
+  },
+  {
     "description": "Mage Training Arena - Stairs with metal rails",
     "baseMaterial": "MARBLE_1",
     "objectIds": [
