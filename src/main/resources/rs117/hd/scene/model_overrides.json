@@ -12760,11 +12760,10 @@
   },
   {
     "description": "Mage Training Arena - Walls - Doorway of Light",
+    "baseMaterial": "MARBLE_2",
     "objectIds": [
       10721
-    ],
-    "uvType": "BOX",
-    "flatNormals": true
+    ]
   },
   {
     "description": "Mage Training Arena - Walls - Dark",

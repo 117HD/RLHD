@@ -4874,6 +4874,28 @@
     "blended": false
   },
   {
+    "name": "Mage Training Arena Grass Fix",
+    "area": "MAGE_TRAINING_ARENA_GRASS_FIX",
+    "underlayIds": [
+      49,
+      50,
+      62,
+      61,
+      64
+    ],
+    "groundMaterial": "GRASS_1"
+  },
+  {
+    "name": "AL_KHARID_DIRT_FIX",
+    "area": "AL_KHARID_DIRT_FIX",
+    "underlayIds": [
+      50,
+      62,
+      126
+    ],
+    "groundMaterial": "DIRT"
+  },
+  {
     "name": "PVP_ARENA_PITFLOOR_SAND_REMOVAL",
     "area": "PVP_ARENA",
     "underlayIds": [
