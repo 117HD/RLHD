@@ -4874,8 +4874,8 @@
     "blended": false
   },
   {
-    "name": "Mage Training Arena Grass Fix",
-    "area": "MAGE_TRAINING_ARENA_GRASS_FIX",
+    "name": "Al Kharid Grass Fixes",
+    "area": "AL_KHARID_GRASS_FIXES",
     "underlayIds": [
       49,
       50,
@@ -4894,6 +4894,7 @@
     "underlayIds": [
       50,
       62,
+      64,
       126
     ],
     "groundMaterial": "DIRT",
