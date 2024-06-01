@@ -12823,6 +12823,17 @@
     "uvOrientation": 128
   },
   {
+    "description": "Mage Training Arena - Enchanters Playground Shape Piles",
+    "baseMaterial": "METALLIC_2_HIGHGLOSS",
+    "objectIds": [
+      23694,
+      23695,
+      23696,
+      23697
+    ],
+    "uvType": "BOX"
+  },
+  {
     "description": "Mage Training Arena - Entrance Statues",
     "baseMaterial": "MARBLE_3",
     "objectIds": [
