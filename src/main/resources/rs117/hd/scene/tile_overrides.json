@@ -4883,7 +4883,10 @@
       61,
       64
     ],
-    "groundMaterial": "GRASS_1"
+    "groundMaterial": "GRASS_1",
+    "replacements": {
+      "WINTER_GRASS": "season == WINTER"
+    }
   },
   {
     "name": "AL_KHARID_DIRT_FIX",
@@ -4893,7 +4896,10 @@
       62,
       126
     ],
-    "groundMaterial": "DIRT"
+    "groundMaterial": "DIRT",
+    "replacements": {
+      "WINTER_DIRT": "season == WINTER"
+    }
   },
   {
     "name": "PVP_ARENA_PITFLOOR_SAND_REMOVAL",
