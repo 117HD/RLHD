@@ -92,14 +92,14 @@ public class Mat4
 			};
 	}
 
-	public static float[] projection(float w, float h, float n)
-	{
+	public static float[] projection(float w, float h, float n) {
+		// Flip Y so positive is up, and reverse depth from 1 at the near plane to 0 infinitely far away
 		return new float[]
 			{
 				2 / w, 0, 0, 0,
-				0, 2 / h, 0, 0,
-				0, 0, -1, -1,
-				0, 0, -2 * n, 0
+				0, -2 / h, 0, 0,
+				0, 0, 0, 1,
+				0, 0, 2 * n, 0
 			};
 	}
 
