@@ -17249,5 +17249,17 @@
     ],
     "uvType": "BOX",
     "uvOrientation": 786
+  },
+  {
+    "description": "Camdozaal - Plant - Fern",
+    "baseMaterial": "PLANT_GRUNGE_2",
+    "objectIds": [
+      41581,
+      41582,
+      41583
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 128,
+    "uvScale": 1.2
   }
 ]
