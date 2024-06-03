@@ -17217,7 +17217,7 @@
     "description": "Camdozaal Cave Walls",
     "baseMaterial": "ROCK_3",
     "objectIds": [
-      41549, 41550, 41552, 41553, 41554, 41555, 41556, 41557, 41558, 41559, 41560
+      41549, 41550, 41552, 41553, 41554, 41555, 41556, 41557, 41558, 41559, 41560, 41591, 48195
     ],
     "uvType": "BOX",
     "uvOrientation": 256
@@ -17237,7 +17237,7 @@
     ],
     "uvType": "BOX",
     "uvOrientation": 256,
-    "uvScale": 0.5
+    "uvScale": 0.6
   },
   {
     "description": "Camdozaal Barronite Walls",
