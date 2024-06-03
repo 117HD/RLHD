@@ -17223,6 +17223,23 @@
     "uvOrientation": 256
   },
   {
+    "description": "Camdozaal Carved Walls and Pillars",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      41469,
+      41470,
+      41471,
+      41472,
+      41473,
+      41474,
+      41475,
+      41569
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 0.5
+  },
+  {
     "description": "Camdozaal Barronite Walls",
     "baseMaterial": "ROCK_3",
     "objectIds": [
