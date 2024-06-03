@@ -266,7 +266,6 @@ void undoVanillaShading(inout ivec4 vertex, vec3 unrotatedNormal) {
 }
 
 void sort_and_insert(uint localId, ModelInfo minfo, int thisPriority, int thisDistance, ivec4 thisrvA, ivec4 thisrvB, ivec4 thisrvC) {
-    /* compute face distance */
     int offset = minfo.offset;
     int size = minfo.size;
 

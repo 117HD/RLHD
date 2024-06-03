@@ -225,14 +225,16 @@ int map_face_priority(__local struct shared_data *shared, uint localId, struct M
   return 0;
 }
 
-void insert_dfs(__local struct shared_data *shared, uint localId, struct ModelInfo minfo, int adjPrio, int distance, int prioIdx) {
+void insert_face(__local struct shared_data *shared, uint localId, struct ModelInfo minfo, int adjPrio, int distance, int prioIdx) {
   uint size = minfo.size;
 
   if (localId < size) {
-    // calculate base offset into dfs based on number of faces with a lower priority
+    // calculate base offset into renderPris based on number of faces with a lower priority
     int baseOff = count_prio_offset(shared, adjPrio);
-    // store into face array offset array by unique index
-    shared->dfs[baseOff + prioIdx] = ((int) localId << 16) | distance;
+    // the furthest faces draw first, and have the highest value
+    // if two faces have the same distance, the one with the
+    // lower id draws first
+    shared->renderPris[baseOff + prioIdx] = ((uint)(distance << 16)) | (~localId & 0xffffu);
   }
 }
 
@@ -318,7 +320,6 @@ void sort_and_insert(
   int4 thisrvC,
   read_only image3d_t tileHeightMap
 ) {
-  /* compute face distance */
   uint offset = minfo.offset;
   uint size = minfo.size;
 
@@ -329,24 +330,17 @@ void sort_and_insert(
     int4 pos = (int4)(minfo.x, minfo.y, minfo.z, 0);
     int orientation = flags & 0x7ff;
 
+    // we only have to order faces against others of the same priority
     const int priorityOffset = count_prio_offset(shared, thisPriority);
     const int numOfPriority = shared->totalMappedNum[thisPriority];
-    int start = priorityOffset; // index of first face with this priority
-    int end = priorityOffset + numOfPriority; // index of last face with this priority
+    const int start = priorityOffset;                // index of first face with this priority
+    const int end = priorityOffset + numOfPriority;  // index of last face with this priority
+    const uint renderPriority = ((uint)(thisDistance << 16)) | (~localId & 0xffffu);
     int myOffset = priorityOffset;
-    
-    // we only have to order faces against others of the same priority
+
     // calculate position this face will be in
     for (int i = start; i < end; ++i) {
-      int d1 = shared->dfs[i];
-      uint theirId = d1 >> 16;
-      int theirDistance = d1 & 0xffff;
-
-      // the closest faces draw last, so have the highest index
-      // if two faces have the same distance, the one with the
-      // higher id draws last
-      if ((theirDistance > thisDistance)
-        || (theirDistance == thisDistance && theirId < localId)) {
+      if (renderPriority < shared->renderPris[i]) {
         ++myOffset;
       }
     }
