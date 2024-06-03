@@ -17326,5 +17326,35 @@
     "uvType": "BOX",
     "uvOrientation": 512,
     "uvScale": 0.6
+  },
+  {
+    "description": "Camdozaal Stone Steps",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      41567
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 1138,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Camdozaal Stone Tiles",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      41568
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 300,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Camdozaal Stone Edging",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      41566
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 700,
+    "uvScale": 0.6
   }
 ]
