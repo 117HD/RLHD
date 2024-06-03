@@ -737,7 +737,7 @@ public enum Material {
 	OOZE(GRAY_65, p -> p
 		.setSpecular(1.5f, 600)
 	),
-	BONE(GRUNGE_2, p -> p.setSpecular(0.25f, 20)),
+	BONE(GRUNGE_2, p -> p.setSpecular(0.25f, 20).setBrightness(1.3f)),
 	ABYSSAL_D,
 	ABYSSAL_N,
 	ABYSSAL(p -> p
