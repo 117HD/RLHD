@@ -6597,13 +6597,14 @@
   },
   {
     "description": "Ground Decoration - Rock - Tiny - Uncolored",
-    "baseMaterial": "ROCK_1",
+    "baseMaterial": "ROCK_1_LIGHT",
     "objectIds": [
       6398,
       12050,
       14486,
       20762,
       25834,
+      41517,
       43627
     ],
     "uvType": "WORLD_XZ",
@@ -6625,8 +6626,7 @@
       17870,
       20294,
       20296,
-      41514,
-      41517
+      41514
     ],
     "inheritTileColorType": "OVERLAY",
     "uvType": "WORLD_XZ",
