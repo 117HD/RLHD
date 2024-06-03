@@ -17235,7 +17235,9 @@
     "description": "Camdozaal Rock Piles - Large",
     "baseMaterial": "ROCK_3",
     "objectIds": [
-      27908
+      27908,
+      27910,
+      27912
     ],
     "uvType": "BOX",
     "uvOrientation": 198,
@@ -17245,7 +17247,10 @@
     "description": "Camdozaal Rock Piles - Medium",
     "baseMaterial": "ROCK_3",
     "objectIds": [
-      27900
+      27898,
+      27900,
+      27902,
+      27904
     ],
     "uvType": "BOX",
     "uvOrientation": 786
