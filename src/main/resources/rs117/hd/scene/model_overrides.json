@@ -17295,5 +17295,36 @@
     ],
     "uvType": "MODEL_XZ",
     "uvScale": 0.7
+  },
+  {
+    "description": "Camdozaal Metal Scaffold",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      41580
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Camdozaal metal floor crate",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      41579
+    ],
+    "uvType": "BOX",
+    "uvOrientationY": 512,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Camdozaal Metal Fence",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      41577,
+      41578
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.6
   }
 ]
