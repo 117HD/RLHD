@@ -141,7 +141,6 @@ void get_face(
   int4 thisC = vb[offset + ssboOffset * 3 + 2];
 
   if (localId < size) {
-    int radius = (flags >> 12) & 0xfff;
     int orientation = flags & 0x7ff;
 
     // rotate for model orientation
@@ -151,12 +150,7 @@ void get_face(
 
     // calculate distance to face
     int thisPriority = (thisA.w >> 16) & 0xF;// all vertices on the face have the same priority
-    int thisDistance;
-    if (radius == 0) {
-      thisDistance = 0;
-    } else {
-      thisDistance = face_distance(uni, thisrvA, thisrvB, thisrvC) + radius;
-    }
+    int thisDistance = face_distance(uni, thisrvA, thisrvB, thisrvC);
 
     *o1 = thisrvA;
     *o2 = thisrvB;
@@ -335,7 +329,7 @@ void sort_and_insert(
     const int numOfPriority = shared->totalMappedNum[thisPriority];
     const int start = priorityOffset;                // index of first face with this priority
     const int end = priorityOffset + numOfPriority;  // index of last face with this priority
-    const uint renderPriority = ((uint)(thisDistance << 16)) | (~localId & 0xffffu);
+    const int renderPriority = thisDistance << 16 | (int)(~localId & 0xffffu);
     int myOffset = priorityOffset;
 
     // calculate position this face will be in

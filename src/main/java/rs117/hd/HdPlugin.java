@@ -2880,7 +2880,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			frameTimer.begin(Timer.DRAW_RENDERABLE);
 
 		eightIntWrite[3] = renderBufferOffset;
-		eightIntWrite[4] = model.getRadius() << 12 | orientation;
+		eightIntWrite[4] = orientation;
 		eightIntWrite[5] = x;
 		eightIntWrite[6] = y;
 		eightIntWrite[7] = z;
