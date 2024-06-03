@@ -6613,7 +6613,7 @@
   },
   {
     "description": "Ground Decoration - Rock - Small - Colored",
-    "baseMaterial": "ROCK_1",
+    "baseMaterial": "ROCK_1_LIGHT",
     "objectIds": [
       14500,
       14502,
@@ -6624,7 +6624,9 @@
       17869,
       17870,
       20294,
-      20296
+      20296,
+      41514,
+      41517
     ],
     "inheritTileColorType": "OVERLAY",
     "uvType": "WORLD_XZ",
@@ -6652,6 +6654,8 @@
       17933,
       20761,
       20763,
+      22341,
+      22342,
       23080,
       23081,
       23082,
@@ -6659,6 +6663,9 @@
       23084,
       25833,
       25835,
+      41513,
+      41515,
+      41516,
       43626,
       43628,
       43724,
@@ -17223,5 +17230,24 @@
     ],
     "uvType": "BOX",
     "uvOrientation": 256
+  },
+  {
+    "description": "Camdozaal Rock Piles - Large",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      27908
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 198,
+    "uvScale": 1.25
+  },
+  {
+    "description": "Camdozaal Rock Piles - Medium",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      27900
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 786
   }
 ]
