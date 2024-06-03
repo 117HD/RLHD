@@ -16587,6 +16587,81 @@
     "uvOrientation": 100
   },
   {
+    "description": "Waterbirth Dungeon Walls",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      10231,
+      10238,
+      10239,
+      10181,
+      10236,
+      10182,
+      10232,
+      10235,
+      8939,
+      8941,
+      10233,
+      10234,
+      10184,
+      8933,
+      10187,
+      8932
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Waterbirth Dungeon Stalagmite",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      8947,
+      8948
+    ]
+  },
+  {
+    "description": "Waterbirth Dungeon Peak Crack",
+    "baseMaterial": "DIRT_1",
+    "objectIds": [
+      30169
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Waterbirth Dungeon Stone Chips",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      8944,
+      8945,
+      8946
+    ]
+  },
+  {
+    "description": "Waterbirth Rocks with Seaweed",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      8950,
+      8951,
+      8952
+    ]
+  },
+  {
+    "description": "Waterbirth Water Puddles",
+    "baseMaterial": "TRANSPARENT",
+    "objectIds": [
+      10188,
+      10189,
+      10190,
+      10191,
+      10192
+    ],
+    "uvType": "BOX"
+  },  {
+  "description": "Waterbirth Water Leak",
+  "baseMaterial": "SLIME_GRUNGE",
+  "objectIds": [
+    10186
+  ]
+},
+  {
     "description": "Stone-  Ruined Steps",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
