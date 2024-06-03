@@ -17261,5 +17261,17 @@
     "uvType": "BOX",
     "uvOrientation": 128,
     "uvScale": 1.2
+  },
+  {
+    "description": "Camdozaal Fish Bones",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      18020,
+      18021,
+      18022,
+      18023
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.7
   }
 ]
