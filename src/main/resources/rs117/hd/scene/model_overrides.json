@@ -17243,13 +17243,40 @@
     "uvScale": 0.7
   },
   {
-    "description": "Camdozaal House Faces",
+    "description": "Camdozaal Vault Walls",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      41520,
+      41521,
+      41522,
+      41523,
+      41524,
+      41525,
+      41526,
+      41527,
+      41528
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7
+  },
+  {
+    "description": "Camdozaal House Walls",
     "baseMaterial": "GRUNGE_2",
     "objectIds": [
       41461,
       41462,
       41463,
       41465
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7
+  },
+  {
+    "description": "Camdozaal Wall Statues",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      41467,
+      41468
     ],
     "uvType": "BOX",
     "uvScale": 0.7
@@ -17262,6 +17289,17 @@
     ],
     "uvType": "BOX",
     "uvOrientation": 256
+  },
+  {
+    "description": "Camdozaal Sacred Forge",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      41411,
+      41412
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.7
   },
   {
     "description": "Camdozaal Rock Piles - Large",
