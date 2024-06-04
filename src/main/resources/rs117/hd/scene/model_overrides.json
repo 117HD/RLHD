@@ -17431,5 +17431,27 @@
     "uvType": "BOX",
     "uvOrientation": 700,
     "uvScale": 0.6
+  },
+  {
+    "description": "Camdozaal Preparation Table",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      41545
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 768,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Camdozaal Altar",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      41546
+    ],
+    "uvType": "BOX",
+    "uvOrientationY": 256,
+    "uvOrientationZ": 768,
+    "uvOrientationX": 768,
+    "uvScale": 0.6
   }
 ]
