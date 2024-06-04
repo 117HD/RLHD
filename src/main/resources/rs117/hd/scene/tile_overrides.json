@@ -3583,6 +3583,24 @@
     ]
   },
   {
+    "name": "CAMDOZAAL_VAULT_FLOOR_OVERLAY",
+    "area": "CAMDOZAAL_VAULT",
+    "overlayIds": [
+      87
+    ],
+    "groundMaterial": "MARBLE_2",
+    "blended": false
+  },
+  {
+    "name": "CAMDOZAAL_VAULT_FLOOR",
+    "area": "CAMDOZAAL_VAULT",
+    "underlayIds": [
+      44, 46, 113
+    ],
+    "groundMaterial": "MARBLE_1",
+    "blended": false
+  },
+  {
     "name": "CAMDOZAAL_WATER",
     "area": "CAMDOZAAL",
     "overlayIds": [
