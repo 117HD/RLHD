@@ -3583,6 +3583,14 @@
     ]
   },
   {
+    "name": "CAMDOZAAL_UNDERWALL_TILES",
+    "area": "CAMDOZAAL",
+    "overlayIds": [
+      42
+    ],
+    "blended": false
+  },
+  {
     "name": "CAMDOZAAL_VAULT_FLOOR_OVERLAY",
     "area": "CAMDOZAAL_VAULT",
     "overlayIds": [
