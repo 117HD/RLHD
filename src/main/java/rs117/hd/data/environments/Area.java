@@ -1763,6 +1763,10 @@ public enum Area
 	BLACKHOLE(1616, 4728, 1623, 4735),
 
 	// Camdozaal (Below Ice Mountain)
+	CAMDOZAAL_VAULT(
+		new AABB(2970, 5816, 2969, 5824),
+		new AABB(2986, 5824, 2952, 5857)
+	),
 	CAMDOZAAL(2897, 5848, 3036, 5760),
 
 	// Tempoross

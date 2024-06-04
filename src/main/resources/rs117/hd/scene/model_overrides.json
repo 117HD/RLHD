@@ -17333,6 +17333,28 @@
     "uvScale": 0.6
   },
   {
+    "description": "Camdozaal Metal Sconce",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      41489,
+      41490
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 300,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Camdozaal Metal Sconce - Lit",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      41487,
+      41488
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 300,
+    "uvScale": 0.6
+  },
+  {
     "description": "Camdozaal Stone Steps",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
