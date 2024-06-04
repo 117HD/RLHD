@@ -17453,5 +17453,16 @@
     "uvOrientationZ": 768,
     "uvOrientationX": 768,
     "uvScale": 0.6
+  },
+  {
+    "description": "Camdozaal and Zanaris Mushrooms",
+    "baseMaterial": "PLANT_GRUNGE_1",
+    "objectIds": [
+      12056,
+      12057,
+      12058,
+      12059
+    ],
+    "uvType": "GEOMETRY"
   }
 ]
