@@ -693,6 +693,16 @@
     "groundFogOpacity": 0.3
   },
   {
+    "area": "WATERBIRTH_ISLAND",
+    "ambientColor": "#6fb0ff",
+    "ambientStrength": 0.5,
+    "sunAngles": [ 72, 235 ],
+    "directionalColor": "#f4e5c9",
+    "directionalStrength": 0.75,
+    "fogColor": "#aebde3",
+    "fogDepth": 45
+  },
+  {
     "area": "PENGUIN_BASE",
     "ambientColor": "#aaafb6",
     "ambientStrength": 0.75,

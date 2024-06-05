@@ -3320,6 +3320,15 @@
     "uvScale": 0.5
   },
   {
+    "description": "SNOW_CAVE_ENTRANCES",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      8930
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
+  },
+  {
     "description": "CAVE_WALLS_BLEND",
     "baseMaterial": "ROCK_2",
     "objectIds": [
@@ -7218,6 +7227,7 @@
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       4600,
+      4602,
       5231,
       5232,
       17876,
@@ -11295,7 +11305,8 @@
       23981,
       24146,
       24147,
-      24148
+      24148,
+      53253
     ],
     "uvType": "BOX",
     "uvScale": 0.22
@@ -11309,7 +11320,9 @@
       11437,
       24143,
       24144,
-      24145
+      24145,
+      53252,
+      53254
     ],
     "uvType": "BOX",
     "uvScale": 0.22
@@ -16587,25 +16600,88 @@
     "uvOrientation": 100
   },
   {
+    "description": "Waterbirth Island Stairs",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      8928,
+      8966
+    ]
+  },
+  {
+    "description": "Waterbirth Metallic Objects - Dungeon Gates, Buttons and Ladders",
+    "baseMaterial": "METALLIC_2_HIGHGLOSS",
+    "objectIds": [
+      4384,
+      8956,
+      8957,
+      8958,
+      8959,
+      8960,
+      8963,
+      8964,
+      8965,
+      10177,
+      10193,
+      10194,
+      10195,
+      10196,
+      10197,
+      10198,
+      10199,
+      10200,
+      10201,
+      10202,
+      10203,
+      10204,
+      10205,
+      10206,
+      10207,
+      10208,
+      10209,
+      10210,
+      10211,
+      10212,
+      10213,
+      10214,
+      10215,
+      10216,
+      10217,
+      10219,
+      10220,
+      10221,
+      10222,
+      10223,
+      10224,
+      10225,
+      10226,
+      10227,
+      10228
+    ]
+  },
+  {
     "description": "Waterbirth Dungeon Walls",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
-      10231,
-      10238,
-      10239,
-      10181,
-      10236,
-      10182,
-      10232,
-      10235,
+      8932,
+      8933,
       8939,
+      8940,
       8941,
+      10180,
+      10181,
+      10182,
+      10183,
+      10184,
+      10187,
+      10231,
+      10232,
       10233,
       10234,
-      10184,
-      8933,
-      10187,
-      8932
+      10235,
+      10236,
+      10238,
+      10239,
+      53258
     ],
     "uvType": "BOX"
   },
