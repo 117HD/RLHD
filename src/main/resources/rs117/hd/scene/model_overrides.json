@@ -12456,6 +12456,18 @@
     "uvScale": 0.65
   },
   {
+    "description": "Nightmare Zone Potion Barrels",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      26277,
+      26278,
+      26279,
+      26280
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512
+  },
+  {
     "description": "Objects - Concrete - Nature Altar Pillars",
     "textureMaterial": "HD_CONCRETE",
     "objectIds": [
