@@ -2759,6 +2759,28 @@
     }
   },
   {
+    "name": "LIGHTHOUSE_OVERLAY",
+    "area": "LIGHTHOUSE",
+    "overlayIds": [
+      83
+    ],
+    "groundMaterial": "PACKED_EARTH"
+  },
+  {
+    "name": "COMPLEX_TILES_LIGHTHOUSE",
+    "area": "LIGHTHOUSE",
+    "underlayIds": [
+      50,
+      96,
+      97,
+      98
+    ],
+    "replacements": {
+      "SEASONAL_DIRT": "h == 8 && s <= 2 && l <= 71",
+      "SEASONAL_GRASS": "h == 8 && s >= 3 && l <= 71"
+    }
+  },
+  {
     "name": "CASTLE_WARS_LOBBY_FLOOR",
     "area": "CASTLE_WARS_LOBBY",
     "overlayIds": [
