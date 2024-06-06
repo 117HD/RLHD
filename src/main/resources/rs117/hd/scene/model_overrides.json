@@ -5103,14 +5103,14 @@
   },
   {
     "description": "CANNON_BALL",
-    "baseMaterial": "METALLIC_1_LIGHT_HIGHGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [
       822
     ]
   },
   {
     "description": "CANNON",
-    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [
       821,
       7137
@@ -11648,14 +11648,16 @@
     "objectIds": [
       1028,
       1029
-    ]
+    ],
+    "uvType": "BOX"
   },
   {
     "description": "Objects - Metallic - Scuttle",
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       24321
-    ]
+    ],
+    "uvType": "BOX"
   },
   {
     "description": "Morytania - Walls - Metallic - Fence",
@@ -11665,9 +11667,10 @@
       3458,
       3459
     ],
+    "retainVanillaUvs": false,
     "uvType": "BOX",
     "uvOrientation": 256,
-    "uvScale": 1.2
+    "uvScale": 0.6
   },
   {
     "description": "Morytania - Walls - Metallic - Frankenstrains Gate",
@@ -11676,7 +11679,7 @@
       5172,
       5173
     ],
-    "uvType": "MODEL_XY",
+    "uvType": "BOX",
     "uvOrientation": 256,
     "uvScale": 0.7
   },
@@ -11685,7 +11688,8 @@
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       1900
-    ]
+    ],
+    "uvType": "BOX"
   },
   {
     "description": "Wooden Wedge Stairs",
@@ -11749,7 +11753,7 @@
   },
   {
     "description": "Blast Furnace",
-    "baseMaterial": "METALLIC_1_GLOSS",
+    "baseMaterial": "METALLIC_1",
     "objectIds": [
       9085,
       9086,
