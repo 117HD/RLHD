@@ -17239,8 +17239,7 @@
       41486,
       41569
     ],
-    "uvType": "BOX",
-    "uvScale": 0.7
+    "uvType": "BOX"
   },
   {
     "description": "Camdozaal Vault Walls",
@@ -17256,8 +17255,7 @@
       41527,
       41528
     ],
-    "uvType": "BOX",
-    "uvScale": 0.7
+    "uvType": "BOX"
   },
   {
     "description": "Camdozaal House Walls",
@@ -17268,8 +17266,7 @@
       41463,
       41465
     ],
-    "uvType": "BOX",
-    "uvScale": 0.7
+    "uvType": "BOX"
   },
   {
     "description": "Camdozaal Wall Statues",
@@ -17278,8 +17275,7 @@
       41467,
       41468
     ],
-    "uvType": "BOX",
-    "uvScale": 0.7
+    "uvType": "BOX"
   },
   {
     "description": "Camdozaal Barronite Walls",
