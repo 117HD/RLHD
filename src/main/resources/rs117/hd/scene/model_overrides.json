@@ -4961,7 +4961,9 @@
       204,
       7432,
       17323
-    ]
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.4
   },
   {
     "description": "Candlestick Holder",
@@ -5006,7 +5008,9 @@
       5554,
       25206,
       25792
-    ]
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
   },
   {
     "description": "STONE_WINDOWS",
@@ -5018,19 +5022,23 @@
   },
   {
     "description": "WALL_TORCHES",
-    "baseMaterial": "METALLIC_1_LIGHT_HIGHGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [
       196,
       197,
       38027
-    ]
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
   },
   {
     "description": "WALL_SHIELD",
     "baseMaterial": "METALLIC_1_LIGHT_HIGHGLOSS",
     "objectIds": [
       840
-    ]
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.4
   },
   {
     "description": "MARBLE_STATUE_OF_KING",
@@ -5070,7 +5078,9 @@
       892,
       893,
       894
-    ]
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.4
   },
   {
     "description": "Metallic Guilded Chest",
@@ -5078,14 +5088,18 @@
     "objectIds": [
       376,
       26273
-    ]
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
   },
   {
     "description": "Metallic Chest",
     "baseMaterial": "METALLIC_1_SEMIGLOSS",
     "objectIds": [
       11735
-    ]
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
   },
   {
     "description": "CANNON_BALL",
@@ -5100,14 +5114,20 @@
     "objectIds": [
       821,
       7137
-    ]
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 512
   },
   {
     "description": "METAL_FLAG_POLE",
     "baseMaterial": "METALLIC_1_GLOSS",
     "objectIds": [
       861
-    ]
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 120
   },
   {
     "description": "BATHTUB",
@@ -5121,7 +5141,9 @@
     "baseMaterial": "METALLIC_1_GLOSS",
     "objectIds": [
       871
-    ]
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
   },
   {
     "description": "Metal Fence Gate",
@@ -5190,9 +5212,11 @@
     "objectIds": [
       20873,
       20874,
+      20875,
       24097
     ],
-    "uvType": "MODEL_XY"
+    "uvType": "BOX",
+    "uvScale": 0.7
   },
   {
     "description": "Marble Fountain",
@@ -5240,6 +5264,7 @@
       6150
     ],
     "uvType": "BOX",
+    "uvScale": 1.1,
     "flatNormals": true
   },
   {
@@ -7080,7 +7105,10 @@
       826,
       827,
       828
-    ]
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 1.2
   },
   {
     "description": "Objects - Metallic - Chair - Broken",
@@ -7091,12 +7119,17 @@
   },
   {
     "description": "Objects - Metallic - Range",
-    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [
+      114,
       7183,
       7184,
-      25730
-    ]
+      25730,
+      40149,
+      40164
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
   },
   {
     "description": "Wall - Decoration - Metallic - Sword and Shield",
@@ -7129,14 +7162,19 @@
       17561,
       17562,
       17647
-    ]
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 655
   },
   {
     "description": "Objects - Metallic - Panning Tray",
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       17560
-    ]
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
   },
   {
     "description": "Objects - Metallic - Iron Billets",
@@ -7144,8 +7182,7 @@
     "objectIds": [
       2140
     ],
-    "uvType": "GEOMETRY",
-    "uvScale": 0.28
+    "uvType": "BOX"
   },
   {
     "description": "Ground - Wooden - Plank Steps",
@@ -7306,8 +7343,8 @@
       18149,
       18150
     ],
-    "uvType": "MODEL_XY",
-    "uvScale": 0.5
+    "uvType": "BOX",
+    "uvScale": 0.4
   },
   {
     "description": "Mortton Shade Catacombs  - Objects - Stone - Grave Stone",
@@ -7431,8 +7468,8 @@
       4114,
       4115
     ],
-    "uvType": "MODEL_XZ",
-    "uvScale": 0.88
+    "uvType": "BOX",
+    "uvScale": 0.6
   },
   {
     "description": "Mortton - Objects - Shade Chests - Medium - Steel",
@@ -7444,8 +7481,8 @@
       4119,
       4120
     ],
-    "uvType": "MODEL_XZ",
-    "uvScale": 0.88
+    "uvType": "BOX",
+    "uvScale": 0.6
   },
   {
     "description": "Mortton - Objects - Shade Chests - Medium - Black",
@@ -7457,8 +7494,8 @@
       4124,
       4125
     ],
-    "uvType": "MODEL_XZ",
-    "uvScale": 0.88
+    "uvType": "BOX",
+    "uvScale": 0.6
   },
   {
     "description": "Mortton - Objects - Shade Chests - Medium - Silver",
@@ -7470,8 +7507,8 @@
       4129,
       4130
     ],
-    "uvType": "MODEL_XZ",
-    "uvScale": 0.88
+    "uvType": "BOX",
+    "uvScale": 0.6
   },
   {
     "description": "Morytania - Walls - Triple Slat Fence",
@@ -8588,12 +8625,13 @@
   },
   {
     "description": "Objects - Metallic - Manhole",
-    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [
       881,
       882
     ],
-    "uvType": "BOX"
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 100
   },
   {
     "description": "Objects - Stone - Large Gravestone - Large",
@@ -17203,5 +17241,68 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.6
+  },
+  {
+    "description": "Seers Coal Mine Fence",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      15593,
+      15594,
+      15601,
+      15602,
+      15603
+    ],
+    "uvType": "BOX",
+    "uvOrientationX": 512,
+    "uvScale": 0.4
+  },
+  {
+    "description": "Seers Coal Mine Fence - Bent",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      18,
+      19,
+      20
+    ],
+    "uvType": "BOX",
+    "uvOrientationX": 512,
+    "uvScale": 0.4
+  },
+  {
+    "description": "Seers Coal Mine Gate",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      15604,
+      15605,
+      15606,
+      15607
+    ],
+    "uvType": "BOX",
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512,
+    "uvScale": 0.4
+  },
+  {
+    "description": "Kourend Decorative Metallic Rails",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      33553,
+      33554,
+      33555
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 655
+  },
+  {
+    "description": "Kourend Decorative Metallic Fence",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      27937,
+      27938
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 655
   }
 ]
