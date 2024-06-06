@@ -3795,11 +3795,147 @@
     ]
   },
   {
-    "description": "Lighthouse underground door",
+    "description": "Lighthouse Walls",
+    "baseMaterial": "WALL_STONE_LIGHT",
+    "objectIds": [
+      4573,
+      4574
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.5
+  },
+  {
+    "description": "Lighthouse Door",
+    "baseMaterial": "WALL_STONE",
+    "objectIds": [
+      4577,
+      4578
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.25
+  },
+  {
+    "description": "Lighthouse Roof",
+    "baseMaterial": "METALLIC_2",
+    "objectIds": [
+      4599
+    ]
+  },
+  {
+    "description": "Lighthouse Spiral Stairs",
+    "baseMaterial": "WOOD_GRAIN_LIGHT",
+    "objectIds": [
+      4568,
+      4569,
+      4570,
+      4596,
+      4597
+    ],
+    "castShadows": false
+  },
+  {
+    "description": "Lighthouse Support Pillars",
+    "baseMaterial": "WOOD_GRAIN_LIGHT",
+    "objectIds": [
+      4596,
+      4597
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "castShadows": false,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Lighthouse Metallic objects, Mechanisms and Ladders",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      4380,
+      4383,
+      4412,
+      4587,
+      4571,
+      4572,
+      4589,
+      4590,
+      4580,
+      4579,
+      4584,
+      4585,
+      4586,
+      4581,
+      4583,
+      4582,
+      21945,
+      4413,
+      30392
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Lighthouse Bed",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [ 4287 ],
+    "uvScale": 0.2,
+    "uvType": "BOX",
+    "uvOrientation": 256
+  },
+  {
+    "description": "Lighthouse Wooden Shelves",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      4371
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "retainVanillaUvs": false
+  },
+  {
+    "description": "Lighthouse Dungeon Doors",
+    "baseMaterial": "ROCK_3",
     "objectIds": [
       4543, 4544, 4545, 4546
     ],
-    "flatNormals": true
+    "uvType": "BOX"
+  },
+  {
+    "description": "Lighthouse Dungeon Walls",
+    "baseMaterial": "STONE_NORMALED_DARK",
+    "objectIds": [
+      4315,
+      4316,
+      4542,
+      4547,
+      4548,
+      4549,
+      4486,
+      4609
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.4
+  },
+  {
+    "description": "Lighthouse Dungeon Wall Pebbles",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      4609
+    ]
+  },
+  {
+    "description": "Lighthouse to Barbarian Outpost - Basalt rocks",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      4560,
+      4561,
+      4562,
+      4563,
+      4564,
+      4565,
+      4567,
+      4566
+    ],
+    "uvType": "BOX"
   },
   {
     "description": "WOODEN_PLANK_DOCKS",
@@ -16792,7 +16928,8 @@
     "description": "Objects - Wooden - Bookcase - Textured - Wide",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      380
+      380,
+      4617
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
