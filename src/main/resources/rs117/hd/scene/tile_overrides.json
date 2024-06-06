@@ -2760,6 +2760,14 @@
   },
   {
     "name": "CASTLE_WARS_LOBBY_FLOOR",
+    "area": "OVERWORLD",
+    "overlayIds": [
+      117
+    ],
+    "groundMaterial": "VARROCK_PATHS"
+  },
+  {
+    "name": "CASTLE_WARS_LOBBY_FLOOR",
     "area": "CASTLE_WARS_LOBBY",
     "overlayIds": [
       14
