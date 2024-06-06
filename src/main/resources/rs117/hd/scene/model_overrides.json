@@ -5002,7 +5002,7 @@
   },
   {
     "description": "Decorative Armor",
-    "baseMaterial": "METALLIC_1_LIGHT_HIGHGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [
       817,
       5554,
@@ -5010,7 +5010,7 @@
       25792
     ],
     "uvType": "BOX",
-    "uvScale": 0.6
+    "uvScale": 0.4
   },
   {
     "description": "STONE_WINDOWS",
