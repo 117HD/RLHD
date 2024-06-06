@@ -17226,7 +17226,7 @@
   },
   {
     "description": "Camdozaal Carved Walls and Pillars",
-    "baseMaterial": "GRUNGE_2",
+    "baseMaterial": "GRUNGE_3",
     "objectIds": [
       41466,
       41469,
@@ -17244,7 +17244,7 @@
   },
   {
     "description": "Camdozaal Vault Walls",
-    "baseMaterial": "GRUNGE_2",
+    "baseMaterial": "GRUNGE_3",
     "objectIds": [
       41520,
       41521,
@@ -17261,7 +17261,7 @@
   },
   {
     "description": "Camdozaal House Walls",
-    "baseMaterial": "GRUNGE_2",
+    "baseMaterial": "GRUNGE_3",
     "objectIds": [
       41461,
       41462,
@@ -17273,7 +17273,7 @@
   },
   {
     "description": "Camdozaal Wall Statues",
-    "baseMaterial": "GRUNGE_2",
+    "baseMaterial": "GRUNGE_3",
     "objectIds": [
       41467,
       41468
@@ -17292,7 +17292,7 @@
   },
   {
     "description": "Camdozaal Sacred Forge",
-    "baseMaterial": "GRUNGE_2",
+    "baseMaterial": "GRUNGE_3",
     "objectIds": [
       41411,
       41412
