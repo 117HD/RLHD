@@ -643,11 +643,11 @@ public enum Material {
 	WALL_STONE_N,
 	WALL_STONE(p -> p.setNormalMap(WALL_STONE_N)),
 	METALLIC_1_N,
-	METALLIC_1(p -> p.setNormalMap(METALLIC_1_N).setSpecular(0.4f, 60)),
+	METALLIC_1(p -> p.setNormalMap(METALLIC_1_N).setSpecular(0.6f, 30)),
 	METALLIC_1_SEMIGLOSS(METALLIC_1, p -> p
-		.setSpecular(0.7f, 80)),
+		.setSpecular(0.8f, 60)),
 	METALLIC_1_GLOSS(METALLIC_1, p -> p
-		.setSpecular(0.9f, 120)),
+		.setSpecular(0.9f, 80)),
 	METALLIC_1_HIGHGLOSS(METALLIC_1, p -> p
 		.setSpecular(1.1f, 120)),
 	METALLIC_1_LIGHT(METALLIC_1, p -> p.setBrightness(1.8f)),
