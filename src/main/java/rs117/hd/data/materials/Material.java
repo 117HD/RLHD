@@ -383,7 +383,8 @@ public enum Material {
 		.setFlowMap(UNDERWATER_FLOW_MAP)
 		.setFlowMapStrength(0.075f)
 		.setFlowMapDuration(new float[] { 12, -12 })),
-
+	GRUNGE_3_N,
+	GRUNGE_3(p -> p.setNormalMap(GRUNGE_3_N).setSpecular(0.25f,30)),
 	ROCK_1_N,
 	ROCK_1(p -> p
 		.setNormalMap(ROCK_1_N)
