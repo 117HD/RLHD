@@ -17322,12 +17322,13 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.6
-  },{
-  "description": "Train Cart",
-  "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
-  "objectIds": [
-    7028
-  ],
-  "uvType": "BOX"
-}
+  },
+  {
+    "description": "Train Cart",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "objectIds": [
+      7028
+    ],
+    "uvType": "BOX"
+  }
 ]
