@@ -5227,7 +5227,7 @@
   },
   {
     "description": "Metallic Furnace",
-    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [
       4304,
       4305,
@@ -17325,10 +17325,20 @@
   },
   {
     "description": "Train Cart",
-    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [
       7028
     ],
     "uvType": "BOX"
+  },
+  {
+    "description": "Wooden textured workbench",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      609
+    ],
+    "uvType": "BOX",
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512
   }
 ]
