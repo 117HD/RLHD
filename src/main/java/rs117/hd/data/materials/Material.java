@@ -650,14 +650,14 @@ public enum Material {
 		.setSpecular(0.7f, 80)),
 	METALLIC_1_HIGHGLOSS(METALLIC_1, p -> p
 		.setSpecular(1.1f, 80)),
-	METALLIC_2(METALLIC_1, p -> p.setBrightness(1.8f)),
-	METALLIC_2_SEMIGLOSS(METALLIC_2, p -> p
+	METALLIC_1_LIGHT(METALLIC_1, p -> p.setBrightness(1.8f)),
+	METALLIC_1_LIGHT_SEMIGLOSS(METALLIC_1_LIGHT, p -> p
 		.setSpecular(0.45f, 80)),
-	METALLIC_2_GLOSS(METALLIC_2, p -> p
+	METALLIC_1_LIGHT_GLOSS(METALLIC_1_LIGHT, p -> p
 		.setSpecular(0.7f, 80)),
-	METALLIC_2_HIGHGLOSS(METALLIC_2, p -> p
+	METALLIC_1_LIGHT_HIGHGLOSS(METALLIC_1_LIGHT, p -> p
 		.setSpecular(1.1f, 80)),
-	METALLIC_2_SUPER_HIGHGLOSS(METALLIC_2, p -> p
+	METALLIC_1_LIGHT_SUPER_HIGHGLOSS(METALLIC_1_LIGHT, p -> p
 		.setSpecular(2.25f, 65)),
 	METALLIC_NONE_GLOSS(NONE, p -> p
 		.setSpecular(0.7f, 80)),
