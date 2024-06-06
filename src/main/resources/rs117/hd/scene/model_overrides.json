@@ -17323,7 +17323,8 @@
       27904
     ],
     "uvType": "BOX",
-    "uvOrientation": 786
+    "uvOrientation": 786,
+    "uvScale": 0.6
   },
   {
     "description": "Camdozaal - Plant - Fern",
