@@ -11751,6 +11751,8 @@
     "description": "Blast Furnace",
     "baseMaterial": "METALLIC_1_GLOSS",
     "objectIds": [
+      9085,
+      9086,
       9087,
       9088,
       9089,
@@ -11759,6 +11761,11 @@
       9095,
       9096,
       9098,
+      9104,
+      9105,
+      9106,
+      9107,
+      9108,
       9114,
       9114,
       9116,
@@ -11771,7 +11778,8 @@
       9123,
       9124,
       9125
-    ]
+    ],
+    "uvType": "BOX"
   },
   {
     "description": "Motherload Furnace",
@@ -17304,5 +17312,22 @@
     "uvType": "BOX",
     "uvScale": 0.8,
     "uvOrientation": 655
-  }
+  },
+  {
+    "description": "Falador Park Fence",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "objectIds": [
+      24013,
+      24014
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },{
+  "description": "Train Cart",
+  "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+  "objectIds": [
+    7028
+  ],
+  "uvType": "BOX"
+}
 ]
