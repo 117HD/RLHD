@@ -28352,7 +28352,7 @@
     "height": 300,
     "offset": [ 100, 0, -100 ],
     "radius": 175,
-    "strength": 40,
+    "strength": 30,
     "color": [
       255,
       0,
@@ -28368,7 +28368,7 @@
   "height": 300,
   "offset": [ -100, 0, -100 ],
   "radius": 175,
-  "strength": 40,
+  "strength": 30,
   "color": [
     255,
     0,
@@ -28384,7 +28384,7 @@
     "height": 350,
     "offset": [ 0, 0, 100 ],
     "radius": 175,
-    "strength": 40,
+    "strength": 30,
     "color": [
       255,
       0,
@@ -28461,7 +28461,7 @@
     "description": "Wyrm Slithering Light",
     "offset": [ 0, 0, 0 ],
     "radius": 170,
-    "strength": 50,
+    "strength": 25,
     "color": [
       0,
       200,
@@ -28478,7 +28478,7 @@
     "description": "Shadow Wyrm Slithering Light",
     "offset": [ 0, 0, 0 ],
     "radius": 270,
-    "strength": 50,
+    "strength": 35,
     "color": [
       0,
       50,
@@ -28495,7 +28495,7 @@
   {
     "description": "Wyrm Magic Attack",
     "offset": [ 0, 0, 0 ],
-    "radius": 250,
+    "radius": 220,
     "strength": 20,
     "color": [
       0,
