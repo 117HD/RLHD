@@ -28348,6 +28348,116 @@
     ]
   },
   {
+    "description": "Drake Back Wound Right",
+    "height": 300,
+    "offset": [ 100, 0, -100 ],
+    "radius": 175,
+    "strength": 40,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 10,
+    "range": 30,
+    "npcIds": [ 8612 ]
+  },
+  {
+  "description": "Drake Back Wound Left",
+  "height": 300,
+  "offset": [ -100, 0, -100 ],
+  "radius": 175,
+  "strength": 40,
+  "color": [
+    255,
+    0,
+    0
+  ],
+  "type": "FLICKER",
+  "duration": 10,
+  "range": 30,
+  "npcIds": [ 8612 ]
+  },
+  {
+    "description": "Drake Back Wound Front",
+    "height": 350,
+    "offset": [ 0, 0, 100 ],
+    "radius": 175,
+    "strength": 40,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 10,
+    "range": 30,
+    "npcIds": [ 8612 ],
+    "animationIds": [ -1, 8276 ],
+    "fadeOutDuration": 300,
+    "fadeInDuration": 750
+  },
+  {
+    "description": "Drake Maw Idle",
+    "height": 50,
+    "offset": [ -20, 5, 252 ],
+    "radius": 32,
+    "strength": 120,
+    "color": "#ff8c00",
+    "type": "FLICKER",
+    "duration": 10,
+    "range": 5,
+    "npcIds": [ 8612 ],
+    "animationIds": [ -1 ],
+    "fadeInDuration": 300
+  },
+  {
+    "description": "Drake Ranged Attack",
+    "offset": [ 0, 0, 0 ],
+    "radius": 135,
+    "strength": 12,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 1,
+    "range": 80,
+    "projectileIds": [ 1636 ],
+    "spawnDelay": 800,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 100
+  },
+  {
+    "description": "Drake Flame Attack",
+    "offset": [ 0, 0, 0 ],
+    "radius": 175,
+    "strength": 12,
+    "color": "#ff8c00",
+    "type": "FLICKER",
+    "duration": 5,
+    "range": 60,
+    "projectileIds": [ 1637 ],
+    "spawnDelay": 255,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 150
+  },
+  {
+    "description": "Drake Flame Explosion",
+    "offset": [ 0, 10, 0 ],
+    "radius": 150,
+    "strength": 45,
+    "color": "#ff8c00",
+    "type": "FLICKER",
+    "duration": 2,
+    "range": 80,
+    "graphicsObjectIds": [ 1638 ],
+    "fadeInDuration": 50,
+    "fadeOutDuration": 50
+  },
+  {
     "description": "KARUULM_INDOOR_LAVA_1",
     "worldX": 1307,
     "worldY": 10193,
