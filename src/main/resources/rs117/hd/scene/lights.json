@@ -28458,6 +28458,24 @@
     "fadeOutDuration": 50
   },
   {
+    "description": "Wyrm Magic Attack",
+    "offset": [ 0, 0, 0 ],
+    "radius": 250,
+    "strength": 20,
+    "color": [
+      0,
+      200,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 1,
+    "range": 80,
+    "projectileIds": [ 1634 ],
+    "spawnDelay": 400,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 100
+  },
+  {
     "description": "KARUULM_INDOOR_LAVA_1",
     "worldX": 1307,
     "worldY": 10193,
