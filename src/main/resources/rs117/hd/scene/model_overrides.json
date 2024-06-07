@@ -10361,6 +10361,7 @@
       16867,
       16868,
       16870,
+      35956,
       39696
     ],
     "uvType": "BOX",
@@ -10392,7 +10393,7 @@
   {
     "description": "Object - Sack with Hey or Grain",
     "baseMaterial": "FINE_CARPET",
-    "objectIds": [ 5574, 10306, 16878 ],
+    "objectIds": [ 5574, 10306, 16878, 35954 ],
     "uvType": "BOX",
     "uvScale": 0.85,
     "retainVanillaUvs": false
