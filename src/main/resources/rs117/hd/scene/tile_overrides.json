@@ -1908,6 +1908,26 @@
     "blended": false
   },
   {
+    "name": "GOBLIN_FORT_DWARF_CANNON_UPPER_FLOORS",
+    "area": "GOBLIN_FORT_DWARF_CANNON_UPPER_FLOORS",
+    "overlayIds": [
+      14
+    ],
+    "groundMaterial": "HD_WOOD_PLANKS_2",
+    "uvScale": 1.15,
+    "blended": false,
+    "shiftLightness": 2
+  },
+  {
+    "name": "GOBLIN_CAVE_FLOOR",
+    "area": "GOBLIN_CAVE",
+    "underlayIds": [
+      63,67
+    ],
+    "groundMaterial": "DIRT",
+    "uvScale": 1.15
+  },
+  {
     "name": "CATHERBY_BEACH_OBELISK_WATER_FIX",
     "area": "CATHERBY_BEACH_OBELISK_WATER_FIX",
     "overlayIds": [
