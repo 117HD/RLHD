@@ -28471,10 +28471,27 @@
     "duration": 10,
     "range": 70,
     "npcIds": [ 8610 ],
-    "spawnDelay": 400,
-    "fadeInDuration": 300,
+    "fadeInDuration": 100,
     "fadeOutDuration": 100
   },
+  {
+    "description": "Shadow Wyrm Slithering Light",
+    "offset": [ 0, 0, 0 ],
+    "radius": 270,
+    "strength": 50,
+    "color": [
+      0,
+      50,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 10,
+    "range": 70,
+    "npcIds": [ 10398 ],
+    "fadeInDuration": 100,
+    "fadeOutDuration": 100
+  },
+
   {
     "description": "Wyrm Magic Attack",
     "offset": [ 0, 0, 0 ],
@@ -28489,6 +28506,24 @@
     "duration": 1,
     "range": 80,
     "projectileIds": [ 1634 ],
+    "spawnDelay": 400,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 100
+  },
+  {
+    "description": "Shadow Wyrm Magic Attack",
+    "offset": [ 0, 0, 0 ],
+    "radius": 220,
+    "strength": 50,
+    "color": [
+      0,
+      50,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 10,
+    "range": 70,
+    "projectileIds": [ 1814 ],
     "spawnDelay": 400,
     "fadeInDuration": 300,
     "fadeOutDuration": 100
