@@ -9005,8 +9005,11 @@
       23142,
       23143,
       23144,
-      23145
-    ]
+      23145,
+      23274
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.9,
   },
   {
     "description": "Objects - Ice Rocks - Small",
