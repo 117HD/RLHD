@@ -693,6 +693,18 @@
     "groundFogOpacity": 0.3
   },
   {
+    "area": "LIGHTHOUSE_DUNGEON",
+    "ambientColor": "#ffffff",
+    "ambientStrength": 1,
+    "directionalColor": "#ffffff",
+    "directionalStrength": 0.25,
+    "fogColor": "#000000",
+    "sunAngles": [
+      52, 235
+    ],
+    "fogDepth": 45
+  },
+  {
     "area": "PENGUIN_BASE",
     "ambientColor": "#aaafb6",
     "ambientStrength": 0.75,
