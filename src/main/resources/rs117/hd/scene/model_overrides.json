@@ -12437,17 +12437,6 @@
     "uvScale": 0.85
   },
   {
-    "description": "Pillory random event cages",
-    "baseMaterial": "METALLIC_2_HIGHGLOSS",
-    "objectIds": [
-      20873,
-      20874,
-      20875
-    ],
-    "uvType": "BOX",
-    "uvOrientation": 512
-  },
-  {
     "description": "Pillory random event crates",
     "baseMaterial": "GRUNGE_2",
     "objectIds": [
