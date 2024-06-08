@@ -695,11 +695,11 @@
   {
     "area": "WATERBIRTH_ISLAND",
     "ambientColor": "#6fb0ff",
-    "ambientStrength": 0.5,
+    "ambientStrength": 1.75,
     "sunAngles": [ 72, 235 ],
     "directionalColor": "#f4e5c9",
-    "directionalStrength": 0.75,
-    "fogColor": "#aebde3",
+    "directionalStrength": 1.5,
+    "fogColor": "#adb9c4",
     "fogDepth": 45
   },
   {
