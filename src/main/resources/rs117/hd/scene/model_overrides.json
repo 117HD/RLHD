@@ -1474,9 +1474,6 @@
       9502,
       9503,
       9504,
-      13861,
-      13862,
-      13863,
       16382,
       16383,
       16384,
@@ -1582,6 +1579,9 @@
       9505,
       9506,
       9507,
+      13861,
+      13862,
+      13863,
       14775,
       14776,
       14777,
@@ -3373,6 +3373,13 @@
       [ 3469, 9845 ]
     ],
     "uvType": "BOX"
+  },
+  {
+    "description": "Canifis Rooftop Agility Course Tall Tree",
+    "objectIds": [ 14843 ],
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvOrientation": 512
   },
   {
     "description": "ROUNDED_CAVE_WALLS",
@@ -7502,7 +7509,7 @@
     "uvType": "GEOMETRY"
   },
   {
-    "description": "Morytania - Walls - Wooden - Plank - Burugh De Rott",
+    "description": "Morytania - Walls - Wooden - Plank - Burgh De Rott",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       12821,
@@ -7541,7 +7548,7 @@
     "uvScale": 0.76
   },
   {
-    "description": "Morytania - Floor - Wooden - Plank - Burugh De Rott",
+    "description": "Morytania - Floor - Wooden - Plank - Burgh De Rott",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       12898,
@@ -7567,7 +7574,7 @@
     "uvType": "MODEL_XZ"
   },
   {
-    "description": "Morytania - Floor - Wooden - Ladder - Burugh De Rott - Meiyerditch",
+    "description": "Morytania - Floor - Wooden - Ladder - Burgh De Rott - Meiyerditch",
     "baseMaterial": "WOOD_GRAIN",
     "objectIds": [
       12780,
@@ -7578,7 +7585,7 @@
     ]
   },
   {
-    "description": "Morytania - Wall Decoration - Wooden - Plank - Burugh De Rott",
+    "description": "Morytania - Wall Decoration - Wooden - Plank - Burgh De Rott",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       12852,
@@ -7589,7 +7596,7 @@
     "uvScale": 0.66
   },
   {
-    "description": "Morytania - Wall  - Wooden - Plank - Repaired Wall - Burugh De Rott",
+    "description": "Morytania - Wall  - Wooden - Plank - Repaired Wall - Burgh De Rott",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       12786
@@ -7612,7 +7619,7 @@
     "uvScale": 0.56
   },
   {
-    "description": "Morytania - Wall  - Stone - Stone Brick Wall - Burugh De Rott",
+    "description": "Morytania - Wall  - Stone - Stone Brick Wall - Burgh De Rott",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       12737,
@@ -7655,7 +7662,7 @@
     "uvType": "GEOMETRY"
   },
   {
-    "description": "Morytania - Ground  - Wooden - Boat Launch - Burugh De Rott",
+    "description": "Morytania - Ground  - Wooden - Boat Launch - Burgh De Rott",
     "baseMaterial": "DOCK_FENCE_DARK",
     "objectIds": [
       12946,
@@ -7666,7 +7673,7 @@
     "uvType": "GEOMETRY"
   },
   {
-    "description": "Burugh De Rott - Objects - Dirt - Rubble Pile",
+    "description": "Burgh De Rott - Objects - Dirt - Rubble Pile",
     "baseMaterial": "DIRT_2",
     "objectIds": [
       12749
@@ -7719,7 +7726,7 @@
     "uvOrientationY": 555
   },
   {
-    "description": "Morytania - Ground  - Water - Puddles - Burugh De Rott",
+    "description": "Morytania - Ground  - Water - Puddles - Burgh De Rott",
     "baseMaterial": "WATER_PUDDLE",
     "objectIds": [
       12860,
@@ -10817,9 +10824,39 @@
     "description": "Temple Trekking Sign",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      23275
+      13873,
+      23275,
+      23276
     ],
-    "uvType": "BOX"
+    "uvType": "BOX",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Temple Trekking - Swamp  - Water - Bubbles",
+    "baseMaterial": "GRAY_50",
+    "objectIds": [
+      13858,
+      13859,
+      13860
+    ],
+    "uvType": "MODEL_XZ",
+    "castShadows": false
+  },
+  {
+    "description": "Temple Trekking & Kebos Swamp Trees",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      13843,
+      13844,
+      13845,
+      13846,
+      13847,
+      13848,
+      13849,
+      13850
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.85
   },
   {
     "description": "Meiyerditch Mine Walls",
@@ -11020,7 +11057,14 @@
     "description": "Generic - Plant - Leafy Shrub",
     "baseMaterial": "PLANT_GRUNGE_1",
     "objectIds": [
-      1392
+      1392,
+      5331,
+      5332,
+      5333,
+      5334,
+      9604,
+      9605,
+      9606
     ]
   },
   {
@@ -11057,13 +11101,14 @@
     "uvScale": 0.8
   },
   {
-    "description": "Morytania - Rotting Log",
-    "baseMaterial": "BARK",
+    "description": "Morytania - Rotting Log & Branch",
+    "baseMaterial": "LIGHT_BARK",
     "objectIds": [
-      3508
+      3508,
+      3510
     ],
     "uvType": "BOX",
-    "uvScale": 0.8
+    "uvScale": 0.75
   },
   {
     "description": "Morytania - Giant Tree",
@@ -14646,7 +14691,7 @@
     "uvScale": 0.9
   },
   {
-    "description": "Fossil Island - Outhouse Walls and Lumbriodge Swamp Shack",
+    "description": "Fossil Island - Outhouse Walls and Lumbridge Swamp Shack",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [ 10372, 10373, 11763, 15054 ],
     "uvType": "BOX",
