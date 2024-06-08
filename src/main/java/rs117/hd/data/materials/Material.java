@@ -384,7 +384,10 @@ public enum Material {
 		.setFlowMapStrength(0.075f)
 		.setFlowMapDuration(new float[] { 12, -12 })),
 	GRUNGE_3_N,
-	GRUNGE_3(p -> p.setNormalMap(GRUNGE_3_N).setSpecular(0.25f,30)),
+	GRUNGE_3(p -> p
+		.setNormalMap(GRUNGE_3_N)
+		.setSpecular(0.25f, 30)
+	),
 	ROCK_1_N,
 	ROCK_1(p -> p
 		.setNormalMap(ROCK_1_N)
@@ -750,7 +753,10 @@ public enum Material {
 	OOZE(GRAY_65, p -> p
 		.setSpecular(1.5f, 600)
 	),
-	BONE(GRUNGE_2, p -> p.setSpecular(0.25f, 20).setBrightness(1.3f)),
+	BONE(GRUNGE_2, p -> p
+		.setSpecular(0.25f, 20)
+		.setBrightness(1.3f)
+	),
 	ABYSSAL_D,
 	ABYSSAL_N,
 	ABYSSAL(p -> p
