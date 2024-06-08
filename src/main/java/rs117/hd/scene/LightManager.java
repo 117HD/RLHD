@@ -710,7 +710,8 @@ public class LightManager {
 			boolean isDuplicate = sceneContext.lights.stream()
 				.anyMatch(light ->
 					light.actor == npc &&
-					light.def == def);
+					light.def == def &&
+					!light.markedForRemoval);
 			if (isDuplicate)
 				continue;
 
