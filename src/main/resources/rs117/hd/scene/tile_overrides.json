@@ -4894,7 +4894,6 @@
     "blended": false
   },
   {
-    "name": "Al Kharid Grass Fixes",
     "area": "AL_KHARID_GRASS_FIXES",
     "underlayIds": [
       49,
@@ -4909,7 +4908,6 @@
     }
   },
   {
-    "name": "AL_KHARID_DIRT_FIX",
     "area": "AL_KHARID_DIRT_FIX",
     "underlayIds": [
       50,

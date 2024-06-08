@@ -881,7 +881,7 @@ public enum Area
 		new AABB(3266, 3262, 3269, 3263, 0),
 		new AABB(3275, 3294, 3275, 3295, 0),
 		new AABB(3292, 3328, 3300, 3329, 0)
-		),
+	),
 	AL_KHARID_DIRT_FIX(
 		new AABB(3328, 3310, 3344, 3327, 0),
 		new AABB(3335, 3309, 3341, 3309, 0),
@@ -890,7 +890,7 @@ public enum Area
 		new AABB(3301, 3328, 3303, 3330, 0),
 		new AABB(3341, 3306),
 		new AABB(3275, 3321, 3291, 3329, 0)
-		),
+	),
 	AL_KHARID_WELL(3293,3183,3293,3183),
 	AL_KHARID_BUILDINGS(
 		new AABB(3265, 3173, 3272, 3161),
