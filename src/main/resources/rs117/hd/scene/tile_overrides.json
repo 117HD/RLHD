@@ -3583,6 +3583,32 @@
     ]
   },
   {
+    "name": "CAMDOZAAL_UNDERWALL_TILES",
+    "area": "CAMDOZAAL",
+    "overlayIds": [
+      42
+    ],
+    "blended": false
+  },
+  {
+    "name": "CAMDOZAAL_VAULT_FLOOR_OVERLAY",
+    "area": "CAMDOZAAL_VAULT",
+    "overlayIds": [
+      87
+    ],
+    "groundMaterial": "MARBLE_2",
+    "blended": false
+  },
+  {
+    "name": "CAMDOZAAL_VAULT_FLOOR",
+    "area": "CAMDOZAAL_VAULT",
+    "underlayIds": [
+      44, 46, 113
+    ],
+    "groundMaterial": "MARBLE_1",
+    "blended": false
+  },
+  {
     "name": "CAMDOZAAL_WATER",
     "area": "CAMDOZAAL",
     "overlayIds": [
@@ -3590,6 +3616,34 @@
     ],
     "waterType": "WATER",
     "blended": false
+  },
+  {
+    "name": "CAMDOZAAL_STONE_PATH",
+    "area": "CAMDOZAAL",
+    "overlayIds": [
+      182
+    ],
+    "groundMaterial": "GRUNGE_2",
+    "uvOrientation": 117,
+    "uvScale": 1.2
+  },
+  {
+    "name": "CAMDOZAAL_GRAVEL_PATH",
+    "area": "CAMDOZAAL",
+    "overlayIds": [
+      2, 83, 127
+    ],
+    "groundMaterial": "GRAVEL",
+    "uvOrientation": 270,
+    "uvScale": 1.25
+  },
+  {
+    "name": "CAMDOZAAL_CAVE_FLOOR",
+    "area": "CAMDOZAAL",
+    "underlayIds": [
+      44, 46
+    ],
+    "groundMaterial": "OVERWORLD_ROCKY"
   },
   {
     "name": "PEST_CONTROL_LANDER_WATER_FIX_1",

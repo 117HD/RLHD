@@ -5916,7 +5916,9 @@
     "objectIds": [
       5204,
       24023,
-      25657
+      25657,
+      41531,
+      41532
     ],
     "uvType": "MODEL_XZ",
     "uvScale": 0.3,
@@ -6674,13 +6676,14 @@
   },
   {
     "description": "Ground Decoration - Rock - Tiny - Uncolored",
-    "baseMaterial": "ROCK_1",
+    "baseMaterial": "ROCK_1_LIGHT",
     "objectIds": [
       6398,
       12050,
       14486,
       20762,
       25834,
+      41517,
       43627
     ],
     "uvType": "WORLD_XZ",
@@ -6690,7 +6693,7 @@
   },
   {
     "description": "Ground Decoration - Rock - Small - Colored",
-    "baseMaterial": "ROCK_1",
+    "baseMaterial": "ROCK_1_LIGHT",
     "objectIds": [
       14500,
       14502,
@@ -6701,7 +6704,8 @@
       17869,
       17870,
       20294,
-      20296
+      20296,
+      41514
     ],
     "inheritTileColorType": "OVERLAY",
     "uvType": "WORLD_XZ",
@@ -6729,6 +6733,8 @@
       17933,
       20761,
       20763,
+      22341,
+      22342,
       23080,
       23081,
       23082,
@@ -6736,6 +6742,9 @@
       23084,
       25833,
       25835,
+      41513,
+      41515,
+      41516,
       43626,
       43628,
       43724,
@@ -6995,6 +7004,7 @@
       25661,
       25836,
       25837,
+      41452,
       41738,
       42066,
       44854
@@ -7039,7 +7049,8 @@
       11486,
       12547,
       12548,
-      15031
+      15031,
+      41450
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -17520,5 +17531,252 @@
     "uvType": "BOX",
     "uvScale": 0.8,
     "uvOrientation": 128
+  },
+  {
+    "description": "Camdozaal Cave Walls",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      41549, 41550, 41552, 41553, 41554, 41555, 41556, 41557, 41558, 41559, 41560, 41591, 48195
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 256
+  },
+  {
+    "description": "Camdozaal Carved Walls and Pillars",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      41466,
+      41469,
+      41470,
+      41471,
+      41472,
+      41473,
+      41474,
+      41475,
+      41486,
+      41569
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Camdozaal Vault Walls",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      41520,
+      41521,
+      41522,
+      41523,
+      41524,
+      41525,
+      41526,
+      41527,
+      41528
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Camdozaal House Walls",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      41461,
+      41462,
+      41463,
+      41465
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Camdozaal Wall Statues",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      41467,
+      41468
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Camdozaal Barronite Walls",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      41547, 41548
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 256
+  },
+  {
+    "description": "Camdozaal Sacred Forge",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      41411,
+      41412
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.7
+  },
+  {
+    "description": "Camdozaal Rock Piles - Large",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      27908,
+      27910,
+      27912
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 198,
+    "uvScale": 1.25
+  },
+  {
+    "description": "Camdozaal Rock Piles - Medium",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      27898,
+      27900,
+      27902,
+      27904
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 786,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Camdozaal - Plant - Fern",
+    "baseMaterial": "PLANT_GRUNGE_2",
+    "objectIds": [
+      41581,
+      41582,
+      41583
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 128,
+    "uvScale": 1.2
+  },
+  {
+    "description": "Camdozaal Fish Bones",
+    "baseMaterial": "BONE",
+    "objectIds": [
+      18020,
+      18021,
+      18022,
+      18023
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.7
+  },
+  {
+    "description": "Camdozaal Metal Scaffold",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      41580
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Camdozaal metal floor crate",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      41579
+    ],
+    "uvType": "BOX",
+    "uvOrientationY": 512,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Camdozaal Metal Fence",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      41577,
+      41578
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Camdozaal Metal Sconce",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      41489,
+      41490
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 300,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Camdozaal Metal Sconce - Lit",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      41487,
+      41488
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 300,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Camdozaal Stone Steps",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      41567
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 1138,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Camdozaal Stone Tiles",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      41568
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 300,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Camdozaal Stone Edging",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      41566
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 700,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Camdozaal Preparation Table",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      41545
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 768,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Camdozaal Altar",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      41546
+    ],
+    "uvType": "BOX",
+    "uvOrientationY": 256,
+    "uvOrientationZ": 768,
+    "uvOrientationX": 768,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Camdozaal and Zanaris Mushrooms",
+    "baseMaterial": "PLANT_GRUNGE_1",
+    "objectIds": [
+      12056,
+      12057,
+      12058,
+      12059
+    ],
+    "uvType": "GEOMETRY"
   }
 ]
