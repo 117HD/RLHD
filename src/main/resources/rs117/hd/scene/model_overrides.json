@@ -3383,6 +3383,7 @@
       1460,
       1467,
       4448,
+      6628,
       9739,
       9740,
       16543,
@@ -12308,7 +12309,8 @@
     "baseMaterial": "ROCK_1",
     "objectIds": [
       10782,
-      10783
+      10783,
+      10784
     ],
     "uvType": "BOX",
     "uvScale": 0.33
@@ -12623,6 +12625,18 @@
     "retainVanillaUvs": false,
     "uvType": "BOX",
     "uvScale": 0.65
+  },
+  {
+    "description": "Nightmare Zone Potion Barrels",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      26277,
+      26278,
+      26279,
+      26280
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512
   },
   {
     "description": "Objects - Concrete - Nature Altar Pillars",
