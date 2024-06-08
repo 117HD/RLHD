@@ -37,7 +37,6 @@ public class ModelHash {
 	public static final long SCENE_Y_MASK = 0x7f << 7;
 	public static final long TYPE_MASK = 3L << 14;
 	public static final long ID_OR_INDEX_MASK = 0xffffffffL << 17;
-	public static final long PLANE_MASK = 3L << 49;
 
 	private static final String[] TYPE_NAMES = {
 		"Player",
@@ -84,7 +83,7 @@ public class ModelHash {
 	}
 
 	public static int getPlane(long hash) {
-		return (int) ((hash & PLANE_MASK) >> 49);
+		return (int) ((hash >> TileObject.HASH_PLANE_SHIFT) & 3);
 	}
 
 	public static int getType(long hash) {
