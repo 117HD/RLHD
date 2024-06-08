@@ -3679,7 +3679,7 @@
   },
   {
     "description": "Desert Quarry Grinder",
-    "baseMaterial": "METALLIC_2_GLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
     "objectIds": [
       26199
     ]
@@ -3874,7 +3874,7 @@
   },
   {
     "description": "Lighthouse Roof",
-    "baseMaterial": "METALLIC_2",
+    "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [
       4599
     ]
@@ -3903,7 +3903,7 @@
   },
   {
     "description": "Lighthouse Metallic objects, Mechanisms and Ladders",
-    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       4380,
       4383,
@@ -13192,7 +13192,7 @@
   },
   {
     "description": "Mage Training Arena - Enchanters Playground Shape Piles",
-    "baseMaterial": "METALLIC_2_HIGHGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_HIGHGLOSS",
     "objectIds": [
       23694,
       23695,
@@ -13212,7 +13212,7 @@
   },
   {
     "description": "Mage Training Arena - Candelabra",
-    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       10720
     ]
@@ -17863,7 +17863,7 @@
   },
   {
     "description": "Camdozaal Metal Scaffold",
-    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       41580
     ],
@@ -17873,7 +17873,7 @@
   },
   {
     "description": "Camdozaal metal floor crate",
-    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       41579
     ],
@@ -17883,7 +17883,7 @@
   },
   {
     "description": "Camdozaal Metal Fence",
-    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       41577,
       41578
@@ -17894,7 +17894,7 @@
   },
   {
     "description": "Camdozaal Metal Sconce",
-    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       41489,
       41490
@@ -17905,7 +17905,7 @@
   },
   {
     "description": "Camdozaal Metal Sconce - Lit",
-    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       41487,
       41488
@@ -17979,13 +17979,15 @@
   },
   {
     "description": "Seers Coal Mine Fence",
-    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       15593,
       15594,
       15601,
       15602,
-      15603
+      15603,
+      15604,
+      15605
     ],
     "uvType": "BOX",
     "uvOrientationX": 512,
@@ -17993,7 +17995,7 @@
   },
   {
     "description": "Seers Coal Mine Fence - Bent",
-    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       18,
       19,
@@ -18005,7 +18007,7 @@
   },
   {
     "description": "Seers Coal Mine Gate",
-    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       15604,
       15605,
