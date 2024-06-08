@@ -1292,7 +1292,6 @@
     "baseMaterial": "BARK",
     "objectIds": [
       1297,
-      9661,
       9663,
       33197,
       40315
@@ -1343,15 +1342,17 @@
   {
     "description": "TREE_STUMP",
     "baseMaterial": "BARK",
+    "castShadows": false,
     "objectIds": [
       1341,
       1342,
       1353,
       4328,
       6212,
+      9661,
       14516,
       14517,
-      50666
+      50089
     ],
     "uvType": "BOX",
     "uvScale": 0.8
