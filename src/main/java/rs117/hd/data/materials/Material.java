@@ -541,6 +541,9 @@ public enum Material {
 	),
 	LIGHT_BARK_STONEPINE(BARK_STONEPINE, p -> p.setBrightness(1.75f)),
 	WOOD_GRAIN,
+	WOOD_GRAIN_LIGHT(WOOD_GRAIN, p -> p
+		.setBrightness(1.5f)
+	),
 	WOOD_GRAIN_2_N,
 	WOOD_GRAIN_2(p -> p
 		.setNormalMap(WOOD_GRAIN_2_N)
@@ -657,7 +660,11 @@ public enum Material {
 		.setScroll(0, -1 / 0.7f)),
 
 	WALL_STONE_N,
-	WALL_STONE(p -> p.setNormalMap(WALL_STONE_N)),
+	WALL_STONE(p -> p
+		.setNormalMap(WALL_STONE_N)),
+	WALL_STONE_LIGHT(WALL_STONE, p -> p
+		.setNormalMap(WALL_STONE_N)
+		.setBrightness(1.7f)),
 	METALLIC_1(p -> p.setSpecular(0.2f, 20)),
 	METALLIC_1_SEMIGLOSS(METALLIC_1, p -> p
 		.setSpecular(0.3f, 80)),

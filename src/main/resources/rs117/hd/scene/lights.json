@@ -20055,7 +20055,6 @@
       12300,
       31628,
       12238,
-      3474,
       43122,
       43123,
       43124,
@@ -33404,6 +33403,57 @@
     "range": 23,
     "objectIds": [
       10185
+    ]
+  },
+  {
+    "description": "Lighthouse - Light at the top - Wide",
+    "height": 355,
+    "radius": 1400,
+    "visibleFromOtherPlanes": false,
+    "fadeInDuration": 1,
+    "strength": 15,
+    "color": [
+      255,
+      255,
+      170
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      4587
+    ]
+  },
+  {
+    "description": "Lighthouse - Light at the top - Narrow",
+    "height": 215,
+    "radius": 500,
+    "visibleFromOtherPlanes": true,
+    "strength": 75,
+    "color": [
+      255,
+      255,
+      170
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      4587
+    ]
+  },
+  {
+    "description": "Lighthouse Lantern",
+    "height": 235,
+    "alignment": "CENTER",
+    "radius": 250,
+    "strength": 6.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      3474
     ]
   },
   {
