@@ -34,7 +34,7 @@ shared int totalDistance[12]; // sum of distances to faces of a given priority
 shared int totalMappedNum[18]; // number of faces with a given adjusted priority
 
 shared int min10; // minimum distance to a face of priority 10
-shared uint renderPris[THREAD_COUNT * FACES_PER_THREAD]; // packed distance and face id
+shared int renderPris[THREAD_COUNT * FACES_PER_THREAD]; // priority for face draw order
 
 layout(std140) uniform CameraUniforms {
     float cameraYaw;

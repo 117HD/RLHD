@@ -60,6 +60,7 @@ public class ModelOverride
 	public boolean upwardsNormals = false;
 	public boolean hideVanillaShadows = false;
 	public boolean retainVanillaShadowsInPvm = false;
+	public boolean hideHdShadowsInPvm = false;
 	public boolean castShadows = true;
 	public boolean receiveShadows = true;
 	public float shadowOpacityThreshold = 0;
@@ -130,7 +131,7 @@ public class ModelOverride
 		if (retainVanillaShadowsInPvm) {
 			if (vanillaShadowMode.retainInPvm)
 				hideVanillaShadows = false;
-			if (vanillaShadowMode == VanillaShadowMode.PREFER_IN_PVM)
+			if (vanillaShadowMode == VanillaShadowMode.PREFER_IN_PVM && hideHdShadowsInPvm)
 				castShadows = false;
 		}
 
@@ -163,6 +164,7 @@ public class ModelOverride
 			upwardsNormals,
 			hideVanillaShadows,
 			retainVanillaShadowsInPvm,
+			hideHdShadowsInPvm,
 			castShadows,
 			receiveShadows,
 			shadowOpacityThreshold,
