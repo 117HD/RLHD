@@ -14857,6 +14857,15 @@
     "projectileIds": [ 1435 ]
   },
   {
+    "description": "Falling rocks at Scurrius",
+    "hideVanillaShadows": true,
+    "retainVanillaShadowsInPvm": true,
+    "hideHdShadowsInPvm": true,
+    "graphicsObjectIds": [
+      2644
+    ]
+  },
+  {
     "description": "Fishing Trawler Boat - Walls - Minigame Hull",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [ 37351, 37352 ],
