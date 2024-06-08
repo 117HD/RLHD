@@ -19882,10 +19882,10 @@
   },
   {
     "description": "STANDING_TORCH",
-    "height": 250,
+    "height": 200,
     "alignment": "CENTER",
     "radius": 500,
-    "strength": 5,
+    "strength": 9,
     "color": [
       252,
       148,
@@ -20158,9 +20158,8 @@
     ]
   },
   {
-    "description": "FLOOR_CANDLES_CENTER",
+    "description": "FLOOR_CANDLES_1",
     "height": 10,
-    "alignment": "CENTER",
     "radius": 300,
     "strength": 10,
     "color": [
@@ -20177,9 +20176,8 @@
     ]
   },
   {
-    "description": "FLOOR_CANDLES_BACK",
+    "description": "FLOOR_CANDLES_2",
     "height": 10,
-    "alignment": "BACK",
     "radius": 200,
     "strength": 10,
     "color": [
@@ -20192,7 +20190,8 @@
     "range": 20,
     "objectIds": [
       12302
-    ]
+    ],
+    "offset": [ 3, 0, 40 ]
   },
   {
     "description": "LANTERN",
@@ -20213,7 +20212,24 @@
       10307,
       16901,
       23577,
-      2492,
+      2492
+    ]
+  },
+  {
+    "description": "LANTERN_CANDLE",
+    "offset": [ 10, 260, -12 ],
+    "alignment": "CENTER",
+    "radius": 550,
+    "strength": 15.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
       11468
     ]
   },
@@ -32817,7 +32833,7 @@
     ]
   },
   {
-    "description": "MAGE_TRAIN_ARENA_CANDLEBRA",
+    "description": "MAGE_TRAIN_ARENA_CANDLEABRA",
     "height": 210,
     "alignment": "CENTER",
     "radius": 500,
