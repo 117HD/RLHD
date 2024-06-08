@@ -14738,6 +14738,7 @@
     "description": "Falling crystals during the Olm fight in Chambers of Xeric",
     "hideVanillaShadows": true,
     "retainVanillaShadowsInPvm": true,
+    "hideHdShadowsInPvm": true,
     "projectileIds": [
       1357
     ]
@@ -14821,6 +14822,39 @@
       11794,
       11795
     ]
+  },
+  {
+    "description": "Grotesque Guardians",
+    "hideVanillaShadows": true,
+    "retainVanillaShadowsInPvm": true,
+    "npcIds": [
+      7851,
+      7852,
+      7853,
+      7854,
+      7855,
+      7882,
+      7883,
+      7884,
+      7885,
+      7886,
+      7887,
+      7888,
+      7889
+    ]
+  },
+  {
+    "description": "Falling rocks at Grotesque Guardians",
+    "hideVanillaShadows": true,
+    "retainVanillaShadowsInPvm": true,
+    "hideHdShadowsInPvm": true,
+    "graphicsObjectIds": [
+      1449,
+      1889,
+      1890,
+      1938
+    ],
+    "projectileIds": [ 1435 ]
   },
   {
     "description": "Fishing Trawler Boat - Walls - Minigame Hull",
