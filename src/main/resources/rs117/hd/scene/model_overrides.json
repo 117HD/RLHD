@@ -1562,6 +1562,7 @@
       6838,
       7049,
       7050,
+      7051,
       7262,
       7263,
       7264,
@@ -1641,6 +1642,16 @@
     ],
     "flatNormals": true,
     "castShadows": false
+  },
+  {
+    "description": "Objects with Short grass which shouldn't cast shadows and shouldn't inherit tile color",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [
+      7110,
+      7111
+    ],
+    "castShadows": false,
+    "flatNormals": true
   },
   {
     "description": "Varlamore, Fortis and Avium Grass",
@@ -4289,7 +4300,7 @@
   },
   {
     "description": "Single row fences",
-    "baseMaterial": "WOOD_GRAIN_3",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
     "objectIds": [
       2050,
       2051,
@@ -4324,6 +4335,15 @@
     "flatNormals": true,
     "uvType": "BOX",
     "uvOrientation": 512
+  },
+  {
+    "description": "Single row fences - End, joining wall",
+    "baseMaterial": "GRAY_65",
+    "objectIds": [
+      23904,
+      23905
+    ],
+    "flatNormals": true
   },
   {
     "description": "FENCES_3",
@@ -6025,6 +6045,14 @@
       524
     ],
     "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Varrock Wall ivy",
+    "baseMaterial": "PLANT_GRUNGE_2",
+    "objectIds": [ 5088, 5089 ],
+    "uvType": "MODEL_YZ",
+    "uvOrientation": 144,
+    "uvScale": 0.6
   },
   {
     "description": "Khandarian Eagles Landing",
@@ -12369,6 +12397,64 @@
     "uvScale": 0.66
   },
   {
+    "description": "Fortune-teller Aris - Tent",
+    "baseMaterial": "FINE_CARPET",
+    "objectIds": [
+      2460,
+      2461,
+      2462,
+      2464,
+      2489,
+      2490
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.85
+  },
+  {
+    "description": "Pillory random event cages",
+    "baseMaterial": "METALLIC_2_HIGHGLOSS",
+    "objectIds": [
+      20873,
+      20874,
+      20875
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Pillory random event crates",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      20885
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.45
+  },
+  {
+    "description": "Lumbridge - Varrock Crossroads Signpost",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      7141
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.35,
+    "flatNormals": true
+  },
+  {
+    "description": "What Lies Below - Camp Fire",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      23063
+    ]
+  },
+  {
+    "description": "What Lies Below - Rat Burgiss Broken Cart",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      23055
+    ]
+  },
+  {
     "description": "Objects - Tree - Banana Tree",
     "baseMaterial": "GRAY_65",
     "objectIds": [
@@ -17637,6 +17723,7 @@
     "baseMaterial": "FINE_CARPET",
     "objectIds": [
       23061,
+      23062,
       42044
     ],
     "uvType": "BOX"
