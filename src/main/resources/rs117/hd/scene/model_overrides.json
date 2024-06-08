@@ -12407,7 +12407,7 @@
   },
   {
     "description": "Varrock Washing line - Clothes",
-    "baseMaterial": "GRUNGE_1",
+    "baseMaterial": "GRUNGE_3",
     "objectIds": [
       4487,
       4058
