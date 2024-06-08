@@ -4894,6 +4894,33 @@
     "blended": false
   },
   {
+    "area": "AL_KHARID_GRASS_FIXES",
+    "underlayIds": [
+      49,
+      50,
+      62,
+      61,
+      64
+    ],
+    "groundMaterial": "GRASS_1",
+    "replacements": {
+      "WINTER_GRASS": "season == WINTER"
+    }
+  },
+  {
+    "area": "AL_KHARID_DIRT_FIX",
+    "underlayIds": [
+      50,
+      62,
+      64,
+      126
+    ],
+    "groundMaterial": "DIRT",
+    "replacements": {
+      "WINTER_DIRT": "season == WINTER"
+    }
+  },
+  {
     "name": "PVP_ARENA_PITFLOOR_SAND_REMOVAL",
     "area": "PVP_ARENA",
     "underlayIds": [

@@ -12920,11 +12920,10 @@
   },
   {
     "description": "Mage Training Arena - Walls - Doorway of Light",
+    "baseMaterial": "MARBLE_2",
     "objectIds": [
       10721
-    ],
-    "uvType": "BOX",
-    "flatNormals": true
+    ]
   },
   {
     "description": "Mage Training Arena - Walls - Dark",
@@ -12984,6 +12983,17 @@
     "uvOrientation": 128
   },
   {
+    "description": "Mage Training Arena - Enchanters Playground Shape Piles",
+    "baseMaterial": "METALLIC_2_HIGHGLOSS",
+    "objectIds": [
+      23694,
+      23695,
+      23696,
+      23697
+    ],
+    "uvType": "BOX"
+  },
+  {
     "description": "Mage Training Arena - Entrance Statues",
     "baseMaterial": "MARBLE_3",
     "objectIds": [
@@ -12991,6 +13001,13 @@
       10737
     ],
     "uvType": "BOX"
+  },
+  {
+    "description": "Mage Training Arena - Candelabra",
+    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "objectIds": [
+      10720
+    ]
   },
   {
     "description": "Mage Training Arena - Stairs with metal rails",
