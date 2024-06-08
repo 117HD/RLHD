@@ -383,7 +383,11 @@ public enum Material {
 		.setFlowMap(UNDERWATER_FLOW_MAP)
 		.setFlowMapStrength(0.075f)
 		.setFlowMapDuration(new float[] { 12, -12 })),
-
+	GRUNGE_3_N,
+	GRUNGE_3(p -> p
+		.setNormalMap(GRUNGE_3_N)
+		.setSpecular(0.25f, 30)
+	),
 	ROCK_1_N,
 	ROCK_1(p -> p
 		.setNormalMap(ROCK_1_N)
@@ -470,7 +474,9 @@ public enum Material {
 		.setSpecular(1.0f, 70)),
 	TILES_2X2_1_SEMIGLOSS(TILES_2X2_1, p -> p
 		.setSpecular(0.5f, 300)),
+	TILES_2X2_2_N,
 	TILES_2X2_2(p -> p
+		.setNormalMap(TILES_2X2_2_N)
 		.setSpecular(0.3f, 30)),
 	TILES_2X2_2_GLOSS(TILES_2X2_2, p -> p
 		.setSpecular(1.0f, 70)),
@@ -535,6 +541,9 @@ public enum Material {
 	),
 	LIGHT_BARK_STONEPINE(BARK_STONEPINE, p -> p.setBrightness(1.75f)),
 	WOOD_GRAIN,
+	WOOD_GRAIN_LIGHT(WOOD_GRAIN, p -> p
+		.setBrightness(1.5f)
+	),
 	WOOD_GRAIN_2_N,
 	WOOD_GRAIN_2(p -> p
 		.setNormalMap(WOOD_GRAIN_2_N)
@@ -623,7 +632,17 @@ public enum Material {
 		.setDisplacementScale(.008f)
 	),
 
-	WORN_TILES,
+	WORN_TILES_N,
+	WORN_TILES(p -> p.setNormalMap(WORN_TILES_N).setSpecular(0.2f,25)),
+	HD_STONE_PATTERN_N,
+	HD_STONE_PATTERN_D,
+	HD_STONE_PATTERN(p -> p
+		.replaceIf(plugin -> plugin.configModelTextures, STONE_PATTERN)
+		.setNormalMap(HD_STONE_PATTERN_N)
+		.setDisplacementMap(HD_STONE_PATTERN_D)
+		.setDisplacementScale(0.08f)
+		.setSpecular(0.25f, 30)
+	),
 	STONE_N,
 	STONE,
 	STONE_NORMALED(STONE, p -> p
@@ -641,7 +660,11 @@ public enum Material {
 		.setScroll(0, -1 / 0.7f)),
 
 	WALL_STONE_N,
-	WALL_STONE(p -> p.setNormalMap(WALL_STONE_N)),
+	WALL_STONE(p -> p
+		.setNormalMap(WALL_STONE_N)),
+	WALL_STONE_LIGHT(WALL_STONE, p -> p
+		.setNormalMap(WALL_STONE_N)
+		.setBrightness(1.7f)),
 	METALLIC_1(p -> p.setSpecular(0.2f, 20)),
 	METALLIC_1_SEMIGLOSS(METALLIC_1, p -> p
 		.setSpecular(0.3f, 80)),
@@ -737,7 +760,10 @@ public enum Material {
 	OOZE(GRAY_65, p -> p
 		.setSpecular(1.5f, 600)
 	),
-	BONE(GRUNGE_2, p -> p.setSpecular(0.25f, 20)),
+	BONE(GRUNGE_2, p -> p
+		.setSpecular(0.25f, 20)
+		.setBrightness(1.3f)
+	),
 	ABYSSAL_D,
 	ABYSSAL_N,
 	ABYSSAL(p -> p
