@@ -2751,7 +2751,7 @@
   },
   {
     "description": "Wintertodt Brazier",
-    "baseMaterial": "_HIGHGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
     "objectIds": [
       29312,
       29313,
