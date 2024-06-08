@@ -8852,6 +8852,13 @@
     "uvScale": 1.2
   },
   {
+    "description": "Objects - Wooden - Tables - Round - With Umbrella",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      2334
+    ]
+  },
+  {
     "description": "Ardougne - Objects - Wooden - Stairs - Plank Textured",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
