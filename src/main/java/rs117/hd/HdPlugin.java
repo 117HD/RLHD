@@ -2346,8 +2346,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				sceneUploader.upload(context);
 			}
 		} catch (OutOfMemoryError oom) {
-			log.error("Ran out of memory while loading scene (32-bit: {}, low memory mode: {})",
-				HDUtils.is32Bit(), useLowMemoryMode, oom
+			log.error("Ran out of memory while loading scene (32-bit: {}, low memory mode: {}, cache size: {})",
+				HDUtils.is32Bit(), useLowMemoryMode, config.modelCacheSizeMiB(), oom
 			);
 			displayOutOfMemoryMessage();
 			stopPlugin();
@@ -3329,7 +3329,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		} else {
 			errorMessage =
 				"The plugin ran out of memory. "
-				+ "Try " + (useLowMemoryMode ? "" : "reducing your model cache size or ") + "closing other programs.<br>"
+				+ "Try " + (useLowMemoryMode ? "" : "reducing your model cache size from " + config.modelCacheSizeMiB() + " or ") + "closing other programs.<br>"
 				+ "<br>"
 				+ "If the issue persists, please join our "
 				+ "<a href=\"" + HdPlugin.DISCORD_URL + "\">Discord</a> server, and click the \"Open logs folder\" button<br>"
