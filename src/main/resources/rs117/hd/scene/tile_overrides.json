@@ -4620,6 +4620,26 @@
     "groundMaterial": "SKULL_OBELISK"
   },
   {
+    "name": "SARACHNIS_BLOOD",
+    "area": "SARACHNIS_LAIR",
+    "overlayIds": [ 72 ],
+    "waterType": "BLOOD"
+  },
+  {
+    "name": "SARACHNIS_DIRT_CLAMP",
+    "area": "SARACHNIS_LAIR",
+    "underlayIds": [ 100, 122 ],
+    "groundMaterial": "DIRT",
+    "minLightness": 20,
+    "maxLightness": 23
+  },
+  {
+    "name": "SARACHNIS_DIRT",
+    "area": "SARACHNIS_LAIR",
+    "underlayIds": [ 99, 118 ],
+    "groundMaterial": "DIRT"
+  },
+  {
     "name": "LUMBRIDGE_CASTLE_TILE_UNDERLAY",
     "area": "LUMBRIDGE_CASTLE_BASEMENT",
     "underlayIds": [

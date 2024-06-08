@@ -710,7 +710,8 @@ public class LightManager {
 			boolean isDuplicate = sceneContext.lights.stream()
 				.anyMatch(light ->
 					light.actor == npc &&
-					light.def == def);
+					light.def == def &&
+					!light.markedForRemoval);
 			if (isDuplicate)
 				continue;
 
@@ -778,14 +779,18 @@ public class LightManager {
 	private void trackImpostorChanges(@Nonnull SceneContext sceneContext, TileObjectImpostorTracker tracker) {
 		int impostorId = -1;
 		if (tracker.impostorIds != null) {
-			int impostorIndex = -1;
-			if (tracker.impostorVarbit != -1) {
-				impostorIndex = client.getVarbitValue(tracker.impostorVarbit);
-			} else if (tracker.impostorVarp != -1) {
-				impostorIndex = client.getVarpValue(tracker.impostorVarp);
+			try {
+				int impostorIndex = -1;
+				if (tracker.impostorVarbit != -1) {
+					impostorIndex = client.getVarbitValue(tracker.impostorVarbit);
+				} else if (tracker.impostorVarp != -1) {
+					impostorIndex = client.getVarpValue(tracker.impostorVarp);
+				}
+				if (impostorIndex >= 0)
+					impostorId = tracker.impostorIds[Math.min(impostorIndex, tracker.impostorIds.length - 1)];
+			} catch (Exception ex) {
+				log.debug("Error getting impostor:", ex);
 			}
-			if (impostorIndex >= 0)
-				impostorId = tracker.impostorIds[Math.min(impostorIndex, tracker.impostorIds.length - 1)];
 		}
 
 		// Don't do anything if the impostor is the same, unless the object just spawned
