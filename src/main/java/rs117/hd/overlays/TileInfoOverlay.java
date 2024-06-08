@@ -420,6 +420,12 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			));
 		}
 
+		for (GraphicsObject graphicsObject : client.getGraphicsObjects()) {
+			var lp = graphicsObject.getLocation();
+			if (lp.getSceneX() == tileX && lp.getSceneY() == tileY)
+				lines.add(String.format("Graphics Object: ID=%s", graphicsObject.getId()));
+		}
+
 		for (int i = 0; i < lines.size(); i++) {
 			var moreLines = lines.get(i).split("\\n");
 			if (moreLines.length > 1) {
