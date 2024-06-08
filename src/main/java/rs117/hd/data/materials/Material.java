@@ -470,7 +470,9 @@ public enum Material {
 		.setSpecular(1.0f, 70)),
 	TILES_2X2_1_SEMIGLOSS(TILES_2X2_1, p -> p
 		.setSpecular(0.5f, 300)),
+	TILES_2X2_2_N,
 	TILES_2X2_2(p -> p
+		.setNormalMap(TILES_2X2_2_N)
 		.setSpecular(0.3f, 30)),
 	TILES_2X2_2_GLOSS(TILES_2X2_2, p -> p
 		.setSpecular(1.0f, 70)),
@@ -622,6 +624,9 @@ public enum Material {
 		.setDisplacementMap(HD_SIMPLE_GRAIN_WOOD_D)
 		.setDisplacementScale(.008f)
 	),
+
+	WORN_TILES_N,
+	WORN_TILES(p -> p.setNormalMap(WORN_TILES_N).setSpecular(0.2f,25)),
 	HD_STONE_PATTERN_N,
 	HD_STONE_PATTERN_D,
 	HD_STONE_PATTERN(p -> p
@@ -631,7 +636,6 @@ public enum Material {
 		.setDisplacementScale(0.08f)
 		.setSpecular(0.25f, 30)
 	),
-	WORN_TILES,
 	STONE_N,
 	STONE,
 	STONE_NORMALED(STONE, p -> p

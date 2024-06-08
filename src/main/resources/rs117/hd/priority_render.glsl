@@ -108,7 +108,6 @@ void get_face(
     thisC = vb[offset + ssboOffset * 3 + 2];
 
     if (localId < size) {
-        int radius = (flags >> 12) & 0xfff;
         int orientation = flags & 0x7ff;
 
         // rotate for model orientation
@@ -118,15 +117,7 @@ void get_face(
 
         // calculate distance to face
         int thisPriority = (thisA.w >> 16) & 0xF;// all vertices on the face have the same priority
-        int thisDistance;
-        if (radius == 0) {
-            thisDistance = 0;
-        } else {
-            thisDistance = face_distance(thisrvA, thisrvB, thisrvC) + radius;
-            // Clamping here *should* be unnecessary, but it prevents crashing in the unlikely event where we
-            // somehow end up with negative numbers, which is known to happen with open-source AMD drivers.
-            thisDistance = max(0, thisDistance);
-        }
+        int thisDistance = face_distance(thisrvA, thisrvB, thisrvC);
 
         o1 = thisrvA;
         o2 = thisrvB;
@@ -197,10 +188,10 @@ void insert_face(uint localId, ModelInfo minfo, int adjPrio, int distance, int p
     if (localId < size) {
         // calculate base offset into renderPris based on number of faces with a lower priority
         int baseOff = count_prio_offset(adjPrio);
-        // the furthest faces draw first, and have the highest value
+        // the furthest faces draw first, and have the highest priority.
         // if two faces have the same distance, the one with the
-        // lower id draws first
-        renderPris[baseOff + prioIdx] = uint(distance << 16) | (~localId & 0xffffu);
+        // lower id draws first.
+        renderPris[baseOff + prioIdx] = distance << 16 | int(~localId & 0xffffu);
     }
 }
 
@@ -266,7 +257,6 @@ void undoVanillaShading(inout ivec4 vertex, vec3 unrotatedNormal) {
 }
 
 void sort_and_insert(uint localId, ModelInfo minfo, int thisPriority, int thisDistance, ivec4 thisrvA, ivec4 thisrvB, ivec4 thisrvC) {
-    /* compute face distance */
     int offset = minfo.offset;
     int size = minfo.size;
 
@@ -282,7 +272,7 @@ void sort_and_insert(uint localId, ModelInfo minfo, int thisPriority, int thisDi
         const int numOfPriority = totalMappedNum[thisPriority];
         const int start = priorityOffset; // index of first face with this priority
         const int end = priorityOffset + numOfPriority; // index of last face with this priority
-        const uint renderPriority = uint(thisDistance << 16) | (~localId & 0xffffu);
+        const int renderPriority = thisDistance << 16 | int(~localId & 0xffffu);
         int myOffset = priorityOffset;
 
         // calculate position this face will be in

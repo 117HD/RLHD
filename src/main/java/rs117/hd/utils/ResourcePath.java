@@ -65,8 +65,7 @@ import org.lwjgl.system.Platform;
 
 @Slf4j
 public class ResourcePath {
-    public static ResourcePath RESOURCE_PATH = Props.getPathOrDefault("rlhd.resource-path", () -> null);
-
+	private static final ResourcePath RESOURCE_PATH = Props.getPathOrDefault("rlhd.resource-path", () -> null);
     private static final FileWatcher.UnregisterCallback NOOP = () -> {};
 
     @Nullable
@@ -268,15 +267,8 @@ public class ResourcePath {
         return false;
     }
 
-    /**
-	 * Check if the resource pointed to is actually on the file system, even if it is loaded as a class resource.
-	 */
 	public boolean isFileSystemResource() {
-		try {
-			return toURL().getProtocol().equals("file");
-		} catch (IOException ex) {
-			return false;
-		}
+		return !isClassResource();
 	}
 
 	/**
@@ -295,9 +287,9 @@ public class ResourcePath {
 		// Load once up front
 		changeHandler.accept(path, true);
 
-		// Watch for changes if the resource is on the file system, which will exclude paths pointing into the JAR
-		// By default, unless paths are overridden by VM arguments, all of 117 HD's paths point into the JAR
-		if (isFileSystemResource())
+		// Watch for changes if the resource is on the file system, which will exclude paths pointing into the JAR.
+		// By default, unless paths are overridden by VM arguments, all of 117 HD's paths point into the JAR.
+		if (path.isFileSystemResource())
 			return FileWatcher.watchPath(path, p -> changeHandler.accept(p, false));
 
 		return NOOP;
@@ -544,16 +536,6 @@ public class ResourcePath {
             return true;
         }
 
-        /**
-         * Check if the resource root is actually on the file system.
-         */
-        public boolean isFileSystemResource() {
-            URL url = root.getResource("/");
-            if (url == null)
-                return false;
-            return url.getProtocol().equals("file");
-        }
-
         @Override
         @NonNull
         public URL toURL() throws IOException {
@@ -620,16 +602,6 @@ public class ResourcePath {
         @Override
         public boolean isClassResource() {
             return true;
-        }
-
-        /**
-         * Check if the resource pointed to is actually on the file system, even if it is loaded as a class resource.
-         */
-        public boolean isFileSystemResource() {
-            URL url = root.getResource("/");
-            if (url == null)
-                return false;
-            return url.getProtocol().equals("file");
         }
 
         @Override
