@@ -20158,9 +20158,8 @@
     ]
   },
   {
-    "description": "FLOOR_CANDLES_CENTER",
+    "description": "FLOOR_CANDLES_1",
     "height": 10,
-    "alignment": "CENTER",
     "radius": 300,
     "strength": 10,
     "color": [
@@ -20177,9 +20176,8 @@
     ]
   },
   {
-    "description": "FLOOR_CANDLES_BACK",
+    "description": "FLOOR_CANDLES_2",
     "height": 10,
-    "alignment": "BACK",
     "radius": 200,
     "strength": 10,
     "color": [
@@ -20192,7 +20190,8 @@
     "range": 20,
     "objectIds": [
       12302
-    ]
+    ],
+    "offset": [ 3, 0, 40 ]
   },
   {
     "description": "LANTERN",
