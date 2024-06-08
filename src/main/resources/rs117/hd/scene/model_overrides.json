@@ -5811,7 +5811,7 @@
   },
   {
     "description": "Varrock - Saw Mill Walls",
-    "baseMaterial": "WOOD_GRAIN_2",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       533,
       23900,
@@ -5819,8 +5819,9 @@
       23902
     ],
     "uvType": "BOX",
+    "uvOrientation": 512,
     "flatNormals": true,
-    "uvScale": 0.6
+    "uvScale": 1.1
   },
   {
     "description": "Varrock - Saw Mill floors",
@@ -6896,6 +6897,7 @@
     "description": "Objects - Wooden - Crate",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      2620,
       5106,
       5107,
       5110,
@@ -17402,5 +17404,44 @@
       42044
     ],
     "uvType": "BOX"
+  },
+  {
+    "description": "Lumber Yard  Crate NPC",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "npcIds": [
+      3499
+    ],
+    "uvType": "BOX",
+    "flatNormals": true
+  },
+  {
+    "description": "pile of logs - Banded",
+    "baseMaterial": "BARK",
+    "objectIds": [ 23614 ],
+    "uvType": "BOX",
+    "uvOrientationX": 512,
+    "uvScale": 0.8
+  },
+  {
+    "description": "Barrel with metal bands",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 2619 ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Wooden Cart - Empty",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 3633 ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Lumbar yard - Pile of Wood",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 3209 ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 128
   }
 ]
