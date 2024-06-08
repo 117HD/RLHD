@@ -11215,16 +11215,18 @@
   },
   {
     "description": "Objects - Desert Treasure Pyramid Obilisk - Large",
-    "baseMaterial": "ROCK_2",
+    "baseMaterial": "ROCK_3_SMOOTH",
     "objectIds": [
       6483,
       6484,
-      6484,
       6486,
       6487,
+      6490,
       6492,
       6493
-    ]
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 680
   },
   {
     "description": "Objects - Desert Treasure Pyramid Statue - Medium",
