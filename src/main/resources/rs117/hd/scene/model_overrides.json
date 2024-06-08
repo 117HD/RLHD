@@ -12397,6 +12397,23 @@
     "uvScale": 0.66
   },
   {
+    "description": "Varrock Washing line - Plank",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      4059
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Varrock Washing line - Clothes",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      4487,
+      4058
+    ]
+  },
+  {
     "description": "Fortune-teller Aris - Tent",
     "baseMaterial": "FINE_CARPET",
     "objectIds": [
