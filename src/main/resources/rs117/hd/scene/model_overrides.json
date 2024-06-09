@@ -104,7 +104,6 @@
       1120,
       1161,
       1362,
-      1363,
       1364,
       1366,
       1367,
@@ -1349,6 +1348,7 @@
       1353,
       4328,
       6212,
+      9712,
       14516,
       14517
     ],
@@ -5023,7 +5023,6 @@
       9614,
       9615,
       10490,
-      12450,
       12544,
       14762,
       14852,
@@ -5052,6 +5051,7 @@
       2649,
       7175,
       9613,
+      12450,
       12543,
       12962,
       14851,
@@ -6746,6 +6746,7 @@
       2634,
       5511,
       5512,
+      5824,
       10785,
       11604,
       11605,
@@ -7184,6 +7185,7 @@
     "description": "Objects - Wooden - Crate",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      1,
       3813,
       3814,
       3815,
@@ -7194,6 +7196,8 @@
       12977,
       12978,
       15030,
+      15599,
+      15600,
       17033,
       20367,
       25775,
@@ -7292,6 +7296,7 @@
     "objectIds": [
       5111,
       11487,
+      15598,
       24087,
       40284
     ],
@@ -8074,6 +8079,7 @@
       7168,
       11603,
       12407,
+      12440,
       14872,
       15039,
       15679,
@@ -8964,6 +8970,7 @@
     "description": "Ground Decoration - Sticks - Small",
     "baseMaterial": "BARK",
     "objectIds": [
+      1246,
       1250,
       1251,
       1252,
@@ -9045,8 +9052,11 @@
       23142,
       23143,
       23144,
-      23145
-    ]
+      23145,
+      23274
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.9
   },
   {
     "description": "Objects - Ice Rocks - Small",
@@ -10651,6 +10661,7 @@
       16867,
       16868,
       16870,
+      35956,
       39696
     ],
     "uvType": "BOX",
@@ -10682,7 +10693,7 @@
   {
     "description": "Object - Sack with Hey or Grain",
     "baseMaterial": "FINE_CARPET",
-    "objectIds": [ 5574, 10306, 16878 ],
+    "objectIds": [ 5574, 10306, 16878, 35954 ],
     "uvType": "BOX",
     "uvScale": 0.85,
     "retainVanillaUvs": false
@@ -11427,7 +11438,6 @@
     "description": "Generic - Plank - Tables - Picnic Bench",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      611,
       7430,
       7811
     ],
@@ -11438,6 +11448,7 @@
     "description": "Generic - Plank - Tables - Picnic Bench - Rotated",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      611,
       39687,
       15041
     ],
@@ -17054,7 +17065,7 @@
   },
   {
     "description": "Waterbirth Metallic Objects - Dungeon Gates, Buttons and Ladders",
-    "baseMaterial": "METALLIC_2_HIGHGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
     "objectIds": [
       4384,
       8956,
@@ -18136,9 +18147,7 @@
       15594,
       15601,
       15602,
-      15603,
-      15604,
-      15605
+      15603
     ],
     "uvType": "BOX",
     "uvOrientationX": 512,
@@ -18220,5 +18229,120 @@
     "uvType": "BOX",
     "uvOrientationX": 512,
     "uvOrientationZ": 512
+  },
+  {
+    "description": "Pentagonal Stool",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 1095 ],
+    "uvType": "BOX",
+    "uvScale": 0.80
+  },
+  {
+    "description": "Dwarf Remains",
+    "baseMaterial": "BONE",
+    "objectIds": [ 15596 ],
+    "uvType": "BOX",
+    "uvScale": 0.80
+  },
+  {
+    "description": "Mud Pile in Goblin Cave",
+    "baseMaterial": "DIRT_2_SHINY",
+    "objectIds": [ 13 ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Goblin Cave Walls",
+    "baseMaterial": "DIRT_1",
+    "objectIds": [
+      18908,
+      21800,
+      21801
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Goblin Cave Walls - With Door",
+    "baseMaterial": "DIRT_1",
+    "objectIds": [ 43261 ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Goblin Cave walls with supports",
+    "baseMaterial": "DIRT_1",
+    "objectIds": [
+      18891
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Goblin Cave wall tops",
+    "baseMaterial": "DIRT_1",
+    "objectIds": [
+      18471
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Skeleton with helmet named corpse",
+    "baseMaterial": "BONE",
+    "objectIds": [
+      7208
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Skeleton named corpse",
+    "baseMaterial": "BONE",
+    "objectIds": [
+      21802,
+      21803
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Ramshackle Barrier",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 1771 ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Wooden shelves - Triple - Empty",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 1015 ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "retainVanillaUvs": false
+  },
+  {
+    "description": "Wooden shelves - Triple - Filled",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 1017, 1018 ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "retainVanillaUvs": false
+  },
+  {
+    "description": "Wooden shelves - Triple - Filled",
+    "baseMaterial": "DIRT_2_VERT",
+    "npcIds": [ 1363 ]
+  },
+  {
+    "description": "Goblin Cave - Trapt Mage",
+    "baseMaterial": "ROCK_4",
+    "objectIds": [
+      5808
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 80
   }
 ]
