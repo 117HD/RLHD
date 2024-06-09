@@ -5007,6 +5007,10 @@
     "description": "Wooden Staircase",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      2522,
+      2523,
+      15653,
+      15654,
       18991,
       18992,
       25604,
@@ -5183,6 +5187,13 @@
     "uvScale": 0.4
   },
   {
+    "description": "Candelabra - Dusty",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [ 208 ],
+    "uvType": "BOX",
+    "uvScale": 0.4
+  },
+  {
     "description": "Candlestick Holder",
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
@@ -5313,6 +5324,7 @@
     "description": "Metallic Chest",
     "baseMaterial": "METALLIC_1_SEMIGLOSS",
     "objectIds": [
+      375,
       11735
     ],
     "uvType": "BOX",
@@ -6559,6 +6571,7 @@
       28933,
       28940,
       28941,
+      28948,
       28956,
       28957
     ],
@@ -6824,7 +6837,8 @@
       4607,
       4608,
       7105,
-      7107
+      7107,
+      11418
     ],
     "inheritTileColorType": "OVERLAY",
     "uvType": "WORLD_XZ",
@@ -8057,7 +8071,8 @@
       423,
       4288,
       23067,
-      27664
+      27664,
+      35797
     ],
     "uvType": "MODEL_XZ",
     "uvScale": 0.60
@@ -8892,7 +8907,9 @@
     "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [
       881,
-      882
+      882,
+      2543,
+      2545
     ],
     "uvType": "MODEL_XZ",
     "uvOrientation": 100
@@ -10635,7 +10652,8 @@
       365,
       2354,
       2356,
-      2663
+      2663,
+      34940
     ],
     "uvType": "BOX",
     "uvOrientation": 256,
@@ -11506,6 +11524,7 @@
     "objectIds": [
       872,
       877,
+      2542,
       3421,
       6480
     ]
@@ -17400,6 +17419,7 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       380,
+      387,
       4617
     ],
     "uvType": "BOX",
@@ -18245,9 +18265,9 @@
     "uvScale": 0.80
   },
   {
-    "description": "Mud Pile in Goblin Cave",
+    "description": "Mud Pile - Climbable",
     "baseMaterial": "DIRT_2_SHINY",
-    "objectIds": [ 13 ],
+    "objectIds": [ 13, 2533 ],
     "uvType": "BOX",
     "uvScale": 0.6
   },
@@ -18324,7 +18344,7 @@
   {
     "description": "Wooden shelves - Triple - Filled",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 1017, 1018 ],
+    "objectIds": [ 1016, 1017, 1018 ],
     "uvType": "BOX",
     "uvScale": 0.8,
     "uvOrientationX": 512,
@@ -18344,5 +18364,70 @@
     "uvType": "BOX",
     "uvScale": 0.6,
     "uvOrientation": 80
+  },
+  {
+    "description": "Wooden shelves with bottom cupboard - Empty",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 1014 ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "retainVanillaUvs": false
+  },
+  {
+    "description": "Grill",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "objectIds": [
+      11422,
+      11423
+    ]
+  },
+  {
+    "description": "Wooden shelves with bottom cupboard - Empty",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 1014 ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "retainVanillaUvs": false
+  },
+  {
+    "description": "Grill",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [ 2544 ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "uvScale": 0.8
+  },
+  {
+    "description": "Gallows",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 649 ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Brown brick wall with metal spikes - Textured",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [ 1934 ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Wall shackles - Textured",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [ 650 ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "uvScale": 0.8,
+    "uvOrientationY": 512
+  },
+  {
+    "description": "Wall shackles - Textured",
+    "baseMaterial": "DIRT_1",
+    "objectIds": [ 11417 ],
+    "uvType": "BOX",
+    "uvScale": 0.9,
+    "uvOrientation": 77
   }
 ]
