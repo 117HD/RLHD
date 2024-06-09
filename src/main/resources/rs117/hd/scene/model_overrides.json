@@ -2751,7 +2751,7 @@
   },
   {
     "description": "Wintertodt Brazier",
-    "baseMaterial": "METALLIC_2_HIGHGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
     "objectIds": [
       29312,
       29313,
@@ -3688,7 +3688,7 @@
   },
   {
     "description": "Desert Quarry Grinder",
-    "baseMaterial": "METALLIC_2_GLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
     "objectIds": [
       26199
     ]
@@ -3810,7 +3810,7 @@
   },
   {
     "description": "Pyramid Plunder Metallic Objects",
-    "baseMaterial": "METALLIC_2_SUPER_HIGHGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_SUPER_HIGHGLOSS",
     "objectIds": [
       20946,
       20947,
@@ -3883,7 +3883,7 @@
   },
   {
     "description": "Lighthouse Roof",
-    "baseMaterial": "METALLIC_2",
+    "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [
       4599
     ]
@@ -3912,7 +3912,7 @@
   },
   {
     "description": "Lighthouse Metallic objects, Mechanisms and Ladders",
-    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       4380,
       4383,
@@ -5171,18 +5171,20 @@
   },
   {
     "description": "Candelabra",
-    "baseMaterial": "METALLIC_2_HIGHGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_HIGHGLOSS",
     "objectIds": [
       202,
       203,
       204,
       7432,
       17323
-    ]
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.4
   },
   {
     "description": "Candlestick Holder",
-    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       1897
     ]
@@ -5217,13 +5219,15 @@
   },
   {
     "description": "Decorative Armor",
-    "baseMaterial": "METALLIC_2_HIGHGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [
       817,
       5554,
       25206,
       25792
-    ]
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.4
   },
   {
     "description": "STONE_WINDOWS",
@@ -5235,19 +5239,23 @@
   },
   {
     "description": "WALL_TORCHES",
-    "baseMaterial": "METALLIC_2_HIGHGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [
       196,
       197,
       38027
-    ]
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
   },
   {
     "description": "WALL_SHIELD",
-    "baseMaterial": "METALLIC_2_HIGHGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_HIGHGLOSS",
     "objectIds": [
       840
-    ]
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.4
   },
   {
     "description": "MARBLE_STATUE_OF_KING",
@@ -5287,48 +5295,60 @@
       892,
       893,
       894
-    ]
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.4
   },
   {
     "description": "Metallic Guilded Chest",
-    "baseMaterial": "METALLIC_2_HIGHGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_HIGHGLOSS",
     "objectIds": [
       376,
       26273
-    ]
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
   },
   {
     "description": "Metallic Chest",
     "baseMaterial": "METALLIC_1_SEMIGLOSS",
     "objectIds": [
       11735
-    ]
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
   },
   {
     "description": "CANNON_BALL",
-    "baseMaterial": "METALLIC_2_HIGHGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [
       822
     ]
   },
   {
     "description": "CANNON",
-    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [
       821,
       7137
-    ]
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 512
   },
   {
     "description": "METAL_FLAG_POLE",
     "baseMaterial": "METALLIC_1_GLOSS",
     "objectIds": [
       861
-    ]
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 120
   },
   {
     "description": "BATHTUB",
-    "baseMaterial": "METALLIC_2_HIGHGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_HIGHGLOSS",
     "objectIds": [
       875
     ]
@@ -5338,11 +5358,13 @@
     "baseMaterial": "METALLIC_1_GLOSS",
     "objectIds": [
       871
-    ]
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
   },
   {
     "description": "Metal Fence Gate",
-    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       37,
       39,
@@ -5403,13 +5425,15 @@
   },
   {
     "description": "Metal Fence",
-    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       20873,
       20874,
+      20875,
       24097
     ],
-    "uvType": "MODEL_XY"
+    "uvType": "BOX",
+    "uvScale": 0.7
   },
   {
     "description": "Marble Fountain",
@@ -5420,7 +5444,7 @@
   },
   {
     "description": "Metallic Furnace",
-    "baseMaterial": "METALLIC_2_GLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [
       4304,
       4305,
@@ -5441,7 +5465,7 @@
   },
   {
     "description": "Metal Lever",
-    "baseMaterial": "METALLIC_2_GLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
     "objectIds": [
       33,
       34,
@@ -5450,13 +5474,14 @@
   },
   {
     "description": "Anvil",
-    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       2097,
       4306,
       6150
     ],
     "uvType": "BOX",
+    "uvScale": 1.1,
     "flatNormals": true
   },
   {
@@ -5587,7 +5612,7 @@
   },
   {
     "description": "Metal Chimney",
-    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       5098
     ]
@@ -5665,7 +5690,7 @@
   },
   {
     "description": "Metal Lanturn",
-    "baseMaterial": "METALLIC_2_GLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
     "objectIds": [
       205,
       3474,
@@ -7314,33 +7339,41 @@
   },
   {
     "description": "Metallic - Ground - Armor",
-    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       825,
       826,
       827,
       828
-    ]
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 1.2
   },
   {
     "description": "Objects - Metallic - Chair - Broken",
-    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       19929
     ]
   },
   {
     "description": "Objects - Metallic - Range",
-    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [
+      114,
       7183,
       7184,
-      25730
-    ]
+      25730,
+      40149,
+      40164
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
   },
   {
     "description": "Wall - Decoration - Metallic - Sword and Shield",
-    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       10515
     ]
@@ -7358,7 +7391,7 @@
   },
   {
     "description": "Objects - Metallic - Pots",
-    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       5609,
       5610,
@@ -7369,23 +7402,27 @@
       17561,
       17562,
       17647
-    ]
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 655
   },
   {
     "description": "Objects - Metallic - Panning Tray",
-    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       17560
-    ]
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
   },
   {
     "description": "Objects - Metallic - Iron Billets",
-    "baseMaterial": "METALLIC_2",
+    "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [
       2140
     ],
-    "uvType": "GEOMETRY",
-    "uvScale": 0.28
+    "uvType": "BOX"
   },
   {
     "description": "Ground - Wooden - Plank Steps",
@@ -7536,7 +7573,7 @@
   },
   {
     "description": "Mortton Shade Catacombs  - Walls - Metallic - Doors",
-    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       4106,
       4107,
@@ -7547,8 +7584,8 @@
       18149,
       18150
     ],
-    "uvType": "MODEL_XY",
-    "uvScale": 0.5
+    "uvType": "BOX",
+    "uvScale": 0.4
   },
   {
     "description": "Mortton Shade Catacombs  - Objects - Stone - Grave Stone",
@@ -7630,7 +7667,7 @@
   },
   {
     "description": "Mortton Shade Catacombs  - Walls - Metallic - Fence",
-    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       37773,
       37774,
@@ -7664,7 +7701,7 @@
   },
   {
     "description": "Mortton - Objects - Shade Chests - Medium - Bronze",
-    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       4111,
       4112,
@@ -7672,12 +7709,12 @@
       4114,
       4115
     ],
-    "uvType": "MODEL_XZ",
-    "uvScale": 0.88
+    "uvType": "BOX",
+    "uvScale": 0.6
   },
   {
     "description": "Mortton - Objects - Shade Chests - Medium - Steel",
-    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       4116,
       4117,
@@ -7685,12 +7722,12 @@
       4119,
       4120
     ],
-    "uvType": "MODEL_XZ",
-    "uvScale": 0.88
+    "uvType": "BOX",
+    "uvScale": 0.6
   },
   {
     "description": "Mortton - Objects - Shade Chests - Medium - Black",
-    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       4121,
       4122,
@@ -7698,12 +7735,12 @@
       4124,
       4125
     ],
-    "uvType": "MODEL_XZ",
-    "uvScale": 0.88
+    "uvType": "BOX",
+    "uvScale": 0.6
   },
   {
     "description": "Mortton - Objects - Shade Chests - Medium - Silver",
-    "baseMaterial": "METALLIC_2_GLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
     "objectIds": [
       4126,
       4127,
@@ -7711,8 +7748,8 @@
       4129,
       4130
     ],
-    "uvType": "MODEL_XZ",
-    "uvScale": 0.88
+    "uvType": "BOX",
+    "uvScale": 0.6
   },
   {
     "description": "Morytania - Walls - Triple Slat Fence",
@@ -8846,12 +8883,13 @@
   },
   {
     "description": "Objects - Metallic - Manhole",
-    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [
       881,
       882
     ],
-    "uvType": "BOX"
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 100
   },
   {
     "description": "Objects - Stone - Large Gravestone - Large",
@@ -8878,7 +8916,7 @@
   },
   {
     "description": "Ardougne - Walls - Stone - Zoo Ferret Fence",
-    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       19995
     ],
@@ -9229,7 +9267,7 @@
   },
   {
     "description": "Penguin Metal Doors",
-    "baseMaterial": "METALLIC_2",
+    "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [
       21160,
       21161,
@@ -9267,7 +9305,7 @@
   },
   {
     "description": "Big Red Button",
-    "baseMaterial": "METALLIC_2",
+    "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [
       21086
     ]
@@ -10055,7 +10093,7 @@
   },
   {
     "description": "Metal Monkeybars",
-    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       14941,
       14942,
@@ -10269,7 +10307,7 @@
   },
   {
     "description": "Sophamena Wall Decoration",
-    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       6535,
       6536
@@ -10373,7 +10411,7 @@
   },
   {
     "description": "Sophanem Gate",
-    "baseMaterial": "METALLIC_2_HIGHGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_HIGHGLOSS",
     "objectIds": [
       44035,
       44036,
@@ -10651,7 +10689,7 @@
   },
   {
     "description": "Culinaromancers Floor",
-    "baseMaterial": "METALLIC_2_HIGHGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_HIGHGLOSS",
     "objectIds": [
       12366
     ]
@@ -11018,7 +11056,7 @@
   },
   {
     "description": "Ver Sinhaza Walls",
-    "baseMaterial": "METALLIC_2",
+    "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [
       17503,
       17504,
@@ -11558,7 +11596,7 @@
   },
   {
     "description": "Wall Decoration - Desert Treasure Pyramid - Golden Torch",
-    "baseMaterial": "METALLIC_2_HIGHGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_HIGHGLOSS",
     "objectIds": [
       6537
     ]
@@ -11828,7 +11866,7 @@
   },
   {
     "description": "Barrows Sarcophagus",
-    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       20720,
       20721,
@@ -11854,7 +11892,7 @@
   },
   {
     "description": "Barrows Tunnels Doors lighter",
-    "baseMaterial": "METALLIC_2_HIGHGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_HIGHGLOSS",
     "objectIds": [
       20678,
       20679,
@@ -11864,7 +11902,7 @@
   },
   {
     "description": "Barrows Tunnels Doors darker",
-    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       20680,
       20699
@@ -11872,7 +11910,7 @@
   },
   {
     "description": "Barrows Chest",
-    "baseMaterial": "METALLIC_2_GLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
     "objectIds": [
       20723,
       20724
@@ -11924,18 +11962,20 @@
   },
   {
     "description": "Objects - Metallic - Vat",
-    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       1028,
       1029
-    ]
+    ],
+    "uvType": "BOX"
   },
   {
     "description": "Objects - Metallic - Scuttle",
-    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       24321
-    ]
+    ],
+    "uvType": "BOX"
   },
   {
     "description": "Morytania - Walls - Metallic - Fence",
@@ -11945,27 +11985,29 @@
       3458,
       3459
     ],
+    "retainVanillaUvs": false,
     "uvType": "BOX",
     "uvOrientation": 256,
-    "uvScale": 1.2
+    "uvScale": 0.6
   },
   {
     "description": "Morytania - Walls - Metallic - Frankenstrains Gate",
-    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       5172,
       5173
     ],
-    "uvType": "MODEL_XY",
+    "uvType": "BOX",
     "uvOrientation": 256,
     "uvScale": 0.7
   },
   {
     "description": "Morytania - Objects - Metallic - Suit of Armor",
-    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       1900
-    ]
+    ],
+    "uvType": "BOX"
   },
   {
     "description": "Wooden Wedge Stairs",
@@ -12009,7 +12051,7 @@
   },
   {
     "description": "Motherload Trough",
-    "baseMaterial": "METALLIC_2_HIGHGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_HIGHGLOSS",
     "objectIds": [
       3428,
       26683,
@@ -12021,7 +12063,7 @@
   },
   {
     "description": "Motherload Mine - Cogs",
-    "baseMaterial": "METALLIC_2_HIGHGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_HIGHGLOSS",
     "objectIds": [
       13589
     ],
@@ -12029,8 +12071,10 @@
   },
   {
     "description": "Blast Furnace",
-    "baseMaterial": "METALLIC_1_GLOSS",
+    "baseMaterial": "METALLIC_1",
     "objectIds": [
+      9085,
+      9086,
       9087,
       9088,
       9089,
@@ -12039,6 +12083,11 @@
       9095,
       9096,
       9098,
+      9104,
+      9105,
+      9106,
+      9107,
+      9108,
       9114,
       9114,
       9116,
@@ -12051,7 +12100,8 @@
       9123,
       9124,
       9125
-    ]
+    ],
+    "uvType": "BOX"
   },
   {
     "description": "Motherload Furnace",
@@ -12142,7 +12192,7 @@
   },
   {
     "description": "Giants Foundry Crucible",
-    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       44622,
       44623,
@@ -12961,7 +13011,7 @@
   },
   {
     "description": "Piscatoris - Walls - Metallic - Doors",
-    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       12723,
       12724,
@@ -13133,7 +13183,7 @@
   },
   {
     "description": "Mage Training Arena - Metal Fence",
-    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       10740,
       10741,
@@ -13155,7 +13205,7 @@
   },
   {
     "description": "Mage Training Arena - Enchanters Playground Shape Piles",
-    "baseMaterial": "METALLIC_2_HIGHGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_HIGHGLOSS",
     "objectIds": [
       23694,
       23695,
@@ -13175,7 +13225,7 @@
   },
   {
     "description": "Mage Training Arena - Candelabra",
-    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       10720
     ]
@@ -13384,7 +13434,7 @@
   },
   {
     "description": "Stronghold Of Security - War - Metallic Floor",
-    "baseMaterial": "METALLIC_2_GLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
     "objectIds": [
       20655
     ],
@@ -13393,7 +13443,7 @@
   },
   {
     "description": "Stronghold Of Security - War - Metallic Floor with fence",
-    "baseMaterial": "METALLIC_2_GLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
     "objectIds": [
       20657,
       20658
@@ -13403,7 +13453,7 @@
   },
   {
     "description": "Stronghold Of Security - War - Metallic Walls",
-    "baseMaterial": "METALLIC_2_GLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
     "objectIds": [
       19173,
       19204,
@@ -13422,7 +13472,7 @@
   },
   {
     "description": "Stronghold Of Security - War - Metallic Overdoor",
-    "baseMaterial": "METALLIC_2_GLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
     "objectIds": [
       19211
     ],
@@ -13430,7 +13480,7 @@
   },
   {
     "description": "Stronghold Of Security - War - Metallic Ladder",
-    "baseMaterial": "METALLIC_2_GLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
     "objectIds": [
       20784,
       20785
@@ -14472,7 +14522,7 @@
   },
   {
     "description": "Freminnik - Decorations - Metal Gutter",
-    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       4162,
       4327
@@ -15036,13 +15086,13 @@
   },
   {
     "description": "Objects - Metallic - Metallic Ladder",
-    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [ 11806 ],
     "uvType": "BOX"
   },
   {
     "description": "Varrock Sewers - Objects - Metallic - Scurrius Entrance Bars",
-    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       14203, 14207, 14208, 14839,
       27120, 27123, 27124, 27125,
@@ -15891,7 +15941,7 @@
   },
   {
     "description": "Keldagrim - Metallic - Metal Walls - Exterior",
-    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       6981, 6982, 6098, 6099
     ],
@@ -16008,14 +16058,14 @@
   },
   {
     "description": "Objects - Metallic - Door",
-    "baseMaterial": "METALLIC_2",
+    "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [ 6102, 6103, 6104, 6105, 6106, 6107, 6108, 6109, 6110, 6111 ],
     "uvType": "BOX",
     "uvOrientation": 128
   },
   {
     "description": "Objects - Metallic - Door",
-    "baseMaterial": "METALLIC_2",
+    "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [ 1742, 6100, 6101, 6138, 6139, 6140, 6141, 6142, 6975, 6976, 6977, 6978 ],
     "uvType": "BOX",
     "uvOrientation": 128
@@ -16076,7 +16126,7 @@
   },
   {
     "description": "Blast Furnace - Objects - Metallic - Sink",
-    "baseMaterial": "METALLIC_2",
+    "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [
       6151,
       9143
@@ -16086,7 +16136,7 @@
   },
   {
     "description": "Blast Furnace - Objects - Metallic - Scaffolding",
-    "baseMaterial": "METALLIC_2",
+    "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [
       9109, 9110, 9111, 9112, 9113
     ],
@@ -16694,7 +16744,7 @@
   },
   {
     "description": "Metal Street Lanturn",
-    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       6202
     ],
@@ -16705,7 +16755,7 @@
   },
   {
     "description": "Keldagrim Fireplace",
-    "baseMaterial": "METALLIC_2",
+    "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [
       6093
     ],
@@ -16715,7 +16765,7 @@
   },
   {
     "description": "Keldagrim Fireplace with Spit - Empty",
-    "baseMaterial": "METALLIC_2",
+    "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [
       6094
     ],
@@ -16725,7 +16775,7 @@
   },
   {
     "description": "Keldagrim Fireplace with Spit and Meat",
-    "baseMaterial": "METALLIC_2",
+    "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [
       6095
     ],
@@ -16775,7 +16825,7 @@
   },
   {
     "description": "Strange Box - Metal",
-    "baseMaterial": "METALLIC_2",
+    "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [
       8879, 8880
     ],
@@ -16785,7 +16835,7 @@
   },
   {
     "description": "Scaffolding - Metal",
-    "baseMaterial": "METALLIC_2",
+    "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [
       8899, 8900, 8901, 8902, 8903, 8904
     ],
@@ -16795,7 +16845,7 @@
   },
   {
     "description": "Struts - Metal",
-    "baseMaterial": "METALLIC_2",
+    "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [
       8917
     ],
@@ -16887,7 +16937,7 @@
   },
   {
     "description": "Objects - Metal Milk Urn",
-    "baseMaterial": "METALLIC_2",
+    "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [
       8690
     ],
@@ -17348,7 +17398,7 @@
   },
   {
     "description": "Objects - Metallic - Range on textured bricks - Textured",
-    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       9736
     ]
@@ -17507,7 +17557,7 @@
   {
     "description": "Metal lamp post with candle lanturn",
     "objectIds": [ 11468 ],
-    "baseMaterial": "METALLIC_2",
+    "baseMaterial": "METALLIC_1_LIGHT",
     "uvType": "BOX",
     "uvScale": 0.5,
     "uvOrientation": 42,
@@ -17964,7 +18014,7 @@
   },
   {
     "description": "Camdozaal Metal Scaffold",
-    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       41580
     ],
@@ -17974,7 +18024,7 @@
   },
   {
     "description": "Camdozaal metal floor crate",
-    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       41579
     ],
@@ -17984,7 +18034,7 @@
   },
   {
     "description": "Camdozaal Metal Fence",
-    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       41577,
       41578
@@ -17995,7 +18045,7 @@
   },
   {
     "description": "Camdozaal Metal Sconce",
-    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       41489,
       41490
@@ -18006,7 +18056,7 @@
   },
   {
     "description": "Camdozaal Metal Sconce - Lit",
-    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       41487,
       41488
@@ -18077,5 +18127,98 @@
       12059
     ],
     "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Seers Coal Mine Fence",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "objectIds": [
+      15593,
+      15594,
+      15601,
+      15602,
+      15603,
+      15604,
+      15605
+    ],
+    "uvType": "BOX",
+    "uvOrientationX": 512,
+    "uvScale": 0.4
+  },
+  {
+    "description": "Seers Coal Mine Fence - Bent",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "objectIds": [
+      18,
+      19,
+      20
+    ],
+    "uvType": "BOX",
+    "uvOrientationX": 512,
+    "uvScale": 0.4
+  },
+  {
+    "description": "Seers Coal Mine Gate",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "objectIds": [
+      15604,
+      15605,
+      15606,
+      15607
+    ],
+    "uvType": "BOX",
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512,
+    "uvScale": 0.4
+  },
+  {
+    "description": "Kourend Decorative Metallic Rails",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      33553,
+      33554,
+      33555
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 655
+  },
+  {
+    "description": "Kourend Decorative Metallic Fence",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      27937,
+      27938
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 655
+  },
+  {
+    "description": "Falador Park Fence",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "objectIds": [
+      24013,
+      24014
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Train Cart",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      7028
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Wooden textured workbench",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      609
+    ],
+    "uvType": "BOX",
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512
   }
 ]
