@@ -12960,7 +12960,8 @@
     "objectIds": [ 356, 595, 647 ],
     "flatNormals": true,
     "uvType": "BOX",
-    "retainVanillaUvs": false
+    "retainVanillaUvs": false,
+    "uvScale": 0.6
   },
   {
     "description": "Wooden crate",
