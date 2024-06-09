@@ -7,9 +7,6 @@ import net.runelite.client.RuneLite;
 import net.runelite.client.RuneLiteProperties;
 import net.runelite.client.externalplugins.ExternalPluginManager;
 import rs117.hd.utils.Props;
-import rs117.hd.utils.ResourcePath;
-
-import static rs117.hd.utils.ResourcePath.path;
 
 @SuppressWarnings("unchecked")
 @Slf4j
@@ -18,7 +15,7 @@ public class HdPluginTest
 	public static void main(String[] args) throws Exception
 	{
 		Props.DEVELOPMENT = true;
-		ResourcePath.RESOURCE_PATH = path("src/main/resources");
+		Props.set("rlhd.resource-path", "src/main/resources");
 		ClassLoader.getSystemClassLoader().setDefaultAssertionStatus(true);
 		useLatestPluginHub();
 		ExternalPluginManager.loadBuiltin(HdPlugin.class);
