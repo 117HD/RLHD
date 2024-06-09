@@ -104,7 +104,6 @@
       1120,
       1161,
       1362,
-      1363,
       1364,
       1366,
       1367,
@@ -6748,7 +6747,6 @@
       5511,
       5512,
       5824,
-      10784,
       10785,
       11604,
       11605,
@@ -17067,7 +17065,7 @@
   },
   {
     "description": "Waterbirth Metallic Objects - Dungeon Gates, Buttons and Ladders",
-    "baseMaterial": "METALLIC_2_HIGHGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
     "objectIds": [
       4384,
       8956,
@@ -18149,9 +18147,7 @@
       15594,
       15601,
       15602,
-      15603,
-      15604,
-      15605
+      15603
     ],
     "uvType": "BOX",
     "uvOrientationX": 512,
@@ -18337,7 +18333,7 @@
   {
     "description": "Wooden shelves - Triple - Filled",
     "baseMaterial": "DIRT_2_VERT",
-    "npcIds": [1363]
+    "npcIds": [ 1363 ]
   },
   {
     "description": "Goblin Cave - Trapt Mage",
