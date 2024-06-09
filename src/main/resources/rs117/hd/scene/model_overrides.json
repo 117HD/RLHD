@@ -16444,7 +16444,7 @@
   },
   {
     "description": "Perilous Moons Monolith and Gates",
-    "baseMaterial": "METALLIC_2_HIGHGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_HIGHGLOSS",
     "objectIds": [
       51379,
       51392,
@@ -16521,7 +16521,7 @@
   },
   {
     "description": "Blood Moon Arena Bloody Wall",
-    "baseMaterial": "METALLIC_2_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_HIGHGLOSS",
     "objectIds": [
       51249,
       51250,

@@ -32094,7 +32094,7 @@
     ]
   },
   {
-    "description": "TOA_WARDEN_P3_SKULL_CHARGE_PROJECTILE_&_BLOOD_MOON_PROJECTILE",
+    "description": "TOA_WARDEN_P3_SKULL_CHARGE_PROJECTILE & BLOOD_MOON_PROJECTILE",
     "height": 25,
     "radius": 400,
     "strength": 7,
@@ -34650,16 +34650,17 @@
     "objectIds": [
       51009
     ]
-  },  {
-  "description": "Eclipse Moon Entrance",
-  "worldX": 1510,
-  "worldY": 9673,
-  "plane": 1,
-  "radius": 750,
-  "strength": 15,
-  "color": "#ff8000",
-  "offset": [ 70, 250, 0 ]
-},
+  },
+  {
+    "description": "Eclipse Moon Entrance",
+    "worldX": 1510,
+    "worldY": 9673,
+    "plane": 1,
+    "radius": 750,
+    "strength": 15,
+    "color": "#ff8000",
+    "offset": [ 70, 250, 0 ]
+  },
   {
     "description": "Blue Moon Entrance",
     "worldX": 1405,
@@ -34678,7 +34679,7 @@
     "radius": 1600,
     "strength": 15,
     "color": "#de0000",
-    "offset": [ 0,350,70 ]
+    "offset": [ 0, 350, 70 ]
   },
   {
     "description": "ANTECHAMBER_CEILING_LIGHT",
