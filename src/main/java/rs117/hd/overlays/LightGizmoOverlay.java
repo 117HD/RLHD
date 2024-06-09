@@ -209,7 +209,7 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 		// NDC clip space
 		Mat4.mul(projectionMatrix, Mat4.scale(client.getScale(), client.getScale(), 1));
 		Mat4.mul(projectionMatrix, Mat4.projection(viewportWidth, viewportHeight, NEAR_PLANE));
-		Mat4.mul(projectionMatrix, Mat4.rotateX(plugin.cameraOrientation[1] - (float) Math.PI));
+		Mat4.mul(projectionMatrix, Mat4.rotateX(plugin.cameraOrientation[1]));
 		Mat4.mul(projectionMatrix, Mat4.rotateY(plugin.cameraOrientation[0]));
 		Mat4.mul(projectionMatrix, Mat4.translate(
 			-plugin.cameraPosition[0],
