@@ -18429,5 +18429,12 @@
     "uvType": "BOX",
     "uvScale": 0.9,
     "uvOrientation": 77
+  },
+  {
+    "description": "Long Oak Cabinet",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 35796 ],
+    "uvType": "BOX",
+    "uvScale": 0.8
   }
 ]
