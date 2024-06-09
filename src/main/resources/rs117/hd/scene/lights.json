@@ -28363,6 +28363,187 @@
     ]
   },
   {
+    "description": "Drake Back Wound Right",
+    "height": 300,
+    "offset": [ 100, 0, -100 ],
+    "radius": 175,
+    "strength": 30,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 10,
+    "range": 30,
+    "npcIds": [ 8612 ]
+  },
+  {
+  "description": "Drake Back Wound Left",
+  "height": 300,
+  "offset": [ -100, 0, -100 ],
+  "radius": 175,
+  "strength": 30,
+  "color": [
+    255,
+    0,
+    0
+  ],
+  "type": "FLICKER",
+  "duration": 10,
+  "range": 30,
+  "npcIds": [ 8612 ]
+  },
+  {
+    "description": "Drake Back Wound Front",
+    "height": 350,
+    "offset": [ 0, 0, 100 ],
+    "radius": 175,
+    "strength": 30,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 10,
+    "range": 30,
+    "npcIds": [ 8612 ],
+    "animationIds": [ -1, 8276 ],
+    "fadeOutDuration": 300,
+    "fadeInDuration": 750
+  },
+  {
+    "description": "Drake Maw Idle",
+    "height": 50,
+    "offset": [ -20, 5, 252 ],
+    "radius": 32,
+    "strength": 120,
+    "color": "#ff8c00",
+    "type": "FLICKER",
+    "duration": 10,
+    "range": 5,
+    "npcIds": [ 8612 ],
+    "animationIds": [ -1 ],
+    "fadeInDuration": 300
+  },
+  {
+    "description": "Drake Ranged Attack",
+    "offset": [ 0, 0, 0 ],
+    "radius": 135,
+    "strength": 12,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 1,
+    "range": 80,
+    "projectileIds": [ 1636 ],
+    "spawnDelay": 800,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 100
+  },
+  {
+    "description": "Drake Flame Attack",
+    "offset": [ 0, 0, 0 ],
+    "radius": 175,
+    "strength": 12,
+    "color": "#ff8c00",
+    "type": "FLICKER",
+    "duration": 5,
+    "range": 60,
+    "projectileIds": [ 1637 ],
+    "spawnDelay": 255,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 150
+  },
+  {
+    "description": "Drake Flame Explosion",
+    "offset": [ 0, 10, 0 ],
+    "radius": 150,
+    "strength": 45,
+    "color": "#ff8c00",
+    "type": "FLICKER",
+    "duration": 2,
+    "range": 80,
+    "graphicsObjectIds": [ 1638 ],
+    "fadeInDuration": 50,
+    "fadeOutDuration": 50
+  },
+  {
+    "description": "Wyrm Slithering Light",
+    "offset": [ 0, 0, 0 ],
+    "radius": 170,
+    "strength": 25,
+    "color": [
+      0,
+      200,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 10,
+    "range": 70,
+    "npcIds": [ 8610 ],
+    "fadeInDuration": 100,
+    "fadeOutDuration": 100
+  },
+  {
+    "description": "Shadow Wyrm Slithering Light",
+    "offset": [ 0, 0, 0 ],
+    "radius": 270,
+    "strength": 35,
+    "color": [
+      0,
+      50,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 10,
+    "range": 70,
+    "npcIds": [ 10398 ],
+    "fadeInDuration": 100,
+    "fadeOutDuration": 100
+  },
+
+  {
+    "description": "Wyrm Magic Attack",
+    "offset": [ 0, 0, 0 ],
+    "radius": 220,
+    "strength": 20,
+    "color": [
+      0,
+      200,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 1,
+    "range": 80,
+    "projectileIds": [ 1634 ],
+    "spawnDelay": 400,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 100
+  },
+  {
+    "description": "Shadow Wyrm Magic Attack",
+    "offset": [ 0, 0, 0 ],
+    "radius": 220,
+    "strength": 50,
+    "color": [
+      0,
+      50,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 10,
+    "range": 70,
+    "projectileIds": [ 1814 ],
+    "spawnDelay": 400,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 100
+  },
+  {
     "description": "KARUULM_INDOOR_LAVA_1",
     "worldX": 1307,
     "worldY": 10193,
