@@ -180,6 +180,7 @@
       2051,
       2052,
       2054,
+      2055,
       2085,
       2086,
       2087,
@@ -18437,5 +18438,21 @@
     "objectIds": [ 35796 ],
     "uvType": "BOX",
     "uvScale": 0.8
+  },
+  {
+    "description": "Grandfather Clock",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 683 ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Marble Pillar - Textured",
+    "baseMaterial": "MARBLE_1_SEMIGLOSS",
+    "objectIds": [ 1869 ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "retainVanillaUvs": false,
+    "uvOrientation": 512
   }
 ]
