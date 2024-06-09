@@ -1922,7 +1922,8 @@
     "name": "GOBLIN_CAVE_FLOOR",
     "area": "GOBLIN_CAVE",
     "underlayIds": [
-      63,67
+      63,
+      67
     ],
     "groundMaterial": "DIRT",
     "uvScale": 1.15
@@ -2801,7 +2802,7 @@
     }
   },
   {
-    "name": "CASTLE_WARS_LOBBY_FLOOR",
+    "name": "JAGGED_STONE_PATH",
     "area": "OVERWORLD",
     "overlayIds": [
       117
