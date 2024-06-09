@@ -34726,12 +34726,12 @@
     "offset": [ 0, 287, 0 ]
   },
   {
-    "description": "ANTECHAMBER_BLUE_MOON_BRAZIERS",
+    "description": "Earthbound Cavern - Glowing Mushrooms",
     "objectIds": [ 36220 ],
-    "height": 105,
+    "height": 155,
     "color": "#00e4ff",
-    "strength": 10,
-    "radius": 400
+    "strength": 5.5,
+    "radius": 600
   },
   {
     "description": "ANTECHAMBER_ECLIPSE_MOON_BRAZIERS",

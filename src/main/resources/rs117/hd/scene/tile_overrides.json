@@ -4381,6 +4381,31 @@
     "maxLightness": 15
   },
   {
+    "name": "Perilous Moons Antechamber Tiles",
+    "area": "PERILOUS_MOONS_ANTECHAMBER_TILES",
+    "underlayIds": [ 19, 39, 72 ],
+    "overlayIds": [ 0, 37, 228, 229 ],
+    "blended": false,
+    "groundMaterial": "MARBLE_1_GLOSS",
+    "maxLightness": 11
+  },
+  {
+    "name": "Perilous Moons Antechamber Blend Fix",
+    "area": "PERILOUS_MOONS_ANTECHABMER_BLEND_FIX",
+    "underlayIds": [ 19, 39, 72 ],
+    "overlayIds": [ 0, 37, 139, 228, 229 ],
+    "groundMaterial": "DIRT",
+    "blended": false,
+    "maxLightness": 9
+  },
+  {
+    "name": "Perilous Moons Ancient Prison, Sun Tiles Fix",
+    "area": "ANCIENT_PRISON_SUN_BLEND_FIX",
+    "overlayIds": [ 80 ],
+    "groundMaterial": "MARBLE_2_GLOSS",
+    "blended": false
+  },
+  {
     "name": "EARTHBOUND_CAVERN_WATER_DARKER",
     "area": "EARTHBOUND_CAVERN",
     "overlayIds": [ 201 ],

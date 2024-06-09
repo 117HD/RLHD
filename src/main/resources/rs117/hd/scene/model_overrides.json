@@ -16363,7 +16363,7 @@
     "uvScale": 0.5
   },
   {
-    "description": "Perilous Moons Giant Eagle Statue, separate because for no gloss",
+    "description": "Perilous Moons Giant Eagle Statue, separate because no gloss",
     "baseMaterial": "MARBLE_2",
     "objectIds": [
       51331
@@ -16499,7 +16499,8 @@
   },
   {
     "description": "Perilous Moons Ancient Shrine stone chips, Hide them they are ugly here",
-    "baseMaterial": "TRANSPARENT",
+    "hide": true,
+    "areas": [ "PERILOUS_MOONS_REWARD_ROOM" ],
     "castShadows": false,
     "receiveShadows": false,
     "objectIds": [
@@ -16559,6 +16560,38 @@
       51607
     ],
     "uvType": "BOX"
+  },
+  {
+    "description": "Perilous Moons - Dragon Head Wall Fountains",
+    "baseMaterial": "GRAY_65",
+    "objectIds": [
+      51424,
+      51425,
+      51426,
+      51427,
+      51428,
+      51429,
+      51430,
+      51431
+    ]
+  },
+  {
+    "description": "Perilous Moons - Camp - Barrier and Stove",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      51362,
+      51364
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Perilous Moons - Camp - Supply Crates",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      51371
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 520
   },
   {
     "description": "Hunter Guild cave, Cam Torum, Perilous Moons and Giants Den - Walls, Rocky objects and Stairs",
