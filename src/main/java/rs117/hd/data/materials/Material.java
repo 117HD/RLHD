@@ -665,24 +665,25 @@ public enum Material {
 	WALL_STONE_LIGHT(WALL_STONE, p -> p
 		.setNormalMap(WALL_STONE_N)
 		.setBrightness(1.7f)),
-	METALLIC_1(p -> p.setSpecular(0.2f, 20)),
+	METALLIC_1_N,
+	METALLIC_1(p -> p.setNormalMap(METALLIC_1_N).setSpecular(0.6f, 30)),
 	METALLIC_1_SEMIGLOSS(METALLIC_1, p -> p
-		.setSpecular(0.3f, 80)),
+		.setSpecular(0.8f, 60)),
 	METALLIC_1_GLOSS(METALLIC_1, p -> p
-		.setSpecular(0.7f, 80)),
+		.setSpecular(0.9f, 80)),
 	METALLIC_1_HIGHGLOSS(METALLIC_1, p -> p
-		.setSpecular(1.1f, 80)),
-	METALLIC_2(METALLIC_1, p -> p.setBrightness(1.8f)),
-	METALLIC_2_SEMIGLOSS(METALLIC_2, p -> p
-		.setSpecular(0.3f, 80)),
-	METALLIC_2_GLOSS(METALLIC_2, p -> p
+		.setSpecular(1.1f, 120)),
+	METALLIC_1_LIGHT(METALLIC_1, p -> p.setBrightness(1.8f)),
+	METALLIC_1_LIGHT_SEMIGLOSS(METALLIC_1_LIGHT, p -> p
 		.setSpecular(0.7f, 80)),
-	METALLIC_2_HIGHGLOSS(METALLIC_2, p -> p
-		.setSpecular(1.1f, 80)),
-	METALLIC_2_SUPER_HIGHGLOSS(METALLIC_2, p -> p
+	METALLIC_1_LIGHT_GLOSS(METALLIC_1_LIGHT, p -> p
+		.setSpecular(0.9f, 120)),
+	METALLIC_1_LIGHT_HIGHGLOSS(METALLIC_1_LIGHT, p -> p
+		.setSpecular(1.1f, 160)),
+	METALLIC_1_LIGHT_SUPER_HIGHGLOSS(METALLIC_1_LIGHT, p -> p
 		.setSpecular(2.25f, 65)),
 	METALLIC_NONE_GLOSS(NONE, p -> p
-		.setSpecular(0.7f, 80)),
+		.setSpecular(0.7f, 120)),
 	WATTLE_1,
 	ICE_1(SNOW_4, p -> p
 		.replaceIf(SeasonalTheme.WINTER, WATER_FLAT_2, WATER_FLAT)
