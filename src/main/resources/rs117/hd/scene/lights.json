@@ -21739,10 +21739,9 @@
   },
   {
     "description": "PURPLE_FLAME",
-    "height": 250,
-    "alignment": "CENTER",
-    "radius": 600,
-    "strength": 10,
+    "offset": [ -50, 400, 0 ],
+    "radius": 400,
+    "strength": 15,
     "color": [
       77,
       13,
@@ -21757,10 +21756,9 @@
   },
   {
     "description": "PURPLE_FLAME_LARGE",
-    "height": 250,
-    "alignment": "CENTER",
+    "offset": [ 0, 250, 0 ],
     "radius": 1200,
-    "strength": 10,
+    "strength": 12,
     "color": [
       77,
       13,
@@ -21775,10 +21773,9 @@
   },
   {
     "description": "DEATHS_OFFICE_PORTAL",
-    "height": 180,
-    "alignment": "WEST",
-    "radius": 800,
-    "strength": 10,
+    "offset": [ 0, 250, 0 ],
+    "radius": 600,
+    "strength": 12,
     "color": [
       77,
       13,
