@@ -4826,6 +4826,8 @@
       10494,
       11794,
       11795,
+      11801,
+      11802,
       12779,
       14745,
       14746,
@@ -5056,6 +5058,8 @@
       2649,
       7175,
       9613,
+      9699,
+      9700,
       12450,
       12543,
       12962,
@@ -5081,7 +5085,8 @@
     "description": "Wooden tables - Solid",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      7401
+      7401,
+      7406
     ],
     "uvType": "BOX",
     "uvOrientation": 512,
@@ -5398,6 +5403,10 @@
       1727,
       1728,
       2631,
+      2058,
+      2059,
+      2060,
+      2061,
       3506,
       3507,
       5501,
@@ -5707,6 +5716,7 @@
     "objectIds": [
       205,
       3474,
+      4503,
       24172
     ]
   },
@@ -5993,6 +6003,8 @@
       11778,
       11779,
       11780,
+      11782,
+      11783,
       15056,
       44784,
       44785,
@@ -6007,6 +6019,8 @@
     "description": "Varrock Castle Doors",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      2032,
+      2033,
       11772,
       11773,
       32463,
@@ -8772,6 +8786,7 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       1096,
+      8694,
       15681
     ],
     "uvType": "BOX"
@@ -8791,6 +8806,7 @@
       1088,
       3801,
       4271,
+      7504,
       9621,
       10491,
       11489,
@@ -8989,6 +9005,7 @@
     "baseMaterial": "BARK",
     "objectIds": [
       1246,
+      1247,
       1250,
       1251,
       1252,
@@ -16938,7 +16955,7 @@
     "description": "Zeah - Rough Plank Walls",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      8695, 8704
+      8695, 8696, 8704
     ],
     "uvType": "BOX",
     "uvOrientation": 1024,
@@ -17015,6 +17032,7 @@
     "objectIds": [
       1334,
       1335,
+      1338,
       1378
     ],
     "uvType": "BOX",
@@ -17433,7 +17451,8 @@
     "description": "Objects - Metallic - Range on textured bricks - Textured",
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
-      9736
+      9736,
+      26181
     ]
   },
   {
@@ -17506,7 +17525,7 @@
   {
     "description": "Wooden shelves - Empty",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 7506, 12980 ],
+    "objectIds": [ 1023, 7506, 8692, 12980 ],
     "uvType": "BOX",
     "uvScale": 0.8,
     "uvOrientationX": 512,
@@ -17793,7 +17812,7 @@
     "description": "Drawers with backsplash",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      7442
+      7194, 7442
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -18346,14 +18365,14 @@
   {
     "description": "Wooden shelves - Triple - Filled",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 1016, 1017, 1018 ],
+    "objectIds": [ 1016, 1017, 1018, 7510, 7511],
     "uvType": "BOX",
     "uvScale": 0.8,
     "uvOrientationX": 512,
     "retainVanillaUvs": false
   },
   {
-    "description": "Wooden shelves - Triple - Filled",
+    "description": "Earth Elemental",
     "baseMaterial": "DIRT_2_VERT",
     "npcIds": [ 1363 ]
   },
@@ -18454,5 +18473,72 @@
     "uvScale": 0.6,
     "retainVanillaUvs": false,
     "uvOrientation": 512
+  },
+  {
+    "description": "Cooking Pot in textured brick fireplace",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [ 26180 ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Brown Bed with pillow",
+    "baseMaterial": "FINE_CARPET",
+    "objectIds": [ 419 ],
+    "uvType": "BOX",
+    "uvOrientation": 64
+  },
+  {
+    "description": "Wooden barrel with metal bands - textured",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [ 362 ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Cauldron - with beige liquid",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [ 35945, 35946 ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Sink with textured water and wood paneling - textured",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      873,
+      874
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Pottery Oven",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      11601
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Drain and pipe - textured",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      876
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Fractionalising Still",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [ 4026 ],
+    "uvType": "BOX",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Objects - Dirt - Manhole",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [ 10321 ],
+    "uvType": "BOX",
+    "uvOrientation": 100
   }
 ]
