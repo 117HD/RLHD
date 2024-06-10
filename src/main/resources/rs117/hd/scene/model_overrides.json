@@ -3577,13 +3577,6 @@
     "uvScale": 1.3
   },
   {
-    "description": "UNKNOWN_4",
-    "objectIds": [
-      39617
-    ],
-    "flatNormals": true
-  },
-  {
     "description": "BEIGE_WALLS",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
@@ -18344,6 +18337,39 @@
     "uvType": "BOX",
     "uvScale": 0.6,
     "uvOrientation": 80
+  },
+  {
+    "description": "Deaths office - Entrances - Lumbridge",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [
+      38426
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Deaths office - Entrances - Seers",
+    "baseMaterial": "GRAY_90",
+    "objectIds": [
+      39546
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Deaths office - Entrances - Ferox",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      39637
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Deaths office - Entrances - Falador",
+    "baseMaterial": "GRUNGE_3",
+    "flatNormals": true,
+    "objectIds": [
+      39617
+    ],
+    "uvType": "BOX"
   },
   {
     "description": "Deaths office - Walls - Stone",
