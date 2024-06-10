@@ -17921,7 +17921,7 @@
   {
     "description": "Wooden Cart - Empty",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 3633 ],
+    "objectIds": [ 307, 3633 ],
     "uvType": "BOX",
     "uvScale": 0.8
   },
