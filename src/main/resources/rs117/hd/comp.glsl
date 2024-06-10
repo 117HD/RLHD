@@ -34,7 +34,7 @@ shared int totalDistance[12]; // sum of distances to faces of a given priority
 shared int totalMappedNum[18]; // number of faces with a given adjusted priority
 
 shared int min10; // minimum distance to a face of priority 10
-shared uint renderPris[THREAD_COUNT * FACES_PER_THREAD]; // packed distance and face id
+shared int renderPris[THREAD_COUNT * FACES_PER_THREAD]; // priority for face draw order
 
 layout(std140) uniform CameraUniforms {
     float cameraYaw;
@@ -45,7 +45,6 @@ layout(std140) uniform CameraUniforms {
     float cameraX;
     float cameraY;
     float cameraZ;
-    ivec2 sinCosTable[2048];
 };
 
 #include comp_common.glsl
@@ -59,7 +58,7 @@ void main() {
     uint groupId = gl_WorkGroupID.x;
     uint localId = gl_LocalInvocationID.x * FACES_PER_THREAD;
     ModelInfo minfo = ol[groupId];
-    ivec4 pos = ivec4(minfo.x, minfo.y, minfo.z, 0);
+    vec3 pos = vec3(minfo.x, minfo.y, minfo.z);
 
     if (localId == 0) {
         min10 = 6000;
@@ -74,9 +73,9 @@ void main() {
 
     int prio[FACES_PER_THREAD];
     int dis[FACES_PER_THREAD];
-    ivec4 vA[FACES_PER_THREAD];
-    ivec4 vB[FACES_PER_THREAD];
-    ivec4 vC[FACES_PER_THREAD];
+    vert vA[FACES_PER_THREAD];
+    vert vB[FACES_PER_THREAD];
+    vert vC[FACES_PER_THREAD];
 
     for (int i = 0; i < FACES_PER_THREAD; i++)
         get_face(localId + i, minfo, prio[i], dis[i], vA[i], vB[i], vC[i]);

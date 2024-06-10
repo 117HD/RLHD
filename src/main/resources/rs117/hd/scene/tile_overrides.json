@@ -1908,6 +1908,27 @@
     "blended": false
   },
   {
+    "name": "GOBLIN_FORT_DWARF_CANNON_UPPER_FLOORS",
+    "area": "GOBLIN_FORT_DWARF_CANNON_UPPER_FLOORS",
+    "overlayIds": [
+      14
+    ],
+    "groundMaterial": "HD_WOOD_PLANKS_2",
+    "uvScale": 1.15,
+    "blended": false,
+    "shiftLightness": 2
+  },
+  {
+    "name": "GOBLIN_CAVE_FLOOR",
+    "area": "GOBLIN_CAVE",
+    "underlayIds": [
+      63,
+      67
+    ],
+    "groundMaterial": "DIRT",
+    "uvScale": 1.15
+  },
+  {
     "name": "CATHERBY_BEACH_OBELISK_WATER_FIX",
     "area": "CATHERBY_BEACH_OBELISK_WATER_FIX",
     "overlayIds": [
@@ -2759,6 +2780,36 @@
     }
   },
   {
+    "name": "LIGHTHOUSE_OVERLAY",
+    "area": "LIGHTHOUSE",
+    "overlayIds": [
+      83
+    ],
+    "groundMaterial": "PACKED_EARTH"
+  },
+  {
+    "name": "COMPLEX_TILES_LIGHTHOUSE",
+    "area": "LIGHTHOUSE",
+    "underlayIds": [
+      50,
+      96,
+      97,
+      98
+    ],
+    "replacements": {
+      "SEASONAL_DIRT": "h == 8 && s <= 2 && l <= 71",
+      "SEASONAL_GRASS": "h == 8 && s >= 3 && l <= 71"
+    }
+  },
+  {
+    "name": "JAGGED_STONE_PATH",
+    "area": "OVERWORLD",
+    "overlayIds": [
+      117
+    ],
+    "groundMaterial": "VARROCK_PATHS"
+  },
+  {
     "name": "CASTLE_WARS_LOBBY_FLOOR",
     "area": "CASTLE_WARS_LOBBY",
     "overlayIds": [
@@ -3583,6 +3634,32 @@
     ]
   },
   {
+    "name": "CAMDOZAAL_UNDERWALL_TILES",
+    "area": "CAMDOZAAL",
+    "overlayIds": [
+      42
+    ],
+    "blended": false
+  },
+  {
+    "name": "CAMDOZAAL_VAULT_FLOOR_OVERLAY",
+    "area": "CAMDOZAAL_VAULT",
+    "overlayIds": [
+      87
+    ],
+    "groundMaterial": "MARBLE_2",
+    "blended": false
+  },
+  {
+    "name": "CAMDOZAAL_VAULT_FLOOR",
+    "area": "CAMDOZAAL_VAULT",
+    "underlayIds": [
+      44, 46, 113
+    ],
+    "groundMaterial": "MARBLE_1",
+    "blended": false
+  },
+  {
     "name": "CAMDOZAAL_WATER",
     "area": "CAMDOZAAL",
     "overlayIds": [
@@ -3590,6 +3667,34 @@
     ],
     "waterType": "WATER",
     "blended": false
+  },
+  {
+    "name": "CAMDOZAAL_STONE_PATH",
+    "area": "CAMDOZAAL",
+    "overlayIds": [
+      182
+    ],
+    "groundMaterial": "GRUNGE_2",
+    "uvOrientation": 117,
+    "uvScale": 1.2
+  },
+  {
+    "name": "CAMDOZAAL_GRAVEL_PATH",
+    "area": "CAMDOZAAL",
+    "overlayIds": [
+      2, 83, 127
+    ],
+    "groundMaterial": "GRAVEL",
+    "uvOrientation": 270,
+    "uvScale": 1.25
+  },
+  {
+    "name": "CAMDOZAAL_CAVE_FLOOR",
+    "area": "CAMDOZAAL",
+    "underlayIds": [
+      44, 46
+    ],
+    "groundMaterial": "OVERWORLD_ROCKY"
   },
   {
     "name": "PEST_CONTROL_LANDER_WATER_FIX_1",
@@ -4620,6 +4725,26 @@
     "groundMaterial": "SKULL_OBELISK"
   },
   {
+    "name": "SARACHNIS_BLOOD",
+    "area": "SARACHNIS_LAIR",
+    "overlayIds": [ 72 ],
+    "waterType": "BLOOD"
+  },
+  {
+    "name": "SARACHNIS_DIRT_CLAMP",
+    "area": "SARACHNIS_LAIR",
+    "underlayIds": [ 100, 122 ],
+    "groundMaterial": "DIRT",
+    "minLightness": 20,
+    "maxLightness": 23
+  },
+  {
+    "name": "SARACHNIS_DIRT",
+    "area": "SARACHNIS_LAIR",
+    "underlayIds": [ 99, 118 ],
+    "groundMaterial": "DIRT"
+  },
+  {
     "name": "LUMBRIDGE_CASTLE_TILE_UNDERLAY",
     "area": "LUMBRIDGE_CASTLE_BASEMENT",
     "underlayIds": [
@@ -4872,6 +4997,33 @@
     ],
     "groundMaterial": "TILES_2X2_2_GLOSS",
     "blended": false
+  },
+  {
+    "area": "AL_KHARID_GRASS_FIXES",
+    "underlayIds": [
+      49,
+      50,
+      62,
+      61,
+      64
+    ],
+    "groundMaterial": "GRASS_1",
+    "replacements": {
+      "WINTER_GRASS": "season == WINTER"
+    }
+  },
+  {
+    "area": "AL_KHARID_DIRT_FIX",
+    "underlayIds": [
+      50,
+      62,
+      64,
+      126
+    ],
+    "groundMaterial": "DIRT",
+    "replacements": {
+      "WINTER_DIRT": "season == WINTER"
+    }
   },
   {
     "name": "PVP_ARENA_PITFLOOR_SAND_REMOVAL",

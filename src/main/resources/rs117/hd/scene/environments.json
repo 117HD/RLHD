@@ -420,9 +420,9 @@
   {
     "area": "MORYTANIA",
     "ambientColor": "#5a8cc0",
-    "ambientStrength": 2,
+    "ambientStrength": 1.5,
     "directionalColor": "#f8bf68",
-    "directionalStrength": 2,
+    "directionalStrength": 1.25,
     "fogColor": "#1e314b",
     "fogDepth": 40,
     "groundFogStart": -150,
@@ -691,6 +691,28 @@
     "fogDepth": 40,
     "groundFogEnd": -400,
     "groundFogOpacity": 0.3
+  },
+  {
+    "area": "LIGHTHOUSE_DUNGEON",
+    "ambientColor": "#ffffff",
+    "ambientStrength": 1,
+    "directionalColor": "#ffffff",
+    "directionalStrength": 0.25,
+    "fogColor": "#000000",
+    "sunAngles": [
+      52, 235
+    ],
+    "fogDepth": 45
+  },
+  {
+    "area": "WATERBIRTH_ISLAND",
+    "ambientColor": "#6fb0ff",
+    "ambientStrength": 1.75,
+    "sunAngles": [ 72, 235 ],
+    "directionalColor": "#f4e5c9",
+    "directionalStrength": 1.5,
+    "fogColor": "#adb9c4",
+    "fogDepth": 45
   },
   {
     "area": "PENGUIN_BASE",

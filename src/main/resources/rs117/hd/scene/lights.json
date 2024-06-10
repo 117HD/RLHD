@@ -19882,10 +19882,10 @@
   },
   {
     "description": "STANDING_TORCH",
-    "height": 250,
+    "height": 200,
     "alignment": "CENTER",
     "radius": 500,
-    "strength": 5,
+    "strength": 9,
     "color": [
       252,
       148,
@@ -20055,7 +20055,6 @@
       12300,
       31628,
       12238,
-      3474,
       43122,
       43123,
       43124,
@@ -20158,9 +20157,8 @@
     ]
   },
   {
-    "description": "FLOOR_CANDLES_CENTER",
+    "description": "FLOOR_CANDLES_1",
     "height": 10,
-    "alignment": "CENTER",
     "radius": 300,
     "strength": 10,
     "color": [
@@ -20177,9 +20175,8 @@
     ]
   },
   {
-    "description": "FLOOR_CANDLES_BACK",
+    "description": "FLOOR_CANDLES_2",
     "height": 10,
-    "alignment": "BACK",
     "radius": 200,
     "strength": 10,
     "color": [
@@ -20192,7 +20189,8 @@
     "range": 20,
     "objectIds": [
       12302
-    ]
+    ],
+    "offset": [ 3, 0, 40 ]
   },
   {
     "description": "LANTERN",
@@ -20213,7 +20211,24 @@
       10307,
       16901,
       23577,
-      2492,
+      2492
+    ]
+  },
+  {
+    "description": "LANTERN_CANDLE",
+    "offset": [ 10, 260, -12 ],
+    "alignment": "CENTER",
+    "radius": 550,
+    "strength": 15.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
       11468
     ]
   },
@@ -28348,6 +28363,187 @@
     ]
   },
   {
+    "description": "Drake Back Wound Right",
+    "height": 300,
+    "offset": [ 100, 0, -100 ],
+    "radius": 175,
+    "strength": 30,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 10,
+    "range": 30,
+    "npcIds": [ 8612 ]
+  },
+  {
+  "description": "Drake Back Wound Left",
+  "height": 300,
+  "offset": [ -100, 0, -100 ],
+  "radius": 175,
+  "strength": 30,
+  "color": [
+    255,
+    0,
+    0
+  ],
+  "type": "FLICKER",
+  "duration": 10,
+  "range": 30,
+  "npcIds": [ 8612 ]
+  },
+  {
+    "description": "Drake Back Wound Front",
+    "height": 350,
+    "offset": [ 0, 0, 100 ],
+    "radius": 175,
+    "strength": 30,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 10,
+    "range": 30,
+    "npcIds": [ 8612 ],
+    "animationIds": [ -1, 8276 ],
+    "fadeOutDuration": 300,
+    "fadeInDuration": 750
+  },
+  {
+    "description": "Drake Maw Idle",
+    "height": 50,
+    "offset": [ -20, 5, 252 ],
+    "radius": 32,
+    "strength": 120,
+    "color": "#ff8c00",
+    "type": "FLICKER",
+    "duration": 10,
+    "range": 5,
+    "npcIds": [ 8612 ],
+    "animationIds": [ -1 ],
+    "fadeInDuration": 300
+  },
+  {
+    "description": "Drake Ranged Attack",
+    "offset": [ 0, 0, 0 ],
+    "radius": 135,
+    "strength": 12,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 1,
+    "range": 80,
+    "projectileIds": [ 1636 ],
+    "spawnDelay": 800,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 100
+  },
+  {
+    "description": "Drake Flame Attack",
+    "offset": [ 0, 0, 0 ],
+    "radius": 175,
+    "strength": 12,
+    "color": "#ff8c00",
+    "type": "FLICKER",
+    "duration": 5,
+    "range": 60,
+    "projectileIds": [ 1637 ],
+    "spawnDelay": 255,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 150
+  },
+  {
+    "description": "Drake Flame Explosion",
+    "offset": [ 0, 10, 0 ],
+    "radius": 150,
+    "strength": 45,
+    "color": "#ff8c00",
+    "type": "FLICKER",
+    "duration": 2,
+    "range": 80,
+    "graphicsObjectIds": [ 1638 ],
+    "fadeInDuration": 50,
+    "fadeOutDuration": 50
+  },
+  {
+    "description": "Wyrm Slithering Light",
+    "offset": [ 0, 0, 0 ],
+    "radius": 170,
+    "strength": 25,
+    "color": [
+      0,
+      200,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 10,
+    "range": 70,
+    "npcIds": [ 8610 ],
+    "fadeInDuration": 100,
+    "fadeOutDuration": 100
+  },
+  {
+    "description": "Shadow Wyrm Slithering Light",
+    "offset": [ 0, 0, 0 ],
+    "radius": 270,
+    "strength": 35,
+    "color": [
+      0,
+      50,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 10,
+    "range": 70,
+    "npcIds": [ 10398 ],
+    "fadeInDuration": 100,
+    "fadeOutDuration": 100
+  },
+
+  {
+    "description": "Wyrm Magic Attack",
+    "offset": [ 0, 0, 0 ],
+    "radius": 220,
+    "strength": 20,
+    "color": [
+      0,
+      200,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 1,
+    "range": 80,
+    "projectileIds": [ 1634 ],
+    "spawnDelay": 400,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 100
+  },
+  {
+    "description": "Shadow Wyrm Magic Attack",
+    "offset": [ 0, 0, 0 ],
+    "radius": 220,
+    "strength": 50,
+    "color": [
+      0,
+      50,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 10,
+    "range": 70,
+    "projectileIds": [ 1814 ],
+    "spawnDelay": 400,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 100
+  },
+  {
     "description": "KARUULM_INDOOR_LAVA_1",
     "worldX": 1307,
     "worldY": 10193,
@@ -32817,7 +33013,7 @@
     ]
   },
   {
-    "description": "MAGE_TRAIN_ARENA_CANDLEBRA",
+    "description": "MAGE_TRAIN_ARENA_CANDLEABRA",
     "height": 210,
     "alignment": "CENTER",
     "radius": 500,
@@ -33388,6 +33584,57 @@
     "range": 23,
     "objectIds": [
       10185
+    ]
+  },
+  {
+    "description": "Lighthouse - Light at the top - Wide",
+    "height": 355,
+    "radius": 1400,
+    "visibleFromOtherPlanes": false,
+    "fadeInDuration": 1,
+    "strength": 15,
+    "color": [
+      255,
+      255,
+      170
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      4587
+    ]
+  },
+  {
+    "description": "Lighthouse - Light at the top - Narrow",
+    "height": 215,
+    "radius": 500,
+    "visibleFromOtherPlanes": true,
+    "strength": 75,
+    "color": [
+      255,
+      255,
+      170
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      4587
+    ]
+  },
+  {
+    "description": "Lighthouse Lantern",
+    "height": 235,
+    "alignment": "CENTER",
+    "radius": 250,
+    "strength": 6.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      3474
     ]
   },
   {

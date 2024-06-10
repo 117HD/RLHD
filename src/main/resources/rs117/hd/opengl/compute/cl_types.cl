@@ -32,15 +32,14 @@ struct uniform {
   float cameraX;
   float cameraY;
   float cameraZ;
-  int4 sinCosTable[2048];
 };
 
 struct shared_data {
-  int totalNum[12]; // number of faces with a given priority
-  int totalDistance[12]; // sum of distances to faces of a given priority
+  int totalNum[12];       // number of faces with a given priority
+  int totalDistance[12];  // sum of distances to faces of a given priority
   int totalMappedNum[18]; // number of faces with a given adjusted priority
-  int min10; // minimum distance to a face of priority 10
-  int dfs[0]; // packed face id and distance, size 512 for small, 6144 for large
+  int min10;              // minimum distance to a face of priority 10
+  int renderPris[0];     // priority for face draw order
 };
 
 struct ModelInfo {
@@ -48,8 +47,15 @@ struct ModelInfo {
   int uvOffset; // offset into uv buffer
   int size;     // length in faces
   int idx;      // write idx in target buffer
-  int flags;    // hillskew, plane, radius, orientation
+  int flags;    // hillskew, plane, orientation
   int x;        // scene position x
   int y;        // scene position y
   int z;        // scene position z
+};
+
+struct vert {
+  float x;
+  float y;
+  float z;
+  int ahsl;
 };

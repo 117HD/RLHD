@@ -1112,15 +1112,19 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		glEnableVertexAttribArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer.glBufferId);
-		glVertexAttribIPointer(0, 4, GL_INT, 0, 0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, false, 16, 0);
 
 		glEnableVertexAttribArray(1);
-		glBindBuffer(GL_ARRAY_BUFFER, uvBuffer.glBufferId);
-		glVertexAttribPointer(1, 4, GL_FLOAT, false, 0, 0);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer.glBufferId);
+		glVertexAttribIPointer(1, 1, GL_INT, 16, 12);
 
 		glEnableVertexAttribArray(2);
-		glBindBuffer(GL_ARRAY_BUFFER, normalBuffer.glBufferId);
+		glBindBuffer(GL_ARRAY_BUFFER, uvBuffer.glBufferId);
 		glVertexAttribPointer(2, 4, GL_FLOAT, false, 0, 0);
+
+		glEnableVertexAttribArray(3);
+		glBindBuffer(GL_ARRAY_BUFFER, normalBuffer.glBufferId);
+		glVertexAttribPointer(3, 4, GL_FLOAT, false, 0, 0);
 	}
 
 	private void destroyVaos() {
@@ -1231,20 +1235,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	private void initCameraUniformBuffer()
 	{
-		IntBuffer uniformBuf = BufferUtils.createIntBuffer(8 + 2048 * 4);
-		uniformBuf.put(new int[8]); // uniform block
-		final int[] pad = new int[2];
-		for (int i = 0; i < 2048; i++) {
-			uniformBuf.put(SINE[i]);
-			uniformBuf.put(COSINE[i]);
-			uniformBuf.put(pad); // ivec2 alignment in std140 is 16 bytes
-		}
-		uniformBuf.flip();
-
-		updateBuffer(hUniformBufferCamera, GL_UNIFORM_BUFFER, uniformBuf, GL_DYNAMIC_DRAW, CL_MEM_READ_ONLY);
+		int size = 8 * SCALAR_BYTES;
+		uniformBufferCamera = BufferUtils.createByteBuffer(size);
+		updateBuffer(hUniformBufferCamera, GL_UNIFORM_BUFFER, size, GL_DYNAMIC_DRAW, CL_MEM_READ_ONLY);
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
-
-		uniformBufferCamera = BufferUtils.createByteBuffer(8 * SCALAR_BYTES);
 	}
 
 	public void updateMaterialUniformBuffer(ByteBuffer buffer) {
@@ -2346,8 +2340,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				sceneUploader.upload(context);
 			}
 		} catch (OutOfMemoryError oom) {
-			log.error("Ran out of memory while loading scene (32-bit: {}, low memory mode: {})",
-				HDUtils.is32Bit(), useLowMemoryMode, oom
+			log.error("Ran out of memory while loading scene (32-bit: {}, low memory mode: {}, cache size: {})",
+				HDUtils.is32Bit(), useLowMemoryMode, config.modelCacheSizeMiB(), oom
 			);
 			displayOutOfMemoryMessage();
 			stopPlugin();
@@ -2880,7 +2874,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			frameTimer.begin(Timer.DRAW_RENDERABLE);
 
 		eightIntWrite[3] = renderBufferOffset;
-		eightIntWrite[4] = model.getRadius() << 12 | orientation;
+		eightIntWrite[4] = orientation;
 		eightIntWrite[5] = x;
 		eightIntWrite[6] = y;
 		eightIntWrite[7] = z;
@@ -3329,7 +3323,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		} else {
 			errorMessage =
 				"The plugin ran out of memory. "
-				+ "Try " + (useLowMemoryMode ? "" : "reducing your model cache size or ") + "closing other programs.<br>"
+				+ "Try " + (useLowMemoryMode ? "" : "reducing your model cache size from " + config.modelCacheSizeMiB() + " or ") + "closing other programs.<br>"
 				+ "<br>"
 				+ "If the issue persists, please join our "
 				+ "<a href=\"" + HdPlugin.DISCORD_URL + "\">Discord</a> server, and click the \"Open logs folder\" button<br>"
