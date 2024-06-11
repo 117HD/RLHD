@@ -17786,6 +17786,7 @@
     "description": "Objects - Wooden - Wooden Chest - Broken",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      5108,
       14854
     ],
     "uvType": "BOX",
@@ -17924,7 +17925,7 @@
   {
     "description": "Barrel with metal bands",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 2619, 5122, 9519, 9521 ],
+    "objectIds": [ 2619, 5112, 5114, 5122, 9519, 9521 ],
     "uvType": "BOX",
     "uvScale": 0.8
   },
