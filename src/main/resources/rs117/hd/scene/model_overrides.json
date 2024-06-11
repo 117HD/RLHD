@@ -5716,6 +5716,7 @@
     "objectIds": [
       205,
       3474,
+      4501,
       4503,
       24172
     ]
@@ -7168,6 +7169,7 @@
       5107,
       5110,
       5113,
+      5115,
       5330,
       7514,
       10374,
@@ -8882,6 +8884,14 @@
     "objectIds": [
       7433,
       14853
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Ugly combined backed wooden rocking chair - Broken",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      14850
     ],
     "uvType": "BOX"
   },
@@ -17914,7 +17924,14 @@
   {
     "description": "Barrel with metal bands",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 2619 ],
+    "objectIds": [ 2619, 5122, 9519, 9521 ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Barrel with metal bands - Stacked",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 5123 ],
     "uvType": "BOX",
     "uvScale": 0.8
   },
@@ -18540,5 +18557,27 @@
     "objectIds": [ 10321 ],
     "uvType": "BOX",
     "uvOrientation": 100
+  },
+  {
+    "description": "Altar Slab - textured",
+    "objectIds": [ 1876 ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Metal Sconce with candles - unlit",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "objectIds": [ 4500 ],
+    "uvType": "BOX",
+    "uvOrientation": 300,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Stone bat wall decoration",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [ 577 ],
+    "uvType": "BOX",
+    "uvScale": 0.8
   }
 ]
