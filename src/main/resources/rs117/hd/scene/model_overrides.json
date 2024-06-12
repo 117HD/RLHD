@@ -18416,5 +18416,15 @@
     "uvType": "BOX",
     "uvScale": 0.8,
     "uvOrientation": 512
+  },
+  {
+    "description": "Wooden posts - textured",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      303
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 512
   }
 ]
