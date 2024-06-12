@@ -18392,5 +18392,15 @@
     ],
     "uvType": "BOX",
     "uvOrientation": 80
+  },
+  {
+    "description": "Zombie Event Mausoleum",
+    "baseMaterial": "ROCK_4",
+    "objectIds": [
+      10055
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 180,
+    "uvScale": 0.6
   }
 ]
