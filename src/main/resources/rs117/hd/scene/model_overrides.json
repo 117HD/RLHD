@@ -18445,6 +18445,8 @@
     "description": "Gnome statues",
     "baseMaterial": "MARBLE_1_SEMIGLOSS",
     "objectIds": [
+      569,
+      13104,
       17140,
       17141
     ],
