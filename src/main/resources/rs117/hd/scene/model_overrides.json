@@ -18381,7 +18381,7 @@
     "uvOrientation": 80
   },
   {
-    "description": "Zombie Event Graves with coffins",
+    "description": "Zombie Event Graves - empty",
     "baseMaterial": "GRUNGE_3",
     "objectIds": [
       10050,
