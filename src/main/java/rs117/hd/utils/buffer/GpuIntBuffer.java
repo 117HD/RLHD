@@ -57,10 +57,6 @@ public class GpuIntBuffer
 		buffer.put(x).put(y).put(z);
 	}
 
-	public void put(int x, int y, int z, int w) {
-		buffer.put(x).put(y).put(z).put(w);
-	}
-
 	public void put(float x, float y, float z, int w) {
 		buffer
 			.put(Float.floatToIntBits(x))

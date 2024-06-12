@@ -1108,10 +1108,10 @@ class SceneUploader {
 		final Scene scene = sceneContext.scene;
 
 		int color = 0;
-		int fromX = 0;
-		int fromY = 0;
-		int toX = LOCAL_TILE_SIZE;
-		int toY = LOCAL_TILE_SIZE;
+		float fromX = 0;
+		float fromY = 0;
+		float toX = LOCAL_TILE_SIZE;
+		float toY = LOCAL_TILE_SIZE;
 
 		final int[][][] tileHeights = scene.getTileHeights();
 		int swHeight = tileHeights[tileZ][tileExX][tileExY];
