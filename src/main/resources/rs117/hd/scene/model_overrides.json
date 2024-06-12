@@ -18353,5 +18353,44 @@
     "uvType": "BOX",
     "uvScale": 0.6,
     "uvOrientation": 80
+  },
+  {
+    "description": "Zombie Event Gravestones",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      9359,
+      9360,
+      9361,
+      9362,
+      9363
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 80
+  },
+  {
+    "description": "Zombie Event Graves with coffins",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      9364,
+      9365,
+      9366,
+      9367,
+      10049
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 80
+  },
+  {
+    "description": "Zombie Event Graves with coffins",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      10050,
+      10051,
+      10052,
+      10053,
+      10054
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 80
   }
 ]
