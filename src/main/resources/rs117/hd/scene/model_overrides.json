@@ -5429,6 +5429,7 @@
     "description": "Metal Fence",
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
+      2186,
       20873,
       20874,
       20875,
