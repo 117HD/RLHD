@@ -18419,11 +18419,36 @@
     "uvOrientation": 512
   },
   {
-    "description": "Wooden posts - textured",
+    "description": "Compost pile with bricks - textured",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
       303
     ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Gnome stronghold door - textured",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      190,
+      191,
+      192
+    ],
+    "retainVanillaUvs": false,
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Gnome statues",
+    "baseMaterial": "MARBLE_1_SEMIGLOSS",
+    "objectIds": [
+      17140,
+      17141
+    ],
+    "retainVanillaUvs": false,
     "uvType": "BOX",
     "uvScale": 0.8,
     "uvOrientation": 512
