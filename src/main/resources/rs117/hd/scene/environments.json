@@ -1270,7 +1270,7 @@
     "ambientStrength": 3,
     "directionalColor": "#5a8cc0",
     "directionalStrength": 0.75,
-    "fogColor": "#101012",
+    "fogColor": "#1e314b",
     "fogDepth": 40,
     "groundFogStart": -150,
     "groundFogEnd": -350,
