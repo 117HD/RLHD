@@ -18402,5 +18402,17 @@
     "uvType": "BOX",
     "uvOrientation": 180,
     "uvScale": 0.6
+  },
+  {
+    "description": "Wooden posts - textured",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      1774,
+      17123
+    ],
+    "retainVanillaUvs": false,
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 512
   }
 ]
