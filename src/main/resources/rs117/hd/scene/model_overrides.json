@@ -6290,12 +6290,14 @@
   },
   {
     "description": "Wyvern Shortcut",
-    "baseMaterial": "GRUNGE_2",
+    "baseMaterial": "GRUNGE_1",
     "objectIds": [
-      42506
+      42506,
+      53250
     ],
-    "uvType": "MODEL_XZ",
-    "uvScale": 0.42
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 100
   },
   {
     "description": "Snow Caves",
@@ -18368,6 +18370,7 @@
       10596,
       10597,
       10600,
+      42507,
       53251
     ],
     "uvType": "BOX"
@@ -18380,15 +18383,5 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.75
-  },
-  {
-    "description": "Asgarnia Ice Dungeon - Shortcut to Ice Wyverns",
-    "baseMaterial": "GRUNGE_1",
-    "objectIds": [
-      53250
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.75,
-    "uvOrientation": 100
   }
 ]
