@@ -9180,6 +9180,7 @@
     "baseMaterial": "ICE_1",
     "objectIds": [
       10602,
+      10603,
       10604,
       21100,
       21139,
@@ -12656,6 +12657,17 @@
     "uvOrientation": 256
   },
   {
+    "description": "Ore - Blurite - Rock",
+    "baseMaterial": "ROCK_4",
+    "objectIds": [
+      11378,
+      11379
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.33,
+    "uvOrientation": 256
+  },
+  {
     "description": "Objects - Concrete - Runecrafting Altars",
     "textureMaterial": "HD_CONCRETE",
     "objectIds": [
@@ -12904,7 +12916,8 @@
     "description": "Objects - Wood - Danger Sign",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      1032
+      1032,
+      10605
     ],
     "uvType": "BOX",
     "uvOrientation": 512
@@ -18344,5 +18357,38 @@
     "uvType": "BOX",
     "uvScale": 0.6,
     "uvOrientation": 80
+  },
+  {
+    "description": "Asgarnia Ice Dungeon - Snow Walls and Entrances",
+    "baseMaterial": "SNOW_1",
+    "objectIds": [
+      10588,
+      10589,
+      10595,
+      10596,
+      10597,
+      10600,
+      53251
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Asgarnia Ice Dungeon - Ice Stairs",
+    "baseMaterial": "ICE_2",
+    "objectIds": [
+      8728
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75
+  },
+  {
+    "description": "Asgarnia Ice Dungeon - Shortcut to Ice Wyverns",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      53250
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 100
   }
 ]
