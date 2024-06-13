@@ -18383,5 +18383,14 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.75
+  },
+  {
+    "description": "Asgarnia Ice Dungeon - Entrance Trapdoor",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      1738
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.55
   }
 ]
