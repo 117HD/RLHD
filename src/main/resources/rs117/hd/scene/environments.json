@@ -344,7 +344,7 @@
       80,
       190
     ],
-    "fogDepth": 20
+    "fogDepth": 60
   },
   {
     "area": "BARROWS_TUNNELS",
@@ -356,7 +356,7 @@
       80,
       190
     ],
-    "fogDepth": 20
+    "fogDepth": 30
   },
   {
     "area": "BARROWS",
