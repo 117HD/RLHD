@@ -810,6 +810,20 @@ public interface HdPluginConfig extends Config
 		return ColorFilter.NONE;
 	}
 
+	String KEY_REMOVE_VERTEX_SNAPPING = "removeVertexSnapping";
+	@ConfigItem(
+		keyName = KEY_REMOVE_VERTEX_SNAPPING,
+		name = "Smoother Animations",
+		description =
+			"Allow models to use high precision numbers, making animations a lot smoother.<br>" +
+			"Should be paired with the Animation Smoothing plugin.",
+		position = 9,
+		section = miscellaneousSettings
+	)
+	default boolean removeVertexSnapping() {
+		return true;
+	}
+
 
 	/*====== Experimental settings ======*/
 
