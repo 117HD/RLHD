@@ -1744,7 +1744,8 @@
       1740,
       993,
       7527,
-      20857
+      20857,
+      10714
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -4846,7 +4847,8 @@
       25844,
       26107,
       50143,
-      50144
+      50144,
+      15115
     ],
     "uvType": "BOX",
     "uvScale": 0.8
@@ -5223,6 +5225,7 @@
     "objectIds": [
       817,
       5554,
+      15167,
       25206,
       25792
     ],
@@ -8082,6 +8085,7 @@
       12440,
       14872,
       15039,
+      15093,
       15679,
       16246,
       16875,
@@ -8802,6 +8806,7 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       7182,
+      15091,
       15682
     ],
     "uvType": "BOX"
@@ -10163,7 +10168,9 @@
       9616,
       10485,
       10486,
-      15040
+      15040,
+      15092,
+      15114
     ],
     "uvType": "BOX",
     "uvOrientationY": 512
@@ -10406,6 +10413,13 @@
       44845
     ],
     "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Wall Decoration - Blood",
+    "baseMaterial": "GRAY_65",
+    "objectIds": [
+      12299
+    ]
   },
   {
     "description": "Exercise Mats",
@@ -18344,5 +18358,212 @@
     "uvType": "BOX",
     "uvScale": 0.6,
     "uvOrientation": 80
+  },
+  {
+    "description": "Kraken Cove, Royal Trouble and Lizardman Caves  - Walls",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      537,
+      538,
+      15122,
+      15123,
+      15124,
+      15160,
+      15168,
+      15169,
+      15177,
+      15179,
+      15194,
+      15195,
+      15196,
+      15197,
+      15188,
+      15189,
+      15170,
+      15171,
+      15173,
+      15175,
+      15186,
+      15187,
+      15178,
+      15216,
+      15218,
+      15219,
+      30178
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.25
+  },
+  {
+    "description": "Kraken Cove - Stalagmites",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      30181,
+      30182,
+      30183
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.64
+  },
+  {
+    "description": "Kraken Cove - Stalagmite - Boat",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      30184
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.44
+  },
+  {
+    "description": "Kraken Cove - Floating Body and Hole",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      26552,
+      30179
+    ]
+  },
+  {
+    "description": "Kraken Cove - Darken Whirlpools",
+    "baseMaterial": "GRAY_65",
+    "npcIds": [
+      493,
+      496,
+      5534
+    ]
+  },
+  {
+    "description": "Royal Trouble Dungeon - Entrance Rock and Hole",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      15199,
+      15202
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Royal Trouble Dungeon - Eggs",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      15182,
+      15183,
+      15184,
+      15185
+    ]
+  },
+  {
+    "description": "Royal Trouble Dungeon - Steam Vents",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      15214,
+      15215
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Royal Trouble Dungeon - House Walls and Doors",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      15089,
+      15090,
+      15204,
+      15205
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Royal Trouble Dungeon - Crates, Barrels",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      15106,
+      15105,
+      15108,
+      15107,
+      15243,
+      15244,
+      15245
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Royal Trouble Dungeon - Crates - Small",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      15109
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 680
+  },
+  {
+    "description": "Royal Trouble Dungeon - Shelves, Hatstand, Beds, Bar and Fabrics",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      15094,
+      15095,
+      15096,
+      15100,
+      15110,
+      15111,
+      15112,
+      15113,
+      15163,
+      14165,
+      14166,
+      14167,
+      15102,
+      15117,
+      15097,
+      15098,
+      15104,
+      15103,
+      15118,
+      15119,
+      15143,
+      15141,
+      15142,
+      15140,
+      15134,
+      15135,
+      15136,
+      15139,
+      15144,
+      15138,
+      15145
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Royal Trouble Dungeon - Wooden Supports",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      15130,
+      15131,
+      15132,
+      15133
+    ],
+    "uvType": "BOX",
+    "uvOrientation": -50
+  },
+  {
+    "description": "Royal Trouble Dungeon - Crane",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      15225,
+      15232,
+      15234,
+      15237
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Royal Trouble Dungeon - Engine",
+    "baseMaterial": "METALLIC_1",
+    "objectIds": [
+      7967,
+      15228,
+      15229
+    ],
+    "uvType": "BOX"
   }
 ]

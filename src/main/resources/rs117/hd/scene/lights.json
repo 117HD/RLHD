@@ -18375,6 +18375,25 @@
     ]
   },
   {
+    "description": "Waterfiend",
+    "height": 60,
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 7.5,
+    "color": [
+      0,
+      220,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "npcIds": [
+      2916,
+      2917
+    ]
+  },
+  {
     "description": "GHOST",
     "height": 80,
     "alignment": "CENTER",
@@ -34926,6 +34945,24 @@
     "range": 20,
     "objectIds": [
       2501
+    ]
+  },
+  {
+    "description": "Royal Trouble - Powered Engine",
+    "height": 0,
+    "offset": [ 70, 70, 0 ],
+    "radius": 300,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      15229
     ]
   }
 ]
