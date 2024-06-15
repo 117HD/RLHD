@@ -340,11 +340,14 @@
     "ambientStrength": 3.5,
     "directionalColor": "#ffc875",
     "directionalStrength": 0,
+    "groundFogOpacity": 1,
+    "groundFogStart": -1900,
+    "groundFogEnd": -2750,
     "sunAngles": [
       80,
       190
     ],
-    "fogDepth": 60
+    "fogDepth": 50
   },
   {
     "area": "BARROWS_TUNNELS",
