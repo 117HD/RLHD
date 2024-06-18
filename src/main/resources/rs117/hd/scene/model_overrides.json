@@ -13923,8 +13923,9 @@
   {
     "description": "Trollheim 'Farming' Patches",
     "baseMaterial": "GRUNGE_2",
-    "objectIds": [ 18835, 18836, 18837, 18838, 18839, 18840 ],
-    "uvType": "BOX"
+    "objectIds": [ 18835, 18836, 18837, 18838, 18839, 18840, 18854 ],
+    "uvType": "BOX",
+    "uvOrientation": 256
   },
   {
     "description": "Trollweiss Wrecked Boat",
