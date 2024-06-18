@@ -9331,6 +9331,15 @@
     "uvScale": 1.1
   },
   {
+    "description": "Iceberg - Agility Course - Snow Drift",
+    "baseMaterial": "SNOW_2",
+    "objectIds": [
+      21142,
+      21143
+    ],
+    "uvType": "BOX"
+  },
+  {
     "description": "Penguin Footprints",
     "baseMaterial": "SNOW_2",
     "uvType": "WORLD_XZ",

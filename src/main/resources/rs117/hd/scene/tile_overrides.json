@@ -5558,6 +5558,7 @@
   {
     "name": "ICEBERG_BLEND",
     "area": "ICEBERG",
+    "description": "For when ground blending is ENABLED",
     "underlayIds": [ 58, 59, 60 ],
     "groundMaterial": "SNOW_2",
     "replacements": {
@@ -5567,7 +5568,8 @@
   },
   {
     "name": "ICEBERG_UNBLEND",
-    "description": "Note, this doesn't apply to anything directly. Only via replacements",
+    "area": "ICEBERG",
+    "description": "For when ground blending is DISABLED",
     "groundMaterial": "SNOW_2",
     "shiftLightness": 12
   },
