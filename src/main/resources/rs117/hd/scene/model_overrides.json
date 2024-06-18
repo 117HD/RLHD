@@ -1432,6 +1432,13 @@
     "uvOrientationZ": 1162
   },
   {
+    "description": "Objects - Trees - Teak",
+    "baseMaterial": "GRAY_85",
+    "objectIds": [
+      40758
+    ]
+  },
+  {
     "description": "FARMING_PATCH_1",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
@@ -1634,6 +1641,8 @@
       17447,
       17448,
       17449,
+      21376,
+      21378,
       34494,
       34496,
       46411,
@@ -10292,7 +10301,9 @@
       4847,
       15957,
       15958,
-      15959
+      15959,
+      44212,
+      44213
     ],
     "uvType": "BOX",
     "uvScale": 0.62,
@@ -10452,33 +10463,6 @@
       44173
     ],
     "uvType": "WORLD_XZ"
-  },
-  {
-    "description": "Ruins of Ullek flat normals on walls and other wall objects",
-    "objectIds": [
-      43898,
-      43899,
-      43900,
-      43901,
-      43902,
-      43903,
-      43952,
-      43953,
-      43954,
-      44097,
-      44099,
-      44100,
-      44109,
-      44110,
-      44111,
-      44112,
-      44113,
-      44114,
-      44115,
-      44116,
-      44117
-    ],
-    "flatNormals": true
   },
   {
     "description": "Ruins of Ullek crypt",
@@ -11651,7 +11635,7 @@
     "uvType": "GEOMETRY"
   },
   {
-    "description": "Walls - Ruins of Ullek",
+    "description": "Ruins of Ullek - Walls - Pillars - Floors",
     "baseMaterial": "GRUNGE_3_LIGHT",
     "objectIds": [
       43888,
@@ -11679,25 +11663,47 @@
     "uvType": "BOX"
   },
   {
-    "description": "Desert - Maisa's Camp - Barriers, Spade, Table",
+    "description": "Ruins of Ullek - Ritual Pillar",
+    "baseMaterial": "MARBLE_3",
+    "objectIds": [
+      44130,
+      44131,
+      44132
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Ruins of Ullek - Rubble",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      44000,
+      44001,
+      44002
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Desert - Maisa's Camp - Fire, Barriers, Spade, Table and Flowers",
     "baseMaterial": "GRUNGE_3_LIGHT",
     "objectIds": [
       44011,
       44012,
+      44013,
+      44015,
+      44016,
+      44017,
+      44018,
       44019,
+      44021,
       43884
     ],
     "uvType": "BOX"
   },
   {
-    "description": "Desert - Maisa's Camp - Flowers",
-    "baseMaterial": "GRUNGE_3_LIGHT",
+    "description": "Desert - Ruins of Ullek - Bushes with rocks",
+    "baseMaterial": "GRUNGE_3",
     "objectIds": [
-      44013,
-      44015,
-      44016,
-      44017,
-      44018
+      44141
     ],
     "uvType": "BOX"
   },
