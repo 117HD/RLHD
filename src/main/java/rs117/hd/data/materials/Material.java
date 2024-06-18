@@ -388,6 +388,9 @@ public enum Material {
 		.setNormalMap(GRUNGE_3_N)
 		.setSpecular(0.25f, 30)
 	),
+	GRUNGE_3_LIGHT(GRUNGE_3,p -> p
+		.setBrightness(1.4f)
+		.setSpecular(0f, 0)),
 	ROCK_1_N,
 	ROCK_1(p -> p
 		.setNormalMap(ROCK_1_N)

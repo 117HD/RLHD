@@ -9997,6 +9997,7 @@
     "description": "Kharidian Sophmena Cactus",
     "baseMaterial": "PLANT_GRUNGE_1",
     "objectIds": [
+      44068,
       44069,
       44070,
       44071,
@@ -10005,7 +10006,12 @@
       44074,
       44075,
       44076,
-      44077
+      44077,
+      44078,
+      44079,
+      44080,
+      44081,
+      44082
     ]
   },
   {
@@ -11645,6 +11651,57 @@
     "uvType": "GEOMETRY"
   },
   {
+    "description": "Walls - Ruins of Ullek",
+    "baseMaterial": "GRUNGE_3_LIGHT",
+    "objectIds": [
+      43888,
+      44095,
+      44097,
+      44100,
+      44107,
+      44106,
+      44105,
+      44110,
+      44109,
+      44094,
+      44099,
+      44096,
+      44114,
+      44115,
+      44116,
+      44111,
+      44112,
+      44113,
+      44101,
+      44104,
+      44108
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Desert - Maisa's Camp - Barriers, Spade, Table",
+    "baseMaterial": "GRUNGE_3_LIGHT",
+    "objectIds": [
+      44011,
+      44012,
+      44019,
+      43884
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Desert - Maisa's Camp - Flowers",
+    "baseMaterial": "GRUNGE_3_LIGHT",
+    "objectIds": [
+      44013,
+      44015,
+      44016,
+      44017,
+      44018
+    ],
+    "uvType": "BOX"
+  },
+  {
     "description": "Rocks - Small",
     "baseMaterial": "ROCK_1",
     "objectIds": [
@@ -11672,6 +11729,7 @@
       24143,
       24144,
       24145,
+      43882,
       53252,
       53254
     ],
@@ -16246,9 +16304,10 @@
     "uvType": "MODEL_XZ"
   },
   {
-    "description": "Varlamore Cushions",
+    "description": "Object - Cushions",
     "baseMaterial": "FINE_CARPET",
     "objectIds": [
+      44020,
       53012,
       52436,
       52437
