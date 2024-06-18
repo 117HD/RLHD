@@ -34929,8 +34929,8 @@
     ]
   },
   {
-    "description": "Troll Stronghold Window",
-    "objectIds": [ 3770 ],
+    "description": "Troll Stronghold Window and Exit Door",
+    "objectIds": [ 3770, 3774 ],
     "radius": 450,
     "strength": 10,
     "color": "#ffffff",
