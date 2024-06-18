@@ -660,6 +660,15 @@
     "fogDepth": 70
   },
   {
+    "area": "ICEBERG",
+    "ambientColor": "#6fb0ff",
+    "ambientStrength": 1,
+    "directionalColor": "#f4e5c9",
+    "directionalStrength": 1.5,
+    "fogColor": "#aebde0",
+    "fogDepth": 20
+  },
+  {
     "area": "MOUNTAIN_CAMP_ENTRY_PATH",
     "ambientColor": "#97baff",
     "ambientStrength": 0.9,
