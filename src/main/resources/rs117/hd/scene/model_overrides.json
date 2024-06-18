@@ -8792,7 +8792,7 @@
   {
     "description": "Objects - Wooden - Chair - No cushion - Smashed",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 1089 ],
+    "objectIds": [ 1089, 3802 ],
     "uvType": "BOX",
     "uvOrientation": 512,
     "uvScale": 0.6
@@ -13878,7 +13878,7 @@
   {
     "description": "Trollheim - Wooden - Door",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 3776 ],
+    "objectIds": [ 1744, 3776, 3777, 3780, 3781 ],
     "uvType": "BOX",
     "flatNormals": true
   },
@@ -13909,7 +13909,7 @@
   {
     "description": "Trollheim Cell Walls",
     "baseMaterial": "GRAY_75",
-    "objectIds": [ 3764, 3765, 3778, 33217, 33218, 33219, 46816, 46817 ],
+    "objectIds": [ 3763, 3764, 3765, 3778, 3810, 3811, 33217, 33218, 33219, 46816, 46817 ],
     "flatNormals": true
   },
   {
