@@ -13909,7 +13909,7 @@
   {
     "description": "Trollheim Cell Walls",
     "baseMaterial": "GRAY_75",
-    "objectIds": [ 3763, 3764, 3765, 3778, 3810, 3811, 33217, 33218, 33219, 46816, 46817 ],
+    "objectIds": [ 3763, 3764, 3765, 3767, 3778, 3810, 3811, 33217, 33218, 33219, 46816, 46817 ],
     "flatNormals": true
   },
   {
