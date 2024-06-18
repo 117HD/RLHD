@@ -13921,6 +13921,12 @@
     "uvOrientation": 512
   },
   {
+    "description": "Trollheim 'Farming' Patches",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [ 18835, 18836, 18837, 18838, 18839, 18840 ],
+    "uvType": "BOX"
+  },
+  {
     "description": "Trollweiss Wrecked Boat",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [ 33195 ],
