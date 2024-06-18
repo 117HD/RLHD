@@ -666,7 +666,10 @@
     "directionalColor": "#f4e5c9",
     "directionalStrength": 1.5,
     "fogColor": "#aebde0",
-    "fogDepth": 20
+    "fogDepth": 20,
+    "sunAngles": [
+      45, 235
+    ]
   },
   {
     "area": "MOUNTAIN_CAMP_ENTRY_PATH",
