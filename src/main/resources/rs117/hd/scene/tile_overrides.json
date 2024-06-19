@@ -1664,7 +1664,7 @@
     "groundMaterial": "WINTER_JAGGED_STONE_TILE"
   },
   {
-    "name": "WEISS_DIRT UNDERLAY FIX",
+    "name": "Weiss Dirt to Snow Underlay Fix",
     "area": "WEISS_REGION",
     "underlayIds": [
       56,
