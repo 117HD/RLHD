@@ -409,6 +409,9 @@ public enum Material {
 		.setSpecular(0.4f, 20)
 		.setBrightness(1.2f)
 	),
+	ROCK_3_DARK(ROCK_3,p -> p
+		.setBrightness(0.65f)
+	),
 	ROCK_3_SMOOTH(ROCK_3, p -> p
 		.setDisplacementScale(0)
 		.setTextureScale(1, 1, .15f)

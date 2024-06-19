@@ -3578,6 +3578,15 @@
     "uvOrientation": 256
   },
   {
+    "description": "Pale rock tunnel, Keldagrim to Rellekka",
+    "baseMaterial": "ROCK_3_DARK",
+    "objectIds": [
+      5014
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.9
+  },
+  {
     "description": "Pale rock walls - Top",
     "baseMaterial": "ROCK_3",
     "objectIds": [
@@ -3613,7 +3622,6 @@
       4147,
       5008,
       5013,
-      5014,
       5046,
       5858,
       5973,
