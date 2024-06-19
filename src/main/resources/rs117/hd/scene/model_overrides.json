@@ -2552,6 +2552,18 @@
     "flatNormals": true
   },
   {
+    "description": "Kourend - Kingstown - Statue of King Rada",
+    "baseMaterial": "MARBLE_2_DARK",
+    "objectIds": [
+      14193,
+      14194,
+      14195,
+      27785
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.1
+  },
+  {
     "description": "SHAYZIEN_SHAY_SHRINE",
     "baseMaterial": "MARBLE_3_GLOSS",
     "objectIds": [

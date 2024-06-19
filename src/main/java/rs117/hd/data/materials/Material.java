@@ -496,6 +496,8 @@ public enum Material {
 		.setSpecular(0.35f, 80)),
 	MARBLE_2_SEMIGLOSS(MARBLE_2, p -> p
 		.setSpecular(0.3f, 100)),
+	MARBLE_2_DARK(MARBLE_2, p -> p
+		.setBrightness(0.5f)),
 	MARBLE_3_SEMIGLOSS(MARBLE_3, p -> p
 		.setSpecular(0.4f, 120)),
 
