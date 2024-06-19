@@ -34935,5 +34935,27 @@
     "strength": 10,
     "color": "#ffffff",
     "offset": [ 0, 150, 60 ]
+  },
+  {
+    "description": "Icy Basalt Teleport",
+    "graphicsObjectIds": [ 1628 ],
+    "radius": 250,
+    "strength": 10,
+    "color": [ 0, 255, 255 ],
+    "offset": [ 0, 30, 0 ],
+    "fadeOutDuration": 150,
+    "fadeInDuration": 250,
+    "spawnDelay": 600
+  },
+  {
+    "description": "Stony Basalt Teleport",
+    "graphicsObjectIds": [ 1617 ],
+    "radius": 250,
+    "strength": 10,
+    "color": [ 0, 255, 50 ],
+    "offset": [ 0, 30, 0 ],
+    "fadeOutDuration": 150,
+    "fadeInDuration": 250,
+    "spawnDelay": 600
   }
 ]
