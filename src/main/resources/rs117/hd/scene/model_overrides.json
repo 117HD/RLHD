@@ -4994,14 +4994,32 @@
     ]
   },
   {
-    "description": "Rope Bridge",
+    "description": "Gnome Agility Course - Rope",
+    "baseMaterial": "ROPE",
+    "objectIds": [
+      23557,
+      23558
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.4
+  },
+  {
+    "description": "Rope Bridge - Rope",
+    "baseMaterial": "ROPE",
+    "objectIds": [
+      269
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.4
+  },
+  {
+    "description": "Rope Bridge - Anchor point",
     "baseMaterial": "GRUNGE_2",
     "objectIds": [
-      269,
       14932,
       14933
     ],
-    "flatNormals": true
+    "uvType": "BOX"
   },
   {
     "description": "Wooden Staircase",
