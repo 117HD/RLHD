@@ -13596,14 +13596,13 @@
   },
   {
     "description": "Stronghold Of Security - Famine - Escape Rope ",
-    "baseMaterial": "GRUNGE_2",
+    "baseMaterial": "ROPE",
     "objectIds": [
       19001,
       19002
     ],
     "uvType": "BOX",
-    "uvScale": 0.6,
-    "uvOrientation": 256
+    "uvOrientation": 50
   },
   {
     "description": "Stronghold Of Security - Walls - Petilence",
@@ -16409,12 +16408,13 @@
   },
   {
     "description": "Hunter Guild Big Tree Rope",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "ROPE",
     "objectIds": [
       51643
     ],
     "uvType": "BOX",
-    "uvScale": 0.75
+    "uvOrientation": -50,
+    "uvScale": 0.3
   },
   {
     "description": "Hunter Guild blue rug",
