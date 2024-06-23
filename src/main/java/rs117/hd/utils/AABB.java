@@ -266,7 +266,7 @@ public class AABB {
 						list.add(new AABB(ints[0], ints[1], ints[2], ints[3]));
 						break;
 					case 5:
-						list.add(new AABB(ints[0], ints[2], ints[1], ints[3], ints[4]));
+						list.add(new AABB(ints[0], ints[1], ints[2], ints[3], ints[4]));
 						break;
 					case 6:
 						list.add(new AABB(ints[0], ints[1], ints[2], ints[3], ints[4], ints[5]));
