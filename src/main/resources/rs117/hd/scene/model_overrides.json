@@ -8740,6 +8740,11 @@
     "uvType": "GEOMETRY"
   },
   {
+    "description": "Revanant Caves - Entrance Crevice",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [ 40386 ]
+  },
+  {
     "description": "Mage Arena - Objects - Stone - Sparkling Pool",
     "baseMaterial": "ROCK_2",
     "objectIds": [
