@@ -8230,6 +8230,7 @@
     "baseMaterial": "STONE",
     "objectIds": [
       11945,
+      11950,
       11946,
       12568
     ],
@@ -8737,7 +8738,8 @@
       2878,
       2879
     ],
-    "uvType": "VANILLA"
+    "uvType": "VANILLA",
+    "castShadows": false
   },
   {
     "description": "Mage Arena - Objects - God Statues",

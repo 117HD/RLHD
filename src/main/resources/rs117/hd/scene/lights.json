@@ -34971,5 +34971,35 @@
     "fadeOverlap": true,
     "fadeOutDuration": 450,
     "spawnDelay": 950
+  },
+  {
+    "description": "Wilderness Mage Arena Bank Pool 1",
+    "worldX": 2542,
+    "worldY": 4720,
+    "plane": 0,
+    "height": 60,
+    "alignment": "CENTER",
+    "radius": 380,
+    "strength": 6,
+    "color": [
+      0,
+      255,
+      255
+    ]
+  },
+  {
+    "description": "Wilderness Mage Arena Bank Pool 2",
+    "worldX": 2509,
+    "worldY": 4687,
+    "plane": 0,
+    "height": 60,
+    "alignment": "CENTER",
+    "radius": 380,
+    "strength": 6,
+    "color": [
+      0,
+      255,
+      255
+    ]
   }
 ]
