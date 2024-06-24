@@ -3306,6 +3306,14 @@
     "uvScale": 0.5
   },
   {
+    "description": "Scorpia Cavern - Entrance",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      26762
+    ],
+    "uvType": "BOX"
+  },
+  {
     "description": "DIRT_CAVE_ENTRANCES",
     "baseMaterial": "DIRT_2",
     "objectIds": [
@@ -8717,7 +8725,8 @@
       1490,
       1491,
       1492,
-      5962
+      5962,
+      26763
     ],
     "uvType": "GEOMETRY"
   },
