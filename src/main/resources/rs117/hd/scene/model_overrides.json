@@ -8727,8 +8727,16 @@
       1491,
       1492,
       5962,
-      26763
+      26763,
+      26767
     ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Wilderness God Wars Dungeon - Boulder and Jutting Wall",
+    "baseMaterial": "STONE",
+    "objectIds": [ 26768 ],
+    "npcIds": [ 6621, 6622 ],
     "uvType": "GEOMETRY"
   },
   {
