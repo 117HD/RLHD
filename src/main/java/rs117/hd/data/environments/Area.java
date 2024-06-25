@@ -1181,6 +1181,7 @@ public enum Area
 		new AABB(2751, 3753, 2726, 3662), // Mountains near Keldagrim Entrance
 		new AABB(2780, 3647, 2815, 3584)  // Mountains near Golden Apple Tree
 	),
+	TROLL_STRONGHOLD_INTERIOR(2816, 10111, 2871, 10047),
 	WEISS_REGION(regions(11325, 11581)),
 	WEISS_UNDERGROUND(10842),
 	WEISS_FIRE_PIT(2875, 3932, 2876, 3933),
