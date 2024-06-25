@@ -15100,7 +15100,7 @@
   {
     "description": "Fossil Island - Outhouse Walls and Lumbridge Swamp Shack",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 10372, 10373, 11763, 15054 ],
+    "objectIds": [ 10372, 10373, 11763, 15054, 33610, 33611 ],
     "uvType": "BOX",
     "uvScale": 0.8
   },
