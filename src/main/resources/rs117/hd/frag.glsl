@@ -142,9 +142,10 @@ void main() {
         vec2 blendedUv = uv1 * IN.texBlend.x + uv2 * IN.texBlend.y + uv3 * IN.texBlend.z;
 
         float mipBias = 0;
-        // Vanilla tree textures rely on UVs being clamped horizontally,
-        // which HD doesn't do, so we instead opt to hide these fragments
-        if ((vMaterialData[0] >> MATERIAL_FLAG_VANILLA_UVS & 1) == 1)
+        // Vanilla tree textures rely on UVs being clamped horizontally, which HD doesn't do at the texture level.
+        // Instead we manually clamp vanilla textures with transparency here. Including the transparency check
+        // allows texture wrapping to work correctly for the mirror shield.
+        if ((vMaterialData[0] >> MATERIAL_FLAG_VANILLA_UVS & 1) == 1 && getMaterialHasTransparency(material1))
             blendedUv.x = clamp(blendedUv.x, 0, .984375);
 
         uv1 = uv2 = uv3 = blendedUv;
