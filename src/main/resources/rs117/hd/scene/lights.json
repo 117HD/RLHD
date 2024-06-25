@@ -35002,5 +35002,23 @@
       255,
       255
     ]
+  },
+  {
+    "description": "Rag and Bone Man - Pot Boiler",
+    "height": 30,
+    "alignment": "CENTER",
+    "radius": 250,
+    "strength": 17.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [ 14008 ],
+    "fadeInDuration": 50,
+    "fadeOutDuration": 100
   }
 ]
