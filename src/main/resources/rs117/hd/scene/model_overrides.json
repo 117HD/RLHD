@@ -11615,9 +11615,12 @@
     "uvType": "BOX"
   },
   {
-    "description": "Remove the shadow cast by the exit crack of the brine rat cave",
+    "description": "Remove the shadow cast by objects that look weird with them",
     "objectIds": [
-      23159
+      19032,
+      19036,
+      23159,
+      26382
     ],
     "castShadows": false
   },
