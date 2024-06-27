@@ -758,6 +758,7 @@ public enum Material {
 		.setSpecular(0.3f, 20)
 		.setNormalMap(HD_HAY_N)
 	),
+	HD_IRON_BARS(p -> p.replaceIf(plugin -> plugin.configModelTextures, IRON_BARS).setHasTransparency(true).setSpecular(0.6f, 30).setTextureScale(0.98f)),
 	OOZE(GRAY_65, p -> p
 		.setSpecular(1.5f, 600)
 	),
