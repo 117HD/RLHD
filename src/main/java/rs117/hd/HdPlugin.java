@@ -97,6 +97,7 @@ import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.Template;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
+import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.FishingSpotReplacer;
 import rs117.hd.scene.LightManager;
@@ -216,6 +217,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Inject
 	private LightManager lightManager;
+
+	@Inject
+	private AreaManager areaManager;
 
 	@Inject
 	private EnvironmentManager environmentManager;
@@ -626,6 +630,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				modelOverrideManager.startUp();
 				modelPusher.startUp();
 				lightManager.startUp();
+				areaManager.startUp();
 				environmentManager.startUp();
 				fishingSpotReplacer.startUp();
 
@@ -2341,6 +2346,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			synchronized (context) {
 				nextSceneContext = context;
 				proceduralGenerator.generateSceneData(context);
+				// TODO: why is this not being fed the context?
+				areaManager.update(client.getLocalPlayer().getWorldLocation());
 				environmentManager.loadSceneEnvironments(context);
 				sceneUploader.upload(context);
 			}
@@ -2588,6 +2595,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 								break;
 							case KEY_VANILLA_SHADOW_MODE:
 								reloadModelOverrides = true;
+								reloadScene = true;
+								break;
+							case KEY_HIDE_UNRELATED_MAPS:
+								// TODO: confirm whether this actually needs to reload in a different way
+//								if (client.getGameState() == GameState.LOGGED_IN)
+//								{
+//									client.setGameState(GameState.LOADING);
+//								}
 								reloadScene = true;
 								break;
 							case KEY_LEGACY_GREY_COLORS:

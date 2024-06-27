@@ -31,6 +31,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
+import net.runelite.api.coords.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.data.WaterType;
 import rs117.hd.data.environments.Area;
@@ -70,6 +71,9 @@ class SceneUploader {
 	private HdPlugin plugin;
 
 	@Inject
+	private AreaManager areaManager;
+
+	@Inject
 	private TileOverrideManager tileOverrideManager;
 
 	@Inject
@@ -83,13 +87,16 @@ class SceneUploader {
 
 	public void upload(SceneContext sceneContext) {
 		Stopwatch stopwatch = Stopwatch.createStarted();
-
 		for (int z = 0; z < Constants.MAX_Z; ++z) {
 			for (int x = 0; x < Constants.EXTENDED_SCENE_SIZE; ++x) {
 				for (int y = 0; y < Constants.EXTENDED_SCENE_SIZE; ++y) {
 					Tile tile = sceneContext.scene.getExtendedTiles()[z][x][y];
-					if (tile != null)
+					if (tile != null) {
+						if (areaManager.shouldHideTile(tile.getLocalLocation())) {
+							sceneContext.scene.removeTile(tile);
+						}
 						upload(sceneContext, tile, x, y);
+					}
 				}
 			}
 		}
@@ -119,6 +126,9 @@ class SceneUploader {
 				for (int tileExY = 0; tileExY < Constants.EXTENDED_SCENE_SIZE; ++tileExY) {
 					int tileX = tileExX - SCENE_OFFSET;
 					int tileY = tileExY - SCENE_OFFSET;
+					if (areaManager.shouldHideTile(new LocalPoint(tileX,tileY))) {
+						continue;
+					}
 					Tile tile = extendedTiles[tileZ][tileExX][tileExY];
 
 					SceneTilePaint paint;
