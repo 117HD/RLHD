@@ -5062,6 +5062,7 @@
       17145,
       25603,
       7446,
+      30171,
       39928,
       39929,
       39930,
@@ -7302,6 +7303,7 @@
     "description": "Objects - Wooden - Stack of crates - Rotated",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      14742,
       15693,
       42068,
       42070
@@ -8112,6 +8114,7 @@
       11603,
       12407,
       12440,
+      14764,
       14872,
       15039,
       15679,
@@ -8776,6 +8779,23 @@
       14728
     ],
     "uvType": "MODEL_XY"
+  },
+  {
+    "description": "Deep Wilderness Dungeon - Agility Shortcut and Cave Web",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      727,
+      19043
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Deep Wilderness Dungeon - Mysterious Pool",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      30395
+    ],
+    "uvType": "BOX"
   },
   {
     "description": "Wall Decoration - Rocks",
@@ -12474,6 +12494,14 @@
     "uvOrientationZ": 512,
     "uvOrientationX": 512,
     "flatNormals": true
+  },
+  {
+    "description": "Object - Wooden - Barrel",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      14740
+    ],
+    "uvType": "BOX"
   },
   {
     "description": "Object - Dying Tree",
