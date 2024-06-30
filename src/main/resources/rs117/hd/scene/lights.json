@@ -35014,6 +35014,9 @@
       24,
       137
     ],
+    "type": "FLICKER",
+    "duration": 10,
+    "range": 20,
     "objectIds": [ 14825 ],
     "animationIds": [ 3944 ],
     "fadeInDuration": 80,
