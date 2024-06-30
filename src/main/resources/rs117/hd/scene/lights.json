@@ -35004,6 +35004,22 @@
     ]
   },
   {
+    "description": "Wilderness - Teleport Obelisks",
+    "height": 330,
+    "alignment": "CENTER",
+    "radius": 350,
+    "strength": 25,
+    "color": [
+      120,
+      24,
+      137
+    ],
+    "objectIds": [ 14825 ],
+    "animationIds": [ 3944 ],
+    "fadeInDuration": 80,
+    "fadeOutDuration": 80
+  },
+  {
     "description": "Rag and Bone Man - Pot Boiler",
     "height": 30,
     "alignment": "CENTER",
