@@ -2616,7 +2616,7 @@
     "flatNormals": true
   },
   {
-    "description": "SHAYZIEN_WALLS_ROCK",
+    "description": "Wilderness and Shayzien - Rock Walls",
     "baseMaterial": "ROCK_1",
     "objectIds": [
       14544,
@@ -2630,6 +2630,14 @@
       14558,
       14559,
       14560,
+      14622,
+      14623,
+      14624,
+      14625,
+      14626,
+      14627,
+      14628,
+      14629,
       14632,
       42110,
       42111
