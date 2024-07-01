@@ -8806,6 +8806,14 @@
     "uvType": "BOX"
   },
   {
+    "description": "Edgeville Wilderness Dungeon - Cave Wall - Opening",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      1477
+    ],
+    "uvType": "BOX"
+  },
+  {
     "description": "Wall Decoration - Rocks",
     "baseMaterial": "ROCK_1_LIGHT",
     "objectIds": [
@@ -10184,9 +10192,11 @@
     "objectIds": [
       14941,
       14942,
-      14943
+      14943,
+      23565,
+      23566
     ],
-    "uvType": "GEOMETRY"
+    "uvType": "BOX"
   },
   {
     "description": "Agility Arrow",
@@ -11747,6 +11757,8 @@
     "baseMaterial": "ROCK_1",
     "objectIds": [
       5309,
+      11174,
+      11175,
       11436,
       11437,
       24143,
