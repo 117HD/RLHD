@@ -1336,13 +1336,26 @@
   {
     "area": "MAGE_ARENA_BANK",
     "ambientColor": "#97baff",
-    "ambientStrength": 1.5,
-    "directionalStrength": 1,
+    "ambientStrength": 1.75,
+    "instantTransition": true,
+    "directionalStrength": 0.25,
     "sunAngles": [
       80,
       190
     ],
-    "fogDepth": 40
+    "fogDepth": 60
+  },
+  {
+    "area": "MAGE_ARENA_GOD_STATUES",
+    "ambientColor": "#97baff",
+    "ambientStrength": 1.75,
+    "instantTransition": true,
+    "directionalStrength": 0.25,
+    "sunAngles": [
+      80,
+      190
+    ],
+    "fogDepth": 60
   },
   {
     "area": "TEARS_OF_GUTHIX",

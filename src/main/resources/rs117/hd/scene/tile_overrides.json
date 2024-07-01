@@ -1644,7 +1644,8 @@
     "overlayIds": [
       171
     ],
-    "groundMaterial": "DIRT"
+    "groundMaterial": "DIRT",
+    "blended": false
   },
   {
     "name": "WEISS_TENT_INTERIOR",
@@ -1661,6 +1662,15 @@
       171
     ],
     "groundMaterial": "WINTER_JAGGED_STONE_TILE"
+  },
+  {
+    "name": "Weiss Dirt to Snow Underlay Fix",
+    "area": "WEISS_REGION",
+    "underlayIds": [
+      56,
+      118
+    ],
+    "groundMaterial": "SNOW_1"
   },
   {
     "name": "TAVERLEY_DUNGEON_BLACK_KNIGHT_KITCHEN",
