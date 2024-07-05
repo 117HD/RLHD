@@ -47,7 +47,6 @@ in int gMaterialData[3];
 in int gTerrainData[3];
 
 flat out vec4 vColor[3];
-flat out vec3 vUv[3];
 flat out int vMaterialData[3];
 flat out int vTerrainData[3];
 flat out vec3 T;
@@ -55,12 +54,15 @@ flat out vec3 B;
 
 out FragmentData {
     vec3 position;
+    vec2 uv;
     vec3 normal;
     vec3 texBlend;
     float fogAmount;
 } OUT;
 
 void main() {
+    vec3 vUv[3];
+
     // MacOS doesn't allow assigning these arrays directly.
     // One of the many wonders of Apple software...
     for (int i = 0; i < 3; i++) {
@@ -93,6 +95,7 @@ void main() {
         // Flat normals must be applied separately per vertex
         vec3 normal = gNormal[i];
         OUT.position = gPosition[i];
+        OUT.uv = vUv[i].xy;
         #if FLAT_SHADING
         OUT.normal = N;
         #else

@@ -27,11 +27,9 @@
 vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     WaterType waterType = getWaterType(waterTypeIndex);
 
-    vec2 baseUv = vUv[0].xy * IN.texBlend.x + vUv[1].xy * IN.texBlend.y + vUv[2].xy * IN.texBlend.z;
-    vec2 uv3 = baseUv;
-
-    vec2 uv2 = worldUvs(3) + animationFrame(24 * waterType.duration);
     vec2 uv1 = worldUvs(3).yx - animationFrame(28 * waterType.duration);
+    vec2 uv2 = worldUvs(3) + animationFrame(24 * waterType.duration);
+    vec2 uv3 = IN.uv;
 
     vec2 flowMapUv = worldUvs(15) + animationFrame(50 * waterType.duration);
     float flowMapStrength = 0.025;

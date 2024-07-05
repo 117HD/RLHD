@@ -71,7 +71,7 @@ void main() {
     int terrainData = int(vNormal.w);
 
     gPosition = position;
-    gUv = vec3(vUv);
+    gUv = vUv.xyz;
     gNormal = vNormal.xyz;
     gColor = color;
     gFogAmount = calculateFogAmount(position);
