@@ -41,12 +41,11 @@ uniform vec3 cameraPos;
 in vec3 gPosition[3];
 in vec3 gUv[3];
 in vec3 gNormal[3];
-in vec4 gColor[3];
-in float gFogAmount[3];
+in int gColor[3];
 in int gMaterialData[3];
 in int gTerrainData[3];
 
-flat out vec4 vColor[3];
+flat out ivec3 vColor;
 flat out int vMaterialData[3];
 flat out int vTerrainData[3];
 flat out vec3 T;
@@ -57,7 +56,6 @@ out FragmentData {
     vec2 uv;
     vec3 normal;
     vec3 texBlend;
-    float fogAmount;
 } OUT;
 
 void main() {
@@ -103,7 +101,6 @@ void main() {
         #endif
         OUT.texBlend = vec3(0);
         OUT.texBlend[i] = 1;
-        OUT.fogAmount = gFogAmount[i];
         gl_Position = projectionMatrix * vec4(OUT.position, 1);
         EmitVertex();
     }

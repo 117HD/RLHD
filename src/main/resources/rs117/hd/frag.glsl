@@ -35,11 +35,14 @@ uniform sampler2DArray textureArray;
 uniform sampler2D shadowMap;
 
 uniform vec3 cameraPos;
+uniform float drawDistance;
+uniform int expandedMapLoadingChunks;
 uniform mat4 lightProjectionMatrix;
 uniform float elapsedTime;
 uniform float colorBlindnessIntensity;
-uniform vec3 fogColor;
+uniform int useFog;
 uniform float fogDepth;
+uniform vec3 fogColor;
 uniform vec3 waterColorLight;
 uniform vec3 waterColorMid;
 uniform vec3 waterColorDark;
@@ -67,7 +70,7 @@ uniform float contrast;
 
 uniform int pointLightsCount; // number of lights in current frame
 
-flat in vec4 vColor[3];
+flat in ivec3 vColor;
 flat in int vMaterialData[3];
 flat in int vTerrainData[3];
 flat in vec3 T;
@@ -78,7 +81,6 @@ in FragmentData {
     vec2 uv;
     vec3 normal;
     vec3 texBlend;
-    float fogAmount;
 } IN;
 
 out vec4 FragColor;
@@ -98,6 +100,7 @@ vec2 worldUvs(float scale) {
 #include utils/shadows.glsl
 #include utils/water.glsl
 #include utils/color_filters.glsl
+#include utils/fog.glsl
 
 void main() {
     vec3 downDir = vec3(0, -1, 0);
@@ -199,10 +202,9 @@ void main() {
         #endif
 
         // get vertex colors
-        vec4 flatColor = vec4(0.5, 0.5, 0.5, 1.0);
-        vec4 baseColor1 = vColor[0];
-        vec4 baseColor2 = vColor[1];
-        vec4 baseColor3 = vColor[2];
+        vec4 baseColor1 = vec4(srgbToLinear(packedHslToSrgb(vColor[0])), 1 - float(vColor[0] >> 24 & 0xff) / 255.);
+        vec4 baseColor2 = vec4(srgbToLinear(packedHslToSrgb(vColor[1])), 1 - float(vColor[1] >> 24 & 0xff) / 255.);
+        vec4 baseColor3 = vec4(srgbToLinear(packedHslToSrgb(vColor[2])), 1 - float(vColor[2] >> 24 & 0xff) / 255.);
 
         #if VANILLA_COLOR_BANDING
         vec4 baseColor =
@@ -453,6 +455,14 @@ void main() {
         }
     }
 
+    vec2 tiledist = abs(floor(IN.position.xz / 128) - floor(cameraPos.xz / 128));
+    float maxDist = max(tiledist.x, tiledist.y);
+    if (maxDist > drawDistance) {
+        // Rapidly fade out any geometry that extends beyond the draw distance.
+        // This is required if we always draw all underwater terrain.
+        outputColor.a *= -256;
+    }
+
 
     outputColor.rgb = clamp(outputColor.rgb, 0, 1);
 
@@ -489,7 +499,8 @@ void main() {
         groundFog *= clamp(distance / closeFadeDistance, 0.0, 1.0);
 
         // multiply the visibility of each fog
-        float combinedFog = 1 - (1 - IN.fogAmount) * (1 - groundFog);
+        float fogAmount = calculateFogAmount(IN.position);
+        float combinedFog = 1 - (1 - fogAmount) * (1 - groundFog);
 
         if (isWater) {
             outputColor.a = combinedFog + outputColor.a * (1 - combinedFog);
