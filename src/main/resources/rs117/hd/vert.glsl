@@ -32,24 +32,13 @@ layout (location = 2) in vec4 vUv;
 layout (location = 3) in vec4 vNormal;
 
 out vec3 gPosition;
-out vec3 gUv;
-out vec3 gNormal;
-out int gColor;
-out int gMaterialData;
-out int gTerrainData;
+out int gHsl;
+out vec4 gUv;
+out vec4 gNormal;
 
 void main() {
-    int ahsl = vHsl;
-    vec3 position = vPosition;
-
-    // CAUTION: only 24-bit ints can be stored safely as floats
-    int materialData = int(vUv.w);
-    int terrainData = int(vNormal.w);
-
-    gPosition = position;
-    gUv = vUv.xyz;
-    gNormal = vNormal.xyz;
-    gColor = ahsl;
-    gMaterialData = materialData;
-    gTerrainData = terrainData;
+    gPosition = vPosition;
+    gHsl = vHsl;
+    gUv = vUv;
+    gNormal = vNormal;
 }

@@ -70,9 +70,9 @@ uniform float contrast;
 
 uniform int pointLightsCount; // number of lights in current frame
 
-flat in ivec3 vColor;
-flat in int vMaterialData[3];
-flat in int vTerrainData[3];
+flat in ivec3 vHsl;
+flat in ivec3 vMaterialData;
+flat in ivec3 vTerrainData;
 flat in vec3 T;
 flat in vec3 B;
 
@@ -202,9 +202,9 @@ void main() {
         #endif
 
         // get vertex colors
-        vec4 baseColor1 = vec4(srgbToLinear(packedHslToSrgb(vColor[0])), 1 - float(vColor[0] >> 24 & 0xff) / 255.);
-        vec4 baseColor2 = vec4(srgbToLinear(packedHslToSrgb(vColor[1])), 1 - float(vColor[1] >> 24 & 0xff) / 255.);
-        vec4 baseColor3 = vec4(srgbToLinear(packedHslToSrgb(vColor[2])), 1 - float(vColor[2] >> 24 & 0xff) / 255.);
+        vec4 baseColor1 = vec4(srgbToLinear(packedHslToSrgb(vHsl[0])), 1 - float(vHsl[0] >> 24 & 0xff) / 255.);
+        vec4 baseColor2 = vec4(srgbToLinear(packedHslToSrgb(vHsl[1])), 1 - float(vHsl[1] >> 24 & 0xff) / 255.);
+        vec4 baseColor3 = vec4(srgbToLinear(packedHslToSrgb(vHsl[2])), 1 - float(vHsl[2] >> 24 & 0xff) / 255.);
 
         #if VANILLA_COLOR_BANDING
         vec4 baseColor =
