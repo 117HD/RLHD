@@ -6103,7 +6103,10 @@
     "name": "DEATHS_OFFICE_TILE",
     "area": "DEATHS_OFFICE",
     "underlayIds": [
-      146
+      146,
+      147,
+      148,
+      149
     ],
     "groundMaterial": "TILES_2X2_1_SEMIGLOSS"
   },

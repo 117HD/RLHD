@@ -3589,13 +3589,6 @@
     "uvScale": 1.3
   },
   {
-    "description": "UNKNOWN_4",
-    "objectIds": [
-      39617
-    ],
-    "flatNormals": true
-  },
-  {
     "description": "BEIGE_WALLS",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
@@ -19011,5 +19004,130 @@
     "objectIds": [ 577 ],
     "uvType": "BOX",
     "uvScale": 0.8
+  },
+  {
+    "description": "Deaths office - Entrances - Lumbridge",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [
+      38426
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Deaths office - Entrances - Seers",
+    "baseMaterial": "GRAY_90",
+    "objectIds": [
+      39546
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Deaths office - Entrances - Ferox",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      39637
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Deaths office - Entrances - Falador",
+    "baseMaterial": "GRUNGE_3",
+    "flatNormals": true,
+    "objectIds": [
+      39617
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Deaths office - Walls - Stone",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      39551,
+      39552,
+      39553,
+      39554,
+      39555,
+      39556,
+      39557,
+      39558,
+      39559,
+      39560,
+      39561,
+      39562,
+      39563,
+      39564,
+      39565
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Deaths office - Walls - Outer Layer",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      39566,
+      39567,
+      39568,
+      39569
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Deaths office - Objects - Generic",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      39550,
+      39570,
+      39571,
+      39572,
+      39573,
+      39574,
+      39575,
+      39576,
+      39578,
+      39579,
+      39580,
+      39581,
+      39582,
+      39583
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Deaths office - Objects - Rug",
+    "baseMaterial": "FINE_CARPET",
+    "objectIds": [
+      39585,
+      39586,
+      39587,
+      39588,
+      39589,
+      39590,
+      39591,
+      39592,
+      39593,
+      39594,
+      39595,
+      39596,
+      39597,
+      39598,
+      39599,
+      39600,
+      39601,
+      39602,
+      39603,
+      39604
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Deaths office - Hide stone chips",
+    "hide": true,
+    "areas": [ "DEATHS_OFFICE" ],
+    "objectIds": [
+      12930,
+      12931
+    ],
+    "uvType": "BOX"
   }
 ]
