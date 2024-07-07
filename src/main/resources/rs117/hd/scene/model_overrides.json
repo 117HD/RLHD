@@ -1341,7 +1341,6 @@
   {
     "description": "TREE_STUMP",
     "baseMaterial": "BARK",
-    "castShadows": false,
     "objectIds": [
       1341,
       1342,
