@@ -9387,6 +9387,43 @@
     "uvType": "GEOMETRY"
   },
   {
+    "description": "Cold War - Larrys Boat",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      21177
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Iceberg - Bird Hide - Uncovered and Broken",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      21180,
+      21182
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.76
+  },
+  {
+    "description": "Iceberg - Bird Hide - Covered",
+    "baseMaterial": "SNOW_2",
+    "objectIds": [
+      21181
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 1.1
+  },
+  {
+    "description": "Iceberg - Agility Course - Snow Drift",
+    "baseMaterial": "SNOW_2",
+    "objectIds": [
+      21142,
+      21143
+    ],
+    "uvType": "BOX"
+  },
+  {
     "description": "Penguin Footprints",
     "baseMaterial": "SNOW_2",
     "uvType": "WORLD_XZ",

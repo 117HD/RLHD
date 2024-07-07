@@ -32453,8 +32453,7 @@
   },
   {
     "description": "PENGUIN_BASE_LAMP",
-    "height": 120,
-    "alignment": "FRONT",
+    "height": 140,
     "radius": 140,
     "strength": 10.5,
     "color": [

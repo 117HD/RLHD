@@ -5657,13 +5657,22 @@
     }
   },
   {
-    "name": "ICEBERG_TEXTURE",
+    "name": "ICEBERG_BLEND",
     "area": "ICEBERG",
-    "underlayIds": [
-      59
-    ],
+    "description": "For when ground blending is ENABLED",
+    "underlayIds": [ 58, 59, 60 ],
     "groundMaterial": "SNOW_2",
-    "shiftLightness": 5
+    "replacements": {
+      "ICEBERG_UNBLEND": "!blending"
+    },
+    "shiftLightness": 35
+  },
+  {
+    "name": "ICEBERG_UNBLEND",
+    "area": "ICEBERG",
+    "description": "For when ground blending is DISABLED",
+    "groundMaterial": "SNOW_2",
+    "shiftLightness": 12
   },
   {
     "name": "APE_ATOLL_COMPLEX_TILES",
