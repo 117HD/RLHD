@@ -114,6 +114,10 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 
 	@Override
 	public Dimension render(Graphics2D g) {
+		// Disable the overlay while loading a scene, since tile overrides aren't thread safe
+		if (plugin.isLoadingScene())
+			return null;
+
 		var sceneContext = plugin.getSceneContext();
 		if (sceneContext == null)
 			return null;

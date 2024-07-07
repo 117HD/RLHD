@@ -2326,6 +2326,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		loadSceneInternal(scene);
 	}
 
+	public boolean isLoadingScene() {
+		return nextSceneContext != null;
+	}
+
 	private synchronized void loadSceneInternal(Scene scene) {
 		if (nextSceneContext != null)
 			nextSceneContext.destroy();
