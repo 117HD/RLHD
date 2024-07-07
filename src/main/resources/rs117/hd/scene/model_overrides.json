@@ -3943,9 +3943,9 @@
     "uvOrientation": 512
   },
   {
-    "description": "Lighthouse Bed",
+    "description": "Object - Bed - Wood",
     "baseMaterial": "GRUNGE_2",
-    "objectIds": [ 4287 ],
+    "objectIds": [ 4287, 20740 ],
     "uvScale": 0.2,
     "uvType": "BOX",
     "uvOrientation": 256
@@ -5058,7 +5058,8 @@
       39932,
       39933,
       40226,
-      40228
+      40228,
+      5349
     ],
     "uvOrientationY": 512,
     "uvType": "BOX",
@@ -8025,16 +8026,6 @@
     "uvType": "GEOMETRY"
   },
   {
-    "description": "Morytania - Ground  - Stone - Stone Steps",
-    "baseMaterial": "STONE_NORMALED",
-    "objectIds": [
-      20735,
-      20736,
-      20768,
-      20769
-    ]
-  },
-  {
     "description": "Morytania - Objects - Wooden - Crate",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
@@ -8873,6 +8864,7 @@
     "description": "Objects - Wooden - Chair 2",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      5346,
       7182,
       15091,
       15682
@@ -11911,7 +11903,7 @@
     "uvScale": 0.6
   },
   {
-    "description": "Moritaynia - Walls - Wooden - Plank - Rotten Plank Walls",
+    "description": "Morytania - Walls - Wooden - Plank - Rotten Plank Walls",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       5240,
@@ -11925,7 +11917,7 @@
     "flatNormals": true
   },
   {
-    "description": "Moritaynia - Walls - Wooden - Plank - Rotten Plank Roof",
+    "description": "Morytania - Walls - Wooden - Plank - Rotten Plank Roof",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       5363,
@@ -11939,7 +11931,7 @@
     "flatNormals": true
   },
   {
-    "description": "Moritaynia - Walls - Wooden - Plank - Rotten Plank Roof - Corner",
+    "description": "Morytania - Walls - Wooden - Plank - Rotten Plank Roof - Corner",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       5366,
@@ -11957,8 +11949,8 @@
     "flatNormals": true
   },
   {
-    "description": "Moritaynia - Walls - Stone - Barrows Crypt",
-    "baseMaterial": "STONE_NORMALED",
+    "description": "Morytania - Walls - Stone - Barrows Crypt",
+    "baseMaterial": "ROCK_3",
     "objectIds": [
       20728,
       20729,
@@ -11971,17 +11963,18 @@
     "uvScale": 0.6
   },
   {
-    "description": "Ferox Enclave - Wall Rubble",
-    "baseMaterial": "STONE_NORMALED",
+    "description": "Morytania - Ground  - Stone - Stone Steps",
+    "baseMaterial": "ROCK_3",
     "objectIds": [
-      39691,
-      39692
-    ],
-    "uvType": "GEOMETRY"
+      20735,
+      20736,
+      20768,
+      20769
+    ]
   },
   {
     "description": "Barrows Sarcophagus",
-    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "baseMaterial": "GRUNGE_3",
     "objectIds": [
       20720,
       20721,
@@ -11990,11 +11983,11 @@
       20771,
       20772
     ],
-    "uvType": "GEOMETRY"
+    "uvType": "BOX"
   },
   {
-    "description": "Barrows stairs",
-    "baseMaterial": "METALLIC_1_HIGHGLOSS",
+    "description": "Barrows Stairs",
+    "baseMaterial": "STONE_NORMALED_DARK",
     "objectIds": [
       20667,
       20668,
@@ -12007,28 +12000,43 @@
   },
   {
     "description": "Barrows Tunnels Doors lighter",
-    "baseMaterial": "METALLIC_1_LIGHT_HIGHGLOSS",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       20678,
       20679,
       20697,
-      20698
-    ]
-  },
-  {
-    "description": "Barrows Tunnels Doors darker",
-    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
-    "objectIds": [
+      20698,
       20680,
       20699
-    ]
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.2
   },
   {
     "description": "Barrows Chest",
-    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [
       20723,
       20724
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Barrows Standing Torch",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      20716
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.66
+  },
+  {
+    "description": "Ferox Enclave - Wall Rubble",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      39691,
+      39692
     ],
     "uvType": "GEOMETRY"
   },
@@ -18409,7 +18417,12 @@
   {
     "description": "Wooden Cart - Empty",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 307, 3633 ],
+    "objectIds": [
+      307,
+      3633,
+      5352,
+      5353
+    ],
     "uvType": "BOX",
     "uvScale": 0.8
   },
