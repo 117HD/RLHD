@@ -1637,6 +1637,7 @@
       17448,
       17449,
       34494,
+      34495,
       34496,
       46411,
       46412
@@ -1695,7 +1696,10 @@
       7518,
       7519,
       7520,
-      7521
+      7521,
+      34494,
+      34495,
+      34496
     ],
     "flatNormals": true,
     "inheritTileColorType": "UNDERLAY",
@@ -2564,6 +2568,18 @@
     "flatNormals": true
   },
   {
+    "description": "Kourend - Kingstown - Statue of King Rada",
+    "baseMaterial": "MARBLE_2_DARK",
+    "objectIds": [
+      14193,
+      14194,
+      14195,
+      27785
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.1
+  },
+  {
     "description": "SHAYZIEN_SHAY_SHRINE",
     "baseMaterial": "MARBLE_3_GLOSS",
     "objectIds": [
@@ -2612,7 +2628,7 @@
     "flatNormals": true
   },
   {
-    "description": "SHAYZIEN_WALLS_ROCK",
+    "description": "Wilderness and Shayzien - Rock Walls",
     "baseMaterial": "ROCK_1",
     "objectIds": [
       14544,
@@ -2626,6 +2642,14 @@
       14558,
       14559,
       14560,
+      14622,
+      14623,
+      14624,
+      14625,
+      14626,
+      14627,
+      14628,
+      14629,
       14632,
       42110,
       42111
@@ -3302,6 +3326,14 @@
     "uvScale": 0.5
   },
   {
+    "description": "Scorpia Cavern - Entrance",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      26762
+    ],
+    "uvType": "BOX"
+  },
+  {
     "description": "DIRT_CAVE_ENTRANCES",
     "baseMaterial": "DIRT_2",
     "objectIds": [
@@ -3578,6 +3610,16 @@
     "uvOrientation": 256
   },
   {
+    "description": "Pale rock tunnel, Keldagrim to Rellekka tunnel",
+    "baseMaterial": "ROCK_3_DARK",
+    "objectIds": [
+      5013,
+      5014
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.9
+  },
+  {
     "description": "Pale rock walls - Top",
     "baseMaterial": "ROCK_3",
     "objectIds": [
@@ -3605,8 +3647,6 @@
       2123,
       4147,
       5008,
-      5013,
-      5014,
       5046,
       5858,
       5973,
@@ -5051,6 +5091,7 @@
       17145,
       25603,
       7446,
+      30171,
       39928,
       39929,
       39930,
@@ -7335,6 +7376,7 @@
     "description": "Objects - Wooden - Stack of crates - Rotated",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      14742,
       15693,
       42068,
       42070
@@ -8140,6 +8182,7 @@
       11603,
       12407,
       12440,
+      14764,
       14872,
       15039,
       15093,
@@ -8259,6 +8302,7 @@
     "baseMaterial": "STONE",
     "objectIds": [
       11945,
+      11950,
       11946,
       12568
     ],
@@ -8674,6 +8718,7 @@
       3658,
       3659,
       3660,
+      3661,
       11432,
       33191,
       37395,
@@ -8753,9 +8798,23 @@
       1490,
       1491,
       1492,
-      5962
+      5962,
+      26763,
+      26767
     ],
     "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Wilderness God Wars Dungeon - Boulder and Jutting Wall",
+    "baseMaterial": "STONE",
+    "objectIds": [ 26768 ],
+    "npcIds": [ 6621, 6622 ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Revanant Caves - Entrance Crevice",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [ 40386 ]
   },
   {
     "description": "Mage Arena - Objects - Stone - Sparkling Pool",
@@ -8764,7 +8823,8 @@
       2878,
       2879
     ],
-    "uvType": "VANILLA"
+    "uvType": "VANILLA",
+    "castShadows": false
   },
   {
     "description": "Mage Arena - Objects - God Statues",
@@ -8788,6 +8848,31 @@
       14728
     ],
     "uvType": "MODEL_XY"
+  },
+  {
+    "description": "Deep Wilderness Dungeon - Agility Shortcut and Cave Web",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      727,
+      19043
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Deep Wilderness Dungeon - Mysterious Pool",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      30395
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Edgeville Wilderness Dungeon - Cave Wall - Opening",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      1477
+    ],
+    "uvType": "BOX"
   },
   {
     "description": "Wall Decoration - Rocks",
@@ -8855,7 +8940,7 @@
   {
     "description": "Objects - Wooden - Chair - No cushion - Smashed",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 1089 ],
+    "objectIds": [ 1089, 3802 ],
     "uvType": "BOX",
     "uvOrientation": 512,
     "uvScale": 0.6
@@ -10228,9 +10313,11 @@
     "objectIds": [
       14941,
       14942,
-      14943
+      14943,
+      23565,
+      23566
     ],
-    "uvType": "GEOMETRY"
+    "uvType": "BOX"
   },
   {
     "description": "Agility Arrow",
@@ -11699,9 +11786,12 @@
     "uvType": "BOX"
   },
   {
-    "description": "Remove the shadow cast by the exit crack of the brine rat cave",
+    "description": "Remove the shadow cast by objects that look weird with them",
     "objectIds": [
-      23159
+      19032,
+      19036,
+      23159,
+      26382
     ],
     "castShadows": false
   },
@@ -11800,6 +11890,8 @@
     "baseMaterial": "ROCK_1",
     "objectIds": [
       5309,
+      11174,
+      11175,
       11436,
       11437,
       24143,
@@ -12572,6 +12664,14 @@
     "uvOrientationZ": 512,
     "uvOrientationX": 512,
     "flatNormals": true
+  },
+  {
+    "description": "Object - Wooden - Barrel",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      14740
+    ],
+    "uvType": "BOX"
   },
   {
     "description": "Object - Dying Tree",
@@ -14105,7 +14205,7 @@
   {
     "description": "Trollheim - Wooden - Door",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 3776 ],
+    "objectIds": [ 1744, 3776, 3777, 3780, 3781 ],
     "uvType": "BOX",
     "flatNormals": true
   },
@@ -14136,7 +14236,7 @@
   {
     "description": "Trollheim Cell Walls",
     "baseMaterial": "GRAY_75",
-    "objectIds": [ 3764, 3765, 3778, 33217, 33218, 33219, 46816, 46817 ],
+    "objectIds": [ 3763, 3764, 3765, 3767, 3778, 3810, 3811, 33217, 33218, 33219, 46816, 46817 ],
     "flatNormals": true
   },
   {
@@ -14145,6 +14245,13 @@
     "objectIds": [ 18833, 18834 ],
     "uvType": "BOX",
     "uvOrientation": 512
+  },
+  {
+    "description": "Trollheim 'Farming' Patches",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [ 18835, 18836, 18837, 18838, 18839, 18840, 18845, 18846, 18847, 18848, 18849, 18850, 18851, 18852, 18853, 18854, 18855 ],
+    "uvType": "BOX",
+    "uvOrientation": 256
   },
   {
     "description": "Trollweiss Wrecked Boat",
@@ -15271,7 +15378,7 @@
   {
     "description": "Fossil Island - Outhouse Walls and Lumbridge Swamp Shack",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 10372, 10373, 11763, 15054 ],
+    "objectIds": [ 10372, 10373, 11763, 15054, 33610, 33611 ],
     "uvType": "BOX",
     "uvScale": 0.8
   },
@@ -16172,7 +16279,7 @@
     "description": "Keldagrim Stone Walls",
     "baseMaterial": "ROCK_3",
     "objectIds": [
-      6000, 6001, 6002, 6003, 6004, 6005, 6006, 6010, 6011, 8881, 8882, 8883, 8884, 8905, 8907, 8909
+      5966, 5989, 5998, 6000, 6001, 6002, 6003, 6004, 6005, 6006, 6010, 6011, 8881, 8882, 8883, 8884, 8905, 8907, 8909
     ],
     "uvType": "BOX",
     "uvOrientation": 128

@@ -33656,7 +33656,7 @@
     ]
   },
   {
-    "description": "Lighthouse Lantern",
+    "description": "Wall Lantern",
     "height": 235,
     "alignment": "CENTER",
     "radius": 250,
@@ -35057,5 +35057,117 @@
     "objectIds": [
       15229
     ]
+  },
+  {
+    "description": "Troll Stronghold Window and Exit Door",
+    "objectIds": [ 3770, 3774 ],
+    "radius": 450,
+    "areas": [ "TROLL_STRONGHOLD_INTERIOR" ],
+    "strength": 10,
+    "color": "#ffffff",
+    "offset": [ 0, 150, 60 ]
+  },
+  {
+    "description": "Icy Basalt Teleport",
+    "graphicsObjectIds": [ 1628 ],
+    "radius": 250,
+    "strength": 10,
+    "color": [ 0, 255, 255 ],
+    "offset": [ 0, 30, 0 ],
+    "fadeOutDuration": 150,
+    "fadeInDuration": 250,
+    "spawnDelay": 600
+  },
+  {
+    "description": "Stony Basalt Teleport",
+    "graphicsObjectIds": [ 1617 ],
+    "radius": 250,
+    "strength": 10,
+    "color": [ 0, 255, 50 ],
+    "offset": [ 0, 30, 0 ],
+    "fadeOutDuration": 150,
+    "fadeInDuration": 250,
+    "spawnDelay": 600
+  },
+  {
+    "description": "Standard Spellbook Teleport",
+    "graphicsObjectIds": [ 111 ],
+    "radius": 350,
+    "strength": 12,
+    "color": [ 205, 0, 205 ],
+    "offset": [ 0, 130, 0 ],
+    "fixedDespawnTime": true,
+    "despawnDelay": 400,
+    "fadeInDuration": 100,
+    "fadeOverlap": true,
+    "fadeOutDuration": 450,
+    "spawnDelay": 950
+  },
+  {
+    "description": "Wilderness Mage Arena Bank Pool 1",
+    "worldX": 2542,
+    "worldY": 4720,
+    "plane": 0,
+    "height": 60,
+    "alignment": "CENTER",
+    "radius": 380,
+    "strength": 6,
+    "color": [
+      0,
+      255,
+      255
+    ]
+  },
+  {
+    "description": "Wilderness Mage Arena Bank Pool 2",
+    "worldX": 2509,
+    "worldY": 4687,
+    "plane": 0,
+    "height": 60,
+    "alignment": "CENTER",
+    "radius": 380,
+    "strength": 6,
+    "color": [
+      0,
+      255,
+      255
+    ]
+  },
+  {
+    "description": "Wilderness - Teleport Obelisks",
+    "height": 330,
+    "alignment": "CENTER",
+    "radius": 350,
+    "strength": 25,
+    "color": [
+      120,
+      24,
+      137
+    ],
+    "type": "FLICKER",
+    "duration": 10,
+    "range": 20,
+    "objectIds": [ 14825 ],
+    "animationIds": [ 3944 ],
+    "fadeInDuration": 80,
+    "fadeOutDuration": 80
+  },
+  {
+    "description": "Rag and Bone Man - Pot Boiler",
+    "height": 30,
+    "alignment": "CENTER",
+    "radius": 250,
+    "strength": 17.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [ 14008 ],
+    "fadeInDuration": 50,
+    "fadeOutDuration": 100
   }
 ]
