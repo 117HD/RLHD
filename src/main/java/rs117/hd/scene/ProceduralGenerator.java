@@ -1026,14 +1026,14 @@ public class ProceduralGenerator {
 			final int triA = model.getFaceIndices1()[face];
 			final int triB = model.getFaceIndices2()[face];
 			final int triC = model.getFaceIndices3()[face];
-			final int[] yVertices = model.getVerticesY();
-			int heightA = yVertices[triA];
-			int heightB = yVertices[triB];
-			int heightC = yVertices[triC];
+			final float[] yVertices = model.getVerticesY();
+			float heightA = yVertices[triA];
+			float heightB = yVertices[triB];
+			float heightC = yVertices[triC];
 
 			// apply coloring to the rocky walls
 			if (color1L < 20) {
-				float pos = clamp((float) (heightA - gradientTop) / (float) gradientBottom, 0.0f, 1.0f);
+				float pos = clamp((heightA - gradientTop) / (float) gradientBottom, 0.0f, 1.0f);
 				color1H = (int) lerp(gradientDarkColor[0], gradientBaseColor[0], pos);
 				color1S = (int) lerp(gradientDarkColor[1], gradientBaseColor[1], pos);
 				color1L = (int) lerp(gradientDarkColor[2], gradientBaseColor[2], pos);
@@ -1041,7 +1041,7 @@ public class ProceduralGenerator {
 
 			if (color2L < 20)
 			{
-				float pos = clamp((float) (heightB - gradientTop) / (float) gradientBottom, 0.0f, 1.0f);
+				float pos = clamp((heightB - gradientTop) / (float) gradientBottom, 0.0f, 1.0f);
 				color2H = (int) lerp(gradientDarkColor[0], gradientBaseColor[0], pos);
 				color2S = (int) lerp(gradientDarkColor[1], gradientBaseColor[1], pos);
 				color2L = (int) lerp(gradientDarkColor[2], gradientBaseColor[2], pos);
@@ -1049,7 +1049,7 @@ public class ProceduralGenerator {
 
 			if (color3L < 20)
 			{
-				float pos = clamp((float) (heightC - gradientTop) / (float) gradientBottom, 0.0f, 1.0f);
+				float pos = clamp((heightC - gradientTop) / (float) gradientBottom, 0.0f, 1.0f);
 				color3H = (int) lerp(gradientDarkColor[0], gradientBaseColor[0], pos);
 				color3S = (int) lerp(gradientDarkColor[1], gradientBaseColor[1], pos);
 				color3L = (int) lerp(gradientDarkColor[2], gradientBaseColor[2], pos);
