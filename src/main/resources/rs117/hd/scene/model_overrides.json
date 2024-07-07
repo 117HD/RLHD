@@ -18845,15 +18845,6 @@
     "uvOrientation": 80
   },
   {
-    "description": "Wooden shelves with bottom cupboard - Empty",
-    "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 1014 ],
-    "uvType": "BOX",
-    "uvScale": 0.8,
-    "uvOrientationX": 512,
-    "retainVanillaUvs": false
-  },
-  {
     "description": "Grill",
     "baseMaterial": "METALLIC_1_SEMIGLOSS",
     "objectIds": [
