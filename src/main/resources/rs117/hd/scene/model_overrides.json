@@ -935,9 +935,6 @@
       12006,
       13378,
       14373,
-      15182,
-      15183,
-      15184,
       15257,
       15510,
       15511,
@@ -18856,7 +18853,7 @@
   {
     "description": "Wooden shelves - Triple - Filled",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 1016, 1017, 1018, 7510, 7511],
+    "objectIds": [ 1016, 1017, 1018, 7510, 7511 ],
     "uvType": "BOX",
     "uvScale": 0.8,
     "uvOrientationX": 512,
