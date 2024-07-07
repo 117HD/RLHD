@@ -1322,6 +1322,7 @@
       5904,
       5905,
       9733,
+      10056,
       11510,
       14513,
       14514,
@@ -1350,6 +1351,7 @@
       6212,
       9661,
       9712,
+      10057,
       14516,
       14517,
       50089
@@ -5462,6 +5464,7 @@
     "description": "Metal Fence",
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
+      2186,
       20873,
       20874,
       20875,
@@ -5900,6 +5903,8 @@
       2706,
       3744,
       3747,
+      17089,
+      17090,
       17316,
       17317,
       20925,
@@ -5947,6 +5952,10 @@
       10263,
       10264,
       10265,
+      17091,
+      17092,
+      17093,
+      17094,
       20197,
       20198,
       24123,
@@ -6609,6 +6618,7 @@
       28940,
       28941,
       28948,
+      28949,
       28956,
       28957
     ],
@@ -10240,7 +10250,8 @@
       9616,
       10485,
       10486,
-      15040
+      15040,
+      19699
     ],
     "uvType": "BOX",
     "uvOrientationY": 512
@@ -19129,5 +19140,103 @@
       12931
     ],
     "uvType": "BOX"
+  },
+  {
+    "description": "Zombie Event Gravestones",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      9359,
+      9360,
+      9361,
+      9362,
+      9363
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 80
+  },
+  {
+    "description": "Zombie Event Graves with coffins",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      9364,
+      9365,
+      9366,
+      9367,
+      10049
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 80
+  },
+  {
+    "description": "Zombie Event Graves - empty",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      10050,
+      10051,
+      10052,
+      10053,
+      10054
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 80
+  },
+  {
+    "description": "Zombie Event Mausoleum",
+    "baseMaterial": "ROCK_4",
+    "objectIds": [
+      10055
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 180,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Wooden posts - textured",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      1774,
+      17123
+    ],
+    "retainVanillaUvs": false,
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Compost pile with bricks - textured",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      303
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Gnome stronghold door - textured",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      190,
+      191,
+      192
+    ],
+    "retainVanillaUvs": false,
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Gnome statues",
+    "baseMaterial": "MARBLE_1_SEMIGLOSS",
+    "objectIds": [
+      569,
+      13104,
+      17140,
+      17141
+    ],
+    "retainVanillaUvs": false,
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 512
   }
 ]
