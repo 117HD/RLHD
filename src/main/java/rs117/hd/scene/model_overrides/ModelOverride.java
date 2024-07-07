@@ -233,9 +233,9 @@ public class ModelOverride
 			case MODEL_YZ:
 			case MODEL_YZ_MIRROR_A:
 			case MODEL_YZ_MIRROR_B: {
-				final int[] vertexX = model.getVerticesX();
-				final int[] vertexY = model.getVerticesY();
-				final int[] vertexZ = model.getVerticesZ();
+				final float[] vertexX = model.getVerticesX();
+				final float[] vertexY = model.getVerticesY();
+				final float[] vertexZ = model.getVerticesZ();
 				final int triA = model.getFaceIndices1()[face];
 				final int triB = model.getFaceIndices2()[face];
 				final int triC = model.getFaceIndices3()[face];
@@ -254,9 +254,9 @@ public class ModelOverride
 				if (texFace != -1) {
 					texFace &= 0xff;
 
-					final int[] vertexX = model.getVerticesX();
-					final int[] vertexY = model.getVerticesY();
-					final int[] vertexZ = model.getVerticesZ();
+					final float[] vertexX = model.getVerticesX();
+					final float[] vertexY = model.getVerticesY();
+					final float[] vertexZ = model.getVerticesZ();
 					final int texA = model.getTexIndices1()[texFace];
 					final int texB = model.getTexIndices2()[texFace];
 					final int texC = model.getTexIndices3()[texFace];
@@ -289,7 +289,7 @@ public class ModelOverride
 	}
 
 	private void computeBoxUvw(float[] out, Model model, int modelOrientation, int face) {
-		final int[][] vertexXYZ = {
+		final float[][] vertexXYZ = {
 			model.getVerticesX(),
 			model.getVerticesY(),
 			model.getVerticesZ()
