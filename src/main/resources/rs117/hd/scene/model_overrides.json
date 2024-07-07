@@ -180,6 +180,7 @@
       2051,
       2052,
       2054,
+      2055,
       2085,
       2086,
       2087,
@@ -4845,6 +4846,8 @@
       10494,
       11794,
       11795,
+      11801,
+      11802,
       12779,
       14745,
       14746,
@@ -5027,6 +5030,10 @@
     "description": "Wooden Staircase",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      2522,
+      2523,
+      15653,
+      15654,
       18991,
       18992,
       25604,
@@ -5071,6 +5078,8 @@
       2649,
       7175,
       9613,
+      9699,
+      9700,
       12450,
       12543,
       12962,
@@ -5096,7 +5105,8 @@
     "description": "Wooden tables - Solid",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      7401
+      7401,
+      7406
     ],
     "uvType": "BOX",
     "uvOrientation": 512,
@@ -5199,6 +5209,13 @@
       7432,
       17323
     ],
+    "uvType": "BOX",
+    "uvScale": 0.4
+  },
+  {
+    "description": "Candelabra - Dusty",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [ 208 ],
     "uvType": "BOX",
     "uvScale": 0.4
   },
@@ -5333,6 +5350,7 @@
     "description": "Metallic Chest",
     "baseMaterial": "METALLIC_1_SEMIGLOSS",
     "objectIds": [
+      375,
       11735
     ],
     "uvType": "BOX",
@@ -5405,6 +5423,10 @@
       1727,
       1728,
       2631,
+      2058,
+      2059,
+      2060,
+      2061,
       3506,
       3507,
       5501,
@@ -5714,6 +5736,8 @@
     "objectIds": [
       205,
       3474,
+      4501,
+      4503,
       24172
     ]
   },
@@ -6000,6 +6024,8 @@
       11778,
       11779,
       11780,
+      11782,
+      11783,
       15056,
       44784,
       44785,
@@ -6014,6 +6040,8 @@
     "description": "Varrock Castle Doors",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      2032,
+      2033,
       11772,
       11773,
       32463,
@@ -6587,6 +6615,7 @@
       28933,
       28940,
       28941,
+      28948,
       28956,
       28957
     ],
@@ -6852,7 +6881,8 @@
       4607,
       4608,
       7105,
-      7107
+      7107,
+      11418
     ],
     "inheritTileColorType": "OVERLAY",
     "uvType": "WORLD_XZ",
@@ -7167,6 +7197,7 @@
       5107,
       5110,
       5113,
+      5115,
       5330,
       7514,
       10374,
@@ -8089,7 +8120,8 @@
       423,
       4288,
       23067,
-      27664
+      27664,
+      35797
     ],
     "uvType": "MODEL_XZ",
     "uvScale": 0.60
@@ -8788,6 +8820,7 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       1096,
+      8694,
       15681
     ],
     "uvType": "BOX"
@@ -8807,6 +8840,7 @@
       1088,
       3801,
       4271,
+      7504,
       9621,
       10491,
       11489,
@@ -8886,6 +8920,14 @@
     "uvType": "BOX"
   },
   {
+    "description": "Ugly combined backed wooden rocking chair - Broken",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      14850
+    ],
+    "uvType": "BOX"
+  },
+  {
     "description": "Objects - Wooden - Chair - High poly mesh",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
@@ -8931,7 +8973,9 @@
     "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [
       881,
-      882
+      882,
+      2543,
+      2545
     ],
     "uvType": "MODEL_XZ",
     "uvOrientation": 100
@@ -9010,6 +9054,7 @@
     "baseMaterial": "BARK",
     "objectIds": [
       1246,
+      1247,
       1250,
       1251,
       1252,
@@ -10674,7 +10719,8 @@
       365,
       2354,
       2356,
-      2663
+      2663,
+      34940
     ],
     "uvType": "BOX",
     "uvOrientation": 256,
@@ -11545,6 +11591,7 @@
     "objectIds": [
       872,
       877,
+      2542,
       3421,
       6480
     ]
@@ -13045,7 +13092,8 @@
     "objectIds": [ 356, 595, 647 ],
     "flatNormals": true,
     "uvType": "BOX",
-    "retainVanillaUvs": false
+    "retainVanillaUvs": false,
+    "uvScale": 0.6
   },
   {
     "description": "Wooden crate",
@@ -17365,7 +17413,7 @@
     "description": "Zeah - Rough Plank Walls",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      8695, 8704
+      8695, 8696, 8704
     ],
     "uvType": "BOX",
     "uvOrientation": 1024,
@@ -17442,6 +17490,7 @@
     "objectIds": [
       1334,
       1335,
+      1338,
       1378
     ],
     "uvType": "BOX",
@@ -17845,6 +17894,7 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       380,
+      387,
       4617
     ],
     "uvType": "BOX",
@@ -17856,7 +17906,8 @@
     "description": "Objects - Metallic - Range on textured bricks - Textured",
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
-      9736
+      9736,
+      26181
     ]
   },
   {
@@ -17929,7 +17980,7 @@
   {
     "description": "Wooden shelves - Empty",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 7506, 12980 ],
+    "objectIds": [ 1023, 7506, 8692, 12980 ],
     "uvType": "BOX",
     "uvScale": 0.8,
     "uvOrientationX": 512,
@@ -18174,6 +18225,7 @@
     "description": "Objects - Wooden - Wooden Chest - Broken",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      5108,
       14854
     ],
     "uvType": "BOX",
@@ -18210,7 +18262,7 @@
     "description": "Drawers with backsplash",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      7442
+      7194, 7442
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -18313,14 +18365,21 @@
   {
     "description": "Barrel with metal bands",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 2619 ],
+    "objectIds": [ 2619, 5112, 5114, 5122, 9519, 9521 ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Barrel with metal bands - Stacked",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 5123 ],
     "uvType": "BOX",
     "uvScale": 0.8
   },
   {
     "description": "Wooden Cart - Empty",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 3633 ],
+    "objectIds": [ 307, 3633 ],
     "uvType": "BOX",
     "uvScale": 0.8
   },
@@ -18685,9 +18744,9 @@
     "uvScale": 0.80
   },
   {
-    "description": "Mud Pile in Goblin Cave",
+    "description": "Mud Pile - Climbable",
     "baseMaterial": "DIRT_2_SHINY",
-    "objectIds": [ 13 ],
+    "objectIds": [ 13, 2533 ],
     "uvType": "BOX",
     "uvScale": 0.6
   },
@@ -18764,14 +18823,14 @@
   {
     "description": "Wooden shelves - Triple - Filled",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 1017, 1018 ],
+    "objectIds": [ 1016, 1017, 1018, 7510, 7511],
     "uvType": "BOX",
     "uvScale": 0.8,
     "uvOrientationX": 512,
     "retainVanillaUvs": false
   },
   {
-    "description": "Wooden shelves - Triple - Filled",
+    "description": "Earth Elemental",
     "baseMaterial": "DIRT_2_VERT",
     "npcIds": [ 1363 ]
   },
@@ -18784,5 +18843,173 @@
     "uvType": "BOX",
     "uvScale": 0.6,
     "uvOrientation": 80
+  },
+  {
+    "description": "Grill",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "objectIds": [
+      11422,
+      11423
+    ]
+  },
+  {
+    "description": "Wooden shelves with bottom cupboard - Empty",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 1014 ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "retainVanillaUvs": false
+  },
+  {
+    "description": "Grill",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [ 2544 ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "uvScale": 0.8
+  },
+  {
+    "description": "Gallows",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 649 ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Brown brick wall with metal spikes - Textured",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [ 1934 ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Wall shackles - Textured",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [ 650 ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "uvScale": 0.8,
+    "uvOrientationY": 512
+  },
+  {
+    "description": "Wall shackles - Textured",
+    "baseMaterial": "DIRT_1",
+    "objectIds": [ 11417 ],
+    "uvType": "BOX",
+    "uvScale": 0.9,
+    "uvOrientation": 77
+  },
+  {
+    "description": "Long Oak Cabinet",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 35796 ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Grandfather Clock",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 683 ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Marble Pillar - Textured",
+    "baseMaterial": "MARBLE_1_SEMIGLOSS",
+    "objectIds": [ 1869 ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "retainVanillaUvs": false,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Cooking Pot in textured brick fireplace",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [ 26180 ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Brown Bed with pillow",
+    "baseMaterial": "FINE_CARPET",
+    "objectIds": [ 419 ],
+    "uvType": "BOX",
+    "uvOrientation": 64
+  },
+  {
+    "description": "Wooden barrel with metal bands - textured",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [ 362 ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Cauldron - with beige liquid",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [ 35945, 35946 ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Sink with textured water and wood paneling - textured",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      873,
+      874
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Pottery Oven",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      11601
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Drain and pipe - textured",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      876
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Fractionalising Still",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [ 4026 ],
+    "uvType": "BOX",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Objects - Dirt - Manhole",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [ 10321 ],
+    "uvType": "BOX",
+    "uvOrientation": 100
+  },
+  {
+    "description": "Altar Slab - textured",
+    "objectIds": [ 1876 ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Metal Sconce with candles - unlit",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "objectIds": [ 4500 ],
+    "uvType": "BOX",
+    "uvOrientation": 300,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Stone bat wall decoration",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [ 577 ],
+    "uvType": "BOX",
+    "uvScale": 0.8
   }
 ]

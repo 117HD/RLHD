@@ -2187,6 +2187,14 @@
     "maxLightness": 33
   },
   {
+    "name": "PLAGUE_CITY_SEWERS_UNDERLAY",
+    "area": "PLAGUE_CITY_SEWERS",
+    "underlayIds": [
+      63
+    ],
+    "groundMaterial": "VARIED_DIRT_SHINY"
+  },
+  {
     "name": "WEST_ARDOUNGE_CARPET_FIX_1",
     "area": "WEST_ARDOUGNE_CARPET_FIX",
     "overlayIds": [
