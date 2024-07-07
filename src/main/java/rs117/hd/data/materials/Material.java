@@ -451,6 +451,7 @@ public enum Material {
 	ROCK_5_ORE(ROCK_5, p -> p
 		.setSpecular(1, 20)
 	),
+	ROPE,
 	CARPET,
 	FINE_CARPET(CARPET, p -> p
 		.setBrightness(1.4f)
