@@ -18375,6 +18375,25 @@
     ]
   },
   {
+    "description": "Waterfiend",
+    "height": 60,
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 7.5,
+    "color": [
+      0,
+      220,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "npcIds": [
+      2916,
+      2917
+    ]
+  },
+  {
     "description": "GHOST",
     "height": 80,
     "alignment": "CENTER",
@@ -19942,6 +19961,26 @@
       5881,
       38555,
       33454
+    ],
+    "visibleFromOtherPlanes": true
+  },
+  {
+    "description": "STANDING_TORCH_VARLAMORE",
+    "height": 230,
+    "offset": [ 10, 0, 55 ],
+    "alignment": "CENTER",
+    "radius": 450,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      51759
     ],
     "visibleFromOtherPlanes": true
   },
@@ -21739,10 +21778,9 @@
   },
   {
     "description": "PURPLE_FLAME",
-    "height": 250,
-    "alignment": "CENTER",
-    "radius": 600,
-    "strength": 10,
+    "offset": [ -50, 400, 0 ],
+    "radius": 400,
+    "strength": 15,
     "color": [
       77,
       13,
@@ -21757,10 +21795,9 @@
   },
   {
     "description": "PURPLE_FLAME_LARGE",
-    "height": 250,
-    "alignment": "CENTER",
+    "offset": [ 0, 250, 0 ],
     "radius": 1200,
-    "strength": 10,
+    "strength": 12,
     "color": [
       77,
       13,
@@ -21775,10 +21812,9 @@
   },
   {
     "description": "DEATHS_OFFICE_PORTAL",
-    "height": 180,
-    "alignment": "WEST",
-    "radius": 800,
-    "strength": 10,
+    "offset": [ 0, 250, 0 ],
+    "radius": 600,
+    "strength": 12,
     "color": [
       77,
       13,
@@ -32074,7 +32110,7 @@
     ]
   },
   {
-    "description": "TOA_WARDEN_P3_SKULL_CHARGE_PROJECTILE",
+    "description": "TOA_WARDEN_P3_SKULL_CHARGE_PROJECTILE & BLOOD_MOON_PROJECTILE",
     "height": 25,
     "radius": 400,
     "strength": 7,
@@ -32086,6 +32122,7 @@
     "type": "PULSE",
     "duration": 300,
     "range": 2,
+    "fadeOutDuration": 200,
     "projectileIds": [
       2226,
       2227
@@ -32416,8 +32453,7 @@
   },
   {
     "description": "PENGUIN_BASE_LAMP",
-    "height": 120,
-    "alignment": "FRONT",
+    "height": 140,
     "radius": 140,
     "strength": 10.5,
     "color": [
@@ -33620,7 +33656,7 @@
     ]
   },
   {
-    "description": "Lighthouse Lantern",
+    "description": "Wall Lantern",
     "height": 235,
     "alignment": "CENTER",
     "radius": 250,
@@ -34631,6 +34667,36 @@
     ]
   },
   {
+    "description": "Eclipse Moon Entrance",
+    "worldX": 1510,
+    "worldY": 9673,
+    "plane": 1,
+    "radius": 750,
+    "strength": 15,
+    "color": "#ff8000",
+    "offset": [ 70, 250, 0 ]
+  },
+  {
+    "description": "Blue Moon Entrance",
+    "worldX": 1405,
+    "worldY": 9704,
+    "plane": 0,
+    "radius": 1200,
+    "strength": 15,
+    "color": "#0097ff",
+    "offset": [ 100, 350, 0 ]
+  },
+  {
+    "description": "Blood Moon Entrance",
+    "worldX": 1388,
+    "worldY": 9591,
+    "plane": 0,
+    "radius": 1600,
+    "strength": 15,
+    "color": "#de0000",
+    "offset": [ 0, 350, 70 ]
+  },
+  {
     "description": "ANTECHAMBER_CEILING_LIGHT",
     "worldX": 1440,
     "worldY": 9632,
@@ -34656,7 +34722,7 @@
     "color": "#e58500",
     "strength": 20,
     "radius": 1000,
-    "offset": [ 0, 227, 0 ]
+    "offset": [ 0, 287, 0 ]
   },
   {
     "description": "ANTECHAMBER_BLOOD_MOON_BRAZIERS",
@@ -34664,7 +34730,7 @@
     "color": "#df002e",
     "strength": 10,
     "radius": 1000,
-    "offset": [ 0, 227, 0 ]
+    "offset": [ 0, 287, 0 ]
   },
   {
     "description": "ANTECHAMBER_BLUE_MOON_BRAZIERS",
@@ -34672,15 +34738,31 @@
     "color": "#3571a7",
     "strength": 25,
     "radius": 1000,
-    "offset": [ 0, 227, 0 ]
+    "offset": [ 0, 287, 0 ]
+  },
+  {
+    "description": "Earthbound Cavern - Glowing Mushrooms",
+    "objectIds": [ 36220 ],
+    "height": 155,
+    "color": "#00e4ff",
+    "strength": 5.5,
+    "radius": 600
   },
   {
     "description": "ANTECHAMBER_ECLIPSE_MOON_BRAZIERS",
     "objectIds": [ 51345 ],
     "color": "#ffa41b",
-    "strength": 2,
+    "strength": 3.5,
     "radius": 1000,
-    "offset": [ 0, 227, 0 ]
+    "offset": [ 0, 257, 0 ]
+  },
+  {
+    "description": "ANTECHAMBER_ECLIPSE_MOON_BRAZIERS",
+    "objectIds": [ 51345 ],
+    "color": "#ffa41b",
+    "strength": 250,
+    "radius": 100,
+    "offset": [ 15, 287, -15 ]
   },
   {
     "description": "SULPHUR_NAGA",
@@ -34726,7 +34808,7 @@
   },
   {
     "description": "EYATLALLI",
-    "npcIds": [ 12869 ],
+    "npcIds": [ 12869, 12870 ],
     "color": "#00c7c1",
     "strength": 25,
     "radius": 700,
@@ -34734,7 +34816,7 @@
   },
   {
     "description": "EYATLALLI_RIGHT_HAND",
-    "npcIds": [ 12869 ],
+    "npcIds": [ 12869, 12870 ],
     "color": "#00c7c1",
     "strength": 25,
     "radius": 250,
@@ -34742,7 +34824,7 @@
   },
   {
     "description": "EYATLALLI_LEFT_HAND",
-    "npcIds": [ 12869 ],
+    "npcIds": [ 12869, 12870 ],
     "color": "#00c7c1",
     "strength": 15,
     "radius": 250,
@@ -34784,6 +34866,36 @@
     "offset": [ 0, 47, 0 ],
     "fadeInDuration": 300,
     "spawnDelay": 600
+  },
+  {
+    "description": "BLUE_MOON_ARENA_BURNING_BRAZIERS",
+    "objectIds": [ 51052 ],
+    "color": "#3571a7",
+    "strength": 25,
+    "radius": 1000,
+    "offset": [ 0, 300, -60 ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200
+  },
+  {
+    "description": "BLUE_MOON_ARENA_BURNING_LINE",
+    "objectIds": [ 51053 ],
+    "color": "#3571a7",
+    "strength": 25,
+    "radius": 220,
+    "offset": [ -30, 100, 0 ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200
+  },
+  {
+    "description": "BLOOD_MOON_ARENA_BURNING_LINE",
+    "objectIds": [ 51054 ],
+    "color": "#6f2375",
+    "strength": 15,
+    "radius": 250,
+    "offset": [ -30, 100, 0 ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200
   },
   {
     "description": "CURRENT_MOON_PHASE",
@@ -34927,5 +35039,135 @@
     "objectIds": [
       2501
     ]
+  },
+  {
+    "description": "Royal Trouble - Powered Engine",
+    "height": 0,
+    "offset": [ 70, 70, 0 ],
+    "radius": 300,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      15229
+    ]
+  },
+  {
+    "description": "Troll Stronghold Window and Exit Door",
+    "objectIds": [ 3770, 3774 ],
+    "radius": 450,
+    "areas": [ "TROLL_STRONGHOLD_INTERIOR" ],
+    "strength": 10,
+    "color": "#ffffff",
+    "offset": [ 0, 150, 60 ]
+  },
+  {
+    "description": "Icy Basalt Teleport",
+    "graphicsObjectIds": [ 1628 ],
+    "radius": 250,
+    "strength": 10,
+    "color": [ 0, 255, 255 ],
+    "offset": [ 0, 30, 0 ],
+    "fadeOutDuration": 150,
+    "fadeInDuration": 250,
+    "spawnDelay": 600
+  },
+  {
+    "description": "Stony Basalt Teleport",
+    "graphicsObjectIds": [ 1617 ],
+    "radius": 250,
+    "strength": 10,
+    "color": [ 0, 255, 50 ],
+    "offset": [ 0, 30, 0 ],
+    "fadeOutDuration": 150,
+    "fadeInDuration": 250,
+    "spawnDelay": 600
+  },
+  {
+    "description": "Standard Spellbook Teleport",
+    "graphicsObjectIds": [ 111 ],
+    "radius": 350,
+    "strength": 12,
+    "color": [ 205, 0, 205 ],
+    "offset": [ 0, 130, 0 ],
+    "fixedDespawnTime": true,
+    "despawnDelay": 400,
+    "fadeInDuration": 100,
+    "fadeOverlap": true,
+    "fadeOutDuration": 450,
+    "spawnDelay": 950
+  },
+  {
+    "description": "Wilderness Mage Arena Bank Pool 1",
+    "worldX": 2542,
+    "worldY": 4720,
+    "plane": 0,
+    "height": 60,
+    "alignment": "CENTER",
+    "radius": 380,
+    "strength": 6,
+    "color": [
+      0,
+      255,
+      255
+    ]
+  },
+  {
+    "description": "Wilderness Mage Arena Bank Pool 2",
+    "worldX": 2509,
+    "worldY": 4687,
+    "plane": 0,
+    "height": 60,
+    "alignment": "CENTER",
+    "radius": 380,
+    "strength": 6,
+    "color": [
+      0,
+      255,
+      255
+    ]
+  },
+  {
+    "description": "Wilderness - Teleport Obelisks",
+    "height": 330,
+    "alignment": "CENTER",
+    "radius": 350,
+    "strength": 25,
+    "color": [
+      120,
+      24,
+      137
+    ],
+    "type": "FLICKER",
+    "duration": 10,
+    "range": 20,
+    "objectIds": [ 14825 ],
+    "animationIds": [ 3944 ],
+    "fadeInDuration": 80,
+    "fadeOutDuration": 80
+  },
+  {
+    "description": "Rag and Bone Man - Pot Boiler",
+    "height": 30,
+    "alignment": "CENTER",
+    "radius": 250,
+    "strength": 17.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [ 14008 ],
+    "fadeInDuration": 50,
+    "fadeOutDuration": 100
   }
 ]

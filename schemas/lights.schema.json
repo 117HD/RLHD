@@ -135,6 +135,13 @@
         "type": "boolean",
         "description": "Whether the light should be hidden when it appears on a different plane than the current. Defaults to true."
       },
+      "areas": {
+        "type": "array",
+        "description": "An array of bounding boxes, region IDs and/or area enums specifying which areas the light should be limited to.",
+        "items": {
+          "$ref": "aabb.schema.json"
+        }
+      },
       "npcIds": {
         "type": "array",
         "description": "A set of NPC IDs or NpcID keys to apply the light to.",

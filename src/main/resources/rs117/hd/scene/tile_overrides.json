@@ -1644,7 +1644,8 @@
     "overlayIds": [
       171
     ],
-    "groundMaterial": "DIRT"
+    "groundMaterial": "DIRT",
+    "blended": false
   },
   {
     "name": "WEISS_TENT_INTERIOR",
@@ -1661,6 +1662,15 @@
       171
     ],
     "groundMaterial": "WINTER_JAGGED_STONE_TILE"
+  },
+  {
+    "name": "Weiss Dirt to Snow Underlay Fix",
+    "area": "WEISS_REGION",
+    "underlayIds": [
+      56,
+      118
+    ],
+    "groundMaterial": "SNOW_1"
   },
   {
     "name": "TAVERLEY_DUNGEON_BLACK_KNIGHT_KITCHEN",
@@ -2185,6 +2195,14 @@
     "groundMaterial": "FALADOR_PATHS",
     "minLightness": 33,
     "maxLightness": 33
+  },
+  {
+    "name": "PLAGUE_CITY_SEWERS_UNDERLAY",
+    "area": "PLAGUE_CITY_SEWERS",
+    "underlayIds": [
+      63
+    ],
+    "groundMaterial": "VARIED_DIRT_SHINY"
   },
   {
     "name": "WEST_ARDOUNGE_CARPET_FIX_1",
@@ -4313,6 +4331,99 @@
     "waterType": "DARK_BLUE_WATER"
   },
   {
+    "name": "Cam Torum Smith & Bank Tiles Fix",
+    "area": "CAM_TORUM_BUILDING_TILES",
+    "overlayIds": [ 132 ],
+    "underlayIds": [ 45 ],
+    "blended": false,
+    "groundMaterial": "MARBLE_1"
+  },
+  {
+    "name": "Cam Torum Bank Entrance Fix",
+    "area": "CAM_TORUM_BANK_ENTRANCE_FIX",
+    "overlayIds": [ 339 ],
+    "blended": false,
+    "groundMaterial": "MARBLE_1",
+    "minHue": 39,
+    "maxHue": 39,
+    "minSaturation": 2,
+    "maxSaturation": 2,
+    "minLightness": 9,
+    "maxLightness": 9
+  },
+  {
+    "name": "Cam Torum Fix Dirt on tiles in front of furnace",
+    "area": "CAM_TORUM_BLACKSMITH_FURNACE_FIX",
+    "underlayIds": [ 26, 123 ],
+    "blended": false,
+    "groundMaterial": "MARBLE_1"
+  },
+  {
+    "name": "Cam Torum Paths",
+    "area": "CAM_TORUM",
+    "overlayIds": [ 338, 339, 219, 222 ],
+    "blended": false,
+    "groundMaterial": "CAM_TORUM_TILES",
+    "minHue": 6,
+    "maxHue": 6,
+    "minSaturation": 1,
+    "maxSaturation": 1,
+    "minLightness": 15,
+    "maxLightness": 15
+  },
+  {
+    "name": "Cam Torum Paths Keep Vanilla Colour",
+    "area": "CAM_TORUM",
+    "blended": false,
+    "overlayIds": [ 102, 132, 133, 85, 278, 90 ],
+    "groundMaterial": "CAM_TORUM_TILES"
+  },
+  {
+    "name": "Cam Torum Entrance Fix",
+    "area": "CAM_TORUM_ENTRANCE_FIX",
+    "blended": false,
+    "overlayIds": [ 11, 228 ],
+    "groundMaterial": "CAM_TORUM_TILES"
+  },
+  {
+    "name": "Cam Torum Bridge Fix",
+    "area": "CAM_TORUM_BRIDGE_FIX",
+    "underlayIds": [ 123 ],
+    "blended": false,
+    "groundMaterial": "CAM_TORUM_TILES",
+    "minHue": 6,
+    "maxHue": 6,
+    "minSaturation": 1,
+    "maxSaturation": 1,
+    "minLightness": 15,
+    "maxLightness": 15
+  },
+  {
+    "name": "Perilous Moons Antechamber Tiles",
+    "area": "PERILOUS_MOONS_ANTECHAMBER_TILES",
+    "underlayIds": [ 19, 39, 72 ],
+    "overlayIds": [ 0, 37, 228, 229 ],
+    "blended": false,
+    "groundMaterial": "MARBLE_1_GLOSS",
+    "maxLightness": 11
+  },
+  {
+    "name": "Perilous Moons Antechamber Blend Fix",
+    "area": "PERILOUS_MOONS_ANTECHABMER_BLEND_FIX",
+    "underlayIds": [ 19, 39, 72 ],
+    "overlayIds": [ 0, 37, 139, 228, 229 ],
+    "groundMaterial": "DIRT",
+    "blended": false,
+    "maxLightness": 9
+  },
+  {
+    "name": "Perilous Moons Ancient Prison, Sun Tiles Fix",
+    "area": "ANCIENT_PRISON_SUN_BLEND_FIX",
+    "overlayIds": [ 80 ],
+    "groundMaterial": "MARBLE_2_GLOSS",
+    "blended": false
+  },
+  {
     "name": "EARTHBOUND_CAVERN_WATER_DARKER",
     "area": "EARTHBOUND_CAVERN",
     "overlayIds": [ 201 ],
@@ -5556,13 +5667,22 @@
     }
   },
   {
-    "name": "ICEBERG_TEXTURE",
+    "name": "ICEBERG_BLEND",
     "area": "ICEBERG",
-    "underlayIds": [
-      59
-    ],
+    "description": "For when ground blending is ENABLED",
+    "underlayIds": [ 58, 59, 60 ],
     "groundMaterial": "SNOW_2",
-    "shiftLightness": 5
+    "replacements": {
+      "ICEBERG_UNBLEND": "!blending"
+    },
+    "shiftLightness": 35
+  },
+  {
+    "name": "ICEBERG_UNBLEND",
+    "area": "ICEBERG",
+    "description": "For when ground blending is DISABLED",
+    "groundMaterial": "SNOW_2",
+    "shiftLightness": 12
   },
   {
     "name": "APE_ATOLL_COMPLEX_TILES",
@@ -6002,7 +6122,10 @@
     "name": "DEATHS_OFFICE_TILE",
     "area": "DEATHS_OFFICE",
     "underlayIds": [
-      146
+      146,
+      147,
+      148,
+      149
     ],
     "groundMaterial": "TILES_2X2_1_SEMIGLOSS"
   },

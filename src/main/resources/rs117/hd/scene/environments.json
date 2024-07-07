@@ -340,11 +340,15 @@
     "ambientStrength": 3.5,
     "directionalColor": "#ffc875",
     "directionalStrength": 0,
+    "groundFogOpacity": 1,
+    "groundFogStart": -1900,
+    "groundFogEnd": -2750,
+    "instantTransition": true,
     "sunAngles": [
       80,
       190
     ],
-    "fogDepth": 20
+    "fogDepth": 50
   },
   {
     "area": "BARROWS_TUNNELS",
@@ -352,11 +356,12 @@
     "ambientStrength": 3,
     "directionalColor": "#ffc875",
     "directionalStrength": 0.5,
+    "instantTransition": true,
     "sunAngles": [
       80,
       190
     ],
-    "fogDepth": 20
+    "fogDepth": 30
   },
   {
     "area": "BARROWS",
@@ -658,6 +663,18 @@
     "directionalStrength": 1,
     "fogColor": "#aebde0",
     "fogDepth": 70
+  },
+  {
+    "area": "ICEBERG",
+    "ambientColor": "#7CB6EF",
+    "ambientStrength": 1,
+    "directionalColor": "#f4e5c9",
+    "directionalStrength": 1.5,
+    "fogColor": "#aebde0",
+    "fogDepth": 20,
+    "sunAngles": [
+      45, 235
+    ]
   },
   {
     "area": "MOUNTAIN_CAMP_ENTRY_PATH",
@@ -1265,6 +1282,18 @@
     "fogDepth": 6.5
   },
   {
+    "area": "RANDOM_EVENT_GRAVEDIGGER",
+    "ambientColor": "#5a8cc0",
+    "ambientStrength": 3,
+    "directionalColor": "#5a8cc0",
+    "directionalStrength": 0.75,
+    "fogColor": "#1e314b",
+    "fogDepth": 40,
+    "groundFogStart": -150,
+    "groundFogEnd": -350,
+    "groundFogOpacity": 0.5
+  },
+  {
     "area": "GIANTS_FOUNDRY",
     "ambientStrength": 1.1,
     "directionalColor": "#ffc199",
@@ -1336,13 +1365,26 @@
   {
     "area": "MAGE_ARENA_BANK",
     "ambientColor": "#97baff",
-    "ambientStrength": 1.5,
-    "directionalStrength": 1,
+    "ambientStrength": 1.75,
+    "instantTransition": true,
+    "directionalStrength": 0.25,
     "sunAngles": [
       80,
       190
     ],
-    "fogDepth": 40
+    "fogDepth": 60
+  },
+  {
+    "area": "MAGE_ARENA_GOD_STATUES",
+    "ambientColor": "#97baff",
+    "ambientStrength": 1.75,
+    "instantTransition": true,
+    "directionalStrength": 0.25,
+    "sunAngles": [
+      80,
+      190
+    ],
+    "fogDepth": 60
   },
   {
     "area": "TEARS_OF_GUTHIX",
