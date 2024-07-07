@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.HashSet;
 import javax.annotation.Nullable;
 import lombok.NoArgsConstructor;
+import rs117.hd.utils.AABB;
 import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.GsonUtils;
 
@@ -31,6 +32,9 @@ public class LightDefinition {
 	public boolean fixedDespawnTime;
 	public boolean visibleFromOtherPlanes;
 	public int renderableIndex = -1;
+
+	@JsonAdapter(AABB.JsonAdapter.class)
+	public AABB[] areas = {};
 	@JsonAdapter(GsonUtils.IntegerSetAdapter.class)
 	public HashSet<Integer> npcIds = new HashSet<>();
 	@JsonAdapter(GsonUtils.IntegerSetAdapter.class)
