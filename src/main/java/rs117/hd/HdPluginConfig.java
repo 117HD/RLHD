@@ -810,6 +810,21 @@ public interface HdPluginConfig extends Config
 		return ColorFilter.NONE;
 	}
 
+	String KEY_REMOVE_VERTEX_SNAPPING = "removeVertexSnapping";
+	@ConfigItem(
+		keyName = KEY_REMOVE_VERTEX_SNAPPING,
+		name = "Remove vertex snapping",
+		description =
+			"Removes vertex snapping from most animations.<br>" +
+			"Most animations are barely affected by this, and it only has an effect if the animation smoothing plugin is turned off.<br>" +
+			"To see quite clearly what impact this option has, a good example is the godsword idle animation.",
+		position = 9,
+		section = miscellaneousSettings
+	)
+	default boolean removeVertexSnapping() {
+		return true;
+	}
+
 
 	/*====== Experimental settings ======*/
 
