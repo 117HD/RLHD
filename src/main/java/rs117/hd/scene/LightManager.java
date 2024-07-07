@@ -411,6 +411,7 @@ public class LightManager {
 					// Reset the light if it's replayable and the parent just spawned
 					if (light.replayable) {
 						light.elapsedTime = 0;
+						light.changedVisibilityAt = -1;
 						if (light.dynamicLifetime)
 							light.lifetime = -1;
 					}

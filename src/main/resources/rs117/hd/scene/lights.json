@@ -25022,8 +25022,7 @@
     "animationIds": [
       8660,
       8663
-    ],
-    "visibleFromOtherPlanes": true
+    ]
   },
   {
     "description": "HALLOWED_SEPULCHRE_WIZARD_STATUE_FLAMES_MIDDLE",
@@ -25040,8 +25039,7 @@
     "animationIds": [
       8661,
       8662
-    ],
-    "visibleFromOtherPlanes": true
+    ]
   },
   {
     "description": "SARADOMIN_BRAZIER_UNLIT",
