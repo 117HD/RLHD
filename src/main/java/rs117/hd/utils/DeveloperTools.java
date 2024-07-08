@@ -11,11 +11,13 @@ import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.input.KeyListener;
 import net.runelite.client.input.KeyManager;
 import rs117.hd.HdPlugin;
-import rs117.hd.data.environments.Area;
 import rs117.hd.overlays.FrameTimerOverlay;
 import rs117.hd.overlays.LightGizmoOverlay;
 import rs117.hd.overlays.ShadowMapOverlay;
 import rs117.hd.overlays.TileInfoOverlay;
+import rs117.hd.scene.AreaManager;
+import rs117.hd.scene.areas.AABB;
+import rs117.hd.scene.areas.Area;
 
 @Slf4j
 public class DeveloperTools implements KeyListener {
@@ -71,7 +73,7 @@ public class DeveloperTools implements KeyListener {
 		lightGizmoOverlay.setActive(lightGizmoOverlayEnabled);
 
 		// Check for any out of bounds areas
-		for (Area area : Area.values()) {
+		for (Area area : AreaManager.AREAS) {
 			if (area == Area.ALL || area == Area.NONE)
 				continue;
 

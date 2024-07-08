@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.HashSet;
 import javax.annotation.Nullable;
 import lombok.NoArgsConstructor;
-import rs117.hd.utils.AABB;
+import rs117.hd.scene.areas.AABB;
 import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.GsonUtils;
 

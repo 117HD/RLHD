@@ -23,7 +23,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package rs117.hd.utils;
+package rs117.hd.scene.areas;
 
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
@@ -31,10 +31,11 @@ import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
+import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.coords.*;
-import rs117.hd.data.environments.Area;
+import rs117.hd.scene.AreaManager;
+import rs117.hd.utils.GsonUtils;
 
 import static net.runelite.api.Constants.*;
 
@@ -96,30 +97,6 @@ public class AABB {
 
 	public AABB(int[] from, int[] to) {
 		this(from[0], from[1], from[2], to[0], to[1], to[2]);
-	}
-
-	public static AABB[] regions(int... regionIds) {
-		return Arrays.stream(regionIds)
-			.mapToObj(AABB::new)
-			.toArray(AABB[]::new);
-	}
-
-	public static AABB regionBox(int fromRegionId, int toRegionId) {
-		int x1 = fromRegionId >>> 8;
-		int y1 = fromRegionId & 0xFF;
-		int x2 = toRegionId >>> 8;
-		int y2 = toRegionId & 0xFF;
-		if (x1 > x2) {
-			int temp = x1;
-			x1 = x2;
-			x2 = temp;
-		}
-		if (y1 > y2) {
-			int temp = y1;
-			y1 = y2;
-			y2 = temp;
-		}
-		return new AABB((x1) << 6, (y1) << 6, ((x2) + 1 << 6) - 1, ((y2) + 1 << 6) - 1);
 	}
 
 	public AABB onPlane(int plane) {
@@ -206,13 +183,13 @@ public class AABB {
 			other.minZ == minZ && other.maxZ == maxZ;
 	}
 
+	@Slf4j
 	public static class JsonAdapter extends TypeAdapter<AABB[]> {
-		private final Area.JsonAdapter areaAdapter = new Area.JsonAdapter();
-
 		@Override
 		public AABB[] read(JsonReader in) throws IOException {
 			in.beginArray();
 			ArrayList<AABB> list = new ArrayList<>();
+			outer:
 			while (in.hasNext() && in.peek() != JsonToken.END_ARRAY) {
 				if (in.peek() == JsonToken.NULL) {
 					in.skipValue();
@@ -226,9 +203,15 @@ public class AABB {
 				}
 
 				if (in.peek() == JsonToken.STRING) {
-					var area = areaAdapter.read(in);
-					Collections.addAll(list, area.aabbs);
-					continue;
+					String name = in.nextString();
+					for (var area : AreaManager.AREAS) {
+						if (name.equals(area.name)) {
+							Collections.addAll(list, area.aabbs);
+							continue outer;
+						}
+					}
+
+					log.warn("No area exists with the name '{}' at {}", name, GsonUtils.location(in), new Throwable());
 				}
 
 				in.beginArray();
@@ -286,18 +269,20 @@ public class AABB {
 
 			out.beginArray();
 			for (AABB aabb : aabbs) {
-				out.beginArray();
-				out.value(aabb.minX);
-				out.value(aabb.minY);
+				// Compact JSON array
+				StringBuilder sb = new StringBuilder();
+				sb.append("[ ").append(aabb.minX);
+				sb.append(", ").append(aabb.minY);
 				if (aabb.hasZ())
-					out.value(aabb.minZ);
+					sb.append(", ").append(aabb.minZ);
 				if (aabb.isVolume()) {
-					out.value(aabb.maxX);
-					out.value(aabb.maxY);
+					sb.append(", ").append(aabb.maxX);
+					sb.append(", ").append(aabb.maxY);
 					if (aabb.hasZ())
-						out.value(aabb.maxZ);
+						sb.append(", ").append(aabb.maxZ);
 				}
-				out.endArray();
+				sb.append(" ]");
+				out.jsonValue(sb.toString());
 			}
 			out.endArray();
 		}

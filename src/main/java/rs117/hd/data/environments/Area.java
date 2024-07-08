@@ -29,17 +29,19 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collections;
+import javax.annotation.Nullable;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.coords.*;
-import rs117.hd.utils.AABB;
+import rs117.hd.scene.areas.AABB;
+import rs117.hd.scene.areas.RegionBox;
 import rs117.hd.utils.GsonUtils;
 
-import static rs117.hd.utils.AABB.regionBox;
-import static rs117.hd.utils.AABB.regions;
-
 @Getter
+@Deprecated
 public enum Area
 {
 	EVIL_BOB_ISLAND(2496, 4748, 2559, 4801),
@@ -855,16 +857,16 @@ public enum Area
 	LMS_ARENA_WILD_VARROCK(regionBox(13918, 14432)),
 	LMS_ARENA_DESERTED_ISLAND(regionBox(13658, 13916)),
 
-	CLAN_WARS_ARENAS_OVERWORLD(
+	CLAN_WARS_ARENAS_OVERWORLD(merge(
 		regionBox(13644, 13646),
 		new AABB(3384, 5112, 3391, 5096)
-	),
-	CLAN_WARS_ARENAS_OTHER(
+	)),
+	CLAN_WARS_ARENAS_OTHER(merge(
 		regionBox(13641, 13642),
 		regionBox(13133, 13135),
 		new AABB(3384, 5119, 3391, 5113),
 		new AABB(3384, 5095, 3391, 5080)
-	),
+	)),
 	CLAN_WARS_ARENAS(
 		CLAN_WARS_ARENAS_OVERWORLD,
 		CLAN_WARS_ARENAS_OTHER
@@ -1092,11 +1094,11 @@ public enum Area
 	FENKENSTRAINS_CASTLE(3534, 3565, 3562, 3536),
 	MORYTANIA_SLAYER_TOWER(3405, 3531, 3452, 3579),
 	CANIFIS(13878),
-	TEMPLE_TREKKING_INSTANCES(
+	TEMPLE_TREKKING_INSTANCES(merge(
 		regionBox(8014, 8270),
 		new AABB(2123, 5036, 2164, 4996),
 		regionBox(8782, 9806)
-	),
+	)),
 	MORTTON(13875),
 	BARROWS_CRYPTS(3520, 9664, 3583, 9727, 3),
 	BARROWS_TUNNELS(3520, 9664, 3583, 9727, 0),
@@ -1170,7 +1172,7 @@ public enum Area
 		new AABB(2726, 3809, 2738, 3803)
 	),
 	// Trollheim - Weiss Region
-	TROLLHEIM(
+	TROLLHEIM(merge(
 		regions(
 			11577,
 			11321,
@@ -1181,7 +1183,7 @@ public enum Area
 		),
 		new AABB(2751, 3753, 2726, 3662), // Mountains near Keldagrim Entrance
 		new AABB(2780, 3647, 2815, 3584)  // Mountains near Golden Apple Tree
-	),
+	)),
 	TROLL_STRONGHOLD_INTERIOR(2816, 10111, 2871, 10047),
 	WEISS_REGION(regions(11325, 11581)),
 	WEISS_UNDERGROUND(10842),
@@ -1344,12 +1346,12 @@ public enum Area
 
 	// Zeah
 	UNDERGROUND_OLD_ONES_RUINS(regions(5274, 5276, 5532, 5785)),
-	KARUULM_SLAYER_DUNGEON(
+	KARUULM_SLAYER_DUNGEON(merge(
 		regions(5536),
 		regionBox(5022, 5023),
 		regionBox(5279, 5280),
 		new AABB(1344, 10239, 1354, 10231)
-	),
+	)),
 	MOUNT_KARUULM(1245,3765,1358,3860),
 	LIZARDMAN_TEMPLE(5277),
 	XERICS_LOOKOUT(1580, 3526, 1596, 3534),
@@ -1566,10 +1568,10 @@ public enum Area
 	MOS_LE_HARMLESS(3643, 3075, 3858, 2923),
 	MOS_LE_HARMLESS_INSTANCE(1952, 5344, 1983, 5312),
 	MOS_LE_HARMLESS_ALL(MOS_LE_HARMLESS, MOS_LE_HARMLESS_INSTANCE),
-	BRAINDEATH_ISLAND(
+	BRAINDEATH_ISLAND(merge(
 		regions(8784),
 		new AABB(2112, 5042, 2175, 5183)
-	),
+	)),
 	HARMONY(15148),
 	DRAGONTOOTH_ISLAND(15159),
 	ICEBERG(2622, 4091, 2686, 3974),
@@ -1589,10 +1591,10 @@ public enum Area
 	PIRATES_COVE(8763),
 
 	// Lunar Isle
-	LUNAR_DREAM_WORLD(
+	LUNAR_DREAM_WORLD(merge(
 		regions(6991),
 		regionBox(7247, 7250)
-	),
+	)),
 	LUNAR_VILLAGE_HOUSE_INTERIORS_GROUND(
 		new AABB(2104, 3922, 2097, 3917, 0), // Bank
 		new AABB(2091, 3922, 2090, 3922, 0), // House 1
@@ -1773,10 +1775,10 @@ public enum Area
 	TRUE_BLOOD_ALTAR(3200, 4862, 3262, 4800),
 
 	// Dragon Slayer II
-	LITHKREN_DUNGEON(
+	LITHKREN_DUNGEON(merge(
 		regions(6223),
 		regionBox(14242, 14243)
-	),
+	)),
 	LITHKREN(3519, 4032, 3602, 3967),
 	DS2_SHIPS(regionBox(6486, 6745)),
 
@@ -1920,10 +1922,10 @@ public enum Area
 
 	// Chambers of Xeric
 	CHAMBERS_OF_XERIC_ICE_DEMON(3264, 5344, 3359, 5375),
-	CHAMBERS_OF_XERIC(
+	CHAMBERS_OF_XERIC(merge(
 		regions(12889, 13136),
 		regionBox(13137, 13401)
-	),
+	)),
 
 	// Nightmare of Ashihama
 	SISTERHOOD_SANCTUARY(regionBox(14999, 15513)),
@@ -1996,10 +1998,10 @@ public enum Area
 	)),
 
 	WEISS_SALT_MINE(11425),
-	SECRETS_OF_THE_NORTH_DUNGEON(
+	SECRETS_OF_THE_NORTH_DUNGEON(merge(
 		regions(11681),
 		regionBox(11619, 12132)
-	),
+	)),
 	GOBLIN_VILLAGE_ICE_CAVE(7777),
 	GOBLIN_VILLAGE_COOKS_CHAMBER_BLEND_FIX(
 		new AABB(2982, 9872, 2979, 9870)
@@ -2043,20 +2045,20 @@ public enum Area
 	SHADOW_DUNGEON(regions(10575, 10831)),
 
 	// Desert Treasure 2 areas
-	THE_SCAR_MAIN_AREA(
+	THE_SCAR_MAIN_AREA(merge(
 		regions(7779),
 		new AABB(1984, 6304, 2143, 6463)
-	),
+	)),
 	THE_SCAR_QUEST_AREAS(regions(7012, 7524, 8804)),
 	THE_SCAR(THE_SCAR_MAIN_AREA, THE_SCAR_QUEST_AREAS),
-	LASSAR_UNDERCITY_MAIN_NORMAL(
+	LASSAR_UNDERCITY_MAIN_NORMAL(merge(
 		regions(10083),
 		regionBox(10338, 10852)
-	),
-	LASSAR_UNDERCITY_MAIN_SHADOW_REALM(
+	)),
+	LASSAR_UNDERCITY_MAIN_SHADOW_REALM(merge(
 		regions(9059),
 		regionBox(9314, 9828)
-	),
+	)),
 	LASSAR_UNDERCITY_DRAIN_NORMAL(11106),
 	LASSAR_UNDERCITY_DRAIN_SHADOW_REALM(10082),
 	LASSAR_UNDERCITY_SUNKEN_CATHEDRAL(
@@ -2480,68 +2482,166 @@ public enum Area
 	NONE(0, 0, 0, 0);
 
 	public final AABB[] aabbs;
+	public Merge merge;
 
 	Area(AABB... aabbs) {
-		this.aabbs = aabbs;
-	}
-
-	Area(AABB[] aabbs1, AABB... aabbs2) {
-		this.aabbs = new AABB[aabbs1.length + aabbs2.length];
-		System.arraycopy(aabbs1, 0, this.aabbs, 0, aabbs1.length);
-		System.arraycopy(aabbs2, 0, this.aabbs, aabbs1.length, aabbs2.length);
+		this(merge((Object[]) aabbs));
 	}
 
 	Area(Area... areas)	{
-		this.aabbs = areas(areas);
+		this(merge((Object[]) areas));
+	}
+
+	Area(RegionBox... regionBoxes) {
+		this(merge((Object[]) regionBoxes));
 	}
 
 	Area(int pointAX, int pointAY, int pointBX, int pointBY) {
-		aabbs = new AABB[] { new AABB(pointAX, pointAY, pointBX, pointBY) };
+		this(merge(new AABB(pointAX, pointAY, pointBX, pointBY)));
 	}
 
 	Area(int pointAX, int pointAY, int pointBX, int pointBY, int plane) {
-		aabbs = new AABB[] { new AABB(pointAX, pointAY, pointBX, pointBY, plane) };
+		this(merge(new AABB(pointAX, pointAY, pointBX, pointBY, plane)));
 	}
 
 	Area(int regionId) {
 		this(regions(regionId));
 	}
 
-	private static AABB[] merge(Object... objects) {
-		int count = 0;
-		for (var obj : objects) {
-			if (obj instanceof Area) {
-				count += ((Area) obj).aabbs.length;
-			} else if (obj instanceof AABB[]) {
-				count += ((AABB[]) obj).length;
-			} else if (obj instanceof AABB) {
-				count++;
-			} else {
-				throw new IllegalArgumentException("Not sure what to do with provided object: " + obj);
-			}
-		}
-
-		AABB[] aabbs = new AABB[count];
-		int i = 0;
-		for (var obj : objects) {
-			if (obj instanceof Area) {
-				for (var aabb : ((Area) obj).aabbs)
-					aabbs[i++] = aabb;
-			} else if (obj instanceof AABB[]) {
-				for (var aabb : ((AABB[]) obj))
-					aabbs[i++] = aabb;
-			} else if (obj instanceof AABB) {
-				aabbs[i++] = (AABB) obj;
-			}
-		}
-
-		return aabbs;
+	Area(Merge merge) {
+		this.merge = merge;
+		aabbs = merge.toAabbs();
 	}
 
-	private static AABB[] areas(Area... areas) {
-		return Arrays.stream(areas)
-			.flatMap(a -> Arrays.stream(a.aabbs))
-			.toArray(AABB[]::new);
+	public static Merge regions(int... regionIds) {
+		return new Merge(null, null, regionIds, null);
+	}
+
+	public static RegionBox regionBox(int fromRegionId, int toRegionId) {
+		return new RegionBox(fromRegionId, toRegionId);
+	}
+
+	@AllArgsConstructor
+	public static class Merge {
+		@Nullable
+		public Area[] areas;
+		@Nullable
+		public AABB[] aabbs;
+		@Nullable
+		public int[] regionIds;
+		@Nullable
+		public RegionBox[] regionBoxes;
+
+		public AABB[] toAabbs() {
+			ArrayList<Object> objects = new ArrayList<>();
+			if (areas != null)
+				Collections.addAll(objects, areas);
+			if (aabbs != null)
+				Collections.addAll(objects, aabbs);
+			if (regionIds != null)
+				Collections.addAll(objects, regionIds);
+			if (regionBoxes != null)
+				Collections.addAll(objects, regionBoxes);
+
+			int count = 0;
+			for (var obj : objects) {
+				if (obj instanceof Area) {
+					count += ((Area) obj).aabbs.length;
+				} else if (obj instanceof Area[]) {
+					count += ((Area[]) obj).length;
+				} else if (obj instanceof AABB[]) {
+					count += ((AABB[]) obj).length;
+				} else if (obj instanceof AABB) {
+					count++;
+				} else if (obj instanceof Integer) {
+					count++;
+				} else if (obj instanceof Integer[]) {
+					count += ((Integer[]) obj).length;
+				} else if (obj instanceof int[]) {
+					count += ((int[]) obj).length;
+				} else if (obj instanceof RegionBox) {
+					count++;
+				} else if (obj instanceof RegionBox[]) {
+					count += ((RegionBox[]) obj).length;
+				} else {
+					throw new IllegalArgumentException("Not sure what to do with provided object: " + obj);
+				}
+			}
+
+			AABB[] aabbs = new AABB[count];
+			int i = 0;
+			for (var obj : objects) {
+				if (obj instanceof Area) {
+					for (var aabb : ((Area) obj).aabbs)
+						aabbs[i++] = aabb;
+				} else if (obj instanceof Area[]) {
+					for (var area : ((Area[]) obj))
+						for (var aabb : area.aabbs)
+							aabbs[i++] = aabb;
+				} else if (obj instanceof AABB[]) {
+					for (var aabb : ((AABB[]) obj))
+						aabbs[i++] = aabb;
+				} else if (obj instanceof AABB) {
+					aabbs[i++] = (AABB) obj;
+				} else if (obj instanceof Integer) {
+					aabbs[i++] = new AABB((int) obj);
+				} else if (obj instanceof Integer[]) {
+					for (var regionId : (Integer[]) obj)
+						aabbs[i++] = new AABB(regionId);
+				} else if (obj instanceof int[]) {
+					for (var regionId : (int[]) obj)
+						aabbs[i++] = new AABB(regionId);
+				} else if (obj instanceof RegionBox) {
+					aabbs[i++] = ((RegionBox) obj).toAabb();
+				} else if (obj instanceof RegionBox[]) {
+					for (var box : ((RegionBox[]) obj))
+						aabbs[i++] = box.toAabb();
+				} else {
+					throw new IllegalArgumentException("Not sure what to do here either with: " + obj);
+				}
+			}
+
+			return aabbs;
+		}
+	}
+
+	private static Merge merge(Object... objects) {
+		ArrayList<Area> areas = new ArrayList<>();
+		ArrayList<AABB> aabbs = new ArrayList<>();
+		ArrayList<Integer> regionIds = new ArrayList<>();
+		ArrayList<RegionBox> regionBoxes = new ArrayList<>();
+
+		for (var obj : objects) {
+			if (obj instanceof Area) {
+				areas.add((Area) obj);
+			} else if (obj instanceof Area[]) {
+				Collections.addAll(areas, (Area[]) obj);
+			} else if (obj instanceof AABB) {
+				aabbs.add((AABB) obj);
+			} else if (obj instanceof AABB[]) {
+				Collections.addAll(aabbs, (AABB[]) obj);
+			} else if (obj instanceof Integer) {
+				regionIds.add((int) obj);
+			} else if (obj instanceof Integer[]) {
+				Collections.addAll(regionIds, (Integer[]) obj);
+			} else if (obj instanceof int[]) {
+				for (var i : (int[]) obj)
+					regionIds.add(i);
+			} else if (obj instanceof RegionBox) {
+				regionBoxes.add((RegionBox) obj);
+			}
+		}
+
+		return new Merge(
+			areas.toArray(Area[]::new),
+			aabbs.toArray(AABB[]::new),
+			regionIds.stream().mapToInt(i -> i).toArray(),
+			regionBoxes.toArray(RegionBox[]::new)
+		);
+	}
+
+	private static Merge areas(Area... areas) {
+		return new Merge(areas, null, null, null);
 	}
 
 	public boolean containsPoint(int worldX, int worldY, int plane) {

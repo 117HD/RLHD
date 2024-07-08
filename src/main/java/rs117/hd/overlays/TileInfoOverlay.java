@@ -45,7 +45,7 @@ import rs117.hd.data.materials.Material;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.TileOverrideManager;
-import rs117.hd.utils.AABB;
+import rs117.hd.scene.areas.AABB;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ModelHash;
 

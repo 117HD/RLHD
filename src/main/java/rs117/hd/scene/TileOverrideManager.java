@@ -21,8 +21,8 @@ import net.runelite.api.coords.*;
 import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
 import rs117.hd.config.SeasonalTheme;
-import rs117.hd.data.environments.Area;
 import rs117.hd.model.ModelPusher;
+import rs117.hd.scene.areas.Area;
 import rs117.hd.scene.tile_overrides.TileOverride;
 import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.HDUtils;
@@ -34,8 +34,8 @@ import static rs117.hd.scene.tile_overrides.TileOverride.OVERLAY_FLAG;
 import static rs117.hd.utils.HDUtils.localToWorld;
 import static rs117.hd.utils.ResourcePath.path;
 
-@Singleton
 @Slf4j
+@Singleton
 public class TileOverrideManager {
 	private static final ResourcePath TILE_OVERRIDES_PATH = Props.getPathOrDefault(
 		"rlhd.tile-overrides-path",

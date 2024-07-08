@@ -3,7 +3,7 @@ package rs117.hd.tools;
 import java.util.Arrays;
 import java.util.HashSet;
 import rs117.hd.data.environments.Area;
-import rs117.hd.utils.AABB;
+import rs117.hd.scene.areas.AABB;
 
 public class ExportAreasForExplv {
 	public static void main(String... args) {
