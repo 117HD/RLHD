@@ -298,8 +298,11 @@ public enum Material {
 	SKULLS_FOG_LIGHT(118),
 	SKULLS_FOG_DARK(119),
 	BRICK_BROWN_HORIZONTAL(120),
+	BRICK_CAM_TORUM(125),
+	BRICK_CAM_TORUM_2(126),
 
 	WHITE(NONE),
+	GRAY_90(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(.90f))),
 	GRAY_75(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(.75f))),
 	GRAY_65(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(.65f))),
 	GRAY_50(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(.5f))),
@@ -409,6 +412,9 @@ public enum Material {
 		.setSpecular(0.4f, 20)
 		.setBrightness(1.2f)
 	),
+	ROCK_3_DARK(ROCK_3,p -> p
+		.setBrightness(0.65f)
+	),
 	ROCK_3_SMOOTH(ROCK_3, p -> p
 		.setDisplacementScale(0)
 		.setTextureScale(1, 1, .15f)
@@ -445,6 +451,7 @@ public enum Material {
 	ROCK_5_ORE(ROCK_5, p -> p
 		.setSpecular(1, 20)
 	),
+	ROPE,
 	CARPET,
 	FINE_CARPET(CARPET, p -> p
 		.setBrightness(1.4f)
@@ -496,6 +503,8 @@ public enum Material {
 		.setSpecular(0.35f, 80)),
 	MARBLE_2_SEMIGLOSS(MARBLE_2, p -> p
 		.setSpecular(0.3f, 100)),
+	MARBLE_2_DARK(MARBLE_2, p -> p
+		.setBrightness(0.5f)),
 	MARBLE_3_SEMIGLOSS(MARBLE_3, p -> p
 		.setSpecular(0.4f, 120)),
 
@@ -510,7 +519,13 @@ public enum Material {
 		.setFlowMap(UNDERWATER_FLOW_MAP)
 		.setFlowMapStrength(0.025f)
 		.setFlowMapDuration(new float[] { 10, -10 })),
-
+	CAM_TORUM_TILE_DISP,
+	CAM_TORUM_TILES(DIRT_1, p -> p
+		.setNormalMap(LASSAR_UNDERCITY_TILE_NORMAL)
+		.setDisplacementMap(LASSAR_UNDERCITY_TILE_DISP)
+		.setAmbientOcclusionMap(CAM_TORUM_TILE_DISP)
+		.setDisplacementScale(.025f)
+	),
 	HD_LAVA_1(p -> p
 		.setUnlit(true)
 		.setOverrideBaseColor(true)
@@ -757,6 +772,12 @@ public enum Material {
 		.replaceIf(plugin -> plugin.configModelTextures, HAY)
 		.setSpecular(0.3f, 20)
 		.setNormalMap(HD_HAY_N)
+	),
+	HD_IRON_BARS(p -> p
+		.replaceIf(plugin -> plugin.configModelTextures, IRON_BARS)
+		.setHasTransparency(true)
+		.setSpecular(0.6f, 30)
+		.setTextureScale(0.98f)
 	),
 	OOZE(GRAY_65, p -> p
 		.setSpecular(1.5f, 600)

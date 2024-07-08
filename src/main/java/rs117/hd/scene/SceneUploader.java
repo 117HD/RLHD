@@ -558,19 +558,16 @@ class SceneUploader {
 				swVertexIsOverlay = true;
 
 
-			int swTerrainData = packTerrainData(true, 0, waterType, tileZ);
-			int seTerrainData = packTerrainData(true, 0, waterType, tileZ);
-			int nwTerrainData = packTerrainData(true, 0, waterType, tileZ);
-			int neTerrainData = packTerrainData(true, 0, waterType, tileZ);
+			int terrainData = packTerrainData(true, 0, waterType, tileZ);
 
 			sceneContext.stagingBufferNormals.ensureCapacity(24);
-			sceneContext.stagingBufferNormals.put(neNormals[0], neNormals[2], neNormals[1], neTerrainData);
-			sceneContext.stagingBufferNormals.put(nwNormals[0], nwNormals[2], nwNormals[1], nwTerrainData);
-			sceneContext.stagingBufferNormals.put(seNormals[0], seNormals[2], seNormals[1], seTerrainData);
+			sceneContext.stagingBufferNormals.put(neNormals[0], neNormals[2], neNormals[1], terrainData);
+			sceneContext.stagingBufferNormals.put(nwNormals[0], nwNormals[2], nwNormals[1], terrainData);
+			sceneContext.stagingBufferNormals.put(seNormals[0], seNormals[2], seNormals[1], terrainData);
 
-			sceneContext.stagingBufferNormals.put(swNormals[0], swNormals[2], swNormals[1], swTerrainData);
-			sceneContext.stagingBufferNormals.put(seNormals[0], seNormals[2], seNormals[1], seTerrainData);
-			sceneContext.stagingBufferNormals.put(nwNormals[0], nwNormals[2], nwNormals[1], nwTerrainData);
+			sceneContext.stagingBufferNormals.put(swNormals[0], swNormals[2], swNormals[1], terrainData);
+			sceneContext.stagingBufferNormals.put(seNormals[0], seNormals[2], seNormals[1], terrainData);
+			sceneContext.stagingBufferNormals.put(nwNormals[0], nwNormals[2], nwNormals[1], terrainData);
 
 
 			sceneContext.stagingBufferVertices.ensureCapacity(24);
@@ -923,14 +920,12 @@ class SceneUploader {
 					vertexCIsOverlay = true;
 			}
 
-			int aTerrainData = packTerrainData(true, 0, waterType, tileZ);
-			int bTerrainData = packTerrainData(true, 0, waterType, tileZ);
-			int cTerrainData = packTerrainData(true, 0, waterType, tileZ);
+			int terrainData = packTerrainData(true, 0, waterType, tileZ);
 
 			sceneContext.stagingBufferNormals.ensureCapacity(12);
-			sceneContext.stagingBufferNormals.put(normalsA[0], normalsA[2], normalsA[1], aTerrainData);
-			sceneContext.stagingBufferNormals.put(normalsB[0], normalsB[2], normalsB[1], bTerrainData);
-			sceneContext.stagingBufferNormals.put(normalsC[0], normalsC[2], normalsC[1], cTerrainData);
+			sceneContext.stagingBufferNormals.put(normalsA[0], normalsA[2], normalsA[1], terrainData);
+			sceneContext.stagingBufferNormals.put(normalsB[0], normalsB[2], normalsB[1], terrainData);
+			sceneContext.stagingBufferNormals.put(normalsC[0], normalsC[2], normalsC[1], terrainData);
 
 			sceneContext.stagingBufferVertices.ensureCapacity(12);
 			sceneContext.stagingBufferVertices.put((float) localVertices[0][0], localVertices[0][2], localVertices[0][1], colorA);
@@ -1108,10 +1103,10 @@ class SceneUploader {
 		final Scene scene = sceneContext.scene;
 
 		int color = 0;
-		int fromX = 0;
-		int fromY = 0;
-		int toX = LOCAL_TILE_SIZE;
-		int toY = LOCAL_TILE_SIZE;
+		float fromX = 0;
+		float fromY = 0;
+		float toX = LOCAL_TILE_SIZE;
+		float toY = LOCAL_TILE_SIZE;
 
 		final int[][][] tileHeights = scene.getTileHeights();
 		int swHeight = tileHeights[tileZ][tileExX][tileExY];

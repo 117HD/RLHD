@@ -30,6 +30,7 @@ import com.google.common.collect.ListMultimap;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.function.Predicate;
@@ -410,6 +411,7 @@ public class LightManager {
 					// Reset the light if it's replayable and the parent just spawned
 					if (light.replayable) {
 						light.elapsedTime = 0;
+						light.changedVisibilityAt = -1;
 						if (light.dynamicLifetime)
 							light.lifetime = -1;
 					}
@@ -672,9 +674,17 @@ public class LightManager {
 		if (sceneContext == null)
 			return;
 
+		int[] worldPos = sceneContext.localToWorld(actor.getLocalLocation(), client.getPlane());
+
 		for (var spotAnim : actor.getSpotAnims()) {
 			int spotAnimId = spotAnim.getId();
 			for (var def : SPOT_ANIM_LIGHTS.get(spotAnim.getId())) {
+				if (def.areas.length > 0) {
+					boolean isInArea = Arrays.stream(def.areas).anyMatch(aabb -> aabb.contains(worldPos));
+					if (!isInArea)
+						continue;
+				}
+
 				boolean isDuplicate = sceneContext.lights.stream()
 					.anyMatch(light ->
 						light.spotAnimId == spotAnimId &&
@@ -698,14 +708,20 @@ public class LightManager {
 		if (sceneContext == null)
 			return;
 
-		var modelOverride = modelOverrideManager.getOverride(
-			ModelHash.packUuid(ModelHash.TYPE_NPC, npc.getId()),
-			sceneContext.localToWorld(npc.getLocalLocation(), client.getPlane())
-		);
+		int uuid = ModelHash.packUuid(ModelHash.TYPE_NPC, npc.getId());
+		int[] worldPos = sceneContext.localToWorld(npc.getLocalLocation(), client.getPlane());
+
+		var modelOverride = modelOverrideManager.getOverride(uuid, worldPos);
 		if (modelOverride.hide)
 			return;
 
 		for (LightDefinition def : NPC_LIGHTS.get(npc.getId())) {
+			if (def.areas.length > 0) {
+				boolean isInArea = Arrays.stream(def.areas).anyMatch(aabb -> aabb.contains(worldPos));
+				if (!isInArea)
+					continue;
+			}
+
 			// Prevent duplicate lights from being spawned for the same NPC
 			boolean isDuplicate = sceneContext.lights.stream()
 				.anyMatch(light ->
@@ -840,6 +856,11 @@ public class LightManager {
 		List<LightDefinition> lights = OBJECT_LIGHTS.get(impostorId == -1 ? tileObject.getId() : impostorId);
 		HashSet<LightDefinition> onlySpawnOnce = new HashSet<>();
 
+		LocalPoint lp = tileObject.getLocalLocation();
+		int lightX = lp.getX();
+		int lightZ = lp.getY();
+		int plane = tileObject.getPlane();
+
 		// Spawn animation-specific lights for each DynamicObject renderable, and non-animation-based lights
 		for (int i = 0; i < 2; i++) {
 			var renderable = renderables[i];
@@ -847,6 +868,13 @@ public class LightManager {
 				continue;
 
 			for (LightDefinition def : lights) {
+				if (def.areas.length > 0) {
+					int[] worldPos = sceneContext.localToWorld(lightX, lightZ, plane);
+					boolean isInArea = Arrays.stream(def.areas).anyMatch(aabb -> aabb.contains(worldPos));
+					if (!isInArea)
+						continue;
+				}
+
 				// Rarely, it may be necessary to specify which of the two possible renderables the light should be attached to
 				if (def.renderableIndex == -1) {
 					// If unspecified, spawn it for the first non-null renderable
@@ -856,11 +884,6 @@ public class LightManager {
 				} else if (def.renderableIndex != i) {
 					continue;
 				}
-
-				LocalPoint lp = tileObject.getLocalLocation();
-				int lightX = lp.getX();
-				int lightZ = lp.getY();
-				int plane = tileObject.getPlane();
 
 				int tileExX = HDUtils.clamp(lp.getSceneX() + SceneUploader.SCENE_OFFSET, 0, EXTENDED_SCENE_SIZE - 2);
 				int tileExY = HDUtils.clamp(lp.getSceneY() + SceneUploader.SCENE_OFFSET, 0, EXTENDED_SCENE_SIZE - 2);
@@ -934,9 +957,17 @@ public class LightManager {
 		if (!sceneContext.knownProjectiles.add(projectile))
 			return;
 
+		int[] worldPos = sceneContext.localToWorld((int) projectile.getX(), (int) projectile.getY(), projectile.getFloor());
+
 		int[] refCounter = { 0 };
-		for (LightDefinition lightDef : PROJECTILE_LIGHTS.get(projectile.getId())) {
-			Light light = new Light(lightDef);
+		for (LightDefinition def : PROJECTILE_LIGHTS.get(projectile.getId())) {
+			if (def.areas.length > 0) {
+				boolean isInArea = Arrays.stream(def.areas).anyMatch(aabb -> aabb.contains(worldPos));
+				if (!isInArea)
+					continue;
+			}
+
+			Light light = new Light(def);
 			light.projectile = projectile;
 			light.projectileRefCounter = refCounter;
 			refCounter[0]++;
@@ -998,14 +1029,22 @@ public class LightManager {
 			return;
 
 		GraphicsObject graphicsObject = graphicsObjectCreated.getGraphicsObject();
-		for (LightDefinition lightDef : SPOT_ANIM_LIGHTS.get(graphicsObject.getId())) {
-			Light light = new Light(lightDef);
+		var lp = graphicsObject.getLocation();
+		int[] worldPos = sceneContext.localToWorld(lp, graphicsObject.getLevel());
+
+		for (LightDefinition def : SPOT_ANIM_LIGHTS.get(graphicsObject.getId())) {
+			if (def.areas.length > 0) {
+				boolean isInArea = Arrays.stream(def.areas).anyMatch(aabb -> aabb.contains(worldPos));
+				if (!isInArea)
+					continue;
+			}
+
+			Light light = new Light(def);
 			light.graphicsObject = graphicsObject;
-			var lp = graphicsObject.getLocation();
 			light.origin[0] = lp.getX();
 			light.origin[1] = graphicsObject.getZ();
 			light.origin[2] = lp.getY();
-			light.plane = graphicsObject.getLevel();
+			light.plane = worldPos[2];
 			sceneContext.lights.add(light);
 		}
 	}

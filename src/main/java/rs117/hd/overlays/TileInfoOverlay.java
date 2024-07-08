@@ -114,6 +114,10 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 
 	@Override
 	public Dimension render(Graphics2D g) {
+		// Disable the overlay while loading a scene, since tile overrides aren't thread safe
+		if (plugin.isLoadingScene())
+			return null;
+
 		var sceneContext = plugin.getSceneContext();
 		if (sceneContext == null)
 			return null;
@@ -406,17 +410,25 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			if (gameObject == null)
 				continue;
 			int height = -1;
+			int animationId = -1;
 			var renderable = gameObject.getRenderable();
-			if (renderable != null)
+			if (renderable != null) {
 				height = renderable.getModelHeight();
+				if (renderable instanceof DynamicObject) {
+					var anim = ((DynamicObject) renderable).getAnimation();
+					if (anim != null)
+						animationId = anim.getId();
+				}
+			}
 
 			lines.add(String.format(
-				"%s: ID=%s preori=%d ori=%d height=%d",
+				"%s: ID=%s preori=%d ori=%d height=%d anim=%d",
 				ModelHash.getTypeName(ModelHash.getType(gameObject.getHash())),
 				getIdAndImpostorId(gameObject, renderable),
 				HDUtils.getBakedOrientation(gameObject.getConfig()),
 				gameObject.getModelOrientation(),
-				height
+				height,
+				animationId
 			));
 		}
 
