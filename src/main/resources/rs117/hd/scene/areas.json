@@ -2625,9 +2625,32 @@
     ]
   },
   {
-    "name": "ZANARIS",
+    "name": "ZANARIS_MAIN",
     "aabbs": [
-      [ 2315, 4345, 2500, 4485 ]
+      [ 2368, 4479, 2495, 4416 ],
+      [ 2368, 4415, 2431, 4352 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "ZANARIS_FAIRY_QUEENS_HIDEOUT",
+    "aabbs": [
+      [ 2304, 4479, 2367, 4416 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "EVIL_CHICKEN_LAIR",
+    "aabbs": [
+      [ 2432, 4415, 2495, 4352 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "ZANARIS",
+    "areas": [
+      "ZANARIS_MAIN",
+      "ZANARIS_FAIRY_QUEENS_HIDEOUT"
     ]
   },
   {
