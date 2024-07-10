@@ -3567,7 +3567,7 @@
   {
     "name": "NATURE_ALTAR",
     "aabbs": [
-      [ 2368, 4799, 2427, 4863 ]
+      [ 2372, 4863, 2425, 4805 ]
     ],
     "hideOtherAreas": true
   },
