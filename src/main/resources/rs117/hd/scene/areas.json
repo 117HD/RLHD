@@ -3624,7 +3624,7 @@
   {
     "name": "TRUE_BLOOD_ALTAR",
     "aabbs": [
-      [ 3200, 4800, 3262, 4862 ]
+      [ 3201, 4799, 3261, 4861 ]
     ],
     "hideOtherAreas": true
   },
