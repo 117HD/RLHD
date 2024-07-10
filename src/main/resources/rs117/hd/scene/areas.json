@@ -4490,7 +4490,8 @@
     "name": "ESSENCE_MINE",
     "regions": [
       11595
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "KINGDOM_OF_MISTHALIN_REGION",
