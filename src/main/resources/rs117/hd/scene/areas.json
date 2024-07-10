@@ -3609,7 +3609,7 @@
   {
     "name": "MIND_ALTAR",
     "aabbs": [
-      [ 2752, 4799, 2816, 4863 ]
+      [ 2754, 4862, 2809, 4806 ]
     ],
     "hideOtherAreas": true
   },
