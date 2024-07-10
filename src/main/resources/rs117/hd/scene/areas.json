@@ -3602,7 +3602,7 @@
   {
     "name": "WATER_ALTAR",
     "aabbs": [
-      [ 2688, 4799, 2752, 4863 ]
+      [ 2689, 4862, 2750, 4801 ]
     ],
     "hideOtherAreas": true
   },
