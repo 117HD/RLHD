@@ -733,12 +733,13 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 					// Done marking
 					var markedAabb = new AABB(markedWorldPoints[0], markedWorldPoints[1]);
 					Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-					StringSelection string = new StringSelection("new AABB(" + markedAabb.toArgs() + "),\n");
+					String aabb = "[ " + markedAabb.toArgs() + " ]";
+					StringSelection string = new StringSelection(aabb);
 					clipboard.setContents(string, null);
 					clientThread.invoke(() -> client.addChatMessage(
 						ChatMessageType.GAMEMESSAGE,
 						"117 HD",
-						ColorUtil.wrapWithColorTag("[117 HD] Copied AABB to clipboard: " + markedAabb.toArgs(), Color.GREEN),
+						ColorUtil.wrapWithColorTag("[117 HD] Copied AABB to clipboard: " + aabb, Color.GREEN),
 						"117 HD"
 					));
 				}
