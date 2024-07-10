@@ -3581,7 +3581,7 @@
   {
     "name": "BODY_ALTAR",
     "aabbs": [
-      [ 2495, 4799, 2553, 4863 ]
+      [ 2497, 4862, 2551, 4815 ]
     ],
     "hideOtherAreas": true
   },
