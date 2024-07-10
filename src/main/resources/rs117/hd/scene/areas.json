@@ -3560,7 +3560,7 @@
   {
     "name": "WRATH_ALTAR",
     "aabbs": [
-      [ 2304, 4799, 2368, 4863 ]
+      [ 2305, 4801, 2366, 4862 ]
     ],
     "hideOtherAreas": true
   },
