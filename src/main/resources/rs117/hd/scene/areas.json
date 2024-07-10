@@ -473,25 +473,29 @@
     "name": "STRONGHOLD_OF_SECURITY_WAR",
     "regions": [
       7505
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "STRONGHOLD_OF_SECURITY_FAMINE",
     "regions": [
       8017
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "STRONGHOLD_OF_SECURITY_PESTILENCE",
     "regions": [
       8530
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "STRONGHOLD_OF_SECURITY_DEATH",
     "regions": [
       9297
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "STRONGHOLD_OF_SECURITY",
