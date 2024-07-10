@@ -3,7 +3,8 @@
     "name": "EVIL_BOB_ISLAND",
     "aabbs": [
       [ 2496, 4799, 2559, 4748 ]
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "VERTICAL_DIRT_FIX_NEAR_FALADOR",
