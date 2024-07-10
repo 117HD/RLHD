@@ -3553,7 +3553,7 @@
   {
     "name": "CHAOS_ALTAR",
     "aabbs": [
-      [ 2240, 4799, 2304, 4863 ]
+      [ 2240, 4863, 2303, 4800 ]
     ],
     "hideOtherAreas": true
   },
