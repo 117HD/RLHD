@@ -32,18 +32,22 @@ import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.HdPlugin;
+import rs117.hd.HdPluginConfig;
 import rs117.hd.data.WaterType;
-import rs117.hd.data.environments.Area;
 import rs117.hd.data.materials.GroundMaterial;
 import rs117.hd.data.materials.Material;
 import rs117.hd.data.materials.UvType;
 import rs117.hd.model.ModelPusher;
+import rs117.hd.scene.areas.AABB;
+import rs117.hd.scene.areas.Area;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.scene.model_overrides.ObjectType;
 import rs117.hd.scene.tile_overrides.TileOverride;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ModelHash;
 
+import static net.runelite.api.Constants.SCENE_SIZE;
+import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.*;
 import static rs117.hd.HdPlugin.NORMAL_SIZE;
 import static rs117.hd.HdPlugin.SCALAR_BYTES;
@@ -52,14 +56,13 @@ import static rs117.hd.HdPlugin.VERTEX_SIZE;
 import static rs117.hd.scene.tile_overrides.TileOverride.NONE;
 import static rs117.hd.scene.tile_overrides.TileOverride.OVERLAY_FLAG;
 
-@SuppressWarnings("UnnecessaryLocalVariable")
-@Singleton
 @Slf4j
-public
-class SceneUploader {
+@Singleton
+@SuppressWarnings("UnnecessaryLocalVariable")
+public class SceneUploader {
 	public static final int SCENE_ID_MASK = 0xFFFF;
 	public static final int EXCLUDED_FROM_SCENE_BUFFER = 0xFFFFFFFF;
-	public static final int SCENE_OFFSET = (Constants.EXTENDED_SCENE_SIZE - Constants.SCENE_SIZE) / 2; // offset for sxy -> msxy
+	public static final int SCENE_OFFSET = (EXTENDED_SCENE_SIZE - SCENE_SIZE) / 2; // offset for sxy -> msxy
 
 	private static final float[] UP_NORMAL = { 0, -1, 0 };
 
@@ -68,6 +71,9 @@ class SceneUploader {
 
 	@Inject
 	private HdPlugin plugin;
+
+	@Inject
+	private HdPluginConfig config;
 
 	@Inject
 	private TileOverrideManager tileOverrideManager;
@@ -84,12 +90,56 @@ class SceneUploader {
 	public void upload(SceneContext sceneContext) {
 		Stopwatch stopwatch = Stopwatch.createStarted();
 
-		for (int z = 0; z < Constants.MAX_Z; ++z) {
-			for (int x = 0; x < Constants.EXTENDED_SCENE_SIZE; ++x) {
-				for (int y = 0; y < Constants.EXTENDED_SCENE_SIZE; ++y) {
-					Tile tile = sceneContext.scene.getExtendedTiles()[z][x][y];
-					if (tile != null)
-						upload(sceneContext, tile, x, y);
+		int baseX = sceneContext.scene.getBaseX();
+		int baseY = sceneContext.scene.getBaseY();
+		int baseExX = baseX - SCENE_OFFSET;
+		int baseExY = baseY - SCENE_OFFSET;
+
+		boolean hideUnrelatedAreas = config.hideUnrelatedAreas() && !sceneContext.scene.isInstance();
+		if (hideUnrelatedAreas) {
+			// Set up an AABB for the chunk the scene is centered around
+			// TODO: make this work even if the player teleports from one area to another without triggering a scene load
+			AABB centerChunk = new AABB(
+				baseX + 6 * CHUNK_SIZE,
+				baseY + 6 * CHUNK_SIZE,
+				baseX + 7 * CHUNK_SIZE - 1,
+				baseY + 7 * CHUNK_SIZE - 1
+			);
+
+			outer:
+			for (Area area : AreaManager.AREAS) {
+				if (!area.hideOtherAreas)
+					continue;
+
+				for (AABB aabb : area.aabbs) {
+					if (aabb.intersects(centerChunk)) {
+						sceneContext.area = area;
+						break outer;
+					}
+				}
+			}
+
+			if (sceneContext.area == null) {
+				hideUnrelatedAreas = false;
+			} else {
+				log.debug("Hiding areas outside of {}", sceneContext.area);
+			}
+		}
+
+		var tiles = sceneContext.scene.getExtendedTiles();
+		for (int z = 0; z < MAX_Z; ++z) {
+			for (int x = 0; x < EXTENDED_SCENE_SIZE; ++x) {
+				for (int y = 0; y < EXTENDED_SCENE_SIZE; ++y) {
+					Tile tile = tiles[z][x][y];
+					if (tile == null)
+						continue;
+
+					if (hideUnrelatedAreas && !sceneContext.area.containsPoint(baseExX + x, baseExY + y, z)) {
+						sceneContext.scene.removeTile(tile);
+						continue;
+					}
+
+					upload(sceneContext, tile, x, y);
 				}
 			}
 		}
@@ -110,13 +160,20 @@ class SceneUploader {
 	}
 
 	public void fillGaps(SceneContext sceneContext) {
-		int sceneMin = sceneContext.expandedMapLoadingChunks * -8;
-		int sceneMax = SCENE_SIZE + sceneContext.expandedMapLoadingChunks * 8;
+		int sceneMin = -sceneContext.expandedMapLoadingChunks * CHUNK_SIZE;
+		int sceneMax = SCENE_SIZE + sceneContext.expandedMapLoadingChunks * CHUNK_SIZE;
+
+		int baseExX = sceneContext.scene.getBaseX() - SCENE_OFFSET;
+		int baseExY = sceneContext.scene.getBaseY() - SCENE_OFFSET;
+		boolean hideUnrelatedAreas = config.hideUnrelatedAreas() && sceneContext.area != null && !sceneContext.scene.isInstance();
 
 		Tile[][][] extendedTiles = sceneContext.scene.getExtendedTiles();
-		for (int tileZ = 0; tileZ < Constants.MAX_Z; ++tileZ) {
-			for (int tileExX = 0; tileExX < Constants.EXTENDED_SCENE_SIZE; ++tileExX) {
-				for (int tileExY = 0; tileExY < Constants.EXTENDED_SCENE_SIZE; ++tileExY) {
+		for (int tileZ = 0; tileZ < MAX_Z; ++tileZ) {
+			for (int tileExX = 0; tileExX < EXTENDED_SCENE_SIZE; ++tileExX) {
+				for (int tileExY = 0; tileExY < EXTENDED_SCENE_SIZE; ++tileExY) {
+					if (hideUnrelatedAreas && !sceneContext.area.containsPoint(baseExX + tileExX, baseExY + tileExY, tileZ))
+						continue;
+
 					int tileX = tileExX - SCENE_OFFSET;
 					int tileY = tileExY - SCENE_OFFSET;
 					Tile tile = extendedTiles[tileZ][tileExX][tileExY];

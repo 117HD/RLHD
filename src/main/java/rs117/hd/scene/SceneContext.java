@@ -12,12 +12,12 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import net.runelite.api.*;
 import net.runelite.api.coords.*;
-import rs117.hd.data.environments.Area;
 import rs117.hd.data.materials.Material;
+import rs117.hd.scene.areas.AABB;
+import rs117.hd.scene.areas.Area;
 import rs117.hd.scene.environments.Environment;
 import rs117.hd.scene.lights.Light;
 import rs117.hd.scene.lights.TileObjectImpostorTracker;
-import rs117.hd.utils.AABB;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.buffer.GpuFloatBuffer;
 import rs117.hd.utils.buffer.GpuIntBuffer;
@@ -32,6 +32,10 @@ public class SceneContext {
 	public final Scene scene;
 	public final HashSet<Integer> regionIds;
 	public final int expandedMapLoadingChunks;
+
+	@Nullable
+	public Area area;
+	public final ArrayList<Environment> environments = new ArrayList<>();
 
 	public int staticVertexCount = 0;
 	public GpuIntBuffer staticUnorderedModelBuffer;
@@ -65,8 +69,6 @@ public class SceneContext {
 	public final HashMap<TileObject, TileObjectImpostorTracker> trackedTileObjects = new HashMap<>();
 	public final ListMultimap<Integer, TileObjectImpostorTracker> trackedVarps = ArrayListMultimap.create();
 	public final ListMultimap<Integer, TileObjectImpostorTracker> trackedVarbits = ArrayListMultimap.create();
-
-	public final ArrayList<Environment> environments = new ArrayList<>();
 
 	// model pusher arrays, to avoid simultaneous usage from different threads
 	public final int[] modelFaceVertices = new int[12];

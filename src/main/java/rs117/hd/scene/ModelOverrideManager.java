@@ -20,8 +20,8 @@ import rs117.hd.utils.ResourcePath;
 
 import static rs117.hd.utils.ResourcePath.path;
 
-@Singleton
 @Slf4j
+@Singleton
 public class ModelOverrideManager {
 	private static final ResourcePath MODEL_OVERRIDES_PATH = Props.getPathOrDefault(
 		"rlhd.model-overrides-path",

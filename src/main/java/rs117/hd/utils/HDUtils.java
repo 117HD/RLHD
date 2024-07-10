@@ -30,7 +30,8 @@ import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.api.coords.*;
-import rs117.hd.data.environments.Area;
+import rs117.hd.scene.areas.AABB;
+import rs117.hd.scene.areas.Area;
 
 import static net.runelite.api.Constants.SCENE_SIZE;
 import static net.runelite.api.Constants.*;

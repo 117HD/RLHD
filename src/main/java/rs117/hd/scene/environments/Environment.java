@@ -5,7 +5,8 @@ import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import rs117.hd.data.environments.Area;
+import rs117.hd.scene.AreaManager;
+import rs117.hd.scene.areas.Area;
 import rs117.hd.utils.GsonUtils;
 import rs117.hd.utils.HDUtils;
 
@@ -30,7 +31,7 @@ public class Environment {
 	public static Environment OVERWORLD, AUTUMN, WINTER;
 
 	public String key;
-	@JsonAdapter(Area.JsonAdapter.class)
+	@JsonAdapter(AreaManager.JsonAdapter.class)
 	public Area area = Area.NONE;
 	public boolean isOverworld = false;
 	public boolean isUnderwater = false;
@@ -86,6 +87,6 @@ public class Environment {
 	public String toString() {
 		if (key != null)
 			return key;
-		return area.name();
+		return area.name;
 	}
 }

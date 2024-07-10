@@ -45,7 +45,7 @@ import rs117.hd.data.materials.Material;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.TileOverrideManager;
-import rs117.hd.utils.AABB;
+import rs117.hd.scene.areas.AABB;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ModelHash;
 
@@ -733,12 +733,13 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 					// Done marking
 					var markedAabb = new AABB(markedWorldPoints[0], markedWorldPoints[1]);
 					Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-					StringSelection string = new StringSelection("new AABB(" + markedAabb.toArgs() + "),\n");
+					String aabb = "[ " + markedAabb.toArgs() + " ]";
+					StringSelection string = new StringSelection(aabb);
 					clipboard.setContents(string, null);
 					clientThread.invoke(() -> client.addChatMessage(
 						ChatMessageType.GAMEMESSAGE,
 						"117 HD",
-						ColorUtil.wrapWithColorTag("[117 HD] Copied AABB to clipboard: " + markedAabb.toArgs(), Color.GREEN),
+						ColorUtil.wrapWithColorTag("[117 HD] Copied AABB to clipboard: " + aabb, Color.GREEN),
 						"117 HD"
 					));
 				}

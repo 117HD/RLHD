@@ -1,6 +1,7 @@
 package rs117.hd.scene.tile_overrides;
 
 import com.google.gson.JsonElement;
+import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -12,8 +13,9 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import rs117.hd.data.WaterType;
-import rs117.hd.data.environments.Area;
 import rs117.hd.data.materials.GroundMaterial;
+import rs117.hd.scene.AreaManager;
+import rs117.hd.scene.areas.Area;
 import rs117.hd.utils.Props;
 
 import static rs117.hd.utils.HDUtils.clamp;
@@ -28,6 +30,7 @@ public class TileOverride {
 	@Nullable
 	public String name;
 	public String description;
+	@JsonAdapter(AreaManager.JsonAdapter.class)
 	public Area area = Area.NONE;
 	public int[] overlayIds;
 	public int[] underlayIds;
@@ -67,7 +70,7 @@ public class TileOverride {
 		if (description != null)
 			return description;
 		if (area != null)
-			return area.name();
+			return area.name;
 		return "Unnamed";
 	}
 

@@ -60,8 +60,8 @@ import static rs117.hd.HdPlugin.TEXTURE_UNIT_UI;
 import static rs117.hd.utils.HDUtils.HALF_PI;
 import static rs117.hd.utils.ResourcePath.path;
 
-@Singleton
 @Slf4j
+@Singleton
 public class TextureManager {
 	private static final String[] SUPPORTED_IMAGE_EXTENSIONS = { "png", "jpg" };
 	private static final ResourcePath TEXTURE_PATH = Props.getPathOrDefault(
