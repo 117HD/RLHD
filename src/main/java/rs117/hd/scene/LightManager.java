@@ -684,6 +684,11 @@ public class LightManager {
 					if (!isInArea)
 						continue;
 				}
+				if (def.excludeAreas.length > 0) {
+					boolean isInArea = Arrays.stream(def.excludeAreas).anyMatch(aabb -> aabb.contains(worldPos));
+					if (isInArea)
+						continue;
+				}
 
 				boolean isDuplicate = sceneContext.lights.stream()
 					.anyMatch(light ->
@@ -719,6 +724,11 @@ public class LightManager {
 			if (def.areas.length > 0) {
 				boolean isInArea = Arrays.stream(def.areas).anyMatch(aabb -> aabb.contains(worldPos));
 				if (!isInArea)
+					continue;
+			}
+			if (def.excludeAreas.length > 0) {
+				boolean isInArea = Arrays.stream(def.excludeAreas).anyMatch(aabb -> aabb.contains(worldPos));
+				if (isInArea)
 					continue;
 			}
 
@@ -874,6 +884,12 @@ public class LightManager {
 					if (!isInArea)
 						continue;
 				}
+				if (def.excludeAreas.length > 0) {
+					int[] worldPos = sceneContext.localToWorld(lightX, lightZ, plane);
+					boolean isInArea = Arrays.stream(def.excludeAreas).anyMatch(aabb -> aabb.contains(worldPos));
+					if (isInArea)
+						continue;
+				}
 
 				// Rarely, it may be necessary to specify which of the two possible renderables the light should be attached to
 				if (def.renderableIndex == -1) {
@@ -966,6 +982,11 @@ public class LightManager {
 				if (!isInArea)
 					continue;
 			}
+			if (def.excludeAreas.length > 0) {
+				boolean isInArea = Arrays.stream(def.excludeAreas).anyMatch(aabb -> aabb.contains(worldPos));
+				if (isInArea)
+					continue;
+			}
 
 			Light light = new Light(def);
 			light.projectile = projectile;
@@ -1036,6 +1057,11 @@ public class LightManager {
 			if (def.areas.length > 0) {
 				boolean isInArea = Arrays.stream(def.areas).anyMatch(aabb -> aabb.contains(worldPos));
 				if (!isInArea)
+					continue;
+			}
+			if (def.excludeAreas.length > 0) {
+				boolean isInArea = Arrays.stream(def.excludeAreas).anyMatch(aabb -> aabb.contains(worldPos));
+				if (isInArea)
 					continue;
 			}
 
