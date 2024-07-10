@@ -1479,6 +1479,11 @@
     "hideOtherAreas": true
   },
   {
+    "name": "LEGENDS_GUILD_DUNGEON",
+    "regions": [ 10904 ],
+    "hideOtherAreas": true
+  },
+  {
     "name": "KHAZARD_BATTLEFIELD_COBBLE_OUTSIDE",
     "aabbs": [
       [ 2507, 3254, 2512, 3259 ],
