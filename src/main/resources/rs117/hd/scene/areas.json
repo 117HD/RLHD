@@ -3569,8 +3569,9 @@
   {
     "name": "LAW_ALTAR",
     "aabbs": [
-      [ 2427, 4799, 2495, 4863 ]
-    ]
+      [ 2428, 4863, 2493, 4805 ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "BODY_ALTAR",
@@ -3581,8 +3582,9 @@
   {
     "name": "FIRE_ALTAR",
     "aabbs": [
-      [ 2553, 4799, 2624, 4863 ]
-    ]
+      [ 2553, 4810, 2615, 4863 ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "EARTH_ALTAR",
