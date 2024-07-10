@@ -3540,31 +3540,36 @@
     "name": "COSMIC_ALTAR",
     "aabbs": [
       [ 2112, 4799, 2176, 4863 ]
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "DEATH_ALTAR",
     "aabbs": [
       [ 2176, 4799, 2240, 4863 ]
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "CHAOS_ALTAR",
     "aabbs": [
       [ 2240, 4799, 2304, 4863 ]
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "WRATH_ALTAR",
     "aabbs": [
       [ 2304, 4799, 2368, 4863 ]
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "NATURE_ALTAR",
     "aabbs": [
       [ 2368, 4799, 2427, 4863 ]
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "LAW_ALTAR",
@@ -3577,7 +3582,8 @@
     "name": "BODY_ALTAR",
     "aabbs": [
       [ 2495, 4799, 2553, 4863 ]
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "FIRE_ALTAR",
@@ -3590,31 +3596,36 @@
     "name": "EARTH_ALTAR",
     "aabbs": [
       [ 2624, 4799, 2688, 4863 ]
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "WATER_ALTAR",
     "aabbs": [
       [ 2688, 4799, 2752, 4863 ]
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "MIND_ALTAR",
     "aabbs": [
       [ 2752, 4799, 2816, 4863 ]
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "AIR_ALTAR",
     "aabbs": [
       [ 2816, 4799, 2880, 4863 ]
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "TRUE_BLOOD_ALTAR",
     "aabbs": [
       [ 3200, 4800, 3262, 4862 ]
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "LITHKREN_DUNGEON",
