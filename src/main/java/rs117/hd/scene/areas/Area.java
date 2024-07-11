@@ -13,6 +13,7 @@ public class Area {
 
 	public String name;
 	public boolean hideOtherAreas;
+	public boolean fillGaps = true;
 
 	private String[] areas;
 	private int[] regions;
