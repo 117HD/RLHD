@@ -2227,9 +2227,20 @@
     ]
   },
   {
+    "name": "TZHAAR_FIGHT_CAVES",
+    "regions": [ 9551 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "TZHAAR_CITY_REGION",
+    "regions": [ 9552, 9807, 9808, 10063, 10064 ],
+    "hideOtherAreas": true
+  },
+  {
     "name": "TZHAAR",
-    "regionBoxes": [
-      [ 9551, 10064 ]
+    "areas": [
+      "TZHAAR_FIGHT_CAVES",
+      "TZHAAR_CITY_REGION"
     ]
   },
   {
