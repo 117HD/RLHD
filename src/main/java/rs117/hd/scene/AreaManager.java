@@ -9,7 +9,10 @@ import java.util.Arrays;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
+import net.runelite.api.*;
+import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
+import rs117.hd.model.ModelPusher;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.GsonUtils;
@@ -27,7 +30,28 @@ public class AreaManager {
 	);
 
 	@Inject
+	private Client client;
+
+	@Inject
+	private ClientThread clientThread;
+
+	@Inject
 	private HdPlugin plugin;
+
+	@Inject
+	private EnvironmentManager environmentManager;
+
+	@Inject
+	private TileOverrideManager tileOverrideManager;
+
+	@Inject
+	private ModelOverrideManager modelOverrideManager;
+
+	@Inject
+	private LightManager lightManager;
+
+	@Inject
+	private ModelPusher modelPusher;
 
 	private FileWatcher.UnregisterCallback fileWatcher;
 
@@ -35,12 +59,6 @@ public class AreaManager {
 
 	public void startUp() {
 		fileWatcher = AREA_PATH.watch((path, first) -> {
-			if (!first) {
-				// This is kind of slow, but the easiest to implement
-				plugin.restartPlugin();
-				return;
-			}
-
 			try {
 				Area[] areas = path.loadJson(plugin.getGson(), Area[].class);
 				if (areas == null)
@@ -56,6 +74,26 @@ public class AreaManager {
 				Area.OVERWORLD = getArea("OVERWORLD");
 
 				log.debug("Loaded {} areas", areas.length);
+
+				if (!first) {
+					clientThread.invoke(() -> {
+						// Reload everything which depends on area definitions
+						modelPusher.clearModelCache();
+						tileOverrideManager.shutDown();
+						modelOverrideManager.shutDown();
+						lightManager.shutDown();
+						environmentManager.shutDown();
+
+						tileOverrideManager.startUp();
+						modelOverrideManager.startUp();
+						lightManager.startUp();
+						environmentManager.startUp();
+
+						// Force reload the scene to reapply area hiding
+						if (client.getGameState() == GameState.LOGGED_IN)
+							client.setGameState(GameState.LOADING);
+					});
+				}
 			} catch (IOException ex) {
 				log.error("Failed to load areas:", ex);
 			}
