@@ -142,6 +142,13 @@
           "$ref": "aabb.schema.json"
         }
       },
+      "excludeAreas": {
+        "type": "array",
+        "description": "An array of areas where the light shouldn't be able to spawn.",
+        "items": {
+          "$ref": "aabb.schema.json"
+        }
+      },
       "npcIds": {
         "type": "array",
         "description": "A set of NPC IDs or NpcID keys to apply the light to.",

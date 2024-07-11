@@ -118,11 +118,11 @@ public class AABB {
 		return !isPoint();
 	}
 
-	public boolean contains(int... worldXYZ) {
+	public boolean contains(int... worldPos) {
 		return
-			minX <= worldXYZ[0] && worldXYZ[0] <= maxX &&
-			minY <= worldXYZ[1] && worldXYZ[1] <= maxY &&
-			(worldXYZ.length < 3 || minZ <= worldXYZ[2] && worldXYZ[2] <= maxZ);
+			minX <= worldPos[0] && worldPos[0] <= maxX &&
+			minY <= worldPos[1] && worldPos[1] <= maxY &&
+			(worldPos.length < 3 || minZ <= worldPos[2] && worldPos[2] <= maxZ);
 	}
 
 	public boolean contains(WorldPoint location) {
@@ -137,22 +137,25 @@ public class AABB {
 
 	public boolean intersects(int minX, int minY, int maxX, int maxY) {
 		return
-			minX < this.maxX && maxX > this.minX &&
-			minY < this.maxY && maxY > this.minY;
+			minX <= this.maxX && maxX >= this.minX &&
+			minY <= this.maxY && maxY >= this.minY;
 	}
 
-	public boolean intersects(int minX, int maxX, int minY, int maxY, int minZ, int maxZ) {
+	public boolean intersects(int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
 		return
-			minX < this.maxX && maxX > this.minX &&
-			minY < this.maxY && maxY > this.minY &&
-			minZ < this.maxZ && maxZ > this.minZ;
+			minX <= this.maxX && maxX >= this.minX &&
+			minY <= this.maxY && maxY >= this.minY &&
+			minZ <= this.maxZ && maxZ >= this.minZ;
 	}
 
 	public boolean intersects(AABB other) {
 		return intersects(
-			other.minX, other.maxX,
-			other.minY, other.maxY,
-			other.minZ, other.maxZ
+			other.minX,
+			other.minY,
+			other.minZ,
+			other.maxX,
+			other.maxY,
+			other.maxZ
 		);
 	}
 

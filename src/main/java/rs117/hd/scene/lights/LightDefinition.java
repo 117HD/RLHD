@@ -35,6 +35,8 @@ public class LightDefinition {
 
 	@JsonAdapter(AABB.JsonAdapter.class)
 	public AABB[] areas = {};
+	@JsonAdapter(AABB.JsonAdapter.class)
+	public AABB[] excludeAreas = {};
 	@JsonAdapter(GsonUtils.IntegerSetAdapter.class)
 	public HashSet<Integer> npcIds = new HashSet<>();
 	@JsonAdapter(GsonUtils.IntegerSetAdapter.class)
