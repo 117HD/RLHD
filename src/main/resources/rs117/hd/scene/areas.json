@@ -2,7 +2,7 @@
   {
     "name": "EVIL_BOB_ISLAND",
     "aabbs": [
-      [ 2496, 4799, 2559, 4748 ]
+      [ 2496, 4748, 2559, 4801 ]
     ],
     "hideOtherAreas": true
   },
@@ -2380,8 +2380,13 @@
     ]
   },
   {
-    "name": "TROLL_STRONGHOLD_INTERIOR",
-    "regions": [ 14421 ],
+    "name": "TROLL_STRONGHOLD",
+    "aabbs": [
+      [ 2815, 10112, 0, 2870, 10098, 0 ],
+      [ 2815, 10097, 0, 2844, 10046, 0 ],
+      [ 2844, 10097, 0, 2875, 10055, 0 ],
+      [ 2822, 10048, 1, 2863, 10111, 2 ]
+    ],
     "hideOtherAreas": true
   },
   {
