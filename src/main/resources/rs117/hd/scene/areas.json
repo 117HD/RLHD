@@ -2362,9 +2362,8 @@
   },
   {
     "name": "TROLL_STRONGHOLD_INTERIOR",
-    "aabbs": [
-      [ 2816, 10047, 2871, 10111 ]
-    ]
+    "regions": [ 14421 ],
+    "hideOtherAreas": true
   },
   {
     "name": "WEISS_REGION",
