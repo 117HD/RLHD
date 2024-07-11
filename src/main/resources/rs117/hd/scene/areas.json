@@ -2860,7 +2860,8 @@
     "name": "LIZARDMAN_TEMPLE",
     "regions": [
       5277
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "XERICS_LOOKOUT",
