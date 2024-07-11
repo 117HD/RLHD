@@ -3208,8 +3208,10 @@
   {
     "name": "KARAMJA_VOLCANO_DUNGEON",
     "aabbs": [
-      [ 2821, 9541, 2875, 9663 ]
-    ]
+      [ 2822, 9536, 2881, 9663 ],
+      [ 2842, 9663, 2822, 9667 ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "KARAMJA",
