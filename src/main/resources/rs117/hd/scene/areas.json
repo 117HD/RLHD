@@ -1063,6 +1063,12 @@
     "hideOtherAreas": true
   },
   {
+    "name": "WATERFALL_DUNGEON",
+    "regions": [
+      10394
+    ]
+  },
+  {
     "name": "GOBLIN_CAVE",
     "regions": [
       10393
