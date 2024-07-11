@@ -103,7 +103,8 @@ public class SceneUploader {
 				baseX + 6 * CHUNK_SIZE,
 				baseY + 6 * CHUNK_SIZE,
 				baseX + 7 * CHUNK_SIZE - 1,
-				baseY + 7 * CHUNK_SIZE - 1
+				baseY + 7 * CHUNK_SIZE - 1,
+				client.getPlane()
 			);
 
 			outer:
