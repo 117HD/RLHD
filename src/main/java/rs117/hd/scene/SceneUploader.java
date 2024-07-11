@@ -161,6 +161,9 @@ public class SceneUploader {
 	}
 
 	public void fillGaps(SceneContext sceneContext) {
+		if (sceneContext.area != null && !sceneContext.area.fillGaps)
+			return;
+
 		int sceneMin = -sceneContext.expandedMapLoadingChunks * CHUNK_SIZE;
 		int sceneMax = SCENE_SIZE + sceneContext.expandedMapLoadingChunks * CHUNK_SIZE;
 
