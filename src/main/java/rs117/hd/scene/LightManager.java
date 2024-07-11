@@ -116,6 +116,7 @@ public class LightManager {
 
 	private boolean reloadLights;
 	private EntityHiderConfig entityHiderConfig;
+	private int currentPlane;
 
 	public void loadConfig(Gson gson, ResourcePath path) {
 		try {
@@ -204,6 +205,13 @@ public class LightManager {
 		int[][][] tileHeights = sceneContext.scene.getTileHeights();
 		var cachedNpcs = client.getCachedNPCs();
 		var cachedPlayers = client.getCachedPlayers();
+		int plane = client.getPlane();
+		boolean changedPlanes = false;
+
+		if (plane != currentPlane) {
+			currentPlane = plane;
+			changedPlanes = true;
+		}
 
 		for (Light light : sceneContext.lights) {
 			// Ways lights may get deleted:
@@ -274,7 +282,6 @@ public class LightManager {
 					var lp = light.actor.getLocalLocation();
 					light.origin[0] = lp.getX();
 					light.origin[2] = lp.getY();
-					int plane = client.getPlane();
 					light.plane = plane;
 					light.orientation = light.actor.getCurrentOrientation();
 
@@ -398,10 +405,10 @@ public class LightManager {
 
 			if (!hiddenTemporarily && !light.def.visibleFromOtherPlanes) {
 				// Hide certain lights on planes lower than the player to prevent light 'leaking' through the floor
-				if (light.plane < client.getPlane() && light.belowFloor)
+				if (light.plane < plane && light.belowFloor)
 					hiddenTemporarily = true;
 				// Hide any light that is above the current plane and is above a solid floor
-				if (light.plane > client.getPlane() && light.aboveFloor)
+				if (light.plane > plane && light.aboveFloor)
 					hiddenTemporarily = true;
 			}
 
@@ -423,7 +430,7 @@ public class LightManager {
 			}
 
 			if (hiddenTemporarily != light.hiddenTemporarily)
-				light.toggleTemporaryVisibility();
+				light.toggleTemporaryVisibility(changedPlanes);
 
 			light.elapsedTime += plugin.deltaClientTime;
 
@@ -473,7 +480,7 @@ public class LightManager {
 
 			// If the light was temporarily hidden, begin fading in
 			if (!light.withinViewingDistance && light.hiddenTemporarily)
-				light.toggleTemporaryVisibility();
+				light.toggleTemporaryVisibility(changedPlanes);
 			light.withinViewingDistance = true;
 
 			if (light.def.type == LightType.FLICKER) {
