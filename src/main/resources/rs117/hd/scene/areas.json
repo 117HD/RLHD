@@ -3610,79 +3610,91 @@
     "name": "COSMIC_ALTAR",
     "aabbs": [
       [ 2112, 4799, 2176, 4863 ]
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "DEATH_ALTAR",
     "aabbs": [
       [ 2176, 4799, 2240, 4863 ]
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "CHAOS_ALTAR",
     "aabbs": [
-      [ 2240, 4799, 2304, 4863 ]
-    ]
+      [ 2240, 4863, 2303, 4800 ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "WRATH_ALTAR",
     "aabbs": [
-      [ 2304, 4799, 2368, 4863 ]
-    ]
+      [ 2304, 4800, 2366, 4863 ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "NATURE_ALTAR",
     "aabbs": [
-      [ 2368, 4799, 2427, 4863 ]
-    ]
+      [ 2372, 4863, 2426, 4804 ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "LAW_ALTAR",
-    "aabbs": [
-      [ 2427, 4799, 2495, 4863 ]
-    ]
+    "regions": [ 9803 ],
+    "hideOtherAreas": true
   },
   {
     "name": "BODY_ALTAR",
     "aabbs": [
-      [ 2495, 4799, 2553, 4863 ]
-    ]
+      [ 2497, 4863, 2543, 4817 ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "FIRE_ALTAR",
     "aabbs": [
-      [ 2553, 4799, 2624, 4863 ]
-    ]
+      [ 2553, 4802, 2624, 4864 ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "EARTH_ALTAR",
     "aabbs": [
-      [ 2624, 4799, 2688, 4863 ]
-    ]
+      [ 2627, 4815, 2685, 4861 ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "WATER_ALTAR",
     "aabbs": [
-      [ 2688, 4799, 2752, 4863 ]
-    ]
+      [ 2688, 4800, 2750, 4862 ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "MIND_ALTAR",
     "aabbs": [
-      [ 2752, 4799, 2816, 4863 ]
-    ]
+      [ 2756, 4805, 2810, 4861 ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "AIR_ALTAR",
     "aabbs": [
-      [ 2816, 4799, 2880, 4863 ]
-    ]
+      [ 2817, 4802, 2865, 4862 ]
+    ],
+    "hideOtherAreas": true,
+    "fillGaps": false
   },
   {
     "name": "TRUE_BLOOD_ALTAR",
     "aabbs": [
-      [ 3200, 4800, 3262, 4862 ]
-    ]
+      [ 3202, 4800, 3263, 4863 ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "LITHKREN_DUNGEON",
