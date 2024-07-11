@@ -35062,7 +35062,7 @@
     "description": "Troll Stronghold Window and Exit Door",
     "objectIds": [ 3770, 3774 ],
     "radius": 450,
-    "areas": [ "TROLL_STRONGHOLD_INTERIOR" ],
+    "areas": [ "TROLL_STRONGHOLD" ],
     "strength": 10,
     "color": "#ffffff",
     "offset": [ 0, 150, 60 ]
