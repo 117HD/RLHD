@@ -3,7 +3,8 @@
     "name": "EVIL_BOB_ISLAND",
     "aabbs": [
       [ 2496, 4748, 2559, 4801 ]
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "VERTICAL_DIRT_FIX_NEAR_FALADOR",
@@ -472,25 +473,29 @@
     "name": "STRONGHOLD_OF_SECURITY_WAR",
     "regions": [
       7505
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "STRONGHOLD_OF_SECURITY_FAMINE",
     "regions": [
       8017
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "STRONGHOLD_OF_SECURITY_PESTILENCE",
     "regions": [
       8530
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "STRONGHOLD_OF_SECURITY_DEATH",
     "regions": [
       9297
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "STRONGHOLD_OF_SECURITY",
@@ -1469,6 +1474,16 @@
     ]
   },
   {
+    "name": "WITCHAVEN_DUNGEON",
+    "regions": [ 9295, 10903 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "LEGENDS_GUILD_DUNGEON",
+    "regions": [ 10904 ],
+    "hideOtherAreas": true
+  },
+  {
     "name": "KHAZARD_BATTLEFIELD_COBBLE_OUTSIDE",
     "aabbs": [
       [ 2507, 3254, 2512, 3259 ],
@@ -2212,9 +2227,20 @@
     ]
   },
   {
+    "name": "TZHAAR_FIGHT_CAVES",
+    "regions": [ 9551 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "TZHAAR_CITY_REGION",
+    "regions": [ 9552, 9807, 9808, 10063, 10064 ],
+    "hideOtherAreas": true
+  },
+  {
     "name": "TZHAAR",
-    "regionBoxes": [
-      [ 9551, 10064 ]
+    "areas": [
+      "TZHAAR_FIGHT_CAVES",
+      "TZHAAR_CITY_REGION"
     ]
   },
   {
@@ -2354,10 +2380,14 @@
     ]
   },
   {
-    "name": "TROLL_STRONGHOLD_INTERIOR",
+    "name": "TROLL_STRONGHOLD",
     "aabbs": [
-      [ 2816, 10047, 2871, 10111 ]
-    ]
+      [ 2815, 10112, 0, 2870, 10098, 0 ],
+      [ 2815, 10097, 0, 2844, 10046, 0 ],
+      [ 2844, 10097, 0, 2875, 10055, 0 ],
+      [ 2822, 10048, 1, 2863, 10111, 2 ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "WEISS_REGION",
@@ -2633,9 +2663,32 @@
     ]
   },
   {
-    "name": "ZANARIS",
+    "name": "ZANARIS_MAIN",
     "aabbs": [
-      [ 2315, 4345, 2500, 4485 ]
+      [ 2368, 4479, 2495, 4416 ],
+      [ 2368, 4415, 2431, 4352 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "ZANARIS_FAIRY_QUEENS_HIDEOUT",
+    "aabbs": [
+      [ 2304, 4479, 2367, 4416 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "EVIL_CHICKEN_LAIR",
+    "aabbs": [
+      [ 2432, 4415, 2495, 4352 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "ZANARIS",
+    "areas": [
+      "ZANARIS_MAIN",
+      "ZANARIS_FAIRY_QUEENS_HIDEOUT"
     ]
   },
   {
@@ -4120,7 +4173,8 @@
   {
     "name": "LIGHTHOUSE_INSTANCE",
     "aabbs": [
-      [ 2432, 4544, 2495, 4624 ]
+      [ 2432, 4624, 2494, 4544 ],
+      [ 2415, 4624, 2431, 4608 ]
     ]
   },
   {
@@ -4510,7 +4564,8 @@
     "name": "ESSENCE_MINE",
     "regions": [
       11595
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "KINGDOM_OF_MISTHALIN_REGION",
