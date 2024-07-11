@@ -1066,13 +1066,15 @@
     "name": "WATERFALL_DUNGEON",
     "regions": [
       10394
-    ]
+    ],
+    "hideOtherAreas": false
   },
   {
     "name": "GOBLIN_CAVE",
     "regions": [
       10393
-    ]
+    ],
+    "hideOtherAreas": false
   },
   {
     "name": "WHITE_WOLF_MOUNTAIN",
