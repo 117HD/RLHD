@@ -3630,71 +3630,69 @@
   {
     "name": "WRATH_ALTAR",
     "aabbs": [
-      [ 2305, 4801, 2366, 4862 ]
+      [ 2304, 4800, 2366, 4863 ]
     ],
     "hideOtherAreas": true
   },
   {
     "name": "NATURE_ALTAR",
     "aabbs": [
-      [ 2372, 4863, 2425, 4805 ]
+      [ 2372, 4863, 2426, 4804 ]
     ],
     "hideOtherAreas": true
   },
   {
     "name": "LAW_ALTAR",
-    "aabbs": [
-      [ 2428, 4863, 2493, 4805 ]
-    ],
+    "regions": [ 9803 ],
     "hideOtherAreas": true
   },
   {
     "name": "BODY_ALTAR",
     "aabbs": [
-      [ 2497, 4862, 2551, 4815 ]
+      [ 2497, 4863, 2543, 4817 ]
     ],
     "hideOtherAreas": true
   },
   {
     "name": "FIRE_ALTAR",
     "aabbs": [
-      [ 2553, 4810, 2615, 4863 ]
+      [ 2553, 4802, 2624, 4864 ]
     ],
     "hideOtherAreas": true
   },
   {
     "name": "EARTH_ALTAR",
     "aabbs": [
-      [ 2624, 4799, 2688, 4863 ]
+      [ 2627, 4815, 2685, 4861 ]
     ],
     "hideOtherAreas": true
   },
   {
     "name": "WATER_ALTAR",
     "aabbs": [
-      [ 2689, 4862, 2750, 4801 ]
+      [ 2688, 4800, 2750, 4862 ]
     ],
     "hideOtherAreas": true
   },
   {
     "name": "MIND_ALTAR",
     "aabbs": [
-      [ 2754, 4862, 2809, 4806 ]
+      [ 2756, 4805, 2810, 4861 ]
     ],
     "hideOtherAreas": true
   },
   {
     "name": "AIR_ALTAR",
     "aabbs": [
-      [ 2819, 4861, 2860, 4809 ],
-      [ 2861, 4856, 2862, 4811 ]
+      [ 2817, 4802, 2865, 4862 ]
     ],
-    "hideOtherAreas": true
+    "hideOtherAreas": true,
+    "fillGaps": false
   },
   {
     "name": "TRUE_BLOOD_ALTAR",
     "aabbs": [
-      [ 3201, 4799, 3261, 4861 ]
+      [ 3202, 4800, 3263, 4863 ]
     ],
     "hideOtherAreas": true
   },
