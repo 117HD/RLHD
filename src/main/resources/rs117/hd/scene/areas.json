@@ -4870,8 +4870,21 @@
   {
     "name": "RED_CHINCHOMPA_HUNTING_GROUND",
     "aabbs": [
-      [ 2510, 9286, 2533, 9308 ]
-    ]
+      [ 2509, 9285, 2534, 9309 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Eagles Peak and Polar Nest",
+    "regions": [ 8013, 10911 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Eagles Peak Jungle Nest",
+    "aabbs": [
+      [ 2508, 9313, 2530, 9330 ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "CERBERUS",
