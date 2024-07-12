@@ -184,14 +184,26 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 					g.setColor(Color.CYAN);
 					g.setFont(FontManager.getRunescapeSmallFont());
 
-					var poly = getCanvasTilePoly(client, sceneContext.scene, center);
+					var poly = getCanvasTilePoly(
+						client,
+						sceneContext.scene,
+						center[0] - sceneContext.scene.getBaseX(),
+						center[1] - sceneContext.scene.getBaseY(),
+						center[2]
+					);
 					if (poly != null)
 						g.drawPolygon(poly);
 
 					String str = "Loading position";
-					var lp = LocalPoint.fromWorld(sceneContext.scene, center[0], center[1]);
+					var lp = sceneContext.worldToLocal(center);
 					if (lp != null) {
-						var pos = Perspective.getCanvasTextLocation(client, g, lp, str, 0);
+						var pos = Perspective.getCanvasTextLocation(
+							client,
+							g,
+							new LocalPoint(lp[0] + LOCAL_TILE_SIZE / 2, lp[1] + LOCAL_TILE_SIZE / 2, sceneContext.getWorldView()),
+							str,
+							0
+						);
 						if (pos != null)
 							OverlayUtil.renderTextLocation(g, pos, str, g.getColor());
 					}
@@ -617,10 +629,10 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 		if (tileExX < 0 || tileExY < 0 || tileExX >= EXTENDED_SCENE_SIZE || tileExY >= EXTENDED_SCENE_SIZE)
 			return null;
 
-		final int swX = sceneXYplane[0] * LOCAL_TILE_SIZE - LOCAL_TILE_SIZE / 2;
-		final int swY = sceneXYplane[1] * LOCAL_TILE_SIZE - LOCAL_TILE_SIZE / 2;
-		final int neX = sceneXYplane[0] * LOCAL_TILE_SIZE + LOCAL_TILE_SIZE / 2;
-		final int neY = sceneXYplane[1] * LOCAL_TILE_SIZE + LOCAL_TILE_SIZE / 2;
+		final int swX = sceneXYplane[0] * LOCAL_TILE_SIZE;
+		final int swY = sceneXYplane[1] * LOCAL_TILE_SIZE;
+		final int neX = (sceneXYplane[0] + 1) * LOCAL_TILE_SIZE;
+		final int neY = (sceneXYplane[1] + 1) * LOCAL_TILE_SIZE;
 
 		final int swHeight = getHeight(scene, swX, swY, sceneXYplane[2]);
 		final int nwHeight = getHeight(scene, neX, swY, sceneXYplane[2]);
