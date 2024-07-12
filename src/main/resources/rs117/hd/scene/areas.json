@@ -5198,7 +5198,8 @@
     "name": "COLOSSEUM",
     "regions": [
       7316
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "SNOWY_REGIONS",
