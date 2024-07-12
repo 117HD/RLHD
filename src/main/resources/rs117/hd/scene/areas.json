@@ -1312,6 +1312,13 @@
     ]
   },
   {
+    "name": "WARRIORS_GUILD_BASEMENT",
+    "aabbs": [
+      [ 2901, 9983, 2942, 9948 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
     "name": "BURTHORPE",
     "aabbs": [
       [ 2830, 3533, 2938, 3576 ],
