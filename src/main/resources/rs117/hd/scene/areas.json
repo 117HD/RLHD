@@ -4857,7 +4857,8 @@
     "name": "HUNTER_GUILD",
     "regions": [
       6291
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "HUNTER_GUILD_SURFACE",
