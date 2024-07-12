@@ -79,6 +79,17 @@ public class HDUtils {
 		return max;
 	}
 
+	public static float sum(float... v) {
+		float sum = 0;
+		for (float x : v)
+			sum += x;
+		return sum;
+	}
+
+	public static float avg(float... v) {
+		return sum(v) / v.length;
+	}
+
 	public static float lerp(float a, float b, float t) {
 		return a + (b - a) * t;
 	}

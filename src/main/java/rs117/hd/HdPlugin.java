@@ -1565,6 +1565,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				glBindBuffer(GL_UNIFORM_BUFFER, 0);
 			}
 		}
+
+		if (sceneContext.area != null) {
+			int[] playerPos = sceneContext.localToWorld(client.getLocalPlayer().getLocalLocation());
+			if (!sceneContext.area.containsPoint(playerPos)) {
+				// Force a scene reload if the player is no longer within the isolated area
+				client.setGameState(GameState.LOADING);
+			}
+		}
 	}
 
 	@Override
@@ -2348,13 +2356,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			// in use by the client thread, meaning we can reuse all of its buffers if we are loading the
 			// next scene also on the client thread
 			boolean reuseBuffers = client.isClientThread();
-			var context = new SceneContext(scene, getExpandedMapLoadingChunks(), reuseBuffers, sceneContext);
+			var context = new SceneContext(client, scene, getExpandedMapLoadingChunks(), reuseBuffers, sceneContext);
 			// noinspection SynchronizationOnLocalVariableOrMethodParameter
 			synchronized (context) {
 				nextSceneContext = context;
 				proceduralGenerator.generateSceneData(context);
 				environmentManager.loadSceneEnvironments(context);
-				sceneUploader.upload(context);
+				sceneUploader.upload(context, sceneContext);
 			}
 		} catch (OutOfMemoryError oom) {
 			log.error("Ran out of memory while loading scene (32-bit: {}, low memory mode: {}, cache size: {})",
@@ -2835,6 +2843,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (sceneContext == null)
 			return;
 
+		int plane = ModelHash.getPlane(hash);
+		if (sceneContext.area != null && renderable instanceof Actor) {
+			int[] worldPos = sceneContext.localToWorld(x, z, plane);
+			if (!sceneContext.area.containsPoint(worldPos))
+				return;
+		}
+
 		if (enableDetailedTimers)
 			frameTimer.begin(Timer.GET_MODEL);
 
@@ -2899,8 +2914,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		eightIntWrite[6] = y;
 		eightIntWrite[7] = z;
 
-		int plane = ModelHash.getPlane(hash);
-
 		int faceCount;
 		if (sceneContext.id == (offsetModel.getSceneId() & SceneUploader.SCENE_ID_MASK)) {
 			// The model is part of the static scene buffer
@@ -2943,7 +2956,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					frameTimer.begin(Timer.MODEL_PUSHING);
 
 				int uuid = ModelHash.generateUuid(client, hash, renderable);
-				int[] worldPos = HDUtils.localToWorld(sceneContext.scene, x, z, plane);
+				int[] worldPos = sceneContext.localToWorld(x, z, plane);
 				ModelOverride modelOverride = modelOverrideManager.getOverride(uuid, worldPos);
 				if (modelOverride.hide)
 					return;

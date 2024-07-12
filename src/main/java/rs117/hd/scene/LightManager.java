@@ -681,7 +681,7 @@ public class LightManager {
 		if (sceneContext == null)
 			return;
 
-		int[] worldPos = sceneContext.localToWorld(actor.getLocalLocation(), client.getPlane());
+		int[] worldPos = sceneContext.localToWorld(actor.getLocalLocation());
 
 		for (var spotAnim : actor.getSpotAnims()) {
 			int spotAnimId = spotAnim.getId();
@@ -721,7 +721,7 @@ public class LightManager {
 			return;
 
 		int uuid = ModelHash.packUuid(ModelHash.TYPE_NPC, npc.getId());
-		int[] worldPos = sceneContext.localToWorld(npc.getLocalLocation(), client.getPlane());
+		int[] worldPos = sceneContext.localToWorld(npc.getLocalLocation());
 
 		var modelOverride = modelOverrideManager.getOverride(uuid, worldPos);
 		if (modelOverride.hide)

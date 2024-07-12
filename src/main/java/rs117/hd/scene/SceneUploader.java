@@ -27,6 +27,7 @@ package rs117.hd.scene;
 
 import com.google.common.base.Stopwatch;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
@@ -87,25 +88,31 @@ public class SceneUploader {
 	@Inject
 	private ModelPusher modelPusher;
 
-	public void upload(SceneContext sceneContext) {
+	public void upload(SceneContext sceneContext, @Nullable SceneContext previousSceneContext) {
 		Stopwatch stopwatch = Stopwatch.createStarted();
 
-		int baseX = sceneContext.scene.getBaseX();
-		int baseY = sceneContext.scene.getBaseY();
+		var worldView = client.getWorldView(sceneContext.scene.getWorldViewId());
+		int baseX = worldView.getBaseX();
+		int baseY = worldView.getBaseY();
+		int plane = worldView.getPlane();
 		int baseExX = baseX - SCENE_OFFSET;
 		int baseExY = baseY - SCENE_OFFSET;
 
-		boolean hideUnrelatedAreas = config.hideUnrelatedAreas() && !sceneContext.scene.isInstance();
+		boolean hideUnrelatedAreas = config.hideUnrelatedAreas() && !worldView.isInstance();
 		if (hideUnrelatedAreas) {
-			// Set up an AABB for the chunk the scene is centered around
-			// TODO: make this work even if the player teleports from one area to another without triggering a scene load
-			AABB centerChunk = new AABB(
-				baseX + 6 * CHUNK_SIZE,
-				baseY + 6 * CHUNK_SIZE,
-				baseX + 7 * CHUNK_SIZE - 1,
-				baseY + 7 * CHUNK_SIZE - 1,
-				client.getPlane()
-			);
+			if (previousSceneContext != null) {
+				var previousWorldView = client.getWorldView(previousSceneContext.scene.getWorldViewId());
+				if (previousWorldView != null) {
+					int previousBaseX = previousWorldView.getBaseX();
+					int previousBaseY = previousWorldView.getBaseY();
+					int previousPlane = previousWorldView.getPlane();
+					if (baseX == previousBaseX && baseY == previousBaseY && plane == previousPlane) {
+						// Same scene, meaning we should load the scene around the player's current position
+						var lp = client.getLocalPlayer().getLocalLocation();
+						sceneContext.loadingPosition = sceneContext.localToWorld(lp, plane);
+					}
+				}
+			}
 
 			outer:
 			for (Area area : AreaManager.AREAS) {
@@ -113,7 +120,7 @@ public class SceneUploader {
 					continue;
 
 				for (AABB aabb : area.aabbs) {
-					if (aabb.intersects(centerChunk)) {
+					if (aabb.contains(sceneContext.loadingPosition)) {
 						sceneContext.area = area;
 						break outer;
 					}

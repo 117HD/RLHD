@@ -4,6 +4,7 @@ import com.google.inject.Singleton;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
@@ -48,6 +49,7 @@ import rs117.hd.scene.TileOverrideManager;
 import rs117.hd.scene.areas.AABB;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ModelHash;
+import rs117.hd.utils.Vector;
 
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.*;
@@ -79,19 +81,21 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 	@Inject
 	private ProceduralGenerator proceduralGenerator;
 
-	private Point mousePos;
+	private int[] mousePos;
 	private boolean ctrlHeld;
 	private boolean ctrlToggled;
 	private boolean shiftHeld;
-	private boolean shiftToggled;
 	private float fontSize = 12;
 	private float zoom = 1;
 
-	private int aabbMarkingStage = 0;
-	private final int[][] markedWorldPoints = new int[2][];
-	private final int[] markedHeights = new int[2];
+	private int mode;
+	private int aabbMarkingStage;
+	private AABB pendingSelection;
+	private final ArrayList<AABB> selections = new ArrayList<>();
+	private int selectedAabb = -1;
+	private int hoveredAabb = -1;
+	private final int[][] markedWorldPoints = new int[2][3];
 	private int[] hoveredWorldPoint = new int[3];
-	private int hoveredHeight;
 	private int targetPlane = MAX_Z - 1;
 
 	public TileInfoOverlay() {
@@ -132,38 +136,113 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 		if (shiftHeld != shiftPressed) {
 			shiftHeld = shiftPressed;
 			if (shiftPressed)
-				shiftToggled = !shiftToggled;
+				mode = (mode + 1) % 3;
 		}
 
-		if (shiftToggled) {
-			drawAllIds(g, sceneContext);
-			return null;
+		Tile[][][] tiles = sceneContext.scene.getExtendedTiles();
+		Point canvasMousePos = client.getMouseCanvasPosition();
+		mousePos = null;
+		if (canvasMousePos != null && canvasMousePos.getX() != -1 && canvasMousePos.getY() != -1)
+			mousePos = new int[] { canvasMousePos.getX(), canvasMousePos.getY() };
+
+		int maxPlane = sceneContext.getPlane();
+		int minPlane = 0;
+		if (ctrlHeld)
+			minPlane = maxPlane = targetPlane;
+
+		switch (mode) {
+			case 0:
+				if (mousePos != null) {
+					g.setFont(FontManager.getRunescapeFont());
+					g.setStroke(new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND));
+
+					tileLoop:
+					for (int z = maxPlane; z >= minPlane; z--) {
+						for (int isBridge = 1; isBridge >= 0; isBridge--) {
+							for (int x = 0; x < EXTENDED_SCENE_SIZE; x++) {
+								for (int y = 0; y < EXTENDED_SCENE_SIZE; y++) {
+									Tile tile = tiles[z][x][y];
+									boolean shouldDraw = tile != null && (isBridge == 0 || tile.getBridge() != null);
+									if (shouldDraw && drawTileInfo(g, sceneContext, tile)) {
+										int tileZ = tile.getRenderLevel();
+										hoveredWorldPoint = sceneContext.extendedSceneToWorld(x, y, tileZ);
+										break tileLoop;
+									}
+								}
+							}
+						}
+					}
+				}
+				break;
+			case 1:
+				drawAllIds(g, sceneContext);
+				break;
+			case 2:
+				if (sceneContext.area != null) {
+					int[] center = sceneContext.loadingPosition;
+
+					g.setColor(Color.CYAN);
+					g.setFont(FontManager.getRunescapeSmallFont());
+
+					var poly = getCanvasTilePoly(client, sceneContext.scene, center);
+					if (poly != null)
+						g.drawPolygon(poly);
+
+					String str = "Loading position";
+					var lp = LocalPoint.fromWorld(sceneContext.scene, center[0], center[1]);
+					if (lp != null) {
+						var pos = Perspective.getCanvasTextLocation(client, g, lp, str, 0);
+						if (pos != null)
+							OverlayUtil.renderTextLocation(g, pos, str, g.getColor());
+					}
+
+					g.setFont(FontManager.getRunescapeFont());
+
+					AABB[] aabbs = sceneContext.area.aabbs;
+					if (mousePos != null) {
+						hoveredAabb = -1;
+						int[] v = new int[2];
+						for (int i = 0; i < aabbs.length; i++) {
+							var aabb = aabbs[i];
+							var p = getAabbCanvasCenter(sceneContext, aabb);
+							if (p != null) {
+								Vector.subtract(v, mousePos, p);
+								if (Vector.dot(v, v) < 50 * 50) {
+									hoveredAabb = i;
+									break;
+								}
+							}
+						}
+					}
+
+					for (int i = 0; i < aabbs.length; i++) {
+						if (i == hoveredAabb && i == selectedAabb) {
+							g.setColor(Color.decode("#00ff00"));
+						} else if (i == hoveredAabb) {
+							g.setColor(Color.WHITE);
+						} else if (i == selectedAabb) {
+							g.setColor(Color.decode("#00c200"));
+						} else {
+							g.setColor(Color.GRAY);
+						}
+						drawAabb(g, sceneContext, aabbs[i]);
+						drawAabbLabel(g, sceneContext, aabbs[i], sceneContext.area.name + "[" + i + "]");
+					}
+				}
+				break;
 		}
 
-		mousePos = client.getMouseCanvasPosition();
-		if (mousePos == null || mousePos.getX() != -1 || mousePos.getY() != -1) {
-			g.setFont(FontManager.getRunescapeFont());
-			g.setStroke(new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND));
-
-			Tile[][][] tiles = sceneContext.scene.getExtendedTiles();
-			var heights = sceneContext.scene.getTileHeights();
-			int maxPlane = client.getPlane();
-			int minPlane = 0;
-			if (ctrlHeld)
-				minPlane = maxPlane = targetPlane;
+		if (mousePos != null) {
 			tileLoop:
 			for (int z = maxPlane; z >= minPlane; z--) {
-				for (int isBridge = 1; isBridge >= 0; isBridge--) {
-					for (int x = 0; x < EXTENDED_SCENE_SIZE; x++) {
-						for (int y = 0; y < EXTENDED_SCENE_SIZE; y++) {
-							Tile tile = tiles[z][x][y];
-							boolean shouldDraw = tile != null && (isBridge == 0 || tile.getBridge() != null);
-							if (shouldDraw && drawTileInfo(g, sceneContext, tile)) {
-								int tileZ = tile.getRenderLevel();
-								hoveredWorldPoint = sceneContext.extendedSceneToWorld(x, y, tileZ);
-								hoveredHeight = heights[tileZ][x][y];
-								break tileLoop;
-							}
+				for (int x = 0; x < EXTENDED_SCENE_SIZE; x++) {
+					for (int y = 0; y < EXTENDED_SCENE_SIZE; y++) {
+						var poly = getCanvasTilePoly(client, sceneContext.scene, x - SCENE_OFFSET, y - SCENE_OFFSET, z);
+						if (poly != null && poly.contains(mousePos[0], mousePos[1])) {
+							hoveredWorldPoint = sceneContext.extendedSceneToWorld(x, y, z);
+							g.setColor(Color.CYAN);
+							g.drawPolygon(poly);
+							break tileLoop;
 						}
 					}
 				}
@@ -173,55 +252,24 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 		// Update second selection point each frame
 		if (aabbMarkingStage == 1) {
 			markedWorldPoints[1] = hoveredWorldPoint;
-			markedHeights[1] = hoveredHeight;
+			pendingSelection = new AABB(markedWorldPoints[0], markedWorldPoints[1]);
 		}
 
-		// Draw selection box
-		if (markedWorldPoints[0] != null) {
-			g.setColor(Color.RED);
-			int[] from = sceneContext.worldToLocal(markedWorldPoints[0]);
-			int[] to = sceneContext.worldToLocal(markedWorldPoints[1]);
-			int x1 = Math.min(from[0], to[0]);
-			int y1 = Math.min(from[1], to[1]);
-			int z1 = Math.min(markedHeights[0], markedHeights[1]);
-			int x2 = Math.max(from[0], to[0]) + LOCAL_TILE_SIZE;
-			int y2 = Math.max(from[1], to[1]) + LOCAL_TILE_SIZE;
-			int z2 = Math.max(markedHeights[0], markedHeights[1]);
-			var bsw = localToCanvas(client, x1, y1, z1);
-			var bnw = localToCanvas(client, x1, y2, z1);
-			var bne = localToCanvas(client, x2, y2, z1);
-			var bse = localToCanvas(client, x2, y1, z1);
-			var tsw = localToCanvas(client, x1, y1, z2);
-			var tnw = localToCanvas(client, x1, y2, z2);
-			var tne = localToCanvas(client, x2, y2, z2);
-			var tse = localToCanvas(client, x2, y1, z2);
-			// Draw bottom rect
-			if (bsw != null && bnw != null)
-				g.drawLine(bsw.getX(), bsw.getY(), bnw.getX(), bnw.getY());
-			if (bnw != null && bne != null)
-				g.drawLine(bnw.getX(), bnw.getY(), bne.getX(), bne.getY());
-			if (bne != null && bse != null)
-				g.drawLine(bne.getX(), bne.getY(), bse.getX(), bse.getY());
-			if (bse != null && bsw != null)
-				g.drawLine(bse.getX(), bse.getY(), bsw.getX(), bsw.getY());
-			// Draw top rect
-			if (tsw != null && tnw != null)
-				g.drawLine(tsw.getX(), tsw.getY(), tnw.getX(), tnw.getY());
-			if (tnw != null && tne != null)
-				g.drawLine(tnw.getX(), tnw.getY(), tne.getX(), tne.getY());
-			if (tne != null && tse != null)
-				g.drawLine(tne.getX(), tne.getY(), tse.getX(), tse.getY());
-			if (tse != null && tsw != null)
-				g.drawLine(tse.getX(), tse.getY(), tsw.getX(), tsw.getY());
-			// Connect rect corners
-			if (bsw != null && tsw != null)
-				g.drawLine(bsw.getX(), bsw.getY(), tsw.getX(), tsw.getY());
-			if (bnw != null && tnw != null)
-				g.drawLine(bnw.getX(), bnw.getY(), tnw.getX(), tnw.getY());
-			if (bne != null && tne != null)
-				g.drawLine(bne.getX(), bne.getY(), tne.getX(), tne.getY());
-			if (bse != null && tse != null)
-				g.drawLine(bse.getX(), bse.getY(), tse.getX(), tse.getY());
+		for (int i = 0; i < selections.size(); i++) {
+			var aabb = selections.get(i);
+			// Draw selection boxes
+			g.setColor(Color.YELLOW);
+			drawAabb(g, sceneContext, aabb);
+			g.setFont(FontManager.getRunescapeFont());
+			drawAabbLabel(g, sceneContext, aabb, "Selection[" + i + "]");
+		}
+
+		if (pendingSelection != null) {
+			// Draw current selection box
+			g.setColor(Color.YELLOW);
+			drawAabb(g, sceneContext, pendingSelection);
+			g.setFont(FontManager.getRunescapeFont());
+			drawAabbLabel(g, sceneContext, pendingSelection, "Selection[" + selections.size() + "]");
 		}
 
 		return null;
@@ -237,7 +285,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			Tile bridge = tile.getBridge();
 			if (bridge != null) {
 				poly = getCanvasTilePoly(client, sceneContext.scene, bridge);
-				if (poly != null && poly.contains(mousePos.getX(), mousePos.getY())) {
+				if (poly != null && poly.contains(mousePos[0], mousePos[1])) {
 					rect = drawTileInfo(g, sceneContext, bridge, poly, null);
 					if (rect != null) {
 						infoDrawn = true;
@@ -246,7 +294,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			}
 
 			poly = getCanvasTilePoly(client, sceneContext.scene, tile);
-			if (poly != null && poly.contains(mousePos.getX(), mousePos.getY())) {
+			if (poly != null && poly.contains(mousePos[0], mousePos[1])) {
 				rect = drawTileInfo(g, sceneContext, tile, poly, rect);
 				if (rect != null) {
 					infoDrawn = true;
@@ -432,7 +480,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			));
 		}
 
-		for (GraphicsObject graphicsObject : client.getGraphicsObjects()) {
+		for (GraphicsObject graphicsObject : sceneContext.getWorldView().getGraphicsObjects()) {
 			var lp = graphicsObject.getLocation();
 			if (lp.getSceneX() == tileX && lp.getSceneY() == tileY)
 				lines.add(String.format("Graphics Object: ID=%s", graphicsObject.getId()));
@@ -556,47 +604,42 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 		return ModelHash.getUuidId(ModelHash.generateUuid(client, object.getHash(), renderable));
 	}
 
-	/**
-	 * Returns a polygon representing a tile.
-	 *
-	 * @param client the game client
-	 * @param tile   the tile
-	 * @return a polygon representing the tile
-	 */
 	public static Polygon getCanvasTilePoly(@Nonnull Client client, Scene scene, Tile tile) {
-		LocalPoint lp = tile.getLocalLocation();
-		int tileExX = lp.getSceneX() + SCENE_OFFSET;
-		int tileExY = lp.getSceneY() + SCENE_OFFSET;
-		int plane = tile.getRenderLevel();
-		if (tileExX < 0 || tileExY < 0 || tileExX >= EXTENDED_SCENE_SIZE || tileExY >= EXTENDED_SCENE_SIZE) {
+		if (tile == null)
 			return null;
-		}
+		var l = tile.getSceneLocation();
+		return getCanvasTilePoly(client, scene, l.getX(), l.getY(), tile.getPlane());
+	}
 
-		final int swX = lp.getX() - LOCAL_TILE_SIZE / 2;
-		final int swY = lp.getY() - LOCAL_TILE_SIZE / 2;
-
-		final int neX = lp.getX() + LOCAL_TILE_SIZE / 2;
-		final int neY = lp.getY() + LOCAL_TILE_SIZE / 2;
-
-		final int swHeight = getHeight(scene, swX, swY, plane);
-		final int nwHeight = getHeight(scene, neX, swY, plane);
-		final int neHeight = getHeight(scene, neX, neY, plane);
-		final int seHeight = getHeight(scene, swX, neY, plane);
-
-		Point p1 = localToCanvas(client, swX, swY, swHeight);
-		Point p2 = localToCanvas(client, neX, swY, nwHeight);
-		Point p3 = localToCanvas(client, neX, neY, neHeight);
-		Point p4 = localToCanvas(client, swX, neY, seHeight);
-
-		if (p1 == null || p2 == null || p3 == null || p4 == null) {
+	public static Polygon getCanvasTilePoly(@Nonnull Client client, Scene scene, int... sceneXYplane) {
+		int tileExX = sceneXYplane[0] + SCENE_OFFSET;
+		int tileExY = sceneXYplane[1] + SCENE_OFFSET;
+		if (tileExX < 0 || tileExY < 0 || tileExX >= EXTENDED_SCENE_SIZE || tileExY >= EXTENDED_SCENE_SIZE)
 			return null;
-		}
+
+		final int swX = sceneXYplane[0] * LOCAL_TILE_SIZE - LOCAL_TILE_SIZE / 2;
+		final int swY = sceneXYplane[1] * LOCAL_TILE_SIZE - LOCAL_TILE_SIZE / 2;
+		final int neX = sceneXYplane[0] * LOCAL_TILE_SIZE + LOCAL_TILE_SIZE / 2;
+		final int neY = sceneXYplane[1] * LOCAL_TILE_SIZE + LOCAL_TILE_SIZE / 2;
+
+		final int swHeight = getHeight(scene, swX, swY, sceneXYplane[2]);
+		final int nwHeight = getHeight(scene, neX, swY, sceneXYplane[2]);
+		final int neHeight = getHeight(scene, neX, neY, sceneXYplane[2]);
+		final int seHeight = getHeight(scene, swX, neY, sceneXYplane[2]);
+
+		int[] p1 = localToCanvas(client, swX, swY, swHeight);
+		int[] p2 = localToCanvas(client, neX, swY, nwHeight);
+		int[] p3 = localToCanvas(client, neX, neY, neHeight);
+		int[] p4 = localToCanvas(client, swX, neY, seHeight);
+
+		if (p1 == null || p2 == null || p3 == null || p4 == null)
+			return null;
 
 		Polygon poly = new Polygon();
-		poly.addPoint(p1.getX(), p1.getY());
-		poly.addPoint(p2.getX(), p2.getY());
-		poly.addPoint(p3.getX(), p3.getY());
-		poly.addPoint(p4.getX(), p4.getY());
+		poly.addPoint(p1[0], p1[1]);
+		poly.addPoint(p2[0], p2[1]);
+		poly.addPoint(p3[0], p3[1]);
+		poly.addPoint(p4[0], p4[1]);
 
 		return poly;
 	}
@@ -617,7 +660,8 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 		return (LOCAL_TILE_SIZE - y) * var8 + y * var9 >> 7;
 	}
 
-	private static Point localToCanvas(@Nonnull Client client, int x, int y, int z) {
+	private static int[] localToCanvas(@Nonnull Client client, int x, int y, int z) {
+		// Using longs to support coordinates much larger than normal local coordinates
 		x -= client.getCameraX();
 		y -= client.getCameraY();
 		z -= client.getCameraZ();
@@ -635,7 +679,11 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			long scale = client.getScale();
 			long pointX = client.getViewportWidth() / 2 + x1 * scale / z1;
 			long pointY = client.getViewportHeight() / 2 + y2 * scale / z1;
-			return new Point((int) (pointX + client.getViewportXOffset()), (int) (pointY + client.getViewportYOffset()));
+			return new int[] {
+				(int) (pointX + client.getViewportXOffset()),
+				(int) (pointY + client.getViewportYOffset()),
+				(int) Math.min(Integer.MAX_VALUE, z1)
+			};
 		}
 
 		return null;
@@ -658,7 +706,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 		g.setColor(new Color(255, 255, 255, 127));
 
 		Tile[][][] tiles = ctx.scene.getExtendedTiles();
-		int plane = ctrlHeld ? MAX_Z - 1 : client.getPlane();
+		int plane = ctrlHeld ? MAX_Z - 1 : ctx.getPlane();
 		for (int z = plane; z >= 0; z--) {
 			for (int x = 0; x < EXTENDED_SCENE_SIZE; x++) {
 				for (int y = 0; y < EXTENDED_SCENE_SIZE; y++) {
@@ -707,6 +755,222 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 		g.drawString(str, p.getX(), p.getY() + line * fontSize);
 	}
 
+	/**
+	 * Draw line given local scene coordinates
+	 */
+	private void drawLine(Graphics2D g, int x1, int y1, int z1, int x2, int y2, int z2) {
+		// Using longs to support coordinates much larger than normal local coordinates
+		int cameraPitch = client.getCameraPitch();
+		int cameraYaw = client.getCameraYaw();
+		long pitchSin = SINE[cameraPitch];
+		long pitchCos = COSINE[cameraPitch];
+		long yawSin = SINE[cameraYaw];
+		long yawCos = COSINE[cameraYaw];
+
+		x1 -= client.getCameraX();
+		y1 -= client.getCameraY();
+		z1 -= client.getCameraZ();
+		x2 -= client.getCameraX();
+		y2 -= client.getCameraY();
+		z2 -= client.getCameraZ();
+
+		long ax = x1 * yawCos + y1 * yawSin >> 16;
+		long aUnpitchedZ = y1 * yawCos - x1 * yawSin >> 16;
+		long ay = z1 * pitchCos - aUnpitchedZ * pitchSin >> 16;
+		long az = aUnpitchedZ * pitchCos + z1 * pitchSin >> 16;
+
+		long bx = x2 * yawCos + y2 * yawSin >> 16;
+		long bUnpitchedZ = y2 * yawCos - x2 * yawSin >> 16;
+		long by = z2 * pitchCos - bUnpitchedZ * pitchSin >> 16;
+		long bz = bUnpitchedZ * pitchCos + z2 * pitchSin >> 16;
+
+		// Both behind the near plane
+		if (az < 1 && bz < 1)
+			return;
+
+		long vx = bx - ax;
+		long vy = by - ay;
+		long vz = bz - az;
+
+		if (az < 1) {
+			// A is behind the near plane
+			// az + (bz - az) * t = 1
+			// t = (1 - az) / (bz - az)
+			double t = (1.f - az) / vz;
+			ax += (long) (vx * t);
+			ay += (long) (vy * t);
+			az = 1;
+		} else if (bz < 1) {
+			// B is behind the near plane
+			double t = (1.f - bz) / vz;
+			bx += (long) (vx * t);
+			by += (long) (vy * t);
+			bz = 1;
+		}
+
+		int scale = client.getScale();
+		ax = client.getViewportXOffset() + client.getViewportWidth() / 2 + ax * scale / az;
+		ay = client.getViewportYOffset() + client.getViewportHeight() / 2 + ay * scale / az;
+		bx = client.getViewportXOffset() + client.getViewportWidth() / 2 + bx * scale / bz;
+		by = client.getViewportYOffset() + client.getViewportHeight() / 2 + by * scale / bz;
+
+		g.drawLine((int) ax, (int) ay, (int) bx, (int) by);
+	}
+
+	private void drawAabb(Graphics2D g, SceneContext ctx, AABB aabb) {
+		int baseX = ctx.scene.getBaseX();
+		int baseY = ctx.scene.getBaseY();
+
+		int x1 = (aabb.minX - baseX) * LOCAL_TILE_SIZE;
+		int y1 = (aabb.minY - baseY) * LOCAL_TILE_SIZE;
+		int x2 = (aabb.maxX + 1 - baseX) * LOCAL_TILE_SIZE;
+		int y2 = (aabb.maxY + 1 - baseY) * LOCAL_TILE_SIZE;
+		int z1 = HDUtils.clamp(aabb.minZ, 0, MAX_Z - 1);
+		int z2 = HDUtils.clamp(aabb.maxZ + 1, 0, MAX_Z - 1);
+
+		int minZ = (int) HDUtils.min(
+			getHeight(ctx.scene, x1, y1, z1),
+			getHeight(ctx.scene, x1, y2, z1),
+			getHeight(ctx.scene, x2, y2, z1),
+			getHeight(ctx.scene, x2, y1, z1)
+		);
+		int maxZ = (int) HDUtils.max(
+			getHeight(ctx.scene, x1, y1, z2),
+			getHeight(ctx.scene, x1, y2, z2),
+			getHeight(ctx.scene, x2, y2, z2),
+			getHeight(ctx.scene, x2, y1, z2)
+		);
+
+		// Draw bottom rect
+		drawLine(g, x1, y1, minZ, x1, y2, minZ);
+		drawLine(g, x1, y2, minZ, x2, y2, minZ);
+		drawLine(g, x2, y2, minZ, x2, y1, minZ);
+		drawLine(g, x2, y1, minZ, x1, y1, minZ);
+
+		// Draw top rect
+		drawLine(g, x1, y1, maxZ, x1, y2, maxZ);
+		drawLine(g, x1, y2, maxZ, x2, y2, maxZ);
+		drawLine(g, x2, y2, maxZ, x2, y1, maxZ);
+		drawLine(g, x2, y1, maxZ, x1, y1, maxZ);
+
+		// Connect corners
+		drawLine(g, x1, y1, minZ, x1, y1, maxZ);
+		drawLine(g, x1, y2, minZ, x1, y2, maxZ);
+		drawLine(g, x2, y2, minZ, x2, y2, maxZ);
+		drawLine(g, x2, y1, minZ, x2, y1, maxZ);
+
+//		var bsw = localToCanvas(client, x1, y1, minZ);
+//		var bnw = localToCanvas(client, x1, y2, minZ);
+//		var bne = localToCanvas(client, x2, y2, minZ);
+//		var bse = localToCanvas(client, x2, y1, minZ);
+//
+//		// Draw bottom rect
+//		if (bsw != null && bnw != null)
+//			g.drawLine(bsw.getX(), bsw.getY(), bnw.getX(), bnw.getY());
+//		if (bnw != null && bne != null)
+//			g.drawLine(bnw.getX(), bnw.getY(), bne.getX(), bne.getY());
+//		if (bne != null && bse != null)
+//			g.drawLine(bne.getX(), bne.getY(), bse.getX(), bse.getY());
+//		if (bse != null && bsw != null)
+//			g.drawLine(bse.getX(), bse.getY(), bsw.getX(), bsw.getY());
+//
+//		if (aabb.isVolume()) {
+//			var tsw = localToCanvas(client, x1, y1, maxZ);
+//			var tnw = localToCanvas(client, x1, y2, maxZ);
+//			var tne = localToCanvas(client, x2, y2, maxZ);
+//			var tse = localToCanvas(client, x2, y1, maxZ);
+//
+//			// Draw top rect
+//			if (tsw != null && tnw != null)
+//				g.drawLine(tsw.getX(), tsw.getY(), tnw.getX(), tnw.getY());
+//			if (tnw != null && tne != null)
+//				g.drawLine(tnw.getX(), tnw.getY(), tne.getX(), tne.getY());
+//			if (tne != null && tse != null)
+//				g.drawLine(tne.getX(), tne.getY(), tse.getX(), tse.getY());
+//			if (tse != null && tsw != null)
+//				g.drawLine(tse.getX(), tse.getY(), tsw.getX(), tsw.getY());
+//
+//			// Connect rect corners
+//			if (bsw != null && tsw != null)
+//				g.drawLine(bsw.getX(), bsw.getY(), tsw.getX(), tsw.getY());
+//			if (bnw != null && tnw != null)
+//				g.drawLine(bnw.getX(), bnw.getY(), tnw.getX(), tnw.getY());
+//			if (bne != null && tne != null)
+//				g.drawLine(bne.getX(), bne.getY(), tne.getX(), tne.getY());
+//			if (bse != null && tse != null)
+//				g.drawLine(bse.getX(), bse.getY(), tse.getX(), tse.getY());
+//		}
+	}
+
+	private int[] getAabbCanvasCenter(SceneContext ctx, AABB aabb) {
+		int baseX = ctx.scene.getBaseX();
+		int baseY = ctx.scene.getBaseY();
+
+		int x1 = (aabb.minX - baseX) * LOCAL_TILE_SIZE;
+		int y1 = (aabb.minY - baseY) * LOCAL_TILE_SIZE;
+		int x2 = (aabb.maxX + 1 - baseX) * LOCAL_TILE_SIZE;
+		int y2 = (aabb.maxY + 1 - baseY) * LOCAL_TILE_SIZE;
+		int z1 = HDUtils.clamp(aabb.minZ, 0, MAX_Z - 1);
+		int z2 = HDUtils.clamp(aabb.maxZ + 1, 0, MAX_Z - 1);
+
+		int x = (x1 + x2) / 2;
+		int y = (y1 + y2) / 2;
+		int z = (getHeight(ctx.scene, x, y, z1) + getHeight(ctx.scene, x, y, z2)) / 2;
+
+		return localToCanvas(client, x, y, z);
+	}
+
+	private void drawAabbLabel(Graphics2D g, SceneContext ctx, AABB aabb, @Nullable String label) {
+		var p = getAabbCanvasCenter(ctx, aabb);
+		if (p == null)
+			return;
+
+		String str = aabb.toString();
+		if (label != null)
+			str = label + "\n" + str;
+		String[] lines = str.split("\\n");
+
+		Color c = g.getColor();
+		Font f = g.getFont();
+		float fontSize = Math.max(8, 50.f * (float) Math.pow((float) client.getScale() / p[2], 1 / 1.5f));
+		g.setFont(FontManager.getDefaultFont().deriveFont(fontSize));
+
+		FontMetrics fm = g.getFontMetrics();
+		int lineHeight = fm.getHeight();
+		int totalHeight = lineHeight * lines.length;
+
+		for (int i = 0; i < lines.length; i++) {
+			String line = lines[i];
+			int width = fm.stringWidth(line);
+			int px = p[0] - width / 2;
+			int py = p[1] - totalHeight / 2 + lineHeight * i;
+			g.setColor(Color.BLACK);
+			g.drawString(line, px + 1, py + 1);
+			g.setColor(c);
+			g.drawString(line, px, py);
+		}
+	}
+
+	private void copyToClipboard(String toCopy) {
+		copyToClipboard(toCopy, null);
+	}
+
+	private void copyToClipboard(String toCopy, @Nullable String description) {
+		Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+		StringSelection string = new StringSelection(toCopy);
+		clipboard.setContents(string, null);
+		clientThread.invoke(() -> client.addChatMessage(
+			ChatMessageType.GAMEMESSAGE,
+			"117 HD",
+			ColorUtil.wrapWithColorTag("[117 HD] " + (
+				description == null ?
+					"Copied to clipboard: " + toCopy :
+					description
+			), Color.GREEN),
+			"117 HD"
+		));
+	}
+
 	@Override
 	public MouseEvent mouseClicked(MouseEvent e) {
 		return e;
@@ -714,34 +978,56 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 
 	@Override
 	public MouseEvent mousePressed(MouseEvent e) {
-		if (shiftToggled)
+		var sceneContext = plugin.getSceneContext();
+		if (sceneContext == null)
 			return e;
 
 		if (e.isAltDown()) {
 			e.consume();
 
+			if (sceneContext.area != null) {
+				if (SwingUtilities.isLeftMouseButton(e)) {
+					int nextSelection = -1;
+					if (selectedAabb != hoveredAabb) {
+						nextSelection = hoveredAabb;
+						if (nextSelection != -1)
+							copyToClipboard(sceneContext.area.aabbs[nextSelection].toArgs());
+					}
+
+					if (nextSelection != selectedAabb) {
+						selectedAabb = nextSelection;
+						e.consume();
+						return e;
+					}
+				}
+			}
+
 			if (SwingUtilities.isRightMouseButton(e)) {
 				// Reset selection
 				aabbMarkingStage = 0;
-				markedWorldPoints[0] = null;
+				selections.clear();
+				pendingSelection = null;
 			} else if (SwingUtilities.isLeftMouseButton(e)) {
 				if (aabbMarkingStage == 0) {
 					// Marking first
 					markedWorldPoints[0] = hoveredWorldPoint;
-					markedHeights[0] = hoveredHeight;
 				} else {
 					// Done marking
-					var markedAabb = new AABB(markedWorldPoints[0], markedWorldPoints[1]);
-					Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-					String aabb = "[ " + markedAabb.toArgs() + " ]";
-					StringSelection string = new StringSelection(aabb);
-					clipboard.setContents(string, null);
-					clientThread.invoke(() -> client.addChatMessage(
-						ChatMessageType.GAMEMESSAGE,
-						"117 HD",
-						ColorUtil.wrapWithColorTag("[117 HD] Copied AABB to clipboard: " + aabb, Color.GREEN),
-						"117 HD"
-					));
+					selections.add(pendingSelection);
+
+					if (selections.size() == 1) {
+						copyToClipboard(pendingSelection.toArgs());
+					} else {
+						StringBuilder sb = new StringBuilder();
+						for (int i = 0; i < selections.size(); i++) {
+							if (i > 0)
+								sb.append(",\n");
+							sb.append(selections.get(i).toArgs());
+						}
+						copyToClipboard(sb.toString(), "Copied " + selections.size() + " AABBs to clipboard");
+					}
+
+					pendingSelection = null;
 				}
 				aabbMarkingStage = (aabbMarkingStage + 1) % 2;
 			}
@@ -777,7 +1063,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 
 	@Override
 	public MouseWheelEvent mouseWheelMoved(MouseWheelEvent e) {
-		if (ctrlHeld && !shiftToggled) {
+		if (ctrlHeld) {
 			e.consume();
 			targetPlane = HDUtils.clamp(targetPlane + e.getWheelRotation(), 0, MAX_Z - 1);
 		}

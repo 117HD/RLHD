@@ -88,4 +88,9 @@ public class Area {
 					return true;
 		return false;
 	}
+
+	@Override
+	public String toString() {
+		return name;
+	}
 }

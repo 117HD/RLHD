@@ -95,12 +95,27 @@ public class AABB {
 		maxZ = Math.max(z1, z2);
 	}
 
+	public AABB(int[] point) {
+		this(point[0], point[1], point[2]);
+	}
+
 	public AABB(int[] from, int[] to) {
 		this(from[0], from[1], from[2], to[0], to[1], to[2]);
 	}
 
 	public AABB onPlane(int plane) {
 		return new AABB(minX, minY, plane, maxX, maxY, plane);
+	}
+
+	public AABB expandTo(int[] point) {
+		return new AABB(
+			Math.min(minX, point[0]),
+			Math.min(minY, point[1]),
+			Math.min(minZ, point[2]),
+			Math.max(maxX, point[0]),
+			Math.max(maxY, point[1]),
+			Math.max(maxZ, point[2])
+		);
 	}
 
 	public boolean hasZ() {
@@ -168,10 +183,10 @@ public class AABB {
 
 	public String toArgs() {
 		if (isPoint())
-			return String.format("%d, %d", minX, minY);
+			return String.format("[ %d, %d ]", minX, minY);
 		if (minZ == maxZ)
-			return String.format("%d, %d, %d, %d, %d", minX, minY, maxX, maxY, minZ);
-		return String.format("%d, %d, %d, %d, %d, %d", minX, minY, minZ, maxX, maxY, maxZ);
+			return String.format("[ %d, %d, %d, %d, %d ]", minX, minY, maxX, maxY, minZ);
+		return String.format("[ %d, %d, %d, %d, %d, %d ]", minX, minY, minZ, maxX, maxY, maxZ);
 	}
 
 	@Override
