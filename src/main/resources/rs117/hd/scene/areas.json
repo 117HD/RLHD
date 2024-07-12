@@ -1293,8 +1293,10 @@
   {
     "name": "HEROES_GUILD_BASEMENT",
     "aabbs": [
-      [ 2883, 9880, 2943, 9919 ]
-    ]
+      [ 2880, 9918, 2948, 9880 ],
+      [ 2881, 9919, 2942, 9925 ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "WARRIORS_GUILD",
