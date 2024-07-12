@@ -667,7 +667,8 @@
     "name": "DRAYNOR_SEWERS",
     "aabbs": [
       [ 3075, 9642, 3127, 9701 ]
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "WIZARDS_TOWER_PATH",
