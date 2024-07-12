@@ -1929,6 +1929,20 @@
     ]
   },
   {
+    "name": "SOPHANEM_TEMPLE_BANK_PRE_CONTACT",
+    "aabbs": [
+      [ 2757, 5128, 2773, 5146 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "SOPHANEM_TEMPLE_BANK_POST_CONTACT",
+    "aabbs": [
+      [ 2790, 5157, 2809, 5175 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
     "name": "SOPHANEM_TRAPDOOR",
     "aabbs": [
       [ 3315, 2797, 0 ]
@@ -2029,13 +2043,22 @@
     "name": "SCARAB_LAIR_TEMPLE",
     "regions": [
       8516
-    ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "SCARAB_LAIR_MIDDLE",
+    "regions": [
+      9538
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "SCARAB_LAIR_BOTTOM",
     "regions": [
       9027
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "CANIFIS_BAR_FLOOR",
