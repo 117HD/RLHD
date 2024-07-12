@@ -1335,9 +1335,10 @@
   },
   {
     "name": "GAMES_ROOM",
-    "regions": [
-      8781
-    ]
+    "aabbs": [
+      [ 2178, 4988, 2236, 4931 ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "EAST_ARDOUGNE_FURNACE",
