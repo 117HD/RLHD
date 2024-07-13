@@ -440,6 +440,9 @@ public enum Material {
 		.setSpecular(0.4f, 20)
 		.setBrightness(1.2f)
 	),
+	ROCK_4_DARK(ROCK_4, p -> p
+		.setBrightness(0.7f)
+	),
 	ROCK_4_ORE(ROCK_4, p -> p
 		.setSpecular(1, 20)
 	),
