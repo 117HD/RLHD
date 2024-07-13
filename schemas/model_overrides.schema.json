@@ -21,6 +21,14 @@
           "WINTER"
         ]
       },
+      "seasonalThemeHemisphere": {
+        "type": "string",
+        "description": "Which hemisphere the 'Automatic' seasonal theme should be taking into account.",
+        "enum": [
+          "NORTHERN",
+	        "SOUTHERN"
+        ]
+      },
       "areas": {
         "type": "array",
         "description": "An array of bounding boxes, region IDs and/or area enums specifying which areas the override should be limited to.",
