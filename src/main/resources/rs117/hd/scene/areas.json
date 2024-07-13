@@ -3575,7 +3575,8 @@
     "name": "LUNAR_ESSENCE_MINE",
     "regions": [
       9377
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "LADY_ZAY",
