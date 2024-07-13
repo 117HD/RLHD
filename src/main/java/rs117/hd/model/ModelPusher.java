@@ -35,6 +35,7 @@ import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.PopupUtils;
 
 import static rs117.hd.HdPlugin.MAX_FACE_COUNT;
+import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
 import static rs117.hd.scene.tile_overrides.TileOverride.OVERLAY_FLAG;
 
 /**
@@ -607,8 +608,8 @@ public class ModelPusher {
 									int tileX = scenePos.getX();
 									int tileY = scenePos.getY();
 									int tileZ = tile.getRenderLevel();
-									int tileExX = tileX + SceneUploader.SCENE_OFFSET;
-									int tileExY = tileY + SceneUploader.SCENE_OFFSET;
+									int tileExX = tileX + SCENE_OFFSET;
+									int tileExY = tileY + SCENE_OFFSET;
 									int[] worldPos = sceneContext.sceneToWorld(tileX, tileY, tileZ);
 									var override = tileOverrideManager.getOverride(scene, tile, worldPos,
 										modelOverride.inheritTileColorType == InheritTileColorType.OVERLAY ?

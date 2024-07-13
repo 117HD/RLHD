@@ -22,23 +22,30 @@ import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.buffer.GpuFloatBuffer;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 
+import static net.runelite.api.Constants.SCENE_SIZE;
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.*;
 import static rs117.hd.HdPlugin.UV_SIZE;
 import static rs117.hd.HdPlugin.VERTEX_SIZE;
-import static rs117.hd.scene.SceneUploader.SCENE_OFFSET;
 
 public class SceneContext {
+	public static final int SCENE_OFFSET = (EXTENDED_SCENE_SIZE - SCENE_SIZE) / 2;
+
 	public final int id = HDUtils.rand.nextInt() & SceneUploader.SCENE_ID_MASK;
 	public final Client client;
 	public final Scene scene;
 	public final HashSet<Integer> regionIds;
 	public final int expandedMapLoadingChunks;
 
+	public boolean enableAreaHiding;
+	public boolean fillGaps;
+	public boolean isPrepared;
+
 	@Nullable
-	public Area area;
-	public int[] loadingPosition;
+	public Area currentArea;
+	public Area[] possibleAreas = new Area[0];
 	public final ArrayList<Environment> environments = new ArrayList<>();
+	public byte[][] filledTiles = new byte[EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE];
 
 	public int staticVertexCount = 0;
 	public GpuIntBuffer staticUnorderedModelBuffer;
@@ -83,9 +90,6 @@ public class SceneContext {
 		this.scene = scene;
 		this.regionIds = HDUtils.getSceneRegionIds(scene);
 		this.expandedMapLoadingChunks = expandedMapLoadingChunks;
-
-		// Load scenes around the center chunk's position
-		loadingPosition = sceneToWorld(6 * CHUNK_SIZE + 3, 6 * CHUNK_SIZE + 3, getPlane());
 
 		if (previous == null) {
 			staticUnorderedModelBuffer = new GpuIntBuffer();
@@ -149,7 +153,7 @@ public class SceneContext {
 	}
 
 	public int[] localToWorld(LocalPoint localPoint) {
-		return localToWorld(localPoint, getPlane());
+		return localToWorld(localPoint, client.getPlane());
 	}
 
 	public int[] localToWorld(int localX, int localY, int plane) {
@@ -157,7 +161,7 @@ public class SceneContext {
 	}
 
 	public int[] localToWorld(int localX, int localY) {
-		return localToWorld(localX, localY, getPlane());
+		return localToWorld(localX, localY, client.getPlane());
 	}
 
 	public int[] sceneToWorld(int sceneX, int sceneY, int plane) {
@@ -206,6 +210,10 @@ public class SceneContext {
 		return HDUtils.sceneIntersects(scene, expandedMapLoadingChunks, aabbs);
 	}
 
+	public AABB getNonInstancedSceneBounds() {
+		return HDUtils.getNonInstancedSceneBounds(scene, expandedMapLoadingChunks);
+	}
+
 	public int getObjectConfig(Tile tile, long hash) {
 		if (tile.getWallObject() != null && tile.getWallObject().getHash() == hash)
 			return tile.getWallObject().getConfig();
@@ -219,11 +227,11 @@ public class SceneContext {
 		return -1;
 	}
 
-	public WorldView getWorldView() {
-		return client.getWorldView(scene.getWorldViewId());
+	public int getBaseExX() {
+		return scene.getBaseX() - SCENE_OFFSET;
 	}
 
-	public int getPlane() {
-		return getWorldView().getPlane();
+	public int getBaseExY() {
+		return scene.getBaseY() - SCENE_OFFSET;
 	}
 }

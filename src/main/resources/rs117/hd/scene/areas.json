@@ -2381,11 +2381,34 @@
   },
   {
     "name": "TROLL_STRONGHOLD",
+    "areas": [
+      "TROLL_STRONGHOLD_FLOOR_0",
+      "TROLL_STRONGHOLD_FLOOR_1",
+      "TROLL_STRONGHOLD_FLOOR_2"
+    ]
+  },
+  {
+    "name": "TROLL_STRONGHOLD_FLOOR_0",
     "aabbs": [
-      [ 2815, 10112, 0, 2870, 10098, 0 ],
-      [ 2815, 10097, 0, 2844, 10046, 0 ],
-      [ 2844, 10097, 0, 2875, 10055, 0 ],
-      [ 2822, 10048, 1, 2863, 10111, 2 ]
+      [ 2815, 10048, 2878, 10111, 0 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "TROLL_STRONGHOLD_FLOOR_1",
+    "aabbs": [
+      [ 2847, 10062, 2858, 10072, 0 ],
+      [ 2848, 10097, 2857, 10109, 0 ],
+      [ 2822, 10048, 1, 2863, 10111, 1 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "TROLL_STRONGHOLD_FLOOR_2",
+    "aabbs": [
+      [ 2837, 10050, 2847, 10057, 1 ],
+      [ 2837, 10103, 2846, 10111, 1 ],
+      [ 2819, 10048, 2, 2863, 10111, 2 ]
     ],
     "hideOtherAreas": true
   },

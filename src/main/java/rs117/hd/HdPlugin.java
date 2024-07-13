@@ -127,7 +127,7 @@ import static net.runelite.api.Perspective.*;
 import static org.lwjgl.opencl.CL10.*;
 import static org.lwjgl.opengl.GL43C.*;
 import static rs117.hd.HdPluginConfig.*;
-import static rs117.hd.scene.SceneUploader.SCENE_OFFSET;
+import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
 import static rs117.hd.utils.HDUtils.MAX_FLOAT_WITH_128TH_PRECISION;
 import static rs117.hd.utils.HDUtils.PI;
 import static rs117.hd.utils.HDUtils.clamp;
@@ -752,7 +752,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		// For some reason, it's necessary to delay this like below to prevent the canvas from locking up on Linux
 		SwingUtilities.invokeLater(() -> clientThread.invokeLater(() -> {
 			shutDown();
-			startUp();
+			clientThread.invokeLater(this::startUp);
 		}));
 	}
 
@@ -1476,6 +1476,32 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		final Scene scene = client.getScene();
 		scene.setDrawDistance(getDrawDistance());
 
+		boolean updateUniforms = true;
+
+		if (sceneContext.currentArea != null) {
+			var lp = client.getLocalPlayer().getLocalLocation();
+			int[] worldPos = {
+				sceneContext.scene.getBaseX() + lp.getSceneX(),
+				sceneContext.scene.getBaseY() + lp.getSceneY(),
+				client.getPlane()
+			};
+
+			// We need to check all areas contained in the scene in the order they appear in the list,
+			// in order to ensure lower floors can take precedence over higher floors which include tiny
+			// portions of the floor beneath around stairs and ladders
+			for (var area : sceneContext.possibleAreas) {
+				if (area.containsPoint(worldPos)) {
+					if (area != sceneContext.currentArea) {
+						// Force a scene reload if the player is no longer within the isolated area
+						client.setGameState(GameState.LOADING);
+						updateUniforms = false;
+						redrawPreviousFrame = true;
+					}
+					break;
+				}
+			}
+		}
+
 		viewportOffsetX = client.getViewportXOffset();
 		viewportOffsetY = client.getViewportYOffset();
 
@@ -1497,53 +1523,55 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				numPassthroughModels += staticUnordered.limit() / 8;
 			}
 
-			cameraPosition[0] = (float) cameraX;
-			cameraPosition[1] = (float) cameraY;
-			cameraPosition[2] = (float) cameraZ;
-			cameraOrientation[0] = (float) cameraYaw;
-			cameraOrientation[1] = (float) cameraPitch;
+			if (updateUniforms) {
+				cameraPosition[0] = (float) cameraX;
+				cameraPosition[1] = (float) cameraY;
+				cameraPosition[2] = (float) cameraZ;
+				cameraOrientation[0] = (float) cameraYaw;
+				cameraOrientation[1] = (float) cameraPitch;
 
-			if (sceneContext.scene == scene) {
-				cameraFocalPoint[0] = client.getOculusOrbFocalPointX();
-				cameraFocalPoint[1] = client.getOculusOrbFocalPointY();
-				Arrays.fill(cameraShift, 0);
+				if (sceneContext.scene == scene) {
+					cameraFocalPoint[0] = client.getOculusOrbFocalPointX();
+					cameraFocalPoint[1] = client.getOculusOrbFocalPointY();
+					Arrays.fill(cameraShift, 0);
 
-				try {
-					frameTimer.begin(Timer.UPDATE_ENVIRONMENT);
-					environmentManager.update(sceneContext);
-					frameTimer.end(Timer.UPDATE_ENVIRONMENT);
+					try {
+						frameTimer.begin(Timer.UPDATE_ENVIRONMENT);
+						environmentManager.update(sceneContext);
+						frameTimer.end(Timer.UPDATE_ENVIRONMENT);
 
-					frameTimer.begin(Timer.UPDATE_LIGHTS);
-					lightManager.update(sceneContext);
-					frameTimer.end(Timer.UPDATE_LIGHTS);
-				} catch (Exception ex) {
-					log.error("Error while updating environment or lights:", ex);
-					stopPlugin();
-					return;
+						frameTimer.begin(Timer.UPDATE_LIGHTS);
+						lightManager.update(sceneContext);
+						frameTimer.end(Timer.UPDATE_LIGHTS);
+					} catch (Exception ex) {
+						log.error("Error while updating environment or lights:", ex);
+						stopPlugin();
+						return;
+					}
+				} else {
+					cameraShift[0] = cameraFocalPoint[0] - client.getOculusOrbFocalPointX();
+					cameraShift[1] = cameraFocalPoint[1] - client.getOculusOrbFocalPointY();
+					cameraPosition[0] += cameraShift[0];
+					cameraPosition[2] += cameraShift[1];
 				}
-			} else {
-				cameraShift[0] = cameraFocalPoint[0] - client.getOculusOrbFocalPointX();
-				cameraShift[1] = cameraFocalPoint[1] - client.getOculusOrbFocalPointY();
-				cameraPosition[0] += cameraShift[0];
-				cameraPosition[2] += cameraShift[1];
-			}
 
-			uniformBufferCamera
-				.clear()
-				.putFloat(cameraOrientation[0])
-				.putFloat(cameraOrientation[1])
-				.putInt(client.getCenterX())
-				.putInt(client.getCenterY())
-				.putInt(client.getScale())
-				.putFloat(cameraPosition[0])
-				.putFloat(cameraPosition[1])
-				.putFloat(cameraPosition[2])
-				.flip();
-			glBindBuffer(GL_UNIFORM_BUFFER, hUniformBufferCamera.glBufferId);
-			glBufferSubData(GL_UNIFORM_BUFFER, 0, uniformBufferCamera);
+				uniformBufferCamera
+					.clear()
+					.putFloat(cameraOrientation[0])
+					.putFloat(cameraOrientation[1])
+					.putInt(client.getCenterX())
+					.putInt(client.getCenterY())
+					.putInt(client.getScale())
+					.putFloat(cameraPosition[0])
+					.putFloat(cameraPosition[1])
+					.putFloat(cameraPosition[2])
+					.flip();
+				glBindBuffer(GL_UNIFORM_BUFFER, hUniformBufferCamera.glBufferId);
+				glBufferSubData(GL_UNIFORM_BUFFER, 0, uniformBufferCamera);
+			}
 		}
 
-		if (sceneContext.scene == scene) {
+		if (sceneContext.scene == scene && updateUniforms) {
 			// Update lights UBO
 			uniformBufferLights.clear();
 			assert sceneContext.numVisibleLights <= configMaxDynamicLights;
@@ -1563,14 +1591,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				glBindBuffer(GL_UNIFORM_BUFFER, hUniformBufferLights.glBufferId);
 				glBufferSubData(GL_UNIFORM_BUFFER, 0, uniformBufferLights);
 				glBindBuffer(GL_UNIFORM_BUFFER, 0);
-			}
-		}
-
-		if (sceneContext.area != null) {
-			int[] playerPos = sceneContext.localToWorld(client.getLocalPlayer().getLocalLocation());
-			if (!sceneContext.area.containsPoint(playerPos)) {
-				// Force a scene reload if the player is no longer within the isolated area
-				client.setGameState(GameState.LOADING);
 			}
 		}
 	}
@@ -2362,7 +2382,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				nextSceneContext = context;
 				proceduralGenerator.generateSceneData(context);
 				environmentManager.loadSceneEnvironments(context);
-				sceneUploader.upload(context, sceneContext);
+				sceneUploader.upload(context);
 			}
 		} catch (OutOfMemoryError oom) {
 			log.error("Ran out of memory while loading scene (32-bit: {}, low memory mode: {}, cache size: {})",
@@ -2405,9 +2425,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		nextSceneContext = null;
 		assert sceneContext != null;
 
-		// Gaps need to be filled in swapScene, since map regions aren't updated earlier
-		if (config.fillGapsInTerrain())
-			sceneUploader.fillGaps(sceneContext);
+		sceneUploader.prepareBeforeSwap(sceneContext);
+
 		sceneContext.staticUnorderedModelBuffer.flip();
 
 		dynamicOffsetVertices = sceneContext.getVertexOffset();
@@ -2843,10 +2862,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (sceneContext == null)
 			return;
 
-		int plane = ModelHash.getPlane(hash);
-		if (sceneContext.area != null && renderable instanceof Actor) {
-			int[] worldPos = sceneContext.localToWorld(x, z, plane);
-			if (!sceneContext.area.containsPoint(worldPos))
+		// Hide actors outside of the current area if area hiding is enabled
+		if (sceneContext.currentArea != null && renderable instanceof Actor) {
+			boolean inArea = sceneContext.currentArea.containsPoint(
+				sceneContext.scene.getBaseX() + x / LOCAL_TILE_SIZE,
+				sceneContext.scene.getBaseY() + z / LOCAL_TILE_SIZE,
+				client.getPlane()
+			);
+			if (!inArea)
 				return;
 		}
 
@@ -2914,6 +2937,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		eightIntWrite[6] = y;
 		eightIntWrite[7] = z;
 
+		int plane = ModelHash.getPlane(hash);
 		int faceCount;
 		if (sceneContext.id == (offsetModel.getSceneId() & SceneUploader.SCENE_ID_MASK)) {
 			// The model is part of the static scene buffer

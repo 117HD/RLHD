@@ -174,6 +174,21 @@ public class AABB {
 		);
 	}
 
+	public boolean intersects(AABB... aabbs) {
+		for (var aabb : aabbs)
+			if (intersects(aabb))
+				return true;
+		return false;
+	}
+
+	public float[] getCenter() {
+		return new float[] {
+			(minX + maxX) / 2.f,
+			(minY + maxY) / 2.f,
+			(minZ + maxZ) / 2.f
+		};
+	}
+
 	@Override
 	public String toString() {
 		if (hasZ())
@@ -184,6 +199,8 @@ public class AABB {
 	public String toArgs() {
 		if (isPoint())
 			return String.format("[ %d, %d ]", minX, minY);
+		if (!hasZ())
+			return String.format("[ %d, %d, %d, %d ]", minX, minY, maxX, maxY);
 		if (minZ == maxZ)
 			return String.format("[ %d, %d, %d, %d, %d ]", minX, minY, maxX, maxY, minZ);
 		return String.format("[ %d, %d, %d, %d, %d, %d ]", minX, minY, minZ, maxX, maxY, maxZ);

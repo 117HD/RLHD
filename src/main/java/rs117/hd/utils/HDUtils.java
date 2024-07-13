@@ -404,23 +404,24 @@ public class HDUtils {
 					}
 				}
 			}
-		} else {
-			int baseX = scene.getBaseX();
-			int baseY = scene.getBaseX();
-			int extended = numChunksExtended * CHUNK_SIZE;
-			AABB sceneAabb = new AABB(
-				baseX - extended,
-				baseY - extended,
-				baseX + SCENE_SIZE + extended - 1,
-				baseY + SCENE_SIZE + extended - 1
-			);
 
-			for (var aabb : aabbs)
-				if (sceneAabb.intersects(aabb))
-					return true;
+			return false;
 		}
 
-		return false;
+		return getNonInstancedSceneBounds(scene, numChunksExtended).intersects(aabbs);
+	}
+
+	public static AABB getNonInstancedSceneBounds(Scene scene, int numChunksExtended) {
+		assert !scene.isInstance();
+		int baseX = scene.getBaseX();
+		int baseY = scene.getBaseY();
+		int extended = numChunksExtended * CHUNK_SIZE;
+		return new AABB(
+			baseX - extended,
+			baseY - extended,
+			baseX + SCENE_SIZE + extended - 1,
+			baseY + SCENE_SIZE + extended - 1
+		);
 	}
 
 	public static void getSouthWesternMostTileColor(int[] out, Tile tile) {

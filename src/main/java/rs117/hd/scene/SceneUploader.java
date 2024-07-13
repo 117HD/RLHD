@@ -26,8 +26,9 @@
 package rs117.hd.scene;
 
 import com.google.common.base.Stopwatch;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
@@ -54,6 +55,7 @@ import static rs117.hd.HdPlugin.NORMAL_SIZE;
 import static rs117.hd.HdPlugin.SCALAR_BYTES;
 import static rs117.hd.HdPlugin.UV_SIZE;
 import static rs117.hd.HdPlugin.VERTEX_SIZE;
+import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
 import static rs117.hd.scene.tile_overrides.TileOverride.NONE;
 import static rs117.hd.scene.tile_overrides.TileOverride.OVERLAY_FLAG;
 
@@ -63,7 +65,6 @@ import static rs117.hd.scene.tile_overrides.TileOverride.OVERLAY_FLAG;
 public class SceneUploader {
 	public static final int SCENE_ID_MASK = 0xFFFF;
 	public static final int EXCLUDED_FROM_SCENE_BUFFER = 0xFFFFFFFF;
-	public static final int SCENE_OFFSET = (EXTENDED_SCENE_SIZE - SCENE_SIZE) / 2; // offset for sxy -> msxy
 
 	private static final float[] UP_NORMAL = { 0, -1, 0 };
 
@@ -77,6 +78,9 @@ public class SceneUploader {
 	private HdPluginConfig config;
 
 	@Inject
+	private AreaManager areaManager;
+
+	@Inject
 	private TileOverrideManager tileOverrideManager;
 
 	@Inject
@@ -88,66 +92,42 @@ public class SceneUploader {
 	@Inject
 	private ModelPusher modelPusher;
 
-	public void upload(SceneContext sceneContext, @Nullable SceneContext previousSceneContext) {
+	public void upload(SceneContext sceneContext) {
 		Stopwatch stopwatch = Stopwatch.createStarted();
 
-		var worldView = client.getWorldView(sceneContext.scene.getWorldViewId());
-		int baseX = worldView.getBaseX();
-		int baseY = worldView.getBaseY();
-		int plane = worldView.getPlane();
-		int baseExX = baseX - SCENE_OFFSET;
-		int baseExY = baseY - SCENE_OFFSET;
+		var scene = sceneContext.scene;
+		sceneContext.enableAreaHiding = config.hideUnrelatedAreas() && !scene.isInstance();
+		sceneContext.fillGaps = config.fillGapsInTerrain();
 
-		boolean hideUnrelatedAreas = config.hideUnrelatedAreas() && !worldView.isInstance();
-		if (hideUnrelatedAreas) {
-			if (previousSceneContext != null) {
-				var previousWorldView = client.getWorldView(previousSceneContext.scene.getWorldViewId());
-				if (previousWorldView != null) {
-					int previousBaseX = previousWorldView.getBaseX();
-					int previousBaseY = previousWorldView.getBaseY();
-					int previousPlane = previousWorldView.getPlane();
-					if (baseX == previousBaseX && baseY == previousBaseY && plane == previousPlane) {
-						// Same scene, meaning we should load the scene around the player's current position
-						var lp = client.getLocalPlayer().getLocalLocation();
-						sceneContext.loadingPosition = sceneContext.localToWorld(lp, plane);
-					}
-				}
-			}
+		if (sceneContext.enableAreaHiding) {
+			AABB sceneBounds = sceneContext.getNonInstancedSceneBounds();
+			sceneContext.possibleAreas = Arrays
+				.stream(areaManager.areasWithAreaHiding)
+				.filter(area -> sceneBounds.intersects(area.aabbs))
+				.toArray(Area[]::new);
 
-			outer:
-			for (Area area : AreaManager.AREAS) {
-				if (!area.hideOtherAreas)
-					continue;
-
-				for (AABB aabb : area.aabbs) {
-					if (aabb.contains(sceneContext.loadingPosition)) {
-						sceneContext.area = area;
-						break outer;
-					}
-				}
-			}
-
-			if (sceneContext.area == null) {
-				hideUnrelatedAreas = false;
-			} else {
-				log.debug("Hiding areas outside of {}", sceneContext.area);
+			if (log.isDebugEnabled() && sceneContext.possibleAreas.length > 0) {
+				log.debug(
+					"Hiding areas outside of {}",
+					Arrays.stream(sceneContext.possibleAreas)
+						.distinct()
+						.map(Area::toString)
+						.collect(Collectors.joining(", "))
+				);
 			}
 		}
 
-		var tiles = sceneContext.scene.getExtendedTiles();
+		// The scene can be prepared early when loaded synchronously
+		if (client.isClientThread())
+			prepareBeforeSwap(sceneContext);
+
+		var tiles = scene.getExtendedTiles();
 		for (int z = 0; z < MAX_Z; ++z) {
 			for (int x = 0; x < EXTENDED_SCENE_SIZE; ++x) {
 				for (int y = 0; y < EXTENDED_SCENE_SIZE; ++y) {
 					Tile tile = tiles[z][x][y];
-					if (tile == null)
-						continue;
-
-					if (hideUnrelatedAreas && !sceneContext.area.containsPoint(baseExX + x, baseExY + y, z)) {
-						sceneContext.scene.removeTile(tile);
-						continue;
-					}
-
-					upload(sceneContext, tile, x, y);
+					if (tile != null)
+						upload(sceneContext, tile, x, y);
 				}
 			}
 		}
@@ -167,22 +147,83 @@ public class SceneUploader {
 		);
 	}
 
-	public void fillGaps(SceneContext sceneContext) {
-		if (sceneContext.area != null && !sceneContext.area.fillGaps)
+	public void prepareBeforeSwap(SceneContext sceneContext) {
+		assert client.isClientThread();
+		if (sceneContext.isPrepared)
+			return;
+		sceneContext.isPrepared = true;
+
+		// At this point, the player's position & plane has been updated, so area hiding can be set up
+		if (sceneContext.enableAreaHiding)
+			removeTilesOutsideCurrentArea(sceneContext);
+
+		// Gaps need to be filled right before scene swap, since map regions aren't updated earlier
+		if (sceneContext.fillGaps)
+			fillGaps(sceneContext);
+	}
+
+	public void updatePlayerArea(SceneContext sceneContext) {
+		if (!sceneContext.enableAreaHiding) {
+			sceneContext.currentArea = null;
+			return;
+		}
+
+		var lp = client.getLocalPlayer().getLocalLocation();
+		int[] worldPos = {
+			sceneContext.scene.getBaseX() + lp.getSceneX(),
+			sceneContext.scene.getBaseY() + lp.getSceneY(),
+			client.getPlane()
+		};
+
+		if (sceneContext.currentArea == null || !sceneContext.currentArea.containsPoint(worldPos)) {
+			sceneContext.currentArea = null;
+			for (var area : sceneContext.possibleAreas) {
+				if (area.containsPoint(worldPos)) {
+					sceneContext.currentArea = area;
+					break;
+				}
+			}
+		}
+	}
+
+	private void removeTilesOutsideCurrentArea(SceneContext sceneContext) {
+		updatePlayerArea(sceneContext);
+		if (sceneContext.currentArea == null)
+			return;
+
+		var tiles = sceneContext.scene.getExtendedTiles();
+		int baseExX = sceneContext.getBaseExX();
+		int baseExY = sceneContext.getBaseExY();
+		for (int z = 0; z < MAX_Z; ++z) {
+			for (int x = 0; x < EXTENDED_SCENE_SIZE; ++x) {
+				for (int y = 0; y < EXTENDED_SCENE_SIZE; ++y) {
+					Tile tile = tiles[z][x][y];
+					if (tile == null)
+						continue;
+
+					if (!sceneContext.currentArea.containsPoint(baseExX + x, baseExY + y, z))
+						sceneContext.scene.removeTile(tile);
+				}
+			}
+		}
+	}
+
+	private void fillGaps(SceneContext sceneContext) {
+		if (sceneContext.currentArea != null && !sceneContext.currentArea.fillGaps)
 			return;
 
 		int sceneMin = -sceneContext.expandedMapLoadingChunks * CHUNK_SIZE;
 		int sceneMax = SCENE_SIZE + sceneContext.expandedMapLoadingChunks * CHUNK_SIZE;
 
-		int baseExX = sceneContext.scene.getBaseX() - SCENE_OFFSET;
-		int baseExY = sceneContext.scene.getBaseY() - SCENE_OFFSET;
-		boolean hideUnrelatedAreas = config.hideUnrelatedAreas() && sceneContext.area != null && !sceneContext.scene.isInstance();
+		int baseExX = sceneContext.getBaseExX();
+		int baseExY = sceneContext.getBaseExY();
 
 		Tile[][][] extendedTiles = sceneContext.scene.getExtendedTiles();
 		for (int tileZ = 0; tileZ < MAX_Z; ++tileZ) {
 			for (int tileExX = 0; tileExX < EXTENDED_SCENE_SIZE; ++tileExX) {
 				for (int tileExY = 0; tileExY < EXTENDED_SCENE_SIZE; ++tileExY) {
-					if (hideUnrelatedAreas && !sceneContext.area.containsPoint(baseExX + tileExX, baseExY + tileExY, tileZ))
+					if (sceneContext.currentArea != null &&
+						!sceneContext.currentArea.containsPoint(baseExX + tileExX, baseExY + tileExY, tileZ))
 						continue;
 
 					int tileX = tileExX - SCENE_OFFSET;
@@ -314,6 +355,8 @@ public class SceneUploader {
 
 		SceneTilePaint sceneTilePaint = tile.getSceneTilePaint();
 		if (sceneTilePaint != null) {
+			sceneContext.filledTiles[tileExX][tileExY] |= (byte) (1 << tile.getPlane());
+
 			// Set offsets before pushing new data
 			int vertexOffset = sceneContext.getVertexOffset();
 			int uvOffset = sceneContext.getUvOffset();
@@ -328,7 +371,10 @@ public class SceneUploader {
 			// other model, all at once at the start of the frame. This bypasses any issues with draw order, and even partially solves the
 			// draw order artifacts resulting from skipped geometry updates for our extension to unlocked FPS.
 			final int[][][] tileHeights = sceneContext.scene.getTileHeights();
-			if (hasUnderwaterTerrain == 1 && tileHeights[tile.getRenderLevel()][tileExX][tileExY] >= -16) {
+			if (hasUnderwaterTerrain == 1 &&
+				tileHeights[tile.getRenderLevel()][tileExX][tileExY] >= -16 &&
+				sceneTilePaint.getNeColor() == 12345678
+			) {
 				int tileX = tileExX - SCENE_OFFSET;
 				int tileY = tileExY - SCENE_OFFSET;
 
@@ -363,6 +409,8 @@ public class SceneUploader {
 
 		var sceneTileModel = tile.getSceneTileModel();
 		if (sceneTileModel != null) {
+			sceneContext.filledTiles[tileExX][tileExY] |= (byte) (1 << tile.getPlane());
+
 			// Set offsets before pushing new data
 			sceneTileModel.setBufferOffset(sceneContext.getVertexOffset());
 			sceneTileModel.setUvBufferOffset(sceneContext.getUvOffset());
@@ -482,8 +530,8 @@ public class SceneUploader {
 		final Point tilePoint = tile.getSceneLocation();
 		final int tileX = tilePoint.getX();
 		final int tileY = tilePoint.getY();
-		final int tileExX = tileX + SceneUploader.SCENE_OFFSET;
-		final int tileExY = tileY + SceneUploader.SCENE_OFFSET;
+		final int tileExX = tileX + SCENE_OFFSET;
+		final int tileExY = tileY + SCENE_OFFSET;
 		final int tileZ = tile.getRenderLevel();
 
 		final int localX = 0;
@@ -691,8 +739,8 @@ public class SceneUploader {
 		final Point tilePoint = tile.getSceneLocation();
 		final int tileX = tilePoint.getX();
 		final int tileY = tilePoint.getY();
-		final int tileExX = tileX + SceneUploader.SCENE_OFFSET;
-		final int tileExY = tileY + SceneUploader.SCENE_OFFSET;
+		final int tileExX = tileX + SCENE_OFFSET;
+		final int tileExY = tileY + SCENE_OFFSET;
 		final int tileZ = tile.getRenderLevel();
 
 		int baseX = scene.getBaseX();
@@ -839,8 +887,8 @@ public class SceneUploader {
 		final Point tilePoint = tile.getSceneLocation();
 		final int tileX = tilePoint.getX();
 		final int tileY = tilePoint.getY();
-		final int tileExX = tileX + SceneUploader.SCENE_OFFSET;
-		final int tileExY = tileY + SceneUploader.SCENE_OFFSET;
+		final int tileExX = tileX + SCENE_OFFSET;
+		final int tileExY = tileY + SCENE_OFFSET;
 		final int tileZ = tile.getRenderLevel();
 
 		int bufferLength = 0;
@@ -1037,8 +1085,8 @@ public class SceneUploader {
 		final Point tilePoint = tile.getSceneLocation();
 		final int tileX = tilePoint.getX();
 		final int tileY = tilePoint.getY();
-		final int tileExX = tileX + SceneUploader.SCENE_OFFSET;
-		final int tileExY = tileY + SceneUploader.SCENE_OFFSET;
+		final int tileExX = tileX + SCENE_OFFSET;
+		final int tileExY = tileY + SCENE_OFFSET;
 		final int tileZ = tile.getRenderLevel();
 
 		int bufferLength = 0;

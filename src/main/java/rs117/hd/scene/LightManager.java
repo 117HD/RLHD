@@ -68,6 +68,7 @@ import static java.lang.Math.cos;
 import static java.lang.Math.pow;
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.*;
+import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
 import static rs117.hd.utils.HDUtils.TWO_PI;
 import static rs117.hd.utils.HDUtils.fract;
 import static rs117.hd.utils.HDUtils.mod;
@@ -288,8 +289,8 @@ public class LightManager {
 					if (light.animationSpecific)
 						parentExists = light.def.animationIds.contains(light.actor.getAnimation());
 
-					int tileExX = light.origin[0] / LOCAL_TILE_SIZE + SceneUploader.SCENE_OFFSET;
-					int tileExY = light.origin[2] / LOCAL_TILE_SIZE + SceneUploader.SCENE_OFFSET;
+					int tileExX = light.origin[0] / LOCAL_TILE_SIZE + SCENE_OFFSET;
+					int tileExY = light.origin[2] / LOCAL_TILE_SIZE + SCENE_OFFSET;
 
 					// Some NPCs, such as Crystalline Hunllef in The Gauntlet, sometimes return scene X/Y values far outside the possible range.
 					Tile tile;
@@ -325,9 +326,9 @@ public class LightManager {
 							float lerpX = (light.origin[0] % LOCAL_TILE_SIZE) / (float) LOCAL_TILE_SIZE;
 							float lerpY = (light.origin[2] % LOCAL_TILE_SIZE) / (float) LOCAL_TILE_SIZE;
 							int baseTileX =
-								(int) Math.floor(light.origin[0] / (float) LOCAL_TILE_SIZE) + SceneUploader.SCENE_OFFSET;
+								(int) Math.floor(light.origin[0] / (float) LOCAL_TILE_SIZE) + SCENE_OFFSET;
 							int baseTileY =
-								(int) Math.floor(light.origin[2] / (float) LOCAL_TILE_SIZE) + SceneUploader.SCENE_OFFSET;
+								(int) Math.floor(light.origin[2] / (float) LOCAL_TILE_SIZE) + SCENE_OFFSET;
 							float heightNorth = HDUtils.lerp(
 								tileHeights[plane][baseTileX][baseTileY + 1],
 								tileHeights[plane][baseTileX + 1][baseTileY + 1],
@@ -390,15 +391,13 @@ public class LightManager {
 				light.prevPlane = light.plane;
 				light.belowFloor = false;
 				light.aboveFloor = false;
-				int tileExX = light.pos[0] / LOCAL_TILE_SIZE + SceneUploader.SCENE_OFFSET;
-				int tileExY = light.pos[2] / LOCAL_TILE_SIZE + SceneUploader.SCENE_OFFSET;
+				int tileExX = light.pos[0] / LOCAL_TILE_SIZE + SCENE_OFFSET;
+				int tileExY = light.pos[2] / LOCAL_TILE_SIZE + SCENE_OFFSET;
 				if (light.plane >= 0 && tileExX >= 0 && tileExY >= 0 && tileExX < EXTENDED_SCENE_SIZE && tileExY < EXTENDED_SCENE_SIZE) {
-					Tile tileAbove = light.plane < 3 ? tiles[light.plane + 1][tileExX][tileExY] : null;
-					if (tileAbove != null && (tileAbove.getSceneTilePaint() != null || tileAbove.getSceneTileModel() != null))
+					byte hasTile = sceneContext.filledTiles[tileExX][tileExY];
+					if ((hasTile & (1 << light.plane + 1)) != 0)
 						light.belowFloor = true;
-
-					Tile lightTile = tiles[light.plane][tileExX][tileExY];
-					if (lightTile != null && (lightTile.getSceneTilePaint() != null || lightTile.getSceneTileModel() != null))
+					if ((hasTile & (1 << light.plane)) != 0)
 						light.aboveFloor = true;
 				}
 			}
@@ -908,8 +907,8 @@ public class LightManager {
 					continue;
 				}
 
-				int tileExX = HDUtils.clamp(lp.getSceneX() + SceneUploader.SCENE_OFFSET, 0, EXTENDED_SCENE_SIZE - 2);
-				int tileExY = HDUtils.clamp(lp.getSceneY() + SceneUploader.SCENE_OFFSET, 0, EXTENDED_SCENE_SIZE - 2);
+				int tileExX = HDUtils.clamp(lp.getSceneX() + SCENE_OFFSET, 0, EXTENDED_SCENE_SIZE - 2);
+				int tileExY = HDUtils.clamp(lp.getSceneY() + SCENE_OFFSET, 0, EXTENDED_SCENE_SIZE - 2);
 				float lerpX = (lightX % LOCAL_TILE_SIZE) / (float) LOCAL_TILE_SIZE;
 				float lerpZ = (lightZ % LOCAL_TILE_SIZE) / (float) LOCAL_TILE_SIZE;
 				int tileZ = HDUtils.clamp(plane, 0, MAX_Z - 1);
@@ -958,8 +957,8 @@ public class LightManager {
 			return;
 
 		LocalPoint lp = firstlp.get();
-		int tileExX = lp.getSceneX() + SceneUploader.SCENE_OFFSET;
-		int tileExY = lp.getSceneY() + SceneUploader.SCENE_OFFSET;
+		int tileExX = lp.getSceneX() + SCENE_OFFSET;
+		int tileExY = lp.getSceneY() + SCENE_OFFSET;
 		if (tileExX < 0 || tileExY < 0 || tileExX >= EXTENDED_SCENE_SIZE || tileExY >= EXTENDED_SCENE_SIZE)
 			return;
 
