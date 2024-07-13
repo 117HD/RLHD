@@ -14927,6 +14927,38 @@
     "uvOrientation": 256
   },
   {
+    "description": "Isle of Stone Dungeon - The Jormungund",
+    "baseMaterial": "STONE_NORMALED",
+    "npcIds": [ 9289, 9290, 9291, 9292 ],
+    "objectIds": [ 37424 ],
+    "uvOrientation": 256
+  },
+  {
+    "description": "Isle of Stone Dungeon - Walls",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      37412,
+      37413,
+      37414,
+      37415,
+      37416,
+      37425,
+      37426,
+      37427,
+      37429
+    ],
+    "uvOrientation": 256
+  },
+  {
+    "description": "Isle of Stone Dungeon - Stalagmite",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      23373,
+      23374
+    ],
+    "uvOrientation": 256
+  },
+  {
     "description": "Spinning Wheel",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
