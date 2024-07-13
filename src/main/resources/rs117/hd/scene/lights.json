@@ -32329,9 +32329,9 @@
   {
     "description": "Secrets of the North - Candle",
     "height": 240,
-    "alignment": "CENTER",
+    "alignment": "LEFT",
     "radius": 350,
-    "strength": 15,
+    "strength": 12.5,
     "color": [
       9,
       149,
@@ -32381,11 +32381,10 @@
     ]
   },
   {
-    "description": "Secrets of the North - Scoreboard",
-    "height": 125,
-    "alignment": "RIGHT",
+    "description": "Secrets of the North - Scoreboard - Upper",
+    "offset": [ -35, 155, 0 ],
     "radius": 400,
-    "strength": 100,
+    "strength": 25,
     "color": [
       53,
       30,
@@ -32396,6 +32395,38 @@
     "range": 7,
     "objectIds": [
       46636
+    ]
+  },
+  {
+    "description": "Secrets of the North - Scoreboard - Lower",
+    "offset": [ -35, 55, 0 ],
+    "radius": 400,
+    "strength": 25,
+    "color": [
+      53,
+      30,
+      121
+    ],
+    "type": "PULSE",
+    "duration": 1800,
+    "range": 7,
+    "objectIds": [
+      46636
+    ]
+  },
+  {
+    "description": "Secrets of the North - Ancient Essence Crystals",
+    "offset": [ -75, 105, -10 ],
+    "radius": 205,
+    "strength": 10,
+    "color": [
+      155,
+      30,
+      155
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      46701
     ]
   },
   {
