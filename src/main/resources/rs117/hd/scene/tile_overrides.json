@@ -5489,18 +5489,28 @@
     }
   },
   {
-    "name": "COMPLEX_TILES_ISLE_OF_STONE",
+    "name": "COMPLEX_TILES_ISLE_OF_STONE Blend",
     "area": "ISLAND_OF_STONE",
+    "description": "For when ground blending is ENABLED",
     "underlayIds": [
       58,
       97,
+      98,
       112
     ],
+    "groundMaterial": "SNOW_1",
     "replacements": {
+      "COMPLEX_TILES_ISLE_OF_STONE Unblend": "!blending",
       "SEASONAL_DIRT": "h == 7 && s >= 1 && l <= 71",
       "SEASONAL_ROCKY_GROUND": "h < 13 && s == 0 && l <= 40",
       "WINTER_DIRT": true
     }
+  },
+  {
+    "name": "COMPLEX_TILES_ISLE_OF_STONE Unblend",
+    "area": "ISLAND_OF_STONE",
+    "description": "For when ground blending is DISABLED",
+    "groundMaterial": "DIRT"
   },
   {
     "name": "FREMENNIK_SLAYER_DUNGEON",
