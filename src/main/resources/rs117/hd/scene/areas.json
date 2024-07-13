@@ -3591,6 +3591,13 @@
     ]
   },
   {
+    "name": "Baba Yaga House Interior",
+    "aabbs": [
+      [ 2448, 4644, 2454, 4650 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
     "name": "MM2_AIRSHIP_PLATFORM",
     "aabbs": [
       [ 2056, 5375, 2109, 5442 ]
