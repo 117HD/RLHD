@@ -4371,7 +4371,8 @@
     "name": "ICY_UNDERGROUND_DARK",
     "areas": [
       "WEISS_SALT_MINE",
-      "GHORROCK_DUNGEON"
+      "GHORROCK_DUNGEON",
+      "PHANTOM_MUSPAH_BOSS_ROOM"
     ]
   },
   {
