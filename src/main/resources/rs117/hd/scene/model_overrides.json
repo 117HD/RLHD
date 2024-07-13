@@ -14419,6 +14419,17 @@
     "uvOrientation": 384
   },
   {
+    "description": "Ghorrock Dungeon Walls",
+    "baseMaterial": "GRUNGE_3_LIGHT",
+    "objectIds": [ 46597, 46623, 46624, 46625, 46626, 46627, 46629, 46630, 46631, 46634, 46635, 46636, 46650, 46651, 46652, 46653, 46654, 46655, 46656, 46657, 46658, 46659, 46660, 46661, 46662, 46666, 46667, 46701, 46702, 49092 ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Ghorrock Dungeon Snow Trim",
+    "baseMaterial": "GRAY_110",
+    "objectIds": [ 46639, 46640, 46641, 46642, 46643 ]
+  },
+  {
     "description": "White Bed with pillow",
     "baseMaterial": "FINE_CARPET",
     "objectIds": [ 46841 ],

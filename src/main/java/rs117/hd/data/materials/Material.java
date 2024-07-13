@@ -302,6 +302,7 @@ public enum Material {
 	BRICK_CAM_TORUM_2(126),
 
 	WHITE(NONE),
+	GRAY_110(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(1.1f))),
 	GRAY_90(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(.90f))),
 	GRAY_75(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(.75f))),
 	GRAY_65(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(.65f))),
@@ -390,6 +391,9 @@ public enum Material {
 	GRUNGE_3(p -> p
 		.setNormalMap(GRUNGE_3_N)
 		.setSpecular(0.25f, 30)
+	),
+	GRUNGE_3_LIGHT(GRUNGE_3, p -> p
+		.setBrightness(1.45f)
 	),
 	ROCK_1_N,
 	ROCK_1(p -> p
