@@ -4901,8 +4901,10 @@
       [ 1503, 9562, 1505, 9566 ],
       [ 1506, 9562, 1508, 9565 ],
       [ 1392, 9535, 1405, 9579 ],
-      [ 1384, 9535, 1391, 9546 ]
-    ]
+      [ 1384, 9535, 1391, 9546 ],
+      [ 1387, 9548, 1391, 9578, 1 ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "CAM_TORUM_ENTRANCE_FIX",
@@ -4995,22 +4997,39 @@
     ]
   },
   {
+    "name": "PERIOUS_MOONS_ANTECHAMBER",
+    "aabbs": [
+      [ 1418, 9653, 1433, 9640 ],
+      [ 1446, 9640, 1460, 9653 ],
+      [ 1428, 9639, 1433, 9625 ],
+      [ 1446, 9639, 1452, 9625 ],
+      [ 1434, 9642, 1445, 9625 ],
+      [ 1419, 9612, 1460, 9624 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
     "name": "EARTHBOUND_CAVERN",
     "aabbs": [
       [ 1344, 9664, 1407, 9747 ]
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "STREAMBOUND_CAVERN",
     "regions": [
       6039
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "ANCIENT_PRISON",
     "aabbs": [
-      [ 1344, 9536, 1391, 9599 ]
-    ]
+      [ 1341, 9598, 1384, 9545 ],
+      [ 1341, 9544, 1378, 9535 ],
+      [ 1385, 9556, 1392, 9598, 0 ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "ANCIENT_PRISON_SUN_BLEND_FIX",
@@ -5022,18 +5041,20 @@
     "name": "ANCIENT_SHRINE",
     "aabbs": [
       [ 1501, 9568, 0, 1525, 9592, 0 ],
-      [ 1493, 9571, 0, 1500, 9588, 0 ],
+      [ 1494, 9571, 0, 1500, 9588, 0 ],
       [ 1506, 9593, 0, 1520, 9598, 0 ],
       [ 1526, 9573, 0, 1532, 9588, 0 ],
       [ 1506, 9561, 0, 1520, 9567, 0 ]
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "THE_BLUE_MOON",
     "aabbs": [
       [ 1434, 9649, 0, 1446, 9663, 0 ],
       [ 1420, 9664, 0, 1460, 9700, 0 ]
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "THE_BLOOD_MOON_ENTRANCE",
@@ -5047,8 +5068,9 @@
       "THE_BLOOD_MOON_ENTRANCE"
     ],
     "aabbs": [
-      [ 1370, 9610, 0, 1407, 9654, 0 ]
-    ]
+      [ 1370, 9610, 0, 1407, 9654, 1 ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "THE_ECLIPSE_MOON_ENTRANCE",
@@ -5063,7 +5085,8 @@
     ],
     "aabbs": [
       [ 1472, 9610, 0, 1510, 9654, 0 ]
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "PERILOUS_MOONS_REWARD_ROOM",
