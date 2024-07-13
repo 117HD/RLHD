@@ -4286,7 +4286,7 @@
     ]
   },
   {
-    "name": "SECRETS_OF_THE_NORTH_DUNGEON",
+    "name": "GHORROCK_DUNGEON",
     "regions": [
       11681
     ],
@@ -4371,7 +4371,7 @@
     "name": "ICY_UNDERGROUND_DARK",
     "areas": [
       "WEISS_SALT_MINE",
-      "SECRETS_OF_THE_NORTH_DUNGEON"
+      "GHORROCK_DUNGEON"
     ]
   },
   {

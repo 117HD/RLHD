@@ -14419,15 +14419,86 @@
     "uvOrientation": 384
   },
   {
-    "description": "Ghorrock Dungeon Walls",
+    "description": "Ghorrock Dungeon - Wall",
     "baseMaterial": "GRUNGE_3_LIGHT",
     "objectIds": [ 46597, 46623, 46624, 46625, 46626, 46627, 46629, 46630, 46631, 46634, 46635, 46636, 46650, 46651, 46652, 46653, 46654, 46655, 46656, 46657, 46658, 46659, 46660, 46661, 46662, 46666, 46667, 46701, 46702, 49092 ],
     "uvType": "BOX"
   },
   {
-    "description": "Ghorrock Dungeon Snow Trim",
+    "description": "Ghorrock Dungeon - Snow - Trim",
     "baseMaterial": "GRAY_110",
     "objectIds": [ 46639, 46640, 46641, 46642, 46643 ]
+  },
+  {
+    "description": "Ghorrock Dungeon - Wooden - Chest",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      46620,
+      46680
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Ghorrock Dungeon - Wooden - Chair",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      46677
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Ghorrock Dungeon - Wooden - Chair - Smashed",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      46676
+    ],
+    "uvType": "BOX",
+    "uvOrientationY": -206
+  },
+  {
+    "description": "Ghorrock Dungeon - Wooden - Crate",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      46688
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Ghorrock Dungeon - Wooden - Crate - Stacked",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      46689
+    ],
+    "uvType": "BOX",
+    "uvOrientationY": -256
+  },
+  {
+    "description": "Ghorrock Dungeon - Tables",
+    "baseMaterial": "SNOW_2",
+    "objectIds": [
+      46674,
+      46675
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Ghorrock Dungeon - Lever",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "objectIds": [
+      46687
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.25
+  },
+  {
+    "description": "Ghorrock Dungeon - Wall - Candle",
+    "baseMaterial": "WOOD_GRAIN",
+    "objectIds": [
+      46647
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.25
   },
   {
     "description": "White Bed with pillow",
