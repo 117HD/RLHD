@@ -6281,6 +6281,7 @@
     "name": "ICY_UNDERGROUND_SNOW",
     "area": "ICY_UNDERGROUND_DARK",
     "underlayIds": [
+      104,
       159,
       161
     ],
@@ -6301,7 +6302,8 @@
     "overlayIds": [
       255
     ],
-    "groundMaterial": "DIRT"
+    "groundMaterial": "DIRT",
+    "blended": false
   },
   {
     "name": "LASSAR_UNDERCITY_SUNKEN_CATHEDRAL",
