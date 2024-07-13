@@ -10532,16 +10532,6 @@
     "uvOrientation": 768
   },
   {
-    "description": "Tropical Tree Big - Leaning",
-    "baseMaterial": "LIGHT_BARK",
-    "objectIds": [
-      1361
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.62,
-    "uvOrientation": 768
-  },
-  {
     "description": "Tree - Snowy - Weiss",
     "baseMaterial": "SNOW_2",
     "objectIds": [
