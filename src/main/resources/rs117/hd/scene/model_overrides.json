@@ -14916,6 +14916,17 @@
     "uvOrientation": 256
   },
   {
+    "description": "Isle of Stone - Cave and Pillars",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      25846,
+      37409,
+      37410
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 256
+  },
+  {
     "description": "Spinning Wheel",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
