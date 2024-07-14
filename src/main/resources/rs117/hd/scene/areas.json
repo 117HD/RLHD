@@ -2458,6 +2458,14 @@
     "hideOtherAreas": true
   },
   {
+    "name": "Deep Wilderness Dungeon",
+    "aabbs": [
+      [ 3012, 10364, 3059, 10366, 0 ],
+      [ 3011, 10305, 3070, 10363, 0 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
     "name": "GIELINOR_SNOWY_NORTHERN_REGION",
     "aabbs": [
       [ 2748, 3711, 2942, 3980 ]
