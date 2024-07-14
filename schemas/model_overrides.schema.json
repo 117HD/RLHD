@@ -12,12 +12,13 @@
         "type": "string",
         "description": "Description of which objects the properties apply to."
       },
-      "seasonalThemeHemisphere": {
+      "seasonalTheme": {
         "type": "string",
-        "description": "Which hemisphere the 'Automatic' seasonal theme should be taking into account.",
+        "description": "Which seasonal theme the model override should be active for, or null for all. Defaults to null.",
         "enum": [
-          "NORTHERN",
-	        "SOUTHERN"
+          "SUMMER",
+          "AUTUMN",
+          "WINTER"
         ]
       },
       "areas": {
