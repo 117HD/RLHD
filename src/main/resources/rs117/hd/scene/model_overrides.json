@@ -5630,6 +5630,19 @@
     "uvScale": 0.75
   },
   {
+    "description": "Wilderness - Basalt rocks",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      11176,
+      11177,
+      11178,
+      11179,
+      11180,
+      11181
+    ],
+    "uvType": "BOX"
+  },
+  {
     "description": "Sewer Valve",
     "baseMaterial": "METALLIC_1_SEMIGLOSS",
     "objectIds": [
