@@ -3,7 +3,8 @@
     "name": "EVIL_BOB_ISLAND",
     "aabbs": [
       [ 2496, 4748, 2559, 4801 ]
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "VERTICAL_DIRT_FIX_NEAR_FALADOR",
@@ -472,25 +473,29 @@
     "name": "STRONGHOLD_OF_SECURITY_WAR",
     "regions": [
       7505
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "STRONGHOLD_OF_SECURITY_FAMINE",
     "regions": [
       8017
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "STRONGHOLD_OF_SECURITY_PESTILENCE",
     "regions": [
       8530
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "STRONGHOLD_OF_SECURITY_DEATH",
     "regions": [
       9297
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "STRONGHOLD_OF_SECURITY",
@@ -1469,6 +1474,16 @@
     ]
   },
   {
+    "name": "WITCHAVEN_DUNGEON",
+    "regions": [ 9295, 10903 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "LEGENDS_GUILD_DUNGEON",
+    "regions": [ 10904 ],
+    "hideOtherAreas": true
+  },
+  {
     "name": "KHAZARD_BATTLEFIELD_COBBLE_OUTSIDE",
     "aabbs": [
       [ 2507, 3254, 2512, 3259 ],
@@ -2212,9 +2227,20 @@
     ]
   },
   {
+    "name": "TZHAAR_FIGHT_CAVES",
+    "regions": [ 9551 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "TZHAAR_CITY_REGION",
+    "regions": [ 9552, 9807, 9808, 10063, 10064 ],
+    "hideOtherAreas": true
+  },
+  {
     "name": "TZHAAR",
-    "regionBoxes": [
-      [ 9551, 10064 ]
+    "areas": [
+      "TZHAAR_FIGHT_CAVES",
+      "TZHAAR_CITY_REGION"
     ]
   },
   {
@@ -2340,16 +2366,51 @@
   },
   {
     "name": "TROLLHEIM",
+    "regions": [
+      11577,
+      11321,
+      11320,
+      11576,
+      11319,
+      11063
+    ],
     "aabbs": [
       [ 2726, 3662, 2751, 3753 ],
       [ 2780, 3584, 2815, 3647 ]
     ]
   },
   {
-    "name": "TROLL_STRONGHOLD_INTERIOR",
-    "aabbs": [
-      [ 2816, 10047, 2871, 10111 ]
+    "name": "TROLL_STRONGHOLD",
+    "areas": [
+      "TROLL_STRONGHOLD_FLOOR_0",
+      "TROLL_STRONGHOLD_FLOOR_1",
+      "TROLL_STRONGHOLD_FLOOR_2"
     ]
+  },
+  {
+    "name": "TROLL_STRONGHOLD_FLOOR_0",
+    "aabbs": [
+      [ 2815, 10048, 2878, 10111, 0 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "TROLL_STRONGHOLD_FLOOR_1",
+    "aabbs": [
+      [ 2847, 10062, 2858, 10072, 0 ],
+      [ 2848, 10097, 2857, 10109, 0 ],
+      [ 2822, 10048, 1, 2863, 10111, 1 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "TROLL_STRONGHOLD_FLOOR_2",
+    "aabbs": [
+      [ 2837, 10050, 2847, 10057, 1 ],
+      [ 2837, 10103, 2846, 10111, 1 ],
+      [ 2819, 10048, 2, 2863, 10111, 2 ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "WEISS_REGION",
@@ -2625,9 +2686,32 @@
     ]
   },
   {
-    "name": "ZANARIS",
+    "name": "ZANARIS_MAIN",
     "aabbs": [
-      [ 2315, 4345, 2500, 4485 ]
+      [ 2368, 4479, 2495, 4416 ],
+      [ 2368, 4415, 2431, 4352 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "ZANARIS_FAIRY_QUEENS_HIDEOUT",
+    "aabbs": [
+      [ 2304, 4479, 2367, 4416 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "EVIL_CHICKEN_LAIR",
+    "aabbs": [
+      [ 2432, 4415, 2495, 4352 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "ZANARIS",
+    "areas": [
+      "ZANARIS_MAIN",
+      "ZANARIS_FAIRY_QUEENS_HIDEOUT"
     ]
   },
   {
@@ -2755,6 +2839,9 @@
   },
   {
     "name": "KARUULM_SLAYER_DUNGEON",
+    "regions": [
+      5536
+    ],
     "regionBoxes": [
       [ 5022, 5023 ],
       [ 5279, 5280 ]
@@ -3208,6 +3295,9 @@
   },
   {
     "name": "BRAINDEATH_ISLAND",
+    "regions": [
+      8784
+    ],
     "aabbs": [
       [ 2112, 5042, 2175, 5183 ]
     ]
@@ -3294,6 +3384,9 @@
   },
   {
     "name": "LUNAR_DREAM_WORLD",
+    "regions": [
+      6991
+    ],
     "regionBoxes": [
       [ 7247, 7250 ]
     ]
@@ -3540,82 +3633,97 @@
     "name": "COSMIC_ALTAR",
     "aabbs": [
       [ 2112, 4799, 2176, 4863 ]
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "DEATH_ALTAR",
     "aabbs": [
       [ 2176, 4799, 2240, 4863 ]
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "CHAOS_ALTAR",
     "aabbs": [
-      [ 2240, 4799, 2304, 4863 ]
-    ]
+      [ 2240, 4863, 2303, 4800 ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "WRATH_ALTAR",
     "aabbs": [
-      [ 2304, 4799, 2368, 4863 ]
-    ]
+      [ 2304, 4800, 2366, 4863 ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "NATURE_ALTAR",
     "aabbs": [
-      [ 2368, 4799, 2427, 4863 ]
-    ]
+      [ 2372, 4863, 2426, 4804 ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "LAW_ALTAR",
-    "aabbs": [
-      [ 2427, 4799, 2495, 4863 ]
-    ]
+    "regions": [ 9803 ],
+    "hideOtherAreas": true
   },
   {
     "name": "BODY_ALTAR",
     "aabbs": [
-      [ 2495, 4799, 2553, 4863 ]
-    ]
+      [ 2497, 4863, 2543, 4817 ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "FIRE_ALTAR",
     "aabbs": [
-      [ 2553, 4799, 2624, 4863 ]
-    ]
+      [ 2553, 4802, 2624, 4864 ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "EARTH_ALTAR",
     "aabbs": [
-      [ 2624, 4799, 2688, 4863 ]
-    ]
+      [ 2627, 4815, 2685, 4861 ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "WATER_ALTAR",
     "aabbs": [
-      [ 2688, 4799, 2752, 4863 ]
-    ]
+      [ 2688, 4800, 2750, 4862 ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "MIND_ALTAR",
     "aabbs": [
-      [ 2752, 4799, 2816, 4863 ]
-    ]
+      [ 2756, 4805, 2810, 4861 ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "AIR_ALTAR",
     "aabbs": [
-      [ 2816, 4799, 2880, 4863 ]
-    ]
+      [ 2817, 4802, 2865, 4862 ]
+    ],
+    "hideOtherAreas": true,
+    "fillGaps": false
   },
   {
     "name": "TRUE_BLOOD_ALTAR",
     "aabbs": [
-      [ 3200, 4800, 3262, 4862 ]
-    ]
+      [ 3202, 4800, 3263, 4863 ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "LITHKREN_DUNGEON",
+    "regions": [
+      6223
+    ],
     "regionBoxes": [
       [ 14242, 14243 ]
     ]
@@ -3982,6 +4090,10 @@
   },
   {
     "name": "CHAMBERS_OF_XERIC",
+    "regions": [
+      12889,
+      13136
+    ],
     "regionBoxes": [
       [ 13137, 13401 ]
     ]
@@ -4096,7 +4208,8 @@
   {
     "name": "LIGHTHOUSE_INSTANCE",
     "aabbs": [
-      [ 2432, 4544, 2495, 4624 ]
+      [ 2432, 4624, 2494, 4544 ],
+      [ 2415, 4624, 2431, 4608 ]
     ]
   },
   {
@@ -4178,6 +4291,15 @@
     "name": "SHIP_SAILING",
     "areas": [
       "DS2_SHIPS"
+    ],
+    "regions": [
+      7242,
+      7243,
+      7499,
+      7500,
+      7755,
+      8011,
+      8012
     ]
   },
   {
@@ -4188,6 +4310,9 @@
   },
   {
     "name": "SECRETS_OF_THE_NORTH_DUNGEON",
+    "regions": [
+      11681
+    ],
     "regionBoxes": [
       [ 11619, 12132 ]
     ]
@@ -4290,6 +4415,9 @@
   },
   {
     "name": "THE_SCAR_MAIN_AREA",
+    "regions": [
+      7779
+    ],
     "aabbs": [
       [ 1984, 6304, 2143, 6463 ]
     ]
@@ -4311,12 +4439,18 @@
   },
   {
     "name": "LASSAR_UNDERCITY_MAIN_NORMAL",
+    "regions": [
+      10083
+    ],
     "regionBoxes": [
       [ 10338, 10852 ]
     ]
   },
   {
     "name": "LASSAR_UNDERCITY_MAIN_SHADOW_REALM",
+    "regions": [
+      9059
+    ],
     "regionBoxes": [
       [ 9314, 9828 ]
     ]
@@ -4465,7 +4599,8 @@
     "name": "ESSENCE_MINE",
     "regions": [
       11595
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "KINGDOM_OF_MISTHALIN_REGION",
@@ -4766,8 +4901,10 @@
       [ 1503, 9562, 1505, 9566 ],
       [ 1506, 9562, 1508, 9565 ],
       [ 1392, 9535, 1405, 9579 ],
-      [ 1384, 9535, 1391, 9546 ]
-    ]
+      [ 1384, 9535, 1391, 9546 ],
+      [ 1387, 9548, 1391, 9578, 1 ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "CAM_TORUM_ENTRANCE_FIX",
@@ -4860,22 +4997,39 @@
     ]
   },
   {
+    "name": "PERIOUS_MOONS_ANTECHAMBER",
+    "aabbs": [
+      [ 1418, 9653, 1433, 9640 ],
+      [ 1446, 9640, 1460, 9653 ],
+      [ 1428, 9639, 1433, 9625 ],
+      [ 1446, 9639, 1452, 9625 ],
+      [ 1434, 9642, 1445, 9625 ],
+      [ 1419, 9612, 1460, 9624 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
     "name": "EARTHBOUND_CAVERN",
     "aabbs": [
       [ 1344, 9664, 1407, 9747 ]
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "STREAMBOUND_CAVERN",
     "regions": [
       6039
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "ANCIENT_PRISON",
     "aabbs": [
-      [ 1344, 9536, 1391, 9599 ]
-    ]
+      [ 1341, 9598, 1384, 9545 ],
+      [ 1341, 9544, 1378, 9535 ],
+      [ 1385, 9556, 1392, 9598, 0 ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "ANCIENT_PRISON_SUN_BLEND_FIX",
@@ -4888,17 +5042,19 @@
     "aabbs": [
       [ 1501, 9568, 0, 1525, 9592, 0 ],
       [ 1493, 9571, 0, 1500, 9588, 0 ],
-      [ 1506, 9593, 0, 1520, 9598, 0 ],
+      [ 1506, 9593, 0, 1520, 9599, 0 ],
       [ 1526, 9573, 0, 1532, 9588, 0 ],
-      [ 1506, 9561, 0, 1520, 9567, 0 ]
-    ]
+      [ 1506, 9560, 0, 1520, 9567, 0 ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "THE_BLUE_MOON",
     "aabbs": [
       [ 1434, 9649, 0, 1446, 9663, 0 ],
       [ 1420, 9664, 0, 1460, 9700, 0 ]
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "THE_BLOOD_MOON_ENTRANCE",
@@ -4912,8 +5068,9 @@
       "THE_BLOOD_MOON_ENTRANCE"
     ],
     "aabbs": [
-      [ 1370, 9610, 0, 1407, 9654, 0 ]
-    ]
+      [ 1370, 9610, 0, 1407, 9654, 1 ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "THE_ECLIPSE_MOON_ENTRANCE",
@@ -4928,7 +5085,8 @@
     ],
     "aabbs": [
       [ 1472, 9610, 0, 1510, 9654, 0 ]
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "PERILOUS_MOONS_REWARD_ROOM",
@@ -5013,6 +5171,11 @@
       "VER_SINHAZA_CUTSCENE",
       "DEFENDER_OF_VARROCK_CASTLE_UNDER_ATTACK",
       "CHURCH_OF_AYASTER"
+    ],
+    "regions": [
+      8288,
+      8801,
+      11593
     ]
   },
   {

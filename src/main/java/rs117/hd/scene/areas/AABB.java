@@ -95,12 +95,27 @@ public class AABB {
 		maxZ = Math.max(z1, z2);
 	}
 
+	public AABB(int[] point) {
+		this(point[0], point[1], point[2]);
+	}
+
 	public AABB(int[] from, int[] to) {
 		this(from[0], from[1], from[2], to[0], to[1], to[2]);
 	}
 
 	public AABB onPlane(int plane) {
 		return new AABB(minX, minY, plane, maxX, maxY, plane);
+	}
+
+	public AABB expandTo(int[] point) {
+		return new AABB(
+			Math.min(minX, point[0]),
+			Math.min(minY, point[1]),
+			Math.min(minZ, point[2]),
+			Math.max(maxX, point[0]),
+			Math.max(maxY, point[1]),
+			Math.max(maxZ, point[2])
+		);
 	}
 
 	public boolean hasZ() {
@@ -118,11 +133,11 @@ public class AABB {
 		return !isPoint();
 	}
 
-	public boolean contains(int... worldXYZ) {
+	public boolean contains(int... worldPos) {
 		return
-			minX <= worldXYZ[0] && worldXYZ[0] <= maxX &&
-			minY <= worldXYZ[1] && worldXYZ[1] <= maxY &&
-			(worldXYZ.length < 3 || minZ <= worldXYZ[2] && worldXYZ[2] <= maxZ);
+			minX <= worldPos[0] && worldPos[0] <= maxX &&
+			minY <= worldPos[1] && worldPos[1] <= maxY &&
+			(worldPos.length < 3 || minZ <= worldPos[2] && worldPos[2] <= maxZ);
 	}
 
 	public boolean contains(WorldPoint location) {
@@ -137,23 +152,41 @@ public class AABB {
 
 	public boolean intersects(int minX, int minY, int maxX, int maxY) {
 		return
-			minX < this.maxX && maxX > this.minX &&
-			minY < this.maxY && maxY > this.minY;
+			minX <= this.maxX && maxX >= this.minX &&
+			minY <= this.maxY && maxY >= this.minY;
 	}
 
-	public boolean intersects(int minX, int maxX, int minY, int maxY, int minZ, int maxZ) {
+	public boolean intersects(int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
 		return
-			minX < this.maxX && maxX > this.minX &&
-			minY < this.maxY && maxY > this.minY &&
-			minZ < this.maxZ && maxZ > this.minZ;
+			minX <= this.maxX && maxX >= this.minX &&
+			minY <= this.maxY && maxY >= this.minY &&
+			minZ <= this.maxZ && maxZ >= this.minZ;
 	}
 
 	public boolean intersects(AABB other) {
 		return intersects(
-			other.minX, other.maxX,
-			other.minY, other.maxY,
-			other.minZ, other.maxZ
+			other.minX,
+			other.minY,
+			other.minZ,
+			other.maxX,
+			other.maxY,
+			other.maxZ
 		);
+	}
+
+	public boolean intersects(AABB... aabbs) {
+		for (var aabb : aabbs)
+			if (intersects(aabb))
+				return true;
+		return false;
+	}
+
+	public float[] getCenter() {
+		return new float[] {
+			(minX + maxX) / 2.f,
+			(minY + maxY) / 2.f,
+			(minZ + maxZ) / 2.f
+		};
 	}
 
 	@Override
@@ -165,10 +198,12 @@ public class AABB {
 
 	public String toArgs() {
 		if (isPoint())
-			return String.format("%d, %d", minX, minY);
+			return String.format("[ %d, %d ]", minX, minY);
+		if (!hasZ())
+			return String.format("[ %d, %d, %d, %d ]", minX, minY, maxX, maxY);
 		if (minZ == maxZ)
-			return String.format("%d, %d, %d, %d, %d", minX, minY, maxX, maxY, minZ);
-		return String.format("%d, %d, %d, %d, %d, %d", minX, minY, minZ, maxX, maxY, maxZ);
+			return String.format("[ %d, %d, %d, %d, %d ]", minX, minY, maxX, maxY, minZ);
+		return String.format("[ %d, %d, %d, %d, %d, %d ]", minX, minY, minZ, maxX, maxY, maxZ);
 	}
 
 	@Override

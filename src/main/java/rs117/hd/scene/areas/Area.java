@@ -13,20 +13,25 @@ public class Area {
 
 	public String name;
 	public boolean hideOtherAreas;
+	public boolean fillGaps = true;
 
-	private String[] areas;
-	private int[] regions;
+	public String[] areas;
+	public int[] regions;
 	@JsonAdapter(RegionBox.JsonAdapter.class)
-	private RegionBox[] regionBoxes;
+	public RegionBox[] regionBoxes;
 	@JsonAdapter(AABB.JsonAdapter.class)
 	@SerializedName("aabbs")
-	private AABB[] rawAabbs;
+	public AABB[] rawAabbs;
 
 	public transient AABB[] aabbs;
 	private transient boolean normalized;
 
-	public Area(String name, int x1, int y1, int x2, int y2) {
+	public Area(String name) {
 		this.name = name;
+	}
+
+	public Area(String name, int x1, int y1, int x2, int y2) {
+		this(name);
 		aabbs = new AABB[] { new AABB(x1, y1, x2, y2) };
 	}
 
@@ -57,12 +62,6 @@ public class Area {
 		}
 
 		this.aabbs = aabbs.toArray(AABB[]::new);
-
-		// Free up a bit of memory
-		areas = null;
-		regions = null;
-		regionBoxes = null;
-		rawAabbs = null;
 	}
 
 	public boolean containsPoint(int worldX, int worldY, int plane) {
@@ -81,10 +80,18 @@ public class Area {
 	public boolean intersects(Area otherArea) {
 		if (otherArea == null)
 			return false;
-		for (AABB other : otherArea.aabbs)
-			for (AABB self : aabbs)
-				if (self.intersects(other))
-					return true;
+		return intersects(otherArea.aabbs);
+	}
+
+	public boolean intersects(AABB... otherAabbs) {
+		for (AABB aabb : aabbs)
+			if (aabb.intersects(otherAabbs))
+				return true;
 		return false;
+	}
+
+	@Override
+	public String toString() {
+		return name;
 	}
 }

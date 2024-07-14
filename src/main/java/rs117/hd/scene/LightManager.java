@@ -68,6 +68,7 @@ import static java.lang.Math.cos;
 import static java.lang.Math.pow;
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.*;
+import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
 import static rs117.hd.utils.HDUtils.TWO_PI;
 import static rs117.hd.utils.HDUtils.fract;
 import static rs117.hd.utils.HDUtils.mod;
@@ -116,6 +117,7 @@ public class LightManager {
 
 	private boolean reloadLights;
 	private EntityHiderConfig entityHiderConfig;
+	private int currentPlane;
 
 	public void loadConfig(Gson gson, ResourcePath path) {
 		try {
@@ -204,6 +206,13 @@ public class LightManager {
 		int[][][] tileHeights = sceneContext.scene.getTileHeights();
 		var cachedNpcs = client.getCachedNPCs();
 		var cachedPlayers = client.getCachedPlayers();
+		int plane = client.getPlane();
+		boolean changedPlanes = false;
+
+		if (plane != currentPlane) {
+			currentPlane = plane;
+			changedPlanes = true;
+		}
 
 		for (Light light : sceneContext.lights) {
 			// Ways lights may get deleted:
@@ -274,15 +283,14 @@ public class LightManager {
 					var lp = light.actor.getLocalLocation();
 					light.origin[0] = lp.getX();
 					light.origin[2] = lp.getY();
-					int plane = client.getPlane();
 					light.plane = plane;
 					light.orientation = light.actor.getCurrentOrientation();
 
 					if (light.animationSpecific)
 						parentExists = light.def.animationIds.contains(light.actor.getAnimation());
 
-					int tileExX = light.origin[0] / LOCAL_TILE_SIZE + SceneUploader.SCENE_OFFSET;
-					int tileExY = light.origin[2] / LOCAL_TILE_SIZE + SceneUploader.SCENE_OFFSET;
+					int tileExX = light.origin[0] / LOCAL_TILE_SIZE + SCENE_OFFSET;
+					int tileExY = light.origin[2] / LOCAL_TILE_SIZE + SCENE_OFFSET;
 
 					// Some NPCs, such as Crystalline Hunllef in The Gauntlet, sometimes return scene X/Y values far outside the possible range.
 					Tile tile;
@@ -318,9 +326,9 @@ public class LightManager {
 							float lerpX = (light.origin[0] % LOCAL_TILE_SIZE) / (float) LOCAL_TILE_SIZE;
 							float lerpY = (light.origin[2] % LOCAL_TILE_SIZE) / (float) LOCAL_TILE_SIZE;
 							int baseTileX =
-								(int) Math.floor(light.origin[0] / (float) LOCAL_TILE_SIZE) + SceneUploader.SCENE_OFFSET;
+								(int) Math.floor(light.origin[0] / (float) LOCAL_TILE_SIZE) + SCENE_OFFSET;
 							int baseTileY =
-								(int) Math.floor(light.origin[2] / (float) LOCAL_TILE_SIZE) + SceneUploader.SCENE_OFFSET;
+								(int) Math.floor(light.origin[2] / (float) LOCAL_TILE_SIZE) + SCENE_OFFSET;
 							float heightNorth = HDUtils.lerp(
 								tileHeights[plane][baseTileX][baseTileY + 1],
 								tileHeights[plane][baseTileX + 1][baseTileY + 1],
@@ -383,25 +391,23 @@ public class LightManager {
 				light.prevPlane = light.plane;
 				light.belowFloor = false;
 				light.aboveFloor = false;
-				int tileExX = light.pos[0] / LOCAL_TILE_SIZE + SceneUploader.SCENE_OFFSET;
-				int tileExY = light.pos[2] / LOCAL_TILE_SIZE + SceneUploader.SCENE_OFFSET;
+				int tileExX = light.pos[0] / LOCAL_TILE_SIZE + SCENE_OFFSET;
+				int tileExY = light.pos[2] / LOCAL_TILE_SIZE + SCENE_OFFSET;
 				if (light.plane >= 0 && tileExX >= 0 && tileExY >= 0 && tileExX < EXTENDED_SCENE_SIZE && tileExY < EXTENDED_SCENE_SIZE) {
-					Tile tileAbove = light.plane < 3 ? tiles[light.plane + 1][tileExX][tileExY] : null;
-					if (tileAbove != null && (tileAbove.getSceneTilePaint() != null || tileAbove.getSceneTileModel() != null))
+					byte hasTile = sceneContext.filledTiles[tileExX][tileExY];
+					if ((hasTile & (1 << light.plane + 1)) != 0)
 						light.belowFloor = true;
-
-					Tile lightTile = tiles[light.plane][tileExX][tileExY];
-					if (lightTile != null && (lightTile.getSceneTilePaint() != null || lightTile.getSceneTileModel() != null))
+					if ((hasTile & (1 << light.plane)) != 0)
 						light.aboveFloor = true;
 				}
 			}
 
 			if (!hiddenTemporarily && !light.def.visibleFromOtherPlanes) {
 				// Hide certain lights on planes lower than the player to prevent light 'leaking' through the floor
-				if (light.plane < client.getPlane() && light.belowFloor)
+				if (light.plane < plane && light.belowFloor)
 					hiddenTemporarily = true;
 				// Hide any light that is above the current plane and is above a solid floor
-				if (light.plane > client.getPlane() && light.aboveFloor)
+				if (light.plane > plane && light.aboveFloor)
 					hiddenTemporarily = true;
 			}
 
@@ -423,7 +429,7 @@ public class LightManager {
 			}
 
 			if (hiddenTemporarily != light.hiddenTemporarily)
-				light.toggleTemporaryVisibility();
+				light.toggleTemporaryVisibility(changedPlanes);
 
 			light.elapsedTime += plugin.deltaClientTime;
 
@@ -473,7 +479,7 @@ public class LightManager {
 
 			// If the light was temporarily hidden, begin fading in
 			if (!light.withinViewingDistance && light.hiddenTemporarily)
-				light.toggleTemporaryVisibility();
+				light.toggleTemporaryVisibility(changedPlanes);
 			light.withinViewingDistance = true;
 
 			if (light.def.type == LightType.FLICKER) {
@@ -674,7 +680,7 @@ public class LightManager {
 		if (sceneContext == null)
 			return;
 
-		int[] worldPos = sceneContext.localToWorld(actor.getLocalLocation(), client.getPlane());
+		int[] worldPos = sceneContext.localToWorld(actor.getLocalLocation());
 
 		for (var spotAnim : actor.getSpotAnims()) {
 			int spotAnimId = spotAnim.getId();
@@ -714,7 +720,7 @@ public class LightManager {
 			return;
 
 		int uuid = ModelHash.packUuid(ModelHash.TYPE_NPC, npc.getId());
-		int[] worldPos = sceneContext.localToWorld(npc.getLocalLocation(), client.getPlane());
+		int[] worldPos = sceneContext.localToWorld(npc.getLocalLocation());
 
 		var modelOverride = modelOverrideManager.getOverride(uuid, worldPos);
 		if (modelOverride.hide)
@@ -901,8 +907,8 @@ public class LightManager {
 					continue;
 				}
 
-				int tileExX = HDUtils.clamp(lp.getSceneX() + SceneUploader.SCENE_OFFSET, 0, EXTENDED_SCENE_SIZE - 2);
-				int tileExY = HDUtils.clamp(lp.getSceneY() + SceneUploader.SCENE_OFFSET, 0, EXTENDED_SCENE_SIZE - 2);
+				int tileExX = HDUtils.clamp(lp.getSceneX() + SCENE_OFFSET, 0, EXTENDED_SCENE_SIZE - 2);
+				int tileExY = HDUtils.clamp(lp.getSceneY() + SCENE_OFFSET, 0, EXTENDED_SCENE_SIZE - 2);
 				float lerpX = (lightX % LOCAL_TILE_SIZE) / (float) LOCAL_TILE_SIZE;
 				float lerpZ = (lightZ % LOCAL_TILE_SIZE) / (float) LOCAL_TILE_SIZE;
 				int tileZ = HDUtils.clamp(plane, 0, MAX_Z - 1);
@@ -951,8 +957,8 @@ public class LightManager {
 			return;
 
 		LocalPoint lp = firstlp.get();
-		int tileExX = lp.getSceneX() + SceneUploader.SCENE_OFFSET;
-		int tileExY = lp.getSceneY() + SceneUploader.SCENE_OFFSET;
+		int tileExX = lp.getSceneX() + SCENE_OFFSET;
+		int tileExY = lp.getSceneY() + SCENE_OFFSET;
 		if (tileExX < 0 || tileExY < 0 || tileExX >= EXTENDED_SCENE_SIZE || tileExY >= EXTENDED_SCENE_SIZE)
 			return;
 
