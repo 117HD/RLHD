@@ -86,6 +86,7 @@ import rs117.hd.config.UIScalingMode;
 import rs117.hd.config.VanillaShadowMode;
 import rs117.hd.data.WaterType;
 import rs117.hd.data.materials.Material;
+import rs117.hd.data.materials.groundMaterial.GroundMaterialManager;
 import rs117.hd.model.ModelHasher;
 import rs117.hd.model.ModelOffsets;
 import rs117.hd.model.ModelPusher;
@@ -216,6 +217,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Inject
 	private AreaManager areaManager;
+
+	@Inject
+	private GroundMaterialManager groundMaterialManager;
 
 	@Inject
 	private LightManager lightManager;
@@ -626,6 +630,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				lastAntiAliasingMode = null;
 
 				areaManager.startUp();
+				groundMaterialManager.startUp();
 				tileOverrideManager.startUp();
 				modelOverrideManager.startUp();
 				modelPusher.startUp();
@@ -680,6 +685,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			environmentManager.shutDown();
 			fishingSpotReplacer.shutDown();
 			areaManager.shutDown();
+			groundMaterialManager.shutDown();
 
 			if (lwjglInitialized) {
 				lwjglInitialized = false;

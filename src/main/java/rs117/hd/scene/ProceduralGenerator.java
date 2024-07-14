@@ -34,6 +34,7 @@ import rs117.hd.HdPlugin;
 import rs117.hd.config.SeasonalTheme;
 import rs117.hd.data.WaterType;
 import rs117.hd.data.materials.Material;
+import rs117.hd.data.materials.groundMaterial.GroundMaterialManager;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.scene.model_overrides.ObjectType;
 import rs117.hd.scene.model_overrides.TzHaarRecolorType;
@@ -77,6 +78,9 @@ public class ProceduralGenerator {
 
 	@Inject
 	private TileOverrideManager tileOverrideManager;
+
+	@Inject
+	private GroundMaterialManager groundMaterialManager;
 
 	public void generateSceneData(SceneContext sceneContext)
 	{
@@ -301,7 +305,7 @@ public class ProceduralGenerator {
 			Material material = Material.DIRT_1;
 			var override = vertexOverrides[vertex];
 			if (override != TileOverride.NONE) {
-				material = override.groundMaterial.getRandomMaterial(worldPos[2], worldPos[0], worldPos[1]);
+				material = groundMaterialManager.lookup(override.groundMaterial).getRandomMaterial(worldPos[2], worldPos[0], worldPos[1]);
 				isOverlay = vertexIsOverlay[vertex] != override.blendedAsOpposite;
 				color = override.modifyColor(color);
 			}

@@ -24,6 +24,14 @@
  */
 package rs117.hd.data.materials;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
+import java.lang.reflect.Type;
+import java.util.Arrays;
 import java.util.Random;
 import lombok.Getter;
 
@@ -137,4 +145,31 @@ public enum GroundMaterial {
 		int randomInt = randomTex.nextInt(this.materials.length);
 		return this.materials[randomInt];
 	}
+
+	public static class GroundMaterialSerializer implements JsonSerializer<GroundMaterial> {
+		@Override
+		public JsonObject serialize(GroundMaterial groundMaterial, Type type, JsonSerializationContext jsonSerializationContext) {
+			JsonObject jsonObject = new JsonObject();
+			jsonObject.addProperty("name", groundMaterial.name());
+
+			// Create materials array
+			JsonArray materialsArray = new JsonArray();
+			for (Material material : groundMaterial.getMaterials()) {
+				materialsArray.add(material.toString()); // Assuming Material has a toString() method
+			}
+			jsonObject.add("materials", materialsArray);
+
+			return jsonObject;
+		}
+	}
+
+	// Method to convert enum to JSON format
+	public static String toJson() {
+		Gson gson = new GsonBuilder()
+			.registerTypeAdapter(GroundMaterial.class, new GroundMaterialSerializer())
+			.setPrettyPrinting()
+			.create();
+		return gson.toJson(Arrays.asList(GroundMaterial.values()));
+	}
+
 }
