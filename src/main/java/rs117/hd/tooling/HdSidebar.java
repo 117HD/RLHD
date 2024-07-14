@@ -25,6 +25,7 @@
 package rs117.hd.tooling;
 
 import com.google.inject.Inject;
+import lombok.Getter;
 import net.runelite.client.ui.ColorScheme;
 import net.runelite.client.ui.PluginPanel;
 import net.runelite.client.ui.components.materialtabs.MaterialTab;
@@ -55,6 +56,9 @@ public class HdSidebar extends PluginPanel {
 	private final NavigationButton navigationButton;
 	private final MaterialTabGroup tabGroup;
 	private final JPanel tabPanel;
+
+	@Getter
+	private final HdDeveloperTools developmentTools;
 
 	@Inject
 	public HdSidebar(ClientToolbar clientToolbar, HdDeveloperTools developmentTools) {
@@ -88,7 +92,9 @@ public class HdSidebar extends PluginPanel {
 			.build();
 		clientToolbar.addNavigation(navigationButton);
 
-		MaterialTab resourcePackTab = addTab(developmentTools, "toolbox_icon.png", "Development Tools");
+		this.developmentTools = developmentTools;
+
+		MaterialTab resourcePackTab = addTab(this.developmentTools, "toolbox_icon.png", "Development Tools");
 
 		resourcePackTab.select();
 	}

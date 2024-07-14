@@ -771,6 +771,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public void toggleFreezeFrame() {
 		clientThread.invoke(() -> {
 			enableFreezeFrame = !enableFreezeFrame;
+			if (getSidebar() != null) {
+				getSidebar().getDevelopmentTools().getShadowButton().setActive(enableFreezeFrame);
+			}
 			if (enableFreezeFrame)
 				redrawPreviousFrame = true;
 		});

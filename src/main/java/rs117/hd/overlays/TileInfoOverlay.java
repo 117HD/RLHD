@@ -107,10 +107,6 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 	private SceneContext currentSceneContext;
 	private Area[] visibleAreas = new Area[0];
 
-	@Inject
-	private HdDeveloperTools hdDeveloperTools;
-
-
 	public TileInfoOverlay() {
 		setLayer(OverlayLayer.ABOVE_SCENE);
 		setPosition(OverlayPosition.DYNAMIC);
@@ -127,9 +123,10 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			mouseManager.unregisterMouseListener(this);
 			mouseManager.unregisterMouseWheelListener(this);
 		}
-		hdDeveloperTools.getTileInfoButton().setActive(activate);
-		System.out.println("==================================");
-		hdDeveloperTools.refresh();
+		if (plugin.getSidebar() != null) {
+			plugin.getSidebar().getDevelopmentTools().getTileInfoButton().setActive(activate);
+		}
+
 		tileOverrideManager.setTrackReplacements(activate);
 	}
 

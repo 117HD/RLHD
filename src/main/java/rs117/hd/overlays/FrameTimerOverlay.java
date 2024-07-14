@@ -22,6 +22,9 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 	@Inject
 	private FrameTimer frameTimer;
 
+	@Inject
+	private HdPlugin plugin;
+
 	private final ArrayDeque<FrameTimings> frames = new ArrayDeque<>();
 
 	@Inject
@@ -40,6 +43,9 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 			frameTimer.removeTimingsListener(this);
 			overlayManager.remove(this);
 			frames.clear();
+		}
+		if (plugin.getSidebar() != null) {
+			plugin.getSidebar().getDevelopmentTools().getTimersButton().setActive(activate);
 		}
 	}
 

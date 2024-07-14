@@ -11,11 +11,20 @@ import net.runelite.client.ui.ColorScheme;
 public class DeveloperToolsButton extends JButton {
 	private boolean active;
 
+	@Inject
+	private EventBus eventBus;
+
+	public DeveloperToolsButton(EventBus eventBus,String title) {
+		new DeveloperToolsButton(eventBus,title,"");
+	}
+
 	public DeveloperToolsButton(EventBus eventBus,String title, String key) {
 		super(title);
 		this.addActionListener((ev) -> {
 			this.setActive(!this.active);
-			eventBus.post(new CommandExecuted("117hd", new String[] { key }));
+			if (!key.isEmpty()) {
+				eventBus.post(new CommandExecuted("117hd", new String[] { key }));
+			}
 		});
 		this.setToolTipText(title);
 	}

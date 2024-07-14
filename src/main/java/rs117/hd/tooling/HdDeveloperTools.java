@@ -24,6 +24,21 @@ public class HdDeveloperTools extends PluginPanel
 	@Getter
 	private final DeveloperToolsButton tileInfoButton;
 
+	@Getter
+	private final DeveloperToolsButton timersButton;
+
+	@Getter
+	private final DeveloperToolsButton shadowButton;
+
+	@Getter
+	private final DeveloperToolsButton lightsButton;
+
+	@Getter
+	private final DeveloperToolsButton frezzeButton;
+
+	@Getter
+	private final DeveloperToolsButton aabbBoundingBoxesButton;
+
 	@Inject
 	private HdDeveloperTools(
 		Client client,
@@ -37,28 +52,14 @@ public class HdDeveloperTools extends PluginPanel
 		this.eventBus = eventBus;
 
 		tileInfoButton = new DeveloperToolsButton(eventBus,"Tile Info","tileinfo");
+		timersButton = new DeveloperToolsButton(eventBus,"Timers","timers");
+		shadowButton = new DeveloperToolsButton(eventBus,"Shadow Map","shadowmap");
+		lightsButton = new DeveloperToolsButton(eventBus,"Lights","lights");
+		frezzeButton = new DeveloperToolsButton(eventBus,"Freeze Frame","freeze");
+		aabbBoundingBoxesButton = new DeveloperToolsButton(eventBus,"Bounding Boxes","freeze");
 
 		setBackground(ColorScheme.DARK_GRAY_COLOR);
 		add(createOptionsPanel());
-	}
-
-	public void refresh() {
-		tileInfoButton.invalidate();
-		tileInfoButton.repaint();
-		SwingUtilities.invokeLater(() -> {
-			// Remove all components
-			removeAll();
-
-			// Add the new options panel
-			add(createOptionsPanel());
-
-			// Revalidate the panel to trigger layout manager
-			revalidate();
-
-			// Repaint the panel to update the UI
-			repaint();
-		});
-		System.out.println("SIs Active: " + tileInfoButton.isActive());
 	}
 
 	@SuppressWarnings("PMD.DoubleBraceInitialization")
@@ -69,10 +70,10 @@ public class HdDeveloperTools extends PluginPanel
 		container.setLayout(new GridLayout(0, 2, 3, 3));
 
 		container.add(tileInfoButton);
-		container.add(new DeveloperToolsButton(eventBus,"Timers","timers"));
-		container.add(new DeveloperToolsButton(eventBus,"Shadow Map","shadowmap"));
-		container.add(new DeveloperToolsButton(eventBus,"Lights","lights"));
-		container.add(new DeveloperToolsButton(eventBus,"Freeze Frame","freeze"));
+		container.add(timersButton);
+		container.add(shadowButton);
+		container.add(lightsButton);
+		container.add(frezzeButton);
 
 		return container;
 	}
