@@ -1676,10 +1676,11 @@
     ]
   },
   {
-    "name": "NIGHTMARE_ZONE",
+    "name": "NIGHTMARE_ZONE_AND_KING_BLACK_DRAGON",
     "aabbs": [
-      [ 2241, 4676, 2303, 4722 ]
-    ]
+      [ 2241, 4670, 2303, 4722 ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "CASTLE_WARS_LOBBY",
