@@ -2497,7 +2497,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		configUndoVanillaShading = config.shadingMode() != ShadingMode.VANILLA;
 		configPreserveVanillaNormals = config.preserveVanillaNormals();
 		configSeasonalTheme = config.seasonalTheme();
-		configSeasonalThemeHemisphere = config.SeasonalThemeHemisphere();
+		configSeasonalThemeHemisphere = config.seasonalThemeHemisphere();
 
 		var newColorFilter = config.colorFilter();
 		if (newColorFilter != configColorFilter) {
