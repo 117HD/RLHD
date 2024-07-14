@@ -138,6 +138,10 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 		if (sceneContext != currentSceneContext) {
 			currentSceneContext = sceneContext;
 
+			hoveredAreaAabb[0] = -1;
+			hoveredAreaAabb[1] = -1;
+			System.arraycopy(hoveredAreaAabb, 0, selectedAreaAabb, 0, 2);
+
 			if (sceneContext.scene.isInstance()) {
 				visibleAreas = new Area[0];
 			} else {
@@ -265,27 +269,36 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 					boolean areaSelected = i == selectedAreaAabb[0];
 					for (int j = 0; j < area.aabbs.length; j++) {
 						AABB aabb = area.aabbs[j];
+						boolean hovered = areaHovered && j == hoveredAreaAabb[1];
 						boolean selected = areaSelected && j == selectedAreaAabb[1];
-						if (selected)
+						if (hovered || selected)
 							continue;
 
-						boolean hovered = areaHovered && j == hoveredAreaAabb[1];
-
 						String label = aabb.toArgs();
-						if (aabb.isVolume() || hovered)
+						if (aabb.isVolume())
 							label = area.name + "[" + j + "]\n" + label;
 
 						// Since we have a bunch of AABBs spanning all planes,
 						// it would be a bit obnoxious to always render the full AABB
-						AABB croppedAabb = hovered ? aabb : cropAabb(sceneContext, aabb);
+						AABB croppedAabb = cropAabb(sceneContext, aabb);
 						var localAabb = toLocalAabb(sceneContext, croppedAabb);
 
-						g.setColor(hovered ? Color.WHITE : Color.GRAY);
+						g.setColor(Color.GRAY);
 						drawLocalAabb(g, localAabb);
 
-						g.setColor(hovered ? Color.WHITE : Color.LIGHT_GRAY);
+						g.setColor(Color.LIGHT_GRAY);
 						drawLocalAabbLabel(g, localAabb, label);
 					}
+				}
+
+				if (hoveredAreaAabb[0] != -1) {
+					var area = visibleAreas[hoveredAreaAabb[0]];
+					var aabb = area.aabbs[hoveredAreaAabb[1]];
+					g.setColor(Color.WHITE);
+
+					var localAabb = toLocalAabb(sceneContext, aabb);
+					drawLocalAabb(g, localAabb);
+					drawLocalAabbLabel(g, localAabb, area.name + "[" + hoveredAreaAabb[1] + "]\n" + aabb.toArgs());
 				}
 
 				if (selectedAreaAabb[0] != -1) {
