@@ -64,6 +64,10 @@ public class ShadowMapOverlay extends Overlay {
 			eventBus.unregister(this);
 		}
 
+		if (plugin.getSidebar() != null) {
+			plugin.getSidebar().getDevelopmentTools().getShadowButton().setActive(activate);
+		}
+
 		clientThread.invoke(() -> {
 			try {
 				plugin.recompilePrograms();

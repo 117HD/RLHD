@@ -49,6 +49,7 @@ import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.TileOverrideManager;
 import rs117.hd.scene.areas.AABB;
 import rs117.hd.scene.areas.Area;
+import rs117.hd.tooling.HdDeveloperTools;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.Vector;
@@ -122,6 +123,10 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			mouseManager.unregisterMouseListener(this);
 			mouseManager.unregisterMouseWheelListener(this);
 		}
+		if (plugin.getSidebar() != null) {
+			plugin.getSidebar().getDevelopmentTools().getTileInfoButton().setActive(activate);
+		}
+
 		tileOverrideManager.setTrackReplacements(activate);
 	}
 

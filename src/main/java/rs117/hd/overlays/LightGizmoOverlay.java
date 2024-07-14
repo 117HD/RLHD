@@ -126,6 +126,9 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 			action = Action.SELECT;
 			selections.clear();
 		}
+		if (plugin.getSidebar() != null) {
+			plugin.getSidebar().getDevelopmentTools().getLightsButton().setActive(activate);
+		}
 	}
 
 	@Override
