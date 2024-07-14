@@ -109,8 +109,9 @@ import rs117.hd.scene.TileOverrideManager;
 import rs117.hd.scene.lights.Light;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.scene.model_overrides.ObjectType;
+import rs117.hd.tooling.HdSidebar;
 import rs117.hd.utils.ColorUtils;
-import rs117.hd.utils.DeveloperTools;
+import rs117.hd.tooling.DeveloperTools;
 import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.Mat4;
@@ -255,6 +256,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Getter
 	private Gson gson;
+
+	@Getter
+	private HdSidebar sidebar;
 
 	public GLCapabilities glCaps;
 	private Canvas canvas;
@@ -647,6 +651,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				checkGLErrors();
 
 				clientThread.invokeLater(this::displayUpdateMessage);
+
+				SwingUtilities.invokeLater(() -> {
+					sidebar = injector.getInstance(HdSidebar.class);
+				});
 			}
 			catch (Throwable err)
 			{
@@ -661,6 +669,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	protected void shutDown() {
 		isActive = false;
 		FileWatcher.destroy();
+
+		if (sidebar != null)
+			sidebar.destroy();
+		sidebar = null;
 
 		clientThread.invoke(() -> {
 			var scene = client.getScene();

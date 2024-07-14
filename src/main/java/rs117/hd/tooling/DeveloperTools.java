@@ -1,8 +1,10 @@
-package rs117.hd.utils;
+package rs117.hd.tooling;
 
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.util.Objects;
 import javax.inject.Inject;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.events.*;
 import net.runelite.client.callback.ClientThread;
@@ -19,15 +21,17 @@ import rs117.hd.overlays.TileInfoOverlay;
 import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.areas.AABB;
 import rs117.hd.scene.areas.Area;
+import rs117.hd.utils.Props;
 
 @Slf4j
 public class DeveloperTools implements KeyListener {
 	// This could be part of the config if we had developer mode config sections
-	private static final Keybind KEY_TOGGLE_TILE_INFO = new Keybind(KeyEvent.VK_F3, InputEvent.CTRL_DOWN_MASK);
-	private static final Keybind KEY_TOGGLE_FRAME_TIMINGS = new Keybind(KeyEvent.VK_F4, InputEvent.CTRL_DOWN_MASK);
-	private static final Keybind KEY_TOGGLE_SHADOW_MAP_OVERLAY = new Keybind(KeyEvent.VK_F5, InputEvent.CTRL_DOWN_MASK);
-	private static final Keybind KEY_TOGGLE_LIGHT_GIZMO_OVERLAY = new Keybind(KeyEvent.VK_F6, InputEvent.CTRL_DOWN_MASK);
-	private static final Keybind KEY_TOGGLE_FREEZE_FRAME = new Keybind(KeyEvent.VK_ESCAPE, InputEvent.SHIFT_DOWN_MASK);
+
+	public static final Keybind KEY_TOGGLE_TILE_INFO = new Keybind(KeyEvent.VK_F3, InputEvent.CTRL_DOWN_MASK);
+	public static final Keybind KEY_TOGGLE_FRAME_TIMINGS = new Keybind(KeyEvent.VK_F4, InputEvent.CTRL_DOWN_MASK);
+	public static final Keybind KEY_TOGGLE_SHADOW_MAP_OVERLAY = new Keybind(KeyEvent.VK_F5, InputEvent.CTRL_DOWN_MASK);
+	public static final Keybind KEY_TOGGLE_LIGHT_GIZMO_OVERLAY = new Keybind(KeyEvent.VK_F6, InputEvent.CTRL_DOWN_MASK);
+	public static final Keybind KEY_TOGGLE_FREEZE_FRAME = new Keybind(KeyEvent.VK_ESCAPE, InputEvent.SHIFT_DOWN_MASK);
 
 	@Inject
 	private ClientThread clientThread;
@@ -40,7 +44,6 @@ public class DeveloperTools implements KeyListener {
 
 	@Inject
 	private HdPlugin plugin;
-
 	@Inject
 	private TileInfoOverlay tileInfoOverlay;
 
@@ -48,12 +51,16 @@ public class DeveloperTools implements KeyListener {
 	private FrameTimerOverlay frameTimerOverlay;
 
 	@Inject
+	@Getter
 	private ShadowMapOverlay shadowMapOverlay;
 
 	@Inject
+	@Getter
 	private LightGizmoOverlay lightGizmoOverlay;
 
+	@Getter
 	private boolean keyBindingsEnabled = false;
+
 	private boolean tileInfoOverlayEnabled = false;
 	private boolean frameTimingsOverlayEnabled = false;
 	private boolean shadowMapOverlayEnabled = false;
@@ -123,6 +130,9 @@ public class DeveloperTools implements KeyListener {
 				break;
 			case "lights":
 				lightGizmoOverlay.setActive(lightGizmoOverlayEnabled = !lightGizmoOverlayEnabled);
+				break;
+			case "freeze":
+				plugin.toggleFreezeFrame();
 				break;
 			case "keybindings":
 				keyBindingsEnabled = !keyBindingsEnabled;

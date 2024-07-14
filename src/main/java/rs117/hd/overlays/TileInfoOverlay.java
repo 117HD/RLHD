@@ -49,6 +49,7 @@ import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.TileOverrideManager;
 import rs117.hd.scene.areas.AABB;
 import rs117.hd.scene.areas.Area;
+import rs117.hd.tooling.HdDeveloperTools;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.Vector;
@@ -106,6 +107,10 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 	private SceneContext currentSceneContext;
 	private Area[] visibleAreas = new Area[0];
 
+	@Inject
+	private HdDeveloperTools hdDeveloperTools;
+
+
 	public TileInfoOverlay() {
 		setLayer(OverlayLayer.ABOVE_SCENE);
 		setPosition(OverlayPosition.DYNAMIC);
@@ -122,6 +127,9 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			mouseManager.unregisterMouseListener(this);
 			mouseManager.unregisterMouseWheelListener(this);
 		}
+		hdDeveloperTools.getTileInfoButton().setActive(activate);
+		System.out.println("==================================");
+		hdDeveloperTools.refresh();
 		tileOverrideManager.setTrackReplacements(activate);
 	}
 
