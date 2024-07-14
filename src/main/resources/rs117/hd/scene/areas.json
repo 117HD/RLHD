@@ -2438,14 +2438,16 @@
   {
     "name": "MAGE_ARENA_BANK",
     "aabbs": [
-      [ 2527, 4708, 2549, 4725 ]
-    ]
+      [ 2525, 4706, 2551, 4727 ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "MAGE_ARENA_GOD_STATUES",
     "aabbs": [
       [ 2495, 4682, 2520, 4730 ]
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "GIELINOR_SNOWY_NORTHERN_REGION",
