@@ -2471,6 +2471,13 @@
     "hideOtherAreas": true
   },
   {
+    "name": "Wilderness Slayer Cave",
+    "regionBoxes": [
+      [ 13469, 13726 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
     "name": "GIELINOR_SNOWY_NORTHERN_REGION",
     "aabbs": [
       [ 2748, 3711, 2942, 3980 ]
