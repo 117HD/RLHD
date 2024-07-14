@@ -169,6 +169,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public static final int UV_SIZE = 4; // 4 floats per vertex
 	public static final int NORMAL_SIZE = 4; // 4 floats per vertex
 
+	public static final float ORTHOGRAPHIC_ZOOM = .0005f;
+
 	public static float BUFFER_GROWTH_MULTIPLIER = 2; // can be less than 2 if trying to conserve memory
 
 	private static final float COLOR_FILTER_FADE_DURATION = 3000;
@@ -449,6 +451,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public boolean enableDetailedTimers;
 	public boolean enableShadowMapOverlay;
 	public boolean enableFreezeFrame;
+	public boolean orthographicProjection;
 
 	@Getter
 	private boolean isActive;
@@ -1952,7 +1955,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 			glBindVertexArray(vaoSceneHandle);
 
-			float[] lightViewMatrix = Mat4.rotateX(PI + environmentManager.currentSunAngles[0]);
+			float[] lightViewMatrix = Mat4.rotateX(environmentManager.currentSunAngles[0]);
 			Mat4.mul(lightViewMatrix, Mat4.rotateY(PI - environmentManager.currentSunAngles[1]));
 
 			float[] lightProjectionMatrix = Mat4.identity();
@@ -1978,7 +1981,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				final int south = Math.max(camY - drawDistanceSceneUnits, 0);
 				final int width = east - west;
 				final int height = north - south;
-				final int near = 10000;
+				final int farPlane = 20000;
 
 				final int maxDrawDistance = 90;
 				final float maxScale = 0.7f;
@@ -1986,7 +1989,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				final float scaleMultiplier = 1.0f - (getDrawDistance() / (maxDrawDistance * maxScale));
 				float scale = HDUtils.lerp(maxScale, minScale, scaleMultiplier);
 				Mat4.mul(lightProjectionMatrix, Mat4.scale(scale, scale, scale));
-				Mat4.mul(lightProjectionMatrix, Mat4.ortho(width, height, near));
+				Mat4.mul(lightProjectionMatrix, Mat4.orthographic(width, height, -farPlane, farPlane));
 				Mat4.mul(lightProjectionMatrix, lightViewMatrix);
 				Mat4.mul(lightProjectionMatrix, Mat4.translate(-(width / 2f + west), 0, -(height / 2f + south)));
 				glUniformMatrix4fv(uniShadowLightProjectionMatrix, false, lightProjectionMatrix);
@@ -2107,10 +2110,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			glUniform1f(uniElapsedTime, (float) (elapsedTime % MAX_FLOAT_WITH_128TH_PRECISION));
 			glUniform3fv(uniCameraPos, cameraPosition);
 
-			// Extract the 3rd column from the light view matrix (the float array is column-major)
-			// This produces the view matrix's forward direction vector in world space,
-			// which in our case is the negative of the light's direction
-			glUniform3f(uniLightDir, lightViewMatrix[2], lightViewMatrix[6], lightViewMatrix[10]);
+			// Extract the 3rd column from the light view matrix (the float array is column-major).
+			// This produces the light's direction vector in world space, which we negate in order to
+			// get the light's direction vector pointing away from each fragment
+			glUniform3f(uniLightDir, -lightViewMatrix[2], -lightViewMatrix[6], -lightViewMatrix[10]);
 
 			// use a curve to calculate max bias value based on the density of the shadow map
 			float shadowPixelsPerTile = (float) shadowMapResolution / config.shadowDistance().getValue();
@@ -2128,7 +2131,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 			// Calculate projection matrix
 			float[] projectionMatrix = Mat4.scale(client.getScale(), client.getScale(), 1);
-			Mat4.mul(projectionMatrix, Mat4.projection(viewportWidth, viewportHeight, NEAR_PLANE));
+			if (orthographicProjection) {
+				Mat4.mul(projectionMatrix, Mat4.scale(ORTHOGRAPHIC_ZOOM, ORTHOGRAPHIC_ZOOM, 1));
+				Mat4.mul(projectionMatrix, Mat4.orthographic(viewportWidth, viewportHeight, -40000, 40000));
+			} else {
+				Mat4.mul(projectionMatrix, Mat4.perspective(viewportWidth, viewportHeight, NEAR_PLANE));
+			}
 			Mat4.mul(projectionMatrix, Mat4.rotateX(cameraOrientation[1]));
 			Mat4.mul(projectionMatrix, Mat4.rotateY(cameraOrientation[0]));
 			Mat4.mul(projectionMatrix, Mat4.translate(
@@ -2757,6 +2765,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (sceneContext == null)
 			return false;
 
+		if (orthographicProjection)
+			return true;
+
 		int[][][] tileHeights = scene.getTileHeights();
 		int x = ((tileExX - SCENE_OFFSET) << Perspective.LOCAL_COORD_BITS) + 64;
 		int z = ((tileExY - SCENE_OFFSET) << Perspective.LOCAL_COORD_BITS) + 64;
@@ -2809,6 +2820,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private boolean isOutsideViewport(Model model, int pitchSin, int pitchCos, int yawSin, int yawCos, int x, int y, int z) {
 		if (sceneContext == null)
 			return true;
+
+		if (orthographicProjection)
+			return false;
 
 		final int XYZMag = model.getXYZMag();
 		final int bottomY = model.getBottomY();

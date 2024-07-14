@@ -29,7 +29,6 @@ import java.util.Random;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
-import net.runelite.api.coords.*;
 import rs117.hd.scene.areas.AABB;
 import rs117.hd.scene.areas.Area;
 
@@ -39,6 +38,7 @@ import static net.runelite.api.Perspective.*;
 import static rs117.hd.scene.ProceduralGenerator.VERTICES_PER_FACE;
 import static rs117.hd.scene.ProceduralGenerator.faceLocalVertices;
 import static rs117.hd.scene.ProceduralGenerator.isOverlayFace;
+import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
 
 @Slf4j
 @Singleton
@@ -271,14 +271,15 @@ public class HDUtils {
 	}
 
 	/**
-	 * Returns the south-west coordinate of the scene in world space, after resolving instance template chunks to their
-	 * original world coordinates. If the scene is instanced, the base coordinates are computed from the center chunk.
+	 * Returns the south-west coordinate of the extended scene in world coordinates, after resolving instance template
+	 * chunks to their original world coordinates. If the scene is instanced, the base coordinates are computed from
+	 * the center chunk instead, or any valid chunk if the center chunk is invalid.
 	 *
 	 * @param scene to get the south-west coordinate for
 	 * @param plane to use when resolving instance template chunks
 	 * @return the south-western coordinate of the scene in world space
 	 */
-	public static WorldPoint getSceneBase(Scene scene, int plane)
+	public static int[] getSceneBaseExtended(Scene scene, int plane)
 	{
 		int baseX = scene.getBaseX();
 		int baseY = scene.getBaseY();
@@ -318,7 +319,7 @@ public class HDUtils {
 			baseY <<= 3;
 		}
 
-		return new WorldPoint(baseX, baseY, plane);
+		return new int[] { baseX - SCENE_OFFSET, baseY - SCENE_OFFSET };
 	}
 
 	/**
