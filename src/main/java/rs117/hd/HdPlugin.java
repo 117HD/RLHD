@@ -219,13 +219,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private AreaManager areaManager;
 
 	@Inject
-	private GroundMaterialManager groundMaterialManager;
-
-	@Inject
 	private LightManager lightManager;
 
 	@Inject
 	private EnvironmentManager environmentManager;
+
+	@Inject
+	private GroundMaterialManager groundMaterialManager;
 
 	@Inject
 	private TileOverrideManager tileOverrideManager;
@@ -680,12 +680,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			developerTools.deactivate();
 			modelPusher.shutDown();
 			tileOverrideManager.shutDown();
+			groundMaterialManager.shutDown();
 			modelOverrideManager.shutDown();
 			lightManager.shutDown();
 			environmentManager.shutDown();
 			fishingSpotReplacer.shutDown();
 			areaManager.shutDown();
-			groundMaterialManager.shutDown();
 
 			if (lwjglInitialized) {
 				lwjglInitialized = false;

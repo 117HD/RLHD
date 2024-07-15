@@ -14,10 +14,10 @@ import static rs117.hd.utils.ResourcePath.path;
 
 @Slf4j
 public class GroundMaterialManager {
-
-	public static NewGroundMaterial[] GROUND_MATERIALS = new NewGroundMaterial[0];
-
-	private FileWatcher.UnregisterCallback fileWatcher;
+	private static final ResourcePath GROUND_MATERIALS_PATH = Props.getPathOrDefault(
+		"rlhd.ground-materials-path",
+		() -> path(AreaManager.class, "ground_materials.json")
+	);
 
 	@Inject
 	private HdPlugin plugin;
@@ -28,22 +28,22 @@ public class GroundMaterialManager {
 	@Inject
 	private TileOverrideManager tileOverrideManager;
 
-	private static final ResourcePath GROUNDMATERIALS_PATH = Props.getPathOrDefault(
-		"rlhd.groundMaterials-path",
-		() -> path(AreaManager.class, "groundMaterials.json")
-	);
+	private FileWatcher.UnregisterCallback fileWatcher;
+
+	public static NewGroundMaterial[] GROUND_MATERIALS = new NewGroundMaterial[0];
 
 	public void startUp() {
-		fileWatcher = GROUNDMATERIALS_PATH.watch((path, first) -> {
+		fileWatcher = GROUND_MATERIALS_PATH.watch((path, first) -> {
 			try {
 				NewGroundMaterial[] groundMaterials = path.loadJson(plugin.getGson(), NewGroundMaterial[].class);
-				if (groundMaterials == null) {
+				if (groundMaterials == null)
 					throw new IOException("Empty or invalid: " + path);
-				}
+
 				GROUND_MATERIALS = new NewGroundMaterial[groundMaterials.length + 2];
 				GROUND_MATERIALS[0] = NewGroundMaterial.NONE;
 				GROUND_MATERIALS[1] = NewGroundMaterial.DIRT;
 				System.arraycopy(groundMaterials, 0, GROUND_MATERIALS, 2, groundMaterials.length);
+
 				if (!first) {
 					clientThread.invoke(() -> {
 						// Reload everything which depends on ground materials
@@ -58,21 +58,10 @@ public class GroundMaterialManager {
 		});
 	}
 
-	public NewGroundMaterial lookup(String name) {
-		for (NewGroundMaterial groundMaterial : GROUND_MATERIALS) {
-			if (groundMaterial.getName().equalsIgnoreCase(name)) {
-				return groundMaterial;
-			}
-		}
-		return NewGroundMaterial.NONE;
-	}
-
 	public void shutDown() {
-		if (fileWatcher != null) {
+		if (fileWatcher != null)
 			fileWatcher.unregister();
-		}
 		fileWatcher = null;
 		GROUND_MATERIALS = new NewGroundMaterial[0];
 	}
-
 }
