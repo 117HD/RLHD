@@ -2644,9 +2644,11 @@
       14549,
       14550,
       14551,
+      14553,
       14558,
       14559,
       14560,
+      14561,
       14622,
       14623,
       14624,
@@ -2659,7 +2661,9 @@
       14631,
       14632,
       42110,
-      42111
+      42111,
+      46997,
+      46998
     ],
     "uvType": "BOX",
     "flatNormals": true
@@ -9010,6 +9014,112 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.66
+  },
+  {
+    "description": "Wilderness - Vet'ion/Calvar'ion Lair - Arched Pillars",
+    "baseMaterial": "MARBLE_2",
+    "objectIds": [
+      46926,
+      46927,
+      46928,
+      46929,
+      46930,
+      46931,
+      46932
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Wilderness - Vet'ion/Calvar'ion Lair - Dirt Wall",
+    "baseMaterial": "DIRT_1",
+    "objectIds": [
+      46914,
+      46915,
+      46916,
+      46917,
+      46918,
+      46919,
+      46920
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Wilderness - Vet'ion/Calvar'ion Lair - Dirt Wall - Arch",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      46921,
+      46922,
+      46923,
+      46924,
+      46925
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75
+  },
+  {
+    "description": "Wilderness - Vet'ion/Calvar'ion Lair - Wall with Banner",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      46933,
+      46934
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Wilderness - Vet'ion/Calvar'ion Lair - Altar",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      43108
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Wilderness - Vet'ion/Calvar'ion Lair - Carpet",
+    "baseMaterial": "FINE_CARPET",
+    "objectIds": [
+      46982,
+      46983,
+      46984,
+      46985,
+      46986,
+      46987,
+      46988,
+      46989,
+      46990
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Wilderness - Vet'ion/Calvar'ion Lair - Banner",
+    "baseMaterial": "FINE_CARPET",
+    "objectIds": [
+      46991
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75
+  },
+  {
+    "description": "Wilderness - Vet'ion's Lair - Entrance",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      46995
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75
+  },
+  {
+    "description": "Wilderness - Graveyard of Shadows - Gravestone",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      14765,
+      14766,
+      14767,
+      14768,
+      14769,
+      46996
+    ],
+    "uvType": "BOX"
   },
   {
     "description": "Edgeville Wilderness Dungeon - Cave Wall - Opening",

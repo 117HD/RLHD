@@ -35237,7 +35237,7 @@
     "fadeOutDuration": 300
   },
   {
-    "description": "Spindel Exit Cave",
+    "description": "Venenatis/Spindel Exit Cave",
     "objectIds": [
       46999,
       47000
@@ -35246,5 +35246,144 @@
     "strength": 10,
     "color": "#ffffff",
     "offset": [ 40, 40, 0 ]
+  },
+  {
+    "description": "Vet'ion/Calvar'ion Exit Door",
+    "objectIds": [
+      46925
+    ],
+    "radius": 450,
+    "strength": 10,
+    "color": "#ffffff",
+    "offset": [ 40, 150, 0 ]
+  },
+  {
+    "description": "Vet'ion/Calvar'ion Ceiling Light",
+    "objectIds": [
+      46949
+    ],
+    "radius": 1350,
+    "strength": 10,
+    "color": "#ffffff",
+    "offset": [ 40, 1000, 0 ]
+  },
+  {
+    "description": "Vet'ion/Calvar'ion Outside Candle Centre",
+    "offset": [ 0, 30, 0 ],
+    "radius": 300,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      46993
+    ]
+  },
+  {
+    "description": "Vet'ion/Calvar'ion Outside Candle Offset",
+    "offset": [ 0, 30, 40 ],
+    "radius": 300,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      46994
+    ]
+  },
+  {
+    "description": "Vet'ion/Calvar'ion Altar Candle 1",
+    "offset": [ -260, 130, 120 ],
+    "radius": 300,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      43108
+    ]
+  },
+  {
+    "description": "Vet'ion/Calvar'ion Altar Candle 2",
+    "offset": [ -195, 125, -170 ],
+    "radius": 300,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      43108
+    ]
+  },
+  {
+    "description": "Vet'ion/Calvar'ion Altar Candle 3",
+    "offset": [ 270, 120, 140 ],
+    "radius": 300,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      43108
+    ]
+  },
+  {
+    "description": "Vet'ion/Calvar'ion Altar Candle 4",
+    "offset": [ 260, 120, -185 ],
+    "radius": 250,
+    "strength": 4,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      43108
+    ]
+  },
+  {
+    "description": "Vet'ion/Calvar'ion Altar Candle 5",
+    "offset": [ 60, 110, -185 ],
+    "radius": 200,
+    "strength": 4,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      43108
+    ]
   }
 ]

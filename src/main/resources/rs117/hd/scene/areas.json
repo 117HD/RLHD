@@ -2478,6 +2478,18 @@
     "hideOtherAreas": true
   },
   {
+    "name": "Vet'ion/Calvar'ion Lair Carpet Fix",
+    "aabbs": [
+      [ 1884, 11534, 1890, 11541 ]
+    ]
+  },
+  {
+    "name": "Vet'ion Lair Entrance Fix",
+    "aabbs": [
+      [ 3220, 3786, 3223, 3791 ]
+    ]
+  },
+  {
     "name": "GIELINOR_SNOWY_NORTHERN_REGION",
     "aabbs": [
       [ 2748, 3711, 2942, 3980 ]
