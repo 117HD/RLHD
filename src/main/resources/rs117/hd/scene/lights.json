@@ -30857,7 +30857,6 @@
     "duration": 0,
     "range": 5,
     "objectIds": [
-      9682,
       40149
     ]
   },
@@ -35236,5 +35235,16 @@
     "projectileIds": [ 1737 ],
     "fadeInDuration": 900,
     "fadeOutDuration": 300
+  },
+  {
+    "description": "Spindel Exit Cave",
+    "objectIds": [
+      46999,
+      47000
+    ],
+    "radius": 450,
+    "strength": 10,
+    "color": "#ffffff",
+    "offset": [ 40, 40, 0 ]
   }
 ]
