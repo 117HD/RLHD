@@ -8939,6 +8939,25 @@
     "uvOrientation": 370
   },
   {
+    "description": "Wilderness - Roots",
+    "baseMaterial": "LIGHT_BARK",
+    "objectIds": [
+      1363,
+      1364,
+      1366,
+      10064,
+      10065,
+      10066,
+      14759,
+      14760,
+      14761,
+      39683,
+      39684
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75
+  },
+  {
     "description": "Wilderness - Teleport Obelisk",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
