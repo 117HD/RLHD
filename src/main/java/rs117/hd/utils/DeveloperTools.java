@@ -138,8 +138,10 @@ public class DeveloperTools extends MouseAdapter implements KeyListener {
 				keyBindingsEnabled = !keyBindingsEnabled;
 				if (keyBindingsEnabled) {
 					keyManager.registerKeyListener(this);
+					mouseManager.registerMouseListener(this);
 				} else {
 					keyManager.unregisterKeyListener(this);
+					mouseManager.unregisterMouseListener(this);
 				}
 				break;
 		}

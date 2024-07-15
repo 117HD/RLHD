@@ -120,7 +120,8 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 		this.active = activate;
 		if (activate) {
 			overlayManager.add(this);
-			mouseManager.registerMouseListener(this);
+			// Listen to events before they're possibly consumed in DeveloperTools
+			mouseManager.registerMouseListener(0, this);
 			mouseManager.registerMouseWheelListener(this);
 		} else {
 			overlayManager.remove(this);
@@ -899,28 +900,33 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 		float by = z2 * pitchCos - bUnpitchedZ * pitchSin;
 		float bz = bUnpitchedZ * pitchCos + z2 * pitchSin;
 
-		// Both behind the near plane
-		if (az < 1 && bz < 1)
-			return;
+		if (!plugin.orthographicProjection) {
+			// Project points which lie behind the camera onto the
+			// near plane, so lines can still be drawn accurately
 
-		float vx = bx - ax;
-		float vy = by - ay;
-		float vz = bz - az;
+			// Both behind the near plane
+			if (az < 1 && bz < 1)
+				return;
 
-		if (az < 1) {
-			// A is behind the near plane
-			// az + (bz - az) * t = 1
-			// t = (1 - az) / (bz - az)
-			double t = (1.f - az) / vz;
-			ax += (float) (vx * t);
-			ay += (float) (vy * t);
-			az = 1;
-		} else if (bz < 1) {
-			// B is behind the near plane
-			double t = (1.f - bz) / vz;
-			bx += (float) (vx * t);
-			by += (float) (vy * t);
-			bz = 1;
+			float vx = bx - ax;
+			float vy = by - ay;
+			float vz = bz - az;
+
+			if (az < 1) {
+				// A is behind the near plane
+				// az + (bz - az) * t = 1
+				// t = (1 - az) / (bz - az)
+				double t = (1.f - az) / vz;
+				ax += (float) (vx * t);
+				ay += (float) (vy * t);
+				az = 1;
+			} else if (bz < 1) {
+				// B is behind the near plane
+				double t = (1.f - bz) / vz;
+				bx += (float) (vx * t);
+				by += (float) (vy * t);
+				bz = 1;
+			}
 		}
 
 		if (plugin.orthographicProjection) {
