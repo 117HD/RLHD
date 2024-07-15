@@ -1,4 +1,4 @@
-package rs117.hd.overlays;
+package rs117.hd.tooling.overlays;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -18,6 +18,7 @@ import net.runelite.client.ui.overlay.OverlayManager;
 import net.runelite.client.ui.overlay.OverlayPosition;
 import rs117.hd.HdPlugin;
 import rs117.hd.opengl.shader.ShaderException;
+import rs117.hd.tooling.DeveloperOverlay;
 
 import static org.lwjgl.opengl.GL20C.*;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_BASE;
@@ -25,7 +26,7 @@ import static rs117.hd.HdPlugin.TEXTURE_UNIT_SHADOW_MAP;
 
 @Slf4j
 @Singleton
-public class ShadowMapOverlay extends Overlay {
+public class ShadowMapOverlay extends DeveloperOverlay {
 	@Inject
 	private Client client;
 
@@ -62,10 +63,6 @@ public class ShadowMapOverlay extends Overlay {
 			overlayManager.remove(this);
 			plugin.enableShadowMapOverlay = false;
 			eventBus.unregister(this);
-		}
-
-		if (plugin.getSidebar() != null) {
-			plugin.getSidebar().getDevelopmentTools().getShadowButton().setActive(activate);
 		}
 
 		clientThread.invoke(() -> {

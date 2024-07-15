@@ -12,8 +12,8 @@ import net.runelite.api.events.*;
 import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import rs117.hd.HdPluginConfig;
-import rs117.hd.overlays.FrameTimer;
-import rs117.hd.overlays.Timer;
+import rs117.hd.tooling.overlays.FrameTimer;
+import rs117.hd.tooling.overlays.Timer;
 import rs117.hd.scene.model_overrides.ModelOverride;
 
 import static rs117.hd.utils.ColorUtils.hsl;

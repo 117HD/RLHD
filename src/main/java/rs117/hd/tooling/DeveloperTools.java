@@ -2,7 +2,8 @@ package rs117.hd.tooling;
 
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.util.Objects;
+import java.util.HashMap;
+import java.util.Map;
 import javax.inject.Inject;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -14,10 +15,10 @@ import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.input.KeyListener;
 import net.runelite.client.input.KeyManager;
 import rs117.hd.HdPlugin;
-import rs117.hd.overlays.FrameTimerOverlay;
-import rs117.hd.overlays.LightGizmoOverlay;
-import rs117.hd.overlays.ShadowMapOverlay;
-import rs117.hd.overlays.TileInfoOverlay;
+import rs117.hd.tooling.overlays.FrameTimerOverlay;
+import rs117.hd.tooling.overlays.LightGizmoOverlay;
+import rs117.hd.tooling.overlays.ShadowMapOverlay;
+import rs117.hd.tooling.overlays.TileInfoOverlay;
 import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.areas.AABB;
 import rs117.hd.scene.areas.Area;
@@ -25,13 +26,8 @@ import rs117.hd.utils.Props;
 
 @Slf4j
 public class DeveloperTools implements KeyListener {
-	// This could be part of the config if we had developer mode config sections
 
-	public static final Keybind KEY_TOGGLE_TILE_INFO = new Keybind(KeyEvent.VK_F3, InputEvent.CTRL_DOWN_MASK);
-	public static final Keybind KEY_TOGGLE_FRAME_TIMINGS = new Keybind(KeyEvent.VK_F4, InputEvent.CTRL_DOWN_MASK);
-	public static final Keybind KEY_TOGGLE_SHADOW_MAP_OVERLAY = new Keybind(KeyEvent.VK_F5, InputEvent.CTRL_DOWN_MASK);
-	public static final Keybind KEY_TOGGLE_LIGHT_GIZMO_OVERLAY = new Keybind(KeyEvent.VK_F6, InputEvent.CTRL_DOWN_MASK);
-	public static final Keybind KEY_TOGGLE_FREEZE_FRAME = new Keybind(KeyEvent.VK_ESCAPE, InputEvent.SHIFT_DOWN_MASK);
+	public static Map<String, DeveloperSettings> settings = new HashMap<>();
 
 	@Inject
 	private ClientThread clientThread;
@@ -61,14 +57,11 @@ public class DeveloperTools implements KeyListener {
 	@Getter
 	private boolean keyBindingsEnabled = false;
 
-	private boolean tileInfoOverlayEnabled = false;
-	private boolean frameTimingsOverlayEnabled = false;
-	private boolean shadowMapOverlayEnabled = false;
-	private boolean lightGizmoOverlayEnabled = false;
 
 	public void activate() {
 		// Listen for commands
 		eventBus.register(this);
+		registerSettings();
 
 		// Don't do anything else unless we're in the development environment
 		if (!Props.DEVELOPMENT)
@@ -78,12 +71,11 @@ public class DeveloperTools implements KeyListener {
 		keyBindingsEnabled = true;
 		keyManager.registerKeyListener(this);
 
-		clientThread.invokeLater(() -> {
-			tileInfoOverlay.setActive(tileInfoOverlayEnabled);
-			frameTimerOverlay.setActive(frameTimingsOverlayEnabled);
-			shadowMapOverlay.setActive(shadowMapOverlayEnabled);
-			lightGizmoOverlay.setActive(lightGizmoOverlayEnabled);
-		});
+		clientThread.invokeLater(() -> settings.forEach( (s, developerSettings) -> {
+			if (developerSettings.getDeveloperOverlay() != null) {
+				tileInfoOverlay.setActive(developerSettings.enabled);
+			}
+		}));
 
 		// Check for any out of bounds areas
 		for (Area area : AreaManager.AREAS) {
@@ -97,16 +89,28 @@ public class DeveloperTools implements KeyListener {
 				}
 			}
 		}
+
+	}
+
+	public void registerSettings() {
+		settings.put("TILE_INFO",new DeveloperSettings("Tile Info", new Keybind(KeyEvent.VK_F3, InputEvent.CTRL_DOWN_MASK),"tileinfo",tileInfoOverlay));
+		settings.put("FRAME_TIMERS",new DeveloperSettings("Frame Timers", new Keybind(KeyEvent.VK_F4, InputEvent.CTRL_DOWN_MASK),"timers",frameTimerOverlay));
+		settings.put("SHADOW_MAP",new DeveloperSettings("Shadow Map", new Keybind(KeyEvent.VK_F5, InputEvent.CTRL_DOWN_MASK),"shadowmap",shadowMapOverlay));
+		settings.put("LIGHT_GIZMO",new DeveloperSettings("Light Gizmo", new Keybind(KeyEvent.VK_F6, InputEvent.CTRL_DOWN_MASK),"lights",lightGizmoOverlay));
+		settings.put("FREEZE_FRAME",new DeveloperSettings("Freeze Frame", new Keybind(KeyEvent.VK_ESCAPE, InputEvent.CTRL_DOWN_MASK),"freeze",() -> plugin.toggleFreezeFrame()));
 	}
 
 	public void deactivate() {
 		eventBus.unregister(this);
 		keyManager.unregisterKeyListener(this);
-		tileInfoOverlay.setActive(false);
-		frameTimerOverlay.setActive(false);
-		shadowMapOverlay.setActive(false);
-		lightGizmoOverlay.setActive(false);
+		settings.forEach( (s, developerSettings) -> {
+			if (developerSettings.getDeveloperOverlay() != null) {
+				tileInfoOverlay.setActive(false);
+			}
+		});
 	}
+
+
 
 	@Subscribe
 	public void onCommandExecuted(CommandExecuted commandExecuted) {
@@ -118,45 +122,26 @@ public class DeveloperTools implements KeyListener {
 			return;
 
 		String action = args[0].toLowerCase();
-		switch (action) {
-			case "tileinfo":
-				tileInfoOverlay.setActive(tileInfoOverlayEnabled = !tileInfoOverlayEnabled);
-				break;
-			case "timers":
-				frameTimerOverlay.setActive(frameTimingsOverlayEnabled = !frameTimingsOverlayEnabled);
-				break;
-			case "shadowmap":
-				shadowMapOverlay.setActive(shadowMapOverlayEnabled = !shadowMapOverlayEnabled);
-				break;
-			case "lights":
-				lightGizmoOverlay.setActive(lightGizmoOverlayEnabled = !lightGizmoOverlayEnabled);
-				break;
-			case "freeze":
-				plugin.toggleFreezeFrame();
-				break;
-			case "keybindings":
-				keyBindingsEnabled = !keyBindingsEnabled;
-				if (keyBindingsEnabled) {
-					keyManager.registerKeyListener(this);
-				} else {
-					keyManager.unregisterKeyListener(this);
-				}
-				break;
+
+		if (DeveloperSettings.findByChatKey(settings,action).isPresent()) {
+			DeveloperSettings.findByChatKey(settings,action).get().toggle();
+
+		}
+
+		if (action.equals("keybindings")) {
+			keyBindingsEnabled = !keyBindingsEnabled;
+			if (keyBindingsEnabled) {
+				keyManager.registerKeyListener(this);
+			} else {
+				keyManager.unregisterKeyListener(this);
+			}
 		}
 	}
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		if (KEY_TOGGLE_TILE_INFO.matches(e)) {
-			tileInfoOverlay.setActive(tileInfoOverlayEnabled = !tileInfoOverlayEnabled);
-		} else if (KEY_TOGGLE_FRAME_TIMINGS.matches(e)) {
-			frameTimerOverlay.setActive(frameTimingsOverlayEnabled = !frameTimingsOverlayEnabled);
-		} else if (KEY_TOGGLE_SHADOW_MAP_OVERLAY.matches(e)) {
-			shadowMapOverlay.setActive(shadowMapOverlayEnabled = !shadowMapOverlayEnabled);
-		} else if (KEY_TOGGLE_LIGHT_GIZMO_OVERLAY.matches(e)) {
-			lightGizmoOverlay.setActive(lightGizmoOverlayEnabled = !lightGizmoOverlayEnabled);
-		} else if (KEY_TOGGLE_FREEZE_FRAME.matches(e)) {
-			plugin.toggleFreezeFrame();
+		if (DeveloperSettings.findByKeyEvent(settings,e).isPresent()) {
+			DeveloperSettings.findByKeyEvent(settings,e).get().toggle();
 		} else {
 			return;
 		}

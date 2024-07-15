@@ -3,44 +3,25 @@ package rs117.hd.tooling.impl;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.JButton;
 import net.runelite.api.events.*;
 import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.ui.ColorScheme;
+import rs117.hd.tooling.DeveloperOverlay;
+import rs117.hd.tooling.DeveloperSettings;
 
 public class DeveloperToolsButton extends JButton {
-	private boolean active;
 
-	@Inject
-	private EventBus eventBus;
-
-	public DeveloperToolsButton(EventBus eventBus,String title) {
-		new DeveloperToolsButton(eventBus,title,"");
-	}
-
-	public DeveloperToolsButton(EventBus eventBus,String title, String key) {
+	public DeveloperToolsButton(String title, DeveloperSettings developerSettings) {
 		super(title);
-		this.addActionListener((ev) -> {
-			this.setActive(!this.active);
-			if (!key.isEmpty()) {
-				eventBus.post(new CommandExecuted("117hd", new String[] { key }));
-			}
-		});
 		this.setToolTipText(title);
+		this.addActionListener((ev) -> developerSettings.toggle());
+
 	}
 
 	public void setActive(boolean active) {
-		this.active = active;
-		if (active) {
-			this.setBackground(Color.GREEN);
-		} else {
-			this.setBackground(ColorScheme.DARKER_GRAY_COLOR);
-		}
-
+		this.setBackground(active ? Color.GREEN : ColorScheme.DARKER_GRAY_COLOR);
 	}
 
-
-	public boolean isActive() {
-		return this.active;
-	}
 }

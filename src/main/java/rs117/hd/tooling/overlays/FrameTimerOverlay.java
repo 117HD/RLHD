@@ -1,4 +1,4 @@
-package rs117.hd.overlays;
+package rs117.hd.tooling.overlays;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -8,14 +8,14 @@ import java.util.ArrayDeque;
 import net.runelite.client.ui.FontManager;
 import net.runelite.client.ui.overlay.OverlayLayer;
 import net.runelite.client.ui.overlay.OverlayManager;
-import net.runelite.client.ui.overlay.OverlayPanel;
 import net.runelite.client.ui.overlay.OverlayPosition;
 import net.runelite.client.ui.overlay.components.LineComponent;
 import net.runelite.client.ui.overlay.components.TitleComponent;
 import rs117.hd.HdPlugin;
+import rs117.hd.tooling.DeveloperOverlay;
 
 @Singleton
-public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listener {
+public class FrameTimerOverlay extends DeveloperOverlay implements FrameTimer.Listener {
 	@Inject
 	private OverlayManager overlayManager;
 
@@ -29,7 +29,6 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 
 	@Inject
 	public FrameTimerOverlay(HdPlugin plugin) {
-		super(plugin);
 		setLayer(OverlayLayer.ABOVE_SCENE);
 		setPosition(OverlayPosition.TOP_RIGHT);
 		panelComponent.setPreferredSize(new Dimension(215, 200));
@@ -43,9 +42,6 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 			frameTimer.removeTimingsListener(this);
 			overlayManager.remove(this);
 			frames.clear();
-		}
-		if (plugin.getSidebar() != null) {
-			plugin.getSidebar().getDevelopmentTools().getTimersButton().setActive(activate);
 		}
 	}
 

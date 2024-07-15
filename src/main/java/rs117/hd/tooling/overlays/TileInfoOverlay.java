@@ -1,4 +1,4 @@
-package rs117.hd.overlays;
+package rs117.hd.tooling.overlays;
 
 import com.google.inject.Singleton;
 import java.awt.BasicStroke;
@@ -49,6 +49,7 @@ import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.TileOverrideManager;
 import rs117.hd.scene.areas.AABB;
 import rs117.hd.scene.areas.Area;
+import rs117.hd.tooling.DeveloperOverlay;
 import rs117.hd.tooling.HdDeveloperTools;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ModelHash;
@@ -62,7 +63,7 @@ import static rs117.hd.utils.HDUtils.clamp;
 
 @Slf4j
 @Singleton
-public class TileInfoOverlay extends Overlay implements MouseListener, MouseWheelListener {
+public class TileInfoOverlay extends DeveloperOverlay implements MouseListener, MouseWheelListener {
 	@Inject
 	private Client client;
 
@@ -122,9 +123,6 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			overlayManager.remove(this);
 			mouseManager.unregisterMouseListener(this);
 			mouseManager.unregisterMouseWheelListener(this);
-		}
-		if (plugin.getSidebar() != null) {
-			plugin.getSidebar().getDevelopmentTools().getTileInfoButton().setActive(activate);
 		}
 
 		tileOverrideManager.setTrackReplacements(activate);

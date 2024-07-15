@@ -94,8 +94,8 @@ import rs117.hd.opengl.compute.OpenCLManager;
 import rs117.hd.opengl.shader.Shader;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.Template;
-import rs117.hd.overlays.FrameTimer;
-import rs117.hd.overlays.Timer;
+import rs117.hd.tooling.overlays.FrameTimer;
+import rs117.hd.tooling.overlays.Timer;
 import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.FishingSpotReplacer;
@@ -652,9 +652,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 				clientThread.invokeLater(this::displayUpdateMessage);
 
-				SwingUtilities.invokeLater(() -> {
-					sidebar = injector.getInstance(HdSidebar.class);
-				});
+				if (Props.DEVELOPMENT) {
+					SwingUtilities.invokeLater(() -> {
+						sidebar = injector.getInstance(HdSidebar.class);
+					});
+				}
 			}
 			catch (Throwable err)
 			{
@@ -771,9 +773,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public void toggleFreezeFrame() {
 		clientThread.invoke(() -> {
 			enableFreezeFrame = !enableFreezeFrame;
-			if (getSidebar() != null) {
-				getSidebar().getDevelopmentTools().getShadowButton().setActive(enableFreezeFrame);
-			}
 			if (enableFreezeFrame)
 				redrawPreviousFrame = true;
 		});

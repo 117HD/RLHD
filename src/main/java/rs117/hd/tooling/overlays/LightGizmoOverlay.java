@@ -1,4 +1,4 @@
-package rs117.hd.overlays;
+package rs117.hd.tooling.overlays;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -37,6 +37,7 @@ import rs117.hd.HdPlugin;
 import rs117.hd.scene.lights.Alignment;
 import rs117.hd.scene.lights.Light;
 import rs117.hd.scene.lights.LightType;
+import rs117.hd.tooling.DeveloperOverlay;
 import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.Mat4;
 import rs117.hd.utils.Vector;
@@ -46,7 +47,7 @@ import static rs117.hd.HdPlugin.NEAR_PLANE;
 
 @Slf4j
 @Singleton
-public class LightGizmoOverlay extends Overlay implements MouseListener, KeyListener {
+public class LightGizmoOverlay extends DeveloperOverlay implements MouseListener, KeyListener {
 	private static final Color ORANGE = Color.decode("#ff9f2c");
 
 	@Inject
@@ -125,9 +126,6 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 			keyManager.unregisterKeyListener(this);
 			action = Action.SELECT;
 			selections.clear();
-		}
-		if (plugin.getSidebar() != null) {
-			plugin.getSidebar().getDevelopmentTools().getLightsButton().setActive(activate);
 		}
 	}
 
