@@ -2665,6 +2665,7 @@
       14630,
       14631,
       14632,
+      14770,
       14723,
       14724,
       14725,
@@ -2676,7 +2677,8 @@
       42110,
       42111,
       46997,
-      46998
+      46998,
+      53579
     ],
     "uvType": "BOX",
     "flatNormals": true
@@ -5281,7 +5283,7 @@
   },
   {
     "description": "Candelabra",
-    "baseMaterial": "METALLIC_1_LIGHT_HIGHGLOSS",
+    "baseMaterial": "METALLIC_1_HIGHGLOSS",
     "objectIds": [
       202,
       203,
@@ -9189,6 +9191,14 @@
     "uvType": "BOX"
   },
   {
+    "description": "Wilderness - Prayer Training Chaos Temple - Stained Glass Window",
+    "baseMaterial": "GRAY_65",
+    "objectIds": [
+      1849
+    ],
+    "uvType": "BOX"
+  },
+  {
     "description": "Edgeville Wilderness Dungeon - Cave Wall - Opening",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
@@ -9218,6 +9228,14 @@
     ],
     "uvType": "MODEL_XZ",
     "uvScale": 0.6
+  },
+  {
+    "description": "Chaos Altar",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      411
+    ],
+    "uvType": "BOX"
   },
   {
     "description": "Objects - Wooden - Rocking Chair",
