@@ -36,6 +36,7 @@ import java.util.Random;
 import lombok.Getter;
 
 @Getter
+@Deprecated
 public enum GroundMaterial {
 	NONE(Material.NONE),
 	SKULL_OBELISK(Material.SKULLS),
@@ -171,5 +172,4 @@ public enum GroundMaterial {
 			.create();
 		return gson.toJson(Arrays.asList(GroundMaterial.values()));
 	}
-
 }
