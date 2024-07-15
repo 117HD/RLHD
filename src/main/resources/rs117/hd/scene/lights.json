@@ -35315,7 +35315,9 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      43108
+      43108,
+      46910,
+      46911
     ]
   },
   {
@@ -35332,7 +35334,9 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      43108
+      43108,
+      46910,
+      46911
     ]
   },
   {
@@ -35349,7 +35353,9 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      43108
+      43108,
+      46910,
+      46911
     ]
   },
   {
@@ -35366,7 +35372,9 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      43108
+      43108,
+      46910,
+      46911
     ]
   },
   {
@@ -35383,7 +35391,100 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      43108
+      43108,
+      46910,
+      46911
     ]
+  },
+  {
+    "description": "Vet'ion/Calvar'ion Altar Glow Purple",
+    "offset": [ 130, 155, -190 ],
+    "radius": 85,
+    "strength": 55,
+    "color": [
+      77,
+      13,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "objectIds": [
+      43108
+    ],
+    "fadeOutDuration": 50,
+    "fadeInDuration": 50
+  },
+  {
+    "description": "Vet'ion/Calvar'ion Altar Glow Orange",
+    "offset": [ 130, 155, -190 ],
+    "radius": 175,
+    "strength": 25,
+    "color": [
+      255,
+      162,
+      41
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "objectIds": [
+      46910
+    ],
+    "fadeOutDuration": 50,
+    "fadeInDuration": 50
+  },
+  {
+    "description": "Vet'ion/Calvar'ion Summon Hound Purple",
+    "offset": [ 0, 150, 0 ],
+    "radius": 450,
+    "strength": 15,
+    "color": [
+      77,
+      13,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 10,
+    "npcIds": [ 6611, 11993 ],
+    "animationIds": [ 9975 ],
+    "fadeOutDuration": 250,
+    "fadeInDuration": 500
+  },
+  {
+    "description": "Vet'ion/Calvar'ion Enrage",
+    "offset": [ 0, 150, 0 ],
+    "radius": 400,
+    "strength": 8,
+    "color": [
+      255,
+      162,
+      41
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 10,
+    "npcIds": [ 11994 ],
+    "animationIds": [ -1, 9969, 9972, 9974, 9976 ],
+    "fadeOutDuration": 1500
+  },
+  {
+    "description": "Vet'ion/Calvar'ion Enrage Hound",
+    "offset": [ 0, 60, 0 ],
+    "radius": 300,
+    "strength": 7,
+    "color": [
+      255,
+      162,
+      41
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 10,
+    "npcIds": [ 12108 ],
+    "animationIds": [ -1, 6578, 6579 ],
+    "fadeInDuration": 100,
+    "fadeOutDuration": 1500
   }
 ]
