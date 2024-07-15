@@ -3,7 +3,6 @@ package rs117.hd.scene;
 import java.io.IOException;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
-import net.runelite.api.*;
 import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
 import rs117.hd.data.materials.NewGroundMaterial;
@@ -29,9 +28,6 @@ public class GroundMaterialManager {
 	@Inject
 	private TileOverrideManager tileOverrideManager;
 
-	@Inject
-	private Client client;
-
 	private static final ResourcePath GROUNDMATERIALS_PATH = Props.getPathOrDefault(
 		"rlhd.groundMaterials-path",
 		() -> path(AreaManager.class, "groundMaterials.json")
@@ -44,18 +40,16 @@ public class GroundMaterialManager {
 				if (groundMaterials == null) {
 					throw new IOException("Empty or invalid: " + path);
 				}
-				GROUND_MATERIALS = groundMaterials;
+				GROUND_MATERIALS = new NewGroundMaterial[groundMaterials.length + 2];
+				GROUND_MATERIALS[0] = NewGroundMaterial.NONE;
+				GROUND_MATERIALS[1] = NewGroundMaterial.DIRT;
+				System.arraycopy(groundMaterials, 0, GROUND_MATERIALS, 2, groundMaterials.length);
 				if (!first) {
 					clientThread.invoke(() -> {
-						// Reload everything which depends on area definitions
+						// Reload everything which depends on ground materials
 						tileOverrideManager.shutDown();
 						tileOverrideManager.startUp();
-
-
-						// Force reload the scene to reapply area hiding
-						if (client.getGameState() == GameState.LOGGED_IN) {
-							client.setGameState(GameState.LOADING);
-						}
+						plugin.reuploadScene();
 					});
 				}
 			} catch (IOException ex) {

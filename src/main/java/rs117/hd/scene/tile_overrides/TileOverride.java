@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import rs117.hd.data.WaterType;
+import rs117.hd.data.materials.NewGroundMaterial;
 import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.utils.Props;
@@ -24,7 +25,7 @@ import static rs117.hd.utils.HDUtils.clamp;
 @AllArgsConstructor
 public class TileOverride {
 	public static final int OVERLAY_FLAG = 1 << 31;
-	public static final TileOverride NONE = new TileOverride("NONE", "DIRT");
+	public static final TileOverride NONE = new TileOverride("NONE", NewGroundMaterial.DIRT);
 
 	@Nullable
 	public String name;
@@ -33,7 +34,8 @@ public class TileOverride {
 	public Area area = Area.NONE;
 	public int[] overlayIds;
 	public int[] underlayIds;
-	public String groundMaterial = "NONE";
+	@JsonAdapter(NewGroundMaterial.JsonAdapter.class)
+	public NewGroundMaterial groundMaterial = NewGroundMaterial.NONE;
 	public WaterType waterType = WaterType.NONE;
 	public boolean blended = true;
 	public boolean blendedAsOpposite = false;
@@ -56,7 +58,7 @@ public class TileOverride {
 	public transient List<ExpressionBasedReplacement> replacements;
 	public transient boolean queriedAsOverlay;
 
-	private TileOverride(@Nullable String name, String groundMaterial) {
+	private TileOverride(@Nullable String name, NewGroundMaterial groundMaterial) {
 		this.name = name;
 		this.groundMaterial = groundMaterial;
 		this.index = Integer.MAX_VALUE; // Prioritize any-match overrides over this
@@ -96,7 +98,7 @@ public class TileOverride {
 		}
 		if (groundMaterial == null) {
 			log.warn("Undefined ground material in tile override: {}", this);
-			groundMaterial = "NONE";
+			groundMaterial = NewGroundMaterial.NONE;
 		}
 		if (waterType == null) {
 			log.warn("Undefined water type in tile override: {}", this);

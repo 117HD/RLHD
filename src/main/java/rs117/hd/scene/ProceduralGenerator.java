@@ -78,9 +78,6 @@ public class ProceduralGenerator {
 	@Inject
 	private TileOverrideManager tileOverrideManager;
 
-	@Inject
-	private GroundMaterialManager groundMaterialManager;
-
 	public void generateSceneData(SceneContext sceneContext)
 	{
 		long timerTotal = System.currentTimeMillis();
@@ -304,7 +301,7 @@ public class ProceduralGenerator {
 			Material material = Material.DIRT_1;
 			var override = vertexOverrides[vertex];
 			if (override != TileOverride.NONE) {
-				material = groundMaterialManager.lookup(override.groundMaterial).getRandomMaterial(worldPos[2], worldPos[0], worldPos[1]);
+				material = override.groundMaterial.getRandomMaterial(worldPos[2], worldPos[0], worldPos[1]);
 				isOverlay = vertexIsOverlay[vertex] != override.blendedAsOpposite;
 				color = override.modifyColor(color);
 			}

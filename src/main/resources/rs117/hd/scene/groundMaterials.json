@@ -1,11 +1,5 @@
 [
   {
-    "name": "NONE",
-    "materials": [
-      "NONE"
-    ]
-  },
-  {
     "name": "SKULL_OBELISK",
     "materials": [
       "SKULLS"
@@ -43,13 +37,6 @@
     "name": "STONE_SCROLLING",
     "materials": [
       "STONE_SCROLLING"
-    ]
-  },
-  {
-    "name": "DIRT",
-    "materials": [
-      "DIRT_1",
-      "DIRT_2"
     ]
   },
   {
@@ -275,13 +262,6 @@
       "SAND_1",
       "SAND_2",
       "SAND_3"
-    ]
-  },
-  {
-    "name": "UNDERWATER_GENERIC",
-    "materials": [
-      "DIRT_1",
-      "DIRT_2"
     ]
   },
   {

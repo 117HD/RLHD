@@ -81,9 +81,6 @@ public class SceneUploader {
 	private AreaManager areaManager;
 
 	@Inject
-	private GroundMaterialManager groundMaterialManager;
-
-	@Inject
 	private TileOverrideManager tileOverrideManager;
 
 	@Inject
@@ -617,7 +614,7 @@ public class SceneUploader {
 					!proceduralGenerator.useDefaultColor(tile, override);
 				NewGroundMaterial groundMaterial = null;
 				if (override != TileOverride.NONE) {
-					groundMaterial = groundMaterialManager.lookup(override.groundMaterial);
+					groundMaterial = override.groundMaterial;
 					uvOrientation = override.uvOrientation;
 					uvScale = override.uvScale;
 					if (!useBlendedMaterialAndColor) {
@@ -628,7 +625,7 @@ public class SceneUploader {
 					}
 				} else if (textureId == -1) {
 					// Fall back to the default ground material if the tile is untextured
-					groundMaterial = groundMaterialManager.lookup(override.groundMaterial);
+					groundMaterial = override.groundMaterial;
 				}
 
 				if (useBlendedMaterialAndColor) {
@@ -806,7 +803,7 @@ public class SceneUploader {
 
 			if (plugin.configGroundTextures)
 			{
-				NewGroundMaterial groundMaterial = groundMaterialManager.lookup("UNDERWATER_GENERIC");
+				NewGroundMaterial groundMaterial = NewGroundMaterial.UNDERWATER_GENERIC;
 
 				swMaterial = groundMaterial.getRandomMaterial(tileZ, baseX + tileX, baseY + tileY);
 				seMaterial = groundMaterial.getRandomMaterial(tileZ, baseX + tileX + 1, baseY + tileY);
@@ -978,7 +975,7 @@ public class SceneUploader {
 						textureId == -1 &&
 						!(isOverlay && proceduralGenerator.useDefaultColor(tile, override));
 					if (override != TileOverride.NONE) {
-						groundMaterial = groundMaterialManager.lookup(override.groundMaterial);
+						groundMaterial = override.groundMaterial;
 						uvOrientation = override.uvOrientation;
 						uvScale = override.uvScale;
 						if (!useBlendedMaterialAndColor) {
@@ -988,7 +985,7 @@ public class SceneUploader {
 						}
 					} else if (textureId == -1) {
 						// Fall back to the default ground material if the tile is untextured
-						groundMaterial = groundMaterialManager.lookup(override.groundMaterial);
+						groundMaterial = override.groundMaterial;
 					}
 
 					if (useBlendedMaterialAndColor) {
@@ -1144,7 +1141,7 @@ public class SceneUploader {
 				int depthC = sceneContext.vertexUnderwaterDepth.getOrDefault(vertexKeyC, 0);
 
 				if (plugin.configGroundTextures) {
-					NewGroundMaterial groundMaterial = groundMaterialManager.lookup("UNDERWATER_GENERIC");
+					NewGroundMaterial groundMaterial = NewGroundMaterial.UNDERWATER_GENERIC;
 
 					int tileVertexX = Math.round((float) localVertices[0][0] / (float) LOCAL_TILE_SIZE) + tileX + baseX;
 					int tileVertexY = Math.round((float) localVertices[0][1] / (float) LOCAL_TILE_SIZE) + tileY + baseY;
