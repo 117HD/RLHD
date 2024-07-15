@@ -298,15 +298,17 @@ public class LightManager {
 						tileExX < EXTENDED_SCENE_SIZE && tileExY < EXTENDED_SCENE_SIZE &&
 						(tile = tiles[plane][tileExX][tileExY]) != null
 					) {
-						// Check if the actor is hidden by another actor on the same tile
-						for (var gameObject : tile.getGameObjects()) {
-							if (gameObject == null || !(gameObject.getRenderable() instanceof Actor))
-								continue;
+						if (!light.def.ignoreActorHiding) {
+							// Check if the actor is hidden by another actor on the same tile
+							for (var gameObject : tile.getGameObjects()) {
+								if (gameObject == null || !(gameObject.getRenderable() instanceof Actor))
+									continue;
 
-							// Assume only the first actor at the same exact location will be rendered
-							if (gameObject.getX() == light.origin[0] && gameObject.getY() == light.origin[2]) {
-								hiddenTemporarily = gameObject.getRenderable() != light.actor;
-								break;
+								// Assume only the first actor at the same exact location will be rendered
+								if (gameObject.getX() == light.origin[0] && gameObject.getY() == light.origin[2]) {
+									hiddenTemporarily = gameObject.getRenderable() != light.actor;
+									break;
+								}
 							}
 						}
 

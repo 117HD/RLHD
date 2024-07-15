@@ -29,6 +29,7 @@ public class LightDefinition {
 	public int despawnDelay;
 	public boolean fixedDespawnTime;
 	public boolean visibleFromOtherPlanes;
+	public boolean ignoreActorHiding;
 	public int renderableIndex = -1;
 
 	@JsonAdapter(AABB.JsonAdapter.class)

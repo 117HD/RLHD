@@ -135,6 +135,10 @@
         "type": "boolean",
         "description": "Whether the light should be hidden when it appears on a different plane than the current. Defaults to true."
       },
+      "ignoreActorHiding": {
+        "type": "boolean",
+        "description": "Don't hide the light if its actor is hidden by another actor drawing on top. Defaults to false."
+      },
       "areas": {
         "type": "array",
         "description": "An array of bounding boxes, region IDs and/or area enums specifying which areas the light should be limited to.",
