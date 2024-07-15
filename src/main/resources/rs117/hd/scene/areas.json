@@ -2478,6 +2478,20 @@
     "hideOtherAreas": true
   },
   {
+    "name": "Daimon's Crater - Bounty Hunter",
+    "regions": [
+      13374,
+      13375,
+      13376,
+      13630,
+      13631,
+      13632,
+      13886,
+      13887,
+      13888
+    ]
+  },
+  {
     "name": "Vet'ion/Calvar'ion Lair Carpet Fix",
     "aabbs": [
       [ 1884, 11534, 1890, 11541 ]
