@@ -73,6 +73,18 @@
     "groundFogOpacity": 0.3
   },
   {
+    "area": "Daimon's Crater - Bounty Hunter",
+    "ambientColor": "#d7d2d2",
+    "ambientStrength": 0.75,
+    "directionalColor": "#c5b8b6",
+    "directionalStrength": 2,
+    "fogColor": "#25252a",
+    "fogDepth": 30,
+    "groundFogStart": 0,
+    "groundFogEnd": -250,
+    "groundFogOpacity": 0.3
+  },
+  {
     "area": "VARROCK_MUSEUM_BASEMENT",
     "ambientColor": "#b59b79",
     "ambientStrength": 2,
