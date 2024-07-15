@@ -1,24 +1,22 @@
-package rs117.hd.data.materials.groundMaterial;
+package rs117.hd.scene;
 
+import java.io.IOException;
+import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
-import rs117.hd.scene.AreaManager;
-import rs117.hd.scene.TileOverrideManager;
+import rs117.hd.data.materials.NewGroundMaterial;
 import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
-
-import javax.inject.Inject;
-import java.io.IOException;
 
 import static rs117.hd.utils.ResourcePath.path;
 
 @Slf4j
 public class GroundMaterialManager {
 
-	public static GroundMaterial[] GROUND_MATERIALS = new GroundMaterial[0];
+	public static NewGroundMaterial[] GROUND_MATERIALS = new NewGroundMaterial[0];
 
 	private FileWatcher.UnregisterCallback fileWatcher;
 
@@ -42,7 +40,7 @@ public class GroundMaterialManager {
 	public void startUp() {
 		fileWatcher = GROUNDMATERIALS_PATH.watch((path, first) -> {
 			try {
-				GroundMaterial[] groundMaterials = path.loadJson(plugin.getGson(), GroundMaterial[].class);
+				NewGroundMaterial[] groundMaterials = path.loadJson(plugin.getGson(), NewGroundMaterial[].class);
 				if (groundMaterials == null) {
 					throw new IOException("Empty or invalid: " + path);
 				}
@@ -66,13 +64,13 @@ public class GroundMaterialManager {
 		});
 	}
 
-	public GroundMaterial lookup(String name) {
-		for (GroundMaterial groundMaterial : GROUND_MATERIALS) {
+	public NewGroundMaterial lookup(String name) {
+		for (NewGroundMaterial groundMaterial : GROUND_MATERIALS) {
 			if (groundMaterial.getName().equalsIgnoreCase(name)) {
 				return groundMaterial;
 			}
 		}
-		return GroundMaterial.NONE;
+		return NewGroundMaterial.NONE;
 	}
 
 	public void shutDown() {
@@ -80,7 +78,7 @@ public class GroundMaterialManager {
 			fileWatcher.unregister();
 		}
 		fileWatcher = null;
-		GROUND_MATERIALS = new GroundMaterial[0];
+		GROUND_MATERIALS = new NewGroundMaterial[0];
 	}
 
 }

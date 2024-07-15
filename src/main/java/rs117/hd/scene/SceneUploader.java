@@ -36,10 +36,9 @@ import net.runelite.api.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.data.WaterType;
-import rs117.hd.data.materials.groundMaterial.GroundMaterial;
 import rs117.hd.data.materials.Material;
+import rs117.hd.data.materials.NewGroundMaterial;
 import rs117.hd.data.materials.UvType;
-import rs117.hd.data.materials.groundMaterial.GroundMaterialManager;
 import rs117.hd.model.ModelPusher;
 import rs117.hd.scene.areas.AABB;
 import rs117.hd.scene.areas.Area;
@@ -616,7 +615,7 @@ public class SceneUploader {
 					plugin.configGroundBlending &&
 					textureId == -1 &&
 					!proceduralGenerator.useDefaultColor(tile, override);
-				GroundMaterial groundMaterial = null;
+				NewGroundMaterial groundMaterial = null;
 				if (override != TileOverride.NONE) {
 					groundMaterial = groundMaterialManager.lookup(override.groundMaterial);
 					uvOrientation = override.uvOrientation;
@@ -807,7 +806,7 @@ public class SceneUploader {
 
 			if (plugin.configGroundTextures)
 			{
-				GroundMaterial groundMaterial  = groundMaterialManager.lookup("UNDERWATER_GENERIC");
+				NewGroundMaterial groundMaterial = groundMaterialManager.lookup("UNDERWATER_GENERIC");
 
 				swMaterial = groundMaterial.getRandomMaterial(tileZ, baseX + tileX, baseY + tileY);
 				seMaterial = groundMaterial.getRandomMaterial(tileZ, baseX + tileX + 1, baseY + tileY);
@@ -972,7 +971,7 @@ public class SceneUploader {
 					normalsB = sceneContext.vertexTerrainNormals.getOrDefault(vertexKeyB, normalsB);
 					normalsC = sceneContext.vertexTerrainNormals.getOrDefault(vertexKeyC, normalsC);
 
-					GroundMaterial groundMaterial = null;
+					NewGroundMaterial groundMaterial = null;
 
 					boolean useBlendedMaterialAndColor =
 						plugin.configGroundBlending &&
@@ -1145,7 +1144,7 @@ public class SceneUploader {
 				int depthC = sceneContext.vertexUnderwaterDepth.getOrDefault(vertexKeyC, 0);
 
 				if (plugin.configGroundTextures) {
-					GroundMaterial groundMaterial = groundMaterialManager.lookup("UNDERWATER_GENERIC");
+					NewGroundMaterial groundMaterial = groundMaterialManager.lookup("UNDERWATER_GENERIC");
 
 					int tileVertexX = Math.round((float) localVertices[0][0] / (float) LOCAL_TILE_SIZE) + tileX + baseX;
 					int tileVertexY = Math.round((float) localVertices[0][1] / (float) LOCAL_TILE_SIZE) + tileY + baseY;

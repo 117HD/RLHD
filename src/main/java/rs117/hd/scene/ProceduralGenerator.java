@@ -34,7 +34,6 @@ import rs117.hd.HdPlugin;
 import rs117.hd.config.SeasonalTheme;
 import rs117.hd.data.WaterType;
 import rs117.hd.data.materials.Material;
-import rs117.hd.data.materials.groundMaterial.GroundMaterialManager;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.scene.model_overrides.ObjectType;
 import rs117.hd.scene.model_overrides.TzHaarRecolorType;
