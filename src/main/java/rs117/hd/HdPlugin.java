@@ -79,6 +79,7 @@ import org.lwjgl.system.Callback;
 import org.lwjgl.system.Configuration;
 import rs117.hd.config.AntiAliasingMode;
 import rs117.hd.config.ColorFilter;
+import rs117.hd.config.SeasonalHemisphere;
 import rs117.hd.config.SeasonalTheme;
 import rs117.hd.config.ShadingMode;
 import rs117.hd.config.ShadowMode;
@@ -444,6 +445,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public int configMaxDynamicLights;
 	public ShadowMode configShadowMode;
 	public SeasonalTheme configSeasonalTheme;
+	public SeasonalHemisphere configSeasonalHemisphere;
 	public VanillaShadowMode configVanillaShadowMode;
 	public ColorFilter configColorFilter = ColorFilter.NONE;
 	public ColorFilter configColorFilterPrevious;
@@ -2526,6 +2528,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		configUndoVanillaShading = config.shadingMode() != ShadingMode.VANILLA;
 		configPreserveVanillaNormals = config.preserveVanillaNormals();
 		configSeasonalTheme = config.seasonalTheme();
+		configSeasonalHemisphere = config.seasonalHemisphere();
 
 		var newColorFilter = config.colorFilter();
 		if (newColorFilter != configColorFilter) {
@@ -2536,20 +2539,39 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		if (configSeasonalTheme == SeasonalTheme.AUTOMATIC) {
 			var time = ZonedDateTime.now(ZoneOffset.UTC);
-			switch (time.getMonth()) {
-				case SEPTEMBER:
-				case OCTOBER:
-				case NOVEMBER:
-					configSeasonalTheme = SeasonalTheme.AUTUMN;
-					break;
-				case DECEMBER:
-				case JANUARY:
-				case FEBRUARY:
-					configSeasonalTheme = SeasonalTheme.WINTER;
-					break;
-				default:
-					configSeasonalTheme = SeasonalTheme.SUMMER;
-					break;
+
+			if (configSeasonalHemisphere == SeasonalHemisphere.NORTHERN) {
+				switch (time.getMonth()) {
+					case SEPTEMBER:
+					case OCTOBER:
+					case NOVEMBER:
+						configSeasonalTheme = SeasonalTheme.AUTUMN;
+						break;
+					case DECEMBER:
+					case JANUARY:
+					case FEBRUARY:
+						configSeasonalTheme = SeasonalTheme.WINTER;
+						break;
+					default:
+						configSeasonalTheme = SeasonalTheme.SUMMER;
+						break;
+				}
+			} else {
+				switch (time.getMonth()) {
+					case MARCH:
+					case APRIL:
+					case MAY:
+						configSeasonalTheme = SeasonalTheme.AUTUMN;
+						break;
+					case JUNE:
+					case JULY:
+					case AUGUST:
+						configSeasonalTheme = SeasonalTheme.WINTER;
+						break;
+					default:
+						configSeasonalTheme = SeasonalTheme.SUMMER;
+						break;
+				}
 			}
 		}
 	}
@@ -2588,6 +2610,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					for (var key : pendingConfigChanges) {
 						switch (key) {
 							case KEY_SEASONAL_THEME:
+							case KEY_SEASONAL_HEMISPHERE:
 							case KEY_GROUND_BLENDING:
 							case KEY_GROUND_TEXTURES:
 								reloadTileOverrides = true;
@@ -2623,6 +2646,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 								reloadEnvironments = true;
 								break;
 							case KEY_SEASONAL_THEME:
+							case KEY_SEASONAL_HEMISPHERE:
 								reloadEnvironments = true;
 								reloadModelOverrides = true;
 								// fall-through
