@@ -5,7 +5,9 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
@@ -57,6 +59,8 @@ public class AreaManager {
 
 	public static Area[] AREAS = new Area[0];
 
+	public Area[] areasWithAreaHiding = new Area[0];
+
 	public void startUp() {
 		fileWatcher = AREA_PATH.watch((path, first) -> {
 			try {
@@ -68,8 +72,13 @@ public class AreaManager {
 				AREAS[AREAS.length - 2] = Area.ALL;
 				AREAS[AREAS.length - 1] = Area.NONE;
 
-				for (Area area : areas)
+				ArrayList<Area> areasWithAreaHiding = new ArrayList<>();
+				for (Area area : areas) {
 					area.normalize();
+					if (area.hideOtherAreas)
+						areasWithAreaHiding.add(area);
+				}
+				this.areasWithAreaHiding = areasWithAreaHiding.toArray(Area[]::new);
 
 				Area.OVERWORLD = getArea("OVERWORLD");
 
@@ -107,6 +116,7 @@ public class AreaManager {
 		AREAS = new Area[0];
 	}
 
+	@Nonnull
 	public Area getArea(String name) {
 		for (Area area : AREAS)
 			if (name.equals(area.name))

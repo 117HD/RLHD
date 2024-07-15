@@ -10,6 +10,8 @@ public class AABBTest {
 	public void testAABB() {
 		Assert.assertTrue(new AABB(2815, 10097, 0, 2844, 10046, 0)
 			.intersects(2832, 10056, 0, 2839, 10063, 0));
+		Assert.assertTrue(new AABB(3221, 9602, 3307, 9660)
+			.contains(3223, 9617, 0));
 	}
 
 	@Test

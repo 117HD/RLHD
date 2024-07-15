@@ -178,7 +178,7 @@ public class ModelOverrideManager {
 
 	@Nonnull
 	public ModelOverride getOverride(int uuid, int[] worldPos) {
-		var override = modelOverrides.get(uuid);
+		var override = modelOverrides.get(ModelHash.getUuidWithoutSubType(uuid));
 		if (override == null)
 			return ModelOverride.NONE;
 
