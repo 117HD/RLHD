@@ -36,8 +36,8 @@ import net.runelite.api.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.data.WaterType;
+import rs117.hd.data.materials.GroundMaterial;
 import rs117.hd.data.materials.Material;
-import rs117.hd.data.materials.NewGroundMaterial;
 import rs117.hd.data.materials.UvType;
 import rs117.hd.model.ModelPusher;
 import rs117.hd.scene.areas.AABB;
@@ -612,7 +612,7 @@ public class SceneUploader {
 					plugin.configGroundBlending &&
 					textureId == -1 &&
 					!proceduralGenerator.useDefaultColor(tile, override);
-				NewGroundMaterial groundMaterial = null;
+				GroundMaterial groundMaterial = null;
 				if (override != TileOverride.NONE) {
 					groundMaterial = override.groundMaterial;
 					uvOrientation = override.uvOrientation;
@@ -803,7 +803,7 @@ public class SceneUploader {
 
 			if (plugin.configGroundTextures)
 			{
-				NewGroundMaterial groundMaterial = NewGroundMaterial.UNDERWATER_GENERIC;
+				GroundMaterial groundMaterial = GroundMaterial.UNDERWATER_GENERIC;
 
 				swMaterial = groundMaterial.getRandomMaterial(tileZ, baseX + tileX, baseY + tileY);
 				seMaterial = groundMaterial.getRandomMaterial(tileZ, baseX + tileX + 1, baseY + tileY);
@@ -968,7 +968,7 @@ public class SceneUploader {
 					normalsB = sceneContext.vertexTerrainNormals.getOrDefault(vertexKeyB, normalsB);
 					normalsC = sceneContext.vertexTerrainNormals.getOrDefault(vertexKeyC, normalsC);
 
-					NewGroundMaterial groundMaterial = null;
+					GroundMaterial groundMaterial = null;
 
 					boolean useBlendedMaterialAndColor =
 						plugin.configGroundBlending &&
@@ -1141,7 +1141,7 @@ public class SceneUploader {
 				int depthC = sceneContext.vertexUnderwaterDepth.getOrDefault(vertexKeyC, 0);
 
 				if (plugin.configGroundTextures) {
-					NewGroundMaterial groundMaterial = NewGroundMaterial.UNDERWATER_GENERIC;
+					GroundMaterial groundMaterial = GroundMaterial.UNDERWATER_GENERIC;
 
 					int tileVertexX = Math.round((float) localVertices[0][0] / (float) LOCAL_TILE_SIZE) + tileX + baseX;
 					int tileVertexY = Math.round((float) localVertices[0][1] / (float) LOCAL_TILE_SIZE) + tileY + baseY;

@@ -5,7 +5,7 @@ import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
-import rs117.hd.data.materials.NewGroundMaterial;
+import rs117.hd.data.materials.GroundMaterial;
 import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
@@ -30,18 +30,18 @@ public class GroundMaterialManager {
 
 	private FileWatcher.UnregisterCallback fileWatcher;
 
-	public static NewGroundMaterial[] GROUND_MATERIALS = new NewGroundMaterial[0];
+	public static GroundMaterial[] GROUND_MATERIALS = new GroundMaterial[0];
 
 	public void startUp() {
 		fileWatcher = GROUND_MATERIALS_PATH.watch((path, first) -> {
 			try {
-				NewGroundMaterial[] groundMaterials = path.loadJson(plugin.getGson(), NewGroundMaterial[].class);
+				GroundMaterial[] groundMaterials = path.loadJson(plugin.getGson(), GroundMaterial[].class);
 				if (groundMaterials == null)
 					throw new IOException("Empty or invalid: " + path);
 
-				GROUND_MATERIALS = new NewGroundMaterial[groundMaterials.length + 2];
-				GROUND_MATERIALS[0] = NewGroundMaterial.NONE;
-				GROUND_MATERIALS[1] = NewGroundMaterial.DIRT;
+				GROUND_MATERIALS = new GroundMaterial[groundMaterials.length + 2];
+				GROUND_MATERIALS[0] = GroundMaterial.NONE;
+				GROUND_MATERIALS[1] = GroundMaterial.DIRT;
 				System.arraycopy(groundMaterials, 0, GROUND_MATERIALS, 2, groundMaterials.length);
 
 				if (!first) {
@@ -62,6 +62,6 @@ public class GroundMaterialManager {
 		if (fileWatcher != null)
 			fileWatcher.unregister();
 		fileWatcher = null;
-		GROUND_MATERIALS = new NewGroundMaterial[0];
+		GROUND_MATERIALS = new GroundMaterial[0];
 	}
 }
