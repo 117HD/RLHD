@@ -9131,6 +9131,58 @@
     "uvType": "VANILLA"
   },
   {
+    "description": "Wilderness - Artio/Callisto Lair Entrance",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      47140,
+      47141
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Wilderness - Artio/Callisto Trees and Roots",
+    "baseMaterial": "LIGHT_BARK",
+    "objectIds": [
+      47087,
+      47088,
+      47089,
+      47090,
+      47091,
+      47097,
+      47098
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.76
+  },
+  {
+    "description": "Wilderness - Artio/Callisto Walls and Rocks",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      47092,
+      47093,
+      47094,
+      47095,
+      47096,
+      47099,
+      47135,
+      47136,
+      47137,
+      47138,
+      47139,
+      47142,
+      47143,
+      47144,
+      47116,
+      47117,
+      47118,
+      47119,
+      47120,
+      47121,
+      47122
+    ],
+    "uvType": "BOX"
+  },
+  {
     "description": "Edgeville Wilderness Dungeon - Cave Wall - Opening",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
