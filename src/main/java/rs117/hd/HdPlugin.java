@@ -106,6 +106,7 @@ import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.SceneUploader;
 import rs117.hd.scene.TextureManager;
 import rs117.hd.scene.TileOverrideManager;
+import rs117.hd.scene.areas.Area;
 import rs117.hd.scene.lights.Light;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.scene.model_overrides.ObjectType;
@@ -1481,7 +1482,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		boolean updateUniforms = true;
 
-		if (sceneContext.currentArea != null) {
+		if (sceneContext.enableAreaHiding) {
 			var lp = client.getLocalPlayer().getLocalLocation();
 			int[] worldPos = {
 				sceneContext.scene.getBaseX() + lp.getSceneX(),
@@ -1492,16 +1493,19 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			// We need to check all areas contained in the scene in the order they appear in the list,
 			// in order to ensure lower floors can take precedence over higher floors which include tiny
 			// portions of the floor beneath around stairs and ladders
+			Area newArea = null;
 			for (var area : sceneContext.possibleAreas) {
 				if (area.containsPoint(worldPos)) {
-					if (area != sceneContext.currentArea) {
-						// Force a scene reload if the player is no longer within the isolated area
-						client.setGameState(GameState.LOADING);
-						updateUniforms = false;
-						redrawPreviousFrame = true;
-					}
+					newArea = area;
 					break;
 				}
+			}
+
+			// Force a scene reload if the player is no longer in the same area
+			if (newArea != sceneContext.currentArea) {
+				client.setGameState(GameState.LOADING);
+				updateUniforms = false;
+				redrawPreviousFrame = true;
 			}
 		}
 
