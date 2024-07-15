@@ -43,7 +43,6 @@ import rs117.hd.model.ModelPusher;
 import rs117.hd.scene.areas.AABB;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.scene.model_overrides.ModelOverride;
-import rs117.hd.scene.model_overrides.ObjectType;
 import rs117.hd.scene.tile_overrides.TileOverride;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ModelHash;
@@ -310,7 +309,7 @@ public class SceneUploader {
 		}
 	}
 
-	private void uploadModel(SceneContext sceneContext, Tile tile, int uuid, Model model, int orientation, ObjectType objectType) {
+	private void uploadModel(SceneContext sceneContext, Tile tile, int uuid, Model model, int orientation) {
 		// deduplicate hillskewed models
 		if (model.getUnskewedModel() != null)
 			model = model.getUnskewedModel();
@@ -337,7 +336,7 @@ public class SceneUploader {
 		if (modelOverride.hide) {
 			vertexOffset = -1;
 		} else {
-			modelPusher.pushModel(sceneContext, tile, uuid, model, modelOverride, objectType, orientation, false);
+			modelPusher.pushModel(sceneContext, tile, uuid, model, modelOverride, orientation, false);
 			if (sceneContext.modelPusherResults[1] == 0)
 				uvOffset = -1;
 		}
@@ -432,17 +431,23 @@ public class SceneUploader {
 		if (wallObject != null) {
 			Renderable renderable1 = wallObject.getRenderable1();
 			if (renderable1 instanceof Model) {
-				uploadModel(sceneContext, tile, ModelHash.packUuid(ModelHash.TYPE_OBJECT, wallObject.getId()), (Model) renderable1,
-					HDUtils.convertWallObjectOrientation(wallObject.getOrientationA()),
-					ObjectType.WALL_OBJECT
+				uploadModel(
+					sceneContext,
+					tile,
+					ModelHash.packUuid(ModelHash.TYPE_WALL_OBJECT, wallObject.getId()),
+					(Model) renderable1,
+					HDUtils.convertWallObjectOrientation(wallObject.getOrientationA())
 				);
 			}
 
 			Renderable renderable2 = wallObject.getRenderable2();
 			if (renderable2 instanceof Model) {
-				uploadModel(sceneContext, tile, ModelHash.packUuid(ModelHash.TYPE_OBJECT, wallObject.getId()), (Model) renderable2,
-					HDUtils.convertWallObjectOrientation(wallObject.getOrientationB()),
-					ObjectType.WALL_OBJECT
+				uploadModel(
+					sceneContext,
+					tile,
+					ModelHash.packUuid(ModelHash.TYPE_WALL_OBJECT, wallObject.getId()),
+					(Model) renderable2,
+					HDUtils.convertWallObjectOrientation(wallObject.getOrientationB())
 				);
 			}
 		}
@@ -451,9 +456,12 @@ public class SceneUploader {
 		if (groundObject != null) {
 			Renderable renderable = groundObject.getRenderable();
 			if (renderable instanceof Model) {
-				uploadModel(sceneContext, tile, ModelHash.packUuid(ModelHash.TYPE_OBJECT, groundObject.getId()), (Model) renderable,
-					HDUtils.getBakedOrientation(groundObject.getConfig()),
-					ObjectType.GROUND_OBJECT
+				uploadModel(
+					sceneContext,
+					tile,
+					ModelHash.packUuid(ModelHash.TYPE_GROUND_OBJECT, groundObject.getId()),
+					(Model) renderable,
+					HDUtils.getBakedOrientation(groundObject.getConfig())
 				);
 			}
 		}
@@ -463,17 +471,23 @@ public class SceneUploader {
 			Renderable renderable = decorativeObject.getRenderable();
 			int orientation = HDUtils.getBakedOrientation(decorativeObject.getConfig());
 			if (renderable instanceof Model) {
-				uploadModel(sceneContext, tile, ModelHash.packUuid(ModelHash.TYPE_OBJECT, decorativeObject.getId()), (Model) renderable,
-					orientation,
-					ObjectType.DECORATIVE_OBJECT
+				uploadModel(
+					sceneContext,
+					tile,
+					ModelHash.packUuid(ModelHash.TYPE_DECORATIVE_OBJECT, decorativeObject.getId()),
+					(Model) renderable,
+					orientation
 				);
 			}
 
 			Renderable renderable2 = decorativeObject.getRenderable2();
 			if (renderable2 instanceof Model) {
-				uploadModel(sceneContext, tile, ModelHash.packUuid(ModelHash.TYPE_OBJECT, decorativeObject.getId()), (Model) renderable2,
-					orientation,
-					ObjectType.DECORATIVE_OBJECT
+				uploadModel(
+					sceneContext,
+					tile,
+					ModelHash.packUuid(ModelHash.TYPE_DECORATIVE_OBJECT, decorativeObject.getId()),
+					(Model) renderable2,
+					orientation
 				);
 			}
 		}
@@ -488,9 +502,9 @@ public class SceneUploader {
 			if (renderable instanceof Model) {
 				uploadModel(sceneContext,
 					tile,
-					ModelHash.packUuid(ModelHash.TYPE_OBJECT, gameObject.getId()),
+					ModelHash.packUuid(ModelHash.TYPE_GAME_OBJECT, gameObject.getId()),
 					(Model) gameObject.getRenderable(),
-					HDUtils.getBakedOrientation(gameObject.getConfig()), ObjectType.GAME_OBJECT
+					HDUtils.getBakedOrientation(gameObject.getConfig())
 				);
 			}
 		}

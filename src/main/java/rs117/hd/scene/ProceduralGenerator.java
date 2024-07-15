@@ -35,9 +35,9 @@ import rs117.hd.config.SeasonalTheme;
 import rs117.hd.data.WaterType;
 import rs117.hd.data.materials.Material;
 import rs117.hd.scene.model_overrides.ModelOverride;
-import rs117.hd.scene.model_overrides.ObjectType;
 import rs117.hd.scene.model_overrides.TzHaarRecolorType;
 import rs117.hd.scene.tile_overrides.TileOverride;
+import rs117.hd.utils.ModelHash;
 
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.*;
@@ -993,11 +993,11 @@ public class ProceduralGenerator {
 	private static final int gradientTop = -200;
 
 	public static int[] recolorTzHaar(
+		int uuid,
 		ModelOverride modelOverride,
 		Model model,
 		int face,
 		int packedAlphaPriority,
-		ObjectType objectType,
 		int color1,
 		int color2,
 		int color3
@@ -1015,8 +1015,8 @@ public class ProceduralGenerator {
 		int color3L = color3 & 0x7F;
 
 		// recolor tzhaar to look like the 2008+ HD version
-		if (objectType == ObjectType.GROUND_OBJECT) {
-			// remove the black parts of floor objects to allow the ground to show
+		if (ModelHash.getUuidSubType(uuid) == ModelHash.TYPE_GROUND_OBJECT) {
+			// remove the black parts of floor objects to allow the ground to show,
 			// so we can apply textures, ground blending, etc. to it
 			if (color1S <= 1)
 				packedAlphaPriority = 0xFF << 24;

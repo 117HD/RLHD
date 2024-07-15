@@ -111,7 +111,6 @@ import rs117.hd.scene.TileOverrideManager;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.scene.lights.Light;
 import rs117.hd.scene.model_overrides.ModelOverride;
-import rs117.hd.scene.model_overrides.ObjectType;
 import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.DeveloperTools;
 import rs117.hd.utils.FileWatcher;
@@ -3054,7 +3053,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					}
 				}
 
-				modelPusher.pushModel(sceneContext, null, uuid, model, modelOverride, ObjectType.NONE, preOrientation, true);
+				modelPusher.pushModel(sceneContext, null, uuid, model, modelOverride, preOrientation, true);
 
 				faceCount = sceneContext.modelPusherResults[0];
 				if (sceneContext.modelPusherResults[1] == 0)
