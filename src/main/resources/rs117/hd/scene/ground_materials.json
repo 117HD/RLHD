@@ -111,6 +111,12 @@
     ]
   },
   {
+    "name": "FINE_CARPET",
+    "materials": [
+      "FINE_CARPET"
+    ]
+  },
+  {
     "name": "BRICK",
     "materials": [
       "BRICK"
