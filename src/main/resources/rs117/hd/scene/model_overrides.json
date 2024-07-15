@@ -4746,7 +4746,9 @@
       30177,
       30374,
       31766,
-      42248
+      42248,
+      47077,
+      47078
     ],
     "uvType": "BOX",
     "uvScale": 0.5
@@ -8946,6 +8948,68 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.75
+  },
+  {
+    "description": "Wilderness - Venenatis/Spindel Lair - Walls",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      46999,
+      47000,
+      47001,
+      47002,
+      47003,
+      47004,
+      47016,
+      47017,
+      47018,
+      47019,
+      47020,
+      47028,
+      47029,
+      47030,
+      47031,
+      47032,
+      47033,
+      47034,
+      47035,
+      47036,
+      47037
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Wilderness - Venenatis/Spindel Lair - Dirt Trim",
+    "baseMaterial": "DIRT_1",
+    "objectIds": [
+      47005,
+      47006,
+      47007,
+      47008,
+      47009,
+      47010,
+      47011,
+      47012,
+      47013,
+      47014,
+      47015
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.66
+  },
+  {
+    "description": "Wilderness - Venenatis/Spindel Lair - Web Sacks",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      47021,
+      47022,
+      47023,
+      47068,
+      47069,
+      47070,
+      47071
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.66
   },
   {
     "description": "Edgeville Wilderness Dungeon - Cave Wall - Opening",
