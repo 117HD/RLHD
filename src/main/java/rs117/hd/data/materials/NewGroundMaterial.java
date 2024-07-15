@@ -2,12 +2,10 @@ package rs117.hd.data.materials;
 
 import java.util.Random;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Getter
 @Slf4j
-@NoArgsConstructor // Called by GSON when parsing JSON
 public class NewGroundMaterial {
 	public static final NewGroundMaterial NONE = new NewGroundMaterial("NONE", Material.NONE);
 

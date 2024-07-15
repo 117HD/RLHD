@@ -3,7 +3,6 @@ package rs117.hd.scene.environments;
 import com.google.gson.annotations.JsonAdapter;
 import java.util.Objects;
 import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.areas.Area;
@@ -14,7 +13,6 @@ import static rs117.hd.utils.ColorUtils.SrgbToLinearAdapter;
 import static rs117.hd.utils.ColorUtils.rgb;
 
 @Setter(value = AccessLevel.PRIVATE)
-@NoArgsConstructor // Called by GSON when parsing JSON
 public class Environment {
 	public static final Environment DEFAULT = new Environment()
 		.setKey("DEFAULT")
