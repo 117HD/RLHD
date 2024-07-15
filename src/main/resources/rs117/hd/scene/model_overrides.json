@@ -9069,7 +9069,9 @@
     "description": "Wilderness - Vet'ion/Calvar'ion Lair - Altar",
     "baseMaterial": "GRUNGE_3",
     "objectIds": [
-      43108
+      43108,
+      46910,
+      46911
     ],
     "uvType": "BOX",
     "uvScale": 0.5
@@ -9116,10 +9118,17 @@
       14766,
       14767,
       14768,
-      14769,
-      46996
+      14769
     ],
     "uvType": "BOX"
+  },
+  {
+    "description": "Wilderness - Graveyard of Shadows - Calvar'ion Lair Entrance",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      46996
+    ],
+    "uvType": "VANILLA"
   },
   {
     "description": "Edgeville Wilderness Dungeon - Cave Wall - Opening",
