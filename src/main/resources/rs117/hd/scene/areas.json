@@ -1500,6 +1500,13 @@
     ]
   },
   {
+    "name": "CLOCK_TOWER_DUNGEON",
+    "aabbs": [
+      [ 2558, 9598, 2625, 9664 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
     "name": "WITCHAVEN",
     "aabbs": [
       [ 2693, 3262, 2744, 3298 ],
