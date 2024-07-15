@@ -2636,6 +2636,8 @@
     "description": "Wilderness and Shayzien - Rock Walls",
     "baseMaterial": "ROCK_1",
     "objectIds": [
+      2341,
+      14543,
       14544,
       14545,
       14546,
@@ -2645,10 +2647,13 @@
       14550,
       14551,
       14553,
+      14556,
+      14557,
       14558,
       14559,
       14560,
       14561,
+      14562,
       14622,
       14623,
       14624,
@@ -2660,6 +2665,14 @@
       14630,
       14631,
       14632,
+      14723,
+      14724,
+      14725,
+      14726,
+      14727,
+      14728,
+      14733,
+      14734,
       42110,
       42111,
       46997,
@@ -5745,15 +5758,6 @@
     "objectIds": [
       5098
     ]
-  },
-  {
-    "description": "Black Knight Fortress Walls",
-    "baseMaterial": "ROCK_2",
-    "objectIds": [
-      2341,
-      14543
-    ],
-    "uvType": "BOX"
   },
   {
     "description": "Black Knight Fortress Wood Rails",
@@ -8889,21 +8893,6 @@
     "uvType": "VANILLA"
   },
   {
-    "description": "Wilderness - Walls - Brick Ruins",
-    "baseMaterial": "ROCK_1_LIGHT",
-    "objectIds": [
-      14723,
-      14724,
-      14725,
-      14726,
-      14727,
-      14728,
-      14733,
-      14734
-    ],
-    "uvType": "BOX"
-  },
-  {
     "description": "Deep Wilderness Dungeon - Agility Shortcut and Cave Web",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
@@ -8942,15 +8931,14 @@
     "description": "Wilderness - Roots",
     "baseMaterial": "LIGHT_BARK",
     "objectIds": [
-      1363,
-      1364,
-      1366,
       10064,
       10065,
       10066,
       14759,
       14760,
       14761,
+      14598,
+      14597,
       39683,
       39684
     ],
@@ -9192,7 +9180,6 @@
       47143,
       47144,
       47116,
-      47117,
       47118,
       47119,
       47120,
@@ -18189,6 +18176,16 @@
       1335,
       1338,
       1378
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 480
+  },
+  {
+    "description": "Hollow Log Light",
+    "baseMaterial": "LIGHT_BARK",
+    "objectIds": [
+      1379
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
