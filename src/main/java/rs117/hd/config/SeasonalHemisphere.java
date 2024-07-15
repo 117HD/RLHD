@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum SeasonalThemeHemisphere {
+public enum SeasonalHemisphere {
 	NORTHERN,
 	SOUTHERN
 	;

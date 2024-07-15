@@ -79,8 +79,8 @@ import org.lwjgl.system.Callback;
 import org.lwjgl.system.Configuration;
 import rs117.hd.config.AntiAliasingMode;
 import rs117.hd.config.ColorFilter;
+import rs117.hd.config.SeasonalHemisphere;
 import rs117.hd.config.SeasonalTheme;
-import rs117.hd.config.SeasonalThemeHemisphere;
 import rs117.hd.config.ShadingMode;
 import rs117.hd.config.ShadowMode;
 import rs117.hd.config.UIScalingMode;
@@ -442,7 +442,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public int configMaxDynamicLights;
 	public ShadowMode configShadowMode;
 	public SeasonalTheme configSeasonalTheme;
-	public SeasonalThemeHemisphere configSeasonalThemeHemisphere;
+	public SeasonalHemisphere configSeasonalHemisphere;
 	public VanillaShadowMode configVanillaShadowMode;
 	public ColorFilter configColorFilter = ColorFilter.NONE;
 	public ColorFilter configColorFilterPrevious;
@@ -2497,7 +2497,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		configUndoVanillaShading = config.shadingMode() != ShadingMode.VANILLA;
 		configPreserveVanillaNormals = config.preserveVanillaNormals();
 		configSeasonalTheme = config.seasonalTheme();
-		configSeasonalThemeHemisphere = config.seasonalThemeHemisphere();
+		configSeasonalHemisphere = config.seasonalHemisphere();
 
 		var newColorFilter = config.colorFilter();
 		if (newColorFilter != configColorFilter) {
@@ -2509,7 +2509,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (configSeasonalTheme == SeasonalTheme.AUTOMATIC) {
 			var time = ZonedDateTime.now(ZoneOffset.UTC);
 
-			if (configSeasonalThemeHemisphere == SeasonalThemeHemisphere.NORTHERN) {
+			if (configSeasonalHemisphere == SeasonalHemisphere.NORTHERN) {
 				switch (time.getMonth()) {
 					case SEPTEMBER:
 					case OCTOBER:

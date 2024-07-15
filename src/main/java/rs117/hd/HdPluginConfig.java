@@ -39,8 +39,8 @@ import rs117.hd.config.DefaultSkyColor;
 import rs117.hd.config.FogDepthMode;
 import rs117.hd.config.MaxDynamicLights;
 import rs117.hd.config.Saturation;
+import rs117.hd.config.SeasonalHemisphere;
 import rs117.hd.config.SeasonalTheme;
-import rs117.hd.config.SeasonalThemeHemisphere;
 import rs117.hd.config.ShadingMode;
 import rs117.hd.config.ShadowDistance;
 import rs117.hd.config.ShadowMode;
@@ -498,16 +498,16 @@ public interface HdPluginConfig extends Config
 		return SeasonalTheme.AUTOMATIC;
 	}
 
-	String KEY_SEASONAL_HEMISPHERE = "seasonalThemeHemisphere";
+	String KEY_SEASONAL_HEMISPHERE = "seasonalHemisphere";
 	@ConfigItem(
 		keyName = KEY_SEASONAL_HEMISPHERE,
-		name = "Season Hemisphere",
+		name = "Seasonal Hemisphere",
 		description = "Determines which hemisphere the 'Automatic' Seasonal Theme should consider.",
 		position = 1,
 		section = environmentSettings
 	)
-	default SeasonalThemeHemisphere seasonalThemeHemisphere() {
-		return SeasonalThemeHemisphere.NORTHERN;
+	default SeasonalHemisphere seasonalHemisphere() {
+		return SeasonalHemisphere.NORTHERN;
 	}
 
 	@ConfigItem(
