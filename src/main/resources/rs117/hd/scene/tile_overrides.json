@@ -4604,6 +4604,14 @@
     "groundMaterial": "DIRT"
   },
   {
+    "name": "Vet'ion Lair Entrance Fix",
+    "area": "Vet'ion Lair Entrance Fix",
+    "overlayIds": [
+      180
+    ],
+    "groundMaterial": "GRUNGE"
+  },
+  {
     "name": "OVERLAY_GRAVEL",
     "area": "ALL",
     "overlayIds": [
@@ -6200,6 +6208,15 @@
     ],
     "groundMaterial": "STONE_CAVE_FLOOR"
   },
+  {
+    "name": "Vet'ion/Calvar'ion Lair Carpet Fix",
+    "area": "Vet'ion/Calvar'ion Lair Carpet Fix",
+    "overlayIds": [
+      256
+    ],
+    "groundMaterial": "FINE_CARPET"
+  },
+
   {
     "name": "MIND_ALTAR_TILE",
     "area": "MIND_ALTAR",
