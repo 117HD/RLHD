@@ -35237,10 +35237,11 @@
     "fadeOutDuration": 300
   },
   {
-    "description": "Venenatis/Spindel Exit Cave",
+    "description": "Venenatis/Spindel/Artio/Callisto Exit Cave",
     "objectIds": [
       46999,
-      47000
+      47000,
+      47122
     ],
     "radius": 450,
     "strength": 10,
