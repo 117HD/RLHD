@@ -100,6 +100,7 @@ import rs117.hd.overlays.Timer;
 import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.FishingSpotReplacer;
+import rs117.hd.scene.GroundMaterialManager;
 import rs117.hd.scene.LightManager;
 import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.ProceduralGenerator;
@@ -226,6 +227,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Inject
 	private EnvironmentManager environmentManager;
+
+	@Inject
+	private GroundMaterialManager groundMaterialManager;
 
 	@Inject
 	private TileOverrideManager tileOverrideManager;
@@ -632,6 +636,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				lastAntiAliasingMode = null;
 
 				areaManager.startUp();
+				groundMaterialManager.startUp();
 				tileOverrideManager.startUp();
 				modelOverrideManager.startUp();
 				modelPusher.startUp();
@@ -681,6 +686,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			developerTools.deactivate();
 			modelPusher.shutDown();
 			tileOverrideManager.shutDown();
+			groundMaterialManager.shutDown();
 			modelOverrideManager.shutDown();
 			lightManager.shutDown();
 			environmentManager.shutDown();

@@ -292,7 +292,7 @@ public class AABB {
 				}
 			}
 			in.endArray();
-			return list.toArray(new AABB[0]);
+			return list.toArray(AABB[]::new);
 		}
 
 		@Override
