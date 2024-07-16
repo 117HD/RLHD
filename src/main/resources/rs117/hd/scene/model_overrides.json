@@ -2666,6 +2666,8 @@
       14630,
       14631,
       14632,
+      14729,
+      14730,
       14770,
       14723,
       14724,
@@ -9344,6 +9346,18 @@
       22337
     ],
     "uvType": "BOX"
+  },
+  {
+    "description": "Wilderness - Larran's Chests",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      33343,
+      34828,
+      34829,
+      34830
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512
   },
   {
     "description": "Edgeville Wilderness Dungeon - Cave Wall - Opening",
@@ -16367,8 +16381,8 @@
       230, 234, 235, 236,
       237, 238, 240, 242,
       253, 281, 283, 284,
-      37350, 37353, 37354,
-      37356, 37365
+      14512, 37350, 37353,
+      37354, 37356, 37365
     ],
     "uvType": "BOX",
     "uvScale": 0.7,
@@ -16426,6 +16440,32 @@
     "uvType": "BOX",
     "uvScale": 1.1,
     "uvOrientation": 512
+  },
+  {
+    "description": "Plank Boat - Wooden - Bowsprit",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 256 ],
+    "uvType": "BOX",
+    "uvScale": 1.1,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Plank Boat - Wooden - Ship's Ladder",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 245, 246, 272, 273 ],
+    "uvType": "BOX",
+    "uvScale": 1.1,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Plank Boat - Wooden - Mast and Helm",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      252,
+      262,
+      263
+    ],
+    "uvType": "BOX"
   },
   {
     "description": "Fishing Trawler Boat - Wooden - Deck Opening",
