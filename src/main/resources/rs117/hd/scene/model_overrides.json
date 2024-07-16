@@ -1291,6 +1291,7 @@
       1297,
       9663,
       14571,
+      14642,
       14600,
       33197,
       40315
@@ -3345,7 +3346,9 @@
       30869,
       11835,
       29627,
-      6659
+      6659,
+      40386,
+      26766
     ],
     "flatNormals": true,
     "uvType": "BOX",
@@ -4760,10 +4763,12 @@
       2808,
       2809,
       2810,
+      12174,
       26654,
       26709,
       30177,
       30374,
+      31555,
       31766,
       42248,
       47077,
@@ -6580,6 +6585,7 @@
       14385,
       14386,
       14387,
+      14388,
       14389,
       14450,
       14451,
@@ -6591,6 +6597,8 @@
       14462,
       14463,
       14464,
+      14465,
+      14466,
       15125,
       15126,
       15127,
@@ -7853,6 +7861,7 @@
     "baseMaterial": "GRUNGE_2",
     "objectIds": [
       1171,
+      1172,
       21742,
       21743
     ],
@@ -8870,11 +8879,6 @@
     "uvType": "GEOMETRY"
   },
   {
-    "description": "Revanant Caves - Entrance Crevice",
-    "baseMaterial": "STONE_NORMALED",
-    "objectIds": [ 40386 ]
-  },
-  {
     "description": "Mage Arena - Objects - Stone - Sparkling Pool",
     "baseMaterial": "ROCK_2",
     "objectIds": [
@@ -8936,6 +8940,10 @@
       10064,
       10065,
       10066,
+      14568,
+      14569,
+      14570,
+      14640,
       14759,
       14760,
       14761,
@@ -9199,12 +9207,49 @@
     "uvType": "BOX"
   },
   {
+    "description": "Wilderness - Lava Maze - Ladder",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      18987,
+      18989
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Wilderness - Revanant Caves - Cavern entrance",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      31556
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Wilderness - Revanant Caves - Trapdoor Exit",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      31557
+    ],
+    "uvType": "BOX"
+  },
+  {
     "description": "Edgeville Wilderness Dungeon - Cave Wall - Opening",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
       1477
     ],
     "uvType": "BOX"
+  },
+  {
+    "description": "Edgeville - Coffin",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "objectIds": [
+      398,
+      3577,
+      28860,
+      39547
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
   },
   {
     "description": "Wall Decoration - Rocks",
@@ -9467,6 +9512,8 @@
       14635,
       14636,
       14637,
+      14664,
+      14666,
       14693,
       14694,
       14695,
@@ -15638,7 +15685,8 @@
     "baseMaterial": "PLANT_GRUNGE_2",
     "objectIds": [
       14538, 14539, 14541, 14589,
-      14591, 14617, 14618, 14619
+      14591, 14617, 14618, 14619,
+      14659, 14660, 14661
     ],
     "uvType": "BOX",
     "uvScale": 0.6,
