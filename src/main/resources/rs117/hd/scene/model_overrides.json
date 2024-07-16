@@ -9199,6 +9199,14 @@
     "uvType": "BOX"
   },
   {
+    "description": "Wilderness - Escape Caves - Entrance",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      47175
+    ],
+    "uvType": "BOX"
+  },
+  {
     "description": "Wilderness - Prayer Training Chaos Temple - Stained Glass Window",
     "baseMaterial": "GRAY_65",
     "objectIds": [
@@ -9236,6 +9244,14 @@
     "baseMaterial": "ROCK_3",
     "objectIds": [
       719
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Wilderness - Corporeal Beast Cave",
+    "baseMaterial": "ROCK_3_DARK",
+    "objectIds": [
+      678
     ],
     "uvType": "BOX"
   },
@@ -17544,7 +17560,7 @@
     "uvOrientation": 520
   },
   {
-    "description": "Hunter Guild cave, Cam Torum, Perilous Moons and Giants Den - Walls, Rocky objects and Stairs",
+    "description": "Hunter Guild cave, Cam Torum, Perilous Moons, Giants Den and Escape Caves - Walls, Rocky objects and Stairs",
     "baseMaterial": "ROCK_3",
     "objectIds": [
       42250,
@@ -17566,6 +17582,13 @@
       42275,
       42276,
       47117,
+      47147,
+      47148,
+      47151,
+      47157,
+      47158,
+      47170,
+      47171,
       50906,
       50907,
       50908,
