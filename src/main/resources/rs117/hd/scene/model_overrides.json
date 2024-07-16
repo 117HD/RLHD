@@ -18534,7 +18534,8 @@
     "description": "Objects - Wooden - Crate - High poly mesh",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      27532
+      27532,
+      41424
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -18545,7 +18546,8 @@
     "description": "Objects - Wooden - Stacked Crates - High poly mesh",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      27533
+      27533,
+      41425
     ],
     "uvType": "BOX",
     "flatNormals": true,
