@@ -18187,6 +18187,16 @@
     "uvOrientation": 512
   },
   {
+    "description": "Sheep Shearer Fred the Farmers house Roof",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 12992, 12993, 12994, 12995, 12996, 12997, 12998, 12999, 13000 ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512,
+    "flatNormals": true
+  },
+  {
     "description": "Textured hay carpet",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [ 920, 921 ],
