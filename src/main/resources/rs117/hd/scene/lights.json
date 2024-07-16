@@ -35236,13 +35236,14 @@
     "fadeOutDuration": 300
   },
   {
-    "description": "Venenatis/Spindel/Artio/Callisto Exit Cave",
+    "description": "Venenatis, Spindel, Artio, Callisto and Escape Caves exit cave",
     "objectIds": [
       46999,
       47000,
-      47122
+      47122,
+      47147
     ],
-    "radius": 450,
+    "radius": 500,
     "strength": 10,
     "color": "#ffffff",
     "offset": [ 40, 40, 0 ]
@@ -35486,5 +35487,15 @@
     "animationIds": [ -1, 6578, 6579 ],
     "fadeInDuration": 100,
     "fadeOutDuration": 1500
+  },
+  {
+    "description": "Wilderness - Escape Caves - Rope Light",
+    "objectIds": [
+      47150
+    ],
+    "radius": 550,
+    "strength": 15,
+    "color": "#ffffff",
+    "offset": [ 0, 200, -70 ]
   }
 ]
