@@ -9217,9 +9217,10 @@
     "uvType": "BOX"
   },
   {
-    "description": "Wilderness - Lava Maze - Ladder",
+    "description": "Wilderness - Ladder",
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [
+      14758,
       18987,
       18989
     ],
@@ -9358,6 +9359,47 @@
     ],
     "uvType": "BOX",
     "uvOrientation": 512
+  },
+  {
+    "description": "Wilderness - Agility Course - Pipe",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      23137
+    ]
+  },
+  {
+    "description": "Wilderness - Agility Course - Rope Swing",
+    "baseMaterial": "ROPE",
+    "objectIds": [
+      23132
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75
+  },
+  {
+    "description": "Wilderness - Agility Course - Spikes",
+    "baseMaterial": "METALLIC_1_LIGHT_HIGHGLOSS",
+    "objectIds": [
+      23551,
+      53225
+    ]
+  },
+  {
+    "description": "Wilderness - Agility Course - Climbing Rocks",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      23640,
+      23641,
+      23642,
+      23643
+    ]
+  },
+  {
+    "description": "Wilderness - Agility Course - Agility Dispenser",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      53224
+    ]
   },
   {
     "description": "Edgeville Wilderness Dungeon - Cave Wall - Opening",
@@ -9754,14 +9796,16 @@
     "description": "Ground Decoration - Wooden - Agility Logs",
     "baseMaterial": "BARK",
     "objectIds": [
+      23141,
       23142,
       23143,
       23144,
       23145,
-      23274
+      23274,
+      23542
     ],
-    "uvType": "BOX",
-    "uvScale": 0.9
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 512
   },
   {
     "description": "Objects - Ice Rocks - Small",
@@ -16464,6 +16508,14 @@
       252,
       262,
       263
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Object - Metal - Anchor",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "objectIds": [
+      271
     ],
     "uvType": "BOX"
   },
