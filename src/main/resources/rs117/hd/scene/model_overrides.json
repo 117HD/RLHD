@@ -5513,6 +5513,10 @@
       14753,
       14754,
       2355,
+      24291,
+      24292,
+      24293,
+      24294,
       23866,
       26130,
       26131,
@@ -14301,7 +14305,7 @@
   {
     "description": "Skeleton",
     "baseMaterial": "BONE",
-    "objectIds": [ 660, 663, 33196, 50003, 50004 ],
+    "objectIds": [ 660, 663, 12243, 12244, 12245, 33196, 50003, 50004 ],
     "uvType": "BOX",
     "uvOrientation": 768,
     "uvScale": 0.75
@@ -19715,5 +19719,28 @@
     "uvType": "BOX",
     "uvScale": 0.6,
     "flatNormals": true
+  },
+  {
+    "description": "Prison Pete Castle Walls",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      24287,
+      24288,
+      24295
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 300,
+    "uvScale": 0.8
+  },
+  {
+    "description": "Prison Pete Castle Walls with Metal Bars",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      24289,
+      24290
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 300,
+    "uvScale": 0.8
   }
 ]

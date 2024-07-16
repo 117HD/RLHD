@@ -4215,7 +4215,8 @@
     "name": "RANDOM_EVENT_PRISON_PETE",
     "aabbs": [
       [ 2059, 4447, 2111, 4479 ]
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "RANDOM_EVENT_QUIZ_MASTER",
