@@ -2504,6 +2504,13 @@
     ]
   },
   {
+    "name": "Wilderness - Zombie Pirate Boat",
+    "aabbs": [
+      [ 3350, 3616, 3378, 3631 ],
+      [ 3372, 3632, 3378, 3640 ]
+    ]
+  },
+  {
     "name": "GIELINOR_SNOWY_NORTHERN_REGION",
     "aabbs": [
       [ 2748, 3711, 2942, 3980 ]

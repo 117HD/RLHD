@@ -7374,7 +7374,7 @@
   {
     "description": "Objects - Wooden - Open Crate",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 16888 ],
+    "objectIds": [ 16888, 22277 ],
     "uvType": "BOX",
     "flatNormals": true,
     "uvOrientationX": 512,
@@ -9252,6 +9252,96 @@
     "baseMaterial": "ROCK_3_DARK",
     "objectIds": [
       678
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Wilderness - Zombie Pirate Boat - Wooden",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "areas": [ "Wilderness - Zombie Pirate Boat" ],
+    "objectIds": [
+      22174, 22175, 22176, 22177, 22178, 22179, 22180, 22181, 22182,
+      22183, 22184, 22185, 22186, 22187, 22188, 22189, 22190, 22191,
+      22192, 22193, 22194, 22195, 22196, 22197, 22198, 22200, 22201,
+      22204, 22205, 22206, 22207, 22208, 22209, 22210, 22211, 22212,
+      22213, 22214, 22215, 22216, 22217, 22220, 22224, 22226, 22227,
+      22228, 22229, 22230, 22231, 22232, 22233, 22234, 22235, 22236,
+      22237, 22238, 22239, 22240, 22241, 22242, 22245, 22246, 22249,
+      22249, 22251, 22255, 22256, 22257, 22258, 22259, 22262, 22263,
+      22264, 22265, 22266, 22267, 22268, 22269, 22274, 22275, 22276,
+      22281, 22282, 22283, 22284, 22285, 22286, 22287, 22288, 22289,
+      22290, 22291, 22292, 22293, 22294, 22295, 22296, 22297, 22485,
+      22486, 22487, 22488, 53219, 53220, 53221
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Wilderness - Zombie Pirate Boat - Cannon",
+    "baseMaterial": "GRAY_70",
+    "areas": [ "Wilderness - Zombie Pirate Boat" ],
+    "objectIds": [
+      22271,
+      22272
+    ]
+  },
+  {
+    "description": "Wilderness - Zombie Pirate Boat - Locker",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "areas": [ "Wilderness - Zombie Pirate Boat" ],
+    "objectIds": [
+      53222,
+      53223
+    ]
+  },
+  {
+    "description": "Wilderness - Zombie Pirate Boat - Mast and Ship Helm",
+    "baseMaterial": "GRUNGE_3",
+    "areas": [ "Wilderness - Zombie Pirate Boat" ],
+    "objectIds": [
+      22221,
+      22222,
+      22223,
+      22225,
+      22270
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Wilderness - Zombie Pirate Boat - Rocks",
+    "baseMaterial": "ROCK_3",
+    "areas": [ "Wilderness - Zombie Pirate Boat" ],
+    "objectIds": [
+      22305,
+      22306,
+      22307,
+      22308,
+      22309,
+      22310,
+      22311,
+      22312,
+      22313,
+      22314,
+      22315,
+      22316,
+      22317,
+      22318,
+      22321,
+      22322,
+      22323,
+      22324,
+      22325,
+      22326,
+      22327,
+      22328,
+      22329,
+      22330,
+      22331,
+      22332,
+      22333,
+      22334,
+      22335,
+      22336,
+      22337
     ],
     "uvType": "BOX"
   },
@@ -13149,7 +13239,9 @@
     "description": "Object - Wooden - Barrel",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      14740
+      14740,
+      22278,
+      22280
     ],
     "uvType": "BOX"
   },
