@@ -5631,48 +5631,6 @@
     ]
   },
   {
-    "description": "Wilderness Ditch",
-    "baseMaterial": "DIRT_1",
-    "objectIds": [
-      23261,
-      23262,
-      23263,
-      23264,
-      23265,
-      23266,
-      23267,
-      23268,
-      23269,
-      23270,
-      23271
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.8
-  },
-  {
-    "description": "Wilderness Ditch Dirt clumps",
-    "baseMaterial": "DIRT_1",
-    "objectIds": [
-      23272,
-      23273
-    ],
-    "uvType": "WORLD_XZ",
-    "uvScale": 0.75
-  },
-  {
-    "description": "Wilderness - Basalt rocks",
-    "baseMaterial": "STONE_NORMALED",
-    "objectIds": [
-      11176,
-      11177,
-      11178,
-      11179,
-      11180,
-      11181
-    ],
-    "uvType": "BOX"
-  },
-  {
     "description": "Sewer Valve",
     "baseMaterial": "METALLIC_1_SEMIGLOSS",
     "objectIds": [
@@ -8872,6 +8830,48 @@
     "uvType": "GEOMETRY"
   },
   {
+    "description": "Wilderness Ditch",
+    "baseMaterial": "DIRT_1",
+    "objectIds": [
+      23261,
+      23262,
+      23263,
+      23264,
+      23265,
+      23266,
+      23267,
+      23268,
+      23269,
+      23270,
+      23271
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Wilderness Ditch Dirt clumps",
+    "baseMaterial": "DIRT_1",
+    "objectIds": [
+      23272,
+      23273
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.75
+  },
+  {
+    "description": "Wilderness - Basalt rocks",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      11176,
+      11177,
+      11178,
+      11179,
+      11180,
+      11181
+    ],
+    "uvType": "BOX"
+  },
+  {
     "description": "Wilderness God Wars Dungeon - Boulder and Jutting Wall",
     "baseMaterial": "STONE",
     "objectIds": [ 26768 ],
@@ -9232,6 +9232,14 @@
     "uvType": "BOX"
   },
   {
+    "description": "Wilderness - Chaos Dwarf Decorative Caves",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      719
+    ],
+    "uvType": "BOX"
+  },
+  {
     "description": "Edgeville Wilderness Dungeon - Cave Wall - Opening",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
@@ -9279,6 +9287,14 @@
     "baseMaterial": "GRUNGE_3",
     "objectIds": [
       411
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Player Killing - Loot Key Chest",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH_LIGHT",
+    "objectIds": [
+      43484
     ],
     "uvType": "BOX"
   },
@@ -11311,7 +11327,8 @@
     "baseMaterial": "CARPET",
     "objectIds": [
       7512,
-      12396
+      12396,
+      39695
     ],
     "uvType": "BOX",
     "uvOrientation": 256,
@@ -12434,10 +12451,47 @@
       39668,
       39669,
       39671,
-      39672
+      39672,
+      39673
     ],
     "uvType": "BOX",
     "uvScale": 0.6
+  },
+  {
+    "description": "Ferox Enclave - Ancient Altar",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      39642
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Ferox Enclave - Floating Debris and Camping Equipment",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      15817,
+      26293,
+      39688,
+      39689
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Ferox Enclave - Statue",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      39674
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Sleeping Bag",
+    "baseMaterial": "FINE_CARPET",
+    "objectIds": [
+      28521
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.66
   },
   {
     "description": "Morytania - Walls - Wooden - Plank - Rotten Plank Walls",
@@ -17284,6 +17338,7 @@
     "baseMaterial": "PLANT_GRUNGE_1",
     "objectIds": [
       36220,
+      39680,
       39681,
       39682,
       51081,
