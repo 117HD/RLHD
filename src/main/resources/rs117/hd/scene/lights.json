@@ -32447,6 +32447,23 @@
     "fadeInDuration": 300
   },
   {
+    "description": "Duke eye scanning",
+    "radius": 500,
+    "strength": 50,
+    "color": [ 255, 50, 50 ],
+    "offset": [ 0, 0, 231 ],
+    "fixedDespawnTime": true,
+    "spawnDelay": 1800,
+    "despawnDelay": 600,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 100,
+    "npcIds": [
+      12199,
+      12200,
+      12201
+    ]
+  },
+  {
     "description": "STANDING_TORCH",
     "height": 90,
     "alignment": "CENTER",
