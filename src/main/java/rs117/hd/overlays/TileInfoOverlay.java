@@ -811,9 +811,9 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 	}
 
 	private void useZoomAwareFont(Graphics2D g, float scale) {
-		zoom = client.get3dZoom() / 1000.f;
+		zoom = client.get3dZoom() / 1400.f;
 		if (zoom > 1.2f) {
-			fontSize = Math.min(16, 11 * zoom);
+			fontSize = Math.min(16, 7 * zoom);
 		} else {
 			fontSize = Math.max(7.8f, 14 * (float) Math.sqrt(zoom));
 		}
