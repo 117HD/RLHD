@@ -26,10 +26,17 @@ public class ModelHash {
 	public static final int TYPE_NPC = 1;
 	public static final int TYPE_OBJECT = 2;
 	public static final int TYPE_GROUND_ITEM = 3;
-	// 117 HD custom types
+
+	// 117 HD UUID types
 	public static final int TYPE_PROJECTILE = 4;
 	public static final int TYPE_GRAPHICS_OBJECT = 5;
 	public static final int TYPE_UNKNOWN = 0xF;
+
+	// 117 HD UUID sub object types
+	public static final int TYPE_WALL_OBJECT = 1 << 4 | TYPE_OBJECT;
+	public static final int TYPE_GROUND_OBJECT = 2 << 4 | TYPE_OBJECT;
+	public static final int TYPE_DECORATIVE_OBJECT = 3 << 4 | TYPE_OBJECT;
+	public static final int TYPE_GAME_OBJECT = 4 << 4 | TYPE_OBJECT;
 
 	public static final int UNKNOWN_ID = 0xFFFFFF;
 
@@ -152,7 +159,15 @@ public class ModelHash {
 	}
 
 	public static int getUuidType(int uuid) {
+		return uuid >> 24 & 0xF;
+	}
+
+	public static int getUuidSubType(int uuid) {
 		return uuid >> 24;
+	}
+
+	public static int getUuidWithoutSubType(int uuid) {
+		return uuid & ~0xF0000000;
 	}
 
 	public static int getUuidId(int uuid) {

@@ -879,7 +879,7 @@
     "fogDepth": 40
   },
   {
-    "area": "NIGHTMARE_ZONE",
+    "area": "NIGHTMARE_ZONE_AND_KING_BLACK_DRAGON",
     "ambientColor": "#f2b979",
     "ambientStrength": 0.9,
     "directionalColor": "#97ddff",

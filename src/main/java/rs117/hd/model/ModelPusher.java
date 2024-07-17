@@ -28,13 +28,13 @@ import rs117.hd.scene.TextureManager;
 import rs117.hd.scene.TileOverrideManager;
 import rs117.hd.scene.model_overrides.InheritTileColorType;
 import rs117.hd.scene.model_overrides.ModelOverride;
-import rs117.hd.scene.model_overrides.ObjectType;
 import rs117.hd.scene.model_overrides.TzHaarRecolorType;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.PopupUtils;
 
 import static rs117.hd.HdPlugin.MAX_FACE_COUNT;
+import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
 import static rs117.hd.scene.tile_overrides.TileOverride.OVERLAY_FLAG;
 
 /**
@@ -160,7 +160,6 @@ public class ModelPusher {
 	 * @param uuid           of the model
 	 * @param model          to push data from
 	 * @param modelOverride  the active model override
-	 * @param objectType     of the specified model. Used for TzHaar recolor
 	 * @param preOrientation which the vertices have already been rotated by
 	 * @param shouldCache    whether the model should be cached for future reuse, if enabled
 	 */
@@ -170,7 +169,6 @@ public class ModelPusher {
 		int uuid,
 		Model model,
 		ModelOverride modelOverride,
-		ObjectType objectType,
 		int preOrientation,
 		boolean shouldCache
 	) {
@@ -295,7 +293,7 @@ public class ModelPusher {
 
 			modelOverride.applyRotation(model);
 			for (int face = 0; face < faceCount; face++) {
-				int[] data = getFaceVertices(sceneContext, tile, uuid, model, modelOverride, objectType, face);
+				int[] data = getFaceVertices(sceneContext, tile, uuid, model, modelOverride, face);
 				sceneContext.stagingBufferVertices.put(data);
 				if (shouldCacheVertexData)
 					fullVertexData.put(data);
@@ -467,7 +465,6 @@ public class ModelPusher {
 		int uuid,
 		Model model,
 		@NonNull ModelOverride modelOverride,
-		ObjectType objectType,
 		int face
 	) {
 		if (model.getFaceColors3()[face] == -2)
@@ -607,8 +604,8 @@ public class ModelPusher {
 									int tileX = scenePos.getX();
 									int tileY = scenePos.getY();
 									int tileZ = tile.getRenderLevel();
-									int tileExX = tileX + SceneUploader.SCENE_OFFSET;
-									int tileExY = tileY + SceneUploader.SCENE_OFFSET;
+									int tileExX = tileX + SCENE_OFFSET;
+									int tileExY = tileY + SCENE_OFFSET;
 									int[] worldPos = sceneContext.sceneToWorld(tileX, tileY, tileZ);
 									var override = tileOverrideManager.getOverride(scene, tile, worldPos,
 										modelOverride.inheritTileColorType == InheritTileColorType.OVERLAY ?
@@ -628,11 +625,11 @@ public class ModelPusher {
 
 				if (plugin.configTzhaarHD && modelOverride.tzHaarRecolorType != TzHaarRecolorType.NONE) {
 					int[] tzHaarRecolored = ProceduralGenerator.recolorTzHaar(
+						uuid,
 						modelOverride,
 						model,
 						face,
 						packedAlphaPriorityFlags,
-						objectType,
 						color1,
 						color2,
 						color3

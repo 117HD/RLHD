@@ -34,6 +34,7 @@ public class TileOverride {
 	public Area area = Area.NONE;
 	public int[] overlayIds;
 	public int[] underlayIds;
+	@JsonAdapter(GroundMaterial.JsonAdapter.class)
 	public GroundMaterial groundMaterial = GroundMaterial.NONE;
 	public WaterType waterType = WaterType.NONE;
 	public boolean blended = true;

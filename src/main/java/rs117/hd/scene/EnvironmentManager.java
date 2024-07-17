@@ -376,16 +376,10 @@ public class EnvironmentManager {
 			.toArray(AABB[]::new);
 
 		sceneContext.environments.clear();
-		outer:
 		for (var environment : environments) {
-			for (AABB region : regions) {
-				for (AABB aabb : environment.area.aabbs) {
-					if (region.intersects(aabb)) {
-						log.debug("Added environment: {}", environment);
-						sceneContext.environments.add(environment);
-						continue outer;
-					}
-				}
+			if (environment.area.intersects(regions)) {
+				log.debug("Added environment: {}", environment);
+				sceneContext.environments.add(environment);
 			}
 		}
 
