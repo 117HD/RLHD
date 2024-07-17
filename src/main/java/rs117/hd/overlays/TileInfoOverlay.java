@@ -589,14 +589,10 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 
 		for (var npc : client.getTopLevelWorldView().npcs()) {
 			var lp = npc.getLocalLocation();
-			float size = npc.getComposition().getSize() / 2.f;
+			int size = npc.getComposition().getSize() / 2;
 			int x = lp.getSceneX();
 			int y = lp.getSceneY();
-			int minX = x - (int) Math.floor(size);
-			int minY = y - (int) Math.floor(size);
-			int maxX = x + (int) Math.floor(size);
-			int maxY = y + (int) Math.floor(size);
-			if (minX <= tileX && tileX <= maxX && minY <= tileY && tileY <= maxY) {
+			if (x - size <= tileX && tileX <= x + size && y - size <= tileY && tileY <= y + size) {
 				lines.add(String.format(
 					"NPC: ID=%s ori=[%d,%d] anim=%d impostor=?",
 					npc.getId(),
