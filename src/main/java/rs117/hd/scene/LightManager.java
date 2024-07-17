@@ -234,7 +234,6 @@ public class LightManager {
 			// Whatever the light is attached to is presumed to exist if it's not marked for removal yet
 			boolean parentExists = !light.markedForRemoval;
 			boolean hiddenTemporarily = false;
-			light.orientation = 0;
 
 			if (light.tileObject != null) {
 				if (!light.markedForRemoval && light.animationSpecific && light.tileObject instanceof GameObject) {
@@ -352,18 +351,14 @@ public class LightManager {
 			light.pos[1] = light.origin[1];
 			light.pos[2] = light.origin[2];
 
-			if (light.alignment.relative) {
-				light.orientation += light.preOrientation;
-				light.orientation += light.alignment.orientation;
-			} else {
-				light.orientation = 0;
-			}
-			light.orientation = HDUtils.mod(light.orientation, 2048);
+			int orientation = 0;
+			if (light.alignment.relative)
+				orientation = HDUtils.mod(light.orientation + light.preOrientation + light.alignment.orientation, 2048);
 
 			if (light.alignment == Alignment.CUSTOM) {
 				// orientation 0 = south
-				int sin = SINE[light.orientation];
-				int cos = COSINE[light.orientation];
+				int sin = SINE[orientation];
+				int cos = COSINE[orientation];
 				int x = light.offset[0];
 				int z = light.offset[2];
 				light.pos[0] += -cos * x - sin * z >> 16;
@@ -377,8 +372,8 @@ public class LightManager {
 				if (!light.alignment.radial)
 					radius = (float) Math.sqrt(localSizeX * localSizeX + localSizeX * localSizeX) / 2;
 
-				float sine = SINE[light.orientation] / 65536f;
-				float cosine = COSINE[light.orientation] / 65536f;
+				float sine = SINE[orientation] / 65536f;
+				float cosine = COSINE[orientation] / 65536f;
 				cosine /= (float) localSizeX / (float) localSizeY;
 
 				int offsetX = (int) (radius * sine);
