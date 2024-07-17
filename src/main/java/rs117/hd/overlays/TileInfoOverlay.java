@@ -185,6 +185,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			if (shiftPressed)
 				mode = (mode + 1) % 3;
 		}
+		boolean altPressed = client.isKeyPressed(KeyCode.KC_ALT);
 
 		Tile[][][] tiles = sceneContext.scene.getExtendedTiles();
 		int[][][] templateChunks = sceneContext.scene.isInstance() ? sceneContext.scene.getInstanceTemplateChunks() : null;
@@ -231,10 +232,14 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 										if (!drawTileInfo(g, sceneContext, tile))
 											continue;
 									} else {
-										g.setColor(Color.CYAN);
-										if (isBridge == 1 && tile.getBridge() != null) {
-											g.setColor(Color.MAGENTA);
-											tile = tile.getBridge();
+										if (altPressed) {
+											g.setColor(Color.YELLOW);
+										} else {
+											g.setColor(Color.CYAN);
+											if (isBridge == 1 && tile.getBridge() != null) {
+												g.setColor(Color.MAGENTA);
+												tile = tile.getBridge();
+											}
 										}
 										var poly = getCanvasTilePoly(client, sceneContext.scene, tile);
 										if (poly == null || !poly.contains(mousePos[0], mousePos[1]))
@@ -345,7 +350,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 
 		// Update second selection point each frame
 		if (aabbMarkingStage == 1) {
-			markedWorldPoints[1] = hoveredWorldPoint;
+			System.arraycopy(hoveredWorldPoint, 0, markedWorldPoints[1], 0, 3);
 			pendingSelection = new AABB(markedWorldPoints[0], markedWorldPoints[1]);
 		}
 
@@ -463,7 +468,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 		Color polyColor = Color.LIGHT_GRAY;
 		if (paint != null)
 		{
-			polyColor = Color.CYAN;
+			polyColor = client.isKeyPressed(KeyCode.KC_ALT) ? Color.YELLOW : Color.CYAN;
 			lines.add("Tile type: Paint");
 			Material material = Material.fromVanillaTexture(paint.getTexture());
 			lines.add(String.format("Material: %s (%d)", material.name(), paint.getTexture()));
@@ -1090,21 +1095,17 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			e.consume();
 
 			if (SwingUtilities.isLeftMouseButton(e)) {
-				int[] nextSelection = { -1, 0 };
 				if (!Arrays.equals(selectedAreaAabb, hoveredAreaAabb)) {
-					System.arraycopy(hoveredAreaAabb, 0, nextSelection, 0, 2);
-					if (nextSelection[0] != -1)
-						copyToClipboard(visibleAreas[nextSelection[0]].aabbs[nextSelection[1]].toArgs());
-				}
+					if (TileInfoOverlay.this.hoveredAreaAabb[0] != -1)
+						copyToClipboard(visibleAreas[TileInfoOverlay.this.hoveredAreaAabb[0]].aabbs[TileInfoOverlay.this.hoveredAreaAabb[1]].toArgs());
 
-				if (!Arrays.equals(nextSelection, selectedAreaAabb)) {
-					System.arraycopy(nextSelection, 0, selectedAreaAabb, 0, 2);
+					System.arraycopy(hoveredAreaAabb, 0, selectedAreaAabb, 0, 2);
 					return e;
 				}
 
 				if (aabbMarkingStage == 0) {
 					// Marking first
-					markedWorldPoints[0] = hoveredWorldPoint;
+					System.arraycopy(hoveredWorldPoint, 0, markedWorldPoints[0], 0, 3);
 				} else {
 					// Done marking
 					selections.add(pendingSelection);
