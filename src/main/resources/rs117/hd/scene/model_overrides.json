@@ -10656,6 +10656,18 @@
     "uvOrientation": 512
   },
   {
+    "description": "CANOE_FAKEWTAER",
+    "objectIds": [
+      754
+    ],
+    "hideInAreas": [
+      [
+        1791, 4543,
+        1856, 4479
+      ]
+    ]
+  },
+  {
     "description": "Sophanem Gate",
     "baseMaterial": "METALLIC_1_LIGHT_HIGHGLOSS",
     "objectIds": [
