@@ -302,6 +302,7 @@ public enum Material {
 	BRICK_CAM_TORUM_2(126),
 
 	WHITE(NONE),
+	GRAY_110(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(1.1f))),
 	GRAY_90(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(.90f))),
 	GRAY_75(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(.75f))),
 	GRAY_65(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(.65f))),
@@ -391,6 +392,9 @@ public enum Material {
 		.setNormalMap(GRUNGE_3_N)
 		.setSpecular(0.25f, 30)
 	),
+	GRUNGE_3_LIGHT(GRUNGE_3, p -> p
+		.setBrightness(1.45f)
+	),
 	ROCK_1_N,
 	ROCK_1(p -> p
 		.setNormalMap(ROCK_1_N)
@@ -435,6 +439,9 @@ public enum Material {
 		.setDisplacementScale(.15f)
 		.setSpecular(0.4f, 20)
 		.setBrightness(1.2f)
+	),
+	ROCK_4_DARK(ROCK_4, p -> p
+		.setBrightness(0.7f)
 	),
 	ROCK_4_ORE(ROCK_4, p -> p
 		.setSpecular(1, 20)

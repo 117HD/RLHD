@@ -4449,7 +4449,7 @@
     ]
   },
   {
-    "name": "SECRETS_OF_THE_NORTH_DUNGEON",
+    "name": "GHORROCK_DUNGEON",
     "regions": [
       11681
     ],
@@ -4534,7 +4534,31 @@
     "name": "ICY_UNDERGROUND_DARK",
     "areas": [
       "WEISS_SALT_MINE",
-      "SECRETS_OF_THE_NORTH_DUNGEON"
+      "GHORROCK_DUNGEON",
+      "PHANTOM_MUSPAH_BOSS_ROOM"
+    ]
+  },
+  {
+    "name": "Ghorrock Dungeon Tiles",
+    "aabbs": [
+      [ 2923, 10343, 2931, 10353, 0 ],
+      [ 2922, 10344, 2922, 10352, 0 ],
+      [ 2921, 10347, 2921, 10349, 0 ],
+      [ 2932, 10344, 2932, 10352, 0 ],
+      [ 2933, 10347, 2933, 10349, 0 ],
+      [ 2928, 10342 ],
+      [ 2926, 10342 ]
+    ]
+  },
+  {
+    "name": "Ghorrock Dungeon Dirt Fix",
+    "aabbs": [
+      [ 2916, 10325, 2924, 10331, 0 ],
+      [ 2931, 10320, 2935, 10323, 0 ],
+      [ 2926, 10337, 2928, 10341, 0 ],
+      [ 2920, 10342, 2934, 10354, 0 ],
+      [ 2914, 10338, 2919, 10342, 0 ],
+      [ 2911, 10316, 2913, 10318, 0 ]
     ]
   },
   {

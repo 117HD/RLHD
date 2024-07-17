@@ -6281,9 +6281,29 @@
     "name": "ICY_UNDERGROUND_SNOW",
     "area": "ICY_UNDERGROUND_DARK",
     "underlayIds": [
-      159
+      104,
+      159,
+      161
     ],
     "groundMaterial": "SNOW_1"
+  },
+  {
+    "name": "Ghorrock Dungeon Tiles",
+    "area": "Ghorrock Dungeon Tiles",
+    "overlayIds": [
+      255
+    ],
+    "groundMaterial": "MARBLE_1_SEMIGLOSS",
+    "blended": false
+  },
+  {
+    "name": "Ghorrock Dungeon Dirt Fix",
+    "area": "Ghorrock Dungeon Dirt Fix",
+    "overlayIds": [
+      255
+    ],
+    "groundMaterial": "DIRT",
+    "blended": false
   },
   {
     "name": "LASSAR_UNDERCITY_SUNKEN_CATHEDRAL",
