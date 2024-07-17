@@ -565,6 +565,9 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			int animationId = -1;
 			var renderable = gameObject.getRenderable();
 			if (renderable != null) {
+				if (renderable instanceof NPC)
+					continue;
+
 				height = renderable.getModelHeight();
 				if (renderable instanceof DynamicObject) {
 					var anim = ((DynamicObject) renderable).getAnimation();
@@ -582,6 +585,26 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 				height,
 				animationId
 			));
+		}
+
+		for (var npc : client.getTopLevelWorldView().npcs()) {
+			var lp = npc.getLocalLocation();
+			float size = npc.getComposition().getSize() / 2.f;
+			int x = lp.getSceneX();
+			int y = lp.getSceneY();
+			int minX = x - (int) Math.floor(size);
+			int minY = y - (int) Math.floor(size);
+			int maxX = x + (int) Math.floor(size);
+			int maxY = y + (int) Math.floor(size);
+			if (minX <= tileX && tileX <= maxX && minY <= tileY && tileY <= maxY) {
+				lines.add(String.format(
+					"NPC: ID=%s ori=[%d,%d] anim=%d impostor=?",
+					npc.getId(),
+					npc.getOrientation(),
+					npc.getCurrentOrientation(),
+					npc.getAnimation()
+				));
+			}
 		}
 
 		for (GraphicsObject graphicsObject : client.getGraphicsObjects()) {
