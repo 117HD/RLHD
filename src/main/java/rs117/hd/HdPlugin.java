@@ -856,6 +856,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.define("DISABLE_DIRECTIONAL_SHADING", config.shadingMode() != ShadingMode.DEFAULT)
 			.define("FLAT_SHADING", config.flatShading())
 			.define("SHADOW_MAP_OVERLAY", enableShadowMapOverlay)
+			.define("WIREFRAME", config.wireframe())
 			.addIncludePath(SHADER_PATH);
 
 		glSceneProgram = PROGRAM.compile(template);
@@ -2541,6 +2542,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			configColorFilter = newColorFilter;
 			colorFilterChangedAt = System.currentTimeMillis();
 		}
+		if (configColorFilter == ColorFilter.CEL_SHADING) {
+			configGroundTextures = false;
+			configModelTextures = false;
+		}
 
 		if (configSeasonalTheme == SeasonalTheme.AUTOMATIC) {
 			var time = ZonedDateTime.now(ZoneOffset.UTC);
@@ -2620,6 +2625,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 							case KEY_GROUND_TEXTURES:
 								reloadTileOverrides = true;
 								break;
+							case KEY_COLOR_FILTER:
+								if (configColorFilter == ColorFilter.CEL_SHADING ||
+									configColorFilterPrevious == ColorFilter.CEL_SHADING
+								) {
+									clearModelCache = true;
+									reloadScene = true;
+								}
+								break;
 						}
 
 						switch (key) {
@@ -2638,6 +2651,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 							case KEY_UI_SCALING_MODE:
 							case KEY_VANILLA_COLOR_BANDING:
 							case KEY_COLOR_FILTER:
+							case KEY_WIREFRAME:
 								recompilePrograms = true;
 								break;
 							case KEY_SHADOW_MODE:
