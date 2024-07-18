@@ -68,7 +68,8 @@ import static rs117.hd.utils.HDUtils.getSceneBaseExtended;
 @Slf4j
 @Singleton
 public class TileInfoOverlay extends Overlay implements MouseListener, MouseWheelListener {
-	public static final Font MONOSPACE_FONT = new Font("Monospaced", Font.PLAIN, 10);
+	private static final Font MONOSPACE_FONT = new Font("Monospaced", Font.PLAIN, 10);
+	private static final Color BACKDROP_COLOR = new Color(0, 0, 0, 200);
 
 	@Inject
 	private Client client;
@@ -331,7 +332,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 						drawLocalAabb(g, localAabb);
 
 						g.setColor(Color.LIGHT_GRAY);
-						drawLocalAabbLabel(g, localAabb, label);
+						drawLocalAabbLabel(g, localAabb, label, false);
 					}
 				}
 
@@ -342,7 +343,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 
 					var localAabb = toLocalAabb(sceneContext, aabb);
 					drawLocalAabb(g, localAabb);
-					drawLocalAabbLabel(g, localAabb, area.name + "[" + hoveredAreaAabb[1] + "]\n" + aabb.toArgs());
+					drawLocalAabbLabel(g, localAabb, area.name + "[" + hoveredAreaAabb[1] + "]\n" + aabb.toArgs(), false);
 				}
 
 				if (selectedAreaAabb[0] != -1) {
@@ -352,7 +353,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 
 					var localAabb = toLocalAabb(sceneContext, aabb);
 					drawLocalAabb(g, localAabb);
-					drawLocalAabbLabel(g, localAabb, area.name + "[" + selectedAreaAabb[1] + "]\n" + aabb.toArgs());
+					drawLocalAabbLabel(g, localAabb, area.name + "[" + selectedAreaAabb[1] + "]\n" + aabb.toArgs(), true);
 				}
 
 				break;
@@ -371,7 +372,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			g.setColor(Color.YELLOW);
 			drawLocalAabb(g, localAabb);
 			g.setFont(FontManager.getRunescapeFont());
-			drawLocalAabbLabel(g, localAabb, "Selection[" + i + "]\n" + aabb.toArgs());
+			drawLocalAabbLabel(g, localAabb, "Selection[" + i + "]\n" + aabb.toArgs(), true);
 		}
 
 		if (pendingSelection != null) {
@@ -380,7 +381,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			g.setColor(Color.YELLOW);
 			drawLocalAabb(g, localAabb);
 			g.setFont(FontManager.getRunescapeFont());
-			drawLocalAabbLabel(g, localAabb, "Selection[" + selections.size() + "]\n" + pendingSelection.toArgs());
+			drawLocalAabbLabel(g, localAabb, "Selection[" + selections.size() + "]\n" + pendingSelection.toArgs(), true);
 		}
 
 		if (sceneContext.scene.isInstance()) {
@@ -718,7 +719,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			rect.y = dodgeRect.y - rect.height - padding;
 		}
 
-		g.setColor(new Color(0, 0, 0, 100));
+		g.setColor(BACKDROP_COLOR);
 		g.fillRect(rect.x, rect.y, rect.width, rect.height);
 
 		g.setColor(Color.WHITE);
@@ -818,26 +819,20 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 	}
 
 	public Polygon getCanvasTilePoly(@Nonnull Client client, Scene scene, int... sceneXYplane) {
-		int tileExX = sceneXYplane[0] + SCENE_OFFSET;
-		int tileExY = sceneXYplane[1] + SCENE_OFFSET;
-		if (tileExX < 0 || tileExY < 0 || tileExX >= EXTENDED_SCENE_SIZE || tileExY >= EXTENDED_SCENE_SIZE)
-			return null;
+		final int wx = sceneXYplane[0] * LOCAL_TILE_SIZE;
+		final int sy = sceneXYplane[1] * LOCAL_TILE_SIZE;
+		final int ex = (sceneXYplane[0] + 1) * LOCAL_TILE_SIZE;
+		final int ny = (sceneXYplane[1] + 1) * LOCAL_TILE_SIZE;
 
-		final int swX = sceneXYplane[0] * LOCAL_TILE_SIZE;
-		final int swY = sceneXYplane[1] * LOCAL_TILE_SIZE;
-		final int neX = (sceneXYplane[0] + 1) * LOCAL_TILE_SIZE;
-		final int neY = (sceneXYplane[1] + 1) * LOCAL_TILE_SIZE;
+		final int sw = getHeight(scene, wx, sy, sceneXYplane[2]);
+		final int se = getHeight(scene, ex, sy, sceneXYplane[2]);
+		final int ne = getHeight(scene, ex, ny, sceneXYplane[2]);
+		final int nw = getHeight(scene, wx, ny, sceneXYplane[2]);
 
-		final int swHeight = getHeight(scene, swX, swY, sceneXYplane[2]);
-		final int nwHeight = getHeight(scene, neX, swY, sceneXYplane[2]);
-		final int neHeight = getHeight(scene, neX, neY, sceneXYplane[2]);
-		final int seHeight = getHeight(scene, swX, neY, sceneXYplane[2]);
-
-		int[] p1 = localToCanvas(client, swX, swY, swHeight);
-		int[] p2 = localToCanvas(client, neX, swY, nwHeight);
-		int[] p3 = localToCanvas(client, neX, neY, neHeight);
-		int[] p4 = localToCanvas(client, swX, neY, seHeight);
-
+		int[] p1 = localToCanvas(client, wx, sy, sw);
+		int[] p2 = localToCanvas(client, ex, sy, se);
+		int[] p3 = localToCanvas(client, ex, ny, ne);
+		int[] p4 = localToCanvas(client, wx, ny, nw);
 		if (p1 == null || p2 == null || p3 == null || p4 == null)
 			return null;
 
@@ -851,19 +846,17 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 	}
 
 	private static int getHeight(Scene scene, int localX, int localY, int plane) {
-		int sceneX = (localX >> LOCAL_COORD_BITS) + SCENE_OFFSET;
-		int sceneY = (localY >> LOCAL_COORD_BITS) + SCENE_OFFSET;
-		if (sceneX < 0 || sceneY < 0 || sceneX >= EXTENDED_SCENE_SIZE || sceneY >= EXTENDED_SCENE_SIZE)
-			return 0;
+		int sceneExX = HDUtils.clamp(localX / LOCAL_TILE_SIZE + SCENE_OFFSET, 0, EXTENDED_SCENE_SIZE - 1);
+		int sceneExY = HDUtils.clamp(localY / LOCAL_TILE_SIZE + SCENE_OFFSET, 0, EXTENDED_SCENE_SIZE - 1);
 
 		int[][][] tileHeights = scene.getTileHeights();
 		int x = localX & (LOCAL_TILE_SIZE - 1);
 		int y = localY & (LOCAL_TILE_SIZE - 1);
-		int var8 =
-			x * tileHeights[plane][sceneX + 1][sceneY] + (LOCAL_TILE_SIZE - x) * tileHeights[plane][sceneX][sceneY] >> LOCAL_COORD_BITS;
-		int var9 = tileHeights[plane][sceneX][sceneY + 1] * (LOCAL_TILE_SIZE - x) + x * tileHeights[plane][sceneX + 1][sceneY + 1]
-				   >> LOCAL_COORD_BITS;
-		return (LOCAL_TILE_SIZE - y) * var8 + y * var9 >> 7;
+		int var8 = x * tileHeights[plane][sceneExX + 1][sceneExY] +
+				   (LOCAL_TILE_SIZE - x) * tileHeights[plane][sceneExX][sceneExY] >> LOCAL_COORD_BITS;
+		int var9 = x * tileHeights[plane][sceneExX + 1][sceneExY + 1] +
+				   (LOCAL_TILE_SIZE - x) * tileHeights[plane][sceneExX][sceneExY + 1] >> LOCAL_COORD_BITS;
+		return y * var9 + (LOCAL_TILE_SIZE - y) * var8 >> 7;
 	}
 
 	private int[] localToCanvas(@Nonnull Client client, int x, int y, int z) {
@@ -1151,8 +1144,22 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			int nw = getHeight(ctx.scene, x1, y2, i);
 			int ne = getHeight(ctx.scene, x2, y2, i);
 			int se = getHeight(ctx.scene, x2, y1, i);
-			z1 = (int) HDUtils.min(z1, sw, nw, ne, se);
-			z2 = (int) HDUtils.max(z2, sw, nw, ne, se);
+			if (sw != -1) {
+				z1 = Math.min(z1, sw);
+				z2 = Math.max(z2, sw);
+			}
+			if (nw != -1) {
+				z1 = Math.min(z1, nw);
+				z2 = Math.max(z2, nw);
+			}
+			if (ne != -1) {
+				z1 = Math.min(z1, ne);
+				z2 = Math.max(z2, ne);
+			}
+			if (se != -1) {
+				z1 = Math.min(z1, se);
+				z2 = Math.max(z2, se);
+			}
 		}
 
 		return new AABB(x1, y1, z1, x2, y2, z2);
@@ -1176,7 +1183,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			}
 		}
 
-		return new AABB(aabb.minX, aabb.minY, aabb.maxX, aabb.maxY, client.getPlane());
+		return aabb;
 	}
 
 	private void drawLocalAabb(Graphics2D g, AABB aabb) {
@@ -1206,7 +1213,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 		return localToCanvas(client, (int) c[0], (int) c[1], (int) c[2]);
 	}
 
-	private void drawLocalAabbLabel(Graphics2D g, AABB aabb, String text) {
+	private void drawLocalAabbLabel(Graphics2D g, AABB aabb, String text, boolean backdrop) {
 		var p = getAabbCanvasCenter(aabb);
 		if (p == null)
 			return;
@@ -1218,6 +1225,21 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 		FontMetrics fm = g.getFontMetrics();
 		int lineHeight = fm.getHeight();
 		int totalHeight = lineHeight * lines.length;
+
+		if (backdrop) {
+			int totalWidth = 0;
+			for (String line : lines)
+				totalWidth = Math.max(totalWidth, fm.stringWidth(line));
+
+			g.setColor(BACKDROP_COLOR);
+			int pad = 4;
+			g.fillRect(
+				p[0] - totalWidth / 2 - pad,
+				p[1] - totalHeight / 2 - lineHeight / 2 - pad,
+				totalWidth + pad * 2,
+				totalHeight + pad * 2
+			);
+		}
 
 		for (int i = 0; i < lines.length; i++) {
 			String line = lines[i];
