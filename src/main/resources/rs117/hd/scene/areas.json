@@ -2382,10 +2382,14 @@
   {
     "name": "FROZEN_WASTE_PLATEAU",
     "aabbs": [
-      [ 2939, 3904, 2988, 3970 ],
-      [ 2988, 3907, 3002, 3940 ],
+      [ 2939, 3903, 2989, 3970 ],
+      [ 2990, 3907, 3002, 3940 ],
       [ 2939, 3865, 2980, 3909 ],
-      [ 2939, 3834, 2958, 3865 ]
+      [ 2939, 3834, 2958, 3865 ],
+      [ 2990, 3904, 2999, 3906 ],
+      [ 3003, 3909, 3006, 3930 ],
+      [ 2990, 3941, 2999, 3948 ],
+      [ 3000, 3941, 3002, 3942 ]
     ]
   },
   {
@@ -2456,6 +2460,59 @@
       [ 2958, 4235, 3002, 4274 ]
     ],
     "hideOtherAreas": true
+  },
+  {
+    "name": "Deep Wilderness Dungeon",
+    "aabbs": [
+      [ 3012, 10364, 3059, 10366, 0 ],
+      [ 3011, 10305, 3070, 10363, 0 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Lava Maze Dungeon",
+    "regions": [ 12192 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Wilderness Slayer Cave",
+    "regionBoxes": [
+      [ 13469, 13726 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Daimon's Crater - Bounty Hunter",
+    "regions": [
+      13374,
+      13375,
+      13376,
+      13630,
+      13631,
+      13632,
+      13886,
+      13887,
+      13888
+    ]
+  },
+  {
+    "name": "Vet'ion/Calvar'ion Lair Carpet Fix",
+    "aabbs": [
+      [ 1884, 11534, 1890, 11541 ]
+    ]
+  },
+  {
+    "name": "Vet'ion Lair Entrance Fix",
+    "aabbs": [
+      [ 3220, 3786, 3223, 3791 ]
+    ]
+  },
+  {
+    "name": "Wilderness - Zombie Pirate Boat",
+    "aabbs": [
+      [ 3350, 3616, 3378, 3631 ],
+      [ 3372, 3632, 3378, 3640 ]
+    ]
   },
   {
     "name": "GIELINOR_SNOWY_NORTHERN_REGION",
@@ -4311,7 +4368,8 @@
     "name": "RANDOM_EVENT_PRISON_PETE",
     "aabbs": [
       [ 2059, 4447, 2111, 4479 ]
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "RANDOM_EVENT_QUIZ_MASTER",

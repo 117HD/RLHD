@@ -136,6 +136,21 @@ public class ModelOverrideManager {
 			// A dummy override is used as the base if only area-specific overrides exist
 			isDuplicate = current != null && !current.isDummy;
 
+			if (isDuplicate && Props.DEVELOPMENT) {
+				// This should ideally not be reached, so print helpful warnings in development mode
+				if (entry.hideInAreas.length > 0) {
+					System.err.printf(
+						"Replacing ID %d from '%s' with hideInAreas-override '%s'. This is likely a mistake...\n",
+						id, current.description, entry.description
+					);
+				} else {
+					System.err.printf(
+						"Replacing ID %d from '%s' with '%s'. The first-mentioned override should be removed.\n",
+						id, current.description, entry.description
+					);
+				}
+			}
+
 			if (current != null && current.areaOverrides != null && !current.areaOverrides.isEmpty()) {
 				var areaOverrides = current.areaOverrides;
 				current = entry.copy();
@@ -158,21 +173,6 @@ public class ModelOverrideManager {
 
 			for (var area : entry.areas)
 				current.areaOverrides.put(area, entry);
-		}
-
-		if (isDuplicate && Props.DEVELOPMENT) {
-			// This should ideally not be reached, so print helpful warnings in development mode
-			if (entry.hideInAreas.length > 0) {
-				System.err.printf(
-					"Replacing ID %d from '%s' with hideInAreas-override '%s'. This is likely a mistake...\n",
-					id, current.description, entry.description
-				);
-			} else {
-				System.err.printf(
-					"Replacing ID %d from '%s' with '%s'. The first-mentioned override should be removed.\n",
-					id, current.description, entry.description
-				);
-			}
 		}
 	}
 

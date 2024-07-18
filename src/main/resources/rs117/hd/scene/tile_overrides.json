@@ -3974,6 +3974,14 @@
     "blended": false
   },
   {
+    "name": "PRISON_PETE_PATH",
+    "area": "RANDOM_EVENT_PRISON_PETE",
+    "overlayIds": [
+      133
+    ],
+    "groundMaterial": "DIRT"
+  },
+  {
     "name": "CLASSROOM",
     "area": "RANDOM_EVENT_CLASSROOM",
     "overlayIds": [
@@ -4602,6 +4610,14 @@
       227
     ],
     "groundMaterial": "DIRT"
+  },
+  {
+    "name": "Vet'ion Lair Entrance Fix",
+    "area": "Vet'ion Lair Entrance Fix",
+    "overlayIds": [
+      180
+    ],
+    "groundMaterial": "GRUNGE"
   },
   {
     "name": "OVERLAY_GRAVEL",
@@ -5489,18 +5505,28 @@
     }
   },
   {
-    "name": "COMPLEX_TILES_ISLE_OF_STONE",
+    "name": "Island of Stone Complex Tiles Blend",
     "area": "ISLAND_OF_STONE",
+    "description": "For when ground blending is ENABLED",
     "underlayIds": [
       58,
       97,
+      98,
       112
     ],
+    "groundMaterial": "SNOW_1",
     "replacements": {
+      "Island of Stone Complex Tiles Unblend": "!blending",
       "SEASONAL_DIRT": "h == 7 && s >= 1 && l <= 71",
       "SEASONAL_ROCKY_GROUND": "h < 13 && s == 0 && l <= 40",
       "WINTER_DIRT": true
     }
+  },
+  {
+    "name": "Island of Stone Complex Tiles Unblend",
+    "area": "ISLAND_OF_STONE",
+    "description": "For when ground blending is DISABLED",
+    "groundMaterial": "DIRT"
   },
   {
     "name": "FREMENNIK_SLAYER_DUNGEON",
@@ -6190,6 +6216,15 @@
     ],
     "groundMaterial": "STONE_CAVE_FLOOR"
   },
+  {
+    "name": "Vet'ion/Calvar'ion Lair Carpet Fix",
+    "area": "Vet'ion/Calvar'ion Lair Carpet Fix",
+    "overlayIds": [
+      256
+    ],
+    "groundMaterial": "FINE_CARPET"
+  },
+
   {
     "name": "MIND_ALTAR_TILE",
     "area": "MIND_ALTAR",

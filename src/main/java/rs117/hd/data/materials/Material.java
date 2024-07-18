@@ -305,6 +305,7 @@ public enum Material {
 	GRAY_110(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(1.1f))),
 	GRAY_90(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(.90f))),
 	GRAY_75(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(.75f))),
+	GRAY_70(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(.70f))),
 	GRAY_65(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(.65f))),
 	GRAY_50(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(.5f))),
 	GRAY_25(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(.25f))),

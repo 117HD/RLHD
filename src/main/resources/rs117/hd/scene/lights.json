@@ -21600,7 +21600,7 @@
     "description": "CASTLE_WARS_PORTAL",
     "height": 120,
     "alignment": "CENTER",
-    "radius": 600,
+    "radius": 500,
     "strength": 10,
     "color": [
       0,
@@ -21608,8 +21608,8 @@
       136
     ],
     "type": "PULSE",
-    "duration": 1550,
-    "range": 20,
+    "duration": 2550,
+    "range": 10,
     "objectIds": [
       30386
     ]
@@ -21626,8 +21626,8 @@
       136
     ],
     "type": "PULSE",
-    "duration": 1600,
-    "range": 20,
+    "duration": 13800,
+    "range": 5,
     "objectIds": [
       39640
     ]
@@ -21652,8 +21652,7 @@
   },
   {
     "description": "FEROX_BARRIER",
-    "height": 100,
-    "alignment": "CENTER",
+    "offset": [ -45, 100, 0 ],
     "radius": 400,
     "strength": 10,
     "color": [
@@ -21662,18 +21661,18 @@
       0
     ],
     "type": "PULSE",
-    "duration": 2050,
-    "range": 20,
+    "duration": 2650,
+    "range": 10,
     "objectIds": [
       39656
     ]
   },
   {
     "description": "FEROX_BOUNTY_HUNTER_PORTAL",
-    "height": 180,
+    "height": 50,
     "alignment": "CENTER",
-    "radius": 400,
-    "strength": 10,
+    "radius": 600,
+    "strength": 5,
     "color": [
       255,
       50,
@@ -21698,8 +21697,8 @@
       255
     ],
     "type": "PULSE",
-    "duration": 1750,
-    "range": 20,
+    "duration": 2750,
+    "range": 10,
     "objectIds": [
       26642
     ]
@@ -21708,7 +21707,7 @@
     "description": "FREE_FOR_ALL_PORTAL",
     "height": 120,
     "alignment": "CENTER",
-    "radius": 600,
+    "radius": 500,
     "strength": 10,
     "color": [
       255,
@@ -21716,8 +21715,8 @@
       255
     ],
     "type": "PULSE",
-    "duration": 1850,
-    "range": 20,
+    "duration": 2850,
+    "range": 10,
     "objectIds": [
       26645
     ]
@@ -21744,16 +21743,16 @@
     "description": "POOL_OF_REFRESHMENT",
     "height": 150,
     "alignment": "CENTER",
-    "radius": 400,
-    "strength": 10,
+    "radius": 300,
+    "strength": 15,
     "color": [
       31,
       225,
       255
     ],
     "type": "PULSE",
-    "duration": 1250,
-    "range": 20,
+    "duration": 1650,
+    "range": 5,
     "objectIds": [
       39651
     ]
@@ -35217,5 +35216,286 @@
     "objectIds": [ 14008 ],
     "fadeInDuration": 50,
     "fadeOutDuration": 100
+  },
+  {
+    "description": "the Jormungand - Magic Projectile",
+    "height": -20,
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 25,
+    "color": [
+      252,
+      0,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 3,
+    "range": 35,
+    "projectileIds": [ 1737 ],
+    "fadeInDuration": 900,
+    "fadeOutDuration": 300
+  },
+  {
+    "description": "Venenatis, Spindel, Artio, Callisto and Escape Caves exit cave",
+    "objectIds": [
+      46999,
+      47000,
+      47122,
+      47147
+    ],
+    "radius": 500,
+    "strength": 10,
+    "color": "#ffffff",
+    "offset": [ 40, 40, 0 ]
+  },
+  {
+    "description": "Vet'ion/Calvar'ion Exit Door",
+    "objectIds": [
+      46925
+    ],
+    "radius": 450,
+    "strength": 10,
+    "color": "#ffffff",
+    "offset": [ 40, 150, 0 ]
+  },
+  {
+    "description": "Vet'ion/Calvar'ion Ceiling Light",
+    "objectIds": [
+      46949
+    ],
+    "radius": 1350,
+    "strength": 10,
+    "color": "#ffffff",
+    "offset": [ 40, 1000, 0 ]
+  },
+  {
+    "description": "Vet'ion/Calvar'ion Outside Candle Centre",
+    "offset": [ 0, 30, 0 ],
+    "radius": 300,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      46993
+    ]
+  },
+  {
+    "description": "Vet'ion/Calvar'ion Outside Candle Offset",
+    "offset": [ 0, 30, 40 ],
+    "radius": 300,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      46994
+    ]
+  },
+  {
+    "description": "Vet'ion/Calvar'ion Altar Candle 1",
+    "offset": [ -260, 130, 120 ],
+    "radius": 300,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      43108,
+      46910,
+      46911
+    ]
+  },
+  {
+    "description": "Vet'ion/Calvar'ion Altar Candle 2",
+    "offset": [ -195, 125, -170 ],
+    "radius": 300,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      43108,
+      46910,
+      46911
+    ]
+  },
+  {
+    "description": "Vet'ion/Calvar'ion Altar Candle 3",
+    "offset": [ 270, 120, 140 ],
+    "radius": 300,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      43108,
+      46910,
+      46911
+    ]
+  },
+  {
+    "description": "Vet'ion/Calvar'ion Altar Candle 4",
+    "offset": [ 260, 120, -185 ],
+    "radius": 250,
+    "strength": 4,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      43108,
+      46910,
+      46911
+    ]
+  },
+  {
+    "description": "Vet'ion/Calvar'ion Altar Candle 5",
+    "offset": [ 60, 110, -185 ],
+    "radius": 200,
+    "strength": 4,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      43108,
+      46910,
+      46911
+    ]
+  },
+  {
+    "description": "Vet'ion/Calvar'ion Altar Glow Purple",
+    "offset": [ 130, 155, -190 ],
+    "radius": 85,
+    "strength": 55,
+    "color": [
+      77,
+      13,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "objectIds": [
+      43108
+    ],
+    "fadeOutDuration": 50,
+    "fadeInDuration": 50
+  },
+  {
+    "description": "Vet'ion/Calvar'ion Altar Glow Orange",
+    "offset": [ 130, 155, -190 ],
+    "radius": 175,
+    "strength": 25,
+    "color": [
+      255,
+      162,
+      41
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "objectIds": [
+      46910
+    ],
+    "fadeOutDuration": 50,
+    "fadeInDuration": 50
+  },
+  {
+    "description": "Vet'ion/Calvar'ion Summon Hound Purple",
+    "offset": [ 0, 150, 0 ],
+    "radius": 450,
+    "strength": 15,
+    "color": [
+      77,
+      13,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 10,
+    "npcIds": [ 6611, 11993 ],
+    "animationIds": [ 9975 ],
+    "fadeOutDuration": 250,
+    "fadeInDuration": 500
+  },
+  {
+    "description": "Vet'ion/Calvar'ion Enrage",
+    "offset": [ 0, 150, 0 ],
+    "radius": 400,
+    "strength": 8,
+    "color": [
+      255,
+      162,
+      41
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 10,
+    "npcIds": [ 11994 ],
+    "animationIds": [ -1, 9969, 9972, 9974, 9976 ],
+    "fadeOutDuration": 1500
+  },
+  {
+    "description": "Vet'ion/Calvar'ion Enrage Hound",
+    "offset": [ 0, 60, 0 ],
+    "radius": 300,
+    "strength": 7,
+    "color": [
+      255,
+      162,
+      41
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 10,
+    "npcIds": [ 12108 ],
+    "animationIds": [ -1, 6578, 6579 ],
+    "fadeInDuration": 100,
+    "fadeOutDuration": 1500
+  },
+  {
+    "description": "Wilderness - Escape Caves - Rope Light",
+    "objectIds": [
+      47150
+    ],
+    "radius": 550,
+    "strength": 15,
+    "color": "#ffffff",
+    "offset": [ 0, 200, -70 ]
   }
 ]

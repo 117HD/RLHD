@@ -1290,6 +1290,9 @@
     "objectIds": [
       1297,
       9663,
+      14571,
+      14642,
+      14600,
       33197,
       40315
     ],
@@ -1351,6 +1354,9 @@
       10057,
       14516,
       14517,
+      14567,
+      14596,
+      14638,
       50089
     ],
     "uvType": "BOX",
@@ -2134,6 +2140,7 @@
       23909,
       23910,
       40285,
+      41840,
       24428
     ],
     "flatNormals": true
@@ -2568,6 +2575,14 @@
     "flatNormals": true
   },
   {
+    "description": "KOUREND_WALLS_COLUMNS",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      41837,
+      41838
+    ]
+  },
+  {
     "description": "Kourend - Kingstown - Statue of King Rada",
     "baseMaterial": "MARBLE_2_DARK",
     "objectIds": [
@@ -2631,6 +2646,8 @@
     "description": "Wilderness and Shayzien - Rock Walls",
     "baseMaterial": "ROCK_1",
     "objectIds": [
+      2341,
+      14543,
       14544,
       14545,
       14546,
@@ -2639,9 +2656,14 @@
       14549,
       14550,
       14551,
+      14553,
+      14556,
+      14557,
       14558,
       14559,
       14560,
+      14561,
+      14562,
       14622,
       14623,
       14624,
@@ -2650,9 +2672,25 @@
       14627,
       14628,
       14629,
+      14630,
+      14631,
       14632,
+      14729,
+      14730,
+      14770,
+      14723,
+      14724,
+      14725,
+      14726,
+      14727,
+      14728,
+      14733,
+      14734,
       42110,
-      42111
+      42111,
+      46997,
+      46998,
+      53579
     ],
     "uvType": "BOX",
     "flatNormals": true
@@ -3319,7 +3357,9 @@
       30869,
       11835,
       29627,
-      6659
+      6659,
+      40386,
+      26766
     ],
     "flatNormals": true,
     "uvType": "BOX",
@@ -4734,12 +4774,16 @@
       2808,
       2809,
       2810,
+      12174,
       26654,
       26709,
       30177,
       30374,
+      31555,
       31766,
-      42248
+      42248,
+      47077,
+      47078
     ],
     "uvType": "BOX",
     "uvScale": 0.5
@@ -4892,6 +4936,7 @@
       18000,
       18001,
       18002,
+      19048,
       24351,
       24352,
       20673,
@@ -5255,7 +5300,7 @@
   },
   {
     "description": "Candelabra",
-    "baseMaterial": "METALLIC_1_LIGHT_HIGHGLOSS",
+    "baseMaterial": "METALLIC_1_HIGHGLOSS",
     "objectIds": [
       202,
       203,
@@ -5335,6 +5380,7 @@
     "objectIds": [
       196,
       197,
+      5208,
       38027
     ],
     "uvType": "BOX",
@@ -5468,6 +5514,8 @@
       1550,
       1551,
       1552,
+      1554,
+      1555,
       1568,
       1569,
       1571,
@@ -5502,6 +5550,10 @@
       14753,
       14754,
       2355,
+      24291,
+      24292,
+      24293,
+      24294,
       23866,
       26130,
       26131,
@@ -5596,35 +5648,6 @@
     ]
   },
   {
-    "description": "Wilderness Ditch",
-    "baseMaterial": "DIRT_1",
-    "objectIds": [
-      23261,
-      23262,
-      23263,
-      23264,
-      23265,
-      23266,
-      23267,
-      23268,
-      23269,
-      23270,
-      23271
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.8
-  },
-  {
-    "description": "Wilderness Ditch Dirt clumps",
-    "baseMaterial": "DIRT_1",
-    "objectIds": [
-      23272,
-      23273
-    ],
-    "uvType": "WORLD_XZ",
-    "uvScale": 0.75
-  },
-  {
     "description": "Sewer Valve",
     "baseMaterial": "METALLIC_1_SEMIGLOSS",
     "objectIds": [
@@ -5700,9 +5723,12 @@
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       9582,
+      14735,
       11789,
       11790,
-      17143
+      17143,
+      14736,
+      14737
     ],
     "uvType": "BOX",
     "uvOrientation": 765,
@@ -5714,15 +5740,6 @@
     "objectIds": [
       5098
     ]
-  },
-  {
-    "description": "Black Knight Fortress Walls",
-    "baseMaterial": "ROCK_2",
-    "objectIds": [
-      2341,
-      14543
-    ],
-    "uvType": "BOX"
   },
   {
     "description": "Black Knight Fortress Wood Rails",
@@ -6543,6 +6560,7 @@
       14385,
       14386,
       14387,
+      14388,
       14389,
       14450,
       14451,
@@ -6554,6 +6572,8 @@
       14462,
       14463,
       14464,
+      14465,
+      14466,
       15125,
       15126,
       15127,
@@ -6767,7 +6787,7 @@
       25159,
       25160
     ],
-    "uvType": "WORLD_XZ",
+    "uvType": "BOX",
     "uvScale": 0.25
   },
   {
@@ -7346,6 +7366,7 @@
       12547,
       12548,
       15031,
+      14739,
       41450
     ],
     "uvType": "BOX",
@@ -7370,7 +7391,7 @@
   {
     "description": "Objects - Wooden - Open Crate",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 16888 ],
+    "objectIds": [ 16888, 22277 ],
     "uvType": "BOX",
     "flatNormals": true,
     "uvOrientationX": 512,
@@ -7382,7 +7403,8 @@
     "objectIds": [
       6178,
       9536,
-      12545
+      12545,
+      14741
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -7814,6 +7836,7 @@
     "baseMaterial": "GRUNGE_2",
     "objectIds": [
       1171,
+      1172,
       21742,
       21743
     ],
@@ -8245,6 +8268,7 @@
       12892,
       14051,
       14163,
+      14763,
       20351,
       23066,
       24360,
@@ -8823,16 +8847,53 @@
     "uvType": "GEOMETRY"
   },
   {
+    "description": "Wilderness Ditch",
+    "baseMaterial": "DIRT_1",
+    "objectIds": [
+      23261,
+      23262,
+      23263,
+      23264,
+      23265,
+      23266,
+      23267,
+      23268,
+      23269,
+      23270,
+      23271
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Wilderness Ditch Dirt clumps",
+    "baseMaterial": "DIRT_1",
+    "objectIds": [
+      23272,
+      23273
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.75
+  },
+  {
+    "description": "Wilderness - Basalt rocks",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      11176,
+      11177,
+      11178,
+      11179,
+      11180,
+      11181
+    ],
+    "uvType": "BOX"
+  },
+  {
     "description": "Wilderness God Wars Dungeon - Boulder and Jutting Wall",
     "baseMaterial": "STONE",
     "objectIds": [ 26768 ],
     "npcIds": [ 6621, 6622 ],
     "uvType": "GEOMETRY"
-  },
-  {
-    "description": "Revanant Caves - Entrance Crevice",
-    "baseMaterial": "STONE_NORMALED",
-    "objectIds": [ 40386 ]
   },
   {
     "description": "Mage Arena - Objects - Stone - Sparkling Pool",
@@ -8855,19 +8916,6 @@
     "uvType": "VANILLA"
   },
   {
-    "description": "Wilderness - Walls - Brick Ruins",
-    "baseMaterial": "ROCK_1_LIGHT",
-    "objectIds": [
-      14723,
-      14724,
-      14725,
-      14726,
-      14727,
-      14728
-    ],
-    "uvType": "MODEL_XY"
-  },
-  {
     "description": "Deep Wilderness Dungeon - Agility Shortcut and Cave Web",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
@@ -8885,12 +8933,508 @@
     "uvType": "BOX"
   },
   {
+    "description": "Wilderness - Rouges' Castle - Bed",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      14771
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Wilderness - Spear wall",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      3664
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 370
+  },
+  {
+    "description": "Wilderness - Roots",
+    "baseMaterial": "LIGHT_BARK",
+    "objectIds": [
+      10064,
+      10065,
+      10066,
+      14568,
+      14569,
+      14570,
+      14640,
+      14759,
+      14760,
+      14761,
+      14598,
+      14597,
+      39683,
+      39684
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75
+  },
+  {
+    "description": "Wilderness - Teleport Obelisk",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      14825,
+      14826,
+      14827,
+      14828,
+      14829,
+      14830,
+      14831
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75
+  },
+  {
+    "description": "Wilderness - Venenatis/Spindel Lair - Walls",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      46999,
+      47000,
+      47001,
+      47002,
+      47003,
+      47004,
+      47016,
+      47017,
+      47018,
+      47019,
+      47020,
+      47028,
+      47029,
+      47030,
+      47031,
+      47032,
+      47033,
+      47034,
+      47035,
+      47036,
+      47037
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Wilderness - Venenatis/Spindel Lair - Dirt Trim",
+    "baseMaterial": "DIRT_1",
+    "objectIds": [
+      47005,
+      47006,
+      47007,
+      47008,
+      47009,
+      47010,
+      47011,
+      47012,
+      47013,
+      47014,
+      47015
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.66
+  },
+  {
+    "description": "Wilderness - Venenatis/Spindel Lair - Web Sacks",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      47021,
+      47022,
+      47023,
+      47068,
+      47069,
+      47070,
+      47071
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.66
+  },
+  {
+    "description": "Wilderness - Vet'ion/Calvar'ion Lair - Arched Pillars",
+    "baseMaterial": "MARBLE_2",
+    "objectIds": [
+      46926,
+      46927,
+      46928,
+      46929,
+      46930,
+      46931,
+      46932
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Wilderness - Vet'ion/Calvar'ion Lair - Dirt Wall",
+    "baseMaterial": "DIRT_1",
+    "objectIds": [
+      46914,
+      46915,
+      46916,
+      46917,
+      46918,
+      46919,
+      46920
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Wilderness - Vet'ion/Calvar'ion Lair - Dirt Wall - Arch",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      46921,
+      46922,
+      46923,
+      46924,
+      46925
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75
+  },
+  {
+    "description": "Wilderness - Vet'ion/Calvar'ion Lair - Wall with Banner",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      46933,
+      46934
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Wilderness - Vet'ion/Calvar'ion Lair - Altar",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      43108,
+      46910,
+      46911
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Wilderness - Vet'ion/Calvar'ion Lair - Carpet",
+    "baseMaterial": "FINE_CARPET",
+    "objectIds": [
+      46982,
+      46983,
+      46984,
+      46985,
+      46986,
+      46987,
+      46988,
+      46989,
+      46990
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Wilderness - Vet'ion/Calvar'ion Lair - Banner",
+    "baseMaterial": "FINE_CARPET",
+    "objectIds": [
+      46991
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75
+  },
+  {
+    "description": "Wilderness - Vet'ion's Lair - Entrance",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      46995
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75
+  },
+  {
+    "description": "Wilderness - Graveyard of Shadows - Gravestone",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      14765,
+      14766,
+      14767,
+      14768,
+      14769
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Wilderness - Graveyard of Shadows - Calvar'ion Lair Entrance",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      46996
+    ],
+    "uvType": "VANILLA"
+  },
+  {
+    "description": "Wilderness - Artio/Callisto Lair Entrance",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      47140,
+      47141
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Wilderness - Artio/Callisto Trees and Roots",
+    "baseMaterial": "LIGHT_BARK",
+    "objectIds": [
+      47087,
+      47088,
+      47089,
+      47090,
+      47091,
+      47097,
+      47098
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.76
+  },
+  {
+    "description": "Wilderness - Artio/Callisto Walls and Rocks",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      47092,
+      47093,
+      47094,
+      47095,
+      47096,
+      47099,
+      47135,
+      47136,
+      47137,
+      47138,
+      47139,
+      47142,
+      47143,
+      47144,
+      47116,
+      47118,
+      47119,
+      47120,
+      47121,
+      47122
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Wilderness - Escape Caves - Entrance",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      47175
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Wilderness - Prayer Training Chaos Temple - Stained Glass Window",
+    "baseMaterial": "GRAY_65",
+    "objectIds": [
+      1849
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Wilderness - Ladder",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      14758,
+      18987,
+      18989
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Wilderness - Revanant Caves - Cavern entrance",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      31556
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Wilderness - Revanant Caves - Trapdoor Exit",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      31557
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Wilderness - Chaos Dwarf Decorative Caves",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      719
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Wilderness - Corporeal Beast Cave",
+    "baseMaterial": "ROCK_3_DARK",
+    "objectIds": [
+      678
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Wilderness - Zombie Pirate Boat - Wooden",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "areas": [ "Wilderness - Zombie Pirate Boat" ],
+    "objectIds": [
+      22174, 22175, 22176, 22177, 22178, 22179, 22180, 22181, 22182,
+      22183, 22184, 22185, 22186, 22187, 22188, 22189, 22190, 22191,
+      22192, 22193, 22194, 22195, 22196, 22197, 22198, 22200, 22201,
+      22204, 22205, 22206, 22207, 22208, 22209, 22210, 22211, 22212,
+      22213, 22214, 22215, 22216, 22217, 22220, 22224, 22226, 22227,
+      22228, 22229, 22230, 22231, 22232, 22233, 22234, 22235, 22236,
+      22237, 22238, 22239, 22240, 22241, 22242, 22245, 22246, 22249,
+      22249, 22251, 22255, 22256, 22257, 22258, 22259, 22262, 22263,
+      22264, 22265, 22266, 22267, 22268, 22269, 22274, 22275, 22276,
+      22281, 22282, 22283, 22284, 22285, 22286, 22287, 22288, 22289,
+      22290, 22291, 22292, 22293, 22294, 22295, 22296, 22297, 22485,
+      22486, 22487, 22488, 53219, 53220, 53221
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Wilderness - Zombie Pirate Boat - Cannon",
+    "baseMaterial": "GRAY_70",
+    "areas": [ "Wilderness - Zombie Pirate Boat" ],
+    "objectIds": [
+      22271,
+      22272
+    ]
+  },
+  {
+    "description": "Wilderness - Zombie Pirate Boat - Locker",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "areas": [ "Wilderness - Zombie Pirate Boat" ],
+    "objectIds": [
+      53222,
+      53223
+    ]
+  },
+  {
+    "description": "Wilderness - Zombie Pirate Boat - Mast and Ship Helm",
+    "baseMaterial": "GRUNGE_3",
+    "areas": [ "Wilderness - Zombie Pirate Boat" ],
+    "objectIds": [
+      22221,
+      22222,
+      22223,
+      22225,
+      22270
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Wilderness - Zombie Pirate Boat - Rocks",
+    "baseMaterial": "ROCK_3",
+    "areas": [ "Wilderness - Zombie Pirate Boat" ],
+    "objectIds": [
+      22305,
+      22306,
+      22307,
+      22308,
+      22309,
+      22310,
+      22311,
+      22312,
+      22313,
+      22314,
+      22315,
+      22316,
+      22317,
+      22318,
+      22321,
+      22322,
+      22323,
+      22324,
+      22325,
+      22326,
+      22327,
+      22328,
+      22329,
+      22330,
+      22331,
+      22332,
+      22333,
+      22334,
+      22335,
+      22336,
+      22337
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Wilderness - Larran's Chests",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      33343,
+      34828,
+      34829,
+      34830
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Wilderness - Agility Course - Pipe",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      23137
+    ]
+  },
+  {
+    "description": "Wilderness - Agility Course - Rope Swing",
+    "baseMaterial": "ROPE",
+    "objectIds": [
+      23132
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75
+  },
+  {
+    "description": "Wilderness - Agility Course - Spikes",
+    "baseMaterial": "METALLIC_1_LIGHT_HIGHGLOSS",
+    "objectIds": [
+      23551,
+      53225
+    ]
+  },
+  {
+    "description": "Wilderness - Agility Course - Climbing Rocks",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      23640,
+      23641,
+      23642,
+      23643
+    ]
+  },
+  {
+    "description": "Wilderness - Agility Course - Agility Dispenser",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      53224
+    ]
+  },
+  {
     "description": "Edgeville Wilderness Dungeon - Cave Wall - Opening",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
       1477
     ],
     "uvType": "BOX"
+  },
+  {
+    "description": "Edgeville - Coffin",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "objectIds": [
+      398,
+      3577,
+      28860,
+      39547
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
   },
   {
     "description": "Wall Decoration - Rocks",
@@ -8914,6 +9458,22 @@
     ],
     "uvType": "MODEL_XZ",
     "uvScale": 0.6
+  },
+  {
+    "description": "Chaos Altar",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      411
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Player Killing - Loot Key Chest",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH_LIGHT",
+    "objectIds": [
+      43484
+    ],
+    "uvType": "BOX"
   },
   {
     "description": "Objects - Wooden - Rocking Chair",
@@ -9033,6 +9593,7 @@
     "description": "Objects - Wooden - Chair - High poly mesh",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      27512,
       27513
     ],
     "uvType": "BOX",
@@ -9046,7 +9607,8 @@
       593,
       598,
       2335,
-      25733
+      25733,
+      27544
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -9136,6 +9698,22 @@
       1141,
       1142,
       1143,
+      1287,
+      1288,
+      1384,
+      14593,
+      14594,
+      14595,
+      14635,
+      14636,
+      14637,
+      14664,
+      14666,
+      14693,
+      14694,
+      14695,
+      14696,
+      14738,
       23559,
       23530,
       23561,
@@ -9235,14 +9813,16 @@
     "description": "Ground Decoration - Wooden - Agility Logs",
     "baseMaterial": "BARK",
     "objectIds": [
+      23141,
       23142,
       23143,
       23144,
       23145,
-      23274
+      23274,
+      23542
     ],
-    "uvType": "BOX",
-    "uvScale": 0.9
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 512
   },
   {
     "description": "Objects - Ice Rocks - Small",
@@ -10928,7 +11508,8 @@
     "baseMaterial": "CARPET",
     "objectIds": [
       7512,
-      12396
+      12396,
+      39695
     ],
     "uvType": "BOX",
     "uvOrientation": 256,
@@ -12051,10 +12632,47 @@
       39668,
       39669,
       39671,
-      39672
+      39672,
+      39673
     ],
     "uvType": "BOX",
     "uvScale": 0.6
+  },
+  {
+    "description": "Ferox Enclave - Ancient Altar",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      39642
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Ferox Enclave - Floating Debris and Camping Equipment",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      15817,
+      26293,
+      39688,
+      39689
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Ferox Enclave - Statue",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      39674
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Sleeping Bag",
+    "baseMaterial": "FINE_CARPET",
+    "objectIds": [
+      28521
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.66
   },
   {
     "description": "Morytania - Walls - Wooden - Plank - Rotten Plank Walls",
@@ -12683,7 +13301,9 @@
     "description": "Object - Wooden - Plank - Chest",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      7192
+      7192,
+      14773,
+      14774
     ],
     "uvType": "BOX",
     "uvOrientationZ": 512,
@@ -12694,7 +13314,9 @@
     "description": "Object - Wooden - Barrel",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      14740
+      14740,
+      22278,
+      22280
     ],
     "uvType": "BOX"
   },
@@ -14295,7 +14917,7 @@
   {
     "description": "Skeleton",
     "baseMaterial": "BONE",
-    "objectIds": [ 660, 663, 33196, 50003, 50004 ],
+    "objectIds": [ 660, 663, 12243, 12244, 12245, 33196, 50003, 50004 ],
     "uvType": "BOX",
     "uvOrientation": 768,
     "uvScale": 0.75
@@ -15013,6 +15635,71 @@
     "uvOrientation": 256
   },
   {
+    "description": "Island of Stone - Cave and Pillars",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      25846,
+      37409,
+      37410
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 256
+  },
+  {
+    "description": "Island of Stone Dungeon - The Jormungund",
+    "baseMaterial": "STONE_NORMALED",
+    "npcIds": [ 9289, 9290, 9291, 9292 ],
+    "objectIds": [ 37424 ]
+  },
+  {
+    "description": "Island of Stone Dungeon - Walls",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      37411,
+      37412,
+      37413,
+      37414,
+      37415,
+      37416,
+      37417,
+      37419,
+      37420,
+      37425,
+      37426,
+      37427,
+      37428,
+      37429,
+      37430
+    ]
+  },
+  {
+    "description": "Island of Stone Dungeon - Old Gate",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "objectIds": [
+      37421,
+      37422
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Island of Stone Dungeon - Stalagmite",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      23373,
+      23374
+    ],
+    "uvOrientation": 256
+  },
+  {
+    "description": "Island of Stone Dungeon - Boat Ribs",
+    "baseMaterial": "WOOD_GRAIN",
+    "objectIds": [
+      4363
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.3
+  },
+  {
     "description": "Spinning Wheel",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
@@ -15235,7 +15922,8 @@
     "baseMaterial": "PLANT_GRUNGE_2",
     "objectIds": [
       14538, 14539, 14541, 14589,
-      14591, 14617, 14618, 14619
+      14591, 14617, 14618, 14619,
+      14659, 14660, 14661
     ],
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -15754,8 +16442,8 @@
       230, 234, 235, 236,
       237, 238, 240, 242,
       253, 281, 283, 284,
-      37350, 37353, 37354,
-      37356, 37365
+      14512, 37350, 37353,
+      37354, 37356, 37365
     ],
     "uvType": "BOX",
     "uvScale": 0.7,
@@ -15813,6 +16501,40 @@
     "uvType": "BOX",
     "uvScale": 1.1,
     "uvOrientation": 512
+  },
+  {
+    "description": "Plank Boat - Wooden - Bowsprit",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 256 ],
+    "uvType": "BOX",
+    "uvScale": 1.1,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Plank Boat - Wooden - Ship's Ladder",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 245, 246, 272, 273 ],
+    "uvType": "BOX",
+    "uvScale": 1.1,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Plank Boat - Wooden - Mast and Helm",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      252,
+      262,
+      263
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Object - Metal - Anchor",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "objectIds": [
+      271
+    ],
+    "uvType": "BOX"
   },
   {
     "description": "Fishing Trawler Boat - Wooden - Deck Opening",
@@ -16833,6 +17555,7 @@
     "baseMaterial": "PLANT_GRUNGE_1",
     "objectIds": [
       36220,
+      39680,
       39681,
       39682,
       51081,
@@ -17038,7 +17761,7 @@
     "uvOrientation": 520
   },
   {
-    "description": "Hunter Guild cave, Cam Torum, Perilous Moons and Giants Den - Walls, Rocky objects and Stairs",
+    "description": "Hunter Guild cave, Cam Torum, Perilous Moons, Giants Den and Escape Caves - Walls, Rocky objects and Stairs",
     "baseMaterial": "ROCK_3",
     "objectIds": [
       42250,
@@ -17060,6 +17783,13 @@
       42275,
       42276,
       47117,
+      47147,
+      47148,
+      47151,
+      47157,
+      47158,
+      47170,
+      47171,
       50906,
       50907,
       50908,
@@ -17786,10 +18516,21 @@
     "description": "Hollow Log 1",
     "baseMaterial": "BARK",
     "objectIds": [
+      1322,
       1334,
       1335,
       1338,
       1378
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 480
+  },
+  {
+    "description": "Hollow Log Light",
+    "baseMaterial": "LIGHT_BARK",
+    "objectIds": [
+      1379
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -18268,6 +19009,16 @@
     "uvOrientation": 512
   },
   {
+    "description": "Sheep Shearer Fred the Farmers house Roof",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 12992, 12993, 12994, 12995, 12996, 12997, 12998, 12999, 13000 ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512,
+    "flatNormals": true
+  },
+  {
     "description": "Textured hay carpet",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [ 920, 921 ],
@@ -18615,7 +19366,8 @@
     "description": "Objects - Wooden - Crate - High poly mesh",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      27532
+      27532,
+      41424
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -18626,7 +19378,8 @@
     "description": "Objects - Wooden - Stacked Crates - High poly mesh",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      27533
+      27533,
+      41425
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -19777,5 +20530,66 @@
       15229
     ],
     "uvType": "BOX"
+  },
+  {
+    "description": "Wooden -  Tables - Sturdy",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 27514 ],
+    "uvOrientationY": 512,
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Wooden -  Tables - Sturdy",
+    "baseMaterial": "MARBLE_2_SEMIGLOSS",
+    "objectIds": [
+      41841,
+      41843,
+      41845,
+      41847,
+      41849
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "flatNormals": true
+  },
+  {
+    "description": "Prison Pete Castle Walls",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      24287,
+      24288,
+      24295
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 300,
+    "uvScale": 0.8
+  },
+  {
+    "description": "Prison Pete Castle Walls with Metal Bars",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      24289,
+      24290
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 300,
+    "uvScale": 0.8
+  },
+  {
+    "description": "Canoe Station - Uncut",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 12144, 12145 ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Canoe Station - with Canoes",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 12146, 12147, 12148, 12149, 12150, 12151, 12152, 12153, 12154, 12155, 12156, 12157, 12158, 12159, 12160, 12161, 12162 ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.8
   }
 ]
