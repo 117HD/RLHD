@@ -35,7 +35,7 @@ public class Vector {
 		float f = 0;
 		int len = Math.min(a.length, b.length);
 		for (int i = 0; i < len; i++)
-			f += a[i] * b[i];
+			f += (float) a[i] * b[i]; // cast to float to prevent int overflow
 		return f;
 	}
 

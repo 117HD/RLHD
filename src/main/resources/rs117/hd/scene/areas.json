@@ -1051,31 +1051,50 @@
   {
     "name": "STRONGHOLD_SLAYER_CAVE",
     "aabbs": [
-      [ 2404, 9808, 2431, 9792 ],
-      [ 2416, 9847, 2431, 9809 ],
-      [ 2368, 9791, 2431, 9750 ],
-      [ 2432, 9792, 2503, 9847 ],
-      [ 2432, 9750, 2495, 9791 ],
-      [ 2397, 9808, 2403, 9802 ],
-      [ 2403, 9792, 2368, 9802 ],
-      [ 2417, 9809, 2376, 9835 ],
-      [ 2376, 9808, 2403, 9802 ]
+      [ 2371, 9743, 2495, 9847, 0 ],
+      [ 2496, 9792, 2499, 9847, 0 ],
+      [ 2371, 9848, 2431, 9855, 0 ],
+      [ 2500, 9792, 2503, 9843, 0 ],
+      [ 2500, 9844, 2500, 9846, 0 ],
+      [ 2501, 9844, 2501, 9845, 0 ],
+      [ 2502, 9844, 2502, 9844, 0 ],
+      [ 2432, 9848, 2445, 9848, 0 ],
+      [ 2432, 9849, 2437, 9849, 0 ],
+      [ 2432, 9850, 2436, 9850, 0 ],
+      [ 2432, 9851, 2435, 9851, 0 ],
+      [ 2432, 9852, 2434, 9852, 0 ],
+      [ 2432, 9853, 2433, 9853, 0 ],
+      [ 2432, 9854, 0 ]
     ],
     "hideOtherAreas": true
   },
   {
     "name": "WATERFALL_DUNGEON",
-    "regions": [
-      10394
+    "aabbs": [
+      [ 2554, 9858, 2597, 9919, 0 ]
     ],
-    "hideOtherAreas": false
+    "hideOtherAreas": true
+  },
+  {
+    "name": "WATERFALL_DUNGEON_CHALICE_ROOM",
+    "aabbs": [
+      [ 2588, 9890, 2619, 9919, 0 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "WATERFALL_DUNGEON_CHALICE_ROOM_FLOODED",
+    "aabbs": [
+      [ 2524, 9890, 2555, 9919, 0 ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "GOBLIN_CAVE",
     "regions": [
       10393
     ],
-    "hideOtherAreas": false
+    "hideOtherAreas": true
   },
   {
     "name": "WHITE_WOLF_MOUNTAIN",
@@ -1294,8 +1313,23 @@
   {
     "name": "HEROES_GUILD_BASEMENT",
     "aabbs": [
-      [ 2880, 9918, 2948, 9880 ],
-      [ 2881, 9919, 2942, 9925 ]
+      [ 2943, 9880, 2953, 9918, 0 ],
+      [ 2901, 9920, 2942, 9932, 0 ],
+      [ 2900, 9920, 2900, 9931, 0 ],
+      [ 2899, 9920, 2899, 9930, 0 ],
+      [ 2898, 9920, 2898, 9929, 0 ],
+      [ 2896, 9920, 2897, 9928, 0 ],
+      [ 2893, 9920, 2895, 9927, 0 ],
+      [ 2891, 9920, 2892, 9926, 0 ],
+      [ 2889, 9920, 2890, 9925, 0 ],
+      [ 2887, 9920, 2888, 9924, 0 ],
+      [ 2886, 9920, 2886, 9923, 0 ],
+      [ 2884, 9920, 2885, 9922, 0 ],
+      [ 2883, 9920, 2883, 9921, 0 ],
+      [ 2882, 9920, 0 ],
+      [ 2880, 9896, 2942, 9919, 0 ],
+      [ 2911, 9887, 2942, 9895, 0 ],
+      [ 2926, 9880, 2942, 9886, 0 ]
     ],
     "hideOtherAreas": true
   },
@@ -1315,8 +1349,16 @@
   {
     "name": "WARRIORS_GUILD_BASEMENT",
     "aabbs": [
-      [ 2901, 9983, 2942, 9948 ]
+      [ 2901, 9981, 2942, 9948 ]
     ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "ROGUES_DEN",
+    "regionBoxes": [
+      [ 11854, 12111 ]
+    ],
+    "regions": [ 12109 ],
     "hideOtherAreas": true
   },
   {
@@ -1337,7 +1379,7 @@
   {
     "name": "GAMES_ROOM",
     "aabbs": [
-      [ 2178, 4988, 2236, 4931 ]
+      [ 2179, 4931, 2236, 4988 ]
     ],
     "hideOtherAreas": true
   },
@@ -1502,7 +1544,7 @@
   {
     "name": "CLOCK_TOWER_DUNGEON",
     "aabbs": [
-      [ 2558, 9598, 2625, 9664 ]
+      [ 2560, 9599, 2623, 9663 ]
     ],
     "hideOtherAreas": true
   },
@@ -1634,10 +1676,11 @@
     ]
   },
   {
-    "name": "NIGHTMARE_ZONE",
+    "name": "NIGHTMARE_ZONE_AND_KING_BLACK_DRAGON",
     "aabbs": [
-      [ 2241, 4676, 2303, 4722 ]
-    ]
+      [ 2241, 4670, 2303, 4722 ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "CASTLE_WARS_LOBBY",
@@ -1887,6 +1930,20 @@
     ]
   },
   {
+    "name": "SOPHANEM_TEMPLE_BANK_PRE_CONTACT",
+    "aabbs": [
+      [ 2757, 5128, 2773, 5146 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "SOPHANEM_TEMPLE_BANK_POST_CONTACT",
+    "aabbs": [
+      [ 2790, 5157, 2809, 5175 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
     "name": "SOPHANEM_TRAPDOOR",
     "aabbs": [
       [ 3315, 2797, 0 ]
@@ -1987,13 +2044,22 @@
     "name": "SCARAB_LAIR_TEMPLE",
     "regions": [
       8516
-    ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "SCARAB_LAIR_MIDDLE",
+    "regions": [
+      9538
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "SCARAB_LAIR_BOTTOM",
     "regions": [
       9027
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "CANIFIS_BAR_FLOOR",
@@ -2373,14 +2439,23 @@
   {
     "name": "MAGE_ARENA_BANK",
     "aabbs": [
-      [ 2527, 4708, 2549, 4725 ]
-    ]
+      [ 2525, 4706, 2551, 4727 ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "MAGE_ARENA_GOD_STATUES",
     "aabbs": [
       [ 2495, 4682, 2520, 4730 ]
-    ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Corporeal Beast Lair",
+    "aabbs": [
+      [ 2958, 4235, 3002, 4274 ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "GIELINOR_SNOWY_NORTHERN_REGION",
@@ -2899,8 +2974,8 @@
   },
   {
     "name": "LIZARDMAN_TEMPLE",
-    "regions": [
-      5277
+    "aabbs": [
+      [ 1280, 10048, 1342, 10110 ]
     ],
     "hideOtherAreas": true
   },
@@ -3249,8 +3324,21 @@
   {
     "name": "KARAMJA_VOLCANO_DUNGEON",
     "aabbs": [
-      [ 2822, 9536, 2881, 9663 ],
-      [ 2842, 9663, 2822, 9667 ]
+      [ 2818, 9606, 2876, 9663, 0 ],
+      [ 2822, 9538, 2876, 9605, 0 ],
+      [ 2819, 9605, 2821, 9605, 0 ],
+      [ 2820, 9604, 2821, 9604, 0 ],
+      [ 2821, 9602, 2821, 9603, 0 ],
+      [ 2825, 9664, 2840, 9669, 0 ],
+      [ 2841, 9664, 2841, 9668, 0 ],
+      [ 2842, 9664, 2843, 9666, 0 ],
+      [ 2844, 9664, 2844, 9665, 0 ],
+      [ 2845, 9664, 2847, 9664, 0 ],
+      [ 2824, 9664, 2824, 9668, 0 ],
+      [ 2823, 9664, 2823, 9667, 0 ],
+      [ 2821, 9664, 2822, 9666, 0 ],
+      [ 2820, 9664, 2820, 9665, 0 ],
+      [ 2819, 9664, 0 ]
     ],
     "hideOtherAreas": true
   },
@@ -3497,7 +3585,8 @@
     "name": "LUNAR_ESSENCE_MINE",
     "regions": [
       9377
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "LADY_ZAY",
@@ -3511,6 +3600,13 @@
     "regionBoxes": [
       [ 8252, 8509 ]
     ]
+  },
+  {
+    "name": "Baba Yaga House Interior",
+    "aabbs": [
+      [ 2448, 4644, 2454, 4650 ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "MM2_AIRSHIP_PLATFORM",
@@ -4354,7 +4450,7 @@
     ]
   },
   {
-    "name": "SECRETS_OF_THE_NORTH_DUNGEON",
+    "name": "GHORROCK_DUNGEON",
     "regions": [
       11681
     ],
@@ -4439,7 +4535,31 @@
     "name": "ICY_UNDERGROUND_DARK",
     "areas": [
       "WEISS_SALT_MINE",
-      "SECRETS_OF_THE_NORTH_DUNGEON"
+      "GHORROCK_DUNGEON",
+      "PHANTOM_MUSPAH_BOSS_ROOM"
+    ]
+  },
+  {
+    "name": "Ghorrock Dungeon Tiles",
+    "aabbs": [
+      [ 2923, 10343, 2931, 10353, 0 ],
+      [ 2922, 10344, 2922, 10352, 0 ],
+      [ 2921, 10347, 2921, 10349, 0 ],
+      [ 2932, 10344, 2932, 10352, 0 ],
+      [ 2933, 10347, 2933, 10349, 0 ],
+      [ 2928, 10342 ],
+      [ 2926, 10342 ]
+    ]
+  },
+  {
+    "name": "Ghorrock Dungeon Dirt Fix",
+    "aabbs": [
+      [ 2916, 10325, 2924, 10331, 0 ],
+      [ 2931, 10320, 2935, 10323, 0 ],
+      [ 2926, 10337, 2928, 10341, 0 ],
+      [ 2920, 10342, 2934, 10354, 0 ],
+      [ 2914, 10338, 2919, 10342, 0 ],
+      [ 2911, 10316, 2913, 10318, 0 ]
     ]
   },
   {
@@ -4816,8 +4936,21 @@
   {
     "name": "RED_CHINCHOMPA_HUNTING_GROUND",
     "aabbs": [
-      [ 2510, 9286, 2533, 9308 ]
-    ]
+      [ 2509, 9285, 2534, 9309 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Eagles Peak and Polar Nest",
+    "regions": [ 8013, 10911 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Eagles Peak Jungle Nest",
+    "aabbs": [
+      [ 2508, 9313, 2530, 9330 ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "CERBERUS",
@@ -5144,7 +5277,8 @@
     "name": "COLOSSEUM",
     "regions": [
       7316
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "SNOWY_REGIONS",

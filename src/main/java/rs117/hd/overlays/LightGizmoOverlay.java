@@ -480,7 +480,7 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 					info += counter + ": " + l.hash;
 					info += "\n".repeat(5 - newlines);
 				}
-				if (isSelected && !hideInfo) {
+				if (!hideInfo) {
 					info += String.format("\nradius: %d", liveInfo ? l.radius : l.def.radius);
 					info += String.format("\nstrength: %.1f", liveInfo ? l.strength : l.def.strength);
 					var color = ColorUtils.linearToSrgb(l.def.color);

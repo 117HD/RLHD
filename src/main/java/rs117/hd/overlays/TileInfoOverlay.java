@@ -185,6 +185,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			if (shiftPressed)
 				mode = (mode + 1) % 3;
 		}
+		boolean altPressed = client.isKeyPressed(KeyCode.KC_ALT);
 
 		Tile[][][] tiles = sceneContext.scene.getExtendedTiles();
 		int[][][] templateChunks = sceneContext.scene.isInstance() ? sceneContext.scene.getInstanceTemplateChunks() : null;
@@ -231,10 +232,14 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 										if (!drawTileInfo(g, sceneContext, tile))
 											continue;
 									} else {
-										g.setColor(Color.CYAN);
-										if (isBridge == 1 && tile.getBridge() != null) {
-											g.setColor(Color.MAGENTA);
-											tile = tile.getBridge();
+										if (altPressed) {
+											g.setColor(Color.YELLOW);
+										} else {
+											g.setColor(Color.CYAN);
+											if (isBridge == 1 && tile.getBridge() != null) {
+												g.setColor(Color.MAGENTA);
+												tile = tile.getBridge();
+											}
 										}
 										var poly = getCanvasTilePoly(client, sceneContext.scene, tile);
 										if (poly == null || !poly.contains(mousePos[0], mousePos[1]))
@@ -345,7 +350,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 
 		// Update second selection point each frame
 		if (aabbMarkingStage == 1) {
-			markedWorldPoints[1] = hoveredWorldPoint;
+			System.arraycopy(hoveredWorldPoint, 0, markedWorldPoints[1], 0, 3);
 			pendingSelection = new AABB(markedWorldPoints[0], markedWorldPoints[1]);
 		}
 
@@ -463,7 +468,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 		Color polyColor = Color.LIGHT_GRAY;
 		if (paint != null)
 		{
-			polyColor = Color.CYAN;
+			polyColor = client.isKeyPressed(KeyCode.KC_ALT) ? Color.YELLOW : Color.CYAN;
 			lines.add("Tile type: Paint");
 			Material material = Material.fromVanillaTexture(paint.getTexture());
 			lines.add(String.format("Material: %s (%d)", material.name(), paint.getTexture()));
@@ -560,6 +565,9 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			int animationId = -1;
 			var renderable = gameObject.getRenderable();
 			if (renderable != null) {
+				if (renderable instanceof NPC)
+					continue;
+
 				height = renderable.getModelHeight();
 				if (renderable instanceof DynamicObject) {
 					var anim = ((DynamicObject) renderable).getAnimation();
@@ -577,6 +585,22 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 				height,
 				animationId
 			));
+		}
+
+		for (var npc : client.getTopLevelWorldView().npcs()) {
+			var lp = npc.getLocalLocation();
+			int size = npc.getComposition().getSize() / 2;
+			int x = lp.getSceneX();
+			int y = lp.getSceneY();
+			if (x - size <= tileX && tileX <= x + size && y - size <= tileY && tileY <= y + size) {
+				lines.add(String.format(
+					"NPC: ID=%s ori=[%d,%d] anim=%d impostor=?",
+					npc.getId(),
+					npc.getOrientation(),
+					npc.getCurrentOrientation(),
+					npc.getAnimation()
+				));
+			}
 		}
 
 		for (GraphicsObject graphicsObject : client.getGraphicsObjects()) {
@@ -806,9 +830,9 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 	}
 
 	private void useZoomAwareFont(Graphics2D g, float scale) {
-		zoom = client.get3dZoom() / 1000.f;
+		zoom = client.get3dZoom() / 1400.f;
 		if (zoom > 1.2f) {
-			fontSize = Math.min(16, 11 * zoom);
+			fontSize = Math.min(16, 7 * zoom);
 		} else {
 			fontSize = Math.max(7.8f, 14 * (float) Math.sqrt(zoom));
 		}
@@ -1090,21 +1114,17 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			e.consume();
 
 			if (SwingUtilities.isLeftMouseButton(e)) {
-				int[] nextSelection = { -1, 0 };
 				if (!Arrays.equals(selectedAreaAabb, hoveredAreaAabb)) {
-					System.arraycopy(hoveredAreaAabb, 0, nextSelection, 0, 2);
-					if (nextSelection[0] != -1)
-						copyToClipboard(visibleAreas[nextSelection[0]].aabbs[nextSelection[1]].toArgs());
-				}
+					if (TileInfoOverlay.this.hoveredAreaAabb[0] != -1)
+						copyToClipboard(visibleAreas[TileInfoOverlay.this.hoveredAreaAabb[0]].aabbs[TileInfoOverlay.this.hoveredAreaAabb[1]].toArgs());
 
-				if (!Arrays.equals(nextSelection, selectedAreaAabb)) {
-					System.arraycopy(nextSelection, 0, selectedAreaAabb, 0, 2);
+					System.arraycopy(hoveredAreaAabb, 0, selectedAreaAabb, 0, 2);
 					return e;
 				}
 
 				if (aabbMarkingStage == 0) {
 					// Marking first
-					markedWorldPoints[0] = hoveredWorldPoint;
+					System.arraycopy(hoveredWorldPoint, 0, markedWorldPoints[0], 0, 3);
 				} else {
 					// Done marking
 					selections.add(pendingSelection);
