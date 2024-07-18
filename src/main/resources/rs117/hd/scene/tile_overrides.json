@@ -3974,6 +3974,14 @@
     "blended": false
   },
   {
+    "name": "PRISON_PETE_PATH",
+    "area": "RANDOM_EVENT_PRISON_PETE",
+    "overlayIds": [
+      133
+    ],
+    "groundMaterial": "DIRT"
+  },
+  {
     "name": "CLASSROOM",
     "area": "RANDOM_EVENT_CLASSROOM",
     "overlayIds": [

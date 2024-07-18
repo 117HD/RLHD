@@ -2140,6 +2140,7 @@
       23909,
       23910,
       40285,
+      41840,
       24428
     ],
     "flatNormals": true
@@ -2572,6 +2573,14 @@
       23800
     ],
     "flatNormals": true
+  },
+  {
+    "description": "KOUREND_WALLS_COLUMNS",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      41837,
+      41838
+    ]
   },
   {
     "description": "Kourend - Kingstown - Statue of King Rada",
@@ -4927,6 +4936,7 @@
       18000,
       18001,
       18002,
+      19048,
       24351,
       24352,
       20673,
@@ -5370,6 +5380,7 @@
     "objectIds": [
       196,
       197,
+      5208,
       38027
     ],
     "uvType": "BOX",
@@ -5539,6 +5550,10 @@
       14753,
       14754,
       2355,
+      24291,
+      24292,
+      24293,
+      24294,
       23866,
       26130,
       26131,
@@ -9578,6 +9593,7 @@
     "description": "Objects - Wooden - Chair - High poly mesh",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      27512,
       27513
     ],
     "uvType": "BOX",
@@ -9591,7 +9607,8 @@
       593,
       598,
       2335,
-      25733
+      25733,
+      27544
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -14900,7 +14917,7 @@
   {
     "description": "Skeleton",
     "baseMaterial": "BONE",
-    "objectIds": [ 660, 663, 33196, 50003, 50004 ],
+    "objectIds": [ 660, 663, 12243, 12244, 12245, 33196, 50003, 50004 ],
     "uvType": "BOX",
     "uvOrientation": 768,
     "uvScale": 0.75
@@ -18992,6 +19009,16 @@
     "uvOrientation": 512
   },
   {
+    "description": "Sheep Shearer Fred the Farmers house Roof",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 12992, 12993, 12994, 12995, 12996, 12997, 12998, 12999, 13000 ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512,
+    "flatNormals": true
+  },
+  {
     "description": "Textured hay carpet",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [ 920, 921 ],
@@ -19339,7 +19366,8 @@
     "description": "Objects - Wooden - Crate - High poly mesh",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      27532
+      27532,
+      41424
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -19350,7 +19378,8 @@
     "description": "Objects - Wooden - Stacked Crates - High poly mesh",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      27533
+      27533,
+      41425
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -20501,5 +20530,66 @@
       15229
     ],
     "uvType": "BOX"
+  },
+  {
+    "description": "Wooden -  Tables - Sturdy",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 27514 ],
+    "uvOrientationY": 512,
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Wooden -  Tables - Sturdy",
+    "baseMaterial": "MARBLE_2_SEMIGLOSS",
+    "objectIds": [
+      41841,
+      41843,
+      41845,
+      41847,
+      41849
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "flatNormals": true
+  },
+  {
+    "description": "Prison Pete Castle Walls",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      24287,
+      24288,
+      24295
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 300,
+    "uvScale": 0.8
+  },
+  {
+    "description": "Prison Pete Castle Walls with Metal Bars",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      24289,
+      24290
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 300,
+    "uvScale": 0.8
+  },
+  {
+    "description": "Canoe Station - Uncut",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 12144, 12145 ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Canoe Station - with Canoes",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 12146, 12147, 12148, 12149, 12150, 12151, 12152, 12153, 12154, 12155, 12156, 12157, 12158, 12159, 12160, 12161, 12162 ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.8
   }
 ]
