@@ -2555,20 +2555,20 @@
   {
     "name": "TROLL_STRONGHOLD",
     "areas": [
-      "TROLL_STRONGHOLD_FLOOR_0",
-      "TROLL_STRONGHOLD_FLOOR_1",
-      "TROLL_STRONGHOLD_FLOOR_2"
+      "TROLL_STRONGHOLD_PLANE_0",
+      "TROLL_STRONGHOLD_PLANE_1",
+      "TROLL_STRONGHOLD_PLANE_2"
     ]
   },
   {
-    "name": "TROLL_STRONGHOLD_FLOOR_0",
+    "name": "TROLL_STRONGHOLD_PLANE_0",
     "aabbs": [
       [ 2815, 10048, 2878, 10111, 0 ]
     ],
     "hideOtherAreas": true
   },
   {
-    "name": "TROLL_STRONGHOLD_FLOOR_1",
+    "name": "TROLL_STRONGHOLD_PLANE_1",
     "aabbs": [
       [ 2847, 10062, 2858, 10072, 0 ],
       [ 2848, 10097, 2857, 10109, 0 ],
@@ -2577,7 +2577,7 @@
     "hideOtherAreas": true
   },
   {
-    "name": "TROLL_STRONGHOLD_FLOOR_2",
+    "name": "TROLL_STRONGHOLD_PLANE_2",
     "aabbs": [
       [ 2837, 10050, 2847, 10057, 1 ],
       [ 2837, 10103, 2846, 10111, 1 ],
@@ -3011,16 +3011,40 @@
     ]
   },
   {
-    "name": "KARUULM_SLAYER_DUNGEON",
-    "regions": [
-      5536
-    ],
+    "name": "KARUULM_SLAYER_DUNGEON_PLANE_0",
     "regionBoxes": [
-      [ 5022, 5023 ],
-      [ 5279, 5280 ]
+      [ 5022, 5279, 0 ],
+      [ 5279, 5536, 0 ]
     ],
-    "aabbs": [
-      [ 1344, 10231, 1354, 10239 ]
+    "hideOtherAreas": true
+  },
+  {
+    "name": "KARUULM_SLAYER_DUNGEON_PLANE_1",
+    "regionBoxes": [
+      [ 5022, 5535, 1 ],
+      [ 5280, 5536, 1 ]
+    ],
+    "regions": [
+      5279
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "KARUULM_SLAYER_DUNGEON_PLANE_2",
+    "regionBoxes": [
+      [ 5022, 5535, 2 ]
+    ],
+    "regions": [
+      5279
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "KARUULM_SLAYER_DUNGEON",
+    "areas": [
+      "KARUULM_SLAYER_DUNGEON_PLANE_0",
+      "KARUULM_SLAYER_DUNGEON_PLANE_1",
+      "KARUULM_SLAYER_DUNGEON_PLANE_2"
     ]
   },
   {
