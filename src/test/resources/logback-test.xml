@@ -1,6 +1,6 @@
 <configuration>
   <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-    <withJansi>false</withJansi>
+    <withJansi>true</withJansi>
     <encoder>
       <pattern>
         %date{HH:mm:ss.SSS,,en-US} [%-10thread] %highlight(%-5level %-30logger{26} - %msg%n)

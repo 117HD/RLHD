@@ -101,6 +101,7 @@ vec2 worldUvs(float scale) {
 #include utils/water.glsl
 #include utils/color_filters.glsl
 #include utils/fog.glsl
+#include utils/wireframe.glsl
 
 void main() {
     vec3 downDir = vec3(0, -1, 0);
@@ -487,7 +488,13 @@ void main() {
 
     #if APPLY_COLOR_FILTER
     outputColor.rgb = applyColorFilter(outputColor.rgb);
+        #if WIREFRAME
+            float edge = edgeFactor(IN.texBlend);
+            vec3 edgeColor = vec3(0.0);
+            outputColor.rgb = mix(edgeColor, outputColor.rgb, edge);
+        #endif
     #endif
+
 
     // apply fog
     if (!isUnderwater) {
