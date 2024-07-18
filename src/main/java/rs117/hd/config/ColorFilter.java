@@ -8,5 +8,5 @@ public enum ColorFilter {
 	CARTOON,
 	INVERT_COLORS,
 	BLACK_AND_WHITE,
-	CELSHADE
+	CEL_SHADING
 }

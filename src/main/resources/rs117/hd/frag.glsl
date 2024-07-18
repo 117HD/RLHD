@@ -487,14 +487,12 @@ void main() {
     outputColor.rgb = colorBlindnessCompensation(outputColor.rgb);
 
     #if APPLY_COLOR_FILTER
-    outputColor.rgb = applyColorFilter(outputColor.rgb);
-        #if WIREFRAME
-            float edge = edgeFactor(IN.texBlend);
-            vec3 edgeColor = vec3(0.0);
-            outputColor.rgb = mix(edgeColor, outputColor.rgb, edge);
-        #endif
+        outputColor.rgb = applyColorFilter(outputColor.rgb);
     #endif
 
+    #if WIREFRAME
+        outputColor.rgb *= wireframeMask();
+    #endif
 
     // apply fog
     if (!isUnderwater) {

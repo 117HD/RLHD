@@ -920,6 +920,17 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
+	String KEY_WIREFRAME = "wireframe";
+	@ConfigItem(
+		keyName = KEY_WIREFRAME,
+		name = "Wireframe",
+		description = "Show the edges of individual triangles in the scene.",
+		section = experimentalSettings
+	)
+	default boolean wireframe() {
+		return false;
+	}
+
 
 	/*====== Internal settings ======*/
 

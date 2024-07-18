@@ -22,17 +22,13 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+#pragma once
+#if WIREFRAME
 
+float wireframeMask() {
+    const float wireframeWidth = 0.8f;
+    vec3 d = smoothstep(vec3(0.0), fwidth(IN.texBlend) * wireframeWidth, IN.texBlend);
+    return min(min(d.x, d.y), d.z);
+}
 
- /*
-  * Determine how close a frag is to triangle edge
-  * can use fwidth to compute the derivatives
-  * with GL_NV_compute_shader_derivatives enabled
-  */
- float edgeFactor(vec3 fBarycentricCoords)
- {
-     float wireframeWidth = 0.8f;
-     vec3 derivative = abs(dFdx(fBarycentricCoords)) + abs(dFdy(fBarycentricCoords));
-     vec3 hi = smoothstep(vec3(0.0), derivative * wireframeWidth, fBarycentricCoords);
-     return min(min(hi.x, hi.y), hi.z);
- }
+#endif
