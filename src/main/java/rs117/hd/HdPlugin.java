@@ -2579,6 +2579,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				}
 			}
 		}
+
+		if (config.colorFilter() == ColorFilter.CELSHADE) {
+			configGroundTextures = false;
+			configModelTextures = false;
+		}
 	}
 
 	@Subscribe
@@ -2637,7 +2642,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 							case KEY_PARALLAX_OCCLUSION_MAPPING:
 							case KEY_UI_SCALING_MODE:
 							case KEY_VANILLA_COLOR_BANDING:
+								recompilePrograms = true;
+								break;
 							case KEY_COLOR_FILTER:
+								reloadScene = true;
 								recompilePrograms = true;
 								break;
 							case KEY_SHADOW_MODE:
