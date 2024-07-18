@@ -277,6 +277,8 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			case MODE_SCENE_AABBS:
 				g.setFont(FontManager.getRunescapeSmallFont());
 
+				drawLoadingLines(g);
+
 				if (mousePos != null) {
 					hoveredAreaAabb[0] = -1;
 					hoveredAreaAabb[1] = 0;
@@ -1251,6 +1253,14 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			g.setColor(c);
 			g.drawString(line, px, py);
 		}
+	}
+
+	private void drawLoadingLines(Graphics2D g) {
+		g.setColor(Color.BLUE);
+		int off = 16 * LOCAL_TILE_SIZE;
+		int max = SCENE_SIZE * LOCAL_TILE_SIZE;
+		var localAabb = new AABB(off, off, max, max, client.getPlane());
+		drawLocalAabb(g, localAabb);
 	}
 
 	private void copyToClipboard(String toCopy) {
