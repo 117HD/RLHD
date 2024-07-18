@@ -10,13 +10,23 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import rs117.hd.utils.GsonUtils;
 
+import static net.runelite.api.Constants.*;
+
 @RequiredArgsConstructor
 public class RegionBox {
 	public final int from, to;
+	public final int fromPlane, toPlane;
 
-	public AABB onPlane(int plane) {
-		AABB aabb = toAabb();
-		return aabb.onPlane(plane);
+	public RegionBox(int regionId) {
+		this(regionId, regionId);
+	}
+
+	public RegionBox(int from, int to) {
+		this(from, to, 0, MAX_Z - 1);
+	}
+
+	public RegionBox(int from, int to, int plane) {
+		this(from, to, plane, plane);
 	}
 
 	public AABB toAabb() {
@@ -34,7 +44,14 @@ public class RegionBox {
 			y1 = y2;
 			y2 = temp;
 		}
-		return new AABB((x1) << 6, (y1) << 6, ((x2) + 1 << 6) - 1, ((y2) + 1 << 6) - 1);
+		return new AABB(
+			(x1) << 6,
+			(y1) << 6,
+			fromPlane,
+			((x2) + 1 << 6) - 1,
+			((y2) + 1 << 6) - 1,
+			toPlane
+		);
 	}
 
 	@Slf4j
@@ -50,7 +67,7 @@ public class RegionBox {
 				}
 
 				in.beginArray();
-				int[] ints = new int[2];
+				int[] ints = new int[4];
 				int i = 0;
 				while (in.hasNext()) {
 					switch (in.peek()) {
@@ -71,7 +88,20 @@ public class RegionBox {
 				}
 				in.endArray();
 
-				list.add(new RegionBox(ints[0], ints[1]));
+				switch (i) {
+					case 1:
+						list.add(new RegionBox(ints[0]));
+						break;
+					case 2:
+						list.add(new RegionBox(ints[0], ints[1]));
+						break;
+					case 3:
+						list.add(new RegionBox(ints[0], ints[1], ints[2]));
+						break;
+					case 4:
+						list.add(new RegionBox(ints[0], ints[1], ints[2], ints[3]));
+						break;
+				}
 			}
 			in.endArray();
 			return list.toArray(new RegionBox[0]);
@@ -87,7 +117,17 @@ public class RegionBox {
 			out.beginArray();
 			for (RegionBox box : aabbs) {
 				// Compact JSON array
-				out.jsonValue("[ " + box.from + ", " + box.to + " ]");
+				if (box.fromPlane == 0 && box.toPlane == MAX_Z - 1) {
+					if (box.from == box.to) {
+						out.jsonValue(String.format("[ %d ]", box.from));
+					} else {
+						out.jsonValue(String.format("[ %d, %d ]", box.from, box.to));
+					}
+				} else if (box.fromPlane == box.toPlane) {
+					out.jsonValue(String.format("[ %d, %d, %d ]", box.from, box.to, box.fromPlane));
+				} else {
+					out.jsonValue(String.format("[ %d, %d, %d, %d ]", box.from, box.to, box.fromPlane, box.toPlane));
+				}
 			}
 			out.endArray();
 		}

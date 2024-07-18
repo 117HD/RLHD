@@ -42,8 +42,8 @@
           "items": {
             "type": "integer"
           },
-          "minItems": 2,
-          "maxItems": 2
+          "minItems": 1,
+          "maxItems": 4
         }
       },
       "aabbs": {
