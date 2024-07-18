@@ -19754,5 +19754,20 @@
     "uvType": "BOX",
     "uvOrientation": 300,
     "uvScale": 0.8
+  },
+  {
+    "description": "Canoe Station - Uncut",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 12144, 12145 ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Canoe Station - with Canoes",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 12146, 12147, 12148, 12149, 12150, 12151, 12152, 12153, 12154, 12155, 12156, 12157, 12158, 12159, 12160, 12161, 12162 ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.8
   }
 ]
