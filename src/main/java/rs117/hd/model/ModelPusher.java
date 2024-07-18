@@ -198,7 +198,8 @@ public class ModelPusher {
 		}
 		boolean skipUVs =
 			!isVanillaTextured &&
-			packMaterialData(baseMaterial, -1, modelOverride, UvType.GEOMETRY, false) == 0;
+			packMaterialData(baseMaterial, -1, modelOverride, UvType.GEOMETRY, false) == 0 &&
+			modelOverride.colorOverrides == null;
 
 		// ensure capacity upfront
 		sceneContext.stagingBufferVertices.ensureCapacity(bufferSize);
@@ -341,6 +342,17 @@ public class ModelPusher {
 					if (override != null) {
 						materialOverride = override;
 						material = materialOverride.textureMaterial;
+					}
+				}
+
+				if (modelOverride.colorOverrides != null) {
+					int hsl = model.getFaceColors1()[face];
+					for (var override : modelOverride.colorOverrides) {
+						if (override.hslCondition.test(hsl)) {
+							materialOverride = override;
+							material = materialOverride.baseMaterial;
+							break;
+						}
 					}
 				}
 

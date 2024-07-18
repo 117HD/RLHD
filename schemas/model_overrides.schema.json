@@ -233,6 +233,77 @@
             }
           }
         }
+      },
+      "colorOverrides": {
+        "description": "A subset of options can be tweaked separately for a specific set of colors of the model.",
+        "type": "array",
+        "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [ "baseMaterial", "colors" ],
+          "properties": {
+            "colors": {
+              "type": [ "array", "string", "integer" ],
+              "description": "One or more expressions or values to test the HSL color against. Available variables: `hsl`, `h`, `s`, `l`.",
+              "items": {
+                "type": [ "string", "integer" ]
+              }
+            },
+            "description": {
+              "type": "string",
+              "description": "Description of which part of the object these properties apply to."
+            },
+            "baseMaterial": {
+              "type": "string",
+              "description": "Case-sensitive name of the material to apply to faces which pass the color checks."
+            },
+            "uvType": {
+              "type": "string",
+              "description": "What to base UV coordinates on for object texturing. Defaults to GEOMETRY.",
+              "enum": [
+                "VANILLA",
+                "GEOMETRY",
+                "MODEL_XY",
+                "MODEL_XY_MIRROR_A",
+                "MODEL_XY_MIRROR_B",
+                "MODEL_XZ",
+                "MODEL_XZ_MIRROR_A",
+                "MODEL_XZ_MIRROR_B",
+                "MODEL_YZ",
+                "MODEL_YZ_MIRROR_A",
+                "MODEL_YZ_MIRROR_B",
+                "WORLD_XY",
+                "WORLD_XZ",
+                "WORLD_YZ",
+                "BOX"
+              ]
+            },
+            "uvScale": {
+              "type": "number",
+              "description": "A scaling factor to apply to UV coordinates. Defaults to 1."
+            },
+            "uvOrientation": {
+              "type": "integer",
+              "description": "Extra rotation to apply to UVs with 2048 corresponding to a complete rotation. Defaults to 0."
+            },
+            "uvOrientationX": {
+              "type": "integer",
+              "description": "Rotation around the X axis, with 2048 corresponding to a complete rotation. Defaults to uvOrientation."
+            },
+            "uvOrientationY": {
+              "type": "integer",
+              "description": "Rotation around the Y axis, with 2048 corresponding to a complete rotation. Defaults to uvOrientation."
+            },
+            "uvOrientationZ": {
+              "type": "integer",
+              "description": "Rotation around the Z axis, with 2048 corresponding to a complete rotation. Defaults to uvOrientation."
+            },
+            "retainVanillaUvs": {
+              "type": "boolean",
+              "description": "Retain vanilla UVs on already textured areas of the model. Defaults to true."
+            }
+          }
+        }
       }
     }
   }
