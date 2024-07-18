@@ -6767,7 +6767,7 @@
       25159,
       25160
     ],
-    "uvType": "WORLD_XZ",
+    "uvType": "BOX",
     "uvScale": 0.25
   },
   {
@@ -15011,6 +15011,71 @@
     ],
     "uvType": "BOX",
     "uvOrientation": 256
+  },
+  {
+    "description": "Island of Stone - Cave and Pillars",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      25846,
+      37409,
+      37410
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 256
+  },
+  {
+    "description": "Island of Stone Dungeon - The Jormungund",
+    "baseMaterial": "STONE_NORMALED",
+    "npcIds": [ 9289, 9290, 9291, 9292 ],
+    "objectIds": [ 37424 ]
+  },
+  {
+    "description": "Island of Stone Dungeon - Walls",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      37411,
+      37412,
+      37413,
+      37414,
+      37415,
+      37416,
+      37417,
+      37419,
+      37420,
+      37425,
+      37426,
+      37427,
+      37428,
+      37429,
+      37430
+    ]
+  },
+  {
+    "description": "Island of Stone Dungeon - Old Gate",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "objectIds": [
+      37421,
+      37422
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Island of Stone Dungeon - Stalagmite",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      23373,
+      23374
+    ],
+    "uvOrientation": 256
+  },
+  {
+    "description": "Island of Stone Dungeon - Boat Ribs",
+    "baseMaterial": "WOOD_GRAIN",
+    "objectIds": [
+      4363
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.3
   },
   {
     "description": "Spinning Wheel",

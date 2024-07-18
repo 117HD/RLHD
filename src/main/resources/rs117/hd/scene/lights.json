@@ -35217,5 +35217,23 @@
     "objectIds": [ 14008 ],
     "fadeInDuration": 50,
     "fadeOutDuration": 100
+  },
+  {
+    "description": "the Jormungand - Magic Projectile",
+    "height": -20,
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 25,
+    "color": [
+      252,
+      0,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 3,
+    "range": 35,
+    "projectileIds": [ 1737 ],
+    "fadeInDuration": 900,
+    "fadeOutDuration": 300
   }
 ]
