@@ -13721,8 +13721,8 @@
     "uvScale": 0.65,
     "colorOverrides": [
       {
-        "colors": [43060, 43082, 43084, 43110, 43125],
-        "baseMaterial": "METALLIC_NONE_GLOSS",
+        "colors": [43060, 43082, 43084, 43110, 43120, 43125],
+        "baseMaterial": "NONE",
         "uvType": "WORLD_XZ",
         "uvScale": 2
       }
@@ -20700,5 +20700,26 @@
         "uvType": "WORLD_XY"
       }
     ]
+  },
+  {
+    "description": "Bankbooth with Glass Window - Phasmatys",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 16642 ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "colors": [ 21507, 21548, 21595 ],
+        "baseMaterial": "NONE",
+        "uvType": "WORLD_XY"
+      }
+    ]
+  },
+  {
+    "description": "Bankbooth with Shutters - Phasmatys",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 16643 ],
+    "uvType": "BOX",
+    "uvScale": 0.8
   }
 ]
