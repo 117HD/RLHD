@@ -20721,5 +20721,26 @@
     "objectIds": [ 16643 ],
     "uvType": "BOX",
     "uvScale": 0.8
+  },
+  {
+    "description": "Bankbooth with Glass Window - Nardah",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 10517 ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "colors": [ 21535, 21576, 21630 ],
+        "baseMaterial": "NONE",
+        "uvType": "WORLD_XY"
+      }
+    ]
+  },
+  {
+    "description": "Bankbooth with Shutters - Nardah",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 10518 ],
+    "uvType": "BOX",
+    "uvScale": 0.8
   }
 ]
