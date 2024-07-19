@@ -20588,5 +20588,32 @@
     "uvType": "BOX",
     "uvOrientation": 512,
     "uvScale": 0.8
+  },  {
+  "description": "Compost Bins - Empty",
+  "baseMaterial": "WOOD_GRAIN_3",
+  "objectIds": [ 7808 ],
+  "uvOrientation": 512,
+  "uvType": "BOX",
+  "flatNormals": true,
+  "uvScale": 0.8
+},
+  {
+    "description": "Compost Bins",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 3830, 3835, 3836, 3837, 3838, 3839, 3840, 3841, 3842, 3843, 3844, 3845, 3846, 3847, 3848, 3851, 3852, 3853, 3854, 19054, 19055 ],
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvScale": 0.8
+  },
+  {
+    "description": "Compost Bins - Closed",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 3849 ],
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvScale": 0.8
   }
+]
 ]
