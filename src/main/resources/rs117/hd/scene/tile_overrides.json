@@ -5448,17 +5448,8 @@
     }
   },
   {
-    "name": "BARROWS_CRYPT_FLOOR",
-    "area": "BARROWS_CRYPTS",
-    "underlayIds": [
-      96,
-      103
-    ],
-    "groundMaterial": "EARTHEN_CAVE_FLOOR"
-  },
-  {
-    "name": "BARROWS_TUNNELS_FLOOR",
-    "area": "BARROWS_TUNNELS",
+    "name": "BARROWS_FLOOR",
+    "area": "BARROWS_UNDERGROUND",
     "underlayIds": [
       96,
       103

@@ -532,6 +532,26 @@
     ]
   },
   {
+    "name": "Tolna's rift",
+    "regions": [ 12370 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Tolna's rift separated",
+    "regions": [ 12113 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Chaos tunnels (What Lies Below)",
+    "regions": [ 12625 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Gorak Plane",
+    "regions": [ 12115 ],
+    "hideOtherAreas": true
+  },
+  {
     "name": "DIGSITE_EXAM_CENTRE",
     "aabbs": [
       [ 3357, 3332, 3367, 3348 ],
@@ -1670,6 +1690,11 @@
     ]
   },
   {
+    "name": "YANILLE_DUNGEON",
+    "regions": [ 10388 ],
+    "hideOtherAreas": true
+  },
+  {
     "name": "GUTANOTH_CAVE",
     "aabbs": [
       [ 2560, 9408, 2626, 9475 ]
@@ -1723,9 +1748,7 @@
   },
   {
     "name": "CASTLE_WARS_UNDERGROUND",
-    "aabbs": [
-      [ 2361, 9473, 2444, 9544 ]
-    ]
+    "regions": [ 9620 ]
   },
   {
     "name": "CASTLE_WARS",
@@ -1733,6 +1756,20 @@
       [ 2364, 3068, 2435, 3139 ],
       [ 2434, 3080, 2448, 3104 ]
     ]
+  },
+  {
+    "name": "OBSERVATORY_DUNGEON",
+    "regions": [
+      9362
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "SMOKE_DEVIL_DUNGEON",
+    "regionBoxes": [
+      [ 9363, 9619 ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "LMS_ARENA_WILD_VARROCK",
@@ -1775,9 +1812,17 @@
   },
   {
     "name": "SMOKE_DUNGEON",
-    "aabbs": [
-      [ 3198, 9341, 3329, 9409 ]
-    ]
+    "regionBoxes": [
+      [ 12690, 13202 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Desert Mining Camp (The Tourist Trap)",
+    "regions": [
+      13203
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "PVP_ARENA",
@@ -2007,19 +2052,155 @@
     ]
   },
   {
+    "name": "DESERT_TREASURE_PYRAMID_LEVEL_1",
+    "regions": [ 11597 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "DESERT_TREASURE_PYRAMID_LEVEL_2",
+    "regions": [ 11341 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "DESERT_TREASURE_PYRAMID_LEVEL_3",
+    "regions": [ 11085 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "DESERT_TREASURE_PYRAMID_LEVEL_4",
+    "regions": [ 12945 ],
+    "hideOtherAreas": true
+  },
+  {
     "name": "DESERT_TREASURE_PYRAMID",
-    "aabbs": [
-      [ 3198, 9275, 3267, 9339 ],
-      [ 2755, 4934, 2812, 4982 ],
-      [ 2825, 4938, 2873, 4976 ],
-      [ 2894, 4941, 2933, 4972 ]
+    "areas": [
+      "DESERT_TREASURE_PYRAMID_LEVEL_1",
+      "DESERT_TREASURE_PYRAMID_LEVEL_2",
+      "DESERT_TREASURE_PYRAMID_LEVEL_3",
+      "DESERT_TREASURE_PYRAMID_LEVEL_4"
     ]
+  },
+  {
+    "name": "Enakhra's Temple",
+    "regions": [ 12433 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Klenter's Pyramid (A Tail of Two Cats)",
+    "regions": [ 13199 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Genie cave",
+    "regions": [ 13457 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Beneath Cursed Sands cave",
+    "regions": [ 13456, 13712 ],
+    "hideOtherAreas": true
   },
   {
     "name": "PYRAMID_PLUNDER",
     "regions": [
       7749
     ]
+  },
+  {
+    "name": "PYRAMID_PLUNDER_WRONG_LOBBY_1",
+    "aabbs": [
+      [ 1924, 4448, 1943, 4467, 2 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "PYRAMID_PLUNDER_WRONG_LOBBY_2",
+    "aabbs": [
+      [ 1958, 4418, 1978, 4437, 2 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "PYRAMID_PLUNDER_WRONG_LOBBY_3",
+    "aabbs": [
+      [ 1957, 4447, 1978, 4468, 3 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "PYRAMID_PLUNDER_CORRECT_LOBBY",
+    "aabbs": [
+      [ 1924, 4417, 1944, 4437, 3 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "PYRAMID_PLUNDER_ROOM_1",
+    "aabbs": [
+      [ 1922, 4463, 1933, 4473, 0 ],
+      [ 1922, 4474, 1930, 4478, 0 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "PYRAMID_PLUNDER_ROOM_2",
+    "aabbs": [
+      [ 1948, 4463, 1957, 4474, 0 ],
+      [ 1952, 4475, 1957, 4478, 0 ],
+      [ 1958, 4463, 1960, 4472, 0 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "PYRAMID_PLUNDER_ROOM_3",
+    "aabbs": [
+      [ 1973, 4453, 1980, 4472, 0 ],
+      [ 1969, 4455, 1972, 4465, 0 ],
+      [ 1970, 4453, 1972, 4454, 0 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "PYRAMID_PLUNDER_ROOM_4",
+    "aabbs": [
+      [ 1923, 4450, 1930, 4455, 0 ],
+      [ 1931, 4448, 1942, 4459, 0 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "PYRAMID_PLUNDER_ROOM_5",
+    "aabbs": [
+      [ 1951, 4443, 1962, 4455, 0 ],
+      [ 1963, 4443, 1966, 4447, 0 ],
+      [ 1964, 4442, 1966, 4442, 0 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "PYRAMID_PLUNDER_ROOM_6",
+    "aabbs": [
+      [ 1951, 4443, 1962, 4455, 0 ],
+      [ 1963, 4443, 1966, 4447, 0 ],
+      [ 1964, 4442, 1966, 4442, 0 ],
+      [ 1921, 4423, 1932, 4440, 0 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "PYRAMID_PLUNDER_ROOM_7",
+    "aabbs": [
+      [ 1940, 4420, 1955, 4433, 0 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "PYRAMID_PLUNDER_ROOM_8",
+    "aabbs": [
+      [ 1967, 4426, 1979, 4437, 0 ],
+      [ 1971, 4419, 1979, 4425, 0 ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "NECROPOLIS",
@@ -2036,9 +2217,25 @@
   },
   {
     "name": "KALPHITE_LAIR",
-    "regions": [
-      13972
-    ]
+    "regionBoxes": [
+      [ 13972, 13972, 2 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "KALPHITE_LAIR_QUEEN_ROOM",
+    "regionBoxes": [
+      [ 13972, 13972, 0 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "KALPHITE_SLAYER_CAVE",
+    "aabbs": [
+      [ 3264, 9472, 3330, 9550 ],
+      [ 3331, 9475, 3349, 9529 ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "SCARAB_LAIR_TEMPLE",
@@ -2261,22 +2458,215 @@
     ]
   },
   {
+    "name": "BARROWS_TUNNELS",
+    "regionBoxes": [
+      [ 14231, 14231, 0 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
     "name": "BARROWS_CRYPTS",
-    "aabbs": [
-      [ 3520, 9664, 3, 3583, 9727, 3 ]
+    "regionBoxes": [
+      [ 14231, 14231, 3 ]
     ]
   },
   {
-    "name": "BARROWS_TUNNELS",
+    "name": "BARROWS_UNDERGROUND",
+    "regions": [ 14231 ]
+  },
+  {
+    "name": "BARROWS_CRYPT_DHAROK",
     "aabbs": [
-      [ 3520, 9664, 0, 3583, 9727, 0 ]
-    ]
+      [ 3546, 9707, 3563, 9722, 3 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "BARROWS_CRYPT_GUTHAN",
+    "aabbs": [
+      [ 3530, 9696, 3548, 9711, 3 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "BARROWS_CRYPT_KARIL",
+    "aabbs": [
+      [ 3542, 9675, 3560, 9691, 3 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "BARROWS_CRYPT_AHRIM",
+    "aabbs": [
+      [ 3547, 9691, 3564, 9707, 3 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "BARROWS_CRYPT_TORAG",
+    "aabbs": [
+      [ 3561, 9679, 3578, 9695, 3 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "BARROWS_CRYPT_VERAC",
+    "aabbs": [
+      [ 3565, 9699, 3582, 9713, 3 ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "BARROWS",
     "regions": [
       14131
     ]
+  },
+  {
+    "name": "SHADE_CATACOMBS",
+    "regions": [ 13975 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Tomb of Ivandis (In Aid of Myreque)",
+    "aabbs": [
+      [ 3486, 9854, 3517, 9880, 0 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Mort Myre Myreque Hideout",
+    "aabbs": [
+      [ 3466, 9832, 3492, 9850, 0 ],
+      [ 3467, 9831, 3493, 9831, 0 ],
+      [ 3469, 9830, 3495, 9830, 0 ],
+      [ 3471, 9829, 3496, 9829, 0 ],
+      [ 3472, 9828, 3497, 9828, 0 ],
+      [ 3473, 9827, 3498, 9827, 0 ],
+      [ 3474, 9825, 3498, 9826, 0 ],
+      [ 3475, 9823, 3499, 9824, 0 ],
+      [ 3476, 9819, 3500, 9822, 0 ],
+      [ 3478, 9815, 3507, 9818, 0 ],
+      [ 3480, 9814, 0 ],
+      [ 3481, 9812, 3498, 9814, 0 ],
+      [ 3484, 9807, 3507, 9811, 0 ],
+      [ 3488, 9802, 3507, 9806, 0 ],
+      [ 3499, 9812, 3507, 9814, 0 ],
+      [ 3501, 9819, 3501, 9821, 0 ],
+      [ 3502, 9819, 3502, 9820, 0 ],
+      [ 3503, 9819, 0 ],
+      [ 3477, 9817, 3477, 9818, 0 ],
+      [ 3475, 9822, 0 ],
+      [ 3475, 9821, 0 ],
+      [ 3479, 9814, 0 ],
+      [ 3480, 9813, 0 ],
+      [ 3482, 9810, 3483, 9811, 0 ],
+      [ 3483, 9808, 3483, 9809, 0 ],
+      [ 3485, 9805, 3487, 9806, 0 ],
+      [ 3486, 9803, 3487, 9804, 0 ],
+      [ 3487, 9802, 0 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Mort Myre Myreque Hideout fairy ring",
+    "aabbs": [
+      [ 3434, 9817, 3456, 9831, 0 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Mort Myre Myreque Hideout west cave 1",
+    "aabbs": [
+      [ 3459, 9809, 3468, 9822, 0 ],
+      [ 3469, 9810, 3469, 9821, 0 ],
+      [ 3470, 9811, 3470, 9821, 0 ],
+      [ 3471, 9812, 3471, 9820, 0 ],
+      [ 3472, 9813, 3472, 9819, 0 ],
+      [ 3473, 9814, 3473, 9818, 0 ],
+      [ 3461, 9823, 3467, 9823, 0 ],
+      [ 3458, 9810, 3458, 9819, 0 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Mort Myre Myreque Hideout west cave 2",
+    "aabbs": [
+      [ 3466, 9804, 3478, 9808, 0 ],
+      [ 3467, 9809, 3477, 9809, 0 ],
+      [ 3469, 9810, 3477, 9810, 0 ],
+      [ 3470, 9811, 3476, 9811, 0 ],
+      [ 3471, 9812, 3474, 9812, 0 ],
+      [ 3467, 9801, 3472, 9804, 0 ],
+      [ 3473, 9802, 3473, 9803, 0 ],
+      [ 3474, 9803, 3477, 9803, 0 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Mort Myre Myreque Hideout west cave 3",
+    "aabbs": [
+      [ 3463, 9795, 3463, 9799, 0 ],
+      [ 3464, 9794, 3464, 9800, 0 ],
+      [ 3465, 9793, 3465, 9800, 0 ],
+      [ 3466, 9793, 3467, 9800, 0 ],
+      [ 3468, 9794, 3470, 9800, 0 ],
+      [ 3471, 9793, 3471, 9801, 0 ],
+      [ 3472, 9793, 3473, 9802, 0 ],
+      [ 3474, 9793, 3474, 9802, 0 ],
+      [ 3475, 9794, 3475, 9801, 0 ],
+      [ 3476, 9794, 3476, 9801, 0 ],
+      [ 3477, 9795, 3477, 9801, 0 ],
+      [ 3478, 9796, 3478, 9801, 0 ],
+      [ 3479, 9797, 3479, 9800, 0 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Mort Myre Myreque Hideout",
+    "aabbs": [
+      [ 3463, 9795, 3463, 9799, 0 ],
+      [ 3464, 9794, 3464, 9800, 0 ],
+      [ 3465, 9793, 3465, 9800, 0 ],
+      [ 3466, 9793, 3467, 9800, 0 ],
+      [ 3468, 9794, 3470, 9800, 0 ],
+      [ 3471, 9793, 3471, 9801, 0 ],
+      [ 3472, 9793, 3473, 9802, 0 ],
+      [ 3474, 9793, 3474, 9802, 0 ],
+      [ 3475, 9794, 3475, 9801, 0 ],
+      [ 3476, 9794, 3476, 9801, 0 ],
+      [ 3477, 9795, 3477, 9801, 0 ],
+      [ 3478, 9796, 3478, 9801, 0 ],
+      [ 3479, 9797, 3479, 9800, 0 ],
+      [ 3500, 9832, 3517, 9843, 0 ],
+      [ 3501, 9844, 3517, 9844, 0 ],
+      [ 3503, 9845, 3517, 9845, 0 ],
+      [ 3505, 9846, 3517, 9846, 0 ],
+      [ 3508, 9847, 3516, 9847, 0 ],
+      [ 3511, 9848, 3515, 9848, 0 ],
+      [ 3501, 9831, 3516, 9831, 0 ],
+      [ 3503, 9830, 3515, 9830, 0 ],
+      [ 3506, 9829, 3514, 9829, 0 ],
+      [ 3507, 9828, 3513, 9828, 0 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Meiyerditch Laboratories",
+    "regions": [
+      14232,
+      14233,
+      14487,
+      14488
+    ],
+    "aabbs": [
+      [ 3511, 9792, 3519, 9820 ],
+      [ 3509, 9792, 3510, 9818 ],
+      [ 3510, 9819 ],
+      [ 3512, 9821, 3519, 9821 ],
+      [ 3514, 9822, 3519, 9822 ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "BURGH_DE_ROTT",
@@ -2288,7 +2678,8 @@
     "name": "BURGH_DE_ROTT_BASEMENT",
     "regions": [
       13974
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "ABANDONED_MINE",
@@ -2340,7 +2731,10 @@
   },
   {
     "name": "TZHAAR_CITY_REGION",
-    "regions": [ 9552, 9807, 9808, 10063, 10064 ],
+    "regions": [ 9552 ],
+    "regionBoxes": [
+      [ 9807, 10064 ]
+    ],
     "hideOtherAreas": true
   },
   {
@@ -2349,6 +2743,21 @@
       "TZHAAR_FIGHT_CAVES",
       "TZHAAR_CITY_REGION"
     ]
+  },
+  {
+    "name": "HAM Store Room",
+    "regions": [ 10321 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Witchhaven Dungeon (Slug Menace)",
+    "regions": [ 9295 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "BLAST_FURNACE",
+    "regions": [ 7757 ],
+    "hideOtherAreas": true
   },
   {
     "name": "TREE_GNOME_STRONGHOLD_INSTANCE",
@@ -2553,6 +2962,27 @@
     ]
   },
   {
+    "name": "Trollheim tunnel",
+    "regions": [
+      11676
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Saba's cave",
+    "regions": [
+      9034
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "White Wolf Mountain passage",
+    "aabbs": [
+      [ 2803, 9856, 2879, 9887 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
     "name": "TROLL_STRONGHOLD",
     "areas": [
       "TROLL_STRONGHOLD_PLANE_0",
@@ -2582,6 +3012,20 @@
       [ 2837, 10050, 2847, 10057, 1 ],
       [ 2837, 10103, 2846, 10111, 1 ],
       [ 2819, 10048, 2, 2863, 10111, 2 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Eadgar's Cave",
+    "aabbs": [
+      [ 2883, 10072, 2900, 10090 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Troll Cave",
+    "aabbs": [
+      [ 2928, 10080, 2940, 10088 ]
     ],
     "hideOtherAreas": true
   },
@@ -2669,7 +3113,8 @@
       10907,
       10908,
       11164
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "KELDAGRIM_INTERIORS",
@@ -2699,12 +3144,10 @@
   },
   {
     "name": "KELDAGRIM",
-    "regions": [
-      11422,
-      11423,
-      11678,
-      11679
-    ]
+    "regionBoxes": [
+      [ 11422, 11679 ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "GWENITH",
@@ -2814,6 +3257,16 @@
     ]
   },
   {
+    "name": "SOTE_IORWERTH_CAMP_DUNGEON",
+    "regions": [ 8855 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "SOTE_LADY_TRAHAEARN_HIDEOUT",
+    "regions": [ 9365 ],
+    "hideOtherAreas": true
+  },
+  {
     "name": "TYRAS_CAMP_INSTANCE",
     "regions": [
       9287
@@ -2837,7 +3290,153 @@
     "areas": [
       "TEMPLE_OF_LIGHT",
       "TEMPLE_OF_LIGHT_EXCAVATION"
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Underground Pass section 1",
+    "aabbs": [
+      [ 2377, 9663, 2414, 9673, 0 ],
+      [ 2378, 9674, 2383, 9674, 0 ],
+      [ 2379, 9675, 2383, 9675, 0 ],
+      [ 2380, 9676, 2383, 9676, 0 ],
+      [ 2381, 9677, 2383, 9687, 0 ],
+      [ 2382, 9688, 2383, 9689, 0 ],
+      [ 2383, 9690, 0 ],
+      [ 2384, 9674, 2414, 9691, 0 ],
+      [ 2387, 9692, 2414, 9692, 0 ],
+      [ 2409, 9693, 0 ],
+      [ 2410, 9693, 2411, 9694, 0 ],
+      [ 2412, 9693, 2421, 9699, 0 ],
+      [ 2411, 9695, 2411, 9696, 0 ],
+      [ 2413, 9700, 2419, 9700, 0 ],
+      [ 2415, 9664, 2421, 9692, 0 ],
+      [ 2422, 9665, 2422, 9683, 0 ],
+      [ 2423, 9667, 2423, 9682, 0 ],
+      [ 2424, 9669, 2425, 9681, 0 ],
+      [ 2426, 9670, 2428, 9680, 0 ],
+      [ 2429, 9671, 2433, 9680, 0 ],
+      [ 2429, 9721, 2500, 9727, 0 ],
+      [ 2434, 9668, 2500, 9720, 0 ],
+      [ 2422, 9669, 2433, 9700, 0 ],
+      [ 2424, 9701, 2433, 9701, 0 ],
+      [ 2426, 9702, 2433, 9703, 0 ],
+      [ 2427, 9704, 2433, 9705, 0 ],
+      [ 2428, 9706, 2433, 9707, 0 ],
+      [ 2429, 9708, 2433, 9715, 0 ],
+      [ 2430, 9716, 2433, 9720, 0 ],
+      [ 2424, 9668, 2433, 9668, 0 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Underground Pass rocky hill trap",
+    "regions": [ 9878 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Underground Pass section 2",
+    "aabbs": [
+      [ 2415, 9599, 2432, 9647, 0 ],
+      [ 2415, 9648, 2431, 9663, 0 ],
+      [ 2367, 9614, 2414, 9662, 0 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Underground Pass unicorn section",
+    "aabbs": [
+      [ 2365, 9588, 2390, 9614, 0 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Underground Pass section 3",
+    "aabbs": [
+      [ 2368, 9702, 2429, 9731, 0 ],
+      [ 2406, 9701, 2414, 9701, 0 ],
+      [ 2406, 9700, 2413, 9700, 0 ],
+      [ 2406, 9699, 2412, 9699, 0 ],
+      [ 2406, 9698, 2411, 9698, 0 ],
+      [ 2406, 9697, 2409, 9697, 0 ],
+      [ 2395, 9697, 2405, 9701, 0 ],
+      [ 2394, 9697, 2394, 9701, 0 ],
+      [ 2393, 9696, 2393, 9701, 0 ],
+      [ 2392, 9694, 2392, 9701, 0 ],
+      [ 2391, 9693, 2391, 9701, 0 ],
+      [ 2368, 9693, 2390, 9701, 0 ],
+      [ 2368, 9675, 2380, 9692, 0 ],
+      [ 2368, 9674, 2379, 9674, 0 ],
+      [ 2368, 9673, 2378, 9673, 0 ],
+      [ 2368, 9671, 2377, 9672, 0 ],
+      [ 2368, 9670, 2377, 9670, 0 ],
+      [ 2368, 9669, 2376, 9669, 0 ],
+      [ 2368, 9668, 2375, 9668, 0 ],
+      [ 2368, 9666, 2374, 9667, 0 ],
+      [ 2368, 9664, 2373, 9665, 0 ],
+      [ 2381, 9686, 2381, 9692, 0 ],
+      [ 2382, 9688, 2382, 9692, 0 ],
+      [ 2383, 9689, 2383, 9692, 0 ],
+      [ 2384, 9690, 2385, 9692, 0 ],
+      [ 2386, 9691, 2387, 9692, 0 ],
+      [ 2388, 9692, 2390, 9692, 0 ],
+      [ 2415, 9701, 2416, 9701, 0 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Underground Pass final area upper",
+    "regions": [
+      8009
+    ],
+    "regionBoxes": [
+      [ 8519, 8521 ]
+    ],
+    "aabbs": [
+      2095, 4527, 2192, 4752
     ]
+  },
+  {
+    "name": "Klank's area (Underground Pass)",
+    "regionBoxes": [
+      [ 9369, 9370 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "WELL_OF_VOYAGE",
+    "aabbs": [
+      [ 2306, 9608, 2359, 9639 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "TIRANNWN_LEAF_TRAP_1",
+    "aabbs": [
+      [ 2309, 9652, 2318, 9661 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "TIRANNWN_LEAF_TRAP_2",
+    "aabbs": [
+      [ 2332, 9652, 2341, 9661 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "TIRANNWN_LEAF_TRAP_3",
+    "aabbs": [
+      [ 2350, 9652, 2359, 9661 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "TIRANNWN_LEAF_TRAP_4",
+    "aabbs": [
+      [ 2350, 9639, 2359, 9648 ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "TIRANNWN_MAINLAND",
@@ -2906,7 +3505,8 @@
     "name": "ISLE_OF_SOULS_DUNGEON",
     "regions": [
       8593
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "ISLE_OF_SOULS_MAINLAND",
@@ -3055,9 +3655,82 @@
   },
   {
     "name": "LIZARDMAN_TEMPLE",
-    "aabbs": [
-      [ 1280, 10048, 1342, 10110 ]
-    ],
+    "regions": [ 5277 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "LIZARDMAN_SHAMAN_CAVES",
+    "regions": [ 5275 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "GARDEN_OF_DEATH_1",
+    "regions": [ 5276 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "GARDEN_OF_DEATH_2",
+    "regions": [ 5532 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "GARDEN_OF_DEATH_3",
+    "regions": [ 5274 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "GARDEN_OF_DEATH_4",
+    "regions": [ 5785 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "CHASM_OF_FIRE",
+    "regions": [ 5789 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Tale of the Righteous red cave",
+    "regions": [ 4763 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Don't know, but should be separate",
+    "regions": [ 4764 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Giants' Den",
+    "regions": [ 5786 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Don't know 2, but should be separate",
+    "regions": [ 5787 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Don't know 3, but should be separate",
+    "regions": [ 6043 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Don't know 4, but should be separate",
+    "regions": [ 6299 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Woodcutting Guild ents",
+    "regions": [ 6298 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Don't know 5, but should be separate",
+    "regions": [ 6555 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Don't know 5, but should be separate",
+    "regions": [ 6297 ],
     "hideOtherAreas": true
   },
   {
@@ -3118,15 +3791,20 @@
     "name": "SKOTIZO",
     "regions": [
       9048
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "KOUREND_CATACOMBS_DUNGEON",
+    "aabbs": [
+      [ 1584, 9976, 1751, 10111 ]
     ]
   },
   {
     "name": "KOUREND_CATACOMBS",
     "areas": [
+      "KOUREND_CATACOMBS_DUNGEON",
       "SKOTIZO"
-    ],
-    "regionBoxes": [
-      [ 6556, 6813 ]
     ]
   },
   {
@@ -3256,6 +3934,13 @@
       [ 1254, 3666, 1272, 3692 ],
       [ 1400, 3465, 1429, 3589 ]
     ]
+  },
+  {
+    "name": "FARMING_GUILD_HESPORI",
+    "regions": [
+      5021
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "MESS_HALL_KITCHEN",
@@ -3437,10 +4122,46 @@
     ]
   },
   {
+    "name": "Rantz's cave (Big Chompy Bird Hunting)",
+    "regions": [ 10642 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "SHILO_VILLAGE_MINE",
+    "regions": [ 11410 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Tomb of Bervirius (Shilo Village)",
+    "regions": [ 11154 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Ah Za Rhoon 1 (Shilo Village)",
+    "regions": [ 11665 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Ah Za Rhoon 2 (Shilo Village)",
+    "regions": [ 11666 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Viyeldi caves top floor (Legends' Quest)",
+    "regions": [ 11153 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Karamjan Temple (Dragon Slayer 2)",
+    "regions": [ 11408, 11409 ],
+    "hideOtherAreas": true
+  },
+  {
     "name": "COSMIC_ENTITYS_PLANE",
     "aabbs": [
       [ 2048, 4800, 2111, 4863 ]
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "VOID_KNIGHTS_OUTPOST",
@@ -3513,7 +4234,8 @@
     ],
     "aabbs": [
       [ 2112, 5042, 2175, 5183 ]
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "HARMONY",
@@ -3582,6 +4304,16 @@
       "NEITIZNOT",
       "FREMENNIK_ISLES_NORTH"
     ]
+  },
+  {
+    "name": "FREMENNIK_TRIALS_KOSCHEI_THE_DEATHLESS",
+    "regions": [ 10653 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "BRINE_RAT_CAVERN",
+    "regions": [ 10910 ],
+    "hideOtherAreas": true
   },
   {
     "name": "UNGAEL",
@@ -3696,10 +4428,45 @@
     ]
   },
   {
+    "name": "Grand Tree tunnels",
+    "regions": [ 9882 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Tree Gnome Village dungeon",
+    "regions": [ 10309 ],
+    "hideOtherAreas": true
+  },
+  {
     "name": "APE_ATOLL",
     "regionBoxes": [
       [ 10794, 11051 ]
     ]
+  },
+  {
+    "name": "Gnome glider hangar (Monkey Madness 1)",
+    "regions": [ 9626 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Ape Atoll Dungeon (Monkey Madness 1)",
+    "regions": [ 10894, 11150 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Banana plantation (Monkey Madness 1)",
+    "regions": [ 10895 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Temple of Marimbo Dungeon (Monkey Madness 1)",
+    "regions": [ 11151 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Kruk's Dungeon hunter area (Monkey Madness 2)",
+    "regions": [ 11662 ],
+    "hideOtherAreas": true
   },
   {
     "name": "KOUREND_CASTLE_ENTRANCE_FIX",
@@ -4145,7 +4912,8 @@
     "name": "TOA_ENTRANCE_LOBBY",
     "aabbs": [
       [ 3344, 9102, 3375, 9135 ]
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "TOA_PATH_HUB",
@@ -4356,7 +5124,8 @@
     "name": "RANDOM_EVENT_CLASSROOM",
     "aabbs": [
       [ 1878, 5014, 1894, 5036 ]
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "RANDOM_EVENT_FREAKY_FORESTER",
@@ -4368,7 +5137,8 @@
     "name": "RANDOM_EVENT_GRAVEDIGGER",
     "aabbs": [
       [ 1920, 4992, 1935, 5007 ]
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "RANDOM_EVENT_BEE_KEEPER",
@@ -4399,7 +5169,18 @@
     "name": "RANDOM_EVENT_QUIZ_MASTER",
     "regions": [
       7754
-    ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "RANDOM_EVENT_MIME",
+    "regions": [ 8010 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "KELDAGRIM_RAT_PITS",
+    "regions": [ 7753 ],
+    "hideOtherAreas": true
   },
   {
     "name": "CHURCH_OF_AYASTER",
@@ -4492,9 +5273,13 @@
   },
   {
     "name": "ELID_CAVE",
+    "regions": [
+      13461
+    ],
     "aabbs": [
-      [ 3325, 9520, 3395, 9605 ]
-    ]
+      [ 3346, 9532, 3350, 9535 ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "ANCIENT_CAVERN",
@@ -4602,9 +5387,18 @@
   },
   {
     "name": "TROLLWEISS_CAVES",
-    "aabbs": [
-      [ 2766, 10185, 2809, 10238 ]
-    ]
+    "regions": [ 11167 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "KELDAGRIM_TUNNEL",
+    "regions": [ 11166 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "The Kendal's cave (Mountain Daughter)",
+    "regions": [ 11165 ],
+    "hideOtherAreas": true
   },
   {
     "name": "PHANTOM_MUSPAH_BOSS_ROOM",
@@ -5015,21 +5809,26 @@
     ]
   },
   {
-    "name": "RED_CHINCHOMPA_HUNTING_GROUND",
-    "aabbs": [
-      [ 2509, 9285, 2534, 9309 ]
-    ],
+    "name": "Eagles Peak nest",
+    "regions": [ 8013 ],
     "hideOtherAreas": true
   },
   {
-    "name": "Eagles Peak and Polar Nest",
-    "regions": [ 8013, 10911 ],
+    "name": "Polar eagle cave",
+    "regions": [ 10911 ],
     "hideOtherAreas": true
   },
   {
     "name": "Eagles Peak Jungle Nest",
     "aabbs": [
       [ 2508, 9313, 2530, 9330 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "RED_CHINCHOMPA_HUNTING_GROUND",
+    "aabbs": [
+      [ 2509, 9285, 2534, 9309 ]
     ],
     "hideOtherAreas": true
   },
@@ -5285,9 +6084,7 @@
   {
     "name": "ANCIENT_PRISON",
     "aabbs": [
-      [ 1341, 9598, 1384, 9545 ],
-      [ 1341, 9544, 1378, 9535 ],
-      [ 1385, 9556, 1392, 9598, 0 ]
+      [ 2834, 5184, 2944, 5244 ]
     ],
     "hideOtherAreas": true
   },
