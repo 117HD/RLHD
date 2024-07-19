@@ -20600,16 +20600,30 @@
   {
     "description": "Compost Bins",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 3830, 3835, 3836, 3837, 3838, 3839, 3840, 3841, 3842, 3843, 3844, 3845, 3846, 3847, 3848, 3851, 3852, 3853, 3854, 19054, 19055 ],
+    "objectIds": [ 3830, 3835, 3836, 3837, 3838, 3839, 3840, 3841, 3842, 3843, 3844, 3845, 3846, 3847, 3848, 3851, 3852, 3853, 3854, 19054, 19055, 19066, 19067, 19068, 19069, 19070, 19071, 19072, 19073, 19074, 19075, 19076, 19077, 19078, 19079, 19080, 19083, 19084, 19085, 19086, 19087, 19088, 19089, 19090, 19091, 19092, 19093, 19094, 19095, 19096, 19097 ],
     "uvOrientation": 512,
     "uvType": "BOX",
     "flatNormals": true,
-    "uvScale": 0.8
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "colors": [ 8717, 8718, 8719, 8720, 8721 ],
+        "baseMaterial": "GRUNGE_1",
+        "uvType": "WORLD_XZ",
+        "uvScale": 0.8
+      },
+      {
+        "colors": [ 13842, 13843, 13844, 13845, 13846, 13847, 13848, 13849 ],
+        "baseMaterial": "DIRT_1_SHINY",
+        "uvType": "WORLD_XZ",
+        "uvScale": 0.8
+      }
+    ]
   },
   {
     "description": "Compost Bins - Closed",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 3849 ],
+    "objectIds": [ 3849, 19081, 19082 ],
     "uvOrientation": 512,
     "uvType": "BOX",
     "flatNormals": true,
