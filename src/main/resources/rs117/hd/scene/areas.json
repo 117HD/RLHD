@@ -2965,6 +2965,16 @@
     "hideOtherAreas": true
   },
   {
+    "name": "Callisto, Vet'ion, Venenatis and Escape Caves",
+    "regions": [
+      13215,
+      13472,
+      13473,
+      13727
+    ],
+    "hideOtherAreas": true
+  },
+  {
     "name": "Daimon's Crater - Bounty Hunter",
     "regions": [
       13374,
