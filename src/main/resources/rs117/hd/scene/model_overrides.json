@@ -9460,6 +9460,15 @@
     "uvScale": 0.6
   },
   {
+    "description": "Wilderness - Slayer Cave - Entrance Stairs",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      40388,
+      40390
+    ],
+    "uvType": "BOX"
+  },
+  {
     "description": "Chaos Altar",
     "baseMaterial": "GRUNGE_3",
     "objectIds": [
@@ -12637,6 +12646,16 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.6
+  },
+  {
+    "description": "Wilderness - Slayer Cave - Entrance Wall Fix",
+    "baseMaterial": "ROCK_1",
+    "areas": [ "Wilderness - Slayer Cave - Entrance Wall Fix" ],
+    "objectIds": [
+      39671
+    ],
+    "uvType": "BOX",
+    "flatNormals": true
   },
   {
     "description": "Ferox Enclave - Ancient Altar",
