@@ -1,7 +1,8 @@
 [
   {
     "name": "DEFAULT_GRASS",
-    "groundMaterial": "OVERWORLD_GRASS_1"
+    "groundMaterial": "OVERWORLD_GRASS_1",
+    "maxLightness": 26
   },
   {
     "name": "DEFAULT_DIRT",
@@ -6540,6 +6541,7 @@
       126
     ],
     "groundMaterial": "OVERWORLD_GRASS_1",
+    "maxLightness": 22,
     "replacements": {
       "WINTER_GRASS": "season == WINTER"
     }
