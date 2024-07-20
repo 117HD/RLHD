@@ -2975,6 +2975,13 @@
     "hideOtherAreas": true
   },
   {
+    "name": "Wilderness - Slayer Cave - Entrance Wall Fix",
+    "aabbs": [
+      [ 3261, 3665, 3262, 3665 ],
+      [ 3291, 3747, 3292, 3747 ]
+    ]
+  },
+  {
     "name": "Daimon's Crater - Bounty Hunter",
     "regions": [
       13374,
