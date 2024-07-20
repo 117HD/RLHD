@@ -1123,18 +1123,65 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 		}
 
 		int scale = client.getScale();
-		float offsetX = client.getViewportXOffset() + client.getViewportWidth() / 2.f;
-		float offsetY = client.getViewportYOffset() + client.getViewportHeight() / 2.f;
 		ax *= scale;
 		ay *= scale;
 		bx *= scale;
 		by *= scale;
+
+		int w = client.getViewportWidth();
+		int h = client.getViewportHeight();
+
+		float offsetX = client.getViewportXOffset() + w / 2.f;
+		float offsetY = client.getViewportYOffset() + h / 2.f;
 		ax += offsetX;
 		ay += offsetY;
 		bx += offsetX;
 		by += offsetY;
 
-		g.drawLine((int) ax, (int) ay, (int) bx, (int) by);
+		float vx = bx - ax;
+		float vy = by - ay;
+
+		// a + v * t = edge
+		// t = (edge - a) / v
+		if (ax < 0) {
+			ay += -ax / vx * vy;
+			ax = 0;
+		} else if (ax > w) {
+			ay += (w - ax) / vx * vy;
+			ax = w;
+		}
+		if (ay < 0) {
+			ax += -ay / vy * vx;
+			ay = 0;
+		} else if (ay > h) {
+			ax += (h - ay) / vy * vx;
+			ay = h;
+		}
+
+		if (bx < 0) {
+			by += -bx / vx * vy;
+			bx = 0;
+		} else if (bx > w) {
+			by += (w - bx) / vx * vy;
+			bx = w;
+		}
+		if (by < 0) {
+			bx += -by / vy * vx;
+			by = 0;
+		} else if (by > h) {
+			bx += (h - by) / vy * vx;
+			by = h;
+		}
+
+		int fromX = Math.round(ax);
+		int fromY = Math.round(ay);
+		int toX = Math.round(bx);
+		int toY = Math.round(by);
+
+		if (fromX == toX || fromY == toY)
+			return;
+
+		g.drawLine(fromX, fromY, toX, toY);
 	}
 
 	private AABB toLocalAabb(SceneContext ctx, AABB aabb) {
