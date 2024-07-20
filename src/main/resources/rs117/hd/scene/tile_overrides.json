@@ -6658,7 +6658,7 @@
     "groundMaterial": "GRUNGE"
   },
   {
-    "name": "COMPLEX_TILES",
+    "name": "OVERWORLD_COMPLEX_TILES",
     "area": "OVERWORLD",
     "underlayIds": [
       13,
