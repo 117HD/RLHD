@@ -6011,8 +6011,8 @@
     "groundMaterial": "GRASS_1"
   },
   {
-    "name": "DWARVEN_MINE_DUNGEON",
-    "area": "DWARVEN_MINE_DUNGEON",
+    "name": "DWARVEN_MINES",
+    "area": "DWARVEN_MINES",
     "underlayIds": [
       63,
       64,

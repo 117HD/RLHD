@@ -1361,9 +1361,9 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 
 	private void drawLoadingLines(Graphics2D g) {
 		g.setColor(Color.BLUE);
-		int off = 16 * LOCAL_TILE_SIZE;
-		int max = SCENE_SIZE * LOCAL_TILE_SIZE;
-		var localAabb = new AABB(off, off, max, max, client.getPlane());
+		int min = 16 * LOCAL_TILE_SIZE;
+		int max = (SCENE_SIZE - 16) * LOCAL_TILE_SIZE;
+		var localAabb = new AABB(min, min, max, max, 0);
 		drawLocalAabb(g, localAabb);
 	}
 

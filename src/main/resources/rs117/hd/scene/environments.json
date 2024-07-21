@@ -504,7 +504,7 @@
     "fogDepth": 20
   },
   {
-    "area": "DRAYNOR_MANOR_BASEMENT",
+    "area": "DRAYNOR_MANOR_CRYPT",
     "ambientColor": "#7891b5",
     "directionalColor": "#4c78b6",
     "directionalStrength": 0,
@@ -512,7 +512,6 @@
       80,
       190
     ],
-    "fogColor": "#190d02",
     "fogDepth": 40
   },
   {
