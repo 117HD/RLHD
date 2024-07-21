@@ -396,6 +396,11 @@ public enum Material {
 	GRUNGE_3_LIGHT(GRUNGE_3, p -> p
 		.setBrightness(1.45f)
 	),
+	WATER_FOUNTAIN_FLAT(GRUNGE_3, p -> p
+		.setFlowMap(UNDERWATER_FLOW_MAP)
+		.setFlowMapStrength(0.2f)
+		.setFlowMapDuration(new float[] { 12, -12 })
+	),
 	ROCK_1_N,
 	ROCK_1(p -> p
 		.setNormalMap(ROCK_1_N)
