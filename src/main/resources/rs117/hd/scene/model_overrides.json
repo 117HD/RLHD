@@ -9469,6 +9469,37 @@
     "uvType": "BOX"
   },
   {
+    "description": "Wilderness - Slayer Cave - Walls",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      31559,
+      39713,
+      39714,
+      39715,
+      40389,
+      40391,
+      40392,
+      53259
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "hsl == 2",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Wilderness - Slayer Cave - Stalagmite",
+    "baseMaterial": "ROCK_1_LIGHT",
+    "objectIds": [
+      31569,
+      31570
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.32
+  },
+  {
     "description": "Chaos Altar",
     "baseMaterial": "GRUNGE_3",
     "objectIds": [
@@ -12635,6 +12666,7 @@
       39661,
       39662,
       39663,
+      39664,
       39665,
       39666,
       39667,
