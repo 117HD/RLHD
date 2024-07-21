@@ -13721,7 +13721,7 @@
     "uvScale": 0.65,
     "colorOverrides": [
       {
-        "colors": [43060, 43082, 43084, 43110, 43120, 43125],
+        "colors": [ 43060, 43082, 43084, 43110, 43120, 43125 ],
         "baseMaterial": "NONE",
         "uvType": "WORLD_XZ",
         "uvScale": 2
@@ -20611,7 +20611,7 @@
     "uvScale": 0.8,
     "colorOverrides": [
       {
-        "colors": [21549, 21594, 21630],
+        "colors": [ 21549, 21594, 21630 ],
         "baseMaterial": "NONE",
         "uvType": "WORLD_XY"
       }
@@ -20632,7 +20632,7 @@
     "uvScale": 0.8,
     "colorOverrides": [
       {
-        "colors": [43054, 43082, 43102, 43125],
+        "colors": [ 43054, 43082, 43102, 43125 ],
         "baseMaterial": "NONE",
         "uvType": "WORLD_XY"
       }
@@ -20653,7 +20653,7 @@
     "uvScale": 0.8,
     "colorOverrides": [
       {
-        "colors": [43054, 43082, 43102, 43125],
+        "colors": [ 43054, 43082, 43102, 43125 ],
         "baseMaterial": "NONE",
         "uvType": "WORLD_XY"
       }
@@ -20667,7 +20667,7 @@
     "uvScale": 0.8,
     "colorOverrides": [
       {
-        "colors": [21549, 21594, 21630],
+        "colors": [ 21549, 21594, 21630 ],
         "baseMaterial": "NONE",
         "uvType": "WORLD_XY"
       }
@@ -20688,7 +20688,7 @@
     "uvScale": 0.8,
     "colorOverrides": [
       {
-        "colors": [43011, 43054, 43102],
+        "colors": [ 43011, 43054, 43102 ],
         "baseMaterial": "NONE",
         "uvType": "WORLD_XY"
       }
@@ -20702,7 +20702,7 @@
     "uvScale": 0.8,
     "colorOverrides": [
       {
-        "colors": [43011, 43054, 43121],
+        "colors": [ 43011, 43054, 43121 ],
         "baseMaterial": "NONE",
         "uvType": "WORLD_XY"
       }
