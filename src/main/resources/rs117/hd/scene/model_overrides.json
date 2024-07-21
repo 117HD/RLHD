@@ -12698,13 +12698,30 @@
     "uvType": "BOX"
   },
   {
-    "description": "Ferox Enclave - Floating Debris and Camping Equipment",
+    "description": "Ferox Enclave - Floating Debris",
     "baseMaterial": "GRUNGE_3",
     "objectIds": [
       15817,
       26293,
-      39688,
       39689
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": [ 38083, 38087 ],
+        "baseMaterial": "TRANSPARENT"
+      }
+    ]
+  },
+  {
+    "description": "Ferox Enclave - Misc Objects",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      2214,
+      2215,
+      2273,
+      14744,
+      39688
     ],
     "uvType": "BOX"
   },
