@@ -595,8 +595,16 @@
   {
     "name": "DRAYNOR_MANOR_BASEMENT",
     "aabbs": [
-      [ 3073, 9766, 3082, 9780 ]
-    ]
+      [ 3082, 9739, 3126, 9773 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "DRAYNOR_MANOR_CRYPT",
+    "aabbs": [
+      [ 3074, 9767, 3081, 9779 ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "DRAYNOR_NORTHERN_HOUSE_FLOOR",
@@ -814,18 +822,21 @@
     ]
   },
   {
-    "name": "DWARVEN_MINE_DUNGEON",
+    "name": "DWARVEN_MINES",
+    "regions": [ 12185 ],
     "aabbs": [
-      [ 2985, 9690, 3071, 9855 ],
-      [ 2960, 9801, 2984, 9820 ]
-    ]
+      [ 2999, 9688, 3071, 9791, 0 ],
+      [ 2972, 9792, 3007, 9855, 0 ],
+      [ 2956, 9800, 2971, 9825, 0 ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "MOTHERLODE_MINE",
     "aabbs": [
-      [ 3713, 5633, 3776, 5696 ],
-      [ 3827, 5652, 3868, 5692 ]
-    ]
+      [ 3680, 5600, 3808, 5727 ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "EDGEVILLE_PATH_OVERLAY",
@@ -952,6 +963,68 @@
     "aabbs": [
       [ 3076, 3507, 3084, 3513 ]
     ]
+  },
+  {
+    "name": "Edgeville Dungeon & Varrock Sewers",
+    "areas": [
+      "VARROCK_SEWERS"
+    ],
+    "aabbs": [
+      [ 3089, 9818, 3135, 9890 ],
+      [ 3086, 9891, 3088, 9901 ],
+      [ 3089, 9891, 3135, 9919 ],
+      [ 3072, 9920, 3141, 9983 ],
+      [ 3136, 9856, 3151, 9919 ],
+      [ 3072, 9984, 3135, 10017 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Clan Cup portal cave",
+    "aabbs": [
+      [ 3145, 9813, 3169, 9838 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Varrock West bank",
+    "aabbs": [
+      [ 3186, 9817, 3197, 9835 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Champion's Challenge",
+    "regions": [ 12696 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Phoenix Gang Hideout",
+    "regions": [ 12952 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Blue Moon Inn basement",
+    "aabbs": [
+      [ 3229, 9796, 3242, 9807 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "EVIL_DAVE",
+    "aabbs": [
+      [ 3072, 9877, 3085, 9899, 0 ],
+      [ 3066, 9893, 3071, 9899, 0 ],
+      [ 3071, 9878, 3071, 9892, 0 ],
+      [ 3068, 9878, 3070, 9884, 0 ],
+      [ 3067, 9878, 3067, 9883, 0 ],
+      [ 3079, 9872, 3085, 9876, 0 ],
+      [ 3086, 9877, 3086, 9878, 0 ],
+      [ 3086, 9879, 3088, 9890, 0 ],
+      [ 3073, 9892, 3086, 9900, 0 ],
+      [ 3076, 9901, 3082, 9905, 0 ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "SEERS_BANK",
@@ -2317,9 +2390,10 @@
   },
   {
     "name": "HALLOWED_SEPULCHRE_LOBBY",
-    "aabbs": [
-      [ 2380, 5958, 2420, 6000 ]
-    ]
+    "regions": [
+      9565
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "HALLOWED_SEPULCHRE_FLOOR_1",
@@ -3694,13 +3768,13 @@
     "hideOtherAreas": true
   },
   {
-    "name": "Don't know, but should be separate",
-    "regions": [ 4764 ],
+    "name": "Giants' Den",
+    "regions": [ 5786 ],
     "hideOtherAreas": true
   },
   {
-    "name": "Giants' Den",
-    "regions": [ 5786 ],
+    "name": "Don't know, but should be separate",
+    "regions": [ 4764 ],
     "hideOtherAreas": true
   },
   {
@@ -3731,6 +3805,13 @@
   {
     "name": "Don't know 5, but should be separate",
     "regions": [ 6297 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "White Knights' Castle crypt",
+    "aabbs": [
+      [ 2956, 9728, 2979, 9747 ]
+    ],
     "hideOtherAreas": true
   },
   {
@@ -5328,7 +5409,8 @@
     "name": "GOBLIN_VILLAGE_ICE_CAVE",
     "regions": [
       7777
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "GOBLIN_VILLAGE_COOKS_CHAMBER_BLEND_FIX",
@@ -5353,7 +5435,8 @@
     "areas": [
       "GOBLIN_VILLAGE_COOKS_CHAMBER_PRE_RFD",
       "GOBLIN_VILLAGE_COOKS_CHAMBER_POST_RFD"
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "GOBLIN_VILLAGE_INSTANCE",
