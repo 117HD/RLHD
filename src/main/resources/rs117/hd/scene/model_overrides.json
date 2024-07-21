@@ -2009,10 +2009,32 @@
     "uvType": "MODEL_XZ"
   },
   {
-    "description": "VARROCK_FOUNTAIN_STATUE",
-    "baseMaterial": "GRUNGE_1",
+    "description": "Varrock Fountain Walls and Statue",
+    "baseMaterial": "STONE_NORMALED",
     "objectIds": [
-      7144
+      7144,
+      7145,
+      7146,
+      7147,
+      7148
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75
+  },
+  {
+    "description": "Varrock Fountain Rocks with Water",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      7143
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "colors": "h == 34",
+        "baseMaterial": "WATER_FOUNTAIN_FLAT",
+        "uvType": "BOX"
+      }
     ]
   },
   {
