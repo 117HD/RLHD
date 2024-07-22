@@ -21299,7 +21299,7 @@
     ]
   },
   {
-    "description": "Karamja Volcano yellow lava & edges",
+    "description": "Karamja Volcano edges",
     "objectIds": [
       25059,
       25060,
@@ -21325,7 +21325,7 @@
     "colorOverrides": [
       {
         "colors": "h == 8",
-        "baseMaterial": "HD_MAGMA_1",
+        "baseMaterial": "TRANSPARENT",
         "uvType": "WORLD_XZ",
         "uvScale": 2
       }
@@ -21347,7 +21347,7 @@
     "colorOverrides": [
       {
         "colors": "h == 8",
-        "baseMaterial": "HD_MAGMA_1",
+        "baseMaterial": "TRANSPARENT",
         "uvType": "WORLD_XZ",
         "uvScale": 2
       }
