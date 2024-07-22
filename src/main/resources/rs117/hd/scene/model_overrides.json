@@ -1649,7 +1649,13 @@
       46412
     ],
     "flatNormals": true,
-    "castShadows": false
+    "castShadows": false,
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "STONE"
+      }
+    ]
   },
   {
     "description": "Objects with Short grass which shouldn't cast shadows and shouldn't inherit tile color",
