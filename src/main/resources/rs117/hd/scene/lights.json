@@ -20792,11 +20792,29 @@
     ]
   },
   {
-    "description": "EDGEVILLE_FURNACE",
+    "description": "Edgeville Furnace",
     "height": 40,
     "alignment": "CENTER",
     "radius": 700,
     "strength": 8.8,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 30,
+    "objectIds": [
+      16657,
+      16469
+    ]
+  },
+  {
+    "description": "Edgeville Furnace Hotspot",
+    "offset": [ 20, 30, 5 ],
+    "radius": 75,
+    "strength": 50,
     "color": [
       252,
       148,
