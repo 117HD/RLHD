@@ -3105,6 +3105,14 @@
     "blended": false
   },
   {
+    "name": "LOVAKENGJ_LAVA_OVERLAY",
+    "area": "LOVAKENGJ",
+    "overlayIds": [
+      152
+    ],
+    "groundMaterial": "LAVA_HD"
+  },
+  {
     "name": "LOVAKENGJ_GROUND_OVERLAY",
     "area": "LOVAKENGJ",
     "overlayIds": [

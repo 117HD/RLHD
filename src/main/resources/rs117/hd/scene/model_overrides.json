@@ -21336,5 +21336,60 @@
         "uvScale": 2
       }
     ]
+  },
+  {
+    "description": "Lovakengj Lava edges",
+    "objectIds": [
+      14417,
+      14418,
+      14419,
+      14420,
+      14421,
+      14422,
+      14423,
+      14425,
+      14426
+    ],
+    "baseMaterial": "DIRT_2",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 8",
+        "baseMaterial": "TRANSPARENT",
+        "uvType": "WORLD_XZ",
+        "uvScale": 2.25
+      }
+    ]
+  },
+  {
+    "description": "Lovakengj Lava tiles",
+    "objectIds": [
+      14427
+    ],
+    "baseMaterial": "TRANSPARENT",
+    "uvType": "WORLD_XZ",
+    "uvScale": 2.25
+  },
+  {
+    "description": "Lovakengj Lava tiles with Rock",
+    "objectIds": [
+      14429,
+      14430
+    ],
+    "baseMaterial": "ROCK_4",
+    "uvType": "BOX",
+    "uvOrientation": 128,
+    "colorOverrides": [
+      {
+        "colors": "h == 8",
+        "baseMaterial": "TRANSPARENT",
+        "uvType": "WORLD_XZ",
+        "uvScale": 2.25
+      },
+      {
+        "colors": "h == 5",
+        "baseMaterial": "TRANSPARENT"
+      }
+    ]
   }
 ]
