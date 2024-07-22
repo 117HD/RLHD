@@ -572,6 +572,9 @@ public enum Material {
 	WOOD_GRAIN_LIGHT(WOOD_GRAIN, p -> p
 		.setBrightness(1.5f)
 	),
+	WOOD_GRAIN_DARK(WOOD_GRAIN, p -> p
+		.setBrightness(0.75f)
+	),
 	WOOD_GRAIN_2_N,
 	WOOD_GRAIN_2(p -> p
 		.setNormalMap(WOOD_GRAIN_2_N)
