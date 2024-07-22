@@ -18473,7 +18473,13 @@
       51668,
       51672
     ],
-    "uvType": "BOX"
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": [ "h == 16" ],
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
   },
   {
     "description": "Hunter Guild Big Tree",
@@ -18489,17 +18495,12 @@
       51627,
       51628,
       51629,
-      51630,
       51631,
       51632,
-      51632,
       51633,
-      51634,
       51635,
-      51636,
       51637,
       51638,
-      51641,
       51646,
       51646,
       51647,
@@ -18515,6 +18516,57 @@
     ],
     "uvType": "BOX",
     "uvScale": 1.2
+  },
+  {
+    "description": "Hunter Guild Big Tree with Leaves",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      51632,
+      51634,
+      51636
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.2,
+    "colorOverrides": [
+      {
+        "colors": [ "h == 16" ],
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
+  },
+  {
+    "description": "Hunter Guild Big Tree with Banners",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      51630
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.2,
+    "colorOverrides": [
+      {
+        "colors": [ "h == 0", "h == 6", "h == 8", "h == 14" ],
+        "baseMaterial": "FINE_CARPET",
+        "uvType": "WORLD_XY",
+        "uvScale": 0.66
+      }
+    ]
+  },
+  {
+    "description": "Hunter Guild Big Tree with Carving",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      51641
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.2,
+    "colorOverrides": [
+      {
+        "colors": [ 5915 ],
+        "baseMaterial": "WOOD_GRAIN_DARK",
+        "uvType": "WORLD_XY",
+        "uvScale": 1.1
+      }
+    ]
   },
   {
     "description": "Hunter Guild Big Tree Rope",
@@ -18616,13 +18668,20 @@
     "uvScale": 0.4
   },
   {
-    "description": "Varlamore, Well, MODEL_YZ is used with intent",
-    "baseMaterial": "GRUNGE_2",
+    "description": "Varlamore - Well",
+    "baseMaterial": "STONE",
     "objectIds": [
       46805
     ],
-    "uvType": "MODEL_YZ",
-    "uvScale": 0.4
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "colors": [ "h == 6" ],
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX"
+      }
+    ]
   },
   {
     "description": "Varlamore, 'Take-log' Roots in Hunter Guild Caverns",
@@ -19441,7 +19500,8 @@
     "baseMaterial": "GRUNGE_2",
     "objectIds": [
       51826,
-      51827
+      51827,
+      51828
     ],
     "uvType": "MODEL_XZ",
     "uvScale": 0.2
