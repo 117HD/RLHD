@@ -1624,6 +1624,44 @@
     "castShadows": false
   },
   {
+    "description": "Farming Patch Grass without Dirt",
+    "baseMaterial": "GRAY_50",
+    "objectIds": [
+      7841,
+      7842,
+      7843,
+      8340,
+      8341,
+      8342,
+      8393,
+      8394,
+      8395
+    ],
+    "upwardsNormals": true,
+    "castShadows": false
+  },
+  {
+    "description": "Farming Patch Grass  with Dirt",
+    "baseMaterial": "GRAY_50",
+    "objectIds": [
+      8574,
+      8575,
+      8576,
+      8577,
+      8578,
+      8579
+    ],
+    "upwardsNormals": true,
+    "castShadows": false,
+    "colorOverrides": [
+      {
+        "colors": "h == 8",
+        "baseMaterial": "DIRT_2",
+        "uvType": "WORLD_XZ"
+      }
+    ]
+  },
+  {
     "description": "Kharidian Desert Grass",
     "baseMaterial": "GRAY_75",
     "objectIds": [ 3547, 3548, 3549 ],
