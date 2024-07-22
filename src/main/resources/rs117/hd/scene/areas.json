@@ -6259,6 +6259,11 @@
     "hideOtherAreas": true
   },
   {
+    "name": "EMIRS_ARENA_UPPER",
+    "regions": [ 13384 ],
+    "hideOtherAreas": true
+  },
+  {
     "name": "SNOWY_REGIONS",
     "areas": [
       "ASGARNIA_ICE_DUNGEON_SNOWY",
@@ -6328,7 +6333,8 @@
       "SHIP_SAILING",
       "VER_SINHAZA_CUTSCENE",
       "DEFENDER_OF_VARROCK_CASTLE_UNDER_ATTACK",
-      "CHURCH_OF_AYASTER"
+      "CHURCH_OF_AYASTER",
+      "EMIRS_ARENA_UPPER"
     ],
     "regions": [
       8288,
