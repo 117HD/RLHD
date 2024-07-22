@@ -9632,18 +9632,6 @@
     "uvType": "BOX"
   },
   {
-    "description": "Edgeville - Coffin",
-    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
-    "objectIds": [
-      398,
-      3577,
-      28860,
-      39547
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.5
-  },
-  {
     "description": "Wall Decoration - Rocks",
     "baseMaterial": "ROCK_1_LIGHT",
     "objectIds": [
@@ -14024,7 +14012,7 @@
     "uvScale": 0.65,
     "colorOverrides": [
       {
-        "colors": [ 43060, 43082, 43084, 43110, 43120, 43125 ],
+        "colors": [ 43060, 43082, 43084, 43110, 43120, 43125, 43099, 43123 ],
         "baseMaterial": "NONE",
         "uvType": "WORLD_XZ",
         "uvScale": 2
@@ -14684,11 +14672,115 @@
   },
   {
     "description": "Edgeville - Walls - Bank Front Windows - Tutorial Island Walls",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [
       1853,
       1854
     ],
-    "flatNormals": true
+    "uvType": "BOX",
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "colors": "h == 34",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Edgeville - Forge - Walls",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      23748,
+      23750,
+      23751,
+      23752,
+      23753
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Edgeville - Forge - Furnace",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      16469
+    ],
+    "uvType": "BOX",
+    "uvOrientation": -256
+  },
+  {
+    "description": "Edgeville - Forge - Misc Objects",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      16470,
+      16471,
+      16472,
+      16476,
+      16512
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Edgeville - Forge - Coal Piles",
+    "baseMaterial": "ROCK_5",
+    "objectIds": [
+      16474,
+      16475
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "colors": [ "h == 5", 24, 29, 38, 48, 53, 26, 35, 42, 49, 54, 22, 28, 36, 46, 50 ],
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Edgeville - Coffin",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "objectIds": [
+      398,
+      3577,
+      28860,
+      39547
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Edgeville - Streak Board",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [
+      37434
+    ]
+  },
+  {
+    "description": "Edgeville - Well",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      884
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ]
+  },
+  {
+    "description": "Edgeville - Bank Door Hinges and Handles",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      1514,
+      1515
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.4
   },
   {
     "description": "Tutorial Island - GIM Armour Crates",
