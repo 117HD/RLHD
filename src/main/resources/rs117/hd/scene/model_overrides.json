@@ -11272,11 +11272,10 @@
   },
   {
     "description": "Jungle Tree Small",
-    "baseMaterial": "PLANT_GRUNGE_2",
+    "baseMaterial": "LEAF_VEINS",
     "objectIds": [
       2887,
       4818,
-      6578,
       51762,
       51763,
       51764,
@@ -11284,6 +11283,24 @@
       51853,
       53188,
       53189
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.25,
+    "uvOrientation": 256,
+    "colorOverrides": [
+      {
+        "colors": [ "h == 5", "h == 4" ],
+        "baseMaterial": "BARK",
+        "uvScale": 0.75,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Jungle Tree Small - Leafy",
+    "baseMaterial": "PLANT_GRUNGE_2",
+    "objectIds": [
+      6578
     ],
     "uvType": "BOX",
     "uvScale": 0.4,

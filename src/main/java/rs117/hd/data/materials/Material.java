@@ -568,6 +568,7 @@ public enum Material {
 		.setSpecular(0.3f, 30)
 	),
 	LIGHT_BARK_STONEPINE(BARK_STONEPINE, p -> p.setBrightness(1.75f)),
+	LEAF_VEINS,
 	WOOD_GRAIN,
 	WOOD_GRAIN_LIGHT(WOOD_GRAIN, p -> p
 		.setBrightness(1.5f)
