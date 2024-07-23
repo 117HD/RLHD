@@ -1768,8 +1768,6 @@
       7129,
       7518,
       7519,
-      7520,
-      7521,
       17446,
       17447,
       17448,
@@ -1785,7 +1783,27 @@
     "colorOverrides": [
       {
         "colors": "h == 7",
-        "baseMaterial": "STONE"
+        "baseMaterial": "ROCK_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Short grass with rock objects Morytania Farming Patches",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [
+      7520,
+      7521
+    ],
+    "flatNormals": true,
+    "castShadows": false,
+    "colorOverrides": [
+      {
+        "colors": "s == 5 || s == 7",
+        "baseMaterial": "ROCK_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.6
       }
     ]
   },
