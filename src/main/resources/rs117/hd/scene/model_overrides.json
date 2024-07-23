@@ -21401,5 +21401,21 @@
         "baseMaterial": "TRANSPARENT"
       }
     ]
+  },
+  {
+    "description": "Lovakengj Lava vents",
+    "objectIds": [
+      14437,
+      14438
+    ],
+    "baseMaterial": "DIRT_2",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 8",
+        "baseMaterial": "HD_LAVA_2",
+        "uvType": "WORLD_XZ"
+      }
+    ]
   }
 ]
