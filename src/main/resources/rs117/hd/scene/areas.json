@@ -3745,6 +3745,12 @@
     ]
   },
   {
+    "name": "MOUNT_KARUULM_PLANE_0",
+    "aabbs": [
+      [ 1245, 3765, 1358, 3860, 0 ]
+    ]
+  },
+  {
     "name": "LIZARDMAN_TEMPLE",
     "regions": [ 5277 ],
     "hideOtherAreas": true

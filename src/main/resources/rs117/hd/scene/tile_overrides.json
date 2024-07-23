@@ -3319,6 +3319,15 @@
     "blended": false
   },
   {
+    "name": "MOUNT_KARUULM",
+    "area": "MOUNT_KARUULM_PLANE_0",
+    "overlayIds": [
+      57
+    ],
+    "groundMaterial": "HD_LAVA_BLUE",
+    "blended": false
+  },
+  {
     "name": "MOUNT_QUIDAMORTEM_SYMBOL",
     "area": "MOUNT_QUIDAMORTEM",
     "overlayIds": [

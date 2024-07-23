@@ -21378,7 +21378,8 @@
     ],
     "baseMaterial": "TRANSPARENT",
     "uvType": "WORLD_XZ",
-    "uvScale": 2.25
+    "uvScale": 2.25,
+    "hide": true
   },
   {
     "description": "Lovakengj Lava tiles with Rock",
@@ -21401,23 +21402,22 @@
         "baseMaterial": "TRANSPARENT"
       }
     ]
-  },
-  {
-    "description": "Lovakengj Lava vents",
-    "objectIds": [
-      14437,
-      14438
-    ],
-    "baseMaterial": "DIRT_2",
-    "uvType": "BOX",
-    "colorOverrides": [
-      {
-        "colors": "h == 8",
-        "baseMaterial": "HD_LAVA_2",
-        "uvType": "WORLD_XZ"
-      }
-    ]
-  },
+  },{
+  "description": "Lovakengj Lava vents",
+  "objectIds": [
+    14437,
+    14438
+  ],
+  "baseMaterial": "DIRT_2",
+  "uvType": "BOX",
+  "colorOverrides": [
+    {
+      "colors": "h == 8",
+      "baseMaterial": "HD_LAVA_2",
+      "uvType": "WORLD_XZ"
+    }
+  ]
+},
   {
     "description": "Lovakengj Lava furnace",
     "objectIds": [
@@ -21430,6 +21430,56 @@
         "colors": ["h == 8 && l > 22", 9098, 9100, 9101, 9102, 9103, 9105, 9106, 9107, 9109],
         "baseMaterial": "HD_LAVA_2",
         "uvType": "WORLD_XZ"
+      }
+    ]
+  },
+  {
+    "description": "Blue lava edges",
+    "objectIds": [
+      34321,
+      34322,
+      34323,
+      34324,
+      34326,
+      34327,
+      34328,
+      34329,
+      34330,
+      34331
+    ],
+    "baseMaterial": "ROCK_2",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h > 32",
+        "baseMaterial": "TRANSPARENT",
+        "uvType": "WORLD_XZ",
+        "uvScale": 2.25
+      }
+    ]
+  },
+  {
+    "description": "Blue lava",
+    "objectIds": [
+      34320
+    ],
+    "baseMaterial": "TRANSPARENT",
+    "uvType": "WORLD_XZ",
+    "uvScale": 2.25,
+    "hide": true
+  },
+  {
+    "description": "Blue lava bubbles and flames",
+    "objectIds": [
+      34332,
+      34333
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 36",
+        "baseMaterial": "TRANSPARENT",
+        "uvType": "WORLD_XZ",
+        "uvScale": 2.25
       }
     ]
   }
