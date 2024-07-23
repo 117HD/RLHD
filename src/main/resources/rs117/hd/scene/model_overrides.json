@@ -21417,5 +21417,20 @@
         "uvType": "WORLD_XZ"
       }
     ]
+  },
+  {
+    "description": "Lovakengj Lava furnace",
+    "objectIds": [
+      28562
+    ],
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 8",
+        "baseMaterial": "HD_LAVA_2",
+        "uvType": "WORLD_XZ"
+      }
+    ]
   }
 ]
