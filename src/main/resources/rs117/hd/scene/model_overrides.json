@@ -1762,16 +1762,24 @@
     "areas": [ "KHARID_DESERT_REGION" ]
   },
   {
+    "description": "Short grass with rock objects",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [
+      17446,
+      17447,
+      17448,
+      17449
+    ],
+    "flatNormals": true,
+    "castShadows": false
+  },
+  {
     "description": "Short grass with rock objects usually found around Farming Patches",
     "baseMaterial": "GRAY_75",
     "objectIds": [
       7129,
       7518,
       7519,
-      17446,
-      17447,
-      17448,
-      17449,
       34494,
       34495,
       34496,
