@@ -21427,7 +21427,7 @@
     "uvType": "BOX",
     "colorOverrides": [
       {
-        "colors": "h == 8",
+        "colors": ["h == 8 && l > 22", 9098, 9100, 9101, 9102, 9103, 9105, 9106, 9107, 9109],
         "baseMaterial": "HD_LAVA_2",
         "uvType": "WORLD_XZ"
       }
