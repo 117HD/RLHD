@@ -1727,7 +1727,7 @@
     "upwardsNormals": true
   },
   {
-    "description": "Farming Patch Grass  with Dirt",
+    "description": "Farming Patch Grass with Dirt",
     "baseMaterial": "GRAY_65",
     "objectIds": [
       8208,
@@ -1745,6 +1745,26 @@
       15063,
       15064,
       15065
+    ],
+    "upwardsNormals": true,
+    "colorOverrides": [
+      {
+        "colors": "h == 8",
+        "baseMaterial": "DIRT_2",
+        "uvType": "WORLD_XZ"
+      }
+    ]
+  },
+  {
+    "description": "Farming Patch Grass with Dirt and Scarecrow",
+    "baseMaterial": "GRAY_65",
+    "objectIds": [
+      7916,
+      7917,
+      7918,
+      9338,
+      9339,
+      9340
     ],
     "upwardsNormals": true,
     "colorOverrides": [
