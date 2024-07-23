@@ -1762,7 +1762,7 @@
     "areas": [ "KHARID_DESERT_REGION" ]
   },
   {
-    "description": "Short grass which shouldn't cast shadows and shouldn't inherit tile color",
+    "description": "Short grass with rock objects usually found around Farming Patches",
     "baseMaterial": "GRAY_75",
     "objectIds": [
       7129,
