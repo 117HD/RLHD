@@ -550,6 +550,22 @@ public enum Material {
 		.setUnlit(true)
 		.setOverrideBaseColor(true)
 		.setFlowMap(LAVA_FLOW_MAP, 0.04f, 36, 12)),
+	HD_LAVA_1_BLUE(p -> p
+		.setUnlit(true)
+		.setOverrideBaseColor(true)
+		.setFlowMap(LAVA_FLOW_MAP, 0.04f, 36, 12)),
+	HD_LAVA_2_BLUE(p -> p
+		.setUnlit(true)
+		.setOverrideBaseColor(true)
+		.setFlowMap(LAVA_FLOW_MAP, 0.04f, 36, 12)),
+	HD_MAGMA_1_BLUE(p -> p
+		.setUnlit(true)
+		.setOverrideBaseColor(true)
+		.setFlowMap(LAVA_FLOW_MAP, 0.04f, 36, 12)),
+	HD_MAGMA_2_BLUE(p -> p
+		.setUnlit(true)
+		.setOverrideBaseColor(true)
+		.setFlowMap(LAVA_FLOW_MAP, 0.04f, 36, 12)),
 	BARK_N,
 	BARK(p -> p
 		.setNormalMap(BARK_N)

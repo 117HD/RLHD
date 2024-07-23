@@ -295,6 +295,18 @@
     ]
   },
   {
+    "name": "HD_LAVA_BLUE",
+    "materials": [
+      "HD_LAVA_1_BLUE",
+      "HD_LAVA_2_BLUE",
+      "HD_LAVA_1_BLUE",
+      "HD_LAVA_1_BLUE",
+      "HD_LAVA_2_BLUE",
+      "HD_MAGMA_1_BLUE",
+      "HD_MAGMA_2_BLUE"
+    ]
+  },
+  {
     "name": "STONE_PATTERN",
     "materials": [
       "STONE_PATTERN"
