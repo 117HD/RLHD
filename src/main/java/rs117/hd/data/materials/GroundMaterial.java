@@ -5,7 +5,6 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
-import java.util.Random;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import rs117.hd.scene.GroundMaterialManager;
@@ -31,19 +30,16 @@ public class GroundMaterial {
 	}
 
 	/**
-	 * Get a random material based on given coordinates.
-	 *
-	 * @param plane  The plane number.
-	 * @param worldX The X coordinate in world space.
-	 * @param worldY The Y coordinate in world space.
-	 * @return A randomly selected Material.
+	 * Get a random material based on the given coordinates.
 	 */
-	public Material getRandomMaterial(int plane, int worldX, int worldY) {
-		// Generate a seed from the tile coordinates for consistent 'random' results between scene loads.
-		long seed = (long) (plane + 1) * 10 * (worldX % 100) * 20 * (worldY % 100) * 30;
-		Random randomTex = new Random(seed);
-		int randomIndex = randomTex.nextInt(materials.length);
-		return materials[randomIndex];
+	public Material getRandomMaterial(int... worldPos) {
+		long hash = 0;
+		for (int coord : worldPos)
+			hash = hash * 31 + coord;
+		long seed = (hash ^ 0x5DEECE66DL) & ((1L << 48) - 1);
+		seed = (seed * 0x5DEECE66DL + 0xBL) & ((1L << 48) - 1);
+		int r = (int) (seed >>> (48 - 31));
+		return materials[r % materials.length];
 	}
 
 	@Override

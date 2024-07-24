@@ -59,6 +59,7 @@ public class HDUtils {
 	public static final float MAX_FLOAT_WITH_128TH_PRECISION = 1 << 16;
 
 	public static final int MAX_SNOW_LIGHTNESS = 70;
+	public static final int HIDDEN_HSL = 12345678;
 
 	// directional vectors approximately opposite of the directional light used by the client
 	private static final float[] LIGHT_DIR_TILE = new float[] { 0.70710678f, 0.70710678f, 0f };
@@ -425,18 +426,19 @@ public class HDUtils {
 		);
 	}
 
-	public static void getSouthWesternMostTileColor(int[] out, Tile tile) {
+	public static int getSouthWesternMostTileColor(int[] out, Tile tile) {
 		var paint = tile.getSceneTilePaint();
 		var model = tile.getSceneTileModel();
+		int hsl = 0;
 		if (paint != null) {
-			ColorUtils.unpackRawHsl(out, paint.getSwColor());
+			hsl = paint.getSwColor();
+			ColorUtils.unpackRawHsl(out, hsl);
 		} else if (model != null) {
 			int faceCount = tile.getSceneTileModel().getFaceX().length;
 			final int[] faceColorsA = model.getTriangleColorA();
 			final int[] faceColorsB = model.getTriangleColorB();
 			final int[] faceColorsC = model.getTriangleColorC();
 
-			int hsl = 0;
 			outer:
 			for (int face = 0; face < faceCount; face++) {
 				if (isOverlayFace(tile, face))
@@ -454,5 +456,6 @@ public class HDUtils {
 
 			ColorUtils.unpackRawHsl(out, hsl);
 		}
+		return hsl;
 	}
 }

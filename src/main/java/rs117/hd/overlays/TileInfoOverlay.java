@@ -63,6 +63,7 @@ import static net.runelite.api.Perspective.*;
 import static rs117.hd.HdPlugin.ORTHOGRAPHIC_ZOOM;
 import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
 import static rs117.hd.scene.tile_overrides.TileOverride.OVERLAY_FLAG;
+import static rs117.hd.utils.HDUtils.HIDDEN_HSL;
 import static rs117.hd.utils.HDUtils.clamp;
 import static rs117.hd.utils.HDUtils.getSceneBaseExtended;
 
@@ -238,7 +239,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 
 									if (secondTry == 0) {
 										var paint = tile.getSceneTilePaint();
-										if ((paint == null || paint.getNeColor() == 12345678) && tile.getSceneTileModel() == null)
+										if ((paint == null || paint.getNeColor() == HIDDEN_HSL) && tile.getSceneTileModel() == null)
 											continue;
 									}
 
@@ -468,7 +469,11 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 				overlay = replacement;
 			}
 			lines.add(String.format("Overlay: ID %d -> %s", overlayId, replacementPath));
-			lines.add("GroundMaterial: " + overlay.groundMaterial);
+			lines.add(String.format(
+				"GroundMaterial: %s -> %s",
+				overlay.groundMaterial,
+				overlay.groundMaterial.getRandomMaterial(worldPos)
+			));
 
 			int underlayId = scene.getUnderlayIds()[tileZ][tileExX][tileExY];
 			var underlay = tileOverrideManager.getOverrideBeforeReplacements(worldPos, underlayId);
@@ -481,16 +486,18 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 				underlay = replacement;
 			}
 			lines.add(String.format("Underlay: ID %d -> %s", underlayId, replacementPath));
-			lines.add("GroundMaterial: " + underlay.groundMaterial);
+			lines.add(String.format(
+				"GroundMaterial: %s -> %s",
+				underlay.groundMaterial,
+				underlay.groundMaterial.getRandomMaterial(worldPos)
+			));
 
 			if (tilePaint != null) {
 				polyColor = client.isKeyPressed(KeyCode.KC_ALT) ? Color.YELLOW : Color.CYAN;
 				lines.add("Tile type: Paint");
 				Material material = Material.fromVanillaTexture(tilePaint.getTexture());
 				lines.add(String.format("Material: %s (%d)", material.name(), tilePaint.getTexture()));
-				int[] hsl = new int[3];
-				HDUtils.getSouthWesternMostTileColor(hsl, tile);
-				lines.add(String.format("HSL: %s", Arrays.toString(hsl)));
+				lines.add(String.format("HSL: %s", hslString(tile)));
 
 				var override = tileOverrideManager.getOverride(scene, tile, worldPos, OVERLAY_FLAG | overlayId, underlayId);
 				lines.add("WaterType: " + proceduralGenerator.seasonalWaterType(override, tilePaint.getTexture()));
@@ -535,9 +542,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 					}
 				}
 
-				int[] hsl = new int[3];
-				HDUtils.getSouthWesternMostTileColor(hsl, tile);
-				lines.add(String.format("HSL: %s", Arrays.toString(hsl)));
+				lines.add(String.format("HSL: %s", hslString(tile)));
 			}
 		}
 
@@ -706,7 +711,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			{
 				leftWidth = Math.max(leftWidth, fm.stringWidth(Text.removeTags(pair.getLeft())));
 				var rfm = fm;
-				if (pair.getRight().startsWith("\t"))
+				if (pair.getRight().contains("<tt>"))
 					rfm = g.getFontMetrics(MONOSPACE_FONT);
 				rightWidth = Math.max(rightWidth, rfm.stringWidth(Text.removeTags(pair.getRight())));
 			}
@@ -753,7 +758,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			else
 			{
 				boolean indented = pair.getRight().startsWith("\t");
-				if (indented) {
+				if (pair.getRight().contains("<tt>")) {
 					g.setFont(MONOSPACE_FONT);
 					dropShadow = false;
 				}
@@ -812,7 +817,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 
 		StringBuilder str = new StringBuilder();
 		for (int i = 0; i < rows; i++) {
-			str.append("\n\t");
+			str.append("\n\t<tt>");
 			for (int j = 0; j < columns; j++) {
 				int idx = i * columns + j;
 				if (idx < colors.length)
@@ -911,10 +916,12 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 		return null;
 	}
 
-	private static String hslString(int color) {
-		if (color == 12345678)
+	private static String hslString(Tile tile) {
+		int[] hsl = new int[3];
+		int rawHsl = HDUtils.getSouthWesternMostTileColor(hsl, tile);
+		if (rawHsl == HIDDEN_HSL)
 			return "HIDDEN";
-		return color + " (" + (color >> 10 & 0x3F) + ", " + (color >> 7 & 7) + ", " + (color & 0x7F) + ")";
+		return rawHsl + " " + Arrays.toString(hsl);
 	}
 
 	private void drawAllIds(Graphics2D g, SceneContext ctx) {
