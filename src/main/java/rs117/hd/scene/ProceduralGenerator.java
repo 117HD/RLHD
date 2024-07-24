@@ -301,7 +301,7 @@ public class ProceduralGenerator {
 			Material material = Material.DIRT_1;
 			var override = vertexOverrides[vertex];
 			if (override != TileOverride.NONE) {
-				material = override.groundMaterial.getRandomMaterial(worldPos[2], worldPos[0], worldPos[1]);
+				material = override.groundMaterial.getRandomMaterial(worldPos);
 				isOverlay = vertexIsOverlay[vertex] != override.blendedAsOpposite;
 				color = override.modifyColor(color);
 			}
@@ -938,6 +938,9 @@ public class ProceduralGenerator {
 		return new int[][] { vertexA, vertexB, vertexC };
 	}
 
+	/**
+	 * Returns vertex positions in local coordinates, between 0 and 128.
+	 */
 	public static int[][] faceLocalVertices(Tile tile, int face) {
 		if (tile.getSceneTileModel() == null)
 			return new int[0][0];

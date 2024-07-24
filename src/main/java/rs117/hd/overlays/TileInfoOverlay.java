@@ -468,7 +468,11 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 				overlay = replacement;
 			}
 			lines.add(String.format("Overlay: ID %d -> %s", overlayId, replacementPath));
-			lines.add("GroundMaterial: " + overlay.groundMaterial);
+			lines.add(String.format(
+				"GroundMaterial: %s -> %s",
+				overlay.groundMaterial,
+				overlay.groundMaterial.getRandomMaterial(worldPos)
+			));
 
 			int underlayId = scene.getUnderlayIds()[tileZ][tileExX][tileExY];
 			var underlay = tileOverrideManager.getOverrideBeforeReplacements(worldPos, underlayId);
@@ -481,7 +485,11 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 				underlay = replacement;
 			}
 			lines.add(String.format("Underlay: ID %d -> %s", underlayId, replacementPath));
-			lines.add("GroundMaterial: " + underlay.groundMaterial);
+			lines.add(String.format(
+				"GroundMaterial: %s -> %s",
+				underlay.groundMaterial,
+				underlay.groundMaterial.getRandomMaterial(worldPos)
+			));
 
 			if (tilePaint != null) {
 				polyColor = client.isKeyPressed(KeyCode.KC_ALT) ? Color.YELLOW : Color.CYAN;

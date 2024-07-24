@@ -517,15 +517,16 @@ public class SceneUploader {
 
 		int[] bufferLengths;
 
-		var override = tileOverrideManager.getOverride(sceneContext.scene, tile);
+		int[] worldPos = sceneContext.localToWorld(tile.getLocalLocation(), tile.getPlane());
+		var override = tileOverrideManager.getOverride(sceneContext.scene, tile, worldPos);
 		WaterType waterType = proceduralGenerator.seasonalWaterType(override, paint.getTexture());
 
-		bufferLengths = uploadHDTilePaintUnderwater(sceneContext, tile, waterType);
+		bufferLengths = uploadHDTilePaintUnderwater(sceneContext, tile, worldPos, waterType);
 		bufferLength += bufferLengths[0];
 		uvBufferLength += bufferLengths[1];
 		underwaterTerrain += bufferLengths[2];
 
-		bufferLengths = uploadHDTilePaintSurface(sceneContext, tile, paint, override, waterType);
+		bufferLengths = uploadHDTilePaintSurface(sceneContext, tile, worldPos, waterType, paint, override);
 		bufferLength += bufferLengths[0];
 		uvBufferLength += bufferLengths[1];
 		underwaterTerrain += bufferLengths[2];
@@ -536,9 +537,10 @@ public class SceneUploader {
 	private int[] uploadHDTilePaintSurface(
 		SceneContext sceneContext,
 		Tile tile,
+		int[] worldPos,
+		WaterType waterType,
 		SceneTilePaint paint,
-		TileOverride override,
-		WaterType waterType
+		TileOverride override
 	) {
 		final Scene scene = sceneContext.scene;
 		final Point tilePoint = tile.getSceneLocation();
@@ -656,10 +658,10 @@ public class SceneUploader {
 						nwMaterial = sceneContext.vertexTerrainTexture.getOrDefault(nwVertexKey, nwMaterial);
 					}
 				} else if (plugin.configGroundTextures && groundMaterial != null) {
-					swMaterial = groundMaterial.getRandomMaterial(tileZ, baseX + tileX, baseY + tileY);
-					seMaterial = groundMaterial.getRandomMaterial(tileZ, baseX + tileX + 1, baseY + tileY);
-					nwMaterial = groundMaterial.getRandomMaterial(tileZ, baseX + tileX, baseY + tileY + 1);
-					neMaterial = groundMaterial.getRandomMaterial(tileZ, baseX + tileX + 1, baseY + tileY + 1);
+					swMaterial = groundMaterial.getRandomMaterial(worldPos[0], worldPos[1], worldPos[2]);
+					seMaterial = groundMaterial.getRandomMaterial(worldPos[0] + 1, worldPos[1], worldPos[2]);
+					nwMaterial = groundMaterial.getRandomMaterial(worldPos[0], worldPos[1] + 1, worldPos[2]);
+					neMaterial = groundMaterial.getRandomMaterial(worldPos[0] + 1, worldPos[1] + 1, worldPos[2]);
 				}
 			}
 			else
@@ -748,7 +750,7 @@ public class SceneUploader {
 		return new int[]{bufferLength, uvBufferLength, underwaterTerrain};
 	}
 
-	private int[] uploadHDTilePaintUnderwater(SceneContext sceneContext, Tile tile, WaterType waterType) {
+	private int[] uploadHDTilePaintUnderwater(SceneContext sceneContext, Tile tile, int[] worldPos, WaterType waterType) {
 		final Scene scene = sceneContext.scene;
 		final Point tilePoint = tile.getSceneLocation();
 		final int tileX = tilePoint.getX();
@@ -818,11 +820,10 @@ public class SceneUploader {
 			if (plugin.configGroundTextures)
 			{
 				GroundMaterial groundMaterial = GroundMaterial.UNDERWATER_GENERIC;
-
-				swMaterial = groundMaterial.getRandomMaterial(tileZ, baseX + tileX, baseY + tileY);
-				seMaterial = groundMaterial.getRandomMaterial(tileZ, baseX + tileX + 1, baseY + tileY);
-				nwMaterial = groundMaterial.getRandomMaterial(tileZ, baseX + tileX, baseY + tileY + 1);
-				neMaterial = groundMaterial.getRandomMaterial(tileZ, baseX + tileX + 1, baseY + tileY + 1);
+				swMaterial = groundMaterial.getRandomMaterial(worldPos[0], worldPos[1], worldPos[2]);
+				seMaterial = groundMaterial.getRandomMaterial(worldPos[0] + 1, worldPos[1], worldPos[2]);
+				nwMaterial = groundMaterial.getRandomMaterial(worldPos[0], worldPos[1] + 1, worldPos[2]);
+				neMaterial = groundMaterial.getRandomMaterial(worldPos[0] + 1, worldPos[1] + 1, worldPos[2]);
 			}
 
 			int swTerrainData = packTerrainData(true, Math.max(1, swDepth), waterType, tileZ);
@@ -1015,19 +1016,19 @@ public class SceneUploader {
 						}
 					} else if (plugin.configGroundTextures && groundMaterial != null) {
 						materialA = groundMaterial.getRandomMaterial(
-							tileZ,
-							baseX + tileX + (int) Math.floor((float) localVertices[0][0] / LOCAL_TILE_SIZE),
-							baseY + tileY + (int) Math.floor((float) localVertices[0][1] / LOCAL_TILE_SIZE)
+							worldPos[0] + localVertices[0][0] / LOCAL_TILE_SIZE,
+							worldPos[1] + localVertices[0][1] / LOCAL_TILE_SIZE,
+							worldPos[2]
 						);
 						materialB = groundMaterial.getRandomMaterial(
-							tileZ,
-							baseX + tileX + (int) Math.floor((float) localVertices[1][0] / LOCAL_TILE_SIZE),
-							baseY + tileY + (int) Math.floor((float) localVertices[1][1] / LOCAL_TILE_SIZE)
+							worldPos[0] + localVertices[1][0] / LOCAL_TILE_SIZE,
+							worldPos[1] + localVertices[1][1] / LOCAL_TILE_SIZE,
+							worldPos[2]
 						);
 						materialC = groundMaterial.getRandomMaterial(
-							tileZ,
-							baseX + tileX + (int) Math.floor((float) localVertices[2][0] / LOCAL_TILE_SIZE),
-							baseY + tileY + (int) Math.floor((float) localVertices[2][1] / LOCAL_TILE_SIZE)
+							worldPos[0] + localVertices[2][0] / LOCAL_TILE_SIZE,
+							worldPos[1] + localVertices[2][1] / LOCAL_TILE_SIZE,
+							worldPos[2]
 						);
 					}
 				} else {
@@ -1156,18 +1157,21 @@ public class SceneUploader {
 
 				if (plugin.configGroundTextures) {
 					GroundMaterial groundMaterial = GroundMaterial.UNDERWATER_GENERIC;
-
-					int tileVertexX = Math.round((float) localVertices[0][0] / (float) LOCAL_TILE_SIZE) + tileX + baseX;
-					int tileVertexY = Math.round((float) localVertices[0][1] / (float) LOCAL_TILE_SIZE) + tileY + baseY;
-					materialA = groundMaterial.getRandomMaterial(tileZ, tileVertexX, tileVertexY);
-
-					tileVertexX = Math.round((float) localVertices[1][0] / (float) LOCAL_TILE_SIZE) + tileX + baseX;
-					tileVertexY = Math.round((float) localVertices[1][1] / (float) LOCAL_TILE_SIZE) + tileY + baseY;
-					materialB = groundMaterial.getRandomMaterial(tileZ, tileVertexX, tileVertexY);
-
-					tileVertexX = Math.round((float) localVertices[2][0] / (float) LOCAL_TILE_SIZE) + tileX + baseX;
-					tileVertexY = Math.round((float) localVertices[2][1] / (float) LOCAL_TILE_SIZE) + tileY + baseY;
-					materialC = groundMaterial.getRandomMaterial(tileZ, tileVertexX, tileVertexY);
+					materialA = groundMaterial.getRandomMaterial(
+						worldPos[0] + localVertices[0][0] / LOCAL_TILE_SIZE,
+						worldPos[1] + localVertices[0][1] / LOCAL_TILE_SIZE,
+						worldPos[2]
+					);
+					materialB = groundMaterial.getRandomMaterial(
+						worldPos[0] + localVertices[1][0] / LOCAL_TILE_SIZE,
+						worldPos[1] + localVertices[1][1] / LOCAL_TILE_SIZE,
+						worldPos[2]
+					);
+					materialC = groundMaterial.getRandomMaterial(
+						worldPos[0] + localVertices[2][0] / LOCAL_TILE_SIZE,
+						worldPos[1] + localVertices[2][1] / LOCAL_TILE_SIZE,
+						worldPos[2]
+					);
 				}
 
 				float[] normalsA = sceneContext.vertexTerrainNormals.getOrDefault(vertexKeyA, UP_NORMAL);
