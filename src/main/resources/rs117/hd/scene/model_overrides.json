@@ -21487,5 +21487,31 @@
       33978,
       41426
     ]
+  },
+  {
+    "description": "Falador Flower patch with rocks",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 69,
+    "colorOverrides": [
+      {
+        "colors": "h == 8 && s == 4",
+        "uvType": "WORLD_XZ",
+        "baseMaterial": "DIRT_1"
+      }
+    ],
+    "objectIds": [
+      24046,
+      24047
+    ]
+  },
+  {
+    "description": "Falador Flower patch",
+    "baseMaterial": "DIRT_1",
+    "uvType": "MODEL_XZ",
+    "objectIds": [
+      24048
+    ]
   }
 ]
