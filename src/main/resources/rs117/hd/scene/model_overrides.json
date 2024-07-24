@@ -12885,10 +12885,17 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       2090,
-      26711
+      26711,
+      42834
     ],
     "uvType": "BOX",
-    "uvOrientation": 512
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 8 && s == 7 ",
+        "baseMaterial": "METALLIC_NONE_GLOSS"
+      }
+    ]
   },
   {
     "description": "Rough Wooden Plank Stairs ",
@@ -20834,6 +20841,20 @@
     "colorOverrides": [
       {
         "colors": [ 43025, 43068, 43116 ],
+        "baseMaterial": "NONE",
+        "uvType": "WORLD_XY"
+      }
+    ]
+  },
+  {
+    "description": "Bankbooth with Glass Window - The Node",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 42837 ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "colors": [ 21525, 21567, 21630 ],
         "baseMaterial": "NONE",
         "uvType": "WORLD_XY"
       }
