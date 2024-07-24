@@ -19106,13 +19106,20 @@
     "retainVanillaUvs": false
   },
   {
-    "description": "Wooden shelves - Empty",
+    "description": "Wooden shelves - Empty or with pottery",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 1023, 7506, 8692, 12980 ],
+    "objectIds": [ 1023, 7506, 7509, 8692, 12980 ],
     "uvType": "BOX",
     "uvScale": 0.8,
     "uvOrientationX": 512,
-    "retainVanillaUvs": false
+    "retainVanillaUvs": false,
+    "colorOverrides": [
+      {
+        "description": "Pottery",
+        "colors": "h > 1 && h <6 && s > 4",
+        "baseMaterial": "GRAY_75"
+      }
+    ]
   },
   {
     "description": "Wooden hat stand",
@@ -21309,7 +21316,10 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "objectIds": [
+      1821,
+      1823,
       1826,
+      1828,
       8687
     ],
     "colorOverrides": [
@@ -21320,7 +21330,7 @@
       },
       {
         "description": "Stone sile",
-        "colors": "s == 0 && l < 50",
+        "colors": "s == 0 && l < 50 && l > 30",
         "baseMaterial": "STONE"
       },
       {
@@ -21332,6 +21342,49 @@
         "description": "Plant",
         "colors": "h > 12",
         "baseMaterial": "GRAY_75"
+      }
+    ]
+  },
+  {
+    "description": "Window with wooden slots or white with curtains",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "objectIds": [
+      1824,
+      1832,
+      1835,
+      1838
+    ],
+    "colorOverrides": [
+      {
+        "description": "Glass",
+        "colors": "s == 0 && l > 45",
+        "baseMaterial": "GRAY_75"
+      },
+      {
+        "description": "Golden rod",
+        "colors": "h == 8 && s > 6 && l > 30",
+        "baseMaterial": "GRAY_65"
+      },
+      {
+        "description": "Curtains - Black",
+        "colors": "l < 20",
+        "baseMaterial": "GRAY_75"
+      },
+      {
+        "description": "Curtains - Green",
+        "colors": "h > 11",
+        "baseMaterial": "GRAY_75"
+      },
+      {
+        "description": "Curtains - Taupe",
+        "colors": "h == 6 && s < 3 ",
+        "baseMaterial": "GRAY_75"
+      },
+      {
+        "description": "Stone sile",
+        "colors": "s == 0 && l < 45 && l > 30",
+        "baseMaterial": "STONE"
       }
     ]
   }
