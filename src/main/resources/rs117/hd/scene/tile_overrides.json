@@ -3110,7 +3110,10 @@
     "overlayIds": [
       152
     ],
-    "groundMaterial": "LAVA_HD"
+    "groundMaterial": "HD_LAVA",
+    "forced": true,
+    "blended": false,
+    "heightOffset": -70
   },
   {
     "name": "LOVAKENGJ_GROUND_OVERLAY",
@@ -3319,13 +3322,32 @@
     "blended": false
   },
   {
-    "name": "MOUNT_KARUULM",
+    "name": "MOUNT_KARUULM_LAVA",
     "area": "MOUNT_KARUULM_PLANE_0",
     "overlayIds": [
       57
     ],
-    "groundMaterial": "HD_LAVA_BLUE",
-    "blended": false
+    "groundMaterial": "LAVA_NOISE",
+    "forced": true,
+    "blended": false,
+    "heightOffset": -46,
+    "setHue": 36,
+    "setSaturation": 5,
+    "setLightness": 95
+  },
+  {
+    "name": "KARUULM_SLAYER_DUNGEON_LAVA",
+    "area": "KARUULM_SLAYER_DUNGEON",
+    "overlayIds": [
+      57
+    ],
+    "groundMaterial": "LAVA_NOISE",
+    "forced": true,
+    "blended": false,
+    "heightOffset": -46,
+    "setHue": 36,
+    "setSaturation": 5,
+    "setLightness": 95
   },
   {
     "name": "MOUNT_QUIDAMORTEM_SYMBOL",

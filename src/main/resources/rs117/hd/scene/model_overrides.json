@@ -21473,14 +21473,6 @@
     "objectIds": [
       34332,
       34333
-    ],
-    "colorOverrides": [
-      {
-        "colors": "h == 36",
-        "baseMaterial": "TRANSPARENT",
-        "uvType": "WORLD_XZ",
-        "uvScale": 2.25
-      }
     ]
   }
 ]

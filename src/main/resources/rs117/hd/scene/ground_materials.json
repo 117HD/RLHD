@@ -295,15 +295,15 @@
     ]
   },
   {
-    "name": "HD_LAVA_BLUE",
+    "name": "LAVA_NOISE",
     "materials": [
-      "HD_LAVA_1_BLUE",
-      "HD_LAVA_2_BLUE",
-      "HD_LAVA_1_BLUE",
-      "HD_LAVA_1_BLUE",
-      "HD_LAVA_2_BLUE",
-      "HD_MAGMA_1_BLUE",
-      "HD_MAGMA_2_BLUE"
+      "LAVA_NOISE_1",
+      "LAVA_NOISE_2",
+      "LAVA_NOISE_1",
+      "LAVA_NOISE_1",
+      "LAVA_NOISE_2",
+      "MAGMA_NOISE_1",
+      "MAGMA_NOISE_2"
     ]
   },
   {
