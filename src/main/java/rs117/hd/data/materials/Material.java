@@ -558,6 +558,10 @@ public enum Material {
 		.setUnlit(true)
 		.setBrightness(4)
 		.setFlowMap(LAVA_FLOW_MAP, 0.04f, 36, 12)),
+	LAVA_NOISE_3(p -> p
+		.setUnlit(true)
+		.setBrightness(4)
+		.setFlowMap(LAVA_FLOW_MAP, 0.04f, 36, 12)),
 	MAGMA_NOISE_1(p -> p
 		.setUnlit(true)
 		.setBrightness(4)
