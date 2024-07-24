@@ -714,7 +714,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			{
 				leftWidth = Math.max(leftWidth, fm.stringWidth(Text.removeTags(pair.getLeft())));
 				var rfm = fm;
-				if (pair.getRight().startsWith("\t"))
+				if (pair.getRight().contains("<tt>"))
 					rfm = g.getFontMetrics(MONOSPACE_FONT);
 				rightWidth = Math.max(rightWidth, rfm.stringWidth(Text.removeTags(pair.getRight())));
 			}
@@ -761,7 +761,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			else
 			{
 				boolean indented = pair.getRight().startsWith("\t");
-				if (indented) {
+				if (pair.getRight().contains("<tt>")) {
 					g.setFont(MONOSPACE_FONT);
 					dropShadow = false;
 				}
@@ -820,7 +820,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 
 		StringBuilder str = new StringBuilder();
 		for (int i = 0; i < rows; i++) {
-			str.append("\n\t");
+			str.append("\n\t<tt>");
 			for (int j = 0; j < columns; j++) {
 				int idx = i * columns + j;
 				if (idx < colors.length)
