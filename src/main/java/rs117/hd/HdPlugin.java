@@ -1541,6 +1541,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				// viewport buffer.
 				renderBufferOffset = sceneContext.staticVertexCount;
 
+				// TODO: this could be done only once during scene swap, but is a bit of a pain to do
 				// Push unordered models that should always be drawn at the start of each frame.
 				// Used to fix issues like the right-click menu causing underwater tiles to disappear.
 				var staticUnordered = sceneContext.staticUnorderedModelBuffer.getBuffer();
@@ -2204,14 +2205,50 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			// Draw with buffers bound to scene VAO
 			glBindVertexArray(vaoSceneHandle);
 
-			glDrawArrays(GL_TRIANGLES, 0, renderBufferOffset);
+			// When there are custom tiles, we need depth testing to draw them in the correct order, but the rest of the
+			// scene doesn't support depth testing, so we only write depths for custom tiles.
+			if (sceneContext.staticCustomTilesVertexCount > 0) {
+				// Draw gap filler tiles first, without depth testing
+				if (sceneContext.staticGapFillerTilesVertexCount > 0) {
+					glDisable(GL_DEPTH_TEST);
+					glDrawArrays(
+						GL_TRIANGLES,
+						sceneContext.staticGapFillerTilesOffset,
+						sceneContext.staticGapFillerTilesVertexCount
+					);
+				}
+
+				glEnable(GL_DEPTH_TEST);
+				glDepthFunc(GL_GREATER);
+
+				// Draw custom tiles, writing depth
+				glDepthMask(true);
+				glDrawArrays(
+					GL_TRIANGLES,
+					sceneContext.staticCustomTilesOffset,
+					sceneContext.staticCustomTilesVertexCount
+				);
+
+				// Draw the rest of the scene with depth testing, but not against itself
+				glDepthMask(false);
+				glDrawArrays(
+					GL_TRIANGLES,
+					sceneContext.staticVertexCount,
+					renderBufferOffset - sceneContext.staticVertexCount
+				);
+			} else {
+				// Draw everything without depth testing
+				glDisable(GL_DEPTH_TEST);
+				glDrawArrays(GL_TRIANGLES, 0, renderBufferOffset);
+			}
 
 			frameTimer.end(Timer.RENDER_SCENE);
 
 			glDisable(GL_BLEND);
 			glDisable(GL_CULL_FACE);
 			glDisable(GL_MULTISAMPLE);
-
+			glDisable(GL_DEPTH_TEST);
+			glDepthMask(true);
 			glUseProgram(0);
 
 			// Blit from the scene FBO to the default FBO

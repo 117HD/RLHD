@@ -57,6 +57,7 @@ import static rs117.hd.HdPlugin.VERTEX_SIZE;
 import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
 import static rs117.hd.scene.tile_overrides.TileOverride.NONE;
 import static rs117.hd.scene.tile_overrides.TileOverride.OVERLAY_FLAG;
+import static rs117.hd.utils.HDUtils.HIDDEN_HSL;
 
 @Slf4j
 @Singleton
@@ -120,6 +121,7 @@ public class SceneUploader {
 		if (client.isClientThread())
 			prepareBeforeSwap(sceneContext);
 
+		sceneContext.staticCustomTilesOffset = sceneContext.staticVertexCount;
 		var tiles = scene.getExtendedTiles();
 		for (int z = 0; z < MAX_Z; ++z) {
 			for (int x = 0; x < EXTENDED_SCENE_SIZE; ++x) {
@@ -130,6 +132,7 @@ public class SceneUploader {
 				}
 			}
 		}
+		sceneContext.staticCustomTilesVertexCount = sceneContext.staticVertexCount - sceneContext.staticCustomTilesOffset;
 
 		stopwatch.stop();
 		log.debug(
@@ -157,8 +160,11 @@ public class SceneUploader {
 			removeTilesOutsideCurrentArea(sceneContext);
 
 		// Gaps need to be filled right before scene swap, since map regions aren't updated earlier
-		if (sceneContext.fillGaps)
+		if (sceneContext.fillGaps) {
+			sceneContext.staticGapFillerTilesOffset = sceneContext.staticVertexCount;
 			fillGaps(sceneContext);
+			sceneContext.staticGapFillerTilesVertexCount = sceneContext.staticVertexCount - sceneContext.staticGapFillerTilesOffset;
+		}
 	}
 
 	public void updatePlayerArea(SceneContext sceneContext) {
@@ -238,14 +244,14 @@ public class SceneUploader {
 						model = tile.getSceneTileModel();
 
 						if (model == null) {
-							boolean hasTilePaint = paint != null && paint.getNeColor() != 12345678;
+							boolean hasTilePaint = paint != null && paint.getNeColor() != HIDDEN_HSL;
 							if (!hasTilePaint) {
 								tile = tile.getBridge();
 								if (tile != null) {
 									renderLevel = tile.getRenderLevel();
 									paint = tile.getSceneTilePaint();
 									model = tile.getSceneTileModel();
-									hasTilePaint = paint != null && paint.getNeColor() != 12345678;
+									hasTilePaint = paint != null && paint.getNeColor() != HIDDEN_HSL;
 								}
 							}
 
@@ -363,39 +369,31 @@ public class SceneUploader {
 
 			int vertexCount = uploadedTilePaintData[0];
 			int uvCount = uploadedTilePaintData[1];
-			int hasUnderwaterTerrain = uploadedTilePaintData[2];
 
 			// Opening the right-click menu causes the game to stop drawing hidden tiles, which prevents us from drawing underwater tiles
-			// below the boats at Pest Control. To work around this, we can instead draw all water tiles that never appear on top of any
-			// other model, all at once at the start of the frame. This bypasses any issues with draw order, and even partially solves the
-			// draw order artifacts resulting from skipped geometry updates for our extension to unlocked FPS.
-			final int[][][] tileHeights = sceneContext.scene.getTileHeights();
-			if (hasUnderwaterTerrain == 1 &&
-				tileHeights[tile.getRenderLevel()][tileExX][tileExY] >= -16 &&
-				sceneTilePaint.getNeColor() == 12345678
-			) {
+			// below the boats at Pest Control, or any other custom tile. To work around this, we can instead draw all hidden tiles at once
+			// at the start of the frame. This currently means they will only draw correctly if they're always behind everything else.
+			if (vertexCount > 0 && sceneTilePaint.getNeColor() == HIDDEN_HSL) {
 				int tileX = tileExX - SCENE_OFFSET;
 				int tileY = tileExY - SCENE_OFFSET;
 
-				// Draw the underwater tile at the start of each frame
+				// Draw the tile at the start of each frame
 				sceneContext.staticUnorderedModelBuffer
 					.ensureCapacity(8)
 					.getBuffer()
 					.put(vertexOffset)
 					.put(uvOffset)
-					.put(2) // 2 faces
+					.put(vertexCount / 3)
 					.put(sceneContext.staticVertexCount)
 					.put(0)
 					.put(tileX * LOCAL_TILE_SIZE)
 					.put(0)
 					.put(tileY * LOCAL_TILE_SIZE);
-				sceneContext.staticVertexCount += 6;
+				sceneContext.staticVertexCount += vertexCount;
 
-				// Since we're now drawing this tile's underwater geometry at the beginning of the frame, remove it from the draw callback
-				vertexCount -= 6;
-				uvCount -= 6;
-				vertexOffset += 6;
-				uvOffset += 6;
+				// Since we're now drawing this tile at the beginning of the frame, remove its vertices from the draw callback
+				vertexCount = 0;
+				uvCount = 0;
 			}
 
 			if (uvCount <= 0)
@@ -553,9 +551,6 @@ public class SceneUploader {
 		final int localX = 0;
 		final int localY = 0;
 
-		int baseX = scene.getBaseX();
-		int baseY = scene.getBaseY();
-
 		final int[][][] tileHeights = scene.getTileHeights();
 		int swHeight = tileHeights[tileZ][tileExX][tileExY];
 		int seHeight = tileHeights[tileZ][tileExX + 1][tileExY];
@@ -586,7 +581,7 @@ public class SceneUploader {
 
 		// Ignore certain tiles that aren't supposed to be visible,
 		// but which we can still make a height-adjusted version of for underwater
-		if (paint.getNeColor() != 12345678)
+		if (paint.getNeColor() != HIDDEN_HSL || override.forced)
 		{
 			int swColor = paint.getSwColor();
 			int seColor = paint.getSeColor();
@@ -639,6 +634,10 @@ public class SceneUploader {
 						nwColor = override.modifyColor(nwColor);
 						neColor = override.modifyColor(neColor);
 					}
+					swHeight -= override.heightOffset;
+					seHeight -= override.heightOffset;
+					neHeight -= override.heightOffset;
+					nwHeight -= override.heightOffset;
 				} else if (textureId == -1) {
 					// Fall back to the default ground material if the tile is untextured
 					groundMaterial = override.groundMaterial;
@@ -729,8 +728,8 @@ public class SceneUploader {
 				uvcos = (float) Math.cos(rad) * -uvScale;
 				uvsin = (float) Math.sin(rad) * -uvScale;
 			}
-			float uvx = baseX + tileX;
-			float uvy = baseY + tileY;
+			float uvx = worldPos[0];
+			float uvy = worldPos[1];
 			float tmp = uvx;
 			uvx = uvx * uvcos - uvy * uvsin;
 			uvy = tmp * uvsin + uvy * uvcos;
@@ -906,22 +905,18 @@ public class SceneUploader {
 		final int tileExY = tileY + SCENE_OFFSET;
 		final int tileZ = tile.getRenderLevel();
 
+		if (sceneContext.skipTile[tileZ][tileExX][tileExY])
+			return new int[3];
+
 		int bufferLength = 0;
 		int uvBufferLength = 0;
 		int underwaterTerrain = 0;
-
-		if (sceneContext.skipTile[tileZ][tileExX][tileExY]) {
-			return new int[] { bufferLength, uvBufferLength, underwaterTerrain };
-		}
 
 		final int[] faceColorA = model.getTriangleColorA();
 		final int[] faceColorB = model.getTriangleColorB();
 		final int[] faceColorC = model.getTriangleColorC();
 		final int[] faceTextures = model.getTriangleTextureId();
 		final int faceCount = model.getFaceX().length;
-
-		int baseX = scene.getBaseX();
-		int baseY = scene.getBaseY();
 
 		int[] worldPos = sceneContext.sceneToWorld(tileX, tileY, tileZ);
 		int overlayId = OVERLAY_FLAG | scene.getOverlayIds()[tileZ][tileExX][tileExY];
@@ -957,17 +952,17 @@ public class SceneUploader {
 
 			WaterType waterType = WaterType.NONE;
 
-			boolean isHidden = colorA == 12345678;
+			boolean isHidden = colorA == HIDDEN_HSL;
 			if (fillGaps) {
 				if (!isHidden)
 					continue;
 				colorA = colorB = colorC = 0;
 			} else {
-				if (isHidden)
-					continue;
-
 				boolean isOverlay = ProceduralGenerator.isOverlayFace(tile, face);
 				var override = tileOverrideManager.getOverride(scene, tile, worldPos, isOverlay ? overlayId : underlayId);
+				if (isHidden && !override.forced)
+					continue;
+
 				textureId = faceTextures == null ? -1 : faceTextures[face];
 				waterType = proceduralGenerator.seasonalWaterType(override, textureId);
 				if (waterType == WaterType.NONE) {
@@ -1049,6 +1044,9 @@ public class SceneUploader {
 					vertexBIsOverlay = true;
 				if (sceneContext.vertexIsOverlay.containsKey(vertexKeyC) && sceneContext.vertexIsUnderlay.containsKey(vertexKeyC))
 					vertexCIsOverlay = true;
+
+				for (int i = 0; i < 3; i++)
+					localVertices[i][2] -= override.heightOffset;
 			}
 
 			int terrainData = packTerrainData(true, 0, waterType, tileZ);
@@ -1080,8 +1078,8 @@ public class SceneUploader {
 
 			sceneContext.stagingBufferUvs.ensureCapacity(12);
 			for (int i = 0; i < 3; i++) {
-				float uvx = baseX + tileX + localVertices[i][0] / 128f - 1;
-				float uvy = baseY + tileY + localVertices[i][1] / 128f - 1;
+				float uvx = worldPos[0] + localVertices[i][0] / 128f - 1;
+				float uvy = worldPos[1] + localVertices[i][1] / 128f - 1;
 				float tmp = uvx;
 				uvx = uvx * uvcos - uvy * uvsin;
 				uvy = tmp * uvsin + uvy * uvcos;
@@ -1137,7 +1135,9 @@ public class SceneUploader {
 				int colorB = 6676;
 				int colorC = 6676;
 
-				if (faceColorA[face] == 12345678)
+				boolean isOverlay = ProceduralGenerator.isOverlayFace(tile, face);
+				var override = tileOverrideManager.getOverride(scene, tile, worldPos, isOverlay ? overlayId : underlayId);
+				if (faceColorA[face] == HIDDEN_HSL && !override.forced)
 					continue;
 
 				int[][] localVertices = ProceduralGenerator.faceLocalVertices(tile, face);
@@ -1178,8 +1178,6 @@ public class SceneUploader {
 				float[] normalsB = sceneContext.vertexTerrainNormals.getOrDefault(vertexKeyB, UP_NORMAL);
 				float[] normalsC = sceneContext.vertexTerrainNormals.getOrDefault(vertexKeyC, UP_NORMAL);
 
-				boolean isOverlay = ProceduralGenerator.isOverlayFace(tile, face);
-				var override = tileOverrideManager.getOverride(scene, tile, worldPos, isOverlay ? overlayId : underlayId);
 				int textureId = faceTextures == null ? -1 : faceTextures[face];
 				WaterType waterType = proceduralGenerator.seasonalWaterType(override, textureId);
 

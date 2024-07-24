@@ -53,6 +53,11 @@ public class SceneContext {
 	public GpuFloatBuffer stagingBufferUvs;
 	public GpuFloatBuffer stagingBufferNormals;
 
+	public int staticGapFillerTilesOffset;
+	public int staticGapFillerTilesVertexCount;
+	public int staticCustomTilesOffset;
+	public int staticCustomTilesVertexCount;
+
 	// statistics
 	public int uniqueModels;
 

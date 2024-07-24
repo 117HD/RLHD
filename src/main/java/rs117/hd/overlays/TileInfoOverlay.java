@@ -63,6 +63,7 @@ import static net.runelite.api.Perspective.*;
 import static rs117.hd.HdPlugin.ORTHOGRAPHIC_ZOOM;
 import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
 import static rs117.hd.scene.tile_overrides.TileOverride.OVERLAY_FLAG;
+import static rs117.hd.utils.HDUtils.HIDDEN_HSL;
 import static rs117.hd.utils.HDUtils.clamp;
 import static rs117.hd.utils.HDUtils.getSceneBaseExtended;
 
@@ -238,7 +239,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 
 									if (secondTry == 0) {
 										var paint = tile.getSceneTilePaint();
-										if ((paint == null || paint.getNeColor() == 12345678) && tile.getSceneTileModel() == null)
+										if ((paint == null || paint.getNeColor() == HIDDEN_HSL) && tile.getSceneTileModel() == null)
 											continue;
 									}
 
@@ -496,9 +497,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 				lines.add("Tile type: Paint");
 				Material material = Material.fromVanillaTexture(tilePaint.getTexture());
 				lines.add(String.format("Material: %s (%d)", material.name(), tilePaint.getTexture()));
-				int[] hsl = new int[3];
-				HDUtils.getSouthWesternMostTileColor(hsl, tile);
-				lines.add(String.format("HSL: %s", Arrays.toString(hsl)));
+				lines.add(String.format("HSL: %s", hslString(tile)));
 
 				var override = tileOverrideManager.getOverride(scene, tile, worldPos, OVERLAY_FLAG | overlayId, underlayId);
 				lines.add("WaterType: " + proceduralGenerator.seasonalWaterType(override, tilePaint.getTexture()));
@@ -543,9 +542,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 					}
 				}
 
-				int[] hsl = new int[3];
-				HDUtils.getSouthWesternMostTileColor(hsl, tile);
-				lines.add(String.format("HSL: %s", Arrays.toString(hsl)));
+				lines.add(String.format("HSL: %s", hslString(tile)));
 			}
 		}
 
@@ -919,10 +916,12 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 		return null;
 	}
 
-	private static String hslString(int color) {
-		if (color == 12345678)
+	private static String hslString(Tile tile) {
+		int[] hsl = new int[3];
+		int rawHsl = HDUtils.getSouthWesternMostTileColor(hsl, tile);
+		if (rawHsl == HIDDEN_HSL)
 			return "HIDDEN";
-		return color + " (" + (color >> 10 & 0x3F) + ", " + (color >> 7 & 7) + ", " + (color & 0x7F) + ")";
+		return rawHsl + " " + Arrays.toString(hsl);
 	}
 
 	private void drawAllIds(Graphics2D g, SceneContext ctx) {
