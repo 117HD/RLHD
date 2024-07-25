@@ -1504,7 +1504,7 @@
     "waterColor": "#2b2b40"
   },
   {
-    "area": "ABYSS",
+    "area": "ABYSSAL_AREAS",
     "fogColor": "#100707",
     "fogDepth": 65,
     "ambientColor": "#AAAFB6",

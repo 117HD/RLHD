@@ -5939,15 +5939,41 @@
     ]
   },
   {
-    "name": "ABYSS",
+    "name": "THE_ABYSS",
+    "aabbs": [
+      [ 3034, 4803, 3044, 4863 ],
+      [ 3008, 4800, 3033, 4863 ],
+      [ 3045, 4800, 3071, 4863 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "ABYSSAL_NEXUS",
     "regions": [
-      12106,
-      12107,
-      12108,
       11850,
       11851,
+      12106,
       12362,
       12363
+    ],
+    "aabbs": [
+      [ 3034, 4800, 3044, 4803 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "ABYSS_AREA_ALR",
+    "regions": [
+      12108
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "ABYSSAL_AREAS",
+    "areas": [
+      "THE_ABYSS",
+      "ABYSSAL_NEXUS",
+      "ABYSS_AREA_ALR"
     ]
   },
   {
