@@ -2978,6 +2978,17 @@
     "waterType": "BLOOD"
   },
   {
+    "name": "WILDERNESS_LAVA",
+    "area": "WILDERNESS",
+    "overlayIds": [
+      152
+    ],
+    "groundMaterial": "HD_LAVA",
+    "forced": true,
+    "blended": false,
+    "heightOffset": -56
+  },
+  {
     "name": "ARANDAR_PATHS",
     "area": "ARANDAR",
     "overlayIds": [
@@ -5356,6 +5367,15 @@
       55,
       63,
       72
+    ],
+    "groundMaterial": "EARTHEN_CAVE_FLOOR"
+  },
+  {
+    "name": "KARAMJA_VOLCANO_DUNGEON_FLOOR",
+    "area": "KARAMJA_VOLCANO_DUNGEON",
+    "underlayIds": [
+      63,
+      65
     ],
     "groundMaterial": "EARTHEN_CAVE_FLOOR"
   },
