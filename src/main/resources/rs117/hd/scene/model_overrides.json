@@ -19330,11 +19330,19 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       352,
-      353
+      353,
+      5618
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
-    "uvOrientationX": 512
+    "uvOrientationX": 512,
+    "colorOverrides": [
+      {
+        "description": "Gold handles",
+        "colors": "h ==8 && s == 7 && l > 19",
+        "baseMaterial": "GRAY_75"
+      }
+    ]
   },
   {
     "description": "Flip UVs for HD Shingle full tiles",
