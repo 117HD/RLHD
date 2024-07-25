@@ -1083,7 +1083,7 @@
       10041, 10832, 14309,
       16546, 16547, 16548, 19167,
       20845, 23639, 37967,
-      37968, 42842
+      37968, 42832, 42842
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -5812,7 +5812,8 @@
     "objectIds": [
       2097,
       4306,
-      6150
+      6150,
+      42825
     ],
     "uvType": "BOX",
     "uvScale": 1.1,
@@ -13573,6 +13574,34 @@
     "uvType": "BOX"
   },
   {
+    "description": "Object - Wooden - Barrel - with fish",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      9520
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": [ "s == 0" ],
+        "baseMaterial": "GRUNGE_1"
+      }
+    ]
+  },
+  {
+    "description": "Object - Wooden - Barrel - with coal",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      2139
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": [ "h == 42" ],
+        "baseMaterial": "GRUNGE_1"
+      }
+    ]
+  },
+  {
     "description": "Object - Dying Tree",
     "baseMaterial": "BARK",
     "objectIds": [
@@ -14638,6 +14667,116 @@
       1854
     ],
     "flatNormals": true
+  },
+  {
+    "description": "Tutorial Island - GIM Armour Crates",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      42827,
+      42828
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": [ "h == 0", "h == 37" ],
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS"
+      }
+    ]
+  },
+  {
+    "description": "Tutorial Island - The Node - Bank Chest",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      42834
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": [ "h == 8" ],
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS"
+      }
+    ]
+  },
+  {
+    "description": "Tutorial Island - The Node - Chest with Gold Trim",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      2079
+    ],
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": [ "h == 8" ],
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS"
+      }
+    ]
+  },
+  {
+    "description": "Tutorial Island - Hanging Tools",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "objectIds": [
+      2192,
+      42830
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "colorOverrides": [
+      {
+        "colors": [ "h == 7" ],
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Tutorial Island - Workbench and Drill",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      2279,
+      2281
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "colorOverrides": [
+      {
+        "colors": [ "h == 0", "h == 5", "h == 10" ],
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
+  },
+  {
+    "description": "Tutorial Island - Shelves",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      3026,
+      3027,
+      3028,
+      4511,
+      5082,
+      41740
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75
+  },
+  {
+    "description": "Tutorial Island - Varrock - Bed",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      7190
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "colors": ["s == 0", "s == 1"],
+        "baseMaterial": "FINE_CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ]
   },
   {
     "description": "Karamja Volcano Entrance",
@@ -19309,7 +19448,7 @@
   {
     "description": "Wooden hat stand",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 12981 ],
+    "objectIds": [ 7166, 12981 ],
     "uvType": "BOX",
     "uvScale": 0.8,
     "uvOrientationX": 512,
@@ -21019,6 +21158,20 @@
     "colorOverrides": [
       {
         "colors": [ 43025, 43068, 43116 ],
+        "baseMaterial": "NONE",
+        "uvType": "WORLD_XY"
+      }
+    ]
+  },
+  {
+    "description": "Bankbooth with Glass Window - The Node",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 42837 ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "colors": [ "h == 21" ],
         "baseMaterial": "NONE",
         "uvType": "WORLD_XY"
       }
