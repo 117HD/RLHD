@@ -21345,25 +21345,13 @@
       14426
     ],
     "baseMaterial": "DIRT_2",
-    "uvType": "BOX",
-    "colorOverrides": [
-      {
-        "colors": "h == 8",
-        "baseMaterial": "TRANSPARENT",
-        "uvType": "WORLD_XZ",
-        "uvScale": 2.25
-      }
-    ]
+    "uvType": "BOX"
   },
   {
     "description": "Lovakengj Lava tiles",
     "objectIds": [
       14427
-    ],
-    "baseMaterial": "TRANSPARENT",
-    "uvType": "WORLD_XZ",
-    "uvScale": 2.25,
-    "hide": true
+    ]
   },
   {
     "description": "Lovakengj Lava tiles with Rock",
@@ -21376,12 +21364,7 @@
     "uvOrientation": 128,
     "colorOverrides": [
       {
-        "colors": "h == 8",
-        "baseMaterial": "TRANSPARENT",
-        "uvType": "WORLD_XZ",
-        "uvScale": 2.25
-      },
-      {
+        "description": "Ripple effect",
         "colors": "h == 5",
         "baseMaterial": "TRANSPARENT"
       }
