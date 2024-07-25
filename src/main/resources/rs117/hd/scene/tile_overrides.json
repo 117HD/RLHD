@@ -3113,7 +3113,7 @@
     "groundMaterial": "HD_LAVA",
     "forced": true,
     "blended": false,
-    "heightOffset": -70
+    "heightOffset": -56
   },
   {
     "name": "LOVAKENGJ_GROUND_OVERLAY",
