@@ -5360,6 +5360,20 @@
     "groundMaterial": "EARTHEN_CAVE_FLOOR"
   },
   {
+    "name": "KARAMJA_VOLCANO_DUNGEON_LAVA",
+    "area": "KARAMJA_VOLCANO_DUNGEON",
+    "overlayIds": [
+      152
+    ],
+    "underlayIds": [
+      0
+    ],
+    "groundMaterial": "HD_LAVA",
+    "forced": true,
+    "blended": false,
+    "heightOffset": -130
+  },
+  {
     "name": "COMPLEX_TILES_KARAMJA",
     "area": "KARAMJA",
     "underlayIds": [
