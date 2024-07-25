@@ -21465,5 +21465,58 @@
         "baseMaterial": "STONE"
       }
     ]
+  },
+  {
+    "description": "Cupboard with glass panels and silver dishes",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      346,
+      347
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "retainVanillaUvs": false,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "GRAY_75"
+      },
+      {
+        "description": "Glass",
+        "colors": ["h == 8 && s == 5 && l < 5"],
+        "baseMaterial": "GRAY_75"
+      }
+    ]
+  },
+  {
+    "description": "Weapons case mounted on wall",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      834,
+      836,
+      837
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "retainVanillaUvs": false,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS"
+      },
+      {
+        "description": "Gold",
+        "colors": "h == 10 && s == 7",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS"
+      },
+      {
+        "description": "Glass",
+        "colors": "h == 8 && s == 5 && l < 5",
+        "baseMaterial": "GRAY_75"
+      }
+    ]
   }
 ]
