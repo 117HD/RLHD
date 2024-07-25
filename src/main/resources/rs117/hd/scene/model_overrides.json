@@ -21374,16 +21374,7 @@
       14429,
       14430
     ],
-    "baseMaterial": "ROCK_4",
-    "uvType": "BOX",
-    "uvOrientation": 128,
-    "colorOverrides": [
-      {
-        "description": "Ripple effect",
-        "colors": "h == 5",
-        "baseMaterial": "TRANSPARENT"
-      }
-    ]
+    "hide": true
   },{
   "description": "Lovakengj Lava vents",
   "objectIds": [
