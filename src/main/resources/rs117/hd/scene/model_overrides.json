@@ -14713,6 +14713,36 @@
     ]
   },
   {
+    "description": "Tutorial Island - The Node - Statue",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      17458,
+      42822
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "colorOverrides": [
+      {
+        "colors": [ "s == 4", "s == 5", "h == 14" ],
+        "baseMaterial": "GRAY_90"
+      }
+    ]
+  },
+  {
+    "description": "Tutorial Island - The Node - Portal",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      42819
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": [ "h == 14", "h == 37", "h == 3" ],
+        "baseMaterial": "GRAY_90"
+      }
+    ]
+  },
+  {
     "description": "Tutorial Island - Hanging Tools",
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
