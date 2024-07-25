@@ -19144,7 +19144,7 @@
       {
         "description": "Metal",
         "colors": "h == 0 && s == 0",
-        "baseMaterial": "GRAY_75"
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS"
       }
     ]
   },
@@ -19162,7 +19162,7 @@
       {
         "description": "Metal",
         "colors": "h == 0 && s == 0",
-        "baseMaterial": "GRAY_75"
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS"
       }
     ]
   },
@@ -19170,6 +19170,7 @@
     "description": "Cooking rack - Lumbridge kitchen",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      391,
       14871
     ],
     "uvType": "BOX",
@@ -19180,7 +19181,7 @@
       {
         "description": "Metal",
         "colors": "h == 0 && s == 0",
-        "baseMaterial": "GRAY_75"
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS"
       }
     ]
   },
