@@ -53,6 +53,10 @@
         "type": "boolean",
         "description": "Force the tile to render even if it has the special hidden color code. Defaults to false."
       },
+      "depthTested": {
+        "type": "boolean",
+        "description": "Enable depth testing for the tile. Defaults to false, but is always enabled for forced tiles."
+      },
       "setHue": {
         "type": "integer",
         "description": "Force a specific hue."
