@@ -4307,6 +4307,17 @@
     "groundMaterial": "DIRT"
   },
   {
+    "name": "SOUL_WARS_LAVA",
+    "area": "ISLE_OF_SOULS",
+    "overlayIds": [
+      152
+    ],
+    "groundMaterial": "HD_LAVA",
+    "forced": true,
+    "blended": false,
+    "heightOffset": -56
+  },
+  {
     "name": "VARLAMORE_TEMPLE_CRYPT_CENTER_BLENDING_FIX",
     "area": "VARLAMORE_TEMPLE_CRYPT_CENTER",
     "overlayIds": [ 11 ],

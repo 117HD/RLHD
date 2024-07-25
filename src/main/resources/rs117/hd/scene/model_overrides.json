@@ -21332,7 +21332,7 @@
     "flatNormals": true
   },
   {
-    "description": "Lovakengj Lava edges",
+    "description": "Yellow Lava edges",
     "objectIds": [
       14416,
       14417,
@@ -21343,15 +21343,29 @@
       14422,
       14423,
       14425,
-      14426
+      14426,
+      40671,
+      40672,
+      40673,
+      40674,
+      40675,
+      40676,
+      40677,
+      40678,
+      40679,
+      40680,
+      40681
     ],
-    "baseMaterial": "DIRT_2",
-    "uvType": "BOX"
+    "baseMaterial": "ROCK_2",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 128
   },
   {
-    "description": "Lovakengj Lava tiles",
+    "description": "Yellow Lava tiles",
     "objectIds": [
-      14427
+      14427,
+      40670
     ]
   },
   {
