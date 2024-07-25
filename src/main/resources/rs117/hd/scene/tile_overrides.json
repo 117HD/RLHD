@@ -5386,6 +5386,7 @@
     "area": "KARAMJA_VOLCANO_DUNGEON",
     "underlayIds": [
       63,
+      64,
       65
     ],
     "groundMaterial": "EARTHEN_CAVE_FLOOR"
