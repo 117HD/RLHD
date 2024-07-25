@@ -21314,8 +21314,16 @@
       25075,
       25076
     ],
-    "baseMaterial": "DIRT_1",
-    "uvType": "BOX"
+    "baseMaterial": "ROCK_1",
+    "uvType": "BOX",
+    "uvOrientation": 128,
+    "colorOverrides": [
+      {
+        "description": "Hide brown part to allow the tile model underneath to show",
+        "colors": "h == 7",
+        "baseMaterial": "TRANSPARENT"
+      }
+    ]
   },
   {
     "description": "Karamja Volcano Walls with Lava Edges",
@@ -21329,14 +21337,7 @@
     ],
     "baseMaterial": "ROCK_2",
     "uvType": "BOX",
-    "flatNormals": true,
-    "colorOverrides": [
-      {
-        "description": "Hide brown part to allow the tile model underneath to show",
-        "colors": "h == 7",
-        "baseMaterial": "TRANSPARENT"
-      }
-    ]
+    "flatNormals": true
   },
   {
     "description": "Yellow Lava edges",

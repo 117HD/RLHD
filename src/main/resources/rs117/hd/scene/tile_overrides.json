@@ -6236,10 +6236,13 @@
     "maxLightness": 52
   },
   {
-    "name": "OURANIA_FLOOR_OVERLAY",
+    "name": "OURANIA_FLOOR",
     "area": "OURANIA_ALTAR",
     "overlayIds": [
       78
+    ],
+    "underlayIds": [
+      96
     ],
     "groundMaterial": "EARTHEN_CAVE_FLOOR"
   },
