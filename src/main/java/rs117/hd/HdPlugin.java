@@ -2975,10 +2975,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			return;
 
 		// Hide everything outside the current area if area hiding is enabled
-		if (sceneContext.currentArea != null) {
+		if (sceneContext.currentArea != null && renderable instanceof Actor) {
 			boolean inArea = sceneContext.currentArea.containsPoint(
-				sceneContext.scene.getBaseX() + x / LOCAL_TILE_SIZE,
-				sceneContext.scene.getBaseY() + z / LOCAL_TILE_SIZE,
+				scene.getBaseX() + x / LOCAL_TILE_SIZE,
+				scene.getBaseY() + z / LOCAL_TILE_SIZE,
 				client.getPlane()
 			);
 			if (!inArea)
