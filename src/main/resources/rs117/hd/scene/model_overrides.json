@@ -14829,7 +14829,8 @@
     "description": "Stronghold Of Security - Death - Objects - Escape Bone Chain",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
-      23732
+      23732,
+      23920
     ],
     "uvType": "BOX",
     "uvScale": 0.7
