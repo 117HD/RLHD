@@ -21329,7 +21329,14 @@
     ],
     "baseMaterial": "ROCK_2",
     "uvType": "BOX",
-    "flatNormals": true
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "description": "Hide brown part to allow the tile model underneath to show",
+        "colors": "h == 7",
+        "baseMaterial": "TRANSPARENT"
+      }
+    ]
   },
   {
     "description": "Yellow Lava edges",
@@ -21342,6 +21349,7 @@
       14421,
       14422,
       14423,
+      14424,
       14425,
       14426,
       40671,
@@ -21375,19 +21383,20 @@
       14430
     ],
     "hide": true
-  },{
-  "description": "Lovakengj Lava vents",
-  "objectIds": [
-    14437,
-    14438
-  ],
-  "baseMaterial": "DIRT_2",
-  "uvType": "BOX",
-  "colorOverrides": [
-    {
-      "colors": "h == 8",
-      "baseMaterial": "HD_LAVA_2",
-      "uvType": "WORLD_XZ"
+  },
+  {
+    "description": "Lovakengj Lava vents",
+    "objectIds": [
+      14437,
+      14438
+    ],
+    "baseMaterial": "DIRT_2",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 8",
+        "baseMaterial": "HD_LAVA_2",
+        "uvType": "WORLD_XZ"
     }
   ]
 },

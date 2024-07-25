@@ -5833,6 +5833,17 @@
     "groundMaterial": "EARTHEN_CAVE_FLOOR"
   },
   {
+    "name": "FOSSIL_ISLAND_VOLCANO_LAVA",
+    "area": "FOSSIL_ISLAND_VOLCANO",
+    "overlayIds": [
+      152
+    ],
+    "groundMaterial": "HD_LAVA",
+    "forced": true,
+    "blended": false ,
+    "heightOffset": -51
+  },
+  {
     "name": "FOSSIL_ISLAND_VOLCANO_SAND",
     "area": "FOSSIL_ISLAND_VOLCANO",
     "underlayIds": [
