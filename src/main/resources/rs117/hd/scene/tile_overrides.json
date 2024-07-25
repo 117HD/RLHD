@@ -6225,10 +6225,29 @@
     "maxLightness": 52
   },
   {
+    "name": "OURANIA_FLOOR_OVERLAY",
+    "area": "OURANIA_ALTAR",
+    "overlayIds": [
+      78
+    ],
+    "groundMaterial": "EARTHEN_CAVE_FLOOR"
+  },
+  {
+    "name": "OURANIA_FLOOR_DIRT",
+    "area": "OURANIA_ALTAR",
+    "underlayIds": [
+      7
+    ],
+    "groundMaterial": "DIRT"
+  },
+  {
     "name": "OURANIA_LAVA",
     "area": "OURANIA_ALTAR",
     "overlayIds": [
       152
+    ],
+    "underlayIds": [
+      0
     ],
     "groundMaterial": "HD_LAVA",
     "forced": true,
