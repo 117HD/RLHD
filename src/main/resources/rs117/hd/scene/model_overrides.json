@@ -21448,31 +21448,60 @@
       34331
     ],
     "baseMaterial": "ROCK_2",
-    "uvType": "BOX",
-    "colorOverrides": [
-      {
-        "colors": "h > 32",
-        "baseMaterial": "TRANSPARENT",
-        "uvType": "WORLD_XZ",
-        "uvScale": 2.25
-      }
-    ]
+    "uvType": "BOX"
   },
   {
     "description": "Blue lava",
     "objectIds": [
       34320
-    ],
-    "baseMaterial": "TRANSPARENT",
-    "uvType": "WORLD_XZ",
-    "uvScale": 2.25,
-    "hide": true
+    ]
   },
   {
     "description": "Blue lava bubbles and flames",
     "objectIds": [
       34332,
       34333
+    ]
+  },
+  {
+    "description": "Karuulm Dungeon lava edges",
+    "objectIds": [
+      34518,
+      34519,
+      34520,
+      34521,
+      34522,
+      34525,
+      34526,
+      34528,
+      34529
+    ],
+    "baseMaterial": "ROCK_2",
+    "uvType": "BOX"
+  },
+  {
+    "description": "Karuulm Dungeon lava",
+    "objectIds": [
+      34517,
+      34541,
+      34542,
+      34543
+    ],
+    "baseMaterial": "ROCK_2",
+    "uvType": "BOX"
+  },
+  {
+    "description": "Karuulm Dungeon Exit",
+    "objectIds": [
+      34514
+    ],
+    "baseMaterial": "ROCK_2",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0 && l > 10",
+        "baseMaterial": "GRAY_75"
+      }
     ]
   }
 ]

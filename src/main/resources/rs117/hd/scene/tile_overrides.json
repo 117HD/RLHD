@@ -3336,6 +3336,33 @@
     "setLightness": 95
   },
   {
+    "name": "KARUULM_SLAYER_DUNGEON_ENTRANCE_TILES",
+    "area": "KARUULM_SLAYER_DUNGEON_FLOOR_FIX",
+    "underlayIds": [
+      0
+    ],
+    "groundMaterial": "DIRT",
+    "forced": true,
+    "blended": false,
+    "setHue": 0,
+    "setSaturation": 0,
+    "setLightness": 10
+  },
+  {
+    "name": "KARUULM_SLAYER_DUNGEON_LAVA",
+    "area": "KARUULM_SLAYER_DUNGEON_PLANE_0",
+    "underlayIds": [
+      0
+    ],
+    "groundMaterial": "LAVA_NOISE",
+    "forced": true,
+    "blended": false,
+    "heightOffset": -145,
+    "setHue": 36,
+    "setSaturation": 5,
+    "setLightness": 95
+  },
+  {
     "name": "MOUNT_QUIDAMORTEM_SYMBOL",
     "area": "MOUNT_QUIDAMORTEM",
     "overlayIds": [
