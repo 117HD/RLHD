@@ -1760,7 +1760,8 @@
     ],
     "aabbs": [
       [ 2531, 3070, 2622, 3127 ]
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "YANILLE_DUNGEON",
@@ -5248,7 +5249,8 @@
     "name": "RANDOM_EVENT_DRILL_DEMON",
     "regions": [
       12619
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "RANDOM_EVENT_FROG_CAVE",
@@ -6360,12 +6362,12 @@
       "VER_SINHAZA_CUTSCENE",
       "DEFENDER_OF_VARROCK_CASTLE_UNDER_ATTACK",
       "CHURCH_OF_AYASTER",
-      "EMIRS_ARENA_UPPER"
+      "EMIRS_ARENA_UPPER",
+      "YANILLE_INSTANCE"
     ],
     "regions": [
       8288,
-      8801,
-      11593
+      8801
     ]
   },
   {
