@@ -7258,7 +7258,9 @@
     "baseMaterial": "LIGHT_BARK",
     "objectIds": [
       1363,
-      1364
+      1364,
+      3958,
+      3959
     ],
     "uvType": "BOX",
     "uvScale": 0.4,
@@ -14622,7 +14624,8 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.4,
-    "uvOrientation": 256
+    "uvOrientation": 256,
+    "shadowOpacityThreshold": 0.1
   },
   {
     "description": "Stronghold Of Security - Famine - Ladder ",
@@ -14661,13 +14664,12 @@
     "uvOrientation": 50
   },
   {
-    "description": "Stronghold Of Security - Walls - Petilence",
-    "baseMaterial": "OOZE",
+    "description": "Stronghold Of Security - Walls - Pestilence",
+    "baseMaterial": "ABYSSAL",
     "objectIds": [
       23648,
       23649,
       23650,
-      23651,
       23652,
       23657,
       23658,
@@ -14678,34 +14680,50 @@
     "uvType": "BOX"
   },
   {
-    "description": "Stronghold Of Security - Petilence - Doors",
-    "baseMaterial": "OOZE",
+    "description": "Stronghold Of Security - Walls - Pestilence - Tentacle Light",
+    "baseMaterial": "ABYSSAL",
     "objectIds": [
-      23653,
-      23654
+      23651
     ],
     "uvType": "BOX",
-    "uvScale": 0.4,
-    "uvOrientation": 512
-  },
-  {
-    "description": "Stronghold Of Security - Petilence - Plant Ladder",
-    "baseMaterial": "OOZE",
-    "objectIds": [
-      23705,
-      23706
+    "colorOverrides": [
+      {
+        "colors": [ "h == 2" ],
+        "baseMaterial": "OOZE"
+      }
     ]
   },
   {
-    "description": "Stronghold Of Security - Pestilence - Escape Goo Covered Vine ",
-    "baseMaterial": "OOZE",
+    "description": "Stronghold Of Security - Pestilence - Doors",
+    "baseMaterial": "ABYSSAL_2",
     "objectIds": [
-      23703,
-      23704
+      23653,
+      23654,
+      23662
     ],
     "uvType": "BOX",
-    "uvScale": 0.6,
-    "uvOrientation": 256
+    "uvScale": 1.2
+  },
+  {
+    "description": "Stronghold Of Security - Pestilance - Overdoor Tendrils",
+    "baseMaterial": "ABYSSAL_2",
+    "objectIds": [
+      23662
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Stronghold Of Security - Pestilence - Plant Ladder and Goo Covered Vine",
+    "baseMaterial": "ABYSSAL",
+    "objectIds": [
+      23703,
+      23704,
+      23705,
+      23706
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75
   },
   {
     "description": "Stronghold Of Security - Pestilence -  Metallic - Box of Health - Chest",
@@ -14764,14 +14782,6 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.5
-  },
-  {
-    "description": "Stronghold Of Security - Petilance - Overdoor Tendrils",
-    "baseMaterial": "OOZE",
-    "objectIds": [
-      23662
-    ],
-    "uvType": "BOX"
   },
   {
     "description": "Stronghold Of Security - Death - Walls",
