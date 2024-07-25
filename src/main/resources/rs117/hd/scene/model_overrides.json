@@ -19129,6 +19129,62 @@
     ]
   },
   {
+    "description": "Freestanding shelves with pots and pans - Lumbridge",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      14869,
+      15685,
+      15686
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "retainVanillaUvs": false,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "GRAY_75"
+      }
+    ]
+  },
+  {
+    "description": "Cooking Shelves - Lumbridge kitchen",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      14870
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "retainVanillaUvs": false,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "GRAY_75"
+      }
+    ]
+  },
+  {
+    "description": "Cooking rack - Lumbridge kitchen",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      14871
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "retainVanillaUvs": false,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "GRAY_75"
+      }
+    ]
+  },
+  {
     "description": "Wooden hat stand",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [ 12981 ],
