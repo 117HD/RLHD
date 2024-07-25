@@ -14733,7 +14733,8 @@
     "description": "Tutorial Island - The Node - Portal",
     "baseMaterial": "STONE",
     "objectIds": [
-      42819
+      42819,
+      42820
     ],
     "uvType": "BOX",
     "colorOverrides": [
