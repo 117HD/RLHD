@@ -36,6 +36,17 @@
     "groundMaterial": "VERTICAL_DIRT"
   },
   {
+    "name": "DEFAULT_LAVA",
+    "groundMaterial": "HD_LAVA"
+  },
+  {
+    "name": "BLUE_LAVA",
+    "groundMaterial": "LAVA_NOISE",
+    "setHue": 36,
+    "setSaturation": 5,
+    "setLightness": 95
+  },
+  {
     "name": "SEASONAL_SAND",
     "replacements": {
       "WINTER_SAND": "season == WINTER",
@@ -2978,6 +2989,20 @@
     "waterType": "BLOOD"
   },
   {
+    "name": "WILDERNESS_LAVA",
+    "area": "WILDERNESS",
+    "overlayIds": [
+      152
+    ],
+    "groundMaterial": "HD_LAVA",
+    "forced": true,
+    "blended": false,
+    "heightOffset": -56,
+    "replacements": {
+      "DEFAULT_LAVA": "!textures"
+    }
+  },
+  {
     "name": "ARANDAR_PATHS",
     "area": "ARANDAR",
     "overlayIds": [
@@ -3103,6 +3128,20 @@
     "area": "APE_ATOLL_WATERFALLS",
     "waterType": "WATER",
     "blended": false
+  },
+  {
+    "name": "LOVAKENGJ_LAVA_OVERLAY",
+    "area": "LOVAKENGJ",
+    "overlayIds": [
+      152
+    ],
+    "groundMaterial": "HD_LAVA",
+    "forced": true,
+    "blended": false,
+    "heightOffset": -56,
+    "replacements": {
+      "DEFAULT_LAVA": "!textures"
+    }
   },
   {
     "name": "LOVAKENGJ_GROUND_OVERLAY",
@@ -3309,6 +3348,53 @@
     ],
     "groundMaterial": "DIRT",
     "blended": false
+  },
+  {
+    "name": "MOUNT_KARUULM_LAVA",
+    "area": "MOUNT_KARUULM_PLANE_0",
+    "overlayIds": [
+      57
+    ],
+    "groundMaterial": "LAVA_NOISE",
+    "setHue": 36,
+    "setSaturation": 5,
+    "setLightness": 95,
+    "forced": true,
+    "blended": false,
+    "heightOffset": -46,
+    "replacements": {
+      "BLUE_LAVA": "!textures"
+    }
+  },
+  {
+    "name": "KARUULM_SLAYER_DUNGEON_ENTRANCE_TILES",
+    "area": "KARUULM_SLAYER_DUNGEON_FLOOR_FIX",
+    "underlayIds": [
+      0
+    ],
+    "groundMaterial": "DIRT",
+    "forced": true,
+    "blended": false,
+    "setHue": 0,
+    "setSaturation": 0,
+    "setLightness": 10
+  },
+  {
+    "name": "KARUULM_SLAYER_DUNGEON_LAVA",
+    "area": "KARUULM_SLAYER_DUNGEON_PLANE_0",
+    "underlayIds": [
+      0
+    ],
+    "groundMaterial": "LAVA_NOISE",
+    "setHue": 36,
+    "setSaturation": 5,
+    "setLightness": 95,
+    "forced": true,
+    "blended": false,
+    "heightOffset": -145,
+    "replacements": {
+      "DEFAULT_LAVA": "!textures"
+    }
   },
   {
     "name": "MOUNT_QUIDAMORTEM_SYMBOL",
@@ -4242,6 +4328,20 @@
       106
     ],
     "groundMaterial": "DIRT"
+  },
+  {
+    "name": "SOUL_WARS_LAVA",
+    "area": "ISLE_OF_SOULS",
+    "overlayIds": [
+      152
+    ],
+    "groundMaterial": "HD_LAVA",
+    "forced": true,
+    "blended": false,
+    "heightOffset": -56,
+    "replacements": {
+      "DEFAULT_LAVA": "!textures"
+    }
   },
   {
     "name": "VARLAMORE_TEMPLE_CRYPT_CENTER_BLENDING_FIX",
@@ -5308,6 +5408,33 @@
     "groundMaterial": "EARTHEN_CAVE_FLOOR"
   },
   {
+    "name": "KARAMJA_VOLCANO_DUNGEON_FLOOR",
+    "area": "KARAMJA_VOLCANO_DUNGEON",
+    "underlayIds": [
+      63,
+      64,
+      65
+    ],
+    "groundMaterial": "EARTHEN_CAVE_FLOOR"
+  },
+  {
+    "name": "KARAMJA_VOLCANO_DUNGEON_LAVA",
+    "area": "KARAMJA_VOLCANO_DUNGEON",
+    "overlayIds": [
+      152
+    ],
+    "underlayIds": [
+      0
+    ],
+    "groundMaterial": "HD_LAVA",
+    "forced": true,
+    "blended": false,
+    "heightOffset": -106,
+    "replacements": {
+      "DEFAULT_LAVA": "!textures"
+    }
+  },
+  {
     "name": "COMPLEX_TILES_KARAMJA",
     "area": "KARAMJA",
     "underlayIds": [
@@ -5736,6 +5863,20 @@
     "groundMaterial": "EARTHEN_CAVE_FLOOR"
   },
   {
+    "name": "FOSSIL_ISLAND_VOLCANO_LAVA",
+    "area": "FOSSIL_ISLAND_VOLCANO",
+    "overlayIds": [
+      152
+    ],
+    "groundMaterial": "HD_LAVA",
+    "forced": true,
+    "blended": false ,
+    "heightOffset": -51,
+    "replacements": {
+      "DEFAULT_LAVA": "!textures"
+    }
+  },
+  {
     "name": "FOSSIL_ISLAND_VOLCANO_SAND",
     "area": "FOSSIL_ISLAND_VOLCANO",
     "underlayIds": [
@@ -6126,6 +6267,42 @@
     "blended": false,
     "minLightness": 52,
     "maxLightness": 52
+  },
+  {
+    "name": "OURANIA_FLOOR",
+    "area": "OURANIA_ALTAR",
+    "overlayIds": [
+      78
+    ],
+    "underlayIds": [
+      96
+    ],
+    "groundMaterial": "EARTHEN_CAVE_FLOOR"
+  },
+  {
+    "name": "OURANIA_FLOOR_DIRT",
+    "area": "OURANIA_ALTAR",
+    "underlayIds": [
+      7
+    ],
+    "groundMaterial": "DIRT"
+  },
+  {
+    "name": "OURANIA_LAVA",
+    "area": "OURANIA_ALTAR",
+    "overlayIds": [
+      152
+    ],
+    "underlayIds": [
+      0
+    ],
+    "groundMaterial": "HD_LAVA",
+    "forced": true,
+    "blended": false,
+    "heightOffset": -128,
+    "replacements": {
+      "DEFAULT_LAVA": "!textures"
+    }
   },
   {
     "name": "ISLE_OF_SOULS_DUNGEON_FLOOR",

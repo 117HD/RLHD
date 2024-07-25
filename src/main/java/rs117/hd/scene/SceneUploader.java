@@ -975,7 +975,7 @@ public class SceneUploader {
 			} else {
 				boolean isOverlay = ProceduralGenerator.isOverlayFace(tile, face);
 				var override = tileOverrideManager.getOverride(scene, tile, worldPos, isOverlay ? overlayId : underlayId);
-				if (isHidden && !override.forced)
+				if (isHidden)// && !override.forced) // This is disabled to fix z-fighting with hidden tiles and tile models on top of one another..
 					continue;
 
 				textureId = faceTextures == null ? -1 : faceTextures[face];

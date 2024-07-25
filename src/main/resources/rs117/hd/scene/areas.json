@@ -3740,9 +3740,25 @@
     ]
   },
   {
+    "name": "KARUULM_SLAYER_DUNGEON_FLOOR_FIX",
+    "aabbs": [
+      [1311, 10185, 1312, 10185, 0],
+      [1318, 10187, 1321, 10191, 0],
+      [1302, 10180, 1305, 10191, 0],
+      [1330, 10188, 1334, 10199, 0],
+      [1326, 10213, 1330, 10216, 0]
+    ]
+  },
+  {
     "name": "MOUNT_KARUULM",
     "aabbs": [
       [ 1245, 3765, 1358, 3860 ]
+    ]
+  },
+  {
+    "name": "MOUNT_KARUULM_PLANE_0",
+    "aabbs": [
+      [ 1245, 3765, 1358, 3860, 0 ]
     ]
   },
   {
@@ -5495,6 +5511,13 @@
   {
     "name": "KELDAGRIM_TUNNEL",
     "regions": [ 11166 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "OURANIA_ALTAR",
+    "aabbs": [
+      [ 2944, 5505, 3134, 5695 ]
+    ],
     "hideOtherAreas": true
   },
   {
