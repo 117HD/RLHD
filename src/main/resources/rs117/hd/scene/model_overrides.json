@@ -14676,6 +14676,7 @@
       42828
     ],
     "uvType": "BOX",
+    "uvOrientation": 512,
     "colorOverrides": [
       {
         "colors": [ "h == 0", "h == 37" ],
@@ -14743,6 +14744,20 @@
     ]
   },
   {
+    "description": "Tutorial Island - The Node - Furnace",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "objectIds": [
+      42824
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": [ "h == 14", "h == 37", "h == 3" ],
+        "baseMaterial": "GRAY_90"
+      }
+    ]
+  },
+  {
     "description": "Tutorial Island - Hanging Tools",
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
@@ -14762,10 +14777,26 @@
     ]
   },
   {
-    "description": "Tutorial Island - Workbench and Drill",
+    "description": "Tutorial Island - Workbench",
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [
-      2279,
+      2279
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "colorOverrides": [
+      {
+        "colors": [ "h == 0" ],
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Tutorial Island - Drill",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
       2281
     ],
     "uvType": "BOX",
