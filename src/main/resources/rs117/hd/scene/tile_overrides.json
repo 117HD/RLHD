@@ -5371,7 +5371,7 @@
     "groundMaterial": "HD_LAVA",
     "forced": true,
     "blended": false,
-    "heightOffset": -130
+    "heightOffset": -106
   },
   {
     "name": "COMPLEX_TILES_KARAMJA",
