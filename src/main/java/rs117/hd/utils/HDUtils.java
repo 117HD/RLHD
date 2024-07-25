@@ -239,6 +239,39 @@ public class HDUtils {
 		}
 	}
 
+	public static String getObjectType(int config) {
+		int type = config & 0x3F;
+		final String[] OBJECT_TYPES = {
+			"StraightWalls",
+			"DiagWallsConn",
+			"EntireWallsCorners",
+			"StraightWallsConn",
+			"StraightInDeco",
+			"StraightOutDeco",
+			"DiagOutDeco",
+			"DiagInDeco",
+			"DiagInWallDeco",
+			"DiagWalls",
+			"Objects",
+			"GroundObjects",
+			"StraightSlopeRoofs",
+			"DiagSlopeRoofs",
+			"DiagSlopeConnRoofs",
+			"StraightSlopeConnRoofs",
+			"StraightSlopeCorners",
+			"FlatTopRoofs",
+			"BottomEdgeRoofs",
+			"DiagBottomEdgeConn",
+			"StraightBottomEdgeConn",
+			"StraightBottomEdgeConnCorners",
+			"GroundDecoMapSigns"
+		};
+		String name = "Unknown";
+		if (type < OBJECT_TYPES.length)
+			name = OBJECT_TYPES[type];
+		return String.format("(%d) %s", type, name);
+	}
+
 	public static HashSet<Integer> getSceneRegionIds(Scene scene) {
 		HashSet<Integer> regionIds = new HashSet<>();
 

@@ -554,6 +554,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 				HDUtils.getBakedOrientation(groundObject.getConfig()),
 				getModelInfo(groundObject.getRenderable())
 			));
+			lines.add("Ground Type: " + HDUtils.getObjectType(groundObject.getConfig()));
 		}
 
 		WallObject wallObject = tile.getWallObject();
@@ -576,6 +577,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 					getModelInfo(wallObject.getRenderable2())
 				));
 			}
+			lines.add("Wall Type: " + HDUtils.getObjectType(wallObject.getConfig()));
 		}
 
 		GameObject[] gameObjects = tile.getGameObjects();
@@ -621,6 +623,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 				faceCount,
 				getModelInfo(renderable)
 			));
+			lines.add("Object Type: " + HDUtils.getObjectType(gameObject.getConfig()));
 		}
 
 		for (var npc : client.getTopLevelWorldView().npcs()) {
