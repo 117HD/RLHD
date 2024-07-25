@@ -5514,6 +5514,13 @@
     "hideOtherAreas": true
   },
   {
+    "name": "OURANIA_ALTAR",
+    "aabbs": [
+      [ 2944, 5505, 3134, 5695 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
     "name": "The Kendal's cave (Mountain Daughter)",
     "regions": [ 11165 ],
     "hideOtherAreas": true

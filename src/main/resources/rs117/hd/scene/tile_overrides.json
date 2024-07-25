@@ -6225,6 +6225,17 @@
     "maxLightness": 52
   },
   {
+    "name": "OURANIA_LAVA",
+    "area": "OURANIA_ALTAR",
+    "overlayIds": [
+      152
+    ],
+    "groundMaterial": "HD_LAVA",
+    "forced": true,
+    "blended": false,
+    "heightOffset": -128
+  },
+  {
     "name": "ISLE_OF_SOULS_DUNGEON_FLOOR",
     "area": "ISLE_OF_SOULS_DUNGEON",
     "underlayIds": [
