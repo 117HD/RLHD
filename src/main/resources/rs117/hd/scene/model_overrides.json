@@ -16837,7 +16837,6 @@
       26151,
       26152,
       26153,
-      26154,
       26155,
       26156,
       26157,
@@ -16860,7 +16859,16 @@
       27055
     ],
     "uvType": "BOX",
-    "uvScale": 0.6
+    "uvScale": 1.85
+  },
+  {
+    "description": "Abyss - Wall",
+    "baseMaterial": "ABYSSAL",
+    "objectIds": [
+      26154
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 1.85
   },
   {
     "description": "Abyss - Puddle",
