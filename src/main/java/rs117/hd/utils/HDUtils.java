@@ -240,56 +240,36 @@ public class HDUtils {
 	}
 
 	public static String getObjectType(int config) {
-		switch (config & 0x3F) {
-			case 0:
-				return "(0) StraightWalls";
-			case 1:
-				return "(1) DiagWallsConn";
-			case 2:
-				return "(2) EntireWallsCorners";
-			case 3:
-				return "(3) StraightWallsConn";
-			case 4:
-				return "(4) StraightInDeco";
-			case 5:
-				return "(5) StraightOutDeco";
-			case 6:
-				return "(6) DiagOutDeco";
-			case 7:
-				return "(7) DiagInDeco";
-			case 8:
-				return "(8) DiagInWallDeco";
-			case 9:
-				return "(9) DiagWalls";
-			case 10:
-				return "(10) Objects";
-			case 11:
-				return "(11) GroundObjects";
-			case 12:
-				return "(12) StraightSlopeRoofs";
-			case 13:
-				return "(13) DiagSlopeRoofs";
-			case 14:
-				return "(14) DiagSlopeConnRoofs";
-			case 15:
-				return "(15) StraightSlopeConnRoofs";
-			case 16:
-				return "(16) StraightSlopeCorners";
-			case 17:
-				return "(17) FlatTopRoofs";
-			case 18:
-				return "(18) BottomEdgeRoofs";
-			case 19:
-				return "(19) DiagBottomEdgeConn";
-			case 20:
-				return "(20) StraightBottomEdgeConn";
-			case 21:
-				return "(21) StraightBottomEdgeConnCorners";
-			case 22:
-				return "(22) GroundDecoMapSigns";
-			default:
-				return "(Unknown)";
-		}
+		int type = config & 0x3F;
+		final String[] OBJECT_TYPES = {
+			"StraightWalls",
+			"DiagWallsConn",
+			"EntireWallsCorners",
+			"StraightWallsConn",
+			"StraightInDeco",
+			"StraightOutDeco",
+			"DiagOutDeco",
+			"DiagInDeco",
+			"DiagInWallDeco",
+			"DiagWalls",
+			"Objects",
+			"GroundObjects",
+			"StraightSlopeRoofs",
+			"DiagSlopeRoofs",
+			"DiagSlopeConnRoofs",
+			"StraightSlopeConnRoofs",
+			"StraightSlopeCorners",
+			"FlatTopRoofs",
+			"BottomEdgeRoofs",
+			"DiagBottomEdgeConn",
+			"StraightBottomEdgeConn",
+			"StraightBottomEdgeConnCorners",
+			"GroundDecoMapSigns"
+		};
+		String name = "Unknown";
+		if (type < OBJECT_TYPES.length)
+			name = OBJECT_TYPES[type];
+		return String.format("(%d) %s", type, name);
 	}
 
 	public static HashSet<Integer> getSceneRegionIds(Scene scene) {
