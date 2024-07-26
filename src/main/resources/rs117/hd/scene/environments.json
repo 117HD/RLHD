@@ -130,7 +130,10 @@
       190
     ],
     "fogColor": "#525e20",
-    "fogDepth": 50
+    "fogDepth": 50,
+    "groundFogStart": -150,
+    "groundFogEnd": -300,
+    "groundFogOpacity": 0.66
   },
   {
     "area": "STRONGHOLD_OF_SECURITY_DEATH",
