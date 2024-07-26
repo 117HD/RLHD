@@ -199,6 +199,9 @@ void main() {
         fragDelta /= 3;
         selfShadowing /= 3;
 
+        // Prevent displaced surfaces from casting flat shadows onto themselves
+        fragDelta.z = max(0, fragDelta.z);
+
         fragPos += TBN * fragDelta;
         #endif
 

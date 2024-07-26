@@ -1296,13 +1296,6 @@
     "fogDepth": 40
   },
   {
-    "area": "RANDOM_EVENT_DRILL_DEMON",
-    "ambientColor": "#97baff",
-    "directionalStrength": 4,
-    "fogColor": "#696559",
-    "fogDepth": 6.5
-  },
-  {
     "area": "RANDOM_EVENT_GRAVEDIGGER",
     "ambientColor": "#5a8cc0",
     "ambientStrength": 3,
@@ -1504,7 +1497,7 @@
     "waterColor": "#2b2b40"
   },
   {
-    "area": "ABYSS",
+    "area": "ABYSSAL_AREAS",
     "fogColor": "#100707",
     "fogDepth": 65,
     "ambientColor": "#AAAFB6",

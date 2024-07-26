@@ -1517,7 +1517,7 @@
   },
   {
     "name": "ABYSSAL_FLOOR_OVERLAY",
-    "area": "ABYSS",
+    "area": "ABYSSAL_AREAS",
     "overlayIds": [
       42
     ],
@@ -1525,7 +1525,7 @@
   },
   {
     "name": "ABYSSAL_LIQUID",
-    "area": "ABYSS",
+    "area": "ABYSSAL_AREAS",
     "overlayIds": [
       66,
       67
@@ -6411,7 +6411,7 @@
   },
   {
     "name": "ABYSSAL_FLOOR_UNDERLAY",
-    "area": "ABYSS",
+    "area": "ABYSSAL_AREAS",
     "underlayIds": [
       2,
       121,
@@ -6420,7 +6420,6 @@
     "groundMaterial": "ABYSSAL_FLOOR",
     "minHue": 1,
     "maxHue": 1,
-    "uvOrientation": 39,
     "uvScale": 1.85
   },
   {
