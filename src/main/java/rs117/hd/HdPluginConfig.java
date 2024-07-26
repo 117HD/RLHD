@@ -46,7 +46,6 @@ import rs117.hd.config.ShadowDistance;
 import rs117.hd.config.ShadowMode;
 import rs117.hd.config.ShadowResolution;
 import rs117.hd.config.TextureResolution;
-import rs117.hd.config.Tonemapping;
 import rs117.hd.config.UIScalingMode;
 import rs117.hd.config.VanillaShadowMode;
 
@@ -815,14 +814,14 @@ public interface HdPluginConfig extends Config
 	)
 	default ColorFilter colorFilter() { return ColorFilter.NONE; }
 
-	String KEY_TONEMAPPING = "toneMapping";
+	String KEY_TONEMAPPING = "tonemapping";
 	@ConfigItem(
 		keyName = KEY_TONEMAPPING,
 		name = "Tonemapping",
-		description = "Apply tonemapping.",
+		description = "Apply tonemapping (enables Toe, Slope, and Shoulder controls).",
 		section = environmentSettings
 	)
-	default Tonemapping tonemapping() { return Tonemapping.NONE; }
+	default boolean tonemapping() { return true; }
 
 	@Range(
 		min = 1,

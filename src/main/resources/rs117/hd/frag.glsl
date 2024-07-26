@@ -454,7 +454,9 @@ void main() {
         outputColor.rgb *= mix(compositeLight, vec3(1), unlit);
 
         // Apply tonemapping prior to SRGB conversion
-        outputColor.rgb = applyTonemapping(outputColor.rgb);
+        #if APPLY_TONEMAPPING
+            outputColor.rgb = tonemap(outputColor.rgb);
+        #endif
 
         // Convert to SRGB
         outputColor.rgb = linearToSrgb(outputColor.rgb);
