@@ -1026,18 +1026,18 @@ public class SceneUploader {
 						}
 					} else if (plugin.configGroundTextures && groundMaterial != null) {
 						materialA = groundMaterial.getRandomMaterial(
-							worldPos[0] + localVertices[0][0] / LOCAL_TILE_SIZE,
-							worldPos[1] + localVertices[0][1] / LOCAL_TILE_SIZE,
+							worldPos[0] + (localVertices[0][0] >> LOCAL_COORD_BITS),
+							worldPos[1] + (localVertices[0][1] >> LOCAL_COORD_BITS),
 							worldPos[2]
 						);
 						materialB = groundMaterial.getRandomMaterial(
-							worldPos[0] + localVertices[1][0] / LOCAL_TILE_SIZE,
-							worldPos[1] + localVertices[1][1] / LOCAL_TILE_SIZE,
+							worldPos[0] + (localVertices[1][0] >> LOCAL_COORD_BITS),
+							worldPos[1] + (localVertices[1][1] >> LOCAL_COORD_BITS),
 							worldPos[2]
 						);
 						materialC = groundMaterial.getRandomMaterial(
-							worldPos[0] + localVertices[2][0] / LOCAL_TILE_SIZE,
-							worldPos[1] + localVertices[2][1] / LOCAL_TILE_SIZE,
+							worldPos[0] + (localVertices[2][0] >> LOCAL_COORD_BITS),
+							worldPos[1] + (localVertices[2][1] >> LOCAL_COORD_BITS),
 							worldPos[2]
 						);
 					}
@@ -1172,18 +1172,18 @@ public class SceneUploader {
 				if (plugin.configGroundTextures) {
 					GroundMaterial groundMaterial = GroundMaterial.UNDERWATER_GENERIC;
 					materialA = groundMaterial.getRandomMaterial(
-						worldPos[0] + localVertices[0][0] / LOCAL_TILE_SIZE,
-						worldPos[1] + localVertices[0][1] / LOCAL_TILE_SIZE,
+						worldPos[0] + (localVertices[0][0] >> LOCAL_COORD_BITS),
+						worldPos[1] + (localVertices[0][1] >> LOCAL_COORD_BITS),
 						worldPos[2]
 					);
 					materialB = groundMaterial.getRandomMaterial(
-						worldPos[0] + localVertices[1][0] / LOCAL_TILE_SIZE,
-						worldPos[1] + localVertices[1][1] / LOCAL_TILE_SIZE,
+						worldPos[0] + (localVertices[1][0] >> LOCAL_COORD_BITS),
+						worldPos[1] + (localVertices[1][1] >> LOCAL_COORD_BITS),
 						worldPos[2]
 					);
 					materialC = groundMaterial.getRandomMaterial(
-						worldPos[0] + localVertices[2][0] / LOCAL_TILE_SIZE,
-						worldPos[1] + localVertices[2][1] / LOCAL_TILE_SIZE,
+						worldPos[0] + (localVertices[2][0] >> LOCAL_COORD_BITS),
+						worldPos[1] + (localVertices[2][1] >> LOCAL_COORD_BITS),
 						worldPos[2]
 					);
 				}

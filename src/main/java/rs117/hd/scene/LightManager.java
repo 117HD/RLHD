@@ -288,8 +288,8 @@ public class LightManager {
 					if (light.animationSpecific)
 						parentExists = light.def.animationIds.contains(light.actor.getAnimation());
 
-					int tileExX = light.origin[0] / LOCAL_TILE_SIZE + SCENE_OFFSET;
-					int tileExY = light.origin[2] / LOCAL_TILE_SIZE + SCENE_OFFSET;
+					int tileExX = (light.origin[0] >> LOCAL_COORD_BITS) + SCENE_OFFSET;
+					int tileExY = (light.origin[2] >> LOCAL_COORD_BITS) + SCENE_OFFSET;
 
 					// Some NPCs, such as Crystalline Hunllef in The Gauntlet, sometimes return scene X/Y values far outside the possible range.
 					Tile tile;
@@ -324,12 +324,10 @@ public class LightManager {
 								plane++;
 
 							// Interpolate between tile heights based on specific scene coordinates
-							float lerpX = (light.origin[0] % LOCAL_TILE_SIZE) / (float) LOCAL_TILE_SIZE;
-							float lerpY = (light.origin[2] % LOCAL_TILE_SIZE) / (float) LOCAL_TILE_SIZE;
-							int baseTileX =
-								(int) Math.floor(light.origin[0] / (float) LOCAL_TILE_SIZE) + SCENE_OFFSET;
-							int baseTileY =
-								(int) Math.floor(light.origin[2] / (float) LOCAL_TILE_SIZE) + SCENE_OFFSET;
+							float lerpX = fract(light.origin[0] / (float) LOCAL_TILE_SIZE);
+							float lerpY = fract(light.origin[2] / (float) LOCAL_TILE_SIZE);
+							int baseTileX = (light.origin[0] >> LOCAL_COORD_BITS) + SCENE_OFFSET;
+							int baseTileY = (light.origin[2] >> LOCAL_COORD_BITS) + SCENE_OFFSET;
 							float heightNorth = HDUtils.lerp(
 								tileHeights[plane][baseTileX][baseTileY + 1],
 								tileHeights[plane][baseTileX + 1][baseTileY + 1],
@@ -388,8 +386,8 @@ public class LightManager {
 				light.prevPlane = light.plane;
 				light.belowFloor = false;
 				light.aboveFloor = false;
-				int tileExX = light.pos[0] / LOCAL_TILE_SIZE + SCENE_OFFSET;
-				int tileExY = light.pos[2] / LOCAL_TILE_SIZE + SCENE_OFFSET;
+				int tileExX = (light.pos[0] >> LOCAL_COORD_BITS) + SCENE_OFFSET;
+				int tileExY = (light.pos[2] >> LOCAL_COORD_BITS) + SCENE_OFFSET;
 				if (light.plane >= 0 && tileExX >= 0 && tileExY >= 0 && tileExX < EXTENDED_SCENE_SIZE && tileExY < EXTENDED_SCENE_SIZE) {
 					byte hasTile = sceneContext.filledTiles[tileExX][tileExY];
 					if ((hasTile & (1 << light.plane + 1)) != 0)
@@ -906,8 +904,8 @@ public class LightManager {
 
 				int tileExX = HDUtils.clamp(lp.getSceneX() + SCENE_OFFSET, 0, EXTENDED_SCENE_SIZE - 2);
 				int tileExY = HDUtils.clamp(lp.getSceneY() + SCENE_OFFSET, 0, EXTENDED_SCENE_SIZE - 2);
-				float lerpX = (lightX % LOCAL_TILE_SIZE) / (float) LOCAL_TILE_SIZE;
-				float lerpZ = (lightZ % LOCAL_TILE_SIZE) / (float) LOCAL_TILE_SIZE;
+				float lerpX = fract(lightX / (float) LOCAL_TILE_SIZE);
+				float lerpZ = fract(lightZ / (float) LOCAL_TILE_SIZE);
 				int tileZ = HDUtils.clamp(plane, 0, MAX_Z - 1);
 
 				Tile[][][] tiles = sceneContext.scene.getExtendedTiles();

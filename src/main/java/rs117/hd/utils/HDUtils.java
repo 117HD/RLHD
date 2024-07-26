@@ -360,8 +360,8 @@ public class HDUtils {
 	 * The returned plane may be different, so it's not safe to use for indexing into overlay IDs for instance
 	 */
 	public static int[] localToWorld(Scene scene, int localX, int localY, int plane) {
-		int sceneX = localX / LOCAL_TILE_SIZE;
-		int sceneY = localY / LOCAL_TILE_SIZE;
+		int sceneX = localX >> LOCAL_COORD_BITS;
+		int sceneY = localY >> LOCAL_COORD_BITS;
 
 		if (scene.isInstance() && sceneX >= 0 && sceneY >= 0 && sceneX < SCENE_SIZE && sceneY < SCENE_SIZE) {
 			int chunkX = sceneX / 8;
