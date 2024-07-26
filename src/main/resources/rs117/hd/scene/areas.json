@@ -752,8 +752,9 @@
   {
     "name": "MISTHALIN_MYSTERY_MANOR_REGION",
     "aabbs": [
-      [ 1600, 4779, 1727, 4863 ]
-    ]
+      [ 1600, 4780, 1682, 4863 ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "FALADOR_EAST_BANK_PATH_FIX_2",
