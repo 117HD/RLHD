@@ -19777,7 +19777,7 @@
     "hideVanillaShadows": true
   },
   {
-    "description": "Murder Mystery Boat",
+    "description": "Misthalin Mystery Boat",
     "objectIds": [ 30108, 30109 ],
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
@@ -19786,6 +19786,19 @@
       {
         "colors": [ "h == 37" ],
         "baseMaterial": "TRANSPARENT"
+      }
+    ]
+  },
+  {
+    "description": "Misthalin Mystery Barrel of Rainwater",
+    "objectIds": [ 30124 ],
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "colors": [ "h == 37" ],
+        "baseMaterial": "GRAY_90"
       }
     ]
   },
