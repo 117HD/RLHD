@@ -452,7 +452,15 @@ void main() {
             getMaterialIsUnlit(material3)
         ));
         outputColor.rgb *= mix(compositeLight, vec3(1), unlit);
+
+        // Apply tonemapping prior to SRGB conversion
+        #if APPLY_TONEMAPPING
+            outputColor.rgb = tonemap(outputColor.rgb);
+        #endif
+
+        // Convert to SRGB
         outputColor.rgb = linearToSrgb(outputColor.rgb);
+
 
         if (isUnderwater) {
             sampleUnderwater(outputColor.rgb, waterType, waterDepth, lightDotNormals);
