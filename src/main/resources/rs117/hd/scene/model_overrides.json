@@ -6631,6 +6631,49 @@
     "uvScale": 0.85
   },
   {
+    "description": "Lumbridge Swamp Tree/Plant",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      1369
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.85,
+    "uvOrientation": 256,
+    "colorOverrides": [
+      {
+        "colors": "h == 28",
+        "baseMaterial": "LEAF_VEINS",
+        "uvScale": 0.2,
+        "uvType": "MODEL_XZ"
+      }
+    ]
+  },
+  {
+    "description": "Lumbridge Swamp - Wooden Cart with Canopy",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      5578
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 355,
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "FINE_CARPET",
+        "uvScale": 0.5,
+        "uvType": "MODEL_XZ"
+      }
+    ]
+  },
+  {
+    "description": "Lumbridge Swamp - Fire with Pot",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      26577
+    ]
+  },
+  {
     "description": "Wyvern Shortcut",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
@@ -13595,6 +13638,7 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       14740,
+      15674,
       22278,
       22280
     ],
@@ -19837,6 +19881,13 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.7
+  },
+  {
+    "description": "Lumbridge - Restless Ghost - Coffin",
+    "objectIds": [ 2145, 15052, 15053 ],
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.88
   },
   {
     "description": "Lumbridge crypt stone block walls",
