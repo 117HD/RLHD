@@ -187,3 +187,74 @@ int srgbToPackedHsl(vec3 srgb) {
 vec3 packedHslToSrgb(int hsl) {
     return hslToSrgb(unpackHsl(hsl));
 }
+
+uniform int tonemapping;
+uniform float toe;
+uniform float slope;
+uniform float shoulder;
+
+#define TONEMAPPING_NONE 0
+#define TONEMAPPING_FILMIC 1
+#define TONEMAPPING_ACES 2
+#define TONEMAPPING_UNREAL 3
+
+vec3 aces(vec3 x) {
+	// Uncharted II configurable tonemapper.
+
+	// A = shoulder strength
+	// B = linear strength
+	// C = linear angle
+	// D = toe strength
+	// E = toe numerator
+	// F = toe denominator
+	// Note: E / F = toe angle
+	// linearWhite = linear white point value
+
+    float A = shoulder;
+    float B = slope;
+    float C = 0.3f;
+    float D = toe;
+    float E = 0.01f;
+    float F = 0.30;
+	x = ((x * (A * x + C * B) + D * E) / (x * (A * x + B) + D * F)) - E / F;
+
+    //float linearWhite = 11.2f;
+	//x = vec3(linearWhite);
+	//vec3 white = ((x * (A * x + C * B) + D * E) / (x * (A * x + B) + D * F)) - E / F;
+
+	return x;// / white;
+}
+
+vec3 filmic(vec3 x) {
+  float white_clip = 0.004f;
+  vec3 X = max(vec3(0.0f), x - white_clip);
+  vec3 result = (X * (6.2f * X + 0.5f)) / (X * (6.2f * X + 1.7f) + 0.06f);
+  return pow(result, vec3(2.2f));
+}
+
+vec3 unreal(vec3 x) {
+  return x / (x + 0.155) * 1.019;
+}
+
+vec3 applyTonemapping(vec3 color)
+{
+    switch (tonemapping)
+    {
+        case TONEMAPPING_FILMIC:
+        {
+            return filmic(color);
+        }
+        case TONEMAPPING_ACES:
+        {
+            return aces(color);
+        }
+        case TONEMAPPING_UNREAL:
+        {
+            return unreal(color);
+        }
+        case TONEMAPPING_NONE:
+        default:
+            break;
+    }
+    return color;
+}

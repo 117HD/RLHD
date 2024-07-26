@@ -83,6 +83,7 @@ import rs117.hd.config.SeasonalHemisphere;
 import rs117.hd.config.SeasonalTheme;
 import rs117.hd.config.ShadingMode;
 import rs117.hd.config.ShadowMode;
+import rs117.hd.config.Tonemapping;
 import rs117.hd.config.UIScalingMode;
 import rs117.hd.config.VanillaShadowMode;
 import rs117.hd.data.WaterType;
@@ -127,6 +128,7 @@ import static net.runelite.api.Constants.SCENE_SIZE;
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.*;
 import static org.lwjgl.opencl.CL10.*;
+import static org.lwjgl.opengl.GL20C.glUniform1f;
 import static org.lwjgl.opengl.GL43C.*;
 import static rs117.hd.HdPluginConfig.*;
 import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
@@ -407,6 +409,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private int uniColorFilter;
 	private int uniColorFilterPrevious;
 	private int uniColorFilterFade;
+	private int uniTonemapping;
+	private int uniToe;
+	private int uniSlope;
+	private int uniShoulder;
 
 	// Shadow program uniforms
 	private int uniShadowLightProjectionMatrix;
@@ -453,6 +459,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public VanillaShadowMode configVanillaShadowMode;
 	public ColorFilter configColorFilter = ColorFilter.NONE;
 	public ColorFilter configColorFilterPrevious;
+	public Tonemapping configTonemapping = Tonemapping.NONE;
 
 	public boolean useLowMemoryMode;
 	public boolean enableDetailedTimers;
@@ -828,6 +835,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.define("UI_SCALING_MODE", config.uiScalingMode().getMode())
 			.define("COLOR_BLINDNESS", config.colorBlindness())
 			.define("APPLY_COLOR_FILTER", configColorFilter != ColorFilter.NONE)
+			.define("APPLY_TONEMAPPING", configTonemapping != Tonemapping.NONE)
 			.define("MATERIAL_CONSTANTS", () -> {
 				StringBuilder include = new StringBuilder();
 				for (Material m : Material.values())
@@ -955,6 +963,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			uniColorFilterPrevious = glGetUniformLocation(glSceneProgram, "colorFilterPrevious");
 			uniColorFilterFade = glGetUniformLocation(glSceneProgram, "colorFilterFade");
 		}
+
+		uniTonemapping = glGetUniformLocation(glSceneProgram, "tonemapping");
+		uniToe = glGetUniformLocation(glSceneProgram, "toe");
+		uniSlope = glGetUniformLocation(glSceneProgram, "slope");
+		uniShoulder = glGetUniformLocation(glSceneProgram, "shoulder");
 
 		uniUiTexture = glGetUniformLocation(glUiProgram, "uiTexture");
 		uniTexTargetDimensions = glGetUniformLocation(glUiProgram, "targetDimensions");
@@ -2129,6 +2142,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 			glUniform1f(uniSaturation, config.saturation() / 100f);
 			glUniform1f(uniContrast, config.contrast() / 100f);
+
+			// Tonemapping
+			glUniform1i(uniTonemapping, config.tonemapping().ordinal());
+			glUniform1f(uniToe, config.toe() / 100f);
+			glUniform1f(uniSlope, config.slope() / 100f);
+			glUniform1f(uniShoulder, config.shoulder() / 100f);
+
 			glUniform1i(uniUnderwaterEnvironment, environmentManager.isUnderwater() ? 1 : 0);
 			glUniform1i(uniUnderwaterCaustics, config.underwaterCaustics() ? 1 : 0);
 			glUniform3fv(uniUnderwaterCausticsColor, environmentManager.currentUnderwaterCausticsColor);
@@ -2154,6 +2174,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				long timeSinceChange = System.currentTimeMillis() - colorFilterChangedAt;
 				glUniform1f(uniColorFilterFade, clamp(timeSinceChange / COLOR_FILTER_FADE_DURATION, 0, 1));
 			}
+
+
 
 			// Calculate projection matrix
 			float[] projectionMatrix = Mat4.scale(client.getScale(), client.getScale(), 1);
@@ -2597,6 +2619,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			configGroundTextures = false;
 			configModelTextures = false;
 		}
+
+		configTonemapping = config.tonemapping();
 
 		if (configSeasonalTheme == SeasonalTheme.AUTOMATIC) {
 			var time = ZonedDateTime.now(ZoneOffset.UTC);
