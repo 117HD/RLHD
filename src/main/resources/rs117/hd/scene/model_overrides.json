@@ -19777,6 +19777,19 @@
     "hideVanillaShadows": true
   },
   {
+    "description": "Murder Mystery Boat",
+    "objectIds": [ 30108, 30109 ],
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "colors": [ "h == 37" ],
+        "baseMaterial": "TRANSPARENT"
+      }
+    ]
+  },
+  {
     "description": "Murder Mystery Wooden Double Doors",
     "objectIds": [ 1146, 11447, 30110, 30111 ],
     "baseMaterial": "WOOD_GRAIN_3",
