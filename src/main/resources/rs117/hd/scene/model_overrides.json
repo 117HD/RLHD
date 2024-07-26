@@ -19791,7 +19791,7 @@
   },
   {
     "description": "Misthalin Mystery Barrel of Rainwater",
-    "objectIds": [ 30124 ],
+    "objectIds": [ 30123, 30124 ],
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.8,
