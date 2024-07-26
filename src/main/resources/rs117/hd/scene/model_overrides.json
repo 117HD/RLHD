@@ -13071,17 +13071,10 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       2090,
-      26711,
-      42834
+      26711
     ],
     "uvType": "BOX",
-    "uvOrientation": 512,
-    "colorOverrides": [
-      {
-        "colors": "h == 8 && s == 7 ",
-        "baseMaterial": "METALLIC_NONE_GLOSS"
-      }
-    ]
+    "uvOrientation": 512
   },
   {
     "description": "Rough Wooden Plank Stairs ",
