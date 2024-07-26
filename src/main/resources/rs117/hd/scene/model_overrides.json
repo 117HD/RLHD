@@ -19132,6 +19132,7 @@
     "description": "Freestanding shelves with pots and pans - Lumbridge",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      1013,
       14869,
       15685,
       15686
@@ -19152,6 +19153,7 @@
     "description": "Cooking Shelves - Lumbridge kitchen",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      1022,
       14870
     ],
     "uvType": "BOX",
@@ -19324,7 +19326,14 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
-    "uvOrientationX": 512
+    "uvOrientationX": 512,
+    "colorOverrides": [
+      {
+        "description": "Gold handles",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS"
+      }
+    ]
   },
   {
     "description": "Objects - Wooden - Brown Drawers with golden handles",
@@ -19341,7 +19350,7 @@
       {
         "description": "Gold handles",
         "colors": "h ==8 && s == 7 && l > 19",
-        "baseMaterial": "GRAY_75"
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS"
       }
     ]
   },
@@ -21438,6 +21447,7 @@
     "objectIds": [
       1822,
       1824,
+      1827,
       1832,
       1835,
       1838
@@ -21525,6 +21535,25 @@
         "description": "Glass",
         "colors": "h == 8 && s == 5 && l < 5",
         "baseMaterial": "GRAY_75"
+      }
+    ]
+  },
+  {
+    "description": "Thin cupboard with golden handles and hinges",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      2612,
+      2613
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "retainVanillaUvs": false,
+    "colorOverrides": [
+      {
+        "description": "Gold",
+        "colors": "h == 6 && s == 7",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS"
       }
     ]
   }
