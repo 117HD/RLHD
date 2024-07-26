@@ -519,10 +519,12 @@
     "lightningEffects": true,
     "ambientColor": "#615c57",
     "ambientStrength": 1.5,
-    "directionalColor": "#ffbcb7",
-    "directionalStrength": 2,
+    "directionalColor": "#ffd4d1",
+    "directionalStrength": 0.1,
     "fogColor": "#0f0e0d",
-    "fogDepth": 30
+    "waterColor": "#1f2838",
+    "waterCausticsStrength": 0,
+    "fogDepth": 40
   },
   {
     "area": "MOTHERLODE_MINE",

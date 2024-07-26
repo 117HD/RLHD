@@ -396,6 +396,11 @@ public enum Material {
 	GRUNGE_3_LIGHT(GRUNGE_3, p -> p
 		.setBrightness(1.45f)
 	),
+	WATER_FOUNTAIN_FLAT(GRUNGE_3, p -> p
+		.setFlowMap(UNDERWATER_FLOW_MAP)
+		.setFlowMapStrength(0.2f)
+		.setFlowMapDuration(new float[] { 12, -12 })
+	),
 	ROCK_1_N,
 	ROCK_1(p -> p
 		.setNormalMap(ROCK_1_N)
@@ -583,9 +588,13 @@ public enum Material {
 		.setSpecular(0.3f, 30)
 	),
 	LIGHT_BARK_STONEPINE(BARK_STONEPINE, p -> p.setBrightness(1.75f)),
+	LEAF_VEINS,
 	WOOD_GRAIN,
 	WOOD_GRAIN_LIGHT(WOOD_GRAIN, p -> p
 		.setBrightness(1.5f)
+	),
+	WOOD_GRAIN_DARK(WOOD_GRAIN, p -> p
+		.setBrightness(0.75f)
 	),
 	WOOD_GRAIN_2_N,
 	WOOD_GRAIN_2(p -> p
