@@ -171,7 +171,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public static final int UV_SIZE = 4; // 4 floats per vertex
 	public static final int NORMAL_SIZE = 4; // 4 floats per vertex
 
-	public static final float ORTHOGRAPHIC_ZOOM = .0005f;
+	public static final float ORTHOGRAPHIC_ZOOM = .0002f;
 
 	public static float BUFFER_GROWTH_MULTIPLIER = 2; // can be less than 2 if trying to conserve memory
 
@@ -2977,8 +2977,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		// Hide everything outside the current area if area hiding is enabled
 		if (sceneContext.currentArea != null && renderable instanceof Actor) {
 			boolean inArea = sceneContext.currentArea.containsPoint(
-				scene.getBaseX() + x / LOCAL_TILE_SIZE,
-				scene.getBaseY() + z / LOCAL_TILE_SIZE,
+				scene.getBaseX() + (x >> LOCAL_COORD_BITS),
+				scene.getBaseY() + (z >> LOCAL_COORD_BITS),
 				client.getPlane()
 			);
 			if (!inArea)
@@ -3102,8 +3102,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 				int preOrientation = 0;
 				if (ModelHash.getType(hash) == ModelHash.TYPE_OBJECT) {
-					int tileExX = x / LOCAL_TILE_SIZE + SCENE_OFFSET;
-					int tileExY = z / LOCAL_TILE_SIZE + SCENE_OFFSET;
+					int tileExX = (x >> LOCAL_COORD_BITS) + SCENE_OFFSET;
+					int tileExY = (z >> LOCAL_COORD_BITS) + SCENE_OFFSET;
 					if (0 <= tileExX && tileExX < EXTENDED_SCENE_SIZE && 0 <= tileExY && tileExY < EXTENDED_SCENE_SIZE) {
 						Tile tile = sceneContext.scene.getExtendedTiles()[plane][tileExX][tileExY];
 						int config;

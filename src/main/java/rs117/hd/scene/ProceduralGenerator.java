@@ -47,6 +47,7 @@ import static rs117.hd.utils.HDUtils.HIDDEN_HSL;
 import static rs117.hd.utils.HDUtils.calculateSurfaceNormals;
 import static rs117.hd.utils.HDUtils.clamp;
 import static rs117.hd.utils.HDUtils.dotLightDirectionTile;
+import static rs117.hd.utils.HDUtils.fract;
 import static rs117.hd.utils.HDUtils.lerp;
 import static rs117.hd.utils.HDUtils.vertexHash;
 import static rs117.hd.utils.Vector.add;
@@ -512,8 +513,8 @@ public class ProceduralGenerator {
 									if (vertices[vertex][0] % LOCAL_TILE_SIZE == 0 &&
 										vertices[vertex][1] % LOCAL_TILE_SIZE == 0
 									) {
-										int vX = vertices[vertex][0] / LOCAL_TILE_SIZE + SCENE_OFFSET;
-										int vY = vertices[vertex][1] / LOCAL_TILE_SIZE + SCENE_OFFSET;
+										int vX = (vertices[vertex][0] >> LOCAL_COORD_BITS) + SCENE_OFFSET;
+										int vY = (vertices[vertex][1] >> LOCAL_COORD_BITS) + SCENE_OFFSET;
 
 										sceneContext.underwaterDepthLevels[z][vX][vY] = 0;
 									}
@@ -658,8 +659,8 @@ public class ProceduralGenerator {
 									// The vertex is at the corner of the tile;
 									// simply use the offset in the tile grid array.
 
-									int vX = vertices[vertex][0] / LOCAL_TILE_SIZE + SCENE_OFFSET;
-									int vY = vertices[vertex][1] / LOCAL_TILE_SIZE + SCENE_OFFSET;
+									int vX = (vertices[vertex][0] >> LOCAL_COORD_BITS) + SCENE_OFFSET;
+									int vY = (vertices[vertex][1] >> LOCAL_COORD_BITS) + SCENE_OFFSET;
 
 									sceneContext.vertexUnderwaterDepth.put(vertexKeys[vertex], underwaterDepths[z][vX][vY]);
 								}
@@ -669,12 +670,8 @@ public class ProceduralGenerator {
 									// interpolate between the height offsets at each corner to get the height offset
 									// of the vertex.
 
-									int tileX = x - SCENE_OFFSET;
-									int tileY = y - SCENE_OFFSET;
-									int localVertexX = vertices[vertex][0] - (tileX * LOCAL_TILE_SIZE);
-									int localVertexY = vertices[vertex][1] - (tileY * LOCAL_TILE_SIZE);
-									float lerpX = (float) localVertexX / (float) LOCAL_TILE_SIZE;
-									float lerpY = (float) localVertexY / (float) LOCAL_TILE_SIZE;
+									float lerpX = fract(vertices[vertex][0] / (float) LOCAL_TILE_SIZE);
+									float lerpY = fract(vertices[vertex][1] / (float) LOCAL_TILE_SIZE);
 									float northHeightOffset = lerp(
 										underwaterDepths[z][x][y + 1],
 										underwaterDepths[z][x + 1][y + 1],
