@@ -21523,7 +21523,7 @@
     ]
   },
   {
-    "description": "Lovkengja Walls",
+    "description": "Lovakengj Walls",
     "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
     "uvOrientation": 512,
     "uvType": "BOX",
@@ -21535,7 +21535,7 @@
     ]
   },
   {
-    "description": "Lovkengja Doors",
+    "description": "Lovakengj Doors",
     "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
     "uvOrientation": 512,
     "uvType": "BOX",
@@ -21548,7 +21548,7 @@
     ]
   },
   {
-    "description": "Lovkengja Walls with Rocks",
+    "description": "Lovakengj Walls with Rocks",
     "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
     "uvOrientation": 512,
     "uvType": "BOX",
@@ -21570,7 +21570,7 @@
     ]
   },
   {
-    "description": "Lovkengja Walls with Rocks and Window",
+    "description": "Lovakengj Walls with Rocks and Window",
     "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
     "uvOrientation": 512,
     "uvType": "BOX",
@@ -21592,7 +21592,7 @@
     ]
   },
   {
-    "description": "Lovkengja roofs",
+    "description": "Lovakengj roofs",
     "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
     "uvOrientation": 512,
     "uvType": "BOX",
