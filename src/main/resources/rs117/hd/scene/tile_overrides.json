@@ -41,10 +41,12 @@
   },
   {
     "name": "BLUE_LAVA",
-    "groundMaterial": "LAVA_NOISE",
     "setHue": 36,
     "setSaturation": 5,
-    "setLightness": 95
+    "setLightness": 95,
+    "forced": true,
+    "blended": false,
+    "heightOffset": -46
   },
   {
     "name": "SEASONAL_SAND",
@@ -3381,7 +3383,7 @@
   },
   {
     "name": "KARUULM_SLAYER_DUNGEON_LAVA",
-    "area": "KARUULM_SLAYER_DUNGEON_PLANE_0",
+    "area": "KARUULM_SLAYER_DUNGEON_BLUE_LAVA",
     "underlayIds": [
       0
     ],
@@ -3393,7 +3395,7 @@
     "blended": false,
     "heightOffset": -145,
     "replacements": {
-      "DEFAULT_LAVA": "!textures"
+      "BLUE_LAVA": "!textures"
     }
   },
   {
