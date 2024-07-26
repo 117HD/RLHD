@@ -35045,7 +35045,8 @@
     "duration": 1000,
     "range": 12,
     "objectIds": [
-      42819
+      42819,
+      42820
     ]
   },
   {
@@ -35499,5 +35500,39 @@
     "strength": 15,
     "color": "#ffffff",
     "offset": [ 0, 200, -70 ]
+  },
+  {
+    "description": "Tutorial Island - The Node - Furnace - 1",
+    "objectIds": [
+      42824
+    ],
+    "offset": [ 0, 80, -30 ],
+    "radius": 150,
+    "strength": 18,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20
+  },
+  {
+    "description": "Tutorial Island - The Node - Furnace - 2",
+    "objectIds": [
+      42824
+    ],
+    "offset": [ 0, 80, -90 ],
+    "radius": 250,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20
   }
 ]

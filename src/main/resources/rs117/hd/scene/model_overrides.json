@@ -1083,7 +1083,7 @@
       10041, 10832, 14309,
       16546, 16547, 16548, 19167,
       20845, 23639, 37967,
-      37968, 42842
+      37968, 42832, 42842
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -1462,9 +1462,14 @@
     "objectIds": [
       8861, 8862, 8863, 8864, 8876
     ],
-    "uvType": "MODEL_XZ",
-    "uvOrientation": 55,
-    "uvScale": 0.75
+    "upwardsNormals": true,
+    "colorOverrides": [
+      {
+        "colors": "h == 8",
+        "baseMaterial": "DIRT_2",
+        "uvType": "WORLD_XZ"
+      }
+    ]
   },
   {
     "description": "GRASS",
@@ -1624,24 +1629,177 @@
     "castShadows": false
   },
   {
+    "description": "Farming Patch Grass without Dirt",
+    "baseMaterial": "GRAY_65",
+    "objectIds": [
+      7558,
+      7559,
+      7560,
+      7574,
+      7575,
+      7576,
+      7744,
+      7745,
+      7746,
+      7773,
+      7774,
+      7775,
+      7841,
+      7842,
+      7843,
+      7844,
+      7845,
+      7846,
+      8048,
+      8049,
+      8050,
+      8133,
+      8134,
+      8135,
+      8136,
+      8137,
+      8138,
+      8312,
+      8313,
+      8314,
+      8340,
+      8341,
+      8342,
+      8393,
+      8394,
+      8395,
+      9167,
+      9168,
+      9163,
+      9178,
+      9179,
+      9180,
+      9182,
+      9183,
+      9184,
+      9186,
+      9187,
+      9188,
+      9211,
+      9212,
+      9213,
+      9225,
+      9226,
+      9227,
+      9234,
+      9235,
+      9236,
+      10097,
+      10098,
+      10099,
+      10103,
+      30477,
+      30475,
+      30479,
+      30484,
+      30485,
+      30486,
+      33695,
+      33696,
+      33697,
+      33722,
+      33723,
+      33724,
+      33981,
+      33982,
+      33983,
+      34036,
+      34037,
+      34038,
+      34040,
+      34041,
+      34042,
+      34044,
+      34045,
+      34046,
+      34048,
+      34049,
+      34050,
+      34908,
+      34909,
+      34910
+    ],
+    "upwardsNormals": true
+  },
+  {
+    "description": "Farming Patch Grass with Dirt",
+    "baseMaterial": "GRAY_65",
+    "objectIds": [
+      8208,
+      8209,
+      8210,
+      8574,
+      8575,
+      8576,
+      8577,
+      8578,
+      8579,
+      9400,
+      9401,
+      9402,
+      15063,
+      15064,
+      15065
+    ],
+    "upwardsNormals": true,
+    "colorOverrides": [
+      {
+        "colors": "h == 8",
+        "baseMaterial": "DIRT_2",
+        "uvType": "WORLD_XZ"
+      }
+    ]
+  },
+  {
+    "description": "Farming Patch Grass with Dirt and Scarecrow",
+    "baseMaterial": "GRAY_65",
+    "objectIds": [
+      7916,
+      7917,
+      7918,
+      9338,
+      9339,
+      9340
+    ],
+    "upwardsNormals": true,
+    "colorOverrides": [
+      {
+        "colors": "h == 8",
+        "baseMaterial": "DIRT_2",
+        "uvType": "WORLD_XZ"
+      }
+    ]
+  },
+  {
     "description": "Kharidian Desert Grass",
     "baseMaterial": "GRAY_75",
     "objectIds": [ 3547, 3548, 3549 ],
     "areas": [ "KHARID_DESERT_REGION" ]
   },
   {
-    "description": "Short grass which shouldn't cast shadows and shouldn't inherit tile color",
+    "description": "Short grass with rock objects",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [
+      17446,
+      17447,
+      17448,
+      17449
+    ],
+    "flatNormals": true,
+    "castShadows": false
+  },
+  {
+    "description": "Short grass with rock objects usually found around Farming Patches",
     "baseMaterial": "GRAY_75",
     "objectIds": [
       7129,
       7518,
       7519,
-      7520,
-      7521,
-      17446,
-      17447,
-      17448,
-      17449,
       34494,
       34495,
       34496,
@@ -1649,7 +1807,33 @@
       46412
     ],
     "flatNormals": true,
-    "castShadows": false
+    "castShadows": false,
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "ROCK_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Short grass with rock objects Morytania Farming Patches",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [
+      7520,
+      7521
+    ],
+    "flatNormals": true,
+    "castShadows": false,
+    "colorOverrides": [
+      {
+        "colors": "s == 5 || s == 7",
+        "baseMaterial": "ROCK_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
   },
   {
     "description": "Objects with Short grass which shouldn't cast shadows and shouldn't inherit tile color",
@@ -5628,7 +5812,8 @@
     "objectIds": [
       2097,
       4306,
-      6150
+      6150,
+      42825
     ],
     "uvType": "BOX",
     "uvScale": 1.1,
@@ -13397,6 +13582,34 @@
     "uvType": "BOX"
   },
   {
+    "description": "Object - Wooden - Barrel - with fish",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      9520
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": [ "s == 0" ],
+        "baseMaterial": "GRUNGE_1"
+      }
+    ]
+  },
+  {
+    "description": "Object - Wooden - Barrel - with coal",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      2139
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": [ "h == 42" ],
+        "baseMaterial": "GRUNGE_1"
+      }
+    ]
+  },
+  {
     "description": "Object - Dying Tree",
     "baseMaterial": "BARK",
     "objectIds": [
@@ -14464,6 +14677,178 @@
     "flatNormals": true
   },
   {
+    "description": "Tutorial Island - GIM Armour Crates",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      42827,
+      42828
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": [ "h == 0", "h == 37" ],
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS"
+      }
+    ]
+  },
+  {
+    "description": "Tutorial Island - The Node - Bank Chest",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      42834
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": [ "h == 8" ],
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS"
+      }
+    ]
+  },
+  {
+    "description": "Tutorial Island - The Node - Chest with Gold Trim",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      2079
+    ],
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": [ "h == 8" ],
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS"
+      }
+    ]
+  },
+  {
+    "description": "Tutorial Island - The Node - Statue",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      17458,
+      42822
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "colorOverrides": [
+      {
+        "colors": [ "s == 4", "s == 5", "h == 14" ],
+        "baseMaterial": "GRAY_90"
+      }
+    ]
+  },
+  {
+    "description": "Tutorial Island - The Node - Portal",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      42819,
+      42820
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": [ "h == 14", "h == 37", "h == 3" ],
+        "baseMaterial": "GRAY_90"
+      }
+    ]
+  },
+  {
+    "description": "Tutorial Island - The Node - Furnace",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "objectIds": [
+      42824
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": [ "h == 14", "h == 37", "h == 3" ],
+        "baseMaterial": "GRAY_90"
+      }
+    ]
+  },
+  {
+    "description": "Tutorial Island - Hanging Tools",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "objectIds": [
+      2192,
+      42830
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "colorOverrides": [
+      {
+        "colors": [ "h == 7" ],
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Tutorial Island - Workbench",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      2279
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "colorOverrides": [
+      {
+        "colors": [ "h == 0" ],
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Tutorial Island - Drill",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      2281
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "colorOverrides": [
+      {
+        "colors": [ "h == 0", "h == 5", "h == 10" ],
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
+  },
+  {
+    "description": "Tutorial Island - Shelves",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      3026,
+      3027,
+      3028,
+      4511,
+      5082,
+      41740
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75
+  },
+  {
+    "description": "Tutorial Island - Varrock - Bed",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      7190
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "colors": ["s == 0", "s == 1"],
+        "baseMaterial": "FINE_CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
     "description": "Karamja Volcano Entrance",
     "baseMaterial": "DIRT_2",
     "objectIds": [ 11441 ],
@@ -15301,7 +15686,7 @@
     "baseMaterial": "BARK",
     "objectIds": [
       4533, 4540, 8462, 8463,
-      8464, 8465, 8466,
+      8464, 8465, 8466, 8467,
       9734, 10820, 20806, 37969,
       37970, 42395, 42831, 51772
     ],
@@ -16845,7 +17230,6 @@
       26151,
       26152,
       26153,
-      26154,
       26155,
       26156,
       26157,
@@ -16868,7 +17252,16 @@
       27055
     ],
     "uvType": "BOX",
-    "uvScale": 0.6
+    "uvScale": 1.85
+  },
+  {
+    "description": "Abyss - Wall",
+    "baseMaterial": "ABYSSAL",
+    "objectIds": [
+      26154
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 1.85
   },
   {
     "description": "Abyss - Puddle",
@@ -19191,7 +19584,7 @@
   {
     "description": "Wooden hat stand",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 12981 ],
+    "objectIds": [ 7166, 12981 ],
     "uvType": "BOX",
     "uvScale": 0.8,
     "uvOrientationX": 512,
@@ -20929,7 +21322,7 @@
     "uvScale": 0.8,
     "colorOverrides": [
       {
-        "colors": [ 21525, 21567, 21630 ],
+        "colors": [ "h == 21" ],
         "baseMaterial": "NONE",
         "uvType": "WORLD_XY"
       }
@@ -21405,6 +21798,119 @@
       33977,
       33978,
       41426
+    ]
+  },
+  {
+    "description": "Falador Flower patch with rocks",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 69,
+    "colorOverrides": [
+      {
+        "colors": "h == 8 && s == 4",
+        "uvType": "WORLD_XZ",
+        "baseMaterial": "DIRT_1"
+      }
+    ],
+    "objectIds": [
+      24046,
+      24047
+    ]
+  },
+  {
+    "description": "Falador Flower patch",
+    "baseMaterial": "DIRT_1",
+    "uvType": "MODEL_XZ",
+    "objectIds": [
+      24048
+    ]
+  },
+  {
+    "description": "Lovakengj Walls",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      28484,
+      28485,
+      28486
+    ]
+  },
+  {
+    "description": "Lovakengj Doors",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      28479,
+      28480,
+      28481,
+      28482
+    ]
+  },
+  {
+    "description": "Lovakengj Walls with Rocks",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "ROCK_2",
+        "uvType": "BOX",
+        "uvScale": 0.7
+      }
+    ],
+    "objectIds": [
+      28474,
+      28475,
+      28476,
+      28477,
+      28478
+    ]
+  },
+  {
+    "description": "Lovakengj Walls with Rocks and Window",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "ROCK_2",
+        "uvType": "BOX",
+        "uvScale": 0.7
+      },
+      {
+        "colors": "h > 7",
+        "baseMaterial": "NONE"
+      }
+    ],
+    "objectIds": [
+      28483
+    ]
+  },
+  {
+    "description": "Lovakengj roofs",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      28487,
+      28488,
+      28489,
+      28490,
+      28491,
+      28492,
+      28493,
+      28494,
+      28495
     ]
   },
   {

@@ -2007,7 +2007,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				final int south = Math.max(camY - drawDistanceSceneUnits, 0);
 				final int width = east - west;
 				final int height = north - south;
-				final int farPlane = 20000;
+				final int depthScale = 10000;
 
 				final int maxDrawDistance = 90;
 				final float maxScale = 0.7f;
@@ -2015,7 +2015,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				final float scaleMultiplier = 1.0f - (getDrawDistance() / (maxDrawDistance * maxScale));
 				float scale = HDUtils.lerp(maxScale, minScale, scaleMultiplier);
 				Mat4.mul(lightProjectionMatrix, Mat4.scale(scale, scale, scale));
-				Mat4.mul(lightProjectionMatrix, Mat4.orthographic(width, height, -farPlane, farPlane));
+				Mat4.mul(lightProjectionMatrix, Mat4.orthographic(width, height, depthScale));
 				Mat4.mul(lightProjectionMatrix, lightViewMatrix);
 				Mat4.mul(lightProjectionMatrix, Mat4.translate(-(width / 2f + west), 0, -(height / 2f + south)));
 				glUniformMatrix4fv(uniShadowLightProjectionMatrix, false, lightProjectionMatrix);
@@ -2159,7 +2159,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			float[] projectionMatrix = Mat4.scale(client.getScale(), client.getScale(), 1);
 			if (orthographicProjection) {
 				Mat4.mul(projectionMatrix, Mat4.scale(ORTHOGRAPHIC_ZOOM, ORTHOGRAPHIC_ZOOM, -1));
-				Mat4.mul(projectionMatrix, Mat4.orthographic(viewportWidth, viewportHeight, -40000, 40000));
+				Mat4.mul(projectionMatrix, Mat4.orthographic(viewportWidth, viewportHeight, 40000));
 			} else {
 				Mat4.mul(projectionMatrix, Mat4.perspective(viewportWidth, viewportHeight, NEAR_PLANE));
 			}
