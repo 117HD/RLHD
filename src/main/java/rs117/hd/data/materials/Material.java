@@ -396,6 +396,10 @@ public enum Material {
 	GRUNGE_3_LIGHT(GRUNGE_3, p -> p
 		.setBrightness(1.45f)
 	),
+	GRUNGE_3_DULL(GRUNGE_3, p -> p
+		.setNormalMap(NONE)
+		.setSpecular(0f, 0)
+	),
 	ROCK_1_N,
 	ROCK_1(p -> p
 		.setNormalMap(ROCK_1_N)
@@ -560,8 +564,11 @@ public enum Material {
 	BARK_STONEPINE_N,
 	BARK_STONEPINE(p -> p
 		.setNormalMap(BARK_STONEPINE_N)
+		.setSpecular(0.3f, 30)),
+	BARK_STONEPINE_2(p -> p
+		.setNormalMap(BARK_STONEPINE_N)
 		.setSpecular(0.3f, 30)
-	),
+		.setBrightness(1.75f)),
 	LIGHT_BARK_STONEPINE(BARK_STONEPINE, p -> p.setBrightness(1.75f)),
 	WOOD_GRAIN,
 	WOOD_GRAIN_LIGHT(WOOD_GRAIN, p -> p
