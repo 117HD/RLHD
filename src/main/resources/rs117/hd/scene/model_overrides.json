@@ -21521,5 +21521,92 @@
     "objectIds": [
       24048
     ]
+  },
+  {
+    "description": "Lovakengj Walls",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      28484,
+      28485,
+      28486
+    ]
+  },
+  {
+    "description": "Lovakengj Doors",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      28479,
+      28480,
+      28481,
+      28482
+    ]
+  },
+  {
+    "description": "Lovakengj Walls with Rocks",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "ROCK_2",
+        "uvType": "BOX",
+        "uvScale": 0.7
+      }
+    ],
+    "objectIds": [
+      28474,
+      28475,
+      28476,
+      28477,
+      28478
+    ]
+  },
+  {
+    "description": "Lovakengj Walls with Rocks and Window",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "ROCK_2",
+        "uvType": "BOX",
+        "uvScale": 0.7
+      },
+      {
+        "colors": "h > 7",
+        "baseMaterial": "NONE"
+      }
+    ],
+    "objectIds": [
+      28483
+    ]
+  },
+  {
+    "description": "Lovakengj roofs",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      28487,
+      28488,
+      28489,
+      28490,
+      28491,
+      28492,
+      28493,
+      28494,
+      28495
+    ]
   }
 ]
