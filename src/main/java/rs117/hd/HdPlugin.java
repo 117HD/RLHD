@@ -171,7 +171,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public static final int UV_SIZE = 4; // 4 floats per vertex
 	public static final int NORMAL_SIZE = 4; // 4 floats per vertex
 
-	public static final float ORTHOGRAPHIC_ZOOM = .0005f;
+	public static final float ORTHOGRAPHIC_ZOOM = .0002f;
 
 	public static float BUFFER_GROWTH_MULTIPLIER = 2; // can be less than 2 if trying to conserve memory
 
