@@ -16046,19 +16046,28 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       4366,
-      4367
+      4367,
+      4507
     ],
     "uvType": "BOX",
     "uvOrientationX": 512
   },
   {
-    "description": "Freminnik - Game Objects - Wooden Shelf With Pots",
+    "description": "Game Objects - Wooden Shelf With Pots",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      4368
+      4368,
+      4514
     ],
     "uvType": "BOX",
-    "uvOrientationX": 512
+    "uvOrientationX": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX"
+      }
+    ]
   },
   {
     "description": "Freminnik - Game Objects - Wooden Shelf With Bucket",
@@ -19520,6 +19529,7 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       1013,
+      4505,
       14869,
       15685,
       15686
@@ -19856,8 +19866,9 @@
   },
   {
     "description": "Wooden Wardrobe",
-    "objectIds": [ 7198 ],
+    "objectIds": [ 7193, 7198 ],
     "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientationY": 512,
     "uvType": "BOX",
     "uvScale": 0.7
   },
@@ -22014,7 +22025,9 @@
     "objectIds": [
       834,
       836,
-      837
+      837,
+      3039,
+      3481
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -22034,6 +22047,35 @@
       {
         "description": "Glass",
         "colors": "h == 8 && s == 5 && l < 5",
+        "baseMaterial": "GRAY_75"
+      }
+    ]
+  },
+  {
+    "description": "Weapons case With bows and arrows",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      3040,
+      3044
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "retainVanillaUvs": false,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS"
+      },
+      {
+        "description": "Gold",
+        "colors": "h == 10 && s == 7",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS"
+      },
+      {
+        "description": "Glass",
+        "colors": "h == 37 && s == 1",
         "baseMaterial": "GRAY_75"
       }
     ]
@@ -22136,6 +22178,109 @@
         "baseMaterial": "GRAY_65",
         "uvType": "BOX",
         "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "Wine rack with bottles",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [
+      2453
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "retainVanillaUvs": false,
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h > 5 && h < 8",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Wooden bookcase with brown and taupe colored books",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      7176
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Paper",
+        "colors": "h == 10 && s == 0",
+        "baseMaterial": "GRAY_65",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Green books",
+        "colors": "h > 12",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Red books",
+        "colors": "h == 4",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Dark brown books",
+        "colors": "h == 7 && s > 4",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Dark brown books",
+        "colors": "h == 6 && s == 3",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "General Store Shelves with metal and glass",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      3022,
+      3023,
+      3034,
+      3035
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "retainVanillaUvs": false,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Green blue and taupe bottles",
+        "colors": "h > 9",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Red bottles",
+        "colors": "h == 0 && s == 7",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      },
+      {
+        "description": "light red bottles",
+        "colors": "h == 0 && s == 4",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
       }
     ]
   }
