@@ -22283,5 +22283,49 @@
         "uvType": "BOX"
       }
     ]
+  },
+  {
+    "description": "Shelf with helmets",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      850
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "retainVanillaUvs": false,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Shelf with helmets",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      24001
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 512,
+    "retainVanillaUvs": false,
+    "colorOverrides": [
+      {
+        "description": "Steel",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Iron",
+        "colors": "h == 42 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX"
+      }
+    ]
   }
 ]
