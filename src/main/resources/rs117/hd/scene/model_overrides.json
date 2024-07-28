@@ -5355,7 +5355,6 @@
       10490,
       12544,
       14762,
-      14852,
       15684,
       17145,
       25603,
@@ -5389,6 +5388,7 @@
       12543,
       12962,
       14851,
+      14852,
       20058,
       23177,
       39716
@@ -19225,6 +19225,69 @@
     "uvType": "BOX",
     "uvOrientation": 512,
     "uvScale": 0.25
+  },
+  {
+    "description": "Kourend - Hosidius - Tithe Farm - Seed Table",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      27430
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_2",
+        "uvScale": 0.4,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Kourend - Hosidius - Tithe Farm - Table with Dishes",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      2998
+    ],
+    "colorOverrides": [
+      {
+        "colors": ["s == 3", "s == 4", "s == 5"],
+        "baseMaterial": "WOOD_GRAIN_2",
+        "uvScale": 0.4,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Kourend - Hosidius - Tithe Farm - Water Barrel",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      5598
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvScale": 0.4,
+        "uvOrientation": 512,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Kourend - Hosidius - Tithe Farm - Cart with covering",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      27429
+    ],
+    "uvType": "BOX",
+    "uvOrientationX": -165,
+    "colorOverrides": [
+      {
+        "colors": ["h == 3", "h == 4", "h == 5", "h == 8", "h == 15"],
+        "baseMaterial": "GRUNGE_3",
+        "uvScale": 0.33,
+        "uvType": "MODEL_XZ"
+      }
+    ]
   },
   {
     "description": "Old Ones Tent",
