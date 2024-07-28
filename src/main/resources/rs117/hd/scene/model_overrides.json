@@ -5280,7 +5280,8 @@
       8772,
       9531,
       25601,
-      25676
+      25676,
+      27511
     ],
     "uvType": "BOX",
     "uvOrientation": 512
@@ -5391,6 +5392,7 @@
       14852,
       20058,
       23177,
+      29334,
       39716
     ],
     "uvType": "BOX",
@@ -13140,6 +13142,7 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       2090,
+      21301,
       26711
     ],
     "uvType": "BOX",
@@ -13637,6 +13640,7 @@
     "description": "Object - Wooden - Barrel",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      10371,
       14740,
       15674,
       22278,
@@ -19348,6 +19352,42 @@
       {
         "colors": ["s == 0", "h == 16"],
         "baseMaterial": "METALLIC_1"
+      }
+    ]
+  },
+  {
+    "description": "Kourend - Hosidius - Vinery - Grape Arbor",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      27510
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512
+  },
+  {
+    "description": "Kourend - Hosidius - Vinery - Stacked Barrels",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      27520
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Kourend - Hosidius - Vinery - Big Wine Barrels",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      11808,
+      41928
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "colors": ["h == 0", "h == 16"],
+        "baseMaterial": "GRUNGE_3"
       }
     ]
   },
