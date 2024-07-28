@@ -1426,6 +1426,16 @@
     "retainVanillaUvs": true
   },
   {
+    "description": "Objects - Tree - Juniper",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      27499
+    ],
+    "uvType": "BOX",
+    "uvOrientationZ": 128,
+    "retainVanillaUvs": true
+  },
+  {
     "description": "Objects - Trees - Tirannwn Leafless Tree",
     "baseMaterial": "BARK",
     "objectIds": [
@@ -8054,6 +8064,14 @@
       22796,
       22797,
       22798
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Objects - Mushroom, Red with white spots",
+    "baseMaterial": "GRAY_70",
+    "objectIds": [
+      7135
     ],
     "uvType": "GEOMETRY"
   },
@@ -19387,6 +19405,53 @@
     "colorOverrides": [
       {
         "colors": ["h == 0", "h == 16"],
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
+  },
+  {
+    "description": "Kourend - Hosidius - Vinery - Arching Grape Vine",
+    "baseMaterial": "LIGHT_BARK",
+    "objectIds": [
+      1754
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": ["h == 8", "h == 9", "h == 10", "h == 11", "h == 13"],
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
+  },
+  {
+    "description": "Kourend - Hosidius - Vinery - Grape Vine",
+    "baseMaterial": "LIGHT_BARK",
+    "objectIds": [
+      1750,
+      1751,
+      1752,
+      1753,
+      11167,
+      11168,
+      11169,
+      11170,
+      11171,
+      11172,
+      11173,
+      11749,
+      11751,
+      11753,
+      11755,
+      11757,
+      11759
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "colorOverrides": [
+      {
+        "colors": ["h == 8", "h == 9", "h == 10","h == 11", "h == 13", "h == 57"],
         "baseMaterial": "GRUNGE_3"
       }
     ]
