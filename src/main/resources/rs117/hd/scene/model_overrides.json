@@ -19342,18 +19342,33 @@
     ]
   },
   {
-    "description": "Kourend - Hosidius - Tithe Farm - Sacks",
-    "baseMaterial": "FINE_CARPET",
+    "description": "Kourend - Hosidius - Tithe Farm - Fruit Sacks",
+    "baseMaterial": "GRUNGE_1",
     "objectIds": [
-      10313,
-      27431
+      27431,
+      27432
     ],
-    "uvType": "BOX",
-    "uvScale": 0.6,
     "colorOverrides": [
       {
-        "colors": ["h == 9", "h == 16"],
-        "baseMaterial": "GRUNGE_1"
+        "colors": ["h == 7"],
+        "baseMaterial": "FINE_CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Kourend - Hosidius - Tithe Farm - Small Sacks",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      10313
+    ],
+    "colorOverrides": [
+      {
+        "colors": ["h == 8"],
+        "baseMaterial": "FINE_CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.7
       }
     ]
   },
