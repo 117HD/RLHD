@@ -19290,6 +19290,68 @@
     ]
   },
   {
+    "description": "Kourend - Hosidius - Tithe Farm - Bed - Sleeping Bag",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      6250
+    ],
+    "colorOverrides": [
+      {
+        "colors": ["h == 0", "h == 6"],
+        "baseMaterial": "FINE_CARPET",
+        "uvScale": 0.65,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Kourend - Hosidius - Tithe Farm - Baskets",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      27521,
+      27522,
+      27524
+    ],
+    "colorOverrides": [
+      {
+        "colors": ["h == 7", "h == 16"],
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
+  },
+  {
+    "description": "Kourend - Hosidius - Tithe Farm - Sacks",
+    "baseMaterial": "FINE_CARPET",
+    "objectIds": [
+      10313,
+      27431
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "colors": ["h == 9", "h == 16"],
+        "baseMaterial": "GRUNGE_1"
+      }
+    ]
+  },
+  {
+    "description": "Kourend - Hosidius - Tithe Farm - Spades and Rakes",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      7516
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 552,
+    "colorOverrides": [
+      {
+        "colors": ["s == 0", "h == 16"],
+        "baseMaterial": "METALLIC_1"
+      }
+    ]
+  },
+  {
     "description": "Old Ones Tent",
     "baseMaterial": "FINE_CARPET",
     "objectIds": [
@@ -19979,11 +20041,17 @@
   },
   {
     "description": "Lumbridge crypt ivy",
-    "baseMaterial": "PLANT_GRUNGE_2",
+    "baseMaterial": "LEAF_VEINS",
     "objectIds": [ 24160, 24161, 24162, 24163, 24164 ],
     "uvType": "MODEL_YZ",
     "uvOrientation": 144,
-    "uvScale": 0.6
+    "uvScale": 0.1,
+    "colorOverrides": [
+      {
+        "colors": [ "h == 17" ],
+        "baseMaterial": "GRUNGE_1"
+      }
+    ]
   },
   {
     "description": "Objects - Wooden - Brown Drawers with metallic handles",
