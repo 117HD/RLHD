@@ -19210,6 +19210,23 @@
     ]
   },
   {
+    "description": "Kourend - Hosidius - Tithe Farm - Greenhouse Walls",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      1755,
+      1756,
+      1757,
+      1758,
+      1759,
+      1760,
+      1761,
+      27472
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.25
+  },
+  {
     "description": "Old Ones Tent",
     "baseMaterial": "FINE_CARPET",
     "objectIds": [
