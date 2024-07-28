@@ -19374,6 +19374,20 @@
     ]
   },
   {
+    "description": "Kourend - Hosidius - Tithe Farm - Giant Fruits",
+    "baseMaterial": "GRUNGE_3_DARK",
+    "objectIds": [
+      27384, 27385, 27386, 27387, 27388, 27389,
+      27390, 27391, 27392, 27393, 27394, 27395,
+      27396, 27397, 27398, 27399, 27400, 27401,
+      27402, 27403, 27404, 27405, 27406, 27407,
+      27408, 27409, 27410, 27411, 27412, 27413,
+      27414, 27415, 27416, 27417, 27418, 27419,
+      27420, 27421, 27422, 27423, 27424
+    ],
+    "uvType": "BOX"
+  },
+  {
     "description": "Kourend - Hosidius - Vinery - Grape Arbor",
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [
