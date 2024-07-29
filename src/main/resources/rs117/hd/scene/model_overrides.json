@@ -22091,5 +22091,24 @@
       28494,
       28495
     ]
+  },
+  {
+    "description": "Stool with Red cushion",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Red Cushion",
+        "colors": "h == 0 && s > 3 && s < 6",
+        "baseMaterial": "FINE_CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.75,
+        "uvOrientation": 256
+      }
+    ],
+    "objectIds": [
+      24322,
+      24323
+    ]
   }
 ]
