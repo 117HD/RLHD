@@ -9879,7 +9879,7 @@
     "uvScale": 0.6
   },
   {
-    "description": "Wooden chair with combined back and cushioned - Blue or white",
+    "description": "Wooden chair with combined back and cushioned",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -9897,9 +9897,17 @@
         "baseMaterial": "FINE_CARPET",
         "uvType": "BOX",
         "uvScale": 0.65
+      },
+      {
+        "description": "Red Cushion",
+        "colors": "h == 0 && s == 7",
+        "baseMaterial": "FINE_CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.65
       }
     ],
     "objectIds": [
+      1090,
       7404,
       24103
     ]
@@ -22178,6 +22186,7 @@
       }
     ],
     "objectIds": [
+      1100,
       1101,
       39137
     ]
