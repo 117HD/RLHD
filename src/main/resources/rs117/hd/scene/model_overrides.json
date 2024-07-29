@@ -22167,5 +22167,49 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.6
+  },
+  {
+    "description": "Mine cart tracks",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientationX": 512,
+    "objectIds": [
+      638,
+      639,
+      640,
+      641,
+      642,
+      643,
+      644,
+      645,
+      646
+    ],
+    "colorOverrides": [
+      {
+        "colors": " h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Mine cart track Buffers",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientationX": 512,
+    "objectIds": [
+      636
+    ],
+    "colorOverrides": [
+      {
+        "colors": " h == 0 && s == 0",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
   }
 ]
