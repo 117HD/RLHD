@@ -19870,11 +19870,11 @@
   },
   {
     "description": "Red wall paper and wooden panneled walls",
-    "objectIds": [ 11512, 11513, 11515, 11536, 11537, 11540 ],
+    "objectIds": [ 11512, 11513, 11515, 11536, 11537, 11540, 30156 ],
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
-    "uvScale": 0.75,
     "uvOrientation": 512,
+    "retainVanillaUvs": false,
     "colorOverrides": [
       {
         "description": "Red carpet",
@@ -19884,7 +19884,7 @@
       },
       {
         "description": "Metal",
-        "colors": [ "h == 0 && s == 0" ],
+        "colors": [ "h == 0 && s == 0 && l < 24" ],
         "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
         "uvType": "BOX"
       }
