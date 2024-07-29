@@ -22095,6 +22095,25 @@
     ]
   },
   {
+    "description": "Dwarven mine tent",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientation": 512,
+    "objectIds": [
+      11858,
+      11859,
+      11860
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": [ "h == 0" ],
+        "baseMaterial": "CARPET",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
     "description": "Winch in the Dwarven Mine entrance north of falador",
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "uvOrientation": 512,
