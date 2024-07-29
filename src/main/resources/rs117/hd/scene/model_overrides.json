@@ -22110,5 +22110,32 @@
       24322,
       24323
     ]
+  },
+  {
+    "description": "Wooden bar with glasses and cocktails on it",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Beer",
+        "colors": "h == 6 && s == 7",
+        "baseMaterial": "GRAY_75"
+      },
+      {
+        "description": "Green and blue bottles",
+        "colors": "h > 12",
+        "baseMaterial": "GRAY_75"
+      }
+    ],
+    "objectIds": [
+      2323,
+      2324,
+      2325,
+      2326,
+      2328,
+      2329,
+      2330,
+      2331
+    ]
   }
 ]
