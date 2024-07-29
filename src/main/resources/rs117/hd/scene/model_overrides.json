@@ -3041,7 +3041,7 @@
   },
   {
     "description": "Wintertodt Tents",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [
       29307,
       29306,
@@ -4907,7 +4907,7 @@
   },
   {
     "description": "Fine Carpet",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [
       925,
       926,
@@ -6660,7 +6660,7 @@
     "colorOverrides": [
       {
         "colors": "h == 5",
-        "baseMaterial": "FINE_CARPET",
+        "baseMaterial": "CARPET",
         "uvScale": 0.5,
         "uvType": "MODEL_XZ"
       }
@@ -7399,7 +7399,7 @@
   },
   {
     "description": "Round Rug",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [
       2455,
       2456,
@@ -8726,7 +8726,7 @@
   },
   {
     "description": "Lunar Island - Ground - Carpet",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [
       16709,
       16710,
@@ -9362,7 +9362,7 @@
   },
   {
     "description": "Wilderness - Vet'ion/Calvar'ion Lair - Carpet",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [
       46982,
       46983,
@@ -9378,7 +9378,7 @@
   },
   {
     "description": "Wilderness - Vet'ion/Calvar'ion Lair - Banner",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [
       46991
     ],
@@ -10590,7 +10590,7 @@
       6766,
       6767
     ],
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "uvType": "WORLD_XZ",
     "flatNormals": true,
     "castShadows": false
@@ -11100,7 +11100,7 @@
   },
   {
     "description": "Al-Kharid Hanging Door",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [
       1533,
       1534
@@ -11170,7 +11170,7 @@
   },
   {
     "description": "Kharidian Tent",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [
       1673,
       1674,
@@ -11293,7 +11293,7 @@
   },
   {
     "description": "Nardah Cloth Awning",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [
       6602
     ],
@@ -11527,7 +11527,7 @@
   },
   {
     "description": "Exercise Mats",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [
       20810,
       16508,
@@ -12990,7 +12990,7 @@
   },
   {
     "description": "Sleeping Bag",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [
       28521
     ],
@@ -13710,7 +13710,7 @@
   },
   {
     "description": "Fortune-teller Aris - Tent",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [
       2460,
       2461,
@@ -14654,7 +14654,7 @@
       10758,
       10759
     ],
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "uvType": "WORLD_XZ",
     "flatNormals": true,
     "castShadows": false
@@ -15009,7 +15009,7 @@
     "colorOverrides": [
       {
         "colors": ["s == 0", "s == 1"],
-        "baseMaterial": "FINE_CARPET",
+        "baseMaterial": "CARPET",
         "uvType": "BOX",
         "uvScale": 0.4
       }
@@ -15279,7 +15279,7 @@
   },
   {
     "description": "Stronghold Of Security - Pestilence - Textured - Hay - Gift of Plenty - Sack",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [
       19000
     ],
@@ -15774,7 +15774,7 @@
   },
   {
     "description": "White Bed with pillow",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [ 46841 ],
     "uvType": "BOX",
     "uvOrientation": 64
@@ -17900,7 +17900,7 @@
   },
   {
     "description": "Objects - Cloth - Bentamirs Bed ",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [ 6184 ],
     "uvType": "BOX",
     "uvOrientation": 88
@@ -18046,7 +18046,7 @@
   },
   {
     "description": "Varlamore Rugs and carpets",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [
       52467,
       52468,
@@ -18066,7 +18066,7 @@
   },
   {
     "description": "Varlamore Cushions",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [
       53012,
       52436,
@@ -18078,7 +18078,7 @@
   },
   {
     "description": "Varlamore Awnings Small Red",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [
       51944
     ],
@@ -18086,7 +18086,7 @@
   },
   {
     "description": "Varlamore Awnings Large Red, MODEL_XZ is used with intent",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [
       51940,
       51941,
@@ -18111,7 +18111,7 @@
   },
   {
     "description": "Varlamore Circular Awning, MODEL_XZ is used with intent",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [
       51943
     ],
@@ -18119,7 +18119,7 @@
   },
   {
     "description": "Varlamore Banners",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [
       51946,
       51947,
@@ -18606,7 +18606,7 @@
     "colorOverrides": [
       {
         "colors": [ "h == 0", "h == 6", "h == 8", "h == 14" ],
-        "baseMaterial": "FINE_CARPET",
+        "baseMaterial": "CARPET",
         "uvType": "WORLD_XY",
         "uvScale": 0.66
       }
@@ -19211,7 +19211,7 @@
   },
   {
     "description": "Old Ones Tent",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [
       46324
     ],
@@ -20128,7 +20128,7 @@
   },
   {
     "description": "Tent - High poly mesh",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [
       23061,
       23062,
@@ -20727,7 +20727,7 @@
   },
   {
     "description": "Brown Bed with pillow",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [ 419 ],
     "uvType": "BOX",
     "uvOrientation": 64
@@ -20898,7 +20898,7 @@
   },
   {
     "description": "Deaths office - Objects - Rug",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [
       39585,
       39586,
