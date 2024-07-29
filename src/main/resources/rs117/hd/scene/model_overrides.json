@@ -19853,6 +19853,22 @@
     ]
   },
   {
+    "description": "Misthalin Mystery Staircase",
+    "objectIds": [ 30139 ],
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "description": "Red carpet",
+        "colors": [ "h == 0 && s > 0" ],
+        "baseMaterial": "FINE_CARPET",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
     "description": "Murder Mystery Wooden Double Doors",
     "objectIds": [ 1146, 11447, 30110, 30111 ],
     "baseMaterial": "WOOD_GRAIN_3",
