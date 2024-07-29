@@ -19884,7 +19884,7 @@
       },
       {
         "description": "Metal",
-        "colors": [ "h == 0 && s 00 0" ],
+        "colors": [ "h == 0 && s == 0" ],
         "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
         "uvType": "BOX"
       }
