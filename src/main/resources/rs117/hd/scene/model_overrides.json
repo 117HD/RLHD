@@ -11775,6 +11775,7 @@
     "baseMaterial": "CARPET",
     "objectIds": [
       3025,
+      10314,
       12394,
       14743,
       16867,
@@ -14956,7 +14957,8 @@
     "description": "Tutorial Island - Workbench",
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [
-      2279
+      2279,
+      24171
     ],
     "uvType": "BOX",
     "uvScale": 0.3,
@@ -22091,5 +22093,79 @@
       28494,
       28495
     ]
+  },
+  {
+    "description": "Winch in the Dwarven Mine entrance north of falador",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvOrientation": 512,
+    "objectIds": [
+      11863
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "colorOverrides": [
+      {
+        "colors": [ "h == 0" ],
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Post at Dwarven Mine",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      11854
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.35
+  },
+  {
+    "description": "Post at Dwarven Mine",
+    "baseMaterial": "ROPE",
+    "objectIds": [
+      11856,
+      11857
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": [ "h == 0" ],
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Dwarven Mine ladder shutters",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientationX": 512,
+    "objectIds": [
+      11864
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Light wooden ladder in an dirt ground hole",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientationX": 512,
+    "objectIds": [
+      11867
+    ],
+    "colorOverrides": [
+      {
+        "colors": " h > 6",
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
   }
 ]
