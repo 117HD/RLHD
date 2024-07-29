@@ -22135,5 +22135,20 @@
       28494,
       28495
     ]
+  },
+  {
+    "description": "Golden 3 candle scone with lit flame - static",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvScale": 0.6,
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": [ "h == 6 && s < 3" ],
+        "baseMaterial": "NONE"
+      }
+    ],
+    "objectIds": [
+      11474
+    ]
   }
 ]
