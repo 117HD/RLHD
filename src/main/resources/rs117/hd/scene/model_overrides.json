@@ -22204,7 +22204,8 @@
     "description": "Wooden bookcase with brown and taupe colored books",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      7176
+      7176,
+      15461
     ],
     "uvType": "BOX",
     "colorOverrides": [
