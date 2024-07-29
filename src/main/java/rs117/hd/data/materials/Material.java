@@ -465,11 +465,12 @@ public enum Material {
 		.setSpecular(1, 20)
 	),
 	ROPE,
-	CARPET,
-	FINE_CARPET(CARPET, p -> p
-		.setBrightness(1.4f)
-		.setTextureScale(0.5f, 0.5f)),
-
+	CARPET_N,
+	CARPET(p -> p
+		.setNormalMap(CARPET_N)
+		.setSpecular(0.25f,30)
+	),
+	BURLAP,
 	FALADOR_PATH_BRICK_N,
 	FALADOR_PATH_BRICK(p -> p
 		.setNormalMap(FALADOR_PATH_BRICK_N)

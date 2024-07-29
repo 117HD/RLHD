@@ -11747,7 +11747,7 @@
   },
   {
     "description": "Sacks - Yellow",
-    "baseMaterial": "CARPET",
+    "baseMaterial": "BURLAP",
     "objectIds": [
       23,
       365,
@@ -11762,7 +11762,7 @@
   },
   {
     "description": "Sacks - Grey",
-    "baseMaterial": "CARPET",
+    "baseMaterial": "BURLAP",
     "objectIds": [
       10304, 10305
     ],
@@ -11772,7 +11772,7 @@
   },
   {
     "description": "Sacks Pile",
-    "baseMaterial": "CARPET",
+    "baseMaterial": "BURLAP",
     "objectIds": [
       3025,
       12394,
@@ -11789,7 +11789,7 @@
   },
   {
     "description": "Sacks with Sword",
-    "baseMaterial": "CARPET",
+    "baseMaterial": "BURLAP",
     "objectIds": [
       12392,
       16871
@@ -11800,7 +11800,7 @@
   },
   {
     "description": "Sack",
-    "baseMaterial": "CARPET",
+    "baseMaterial": "BURLAP",
     "objectIds": [
       7512,
       12396,
@@ -11812,10 +11812,10 @@
   },
   {
     "description": "Object - Sack with Hey or Grain",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "BURLAP",
     "objectIds": [ 5574, 10306, 16878, 35954 ],
     "uvType": "BOX",
-    "uvScale": 0.85,
+    "uvScale": 0.75,
     "retainVanillaUvs": false
   },
   {
@@ -12355,12 +12355,12 @@
     ]
   },
   {
-    "description": "Sack",
+    "description": "Rack",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       17298
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "uvScale": 0.4
   },
   {
