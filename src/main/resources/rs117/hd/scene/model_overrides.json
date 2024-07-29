@@ -9879,6 +9879,24 @@
     "uvScale": 0.6
   },
   {
+    "description": "Wooden chair with combined blue back and cushioned",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Cushion",
+        "colors": "h > 30",
+        "baseMaterial": "FINE_CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.65
+      }
+    ],
+    "objectIds": [
+      7404
+    ]
+  },
+  {
     "description": "Objects - Wooden - Tables - Round",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
