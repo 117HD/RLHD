@@ -22093,7 +22093,7 @@
     ]
   },
   {
-    "description": "Stool with Red cushion",
+    "description": "Stool with Red or blue cushions",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "colorOverrides": [
@@ -22104,11 +22104,22 @@
         "uvType": "BOX",
         "uvScale": 0.75,
         "uvOrientation": 256
+      },
+      {
+        "description": "Blue Cushion",
+        "colors": "h > 30",
+        "baseMaterial": "FINE_CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.75,
+        "uvOrientation": 256
       }
     ],
     "objectIds": [
+      2311,
+      2312,
       24322,
-      24323
+      24323,
+      39138
     ]
   },
   {
@@ -22128,6 +22139,15 @@
       }
     ],
     "objectIds": [
+      2314,
+      2315,
+      2316,
+      2317,
+      2318,
+      2319,
+      2320,
+      2321,
+      2322,
       2323,
       2324,
       2325,
