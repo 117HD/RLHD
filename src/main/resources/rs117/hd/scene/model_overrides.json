@@ -14130,7 +14130,7 @@
   },
   {
     "description": "Objects - Textured Rocks - Rocks with Vines",
-    "baseMaterial": "PLANT_GRUNGE_1",
+    "baseMaterial": "LEAF_VEINS",
     "textureMaterial": "HD_CONCRETE",
     "objectIds": [
       10786,
@@ -22104,6 +22104,23 @@
       28493,
       28494,
       28495
+    ]
+  },
+  {
+    "description": "Metal Plough with wooden handles",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientation": 256,
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": " h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvOrientation": 920
+      }
+    ],
+    "objectIds": [
+      296
     ]
   }
 ]
