@@ -20521,7 +20521,8 @@
     "description": "Wooden textured workbench",
     "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [
-      609
+      609,
+      610
     ],
     "uvType": "BOX",
     "uvOrientationX": 512,
