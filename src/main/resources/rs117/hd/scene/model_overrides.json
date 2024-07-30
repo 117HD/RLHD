@@ -7611,6 +7611,7 @@
     "objectIds": [
       2071,
       9534,
+      9064,
       11485,
       11486,
       12547,
@@ -11301,7 +11302,7 @@
   },
   {
     "description": "Tree - Non interactable - Jungle",
-    "baseMaterial": "PLANT_GRUNGE_2",
+    "baseMaterial": "BARK",
     "objectIds": [
       1301,
       1302,
@@ -11311,7 +11312,15 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.4,
-    "uvOrientation": 256
+    "uvOrientation": 256,
+    "colorOverrides": [
+      {
+        "colors": "h > 10",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.25
+      }
+    ]
   },
   {
     "description": "Jungle Tree Small",
