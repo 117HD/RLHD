@@ -12464,27 +12464,32 @@
     ]
   },
   {
-    "description": "Generic Leafy Fern",
-    "baseMaterial": "PLANT_GRUNGE_2",
-    "objectIds": [
-      1391,
-      1393,
-      1394
-    ]
-  },
-  {
     "description": "Generic - Plant - Fern - Small",
-    "baseMaterial": "PLANT_GRUNGE_1",
+    "baseMaterial": "LEAF_VEINS",
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.25,
     "objectIds": [
       1173,
-      1299
+      1299,
+      1300
     ]
   },
   {
     "description": "Generic - Plant - Leafy Shrub",
     "baseMaterial": "PLANT_GRUNGE_1",
+    "colorOverrides": [
+      {
+        "colors": "h > 11",
+        "baseMaterial": "LEAF_VEINS",
+        "uvScale": 0.25,
+        "uvType": "MODEL_XZ"
+      }
+    ],
     "objectIds": [
+      1391,
       1392,
+      1393,
+      1394,
       5331,
       5332,
       5333,
