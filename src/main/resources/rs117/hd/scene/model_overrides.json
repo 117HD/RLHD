@@ -22231,5 +22231,27 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.6
+  },
+  {
+    "description": "Spiral Staircase - Concrete textured",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      16671,
+      16672
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "retainVanillaUvs": false
+  },
+  {
+    "description": "Spiral Staircase top with rails - Concrete textured",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      16673
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "retainVanillaUvs": false,
+    "flatNormals": true
   }
 ]
