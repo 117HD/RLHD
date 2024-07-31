@@ -21553,7 +21553,7 @@
     "uvScale": 0.8,
     "colorOverrides": [
       {
-        "colors": "h == 8 && s == 4",
+        "colors": "h == 8 && s > 2 && s < 5",
         "baseMaterial": "GRUNGE_1",
         "uvType": "WORLD_XZ",
         "uvScale": 0.8
