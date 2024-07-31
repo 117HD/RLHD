@@ -20198,6 +20198,24 @@
     "uvScale": 0.8
   },
   {
+    "description": "Wooden Cart - with textured Hay",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "retainVanillaUvs": false,
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && l < 40",
+        "uvType": "BOX",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      5579
+    ]
+  },
+  {
     "description": "Lumbar yard - Pile of Wood",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [ 3209 ],
