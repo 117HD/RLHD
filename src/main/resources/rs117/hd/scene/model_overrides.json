@@ -22147,7 +22147,7 @@
     ]
   },
   {
-    "description": "Woodnen plank Water Barrel with textured water",
+    "description": "Wooden plank Water Barrel with textured water",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -22160,6 +22160,105 @@
         "baseMaterial": "METALLIC_1_LIGHT",
         "uvType": "BOX"
       }
+    ]
+  },
+  {
+    "description": "Rune Essence Mine Rock",
+    "baseMaterial": "ROCK_4",
+    "uvType": "BOX",
+    "uvOrientation": 1024,
+    "colorOverrides": [
+      {
+        "colors": "h == 7 && s > 1",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      11443,
+      11444,
+      34773
+    ]
+  },
+  {
+    "description": "Broken wooden ladder in essence mines",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.80,
+    "objectIds": [
+      741,
+      742
+    ]
+  },
+  {
+    "description": "wooden ladder laying on the ground in essence mines",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.80,
+    "objectIds": [
+      743
+    ]
+  },
+  {
+    "description": "Wooden Scaffold with wooden bucket on it",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.85,
+    "uvOrientationZ": 512,
+    "uvOrientationX": 512,
+    "objectIds": [
+      744
+    ]
+  },
+  {
+    "description": "Wooden bucket on its side spilling rocks",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.85,
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      11927
+    ]
+  },
+  {
+    "description": "Rock with pickaxe and shovel in it",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.85,
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ],
+    "objectIds": [
+      11924
+    ]
+  },
+  {
+    "description": "Shovel in the ground with Rocks around it",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.85,
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ],
+    "objectIds": [
+      11928
     ]
   }
 ]
