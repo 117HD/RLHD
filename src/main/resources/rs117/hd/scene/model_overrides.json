@@ -5799,6 +5799,25 @@
     ]
   },
   {
+    "description": "Stone Fountain",
+    "baseMaterial": "STONE",
+    "uvType": "BOX",
+    "uvScale": 0.45,
+    "objectIds": [
+      3641
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 32",
+        "baseMaterial": "NONE"
+      },
+      {
+        "colors": ["h == 2", "h == 3", "h == 7"],
+        "baseMaterial": "GRAY_90"
+      }
+    ]
+  },
+  {
     "description": "Metallic Furnace",
     "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [
