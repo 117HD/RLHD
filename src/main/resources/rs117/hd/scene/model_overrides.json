@@ -22144,5 +22144,21 @@
     "objectIds": [
       296
     ]
+  },
+  {
+    "description": "Woodnen plank Water Barrel with textured water",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      5598
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0 && l < 60",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX"
+      }
+    ]
   }
 ]
