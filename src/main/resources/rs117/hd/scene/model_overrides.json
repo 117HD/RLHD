@@ -11831,7 +11831,13 @@
     ],
     "uvType": "BOX",
     "uvOrientation": 256,
-    "uvScale": 0.4
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "colors": ["s == 7"],
+        "baseMaterial": "GRUNGE_2"
+      }
+    ]
   },
   {
     "description": "Object - Sack with Hey or Grain",
@@ -22300,6 +22306,21 @@
       {
         "colors": ["h == 2", "h == 3", "h == 7"],
         "baseMaterial": "GRAY_90"
+      }
+    ]
+  },
+  {
+    "description": "Farming Guild - Seed Vault",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      26206
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 27",
+        "baseMaterial": "NONE"
       }
     ]
   }
