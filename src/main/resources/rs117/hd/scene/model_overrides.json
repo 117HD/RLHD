@@ -22134,7 +22134,7 @@
     "uvScale": 0.2,
     "colorOverrides": [
       {
-        "colors": ["h == 4", "h == 8"],
+        "colors": [ "h == 4", "h == 8" ],
         "baseMaterial": "BARK",
         "uvType": "BOX",
         "uvScale": 0.6
@@ -22266,7 +22266,7 @@
     "uvScale": 0.3,
     "colorOverrides": [
       {
-        "colors": ["h == 0", "h == 6"],
+        "colors": [ "h == 0", "h == 6" ],
         "baseMaterial": "GRAY_90"
       }
     ]
@@ -22304,7 +22304,7 @@
         "baseMaterial": "METALLIC_1"
       },
       {
-        "colors": ["h == 2", "h == 3", "h == 7"],
+        "colors": [ "h == 2", "h == 3", "h == 7" ],
         "baseMaterial": "GRAY_90"
       }
     ]
@@ -22321,6 +22321,20 @@
       {
         "colors": "h == 27",
         "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Farming Guild - Hespori Cave Entrance",
+    "baseMaterial": "STONE_NORMALED_DARK",
+    "uvType": "BOX",
+    "objectIds": [
+      34499
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 13",
+        "baseMaterial": "GRAY_65"
       }
     ]
   }
