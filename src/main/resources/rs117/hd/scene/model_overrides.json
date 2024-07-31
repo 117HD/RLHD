@@ -22091,5 +22091,34 @@
       28494,
       28495
     ]
+  },
+  {
+    "description": "Farming Guild - Small Tree",
+    "baseMaterial": "PLANT_GRUNGE_2",
+    "objectIds": [
+      34486,
+      34487,
+      34488,
+      34489
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "colorOverrides": [
+      {
+        "colors": ["h == 4", "h == 8"],
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Farming Guild - Small Bush",
+    "baseMaterial": "PLANT_GRUNGE_2",
+    "objectIds": [
+      33638
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.2
   }
 ]
