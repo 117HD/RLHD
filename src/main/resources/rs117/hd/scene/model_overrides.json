@@ -22337,5 +22337,20 @@
         "baseMaterial": "GRAY_65"
       }
     ]
+  },
+  {
+    "description": "Farming Guild - Statue",
+    "baseMaterial": "STONE",
+    "uvType": "BOX",
+    "uvScale": 0.74,
+    "objectIds": [
+      34498
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 13", "h == 14", "s == 2", "s == 3" ],
+        "baseMaterial": "GRAY_75"
+      }
+    ]
   }
 ]
