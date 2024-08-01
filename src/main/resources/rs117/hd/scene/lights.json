@@ -35560,8 +35560,7 @@
     "alignment": "CENTER",
     "radius": 195,
     "strength": 15,
-    "fadeOutDuration": 400,
-    "fadeInDuration": 200,
+    "fadeInDuration": 100,
     "color": [
       40,
       240,

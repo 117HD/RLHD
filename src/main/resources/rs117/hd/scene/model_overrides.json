@@ -22386,6 +22386,54 @@
     ]
   },
   {
+    "description": "Farming Guild - Greenhouse Walls",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "flatNormals": true,
+    "objectIds": [
+      34445,
+      34448,
+      34449,
+      34450,
+      34451,
+      34461,
+      34462,
+      34463,
+      34464,
+      34465,
+      34466,
+      34467,
+      34468,
+      34454,
+      34455,
+      34456,
+      34457,
+      34458,
+      34459,
+      34460
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "STONE",
+        "uvType": "BOX"
+      },
+      {
+        "colors": ["h == 6", "h == 7", "h == 27", "h == 32"],
+        "baseMaterial": "GRAY_90"
+      }
+    ]
+  },
+  {
+    "description": "Farming Guild - Greenhouse Gates",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "objectIds": [
+      34475,
+      34476
+    ]
+  },
+  {
     "description": "Farming Guild - Hespori Arena - Walls",
     "baseMaterial": "DIRT_1",
     "uvType": "BOX",
@@ -22429,5 +22477,10 @@
       8585
     ],
     "objectIds": [ 34705, 34706 ]
+  },
+  {
+    "description": "Farming Guild - Hide Ripples",
+    "hide": true,
+    "objectIds": [ 5607 ]
   }
 ]
