@@ -1818,6 +1818,38 @@
     ]
   },
   {
+    "description": "Hespori Grass Arena Fix",
+    "areas": ["FARMING_GUILD_HESPORI"],
+    "baseMaterial": "COLORED_GRASS",
+    "objectIds": [
+      34492
+    ]
+  },
+  {
+    "description": "Hespori Patch Edge Grass Fix",
+    "areas": ["FARMING_GUILD_HESPORI"],
+    "baseMaterial": "COLORED_GRASS",
+    "objectIds": [
+      34494,
+      34496
+    ],
+    "castShadows": false,
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "ROCK_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "colors": [ "h == 5", "h == 6" ],
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
     "description": "Short grass with rock objects Morytania Farming Patches",
     "baseMaterial": "GRAY_75",
     "objectIds": [
@@ -22326,7 +22358,7 @@
   },
   {
     "description": "Farming Guild - Hespori Cave Entrance",
-    "baseMaterial": "STONE_NORMALED_DARK",
+    "baseMaterial": "ROCK_3",
     "uvType": "BOX",
     "objectIds": [
       34499
@@ -22352,5 +22384,50 @@
         "baseMaterial": "GRAY_75"
       }
     ]
+  },
+  {
+    "description": "Farming Guild - Hespori Arena - Walls",
+    "baseMaterial": "DIRT_1",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 0.75,
+    "objectIds": [
+      34435,
+      34438,
+      34439,
+      34440,
+      34441,
+      34442,
+      34443
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 14",
+        "baseMaterial": "PLANT_GRUNGE_1"
+      }
+    ]
+  },
+  {
+    "description": "Farming Guild - Hespori Boss",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "GEOMETRY",
+    "objectIds": [
+      33726,
+      33727,
+      33728,
+      33729,
+      33730
+    ],
+    "npcIds": [ 8583 ]
+  },
+  {
+    "description": "Farming Guild - Hespori Flower",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "GEOMETRY",
+    "npcIds": [
+      8584,
+      8585
+    ],
+    "objectIds": [ 34705, 34706 ]
   }
 ]
