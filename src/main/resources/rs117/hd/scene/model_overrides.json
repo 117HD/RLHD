@@ -2158,13 +2158,48 @@
     "flatNormals": true
   },
   {
+    "description": "Brick walls with wooden boards",
+    "baseMaterial": "GRUNGE_1",
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "description": "Wooden boards",
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 448
+      }
+    ],
+    "objectIds": [
+      490,
+      495
+    ]
+  },
+  {
+    "description": "Brick walls with wooden plank windows",
+    "baseMaterial": "GRUNGE_1",
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "description": "Wooden boards",
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 16
+      }
+    ],
+    "objectIds": [
+      441,
+      442
+    ]
+  },
+  {
     "description": "Walls",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
       436,
       437,
       438,
-      441,
       443,
       444,
       445,
@@ -2174,10 +2209,8 @@
       455,
       462,
       477,
-      490,
       493,
       494,
-      495,
       496,
       497,
       451,
@@ -2218,13 +2251,11 @@
       487,
       488,
       489,
-      490,
       491,
       491,
       492,
       493,
       494,
-      495,
       496,
       497,
       498,
@@ -3880,7 +3911,6 @@
     "description": "BEIGE_WALLS",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
-      442,
       446,
       447
     ],
