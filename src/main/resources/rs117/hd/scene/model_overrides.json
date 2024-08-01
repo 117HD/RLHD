@@ -2172,8 +2172,21 @@
     ],
     "objectIds": [
       490,
+      492,
+      493,
       494,
-      495
+      495,
+      506,
+      507,
+      508,
+      509,
+      510,
+      515,
+      517,
+      518,
+      519,
+      520,
+      40285
     ]
   },
   {
@@ -2191,7 +2204,31 @@
     ],
     "objectIds": [
       441,
-      442
+      442,
+      454,
+      23745
+    ]
+  },
+  {
+    "description": "Brick walls with wooden planks leaned on them",
+    "baseMaterial": "GRUNGE_1",
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "description": "Wooden boards",
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      480,
+      481,
+      482,
+      485,
+      486,
+      487,
+      488
     ]
   },
   {
@@ -2201,6 +2238,14 @@
     "uvType": "BOX",
     "uvOrientation": 448,
     "objectIds": [
+      496,
+      497,
+      498,
+      499,
+      500,
+      501,
+      502,
+      503,
       26589,
       26590,
       26591,
@@ -2231,7 +2276,30 @@
     ],
     "objectIds": [
       23743,
-      23746
+      23744,
+      23746,
+      23747
+    ]
+  },
+  {
+    "description": "Varrock church golden window",
+    "baseMaterial": "GRUNGE_1",
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "description": "Wooden boards",
+        "colors": "h == 7 && s < 4",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Gold glass",
+        "colors": "h == 7 && s > 3 ",
+        "baseMaterial": "NONE"
+      }
+    ],
+    "objectIds": [
+      23807
     ]
   },
   {
@@ -2253,7 +2321,6 @@
       451,
       452,
       453,
-      454,
       455,
       456,
       457,
@@ -2278,49 +2345,17 @@
       476,
       477,
       478,
-      480,
-      481,
-      482,
       483,
       484,
-      485,
-      486,
-      487,
-      488,
       489,
       491,
-      492,
-      493,
-      496,
-      497,
-      498,
-      499,
-      500,
-      501,
-      502,
-      503,
       504,
       505,
-      506,
-      507,
-      508,
-      509,
-      510,
       511,
       512,
       513,
       514,
-      515,
       516,
-      517,
-      518,
-      519,
-      520,
-      526,
-      527,
-      528,
-      529,
-      531,
       9264,
       9265,
       9269,
@@ -2333,9 +2368,7 @@
       23740,
       23741,
       23742,
-      23744,
       23745,
-      23747,
       23757,
       23758,
       23759,
@@ -2353,7 +2386,6 @@
       23804,
       23805,
       23806,
-      23807,
       23808,
       23809,
       23810,
@@ -2409,7 +2441,6 @@
       23908,
       23909,
       23910,
-      40285,
       41840,
       24428
     ],
@@ -7340,6 +7371,11 @@
     "description": "Ground Decoration - Rock - Small - Uncolored",
     "baseMaterial": "ROCK_1_LIGHT",
     "objectIds": [
+      526,
+      527,
+      528,
+      529,
+      531,
       2381,
       2383,
       6397,
@@ -13748,7 +13784,8 @@
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       5090,
-      5091
+      5091,
+      5092
     ],
     "uvType": "BOX",
     "uvOrientation": 562,
