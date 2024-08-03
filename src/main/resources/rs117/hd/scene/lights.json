@@ -35258,6 +35258,17 @@
     "fadeOutDuration": 300
   },
   {
+    "description": "Basalisk Knight - Magic Attack",
+    "alignment": "CENTER",
+    "radius": 215,
+    "strength": 11,
+    "color": [ 220, 0, 255 ],
+    "projectileIds": [ 1735 ],
+    "fadeInDuration": 350,
+    "spawnDelay": 750,
+    "fadeOutDuration": 600
+  },
+  {
     "description": "Venenatis, Spindel, Artio, Callisto and Escape Caves exit cave",
     "objectIds": [
       46999,
