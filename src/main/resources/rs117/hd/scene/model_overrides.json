@@ -5832,6 +5832,7 @@
     "description": "Anvil",
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
+      2031,
       2097,
       4306,
       6150,
@@ -22253,5 +22254,42 @@
     "uvScale": 0.6,
     "retainVanillaUvs": false,
     "flatNormals": true
+  },
+  {
+    "description": "Blacksmiths tools on a wooden board",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 343
+      }
+    ],
+    "objectIds": [
+      11876
+    ]
+  },
+  {
+    "description": "Pickaxes crossed as a wall decoration",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 42,
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 343
+      }
+    ],
+    "objectIds": [
+      2096
+    ]
   }
 ]
