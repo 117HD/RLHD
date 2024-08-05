@@ -5910,8 +5910,10 @@
     "flatNormals": true
   },
   {
-    "description": "Marble Staircase Spiral",
+    "description": "Marble Staircase Spiral with wooden rails",
     "baseMaterial": "MARBLE_3",
+    "uvType": "BOX",
+    "uvScale": 0.66,
     "colorOverrides": [
       {
         "colors": "h == 7 && s > 2",
@@ -5925,6 +5927,7 @@
       11789,
       11790,
       11792,
+      11793,
       12537,
       24075
     ]
@@ -6359,7 +6362,6 @@
     "description": "Varrock Castle Railing",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      11793,
       23852
     ],
     "uvType": "BOX",
