@@ -5912,8 +5912,18 @@
   {
     "description": "Marble Staircase Spiral",
     "baseMaterial": "MARBLE_3",
+    "colorOverrides": [
+      {
+        "colors": "h == 7 && s > 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ],
     "objectIds": [
       12536,
+      11789,
+      11790,
       11792,
       12537,
       24075
@@ -5928,20 +5938,26 @@
     ]
   },
   {
-    "description": "STONE Staircase Spiral",
+    "description": "STONE Staircase Spiral with wooden rails",
     "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 765,
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "colors": "h == 7 && s > 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ],
     "objectIds": [
       9582,
       14735,
-      11789,
-      11790,
       17143,
       14736,
       14737
-    ],
-    "uvType": "BOX",
-    "uvOrientation": 765,
-    "uvScale": 0.4
+    ]
   },
   {
     "description": "Metal Chimney",
@@ -22125,6 +22141,32 @@
       14862,
       14863,
       14864
+    ]
+  },
+  {
+    "description": "Varrock church wooden lecturn",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Paper",
+        "colors": "h == 8 && s == 0",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "MODEL_XY"
+      },
+      {
+        "description": "Golden paper edges",
+        "colors": "h == 6 && s == 4",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvOrientation": 864,
+        "uvScale": 0.75
+      }
+    ],
+    "objectIds": [
+      12136
     ]
   }
 ]
