@@ -14898,9 +14898,10 @@
     ]
   },
   {
-    "description": "Tutorial Island - The Node - Chest with Gold Trim",
+    "description": "Tutorial Island - The Node - Chest with Gold lumps in it",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      1768,
       2079
     ],
     "uvOrientation": 512,
@@ -14908,7 +14909,9 @@
     "colorOverrides": [
       {
         "colors": [ "h == 8" ],
-        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS"
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "WORLD_XZ",
+        "uvScale": 0.25
       }
     ]
   },
