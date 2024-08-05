@@ -11035,6 +11035,10 @@
   {
     "description": "Al-Kharid pillar decoration",
     "baseMaterial": "MARBLE_3",
+    "uvType": "BOX",
+    "uvOrientation": 343,
+    "uvScale": 0.6,
+    "flatNormals": true,
     "objectIds": [
       914
     ]
@@ -22102,15 +22106,25 @@
     "uvScale": 0.6,
     "colorOverrides": [
       {
-        "description": "Cushion",
+        "description": "Red Cushion",
         "colors": "h == 0 && s == 4",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      },
+      {
+        "description": "Golden Cushion",
+        "colors": "h == 7 && s == 7",
         "baseMaterial": "CARPET",
         "uvType": "BOX",
         "uvScale": 0.75
       }
     ],
     "objectIds": [
-      5788
+      5788,
+      14862,
+      14863,
+      14864
     ]
   }
 ]
