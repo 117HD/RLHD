@@ -22185,7 +22185,9 @@
     "description": "Wine rack with bottles",
     "baseMaterial": "GRAY_75",
     "objectIds": [
-      2453
+      2453,
+      2712,
+      2713
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
