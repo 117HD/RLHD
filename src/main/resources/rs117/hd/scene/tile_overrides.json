@@ -3950,7 +3950,6 @@
     "name": "CANOE_CUTSCENE_STONE",
     "area": "CANOE_CUTSCENE",
     "overlayIds": [
-      0,
       11
     ],
     "groundMaterial": "STONE_SCROLLING"
