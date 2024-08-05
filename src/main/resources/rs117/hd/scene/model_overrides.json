@@ -20997,12 +20997,19 @@
   {
     "description": "Zombie Event Mausoleum",
     "baseMaterial": "ROCK_4",
-    "objectIds": [
-      10055
-    ],
     "uvType": "BOX",
     "uvOrientation": 180,
-    "uvScale": 0.6
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Vines",
+        "colors": " h == 17",
+        "baseMaterial": "LEAF_VEINS"
+      }
+    ],
+    "objectIds": [
+      10055
+    ]
   },
   {
     "description": "Wooden posts - textured",
