@@ -10115,6 +10115,28 @@
     ]
   },
   {
+    "description": "Song of the Elves - Battle for West Ardougne - Barricade and Debris",
+    "baseMaterial": "NONE",
+    "objectIds": [
+      35804,
+      35805,
+      35806,
+      35813,
+      35814
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.33,
+        "uvOrientationY": 250,
+        "uvOrientationX": 512,
+        "uvOrientationZ": 512
+      }
+    ]
+  },
+  {
     "description": "Objects - Tree - Fake Dead Tree",
     "baseMaterial": "BARK",
     "objectIds": [
