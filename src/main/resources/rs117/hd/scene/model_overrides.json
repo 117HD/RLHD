@@ -5132,6 +5132,9 @@
       11801,
       11802,
       12779,
+      12964,
+      12965,
+      12966,
       14745,
       14746,
       17122,
@@ -6789,8 +6792,6 @@
       11427,
       11428,
       11431,
-      11433,
-      11434,
       11435,
       12216,
       12217,
@@ -7611,6 +7612,7 @@
     "objectIds": [
       2071,
       9534,
+      9064,
       11485,
       11486,
       12547,
@@ -7654,6 +7656,7 @@
       6178,
       9536,
       12545,
+      12963,
       14741
     ],
     "uvType": "BOX",
@@ -9011,7 +9014,6 @@
       3659,
       3660,
       3661,
-      11432,
       33191,
       37395,
       37396,
@@ -11301,7 +11303,7 @@
   },
   {
     "description": "Tree - Non interactable - Jungle",
-    "baseMaterial": "PLANT_GRUNGE_2",
+    "baseMaterial": "BARK",
     "objectIds": [
       1301,
       1302,
@@ -11311,7 +11313,15 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.4,
-    "uvOrientation": 256
+    "uvOrientation": 256,
+    "colorOverrides": [
+      {
+        "colors": "h > 10",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.25
+      }
+    ]
   },
   {
     "description": "Jungle Tree Small",
@@ -12455,27 +12465,33 @@
     ]
   },
   {
-    "description": "Generic Leafy Fern",
-    "baseMaterial": "PLANT_GRUNGE_2",
-    "objectIds": [
-      1391,
-      1393,
-      1394
-    ]
-  },
-  {
     "description": "Generic - Plant - Fern - Small",
-    "baseMaterial": "PLANT_GRUNGE_1",
+    "baseMaterial": "LEAF_VEINS",
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.25,
     "objectIds": [
       1173,
-      1299
+      1298,
+      1299,
+      1300
     ]
   },
   {
     "description": "Generic - Plant - Leafy Shrub",
     "baseMaterial": "PLANT_GRUNGE_1",
+    "colorOverrides": [
+      {
+        "colors": "h > 11",
+        "baseMaterial": "LEAF_VEINS",
+        "uvScale": 0.25,
+        "uvType": "MODEL_XZ"
+      }
+    ],
     "objectIds": [
+      1391,
       1392,
+      1393,
+      1394,
       5331,
       5332,
       5333,
@@ -14116,7 +14132,7 @@
   },
   {
     "description": "Objects - Textured Rocks - Rocks with Vines",
-    "baseMaterial": "PLANT_GRUNGE_1",
+    "baseMaterial": "LEAF_VEINS",
     "textureMaterial": "HD_CONCRETE",
     "objectIds": [
       10786,
@@ -20180,6 +20196,24 @@
     "uvScale": 0.8
   },
   {
+    "description": "Wooden Cart - with textured Hay",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "retainVanillaUvs": false,
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && l < 40",
+        "uvType": "BOX",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      5579
+    ]
+  },
+  {
     "description": "Lumbar yard - Pile of Wood",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [ 3209 ],
@@ -21516,7 +21550,7 @@
     "uvScale": 0.8,
     "colorOverrides": [
       {
-        "colors": "h == 8 && s == 4",
+        "colors": "h == 8 && s > 2 && s < 5",
         "baseMaterial": "GRUNGE_1",
         "uvType": "WORLD_XZ",
         "uvScale": 0.8
@@ -22090,6 +22124,149 @@
       28493,
       28494,
       28495
+    ]
+  },
+  {
+    "description": "Metal Plough with wooden handles",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientation": 256,
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": " h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvOrientation": 920
+      }
+    ],
+    "objectIds": [
+      296
+    ]
+  },
+  {
+    "description": "Wooden plank Water Barrel with textured water",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      5598
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0 && l < 60",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Rune Essence Mine Rock",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 768,
+    "uvScale": 1.5,
+    "colorOverrides": [
+      {
+        "colors": "h == 7 && s > 1",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      11443,
+      11444,
+      34773
+    ]
+  },
+  {
+    "description": "Rocks found near rune essence - think twice if changing texture",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "objectIds": [
+      11432,
+      11433,
+      11434
+    ]
+  },
+  {
+    "description": "Broken wooden ladder in essence mines",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.80,
+    "objectIds": [
+      741,
+      742
+    ]
+  },
+  {
+    "description": "wooden ladder laying on the ground in essence mines",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.80,
+    "objectIds": [
+      743
+    ]
+  },
+  {
+    "description": "Wooden Scaffold with wooden bucket on it",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.85,
+    "uvOrientationZ": 512,
+    "uvOrientationX": 512,
+    "objectIds": [
+      744
+    ]
+  },
+  {
+    "description": "Wooden bucket on its side spilling rocks",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.85,
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      11927
+    ]
+  },
+  {
+    "description": "Rock with pickaxe and shovel in it",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.85,
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ],
+    "objectIds": [
+      11924
+    ]
+  },
+  {
+    "description": "Shovel in the ground with Rocks around it",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.85,
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ],
+    "objectIds": [
+      11928
     ]
   }
 ]
