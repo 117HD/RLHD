@@ -132,7 +132,8 @@
     "name": "HAM_HIDEOUT",
     "aabbs": [
       [ 3137, 9602, 3192, 9661 ]
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "LUMBRIDGE_CASTLE",
