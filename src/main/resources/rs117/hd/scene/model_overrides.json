@@ -5265,7 +5265,8 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       7496,
-      24086
+      24086,
+      34936
     ],
     "uvType": "BOX",
     "uvOrientation": 512
@@ -5627,7 +5628,8 @@
       15650,
       16664,
       16665,
-      35791
+      35791,
+      35792
     ]
   },
   {
@@ -5641,7 +5643,7 @@
       894
     ],
     "uvType": "BOX",
-    "uvScale": 0.4
+    "uvScale": 0.2
   },
   {
     "description": "Metallic Guilded Chest",
@@ -5651,17 +5653,21 @@
       26273
     ],
     "uvType": "BOX",
-    "uvScale": 0.6
+    "uvScale": 0.33,
+    "uvOrientation": 512
   },
   {
     "description": "Metallic Chest",
-    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       375,
-      11735
+      11735,
+      11739,
+      11743
     ],
     "uvType": "BOX",
-    "uvScale": 0.6
+    "uvScale": 0.33,
+    "uvOrientation": 512
   },
   {
     "description": "CANNON_BALL",
@@ -5683,24 +5689,32 @@
   },
   {
     "description": "METAL_FLAG_POLE",
-    "baseMaterial": "METALLIC_1_GLOSS",
+    "baseMaterial": "GRUNGE_3",
     "objectIds": [
       861
     ],
-    "uvType": "BOX",
-    "uvScale": 0.6,
-    "uvOrientation": 120
-  },
-  {
-    "description": "BATHTUB",
-    "baseMaterial": "METALLIC_1_LIGHT_HIGHGLOSS",
-    "objectIds": [
-      875
+    "colorOverrides": [
+      {
+        "colors": "s == 0",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 512
+      }
     ]
   },
   {
+    "description": "BATHTUB",
+    "baseMaterial": "METALLIC_1_HIGHGLOSS",
+    "objectIds": [
+      875
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.3
+  },
+  {
     "description": "BATH_PUMP",
-    "baseMaterial": "METALLIC_1_GLOSS",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
     "objectIds": [
       871
     ],
@@ -5743,6 +5757,7 @@
       8792,
       8820,
       8821,
+      9544,
       9565,
       9717,
       9718,
@@ -5787,6 +5802,17 @@
       20874,
       20875,
       24097
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7
+  },
+  {
+    "description": "Metal Fence - Darken",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "objectIds": [
+      9546,
+      9563,
+      35795
     ],
     "uvType": "BOX",
     "uvScale": 0.7
@@ -8442,7 +8468,7 @@
     "uvType": "GEOMETRY"
   },
   {
-    "description": "Objects - Bed - Bedroll - Non Interactable",
+    "description": "Objects - Bed - Bedroll",
     "baseMaterial": "CARPET",
     "objectIds": [
       422,
@@ -8450,7 +8476,8 @@
       4288,
       23067,
       27664,
-      35797
+      35797,
+      35798
     ],
     "uvType": "MODEL_XZ",
     "uvScale": 0.60
@@ -9960,6 +9987,132 @@
       306
     ],
     "uvType": "VANILLA"
+  },
+  {
+    "description": "Objects - Ardougne Castle Prison - Sewer Grate",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "objectIds": [
+      35793,
+      35794
+    ],
+    "uvType": "MODEL_XY"
+  },
+  {
+    "description": "Objects - Ardougne Castle - Spear Wall",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "objectIds": [
+      848
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h > 3",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.33,
+        "uvOrientation": 672
+      }
+    ]
+  },
+  {
+    "description": "Objects - Ardougne Castle - Timber Defence",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      3000,
+      3046,
+      1864
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.33,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "GRAY_90"
+      }
+    ]
+  },
+  {
+    "description": "Objects - Ardougne Castle - Standard",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      864,
+      866
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.33,
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Objects - Ardougne Castle - Cabinet",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      346,
+      347
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.33,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": [ "h == 0", "h == 8" ],
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "MODEL_YZ"
+      }
+    ]
+  },
+  {
+    "description": "Objects - Ardougne Castle - Chairs with fabric",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      1090,
+      1097
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.33,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "GRUNGE_3"
+      },
+      {
+        "colors": "h == 7",
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
+  },
+  {
+    "description": "Objects - Ardougne Castle - Bathroom Table",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      592
+    ]
+  },
+  {
+    "description": "Objects - Ardougne Castle - Mirror",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      689
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.33,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 32",
+        "baseMaterial": "GRAY_75"
+      },
+      {
+        "colors": "s == 6",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS"
+      }
+    ]
   },
   {
     "description": "Objects - Tree - Fake Dead Tree",
