@@ -6792,8 +6792,6 @@
       11427,
       11428,
       11431,
-      11433,
-      11434,
       11435,
       12216,
       12217,
@@ -9016,7 +9014,6 @@
       3659,
       3660,
       3661,
-      11432,
       33191,
       37395,
       37396,
@@ -22164,9 +22161,10 @@
   },
   {
     "description": "Rune Essence Mine Rock",
-    "baseMaterial": "ROCK_4",
+    "baseMaterial": "STONE_NORMALED",
     "uvType": "BOX",
-    "uvOrientation": 1024,
+    "uvOrientation": 768,
+    "uvScale": 1.5,
     "colorOverrides": [
       {
         "colors": "h == 7 && s > 1",
@@ -22178,6 +22176,16 @@
       11443,
       11444,
       34773
+    ]
+  },
+  {
+    "description": "Rocks found near rune essence - think twice if changing texture",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "objectIds": [
+      11432,
+      11433,
+      11434
     ]
   },
   {
