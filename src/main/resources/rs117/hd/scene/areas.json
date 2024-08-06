@@ -130,9 +130,7 @@
   },
   {
     "name": "HAM_HIDEOUT",
-    "aabbs": [
-      [ 3137, 9602, 3192, 9661 ]
-    ],
+    "regions": [ 12694 ],
     "hideOtherAreas": true
   },
   {
