@@ -22090,6 +22090,8 @@
     "description": "Thin cupboard with golden handles and hinges",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      2056,
+      2057,
       2612,
       2613
     ],
