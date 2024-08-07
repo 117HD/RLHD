@@ -22918,5 +22918,203 @@
         "uvScale": 0.5
       }
     ]
+  },
+  {
+    "description": "Grand Library - Bookcase Wall",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      34993,
+      34994,
+      34995,
+      34996,
+      35001,
+      35002,
+      35003,
+      35004,
+      35005,
+      35006,
+      35007,
+      35008,
+      35009,
+      35010,
+      35011,
+      35012,
+      35013,
+      35014,
+      35015,
+      35016,
+      35017,
+      35018,
+      35019,
+      35020,
+      35021,
+      35022,
+      35023,
+      35024,
+      35025,
+      35026,
+      35027,
+      35028,
+      35029,
+      35030,
+      35031,
+      35032,
+      35024,
+      35039,
+      35042,
+      35343,
+      35046,
+      35048,
+      35053,
+      35055,
+      35040,
+      35044,
+      35358,
+      35346,
+      35373,
+      35049,
+      35047,
+      35341,
+      35045,
+      35050,
+      35344,
+      35355,
+      35354,
+      35043,
+      35041,
+      35051,
+      35368,
+      35349,
+      35372,
+      35052,
+      35361,
+      37371,
+      37372,
+      4140,
+      2485,
+      37370,
+      37369,
+      4976,
+      37375,
+      37378,
+      37376,
+      37374,
+      37379,
+      37373,
+      35449,
+      37377,
+      35339,
+      35450,
+      35363,
+      35338,
+      35365,
+      35348,
+      35364
+    ],
+    "uvType": "MODEL_XY",
+    "colorOverrides": [
+      {
+        "colors": "h == 3",
+        "baseMaterial": "WOOD_GRAIN",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      },
+      {
+        "colors": "h == 34",
+        "baseMaterial": "MARBLE_1",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      },
+      {
+        "colors": "h == 9",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "MODEL_XY",
+        "uvScale": 0.1
+      }
+    ]
+  },
+  {
+    "description": "Grand Library - Wall Pillar",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      34997,
+      34999,
+      35000,
+      35057,
+      35058,
+      35060,
+      35062,
+      35063,
+      35359,
+      35381,
+      35382,
+      35383,
+      35385,
+      35380
+    ],
+    "uvType": "MODEL_XY",
+    "colorOverrides": [
+      {
+        "colors": "h == 34",
+        "baseMaterial": "MARBLE_1",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ]
+  },
+  {
+    "description": "Grand Library - Wall Pillar with Crystal",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      34998,
+      35064,
+      35384,
+      35059,
+      35061,
+      35451,
+      35453,
+      35455,
+      35457,
+      35459,
+      35461,
+      35463,
+      35465,
+      35451,
+      35453,
+      35455,
+      35457,
+      35459,
+      35461,
+      35463,
+      35465
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "colors": [ "s == 7" ],
+        "baseMaterial": "GRAY_90",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      },
+      {
+        "colors": [ "h == 30" ,"h == 32", "h == 34" ],
+        "baseMaterial": "MARBLE_1",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ]
+  },
+  {
+    "description": "Grand Library - Inner Wall",
+    "baseMaterial": "BLACK",
+    "objectIds": [
+      35379,
+      35376,
+      35375,
+      35377,
+      35374,
+      35378
+    ]
   }
 ]
