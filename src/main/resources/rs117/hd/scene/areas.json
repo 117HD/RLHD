@@ -1522,8 +1522,9 @@
   {
     "name": "PLAGUE_CITY_SEWERS",
     "aabbs": [
-      [ 2507, 9737, 2529, 9778 ]
-    ]
+      [ 2496, 9728, 2559, 9789 ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "WEST_ARDOUGNE_COBBLE_HOUSES",
