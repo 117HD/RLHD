@@ -1313,6 +1313,9 @@
       1289,
       1365,
       1383,
+      3891,
+      3967,
+      3968,
       4051,
       4052,
       4053,
@@ -1426,6 +1429,21 @@
     "retainVanillaUvs": true
   },
   {
+    "description": "Objects - Trees - Tirannwn Tree",
+    "baseMaterial": "LIGHT_BARK",
+    "objectIds": [
+      3879,
+      3880,
+      3881,
+      3882,
+      3883,
+      3884,
+      3893
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7
+  },
+  {
     "description": "Objects - Trees - Tirannwn Leafless Tree",
     "baseMaterial": "BARK",
     "objectIds": [
@@ -1436,7 +1454,372 @@
     "uvScale": 0.7,
     "uvOrientationY": 1162,
     "uvOrientationX": 128,
-    "uvOrientationZ": 1162
+    "uvOrientationZ": 1162,
+    "colorOverrides": [
+      {
+        "colors": "h == 12",
+        "baseMaterial": "GRAY_75"
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Wood Debris",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      3907,
+      3908,
+      3909,
+      3910,
+      3911,
+      3942,
+      3943
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "colors": "h == 12",
+        "baseMaterial": "GRAY_75"
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Trap - Sticks",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      3922
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "ROPE",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.15
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Trap - Tripwire",
+    "baseMaterial": "ROCK_1",
+    "textureMaterial": "HD_CONCRETE",
+    "objectIds": [
+      3919,
+      3920
+    ],
+    "retainVanillaUvs": false,
+    "uvType": "BOX",
+    "uvScale": 0.45,
+    "colorOverrides": [
+      {
+        "colors": "h == 12",
+        "baseMaterial": "PLANT_GRUNGE_1",
+        "uvScale": 0.5,
+        "uvType": "MODEL_XZ",
+        "uvOrientation": 256
+      },
+      {
+        "colors": "h == 6",
+        "baseMaterial": "BARK",
+        "uvScale": 0.3,
+        "uvType": "BOX",
+        "uvOrientation": 256
+      }
+    ]
+  },
+  {
+    "description": "Objects - Trees - Tirannwn - Lletya Entrance and Dense Forest",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      3937,
+      3938,
+      3998,
+      3999,
+      8742
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientationY": 1162,
+    "uvOrientationX": 128,
+    "uvOrientationZ": 1162,
+    "colorOverrides": [
+      {
+        "colors": "h == 12",
+        "baseMaterial": "GRAY_75"
+      },
+      {
+        "colors": [ "h == 5", "h == 10" ],
+        "baseMaterial": "STONE_NORMALED_DARK"
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Mossy Rocks",
+    "baseMaterial": "ROCK_1",
+    "textureMaterial": "HD_CONCRETE",
+    "objectIds": [
+      3894,
+      3895,
+      3896,
+      3897,
+      35856,
+      35858,
+      35860
+    ],
+    "retainVanillaUvs": false,
+    "uvType": "BOX",
+    "uvScale": 0.65,
+    "colorOverrides": [
+      {
+        "colors": "h == 12",
+        "baseMaterial": "PLANT_GRUNGE_1",
+        "uvScale": 0.5,
+        "uvType": "MODEL_XZ",
+        "uvOrientation": 256
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Mossy Rocks with Tree",
+    "baseMaterial": "ROCK_1",
+    "textureMaterial": "HD_CONCRETE",
+    "objectIds": [
+      3885,
+      3892
+    ],
+    "retainVanillaUvs": false,
+    "uvType": "BOX",
+    "uvScale": 0.65,
+    "colorOverrides": [
+      {
+        "colors": "h == 12",
+        "baseMaterial": "PLANT_GRUNGE_1",
+        "uvScale": 0.5,
+        "uvType": "MODEL_XZ",
+        "uvOrientation": 256
+      },
+      {
+        "colors": "h == 6",
+        "baseMaterial": "BARK",
+        "uvScale": 0.5,
+        "uvType": "BOX",
+        "uvOrientationZ": 512
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Elven Lamp",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      3918,
+      8774,
+      35868
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 156,
+    "colorOverrides": [
+      {
+        "colors": "h == 40",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Spear Wall",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "objectIds": [
+      3991
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.25
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Tents",
+    "baseMaterial": "FINE_CARPET",
+    "objectIds": [
+      781,
+      783,
+      784,
+      3979,
+      3981,
+      3982,
+      3983
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": [ "h == 0", "h == 4" ],
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.66
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Tents - Guy Rope",
+    "baseMaterial": "ROPE",
+    "objectIds": [
+      785,
+      3989
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.35,
+    "colorOverrides": [
+      {
+        "colors": "h == 4",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.66
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Iorwerth Camp - Standard",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      786
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.33,
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Tyras Camp - Standard",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      3992,
+      3993
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Tirannwn - Tyras - Catapult",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      3976,
+      3977,
+      3978
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS"
+      },
+      {
+        "colors": "h == 5",
+        "baseMaterial": "GRUNGE_3"
+      },
+      {
+        "colors": "h == 7",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Poison Waste - Sulphur Pile",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      3962,
+      3963,
+      3964
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Poison Waste - Sulphur Vent",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      3965
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "uvScale": 0.66
+      }
+    ]
+  },
+  {
+    "description": "Poison Waste - Sulphur Gas",
+    "baseMaterial": "GRAY_90",
+    "objectIds": [
+      3966
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Poison Waste - Zul-Andra - Torch",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      10658
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "colors": [ "h == 0", "h == 3", "h == 4", "h == 8" ],
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Poison Waste - Zulrah - Sacrificial Boat",
+    "baseMaterial": "HD_WOOD_PLANKS_2",
+    "objectIds": [
+      46242
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 40",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Floating Rocks - Remove Ripples",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      6707,
+      6708,
+      6709,
+      10663
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": [ "h == 42", "h == 35" ],
+        "baseMaterial": "TRANSPARENT",
+        "uvType": "BOX",
+        "uvScale": 0.33,
+        "uvOrientation": 512
+      }
+    ]
   },
   {
     "description": "FARMING_PATCH_1",
@@ -1839,6 +2222,9 @@
     "description": "Objects with Short grass which shouldn't cast shadows and shouldn't inherit tile color",
     "baseMaterial": "GRAY_75",
     "objectIds": [
+      3934,
+      3935,
+      3936,
       7110,
       7111
     ],
@@ -4980,6 +5366,7 @@
       2808,
       2809,
       2810,
+      4006,
       12174,
       26654,
       26709,
@@ -4987,6 +5374,7 @@
       30374,
       31555,
       31766,
+      35846,
       42248,
       47077,
       47078
@@ -6987,10 +7375,6 @@
     "baseMaterial": "ROCK_1",
     "textureMaterial": "HD_CONCRETE",
     "objectIds": [
-      3894,
-      3895,
-      3896,
-      3897,
       5847,
       11425,
       27899,
@@ -7523,7 +7907,9 @@
     "objectIds": [
       1366,
       1367,
-      1368
+      1368,
+      3960,
+      3959
     ],
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -7534,7 +7920,8 @@
     "baseMaterial": "LIGHT_BARK",
     "objectIds": [
       1363,
-      1364
+      1364,
+      3958
     ],
     "uvType": "BOX",
     "uvScale": 0.4,
@@ -7637,6 +8024,7 @@
     "objectIds": [
       2071,
       9534,
+      10662,
       11485,
       11486,
       12547,
@@ -9834,6 +10222,8 @@
     "objectIds": [
       5346,
       7182,
+      12887,
+      12888,
       15091,
       15682
     ],
@@ -9978,15 +10368,19 @@
     "objectIds": [
       19995
     ],
-    "uvType": "GEOMETRY"
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 512
   },
   {
-    "description": "Ardougne - Walls - Stone - Zoo Ferret Fence",
-    "baseMaterial": "DOCK_FENCE",
+    "description": "Ardougne - Cart - Broken",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [
-      306
+      306,
+      327
     ],
-    "uvType": "VANILLA"
+    "uvType": "BOX",
+    "uvScale": 0.3
   },
   {
     "description": "Objects - Ardougne Castle Prison - Sewer Grate",
@@ -10266,6 +10660,11 @@
     "description": "Ground Decoration - Wooden - Agility Logs",
     "baseMaterial": "BARK",
     "objectIds": [
+      3929,
+      3930,
+      3931,
+      3932,
+      3933,
       23141,
       23142,
       23143,
@@ -13167,6 +13566,7 @@
     "description": "Sleeping Bag",
     "baseMaterial": "FINE_CARPET",
     "objectIds": [
+      5495,
       28521
     ],
     "uvType": "BOX",
@@ -13800,6 +14200,7 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       7192,
+      10661,
       14773,
       14774
     ],
@@ -14467,16 +14868,17 @@
     "retainVanillaUvs": false
   },
   {
-    "description": "Picatoris - Objects - Dirt - Rabbit Hole",
+    "description": "Objects - Dirt - Rabbit Hole",
     "baseMaterial": "DIRT_1",
     "objectIds": [
+      3940,
       19337
     ],
     "uvType": "BOX",
     "uvScale": 0.6
   },
   {
-    "description": "Picatoris - Objects - Dirt - Ferret Burrow",
+    "description": "Objects - Dirt - Ferret Burrow",
     "baseMaterial": "DIRT_2",
     "objectIds": [
       19438,
@@ -16520,7 +16922,8 @@
     "description": "Spinning Wheel",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      4309
+      4309,
+      8748
     ],
     "uvType": "BOX"
   },
@@ -16928,6 +17331,112 @@
     "uvScale": 0.8,
     "uvOrientationX": 512,
     "flatNormals": true
+  },
+  {
+    "description": "Tirannwn - Lletya - Well",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      35880,
+      35881
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "colors": ["h == 10","h==5"],
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Lletya - Rope Barrier",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      8780
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.2,
+        "uvOrientationX": 512,
+        "uvOrientationZ": -200
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Lletya - Shelves with Thread",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      8776
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Lletya - Clothes Model",
+    "baseMaterial": "GRAY_65",
+    "objectIds": [
+      8778,
+      8779
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Lletya - Wall Mounted Crossbow and Arrows Main",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      8773,
+      8775
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && l > 40 && l < 60",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      },
+      {
+        "colors": "h == 0 && l > 10 && l < 22",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Lletya - Wall Mounted Crossbow and Arrows Fix",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "areas": [ "Lletya Crossbow Fix" ],
+    "objectIds": [
+      8773,
+      8775
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && l > 0 && l < 5 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
   },
   {
     "description": "Mourners Tunnels - Walls - Dirt",
@@ -18732,7 +19241,6 @@
       51628,
       51629,
       51631,
-      51632,
       51633,
       51635,
       51637,

@@ -2989,11 +2989,12 @@
   },
   {
     "name": "LLETYA_WOOD_FLOORS",
-    "area": "LLETYA_UPPER_LEVELS",
+    "area": "Lletya Wood Floors Fix",
     "overlayIds": [
       22
     ],
-    "groundMaterial": "HD_WOOD_PLANKS_2"
+    "groundMaterial": "HD_WOOD_PLANKS_2",
+    "uvScale": 1.25
   },
   {
     "name": "TIRANNWN_PATHS",

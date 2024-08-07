@@ -19939,6 +19939,24 @@
     ]
   },
   {
+    "description": "STANDING_TORCH_SHORTER_RADIUS",
+    "height": 200,
+    "alignment": "CENTER",
+    "radius": 350,
+    "strength": 9,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      10658
+    ]
+  },
+  {
     "description": "STANDING_TORCH_SHORT",
     "height": 200,
     "alignment": "CENTER",
