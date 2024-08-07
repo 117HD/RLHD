@@ -23107,12 +23107,12 @@
     ]
   },
   {
-    "description": "Grand Library - Light Pillar",
+    "description": "Grand Library - Stairs",
     "baseMaterial": "CARPET",
     "uvType": "BOX",
     "uvOrientation": 256,
     "uvScale": 0.7,
-    "objectIds": [ 35387, 35388 ],
+    "objectIds": [ 35387, 35388, 35389 ],
     "colorOverrides": [
       {
         "colors": [ "h == 34" ],
