@@ -23116,5 +23116,53 @@
       35374,
       35378
     ]
+  },
+  {
+    "description": "Grand Library - Floor - Wooden with Marble",
+    "baseMaterial": "WOOD_GRAIN",
+    "objectIds": [
+      34978,
+      34979,
+      34980,
+      34981,
+      34982,
+      34983,
+      34984,
+      34985,
+      34986,
+      34987,
+      34988,
+      34989,
+      34990,
+      34991,
+      34992
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 32" ],
+        "baseMaterial": "MARBLE_2",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ]
+  },
+  {
+    "description": "Grand Library - Floor - Hole Edge",
+    "baseMaterial": "WOOD_GRAIN",
+    "objectIds": [
+      35072,
+      35073
+    ]
+  },
+  {
+    "description": "Grand Library - Floor - Carpet",
+    "baseMaterial": "FINE_CARPET",
+    "objectIds": [
+      35430,
+      35431,
+      35432,
+      35433
+    ],
+    "uvType": "BOX"
   }
 ]

@@ -3005,6 +3005,16 @@
     "groundMaterial": "GRASSY_DIRT"
   },
   {
+    "name": "Grand Library Floor",
+    "area": "SOTE_GRAND_LIBRARY",
+    "groundMaterial": "CARPET",
+    "overlayIds": [
+      63
+    ],
+    "uvOrientation": 256,
+    "uvScale": 0.7
+  },
+  {
     "name": "PRIFDDINAS_POND_WATER",
     "area": "PRIFDDINAS",
     "overlayIds": [
