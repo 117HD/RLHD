@@ -9539,6 +9539,8 @@
       1490,
       1491,
       1492,
+      1494,
+      1495,
       5962,
       26763,
       26767
@@ -10254,6 +10256,8 @@
     "description": "Objects - Wooden - Chair 2",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      1898,
+      1899,
       5346,
       7182,
       12887,
@@ -22807,6 +22811,64 @@
       28493,
       28494,
       28495
+    ]
+  },
+  {
+    "description": "Baxtorian Falls - Tables - Cloth",
+    "baseMaterial": "CARPET",
+    "objectIds": [
+      1901
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "colors": [ "h == 3", "h == 10" ],
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Baxtorian Falls - Throne - Broken",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      1896
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "colors": "l > 11",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Baxtorian Falls - Pillar",
+    "baseMaterial": "MARBLE_1",
+    "objectIds": [
+      34965
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Baxtorian Falls - Statues",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      2006,
+      34967,
+      34968
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Baxtorian Falls - Chalice",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      2014,
+      2015
     ]
   }
 ]
