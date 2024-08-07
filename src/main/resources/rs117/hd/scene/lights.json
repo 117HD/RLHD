@@ -23056,10 +23056,26 @@
   },
   {
     "description": "GRAND_LIBRARY_PORTAL",
-    "height": 150,
-    "alignment": "CENTER",
+    "offset": [ -15, 150, 0 ],
     "radius": 450,
-    "strength": 12.5,
+    "strength": 3,
+    "color": [
+      0,
+      200,
+      225
+    ],
+    "type": "PULSE",
+    "duration": 1200,
+    "range": 10,
+    "objectIds": [
+      35075
+    ]
+  },
+  {
+    "description": "GRAND_LIBRARY_PORTAL_2",
+    "offset": [ 0, 5, 0 ],
+    "radius": 450,
+    "strength": 10,
     "color": [
       0,
       200,
