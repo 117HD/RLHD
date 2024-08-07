@@ -23021,7 +23021,7 @@
       },
       {
         "colors": "h == 34",
-        "baseMaterial": "MARBLE_1",
+        "baseMaterial": "MARBLE_1_SEMIGLOSS",
         "uvType": "BOX",
         "uvScale": 0.75
       },
@@ -23056,7 +23056,7 @@
     "colorOverrides": [
       {
         "colors": "h == 34",
-        "baseMaterial": "MARBLE_1",
+        "baseMaterial": "MARBLE_1_SEMIGLOSS",
         "uvType": "BOX",
         "uvScale": 0.75
       }
@@ -23086,7 +23086,16 @@
       35459,
       35461,
       35463,
-      35465
+      35465,
+      35452,
+      35454,
+      35456,
+      35458,
+      35460,
+      35462,
+      35464,
+      35466,
+      35467
     ],
     "uvType": "BOX",
     "uvScale": 0.5,
@@ -23099,7 +23108,7 @@
       },
       {
         "colors": [ "h == 30" ,"h == 32", "h == 34" ],
-        "baseMaterial": "MARBLE_1",
+        "baseMaterial": "MARBLE_1_SEMIGLOSS",
         "uvType": "BOX",
         "uvScale": 0.75
       }
@@ -23147,11 +23156,13 @@
     ]
   },
   {
-    "description": "Grand Library - Floor - Hole Edge",
+    "description": "Grand Library - Floor - Hole and Railing",
     "baseMaterial": "WOOD_GRAIN",
     "objectIds": [
       35072,
-      35073
+      35073,
+      35068,
+      35067
     ]
   },
   {
@@ -23164,5 +23175,85 @@
       35433
     ],
     "uvType": "BOX"
+  },
+  {
+    "description": "Grand Library - Large Cabinet",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      35424,
+      35423,
+      35426,
+      35429,
+      35427,
+      35425,
+      35428
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 3" ],
+        "baseMaterial": "WOOD_GRAIN"
+      },
+      {
+        "colors": [ "h == 57" ],
+        "baseMaterial": "FINE_CARPET",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Grand Library - Large Cabinet - Upside-down",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      34976,
+      34974,
+      34971,
+      34977,
+      34973,
+      34970,
+      34975
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 3" ],
+        "baseMaterial": "WOOD_GRAIN"
+      }
+    ]
+  },
+  {
+    "description": "Grand Library - Floating Bookcase",
+    "baseMaterial": "WOOD_GRAIN",
+    "objectIds": [
+      37380,
+      35447
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 3" ],
+        "baseMaterial": "WOOD_GRAIN"
+      }
+    ]
+  },
+  {
+    "description": "Grand Library - Furniture",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "objectIds": [
+      35439,
+      35440,
+      35407,
+      35408,
+      35406,
+      35437
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 3" ],
+        "baseMaterial": "WOOD_GRAIN"
+      },
+      {
+        "colors": [ "h == 9" ],
+        "baseMaterial": "METALLIC_1"
+      }
+    ]
   }
 ]
