@@ -1350,6 +1350,7 @@
       1341,
       1342,
       1353,
+      1358,
       4328,
       6212,
       9661,
@@ -1800,6 +1801,39 @@
         "baseMaterial": "NONE"
       }
     ]
+  },
+  {
+    "description": "Arandar - Fence",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      3524
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.8
+  },
+  {
+    "description": "Arandar - Shortcut Rocks",
+    "baseMaterial": "ROCK_2",
+    "objectIds": [
+      16514,
+      16515,
+      16516
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.4
+  },
+  {
+    "description": "Arandar - Limestone",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      11382,
+      11383,
+      11384
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.33
   },
   {
     "description": "Floating Rocks - Remove Ripples",
