@@ -23015,18 +23015,18 @@
   },
   {
     "description": "WELL_OF_VOYAGE",
-    "height": 200,
+    "height": 400,
     "alignment": "CENTER",
-    "radius": 250,
-    "strength": 15,
+    "radius": 700,
+    "strength": 20,
     "color": [
       255,
       255,
       255
     ],
     "type": "PULSE",
-    "duration": 1200,
-    "range": 30,
+    "duration": 3000,
+    "range": 7,
     "objectIds": [
       4004,
       4005
@@ -23034,7 +23034,7 @@
   },
   {
     "description": "ELVEN_LAMP",
-    "height": 180,
+    "height": 160,
     "alignment": "CENTER",
     "radius": 250,
     "strength": 10,
@@ -23044,8 +23044,8 @@
       255
     ],
     "type": "PULSE",
-    "duration": 1000,
-    "range": 10,
+    "duration": 2000,
+    "range": 7,
     "objectIds": [
       35867,
       35868,

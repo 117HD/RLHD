@@ -4108,7 +4108,11 @@
       16543,
       17086,
       17087,
-      26712
+      26712,
+      35838,
+      35839,
+      35840,
+      35841
     ],
     "uvType": "BOX",
     "uvScale": 0.75,
@@ -10129,6 +10133,7 @@
     "description": "Wall Decoration - Rocks",
     "baseMaterial": "ROCK_1_LIGHT",
     "objectIds": [
+      1474,
       1493,
       6393,
       6394,
@@ -22869,6 +22874,49 @@
     "objectIds": [
       2014,
       2015
+    ]
+  },
+  {
+    "description": "Underground Pass - Well of Voyage",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      4004,
+      4005
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "colors": [ "h == 0", "h == 39", "h == 40" ],
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.1
+      }
+    ]
+  },
+  {
+    "description": "Underground Pass - Exit to Tirannwn",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      4007
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 100,
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "BLACK",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
     ]
   }
 ]
