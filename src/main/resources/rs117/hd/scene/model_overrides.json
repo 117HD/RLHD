@@ -1439,7 +1439,17 @@
       3882,
       3883,
       3884,
-      3893
+      3893,
+      37272
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7
+  },
+  {
+    "description": "Tirannwn - Lord Crwys Tree",
+    "baseMaterial": "LIGHT_BARK",
+    "npcIds": [
+      8902
     ],
     "uvType": "BOX",
     "uvScale": 0.7
@@ -1566,7 +1576,10 @@
       3897,
       35856,
       35858,
-      35860
+      35860,
+      35857,
+      35855,
+      35859
     ],
     "retainVanillaUvs": false,
     "uvType": "BOX",
@@ -1615,7 +1628,9 @@
     "objectIds": [
       3918,
       8774,
-      35868
+      35868,
+      35867,
+      34958
     ],
     "uvType": "BOX",
     "uvScale": 0.4,
@@ -5707,7 +5722,8 @@
       8772,
       9531,
       25601,
-      25676
+      25676,
+      35874
     ],
     "uvType": "BOX",
     "uvOrientation": 512
@@ -8069,6 +8085,9 @@
       12548,
       15031,
       14739,
+      27223,
+      27224,
+      27225,
       41450
     ],
     "uvType": "BOX",
@@ -10420,7 +10439,8 @@
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [
       306,
-      327
+      327,
+      35869
     ],
     "uvType": "BOX",
     "uvScale": 0.3
@@ -10559,7 +10579,8 @@
       35805,
       35806,
       35813,
-      35814
+      35814,
+      35871
     ],
     "colorOverrides": [
       {
@@ -12430,7 +12451,7 @@
   {
     "description": "Object - Sack with Hey or Grain",
     "baseMaterial": "FINE_CARPET",
-    "objectIds": [ 5574, 10306, 16878, 35954 ],
+    "objectIds": [ 5574, 10306, 16878, 35954, 35872 ],
     "uvType": "BOX",
     "uvScale": 0.85,
     "retainVanillaUvs": false
@@ -14259,7 +14280,9 @@
       14740,
       15674,
       22278,
-      22280
+      22280,
+      27228,
+      27229
     ],
     "uvType": "BOX"
   },
@@ -17299,7 +17322,11 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       8763,
-      8764
+      8764,
+      35902,
+      35903,
+      35906,
+      35907
     ],
     "uvType": "BOX",
     "uvScale": 0.92,
@@ -17324,7 +17351,8 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       8756,
-      8758
+      8758,
+      35951
     ],
     "uvType": "BOX",
     "uvScale": 0.92,
@@ -17336,7 +17364,8 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       8751,
-      20127
+      20127,
+      35873
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -17379,8 +17408,12 @@
     "description": "Tirannwn - Lletya - Well",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      8747,
+      8766,
       35880,
-      35881
+      35881,
+      35882,
+      35884
     ],
     "uvType": "BOX",
     "uvScale": 0.7,
@@ -17390,6 +17423,32 @@
         "baseMaterial": "STONE_NORMALED",
         "uvType": "BOX",
         "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Lletya - Grave",
+    "baseMaterial": "MARBLE_3",
+    "objectIds": [
+      35914
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7
+  },
+  {
+    "description": "Tirannwn - Lletya - Cooking Range",
+    "baseMaterial": "METALLIC_1",
+    "objectIds": [
+      8750,
+      35877
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": [ "h == 6" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.75
       }
     ]
   },
@@ -17480,6 +17539,69 @@
         "baseMaterial": "METALLIC_1_LIGHT"
       }
     ]
+  },
+  {
+    "description": "Underground Pass - Dwarven Camp - Ground - Wooden - Planks",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      14184,
+      14185,
+      14186,
+      14187
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Underground Pass - Dwarven Camp - Ground - Explosives Hole",
+    "baseMaterial": "DIRT_1",
+    "objectIds": [
+      35888,
+      35889
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.57
+  },
+  {
+    "description": "Underground Pass - Spear Wall",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "objectIds": [
+      849,
+      34938
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.25
+      }
+    ]
+  },
+  {
+    "description": "Underground Pass - Spear Wall",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "npcIds": [
+      8951
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 5", "h == 6" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 50
+      }
+    ]
+  },
+  {
+    "description": "Underground Pass - Catapult",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      671
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
   },
   {
     "description": "Mourners Tunnels - Walls - Dirt",
