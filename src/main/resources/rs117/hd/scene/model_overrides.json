@@ -4114,8 +4114,10 @@
       1422,
       1435,
       1459,
+      1469,
       1460,
       1467,
+      3222,
       4448,
       6628,
       9739,
@@ -23210,5 +23212,17 @@
         "uvScale": 0.5
       }
     ]
+  },
+  {
+    "description": "Song of the Elves Cutscene - Light Pillar",
+    "baseMaterial": "MARBLE_2_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [ 35894, 35893 ]
+  },
+  {
+    "description": "Song of the Elves Cutscene - Fragment of Seren, Fix Shadow Flicker",
+    "shadowOpacityThreshold": 0.1,
+    "npcIds": [ 8920 ]
   }
 ]

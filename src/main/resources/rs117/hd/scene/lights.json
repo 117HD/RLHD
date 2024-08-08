@@ -18652,15 +18652,15 @@
     ]
   },
   {
-    "description": "FRAGMENT_OF_SEREN",
+    "description": "FRAGMENT_OF_SEREN_PRE_DEFEAT",
     "height": 200,
     "alignment": "CENTER",
     "radius": 500,
-    "strength": 17.5,
+    "strength": 14.5,
     "color": [
-      187,
-      153,
-      255
+      255,
+      0,
+      0
     ],
     "type": "PULSE",
     "duration": 3200,
@@ -23036,7 +23036,7 @@
     "description": "ELVEN_LAMP",
     "height": 160,
     "alignment": "CENTER",
-    "radius": 250,
+    "radius": 350,
     "strength": 10,
     "color": [
       255,
@@ -23264,7 +23264,7 @@
     ]
   },
   {
-    "description": "FRAGMENT_OF_SEREN",
+    "description": "FRAGMENT_OF_SEREN_POST_DEFEAT",
     "height": 280,
     "alignment": "CENTER",
     "radius": 500,
