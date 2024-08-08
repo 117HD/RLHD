@@ -22996,7 +22996,14 @@
   {
     "description": "Grand Library - Floor - Hole and Railing",
     "baseMaterial": "WOOD_GRAIN",
-    "objectIds": [ 35067, 35068, 35072, 35073, 35074 ]
+    "objectIds": [ 35067, 35068, 35069, 35070, 35072, 35073, 35074 ]
+  },
+  {
+    "description": "Grand Library - Floor - Bust",
+    "baseMaterial": "MARBLE_1",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [ 35033, 35034, 35035, 35036, 35037, 35038, 35441, 35442, 35443, 35444, 35445, 35446 ]
   },
   {
     "description": "Grand Library - Floor - Carpet",
