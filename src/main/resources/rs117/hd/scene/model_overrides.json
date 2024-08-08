@@ -22921,7 +22921,6 @@
   },
   {
     "description": "Grand Library - Bookcase Wall",
-    "baseMaterial": "GRUNGE_3",
     "objectIds": [
       2485, 4140, 4976, 34993, 34994, 34995, 34996, 35001, 35002,
       35003, 35004, 35005, 35006, 35007, 35008, 35009, 35010, 35011,
@@ -22934,7 +22933,6 @@
       35368, 35372, 35373, 35449, 35450, 37369, 37370, 37371, 37372,
       37373, 37374, 37375, 37376, 37377, 37378, 37379
     ],
-    "uvType": "MODEL_XY",
     "colorOverrides": [
       {
         "colors": "h == 3",
@@ -22944,51 +22942,33 @@
       },
       {
         "colors": "h == 34",
-        "baseMaterial": "MARBLE_1_SEMIGLOSS",
+        "baseMaterial": "MARBLE_1",
         "uvType": "BOX",
         "uvScale": 0.75
-      },
-      {
-        "colors": "h == 9",
-        "baseMaterial": "METALLIC_1_LIGHT",
-        "uvType": "MODEL_XY",
-        "uvScale": 0.1
       }
     ]
   },
   {
     "description": "Grand Library - Wall Pillar",
-    "baseMaterial": "GRUNGE_3",
     "objectIds": [ 34997, 34999, 35000, 35057, 35058, 35060, 35062, 35063, 35380, 35381, 35382, 35383, 35385 ],
-    "uvType": "MODEL_XY",
-    "colorOverrides": [
-      {
-        "colors": "h == 34",
-        "baseMaterial": "MARBLE_1_SEMIGLOSS",
-        "uvType": "BOX",
-        "uvScale": 0.75
-      }
-    ]
+    "baseMaterial": "MARBLE_1",
+    "uvType": "BOX",
+    "uvScale": 0.75
   },
   {
     "description": "Grand Library - Wall Pillar with Crystal",
-    "baseMaterial": "GRUNGE_3",
     "objectIds": [
       34998, 35059, 35061, 35064, 35384, 35451, 35451, 35452, 35453, 35453, 35454, 35455, 35455, 35456, 35457,
       35457, 35458, 35459, 35459, 35460, 35461, 35461, 35462, 35463, 35463, 35464, 35465, 35465, 35466, 35467
     ],
-    "uvType": "BOX",
-    "uvScale": 0.5,
     "colorOverrides": [
       {
         "colors": [ "s == 7" ],
-        "baseMaterial": "GRAY_90",
-        "uvType": "BOX",
-        "uvScale": 0.75
+        "baseMaterial": "NONE"
       },
       {
         "colors": [ "h == 30" ,"h == 32", "h == 34" ],
-        "baseMaterial": "MARBLE_1_SEMIGLOSS",
+        "baseMaterial": "MARBLE_1",
         "uvType": "BOX",
         "uvScale": 0.75
       }
@@ -23008,7 +22988,7 @@
       {
         "colors": [ "h == 32" ],
         "baseMaterial": "MARBLE_2",
-        "uvType": "BOX",
+        "uvType": "MODEL_XZ",
         "uvScale": 0.75
       }
     ]
@@ -23016,18 +22996,17 @@
   {
     "description": "Grand Library - Floor - Hole and Railing",
     "baseMaterial": "WOOD_GRAIN",
-    "objectIds": [ 35067, 35068, 35072, 35073 ]
+    "objectIds": [ 35067, 35068, 35072, 35073, 35074 ]
   },
   {
     "description": "Grand Library - Floor - Carpet",
     "baseMaterial": "FINE_CARPET",
     "objectIds": [ 35430, 35431, 35432, 35433 ],
-    "uvType": "BOX"
+    "uvType": "MODEL_XZ"
   },
   {
     "description": "Grand Library - Large Cabinet",
-    "baseMaterial": "GRUNGE_3",
-    "objectIds": [ 35423, 35424, 35425, 35426, 35427, 35428, 35429 ],
+    "objectIds": [ 35423, 35424, 35425, 35426, 35427, 35428, 35429, 34970, 34971, 34973, 34974, 34975, 34976, 34977 ],
     "colorOverrides": [
       {
         "colors": [ "h == 3" ],
@@ -23036,24 +23015,12 @@
       {
         "colors": [ "h == 57" ],
         "baseMaterial": "FINE_CARPET",
-        "uvType": "BOX"
-      }
-    ]
-  },
-  {
-    "description": "Grand Library - Large Cabinet - Upside-down",
-    "baseMaterial": "GRUNGE_3",
-    "objectIds": [ 34970, 34971, 34973, 34974, 34975, 34976, 34977 ],
-    "colorOverrides": [
-      {
-        "colors": [ "h == 3" ],
-        "baseMaterial": "WOOD_GRAIN"
+        "uvType": "MODEL_XZ"
       }
     ]
   },
   {
     "description": "Grand Library - Floating Bookcase",
-    "baseMaterial": "WOOD_GRAIN",
     "objectIds": [ 37380, 35447 ],
     "colorOverrides": [
       {
@@ -23064,23 +23031,16 @@
   },
   {
     "description": "Grand Library - Furniture",
-    "baseMaterial": "GRUNGE_3",
-    "uvType": "BOX",
     "objectIds": [ 35406, 35407, 35408, 35437, 35439, 35440 ],
     "colorOverrides": [
       {
         "colors": [ "h == 3" ],
         "baseMaterial": "WOOD_GRAIN"
-      },
-      {
-        "colors": [ "h == 9" ],
-        "baseMaterial": "METALLIC_1"
       }
     ]
   },
   {
     "description": "Grand Library - Light Pillar",
-    "baseMaterial": "NONE",
     "objectIds": [
       35076, 35082, 35083, 35084, 35085, 35086, 35087, 35088, 35089, 35090, 35091, 35092, 35093, 35094, 35095, 35096, 35097,
       35098, 35099, 35100, 35101, 35102, 35103, 35104, 35105, 35106, 35107, 35108, 35109, 35110, 35111, 35112, 35113, 35114,
@@ -23100,7 +23060,7 @@
     "colorOverrides": [
       {
         "colors": [ "h == 34" ],
-        "baseMaterial": "MARBLE_2_SEMIGLOSS",
+        "baseMaterial": "MARBLE_2_GLOSS",
         "uvType": "BOX",
         "uvScale": 0.7
       }
@@ -23109,7 +23069,7 @@
   {
     "description": "Grand Library - Stairs",
     "baseMaterial": "CARPET",
-    "uvType": "BOX",
+    "uvType": "MODEL_XZ",
     "uvOrientation": 256,
     "uvScale": 0.7,
     "objectIds": [ 35387, 35388, 35389 ],
