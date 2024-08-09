@@ -22093,7 +22093,7 @@
     ]
   },
   {
-    "description": "Gauntlet - Walls - Scoreboard",
+    "description": "Gauntlet Lobby - Walls - Scoreboard",
     "baseMaterial": "ROCK_3",
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -22106,6 +22106,40 @@
         "baseMaterial": "GRUNGE_3",
         "uvType": "MODEL_XY",
         "uvScale": 0.75
+      }
+    ]
+  },
+  {
+    "description": "Gauntlet Lobby - Deposit Box",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      36086
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 32" ],
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "MODEL_XY",
+        "uvScale": 0.75
+      }
+    ]
+  },
+  {
+    "description": "Gauntlet Lobby - Reward Chest",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "objectIds": [
+      36087,
+      36088
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 32", "h == 42", "h == 26" ],
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.4
       }
     ]
   },

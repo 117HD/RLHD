@@ -23255,7 +23255,7 @@
       255
     ],
     "type": "PULSE",
-    "duration": 900,
+    "duration": 2000,
     "range": 20,
     "objectIds": [
       36083,
