@@ -22093,6 +22093,23 @@
     ]
   },
   {
+    "description": "Gauntlet - Walls - Scoreboard",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      36060
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "s == 2", "s == 7", "h == 29" ],
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "MODEL_XY",
+        "uvScale": 0.75
+      }
+    ]
+  },
+  {
     "description": "Gauntlet - Walls and Unlit Node",
     "baseMaterial": "ROCK_3",
     "uvType": "BOX",
@@ -22118,7 +22135,8 @@
     "colorOverrides": [
       {
         "colors": [ "s == 2", "s == 7" ],
-        "baseMaterial": "GRUNGE_3"
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "MODEL_XY"
       }
     ]
   },
@@ -22155,7 +22173,7 @@
     "colorOverrides": [
       {
         "colors": [ "h == 32" ],
-        "baseMaterial": "BARK",
+        "baseMaterial": "LIGHT_BARK",
         "uvType": "BOX",
         "uvScale": 0.66
       }
@@ -22191,5 +22209,92 @@
         "uvScale": 0.5
       }
     ]
+  },
+  {
+    "description": "Gauntlet - Water Pump",
+    "baseMaterial": "METALLIC_1_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "objectIds": [
+      36078
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 32", "h == 33" ],
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Gauntlet - Cooking Range",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "objectIds": [
+      36077
+    ]
+  },
+  {
+    "description": "Gauntlet - Recipe Books",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "MODEL_XY",
+    "uvScale": 0.5,
+    "objectIds": [
+      36075,
+      36076
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 32 && s < 3", "h == 0", "h == 34", "s == 5" ],
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.66
+      }
+    ]
+  },
+  {
+    "description": "Gauntlet - Singing Bowl",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [
+      36063
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "s < 7" ],
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS"
+      }
+    ]
+  },
+  {
+    "description": "Gauntlet - Teleport Platform & Entrance",
+    "objectIds": [
+      36062,
+      36082,
+      36085
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "l < 45" ],
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS"
+      }
+    ]
+  },
+  {
+    "description": "Gauntlet - Tool Storage",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [
+      36074
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 0 && l < 16", "h == 32 && l < 13" ],
+        "baseMaterial": "ROCK_3_SMOOTH",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Gauntlet - Barrier - Remove Flickering Shadow",
+    "castShadows": false,
+    "objectIds": [ 36079, 36080 ]
   }
 ]
