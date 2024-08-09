@@ -22345,7 +22345,7 @@
     "description": "Gauntlet - Linum Tirinum",
     "baseMaterial": "BARK",
     "uvType": "BOX",
-    "uvScale": 0.22,
+    "uvScale": 0.44,
     "objectIds": [
       36072,
       36073
@@ -22359,7 +22359,7 @@
         "colors": [ "h == 0" ],
         "baseMaterial": "DIRT_1",
         "uvType": "BOX",
-        "uvScale": 0.5
+        "uvScale": 0.4
       }
     ]
   },
@@ -22398,7 +22398,8 @@
       35995,
       35996,
       35998,
-      35999
+      35999,
+      36002
     ]
   },
   {
@@ -22497,6 +22498,92 @@
       {
         "colors": [ "h == 0" ],
         "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS"
+      }
+    ]
+  },
+  {
+    "description": "Corrupted Gauntlet - Corrupt Phren Roots",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      35969,
+      35970
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h > 61" ],
+        "baseMaterial": "NONE"
+      },
+      {
+        "colors": [ "h == 0 && s != 5" ],
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Corrupted Gauntlet - Corrupt Crystal Deposit",
+    "baseMaterial": "ROCK_3_ORE",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      35967,
+      35968
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 62 ", "h == 63" ],
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Corrupted Gauntlet - Corrupt Linum Tirinum",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.44,
+    "objectIds": [
+      35975,
+      35976
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 32" ],
+        "baseMaterial": "GRAY_90"
+      },
+      {
+        "colors": [ "h == 0" ],
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "Corrupted Gauntlet - Corrupt Gyrm Root",
+    "baseMaterial": "LEAF_VEINS",
+    "uvType": "BOX",
+    "uvScale": 0.22,
+    "objectIds": [
+      35973,
+      35974
+    ]
+  },
+  {
+    "description": "Corrupted Gauntlet - Corrupt Fishing Spot",
+    "baseMaterial": "DIRT_1",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      35971,
+      35972
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h != 0" ],
+        "baseMaterial": "NONE"
       }
     ]
   }
