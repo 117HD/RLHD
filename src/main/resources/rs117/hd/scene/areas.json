@@ -4851,7 +4851,8 @@
     "name": "THE_GAUNTLET_LOBBY",
     "aabbs": [
       [ 3025, 6116, 3040, 6131 ]
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "PLAYER_OWNED_HOUSE",
