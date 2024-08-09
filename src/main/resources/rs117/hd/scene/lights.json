@@ -23355,7 +23355,7 @@
   {
     "description": "GAUNTLET_LIT_NODE_2",
     "offset": [ 80, 210, 20 ],
-    "radius": 200,
+    "radius": 300,
     "strength": 10,
     "color": [
       0,
@@ -23404,6 +23404,23 @@
     "objectIds": [
       36064
     ]
+  },
+  {
+    "description": "GAUNTLET_FISHING_SPOT",
+    "height": 40,
+    "alignment": "CENTER",
+    "radius": 225,
+    "strength": 10,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      36068
+    ],
+    "fadeOutDuration": 100
   },
   {
     "description": "CORRUPTED_TELEPORT_PLATFORM",
@@ -23546,6 +23563,23 @@
     "objectIds": [
       35967
     ]
+  },
+  {
+    "description": "GAUNTLET_FISHING_SPOT",
+    "height": 40,
+    "alignment": "CENTER",
+    "radius": 225,
+    "strength": 10,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      35971
+    ],
+    "fadeOutDuration": 100
   },
   {
     "description": "ZALCANO_ROCK_FORMATION_GLOWING",
