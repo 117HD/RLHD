@@ -23337,9 +23337,8 @@
   },
   {
     "description": "GAUNTLET_LIT_NODE_1",
-    "height": 210,
-    "alignment": "BACKRIGHT",
-    "radius": 200,
+    "offset": [ -80, 210, 20 ],
+    "radius": 300,
     "strength": 10,
     "color": [
       0,
@@ -23355,8 +23354,7 @@
   },
   {
     "description": "GAUNTLET_LIT_NODE_2",
-    "height": 210,
-    "alignment": "BACKLEFT",
+    "offset": [ 80, 210, 20 ],
     "radius": 200,
     "strength": 10,
     "color": [
@@ -23481,10 +23479,9 @@
   },
   {
     "description": "CORRUPTED_GAUNTLET_LIT_NODE_1",
-    "height": 210,
-    "alignment": "BACKRIGHT",
-    "radius": 200,
-    "strength": 10,
+    "offset": [ -80, 210, 20 ],
+    "radius": 350,
+    "strength": 7,
     "color": [
       255,
       0,
@@ -23499,10 +23496,9 @@
   },
   {
     "description": "CORRUPTED_GAUNTLET_LIT_NODE_2",
-    "height": 210,
-    "alignment": "BACKLEFT",
-    "radius": 200,
-    "strength": 10,
+    "offset": [ 80, 210, 20 ],
+    "radius": 350,
+    "strength": 7,
     "color": [
       255,
       0,
