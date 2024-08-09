@@ -22218,6 +22218,7 @@
     "uvType": "BOX",
     "uvScale": 0.25,
     "objectIds": [
+      35981,
       36078
     ],
     "colorOverrides": [
@@ -22232,6 +22233,7 @@
     "baseMaterial": "GRUNGE_3",
     "uvType": "BOX",
     "objectIds": [
+      35980,
       36077
     ]
   },
@@ -22284,6 +22286,7 @@
     "description": "Gauntlet - Tool Storage",
     "baseMaterial": "GRAY_75",
     "objectIds": [
+      35977,
       36074
     ],
     "colorOverrides": [
@@ -22451,6 +22454,49 @@
         "baseMaterial": "LIGHT_BARK",
         "uvType": "BOX",
         "uvScale": 0.66
+      }
+    ]
+  },
+  {
+    "description": "Corrupted Gauntlet - Recipe Books",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "MODEL_XY",
+    "uvScale": 0.5,
+    "objectIds": [
+      35978,
+      35979
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 10 ", "h == 3", "h == 18" ],
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.66
+      }
+    ]
+  },
+  {
+    "description": "Corrupted Gauntlet - Singing Bowl",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [
+      35966
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 10", "h == 32" ],
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS"
+      }
+    ]
+  },
+  {
+    "description": "Corrupted Gauntlet - Teleport Platform",
+    "objectIds": [
+      35965
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 0" ],
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS"
       }
     ]
   }
