@@ -22184,14 +22184,24 @@
     "baseMaterial": "MARBLE_1",
     "uvType": "MODEL_XZ",
     "objectIds": [
-      36149
+      36149,
+      36046
     ]
   },
   {
     "description": "Gauntlet - Floor - Cracked",
-    "baseMaterial": "MARBLE_1",
+    "baseMaterial": "MARBLE_3",
     "uvType": "MODEL_XZ",
+    "uvScale": 0.5,
     "objectIds": [
+      36052,
+      36053,
+      36054,
+      36055,
+      36056,
+      36057,
+      36058,
+      36059,
       36155,
       36156,
       36157,
@@ -22200,14 +22210,6 @@
       36160,
       36161,
       36162
-    ],
-    "colorOverrides": [
-      {
-        "colors": [ "h == 0", "l == 3" ],
-        "baseMaterial": "DIRT_1",
-        "uvType": "MODEL_XZ",
-        "uvScale": 0.5
-      }
     ]
   },
   {
@@ -22295,7 +22297,7 @@
   {
     "description": "Gauntlet - Barrier - Remove Flickering Shadow",
     "castShadows": false,
-    "objectIds": [ 36079, 36080 ]
+    "objectIds": [ 36079, 36080, 35982, 35983 ]
   },
   {
     "description": "Gauntlet - Phren Roots",
@@ -22381,6 +22383,74 @@
       {
         "colors": [ "s == 7" ],
         "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Corrupted Gauntlet - Walls and Unlit Node",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      35995,
+      35996,
+      35998,
+      35999
+    ]
+  },
+  {
+    "description": "Corrupted Gauntlet - Walls - With Red Symbol",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      35994,
+      35992
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "s == 6", "s == 7" ],
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "MODEL_XY"
+      }
+    ]
+  },
+  {
+    "description": "Corrupted Gauntlet - Walls - Corner Pillar and Lit Node",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      35997,
+      36000,
+      36001
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "s > 5" ],
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
+  },
+  {
+    "description": "Corrupted Gauntlet - Walls - Roots",
+    "baseMaterial": "DIRT_2",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      36003,
+      36004,
+      36005,
+      36006,
+      36007,
+      36008
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 10" ],
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.66
       }
     ]
   }
