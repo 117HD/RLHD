@@ -20322,15 +20322,16 @@
   },
   {
     "description": "Camdozaal - Plant - Fern",
-    "baseMaterial": "PLANT_GRUNGE_2",
+    "baseMaterial": "LEAF_VEINS_LIGHT",
     "objectIds": [
       41581,
       41582,
-      41583
+      41583,
+      41584
     ],
     "uvType": "BOX",
     "uvOrientation": 128,
-    "uvScale": 1.2
+    "uvScale": 0.4
   },
   {
     "description": "Camdozaal Fish Bones",
