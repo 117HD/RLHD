@@ -20232,22 +20232,48 @@
   {
     "description": "Camdozaal House Walls",
     "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 5",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvOrientation": 700
+      }
+    ],
     "objectIds": [
       41461,
       41462,
       41463,
+      41464,
       41465
-    ],
-    "uvType": "BOX"
+    ]
   },
   {
-    "description": "Camdozaal Wall Statues",
+    "description": "Camdozaal Wall Statue - static",
     "baseMaterial": "GRUNGE_3",
-    "objectIds": [
-      41467,
-      41468
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 5",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvOrientation": 700
+      }
     ],
-    "uvType": "BOX"
+    "objectIds": [
+      41468
+    ]
+  },
+  {
+    "description": "Camdozaal Wall Statues - Dynamic",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "objectIds": [
+      41467
+    ]
   },
   {
     "description": "Camdozaal Barronite Walls",
@@ -20404,6 +20430,15 @@
   {
     "description": "Camdozaal Preparation Table",
     "baseMaterial": "STONE_NORMALED",
+    "colorOverrides": [
+      {
+        "description": "Bones",
+        "colors": "h == 0",
+        "baseMaterial": "BONE",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.5
+      }
+    ],
     "objectIds": [
       41545
     ],
@@ -20414,14 +20449,23 @@
   {
     "description": "Camdozaal Altar",
     "baseMaterial": "STONE_NORMALED",
-    "objectIds": [
-      41546
-    ],
     "uvType": "BOX",
     "uvOrientationY": 256,
     "uvOrientationZ": 768,
     "uvOrientationX": 768,
-    "uvScale": 0.6
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 5",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvOrientation": 700
+      }
+    ],
+    "objectIds": [
+      41546
+    ]
   },
   {
     "description": "Camdozaal and Zanaris Mushrooms",
@@ -20501,7 +20545,7 @@
   },
   {
     "description": "Camdozaal Big Door",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "GRUNGE_3",
     "uvType": "BOX",
     "uvScale": 1.25,
     "colorOverrides": [
@@ -20509,11 +20553,13 @@
         "description": "Metal",
         "colors": "h == 6",
         "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
-        "uvType": "MODEL_XY"
+        "uvType": "BOX"
       }
     ],
     "objectIds": [
-      41482
+      41482,
+      41483,
+      41484
     ]
   },
   {
@@ -20523,6 +20569,8 @@
     "uvScale": 0.4,
     "uvOrientation": 182,
     "objectIds": [
+      41458,
+      41459,
       41460
     ]
   },
