@@ -20260,6 +20260,7 @@
         "colors": "h == 5",
         "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
         "uvType": "BOX",
+        "uvScale": 0.6,
         "uvOrientation": 700
       }
     ],
@@ -20574,6 +20575,91 @@
       41458,
       41459,
       41460
+    ]
+  },
+  {
+    "description": "Camdozaal tent with tools under it",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 128,
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h < 7 && s > 0",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      41491
+    ]
+  },
+  {
+    "description": "Camdozaal Pickaxe Barrel",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h < 4",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      41593
+    ]
+  },
+  {
+    "description": "Camdozaal Barrel",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h < 4",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      30821,
+      41541
+    ]
+  },
+  {
+    "description": "Camdozaal Workbench",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h < 9",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 343
+      },
+      {
+        "description": "Crystals",
+        "colors": "h == 51",
+        "baseMaterial": "NONE",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 343
+      }
+    ],
+    "objectIds": [
+      41495
     ]
   },
   {
