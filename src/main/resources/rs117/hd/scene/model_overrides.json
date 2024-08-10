@@ -20476,7 +20476,27 @@
       }
     ],
     "objectIds": [
+      41440,
       41441
+    ]
+  },
+  {
+    "description": "Camdozaal Entrance rubble",
+    "baseMaterial": "SNOW_1",
+    "uvType": "BOX",
+    "uvScale": 1.25,
+    "colorOverrides": [
+      {
+        "description": "Stone",
+        "colors": "h == 0 && l < 55",
+        "baseMaterial": "ROCK_2",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 1024
+      }
+    ],
+    "objectIds": [
+      41454
     ]
   },
   {
