@@ -22136,5 +22136,21 @@
       28494,
       28495
     ]
+  },
+  {
+    "description": "Object - Wooden - Barrel - with coal",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      41455
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": [ "h == 0" ],
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvOrientation": 77
+      }
+    ]
   }
 ]
