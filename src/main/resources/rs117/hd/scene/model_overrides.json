@@ -20435,6 +20435,51 @@
     "uvType": "GEOMETRY"
   },
   {
+    "description": "Camdozaal Entrance Sides",
+    "baseMaterial": "SNOW_1",
+    "uvType": "BOX",
+    "uvScale": 1.25,
+    "colorOverrides": [
+      {
+        "description": "Stone",
+        "colors": "l < 56",
+        "baseMaterial": "ROCK_1",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 343
+      }
+    ],
+    "objectIds": [
+      41443,
+      41444
+    ]
+  },
+  {
+    "description": "Camdozaal Entrance",
+    "baseMaterial": "SNOW_1",
+    "uvType": "BOX",
+    "uvScale": 1.25,
+    "colorOverrides": [
+      {
+        "description": "Stone",
+        "colors": "h == 0 && l < 65",
+        "baseMaterial": "ROCK_2",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 1024
+      },
+      {
+        "description": "Ice",
+        "colors": "h == 32",
+        "baseMaterial": "ICE_3",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      41441
+    ]
+  },
+  {
     "description": "Seers Coal Mine Fence",
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
