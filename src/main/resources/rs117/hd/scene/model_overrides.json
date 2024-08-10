@@ -20500,6 +20500,32 @@
     ]
   },
   {
+    "description": "Camdozaal Big Door",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 1.25,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 6",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "MODEL_XY"
+      }
+    ],
+    "objectIds": [
+      41482
+    ]
+  },
+  {
+    "description": "Structural Pillar",
+    "baseMaterial": "ROCK_2",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      41460
+    ]
+  },
+  {
     "description": "Seers Coal Mine Fence",
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
