@@ -20521,6 +20521,7 @@
     "baseMaterial": "ROCK_2",
     "uvType": "BOX",
     "uvScale": 0.4,
+    "uvOrientation": 182,
     "objectIds": [
       41460
     ]
