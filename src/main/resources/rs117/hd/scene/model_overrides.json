@@ -393,7 +393,6 @@
       4796,
       4797,
       4798,
-      4809,
       4820,
       4821,
       4881,
@@ -509,7 +508,6 @@
       6723,
       6738,
       6762,
-      6793,
       6795,
       6824,
       7023,
@@ -22205,6 +22203,21 @@
       {
         "colors": ["h == 3", "h == 6" ],
         "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.7
+      }
+    ]
+  },
+  {
+    "description": "Hellrats - Hide Fake Lighting",
+    "npcIds": [
+      4809,
+      6793
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 2" ],
+        "baseMaterial": "TRANSPARENT",
         "uvType": "BOX",
         "uvScale": 0.7
       }

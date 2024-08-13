@@ -17613,10 +17613,10 @@
   },
   {
     "description": "HELLRAT",
-    "height": 20,
+    "height": 40,
     "alignment": "CENTER",
-    "radius": 220,
-    "strength": 7.5,
+    "radius": 240,
+    "strength": 5.5,
     "color": [
       255,
       0,
@@ -17626,7 +17626,24 @@
     "duration": 0,
     "range": 0,
     "npcIds": [
-      4809,
+      4809
+    ]
+  },
+  {
+    "description": "HELLRAT BEHEMOTH",
+    "height": 80,
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 12.5,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "npcIds": [
       6793
     ]
   },
