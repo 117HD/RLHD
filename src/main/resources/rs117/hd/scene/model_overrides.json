@@ -4067,16 +4067,29 @@
     ]
   },
   {
+    "description": "Pyramid Plunder Walls - Exit Doors",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      20931,
+      20932
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": [ "l == 103", "l == 23" ],
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
     "description": "Pyramid Plunder Walls - Interior",
     "baseMaterial": "ROCK_3",
     "objectIds": [
-      20932,
       20933,
       20939,
       20937,
       20948,
       20949,
-      20931,
       21280,
       20934,
       20944,
@@ -4099,10 +4112,7 @@
   },
   {
     "description": "Pyramid Plunder Metallic Objects",
-    "baseMaterial": "METALLIC_1_LIGHT_SUPER_HIGHGLOSS",
     "objectIds": [
-      20946,
-      20947,
       21263,
       21267,
       21262,
@@ -4110,8 +4120,27 @@
       21261,
       21265
     ],
-    "uvType": "BOX",
-    "uvScale": 1.5
+    "colorOverrides": [
+      {
+        "colors": [ "h == 8" ],
+        "baseMaterial": "METALLIC_1_LIGHT_HIGHGLOSS"
+      }
+    ]
+  },
+  {
+    "description": "Pyramid Plunder Gold Chest",
+    "objectIds": [
+      20946,
+      20947
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 9" ],
+        "baseMaterial": "METALLIC_1_LIGHT_HIGHGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.2
+      }
+    ]
   },
   {
     "description": "Pyramid Plunder Wall Torch",
@@ -4119,7 +4148,15 @@
     "objectIds": [
       20942
     ],
-    "uvType": "BOX"
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "colorOverrides": [
+      {
+        "colors": [ "h < 7" ],
+        "baseMaterial": "GRAY_90"
+      }
+    ]
+
   },
   {
     "description": "Pyramid Plunder Sarcophagus",
@@ -4129,8 +4166,9 @@
       21257
     ],
     "uvType": "BOX",
-    "uvScale": 1.2,
-    "uvOrientation": 1142
+    "uvScale": 0.8,
+    "uvOrientation": 1142,
+    "uvOrientationX": 1
   },
   {
     "description": "Pyramid Plunder Sarcophagus Opened",

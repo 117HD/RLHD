@@ -23803,11 +23803,11 @@
     ]
   },
   {
-    "description": "PYRAMID_PLUNDER_TOMB_DOOR",
+    "description": "PYRAMID_PLUNDER_TOMB_DOOR_1",
     "height": 100,
-    "alignment": "FRONT",
+    "alignment": "CENTRE",
     "radius": 400,
-    "strength": 10,
+    "strength": 15,
     "color": [
       255,
       224,
@@ -23817,14 +23817,31 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      20931,
+      20931
+    ]
+  },
+  {
+    "description": "PYRAMID_PLUNDER_TOMB_DOOR_2",
+    "height": 100,
+    "alignment": "CENTRE",
+    "radius": 350,
+    "strength": 65,
+    "color": [
+      255,
+      224,
+      166
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "objectIds": [
       20932
     ]
   },
   {
     "description": "PYRAMID_PLUNDER_WALL_TORCH",
     "height": 205,
-    "offset": [ -15, 0, 0 ],
+    "offset": [ -30, 0, -5 ],
     "radius": 350,
     "strength": 12.5,
     "color": [
