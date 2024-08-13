@@ -20217,8 +20217,8 @@
   },
   {
     "description": "FLOOR_CANDLES_1",
-    "height": 10,
-    "radius": 300,
+    "height": 40,
+    "radius": 280,
     "strength": 10,
     "color": [
       252,
@@ -20235,8 +20235,8 @@
   },
   {
     "description": "FLOOR_CANDLES_2",
-    "height": 10,
-    "radius": 200,
+    "height": 40,
+    "radius": 190,
     "strength": 10,
     "color": [
       252,
