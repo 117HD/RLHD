@@ -22091,5 +22091,123 @@
       28494,
       28495
     ]
+  },
+  {
+    "description": "Baba Yaga's House - Door",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "objectIds": [
+      16774
+    ]
+  },
+  {
+    "description": "Baba Yaga's House - Table, Stool and Empty Shelf",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.7,
+    "objectIds": [
+      16725,
+      16814,
+      16815
+    ]
+  },
+  {
+    "description": "Baba Yaga's House - Shelf with Utensils",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.7,
+    "objectIds": [
+      16816
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_GLOSS"
+      }
+    ]
+  },
+  {
+    "description": "Baba Yaga's House - Cooker",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      16812
+    ],
+    "colorOverrides": [
+      {
+        "colors": ["h == 0", "h == 10" ],
+        "baseMaterial": "METALLIC_1_GLOSS"
+      }
+    ]
+  },
+  {
+    "description": "Baba Yaga's House - Bed",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      16721
+    ],
+    "colorOverrides": [
+      {
+        "colors": ["h == 5", "h == 6" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.7
+      },
+      {
+        "colors": [ "h == 32" ],
+        "baseMaterial": "FINE_CARPET",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.7,
+        "uvOrientation": 256
+      },
+      {
+        "colors": ["h == 8" ],
+        "baseMaterial": "FINE_CARPET",
+        "uvType": "BOX",
+        "uvOrientation": 256
+      }
+    ]
+  },
+  {
+    "description": "Baba Yaga's House - Clothes Rack",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      16813
+    ],
+    "colorOverrides": [
+      {
+        "colors": ["h == 5", "h == 6" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.7
+      }
+    ]
+  },
+  {
+    "description": "Baba Yaga's House - Bookcase",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "areas": [ "Baba Yaga House Interior" ],
+    "objectIds": [
+      16707
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.4
+  },
+  {
+    "description": "Baba Yaga's House - Sink",
+    "baseMaterial": "NONE",
+    "areas": [ "Baba Yaga House Interior" ],
+    "objectIds": [
+      16704
+    ],
+    "colorOverrides": [
+      {
+        "colors": ["h == 3", "h == 6" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.7
+      }
+    ]
   }
 ]

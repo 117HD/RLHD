@@ -35564,5 +35564,22 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 20
+  },
+  {
+    "description": "Baba Yaga's House - Cooking Range",
+    "offset": [ -15, 165, 0 ],
+    "radius": 120,
+    "strength": 8,
+    "color": [
+      230,
+      100,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 5,
+    "objectIds": [
+      16812
+    ]
   }
 ]
