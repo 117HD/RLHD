@@ -22124,6 +22124,17 @@
     ]
   },
   {
+    "description": "Fortis wooden staircase - Wide",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.8,
+    "flatNormals": true,
+    "objectIds": [
+      52012
+    ]
+  },
+  {
     "description": "Fortis Masonry wall with wooden post",
     "baseMaterial": "MARBLE_2_GLOSS",
     "uvType": "BOX",
@@ -22156,6 +22167,8 @@
       }
     ],
     "objectIds": [
+      52000,
+      52001,
       52055
     ]
   },
@@ -22166,7 +22179,6 @@
     "uvScale": 0.8,
     "uvType": "BOX",
     "objectIds": [
-      52001,
       52050,
       52060,
       52061,
@@ -22176,6 +22188,8 @@
       52067,
       52068,
       52072,
+      52073,
+      52074,
       52075,
       52077,
       52078,
