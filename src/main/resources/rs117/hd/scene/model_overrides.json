@@ -22161,15 +22161,45 @@
       {
         "description": "Wooden Post",
         "baseMaterial": "WOOD_GRAIN_3",
-        "colors": "h == 3 && l < 30",
+        "colors": "h == 3 && s > 0 && s < 3",
         "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      52055
+    ]
+  },
+  {
+    "description": "Fortis Masonry wall with window",
+    "baseMaterial": "MARBLE_2_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Curtain",
+        "baseMaterial": "CARPET",
+        "colors": ["h == 42", "h == 1 && s == 2"],
+        "uvType": "BOX",
+        "uvOrientation": 256,
+        "uvScale": 0.8
+      },
+      {
+        "description": "Wood Window sile",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "colors": "h == 3 && s == 2",
+        "uvType": "BOX",
+        "uvOrientationX": 512,
         "uvScale": 0.8
       }
     ],
     "objectIds": [
       52000,
       52001,
-      52055
+      52060,
+      52061,
+      52062,
+      52063
     ]
   },
   {
@@ -22179,11 +22209,8 @@
     "uvScale": 0.8,
     "uvType": "BOX",
     "objectIds": [
+      52049,
       52050,
-      52060,
-      52061,
-      52062,
-      52063,
       52066,
       52067,
       52068,
