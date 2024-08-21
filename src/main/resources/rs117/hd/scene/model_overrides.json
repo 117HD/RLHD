@@ -13295,17 +13295,10 @@
       9086,
       9087,
       9088,
-      9089,
       9093,
       9094,
       9095,
       9096,
-      9098,
-      9104,
-      9105,
-      9106,
-      9107,
-      9108,
       9114,
       9114,
       9116,
@@ -13320,6 +13313,107 @@
       9125
     ],
     "uvType": "BOX"
+  },
+  {
+    "description": "Blast Furnace - Wooden",
+    "baseMaterial": "METALLIC_1",
+    "objectIds": [
+      9102,
+      9104,
+      9105,
+      9106,
+      9107,
+      9108
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": [ "h == 6" ],
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.7
+      }
+    ]
+  },
+  {
+    "description": "Blast Furnace - Drive Belt",
+    "baseMaterial": "METALLIC_1",
+    "objectIds": [
+      9102,
+      9107
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": [ "h == 6" ],
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
+  },
+  {
+    "description": "Blast Furnace - Ore Belt",
+    "baseMaterial": "METALLIC_1",
+    "objectIds": [
+      9100,
+      9101
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": [ "h == 6" ],
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
+  },
+  {
+    "description": "Blast Furnace - Temp Gauge",
+    "baseMaterial": "METALLIC_1",
+    "objectIds": [
+      9089
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": [ 123, 958, 22449 ],
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "MODEL_XY",
+        "uvScale": 0.7
+      }
+    ]
+  },
+  {
+    "description": "Blast Furnace - Melting Pot",
+    "baseMaterial": "METALLIC_1",
+    "objectIds": [
+      9098
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": [ "s == 6" ],
+        "baseMaterial": "HD_LAVA_2",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.7
+      }
+    ]
+  },
+  {
+    "description": "Blast Furnace - Shelves",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      6154,
+      6155,
+      6156,
+      6157
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "colors": [ "h == 6" ],
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
   },
   {
     "description": "Motherload Furnace",
