@@ -13312,7 +13312,8 @@
       9124,
       9125
     ],
-    "uvType": "BOX"
+    "uvType": "BOX",
+    "uvScale": 0.5
   },
   {
     "description": "Blast Furnace - Wooden",
@@ -13326,6 +13327,7 @@
       9108
     ],
     "uvType": "BOX",
+    "uvScale": 0.5,
     "colorOverrides": [
       {
         "colors": [ "h == 6" ],
@@ -13343,6 +13345,7 @@
       9107
     ],
     "uvType": "BOX",
+    "uvScale": 0.5,
     "colorOverrides": [
       {
         "colors": [ "h == 6" ],
@@ -13358,6 +13361,7 @@
       9101
     ],
     "uvType": "BOX",
+    "uvScale": 0.5,
     "colorOverrides": [
       {
         "colors": [ "h == 6" ],
@@ -13372,6 +13376,7 @@
       9089
     ],
     "uvType": "BOX",
+    "uvScale": 0.5,
     "colorOverrides": [
       {
         "colors": [ 123, 958, 22449 ],
@@ -13388,6 +13393,7 @@
       9098
     ],
     "uvType": "BOX",
+    "uvScale": 0.5,
     "colorOverrides": [
       {
         "colors": [ "s == 6" ],
@@ -18058,7 +18064,7 @@
   },
   {
     "description": "Blast Furnace - Objects - Metallic - Scaffolding",
-    "baseMaterial": "METALLIC_1_LIGHT",
+    "baseMaterial": "METALLIC_1",
     "objectIds": [
       9109, 9110, 9111, 9112, 9113
     ],
