@@ -9108,12 +9108,30 @@
       23266,
       23267,
       23268,
-      23269,
-      23270,
       23271
     ],
     "uvType": "BOX",
     "uvScale": 0.8
+  },
+  {
+    "description": "Wilderness Ditch with fence",
+    "baseMaterial": "DIRT_1",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Fence",
+        "colors": "s == 0",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 448
+      }
+    ],
+    "objectIds": [
+      23269,
+      23270
+    ]
   },
   {
     "description": "Wilderness Ditch Dirt clumps",
