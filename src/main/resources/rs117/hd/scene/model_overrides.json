@@ -20230,6 +20230,16 @@
     "uvType": "BOX"
   },
   {
+    "description": "Camdozaal Vault Door",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 42,
+    "objectIds": [
+      41537
+    ]
+  },
+  {
     "description": "Camdozaal House Walls",
     "baseMaterial": "GRUNGE_3",
     "uvType": "BOX",
@@ -20660,6 +20670,37 @@
     ],
     "objectIds": [
       41495
+    ]
+  },
+  {
+    "description": "Camdozaal Stalactite post and lamp",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvOrientation": 343,
+    "colorOverrides": [
+      {
+        "description": "Rock",
+        "colors": "h == 48",
+        "baseMaterial": "ROCK_3",
+        "uvType": "BOX",
+        "uvOrientation": 42
+      },
+      {
+        "description": "Post",
+        "colors": "h == 8",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Rope",
+        "colors": "h == 6 && s == 4",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvOrientation": 42
+      }
+    ],
+    "objectIds": [
+      41565
     ]
   },
   {
