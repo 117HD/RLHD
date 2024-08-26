@@ -3105,8 +3105,15 @@
   },
   {
     "description": "MORYTANIA_SLAYER_TOWER_WALLS",
-    "baseMaterial": "GRUNGE_1",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 343,
+    "uvScale": 0.8,
+    "flatNormals": true,
     "objectIds": [
+      2106,
+      2109,
+      2110,
       2160,
       2161,
       2162,
@@ -3122,8 +3129,48 @@
       4332,
       2171,
       2114
+    ]
+  },
+  {
+    "description": "Morytania Slayer Tower Walls over door bricks",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 343,
+    "uvScale": 0.8,
+    "flatNormals": true,
+    "objectIds": [
+      2110,
+      2106
+    ]
+  },
+  {
+    "description": "Morytania Slayer Tower doors with metal hinges",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "description": "Metal hinges",
+        "colors": "s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 42
+      }
     ],
-    "flatNormals": true
+    "objectIds": [
+      2100,
+      2101,
+      2102,
+      2103,
+      2104,
+      2105,
+      2108,
+      2111,
+      2112,
+      2113
+    ]
   },
   {
     "description": "TOB_VERZIK_TILE_FLOOR",
