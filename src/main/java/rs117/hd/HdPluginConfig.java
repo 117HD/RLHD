@@ -852,6 +852,17 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
+	String KEY_USE_INTERFACE_ASYNC_COPY = "experimentalUseInterfaceAsyncCopy";
+	@ConfigItem(
+		keyName = KEY_USE_INTERFACE_ASYNC_COPY,
+		name = "Perform UI Copy Async",
+		description = "Improves performance by moving UI copy to a thread pool",
+		section = experimentalSettings
+	)
+	default boolean useInterfaceAsyncCopy() {
+		return false;
+	}
+
 	String KEY_FASTER_MODEL_HASHING = "experimentalFasterModelHashing";
 	@ConfigItem(
 		keyName = KEY_FASTER_MODEL_HASHING,

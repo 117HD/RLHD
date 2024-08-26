@@ -90,6 +90,7 @@ import rs117.hd.data.materials.Material;
 import rs117.hd.model.ModelHasher;
 import rs117.hd.model.ModelOffsets;
 import rs117.hd.model.ModelPusher;
+import rs117.hd.opengl.AsyncInterfaceCopy;
 import rs117.hd.opengl.compute.ComputeMode;
 import rs117.hd.opengl.compute.OpenCLManager;
 import rs117.hd.opengl.shader.Shader;
@@ -354,6 +355,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private ByteBuffer uniformBufferCamera;
 	private ByteBuffer uniformBufferLights;
 
+	private AsyncInterfaceCopy interfaceAsyncCopy;
+	private boolean shouldSkipInterfaceUpload;
+
 	@Getter
 	@Nullable
 	private SceneContext sceneContext;
@@ -455,6 +459,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public VanillaShadowMode configVanillaShadowMode;
 	public ColorFilter configColorFilter = ColorFilter.NONE;
 	public ColorFilter configColorFilterPrevious;
+	public boolean configUseInterfaceAsyncCopy;
 
 	public boolean useLowMemoryMode;
 	public boolean enableDetailedTimers;
@@ -531,6 +536,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				awtContext.createGLContext();
 
 				canvas.setIgnoreRepaint(true);
+
+				if(interfaceAsyncCopy == null) {
+					interfaceAsyncCopy = new AsyncInterfaceCopy(frameTimer);
+				}
 
 				// lwjgl defaults to lwjgl- + user.name, but this breaks if the username would cause an invalid path
 				// to be created.
@@ -1851,8 +1860,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	private void prepareInterfaceTexture(int canvasWidth, int canvasHeight) {
-		frameTimer.begin(Timer.UPLOAD_UI);
-
 		if (canvasWidth != lastCanvasWidth || canvasHeight != lastCanvasHeight) {
 			lastCanvasWidth = canvasWidth;
 			lastCanvasHeight = canvasHeight;
@@ -1866,6 +1873,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			glBindTexture(GL_TEXTURE_2D, 0);
 		}
 
+		if(shouldSkipInterfaceUpload) {
+			return;
+		}
+
+		frameTimer.begin(Timer.UPLOAD_UI);
 		final BufferProvider bufferProvider = client.getBufferProvider();
 		final int[] pixels = bufferProvider.getPixels();
 		final int width = bufferProvider.getWidth();
@@ -1876,7 +1888,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (mappedBuffer == null) {
 			log.error("Unable to map interface PBO. Skipping UI...");
 		} else {
+			frameTimer.begin(Timer.COPY_UI);
 			mappedBuffer.asIntBuffer().put(pixels, 0, width * height);
+			frameTimer.end(Timer.COPY_UI);
 			glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
 			glBindTexture(GL_TEXTURE_2D, interfaceTexture);
 			glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, 0);
@@ -2286,11 +2300,17 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 			log.error("Unable to swap buffers:", ex);
 		}
-
+		
 		glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
 
 		frameTimer.end(Timer.DRAW_FRAME);
 		frameTimer.endFrameAndReset();
+
+		if(configUseInterfaceAsyncCopy) {
+			interfaceAsyncCopy.prepare(client.getBufferProvider(), interfacePbo, interfaceTexture);
+		}
+
+
 		frameModelInfoMap.clear();
 		checkGLErrors();
 
@@ -2587,6 +2607,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		configPreserveVanillaNormals = config.preserveVanillaNormals();
 		configSeasonalTheme = config.seasonalTheme();
 		configSeasonalHemisphere = config.seasonalHemisphere();
+		configUseInterfaceAsyncCopy = config.useInterfaceAsyncCopy();
 
 		var newColorFilter = config.colorFilter();
 		if (newColorFilter != configColorFilter) {
@@ -3310,10 +3331,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Subscribe(priority = -1) // Run after the low detail plugin
 	public void onBeforeRender(BeforeRender beforeRender) {
-		if (client.getScene() == null)
-			return;
-		// The game runs significantly slower with lower planes in Chambers of Xeric
-		client.getScene().setMinLevel(isInChambersOfXeric ? client.getPlane() : client.getScene().getMinLevel());
+		if (client.getScene() != null) {
+			// The game runs significantly slower with lower planes in Chambers of Xeric
+			client.getScene().setMinLevel(isInChambersOfXeric ? client.getPlane() : client.getScene().getMinLevel());
+		}
+
+		if(interfaceAsyncCopy != null) {
+			shouldSkipInterfaceUpload = interfaceAsyncCopy.complete();
+		}
 	}
 
 	@Subscribe
