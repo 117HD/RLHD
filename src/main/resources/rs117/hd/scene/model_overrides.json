@@ -5460,11 +5460,13 @@
   {
     "description": "Wooden tables - Solid - Cobwebs",
     "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "flatNormals": true,
     "objectIds": [
       616,
       25615
-    ],
-    "flatNormals": true
+    ]
   },
   {
     "description": "Wooden tables - Solid",
@@ -14333,6 +14335,7 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       1032,
+      2107,
       10605
     ],
     "uvType": "BOX",
