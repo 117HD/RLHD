@@ -22236,5 +22236,53 @@
     "objectIds": [
       1901
     ]
+  },
+  {
+    "description": "Morytania Slayer Tower roof entrance - Dynamic",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 343,
+    "uvScale": 0.8,
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "description": "Mossy substance",
+        "colors": "h == 21",
+        "baseMaterial": "LEAF_VEINS"
+      }
+    ],
+    "objectIds": [
+      31672,
+      31673
+    ]
+  },
+  {
+    "description": "Morytania Slayer Tower roof exit",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 343,
+    "uvScale": 0.8,
+    "flatNormals": true,
+    "objectIds": [
+      31674
+    ]
+  },
+  {
+    "description": "Morytania Slayer Magical Chest",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h > 13",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvOrientation": 42
+      }
+    ],
+    "objectIds": [
+      31675
+    ]
   }
 ]
