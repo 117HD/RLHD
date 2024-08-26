@@ -13218,6 +13218,7 @@
   {
     "description": "Ground Decoration - Flat Rocks - Small",
     "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
     "objectIds": [
       1862,
       2159,
