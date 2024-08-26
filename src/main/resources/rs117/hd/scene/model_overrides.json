@@ -3127,7 +3127,6 @@
       2168,
       2169,
       2170,
-      2172,
       2171
     ]
   },
@@ -6497,6 +6496,7 @@
     "description": "Rock-Like Object - Rubble - Small",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
+      2172,
       5203,
       5205,
       24022,
