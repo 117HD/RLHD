@@ -13482,7 +13482,7 @@
   },
   {
     "description": "Giants Foundry - Trip Hammer",
-    "baseMaterial": "METALLIC_1_GLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
     "objectIds": [
       44619
     ],
@@ -13501,7 +13501,7 @@
   },
   {
     "description": "Giants Foundry - Belt System",
-    "baseMaterial": "METALLIC_1_GLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
     "objectIds": [
       44762,
       44763
@@ -13525,7 +13525,7 @@
   },
   {
     "description": "Giants Foundry - Grindstone",
-    "baseMaterial": "METALLIC_1_GLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
     "objectIds": [
       44620
     ],
@@ -13546,7 +13546,7 @@
   },
   {
     "description": "Giants Foundry - Polishing Wheel",
-    "baseMaterial": "METALLIC_1_GLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
     "uvType": "BOX",
     "uvScale": 0.3,
     "objectIds": [
@@ -13568,7 +13568,7 @@
   },
   {
     "description": "Giants Foundry - Waterwheel",
-    "baseMaterial": "METALLIC_1_GLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
     "uvType": "BOX",
     "uvScale": 0.3,
     "objectIds": [
