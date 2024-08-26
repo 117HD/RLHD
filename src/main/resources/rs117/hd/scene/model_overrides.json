@@ -3128,9 +3128,19 @@
       2169,
       2170,
       2172,
-      4332,
-      2171,
-      2114
+      2171
+    ]
+  },
+  {
+    "description": "Morytania Slayer Tower stairs",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 343,
+    "uvScale": 0.8,
+    "flatNormals": true,
+    "objectIds": [
+      2114,
+      2118
     ]
   },
   {
@@ -22151,6 +22161,14 @@
     "objectIds": [
       16537,
       16538
+    ]
+  },
+  {
+    "description": "Rock stick rubble that needs proper assignment - Check model",
+    "baseMaterial": "GREY_75",
+    "uvScale": 0.6,
+    "objectIds": [
+      4332
     ]
   }
 ]
