@@ -9912,6 +9912,34 @@
     "uvScale": 0.8
   },
   {
+    "description": "Slayer Tower broken chairs",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.6,
+    "objectIds": [
+      1898,
+      1899
+    ]
+  },
+  {
+    "description": "Slayer Tower broken chair with golden ornament",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Gold",
+        "colors": "l > 12",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS"
+      }
+    ],
+    "objectIds": [
+      1896
+    ]
+  },
+  {
     "description": "Objects - Wooden - Ugly combined backed wooden chair",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
@@ -22187,5 +22215,23 @@
       3668
     ],
     "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Table with no visible legs and a golden candleholder",
+    "baseMaterial": "CARPET",
+    "uvScale": 0.8,
+    "uvOrientation": 256,
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Candleholder",
+        "colors": "h == 10",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      1901
+    ]
   }
 ]
