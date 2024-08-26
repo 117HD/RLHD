@@ -14107,6 +14107,7 @@
     ],
     "uvType": "BOX",
     "retainVanillaUvs": false,
+    "uvOrientation": 512,
     "uvScale": 0.65
   },
   {
@@ -14123,16 +14124,29 @@
       10528
     ],
     "uvType": "BOX",
-    "retainVanillaUvs": false,
+    "uvOrientation": 512,
     "uvScale": 0.65,
     "colorOverrides": [
       {
         "colors": [ 43060, 43082, 43084, 43110, 43120, 43125, 43099, 43123 ],
-        "baseMaterial": "NONE",
-        "uvType": "WORLD_XZ",
-        "uvScale": 2
+        "baseMaterial": "NONE"
       }
     ]
+  },
+  {
+    "description": "Objects - Concrete - Bank Booth - Closed",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "materialOverrides": {
+      "WOODEN_SCREEN": {
+        "textureMaterial": "WOODEN_SCREEN"
+      }
+    },
+    "objectIds": [
+      8142
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.65
   },
   {
     "description": "Objects - Concrete - Gravestone",
