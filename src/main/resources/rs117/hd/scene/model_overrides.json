@@ -20648,6 +20648,7 @@
     "description": "Skeleton with helmet named corpse",
     "baseMaterial": "BONE",
     "objectIds": [
+      4984,
       7208
     ],
     "uvType": "BOX",
