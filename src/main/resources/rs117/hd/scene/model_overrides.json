@@ -3139,7 +3139,9 @@
     "flatNormals": true,
     "objectIds": [
       2114,
-      2118
+      2118,
+      2119,
+      2120
     ]
   },
   {
@@ -22173,5 +22175,16 @@
     "objectIds": [
       4332
     ]
+  },
+  {
+    "description": "Ground decoration blood",
+    "baseMaterial": "METALLIC_NONE_GLOSS",
+    "objectIds": [
+      654,
+      3666,
+      3667,
+      3668
+    ],
+    "uvType": "MODEL_XZ"
   }
 ]
