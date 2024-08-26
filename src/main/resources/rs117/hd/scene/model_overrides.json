@@ -22138,5 +22138,16 @@
       28494,
       28495
     ]
+  },
+  {
+    "description": "Mortytania Slayer Tower Spiked Chain shortcuts",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvOrientation": 343,
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      16537,
+      16538
+    ]
   }
 ]
