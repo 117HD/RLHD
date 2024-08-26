@@ -13091,7 +13091,24 @@
       20764
     ],
     "uvType": "BOX",
-    "uvScale": 0.6
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "colors": [ "h < 11" ],
+        "baseMaterial": "ROCK_2",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Barrows - Wall Fix",
+    "baseMaterial": "ROCK_2",
+    "areas": [ "BARROWS_CRYPTS" ],
+    "objectIds": [
+      20737
+    ],
+    "uvType": "MODEL_XZ"
   },
   {
     "description": "Morytania - Ground  - Stone - Stone Steps",
