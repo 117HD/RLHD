@@ -2884,29 +2884,33 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		y -= (int) cameraPosition[1];
 		z -= (int) cameraPosition[2];
 
-		int radius = 96; // ~ 64 * sqrt(2)
+		int tileRadius = 96; // ~ 64 * sqrt(2)
 
-		int zoom = (configShadowsEnabled && configExpandShadowDraw) ? client.get3dZoom() / 2 : client.get3dZoom();
+		int currentZoom = (configShadowsEnabled && configExpandShadowDraw) ? client.get3dZoom() / 2 : client.get3dZoom();
 		int Rasterizer3D_clipMidX2 = client.getRasterizer3D_clipMidX2();
 		int Rasterizer3D_clipNegativeMidX = client.getRasterizer3D_clipNegativeMidX();
 		int Rasterizer3D_clipNegativeMidY = client.getRasterizer3D_clipNegativeMidY();
 
-		int var11 = yawCos * z - yawSin * x >> 16;
-		int var12 = pitchSin * y + pitchCos * var11 >> 16;
-		int var13 = pitchCos * radius >> 16;
-		int depth = var12 + var13;
+		// Transform the local coordinates using the yaw (horizontal rotation)
+		final int transformedZ = (yawCos * z - yawSin * x) >> 16;
+		final int depthRadiusOffset = (pitchCos * tileRadius) >> 16;
+		final int depth = depthRadiusOffset + ((pitchSin * y + pitchCos * transformedZ) >> 16);
+
+		// Check if the tile is within the near plane of the frustum
 		if (depth > NEAR_PLANE) {
-			int rx = z * yawSin + yawCos * x >> 16;
-			int var16 = (rx - radius) * zoom;
-			int var17 = (rx + radius) * zoom;
-			// left && right
-			if (var16 < Rasterizer3D_clipMidX2 * depth && var17 > Rasterizer3D_clipNegativeMidX * depth) {
-				int ry = pitchCos * y - var11 * pitchSin >> 16;
-				int ybottom = pitchSin * radius >> 16;
-				int var20 = (ry + ybottom) * zoom;
-				// top
-				// we don't test the bottom so we don't have to find the height of all the models on the tile
-				return var20 > Rasterizer3D_clipNegativeMidY * depth;
+			final int transformedX = (z * yawSin + yawCos * x) >> 16;
+			final int leftFrustumBound = (transformedX - tileRadius) * currentZoom;
+			// Check left and right bounds
+			if (leftFrustumBound < Rasterizer3D_clipMidX2 * depth) {
+				final int rightFrustumBound = (transformedX + tileRadius) * currentZoom;
+				if (rightFrustumBound > Rasterizer3D_clipNegativeMidX * depth) {
+					// Transform the local Y using pitch (vertical rotation)
+					final int transformedY = pitchCos * y - transformedZ * pitchSin;
+					final int topFrustumBound = ((transformedY + (pitchSin * tileRadius)) >> 16) * currentZoom;
+
+					// Check top bound (we skip bottom bound to avoid computing model heights)
+					return topFrustumBound > Rasterizer3D_clipNegativeMidY * depth;
+				}
 			}
 		}
 		return false;
@@ -2922,34 +2926,34 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (orthographicProjection)
 			return false;
 
-		final int XYZMag = model.getXYZMag();
-		final int bottomY = model.getBottomY();
-		final int zoom = (configShadowsEnabled && configExpandShadowDraw) ? client.get3dZoom() / 2 : client.get3dZoom();
-		final int modelHeight = model.getModelHeight();
-
+		int currentZoom = (configShadowsEnabled && configExpandShadowDraw) ? client.get3dZoom() / 2 : client.get3dZoom();
 		int Rasterizer3D_clipMidX2 = client.getRasterizer3D_clipMidX2();
 		int Rasterizer3D_clipNegativeMidX = client.getRasterizer3D_clipNegativeMidX();
 		int Rasterizer3D_clipNegativeMidY = client.getRasterizer3D_clipNegativeMidY();
 		int Rasterizer3D_clipMidY2 = client.getRasterizer3D_clipMidY2();
 
-		int var11 = yawCos * z - yawSin * x >> 16;
-		int var12 = pitchSin * y + pitchCos * var11 >> 16;
-		int var13 = pitchCos * XYZMag >> 16;
-		int depth = var12 + var13;
+		final int modelXYZMag = model.getXYZMag();
+		final int transformedZ = (yawCos * z - yawSin * x) >> 16;
+		final int depthRadiusOffset = (pitchCos * modelXYZMag) >> 16;
+		final int depth = depthRadiusOffset + (((pitchSin * y + pitchCos * transformedZ)) >> 16);
+
 		if (depth > NEAR_PLANE) {
-			int rx = z * yawSin + yawCos * x >> 16;
-			int var16 = (rx - XYZMag) * zoom;
-			if (var16 / depth < Rasterizer3D_clipMidX2) {
-				int var17 = (rx + XYZMag) * zoom;
-				if (var17 / depth > Rasterizer3D_clipNegativeMidX) {
-					int ry = pitchCos * y - var11 * pitchSin >> 16;
-					int yheight = pitchSin * XYZMag >> 16;
-					int ybottom = (pitchCos * bottomY >> 16) + yheight;
-					int var20 = (ry + ybottom) * zoom;
-					if (var20 / depth > Rasterizer3D_clipNegativeMidY) {
-						int ytop = (pitchCos * modelHeight >> 16) + yheight;
-						int var22 = (ry - ytop) * zoom;
-						return var22 / depth >= Rasterizer3D_clipMidY2;
+			final int transformedX = (z * yawSin + yawCos * x) >> 16;
+			final int leftFrustumBound = (transformedX - modelXYZMag) * currentZoom;
+			if (leftFrustumBound < Rasterizer3D_clipMidX2 * depth) {
+				final int rightFrustumBound = (transformedX + modelXYZMag) * currentZoom;
+				if (rightFrustumBound > Rasterizer3D_clipNegativeMidX * depth) {
+					final int modelBottomY = model.getBottomY();
+					final int transformedY = (pitchCos * y - transformedZ * pitchSin) >> 16;
+					final int yHeight = pitchSin * modelXYZMag;
+					final int yBottom = ((pitchCos * modelBottomY) + yHeight) >> 16;
+					final int topFrustumBound = (transformedY + yBottom) * currentZoom;
+
+					if (topFrustumBound > Rasterizer3D_clipNegativeMidY * depth) {
+						final int modelHeight = model.getModelHeight();
+						final int yTop = ((pitchCos * modelHeight) + yHeight) >> 16;
+						final int bottomFrustumBound = (transformedY - yTop) * currentZoom;
+						return bottomFrustumBound >= Rasterizer3D_clipMidY2 * depth;
 					}
 				}
 			}
