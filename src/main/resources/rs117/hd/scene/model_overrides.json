@@ -374,7 +374,6 @@
       3978,
       3979,
       3998,
-      4053,
       4289,
       4290,
       4385,
@@ -22090,6 +22089,68 @@
       28493,
       28494,
       28495
+    ]
+  },
+  {
+    "description": "Morytania Spider Cave",
+    "baseMaterial": "GRASS_3",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Dirt",
+        "colors": "h < 10",
+        "baseMaterial": "DIRT_2",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Web",
+        "colors": "h == 10",
+        "baseMaterial": "NONE"
+      },
+      {
+        "description": "Grass that needs upward normals to fix",
+        "colors": "h == 12",
+        "baseMaterial": "GRAY_50"
+      }
+    ],
+    "objectIds": [
+      42594
+    ]
+  },
+  {
+    "description": "Morytania webbed trees",
+    "baseMaterial": "BARK",
+    "uvOrientation": 188,
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Web",
+        "colors": "h == 10",
+        "baseMaterial": "NONE"
+      }
+    ],
+    "objectIds": [
+      42649
+    ]
+  },
+  {
+    "description": "Morytania trees with grass around the base",
+    "baseMaterial": "BARK",
+    "uvOrientation": 188,
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Grass",
+        "colors": "h == 12",
+        "baseMaterial": "GRAY_60"
+      }
+    ],
+    "objectIds": [
+      4053
     ]
   }
 ]
