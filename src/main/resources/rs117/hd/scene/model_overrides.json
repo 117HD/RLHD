@@ -22146,7 +22146,7 @@
       {
         "description": "Grass",
         "colors": "h == 12",
-        "baseMaterial": "GRAY_60"
+        "baseMaterial": "GRAY_50"
       }
     ],
     "objectIds": [
