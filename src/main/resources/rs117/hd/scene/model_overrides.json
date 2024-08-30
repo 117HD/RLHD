@@ -22155,10 +22155,10 @@
   },
   {
     "description": "Morytania Spider Cave wall topper",
-    "baseMaterial": "ROCK_2",
-    "uvOrientation": 343,
+    "baseMaterial": "ROCK_1",
+    "uvOrientation": 256,
+    "uvScale": 1.2,
     "uvType": "BOX",
-    "uvScale": 0.4,
     "objectIds": [
       42596,
       42597,
@@ -22167,10 +22167,9 @@
   },
   {
     "description": "Morytania Spider Cave wall topper edges with black",
-    "baseMaterial": "ROCK_2",
+    "baseMaterial": "ROCK_1",
     "uvOrientation": 256,
     "uvType": "BOX",
-    "uvScale": 0.4,
     "objectIds": [
       42598,
       42599,
@@ -22182,10 +22181,9 @@
   },
   {
     "description": "Morytania Spider Cave walls",
-    "baseMaterial": "ROCK_2",
+    "baseMaterial": "ROCK_1",
     "uvOrientation": 343,
     "uvType": "BOX",
-    "uvScale": 0.4,
     "colorOverrides": [
       {
         "description": "Web backing",
@@ -22209,10 +22207,9 @@
   },
   {
     "description": "Morytania Spider Cave Exit",
-    "baseMaterial": "ROCK_2",
+    "baseMaterial": "ROCK_1",
     "uvOrientation": 343,
     "uvType": "BOX",
-    "uvScale": 0.4,
     "colorOverrides": [
       {
         "description": "Web backing",
@@ -22231,10 +22228,9 @@
   },
   {
     "description": "Morytania Spider Cave web tunnel",
-    "baseMaterial": "ROCK_2",
+    "baseMaterial": "ROCK_1",
     "uvOrientation": 343,
     "uvType": "BOX",
-    "uvScale": 0.4,
     "colorOverrides": [
       {
         "description": "Web backing",
