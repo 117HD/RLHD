@@ -6064,8 +6064,9 @@
     ],
     "groundMaterial": "GROUND_WEBS",
     "blended": false,
-    "uvOrientation": 90,
-    "shiftLightness": 10
+    "uvScale": 2,
+    "uvOrientation": 32,
+    "shiftLightness": 14
   },
   {
     "name": "ARAXXOR_WEB_OVERLAY",
@@ -6082,13 +6083,18 @@
       191
     ],
     "underlayIds": [
+      72,
       79,
       81,
       84
     ],
     "groundMaterial": "GROUND_WEBS",
     "uvScale": 2,
-    "uvOrientation": 90
+    "uvOrientation": 90,
+    "shiftLightness": 7,
+    "replacements": {
+      "DEFAULT_PACKED_EARTH": "h < 10"
+    }
   },
   {
     "name": "MORYTANIA_SPIDER_CAVES_WEB_2",
@@ -6102,7 +6108,11 @@
     ],
     "groundMaterial": "GROUND_WEBS",
     "uvScale": 2,
-    "uvOrientation": 32
+    "uvOrientation": 32,
+    "shiftLightness": 7,
+    "replacements": {
+      "DEFAULT_PACKED_EARTH": "h < 10"
+    }
   },
   {
     "name": "GOBLIN_VILLAGE_TILES_BLEND_FIX",
