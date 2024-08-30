@@ -22261,5 +22261,22 @@
     "objectIds": [
       42629
     ]
+  },
+  {
+    "description": "Morytania Spider Cave webbed stalagmite and scroll",
+    "baseMaterial": "ROCK_4",
+    "uvOrientation": 343,
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Web backing",
+        "colors": "h != 26",
+        "baseMaterial": "NONE"
+      }
+    ],
+    "objectIds": [
+      54150
+    ]
   }
 ]
