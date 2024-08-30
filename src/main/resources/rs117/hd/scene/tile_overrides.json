@@ -6057,6 +6057,54 @@
     "groundMaterial": "VARIED_DIRT"
   },
   {
+    "name": "ARAXXOR_WEB_OVERLAY",
+    "area": "MORYTANIA_SPIDER_CAVES",
+    "overlayIds": [
+      370
+    ],
+    "groundMaterial": "GROUND_WEBS",
+    "blended": false,
+    "uvOrientation": 90,
+    "shiftLightness": 10
+  },
+  {
+    "name": "ARAXXOR_WEB_OVERLAY",
+    "area": "MORYTANIA_SPIDER_CAVES",
+    "overlayIds": [
+      364
+    ],
+    "waterType": "ARAXXOR_WASTE"
+  },
+  {
+    "name": "MORYTANIA_SPIDER_CAVES_WEB_1",
+    "area": "MORYTANIA_SPIDER_CAVES",
+    "overlayIds": [
+      191
+    ],
+    "underlayIds": [
+      79,
+      81,
+      84
+    ],
+    "groundMaterial": "GROUND_WEBS",
+    "uvScale": 2,
+    "uvOrientation": 90
+  },
+  {
+    "name": "MORYTANIA_SPIDER_CAVES_WEB_2",
+    "area": "MORYTANIA_SPIDER_CAVES",
+    "underlayIds": [
+      39,
+      62,
+      80,
+      85,
+      138
+    ],
+    "groundMaterial": "GROUND_WEBS",
+    "uvScale": 2,
+    "uvOrientation": 32
+  },
+  {
     "name": "GOBLIN_VILLAGE_TILES_BLEND_FIX",
     "area": "GOBLIN_VILLAGE_COOKS_CHAMBER",
     "underlayIds": [
