@@ -3375,7 +3375,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	public void checkGLErrors() {
-		if (!log.isDebugEnabled())
+		if (!log.isDebugEnabled() || developerTools.isFrameTimingsOverlayEnabled())
 			return;
 
 		while (true) {
