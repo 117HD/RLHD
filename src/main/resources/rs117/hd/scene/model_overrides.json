@@ -13500,6 +13500,12 @@
     "hide": true
   },
   {
+    "description": "Hide vanilla scrolling water models, until a better solution is found",
+    "objectIds": [ 754, 10459 ],
+    "areas": [ "MOTHERLODE_MINE"],
+    "textureMaterial": "MOTHERLODE_MINE_WATER"
+  },
+  {
     "description": "Poison Waste dungeon flowing tar (TODO)",
     "objectIds": [
       49789,

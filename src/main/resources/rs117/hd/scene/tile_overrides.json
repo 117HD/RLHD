@@ -1939,6 +1939,14 @@
     "uvScale": 1.15
   },
   {
+    "name": "MOTHERLODE_MINE_WATER",
+    "area": "MOTHERLODE_MINE",
+    "overlayIds": [
+      6
+    ],
+    "waterType": "MLM_WATER"
+  },
+  {
     "name": "CATHERBY_BEACH_OBELISK_WATER_FIX",
     "area": "CATHERBY_BEACH_OBELISK_WATER_FIX",
     "overlayIds": [
