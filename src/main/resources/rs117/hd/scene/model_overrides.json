@@ -4998,16 +4998,12 @@
     "description": "Motherload mine walls",
     "baseMaterial": "DIRT_2",
     "objectIds": [
-      10047,
       26655,
       26656,
       26658,
       26659,
       26660,
       26661,
-      26662,
-      26663,
-      26664,
       26665,
       26666,
       26667,
@@ -5015,14 +5011,36 @@
       30368,
       30369,
       30370,
-      30375
+      30375,
+      26662,
+      26663,
+      26664,
+      53244
     ],
     "uvType": "BOX",
-    "uvScale": 0.5
+    "uvScale": 0.45
+  },
+  {
+    "description": "Motherload mine walls lighten",
+    "baseMaterial": "DIRT_2_LIGHT",
+    "areas": [ "Motherlode Mine Dark Wall Fix" ],
+    "objectIds": [
+      10047,
+      26662,
+      26663,
+      26664,
+      26666,
+      26667,
+      30366,
+      30368,
+      53244
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.45
   },
   {
     "description": "Motherload mine upper floor",
-    "baseMaterial": "DIRT_2",
+    "baseMaterial": "DIRT_1",
     "objectIds": [
       26657
     ]
