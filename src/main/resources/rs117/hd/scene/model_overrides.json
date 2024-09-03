@@ -5020,20 +5020,17 @@
     "description": "Motherlode Mine Walls",
     "baseMaterial": "DIRT_2",
     "objectIds": [
-      26655,
       26656,
       26658,
       26659,
       26660,
       26661,
-      26665,
       26666,
       26667,
       26668,
       30368,
       30369,
       30370,
-      30375,
       26662,
       26663,
       26664,
@@ -5047,7 +5044,6 @@
     "baseMaterial": "DIRT_2_LIGHT",
     "areas": [ "Motherlode Mine Dark Wall Fix" ],
     "objectIds": [
-      10047,
       26656,
       26661,
       26662,
@@ -5056,12 +5052,29 @@
       26665,
       26666,
       26667,
-      30366,
-      30368,
-      53244
+      30368
     ],
     "uvType": "BOX",
     "uvScale": 0.7
+  },
+  {
+    "description": "Motherlode Mine Walls Lighten & Darken Caves",
+    "baseMaterial": "DIRT_2_LIGHT",
+    "areas": [ "Motherlode Mine Dark Wall Fix" ],
+    "objectIds": [
+      10047,
+      26655,
+      30375,
+      53244
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "PURE_BLACK"
+      }
+    ]
   },
   {
     "description": "Motherlode Mine Upper Floor",
