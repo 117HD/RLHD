@@ -5118,6 +5118,19 @@
     "uvType": "MODEL_XZ"
   },
   {
+    "description": "Motherlode Mine - Ladder, area specific due to use in other places",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "areas": [ "MOTHERLODE_MINE" ],
+    "objectIds": [
+      19046,
+      19047,
+      19048,
+      19049
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
+  },
+  {
     "description": "Motherlode Trough",
     "baseMaterial": "METALLIC_1_LIGHT_HIGHGLOSS",
     "objectIds": [
