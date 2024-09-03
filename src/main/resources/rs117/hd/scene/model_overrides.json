@@ -5170,6 +5170,14 @@
     "uvType": "BOX"
   },
   {
+    "description": "Motherlode Mine - Darken Mercy",
+    "baseMaterial": "GRAY_75",
+    "areas": [ "MOTHERLODE_MINE" ],
+    "npcIds": [
+      5562
+    ]
+  },
+  {
     "description": "Mining Guild statue",
     "baseMaterial": "MARBLE_1_GLOSS",
     "objectIds": [
