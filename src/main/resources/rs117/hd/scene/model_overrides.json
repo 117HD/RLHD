@@ -5040,7 +5040,7 @@
       53244
     ],
     "uvType": "BOX",
-    "uvScale": 0.45
+    "uvScale": 0.7
   },
   {
     "description": "Motherload Mine Walls Lighten",
@@ -5048,9 +5048,12 @@
     "areas": [ "Motherlode Mine Dark Wall Fix" ],
     "objectIds": [
       10047,
+      26656,
+      26661,
       26662,
       26663,
       26664,
+      26665,
       26666,
       26667,
       30366,
@@ -5058,14 +5061,17 @@
       53244
     ],
     "uvType": "BOX",
-    "uvScale": 0.45
+    "uvScale": 0.7
   },
   {
     "description": "Motherload Mine Upper Floor",
-    "baseMaterial": "DIRT_1",
+    "baseMaterial": "DIRT_2",
     "objectIds": [
       26657
-    ]
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.5,
+    "uvOrientation": 256
   },
   {
     "description": "Amathyst mine walls",
