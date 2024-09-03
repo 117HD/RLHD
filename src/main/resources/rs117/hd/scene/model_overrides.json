@@ -4995,7 +4995,29 @@
     "uvScale": 0.5
   },
   {
-    "description": "Motherload mine walls",
+    "description": "Motherload Mine Water Wheel",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      26671,
+      26672
+    ]
+  },
+  {
+    "description": "Motherload Mine Water Wheel Support",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      26669,
+      26670
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Motherload Mine Walls",
     "baseMaterial": "DIRT_2",
     "objectIds": [
       26655,
@@ -5021,7 +5043,7 @@
     "uvScale": 0.45
   },
   {
-    "description": "Motherload mine walls lighten",
+    "description": "Motherload Mine Walls Lighten",
     "baseMaterial": "DIRT_2_LIGHT",
     "areas": [ "Motherlode Mine Dark Wall Fix" ],
     "objectIds": [
@@ -5039,7 +5061,7 @@
     "uvScale": 0.45
   },
   {
-    "description": "Motherload mine upper floor",
+    "description": "Motherload Mine Upper Floor",
     "baseMaterial": "DIRT_1",
     "objectIds": [
       26657
