@@ -4995,7 +4995,7 @@
     "uvScale": 0.5
   },
   {
-    "description": "Motherload Mine Water Wheel",
+    "description": "Motherlode Mine Water Wheel",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
       26671,
@@ -5003,7 +5003,7 @@
     ]
   },
   {
-    "description": "Motherload Mine Water Wheel Support",
+    "description": "Motherlode Mine Water Wheel Support",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
       26669,
@@ -5017,7 +5017,7 @@
     ]
   },
   {
-    "description": "Motherload Mine Walls",
+    "description": "Motherlode Mine Walls",
     "baseMaterial": "DIRT_2",
     "objectIds": [
       26655,
@@ -5043,7 +5043,7 @@
     "uvScale": 0.7
   },
   {
-    "description": "Motherload Mine Walls Lighten",
+    "description": "Motherlode Mine Walls Lighten",
     "baseMaterial": "DIRT_2_LIGHT",
     "areas": [ "Motherlode Mine Dark Wall Fix" ],
     "objectIds": [
@@ -5064,7 +5064,7 @@
     "uvScale": 0.7
   },
   {
-    "description": "Motherload Mine Upper Floor",
+    "description": "Motherlode Mine Upper Floor",
     "baseMaterial": "DIRT_2",
     "objectIds": [
       26657
@@ -5085,7 +5085,7 @@
     "uvType": "BOX"
   },
   {
-    "description": "Motherload Mine Rockfall",
+    "description": "Motherlode Mine Rockfall",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       26679,
@@ -5094,6 +5094,43 @@
     "uvType": "BOX",
     "uvScale": 0.4,
     "uvOrientation": 400
+  },
+  {
+    "description": "Motherlode Mine - Cogs",
+    "baseMaterial": "METALLIC_1_HIGHGLOSS",
+    "objectIds": [
+      13589
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Motherlode Trough",
+    "baseMaterial": "METALLIC_1_LIGHT_HIGHGLOSS",
+    "objectIds": [
+      3428,
+      18606,
+      18607,
+      26683,
+      26684,
+      26685,
+      26686,
+      53243
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Motherlode Trough Darker",
+    "baseMaterial": "METALLIC_1_HIGHGLOSS",
+    "areas": [ "Motherlode Mine Dark Trough Fix" ],
+    "objectIds": [
+      3428,
+      26683,
+      26684,
+      26685,
+      26686
+    ],
+    "uvType": "BOX"
   },
   {
     "description": "Mining Guild statue",
@@ -13312,43 +13349,6 @@
     "uvType": "BOX",
     "uvOrientation": 1536,
     "uvScale": 0.66
-  },
-  {
-    "description": "Motherload Trough",
-    "baseMaterial": "METALLIC_1_LIGHT_HIGHGLOSS",
-    "objectIds": [
-      3428,
-      18606,
-      18607,
-      26683,
-      26684,
-      26685,
-      26686,
-      53243
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.5
-  },
-  {
-    "description": "Motherload Trough Darker",
-    "baseMaterial": "METALLIC_1_HIGHGLOSS",
-    "areas": [ "Motherlode Mine Dark Trough Fix" ],
-    "objectIds": [
-      3428,
-      26683,
-      26684,
-      26685,
-      26686
-    ],
-    "uvType": "BOX"
-  },
-  {
-    "description": "Motherload Mine - Cogs",
-    "baseMaterial": "METALLIC_1_HIGHGLOSS",
-    "objectIds": [
-      13589
-    ],
-    "uvType": "MODEL_XZ"
   },
   {
     "description": "Blast Furnace",
