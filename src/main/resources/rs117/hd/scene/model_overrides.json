@@ -13312,6 +13312,23 @@
     "baseMaterial": "METALLIC_1_LIGHT_HIGHGLOSS",
     "objectIds": [
       3428,
+      18606,
+      18607,
+      26683,
+      26684,
+      26685,
+      26686,
+      53243
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Motherload Trough Darker",
+    "baseMaterial": "METALLIC_1_HIGHGLOSS",
+    "areas": [ "Motherlode Mine Dark Trough Fix" ],
+    "objectIds": [
+      3428,
       26683,
       26684,
       26685,
@@ -13321,7 +13338,7 @@
   },
   {
     "description": "Motherload Mine - Cogs",
-    "baseMaterial": "METALLIC_1_LIGHT_HIGHGLOSS",
+    "baseMaterial": "METALLIC_1_HIGHGLOSS",
     "objectIds": [
       13589
     ],
@@ -13362,13 +13379,13 @@
     "uvType": "BOX"
   },
   {
-    "description": "Motherload Furnace",
+    "description": "Motherload Hopper",
     "baseMaterial": "METALLIC_1_HIGHGLOSS",
     "objectIds": [
       26674
     ],
-    "uvType": "MODEL_XZ_MIRROR_A",
-    "uvScale": 0.7
+    "uvType": "BOX",
+    "uvScale": 0.5
   },
   {
     "description": "Objects - Stone - Giants Foundry - Moulds",
@@ -13540,7 +13557,7 @@
     "hide": true
   },
   {
-    "description": "Hide vanilla scrolling water models, until a better solution is found",
+    "description": "Texture for water in Motherlode Mine troughs",
     "objectIds": [ 754, 10459 ],
     "areas": [ "MOTHERLODE_MINE"],
     "textureMaterial": "MOTHERLODE_MINE_WATER"
