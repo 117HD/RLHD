@@ -5131,6 +5131,15 @@
     "uvScale": 0.5
   },
   {
+    "description": "Motherlode Mine - Machine",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "areas": [ "MOTHERLODE_MINE" ],
+    "objectIds": [
+      26681,
+      26682
+    ]
+  },
+  {
     "description": "Motherlode Trough",
     "baseMaterial": "METALLIC_1_LIGHT_HIGHGLOSS",
     "objectIds": [
