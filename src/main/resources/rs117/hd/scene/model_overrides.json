@@ -14230,6 +14230,15 @@
     "uvScale": 0.65
   },
   {
+    "description": "Motherlode Mine - Deposit Box",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      25937
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7
+  },
+  {
     "description": "Objects - Textured Rocks - Rocks with Vines",
     "baseMaterial": "PLANT_GRUNGE_1",
     "textureMaterial": "HD_CONCRETE",
