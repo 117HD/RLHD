@@ -22822,5 +22822,25 @@
     "objectIds": [
       2096
     ]
+  },
+  {
+    "description": "Wooden plank table with weapons",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "description": "Table",
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientationY": 512,
+        "uvOrientationZ": 512
+      }
+    ],
+    "objectIds": [
+      2783
+    ]
   }
 ]
