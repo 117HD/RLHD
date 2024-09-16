@@ -7668,6 +7668,7 @@
     "description": "Objects - Wooden - Stack of crates - Rotated",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      7513,
       14742,
       15693,
       42068,
@@ -16230,19 +16231,28 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       4366,
-      4367
+      4367,
+      4507
     ],
     "uvType": "BOX",
     "uvOrientationX": 512
   },
   {
-    "description": "Freminnik - Game Objects - Wooden Shelf With Pots",
+    "description": "Game Objects - Wooden Shelf With Pots",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      4368
+      4368,
+      4514
     ],
     "uvType": "BOX",
-    "uvOrientationX": 512
+    "uvOrientationX": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX"
+      }
+    ]
   },
   {
     "description": "Freminnik - Game Objects - Wooden Shelf With Bucket",
@@ -19744,13 +19754,80 @@
     "retainVanillaUvs": false
   },
   {
-    "description": "Wooden shelves - Empty",
+    "description": "Wooden shelves - Empty or with pottery",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 1023, 7506, 8692, 12980 ],
+    "objectIds": [ 1023, 7506, 7509, 8692, 12980 ],
     "uvType": "BOX",
     "uvScale": 0.8,
     "uvOrientationX": 512,
-    "retainVanillaUvs": false
+    "retainVanillaUvs": false,
+    "colorOverrides": [
+      {
+        "description": "Pottery",
+        "colors": "h > 1 && h <6 && s > 4",
+        "baseMaterial": "GRAY_75"
+      }
+    ]
+  },
+  {
+    "description": "Freestanding shelves with pots and pans - Lumbridge",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      1013,
+      4505,
+      14869,
+      15685,
+      15686
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "retainVanillaUvs": false,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS"
+      }
+    ]
+  },
+  {
+    "description": "Cooking Shelves - Lumbridge kitchen",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      1022,
+      14870
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "retainVanillaUvs": false,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS"
+      }
+    ]
+  },
+  {
+    "description": "Cooking rack - Lumbridge kitchen",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      391,
+      14871
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "retainVanillaUvs": false,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS"
+      }
+    ]
   },
   {
     "description": "Wooden hat stand",
@@ -19924,18 +20001,33 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
-    "uvOrientationX": 512
+    "uvOrientationX": 512,
+    "colorOverrides": [
+      {
+        "description": "Gold handles",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS"
+      }
+    ]
   },
   {
     "description": "Objects - Wooden - Brown Drawers with golden handles",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       352,
-      353
+      353,
+      5618
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
-    "uvOrientationX": 512
+    "uvOrientationX": 512,
+    "colorOverrides": [
+      {
+        "description": "Gold handles",
+        "colors": "h ==8 && s == 7 && l > 19",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS"
+      }
+    ]
   },
   {
     "description": "Flip UVs for HD Shingle full tiles",
@@ -20052,8 +20144,9 @@
   },
   {
     "description": "Wooden Wardrobe",
-    "objectIds": [ 7198 ],
+    "objectIds": [ 7193, 7198 ],
     "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientationY": 512,
     "uvType": "BOX",
     "uvScale": 0.7
   },
@@ -22100,6 +22193,432 @@
       28493,
       28494,
       28495
+    ]
+  },
+  {
+    "description": "Window with solid white for glass",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "objectIds": [
+      1821,
+      1823,
+      1826,
+      1828,
+      1839,
+      1840,
+      8687
+    ],
+    "colorOverrides": [
+      {
+        "description": "Glass",
+        "colors": "s == 0 && l > 50",
+        "baseMaterial": "GRAY_75"
+      },
+      {
+        "description": "Stone sile",
+        "colors": "s == 0 && l < 50 && l > 30",
+        "baseMaterial": "STONE"
+      },
+      {
+        "description": "Pottery",
+        "colors": "h > 1 && h <6 && s > 4",
+        "baseMaterial": "GRAY_75"
+      },
+      {
+        "description": "Plant",
+        "colors": "h > 12",
+        "baseMaterial": "GRAY_75"
+      }
+    ]
+  },
+  {
+    "description": "Window with wooden slots or white with curtains",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "objectIds": [
+      1822,
+      1824,
+      1827,
+      1830,
+      1832,
+      1835,
+      1838,
+      1843,
+      1844,
+      1845
+    ],
+    "colorOverrides": [
+      {
+        "description": "Glass",
+        "colors": "s == 0 && l > 45",
+        "baseMaterial": "GRAY_75"
+      },
+      {
+        "description": "Golden rod",
+        "colors": "h == 8 && s > 6 && l > 30",
+        "baseMaterial": "GRAY_65"
+      },
+      {
+        "description": "Curtains - Black",
+        "colors": "l < 20",
+        "baseMaterial": "GRAY_75"
+      },
+      {
+        "description": "Curtains - Green",
+        "colors": "h > 11",
+        "baseMaterial": "GRAY_75"
+      },
+      {
+        "description": "Curtains - Taupe",
+        "colors": "h == 6 && s < 3 ",
+        "baseMaterial": "GRAY_75"
+      },
+      {
+        "description": "Stone sile",
+        "colors": "s == 0 && l < 45 && l > 30",
+        "baseMaterial": "STONE"
+      }
+    ]
+  },
+  {
+    "description": "Cupboard with glass panels and silver dishes",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      346,
+      347
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "retainVanillaUvs": false,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "GRAY_75"
+      },
+      {
+        "description": "Glass",
+        "colors": ["h == 8 && s == 5 && l < 5"],
+        "baseMaterial": "GRAY_75"
+      }
+    ]
+  },
+  {
+    "description": "Weapons case mounted on wall",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      834,
+      836,
+      837,
+      3039,
+      3481
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "retainVanillaUvs": false,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS"
+      },
+      {
+        "description": "Gold",
+        "colors": "h == 10 && s == 7",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS"
+      },
+      {
+        "description": "Glass",
+        "colors": "h == 8 && s == 5 && l < 5",
+        "baseMaterial": "GRAY_75"
+      }
+    ]
+  },
+  {
+    "description": "Weapons case With bows and arrows",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      3040,
+      3044
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "retainVanillaUvs": false,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS"
+      },
+      {
+        "description": "Gold",
+        "colors": "h == 10 && s == 7",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS"
+      },
+      {
+        "description": "Glass",
+        "colors": "h == 37 && s == 1",
+        "baseMaterial": "GRAY_75"
+      }
+    ]
+  },
+  {
+    "description": "Thin cupboard with golden handles and hinges",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      2056,
+      2057,
+      2062,
+      2063,
+      2612,
+      2613
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "retainVanillaUvs": false,
+    "colorOverrides": [
+      {
+        "description": "Gold",
+        "colors": "h == 6 && s == 7",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS"
+      }
+    ]
+  },
+  {
+    "description": "Farming Shelves with baskets boots and a rake head",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      7507
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "retainVanillaUvs": false,
+    "colorOverrides": [
+      {
+        "description": "Rake",
+        "colors": "h == 5 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvOrientation": 256,
+        "uvScale": 0.6
+      },
+      {
+        "description": "Boots",
+        "colors": "h == 7 && s > 1 && s < 5 && l < 18",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Farming Shelves with Watering can and books",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      7508
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "retainVanillaUvs": false,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 5 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Paper",
+        "colors": "h == 10 && s == 0",
+        "baseMaterial": "GRAY_65",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "Light wooden shelves with boxs on them",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      8693
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "retainVanillaUvs": false,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 5 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Paper",
+        "colors": "h == 10 && s == 0",
+        "baseMaterial": "GRAY_65",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "Wine rack with bottles",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [
+      2453,
+      2712,
+      2713
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "retainVanillaUvs": false,
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h > 5 && h < 8",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Wooden bookcase with brown and taupe colored books",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      7176,
+      9523,
+      15461
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Paper",
+        "colors": "h == 10 && s == 0",
+        "baseMaterial": "GRAY_65",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Green books",
+        "colors": "h > 12",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Red books",
+        "colors": "h == 4",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Dark brown books",
+        "colors": "h == 7 && s > 4",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Dark brown books",
+        "colors": "h == 6 && s == 3",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "General Store Shelves with metal and glass",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      3022,
+      3023,
+      3034,
+      3035,
+      30146
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "retainVanillaUvs": false,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Green blue and taupe bottles",
+        "colors": "h > 9",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Red bottles",
+        "colors": "h == 0 && s == 7",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      },
+      {
+        "description": "light red bottles",
+        "colors": "h == 0 && s == 4",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Shelf with helmets",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      850
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "retainVanillaUvs": false,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Shelf with helmets",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      24001
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 512,
+    "retainVanillaUvs": false,
+    "colorOverrides": [
+      {
+        "description": "Steel",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Iron",
+        "colors": "h == 42 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX"
+      }
     ]
   }
 ]
