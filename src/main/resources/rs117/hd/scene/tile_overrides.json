@@ -4590,7 +4590,6 @@
     "waterType": "ABYSS_BILE"
   },
   {
-    "name": "STRONGHOLD_OF_SECURITY_OOZE_DIRT_FIX",
     "area": "STRONGHOLD_OF_SECURITY_PESTILENCE_WATER_AND_DIRT_FIX",
     "overlayIds": [
       77
@@ -4600,7 +4599,6 @@
     "blended": false
   },
   {
-    "name": "STRONGHOLD_OF_SECURITY_OOZE_DIRT_FIX",
     "area": "STRONGHOLD_OF_SECURITY_PESTILENCE_GRASS_FIX",
     "overlayIds": [
       29
