@@ -372,6 +372,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	private int viewportOffsetX;
 	private int viewportOffsetY;
+	private int viewportWidth;
+	private int viewportHeight;
 
 	// Uniforms
 	private int uniColorBlindnessIntensity;
@@ -1532,6 +1534,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		viewportOffsetX = client.getViewportXOffset();
 		viewportOffsetY = client.getViewportYOffset();
+		viewportWidth = client.getViewportWidth();
+		viewportHeight = client.getViewportHeight();
 
 		if (!enableFreezeFrame) {
 			if (!redrawPreviousFrame) {
@@ -1937,9 +1941,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			textureProvider != null &&
 			client.getGameState().getState() >= GameState.LOADING.getState()
 		) {
-			final int viewportHeight = client.getViewportHeight();
-			final int viewportWidth = client.getViewportWidth();
-
 			int renderWidthOff = viewportOffsetX;
 			int renderHeightOff = viewportOffsetY;
 			int renderCanvasHeight = canvasHeight;
