@@ -297,7 +297,9 @@ public class LightManager {
 						tileExX < EXTENDED_SCENE_SIZE && tileExY < EXTENDED_SCENE_SIZE &&
 						(tile = tiles[plane][tileExX][tileExY]) != null
 					) {
-						if (!light.def.ignoreActorHiding) {
+						if (!light.def.ignoreActorHiding &&
+							!(light.actor instanceof NPC && ((NPC) light.actor).getComposition().getSize() > 1)
+						) {
 							// Check if the actor is hidden by another actor on the same tile
 							for (var gameObject : tile.getGameObjects()) {
 								if (gameObject == null || !(gameObject.getRenderable() instanceof Actor))
