@@ -28506,7 +28506,7 @@
   {
     "description": "Drake Maw Idle",
     "height": 50,
-    "offset": [ -20, 5, 252 ],
+    "offset": [ -17, -3, 249 ],
     "radius": 32,
     "strength": 120,
     "color": "#ff8c00",
