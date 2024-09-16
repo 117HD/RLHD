@@ -6317,7 +6317,8 @@
       44784,
       44785,
       50048,
-      50049
+      50049,
+      50050
     ],
     "uvOrientation": 512,
     "uvScale": 0.4,
@@ -13681,7 +13682,8 @@
     "description": "Object - Dying Tree",
     "baseMaterial": "BARK",
     "objectIds": [
-      3648
+      3648,
+      50074
     ],
     "uvType": "BOX"
   },
