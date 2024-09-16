@@ -491,6 +491,14 @@
     "hideOtherAreas": true
   },
   {
+    "name": "STRONGHOLD_OF_SECURITY_PESTILENCE_WATER_AND_DIRT_FIX",
+    "aabbs": [ [ 2121, 5290, 2131, 5303 ] ]
+  },
+  {
+    "name": "STRONGHOLD_OF_SECURITY_PESTILENCE_GRASS_FIX",
+    "aabbs": [ [ 2152, 5284, 0 ] ]
+  },
+  {
     "name": "STRONGHOLD_OF_SECURITY_DEATH",
     "regions": [
       9297
