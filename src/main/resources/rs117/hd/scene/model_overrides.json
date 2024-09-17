@@ -22652,6 +22652,43 @@
     ]
   },
   {
+    "description": "PoH - Basic wooden walls with shutters",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "upwardsNormals": true,
+    "flatNormals": true,
+    "objectIds": [
+      13253
+    ]
+  },
+  {
+    "description": "PoH - Basic wooden wall roofs",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "upwardsNormals": true,
+    "flatNormals": true,
+    "objectIds": [
+      17164,
+      17165,
+      17166,
+      17167,
+      17168,
+      17169,
+      17170,
+      17171,
+      17172,
+      17173,
+      17174,
+      17175,
+      17176,
+      17177,
+      17178,
+      17179
+    ]
+  },
+  {
     "description": "PoH - Basic wooden wall doors",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
