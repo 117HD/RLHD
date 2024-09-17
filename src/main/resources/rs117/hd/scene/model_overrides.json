@@ -6116,6 +6116,10 @@
       12350,
       13001,
       13002,
+      13094,
+      13095,
+      13096,
+      13097,
       14749,
       14750,
       15759,
@@ -22710,6 +22714,50 @@
       13101,
       13102,
       13103
+    ]
+  },
+  {
+    "description": "PoH - Basic stone wall",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      1902,
+      13090
+    ]
+  },
+  {
+    "description": "PoH - Basic stone wall with wooden window frame",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "colors": "s == 0 && l < 30",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      13091
+    ]
+  },
+  {
+    "description": "PoH - Basic stone wall with shutters",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "colors": "s == 4",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 512
+      }
+    ],
+    "objectIds": [
+      13226
     ]
   }
 ]
