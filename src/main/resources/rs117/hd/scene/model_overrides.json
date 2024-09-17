@@ -22640,7 +22640,7 @@
     ]
   },
   {
-    "description": "PoH - horizontal wooden board walls",
+    "description": "PoH - Basic wooden walls",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -22652,7 +22652,7 @@
     ]
   },
   {
-    "description": "PoH - horizontal wooden board doors",
+    "description": "PoH - Basic wooden wall doors",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.8,
