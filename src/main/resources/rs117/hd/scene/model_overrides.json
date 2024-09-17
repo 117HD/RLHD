@@ -22638,5 +22638,41 @@
     "objectIds": [
       6753
     ]
+  },
+  {
+    "description": "PoH - horizontal wooden board walls",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "upwardsNormals": true,
+    "flatNormals": true,
+    "objectIds": [
+      13098,
+      13099
+    ]
+  },
+  {
+    "description": "PoH - horizontal wooden board doors",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "upwardsNormals": true,
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "description": "Metal Hinge",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 42
+      }
+    ],
+    "objectIds": [
+      13100,
+      13101,
+      13102,
+      13103
+    ]
   }
 ]
