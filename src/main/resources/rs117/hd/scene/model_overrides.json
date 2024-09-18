@@ -22819,7 +22819,7 @@
     ]
   },
   {
-    "description": "PoH - Whitewashed wall wooden plant doors",
+    "description": "PoH - Whitewashed wall wooden plank doors",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -22834,6 +22834,52 @@
       13007,
       13008,
       13009
+    ]
+  },
+  {
+    "description": "PoH - Fremennik plank walls",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      13111,
+      13112
+    ]
+  },
+  {
+    "description": "PoH - Fremennik plank walls with roofs",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      17180,
+      17181,
+      17182,
+      17183,
+      17184,
+      17185,
+      17186,
+      17187,
+      17188,
+      17189,
+      17190,
+      17191,
+      17192,
+      17193,
+      17194,
+      17195
+    ]
+  },
+  {
+    "description": "PoH - Fremennik plank doors",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      13107,
+      13108,
+      13109,
+      13110
     ]
   }
 ]
