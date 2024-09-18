@@ -2487,7 +2487,7 @@
     "flatNormals": true
   },
   {
-    "description": "AL_KHARID_WALLS",
+    "description": "Al Kharid and PoH Whitewashed Walls",
     "baseMaterial": "WATTLE_1",
     "objectIds": [
       1415,
@@ -22758,6 +22758,86 @@
     ],
     "objectIds": [
       13226
+    ]
+  },
+  {
+    "description": "PoH - Whitewashed Walls with woodgrain sides",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "flatNormals": true,
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "WATTLE_1",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      13005,
+      13010
+    ]
+  },
+  {
+    "description": "PoH - Whitewashed Walls with woodgrain sides and shutters",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "flatNormals": true,
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "WATTLE_1",
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h == 0",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      13235
+    ]
+  },
+  {
+    "description": "PoH - Whitewashed Walls with woodgrain sides and shutters",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "flatNormals": true,
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "WATTLE_1",
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h == 0",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      13235
+    ]
+  },
+  {
+    "description": "PoH - Whitewashed wall wooden plant doors",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "colors": "s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS"
+      }
+    ],
+    "objectIds": [
+      13006,
+      13007,
+      13008,
+      13009
     ]
   }
 ]
