@@ -22797,5 +22797,22 @@
     "objectIds": [
       11928
     ]
+  },
+  {
+    "description": "Dead Tree with snow",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Snow",
+        "baseMaterial": "SNOW_1",
+        "colors": "s == 0",
+        "uvType": "BOX",
+        "uvScale": 0.25
+      }
+    ],
+    "objectIds": [
+      1291
+    ]
   }
 ]
