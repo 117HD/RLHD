@@ -2253,7 +2253,7 @@
     ]
   },
   {
-    "description": "Brick walls with green glass windows",
+    "description": "Brick walls with green glass with gold windows",
     "baseMaterial": "GRUNGE_1",
     "flatNormals": true,
     "colorOverrides": [
@@ -2276,7 +2276,27 @@
     ],
     "objectIds": [
       23743,
-      23744,
+      23744
+    ]
+  },
+  {
+    "description": "Brick walls with green glass windows",
+    "baseMaterial": "GRUNGE_1",
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "description": "Wooden boards",
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Green glass",
+        "colors": "h > 11",
+        "baseMaterial": "NONE"
+      }
+    ],
+    "objectIds": [
       23746,
       23747
     ]
