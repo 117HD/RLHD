@@ -5412,7 +5412,8 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       7401,
-      7406
+      7406,
+      55033
     ],
     "uvType": "BOX",
     "uvOrientation": 512,
@@ -7573,7 +7574,8 @@
       41452,
       41738,
       42066,
-      44854
+      44854,
+      55048
     ],
     "uvType": "BOX",
     "flatNormals": true
@@ -7673,7 +7675,8 @@
       14742,
       15693,
       42068,
-      42070
+      42070,
+      55049
     ],
     "uvType": "BOX",
     "flatNormals": true,
