@@ -18190,7 +18190,7 @@
     "uvScale": 0.85
   },
   {
-    "description": "Colossal Wyrm Remains Bones",
+    "description": "Colossal Wyrm Agility Course Bones",
     "baseMaterial": "BONE",
     "objectIds": [
       55138,
@@ -18203,7 +18203,7 @@
     "uvScale": 0.5
   },
   {
-    "description": "Colossal Wyrm Remains Bones with Dirt",
+    "description": "Colossal Wyrm Agility Course Bones with Dirt",
     "baseMaterial": "BONE",
     "objectIds": [
       55144,
@@ -18219,7 +18219,7 @@
     ]
   },
   {
-    "description": "Colossal Wyrm Remains Bones with Wood",
+    "description": "Colossal Wyrm Agility Course Bones with Wood",
     "baseMaterial": "BONE",
     "objectIds": [
       55146
@@ -18237,7 +18237,7 @@
     ]
   },
   {
-    "description": "Colossal Wyrm Remains Scaffolding Floor",
+    "description": "Colossal Wyrm Agility Course Scaffolding Floor",
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [
       46803,
@@ -18249,7 +18249,7 @@
     "uvScale": 0.75
   },
   {
-    "description": "Colossal Wyrm Remains Scaffolding",
+    "description": "Colossal Wyrm Agility Course Scaffolding",
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [
       55149,
@@ -18264,7 +18264,7 @@
     "uvOrientation": 512
   },
   {
-    "description": "Colossal Wyrm Remains Wooden Decorations",
+    "description": "Colossal Wyrm Agility Course Wooden Decorations",
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [
       55037,
@@ -18279,7 +18279,7 @@
     "uvOrientation": 512
   },
   {
-    "description": "Colossal Wyrm Remains Scaffolding with Ropes",
+    "description": "Colossal Wyrm Agility Course Scaffolding with Ropes",
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [
       55152,
@@ -18305,7 +18305,7 @@
     ]
   },
   {
-    "description": "Colossal Wyrm Remains Scaffolding Tightrope",
+    "description": "Colossal Wyrm Agility Course Tightrope",
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [
       42239,
@@ -18336,7 +18336,7 @@
     ]
   },
   {
-    "description": "Colossal Wyrm Remains Scaffolding Rotated",
+    "description": "Colossal Wyrm Agility Course Scaffolding Rotated",
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [
       55169
@@ -18355,7 +18355,7 @@
     ]
   },
   {
-    "description": "Colossal Wyrm Remains Scaffolding Rope Support",
+    "description": "Colossal Wyrm Agility Course Scaffolding Rope Support",
     "baseMaterial": "METALLIC_1_SEMIGLOSS",
     "objectIds": [
       42233,
@@ -18372,7 +18372,7 @@
     ]
   },
   {
-    "description": "Colossal Wyrm Remains Termite Hill",
+    "description": "Colossal Wyrm Agility Course Termite Hill",
     "baseMaterial": "DIRT_2",
     "uvType": "BOX",
     "uvScale": 0.33,
