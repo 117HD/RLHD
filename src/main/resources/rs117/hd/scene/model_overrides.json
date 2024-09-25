@@ -18344,6 +18344,17 @@
     ]
   },
   {
+    "description": "Colossal Wyrm Remains Termite Hill",
+    "baseMaterial": "DIRT_2",
+    "uvType": "BOX",
+    "uvScale": 0.33,
+    "objectIds": [
+      55135,
+      55136,
+      55137
+    ]
+  },
+  {
     "description": "Perilous Moons Murals",
     "baseMaterial": "GRUNGE_2",
     "objectIds": [
