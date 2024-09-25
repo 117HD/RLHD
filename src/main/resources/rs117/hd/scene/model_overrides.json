@@ -18164,7 +18164,20 @@
     "uvType": "MODEL_YZ"
   },
   {
-    "description": "Colossal Wyrm Remains Skull",
+    "description": "Colossal Wyrm Agility Course Hay Bale",
+    "baseMaterial": "HD_HAY",
+    "objectIds": [
+      55173,
+      55174,
+      55175,
+      46309,
+      46311
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7
+  },
+  {
+    "description": "Colossal Wyrm Agility Course Skull",
     "baseMaterial": "BONE",
     "objectIds": [
       51910,
