@@ -5156,7 +5156,9 @@
       26107,
       50143,
       50144,
-      15115
+      15115,
+      52614,
+      52621
     ],
     "uvType": "BOX",
     "uvScale": 0.8
@@ -18133,6 +18135,14 @@
       44910
     ],
     "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Varlamore Tent Walls",
+    "baseMaterial": "FINE_CARPET",
+    "objectIds": [
+      44853
+    ],
+    "uvType": "BOX"
   },
   {
     "description": "Varlamore Circular Awning, MODEL_XZ is used with intent",
