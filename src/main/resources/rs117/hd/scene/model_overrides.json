@@ -22757,5 +22757,20 @@
     "objectIds": [
       55198
     ]
+  },
+  {
+    "description": "Hueycoatl Tent",
+    "baseMaterial": "SNOW_1",
+    "objectIds": [
+      55261
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 10" ],
+        "baseMaterial": "FINE_CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.85
+      }
+    ]
   }
 ]
