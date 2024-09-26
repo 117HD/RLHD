@@ -22620,5 +22620,22 @@
         "uvType": "BOX"
       }
     ]
+  },
+  {
+    "description": "Hueycoatl Rocks",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      55249,
+      55250,
+      55251,
+      55252,
+      55253,
+      55254,
+      55256,
+      55259,
+      55260
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
   }
 ]
