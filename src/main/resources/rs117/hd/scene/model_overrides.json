@@ -22637,5 +22637,42 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.8
+  },
+  {
+    "description": "Hueycoatl Body Cave",
+    "objectIds": [
+      55242,
+      55243,
+      55245,
+      55246
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "STONE_NORMALED"
+      },
+      {
+        "colors": "h == 63",
+        "baseMaterial": "BLACK",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Hueycoatl Blockage Segment Caves",
+    "objectIds": [
+      55206,
+      55207
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "colors": ["h == 0", "h == 63" ],
+        "baseMaterial": "STONE_NORMALED"
+      }
+    ]
   }
 ]
