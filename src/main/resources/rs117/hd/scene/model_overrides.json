@@ -22824,5 +22824,24 @@
         "baseMaterial": "METALLIC_1_SEMIGLOSS"
       }
     ]
+  },
+  {
+    "description": "Hueycoatl Meeting Flag",
+    "objectIds": [
+      55203
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 33" ],
+        "baseMaterial": "GRUNGE_3"
+      },
+      {
+        "colors": [ "h == 5" ],
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.75,
+        "uvOrientation": 512
+      }
+    ]
   }
 ]
