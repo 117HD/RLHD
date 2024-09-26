@@ -22684,5 +22684,15 @@
         "baseMaterial": "STONE"
       }
     ]
+  },
+  {
+    "description": "Hueycoatl",
+    "npcIds": [ 14009, 14010, 14011, 14012, 14013 ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 0 && s == 0", "h == 63" ],
+        "baseMaterial": "STONE"
+      }
+    ]
   }
 ]
