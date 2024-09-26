@@ -22772,5 +22772,35 @@
         "uvScale": 0.85
       }
     ]
+  },
+  {
+    "description": "Hueycoatl Campfire",
+    "baseMaterial": "METALLIC_1_GLOSS",
+    "objectIds": [
+      55200
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h > 6" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Hueycoatl Campfires Fire",
+    "objectIds": [
+      19882
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 5" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.25
+      }
+    ]
   }
 ]
