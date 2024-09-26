@@ -35550,5 +35550,22 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 20
+  },
+  {
+    "description": "Hueycoatl Campfire",
+    "height": 50,
+    "radius": 400,
+    "strength": 12,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 15,
+    "objectIds": [
+      55200
+    ]
   }
 ]

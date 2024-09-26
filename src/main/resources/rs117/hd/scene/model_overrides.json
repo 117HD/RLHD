@@ -22774,7 +22774,7 @@
     ]
   },
   {
-    "description": "Hueycoatl Campfire",
+    "description": "Hueycoatl Campfire Frame",
     "baseMaterial": "METALLIC_1_GLOSS",
     "objectIds": [
       55200
@@ -22790,7 +22790,7 @@
     ]
   },
   {
-    "description": "Hueycoatl Campfires Fire",
+    "description": "Hueycoatl Campfire Fire",
     "objectIds": [
       19882
     ],
