@@ -22625,6 +22625,7 @@
     "description": "Hueycoatl Rocks",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
+      55234,
       55249,
       55250,
       55251,
@@ -22800,6 +22801,27 @@
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
         "uvScale": 0.25
+      }
+    ]
+  },
+  {
+    "description": "Hueycoatl Brazier",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 256,
+    "objectIds": [
+      55210,
+      55211,
+      55218,
+      55219,
+      55226,
+      55227
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 5" ],
+        "baseMaterial": "METALLIC_1_SEMIGLOSS"
       }
     ]
   }

@@ -35567,5 +35567,26 @@
     "objectIds": [
       55200
     ]
+  },
+  {
+    "description": "Hueycoatl Brazier",
+    "height": 650,
+    "radius": 400,
+    "strength": 12,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "fadeInDuration": 100,
+    "fadeOutDuration": 200,
+    "duration": 600,
+    "range": 15,
+    "objectIds": [
+      55210,
+      55218,
+      55226
+    ]
   }
 ]
