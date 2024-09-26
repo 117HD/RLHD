@@ -20691,6 +20691,28 @@
     ]
   },
   {
+    "description": "Camdozaal Exit",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "colorOverrides": [
+      {
+        "description": "carved stone",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      },
+      {
+        "description": "fake fog",
+        "colors": "h == 48 && s == 0",
+        "baseMaterial": "NONE"
+      }
+    ],
+    "objectIds": [
+      41446
+    ]
+  },
+  {
     "description": "Camdozaal tent with tools under it",
     "baseMaterial": "CARPET",
     "uvType": "BOX",
