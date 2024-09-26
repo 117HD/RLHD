@@ -22736,9 +22736,9 @@
   },
   {
     "description": "Hueycoatl Entrance Chain",
-    "baseMaterial": "ROCK_1",
+    "baseMaterial": "STONE",
     "uvType": "BOX",
-    "uvScale": 0.5,
+    "uvScale": 0.75,
     "objectIds": [
       55202
     ],
@@ -22747,6 +22747,15 @@
         "colors": [ "h == 3" ],
         "baseMaterial": "METALLIC_1_GLOSS"
       }
+    ]
+  },
+  {
+    "description": "Hueycoatl Scoreboard",
+    "baseMaterial": "STONE",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      55198
     ]
   }
 ]
