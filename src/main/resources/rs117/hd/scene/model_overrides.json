@@ -22646,8 +22646,6 @@
       55245,
       55246
     ],
-    "uvType": "MODEL_XZ",
-    "uvScale": 0.8,
     "colorOverrides": [
       {
         "colors": "h == 0 && s == 0",
@@ -22655,8 +22653,7 @@
       },
       {
         "colors": "h == 63",
-        "baseMaterial": "BLACK",
-        "uvType": "BOX"
+        "baseMaterial": "BLACK"
       }
     ]
   },
@@ -22666,12 +22663,25 @@
       55206,
       55207
     ],
-    "uvType": "MODEL_XZ",
-    "uvScale": 0.8,
     "colorOverrides": [
       {
         "colors": ["h == 0", "h == 63" ],
         "baseMaterial": "STONE_NORMALED"
+      }
+    ]
+  },
+  {
+    "description": "Hueycoatl Tail Cave",
+    "objectIds": [ 55241 ],
+    "npcIds": [ 14014, 14015 ],
+    "colorOverrides": [
+      {
+        "colors": [ 2 ],
+        "baseMaterial": "BLACK"
+      },
+      {
+        "colors": [ "h == 0" ],
+        "baseMaterial": "STONE"
       }
     ]
   }
