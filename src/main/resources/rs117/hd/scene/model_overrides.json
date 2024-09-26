@@ -22733,5 +22733,20 @@
       55293,
       55294
     ]
+  },
+  {
+    "description": "Hueycoatl Entrance Chain",
+    "baseMaterial": "ROCK_1",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      55202
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 3" ],
+        "baseMaterial": "METALLIC_1_GLOSS"
+      }
+    ]
   }
 ]
