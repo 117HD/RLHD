@@ -20829,6 +20829,18 @@
     ]
   },
   {
+    "description": "Camdozaal ice formation",
+    "baseMaterial": "GRUNGE_3_LIGHT_SHINY",
+    "uvType": "BOX",
+    "uvOrientation": 343,
+    "objectIds": [
+      6460,
+      6472,
+      6474,
+      13704
+    ]
+  },
+  {
     "description": "Seers Coal Mine Fence",
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
