@@ -35608,8 +35608,8 @@
   },
   {
     "description": "Hueycoatl Range Projectile",
-    "height": 0,
-    "radius": 200,
+    "offset": [ 5, 20, 5],
+    "radius": 210,
     "strength": 12,
     "color": [
       0,
@@ -35625,9 +35625,9 @@
   },
   {
     "description": "Hueycoatl Mage Projectile",
-    "height": 0,
-    "radius": 265,
-    "strength": 12,
+    "height": 20,
+    "radius": 285,
+    "strength": 14,
     "color": [
       0,
       200,
