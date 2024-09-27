@@ -20333,24 +20333,61 @@
     "uvType": "BOX"
   },
   {
+    "description": "Camdozaal Vault Door",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 42,
+    "objectIds": [
+      41537
+    ]
+  },
+  {
     "description": "Camdozaal House Walls",
     "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 5",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvOrientation": 700
+      }
+    ],
     "objectIds": [
       41461,
       41462,
       41463,
+      41464,
       41465
-    ],
-    "uvType": "BOX"
+    ]
   },
   {
-    "description": "Camdozaal Wall Statues",
+    "description": "Camdozaal Wall Statue - static",
     "baseMaterial": "GRUNGE_3",
-    "objectIds": [
-      41467,
-      41468
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 5",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 700
+      }
     ],
-    "uvType": "BOX"
+    "objectIds": [
+      41468
+    ]
+  },
+  {
+    "description": "Camdozaal Wall Statues - Dynamic",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "objectIds": [
+      41467
+    ]
   },
   {
     "description": "Camdozaal Barronite Walls",
@@ -20399,15 +20436,16 @@
   },
   {
     "description": "Camdozaal - Plant - Fern",
-    "baseMaterial": "PLANT_GRUNGE_2",
+    "baseMaterial": "LEAF_VEINS_LIGHT",
     "objectIds": [
       41581,
       41582,
-      41583
+      41583,
+      41584
     ],
     "uvType": "BOX",
     "uvOrientation": 128,
-    "uvScale": 1.2
+    "uvScale": 0.4
   },
   {
     "description": "Camdozaal Fish Bones",
@@ -20507,6 +20545,15 @@
   {
     "description": "Camdozaal Preparation Table",
     "baseMaterial": "STONE_NORMALED",
+    "colorOverrides": [
+      {
+        "description": "Bones",
+        "colors": "h == 0",
+        "baseMaterial": "BONE",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.5
+      }
+    ],
     "objectIds": [
       41545
     ],
@@ -20517,14 +20564,23 @@
   {
     "description": "Camdozaal Altar",
     "baseMaterial": "STONE_NORMALED",
-    "objectIds": [
-      41546
-    ],
     "uvType": "BOX",
     "uvOrientationY": 256,
     "uvOrientationZ": 768,
     "uvOrientationX": 768,
-    "uvScale": 0.6
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 5",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvOrientation": 700
+      }
+    ],
+    "objectIds": [
+      41546
+    ]
   },
   {
     "description": "Camdozaal and Zanaris Mushrooms",
@@ -20536,6 +20592,253 @@
       12059
     ],
     "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Camdozaal Entrance Sides",
+    "baseMaterial": "SNOW_1",
+    "uvType": "BOX",
+    "uvScale": 1.25,
+    "colorOverrides": [
+      {
+        "description": "Stone",
+        "colors": "l < 56",
+        "baseMaterial": "ROCK_1",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 343
+      }
+    ],
+    "objectIds": [
+      41443,
+      41444
+    ]
+  },
+  {
+    "description": "Camdozaal Entrance",
+    "baseMaterial": "SNOW_1",
+    "uvType": "BOX",
+    "uvScale": 1.25,
+    "colorOverrides": [
+      {
+        "description": "Stone",
+        "colors": "h == 0 && l < 65",
+        "baseMaterial": "ROCK_2",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 1024
+      },
+      {
+        "description": "Ice",
+        "colors": "h == 32",
+        "baseMaterial": "ICE_3",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      41439,
+      41440,
+      41441
+    ]
+  },
+  {
+    "description": "Camdozaal Entrance rubble",
+    "baseMaterial": "SNOW_1",
+    "uvType": "BOX",
+    "uvScale": 1.25,
+    "colorOverrides": [
+      {
+        "description": "Stone",
+        "colors": "h == 0 && l < 55",
+        "baseMaterial": "ROCK_2",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 1024
+      }
+    ],
+    "objectIds": [
+      41454
+    ]
+  },
+  {
+    "description": "Camdozaal Big Door",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 1.25,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 6",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      41482,
+      41483,
+      41484
+    ]
+  },
+  {
+    "description": "Structural Pillar",
+    "baseMaterial": "ROCK_2",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 182,
+    "objectIds": [
+      41458,
+      41459,
+      41460
+    ]
+  },
+  {
+    "description": "Camdozaal Exit",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "colorOverrides": [
+      {
+        "description": "carved stone",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      },
+      {
+        "description": "fake fog",
+        "colors": "h == 48 && s == 0",
+        "baseMaterial": "NONE"
+      }
+    ],
+    "objectIds": [
+      41446
+    ]
+  },
+  {
+    "description": "Camdozaal tent with tools under it",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 128,
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h < 7 && s > 0",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      41491
+    ]
+  },
+  {
+    "description": "Camdozaal Pickaxe Barrel",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h < 4",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      41593
+    ]
+  },
+  {
+    "description": "Camdozaal Barrel",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h < 4",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      30821,
+      41541
+    ]
+  },
+  {
+    "description": "Camdozaal Workbench",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h < 9",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 343
+      },
+      {
+        "description": "Crystals",
+        "colors": "h == 51",
+        "baseMaterial": "NONE",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 343
+      }
+    ],
+    "objectIds": [
+      41495
+    ]
+  },
+  {
+    "description": "Camdozaal Stalactite post and lamp",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvOrientation": 343,
+    "colorOverrides": [
+      {
+        "description": "Rock",
+        "colors": "h == 48",
+        "baseMaterial": "ROCK_3",
+        "uvType": "BOX",
+        "uvOrientation": 42
+      },
+      {
+        "description": "Post",
+        "colors": "h == 8",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Rope",
+        "colors": "h == 6 && s == 4",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvOrientation": 42
+      }
+    ],
+    "objectIds": [
+      41565
+    ]
+  },
+  {
+    "description": "Camdozaal ice formation",
+    "baseMaterial": "GRUNGE_3_LIGHT_SHINY",
+    "uvType": "BOX",
+    "uvOrientation": 343,
+    "objectIds": [
+      6460,
+      6472,
+      6474,
+      13704
+    ]
   },
   {
     "description": "Seers Coal Mine Fence",
@@ -22618,6 +22921,22 @@
         "colors": "h == 42 && s == 0",
         "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
         "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Object - Wooden - Barrel - with coal",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      41455
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": [ "h == 0" ],
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvOrientation": 77
       }
     ]
   }
