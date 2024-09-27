@@ -22625,6 +22625,7 @@
     "description": "Hueycoatl Rocks",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
+      55205,
       55234,
       55249,
       55250,
@@ -22741,6 +22742,7 @@
     "uvType": "BOX",
     "uvScale": 0.75,
     "objectIds": [
+      55201,
       55202
     ],
     "colorOverrides": [
