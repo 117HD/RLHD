@@ -396,6 +396,10 @@ public enum Material {
 	GRUNGE_3_LIGHT(GRUNGE_3, p -> p
 		.setBrightness(1.45f)
 	),
+	GRUNGE_3_DARK(GRUNGE_3, p -> p
+		.setBrightness(0.75f)
+		.setSpecular(0f, 0)
+	),
 	WATER_FOUNTAIN_FLAT(GRUNGE_3, p -> p
 		.setFlowMap(UNDERWATER_FLOW_MAP)
 		.setFlowMapStrength(0.2f)
