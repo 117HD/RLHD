@@ -51,6 +51,15 @@ public enum WaterType
 		.causticsStrength(0)
 		.duration(1.2f)
 		.fishingSpotRecolor(hsl("#04730d"))),
+	MLM_WATER(b -> b
+		.specularStrength(.1f)
+		.specularGloss(100)
+		.normalStrength(.05f)
+		.baseOpacity(.8f)
+		.fresnelAmount(.3f)
+		.surfaceColor(rgb("#617093"))
+		.causticsStrength(0)
+		.duration(1.2f)),
 	SWAMP_WATER_FLAT(SWAMP_WATER, true),
 	POISON_WASTE(b -> b
 		.specularStrength(.1f)
