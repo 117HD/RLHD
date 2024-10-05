@@ -9920,21 +9920,21 @@
       {
         "description": "Blue Cushion",
         "colors": "h > 30",
-        "baseMaterial": "FINE_CARPET",
+        "baseMaterial": "CARPET",
         "uvType": "BOX",
         "uvScale": 0.65
       },
       {
         "description": "White Cushion",
         "colors": "h == 5 && s == 0",
-        "baseMaterial": "FINE_CARPET",
+        "baseMaterial": "CARPET",
         "uvType": "BOX",
         "uvScale": 0.65
       },
       {
         "description": "Red Cushion",
         "colors": "h == 0 && s == 7",
-        "baseMaterial": "FINE_CARPET",
+        "baseMaterial": "CARPET",
         "uvType": "BOX",
         "uvScale": 0.65
       }
@@ -19383,7 +19383,7 @@
     "colorOverrides": [
       {
         "colors": ["h == 0", "h == 6"],
-        "baseMaterial": "FINE_CARPET",
+        "baseMaterial": "CARPET",
         "uvScale": 0.65,
         "uvType": "BOX"
       }
@@ -19414,7 +19414,7 @@
     "colorOverrides": [
       {
         "colors": ["h == 7"],
-        "baseMaterial": "FINE_CARPET",
+        "baseMaterial": "CARPET",
         "uvType": "BOX",
         "uvScale": 0.8
       }
@@ -19429,7 +19429,7 @@
     "colorOverrides": [
       {
         "colors": ["h == 8"],
-        "baseMaterial": "FINE_CARPET",
+        "baseMaterial": "CARPET",
         "uvType": "BOX",
         "uvScale": 0.7
       }
@@ -20302,7 +20302,7 @@
       {
         "description": "Red carpet",
         "colors": [ "h == 0 && s > 0" ],
-        "baseMaterial": "FINE_CARPET",
+        "baseMaterial": "CARPET",
         "uvType": "BOX"
       }
     ]
@@ -23069,7 +23069,7 @@
       {
         "description": "Red Cushion",
         "colors": "h == 0 && s > 3 && s < 6",
-        "baseMaterial": "FINE_CARPET",
+        "baseMaterial": "CARPET",
         "uvType": "BOX",
         "uvScale": 0.75,
         "uvOrientation": 256
@@ -23077,7 +23077,7 @@
       {
         "description": "Blue Cushion",
         "colors": "h > 30",
-        "baseMaterial": "FINE_CARPET",
+        "baseMaterial": "CARPET",
         "uvType": "BOX",
         "uvScale": 0.75,
         "uvOrientation": 256
@@ -23099,7 +23099,7 @@
       {
         "description": "Red Cushion",
         "colors": "h == 0 && s == 7",
-        "baseMaterial": "FINE_CARPET",
+        "baseMaterial": "CARPET",
         "uvType": "BOX",
         "uvScale": 0.75,
         "uvOrientation": 256
@@ -23107,7 +23107,7 @@
       {
         "description": "White Cushion",
         "colors": "h == 42 && s == 0",
-        "baseMaterial": "FINE_CARPET",
+        "baseMaterial": "CARPET",
         "uvType": "BOX",
         "uvScale": 0.75,
         "uvOrientation": 256
@@ -23115,7 +23115,7 @@
       {
         "description": "Gold Trim",
         "colors": "h == 7 && s == 7",
-        "baseMaterial": "FINE_CARPET",
+        "baseMaterial": "CARPET",
         "uvType": "BOX",
         "uvOrientation": 512
       }
