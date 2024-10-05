@@ -1426,6 +1426,16 @@
     "retainVanillaUvs": true
   },
   {
+    "description": "Objects - Tree - Juniper",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      27499
+    ],
+    "uvType": "BOX",
+    "uvOrientationZ": 128,
+    "retainVanillaUvs": true
+  },
+  {
     "description": "Objects - Trees - Tirannwn Leafless Tree",
     "baseMaterial": "BARK",
     "objectIds": [
@@ -3310,6 +3320,7 @@
       20179,
       20180,
       20181,
+      20182,
       20777,
       20778,
       20779,
@@ -5280,7 +5291,8 @@
       8772,
       9531,
       25601,
-      25676
+      25676,
+      27511
     ],
     "uvType": "BOX",
     "uvOrientation": 512
@@ -5355,7 +5367,6 @@
       10490,
       12544,
       14762,
-      14852,
       15684,
       17145,
       25603,
@@ -5389,8 +5400,10 @@
       12543,
       12962,
       14851,
+      14852,
       20058,
       23177,
+      29334,
       39716
     ],
     "uvType": "BOX",
@@ -8055,6 +8068,14 @@
       22796,
       22797,
       22798
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Objects - Mushroom, Red with white spots",
+    "baseMaterial": "GRAY_70",
+    "objectIds": [
+      7135
     ],
     "uvType": "GEOMETRY"
   },
@@ -13143,6 +13164,7 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       2090,
+      21301,
       26711
     ],
     "uvType": "BOX",
@@ -13640,6 +13662,7 @@
     "description": "Object - Wooden - Barrel",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      10371,
       14740,
       15674,
       22278,
@@ -18577,7 +18600,6 @@
       51628,
       51629,
       51631,
-      51632,
       51633,
       51635,
       51637,
@@ -19227,6 +19249,271 @@
       42402,
       42403,
       42404
+    ]
+  },
+  {
+    "description": "Kourend - Hosidius - Tithe Farm - Greenhouse Walls",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      1755,
+      1756,
+      1757,
+      1758,
+      1759,
+      1760,
+      1761,
+      27472
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.25
+  },
+  {
+    "description": "Kourend - Hosidius - Tithe Farm - Seed Table",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      27430
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_2",
+        "uvScale": 0.4,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Kourend - Hosidius - Tithe Farm - Table with Dishes",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      2998
+    ],
+    "colorOverrides": [
+      {
+        "colors": ["s == 3", "s == 4", "s == 5"],
+        "baseMaterial": "WOOD_GRAIN_2",
+        "uvScale": 0.4,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Kourend - Hosidius - Tithe Farm - Water Barrel",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      5598
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvScale": 0.4,
+        "uvOrientation": 512,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Kourend - Hosidius - Tithe Farm - Cart with covering",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      27429
+    ],
+    "uvType": "BOX",
+    "uvOrientationX": -165,
+    "colorOverrides": [
+      {
+        "colors": ["h == 3", "h == 4", "h == 5", "h == 8", "h == 15"],
+        "baseMaterial": "GRUNGE_3",
+        "uvScale": 0.33,
+        "uvType": "MODEL_XZ"
+      }
+    ]
+  },
+  {
+    "description": "Kourend - Hosidius - Tithe Farm - Bed - Sleeping Bag",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      6250
+    ],
+    "colorOverrides": [
+      {
+        "colors": ["h == 0", "h == 6"],
+        "baseMaterial": "FINE_CARPET",
+        "uvScale": 0.65,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Kourend - Hosidius - Tithe Farm - Baskets",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      27521,
+      27522,
+      27524
+    ],
+    "colorOverrides": [
+      {
+        "colors": ["h == 7", "h == 16"],
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
+  },
+  {
+    "description": "Kourend - Hosidius - Tithe Farm - Fruit Sacks",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      27431,
+      27432
+    ],
+    "colorOverrides": [
+      {
+        "colors": ["h == 7"],
+        "baseMaterial": "FINE_CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Kourend - Hosidius - Tithe Farm - Small Sacks",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      10313
+    ],
+    "colorOverrides": [
+      {
+        "colors": ["h == 8"],
+        "baseMaterial": "FINE_CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.7
+      }
+    ]
+  },
+  {
+    "description": "Kourend - Hosidius - Tithe Farm - Spades and Rakes",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      7516
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 552,
+    "colorOverrides": [
+      {
+        "colors": ["s == 0", "h == 16"],
+        "baseMaterial": "METALLIC_1"
+      }
+    ]
+  },
+  {
+    "description": "Kourend - Hosidius - Tithe Farm - Giant Fruits",
+    "baseMaterial": "GRUNGE_3_DARK",
+    "objectIds": [
+      27384, 27385, 27386, 27387, 27388, 27389,
+      27390, 27391, 27392, 27393, 27394, 27395,
+      27396, 27397, 27398, 27399, 27400, 27401,
+      27402, 27403, 27404, 27405, 27406, 27407,
+      27408, 27409, 27410, 27411, 27412, 27413,
+      27414, 27415, 27416, 27417, 27418, 27419,
+      27420, 27421, 27422, 27423, 27424
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Kourend - Hosidius - Vinery - Grape Arbor",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      27510
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512
+  },
+  {
+    "description": "Kourend - Hosidius - Vinery - Stacked Barrels",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      27520
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Kourend - Hosidius - Vinery - Big Wine Barrels",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      11808,
+      41928
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "colors": ["h == 0", "h == 16"],
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
+  },
+  {
+    "description": "Kourend - Hosidius - Vinery - Arching Grape Vine",
+    "baseMaterial": "LIGHT_BARK",
+    "objectIds": [
+      1754
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": ["h == 8", "h == 9", "h == 10", "h == 11", "h == 13"],
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
+  },
+  {
+    "description": "Kourend - Hosidius - Vinery - Grape Vine",
+    "baseMaterial": "LIGHT_BARK",
+    "objectIds": [
+      1750,
+      1751,
+      1752,
+      1753,
+      11166,
+      11167,
+      11168,
+      11169,
+      11170,
+      11171,
+      11172,
+      11173,
+      11744,
+      11745,
+      11746,
+      11747,
+      11748,
+      11749,
+      11751,
+      11752,
+      11753,
+      11754,
+      11755,
+      11756,
+      11757,
+      11758,
+      11759,
+      22351
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "colorOverrides": [
+      {
+        "colors": ["h == 7","h == 8", "h == 9", "h == 10","h == 11", "h == 13", "h == 57"],
+        "baseMaterial": "GRUNGE_3"
+      }
     ]
   },
   {
@@ -19986,11 +20273,17 @@
   },
   {
     "description": "Lumbridge crypt ivy",
-    "baseMaterial": "PLANT_GRUNGE_2",
+    "baseMaterial": "LEAF_VEINS",
     "objectIds": [ 24160, 24161, 24162, 24163, 24164 ],
     "uvType": "MODEL_YZ",
     "uvOrientation": 144,
-    "uvScale": 0.6
+    "uvScale": 0.1,
+    "colorOverrides": [
+      {
+        "colors": [ "h == 17" ],
+        "baseMaterial": "GRUNGE_1"
+      }
+    ]
   },
   {
     "description": "Objects - Wooden - Brown Drawers with metallic handles",
