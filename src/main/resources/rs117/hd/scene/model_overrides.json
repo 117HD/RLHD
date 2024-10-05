@@ -930,7 +930,6 @@
       6188,
       10436,
       10487,
-      11876,
       12005,
       12006,
       13378,
@@ -5854,6 +5853,7 @@
     "description": "Anvil",
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
+      2031,
       2097,
       4306,
       6150,
@@ -6338,7 +6338,8 @@
       44784,
       44785,
       50048,
-      50049
+      50049,
+      50050
     ],
     "uvOrientation": 512,
     "uvScale": 0.4,
@@ -11842,6 +11843,7 @@
     "baseMaterial": "BURLAP",
     "objectIds": [
       3025,
+      10314,
       12394,
       14743,
       16867,
@@ -13745,7 +13747,8 @@
     "description": "Object - Dying Tree",
     "baseMaterial": "BARK",
     "objectIds": [
-      3648
+      3648,
+      50074
     ],
     "uvType": "BOX"
   },
@@ -15025,7 +15028,8 @@
     "description": "Tutorial Island - Workbench",
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [
-      2279
+      2279,
+      24171
     ],
     "uvType": "BOX",
     "uvScale": 0.3,
@@ -21047,7 +21051,8 @@
     "description": "Wooden textured workbench",
     "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [
-      609
+      609,
+      610
     ],
     "uvType": "BOX",
     "uvOrientationX": 512,
@@ -23192,6 +23197,222 @@
     ],
     "objectIds": [
       11877
+    ]
+  },
+  {
+    "description": "Dwarven mine tent",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientation": 512,
+    "objectIds": [
+      11858,
+      11859,
+      11860
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": [ "h == 0" ],
+        "baseMaterial": "CARPET",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Winch in the Dwarven Mine entrance north of falador",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvOrientation": 512,
+    "objectIds": [
+      11863
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "colorOverrides": [
+      {
+        "colors": [ "h == 0" ],
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Post at Dwarven Mine",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      11854
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.35
+  },
+  {
+    "description": "Post at Dwarven Mine",
+    "baseMaterial": "ROPE",
+    "objectIds": [
+      11856,
+      11857
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": [ "h == 0" ],
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Dwarven Mine ladder shutters",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientationX": 512,
+    "objectIds": [
+      11864
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Light wooden ladder in an dirt ground hole",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientationX": 512,
+    "objectIds": [
+      11867
+    ],
+    "colorOverrides": [
+      {
+        "colors": " h > 6",
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Mine cart tracks",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientationX": 512,
+    "objectIds": [
+      638,
+      639,
+      640,
+      641,
+      642,
+      643,
+      644,
+      645,
+      646
+    ],
+    "colorOverrides": [
+      {
+        "colors": " h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Mine cart track Buffers",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientationX": 512,
+    "objectIds": [
+      636
+    ],
+    "colorOverrides": [
+      {
+        "colors": " h == 0 && s == 0",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Spiral Staircase - Concrete textured",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      16671,
+      16672
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "retainVanillaUvs": false
+  },
+  {
+    "description": "Spiral Staircase top with rails - Concrete textured",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      16673
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "retainVanillaUvs": false,
+    "flatNormals": true
+  },
+  {
+    "description": "Blacksmiths tools on a wooden board",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 343
+      }
+    ],
+    "objectIds": [
+      11876
+    ]
+  },
+  {
+    "description": "Pickaxes crossed as a wall decoration",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 42,
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 343
+      }
+    ],
+    "objectIds": [
+      2096
+    ]
+  },
+  {
+    "description": "Wooden plank table with weapons",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "description": "Table",
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientationY": 512,
+        "uvOrientationZ": 512
+      }
+    ],
+    "objectIds": [
+      2783
     ]
   }
 ]
