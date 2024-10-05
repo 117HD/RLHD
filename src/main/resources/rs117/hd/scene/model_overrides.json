@@ -9903,6 +9903,40 @@
     "uvScale": 0.6
   },
   {
+    "description": "Wooden chair with combined back and cushioned",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Blue Cushion",
+        "colors": "h > 30",
+        "baseMaterial": "FINE_CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.65
+      },
+      {
+        "description": "White Cushion",
+        "colors": "h == 5 && s == 0",
+        "baseMaterial": "FINE_CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.65
+      },
+      {
+        "description": "Red Cushion",
+        "colors": "h == 0 && s == 7",
+        "baseMaterial": "FINE_CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.65
+      }
+    ],
+    "objectIds": [
+      1090,
+      7404,
+      24103
+    ]
+  },
+  {
     "description": "Objects - Wooden - Tables - Round",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
@@ -23016,6 +23050,107 @@
     ],
     "objectIds": [
       11474
+    ]
+  },
+  {
+    "description": "Stool with Red or blue cushions",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Red Cushion",
+        "colors": "h == 0 && s > 3 && s < 6",
+        "baseMaterial": "FINE_CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.75,
+        "uvOrientation": 256
+      },
+      {
+        "description": "Blue Cushion",
+        "colors": "h > 30",
+        "baseMaterial": "FINE_CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.75,
+        "uvOrientation": 256
+      }
+    ],
+    "objectIds": [
+      2311,
+      2312,
+      24322,
+      24323,
+      39138
+    ]
+  },
+  {
+    "description": "Stool with Red or white cushions and gold trim",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Red Cushion",
+        "colors": "h == 0 && s == 7",
+        "baseMaterial": "FINE_CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.75,
+        "uvOrientation": 256
+      },
+      {
+        "description": "White Cushion",
+        "colors": "h == 42 && s == 0",
+        "baseMaterial": "FINE_CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.75,
+        "uvOrientation": 256
+      },
+      {
+        "description": "Gold Trim",
+        "colors": "h == 7 && s == 7",
+        "baseMaterial": "FINE_CARPET",
+        "uvType": "BOX",
+        "uvOrientation": 512
+      }
+    ],
+    "objectIds": [
+      1100,
+      1101,
+      39137
+    ]
+  },
+  {
+    "description": "Wooden bar with glasses and cocktails on it",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Beer",
+        "colors": "h == 6 && s == 7",
+        "baseMaterial": "GRAY_75"
+      },
+      {
+        "description": "Green and blue bottles",
+        "colors": "h > 12",
+        "baseMaterial": "GRAY_75"
+      }
+    ],
+    "objectIds": [
+      2314,
+      2315,
+      2316,
+      2317,
+      2318,
+      2319,
+      2320,
+      2321,
+      2322,
+      2323,
+      2324,
+      2325,
+      2326,
+      2328,
+      2329,
+      2330,
+      2331
     ]
   }
 ]
