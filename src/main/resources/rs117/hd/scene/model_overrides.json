@@ -930,7 +930,6 @@
       6188,
       10436,
       10487,
-      11876,
       12005,
       12006,
       13378,
@@ -1423,6 +1422,16 @@
     "uvScale": 0.8,
     "uvOrientationZ": 128,
     "uvOrientationY": 512,
+    "retainVanillaUvs": true
+  },
+  {
+    "description": "Objects - Tree - Juniper",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      27499
+    ],
+    "uvType": "BOX",
+    "uvOrientationZ": 128,
     "retainVanillaUvs": true
   },
   {
@@ -3041,7 +3050,7 @@
   },
   {
     "description": "Wintertodt Tents",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [
       29307,
       29306,
@@ -3310,6 +3319,7 @@
       20179,
       20180,
       20181,
+      20182,
       20777,
       20778,
       20779,
@@ -4907,7 +4917,7 @@
   },
   {
     "description": "Fine Carpet",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [
       925,
       926,
@@ -5283,7 +5293,8 @@
       8772,
       9531,
       25601,
-      25676
+      25676,
+      27511
     ],
     "uvType": "BOX",
     "uvOrientation": 512
@@ -5358,7 +5369,6 @@
       10490,
       12544,
       14762,
-      14852,
       15684,
       17145,
       25603,
@@ -5392,8 +5402,10 @@
       12543,
       12962,
       14851,
+      14852,
       20058,
       23177,
+      29334,
       39716
     ],
     "uvType": "BOX",
@@ -5621,7 +5633,16 @@
   },
   {
     "description": "STONE_STAIRS_WOODEN_RAILS",
-    "baseMaterial": "GRUNGE_1",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Railing",
+        "colors": " h == 6 && s == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      }
+    ],
     "objectIds": [
       15645,
       15646,
@@ -5835,6 +5856,7 @@
     "description": "Anvil",
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
+      2031,
       2097,
       4306,
       6150,
@@ -6319,7 +6341,8 @@
       44784,
       44785,
       50048,
-      50049
+      50049,
+      50050
     ],
     "uvOrientation": 512,
     "uvScale": 0.4,
@@ -6663,7 +6686,7 @@
     "colorOverrides": [
       {
         "colors": "h == 5",
-        "baseMaterial": "FINE_CARPET",
+        "baseMaterial": "CARPET",
         "uvScale": 0.5,
         "uvType": "MODEL_XZ"
       }
@@ -7400,7 +7423,7 @@
   },
   {
     "description": "Round Rug",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [
       2455,
       2456,
@@ -8058,6 +8081,14 @@
       22796,
       22797,
       22798
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Objects - Mushroom, Red with white spots",
+    "baseMaterial": "GRAY_70",
+    "objectIds": [
+      7135
     ],
     "uvType": "GEOMETRY"
   },
@@ -8732,7 +8763,7 @@
   },
   {
     "description": "Lunar Island - Ground - Carpet",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [
       16709,
       16710,
@@ -9367,7 +9398,7 @@
   },
   {
     "description": "Wilderness - Vet'ion/Calvar'ion Lair - Carpet",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [
       46982,
       46983,
@@ -9383,7 +9414,7 @@
   },
   {
     "description": "Wilderness - Vet'ion/Calvar'ion Lair - Banner",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [
       46991
     ],
@@ -9882,6 +9913,40 @@
     "uvType": "BOX",
     "uvOrientation": 512,
     "uvScale": 0.6
+  },
+  {
+    "description": "Wooden chair with combined back and cushioned",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Blue Cushion",
+        "colors": "h > 30",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.65
+      },
+      {
+        "description": "White Cushion",
+        "colors": "h == 5 && s == 0",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.65
+      },
+      {
+        "description": "Red Cushion",
+        "colors": "h == 0 && s == 7",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.65
+      }
+    ],
+    "objectIds": [
+      1090,
+      7404,
+      24103
+    ]
   },
   {
     "description": "Objects - Wooden - Tables - Round",
@@ -10595,7 +10660,7 @@
       6766,
       6767
     ],
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "uvType": "WORLD_XZ",
     "flatNormals": true,
     "castShadows": false
@@ -11105,7 +11170,7 @@
   },
   {
     "description": "Al-Kharid Hanging Door",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [
       1533,
       1534
@@ -11175,7 +11240,7 @@
   },
   {
     "description": "Kharidian Tent",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [
       1673,
       1674,
@@ -11298,7 +11363,7 @@
   },
   {
     "description": "Nardah Cloth Awning",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [
       6602
     ],
@@ -11540,7 +11605,7 @@
   },
   {
     "description": "Exercise Mats",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [
       20810,
       16508,
@@ -11760,7 +11825,7 @@
   },
   {
     "description": "Sacks - Yellow",
-    "baseMaterial": "CARPET",
+    "baseMaterial": "BURLAP",
     "objectIds": [
       23,
       365,
@@ -11775,7 +11840,7 @@
   },
   {
     "description": "Sacks - Grey",
-    "baseMaterial": "CARPET",
+    "baseMaterial": "BURLAP",
     "objectIds": [
       10304, 10305
     ],
@@ -11785,9 +11850,10 @@
   },
   {
     "description": "Sacks Pile",
-    "baseMaterial": "CARPET",
+    "baseMaterial": "BURLAP",
     "objectIds": [
       3025,
+      10314,
       12394,
       14743,
       16867,
@@ -11802,7 +11868,7 @@
   },
   {
     "description": "Sacks with Sword",
-    "baseMaterial": "CARPET",
+    "baseMaterial": "BURLAP",
     "objectIds": [
       12392,
       16871
@@ -11813,7 +11879,7 @@
   },
   {
     "description": "Sack",
-    "baseMaterial": "CARPET",
+    "baseMaterial": "BURLAP",
     "objectIds": [
       7512,
       12396,
@@ -11825,10 +11891,10 @@
   },
   {
     "description": "Object - Sack with Hey or Grain",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "BURLAP",
     "objectIds": [ 5574, 10306, 16878, 35954 ],
     "uvType": "BOX",
-    "uvScale": 0.85,
+    "uvScale": 0.75,
     "retainVanillaUvs": false
   },
   {
@@ -12368,12 +12434,12 @@
     ]
   },
   {
-    "description": "Sack",
+    "description": "Rack",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       17298
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "uvScale": 0.4
   },
   {
@@ -13009,7 +13075,7 @@
   },
   {
     "description": "Sleeping Bag",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [
       28521
     ],
@@ -13159,6 +13225,7 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       2090,
+      21301,
       26711
     ],
     "uvType": "BOX",
@@ -13656,6 +13723,7 @@
     "description": "Object - Wooden - Barrel",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      10371,
       14740,
       15674,
       22278,
@@ -13695,7 +13763,8 @@
     "description": "Object - Dying Tree",
     "baseMaterial": "BARK",
     "objectIds": [
-      3648
+      3648,
+      50074
     ],
     "uvType": "BOX"
   },
@@ -13729,7 +13798,7 @@
   },
   {
     "description": "Fortune-teller Aris - Tent",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [
       2460,
       2461,
@@ -14673,7 +14742,7 @@
       10758,
       10759
     ],
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "uvType": "WORLD_XZ",
     "flatNormals": true,
     "castShadows": false
@@ -14975,7 +15044,8 @@
     "description": "Tutorial Island - Workbench",
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [
-      2279
+      2279,
+      24171
     ],
     "uvType": "BOX",
     "uvScale": 0.3,
@@ -15028,7 +15098,7 @@
     "colorOverrides": [
       {
         "colors": ["s == 0", "s == 1"],
-        "baseMaterial": "FINE_CARPET",
+        "baseMaterial": "CARPET",
         "uvType": "BOX",
         "uvScale": 0.4
       }
@@ -15313,7 +15383,7 @@
   },
   {
     "description": "Stronghold Of Security - Pestilence - Textured - Hay - Gift of Plenty - Sack",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [
       19000
     ],
@@ -15801,7 +15871,7 @@
   },
   {
     "description": "White Bed with pillow",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [ 46841 ],
     "uvType": "BOX",
     "uvOrientation": 64
@@ -17936,7 +18006,7 @@
   },
   {
     "description": "Objects - Cloth - Bentamirs Bed ",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [ 6184 ],
     "uvType": "BOX",
     "uvOrientation": 88
@@ -18082,7 +18152,7 @@
   },
   {
     "description": "Varlamore Rugs and carpets",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [
       52467,
       52468,
@@ -18102,7 +18172,7 @@
   },
   {
     "description": "Varlamore Cushions",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [
       53012,
       52436,
@@ -18114,7 +18184,7 @@
   },
   {
     "description": "Varlamore Awnings Small Red",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [
       51944
     ],
@@ -18122,7 +18192,7 @@
   },
   {
     "description": "Varlamore Awnings Large Red, MODEL_XZ is used with intent",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [
       51940,
       51941,
@@ -18147,7 +18217,7 @@
   },
   {
     "description": "Varlamore Circular Awning, MODEL_XZ is used with intent",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [
       51943
     ],
@@ -18155,7 +18225,7 @@
   },
   {
     "description": "Varlamore Banners",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [
       51946,
       51947,
@@ -18593,7 +18663,6 @@
       51628,
       51629,
       51631,
-      51632,
       51633,
       51635,
       51637,
@@ -18642,7 +18711,7 @@
     "colorOverrides": [
       {
         "colors": [ "h == 0", "h == 6", "h == 8", "h == 14" ],
-        "baseMaterial": "FINE_CARPET",
+        "baseMaterial": "CARPET",
         "uvType": "WORLD_XY",
         "uvScale": 0.66
       }
@@ -19246,8 +19315,273 @@
     ]
   },
   {
+    "description": "Kourend - Hosidius - Tithe Farm - Greenhouse Walls",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      1755,
+      1756,
+      1757,
+      1758,
+      1759,
+      1760,
+      1761,
+      27472
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.25
+  },
+  {
+    "description": "Kourend - Hosidius - Tithe Farm - Seed Table",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      27430
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_2",
+        "uvScale": 0.4,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Kourend - Hosidius - Tithe Farm - Table with Dishes",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      2998
+    ],
+    "colorOverrides": [
+      {
+        "colors": ["s == 3", "s == 4", "s == 5"],
+        "baseMaterial": "WOOD_GRAIN_2",
+        "uvScale": 0.4,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Kourend - Hosidius - Tithe Farm - Water Barrel",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      5598
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvScale": 0.4,
+        "uvOrientation": 512,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Kourend - Hosidius - Tithe Farm - Cart with covering",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      27429
+    ],
+    "uvType": "BOX",
+    "uvOrientationX": -165,
+    "colorOverrides": [
+      {
+        "colors": ["h == 3", "h == 4", "h == 5", "h == 8", "h == 15"],
+        "baseMaterial": "GRUNGE_3",
+        "uvScale": 0.33,
+        "uvType": "MODEL_XZ"
+      }
+    ]
+  },
+  {
+    "description": "Kourend - Hosidius - Tithe Farm - Bed - Sleeping Bag",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      6250
+    ],
+    "colorOverrides": [
+      {
+        "colors": ["h == 0", "h == 6"],
+        "baseMaterial": "CARPET",
+        "uvScale": 0.65,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Kourend - Hosidius - Tithe Farm - Baskets",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      27521,
+      27522,
+      27524
+    ],
+    "colorOverrides": [
+      {
+        "colors": ["h == 7", "h == 16"],
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
+  },
+  {
+    "description": "Kourend - Hosidius - Tithe Farm - Fruit Sacks",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      27431,
+      27432
+    ],
+    "colorOverrides": [
+      {
+        "colors": ["h == 7"],
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Kourend - Hosidius - Tithe Farm - Small Sacks",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      10313
+    ],
+    "colorOverrides": [
+      {
+        "colors": ["h == 8"],
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.7
+      }
+    ]
+  },
+  {
+    "description": "Kourend - Hosidius - Tithe Farm - Spades and Rakes",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      7516
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 552,
+    "colorOverrides": [
+      {
+        "colors": ["s == 0", "h == 16"],
+        "baseMaterial": "METALLIC_1"
+      }
+    ]
+  },
+  {
+    "description": "Kourend - Hosidius - Tithe Farm - Giant Fruits",
+    "baseMaterial": "GRUNGE_3_DARK",
+    "objectIds": [
+      27384, 27385, 27386, 27387, 27388, 27389,
+      27390, 27391, 27392, 27393, 27394, 27395,
+      27396, 27397, 27398, 27399, 27400, 27401,
+      27402, 27403, 27404, 27405, 27406, 27407,
+      27408, 27409, 27410, 27411, 27412, 27413,
+      27414, 27415, 27416, 27417, 27418, 27419,
+      27420, 27421, 27422, 27423, 27424
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Kourend - Hosidius - Vinery - Grape Arbor",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      27510
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512
+  },
+  {
+    "description": "Kourend - Hosidius - Vinery - Stacked Barrels",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      27520
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Kourend - Hosidius - Vinery - Big Wine Barrels",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      11808,
+      41928
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "colors": ["h == 0", "h == 16"],
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
+  },
+  {
+    "description": "Kourend - Hosidius - Vinery - Arching Grape Vine",
+    "baseMaterial": "LIGHT_BARK",
+    "objectIds": [
+      1754
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": ["h == 8", "h == 9", "h == 10", "h == 11", "h == 13"],
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
+  },
+  {
+    "description": "Kourend - Hosidius - Vinery - Grape Vine",
+    "baseMaterial": "LIGHT_BARK",
+    "objectIds": [
+      1750,
+      1751,
+      1752,
+      1753,
+      11166,
+      11167,
+      11168,
+      11169,
+      11170,
+      11171,
+      11172,
+      11173,
+      11744,
+      11745,
+      11746,
+      11747,
+      11748,
+      11749,
+      11751,
+      11752,
+      11753,
+      11754,
+      11755,
+      11756,
+      11757,
+      11758,
+      11759,
+      22351
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "colorOverrides": [
+      {
+        "colors": ["h == 7","h == 8", "h == 9", "h == 10","h == 11", "h == 13", "h == 57"],
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
+  },
+  {
     "description": "Old Ones Tent",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [
       46324
     ],
@@ -19945,7 +20279,96 @@
     "colorOverrides": [
       {
         "colors": [ "h == 37" ],
-        "baseMaterial": "GRAY_90"
+        "baseMaterial": "WATER_FLAT",
+        "uvType": "MODEL_XZ"
+      },
+      {
+        "colors": [ "h == 5 && s < 3" ],
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Misthalin Mystery Barrel of Gunpowder",
+    "objectIds": [ 30127, 30128 ],
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Metal bands",
+        "colors": [ "h == 5 && s < 2 && l < 70" ],
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Wick",
+        "colors": [ "h == 5 && s < 2 && l > 70" ],
+        "baseMaterial": "ROPE",
+        "uvScale": 0.4,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Misthalin Mystery Staircase",
+    "objectIds": [ 30139 ],
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "description": "Red carpet",
+        "colors": [ "h == 0 && s > 0" ],
+        "baseMaterial": "CARPET",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Red wall paper and wooden panneled walls",
+    "objectIds": [
+      11512,
+      11513,
+      11515,
+      11516,
+      11517,
+      11518,
+      11519,
+      11520,
+      11521,
+      11528,
+      11529,
+      11530,
+      11531,
+      11532,
+      11533,
+      11534,
+      11535,
+      11536,
+      11537,
+      11540,
+      11541,
+      11542,
+      11543,
+      11544,
+      30131,
+      30132,
+      30156
+    ],
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 1.2,
+    "retainVanillaUvs": false,
+    "colorOverrides": [
+      {
+        "description": "Red carpet",
+        "colors": [ "h == 0 && s > 0" ],
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
       }
     ]
   },
@@ -20002,11 +20425,17 @@
   },
   {
     "description": "Lumbridge crypt ivy",
-    "baseMaterial": "PLANT_GRUNGE_2",
+    "baseMaterial": "LEAF_VEINS",
     "objectIds": [ 24160, 24161, 24162, 24163, 24164 ],
     "uvType": "MODEL_YZ",
     "uvOrientation": 144,
-    "uvScale": 0.6
+    "uvScale": 0.1,
+    "colorOverrides": [
+      {
+        "colors": [ "h == 17" ],
+        "baseMaterial": "GRUNGE_1"
+      }
+    ]
   },
   {
     "description": "Objects - Wooden - Brown Drawers with metallic handles",
@@ -20247,7 +20676,7 @@
   },
   {
     "description": "Tent - High poly mesh",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [
       23061,
       23062,
@@ -20656,7 +21085,8 @@
     "description": "Wooden textured workbench",
     "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [
-      609
+      609,
+      610
     ],
     "uvType": "BOX",
     "uvOrientationX": 512,
@@ -20864,7 +21294,7 @@
   },
   {
     "description": "Brown Bed with pillow",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [ 419 ],
     "uvType": "BOX",
     "uvOrientation": 64
@@ -21035,7 +21465,7 @@
   },
   {
     "description": "Deaths office - Objects - Rug",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [
       39585,
       39586,
@@ -22813,6 +23243,370 @@
     ],
     "objectIds": [
       1291
+    ]
+  },
+  {
+    "description": "Golden 3 candle scone with lit flame - static",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvScale": 0.6,
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": [ "h == 6 && s < 3" ],
+        "baseMaterial": "NONE"
+      }
+    ],
+    "objectIds": [
+      11474
+    ]
+  },
+  {
+    "description": "Stool with Red or blue cushions",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Red Cushion",
+        "colors": "h == 0 && s > 3 && s < 6",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.75,
+        "uvOrientation": 256
+      },
+      {
+        "description": "Blue Cushion",
+        "colors": "h > 30",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.75,
+        "uvOrientation": 256
+      }
+    ],
+    "objectIds": [
+      2311,
+      2312,
+      24322,
+      24323,
+      39138
+    ]
+  },
+  {
+    "description": "Stool with Red or white cushions and gold trim",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Red Cushion",
+        "colors": "h == 0 && s == 7",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.75,
+        "uvOrientation": 256
+      },
+      {
+        "description": "White Cushion",
+        "colors": "h == 42 && s == 0",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.75,
+        "uvOrientation": 256
+      },
+      {
+        "description": "Gold Trim",
+        "colors": "h == 7 && s == 7",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvOrientation": 512
+      }
+    ],
+    "objectIds": [
+      1100,
+      1101,
+      39137
+    ]
+  },
+  {
+    "description": "Wooden bar with glasses and cocktails on it",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Beer",
+        "colors": "h == 6 && s == 7",
+        "baseMaterial": "GRAY_75"
+      },
+      {
+        "description": "Green and blue bottles",
+        "colors": "h > 12",
+        "baseMaterial": "GRAY_75"
+      }
+    ],
+    "objectIds": [
+      2314,
+      2315,
+      2316,
+      2317,
+      2318,
+      2319,
+      2320,
+      2321,
+      2322,
+      2323,
+      2324,
+      2325,
+      2326,
+      2328,
+      2329,
+      2330,
+      2331
+    ]
+  },
+  {
+    "description": "Dorics Bed",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 42,
+    "colorOverrides": [
+      {
+        "description": "Mattress",
+        "colors": "h == 6 && s == 1",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvOrientation": 343
+      },
+      {
+        "description": "BLANKET",
+        "colors": "h == 8 && s == 3",
+        "baseMaterial": "BURLAP",
+        "uvType": "BOX",
+        "uvScale": 0.25
+      },
+      {
+        "description": "Pillow",
+        "colors": "h == 8 && s == 1",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      11877
+    ]
+  },
+  {
+    "description": "Dwarven mine tent",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientation": 512,
+    "objectIds": [
+      11858,
+      11859,
+      11860
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": [ "h == 0" ],
+        "baseMaterial": "CARPET",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Winch in the Dwarven Mine entrance north of falador",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvOrientation": 512,
+    "objectIds": [
+      11863
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "colorOverrides": [
+      {
+        "colors": [ "h == 0" ],
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Post at Dwarven Mine",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      11854
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.35
+  },
+  {
+    "description": "Post at Dwarven Mine",
+    "baseMaterial": "ROPE",
+    "objectIds": [
+      11856,
+      11857
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": [ "h == 0" ],
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Dwarven Mine ladder shutters",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientationX": 512,
+    "objectIds": [
+      11864
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Light wooden ladder in an dirt ground hole",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientationX": 512,
+    "objectIds": [
+      11867
+    ],
+    "colorOverrides": [
+      {
+        "colors": " h > 6",
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Mine cart tracks",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientationX": 512,
+    "objectIds": [
+      638,
+      639,
+      640,
+      641,
+      642,
+      643,
+      644,
+      645,
+      646
+    ],
+    "colorOverrides": [
+      {
+        "colors": " h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Mine cart track Buffers",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientationX": 512,
+    "objectIds": [
+      636
+    ],
+    "colorOverrides": [
+      {
+        "colors": " h == 0 && s == 0",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Spiral Staircase - Concrete textured",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      16671,
+      16672
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "retainVanillaUvs": false
+  },
+  {
+    "description": "Spiral Staircase top with rails - Concrete textured",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      16673
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "retainVanillaUvs": false,
+    "flatNormals": true
+  },
+  {
+    "description": "Blacksmiths tools on a wooden board",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 343
+      }
+    ],
+    "objectIds": [
+      11876
+    ]
+  },
+  {
+    "description": "Pickaxes crossed as a wall decoration",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 42,
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 343
+      }
+    ],
+    "objectIds": [
+      2096
+    ]
+  },
+  {
+    "description": "Wooden plank table with weapons",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "description": "Table",
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientationY": 512,
+        "uvOrientationZ": 512
+      }
+    ],
+    "objectIds": [
+      2783
     ]
   }
 ]
