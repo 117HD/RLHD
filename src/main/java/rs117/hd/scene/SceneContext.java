@@ -68,6 +68,9 @@ public class SceneContext {
 	// used for overriding potentially low quality vertex colors
 	public HashMap<Integer, Boolean> highPriorityColor;
 
+	private int[] tileCameraCache = new int[8];
+	public boolean[][][] tileIsVisible = new boolean[MAX_Z][EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE];
+
 	// water-related data
 	public boolean[][][] tileIsWater;
 	public Map<Integer, Boolean> vertexIsWater;
@@ -135,6 +138,44 @@ public class SceneContext {
 		if (stagingBufferNormals != null)
 			stagingBufferNormals.destroy();
 		stagingBufferNormals = null;
+	}
+
+	public boolean compareCameraCache(int pitchSin,
+		int pitchCos,
+		int yawSin,
+		int yawCos,
+		int cameraX,
+		int cameraY,
+		int cameraZ,
+		int currentZoom){
+
+		return tileCameraCache[0] == pitchSin &&
+			   tileCameraCache[1] == pitchCos &&
+			   tileCameraCache[2] == yawSin &&
+			   tileCameraCache[3] == yawCos &&
+			   tileCameraCache[4] == cameraX &&
+			   tileCameraCache[5] == cameraY &&
+			   tileCameraCache[6] == cameraZ &&
+			   tileCameraCache[7] == currentZoom;
+	}
+
+	public void setCameraCache(int pitchSin,
+		int pitchCos,
+		int yawSin,
+		int yawCos,
+		int cameraX,
+		int cameraY,
+		int cameraZ,
+		int currentZoom){
+		// Cache the camera info
+		tileCameraCache[0] = pitchSin;
+		tileCameraCache[1] = pitchCos;
+		tileCameraCache[2] = yawSin;
+		tileCameraCache[3] = yawCos;
+		tileCameraCache[4] = cameraX;
+		tileCameraCache[5] = cameraY;
+		tileCameraCache[6] = cameraZ;
+		tileCameraCache[7] = currentZoom;
 	}
 
 	public int getVertexOffset() {
