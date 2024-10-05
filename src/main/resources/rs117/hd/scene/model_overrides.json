@@ -3051,7 +3051,7 @@
   },
   {
     "description": "Wintertodt Tents",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [
       29307,
       29306,
@@ -4918,7 +4918,7 @@
   },
   {
     "description": "Fine Carpet",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [
       925,
       926,
@@ -6682,7 +6682,7 @@
     "colorOverrides": [
       {
         "colors": "h == 5",
-        "baseMaterial": "FINE_CARPET",
+        "baseMaterial": "CARPET",
         "uvScale": 0.5,
         "uvType": "MODEL_XZ"
       }
@@ -7421,7 +7421,7 @@
   },
   {
     "description": "Round Rug",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [
       2455,
       2456,
@@ -8759,7 +8759,7 @@
   },
   {
     "description": "Lunar Island - Ground - Carpet",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [
       16709,
       16710,
@@ -9395,7 +9395,7 @@
   },
   {
     "description": "Wilderness - Vet'ion/Calvar'ion Lair - Carpet",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [
       46982,
       46983,
@@ -9411,7 +9411,7 @@
   },
   {
     "description": "Wilderness - Vet'ion/Calvar'ion Lair - Banner",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [
       46991
     ],
@@ -9920,21 +9920,21 @@
       {
         "description": "Blue Cushion",
         "colors": "h > 30",
-        "baseMaterial": "FINE_CARPET",
+        "baseMaterial": "CARPET",
         "uvType": "BOX",
         "uvScale": 0.65
       },
       {
         "description": "White Cushion",
         "colors": "h == 5 && s == 0",
-        "baseMaterial": "FINE_CARPET",
+        "baseMaterial": "CARPET",
         "uvType": "BOX",
         "uvScale": 0.65
       },
       {
         "description": "Red Cushion",
         "colors": "h == 0 && s == 7",
-        "baseMaterial": "FINE_CARPET",
+        "baseMaterial": "CARPET",
         "uvType": "BOX",
         "uvScale": 0.65
       }
@@ -10657,7 +10657,7 @@
       6766,
       6767
     ],
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "uvType": "WORLD_XZ",
     "flatNormals": true,
     "castShadows": false
@@ -11167,7 +11167,7 @@
   },
   {
     "description": "Al-Kharid Hanging Door",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [
       1533,
       1534
@@ -11237,7 +11237,7 @@
   },
   {
     "description": "Kharidian Tent",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [
       1673,
       1674,
@@ -11360,7 +11360,7 @@
   },
   {
     "description": "Nardah Cloth Awning",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [
       6602
     ],
@@ -11594,7 +11594,7 @@
   },
   {
     "description": "Exercise Mats",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [
       20810,
       16508,
@@ -11814,7 +11814,7 @@
   },
   {
     "description": "Sacks - Yellow",
-    "baseMaterial": "CARPET",
+    "baseMaterial": "BURLAP",
     "objectIds": [
       23,
       365,
@@ -11829,7 +11829,7 @@
   },
   {
     "description": "Sacks - Grey",
-    "baseMaterial": "CARPET",
+    "baseMaterial": "BURLAP",
     "objectIds": [
       10304, 10305
     ],
@@ -11839,7 +11839,7 @@
   },
   {
     "description": "Sacks Pile",
-    "baseMaterial": "CARPET",
+    "baseMaterial": "BURLAP",
     "objectIds": [
       3025,
       12394,
@@ -11856,7 +11856,7 @@
   },
   {
     "description": "Sacks with Sword",
-    "baseMaterial": "CARPET",
+    "baseMaterial": "BURLAP",
     "objectIds": [
       12392,
       16871
@@ -11867,7 +11867,7 @@
   },
   {
     "description": "Sack",
-    "baseMaterial": "CARPET",
+    "baseMaterial": "BURLAP",
     "objectIds": [
       7512,
       12396,
@@ -11879,10 +11879,10 @@
   },
   {
     "description": "Object - Sack with Hey or Grain",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "BURLAP",
     "objectIds": [ 5574, 10306, 16878, 35954 ],
     "uvType": "BOX",
-    "uvScale": 0.85,
+    "uvScale": 0.75,
     "retainVanillaUvs": false
   },
   {
@@ -12422,12 +12422,12 @@
     ]
   },
   {
-    "description": "Sack",
+    "description": "Rack",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       17298
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "uvScale": 0.4
   },
   {
@@ -13057,7 +13057,7 @@
   },
   {
     "description": "Sleeping Bag",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [
       28521
     ],
@@ -13779,7 +13779,7 @@
   },
   {
     "description": "Fortune-teller Aris - Tent",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [
       2460,
       2461,
@@ -14723,7 +14723,7 @@
       10758,
       10759
     ],
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "uvType": "WORLD_XZ",
     "flatNormals": true,
     "castShadows": false
@@ -15078,7 +15078,7 @@
     "colorOverrides": [
       {
         "colors": ["s == 0", "s == 1"],
-        "baseMaterial": "FINE_CARPET",
+        "baseMaterial": "CARPET",
         "uvType": "BOX",
         "uvScale": 0.4
       }
@@ -15363,7 +15363,7 @@
   },
   {
     "description": "Stronghold Of Security - Pestilence - Textured - Hay - Gift of Plenty - Sack",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [
       19000
     ],
@@ -15851,7 +15851,7 @@
   },
   {
     "description": "White Bed with pillow",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [ 46841 ],
     "uvType": "BOX",
     "uvOrientation": 64
@@ -17986,7 +17986,7 @@
   },
   {
     "description": "Objects - Cloth - Bentamirs Bed ",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [ 6184 ],
     "uvType": "BOX",
     "uvOrientation": 88
@@ -18132,7 +18132,7 @@
   },
   {
     "description": "Varlamore Rugs and carpets",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [
       52467,
       52468,
@@ -18152,7 +18152,7 @@
   },
   {
     "description": "Varlamore Cushions",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [
       53012,
       52436,
@@ -18164,7 +18164,7 @@
   },
   {
     "description": "Varlamore Awnings Small Red",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [
       51944
     ],
@@ -18172,7 +18172,7 @@
   },
   {
     "description": "Varlamore Awnings Large Red, MODEL_XZ is used with intent",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [
       51940,
       51941,
@@ -18197,7 +18197,7 @@
   },
   {
     "description": "Varlamore Circular Awning, MODEL_XZ is used with intent",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [
       51943
     ],
@@ -18205,7 +18205,7 @@
   },
   {
     "description": "Varlamore Banners",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [
       51946,
       51947,
@@ -18691,7 +18691,7 @@
     "colorOverrides": [
       {
         "colors": [ "h == 0", "h == 6", "h == 8", "h == 14" ],
-        "baseMaterial": "FINE_CARPET",
+        "baseMaterial": "CARPET",
         "uvType": "WORLD_XY",
         "uvScale": 0.66
       }
@@ -19383,7 +19383,7 @@
     "colorOverrides": [
       {
         "colors": ["h == 0", "h == 6"],
-        "baseMaterial": "FINE_CARPET",
+        "baseMaterial": "CARPET",
         "uvScale": 0.65,
         "uvType": "BOX"
       }
@@ -19414,7 +19414,7 @@
     "colorOverrides": [
       {
         "colors": ["h == 7"],
-        "baseMaterial": "FINE_CARPET",
+        "baseMaterial": "CARPET",
         "uvType": "BOX",
         "uvScale": 0.8
       }
@@ -19429,7 +19429,7 @@
     "colorOverrides": [
       {
         "colors": ["h == 8"],
-        "baseMaterial": "FINE_CARPET",
+        "baseMaterial": "CARPET",
         "uvType": "BOX",
         "uvScale": 0.7
       }
@@ -19561,7 +19561,7 @@
   },
   {
     "description": "Old Ones Tent",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [
       46324
     ],
@@ -20302,7 +20302,7 @@
       {
         "description": "Red carpet",
         "colors": [ "h == 0 && s > 0" ],
-        "baseMaterial": "FINE_CARPET",
+        "baseMaterial": "CARPET",
         "uvType": "BOX"
       }
     ]
@@ -20656,7 +20656,7 @@
   },
   {
     "description": "Tent - High poly mesh",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [
       23061,
       23062,
@@ -21255,7 +21255,7 @@
   },
   {
     "description": "Brown Bed with pillow",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [ 419 ],
     "uvType": "BOX",
     "uvOrientation": 64
@@ -21426,7 +21426,7 @@
   },
   {
     "description": "Deaths office - Objects - Rug",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [
       39585,
       39586,
@@ -23069,7 +23069,7 @@
       {
         "description": "Red Cushion",
         "colors": "h == 0 && s > 3 && s < 6",
-        "baseMaterial": "FINE_CARPET",
+        "baseMaterial": "CARPET",
         "uvType": "BOX",
         "uvScale": 0.75,
         "uvOrientation": 256
@@ -23077,7 +23077,7 @@
       {
         "description": "Blue Cushion",
         "colors": "h > 30",
-        "baseMaterial": "FINE_CARPET",
+        "baseMaterial": "CARPET",
         "uvType": "BOX",
         "uvScale": 0.75,
         "uvOrientation": 256
@@ -23099,7 +23099,7 @@
       {
         "description": "Red Cushion",
         "colors": "h == 0 && s == 7",
-        "baseMaterial": "FINE_CARPET",
+        "baseMaterial": "CARPET",
         "uvType": "BOX",
         "uvScale": 0.75,
         "uvOrientation": 256
@@ -23107,7 +23107,7 @@
       {
         "description": "White Cushion",
         "colors": "h == 42 && s == 0",
-        "baseMaterial": "FINE_CARPET",
+        "baseMaterial": "CARPET",
         "uvType": "BOX",
         "uvScale": 0.75,
         "uvOrientation": 256
@@ -23115,7 +23115,7 @@
       {
         "description": "Gold Trim",
         "colors": "h == 7 && s == 7",
-        "baseMaterial": "FINE_CARPET",
+        "baseMaterial": "CARPET",
         "uvType": "BOX",
         "uvOrientation": 512
       }
@@ -23160,6 +23160,38 @@
       2329,
       2330,
       2331
+    ]
+  },
+  {
+    "description": "Dorics Bed",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 42,
+    "colorOverrides": [
+      {
+        "description": "Mattress",
+        "colors": "h == 6 && s == 1",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvOrientation": 343
+      },
+      {
+        "description": "BLANKET",
+        "colors": "h == 8 && s == 3",
+        "baseMaterial": "BURLAP",
+        "uvType": "BOX",
+        "uvScale": 0.25
+      },
+      {
+        "description": "Pillow",
+        "colors": "h == 8 && s == 1",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      11877
     ]
   }
 ]
