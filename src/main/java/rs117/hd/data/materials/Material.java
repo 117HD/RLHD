@@ -396,6 +396,10 @@ public enum Material {
 	GRUNGE_3_LIGHT(GRUNGE_3, p -> p
 		.setBrightness(1.45f)
 	),
+	GRUNGE_3_DARK(GRUNGE_3, p -> p
+		.setBrightness(0.75f)
+		.setSpecular(0f, 0)
+	),
 	WATER_FOUNTAIN_FLAT(GRUNGE_3, p -> p
 		.setFlowMap(UNDERWATER_FLOW_MAP)
 		.setFlowMapStrength(0.2f)
@@ -465,11 +469,12 @@ public enum Material {
 		.setSpecular(1, 20)
 	),
 	ROPE,
-	CARPET,
-	FINE_CARPET(CARPET, p -> p
-		.setBrightness(1.4f)
-		.setTextureScale(0.5f, 0.5f)),
-
+	CARPET_N,
+	CARPET(p -> p
+		.setNormalMap(CARPET_N)
+		.setSpecular(0.25f,30)
+	),
+	BURLAP,
 	FALADOR_PATH_BRICK_N,
 	FALADOR_PATH_BRICK(p -> p
 		.setNormalMap(FALADOR_PATH_BRICK_N)
