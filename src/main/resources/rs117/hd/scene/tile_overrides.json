@@ -6608,6 +6608,17 @@
     "groundMaterial": "PACKED_EARTH"
   },
   {
+    "name": "Essence Mine Snow",
+    "area": "ESSENCE_MINE",
+    "underlayIds": [
+      55,
+      58,
+      59
+    ],
+    "groundMaterial": "SNOW_1",
+    "shiftHue": 5
+  },
+  {
     "name": "UNDERLAY_SNOW",
     "area": "SNOWY_REGIONS",
     "underlayIds": [

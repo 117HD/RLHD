@@ -654,6 +654,16 @@
     "fogDepth": 35
   },
   {
+    "area": "ESSENCE_MINE",
+    "ambientColor": "#7CB6EF",
+    "ambientStrength": 1.2,
+    "sunAngles": [ 68, 245 ],
+    "directionalColor": "#f4e5c9",
+    "directionalStrength": 1.1,
+    "fogColor": "#adb9c4",
+    "fogDepth": 50
+  },
+  {
     "area": "GIELINOR_SNOWY_NORTHERN_REGION",
     "ambientColor": "#6fb0ff",
     "ambientStrength": 1.5,
