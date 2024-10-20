@@ -5990,9 +5990,9 @@
       58
     ],
     "groundMaterial": "SNOW_1",
-    "maxHue": 0,
+    "shiftHue": 4,
     "maxSaturation": 0,
-    "minLightness": 100,
+    "minLightness": 78,
     "maxLightness": 100
   },
   {
