@@ -655,11 +655,11 @@
   },
   {
     "area": "ESSENCE_MINE",
-    "ambientColor": "#7CB6EF",
-    "ambientStrength": 0.8,
-    "sunAngles": [ 64, 245 ],
+    "ambientColor": "#6687a9",
+    "ambientStrength": 0.85,
+    "sunAngles": [ 50, 244 ],
     "directionalColor": "#ffffff",
-    "directionalStrength": 0.5,
+    "directionalStrength": 0.45,
     "fogColor": "#adb9c4",
     "fogDepth": 50
   },
