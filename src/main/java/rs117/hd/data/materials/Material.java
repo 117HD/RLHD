@@ -692,7 +692,7 @@ public enum Material {
 		.setBrightness(0.88f)
 	),
 	STONE_NORMALED_LIGHT(STONE_NORMALED, p -> p
-		.setBrightness(1.2f)
+		.setBrightness(1.3f)
 	),
 	STONE_LOWGLOSS(STONE, p -> p
 		.setSpecular(0.3f, 30)
