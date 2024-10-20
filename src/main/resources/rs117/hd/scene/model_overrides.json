@@ -23106,7 +23106,7 @@
   },
   {
     "description": "Rune Essence Mine Rock",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "STONE_NORMALED_LIGHT",
     "uvType": "BOX",
     "uvOrientation": 768,
     "uvScale": 1.5,
