@@ -23595,5 +23595,24 @@
     "objectIds": [
       2783
     ]
+  },
+  {
+    "description": "Post with rope",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Rope",
+        "colors": "h == 8",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 42
+      }
+    ],
+    "objectIds": [
+      27647,
+      27648
+    ]
   }
 ]
