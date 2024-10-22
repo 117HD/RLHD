@@ -23599,5 +23599,15 @@
     "objectIds": [
       2783
     ]
+  },
+  {
+    "description": "Textured brick wooden post wall",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      9473,
+      9474
+    ]
   }
 ]
