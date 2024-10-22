@@ -13738,7 +13738,8 @@
     "description": "Object - Wooden - Barrel - with fish",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      9520
+      9520,
+      27552
     ],
     "uvType": "BOX",
     "colorOverrides": [
