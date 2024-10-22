@@ -23605,6 +23605,16 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "description": "Interior Wall",
+        "colors": "s == 2",
+        "baseMaterial": "TEXTURE_47",
+        "uvType": "MODEL_XY",
+        "uvOrientation": 512,
+        "uvScale": 1.5
+      }
+    ],
     "objectIds": [
       9473,
       9474
