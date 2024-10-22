@@ -8635,16 +8635,6 @@
     "uvType": "VANILLA"
   },
   {
-    "description": "Lunar Isle - Objects - Ice - Ice Chunks - Large",
-    "baseMaterial": "ICE_1_HIGHGLOSS",
-    "objectIds": [
-      6472,
-      6473
-    ],
-    "uvType": "MODEL_XZ",
-    "uvScale": 0.6
-  },
-  {
     "description": "Lunar Isle - Objects - Ice - Ice Chunks - Small",
     "baseMaterial": "ICE_1_HIGHGLOSS",
     "objectIds": [
@@ -8653,15 +8643,6 @@
     ],
     "uvType": "MODEL_XZ",
     "uvScale": 0.8
-  },
-  {
-    "description": "Lunar Isle - Objects - Ice - Ice Chunks - Medium",
-    "baseMaterial": "ICE_1_HIGHGLOSS",
-    "objectIds": [
-      6474
-    ],
-    "uvType": "MODEL_XZ",
-    "uvScale": 0.55
   },
   {
     "description": "Lunar Island - Walls - Wooden - Plank - Ruined",
@@ -20836,6 +20817,7 @@
     "objectIds": [
       6460,
       6472,
+      6473,
       6474,
       13704
     ]
