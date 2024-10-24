@@ -23633,5 +23633,15 @@
       16169,
       16170
     ]
+  },
+  {
+    "description": "Textured table with dishes",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvScale": 0.5,
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "objectIds": [
+      603
+    ]
   }
 ]
