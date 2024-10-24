@@ -5393,6 +5393,7 @@
     "description": "Wooden - Plank - Tables - Rotated",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
+      595,
       2649,
       7175,
       9613,
@@ -14365,7 +14366,7 @@
   {
     "description": "Wooden crates, Wooden table, wooden rack",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 356, 595, 647 ],
+    "objectIds": [ 356, 647 ],
     "flatNormals": true,
     "uvType": "BOX",
     "retainVanillaUvs": false,
