@@ -23685,6 +23685,24 @@
     ]
   },
   {
+    "description": "Single bed with gray blanket",
+    "baseMaterial": "CARPET",
+    "objectIds": [
+      417
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "description": "Golden trim on blanket",
+        "colors": "h == 8",
+        "baseMaterial": "ROPE",
+        "uvType": "MODEL_YZ",
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
     "description": "Golden framed mirror",
     "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
     "uvOrientation": 84,
