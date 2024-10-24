@@ -23592,5 +23592,34 @@
     "objectIds": [
       2783
     ]
+  },
+  {
+    "description": "Game Objects - Wooden Shelf With Book and Urns",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Urns",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvOrientationX": 84
+      },
+      {
+        "description": "Book cover",
+        "colors": "h == 4 ",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvOrientationX": 84
+      },
+      {
+        "description": "Paper",
+        "colors": "l > 60",
+        "baseMaterial": "GRAY_75"
+      }
+    ],
+    "objectIds": [
+      1021
+    ]
   }
 ]
