@@ -21164,6 +21164,8 @@
     "description": "Skeleton named corpse",
     "baseMaterial": "BONE",
     "objectIds": [
+      661,
+      662,
       21802,
       21803
     ],
