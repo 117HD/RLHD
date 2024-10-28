@@ -23621,5 +23621,24 @@
     "objectIds": [
       1027
     ]
+  },
+  {
+    "description": "Baxtorian Falls raft",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "description": "Table",
+        "colors": "h == 7",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ],
+    "objectIds": [
+      1987,
+      1988
+    ]
   }
 ]
