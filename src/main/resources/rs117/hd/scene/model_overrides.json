@@ -8573,6 +8573,8 @@
     "description": "Objects - Table - Single - Wooden – Plank - Generic - Rotated",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      594,
+      602,
       12734
     ],
     "uvType": "BOX",
