@@ -23679,5 +23679,14 @@
     "objectIds": [
       2010
     ]
+  },
+  {
+    "description": "handing wooden shelf",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      1107
+    ]
   }
 ]
