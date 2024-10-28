@@ -21316,7 +21316,7 @@
   {
     "description": "Wooden barrel with metal bands - textured",
     "baseMaterial": "METALLIC_1_LIGHT",
-    "objectIds": [ 362 ],
+    "objectIds": [ 362, 2022 ],
     "uvType": "BOX",
     "uvScale": 0.6
   },
