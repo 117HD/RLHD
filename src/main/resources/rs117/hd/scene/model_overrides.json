@@ -7348,7 +7348,12 @@
       44735,
       44736,
       46822,
-      46821
+      46821,
+      49645,
+      49646,
+      49647,
+      49648,
+      49649
     ],
     "uvType": "WORLD_XZ",
     "uvScale": 0.74
@@ -7600,7 +7605,9 @@
       41452,
       41738,
       42066,
-      44854
+      44854,
+      49641,
+      49642
     ],
     "uvType": "BOX",
     "flatNormals": true
@@ -8533,7 +8540,8 @@
       24089,
       39718,
       42092,
-      43766
+      43766,
+      49654
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -8797,7 +8805,8 @@
       14044,
       14049,
       16974,
-      24333
+      24333,
+      49653
     ],
     "uvType": "BOX"
   },
@@ -9839,7 +9848,7 @@
   {
     "description": "Objects - Wooden - Chair - No cushion - Smashed",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 1089, 3802 ],
+    "objectIds": [ 1089, 3802, 49655 ],
     "uvType": "BOX",
     "uvOrientation": 512,
     "uvScale": 0.6
@@ -20661,6 +20670,7 @@
     "description": "Objects - Wooden - Crate - High poly mesh",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      1990,
       27532,
       41424
     ],
@@ -20711,7 +20721,7 @@
   {
     "description": "Barrel with metal bands",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 2619, 5112, 5114, 5122, 9519, 9521 ],
+    "objectIds": [ 2619, 5112, 5114, 5122, 9519, 9521, 49640 ],
     "uvType": "BOX",
     "uvScale": 0.8
   },
