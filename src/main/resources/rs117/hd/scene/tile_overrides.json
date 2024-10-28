@@ -1929,6 +1929,19 @@
     "shiftLightness": 2
   },
   {
+    "name": "Glarials Tomb floor",
+    "area": "Glarials Tomb Dungeon",
+    "underlayIds": [
+      48,
+      67
+    ],
+    "groundMaterial": "DIRT",
+    "uvScale": 1.15,
+    "replacements": {
+      "DEFAULT_GRASS": "h > 9"
+    }
+  },
+  {
     "name": "GOBLIN_CAVE_FLOOR",
     "area": "GOBLIN_CAVE",
     "underlayIds": [
