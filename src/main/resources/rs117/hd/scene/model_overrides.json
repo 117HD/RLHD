@@ -6451,6 +6451,8 @@
     "description": "Rock-Like Object - Rubble - Tiny",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
+      181,
+      182,
       5204,
       24023,
       25657,
@@ -9136,17 +9138,19 @@
   },
   {
     "description": "Walls - Rock Cave Walls",
-    "baseMaterial": "STONE",
+    "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       1489,
       1490,
       1491,
       1492,
+      1494,
+      1495,
       5962,
       26763,
       26767
     ],
-    "uvType": "GEOMETRY"
+    "uvType": "BOX"
   },
   {
     "description": "Wilderness Ditch",
@@ -23718,5 +23722,25 @@
     "objectIds": [
       848
     ]
+  },
+  {
+    "description": "Small Marble Pillars",
+    "baseMaterial": "MARBLE_2",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 42,
+    "objectIds": [
+      34965
+    ]
+  },
+  {
+    "description": "Glarial and Baxtorian statues",
+    "baseMaterial": "MARBLE_3_SEMIGLOSS",
+    "uvScale": 0.5,
+    "objectIds": [
+      2006,
+      34967
+    ],
+    "uvType": "BOX"
   }
 ]

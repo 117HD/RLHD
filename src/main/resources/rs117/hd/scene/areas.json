@@ -1172,6 +1172,7 @@
   },
   {
     "name": "WATERFALL_DUNGEON",
+    "regions": [ 10394 ],
     "aabbs": [
       [ 2554, 9858, 2597, 9919, 0 ]
     ],

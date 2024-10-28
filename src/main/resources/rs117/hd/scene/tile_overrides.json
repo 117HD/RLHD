@@ -1950,7 +1950,9 @@
       67
     ],
     "groundMaterial": "DIRT",
-    "uvScale": 1.15
+    "replacements": {
+      "DEFAULT_GRUNGE": "s == 0"
+    }
   },
   {
     "name": "GOBLIN_CAVE_FLOOR",
