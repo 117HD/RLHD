@@ -8575,6 +8575,7 @@
     "objectIds": [
       594,
       602,
+      624,
       12734
     ],
     "uvType": "BOX",
@@ -20193,7 +20194,7 @@
   {
     "description": "Wooden shelf wall mounted",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 4513, 12976 ],
+    "objectIds": [ 1023, 4513, 12976 ],
     "uvType": "BOX",
     "uvScale": 0.5,
     "uvOrientationX": 512,
