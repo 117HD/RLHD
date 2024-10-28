@@ -23661,5 +23661,23 @@
     "objectIds": [
       10795
     ]
+  },
+  {
+    "description": "Baxtorian Falls Door",
+    "baseMaterial": "DIRT_2",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "description": "Overdoor water",
+        "colors": "h == 37",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ],
+    "objectIds": [
+      2010
+    ]
   }
 ]
