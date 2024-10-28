@@ -4545,6 +4545,11 @@
     "hideOtherAreas": true
   },
   {
+    "name": "Glarials Tomb Dungeon",
+    "regions": [ 10137 ],
+    "hideOtherAreas": true
+  },
+  {
     "name": "APE_ATOLL",
     "regionBoxes": [
       [ 10794, 11051 ]
