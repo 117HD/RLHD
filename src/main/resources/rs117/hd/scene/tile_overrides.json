@@ -1942,6 +1942,17 @@
     }
   },
   {
+    "name": "Waterfall Dungeon tiles",
+    "area": "WATERFALL_DUNGEON",
+    "underlayIds": [
+      50,
+      56,
+      67
+    ],
+    "groundMaterial": "DIRT",
+    "uvScale": 1.15
+  },
+  {
     "name": "GOBLIN_CAVE_FLOOR",
     "area": "GOBLIN_CAVE",
     "underlayIds": [
