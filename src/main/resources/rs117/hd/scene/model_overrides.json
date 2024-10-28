@@ -21303,6 +21303,13 @@
     "uvOrientation": 64
   },
   {
+    "description": "Baby Blue Bed with pillow",
+    "baseMaterial": "CARPET",
+    "objectIds": [ 418 ],
+    "uvType": "BOX",
+    "uvOrientation": 64
+  },
+  {
     "description": "Wooden barrel with metal bands - textured",
     "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [ 362 ],
