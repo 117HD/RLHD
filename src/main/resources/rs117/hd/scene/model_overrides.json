@@ -16079,7 +16079,8 @@
     "objectIds": [
       43715,
       43716,
-      43796
+      43796,
+      43797
     ],
     "uvType": "BOX"
   },
@@ -16189,6 +16190,39 @@
     "uvType": "BOX",
     "uvScale": 0.7,
     "uvOrientation": 512
+  },
+  {
+    "description": "Guardians of the Rift - Yellow Kelp",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      43632,
+      43633,
+      43634
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.87
+  },
+  {
+    "description": "Guardians of the Rift - Elk Kelp",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      43638,
+      43639,
+      43640
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.87
+  },
+  {
+    "description": "Guardians of the Rift - Dark Lace - Kelp",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      43635,
+      43636,
+      43637
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.87
   },
   {
     "description": "Freminnik Slayer Dungeon - Stone Staircase",
