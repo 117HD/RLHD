@@ -1955,6 +1955,19 @@
     }
   },
   {
+    "name": "Waterfall Dungeon tiles - Chalice Room",
+    "area": "WATERFALL_DUNGEON_CHALICE_ROOM",
+    "underlayIds": [
+      50,
+      56,
+      67
+    ],
+    "groundMaterial": "DIRT",
+    "replacements": {
+      "DEFAULT_GRUNGE": "s == 0"
+    }
+  },
+  {
     "name": "GOBLIN_CAVE_FLOOR",
     "area": "GOBLIN_CAVE",
     "underlayIds": [
