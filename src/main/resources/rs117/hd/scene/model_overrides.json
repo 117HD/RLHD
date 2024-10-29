@@ -23743,5 +23743,25 @@
       34967
     ],
     "uvType": "BOX"
+  },
+  {
+    "description": "Glarials Chalice",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "uvOrientation": 343,
+    "colorOverrides": [
+      {
+        "description": "Water",
+        "colors": "h == 42",
+        "baseMaterial": "WATER_FLAT_FORCE",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.8,
+        "uvOrientation": 343
+      }
+    ],
+    "objectIds": [
+      2014
+    ]
   }
 ]
