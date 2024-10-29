@@ -16012,6 +16012,8 @@
     "description": "Guardians of the Rift - Marble - Steps",
     "baseMaterial": "MARBLE_3_SEMIGLOSS",
     "objectIds": [
+      43545,
+      43546,
       43557,
       43568,
       43569
@@ -16044,7 +16046,9 @@
     "description": "Guardians of the Rift - Large Guardian Remains",
     "baseMaterial": "ROCK_3_ORE",
     "objectIds": [
-      43719
+      43719,
+      43800,
+      43801
     ],
     "uvType": "BOX",
     "uvScale": 0.87
@@ -16063,7 +16067,9 @@
     "baseMaterial": "ROCK_3_ORE",
     "objectIds": [
       43717,
-      43718
+      43718,
+      43798,
+      43799
     ],
     "uvType": "BOX"
   },
@@ -16072,7 +16078,8 @@
     "baseMaterial": "ROCK_3_ORE",
     "objectIds": [
       43715,
-      43716
+      43716,
+      43796
     ],
     "uvType": "BOX"
   },
@@ -16081,7 +16088,9 @@
     "baseMaterial": "ROCK_3_ORE",
     "objectIds": [
       43752,
-      43753
+      43753,
+      43782,
+      43783
     ],
     "uvType": "MODEL_XZ",
     "uvOrientation": 256,
@@ -16130,7 +16139,19 @@
       43709,
       43710,
       43711,
-      43712
+      43712,
+      43784,
+      43785,
+      43786,
+      43787,
+      43788,
+      43789,
+      43790,
+      43791,
+      43792,
+      43793,
+      43794,
+      43795
     ],
     "uvType": "BOX",
     "uvScale": 0.7
