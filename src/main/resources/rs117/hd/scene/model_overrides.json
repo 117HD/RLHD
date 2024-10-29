@@ -1517,6 +1517,7 @@
       19838,
       23914,
       23915,
+      23916,
       31777,
       31778,
       31779,
@@ -6450,6 +6451,8 @@
     "description": "Rock-Like Object - Rubble - Tiny",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
+      181,
+      182,
       5204,
       24023,
       25657,
@@ -7109,6 +7112,7 @@
       321,
       4342,
       4344,
+      5517,
       5519,
       5521,
       11084,
@@ -7173,7 +7177,9 @@
       18892,
       18893,
       18894,
-      18895
+      18895,
+      25347,
+      25348
     ],
     "uvType": "BOX",
     "uvScale": 0.5
@@ -7344,7 +7350,12 @@
       44735,
       44736,
       46822,
-      46821
+      46821,
+      49645,
+      49646,
+      49647,
+      49648,
+      49649
     ],
     "uvType": "WORLD_XZ",
     "uvScale": 0.74
@@ -7596,7 +7607,9 @@
       41452,
       41738,
       42066,
-      44854
+      44854,
+      49641,
+      49642
     ],
     "uvType": "BOX",
     "flatNormals": true
@@ -8529,7 +8542,8 @@
       24089,
       39718,
       42092,
-      43766
+      43766,
+      49654
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -8573,6 +8587,9 @@
     "description": "Objects - Table - Single - Wooden – Plank - Generic - Rotated",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      594,
+      602,
+      624,
       12734
     ],
     "uvType": "BOX",
@@ -8790,7 +8807,8 @@
       14044,
       14049,
       16974,
-      24333
+      24333,
+      49653
     ],
     "uvType": "BOX"
   },
@@ -9120,17 +9138,20 @@
   },
   {
     "description": "Walls - Rock Cave Walls",
-    "baseMaterial": "STONE",
+    "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       1489,
       1490,
       1491,
       1492,
+      1494,
+      1495,
       5962,
       26763,
       26767
     ],
-    "uvType": "GEOMETRY"
+    "uvOrientation": 768,
+    "uvType": "BOX"
   },
   {
     "description": "Wilderness Ditch",
@@ -9832,7 +9853,7 @@
   {
     "description": "Objects - Wooden - Chair - No cushion - Smashed",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 1089, 3802 ],
+    "objectIds": [ 1089, 3802, 49655 ],
     "uvType": "BOX",
     "uvOrientation": 512,
     "uvScale": 0.6
@@ -20191,7 +20212,7 @@
   {
     "description": "Wooden shelf wall mounted",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 4513, 12976 ],
+    "objectIds": [ 1023, 4513, 12976 ],
     "uvType": "BOX",
     "uvScale": 0.5,
     "uvOrientationX": 512,
@@ -20654,6 +20675,7 @@
     "description": "Objects - Wooden - Crate - High poly mesh",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      1990,
       27532,
       41424
     ],
@@ -20704,7 +20726,7 @@
   {
     "description": "Barrel with metal bands",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 2619, 5112, 5114, 5122, 9519, 9521 ],
+    "objectIds": [ 2619, 5112, 5114, 5122, 9519, 9521, 49640 ],
     "uvType": "BOX",
     "uvScale": 0.8
   },
@@ -21300,9 +21322,16 @@
     "uvOrientation": 64
   },
   {
+    "description": "Baby Blue Bed with pillow",
+    "baseMaterial": "CARPET",
+    "objectIds": [ 418 ],
+    "uvType": "BOX",
+    "uvOrientation": 64
+  },
+  {
     "description": "Wooden barrel with metal bands - textured",
     "baseMaterial": "METALLIC_1_LIGHT",
-    "objectIds": [ 362 ],
+    "objectIds": [ 362, 2022 ],
     "uvType": "BOX",
     "uvScale": 0.6
   },
@@ -23591,6 +23620,148 @@
     ],
     "objectIds": [
       2783
+    ]
+  },
+  {
+    "description": "Tanning Line",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "description": "Table",
+        "colors": "h == 6",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      1027
+    ]
+  },
+  {
+    "description": "Baxtorian Falls raft",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "description": "Rope",
+        "colors": "h == 7",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ],
+    "objectIds": [
+      1987,
+      1988
+    ]
+  },
+  {
+    "description": "Baxtorian Falls tree and dirt on an island combo model",
+    "baseMaterial": "DIRT_2",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "description": "Tree and dirt as a single model - needs real UV to fix",
+        "colors": "h == 5 && s == 6",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ],
+    "objectIds": [
+      10795
+    ]
+  },
+  {
+    "description": "Baxtorian Falls Door",
+    "baseMaterial": "DIRT_2",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "description": "Overdoor water",
+        "colors": "h == 37",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ],
+    "objectIds": [
+      2010
+    ]
+  },
+  {
+    "description": "handing wooden shelf",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      1107
+    ]
+  },
+  {
+    "description": "Wooden spears with metal tips",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 100,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 343
+      }
+    ],
+    "objectIds": [
+      848
+    ]
+  },
+  {
+    "description": "Small Marble Pillars",
+    "baseMaterial": "MARBLE_2",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 42,
+    "objectIds": [
+      34965
+    ]
+  },
+  {
+    "description": "Glarial and Baxtorian statues",
+    "baseMaterial": "MARBLE_3_SEMIGLOSS",
+    "uvScale": 0.5,
+    "objectIds": [
+      2006,
+      34967
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Glarials Chalice",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "uvOrientation": 343,
+    "colorOverrides": [
+      {
+        "description": "Water",
+        "colors": "h == 42",
+        "baseMaterial": "WATER_FLAT_FORCE",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.8,
+        "uvOrientation": 343
+      }
+    ],
+    "objectIds": [
+      2014
     ]
   }
 ]
