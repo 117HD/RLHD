@@ -23690,5 +23690,21 @@
     "objectIds": [
       3485
     ]
+  },
+  {
+    "description": "Paterdomus Temple Basement Monument - DYNAMIC",
+    "baseMaterial": "MARBLE_3",
+    "uvType": "BOX",
+    "uvOrientation": 42,
+    "uvScale": 0.6,
+    "objectIds": [
+      3493,
+      3494,
+      3495,
+      3496,
+      3497,
+      3498,
+      3499
+    ]
   }
 ]
