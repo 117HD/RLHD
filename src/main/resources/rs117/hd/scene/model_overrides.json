@@ -5760,6 +5760,8 @@
       2059,
       2060,
       2061,
+      3444,
+      3446,
       3506,
       3507,
       5501,
@@ -23646,6 +23648,47 @@
     ],
     "objectIds": [
       608
+    ]
+  },
+  {
+    "description": "Paterdomus Temple basement walls - textured",
+    "baseMaterial": "DIRT_1",
+    "uvType": "MODEL_XZ_MIRROR_B",
+    "objectIds": [
+      3442,
+      3450,
+      3451
+    ]
+  },
+  {
+    "description": "Paterdomus Temple basement wall tops",
+    "baseMaterial": "DIRT_1",
+    "uvType": "MODEL_XZ",
+    "uvScale": 1.15,
+    "uvOrientation": 42,
+    "objectIds": [
+      3447,
+      3448
+    ]
+  },
+  {
+    "description": "Paterdomus Temple basement columns",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 343,
+    "uvScale": 0.6,
+    "objectIds": [
+      3486
+    ]
+  },
+  {
+    "description": "Paterdomus Temple basement well",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 42,
+    "uvScale": 0.6,
+    "objectIds": [
+      3485
     ]
   }
 ]
