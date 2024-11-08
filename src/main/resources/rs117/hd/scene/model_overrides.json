@@ -5761,6 +5761,7 @@
       2060,
       2061,
       3444,
+      3445,
       3446,
       3506,
       3507,
@@ -14198,6 +14199,7 @@
   },
   {
     "description": "Objects - Concrete - Salve Tunnel Entrance",
+    "baseMaterial": "ROCK_3",
     "textureMaterial": "HD_CONCRETE",
     "objectIds": [
       3456,
@@ -23657,7 +23659,8 @@
     "objectIds": [
       3442,
       3450,
-      3451
+      3451,
+      12765
     ]
   },
   {
@@ -23693,7 +23696,7 @@
   },
   {
     "description": "Paterdomus Temple Basement Monument - DYNAMIC",
-    "baseMaterial": "MARBLE_3",
+    "baseMaterial": "MARBLE_3_SEMIGLOSS",
     "uvType": "BOX",
     "uvOrientation": 42,
     "uvScale": 0.6,
