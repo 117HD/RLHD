@@ -35554,7 +35554,7 @@
   {
     "description": "Paterdomus Temple Basement Monument lights",
     "height": 160,
-    "alignment": "BACK",
+    "offset": [ 0, -37, -90 ],
     "radius": 150,
     "strength": 7.7,
     "color": [
@@ -35563,7 +35563,7 @@
       0
     ],
     "type": "FLICKER",
-    "duration": 0,
+    "duration": 30,
     "range": 10,
     "objectIds": [
       3493,
@@ -35575,7 +35575,7 @@
   {
     "description": "Paterdomus Temple Basement Monument lights - Angled",
     "height": 160,
-    "alignment": "BACKLEFT",
+    "offset": [ -40, -37, -74 ],
     "radius": 150,
     "strength": 7.7,
     "color": [
@@ -35584,7 +35584,7 @@
       0
     ],
     "type": "FLICKER",
-    "duration": 0,
+    "duration": 30,
     "range": 10,
     "objectIds": [
       3497,
