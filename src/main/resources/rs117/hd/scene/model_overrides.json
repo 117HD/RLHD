@@ -5803,6 +5803,21 @@
     "uvOrientation": 463
   },
   {
+    "description": "Metal Fence Gate with textured posts",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "uvOrientation": 512,
+    "objectIds": [
+      3460,
+      3461,
+      3462,
+      3463,
+      3464,
+      3465
+    ]
+  },
+  {
     "description": "Metal Fence",
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
