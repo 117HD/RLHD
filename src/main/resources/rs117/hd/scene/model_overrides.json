@@ -23592,5 +23592,45 @@
     "objectIds": [
       2783
     ]
+  },
+  {
+    "description": "Wooden pew bench with green cushion and saradomin symbol on the side",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Cushion",
+        "baseMaterial": "CARPET",
+        "uvType": "MODEL_XZ",
+        "colors": "h == 17"
+      },
+      {
+        "description": "Saradomin Symbol",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "MODEL_YZ",
+        "colors": "h == 11",
+        "uvOrientation": 42,
+        "uvScale": 0.4
+      }
+    ],
+    "objectIds": [
+      1112
+    ]
+  },
+  {
+    "description": "Wooden study desk with a green mat",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Desk mat",
+        "baseMaterial": "CARPET",
+        "uvType": "MODEL_XZ",
+        "colors": "h == 21"
+      }
+    ],
+    "objectIds": [
+      608
+    ]
   }
 ]
