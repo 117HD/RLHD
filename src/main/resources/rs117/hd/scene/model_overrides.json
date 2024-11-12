@@ -2996,7 +2996,7 @@
   },
   {
     "description": "Wintertodt Wooden Objects",
-    "baseMaterial": "WOOD_GRAIN_2_SMOOTH_LIGHT",
+    "baseMaterial": "SNOW_1",
     "objectIds": [
       29319,
       29320,
@@ -3007,20 +3007,38 @@
       29305,
       29302,
       29321,
-      26330
+      29303,
+      29304,
+      55411,
+      55412,
+      55413,
+      55414,
+      55415,
+      55416
     ],
-    "uvType": "WORLD_XY",
-    "uvScale": 1.5
+    "colorOverrides": [
+      {
+        "colors": "h == 32",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ]
   },
   {
-    "description": "Wintertodt Wooden Objects rotated",
-    "baseMaterial": "WOOD_GRAIN_2_SMOOTH_LIGHT",
-    "objectIds": [
-      29303,
-      29304
-    ],
-    "uvType": "WORLD_XY",
-    "uvScale": 1.5
+  "description": "Wintertodt Barrel Group",
+  "baseMaterial": "SNOW_1",
+  "objectIds": [
+    26330
+  ],
+  "colorOverrides": [
+    {
+      "colors": "h == 5",
+      "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+      "uvType": "BOX",
+      "uvScale": 0.75
+    }
+  ]
   },
   {
     "description": "Wintertodt Bruma Roots",
