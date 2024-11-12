@@ -2989,7 +2989,8 @@
       29287,
       29289,
       29290,
-      29291
+      29291,
+      29292
     ],
     "uvType": "BOX",
     "uvScale": 1.25
@@ -3064,7 +3065,14 @@
       29313,
       29314
     ],
-    "uvType": "BOX"
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "colors": ["h == 14", "h == 17"],
+        "baseMaterial": "NONE"
+      }
+    ]
   },
   {
     "description": "Wintertodt Tents",
