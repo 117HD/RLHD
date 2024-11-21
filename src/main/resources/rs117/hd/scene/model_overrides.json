@@ -3130,6 +3130,15 @@
     ]
   },
   {
+    "description": "Wintertodt Storm - Brighten",
+    "baseMaterial": "GRAY_150",
+    "objectIds": [
+      29308
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
+  },
+  {
     "description": "Wintertodt Tents",
     "baseMaterial": "CARPET",
     "objectIds": [
