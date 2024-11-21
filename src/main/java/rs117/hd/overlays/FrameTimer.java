@@ -28,6 +28,8 @@ public class FrameTimer {
 
 	private boolean isInactive = true;
 	private long cumulativeError = 0;
+	private long cumulativeErrorCompensation = 17;
+	private boolean calculatedCumulativeError = false;
 
 	private void initialize() {
 		clientThread.invokeLater(() -> {
@@ -41,6 +43,40 @@ public class FrameTimer {
 
 			isInactive = false;
 			plugin.enableDetailedTimers = true;
+
+			// Check if we've calculated the cumulativeCost of calling nanoTime()
+			if(!calculatedCumulativeError) {
+				final int iterations = 1000;
+				long loopBaseLine, start, end;
+				int i;
+
+				// Warm-Up to ensure JIT has compiled the usage of nanoTime()
+				for (i = 0; i < iterations; i++) {
+					System.nanoTime();
+				}
+
+				// grab a baseline of a for loops performance
+				i = 0;
+				start = System.nanoTime();
+				for (; i < iterations; i++){}
+				end = System.nanoTime();
+				loopBaseLine = end - start;
+
+				// grab how long invoking nanoTime() takes
+				i = 0;
+				start = System.nanoTime();
+				for (; i < iterations; i++) System.nanoTime();
+				end = System.nanoTime();
+
+				// Calculate the cumulativeCost of nanoTime() so it can be removed from the frame timers. Clamp to be between 17 - 34
+				cumulativeErrorCompensation = Math.max(17, Math.min(30, ((end - start) - loopBaseLine) / iterations));
+				log.debug(
+					"FrameTimer cumulative error calculation completed {} iterations, calculating a compensation value of: {}",
+					iterations,
+					cumulativeErrorCompensation
+				);
+				calculatedCumulativeError = true;
+			}
 		});
 	}
 
@@ -104,7 +140,7 @@ public class FrameTimer {
 			glQueryCounter(gpuQueries[timer.ordinal() * 2 + 1], GL_TIMESTAMP);
 			// leave the GPU timer active, since it needs to be gathered at a later point
 		} else {
-			cumulativeError += 17; // compensate slightly for the timer's own overhead
+			cumulativeError += cumulativeErrorCompensation; // compensate slightly for the timer's own overhead
 			timings[timer.ordinal()] += System.nanoTime() - cumulativeError;
 			activeTimers[timer.ordinal()] = false;
 		}
