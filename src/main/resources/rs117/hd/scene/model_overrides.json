@@ -976,7 +976,6 @@
       30659,
       30660,
       30661,
-      30741,
       30868,
       31920,
       31922,
@@ -23731,6 +23730,41 @@
       12474,
       12475,
       12476
+    ]
+  },
+  {
+    "description": "Fossil Island Underwater Cliffs 1",
+    "baseMaterial": "ROCK_1",
+    "uvScale": 0.75,
+    "uvOrientation": 75,
+    "uvType": "BOX",
+    "objectIds": [
+      30738,
+      30740,
+      30741,
+      30742,
+      30743
+    ]
+  },
+  {
+    "description": "Fossil Island Underwater Cliffs 2",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvOrientation": -50,
+    "objectIds": [
+      30734,
+      30735,
+      30736,
+      30744,
+      30745,
+      30746,
+      30747,
+      30959,
+      30962,
+      30963,
+      30964,
+      30965,
+      31845
     ]
   }
 ]

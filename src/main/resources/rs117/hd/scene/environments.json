@@ -1247,18 +1247,19 @@
     "area": "FOSSIL_ISLAND_UNDERWATER_AREA",
     "isUnderwater": true,
     "ambientColor": "#255590",
-    "ambientStrength": 0.5,
+    "ambientStrength": 1.5,
     "directionalColor": "#71a3d0",
-    "directionalStrength": 5,
+    "directionalStrength": 3,
     "sunAngles": [
       80,
       190
     ],
     "fogColor": "#133156",
     "fogDepth": 60,
-    "groundFogStart": -400,
-    "groundFogEnd": -750,
-    "groundFogOpacity": 0.5
+    "groundFogStart": -450,
+    "groundFogEnd": -700,
+    "groundFogOpacity": 0.65,
+    "waterCausticsStrength": 4
   },
   {
     "area": "LUNAR_DREAM_WORLD",

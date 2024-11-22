@@ -6475,6 +6475,16 @@
     "groundMaterial": "SANDY_DIRT"
   },
   {
+    "name": "FOSSIL_ISLAND_UNDERWATER_AREA_SAND",
+    "area": "FOSSIL_ISLAND_UNDERWATER_AREA",
+    "underlayIds": [
+      68,
+      129
+    ],
+    "groundMaterial": "SANDY_DIRT",
+    "uvOrientation": 100
+  },
+  {
     "name": "ISLE_OF_SOULS_HOT_ZONE_COMPLEX",
     "area": "ISLE_OF_SOULS_HOT_ZONES",
     "underlayIds": [
