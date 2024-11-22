@@ -23592,5 +23592,30 @@
     "objectIds": [
       2783
     ]
+  },
+  {
+    "description": "Mogre Camp Cliffs",
+    "baseMaterial": "ROCK_1",
+    "uvScale": 0.75,
+    "uvOrientation": 75,
+    "uvType": "BOX",
+    "objectIds": [
+      12454,
+      12457,
+      12464,
+      12465,
+      12459
+    ]
+  },
+  {
+    "description": "Mogre Camp Cliffs",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvOrientation": -50,
+    "objectIds": [
+      12455,
+      12456,
+      12458
+    ]
   }
 ]
