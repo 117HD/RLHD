@@ -23723,5 +23723,14 @@
         "uvScale": 0.75
       }
     ]
+  },
+  {
+    "description": "Mogre Camp Anchor",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "objectIds": [
+      12474,
+      12475,
+      12476
+    ]
   }
 ]
