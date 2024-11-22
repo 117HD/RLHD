@@ -1217,13 +1217,14 @@
     "area": "MOGRE_CAMP",
     "isUnderwater": true,
     "ambientColor": "#255590",
-    "ambientStrength": 0.5,
+    "ambientStrength": 1.5,
     "directionalColor": "#71a3d0",
-    "directionalStrength": 5,
+    "directionalStrength": 2.5,
     "fogColor": "#133156",
     "fogDepth": 60,
-    "groundFogStart": 0,
-    "groundFogOpacity": 0.5
+    "groundFogStart": -100,
+    "groundFogOpacity": 0.65,
+    "waterCausticsStrength": 2
   },
   {
     "area": "HARMONY_ISLAND_UNDERWATER_TUNNEL",
