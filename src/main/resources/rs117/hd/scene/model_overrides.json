@@ -23594,7 +23594,7 @@
     ]
   },
   {
-    "description": "Mogre Camp Cliffs",
+    "description": "Mogre Camp Cliffs 1",
     "baseMaterial": "ROCK_1",
     "uvScale": 0.75,
     "uvOrientation": 75,
@@ -23608,7 +23608,7 @@
     ]
   },
   {
-    "description": "Mogre Camp Cliffs",
+    "description": "Mogre Camp Cliffs 2",
     "baseMaterial": "ROCK_3",
     "uvType": "BOX",
     "uvOrientation": -50,
@@ -23616,6 +23616,43 @@
       12455,
       12456,
       12458
+    ]
+  },
+  {
+    "description": "Mogre Camp Skippy Cave Entrance",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "objectIds": [
+      12460,
+      12461,
+      12462,
+      12463
+    ],
+    "colorOverrides": [
+      {
+        "description": "Table",
+        "colors": ["h == 6", "h == 16"],
+        "baseMaterial": "GRUNGE_2",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientationY": 512,
+        "uvOrientationZ": 512
+      }
+    ]
+  },
+  {
+    "description": "Mogre Camp Bamboo Fence",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "objectIds": [
+      12466,
+      12467,
+      12468,
+      12469,
+      12470,
+      12471,
+      12472,
+      12473
     ]
   }
 ]
