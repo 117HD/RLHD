@@ -23697,5 +23697,17 @@
     "objectIds": [
       2783
     ]
+  },
+  {
+    "description": "Glough house pillars",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      2440,
+      2441,
+      2442,
+      2443
+    ]
   }
 ]
