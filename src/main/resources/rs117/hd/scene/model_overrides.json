@@ -10203,9 +10203,36 @@
   },
   {
     "description": "Gnome - Objects - Wooden - Bench - Textured",
-    "baseMaterial": "GRUNGE_2",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "uvType": "BOX",
+    "uvScale": 0.48,
     "objectIds": [
       1104
+    ]
+  },
+  {
+    "description": "Gnome table with cutlery and napkins",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 600,
+    "objectIds": [
+      1103
+    ]
+  },
+  {
+    "description": "Gnome stool",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 84,
+    "colorOverrides": [
+      {
+        "description": "Silverware and napkin",
+        "colors": "s == 0",
+        "baseMaterial": "NONE"
+      }
+    ],
+    "objectIds": [
+      600
     ]
   },
   {
