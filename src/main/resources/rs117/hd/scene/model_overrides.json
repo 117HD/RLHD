@@ -10141,7 +10141,6 @@
     "baseMaterial": "BARK",
     "uvType": "BOX",
     "uvScale": 0.6,
-    "uvOrientation": 42,
     "colorOverrides": [
       {
         "description": "Lamp",
@@ -10151,6 +10150,35 @@
     ],
     "objectIds": [
       201
+    ]
+  },
+  {
+    "description": "Gnome Stronghold tree doors",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "materialOverrides": {
+      "SIMPLE_GRAIN_WOOD": {
+        "textureMaterial": "SIMPLE_GRAIN_WOOD",
+        "uvOrientation": 512,
+        "uvScale": 0.7,
+        "uvType": "BOX",
+        "retainVanillaUvs": false
+      }
+    },
+    "colorOverrides": [
+      {
+        "description": "Carving",
+        "colors": "h == 17",
+        "baseMaterial": "GRUNGE_3_LIGHT",
+        "uvType": "BOX",
+        "uvOrientation": 343
+      }
+    ],
+    "objectIds": [
+      1967,
+      1968,
+      1969,
+      1970
     ]
   },
   {
