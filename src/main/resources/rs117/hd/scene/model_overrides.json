@@ -10137,8 +10137,18 @@
     ]
   },
   {
-    "description": "Gnome - Objects - Wooden - Lamp",
+    "description": "Gnome - Objects - Wooden Lamp - DYNAMIC",
     "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 42,
+    "colorOverrides": [
+      {
+        "description": "Lamp",
+        "colors": "s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ],
     "objectIds": [
       201
     ]
