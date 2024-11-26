@@ -10182,6 +10182,26 @@
     ]
   },
   {
+    "description": "Gnome - Objects - Gnome busts on wooden piller",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Bust",
+        "colors": "s == 0",
+        "uvScale": 0.4,
+        "uvOrientation": 343,
+        "baseMaterial": "MARBLE_3",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      571,
+      572
+    ]
+  },
+  {
     "description": "Gnome - Objects - Wooden - Bench - Textured",
     "baseMaterial": "GRUNGE_2",
     "objectIds": [
