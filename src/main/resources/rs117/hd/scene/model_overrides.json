@@ -14421,6 +14421,17 @@
     "uvOrientation": 342
   },
   {
+    "description": "Objects - Root - Large",
+    "baseMaterial": "LIGHT_BARK",
+    "objectIds": [
+      1985,
+      1986
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 342
+  },
+  {
     "description": "Wooden crates, Wooden table, wooden rack",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [ 356, 595, 647 ],
