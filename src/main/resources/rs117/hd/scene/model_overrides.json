@@ -23710,5 +23710,21 @@
       2442,
       2443
     ]
+  },
+  {
+    "description": "Gnome Stronghold tunnels walls with roots - DYNAMIC",
+    "baseMaterial": "GRUNGE_1",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Roots",
+        "baseMaterial": "LIGHT_BARK",
+        "colors": "h == 7",
+        "uvType": "BOX",
+        "uvOrientation": 343,
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [ 2451 ]
   }
 ]
