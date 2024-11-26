@@ -10185,7 +10185,7 @@
     "description": "Gnome - Objects - Gnome busts on wooden piller",
     "baseMaterial": "BARK",
     "uvType": "BOX",
-    "uvScale": 0.6,
+    "uvScale": 0.8,
     "colorOverrides": [
       {
         "description": "Bust",
