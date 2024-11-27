@@ -6,27 +6,41 @@ import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import rs117.hd.utils.GsonUtils;
 
 import static net.runelite.api.Constants.*;
 
-@RequiredArgsConstructor
+@Slf4j
 public class RegionBox {
-	public final int from, to;
-	public final int fromPlane, toPlane;
+	private final int from;
+	private final int to;
+	private final int fromPlane;
+	private final int toPlane;
 
 	public RegionBox(int regionId) {
 		this(regionId, regionId);
 	}
 
 	public RegionBox(int from, int to) {
-		this(from, to, 0, MAX_Z - 1);
+		this.from = from;
+		this.to = to;
+		this.fromPlane = 0;
+		this.toPlane = MAX_Z - 1;
 	}
 
 	public RegionBox(int from, int to, int plane) {
-		this(from, to, plane, plane);
+		this.from = from;
+		this.to = to;
+		this.fromPlane = plane;
+		this.toPlane = plane;
+	}
+
+	public RegionBox(int from, int to, int fromPlane, int toPlane) {
+		this.from = from;
+		this.to = to;
+		this.fromPlane = fromPlane;
+		this.toPlane = toPlane;
 	}
 
 	public AABB toAabb() {
@@ -47,10 +61,8 @@ public class RegionBox {
 		return new AABB(
 			(x1) << 6,
 			(y1) << 6,
-			fromPlane,
 			((x2) + 1 << 6) - 1,
-			((y2) + 1 << 6) - 1,
-			toPlane
+			((y2) + 1 << 6) - 1
 		);
 	}
 

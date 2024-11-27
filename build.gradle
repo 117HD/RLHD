@@ -1,6 +1,6 @@
 plugins {
 	id 'java'
-//	id 'com.github.johnrengelman.shadow' version '6.1.0'
+	id 'pmd'
 }
 
 repositories {
@@ -15,14 +15,17 @@ def runeLiteVersion = '1.10.+'
 
 dependencies {
 	compileOnly group: 'net.runelite', name: 'client', version: runeLiteVersion
-
 	compileOnly 'org.projectlombok:lombok:1.18.20'
 	annotationProcessor 'org.projectlombok:lombok:1.18.20'
 
+	// Test dependencies
 	testImplementation 'junit:junit:4.13.2'
 	testImplementation 'org.mockito:mockito-core:3.1.0'
 	testImplementation group: 'net.runelite', name: 'client', version: runeLiteVersion
 	testImplementation group: 'net.runelite', name: 'jshell', version: runeLiteVersion
+	testImplementation 'org.slf4j:slf4j-api:1.7.32'
+	testImplementation 'ch.qos.logback:logback-classic:1.2.6'
+	testImplementation 'javax.inject:javax.inject:1'
 
 	testCompileOnly 'org.projectlombok:lombok:1.18.20'
 	testAnnotationProcessor 'org.projectlombok:lombok:1.18.20'
@@ -36,10 +39,17 @@ tasks.withType(JavaCompile).configureEach {
 	options.encoding = 'UTF-8'
 }
 
-//shadowJar {
-//	from sourceSets.test.output
-//	configurations = [project.configurations.testRuntimeClasspath]
-//	manifest {
-//		attributes 'Main-Class': 'rs117.hd.HdPluginTest'
-//	}
-//}
+pmd {
+	consoleOutput = true
+	toolVersion = "6.55.0"
+	rulesMinimumPriority = 5
+	ruleSets = [
+		"category/java/bestpractices.xml",
+		"category/java/codestyle.xml",
+		"category/java/design.xml",
+		"category/java/documentation.xml",
+		"category/java/errorprone.xml",
+		"category/java/multithreading.xml",
+		"category/java/performance.xml"
+	]
+}
