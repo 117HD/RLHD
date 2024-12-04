@@ -27731,6 +27731,8 @@
     "alignment": "CENTER",
     "radius": 800,
     "strength": 20,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 300,
     "color": [
       252,
       148,
