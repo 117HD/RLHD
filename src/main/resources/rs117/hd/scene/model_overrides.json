@@ -23732,5 +23732,22 @@
         "uvScale": 0.8
       }
     ]
+  },
+  {
+    "description": "Cerberus Lair - Bone Pillar",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      21761,
+      21762
+    ]
+  },
+  {
+    "description": "Cerberus Lair - Hooks",
+    "baseMaterial": "METALLIC_1_HIGHGLOSS",
+    "objectIds": [
+      21763
+    ]
   }
 ]
