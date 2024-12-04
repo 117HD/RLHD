@@ -23717,5 +23717,20 @@
     "objectIds": [
       17118
     ]
+  },
+  {
+    "description": "Cerberus Lair - Soul Boat",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      23101
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h > 4 && h < 7",
+        "baseMaterial": "WOOD_GRAIN_2",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ]
   }
 ]
