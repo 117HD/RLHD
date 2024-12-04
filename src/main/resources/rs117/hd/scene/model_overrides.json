@@ -23709,5 +23709,13 @@
         "uvOrientation": 120
       }
     ]
+  },
+  {
+    "description": "Cerberus Lair - Hide Bubbles",
+    "areas": [ "CERBERUS" ],
+    "hide": true,
+    "objectIds": [
+      17118
+    ]
   }
 ]
