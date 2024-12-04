@@ -23645,5 +23645,22 @@
         "uvOrientation": 120
       }
     ]
+  },
+  {
+    "description": "Cerberus Lair - Bone Spikes",
+    "baseMaterial": "METALLIC_1_GLOSS",
+    "objectIds": [
+      21765,
+      21766
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 1",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 1.2,
+        "uvOrientation": 120
+      }
+    ]
   }
 ]
