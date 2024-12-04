@@ -23647,6 +23647,53 @@
     ]
   },
   {
+  "description": "Cerberus Lair - Wall with Skeletons",
+  "baseMaterial": "STONE_NORMALED",
+  "uvType": "BOX",
+  "objectIds": [
+    7823,
+    7824,
+    7825,
+    7826,
+    7827,
+    7828,
+    7829,
+    7830
+  ],
+  "colorOverrides": [
+    {
+      "colors": "h == 10",
+      "baseMaterial": "GRUNGE_2",
+      "uvType": "BOX",
+      "uvScale": 0.2
+    }
+  ]
+  },
+  {
+    "description": "Cerberus Lair - Wall with Masks",
+    "baseMaterial": "DIRT_1",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      22494,
+      21946,
+      21775,
+      21776,
+      21777,
+      21779,
+      21780,
+      21947
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.2
+      }
+    ]
+  },
+  {
     "description": "Cerberus Lair - Bone Spikes",
     "baseMaterial": "METALLIC_1_GLOSS",
     "objectIds": [
