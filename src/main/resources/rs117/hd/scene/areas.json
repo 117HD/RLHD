@@ -5960,6 +5960,12 @@
     ]
   },
   {
+    "name": "CERBERUS_ENTRANCE_FIX",
+    "aabbs": [
+      [ 1304, 1289, 1304, 1310 ]
+    ]
+  },
+  {
     "name": "THE_ABYSS",
     "aabbs": [
       [ 3034, 4803, 3044, 4863 ],
