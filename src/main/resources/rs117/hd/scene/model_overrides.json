@@ -23744,10 +23744,22 @@
     ]
   },
   {
-    "description": "Cerberus Lair - Hooks",
-    "baseMaterial": "METALLIC_1_HIGHGLOSS",
+    "description": "Cerberus Lair - Soul Devourer",
+    "baseMaterial": "GRAY_90",
     "objectIds": [
-      21763
+      21773
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 10 && s == 2",
+        "baseMaterial": "GRUNGE_2",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "colors": [ "h == 2", "h == 3", "h == 10 && s == 1" ],
+        "baseMaterial": "GRUNGE_3"
+      }
     ]
   }
 ]
