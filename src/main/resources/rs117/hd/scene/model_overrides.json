@@ -23761,5 +23761,12 @@
         "baseMaterial": "GRUNGE_3"
       }
     ]
+  },
+  {
+    "description": "Cerberus Lair - Wall Filler - Darken",
+    "baseMaterial": "GRAY_50",
+    "objectIds": [
+      7834
+    ]
   }
 ]
