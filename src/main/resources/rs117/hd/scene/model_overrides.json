@@ -23768,5 +23768,50 @@
     "objectIds": [
       7834
     ]
+  },
+  {
+    "description": "Cerberus Lair - Entrance Walls",
+    "areas": [ "CERBERUS" ],
+    "baseMaterial": "ROCK_3_DARK",
+    "uvType": "BOX",
+    "objectIds": [
+      1502
+    ]
+  },
+  {
+    "description": "Cerberus Lair - Entrance Walls - Top",
+    "areas": [ "CERBERUS" ],
+    "baseMaterial": "STONE_NORMALED_DARK",
+    "uvType": "BOX",
+    "objectIds": [
+      20737
+    ]
+  },
+  {
+    "description": "Cerberus Lair - Tiles",
+    "areas": [ "CERBERUS" ],
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "objectIds": [
+      23107,
+      23108,
+      23109,
+      23610,
+      23112,
+      26294
+    ]
+  },
+  {
+    "description": "Cerberus Lair - Portcullis & Winch",
+    "areas": [ "CERBERUS" ],
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "objectIds": [
+      23102,
+      23104,
+      21772,
+      26571
+    ]
   }
 ]
