@@ -5960,6 +5960,13 @@
     ]
   },
   {
+    "name": "CERBERUS ENTRANCE",
+    "aabbs": [
+      [ 1280, 1226, 1343, 1279 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
     "name": "CERBERUS_GROUND_FIX",
     "aabbs": [
       [ 1304, 1289, 1304, 1310 ],

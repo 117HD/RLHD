@@ -23775,7 +23775,10 @@
     "baseMaterial": "ROCK_3_DARK",
     "uvType": "BOX",
     "objectIds": [
-      1502
+      1502,
+      26564,
+      26565,
+      26566
     ]
   },
   {
