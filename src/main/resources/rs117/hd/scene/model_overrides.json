@@ -23816,5 +23816,23 @@
       21772,
       26571
     ]
+  },
+  {
+    "description": "Cerberus Lair - Torch",
+    "areas": [ "CERBERUS" ],
+    "baseMaterial": "NONE",
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "objectIds": [
+      26570
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 0", "h == 5", "h == 10" ],
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
   }
 ]
