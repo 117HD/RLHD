@@ -22681,6 +22681,7 @@
     "description": "Grotesque Guardians Exit Stairs",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
+      31673,
       31674
     ],
     "uvType": "BOX",
