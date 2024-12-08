@@ -104,6 +104,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 	private boolean ctrlHeld;
 	private boolean ctrlToggled;
 	private boolean shiftHeld;
+	private boolean altHeld;
 	private float zoom = 1;
 
 	private static final int MODE_TILE_INFO = 0;
@@ -120,6 +121,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 	private final int[][] markedWorldPoints = new int[2][3];
 	private int[] hoveredWorldPoint = new int[3];
 	private int targetPlane = MAX_Z - 1;
+	private boolean selectionIncludeZ;
 
 	private SceneContext currentSceneContext;
 	private Area[] visibleAreas = new Area[0];
@@ -200,7 +202,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			if (shiftPressed)
 				mode = (mode + 1) % 4;
 		}
-		boolean altPressed = client.isKeyPressed(KeyCode.KC_ALT);
+		altHeld = client.isKeyPressed(KeyCode.KC_ALT);
 
 		Tile[][][] tiles = sceneContext.scene.getExtendedTiles();
 		int[][][] templateChunks = sceneContext.scene.isInstance() ? sceneContext.scene.getInstanceTemplateChunks() : null;
@@ -247,7 +249,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 										if (!drawTileInfo(g, sceneContext, tile))
 											continue;
 									} else {
-										if (altPressed) {
+										if (altHeld) {
 											g.setColor(Color.YELLOW);
 										} else {
 											g.setColor(Color.CYAN);
@@ -369,7 +371,16 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 		// Update second selection point each frame
 		if (aabbMarkingStage == 1) {
 			System.arraycopy(hoveredWorldPoint, 0, markedWorldPoints[1], 0, 3);
-			pendingSelection = new AABB(markedWorldPoints[0], markedWorldPoints[1]);
+			if (selectionIncludeZ || markedWorldPoints[0][2] != markedWorldPoints[1][2]) {
+				pendingSelection = new AABB(markedWorldPoints[0], markedWorldPoints[1]);
+			} else {
+				pendingSelection = new AABB(
+					markedWorldPoints[0][0],
+					markedWorldPoints[0][1],
+					markedWorldPoints[1][0],
+					markedWorldPoints[1][1]
+				);
+			}
 		}
 
 		for (int i = 0; i < selections.size(); i++) {
@@ -1437,7 +1448,9 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			if (SwingUtilities.isLeftMouseButton(e)) {
 				if (!Arrays.equals(selectedAreaAabb, hoveredAreaAabb)) {
 					if (TileInfoOverlay.this.hoveredAreaAabb[0] != -1)
-						copyToClipboard(visibleAreas[TileInfoOverlay.this.hoveredAreaAabb[0]].aabbs[TileInfoOverlay.this.hoveredAreaAabb[1]].toArgs());
+						copyToClipboard(visibleAreas[TileInfoOverlay.this.hoveredAreaAabb[0]]
+							.aabbs[TileInfoOverlay.this.hoveredAreaAabb[1]]
+							.toArgs());
 
 					System.arraycopy(hoveredAreaAabb, 0, selectedAreaAabb, 0, 2);
 					return e;
@@ -1506,6 +1519,9 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 		if (ctrlHeld) {
 			e.consume();
 			targetPlane = clamp(targetPlane + e.getWheelRotation(), 0, MAX_Z - 1);
+		} else if (altHeld) {
+			e.consume();
+			selectionIncludeZ = !selectionIncludeZ;
 		}
 
 		return e;

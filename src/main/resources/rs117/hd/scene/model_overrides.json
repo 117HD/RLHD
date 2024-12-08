@@ -1827,6 +1827,38 @@
     ]
   },
   {
+    "description": "Hespori Grass Arena Fix",
+    "areas": [ "FARMING_GUILD_HESPORI" ],
+    "baseMaterial": "COLORED_GRASS",
+    "objectIds": [
+      34492
+    ]
+  },
+  {
+    "description": "Hespori Patch Edge Grass Fix",
+    "areas": [ "FARMING_GUILD_HESPORI" ],
+    "baseMaterial": "COLORED_GRASS",
+    "objectIds": [
+      34494,
+      34496
+    ],
+    "castShadows": false,
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "ROCK_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "colors": [ "h == 5", "h == 6" ],
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
     "description": "Short grass with rock objects Morytania Farming Patches",
     "baseMaterial": "GRAY_75",
     "objectIds": [
@@ -2167,13 +2199,177 @@
     "flatNormals": true
   },
   {
+    "description": "Brick walls with wooden boards",
+    "baseMaterial": "GRUNGE_1",
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "description": "Wooden boards",
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 448
+      }
+    ],
+    "objectIds": [
+      490,
+      492,
+      493,
+      494,
+      495,
+      506,
+      507,
+      508,
+      509,
+      510,
+      515,
+      517,
+      518,
+      519,
+      520,
+      40285
+    ]
+  },
+  {
+    "description": "Brick walls with wooden plank windows",
+    "baseMaterial": "GRUNGE_1",
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "description": "Wooden boards",
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 16
+      }
+    ],
+    "objectIds": [
+      441,
+      442,
+      454,
+      23745
+    ]
+  },
+  {
+    "description": "Brick walls with wooden planks leaned on them",
+    "baseMaterial": "GRUNGE_1",
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "description": "Wooden boards",
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      480,
+      481,
+      482,
+      485,
+      486,
+      487,
+      488
+    ]
+  },
+  {
+    "description": "Wooden board walls",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "flatNormals": true,
+    "uvType": "BOX",
+    "uvOrientation": 448,
+    "objectIds": [
+      496,
+      497,
+      498,
+      499,
+      500,
+      501,
+      502,
+      503,
+      26589,
+      26590,
+      26591,
+      26592
+    ]
+  },
+  {
+    "description": "Brick walls with green glass with gold windows",
+    "baseMaterial": "GRUNGE_1",
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "description": "Wooden boards",
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Green glass",
+        "colors": "h > 11",
+        "baseMaterial": "NONE"
+      },
+      {
+        "description": "Gold glass",
+        "colors": "h == 8 && s == 7",
+        "baseMaterial": "NONE"
+      }
+    ],
+    "objectIds": [
+      23743,
+      23744
+    ]
+  },
+  {
+    "description": "Brick walls with green glass windows",
+    "baseMaterial": "GRUNGE_1",
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "description": "Wooden boards",
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Green glass",
+        "colors": "h > 11",
+        "baseMaterial": "NONE"
+      }
+    ],
+    "objectIds": [
+      23746,
+      23747
+    ]
+  },
+  {
+    "description": "Varrock church golden window",
+    "baseMaterial": "GRUNGE_1",
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "description": "Wooden boards",
+        "colors": "h == 7 && s < 4",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Gold glass",
+        "colors": "h == 7 && s > 3 ",
+        "baseMaterial": "NONE"
+      }
+    ],
+    "objectIds": [
+      23807
+    ]
+  },
+  {
     "description": "Walls",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
       436,
       437,
       438,
-      441,
       443,
       444,
       445,
@@ -2183,16 +2379,9 @@
       455,
       462,
       477,
-      490,
-      493,
-      494,
-      495,
-      496,
-      497,
       451,
       452,
       453,
-      454,
       455,
       456,
       457,
@@ -2217,53 +2406,17 @@
       476,
       477,
       478,
-      480,
-      481,
-      482,
       483,
       484,
-      485,
-      486,
-      487,
-      488,
       489,
-      490,
       491,
-      491,
-      492,
-      493,
-      494,
-      495,
-      496,
-      497,
-      498,
-      499,
-      500,
-      501,
-      502,
-      503,
       504,
       505,
-      506,
-      507,
-      508,
-      509,
-      510,
       511,
       512,
       513,
       514,
-      515,
       516,
-      517,
-      518,
-      519,
-      520,
-      526,
-      527,
-      528,
-      529,
-      531,
       9264,
       9265,
       9269,
@@ -2276,11 +2429,6 @@
       23740,
       23741,
       23742,
-      23743,
-      23744,
-      23745,
-      23746,
-      23747,
       23757,
       23758,
       23759,
@@ -2298,7 +2446,6 @@
       23804,
       23805,
       23806,
-      23807,
       23808,
       23809,
       23810,
@@ -2354,7 +2501,6 @@
       23908,
       23909,
       23910,
-      40285,
       41840,
       24428
     ],
@@ -3890,7 +4036,6 @@
     "description": "BEIGE_WALLS",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
-      442,
       446,
       447
     ],
@@ -5825,6 +5970,25 @@
     ]
   },
   {
+    "description": "Stone Fountain",
+    "baseMaterial": "STONE",
+    "uvType": "BOX",
+    "uvScale": 0.45,
+    "objectIds": [
+      3641
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 32",
+        "baseMaterial": "NONE"
+      },
+      {
+        "colors": [ "h == 2", "h == 3", "h == 7" ],
+        "baseMaterial": "GRAY_90"
+      }
+    ]
+  },
+  {
     "description": "Metallic Furnace",
     "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [
@@ -7321,6 +7485,11 @@
     "description": "Ground Decoration - Rock - Small - Uncolored",
     "baseMaterial": "ROCK_1_LIGHT",
     "objectIds": [
+      526,
+      527,
+      528,
+      529,
+      531,
       2381,
       2383,
       6397,
@@ -7613,6 +7782,8 @@
       25661,
       25836,
       25837,
+      34508,
+      34510,
       41452,
       41738,
       42066,
@@ -7676,6 +7847,7 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       9535,
+      34509,
       41739,
       42069
     ],
@@ -11911,7 +12083,13 @@
     ],
     "uvType": "BOX",
     "uvOrientation": 256,
-    "uvScale": 0.4
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "colors": [ "s == 7" ],
+        "baseMaterial": "GRUNGE_2"
+      }
+    ]
   },
   {
     "description": "Object - Sack with Hey or Grain",
@@ -13797,7 +13975,8 @@
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       5090,
-      5091
+      5091,
+      5092
     ],
     "uvType": "BOX",
     "uvOrientation": 562,
@@ -20133,7 +20312,7 @@
   {
     "description": "Wooden shelves - Empty or with pottery",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 1023, 7506, 7509, 8692, 12980 ],
+    "objectIds": [ 1023, 7506, 8692, 12980 ],
     "uvType": "BOX",
     "uvScale": 0.8,
     "uvOrientationX": 512,
@@ -23626,6 +23805,335 @@
     "objectIds": [
       2783
     ]
+  },
+  {
+    "description": "Farming Guild - Small Tree",
+    "baseMaterial": "PLANT_GRUNGE_2",
+    "objectIds": [
+      34486,
+      34487,
+      34488,
+      34489
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "colorOverrides": [
+      {
+        "colors": [ "h == 4", "h == 8" ],
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Farming Guild - Small Bush",
+    "baseMaterial": "PLANT_GRUNGE_2",
+    "objectIds": [
+      33638
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.2
+  },
+  {
+    "description": "Farming Guild - Water Barrel",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      8702
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.55,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": [
+          2, 7, 8, 12, 15, 16, 17, 18, 20,
+          21, 22, 24, 25, 26, 27, 28, 29 ,
+          30, 31, 32, 33, 34, 35, 36, 37,
+          39, 40, 41, 42, 43, 44, 46, 49
+        ],
+        "baseMaterial": "METALLIC_1_SEMIGLOSS"
+      }
+    ]
+  },
+  {
+    "description": "Farming Guild - Gazebo with cat",
+    "baseMaterial": "WOOD_GRAIN",
+    "objectIds": [
+      34480
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Farming Guild - Chest of Gold",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.9,
+    "uvOrientation": 512,
+    "objectIds": [
+      1768
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 8 && l > 1",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Farming Guild - Trellis Fence",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientationY": 512,
+    "objectIds": [
+      34479
+    ]
+  },
+  {
+    "description": "Farming Guild - Redwood Tree Walkway - Planks Straight",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientationY": 512,
+    "objectIds": [
+      29685,
+      29686,
+      29687,
+      29688
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h < 3",
+        "baseMaterial": "GRAY_75"
+      }
+    ]
+  },
+  {
+    "description": "Farming Guild - Redwood Tree Walkway - Planks Diagonal",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": -256,
+    "objectIds": [
+      29689
+    ]
+  },
+  {
+    "description": "Farming Guild - Redwood Tree Walkway - Walls and Supports",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      29690,
+      29691
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "ROPE",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.55
+      }
+    ]
+  },
+  {
+    "description": "Farming Guild - Redwood Tree Walkway - Rope Ladder",
+    "baseMaterial": "ROPE",
+    "objectIds": [
+      34477,
+      34478
+    ],
+    "uvType": "MODEL_XY",
+    "uvScale": 0.3,
+    "colorOverrides": [
+      {
+        "colors": [ "h == 0", "h == 6" ],
+        "baseMaterial": "GRAY_90"
+      }
+    ]
+  },
+  {
+    "description": "Farming Guild - Log Pile",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.33,
+    "objectIds": [
+      309
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "METALLIC_1"
+      }
+    ]
+  },
+  {
+    "description": "Farming Guild - Shelves with Various Clutter",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      7509,
+      34505,
+      34506,
+      34507
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "METALLIC_1"
+      },
+      {
+        "colors": [ "h == 2", "h == 3", "h == 7" ],
+        "baseMaterial": "GRAY_90"
+      }
+    ]
+  },
+  {
+    "description": "Farming Guild - Seed Vault",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      26206
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 27",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Farming Guild - Hespori Cave Entrance",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "objectIds": [
+      34499
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 13",
+        "baseMaterial": "GRAY_65"
+      }
+    ]
+  },
+  {
+    "description": "Farming Guild - Statue",
+    "baseMaterial": "STONE",
+    "uvType": "BOX",
+    "uvScale": 0.74,
+    "objectIds": [
+      34498
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 13", "h == 14", "s == 2", "s == 3" ],
+        "baseMaterial": "GRAY_75"
+      }
+    ]
+  },
+  {
+    "description": "Farming Guild - Greenhouse Walls",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "flatNormals": true,
+    "objectIds": [
+      34445,
+      34448,
+      34449,
+      34450,
+      34451,
+      34461,
+      34462,
+      34463,
+      34464,
+      34465,
+      34466,
+      34467,
+      34468,
+      34454,
+      34455,
+      34456,
+      34457,
+      34458,
+      34459,
+      34460
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "STONE",
+        "uvType": "BOX"
+      },
+      {
+        "colors": ["h == 6", "h == 7", "h == 27", "h == 32"],
+        "baseMaterial": "GRAY_90"
+      }
+    ]
+  },
+  {
+    "description": "Farming Guild - Greenhouse Gates",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "objectIds": [
+      34475,
+      34476
+    ]
+  },
+  {
+    "description": "Farming Guild - Hespori Arena - Walls",
+    "baseMaterial": "DIRT_1",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 0.75,
+    "objectIds": [
+      34435,
+      34438,
+      34439,
+      34440,
+      34441,
+      34442,
+      34443
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 14",
+        "baseMaterial": "PLANT_GRUNGE_1"
+      }
+    ]
+  },
+  {
+    "description": "Farming Guild - Hespori Boss",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "GEOMETRY",
+    "objectIds": [
+      33726,
+      33727,
+      33728,
+      33729,
+      33730
+    ],
+    "npcIds": [ 8583 ]
+  },
+  {
+    "description": "Farming Guild - Hespori Flower",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "GEOMETRY",
+    "npcIds": [
+      8584,
+      8585
+    ],
+    "objectIds": [ 34705, 34706 ]
+  },
+  {
+    "description": "Farming Guild - Hide Ripples",
+    "hide": true,
+    "objectIds": [ 5607 ]
   },
   {
     "description": "Cushioned church pew with foot rest",
