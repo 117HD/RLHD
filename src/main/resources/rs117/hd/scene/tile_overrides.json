@@ -3952,6 +3952,9 @@
     "overlayIds": [
       11
     ],
+    "underlayIds": [
+      72
+    ],
     "groundMaterial": "STONE_SCROLLING"
   },
   {
