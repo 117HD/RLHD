@@ -2167,13 +2167,177 @@
     "flatNormals": true
   },
   {
+    "description": "Brick walls with wooden boards",
+    "baseMaterial": "GRUNGE_1",
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "description": "Wooden boards",
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 448
+      }
+    ],
+    "objectIds": [
+      490,
+      492,
+      493,
+      494,
+      495,
+      506,
+      507,
+      508,
+      509,
+      510,
+      515,
+      517,
+      518,
+      519,
+      520,
+      40285
+    ]
+  },
+  {
+    "description": "Brick walls with wooden plank windows",
+    "baseMaterial": "GRUNGE_1",
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "description": "Wooden boards",
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 16
+      }
+    ],
+    "objectIds": [
+      441,
+      442,
+      454,
+      23745
+    ]
+  },
+  {
+    "description": "Brick walls with wooden planks leaned on them",
+    "baseMaterial": "GRUNGE_1",
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "description": "Wooden boards",
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      480,
+      481,
+      482,
+      485,
+      486,
+      487,
+      488
+    ]
+  },
+  {
+    "description": "Wooden board walls",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "flatNormals": true,
+    "uvType": "BOX",
+    "uvOrientation": 448,
+    "objectIds": [
+      496,
+      497,
+      498,
+      499,
+      500,
+      501,
+      502,
+      503,
+      26589,
+      26590,
+      26591,
+      26592
+    ]
+  },
+  {
+    "description": "Brick walls with green glass with gold windows",
+    "baseMaterial": "GRUNGE_1",
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "description": "Wooden boards",
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Green glass",
+        "colors": "h > 11",
+        "baseMaterial": "NONE"
+      },
+      {
+        "description": "Gold glass",
+        "colors": "h == 8 && s == 7",
+        "baseMaterial": "NONE"
+      }
+    ],
+    "objectIds": [
+      23743,
+      23744
+    ]
+  },
+  {
+    "description": "Brick walls with green glass windows",
+    "baseMaterial": "GRUNGE_1",
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "description": "Wooden boards",
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Green glass",
+        "colors": "h > 11",
+        "baseMaterial": "NONE"
+      }
+    ],
+    "objectIds": [
+      23746,
+      23747
+    ]
+  },
+  {
+    "description": "Varrock church golden window",
+    "baseMaterial": "GRUNGE_1",
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "description": "Wooden boards",
+        "colors": "h == 7 && s < 4",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Gold glass",
+        "colors": "h == 7 && s > 3 ",
+        "baseMaterial": "NONE"
+      }
+    ],
+    "objectIds": [
+      23807
+    ]
+  },
+  {
     "description": "Walls",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
       436,
       437,
       438,
-      441,
       443,
       444,
       445,
@@ -2183,16 +2347,9 @@
       455,
       462,
       477,
-      490,
-      493,
-      494,
-      495,
-      496,
-      497,
       451,
       452,
       453,
-      454,
       455,
       456,
       457,
@@ -2217,53 +2374,17 @@
       476,
       477,
       478,
-      480,
-      481,
-      482,
       483,
       484,
-      485,
-      486,
-      487,
-      488,
       489,
-      490,
       491,
-      491,
-      492,
-      493,
-      494,
-      495,
-      496,
-      497,
-      498,
-      499,
-      500,
-      501,
-      502,
-      503,
       504,
       505,
-      506,
-      507,
-      508,
-      509,
-      510,
       511,
       512,
       513,
       514,
-      515,
       516,
-      517,
-      518,
-      519,
-      520,
-      526,
-      527,
-      528,
-      529,
-      531,
       9264,
       9265,
       9269,
@@ -2276,11 +2397,6 @@
       23740,
       23741,
       23742,
-      23743,
-      23744,
-      23745,
-      23746,
-      23747,
       23757,
       23758,
       23759,
@@ -2298,7 +2414,6 @@
       23804,
       23805,
       23806,
-      23807,
       23808,
       23809,
       23810,
@@ -2354,7 +2469,6 @@
       23908,
       23909,
       23910,
-      40285,
       41840,
       24428
     ],
@@ -3890,7 +4004,6 @@
     "description": "BEIGE_WALLS",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
-      442,
       446,
       447
     ],
@@ -7301,6 +7414,11 @@
     "description": "Ground Decoration - Rock - Small - Uncolored",
     "baseMaterial": "ROCK_1_LIGHT",
     "objectIds": [
+      526,
+      527,
+      528,
+      529,
+      531,
       2381,
       2383,
       6397,
@@ -13773,7 +13891,8 @@
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       5090,
-      5091
+      5091,
+      5092
     ],
     "uvType": "BOX",
     "uvOrientation": 562,
