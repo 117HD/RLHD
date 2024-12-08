@@ -1828,7 +1828,7 @@
   },
   {
     "description": "Hespori Grass Arena Fix",
-    "areas": ["FARMING_GUILD_HESPORI"],
+    "areas": [ "FARMING_GUILD_HESPORI" ],
     "baseMaterial": "COLORED_GRASS",
     "objectIds": [
       34492
@@ -1836,7 +1836,7 @@
   },
   {
     "description": "Hespori Patch Edge Grass Fix",
-    "areas": ["FARMING_GUILD_HESPORI"],
+    "areas": [ "FARMING_GUILD_HESPORI" ],
     "baseMaterial": "COLORED_GRASS",
     "objectIds": [
       34494,
@@ -5981,7 +5981,7 @@
         "baseMaterial": "NONE"
       },
       {
-        "colors": ["h == 2", "h == 3", "h == 7"],
+        "colors": [ "h == 2", "h == 3", "h == 7" ],
         "baseMaterial": "GRAY_90"
       }
     ]
@@ -12062,7 +12062,7 @@
     "uvScale": 0.4,
     "colorOverrides": [
       {
-        "colors": ["s == 7"],
+        "colors": [ "s == 7" ],
         "baseMaterial": "GRUNGE_2"
       }
     ]
@@ -20285,7 +20285,7 @@
   {
     "description": "Wooden shelves - Empty or with pottery",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 1023, 7506, 7509, 8692, 12980 ],
+    "objectIds": [ 1023, 7506, 8692, 12980 ],
     "uvType": "BOX",
     "uvScale": 0.8,
     "uvOrientationX": 512,
@@ -23943,7 +23943,6 @@
     "uvType": "BOX",
     "uvScale": 0.7,
     "objectIds": [
-      7508,
       7509,
       34505,
       34506,
