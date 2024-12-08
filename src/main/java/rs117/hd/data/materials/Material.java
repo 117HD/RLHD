@@ -331,7 +331,7 @@ public enum Material {
 	GRASS_2,
 	GRASS_3,
 	GRASS_SCROLLING(GRASS_1, p -> p
-		.setScroll(0, 1 / 0.7f)),
+		.setScroll(0, -1 / 0.7f)),
 	COLORED_GRASS(p -> p.setOverrideBaseColor(true)),
 	DIRT_1_N,
 	DIRT_1(p -> p
