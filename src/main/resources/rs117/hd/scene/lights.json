@@ -35550,5 +35550,81 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 20
+  },
+  {
+    "description": "Hespori Status Flower - Open",
+    "height": 100,
+    "alignment": "CENTER",
+    "radius": 195,
+    "strength": 15,
+    "fadeInDuration": 100,
+    "color": [
+      40,
+      240,
+      40
+    ],
+    "type": "STATIC",
+    "duration": 4500,
+    "range": 10,
+    "objectIds": [ 34705 ]
+  },
+  {
+    "description": "Hespori Combat Flower - Open - Wide",
+    "height": 70,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 7,
+    "fadeOutDuration": 700,
+    "fadeInDuration": 75,
+    "spawnDelay": 1300,
+    "color": [
+      40,
+      240,
+      40
+    ],
+    "type": "PULSE",
+    "duration": 2500,
+    "range": 15,
+    "npcIds": [ 8584 ],
+    "animationIds": [ -1, 8229 ]
+  },
+  {
+    "description": "Hespori Combat Flower - Open - Short",
+    "height": 70,
+    "alignment": "CENTER",
+    "radius": 125,
+    "strength": 12,
+    "fadeOutDuration": 600,
+    "fadeInDuration": 500,
+    "spawnDelay": 400,
+    "color": [
+      40,
+      240,
+      40
+    ],
+    "type": "PULSE",
+    "duration": 2500,
+    "range": 15,
+    "npcIds": [ 8584 ],
+    "animationIds": [ -1, 8229 ]
+  },
+  {
+    "description": "Hespori Magic Attack",
+    "radius": 250,
+    "height": -50,
+    "strength": 8.8,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 1000,
+    "fadeOutDuration": 250,
+    "projectileIds": [
+      1640
+    ]
   }
 ]
