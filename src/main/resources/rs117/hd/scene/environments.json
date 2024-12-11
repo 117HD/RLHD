@@ -1578,7 +1578,7 @@
     "directionalColor": "#f4e5c9",
     "directionalStrength": 2,
     "fogColor": "#aebde0",
-    "fogDepth": 40
+    "fogDepth": 35
   },
   {
     "key": "OVERWORLD",

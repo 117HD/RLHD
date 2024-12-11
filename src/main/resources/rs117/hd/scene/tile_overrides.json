@@ -6275,7 +6275,7 @@
     "groundMaterial": "GRASS_SCROLLING"
   },
   {
-    "name": "FALADOR_XMAS_GRASS_FIX underlay",
+    "name": "FALADOR_XMAS_GRASS_FIX",
     "area": "FALADOR_XMAS_GRASS_FIX",
     "description": "For when ground blending is ENABLED",
     "underlayIds": [ 58, 59, 159 ],
@@ -6299,12 +6299,12 @@
     "overlayIds": [ 197 ],
     "groundMaterial": "DIRT",
     "replacements": {
-      "FALADOR_XMAS_GRASS_FIX_UNBLEND_PATH": "!blending"
+      "FALADOR_XMAS_GRASS_FIX_PATH_UNBLEND": "!blending"
     },
     "shiftLightness": 27
   },
   {
-    "name": "FALADOR_XMAS_GRASS_FIX_UNBLEND_PATH",
+    "name": "FALADOR_XMAS_GRASS_FIX_PATH_UNBLEND",
     "area": "ICEBERG",
     "description": "For when ground blending is DISABLED",
     "groundMaterial": "DIRT",
