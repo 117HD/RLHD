@@ -1920,6 +1920,8 @@
       4986,
       4987,
       4988,
+      4989,
+      4990,
       5341,
       9502,
       9503,
@@ -3692,8 +3694,13 @@
   },
   {
     "description": "MORYTANIA_SLAYER_TOWER_WALLS",
-    "baseMaterial": "GRUNGE_1",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 343,
+    "uvScale": 0.8,
+    "flatNormals": true,
     "objectIds": [
+      2109,
       2160,
       2161,
       2162,
@@ -3705,12 +3712,63 @@
       2168,
       2169,
       2170,
-      2172,
-      4332,
-      2171,
-      2114
+      2171
+    ]
+  },
+  {
+    "description": "Morytania Slayer Tower stairs",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 343,
+    "uvScale": 0.8,
+    "flatNormals": true,
+    "objectIds": [
+      2114,
+      2118,
+      2119,
+      2120
+    ]
+  },
+  {
+    "description": "Morytania Slayer Tower Walls over door bricks",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 343,
+    "uvScale": 0.8,
+    "flatNormals": true,
+    "objectIds": [
+      2110,
+      2106
+    ]
+  },
+  {
+    "description": "Morytania Slayer Tower doors with metal hinges",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "description": "Metal hinges",
+        "colors": "s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 42
+      }
     ],
-    "flatNormals": true
+    "objectIds": [
+      2100,
+      2101,
+      2102,
+      2103,
+      2104,
+      2105,
+      2108,
+      2111,
+      2112,
+      2113
+    ]
   },
   {
     "description": "TOB_VERZIK_TILE_FLOOR",
@@ -6042,11 +6100,13 @@
   {
     "description": "Wooden tables - Solid - Cobwebs",
     "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "flatNormals": true,
     "objectIds": [
       616,
       25615
-    ],
-    "flatNormals": true
+    ]
   },
   {
     "description": "Wooden tables - Solid",
@@ -7161,6 +7221,7 @@
     "description": "Rock-Like Object - Rubble - Small",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
+      2172,
       5203,
       5205,
       24022,
@@ -10560,8 +10621,6 @@
     "description": "Objects - Wooden - Chair 2",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      1898,
-      1899,
       5346,
       7182,
       12887,
@@ -10608,6 +10667,34 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.8
+  },
+  {
+    "description": "Slayer Tower broken chairs",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.6,
+    "objectIds": [
+      1898,
+      1899
+    ]
+  },
+  {
+    "description": "Slayer Tower broken chair with golden ornament",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Gold",
+        "colors": "l > 12",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS"
+      }
+    ],
+    "objectIds": [
+      1896
+    ]
   },
   {
     "description": "Objects - Wooden - Ugly combined backed wooden chair",
@@ -14148,6 +14235,7 @@
   {
     "description": "Ground Decoration - Flat Rocks - Small",
     "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
     "objectIds": [
       1862,
       2159,
@@ -15526,6 +15614,7 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       1032,
+      2107,
       10605
     ],
     "uvType": "BOX",
@@ -22877,6 +22966,7 @@
     "description": "Skeleton with helmet named corpse",
     "baseMaterial": "BONE",
     "objectIds": [
+      4984,
       7208
     ],
     "uvType": "BOX",
@@ -22886,6 +22976,8 @@
     "description": "Skeleton named corpse",
     "baseMaterial": "BONE",
     "objectIds": [
+      2176,
+      4983,
       21802,
       21803
     ],
@@ -25777,36 +25869,6 @@
     ]
   },
   {
-    "description": "Baxtorian Falls - Tables - Cloth",
-    "baseMaterial": "CARPET",
-    "objectIds": [
-      1901
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.4,
-    "colorOverrides": [
-      {
-        "colors": [ "h == 3", "h == 10" ],
-        "baseMaterial": "METALLIC_1_LIGHT"
-      }
-    ]
-  },
-  {
-    "description": "Baxtorian Falls - Throne - Broken",
-    "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [
-      1896
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.7,
-    "colorOverrides": [
-      {
-        "colors": "l > 11",
-        "baseMaterial": "METALLIC_1_LIGHT"
-      }
-    ]
-  },
-  {
     "description": "Baxtorian Falls - Pillar",
     "baseMaterial": "MARBLE_1",
     "objectIds": [
@@ -26930,6 +26992,94 @@
     "flatNormals": true,
     "objectIds": [
       52098
+    ]
+  },
+  {
+    "description": "Mortytania Slayer Tower Spiked Chain shortcuts",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvOrientation": 343,
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      16537,
+      16538
+    ]
+  },
+  {
+    "description": "Ground decoration blood",
+    "baseMaterial": "METALLIC_NONE_GLOSS",
+    "objectIds": [
+      654,
+      3666,
+      3667,
+      3668
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Table with no visible legs and a golden candleholder",
+    "baseMaterial": "CARPET",
+    "uvScale": 0.8,
+    "uvOrientation": 256,
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Candleholder",
+        "colors": "h == 10",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      1901
+    ]
+  },
+  {
+    "description": "Morytania Slayer Tower roof entrance - Dynamic",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 343,
+    "uvScale": 0.8,
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "description": "Mossy substance",
+        "colors": "h == 21",
+        "baseMaterial": "LEAF_VEINS"
+      }
+    ],
+    "objectIds": [
+      31672,
+      31673
+    ]
+  },
+  {
+    "description": "Morytania Slayer Tower roof exit",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 343,
+    "uvScale": 0.8,
+    "flatNormals": true,
+    "objectIds": [
+      31674
+    ]
+  },
+  {
+    "description": "Morytania Slayer Magical Chest",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h > 13",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvOrientation": 42
+      }
+    ],
+    "objectIds": [
+      31675
     ]
   }
 ]
