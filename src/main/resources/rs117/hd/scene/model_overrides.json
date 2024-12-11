@@ -10621,8 +10621,6 @@
     "description": "Objects - Wooden - Chair 2",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      1898,
-      1899,
       5346,
       7182,
       12887,
@@ -25871,36 +25869,6 @@
     ]
   },
   {
-    "description": "Baxtorian Falls - Tables - Cloth",
-    "baseMaterial": "CARPET",
-    "objectIds": [
-      1901
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.4,
-    "colorOverrides": [
-      {
-        "colors": [ "h == 3", "h == 10" ],
-        "baseMaterial": "METALLIC_1_LIGHT"
-      }
-    ]
-  },
-  {
-    "description": "Baxtorian Falls - Throne - Broken",
-    "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [
-      1896
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.7,
-    "colorOverrides": [
-      {
-        "colors": "l > 11",
-        "baseMaterial": "METALLIC_1_LIGHT"
-      }
-    ]
-  },
-  {
     "description": "Baxtorian Falls - Pillar",
     "baseMaterial": "MARBLE_1",
     "objectIds": [
@@ -27035,14 +27003,6 @@
     "objectIds": [
       16537,
       16538
-    ]
-  },
-  {
-    "description": "Rock stick rubble that needs proper assignment - Check model",
-    "baseMaterial": "GREY_75",
-    "uvScale": 0.6,
-    "objectIds": [
-      4332
     ]
   },
   {
