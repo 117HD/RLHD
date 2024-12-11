@@ -1635,6 +1635,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		frameTimer.end(Timer.DRAW_SCENE);
 		frameTimer.begin(Timer.UPLOAD_GEOMETRY);
+		frameTimer.begin(Timer.RENDER_FRAME);
 
 		// The client only updates animations once per client tick, so we can skip updating geometry buffers,
 		// but the compute shaders should still be executed in case the camera angle has changed.
@@ -1893,6 +1894,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (gameState == GameState.STARTING) {
 			frameTimer.end(Timer.DRAW_FRAME);
 			return;
+		}
+
+		if(sceneContext == null){
+			frameTimer.begin(Timer.RENDER_FRAME);
 		}
 
 		if (lastFrameTimeMillis > 0) {
@@ -2273,6 +2278,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		drawUi(overlayColor, canvasHeight, canvasWidth);
 
 		try {
+			frameTimer.end(Timer.RENDER_FRAME);
 			frameTimer.begin(Timer.SWAP_BUFFERS);
 			awtContext.swapBuffers();
 			frameTimer.end(Timer.SWAP_BUFFERS);
@@ -3370,7 +3376,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	public void checkGLErrors() {
-		if (!log.isDebugEnabled())
+		if (!log.isDebugEnabled() || developerTools.isFrameTimingsOverlayEnabled())
 			return;
 
 		while (true) {
