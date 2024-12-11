@@ -1,7 +1,15 @@
 [
   {
+    "name": "DEFAULT_GRASS_BLENDED",
+    "groundMaterial": "OVERWORLD_GRASS_1",
+    "maxLightness": 22
+  },
+  {
     "name": "DEFAULT_GRASS",
-    "groundMaterial": "OVERWORLD_GRASS_1"
+    "groundMaterial": "OVERWORLD_GRASS_1",
+    "replacements": {
+      "DEFAULT_GRASS_BLENDED": "blending"
+    }
   },
   {
     "name": "DEFAULT_DIRT",
@@ -6597,6 +6605,7 @@
     ],
     "groundMaterial": "OVERWORLD_GRASS_1",
     "replacements": {
+      "DEFAULT_GRASS_BLENDED": "blending",
       "WINTER_GRASS": "season == WINTER"
     }
   },
@@ -6712,7 +6721,7 @@
     "groundMaterial": "GRUNGE"
   },
   {
-    "name": "COMPLEX_TILES",
+    "name": "OVERWORLD_COMPLEX_TILES",
     "area": "OVERWORLD",
     "underlayIds": [
       13,
