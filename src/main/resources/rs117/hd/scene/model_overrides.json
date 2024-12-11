@@ -14268,11 +14268,9 @@
     "description": "Blast Furnace - Wooden",
     "baseMaterial": "METALLIC_1",
     "objectIds": [
-      9102,
       9104,
       9105,
       9106,
-      9107,
       9108
     ],
     "uvType": "BOX",
