@@ -8596,7 +8596,17 @@
       44715,
       44717,
       44719,
-      44720
+      44720,
+      44751,
+      44752,
+      44753,
+      44754,
+      44755,
+      44756,
+      44757,
+      44758,
+      44759,
+      44760
     ],
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -14488,13 +14498,15 @@
     "description": "Objects - Stone - Giants Foundry - Lava Rocks",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
+      44764,
+      44765,
       44766,
       44767,
       44768,
-      44769
+      44769,
+      44770
     ],
-    "uvType": "MODEL_XZ",
-    "uvScale": 0.58
+    "uvType": "MODEL_XZ"
   },
   {
     "description": "Objects - Stone - Giants Foundry - Lava Rocks - Small",
@@ -14502,11 +14514,176 @@
     "objectIds": [
       42494,
       42495,
-      42496
+      42496,
+      42497
     ],
     "uvType": "MODEL_XZ",
     "uvScale": 0.8,
     "uvOrientation": 128
+  },
+  {
+    "description": "Giants Foundry - Lava Pool",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      44631
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Objects - Misc - Giants Foundry - Hammer",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      44727
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 612,
+    "colorOverrides": [
+      {
+        "colors": [ "s == 0" ],
+        "baseMaterial": "ROCK_3"
+      }
+    ]
+  },
+  {
+    "description": "Giants Foundry - Trip Hammer",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "objectIds": [
+      44619
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 2" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "colors": [ "h == 5" ],
+        "baseMaterial": "STONE_NORMALED"
+      }
+    ]
+  },
+  {
+    "description": "Giants Foundry - Belt System",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "objectIds": [
+      44762,
+      44763
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "colorOverrides": [
+      {
+        "colors": [ "h == 2" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientationX":512,
+        "uvScale": 0.4
+      },
+      {
+        "colors": [ "h == 5" ],
+        "baseMaterial": "GRAY_90",
+        "uvType": "GEOMETRY"
+      }
+    ]
+  },
+  {
+    "description": "Giants Foundry - Grindstone",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "objectIds": [
+      44620
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 2" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientationX":512,
+        "uvScale": 0.4
+      },
+      {
+        "colors": [ "h == 5" ],
+        "baseMaterial": "GRAY_90",
+        "uvType": "GEOMETRY"
+      }
+    ]
+  },
+  {
+    "description": "Giants Foundry - Polishing Wheel",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "objectIds": [
+      44621
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 2" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientationX":512,
+        "uvScale": 0.4
+      },
+      {
+        "colors": [ "h == 0" ],
+        "baseMaterial": "GRAY_90"
+      }
+    ]
+  },
+  {
+    "description": "Giants Foundry - Waterwheel",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "objectIds": [
+      44761
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 2" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "GEOMETRY"
+      },
+      {
+        "colors": [ "h == 33" ],
+        "uvType": "MODEL_XZ",
+        "baseMaterial": "WATER_FOUNTAIN_FLAT",
+        "uvOrientation": 750
+      }
+    ]
+  },
+  {
+    "description": "Giants Foundry - Waterfall",
+    "baseMaterial": "ROCK_2",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 256,
+    "objectIds": [
+      44632
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 33" ],
+        "uvType": "BOX",
+        "uvOrientation": 750,
+        "uvScale": 1.5,
+        "baseMaterial": "WATER_FOUNTAIN_FLAT"
+      }
+    ]
+  },
+  {
+    "description": "Giants Foundry - Waterfall Tile",
+    "baseMaterial": "WATER_FOUNTAIN_FLAT",
+    "uvType": "BOX",
+    "uvOrientation": 750,
+    "uvScale": 1.5,
+    "objectIds": [
+      44747,
+      44748,
+      44749,
+      44750
+    ]
   },
   {
     "description": "Giants Anvil",
@@ -14531,6 +14708,27 @@
     "description": "Giants Foundry -  Wooden - Chest",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [ 44726 ],
+    "uvType": "BOX",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Giants Foundry -  Wooden - Pile of Buckets",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 33309 ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientationY": -200,
+    "colorOverrides": [
+      {
+        "colors": [ "s == 0" ],
+        "baseMaterial": "METALLIC_1"
+      }
+    ]
+  },
+  {
+    "description": "Giants Foundry -  Wooden - Crate",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 44638 ],
     "uvType": "BOX",
     "uvOrientation": 512
   },
