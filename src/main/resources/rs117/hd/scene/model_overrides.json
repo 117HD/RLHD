@@ -26052,14 +26052,14 @@
       },
       {
         "colors": [ "h == 32" ],
-        "baseMaterial": "FINE_CARPET",
+        "baseMaterial": "BURLAP",
         "uvType": "MODEL_XZ",
         "uvScale": 0.7,
         "uvOrientation": 256
       },
       {
         "colors": ["h == 8" ],
-        "baseMaterial": "FINE_CARPET",
+        "baseMaterial": "BURLAP",
         "uvType": "BOX",
         "uvOrientation": 256
       }
