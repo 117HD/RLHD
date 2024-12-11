@@ -2989,11 +2989,12 @@
   },
   {
     "name": "LLETYA_WOOD_FLOORS",
-    "area": "LLETYA_UPPER_LEVELS",
+    "area": "Lletya Wood Floors Fix",
     "overlayIds": [
       22
     ],
-    "groundMaterial": "HD_WOOD_PLANKS_2"
+    "groundMaterial": "HD_WOOD_PLANKS_2",
+    "uvScale": 1.25
   },
   {
     "name": "TIRANNWN_PATHS",
@@ -3002,6 +3003,16 @@
       106
     ],
     "groundMaterial": "GRASSY_DIRT"
+  },
+  {
+    "name": "Grand Library Floor",
+    "area": "SOTE_GRAND_LIBRARY",
+    "groundMaterial": "CARPET",
+    "overlayIds": [
+      63
+    ],
+    "uvOrientation": 256,
+    "uvScale": 0.7
   },
   {
     "name": "PRIFDDINAS_POND_WATER",
@@ -3687,6 +3698,19 @@
     "blended": false
   },
   {
+    "name": "CAMDOZAAL_TILES",
+    "area": "CAMDOZAAL_TILED_FLOOR",
+    "underlayIds": [
+      16,
+      44,
+      46
+    ],
+    "groundMaterial": "MARBLE_1",
+    "uvOrientation": 117,
+    "uvScale": 1.2,
+    "blended": false
+  },
+  {
     "name": "CAMDOZAAL_STONE_PATH",
     "area": "CAMDOZAAL",
     "overlayIds": [
@@ -3950,8 +3974,10 @@
     "name": "CANOE_CUTSCENE_STONE",
     "area": "CANOE_CUTSCENE",
     "overlayIds": [
-      0,
       11
+    ],
+    "underlayIds": [
+      72
     ],
     "groundMaterial": "STONE_SCROLLING"
   },
@@ -6237,7 +6263,7 @@
     "overlayIds": [
       256
     ],
-    "groundMaterial": "FINE_CARPET"
+    "groundMaterial": "CARPET"
   },
 
   {
@@ -6532,6 +6558,13 @@
       191
     ],
     "groundMaterial": "ROCKY_CAVE_FLOOR"
+  },
+  {
+    "name": "THE_GAUNTLET_FLOOR_ROOT_FIX",
+    "area": "THE_GAUNTLET_FLOOR_ROOT_FIX",
+    "underlayIds": [ 72 ],
+    "groundMaterial": "MARBLE_2",
+    "uvScale": 0.5
   },
   {
     "name": "OVERWORLD_GRASS_UNDERLAY",
