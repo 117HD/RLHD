@@ -1668,7 +1668,7 @@
   },
   {
     "description": "Tirannwn - Tents",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "BURLAP",
     "objectIds": [
       781,
       783,
@@ -8185,8 +8185,7 @@
       1366,
       1367,
       1368,
-      3960,
-      3959
+      3960
     ],
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -10777,28 +10776,9 @@
     ]
   },
   {
-    "description": "Objects - Ardougne Castle - Cabinet",
-    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
-    "objectIds": [
-      346,
-      347
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.33,
-    "uvOrientation": 512,
-    "colorOverrides": [
-      {
-        "colors": [ "h == 0", "h == 8" ],
-        "baseMaterial": "GRUNGE_3",
-        "uvType": "MODEL_YZ"
-      }
-    ]
-  },
-  {
     "description": "Objects - Ardougne Castle - Chairs with fabric",
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [
-      1090,
       1097
     ],
     "uvType": "BOX",
@@ -25298,7 +25278,7 @@
   },
   {
     "description": "Grand Library - Floor - Carpet",
-    "baseMaterial": "FINE_CARPET",
+    "baseMaterial": "CARPET",
     "objectIds": [ 35430, 35431, 35432, 35433 ],
     "uvType": "MODEL_XZ"
   },
@@ -25312,7 +25292,7 @@
       },
       {
         "colors": [ "h == 57" ],
-        "baseMaterial": "FINE_CARPET",
+        "baseMaterial": "CARPET",
         "uvType": "MODEL_XZ"
       }
     ]
