@@ -18669,15 +18669,15 @@
     ]
   },
   {
-    "description": "FRAGMENT_OF_SEREN",
+    "description": "FRAGMENT_OF_SEREN_PRE_DEFEAT",
     "height": 200,
     "alignment": "CENTER",
     "radius": 500,
-    "strength": 17.5,
+    "strength": 14.5,
     "color": [
-      187,
-      153,
-      255
+      255,
+      0,
+      0
     ],
     "type": "PULSE",
     "duration": 3200,
@@ -19953,6 +19953,24 @@
       11606,
       15158,
       6203
+    ]
+  },
+  {
+    "description": "STANDING_TORCH_SHORTER_RADIUS",
+    "height": 200,
+    "alignment": "CENTER",
+    "radius": 350,
+    "strength": 9,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      10658
     ]
   },
   {
@@ -23014,18 +23032,18 @@
   },
   {
     "description": "WELL_OF_VOYAGE",
-    "height": 200,
+    "height": 400,
     "alignment": "CENTER",
-    "radius": 250,
-    "strength": 15,
+    "radius": 700,
+    "strength": 20,
     "color": [
       255,
       255,
       255
     ],
     "type": "PULSE",
-    "duration": 1200,
-    "range": 30,
+    "duration": 3000,
+    "range": 7,
     "objectIds": [
       4004,
       4005
@@ -23033,9 +23051,9 @@
   },
   {
     "description": "ELVEN_LAMP",
-    "height": 180,
+    "height": 160,
     "alignment": "CENTER",
-    "radius": 250,
+    "radius": 350,
     "strength": 10,
     "color": [
       255,
@@ -23043,8 +23061,8 @@
       255
     ],
     "type": "PULSE",
-    "duration": 1000,
-    "range": 10,
+    "duration": 2000,
+    "range": 7,
     "objectIds": [
       35867,
       35868,
@@ -23055,10 +23073,26 @@
   },
   {
     "description": "GRAND_LIBRARY_PORTAL",
-    "height": 150,
-    "alignment": "CENTER",
+    "offset": [ -15, 150, 0 ],
     "radius": 450,
-    "strength": 12.5,
+    "strength": 3,
+    "color": [
+      0,
+      200,
+      225
+    ],
+    "type": "PULSE",
+    "duration": 1200,
+    "range": 10,
+    "objectIds": [
+      35075
+    ]
+  },
+  {
+    "description": "GRAND_LIBRARY_PORTAL_2",
+    "offset": [ 0, 5, 0 ],
+    "radius": 450,
+    "strength": 10,
     "color": [
       0,
       200,
@@ -23073,10 +23107,9 @@
   },
   {
     "description": "GRAND_LIBRARY_CRYSTAL_1",
-    "height": 310,
-    "alignment": "FRONTLEFT",
-    "radius": 200,
-    "strength": 12.5,
+    "offset": [ 50, 310, -50 ],
+    "radius": 350,
+    "strength": 8,
     "color": [
       0,
       200,
@@ -23091,10 +23124,9 @@
   },
   {
     "description": "GRAND_LIBRARY_CRYSTAL_2",
-    "height": 140,
-    "alignment": "FRONTLEFT",
-    "radius": 200,
-    "strength": 12.5,
+    "offset": [ 50, 160, -50 ],
+    "radius": 350,
+    "strength": 8,
     "color": [
       0,
       200,
@@ -23106,15 +23138,16 @@
     "objectIds": [
       35059,
       35061,
+      35064,
       35384
     ]
   },
   {
     "description": "GRAND_LIBRARY_LIGHT_1",
-    "height": 140,
+    "height": 90,
     "alignment": "CENTER",
-    "radius": 200,
-    "strength": 12.5,
+    "radius": 300,
+    "strength": 10,
     "color": [
       0,
       200,
@@ -23129,10 +23162,9 @@
   },
   {
     "description": "GRAND_LIBRARY_LIGHT_2",
-    "height": 310,
-    "alignment": "CENTER",
-    "radius": 200,
-    "strength": 12.5,
+    "offset": [ -40, 360, 0 ],
+    "radius": 350,
+    "strength": 10,
     "color": [
       0,
       200,
@@ -23148,11 +23180,10 @@
     ]
   },
   {
-    "description": "GRAND_LIBRARY_SEAL",
-    "height": 150,
-    "alignment": "FRONT",
+    "description": "GRAND_LIBRARY_SEAL 1",
+    "offset": [ -90, 160, -50 ],
     "radius": 300,
-    "strength": 12.5,
+    "strength": 8,
     "color": [
       0,
       200,
@@ -23170,14 +23201,65 @@
       35461,
       35463,
       35465
-    ]
+    ],
+    "fadeOutDuration": 300
+  },
+  {
+    "description": "GRAND_LIBRARY_SEAL_2",
+    "offset": [ 90, 160, -50 ],
+    "radius": 300,
+    "strength": 8,
+    "color": [
+      0,
+      200,
+      225
+    ],
+    "type": "PULSE",
+    "duration": 3200,
+    "range": 5,
+    "objectIds": [
+      35451,
+      35453,
+      35455,
+      35457,
+      35459,
+      35461,
+      35463,
+      35465
+    ],
+    "fadeOutDuration": 300
+  },
+  {
+    "description": "GRAND_LIBRARY_SEAL_3",
+    "offset": [ 0, 150, -80 ],
+    "radius": 300,
+    "strength": 5,
+    "color": [
+      0,
+      200,
+      225
+    ],
+    "type": "PULSE",
+    "duration": 3200,
+    "range": 5,
+    "objectIds": [
+      35451,
+      35453,
+      35455,
+      35457,
+      35459,
+      35461,
+      35463,
+      35465
+    ],
+    "fadeOutDuration": 300
   },
   {
     "description": "GRAND_LIBRARY_SEAL_BROKEN",
     "height": 150,
-    "alignment": "FRONT",
-    "radius": 300,
-    "strength": 12.5,
+    "alignment": "BACK",
+    "radius": 80,
+    "strength": 120,
     "color": [
       0,
       200,
@@ -23199,7 +23281,7 @@
     ]
   },
   {
-    "description": "FRAGMENT_OF_SEREN",
+    "description": "FRAGMENT_OF_SEREN_POST_DEFEAT",
     "height": 280,
     "alignment": "CENTER",
     "radius": 500,
@@ -23272,7 +23354,7 @@
       255
     ],
     "type": "PULSE",
-    "duration": 900,
+    "duration": 2000,
     "range": 20,
     "objectIds": [
       36083,
@@ -23354,9 +23436,8 @@
   },
   {
     "description": "GAUNTLET_LIT_NODE_1",
-    "height": 210,
-    "alignment": "BACKRIGHT",
-    "radius": 200,
+    "offset": [ -80, 210, 20 ],
+    "radius": 300,
     "strength": 10,
     "color": [
       0,
@@ -23372,9 +23453,8 @@
   },
   {
     "description": "GAUNTLET_LIT_NODE_2",
-    "height": 210,
-    "alignment": "BACKLEFT",
-    "radius": 200,
+    "offset": [ 80, 210, 20 ],
+    "radius": 300,
     "strength": 10,
     "color": [
       0,
@@ -23423,6 +23503,23 @@
     "objectIds": [
       36064
     ]
+  },
+  {
+    "description": "GAUNTLET_FISHING_SPOT",
+    "height": 40,
+    "alignment": "CENTER",
+    "radius": 225,
+    "strength": 10,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      36068
+    ],
+    "fadeOutDuration": 100
   },
   {
     "description": "CORRUPTED_TELEPORT_PLATFORM",
@@ -23498,10 +23595,9 @@
   },
   {
     "description": "CORRUPTED_GAUNTLET_LIT_NODE_1",
-    "height": 210,
-    "alignment": "BACKRIGHT",
-    "radius": 200,
-    "strength": 10,
+    "offset": [ -80, 210, 20 ],
+    "radius": 350,
+    "strength": 7,
     "color": [
       255,
       0,
@@ -23516,10 +23612,9 @@
   },
   {
     "description": "CORRUPTED_GAUNTLET_LIT_NODE_2",
-    "height": 210,
-    "alignment": "BACKLEFT",
-    "radius": 200,
-    "strength": 10,
+    "offset": [ 80, 210, 20 ],
+    "radius": 350,
+    "strength": 7,
     "color": [
       255,
       0,
@@ -23567,6 +23662,23 @@
     "objectIds": [
       35967
     ]
+  },
+  {
+    "description": "GAUNTLET_FISHING_SPOT",
+    "height": 40,
+    "alignment": "CENTER",
+    "radius": 225,
+    "strength": 10,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      35971
+    ],
+    "fadeOutDuration": 100
   },
   {
     "description": "ZALCANO_ROCK_FORMATION_GLOWING",
@@ -33341,10 +33453,9 @@
   },
   {
     "description": "STRONGHOLD_OF_SECURITY_WAR_LIGHT",
-    "height": 90,
-    "alignment": "RIGHT",
+    "height": 80,
     "radius": 400,
-    "strength": 7.5,
+    "strength": 9.5,
     "color": [
       255,
       80,
@@ -33376,10 +33487,9 @@
   },
   {
     "description": "STRONGHOLD_OF_SECURITY_FAMINE_LIGHT",
-    "height": 220,
-    "alignment": "RIGHT",
-    "radius": 400,
-    "strength": 7.5,
+    "offset": [ -30, 250, 0 ],
+    "radius": 500,
+    "strength": 3.5,
     "color": [
       255,
       216,
@@ -33427,8 +33537,7 @@
   },
   {
     "description": "STRONGHOLD_OF_SECURITY_DEATH_LIGHT",
-    "height": 225,
-    "alignment": "FRONT",
+    "offset": [ 40, 225, 0 ],
     "radius": 550,
     "strength": 4,
     "color": [
@@ -35598,6 +35707,82 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 20
+  },
+  {
+    "description": "Hespori Status Flower - Open",
+    "height": 100,
+    "alignment": "CENTER",
+    "radius": 195,
+    "strength": 15,
+    "fadeInDuration": 100,
+    "color": [
+      40,
+      240,
+      40
+    ],
+    "type": "STATIC",
+    "duration": 4500,
+    "range": 10,
+    "objectIds": [ 34705 ]
+  },
+  {
+    "description": "Hespori Combat Flower - Open - Wide",
+    "height": 70,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 7,
+    "fadeOutDuration": 700,
+    "fadeInDuration": 75,
+    "spawnDelay": 1300,
+    "color": [
+      40,
+      240,
+      40
+    ],
+    "type": "PULSE",
+    "duration": 2500,
+    "range": 15,
+    "npcIds": [ 8584 ],
+    "animationIds": [ -1, 8229 ]
+  },
+  {
+    "description": "Hespori Combat Flower - Open - Short",
+    "height": 70,
+    "alignment": "CENTER",
+    "radius": 125,
+    "strength": 12,
+    "fadeOutDuration": 600,
+    "fadeInDuration": 500,
+    "spawnDelay": 400,
+    "color": [
+      40,
+      240,
+      40
+    ],
+    "type": "PULSE",
+    "duration": 2500,
+    "range": 15,
+    "npcIds": [ 8584 ],
+    "animationIds": [ -1, 8229 ]
+  },
+  {
+    "description": "Hespori Magic Attack",
+    "radius": 250,
+    "height": -50,
+    "strength": 8.8,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 1000,
+    "fadeOutDuration": 250,
+    "projectileIds": [
+      1640
+    ]
   },
   {
     "description": "Baba Yaga's House - Cooking Range",
