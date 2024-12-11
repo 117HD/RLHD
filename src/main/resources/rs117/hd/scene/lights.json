@@ -18652,15 +18652,15 @@
     ]
   },
   {
-    "description": "FRAGMENT_OF_SEREN",
+    "description": "FRAGMENT_OF_SEREN_PRE_DEFEAT",
     "height": 200,
     "alignment": "CENTER",
     "radius": 500,
-    "strength": 17.5,
+    "strength": 14.5,
     "color": [
-      187,
-      153,
-      255
+      255,
+      0,
+      0
     ],
     "type": "PULSE",
     "duration": 3200,
@@ -19936,6 +19936,24 @@
       11606,
       15158,
       6203
+    ]
+  },
+  {
+    "description": "STANDING_TORCH_SHORTER_RADIUS",
+    "height": 200,
+    "alignment": "CENTER",
+    "radius": 350,
+    "strength": 9,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      10658
     ]
   },
   {
@@ -22997,18 +23015,18 @@
   },
   {
     "description": "WELL_OF_VOYAGE",
-    "height": 200,
+    "height": 400,
     "alignment": "CENTER",
-    "radius": 250,
-    "strength": 15,
+    "radius": 700,
+    "strength": 20,
     "color": [
       255,
       255,
       255
     ],
     "type": "PULSE",
-    "duration": 1200,
-    "range": 30,
+    "duration": 3000,
+    "range": 7,
     "objectIds": [
       4004,
       4005
@@ -23016,9 +23034,9 @@
   },
   {
     "description": "ELVEN_LAMP",
-    "height": 180,
+    "height": 160,
     "alignment": "CENTER",
-    "radius": 250,
+    "radius": 350,
     "strength": 10,
     "color": [
       255,
@@ -23026,8 +23044,8 @@
       255
     ],
     "type": "PULSE",
-    "duration": 1000,
-    "range": 10,
+    "duration": 2000,
+    "range": 7,
     "objectIds": [
       35867,
       35868,
@@ -23038,10 +23056,26 @@
   },
   {
     "description": "GRAND_LIBRARY_PORTAL",
-    "height": 150,
-    "alignment": "CENTER",
+    "offset": [ -15, 150, 0 ],
     "radius": 450,
-    "strength": 12.5,
+    "strength": 3,
+    "color": [
+      0,
+      200,
+      225
+    ],
+    "type": "PULSE",
+    "duration": 1200,
+    "range": 10,
+    "objectIds": [
+      35075
+    ]
+  },
+  {
+    "description": "GRAND_LIBRARY_PORTAL_2",
+    "offset": [ 0, 5, 0 ],
+    "radius": 450,
+    "strength": 10,
     "color": [
       0,
       200,
@@ -23056,10 +23090,9 @@
   },
   {
     "description": "GRAND_LIBRARY_CRYSTAL_1",
-    "height": 310,
-    "alignment": "FRONTLEFT",
-    "radius": 200,
-    "strength": 12.5,
+    "offset": [ 50, 310, -50 ],
+    "radius": 350,
+    "strength": 8,
     "color": [
       0,
       200,
@@ -23074,10 +23107,9 @@
   },
   {
     "description": "GRAND_LIBRARY_CRYSTAL_2",
-    "height": 140,
-    "alignment": "FRONTLEFT",
-    "radius": 200,
-    "strength": 12.5,
+    "offset": [ 50, 160, -50 ],
+    "radius": 350,
+    "strength": 8,
     "color": [
       0,
       200,
@@ -23089,15 +23121,16 @@
     "objectIds": [
       35059,
       35061,
+      35064,
       35384
     ]
   },
   {
     "description": "GRAND_LIBRARY_LIGHT_1",
-    "height": 140,
+    "height": 90,
     "alignment": "CENTER",
-    "radius": 200,
-    "strength": 12.5,
+    "radius": 300,
+    "strength": 10,
     "color": [
       0,
       200,
@@ -23112,10 +23145,9 @@
   },
   {
     "description": "GRAND_LIBRARY_LIGHT_2",
-    "height": 310,
-    "alignment": "CENTER",
-    "radius": 200,
-    "strength": 12.5,
+    "offset": [ -40, 360, 0 ],
+    "radius": 350,
+    "strength": 10,
     "color": [
       0,
       200,
@@ -23131,11 +23163,10 @@
     ]
   },
   {
-    "description": "GRAND_LIBRARY_SEAL",
-    "height": 150,
-    "alignment": "FRONT",
+    "description": "GRAND_LIBRARY_SEAL 1",
+    "offset": [ -90, 160, -50 ],
     "radius": 300,
-    "strength": 12.5,
+    "strength": 8,
     "color": [
       0,
       200,
@@ -23153,14 +23184,65 @@
       35461,
       35463,
       35465
-    ]
+    ],
+    "fadeOutDuration": 300
+  },
+  {
+    "description": "GRAND_LIBRARY_SEAL_2",
+    "offset": [ 90, 160, -50 ],
+    "radius": 300,
+    "strength": 8,
+    "color": [
+      0,
+      200,
+      225
+    ],
+    "type": "PULSE",
+    "duration": 3200,
+    "range": 5,
+    "objectIds": [
+      35451,
+      35453,
+      35455,
+      35457,
+      35459,
+      35461,
+      35463,
+      35465
+    ],
+    "fadeOutDuration": 300
+  },
+  {
+    "description": "GRAND_LIBRARY_SEAL_3",
+    "offset": [ 0, 150, -80 ],
+    "radius": 300,
+    "strength": 5,
+    "color": [
+      0,
+      200,
+      225
+    ],
+    "type": "PULSE",
+    "duration": 3200,
+    "range": 5,
+    "objectIds": [
+      35451,
+      35453,
+      35455,
+      35457,
+      35459,
+      35461,
+      35463,
+      35465
+    ],
+    "fadeOutDuration": 300
   },
   {
     "description": "GRAND_LIBRARY_SEAL_BROKEN",
     "height": 150,
-    "alignment": "FRONT",
-    "radius": 300,
-    "strength": 12.5,
+    "alignment": "BACK",
+    "radius": 80,
+    "strength": 120,
     "color": [
       0,
       200,
@@ -23182,7 +23264,7 @@
     ]
   },
   {
-    "description": "FRAGMENT_OF_SEREN",
+    "description": "FRAGMENT_OF_SEREN_POST_DEFEAT",
     "height": 280,
     "alignment": "CENTER",
     "radius": 500,

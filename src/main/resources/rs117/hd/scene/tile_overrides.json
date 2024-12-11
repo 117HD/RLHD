@@ -2989,11 +2989,12 @@
   },
   {
     "name": "LLETYA_WOOD_FLOORS",
-    "area": "LLETYA_UPPER_LEVELS",
+    "area": "Lletya Wood Floors Fix",
     "overlayIds": [
       22
     ],
-    "groundMaterial": "HD_WOOD_PLANKS_2"
+    "groundMaterial": "HD_WOOD_PLANKS_2",
+    "uvScale": 1.25
   },
   {
     "name": "TIRANNWN_PATHS",
@@ -3002,6 +3003,16 @@
       106
     ],
     "groundMaterial": "GRASSY_DIRT"
+  },
+  {
+    "name": "Grand Library Floor",
+    "area": "SOTE_GRAND_LIBRARY",
+    "groundMaterial": "CARPET",
+    "overlayIds": [
+      63
+    ],
+    "uvOrientation": 256,
+    "uvScale": 0.7
   },
   {
     "name": "PRIFDDINAS_POND_WATER",
