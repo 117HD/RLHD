@@ -130,9 +130,8 @@
   },
   {
     "name": "HAM_HIDEOUT",
-    "aabbs": [
-      [ 3137, 9602, 3192, 9661 ]
-    ]
+    "regions": [ 12694 ],
+    "hideOtherAreas": true
   },
   {
     "name": "LUMBRIDGE_CASTLE",
@@ -491,6 +490,14 @@
     "hideOtherAreas": true
   },
   {
+    "name": "STRONGHOLD_OF_SECURITY_PESTILENCE_WATER_AND_DIRT_FIX",
+    "aabbs": [ [ 2121, 5290, 2131, 5303 ] ]
+  },
+  {
+    "name": "STRONGHOLD_OF_SECURITY_PESTILENCE_GRASS_FIX",
+    "aabbs": [ [ 2152, 5284, 0 ] ]
+  },
+  {
     "name": "STRONGHOLD_OF_SECURITY_DEATH",
     "regions": [
       9297
@@ -826,9 +833,9 @@
     "name": "DWARVEN_MINES",
     "regions": [ 12185 ],
     "aabbs": [
-      [ 2999, 9688, 3071, 9791, 0 ],
-      [ 2972, 9792, 3007, 9855, 0 ],
-      [ 2956, 9800, 2971, 9825, 0 ]
+      [ 2999, 9688, 3071, 9791 ],
+      [ 2972, 9792, 3007, 9855 ],
+      [ 2956, 9800, 2971, 9825 ]
     ],
     "hideOtherAreas": true
   },
@@ -1761,8 +1768,7 @@
     ],
     "aabbs": [
       [ 2531, 3070, 2622, 3127 ]
-    ],
-    "hideOtherAreas": true
+    ]
   },
   {
     "name": "YANILLE_DUNGEON",
@@ -5337,9 +5343,10 @@
   },
   {
     "name": "CLAN_HALL",
-    "regions": [
-      6997
-    ]
+    "aabbs": [
+      [ 1730, 5442, 1789, 5501 ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "LIGHTHOUSE",
@@ -5422,10 +5429,20 @@
     "hideOtherAreas": true
   },
   {
+    "name": "ANCIENT_CAVERN_1",
+    "regions": [ 6482, 6483 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "ANCIENT_CAVERN_2",
+    "regions": [ 6994, 6995 ],
+    "hideOtherAreas": true
+  },
+  {
     "name": "ANCIENT_CAVERN",
-    "regionBoxes": [
-      [ 6482, 6483 ],
-      [ 6994, 6995 ]
+    "areas": [
+      "ANCIENT_CAVERN_1",
+      "ANCIENT_CAVERN_2"
     ]
   },
   {

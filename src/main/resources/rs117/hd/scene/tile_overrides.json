@@ -3961,8 +3961,10 @@
     "name": "CANOE_CUTSCENE_STONE",
     "area": "CANOE_CUTSCENE",
     "overlayIds": [
-      0,
       11
+    ],
+    "underlayIds": [
+      72
     ],
     "groundMaterial": "STONE_SCROLLING"
   },
@@ -4593,6 +4595,30 @@
     "waterType": "WATER"
   },
   {
+    "name": "STRONGHOLD_OF_SECURITY_OOZE_WATER_FIX",
+    "area": "STRONGHOLD_OF_SECURITY_PESTILENCE_WATER_AND_DIRT_FIX",
+    "overlayIds": [
+      29
+    ],
+    "waterType": "ABYSS_BILE"
+  },
+  {
+    "area": "STRONGHOLD_OF_SECURITY_PESTILENCE_WATER_AND_DIRT_FIX",
+    "overlayIds": [
+      77
+    ],
+    "groundMaterial": "ABYSSAL_FLOOR",
+    "setSaturation": -2,
+    "blended": false
+  },
+  {
+    "area": "STRONGHOLD_OF_SECURITY_PESTILENCE_GRASS_FIX",
+    "overlayIds": [
+      29
+    ],
+    "groundMaterial": "ABYSSAL_FLOOR"
+  },
+  {
     "name": "OVERLAY_DIRT",
     "area": "ALL",
     "overlayIds": [
@@ -5016,7 +5042,7 @@
       61,
       93
     ],
-    "groundMaterial": "OOZE_FLOOR"
+    "groundMaterial": "ABYSSAL_FLOOR"
   },
   {
     "name": "STRONGHOLD_OF_SECURITY_GRASS",
@@ -6224,7 +6250,7 @@
     "overlayIds": [
       256
     ],
-    "groundMaterial": "FINE_CARPET"
+    "groundMaterial": "CARPET"
   },
 
   {
