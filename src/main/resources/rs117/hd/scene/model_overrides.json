@@ -393,7 +393,6 @@
       4796,
       4797,
       4798,
-      4809,
       4820,
       4821,
       4881,
@@ -509,7 +508,6 @@
       6723,
       6738,
       6762,
-      6793,
       6795,
       6824,
       7023,
@@ -2022,6 +2020,7 @@
       7267,
       7269,
       8724,
+      9484,
       9485,
       9486,
       9487,
@@ -4663,16 +4662,29 @@
     ]
   },
   {
+    "description": "Pyramid Plunder Walls - Exit Doors",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      20931,
+      20932
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": [ "l == 103", "l == 23" ],
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
     "description": "Pyramid Plunder Walls - Interior",
     "baseMaterial": "ROCK_3",
     "objectIds": [
-      20932,
       20933,
       20939,
       20937,
       20948,
       20949,
-      20931,
       21280,
       20934,
       20944,
@@ -4695,10 +4707,7 @@
   },
   {
     "description": "Pyramid Plunder Metallic Objects",
-    "baseMaterial": "METALLIC_1_LIGHT_SUPER_HIGHGLOSS",
     "objectIds": [
-      20946,
-      20947,
       21263,
       21267,
       21262,
@@ -4706,8 +4715,27 @@
       21261,
       21265
     ],
-    "uvType": "BOX",
-    "uvScale": 1.5
+    "colorOverrides": [
+      {
+        "colors": [ "h == 8" ],
+        "baseMaterial": "METALLIC_1_LIGHT_HIGHGLOSS"
+      }
+    ]
+  },
+  {
+    "description": "Pyramid Plunder Gold Chest",
+    "objectIds": [
+      20946,
+      20947
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 9" ],
+        "baseMaterial": "METALLIC_1_LIGHT_HIGHGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.2
+      }
+    ]
   },
   {
     "description": "Pyramid Plunder Wall Torch",
@@ -4715,7 +4743,15 @@
     "objectIds": [
       20942
     ],
-    "uvType": "BOX"
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "colorOverrides": [
+      {
+        "colors": [ "h < 7" ],
+        "baseMaterial": "GRAY_90"
+      }
+    ]
+
   },
   {
     "description": "Pyramid Plunder Sarcophagus",
@@ -4725,8 +4761,9 @@
       21257
     ],
     "uvType": "BOX",
-    "uvScale": 1.2,
-    "uvOrientation": 1142
+    "uvScale": 0.8,
+    "uvOrientation": 1142,
+    "uvOrientationX": 1
   },
   {
     "description": "Pyramid Plunder Sarcophagus Opened",
@@ -13968,7 +14005,24 @@
       20764
     ],
     "uvType": "BOX",
-    "uvScale": 0.6
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "colors": [ "h < 11" ],
+        "baseMaterial": "ROCK_2",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Barrows - Wall Fix",
+    "baseMaterial": "ROCK_2",
+    "areas": [ "BARROWS_CRYPTS" ],
+    "objectIds": [
+      20737
+    ],
+    "uvType": "MODEL_XZ"
   },
   {
     "description": "Morytania - Ground  - Stone - Stone Steps",
@@ -14973,6 +15027,7 @@
     ],
     "uvType": "BOX",
     "retainVanillaUvs": false,
+    "uvOrientation": 512,
     "uvScale": 0.65
   },
   {
@@ -14989,16 +15044,29 @@
       10528
     ],
     "uvType": "BOX",
-    "retainVanillaUvs": false,
+    "uvOrientation": 512,
     "uvScale": 0.65,
     "colorOverrides": [
       {
         "colors": [ 43060, 43082, 43084, 43110, 43120, 43125, 43099, 43123 ],
-        "baseMaterial": "NONE",
-        "uvType": "WORLD_XZ",
-        "uvScale": 2
+        "baseMaterial": "NONE"
       }
     ]
+  },
+  {
+    "description": "Objects - Concrete - Bank Booth - Closed",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "materialOverrides": {
+      "WOODEN_SCREEN": {
+        "textureMaterial": "WOODEN_SCREEN"
+      }
+    },
+    "objectIds": [
+      8142
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.65
   },
   {
     "description": "Objects - Concrete - Gravestone",
@@ -15175,7 +15243,14 @@
       1904,
       1907,
       1920,
-      17088
+      13090,
+      13091,
+      17088,
+      15453,
+      15454,
+      15455,
+      15456,
+      15457
     ],
     "flatNormals": true
   },
@@ -22958,10 +23033,11 @@
   },
   {
     "description": "Bankbooth with Glass Window - Lumbridge",
-    "baseMaterial": "WOOD_GRAIN_3",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [ 18491 ],
     "uvType": "BOX",
-    "uvScale": 0.8,
+    "uvScale": 0.4,
+    "uvOrientationZ": 512,
     "colorOverrides": [
       {
         "colors": [ 21549, 21594, 21630 ],
@@ -22972,20 +23048,22 @@
   },
   {
     "description": "Bankbooth with Shutters - Lumbridge",
-    "baseMaterial": "WOOD_GRAIN_3",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [ 18492 ],
     "uvType": "BOX",
-    "uvScale": 0.8
+    "uvScale": 0.4,
+    "uvOrientationZ": 512
   },
   {
     "description": "Bankbooth with Glass Window - Varrock",
-    "baseMaterial": "WOOD_GRAIN_3",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [ 10583 ],
     "uvType": "BOX",
-    "uvScale": 0.8,
+    "uvScale": 0.4,
+    "uvOrientationZ": 512,
     "colorOverrides": [
       {
-        "colors": [ 43054, 43082, 43102, 43125 ],
+        "colors": [ "h == 42" ],
         "baseMaterial": "NONE",
         "uvType": "WORLD_XY"
       }
@@ -22993,20 +23071,22 @@
   },
   {
     "description": "Bankbooth with Shutters - Corsair Cove",
-    "baseMaterial": "WOOD_GRAIN_3",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [ 10585 ],
     "uvType": "BOX",
-    "uvScale": 0.8
+    "uvScale": 0.4,
+    "uvOrientationZ": 512
   },
   {
     "description": "Bankbooth with Glass Window - Falador",
-    "baseMaterial": "WOOD_GRAIN_3",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [ 24101 ],
     "uvType": "BOX",
-    "uvScale": 0.8,
+    "uvScale": 0.4,
+    "uvOrientationZ": 512,
     "colorOverrides": [
       {
-        "colors": [ 43054, 43082, 43102, 43125 ],
+        "colors": [ "h == 42" ],
         "baseMaterial": "NONE",
         "uvType": "WORLD_XY"
       }
@@ -23014,10 +23094,11 @@
   },
   {
     "description": "Bankbooth with Glass Window - Seers",
-    "baseMaterial": "WOOD_GRAIN_3",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [ 25808 ],
     "uvType": "BOX",
-    "uvScale": 0.8,
+    "uvScale": 0.4,
+    "uvOrientationZ": 512,
     "colorOverrides": [
       {
         "colors": [ 21549, 21594, 21630 ],
@@ -23028,17 +23109,19 @@
   },
   {
     "description": "Bankbooth with Shutters - Seers",
-    "baseMaterial": "WOOD_GRAIN_3",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [ 25809 ],
     "uvType": "BOX",
-    "uvScale": 0.8
+    "uvScale": 0.4,
+    "uvOrientationZ": 512
   },
   {
     "description": "Bankbooth with Glass Window - Lunar Island",
-    "baseMaterial": "WOOD_GRAIN_3",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [ 16700 ],
     "uvType": "BOX",
-    "uvScale": 0.8,
+    "uvScale": 0.4,
+    "uvOrientationZ": 512,
     "colorOverrides": [
       {
         "colors": [ 43011, 43054, 43102 ],
@@ -23049,10 +23132,11 @@
   },
   {
     "description": "Bankbooth with Glass Window - Canifis",
-    "baseMaterial": "WOOD_GRAIN_3",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [ 24347 ],
     "uvType": "BOX",
-    "uvScale": 0.8,
+    "uvScale": 0.4,
+    "uvOrientationZ": 512,
     "colorOverrides": [
       {
         "colors": [ 43011, 43054, 43121 ],
@@ -23063,10 +23147,11 @@
   },
   {
     "description": "Bankbooth with Glass Window - Phasmatys",
-    "baseMaterial": "WOOD_GRAIN_3",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [ 16642 ],
     "uvType": "BOX",
-    "uvScale": 0.8,
+    "uvScale": 0.4,
+    "uvOrientationZ": 512,
     "colorOverrides": [
       {
         "colors": [ 21507, 21548, 21595 ],
@@ -23077,17 +23162,19 @@
   },
   {
     "description": "Bankbooth with Shutters - Phasmatys",
-    "baseMaterial": "WOOD_GRAIN_3",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [ 16643 ],
     "uvType": "BOX",
-    "uvScale": 0.8
+    "uvScale": 0.4,
+    "uvOrientationZ": 512
   },
   {
     "description": "Bankbooth with Glass Window - Nardah",
-    "baseMaterial": "WOOD_GRAIN_3",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [ 10517 ],
     "uvType": "BOX",
-    "uvScale": 0.8,
+    "uvScale": 0.4,
+    "uvOrientationZ": 512,
     "colorOverrides": [
       {
         "colors": [ 21535, 21576, 21630 ],
@@ -23098,17 +23185,19 @@
   },
   {
     "description": "Bankbooth with Shutters - Nardah",
-    "baseMaterial": "WOOD_GRAIN_3",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [ 10518 ],
     "uvType": "BOX",
-    "uvScale": 0.8
+    "uvScale": 0.4,
+    "uvOrientationZ": 512
   },
   {
-    "description": "Bankbooth with Glass Window - Nardah",
-    "baseMaterial": "WOOD_GRAIN_3",
+    "description": "Bankbooth with Glass Window - Sophanem",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [ 20325 ],
     "uvType": "BOX",
-    "uvScale": 0.8,
+    "uvScale": 0.4,
+    "uvOrientationZ": 512,
     "colorOverrides": [
       {
         "colors": [ 43025, 43068, 43116 ],
@@ -23119,10 +23208,11 @@
   },
   {
     "description": "Bankbooth with Glass Window - The Node",
-    "baseMaterial": "WOOD_GRAIN_3",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [ 42837 ],
     "uvType": "BOX",
-    "uvScale": 0.8,
+    "uvScale": 0.4,
+    "uvOrientationZ": 512,
     "colorOverrides": [
       {
         "colors": [ "h == 21" ],
@@ -25897,5 +25987,138 @@
     "description": "Gauntlet - Barrier - Remove Flickering Shadow",
     "castShadows": false,
     "objectIds": [ 36079, 36080, 35982, 35983 ]
+  },
+  {
+    "description": "Baba Yaga's House - Door",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "objectIds": [
+      16774
+    ]
+  },
+  {
+    "description": "Baba Yaga's House - Table, Stool and Empty Shelf",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.7,
+    "objectIds": [
+      16725,
+      16814,
+      16815
+    ]
+  },
+  {
+    "description": "Baba Yaga's House - Shelf with Utensils",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.7,
+    "objectIds": [
+      16816
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_GLOSS"
+      }
+    ]
+  },
+  {
+    "description": "Baba Yaga's House - Cooker",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      16812
+    ],
+    "colorOverrides": [
+      {
+        "colors": ["h == 0", "h == 10" ],
+        "baseMaterial": "METALLIC_1_GLOSS"
+      }
+    ]
+  },
+  {
+    "description": "Baba Yaga's House - Bed",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      16721
+    ],
+    "colorOverrides": [
+      {
+        "colors": ["h == 5", "h == 6" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.7
+      },
+      {
+        "colors": [ "h == 32" ],
+        "baseMaterial": "BURLAP",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.7,
+        "uvOrientation": 256
+      },
+      {
+        "colors": ["h == 8" ],
+        "baseMaterial": "BURLAP",
+        "uvType": "BOX",
+        "uvOrientation": 256
+      }
+    ]
+  },
+  {
+    "description": "Baba Yaga's House - Clothes Rack",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      16813
+    ],
+    "colorOverrides": [
+      {
+        "colors": ["h == 5", "h == 6" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.7
+      }
+    ]
+  },
+  {
+    "description": "Baba Yaga's House - Bookcase",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "areas": [ "Baba Yaga House Interior" ],
+    "objectIds": [
+      16707
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.4
+  },
+  {
+    "description": "Baba Yaga's House - Sink",
+    "baseMaterial": "NONE",
+    "areas": [ "Baba Yaga House Interior" ],
+    "objectIds": [
+      16704
+    ],
+    "colorOverrides": [
+      {
+        "colors": ["h == 3", "h == 6" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.7
+      }
+    ]
+  },
+  {
+    "description": "Hellrats - Hide Fake Lighting",
+    "npcIds": [
+      4809,
+      6793
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 2" ],
+        "baseMaterial": "TRANSPARENT",
+        "uvType": "BOX",
+        "uvScale": 0.7
+      }
+    ]
   }
 ]

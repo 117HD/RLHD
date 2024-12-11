@@ -17613,10 +17613,10 @@
   },
   {
     "description": "HELLRAT",
-    "height": 20,
+    "height": 40,
     "alignment": "CENTER",
-    "radius": 220,
-    "strength": 7.5,
+    "radius": 240,
+    "strength": 5.5,
     "color": [
       255,
       0,
@@ -17626,7 +17626,24 @@
     "duration": 0,
     "range": 0,
     "npcIds": [
-      4809,
+      4809
+    ]
+  },
+  {
+    "description": "HELLRAT BEHEMOTH",
+    "height": 80,
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 12.5,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "npcIds": [
       6793
     ]
   },
@@ -20218,8 +20235,8 @@
   },
   {
     "description": "FLOOR_CANDLES_1",
-    "height": 10,
-    "radius": 300,
+    "height": 40,
+    "radius": 280,
     "strength": 10,
     "color": [
       252,
@@ -20236,8 +20253,8 @@
   },
   {
     "description": "FLOOR_CANDLES_2",
-    "height": 10,
-    "radius": 200,
+    "height": 40,
+    "radius": 190,
     "strength": 10,
     "color": [
       252,
@@ -23898,11 +23915,11 @@
     ]
   },
   {
-    "description": "PYRAMID_PLUNDER_TOMB_DOOR",
+    "description": "PYRAMID_PLUNDER_TOMB_DOOR_1",
     "height": 100,
-    "alignment": "FRONT",
+    "alignment": "CENTRE",
     "radius": 400,
-    "strength": 10,
+    "strength": 15,
     "color": [
       255,
       224,
@@ -23912,14 +23929,31 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      20931,
+      20931
+    ]
+  },
+  {
+    "description": "PYRAMID_PLUNDER_TOMB_DOOR_2",
+    "height": 100,
+    "alignment": "CENTRE",
+    "radius": 350,
+    "strength": 65,
+    "color": [
+      255,
+      224,
+      166
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "objectIds": [
       20932
     ]
   },
   {
     "description": "PYRAMID_PLUNDER_WALL_TORCH",
     "height": 205,
-    "offset": [ -15, 0, 0 ],
+    "offset": [ -30, 0, -5 ],
     "radius": 350,
     "strength": 12.5,
     "color": [
@@ -28584,7 +28618,7 @@
   {
     "description": "Drake Maw Idle",
     "height": 50,
-    "offset": [ -20, 5, 252 ],
+    "offset": [ -17, -3, 249 ],
     "radius": 32,
     "strength": 120,
     "color": "#ff8c00",
@@ -35367,6 +35401,17 @@
     "fadeOutDuration": 300
   },
   {
+    "description": "Basalisk Knight - Magic Attack",
+    "alignment": "CENTER",
+    "radius": 215,
+    "strength": 11,
+    "color": [ 220, 0, 255 ],
+    "projectileIds": [ 1735 ],
+    "fadeInDuration": 350,
+    "spawnDelay": 750,
+    "fadeOutDuration": 600
+  },
+  {
     "description": "Venenatis, Spindel, Artio, Callisto and Escape Caves exit cave",
     "objectIds": [
       46999,
@@ -35737,6 +35782,23 @@
     "fadeOutDuration": 250,
     "projectileIds": [
       1640
+    ]
+  },
+  {
+    "description": "Baba Yaga's House - Cooking Range",
+    "offset": [ -15, 165, 0 ],
+    "radius": 120,
+    "strength": 8,
+    "color": [
+      230,
+      100,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 5,
+    "objectIds": [
+      16812
     ]
   }
 ]
