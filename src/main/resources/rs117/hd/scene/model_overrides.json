@@ -1003,8 +1003,6 @@
       35852,
       35900,
       35901,
-      35967,
-      35968,
       36501,
       37492,
       37493,
@@ -25371,5 +25369,533 @@
     "description": "Song of the Elves Cutscene - Fragment of Seren, Fix Shadow Flicker",
     "shadowOpacityThreshold": 0.1,
     "npcIds": [ 8920 ]
+  },
+  {
+    "description": "Gauntlet Lobby - Walls - Scoreboard",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      36060
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "s == 2", "s == 7", "h == 29" ],
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "MODEL_XY",
+        "uvScale": 0.75
+      }
+    ]
+  },
+  {
+    "description": "Gauntlet Lobby - Deposit Box",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      36086
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 32" ],
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "MODEL_XY",
+        "uvScale": 0.75
+      }
+    ]
+  },
+  {
+    "description": "Gauntlet Lobby - Reward Chest",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "objectIds": [
+      36087,
+      36088
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 32", "h == 42", "h == 26" ],
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "Gauntlet - Walls and Unlit Node",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      36098,
+      36099,
+      36102,
+      36101,
+      36105
+    ]
+  },
+  {
+    "description": "Gauntlet - Walls - With Blue Symbol",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      36095,
+      36096,
+      36097
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "s == 2", "s == 7" ],
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "MODEL_XY"
+      }
+    ]
+  },
+  {
+    "description": "Gauntlet - Walls - Corner Pillar and Lit Node",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      36100,
+      36103,
+      36104
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "s == 7" ],
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
+  },
+  {
+    "description": "Gauntlet - Walls - Roots",
+    "baseMaterial": "DIRT_2",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      36106,
+      36109,
+      36108,
+      36107,
+      36110,
+      36111
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 32" ],
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.66
+      }
+    ]
+  },
+  {
+    "description": "Gauntlet - Floor",
+    "baseMaterial": "MARBLE_1",
+    "uvType": "MODEL_XZ",
+    "objectIds": [
+      36046,
+      36149
+    ]
+  },
+  {
+    "description": "Gauntlet - Floor - Cracked",
+    "baseMaterial": "MARBLE_3",
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.5,
+    "objectIds": [
+      36052,
+      36053,
+      36054,
+      36055,
+      36056,
+      36057,
+      36058,
+      36059,
+      36155,
+      36156,
+      36157,
+      36158,
+      36159,
+      36160,
+      36161,
+      36162
+    ]
+  },
+  {
+    "description": "Gauntlet - Water Pump",
+    "baseMaterial": "METALLIC_1_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "objectIds": [
+      35981,
+      36078
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 32", "h == 33" ],
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Gauntlet - Cooking Range",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "objectIds": [
+      35980,
+      36077
+    ]
+  },
+  {
+    "description": "Gauntlet - Recipe Books",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "MODEL_XY",
+    "uvScale": 0.5,
+    "objectIds": [
+      36075,
+      36076
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 32 && s < 3", "h == 0", "h == 34", "s == 5" ],
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.66
+      }
+    ]
+  },
+  {
+    "description": "Gauntlet - Singing Bowl",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [
+      36063
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "s < 7" ],
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS"
+      }
+    ]
+  },
+  {
+    "description": "Gauntlet - Teleport Platform & Entrance",
+    "objectIds": [
+      36062,
+      36082,
+      36085
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "l < 45" ],
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS"
+      }
+    ]
+  },
+  {
+    "description": "Gauntlet - Tool Storage",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [
+      35977,
+      36074
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 0 && l < 16", "h == 32 && l < 13" ],
+        "baseMaterial": "ROCK_3_SMOOTH",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Gauntlet - Phren Roots",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      36066,
+      36067
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "s == 7" ],
+        "baseMaterial": "NONE"
+      },
+      {
+        "colors": [ "h == 0" ],
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Gauntlet - Crystal Deposit",
+    "baseMaterial": "ROCK_3_ORE",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      36064,
+      36065
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 32 && l > 14", "h == 33 && l > 20" ],
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Gauntlet - Linum Tirinum",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.44,
+    "objectIds": [
+      36072,
+      36073
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "l > 53" ],
+        "baseMaterial": "GRAY_90"
+      },
+      {
+        "colors": [ "h == 0" ],
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "Gauntlet - Gyrm Root",
+    "baseMaterial": "LEAF_VEINS",
+    "uvType": "BOX",
+    "uvScale": 0.22,
+    "objectIds": [
+      36070,
+      36071
+    ]
+  },
+  {
+    "description": "Gauntlet - Fishing Spot",
+    "baseMaterial": "DIRT_1",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      36068,
+      36069
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "s == 7" ],
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Corrupted Gauntlet - Walls and Unlit Node",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      35995,
+      35996,
+      35998,
+      35999,
+      36002
+    ]
+  },
+  {
+    "description": "Corrupted Gauntlet - Walls - With Red Symbol",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      35992,
+      35994
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "s == 6", "s == 7" ],
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "MODEL_XY"
+      }
+    ]
+  },
+  {
+    "description": "Corrupted Gauntlet - Walls - Corner Pillar and Lit Node",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      35997,
+      36000,
+      36001
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "s > 5" ],
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
+  },
+  {
+    "description": "Corrupted Gauntlet - Walls - Roots",
+    "baseMaterial": "DIRT_2",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      36003,
+      36004,
+      36005,
+      36006,
+      36007,
+      36008
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 10" ],
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.66
+      }
+    ]
+  },
+  {
+    "description": "Corrupted Gauntlet - Recipe Books",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "MODEL_XY",
+    "uvScale": 0.5,
+    "objectIds": [
+      35978,
+      35979
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 10 ", "h == 3", "h == 18" ],
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.66
+      }
+    ]
+  },
+  {
+    "description": "Corrupted Gauntlet - Singing Bowl",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [
+      35966
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 10", "h == 32" ],
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS"
+      }
+    ]
+  },
+  {
+    "description": "Corrupted Gauntlet - Teleport Platform",
+    "objectIds": [
+      35965
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 0" ],
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS"
+      }
+    ]
+  },
+  {
+    "description": "Corrupted Gauntlet - Corrupt Phren Roots",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      35969,
+      35970
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h > 61" ],
+        "baseMaterial": "NONE"
+      },
+      {
+        "colors": [ "h == 0 && s != 5" ],
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Corrupted Gauntlet - Corrupt Crystal Deposit",
+    "baseMaterial": "ROCK_3_ORE",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      35967,
+      35968
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 62 ", "h == 63" ],
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Corrupted Gauntlet - Corrupt Linum Tirinum",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.44,
+    "objectIds": [
+      35975,
+      35976
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 32" ],
+        "baseMaterial": "GRAY_90"
+      },
+      {
+        "colors": [ "h == 0" ],
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "Corrupted Gauntlet - Corrupt Gyrm Root",
+    "baseMaterial": "LEAF_VEINS",
+    "uvType": "BOX",
+    "uvScale": 0.22,
+    "objectIds": [
+      35973,
+      35974
+    ]
+  },
+  {
+    "description": "Corrupted Gauntlet - Corrupt Fishing Spot",
+    "baseMaterial": "DIRT_1",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      35971,
+      35972
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h != 0" ],
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Gauntlet - Barrier - Remove Flickering Shadow",
+    "castShadows": false,
+    "objectIds": [ 36079, 36080, 35982, 35983 ]
   }
 ]

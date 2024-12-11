@@ -23337,7 +23337,7 @@
       255
     ],
     "type": "PULSE",
-    "duration": 900,
+    "duration": 2000,
     "range": 20,
     "objectIds": [
       36083,
@@ -23419,9 +23419,8 @@
   },
   {
     "description": "GAUNTLET_LIT_NODE_1",
-    "height": 210,
-    "alignment": "BACKRIGHT",
-    "radius": 200,
+    "offset": [ -80, 210, 20 ],
+    "radius": 300,
     "strength": 10,
     "color": [
       0,
@@ -23437,9 +23436,8 @@
   },
   {
     "description": "GAUNTLET_LIT_NODE_2",
-    "height": 210,
-    "alignment": "BACKLEFT",
-    "radius": 200,
+    "offset": [ 80, 210, 20 ],
+    "radius": 300,
     "strength": 10,
     "color": [
       0,
@@ -23488,6 +23486,23 @@
     "objectIds": [
       36064
     ]
+  },
+  {
+    "description": "GAUNTLET_FISHING_SPOT",
+    "height": 40,
+    "alignment": "CENTER",
+    "radius": 225,
+    "strength": 10,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      36068
+    ],
+    "fadeOutDuration": 100
   },
   {
     "description": "CORRUPTED_TELEPORT_PLATFORM",
@@ -23563,10 +23578,9 @@
   },
   {
     "description": "CORRUPTED_GAUNTLET_LIT_NODE_1",
-    "height": 210,
-    "alignment": "BACKRIGHT",
-    "radius": 200,
-    "strength": 10,
+    "offset": [ -80, 210, 20 ],
+    "radius": 350,
+    "strength": 7,
     "color": [
       255,
       0,
@@ -23581,10 +23595,9 @@
   },
   {
     "description": "CORRUPTED_GAUNTLET_LIT_NODE_2",
-    "height": 210,
-    "alignment": "BACKLEFT",
-    "radius": 200,
-    "strength": 10,
+    "offset": [ 80, 210, 20 ],
+    "radius": 350,
+    "strength": 7,
     "color": [
       255,
       0,
@@ -23632,6 +23645,23 @@
     "objectIds": [
       35967
     ]
+  },
+  {
+    "description": "GAUNTLET_FISHING_SPOT",
+    "height": 40,
+    "alignment": "CENTER",
+    "radius": 225,
+    "strength": 10,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      35971
+    ],
+    "fadeOutDuration": 100
   },
   {
     "description": "ZALCANO_ROCK_FORMATION_GLOWING",
