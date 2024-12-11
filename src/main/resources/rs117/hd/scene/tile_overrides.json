@@ -6275,6 +6275,42 @@
     "groundMaterial": "GRASS_SCROLLING"
   },
   {
+    "name": "FALADOR_XMAS_GRASS_FIX underlay",
+    "area": "FALADOR_XMAS_GRASS_FIX",
+    "description": "For when ground blending is ENABLED",
+    "underlayIds": [ 58, 59, 159 ],
+    "groundMaterial": "DIRT",
+    "replacements": {
+      "FALADOR_XMAS_GRASS_FIX_UNBLEND": "!blending"
+    },
+    "shiftLightness": 45
+  },
+  {
+    "name": "FALADOR_XMAS_GRASS_FIX_UNBLEND",
+    "area": "ICEBERG",
+    "description": "For when ground blending is DISABLED",
+    "groundMaterial": "DIRT",
+    "shiftLightness": 7
+  },
+  {
+    "name": "FALADOR_XMAS_GRASS_FIX_PATH",
+    "area": "FALADOR_XMAS_GRASS_FIX",
+    "description": "For when ground blending is ENABLED",
+    "overlayIds": [ 197 ],
+    "groundMaterial": "DIRT",
+    "replacements": {
+      "FALADOR_XMAS_GRASS_FIX_UNBLEND_PATH": "!blending"
+    },
+    "shiftLightness": 27
+  },
+  {
+    "name": "FALADOR_XMAS_GRASS_FIX_UNBLEND_PATH",
+    "area": "ICEBERG",
+    "description": "For when ground blending is DISABLED",
+    "groundMaterial": "DIRT",
+    "shiftLightness": 7
+  },
+  {
     "name": "ISLE_OF_SOULS_HOT_ZONE_COMPLEX",
     "area": "ISLE_OF_SOULS_HOT_ZONES",
     "underlayIds": [
