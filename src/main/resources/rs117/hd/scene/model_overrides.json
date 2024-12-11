@@ -5038,6 +5038,7 @@
       9679,
       9681,
       11482,
+      15688,
       24094,
       40234,
       40241
@@ -5052,6 +5053,7 @@
     "objectIds": [
       7447,
       11481,
+      15687,
       24093,
       40235,
       40242
@@ -6097,11 +6099,24 @@
     "flatNormals": true
   },
   {
-    "description": "Marble Staircase Spiral",
+    "description": "Marble Staircase Spiral with wooden rails",
     "baseMaterial": "MARBLE_3",
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "colorOverrides": [
+      {
+        "colors": "h == 7 && s > 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ],
     "objectIds": [
       12536,
+      11789,
+      11790,
       11792,
+      11793,
       12537,
       24075
     ]
@@ -6115,20 +6130,26 @@
     ]
   },
   {
-    "description": "STONE Staircase Spiral",
+    "description": "STONE Staircase Spiral with wooden rails",
     "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 765,
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "colors": "h == 7 && s > 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ],
     "objectIds": [
       9582,
       14735,
-      11789,
-      11790,
       17143,
       14736,
       14737
-    ],
-    "uvType": "BOX",
-    "uvOrientation": 765,
-    "uvScale": 0.4
+    ]
   },
   {
     "description": "Metal Chimney",
@@ -6531,7 +6552,6 @@
     "description": "Varrock Castle Railing",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      11793,
       23852
     ],
     "uvType": "BOX",
@@ -11275,6 +11295,10 @@
   {
     "description": "Al-Kharid pillar decoration",
     "baseMaterial": "MARBLE_3",
+    "uvType": "BOX",
+    "uvOrientation": 343,
+    "uvScale": 0.6,
+    "flatNormals": true,
     "objectIds": [
       914
     ]
@@ -15141,9 +15165,10 @@
     ]
   },
   {
-    "description": "Tutorial Island - The Node - Chest with Gold Trim",
+    "description": "Tutorial Island - The Node - Chest with Gold lumps in it",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      1768,
       2079
     ],
     "uvOrientation": 512,
@@ -15151,7 +15176,9 @@
     "colorOverrides": [
       {
         "colors": [ "h == 8" ],
-        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS"
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "WORLD_XZ",
+        "uvScale": 0.25
       }
     ]
   },
@@ -21721,12 +21748,19 @@
   {
     "description": "Zombie Event Mausoleum",
     "baseMaterial": "ROCK_4",
-    "objectIds": [
-      10055
-    ],
     "uvType": "BOX",
     "uvOrientation": 180,
-    "uvScale": 0.6
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Vines",
+        "colors": " h == 17",
+        "baseMaterial": "LEAF_VEINS"
+      }
+    ],
+    "objectIds": [
+      10055
+    ]
   },
   {
     "description": "Wooden posts - textured",
@@ -23836,22 +23870,6 @@
     ]
   },
   {
-    "description": "Farming Guild - Chest of Gold",
-    "baseMaterial": "WOOD_GRAIN_3",
-    "uvType": "BOX",
-    "uvScale": 0.9,
-    "uvOrientation": 512,
-    "objectIds": [
-      1768
-    ],
-    "colorOverrides": [
-      {
-        "colors": "h == 8 && l > 1",
-        "baseMaterial": "METALLIC_1_LIGHT"
-      }
-    ]
-  },
-  {
     "description": "Farming Guild - Trellis Fence",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
@@ -24100,5 +24118,129 @@
     "description": "Farming Guild - Hide Ripples",
     "hide": true,
     "objectIds": [ 5607 ]
+  },
+  {
+    "description": "Cushioned church pew with foot rest",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Red Cushion",
+        "colors": "h == 0 && s == 4",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      },
+      {
+        "description": "Golden Cushion",
+        "colors": "h == 7 && s == 7",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ],
+    "objectIds": [
+      5788,
+      14862,
+      14863,
+      14864
+    ]
+  },
+  {
+    "description": "Varrock church wooden lectern",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Paper",
+        "colors": "h == 8 && s == 0",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "MODEL_XY"
+      },
+      {
+        "description": "Golden paper edges",
+        "colors": "h == 6 && s == 4",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvOrientation": 864,
+        "uvScale": 0.75
+      }
+    ],
+    "objectIds": [
+      12136
+    ]
+  },
+  {
+    "description": "Varrock Apothecary table with book plus pestle and mortar",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Paper",
+        "colors": ["h == 5 && s == 0", "h == 10 && s == 0"],
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "MODEL_XY"
+      },
+      {
+        "description": "Pestle and mortar",
+        "colors": "h < 4 && s == 0",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      2714
+    ]
+  },
+  {
+    "description": "Varrock Apothecary Wooden cabinet with Brain and abyssal jars",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512,
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Paper",
+        "colors": ["h == 5 && s == 0", "h == 10 && s == 0"],
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "MODEL_XY"
+      },
+      {
+        "description": "Glass",
+        "colors": "h == 26",
+        "baseMaterial": "GRAY_75",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      2722
+    ]
+  },
+  {
+    "description": "Varrock Apothecary experiment table",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Table",
+        "colors": "h == 7 && s < 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientationY": 512
+      }
+    ],
+    "objectIds": [
+      2716
+    ]
   }
 ]
