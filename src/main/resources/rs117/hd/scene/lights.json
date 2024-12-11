@@ -25778,6 +25778,40 @@
     ]
   },
   {
+    "description": "BLAST_FURNACE_STOVE_TOP",
+    "offset": [ 0, 215, 0 ],
+    "radius": 40,
+    "strength": 75,
+    "color": [
+      200,
+      70,
+      10
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 5,
+    "objectIds": [
+      9087
+    ]
+  },
+  {
+    "description": "BLAST_FURNACE_STOVE_BOTTOM",
+    "offset": [ 140, 70, 0 ],
+    "radius": 90,
+    "strength": 45,
+    "color": [
+      200,
+      70,
+      10
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 5,
+    "objectIds": [
+      9087
+    ]
+  },
+  {
     "description": "CANIFIS_TUBE",
     "height": 130,
     "alignment": "CENTER",
