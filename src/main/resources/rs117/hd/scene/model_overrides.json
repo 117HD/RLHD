@@ -5656,15 +5656,23 @@
   },
   {
     "description": "Wattle Style Houses (Ardougne, Digsite)",
-    "baseMaterial": "WATTLE_1",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "colors": "h == 10 && s == 0",
+        "baseMaterial": "WATTLE_1",
+        "uvType": "BOX"
+      }
+    ],
     "objectIds": [
       1602,
       1603,
       1606,
       1608,
       17349
-    ],
-    "flatNormals": true
+    ]
   },
   {
     "description": "Candelabra",
@@ -14983,6 +14991,16 @@
   {
     "description": "Objects - Hay - Roof",
     "textureMaterial": "HD_HAY",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "colorOverrides": [
+        {
+          "colors": "h == 10 && s == 0",
+          "baseMaterial": "WATTLE_1",
+          "uvType": "BOX"
+        }
+    ],
     "objectIds": [
       1604,
       1605,
@@ -14994,9 +15012,7 @@
       4243,
       4244,
       4245
-    ],
-    "uvType": "BOX",
-    "retainVanillaUvs": false
+    ]
   },
   {
     "description": "Objects - Hay - Haystack",
