@@ -397,6 +397,10 @@ public enum Material {
 	GRUNGE_3_LIGHT(GRUNGE_3, p -> p
 		.setBrightness(1.45f)
 	),
+	GRUNGE_3_LIGHT_SHINY(GRUNGE_3_LIGHT, p -> p
+		.setBrightness(1.45f)
+		.setSpecular(0.5f, 300)
+		),
 	GRUNGE_3_DARK(GRUNGE_3, p -> p
 		.setBrightness(0.75f)
 		.setSpecular(0f, 0)
@@ -575,6 +579,7 @@ public enum Material {
 	),
 	LIGHT_BARK_STONEPINE(BARK_STONEPINE, p -> p.setBrightness(1.75f)),
 	LEAF_VEINS,
+	LEAF_VEINS_LIGHT(LEAF_VEINS, p -> p.setBrightness(1.2f)),
 	WOOD_GRAIN,
 	WOOD_GRAIN_LIGHT(WOOD_GRAIN, p -> p
 		.setBrightness(1.5f)

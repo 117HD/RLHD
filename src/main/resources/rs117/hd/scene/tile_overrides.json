@@ -3698,6 +3698,19 @@
     "blended": false
   },
   {
+    "name": "CAMDOZAAL_TILES",
+    "area": "CAMDOZAAL_TILED_FLOOR",
+    "underlayIds": [
+      16,
+      44,
+      46
+    ],
+    "groundMaterial": "MARBLE_1",
+    "uvOrientation": 117,
+    "uvScale": 1.2,
+    "blended": false
+  },
+  {
     "name": "CAMDOZAAL_STONE_PATH",
     "area": "CAMDOZAAL",
     "overlayIds": [
