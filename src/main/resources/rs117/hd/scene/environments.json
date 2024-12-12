@@ -654,6 +654,26 @@
     "fogDepth": 35
   },
   {
+    "area": "ESSENCE_MINE",
+    "ambientColor": "#6687a9",
+    "ambientStrength": 0.85,
+    "sunAngles": [ 50, 244 ],
+    "directionalColor": "#ffffff",
+    "directionalStrength": 0.45,
+    "fogColor": "#adb9c4",
+    "fogDepth": 50
+  },
+  {
+    "area": "ICE_QUEENS_DUNGEON",
+    "ambientColor": "#6687a9",
+    "ambientStrength": 0.85,
+    "sunAngles": [ 73, 244 ],
+    "directionalColor": "#ffffff",
+    "directionalStrength": 0.45,
+    "fogColor": "#adb9c4",
+    "fogDepth": 50
+  },
+  {
     "area": "GIELINOR_SNOWY_NORTHERN_REGION",
     "ambientColor": "#6fb0ff",
     "ambientStrength": 1.5,
