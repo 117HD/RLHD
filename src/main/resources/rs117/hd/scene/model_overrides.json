@@ -18914,26 +18914,6 @@
     ]
   },
   {
-    "description": "Grotesque Guardians",
-    "hideVanillaShadows": true,
-    "retainVanillaShadowsInPvm": true,
-    "npcIds": [
-      7851,
-      7852,
-      7853,
-      7854,
-      7855,
-      7882,
-      7883,
-      7884,
-      7885,
-      7886,
-      7887,
-      7888,
-      7889
-    ]
-  },
-  {
     "description": "Falling rocks at Grotesque Guardians",
     "hideVanillaShadows": true,
     "retainVanillaShadowsInPvm": true,
@@ -28250,6 +28230,8 @@
       31676,
       31677
     ],
+    "hideVanillaShadows": true,
+    "retainVanillaShadowsInPvm": true,
     "npcIds": [
       7849,
       7850,
