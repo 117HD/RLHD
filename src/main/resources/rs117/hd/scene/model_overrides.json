@@ -21942,7 +21942,7 @@
   {
     "description": "Wooden shelf wall mounted",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 1023, 4513, 12976 ],
+    "objectIds": [ 4513, 12976 ],
     "uvType": "BOX",
     "uvScale": 0.5,
     "uvOrientationX": 512,
@@ -26141,13 +26141,14 @@
     ]
   },
   {
-    "description": "Baxtorian Falls - Pillar",
-    "baseMaterial": "MARBLE_1",
+    "description": "Baxtorian Falls - Small Marble Pillars",
+    "baseMaterial": "MARBLE_2",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 42,
     "objectIds": [
       34965
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.6
+    ]
   },
   {
     "description": "Baxtorian Falls - Statues",
@@ -26164,7 +26165,6 @@
     "description": "Baxtorian Falls - Chalice",
     "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [
-      2014,
       2015
     ]
   },
@@ -28011,46 +28011,6 @@
     "objectIds": [
       1107
     ]
-  },
-  {
-    "description": "Wooden spears with metal tips",
-    "baseMaterial": "WOOD_GRAIN_3",
-    "uvType": "BOX",
-    "uvScale": 0.5,
-    "uvOrientation": 100,
-    "colorOverrides": [
-      {
-        "description": "Metal",
-        "colors": "s == 0",
-        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
-        "uvType": "BOX",
-        "uvScale": 0.4,
-        "uvOrientation": 343
-      }
-    ],
-    "objectIds": [
-      848
-    ]
-  },
-  {
-    "description": "Small Marble Pillars",
-    "baseMaterial": "MARBLE_2",
-    "uvType": "BOX",
-    "uvScale": 0.5,
-    "uvOrientation": 42,
-    "objectIds": [
-      34965
-    ]
-  },
-  {
-    "description": "Glarial and Baxtorian statues",
-    "baseMaterial": "MARBLE_3_SEMIGLOSS",
-    "uvScale": 0.5,
-    "objectIds": [
-      2006,
-      34967
-    ],
-    "uvType": "BOX"
   },
   {
     "description": "Glarials Chalice",
