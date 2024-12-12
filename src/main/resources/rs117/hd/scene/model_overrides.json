@@ -28591,7 +28591,7 @@
     "colorOverrides": [
       {
         "colors": [ "h == 10" ],
-        "baseMaterial": "FINE_CARPET",
+        "baseMaterial": "CARPET",
         "uvType": "BOX",
         "uvScale": 0.85
       }
