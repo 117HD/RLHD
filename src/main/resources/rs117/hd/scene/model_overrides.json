@@ -3542,11 +3542,9 @@
     "description": "Wintertodt Terrain",
     "baseMaterial": "SNOW_4",
     "objectIds": [
-      29297,
       29293,
       29296,
       29295,
-      29298,
       29294,
       29279,
       29265,
@@ -3569,6 +3567,45 @@
     "uvScale": 1.25
   },
   {
+    "description": "Wintertodt Root Terrain",
+    "baseMaterial": "SNOW_4",
+    "objectIds": [
+      29297
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.25,
+    "colorOverrides": [
+      {
+        "colors": "h == 32",
+        "baseMaterial": "VERY_LIGHT_BARK",
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h == 16",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.75
+      }
+    ]
+  },
+  {
+    "description": "Wintertodt Herb Terrain",
+    "baseMaterial": "SNOW_4",
+    "objectIds": [
+      29298
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.25,
+    "colorOverrides": [
+      {
+        "colors": "h == 32",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
     "description": "Wintertodt Railings",
     "baseMaterial": "SNOW_4",
     "objectIds": [
@@ -3576,14 +3613,15 @@
       29287,
       29289,
       29290,
-      29291
+      29291,
+      29292
     ],
     "uvType": "BOX",
     "uvScale": 1.25
   },
   {
     "description": "Wintertodt Wooden Objects",
-    "baseMaterial": "WOOD_GRAIN_2_SMOOTH_LIGHT",
+    "baseMaterial": "SNOW_1",
     "objectIds": [
       29319,
       29320,
@@ -3594,20 +3632,38 @@
       29305,
       29302,
       29321,
-      26330
+      29303,
+      29304,
+      55411,
+      55412,
+      55413,
+      55414,
+      55415,
+      55416
     ],
-    "uvType": "WORLD_XY",
-    "uvScale": 1.5
+    "colorOverrides": [
+      {
+        "colors": "h == 32",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ]
   },
   {
-    "description": "Wintertodt Wooden Objects rotated",
-    "baseMaterial": "WOOD_GRAIN_2_SMOOTH_LIGHT",
-    "objectIds": [
-      29303,
-      29304
-    ],
-    "uvType": "WORLD_XY",
-    "uvScale": 1.5
+  "description": "Wintertodt Barrel Group",
+  "baseMaterial": "SNOW_1",
+  "objectIds": [
+    26330
+  ],
+  "colorOverrides": [
+    {
+      "colors": "h == 5",
+      "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+      "uvType": "BOX",
+      "uvScale": 0.75
+    }
+  ]
   },
   {
     "description": "Wintertodt Bruma Roots",
@@ -3615,15 +3671,33 @@
     "objectIds": [
       29311
     ],
+    "colorOverrides": [
+      {
+        "colors": "h == 16",
+        "baseMaterial": "VERY_LIGHT_BARK",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.75
+      }
+    ],
     "uvType": "BOX"
   },
   {
     "description": "Wintertodt Herb Roots",
-    "baseMaterial": "LIGHT_BARK",
+    "baseMaterial": "VERY_LIGHT_BARK",
     "objectIds": [
       29315
     ],
-    "uvType": "BOX"
+    "colorOverrides": [
+      {
+        "colors": "h == 16",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512
   },
   {
     "description": "Wintertodt Brazier",
@@ -3633,7 +3707,23 @@
       29313,
       29314
     ],
-    "uvType": "BOX"
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "colors": ["h == 14", "h == 17"],
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Wintertodt Storm - Brighten",
+    "baseMaterial": "GRAY_150",
+    "objectIds": [
+      29308
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
   },
   {
     "description": "Wintertodt Tents",
@@ -11078,6 +11168,8 @@
       23530,
       23561,
       28658,
+      25169,
+      25174,
       51766
     ],
     "uvType": "BOX"
