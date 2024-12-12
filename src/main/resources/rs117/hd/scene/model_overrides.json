@@ -17355,6 +17355,8 @@
     "description": "Guardians of the Rift - Marble - Steps",
     "baseMaterial": "MARBLE_3_SEMIGLOSS",
     "objectIds": [
+      43545,
+      43546,
       43557,
       43568,
       43569
@@ -17387,7 +17389,9 @@
     "description": "Guardians of the Rift - Large Guardian Remains",
     "baseMaterial": "ROCK_3_ORE",
     "objectIds": [
-      43719
+      43719,
+      43800,
+      43801
     ],
     "uvType": "BOX",
     "uvScale": 0.87
@@ -17406,7 +17410,9 @@
     "baseMaterial": "ROCK_3_ORE",
     "objectIds": [
       43717,
-      43718
+      43718,
+      43798,
+      43799
     ],
     "uvType": "BOX"
   },
@@ -17415,7 +17421,9 @@
     "baseMaterial": "ROCK_3_ORE",
     "objectIds": [
       43715,
-      43716
+      43716,
+      43796,
+      43797
     ],
     "uvType": "BOX"
   },
@@ -17424,7 +17432,9 @@
     "baseMaterial": "ROCK_3_ORE",
     "objectIds": [
       43752,
-      43753
+      43753,
+      43782,
+      43783
     ],
     "uvType": "MODEL_XZ",
     "uvOrientation": 256,
@@ -17473,7 +17483,34 @@
       43709,
       43710,
       43711,
-      43712
+      43712,
+      43784,
+      43785,
+      43786,
+      43787,
+      43788,
+      43789,
+      43790,
+      43791,
+      43792,
+      43793,
+      43794,
+      43795,
+      43809,
+      43810,
+      43811,
+      43812,
+      43813,
+      43814,
+      43815,
+      43816,
+      43817,
+      43818,
+      43819,
+      43820,
+      43841,
+      43821,
+      43822
     ],
     "uvType": "BOX",
     "uvScale": 0.7
@@ -17511,6 +17548,41 @@
     "uvType": "BOX",
     "uvScale": 0.7,
     "uvOrientation": 512
+  },
+  {
+    "description": "Guardians of the Rift - Yellow Kelp",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "uvScale": 0.67,
+    "uvOrientation": 42,
+    "objectIds": [
+      43632,
+      43633,
+      43634
+    ]
+  },
+  {
+    "description": "Guardians of the Rift - Elk Kelp",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "uvScale": 0.67,
+    "uvOrientation": 343,
+    "objectIds": [
+      43638,
+      43639,
+      43640
+    ]
+  },
+  {
+    "description": "Guardians of the Rift - Dark Lace - Kelp",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "uvScale": 0.67,
+    "objectIds": [
+      43635,
+      43636,
+      43637
+    ]
   },
   {
     "description": "Freminnik Slayer Dungeon - Stone Staircase",
