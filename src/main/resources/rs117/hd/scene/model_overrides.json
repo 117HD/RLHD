@@ -393,7 +393,6 @@
       4796,
       4797,
       4798,
-      4809,
       4820,
       4821,
       4881,
@@ -509,7 +508,6 @@
       6723,
       6738,
       6762,
-      6793,
       6795,
       6824,
       7023,
@@ -1003,8 +1001,6 @@
       35852,
       35900,
       35901,
-      35967,
-      35968,
       36501,
       37492,
       37493,
@@ -1312,6 +1308,9 @@
       1289,
       1365,
       1383,
+      3891,
+      3967,
+      3968,
       4051,
       4052,
       4053,
@@ -1346,6 +1345,7 @@
       1341,
       1342,
       1353,
+      1358,
       4328,
       6212,
       9661,
@@ -1435,6 +1435,31 @@
     "retainVanillaUvs": true
   },
   {
+    "description": "Objects - Trees - Tirannwn Tree",
+    "baseMaterial": "LIGHT_BARK",
+    "objectIds": [
+      3879,
+      3880,
+      3881,
+      3882,
+      3883,
+      3884,
+      3893,
+      37272
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7
+  },
+  {
+    "description": "Tirannwn - Lord Crwys Tree",
+    "baseMaterial": "LIGHT_BARK",
+    "npcIds": [
+      8902
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7
+  },
+  {
     "description": "Objects - Trees - Tirannwn Leafless Tree",
     "baseMaterial": "BARK",
     "objectIds": [
@@ -1445,7 +1470,410 @@
     "uvScale": 0.7,
     "uvOrientationY": 1162,
     "uvOrientationX": 128,
-    "uvOrientationZ": 1162
+    "uvOrientationZ": 1162,
+    "colorOverrides": [
+      {
+        "colors": "h == 12",
+        "baseMaterial": "GRAY_75"
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Wood Debris",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      3907,
+      3908,
+      3909,
+      3910,
+      3911,
+      3942,
+      3943
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "colors": "h == 12",
+        "baseMaterial": "GRAY_75"
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Trap - Sticks",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      3922
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "ROPE",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.15
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Trap - Tripwire",
+    "baseMaterial": "ROCK_1",
+    "textureMaterial": "HD_CONCRETE",
+    "objectIds": [
+      3919,
+      3920
+    ],
+    "retainVanillaUvs": false,
+    "uvType": "BOX",
+    "uvScale": 0.45,
+    "colorOverrides": [
+      {
+        "colors": "h == 12",
+        "baseMaterial": "PLANT_GRUNGE_1",
+        "uvScale": 0.5,
+        "uvType": "MODEL_XZ",
+        "uvOrientation": 256
+      },
+      {
+        "colors": "h == 6",
+        "baseMaterial": "BARK",
+        "uvScale": 0.3,
+        "uvType": "BOX",
+        "uvOrientation": 256
+      }
+    ]
+  },
+  {
+    "description": "Objects - Trees - Tirannwn - Lletya Entrance and Dense Forest",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      3937,
+      3938,
+      3998,
+      3999,
+      8742
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientationY": 1162,
+    "uvOrientationX": 128,
+    "uvOrientationZ": 1162,
+    "colorOverrides": [
+      {
+        "colors": "h == 12",
+        "baseMaterial": "GRAY_75"
+      },
+      {
+        "colors": [ "h == 5", "h == 10" ],
+        "baseMaterial": "STONE_NORMALED_DARK"
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Mossy Rocks",
+    "baseMaterial": "ROCK_1",
+    "textureMaterial": "HD_CONCRETE",
+    "objectIds": [
+      3894,
+      3895,
+      3896,
+      3897,
+      35856,
+      35858,
+      35860,
+      35857,
+      35855,
+      35859
+    ],
+    "retainVanillaUvs": false,
+    "uvType": "BOX",
+    "uvScale": 0.65,
+    "colorOverrides": [
+      {
+        "colors": "h == 12",
+        "baseMaterial": "PLANT_GRUNGE_1",
+        "uvScale": 0.5,
+        "uvType": "MODEL_XZ",
+        "uvOrientation": 256
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Mossy Rocks with Tree",
+    "baseMaterial": "ROCK_1",
+    "textureMaterial": "HD_CONCRETE",
+    "objectIds": [
+      3885,
+      3892
+    ],
+    "retainVanillaUvs": false,
+    "uvType": "BOX",
+    "uvScale": 0.65,
+    "colorOverrides": [
+      {
+        "colors": "h == 12",
+        "baseMaterial": "PLANT_GRUNGE_1",
+        "uvScale": 0.5,
+        "uvType": "MODEL_XZ",
+        "uvOrientation": 256
+      },
+      {
+        "colors": "h == 6",
+        "baseMaterial": "BARK",
+        "uvScale": 0.5,
+        "uvType": "BOX",
+        "uvOrientationZ": 512
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Elven Lamp",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      3918,
+      8774,
+      35868,
+      35867,
+      34958
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 156,
+    "colorOverrides": [
+      {
+        "colors": "h == 40",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Spear Wall",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "objectIds": [
+      3991
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.25
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Tents",
+    "baseMaterial": "BURLAP",
+    "objectIds": [
+      781,
+      783,
+      784,
+      3979,
+      3981,
+      3982,
+      3983
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": [ "h == 0", "h == 4" ],
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.66
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Tents - Guy Rope",
+    "baseMaterial": "ROPE",
+    "objectIds": [
+      785,
+      3989
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.35,
+    "colorOverrides": [
+      {
+        "colors": "h == 4",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.66
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Iorwerth Camp - Standard",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      786
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.33,
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Tyras Camp - Standard",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      3992,
+      3993
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Tirannwn - Tyras - Catapult",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      3976,
+      3977,
+      3978
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS"
+      },
+      {
+        "colors": "h == 5",
+        "baseMaterial": "GRUNGE_3"
+      },
+      {
+        "colors": "h == 7",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Poison Waste - Sulphur Pile",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      3962,
+      3963,
+      3964
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Poison Waste - Sulphur Vent",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      3965
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "uvScale": 0.66
+      }
+    ]
+  },
+  {
+    "description": "Poison Waste - Sulphur Gas",
+    "baseMaterial": "GRAY_90",
+    "objectIds": [
+      3966
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Poison Waste - Zul-Andra - Torch",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      10658
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "colors": [ "h == 0", "h == 3", "h == 4", "h == 8" ],
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Poison Waste - Zulrah - Sacrificial Boat",
+    "baseMaterial": "HD_WOOD_PLANKS_2",
+    "objectIds": [
+      46242
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 40",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Arandar - Fence",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      3524
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.8
+  },
+  {
+    "description": "Arandar - Shortcut Rocks",
+    "baseMaterial": "ROCK_2",
+    "objectIds": [
+      16514,
+      16515,
+      16516
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.4
+  },
+  {
+    "description": "Arandar - Limestone",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      11382,
+      11383,
+      11384
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.33
+  },
+  {
+    "description": "Floating Rocks - Remove Ripples",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      6707,
+      6708,
+      6709,
+      10663
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": [ "h == 42", "h == 35" ],
+        "baseMaterial": "TRANSPARENT",
+        "uvType": "BOX",
+        "uvScale": 0.33,
+        "uvOrientation": 512
+      }
+    ]
   },
   {
     "description": "FARMING_PATCH_1",
@@ -1492,6 +1920,8 @@
       4986,
       4987,
       4988,
+      4989,
+      4990,
       5341,
       9502,
       9503,
@@ -1593,6 +2023,7 @@
       7267,
       7269,
       8724,
+      9484,
       9485,
       9486,
       9487,
@@ -1828,6 +2259,38 @@
     ]
   },
   {
+    "description": "Hespori Grass Arena Fix",
+    "areas": [ "FARMING_GUILD_HESPORI" ],
+    "baseMaterial": "COLORED_GRASS",
+    "objectIds": [
+      34492
+    ]
+  },
+  {
+    "description": "Hespori Patch Edge Grass Fix",
+    "areas": [ "FARMING_GUILD_HESPORI" ],
+    "baseMaterial": "COLORED_GRASS",
+    "objectIds": [
+      34494,
+      34496
+    ],
+    "castShadows": false,
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "ROCK_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "colors": [ "h == 5", "h == 6" ],
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
     "description": "Short grass with rock objects Morytania Farming Patches",
     "baseMaterial": "GRAY_75",
     "objectIds": [
@@ -1849,6 +2312,9 @@
     "description": "Objects with Short grass which shouldn't cast shadows and shouldn't inherit tile color",
     "baseMaterial": "GRAY_75",
     "objectIds": [
+      3934,
+      3935,
+      3936,
       7110,
       7111
     ],
@@ -2168,13 +2634,177 @@
     "flatNormals": true
   },
   {
+    "description": "Brick walls with wooden boards",
+    "baseMaterial": "GRUNGE_1",
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "description": "Wooden boards",
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 448
+      }
+    ],
+    "objectIds": [
+      490,
+      492,
+      493,
+      494,
+      495,
+      506,
+      507,
+      508,
+      509,
+      510,
+      515,
+      517,
+      518,
+      519,
+      520,
+      40285
+    ]
+  },
+  {
+    "description": "Brick walls with wooden plank windows",
+    "baseMaterial": "GRUNGE_1",
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "description": "Wooden boards",
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 16
+      }
+    ],
+    "objectIds": [
+      441,
+      442,
+      454,
+      23745
+    ]
+  },
+  {
+    "description": "Brick walls with wooden planks leaned on them",
+    "baseMaterial": "GRUNGE_1",
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "description": "Wooden boards",
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      480,
+      481,
+      482,
+      485,
+      486,
+      487,
+      488
+    ]
+  },
+  {
+    "description": "Wooden board walls",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "flatNormals": true,
+    "uvType": "BOX",
+    "uvOrientation": 448,
+    "objectIds": [
+      496,
+      497,
+      498,
+      499,
+      500,
+      501,
+      502,
+      503,
+      26589,
+      26590,
+      26591,
+      26592
+    ]
+  },
+  {
+    "description": "Brick walls with green glass with gold windows",
+    "baseMaterial": "GRUNGE_1",
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "description": "Wooden boards",
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Green glass",
+        "colors": "h > 11",
+        "baseMaterial": "NONE"
+      },
+      {
+        "description": "Gold glass",
+        "colors": "h == 8 && s == 7",
+        "baseMaterial": "NONE"
+      }
+    ],
+    "objectIds": [
+      23743,
+      23744
+    ]
+  },
+  {
+    "description": "Brick walls with green glass windows",
+    "baseMaterial": "GRUNGE_1",
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "description": "Wooden boards",
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Green glass",
+        "colors": "h > 11",
+        "baseMaterial": "NONE"
+      }
+    ],
+    "objectIds": [
+      23746,
+      23747
+    ]
+  },
+  {
+    "description": "Varrock church golden window",
+    "baseMaterial": "GRUNGE_1",
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "description": "Wooden boards",
+        "colors": "h == 7 && s < 4",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Gold glass",
+        "colors": "h == 7 && s > 3 ",
+        "baseMaterial": "NONE"
+      }
+    ],
+    "objectIds": [
+      23807
+    ]
+  },
+  {
     "description": "Walls",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
       436,
       437,
       438,
-      441,
       443,
       444,
       445,
@@ -2184,16 +2814,9 @@
       455,
       462,
       477,
-      490,
-      493,
-      494,
-      495,
-      496,
-      497,
       451,
       452,
       453,
-      454,
       455,
       456,
       457,
@@ -2218,53 +2841,17 @@
       476,
       477,
       478,
-      480,
-      481,
-      482,
       483,
       484,
-      485,
-      486,
-      487,
-      488,
       489,
-      490,
       491,
-      491,
-      492,
-      493,
-      494,
-      495,
-      496,
-      497,
-      498,
-      499,
-      500,
-      501,
-      502,
-      503,
       504,
       505,
-      506,
-      507,
-      508,
-      509,
-      510,
       511,
       512,
       513,
       514,
-      515,
       516,
-      517,
-      518,
-      519,
-      520,
-      526,
-      527,
-      528,
-      529,
-      531,
       9264,
       9265,
       9269,
@@ -2277,11 +2864,6 @@
       23740,
       23741,
       23742,
-      23743,
-      23744,
-      23745,
-      23746,
-      23747,
       23757,
       23758,
       23759,
@@ -2299,7 +2881,6 @@
       23804,
       23805,
       23806,
-      23807,
       23808,
       23809,
       23810,
@@ -2355,7 +2936,6 @@
       23908,
       23909,
       23910,
-      40285,
       41840,
       24428
     ],
@@ -3115,8 +3695,13 @@
   },
   {
     "description": "MORYTANIA_SLAYER_TOWER_WALLS",
-    "baseMaterial": "GRUNGE_1",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 343,
+    "uvScale": 0.8,
+    "flatNormals": true,
     "objectIds": [
+      2109,
       2160,
       2161,
       2162,
@@ -3128,12 +3713,63 @@
       2168,
       2169,
       2170,
-      2172,
-      4332,
-      2171,
-      2114
+      2171
+    ]
+  },
+  {
+    "description": "Morytania Slayer Tower stairs",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 343,
+    "uvScale": 0.8,
+    "flatNormals": true,
+    "objectIds": [
+      2114,
+      2118,
+      2119,
+      2120
+    ]
+  },
+  {
+    "description": "Morytania Slayer Tower Walls over door bricks",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 343,
+    "uvScale": 0.8,
+    "flatNormals": true,
+    "objectIds": [
+      2110,
+      2106
+    ]
+  },
+  {
+    "description": "Morytania Slayer Tower doors with metal hinges",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "description": "Metal hinges",
+        "colors": "s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 42
+      }
     ],
-    "flatNormals": true
+    "objectIds": [
+      2100,
+      2101,
+      2102,
+      2103,
+      2104,
+      2105,
+      2108,
+      2111,
+      2112,
+      2113
+    ]
   },
   {
     "description": "TOB_VERZIK_TILE_FLOOR",
@@ -3690,8 +4326,10 @@
       1422,
       1435,
       1459,
+      1469,
       1460,
       1467,
+      3222,
       4448,
       6628,
       9739,
@@ -3699,7 +4337,11 @@
       16543,
       17086,
       17087,
-      26712
+      26712,
+      35838,
+      35839,
+      35840,
+      35841
     ],
     "uvType": "BOX",
     "uvScale": 0.75,
@@ -3891,7 +4533,6 @@
     "description": "BEIGE_WALLS",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
-      442,
       446,
       447
     ],
@@ -4080,16 +4721,29 @@
     ]
   },
   {
+    "description": "Pyramid Plunder Walls - Exit Doors",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      20931,
+      20932
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": [ "l == 103", "l == 23" ],
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
     "description": "Pyramid Plunder Walls - Interior",
     "baseMaterial": "ROCK_3",
     "objectIds": [
-      20932,
       20933,
       20939,
       20937,
       20948,
       20949,
-      20931,
       21280,
       20934,
       20944,
@@ -4112,10 +4766,7 @@
   },
   {
     "description": "Pyramid Plunder Metallic Objects",
-    "baseMaterial": "METALLIC_1_LIGHT_SUPER_HIGHGLOSS",
     "objectIds": [
-      20946,
-      20947,
       21263,
       21267,
       21262,
@@ -4123,8 +4774,27 @@
       21261,
       21265
     ],
-    "uvType": "BOX",
-    "uvScale": 1.5
+    "colorOverrides": [
+      {
+        "colors": [ "h == 8" ],
+        "baseMaterial": "METALLIC_1_LIGHT_HIGHGLOSS"
+      }
+    ]
+  },
+  {
+    "description": "Pyramid Plunder Gold Chest",
+    "objectIds": [
+      20946,
+      20947
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 9" ],
+        "baseMaterial": "METALLIC_1_LIGHT_HIGHGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.2
+      }
+    ]
   },
   {
     "description": "Pyramid Plunder Wall Torch",
@@ -4132,7 +4802,15 @@
     "objectIds": [
       20942
     ],
-    "uvType": "BOX"
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "colorOverrides": [
+      {
+        "colors": [ "h < 7" ],
+        "baseMaterial": "GRAY_90"
+      }
+    ]
+
   },
   {
     "description": "Pyramid Plunder Sarcophagus",
@@ -4142,8 +4820,9 @@
       21257
     ],
     "uvType": "BOX",
-    "uvScale": 1.2,
-    "uvOrientation": 1142
+    "uvScale": 0.8,
+    "uvOrientation": 1142,
+    "uvOrientationX": 1
   },
   {
     "description": "Pyramid Plunder Sarcophagus Opened",
@@ -4894,6 +5573,7 @@
       9679,
       9681,
       11482,
+      15688,
       24094,
       40234,
       40241
@@ -4908,6 +5588,7 @@
     "objectIds": [
       7447,
       11481,
+      15687,
       24093,
       40235,
       40242
@@ -4991,6 +5672,7 @@
       2808,
       2809,
       2810,
+      4006,
       12174,
       26654,
       26709,
@@ -4998,6 +5680,7 @@
       30374,
       31555,
       31766,
+      35846,
       42248,
       47077,
       47078
@@ -5279,7 +5962,8 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       7496,
-      24086
+      24086,
+      34936
     ],
     "uvType": "BOX",
     "uvOrientation": 512
@@ -5295,7 +5979,8 @@
       9531,
       25601,
       25676,
-      27511
+      27511,
+      35874
     ],
     "uvType": "BOX",
     "uvOrientation": 512
@@ -5416,11 +6101,13 @@
   {
     "description": "Wooden tables - Solid - Cobwebs",
     "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "flatNormals": true,
     "objectIds": [
       616,
       25615
-    ],
-    "flatNormals": true
+    ]
   },
   {
     "description": "Wooden tables - Solid",
@@ -5510,15 +6197,23 @@
   },
   {
     "description": "Wattle Style Houses (Ardougne, Digsite)",
-    "baseMaterial": "WATTLE_1",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "colors": "h == 10 && s == 0",
+        "baseMaterial": "WATTLE_1",
+        "uvType": "BOX"
+      }
+    ],
     "objectIds": [
       1602,
       1603,
       1606,
       1608,
       17349
-    ],
-    "flatNormals": true
+    ]
   },
   {
     "description": "Candelabra",
@@ -5652,7 +6347,8 @@
       15650,
       16664,
       16665,
-      35791
+      35791,
+      35792
     ]
   },
   {
@@ -5666,7 +6362,7 @@
       894
     ],
     "uvType": "BOX",
-    "uvScale": 0.4
+    "uvScale": 0.2
   },
   {
     "description": "Metallic Guilded Chest",
@@ -5676,17 +6372,21 @@
       26273
     ],
     "uvType": "BOX",
-    "uvScale": 0.6
+    "uvScale": 0.33,
+    "uvOrientation": 512
   },
   {
     "description": "Metallic Chest",
-    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       375,
-      11735
+      11735,
+      11739,
+      11743
     ],
     "uvType": "BOX",
-    "uvScale": 0.6
+    "uvScale": 0.33,
+    "uvOrientation": 512
   },
   {
     "description": "CANNON_BALL",
@@ -5708,24 +6408,32 @@
   },
   {
     "description": "METAL_FLAG_POLE",
-    "baseMaterial": "METALLIC_1_GLOSS",
+    "baseMaterial": "GRUNGE_3",
     "objectIds": [
       861
     ],
-    "uvType": "BOX",
-    "uvScale": 0.6,
-    "uvOrientation": 120
-  },
-  {
-    "description": "BATHTUB",
-    "baseMaterial": "METALLIC_1_LIGHT_HIGHGLOSS",
-    "objectIds": [
-      875
+    "colorOverrides": [
+      {
+        "colors": "s == 0",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 512
+      }
     ]
   },
   {
+    "description": "BATHTUB",
+    "baseMaterial": "METALLIC_1_HIGHGLOSS",
+    "objectIds": [
+      875
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.3
+  },
+  {
     "description": "BATH_PUMP",
-    "baseMaterial": "METALLIC_1_GLOSS",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
     "objectIds": [
       871
     ],
@@ -5768,6 +6476,7 @@
       8792,
       8820,
       8821,
+      9544,
       9565,
       9717,
       9718,
@@ -5817,10 +6526,40 @@
     "uvScale": 0.7
   },
   {
+    "description": "Metal Fence - Darken",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "objectIds": [
+      9546,
+      9563,
+      35795
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7
+  },
+  {
     "description": "Marble Fountain",
     "baseMaterial": "MARBLE_1_SEMIGLOSS",
     "objectIds": [
       879
+    ]
+  },
+  {
+    "description": "Stone Fountain",
+    "baseMaterial": "STONE",
+    "uvType": "BOX",
+    "uvScale": 0.45,
+    "objectIds": [
+      3641
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 32",
+        "baseMaterial": "NONE"
+      },
+      {
+        "colors": [ "h == 2", "h == 3", "h == 7" ],
+        "baseMaterial": "GRAY_90"
+      }
     ]
   },
   {
@@ -5934,11 +6673,24 @@
     "flatNormals": true
   },
   {
-    "description": "Marble Staircase Spiral",
+    "description": "Marble Staircase Spiral with wooden rails",
     "baseMaterial": "MARBLE_3",
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "colorOverrides": [
+      {
+        "colors": "h == 7 && s > 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ],
     "objectIds": [
       12536,
+      11789,
+      11790,
       11792,
+      11793,
       12537,
       24075
     ]
@@ -5952,20 +6704,26 @@
     ]
   },
   {
-    "description": "STONE Staircase Spiral",
+    "description": "STONE Staircase Spiral with wooden rails",
     "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 765,
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "colors": "h == 7 && s > 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ],
     "objectIds": [
       9582,
       14735,
-      11789,
-      11790,
       17143,
       14736,
       14737
-    ],
-    "uvType": "BOX",
-    "uvOrientation": 765,
-    "uvScale": 0.4
+    ]
   },
   {
     "description": "Metal Chimney",
@@ -6368,7 +7126,6 @@
     "description": "Varrock Castle Railing",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      11793,
       23852
     ],
     "uvType": "BOX",
@@ -6467,6 +7224,7 @@
     "description": "Rock-Like Object - Rubble - Small",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
+      2172,
       5203,
       5205,
       24022,
@@ -6988,10 +7746,6 @@
     "baseMaterial": "ROCK_1",
     "textureMaterial": "HD_CONCRETE",
     "objectIds": [
-      3894,
-      3895,
-      3896,
-      3897,
       5847,
       11425,
       27899,
@@ -7307,6 +8061,11 @@
     "description": "Ground Decoration - Rock - Small - Uncolored",
     "baseMaterial": "ROCK_1_LIGHT",
     "objectIds": [
+      526,
+      527,
+      528,
+      529,
+      531,
       2381,
       2383,
       6397,
@@ -7532,7 +8291,8 @@
     "objectIds": [
       1366,
       1367,
-      1368
+      1368,
+      3960
     ],
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -7604,6 +8364,8 @@
       25661,
       25836,
       25837,
+      34508,
+      34510,
       41452,
       41738,
       42066,
@@ -7651,12 +8413,16 @@
       2071,
       9534,
       9064,
+      10662,
       11485,
       11486,
       12547,
       12548,
       15031,
       14739,
+      27223,
+      27224,
+      27225,
       41450
     ],
     "uvType": "BOX",
@@ -7669,6 +8435,7 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       9535,
+      34509,
       41739,
       42069
     ],
@@ -7903,7 +8670,17 @@
       44715,
       44717,
       44719,
-      44720
+      44720,
+      44751,
+      44752,
+      44753,
+      44754,
+      44755,
+      44756,
+      44757,
+      44758,
+      44759,
+      44760
     ],
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -8492,7 +9269,7 @@
     "uvType": "GEOMETRY"
   },
   {
-    "description": "Objects - Bed - Bedroll - Non Interactable",
+    "description": "Objects - Bed - Bedroll",
     "baseMaterial": "CARPET",
     "objectIds": [
       422,
@@ -8500,7 +9277,8 @@
       4288,
       23067,
       27664,
-      35797
+      35797,
+      35798
     ],
     "uvType": "MODEL_XZ",
     "uvScale": 0.60
@@ -8686,16 +9464,6 @@
     "uvType": "VANILLA"
   },
   {
-    "description": "Lunar Isle - Objects - Ice - Ice Chunks - Large",
-    "baseMaterial": "ICE_1_HIGHGLOSS",
-    "objectIds": [
-      6472,
-      6473
-    ],
-    "uvType": "MODEL_XZ",
-    "uvScale": 0.6
-  },
-  {
     "description": "Lunar Isle - Objects - Ice - Ice Chunks - Small",
     "baseMaterial": "ICE_1_HIGHGLOSS",
     "objectIds": [
@@ -8704,15 +9472,6 @@
     ],
     "uvType": "MODEL_XZ",
     "uvScale": 0.8
-  },
-  {
-    "description": "Lunar Isle - Objects - Ice - Ice Chunks - Medium",
-    "baseMaterial": "ICE_1_HIGHGLOSS",
-    "objectIds": [
-      6474
-    ],
-    "uvType": "MODEL_XZ",
-    "uvScale": 0.55
   },
   {
     "description": "Lunar Island - Walls - Wooden - Plank - Ruined",
@@ -9165,12 +9924,30 @@
       23266,
       23267,
       23268,
-      23269,
-      23270,
       23271
     ],
     "uvType": "BOX",
     "uvScale": 0.8
+  },
+  {
+    "description": "Wilderness Ditch with fence",
+    "baseMaterial": "DIRT_1",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Fence",
+        "colors": "s == 0",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 448
+      }
+    ],
+    "objectIds": [
+      23269,
+      23270
+    ]
   },
   {
     "description": "Wilderness Ditch Dirt clumps",
@@ -9735,6 +10512,7 @@
     "description": "Wall Decoration - Rocks",
     "baseMaterial": "ROCK_1_LIGHT",
     "objectIds": [
+      1474,
       1493,
       6393,
       6394,
@@ -9864,6 +10642,8 @@
     "objectIds": [
       5346,
       7182,
+      12887,
+      12888,
       15091,
       15682
     ],
@@ -9906,6 +10686,34 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.8
+  },
+  {
+    "description": "Slayer Tower broken chairs",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.6,
+    "objectIds": [
+      1898,
+      1899
+    ]
+  },
+  {
+    "description": "Slayer Tower broken chair with golden ornament",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Gold",
+        "colors": "l > 12",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS"
+      }
+    ],
+    "objectIds": [
+      1896
+    ]
   },
   {
     "description": "Objects - Wooden - Ugly combined backed wooden chair",
@@ -10042,15 +10850,150 @@
     "objectIds": [
       19995
     ],
-    "uvType": "GEOMETRY"
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 512
   },
   {
-    "description": "Ardougne - Walls - Stone - Zoo Ferret Fence",
-    "baseMaterial": "DOCK_FENCE",
+    "description": "Ardougne - Cart - Broken",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [
-      306
+      306,
+      327,
+      35869
     ],
-    "uvType": "VANILLA"
+    "uvType": "BOX",
+    "uvScale": 0.3
+  },
+  {
+    "description": "Objects - Ardougne Castle Prison - Sewer Grate",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "objectIds": [
+      35793,
+      35794
+    ],
+    "uvType": "MODEL_XY"
+  },
+  {
+    "description": "Objects - Ardougne Castle - Spear Wall",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "objectIds": [
+      848
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h > 3",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.33,
+        "uvOrientation": 672
+      }
+    ]
+  },
+  {
+    "description": "Objects - Ardougne Castle - Timber Defence",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      3000,
+      3046,
+      1864
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.33,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "GRAY_90"
+      }
+    ]
+  },
+  {
+    "description": "Objects - Ardougne Castle - Standard",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      864,
+      866
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.33,
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Objects - Ardougne Castle - Chairs with fabric",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      1097
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.33,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "GRUNGE_3"
+      },
+      {
+        "colors": "h == 7",
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
+  },
+  {
+    "description": "Objects - Ardougne Castle - Bathroom Table",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      592
+    ]
+  },
+  {
+    "description": "Objects - Ardougne Castle - Mirror",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      689
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.33,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 32",
+        "baseMaterial": "GRAY_75"
+      },
+      {
+        "colors": "s == 6",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS"
+      }
+    ]
+  },
+  {
+    "description": "Song of the Elves - Battle for West Ardougne - Barricade and Debris",
+    "baseMaterial": "NONE",
+    "objectIds": [
+      35804,
+      35805,
+      35806,
+      35813,
+      35814,
+      35871
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.33,
+        "uvOrientationY": 250,
+        "uvOrientationX": 512,
+        "uvOrientationZ": 512
+      }
+    ]
   },
   {
     "description": "Objects - Tree - Fake Dead Tree",
@@ -10182,6 +11125,11 @@
     "description": "Ground Decoration - Wooden - Agility Logs",
     "baseMaterial": "BARK",
     "objectIds": [
+      3929,
+      3930,
+      3931,
+      3932,
+      3933,
       23141,
       23142,
       23143,
@@ -11124,6 +12072,10 @@
   {
     "description": "Al-Kharid pillar decoration",
     "baseMaterial": "MARBLE_3",
+    "uvType": "BOX",
+    "uvOrientation": 343,
+    "uvScale": 0.6,
+    "flatNormals": true,
     "objectIds": [
       914
     ]
@@ -11908,12 +12860,18 @@
     ],
     "uvType": "BOX",
     "uvOrientation": 256,
-    "uvScale": 0.4
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "colors": [ "s == 7" ],
+        "baseMaterial": "GRUNGE_2"
+      }
+    ]
   },
   {
     "description": "Object - Sack with Hey or Grain",
     "baseMaterial": "BURLAP",
-    "objectIds": [ 5574, 10306, 16878, 35954 ],
+    "objectIds": [ 5574, 10306, 16878, 35872, 35954 ],
     "uvType": "BOX",
     "uvScale": 0.75,
     "retainVanillaUvs": false
@@ -13098,6 +14056,7 @@
     "description": "Sleeping Bag",
     "baseMaterial": "CARPET",
     "objectIds": [
+      5495,
       28521
     ],
     "uvType": "BOX",
@@ -13161,7 +14120,24 @@
       20764
     ],
     "uvType": "BOX",
-    "uvScale": 0.6
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "colors": [ "h < 11" ],
+        "baseMaterial": "ROCK_2",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Barrows - Wall Fix",
+    "baseMaterial": "ROCK_2",
+    "areas": [ "BARROWS_CRYPTS" ],
+    "objectIds": [
+      20737
+    ],
+    "uvType": "MODEL_XZ"
   },
   {
     "description": "Morytania - Ground  - Stone - Stone Steps",
@@ -13278,6 +14254,7 @@
   {
     "description": "Ground Decoration - Flat Rocks - Small",
     "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
     "objectIds": [
       1862,
       2159,
@@ -13402,17 +14379,10 @@
       9086,
       9087,
       9088,
-      9089,
       9093,
       9094,
       9095,
       9096,
-      9098,
-      9104,
-      9105,
-      9106,
-      9107,
-      9108,
       9114,
       9114,
       9116,
@@ -13426,7 +14396,112 @@
       9124,
       9125
     ],
-    "uvType": "BOX"
+    "uvType": "BOX",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Blast Furnace - Wooden",
+    "baseMaterial": "METALLIC_1",
+    "objectIds": [
+      9104,
+      9105,
+      9106,
+      9108
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "colors": [ "h == 6" ],
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.7
+      }
+    ]
+  },
+  {
+    "description": "Blast Furnace - Drive Belt",
+    "baseMaterial": "METALLIC_1",
+    "objectIds": [
+      9102,
+      9107
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "colors": [ "h == 6" ],
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
+  },
+  {
+    "description": "Blast Furnace - Ore Belt",
+    "baseMaterial": "METALLIC_1",
+    "objectIds": [
+      9100,
+      9101
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "colors": [ "h == 6" ],
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
+  },
+  {
+    "description": "Blast Furnace - Temp Gauge",
+    "baseMaterial": "METALLIC_1",
+    "objectIds": [
+      9089
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "colors": [ 123, 958, 22449 ],
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "MODEL_XY",
+        "uvScale": 0.7
+      }
+    ]
+  },
+  {
+    "description": "Blast Furnace - Melting Pot",
+    "baseMaterial": "METALLIC_1",
+    "objectIds": [
+      9098
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "colors": [ "s == 6" ],
+        "baseMaterial": "HD_LAVA_2",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.7
+      }
+    ]
+  },
+  {
+    "description": "Blast Furnace - Shelves",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      6154,
+      6155,
+      6156,
+      6157
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "colors": [ "h == 6" ],
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
   },
   {
     "description": "Motherload Furnace",
@@ -13530,13 +14605,15 @@
     "description": "Objects - Stone - Giants Foundry - Lava Rocks",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
+      44764,
+      44765,
       44766,
       44767,
       44768,
-      44769
+      44769,
+      44770
     ],
-    "uvType": "MODEL_XZ",
-    "uvScale": 0.58
+    "uvType": "MODEL_XZ"
   },
   {
     "description": "Objects - Stone - Giants Foundry - Lava Rocks - Small",
@@ -13544,11 +14621,176 @@
     "objectIds": [
       42494,
       42495,
-      42496
+      42496,
+      42497
     ],
     "uvType": "MODEL_XZ",
     "uvScale": 0.8,
     "uvOrientation": 128
+  },
+  {
+    "description": "Giants Foundry - Lava Pool",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      44631
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Objects - Misc - Giants Foundry - Hammer",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      44727
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 612,
+    "colorOverrides": [
+      {
+        "colors": [ "s == 0" ],
+        "baseMaterial": "ROCK_3"
+      }
+    ]
+  },
+  {
+    "description": "Giants Foundry - Trip Hammer",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "objectIds": [
+      44619
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 2" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "colors": [ "h == 5" ],
+        "baseMaterial": "STONE_NORMALED"
+      }
+    ]
+  },
+  {
+    "description": "Giants Foundry - Belt System",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "objectIds": [
+      44762,
+      44763
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "colorOverrides": [
+      {
+        "colors": [ "h == 2" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientationX":512,
+        "uvScale": 0.4
+      },
+      {
+        "colors": [ "h == 5" ],
+        "baseMaterial": "GRAY_90",
+        "uvType": "GEOMETRY"
+      }
+    ]
+  },
+  {
+    "description": "Giants Foundry - Grindstone",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "objectIds": [
+      44620
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 2" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientationX":512,
+        "uvScale": 0.4
+      },
+      {
+        "colors": [ "h == 5" ],
+        "baseMaterial": "GRAY_90",
+        "uvType": "GEOMETRY"
+      }
+    ]
+  },
+  {
+    "description": "Giants Foundry - Polishing Wheel",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "objectIds": [
+      44621
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 2" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientationX":512,
+        "uvScale": 0.4
+      },
+      {
+        "colors": [ "h == 0" ],
+        "baseMaterial": "GRAY_90"
+      }
+    ]
+  },
+  {
+    "description": "Giants Foundry - Waterwheel",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "objectIds": [
+      44761
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 2" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "GEOMETRY"
+      },
+      {
+        "colors": [ "h == 33" ],
+        "uvType": "MODEL_XZ",
+        "baseMaterial": "WATER_FOUNTAIN_FLAT",
+        "uvOrientation": 750
+      }
+    ]
+  },
+  {
+    "description": "Giants Foundry - Waterfall",
+    "baseMaterial": "ROCK_2",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 256,
+    "objectIds": [
+      44632
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 33" ],
+        "uvType": "BOX",
+        "uvOrientation": 750,
+        "uvScale": 1.5,
+        "baseMaterial": "WATER_FOUNTAIN_FLAT"
+      }
+    ]
+  },
+  {
+    "description": "Giants Foundry - Waterfall Tile",
+    "baseMaterial": "WATER_FOUNTAIN_FLAT",
+    "uvType": "BOX",
+    "uvOrientation": 750,
+    "uvScale": 1.5,
+    "objectIds": [
+      44747,
+      44748,
+      44749,
+      44750
+    ]
   },
   {
     "description": "Giants Anvil",
@@ -13573,6 +14815,27 @@
     "description": "Giants Foundry -  Wooden - Chest",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [ 44726 ],
+    "uvType": "BOX",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Giants Foundry -  Wooden - Pile of Buckets",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 33309 ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientationY": -200,
+    "colorOverrides": [
+      {
+        "colors": [ "s == 0" ],
+        "baseMaterial": "METALLIC_1"
+      }
+    ]
+  },
+  {
+    "description": "Giants Foundry -  Wooden - Crate",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ 44638 ],
     "uvType": "BOX",
     "uvOrientation": 512
   },
@@ -13732,6 +14995,7 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       7192,
+      10661,
       14773,
       14774
     ],
@@ -13748,7 +15012,9 @@
       14740,
       15674,
       22278,
-      22280
+      22280,
+      27228,
+      27229
     ],
     "uvType": "BOX"
   },
@@ -13794,7 +15060,8 @@
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       5090,
-      5091
+      5091,
+      5092
     ],
     "uvType": "BOX",
     "uvOrientation": 562,
@@ -14162,6 +15429,7 @@
     ],
     "uvType": "BOX",
     "retainVanillaUvs": false,
+    "uvOrientation": 512,
     "uvScale": 0.65
   },
   {
@@ -14178,16 +15446,29 @@
       10528
     ],
     "uvType": "BOX",
-    "retainVanillaUvs": false,
+    "uvOrientation": 512,
     "uvScale": 0.65,
     "colorOverrides": [
       {
         "colors": [ 43060, 43082, 43084, 43110, 43120, 43125, 43099, 43123 ],
-        "baseMaterial": "NONE",
-        "uvType": "WORLD_XZ",
-        "uvScale": 2
+        "baseMaterial": "NONE"
       }
     ]
+  },
+  {
+    "description": "Objects - Concrete - Bank Booth - Closed",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "materialOverrides": {
+      "WOODEN_SCREEN": {
+        "textureMaterial": "WOODEN_SCREEN"
+      }
+    },
+    "objectIds": [
+      8142
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.65
   },
   {
     "description": "Objects - Concrete - Gravestone",
@@ -14352,6 +15633,7 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       1032,
+      2107,
       10605
     ],
     "uvType": "BOX",
@@ -14364,7 +15646,14 @@
       1904,
       1907,
       1920,
-      17088
+      13090,
+      13091,
+      17088,
+      15453,
+      15454,
+      15455,
+      15456,
+      15457
     ],
     "flatNormals": true
   },
@@ -14401,16 +15690,17 @@
     "retainVanillaUvs": false
   },
   {
-    "description": "Picatoris - Objects - Dirt - Rabbit Hole",
+    "description": "Objects - Dirt - Rabbit Hole",
     "baseMaterial": "DIRT_1",
     "objectIds": [
+      3940,
       19337
     ],
     "uvType": "BOX",
     "uvScale": 0.6
   },
   {
-    "description": "Picatoris - Objects - Dirt - Ferret Burrow",
+    "description": "Objects - Dirt - Ferret Burrow",
     "baseMaterial": "DIRT_2",
     "objectIds": [
       19438,
@@ -14801,6 +16091,16 @@
   {
     "description": "Objects - Hay - Roof",
     "textureMaterial": "HD_HAY",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "colorOverrides": [
+        {
+          "colors": "h == 10 && s == 0",
+          "baseMaterial": "WATTLE_1",
+          "uvType": "BOX"
+        }
+    ],
     "objectIds": [
       1604,
       1605,
@@ -14812,9 +16112,7 @@
       4243,
       4244,
       4245
-    ],
-    "uvType": "BOX",
-    "retainVanillaUvs": false
+    ]
   },
   {
     "description": "Objects - Hay - Haystack",
@@ -14983,9 +16281,10 @@
     ]
   },
   {
-    "description": "Tutorial Island - The Node - Chest with Gold Trim",
+    "description": "Tutorial Island - The Node - Chest with Gold lumps in it",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      1768,
       2079
     ],
     "uvOrientation": 512,
@@ -14993,7 +16292,9 @@
     "colorOverrides": [
       {
         "colors": [ "h == 8" ],
-        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS"
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "WORLD_XZ",
+        "uvScale": 0.25
       }
     ]
   },
@@ -16472,7 +17773,8 @@
     "description": "Spinning Wheel",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      4309
+      4309,
+      8748
     ],
     "uvType": "BOX"
   },
@@ -16805,7 +18107,11 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       8763,
-      8764
+      8764,
+      35902,
+      35903,
+      35906,
+      35907
     ],
     "uvType": "BOX",
     "uvScale": 0.92,
@@ -16830,7 +18136,8 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       8756,
-      8758
+      8758,
+      35951
     ],
     "uvType": "BOX",
     "uvScale": 0.92,
@@ -16842,7 +18149,8 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       8751,
-      20127
+      20127,
+      35873
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -16880,6 +18188,205 @@
     "uvScale": 0.8,
     "uvOrientationX": 512,
     "flatNormals": true
+  },
+  {
+    "description": "Tirannwn - Lletya - Well",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      8747,
+      8766,
+      35880,
+      35881,
+      35882,
+      35884
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "colors": ["h == 10","h==5"],
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Lletya - Grave",
+    "baseMaterial": "MARBLE_3",
+    "objectIds": [
+      35914
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7
+  },
+  {
+    "description": "Tirannwn - Lletya - Cooking Range",
+    "baseMaterial": "METALLIC_1",
+    "objectIds": [
+      8750,
+      35877
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": [ "h == 6" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Lletya - Rope Barrier",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      8780
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.2,
+        "uvOrientationX": 512,
+        "uvOrientationZ": -200
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Lletya - Shelves with Thread",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      8776
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Lletya - Clothes Model",
+    "baseMaterial": "GRAY_65",
+    "objectIds": [
+      8778,
+      8779
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Lletya - Wall Mounted Crossbow and Arrows Main",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      8773,
+      8775
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && l > 40 && l < 60",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      },
+      {
+        "colors": "h == 0 && l > 10 && l < 22",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Lletya - Wall Mounted Crossbow and Arrows Fix",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "areas": [ "Lletya Crossbow Fix" ],
+    "objectIds": [
+      8773,
+      8775
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && l > 0 && l < 5 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Underground Pass - Dwarven Camp - Ground - Wooden - Planks",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      14184,
+      14185,
+      14186,
+      14187
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Underground Pass - Dwarven Camp - Ground - Explosives Hole",
+    "baseMaterial": "DIRT_1",
+    "objectIds": [
+      35888,
+      35889
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.57
+  },
+  {
+    "description": "Underground Pass - Spear Wall",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "objectIds": [
+      849,
+      34938
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.25
+      }
+    ]
+  },
+  {
+    "description": "Underground Pass - Spear Wall",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "npcIds": [
+      8951
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 5", "h == 6" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 50
+      }
+    ]
+  },
+  {
+    "description": "Underground Pass - Catapult",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      671
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
   },
   {
     "description": "Mourners Tunnels - Walls - Dirt",
@@ -18091,7 +19598,7 @@
   },
   {
     "description": "Blast Furnace - Objects - Metallic - Scaffolding",
-    "baseMaterial": "METALLIC_1_LIGHT",
+    "baseMaterial": "METALLIC_1",
     "objectIds": [
       9109, 9110, 9111, 9112, 9113
     ],
@@ -20127,7 +21634,7 @@
   {
     "description": "Wooden shelves - Empty or with pottery",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 1023, 7506, 7509, 8692, 12980 ],
+    "objectIds": [ 1023, 7506, 8692, 12980 ],
     "uvType": "BOX",
     "uvScale": 0.8,
     "uvOrientationX": 512,
@@ -20818,24 +22325,61 @@
     "uvType": "BOX"
   },
   {
+    "description": "Camdozaal Vault Door",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 42,
+    "objectIds": [
+      41537
+    ]
+  },
+  {
     "description": "Camdozaal House Walls",
     "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 5",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvOrientation": 700
+      }
+    ],
     "objectIds": [
       41461,
       41462,
       41463,
+      41464,
       41465
-    ],
-    "uvType": "BOX"
+    ]
   },
   {
-    "description": "Camdozaal Wall Statues",
+    "description": "Camdozaal Wall Statue - static",
     "baseMaterial": "GRUNGE_3",
-    "objectIds": [
-      41467,
-      41468
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 5",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 700
+      }
     ],
-    "uvType": "BOX"
+    "objectIds": [
+      41468
+    ]
+  },
+  {
+    "description": "Camdozaal Wall Statues - Dynamic",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "objectIds": [
+      41467
+    ]
   },
   {
     "description": "Camdozaal Barronite Walls",
@@ -20884,15 +22428,16 @@
   },
   {
     "description": "Camdozaal - Plant - Fern",
-    "baseMaterial": "PLANT_GRUNGE_2",
+    "baseMaterial": "LEAF_VEINS_LIGHT",
     "objectIds": [
       41581,
       41582,
-      41583
+      41583,
+      41584
     ],
     "uvType": "BOX",
     "uvOrientation": 128,
-    "uvScale": 1.2
+    "uvScale": 0.4
   },
   {
     "description": "Camdozaal Fish Bones",
@@ -20992,6 +22537,15 @@
   {
     "description": "Camdozaal Preparation Table",
     "baseMaterial": "STONE_NORMALED",
+    "colorOverrides": [
+      {
+        "description": "Bones",
+        "colors": "h == 0",
+        "baseMaterial": "BONE",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.5
+      }
+    ],
     "objectIds": [
       41545
     ],
@@ -21002,14 +22556,23 @@
   {
     "description": "Camdozaal Altar",
     "baseMaterial": "STONE_NORMALED",
-    "objectIds": [
-      41546
-    ],
     "uvType": "BOX",
     "uvOrientationY": 256,
     "uvOrientationZ": 768,
     "uvOrientationX": 768,
-    "uvScale": 0.6
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 5",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvOrientation": 700
+      }
+    ],
+    "objectIds": [
+      41546
+    ]
   },
   {
     "description": "Camdozaal and Zanaris Mushrooms",
@@ -21021,6 +22584,254 @@
       12059
     ],
     "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Camdozaal Entrance Sides",
+    "baseMaterial": "SNOW_1",
+    "uvType": "BOX",
+    "uvScale": 1.25,
+    "colorOverrides": [
+      {
+        "description": "Stone",
+        "colors": "l < 56",
+        "baseMaterial": "ROCK_1",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 343
+      }
+    ],
+    "objectIds": [
+      41443,
+      41444
+    ]
+  },
+  {
+    "description": "Camdozaal Entrance",
+    "baseMaterial": "SNOW_1",
+    "uvType": "BOX",
+    "uvScale": 1.25,
+    "colorOverrides": [
+      {
+        "description": "Stone",
+        "colors": "h == 0 && l < 65",
+        "baseMaterial": "ROCK_2",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 1024
+      },
+      {
+        "description": "Ice",
+        "colors": "h == 32",
+        "baseMaterial": "ICE_3",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      41439,
+      41440,
+      41441
+    ]
+  },
+  {
+    "description": "Camdozaal Entrance rubble",
+    "baseMaterial": "SNOW_1",
+    "uvType": "BOX",
+    "uvScale": 1.25,
+    "colorOverrides": [
+      {
+        "description": "Stone",
+        "colors": "h == 0 && l < 55",
+        "baseMaterial": "ROCK_2",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 1024
+      }
+    ],
+    "objectIds": [
+      41454
+    ]
+  },
+  {
+    "description": "Camdozaal Big Door",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 1.25,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 6",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      41482,
+      41483,
+      41484
+    ]
+  },
+  {
+    "description": "Structural Pillar",
+    "baseMaterial": "ROCK_2",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 182,
+    "objectIds": [
+      41458,
+      41459,
+      41460
+    ]
+  },
+  {
+    "description": "Camdozaal Exit",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "colorOverrides": [
+      {
+        "description": "carved stone",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      },
+      {
+        "description": "fake fog",
+        "colors": "h == 48 && s == 0",
+        "baseMaterial": "NONE"
+      }
+    ],
+    "objectIds": [
+      41446
+    ]
+  },
+  {
+    "description": "Camdozaal tent with tools under it",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 128,
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h < 7 && s > 0",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      41491
+    ]
+  },
+  {
+    "description": "Camdozaal Pickaxe Barrel",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h < 4",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      41593
+    ]
+  },
+  {
+    "description": "Camdozaal Barrel",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h < 4",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      30821,
+      41541
+    ]
+  },
+  {
+    "description": "Camdozaal Workbench",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h < 9",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 343
+      },
+      {
+        "description": "Crystals",
+        "colors": "h == 51",
+        "baseMaterial": "NONE",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 343
+      }
+    ],
+    "objectIds": [
+      41495
+    ]
+  },
+  {
+    "description": "Camdozaal Stalactite post and lamp",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvOrientation": 343,
+    "colorOverrides": [
+      {
+        "description": "Rock",
+        "colors": "h == 48",
+        "baseMaterial": "ROCK_3",
+        "uvType": "BOX",
+        "uvOrientation": 42
+      },
+      {
+        "description": "Post",
+        "colors": "h == 8",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Rope",
+        "colors": "h == 6 && s == 4",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvOrientation": 42
+      }
+    ],
+    "objectIds": [
+      41565
+    ]
+  },
+  {
+    "description": "Camdozaal ice formation",
+    "baseMaterial": "GRUNGE_3_LIGHT_SHINY",
+    "uvType": "BOX",
+    "uvOrientation": 343,
+    "objectIds": [
+      6460,
+      6472,
+      6473,
+      6474,
+      13704
+    ]
   },
   {
     "description": "Seers Coal Mine Fence",
@@ -21175,6 +22986,7 @@
     "description": "Skeleton with helmet named corpse",
     "baseMaterial": "BONE",
     "objectIds": [
+      4984,
       7208
     ],
     "uvType": "BOX",
@@ -21184,6 +22996,8 @@
     "description": "Skeleton named corpse",
     "baseMaterial": "BONE",
     "objectIds": [
+      2176,
+      4983,
       21802,
       21803
     ],
@@ -21571,12 +23385,19 @@
   {
     "description": "Zombie Event Mausoleum",
     "baseMaterial": "ROCK_4",
-    "objectIds": [
-      10055
-    ],
     "uvType": "BOX",
     "uvOrientation": 180,
-    "uvScale": 0.6
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Vines",
+        "colors": " h == 17",
+        "baseMaterial": "LEAF_VEINS"
+      }
+    ],
+    "objectIds": [
+      10055
+    ]
   },
   {
     "description": "Wooden posts - textured",
@@ -21930,10 +23751,11 @@
   },
   {
     "description": "Bankbooth with Glass Window - Lumbridge",
-    "baseMaterial": "WOOD_GRAIN_3",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [ 18491 ],
     "uvType": "BOX",
-    "uvScale": 0.8,
+    "uvScale": 0.4,
+    "uvOrientationZ": 512,
     "colorOverrides": [
       {
         "colors": [ 21549, 21594, 21630 ],
@@ -21944,20 +23766,22 @@
   },
   {
     "description": "Bankbooth with Shutters - Lumbridge",
-    "baseMaterial": "WOOD_GRAIN_3",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [ 18492 ],
     "uvType": "BOX",
-    "uvScale": 0.8
+    "uvScale": 0.4,
+    "uvOrientationZ": 512
   },
   {
     "description": "Bankbooth with Glass Window - Varrock",
-    "baseMaterial": "WOOD_GRAIN_3",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [ 10583 ],
     "uvType": "BOX",
-    "uvScale": 0.8,
+    "uvScale": 0.4,
+    "uvOrientationZ": 512,
     "colorOverrides": [
       {
-        "colors": [ 43054, 43082, 43102, 43125 ],
+        "colors": [ "h == 42" ],
         "baseMaterial": "NONE",
         "uvType": "WORLD_XY"
       }
@@ -21965,20 +23789,22 @@
   },
   {
     "description": "Bankbooth with Shutters - Corsair Cove",
-    "baseMaterial": "WOOD_GRAIN_3",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [ 10585 ],
     "uvType": "BOX",
-    "uvScale": 0.8
+    "uvScale": 0.4,
+    "uvOrientationZ": 512
   },
   {
     "description": "Bankbooth with Glass Window - Falador",
-    "baseMaterial": "WOOD_GRAIN_3",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [ 24101 ],
     "uvType": "BOX",
-    "uvScale": 0.8,
+    "uvScale": 0.4,
+    "uvOrientationZ": 512,
     "colorOverrides": [
       {
-        "colors": [ 43054, 43082, 43102, 43125 ],
+        "colors": [ "h == 42" ],
         "baseMaterial": "NONE",
         "uvType": "WORLD_XY"
       }
@@ -21986,10 +23812,11 @@
   },
   {
     "description": "Bankbooth with Glass Window - Seers",
-    "baseMaterial": "WOOD_GRAIN_3",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [ 25808 ],
     "uvType": "BOX",
-    "uvScale": 0.8,
+    "uvScale": 0.4,
+    "uvOrientationZ": 512,
     "colorOverrides": [
       {
         "colors": [ 21549, 21594, 21630 ],
@@ -22000,17 +23827,19 @@
   },
   {
     "description": "Bankbooth with Shutters - Seers",
-    "baseMaterial": "WOOD_GRAIN_3",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [ 25809 ],
     "uvType": "BOX",
-    "uvScale": 0.8
+    "uvScale": 0.4,
+    "uvOrientationZ": 512
   },
   {
     "description": "Bankbooth with Glass Window - Lunar Island",
-    "baseMaterial": "WOOD_GRAIN_3",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [ 16700 ],
     "uvType": "BOX",
-    "uvScale": 0.8,
+    "uvScale": 0.4,
+    "uvOrientationZ": 512,
     "colorOverrides": [
       {
         "colors": [ 43011, 43054, 43102 ],
@@ -22021,10 +23850,11 @@
   },
   {
     "description": "Bankbooth with Glass Window - Canifis",
-    "baseMaterial": "WOOD_GRAIN_3",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [ 24347 ],
     "uvType": "BOX",
-    "uvScale": 0.8,
+    "uvScale": 0.4,
+    "uvOrientationZ": 512,
     "colorOverrides": [
       {
         "colors": [ 43011, 43054, 43121 ],
@@ -22035,10 +23865,11 @@
   },
   {
     "description": "Bankbooth with Glass Window - Phasmatys",
-    "baseMaterial": "WOOD_GRAIN_3",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [ 16642 ],
     "uvType": "BOX",
-    "uvScale": 0.8,
+    "uvScale": 0.4,
+    "uvOrientationZ": 512,
     "colorOverrides": [
       {
         "colors": [ 21507, 21548, 21595 ],
@@ -22049,17 +23880,19 @@
   },
   {
     "description": "Bankbooth with Shutters - Phasmatys",
-    "baseMaterial": "WOOD_GRAIN_3",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [ 16643 ],
     "uvType": "BOX",
-    "uvScale": 0.8
+    "uvScale": 0.4,
+    "uvOrientationZ": 512
   },
   {
     "description": "Bankbooth with Glass Window - Nardah",
-    "baseMaterial": "WOOD_GRAIN_3",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [ 10517 ],
     "uvType": "BOX",
-    "uvScale": 0.8,
+    "uvScale": 0.4,
+    "uvOrientationZ": 512,
     "colorOverrides": [
       {
         "colors": [ 21535, 21576, 21630 ],
@@ -22070,17 +23903,19 @@
   },
   {
     "description": "Bankbooth with Shutters - Nardah",
-    "baseMaterial": "WOOD_GRAIN_3",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [ 10518 ],
     "uvType": "BOX",
-    "uvScale": 0.8
+    "uvScale": 0.4,
+    "uvOrientationZ": 512
   },
   {
-    "description": "Bankbooth with Glass Window - Nardah",
-    "baseMaterial": "WOOD_GRAIN_3",
+    "description": "Bankbooth with Glass Window - Sophanem",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [ 20325 ],
     "uvType": "BOX",
-    "uvScale": 0.8,
+    "uvScale": 0.4,
+    "uvOrientationZ": 512,
     "colorOverrides": [
       {
         "colors": [ 43025, 43068, 43116 ],
@@ -22091,10 +23926,11 @@
   },
   {
     "description": "Bankbooth with Glass Window - The Node",
-    "baseMaterial": "WOOD_GRAIN_3",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [ 42837 ],
     "uvType": "BOX",
-    "uvScale": 0.8,
+    "uvScale": 0.4,
+    "uvOrientationZ": 512,
     "colorOverrides": [
       {
         "colors": [ "h == 21" ],
@@ -23620,6 +25456,1657 @@
     ],
     "objectIds": [
       2783
+    ]
+  },
+  {
+    "description": "Farming Guild - Small Tree",
+    "baseMaterial": "PLANT_GRUNGE_2",
+    "objectIds": [
+      34486,
+      34487,
+      34488,
+      34489
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "colorOverrides": [
+      {
+        "colors": [ "h == 4", "h == 8" ],
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Farming Guild - Small Bush",
+    "baseMaterial": "PLANT_GRUNGE_2",
+    "objectIds": [
+      33638
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.2
+  },
+  {
+    "description": "Farming Guild - Water Barrel",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      8702
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.55,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": [
+          2, 7, 8, 12, 15, 16, 17, 18, 20,
+          21, 22, 24, 25, 26, 27, 28, 29 ,
+          30, 31, 32, 33, 34, 35, 36, 37,
+          39, 40, 41, 42, 43, 44, 46, 49
+        ],
+        "baseMaterial": "METALLIC_1_SEMIGLOSS"
+      }
+    ]
+  },
+  {
+    "description": "Farming Guild - Gazebo with cat",
+    "baseMaterial": "WOOD_GRAIN",
+    "objectIds": [
+      34480
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Farming Guild - Trellis Fence",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientationY": 512,
+    "objectIds": [
+      34479
+    ]
+  },
+  {
+    "description": "Farming Guild - Redwood Tree Walkway - Planks Straight",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientationY": 512,
+    "objectIds": [
+      29685,
+      29686,
+      29687,
+      29688
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h < 3",
+        "baseMaterial": "GRAY_75"
+      }
+    ]
+  },
+  {
+    "description": "Farming Guild - Redwood Tree Walkway - Planks Diagonal",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": -256,
+    "objectIds": [
+      29689
+    ]
+  },
+  {
+    "description": "Farming Guild - Redwood Tree Walkway - Walls and Supports",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      29690,
+      29691
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "ROPE",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.55
+      }
+    ]
+  },
+  {
+    "description": "Farming Guild - Redwood Tree Walkway - Rope Ladder",
+    "baseMaterial": "ROPE",
+    "objectIds": [
+      34477,
+      34478
+    ],
+    "uvType": "MODEL_XY",
+    "uvScale": 0.3,
+    "colorOverrides": [
+      {
+        "colors": [ "h == 0", "h == 6" ],
+        "baseMaterial": "GRAY_90"
+      }
+    ]
+  },
+  {
+    "description": "Farming Guild - Log Pile",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.33,
+    "objectIds": [
+      309
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "METALLIC_1"
+      }
+    ]
+  },
+  {
+    "description": "Farming Guild - Shelves with Various Clutter",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      7509,
+      34505,
+      34506,
+      34507
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "METALLIC_1"
+      },
+      {
+        "colors": [ "h == 2", "h == 3", "h == 7" ],
+        "baseMaterial": "GRAY_90"
+      }
+    ]
+  },
+  {
+    "description": "Farming Guild - Seed Vault",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      26206
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 27",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Farming Guild - Hespori Cave Entrance",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "objectIds": [
+      34499
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 13",
+        "baseMaterial": "GRAY_65"
+      }
+    ]
+  },
+  {
+    "description": "Farming Guild - Statue",
+    "baseMaterial": "STONE",
+    "uvType": "BOX",
+    "uvScale": 0.74,
+    "objectIds": [
+      34498
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 13", "h == 14", "s == 2", "s == 3" ],
+        "baseMaterial": "GRAY_75"
+      }
+    ]
+  },
+  {
+    "description": "Farming Guild - Greenhouse Walls",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "flatNormals": true,
+    "objectIds": [
+      34445,
+      34448,
+      34449,
+      34450,
+      34451,
+      34461,
+      34462,
+      34463,
+      34464,
+      34465,
+      34466,
+      34467,
+      34468,
+      34454,
+      34455,
+      34456,
+      34457,
+      34458,
+      34459,
+      34460
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "STONE",
+        "uvType": "BOX"
+      },
+      {
+        "colors": ["h == 6", "h == 7", "h == 27", "h == 32"],
+        "baseMaterial": "GRAY_90"
+      }
+    ]
+  },
+  {
+    "description": "Farming Guild - Greenhouse Gates",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "objectIds": [
+      34475,
+      34476
+    ]
+  },
+  {
+    "description": "Farming Guild - Hespori Arena - Walls",
+    "baseMaterial": "DIRT_1",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 0.75,
+    "objectIds": [
+      34435,
+      34438,
+      34439,
+      34440,
+      34441,
+      34442,
+      34443
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 14",
+        "baseMaterial": "PLANT_GRUNGE_1"
+      }
+    ]
+  },
+  {
+    "description": "Farming Guild - Hespori Boss",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "GEOMETRY",
+    "objectIds": [
+      33726,
+      33727,
+      33728,
+      33729,
+      33730
+    ],
+    "npcIds": [ 8583 ]
+  },
+  {
+    "description": "Farming Guild - Hespori Flower",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "GEOMETRY",
+    "npcIds": [
+      8584,
+      8585
+    ],
+    "objectIds": [ 34705, 34706 ]
+  },
+  {
+    "description": "Farming Guild - Hide Ripples",
+    "hide": true,
+    "objectIds": [ 5607 ]
+  },
+  {
+    "description": "Cushioned church pew with foot rest",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Red Cushion",
+        "colors": "h == 0 && s == 4",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      },
+      {
+        "description": "Golden Cushion",
+        "colors": "h == 7 && s == 7",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ],
+    "objectIds": [
+      5788,
+      14862,
+      14863,
+      14864
+    ]
+  },
+  {
+    "description": "Varrock church wooden lectern",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Paper",
+        "colors": "h == 8 && s == 0",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "MODEL_XY"
+      },
+      {
+        "description": "Golden paper edges",
+        "colors": "h == 6 && s == 4",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvOrientation": 864,
+        "uvScale": 0.75
+      }
+    ],
+    "objectIds": [
+      12136
+    ]
+  },
+  {
+    "description": "Varrock Apothecary table with book plus pestle and mortar",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Paper",
+        "colors": ["h == 5 && s == 0", "h == 10 && s == 0"],
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "MODEL_XY"
+      },
+      {
+        "description": "Pestle and mortar",
+        "colors": "h < 4 && s == 0",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      2714
+    ]
+  },
+  {
+    "description": "Varrock Apothecary Wooden cabinet with Brain and abyssal jars",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512,
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Paper",
+        "colors": ["h == 5 && s == 0", "h == 10 && s == 0"],
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "MODEL_XY"
+      },
+      {
+        "description": "Glass",
+        "colors": "h == 26",
+        "baseMaterial": "GRAY_75",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      2722
+    ]
+  },
+  {
+    "description": "Varrock Apothecary experiment table",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Table",
+        "colors": "h == 7 && s < 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientationY": 512
+      }
+    ],
+    "objectIds": [
+      2716
+    ]
+  },
+  {
+    "description": "Baxtorian Falls - Pillar",
+    "baseMaterial": "MARBLE_1",
+    "objectIds": [
+      34965
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Baxtorian Falls - Statues",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      2006,
+      34967,
+      34968
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Baxtorian Falls - Chalice",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      2014,
+      2015
+    ]
+  },
+  {
+    "description": "Underground Pass - Well of Voyage",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      4004,
+      4005
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "colors": [ "h == 0", "h == 39", "h == 40" ],
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.1
+      }
+    ]
+  },
+  {
+    "description": "Underground Pass - Exit to Tirannwn",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      4007
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 100,
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "BLACK",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Grand Library - Bookcase Wall",
+    "objectIds": [
+      2485, 4140, 4976, 34993, 34994, 34995, 34996, 35001, 35002,
+      35003, 35004, 35005, 35006, 35007, 35008, 35009, 35010, 35011,
+      35012, 35013, 35014, 35015, 35016, 35017, 35018, 35019, 35020,
+      35021, 35022, 35023, 35024, 35024, 35025, 35026, 35027, 35028,
+      35029, 35030, 35031, 35032, 35039, 35040, 35041, 35042, 35043,
+      35044, 35045, 35046, 35047, 35048, 35049, 35050, 35051, 35052,
+      35053, 35055, 35338, 35339, 35341, 35343, 35344, 35346, 35348,
+      35349, 35354, 35355, 35358, 35359, 35361, 35363, 35364, 35365,
+      35368, 35372, 35373, 35449, 35450, 37369, 37370, 37371, 37372,
+      37373, 37374, 37375, 37376, 37377, 37378, 37379
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 3",
+        "baseMaterial": "WOOD_GRAIN",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      },
+      {
+        "colors": "h == 34",
+        "baseMaterial": "MARBLE_1",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ]
+  },
+  {
+    "description": "Grand Library - Wall Pillar",
+    "objectIds": [ 34997, 34999, 35000, 35057, 35058, 35060, 35062, 35063, 35380, 35381, 35382, 35383, 35385 ],
+    "baseMaterial": "MARBLE_1",
+    "uvType": "BOX",
+    "uvScale": 0.75
+  },
+  {
+    "description": "Grand Library - Wall Pillar with Crystal",
+    "objectIds": [
+      34998, 35059, 35061, 35064, 35384, 35451, 35451, 35452, 35453, 35453, 35454, 35455, 35455, 35456, 35457,
+      35457, 35458, 35459, 35459, 35460, 35461, 35461, 35462, 35463, 35463, 35464, 35465, 35465, 35466, 35467
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "s == 7" ],
+        "baseMaterial": "NONE"
+      },
+      {
+        "colors": [ "h == 30" ,"h == 32", "h == 34" ],
+        "baseMaterial": "MARBLE_1",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ]
+  },
+  {
+    "description": "Grand Library - Inner Wall",
+    "baseMaterial": "BLACK",
+    "objectIds": [ 35374, 35375, 35376, 35377, 35378, 35379 ]
+  },
+  {
+    "description": "Grand Library - Floor - Wooden with Marble",
+    "baseMaterial": "WOOD_GRAIN",
+    "objectIds": [ 34978, 34979, 34980, 34981, 34982, 34983, 34984,
+      34985, 34986, 34987, 34988, 34989, 34990, 34991, 34992 ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 32" ],
+        "baseMaterial": "MARBLE_2",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.75
+      }
+    ]
+  },
+  {
+    "description": "Grand Library - Floor - Hole and Railing",
+    "baseMaterial": "WOOD_GRAIN",
+    "objectIds": [ 35067, 35068, 35069, 35070, 35072, 35073, 35074 ]
+  },
+  {
+    "description": "Grand Library - Floor - Bust",
+    "baseMaterial": "MARBLE_1",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [ 35033, 35034, 35035, 35036, 35037, 35038, 35441, 35442, 35443, 35444, 35445, 35446 ]
+  },
+  {
+    "description": "Grand Library - Floor - Carpet",
+    "baseMaterial": "CARPET",
+    "objectIds": [ 35430, 35431, 35432, 35433 ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Grand Library - Large Cabinet",
+    "objectIds": [ 35423, 35424, 35425, 35426, 35427, 35428, 35429, 34970, 34971, 34973, 34974, 34975, 34976, 34977 ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 3" ],
+        "baseMaterial": "WOOD_GRAIN"
+      },
+      {
+        "colors": [ "h == 57" ],
+        "baseMaterial": "CARPET",
+        "uvType": "MODEL_XZ"
+      }
+    ]
+  },
+  {
+    "description": "Grand Library - Floating Bookcase",
+    "objectIds": [ 37380, 35447 ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 3" ],
+        "baseMaterial": "WOOD_GRAIN"
+      }
+    ]
+  },
+  {
+    "description": "Grand Library - Furniture",
+    "objectIds": [ 35406, 35407, 35408, 35437, 35439, 35440 ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 3" ],
+        "baseMaterial": "WOOD_GRAIN"
+      }
+    ]
+  },
+  {
+    "description": "Grand Library - Light Pillar",
+    "objectIds": [
+      35076, 35082, 35083, 35084, 35085, 35086, 35087, 35088, 35089, 35090, 35091, 35092, 35093, 35094, 35095, 35096, 35097,
+      35098, 35099, 35100, 35101, 35102, 35103, 35104, 35105, 35106, 35107, 35108, 35109, 35110, 35111, 35112, 35113, 35114,
+      35115, 35116, 35117, 35118, 35119, 35120, 35121, 35122, 35123, 35124, 35125, 35126, 35127, 35128, 35129, 35130, 35131,
+      35132, 35133, 35134, 35135, 35136, 35137, 35138, 35139, 35140, 35141, 35142, 35143, 35144, 35145, 35146, 35147, 35148,
+      35149, 35150, 35151, 35152, 35153, 35154, 35155, 35156, 35157, 35158, 35159, 35160, 35161, 35162, 35163, 35164, 35165,
+      35166, 35167, 35168, 35169, 35170, 35171, 35172, 35173, 35174, 35175, 35176, 35177, 35178, 35179, 35180, 35181, 35182,
+      35183, 35184, 35185, 35186, 35187, 35188, 35189, 35190, 35191, 35192, 35193, 35194, 35195, 35196, 35197, 35198, 35199,
+      35200, 35201, 35202, 35203, 35204, 35205, 35206, 35208, 35209, 35210, 35211, 35212, 35213, 35214, 35215, 35216, 35217,
+      35218, 35219, 35220, 35221, 35222, 35223, 35224, 35225, 35226, 35227, 35228, 35229, 35230, 35231, 35232, 35233, 35234,
+      35253, 35254, 35255, 35256, 35257, 35258, 35259, 35260, 35261, 35262, 35263, 35264, 35265, 35266, 35267, 35268, 35269,
+      35270, 35271, 35272, 35273, 35274, 35275, 35276, 35277, 35278, 35279, 35280, 35281, 35282, 35283, 35284, 35285, 35286,
+      35287, 35288, 35289, 35290, 35291, 35292, 35293, 35294, 35295, 35296, 35297, 35298, 35299, 35300, 35301, 35302, 35303,
+      35304, 35305, 35306, 35307, 35308, 35309, 35310, 35311, 35312, 35313, 35314, 35315, 35316, 35317, 35318, 35319, 35320,
+      35321, 35322, 35323, 35324, 35325, 35326, 35327, 35328, 35329, 35330, 35331
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 34" ],
+        "baseMaterial": "MARBLE_2_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.7
+      }
+    ]
+  },
+  {
+    "description": "Grand Library - Stairs",
+    "baseMaterial": "CARPET",
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 256,
+    "uvScale": 0.7,
+    "objectIds": [ 35387, 35388, 35389 ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 34" ],
+        "baseMaterial": "MARBLE_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Song of the Elves Cutscene - Light Pillar",
+    "baseMaterial": "MARBLE_2_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [ 35894, 35893 ]
+  },
+  {
+    "description": "Song of the Elves Cutscene - Fragment of Seren, Fix Shadow Flicker",
+    "shadowOpacityThreshold": 0.1,
+    "npcIds": [ 8920 ]
+  },
+  {
+    "description": "Gauntlet Lobby - Walls - Scoreboard",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      36060
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "s == 2", "s == 7", "h == 29" ],
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "MODEL_XY",
+        "uvScale": 0.75
+      }
+    ]
+  },
+  {
+    "description": "Gauntlet Lobby - Deposit Box",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      36086
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 32" ],
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "MODEL_XY",
+        "uvScale": 0.75
+      }
+    ]
+  },
+  {
+    "description": "Gauntlet Lobby - Reward Chest",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "objectIds": [
+      36087,
+      36088
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 32", "h == 42", "h == 26" ],
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "Gauntlet - Walls and Unlit Node",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      36098,
+      36099,
+      36102,
+      36101,
+      36105
+    ]
+  },
+  {
+    "description": "Gauntlet - Walls - With Blue Symbol",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      36095,
+      36096,
+      36097
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "s == 2", "s == 7" ],
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "MODEL_XY"
+      }
+    ]
+  },
+  {
+    "description": "Gauntlet - Walls - Corner Pillar and Lit Node",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      36100,
+      36103,
+      36104
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "s == 7" ],
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
+  },
+  {
+    "description": "Gauntlet - Walls - Roots",
+    "baseMaterial": "DIRT_2",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      36106,
+      36109,
+      36108,
+      36107,
+      36110,
+      36111
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 32" ],
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.66
+      }
+    ]
+  },
+  {
+    "description": "Gauntlet - Floor",
+    "baseMaterial": "MARBLE_1",
+    "uvType": "MODEL_XZ",
+    "objectIds": [
+      36046,
+      36149
+    ]
+  },
+  {
+    "description": "Gauntlet - Floor - Cracked",
+    "baseMaterial": "MARBLE_3",
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.5,
+    "objectIds": [
+      36052,
+      36053,
+      36054,
+      36055,
+      36056,
+      36057,
+      36058,
+      36059,
+      36155,
+      36156,
+      36157,
+      36158,
+      36159,
+      36160,
+      36161,
+      36162
+    ]
+  },
+  {
+    "description": "Gauntlet - Water Pump",
+    "baseMaterial": "METALLIC_1_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "objectIds": [
+      35981,
+      36078
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 32", "h == 33" ],
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Gauntlet - Cooking Range",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "objectIds": [
+      35980,
+      36077
+    ]
+  },
+  {
+    "description": "Gauntlet - Recipe Books",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "MODEL_XY",
+    "uvScale": 0.5,
+    "objectIds": [
+      36075,
+      36076
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 32 && s < 3", "h == 0", "h == 34", "s == 5" ],
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.66
+      }
+    ]
+  },
+  {
+    "description": "Gauntlet - Singing Bowl",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [
+      36063
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "s < 7" ],
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS"
+      }
+    ]
+  },
+  {
+    "description": "Gauntlet - Teleport Platform & Entrance",
+    "objectIds": [
+      36062,
+      36082,
+      36085
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "l < 45" ],
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS"
+      }
+    ]
+  },
+  {
+    "description": "Gauntlet - Tool Storage",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [
+      35977,
+      36074
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 0 && l < 16", "h == 32 && l < 13" ],
+        "baseMaterial": "ROCK_3_SMOOTH",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Gauntlet - Phren Roots",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      36066,
+      36067
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "s == 7" ],
+        "baseMaterial": "NONE"
+      },
+      {
+        "colors": [ "h == 0" ],
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Gauntlet - Crystal Deposit",
+    "baseMaterial": "ROCK_3_ORE",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      36064,
+      36065
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 32 && l > 14", "h == 33 && l > 20" ],
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Gauntlet - Linum Tirinum",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.44,
+    "objectIds": [
+      36072,
+      36073
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "l > 53" ],
+        "baseMaterial": "GRAY_90"
+      },
+      {
+        "colors": [ "h == 0" ],
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "Gauntlet - Gyrm Root",
+    "baseMaterial": "LEAF_VEINS",
+    "uvType": "BOX",
+    "uvScale": 0.22,
+    "objectIds": [
+      36070,
+      36071
+    ]
+  },
+  {
+    "description": "Gauntlet - Fishing Spot",
+    "baseMaterial": "DIRT_1",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      36068,
+      36069
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "s == 7" ],
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Corrupted Gauntlet - Walls and Unlit Node",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      35995,
+      35996,
+      35998,
+      35999,
+      36002
+    ]
+  },
+  {
+    "description": "Corrupted Gauntlet - Walls - With Red Symbol",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      35992,
+      35994
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "s == 6", "s == 7" ],
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "MODEL_XY"
+      }
+    ]
+  },
+  {
+    "description": "Corrupted Gauntlet - Walls - Corner Pillar and Lit Node",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      35997,
+      36000,
+      36001
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "s > 5" ],
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
+  },
+  {
+    "description": "Corrupted Gauntlet - Walls - Roots",
+    "baseMaterial": "DIRT_2",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      36003,
+      36004,
+      36005,
+      36006,
+      36007,
+      36008
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 10" ],
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.66
+      }
+    ]
+  },
+  {
+    "description": "Corrupted Gauntlet - Recipe Books",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "MODEL_XY",
+    "uvScale": 0.5,
+    "objectIds": [
+      35978,
+      35979
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 10 ", "h == 3", "h == 18" ],
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.66
+      }
+    ]
+  },
+  {
+    "description": "Corrupted Gauntlet - Singing Bowl",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [
+      35966
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 10", "h == 32" ],
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS"
+      }
+    ]
+  },
+  {
+    "description": "Corrupted Gauntlet - Teleport Platform",
+    "objectIds": [
+      35965
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 0" ],
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS"
+      }
+    ]
+  },
+  {
+    "description": "Corrupted Gauntlet - Corrupt Phren Roots",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      35969,
+      35970
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h > 61" ],
+        "baseMaterial": "NONE"
+      },
+      {
+        "colors": [ "h == 0 && s != 5" ],
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Corrupted Gauntlet - Corrupt Crystal Deposit",
+    "baseMaterial": "ROCK_3_ORE",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      35967,
+      35968
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 62 ", "h == 63" ],
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Corrupted Gauntlet - Corrupt Linum Tirinum",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.44,
+    "objectIds": [
+      35975,
+      35976
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 32" ],
+        "baseMaterial": "GRAY_90"
+      },
+      {
+        "colors": [ "h == 0" ],
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "Corrupted Gauntlet - Corrupt Gyrm Root",
+    "baseMaterial": "LEAF_VEINS",
+    "uvType": "BOX",
+    "uvScale": 0.22,
+    "objectIds": [
+      35973,
+      35974
+    ]
+  },
+  {
+    "description": "Corrupted Gauntlet - Corrupt Fishing Spot",
+    "baseMaterial": "DIRT_1",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      35971,
+      35972
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h != 0" ],
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Gauntlet - Barrier - Remove Flickering Shadow",
+    "castShadows": false,
+    "objectIds": [ 36079, 36080, 35982, 35983 ]
+  },
+  {
+    "description": "Baba Yaga's House - Door",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "objectIds": [
+      16774
+    ]
+  },
+  {
+    "description": "Baba Yaga's House - Table, Stool and Empty Shelf",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.7,
+    "objectIds": [
+      16725,
+      16814,
+      16815
+    ]
+  },
+  {
+    "description": "Baba Yaga's House - Shelf with Utensils",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.7,
+    "objectIds": [
+      16816
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_GLOSS"
+      }
+    ]
+  },
+  {
+    "description": "Baba Yaga's House - Cooker",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      16812
+    ],
+    "colorOverrides": [
+      {
+        "colors": ["h == 0", "h == 10" ],
+        "baseMaterial": "METALLIC_1_GLOSS"
+      }
+    ]
+  },
+  {
+    "description": "Baba Yaga's House - Bed",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      16721
+    ],
+    "colorOverrides": [
+      {
+        "colors": ["h == 5", "h == 6" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.7
+      },
+      {
+        "colors": [ "h == 32" ],
+        "baseMaterial": "BURLAP",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.7,
+        "uvOrientation": 256
+      },
+      {
+        "colors": ["h == 8" ],
+        "baseMaterial": "BURLAP",
+        "uvType": "BOX",
+        "uvOrientation": 256
+      }
+    ]
+  },
+  {
+    "description": "Baba Yaga's House - Clothes Rack",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      16813
+    ],
+    "colorOverrides": [
+      {
+        "colors": ["h == 5", "h == 6" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.7
+      }
+    ]
+  },
+  {
+    "description": "Baba Yaga's House - Bookcase",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "areas": [ "Baba Yaga House Interior" ],
+    "objectIds": [
+      16707
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.4
+  },
+  {
+    "description": "Baba Yaga's House - Sink",
+    "baseMaterial": "NONE",
+    "areas": [ "Baba Yaga House Interior" ],
+    "objectIds": [
+      16704
+    ],
+    "colorOverrides": [
+      {
+        "colors": ["h == 3", "h == 6" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.7
+      }
+    ]
+  },
+  {
+    "description": "Hellrats - Hide Fake Lighting",
+    "npcIds": [
+      4809,
+      6793
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 2" ],
+        "baseMaterial": "TRANSPARENT",
+        "uvType": "BOX",
+        "uvScale": 0.7
+      }
+    ]
+  },
+  {
+    "description": "Object - Wooden - Barrel - with coal",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      41455
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": [ "h == 0" ],
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvOrientation": 77
+      }
+    ]
+  },
+  {
+    "description": "Fortis wooden plank floor",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "flatNormals": true,
+    "objectIds": [
+      52377
+    ]
+  },
+  {
+    "description": "Fortis wooden plank walls",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "flatNormals": true,
+    "objectIds": [
+      52375
+    ]
+  },
+  {
+    "description": "Fortis wooden staircase",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.9,
+    "flatNormals": true,
+    "objectIds": [
+      52635
+    ]
+  },
+  {
+    "description": "Fortis wooden staircase - Wide",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.8,
+    "flatNormals": true,
+    "objectIds": [
+      52012
+    ]
+  },
+  {
+    "description": "Fortis Masonry wall with wooden post",
+    "baseMaterial": "MARBLE_2_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Wooden Post",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "colors": "h == 5 && s > 0",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      52053
+    ]
+  },
+  {
+    "description": "Fortis Masonry wall with red shifted wooden post",
+    "baseMaterial": "MARBLE_2_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Wooden Post",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "colors": "h == 3 && s > 0 && s < 3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      52055
+    ]
+  },
+  {
+    "description": "Fortis Masonry wall with window",
+    "baseMaterial": "MARBLE_2_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Curtain",
+        "baseMaterial": "CARPET",
+        "colors": ["h == 42", "h == 1 && s == 2"],
+        "uvType": "BOX",
+        "uvOrientation": 256,
+        "uvScale": 0.8
+      },
+      {
+        "description": "Wood Window sile",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "colors": "h == 3 && s == 2",
+        "uvType": "BOX",
+        "uvOrientationX": 512,
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      52060,
+      52061,
+      52062,
+      52063
+    ]
+  },
+  {
+    "description": "Fortis Masonry wall thieving window - Dynamic",
+    "baseMaterial": "MARBLE_2_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Curtain",
+        "baseMaterial": "CARPET",
+        "colors": ["h == 42", "h == 1 && s == 2"],
+        "uvType": "BOX",
+        "uvOrientation": 256,
+        "uvScale": 0.8
+      },
+      {
+        "description": "Wood Window sile",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "colors": "h == 3 && s == 2",
+        "uvType": "BOX",
+        "uvOrientationX": 512,
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      52000,
+      52001
+    ]
+  },
+  {
+    "description": "Fortis Masonry stone brick wall",
+    "baseMaterial": "MARBLE_2_GLOSS",
+    "uvOrientation": 256,
+    "uvScale": 0.8,
+    "uvType": "BOX",
+    "objectIds": [
+      52049,
+      52050,
+      52066,
+      52067,
+      52068,
+      52072,
+      52073,
+      52074,
+      52075,
+      52077,
+      52078,
+      52079,
+      52080,
+      52081,
+      52083
+    ]
+  },
+  {
+    "description": "Fortis Masonry stone brick wall arch",
+    "baseMaterial": "MARBLE_2_GLOSS",
+    "uvOrientation": 768,
+    "uvScale": 0.8,
+    "uvType": "BOX",
+    "objectIds": [
+      52104,
+      52105,
+      52106,
+      52107,
+      52108,
+      52109
+    ]
+  },
+  {
+    "description": "Fortis wooden railing",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.9,
+    "flatNormals": true,
+    "objectIds": [
+      52099
+    ]
+  },
+  {
+    "description": "Fortis wooden railing X type",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.9,
+    "flatNormals": true,
+    "objectIds": [
+      52098
+    ]
+  },
+  {
+    "description": "Mortytania Slayer Tower Spiked Chain shortcuts",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvOrientation": 343,
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      16537,
+      16538
+    ]
+  },
+  {
+    "description": "Ground decoration blood",
+    "baseMaterial": "METALLIC_NONE_GLOSS",
+    "objectIds": [
+      654,
+      3666,
+      3667,
+      3668
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Table with no visible legs and a golden candleholder",
+    "baseMaterial": "CARPET",
+    "uvScale": 0.8,
+    "uvOrientation": 256,
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Candleholder",
+        "colors": "h == 10",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      1901
+    ]
+  },
+  {
+    "description": "Morytania Slayer Tower roof entrance - Dynamic",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 343,
+    "uvScale": 0.8,
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "description": "Mossy substance",
+        "colors": "h == 21",
+        "baseMaterial": "LEAF_VEINS"
+      }
+    ],
+    "objectIds": [
+      31672,
+      31673
+    ]
+  },
+  {
+    "description": "Morytania Slayer Tower roof exit",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 343,
+    "uvScale": 0.8,
+    "flatNormals": true,
+    "objectIds": [
+      31674
+    ]
+  },
+  {
+    "description": "Morytania Slayer Magical Chest",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h > 13",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvOrientation": 42
+      }
+    ],
+    "objectIds": [
+      31675
     ]
   },
   {
