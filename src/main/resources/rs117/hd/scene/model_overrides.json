@@ -27191,23 +27191,5 @@
         "uvOrientation": 512
       }
     ]
-  },
-  {
-    "description": "Golden framed mirror",
-    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
-    "uvOrientation": 84,
-    "objectIds": [
-      689
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.75,
-    "colorOverrides": [
-      {
-        "description": "Mirror",
-        "colors": "s == 0",
-        "baseMaterial": "BLANK_GLOSS",
-        "uvType": "MODEL_XY"
-      }
-    ]
   }
 ]
