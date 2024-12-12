@@ -28204,16 +28204,6 @@
     "uvScale": 0.5
   },
   {
-    "description": "Grotesque Guardians Exit Stairs",
-    "baseMaterial": "STONE_NORMALED",
-    "objectIds": [
-      31673,
-      31674
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.75
-  },
-  {
     "description": "Grotesque Guardians Dusk and Dawn Statues",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
