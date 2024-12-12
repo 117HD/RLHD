@@ -1643,6 +1643,41 @@
     "castShadows": false
   },
   {
+    "description": "Falador Xmas Grass",
+    "areas": [ "FALADOR_XMAS" ],
+    "baseMaterial": "GRAY_75",
+    "objectIds": [
+      4736,
+      42909,
+      42910,
+      42911,
+      42912,
+      42913,
+      42914,
+      42915,
+      42916,
+      42917,
+      42918,
+      42919,
+      42920
+    ],
+    "flatNormals": true,
+    "castShadows": false
+  },
+  {
+    "description": "Falador Xmas Tree",
+    "areas": [ "FALADOR_XMAS" ],
+    "baseMaterial": "SNOW_2",
+    "objectIds": [
+      55913,
+      55914,
+      55915,
+      55916
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.9
+  },
+  {
     "description": "Varlamore, Fortis and Avium Grass",
     "baseMaterial": "GRAY_75",
     "objectIds": [

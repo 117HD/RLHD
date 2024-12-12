@@ -1572,6 +1572,15 @@
     "fogDepth": 50
   },
   {
+    "area": "FALADOR_XMAS",
+    "ambientColor": "#6fb0ff",
+    "ambientStrength": 1.2,
+    "directionalColor": "#f4e5c9",
+    "directionalStrength": 2,
+    "fogColor": "#aebde0",
+    "fogDepth": 35
+  },
+  {
     "key": "OVERWORLD",
     "area": "OVERWORLD",
     "ambientColor": "#97baff",
