@@ -412,6 +412,7 @@ public enum Material {
 		.setFlowMapStrength(0.2f)
 		.setFlowMapDuration(new float[] { 12, -12 })
 	),
+	WATER_FLAT_FORCE(WATER_FLAT, p -> p.setOverrideBaseColor(true)),
 	ROCK_1_N,
 	ROCK_1(p -> p
 		.setNormalMap(ROCK_1_N)

@@ -1929,6 +1929,45 @@
     "shiftLightness": 2
   },
   {
+    "name": "Glarials Tomb floor",
+    "area": "Glarials Tomb Dungeon",
+    "underlayIds": [
+      48,
+      67
+    ],
+    "groundMaterial": "DIRT",
+    "uvScale": 1.15,
+    "replacements": {
+      "DEFAULT_GRASS": "h > 9"
+    }
+  },
+  {
+    "name": "Waterfall Dungeon tiles",
+    "area": "WATERFALL_DUNGEON",
+    "underlayIds": [
+      50,
+      56,
+      67
+    ],
+    "groundMaterial": "DIRT",
+    "replacements": {
+      "DEFAULT_GRUNGE": "s == 0"
+    }
+  },
+  {
+    "name": "Waterfall Dungeon tiles - Chalice Room",
+    "area": "WATERFALL_DUNGEON_CHALICE_ROOM",
+    "underlayIds": [
+      50,
+      56,
+      67
+    ],
+    "groundMaterial": "DIRT",
+    "replacements": {
+      "DEFAULT_GRUNGE": "s == 0"
+    }
+  },
+  {
     "name": "GOBLIN_CAVE_FLOOR",
     "area": "GOBLIN_CAVE",
     "underlayIds": [
