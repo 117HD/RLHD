@@ -15645,7 +15645,22 @@
     "flatNormals": true,
     "objectIds": [
       1902,
-      13090,
+      13090
+    ]
+  },
+  {
+    "description": "PoH - Basic stone wall with wooden window frame",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "colors": "s == 0 && l < 30",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
       13091
     ]
   },
@@ -27186,22 +27201,6 @@
       13101,
       13102,
       13103
-    ]
-  },
-  {
-    "description": "PoH - Basic stone wall with wooden window frame",
-    "baseMaterial": "WOOD_GRAIN_3",
-    "uvType": "BOX",
-    "uvScale": 0.8,
-    "colorOverrides": [
-      {
-        "colors": "s == 0 && l < 30",
-        "baseMaterial": "STONE_NORMALED",
-        "uvType": "BOX"
-      }
-    ],
-    "objectIds": [
-      13091
     ]
   },
   {
