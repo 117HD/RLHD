@@ -28166,5 +28166,121 @@
       9473,
       9474
     ]
+  },
+  {
+    "description": "Grotesque Guardians Tiled Floor",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      31653,
+      31654,
+      31655,
+      31656,
+      31657,
+      31658,
+      31659,
+      31660,
+      31661,
+      31662,
+      31663,
+      31664,
+      31665,
+      31666,
+      31667,
+      31668
+    ],
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 156
+  },
+  {
+    "description": "Grotesque Guardians Low Wall",
+    "baseMaterial": "MARBLE_2",
+    "objectIds": [
+      31642,
+      31643,
+      31644
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 156
+  },
+  {
+    "description": "Grotesque Guardians Roof",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      31635,
+      31637,
+      31638,
+      31639,
+      31640,
+      31641,
+      31645,
+      31646,
+      31647,
+      31648,
+      31649,
+      31651,
+      31652
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Grotesque Guardians Exit Stairs",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      31673,
+      31674
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75
+  },
+  {
+    "description": "Grotesque Guardians Dusk and Dawn Statues",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      31670,
+      31671
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.2
+  },
+  {
+    "description": "Grotesque Guardians Dusk and Dawn Npc",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      31676,
+      31677
+    ],
+    "npcIds": [
+      7849,
+      7850,
+      7851,
+      7852,
+      7853,
+      7854,
+      7855,
+      7882,
+      7883,
+      7884,
+      7885,
+      7886,
+      7887,
+      7888,
+      7889
+    ],
+    "uvScale": 0.75
+  },
+  {
+    "description": "Grotesque Guardians Bell",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "objectIds": [
+      31685
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 7", "h == 8" ],
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS"
+      }
+    ]
   }
 ]
