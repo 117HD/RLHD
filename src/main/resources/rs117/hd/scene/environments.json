@@ -1616,22 +1616,22 @@
     "fogDepth": 30
   },
   {
-    "area": "RALOS_RISE_LOWER",
-    "ambientColor": "#6fb0ff",
-    "ambientStrength": 1.75,
-    "directionalColor": "#f4e5c9",
-    "directionalStrength": 3,
-    "fogColor": "#aebde0",
-    "fogDepth": 30
-  },
-  {
-    "area": "RALOS_RISE_UPPER",
+    "area": "VARLAMORE_SNOWY_MOUNTAINS_UPPER",
     "ambientColor": "#6fb0ff",
     "ambientStrength": 0.8,
     "directionalColor": "#f4e5c9",
     "directionalStrength": 2,
     "fogColor": "#aebde0",
     "fogDepth": 50
+  },
+  {
+    "area": "VARLAMORE_SNOWY_MOUNTAINS_LOWER",
+    "ambientColor": "#6fb0ff",
+    "ambientStrength": 1.75,
+    "directionalColor": "#f4e5c9",
+    "directionalStrength": 3,
+    "fogColor": "#aebde0",
+    "fogDepth": 30
   },
   {
     "key": "OVERWORLD",
