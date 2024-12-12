@@ -4045,6 +4045,7 @@
       10471,
       10472,
       10473,
+      13408,
       13409,
       20176,
       20177,
@@ -5789,7 +5790,8 @@
       35846,
       42248,
       47077,
-      47078
+      47078,
+      51660
     ],
     "uvType": "BOX",
     "uvScale": 0.5
@@ -5957,7 +5959,9 @@
       26107,
       50143,
       50144,
-      15115
+      15115,
+      52614,
+      52621
     ],
     "uvType": "BOX",
     "uvScale": 0.8
@@ -6222,7 +6226,8 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       7401,
-      7406
+      7406,
+      55033
     ],
     "uvType": "BOX",
     "uvOrientation": 512,
@@ -8504,6 +8509,8 @@
       44854,
       49641,
       49642
+      44854,
+      55048
     ],
     "uvType": "BOX",
     "flatNormals": true
@@ -8612,7 +8619,8 @@
       14742,
       15693,
       42068,
-      42070
+      42070,
+      55049
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -20068,6 +20076,14 @@
     "uvType": "MODEL_XZ"
   },
   {
+    "description": "Varlamore Tent Walls",
+    "baseMaterial": "FINE_CARPET",
+    "objectIds": [
+      44853
+    ],
+    "uvType": "BOX"
+  },
+  {
     "description": "Varlamore Circular Awning, MODEL_XZ is used with intent",
     "baseMaterial": "CARPET",
     "objectIds": [
@@ -20087,16 +20103,223 @@
     "uvType": "MODEL_YZ"
   },
   {
-    "description": "Colossal Wyrm Remains Skull",
+    "description": "Colossal Wyrm Agility Course Hay Bale",
+    "baseMaterial": "HD_HAY",
+    "objectIds": [
+      55173,
+      55174,
+      55175,
+      46309,
+      46311
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7
+  },
+  {
+    "description": "Colossal Wyrm Agility Course Skull",
     "baseMaterial": "BONE",
     "objectIds": [
       51910,
       51911,
       51912,
-      51913
+      51913,
+      55142
     ],
     "uvType": "BOX",
     "uvScale": 0.85
+  },
+  {
+    "description": "Colossal Wyrm Agility Course Bones",
+    "baseMaterial": "BONE",
+    "objectIds": [
+      55138,
+      55139,
+      55140,
+      55141,
+      55143
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Colossal Wyrm Agility Course Bones with Dirt",
+    "baseMaterial": "BONE",
+    "objectIds": [
+      55144,
+      55145
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "colors": [ "h == 6", "h == 8" ],
+        "baseMaterial": "DIRT_1"
+      }
+    ]
+  },
+  {
+    "description": "Colossal Wyrm Agility Course Bones with Wood",
+    "baseMaterial": "BONE",
+    "objectIds": [
+      55146
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "colors": [ "h == 6", "h == 8" ],
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.74,
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Colossal Wyrm Agility Course Scaffolding Floor",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      46803,
+      55147,
+      55148,
+      55194
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75
+  },
+  {
+    "description": "Colossal Wyrm Agility Course Scaffolding",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      55149,
+      55150,
+      55151,
+      55158,
+      55160,
+      55161
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Colossal Wyrm Agility Course Wooden Decorations",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      55037,
+      15832,
+      55162,
+      55163,
+      55164,
+      55165
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Colossal Wyrm Agility Course Scaffolding with Ropes",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      55152,
+      55153,
+      55154,
+      55155,
+      55156,
+      55178,
+      55190,
+      55191,
+      55196
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": [ "s == 4" ],
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Colossal Wyrm Agility Course Tightrope",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      42239,
+      55166,
+      55168,
+      55180,
+      55182,
+      55184,
+      55186,
+      55188,
+      55170,
+      55171,
+      55172,
+      55179,
+      55192
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": [ "s == 7" ],
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.35,
+        "uvOrientation": 125
+      }
+    ]
+  },
+  {
+    "description": "Colossal Wyrm Agility Course Scaffolding Rotated",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      55169
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": [ "s == 7" ],
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.35,
+        "uvOrientation": -412
+      }
+    ]
+  },
+  {
+    "description": "Colossal Wyrm Agility Course Scaffolding Rope Support",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "objectIds": [
+      42233,
+      42234
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "s == 7" ],
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": -100
+      }
+    ]
+  },
+  {
+    "description": "Colossal Wyrm Agility Course Termite Hill",
+    "baseMaterial": "DIRT_2",
+    "uvType": "BOX",
+    "uvScale": 0.33,
+    "objectIds": [
+      55135,
+      55136,
+      55137
+    ]
   },
   {
     "description": "Perilous Moons Murals",
