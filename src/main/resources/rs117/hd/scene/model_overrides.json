@@ -15779,21 +15779,36 @@
   },
   {
     "description": "Walls - Bricks - Light Brick",
+    "flatNormals": true,
     "objectIds": [
-      1902,
-      1904,
-      1907,
       1920,
-      13090,
-      13091,
       17088,
       15453,
       15454,
       15455,
       15456,
       15457
-    ],
-    "flatNormals": true
+    ]
+  },
+  {
+    "description": "PoH - Basic stone wall",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "flatNormals": true,
+    "objectIds": [
+      1902,
+      13090,
+      13091
+    ]
+  },
+  {
+    "description": "Walls - Bricks - Light Brick with White backs",
+    "flatNormals": true,
+    "objectIds": [
+      1904,
+      1907
+    ]
   },
   {
     "description": "Objects - Root - Small",
@@ -27637,16 +27652,6 @@
     ]
   },
   {
-    "description": "PoH - Basic stone wall",
-    "baseMaterial": "STONE_NORMALED",
-    "uvType": "BOX",
-    "uvScale": 0.8,
-    "objectIds": [
-      1902,
-      13090
-    ]
-  },
-  {
     "description": "PoH - Basic stone wall with wooden window frame",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
@@ -27696,28 +27701,6 @@
     "objectIds": [
       13005,
       13010
-    ]
-  },
-  {
-    "description": "PoH - Whitewashed Walls with woodgrain sides and shutters",
-    "baseMaterial": "WOOD_GRAIN_3",
-    "flatNormals": true,
-    "uvType": "BOX",
-    "uvScale": 0.75,
-    "colorOverrides": [
-      {
-        "colors": "h == 10",
-        "baseMaterial": "WATTLE_1",
-        "uvType": "BOX"
-      },
-      {
-        "colors": "h == 0",
-        "baseMaterial": "STONE_NORMALED",
-        "uvType": "BOX"
-      }
-    ],
-    "objectIds": [
-      13235
     ]
   },
   {
