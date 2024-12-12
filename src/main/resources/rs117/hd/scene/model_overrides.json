@@ -8366,6 +8366,8 @@
       25661,
       25836,
       25837,
+      27754,
+      27756,
       34508,
       34510,
       41452,
@@ -8423,6 +8425,7 @@
       27223,
       27224,
       27225,
+      27757,
       41450
     ],
     "uvType": "BOX",
@@ -8435,6 +8438,7 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       9535,
+      27755,
       34509,
       41739,
       42069
@@ -15018,7 +15022,8 @@
     "description": "Object - Wooden - Barrel - with fish",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      9520
+      9520,
+      27552
     ],
     "uvType": "BOX",
     "colorOverrides": [
@@ -22228,16 +22233,32 @@
   {
     "description": "Barrel with metal bands",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 2619, 5112, 5114, 5122, 9519, 9521 ],
     "uvType": "BOX",
-    "uvScale": 0.8
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && s < 2",
+        "uvType": "BOX",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [ 2619, 5112, 5114, 5122, 5124, 9519, 9521, 27220, 27758 ]
   },
   {
     "description": "Barrel with metal bands - Stacked",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 5123 ],
     "uvType": "BOX",
-    "uvScale": 0.8
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && s < 2",
+        "uvType": "BOX",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [ 5123, 27227 ]
   },
   {
     "description": "Wooden Cart - Empty",
@@ -27547,6 +27568,25 @@
       13108,
       13109,
       13110
+    ]
+  },
+  {
+    "description": "Post with rope",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Rope",
+        "colors": "h == 8",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 42
+      }
+    ],
+    "objectIds": [
+      27647,
+      27648
     ]
   }
 ]
