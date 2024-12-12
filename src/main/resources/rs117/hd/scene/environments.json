@@ -913,6 +913,7 @@
     "area": "SOTE_FRAGMENT_OF_SEREN_ARENA",
     "allowSkyOverride": false,
     "ambientColor": "#97baff",
+    "fogColor": "#000000",
     "directionalStrength": 4,
     "fogDepth": 6.5
   },
