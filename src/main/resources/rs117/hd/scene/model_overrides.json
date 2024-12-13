@@ -1433,7 +1433,7 @@
     ]
   },
   {
-    "description": "Tree - Mahogany - Player grown",
+    "description": "Tree - Mahogany - Player grown - Dynamic",
     "baseMaterial": "BARK_STONEPINE",
     "uvType": "BOX",
     "uvScale": 0.33,
@@ -1449,7 +1449,8 @@
       30414,
       30415,
       30416,
-      30417
+      30417,
+      30418
     ]
   },
   {
@@ -1476,7 +1477,7 @@
     ]
   },
   {
-    "description": "Tree - Teak - Player grown",
+    "description": "Tree - Teak - Player grown - Dynamic",
     "baseMaterial": "BARK",
     "uvType": "BOX",
     "uvScale": 0.66,
@@ -1499,7 +1500,8 @@
       30442,
       30443,
       30444,
-      30445
+      30445,
+      30446
     ]
   },
   {
