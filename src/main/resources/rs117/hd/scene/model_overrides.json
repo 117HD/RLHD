@@ -1428,7 +1428,8 @@
     "description": "Objects - Tree - Mahogany",
     "baseMaterial": "BARK_STONEPINE",
     "uvType": "BOX",
-    "uvScale": 0.2,
+    "uvScale": 0.25,
+    "uvOrientation": 42,
     "retainVanillaUvs": true,
     "objectIds": [
       9034,
@@ -1439,7 +1440,7 @@
     "description": "Tree - Mahogany - Player grown - Dynamic",
     "baseMaterial": "BARK_STONEPINE",
     "uvType": "BOX",
-    "uvScale": 0.2,
+    "uvScale": 0.25,
     "retainVanillaUvs": true,
     "objectIds": [
       30407,
