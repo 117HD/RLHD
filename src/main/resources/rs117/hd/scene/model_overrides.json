@@ -1425,6 +1425,89 @@
     "retainVanillaUvs": true
   },
   {
+    "description": "Objects - Tree - Mahogany",
+    "baseMaterial": "BARK_STONEPINE",
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "retainVanillaUvs": true,
+    "objectIds": [
+      9034,
+      9035
+    ]
+  },
+  {
+    "description": "Tree - Mahogany - Player grown - Dynamic",
+    "baseMaterial": "BARK_STONEPINE",
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "retainVanillaUvs": true,
+    "objectIds": [
+      30407,
+      30408,
+      30409,
+      30410,
+      30411,
+      30412,
+      30413,
+      30414,
+      30415,
+      30416,
+      30417,
+      30418
+    ]
+  },
+  {
+    "description": "Objects - Tree - Teak",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "colorOverrides": [
+      {
+        "description": "Leaves",
+        "colors": "h > 12",
+        "baseMaterial": "LEAF_VEINS",
+        "uvScale": 0.2,
+        "uvOrientation": 42,
+        "uvType": "MODEL_XZ"
+      }
+    ],
+    "objectIds": [
+      9036,
+      9037,
+      15032,
+      36686,
+      40758
+    ]
+  },
+  {
+    "description": "Tree - Teak - Player grown - Dynamic",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "colorOverrides": [
+      {
+        "description": "Leaves",
+        "colors": "h > 12",
+        "baseMaterial": "LEAF_VEINS",
+        "uvScale": 0.4,
+        "uvOrientation": 42,
+        "uvType": "MODEL_XZ"
+      }
+    ],
+    "objectIds": [
+      30437,
+      30438,
+      30439,
+      30440,
+      30441,
+      30442,
+      30443,
+      30444,
+      30445,
+      30446
+    ]
+  },
+  {
     "description": "Objects - Tree - Juniper",
     "baseMaterial": "BARK",
     "objectIds": [
