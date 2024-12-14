@@ -8852,6 +8852,34 @@
     "uvType": "GEOMETRY"
   },
   {
+    "description": "Objects - Vines with grass",
+    "baseMaterial": "GRUNGE_3_DARK",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Grass",
+        "colors": "s == 7",
+        "baseMaterial": "NONE"
+      },
+      {
+        "description": "Leaves",
+        "colors": "s == 3",
+        "baseMaterial": "LEAF_VEINS"
+      }
+    ],
+    "objectIds": [
+      1222,
+      1223,
+      1224,
+      1225,
+      1226,
+      1227,
+      1228,
+      1229,
+      1230
+    ]
+  },
+  {
     "description": "Objects - White Mushrooms - Medium",
     "baseMaterial": "PLANT_GRUNGE_1",
     "objectIds": [
@@ -13528,6 +13556,46 @@
       9604,
       9605,
       9606
+    ]
+  },
+  {
+    "description": "Karamja - Jungle plant - Leafy style",
+    "baseMaterial": "LEAF_VEINS",
+    "uvScale": 0.25,
+    "uvType": "BOX",
+    "objectIds": [
+      1204,
+      1399,
+      1400,
+      1401,
+      1402
+    ]
+  },
+  {
+    "description": "Karamja - Jungle plant - fern style",
+    "baseMaterial": "LEAF_VEINS",
+    "uvScale": 0.25,
+    "uvType": "MODEL_XZ",
+    "objectIds": [
+      1390
+    ]
+  },
+  {
+    "description": "Karamja - Creeping plant",
+    "baseMaterial": "LEAF_VEINS",
+    "uvScale": 0.25,
+    "uvType": "MODEL_XZ",
+    "objectIds": [
+      1184
+    ]
+  },
+  {
+    "description": "Karamja - Curling plant",
+    "baseMaterial": "LEAF_VEINS",
+    "uvScale": 0.25,
+    "uvType": "MODEL_XZ",
+    "objectIds": [
+      1186
     ]
   },
   {
