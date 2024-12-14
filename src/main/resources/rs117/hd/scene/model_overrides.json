@@ -27081,5 +27081,59 @@
     "objectIds": [
       31675
     ]
+  },
+  {
+    "description": "Karamja hut walls",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.25,
+    "objectIds": [
+      1593,
+      1616,
+      1855
+    ]
+  },
+  {
+    "description": "Karamja hardwood grove doors",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.25,
+    "objectIds": [
+      9038,
+      9039
+    ]
+  },
+  {
+    "description": "Karamja Bamboo door",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.25,
+    "objectIds": [
+      779
+    ]
+  },
+  {
+    "description": "Karamja Bamboo bridge",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 1024,
+    "uvOrientationZ": 162,
+    "colorOverrides": [
+      {
+        "description": "Rope",
+        "baseMaterial": "ROPE",
+        "colors": " h == 11",
+        "uvType": "MODEL_XZ",
+        "uvOrientation": 128,
+        "uvScale": 0.25
+      }
+    ],
+    "objectIds": [
+      1721
+    ]
   }
 ]
