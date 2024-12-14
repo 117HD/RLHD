@@ -27366,5 +27366,47 @@
     "uvOrientation": 64,
     "uvScale": 0.66,
     "objectIds": [ 9025, 9026, 9027, 9028, 9029, 9042, 9043 ]
+  },
+  {
+    "description": "Tai Bwo Wannai Cleanup Jungle - Dynamic",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "uvOrientation": 512,
+    "objectIds": [
+      9013,
+      9014,
+      9017,
+      9018,
+      9019,
+      9022,
+      9023,
+      9024
+    ]
+  },
+  {
+    "description": "Tai Bwo Wannai Cleanup Jungle with leaves - Dynamic",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "description": "Plant",
+        "baseMaterial": "LEAF_VEINS",
+        "colors": " h > 11",
+        "uvType": "MODEL_XZ",
+        "uvOrientation": 384,
+        "uvScale": 0.25
+      }
+    ],
+    "objectIds": [
+      9010,
+      9011,
+      9015,
+      9016,
+      9020,
+      9021
+    ]
   }
 ]
