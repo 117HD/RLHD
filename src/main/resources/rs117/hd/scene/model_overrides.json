@@ -27351,5 +27351,12 @@
     "objectIds": [
       1617
     ]
+  },
+  {
+    "description": "Tribal Statue - Tai Bwo Wannai",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 32,
+    "objectIds": [ 3863 ]
   }
 ]
