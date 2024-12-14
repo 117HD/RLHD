@@ -13584,7 +13584,8 @@
     "uvScale": 0.25,
     "uvType": "MODEL_XZ",
     "objectIds": [
-      1390
+      1390,
+      1398
     ]
   },
   {
@@ -27209,6 +27210,26 @@
     ],
     "objectIds": [
       1721
+    ]
+  },
+  {
+    "description": "Karamja Bamboo potted plant",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "description": "Plant",
+        "baseMaterial": "LEAF_VEINS",
+        "colors": " h > 11",
+        "uvType": "MODEL_XZ",
+        "uvOrientation": 128,
+        "uvScale": 0.25
+      }
+    ],
+    "objectIds": [
+      1160
     ]
   }
 ]
