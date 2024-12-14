@@ -11065,11 +11065,31 @@
     "uvScale": 0.4
   },
   {
+    "description": "Walls - Double Rope Rails",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.54,
+    "colorOverrides": [
+      {
+        "description": "Ropes",
+        "baseMaterial": "ROPE",
+        "colors": "h == 6",
+        "uvType": "BOX",
+        "uvOrientationZ": 512,
+        "uvOrientationY": 320,
+        "uvOrientationX": 768,
+        "uvScale": 0.4
+      }
+    ],
+    "objectIds": [
+      1982
+    ]
+  },
+  {
     "description": "Gnome - Walls - Rope Rails",
     "baseMaterial": "DOCK_FENCE",
     "objectIds": [
-      1708,
-      1982
+      1708
     ]
   },
   {
