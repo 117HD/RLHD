@@ -27332,5 +27332,24 @@
     "objectIds": [
       433
     ]
+  },
+  {
+    "description": "Karamja Bamboo access ramps - Model has bad UVs even with Box",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "uvOrientation": 256,
+    "colorOverrides": [
+      {
+        "description": "horizontal braces",
+        "baseMaterial": "GRUNGE_1",
+        "colors": " h == 7",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ],
+    "objectIds": [
+      1617
+    ]
   }
 ]
