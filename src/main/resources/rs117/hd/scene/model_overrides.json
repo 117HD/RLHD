@@ -12423,13 +12423,20 @@
   },
   {
     "description": "Jungle Tree Large - Unusual Plant",
-    "baseMaterial": "PLANT_GRUNGE_2",
-    "objectIds": [
-      1314
-    ],
+    "baseMaterial": "BARK",
     "uvType": "BOX",
     "uvScale": 0.4,
-    "uvOrientation": 256
+    "uvOrientation": 768,
+    "colorOverrides": [
+      {
+        "description": "Leaves",
+        "baseMaterial": "LEAF_VEINS",
+        "colors": "h > 10"
+      }
+    ],
+    "objectIds": [
+      1314
+    ]
   },
   {
     "description": "Tropical Tree Big",
