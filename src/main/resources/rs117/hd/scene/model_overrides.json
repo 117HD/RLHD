@@ -27251,5 +27251,86 @@
     "objectIds": [
       1160
     ]
+  },
+  {
+    "description": "Karamja Bamboo pots",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "uvOrientation": 512,
+    "objectIds": [
+      395,
+      396
+    ]
+  },
+  {
+    "description": "Karamja Bamboo booksehlf - Textured - Has a really bad UV even with boxed.",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "uvOrientation": 512,
+    "objectIds": [
+      393
+    ]
+  },
+  {
+    "description": "Karamja Bamboo booksehlf - Has a really bad UV even with boxed.",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "uvOrientation": 512,
+    "objectIds": [
+      394
+    ]
+  },
+  {
+    "description": "Karamja Bamboo table",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "description": "Dirt",
+        "baseMaterial": "DIRT_2",
+        "colors": " h == 4",
+        "uvType": "MODEL_XZ",
+        "uvOrientation": 128,
+        "uvScale": 0.33
+      }
+    ],
+    "objectIds": [
+      620
+    ]
+  },
+  {
+    "description": "Karamja Bamboo stool",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "uvOrientation": 512,
+    "objectIds": [
+      1113
+    ]
+  },
+  {
+    "description": "Karamja Bamboo raised bed",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "description": "Bed",
+        "baseMaterial": "CARPET",
+        "colors": " h == 8",
+        "uvType": "BOX",
+        "uvOrientation": 720,
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      433
+    ]
   }
 ]
