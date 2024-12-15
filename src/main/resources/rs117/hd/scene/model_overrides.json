@@ -6627,12 +6627,14 @@
   {
     "description": "Sewer Valve",
     "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "uvType": "BOX",
     "objectIds": [
       2844,
       2845,
       2846,
       2847,
-      2848
+      2848,
+      4924
     ]
   },
   {
@@ -8249,10 +8251,11 @@
   },
   {
     "description": "Stone - Steps",
-    "baseMaterial": "STONE",
+    "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       5307,
       5460,
+      20436,
       30599,
       30600,
       30601
@@ -25380,7 +25383,6 @@
       15822,
       15823,
       15824,
-      15825,
       15826,
       15827,
       15828,
@@ -27200,7 +27202,7 @@
     "baseMaterial": "ROCK_3",
     "uvType": "BOX",
     "uvScale": 0.75,
-    "objectIds": [ 4923 ]
+    "objectIds": [ 4923, 4973 ]
   },
   {
     "description": "Abandoned Mine cart tunnel with tracks",
@@ -27320,6 +27322,56 @@
     ]
   },
   {
+    "description": "Abandoned Mine walls with lift parts",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 84,
+    "colorOverrides": [
+      {
+        "description": "Rock wall",
+        "colors": " h == 21",
+        "baseMaterial": "ROCK_3",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      },
+      {
+        "description": "Wood",
+        "colors": " h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.75
+      }
+    ],
+    "objectIds": [
+      4939,
+      4940,
+      4941
+    ]
+  },
+  {
+    "description": "Abandoned Mine lift parts",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvOrientation": 84,
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": " h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.75
+      }
+    ],
+    "objectIds": [
+      4937,
+      4938
+    ]
+  },
+  {
     "description": "Abandoned Mine walls with Points Settings",
     "baseMaterial": "GRUNGE_3",
     "uvType": "BOX",
@@ -27421,6 +27473,28 @@
     ]
   },
   {
+    "description": "Abandoned Mine walls - Iron ore vein",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Ore",
+        "baseMaterial": "ROCK_4_ORE",
+        "colors": "h == 2",
+        "uvType": "BOX",
+        "uvOrientation": 256,
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      20422,
+      20423,
+      20424,
+      20425
+    ]
+  },
+  {
     "description": "Abandoned Mine walls - Coal ore vein",
     "baseMaterial": "ROCK_3",
     "uvType": "BOX",
@@ -27459,7 +27533,8 @@
     ],
     "objectIds": [
       20418,
-      20419
+      20419,
+      20420
     ]
   },
   {
@@ -27523,13 +27598,13 @@
     ]
   },
   {
-    "description": "Abandoned Mine wooden levels with metal plate",
+    "description": "Abandoned Mine wooden levers with metal plate",
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "uvType": "BOX",
     "uvScale": 0.75,
     "colorOverrides": [
       {
-        "description": "Ore",
+        "description": "Lever",
         "baseMaterial": "WOOD_GRAIN_3",
         "colors": "h == 6",
         "uvType": "BOX",
@@ -27551,5 +27626,69 @@
       4960,
       4961
     ]
+  },
+  {
+    "description": "Abandoned Mine walls - Lift hole",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      4946,
+      4948
+    ]
+  },
+  {
+    "description": "Abandoned Mine walls - Lift platform",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvOrientation": 69,
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      4947
+    ]
+  },
+  {
+    "description": "sunken mine cart",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvOrientation": 69,
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Fake water removal",
+        "colors": "h == 27",
+        "baseMaterial": "TRANSPARENT"
+      }
+    ],
+    "objectIds": [
+      4945
+    ]
+  },
+  {
+    "description": "Sunken lift parts",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 84,
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": " h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.75
+      }
+    ],
+    "objectIds": [
+      4942
+    ]
+  },
+  {
+    "description": "Abandoned Mine stairs",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [ 4971 ]
   }
 ]
