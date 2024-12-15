@@ -25318,7 +25318,8 @@
     "description": "Light wooden ladder in an stone ground hole",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      4965
+      4965,
+      4969
     ],
     "colorOverrides": [
       {
