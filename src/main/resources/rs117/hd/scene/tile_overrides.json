@@ -1865,6 +1865,12 @@
     "groundMaterial": "FALADOR_PATHS"
   },
   {
+    "name": "elemental workshop floor",
+    "area": "Elemental Workshop floor 1",
+    "groundMaterial": "PACKED_EARTH",
+    "underlayIds": [ 67 ]
+  },
+  {
     "name": "SINCLAIR_MANSION_FLOOR",
     "area": "SINCLAIR_MANSION",
     "overlayIds": [
