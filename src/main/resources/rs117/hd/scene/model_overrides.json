@@ -4068,6 +4068,7 @@
       15248,
       15249,
       15631,
+      15797,
       15798,
       15799,
       15800,
@@ -5815,6 +5816,7 @@
       4164,
       4187,
       4189,
+      4966,
       4968,
       4970,
       8744,
@@ -7017,6 +7019,8 @@
       2548,
       2549,
       2624,
+      4963,
+      4964,
       2625,
       5667,
       10262,
@@ -18409,6 +18413,7 @@
     "objectIds": [
       637,
       4918,
+      4974,
       8831
     ],
     "uvType": "BOX",
@@ -25384,7 +25389,8 @@
       20404,
       20405,
       20406,
-      20434
+      20434,
+      20438
     ],
     "colorOverrides": [
       {
@@ -27190,6 +27196,13 @@
     "objectIds": [ 4919 ]
   },
   {
+    "description": "Abandoned Mine Secret Exit",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [ 4923 ]
+  },
+  {
     "description": "Abandoned Mine cart tunnel with tracks",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
@@ -27297,12 +27310,70 @@
     "uvType": "BOX",
     "uvScale": 0.75,
     "objectIds": [
+      15788,
       15789,
       15790,
       20439,
       20440,
       20441,
       20442
+    ]
+  },
+  {
+    "description": "Abandoned Mine walls with Points Settings",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "colors": " h == 21",
+        "baseMaterial": "ROCK_3",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ],
+    "objectIds": [
+      4949
+    ]
+  },
+  {
+    "description": "Abandoned Mine walls with water",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Water",
+        "colors": "h == 27",
+        "baseMaterial": "NONE"
+      }
+    ],
+    "objectIds": [
+      15775,
+      15776,
+      15777,
+      15778,
+      15780,
+      15781,
+      15782,
+      15783
+    ]
+  },
+  {
+    "description": "Abandoned Mine walls with rusty metal bars",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Metal bars",
+        "colors": "h == 6",
+        "baseMaterial": "METALLIC_1"
+      }
+    ],
+    "objectIds": [
+      20427,
+      20428
     ]
   },
   {
@@ -27350,6 +27421,69 @@
     ]
   },
   {
+    "description": "Abandoned Mine walls - Coal ore vein",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Ore",
+        "baseMaterial": "ROCK_4_ORE",
+        "colors": "h == 0",
+        "uvType": "BOX",
+        "uvOrientation": 256,
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      20410,
+      20411,
+      20412,
+      20413
+    ]
+  },
+  {
+    "description": "Abandoned Mine walls - Mithril ore vein",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Ore",
+        "baseMaterial": "ROCK_4_ORE",
+        "colors": "h == 42",
+        "uvType": "BOX",
+        "uvOrientation": 256,
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      20418,
+      20419
+    ]
+  },
+  {
+    "description": "Abandoned Mine walls - Adamentite ore vein",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Ore",
+        "baseMaterial": "ROCK_4_ORE",
+        "colors": "s > 0",
+        "uvType": "BOX",
+        "uvOrientation": 256,
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      20414,
+      20415,
+      20416
+    ]
+  },
+  {
     "description": "Abandoned Mine walls - Clay vein",
     "baseMaterial": "ROCK_3",
     "uvType": "BOX",
@@ -27386,6 +27520,36 @@
     "objectIds": [
       4932,
       4933
+    ]
+  },
+  {
+    "description": "Abandoned Mine wooden levels with metal plate",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Ore",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "colors": "h == 6",
+        "uvType": "BOX",
+        "uvOrientation": 768,
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      4950,
+      4951,
+      4952,
+      4953,
+      4954,
+      4955,
+      4956,
+      4957,
+      4958,
+      4959,
+      4960,
+      4961
     ]
   }
 ]

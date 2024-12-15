@@ -2771,6 +2771,11 @@
     ]
   },
   {
+    "name": "ABANDONED_MINE_1",
+    "regions": [ 13718 ],
+    "hideOtherAreas": true
+  },
+  {
     "name": "ABANDONED_MINE_2",
     "regions": [ 11079 ],
     "hideOtherAreas": true
@@ -2788,6 +2793,7 @@
   {
     "name": "ABANDONED_MINE",
     "areas": [
+      "ABANDONED_MINE_1",
       "ABANDONED_MINE_2",
       "ABANDONED_MINE_3",
       "ABANDONED_MINE_4"
