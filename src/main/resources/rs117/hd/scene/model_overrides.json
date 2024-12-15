@@ -27211,5 +27211,45 @@
     "objectIds": [
       11659
     ]
+  },
+  {
+    "description": "Wereball course goal posts",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 42,
+    "colorOverrides": [
+      {
+        "description": "Corpse parts",
+        "colors": "s == 1" ,
+        "baseMaterial": "BONE",
+        "uvType": "BOX",
+        "uvOrientation": 42,
+        "uvScale": 0.6
+      }
+    ],
+    "objectIds": [
+      11652,
+      11653
+    ]
+  },
+  {
+    "description": "Wereball course goalie corpse - DYNAMIC",
+    "baseMaterial": "BONE",
+    "uvType": "BOX",
+    "uvOrientation": 343,
+    "uvScale": 0.6,
+    "objectIds": [
+      11651
+    ]
+  },
+  {
+    "description": "Wereball course paint",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 343,
+    "objectIds": [
+      11654,
+      11655
+    ]
   }
 ]
