@@ -2771,9 +2771,31 @@
     ]
   },
   {
-    "name": "ABANDONED_MINE",
-    "regions": [ 13718 ],
+    "name": "ABANDONED_MINE_2",
+    "regions": [ 11079 ],
     "hideOtherAreas": true
+  },
+  {
+    "name": "ABANDONED_MINE_3",
+    "aabbs": [
+      [ 10822 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "ABANDONED_MINE_4",
+    "aabbs": [
+      [ 10878 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "ABANDONED_MINE",
+    "areas": [
+      "ABANDONED_MINE_2",
+      "ABANDONED_MINE_3",
+      "ABANDONED_MINE_4"
+    ]
   },
   {
     "name": "GROTESQUE_GUARDIANS",
