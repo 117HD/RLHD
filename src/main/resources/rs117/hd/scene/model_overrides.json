@@ -8348,6 +8348,7 @@
       17907,
       17908,
       20429,
+      20430,
       24344,
       24088,
       25655,
@@ -22219,9 +22220,34 @@
   {
     "description": "Barrel with metal bands",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 2619, 5112, 5114, 5122, 9519, 9521 ],
+    "objectIds": [
+      2619,
+      5112,
+      5114,
+      5122,
+      9519,
+      9521
+    ],
     "uvType": "BOX",
     "uvScale": 0.8
+  },
+  {
+    "description": "Barrel with tarnished metal bands",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Metal bands",
+        "colors": "h == 5",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.66
+      }
+    ],
+    "objectIds": [
+      20431
+    ]
   },
   {
     "description": "Barrel with metal bands - Stacked",
@@ -27270,7 +27296,8 @@
     "uvScale": 0.75,
     "objectIds": [
       15789,
-      15790
+      15790,
+      20440
     ]
   },
   {
@@ -27289,6 +27316,7 @@
       }
     ],
     "objectIds": [
+      20407,
       20443,
       20444,
       20445
