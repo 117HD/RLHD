@@ -2765,10 +2765,15 @@
     "hideOtherAreas": true
   },
   {
-    "name": "ABANDONED_MINE",
+    "name": "ABANDONED_MINE_OVERWORLD",
     "aabbs": [
       [ 3423, 3201, 3461, 3261 ]
     ]
+  },
+  {
+    "name": "ABANDONED_MINE",
+    "regions": [ 13718 ],
+    "hideOtherAreas": true
   },
   {
     "name": "GROTESQUE_GUARDIANS",
