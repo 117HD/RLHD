@@ -22972,8 +22972,6 @@
     "description": "Skeleton with helmet named corpse",
     "baseMaterial": "BONE",
     "objectIds": [
-      661,
-      662,
       4984,
       7208
     ],
