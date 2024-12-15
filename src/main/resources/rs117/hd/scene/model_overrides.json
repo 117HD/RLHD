@@ -4068,7 +4068,10 @@
       15248,
       15249,
       15631,
+      15797,
       15798,
+      15799,
+      15800,
       15801,
       15802,
       15803,
@@ -5813,6 +5816,9 @@
       4164,
       4187,
       4189,
+      4966,
+      4968,
+      4970,
       8744,
       8745,
       8746,
@@ -6621,12 +6627,14 @@
   {
     "description": "Sewer Valve",
     "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "uvType": "BOX",
     "objectIds": [
       2844,
       2845,
       2846,
       2847,
-      2848
+      2848,
+      4924
     ]
   },
   {
@@ -7013,6 +7021,8 @@
       2548,
       2549,
       2624,
+      4963,
+      4964,
       2625,
       5667,
       10262,
@@ -8241,10 +8251,11 @@
   },
   {
     "description": "Stone - Steps",
-    "baseMaterial": "STONE",
+    "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       5307,
       5460,
+      20436,
       30599,
       30600,
       30601
@@ -8346,6 +8357,7 @@
       17907,
       17908,
       20429,
+      20430,
       24344,
       24088,
       25655,
@@ -8706,6 +8718,8 @@
       4602,
       5231,
       5232,
+      15813,
+      15814,
       17876,
       17877,
       42263,
@@ -18397,9 +18411,12 @@
     "uvScale": 0.68
   },
   {
-    "description": "Mourners Tunnels - Metallic - Minecart",
+    "description": "Metallic - Minecart",
     "baseMaterial": "METALLIC_1_SEMIGLOSS",
     "objectIds": [
+      637,
+      4918,
+      4974,
       8831
     ],
     "uvType": "BOX",
@@ -22218,6 +22235,24 @@
     "uvScale": 0.8
   },
   {
+    "description": "Barrel with tarnished metal bands",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Metal bands",
+        "colors": "h == 5",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.66
+      }
+    ],
+    "objectIds": [
+      20431
+    ]
+  },
+  {
     "description": "Barrel with metal bands - Stacked",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [ 5123 ],
@@ -25309,6 +25344,25 @@
     "uvScale": 0.6
   },
   {
+    "description": "Light wooden ladder in an stone ground hole",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      4965,
+      4967,
+      4969
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 0",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
     "description": "Mine cart tracks",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvOrientationX": 512,
@@ -25321,7 +25375,24 @@
       643,
       644,
       645,
-      646
+      646,
+      15818,
+      15819,
+      15820,
+      15821,
+      15822,
+      15823,
+      15824,
+      15826,
+      15827,
+      15828,
+      15829,
+      20403,
+      20404,
+      20405,
+      20406,
+      20434,
+      20438
     ],
     "colorOverrides": [
       {
@@ -25335,11 +25406,48 @@
     "uvScale": 0.6
   },
   {
+    "description": "Mine cart tunnel with tracks going into cave",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientationX": 512,
+    "colorOverrides": [
+      {
+        "colors": " h == 0 && s == 0 && l < 15",
+        "baseMaterial": "ROCK_3",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      },
+      {
+        "colors": " h == 0 && s == 0 && l > 15",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ],
+    "objectIds": [
+      4914,
+      4915
+    ]
+  },
+  {
+    "description": "Mine cart tunnel with tracks going into cave",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientationX": 512,
+    "objectIds": [
+      20396,
+      20397
+    ]
+  },
+  {
     "description": "Mine cart track Buffers",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvOrientationX": 512,
     "objectIds": [
-      636
+      636,
+      15825
     ],
     "colorOverrides": [
       {
@@ -27080,6 +27188,520 @@
     ],
     "objectIds": [
       31675
+    ]
+  },
+  {
+    "description": "Abandoned Mine Secret Entrance",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [ 4919 ]
+  },
+  {
+    "description": "Abandoned Mine Secret Exit",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [ 4923, 4973 ]
+  },
+  {
+    "description": "Abandoned Mine cart tunnel with tracks",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientationX": 512,
+    "colorOverrides": [
+      {
+        "colors": " h == 21",
+        "baseMaterial": "ROCK_3",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      },
+      {
+        "colors": " h == 0 && s == 0 && l > 15",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ],
+    "objectIds": [
+      4920,
+      15830,
+      20432,
+      29333
+    ]
+  },
+  {
+    "description": "Abandoned Mine walls with wooden supports",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "colors": " h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      15792,
+      15793,
+      15794
+    ]
+  },
+  {
+    "description": "Abandoned Mine walls with support anchors",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Wooden post",
+        "colors": " h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 512
+      },
+      {
+        "description": "Anchors",
+        "colors": " h == 0",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvOrientation": 42
+      }
+    ],
+    "objectIds": [
+      15791
+    ]
+  },
+  {
+    "description": "Abandoned Mine Wooden wall support",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      15832
+    ]
+  },
+  {
+    "description": "Abandoned Mine walls with wooden supports and a lamp",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "colors": " h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      },
+      {
+        "colors": " h == 0 && s == 0 && l > 15",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ],
+    "objectIds": [
+      15796
+    ]
+  },
+  {
+    "description": "Abandoned Mine walls",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      15788,
+      15789,
+      15790,
+      20439,
+      20440,
+      20441,
+      20442
+    ]
+  },
+  {
+    "description": "Abandoned Mine walls with lift parts",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 84,
+    "colorOverrides": [
+      {
+        "description": "Rock wall",
+        "colors": " h == 21",
+        "baseMaterial": "ROCK_3",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      },
+      {
+        "description": "Wood",
+        "colors": " h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.75
+      }
+    ],
+    "objectIds": [
+      4939,
+      4940,
+      4941
+    ]
+  },
+  {
+    "description": "Abandoned Mine lift parts",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvOrientation": 84,
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": " h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.75
+      }
+    ],
+    "objectIds": [
+      4937,
+      4938
+    ]
+  },
+  {
+    "description": "Abandoned Mine walls with Points Settings",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "colors": " h == 21",
+        "baseMaterial": "ROCK_3",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ],
+    "objectIds": [
+      4949
+    ]
+  },
+  {
+    "description": "Abandoned Mine walls with water",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Water",
+        "colors": "h == 27",
+        "baseMaterial": "NONE"
+      }
+    ],
+    "objectIds": [
+      15775,
+      15776,
+      15777,
+      15778,
+      15780,
+      15781,
+      15782,
+      15783
+    ]
+  },
+  {
+    "description": "Abandoned Mine walls with rusty metal bars",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Metal bars",
+        "colors": "h == 6",
+        "baseMaterial": "METALLIC_1"
+      }
+    ],
+    "objectIds": [
+      20427,
+      20428
+    ]
+  },
+  {
+    "description": "Abandoned Mine walls - Tin ore vein",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Ore",
+        "baseMaterial": "ROCK_5_ORE",
+        "colors": "h == 0",
+        "uvType": "BOX",
+        "uvOrientation": 256,
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      20407,
+      20443,
+      20444,
+      20445
+    ]
+  },
+  {
+    "description": "Abandoned Mine walls - Copper ore vein",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Ore",
+        "baseMaterial": "ROCK_4_ORE",
+        "colors": "h == 4",
+        "uvType": "BOX",
+        "uvOrientation": 256,
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      20408,
+      20446,
+      20447,
+      20448
+    ]
+  },
+  {
+    "description": "Abandoned Mine walls - Iron ore vein",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Ore",
+        "baseMaterial": "ROCK_4_ORE",
+        "colors": "h == 2",
+        "uvType": "BOX",
+        "uvOrientation": 256,
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      20422,
+      20423,
+      20424,
+      20425
+    ]
+  },
+  {
+    "description": "Abandoned Mine walls - Coal ore vein",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Ore",
+        "baseMaterial": "ROCK_4_ORE",
+        "colors": "h == 0",
+        "uvType": "BOX",
+        "uvOrientation": 256,
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      20410,
+      20411,
+      20412,
+      20413
+    ]
+  },
+  {
+    "description": "Abandoned Mine walls - Mithril ore vein",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Ore",
+        "baseMaterial": "ROCK_4_ORE",
+        "colors": "h == 42",
+        "uvType": "BOX",
+        "uvOrientation": 256,
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      20418,
+      20419,
+      20420,
+      20421
+    ]
+  },
+  {
+    "description": "Abandoned Mine walls - Adamentite ore vein",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Ore",
+        "baseMaterial": "ROCK_4_ORE",
+        "colors": "s > 0",
+        "uvType": "BOX",
+        "uvOrientation": 256,
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      20414,
+      20415,
+      20416,
+      20417
+    ]
+  },
+  {
+    "description": "Abandoned Mine walls - Clay vein",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Ore",
+        "baseMaterial": "GRUNGE_1_SHINY",
+        "colors": "h == 6",
+        "uvType": "BOX",
+        "uvOrientation": 256,
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      20449,
+      20450
+    ]
+  },
+  {
+    "description": "Abandoned Mine wall toppers",
+    "baseMaterial": "GRUNGE_3_DARK",
+    "uvType": "WORLD_XZ",
+    "uvScale": 1.2,
+    "objectIds": [
+      15804
+    ]
+  },
+  {
+    "description": "Glowing Fungus - Medium",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 1.1,
+    "objectIds": [
+      4932,
+      4933
+    ]
+  },
+  {
+    "description": "Abandoned Mine wooden levers with metal plate",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Lever",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "colors": "h == 6",
+        "uvType": "BOX",
+        "uvOrientation": 768,
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      4950,
+      4951,
+      4952,
+      4953,
+      4954,
+      4955,
+      4956,
+      4957,
+      4958,
+      4959,
+      4960,
+      4961
+    ]
+  },
+  {
+    "description": "Abandoned Mine walls - Lift hole",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      4946,
+      4948
+    ]
+  },
+  {
+    "description": "Abandoned Mine walls - Lift platform",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvOrientation": 69,
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      4947
+    ]
+  },
+  {
+    "description": "sunken mine cart",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvOrientation": 69,
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Fake water removal",
+        "colors": "h == 27",
+        "baseMaterial": "TRANSPARENT"
+      }
+    ],
+    "objectIds": [
+      4945
+    ]
+  },
+  {
+    "description": "Sunken lift parts",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 84,
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": " h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.75
+      }
+    ],
+    "objectIds": [
+      4942
+    ]
+  },
+  {
+    "description": "Abandoned Mine stairs",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [ 4971 ]
+  },
+  {
+    "description": "Crystal Outcrop - Haunted Mine crystals",
+    "baseMaterial": "GRUNGE_3_LIGHT_SHINY",
+    "uvType": "BOX",
+    "objectIds": [
+      4927,
+      4928
     ]
   }
 ]
