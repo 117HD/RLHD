@@ -27694,5 +27694,14 @@
     "uvType": "BOX",
     "uvScale": 0.8,
     "objectIds": [ 4971 ]
+  },
+  {
+    "description": "Crystal Outcrop - Haunted Mine crystals",
+    "baseMaterial": "GRUNGE_3_LIGHT_SHINY",
+    "uvType": "BOX",
+    "objectIds": [
+      4927,
+      4928
+    ]
   }
 ]
