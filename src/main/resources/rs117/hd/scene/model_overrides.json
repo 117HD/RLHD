@@ -18397,9 +18397,11 @@
     "uvScale": 0.68
   },
   {
-    "description": "Mourners Tunnels - Metallic - Minecart",
+    "description": "Metallic - Minecart",
     "baseMaterial": "METALLIC_1_SEMIGLOSS",
     "objectIds": [
+      637,
+      4918,
       8831
     ],
     "uvType": "BOX",
@@ -25321,7 +25323,14 @@
       643,
       644,
       645,
-      646
+      646,
+      15818,
+      15819,
+      15820,
+      15821,
+      15822,
+      15823,
+      15824
     ],
     "colorOverrides": [
       {
@@ -25335,11 +25344,48 @@
     "uvScale": 0.6
   },
   {
+    "description": "Mine cart tunnel with tracks going into cave",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientationX": 512,
+    "colorOverrides": [
+      {
+        "colors": " h == 0 && s == 0 && l < 15",
+        "baseMaterial": "ROCK_3",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      },
+      {
+        "colors": " h == 0 && s == 0 && l > 15",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ],
+    "objectIds": [
+      4914,
+      4915
+    ]
+  },
+  {
+    "description": "Mine cart tunnel with tracks going into cave",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientationX": 512,
+    "objectIds": [
+      20396,
+      20397
+    ]
+  },
+  {
     "description": "Mine cart track Buffers",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvOrientationX": 512,
     "objectIds": [
-      636
+      636,
+      15825
     ],
     "colorOverrides": [
       {
@@ -27081,5 +27127,12 @@
     "objectIds": [
       31675
     ]
+  },
+  {
+    "description": "Haunted Mine Secret Entrance",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [ 4919 ]
   }
 ]
