@@ -4069,6 +4069,8 @@
       15249,
       15631,
       15798,
+      15799,
+      15800,
       15801,
       15802,
       15803,
@@ -8706,6 +8708,8 @@
       4602,
       5231,
       5232,
+      15813,
+      15814,
       17876,
       17877,
       42263,
@@ -22968,6 +22972,8 @@
     "description": "Skeleton with helmet named corpse",
     "baseMaterial": "BONE",
     "objectIds": [
+      661,
+      662,
       4984,
       7208
     ],
@@ -25311,6 +25317,23 @@
     "uvScale": 0.6
   },
   {
+    "description": "Light wooden ladder in an stone ground hole",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      4965
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 0",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
     "description": "Mine cart tracks",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvOrientationX": 512,
@@ -25330,7 +25353,12 @@
       15821,
       15822,
       15823,
-      15824
+      15824,
+      15825,
+      15826,
+      15827,
+      15828,
+      15829
     ],
     "colorOverrides": [
       {
@@ -27134,5 +27162,187 @@
     "uvType": "BOX",
     "uvScale": 0.8,
     "objectIds": [ 4919 ]
+  },
+  {
+    "description": "Abandoned Mine cart tunnel with tracks",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientationX": 512,
+    "colorOverrides": [
+      {
+        "colors": " h == 21",
+        "baseMaterial": "ROCK_3",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      },
+      {
+        "colors": " h == 0 && s == 0 && l > 15",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ],
+    "objectIds": [
+      4920,
+      15830
+    ]
+  },
+  {
+    "description": "Abandoned Mine walls with wooden supports",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "colors": " h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      15792,
+      15793
+    ]
+  },
+  {
+    "description": "Abandoned Mine walls with support anchors",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Wooden post",
+        "colors": " h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 512
+      },
+      {
+        "description": "Anchors",
+        "colors": " h == 0",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvOrientation": 42
+      }
+    ],
+    "objectIds": [
+      15791
+    ]
+  },
+  {
+    "description": "Abandoned Mine Wooden wall support",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      15832
+    ]
+  },
+  {
+    "description": "Abandoned Mine walls with wooden supports and a lamp",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "colors": " h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      },
+      {
+        "colors": " h == 0 && s == 0 && l > 15",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ],
+    "objectIds": [
+      15796
+    ]
+  },
+  {
+    "description": "Abandoned Mine walls",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      15789,
+      15790
+    ]
+  },
+  {
+    "description": "Abandoned Mine walls - Tin ore vein",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Ore",
+        "baseMaterial": "ROCK_5_ORE",
+        "colors": "h == 0",
+        "uvType": "BOX",
+        "uvOrientation": 256,
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      20443,
+      20444,
+      20445
+    ]
+  },
+  {
+    "description": "Abandoned Mine walls - Copper ore vein",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Ore",
+        "baseMaterial": "ROCK_4_ORE",
+        "colors": "h == 4",
+        "uvType": "BOX",
+        "uvOrientation": 256,
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      20446,
+      20447,
+      20448
+    ]
+  },
+  {
+    "description": "Abandoned Mine walls - Clay vein",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Ore",
+        "baseMaterial": "GRUNGE_1_SHINY",
+        "colors": "h == 6",
+        "uvType": "BOX",
+        "uvOrientation": 256,
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      20449,
+      20450
+    ]
+  },
+  {
+    "description": "Abandoned Mine wall toppers",
+    "baseMaterial": "GRUNGE_3_DARK",
+    "uvType": "WORLD_XZ",
+    "uvScale": 1.2,
+    "objectIds": [
+      15804
+    ]
   }
 ]
