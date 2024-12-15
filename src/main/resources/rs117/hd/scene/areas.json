@@ -6079,6 +6079,11 @@
     ]
   },
   {
+    "name": "Werewolf obstacle and wereball course",
+    "regions": [ 14234 ],
+    "hideOtherAreas": true
+  },
+  {
     "name": "VARLAMORE",
     "regionBoxes": [
       [ 4908, 7476 ]
