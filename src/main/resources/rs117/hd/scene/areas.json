@@ -6079,7 +6079,7 @@
     ]
   },
   {
-    "name": "Werewolf obstacle and wereball course",
+    "name": "WEREWOLF_AGILITY_AREA",
     "regions": [ 14234 ],
     "hideOtherAreas": true
   },
