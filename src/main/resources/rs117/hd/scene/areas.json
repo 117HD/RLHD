@@ -2777,16 +2777,12 @@
   },
   {
     "name": "ABANDONED_MINE_3",
-    "aabbs": [
-      [ 10822 ]
-    ],
+    "regions": [ 10822 ],
     "hideOtherAreas": true
   },
   {
     "name": "ABANDONED_MINE_4",
-    "aabbs": [
-      [ 10878 ]
-    ],
+    "regions": [ 10878 ],
     "hideOtherAreas": true
   },
   {

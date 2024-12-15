@@ -35835,5 +35835,23 @@
     "objectIds": [
       16812
     ]
+  },
+  {
+    "description": "Glowing Fungus",
+    "offset": [ 0, 8, 0 ],
+    "radius": 180,
+    "strength": 8,
+    "color": [
+      100,
+      3,
+      187
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 5,
+    "objectIds": [
+      4932,
+      4933
+    ]
   }
 ]
