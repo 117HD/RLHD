@@ -19281,7 +19281,7 @@
   },
   {
     "description": "Abyssal Nexus - Flesh with Bone",
-    "baseMaterial": "ABYSSAL_2",
+    "baseMaterial": "ABYSSAL",
     "objectIds": [
       26940,
       26941,
@@ -19307,35 +19307,11 @@
       26973
     ],
     "uvType": "BOX",
-    "uvScale": 0.55,
-    "colorOverrides": [
-      {
-        "colors": [ "h == 7" ],
-        "baseMaterial": "GRUNGE_3",
-        "uvType": "BOX",
-        "uvScale": 0.7
-      }
-    ]
-  },
-  {
-    "description": "Abyssal Nexus - Flesh with Bone - End",
-    "baseMaterial": "ABYSSAL_2",
-    "objectIds": [
-      26972,
-      26973
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.45,
+    "uvScale": 0.65,
     "colorOverrides": [
       {
         "colors": [ "h == 6", "h == 7" ],
-        "baseMaterial": "GRUNGE_2",
-        "uvType": "BOX"
-      },
-      {
-        "colors": [ "h == 0", "h == 1", "h == 2" ],
-        "baseMaterial": "ABYSSAL",
-        "uvType": "BOX"
+        "baseMaterial": "GRUNGE_3"
       }
     ]
   },
