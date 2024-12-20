@@ -1504,7 +1504,7 @@
   },
   {
     "area": "ABYSSAL_AREAS",
-    "fogColor": "#100707",
+    "fogColor": "#0a0404",
     "fogDepth": 65,
     "ambientColor": "#AAAFB6",
     "ambientStrength": 2.2,
