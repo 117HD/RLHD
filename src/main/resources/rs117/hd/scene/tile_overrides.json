@@ -1524,13 +1524,17 @@
     "groundMaterial": "ABYSSAL_FLOOR"
   },
   {
-    "name": "ABYSSAL_LIQUID",
+    "name": "ABYSSAL_BILE",
     "area": "ABYSSAL_AREAS",
     "overlayIds": [
       66,
       67
     ],
-    "waterType": "ABYSS_BILE"
+    "groundMaterial": "ABYSSAL_BILE",
+    "uvScale": 1.12,
+    "shiftLightness": 4,
+    "shiftHue": -4,
+    "blended": false
   },
   {
     "name": "GOBLIN_VILLAGE_TILES_BLEND_FIX_OVERLAY",

@@ -462,5 +462,12 @@
       "ABYSSAL",
       "ABYSSAL"
     ]
+  },
+  {
+    "name": "ABYSSAL_BILE",
+    "materials": [
+      "ABYSSAL_2_FLOW",
+      "ABYSSAL_FLOW"
+    ]
   }
 ]
