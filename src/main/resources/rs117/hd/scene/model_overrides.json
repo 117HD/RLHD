@@ -16723,14 +16723,12 @@
   },
   {
     "description": "Stronghold Of Security Petilance - Dripping Tendrils",
-    "baseMaterial": "ABYSSAL_2",
+    "baseMaterial": "GRUNGE_3",
     "objectIds": [
       23700,
       23701,
       23702
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.5
+    ]
   },
   {
     "description": "Stronghold Of Security - Death - Walls",
@@ -19341,8 +19339,9 @@
   },
   {
     "description": "Abyssal Nexus - Respiratory System",
-    "baseMaterial": "GRAY_65",
-    "objectIds": [ 26953 ]
+    "baseMaterial": "GRAY_75",
+    "objectIds": [ 26953, 26954 ],
+    "npcIds": [ 5915 ]
   },
   {
     "description": "Walls - Law Altar",
