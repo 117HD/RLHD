@@ -28389,6 +28389,21 @@
     ]
   },
   {
+    "description": "SIRE_THRONE_LIGHT",
+    "offset": [ -50, 170, 50 ],
+    "objectIds": [ 26984 ],
+    "radius": 700,
+    "strength": 25,
+    "color": [
+      25,
+      200,
+      25
+    ],
+    "type": "PULSE",
+    "duration": 2500,
+    "range": 13
+  },
+  {
     "description": "GOTR_ENTRANCE_BARRIER_YELLOW",
     "height": 250,
     "alignment": "CENTER",

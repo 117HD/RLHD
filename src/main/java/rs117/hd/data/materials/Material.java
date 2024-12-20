@@ -835,12 +835,12 @@ public enum Material {
 	ABYSSAL_FLOW(ABYSSAL, p -> p
 		.setFlowMap(UNDERWATER_FLOW_MAP)
 		.setFlowMapStrength(0.075f)
-		.setFlowMapDuration(new float[] { -40, 36 })
+		.setFlowMapDuration(new float[] { -37, 37 })
 	),
 	ABYSSAL_2_FLOW(ABYSSAL_2, p -> p
 		.setFlowMap(UNDERWATER_FLOW_MAP)
 		.setFlowMapStrength(0.2f)
-		.setFlowMapDuration(new float[] { 28, -24 })
+		.setFlowMapDuration(new float[] { 28, -28 })
 	),
 
 
