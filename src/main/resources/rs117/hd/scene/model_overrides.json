@@ -19086,14 +19086,20 @@
   },
   {
     "description": "Abyss - Eyes",
-    "baseMaterial": "ABYSSAL_2",
+    "baseMaterial": "GRUNGE_3",
     "objectIds": [
       26146,
       26147,
       26148
     ],
-    "uvType": "BOX",
-    "uvScale": 0.5
+    "colorOverrides": [
+      {
+        "colors": [ "h == 1", "h == 7" ],
+        "baseMaterial": "ABYSSAL",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ]
   },
   {
     "description": "Abyss - Boil",
@@ -19165,7 +19171,7 @@
   },
   {
     "description": "Abyss - Peak Eye",
-    "baseMaterial": "ABYSSAL_2",
+    "baseMaterial": "GRUNGE_3",
     "objectIds": [
       27048,
       27049,
@@ -19174,9 +19180,14 @@
       27052,
       27053
     ],
-    "uvType": "BOX",
-    "uvOrientation": 512,
-    "uvScale": 0.6
+    "colorOverrides": [
+      {
+        "colors": [ "h == 1", "h == 7" ],
+        "baseMaterial": "ABYSSAL",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ]
   },
   {
     "description": "Abyssal Nexus - Green-tipped Tendrils & Pustules",
