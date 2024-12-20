@@ -19329,6 +19329,11 @@
     "uvScale": 0.7
   },
   {
+    "description": "Abyssal Nexus - Respiratory System",
+    "baseMaterial": "GRAY_65",
+    "objectIds": [ 26953 ]
+  },
+  {
     "description": "Walls - Law Altar",
     "baseMaterial": "ROCK_2",
     "objectIds": [
