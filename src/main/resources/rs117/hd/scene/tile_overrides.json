@@ -1532,8 +1532,8 @@
     ],
     "groundMaterial": "ABYSSAL_BILE",
     "uvScale": 1.12,
-    "shiftLightness": -4,
-    "shiftHue": -4,
+    "shiftLightness": -6,
+    "shiftHue": -1,
     "blended": false
   },
   {
