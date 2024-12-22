@@ -28389,6 +28389,68 @@
     ]
   },
   {
+    "description": "SIRE_BELLY_LIGHT_LOWER",
+    "offset": [ 0, 250, 100 ],
+    "npcIds": [ 5890, 5889, 5891 ],
+    "radius": 250,
+    "strength": 125,
+    "color": [
+      100,
+      0,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 2500,
+    "range": 13
+  },
+  {
+    "description": "SIRE_BELLY_LIGHT_UPPER",
+    "offset": [ 0, 350, 75 ],
+    "npcIds": [ 5890, 5889, 5891 ],
+    "radius": 100,
+    "strength": 125,
+    "color": [
+      100,
+      0,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 2500,
+    "range": 13
+  },
+  {
+    "description": "SIRE_BELLY_LIGHT_EXPLOSION",
+    "offset": [ 0, 325, 200 ],
+    "npcIds": [ 5908 ],
+    "radius": 350,
+    "strength": 200,
+    "color": [
+      100,
+      0,
+      255
+    ],
+    "type": "STATIC"
+  },
+  {
+    "description": "SIRE_BELLY_LIGHT_EXPLOSION_2",
+    "offset": [ 0, 150, 275 ],
+    "npcIds": [ 5908 ],
+    "animationIds": [ -1, 7098, 7099 ],
+    "radius": 450,
+    "strength": 15,
+    "color": [
+      200,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "range": 40,
+    "duration": 100,
+    "fadeInDuration": 400,
+    "fadeOutDuration": 100,
+    "spawnDelay": 150
+  },
+  {
     "description": "SIRE_THRONE_LIGHT",
     "offset": [ -50, 170, 50 ],
     "objectIds": [ 26984 ],
