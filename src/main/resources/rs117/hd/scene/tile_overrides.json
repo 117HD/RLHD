@@ -5309,6 +5309,7 @@
     ],
     "replacements": {
       "KHARID_GRASS": [
+        "h > 11",
         "h > 9 && s > 3",
         "h == 9 && s > 4"
       ],
