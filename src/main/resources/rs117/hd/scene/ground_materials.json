@@ -47,6 +47,12 @@
     ]
   },
   {
+    "name": "VERTICAL_GRAVEL",
+    "materials": [
+      "VERTICAL_GRAVEL"
+    ]
+  },
+  {
     "name": "SNOW_1",
     "materials": [
       "SNOW_1",

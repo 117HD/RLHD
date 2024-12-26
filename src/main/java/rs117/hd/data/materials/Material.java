@@ -348,6 +348,9 @@ public enum Material {
 		.setNormalMap(GRAVEL_N)
 		.setSpecular(0.4f, 130)
 	),
+	VERTICAL_GRAVEL(GRAVEL, p -> p
+		.setNormalMap(null)
+	),
 	GRAVEL_LIGHT(GRAVEL, p -> p
 		.setBrightness(1.5f)
 	),
