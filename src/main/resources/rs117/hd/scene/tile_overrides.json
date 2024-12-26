@@ -5284,12 +5284,6 @@
     "maxLightness": 50
   },
   {
-    "name": "KHARID_SAND_3",
-    "groundMaterial": "SAND",
-    "maxLightness": 60,
-    "shiftHue": -1
-  },
-  {
     "name": "KHARID_SAND_1",
     "area": "KHARID_DESERT_REGION",
     "groundMaterial": "SAND",
@@ -5299,6 +5293,8 @@
       45,
       49,
       50,
+      52,
+      53,
       58,
       61,
       62,
@@ -5323,12 +5319,14 @@
     }
   },
   {
-    "name": "KHARID_SAND_117",
-    "area": "KHARID_DESERT_REGION",
+    "name": "KHARID_DESERT_SAND",
+    "area": "KHARID_DESERT",
     "underlayIds": [
       45,
       49,
       50,
+      52,
+      53,
       58,
       61,
       62,
