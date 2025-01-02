@@ -23917,7 +23917,7 @@
   {
     "description": "PYRAMID_PLUNDER_TOMB_DOOR_1",
     "height": 100,
-    "alignment": "CENTRE",
+    "alignment": "CENTER",
     "radius": 400,
     "strength": 15,
     "color": [
@@ -23935,7 +23935,7 @@
   {
     "description": "PYRAMID_PLUNDER_TOMB_DOOR_2",
     "height": 100,
-    "alignment": "CENTRE",
+    "alignment": "CENTER",
     "radius": 350,
     "strength": 65,
     "color": [
@@ -24718,8 +24718,8 @@
     "strength": 10,
     "color": [
       255,
-      216,
-      87
+      255,
+      255
     ],
     "type": "PULSE",
     "duration": 1550,
@@ -24727,6 +24727,119 @@
     "objectIds": [
       9369
     ]
+  },
+  {
+    "description": "Corporeal Beast Ancient Brazier Lit High",
+    "offset": [ -14, 250, 15 ],
+    "radius": 350,
+    "strength": 5,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 150,
+    "color": [
+      100,
+      150,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 1550,
+    "range": 20,
+    "objectIds": [
+      41016
+    ]
+  },
+  {
+    "description": "Corporeal Beast Ancient Brazier Lit Low",
+    "offset": [ 30, 25, 18 ],
+    "radius": 450,
+    "strength": 7,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 150,
+    "color": [
+      100,
+      150,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 1000,
+    "range": 25,
+    "objectIds": [
+      41016
+    ]
+  },
+  {
+    "description": "Corporeal Beast Magic Projectile",
+    "offset": [ 0, -20, 0 ],
+    "radius": 275,
+    "spawnDelay": 250,
+    "strength": 4,
+    "fadeOutDuration": 200,
+    "fadeInDuration": 200,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 1000,
+    "range": 25,
+    "projectileIds": [
+      314,
+      316
+    ]
+  },
+  {
+    "description": "Corporeal Beast Explosion Projectile",
+    "offset": [ 0, 50, 0 ],
+    "radius": 350,
+    "strength": 3,
+    "spawnDelay": 100,
+    "fadeInDuration": 500,
+    "fadeOutDuration": 200,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 1000,
+    "range": 25,
+    "projectileIds": [
+      315
+    ]
+  },
+  {
+    "description": "Corporeal Beast Dark Core - Stationary",
+    "offset": [ 0, 100, 0 ],
+    "radius": 260,
+    "strength": 7,
+    "fadeOutDuration": 300,
+    "fadeInDuration": 200,
+    "color": [
+      150,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 1000,
+    "range": 10,
+    "npcIds": [ 320 ]
+  },
+  {
+    "description": "Corporeal Beast Dark Core - Moving",
+    "offset": [ 0, -40, 0 ],
+    "radius": 250,
+    "strength": 6,
+    "fadeOutDuration": 300,
+    "fadeInDuration": 200,
+    "color": [
+      150,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 1000,
+    "range": 10,
+    "projectileIds": [ 319 ]
   },
   {
     "description": "TUNNEL_EXIT",

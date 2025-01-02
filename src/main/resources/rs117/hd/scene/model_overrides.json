@@ -4457,12 +4457,95 @@
     "uvScale": 0.6
   },
   {
-    "description": "UNKNOWN_1",
-    "baseMaterial": "GRUNGE_1",
+    "description": "Corporeal Beast Entrance Passage",
+    "baseMaterial": "DIRT_2",
+    "flatNormals": true,
+    "uvType": "BOX",
+    "uvOrientation": 100,
     "objectIds": [
       677
+    ]
+  },
+  {
+    "description": "Corporeal Beast Walls",
+    "baseMaterial": "DIRT_2",
+    "areas": [ "Corporeal Beast Lair" ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 200,
+    "objectIds": [
+      6820,
+      6822
+    ]
+  },
+  {
+    "description": "Corporeal Beast Exit Cave",
+    "baseMaterial": "DIRT_2",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 110,
+    "objectIds": [
+      679
     ],
-    "flatNormals": true
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "BLACK"
+      }
+    ]
+  },
+  {
+    "description": "Corporeal Beast Ancient Brazier",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvScale": 0.4,
+    "uvType": "BOX",
+    "objectIds": [
+      41015,
+      41016
+    ],
+    "colorOverrides": [
+      {
+        "colors": ["h == 0", "h == 39", "h == 36 && s == 1"],
+        "baseMaterial": "METALLIC_1"
+      },
+      {
+        "colors": "h == 7",
+        "baseMaterial": "DIRT_1"
+      },
+      {
+        "colors": "h == 36 && s == 2",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Corporeal Beast Graves",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      675,
+      676
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "l == 76" ],
+        "baseMaterial": "GRUNGE_3"
+      },
+      {
+        "colors": ["h == 0"],
+        "baseMaterial": "ROCK_3",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.5
+      },
+      {
+        "colors": ["h == 7"],
+        "baseMaterial": "DIRT_1"
+      }
+    ]
+  },
+  {
+    "description": "Corporeal Beast - Darken to fit environment",
+    "baseMaterial": "GRAY_75",
+    "npcIds": [ 319 ]
   },
   {
     "description": "UNKNOWN_2",
@@ -4553,8 +4636,7 @@
       26569,
       31481,
       31482,
-      43759,
-      679
+      43759
     ],
     "uvType": "BOX",
     "uvScale": 0.5
