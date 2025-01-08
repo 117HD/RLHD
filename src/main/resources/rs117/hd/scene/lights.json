@@ -25413,11 +25413,44 @@
     ]
   },
   {
-    "description": "TOB_SOTETSEG_WINDOW",
-    "height": 400,
-    "alignment": "FRONTRIGHT_CORNER",
+    "description": "TOB_SOTETSEG_WINDOW Low",
+    "offset": [ -400, 125, -135 ],
+    "radius": 2000,
+    "strength": 10 ,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "objectIds": [
+      33052
+    ]
+  },
+  {
+    "description": "TOB_SOTETSEG_WINDOW Mid",
+    "offset": [ -300, 600, -135 ],
     "radius": 1200,
-    "strength": 10,
+    "strength": 3,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "objectIds": [
+      33052
+    ]
+  },
+  {
+    "description": "TOB_SOTETSEG_WINDOW High",
+    "offset": [ -250, 850, -135 ],
+    "radius": 700,
+    "strength": 6,
     "color": [
       255,
       255,

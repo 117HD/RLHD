@@ -27186,6 +27186,26 @@
       32873,
       32967,
       32974,
+      33038,
+      33039,
+      33040,
+      33041,
+      33042,
+      33043,
+      33044,
+      33045,
+      33046,
+      33047,
+      33048,
+      33049,
+      33050,
+      33051,
+      33053,
+      33054,
+      33055,
+      33056,
+      33057,
+      33058,
       33060,
       33061,
       33062
@@ -27197,6 +27217,28 @@
         "colors": "s > 4",
         "baseMaterial": "NONE",
         "uvType": "BOX"
+      },
+      {
+        "colors": "l > 20",
+        "baseMaterial": "ROCK_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Theatre of Blood - Sotetseg Big Window",
+    "baseMaterial": "STONE_NORMALED",
+    "castShadows": false,
+    "objectIds": [
+      33052,
+      33059
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 100,
+    "colorOverrides": [
+      {
+        "colors": [206, 211, 1482, 2261, 3160, 3286, 5213 ],
+        "baseMaterial": "WHITE"
       },
       {
         "colors": "l > 20",
