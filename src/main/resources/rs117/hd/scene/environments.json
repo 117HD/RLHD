@@ -333,8 +333,11 @@
     "ambientStrength": 3.5,
     "directionalColor": "#dfc0c0",
     "directionalStrength": 1.5,
-    "fogColor": "#000000",
-    "fogDepth": 40
+    "fogColor": "#04040f",
+    "fogDepth": 40,
+    "groundFogEnd": -1000,
+    "groundFogStart": -200,
+    "groundFogOpacity": 0.3
   },
   {
     "area": "TOA_LOOT_ROOM",
