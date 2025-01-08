@@ -27215,13 +27215,90 @@
     "colorOverrides": [
       {
         "colors": "s > 4",
-        "baseMaterial": "NONE",
-        "uvType": "BOX"
+        "baseMaterial": "NONE"
       },
       {
         "colors": "l > 20",
         "baseMaterial": "ROCK_3",
         "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Theatre of Blood - Xarpus Walls",
+    "baseMaterial": "GRAY_70",
+    "objectIds": [
+      32745,
+      32746,
+      32748
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0 && l < 25",
+        "baseMaterial": "ROCK_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Theatre of Blood - Xarpus Buildings",
+    "baseMaterial": "STONE_NORMALED",
+    "areas": [ "THEATRE_OF_BLOOD" ],
+    "objectIds": [
+      17487,
+      32684,
+      32749
+    ]
+  },
+  {
+    "description": "Theatre of Blood - Xarpus Buildings - Doors and Railing",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "areas": [ "THEATRE_OF_BLOOD" ],
+    "objectIds": [
+      32670,
+      32752,
+      32751
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && l > 42",
+        "baseMaterial": "GRAY_50"
+      },
+      {
+        "colors": [ "h == 0 && s > 2", "h > 0 && h < 6 && s > 1" ],
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Theatre of Blood - Xarpus - Skeleton",
+    "baseMaterial": "GRAY_75",
+    "uvType": "BOX",
+    "objectIds": [
+      32741
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h < 7",
+        "baseMaterial": "BONE"
+      }
+    ]
+  },
+  {
+    "description": "Theatre of Blood - Xarpus Buildings - Window",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "areas": [ "THEATRE_OF_BLOOD" ],
+    "objectIds": [
+      32662
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s > 2",
+        "baseMaterial": "NONE"
       }
     ]
   },
@@ -27305,8 +27382,7 @@
     "colorOverrides": [
       {
         "colors": "l > 40",
-        "baseMaterial": "NONE",
-        "uvType": "BOX"
+        "baseMaterial": "NONE"
       },
       {
         "colors": 272,
@@ -27371,8 +27447,7 @@
     "colorOverrides": [
       {
         "colors": [ 2 ],
-        "baseMaterial": "NONE",
-        "uvType": "BOX"
+        "baseMaterial": "NONE"
       }
     ]
   },

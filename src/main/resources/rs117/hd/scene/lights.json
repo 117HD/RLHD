@@ -25323,6 +25323,24 @@
     ]
   },
   {
+    "description": "TOB_XARPUS_WINDOW",
+    "areas": [ "THEATRE_OF_BLOOD" ],
+    "offset": [ 0, 200, 100 ],
+    "radius": 550,
+    "strength": 10,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 2200,
+    "range": 30,
+    "objectIds": [
+      32662
+    ]
+  },
+  {
     "description": "TOB_BARRIER",
     "height": 100,
     "alignment": "CENTER",
