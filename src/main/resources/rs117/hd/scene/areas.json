@@ -5097,6 +5097,10 @@
     ]
   },
   {
+    "name": "THEATRE_OF_BLOOD_VERZIK",
+    "regions": [ 12611 ]
+  },
+  {
     "name": "TOA_ENTRANCE_LOBBY",
     "aabbs": [
       [ 3344, 9102, 3375, 9135 ]

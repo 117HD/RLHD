@@ -3771,22 +3771,6 @@
     ]
   },
   {
-    "description": "TOB_VERZIK_TILE_FLOOR",
-    "baseMaterial": "BLANK_SEMIGLOSS",
-    "objectIds": [
-      32719,
-      32720,
-      32721,
-      32722,
-      32723,
-      32724,
-      32725,
-      32726,
-      32727,
-      32728
-    ]
-  },
-  {
     "description": "COX_OUTSIDE_RUINS",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
@@ -27083,6 +27067,161 @@
     ]
   },
   {
+    "description": "Theatre of Blood - Verzik Stone Floor",
+    "baseMaterial": "MARBLE_3_GLOSS",
+    "objectIds": [
+      32719,
+      32721,
+      32722,
+      32723,
+      32724,
+      32725,
+      32726,
+      32727,
+      32728,
+      32729,
+      32730,
+      32731,
+      32732,
+      32733
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Theatre of Blood - Verzik Walls with Statue",
+    "baseMaterial": "ROCK_3",
+    "uvScale": 1.2,
+    "objectIds": [
+      32699
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "MARBLE_1",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Theatre of Blood - Verzik Walls with Window or Banner",
+    "baseMaterial": "ROCK_3",
+    "uvScale": 1.2,
+    "objectIds": [
+      32697,
+      32693,
+      32694
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h > 7 ",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Theatre of Blood - Verzik Walls - Big Window",
+    "baseMaterial": "GRAY_90",
+    "objectIds": [
+      32691
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5 ",
+        "baseMaterial": "ROCK_3"
+      }
+    ]
+  },
+  {
+    "description": "Theatre of Blood - Verzik - Throne",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      32702,
+      32703,
+      32704,
+      32705,
+      32706,
+      32707,
+      32708,
+      32709,
+      32710,
+      32711,
+      32712,
+      32738
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h > 5",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Theatre of Blood - Verzik Wall",
+    "baseMaterial": "ROCK_3",
+    "uvScale": 1.2,
+    "objectIds": [
+      32687,
+      32692,
+      32695,
+      32696,
+      32700
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Theatre of Blood - Verzik Crumbling Pillar",
+    "baseMaterial": "ROCK_3",
+    "uvScale": 1.2,
+    "npcIds": [ 8377 ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Theatre of Blood - Treasure Room Walls",
+    "baseMaterial": "MARBLE_2",
+    "objectIds": [
+      32995,
+      32997,
+      32998,
+      32999,
+      33000,
+      33001,
+      33002,
+      33003,
+      33005,
+      33006,
+      33007,
+      33008,
+      33009,
+      33010,
+      33021,
+      33022,
+      33023,
+      33024,
+      33025
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 100,
+    "colorOverrides": [
+      {
+        "colors": "s > 4",
+        "baseMaterial": "METALLIC_1"
+      },
+      {
+        "colors": "h > 4 && s > 0",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX"
+      },
+      {
+        "colors": 2,
+        "baseMaterial": "GRAY_75"
+      }
+    ]
+  },
+  {
     "description": "Theatre of Blood - Stone Floor",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
@@ -27278,7 +27417,8 @@
     "baseMaterial": "GRAY_75",
     "uvType": "BOX",
     "objectIds": [
-      32741
+      32741,
+      32742
     ],
     "colorOverrides": [
       {
@@ -27456,7 +27596,9 @@
     "baseMaterial": "GRAY_90",
     "shadowOpacityThreshold": 0.1,
     "objectIds": [
-      32755
+      32755,
+      33028,
+      47336
     ]
   },
   {

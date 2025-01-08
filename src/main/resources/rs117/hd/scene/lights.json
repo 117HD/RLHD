@@ -25264,11 +25264,12 @@
     ]
   },
   {
-    "description": "MONUMENTAL_CHEST_OPEN",
-    "height": 120,
+    "description": "MONUMENTAL_CHEST_NORMAL",
+    "offset": [ 0, 300, -100 ],
     "alignment": "CENTER",
-    "radius": 800,
-    "strength": 7.5,
+    "radius": 900,
+    "strength": 9.5,
+    "fadeOutDuration": 300,
     "color": [
       255,
       191,
@@ -25279,16 +25280,31 @@
     "range": 0,
     "objectIds": [
       32992,
+      32990
+    ]
+  },
+  {
+    "description": "MONUMENTAL_CHEST_UNIQUE",
+    "offset": [ 0, 300, -100 ],
+    "radius": 900,
+    "strength": 9.5,
+    "fadeOutDuration": 300,
+    "color": [
+      205,
+      0,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "objectIds": [
       32993,
-      32994,
-      32990,
       32991
     ]
   },
   {
     "description": "TOB_WALL_TORCH",
-    "height": 200,
-    "alignment": "FRONTRIGHT_CORNER",
+    "offset": [ -100, 250, -100 ],
     "radius": 300,
     "strength": 7.5,
     "color": [
@@ -25297,7 +25313,7 @@
       3
     ],
     "type": "FLICKER",
-    "duration": 0,
+    "duration": 30,
     "range": 20,
     "objectIds": [
       32998,
@@ -25306,10 +25322,10 @@
   },
   {
     "description": "TOB_TELEPORT_CRYSTAL",
-    "height": 200,
+    "height": 300,
     "alignment": "CENTER",
-    "radius": 300,
-    "strength": 7.5,
+    "radius": 600,
+    "strength": 20,
     "color": [
       140,
       0,
@@ -25317,9 +25333,30 @@
     ],
     "type": "PULSE",
     "duration": 1800,
-    "range": 30,
+    "range": 10,
     "objectIds": [
       32996
+    ]
+  },
+  {
+    "description": "TOB_XARPUS_EXHUMED_GROUND",
+    "areas": [ "THEATRE_OF_BLOOD" ],
+    "offset": [ 0, 20, 0 ],
+    "radius": 250,
+    "strength": 10,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 900,
+    "spawnDelay": 900,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 2200,
+    "range": 30,
+    "objectIds": [
+      32743
     ]
   },
   {
@@ -25359,6 +25396,25 @@
     ]
   },
   {
+    "description": "TOB_VERZIK_BARRIER",
+    "height": 100,
+    "alignment": "CENTER",
+    "radius": 350,
+    "strength": 6,
+    "color": [
+      162,
+      0,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 2200,
+    "range": 30,
+    "objectIds": [
+      33028,
+      47336
+    ]
+  },
+  {
     "description": "PESTILENT_BLOAT_CHAMBER",
     "height": 400,
     "alignment": "CENTER",
@@ -25378,8 +25434,7 @@
   },
   {
     "description": "TOB_VERZIK_BIG_WINDOW",
-    "height": 750,
-    "alignment": "FRONT",
+    "offset": [ 0, 750, -50 ],
     "radius": 1000,
     "strength": 16.3,
     "color": [
@@ -25396,9 +25451,8 @@
   },
   {
     "description": "TOB_VERZIK_WINDOW",
-    "height": 450,
-    "alignment": "FRONT",
-    "radius": 600,
+    "offset": [ 0, 500, -100 ],
+    "radius": 800,
     "strength": 10,
     "color": [
       162,
@@ -25414,10 +25468,9 @@
   },
   {
     "description": "TOB_VERZIK_WINDOW_FLOOR",
-    "height": 70,
-    "alignment": "FRONT",
-    "radius": 1000,
-    "strength": 5,
+    "offset": [ 0, 150, -100 ],
+    "radius": 600,
+    "strength": 15,
     "color": [
       162,
       0,
