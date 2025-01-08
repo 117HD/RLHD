@@ -330,10 +330,10 @@
   {
     "area": "THEATRE_OF_BLOOD",
     "ambientColor": "#8282b0",
-    "ambientStrength": 3,
+    "ambientStrength": 3.5,
     "directionalColor": "#dfc0c0",
-    "directionalStrength": 5,
-    "fogColor": "#0e0c2c",
+    "directionalStrength": 1.5,
+    "fogColor": "#000000",
     "fogDepth": 40
   },
   {

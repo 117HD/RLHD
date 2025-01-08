@@ -25324,10 +25324,10 @@
   },
   {
     "description": "TOB_BARRIER",
-    "height": 50,
+    "height": 100,
     "alignment": "CENTER",
-    "radius": 150,
-    "strength": 7.5,
+    "radius": 350,
+    "strength": 10,
     "color": [
       255,
       0,
@@ -25432,10 +25432,9 @@
   },
   {
     "description": "TOB_BAT_TORCH",
-    "height": 820,
-    "alignment": "FRONT",
-    "radius": 300,
-    "strength": 10,
+    "offset": [ 0, 820, -70 ],
+    "radius": 425,
+    "strength": 12,
     "color": [
       255,
       0,

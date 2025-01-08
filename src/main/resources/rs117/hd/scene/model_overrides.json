@@ -27081,5 +27081,145 @@
     "objectIds": [
       31675
     ]
+  },
+  {
+    "description": "Theatre of Blood - Stone Floor",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      32784,
+      32785,
+      32786,
+      32787,
+      32788,
+      32789,
+      32790,
+      32791,
+      32792,
+      32793,
+      32816,
+      32817,
+      32818,
+      32819,
+      32820,
+      32821,
+      32822,
+      32823,
+      32824,
+      32825,
+      32826,
+      32827,
+      32828,
+      32829,
+      32830,
+      32831,
+      32832,
+      32834,
+      32835,
+      32836,
+      32837,
+      32838,
+      32839,
+      32840,
+      32841,
+      32842,
+      32843,
+      32844,
+      32845,
+      32846,
+      32847,
+      32848,
+      32849,
+      32850,
+      32851,
+      32852
+    ],
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 100
+  },
+  {
+    "description": "Theatre of Blood - Stone Walls",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      32763,
+      32764,
+      32765,
+      32766,
+      32767,
+      32768,
+      32769,
+      32770,
+      32771,
+      32772,
+      32775,
+      32776,
+      32777,
+      32781,
+      32782,
+      32783,
+      32794,
+      32795,
+      32796,
+      32797,
+      32798,
+      32799,
+      32800,
+      32801,
+      32802,
+      32803,
+      32804,
+      32805,
+      32806,
+      32807,
+      32810,
+      32811,
+      32812,
+      32813,
+      32814,
+      32815,
+      32967,
+      32974,
+      33060,
+      33061,
+      33062
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 100,
+    "colorOverrides": [
+      {
+        "colors": "s > 4",
+        "baseMaterial": "NONE",
+        "uvType": "BOX"
+      },
+      {
+        "colors": "l > 20",
+        "baseMaterial": "ROCK_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Theatre of Blood - Door Arch",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      32808,
+      32809
+    ],
+    "uvType": "VANILLA",
+    "uvOrientation": 100,
+    "colorOverrides": [
+      {
+        "colors": [ 2 ],
+        "baseMaterial": "NONE",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Theatre of Blood - Barrier",
+    "baseMaterial": "GRAY_90",
+    "shadowOpacityThreshold": 0.1,
+    "objectIds": [
+      32755
+    ]
   }
 ]
