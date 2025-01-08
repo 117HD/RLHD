@@ -27176,6 +27176,14 @@
       32813,
       32814,
       32815,
+      32866,
+      32867,
+      32868,
+      32869,
+      32870,
+      32871,
+      32872,
+      32873,
       32967,
       32974,
       33060,
@@ -27192,6 +27200,118 @@
       },
       {
         "colors": "l > 20",
+        "baseMaterial": "ROCK_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Theatre of Blood - Nylocas Arena Pillars",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      32862,
+      32876,
+      32899
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Theatre of Blood - Nylocas Arena Floor",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      32874,
+      32877,
+      32878,
+      32879,
+      32880,
+      32881,
+      32882,
+      32883,
+      32884,
+      32885,
+      32886,
+      32887,
+      32888,
+      32889,
+      32890,
+      32892,
+      32893,
+      32894,
+      32895,
+      32896,
+      32897,
+      32891,
+      32898,
+      32900,
+      32901,
+      32902,
+      32903,
+      32904,
+      32905,
+      32906,
+      32907,
+      32908,
+      32909,
+      32910,
+      32911,
+      32912,
+      32913,
+      32863,
+      32864
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "l > 40",
+        "baseMaterial": "NONE",
+        "uvType": "BOX"
+      },
+      {
+        "colors": 272,
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Theatre of Blood - Nylocas Arena Web Platform",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      32914,
+      32915,
+      32916,
+      32917,
+      32918,
+      32919,
+      32920,
+      32921,
+      32922,
+      32923,
+      32924,
+      32925,
+      32926,
+      32927,
+      32928,
+      32929,
+      32930,
+      32931,
+      32932,
+      32933,
+      32934
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Theatre of Blood - Nylocas Arena Web Platform Connection",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      32935,
+      32936
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "l < 15",
         "baseMaterial": "ROCK_3",
         "uvType": "BOX"
       }
