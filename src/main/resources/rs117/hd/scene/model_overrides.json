@@ -27221,5 +27221,61 @@
     "objectIds": [
       32755
     ]
+  },
+  {
+    "description": "Theatre of Blood - Bloat Jar",
+    "baseMaterial": "METALLIC_1",
+    "objectIds": [
+      32957
+    ],
+    "uvType": "GEOMETRY",
+    "colorOverrides": [
+      {
+        "colors": [ "h == 5", "h == 6" ,"h == 7", "h == 9" ],
+        "baseMaterial": "GRAY_90"
+      }
+    ]
+  },
+  {
+    "description": "Theatre of Blood - Bloat Jar Top",
+    "baseMaterial": "METALLIC_1",
+    "objectIds": [
+      32958
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Theatre of Blood - Hanging Hooks",
+    "baseMaterial": "METALLIC_1",
+    "objectIds": [
+      32949,
+      32950,
+      32951,
+      32952,
+      32953,
+      32954,
+      32971
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Theatre of Blood - Body Parts",
+    "baseMaterial": "METALLIC_1",
+    "objectIds": [
+      32961,
+      32962,
+      32963,
+      32964,
+      32965
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Theatre of Blood - Bloat Jar Supports",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      32955
+    ],
+    "uvType": "BOX"
   }
 ]
