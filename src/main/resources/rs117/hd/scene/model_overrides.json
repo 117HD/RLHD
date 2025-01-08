@@ -27148,6 +27148,7 @@
       32710,
       32711,
       32712,
+      32737,
       32738
     ],
     "uvType": "BOX",
@@ -27426,6 +27427,11 @@
         "baseMaterial": "BONE"
       }
     ]
+  },
+  {
+    "description": "Theatre of Blood - Xarpus - Hide Projectile Shadow",
+    "castShadows": false,
+    "projectileIds": [ 1555 ]
   },
   {
     "description": "Theatre of Blood - Xarpus Buildings - Window",
