@@ -20150,10 +20150,9 @@
   },
   {
     "description": "WALL_TORCH_MID",
-    "height": 200,
-    "alignment": "CENTER",
-    "radius": 300,
-    "strength": 12.5,
+    "offset": [ 0, 185, 0 ],
+    "radius": 250,
+    "strength": 7.5,
     "color": [
       252,
       148,
@@ -20165,17 +20164,49 @@
     "objectIds": [
       196,
       197,
-      7432,
       202,
       203,
       206,
       11474,
       5746,
-      4501,
       5787,
       24414,
       2175,
       30130
+    ]
+  },
+  {
+    "description": "Varrock Wall Candelabra",
+    "offset": [ 0, 215 , 0 ],
+    "radius": 275,
+    "strength": 5.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      7432
+    ]
+  },
+  {
+    "description": "Varrock Lantern",
+    "offset": [ -10, 155 , 0 ],
+    "radius": 220,
+    "strength": 8.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      4501
     ]
   },
   {
@@ -20201,7 +20232,7 @@
     "height": 220,
     "alignment": "CENTER",
     "radius": 300,
-    "strength": 12.5,
+    "strength": 7.5,
     "color": [
       252,
       148,
@@ -20287,8 +20318,61 @@
       4691,
       10307,
       16901,
-      23577,
+      23577
+    ]
+  },
+  {
+    "description": "Aris Tent Lantern",
+    "height": 200,
+    "alignment": "CENTER",
+    "radius": 350,
+    "strength": 7.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
       2492
+    ]
+  },
+  {
+    "description": "Aris Tent Candle",
+    "offset": [ 0, 150, 0 ],
+    "alignment": "CENTER",
+    "radius": 125,
+    "strength": 15.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      2458
+    ]
+  },
+  {
+    "description": "Aris Tent Crystal Ball",
+    "height": 120,
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 10.5,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 10,
+    "range": 30,
+    "objectIds": [
+      2459
     ]
   },
   {
@@ -20518,16 +20602,13 @@
       40775,
       8712,
       10824,
-      24969,
       40777,
       4618,
       10058,
-      24970,
       6093,
       6094,
       6095,
       6096,
-      7185,
       9439,
       9440,
       9441,
@@ -20544,6 +20625,57 @@
       30138,
       6781,
       6783
+    ]
+  },
+  {
+    "description": "Lumbridge Castle Fireplace",
+    "offset": [ 50, 70, 0 ],
+    "radius": 400,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      24970
+    ]
+  },
+  {
+    "description": "Bluemoon Inn Fireplace",
+    "offset": [ 0, 40, 0 ],
+    "radius": 300,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      7185
+    ]
+  },
+  {
+    "description": "Lumbrige General Store Fireplace",
+    "offset": [ 30, 70, 0 ],
+    "radius": 300,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      24969
     ]
   },
   {
@@ -21266,10 +21398,10 @@
     ]
   },
   {
-    "description": "HEARTH",
-    "height": 50,
+    "description": "Varrock Blacksmith Hearth",
+    "offset": [ 0, 100, 40 ],
     "alignment": "CENTER",
-    "radius": 650,
+    "radius": 350,
     "strength": 12.5,
     "color": [
       252,
@@ -25007,9 +25139,8 @@
   },
   {
     "description": "CLAN_HALL_PORTAL",
-    "height": 130,
-    "alignment": "FRONT",
-    "radius": 700,
+    "offset": [ 0, 150, -100 ],
+    "radius": 600,
     "strength": 12.5,
     "color": [
       0,
@@ -25848,9 +25979,8 @@
     ]
   },
   {
-    "description": "WALL_STATIC_LAMPS",
-    "height": 190,
-    "alignment": "CENTER",
+    "description": "Lantern with Glass",
+    "offset": [ -5, 210, 0 ],
     "radius": 450,
     "strength": 7.5,
     "color": [
@@ -33902,8 +34032,7 @@
   },
   {
     "description": "Wall Lantern",
-    "height": 235,
-    "alignment": "CENTER",
+    "offset": [ 0, 200, 0 ],
     "radius": 250,
     "strength": 6.5,
     "color": [
