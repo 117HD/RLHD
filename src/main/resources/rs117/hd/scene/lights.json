@@ -25339,6 +25339,20 @@
     ]
   },
   {
+    "description": "Bloat Shadow Enhancer",
+    "offset": [ 0, 20, 0 ],
+    "radius": 150,
+    "strength": -1.5,
+    "fadeInDuration": 100,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "graphicsObjectIds": [ 1571, 1572, 1573 ]
+  },
+  {
     "description": "TOB_XARPUS_EXHUMED_GROUND",
     "areas": [ "THEATRE_OF_BLOOD" ],
     "offset": [ 0, 20, 0 ],
