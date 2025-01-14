@@ -1039,6 +1039,7 @@
     "name": "AL_KHARID_MINE_WALLS",
     "area": "AL_KHARID_MINE",
     "groundMaterial": "VERTICAL_GRAVEL",
+    "shiftHue": -2,
     "overlayIds": [ 26 ]
   },
   {
