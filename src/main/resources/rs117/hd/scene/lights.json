@@ -20662,10 +20662,10 @@
     ]
   },
   {
-    "description": "Lumbrige General Store Fireplace",
+    "description": "Lumbridge General Store Fireplace",
     "offset": [ 30, 70, 0 ],
-    "radius": 300,
-    "strength": 12.5,
+    "radius": 235,
+    "strength": 11.5,
     "color": [
       252,
       148,
@@ -25962,9 +25962,9 @@
   },
   {
     "description": "CAMELOT_COOKING_RANGE",
-    "height": 120,
+    "offset": [ 0, 120, 0 ],
     "alignment": "CENTER",
-    "radius": 800,
+    "radius": 225,
     "strength": 5,
     "color": [
       252,
