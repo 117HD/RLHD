@@ -128,9 +128,9 @@ public class ModelHash {
 			} else if (type == TYPE_NPC) {
 				int index = id;
 				id = UNKNOWN_ID;
-				NPC[] npcs = client.getCachedNPCs();
-				if (index >= 0 && index < npcs.length) {
-					NPC npc = npcs[index];
+				var npcs = client.getTopLevelWorldView().npcs();
+				if (index >= 0 && index < 65536) {
+					NPC npc = npcs.byIndex(index);
 					if (npc != null)
 						id = npc.getId();
 				}
