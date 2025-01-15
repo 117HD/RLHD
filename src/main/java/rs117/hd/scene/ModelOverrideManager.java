@@ -163,13 +163,13 @@ public class ModelOverrideManager {
 		if (isDuplicate && Props.DEVELOPMENT) {
 			// This should ideally not be reached, so print helpful warnings in development mode
 			if (entry.hideInAreas.length > 0) {
-				System.err.printf(
-					"Replacing ID %d from '%s' with hideInAreas-override '%s'. This is likely a mistake...\n",
+				log.error(
+					"Replacing ID {} from '{}' with hideInAreas-override '{}'. This is likely a mistake...\n",
 					id, current.description, entry.description
 				);
 			} else {
-				System.err.printf(
-					"Replacing ID %d from '%s' with '%s'. The first-mentioned override should be removed.\n",
+				log.error(
+					"Replacing ID {} from '{}' with '{}'. The first-mentioned override should be removed.\n",
 					id, current.description, entry.description
 				);
 			}
