@@ -2949,7 +2949,8 @@
   {
     "name": "Corporeal Beast Lair",
     "aabbs": [
-      [ 2958, 4235, 3002, 4274 ]
+      [ 2958, 4235, 3002, 4274 ],
+      [ 2958, 4363, 3002, 4402 ]
     ],
     "hideOtherAreas": true
   },
