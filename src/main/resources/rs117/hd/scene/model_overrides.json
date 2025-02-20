@@ -15228,7 +15228,9 @@
     "baseMaterial": "ROCK_5_ORE",
     "objectIds": [
       11390,
-      11391
+      11391,
+      22780,
+      22782
     ],
     "uvType": "BOX",
     "uvScale": 0.33,
@@ -15240,7 +15242,9 @@
     "objectIds": [
       10080,
       11360,
-      11361
+      11361,
+      22720,
+      22722
     ],
     "uvType": "BOX",
     "uvScale": 0.33
@@ -15251,7 +15255,9 @@
     "objectIds": [
       10079,
       10943,
-      11161
+      11161,
+      21886,
+      22322
     ],
     "uvType": "BOX",
     "uvScale": 0.33
@@ -15262,6 +15268,7 @@
     "objectIds": [
       11364,
       11365,
+      22728,
       42833
     ],
     "uvType": "BOX",
@@ -15273,7 +15280,9 @@
     "baseMaterial": "ROCK_3_ORE",
     "objectIds": [
       11372,
-      11373
+      11373,
+      22744,
+      22746
     ],
     "uvType": "BOX",
     "uvScale": 0.33
@@ -15283,7 +15292,9 @@
     "baseMaterial": "ROCK_5_ORE",
     "objectIds": [
       11374,
-      11375
+      11375,
+      22748,
+      22750
     ],
     "uvType": "BOX",
     "uvScale": 0.33,
@@ -15294,7 +15305,9 @@
     "baseMaterial": "ROCK_5_ORE",
     "objectIds": [
       11376,
-      11377
+      11377,
+      22752,
+      22754
     ],
     "uvType": "BOX",
     "uvScale": 0.33
@@ -15304,7 +15317,9 @@
     "baseMaterial": "ROCK_3",
     "objectIds": [
       11366,
-      11367
+      11367,
+      22732,
+      22734
     ],
     "uvType": "BOX",
     "uvScale": 0.33,
@@ -15315,7 +15330,9 @@
     "baseMaterial": "ROCK_4_ORE",
     "objectIds": [
       11368,
-      11369
+      11369,
+      22736,
+      22738
     ],
     "uvType": "BOX",
     "uvScale": 0.40,
@@ -15326,7 +15343,9 @@
     "baseMaterial": "ROCK_4_ORE",
     "objectIds": [
       11370,
-      11371
+      11371,
+      22740,
+      22742
     ],
     "uvType": "BOX",
     "uvScale": 0.33
