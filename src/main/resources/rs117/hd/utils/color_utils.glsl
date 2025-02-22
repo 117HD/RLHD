@@ -187,3 +187,22 @@ int srgbToPackedHsl(vec3 srgb) {
 vec3 packedHslToSrgb(int hsl) {
     return hslToSrgb(unpackHsl(hsl));
 }
+
+// Tonemapping
+
+uniform float toe;
+uniform float slope;
+uniform float shoulder;
+
+vec3 tonemap(vec3 color)
+{
+    float A = shoulder;
+    float B = slope;
+    float C = 0.3f;
+    float D = toe;
+    float E = 0.01f;
+    float F = 0.30;
+	color = ((color * (A * color + C * B) + D * E) / (color * (A * color + B) + D * F)) - E / F;
+
+	return color;
+}
