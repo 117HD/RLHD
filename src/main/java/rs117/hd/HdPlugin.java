@@ -124,8 +124,8 @@ import rs117.hd.utils.ResourcePath;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 
-import static net.runelite.api.Constants.SCENE_SIZE;
 import static net.runelite.api.Constants.*;
+import static net.runelite.api.Constants.SCENE_SIZE;
 import static net.runelite.api.Perspective.*;
 import static org.lwjgl.opencl.CL10.*;
 import static org.lwjgl.opengl.GL43C.*;
@@ -452,6 +452,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public boolean configUseFasterModelHashing;
 	public boolean configUndoVanillaShading;
 	public boolean configPreserveVanillaNormals;
+	public boolean configAsyncUICopy;
 	public int configMaxDynamicLights;
 	public ShadowMode configShadowMode;
 	public SeasonalTheme configSeasonalTheme;
@@ -459,7 +460,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public VanillaShadowMode configVanillaShadowMode;
 	public ColorFilter configColorFilter = ColorFilter.NONE;
 	public ColorFilter configColorFilterPrevious;
-	public boolean configUseInterfaceAsyncCopy;
 
 	public boolean useLowMemoryMode;
 	public boolean enableDetailedTimers;
@@ -537,9 +537,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 				canvas.setIgnoreRepaint(true);
 
-				if(interfaceAsyncCopy == null) {
+				if (interfaceAsyncCopy == null)
 					interfaceAsyncCopy = new AsyncInterfaceCopy(frameTimer);
-				}
 
 				// lwjgl defaults to lwjgl- + user.name, but this breaks if the username would cause an invalid path
 				// to be created.
@@ -1873,9 +1872,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			glBindTexture(GL_TEXTURE_2D, 0);
 		}
 
-		if(shouldSkipInterfaceUpload) {
+		if (shouldSkipInterfaceUpload)
 			return;
-		}
 
 		frameTimer.begin(Timer.UPLOAD_UI);
 		final BufferProvider bufferProvider = client.getBufferProvider();
@@ -2300,16 +2298,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 			log.error("Unable to swap buffers:", ex);
 		}
-		
+
 		glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
 
 		frameTimer.end(Timer.DRAW_FRAME);
 		frameTimer.endFrameAndReset();
 
-		if(configUseInterfaceAsyncCopy) {
+		if (configAsyncUICopy)
 			interfaceAsyncCopy.prepare(client.getBufferProvider(), interfacePbo, interfaceTexture);
-		}
-
 
 		frameModelInfoMap.clear();
 		checkGLErrors();
@@ -2607,7 +2603,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		configPreserveVanillaNormals = config.preserveVanillaNormals();
 		configSeasonalTheme = config.seasonalTheme();
 		configSeasonalHemisphere = config.seasonalHemisphere();
-		configUseInterfaceAsyncCopy = config.useInterfaceAsyncCopy();
+		configAsyncUICopy = config.useInterfaceAsyncCopy();
 
 		var newColorFilter = config.colorFilter();
 		if (newColorFilter != configColorFilter) {
@@ -3331,14 +3327,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Subscribe(priority = -1) // Run after the low detail plugin
 	public void onBeforeRender(BeforeRender beforeRender) {
-		if (client.getScene() != null) {
-			// The game runs significantly slower with lower planes in Chambers of Xeric
-			client.getScene().setMinLevel(isInChambersOfXeric ? client.getPlane() : client.getScene().getMinLevel());
-		}
-
-		if(interfaceAsyncCopy != null) {
+		if (interfaceAsyncCopy != null)
 			shouldSkipInterfaceUpload = interfaceAsyncCopy.complete();
-		}
+
+		if (client.getScene() == null)
+			return;
+		// The game runs significantly slower with lower planes in Chambers of Xeric
+		client.getScene().setMinLevel(isInChambersOfXeric ? client.getPlane() : client.getScene().getMinLevel());
 	}
 
 	@Subscribe
