@@ -60,6 +60,10 @@ public class DeveloperTools implements KeyListener {
 	private boolean shadowMapOverlayEnabled = false;
 	private boolean lightGizmoOverlayEnabled = false;
 
+	public boolean isFrameTimingsOverlayEnabled(){
+		return frameTimingsOverlayEnabled;
+	}
+
 	public void activate() {
 		// Listen for commands
 		eventBus.register(this);
