@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import rs117.hd.scene.GroundMaterialManager;
 import rs117.hd.utils.GsonUtils;
+import rs117.hd.utils.RandomSeedGenerator;
 
 @Getter
 @Slf4j
@@ -21,8 +22,8 @@ public class GroundMaterial {
 		Material.DIRT_2
 	);
 
-	public String name;
-	public Material[] materials;
+	private final String name;
+	private final Material[] materials;
 
 	public GroundMaterial(String name, Material... materials) {
 		this.name = name;
@@ -33,13 +34,9 @@ public class GroundMaterial {
 	 * Get a random material based on the given coordinates.
 	 */
 	public Material getRandomMaterial(int... worldPos) {
-		long hash = 0;
-		for (int coord : worldPos)
-			hash = hash * 31 + coord;
-		long seed = (hash ^ 0x5DEECE66DL) & ((1L << 48) - 1);
-		seed = (seed * 0x5DEECE66DL + 0xBL) & ((1L << 48) - 1);
-		int r = (int) (seed >>> (48 - 31));
-		return materials[r % materials.length];
+		long seed = RandomSeedGenerator.generateSeed(worldPos);
+		int r = RandomSeedGenerator.getRandomIndex(seed, materials.length);
+		return materials[r];
 	}
 
 	@Override

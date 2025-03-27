@@ -1,29 +1,4 @@
-/*
- * Copyright (c) 2018, Adam <Adam@sigterm.info>
- * Copyright (c) 2021, 117 <https://twitter.com/117scape>
- * Copyright (c) 2023, Hooder <ahooder@protonmail.com>
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice, this
- *    list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+
 package rs117.hd;
 
 import com.google.gson.Gson;
@@ -1493,7 +1468,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	@Override
-	public void drawScene(double cameraX, double cameraY, double cameraZ, double cameraPitch, double cameraYaw, int plane) {
+	public void drawScene(mygame.renderer.Camera camera, int plane) {
 		if (sceneContext == null)
 			return;
 
@@ -1503,128 +1478,31 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		final Scene scene = client.getScene();
 		scene.setDrawDistance(getDrawDistance());
 
-		boolean updateUniforms = true;
+		boolean updateUniforms = checkAndUpdateArea();
 
-		if (sceneContext.enableAreaHiding) {
-			var lp = client.getLocalPlayer().getLocalLocation();
-			int[] worldPos = {
-				sceneContext.scene.getBaseX() + lp.getSceneX(),
-				sceneContext.scene.getBaseY() + lp.getSceneY(),
-				client.getPlane()
-			};
-
-			// We need to check all areas contained in the scene in the order they appear in the list,
-			// in order to ensure lower floors can take precedence over higher floors which include tiny
-			// portions of the floor beneath around stairs and ladders
-			Area newArea = null;
-			for (var area : sceneContext.possibleAreas) {
-				if (area.containsPoint(worldPos)) {
-					newArea = area;
-					break;
-				}
-			}
-
-			// Force a scene reload if the player is no longer in the same area
-			if (newArea != sceneContext.currentArea) {
-				client.setGameState(GameState.LOADING);
-				updateUniforms = false;
-				redrawPreviousFrame = true;
-			}
-		}
-
-		viewportOffsetX = client.getViewportXOffset();
-		viewportOffsetY = client.getViewportYOffset();
-		viewportWidth = client.getViewportWidth();
-		viewportHeight = client.getViewportHeight();
+		updateViewport();
 
 		if (!enableFreezeFrame) {
 			if (!redrawPreviousFrame) {
-				// Only reset the target buffer offset right before drawing the scene. That way if there are frames
-				// after this that don't involve a scene draw, like during LOADING/HOPPING/CONNECTION_LOST, we can
-				// still redraw the previous frame's scene to emulate the client behavior of not painting over the
-				// viewport buffer.
-				renderBufferOffset = sceneContext.staticVertexCount;
-
-				// TODO: this could be done only once during scene swap, but is a bit of a pain to do
-				// Push unordered models that should always be drawn at the start of each frame.
-				// Used to fix issues like the right-click menu causing underwater tiles to disappear.
-				var staticUnordered = sceneContext.staticUnorderedModelBuffer.getBuffer();
-				modelPassthroughBuffer
-					.ensureCapacity(staticUnordered.limit())
-					.put(staticUnordered);
-				staticUnordered.rewind();
-				numPassthroughModels += staticUnordered.limit() / 8;
+				prepareRenderBuffer();
 			}
 
 			if (updateUniforms) {
-				cameraPosition[0] = (float) cameraX;
-				cameraPosition[1] = (float) cameraY;
-				cameraPosition[2] = (float) cameraZ;
-				cameraOrientation[0] = (float) cameraYaw;
-				cameraOrientation[1] = (float) cameraPitch;
+				updateCameraState(camera);
 
 				if (sceneContext.scene == scene) {
-					cameraFocalPoint[0] = client.getOculusOrbFocalPointX();
-					cameraFocalPoint[1] = client.getOculusOrbFocalPointY();
-					Arrays.fill(cameraShift, 0);
-
-					try {
-						frameTimer.begin(Timer.UPDATE_ENVIRONMENT);
-						environmentManager.update(sceneContext);
-						frameTimer.end(Timer.UPDATE_ENVIRONMENT);
-
-						frameTimer.begin(Timer.UPDATE_LIGHTS);
-						lightManager.update(sceneContext);
-						frameTimer.end(Timer.UPDATE_LIGHTS);
-					} catch (Exception ex) {
-						log.error("Error while updating environment or lights:", ex);
-						stopPlugin();
-						return;
-					}
+					updateCameraFocalPoint();
+					updateEnvironmentAndLights();
 				} else {
-					cameraShift[0] = cameraFocalPoint[0] - client.getOculusOrbFocalPointX();
-					cameraShift[1] = cameraFocalPoint[1] - client.getOculusOrbFocalPointY();
-					cameraPosition[0] += cameraShift[0];
-					cameraPosition[2] += cameraShift[1];
+					applyCameraShift();
 				}
 
-				uniformBufferCamera
-					.clear()
-					.putFloat(cameraOrientation[0])
-					.putFloat(cameraOrientation[1])
-					.putInt(client.getCenterX())
-					.putInt(client.getCenterY())
-					.putInt(client.getScale())
-					.putFloat(cameraPosition[0])
-					.putFloat(cameraPosition[1])
-					.putFloat(cameraPosition[2])
-					.flip();
-				glBindBuffer(GL_UNIFORM_BUFFER, hUniformBufferCamera.glBufferId);
-				glBufferSubData(GL_UNIFORM_BUFFER, 0, uniformBufferCamera);
+				updateUniformBuffer();
 			}
 		}
 
 		if (sceneContext.scene == scene && updateUniforms) {
-			// Update lights UBO
-			uniformBufferLights.clear();
-			assert sceneContext.numVisibleLights <= configMaxDynamicLights;
-			for (int i = 0; i < sceneContext.numVisibleLights; i++) {
-				Light light = sceneContext.lights.get(i);
-				uniformBufferLights.putFloat(light.pos[0] + cameraShift[0]);
-				uniformBufferLights.putFloat(light.pos[1]);
-				uniformBufferLights.putFloat(light.pos[2] + cameraShift[1]);
-				uniformBufferLights.putFloat(light.radius * light.radius);
-				uniformBufferLights.putFloat(light.color[0] * light.strength);
-				uniformBufferLights.putFloat(light.color[1] * light.strength);
-				uniformBufferLights.putFloat(light.color[2] * light.strength);
-				uniformBufferLights.putFloat(0); // pad
-			}
-			uniformBufferLights.flip();
-			if (configMaxDynamicLights > 0) {
-				glBindBuffer(GL_UNIFORM_BUFFER, hUniformBufferLights.glBufferId);
-				glBufferSubData(GL_UNIFORM_BUFFER, 0, uniformBufferLights);
-				glBindBuffer(GL_UNIFORM_BUFFER, 0);
-			}
+			updateLightsUBO();
 		}
 	}
 

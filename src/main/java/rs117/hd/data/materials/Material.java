@@ -400,7 +400,7 @@ public enum Material {
 	GRUNGE_3_LIGHT_SHINY(GRUNGE_3_LIGHT, p -> p
 		.setBrightness(1.45f)
 		.setSpecular(0.5f, 300)
-		),
+	),
 	GRUNGE_3_DARK(GRUNGE_3, p -> p
 		.setBrightness(0.75f)
 		.setSpecular(0f, 0)
@@ -431,7 +431,7 @@ public enum Material {
 		.setSpecular(0.4f, 20)
 		.setBrightness(1.2f)
 	),
-	ROCK_3_DARK(ROCK_3,p -> p
+	ROCK_3_DARK(ROCK_3, p -> p
 		.setBrightness(0.65f)
 	),
 	ROCK_3_SMOOTH(ROCK_3, p -> p
@@ -477,7 +477,7 @@ public enum Material {
 	CARPET_N,
 	CARPET(p -> p
 		.setNormalMap(CARPET_N)
-		.setSpecular(0.25f,30)
+		.setSpecular(0.25f, 30)
 	),
 	BURLAP,
 	FALADOR_PATH_BRICK_N,
@@ -676,7 +676,7 @@ public enum Material {
 	),
 
 	WORN_TILES_N,
-	WORN_TILES(p -> p.setNormalMap(WORN_TILES_N).setSpecular(0.2f,25)),
+	WORN_TILES(p -> p.setNormalMap(WORN_TILES_N).setSpecular(0.2f, 25)),
 	HD_STONE_PATTERN_N,
 	HD_STONE_PATTERN_D,
 	HD_STONE_PATTERN(p -> p
@@ -995,6 +995,12 @@ public enum Material {
 
 		Builder setParent(Material parent) {
 			this.parent = parent;
+			// Setting parent properties can be extracted into a method
+			copyParentProperties(parent);
+			return this;
+		}
+
+		private void copyParentProperties(Material parent) {
 			this.normalMap = parent.normalMap;
 			this.displacementMap = parent.displacementMap;
 			this.roughnessMap = parent.roughnessMap;
@@ -1014,7 +1020,6 @@ public enum Material {
 			this.textureScale = parent.textureScale;
 			this.materialsToReplace.addAll(parent.materialsToReplace);
 			this.replacementCondition = parent.replacementCondition;
-			return this;
 		}
 
 		Builder setSpecular(float specularStrength, float specularGloss) {
@@ -1075,6 +1080,10 @@ public enum Material {
 	Material(Consumer<Builder> consumer) {
 		Builder builder = new Builder();
 		consumer.accept(builder);
+		initializeMaterial(builder);
+	}
+
+	private void initializeMaterial(Builder builder) {
 		parent = builder.parent;
 		normalMap = builder.normalMap;
 		displacementMap = builder.displacementScale == 0 ? null : builder.displacementMap;
@@ -1097,16 +1106,23 @@ public enum Material {
 		replacementCondition = builder.replacementCondition;
 
 		// Determine whether the material contains some form of texture change
+		initializeTextureChange();
+	}
+
+	private void initializeTextureChange() {
 		var base = this;
 		while (base.parent != null)
 			base = base.parent;
-		hasTexture =
-			base.ordinal() != 0 ||
-			normalMap != null ||
-			displacementMap != null ||
-			roughnessMap != null ||
-			ambientOcclusionMap != null ||
-			flowMap != null;
+		hasTexture = isTextureChangeRequired(base);
+	}
+
+	private boolean isTextureChangeRequired(Material base) {
+		return base.ordinal() != 0 ||
+			   normalMap != null ||
+			   displacementMap != null ||
+			   roughnessMap != null ||
+			   ambientOcclusionMap != null ||
+			   flowMap != null;
 	}
 
 	private static Material[] VANILLA_TEXTURE_MAPPING = {};
@@ -1119,24 +1135,37 @@ public enum Material {
 
 			// If the material is a conditional replacement material, and the condition is not met,
 			// the material shouldn't be loaded and can be mapped to NONE
-			if (material.replacementCondition != null && !material.replacementCondition.apply(plugin)) {
-				material = NONE;
-			} else {
-				// Apply material replacements from top to bottom
-				for (int j = i + 1; j < materials.length; ++j) {
-					var replacement = materials[j];
-					if (replacement.replacementCondition != null &&
-						replacement.replacementCondition.apply(plugin) &&
-						replacement.materialsToReplace.contains(material)) {
-						material = replacement;
-						break;
-					}
-				}
-			}
+			material = resolveReplacementMaterial(material, plugin, materials, i);
 
 			REPLACEMENT_MAPPING[i] = material;
 		}
 
+		// Initialize the Vanilla Texture Mappings
+		initializeVanillaTextureMappings(textures, materials);
+	}
+
+	private static Material resolveReplacementMaterial(Material material, HdPlugin plugin, Material[] materials, int i) {
+		if (material.replacementCondition != null && !material.replacementCondition.apply(plugin)) {
+			return NONE;
+		} else {
+			for (int j = i + 1; j < materials.length; ++j) {
+				var replacement = materials[j];
+				if (isReplacementValid(replacement, plugin, material)) {
+					material = replacement;
+					break;
+				}
+			}
+		}
+		return material;
+	}
+
+	private static boolean isReplacementValid(Material replacement, HdPlugin plugin, Material material) {
+		return replacement.replacementCondition != null &&
+			   replacement.replacementCondition.apply(plugin) &&
+			   replacement.materialsToReplace.contains(material);
+	}
+
+	private static void initializeVanillaTextureMappings(Texture[] textures, Material[] materials) {
 		VANILLA_TEXTURE_MAPPING = new Material[textures.length];
 		Arrays.fill(VANILLA_TEXTURE_MAPPING, Material.VANILLA);
 		for (int i = 0; i < textures.length; i++) {
