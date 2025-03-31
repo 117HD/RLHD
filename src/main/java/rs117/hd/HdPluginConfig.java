@@ -812,8 +812,63 @@ public interface HdPluginConfig extends Config
 		description = "Apply a color filter to the game as a post-processing effect.",
 		section = miscellaneousSettings
 	)
-	default ColorFilter colorFilter() {
-		return ColorFilter.NONE;
+	default ColorFilter colorFilter() { return ColorFilter.NONE; }
+
+	String KEY_TONEMAPPING = "tonemapping";
+	@ConfigItem(
+		keyName = KEY_TONEMAPPING,
+		name = "Tonemapping",
+		description = "Apply tonemapping (enables Toe, Slope, and Shoulder controls).",
+		section = environmentSettings
+	)
+	default boolean tonemapping() { return true; }
+
+	@Range(
+		min = 1,
+		max = 2000
+	)
+	@ConfigItem(
+		keyName = "toe",
+		name = "Toe",
+		description =
+			"Contrast in darks.",
+		section = environmentSettings
+	)
+	default int toe()
+	{
+		return 125;
+	}
+
+	@Range(
+		min = 1,
+		max = 2000
+	)
+	@ConfigItem(
+		keyName = "slope",
+		name = "Slope",
+		description =
+			"Contrast in mids.",
+		section = environmentSettings
+	)
+	default int slope()
+	{
+		return 400;
+	}
+
+	@Range(
+		min = 1,
+		max = 2000
+	)
+	@ConfigItem(
+		keyName = "shoulder",
+		name = "Shoulder",
+		description =
+			"Contrast in brights.",
+		section = environmentSettings
+	)
+	default int shoulder()
+	{
+		return 500;
 	}
 
 	String KEY_REMOVE_VERTEX_SNAPPING = "removeVertexSnapping";
