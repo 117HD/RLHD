@@ -191,6 +191,8 @@ public class AABB {
 
 	@Override
 	public String toString() {
+		if (minZ == 0 && maxZ == 0)
+			return String.format("AABB{min=(%d,%d), max=(%d,%d)}", minX, minY, maxX, maxY);
 		if (hasZ())
 			return String.format("AABB{min=(%d,%d,%d), max=(%d,%d,%d)}", minX, minY, minZ, maxX, maxY, maxZ);
 		return String.format("AABB{min=(%d,%d), max=(%d,%d)}", minX, minY, maxX, maxY);
