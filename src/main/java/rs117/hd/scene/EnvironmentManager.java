@@ -41,6 +41,7 @@ import rs117.hd.scene.environments.Environment;
 import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
+import rs117.hd.utils.Vector;
 
 import static rs117.hd.utils.HDUtils.PI;
 import static rs117.hd.utils.HDUtils.TWO_PI;
@@ -67,6 +68,9 @@ public class EnvironmentManager {
 
 	@Inject
 	private HdPlugin plugin;
+
+	@Inject
+	private TextureManager textureManager;
 
 	@Inject
 	private HdPluginConfig config;
@@ -140,6 +144,11 @@ public class EnvironmentManager {
 	private final float[] startSunAngles = { 0, 0 };
 	public final float[] currentSunAngles = { 0, 0 };
 	private final float[] targetSunAngles = { 0, 0 };
+
+	private float[] skyboxProperties = new float[4];
+	private int targetSkyboxIndex = -1;
+	private int currentSkyboxIndex = -1;
+	private float currentSkyboxBlend = 0f;
 
 	private boolean lightningEnabled = false;
 	private boolean forceNextTransition = false;
@@ -238,6 +247,11 @@ public class EnvironmentManager {
 			// Always write fog and water color, since they're affected by lightning
 			currentFogColor = targetFogColor;
 			currentWaterColor = targetWaterColor;
+			if(currentSkyboxBlend >= 1) {
+				currentSkyboxIndex = targetSkyboxIndex;
+				targetSkyboxIndex = -1;
+				currentSkyboxBlend = 0.0f;
+			}
 		} else {
 			// interpolate between start and target values
 			float t = clamp((float) (plugin.elapsedTime - transitionStartTime) / TRANSITION_DURATION, 0, 1);
@@ -259,6 +273,7 @@ public class EnvironmentManager {
 				currentSunAngles[i] = hermite(startSunAngles[i], targetSunAngles[i], t);
 			currentUnderwaterCausticsColor = hermite(startUnderwaterCausticsColor, targetUnderwaterCausticsColor, t);
 			currentUnderwaterCausticsStrength = hermite(startUnderwaterCausticsStrength, targetUnderwaterCausticsStrength, t);
+			currentSkyboxBlend = t;
 		}
 
 		updateLightning();
@@ -334,6 +349,7 @@ public class EnvironmentManager {
 		targetUnderglowColor = env.underglowColor;
 		targetUnderwaterCausticsColor = env.waterCausticsColor;
 		targetUnderwaterCausticsStrength = env.waterCausticsStrength;
+		targetSkyboxIndex = textureManager.getSkyboxIndex(env.skyboxId);
 
 		// Prevent transitions from taking the long way around
 		for (int i = 0; i < 2; i++) {
@@ -464,5 +480,26 @@ public class EnvironmentManager {
 
 	public boolean isUnderwater() {
 		return currentEnvironment.isUnderwater;
+	}
+
+	public float[] getSkyboxProperties() {
+		if(config.renderSkybox()){
+			int debugOverwriteSkyboxIndex = textureManager.getSkyboxIndex(config.overwriteSkybox());
+			if(debugOverwriteSkyboxIndex != -1) {
+				skyboxProperties[0] = debugOverwriteSkyboxIndex;
+				skyboxProperties[1] = 0.0f;
+				skyboxProperties[2] = -1;
+			} else {
+				skyboxProperties[0] = currentSkyboxIndex;
+				skyboxProperties[1] = currentSkyboxBlend;
+				skyboxProperties[2] = targetSkyboxIndex;
+			}
+		} else {
+			skyboxProperties[0] = -1;
+			skyboxProperties[1] = 0.0f;
+			skyboxProperties[2] = -1;
+		}
+		skyboxProperties[3] = HdPlugin.NEAR_PLANE * 100.0f;
+		return skyboxProperties;
 	}
 }

@@ -23,6 +23,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include utils/misc.glsl
+#include utils/skybox.glsl
 
 vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     WaterType waterType = getWaterType(waterTypeIndex);
@@ -131,7 +132,16 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     if (finalFresnel < 0.5) {
         surfaceColor = mix(waterColorDark, waterColorMid, finalFresnel * 2);
     } else {
+    #if 0 // Enable for the water to refract the skybox
+        vec3 skyColor = waterColorLight;
+        if(canSampleSky()) {
+            const float waterRefractionIndex = 1.00 / 1.52;
+            skyColor = sampleSky(normalize(refract(-viewDir, normals, waterRefractionIndex)), waterColorLight);
+        }
+        surfaceColor = mix(waterColorMid, skyColor, (finalFresnel - 0.5) * 2);
+    #else
         surfaceColor = mix(waterColorMid, waterColorLight, (finalFresnel - 0.5) * 2);
+    #endif
     }
 
     vec3 surfaceColorOut = surfaceColor * max(combinedSpecularStrength, 0.2);

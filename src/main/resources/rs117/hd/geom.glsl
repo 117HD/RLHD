@@ -50,6 +50,7 @@ flat out vec3 T;
 flat out vec3 B;
 
 out FragmentData {
+    vec4 positionCS;
     vec3 position;
     vec2 uv;
     vec3 normal;
@@ -92,6 +93,7 @@ void main() {
         // Flat normals must be applied separately per vertex
         vec3 normal = gNormal[i].xyz;
         OUT.position = gPosition[i];
+        OUT.positionCS = projectionMatrix * vec4(OUT.position, 1);
         OUT.uv = vUv[i].xy;
         #if FLAT_SHADING
         OUT.normal = N;
@@ -100,7 +102,7 @@ void main() {
         #endif
         OUT.texBlend = vec3(0);
         OUT.texBlend[i] = 1;
-        gl_Position = projectionMatrix * vec4(OUT.position, 1);
+        gl_Position = OUT.positionCS;
         EmitVertex();
     }
 

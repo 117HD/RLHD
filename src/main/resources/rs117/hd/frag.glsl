@@ -23,11 +23,12 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#version 330
+#version 400
 
 #include uniforms/materials.glsl
 #include uniforms/water_types.glsl
 #include uniforms/lights.glsl
+#include utils/skybox.glsl
 
 #include MATERIAL_CONSTANTS
 
@@ -63,6 +64,7 @@ uniform bool underwaterEnvironment;
 uniform bool underwaterCaustics;
 uniform vec3 underwaterCausticsColor;
 uniform float underwaterCausticsStrength;
+uniform ivec4 sceneAABB;
 
 // general HD settings
 uniform float saturation;
@@ -77,6 +79,7 @@ flat in vec3 T;
 flat in vec3 B;
 
 in FragmentData {
+    vec4 positionCS;
     vec3 position;
     vec2 uv;
     vec3 normal;
@@ -147,7 +150,7 @@ void main() {
         // Instead we manually clamp vanilla textures with transparency here. Including the transparency check
         // allows texture wrapping to work correctly for the mirror shield.
         if ((vMaterialData[0] >> MATERIAL_FLAG_VANILLA_UVS & 1) == 1 && getMaterialHasTransparency(material1))
-            blendedUv.x = clamp(blendedUv.x, 0, .984375);
+            blendedUv.x = clamp(blendedUv.x, 0.0, .984375);
 
         vec2 uv1 = blendedUv;
         vec2 uv2 = blendedUv;
@@ -422,7 +425,6 @@ void main() {
         float skyDotNormals = downDotNormals;
         vec3 skyLightOut = max(skyDotNormals, 0.0) * skyLightColor * skyLightStrength;
 
-
         // lightning
         vec3 lightningColor = vec3(.25, .25, .25);
         float lightningStrength = lightningBrightness;
@@ -509,12 +511,29 @@ void main() {
         // multiply the visibility of each fog
         float fogAmount = calculateFogAmount(IN.position);
         float combinedFog = 1 - (1 - fogAmount) * (1 - groundFog);
+        vec3 blendColor = fogColor;
 
         if (isWater) {
             outputColor.a = combinedFog + outputColor.a * (1 - combinedFog);
         }
 
-        outputColor.rgb = mix(outputColor.rgb, fogColor, combinedFog);
+        // skybox sampling
+        if(combinedFog > 0 && canSampleSky()) {
+            const float skyboxTileBoundary = (128.0) * 8;
+            const float skyboxCameraBoundary = (128.0) * 35;
+            float distanceFromBoundary = IN.position.x - sceneAABB.x;
+            distanceFromBoundary = min(distanceFromBoundary, IN.position.z - sceneAABB.y);
+            distanceFromBoundary = min(distanceFromBoundary, sceneAABB.z - IN.position.x);
+            distanceFromBoundary = min(distanceFromBoundary, sceneAABB.w - IN.position.z);
+
+            if(distanceFromBoundary > skyboxTileBoundary || distance > skyboxCameraBoundary) {
+                blendColor = sampleSky(-viewDir, fogColor);
+            } else {
+                combinedFog = 0.0;
+            }
+        }
+
+        outputColor.rgb = mix(outputColor.rgb, blendColor, combinedFog);
     }
 
     FragColor = outputColor;
