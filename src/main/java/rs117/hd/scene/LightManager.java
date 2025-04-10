@@ -204,8 +204,8 @@ public class LightManager {
 		int drawDistance = plugin.getDrawDistance() * LOCAL_TILE_SIZE;
 		Tile[][][] tiles = sceneContext.scene.getExtendedTiles();
 		int[][][] tileHeights = sceneContext.scene.getTileHeights();
-		var cachedNpcs = client.getCachedNPCs();
-		var cachedPlayers = client.getCachedPlayers();
+		var cachedNpcs = client.getTopLevelWorldView().npcs();
+		var cachedPlayers = client.getTopLevelWorldView().players();
 		int plane = client.getPlane();
 		boolean changedPlanes = false;
 
@@ -272,8 +272,8 @@ public class LightManager {
 					parentExists = animation != null && light.def.animationIds.contains(animation.getId());
 				}
 			} else if (light.actor != null && !light.markedForRemoval) {
-				if (light.actor instanceof NPC && light.actor != cachedNpcs[((NPC) light.actor).getIndex()] ||
-					light.actor instanceof Player && light.actor != cachedPlayers[((Player) light.actor).getId()] ||
+				if (light.actor instanceof NPC && light.actor != cachedNpcs.byIndex(((NPC) light.actor).getIndex()) ||
+					light.actor instanceof Player && light.actor != cachedPlayers.byIndex(((Player) light.actor).getId()) ||
 					light.spotAnimId != -1 && !light.actor.hasSpotAnim(light.spotAnimId)
 				) {
 					parentExists = false;
@@ -297,7 +297,9 @@ public class LightManager {
 						tileExX < EXTENDED_SCENE_SIZE && tileExY < EXTENDED_SCENE_SIZE &&
 						(tile = tiles[plane][tileExX][tileExY]) != null
 					) {
-						if (!light.def.ignoreActorHiding) {
+						if (!light.def.ignoreActorHiding &&
+							!(light.actor instanceof NPC && ((NPC) light.actor).getComposition().getSize() > 1)
+						) {
 							// Check if the actor is hidden by another actor on the same tile
 							for (var gameObject : tile.getGameObjects()) {
 								if (gameObject == null || !(gameObject.getRenderable() instanceof Actor))
