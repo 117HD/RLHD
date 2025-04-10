@@ -302,6 +302,7 @@ public enum Material {
 	BRICK_CAM_TORUM_2(126),
 
 	WHITE(NONE),
+	GRAY_125(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(1.25f))),
 	GRAY_110(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(1.1f))),
 	GRAY_90(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(.90f))),
 	GRAY_75(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(.75f))),
