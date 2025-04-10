@@ -1639,7 +1639,8 @@
     "ambientColor": "#97baff",
     "directionalStrength": 4,
     "sunAngles": [ 52, 235 ],
-    "fogDepth": 6.5
+    "fogDepth": 6.5,
+    "skyboxId": "rs3_magicblue"
   },
   {
     "key": "AUTUMN",
