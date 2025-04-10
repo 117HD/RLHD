@@ -494,9 +494,8 @@ public enum Material {
 		.setSpecular(0.5f, 30)
 	),
 	POTTERY_OVEN_STONE(JAGGED_STONE_TILE, p -> p.setBrightness(0.3f)),
-	TILE_SMALL_1_N,
+
 	TILE_SMALL_1(p -> p
-		.setNormalMap(TILE_SMALL_1_N)
 		.setSpecular(0.8f, 70)),
 	TILES_2X2_1_N,
 	TILES_2X2_1(p -> p
