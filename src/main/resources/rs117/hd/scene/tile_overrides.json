@@ -2934,6 +2934,16 @@
     "groundMaterial": "DIRT"
   },
   {
+    "name": "ABANDONED_MINE_LIFT_PLATFORM",
+    "area": "ABANDONED_MINE",
+    "uvOrientation": 512,
+    "shiftLightness": 2,
+    "overlayIds": [
+      14
+    ],
+    "groundMaterial": "HD_WOOD_PLANKS_2"
+  },
+  {
     "name": "TRUE_BLOOD_ALTAR_BLOOD",
     "area": "TRUE_BLOOD_ALTAR",
     "overlayIds": [
