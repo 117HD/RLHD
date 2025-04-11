@@ -1445,6 +1445,12 @@
     "hideOtherAreas": true
   },
   {
+    "name": "ROYAL_TITANS_ARENA",
+    "aabbs": [
+      [ 2906, 9555, 2916, 9580 ]
+    ]
+  },
+  {
     "name": "KARAMJA_VOLCANO",
     "aabbs": [
       [ 2827, 3158, 2859, 3192 ]

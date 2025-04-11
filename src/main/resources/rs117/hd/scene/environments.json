@@ -1393,6 +1393,18 @@
     ]
   },
   {
+    "area": "ROYAL_TITANS_ARENA",
+    "ambientColor": "#aaafb6",
+    "ambientStrength": 1.75,
+    "directionalStrength": 0.75,
+    "fogDepth": 30,
+    "sunAngles": [
+      80,
+      190
+    ],
+    "instantTransition": true
+  },
+  {
     "area": "GOBLIN_VILLAGE_COOKS_CHAMBER",
     "allowSkyOverride": false,
     "ambientColor": "#aaafb6",
