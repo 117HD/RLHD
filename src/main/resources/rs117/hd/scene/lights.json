@@ -19530,10 +19530,13 @@
     ]
   },
   {
-    "description": "THE_NIGHTMARE_INACTIVE",
-    "height": 100,
+    "description": "Nightmare of Ashihama - Encounter Active",
+    "height": 125,
     "alignment": "CENTER",
-    "radius": 1200,
+    "radius": 1500,
+    "spawnDelay": 2000,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 2000,
     "strength": 15,
     "color": [
       255,
@@ -19541,14 +19544,153 @@
       166
     ],
     "type": "PULSE",
-    "duration": 1950,
-    "range": 20,
+    "duration": 2300,
+    "range": 8,
     "npcIds": [
       9461,
       9462,
       9463,
       9464
     ]
+  },
+  {
+    "description": "Nightmare of Ashihama - Pool of Nightmares - Main",
+    "height": 200,
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 10,
+    "color": [
+      255,
+      0,
+      166
+    ],
+    "type": "PULSE",
+    "duration": 2950,
+    "range": 10,
+    "objectIds": [ 29706 ]
+  },
+  {
+    "description": "Nightmare of Ashihama - Pool of Nightmares - Highlight South",
+    "offset": [ 100, 75, 0 ],
+    "radius": 200,
+    "strength": 10,
+    "color": [
+      255,
+      0,
+      166
+    ],
+    "type": "STATIC",
+    "objectIds": [ 29706 ]
+  },
+  {
+    "description": "Nightmare of Ashihama - Pool of Nightmares - Highlight North",
+    "offset": [ -100, 60, 0 ],
+    "radius": 200,
+    "strength": 10,
+    "color": [
+      255,
+      0,
+      166
+    ],
+    "type": "STATIC",
+    "objectIds": [ 29706 ]
+  },
+  {
+    "description": "Nightmare of Ashihama - Pool of Nightmares - Highlight East",
+    "offset": [ 0, 75, 100 ],
+    "radius": 200,
+    "strength": 10,
+    "color": [
+      255,
+      0,
+      166
+    ],
+    "type": "STATIC",
+    "objectIds": [ 29706 ]
+  },
+  {
+    "description": "Nightmare of Ashihama - Pool of Nightmares - Highlight West",
+    "offset": [ 0, 75, -100 ],
+    "radius": 200,
+    "strength": 10,
+    "color": [
+      255,
+      0,
+      166
+    ],
+    "type": "STATIC",
+    "objectIds": [ 29706 ]
+  },
+  {
+    "description": "Nightmare of Ashihama - Energy Barrier 1",
+    "offset": [ 0, 200, 150 ],
+    "radius": 600,
+    "strength": 18,
+    "color": [
+      255,
+      0,
+      166
+    ],
+    "type": "PULSE",
+    "duration": 2000,
+    "range": 7,
+    "objectIds": [
+      37730,
+      37731
+    ]
+  },
+  {
+    "description": "Nightmare of Ashihama - Energy Barrier 2",
+    "offset": [ 0, 200, -150 ],
+    "radius": 600,
+    "strength": 10,
+    "color": [
+      255,
+      0,
+      166
+    ],
+    "type": "PULSE",
+    "duration": 750,
+    "range": 7,
+    "objectIds": [
+      37730,
+      37731
+    ]
+  },
+  {
+    "description": "Nightmare of Ashihama - Magic Projectile",
+    "offset": [ 0, -50, 0 ],
+    "radius": 250,
+    "strength": 10,
+    "fadeInDuration": 50,
+    "fadeOutDuration": 200,
+    "color": [
+      255,
+      0,
+      166
+    ],
+    "type": "PULSE",
+    "duration": 1750,
+    "range": 20,
+    "projectileIds": [ 1764 ]
+  },
+  {
+    "description": "Nightmare of Ashihama - Charged Totem",
+    "offset": [ 200, 1100, 200 ],
+    "radius": 2000,
+    "spawnDelay": 200,
+    "strength": 20,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 300,
+    "color": [
+      0,
+      128,
+      128
+    ],
+    "type": "PULSE",
+    "duration": 1750,
+    "range": 7,
+    "npcIds": [ 9445, 9442, 9439, 9436 ]
   },
   {
     "description": "FIRE_GIANT",
