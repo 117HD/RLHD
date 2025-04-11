@@ -1717,20 +1717,9 @@
       196
     ],
     "groundMaterial": "ICE_4",
-    "shiftLightness": 5
-  },
-  {
-    "name": "ASGARNIA_ICE_DUNGEON Snow Tiles Fix 2",
-    "area": "ASGARNIA_ICE_DUNGEON_SNOW_FIX_2",
-    "overlayIds": [
-      0,
-      59,
-      263
-    ],
-    "underlayIds": [
-      59
-    ],
-    "groundMaterial": "SNOW_2"
+    "shiftLightness": 5,
+    "uvScale": 2,
+    "uvOrientation": -100
   },
   {
     "name": "ASGARNIA_ICE_DUNGEON Snow Tiles Fix",
@@ -1750,6 +1739,19 @@
     "description": "For when ground blending is DISABLED",
     "groundMaterial": "SNOW_2",
     "shiftLightness": 0
+  },
+  {
+    "name": "ASGARNIA_ICE_DUNGEON Snow Tiles Fix 2",
+    "area": "ASGARNIA_ICE_DUNGEON_SNOW_FIX_2",
+    "overlayIds": [
+      0,
+      59,
+      263
+    ],
+    "underlayIds": [
+      59
+    ],
+    "groundMaterial": "SNOW_2"
   },
   {
     "name": "ASGARNIA_ICE_DUNGEON Ice Tiles Fix",

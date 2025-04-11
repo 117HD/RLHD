@@ -23564,6 +23564,85 @@
     ]
   },
   {
+    "description": "Asgarnia Ice Dungeon - Ice Spikes",
+    "baseMaterial": "ICE_1_HIGHGLOSS",
+    "objectIds": [
+      55982,
+      55983,
+      55984,
+      55985,
+      27889,
+      27890,
+      55980,
+      55981
+    ],
+    "shadowOpacityThreshold": 0.9
+  },
+  {
+    "description": "Asgarnia Ice Dungeon - Scoreboard",
+    "baseMaterial": "ICE_1_HIGHGLOSS",
+    "objectIds": [
+      56004
+    ],
+    "shadowOpacityThreshold": 0.9,
+    "colorOverrides": [
+      {
+        "colors": "h == 37",
+        "baseMaterial": "ROCK_3",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      },
+      {
+        "colors": "s == 0",
+        "baseMaterial": "SNOW_1",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Asgarnia Ice Dungeon - Frozen Throne",
+    "baseMaterial": "ICE_1_HIGHGLOSS",
+    "objectIds": [
+      55979
+    ],
+    "shadowOpacityThreshold": 0.9,
+    "colorOverrides": [
+      {
+        "colors": ["s == 0","s == 1"],
+        "baseMaterial": "SNOW_1",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Asgarnia Ice Dungeon - Ice Floes",
+    "baseMaterial": "SNOW_3",
+    "objectIds": [
+      56021,
+      56022,
+      56023,
+      56024,
+      56025
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.3
+  },
+  {
+    "description": "Asgarnia Ice Dungeon - Ice Trim",
+    "baseMaterial": "ICE_4",
+    "objectIds": [
+      56014,
+      56015,
+      56016,
+      56017,
+      56018,
+      56019,
+      56020
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
+  },
+  {
     "description": "Kraken Cove, Royal Trouble and Lizardman Caves  - Walls",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
