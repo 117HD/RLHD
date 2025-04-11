@@ -4175,6 +4175,7 @@
       25108,
       25109,
       25110,
+      25111,
       25112,
       25113,
       25114,
@@ -4258,49 +4259,85 @@
   },
   {
     "description": "CAVE_WALLS_BLEND",
-    "baseMaterial": "ROCK_2",
+    "baseMaterial": "ROCK_3",
     "objectIds": [
+      2606,
       17210,
       17211,
       17215,
       17216,
       17217,
+      25099,
+      25100,
+      25101,
+      25039,
       25049,
       25050,
       25051,
       25052,
-      25053,
-      25054,
-      25055,
-      25056,
       25059,
       25060,
       25061,
       25062,
       25063,
       25064,
-      29634
+      29634,
+      32163,
+      32164,
+      55904,
+      55906,
+      55973,
+      55988,
+      55976,
+      55977,
+      55978,
+      25140
     ],
-    "flatNormals": true,
-    "uvType": "BOX"
+    "uvType": "BOX",
+    "uvScale": 0.75
+  },
+  {
+    "description": "CAVE_WALLS_LANTERN",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      25053,
+      25054,
+      25055,
+      25056
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75
+  },
+  {
+    "description": "Asgarnia Ice Dungeon Lantern Wall - Darken so they match adjacent walls",
+    "baseMaterial": "ROCK_3_MEDIUM_DARK",
+    "areas": [ "ASGARNIA_ICE_DUNGEON" ],
+    "objectIds": [
+      25053,
+      25054,
+      25055,
+      25056
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75
   },
   {
     "description": "CAVE_WALLS_BLEND_TUNNEL",
-    "baseMaterial": "ROCK_2",
+    "baseMaterial": "ROCK_3",
     "objectIds": [ 30174, 30175 ],
-    "flatNormals": true,
-    "uvType": "BOX"
+    "uvType": "BOX",
+    "uvScale": 0.75
   },
   {
     "description": "CAVE_WALL_ABOVE_FLOOR_TILE",
-    "baseMaterial": "ROCK_2",
+    "baseMaterial": "ROCK_3",
     "objectIds": [
       17224,
       25057,
       25058
     ],
-    "flatNormals": true,
-    "uvType": "MODEL_XZ"
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 400
   },
   {
     "description": "Hide weird wall piece above other walls in Canifis pub basement",
@@ -7459,7 +7496,7 @@
   },
   {
     "description": "Wyvern Shortcut",
-    "baseMaterial": "GRUNGE_1",
+    "baseMaterial": "ROCK_3",
     "objectIds": [
       42506,
       53250
@@ -23430,9 +23467,11 @@
       10595,
       10596,
       10597,
+      10599,
       10600,
       42507,
-      53251
+      53251,
+      55986
     ],
     "uvType": "BOX"
   },
