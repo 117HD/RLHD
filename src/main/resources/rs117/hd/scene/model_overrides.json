@@ -4322,6 +4322,16 @@
     "uvScale": 0.75
   },
   {
+    "description": "Try to fix the cave walls from looking like cardboard cutouts",
+    "baseMaterial": "ROCK_3",
+    "areas": [ "ASGARNIA_ICE_DUNGEON" ],
+    "objectIds": [
+      37491
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75
+  },
+  {
     "description": "CAVE_WALLS_BLEND_TUNNEL",
     "baseMaterial": "ROCK_3",
     "objectIds": [ 30174, 30175 ],
