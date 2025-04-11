@@ -533,9 +533,9 @@
     "area": "MOTHERLODE_MINE",
     "ambientColor": "#aaafb6",
     "ambientStrength": 4,
-    "directionalStrength": 1,
+    "directionalStrength": 0.5,
     "sunAngles": [
-      80,
+      75,
       190
     ],
     "fogColor": "#241809",
