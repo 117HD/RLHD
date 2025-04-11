@@ -23539,7 +23539,8 @@
     "baseMaterial": "MUD_1_DARK",
     "objectIds": [
       37573,
-      42506
+      42506,
+      55987
     ],
     "uvType": "BOX",
     "colorOverrides": [
@@ -23576,9 +23577,9 @@
     "colorOverrides": [
       {
         "colors": "h == 37",
-        "baseMaterial": "ROCK_3",
+        "baseMaterial": "STONE_NORMALED",
         "uvType": "BOX",
-        "uvScale": 0.75
+        "uvScale": 1.2
       },
       {
         "colors": "s == 0",

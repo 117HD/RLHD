@@ -1397,7 +1397,7 @@
     "ambientColor": "#aaafb6",
     "ambientStrength": 1.75,
     "directionalStrength": 0.75,
-    "fogDepth": 30,
+    "fogDepth": 50,
     "sunAngles": [
       80,
       190
