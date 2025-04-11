@@ -23494,6 +23494,76 @@
     "uvScale": 0.55
   },
   {
+    "description": "Asgarnia Ice Dungeon - Muddy Walls",
+    "baseMaterial": "MUD_1",
+    "objectIds": [
+      37568,
+      37569,
+      37572,
+      37580,
+      41413,
+      41414,
+      41415,
+      50707,
+      50709,
+      53228,
+      55901
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Asgarnia Ice Dungeon - Muddy Walls Blending to Ice",
+    "baseMaterial": "SNOW_1",
+    "objectIds": [
+      37566,
+      37567,
+      37571
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "colors": " h == 7",
+        "baseMaterial": "MUD_1",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Asgarnia Ice Dungeon - Muddy Walls Blending to Rock",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      55908,
+      55974,
+      55975
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "colors": " h == 7",
+        "baseMaterial": "MUD_1",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Asgarnia Ice Dungeon - Muddly Lantern Wall - Darken so it blends in with adjacent walls",
+    "baseMaterial": "MUD_1_DARK",
+    "objectIds": [
+      37573
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": " h == 6 && s > 1",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
     "description": "Kraken Cove, Royal Trouble and Lizardman Caves  - Walls",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [

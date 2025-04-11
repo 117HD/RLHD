@@ -20754,6 +20754,23 @@
     ]
   },
   {
+    "description": "MINE_LANTERN_2",
+    "offset": [ -10, 120, 70 ],
+    "radius": 400,
+    "strength": 6.3,
+    "color": [
+      252,
+      208,
+      104
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      37573
+    ]
+  },
+  {
     "description": "ZANARIS_MUSHROOM_RED",
     "height": 100,
     "alignment": "CENTER",
