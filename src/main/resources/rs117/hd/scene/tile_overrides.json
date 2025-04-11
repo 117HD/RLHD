@@ -6567,6 +6567,14 @@
     "uvScale": 0.5
   },
   {
+    "name": "TOB_VERZIK_CARPET",
+    "area": "THEATRE_OF_BLOOD_VERZIK",
+    "overlayIds": [
+      103
+    ],
+    "groundMaterial": "CARPET"
+  },
+  {
     "name": "OVERWORLD_GRASS_UNDERLAY",
     "area": "OVERWORLD",
     "underlayIds": [
