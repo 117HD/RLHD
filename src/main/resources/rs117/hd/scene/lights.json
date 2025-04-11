@@ -35769,5 +35769,61 @@
     "type": "STATIC",
     "duration": 1000,
     "range": 0.2
+  },
+  {
+    "description": "Asgarnia Ice Dungeon - Royal Titans Lava 1",
+    "worldX": 2908,
+    "worldY": 9570,
+    "plane": 0,
+    "height": 420,
+    "alignment": "CENTER",
+    "radius": 800,
+    "strength": 30,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "PULSE",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Asgarnia Ice Dungeon - Royal Titans Lava 2",
+    "worldX": 2908,
+    "worldY": 9565,
+    "plane": 0,
+    "height": 520,
+    "alignment": "CENTER",
+    "radius": 900,
+    "strength": 30,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "PULSE",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "FIRE",
+    "height": 100,
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 15.5,
+    "fadeInDuration": 10,
+    "fadeOutDuration": 100,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      56001
+    ]
   }
 ]
