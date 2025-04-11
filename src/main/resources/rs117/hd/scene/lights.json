@@ -20757,7 +20757,7 @@
     "description": "MINE_LANTERN_2",
     "offset": [ -10, 120, 70 ],
     "radius": 400,
-    "strength": 6.3,
+    "strength": 8.3,
     "color": [
       252,
       208,

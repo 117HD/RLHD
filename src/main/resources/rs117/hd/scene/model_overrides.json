@@ -7498,7 +7498,6 @@
     "description": "Wyvern Shortcut",
     "baseMaterial": "ROCK_3",
     "objectIds": [
-      42506,
       53250
     ],
     "uvType": "BOX",
@@ -23548,10 +23547,11 @@
     ]
   },
   {
-    "description": "Asgarnia Ice Dungeon - Muddly Lantern Wall - Darken so it blends in with adjacent walls",
+    "description": "Asgarnia Ice Dungeon - Muddly Wall - Darken so it blends in with adjacent walls",
     "baseMaterial": "MUD_1_DARK",
     "objectIds": [
-      37573
+      37573,
+      42506
     ],
     "uvType": "BOX",
     "colorOverrides": [

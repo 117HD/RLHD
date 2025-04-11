@@ -1711,6 +1711,27 @@
     "groundMaterial": "VERTICAL_DIRT"
   },
   {
+    "name": "ASGARNIA_ICE_DUNGEON_SNOW_FIX",
+    "area": "ASGARNIA_ICE_DUNGEON_SNOW_FIX",
+    "overlayIds": [
+      0,
+      59,
+      263
+    ],
+    "underlayIds": [
+      59
+    ],
+    "groundMaterial": "SNOW_2"
+  },
+  {
+    "name": "ASGARNIA_ICE_DUNGEON_ICE_FIX",
+    "area": "ASGARNIA_ICE_DUNGEON_ICE_FIX",
+    "overlayIds": [
+      409
+    ],
+    "groundMaterial": "ICE_1_HIGHGLOSS"
+  },
+  {
     "name": "ICE_QUEENS_SYMBOL",
     "area": "ICE_QUEENS_DUNGEON",
     "overlayIds": [
