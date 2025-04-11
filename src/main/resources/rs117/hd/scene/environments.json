@@ -1373,7 +1373,11 @@
     "area": "ASGARNIA_ICE_DUNGEON_SNOWY",
     "ambientColor": "#aaafb6",
     "ambientStrength": 0.75,
-    "directionalStrength": 0.65,
+    "directionalStrength": 0.75,
+    "sunAngles": [
+      80,
+      190
+    ],
     "fogColor": "#adc5e4",
     "fogDepth": 68
   },
@@ -1382,7 +1386,11 @@
     "ambientColor": "#aaafb6",
     "ambientStrength": 1.75,
     "directionalStrength": 0.75,
-    "fogDepth": 30
+    "fogDepth": 30,
+    "sunAngles": [
+      80,
+      190
+    ]
   },
   {
     "area": "GOBLIN_VILLAGE_COOKS_CHAMBER",
