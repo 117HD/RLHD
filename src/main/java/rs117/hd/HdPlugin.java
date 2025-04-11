@@ -122,6 +122,8 @@ import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.GpuIntBuffer;
+import rs117.hd.opengl.ShaderManager;
+import rs117.hd.scene.SceneRenderer;
 
 import static net.runelite.api.Constants.SCENE_SIZE;
 import static net.runelite.api.Constants.*;
@@ -490,6 +492,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private int gameTicksUntilSceneReload = 0;
 	private long colorFilterChangedAt;
 
+	@Inject
+	private ShaderManager shaderManager;
+
+	@Inject
+	private SceneRenderer sceneRenderer;
+
 	@Provides
 	HdPluginConfig provideConfig(ConfigManager configManager) {
 		return configManager.getConfig(HdPluginConfig.class);
@@ -501,6 +509,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		clientThread.invoke(() -> {
 			try {
+				shaderManager.loadShaders();
 				if (!textureManager.vanillaTexturesAvailable())
 					return false;
 
@@ -742,6 +751,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			if (client.getGameState() == GameState.LOGGED_IN)
 				client.setGameState(GameState.LOADING);
 		});
+
+		shaderManager.destroyShaders();
 	}
 
 	public void stopPlugin()
@@ -3511,5 +3522,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				return true;
 			}
 		);
+	}
+
+	private void renderScene() {
+		sceneRenderer.startFrame();
+		Scene scene = client.getScene();
+		sceneRenderer.renderScene(scene);
 	}
 }
