@@ -35773,37 +35773,127 @@
   {
     "description": "Asgarnia Ice Dungeon - Royal Titans Lava 1",
     "worldX": 2908,
-    "worldY": 9570,
+    "worldY": 9573,
     "plane": 0,
-    "height": 420,
+    "height": 220,
     "alignment": "CENTER",
-    "radius": 800,
-    "strength": 30,
+    "radius": 300,
+    "strength": 10,
     "color": [
       253.63197,
       182.39111,
       33.847893
     ],
     "type": "PULSE",
-    "duration": 7000,
+    "duration": 1100,
     "range": 10
   },
   {
     "description": "Asgarnia Ice Dungeon - Royal Titans Lava 2",
     "worldX": 2908,
-    "worldY": 9565,
+    "worldY": 9571,
     "plane": 0,
-    "height": 520,
+    "height": 220,
     "alignment": "CENTER",
-    "radius": 900,
-    "strength": 30,
+    "radius": 300,
+    "strength": 10,
     "color": [
       253.63197,
       182.39111,
       33.847893
     ],
     "type": "PULSE",
-    "duration": 7000,
+    "duration": 1050,
+    "range": 10
+  },
+  {
+    "description": "Asgarnia Ice Dungeon - Royal Titans Lava 3",
+    "worldX": 2908,
+    "worldY": 9569,
+    "plane": 0,
+    "height": 220,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 10,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "PULSE",
+    "duration": 1250,
+    "range": 10
+  },
+  {
+    "description": "Asgarnia Ice Dungeon - Royal Titans Lava 4",
+    "worldX": 2908,
+    "worldY": 9567,
+    "plane": 0,
+    "height": 220,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 10,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "PULSE",
+    "duration": 1150,
+    "range": 10
+  },
+  {
+    "description": "Asgarnia Ice Dungeon - Royal Titans Lava 5",
+    "worldX": 2908,
+    "worldY": 9565,
+    "plane": 0,
+    "height": 220,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 10,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "PULSE",
+    "duration": 1200,
+    "range": 10
+  },
+  {
+    "description": "Asgarnia Ice Dungeon - Royal Titans Lava 6",
+    "worldX": 2908,
+    "worldY": 9563,
+    "plane": 0,
+    "height": 220,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 10,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "PULSE",
+    "duration": 1100,
+    "range": 10
+  },
+  {
+    "description": "Asgarnia Ice Dungeon - Royal Titans Lava 7",
+    "worldX": 2908,
+    "worldY": 9561,
+    "plane": 0,
+    "height": 220,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 10,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "PULSE",
+    "duration": 1075,
     "range": 10
   },
   {
@@ -35825,5 +35915,153 @@
     "objectIds": [
       56001
     ]
+  },
+  {
+    "description": "Royal Titans - Branda Body Light Front",
+    "offset": [ 0, 300, 0 ],
+    "radius": 700,
+    "strength": 20,
+    "color": [
+      255,
+      124,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "npcIds": [ 12596 ],
+    "fadeInDuration": 100,
+    "fadeOutDuration": 400
+  },
+  {
+    "description": "Royal Titans - Branda Body Light Back",
+    "offset": [ 0, 350, -150 ],
+    "radius": 700,
+    "strength": 12,
+    "color": [
+      255,
+      124,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "npcIds": [ 12596 ],
+    "fadeInDuration": 100,
+    "fadeOutDuration": 400
+  },
+  {
+    "description": "Royal Titans - Branda Body Light Top",
+    "offset": [ 0, 550, 0 ],
+    "radius": 400,
+    "strength": 15,
+    "color": [
+      255,
+      124,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "npcIds": [ 12596 ],
+    "fadeInDuration": 100,
+    "fadeOutDuration": 400
+  },
+  {
+    "description": "Royal Titans - Branda Respawn",
+    "offset": [ 0, 250, 0 ],
+    "radius": 800,
+    "strength": 20,
+    "color": [
+      255,
+      124,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "npcIds": [ 14148 ],
+    "animationIds": [ 11992 ],
+    "fadeInDuration": 400,
+    "fadeOutDuration": 100
+  },
+  {
+    "description": "Royal Titans - Eldric Body Light Front",
+    "offset": [ 0, 300, 70 ],
+    "radius": 600,
+    "strength": 4,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "npcIds": [ 14147 ],
+    "fadeInDuration": 100,
+    "fadeOutDuration": 400
+  },
+  {
+    "description": "Royal Titans - Eldric Body Light Back",
+    "offset": [ 0, 350, -180 ],
+    "radius": 600,
+    "strength": 1.5,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "npcIds": [ 14147 ],
+    "fadeInDuration": 100,
+    "fadeOutDuration": 400
+  },
+  {
+    "description": "Royal Titans - Eldric Body Light Top",
+    "offset": [ 0, 550, 0 ],
+    "radius": 400,
+    "strength": 1,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "npcIds": [ 14147 ],
+    "fadeInDuration": 100,
+    "fadeOutDuration": 400
+  },
+  {
+    "description": "Royal Titans - Fire Elemental",
+    "offset": [ 0, 100, 0 ],
+    "radius": 150,
+    "strength": 20,
+    "color": [
+      255,
+      124,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "npcIds": [ 14150 ],
+    "animationIds": [ -1, 11947, 11956 ],
+    "fadeInDuration": 100,
+    "fadeOutDuration": 200
+  },
+  {
+    "description": "Royal Titans - Ice Elemental",
+    "offset": [ 0, 150, 10 ],
+    "radius": 225,
+    "strength": 15,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "npcIds": [ 14151 ],
+    "animationIds": [ -1, 11950, 11954 ],
+    "fadeInDuration": 100,
+    "fadeOutDuration": 200
   }
 ]
