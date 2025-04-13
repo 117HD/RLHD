@@ -35970,7 +35970,7 @@
   {
     "description": "Royal Titans - Branda Respawn",
     "offset": [ 0, 250, 0 ],
-    "radius": 800,
+    "radius": 650,
     "strength": 20,
     "color": [
       255,
@@ -35983,7 +35983,9 @@
     "npcIds": [ 14148 ],
     "animationIds": [ 11992 ],
     "fadeInDuration": 400,
-    "fadeOutDuration": 100
+    "fixedDespawnTime": true,
+    "despawnDelay": 3100,
+    "fadeOutDuration": 600
   },
   {
     "description": "Royal Titans - Eldric Body Light Front",
