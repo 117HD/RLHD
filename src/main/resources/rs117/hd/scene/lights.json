@@ -36065,5 +36065,41 @@
     "animationIds": [ -1, 11950, 11954 ],
     "fadeInDuration": 100,
     "fadeOutDuration": 200
+  },
+  {
+    "description": "Royal Titans - Ice",
+    "offset": [ 0, 100, 10 ],
+    "radius": 175,
+    "strength": 15,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "graphicsObjectIds": [ 3226 ],
+    "fixedDespawnTime": true,
+    "despawnDelay": 1300,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 600
+  },
+  {
+    "description": "Giantsoul Amulet Teleport - Fire",
+    "offset": [ 0, 225, 10 ],
+    "radius": 200,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "graphicsObjectIds": [ 3226 ],
+    "fixedDespawnTime": true,
+    "despawnDelay": 1300,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 600
   }
 ]
