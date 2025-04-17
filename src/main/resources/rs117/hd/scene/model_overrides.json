@@ -12894,11 +12894,23 @@
     "baseMaterial": "BURLAP",
     "objectIds": [
       12392,
-      16871
+      16869,
+      16871,
+      52583
     ],
     "uvType": "BOX",
     "uvOrientation": 256,
-    "uvScale": 0.6
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "colors": [ "h < 4" ],
+        "baseMaterial": "METALLIC_1_LIGHT"
+      },
+      {
+        "colors": [ "h == 8" ],
+        "baseMaterial": "HD_HAY"
+      }
+    ]
   },
   {
     "description": "Sack",
@@ -23700,6 +23712,15 @@
       56012
     ],
     "uvType": "BOX"
+  },
+  {
+    "description": "Campfire",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      46421
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.4
   },
   {
     "description": "Kraken Cove, Royal Trouble and Lizardman Caves  - Walls",
