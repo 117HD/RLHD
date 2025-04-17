@@ -8582,6 +8582,51 @@
     "uvOrientationY": 512
   },
   {
+    "description": "Wooden Crate",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      22426
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75
+  },
+  {
+    "description": "Wooden Crate - Rotated Texture 90 Degrees",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      16564,
+      16565
+    ],
+    "uvOrientation": 512,
+    "uvScale": 0.75,
+    "uvType": "BOX"
+  },
+  {
+    "description": "Wooden Crate - Stacked with Mismatching Top Faces",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      10161
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 75
+  },
+  {
+    "description": "Objects - Wooden - Barrel with Metal Band",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      16566
+    ],
+    "uvOrientation": 100,
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && s < 2",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
     "description": "Metallic - Ground - Armor",
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
