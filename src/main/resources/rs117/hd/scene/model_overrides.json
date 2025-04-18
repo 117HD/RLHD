@@ -4294,7 +4294,13 @@
       25140
     ],
     "uvType": "BOX",
-    "uvScale": 0.75
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "colors": 2,
+        "baseMaterial": "BLACK"
+      }
+    ]
   },
   {
     "description": "CAVE_WALLS_LANTERN",
@@ -4329,7 +4335,13 @@
       37491
     ],
     "uvType": "BOX",
-    "uvScale": 0.75
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "colors": 2,
+        "baseMaterial": "BLACK"
+      }
+    ]
   },
   {
     "description": "CAVE_WALLS_BLEND_TUNNEL",
@@ -23524,10 +23536,24 @@
       10599,
       10600,
       42507,
-      53251,
+      53251
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": 2,
+        "baseMaterial": "BLACK"
+      }
+    ]
+  },
+  {
+    "description": "Asgarnia Ice Dungeon - Royal Titans Boss Entrance",
+    "baseMaterial": "SNOW_1",
+    "objectIds": [
       55986
     ],
-    "uvType": "BOX"
+    "uvType": "BOX",
+    "castShadows": false
   },
   {
     "description": "Asgarnia Ice Dungeon - Ice Stairs",
@@ -23563,7 +23589,13 @@
       53228,
       55901
     ],
-    "uvType": "BOX"
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": 2,
+        "baseMaterial": "BLACK"
+      }
+    ]
   },
   {
     "description": "Asgarnia Ice Dungeon - Muddy Walls Blending to Ice",
@@ -23580,6 +23612,10 @@
         "colors": " h == 7",
         "baseMaterial": "MUD_1",
         "uvType": "BOX"
+      },
+      {
+        "colors": 2,
+        "baseMaterial": "BLACK"
       }
     ]
   },
@@ -23598,6 +23634,10 @@
         "colors": " h == 7",
         "baseMaterial": "MUD_1",
         "uvType": "BOX"
+      },
+      {
+        "colors": 2,
+        "baseMaterial": "BLACK"
       }
     ]
   },
@@ -23616,6 +23656,10 @@
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
         "uvScale": 0.8
+      },
+      {
+        "colors": 2,
+        "baseMaterial": "BLACK"
       }
     ]
   },
