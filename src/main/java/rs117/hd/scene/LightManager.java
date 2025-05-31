@@ -250,8 +250,7 @@ public class LightManager {
 						var animation = light.projectile.getAnimation();
 						parentExists = animation != null && light.def.animationIds.contains(animation.getId());
 					}
-					light.orientation = (int) Math.round(
-						Math.atan2(light.projectile.getVelocityZ(), light.projectile.getVelocityX()) / UNIT);
+					light.orientation = light.projectile.getOrientation();
 				}
 			} else if (light.graphicsObject != null) {
 				light.origin[0] = light.graphicsObject.getLocation().getX();
