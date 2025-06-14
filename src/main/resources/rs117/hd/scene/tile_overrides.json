@@ -1929,8 +1929,8 @@
     "shiftLightness": 2
   },
   {
-    "name": "Glarials Tomb floor",
-    "area": "Glarials Tomb Dungeon",
+    "name": "Glarial's Tomb floor",
+    "area": "Glarial's Tomb Dungeon",
     "underlayIds": [
       48,
       67

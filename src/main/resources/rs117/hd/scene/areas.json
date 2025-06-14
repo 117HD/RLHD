@@ -4614,11 +4614,11 @@
   },
   {
     "name": "Tree Gnome Village dungeon",
-    "regions": [ 10309, 10133],
+    "regions": [ 10309, 10133 ],
     "hideOtherAreas": true
   },
   {
-    "name": "Glarials Tomb Dungeon",
+    "name": "Glarial's Tomb Dungeon",
     "regions": [ 10137 ],
     "hideOtherAreas": true
   },
