@@ -5445,7 +5445,8 @@
   {
     "name": "KHARID_GRASS",
     "groundMaterial": "OVERWORLD_GRASS_1",
-    "maxLightness": 50
+    "maxLightness": 50,
+    "shiftHue": -1
   },
   {
     "name": "KHARID_DESERT_SAND",
@@ -5474,12 +5475,13 @@
     "maxSaturation": 3
   },
   {
-    "name": "KHARID_SAND_1",
+    "name": "KHARID_SAND",
     "area": "KHARID_DESERT_REGION",
     "groundMaterial": "SAND",
     "maxLightness": 60,
     "shiftHue": -2,
-    "minHue": 6,
+    "shiftSaturation": 1,
+    "maxSaturation": 4,
     "underlayIds": [
       45,
       49,
@@ -5499,9 +5501,6 @@
       129
     ],
     "replacements": {
-      "KHARID_DIRTY_SAND": [
-        "h == 8 && s == 4"
-      ],
       "KHARID_GRASS": [
         "h > 11",
         "h > 9 && s > 3",
@@ -5509,7 +5508,6 @@
       ],
       "KHARID_DIRT": [
         "h < 8",
-        "h == 8 && s > 4",
         "h == 9 && s == 4"
       ]
     }
