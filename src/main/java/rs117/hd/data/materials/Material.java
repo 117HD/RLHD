@@ -417,6 +417,7 @@ public enum Material {
 		.setFlowMapStrength(0.2f)
 		.setFlowMapDuration(new float[] { 12, -12 })
 	),
+	WATER_FLAT_FORCE(WATER_FLAT, p -> p.setOverrideBaseColor(true)),
 	MOTHERLODE_MINE_WATER(WATER_FLAT, p -> p
 		.setFlowMap(UNDERWATER_FLOW_MAP)
 		.setFlowMapStrength(0.3f)
