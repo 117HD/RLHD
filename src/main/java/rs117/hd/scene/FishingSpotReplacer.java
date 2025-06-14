@@ -97,9 +97,9 @@ public class FishingSpotReplacer {
 
 		// Update the location of active fishing spots to match their corresponding NPC's current position
 		npcIndexToModel.forEach((index, runeLiteObject) -> {
-			NPC npc = client.getCachedNPCs()[index];
+			NPC npc = client.getTopLevelWorldView().npcs().byIndex(index);
 			if (npc != null)
-				runeLiteObject.setLocation(npc.getLocalLocation(), client.getPlane());
+				runeLiteObject.setLocation(npc.getLocalLocation(), client.getTopLevelWorldView().getPlane());
 		});
 
 		frameTimer.end(Timer.REPLACE_FISHING_SPOTS);
