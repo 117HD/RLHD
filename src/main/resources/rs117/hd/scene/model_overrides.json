@@ -6225,6 +6225,7 @@
     "description": "Wooden - Plank - Tables - Rotated",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
+      595,
       2649,
       7175,
       9613,
@@ -15843,7 +15844,7 @@
   {
     "description": "Wooden crates, Wooden table, wooden rack",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 356, 595, 647 ],
+    "objectIds": [ 356, 647 ],
     "flatNormals": true,
     "uvType": "BOX",
     "retainVanillaUvs": false,
@@ -23376,6 +23377,8 @@
     "description": "Skeleton named corpse",
     "baseMaterial": "BONE",
     "objectIds": [
+      661,
+      662,
       2176,
       4983,
       21802,
@@ -25198,6 +25201,8 @@
     "objectIds": [
       7176,
       9523,
+      12539,
+      12540,
       15461
     ],
     "uvType": "BOX",
@@ -27833,6 +27838,111 @@
     "objectIds": [
       9473,
       9474
+    ]
+  },
+  {
+    "description": "Game Objects - Wooden Shelf With Book and Urns",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Urns",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvOrientationX": 84
+      },
+      {
+        "description": "Book cover",
+        "colors": "h == 4",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvOrientationX": 84
+      },
+      {
+        "description": "Paper",
+        "colors": "l > 60",
+        "baseMaterial": "GRAY_75"
+      }
+    ],
+    "objectIds": [
+      1021
+    ]
+  },
+  {
+    "description": "Mizgog Table",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "objectIds": [
+      16169,
+      16170
+    ]
+  },
+  {
+    "description": "Textured table with dishes",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvScale": 0.5,
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "objectIds": [
+      603
+    ]
+  },
+  {
+    "description": "Double bed with red blanket and bed frame",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      427
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Pillow and sheet",
+        "colors": "h == 0 || h == 10 && s == 0",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Red blanket",
+        "colors": "h == 0 && s == 7",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Golden decoration",
+        "colors": "h == 10 && s == 7",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvOrientation": 84
+      },
+      {
+        "description": "Golden trim on blanket",
+        "colors": "h == 8",
+        "baseMaterial": "ROPE",
+        "uvType": "MODEL_YZ",
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Single bed with gray blanket",
+    "baseMaterial": "CARPET",
+    "objectIds": [
+      417
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "description": "Golden trim on blanket",
+        "colors": "h == 8",
+        "baseMaterial": "ROPE",
+        "uvType": "MODEL_YZ",
+        "uvOrientation": 512
+      }
     ]
   }
 ]
