@@ -27854,7 +27854,7 @@
       },
       {
         "description": "Book cover",
-        "colors": "h == 4 ",
+        "colors": "h == 4",
         "baseMaterial": "GRUNGE_3",
         "uvType": "BOX",
         "uvOrientationX": 84
