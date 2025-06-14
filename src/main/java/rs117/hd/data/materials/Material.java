@@ -434,6 +434,10 @@ public enum Material {
 		.setScroll(0, 1.4f)
 		.setFlowMapDuration(new float[] { 10, -14 })
 	),
+	GRUNGE_3_DULL(GRUNGE_3, p -> p
+		.setNormalMap(null)
+		.setSpecular(0, 0)
+	),
 	ROCK_1_N,
 	ROCK_1(p -> p
 		.setNormalMap(ROCK_1_N)
@@ -602,8 +606,11 @@ public enum Material {
 	BARK_STONEPINE_N,
 	BARK_STONEPINE(p -> p
 		.setNormalMap(BARK_STONEPINE_N)
+		.setSpecular(0.3f, 30)),
+	BARK_STONEPINE_2(p -> p
+		.setNormalMap(BARK_STONEPINE_N)
 		.setSpecular(0.3f, 30)
-	),
+		.setBrightness(1.75f)),
 	LIGHT_BARK_STONEPINE(BARK_STONEPINE, p -> p.setBrightness(1.75f)),
 	LEAF_VEINS,
 	LEAF_VEINS_LIGHT(LEAF_VEINS, p -> p.setBrightness(1.2f)),

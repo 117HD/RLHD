@@ -18159,7 +18159,7 @@
   },
   {
     "description": "Magic Tree",
-    "baseMaterial": "BARK",
+    "baseMaterial": "BARK_STONEPINE",
     "objectIds": [
       4537, 5127, 8396,
       8397, 8398, 8399,
@@ -18168,7 +18168,72 @@
       8406, 8407, 8408, 8409, 10834
     ],
     "uvType": "BOX",
-    "uvScale": 0.8
+    "uvOrientation": 150,
+    "uvScale": 0.35
+  },
+  {
+    "description": "Magic Tree Stump",
+    "baseMaterial": "BARK_STONEPINE",
+    "objectIds": [
+      9713
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 150,
+    "uvScale": 0.35,
+    "colorOverrides": [
+      {
+        "colors": "h == 28 || h == 30 || h == 31",
+        "baseMaterial": "GRUNGE_1"
+      }
+    ]
+  },
+  {
+    "description": "Woodcutting Guild - Redwood Tree Bark",
+    "baseMaterial": "BARK_STONEPINE_2",
+    "objectIds": [
+      29668,
+      29669,
+      29670,
+      29671,
+      29673,
+      29674,
+      29675,
+      29676,
+      29677,
+      29678,
+      29679,
+      29681,
+      29683,
+      29682,
+      29684
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.2,
+    "uvOrientation": 70,
+    "colorOverrides": [
+      {
+        "colors": "h == 10 || h == 4",
+        "baseMaterial": "GRUNGE_3_DULL"
+      }
+    ]
+  },
+  {
+    "description": "Woodcutting Guild - Redwood Tree Top Leaves",
+    "baseMaterial": "GRUNGE_3_DULL",
+    "objectIds": [
+      29693,
+      29694,
+      29695,
+      29696,
+      29697,
+      29698,
+      29699,
+      29700,
+      29701,
+      29702,
+      29703,
+      29704
+    ]
   },
   {
     "description": "Guardians Of the Rift - Rocks - Medium",
