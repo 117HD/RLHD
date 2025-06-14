@@ -30354,7 +30354,7 @@
     "range": 10
   },
   {
-    "description": "WINTERTODT_LIT_BRAZIER",
+    "description": "WINTERTODT_LIT_BRAZIER_MAIN",
     "height": 300,
     "alignment": "CENTER",
     "radius": 600,
@@ -30369,6 +30369,24 @@
     "range": 15,
     "fadeInDuration": 50,
     "fadeOutDuration": 100,
+    "objectIds": [
+      29314,
+      31926
+    ]
+  },
+  {
+    "description": "WINTERTODT_LIT_BRAZIER_FLICKER",
+    "offset": [ -7, 135, -4 ],
+    "radius": 100,
+    "strength": 300,
+    "color": [
+      165,
+      255,
+      56
+    ],
+    "type": "FLICKER",
+    "duration": 10,
+    "range": 45,
     "objectIds": [
       29314,
       31926
