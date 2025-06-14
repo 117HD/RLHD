@@ -1170,6 +1170,13 @@
     ]
   },
   {
+    "name": "Elemental Workshop floor 1",
+    "aabbs": [
+      [ 2670, 9857, 2763, 9934 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
     "name": "SINCLAIR_MANSION",
     "aabbs": [
       [ 2733, 3574, 2747, 3582 ],

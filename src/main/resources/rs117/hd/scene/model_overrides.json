@@ -8763,6 +8763,11 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       2071,
+      3394,
+      3395,
+      3398,
+      3400,
+      3401,
       9534,
       9064,
       10662,
@@ -8772,6 +8777,8 @@
       12548,
       15031,
       14739,
+      18506,
+      18507,
       27223,
       27224,
       27225,
@@ -8828,9 +8835,12 @@
     "description": "Objects - Wooden - Stack of crates - Rotated",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      3397,
+      3399,
       7513,
       14742,
       15693,
+      18508,
       42068,
       42070,
       55049
@@ -14234,8 +14244,11 @@
       872,
       877,
       2542,
+      3419,
+      3420,
       3421,
-      6480
+      6480,
+      18531
     ]
   },
   {
@@ -29032,7 +29045,7 @@
     ]
   },
   {
-    "description": "Karamja Bamboo booksehlf - Textured - Has a really bad UV even with boxed.",
+    "description": "Karamja Bamboo bookshelf - Textured - Has a really bad UV even with boxed.",
     "baseMaterial": "GRUNGE_2",
     "uvType": "BOX",
     "uvScale": 0.25,
@@ -29042,7 +29055,7 @@
     ]
   },
   {
-    "description": "Karamja Bamboo booksehlf - Has a really bad UV even with boxed.",
+    "description": "Karamja Bamboo bookshelf - Has a really bad UV even with boxed.",
     "baseMaterial": "GRUNGE_2",
     "uvType": "BOX",
     "uvScale": 0.25,
@@ -29175,6 +29188,164 @@
       9016,
       9020,
       9021
+    ]
+  },
+  {
+    "description": "Metal spiral staircase in ground",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      3415
+    ]
+  },
+  {
+    "description": "Metal spiral staircase",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      3416
+    ]
+  },
+  {
+    "description": "Water wheel - DYNAMIC",
+    "objectIds": [ 18512 ],
+    "flatNormals": true
+  },
+  {
+    "description": "Elemental workshop water controls - DYNAMIC",
+    "objectIds": [ 18509, 18510 ]
+  },
+  {
+    "description": "Elemental workshop moving machinery - DYNAMIC",
+    "objectIds": [ 18530 ]
+  },
+  {
+    "description": "Elemental workshop levers",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [ 3406, 3409, 3417 ]
+  },
+  {
+    "description": "metallic pipe with a beige stripe on the side",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "objectIds": [
+      18726,
+      18727,
+      18728,
+      18729,
+      18730,
+      18732
+    ]
+  },
+  {
+    "description": "metallic pipe with a orange stripe on the side",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "objectIds": [
+      18528,
+      18529,
+      18532,
+      18533,
+      18534,
+      18535
+    ]
+  },
+  {
+    "description": "Lava trough",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvOrientation": 42,
+    "objectIds": [
+      18519,
+      18520,
+      18521,
+      18522,
+      18523
+    ]
+  },
+  {
+    "description": "Lava trough end caps",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "objectIds": [
+      18588,
+      18589
+    ]
+  },
+  {
+    "description": "Domed machinery with a dial on the front of it",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "objectIds": [
+      3422,
+      3423
+    ]
+  },
+  {
+    "description": "Bellows - DYNAMIC",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvOrientation": 343,
+    "objectIds": [
+      18515,
+      18516
+    ]
+  },
+  {
+    "description": "Elemental Workshop lava furnace - DYNAMIC",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvType": "BOX",
+    "uvOrientation": 343,
+    "objectIds": [
+      18517,
+      18518,
+      18525
+    ]
+  },
+  {
+    "description": "Elemental Workshop metal plate walls with stone bricks",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvOrientation": 343,
+    "objectIds": [
+      18538,
+      18539,
+      18540,
+      18541,
+      18543,
+      18544,
+      18545,
+      18547,
+      18548,
+      18550,
+      18552,
+      18553,
+      18554,
+      18555,
+      18556,
+      18557,
+      18558,
+      18565,
+      18567,
+      18568,
+      18570,
+      18571,
+      18573,
+      18574,
+      18575,
+      18576,
+      18577,
+      18579,
+      18583,
+      18585
     ]
   }
 ]

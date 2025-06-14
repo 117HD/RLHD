@@ -36015,5 +36015,22 @@
       3498,
       3499
     ]
+  },
+  {
+    "description": "Elemental Workshop wall lantern",
+    "offset": [ 4, 155, 0 ],
+    "radius": 500,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      18536
+    ]
   }
 ]
