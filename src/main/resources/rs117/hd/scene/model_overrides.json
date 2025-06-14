@@ -15802,7 +15802,7 @@
     ],
     "colorOverrides": [
       {
-        "colors": "h== 0 && s ==7",
+        "colors": "h == 0 && s == 7",
         "baseMaterial": "CARPET",
         "uvType": "BOX",
         "uvScale": 0.5
