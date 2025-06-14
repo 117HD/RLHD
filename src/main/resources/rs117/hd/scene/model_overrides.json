@@ -30611,13 +30611,13 @@
     ],
     "colorOverrides": [
       {
-        "colors": [ "h == 7" ,"h == 8", "h == 9", "h == 60" ],
+        "colors": "h == 7 || h == 8 || h == 9 || h == 60",
         "baseMaterial": "GRUNGE_3",
         "uvType": "BOX",
         "uvScale": 0.6
       },
       {
-        "colors": [ "h == 0 && s == 0", "h == 5", "h == 25" ],
+        "colors": "h == 0 && s == 0 || h == 5 || h == 25",
         "baseMaterial": "GRAY_90"
       },
       {
@@ -30646,7 +30646,7 @@
         "uvType": "GEOMETRY"
       },
       {
-        "colors": [ "h == 0", "h == 17 && s == 7" ],
+        "colors": "h == 0 || h == 17 && s == 7",
         "baseMaterial": "NONE"
       }
     ]

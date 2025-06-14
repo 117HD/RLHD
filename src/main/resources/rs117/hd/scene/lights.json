@@ -19532,7 +19532,6 @@
   {
     "description": "Nightmare of Ashihama - Encounter Active",
     "height": 125,
-    "alignment": "CENTER",
     "radius": 1500,
     "spawnDelay": 2000,
     "fadeInDuration": 300,
@@ -19556,7 +19555,6 @@
   {
     "description": "Nightmare of Ashihama - Pool of Nightmares - Main",
     "height": 200,
-    "alignment": "CENTER",
     "radius": 200,
     "strength": 10,
     "color": [
