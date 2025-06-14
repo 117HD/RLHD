@@ -204,8 +204,8 @@ public class LightManager {
 		int drawDistance = plugin.getDrawDistance() * LOCAL_TILE_SIZE;
 		Tile[][][] tiles = sceneContext.scene.getExtendedTiles();
 		int[][][] tileHeights = sceneContext.scene.getTileHeights();
-		var cachedNpcs = client.getCachedNPCs();
-		var cachedPlayers = client.getCachedPlayers();
+		var cachedNpcs = client.getTopLevelWorldView().npcs();
+		var cachedPlayers = client.getTopLevelWorldView().players();
 		int plane = client.getPlane();
 		boolean changedPlanes = false;
 
@@ -258,8 +258,7 @@ public class LightManager {
 						var animation = light.projectile.getAnimation();
 						parentExists = animation != null && light.def.animationIds.contains(animation.getId());
 					}
-					light.orientation = (int) Math.round(
-						Math.atan2(light.projectile.getVelocityZ(), light.projectile.getVelocityX()) / UNIT);
+					light.orientation = light.projectile.getOrientation();
 				}
 			} else if (light.graphicsObject != null) {
 				light.origin[0] = light.graphicsObject.getLocation().getX();
@@ -272,8 +271,8 @@ public class LightManager {
 					parentExists = animation != null && light.def.animationIds.contains(animation.getId());
 				}
 			} else if (light.actor != null && !light.markedForRemoval) {
-				if (light.actor instanceof NPC && light.actor != cachedNpcs[((NPC) light.actor).getIndex()] ||
-					light.actor instanceof Player && light.actor != cachedPlayers[((Player) light.actor).getId()] ||
+				if (light.actor instanceof NPC && light.actor != cachedNpcs.byIndex(((NPC) light.actor).getIndex()) ||
+					light.actor instanceof Player && light.actor != cachedPlayers.byIndex(((Player) light.actor).getId()) ||
 					light.spotAnimId != -1 && !light.actor.hasSpotAnim(light.spotAnimId)
 				) {
 					parentExists = false;
@@ -297,7 +296,9 @@ public class LightManager {
 						tileExX < EXTENDED_SCENE_SIZE && tileExY < EXTENDED_SCENE_SIZE &&
 						(tile = tiles[plane][tileExX][tileExY]) != null
 					) {
-						if (!light.def.ignoreActorHiding) {
+						if (!light.def.ignoreActorHiding &&
+							!(light.actor instanceof NPC && ((NPC) light.actor).getComposition().getSize() > 1)
+						) {
 							// Check if the actor is hidden by another actor on the same tile
 							for (var gameObject : tile.getGameObjects()) {
 								if (gameObject == null || !(gameObject.getRenderable() instanceof Actor))
@@ -351,7 +352,7 @@ public class LightManager {
 
 			int orientation = 0;
 			if (light.alignment.relative)
-				orientation = HDUtils.mod(light.orientation + light.preOrientation + light.alignment.orientation, 2048);
+				orientation = HDUtils.mod(light.orientation + light.alignment.orientation, 2048);
 
 			if (light.alignment == Alignment.CUSTOM) {
 				// orientation 0 = south
@@ -930,7 +931,7 @@ public class LightManager {
 				light.hash = newHash;
 				light.tileObject = tileObject;
 				light.plane = plane;
-				light.preOrientation = orientations[i];
+				light.orientation = orientations[i];
 				light.origin[0] = lightX;
 				light.origin[1] = (int) tileHeight - light.def.height - 1;
 				light.origin[2] = lightZ;

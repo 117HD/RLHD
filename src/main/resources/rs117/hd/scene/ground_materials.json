@@ -111,12 +111,6 @@
     ]
   },
   {
-    "name": "FINE_CARPET",
-    "materials": [
-      "FINE_CARPET"
-    ]
-  },
-  {
     "name": "BRICK",
     "materials": [
       "BRICK"
@@ -419,6 +413,14 @@
       "STONE_NORMALED",
       "ROCK_2",
       "STONE_NORMALED"
+    ]
+  },
+  {
+    "name": "SANDY_DIRT",
+    "materials": [
+      "SAND_3",
+      "DIRT_1",
+      "SAND_2"
     ]
   },
   {
