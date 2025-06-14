@@ -5335,8 +5335,10 @@
     "uvScale": 0.4
   },
   {
-    "description": "PICARILIUS_DOCKS",
-    "baseMaterial": "GRUNGE_2",
+    "description": "Piscarilius Docks",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 1.1,
     "objectIds": [
       27626,
       27627,
@@ -5362,12 +5364,21 @@
       27650,
       27651,
       42661
-    ],
-    "uvType": "MODEL_XZ"
+    ]
   },
   {
-    "description": "PICARILIUS_DOCKS_SAND_TILE",
-    "baseMaterial": "GRUNGE_2",
+    "description": "Piscarilius Docks with Sand overlay",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 1.1,
+    "colorOverrides": [
+      {
+        "description": "Sand",
+        "baseMaterial": "DIRT_1",
+        "colors": "l > 40",
+        "uvType": "WORLD_XZ"
+      }
+    ],
     "objectIds": [
       27649,
       27652,
@@ -5382,8 +5393,7 @@
       27657,
       27658,
       27660
-    ],
-    "uvType": "MODEL_XZ"
+    ]
   },
   {
     "description": "Picarilius docks with Carpet",
