@@ -533,9 +533,9 @@
     "area": "MOTHERLODE_MINE",
     "ambientColor": "#aaafb6",
     "ambientStrength": 4,
-    "directionalStrength": 1,
+    "directionalStrength": 0.5,
     "sunAngles": [
-      80,
+      75,
       190
     ],
     "fogColor": "#241809",
@@ -893,6 +893,7 @@
     "area": "SOTE_FRAGMENT_OF_SEREN_ARENA",
     "allowSkyOverride": false,
     "ambientColor": "#97baff",
+    "fogColor": "#000000",
     "directionalStrength": 4,
     "fogDepth": 6.5
   },
@@ -1615,22 +1616,22 @@
     "fogDepth": 30
   },
   {
-    "area": "RALOS_RISE_LOWER",
-    "ambientColor": "#6fb0ff",
-    "ambientStrength": 1.75,
-    "directionalColor": "#f4e5c9",
-    "directionalStrength": 3,
-    "fogColor": "#aebde0",
-    "fogDepth": 30
-  },
-  {
-    "area": "RALOS_RISE_UPPER",
+    "area": "VARLAMORE_SNOWY_MOUNTAINS_UPPER",
     "ambientColor": "#6fb0ff",
     "ambientStrength": 0.8,
     "directionalColor": "#f4e5c9",
     "directionalStrength": 2,
     "fogColor": "#aebde0",
     "fogDepth": 50
+  },
+  {
+    "area": "VARLAMORE_SNOWY_MOUNTAINS_LOWER",
+    "ambientColor": "#6fb0ff",
+    "ambientStrength": 1.75,
+    "directionalColor": "#f4e5c9",
+    "directionalStrength": 3,
+    "fogColor": "#aebde0",
+    "fogDepth": 30
   },
   {
     "key": "OVERWORLD",
