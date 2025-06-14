@@ -5481,7 +5481,6 @@
     "groundMaterial": "SAND",
     "maxLightness": 60,
     "shiftHue": -2,
-    "shiftSaturation": 1,
     "maxSaturation": 4,
     "underlayIds": [
       45,
