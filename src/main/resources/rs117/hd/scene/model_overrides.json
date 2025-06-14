@@ -5335,7 +5335,7 @@
     "uvScale": 0.4
   },
   {
-    "description": "Picarlius Docks",
+    "description": "Piscarilius Docks",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 1.1,
@@ -5367,7 +5367,7 @@
     ]
   },
   {
-    "description": "Picarlius Docks with Sand overlay",
+    "description": "Piscarilius Docks with Sand overlay",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 1.1,
