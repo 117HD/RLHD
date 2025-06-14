@@ -658,7 +658,6 @@
     "ambientColor": "#6687a9",
     "ambientStrength": 0.85,
     "sunAngles": [ 50, 244 ],
-    "directionalColor": "#ffffff",
     "directionalStrength": 0.45,
     "fogColor": "#adb9c4",
     "fogDepth": 50
@@ -668,7 +667,6 @@
     "ambientColor": "#6687a9",
     "ambientStrength": 0.85,
     "sunAngles": [ 73, 244 ],
-    "directionalColor": "#ffffff",
     "directionalStrength": 0.45,
     "fogColor": "#adb9c4",
     "fogDepth": 50

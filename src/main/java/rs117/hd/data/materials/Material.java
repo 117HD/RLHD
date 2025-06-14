@@ -322,7 +322,10 @@ public enum Material {
 	SNOW_2_N,
 	SNOW_2(p -> p.setNormalMap(SNOW_2_N).setSpecular(0.4f, 20)),
 	SNOW_2_DARK(SNOW_2, p -> p.setBrightness(0.5f)),
-	SNOW_COLORED(p -> p.setOverrideBaseColor(true).setNormalMap(SNOW_1_N).setSpecular(0.4f,20)),
+	SNOW_COLORED(p -> p
+		.setOverrideBaseColor(true)
+		.setNormalMap(SNOW_1_N)
+		.setSpecular(0.4f, 20)),
 	SNOW_3_N,
 	SNOW_3(p -> p.setNormalMap(SNOW_3_N).setSpecular(0.4f, 20)),
 	SNOW_4_N,
@@ -410,7 +413,6 @@ public enum Material {
 		.setSpecular(0f, 0)
 	),
 	WATER_FOUNTAIN_FLAT(GRUNGE_3, p -> p
-		.setFlowMap(UNDERWATER_FLOW_MAP)
 		.setFlowMap(UNDERWATER_FLOW_MAP)
 		.setFlowMapStrength(0.2f)
 		.setFlowMapDuration(new float[] { 12, -12 })
