@@ -9220,6 +9220,34 @@
     "uvType": "GEOMETRY"
   },
   {
+    "description": "Objects - Vines with grass",
+    "baseMaterial": "GRUNGE_3_DARK",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Grass",
+        "colors": "s == 7",
+        "baseMaterial": "NONE"
+      },
+      {
+        "description": "Leaves",
+        "colors": "s == 3",
+        "baseMaterial": "LEAF_VEINS"
+      }
+    ],
+    "objectIds": [
+      1222,
+      1223,
+      1224,
+      1225,
+      1226,
+      1227,
+      1228,
+      1229,
+      1230
+    ]
+  },
+  {
     "description": "Objects - White Mushrooms - Medium",
     "baseMaterial": "PLANT_GRUNGE_1",
     "objectIds": [
@@ -11418,11 +11446,31 @@
     "uvScale": 0.4
   },
   {
+    "description": "Walls - Double Rope Rails",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.54,
+    "colorOverrides": [
+      {
+        "description": "Ropes",
+        "baseMaterial": "ROPE",
+        "colors": "h == 6",
+        "uvType": "BOX",
+        "uvOrientationZ": 512,
+        "uvOrientationY": 320,
+        "uvOrientationX": 768,
+        "uvScale": 0.4
+      }
+    ],
+    "objectIds": [
+      1982
+    ]
+  },
+  {
     "description": "Gnome - Walls - Rope Rails",
     "baseMaterial": "DOCK_FENCE",
     "objectIds": [
-      1708,
-      1982
+      1708
     ]
   },
   {
@@ -12861,13 +12909,20 @@
   },
   {
     "description": "Jungle Tree Large - Unusual Plant",
-    "baseMaterial": "PLANT_GRUNGE_2",
-    "objectIds": [
-      1314
-    ],
+    "baseMaterial": "BARK",
     "uvType": "BOX",
     "uvScale": 0.4,
-    "uvOrientation": 256
+    "uvOrientation": 768,
+    "colorOverrides": [
+      {
+        "description": "Leaves",
+        "baseMaterial": "LEAF_VEINS",
+        "colors": "h > 10"
+      }
+    ],
+    "objectIds": [
+      1314
+    ]
   },
   {
     "description": "Tropical Tree Big",
@@ -13994,6 +14049,47 @@
       9604,
       9605,
       9606
+    ]
+  },
+  {
+    "description": "Karamja - Jungle plant - Leafy style",
+    "baseMaterial": "LEAF_VEINS",
+    "uvScale": 0.25,
+    "uvType": "BOX",
+    "objectIds": [
+      1204,
+      1399,
+      1400,
+      1401,
+      1402
+    ]
+  },
+  {
+    "description": "Karamja - Jungle plant - fern style",
+    "baseMaterial": "LEAF_VEINS",
+    "uvScale": 0.25,
+    "uvType": "MODEL_XZ",
+    "objectIds": [
+      1390,
+      1398
+    ]
+  },
+  {
+    "description": "Karamja - Creeping plant",
+    "baseMaterial": "LEAF_VEINS",
+    "uvScale": 0.25,
+    "uvType": "MODEL_XZ",
+    "objectIds": [
+      1184
+    ]
+  },
+  {
+    "description": "Karamja - Curling plant",
+    "baseMaterial": "LEAF_VEINS",
+    "uvScale": 0.25,
+    "uvType": "MODEL_XZ",
+    "objectIds": [
+      1186
     ]
   },
   {
@@ -28848,6 +28944,237 @@
       40327,
       40328,
       40329
+    ]
+  },
+  {
+    "description": "Karamja hut walls",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.25,
+    "objectIds": [
+      1593,
+      1616,
+      1855
+    ]
+  },
+  {
+    "description": "Karamja hardwood grove doors",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.25,
+    "objectIds": [
+      9038,
+      9039
+    ]
+  },
+  {
+    "description": "Karamja Bamboo door",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.25,
+    "objectIds": [
+      779
+    ]
+  },
+  {
+    "description": "Karamja Bamboo bridge",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 1024,
+    "uvOrientationZ": 162,
+    "colorOverrides": [
+      {
+        "description": "Rope",
+        "baseMaterial": "ROPE",
+        "colors": " h == 11",
+        "uvType": "MODEL_XZ",
+        "uvOrientation": 128,
+        "uvScale": 0.25
+      }
+    ],
+    "objectIds": [
+      1721
+    ]
+  },
+  {
+    "description": "Karamja Bamboo potted plant",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "description": "Plant",
+        "baseMaterial": "LEAF_VEINS",
+        "colors": " h > 11",
+        "uvType": "MODEL_XZ",
+        "uvOrientation": 128,
+        "uvScale": 0.25
+      }
+    ],
+    "objectIds": [
+      1160
+    ]
+  },
+  {
+    "description": "Karamja Bamboo pots",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "uvOrientation": 512,
+    "objectIds": [
+      395,
+      396
+    ]
+  },
+  {
+    "description": "Karamja Bamboo booksehlf - Textured - Has a really bad UV even with boxed.",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "uvOrientation": 512,
+    "objectIds": [
+      393
+    ]
+  },
+  {
+    "description": "Karamja Bamboo booksehlf - Has a really bad UV even with boxed.",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "uvOrientation": 512,
+    "objectIds": [
+      394
+    ]
+  },
+  {
+    "description": "Karamja Bamboo table",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "description": "Dirt",
+        "baseMaterial": "DIRT_2",
+        "colors": " h == 4",
+        "uvType": "MODEL_XZ",
+        "uvOrientation": 128,
+        "uvScale": 0.33
+      }
+    ],
+    "objectIds": [
+      620
+    ]
+  },
+  {
+    "description": "Karamja Bamboo stool",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "uvOrientation": 512,
+    "objectIds": [
+      1113
+    ]
+  },
+  {
+    "description": "Karamja Bamboo raised bed",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "description": "Bed",
+        "baseMaterial": "CARPET",
+        "colors": " h == 8",
+        "uvType": "BOX",
+        "uvOrientation": 720,
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      433
+    ]
+  },
+  {
+    "description": "Karamja Bamboo access ramps - Model has bad UVs even with Box",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "uvOrientation": 256,
+    "colorOverrides": [
+      {
+        "description": "horizontal braces",
+        "baseMaterial": "GRUNGE_1",
+        "colors": " h == 7",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ],
+    "objectIds": [
+      1617
+    ]
+  },
+  {
+    "description": "Tribal Statue - Tai Bwo Wannai",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 32,
+    "objectIds": [ 3863 ]
+  },
+  {
+    "description": "Tai Bwo Wannai Village Fence",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 64,
+    "uvScale": 0.66,
+    "objectIds": [ 9025, 9026, 9027, 9028, 9029, 9042, 9043 ]
+  },
+  {
+    "description": "Tai Bwo Wannai Cleanup Jungle - Dynamic",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "uvOrientation": 512,
+    "objectIds": [
+      9013,
+      9014,
+      9017,
+      9018,
+      9019,
+      9022,
+      9023,
+      9024
+    ]
+  },
+  {
+    "description": "Tai Bwo Wannai Cleanup Jungle with leaves - Dynamic",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "description": "Plant",
+        "baseMaterial": "LEAF_VEINS",
+        "colors": " h > 11",
+        "uvType": "MODEL_XZ",
+        "uvOrientation": 384,
+        "uvScale": 0.25
+      }
+    ],
+    "objectIds": [
+      9010,
+      9011,
+      9015,
+      9016,
+      9020,
+      9021
     ]
   }
 ]
