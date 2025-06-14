@@ -2420,9 +2420,13 @@
       1562,
       1563,
       1564,
+      1565,
+      1566,
       1567,
       1739,
       1740,
+      2438,
+      2439,
       993,
       7527,
       20857,
@@ -6110,6 +6114,7 @@
       16684,
       16685,
       17026,
+      17028,
       17384,
       17385,
       17387,
@@ -11281,6 +11286,8 @@
       1287,
       1288,
       1384,
+      2447,
+      2448,
       14593,
       14594,
       14595,
@@ -11299,6 +11306,7 @@
       23561,
       25169,
       25174,
+      28658,
       51766
     ],
     "uvType": "BOX"
@@ -11371,17 +11379,102 @@
     ]
   },
   {
-    "description": "Gnome - Objects - Wooden - Lamp",
+    "description": "Gnome - Objects - Wooden Lamp - DYNAMIC",
     "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Lamp",
+        "colors": "s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ],
     "objectIds": [
       201
     ]
   },
   {
+    "description": "Gnome Stronghold tree doors",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "materialOverrides": {
+      "SIMPLE_GRAIN_WOOD": {
+        "textureMaterial": "SIMPLE_GRAIN_WOOD",
+        "uvOrientation": 512,
+        "uvScale": 0.7,
+        "uvType": "BOX",
+        "retainVanillaUvs": false
+      }
+    },
+    "colorOverrides": [
+      {
+        "description": "Carving",
+        "colors": "h == 17",
+        "baseMaterial": "GRUNGE_3_LIGHT",
+        "uvType": "BOX",
+        "uvOrientation": 343
+      }
+    ],
+    "objectIds": [
+      1967,
+      1968,
+      1969,
+      1970
+    ]
+  },
+  {
+    "description": "Gnome - Objects - Gnome busts on wooden pillar",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Bust",
+        "colors": "s == 0",
+        "uvScale": 0.4,
+        "uvOrientation": 343,
+        "baseMaterial": "MARBLE_3",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      571,
+      572
+    ]
+  },
+  {
     "description": "Gnome - Objects - Wooden - Bench - Textured",
-    "baseMaterial": "GRUNGE_2",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "uvType": "BOX",
+    "uvScale": 0.48,
     "objectIds": [
       1104
+    ]
+  },
+  {
+    "description": "Gnome table with cutlery and napkins",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 600,
+    "objectIds": [
+      1103
+    ]
+  },
+  {
+    "description": "Gnome stool",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 84,
+    "colorOverrides": [
+      {
+        "description": "Silverware and napkin",
+        "colors": "s == 0",
+        "baseMaterial": "NONE"
+      }
+    ],
+    "objectIds": [
+      600
     ]
   },
   {
@@ -15968,6 +16061,17 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.6,
+    "uvOrientation": 342
+  },
+  {
+    "description": "Objects - Root - Large",
+    "baseMaterial": "LIGHT_BARK",
+    "objectIds": [
+      1985,
+      1986
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.4,
     "uvOrientation": 342
   },
   {
@@ -25286,6 +25390,8 @@
       2057,
       2062,
       2063,
+      2434,
+      2435,
       2612,
       2613
     ],
@@ -28536,5 +28642,33 @@
       30965,
       31845
     ]
+  },
+  {
+    "description": "Glough house pillars",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      2440,
+      2441,
+      2442,
+      2443
+    ]
+  },
+  {
+    "description": "Gnome Stronghold tunnels walls with roots - DYNAMIC",
+    "baseMaterial": "GRUNGE_1",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Roots",
+        "baseMaterial": "LIGHT_BARK",
+        "colors": "h == 7",
+        "uvType": "BOX",
+        "uvOrientation": 343,
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [ 2451 ]
   }
 ]
