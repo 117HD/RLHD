@@ -32,7 +32,7 @@ layout(local_size_x = 6) in;
 void main() {
     uint groupId = gl_WorkGroupID.x;
     uint localId = gl_LocalInvocationID.x;
-    ModelInfo minfo = ol[groupId];
+    const ModelInfo minfo = ol[groupId];
 
     int offset = minfo.offset;
     int size = minfo.size;

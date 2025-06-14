@@ -372,6 +372,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	private int viewportOffsetX;
 	private int viewportOffsetY;
+	private int viewportWidth;
+	private int viewportHeight;
 
 	// Uniforms
 	private int uniColorBlindnessIntensity;
@@ -1532,6 +1534,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		viewportOffsetX = client.getViewportXOffset();
 		viewportOffsetY = client.getViewportYOffset();
+		viewportWidth = client.getViewportWidth();
+		viewportHeight = client.getViewportHeight();
 
 		if (!enableFreezeFrame) {
 			if (!redrawPreviousFrame) {
@@ -1937,9 +1941,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			textureProvider != null &&
 			client.getGameState().getState() >= GameState.LOADING.getState()
 		) {
-			final int viewportHeight = client.getViewportHeight();
-			final int viewportWidth = client.getViewportWidth();
-
 			int renderWidthOff = viewportOffsetX;
 			int renderHeightOff = viewportOffsetY;
 			int renderCanvasHeight = canvasHeight;
@@ -2970,15 +2971,15 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	 * @param hash        A unique hash of the renderable consisting of some useful information. See {@link rs117.hd.utils.ModelHash} for more details.
 	 */
 	@Override
-	public void draw(Projection projection, Scene scene, Renderable renderable, int orientation, int x, int y, int z, long hash) {
+	public void draw(Projection projection, @Nullable Scene scene, Renderable renderable, int orientation, int x, int y, int z, long hash) {
 		if (sceneContext == null)
 			return;
 
 		// Hide everything outside the current area if area hiding is enabled
 		if (sceneContext.currentArea != null && renderable instanceof Actor) {
 			boolean inArea = sceneContext.currentArea.containsPoint(
-				scene.getBaseX() + (x >> LOCAL_COORD_BITS),
-				scene.getBaseY() + (z >> LOCAL_COORD_BITS),
+				sceneContext.scene.getBaseX() + (x >> LOCAL_COORD_BITS),
+				sceneContext.scene.getBaseY() + (z >> LOCAL_COORD_BITS),
 				client.getPlane()
 			);
 			if (!inArea)
