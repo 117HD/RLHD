@@ -5571,7 +5571,6 @@
     "maxSaturation": 3,
     "replacements": {
       "KHARID_DIRT": [
-        "h == 7 && s == 4",
         "h == 7 && s == 5"
       ]
     }
