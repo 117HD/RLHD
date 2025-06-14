@@ -5446,9 +5446,7 @@
   },
   {
     "name": "RATCATCHERS_HOUSE",
-    "aabbs": [
-      [ 2821, 5059, 2875, 5114 ]
-    ]
+    "regions": [ 11343 ]
   },
   {
     "name": "CANOE_CUTSCENE",
@@ -6412,6 +6410,10 @@
     "hideOtherAreas": true
   },
   {
+    "name": "ENLIGHTENED_JOURNEY_CRASH_SITE",
+    "regions": [ 7244 ]
+  },
+  {
     "name": "SNOWY_REGIONS",
     "areas": [
       "ASGARNIA_ICE_DUNGEON_SNOWY",
@@ -6483,7 +6485,9 @@
       "DEFENDER_OF_VARROCK_CASTLE_UNDER_ATTACK",
       "CHURCH_OF_AYASTER",
       "EMIRS_ARENA_UPPER",
-      "YANILLE_INSTANCE"
+      "YANILLE_INSTANCE",
+      "RATCATCHERS_HOUSE",
+      "ENLIGHTENED_JOURNEY_CRASH_SITE"
     ],
     "regions": [
       8288,
