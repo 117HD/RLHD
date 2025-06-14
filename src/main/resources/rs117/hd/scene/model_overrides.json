@@ -28399,7 +28399,7 @@
     ],
     "colorOverrides": [
       {
-        "colors": ["h == 6", "h == 16"],
+        "colors": "h == 6 || h == 16",
         "baseMaterial": "GRUNGE_2",
         "uvType": "BOX"
       }
@@ -28480,13 +28480,13 @@
     ],
     "colorOverrides": [
       {
-        "colors": ["h == 7 && s == 1", "h == 8 && s == 1", "h == 9 && s == 2"],
+        "colors": "h == 7 && s == 1 || h == 8 && s == 1 || h == 9 && s == 2",
         "baseMaterial": "DIRT_1",
         "uvType": "BOX",
         "uvScale": 0.75
       },
       {
-        "colors": ["h == 6 && s == 7" ,"h == 7 && s == 7", "h == 8 && s == 7"],
+        "colors": "h == 6 && s == 7 || h == 7 && s == 7 || h == 8 && s == 7",
         "baseMaterial": "PLANT_GRUNGE_2",
         "uvType": "BOX",
         "uvScale": 0.75
