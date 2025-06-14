@@ -974,7 +974,6 @@
       30659,
       30660,
       30661,
-      30741,
       30868,
       31920,
       31922,
@@ -28361,6 +28360,181 @@
       3497,
       3498,
       3499
+    ]
+  },
+  {
+    "description": "Mogre Camp Cliffs 1",
+    "baseMaterial": "ROCK_1",
+    "uvScale": 0.75,
+    "uvOrientation": 75,
+    "uvType": "BOX",
+    "objectIds": [
+      12454,
+      12457,
+      12464,
+      12465,
+      12459
+    ]
+  },
+  {
+    "description": "Mogre Camp Cliffs 2",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvOrientation": -50,
+    "objectIds": [
+      12455,
+      12456,
+      12458
+    ]
+  },
+  {
+    "description": "Mogre Camp Skippy Cave Entrance",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "objectIds": [
+      12460,
+      12461,
+      12462,
+      12463
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6 || h == 16",
+        "baseMaterial": "GRUNGE_2",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Mogre Camp Bamboo Fence",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "objectIds": [
+      12466,
+      12467,
+      12468,
+      12469,
+      12470,
+      12471,
+      12472,
+      12473
+    ]
+  },
+  {
+    "description": "Mogre Camp Coral",
+    "baseMaterial": "ROCK_2",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      12479,
+      12480,
+      12481,
+      12482,
+      12483,
+      12484,
+      12485,
+      12486,
+      12487,
+      12488,
+      12489,
+      12490,
+      12491,
+      12492,
+      12493,
+      12494,
+      12495,
+      12496,
+      12497,
+      12498,
+      12499,
+      12500,
+      12501,
+      12502,
+      12503,
+      12504,
+      12505,
+      12506,
+      12507,
+      12508,
+      12509,
+      12510,
+      12511,
+      12512,
+      12513,
+      12514,
+      12515,
+      12516,
+      12517,
+      12518,
+      12519,
+      12520,
+      12521,
+      12522,
+      12523,
+      12524,
+      12525,
+      12526,
+      12527,
+      12528,
+      12529
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7 && s == 1 || h == 8 && s == 1 || h == 9 && s == 2",
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      },
+      {
+        "colors": "h == 6 && s == 7 || h == 7 && s == 7 || h == 8 && s == 7",
+        "baseMaterial": "PLANT_GRUNGE_2",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ]
+  },
+  {
+    "description": "Mogre Camp Anchor",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "objectIds": [
+      12474,
+      12475,
+      12476
+    ]
+  },
+  {
+    "description": "Fossil Island Underwater Cliffs 1",
+    "baseMaterial": "ROCK_1",
+    "uvScale": 0.75,
+    "uvOrientation": 75,
+    "uvType": "BOX",
+    "objectIds": [
+      30738,
+      30740,
+      30741,
+      30742,
+      30743
+    ]
+  },
+  {
+    "description": "Fossil Island Underwater Cliffs 2",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvOrientation": -50,
+    "objectIds": [
+      30734,
+      30735,
+      30736,
+      30744,
+      30745,
+      30746,
+      30747,
+      30959,
+      30962,
+      30963,
+      30964,
+      30965,
+      31845
     ]
   }
 ]

@@ -4788,7 +4788,8 @@
     "name": "MOGRE_CAMP",
     "regions": [
       11924
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "HARMONY_ISLAND_UNDERWATER_TUNNEL",
