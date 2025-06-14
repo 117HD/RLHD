@@ -23,6 +23,28 @@ public class GsonUtils {
 		return str;
 	}
 
+	public static HashSet<String> parseStringArray(JsonReader in) throws IOException {
+		HashSet<String> ids = new HashSet<>();
+		in.beginArray();
+		while (in.hasNext()) {
+			if (in.peek() == JsonToken.STRING) {
+				try {
+					ids.add(in.nextString());
+				} catch (NumberFormatException ex) {
+					String message = "Failed to parse int at " + location(in);
+					if (THROW_WHEN_PARSING_FAILS)
+						throw new RuntimeException(message, ex);
+					log.error(message, ex);
+				}
+			} else {
+				throw new RuntimeException("Unable to parse ID: " + in.peek() + " at " + location(in));
+			}
+		}
+		in.endArray();
+		return ids;
+	}
+
+
 	public static HashSet<Integer> parseIDArray(JsonReader in) throws IOException {
 		HashSet<Integer> ids = new HashSet<>();
 		in.beginArray();
@@ -44,6 +66,18 @@ public class GsonUtils {
         return ids;
     }
 
+	public static void writeStringArray(JsonWriter out, HashSet<String> listToWrite) throws IOException {
+		if (listToWrite.isEmpty()) {
+			out.nullValue();
+			return;
+		}
+
+		out.beginArray();
+		for (String id : listToWrite)
+			out.value(id);
+		out.endArray();
+	}
+
 	public static void writeIDArray(JsonWriter out, HashSet<Integer> listToWrite) throws IOException {
 		if (listToWrite.isEmpty()) {
 			out.nullValue();
@@ -54,6 +88,18 @@ public class GsonUtils {
 		for (int id : listToWrite)
 			out.value(id);
 		out.endArray();
+	}
+
+	public static class StringSetAdapter extends TypeAdapter<HashSet<String>> {
+		@Override
+		public HashSet<String> read(JsonReader in) throws IOException {
+			return parseStringArray(in);
+		}
+
+		@Override
+		public void write(JsonWriter out, HashSet<String> value) throws IOException {
+			writeStringArray(out, value);
+		}
 	}
 
 	public static class IntegerSetAdapter extends TypeAdapter<HashSet<Integer>> {

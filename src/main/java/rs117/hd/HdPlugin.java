@@ -85,6 +85,7 @@ import rs117.hd.config.ShadingMode;
 import rs117.hd.config.ShadowMode;
 import rs117.hd.config.UIScalingMode;
 import rs117.hd.config.VanillaShadowMode;
+import rs117.hd.data.GameValRepository;
 import rs117.hd.data.WaterType;
 import rs117.hd.data.materials.Material;
 import rs117.hd.model.ModelHasher;
@@ -238,6 +239,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Inject
 	private ProceduralGenerator proceduralGenerator;
+
+	@Inject
+	private GameValRepository gameValRepository;
 
 	@Inject
 	private SceneUploader sceneUploader;
@@ -637,6 +641,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				lastStretchedCanvasWidth = lastStretchedCanvasHeight = 0;
 				lastAntiAliasingMode = null;
 
+				gameValRepository.startUp();
 				areaManager.startUp();
 				groundMaterialManager.startUp();
 				tileOverrideManager.startUp();
@@ -2383,7 +2388,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				int r = buffer.get() & 0xff;
 				int g = buffer.get() & 0xff;
 				int b = buffer.get() & 0xff;
-				buffer.get(); // alpha
+				buffer.get(); // alph a
 
 				pixels[(height - y - 1) * width + x] = (r << 16) | (g << 8) | b;
 			}

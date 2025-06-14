@@ -11,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
+import rs117.hd.data.GameValRepository;
+import rs117.hd.data.GameValType;
 import rs117.hd.model.ModelPusher;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.FileWatcher;
@@ -42,6 +44,9 @@ public class ModelOverrideManager {
 
 	@Inject
 	private FishingSpotReplacer fishingSpotReplacer;
+
+	@Inject
+	private GameValRepository gameValRepository;
 
 	private final HashMap<Integer, ModelOverride> modelOverrides = new HashMap<>();
 
@@ -107,14 +112,14 @@ public class ModelOverrideManager {
 		if (override == null || override.seasonalTheme != null && override.seasonalTheme != plugin.configSeasonalTheme)
 			return;
 
-		for (int id : override.npcIds)
-			addEntry(ModelHash.TYPE_NPC, id, override);
-		for (int id : override.objectIds)
-			addEntry(ModelHash.TYPE_OBJECT, id, override);
-		for (int id : override.projectileIds)
-			addEntry(ModelHash.TYPE_PROJECTILE, id, override);
-		for (int id : override.graphicsObjectIds)
-			addEntry(ModelHash.TYPE_GRAPHICS_OBJECT, id, override);
+		for (String configName : override.npcIds)
+			addEntry(ModelHash.TYPE_NPC, gameValRepository.get(GameValType.NPC,configName), override);
+		for (String configName : override.objectIds)
+			addEntry(ModelHash.TYPE_OBJECT, gameValRepository.get(GameValType.OBJECT,configName), override);
+		for (String configName : override.projectileIds)
+			addEntry(ModelHash.TYPE_PROJECTILE, gameValRepository.get(GameValType.SPOTANIM,configName), override);
+		for (String configName : override.graphicsObjectIds)
+			addEntry(ModelHash.TYPE_GRAPHICS_OBJECT, gameValRepository.get(GameValType.SPOTANIM,configName), override);
 	}
 
 	private void addEntry(int type, int id, ModelOverride entry) {

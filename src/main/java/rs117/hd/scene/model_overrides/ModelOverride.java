@@ -31,7 +31,7 @@ public class ModelOverride
 {
 	public static final ModelOverride NONE = new ModelOverride(true);
 
-	private static final Set<Integer> EMPTY = new HashSet<>();
+	private static final Set<String> EMPTY = new HashSet<>();
 
 	public String description = "UNKNOWN";
 
@@ -39,14 +39,14 @@ public class ModelOverride
 	public SeasonalTheme seasonalTheme;
 	@JsonAdapter(AABB.JsonAdapter.class)
 	public AABB[] areas = {};
-	@JsonAdapter(GsonUtils.IntegerSetAdapter.class)
-	public Set<Integer> npcIds = EMPTY;
-	@JsonAdapter(GsonUtils.IntegerSetAdapter.class)
-	public Set<Integer> objectIds = EMPTY;
-	@JsonAdapter(GsonUtils.IntegerSetAdapter.class)
-	public Set<Integer> projectileIds = EMPTY;
-	@JsonAdapter(GsonUtils.IntegerSetAdapter.class)
-	public Set<Integer> graphicsObjectIds = EMPTY;
+	@JsonAdapter(GsonUtils.StringSetAdapter.class)
+	public Set<String> npcIds = EMPTY;
+	@JsonAdapter(GsonUtils.StringSetAdapter.class)
+	public Set<String> objectIds = EMPTY;
+	@JsonAdapter(GsonUtils.StringSetAdapter.class)
+	public Set<String> projectileIds = EMPTY;
+	@JsonAdapter(GsonUtils.StringSetAdapter.class)
+	public Set<String> graphicsObjectIds = EMPTY;
 
 	public Material baseMaterial = Material.NONE;
 	public Material textureMaterial = Material.NONE;

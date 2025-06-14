@@ -1,3 +1,6 @@
+import groovy.json.JsonOutput
+import java.lang.reflect.Modifier
+
 plugins {
 	id 'java'
 //	id 'com.github.johnrengelman.shadow' version '6.1.0'
@@ -34,6 +37,55 @@ sourceCompatibility = '11'
 
 tasks.withType(JavaCompile).configureEach {
 	options.encoding = 'UTF-8'
+}
+
+task exportConstantsToJson {
+	doLast {
+		def startTime = System.nanoTime()
+
+		def outputDir = file('src/main/resources/rs117/hd/gamevals')
+		outputDir.mkdirs()
+
+		def exportMap = [
+			'npcs.json'   : ['net.runelite.api.gameval.NpcID'],
+			'objects.json': ['net.runelite.api.gameval.ObjectID', 'net.runelite.api.gameval.ObjectID1'],
+			'anims.json'  : ['net.runelite.api.gameval.AnimationID'],
+			'spotanim.json' : ['net.runelite.api.gameval.SpotanimID']
+		]
+
+		URLClassLoader loader = new URLClassLoader(
+			configurations.compileClasspath.collect { it.toURI().toURL() } as URL[],
+			this.class.classLoader
+		)
+
+		exportMap.each { filename, classList ->
+			def constants = [:]
+
+			classList.each { className ->
+				def clazz = loader.loadClass(className)
+
+				clazz.declaredFields.each { field ->
+					if (Modifier.isPublic(field.modifiers) &&
+						Modifier.isStatic(field.modifiers) &&
+						Modifier.isFinal(field.modifiers)) {
+
+						field.accessible = true
+						constants[field.name] = field.get(null)
+					}
+				}
+			}
+
+			def outputFile = new File(outputDir, filename)
+			outputFile.text = JsonOutput.prettyPrint(JsonOutput.toJson(constants))
+		}
+
+		def elapsedMs = (System.nanoTime() - startTime) / 1_000_000
+		println "Export GameVal completed in ${elapsedMs} ms"
+	}
+}
+
+tasks.named('build') {
+	dependsOn exportConstantsToJson
 }
 
 //shadowJar {

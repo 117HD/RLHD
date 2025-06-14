@@ -51,6 +51,8 @@ import net.runelite.client.plugins.entityhider.EntityHiderPlugin;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.config.MaxDynamicLights;
+import rs117.hd.data.GameValRepository;
+import rs117.hd.data.GameValType;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 import rs117.hd.scene.lights.Alignment;
@@ -109,11 +111,15 @@ public class LightManager {
 	@Inject
 	private FrameTimer frameTimer;
 
+	@Inject
+	private GameValRepository gameValRepository;
+
 	private final ArrayList<Light> WORLD_LIGHTS = new ArrayList<>();
 	private final ListMultimap<Integer, LightDefinition> NPC_LIGHTS = ArrayListMultimap.create();
 	private final ListMultimap<Integer, LightDefinition> OBJECT_LIGHTS = ArrayListMultimap.create();
 	private final ListMultimap<Integer, LightDefinition> PROJECTILE_LIGHTS = ArrayListMultimap.create();
 	private final ListMultimap<Integer, LightDefinition> SPOT_ANIM_LIGHTS = ArrayListMultimap.create();
+	private final ListMultimap<Integer, LightDefinition> ANIMATION_LIGHTS = ArrayListMultimap.create();
 
 	private boolean reloadLights;
 	private EntityHiderConfig entityHiderConfig;
@@ -147,10 +153,11 @@ public class LightManager {
 					light.persistent = true;
 					WORLD_LIGHTS.add(light);
 				}
-				lightDef.npcIds.forEach(id -> NPC_LIGHTS.put(id, lightDef));
-				lightDef.objectIds.forEach(id -> OBJECT_LIGHTS.put(id, lightDef));
-				lightDef.projectileIds.forEach(id -> PROJECTILE_LIGHTS.put(id, lightDef));
-				lightDef.spotAnimIds.forEach(id -> SPOT_ANIM_LIGHTS.put(id, lightDef));
+				lightDef.npcIds.forEach(configName -> NPC_LIGHTS.put(gameValRepository.get(GameValType.NPC,configName), lightDef));
+				lightDef.objectIds.forEach(configName -> OBJECT_LIGHTS.put(gameValRepository.get(GameValType.OBJECT,configName), lightDef));
+				lightDef.projectileIds.forEach(configName -> PROJECTILE_LIGHTS.put(gameValRepository.get(GameValType.SPOTANIM,configName), lightDef));
+				lightDef.spotAnimIds.forEach(configName -> SPOT_ANIM_LIGHTS.put(gameValRepository.get(GameValType.SPOTANIM,configName), lightDef));
+				lightDef.animationIds.forEach(configName -> ANIMATION_LIGHTS.put(gameValRepository.get(GameValType.ANIM,configName), lightDef));
 			}
 
 			log.debug("Loaded {} lights", lights.length);
@@ -244,7 +251,7 @@ public class LightManager {
 						if (anim != null)
 							animationId = anim.getId();
 					}
-					parentExists = light.def.animationIds.contains(animationId);
+					parentExists = ANIMATION_LIGHTS.containsKey(animationId);
 				}
 			} else if (light.projectile != null) {
 				light.origin[0] = (int) light.projectile.getX();
@@ -256,7 +263,7 @@ public class LightManager {
 					hiddenTemporarily = !shouldShowProjectileLights();
 					if (light.animationSpecific) {
 						var animation = light.projectile.getAnimation();
-						parentExists = animation != null && light.def.animationIds.contains(animation.getId());
+						parentExists = animation != null && ANIMATION_LIGHTS.containsKey(animation.getId());
 					}
 					light.orientation = light.projectile.getOrientation();
 				}
@@ -268,7 +275,7 @@ public class LightManager {
 					light.markedForRemoval = true;
 				} else if (light.animationSpecific) {
 					var animation = light.graphicsObject.getAnimation();
-					parentExists = animation != null && light.def.animationIds.contains(animation.getId());
+					parentExists = animation != null && ANIMATION_LIGHTS.containsKey(animation.getId());
 				}
 			} else if (light.actor != null && !light.markedForRemoval) {
 				if (light.actor instanceof NPC && light.actor != cachedNpcs.byIndex(((NPC) light.actor).getIndex()) ||
@@ -285,7 +292,7 @@ public class LightManager {
 					light.orientation = light.actor.getCurrentOrientation();
 
 					if (light.animationSpecific)
-						parentExists = light.def.animationIds.contains(light.actor.getAnimation());
+						parentExists = ANIMATION_LIGHTS.containsKey(light.actor.getAnimation());
 
 					int tileExX = (light.origin[0] >> LOCAL_COORD_BITS) + SCENE_OFFSET;
 					int tileExY = (light.origin[2] >> LOCAL_COORD_BITS) + SCENE_OFFSET;

@@ -36,17 +36,17 @@ public class LightDefinition {
 	public AABB[] areas = {};
 	@JsonAdapter(AABB.JsonAdapter.class)
 	public AABB[] excludeAreas = {};
-	@JsonAdapter(GsonUtils.IntegerSetAdapter.class)
-	public HashSet<Integer> npcIds = new HashSet<>();
-	@JsonAdapter(GsonUtils.IntegerSetAdapter.class)
-	public HashSet<Integer> objectIds = new HashSet<>();
-	@JsonAdapter(GsonUtils.IntegerSetAdapter.class)
-	public HashSet<Integer> projectileIds = new HashSet<>();
-	@JsonAdapter(GsonUtils.IntegerSetAdapter.class)
+	@JsonAdapter(GsonUtils.StringSetAdapter.class)
+	public HashSet<String> npcIds = new HashSet<>();
+	@JsonAdapter(GsonUtils.StringSetAdapter.class)
+	public HashSet<String> objectIds = new HashSet<>();
+	@JsonAdapter(GsonUtils.StringSetAdapter.class)
+	public HashSet<String> projectileIds = new HashSet<>();
+	@JsonAdapter(GsonUtils.StringSetAdapter.class)
 	@SerializedName("graphicsObjectIds") // TODO: rename this
-	public HashSet<Integer> spotAnimIds = new HashSet<>();
-	@JsonAdapter(GsonUtils.IntegerSetAdapter.class)
-	public HashSet<Integer> animationIds = new HashSet<>();
+	public HashSet<String> spotAnimIds = new HashSet<>();
+	@JsonAdapter(GsonUtils.StringSetAdapter.class)
+	public HashSet<String> animationIds = new HashSet<>();
 
 	public void normalize() {
 		if (description == null)
