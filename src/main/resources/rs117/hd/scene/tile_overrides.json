@@ -6114,8 +6114,8 @@
     ],
     "groundMaterial": "GROUND_WEBS",
     "blended": false,
-    "uvScale": 2,
-    "uvOrientation": 32,
+    "uvScale": 3,
+    "uvOrientation": 89,
     "shiftLightness": 14
   },
   {
