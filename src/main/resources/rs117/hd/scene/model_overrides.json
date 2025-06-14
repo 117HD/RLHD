@@ -3076,7 +3076,7 @@
     "flatNormals": true
   },
   {
-    "description": "AL_KHARID_WALLS",
+    "description": "Al Kharid and PoH Whitewashed Walls",
     "baseMaterial": "WATTLE_1",
     "objectIds": [
       1415,
@@ -3948,6 +3948,7 @@
       10471,
       10472,
       10473,
+      13408,
       13409,
       20176,
       20177,
@@ -5334,8 +5335,10 @@
     "uvScale": 0.4
   },
   {
-    "description": "PICARILIUS_DOCKS",
-    "baseMaterial": "GRUNGE_2",
+    "description": "Piscarilius Docks",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 1.1,
     "objectIds": [
       27626,
       27627,
@@ -5361,12 +5364,21 @@
       27650,
       27651,
       42661
-    ],
-    "uvType": "MODEL_XZ"
+    ]
   },
   {
-    "description": "PICARILIUS_DOCKS_SAND_TILE",
-    "baseMaterial": "GRUNGE_2",
+    "description": "Piscarilius Docks with Sand overlay",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 1.1,
+    "colorOverrides": [
+      {
+        "description": "Sand",
+        "baseMaterial": "DIRT_1",
+        "colors": "l > 40",
+        "uvType": "WORLD_XZ"
+      }
+    ],
     "objectIds": [
       27649,
       27652,
@@ -5381,8 +5393,7 @@
       27657,
       27658,
       27660
-    ],
-    "uvType": "MODEL_XZ"
+    ]
   },
   {
     "description": "Picarilius docks with Carpet",
@@ -5682,25 +5693,43 @@
       35846,
       42248,
       47077,
-      47078
+      47078,
+      51660
     ],
     "uvType": "BOX",
     "uvScale": 0.5
   },
   {
-    "description": "Motherload mine walls",
+    "description": "Motherlode Mine Water Wheel",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      26671,
+      26672
+    ]
+  },
+  {
+    "description": "Motherlode Mine Water Wheel Support",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      26669,
+      26670
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Motherlode Mine Walls",
     "baseMaterial": "DIRT_2",
     "objectIds": [
-      10047,
-      26655,
       26656,
       26658,
       26659,
       26660,
       26661,
-      26662,
-      26663,
-      26664,
       26665,
       26666,
       26667,
@@ -5708,17 +5737,60 @@
       30368,
       30369,
       30370,
-      30375
+      26662,
+      26663,
+      26664,
+      53244
     ],
     "uvType": "BOX",
-    "uvScale": 0.5
+    "uvScale": 0.7
   },
   {
-    "description": "Motherload mine upper floor",
+    "description": "Motherlode Mine Walls Lighten",
+    "baseMaterial": "DIRT_2_LIGHT",
+    "areas": [ "Motherlode Mine Dark Wall Fix" ],
+    "objectIds": [
+      26656,
+      26661,
+      26662,
+      26663,
+      26664,
+      26665,
+      26666,
+      26667,
+      30368
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7
+  },
+  {
+    "description": "Motherlode Mine Walls Lighten & Darken Caves",
+    "baseMaterial": "DIRT_2_LIGHT",
+    "areas": [ "Motherlode Mine Dark Wall Fix" ],
+    "objectIds": [
+      10047,
+      26655,
+      30375,
+      53244
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "PURE_BLACK"
+      }
+    ]
+  },
+  {
+    "description": "Motherlode Mine Upper Floor",
     "baseMaterial": "DIRT_2",
     "objectIds": [
       26657
-    ]
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.5,
+    "uvOrientation": 256
   },
   {
     "description": "Amathyst mine walls",
@@ -5732,7 +5804,7 @@
     "uvType": "BOX"
   },
   {
-    "description": "Motherload Mine Rockfall",
+    "description": "Motherlode Mine Rockfall",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       26679,
@@ -5741,6 +5813,75 @@
     "uvType": "BOX",
     "uvScale": 0.4,
     "uvOrientation": 400
+  },
+  {
+    "description": "Motherlode Mine - Cogs",
+    "baseMaterial": "METALLIC_1_HIGHGLOSS",
+    "objectIds": [
+      13589
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Motherlode Mine - Ladder, area specific due to use in other places",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "areas": [ "MOTHERLODE_MINE" ],
+    "objectIds": [
+      19046,
+      19047,
+      19048,
+      19049,
+      19050
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Motherlode Mine - Machine",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "areas": [ "MOTHERLODE_MINE" ],
+    "objectIds": [
+      26681,
+      26682
+    ]
+  },
+  {
+    "description": "Motherlode Trough",
+    "baseMaterial": "METALLIC_1_LIGHT_HIGHGLOSS",
+    "objectIds": [
+      3428,
+      18606,
+      18607,
+      18609,
+      26683,
+      26684,
+      26685,
+      26686,
+      53243
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Motherlode Trough Darker",
+    "baseMaterial": "METALLIC_1_HIGHGLOSS",
+    "areas": [ "Motherlode Mine Dark Trough Fix" ],
+    "objectIds": [
+      3428,
+      26683,
+      26684,
+      26685,
+      26686
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Motherlode Mine - Darken Mercy",
+    "baseMaterial": "GRAY_75",
+    "areas": [ "MOTHERLODE_MINE" ],
+    "npcIds": [
+      5562
+    ]
   },
   {
     "description": "Mining Guild statue",
@@ -5850,7 +5991,9 @@
       26107,
       50143,
       50144,
-      15115
+      15115,
+      52614,
+      52621
     ],
     "uvType": "BOX",
     "uvScale": 0.8
@@ -6113,7 +6256,8 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       7401,
-      7406
+      7406,
+      55033
     ],
     "uvType": "BOX",
     "uvOrientation": 512,
@@ -6899,6 +7043,10 @@
       12350,
       13001,
       13002,
+      13094,
+      13095,
+      13096,
+      13097,
       14749,
       14750,
       15759,
@@ -8360,7 +8508,8 @@
       41452,
       41738,
       42066,
-      44854
+      44854,
+      55048
     ],
     "uvType": "BOX",
     "flatNormals": true
@@ -8469,7 +8618,8 @@
       14742,
       15693,
       42068,
-      42070
+      42070,
+      55049
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -9692,13 +9842,15 @@
   },
   {
     "description": "Ice Queens Dungeon - Walls - Snow",
-    "baseMaterial": "SNOW_2",
+    "baseMaterial": "SNOW_COLORED",
     "objectIds": [
       1440,
       1441,
       1442
     ],
-    "uvType": "GEOMETRY"
+    "uvType": "BOX",
+    "uvScale": 1.2,
+    "uvOrientation": 42
   },
   {
     "description": "Ice Queens Dungeon - Objects - Icicle - Ice",
@@ -14337,26 +14489,6 @@
     "uvScale": 0.66
   },
   {
-    "description": "Motherload Trough",
-    "baseMaterial": "METALLIC_1_LIGHT_HIGHGLOSS",
-    "objectIds": [
-      3428,
-      26683,
-      26684,
-      26685,
-      26686
-    ],
-    "uvType": "BOX"
-  },
-  {
-    "description": "Motherload Mine - Cogs",
-    "baseMaterial": "METALLIC_1_LIGHT_HIGHGLOSS",
-    "objectIds": [
-      13589
-    ],
-    "uvType": "MODEL_XZ"
-  },
-  {
     "description": "Blast Furnace",
     "baseMaterial": "METALLIC_1",
     "objectIds": [
@@ -14489,13 +14621,13 @@
     ]
   },
   {
-    "description": "Motherload Furnace",
+    "description": "Motherload Hopper",
     "baseMaterial": "METALLIC_1_HIGHGLOSS",
     "objectIds": [
       26674
     ],
-    "uvType": "MODEL_XZ_MIRROR_A",
-    "uvScale": 0.7
+    "uvType": "BOX",
+    "uvScale": 0.5
   },
   {
     "description": "Objects - Stone - Giants Foundry - Moulds",
@@ -14853,6 +14985,12 @@
     "description": "Hide vanilla scrolling water models, until a better solution is found",
     "objectIds": [ 754, 10459, 18863 ],
     "hide": true
+  },
+  {
+    "description": "Texture for water in Motherlode Mine troughs",
+    "objectIds": [ 754, 10459 ],
+    "areas": [ "MOTHERLODE_MINE"],
+    "textureMaterial": "MOTHERLODE_MINE_WATER"
   },
   {
     "description": "Poison Waste dungeon flowing tar (TODO)",
@@ -15491,6 +15629,15 @@
     "uvScale": 0.65
   },
   {
+    "description": "Motherlode Mine - Deposit Box",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      25937
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7
+  },
+  {
     "description": "Objects - Textured Rocks - Rocks with Vines",
     "baseMaterial": "LEAF_VEINS",
     "textureMaterial": "HD_CONCRETE",
@@ -15627,21 +15774,51 @@
   },
   {
     "description": "Walls - Bricks - Light Brick",
+    "flatNormals": true,
     "objectIds": [
-      1902,
-      1904,
-      1907,
       1920,
-      13090,
-      13091,
       17088,
       15453,
       15454,
       15455,
       15456,
       15457
+    ]
+  },
+  {
+    "description": "PoH - Basic stone wall",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "flatNormals": true,
+    "objectIds": [
+      1902,
+      13090
+    ]
+  },
+  {
+    "description": "PoH - Basic stone wall with wooden window frame",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "colors": "s == 0 && l < 30",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX"
+      }
     ],
-    "flatNormals": true
+    "objectIds": [
+      13091
+    ]
+  },
+  {
+    "description": "Walls - Bricks - Light Brick with White backs",
+    "flatNormals": true,
+    "objectIds": [
+      1904,
+      1907
+    ]
   },
   {
     "description": "Objects - Root - Small",
@@ -18648,26 +18825,6 @@
     ]
   },
   {
-    "description": "Grotesque Guardians",
-    "hideVanillaShadows": true,
-    "retainVanillaShadowsInPvm": true,
-    "npcIds": [
-      7851,
-      7852,
-      7853,
-      7854,
-      7855,
-      7882,
-      7883,
-      7884,
-      7885,
-      7886,
-      7887,
-      7888,
-      7889
-    ]
-  },
-  {
     "description": "Falling rocks at Grotesque Guardians",
     "hideVanillaShadows": true,
     "retainVanillaShadowsInPvm": true,
@@ -19730,6 +19887,14 @@
     "uvType": "MODEL_XZ"
   },
   {
+    "description": "Varlamore Tent Walls",
+    "baseMaterial": "CARPET",
+    "objectIds": [
+      44853
+    ],
+    "uvType": "BOX"
+  },
+  {
     "description": "Varlamore Circular Awning, MODEL_XZ is used with intent",
     "baseMaterial": "CARPET",
     "objectIds": [
@@ -19749,16 +19914,223 @@
     "uvType": "MODEL_YZ"
   },
   {
-    "description": "Colossal Wyrm Remains Skull",
+    "description": "Colossal Wyrm Agility Course Hay Bale",
+    "baseMaterial": "HD_HAY",
+    "objectIds": [
+      55173,
+      55174,
+      55175,
+      46309,
+      46311
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7
+  },
+  {
+    "description": "Colossal Wyrm Agility Course Skull",
     "baseMaterial": "BONE",
     "objectIds": [
       51910,
       51911,
       51912,
-      51913
+      51913,
+      55142
     ],
     "uvType": "BOX",
     "uvScale": 0.85
+  },
+  {
+    "description": "Colossal Wyrm Agility Course Bones",
+    "baseMaterial": "BONE",
+    "objectIds": [
+      55138,
+      55139,
+      55140,
+      55141,
+      55143
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Colossal Wyrm Agility Course Bones with Dirt",
+    "baseMaterial": "BONE",
+    "objectIds": [
+      55144,
+      55145
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "colors": [ "h == 6", "h == 8" ],
+        "baseMaterial": "DIRT_1"
+      }
+    ]
+  },
+  {
+    "description": "Colossal Wyrm Agility Course Bones with Wood",
+    "baseMaterial": "BONE",
+    "objectIds": [
+      55146
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "colors": [ "h == 6", "h == 8" ],
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.74,
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Colossal Wyrm Agility Course Scaffolding Floor",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      46803,
+      55147,
+      55148,
+      55194
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75
+  },
+  {
+    "description": "Colossal Wyrm Agility Course Scaffolding",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      55149,
+      55150,
+      55151,
+      55158,
+      55160,
+      55161
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Colossal Wyrm Agility Course Wooden Decorations",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      55037,
+      15832,
+      55162,
+      55163,
+      55164,
+      55165
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Colossal Wyrm Agility Course Scaffolding with Ropes",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      55152,
+      55153,
+      55154,
+      55155,
+      55156,
+      55178,
+      55190,
+      55191,
+      55196
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": [ "s == 4" ],
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Colossal Wyrm Agility Course Tightrope",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      42239,
+      55166,
+      55168,
+      55180,
+      55182,
+      55184,
+      55186,
+      55188,
+      55170,
+      55171,
+      55172,
+      55179,
+      55192
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": [ "s == 7" ],
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.35,
+        "uvOrientation": 125
+      }
+    ]
+  },
+  {
+    "description": "Colossal Wyrm Agility Course Scaffolding Rotated",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      55169
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": [ "s == 7" ],
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.35,
+        "uvOrientation": -412
+      }
+    ]
+  },
+  {
+    "description": "Colossal Wyrm Agility Course Scaffolding Rope Support",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "objectIds": [
+      42233,
+      42234
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "s == 7" ],
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": -100
+      }
+    ]
+  },
+  {
+    "description": "Colossal Wyrm Agility Course Termite Hill",
+    "baseMaterial": "DIRT_2",
+    "uvType": "BOX",
+    "uvScale": 0.33,
+    "objectIds": [
+      55135,
+      55136,
+      55137
+    ]
   },
   {
     "description": "Perilous Moons Murals",
@@ -24963,7 +25335,7 @@
   },
   {
     "description": "Rune Essence Mine Rock",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "STONE_NORMALED_LIGHT",
     "uvType": "BOX",
     "uvOrientation": 768,
     "uvScale": 1.5,
@@ -27101,6 +27473,323 @@
     ],
     "objectIds": [
       31675
+    ]
+  },
+  {
+    "description": "Grotesque Guardians Tiled Floor",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      31653,
+      31654,
+      31655,
+      31656,
+      31657,
+      31658,
+      31659,
+      31660,
+      31661,
+      31662,
+      31663,
+      31664,
+      31665,
+      31666,
+      31667,
+      31668
+    ],
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 156
+  },
+  {
+    "description": "Grotesque Guardians Low Wall",
+    "baseMaterial": "MARBLE_2",
+    "objectIds": [
+      31642,
+      31643,
+      31644
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 156
+  },
+  {
+    "description": "Grotesque Guardians Roof",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      31635,
+      31637,
+      31638,
+      31639,
+      31640,
+      31641,
+      31645,
+      31646,
+      31647,
+      31648,
+      31649,
+      31651,
+      31652
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Grotesque Guardians Dusk and Dawn Statues",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      31670,
+      31671
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.2
+  },
+  {
+    "description": "Grotesque Guardians Dusk and Dawn Npc",
+    "hideVanillaShadows": true,
+    "retainVanillaShadowsInPvm": true,
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      31676,
+      31677
+    ],
+    "npcIds": [
+      7849,
+      7850,
+      7851,
+      7852,
+      7853,
+      7854,
+      7855,
+      7882,
+      7883,
+      7884,
+      7885,
+      7886,
+      7887,
+      7888,
+      7889
+    ],
+    "uvScale": 0.75
+  },
+  {
+    "description": "Grotesque Guardians Bell",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "objectIds": [
+      31685
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 7", "h == 8" ],
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS"
+      }
+    ]
+  },
+  {
+    "description": "PoH - Crude Wooden Chair",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      6752
+    ]
+  },
+  {
+    "description": "PoH - Wooden Chair",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      6753
+    ]
+  },
+  {
+    "description": "PoH - Basic wooden walls",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "flatNormals": true,
+    "objectIds": [
+      13098,
+      13099
+    ]
+  },
+  {
+    "description": "PoH - Basic wooden walls with shutters",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "flatNormals": true,
+    "objectIds": [
+      13253
+    ]
+  },
+  {
+    "description": "PoH - Basic wooden wall roofs",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "flatNormals": true,
+    "objectIds": [
+      17164,
+      17165,
+      17166,
+      17167,
+      17168,
+      17169,
+      17170,
+      17171,
+      17172,
+      17173,
+      17174,
+      17175,
+      17176,
+      17177,
+      17178,
+      17179
+    ]
+  },
+  {
+    "description": "PoH - Basic wooden wall doors",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "description": "Metal Hinge",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 42
+      }
+    ],
+    "objectIds": [
+      13100,
+      13101,
+      13102,
+      13103
+    ]
+  },
+  {
+    "description": "PoH - Basic stone wall with shutters",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "colors": "s == 4",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 512
+      }
+    ],
+    "objectIds": [
+      13226
+    ]
+  },
+  {
+    "description": "PoH - Whitewashed Walls with woodgrain sides",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "flatNormals": true,
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "WATTLE_1",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      13005,
+      13010
+    ]
+  },
+  {
+    "description": "PoH - Whitewashed Walls with woodgrain sides and shutters",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "flatNormals": true,
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "WATTLE_1",
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h == 0",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      13235
+    ]
+  },
+  {
+    "description": "PoH - Whitewashed wall wooden plank doors",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "colors": "s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS"
+      }
+    ],
+    "objectIds": [
+      13006,
+      13007,
+      13008,
+      13009
+    ]
+  },
+  {
+    "description": "PoH - Fremennik plank walls",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      13111,
+      13112
+    ]
+  },
+  {
+    "description": "PoH - Fremennik plank walls with roofs",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      17180,
+      17181,
+      17182,
+      17183,
+      17184,
+      17185,
+      17186,
+      17187,
+      17188,
+      17189,
+      17190,
+      17191,
+      17192,
+      17193,
+      17194,
+      17195
+    ]
+  },
+  {
+    "description": "PoH - Fremennik plank doors",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      13107,
+      13108,
+      13109,
+      13110
     ]
   },
   {

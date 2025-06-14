@@ -490,9 +490,9 @@ public class ModelPusher {
 
 			if (ModelHash.getUuidType(uuid) == ModelHash.TYPE_PLAYER) {
 				int index = ModelHash.getUuidId(uuid);
-				Player[] players = client.getCachedPlayers();
-				if (index >= 0 && index < players.length) {
-					Player player = players[index];
+				var players = client.getTopLevelWorldView().players();
+				if (index >= 0 && index < 2048) {
+					Player player = players.byIndex(index);
 					if (player != null && player.getPlayerComposition().getEquipmentId(KitType.WEAPON) == ItemID.MAGIC_CARPET)
 						return ZEROED_INTS; // Hide the face
 				}
