@@ -7273,11 +7273,25 @@
     "description": "Metal Lanturn",
     "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
     "objectIds": [
-      205,
       3474,
       4501,
       4503,
       24172
+    ]
+  },
+  {
+    "description": "Static Lantern - Brighten Glass and Texture Metal",
+    "baseMaterial": "GRAY_125",
+    "objectIds": [
+      205
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.25
+      }
     ]
   },
   {
@@ -15768,7 +15782,7 @@
   },
   {
     "description": "Fortune-teller Aris - Tent",
-    "baseMaterial": "CARPET",
+    "baseMaterial": "BURLAP",
     "objectIds": [
       2460,
       2461,
@@ -15776,6 +15790,23 @@
       2464,
       2489,
       2490
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.85
+  },
+  {
+    "description": "Fortune-teller Aris - Table with Crystal Ball",
+    "baseMaterial": "NONE",
+    "objectIds": [
+      2459
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 7",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
     ],
     "uvType": "BOX",
     "uvScale": 0.85
