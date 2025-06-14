@@ -1227,15 +1227,15 @@
   },
   {
     "area": "NIGHTMARE_OF_ASHIHAMA_ARENA",
-    "ambientColor": "#9a5dfd",
+    "ambientColor": "#a36bff",
     "ambientStrength": 2.5,
-    "directionalColor": "#00ff60",
+    "directionalColor": "#c9c9c9",
     "directionalStrength": 2,
     "sunAngles": [
       80,
       190
     ],
-    "fogDepth": 30
+    "fogDepth": 50
   },
   {
     "area": "SISTERHOOD_SANCTUARY",

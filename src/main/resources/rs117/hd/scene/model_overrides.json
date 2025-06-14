@@ -30430,5 +30430,217 @@
       11654,
       11655
     ]
+  },
+  {
+    "description": "Nightmare of Ashihama - Arena Floor",
+    "baseMaterial": "CARPET",
+    "uvType": "MODEL_XZ",
+    "objectIds": [
+      37674,
+      37675,
+      37676,
+      37677,
+      37678,
+      37680,
+      37681,
+      37682,
+      37683,
+      37684,
+      37685,
+      37686,
+      37687,
+      37688,
+      37689,
+      37690,
+      37691,
+      37692,
+      37693,
+      37694,
+      37695,
+      37696,
+      37697,
+      37698,
+      37699,
+      37700
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "MODEL_XZ",
+        "uvOrientation": 512,
+        "uvScale": 0.9
+      },
+      {
+        "colors": "h == 25",
+        "baseMaterial": "GRUNGE_3_LIGHT_SHINY",
+        "uvType": "MODEL_XZ",
+        "uvOrientation": 156
+      }
+    ]
+  },
+  {
+    "description": "Nightmare of Ashihama - Arena Fence",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "objectIds": [
+      37701,
+      37702,
+      37703,
+      37704,
+      37705
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.75
+      }
+    ]
+  },
+  {
+    "description": "Nightmare of Ashihama - Torii Gates",
+    "baseMaterial": "METALLIC_1",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      37637,
+      37638,
+      37639,
+      37640,
+      37642,
+      37643,
+      37644
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvOrientation": 512,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Nightmare of Ashihama - Marble Supports",
+    "baseMaterial": "MARBLE_2",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      37636,
+      37646,
+      37651,
+      37652,
+      37653,
+      37658,
+      37659,
+      37660,
+      37661,
+      37662,
+      37663,
+      37664,
+      37665,
+      37666,
+      37667,
+      37668,
+      37669,
+      37670,
+      37671,
+      37672,
+      37673
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 2",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Nightmare of Ashihama - Torii Gates",
+    "baseMaterial": "MARBLE_2",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      37647,
+      37648,
+      37649,
+      37650,
+      37654,
+      37655,
+      37656,
+      37657
+
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 2",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Nightmare of Ashihama - Totem",
+    "baseMaterial": "MARBLE_2",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "npcIds": [
+      9434,
+      9435,
+      9436,
+      9437,
+      9438,
+      9439,
+      9440,
+      9441,
+      9442,
+      9443,
+      9444,
+      9445
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7 || h == 8 || h == 9 || h == 60",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "colors": "h == 0 && s == 0 || h == 5 || h == 25",
+        "baseMaterial": "GRAY_90"
+      },
+      {
+        "colors": "s == 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 200
+      }
+    ]
+  },
+  {
+    "description": "Nightmare of Ashihama - Floating Island",
+    "baseMaterial": "GRASS_2",
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.75,
+    "objectIds": [
+      37719,
+      37720,
+      37721
+
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "DIRT_1",
+        "uvType": "GEOMETRY"
+      },
+      {
+        "colors": "h == 0 || h == 17 && s == 7",
+        "baseMaterial": "NONE"
+      }
+    ]
   }
 ]
