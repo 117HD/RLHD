@@ -22302,11 +22302,12 @@
     "duration": 1250,
     "range": 20,
     "objectIds": [
+      27097,
+      33408,
       33409,
       33410,
       37549,
-      37550,
-      27097
+      37550
     ]
   },
   {
@@ -36481,7 +36482,6 @@
     "description": "Asgarnia Ice Dungeon Ladder",
     "objectIds": [ 17385 ],
     "height": 360,
-    "alignment": "CENTER",
     "radius": 900,
     "strength": 10,
     "color": [
@@ -36497,9 +36497,7 @@
     "description": "Asgarnia Ice Dungeon - Royal Titans Lava 1",
     "worldX": 2908,
     "worldY": 9573,
-    "plane": 0,
     "height": 220,
-    "alignment": "CENTER",
     "radius": 300,
     "strength": 10,
     "color": [
@@ -36515,9 +36513,7 @@
     "description": "Asgarnia Ice Dungeon - Royal Titans Lava 2",
     "worldX": 2908,
     "worldY": 9571,
-    "plane": 0,
     "height": 220,
-    "alignment": "CENTER",
     "radius": 300,
     "strength": 10,
     "color": [
@@ -36533,9 +36529,7 @@
     "description": "Asgarnia Ice Dungeon - Royal Titans Lava 3",
     "worldX": 2908,
     "worldY": 9569,
-    "plane": 0,
     "height": 220,
-    "alignment": "CENTER",
     "radius": 300,
     "strength": 10,
     "color": [
@@ -36551,9 +36545,7 @@
     "description": "Asgarnia Ice Dungeon - Royal Titans Lava 4",
     "worldX": 2908,
     "worldY": 9567,
-    "plane": 0,
     "height": 220,
-    "alignment": "CENTER",
     "radius": 300,
     "strength": 10,
     "color": [
@@ -36569,9 +36561,7 @@
     "description": "Asgarnia Ice Dungeon - Royal Titans Lava 5",
     "worldX": 2908,
     "worldY": 9565,
-    "plane": 0,
     "height": 220,
-    "alignment": "CENTER",
     "radius": 300,
     "strength": 10,
     "color": [
@@ -36587,9 +36577,7 @@
     "description": "Asgarnia Ice Dungeon - Royal Titans Lava 6",
     "worldX": 2908,
     "worldY": 9563,
-    "plane": 0,
     "height": 220,
-    "alignment": "CENTER",
     "radius": 300,
     "strength": 10,
     "color": [
@@ -36605,9 +36593,7 @@
     "description": "Asgarnia Ice Dungeon - Royal Titans Lava 7",
     "worldX": 2908,
     "worldY": 9561,
-    "plane": 0,
     "height": 220,
-    "alignment": "CENTER",
     "radius": 300,
     "strength": 10,
     "color": [
@@ -36622,7 +36608,6 @@
   {
     "description": "FIRE",
     "height": 100,
-    "alignment": "CENTER",
     "radius": 200,
     "strength": 15.5,
     "fadeInDuration": 10,
