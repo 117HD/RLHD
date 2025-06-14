@@ -17613,10 +17613,10 @@
   },
   {
     "description": "HELLRAT",
-    "height": 20,
+    "height": 40,
     "alignment": "CENTER",
-    "radius": 220,
-    "strength": 7.5,
+    "radius": 240,
+    "strength": 5.5,
     "color": [
       255,
       0,
@@ -17626,7 +17626,24 @@
     "duration": 0,
     "range": 0,
     "npcIds": [
-      4809,
+      4809
+    ]
+  },
+  {
+    "description": "HELLRAT BEHEMOTH",
+    "height": 80,
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 12.5,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "npcIds": [
       6793
     ]
   },
@@ -18652,15 +18669,15 @@
     ]
   },
   {
-    "description": "FRAGMENT_OF_SEREN",
+    "description": "FRAGMENT_OF_SEREN_PRE_DEFEAT",
     "height": 200,
     "alignment": "CENTER",
     "radius": 500,
-    "strength": 17.5,
+    "strength": 14.5,
     "color": [
-      187,
-      153,
-      255
+      255,
+      0,
+      0
     ],
     "type": "PULSE",
     "duration": 3200,
@@ -19939,6 +19956,24 @@
     ]
   },
   {
+    "description": "STANDING_TORCH_SHORTER_RADIUS",
+    "height": 200,
+    "alignment": "CENTER",
+    "radius": 350,
+    "strength": 9,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      10658
+    ]
+  },
+  {
     "description": "STANDING_TORCH_SHORT",
     "height": 200,
     "alignment": "CENTER",
@@ -20200,8 +20235,8 @@
   },
   {
     "description": "FLOOR_CANDLES_1",
-    "height": 10,
-    "radius": 300,
+    "height": 40,
+    "radius": 280,
     "strength": 10,
     "color": [
       252,
@@ -20218,8 +20253,8 @@
   },
   {
     "description": "FLOOR_CANDLES_2",
-    "height": 10,
-    "radius": 200,
+    "height": 40,
+    "radius": 190,
     "strength": 10,
     "color": [
       252,
@@ -22997,18 +23032,18 @@
   },
   {
     "description": "WELL_OF_VOYAGE",
-    "height": 200,
+    "height": 400,
     "alignment": "CENTER",
-    "radius": 250,
-    "strength": 15,
+    "radius": 700,
+    "strength": 20,
     "color": [
       255,
       255,
       255
     ],
     "type": "PULSE",
-    "duration": 1200,
-    "range": 30,
+    "duration": 3000,
+    "range": 7,
     "objectIds": [
       4004,
       4005
@@ -23016,9 +23051,9 @@
   },
   {
     "description": "ELVEN_LAMP",
-    "height": 180,
+    "height": 160,
     "alignment": "CENTER",
-    "radius": 250,
+    "radius": 350,
     "strength": 10,
     "color": [
       255,
@@ -23026,8 +23061,8 @@
       255
     ],
     "type": "PULSE",
-    "duration": 1000,
-    "range": 10,
+    "duration": 2000,
+    "range": 7,
     "objectIds": [
       35867,
       35868,
@@ -23038,10 +23073,26 @@
   },
   {
     "description": "GRAND_LIBRARY_PORTAL",
-    "height": 150,
-    "alignment": "CENTER",
+    "offset": [ -15, 150, 0 ],
     "radius": 450,
-    "strength": 12.5,
+    "strength": 3,
+    "color": [
+      0,
+      200,
+      225
+    ],
+    "type": "PULSE",
+    "duration": 1200,
+    "range": 10,
+    "objectIds": [
+      35075
+    ]
+  },
+  {
+    "description": "GRAND_LIBRARY_PORTAL_2",
+    "offset": [ 0, 5, 0 ],
+    "radius": 450,
+    "strength": 10,
     "color": [
       0,
       200,
@@ -23056,10 +23107,9 @@
   },
   {
     "description": "GRAND_LIBRARY_CRYSTAL_1",
-    "height": 310,
-    "alignment": "FRONTLEFT",
-    "radius": 200,
-    "strength": 12.5,
+    "offset": [ 50, 310, -50 ],
+    "radius": 350,
+    "strength": 8,
     "color": [
       0,
       200,
@@ -23074,10 +23124,9 @@
   },
   {
     "description": "GRAND_LIBRARY_CRYSTAL_2",
-    "height": 140,
-    "alignment": "FRONTLEFT",
-    "radius": 200,
-    "strength": 12.5,
+    "offset": [ 50, 160, -50 ],
+    "radius": 350,
+    "strength": 8,
     "color": [
       0,
       200,
@@ -23089,15 +23138,16 @@
     "objectIds": [
       35059,
       35061,
+      35064,
       35384
     ]
   },
   {
     "description": "GRAND_LIBRARY_LIGHT_1",
-    "height": 140,
+    "height": 90,
     "alignment": "CENTER",
-    "radius": 200,
-    "strength": 12.5,
+    "radius": 300,
+    "strength": 10,
     "color": [
       0,
       200,
@@ -23112,10 +23162,9 @@
   },
   {
     "description": "GRAND_LIBRARY_LIGHT_2",
-    "height": 310,
-    "alignment": "CENTER",
-    "radius": 200,
-    "strength": 12.5,
+    "offset": [ -40, 360, 0 ],
+    "radius": 350,
+    "strength": 10,
     "color": [
       0,
       200,
@@ -23131,11 +23180,10 @@
     ]
   },
   {
-    "description": "GRAND_LIBRARY_SEAL",
-    "height": 150,
-    "alignment": "FRONT",
+    "description": "GRAND_LIBRARY_SEAL 1",
+    "offset": [ -90, 160, -50 ],
     "radius": 300,
-    "strength": 12.5,
+    "strength": 8,
     "color": [
       0,
       200,
@@ -23153,14 +23201,65 @@
       35461,
       35463,
       35465
-    ]
+    ],
+    "fadeOutDuration": 300
+  },
+  {
+    "description": "GRAND_LIBRARY_SEAL_2",
+    "offset": [ 90, 160, -50 ],
+    "radius": 300,
+    "strength": 8,
+    "color": [
+      0,
+      200,
+      225
+    ],
+    "type": "PULSE",
+    "duration": 3200,
+    "range": 5,
+    "objectIds": [
+      35451,
+      35453,
+      35455,
+      35457,
+      35459,
+      35461,
+      35463,
+      35465
+    ],
+    "fadeOutDuration": 300
+  },
+  {
+    "description": "GRAND_LIBRARY_SEAL_3",
+    "offset": [ 0, 150, -80 ],
+    "radius": 300,
+    "strength": 5,
+    "color": [
+      0,
+      200,
+      225
+    ],
+    "type": "PULSE",
+    "duration": 3200,
+    "range": 5,
+    "objectIds": [
+      35451,
+      35453,
+      35455,
+      35457,
+      35459,
+      35461,
+      35463,
+      35465
+    ],
+    "fadeOutDuration": 300
   },
   {
     "description": "GRAND_LIBRARY_SEAL_BROKEN",
     "height": 150,
-    "alignment": "FRONT",
-    "radius": 300,
-    "strength": 12.5,
+    "alignment": "BACK",
+    "radius": 80,
+    "strength": 120,
     "color": [
       0,
       200,
@@ -23182,7 +23281,7 @@
     ]
   },
   {
-    "description": "FRAGMENT_OF_SEREN",
+    "description": "FRAGMENT_OF_SEREN_POST_DEFEAT",
     "height": 280,
     "alignment": "CENTER",
     "radius": 500,
@@ -23255,7 +23354,7 @@
       255
     ],
     "type": "PULSE",
-    "duration": 900,
+    "duration": 2000,
     "range": 20,
     "objectIds": [
       36083,
@@ -23337,9 +23436,8 @@
   },
   {
     "description": "GAUNTLET_LIT_NODE_1",
-    "height": 210,
-    "alignment": "BACKRIGHT",
-    "radius": 200,
+    "offset": [ -80, 210, 20 ],
+    "radius": 300,
     "strength": 10,
     "color": [
       0,
@@ -23355,9 +23453,8 @@
   },
   {
     "description": "GAUNTLET_LIT_NODE_2",
-    "height": 210,
-    "alignment": "BACKLEFT",
-    "radius": 200,
+    "offset": [ 80, 210, 20 ],
+    "radius": 300,
     "strength": 10,
     "color": [
       0,
@@ -23406,6 +23503,23 @@
     "objectIds": [
       36064
     ]
+  },
+  {
+    "description": "GAUNTLET_FISHING_SPOT",
+    "height": 40,
+    "alignment": "CENTER",
+    "radius": 225,
+    "strength": 10,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      36068
+    ],
+    "fadeOutDuration": 100
   },
   {
     "description": "CORRUPTED_TELEPORT_PLATFORM",
@@ -23481,10 +23595,9 @@
   },
   {
     "description": "CORRUPTED_GAUNTLET_LIT_NODE_1",
-    "height": 210,
-    "alignment": "BACKRIGHT",
-    "radius": 200,
-    "strength": 10,
+    "offset": [ -80, 210, 20 ],
+    "radius": 350,
+    "strength": 7,
     "color": [
       255,
       0,
@@ -23499,10 +23612,9 @@
   },
   {
     "description": "CORRUPTED_GAUNTLET_LIT_NODE_2",
-    "height": 210,
-    "alignment": "BACKLEFT",
-    "radius": 200,
-    "strength": 10,
+    "offset": [ 80, 210, 20 ],
+    "radius": 350,
+    "strength": 7,
     "color": [
       255,
       0,
@@ -23550,6 +23662,23 @@
     "objectIds": [
       35967
     ]
+  },
+  {
+    "description": "GAUNTLET_FISHING_SPOT",
+    "height": 40,
+    "alignment": "CENTER",
+    "radius": 225,
+    "strength": 10,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      35971
+    ],
+    "fadeOutDuration": 100
   },
   {
     "description": "ZALCANO_ROCK_FORMATION_GLOWING",
@@ -23786,11 +23915,11 @@
     ]
   },
   {
-    "description": "PYRAMID_PLUNDER_TOMB_DOOR",
+    "description": "PYRAMID_PLUNDER_TOMB_DOOR_1",
     "height": 100,
-    "alignment": "FRONT",
+    "alignment": "CENTRE",
     "radius": 400,
-    "strength": 10,
+    "strength": 15,
     "color": [
       255,
       224,
@@ -23800,14 +23929,31 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      20931,
+      20931
+    ]
+  },
+  {
+    "description": "PYRAMID_PLUNDER_TOMB_DOOR_2",
+    "height": 100,
+    "alignment": "CENTRE",
+    "radius": 350,
+    "strength": 65,
+    "color": [
+      255,
+      224,
+      166
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "objectIds": [
       20932
     ]
   },
   {
     "description": "PYRAMID_PLUNDER_WALL_TORCH",
     "height": 205,
-    "offset": [ -15, 0, 0 ],
+    "offset": [ -30, 0, -5 ],
     "radius": 350,
     "strength": 12.5,
     "color": [
@@ -25629,6 +25775,40 @@
     "range": 20,
     "objectIds": [
       9098
+    ]
+  },
+  {
+    "description": "BLAST_FURNACE_STOVE_TOP",
+    "offset": [ 0, 215, 0 ],
+    "radius": 40,
+    "strength": 75,
+    "color": [
+      200,
+      70,
+      10
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 5,
+    "objectIds": [
+      9087
+    ]
+  },
+  {
+    "description": "BLAST_FURNACE_STOVE_BOTTOM",
+    "offset": [ 140, 70, 0 ],
+    "radius": 90,
+    "strength": 45,
+    "color": [
+      200,
+      70,
+      10
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 5,
+    "objectIds": [
+      9087
     ]
   },
   {
@@ -27951,7 +28131,9 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      43704
+      43704,
+      43787,
+      43812
     ]
   },
   {
@@ -27969,7 +28151,9 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      43711
+      43711,
+      43794,
+      43819
     ]
   },
   {
@@ -27987,7 +28171,9 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      43703
+      43703,
+      43786,
+      43811
     ]
   },
   {
@@ -28005,7 +28191,10 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      43702
+      43702,
+      43785,
+      43810,
+      43821
     ]
   },
   {
@@ -28023,7 +28212,9 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      43710
+      43710,
+      43793,
+      43818
     ]
   },
   {
@@ -28041,7 +28232,9 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      43701
+      43701,
+      43784,
+      43809
     ]
   },
   {
@@ -28059,7 +28252,10 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      43705
+      43705,
+      43788,
+      43813,
+      43822
     ]
   },
   {
@@ -28077,7 +28273,9 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      43709
+      43709,
+      43792,
+      43817
     ]
   },
   {
@@ -28095,7 +28293,9 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      43706
+      43706,
+      43789,
+      43814
     ]
   },
   {
@@ -28113,7 +28313,9 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      43707
+      43707,
+      43790,
+      43815
     ]
   },
   {
@@ -28131,7 +28333,9 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      43712
+      43712,
+      43795,
+      43820
     ]
   },
   {
@@ -28149,7 +28353,9 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      43708
+      43708,
+      43791,
+      43816
     ]
   },
   {
@@ -28472,7 +28678,7 @@
   {
     "description": "Drake Maw Idle",
     "height": 50,
-    "offset": [ -20, 5, 252 ],
+    "offset": [ -17, -3, 249 ],
     "radius": 32,
     "strength": 120,
     "color": "#ff8c00",
@@ -35273,6 +35479,17 @@
     "fadeOutDuration": 300
   },
   {
+    "description": "Basalisk Knight - Magic Attack",
+    "alignment": "CENTER",
+    "radius": 215,
+    "strength": 11,
+    "color": [ 220, 0, 255 ],
+    "projectileIds": [ 1735 ],
+    "fadeInDuration": 350,
+    "spawnDelay": 750,
+    "fadeOutDuration": 600
+  },
+  {
     "description": "Venenatis, Spindel, Artio, Callisto and Escape Caves exit cave",
     "objectIds": [
       46999,
@@ -35568,5 +35785,235 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 20
+  },
+  {
+    "description": "Hespori Status Flower - Open",
+    "height": 100,
+    "alignment": "CENTER",
+    "radius": 195,
+    "strength": 15,
+    "fadeInDuration": 100,
+    "color": [
+      40,
+      240,
+      40
+    ],
+    "type": "STATIC",
+    "duration": 4500,
+    "range": 10,
+    "objectIds": [ 34705 ]
+  },
+  {
+    "description": "Hespori Combat Flower - Open - Wide",
+    "height": 70,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 7,
+    "fadeOutDuration": 700,
+    "fadeInDuration": 75,
+    "spawnDelay": 1300,
+    "color": [
+      40,
+      240,
+      40
+    ],
+    "type": "PULSE",
+    "duration": 2500,
+    "range": 15,
+    "npcIds": [ 8584 ],
+    "animationIds": [ -1, 8229 ]
+  },
+  {
+    "description": "Hespori Combat Flower - Open - Short",
+    "height": 70,
+    "alignment": "CENTER",
+    "radius": 125,
+    "strength": 12,
+    "fadeOutDuration": 600,
+    "fadeInDuration": 500,
+    "spawnDelay": 400,
+    "color": [
+      40,
+      240,
+      40
+    ],
+    "type": "PULSE",
+    "duration": 2500,
+    "range": 15,
+    "npcIds": [ 8584 ],
+    "animationIds": [ -1, 8229 ]
+  },
+  {
+    "description": "Hespori Magic Attack",
+    "radius": 250,
+    "height": -50,
+    "strength": 8.8,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 1000,
+    "fadeOutDuration": 250,
+    "projectileIds": [
+      1640
+    ]
+  },
+  {
+    "description": "Baba Yaga's House - Cooking Range",
+    "offset": [ -15, 165, 0 ],
+    "radius": 120,
+    "strength": 8,
+    "color": [
+      230,
+      100,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 5,
+    "objectIds": [
+      16812
+    ]
+  },
+  {
+    "description": "Grotesque Guardians Dawn Ranged Attack",
+    "projectileIds": [
+      1437,
+      1444
+    ],
+    "offset": [ 0, 0, 0 ],
+    "radius": 210,
+    "strength": 20,
+    "color": [
+      50,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "spawnDelay": 300,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200
+  },
+  {
+    "description": "Grotesque Guardians Dawn Freeze",
+    "projectileIds": [
+      1445
+    ],
+    "offset": [ 0, -20, 0 ],
+    "radius": 195,
+    "strength": 10,
+    "color": [
+      135,
+      135,
+      135
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "spawnDelay": 300,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200
+  },
+  {
+    "description": "Grotesque Guardians Flames",
+    "graphicsObjectIds": [
+      1434
+    ],
+    "offset": [ 0, 10, 0 ],
+    "radius": 175,
+    "strength": 20,
+    "color": [
+      50,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 300,
+    "fixedDespawnTime": true,
+    "despawnDelay": 2500
+  },
+  {
+    "description": "Grotesque Guardians Dusk Final Phase",
+    "npcIds": [
+      7888
+    ],
+    "offset": [ 0, 50, 0 ],
+    "radius": 700,
+    "strength": 20,
+    "color": [
+      50,
+      0,
+      255
+    ],
+    "type": "STATIC"
+  },
+  {
+    "description": "Grotesque Guardians Dusk Heal Orb",
+    "objectIds": [
+      31678,
+      31679,
+      31680
+    ],
+    "offset": [ 0, 10, 0 ],
+    "radius": 200,
+    "strength": 20,
+    "color": [
+      50,
+      0,
+      255
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 100,
+    "fadeOutDuration": 150
+  },
+  {
+    "description": "Paterdomus Temple Basement Monument lights",
+    "height": 160,
+    "offset": [ 0, -37, -90 ],
+    "radius": 150,
+    "strength": 7.7,
+    "color": [
+      255,
+      255,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 30,
+    "range": 10,
+    "objectIds": [
+      3493,
+      3494,
+      3495,
+      3496
+    ]
+  },
+  {
+    "description": "Paterdomus Temple Basement Monument lights - Angled",
+    "height": 160,
+    "offset": [ -40, -37, -74 ],
+    "radius": 150,
+    "strength": 7.7,
+    "color": [
+      255,
+      255,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 30,
+    "range": 10,
+    "objectIds": [
+      3497,
+      3498,
+      3499
+    ]
   }
 ]
