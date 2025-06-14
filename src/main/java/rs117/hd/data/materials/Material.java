@@ -371,6 +371,13 @@ public enum Material {
 		.setSpecular(1.1f, 380)
 		.setBrightness(1.55f)
 	),
+	MUD_1_N,
+	MUD_1(p -> p
+		.setNormalMap(MUD_1_N)
+		.setSpecular(0.50f, 25)),
+	MUD_1_DARK(MUD_1, p -> p
+		.setBrightness(0.85f)
+	),
 	SAND_1_N,
 	SAND_1(p -> p
 		.setNormalMap(SAND_1_N)
@@ -447,6 +454,9 @@ public enum Material {
 		.setDisplacementScale(.15f)
 		.setSpecular(0.4f, 20)
 		.setBrightness(1.2f)
+	),
+	ROCK_3_MEDIUM_DARK(ROCK_3,p -> p
+		.setBrightness(0.85f)
 	),
 	ROCK_3_DARK(ROCK_3,p -> p
 		.setBrightness(0.65f)

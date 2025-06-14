@@ -1399,6 +1399,41 @@
     "fogDepth": 68
   },
   {
+    "area": "ASGARNIA_ICE_DUNGEON_SNOWY",
+    "ambientColor": "#aaafb6",
+    "ambientStrength": 0.75,
+    "directionalStrength": 0.75,
+    "sunAngles": [
+      80,
+      190
+    ],
+    "fogColor": "#adc5e4",
+    "fogDepth": 68
+  },
+  {
+    "area": "ASGARNIA_ICE_DUNGEON_NORMAL",
+    "ambientColor": "#aaafb6",
+    "ambientStrength": 1.75,
+    "directionalStrength": 0.75,
+    "fogDepth": 30,
+    "sunAngles": [
+      80,
+      190
+    ]
+  },
+  {
+    "area": "ROYAL_TITANS_ARENA",
+    "ambientColor": "#aaafb6",
+    "ambientStrength": 1.75,
+    "directionalStrength": 0.75,
+    "fogDepth": 50,
+    "sunAngles": [
+      80,
+      190
+    ],
+    "instantTransition": true
+  },
+  {
     "area": "GOBLIN_VILLAGE_COOKS_CHAMBER",
     "allowSkyOverride": false,
     "ambientColor": "#aaafb6",
