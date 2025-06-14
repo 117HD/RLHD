@@ -1406,6 +1406,27 @@
     "maxLightness": 30
   },
   {
+    "name": "EDGEVILLE_BANK_WINDOW_FIX_BLEND",
+    "area": "EDGEVILLE_BANK_WINDOW_FIX",
+    "description": "For when ground blending is ENABLED",
+    "overlayIds": [
+      10
+    ],
+    "groundMaterial": "VARROCK_PATHS",
+    "replacements": {
+      "EDGEVILLE_BANK_WINDOW_FIX_UNBLEND": "!blending"
+    },
+    "blended": false,
+    "minLightness": 29,
+    "maxLightness": 30
+  },
+  {
+    "name": "EDGEVILLE_BANK_WINDOW_FIX_UNBLEND",
+    "area": "EDGEVILLE_BANK_WINDOW_FIX",
+    "description": "For when ground blending is DISABLED",
+    "groundMaterial": "VARROCK_PATHS"
+  },
+  {
     "name": "EDGEVILLE_BANK_PERIMETER",
     "area": "EDGEVILLE_BANK",
     "overlayIds": [
@@ -1420,6 +1441,7 @@
   {
     "name": "EDGEVILLE_BANK_SURROUNDING_PATH",
     "area": "EDGEVILLE_BANK_SURROUNDING_PATH",
+    "blendedAsOpposite": false,
     "overlayIds": [
       10
     ],
@@ -5066,7 +5088,6 @@
   {
     "name": "EDGEVILLE_PATH_OVERLAY_48_CUSTOM_PATH",
     "groundMaterial": "VARROCK_PATHS",
-    "blendedAsOpposite": true,
     "maxHue": 0,
     "maxSaturation": 0,
     "shiftLightness": 8,
