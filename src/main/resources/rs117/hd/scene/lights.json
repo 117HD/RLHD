@@ -23918,7 +23918,6 @@
   {
     "description": "PYRAMID_PLUNDER_TOMB_DOOR_1",
     "height": 100,
-    "alignment": "CENTER",
     "radius": 400,
     "strength": 15,
     "color": [
@@ -23936,7 +23935,6 @@
   {
     "description": "PYRAMID_PLUNDER_TOMB_DOOR_2",
     "height": 100,
-    "alignment": "CENTER",
     "radius": 350,
     "strength": 65,
     "color": [
@@ -24714,7 +24712,6 @@
   {
     "description": "CORP_PRIVATE_PORTAL_EXIT",
     "height": 30,
-    "alignment": "CENTER",
     "radius": 500,
     "strength": 10,
     "color": [

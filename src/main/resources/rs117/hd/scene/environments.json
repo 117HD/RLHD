@@ -42,7 +42,7 @@
     "area": "Corporeal Beast Lair",
     "ambientStrength": 0.75,
     "directionalStrength": 0.1,
-    "fogDepth": 30
+    "fogDepth": 25
   },
   {
     "area": "WILDERNESS_HIGH",
