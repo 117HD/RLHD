@@ -31386,7 +31386,7 @@
   },
   {
     "description": "Theatre of Blood - Verzik Stone Floor",
-    "baseMaterial": "MARBLE_3_GLOSS",
+    "baseMaterial": "BLANK_SEMIGLOSS",
     "objectIds": [
       32719,
       32721,
