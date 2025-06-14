@@ -5538,6 +5538,30 @@
 
   },
   {
+    "name": "RUINS_OF_UNKAH",
+    "area": "RUINS_OF_UNKAH",
+    "groundMaterial": "SAND",
+    "maxLightness": 60,
+    "shiftHue": -2,
+    "shiftSaturation": 1,
+    "maxSaturation": 4,
+    "underlayIds": [
+      61,
+      62,
+      64,
+      52,
+      99,
+      126
+    ],
+    "replacements": {
+      "KHARID_GRASS": [
+        "h > 10",
+        "h > 9 && s > 3",
+        "h == 9 && s > 4"
+      ]
+    }
+  },
+  {
     "name": "UZER_OASIS",
     "area": "UZER_OASIS",
     "groundMaterial": "SAND",
