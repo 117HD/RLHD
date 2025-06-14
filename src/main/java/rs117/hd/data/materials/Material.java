@@ -869,6 +869,16 @@ public enum Material {
 		.setDisplacementScale(0.1f)
 		.setBrightness(1.9f)
 	),
+	ABYSSAL_FLOW(ABYSSAL, p -> p
+		.setFlowMap(UNDERWATER_FLOW_MAP)
+		.setFlowMapStrength(0.075f)
+		.setFlowMapDuration(new float[] { -37, 37 })
+	),
+	ABYSSAL_2_FLOW(ABYSSAL_2, p -> p
+		.setFlowMap(UNDERWATER_FLOW_MAP)
+		.setFlowMapStrength(0.2f)
+		.setFlowMapDuration(new float[] { 28, -28 })
+	),
 
 	GROUND_WEB_1_N,
 	GROUND_WEB_1(p -> p.setNormalMap(GROUND_WEB_1_N).setSpecular(0.35f,90)),

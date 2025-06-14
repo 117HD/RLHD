@@ -28679,32 +28679,6 @@
     ]
   },
   {
-    "description": "ABYSSAL_NEXUS_TENDRILS_THRONE",
-    "height": 65,
-    "alignment": "CENTER",
-    "radius": 600,
-    "strength": 5,
-    "color": [
-      70,
-      242,
-      31
-    ],
-    "type": "FLICKER",
-    "duration": 2000,
-    "range": 20,
-    "objectIds": [
-      27005,
-      26984,
-      26985,
-      26986,
-      27004,
-      27006,
-      27014,
-      27015,
-      27016
-    ]
-  },
-  {
     "description": "ABYSSAL_NEXUS_FONT",
     "height": 140,
     "alignment": "BACK",
@@ -28740,6 +28714,118 @@
       43713,
       43714
     ]
+  },
+  {
+    "description": "SIRE_BELLY_LIGHT_LOWER",
+    "offset": [ 0, 250, 100 ],
+    "npcIds": [ 5890, 5889, 5891 ],
+    "radius": 250,
+    "strength": 125,
+    "color": [
+      100,
+      0,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 2500,
+    "range": 13
+  },
+  {
+    "description": "SIRE_BELLY_LIGHT_UPPER",
+    "offset": [ 0, 350, 75 ],
+    "npcIds": [ 5890, 5889, 5891 ],
+    "radius": 100,
+    "strength": 125,
+    "color": [
+      100,
+      0,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 2500,
+    "range": 13
+  },
+  {
+    "description": "SIRE_BELLY_LIGHT_EXPLOSION",
+    "offset": [ 0, 325, 200 ],
+    "npcIds": [ 5908 ],
+    "radius": 350,
+    "strength": 200,
+    "color": [
+      100,
+      0,
+      255
+    ],
+    "type": "STATIC"
+  },
+  {
+    "description": "SIRE_BELLY_LIGHT_EXPLOSION_2",
+    "offset": [ 0, 150, 275 ],
+    "npcIds": [ 5908 ],
+    "animationIds": [ -1, 7098, 7099 ],
+    "radius": 450,
+    "strength": 15,
+    "color": [
+      200,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "range": 40,
+    "duration": 100,
+    "fadeInDuration": 400,
+    "fadeOutDuration": 100,
+    "spawnDelay": 150
+  },
+  {
+    "description": "SIRE_THRONE_LIGHT",
+    "offset": [ -50, 170, 50 ],
+    "objectIds": [ 26984 ],
+    "radius": 700,
+    "strength": 25,
+    "color": [
+      25,
+      200,
+      25
+    ],
+    "type": "PULSE",
+    "duration": 2500,
+    "range": 13
+  },
+  {
+    "description": "ABYSSAL_NEXUS_TENDRILS",
+    "height": 45,
+    "alignment": "CENTER",
+    "radius": 475,
+    "strength": 3.5,
+    "color": [
+      70,
+      242,
+      31
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      27014,
+      27015,
+      27016
+    ]
+  },
+  {
+    "description": "Abyssal Nexus - Respiratory System",
+    "height": 275,
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 7.5,
+    "color": [
+      70,
+      242,
+      31
+    ],
+    "objectIds": [ 26953 ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200
   },
   {
     "description": "GOTR_ENTRANCE_BARRIER_YELLOW",

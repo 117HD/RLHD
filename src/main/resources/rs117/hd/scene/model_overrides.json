@@ -17611,14 +17611,12 @@
   },
   {
     "description": "Stronghold Of Security Petilance - Dripping Tendrils",
-    "baseMaterial": "ABYSSAL_2",
+    "baseMaterial": "GRUNGE_3",
     "objectIds": [
       23700,
       23701,
       23702
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.5
+    ]
   },
   {
     "description": "Stronghold Of Security - Death - Walls",
@@ -20012,6 +20010,7 @@
   {
     "description": "Abyss - Wall",
     "baseMaterial": "ABYSSAL",
+    "areas": [ "ABYSSAL_AREAS" ],
     "objectIds": [
       20737,
       25382,
@@ -20035,14 +20034,11 @@
       26969,
       26970,
       26971,
-      26972,
-      26973,
       27027,
-      27054,
-      27055
+      27054
     ],
     "uvType": "BOX",
-    "uvScale": 1.85
+    "uvScale": 0.9
   },
   {
     "description": "Abyss - Wall",
@@ -20051,24 +20047,24 @@
       26154
     ],
     "uvType": "WORLD_XZ",
-    "uvScale": 1.85
+    "uvScale": 1.1
   },
   {
     "description": "Abyss - Puddle",
-    "baseMaterial": "WATER_PUDDLE",
+    "hide": true,
     "objectIds": [
       26174,
       26176,
       26177
-    ],
-    "uvType": "MODEL_XZ"
+    ]
   },
   {
-    "description": "Abyss - Gap",
+    "description": "Abyss - Agility Gap",
     "baseMaterial": "ABYSSAL_2",
     "objectIds": [
       25428,
-      25381
+      25381,
+      27055
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -20088,25 +20084,28 @@
   },
   {
     "description": "Abyss - Tendrils - Large",
-    "baseMaterial": "ABYSSAL_2",
+    "baseMaterial": "GRUNGE_1",
     "objectIds": [
       25425,
       25427
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.8,
-    "uvOrientation": 512
+    ]
   },
   {
     "description": "Abyss - Eyes",
-    "baseMaterial": "ABYSSAL_2",
+    "baseMaterial": "GRUNGE_3",
     "objectIds": [
       26146,
       26147,
       26148
     ],
-    "uvType": "BOX",
-    "uvScale": 0.5
+    "colorOverrides": [
+      {
+        "colors": "h == 1 || h == 7",
+        "baseMaterial": "ABYSSAL",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ]
   },
   {
     "description": "Abyss - Boil",
@@ -20133,13 +20132,13 @@
     "objectIds": [
       26159
     ],
-    "uvType": "BOX",
-    "uvScale": 0.4,
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.33,
     "uvOrientation": 256
   },
   {
     "description": "Abyss - Object - Ground Tendrils - Small",
-    "baseMaterial": "ABYSSAL",
+    "baseMaterial": "GRUNGE_1",
     "objectIds": [
       26167,
       26168,
@@ -20148,7 +20147,7 @@
   },
   {
     "description": "Abyss - Object - Popped Pustules - Small",
-    "baseMaterial": "ABYSSAL",
+    "baseMaterial": "ABYSSAL_2",
     "objectIds": [
       26161,
       26162,
@@ -20162,7 +20161,7 @@
       27024
     ],
     "uvType": "BOX",
-    "uvScale": 0.52,
+    "uvScale": 0.3,
     "uvOrientation": 256
   },
   {
@@ -20173,12 +20172,12 @@
       26173
     ],
     "uvType": "BOX",
-    "uvScale": 0.4,
+    "uvScale": 0.3,
     "uvOrientation": 512
   },
   {
     "description": "Abyss - Peak Eye",
-    "baseMaterial": "ABYSSAL_2",
+    "baseMaterial": "GRUNGE_3",
     "objectIds": [
       27048,
       27049,
@@ -20187,20 +20186,176 @@
       27052,
       27053
     ],
-    "uvType": "BOX",
-    "uvOrientation": 512,
-    "uvScale": 0.6
+    "colorOverrides": [
+      {
+        "colors": "h == 1 || h == 7",
+        "baseMaterial": "ABYSSAL",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ]
   },
   {
-    "description": "Abyss - Green-tipped Tendrils",
-    "baseMaterial": "ABYSSAL_2",
+    "description": "Abyssal Nexus - Green-tipped Tendrils & Pustules",
+    "baseMaterial": "GRUNGE_1",
     "objectIds": [
       27014,
       27015,
-      27016
+      27016,
+      27017,
+      27018,
+      27019,
+      27020
+    ]
+  },
+  {
+    "description": "Abyssal Nexus - Flesh",
+    "baseMaterial": "ABYSSAL_2",
+    "objectIds": [
+      26935,
+      26922,
+      26923,
+      26902,
+      26903,
+      26905,
+      26908,
+      26911,
+      26912,
+      26913,
+      26914,
+      26918,
+      26919,
+      26920,
+      26927,
+      26928,
+      26929,
+      26930,
+      26933,
+      26936,
+      26938,
+      26937,
+      26931,
+      26932,
+      26934,
+      26939,
+      26915,
+      26917,
+      26925,
+      26921,
+      26904,
+      26910,
+      26909,
+      26907,
+      26906,
+      26890,
+      26891,
+      26896,
+      26901,
+      26892,
+      20249,
+      26899,
+      26889,
+      26895,
+      26898,
+      26924,
+      26994,
+      26995,
+      26996,
+      26997,
+      26975,
+      26976,
+      26977,
+      26979,
+      26978,
+      26998,
+      26999,
+      27000,
+      27003,
+      27005,
+      27004,
+      27006,
+      27007,
+      27008,
+      27002,
+      27001,
+      26981,
+      26988,
+      26985,
+      26986,
+      26989,
+      26984,
+      26982,
+      26983,
+      26980,
+      26900,
+      26897,
+      26893,
+      26926,
+      26974
     ],
     "uvType": "BOX",
-    "uvScale": 0.5
+    "uvScale": 0.45
+  },
+  {
+    "description": "Abyssal Nexus - Flesh with Bone",
+    "baseMaterial": "ABYSSAL",
+    "objectIds": [
+      26940,
+      26941,
+      26942,
+      26943,
+      26944,
+      26945,
+      26946,
+      26948,
+      26949,
+      26950,
+      26951,
+      26952,
+      26990,
+      26991,
+      26992,
+      26993,
+      27010,
+      27011,
+      27012,
+      27013,
+      26972,
+      26973
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.65,
+    "colorOverrides": [
+      {
+        "colors": "h == 6 || h == 7",
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
+  },
+  {
+    "description": "Abyssal Nexus - Bile Pool Edges",
+    "baseMaterial": "ABYSSAL",
+    "objectIds": [
+      26956,
+      26957,
+      26958,
+      26959,
+      26960
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "colors": "s == 1",
+        "baseMaterial": "GRAY_65"
+      }
+    ]
+  },
+  {
+    "description": "Abyssal Nexus - Respiratory System",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [ 26953, 26954 ],
+    "npcIds": [ 5915 ]
   },
   {
     "description": "Walls - Law Altar",

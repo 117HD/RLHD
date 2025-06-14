@@ -1546,7 +1546,7 @@
     "groundMaterial": "ABYSSAL_FLOOR"
   },
   {
-    "name": "ABYSSAL_LIQUID",
+    "name": "ABYSSAL_BILE",
     "area": "ABYSSAL_AREAS",
     "overlayIds": [
       66,
