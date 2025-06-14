@@ -35988,7 +35988,7 @@
   },
   {
     "description": "Hueycoatl Range Projectile",
-    "offset": [ 5, 20, 5],
+    "offset": [ 5, 20, 5 ],
     "radius": 210,
     "strength": 12,
     "color": [
