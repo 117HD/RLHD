@@ -221,7 +221,7 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 		try {
 			inverseProjection = Mat4.inverse(projectionMatrix);
 		} catch (IllegalArgumentException ex) {
-			System.out.println("Not invertible");
+			log.warn("Not invertible:\n{}", Mat4.format(projectionMatrix));
 		}
 
 		int numFrozenAxes = 0;
