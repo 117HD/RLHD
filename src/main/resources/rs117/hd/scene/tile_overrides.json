@@ -1406,6 +1406,27 @@
     "maxLightness": 30
   },
   {
+    "name": "EDGEVILLE_BANK_WINDOW_FIX_BLEND",
+    "area": "EDGEVILLE_BANK_WINDOW_FIX",
+    "description": "For when ground blending is ENABLED",
+    "overlayIds": [
+      10
+    ],
+    "groundMaterial": "VARROCK_PATHS",
+    "replacements": {
+      "EDGEVILLE_BANK_WINDOW_FIX_UNBLEND": "!blending"
+    },
+    "blended": false,
+    "minLightness": 29,
+    "maxLightness": 30
+  },
+  {
+    "name": "EDGEVILLE_BANK_WINDOW_FIX_UNBLEND",
+    "area": "EDGEVILLE_BANK_WINDOW_FIX",
+    "description": "For when ground blending is DISABLED",
+    "groundMaterial": "VARROCK_PATHS"
+  },
+  {
     "name": "EDGEVILLE_BANK_PERIMETER",
     "area": "EDGEVILLE_BANK",
     "overlayIds": [
@@ -1420,6 +1441,7 @@
   {
     "name": "EDGEVILLE_BANK_SURROUNDING_PATH",
     "area": "EDGEVILLE_BANK_SURROUNDING_PATH",
+    "blendedAsOpposite": false,
     "overlayIds": [
       10
     ],
@@ -1711,6 +1733,57 @@
     "groundMaterial": "VERTICAL_DIRT"
   },
   {
+    "name": "ASGARNIA_ICE_DUNGEON Water to Ice Fix",
+    "area": "ASGARNIA_ICE_DUNGEON",
+    "overlayIds": [
+      196
+    ],
+    "groundMaterial": "ICE_4",
+    "shiftLightness": 5,
+    "uvScale": 2,
+    "uvOrientation": -100
+  },
+  {
+    "name": "ASGARNIA_ICE_DUNGEON Snow Tiles Fix",
+    "area": "ASGARNIA_ICE_DUNGEON_SNOW_FIX",
+    "description": "For when ground blending is ENABLED",
+    "overlayIds": [ 0, 59, 263 ],
+    "underlayIds": [ 59 ],
+    "groundMaterial": "SNOW_2",
+    "replacements": {
+      "ASGARNIA_ICE_DUNGEON Snow Tiles Fix UNBLEND": "!blending"
+    },
+    "shiftLightness": 27
+  },
+  {
+    "name": "ASGARNIA_ICE_DUNGEON Snow Tiles Fix UNBLEND",
+    "area": "ASGARNIA_ICE_DUNGEON_SNOW_FIX",
+    "description": "For when ground blending is DISABLED",
+    "groundMaterial": "SNOW_2",
+    "shiftLightness": 0
+  },
+  {
+    "name": "ASGARNIA_ICE_DUNGEON Snow Tiles Fix 2",
+    "area": "ASGARNIA_ICE_DUNGEON_SNOW_FIX_2",
+    "overlayIds": [
+      0,
+      59,
+      263
+    ],
+    "underlayIds": [
+      59
+    ],
+    "groundMaterial": "SNOW_2"
+  },
+  {
+    "name": "ASGARNIA_ICE_DUNGEON Ice Tiles Fix",
+    "area": "ASGARNIA_ICE_DUNGEON_ICE_FIX",
+    "overlayIds": [
+      409
+    ],
+    "groundMaterial": "ICE_1_HIGHGLOSS"
+  },
+  {
     "name": "ICE_QUEENS_SYMBOL",
     "area": "ICE_QUEENS_DUNGEON",
     "overlayIds": [
@@ -1865,6 +1938,12 @@
     "groundMaterial": "FALADOR_PATHS"
   },
   {
+    "name": "Elemental Workshop floor",
+    "area": "Elemental Workshop floor 1",
+    "groundMaterial": "PACKED_EARTH",
+    "underlayIds": [ 67 ]
+  },
+  {
     "name": "SINCLAIR_MANSION_FLOOR",
     "area": "SINCLAIR_MANSION",
     "overlayIds": [
@@ -1929,6 +2008,45 @@
     "shiftLightness": 2
   },
   {
+    "name": "Glarial's Tomb floor",
+    "area": "Glarial's Tomb Dungeon",
+    "underlayIds": [
+      48,
+      67
+    ],
+    "groundMaterial": "DIRT",
+    "uvScale": 1.15,
+    "replacements": {
+      "DEFAULT_GRASS": "h > 9"
+    }
+  },
+  {
+    "name": "Waterfall Dungeon tiles",
+    "area": "WATERFALL_DUNGEON",
+    "underlayIds": [
+      50,
+      56,
+      67
+    ],
+    "groundMaterial": "DIRT",
+    "replacements": {
+      "DEFAULT_GRUNGE": "s == 0"
+    }
+  },
+  {
+    "name": "Waterfall Dungeon tiles - Chalice Room",
+    "area": "WATERFALL_DUNGEON_CHALICE_ROOM",
+    "underlayIds": [
+      50,
+      56,
+      67
+    ],
+    "groundMaterial": "DIRT",
+    "replacements": {
+      "DEFAULT_GRUNGE": "s == 0"
+    }
+  },
+  {
     "name": "GOBLIN_CAVE_FLOOR",
     "area": "GOBLIN_CAVE",
     "underlayIds": [
@@ -1937,6 +2055,14 @@
     ],
     "groundMaterial": "DIRT",
     "uvScale": 1.15
+  },
+  {
+    "name": "MOTHERLODE_MINE_WATER",
+    "area": "MOTHERLODE_MINE",
+    "overlayIds": [
+      6
+    ],
+    "waterType": "MLM_WATER"
   },
   {
     "name": "CATHERBY_BEACH_OBELISK_WATER_FIX",
@@ -2918,6 +3044,25 @@
     "groundMaterial": "VARROCK_PATHS"
   },
   {
+    "name": "Werewolf Agility course path",
+    "area": "WEREWOLF_AGILITY_AREA",
+    "groundMaterial": "GRAVEL",
+    "uvOrientation": 84,
+    "uvScale": 1.2,
+    "overlayIds": [ 83 ]
+  },
+  {
+    "name": "Werewolf Agility area - COMPLEX",
+    "area": "WEREWOLF_AGILITY_AREA",
+    "groundMaterial": "OVERWORLD_ROCKY",
+    "uvOrientation": 84,
+    "uvScale": 1.2,
+    "replacements": {
+      "DEFAULT_DIRT": "h > 7 && s > 1"
+    },
+    "underlayIds": [ 92, 93, 94, 96]
+  },
+  {
     "name": "SLEPE_PATHS",
     "area": "SLEPE",
     "overlayIds": [
@@ -2932,6 +3077,16 @@
       11
     ],
     "groundMaterial": "DIRT"
+  },
+  {
+    "name": "ABANDONED_MINE_LIFT_PLATFORM",
+    "area": "ABANDONED_MINE",
+    "uvOrientation": 512,
+    "shiftLightness": 2,
+    "overlayIds": [
+      14
+    ],
+    "groundMaterial": "HD_WOOD_PLANKS_2"
   },
   {
     "name": "TRUE_BLOOD_ALTAR_BLOOD",
@@ -4984,7 +5139,6 @@
   {
     "name": "EDGEVILLE_PATH_OVERLAY_48_CUSTOM_PATH",
     "groundMaterial": "VARROCK_PATHS",
-    "blendedAsOpposite": true,
     "maxHue": 0,
     "maxSaturation": 0,
     "shiftLightness": 8,
@@ -6016,9 +6170,9 @@
       58
     ],
     "groundMaterial": "SNOW_1",
-    "maxHue": 0,
+    "shiftHue": 4,
     "maxSaturation": 0,
-    "minLightness": 100,
+    "minLightness": 78,
     "maxLightness": 100
   },
   {
@@ -6551,6 +6705,24 @@
     "groundMaterial": "GRASS_SCROLLING"
   },
   {
+    "name": "MOGRE_CAMP_SAND",
+    "area": "MOGRE_CAMP",
+    "underlayIds": [
+      68
+    ],
+    "groundMaterial": "SANDY_DIRT"
+  },
+  {
+    "name": "FOSSIL_ISLAND_UNDERWATER_AREA_SAND",
+    "area": "FOSSIL_ISLAND_UNDERWATER_AREA",
+    "underlayIds": [
+      68,
+      129
+    ],
+    "groundMaterial": "SANDY_DIRT",
+    "uvOrientation": 100
+  },
+  {
     "name": "ISLE_OF_SOULS_HOT_ZONE_COMPLEX",
     "area": "ISLE_OF_SOULS_HOT_ZONES",
     "underlayIds": [
@@ -6697,6 +6869,19 @@
       15
     ],
     "groundMaterial": "PACKED_EARTH"
+  },
+  {
+    "name": "Essence Mine Snow",
+    "area": "ESSENCE_MINE",
+    "underlayIds": [
+      55,
+      56,
+      58,
+      59
+    ],
+    "groundMaterial": "SNOW_1",
+    "shiftHue": 5,
+    "setLightness": 72
   },
   {
     "name": "UNDERLAY_SNOW",

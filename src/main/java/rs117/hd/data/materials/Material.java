@@ -302,6 +302,8 @@ public enum Material {
 	BRICK_CAM_TORUM_2(126),
 
 	WHITE(NONE),
+	GRAY_150(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(1.5f))),
+	GRAY_125(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(1.25f))),
 	GRAY_110(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(1.1f))),
 	GRAY_90(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(.90f))),
 	GRAY_75(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(.75f))),
@@ -322,6 +324,10 @@ public enum Material {
 	SNOW_2_N,
 	SNOW_2(p -> p.setNormalMap(SNOW_2_N).setSpecular(0.4f, 20)),
 	SNOW_2_DARK(SNOW_2, p -> p.setBrightness(0.5f)),
+	SNOW_COLORED(p -> p
+		.setOverrideBaseColor(true)
+		.setNormalMap(SNOW_1_N)
+		.setSpecular(0.4f, 20)),
 	SNOW_3_N,
 	SNOW_3(p -> p.setNormalMap(SNOW_3_N).setSpecular(0.4f, 20)),
 	SNOW_4_N,
@@ -343,6 +349,9 @@ public enum Material {
 		.setNormalMap(DIRT_2_N)
 		.setSpecular(0.25f, 18)),
 	DIRT_2_VERT(DIRT_2, p -> p.setNormalMap(null)),
+	DIRT_2_LIGHT(DIRT_2, p -> p
+		.setBrightness(1.2f)),
+
 	GRAVEL_N,
 	GRAVEL(p -> p
 		.setNormalMap(GRAVEL_N)
@@ -361,6 +370,13 @@ public enum Material {
 	GRAVEL_SHINY_LIGHT(GRAVEL, p -> p
 		.setSpecular(1.1f, 380)
 		.setBrightness(1.55f)
+	),
+	MUD_1_N,
+	MUD_1(p -> p
+		.setNormalMap(MUD_1_N)
+		.setSpecular(0.50f, 25)),
+	MUD_1_DARK(MUD_1, p -> p
+		.setBrightness(0.85f)
 	),
 	SAND_1_N,
 	SAND_1(p -> p
@@ -410,6 +426,18 @@ public enum Material {
 		.setFlowMapStrength(0.2f)
 		.setFlowMapDuration(new float[] { 12, -12 })
 	),
+	WATER_FLAT_FORCE(WATER_FLAT, p -> p.setOverrideBaseColor(true)),
+	MOTHERLODE_MINE_WATER(WATER_FLAT, p -> p
+		.setFlowMap(UNDERWATER_FLOW_MAP)
+		.setFlowMapStrength(0.3f)
+		.setBrightness(0.45f)
+		.setScroll(0, 1.4f)
+		.setFlowMapDuration(new float[] { 10, -14 })
+	),
+	GRUNGE_3_DULL(GRUNGE_3, p -> p
+		.setNormalMap(null)
+		.setSpecular(0, 0)
+	),
 	ROCK_1_N,
 	ROCK_1(p -> p
 		.setNormalMap(ROCK_1_N)
@@ -430,6 +458,9 @@ public enum Material {
 		.setDisplacementScale(.15f)
 		.setSpecular(0.4f, 20)
 		.setBrightness(1.2f)
+	),
+	ROCK_3_MEDIUM_DARK(ROCK_3,p -> p
+		.setBrightness(0.85f)
 	),
 	ROCK_3_DARK(ROCK_3,p -> p
 		.setBrightness(0.65f)
@@ -575,8 +606,11 @@ public enum Material {
 	BARK_STONEPINE_N,
 	BARK_STONEPINE(p -> p
 		.setNormalMap(BARK_STONEPINE_N)
+		.setSpecular(0.3f, 30)),
+	BARK_STONEPINE_2(p -> p
+		.setNormalMap(BARK_STONEPINE_N)
 		.setSpecular(0.3f, 30)
-	),
+		.setBrightness(1.75f)),
 	LIGHT_BARK_STONEPINE(BARK_STONEPINE, p -> p.setBrightness(1.75f)),
 	LEAF_VEINS,
 	LEAF_VEINS_LIGHT(LEAF_VEINS, p -> p.setBrightness(1.2f)),
@@ -694,6 +728,9 @@ public enum Material {
 	),
 	STONE_NORMALED_DARK(STONE_NORMALED, p -> p
 		.setBrightness(0.88f)
+	),
+	STONE_NORMALED_LIGHT(STONE_NORMALED, p -> p
+		.setBrightness(1.3f)
 	),
 	STONE_LOWGLOSS(STONE, p -> p
 		.setSpecular(0.3f, 30)
