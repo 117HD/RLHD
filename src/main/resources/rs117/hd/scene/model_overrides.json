@@ -29960,5 +29960,211 @@
       4927,
       4928
     ]
+  },
+  {
+    "description": "Hueycoatl Rocks",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      55205,
+      55234,
+      55249,
+      55250,
+      55251,
+      55252,
+      55253,
+      55254,
+      55256,
+      55259,
+      55260
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Hueycoatl Body Cave",
+    "objectIds": [
+      55242,
+      55243,
+      55245,
+      55246
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "STONE_NORMALED"
+      },
+      {
+        "colors": "h == 63",
+        "baseMaterial": "BLACK"
+      }
+    ]
+  },
+  {
+    "description": "Hueycoatl Blockage Segment Caves",
+    "objectIds": [
+      55206,
+      55207
+    ],
+    "colorOverrides": [
+      {
+        "colors": ["h == 0", "h == 63" ],
+        "baseMaterial": "STONE_NORMALED"
+      }
+    ]
+  },
+  {
+    "description": "Hueycoatl Tail Cave",
+    "objectIds": [ 55241 ],
+    "npcIds": [ 14014, 14015 ],
+    "colorOverrides": [
+      {
+        "colors": [ 2 ],
+        "baseMaterial": "BLACK"
+      },
+      {
+        "colors": [ "h == 0" ],
+        "baseMaterial": "STONE"
+      }
+    ]
+  },
+  {
+    "description": "Hueycoatl",
+    "npcIds": [ 14009, 14010, 14011, 14012, 14013 ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 0 && s == 0", "h == 63" ],
+        "baseMaterial": "STONE"
+      }
+    ]
+  },
+  {
+    "description": "Hueycoatl Broken Ground Sigil",
+    "baseMaterial": "MARBLE_1",
+    "uvType": "MODEL_XZ",
+    "objectIds": [
+      55263,
+      55264,
+      55265,
+      55266,
+      55267,
+      55268,
+      55269,
+      55270,
+      55271,
+      55272,
+      55273,
+      55274,
+      55275,
+      55276,
+      55277,
+      55278,
+      55279,
+      55280,
+      55281,
+      55282,
+      55283,
+      55284,
+      55285,
+      55286,
+      55287,
+      55288,
+      55289,
+      55290,
+      55291,
+      55292,
+      55293,
+      55294
+    ]
+  },
+  {
+    "description": "Hueycoatl Entrance Chain",
+    "baseMaterial": "STONE",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      55201,
+      55202
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 3" ],
+        "baseMaterial": "METALLIC_1_GLOSS"
+      }
+    ]
+  },
+  {
+    "description": "Hueycoatl Scoreboard",
+    "baseMaterial": "STONE",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      55198
+    ]
+  },
+  {
+    "description": "Hueycoatl Tent",
+    "baseMaterial": "SNOW_1",
+    "objectIds": [
+      55261
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 10" ],
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.85
+      }
+    ]
+  },
+  {
+    "description": "Hueycoatl Campfire Frame",
+    "baseMaterial": "METALLIC_1_GLOSS",
+    "objectIds": [
+      55200
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h > 6" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Hueycoatl Campfire Fire",
+    "objectIds": [
+      19882
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 5" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.25
+      }
+    ]
+  },
+  {
+    "description": "Hueycoatl Brazier",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 256,
+    "objectIds": [
+      55210,
+      55211,
+      55218,
+      55219,
+      55226,
+      55227
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 5" ],
+        "baseMaterial": "METALLIC_1_SEMIGLOSS"
+      }
+    ]
   }
 ]
