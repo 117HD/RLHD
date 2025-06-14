@@ -5433,8 +5433,7 @@
     "groundMaterial": "DIRT",
     "maxLightness": 50,
     "shiftHue": -1,
-    "shiftSaturation": -1,
-    "minHue": 4
+    "shiftSaturation": -1
   },
   {
     "name": "KHARID_GRASS",
