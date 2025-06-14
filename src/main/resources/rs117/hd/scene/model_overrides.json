@@ -29045,7 +29045,7 @@
     ]
   },
   {
-    "description": "Karamja Bamboo booksehlf - Textured - Has a really bad UV even with boxed.",
+    "description": "Karamja Bamboo bookshelf - Textured - Has a really bad UV even with boxed.",
     "baseMaterial": "GRUNGE_2",
     "uvType": "BOX",
     "uvScale": 0.25,
@@ -29055,7 +29055,7 @@
     ]
   },
   {
-    "description": "Karamja Bamboo booksehlf - Has a really bad UV even with boxed.",
+    "description": "Karamja Bamboo bookshelf - Has a really bad UV even with boxed.",
     "baseMaterial": "GRUNGE_2",
     "uvType": "BOX",
     "uvScale": 0.25,

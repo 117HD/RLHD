@@ -1865,7 +1865,7 @@
     "groundMaterial": "FALADOR_PATHS"
   },
   {
-    "name": "elemental workshop floor",
+    "name": "Elemental Workshop floor",
     "area": "Elemental Workshop floor 1",
     "groundMaterial": "PACKED_EARTH",
     "underlayIds": [ 67 ]
