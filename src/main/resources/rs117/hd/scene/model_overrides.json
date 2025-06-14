@@ -9828,13 +9828,15 @@
   },
   {
     "description": "Ice Queens Dungeon - Walls - Snow",
-    "baseMaterial": "SNOW_2",
+    "baseMaterial": "SNOW_COLORED",
     "objectIds": [
       1440,
       1441,
       1442
     ],
-    "uvType": "GEOMETRY"
+    "uvType": "BOX",
+    "uvScale": 1.2,
+    "uvOrientation": 42
   },
   {
     "description": "Ice Queens Dungeon - Objects - Icicle - Ice",
@@ -25302,7 +25304,7 @@
   },
   {
     "description": "Rune Essence Mine Rock",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "STONE_NORMALED_LIGHT",
     "uvType": "BOX",
     "uvOrientation": 768,
     "uvScale": 1.5,
