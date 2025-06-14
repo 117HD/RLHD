@@ -5436,13 +5436,6 @@
     "shiftSaturation": -1
   },
   {
-    "name": "KHARID_DIRTY_SAND",
-    "groundMaterial": "SAND",
-    "maxLightness": 50,
-    "shiftHue": -1,
-    "shiftSaturation": -1
-  },
-  {
     "name": "KHARID_GRASS",
     "groundMaterial": "OVERWORLD_GRASS_1",
     "maxLightness": 50,
