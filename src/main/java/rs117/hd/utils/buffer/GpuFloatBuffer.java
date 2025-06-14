@@ -38,7 +38,13 @@ public class GpuFloatBuffer
 	}
 
 	public GpuFloatBuffer(int initialCapacity) {
-		buffer = MemoryUtil.memAllocFloat(initialCapacity);
+		try {
+			buffer = MemoryUtil.memAllocFloat(initialCapacity);
+		} catch (OutOfMemoryError oom) {
+			// Force garbage collection and try again
+			System.gc();
+			buffer = MemoryUtil.memAllocFloat(initialCapacity);
+		}
 	}
 
 	public void destroy() {

@@ -1929,6 +1929,45 @@
     "shiftLightness": 2
   },
   {
+    "name": "Glarial's Tomb floor",
+    "area": "Glarial's Tomb Dungeon",
+    "underlayIds": [
+      48,
+      67
+    ],
+    "groundMaterial": "DIRT",
+    "uvScale": 1.15,
+    "replacements": {
+      "DEFAULT_GRASS": "h > 9"
+    }
+  },
+  {
+    "name": "Waterfall Dungeon tiles",
+    "area": "WATERFALL_DUNGEON",
+    "underlayIds": [
+      50,
+      56,
+      67
+    ],
+    "groundMaterial": "DIRT",
+    "replacements": {
+      "DEFAULT_GRUNGE": "s == 0"
+    }
+  },
+  {
+    "name": "Waterfall Dungeon tiles - Chalice Room",
+    "area": "WATERFALL_DUNGEON_CHALICE_ROOM",
+    "underlayIds": [
+      50,
+      56,
+      67
+    ],
+    "groundMaterial": "DIRT",
+    "replacements": {
+      "DEFAULT_GRUNGE": "s == 0"
+    }
+  },
+  {
     "name": "GOBLIN_CAVE_FLOOR",
     "area": "GOBLIN_CAVE",
     "underlayIds": [
@@ -1937,6 +1976,14 @@
     ],
     "groundMaterial": "DIRT",
     "uvScale": 1.15
+  },
+  {
+    "name": "MOTHERLODE_MINE_WATER",
+    "area": "MOTHERLODE_MINE",
+    "overlayIds": [
+      6
+    ],
+    "waterType": "MLM_WATER"
   },
   {
     "name": "CATHERBY_BEACH_OBELISK_WATER_FIX",
@@ -6016,9 +6063,9 @@
       58
     ],
     "groundMaterial": "SNOW_1",
-    "maxHue": 0,
+    "shiftHue": 4,
     "maxSaturation": 0,
-    "minLightness": 100,
+    "minLightness": 78,
     "maxLightness": 100
   },
   {
@@ -6493,6 +6540,24 @@
     "groundMaterial": "GRASS_SCROLLING"
   },
   {
+    "name": "MOGRE_CAMP_SAND",
+    "area": "MOGRE_CAMP",
+    "underlayIds": [
+      68
+    ],
+    "groundMaterial": "SANDY_DIRT"
+  },
+  {
+    "name": "FOSSIL_ISLAND_UNDERWATER_AREA_SAND",
+    "area": "FOSSIL_ISLAND_UNDERWATER_AREA",
+    "underlayIds": [
+      68,
+      129
+    ],
+    "groundMaterial": "SANDY_DIRT",
+    "uvOrientation": 100
+  },
+  {
     "name": "ISLE_OF_SOULS_HOT_ZONE_COMPLEX",
     "area": "ISLE_OF_SOULS_HOT_ZONES",
     "underlayIds": [
@@ -6639,6 +6704,19 @@
       15
     ],
     "groundMaterial": "PACKED_EARTH"
+  },
+  {
+    "name": "Essence Mine Snow",
+    "area": "ESSENCE_MINE",
+    "underlayIds": [
+      55,
+      56,
+      58,
+      59
+    ],
+    "groundMaterial": "SNOW_1",
+    "shiftHue": 5,
+    "setLightness": 72
   },
   {
     "name": "UNDERLAY_SNOW",
