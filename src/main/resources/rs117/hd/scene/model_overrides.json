@@ -19820,7 +19820,7 @@
     ],
     "colorOverrides": [
       {
-        "colors": [ "h == 1", "h == 7" ],
+        "colors": "h == 1 || h == 7",
         "baseMaterial": "ABYSSAL",
         "uvType": "BOX",
         "uvScale": 0.75
@@ -20047,7 +20047,7 @@
     "uvScale": 0.65,
     "colorOverrides": [
       {
-        "colors": [ "h == 6", "h == 7" ],
+        "colors": "h == 6 || h == 7",
         "baseMaterial": "GRUNGE_3"
       }
     ]
