@@ -43,9 +43,11 @@ import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.*;
 import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
 import static rs117.hd.scene.tile_overrides.TileOverride.OVERLAY_FLAG;
+import static rs117.hd.utils.HDUtils.HIDDEN_HSL;
 import static rs117.hd.utils.HDUtils.calculateSurfaceNormals;
 import static rs117.hd.utils.HDUtils.clamp;
 import static rs117.hd.utils.HDUtils.dotLightDirectionTile;
+import static rs117.hd.utils.HDUtils.fract;
 import static rs117.hd.utils.HDUtils.lerp;
 import static rs117.hd.utils.HDUtils.vertexHash;
 import static rs117.hd.utils.Vector.add;
@@ -253,20 +255,17 @@ public class ProceduralGenerator {
 		for (int vertex = 0; vertex < vertexHashes.length; vertex++)
 		{
 			if (vertexHashes[vertex] == 0)
-			{
 				continue;
-			}
-			if (vertexColors[vertex] < 0 || vertexColors[vertex] > 65535)
-			{
-				// skip invalid tile color
+
+			int color = vertexColors[vertex];
+			var override = vertexOverrides[vertex];
+			if (color < 0 || color == HIDDEN_HSL && !override.forced)
 				continue;
-			}
+
 			// if this vertex already has a 'high priority' color assigned,
 			// skip assigning a 'low priority' color unless there is no color assigned.
 			// Near-solid-black tiles that are used in some places under wall objects
 			boolean lowPriorityColor = vertexColors[vertex] <= 2;
-
-			int color = vertexColors[vertex];
 
 			float lightenMultiplier = 1.5f;
 			int lightenBase = 15;
@@ -299,9 +298,8 @@ public class ProceduralGenerator {
 
 			boolean isOverlay = false;
 			Material material = Material.DIRT_1;
-			var override = vertexOverrides[vertex];
 			if (override != TileOverride.NONE) {
-				material = override.groundMaterial.getRandomMaterial(worldPos[2], worldPos[0], worldPos[1]);
+				material = override.groundMaterial.getRandomMaterial(worldPos);
 				isOverlay = vertexIsOverlay[vertex] != override.blendedAsOpposite;
 				color = override.modifyColor(color);
 			}
@@ -399,11 +397,9 @@ public class ProceduralGenerator {
 						int[] worldPos = sceneContext.extendedSceneToWorld(x, y, tile.getRenderLevel());
 						var override = tileOverrideManager.getOverride(scene, tile, worldPos);
 						if (seasonalWaterType(override, tile.getSceneTilePaint().getTexture()) == WaterType.NONE) {
-							for (int vertexKey : vertexKeys) {
-								if (tile.getSceneTilePaint().getNeColor() != 12345678) {
+							for (int vertexKey : vertexKeys)
+								if (tile.getSceneTilePaint().getNeColor() != HIDDEN_HSL || override.forced)
 									sceneContext.vertexIsLand.put(vertexKey, true);
-								}
-							}
 
 							sceneContext.underwaterDepthLevels[z][x][y] = 0;
 							sceneContext.underwaterDepthLevels[z][x + 1][y] = 0;
@@ -511,14 +507,14 @@ public class ProceduralGenerator {
 							{
 								for (int vertex = 0; vertex < VERTICES_PER_FACE; vertex++)
 								{
-									if (model.getTriangleColorA()[face] != 12345678)
+									if (model.getTriangleColorA()[face] != HIDDEN_HSL || override.forced)
 										sceneContext.vertexIsLand.put(vertexKeys[vertex], true);
 
 									if (vertices[vertex][0] % LOCAL_TILE_SIZE == 0 &&
 										vertices[vertex][1] % LOCAL_TILE_SIZE == 0
 									) {
-										int vX = vertices[vertex][0] / LOCAL_TILE_SIZE + SCENE_OFFSET;
-										int vY = vertices[vertex][1] / LOCAL_TILE_SIZE + SCENE_OFFSET;
+										int vX = (vertices[vertex][0] >> LOCAL_COORD_BITS) + SCENE_OFFSET;
+										int vY = (vertices[vertex][1] >> LOCAL_COORD_BITS) + SCENE_OFFSET;
 
 										sceneContext.underwaterDepthLevels[z][vX][vY] = 0;
 									}
@@ -663,8 +659,8 @@ public class ProceduralGenerator {
 									// The vertex is at the corner of the tile;
 									// simply use the offset in the tile grid array.
 
-									int vX = vertices[vertex][0] / LOCAL_TILE_SIZE + SCENE_OFFSET;
-									int vY = vertices[vertex][1] / LOCAL_TILE_SIZE + SCENE_OFFSET;
+									int vX = (vertices[vertex][0] >> LOCAL_COORD_BITS) + SCENE_OFFSET;
+									int vY = (vertices[vertex][1] >> LOCAL_COORD_BITS) + SCENE_OFFSET;
 
 									sceneContext.vertexUnderwaterDepth.put(vertexKeys[vertex], underwaterDepths[z][vX][vY]);
 								}
@@ -674,12 +670,8 @@ public class ProceduralGenerator {
 									// interpolate between the height offsets at each corner to get the height offset
 									// of the vertex.
 
-									int tileX = x - SCENE_OFFSET;
-									int tileY = y - SCENE_OFFSET;
-									int localVertexX = vertices[vertex][0] - (tileX * LOCAL_TILE_SIZE);
-									int localVertexY = vertices[vertex][1] - (tileY * LOCAL_TILE_SIZE);
-									float lerpX = (float) localVertexX / (float) LOCAL_TILE_SIZE;
-									float lerpY = (float) localVertexY / (float) LOCAL_TILE_SIZE;
+									float lerpX = fract(vertices[vertex][0] / (float) LOCAL_TILE_SIZE);
+									float lerpY = fract(vertices[vertex][1] / (float) LOCAL_TILE_SIZE);
 									float northHeightOffset = lerp(
 										underwaterDepths[z][x][y + 1],
 										underwaterDepths[z][x + 1][y + 1],
@@ -938,6 +930,9 @@ public class ProceduralGenerator {
 		return new int[][] { vertexA, vertexB, vertexC };
 	}
 
+	/**
+	 * Returns vertex positions in local coordinates, between 0 and 128.
+	 */
 	public static int[][] faceLocalVertices(Tile tile, int face) {
 		if (tile.getSceneTileModel() == null)
 			return new int[0][0];

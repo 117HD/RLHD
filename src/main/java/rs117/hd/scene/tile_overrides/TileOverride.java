@@ -38,18 +38,24 @@ public class TileOverride {
 	public GroundMaterial groundMaterial = GroundMaterial.NONE;
 	public WaterType waterType = WaterType.NONE;
 	public boolean blended = true;
-	public boolean blendedAsOpposite = false;
-	public int shiftHue;
-	public int minHue;
-	public int maxHue = 63;
-	public int shiftSaturation;
-	public int minSaturation;
-	public int maxSaturation = 7;
-	public int shiftLightness;
-	public int minLightness;
-	public int maxLightness = 127;
+	public boolean blendedAsOpposite;
+	public boolean forced;
+	public boolean depthTested;
+	private int setHue = -1;
+	private int shiftHue;
+	private int minHue;
+	private int maxHue = 63;
+	private int setSaturation = -1;
+	private int shiftSaturation;
+	private int minSaturation;
+	private int maxSaturation = 7;
+	private int setLightness = -1;
+	private int shiftLightness;
+	private int minLightness;
+	private int maxLightness = 127;
 	public int uvOrientation;
 	public float uvScale = 1;
+	public int heightOffset;
 	@SerializedName("replacements")
 	public LinkedHashMap<String, JsonElement> rawReplacements;
 
@@ -104,6 +110,19 @@ public class TileOverride {
 			log.warn("Undefined water type in tile override: {}", this);
 			waterType = WaterType.NONE;
 		}
+
+		if (forced) {
+			// Replace hidden tiles with white by default
+			minHue = maxHue = minSaturation = maxSaturation = 0;
+			minLightness = maxLightness = 127;
+		}
+
+		if (setHue != -1)
+			minHue = maxHue = setHue;
+		if (setSaturation != -1)
+			minSaturation = maxSaturation = setSaturation;
+		if (setLightness != -1)
+			minLightness = maxLightness = setLightness;
 
 		// Convert UV scale to reciprocal, so we can multiply instead of dividing later
 		uvScale = 1 / uvScale;

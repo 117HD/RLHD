@@ -59,6 +59,7 @@ public class HDUtils {
 	public static final float MAX_FLOAT_WITH_128TH_PRECISION = 1 << 16;
 
 	public static final int MAX_SNOW_LIGHTNESS = 70;
+	public static final int HIDDEN_HSL = 12345678;
 
 	// directional vectors approximately opposite of the directional light used by the client
 	private static final float[] LIGHT_DIR_TILE = new float[] { 0.70710678f, 0.70710678f, 0f };
@@ -238,6 +239,39 @@ public class HDUtils {
 		}
 	}
 
+	public static String getObjectType(int config) {
+		int type = config & 0x3F;
+		final String[] OBJECT_TYPES = {
+			"StraightWalls",
+			"DiagWallsConn",
+			"EntireWallsCorners",
+			"StraightWallsConn",
+			"StraightInDeco",
+			"StraightOutDeco",
+			"DiagOutDeco",
+			"DiagInDeco",
+			"DiagInWallDeco",
+			"DiagWalls",
+			"Objects",
+			"GroundObjects",
+			"StraightSlopeRoofs",
+			"DiagSlopeRoofs",
+			"DiagSlopeConnRoofs",
+			"StraightSlopeConnRoofs",
+			"StraightSlopeCorners",
+			"FlatTopRoofs",
+			"BottomEdgeRoofs",
+			"DiagBottomEdgeConn",
+			"StraightBottomEdgeConn",
+			"StraightBottomEdgeConnCorners",
+			"GroundDecoMapSigns"
+		};
+		String name = "Unknown";
+		if (type < OBJECT_TYPES.length)
+			name = OBJECT_TYPES[type];
+		return String.format("(%d) %s", type, name);
+	}
+
 	public static HashSet<Integer> getSceneRegionIds(Scene scene) {
 		HashSet<Integer> regionIds = new HashSet<>();
 
@@ -326,8 +360,8 @@ public class HDUtils {
 	 * The returned plane may be different, so it's not safe to use for indexing into overlay IDs for instance
 	 */
 	public static int[] localToWorld(Scene scene, int localX, int localY, int plane) {
-		int sceneX = localX / LOCAL_TILE_SIZE;
-		int sceneY = localY / LOCAL_TILE_SIZE;
+		int sceneX = localX >> LOCAL_COORD_BITS;
+		int sceneY = localY >> LOCAL_COORD_BITS;
 
 		if (scene.isInstance() && sceneX >= 0 && sceneY >= 0 && sceneX < SCENE_SIZE && sceneY < SCENE_SIZE) {
 			int chunkX = sceneX / 8;
@@ -425,18 +459,19 @@ public class HDUtils {
 		);
 	}
 
-	public static void getSouthWesternMostTileColor(int[] out, Tile tile) {
+	public static int getSouthWesternMostTileColor(int[] out, Tile tile) {
 		var paint = tile.getSceneTilePaint();
 		var model = tile.getSceneTileModel();
+		int hsl = 0;
 		if (paint != null) {
-			ColorUtils.unpackRawHsl(out, paint.getSwColor());
+			hsl = paint.getSwColor();
+			ColorUtils.unpackRawHsl(out, hsl);
 		} else if (model != null) {
 			int faceCount = tile.getSceneTileModel().getFaceX().length;
 			final int[] faceColorsA = model.getTriangleColorA();
 			final int[] faceColorsB = model.getTriangleColorB();
 			final int[] faceColorsC = model.getTriangleColorC();
 
-			int hsl = 0;
 			outer:
 			for (int face = 0; face < faceCount; face++) {
 				if (isOverlayFace(tile, face))
@@ -454,5 +489,6 @@ public class HDUtils {
 
 			ColorUtils.unpackRawHsl(out, hsl);
 		}
+		return hsl;
 	}
 }

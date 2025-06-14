@@ -53,6 +53,11 @@ public class SceneContext {
 	public GpuFloatBuffer stagingBufferUvs;
 	public GpuFloatBuffer stagingBufferNormals;
 
+	public int staticGapFillerTilesOffset;
+	public int staticGapFillerTilesVertexCount;
+	public int staticCustomTilesOffset;
+	public int staticCustomTilesVertexCount;
+
 	// statistics
 	public int uniqueModels;
 
@@ -199,7 +204,10 @@ public class SceneContext {
 	 * Gets the local coordinate at the south-western corner of the passed tile.
 	 */
 	public int[] worldToLocal(@Nonnull int[] worldPoint) {
-		return new int[] { (worldPoint[0] - scene.getBaseX()) * LOCAL_TILE_SIZE, (worldPoint[1] - scene.getBaseY()) * LOCAL_TILE_SIZE };
+		return new int[] {
+			(worldPoint[0] - scene.getBaseX()) * LOCAL_TILE_SIZE,
+			(worldPoint[1] - scene.getBaseY()) * LOCAL_TILE_SIZE
+		};
 	}
 
 	public boolean intersects(Area area) {

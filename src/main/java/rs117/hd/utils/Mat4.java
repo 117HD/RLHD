@@ -97,13 +97,13 @@ public class Mat4
 		};
 	}
 
-	public static float[] orthographic(float w, float h, float n, float f)
+	public static float[] orthographic(float w, float h, float n)
 	{
 		return new float[] {
 			2 / w, 0, 0, 0,
 			0, -2 / h, 0, 0,
-			0, 0, 2 / (f - n), 0,
-			0, 0, -1 - n / (f - n), 1
+			0, 0, 2 / n, 0,
+			0, 0, 0, 1
 		};
 	}
 

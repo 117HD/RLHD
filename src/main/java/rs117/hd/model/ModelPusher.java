@@ -36,6 +36,7 @@ import rs117.hd.utils.PopupUtils;
 import static rs117.hd.HdPlugin.MAX_FACE_COUNT;
 import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
 import static rs117.hd.scene.tile_overrides.TileOverride.OVERLAY_FLAG;
+import static rs117.hd.utils.HDUtils.HIDDEN_HSL;
 
 /**
  * Pushes models
@@ -336,12 +337,12 @@ public class ModelPusher {
 						material = Material.fromVanillaTexture(textureId);
 				}
 
-				ModelOverride materialOverride = modelOverride;
+				ModelOverride faceOverride = modelOverride;
 				if (modelOverride.materialOverrides != null) {
 					var override = modelOverride.materialOverrides.get(material);
 					if (override != null) {
-						materialOverride = override;
-						material = materialOverride.textureMaterial;
+						faceOverride = override;
+						material = faceOverride.textureMaterial;
 					}
 				}
 
@@ -349,26 +350,26 @@ public class ModelPusher {
 					int hsl = model.getFaceColors1()[face];
 					for (var override : modelOverride.colorOverrides) {
 						if (override.hslCondition.test(hsl)) {
-							materialOverride = override;
-							material = materialOverride.baseMaterial;
+							faceOverride = override;
+							material = faceOverride.baseMaterial;
 							break;
 						}
 					}
 				}
 
 				if (material != Material.NONE) {
-					uvType = materialOverride.uvType;
-					if (uvType == UvType.VANILLA || (textureId != -1 && materialOverride.retainVanillaUvs))
+					uvType = faceOverride.uvType;
+					if (uvType == UvType.VANILLA || (textureId != -1 && faceOverride.retainVanillaUvs))
 						uvType = isVanillaUVMapped && textureFaces[face] != -1 ? UvType.VANILLA : UvType.GEOMETRY;
 				}
 
-				int materialData = packMaterialData(material, textureId, materialOverride, uvType, false);
+				int materialData = packMaterialData(material, textureId, faceOverride, uvType, false);
 
 				final float[] uvData = sceneContext.modelFaceNormals;
 				if (materialData == 0) {
 					Arrays.fill(uvData, 0);
 				} else {
-					materialOverride.fillUvsForFace(uvData, model, preOrientation, uvType, face);
+					faceOverride.fillUvsForFace(uvData, model, preOrientation, uvType, face);
 					uvData[3] = uvData[7] = uvData[11] = materialData;
 				}
 
@@ -489,9 +490,9 @@ public class ModelPusher {
 
 			if (ModelHash.getUuidType(uuid) == ModelHash.TYPE_PLAYER) {
 				int index = ModelHash.getUuidId(uuid);
-				Player[] players = client.getCachedPlayers();
-				if (index >= 0 && index < players.length) {
-					Player player = players[index];
+				var players = client.getTopLevelWorldView().players();
+				if (index >= 0 && index < 2048) {
+					Player player = players.byIndex(index);
 					if (player != null && player.getPlayerComposition().getEquipmentId(KitType.WEAPON) == ItemID.MAGIC_CARPET)
 						return ZEROED_INTS; // Hide the face
 				}
@@ -568,7 +569,7 @@ public class ModelPusher {
 							tilePaint != null &&
 							tilePaint.getTexture() == -1 &&
 							tilePaint.getRBG() != 0 &&
-							tilePaint.getNeColor() != 12345678
+							tilePaint.getNeColor() != HIDDEN_HSL
 						) {
 
 							// Since tile colors are guaranteed to have the same hue and saturation per face,
@@ -611,7 +612,7 @@ public class ModelPusher {
 
 							if (faceColorIndex != -1) {
 								int color = tileModel.getTriangleColorA()[faceColorIndex];
-								if (color != 12345678) {
+								if (color != HIDDEN_HSL) {
 									var scenePos = tile.getSceneLocation();
 									int tileX = scenePos.getX();
 									int tileY = scenePos.getY();

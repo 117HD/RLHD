@@ -204,8 +204,8 @@ public class LightManager {
 		int drawDistance = plugin.getDrawDistance() * LOCAL_TILE_SIZE;
 		Tile[][][] tiles = sceneContext.scene.getExtendedTiles();
 		int[][][] tileHeights = sceneContext.scene.getTileHeights();
-		var cachedNpcs = client.getCachedNPCs();
-		var cachedPlayers = client.getCachedPlayers();
+		var cachedNpcs = client.getTopLevelWorldView().npcs();
+		var cachedPlayers = client.getTopLevelWorldView().players();
 		int plane = client.getPlane();
 		boolean changedPlanes = false;
 
@@ -258,8 +258,7 @@ public class LightManager {
 						var animation = light.projectile.getAnimation();
 						parentExists = animation != null && light.def.animationIds.contains(animation.getId());
 					}
-					light.orientation = (int) Math.round(
-						Math.atan2(light.projectile.getVelocityZ(), light.projectile.getVelocityX()) / UNIT);
+					light.orientation = light.projectile.getOrientation();
 				}
 			} else if (light.graphicsObject != null) {
 				light.origin[0] = light.graphicsObject.getLocation().getX();
@@ -272,8 +271,8 @@ public class LightManager {
 					parentExists = animation != null && light.def.animationIds.contains(animation.getId());
 				}
 			} else if (light.actor != null && !light.markedForRemoval) {
-				if (light.actor instanceof NPC && light.actor != cachedNpcs[((NPC) light.actor).getIndex()] ||
-					light.actor instanceof Player && light.actor != cachedPlayers[((Player) light.actor).getId()] ||
+				if (light.actor instanceof NPC && light.actor != cachedNpcs.byIndex(((NPC) light.actor).getIndex()) ||
+					light.actor instanceof Player && light.actor != cachedPlayers.byIndex(((Player) light.actor).getId()) ||
 					light.spotAnimId != -1 && !light.actor.hasSpotAnim(light.spotAnimId)
 				) {
 					parentExists = false;
@@ -288,8 +287,8 @@ public class LightManager {
 					if (light.animationSpecific)
 						parentExists = light.def.animationIds.contains(light.actor.getAnimation());
 
-					int tileExX = light.origin[0] / LOCAL_TILE_SIZE + SCENE_OFFSET;
-					int tileExY = light.origin[2] / LOCAL_TILE_SIZE + SCENE_OFFSET;
+					int tileExX = (light.origin[0] >> LOCAL_COORD_BITS) + SCENE_OFFSET;
+					int tileExY = (light.origin[2] >> LOCAL_COORD_BITS) + SCENE_OFFSET;
 
 					// Some NPCs, such as Crystalline Hunllef in The Gauntlet, sometimes return scene X/Y values far outside the possible range.
 					Tile tile;
@@ -297,7 +296,9 @@ public class LightManager {
 						tileExX < EXTENDED_SCENE_SIZE && tileExY < EXTENDED_SCENE_SIZE &&
 						(tile = tiles[plane][tileExX][tileExY]) != null
 					) {
-						if (!light.def.ignoreActorHiding) {
+						if (!light.def.ignoreActorHiding &&
+							!(light.actor instanceof NPC && ((NPC) light.actor).getComposition().getSize() > 1)
+						) {
 							// Check if the actor is hidden by another actor on the same tile
 							for (var gameObject : tile.getGameObjects()) {
 								if (gameObject == null || !(gameObject.getRenderable() instanceof Actor))
@@ -324,12 +325,10 @@ public class LightManager {
 								plane++;
 
 							// Interpolate between tile heights based on specific scene coordinates
-							float lerpX = (light.origin[0] % LOCAL_TILE_SIZE) / (float) LOCAL_TILE_SIZE;
-							float lerpY = (light.origin[2] % LOCAL_TILE_SIZE) / (float) LOCAL_TILE_SIZE;
-							int baseTileX =
-								(int) Math.floor(light.origin[0] / (float) LOCAL_TILE_SIZE) + SCENE_OFFSET;
-							int baseTileY =
-								(int) Math.floor(light.origin[2] / (float) LOCAL_TILE_SIZE) + SCENE_OFFSET;
+							float lerpX = fract(light.origin[0] / (float) LOCAL_TILE_SIZE);
+							float lerpY = fract(light.origin[2] / (float) LOCAL_TILE_SIZE);
+							int baseTileX = (light.origin[0] >> LOCAL_COORD_BITS) + SCENE_OFFSET;
+							int baseTileY = (light.origin[2] >> LOCAL_COORD_BITS) + SCENE_OFFSET;
 							float heightNorth = HDUtils.lerp(
 								tileHeights[plane][baseTileX][baseTileY + 1],
 								tileHeights[plane][baseTileX + 1][baseTileY + 1],
@@ -353,7 +352,7 @@ public class LightManager {
 
 			int orientation = 0;
 			if (light.alignment.relative)
-				orientation = HDUtils.mod(light.orientation + light.preOrientation + light.alignment.orientation, 2048);
+				orientation = HDUtils.mod(light.orientation + light.alignment.orientation, 2048);
 
 			if (light.alignment == Alignment.CUSTOM) {
 				// orientation 0 = south
@@ -388,8 +387,8 @@ public class LightManager {
 				light.prevPlane = light.plane;
 				light.belowFloor = false;
 				light.aboveFloor = false;
-				int tileExX = light.pos[0] / LOCAL_TILE_SIZE + SCENE_OFFSET;
-				int tileExY = light.pos[2] / LOCAL_TILE_SIZE + SCENE_OFFSET;
+				int tileExX = (light.pos[0] >> LOCAL_COORD_BITS) + SCENE_OFFSET;
+				int tileExY = (light.pos[2] >> LOCAL_COORD_BITS) + SCENE_OFFSET;
 				if (light.plane >= 0 && tileExX >= 0 && tileExY >= 0 && tileExX < EXTENDED_SCENE_SIZE && tileExY < EXTENDED_SCENE_SIZE) {
 					byte hasTile = sceneContext.filledTiles[tileExX][tileExY];
 					if ((hasTile & (1 << light.plane + 1)) != 0)
@@ -906,8 +905,8 @@ public class LightManager {
 
 				int tileExX = HDUtils.clamp(lp.getSceneX() + SCENE_OFFSET, 0, EXTENDED_SCENE_SIZE - 2);
 				int tileExY = HDUtils.clamp(lp.getSceneY() + SCENE_OFFSET, 0, EXTENDED_SCENE_SIZE - 2);
-				float lerpX = (lightX % LOCAL_TILE_SIZE) / (float) LOCAL_TILE_SIZE;
-				float lerpZ = (lightZ % LOCAL_TILE_SIZE) / (float) LOCAL_TILE_SIZE;
+				float lerpX = fract(lightX / (float) LOCAL_TILE_SIZE);
+				float lerpZ = fract(lightZ / (float) LOCAL_TILE_SIZE);
 				int tileZ = HDUtils.clamp(plane, 0, MAX_Z - 1);
 
 				Tile[][][] tiles = sceneContext.scene.getExtendedTiles();
@@ -932,7 +931,7 @@ public class LightManager {
 				light.hash = newHash;
 				light.tileObject = tileObject;
 				light.plane = plane;
-				light.preOrientation = orientations[i];
+				light.orientation = orientations[i];
 				light.origin[0] = lightX;
 				light.origin[1] = (int) tileHeight - light.def.height - 1;
 				light.origin[2] = lightZ;
