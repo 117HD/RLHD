@@ -2197,6 +2197,14 @@
     ]
   },
   {
+    "name": "MAGE_TRAINING_ARENA_AND_KHARID_MINE_DIRT_FIX",
+    "aabbs": [
+      [ 3344, 3301, 3347, 3297 ],
+      [ 3353, 3285, 3357, 3289 ],
+      [ 3304, 3318, 3312, 3314 ]
+    ]
+  },
+  {
     "name": "KHARIDIAN_DESERT_DEEP",
     "areas": [
       "AGILITY_PYRAMID_TOP"

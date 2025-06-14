@@ -5337,6 +5337,32 @@
     "blended": false
   },
   {
+    "name": "MAGE_TRAINING_ARENA_AND_KHARID_MINE_DIRT_FIX",
+    "area": "MAGE_TRAINING_ARENA_AND_KHARID_MINE_DIRT_FIX",
+    "groundMaterial": "SAND",
+    "maxLightness": 60,
+    "shiftHue": -1,
+    "shiftSaturation": 1,
+    "maxSaturation": 4,
+    "underlayIds": [
+      45,
+      50,
+      52,
+      61,
+      62,
+      126
+    ],
+    "replacements": {
+      "KHARID_GRASS": [
+        "h > 11",
+        "h > 9 && s > 3"
+      ],
+      "DEFAULT_GRASS": [
+        "h == 9 && s == 4"
+      ]
+    }
+  },
+  {
     "area": "AL_KHARID_GRASS_FIXES",
     "underlayIds": [
       49,
