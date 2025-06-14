@@ -533,9 +533,9 @@
     "area": "MOTHERLODE_MINE",
     "ambientColor": "#aaafb6",
     "ambientStrength": 4,
-    "directionalStrength": 1,
+    "directionalStrength": 0.5,
     "sunAngles": [
-      80,
+      75,
       190
     ],
     "fogColor": "#241809",
@@ -652,6 +652,24 @@
     ],
     "fogColor": "#161101",
     "fogDepth": 35
+  },
+  {
+    "area": "ESSENCE_MINE",
+    "ambientColor": "#6687a9",
+    "ambientStrength": 0.85,
+    "sunAngles": [ 50, 244 ],
+    "directionalStrength": 0.45,
+    "fogColor": "#adb9c4",
+    "fogDepth": 50
+  },
+  {
+    "area": "ICE_QUEENS_DUNGEON",
+    "ambientColor": "#6687a9",
+    "ambientStrength": 0.85,
+    "sunAngles": [ 73, 244 ],
+    "directionalStrength": 0.45,
+    "fogColor": "#adb9c4",
+    "fogDepth": 50
   },
   {
     "area": "GIELINOR_SNOWY_NORTHERN_REGION",
@@ -1616,22 +1634,22 @@
     "fogDepth": 30
   },
   {
-    "area": "RALOS_RISE_LOWER",
-    "ambientColor": "#6fb0ff",
-    "ambientStrength": 1.75,
-    "directionalColor": "#f4e5c9",
-    "directionalStrength": 3,
-    "fogColor": "#aebde0",
-    "fogDepth": 30
-  },
-  {
-    "area": "RALOS_RISE_UPPER",
+    "area": "VARLAMORE_SNOWY_MOUNTAINS_UPPER",
     "ambientColor": "#6fb0ff",
     "ambientStrength": 0.8,
     "directionalColor": "#f4e5c9",
     "directionalStrength": 2,
     "fogColor": "#aebde0",
     "fogDepth": 50
+  },
+  {
+    "area": "VARLAMORE_SNOWY_MOUNTAINS_LOWER",
+    "ambientColor": "#6fb0ff",
+    "ambientStrength": 1.75,
+    "directionalColor": "#f4e5c9",
+    "directionalStrength": 3,
+    "fogColor": "#aebde0",
+    "fogDepth": 30
   },
   {
     "key": "OVERWORLD",
