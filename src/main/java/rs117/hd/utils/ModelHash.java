@@ -7,8 +7,7 @@ import static rs117.hd.utils.HDUtils.clamp;
 
 public class ModelHash {
 	// Model hashes are composed as follows:
-	// | 1111 1111 1111 1 |    11 | 1  1111 1111 1111 1111 1111 1111 1111 111 |               1 |   11 |    11 1111 1 |     111 1111 |
-	// |   13 unused bits | plane |                        32-bit id or index | right-clickable | type | 7-bit sceneY | 7-bit sceneX |
+	// | 12-bit worldView | 32-bit id or index | 1-bit wall | 3-bit type | 2-bit plane | 7-bit sceneY | 7-bit sceneX |
 	//
 	// type:
 	// - 0 = player
@@ -40,11 +39,6 @@ public class ModelHash {
 
 	public static final int UNKNOWN_ID = 0xFFFFFF;
 
-	public static final long SCENE_X_MASK = 0x7f;
-	public static final long SCENE_Y_MASK = 0x7f << 7;
-	public static final long TYPE_MASK = 3L << 14;
-	public static final long ID_OR_INDEX_MASK = 0xffffffffL << 17;
-
 	private static final String[] TYPE_NAMES = {
 		"Player",
 		"NPC",
@@ -72,33 +66,24 @@ public class ModelHash {
 		return TYPE_NAMES_SHORT[clamp(type, 0, TYPE_NAMES_SHORT.length - 1)];
 	}
 
-	public static long pack(int idOrIndex, boolean rightClickable, int type, int sceneY, int sceneX) {
-		return
-			(idOrIndex & 0xffffffffL) << 17
-			| (rightClickable ? 1L : 0L) << 16
-			| ((long) type & 0x3) << 14
-			| (sceneY & 0x7f) << 7
-			| (sceneX & 0x7f);
-	}
-
 	public static int getSceneX(long hash) {
-		return (int) (hash & SCENE_X_MASK);
+		return (int) (hash & 0x7f);
 	}
 
 	public static int getSceneY(long hash) {
-		return (int) ((hash & SCENE_Y_MASK) >> 7);
+		return (int) (hash >> 7 & 0x7f);
 	}
 
 	public static int getPlane(long hash) {
-		return (int) ((hash >> TileObject.HASH_PLANE_SHIFT) & 3);
+		return (int) (hash >> TileObject.HASH_PLANE_SHIFT & 3);
 	}
 
 	public static int getType(long hash) {
-		return (int) ((hash & TYPE_MASK) >> 14);
+		return (int) (hash >> 16 & 7);
 	}
 
 	public static int getIdOrIndex(long hash) {
-		return (int) ((hash & ID_OR_INDEX_MASK) >>> 17);
+		return (int) (hash >> 20);
 	}
 
 	/**
@@ -135,9 +120,9 @@ public class ModelHash {
 			} else if (type == TYPE_NPC) {
 				int index = id;
 				id = UNKNOWN_ID;
-				NPC[] npcs = client.getCachedNPCs();
-				if (index >= 0 && index < npcs.length) {
-					NPC npc = npcs[index];
+				var npcs = client.getTopLevelWorldView().npcs();
+				if (index >= 0 && index < 65536) {
+					NPC npc = npcs.byIndex(index);
 					if (npc != null)
 						id = npc.getId();
 				}

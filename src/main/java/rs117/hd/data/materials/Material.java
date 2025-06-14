@@ -344,6 +344,9 @@ public enum Material {
 		.setNormalMap(DIRT_2_N)
 		.setSpecular(0.25f, 18)),
 	DIRT_2_VERT(DIRT_2, p -> p.setNormalMap(null)),
+	DIRT_2_LIGHT(DIRT_2, p -> p
+		.setBrightness(1.2f)),
+
 	GRAVEL_N,
 	GRAVEL(p -> p
 		.setNormalMap(GRAVEL_N)
@@ -411,6 +414,13 @@ public enum Material {
 		.setFlowMap(UNDERWATER_FLOW_MAP)
 		.setFlowMapStrength(0.2f)
 		.setFlowMapDuration(new float[] { 12, -12 })
+	),
+	MOTHERLODE_MINE_WATER(WATER_FLAT, p -> p
+		.setFlowMap(UNDERWATER_FLOW_MAP)
+		.setFlowMapStrength(0.3f)
+		.setBrightness(0.45f)
+		.setScroll(0, 1.4f)
+		.setFlowMapDuration(new float[] { 10, -14 })
 	),
 	ROCK_1_N,
 	ROCK_1(p -> p

@@ -23,6 +23,7 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 	private FrameTimer frameTimer;
 
 	private final ArrayDeque<FrameTimings> frames = new ArrayDeque<>();
+	private final StringBuilder sb = new StringBuilder();
 
 	@Inject
 	public FrameTimerOverlay(HdPlugin plugin) {
@@ -119,12 +120,16 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 			return;
 
 		// Round timers to zero if they are less than a microsecond off
-		String formatted = nanos < 3e3 && nanos > -1e5 ? "~0 ms" : String.format("%.3f ms", nanos / 1e6);
+		String result = "~0 ms";
+		if (nanos < -1e5 || nanos > 3e3) {
+			result = sb.append(Math.round(nanos / 1e3) / 1e3).append(" ms").toString();
+			sb.setLength(0);
+		}
 		var font = bold ? FontManager.getRunescapeBoldFont() : FontManager.getRunescapeFont();
 		panelComponent.getChildren().add(LineComponent.builder()
 			.left(name + ":")
 			.leftFont(font)
-			.right(formatted)
+			.right(result)
 			.rightFont(font)
 			.build());
 	}
