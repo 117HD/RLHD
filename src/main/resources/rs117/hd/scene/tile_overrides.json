@@ -5506,6 +5506,38 @@
     }
   },
   {
+    "name": "RIVER_ELID_DIRT_FIX",
+    "area": "RIVER_ELID",
+    "underlayIds": [
+      45,
+      49,
+      50,
+      52,
+      53,
+      58,
+      61,
+      62,
+      63,
+      64,
+      67,
+      68,
+      69,
+      126,
+      129
+    ],
+    "groundMaterial": "SAND",
+    "minHue": 6,
+    "maxHue": 6,
+    "minSaturation": 3,
+    "maxSaturation": 3,
+    "replacements": {
+      "KHARID_DIRT": [
+        "h == 7 && s > 3 && s < 8"
+      ]
+    }
+
+  },
+  {
     "name": "UZER_OASIS",
     "area": "UZER_OASIS",
     "groundMaterial": "SAND",
@@ -5568,12 +5600,7 @@
     "minHue": 6,
     "maxHue": 6,
     "minSaturation": 3,
-    "maxSaturation": 3,
-    "replacements": {
-      "KHARID_DIRT": [
-        "h == 7 && s == 5"
-      ]
-    }
+    "maxSaturation": 3
   },
   {
     "name": "KHARID_SAND",
