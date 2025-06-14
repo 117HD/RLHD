@@ -31938,8 +31938,8 @@
     "uvType": "GEOMETRY",
     "colorOverrides": [
       {
-        "colors": [ "h == 5", "h == 6" ,"h == 7", "h == 9" ],
-        "baseMaterial": "GRAY_90"
+        "colors": "h == 5 || h == 6 || h == 7 || h == 9",
+        "baseMaterial": "GRAY_150"
       }
     ]
   },
@@ -31984,5 +31984,10 @@
       32955
     ],
     "uvType": "BOX"
+  },
+  {
+    "description": "TOB Bloat - make floor objects brighter to improve falling shadow visibility",
+    "objectIds": [ 32944, 32945, 32946, 32947, 32948 ],
+    "baseMaterial": "GRAY_150"
   }
 ]

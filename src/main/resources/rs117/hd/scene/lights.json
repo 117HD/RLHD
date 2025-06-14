@@ -25641,20 +25641,6 @@
     ]
   },
   {
-    "description": "Bloat Shadow Enhancer",
-    "offset": [ 0, 20, 0 ],
-    "radius": 150,
-    "strength": -1.5,
-    "fadeInDuration": 100,
-    "color": [
-      255,
-      255,
-      255
-    ],
-    "type": "STATIC",
-    "graphicsObjectIds": [ 1571, 1572, 1573 ]
-  },
-  {
     "description": "TOB_XARPUS_EXHUMED_GROUND",
     "areas": [ "THEATRE_OF_BLOOD" ],
     "offset": [ 0, 20, 0 ],
@@ -25734,8 +25720,8 @@
     "description": "PESTILENT_BLOAT_CHAMBER",
     "height": 400,
     "alignment": "CENTER",
-    "radius": 1500,
-    "strength": 15,
+    "radius": 2000,
+    "strength": 20,
     "color": [
       255,
       208,
@@ -25743,7 +25729,7 @@
     ],
     "type": "PULSE",
     "duration": 1800,
-    "range": 10,
+    "range": 5,
     "objectIds": [
       32957
     ]
