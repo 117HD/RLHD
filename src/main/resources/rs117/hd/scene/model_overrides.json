@@ -3709,7 +3709,7 @@
     "uvScale": 0.5,
     "colorOverrides": [
       {
-        "colors": ["h == 14", "h == 17"],
+        "colors": [ "h == 14 || h == 17" ],
         "baseMaterial": "NONE"
       }
     ]
