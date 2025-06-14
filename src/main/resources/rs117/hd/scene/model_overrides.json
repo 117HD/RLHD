@@ -4687,11 +4687,41 @@
       6822,
       6824,
       6826,
+      11656,
       16539
     ],
     "uvType": "BOX",
     "uvScale": 0.7,
     "uvOrientation": 256
+  },
+  {
+    "description": "Pale rock wall topper",
+    "baseMaterial": "ROCK_3",
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.7,
+    "uvOrientation": 256,
+    "objectIds": [
+      6825
+    ]
+  },
+  {
+    "description": "Pale rock wall with metal pipe",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 256,
+    "colorOverrides": [
+      {
+        "description": "Metal Pipe",
+        "colors": "h == 10",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvOrientation": 157
+      }
+    ],
+    "objectIds": [
+      11657
+    ]
   },
   {
     "description": "Pale rock tunnel, Keldagrim to Rellekka tunnel",
@@ -6149,6 +6179,7 @@
       9559,
       10493,
       10494,
+      11635,
       11794,
       11795,
       11801,
@@ -7872,6 +7903,7 @@
     "description": "Stepping Stones",
     "baseMaterial": "ROCK_1",
     "objectIds": [
+      11643,
       11768,
       13504,
       16466,
@@ -7909,6 +7941,7 @@
       4356,
       4357,
       4358,
+      4359,
       4603,
       4604,
       4605,
@@ -23922,6 +23955,16 @@
     "uvScale": 0.6
   },
   {
+    "description": "Skulls",
+    "baseMaterial": "BONE",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      11641,
+      11642
+    ]
+  },
+  {
     "description": "Ramshackle Barrier",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [ 1771 ],
@@ -30165,6 +30208,133 @@
         "colors": [ "h == 5" ],
         "baseMaterial": "METALLIC_1_SEMIGLOSS"
       }
+    ]
+  },
+  {
+    "description": "Morytania Slayer Magical Chest",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Skull",
+        "colors": "h == 6 && s == 1",
+        "baseMaterial": "BONE",
+        "uvType": "BOX",
+        "uvOrientation": 42
+      },
+      {
+        "description": "transparency fix",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "TRANSPARENT"
+      }
+    ],
+    "objectIds": [
+      11638,
+      11639,
+      11640
+    ]
+  },
+  {
+    "description": "Morytania Slayer Magical Chest",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Rope",
+        "colors": "h == 6",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvOrientation": 128
+      },
+      {
+        "description": "Metal anchor",
+        "colors": "h == 42",
+        "baseMaterial": "METALLIC_1",
+        "uvType": "BOX",
+        "uvOrientation": 128
+      }
+    ],
+    "objectIds": [
+      11644,
+      11645,
+      11646,
+      11647,
+      11648,
+      11649
+    ]
+  },
+  {
+    "description": "Zip-line rope",
+    "baseMaterial": "ROPE",
+    "uvType": "BOX",
+    "uvOrientation": 128,
+    "objectIds": [ 11650 ]
+  },
+  {
+    "description": "Werewolf - Agility Course - Spikes",
+    "baseMaterial": "METALLIC_1_LIGHT_HIGHGLOSS",
+    "objectIds": [
+      11658,
+      11660
+    ]
+  },
+  {
+    "description": "Werewolf - Agility Course - spikes with corpse",
+    "baseMaterial": "BONE",
+    "uvType": "BOX",
+    "uvOrientation": 42,
+    "colorOverrides": [
+      {
+        "description": "Metal Spikes",
+        "colors": "h == 0" ,
+        "baseMaterial": "METALLIC_1_LIGHT_HIGHGLOSS"
+      }
+    ],
+    "objectIds": [
+      11659
+    ]
+  },
+  {
+    "description": "Wereball course goal posts",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 42,
+    "colorOverrides": [
+      {
+        "description": "Corpse parts",
+        "colors": "s == 1" ,
+        "baseMaterial": "BONE",
+        "uvType": "BOX",
+        "uvOrientation": 42,
+        "uvScale": 0.6
+      }
+    ],
+    "objectIds": [
+      11652,
+      11653
+    ]
+  },
+  {
+    "description": "Wereball course goalie corpse - DYNAMIC",
+    "baseMaterial": "BONE",
+    "uvType": "BOX",
+    "uvOrientation": 343,
+    "uvScale": 0.6,
+    "objectIds": [
+      11651
+    ]
+  },
+  {
+    "description": "Wereball course paint",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 343,
+    "objectIds": [
+      11654,
+      11655
     ]
   }
 ]

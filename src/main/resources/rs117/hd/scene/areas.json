@@ -6167,6 +6167,11 @@
     ]
   },
   {
+    "name": "WEREWOLF_AGILITY_AREA",
+    "regions": [ 14234 ],
+    "hideOtherAreas": true
+  },
+  {
     "name": "VARLAMORE",
     "regionBoxes": [
       [ 4908, 7476 ]

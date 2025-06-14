@@ -2971,6 +2971,25 @@
     "groundMaterial": "VARROCK_PATHS"
   },
   {
+    "name": "Werewolf Agility course path",
+    "area": "WEREWOLF_AGILITY_AREA",
+    "groundMaterial": "GRAVEL",
+    "uvOrientation": 84,
+    "uvScale": 1.2,
+    "overlayIds": [ 83 ]
+  },
+  {
+    "name": "Werewolf Agility area - COMPLEX",
+    "area": "WEREWOLF_AGILITY_AREA",
+    "groundMaterial": "OVERWORLD_ROCKY",
+    "uvOrientation": 84,
+    "uvScale": 1.2,
+    "replacements": {
+      "DEFAULT_DIRT": "h > 7 && s > 1"
+    },
+    "underlayIds": [ 92, 93, 94, 96]
+  },
+  {
     "name": "SLEPE_PATHS",
     "area": "SLEPE",
     "overlayIds": [
