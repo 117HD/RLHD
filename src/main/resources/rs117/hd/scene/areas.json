@@ -1170,6 +1170,13 @@
     ]
   },
   {
+    "name": "Elemental Workshop floor 1",
+    "aabbs": [
+      [ 2670, 9857, 2763, 9934 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
     "name": "SINCLAIR_MANSION",
     "aabbs": [
       [ 2733, 3574, 2747, 3582 ],
@@ -2799,9 +2806,52 @@
     "hideOtherAreas": true
   },
   {
-    "name": "ABANDONED_MINE",
+    "name": "ABANDONED_MINE_OVERWORLD",
     "aabbs": [
       [ 3423, 3201, 3461, 3261 ]
+    ]
+  },
+  {
+    "name": "ABANDONED_MINE_1",
+    "regions": [ 13718 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "ABANDONED_MINE_2",
+    "regions": [ 11079 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "ABANDONED_MINE_3",
+    "regions": [ 10822 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "ABANDONED_MINE_4",
+    "regions": [ 11078 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "ABANDONED_MINE_5",
+    "aabbs": [
+      [ 2688, 4416, 2754, 4482 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "ABANDONED_MINE_6",
+    "regions": [ 11077 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "ABANDONED_MINE",
+    "areas": [
+      "ABANDONED_MINE_1",
+      "ABANDONED_MINE_2",
+      "ABANDONED_MINE_3",
+      "ABANDONED_MINE_4",
+      "ABANDONED_MINE_5",
+      "ABANDONED_MINE_6"
     ]
   },
   {
@@ -4614,7 +4664,12 @@
   },
   {
     "name": "Tree Gnome Village dungeon",
-    "regions": [ 10309 ],
+    "regions": [ 10309, 10133 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Glarial's Tomb Dungeon",
+    "regions": [ 10137 ],
     "hideOtherAreas": true
   },
   {
@@ -4783,7 +4838,8 @@
     "name": "MOGRE_CAMP",
     "regions": [
       11924
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "HARMONY_ISLAND_UNDERWATER_TUNNEL",

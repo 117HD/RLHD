@@ -974,7 +974,6 @@
       30659,
       30660,
       30661,
-      30741,
       30868,
       31920,
       31922,
@@ -1423,6 +1422,90 @@
     "uvOrientationZ": 128,
     "uvOrientationY": 512,
     "retainVanillaUvs": true
+  },
+  {
+    "description": "Objects - Tree - Mahogany",
+    "baseMaterial": "BARK_STONEPINE",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "uvOrientation": 42,
+    "retainVanillaUvs": true,
+    "objectIds": [
+      9034,
+      9035
+    ]
+  },
+  {
+    "description": "Tree - Mahogany - Player grown - Dynamic",
+    "baseMaterial": "BARK_STONEPINE",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "retainVanillaUvs": true,
+    "objectIds": [
+      30407,
+      30408,
+      30409,
+      30410,
+      30411,
+      30412,
+      30413,
+      30414,
+      30415,
+      30416,
+      30417,
+      30418
+    ]
+  },
+  {
+    "description": "Objects - Tree - Teak",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "colorOverrides": [
+      {
+        "description": "Leaves",
+        "colors": "h > 12",
+        "baseMaterial": "LEAF_VEINS",
+        "uvScale": 0.2,
+        "uvOrientation": 42,
+        "uvType": "MODEL_XZ"
+      }
+    ],
+    "objectIds": [
+      9036,
+      9037,
+      15032,
+      36686,
+      40758
+    ]
+  },
+  {
+    "description": "Tree - Teak - Player grown - Dynamic",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "colorOverrides": [
+      {
+        "description": "Leaves",
+        "colors": "h > 12",
+        "baseMaterial": "LEAF_VEINS",
+        "uvScale": 0.4,
+        "uvOrientation": 42,
+        "uvType": "MODEL_XZ"
+      }
+    ],
+    "objectIds": [
+      30437,
+      30438,
+      30439,
+      30440,
+      30441,
+      30442,
+      30443,
+      30444,
+      30445,
+      30446
+    ]
   },
   {
     "description": "Objects - Tree - Juniper",
@@ -1947,6 +2030,7 @@
       19838,
       23914,
       23915,
+      23916,
       31777,
       31778,
       31779,
@@ -2397,6 +2481,7 @@
     "objectIds": [
       166,
       167,
+      883,
       980,
       981,
       991,
@@ -2412,7 +2497,6 @@
       9623,
       9470,
       9708,
-      25677,
       1558,
       1559,
       1560,
@@ -2420,12 +2504,20 @@
       1562,
       1563,
       1564,
+      1565,
+      1566,
       1567,
       1739,
       1740,
+      2438,
+      2439,
       993,
       7527,
       20857,
+      23917,
+      23918,
+      23919,
+      25677,
       10714
     ],
     "uvType": "BOX",
@@ -3535,11 +3627,9 @@
     "description": "Wintertodt Terrain",
     "baseMaterial": "SNOW_4",
     "objectIds": [
-      29297,
       29293,
       29296,
       29295,
-      29298,
       29294,
       29279,
       29265,
@@ -3562,6 +3652,45 @@
     "uvScale": 1.25
   },
   {
+    "description": "Wintertodt Root Terrain",
+    "baseMaterial": "SNOW_4",
+    "objectIds": [
+      29297
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.25,
+    "colorOverrides": [
+      {
+        "colors": "h == 32",
+        "baseMaterial": "VERY_LIGHT_BARK",
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h == 16",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.75
+      }
+    ]
+  },
+  {
+    "description": "Wintertodt Herb Terrain",
+    "baseMaterial": "SNOW_4",
+    "objectIds": [
+      29298
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.25,
+    "colorOverrides": [
+      {
+        "colors": "h == 32",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
     "description": "Wintertodt Railings",
     "baseMaterial": "SNOW_4",
     "objectIds": [
@@ -3569,14 +3698,15 @@
       29287,
       29289,
       29290,
-      29291
+      29291,
+      29292
     ],
     "uvType": "BOX",
     "uvScale": 1.25
   },
   {
     "description": "Wintertodt Wooden Objects",
-    "baseMaterial": "WOOD_GRAIN_2_SMOOTH_LIGHT",
+    "baseMaterial": "SNOW_1",
     "objectIds": [
       29319,
       29320,
@@ -3587,20 +3717,38 @@
       29305,
       29302,
       29321,
-      26330
+      29303,
+      29304,
+      55411,
+      55412,
+      55413,
+      55414,
+      55415,
+      55416
     ],
-    "uvType": "WORLD_XY",
-    "uvScale": 1.5
+    "colorOverrides": [
+      {
+        "colors": "h == 32",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ]
   },
   {
-    "description": "Wintertodt Wooden Objects rotated",
-    "baseMaterial": "WOOD_GRAIN_2_SMOOTH_LIGHT",
-    "objectIds": [
-      29303,
-      29304
-    ],
-    "uvType": "WORLD_XY",
-    "uvScale": 1.5
+  "description": "Wintertodt Barrel Group",
+  "baseMaterial": "SNOW_1",
+  "objectIds": [
+    26330
+  ],
+  "colorOverrides": [
+    {
+      "colors": "h == 5",
+      "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+      "uvType": "BOX",
+      "uvScale": 0.75
+    }
+  ]
   },
   {
     "description": "Wintertodt Bruma Roots",
@@ -3608,15 +3756,33 @@
     "objectIds": [
       29311
     ],
+    "colorOverrides": [
+      {
+        "colors": "h == 16",
+        "baseMaterial": "VERY_LIGHT_BARK",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.75
+      }
+    ],
     "uvType": "BOX"
   },
   {
     "description": "Wintertodt Herb Roots",
-    "baseMaterial": "LIGHT_BARK",
+    "baseMaterial": "VERY_LIGHT_BARK",
     "objectIds": [
       29315
     ],
-    "uvType": "BOX"
+    "colorOverrides": [
+      {
+        "colors": "h == 16",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512
   },
   {
     "description": "Wintertodt Brazier",
@@ -3626,7 +3792,23 @@
       29313,
       29314
     ],
-    "uvType": "BOX"
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "colors": [ "h == 14 || h == 17" ],
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Wintertodt Storm - Brighten",
+    "baseMaterial": "GRAY_150",
+    "objectIds": [
+      29308
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
   },
   {
     "description": "Wintertodt Tents",
@@ -4069,7 +4251,10 @@
       15248,
       15249,
       15631,
+      15797,
       15798,
+      15799,
+      15800,
       15801,
       15802,
       15803,
@@ -5335,8 +5520,10 @@
     "uvScale": 0.4
   },
   {
-    "description": "PICARILIUS_DOCKS",
-    "baseMaterial": "GRUNGE_2",
+    "description": "Piscarilius Docks",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 1.1,
     "objectIds": [
       27626,
       27627,
@@ -5362,12 +5549,21 @@
       27650,
       27651,
       42661
-    ],
-    "uvType": "MODEL_XZ"
+    ]
   },
   {
-    "description": "PICARILIUS_DOCKS_SAND_TILE",
-    "baseMaterial": "GRUNGE_2",
+    "description": "Piscarilius Docks with Sand overlay",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 1.1,
+    "colorOverrides": [
+      {
+        "description": "Sand",
+        "baseMaterial": "DIRT_1",
+        "colors": "l > 40",
+        "uvType": "WORLD_XZ"
+      }
+    ],
     "objectIds": [
       27649,
       27652,
@@ -5382,8 +5578,7 @@
       27657,
       27658,
       27660
-    ],
-    "uvType": "MODEL_XZ"
+    ]
   },
   {
     "description": "Picarilius docks with Carpet",
@@ -5944,6 +6139,9 @@
       4164,
       4187,
       4189,
+      4966,
+      4968,
+      4970,
       8744,
       8745,
       8746,
@@ -6006,6 +6204,7 @@
       16684,
       16685,
       17026,
+      17028,
       17384,
       17385,
       17387,
@@ -6211,6 +6410,7 @@
     "description": "Wooden - Plank - Tables - Rotated",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
+      595,
       2649,
       7175,
       9613,
@@ -6467,7 +6667,7 @@
     "colorOverrides": [
       {
         "description": "Railing",
-        "colors": " h == 6 && s == 7",
+        "colors": "h == 6 && s == 7",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX"
       }
@@ -6602,6 +6802,9 @@
       2059,
       2060,
       2061,
+      3444,
+      3445,
+      3446,
       3506,
       3507,
       5501,
@@ -6644,6 +6847,21 @@
     ],
     "uvType": "BOX",
     "uvOrientation": 463
+  },
+  {
+    "description": "Metal Fence Gate with textured posts",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "uvOrientation": 512,
+    "objectIds": [
+      3460,
+      3461,
+      3462,
+      3463,
+      3464,
+      3465
+    ]
   },
   {
     "description": "Metal Fence",
@@ -6755,12 +6973,14 @@
   {
     "description": "Sewer Valve",
     "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "uvType": "BOX",
     "objectIds": [
       2844,
       2845,
       2846,
       2847,
-      2848
+      2848,
+      4924
     ]
   },
   {
@@ -7151,6 +7371,8 @@
       2548,
       2549,
       2624,
+      4963,
+      4964,
       2625,
       5667,
       10262,
@@ -7345,6 +7567,8 @@
     "description": "Rock-Like Object - Rubble - Tiny",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
+      181,
+      182,
       5204,
       24023,
       25657,
@@ -8001,6 +8225,7 @@
       321,
       4342,
       4344,
+      5517,
       5519,
       5521,
       11084,
@@ -8065,7 +8290,9 @@
       18892,
       18893,
       18894,
-      18895
+      18895,
+      25347,
+      25348
     ],
     "uvType": "BOX",
     "uvScale": 0.5
@@ -8241,7 +8468,12 @@
       44735,
       44736,
       46822,
-      46821
+      46821,
+      49645,
+      49646,
+      49647,
+      49648,
+      49649
     ],
     "uvType": "WORLD_XZ",
     "uvScale": 0.74
@@ -8379,10 +8611,11 @@
   },
   {
     "description": "Stone - Steps",
-    "baseMaterial": "STONE",
+    "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       5307,
       5460,
+      20436,
       30599,
       30600,
       30601
@@ -8484,6 +8717,7 @@
       17907,
       17908,
       20429,
+      20430,
       24344,
       24088,
       25655,
@@ -8491,12 +8725,16 @@
       25661,
       25836,
       25837,
+      27754,
+      27756,
       34508,
       34510,
       41452,
       41738,
       42066,
       44854,
+      49641,
+      49642,
       55048
     ],
     "uvType": "BOX",
@@ -8537,6 +8775,11 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       2071,
+      3394,
+      3395,
+      3398,
+      3400,
+      3401,
       9534,
       9064,
       10662,
@@ -8546,9 +8789,12 @@
       12548,
       15031,
       14739,
+      18506,
+      18507,
       27223,
       27224,
       27225,
+      27757,
       41450
     ],
     "uvType": "BOX",
@@ -8561,6 +8807,7 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       9535,
+      27755,
       34509,
       41739,
       42069
@@ -8600,9 +8847,12 @@
     "description": "Objects - Wooden - Stack of crates - Rotated",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      3397,
+      3399,
       7513,
       14742,
       15693,
+      18508,
       42068,
       42070,
       55049
@@ -8846,6 +9096,8 @@
       4602,
       5231,
       5232,
+      15813,
+      15814,
       17876,
       17877,
       42263,
@@ -8990,6 +9242,34 @@
       41209
     ],
     "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Objects - Vines with grass",
+    "baseMaterial": "GRUNGE_3_DARK",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Grass",
+        "colors": "s == 7",
+        "baseMaterial": "NONE"
+      },
+      {
+        "description": "Leaves",
+        "colors": "s == 3",
+        "baseMaterial": "LEAF_VEINS"
+      }
+    ],
+    "objectIds": [
+      1222,
+      1223,
+      1224,
+      1225,
+      1226,
+      1227,
+      1228,
+      1229,
+      1230
+    ]
   },
   {
     "description": "Objects - White Mushrooms - Medium",
@@ -9447,7 +9727,8 @@
       24089,
       39718,
       42092,
-      43766
+      43766,
+      49654
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -9491,6 +9772,9 @@
     "description": "Objects - Table - Single - Wooden – Plank - Generic - Rotated",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      594,
+      602,
+      624,
       12734
     ],
     "uvType": "BOX",
@@ -9689,7 +9973,8 @@
       14044,
       14049,
       16974,
-      24333
+      24333,
+      49653
     ],
     "uvType": "BOX"
   },
@@ -9828,13 +10113,15 @@
   },
   {
     "description": "Ice Queens Dungeon - Walls - Snow",
-    "baseMaterial": "SNOW_2",
+    "baseMaterial": "SNOW_COLORED",
     "objectIds": [
       1440,
       1441,
       1442
     ],
-    "uvType": "GEOMETRY"
+    "uvType": "BOX",
+    "uvScale": 1.2,
+    "uvOrientation": 42
   },
   {
     "description": "Ice Queens Dungeon - Objects - Icicle - Ice",
@@ -10019,7 +10306,7 @@
   },
   {
     "description": "Walls - Rock Cave Walls",
-    "baseMaterial": "STONE",
+    "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       1489,
       1490,
@@ -10031,7 +10318,8 @@
       26763,
       26767
     ],
-    "uvType": "GEOMETRY"
+    "uvOrientation": 768,
+    "uvType": "BOX"
   },
   {
     "description": "Wilderness Ditch",
@@ -10752,7 +11040,7 @@
   {
     "description": "Objects - Wooden - Chair - No cushion - Smashed",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 1089, 3802 ],
+    "objectIds": [ 1089, 3802, 49655 ],
     "uvType": "BOX",
     "uvOrientation": 512,
     "uvScale": 0.6
@@ -11134,6 +11422,8 @@
       1287,
       1288,
       1384,
+      2447,
+      2448,
       14593,
       14594,
       14595,
@@ -11150,6 +11440,9 @@
       23559,
       23530,
       23561,
+      25169,
+      25174,
+      28658,
       51766
     ],
     "uvType": "BOX"
@@ -11177,11 +11470,31 @@
     "uvScale": 0.4
   },
   {
+    "description": "Walls - Double Rope Rails",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.54,
+    "colorOverrides": [
+      {
+        "description": "Ropes",
+        "baseMaterial": "ROPE",
+        "colors": "h == 6",
+        "uvType": "BOX",
+        "uvOrientationZ": 512,
+        "uvOrientationY": 320,
+        "uvOrientationX": 768,
+        "uvScale": 0.4
+      }
+    ],
+    "objectIds": [
+      1982
+    ]
+  },
+  {
     "description": "Gnome - Walls - Rope Rails",
     "baseMaterial": "DOCK_FENCE",
     "objectIds": [
-      1708,
-      1982
+      1708
     ]
   },
   {
@@ -11222,17 +11535,102 @@
     ]
   },
   {
-    "description": "Gnome - Objects - Wooden - Lamp",
+    "description": "Gnome - Objects - Wooden Lamp - DYNAMIC",
     "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Lamp",
+        "colors": "s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ],
     "objectIds": [
       201
     ]
   },
   {
+    "description": "Gnome Stronghold tree doors",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "materialOverrides": {
+      "SIMPLE_GRAIN_WOOD": {
+        "textureMaterial": "SIMPLE_GRAIN_WOOD",
+        "uvOrientation": 512,
+        "uvScale": 0.7,
+        "uvType": "BOX",
+        "retainVanillaUvs": false
+      }
+    },
+    "colorOverrides": [
+      {
+        "description": "Carving",
+        "colors": "h == 17",
+        "baseMaterial": "GRUNGE_3_LIGHT",
+        "uvType": "BOX",
+        "uvOrientation": 343
+      }
+    ],
+    "objectIds": [
+      1967,
+      1968,
+      1969,
+      1970
+    ]
+  },
+  {
+    "description": "Gnome - Objects - Gnome busts on wooden pillar",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Bust",
+        "colors": "s == 0",
+        "uvScale": 0.4,
+        "uvOrientation": 343,
+        "baseMaterial": "MARBLE_3",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      571,
+      572
+    ]
+  },
+  {
     "description": "Gnome - Objects - Wooden - Bench - Textured",
-    "baseMaterial": "GRUNGE_2",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "uvType": "BOX",
+    "uvScale": 0.48,
     "objectIds": [
       1104
+    ]
+  },
+  {
+    "description": "Gnome table with cutlery and napkins",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 600,
+    "objectIds": [
+      1103
+    ]
+  },
+  {
+    "description": "Gnome stool",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 84,
+    "colorOverrides": [
+      {
+        "description": "Silverware and napkin",
+        "colors": "s == 0",
+        "baseMaterial": "NONE"
+      }
+    ],
+    "objectIds": [
+      600
     ]
   },
   {
@@ -12535,13 +12933,20 @@
   },
   {
     "description": "Jungle Tree Large - Unusual Plant",
-    "baseMaterial": "PLANT_GRUNGE_2",
-    "objectIds": [
-      1314
-    ],
+    "baseMaterial": "BARK",
     "uvType": "BOX",
     "uvScale": 0.4,
-    "uvOrientation": 256
+    "uvOrientation": 768,
+    "colorOverrides": [
+      {
+        "description": "Leaves",
+        "baseMaterial": "LEAF_VEINS",
+        "colors": "h > 10"
+      }
+    ],
+    "objectIds": [
+      1314
+    ]
   },
   {
     "description": "Tropical Tree Big",
@@ -13671,6 +14076,47 @@
     ]
   },
   {
+    "description": "Karamja - Jungle plant - Leafy style",
+    "baseMaterial": "LEAF_VEINS",
+    "uvScale": 0.25,
+    "uvType": "BOX",
+    "objectIds": [
+      1204,
+      1399,
+      1400,
+      1401,
+      1402
+    ]
+  },
+  {
+    "description": "Karamja - Jungle plant - fern style",
+    "baseMaterial": "LEAF_VEINS",
+    "uvScale": 0.25,
+    "uvType": "MODEL_XZ",
+    "objectIds": [
+      1390,
+      1398
+    ]
+  },
+  {
+    "description": "Karamja - Creeping plant",
+    "baseMaterial": "LEAF_VEINS",
+    "uvScale": 0.25,
+    "uvType": "MODEL_XZ",
+    "objectIds": [
+      1184
+    ]
+  },
+  {
+    "description": "Karamja - Curling plant",
+    "baseMaterial": "LEAF_VEINS",
+    "uvScale": 0.25,
+    "uvType": "MODEL_XZ",
+    "objectIds": [
+      1186
+    ]
+  },
+  {
     "description": "Digsite Wooden Fence Gate",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
@@ -13812,8 +14258,11 @@
       872,
       877,
       2542,
+      3419,
+      3420,
       3421,
-      6480
+      6480,
+      18531
     ]
   },
   {
@@ -15129,7 +15578,8 @@
     "description": "Object - Wooden - Barrel - with fish",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      9520
+      9520,
+      27552
     ],
     "uvType": "BOX",
     "colorOverrides": [
@@ -15158,6 +15608,7 @@
     "baseMaterial": "BARK",
     "objectIds": [
       3648,
+      3649,
       50074
     ],
     "uvType": "BOX"
@@ -15590,6 +16041,7 @@
   },
   {
     "description": "Objects - Concrete - Salve Tunnel Entrance",
+    "baseMaterial": "ROCK_3",
     "textureMaterial": "HD_CONCRETE",
     "objectIds": [
       3456,
@@ -15819,9 +16271,20 @@
     "uvOrientation": 342
   },
   {
+    "description": "Objects - Root - Large",
+    "baseMaterial": "LIGHT_BARK",
+    "objectIds": [
+      1985,
+      1986
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 342
+  },
+  {
     "description": "Wooden crates, Wooden table, wooden rack",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 356, 595, 647 ],
+    "objectIds": [ 356, 647 ],
     "flatNormals": true,
     "uvType": "BOX",
     "retainVanillaUvs": false,
@@ -16165,7 +16628,9 @@
       1122,
       1123,
       11113,
-      11911
+      11911,
+      11913,
+      50097
     ],
     "uvType": "BOX",
     "uvOrientation": 600
@@ -17417,7 +17882,7 @@
     "description": "Oak Tree",
     "baseMaterial": "BARK",
     "objectIds": [
-      4533, 4540, 8462, 8463,
+      1356, 4533, 4540, 8462, 8463,
       8464, 8465, 8466, 8467,
       9734, 10820, 20806, 37969,
       37970, 42395, 42831, 51772
@@ -17480,6 +17945,8 @@
     "description": "Guardians of the Rift - Marble - Steps",
     "baseMaterial": "MARBLE_3_SEMIGLOSS",
     "objectIds": [
+      43545,
+      43546,
       43557,
       43568,
       43569
@@ -17512,7 +17979,9 @@
     "description": "Guardians of the Rift - Large Guardian Remains",
     "baseMaterial": "ROCK_3_ORE",
     "objectIds": [
-      43719
+      43719,
+      43800,
+      43801
     ],
     "uvType": "BOX",
     "uvScale": 0.87
@@ -17531,7 +18000,9 @@
     "baseMaterial": "ROCK_3_ORE",
     "objectIds": [
       43717,
-      43718
+      43718,
+      43798,
+      43799
     ],
     "uvType": "BOX"
   },
@@ -17540,7 +18011,9 @@
     "baseMaterial": "ROCK_3_ORE",
     "objectIds": [
       43715,
-      43716
+      43716,
+      43796,
+      43797
     ],
     "uvType": "BOX"
   },
@@ -17549,7 +18022,9 @@
     "baseMaterial": "ROCK_3_ORE",
     "objectIds": [
       43752,
-      43753
+      43753,
+      43782,
+      43783
     ],
     "uvType": "MODEL_XZ",
     "uvOrientation": 256,
@@ -17598,7 +18073,34 @@
       43709,
       43710,
       43711,
-      43712
+      43712,
+      43784,
+      43785,
+      43786,
+      43787,
+      43788,
+      43789,
+      43790,
+      43791,
+      43792,
+      43793,
+      43794,
+      43795,
+      43809,
+      43810,
+      43811,
+      43812,
+      43813,
+      43814,
+      43815,
+      43816,
+      43817,
+      43818,
+      43819,
+      43820,
+      43841,
+      43821,
+      43822
     ],
     "uvType": "BOX",
     "uvScale": 0.7
@@ -17636,6 +18138,41 @@
     "uvType": "BOX",
     "uvScale": 0.7,
     "uvOrientation": 512
+  },
+  {
+    "description": "Guardians of the Rift - Yellow Kelp",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "uvScale": 0.67,
+    "uvOrientation": 42,
+    "objectIds": [
+      43632,
+      43633,
+      43634
+    ]
+  },
+  {
+    "description": "Guardians of the Rift - Elk Kelp",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "uvScale": 0.67,
+    "uvOrientation": 343,
+    "objectIds": [
+      43638,
+      43639,
+      43640
+    ]
+  },
+  {
+    "description": "Guardians of the Rift - Dark Lace - Kelp",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "uvScale": 0.67,
+    "objectIds": [
+      43635,
+      43636,
+      43637
+    ]
   },
   {
     "description": "Freminnik Slayer Dungeon - Stone Staircase",
@@ -18562,9 +19099,12 @@
     "uvScale": 0.68
   },
   {
-    "description": "Mourners Tunnels - Metallic - Minecart",
+    "description": "Metallic - Minecart",
     "baseMaterial": "METALLIC_1_SEMIGLOSS",
     "objectIds": [
+      637,
+      4918,
+      4974,
       8831
     ],
     "uvType": "BOX",
@@ -22523,6 +23063,7 @@
     "description": "Objects - Wooden - Crate - High poly mesh",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      1990,
       27532,
       41424
     ],
@@ -22573,16 +23114,50 @@
   {
     "description": "Barrel with metal bands",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 2619, 5112, 5114, 5122, 9519, 9521 ],
     "uvType": "BOX",
-    "uvScale": 0.8
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && s < 2",
+        "uvType": "BOX",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [ 2619, 5112, 5114, 5122, 5124, 9519, 9521, 27220, 27758, 49640 ]
+  },
+  {
+    "description": "Barrel with tarnished metal bands",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Metal bands",
+        "colors": "h == 5",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.66
+      }
+    ],
+    "objectIds": [
+      20431
+    ]
   },
   {
     "description": "Barrel with metal bands - Stacked",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ 5123 ],
     "uvType": "BOX",
-    "uvScale": 0.8
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && s < 2",
+        "uvType": "BOX",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [ 5123, 27227 ]
   },
   {
     "description": "Wooden Cart - Empty",
@@ -23336,6 +23911,8 @@
     "description": "Skeleton named corpse",
     "baseMaterial": "BONE",
     "objectIds": [
+      661,
+      662,
       2176,
       4983,
       21802,
@@ -23476,9 +24053,16 @@
     "uvOrientation": 64
   },
   {
+    "description": "Baby Blue Bed with pillow",
+    "baseMaterial": "CARPET",
+    "objectIds": [ 418 ],
+    "uvType": "BOX",
+    "uvOrientation": 64
+  },
+  {
     "description": "Wooden barrel with metal bands - textured",
     "baseMaterial": "METALLIC_1_LIGHT",
-    "objectIds": [ 362 ],
+    "objectIds": [ 362, 2022 ],
     "uvType": "BOX",
     "uvScale": 0.6
   },
@@ -23724,7 +24308,7 @@
     "colorOverrides": [
       {
         "description": "Vines",
-        "colors": " h == 17",
+        "colors": "h == 17",
         "baseMaterial": "LEAF_VEINS"
       }
     ],
@@ -25034,6 +25618,8 @@
       2057,
       2062,
       2063,
+      2434,
+      2435,
       2612,
       2613
     ],
@@ -25158,6 +25744,8 @@
     "objectIds": [
       7176,
       9523,
+      12539,
+      12540,
       15461
     ],
     "uvType": "BOX",
@@ -25290,7 +25878,7 @@
     "uvType": "BOX",
     "colorOverrides": [
       {
-        "colors": " h == 0 && s == 0",
+        "colors": "h == 0 && s == 0",
         "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
         "uvType": "BOX",
         "uvOrientation": 920
@@ -25302,7 +25890,7 @@
   },
   {
     "description": "Rune Essence Mine Rock",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "STONE_NORMALED_LIGHT",
     "uvType": "BOX",
     "uvOrientation": 768,
     "uvScale": 1.5,
@@ -25659,8 +26247,27 @@
     ],
     "colorOverrides": [
       {
-        "colors": " h > 6",
+        "colors": "h > 6",
         "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Light wooden ladder in an stone ground hole",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      4965,
+      4967,
+      4969
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 0",
+        "baseMaterial": "STONE_NORMALED",
         "uvType": "BOX",
         "uvScale": 0.75
       }
@@ -25681,11 +26288,28 @@
       643,
       644,
       645,
-      646
+      646,
+      15818,
+      15819,
+      15820,
+      15821,
+      15822,
+      15823,
+      15824,
+      15826,
+      15827,
+      15828,
+      15829,
+      20403,
+      20404,
+      20405,
+      20406,
+      20434,
+      20438
     ],
     "colorOverrides": [
       {
-        "colors": " h == 0 && s == 0",
+        "colors": "h == 0 && s == 0",
         "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
         "uvType": "BOX",
         "uvScale": 0.75
@@ -25695,15 +26319,52 @@
     "uvScale": 0.6
   },
   {
+    "description": "Mine cart tunnel with tracks going into cave",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientationX": 512,
+    "colorOverrides": [
+      {
+        "colors": "hsl < 15",
+        "baseMaterial": "ROCK_3",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      },
+      {
+        "colors": "hsl > 15",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ],
+    "objectIds": [
+      4914,
+      4915
+    ]
+  },
+  {
+    "description": "Mine cart tunnel with tracks going into cave",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientationX": 512,
+    "objectIds": [
+      20396,
+      20397
+    ]
+  },
+  {
     "description": "Mine cart track Buffers",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvOrientationX": 512,
     "objectIds": [
-      636
+      636,
+      15825
     ],
     "colorOverrides": [
       {
-        "colors": " h == 0 && s == 0",
+        "colors": "h == 0 && s == 0",
         "baseMaterial": "STONE_NORMALED",
         "uvType": "BOX",
         "uvScale": 0.75
@@ -26229,13 +26890,14 @@
     ]
   },
   {
-    "description": "Baxtorian Falls - Pillar",
-    "baseMaterial": "MARBLE_1",
+    "description": "Baxtorian Falls - Small Marble Pillars",
+    "baseMaterial": "MARBLE_2",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 42,
     "objectIds": [
       34965
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.6
+    ]
   },
   {
     "description": "Baxtorian Falls - Statues",
@@ -26252,7 +26914,6 @@
     "description": "Baxtorian Falls - Chalice",
     "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [
-      2014,
       2015
     ]
   },
@@ -27757,6 +28418,1547 @@
       13108,
       13109,
       13110
+    ]
+  },
+  {
+    "description": "Post with rope",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Rope",
+        "colors": "h == 8",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 42
+      }
+    ],
+    "objectIds": [
+      27647,
+      27648
+    ]
+  },
+  {
+    "description": "Textured brick wooden post wall",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "description": "Interior Wall",
+        "colors": [ 93, "s == 2" ],
+        "baseMaterial": "NONE"
+      }
+    ],
+    "objectIds": [
+      9473,
+      9474
+    ]
+  },
+  {
+    "description": "Game Objects - Wooden Shelf With Book and Urns",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Urns",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvOrientationX": 84
+      },
+      {
+        "description": "Book cover",
+        "colors": "h == 4",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvOrientationX": 84
+      },
+      {
+        "description": "Paper",
+        "colors": "l > 60",
+        "baseMaterial": "GRAY_75"
+      }
+    ],
+    "objectIds": [
+      1021
+    ]
+  },
+  {
+    "description": "Mizgog Table",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "objectIds": [
+      16169,
+      16170
+    ]
+  },
+  {
+    "description": "Textured table with dishes",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvScale": 0.5,
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "objectIds": [
+      603
+    ]
+  },
+  {
+    "description": "Double bed with red blanket and bed frame",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      427
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Pillow and sheet",
+        "colors": "h == 0 || h == 10 && s == 0",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Red blanket",
+        "colors": "h == 0 && s == 7",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Golden decoration",
+        "colors": "h == 10 && s == 7",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvOrientation": 84
+      },
+      {
+        "description": "Golden trim on blanket",
+        "colors": "h == 8",
+        "baseMaterial": "ROPE",
+        "uvType": "MODEL_YZ",
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Single bed with gray blanket",
+    "baseMaterial": "CARPET",
+    "objectIds": [
+      417
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "description": "Golden trim on blanket",
+        "colors": "h == 8",
+        "baseMaterial": "ROPE",
+        "uvType": "MODEL_YZ",
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Tanning Line",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "description": "Table",
+        "colors": "h == 6",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      1027
+    ]
+  },
+  {
+    "description": "Baxtorian Falls raft",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "description": "Rope",
+        "colors": "h == 7",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ],
+    "objectIds": [
+      1987,
+      1988
+    ]
+  },
+  {
+    "description": "Baxtorian Falls tree and dirt on an island combo model",
+    "baseMaterial": "DIRT_2",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "description": "Tree and dirt as a single model - needs real UV to fix",
+        "colors": "h == 5 && s == 6",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ],
+    "objectIds": [
+      10795
+    ]
+  },
+  {
+    "description": "Baxtorian Falls Door",
+    "baseMaterial": "DIRT_2",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "description": "Overdoor water",
+        "colors": "h == 37",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ],
+    "objectIds": [
+      2010
+    ]
+  },
+  {
+    "description": "handing wooden shelf",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      1107
+    ]
+  },
+  {
+    "description": "Glarial's Chalice",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "uvOrientation": 343,
+    "colorOverrides": [
+      {
+        "description": "Water",
+        "colors": "h == 42",
+        "baseMaterial": "WATER_FLAT_FORCE",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.8,
+        "uvOrientation": 343
+      }
+    ],
+    "objectIds": [
+      2014
+    ]
+  },
+  {
+    "description": "Wooden pew bench with green cushion and saradomin symbol on the side",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Cushion",
+        "baseMaterial": "CARPET",
+        "uvType": "MODEL_XZ",
+        "colors": "h == 17"
+      },
+      {
+        "description": "Saradomin Symbol",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "MODEL_YZ",
+        "colors": "h == 11",
+        "uvOrientation": 42,
+        "uvScale": 0.4
+      }
+    ],
+    "objectIds": [
+      1112
+    ]
+  },
+  {
+    "description": "Wooden study desk with a green mat",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Desk mat",
+        "baseMaterial": "CARPET",
+        "uvType": "MODEL_XZ",
+        "colors": "h == 21"
+      }
+    ],
+    "objectIds": [
+      608
+    ]
+  },
+  {
+    "description": "Paterdomus Temple basement walls - textured",
+    "baseMaterial": "DIRT_1",
+    "uvType": "MODEL_XZ_MIRROR_B",
+    "objectIds": [
+      3442,
+      3450,
+      3451,
+      12765
+    ]
+  },
+  {
+    "description": "Paterdomus Temple basement walls with portal - textured",
+    "baseMaterial": "DIRT_1",
+    "uvType": "MODEL_XZ_MIRROR_B",
+    "objectIds": [
+     3443
+    ]
+  },
+  {
+    "description": "Paterdomus Temple basement wall tops",
+    "baseMaterial": "DIRT_1",
+    "uvType": "MODEL_XZ",
+    "uvScale": 1.15,
+    "uvOrientation": 42,
+    "objectIds": [
+      3447,
+      3448
+    ]
+  },
+  {
+    "description": "Paterdomus Temple basement columns",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 343,
+    "uvScale": 0.6,
+    "objectIds": [
+      3486
+    ]
+  },
+  {
+    "description": "Paterdomus Temple basement well",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 42,
+    "uvScale": 0.6,
+    "objectIds": [
+      3485
+    ]
+  },
+  {
+    "description": "Paterdomus Temple Basement Monument - DYNAMIC",
+    "baseMaterial": "MARBLE_3_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvOrientation": 42,
+    "uvScale": 0.6,
+    "objectIds": [
+      3493,
+      3494,
+      3495,
+      3496,
+      3497,
+      3498,
+      3499
+    ]
+  },
+  {
+    "description": "Mogre Camp Cliffs 1",
+    "baseMaterial": "ROCK_1",
+    "uvScale": 0.75,
+    "uvOrientation": 75,
+    "uvType": "BOX",
+    "objectIds": [
+      12454,
+      12457,
+      12464,
+      12465,
+      12459
+    ]
+  },
+  {
+    "description": "Mogre Camp Cliffs 2",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvOrientation": -50,
+    "objectIds": [
+      12455,
+      12456,
+      12458
+    ]
+  },
+  {
+    "description": "Mogre Camp Skippy Cave Entrance",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "objectIds": [
+      12460,
+      12461,
+      12462,
+      12463
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6 || h == 16",
+        "baseMaterial": "GRUNGE_2",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Mogre Camp Bamboo Fence",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "objectIds": [
+      12466,
+      12467,
+      12468,
+      12469,
+      12470,
+      12471,
+      12472,
+      12473
+    ]
+  },
+  {
+    "description": "Mogre Camp Coral",
+    "baseMaterial": "ROCK_2",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      12479,
+      12480,
+      12481,
+      12482,
+      12483,
+      12484,
+      12485,
+      12486,
+      12487,
+      12488,
+      12489,
+      12490,
+      12491,
+      12492,
+      12493,
+      12494,
+      12495,
+      12496,
+      12497,
+      12498,
+      12499,
+      12500,
+      12501,
+      12502,
+      12503,
+      12504,
+      12505,
+      12506,
+      12507,
+      12508,
+      12509,
+      12510,
+      12511,
+      12512,
+      12513,
+      12514,
+      12515,
+      12516,
+      12517,
+      12518,
+      12519,
+      12520,
+      12521,
+      12522,
+      12523,
+      12524,
+      12525,
+      12526,
+      12527,
+      12528,
+      12529
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7 && s == 1 || h == 8 && s == 1 || h == 9 && s == 2",
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      },
+      {
+        "colors": "h == 6 && s == 7 || h == 7 && s == 7 || h == 8 && s == 7",
+        "baseMaterial": "PLANT_GRUNGE_2",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ]
+  },
+  {
+    "description": "Mogre Camp Anchor",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "objectIds": [
+      12474,
+      12475,
+      12476
+    ]
+  },
+  {
+    "description": "Fossil Island Underwater Cliffs 1",
+    "baseMaterial": "ROCK_1",
+    "uvScale": 0.75,
+    "uvOrientation": 75,
+    "uvType": "BOX",
+    "objectIds": [
+      30738,
+      30740,
+      30741,
+      30742,
+      30743
+    ]
+  },
+  {
+    "description": "Fossil Island Underwater Cliffs 2",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvOrientation": -50,
+    "objectIds": [
+      30734,
+      30735,
+      30736,
+      30744,
+      30745,
+      30746,
+      30747,
+      30959,
+      30962,
+      30963,
+      30964,
+      30965,
+      31845
+    ]
+  },
+  {
+    "description": "Glough house pillars",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      2440,
+      2441,
+      2442,
+      2443
+    ]
+  },
+  {
+    "description": "Gnome Stronghold tunnels walls with roots - DYNAMIC",
+    "baseMaterial": "GRUNGE_1",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Roots",
+        "baseMaterial": "LIGHT_BARK",
+        "colors": "h == 7",
+        "uvType": "BOX",
+        "uvOrientation": 343,
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [ 2451 ]
+  },
+  {
+    "description": "Porcine of Interest - Veg Cart",
+    "baseMaterial": "GRAY_90",
+    "colorOverrides": [
+      {
+        "colors": "h == 6 && s < 4",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 256
+      }
+    ],
+    "objectIds": [
+      40314
+    ]
+  },
+  {
+    "description": "Porcine of Interest - Strange Hole",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 7 && s > 5",
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h == 0",
+        "baseMaterial": "BLACK"
+      },
+      {
+        "colors": "h == 5",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.35,
+        "uvOrientation": 256
+      }
+    ],
+    "objectIds": [
+      40308,
+      40309
+    ]
+  },
+  {
+    "description": "Porcine of Interest - Sourhog Lair Walls",
+    "baseMaterial": "DIRT_2",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      31793,
+      31794,
+      31795
+    ]
+  },
+  {
+    "description": "Porcine of Interest - Sourhog Lair Walls Filler",
+    "baseMaterial": "DIRT_2",
+    "uvType": "BOX",
+    "objectIds": [
+      40332,
+      40333,
+      40334,
+      40335,
+      40336
+    ]
+  },
+  {
+    "description": "Porcine of Interest - Sourhog Lair Blockage",
+    "baseMaterial": "DIRT_2",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      40331
+    ]
+  },
+  {
+    "description": "Porcine of Interest - Sourhog Lair Bones",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "objectIds": [
+      40320,
+      40326,
+      40327,
+      40328,
+      40329
+    ]
+  },
+  {
+    "description": "Karamja hut walls",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.25,
+    "objectIds": [
+      1593,
+      1616,
+      1855
+    ]
+  },
+  {
+    "description": "Karamja hardwood grove doors",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.25,
+    "objectIds": [
+      9038,
+      9039
+    ]
+  },
+  {
+    "description": "Karamja Bamboo door",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.25,
+    "objectIds": [
+      779
+    ]
+  },
+  {
+    "description": "Karamja Bamboo bridge",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 1024,
+    "uvOrientationZ": 162,
+    "colorOverrides": [
+      {
+        "description": "Rope",
+        "baseMaterial": "ROPE",
+        "colors": "h == 11",
+        "uvType": "MODEL_XZ",
+        "uvOrientation": 128,
+        "uvScale": 0.25
+      }
+    ],
+    "objectIds": [
+      1721
+    ]
+  },
+  {
+    "description": "Karamja Bamboo potted plant",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "description": "Plant",
+        "baseMaterial": "LEAF_VEINS",
+        "colors": "h > 11",
+        "uvType": "MODEL_XZ",
+        "uvOrientation": 128,
+        "uvScale": 0.25
+      }
+    ],
+    "objectIds": [
+      1160
+    ]
+  },
+  {
+    "description": "Karamja Bamboo pots",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "uvOrientation": 512,
+    "objectIds": [
+      395,
+      396
+    ]
+  },
+  {
+    "description": "Karamja Bamboo bookshelf - Textured - Has a really bad UV even with boxed.",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "uvOrientation": 512,
+    "objectIds": [
+      393
+    ]
+  },
+  {
+    "description": "Karamja Bamboo bookshelf - Has a really bad UV even with boxed.",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "uvOrientation": 512,
+    "objectIds": [
+      394
+    ]
+  },
+  {
+    "description": "Karamja Bamboo table",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "description": "Dirt",
+        "baseMaterial": "DIRT_2",
+        "colors": "h == 4",
+        "uvType": "MODEL_XZ",
+        "uvOrientation": 128,
+        "uvScale": 0.33
+      }
+    ],
+    "objectIds": [
+      620
+    ]
+  },
+  {
+    "description": "Karamja Bamboo stool",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "uvOrientation": 512,
+    "objectIds": [
+      1113
+    ]
+  },
+  {
+    "description": "Karamja Bamboo raised bed",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "description": "Bed",
+        "baseMaterial": "CARPET",
+        "colors": "h == 8",
+        "uvType": "BOX",
+        "uvOrientation": 720,
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      433
+    ]
+  },
+  {
+    "description": "Karamja Bamboo access ramps - Model has bad UVs even with Box",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "uvOrientation": 256,
+    "colorOverrides": [
+      {
+        "description": "horizontal braces",
+        "baseMaterial": "GRUNGE_1",
+        "colors": "h == 7",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ],
+    "objectIds": [
+      1617
+    ]
+  },
+  {
+    "description": "Tribal Statue - Tai Bwo Wannai",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 32,
+    "objectIds": [ 3863 ]
+  },
+  {
+    "description": "Tai Bwo Wannai Village Fence",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 64,
+    "uvScale": 0.66,
+    "objectIds": [ 9025, 9026, 9027, 9028, 9029, 9042, 9043 ]
+  },
+  {
+    "description": "Tai Bwo Wannai Cleanup Jungle - Dynamic",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "uvOrientation": 512,
+    "objectIds": [
+      9013,
+      9014,
+      9017,
+      9018,
+      9019,
+      9022,
+      9023,
+      9024
+    ]
+  },
+  {
+    "description": "Tai Bwo Wannai Cleanup Jungle with leaves - Dynamic",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "description": "Plant",
+        "baseMaterial": "LEAF_VEINS",
+        "colors": "h > 11",
+        "uvType": "MODEL_XZ",
+        "uvOrientation": 384,
+        "uvScale": 0.25
+      }
+    ],
+    "objectIds": [
+      9010,
+      9011,
+      9015,
+      9016,
+      9020,
+      9021
+    ]
+  },
+  {
+    "description": "Metal spiral staircase in ground",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      3415
+    ]
+  },
+  {
+    "description": "Metal spiral staircase",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      3416
+    ]
+  },
+  {
+    "description": "Water wheel - DYNAMIC",
+    "objectIds": [ 18512 ],
+    "flatNormals": true
+  },
+  {
+    "description": "Elemental workshop water controls - DYNAMIC",
+    "objectIds": [ 18509, 18510 ]
+  },
+  {
+    "description": "Elemental workshop moving machinery - DYNAMIC",
+    "objectIds": [ 18530 ]
+  },
+  {
+    "description": "Elemental workshop levers",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [ 3406, 3409, 3417 ]
+  },
+  {
+    "description": "metallic pipe with a beige stripe on the side",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "objectIds": [
+      18726,
+      18727,
+      18728,
+      18729,
+      18730,
+      18732
+    ]
+  },
+  {
+    "description": "metallic pipe with a orange stripe on the side",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "objectIds": [
+      18528,
+      18529,
+      18532,
+      18533,
+      18534,
+      18535
+    ]
+  },
+  {
+    "description": "Lava trough",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvOrientation": 42,
+    "objectIds": [
+      18519,
+      18520,
+      18521,
+      18522,
+      18523
+    ]
+  },
+  {
+    "description": "Lava trough end caps",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "objectIds": [
+      18588,
+      18589
+    ]
+  },
+  {
+    "description": "Domed machinery with a dial on the front of it",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "objectIds": [
+      3422,
+      3423
+    ]
+  },
+  {
+    "description": "Bellows - DYNAMIC",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvOrientation": 343,
+    "objectIds": [
+      18515,
+      18516
+    ]
+  },
+  {
+    "description": "Elemental Workshop lava furnace - DYNAMIC",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvType": "BOX",
+    "uvOrientation": 343,
+    "objectIds": [
+      18517,
+      18518,
+      18525
+    ]
+  },
+  {
+    "description": "Elemental Workshop metal plate walls with stone bricks",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvOrientation": 343,
+    "objectIds": [
+      18538,
+      18539,
+      18540,
+      18541,
+      18543,
+      18544,
+      18545,
+      18547,
+      18548,
+      18550,
+      18552,
+      18553,
+      18554,
+      18555,
+      18556,
+      18557,
+      18558,
+      18565,
+      18567,
+      18568,
+      18570,
+      18571,
+      18573,
+      18574,
+      18575,
+      18576,
+      18577,
+      18579,
+      18583,
+      18585
+    ]
+  },
+  {
+    "description": "Abandoned Mine Secret Entrance",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [ 4919 ]
+  },
+  {
+    "description": "Abandoned Mine Secret Exit",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [ 4923, 4973 ]
+  },
+  {
+    "description": "Abandoned Mine cart tunnel with tracks",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientationX": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 21",
+        "baseMaterial": "ROCK_3",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      },
+      {
+        "colors": "hsl > 15",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ],
+    "objectIds": [
+      4920,
+      15830,
+      20432,
+      29333
+    ]
+  },
+  {
+    "description": "Abandoned Mine walls with wooden supports",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      15792,
+      15793,
+      15794
+    ]
+  },
+  {
+    "description": "Abandoned Mine walls with support anchors",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Wooden post",
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 512
+      },
+      {
+        "description": "Anchors",
+        "colors": "h == 0",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvOrientation": 42
+      }
+    ],
+    "objectIds": [
+      15791
+    ]
+  },
+  {
+    "description": "Abandoned Mine walls with wooden supports and a lamp",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      },
+      {
+        "colors": "hsl > 15",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ],
+    "objectIds": [
+      15796
+    ]
+  },
+  {
+    "description": "Abandoned Mine walls",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      15788,
+      15789,
+      15790,
+      20439,
+      20440,
+      20441,
+      20442
+    ]
+  },
+  {
+    "description": "Abandoned Mine walls with lift parts",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 84,
+    "colorOverrides": [
+      {
+        "description": "Rock wall",
+        "colors": "h == 21",
+        "baseMaterial": "ROCK_3",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      },
+      {
+        "description": "Wood",
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.75
+      }
+    ],
+    "objectIds": [
+      4939,
+      4940,
+      4941
+    ]
+  },
+  {
+    "description": "Abandoned Mine lift parts",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvOrientation": 84,
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.75
+      }
+    ],
+    "objectIds": [
+      4937,
+      4938
+    ]
+  },
+  {
+    "description": "Abandoned Mine walls with Points Settings",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "colors": "h == 21",
+        "baseMaterial": "ROCK_3",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ],
+    "objectIds": [
+      4949
+    ]
+  },
+  {
+    "description": "Abandoned Mine walls with water",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Water",
+        "colors": "h == 27",
+        "baseMaterial": "NONE"
+      }
+    ],
+    "objectIds": [
+      15775,
+      15776,
+      15777,
+      15778,
+      15780,
+      15781,
+      15782,
+      15783
+    ]
+  },
+  {
+    "description": "Abandoned Mine walls with rusty metal bars",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Metal bars",
+        "colors": "h == 6",
+        "baseMaterial": "METALLIC_1"
+      }
+    ],
+    "objectIds": [
+      20427,
+      20428
+    ]
+  },
+  {
+    "description": "Abandoned Mine walls - Tin ore vein",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Ore",
+        "baseMaterial": "ROCK_5_ORE",
+        "colors": "h == 0",
+        "uvType": "BOX",
+        "uvOrientation": 256,
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      20407,
+      20443,
+      20444,
+      20445
+    ]
+  },
+  {
+    "description": "Abandoned Mine walls - Copper ore vein",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Ore",
+        "baseMaterial": "ROCK_4_ORE",
+        "colors": "h == 4",
+        "uvType": "BOX",
+        "uvOrientation": 256,
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      20408,
+      20446,
+      20447,
+      20448
+    ]
+  },
+  {
+    "description": "Abandoned Mine walls - Iron ore vein",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Ore",
+        "baseMaterial": "ROCK_4_ORE",
+        "colors": "h == 2",
+        "uvType": "BOX",
+        "uvOrientation": 256,
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      20422,
+      20423,
+      20424,
+      20425
+    ]
+  },
+  {
+    "description": "Abandoned Mine walls - Coal ore vein",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Ore",
+        "baseMaterial": "ROCK_4_ORE",
+        "colors": "h == 0",
+        "uvType": "BOX",
+        "uvOrientation": 256,
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      20410,
+      20411,
+      20412,
+      20413
+    ]
+  },
+  {
+    "description": "Abandoned Mine walls - Mithril ore vein",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Ore",
+        "baseMaterial": "ROCK_4_ORE",
+        "colors": "h == 42",
+        "uvType": "BOX",
+        "uvOrientation": 256,
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      20418,
+      20419,
+      20420,
+      20421
+    ]
+  },
+  {
+    "description": "Abandoned Mine walls - Adamentite ore vein",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Ore",
+        "baseMaterial": "ROCK_4_ORE",
+        "colors": "s > 0",
+        "uvType": "BOX",
+        "uvOrientation": 256,
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      20414,
+      20415,
+      20416,
+      20417
+    ]
+  },
+  {
+    "description": "Abandoned Mine walls - Clay vein",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Ore",
+        "baseMaterial": "GRUNGE_1_SHINY",
+        "colors": "h == 6",
+        "uvType": "BOX",
+        "uvOrientation": 256,
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      20449,
+      20450
+    ]
+  },
+  {
+    "description": "Abandoned Mine wall toppers",
+    "baseMaterial": "GRUNGE_3_DARK",
+    "uvType": "WORLD_XZ",
+    "uvScale": 1.2,
+    "objectIds": [
+      15804
+    ]
+  },
+  {
+    "description": "Glowing Fungus - Medium",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 1.1,
+    "objectIds": [
+      4932,
+      4933
+    ]
+  },
+  {
+    "description": "Abandoned Mine wooden levers with metal plate",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Lever",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "colors": "h == 6",
+        "uvType": "BOX",
+        "uvOrientation": 768,
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      4950,
+      4951,
+      4952,
+      4953,
+      4954,
+      4955,
+      4956,
+      4957,
+      4958,
+      4959,
+      4960,
+      4961
+    ]
+  },
+  {
+    "description": "Abandoned Mine walls - Lift hole",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      4946,
+      4948
+    ]
+  },
+  {
+    "description": "Abandoned Mine walls - Lift platform",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvOrientation": 69,
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      4947
+    ]
+  },
+  {
+    "description": "sunken mine cart",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvOrientation": 69,
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Fake water removal",
+        "colors": "h == 27",
+        "baseMaterial": "TRANSPARENT"
+      }
+    ],
+    "objectIds": [
+      4945
+    ]
+  },
+  {
+    "description": "Sunken lift parts",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 84,
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.75
+      }
+    ],
+    "objectIds": [
+      4942
+    ]
+  },
+  {
+    "description": "Abandoned Mine stairs",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [ 4971 ]
+  },
+  {
+    "description": "Crystal Outcrop - Haunted Mine crystals",
+    "baseMaterial": "GRUNGE_3_LIGHT_SHINY",
+    "uvType": "BOX",
+    "objectIds": [
+      4927,
+      4928
     ]
   },
   {

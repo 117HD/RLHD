@@ -654,6 +654,24 @@
     "fogDepth": 35
   },
   {
+    "area": "ESSENCE_MINE",
+    "ambientColor": "#6687a9",
+    "ambientStrength": 0.85,
+    "sunAngles": [ 50, 244 ],
+    "directionalStrength": 0.45,
+    "fogColor": "#adb9c4",
+    "fogDepth": 50
+  },
+  {
+    "area": "ICE_QUEENS_DUNGEON",
+    "ambientColor": "#6687a9",
+    "ambientStrength": 0.85,
+    "sunAngles": [ 73, 244 ],
+    "directionalStrength": 0.45,
+    "fogColor": "#adb9c4",
+    "fogDepth": 50
+  },
+  {
     "area": "GIELINOR_SNOWY_NORTHERN_REGION",
     "ambientColor": "#6fb0ff",
     "ambientStrength": 1.5,
@@ -998,7 +1016,10 @@
     "directionalColor": "#f4e5c9",
     "directionalStrength": 0.75,
     "fogColor": "#aebde3",
-    "fogDepth": 75
+    "fogDepth": 75,
+    "groundFogStart": -1750,
+    "groundFogEnd": -2250,
+    "groundFogOpacity": 0.65
   },
   {
     "area": "ARCEUUS",
@@ -1218,13 +1239,14 @@
     "area": "MOGRE_CAMP",
     "isUnderwater": true,
     "ambientColor": "#255590",
-    "ambientStrength": 0.5,
+    "ambientStrength": 1.5,
     "directionalColor": "#71a3d0",
-    "directionalStrength": 5,
+    "directionalStrength": 2.5,
     "fogColor": "#133156",
     "fogDepth": 60,
-    "groundFogStart": 0,
-    "groundFogOpacity": 0.5
+    "groundFogStart": -100,
+    "groundFogOpacity": 0.65,
+    "waterCausticsStrength": 3.5
   },
   {
     "area": "HARMONY_ISLAND_UNDERWATER_TUNNEL",
@@ -1247,18 +1269,19 @@
     "area": "FOSSIL_ISLAND_UNDERWATER_AREA",
     "isUnderwater": true,
     "ambientColor": "#255590",
-    "ambientStrength": 0.5,
+    "ambientStrength": 1.5,
     "directionalColor": "#71a3d0",
-    "directionalStrength": 5,
+    "directionalStrength": 3,
     "sunAngles": [
       80,
       190
     ],
     "fogColor": "#133156",
     "fogDepth": 60,
-    "groundFogStart": -400,
-    "groundFogEnd": -750,
-    "groundFogOpacity": 0.5
+    "groundFogStart": -450,
+    "groundFogEnd": -700,
+    "groundFogOpacity": 0.65,
+    "waterCausticsStrength": 4
   },
   {
     "area": "LUNAR_DREAM_WORLD",
