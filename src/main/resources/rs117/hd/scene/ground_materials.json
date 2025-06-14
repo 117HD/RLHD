@@ -472,6 +472,14 @@
     ]
   },
   {
+    "name": "GROUND_WEBS",
+    "materials": [
+      "GROUND_WEB_1",
+      "GROUND_WEB_2",
+      "GROUND_WEB_3"
+    ]
+  },
+  {
     "name": "ABYSSAL_BILE",
     "materials": [
       "ABYSSAL_2_FLOW",

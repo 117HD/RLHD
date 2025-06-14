@@ -1312,7 +1312,6 @@
       3968,
       4051,
       4052,
-      4053,
       4054,
       5902,
       5903,
@@ -31204,6 +31203,201 @@
         "colors": "h == 0 || h == 17 && s == 7",
         "baseMaterial": "NONE"
       }
+    ]
+  },
+  {
+    "description": "Morytania Spider Cave",
+    "baseMaterial": "GRASS_3",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Dirt",
+        "colors": "h < 10",
+        "baseMaterial": "DIRT_2",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Web",
+        "colors": "h == 10",
+        "baseMaterial": "NONE"
+      },
+      {
+        "description": "Grass that needs upward normals to fix",
+        "colors": "h == 12",
+        "baseMaterial": "GRAY_50"
+      }
+    ],
+    "objectIds": [
+      42594
+    ]
+  },
+  {
+    "description": "Morytania webbed trees",
+    "baseMaterial": "BARK",
+    "uvOrientation": 188,
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Web",
+        "colors": "h == 10",
+        "baseMaterial": "NONE"
+      }
+    ],
+    "objectIds": [
+      42649
+    ]
+  },
+  {
+    "description": "Morytania trees with grass around the base",
+    "baseMaterial": "BARK",
+    "uvOrientation": 188,
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Grass",
+        "colors": "h == 12",
+        "baseMaterial": "GRAY_50"
+      }
+    ],
+    "objectIds": [
+      4053
+    ]
+  },
+  {
+    "description": "Morytania Spider Cave wall topper",
+    "baseMaterial": "ROCK_1",
+    "uvOrientation": 256,
+    "uvScale": 1.2,
+    "uvType": "BOX",
+    "objectIds": [
+      42596,
+      42597,
+      54186
+    ]
+  },
+  {
+    "description": "Morytania Spider Cave wall topper edges with black",
+    "baseMaterial": "ROCK_1",
+    "uvOrientation": 256,
+    "uvType": "BOX",
+    "objectIds": [
+      42598,
+      42599,
+      42600,
+      54189,
+      54190,
+      54191
+    ]
+  },
+  {
+    "description": "Morytania Spider Cave walls",
+    "baseMaterial": "ROCK_1",
+    "uvOrientation": 343,
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Web backing",
+        "colors": "h == 10",
+        "baseMaterial": "NONE"
+      },
+      {
+        "description": "Web",
+        "colors": "h == 0",
+        "baseMaterial": "NONE"
+      }
+    ],
+    "objectIds": [
+      42610,
+      42611,
+      42612,
+      42613,
+      54167,
+      54183
+    ]
+  },
+  {
+    "description": "Morytania Spider Cave Exit",
+    "baseMaterial": "ROCK_1",
+    "uvOrientation": 343,
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Web backing",
+        "colors": "h == 10",
+        "baseMaterial": "NONE"
+      },
+      {
+        "description": "Web",
+        "colors": "h == 0",
+        "baseMaterial": "NONE"
+      }
+    ],
+    "objectIds": [
+      42595
+    ]
+  },
+  {
+    "description": "Morytania Spider Cave web tunnel",
+    "baseMaterial": "ROCK_1",
+    "uvOrientation": 343,
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Web backing",
+        "colors": "h == 10",
+        "baseMaterial": "NONE"
+      },
+      {
+        "description": "Web",
+        "colors": "h == 0",
+        "baseMaterial": "NONE"
+      }
+    ],
+    "objectIds": [
+      54152,
+      54154,
+      54159
+    ]
+  },
+  {
+    "description": "Morytania Spider Cave webbed stalagmite",
+    "baseMaterial": "ROCK_4",
+    "uvOrientation": 343,
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Web backing",
+        "colors": "h == 10",
+        "baseMaterial": "NONE"
+      }
+    ],
+    "objectIds": [
+      42629,
+      54215,
+      54216,
+      54222
+    ]
+  },
+  {
+    "description": "Morytania Spider Cave webbed stalagmite and scroll",
+    "baseMaterial": "ROCK_4",
+    "uvOrientation": 343,
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Web backing",
+        "colors": "h != 26",
+        "baseMaterial": "NONE"
+      }
+    ],
+    "objectIds": [
+      54150
     ]
   }
 ]
