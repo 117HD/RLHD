@@ -18182,7 +18182,7 @@
     "uvScale": 0.35,
     "colorOverrides": [
       {
-        "colors": ["h == 28", "h == 30", "h == 31"],
+        "colors": "h == 28 || h == 30 || h == 31",
         "baseMaterial": "GRUNGE_1"
       }
     ]
@@ -18212,7 +18212,7 @@
     "uvOrientation": 70,
     "colorOverrides": [
       {
-        "colors": ["h == 10", "h == 4"],
+        "colors": "h == 10 || h == 4",
         "baseMaterial": "GRUNGE_3_DULL"
       }
     ]
