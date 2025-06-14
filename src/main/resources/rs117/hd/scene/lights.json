@@ -20749,10 +20749,10 @@
     "duration": 0,
     "range": 30,
     "objectIds": [
-      25056,
       15796,
       17829,
-      25055
+      25055,
+      25056
     ]
   },
   {
@@ -36053,7 +36053,7 @@
     ]
   },
   {
-    "description": "Crystal Outcroping ",
+    "description": "Crystal Outcropping",
     "offset": [ 0, 6, 0 ],
     "radius": 180,
     "strength": 8,
