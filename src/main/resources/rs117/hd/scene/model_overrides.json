@@ -2397,6 +2397,7 @@
     "objectIds": [
       166,
       167,
+      883,
       980,
       981,
       991,
@@ -2412,7 +2413,6 @@
       9623,
       9470,
       9708,
-      25677,
       1558,
       1559,
       1560,
@@ -2426,6 +2426,10 @@
       993,
       7527,
       20857,
+      23917,
+      23918,
+      23919,
+      25677,
       10714
     ],
     "uvType": "BOX",
@@ -15175,6 +15179,7 @@
     "baseMaterial": "BARK",
     "objectIds": [
       3648,
+      3649,
       50074
     ],
     "uvType": "BOX"
@@ -16182,7 +16187,9 @@
       1122,
       1123,
       11113,
-      11911
+      11911,
+      11913,
+      50097
     ],
     "uvType": "BOX",
     "uvOrientation": 600
@@ -17434,7 +17441,7 @@
     "description": "Oak Tree",
     "baseMaterial": "BARK",
     "objectIds": [
-      4533, 4540, 8462, 8463,
+      1356, 4533, 4540, 8462, 8463,
       8464, 8465, 8466, 8467,
       9734, 10820, 20806, 37969,
       37970, 42395, 42831, 51772
@@ -27809,6 +27816,23 @@
     "objectIds": [
       27647,
       27648
+    ]
+  },
+  {
+    "description": "Textured brick wooden post wall",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "description": "Interior Wall",
+        "colors": [ 93, "s == 2" ],
+        "baseMaterial": "NONE"
+      }
+    ],
+    "objectIds": [
+      9473,
+      9474
     ]
   }
 ]
