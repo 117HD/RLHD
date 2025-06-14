@@ -38,7 +38,13 @@ public class GpuIntBuffer
 	}
 
 	public GpuIntBuffer(int initialCapacity) {
-		buffer = MemoryUtil.memAllocInt(initialCapacity);
+		try {
+			buffer = MemoryUtil.memAllocInt(initialCapacity);
+		} catch (OutOfMemoryError oom) {
+			// Force garbage collection and try again
+			System.gc();
+			buffer = MemoryUtil.memAllocInt(initialCapacity);
+		}
 	}
 
 	public void destroy() {
