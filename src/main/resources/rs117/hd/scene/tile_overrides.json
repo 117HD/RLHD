@@ -5442,6 +5442,44 @@
     "shiftHue": -1
   },
   {
+    "name": "KHARID_DESERT_COAST_FIX",
+    "area": "KHARIDIAN_COAST_FIX",
+    "groundMaterial": "SAND",
+    "maxLightness": 60,
+    "shiftHue": -2,
+    "shiftSaturation": 1,
+    "maxSaturation": 4,
+    "underlayIds": [
+      45,
+      49,
+      50,
+      52,
+      53,
+      58,
+      61,
+      62,
+      63,
+      64,
+      67,
+      68,
+      69,
+      99,
+      126,
+      129
+    ],
+    "replacements": {
+      "KHARID_GRASS": [
+        "h > 10",
+        "h > 9 && s > 3",
+        "h == 9 && s > 4"
+      ],
+      "KHARID_DIRT": [
+        "h < 8",
+        "h == 9 && s == 4"
+      ]
+    }
+  },
+  {
     "name": "UZER_OASIS",
     "area": "UZER_OASIS",
     "groundMaterial": "SAND",
