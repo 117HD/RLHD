@@ -28132,7 +28132,9 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      43704
+      43704,
+      43787,
+      43812
     ]
   },
   {
@@ -28150,7 +28152,9 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      43711
+      43711,
+      43794,
+      43819
     ]
   },
   {
@@ -28168,7 +28172,9 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      43703
+      43703,
+      43786,
+      43811
     ]
   },
   {
@@ -28186,7 +28192,10 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      43702
+      43702,
+      43785,
+      43810,
+      43821
     ]
   },
   {
@@ -28204,7 +28213,9 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      43710
+      43710,
+      43793,
+      43818
     ]
   },
   {
@@ -28222,7 +28233,9 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      43701
+      43701,
+      43784,
+      43809
     ]
   },
   {
@@ -28240,7 +28253,10 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      43705
+      43705,
+      43788,
+      43813,
+      43822
     ]
   },
   {
@@ -28258,7 +28274,9 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      43709
+      43709,
+      43792,
+      43817
     ]
   },
   {
@@ -28276,7 +28294,9 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      43706
+      43706,
+      43789,
+      43814
     ]
   },
   {
@@ -28294,7 +28314,9 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      43707
+      43707,
+      43790,
+      43815
     ]
   },
   {
@@ -28312,7 +28334,9 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      43712
+      43712,
+      43795,
+      43820
     ]
   },
   {
@@ -28330,7 +28354,9 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      43708
+      43708,
+      43791,
+      43816
     ]
   },
   {
@@ -30329,7 +30355,7 @@
     "range": 10
   },
   {
-    "description": "WINTERTODT_LIT_BRAZIER",
+    "description": "WINTERTODT_LIT_BRAZIER_MAIN",
     "height": 300,
     "alignment": "CENTER",
     "radius": 600,
@@ -30344,6 +30370,24 @@
     "range": 15,
     "fadeInDuration": 50,
     "fadeOutDuration": 100,
+    "objectIds": [
+      29314,
+      31926
+    ]
+  },
+  {
+    "description": "WINTERTODT_LIT_BRAZIER_FLICKER",
+    "offset": [ -7, 135, -4 ],
+    "radius": 100,
+    "strength": 300,
+    "color": [
+      165,
+      255,
+      56
+    ],
+    "type": "FLICKER",
+    "duration": 10,
+    "range": 45,
     "objectIds": [
       29314,
       31926
@@ -35834,6 +35878,160 @@
     "range": 5,
     "objectIds": [
       16812
+    ]
+  },
+  {
+    "description": "Grotesque Guardians Dawn Ranged Attack",
+    "projectileIds": [
+      1437,
+      1444
+    ],
+    "offset": [ 0, 0, 0 ],
+    "radius": 210,
+    "strength": 20,
+    "color": [
+      50,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "spawnDelay": 300,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200
+  },
+  {
+    "description": "Grotesque Guardians Dawn Freeze",
+    "projectileIds": [
+      1445
+    ],
+    "offset": [ 0, -20, 0 ],
+    "radius": 195,
+    "strength": 10,
+    "color": [
+      135,
+      135,
+      135
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "spawnDelay": 300,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200
+  },
+  {
+    "description": "Grotesque Guardians Flames",
+    "graphicsObjectIds": [
+      1434
+    ],
+    "offset": [ 0, 10, 0 ],
+    "radius": 175,
+    "strength": 20,
+    "color": [
+      50,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 300,
+    "fixedDespawnTime": true,
+    "despawnDelay": 2500
+  },
+  {
+    "description": "Grotesque Guardians Dusk Final Phase",
+    "npcIds": [
+      7888
+    ],
+    "offset": [ 0, 50, 0 ],
+    "radius": 700,
+    "strength": 20,
+    "color": [
+      50,
+      0,
+      255
+    ],
+    "type": "STATIC"
+  },
+  {
+    "description": "Grotesque Guardians Dusk Heal Orb",
+    "objectIds": [
+      31678,
+      31679,
+      31680
+    ],
+    "offset": [ 0, 10, 0 ],
+    "radius": 200,
+    "strength": 20,
+    "color": [
+      50,
+      0,
+      255
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 100,
+    "fadeOutDuration": 150
+  },
+  {
+    "description": "Paterdomus Temple Basement Monument lights",
+    "height": 160,
+    "offset": [ 0, -37, -90 ],
+    "radius": 150,
+    "strength": 7.7,
+    "color": [
+      255,
+      255,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 30,
+    "range": 10,
+    "objectIds": [
+      3493,
+      3494,
+      3495,
+      3496
+    ]
+  },
+  {
+    "description": "Paterdomus Temple Basement Monument lights - Angled",
+    "height": 160,
+    "offset": [ -40, -37, -74 ],
+    "radius": 150,
+    "strength": 7.7,
+    "color": [
+      255,
+      255,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 30,
+    "range": 10,
+    "objectIds": [
+      3497,
+      3498,
+      3499
+    ]
+  },
+  {
+    "description": "Elemental Workshop wall lantern",
+    "offset": [ 4, 155, 0 ],
+    "radius": 500,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      18536
     ]
   },
   {
