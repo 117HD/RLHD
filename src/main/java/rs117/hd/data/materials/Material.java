@@ -870,6 +870,13 @@ public enum Material {
 		.setBrightness(1.9f)
 	),
 
+	GROUND_WEB_1_N,
+	GROUND_WEB_1(p -> p.setNormalMap(GROUND_WEB_1_N).setSpecular(0.35f,90)),
+	GROUND_WEB_2_N,
+	GROUND_WEB_2(p -> p.setNormalMap(GROUND_WEB_2_N).setSpecular(0.35f,90)),
+	GROUND_WEB_3_N,
+	GROUND_WEB_3(p -> p.setNormalMap(GROUND_WEB_3_N).setSpecular(0.35f,90)),
+
 
 	// Aliases for separately replacing textures of different trees
 	LEAVES_YELLOW_SIDE(LEAVES_SIDE),
