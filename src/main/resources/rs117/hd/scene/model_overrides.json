@@ -4361,6 +4361,7 @@
       25108,
       25109,
       25110,
+      25111,
       25112,
       25113,
       25114,
@@ -4444,49 +4445,107 @@
   },
   {
     "description": "CAVE_WALLS_BLEND",
-    "baseMaterial": "ROCK_2",
+    "baseMaterial": "ROCK_3",
     "objectIds": [
+      2606,
       17210,
       17211,
       17215,
       17216,
       17217,
+      25099,
+      25100,
+      25101,
+      25039,
       25049,
       25050,
       25051,
       25052,
-      25053,
-      25054,
-      25055,
-      25056,
       25059,
       25060,
       25061,
       25062,
       25063,
       25064,
-      29634
+      29634,
+      32163,
+      32164,
+      55904,
+      55906,
+      55973,
+      55988,
+      55976,
+      55977,
+      55978,
+      25140
     ],
-    "flatNormals": true,
-    "uvType": "BOX"
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "colors": 2,
+        "baseMaterial": "BLACK"
+      }
+    ]
+  },
+  {
+    "description": "CAVE_WALLS_LANTERN",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      25053,
+      25054,
+      25055,
+      25056
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75
+  },
+  {
+    "description": "Asgarnia Ice Dungeon Lantern Wall - Darken so they match adjacent walls",
+    "baseMaterial": "ROCK_3_MEDIUM_DARK",
+    "areas": [ "ASGARNIA_ICE_DUNGEON" ],
+    "objectIds": [
+      25053,
+      25054,
+      25055,
+      25056
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75
+  },
+  {
+    "description": "Try to fix the cave walls from looking like cardboard cutouts",
+    "baseMaterial": "ROCK_3",
+    "areas": [ "ASGARNIA_ICE_DUNGEON" ],
+    "objectIds": [
+      37491
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "colors": 2,
+        "baseMaterial": "BLACK"
+      }
+    ]
   },
   {
     "description": "CAVE_WALLS_BLEND_TUNNEL",
-    "baseMaterial": "ROCK_2",
+    "baseMaterial": "ROCK_3",
     "objectIds": [ 30174, 30175 ],
-    "flatNormals": true,
-    "uvType": "BOX"
+    "uvType": "BOX",
+    "uvScale": 0.75
   },
   {
     "description": "CAVE_WALL_ABOVE_FLOOR_TILE",
-    "baseMaterial": "ROCK_2",
+    "baseMaterial": "ROCK_3",
     "objectIds": [
       17224,
       25057,
       25058
     ],
-    "flatNormals": true,
-    "uvType": "MODEL_XZ"
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 400
   },
   {
     "description": "Hide weird wall piece above other walls in Canifis pub basement",
@@ -4496,6 +4555,12 @@
       [ 3469, 9845 ]
     ],
     "uvType": "BOX"
+  },
+  {
+    "description": "Obors lair exit",
+    "baseMaterial": "GRUNGE_1",
+    "uvType": "BOX",
+    "objectIds": [ 1423, 1424 ]
   },
   {
     "description": "Canifis Rooftop Agility Course Tall Tree",
@@ -4643,12 +4708,95 @@
     "uvScale": 0.6
   },
   {
-    "description": "UNKNOWN_1",
-    "baseMaterial": "GRUNGE_1",
+    "description": "Corporeal Beast Entrance Passage",
+    "baseMaterial": "DIRT_2",
+    "flatNormals": true,
+    "uvType": "BOX",
+    "uvOrientation": 100,
     "objectIds": [
       677
+    ]
+  },
+  {
+    "description": "Corporeal Beast Walls",
+    "baseMaterial": "DIRT_2",
+    "areas": [ "Corporeal Beast Lair" ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 200,
+    "objectIds": [
+      6820,
+      6822
+    ]
+  },
+  {
+    "description": "Corporeal Beast Exit Cave",
+    "baseMaterial": "DIRT_2",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 110,
+    "objectIds": [
+      679
     ],
-    "flatNormals": true
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "BLACK"
+      }
+    ]
+  },
+  {
+    "description": "Corporeal Beast Ancient Brazier",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvScale": 0.4,
+    "uvType": "BOX",
+    "objectIds": [
+      41015,
+      41016
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 || h == 39 || h == 36 && s == 1",
+        "baseMaterial": "METALLIC_1"
+      },
+      {
+        "colors": "h == 7",
+        "baseMaterial": "DIRT_1"
+      },
+      {
+        "colors": "h == 36 && s == 2",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Corporeal Beast Graves",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      675,
+      676
+    ],
+    "colorOverrides": [
+      {
+        "colors": "l == 76",
+        "baseMaterial": "GRUNGE_3"
+      },
+      {
+        "colors": "h == 0",
+        "baseMaterial": "ROCK_3",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h == 7",
+        "baseMaterial": "DIRT_1"
+      }
+    ]
+  },
+  {
+    "description": "Corporeal Beast - Darken to fit environment",
+    "baseMaterial": "GRAY_75",
+    "npcIds": [ 319 ]
   },
   {
     "description": "UNKNOWN_2",
@@ -4769,8 +4917,7 @@
       26569,
       31481,
       31482,
-      43759,
-      679
+      43759
     ],
     "uvType": "BOX",
     "uvScale": 0.5
@@ -6866,6 +7013,8 @@
       26131,
       26132,
       26133,
+      29488,
+      29489,
       32534,
       34844,
       34931,
@@ -6902,7 +7051,8 @@
       20873,
       20874,
       20875,
-      24097
+      24097,
+      29490
     ],
     "uvType": "BOX",
     "uvScale": 0.7
@@ -7182,11 +7332,25 @@
     "description": "Metal Lanturn",
     "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
     "objectIds": [
-      205,
       3474,
       4501,
       4503,
       24172
+    ]
+  },
+  {
+    "description": "Static Lantern - Brighten Glass and Texture Metal",
+    "baseMaterial": "GRAY_125",
+    "objectIds": [
+      205
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.25
+      }
     ]
   },
   {
@@ -7852,9 +8016,8 @@
   },
   {
     "description": "Wyvern Shortcut",
-    "baseMaterial": "GRUNGE_1",
+    "baseMaterial": "ROCK_3",
     "objectIds": [
-      42506,
       53250
     ],
     "uvType": "BOX",
@@ -8957,6 +9120,51 @@
     "flatNormals": true,
     "uvType": "BOX",
     "uvOrientationY": 512
+  },
+  {
+    "description": "Wooden Crate",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      22426
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75
+  },
+  {
+    "description": "Wooden Crate - Rotated Texture 90 Degrees",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      16564,
+      16565
+    ],
+    "uvOrientation": 512,
+    "uvScale": 0.75,
+    "uvType": "BOX"
+  },
+  {
+    "description": "Wooden Crate - Stacked with Mismatching Top Faces",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      10161
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 75
+  },
+  {
+    "description": "Objects - Wooden - Barrel with Metal Band",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      16566
+    ],
+    "uvOrientation": 100,
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && s < 2",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
   },
   {
     "description": "Metallic - Ground - Armor",
@@ -12393,8 +12601,6 @@
       33365,
       33366,
       33367,
-      33368,
-      33369,
       33370,
       33371,
       33372,
@@ -12470,33 +12676,16 @@
       37549,
       37550,
       37551,
-      37552,
-      37553,
-      37554,
-      37555,
-      37556,
-      37557,
-      37559,
-      37560,
-      37561,
       37562,
       37563,
       37564,
       37565,
-      37566,
-      37567,
-      37568,
-      37569,
-      37571,
-      37572,
-      37573,
       37574,
       37575,
       37576,
       37577,
       37578,
       37579,
-      37580,
       37581,
       37583,
       37584,
@@ -12539,9 +12728,6 @@
       40441,
       40460,
       40461,
-      41413,
-      41414,
-      41415,
       41416,
       41417,
       41418,
@@ -13403,11 +13589,23 @@
     "baseMaterial": "BURLAP",
     "objectIds": [
       12392,
-      16871
+      16869,
+      16871,
+      52583
     ],
     "uvType": "BOX",
     "uvOrientation": 256,
-    "uvScale": 0.6
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "colors": "h < 4",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      },
+      {
+        "colors": "h == 8",
+        "baseMaterial": "HD_HAY"
+      }
+    ]
   },
   {
     "description": "Sack",
@@ -15188,13 +15386,23 @@
     "description": "Objects - Stone - Giants Foundry - Lava Rocks",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
+      37552,
+      37553,
+      37554,
+      37555,
+      37556,
+      37557,
+      37559,
+      37560,
+      37561,
       44764,
       44765,
       44766,
       44767,
       44768,
       44769,
-      44770
+      44770,
+      44771
     ],
     "uvType": "MODEL_XZ"
   },
@@ -15677,7 +15885,7 @@
   },
   {
     "description": "Fortune-teller Aris - Tent",
-    "baseMaterial": "CARPET",
+    "baseMaterial": "BURLAP",
     "objectIds": [
       2460,
       2461,
@@ -15685,6 +15893,23 @@
       2464,
       2489,
       2490
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.85
+  },
+  {
+    "description": "Fortune-teller Aris - Table with Crystal Ball",
+    "baseMaterial": "NONE",
+    "objectIds": [
+      2459
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 7",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
     ],
     "uvType": "BOX",
     "uvScale": 0.85
@@ -15797,7 +16022,8 @@
     "objectIds": [
       10782,
       10783,
-      10784
+      10784,
+      29491
     ],
     "uvType": "BOX",
     "uvScale": 0.33
@@ -17933,7 +18159,7 @@
   },
   {
     "description": "Magic Tree",
-    "baseMaterial": "BARK",
+    "baseMaterial": "BARK_STONEPINE",
     "objectIds": [
       4537, 5127, 8396,
       8397, 8398, 8399,
@@ -17942,7 +18168,72 @@
       8406, 8407, 8408, 8409, 10834
     ],
     "uvType": "BOX",
-    "uvScale": 0.8
+    "uvOrientation": 150,
+    "uvScale": 0.35
+  },
+  {
+    "description": "Magic Tree Stump",
+    "baseMaterial": "BARK_STONEPINE",
+    "objectIds": [
+      9713
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 150,
+    "uvScale": 0.35,
+    "colorOverrides": [
+      {
+        "colors": "h == 28 || h == 30 || h == 31",
+        "baseMaterial": "GRUNGE_1"
+      }
+    ]
+  },
+  {
+    "description": "Woodcutting Guild - Redwood Tree Bark",
+    "baseMaterial": "BARK_STONEPINE_2",
+    "objectIds": [
+      29668,
+      29669,
+      29670,
+      29671,
+      29673,
+      29674,
+      29675,
+      29676,
+      29677,
+      29678,
+      29679,
+      29681,
+      29683,
+      29682,
+      29684
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.2,
+    "uvOrientation": 70,
+    "colorOverrides": [
+      {
+        "colors": "h == 10 || h == 4",
+        "baseMaterial": "GRUNGE_3_DULL"
+      }
+    ]
+  },
+  {
+    "description": "Woodcutting Guild - Redwood Tree Top Leaves",
+    "baseMaterial": "GRUNGE_3_DULL",
+    "objectIds": [
+      29693,
+      29694,
+      29695,
+      29696,
+      29697,
+      29698,
+      29699,
+      29700,
+      29701,
+      29702,
+      29703,
+      29704
+    ]
   },
   {
     "description": "Guardians Of the Rift - Rocks - Medium",
@@ -23949,7 +24240,9 @@
       2176,
       4983,
       21802,
-      21803
+      21803,
+      29493,
+      29494
     ],
     "uvType": "BOX",
     "uvScale": 0.6
@@ -24417,11 +24710,27 @@
       10595,
       10596,
       10597,
+      10599,
       10600,
       42507,
       53251
     ],
-    "uvType": "BOX"
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": 2,
+        "baseMaterial": "BLACK"
+      }
+    ]
+  },
+  {
+    "description": "Asgarnia Ice Dungeon - Royal Titans Boss Entrance",
+    "baseMaterial": "SNOW_1",
+    "objectIds": [
+      55986
+    ],
+    "uvType": "BOX",
+    "castShadows": false
   },
   {
     "description": "Asgarnia Ice Dungeon - Ice Stairs",
@@ -24440,6 +24749,199 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.55
+  },
+  {
+    "description": "Asgarnia Ice Dungeon - Muddy Walls",
+    "baseMaterial": "MUD_1",
+    "objectIds": [
+      37568,
+      37569,
+      37572,
+      37580,
+      41413,
+      41414,
+      41415,
+      50707,
+      50709,
+      53228,
+      55901
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": 2,
+        "baseMaterial": "BLACK"
+      }
+    ]
+  },
+  {
+    "description": "Asgarnia Ice Dungeon - Muddy Walls Blending to Ice",
+    "baseMaterial": "SNOW_1",
+    "objectIds": [
+      37566,
+      37567,
+      37571
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "MUD_1",
+        "uvType": "BOX"
+      },
+      {
+        "colors": 2,
+        "baseMaterial": "BLACK"
+      }
+    ]
+  },
+  {
+    "description": "Asgarnia Ice Dungeon - Muddy Walls Blending to Rock",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      55908,
+      55974,
+      55975
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "MUD_1",
+        "uvType": "BOX"
+      },
+      {
+        "colors": 2,
+        "baseMaterial": "BLACK"
+      }
+    ]
+  },
+  {
+    "description": "Asgarnia Ice Dungeon - Muddly Wall - Darken so it blends in with adjacent walls",
+    "baseMaterial": "MUD_1_DARK",
+    "objectIds": [
+      37573,
+      42506,
+      55987
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 6 && s > 1",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      },
+      {
+        "colors": 2,
+        "baseMaterial": "BLACK"
+      }
+    ]
+  },
+  {
+    "description": "Asgarnia Ice Dungeon - Ice Spikes",
+    "baseMaterial": "ICE_1_HIGHGLOSS",
+    "objectIds": [
+      55982,
+      55983,
+      55984,
+      55985,
+      27889,
+      27890,
+      55980,
+      55981
+    ],
+    "shadowOpacityThreshold": 0.9
+  },
+  {
+    "description": "Asgarnia Ice Dungeon - Scoreboard",
+    "baseMaterial": "ICE_1_HIGHGLOSS",
+    "objectIds": [
+      56004
+    ],
+    "shadowOpacityThreshold": 0.9,
+    "colorOverrides": [
+      {
+        "colors": "h == 37",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 1.2
+      },
+      {
+        "colors": "s == 0",
+        "baseMaterial": "SNOW_1",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Asgarnia Ice Dungeon - Frozen Throne",
+    "baseMaterial": "ICE_1_HIGHGLOSS",
+    "objectIds": [
+      55979
+    ],
+    "shadowOpacityThreshold": 0.9,
+    "colorOverrides": [
+      {
+        "colors": "s <= 1",
+        "baseMaterial": "SNOW_1",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Asgarnia Ice Dungeon - Ice Floes",
+    "baseMaterial": "SNOW_3",
+    "objectIds": [
+      56021,
+      56022,
+      56023,
+      56024,
+      56025
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.3
+  },
+  {
+    "description": "Asgarnia Ice Dungeon - Ice Trim",
+    "baseMaterial": "ICE_4",
+    "objectIds": [
+      56014,
+      56015,
+      56016,
+      56017,
+      56018,
+      56019,
+      56020
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Asgarnia Ice Dungeon - Lava Trim",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      56005,
+      56006,
+      56007,
+      56008,
+      56009,
+      56010,
+      56011,
+      56012
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Campfire",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      46421
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.4
   },
   {
     "description": "Kraken Cove, Royal Trouble and Lizardman Caves  - Walls",
@@ -30335,6 +30837,218 @@
     "objectIds": [
       11654,
       11655
+    ]
+  },
+  {
+    "description": "Nightmare of Ashihama - Arena Floor",
+    "baseMaterial": "CARPET",
+    "uvType": "MODEL_XZ",
+    "objectIds": [
+      37674,
+      37675,
+      37676,
+      37677,
+      37678,
+      37680,
+      37681,
+      37682,
+      37683,
+      37684,
+      37685,
+      37686,
+      37687,
+      37688,
+      37689,
+      37690,
+      37691,
+      37692,
+      37693,
+      37694,
+      37695,
+      37696,
+      37697,
+      37698,
+      37699,
+      37700
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "MODEL_XZ",
+        "uvOrientation": 512,
+        "uvScale": 0.9
+      },
+      {
+        "colors": "h == 25",
+        "baseMaterial": "GRUNGE_3_LIGHT_SHINY",
+        "uvType": "MODEL_XZ",
+        "uvOrientation": 156
+      }
+    ]
+  },
+  {
+    "description": "Nightmare of Ashihama - Arena Fence",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "objectIds": [
+      37701,
+      37702,
+      37703,
+      37704,
+      37705
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.75
+      }
+    ]
+  },
+  {
+    "description": "Nightmare of Ashihama - Torii Gates",
+    "baseMaterial": "METALLIC_1",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      37637,
+      37638,
+      37639,
+      37640,
+      37642,
+      37643,
+      37644
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvOrientation": 512,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Nightmare of Ashihama - Marble Supports",
+    "baseMaterial": "MARBLE_2",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      37636,
+      37646,
+      37651,
+      37652,
+      37653,
+      37658,
+      37659,
+      37660,
+      37661,
+      37662,
+      37663,
+      37664,
+      37665,
+      37666,
+      37667,
+      37668,
+      37669,
+      37670,
+      37671,
+      37672,
+      37673
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 2",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Nightmare of Ashihama - Torii Gates",
+    "baseMaterial": "MARBLE_2",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      37647,
+      37648,
+      37649,
+      37650,
+      37654,
+      37655,
+      37656,
+      37657
+
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 2",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Nightmare of Ashihama - Totem",
+    "baseMaterial": "MARBLE_2",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "npcIds": [
+      9434,
+      9435,
+      9436,
+      9437,
+      9438,
+      9439,
+      9440,
+      9441,
+      9442,
+      9443,
+      9444,
+      9445
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7 || h == 8 || h == 9 || h == 60",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "colors": "h == 0 && s == 0 || h == 5 || h == 25",
+        "baseMaterial": "GRAY_90"
+      },
+      {
+        "colors": "s == 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 200
+      }
+    ]
+  },
+  {
+    "description": "Nightmare of Ashihama - Floating Island",
+    "baseMaterial": "GRASS_2",
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.75,
+    "objectIds": [
+      37719,
+      37720,
+      37721
+
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "DIRT_1",
+        "uvType": "GEOMETRY"
+      },
+      {
+        "colors": "h == 0 || h == 17 && s == 7",
+        "baseMaterial": "NONE"
+      }
     ]
   }
 ]
