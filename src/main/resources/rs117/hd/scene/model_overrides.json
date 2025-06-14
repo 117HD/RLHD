@@ -4498,6 +4498,12 @@
     "uvType": "BOX"
   },
   {
+    "description": "Obors lair exit",
+    "baseMaterial": "GRUNGE_1",
+    "uvType": "BOX",
+    "objectIds": [ 1423, 1424 ]
+  },
+  {
     "description": "Canifis Rooftop Agility Course Tall Tree",
     "objectIds": [ 14843 ],
     "baseMaterial": "LIGHT_BARK",
@@ -6866,6 +6872,8 @@
       26131,
       26132,
       26133,
+      29488,
+      29489,
       32534,
       34844,
       34931,
@@ -6902,7 +6910,8 @@
       20873,
       20874,
       20875,
-      24097
+      24097,
+      29490
     ],
     "uvType": "BOX",
     "uvScale": 0.7
@@ -15797,7 +15806,8 @@
     "objectIds": [
       10782,
       10783,
-      10784
+      10784,
+      29491
     ],
     "uvType": "BOX",
     "uvScale": 0.33
@@ -23949,7 +23959,9 @@
       2176,
       4983,
       21802,
-      21803
+      21803,
+      29493,
+      29494
     ],
     "uvType": "BOX",
     "uvScale": 0.6
