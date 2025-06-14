@@ -35836,24 +35836,6 @@
     ]
   },
   {
-    "description": "Grotesque Guardians Shadow Enhancer",
-    "graphicsObjectIds": [
-      1449,
-      1889,
-      1890,
-      1938
-    ],
-    "offset": [ 0, 10, 0 ],
-    "radius": 150,
-    "strength": -3.5,
-    "color": [
-      255,
-      255,
-      255
-    ],
-    "type": "STATIC"
-  },
-  {
     "description": "Grotesque Guardians Dawn Ranged Attack",
     "projectileIds": [
       1437,
