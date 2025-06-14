@@ -20749,9 +20749,10 @@
     "duration": 0,
     "range": 30,
     "objectIds": [
-      25056,
+      15796,
       17829,
-      25055
+      25055,
+      25056
     ]
   },
   {
@@ -36031,6 +36032,43 @@
     "range": 20,
     "objectIds": [
       18536
+    ]
+  },
+  {
+    "description": "Glowing Fungus",
+    "offset": [ 0, 8, 0 ],
+    "radius": 180,
+    "strength": 8,
+    "color": [
+      100,
+      3,
+      187
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 5,
+    "objectIds": [
+      4932,
+      4933
+    ]
+  },
+  {
+    "description": "Crystal Outcropping",
+    "offset": [ 0, 6, 0 ],
+    "radius": 180,
+    "strength": 8,
+    "color": [
+      187,
+      3,
+      187
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 5,
+    "objectIds": [
+      4926,
+      4927,
+      4928
     ]
   }
 ]
