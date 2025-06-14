@@ -58,7 +58,6 @@ public class Light
 	public TileObject tileObject;
 	public GraphicsObject graphicsObject;
 	public int spotAnimId = -1;
-	public int preOrientation;
 	public int[] projectileRefCounter;
 	public long hash;
 

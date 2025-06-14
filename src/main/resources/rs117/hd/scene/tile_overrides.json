@@ -1939,6 +1939,14 @@
     "uvScale": 1.15
   },
   {
+    "name": "MOTHERLODE_MINE_WATER",
+    "area": "MOTHERLODE_MINE",
+    "overlayIds": [
+      6
+    ],
+    "waterType": "MLM_WATER"
+  },
+  {
     "name": "CATHERBY_BEACH_OBELISK_WATER_FIX",
     "area": "CATHERBY_BEACH_OBELISK_WATER_FIX",
     "overlayIds": [
@@ -2989,11 +2997,12 @@
   },
   {
     "name": "LLETYA_WOOD_FLOORS",
-    "area": "LLETYA_UPPER_LEVELS",
+    "area": "Lletya Wood Floors Fix",
     "overlayIds": [
       22
     ],
-    "groundMaterial": "HD_WOOD_PLANKS_2"
+    "groundMaterial": "HD_WOOD_PLANKS_2",
+    "uvScale": 1.25
   },
   {
     "name": "TIRANNWN_PATHS",
@@ -3002,6 +3011,16 @@
       106
     ],
     "groundMaterial": "GRASSY_DIRT"
+  },
+  {
+    "name": "Grand Library Floor",
+    "area": "SOTE_GRAND_LIBRARY",
+    "groundMaterial": "CARPET",
+    "overlayIds": [
+      63
+    ],
+    "uvOrientation": 256,
+    "uvScale": 0.7
   },
   {
     "name": "PRIFDDINAS_POND_WATER",
@@ -3687,6 +3706,19 @@
     "blended": false
   },
   {
+    "name": "CAMDOZAAL_TILES",
+    "area": "CAMDOZAAL_TILED_FLOOR",
+    "underlayIds": [
+      16,
+      44,
+      46
+    ],
+    "groundMaterial": "MARBLE_1",
+    "uvOrientation": 117,
+    "uvScale": 1.2,
+    "blended": false
+  },
+  {
     "name": "CAMDOZAAL_STONE_PATH",
     "area": "CAMDOZAAL",
     "overlayIds": [
@@ -3950,8 +3982,10 @@
     "name": "CANOE_CUTSCENE_STONE",
     "area": "CANOE_CUTSCENE",
     "overlayIds": [
-      0,
       11
+    ],
+    "underlayIds": [
+      72
     ],
     "groundMaterial": "STONE_SCROLLING"
   },
@@ -5990,9 +6024,9 @@
       58
     ],
     "groundMaterial": "SNOW_1",
-    "maxHue": 0,
+    "shiftHue": 4,
     "maxSaturation": 0,
-    "minLightness": 100,
+    "minLightness": 78,
     "maxLightness": 100
   },
   {
@@ -6237,7 +6271,7 @@
     "overlayIds": [
       256
     ],
-    "groundMaterial": "FINE_CARPET"
+    "groundMaterial": "CARPET"
   },
 
   {
@@ -6534,6 +6568,13 @@
     "groundMaterial": "ROCKY_CAVE_FLOOR"
   },
   {
+    "name": "THE_GAUNTLET_FLOOR_ROOT_FIX",
+    "area": "THE_GAUNTLET_FLOOR_ROOT_FIX",
+    "underlayIds": [ 72 ],
+    "groundMaterial": "MARBLE_2",
+    "uvScale": 0.5
+  },
+  {
     "name": "OVERWORLD_GRASS_UNDERLAY",
     "area": "OVERWORLD",
     "underlayIds": [
@@ -6606,6 +6647,19 @@
       15
     ],
     "groundMaterial": "PACKED_EARTH"
+  },
+  {
+    "name": "Essence Mine Snow",
+    "area": "ESSENCE_MINE",
+    "underlayIds": [
+      55,
+      56,
+      58,
+      59
+    ],
+    "groundMaterial": "SNOW_1",
+    "shiftHue": 5,
+    "setLightness": 72
   },
   {
     "name": "UNDERLAY_SNOW",
