@@ -1552,11 +1552,7 @@
       66,
       67
     ],
-    "groundMaterial": "ABYSSAL_BILE",
-    "uvScale": 1.12,
-    "shiftLightness": -6,
-    "shiftHue": -1,
-    "blended": false
+    "waterType": "ABYSS_BILE"
   },
   {
     "name": "GOBLIN_VILLAGE_TILES_BLEND_FIX_OVERLAY",

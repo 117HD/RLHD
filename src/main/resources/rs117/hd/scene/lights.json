@@ -28793,6 +28793,41 @@
     "range": 13
   },
   {
+    "description": "ABYSSAL_NEXUS_TENDRILS",
+    "height": 45,
+    "alignment": "CENTER",
+    "radius": 475,
+    "strength": 3.5,
+    "color": [
+      70,
+      242,
+      31
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      27014,
+      27015,
+      27016
+    ]
+  },
+  {
+    "description": "Abyssal Nexus - Respiratory System",
+    "height": 275,
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 7.5,
+    "color": [
+      70,
+      242,
+      31
+    ],
+    "objectIds": [ 26953 ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200
+  },
+  {
     "description": "GOTR_ENTRANCE_BARRIER_YELLOW",
     "height": 250,
     "alignment": "CENTER",

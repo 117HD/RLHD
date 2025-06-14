@@ -20335,7 +20335,7 @@
   },
   {
     "description": "Abyssal Nexus - Bile Pool Edges",
-    "baseMaterial": "ABYSSAL_2",
+    "baseMaterial": "ABYSSAL",
     "objectIds": [
       26956,
       26957,
@@ -20344,7 +20344,13 @@
       26960
     ],
     "uvType": "BOX",
-    "uvScale": 0.7
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "colors": "s == 1",
+        "baseMaterial": "GRAY_65"
+      }
+    ]
   },
   {
     "description": "Abyssal Nexus - Respiratory System",
