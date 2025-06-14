@@ -27826,11 +27826,8 @@
     "colorOverrides": [
       {
         "description": "Interior Wall",
-        "colors": "s == 2",
-        "baseMaterial": "TEXTURE_47",
-        "uvType": "MODEL_XY",
-        "uvOrientation": 512,
-        "uvScale": 1.5
+        "colors": [ 93, "s == 2" ],
+        "baseMaterial": "NONE"
       }
     ],
     "objectIds": [
