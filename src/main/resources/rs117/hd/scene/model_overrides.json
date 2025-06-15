@@ -1312,7 +1312,6 @@
       3968,
       4051,
       4052,
-      4053,
       4054,
       5902,
       5903,
@@ -2399,7 +2398,9 @@
       3935,
       3936,
       7110,
-      7111
+      7111,
+      21376,
+      21378
     ],
     "castShadows": false,
     "flatNormals": true
@@ -3950,22 +3951,6 @@
       2111,
       2112,
       2113
-    ]
-  },
-  {
-    "description": "TOB_VERZIK_TILE_FLOOR",
-    "baseMaterial": "BLANK_SEMIGLOSS",
-    "objectIds": [
-      32719,
-      32720,
-      32721,
-      32722,
-      32723,
-      32724,
-      32725,
-      32726,
-      32727,
-      32728
     ]
   },
   {
@@ -12854,6 +12839,7 @@
     "description": "Kharidian Sophmena Cactus",
     "baseMaterial": "PLANT_GRUNGE_1",
     "objectIds": [
+      44068,
       44069,
       44070,
       44071,
@@ -12862,7 +12848,12 @@
       44074,
       44075,
       44076,
-      44077
+      44077,
+      44078,
+      44079,
+      44080,
+      44081,
+      44082
     ]
   },
   {
@@ -13180,7 +13171,9 @@
       4847,
       15957,
       15958,
-      15959
+      15959,
+      44212,
+      44213
     ],
     "uvType": "BOX",
     "uvScale": 0.62,
@@ -13354,61 +13347,6 @@
       44173
     ],
     "uvType": "WORLD_XZ"
-  },
-  {
-    "description": "Ruins of Ullek flat normals on walls and other wall objects",
-    "objectIds": [
-      43898,
-      43899,
-      43900,
-      43901,
-      43902,
-      43903,
-      43952,
-      43953,
-      43954,
-      44097,
-      44099,
-      44100,
-      44109,
-      44110,
-      44111,
-      44112,
-      44113,
-      44114,
-      44115,
-      44116,
-      44117
-    ],
-    "flatNormals": true
-  },
-  {
-    "description": "Ruins of Ullek crypt",
-    "objectIds": [
-      43904,
-      43908,
-      43910,
-      43911,
-      43912,
-      43905,
-      43906,
-      43907,
-      43909,
-      43960,
-      43959,
-      43958,
-      43961,
-      43962,
-      43971,
-      43972,
-      43973,
-      43974,
-      43975,
-      43976,
-      43977,
-      43978
-    ],
-    "flatNormals": true
   },
   {
     "description": "Tombs of Amascut invocation board",
@@ -14628,6 +14566,225 @@
     "uvType": "GEOMETRY"
   },
   {
+    "description": "Ruins of Ullek - Walls - Pillars - Floors - Furnace - Well",
+    "baseMaterial": "GRUNGE_3_LIGHT",
+    "objectIds": [
+      43888,
+      44095,
+      44097,
+      44100,
+      44107,
+      44106,
+      44105,
+      44110,
+      44109,
+      44094,
+      44099,
+      44096,
+      44114,
+      44115,
+      44116,
+      44111,
+      44112,
+      44113,
+      44101,
+      44104,
+      44108,
+      43902,
+      43903,
+      43893,
+      43953,
+      44117,
+      43895,
+      43901
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Ruins of Ullek - Ritual Pillar",
+    "baseMaterial": "MARBLE_3",
+    "objectIds": [
+      44130,
+      44131,
+      44132
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Ruins of Ullek - Pillars",
+    "baseMaterial": "MARBLE_2",
+    "objectIds": [
+      43994,
+      43995,
+      43996,
+      43997,
+      43998,
+      43999,
+      43900,
+      43898,
+      43899
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.1
+  },
+  {
+    "description": "Ruins of Ullek - Rubble",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      44000,
+      44001,
+      44002
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Ruins of Ullek - Bushes with rocks",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      44141
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Ruins of Ullek - Wooden Planks",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      44124,
+      44125
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Ruins of Ullek Dungeon - Walls",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      43904,
+      43908,
+      43910,
+      43911,
+      43912,
+      43905,
+      43909,
+      43914,
+      43915,
+      43916,
+      43959,
+      43958,
+      43917,
+      43957,
+      43956,
+      43948,
+      43949,
+      43950,
+      43951
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 650
+  },
+  {
+    "description": "Ruins of Ullek Dungeon - Doors",
+    "baseMaterial": "STONE_NORMALED_DARK",
+    "objectIds": [
+      43906,
+      43907,
+      43960,
+      43961,
+      43962,
+      43963,
+      43964
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 400
+  },
+  {
+    "description": "Ruins of Ullek Dungeon - Void",
+    "baseMaterial": "GRAY_65",
+    "objectIds": [
+      43913
+    ]
+  },
+  {
+    "description": "Ruins of Ullek Dungeon - Statues",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      43938,
+      43939,
+      43940,
+      43941,
+      43945,
+      43946,
+      43947
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Ruins of Ullek Dungeon - Sarcophagus",
+    "baseMaterial": "MARBLE_2",
+    "objectIds": [
+      43927
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Ruins of Ullek Dungeon - Altar",
+    "baseMaterial": "MARBLE_2",
+    "objectIds": [
+      43983
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Ruins of Ullek Dungeon - Urns",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      43919,
+      43920,
+      43921,
+      43922,
+      43923,
+      43924,
+      43925,
+      43926,
+      43980
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Ruins of Ullek Dungeon - Plaque",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      43971,
+      43972,
+      43973,
+      43974,
+      43975,
+      43976,
+      43977,
+      43978
+    ],
+    "uvType": "BOX"
+  },
+  {
+
+    "description": "Maisa's Camp - Fire, Barriers, Spade, Table and Flowers",
+    "baseMaterial": "GRUNGE_3_LIGHT",
+    "objectIds": [
+      44011,
+      44012,
+      44013,
+      44015,
+      44016,
+      44017,
+      44018,
+      44019,
+      44021,
+      43884
+    ],
+    "uvType": "BOX"
+  },
+  {
     "description": "Rocks - Small",
     "baseMaterial": "ROCK_1",
     "objectIds": [
@@ -14657,6 +14814,7 @@
       24143,
       24144,
       24145,
+      43882,
       53252,
       53254
     ],
@@ -17606,14 +17764,12 @@
   },
   {
     "description": "Stronghold Of Security Petilance - Dripping Tendrils",
-    "baseMaterial": "ABYSSAL_2",
+    "baseMaterial": "GRUNGE_3",
     "objectIds": [
       23700,
       23701,
       23702
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.5
+    ]
   },
   {
     "description": "Stronghold Of Security - Death - Walls",
@@ -20007,6 +20163,7 @@
   {
     "description": "Abyss - Wall",
     "baseMaterial": "ABYSSAL",
+    "areas": [ "ABYSSAL_AREAS" ],
     "objectIds": [
       20737,
       25382,
@@ -20030,14 +20187,11 @@
       26969,
       26970,
       26971,
-      26972,
-      26973,
       27027,
-      27054,
-      27055
+      27054
     ],
     "uvType": "BOX",
-    "uvScale": 1.85
+    "uvScale": 0.9
   },
   {
     "description": "Abyss - Wall",
@@ -20046,24 +20200,24 @@
       26154
     ],
     "uvType": "WORLD_XZ",
-    "uvScale": 1.85
+    "uvScale": 1.1
   },
   {
     "description": "Abyss - Puddle",
-    "baseMaterial": "WATER_PUDDLE",
+    "hide": true,
     "objectIds": [
       26174,
       26176,
       26177
-    ],
-    "uvType": "MODEL_XZ"
+    ]
   },
   {
-    "description": "Abyss - Gap",
+    "description": "Abyss - Agility Gap",
     "baseMaterial": "ABYSSAL_2",
     "objectIds": [
       25428,
-      25381
+      25381,
+      27055
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -20083,25 +20237,28 @@
   },
   {
     "description": "Abyss - Tendrils - Large",
-    "baseMaterial": "ABYSSAL_2",
+    "baseMaterial": "GRUNGE_1",
     "objectIds": [
       25425,
       25427
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.8,
-    "uvOrientation": 512
+    ]
   },
   {
     "description": "Abyss - Eyes",
-    "baseMaterial": "ABYSSAL_2",
+    "baseMaterial": "GRUNGE_3",
     "objectIds": [
       26146,
       26147,
       26148
     ],
-    "uvType": "BOX",
-    "uvScale": 0.5
+    "colorOverrides": [
+      {
+        "colors": "h == 1 || h == 7",
+        "baseMaterial": "ABYSSAL",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ]
   },
   {
     "description": "Abyss - Boil",
@@ -20128,13 +20285,13 @@
     "objectIds": [
       26159
     ],
-    "uvType": "BOX",
-    "uvScale": 0.4,
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.33,
     "uvOrientation": 256
   },
   {
     "description": "Abyss - Object - Ground Tendrils - Small",
-    "baseMaterial": "ABYSSAL",
+    "baseMaterial": "GRUNGE_1",
     "objectIds": [
       26167,
       26168,
@@ -20143,7 +20300,7 @@
   },
   {
     "description": "Abyss - Object - Popped Pustules - Small",
-    "baseMaterial": "ABYSSAL",
+    "baseMaterial": "ABYSSAL_2",
     "objectIds": [
       26161,
       26162,
@@ -20157,7 +20314,7 @@
       27024
     ],
     "uvType": "BOX",
-    "uvScale": 0.52,
+    "uvScale": 0.3,
     "uvOrientation": 256
   },
   {
@@ -20168,12 +20325,12 @@
       26173
     ],
     "uvType": "BOX",
-    "uvScale": 0.4,
+    "uvScale": 0.3,
     "uvOrientation": 512
   },
   {
     "description": "Abyss - Peak Eye",
-    "baseMaterial": "ABYSSAL_2",
+    "baseMaterial": "GRUNGE_3",
     "objectIds": [
       27048,
       27049,
@@ -20182,20 +20339,176 @@
       27052,
       27053
     ],
-    "uvType": "BOX",
-    "uvOrientation": 512,
-    "uvScale": 0.6
+    "colorOverrides": [
+      {
+        "colors": "h == 1 || h == 7",
+        "baseMaterial": "ABYSSAL",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ]
   },
   {
-    "description": "Abyss - Green-tipped Tendrils",
-    "baseMaterial": "ABYSSAL_2",
+    "description": "Abyssal Nexus - Green-tipped Tendrils & Pustules",
+    "baseMaterial": "GRUNGE_1",
     "objectIds": [
       27014,
       27015,
-      27016
+      27016,
+      27017,
+      27018,
+      27019,
+      27020
+    ]
+  },
+  {
+    "description": "Abyssal Nexus - Flesh",
+    "baseMaterial": "ABYSSAL_2",
+    "objectIds": [
+      26935,
+      26922,
+      26923,
+      26902,
+      26903,
+      26905,
+      26908,
+      26911,
+      26912,
+      26913,
+      26914,
+      26918,
+      26919,
+      26920,
+      26927,
+      26928,
+      26929,
+      26930,
+      26933,
+      26936,
+      26938,
+      26937,
+      26931,
+      26932,
+      26934,
+      26939,
+      26915,
+      26917,
+      26925,
+      26921,
+      26904,
+      26910,
+      26909,
+      26907,
+      26906,
+      26890,
+      26891,
+      26896,
+      26901,
+      26892,
+      20249,
+      26899,
+      26889,
+      26895,
+      26898,
+      26924,
+      26994,
+      26995,
+      26996,
+      26997,
+      26975,
+      26976,
+      26977,
+      26979,
+      26978,
+      26998,
+      26999,
+      27000,
+      27003,
+      27005,
+      27004,
+      27006,
+      27007,
+      27008,
+      27002,
+      27001,
+      26981,
+      26988,
+      26985,
+      26986,
+      26989,
+      26984,
+      26982,
+      26983,
+      26980,
+      26900,
+      26897,
+      26893,
+      26926,
+      26974
     ],
     "uvType": "BOX",
-    "uvScale": 0.5
+    "uvScale": 0.45
+  },
+  {
+    "description": "Abyssal Nexus - Flesh with Bone",
+    "baseMaterial": "ABYSSAL",
+    "objectIds": [
+      26940,
+      26941,
+      26942,
+      26943,
+      26944,
+      26945,
+      26946,
+      26948,
+      26949,
+      26950,
+      26951,
+      26952,
+      26990,
+      26991,
+      26992,
+      26993,
+      27010,
+      27011,
+      27012,
+      27013,
+      26972,
+      26973
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.65,
+    "colorOverrides": [
+      {
+        "colors": "h == 6 || h == 7",
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
+  },
+  {
+    "description": "Abyssal Nexus - Bile Pool Edges",
+    "baseMaterial": "ABYSSAL",
+    "objectIds": [
+      26956,
+      26957,
+      26958,
+      26959,
+      26960
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "colors": "s == 1",
+        "baseMaterial": "GRAY_65"
+      }
+    ]
+  },
+  {
+    "description": "Abyssal Nexus - Respiratory System",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [ 26953, 26954 ],
+    "npcIds": [ 5915 ]
   },
   {
     "description": "Walls - Law Altar",
@@ -20683,9 +20996,10 @@
     "uvType": "MODEL_XZ"
   },
   {
-    "description": "Varlamore Cushions",
+    "description": "Object - Cushions",
     "baseMaterial": "CARPET",
     "objectIds": [
+      44020,
       53012,
       52436,
       52437
@@ -31044,6 +31358,807 @@
         "baseMaterial": "NONE"
       }
     ]
+  },
+  {
+    "description": "Morytania Spider Cave",
+    "baseMaterial": "GRASS_3",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Dirt",
+        "colors": "h < 10",
+        "baseMaterial": "DIRT_2",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Web",
+        "colors": "h == 10",
+        "baseMaterial": "NONE"
+      },
+      {
+        "description": "Grass that needs upward normals to fix",
+        "colors": "h == 12",
+        "baseMaterial": "GRAY_50"
+      }
+    ],
+    "objectIds": [
+      42594
+    ]
+  },
+  {
+    "description": "Morytania webbed trees",
+    "baseMaterial": "BARK",
+    "uvOrientation": 188,
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Web",
+        "colors": "h == 10",
+        "baseMaterial": "NONE"
+      }
+    ],
+    "objectIds": [
+      42649
+    ]
+  },
+  {
+    "description": "Morytania trees with grass around the base",
+    "baseMaterial": "BARK",
+    "uvOrientation": 188,
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Grass",
+        "colors": "h == 12",
+        "baseMaterial": "GRAY_50"
+      }
+    ],
+    "objectIds": [
+      4053
+    ]
+  },
+  {
+    "description": "Morytania Spider Cave wall topper",
+    "baseMaterial": "ROCK_1",
+    "uvOrientation": 256,
+    "uvScale": 1.2,
+    "uvType": "BOX",
+    "objectIds": [
+      42596,
+      42597,
+      54186
+    ]
+  },
+  {
+    "description": "Morytania Spider Cave wall topper edges with black",
+    "baseMaterial": "ROCK_1",
+    "uvOrientation": 256,
+    "uvType": "BOX",
+    "objectIds": [
+      42598,
+      42599,
+      42600,
+      54189,
+      54190,
+      54191
+    ]
+  },
+  {
+    "description": "Morytania Spider Cave walls",
+    "baseMaterial": "ROCK_1",
+    "uvOrientation": 343,
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Web backing",
+        "colors": "h == 10",
+        "baseMaterial": "NONE"
+      },
+      {
+        "description": "Web",
+        "colors": "h == 0",
+        "baseMaterial": "NONE"
+      }
+    ],
+    "objectIds": [
+      42610,
+      42611,
+      42612,
+      42613,
+      54167,
+      54183
+    ]
+  },
+  {
+    "description": "Morytania Spider Cave Exit",
+    "baseMaterial": "ROCK_1",
+    "uvOrientation": 343,
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Web backing",
+        "colors": "h == 10",
+        "baseMaterial": "NONE"
+      },
+      {
+        "description": "Web",
+        "colors": "h == 0",
+        "baseMaterial": "NONE"
+      }
+    ],
+    "objectIds": [
+      42595
+    ]
+  },
+  {
+    "description": "Morytania Spider Cave web tunnel",
+    "baseMaterial": "ROCK_1",
+    "uvOrientation": 343,
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Web backing",
+        "colors": "h == 10",
+        "baseMaterial": "NONE"
+      },
+      {
+        "description": "Web",
+        "colors": "h == 0",
+        "baseMaterial": "NONE"
+      }
+    ],
+    "objectIds": [
+      54152,
+      54154,
+      54159
+    ]
+  },
+  {
+    "description": "Morytania Spider Cave webbed stalagmite",
+    "baseMaterial": "ROCK_4",
+    "uvOrientation": 343,
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Web backing",
+        "colors": "h == 10",
+        "baseMaterial": "NONE"
+      }
+    ],
+    "objectIds": [
+      42629,
+      54215,
+      54216,
+      54222
+    ]
+  },
+  {
+    "description": "Morytania Spider Cave webbed stalagmite and scroll",
+    "baseMaterial": "ROCK_4",
+    "uvOrientation": 343,
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Web backing",
+        "colors": "h != 26",
+        "baseMaterial": "NONE"
+      }
+    ],
+    "objectIds": [
+      54150
+    ]
+  },
+  {
+    "description": "Theatre of Blood - Verzik Stone Floor",
+    "baseMaterial": "BLANK_SEMIGLOSS",
+    "objectIds": [
+      32719,
+      32721,
+      32722,
+      32723,
+      32724,
+      32725,
+      32726,
+      32727,
+      32728,
+      32729,
+      32730,
+      32731,
+      32732,
+      32733
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Theatre of Blood - Verzik Walls with Statue",
+    "baseMaterial": "ROCK_3",
+    "uvScale": 1.2,
+    "objectIds": [
+      32699
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "MARBLE_1",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Theatre of Blood - Verzik Walls with Window or Banner",
+    "baseMaterial": "ROCK_3",
+    "uvScale": 1.2,
+    "objectIds": [
+      32697,
+      32693,
+      32694
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h > 7 ",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Theatre of Blood - Verzik Walls - Big Window",
+    "baseMaterial": "GRAY_90",
+    "objectIds": [
+      32691
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5 ",
+        "baseMaterial": "ROCK_3"
+      }
+    ]
+  },
+  {
+    "description": "Theatre of Blood - Verzik - Throne",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      32702,
+      32703,
+      32704,
+      32705,
+      32706,
+      32707,
+      32708,
+      32709,
+      32710,
+      32711,
+      32712,
+      32737,
+      32738
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h > 5",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Theatre of Blood - Verzik Wall",
+    "baseMaterial": "ROCK_3",
+    "uvScale": 1.2,
+    "objectIds": [
+      32687,
+      32692,
+      32695,
+      32696,
+      32700,
+      32701,
+      32713,
+      32714,
+      32715
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Theatre of Blood - Verzik Crumbling Pillar",
+    "baseMaterial": "ROCK_3",
+    "uvScale": 1.2,
+    "npcIds": [ 8377 ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Theatre of Blood - Treasure Room Walls",
+    "baseMaterial": "MARBLE_2",
+    "objectIds": [
+      32995,
+      32997,
+      32998,
+      32999,
+      33000,
+      33001,
+      33002,
+      33003,
+      33005,
+      33006,
+      33007,
+      33008,
+      33009,
+      33010,
+      33021,
+      33022,
+      33023,
+      33024,
+      33025
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 100,
+    "colorOverrides": [
+      {
+        "colors": "s > 4",
+        "baseMaterial": "METALLIC_1"
+      },
+      {
+        "colors": "h > 4 && s > 0",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX"
+      },
+      {
+        "colors": 2,
+        "baseMaterial": "GRAY_75"
+      }
+    ]
+  },
+  {
+    "description": "Theatre of Blood - Stone Floor",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      32784,
+      32785,
+      32786,
+      32787,
+      32788,
+      32789,
+      32790,
+      32791,
+      32792,
+      32793,
+      32816,
+      32817,
+      32818,
+      32819,
+      32820,
+      32821,
+      32822,
+      32823,
+      32824,
+      32825,
+      32826,
+      32827,
+      32828,
+      32829,
+      32830,
+      32831,
+      32832,
+      32834,
+      32835,
+      32836,
+      32837,
+      32838,
+      32839,
+      32840,
+      32841,
+      32842,
+      32843,
+      32844,
+      32845,
+      32846,
+      32847,
+      32848,
+      32849,
+      32850,
+      32851,
+      32852
+    ],
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 100
+  },
+  {
+    "description": "Theatre of Blood - Stone Walls",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      32763,
+      32764,
+      32765,
+      32766,
+      32767,
+      32768,
+      32769,
+      32770,
+      32771,
+      32772,
+      32775,
+      32776,
+      32777,
+      32781,
+      32782,
+      32783,
+      32794,
+      32795,
+      32796,
+      32797,
+      32798,
+      32799,
+      32800,
+      32801,
+      32802,
+      32803,
+      32804,
+      32805,
+      32806,
+      32807,
+      32810,
+      32811,
+      32812,
+      32813,
+      32814,
+      32815,
+      32866,
+      32867,
+      32868,
+      32869,
+      32870,
+      32871,
+      32872,
+      32873,
+      32967,
+      32974,
+      33038,
+      33039,
+      33040,
+      33041,
+      33042,
+      33043,
+      33044,
+      33045,
+      33046,
+      33047,
+      33048,
+      33049,
+      33050,
+      33051,
+      33053,
+      33054,
+      33055,
+      33056,
+      33057,
+      33058,
+      33060,
+      33061,
+      33062
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 100,
+    "colorOverrides": [
+      {
+        "colors": "s > 4",
+        "baseMaterial": "NONE"
+      },
+      {
+        "colors": "l > 20",
+        "baseMaterial": "ROCK_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Theatre of Blood - Xarpus Walls",
+    "baseMaterial": "GRAY_70",
+    "objectIds": [
+      32745,
+      32746,
+      32748
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0 && l < 25",
+        "baseMaterial": "ROCK_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Theatre of Blood - Xarpus Buildings",
+    "baseMaterial": "STONE_NORMALED",
+    "areas": [ "THEATRE_OF_BLOOD" ],
+    "objectIds": [
+      17487,
+      32684,
+      32749
+    ]
+  },
+  {
+    "description": "Theatre of Blood - Xarpus Buildings - Doors and Railing",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "areas": [ "THEATRE_OF_BLOOD" ],
+    "objectIds": [
+      32670,
+      32752,
+      32751
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && l > 42",
+        "baseMaterial": "GRAY_50"
+      },
+      {
+        "colors": [ "h == 0 && s > 2", "h > 0 && h < 6 && s > 1" ],
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Theatre of Blood - Xarpus - Skeleton",
+    "baseMaterial": "GRAY_75",
+    "uvType": "BOX",
+    "objectIds": [
+      32741,
+      32742
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h < 7",
+        "baseMaterial": "BONE"
+      }
+    ]
+  },
+  {
+    "description": "Theatre of Blood - Xarpus - Hide Projectile Shadow",
+    "castShadows": false,
+    "projectileIds": [ 1555 ]
+  },
+  {
+    "description": "Theatre of Blood - Xarpus Buildings - Window",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "areas": [ "THEATRE_OF_BLOOD" ],
+    "objectIds": [
+      32662
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s > 2",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Theatre of Blood - Sotetseg Big Window",
+    "baseMaterial": "STONE_NORMALED",
+    "castShadows": false,
+    "objectIds": [
+      33052,
+      33059
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 100,
+    "colorOverrides": [
+      {
+        "colors": [206, 211, 1482, 2261, 3160, 3286, 5213 ],
+        "baseMaterial": "WHITE"
+      },
+      {
+        "colors": "l > 20",
+        "baseMaterial": "ROCK_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Theatre of Blood - Nylocas Arena Pillars",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      32862,
+      32876,
+      32899
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Theatre of Blood - Nylocas Arena Floor",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      32874,
+      32877,
+      32878,
+      32879,
+      32880,
+      32881,
+      32882,
+      32883,
+      32884,
+      32885,
+      32886,
+      32887,
+      32888,
+      32889,
+      32890,
+      32892,
+      32893,
+      32894,
+      32895,
+      32896,
+      32897,
+      32891,
+      32898,
+      32900,
+      32901,
+      32902,
+      32903,
+      32904,
+      32905,
+      32906,
+      32907,
+      32908,
+      32909,
+      32910,
+      32911,
+      32912,
+      32913,
+      32863,
+      32864
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "l > 40",
+        "baseMaterial": "NONE"
+      },
+      {
+        "colors": 272,
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Theatre of Blood - Nylocas Arena Web Platform",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      32914,
+      32915,
+      32916,
+      32917,
+      32918,
+      32919,
+      32920,
+      32921,
+      32922,
+      32923,
+      32924,
+      32925,
+      32926,
+      32927,
+      32928,
+      32929,
+      32930,
+      32931,
+      32932,
+      32933,
+      32934
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Theatre of Blood - Nylocas Arena Web Platform Connection",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      32935,
+      32936
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "l < 15",
+        "baseMaterial": "ROCK_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Theatre of Blood - Door Arch",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      32808,
+      32809
+    ],
+    "uvType": "VANILLA",
+    "uvOrientation": 100,
+    "colorOverrides": [
+      {
+        "colors": [ 2 ],
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Theatre of Blood - Barrier",
+    "baseMaterial": "GRAY_90",
+    "shadowOpacityThreshold": 0.1,
+    "objectIds": [
+      32755,
+      33028,
+      47336
+    ]
+  },
+  {
+    "description": "Theatre of Blood - Bloat Jar",
+    "baseMaterial": "METALLIC_1",
+    "objectIds": [
+      32957
+    ],
+    "uvType": "GEOMETRY",
+    "colorOverrides": [
+      {
+        "colors": "h == 5 || h == 6 || h == 7 || h == 9",
+        "baseMaterial": "GRAY_150"
+      }
+    ]
+  },
+  {
+    "description": "Theatre of Blood - Bloat Jar Top",
+    "baseMaterial": "METALLIC_1",
+    "objectIds": [
+      32958
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Theatre of Blood - Hanging Hooks",
+    "baseMaterial": "METALLIC_1",
+    "objectIds": [
+      32949,
+      32950,
+      32951,
+      32952,
+      32953,
+      32954,
+      32971
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Theatre of Blood - Body Parts",
+    "baseMaterial": "METALLIC_1",
+    "objectIds": [
+      32961,
+      32962,
+      32963,
+      32964,
+      32965
+    ],
+    "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Theatre of Blood - Bloat Jar Supports",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      32955
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "TOB Bloat - make floor objects brighter to improve falling shadow visibility",
+    "objectIds": [ 32944, 32945, 32946, 32947, 32948 ],
+    "baseMaterial": "GRAY_150"
   },
   {
     "description": "Karamja Volcano edges",

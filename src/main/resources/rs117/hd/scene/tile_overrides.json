@@ -1419,6 +1419,27 @@
     "maxLightness": 30
   },
   {
+    "name": "EDGEVILLE_BANK_WINDOW_FIX_BLEND",
+    "area": "EDGEVILLE_BANK_WINDOW_FIX",
+    "description": "For when ground blending is ENABLED",
+    "overlayIds": [
+      10
+    ],
+    "groundMaterial": "VARROCK_PATHS",
+    "replacements": {
+      "EDGEVILLE_BANK_WINDOW_FIX_UNBLEND": "!blending"
+    },
+    "blended": false,
+    "minLightness": 29,
+    "maxLightness": 30
+  },
+  {
+    "name": "EDGEVILLE_BANK_WINDOW_FIX_UNBLEND",
+    "area": "EDGEVILLE_BANK_WINDOW_FIX",
+    "description": "For when ground blending is DISABLED",
+    "groundMaterial": "VARROCK_PATHS"
+  },
+  {
     "name": "EDGEVILLE_BANK_PERIMETER",
     "area": "EDGEVILLE_BANK",
     "overlayIds": [
@@ -1433,6 +1454,7 @@
   {
     "name": "EDGEVILLE_BANK_SURROUNDING_PATH",
     "area": "EDGEVILLE_BANK_SURROUNDING_PATH",
+    "blendedAsOpposite": false,
     "overlayIds": [
       10
     ],
@@ -1537,7 +1559,7 @@
     "groundMaterial": "ABYSSAL_FLOOR"
   },
   {
-    "name": "ABYSSAL_LIQUID",
+    "name": "ABYSSAL_BILE",
     "area": "ABYSSAL_AREAS",
     "overlayIds": [
       66,
@@ -5219,7 +5241,6 @@
   {
     "name": "EDGEVILLE_PATH_OVERLAY_48_CUSTOM_PATH",
     "groundMaterial": "VARROCK_PATHS",
-    "blendedAsOpposite": true,
     "maxHue": 0,
     "maxSaturation": 0,
     "shiftLightness": 8,
@@ -6383,6 +6404,64 @@
     "groundMaterial": "VARIED_DIRT"
   },
   {
+    "name": "ARAXXOR_WEB_OVERLAY",
+    "area": "MORYTANIA_SPIDER_CAVES",
+    "overlayIds": [
+      370
+    ],
+    "groundMaterial": "GROUND_WEBS",
+    "blended": false,
+    "uvScale": 3,
+    "uvOrientation": 89,
+    "shiftLightness": 14
+  },
+  {
+    "name": "ARAXXOR_WASTE_WATER",
+    "area": "MORYTANIA_SPIDER_CAVES",
+    "overlayIds": [
+      364
+    ],
+    "waterType": "ARAXXOR_WASTE"
+  },
+  {
+    "name": "MORYTANIA_SPIDER_CAVES_WEB_1",
+    "area": "MORYTANIA_SPIDER_CAVES",
+    "overlayIds": [
+      191
+    ],
+    "underlayIds": [
+      72,
+      79,
+      81,
+      84
+    ],
+    "groundMaterial": "GROUND_WEBS",
+    "uvScale": 2,
+    "uvOrientation": 90,
+    "shiftLightness": 7,
+    "replacements": {
+      "DEFAULT_PACKED_EARTH": "h < 10"
+    }
+  },
+  {
+    "name": "MORYTANIA_SPIDER_CAVES_WEB_2",
+    "area": "MORYTANIA_SPIDER_CAVES",
+    "underlayIds": [
+      39,
+      62,
+      80,
+      85,
+      138
+    ],
+    "groundMaterial": "GROUND_WEBS",
+    "uvScale": 2,
+    "uvOrientation": 32,
+    "shiftLightness": 7,
+    "replacements": {
+      "DEFAULT_PACKED_EARTH": "h < 10"
+    }
+  },
+  {
     "name": "GOBLIN_VILLAGE_TILES_BLEND_FIX",
     "area": "GOBLIN_VILLAGE_COOKS_CHAMBER",
     "underlayIds": [
@@ -6895,6 +6974,14 @@
     "underlayIds": [ 72 ],
     "groundMaterial": "MARBLE_2",
     "uvScale": 0.5
+  },
+  {
+    "name": "TOB_VERZIK_CARPET",
+    "area": "THEATRE_OF_BLOOD_VERZIK",
+    "overlayIds": [
+      103
+    ],
+    "groundMaterial": "CARPET"
   },
   {
     "name": "OVERWORLD_GRASS_UNDERLAY",
