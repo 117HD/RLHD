@@ -39,13 +39,9 @@ public class ModelOverride
 	public SeasonalTheme seasonalTheme;
 	@JsonAdapter(AABB.JsonAdapter.class)
 	public AABB[] areas = {};
-	@JsonAdapter(GsonUtils.StringSetAdapter.class)
 	public Set<String> npcIds = EMPTY;
-	@JsonAdapter(GsonUtils.StringSetAdapter.class)
 	public Set<String> objectIds = EMPTY;
-	@JsonAdapter(GsonUtils.StringSetAdapter.class)
 	public Set<String> projectileIds = EMPTY;
-	@JsonAdapter(GsonUtils.StringSetAdapter.class)
 	public Set<String> graphicsObjectIds = EMPTY;
 
 	public Material baseMaterial = Material.NONE;

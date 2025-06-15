@@ -66,18 +66,6 @@ public class GsonUtils {
         return ids;
     }
 
-	public static void writeStringArray(JsonWriter out, HashSet<String> listToWrite) throws IOException {
-		if (listToWrite.isEmpty()) {
-			out.nullValue();
-			return;
-		}
-
-		out.beginArray();
-		for (String id : listToWrite)
-			out.value(id);
-		out.endArray();
-	}
-
 	public static void writeIDArray(JsonWriter out, HashSet<Integer> listToWrite) throws IOException {
 		if (listToWrite.isEmpty()) {
 			out.nullValue();
@@ -88,18 +76,6 @@ public class GsonUtils {
 		for (int id : listToWrite)
 			out.value(id);
 		out.endArray();
-	}
-
-	public static class StringSetAdapter extends TypeAdapter<HashSet<String>> {
-		@Override
-		public HashSet<String> read(JsonReader in) throws IOException {
-			return parseStringArray(in);
-		}
-
-		@Override
-		public void write(JsonWriter out, HashSet<String> value) throws IOException {
-			writeStringArray(out, value);
-		}
 	}
 
 	public static class IntegerSetAdapter extends TypeAdapter<HashSet<Integer>> {
