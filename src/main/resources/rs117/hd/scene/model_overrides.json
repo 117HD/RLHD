@@ -2398,7 +2398,9 @@
       3935,
       3936,
       7110,
-      7111
+      7111,
+      21376,
+      21378
     ],
     "castShadows": false,
     "flatNormals": true
@@ -12842,6 +12844,7 @@
     "description": "Kharidian Sophmena Cactus",
     "baseMaterial": "PLANT_GRUNGE_1",
     "objectIds": [
+      44068,
       44069,
       44070,
       44071,
@@ -12850,7 +12853,12 @@
       44074,
       44075,
       44076,
-      44077
+      44077,
+      44078,
+      44079,
+      44080,
+      44081,
+      44082
     ]
   },
   {
@@ -13168,7 +13176,9 @@
       4847,
       15957,
       15958,
-      15959
+      15959,
+      44212,
+      44213
     ],
     "uvType": "BOX",
     "uvScale": 0.62,
@@ -13342,61 +13352,6 @@
       44173
     ],
     "uvType": "WORLD_XZ"
-  },
-  {
-    "description": "Ruins of Ullek flat normals on walls and other wall objects",
-    "objectIds": [
-      43898,
-      43899,
-      43900,
-      43901,
-      43902,
-      43903,
-      43952,
-      43953,
-      43954,
-      44097,
-      44099,
-      44100,
-      44109,
-      44110,
-      44111,
-      44112,
-      44113,
-      44114,
-      44115,
-      44116,
-      44117
-    ],
-    "flatNormals": true
-  },
-  {
-    "description": "Ruins of Ullek crypt",
-    "objectIds": [
-      43904,
-      43908,
-      43910,
-      43911,
-      43912,
-      43905,
-      43906,
-      43907,
-      43909,
-      43960,
-      43959,
-      43958,
-      43961,
-      43962,
-      43971,
-      43972,
-      43973,
-      43974,
-      43975,
-      43976,
-      43977,
-      43978
-    ],
-    "flatNormals": true
   },
   {
     "description": "Tombs of Amascut invocation board",
@@ -14616,6 +14571,225 @@
     "uvType": "GEOMETRY"
   },
   {
+    "description": "Ruins of Ullek - Walls - Pillars - Floors - Furnace - Well",
+    "baseMaterial": "GRUNGE_3_LIGHT",
+    "objectIds": [
+      43888,
+      44095,
+      44097,
+      44100,
+      44107,
+      44106,
+      44105,
+      44110,
+      44109,
+      44094,
+      44099,
+      44096,
+      44114,
+      44115,
+      44116,
+      44111,
+      44112,
+      44113,
+      44101,
+      44104,
+      44108,
+      43902,
+      43903,
+      43893,
+      43953,
+      44117,
+      43895,
+      43901
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Ruins of Ullek - Ritual Pillar",
+    "baseMaterial": "MARBLE_3",
+    "objectIds": [
+      44130,
+      44131,
+      44132
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Ruins of Ullek - Pillars",
+    "baseMaterial": "MARBLE_2",
+    "objectIds": [
+      43994,
+      43995,
+      43996,
+      43997,
+      43998,
+      43999,
+      43900,
+      43898,
+      43899
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.1
+  },
+  {
+    "description": "Ruins of Ullek - Rubble",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      44000,
+      44001,
+      44002
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Ruins of Ullek - Bushes with rocks",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      44141
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Ruins of Ullek - Wooden Planks",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      44124,
+      44125
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Ruins of Ullek Dungeon - Walls",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      43904,
+      43908,
+      43910,
+      43911,
+      43912,
+      43905,
+      43909,
+      43914,
+      43915,
+      43916,
+      43959,
+      43958,
+      43917,
+      43957,
+      43956,
+      43948,
+      43949,
+      43950,
+      43951
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 650
+  },
+  {
+    "description": "Ruins of Ullek Dungeon - Doors",
+    "baseMaterial": "STONE_NORMALED_DARK",
+    "objectIds": [
+      43906,
+      43907,
+      43960,
+      43961,
+      43962,
+      43963,
+      43964
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 400
+  },
+  {
+    "description": "Ruins of Ullek Dungeon - Void",
+    "baseMaterial": "GRAY_65",
+    "objectIds": [
+      43913
+    ]
+  },
+  {
+    "description": "Ruins of Ullek Dungeon - Statues",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      43938,
+      43939,
+      43940,
+      43941,
+      43945,
+      43946,
+      43947
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Ruins of Ullek Dungeon - Sarcophagus",
+    "baseMaterial": "MARBLE_2",
+    "objectIds": [
+      43927
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Ruins of Ullek Dungeon - Altar",
+    "baseMaterial": "MARBLE_2",
+    "objectIds": [
+      43983
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Ruins of Ullek Dungeon - Urns",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      43919,
+      43920,
+      43921,
+      43922,
+      43923,
+      43924,
+      43925,
+      43926,
+      43980
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Ruins of Ullek Dungeon - Plaque",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      43971,
+      43972,
+      43973,
+      43974,
+      43975,
+      43976,
+      43977,
+      43978
+    ],
+    "uvType": "BOX"
+  },
+  {
+
+    "description": "Maisa's Camp - Fire, Barriers, Spade, Table and Flowers",
+    "baseMaterial": "GRUNGE_3_LIGHT",
+    "objectIds": [
+      44011,
+      44012,
+      44013,
+      44015,
+      44016,
+      44017,
+      44018,
+      44019,
+      44021,
+      43884
+    ],
+    "uvType": "BOX"
+  },
+  {
     "description": "Rocks - Small",
     "baseMaterial": "ROCK_1",
     "objectIds": [
@@ -14645,6 +14819,7 @@
       24143,
       24144,
       24145,
+      43882,
       53252,
       53254
     ],
@@ -20826,9 +21001,10 @@
     "uvType": "MODEL_XZ"
   },
   {
-    "description": "Varlamore Cushions",
+    "description": "Object - Cushions",
     "baseMaterial": "CARPET",
     "objectIds": [
+      44020,
       53012,
       52436,
       52437

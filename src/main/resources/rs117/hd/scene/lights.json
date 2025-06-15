@@ -20662,7 +20662,8 @@
       5499,
       12796,
       3775,
-      49927
+      49927,
+      44021
     ]
   },
   {
@@ -36997,5 +36998,41 @@
     "despawnDelay": 1300,
     "fadeInDuration": 100,
     "fadeOutDuration": 600
+  },
+  {
+    "description": "Ullek Furnace",
+    "offset": [ 0, 80, -180 ],
+    "radius": 450,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      43895
+    ]
+  },
+  {
+    "description": "Ullek Dungeon - Fire Arrow",
+    "offset": [ 0, 80, 0 ],
+    "radius": 350,
+    "strength": 3.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "npcIds": [
+      11559
+    ],
+    "fadeOutDuration": 100,
+    "fadeInDuration": 300
   }
 ]
