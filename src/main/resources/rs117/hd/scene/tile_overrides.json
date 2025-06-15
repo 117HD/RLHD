@@ -5486,7 +5486,7 @@
     "name": "KHARID_GRASSY_SAND",
     "groundMaterial": "SAND",
     "maxLightness": 60,
-    "shiftHue": -3,
+    "shiftHue": -2,
     "minHue": 6,
     "maxSaturation": 3
   },
@@ -5767,11 +5767,11 @@
     ],
     "replacements": {
       "KHARID_GRASSY_SAND":[
-        "s == 3 && 9 <= h && h <= 11",
+        "s == 3 && 9 <= h && h <= 10",
         "s == 4 && 8 <= h && h <= 9"
       ],
       "KHARID_GRASS": [
-        "h > 11",
+        "h >= 11",
         "h > 8 && s > 3"
       ],
       "KHARID_DIRT": [
