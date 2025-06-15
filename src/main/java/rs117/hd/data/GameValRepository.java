@@ -2,6 +2,7 @@ package rs117.hd.data;
 
 import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
+import java.util.Objects;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import rs117.hd.HdPlugin;
@@ -63,6 +64,9 @@ public class GameValRepository {
 	}
 
 	public Integer get(GameValType type, String name) {
+		if (Objects.equals(name, "-1")) { //Not Ideal but we use it as a hack for anims
+			return -1;
+		}
 		return get(type).get(name);
 	}
 
