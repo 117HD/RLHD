@@ -155,6 +155,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public static final int TEXTURE_UNIT_GAME = TEXTURE_UNIT_BASE + 1;
 	public static final int TEXTURE_UNIT_SHADOW_MAP = TEXTURE_UNIT_BASE + 2;
 	public static final int TEXTURE_UNIT_TILE_HEIGHT_MAP = TEXTURE_UNIT_BASE + 3;
+	public static final int TEXTURE_UNIT_SKYBOX = TEXTURE_UNIT_BASE + 4;
 
 	public static final int UNIFORM_BLOCK_CAMERA = 0;
 	public static final int UNIFORM_BLOCK_MATERIALS = 1;
@@ -300,6 +301,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		.add(GL_VERTEX_SHADER, "vertui.glsl")
 		.add(GL_FRAGMENT_SHADER, "fragui.glsl");
 
+	private static final Shader SKYBOX_PROGRAM = new Shader()
+		.add(GL_VERTEX_SHADER, "skybox_vert.glsl")
+		.add(GL_FRAGMENT_SHADER, "skybox_frag.glsl");
+
 	private static final ResourcePath SHADER_PATH = Props
 		.getPathOrDefault("rlhd.shader-path", () -> path(HdPlugin.class))
 		.chroot();
@@ -307,6 +312,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public int glSceneProgram;
 	public int glUiProgram;
 	public int glShadowProgram;
+	public int glSkyboxProgram;
 	public int glModelPassthroughComputeProgram;
 	public int[] glModelSortingComputePrograms = {};
 
@@ -315,6 +321,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	private int vaoUiHandle;
 	private int vboUiHandle;
+
+	private int vaoSkyboxHandle;
+	private int vboSkyboxHandle;
 
 	private int vaoSceneHandle;
 	private int fboSceneHandle;
@@ -409,6 +418,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private int uniColorFilter;
 	private int uniColorFilterPrevious;
 	private int uniColorFilterFade;
+	private int uniSceneSkyboxTexture;
+	private int uniSceneSkyboxProperties;
+	private int uniSceneAABB;
+
 
 	// Shadow program uniforms
 	private int uniShadowLightProjectionMatrix;
@@ -427,6 +440,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private int uniUiAlphaOverlay;
 	private int uniTextureArray;
 	private int uniElapsedTime;
+
+	private int uniSkyboxModelMatrix;
+	private int uniSkyboxProjectionMatrix;
+	private int uniSkyboxProperties;
+	private int uniSkyboxFogColor;
+	private int uniSkyboxTexture;
 
 	private int uniBlockMaterials;
 	private int uniBlockWaterTypes;
@@ -489,6 +508,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private double lastFrameClientTime;
 	private int gameTicksUntilSceneReload = 0;
 	private long colorFilterChangedAt;
+	private int[] sceneMinMaxXY = new int[4];
 
 	@Provides
 	HdPluginConfig provideConfig(ConfigManager configManager) {
@@ -778,6 +798,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		});
 	}
 
+	private void sceneAABBEncapsulatePoint(int x, int y) {
+		sceneMinMaxXY[0] = Math.min(x, sceneMinMaxXY[0]);
+		sceneMinMaxXY[1] = Math.min(y, sceneMinMaxXY[1]);
+		sceneMinMaxXY[2] = Math.max(x, sceneMinMaxXY[2]);
+		sceneMinMaxXY[3] = Math.max(y, sceneMinMaxXY[3]);
+	}
+
 	private String generateFetchCases(String array, int from, int to)
 	{
 		int length = to - from;
@@ -864,6 +891,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		glSceneProgram = PROGRAM.compile(template);
 		glUiProgram = UI_PROGRAM.compile(template);
+		glSkyboxProgram = SKYBOX_PROGRAM.compile(template);
 
 		switch (configShadowMode) {
 			case FAST:
@@ -898,6 +926,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		glUseProgram(glSceneProgram);
 		glUniform1i(uniTextureArray, TEXTURE_UNIT_GAME - TEXTURE_UNIT_BASE);
 		glUniform1i(uniShadowMap, TEXTURE_UNIT_SHADOW_MAP - TEXTURE_UNIT_BASE);
+		glUniform1i(uniSceneSkyboxTexture, TEXTURE_UNIT_SKYBOX - TEXTURE_UNIT_BASE);
 
 		// Bind a VOA, else validation may fail on older Intel-based Macs
 		glBindVertexArray(vaoSceneHandle);
@@ -908,6 +937,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			String err = glGetProgramInfoLog(glSceneProgram);
 			throw new ShaderException(err);
 		}
+
+		glUseProgram(glSkyboxProgram);
+		glUniform1i(uniSkyboxTexture, TEXTURE_UNIT_SKYBOX - TEXTURE_UNIT_BASE);
 
 		glUseProgram(glUiProgram);
 		glUniform1i(uniUiTexture, TEXTURE_UNIT_UI - TEXTURE_UNIT_BASE);
@@ -949,6 +981,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		uniUnderwaterCausticsColor = glGetUniformLocation(glSceneProgram, "underwaterCausticsColor");
 		uniUnderwaterCausticsStrength = glGetUniformLocation(glSceneProgram, "underwaterCausticsStrength");
 		uniCameraPos = glGetUniformLocation(glSceneProgram, "cameraPos");
+		uniSceneSkyboxTexture = glGetUniformLocation(glSceneProgram, "skybox");
+		uniSceneSkyboxProperties = glGetUniformLocation(glSceneProgram, "skyboxProperties");
+		uniSceneAABB = glGetUniformLocation(glSceneProgram, "sceneAABB");
 		uniTextureArray = glGetUniformLocation(glSceneProgram, "textureArray");
 		uniElapsedTime = glGetUniformLocation(glSceneProgram, "elapsedTime");
 
@@ -963,6 +998,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		uniTexSourceDimensions = glGetUniformLocation(glUiProgram, "sourceDimensions");
 		uniUiColorBlindnessIntensity = glGetUniformLocation(glUiProgram, "colorBlindnessIntensity");
 		uniUiAlphaOverlay = glGetUniformLocation(glUiProgram, "alphaOverlay");
+
+		uniSkyboxFogColor = glGetUniformLocation(glSkyboxProgram, "fogColor");
+		uniSkyboxModelMatrix = glGetUniformLocation(glSkyboxProgram, "modelMatrix");
+		uniSkyboxProjectionMatrix = glGetUniformLocation(glSkyboxProgram, "projectionMatrix");
+		uniSkyboxTexture = glGetUniformLocation(glSkyboxProgram, "skybox");
+		uniSkyboxProperties = glGetUniformLocation(glSkyboxProgram, "skyboxProperties");
 
 		uniBlockMaterials = glGetUniformBlockIndex(glSceneProgram, "MaterialUniforms");
 		uniBlockWaterTypes = glGetUniformBlockIndex(glSceneProgram, "WaterTypeUniforms");
@@ -1135,6 +1176,30 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		glEnableVertexAttribArray(1);
 	}
 
+	public void updateSkyboxVerticies(float[] verticies) {
+		if(vaoSkyboxHandle == 0) {
+			vaoSkyboxHandle = glGenVertexArrays();
+		}
+
+		if(vboSkyboxHandle == 0) {
+			vboSkyboxHandle = glGenBuffers();
+		}
+
+		FloatBuffer vboSkyboxData = BufferUtils.createFloatBuffer(verticies.length)
+			.put(verticies)
+			.flip();
+
+		glBindVertexArray(vaoSkyboxHandle);
+		glBindBuffer(GL_ARRAY_BUFFER, vboSkyboxHandle);
+		glBufferData(GL_ARRAY_BUFFER, vboSkyboxData, GL_STATIC_DRAW);
+
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, false, 3 * Float.BYTES, 0);
+
+		glBindVertexArray(0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+	}
+
 	private void updateSceneVao(GLBuffer vertexBuffer, GLBuffer uvBuffer, GLBuffer normalBuffer) {
 		glBindVertexArray(vaoSceneHandle);
 
@@ -1167,6 +1232,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (vaoUiHandle != 0)
 			glDeleteVertexArrays(vaoUiHandle);
 		vaoUiHandle = 0;
+
+		if(vboSkyboxHandle != 0)
+			glDeleteBuffers(vboSkyboxHandle);
+		vboSkyboxHandle = 0;
+
+		if(vaoSkyboxHandle != 0)
+			glDeleteVertexArrays(vaoSkyboxHandle);
+		vaoSkyboxHandle = 0;
 	}
 
 	private void initBuffers() {
@@ -1505,6 +1578,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		boolean updateUniforms = true;
 
+		sceneMinMaxXY[0] = Integer.MAX_VALUE;
+		sceneMinMaxXY[1] = Integer.MAX_VALUE;
+		sceneMinMaxXY[2] = Integer.MIN_VALUE;
+		sceneMinMaxXY[3] = Integer.MIN_VALUE;
+
 		if (sceneContext.enableAreaHiding) {
 			var lp = client.getLocalPlayer().getLocalLocation();
 			int[] worldPos = {
@@ -1767,6 +1845,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		int vertexCount = paint.getBufferLen();
 
+		final int localX = tileX * LOCAL_TILE_SIZE;
+		final int localZ = tileY * LOCAL_TILE_SIZE;
+
+		sceneAABBEncapsulatePoint(localX, localZ);
+		sceneAABBEncapsulatePoint(localX + LOCAL_TILE_SIZE, localZ + LOCAL_TILE_SIZE);
+
 		++numPassthroughModels;
 		modelPassthroughBuffer
 			.ensureCapacity(16)
@@ -1776,9 +1860,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.put(vertexCount / 3)
 			.put(renderBufferOffset)
 			.put(0)
-			.put(tileX * LOCAL_TILE_SIZE)
+			.put(localX)
 			.put(0)
-			.put(tileY * LOCAL_TILE_SIZE);
+			.put(localZ);
 
 		renderBufferOffset += vertexCount;
 	}
@@ -1806,6 +1890,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		final int localX = tileX * LOCAL_TILE_SIZE;
 		final int localY = 0;
 		final int localZ = tileY * LOCAL_TILE_SIZE;
+
+		sceneAABBEncapsulatePoint(localX, localZ);
+		sceneAABBEncapsulatePoint(localX + LOCAL_TILE_SIZE, localZ + LOCAL_TILE_SIZE);
 
 		GpuIntBuffer b = modelPassthroughBuffer;
 		b.ensureCapacity(16);
@@ -2043,7 +2130,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				frameTimer.end(Timer.RENDER_SHADOWS);
 			}
 
-			glUseProgram(glSceneProgram);
 
 			final AntiAliasingMode antiAliasingMode = config.antiAliasingMode();
 			final Dimension stretchedDimensions = client.getStretchedDimensions();
@@ -2069,7 +2155,60 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				}
 			}
 
+			// Calculate projection matrix
+			float[] projectionMatrix = Mat4.scale(client.getScale(), client.getScale(), 1);
+			if (orthographicProjection) {
+				Mat4.mul(projectionMatrix, Mat4.scale(ORTHOGRAPHIC_ZOOM, ORTHOGRAPHIC_ZOOM, -1));
+				Mat4.mul(projectionMatrix, Mat4.orthographic(viewportWidth, viewportHeight, 40000));
+			} else {
+				Mat4.mul(projectionMatrix, Mat4.perspective(viewportWidth, viewportHeight, NEAR_PLANE));
+			}
+			Mat4.mul(projectionMatrix, Mat4.rotateX(cameraOrientation[1]));
+			Mat4.mul(projectionMatrix, Mat4.rotateY(cameraOrientation[0]));
+			Mat4.mul(projectionMatrix, Mat4.translate(
+				-cameraPosition[0],
+				-cameraPosition[1],
+				-cameraPosition[2]
+			));
+
 			float[] fogColor = ColorUtils.linearToSrgb(environmentManager.currentFogColor);
+
+			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fboSceneHandle);
+			glViewport(dpiViewport[0], dpiViewport[1], dpiViewport[2], dpiViewport[3]);
+
+			// Clear scene
+			frameTimer.begin(Timer.CLEAR_SCENE);
+			glClearDepthf(0);
+			glClearColor(fogColor[0], fogColor[1], fogColor[2], 1f);
+
+			// Draw Skybox
+			float[] skyboxProperties = environmentManager.getSkyboxProperties();
+			if(config.renderSkybox() && textureManager.getSkyboxCount() > 0 && vaoSkyboxHandle != 0 && (skyboxProperties[0] >= 0.0 || skyboxProperties[2] >= 0.0)) {
+				glClear(GL_DEPTH_BUFFER_BIT);
+				glToggle(GL_MULTISAMPLE, false);
+
+				glUseProgram(glSkyboxProgram);
+				glDepthMask(false);
+
+				glUniform4fv(uniSkyboxProperties, skyboxProperties);
+				glUniform3fv(uniSkyboxFogColor, fogColor);
+				glUniformMatrix4fv(uniSkyboxModelMatrix, false, Mat4.translate(cameraPosition[0], cameraPosition[1], cameraPosition[2]));
+				glUniformMatrix4fv(uniSkyboxProjectionMatrix, false, projectionMatrix);
+				glBindVertexArray(vaoSkyboxHandle);
+
+				glDrawArrays(GL_TRIANGLES, 0, 36);
+			} else {
+				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			}
+
+			glDepthMask(true);
+			glToggle(GL_MULTISAMPLE, numSamples > 1);
+
+			frameTimer.end(Timer.CLEAR_SCENE);
+
+
+			glUseProgram(glSceneProgram);
+
 			float fogDepth = 0;
 			switch (config.fogDepthMode()) {
 				case USER_DEFINED:
@@ -2087,6 +2226,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			glUniform1f(uniDrawDistance, getDrawDistance());
 			glUniform1i(uniExpandedMapLoadingChunks, sceneContext.expandedMapLoadingChunks);
 			glUniform1f(uniColorBlindnessIntensity, config.colorBlindnessIntensity() / 100.f);
+			glUniform4iv(uniSceneAABB, sceneMinMaxXY);
 
 			float[] waterColorHsv = ColorUtils.srgbToHsv(environmentManager.currentWaterColor);
 			float lightBrightnessMultiplier = 0.8f;
@@ -2136,6 +2276,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			glUniform1f(uniUnderwaterCausticsStrength, environmentManager.currentUnderwaterCausticsStrength);
 			glUniform1f(uniElapsedTime, (float) (elapsedTime % MAX_FLOAT_WITH_128TH_PRECISION));
 			glUniform3fv(uniCameraPos, cameraPosition);
+			glUniform4fv(uniSceneSkyboxProperties, skyboxProperties);
 
 			// Extract the 3rd column from the light view matrix (the float array is column-major).
 			// This produces the light's direction vector in world space, which we negate in order to
@@ -2155,22 +2296,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				long timeSinceChange = System.currentTimeMillis() - colorFilterChangedAt;
 				glUniform1f(uniColorFilterFade, clamp(timeSinceChange / COLOR_FILTER_FADE_DURATION, 0, 1));
 			}
-
-			// Calculate projection matrix
-			float[] projectionMatrix = Mat4.scale(client.getScale(), client.getScale(), 1);
-			if (orthographicProjection) {
-				Mat4.mul(projectionMatrix, Mat4.scale(ORTHOGRAPHIC_ZOOM, ORTHOGRAPHIC_ZOOM, -1));
-				Mat4.mul(projectionMatrix, Mat4.orthographic(viewportWidth, viewportHeight, 40000));
-			} else {
-				Mat4.mul(projectionMatrix, Mat4.perspective(viewportWidth, viewportHeight, NEAR_PLANE));
-			}
-			Mat4.mul(projectionMatrix, Mat4.rotateX(cameraOrientation[1]));
-			Mat4.mul(projectionMatrix, Mat4.rotateY(cameraOrientation[0]));
-			Mat4.mul(projectionMatrix, Mat4.translate(
-				-cameraPosition[0],
-				-cameraPosition[1],
-				-cameraPosition[2]
-			));
 			glUniformMatrix4fv(uniProjectionMatrix, false, projectionMatrix);
 
 			// Bind directional light projection matrix
@@ -2180,17 +2305,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			glUniformBlockBinding(glSceneProgram, uniBlockMaterials, UNIFORM_BLOCK_MATERIALS);
 			glUniformBlockBinding(glSceneProgram, uniBlockWaterTypes, UNIFORM_BLOCK_WATER_TYPES);
 			glUniformBlockBinding(glSceneProgram, uniBlockPointLights, UNIFORM_BLOCK_LIGHTS);
-
-			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fboSceneHandle);
-			glToggle(GL_MULTISAMPLE, numSamples > 1);
-			glViewport(dpiViewport[0], dpiViewport[1], dpiViewport[2], dpiViewport[3]);
-
-			// Clear scene
-			frameTimer.begin(Timer.CLEAR_SCENE);
-			glClearColor(fogColor[0], fogColor[1], fogColor[2], 1f);
-			glClearDepthf(0);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			frameTimer.end(Timer.CLEAR_SCENE);
 
 			frameTimer.begin(Timer.RENDER_SCENE);
 
