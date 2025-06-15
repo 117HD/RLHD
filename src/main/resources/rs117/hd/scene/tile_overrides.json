@@ -5541,8 +5541,10 @@
     "replacements": {
       "KHARID_DIRT": [
         "h == 7 && s > 3 && s < 8",
-        "h == 8 && s == 5 || s == 6",
         "h == 9 && s == 5"
+      ],
+      "KHARID_GRASSY_SAND": [
+        "h == 8 && s == 5 || s == 6"
       ]
     }
 
