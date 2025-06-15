@@ -120,7 +120,6 @@ public class LightManager {
 	private EntityHiderConfig entityHiderConfig;
 	private int currentPlane;
 
-
 	public void loadConfig(Gson gson, ResourcePath path) {
 		try {
 			LightDefinition[] lights;
@@ -239,14 +238,14 @@ public class LightManager {
 
 			if (light.tileObject != null) {
 				if (!light.markedForRemoval && light.animationSpecific && light.tileObject instanceof GameObject) {
-					int animationConfigName = -1;
+					int animationId = -1;
 					var renderable = ((GameObject) light.tileObject).getRenderable();
 					if (renderable instanceof DynamicObject) {
 						var anim = ((DynamicObject) renderable).getAnimation();
 						if (anim != null)
-							animationConfigName = anim.getId();
+							animationId = anim.getId();
 					}
-					parentExists = light.def.animationIds.contains(animationConfigName);
+					parentExists = light.def.animationIds.contains(animationId);
 				}
 			} else if (light.projectile != null) {
 				light.origin[0] = (int) light.projectile.getX();
