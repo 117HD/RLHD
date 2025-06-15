@@ -5570,7 +5570,8 @@
       68,
       69,
       126,
-      129
+      129,
+      138
     ],
     "groundMaterial": "SAND",
     "minHue": 6,
@@ -5579,8 +5580,7 @@
     "maxSaturation": 3,
     "replacements": {
       "KHARID_DIRT": [
-        "h == 7 && s > 3 && s < 8",
-        "h == 9 && s == 5"
+        "h == 7 && s > 3 && s < 8"
       ],
       "KHARID_GRASSY_SAND": [
         "h == 8 && s == 5 || s == 6"
@@ -5668,7 +5668,8 @@
       68,
       69,
       126,
-      129
+      129,
+      138
     ],
     "groundMaterial": "SAND",
     "minHue": 6,
