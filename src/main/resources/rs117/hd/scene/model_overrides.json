@@ -2398,7 +2398,9 @@
       "REGICIDE_BLUE_GRASS2",
       "REGICIDE_BLUE_GRASS3",
       "FAI_VARROCK_DRAINS1",
-      "FAI_VARROCK_DRAINS2"
+      "FAI_VARROCK_DRAINS2",
+      "FRIS_LONG_GRASS_1",
+      "FRIS_LONG_GRASS_3"
     ],
     "castShadows": false,
     "flatNormals": true
@@ -12843,6 +12845,7 @@
     "description": "Kharidian Sophmena Cactus",
     "baseMaterial": "PLANT_GRUNGE_1",
     "objectIds": [
+      "PLANT_CACTUS_01",
       "PLANT_CACTUS_02",
       "PLANT_CACTUS_03",
       "PLANT_CACTUS_04",
@@ -12851,7 +12854,12 @@
       "PLANT_CACTUS_07",
       "PLANT_CACTUS_08",
       "PLANT_CACTUS_09",
-      "PLANT_CACTUS_10"
+      "PLANT_CACTUS_10",
+      "PLANT_CACTUS_11",
+      "PLANT_CACTUS_12",
+      "PLANT_CACTUS_13",
+      "PLANT_CACTUS_14",
+      "PLANT_CACTUS_15"
     ]
   },
   {
@@ -13169,7 +13177,9 @@
       "MM_BAMBOO_TREE_UPPERMID",
       "BREW_BAMBOO_TREE_BASE",
       "BREW_BAMBOO_TREE_MID",
-      "BREW_BAMBOO_TREE_UPPERMID"
+      "BREW_BAMBOO_TREE_UPPERMID",
+      "TREE_PALM01_CLUSTER01",
+      "TREE_PALM01_CLUSTER02"
     ],
     "uvType": "BOX",
     "uvScale": 0.62,
@@ -13343,61 +13353,6 @@
       "CLIFF_SAND01_FLAT03"
     ],
     "uvType": "WORLD_XZ"
-  },
-  {
-    "description": "Ruins of Ullek flat normals on walls and other wall objects",
-    "objectIds": [
-      "BCS_PILLAR_OP",
-      "BCS_PILLAR_NOOP",
-      "BCS_PILLAR_EMBLEM_OP",
-      "BCS_PILLAR_EMBLEM_NOOP",
-      "BCS_WELL_NOOP",
-      "BCS_WELL_OP",
-      "BCS_TOMB_ENTRANCE_CLOSED_NOOP",
-      "BCS_TOMB_ENTRANCE_CLOSED",
-      "BCS_TOMB_ENTRANCE_OPEN",
-      "CLIFF_DESERT_ROCK01",
-      "CLIFF_DESERT_ROCK02",
-      "CLIFF_DESERT_ROCK03",
-      "OUTCROP_DESERT_ROCK2X2",
-      "OUTCROP_DESERT_ROCK2X202",
-      "STAIRS_DESERT_ROCK01",
-      "STAIRS_DESERT_ROCK02",
-      "STAIRS_DESERT_ROCK03",
-      "CLIFF_DESERT_HOUSE01",
-      "CLIFF_DESERT_HOUSE02",
-      "CLIFF_DESERT_HOUSE03",
-      "CLIFF_DESERT_ROCK_DECORATIVE01"
-    ],
-    "flatNormals": true
-  },
-  {
-    "description": "Ruins of Ullek crypt",
-    "objectIds": [
-      "BCS_TOMB_WALL01",
-      "BCS_TOMB_WALL_ALCOVE",
-      "BCS_TOMB_WALL_HOLE_OPEN",
-      "BCS_TOMB_WALL_DOOR_CONNECTOR",
-      "BCS_TOMB_WALL_DOOR_CONNECTOR_MIRROR",
-      "BCS_TOMB_WALL02",
-      "BCS_TOMB_WALL03",
-      "BCS_TOMB_WALL03_MIRROR",
-      "BCS_TOMB_WALL_HOLE_CLOSED",
-      "BCS_TOMB_DOOR_UPPER_OUTER",
-      "BCS_TOMB_STAIRS_TOP_MIRROR",
-      "BCS_TOMB_STAIRS_TOP",
-      "BCS_TOMB_DOOR_LOWER_OUTER",
-      "BCS_TOMB_DOOR_LOWER_INNER",
-      "BCS_RIDDLE_PLAQUE_OP",
-      "BCS_RIDDLE_PLAQUE_NOOP",
-      "BCS_EMBLEM_PLAQUE_OP",
-      "BCS_EMBLEM_PLAQUE_NOOP",
-      "BCS_HET_PLAQUE",
-      "BCS_APMEKEN_PLAQUE",
-      "BCS_CRONDIS_PLAQUE",
-      "BCS_SCABARAS_PLAQUE"
-    ],
-    "flatNormals": true
   },
   {
     "description": "Tombs of Amascut invocation board",
@@ -14617,6 +14572,225 @@
     "uvType": "GEOMETRY"
   },
   {
+    "description": "Ruins of Ullek - Walls - Pillars - Floors - Furnace - Well",
+    "baseMaterial": "GRUNGE_3_LIGHT",
+    "objectIds": [
+      "BCS_MAISA_CAMP_TENT_NOOP",
+      "CLIFF_DESERT_WALLTOP",
+      "CLIFF_DESERT_ROCK01",
+      "CLIFF_DESERT_ROCK03",
+      "OUTCROP_DESERT_ROCK1X103",
+      "OUTCROP_DESERT_ROCK1X102",
+      "OUTCROP_DESERT_ROCK1X1",
+      "OUTCROP_DESERT_ROCK2X202",
+      "OUTCROP_DESERT_ROCK2X2",
+      "CLIFF_DESERT_ROCK01_NOTES",
+      "CLIFF_DESERT_ROCK02",
+      "CLIFF_DESERT_WALLTOP02",
+      "CLIFF_DESERT_HOUSE01",
+      "CLIFF_DESERT_HOUSE02",
+      "CLIFF_DESERT_HOUSE03",
+      "STAIRS_DESERT_ROCK01",
+      "STAIRS_DESERT_ROCK02",
+      "STAIRS_DESERT_ROCK03",
+      "CLIFF_DESERT_ROCK04",
+      "CLIFF_DESERT_ROCK04_ROOF",
+      "OUTCROP_DESERT_ROCK1X104",
+      "BCS_WELL_NOOP",
+      "BCS_WELL_OP",
+      "BCS_FURNACE_UNLIT_REFUEL",
+      "BCS_TOMB_ENTRANCE_CLOSED",
+      "CLIFF_DESERT_ROCK_DECORATIVE01",
+      "BCS_FURNACE_LIT",
+      "BCS_PILLAR_EMBLEM_NOOP"
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Ruins of Ullek - Ritual Pillar",
+    "baseMaterial": "MARBLE_3",
+    "objectIds": [
+      "PILLAR_SWAMP_DESERT02",
+      "PILLAR_SWAMP_DESERT03",
+      "PILLAR_SWAMP_DESERT04"
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Ruins of Ullek - Pillars",
+    "baseMaterial": "MARBLE_2",
+    "objectIds": [
+      "BCS_ULLEK_PILLAR02",
+      "BCS_ULLEK_PILLAR03",
+      "BCS_ULLEK_PILLAR04",
+      "BCS_ULLEK_PILLAR05",
+      "BCS_ULLEK_PILLAR_FALLEN01",
+      "BCS_ULLEK_PILLAR_FALLEN02",
+      "BCS_PILLAR_EMBLEM_OP",
+      "BCS_PILLAR_OP",
+      "BCS_PILLAR_NOOP"
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.1
+  },
+  {
+    "description": "Ruins of Ullek - Rubble",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      "BCS_ULLEK_RUBBLE01",
+      "BCS_ULLEK_RUBBLE02",
+      "BCS_ULLEK_RUBBLE03"
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Ruins of Ullek - Bushes with rocks",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "PLANT_ROCKS_SWAMP01"
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Ruins of Ullek - Wooden Planks",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      "PLANK_WOOD01_LAYED01",
+      "PLANK_WOOD01_LAYED02"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Ruins of Ullek Dungeon - Walls",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      "BCS_TOMB_WALL01",
+      "BCS_TOMB_WALL_ALCOVE",
+      "BCS_TOMB_WALL_HOLE_OPEN",
+      "BCS_TOMB_WALL_DOOR_CONNECTOR",
+      "BCS_TOMB_WALL_DOOR_CONNECTOR_MIRROR",
+      "BCS_TOMB_WALL02",
+      "BCS_TOMB_WALL_HOLE_CLOSED",
+      "BCS_TOMB_WALLTOP02",
+      "BCS_TOMB_WALLTOP03",
+      "BCS_TOMB_WALLTOP04",
+      "BCS_TOMB_STAIRS_TOP_MIRROR",
+      "BCS_TOMB_STAIRS_TOP",
+      "BCS_TOMB_WALLTOP05",
+      "BCS_TOMB_STAIRS_MIRROR",
+      "BCS_TOMB_STAIRS",
+      "BCS_ARROW_TRAP",
+      "BCS_ARROW_TRAP_CORNER_DOUBLE",
+      "BCS_ARROW_TRAP_CORNER01",
+      "BCS_ARROW_TRAP_CORNER02"
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 650
+  },
+  {
+    "description": "Ruins of Ullek Dungeon - Doors",
+    "baseMaterial": "STONE_NORMALED_DARK",
+    "objectIds": [
+      "BCS_TOMB_WALL03",
+      "BCS_TOMB_WALL03_MIRROR",
+      "BCS_TOMB_DOOR_UPPER_OUTER",
+      "BCS_TOMB_DOOR_LOWER_OUTER",
+      "BCS_TOMB_DOOR_LOWER_INNER",
+      "BCS_TOMB_DOOR_NORMAL",
+      "BCS_TOMB_DOOR_OPEN"
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 400
+  },
+  {
+    "description": "Ruins of Ullek Dungeon - Void",
+    "baseMaterial": "GRAY_65",
+    "objectIds": [
+      "BCS_TOMB_WALLTOP"
+    ]
+  },
+  {
+    "description": "Ruins of Ullek Dungeon - Statues",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      "BCS_SCABARAS_STATUE",
+      "BCS_SCABARAS_STATUE02",
+      "BCS_SCABARAS_STATUE03",
+      "BCS_SCABARAS_STATUE04",
+      "BCS_STATUE_RUBBLE04",
+      "BCS_STATUE_RUBBLE05",
+      "BCS_STATUE_RUBBLE06"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Ruins of Ullek Dungeon - Sarcophagus",
+    "baseMaterial": "MARBLE_2",
+    "objectIds": [
+      "BCS_SARGOPHAGUS"
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Ruins of Ullek Dungeon - Altar",
+    "baseMaterial": "MARBLE_2",
+    "objectIds": [
+      "BCS_TOMB_ALTAR_OP"
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Ruins of Ullek Dungeon - Urns",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "BCS_URN_NOOP01",
+      "BCS_URN_NOOP02",
+      "BCS_URN_NOOP03",
+      "BCS_URN_NOOP04",
+      "BCS_URN_NOOP05",
+      "BCS_URN_NOOP06",
+      "BCS_URN_NOOP07",
+      "BCS_URN_NOOP08",
+      "BCS_TOMB_URN_NOOP"
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Ruins of Ullek Dungeon - Plaque",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      "BCS_RIDDLE_PLAQUE_OP",
+      "BCS_RIDDLE_PLAQUE_NOOP",
+      "BCS_EMBLEM_PLAQUE_OP",
+      "BCS_EMBLEM_PLAQUE_NOOP",
+      "BCS_HET_PLAQUE",
+      "BCS_APMEKEN_PLAQUE",
+      "BCS_CRONDIS_PLAQUE",
+      "BCS_SCABARAS_PLAQUE"
+    ],
+    "uvType": "BOX"
+  },
+  {
+
+    "description": "Maisa's Camp - Fire, Barriers, Spade, Table and Flowers",
+    "baseMaterial": "GRUNGE_3_LIGHT",
+    "objectIds": [
+      "BCS_MAISA_CAMP_BARRIER_LONG",
+      "BCS_MAISA_CAMP_BARRIER_SHORT",
+      "PLANT_DESERT_MAISA_01",
+      "PLANT_DESERT_MAISA_03",
+      "PLANT_DESERT_MAISA_04",
+      "PLANT_DESERT_MAISA_05",
+      "PLANT_DESERT_MAISA_06",
+      "BCS_MAISA_CAMP_TABLE",
+      "BCS_MAISA_CAMP_FIRE",
+      "BCS_SPADE"
+    ],
+    "uvType": "BOX"
+  },
+  {
     "description": "Rocks - Small",
     "baseMaterial": "ROCK_1",
     "objectIds": [
@@ -14646,6 +14820,7 @@
       "FAI_ROCK_SMALL_01",
       "FAI_ROCK_SMALL_02",
       "FAI_ROCK_SMALL_03",
+      "BCS_ROCKS_PICKAXE",
       "DAGANNOTH_WATERBIRTH_ROCK_CLIMB_AGILITY_SHORTCUT_BOTTOM",
       "DAGANNOTH_WATERBIRTH_ROCK_CLIMB_AGILITY_SHORTCUT_TOP"
     ],
@@ -20827,9 +21002,10 @@
     "uvType": "MODEL_XZ"
   },
   {
-    "description": "Varlamore Cushions",
+    "description": "Object - Cushions",
     "baseMaterial": "CARPET",
     "objectIds": [
+      "BCS_MAISA_CAMP_CUSHION",
       "AFL_CATBED_NOOP",
       "PILLOW_VARLAMORE01_DEFAULT01",
       "PILLOW_VARLAMORE01_STACK01"

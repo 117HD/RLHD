@@ -20662,7 +20662,8 @@
       "FAVOUR_CAMPFIRE",
       "BURGH_VILLAGE_FIRE",
       "TROLL_EADGAR_COOKING_POT",
-      "FORESTRY_FIRE"
+      "FORESTRY_FIRE",
+      "BCS_MAISA_CAMP_FIRE"
     ]
   },
   {
@@ -36998,5 +36999,41 @@
     "despawnDelay": 1300,
     "fadeInDuration": 100,
     "fadeOutDuration": 600
+  },
+  {
+    "description": "Ullek Furnace",
+    "offset": [ 0, 80, -180 ],
+    "radius": 450,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "BCS_FURNACE_LIT"
+    ]
+  },
+  {
+    "description": "Ullek Dungeon - Fire Arrow",
+    "offset": [ 0, 80, 0 ],
+    "radius": 350,
+    "strength": 3.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "npcIds": [
+      "BCS_BOLT_NPC"
+    ],
+    "fadeOutDuration": 100,
+    "fadeInDuration": 300
   }
 ]
