@@ -5838,6 +5838,7 @@
     "groundMaterial": "SANDY_DIRT_2",
     "uvOrientation": 42,
     "underlayIds": [
+      121,
       124,
       125
     ],
