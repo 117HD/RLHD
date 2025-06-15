@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.config.SeasonalTheme;
 import rs117.hd.config.VanillaShadowMode;
+import rs117.hd.data.GameVals;
 import rs117.hd.data.materials.Material;
 import rs117.hd.data.materials.UvType;
 import rs117.hd.scene.areas.AABB;
@@ -31,7 +32,7 @@ public class ModelOverride
 {
 	public static final ModelOverride NONE = new ModelOverride(true);
 
-	private static final Set<String> EMPTY = new HashSet<>();
+	private static final Set<Integer> EMPTY = new HashSet<>();
 
 	public String description = "UNKNOWN";
 
@@ -39,10 +40,14 @@ public class ModelOverride
 	public SeasonalTheme seasonalTheme;
 	@JsonAdapter(AABB.JsonAdapter.class)
 	public AABB[] areas = {};
-	public Set<String> npcIds = EMPTY;
-	public Set<String> objectIds = EMPTY;
-	public Set<String> projectileIds = EMPTY;
-	public Set<String> graphicsObjectIds = EMPTY;
+	@JsonAdapter(GameVals.GameValNpc.class)
+	public Set<Integer> npcIds = EMPTY;
+	@JsonAdapter(GameVals.GameValObject.class)
+	public Set<Integer> objectIds = EMPTY;
+	@JsonAdapter(GameVals.GameValProjectile.class)
+	public Set<Integer> projectileIds = EMPTY;
+	@JsonAdapter(GameVals.GameValSpotAnim.class)
+	public Set<Integer> graphicsObjectIds = EMPTY;
 
 	public Material baseMaterial = Material.NONE;
 	public Material textureMaterial = Material.NONE;

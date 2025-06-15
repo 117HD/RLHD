@@ -1,8 +1,8 @@
 package rs117.hd.scene;
 
+import com.google.common.collect.Sets;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -12,7 +12,6 @@ import net.runelite.api.events.*;
 import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import rs117.hd.HdPluginConfig;
-import rs117.hd.data.GameVals;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 import rs117.hd.scene.model_overrides.ModelOverride;
@@ -30,7 +29,7 @@ public class FishingSpotReplacer {
 	private static final Set<Integer> FISHING_SPOT_IDS = Set.of(394, 635, 1506, 1507, 1508, 1509, 1510, 1511, 1512, 1513, 1514, 1515, 1516, 1517, 1518, 1519, 1520, 1521, 1522, 1523, 1524, 1525, 1526, 1527, 1528, 1529, 1530, 1531, 1532, 1533, 1534, 1535, 1536, 1542, 1544, 2146, 2653, 2654, 2655, 3317, 3417, 3418, 3419, 3657, 3913, 3914, 3915, 4079, 4080, 4081, 4082, 4316, 4476, 4477, 4710, 4711, 4712, 4713, 4714, 5233, 5234, 5820, 5821, 6731, 6825, 7155, 7199, 7200, 7323, 7459, 7460, 7461, 7462, 7463, 7464, 7465, 7466, 7467, 7468, 7469, 7470, 7946, 7947, 8524, 8525, 8526, 8527, 9171, 9172, 9173, 9174, 9478, 12267);
 	private static final Set<Integer> LAVA_FISHING_SPOT_IDS = Set.of(4928);
 	// @formatter:on
-	private static final Set<String> NPC_IDS = new HashSet<>();
+	private static final Set<Integer> NPC_IDS = Sets.union(FISHING_SPOT_IDS, LAVA_FISHING_SPOT_IDS).immutableCopy();
 
 	@Inject
 	private Client client;
@@ -47,9 +46,6 @@ public class FishingSpotReplacer {
 	@Inject
 	private FrameTimer frameTimer;
 
-	@Inject
-	private GameVals gameVals;
-
 	private final Map<Integer, RuneLiteObject> npcIndexToModel = new HashMap<>();
 	private Animation fishingSpotAnimation;
 	private Animation lavaFishingSpotAnimation;
@@ -58,8 +54,6 @@ public class FishingSpotReplacer {
 		eventBus.register(this);
 		fishingSpotAnimation = client.loadAnimation(FISHING_SPOT_ANIMATION_ID);
 		lavaFishingSpotAnimation = client.loadAnimation(LAVA_SPOT_ANIMATION_ID);
-		FISHING_SPOT_IDS.forEach(id -> NPC_IDS.add(gameVals.getNpcConfigName(id)));
-		LAVA_FISHING_SPOT_IDS.forEach(id -> NPC_IDS.add(gameVals.getNpcConfigName(id)));
 	}
 
 	public void shutDown() {

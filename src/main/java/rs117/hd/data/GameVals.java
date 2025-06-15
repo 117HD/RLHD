@@ -1,10 +1,7 @@
 package rs117.hd.data;
 
 import com.google.gson.reflect.TypeToken;
-import java.util.ArrayList;
-import java.util.Arrays;
 import lombok.extern.slf4j.Slf4j;
-import net.runelite.api.*;
 import rs117.hd.HdPlugin;
 
 import javax.inject.Inject;
@@ -17,16 +14,17 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import rs117.hd.scene.AreaManager;
-import rs117.hd.scene.areas.Area;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
+import rs117.hd.utils.GameValTypeAdapter;
 
 import static rs117.hd.utils.ResourcePath.path;
 
 @Slf4j
 @Singleton
 public class GameVals {
+
+	public static GameVals INSTANCE;
 
 	private static final ResourcePath GAME_VAL_PATH = Props.getPathOrDefault(
 		"rlhd.gameval-path",
@@ -42,7 +40,7 @@ public class GameVals {
 	@Inject
 	private HdPlugin plugin;
 
-	private final Map<String, Map<String, Integer>> values = new HashMap<>();
+	public final Map<String, Map<String, Integer>> values = new HashMap<>();
 
 	public void startUp() throws IOException {
 		long startTime = System.nanoTime();
@@ -65,6 +63,7 @@ public class GameVals {
 
 		long durationMs = (System.nanoTime() - startTime) / 1_000_000;
 		log.info("Loaded gamevals.json in {} ms", durationMs);
+		INSTANCE = this;
 	}
 
 	public Map<String, Integer> getAll(String typeKey) {
@@ -72,7 +71,10 @@ public class GameVals {
 	}
 
 	public Integer get(String typeKey, String name) {
-		return Objects.equals(name, "-1") ? -1 : getAll(typeKey).get(name);
+		if (Objects.equals(name, "-1")) {
+			return -1;
+		}
+		return getAll(typeKey).get(name);
 	}
 
 	public String getName(String typeKey, Integer id) {
@@ -101,8 +103,21 @@ public class GameVals {
 		return get(SPOTANIM_KEY, name);
 	}
 
+	public String get(String key,int id) {
+		return getName(key, id);
+	}
+
 	public String getNpcConfigName(int id) {
 		return getName(NPC_KEY, id);
 	}
 
+	public String getAnimConfigName(int id) {
+		return getName(ANIM_KEY, id);
+	}
+
+	public static class GameValObject extends GameValTypeAdapter { public GameValObject() { super("objects"); } }
+	public static class GameValNpc extends GameValTypeAdapter { public GameValNpc() { super("npcs"); } }
+	public static class GameValAnimation extends GameValTypeAdapter { public GameValAnimation() { super("anims"); } }
+	public static class GameValProjectile extends GameValTypeAdapter { public GameValProjectile() { super("spotanim"); } }
+	public static class GameValSpotAnim extends GameValTypeAdapter { public GameValSpotAnim() { super("spotanim"); } }
 }

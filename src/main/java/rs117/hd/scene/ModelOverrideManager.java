@@ -111,14 +111,14 @@ public class ModelOverrideManager {
 		if (override == null || override.seasonalTheme != null && override.seasonalTheme != plugin.configSeasonalTheme)
 			return;
 
-		for (String configName : override.npcIds)
-			addEntry(ModelHash.TYPE_NPC, gameVals.getNpc(configName), override);
-		for (String configName : override.objectIds)
-			addEntry(ModelHash.TYPE_OBJECT, gameVals.getObject(configName), override);
-		for (String configName : override.projectileIds)
-			addEntry(ModelHash.TYPE_PROJECTILE, gameVals.getSpotanim(configName), override);
-		for (String configName : override.graphicsObjectIds)
-			addEntry(ModelHash.TYPE_GRAPHICS_OBJECT, gameVals.getSpotanim(configName), override);
+		for (int id : override.npcIds)
+			addEntry(ModelHash.TYPE_NPC, id, override);
+		for (int id : override.objectIds)
+			addEntry(ModelHash.TYPE_OBJECT, id, override);
+		for (int id : override.projectileIds)
+			addEntry(ModelHash.TYPE_PROJECTILE, id, override);
+		for (int id : override.graphicsObjectIds)
+			addEntry(ModelHash.TYPE_GRAPHICS_OBJECT, id, override);
 	}
 
 	private void addEntry(int type, int id, ModelOverride entry) {
