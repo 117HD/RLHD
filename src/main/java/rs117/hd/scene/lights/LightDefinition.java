@@ -42,8 +42,8 @@ public class LightDefinition {
 	public HashSet<Integer> objectIds = new HashSet<>();
 	@JsonAdapter(GameVals.GameValProjectile.class)
 	public HashSet<Integer> projectileIds = new HashSet<>();
-	@SerializedName("graphicsObjectIds")
 	@JsonAdapter(GameVals.GameValSpotAnim.class)
+	@SerializedName("graphicsObjectIds") // TODO: rename this
 	public HashSet<Integer> spotAnimIds = new HashSet<>();
 	@JsonAdapter(GameVals.GameValAnimation.class)
 	public HashSet<Integer> animationIds = new HashSet<>();
