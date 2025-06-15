@@ -1,5 +1,5 @@
-import groovy.json.JsonOutput
-import java.lang.reflect.Modifier
+/*import groovy.json.JsonOutput
+import java.lang.reflect.Modifier*/
 
 plugins {
 	id 'java'
@@ -39,7 +39,7 @@ tasks.withType(JavaCompile).configureEach {
 	options.encoding = 'UTF-8'
 }
 
-task exportConstantsToJson {
+/*task exportConstantsToJson {
 	doLast {
 		def startTime = System.nanoTime()
 
@@ -85,11 +85,7 @@ task exportConstantsToJson {
 		def elapsedMs = (System.nanoTime() - startTime) / 1_000_000
 		println "Export GameVal completed in ${elapsedMs} ms"
 	}
-}
-
-tasks.named('compileJava') {
-	dependsOn 'exportConstantsToJson'
-}
+}*/
 
 //shadowJar {
 //	from sourceSets.test.output
