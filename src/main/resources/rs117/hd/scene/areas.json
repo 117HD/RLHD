@@ -2257,6 +2257,12 @@
     ]
   },
   {
+    "name": "KHARIDIAN_CREVICE",
+    "aabbs": [
+      [ 3367, 2895, 3379, 2912 ]
+    ]
+  },
+  {
     "name": "KHARIDIAN_DESERT_DEEP",
     "areas": [
       "AGILITY_PYRAMID_TOP"

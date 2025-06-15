@@ -5491,6 +5491,14 @@
     "maxSaturation": 3
   },
   {
+    "name": "KHARIDIAN_DEEP_DESERT_CREVICE",
+    "groundMaterial": "SAND",
+    "maxLightness": 60,
+    "shiftHue": -2,
+    "shiftSaturation": -2,
+    "minSaturation": 3
+  },
+  {
     "name": "KHARID_DESERT_COAST_GOATS_FIX_2",
     "area": "KHARIDIAN_DESERT_COAST_GOATS_CUTOUT_FIX",
     "groundMaterial": "OVERWORLD_GRASS_1",
@@ -5683,6 +5691,25 @@
         "h < 8",
         "h == 8 && s == 4",
         "h == 9 && s == 4"
+      ]
+    }
+  },
+  {
+    "name": "KHARIDIAN_CREVICE",
+    "area": "KHARIDIAN_CREVICE",
+    "groundMaterial": "SAND",
+    "minHue": 6,
+    "maxHue": 6,
+    "minSaturation": 3,
+    "maxSaturation": 3,
+    "underlayIds": [
+      61,
+      126,
+      138
+    ],
+    "replacements": {
+      "KHARIDIAN_DEEP_DESERT_CREVICE": [
+        "h <= 6"
       ]
     }
   },
