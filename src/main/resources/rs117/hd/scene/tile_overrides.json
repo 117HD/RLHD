@@ -5722,6 +5722,32 @@
     }
   },
   {
+    "name": "SOUTH_RUINS_OF_ULLEK_OVERWORLD_SAND",
+    "area": "SOUTH_OF_RUINS_OF_ULLEK",
+    "groundMaterial": "SAND",
+    "minHue": 6,
+    "maxHue": 6,
+    "minSaturation": 3,
+    "maxSaturation": 3,
+    "underlayIds": [
+      61,
+      62,
+      64,
+      99,
+      126
+    ],
+    "replacements": {
+      "KHARID_GRASS": [
+        "h >= 10"
+      ],
+      "KHARID_DIRT": [
+        "h == 8 && s >= 4 && l < 27",
+        "h == 9 && s >= 4",
+        "h == 7 && s >= 4 && l < 25"
+      ]
+    }
+  },
+  {
     "name": "KHARIDIAN_DESERT_SAND",
     "area": "KHARIDIAN_DESERT",
     "underlayIds": [
