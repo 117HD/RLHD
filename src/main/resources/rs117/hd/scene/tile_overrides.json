@@ -5732,7 +5732,8 @@
     "groundMaterial": "SAND",
     "uvOrientation": 42,
     "underlayIds": [
-      124
+      124,
+      125
     ],
     "replacements": {
       "KHARID_SAND": [
