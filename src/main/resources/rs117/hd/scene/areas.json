@@ -2306,7 +2306,7 @@
   },
   {
     "name": "KHARIDIAN_COAST_FIX",
-    "areas": ["REGOIN_SOUTH_OF_UNKAH" ],
+    "areas": [ "REGION_SOUTH_OF_UNKAH" ],
     "aabbs": [
       [ 3504, 3072, 3518, 3082 ],
       [ 3502, 3076, 3503, 3082 ],
@@ -2388,7 +2388,7 @@
     ]
   },
   {
-    "name": "REGOIN_SOUTH_OF_UNKAH",
+    "name": "REGION_SOUTH_OF_UNKAH",
     "aabbs": [
       [ 3125, 2752, 3157, 2807 ],
       [ 3158, 2752, 3196, 2812 ],
