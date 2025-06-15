@@ -29,8 +29,8 @@ import java.util.Random;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
-import net.runelite.api.coords.*;
-import rs117.hd.data.environments.Area;
+import rs117.hd.scene.areas.AABB;
+import rs117.hd.scene.areas.Area;
 
 import static net.runelite.api.Constants.SCENE_SIZE;
 import static net.runelite.api.Constants.*;
@@ -38,6 +38,7 @@ import static net.runelite.api.Perspective.*;
 import static rs117.hd.scene.ProceduralGenerator.VERTICES_PER_FACE;
 import static rs117.hd.scene.ProceduralGenerator.faceLocalVertices;
 import static rs117.hd.scene.ProceduralGenerator.isOverlayFace;
+import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
 
 @Slf4j
 @Singleton
@@ -58,6 +59,7 @@ public class HDUtils {
 	public static final float MAX_FLOAT_WITH_128TH_PRECISION = 1 << 16;
 
 	public static final int MAX_SNOW_LIGHTNESS = 70;
+	public static final int HIDDEN_HSL = 12345678;
 
 	// directional vectors approximately opposite of the directional light used by the client
 	private static final float[] LIGHT_DIR_TILE = new float[] { 0.70710678f, 0.70710678f, 0f };
@@ -76,6 +78,17 @@ public class HDUtils {
 			if (v[i] > max)
 				max = v[i];
 		return max;
+	}
+
+	public static float sum(float... v) {
+		float sum = 0;
+		for (float x : v)
+			sum += x;
+		return sum;
+	}
+
+	public static float avg(float... v) {
+		return sum(v) / v.length;
 	}
 
 	public static float lerp(float a, float b, float t) {
@@ -226,6 +239,39 @@ public class HDUtils {
 		}
 	}
 
+	public static String getObjectType(int config) {
+		int type = config & 0x3F;
+		final String[] OBJECT_TYPES = {
+			"StraightWalls",
+			"DiagWallsConn",
+			"EntireWallsCorners",
+			"StraightWallsConn",
+			"StraightInDeco",
+			"StraightOutDeco",
+			"DiagOutDeco",
+			"DiagInDeco",
+			"DiagInWallDeco",
+			"DiagWalls",
+			"Objects",
+			"GroundObjects",
+			"StraightSlopeRoofs",
+			"DiagSlopeRoofs",
+			"DiagSlopeConnRoofs",
+			"StraightSlopeConnRoofs",
+			"StraightSlopeCorners",
+			"FlatTopRoofs",
+			"BottomEdgeRoofs",
+			"DiagBottomEdgeConn",
+			"StraightBottomEdgeConn",
+			"StraightBottomEdgeConnCorners",
+			"GroundDecoMapSigns"
+		};
+		String name = "Unknown";
+		if (type < OBJECT_TYPES.length)
+			name = OBJECT_TYPES[type];
+		return String.format("(%d) %s", type, name);
+	}
+
 	public static HashSet<Integer> getSceneRegionIds(Scene scene) {
 		HashSet<Integer> regionIds = new HashSet<>();
 
@@ -259,14 +305,15 @@ public class HDUtils {
 	}
 
 	/**
-	 * Returns the south-west coordinate of the scene in world space, after resolving instance template chunks to their
-	 * original world coordinates. If the scene is instanced, the base coordinates are computed from the center chunk.
+	 * Returns the south-west coordinate of the extended scene in world coordinates, after resolving instance template
+	 * chunks to their original world coordinates. If the scene is instanced, the base coordinates are computed from
+	 * the center chunk instead, or any valid chunk if the center chunk is invalid.
 	 *
 	 * @param scene to get the south-west coordinate for
 	 * @param plane to use when resolving instance template chunks
 	 * @return the south-western coordinate of the scene in world space
 	 */
-	public static WorldPoint getSceneBase(Scene scene, int plane)
+	public static int[] getSceneBaseExtended(Scene scene, int plane)
 	{
 		int baseX = scene.getBaseX();
 		int baseY = scene.getBaseY();
@@ -306,15 +353,15 @@ public class HDUtils {
 			baseY <<= 3;
 		}
 
-		return new WorldPoint(baseX, baseY, plane);
+		return new int[] { baseX - SCENE_OFFSET, baseY - SCENE_OFFSET };
 	}
 
 	/**
 	 * The returned plane may be different, so it's not safe to use for indexing into overlay IDs for instance
 	 */
 	public static int[] localToWorld(Scene scene, int localX, int localY, int plane) {
-		int sceneX = localX / LOCAL_TILE_SIZE;
-		int sceneY = localY / LOCAL_TILE_SIZE;
+		int sceneX = localX >> LOCAL_COORD_BITS;
+		int sceneY = localY >> LOCAL_COORD_BITS;
 
 		if (scene.isInstance() && sceneX >= 0 && sceneY >= 0 && sceneX < SCENE_SIZE && sceneY < SCENE_SIZE) {
 			int chunkX = sceneX / 8;
@@ -392,37 +439,39 @@ public class HDUtils {
 					}
 				}
 			}
-		} else {
-			int baseX = scene.getBaseX();
-			int baseY = scene.getBaseX();
-			int extended = numChunksExtended * CHUNK_SIZE;
-			AABB sceneAabb = new AABB(
-				baseX - extended,
-				baseY - extended,
-				baseX + SCENE_SIZE + extended - 1,
-				baseY + SCENE_SIZE + extended - 1
-			);
 
-			for (var aabb : aabbs)
-				if (sceneAabb.intersects(aabb))
-					return true;
+			return false;
 		}
 
-		return false;
+		return getNonInstancedSceneBounds(scene, numChunksExtended).intersects(aabbs);
 	}
 
-	public static void getSouthWesternMostTileColor(int[] out, Tile tile) {
+	public static AABB getNonInstancedSceneBounds(Scene scene, int numChunksExtended) {
+		assert !scene.isInstance();
+		int baseX = scene.getBaseX();
+		int baseY = scene.getBaseY();
+		int extended = numChunksExtended * CHUNK_SIZE;
+		return new AABB(
+			baseX - extended,
+			baseY - extended,
+			baseX + SCENE_SIZE + extended - 1,
+			baseY + SCENE_SIZE + extended - 1
+		);
+	}
+
+	public static int getSouthWesternMostTileColor(int[] out, Tile tile) {
 		var paint = tile.getSceneTilePaint();
 		var model = tile.getSceneTileModel();
+		int hsl = 0;
 		if (paint != null) {
-			ColorUtils.unpackRawHsl(out, paint.getSwColor());
+			hsl = paint.getSwColor();
+			ColorUtils.unpackRawHsl(out, hsl);
 		} else if (model != null) {
 			int faceCount = tile.getSceneTileModel().getFaceX().length;
 			final int[] faceColorsA = model.getTriangleColorA();
 			final int[] faceColorsB = model.getTriangleColorB();
 			final int[] faceColorsC = model.getTriangleColorC();
 
-			int hsl = 0;
 			outer:
 			for (int face = 0; face < faceCount; face++) {
 				if (isOverlayFace(tile, face))
@@ -440,5 +489,6 @@ public class HDUtils {
 
 			ColorUtils.unpackRawHsl(out, hsl);
 		}
+		return hsl;
 	}
 }

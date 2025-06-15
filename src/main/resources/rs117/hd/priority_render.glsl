@@ -83,28 +83,17 @@ int count_prio_offset(int priority) {
     return total;
 }
 
-void get_face(
-    uint localId, ModelInfo minfo,
-    out int prio, out int dis, out vert o1, out vert o2, out vert o3
-) {
-    int size = minfo.size;
-    int offset = minfo.offset;
-    int flags = minfo.flags;
-    uint ssboOffset;
+void add_face_prio_distance(const uint localId, const ModelInfo minfo, out int prio, out int dis) {
+    if (localId < minfo.size) {
+        int offset = minfo.offset;
+        int flags = minfo.flags;
 
-    if (localId < size) {
-        ssboOffset = localId;
-    } else {
-        ssboOffset = 0;
-    }
-
-    // Grab triangle vertices from the correct buffer
-    vert thisA = vb[offset + ssboOffset * 3];
-    vert thisB = vb[offset + ssboOffset * 3 + 1];
-    vert thisC = vb[offset + ssboOffset * 3 + 2];
-
-    if (localId < size) {
         int orientation = flags & 0x7ff;
+
+        // Grab triangle vertices from the correct buffer
+        vert thisA = vb[offset + localId * 3];
+        vert thisB = vb[offset + localId * 3 + 1];
+        vert thisC = vb[offset + localId * 3 + 2];
 
         // rotate for model orientation
         thisA.pos = rotate(thisA.pos, orientation);
@@ -112,39 +101,24 @@ void get_face(
         thisC.pos = rotate(thisC.pos, orientation);
 
         // calculate distance to face
-        int thisPriority = (thisA.ahsl >> 16) & 0xF;// all vertices on the face have the same priority
-        int thisDistance = face_distance(thisA.pos, thisB.pos, thisC.pos);
+        prio = (thisA.ahsl >> 16) & 0xF;// all vertices on the face have the same priority
+        dis = face_distance(thisA.pos, thisB.pos, thisC.pos);
 
-        o1 = thisA;
-        o2 = thisB;
-        o3 = thisC;
-        prio = thisPriority;
-        dis = thisDistance;
-    } else {
-        o1 = vert(vec3(0), 0);
-        o2 = vert(vec3(0), 0);
-        o3 = vert(vec3(0), 0);
-        prio = 0;
-        dis = 0;
-    }
-}
-
-void add_face_prio_distance(uint localId, ModelInfo minfo, vert thisrvA, vert thisrvB, vert thisrvC, int thisPriority, int thisDistance, vec3 pos) {
-    if (localId < minfo.size) {
         // if the face is not culled, it is calculated into priority distance averages
-        if (face_visible(thisrvA.pos, thisrvB.pos, thisrvC.pos, pos)) {
-            atomicAdd(totalNum[thisPriority], 1);
-            atomicAdd(totalDistance[thisPriority], thisDistance);
+        vec3 modelPos = vec3(minfo.x, minfo.y, minfo.z);
+        if (face_visible(thisA.pos, thisB.pos, thisC.pos, modelPos)) {
+            atomicAdd(totalNum[prio], 1);
+            atomicAdd(totalDistance[prio], dis);
 
             // calculate minimum distance to any face of priority 10 for positioning the 11 faces later
-            if (thisPriority == 10) {
-                atomicMin(min10, thisDistance);
+            if (prio == 10) {
+                atomicMin(min10, dis);
             }
         }
     }
 }
 
-int map_face_priority(uint localId, ModelInfo minfo, int thisPriority, int thisDistance, out int prio) {
+int map_face_priority(uint localId, const ModelInfo minfo, int thisPriority, int thisDistance, out int prio) {
     int size = minfo.size;
 
     // Compute average distances for 0/2, 3/4, and 6/8
@@ -177,7 +151,7 @@ int map_face_priority(uint localId, ModelInfo minfo, int thisPriority, int thisD
     return 0;
 }
 
-void insert_face(uint localId, ModelInfo minfo, int adjPrio, int distance, int prioIdx) {
+void insert_face(uint localId, const ModelInfo minfo, int adjPrio, int distance, int prioIdx) {
     int size = minfo.size;
 
     if (localId < size) {
@@ -238,7 +212,7 @@ void undoVanillaShading(inout int hsl, vec3 unrotatedNormal) {
     hsl |= lightness;
 }
 
-void sort_and_insert(uint localId, ModelInfo minfo, int thisPriority, int thisDistance, vert thisrvA, vert thisrvB, vert thisrvC) {
+void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int thisDistance) {
     int offset = minfo.offset;
     int size = minfo.size;
 
@@ -271,6 +245,16 @@ void sort_and_insert(uint localId, ModelInfo minfo, int thisPriority, int thisDi
         normalout[outOffset + myOffset * 3]     = rotate(normA, orientation);
         normalout[outOffset + myOffset * 3 + 1] = rotate(normB, orientation);
         normalout[outOffset + myOffset * 3 + 2] = rotate(normC, orientation);
+
+        // Grab triangle vertices from the correct buffer
+        vert thisrvA = vb[offset + localId * 3];
+        vert thisrvB = vb[offset + localId * 3 + 1];
+        vert thisrvC = vb[offset + localId * 3 + 2];
+
+        // rotate for model orientation
+        thisrvA.pos = rotate(thisrvA.pos, orientation);
+        thisrvB.pos = rotate(thisrvB.pos, orientation);
+        thisrvC.pos = rotate(thisrvC.pos, orientation);
 
         #if UNDO_VANILLA_SHADING
         if ((int(thisrvA.ahsl) >> 20 & 1) == 0) {

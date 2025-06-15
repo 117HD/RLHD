@@ -41,3 +41,4 @@
 #include FLAT_SHADING
 #include SHADOW_MAP_OVERLAY
 #include APPLY_COLOR_FILTER
+#include WIREFRAME

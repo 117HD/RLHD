@@ -39,6 +39,7 @@ import rs117.hd.config.DefaultSkyColor;
 import rs117.hd.config.FogDepthMode;
 import rs117.hd.config.MaxDynamicLights;
 import rs117.hd.config.Saturation;
+import rs117.hd.config.SeasonalHemisphere;
 import rs117.hd.config.SeasonalTheme;
 import rs117.hd.config.ShadingMode;
 import rs117.hd.config.ShadowDistance;
@@ -497,6 +498,18 @@ public interface HdPluginConfig extends Config
 		return SeasonalTheme.AUTOMATIC;
 	}
 
+	String KEY_SEASONAL_HEMISPHERE = "seasonalHemisphere";
+	@ConfigItem(
+		keyName = KEY_SEASONAL_HEMISPHERE,
+		name = "Seasonal Hemisphere",
+		description = "Determines which hemisphere the 'Automatic' Seasonal Theme should consider.",
+		position = 1,
+		section = environmentSettings
+	)
+	default SeasonalHemisphere seasonalHemisphere() {
+		return SeasonalHemisphere.NORTHERN;
+	}
+
 	@ConfigItem(
 		keyName = "fogDepthMode",
 		name = "Fog Depth Mode",
@@ -504,7 +517,7 @@ public interface HdPluginConfig extends Config
 			"Determines how the fog amount is controlled.<br>" +
 			"'Dynamic' changes fog depth based on the area, while<br>" +
 			"'Static' respects the manually defined fog depth.",
-		position = 1,
+		position = 2,
 		section = environmentSettings
 	)
 	default FogDepthMode fogDepthMode()
@@ -521,7 +534,7 @@ public interface HdPluginConfig extends Config
 		description =
 			"Specify how far from the edge fog should reach.<br>" +
 			"This applies only when 'Fog Depth Mode' is set to 'Static'.",
-		position = 2,
+		position = 3,
 		section = environmentSettings
 	)
 	default int fogDepth()
@@ -533,7 +546,7 @@ public interface HdPluginConfig extends Config
 		keyName = "groundFog",
 		name = "Ground Fog",
 		description = "Enables a height-based fog effect that covers the ground in certain areas.",
-		position = 3,
+		position = 4,
 		section = environmentSettings
 	)
 	default boolean groundFog() {
@@ -549,7 +562,7 @@ public interface HdPluginConfig extends Config
 			"If set to 'RuneLite Skybox', the sky color from RuneLite's Skybox plugin will be used.<br>" +
 			"If set to 'Old School Black', the sky will be black and water will remain blue, but for any<br>" +
 			"other option, the water color will be influenced by the sky color.",
-		position = 4,
+		position = 5,
 		section = environmentSettings
 	)
 	default DefaultSkyColor defaultSkyColor()
@@ -561,7 +574,7 @@ public interface HdPluginConfig extends Config
 		keyName = "overrideSky",
 		name = "Override Sky Color",
 		description = "Forces the default sky color to be used in all environments.",
-		position = 5,
+		position = 6,
 		section = environmentSettings
 	)
 	default boolean overrideSky() {
@@ -573,7 +586,7 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_MODEL_TEXTURES,
 		name = "Model Textures",
 		description = "Adds textures to some models.",
-		position = 6,
+		position = 7,
 		section = environmentSettings
 	)
 	default boolean modelTextures() {
@@ -585,7 +598,7 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_GROUND_TEXTURES,
 		name = "Ground Textures",
 		description = "Adds textures to some ground tiles.",
-		position = 7,
+		position = 8,
 		section = environmentSettings
 	)
 	default boolean groundTextures()
@@ -598,7 +611,7 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_TEXTURE_RESOLUTION,
 		name = "Texture Resolution",
 		description = "Controls the resolution used for all in-game textures.",
-		position = 8,
+		position = 9,
 		section = environmentSettings
 	)
 	default TextureResolution textureResolution()
@@ -611,7 +624,7 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_GROUND_BLENDING,
 		name = "Ground Blending",
 		description = "Controls whether ground tiles should blend into each other, or have distinct edges.",
-		position = 9,
+		position = 10,
 		section = environmentSettings
 	)
 	default boolean groundBlending()
@@ -623,7 +636,7 @@ public interface HdPluginConfig extends Config
 		keyName = "underwaterCaustics",
 		name = "Underwater Caustics",
 		description = "Apply underwater lighting effects to imitate sunlight passing through waves on the surface.",
-		position = 10,
+		position = 11,
 		section = environmentSettings
 	)
 	default boolean underwaterCaustics()
@@ -636,7 +649,7 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_HD_TZHAAR_RESKIN,
 		name = "HD TzHaar Reskin",
 		description = "Recolors the TzHaar city of Mor Ul Rek to give it an appearance similar to that of its 2008 HD variant.",
-		position = 11,
+		position = 12,
 		section = environmentSettings
 	)
 	default boolean hdTzHaarReskin() {
@@ -721,7 +734,6 @@ public interface HdPluginConfig extends Config
 		warning =
 			"This setting can cause RuneLite to crash, and it can be difficult to undo.\n" +
 			"Only enable it if you are seeing broken colors. Are you sure you want to enable this setting?",
-		position = 1,
 		section = miscellaneousSettings
 	)
 	default boolean macosIntelWorkaround()
@@ -736,7 +748,6 @@ public interface HdPluginConfig extends Config
 		description =
 			"Replace the infernal cape texture with a more detailed version.<br>" +
 			"Note, with Anisotropic Filtering above zero, the cape may look blurry when zoomed out.",
-		position = 2,
 		section = miscellaneousSettings
 	)
 	default boolean hdInfernalTexture() {
@@ -750,7 +761,6 @@ public interface HdPluginConfig extends Config
 		description =
 			"Previously, HD attempted to reduce over-exposure by capping the maximum color brightness,<br>" +
 			"which changed white colors into dull shades of grey. This option brings back that old behaviour.",
-		position = 4,
 		section = miscellaneousSettings
 	)
 	default boolean legacyGreyColors() {
@@ -764,7 +774,6 @@ public interface HdPluginConfig extends Config
 		description =
 			"Blend between colors similarly to how it works in vanilla, with clearly defined bands of color.<br>" +
 			"This isn't really noticeable on textured surfaces, and is intended to be used without ground textures.",
-		position = 5,
 		section = miscellaneousSettings
 	)
 	default boolean vanillaColorBanding() {
@@ -779,7 +788,6 @@ public interface HdPluginConfig extends Config
 		warning =
 			"<html>This <b>will not</b> result in better performance. It is recommended only if you are unable to install<br>" +
 			"the 64-bit version of RuneLite, or if your computer has a very low amount of memory available.</html>",
-		position = 6,
 		section = miscellaneousSettings
 	)
 	default boolean lowMemoryMode() {
@@ -791,7 +799,6 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_REPLACE_FISHING_SPOTS,
 		name = "Replace Fishing Spots",
 		description = "Replace certain fishing spots with more appropriate models that are easier to see.",
-		position = 7,
 		section = miscellaneousSettings
 	)
 	default boolean replaceFishingSpots() {
@@ -803,11 +810,24 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_COLOR_FILTER,
 		name = "Color Filter",
 		description = "Apply a color filter to the game as a post-processing effect.",
-		position = 8,
 		section = miscellaneousSettings
 	)
 	default ColorFilter colorFilter() {
 		return ColorFilter.NONE;
+	}
+
+	String KEY_REMOVE_VERTEX_SNAPPING = "removeVertexSnapping";
+	@ConfigItem(
+		keyName = KEY_REMOVE_VERTEX_SNAPPING,
+		name = "Remove vertex snapping",
+		description =
+			"Removes vertex snapping from most animations.<br>" +
+			"Most animations are barely affected by this, and it only has an effect if the animation smoothing plugin is turned off.<br>" +
+			"To see quite clearly what impact this option has, a good example is the godsword idle animation.",
+		section = miscellaneousSettings
+	)
+	default boolean removeVertexSnapping() {
+		return true;
 	}
 
 
@@ -886,6 +906,28 @@ public interface HdPluginConfig extends Config
 		section = experimentalSettings
 	)
 	default boolean decoupleSkyAndWaterColor() {
+		return false;
+	}
+
+	String KEY_HIDE_UNRELATED_AREAS = "hideUnrelatedAreas";
+	@ConfigItem(
+		keyName = KEY_HIDE_UNRELATED_AREAS,
+		name = "Hide unrelated areas",
+		description = "Hide unrelated areas which you shouldn't see from your current position.",
+		section = experimentalSettings
+	)
+	default boolean hideUnrelatedAreas() {
+		return true;
+	}
+
+	String KEY_WIREFRAME = "wireframe";
+	@ConfigItem(
+		keyName = KEY_WIREFRAME,
+		name = "Wireframe",
+		description = "Show the edges of individual triangles in the scene.",
+		section = experimentalSettings
+	)
+	default boolean wireframe() {
 		return false;
 	}
 

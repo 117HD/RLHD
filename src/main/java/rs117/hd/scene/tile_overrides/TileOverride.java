@@ -1,6 +1,7 @@
 package rs117.hd.scene.tile_overrides;
 
 import com.google.gson.JsonElement;
+import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -12,8 +13,9 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import rs117.hd.data.WaterType;
-import rs117.hd.data.environments.Area;
 import rs117.hd.data.materials.GroundMaterial;
+import rs117.hd.scene.AreaManager;
+import rs117.hd.scene.areas.Area;
 import rs117.hd.utils.Props;
 
 import static rs117.hd.utils.HDUtils.clamp;
@@ -28,24 +30,32 @@ public class TileOverride {
 	@Nullable
 	public String name;
 	public String description;
+	@JsonAdapter(AreaManager.JsonAdapter.class)
 	public Area area = Area.NONE;
 	public int[] overlayIds;
 	public int[] underlayIds;
+	@JsonAdapter(GroundMaterial.JsonAdapter.class)
 	public GroundMaterial groundMaterial = GroundMaterial.NONE;
 	public WaterType waterType = WaterType.NONE;
 	public boolean blended = true;
-	public boolean blendedAsOpposite = false;
-	public int shiftHue;
-	public int minHue;
-	public int maxHue = 63;
-	public int shiftSaturation;
-	public int minSaturation;
-	public int maxSaturation = 7;
-	public int shiftLightness;
-	public int minLightness;
-	public int maxLightness = 127;
+	public boolean blendedAsOpposite;
+	public boolean forced;
+	public boolean depthTested;
+	private int setHue = -1;
+	private int shiftHue;
+	private int minHue;
+	private int maxHue = 63;
+	private int setSaturation = -1;
+	private int shiftSaturation;
+	private int minSaturation;
+	private int maxSaturation = 7;
+	private int setLightness = -1;
+	private int shiftLightness;
+	private int minLightness;
+	private int maxLightness = 127;
 	public int uvOrientation;
 	public float uvScale = 1;
+	public int heightOffset;
 	@SerializedName("replacements")
 	public LinkedHashMap<String, JsonElement> rawReplacements;
 
@@ -67,7 +77,7 @@ public class TileOverride {
 		if (description != null)
 			return description;
 		if (area != null)
-			return area.name();
+			return area.name;
 		return "Unnamed";
 	}
 
@@ -100,6 +110,19 @@ public class TileOverride {
 			log.warn("Undefined water type in tile override: {}", this);
 			waterType = WaterType.NONE;
 		}
+
+		if (forced) {
+			// Replace hidden tiles with white by default
+			minHue = maxHue = minSaturation = maxSaturation = 0;
+			minLightness = maxLightness = 127;
+		}
+
+		if (setHue != -1)
+			minHue = maxHue = setHue;
+		if (setSaturation != -1)
+			minSaturation = maxSaturation = setSaturation;
+		if (setLightness != -1)
+			minLightness = maxLightness = setLightness;
 
 		// Convert UV scale to reciprocal, so we can multiply instead of dividing later
 		uvScale = 1 / uvScale;

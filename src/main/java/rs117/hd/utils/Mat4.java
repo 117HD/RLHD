@@ -33,35 +33,32 @@ public class Mat4
 
 	public static float[] identity()
 	{
-		return new float[]
-			{
-				1, 0, 0, 0,
-				0, 1, 0, 0,
-				0, 0, 1, 0,
-				0, 0, 0, 1,
-			};
+		return new float[] {
+			1, 0, 0, 0,
+			0, 1, 0, 0,
+			0, 0, 1, 0,
+			0, 0, 0, 1,
+		};
 	}
 
 	public static float[] scale(float sx, float sy, float sz)
 	{
-		return new float[]
-			{
-				sx, 0, 0, 0,
-				0, sy, 0, 0,
-				0, 0, sz, 0,
-				0, 0, 0, 1,
-			};
+		return new float[] {
+			sx, 0, 0, 0,
+			0, sy, 0, 0,
+			0, 0, sz, 0,
+			0, 0, 0, 1,
+		};
 	}
 
 	public static float[] translate(float tx, float ty, float tz)
 	{
-		return new float[]
-			{
-				1, 0, 0, 0,
-				0, 1, 0, 0,
-				0, 0, 1, 0,
-				tx, ty, tz, 1,
-			};
+		return new float[] {
+			1, 0, 0, 0,
+			0, 1, 0, 0,
+			0, 0, 1, 0,
+			tx, ty, tz, 1,
+		};
 	}
 
 	public static float[] rotateX(float rx)
@@ -69,13 +66,12 @@ public class Mat4
 		float s = (float) Math.sin(rx);
 		float c = (float) Math.cos(rx);
 
-		return new float[]
-			{
-				1, 0, 0, 0,
-				0, c, s, 0,
-				0, -s, c, 0,
-				0, 0, 0, 1,
-			};
+		return new float[] {
+			1, 0, 0, 0,
+			0, c, s, 0,
+			0, -s, c, 0,
+			0, 0, 0, 1,
+		};
 	}
 
 	public static float[] rotateY(float ry)
@@ -83,35 +79,32 @@ public class Mat4
 		float s = (float) Math.sin(ry);
 		float c = (float) Math.cos(ry);
 
-		return new float[]
-			{
-				c, 0, -s, 0,
-				0, 1, 0, 0,
-				s, 0, c, 0,
-				0, 0, 0, 1,
-			};
+		return new float[] {
+			c, 0, -s, 0,
+			0, 1, 0, 0,
+			s, 0, c, 0,
+			0, 0, 0, 1,
+		};
 	}
 
-	public static float[] projection(float w, float h, float n) {
+	public static float[] perspective(float w, float h, float n) {
 		// Flip Y so positive is up, and reverse depth from 1 at the near plane to 0 infinitely far away
-		return new float[]
-			{
-				2 / w, 0, 0, 0,
-				0, -2 / h, 0, 0,
-				0, 0, 0, 1,
-				0, 0, 2 * n, 0
-			};
+		return new float[] {
+			2 / w, 0, 0, 0,
+			0, -2 / h, 0, 0,
+			0, 0, 0, 1,
+			0, 0, 2 * n, 0
+		};
 	}
 
-	public static float[] ortho(float w, float h, float n)
+	public static float[] orthographic(float w, float h, float n)
 	{
-		return new float[]
-			{
-				2 / w, 0, 0, 0,
-				0, 2 / h, 0, 0,
-				0, 0, -2 / n, 0,
-				0, 0, 0, 1
-			};
+		return new float[] {
+			2 / w, 0, 0, 0,
+			0, -2 / h, 0, 0,
+			0, 0, 2 / n, 0,
+			0, 0, 0, 1
+		};
 	}
 
 	/**
@@ -268,5 +261,4 @@ public class Mat4
 		assert m.length == 16;
 		return Matrix.format(m, 4, 4);
 	}
-
 }

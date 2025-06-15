@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ground_materials.schema.json",
+  "title": "Ground Materials",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "name": {
+        "type": "string",
+        "description": "Identifier used to refer to the ground material from tile overrides."
+      },
+      "materials": {
+        "type": "array",
+        "description": "A list of materials to choose from when randomizing tiles with this ground material applied. Duplicates may be used to increase prevalence.",
+        "items": {
+          "type": "string",
+          "description": "A name corresponding to one of our defined materials."
+        }
+      }
+    }
+  }
+}

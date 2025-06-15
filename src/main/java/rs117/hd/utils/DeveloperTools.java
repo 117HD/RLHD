@@ -5,17 +5,20 @@ import java.awt.event.KeyEvent;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.events.*;
+import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.Keybind;
 import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.input.KeyListener;
 import net.runelite.client.input.KeyManager;
 import rs117.hd.HdPlugin;
-import rs117.hd.data.environments.Area;
 import rs117.hd.overlays.FrameTimerOverlay;
 import rs117.hd.overlays.LightGizmoOverlay;
 import rs117.hd.overlays.ShadowMapOverlay;
 import rs117.hd.overlays.TileInfoOverlay;
+import rs117.hd.scene.AreaManager;
+import rs117.hd.scene.areas.AABB;
+import rs117.hd.scene.areas.Area;
 
 @Slf4j
 public class DeveloperTools implements KeyListener {
@@ -25,6 +28,10 @@ public class DeveloperTools implements KeyListener {
 	private static final Keybind KEY_TOGGLE_SHADOW_MAP_OVERLAY = new Keybind(KeyEvent.VK_F5, InputEvent.CTRL_DOWN_MASK);
 	private static final Keybind KEY_TOGGLE_LIGHT_GIZMO_OVERLAY = new Keybind(KeyEvent.VK_F6, InputEvent.CTRL_DOWN_MASK);
 	private static final Keybind KEY_TOGGLE_FREEZE_FRAME = new Keybind(KeyEvent.VK_ESCAPE, InputEvent.SHIFT_DOWN_MASK);
+	private static final Keybind KEY_TOGGLE_ORTHOGRAPHIC = new Keybind(KeyEvent.VK_TAB, InputEvent.SHIFT_DOWN_MASK);
+
+	@Inject
+	private ClientThread clientThread;
 
 	@Inject
 	private EventBus eventBus;
@@ -65,13 +72,15 @@ public class DeveloperTools implements KeyListener {
 		keyBindingsEnabled = true;
 		keyManager.registerKeyListener(this);
 
-		tileInfoOverlay.setActive(tileInfoOverlayEnabled);
-		frameTimerOverlay.setActive(frameTimingsOverlayEnabled);
-		shadowMapOverlay.setActive(shadowMapOverlayEnabled);
-		lightGizmoOverlay.setActive(lightGizmoOverlayEnabled);
+		clientThread.invokeLater(() -> {
+			tileInfoOverlay.setActive(tileInfoOverlayEnabled);
+			frameTimerOverlay.setActive(frameTimingsOverlayEnabled);
+			shadowMapOverlay.setActive(shadowMapOverlayEnabled);
+			lightGizmoOverlay.setActive(lightGizmoOverlayEnabled);
+		});
 
 		// Check for any out of bounds areas
-		for (Area area : Area.values()) {
+		for (Area area : AreaManager.AREAS) {
 			if (area == Area.ALL || area == Area.NONE)
 				continue;
 
@@ -139,6 +148,8 @@ public class DeveloperTools implements KeyListener {
 			lightGizmoOverlay.setActive(lightGizmoOverlayEnabled = !lightGizmoOverlayEnabled);
 		} else if (KEY_TOGGLE_FREEZE_FRAME.matches(e)) {
 			plugin.toggleFreezeFrame();
+		} else if (KEY_TOGGLE_ORTHOGRAPHIC.matches(e)) {
+			plugin.orthographicProjection = !plugin.orthographicProjection;
 		} else {
 			return;
 		}
@@ -146,8 +157,8 @@ public class DeveloperTools implements KeyListener {
 	}
 
 	@Override
-	public void keyReleased(KeyEvent event) {}
+	public void keyReleased(KeyEvent e) {}
 
 	@Override
-	public void keyTyped(KeyEvent event) {}
+	public void keyTyped(KeyEvent e) {}
 }

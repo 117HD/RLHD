@@ -1,0 +1,6774 @@
+[
+  {
+    "name": "EVIL_BOB_ISLAND",
+    "aabbs": [
+      [ 2496, 4748, 2559, 4801 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "VERTICAL_DIRT_FIX_NEAR_FALADOR",
+    "aabbs": [
+      [ 2941, 3402, 3072, 3548 ]
+    ]
+  },
+  {
+    "name": "TUTORIAL_ISLAND_WIZARD_BUILDING",
+    "aabbs": [
+      [ 3136, 3076, 3144, 3097 ]
+    ]
+  },
+  {
+    "name": "TUTORIAL_ISLAND_CHURCH",
+    "aabbs": [
+      [ 3114, 3102, 3129, 3111 ]
+    ]
+  },
+  {
+    "name": "TUTORIAL_ISLAND_BANK",
+    "aabbs": [
+      [ 3113, 3117, 3130, 3131 ]
+    ]
+  },
+  {
+    "name": "TUTORIAL_ISLAND_UNDERGROUND",
+    "aabbs": [
+      [ 3067, 9491, 3120, 9534 ]
+    ]
+  },
+  {
+    "name": "TUTORIAL_ISLAND_QUEST_BUILDING",
+    "aabbs": [
+      [ 3079, 3118, 3090, 3126 ]
+    ]
+  },
+  {
+    "name": "TUTORIAL_ISLAND_KITCHEN",
+    "aabbs": [
+      [ 3072, 3080, 3079, 3092 ]
+    ]
+  },
+  {
+    "name": "TUTORIAL_ISLAND_START_BUILDING",
+    "aabbs": [
+      [ 3086, 3099, 3098, 3113 ]
+    ]
+  },
+  {
+    "name": "TUTORIAL_ISLAND_THE_NODE",
+    "aabbs": [
+      [ 3084, 3006, 3124, 3048 ]
+    ]
+  },
+  {
+    "name": "TUTORIAL_ISLAND_INSTANCE",
+    "regionBoxes": [
+      [ 6494, 7008 ]
+    ]
+  },
+  {
+    "name": "TUTORIAL_ISLAND",
+    "areas": [
+      "TUTORIAL_ISLAND_INSTANCE"
+    ],
+    "aabbs": [
+      [ 3052, 3057, 3155, 3137 ],
+      [ 3084, 3006, 3124, 3048 ]
+    ]
+  },
+  {
+    "name": "TUTORIAL_ISLAND_CAVES",
+    "regions": [
+      12436
+    ]
+  },
+  {
+    "name": "LUMBRIDGE_CASTLE_BASEMENT",
+    "aabbs": [
+      [ 3205, 9613, 3220, 9626 ]
+    ]
+  },
+  {
+    "name": "LUMBRIDGE_CASTLE_ENTRYWAY",
+    "aabbs": [
+      [ 3213, 3212, 3216, 3225 ]
+    ]
+  },
+  {
+    "name": "LUMBRIDGE_CASTLE_DINING_ROOM",
+    "aabbs": [
+      [ 3205, 3218, 3212, 3226 ]
+    ]
+  },
+  {
+    "name": "LUMBRIDGE_CASTLE_COBBLE",
+    "aabbs": [
+      [ 3204, 3207, 0, 3216, 3230, 0 ],
+      [ 3204, 3207, 1, 3207, 3230, 1 ],
+      [ 3208, 3212, 1, 3213, 3225, 1 ],
+      [ 3207, 3215, 2, 3210, 3222, 2 ]
+    ]
+  },
+  {
+    "name": "LUMBRIDGE_TOWER_FLOOR_INTERIOR",
+    "aabbs": [
+      [ 3227, 3221, 0, 3230, 3225, 0 ],
+      [ 3227, 3212, 0, 3230, 3216, 0 ]
+    ]
+  },
+  {
+    "name": "RFD_QUIZ",
+    "aabbs": [
+      [ 2566, 4618, 2589, 4642 ]
+    ]
+  },
+  {
+    "name": "LUM_BRIDGE",
+    "aabbs": [
+      [ 3240, 3225, 3250, 3226 ]
+    ]
+  },
+  {
+    "name": "HAM_HIDEOUT",
+    "regions": [ 12694 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "LUMBRIDGE_CASTLE",
+    "aabbs": [
+      [ 3204, 3207, 3216, 3230 ],
+      [ 3227, 3212, 2, 3230, 3225, 2 ]
+    ]
+  },
+  {
+    "name": "LUMBRIDGE_CASTLE_ENTRANCE",
+    "aabbs": [
+      [ 3217, 3218, 3218, 3219 ]
+    ]
+  },
+  {
+    "name": "LUMBRIDGE_DRAYNOR_PATH_BLEND_1",
+    "aabbs": [
+      [ 3135, 3293, 3135, 3295 ]
+    ]
+  },
+  {
+    "name": "LUMBRIDGE_DRAYNOR_PATH_BLEND_2",
+    "aabbs": [
+      [ 3136, 3293, 3136, 3296 ]
+    ]
+  },
+  {
+    "name": "LUMBRIDGE_SWAMP_PATH_FIX",
+    "aabbs": [
+      [ 3242, 3184, 3244, 3186 ]
+    ]
+  },
+  {
+    "name": "LUMBRIDGE_VARROCK_PATH_BLEND_FIX",
+    "aabbs": [
+      [ 3250, 3315 ],
+      [ 3249, 3314 ],
+      [ 3248, 3312 ],
+      [ 3247, 3311 ],
+      [ 3246, 3311 ],
+      [ 3245, 3310 ],
+      [ 3243, 3308, 3343, 3308 ],
+      [ 3241, 3306 ],
+      [ 3240, 3305 ]
+    ]
+  },
+  {
+    "name": "LUMBRIDGE_VARROCK_PATH_FIX",
+    "aabbs": [
+      [ 3267, 3328, 3269, 3329 ]
+    ]
+  },
+  {
+    "name": "LUMBRIDGE_CASTLE_INSTANCE",
+    "aabbs": [
+      [ 3400, 4808, 3447, 4847 ]
+    ]
+  },
+  {
+    "name": "LUMBRIDGE",
+    "areas": [
+      "LUMBRIDGE_CASTLE_INSTANCE"
+    ],
+    "aabbs": [
+      [ 3136, 3137, 3254, 3327 ],
+      [ 3255, 3189, 3263, 3199 ],
+      [ 3255, 3200, 3266, 3327 ],
+      [ 3267, 3223, 3267, 3232 ],
+      [ 3267, 3324, 3269, 3330 ]
+    ]
+  },
+  {
+    "name": "GOBLIN_MAZE",
+    "aabbs": [
+      [ 3221, 9602, 3307, 9660 ]
+    ]
+  },
+  {
+    "name": "LUMBRIDGE_SWAMP_CAVES",
+    "aabbs": [
+      [ 3141, 9536, 3265, 9602 ]
+    ]
+  },
+  {
+    "name": "TEARS_OF_GUTHIX",
+    "regions": [
+      12948
+    ]
+  },
+  {
+    "name": "DORGESHKAAN",
+    "aabbs": [
+      [ 2687, 5247, 2752, 5376 ],
+      [ 2751, 5311, 2816, 5440 ],
+      [ 2815, 5375, 2880, 5504 ]
+    ]
+  },
+  {
+    "name": "VARROCK_GUARD_POSTS",
+    "aabbs": [
+      [ 3239, 3499, 0, 3242, 3501, 0 ],
+      [ 3201, 3384, 3207, 3390 ]
+    ]
+  },
+  {
+    "name": "VARROCK_ZAMORAK_TEMPLE",
+    "aabbs": [
+      [ 3256, 3380, 3263, 3390 ],
+      [ 3253, 3380, 3255, 3385 ]
+    ]
+  },
+  {
+    "name": "VARROCK_HORVIKS_ANVIL",
+    "aabbs": [
+      [ 3227, 3433, 3232, 3441 ]
+    ]
+  },
+  {
+    "name": "VARROCK_HOUSE_1",
+    "aabbs": [
+      [ 3253, 3459, 3257, 3462 ]
+    ]
+  },
+  {
+    "name": "VARROCK_HOUSE_2",
+    "aabbs": [
+      [ 3230, 3382, 0, 3238, 3386, 0 ],
+      [ 3230, 3382, 1, 3236, 3386, 1 ]
+    ]
+  },
+  {
+    "name": "VARROCK_BLUE_MOON_INN",
+    "aabbs": [
+      [ 3228, 3397, 0, 3233, 3402, 0 ],
+      [ 3231, 3401, 1, 3233, 3402, 1 ],
+      [ 3226, 3400, 1, 3232, 3400, 1 ],
+      [ 3218, 3393, 1, 3232, 3399, 1 ],
+      [ 3218, 3400, 1, 3224, 3403, 1 ]
+    ]
+  },
+  {
+    "name": "VARROCK_CHAMPIONS_GUILD",
+    "aabbs": [
+      [ 3188, 3352, 0, 3194, 3362, 0 ]
+    ]
+  },
+  {
+    "name": "VARROCK_JULIETS_FAMILY_CRYPT",
+    "regions": [
+      9288
+    ]
+  },
+  {
+    "name": "VARROCK_HALLOWEEN_EVENT_DIRT",
+    "aabbs": [
+      [ 3194, 3433, 3198, 3437 ]
+    ]
+  },
+  {
+    "name": "VARROCK_MUSEUM_BASEMENT",
+    "aabbs": [
+      [ 1729, 4929, 1790, 4990 ],
+      [ 1601, 4929, 1663, 4990 ]
+    ]
+  },
+  {
+    "name": "VARROCK_MUSEUM",
+    "aabbs": [
+      [ 3253, 3442, 3267, 3455 ]
+    ]
+  },
+  {
+    "name": "VARROCK_CASTLE",
+    "aabbs": [
+      [ 3201, 3467, 3224, 3497 ],
+      [ 3225, 3470, 3225, 3473 ],
+      [ 3225, 3479, 3226, 3490 ],
+      [ 3200, 3498, 3206, 3499 ],
+      [ 3201, 3500, 3205, 3500 ],
+      [ 3200, 3495, 3200, 3497 ],
+      [ 3200, 3470, 3200, 3474 ]
+    ]
+  },
+  {
+    "name": "VARROCK_CASTLE_DIRT_PATH_FIXES_1",
+    "aabbs": [
+      [ 3198, 3499, 3198, 3500 ],
+      [ 3208, 3501 ],
+      [ 3198, 3474, 3198, 3475 ]
+    ]
+  },
+  {
+    "name": "VARROCK_CASTLE_DIRT_PATH_FIXES_2",
+    "aabbs": [
+      [ 3206, 3501, 3206, 3502 ],
+      [ 3207, 3502, 3208, 3502 ]
+    ]
+  },
+  {
+    "name": "VARROCK_JULIETS_HOUSE_FLOWER_BED",
+    "aabbs": [
+      [ 3161, 3444, 3171, 3450 ]
+    ]
+  },
+  {
+    "name": "VARROCK_JULIETS_HOUSE",
+    "aabbs": [
+      [ 3149, 3427, 3164, 3441 ]
+    ]
+  },
+  {
+    "name": "VARROCK_JOLLY_BOAR_INN",
+    "aabbs": [
+      [ 3272, 3486, 3288, 3510 ]
+    ]
+  },
+  {
+    "name": "VARROCK_SARADOMIN_CHURCH",
+    "aabbs": [
+      [ 3252, 3471, 3259, 3488 ],
+      [ 3249, 3476, 3251, 3483 ]
+    ]
+  },
+  {
+    "name": "VARROCK_ANVILS",
+    "aabbs": [
+      [ 3185, 3420, 3190, 3427 ]
+    ]
+  },
+  {
+    "name": "VARROCK_BUILDING_RUINS",
+    "aabbs": [
+      [ 3185, 3416, 3194, 3427 ],
+      [ 3193, 3410, 3197, 3416 ],
+      [ 3254, 3406, 3263, 3411 ]
+    ]
+  },
+  {
+    "name": "VARROCK_EAST_BANK_CENTER",
+    "aabbs": [
+      [ 3251, 3420, 3256, 3422 ]
+    ]
+  },
+  {
+    "name": "VARROCK_EAST_BANK",
+    "aabbs": [
+      [ 3250, 3416, 3257, 3423 ]
+    ]
+  },
+  {
+    "name": "VARROCK_EAST_BANK_OUTSIDE_1",
+    "aabbs": [
+      [ 3250, 3424, 3257, 3424 ]
+    ]
+  },
+  {
+    "name": "VARROCK_MOON_INN_BALCONY",
+    "aabbs": [
+      [ 3214, 3397, 3217, 3401 ]
+    ]
+  },
+  {
+    "name": "VARROCK_MOON_INN_FLOOR",
+    "aabbs": [
+      [ 3228, 3394, 3229, 3396 ],
+      [ 3216, 3394, 3217, 3396 ],
+      [ 3218, 3394, 3227, 3402 ],
+      [ 3227, 3401, 3228, 3402 ],
+      [ 3226, 3393, 3229, 3393 ],
+      [ 3217, 3393, 3220, 3393 ],
+      [ 3219, 3403, 3221, 3403 ]
+    ]
+  },
+  {
+    "name": "VARROCK_MOON_INN_FLOOR_FIX",
+    "aabbs": [
+      [ 3225, 3393 ],
+      [ 3221, 3393 ],
+      [ 3216, 3393 ]
+    ]
+  },
+  {
+    "name": "VARROCK_MUSEUM_SOUTH_PATH_FIX",
+    "aabbs": [
+      [ 3264, 3439, 3265, 3441 ]
+    ]
+  },
+  {
+    "name": "VARROCK_WEST_BANK_SOUTH_PATH_FIX",
+    "aabbs": [
+      [ 3182, 3432, 3183, 3432 ]
+    ]
+  },
+  {
+    "name": "VARROCK_WILDERNESS_DITCH_PATH_FIX",
+    "aabbs": [
+      [ 3242, 3519, 3275, 3526 ]
+    ]
+  },
+  {
+    "name": "VARROCK_GRAND_EXCHANGE_ROOF",
+    "aabbs": [
+      [ 3154, 3480, 3175, 3501 ]
+    ]
+  },
+  {
+    "name": "VARROCK",
+    "aabbs": [
+      [ 3136, 3397, 3290, 3518 ],
+      [ 3177, 3371, 3291, 3410 ]
+    ]
+  },
+  {
+    "name": "VARROCK_SEWERS",
+    "aabbs": [
+      [ 3152, 9856, 3310, 9919 ]
+    ]
+  },
+  {
+    "name": "DEFENDER_OF_VARROCK_DUNGEON",
+    "regionBoxes": [
+      [ 14151, 14408 ]
+    ]
+  },
+  {
+    "name": "DEFENDER_OF_VARROCK_CASTLE_UNDER_ATTACK",
+    "regionBoxes": [
+      [ 15436, 15950 ]
+    ]
+  },
+  {
+    "name": "BARBARIAN_VILLAGE_EAST_PATH_FIX",
+    "aabbs": [
+      [ 3111, 3420, 3112, 3421 ]
+    ]
+  },
+  {
+    "name": "STRONGHOLD_OF_SECURITY_WAR",
+    "regions": [
+      7505
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "STRONGHOLD_OF_SECURITY_FAMINE",
+    "regions": [
+      8017
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "STRONGHOLD_OF_SECURITY_PESTILENCE",
+    "regions": [
+      8530
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "STRONGHOLD_OF_SECURITY_PESTILENCE_WATER_AND_DIRT_FIX",
+    "aabbs": [ [ 2121, 5290, 2131, 5303 ] ]
+  },
+  {
+    "name": "STRONGHOLD_OF_SECURITY_PESTILENCE_GRASS_FIX",
+    "aabbs": [ [ 2152, 5284, 0 ] ]
+  },
+  {
+    "name": "STRONGHOLD_OF_SECURITY_DEATH",
+    "regions": [
+      9297
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "STRONGHOLD_OF_SECURITY",
+    "areas": [
+      "STRONGHOLD_OF_SECURITY_WAR",
+      "STRONGHOLD_OF_SECURITY_FAMINE",
+      "STRONGHOLD_OF_SECURITY_PESTILENCE",
+      "STRONGHOLD_OF_SECURITY_DEATH"
+    ]
+  },
+  {
+    "name": "TOLNA_DUNGEON_ANGER",
+    "aabbs": [
+      [ 3008, 5216, 3039, 5247 ],
+      [ 2963, 5198, 2995, 5228 ],
+      [ 3264, 9823, 3298, 9855 ]
+    ]
+  },
+  {
+    "name": "TOLNA_DUNGEON_FEAR",
+    "aabbs": [
+      [ 3040, 5216, 3071, 5247 ],
+      [ 3072, 5184, 3103, 5215 ],
+      [ 3008, 5184, 3039, 5215 ],
+      [ 3264, 9792, 3296, 9822 ],
+      [ 3299, 9823, 3327, 9855 ]
+    ]
+  },
+  {
+    "name": "TOLNA_DUNGEON_CONFUSION",
+    "aabbs": [
+      [ 3040, 5184, 3071, 5215 ],
+      [ 3297, 9792, 3327, 9822 ]
+    ]
+  },
+  {
+    "name": "Tolna's rift",
+    "regions": [ 12370 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Tolna's rift separated",
+    "regions": [ 12113 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Chaos tunnels (What Lies Below)",
+    "regions": [ 12625 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Gorak Plane",
+    "regions": [ 12115 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "DIGSITE_EXAM_CENTRE",
+    "aabbs": [
+      [ 3357, 3332, 3367, 3348 ],
+      [ 3348, 3332, 3356, 3337 ]
+    ]
+  },
+  {
+    "name": "DIGSITE_DOCK",
+    "aabbs": [
+      [ 3348, 3444, 3404, 3460 ]
+    ]
+  },
+  {
+    "name": "DRAYNOR_MANOR_INTERIOR",
+    "aabbs": [
+      [ 3091, 3353, 3096, 3363 ],
+      [ 3097, 3353, 3119, 3374 ],
+      [ 3120, 3353, 3126, 3360 ]
+    ]
+  },
+  {
+    "name": "DRAYNOR_MANOR",
+    "aabbs": [
+      [ 3084, 3330, 3120, 3382 ],
+      [ 3121, 3330, 3125, 3377 ],
+      [ 3126, 3344, 3127, 3375 ],
+      [ 3128, 3347, 3129, 3364 ],
+      [ 3090, 3383, 3107, 3385 ],
+      [ 3087, 3323, 3123, 3329 ],
+      [ 3126, 3335, 3126, 3339 ]
+    ]
+  },
+  {
+    "name": "DRAYNOR_MANOR_FOREST",
+    "aabbs": [
+      [ 3076, 3315, 3119, 3393 ],
+      [ 3120, 3315, 3144, 3387 ],
+      [ 3145, 3315, 3150, 3376 ]
+    ]
+  },
+  {
+    "name": "DRAYNOR_MANOR_BASEMENT",
+    "aabbs": [
+      [ 3082, 9739, 3126, 9773 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "DRAYNOR_MANOR_CRYPT",
+    "aabbs": [
+      [ 3074, 9767, 3081, 9779 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "DRAYNOR_NORTHERN_HOUSE_FLOOR",
+    "aabbs": [
+      [ 3097, 3277, 3102, 3281 ]
+    ]
+  },
+  {
+    "name": "DRAYNOR_AGGIES_HOUSE",
+    "aabbs": [
+      [ 3083, 3256, 3088, 3261 ]
+    ]
+  },
+  {
+    "name": "DRAYNOR_WOM_HOUSE_FRONT",
+    "aabbs": [
+      [ 3088, 3250, 3094, 3250 ]
+    ]
+  },
+  {
+    "name": "DRAYNOR_BANK",
+    "aabbs": [
+      [ 3088, 3240, 3097, 3246 ],
+      [ 2127, 4903, 2137, 4910 ]
+    ]
+  },
+  {
+    "name": "DRAYNOR_PATH_BLENDING_FIXES",
+    "aabbs": [
+      [ 3110, 3281 ],
+      [ 3109, 3280 ],
+      [ 3108, 3279 ]
+    ]
+  },
+  {
+    "name": "DRAYNOR_NEDS_PATH_FIXES",
+    "aabbs": [
+      [ 3103, 3256, 3103, 3257 ]
+    ]
+  },
+  {
+    "name": "DRAYNOR_BANK_FRONT_PATH",
+    "aabbs": [
+      [ 3092, 3247, 3093, 3247 ]
+    ]
+  },
+  {
+    "name": "DRAYNOR_MARKET_PATH_FIX",
+    "aabbs": [
+      [ 3094, 3247, 3095, 3247 ],
+      [ 3085, 3243, 3087, 3246 ],
+      [ 3087, 3247, 3091, 3247 ]
+    ]
+  },
+  {
+    "name": "DRAYNOR_BANK_PATH_FIX_DARK",
+    "aabbs": [
+      [ 3088, 3248 ],
+      [ 3087, 3247 ],
+      [ 3086, 3246 ],
+      [ 3084, 3246 ]
+    ]
+  },
+  {
+    "name": "DRAYNOR_BANK_PATH_FIX_LIGHT",
+    "aabbs": [
+      [ 3095, 3248 ],
+      [ 3095, 3250 ],
+      [ 3096, 3251 ]
+    ]
+  },
+  {
+    "name": "DRAYNOR_BANK_ROBBERY_CUTSCENE",
+    "aabbs": [
+      [ 2112, 4895, 2156, 4927 ]
+    ]
+  },
+  {
+    "name": "DRAYNOR",
+    "areas": [
+      "DRAYNOR_BANK_ROBBERY_CUTSCENE"
+    ],
+    "aabbs": [
+      [ 3071, 3226, 3133, 3292 ]
+    ]
+  },
+  {
+    "name": "DRAYNOR_SEWERS",
+    "aabbs": [
+      [ 3075, 9642, 3127, 9701 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "WIZARDS_TOWER_PATH",
+    "aabbs": [
+      [ 3112, 3168, 3115, 3171 ],
+      [ 3116, 3166, 3117, 3169 ],
+      [ 3110, 3167, 3111, 3169 ],
+      [ 3115, 3167 ],
+      [ 3118, 3167, 3118, 3168 ],
+      [ 3108, 3168, 3109, 3168 ],
+      [ 3108, 3167, 3109, 3167 ],
+      [ 3116, 3170 ],
+      [ 3118, 3169 ],
+      [ 3108, 3169 ],
+      [ 3109, 3169 ]
+    ]
+  },
+  {
+    "name": "WIZARD_TOWER_PATH_PARTIAL_TILES",
+    "aabbs": [
+      [ 3111, 3170 ],
+      [ 3107, 3186 ],
+      [ 3114, 3167 ],
+      [ 3112, 3167 ],
+      [ 3107, 3167, 3107, 3168 ],
+      [ 3118, 3166 ],
+      [ 3115, 3166 ]
+    ]
+  },
+  {
+    "name": "WIZARD_TOWER_ROOF",
+    "aabbs": [
+      [ 3101, 3153, 3116, 3167 ]
+    ]
+  },
+  {
+    "name": "WIZARD_TOWER_BASEMENT",
+    "aabbs": [
+      [ 3094, 9554, 3122, 9579 ]
+    ]
+  },
+  {
+    "name": "MISTHALIN_MYSTERY_MANOR",
+    "aabbs": [
+      [ 1630, 4835, 1647, 4844 ],
+      [ 1618, 4825, 1647, 4834 ],
+      [ 1624, 4838, 1629, 4844 ],
+      [ 1642, 4824, 1644, 4824 ],
+      [ 1639, 4845, 1641, 4845 ],
+      [ 1630, 4845, 1633, 4845 ]
+    ]
+  },
+  {
+    "name": "MISTHALIN_MYSTERY_MANOR_REGION",
+    "aabbs": [
+      [ 1600, 4780, 1682, 4863 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "FALADOR_EAST_BANK_PATH_FIX_2",
+    "aabbs": [
+      [ 3006, 3346, 3006, 3348 ]
+    ]
+  },
+  {
+    "name": "FALADOR_EAST_BANK_PATH_FIX_1",
+    "aabbs": [
+      [ 3006, 3344, 3006, 3346 ]
+    ]
+  },
+  {
+    "name": "FALADOR_HAIRDRESSER",
+    "aabbs": [
+      [ 2941, 3376, 2946, 3389 ],
+      [ 2946, 3376, 2949, 3382 ]
+    ]
+  },
+  {
+    "name": "FALADOR_PARTY_ROOM",
+    "aabbs": [
+      [ 3034, 3369, 3057, 3387 ]
+    ]
+  },
+  {
+    "name": "FALADOOR_PARTY_ROOM_STAIRS_FIX",
+    "aabbs": [
+      [ 3053, 3084, 3054, 3383 ],
+      [ 3037, 3084, 3038, 3383 ]
+    ]
+  },
+  {
+    "name": "FALADOR_TRIANGLE_PATH_FIX_1",
+    "aabbs": [
+      [ 2973, 3413, 2974, 3415 ]
+    ]
+  },
+  {
+    "name": "FALADOR_TRIANGLE_PATH_FIX_2",
+    "aabbs": [
+      [ 2965, 3406, 2968, 3407 ]
+    ]
+  },
+  {
+    "name": "FALADOR_SOUTH_PATH_FIX",
+    "aabbs": [
+      [ 3006, 3320, 3008, 3321 ]
+    ]
+  },
+  {
+    "name": "FALADOR_INSTANCE",
+    "aabbs": [
+      [ 3456, 4736, 3527, 4783 ]
+    ]
+  },
+  {
+    "name": "FALADOR",
+    "areas": [
+      "FALADOR_INSTANCE"
+    ],
+    "aabbs": [
+      [ 2932, 3306, 3068, 3401 ],
+      [ 2964, 3401, 2969, 3405 ]
+    ]
+  },
+  {
+    "name": "DWARVEN_MINES",
+    "regions": [ 12185 ],
+    "aabbs": [
+      [ 2999, 9688, 3071, 9791 ],
+      [ 2972, 9792, 3007, 9855 ],
+      [ 2956, 9800, 2971, 9825 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "MOTHERLODE_MINE",
+    "aabbs": [
+      [ 3710, 5631, 3775, 5695 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Motherlode Mine Dark Wall Fix",
+    "aabbs": [
+      [ 3752, 5684, 3753, 5684 ],
+      [ 3756, 5684, 3757, 5684 ],
+      [ 3758, 5680, 3758, 5681 ],
+      [ 3760, 5680, 3762, 5680 ],
+      [ 3759, 5674, 3761, 5674 ],
+      [ 3762, 5670, 3762, 5673 ],
+      [ 3763, 5662, 3763, 5663 ],
+      [ 3754, 5682, 3754, 5683 ],
+      [ 3758, 5675 ],
+      [ 3754, 5681 ],
+      [ 3760, 5670 ],
+      [ 3764, 5671 ],
+      [ 3751, 5677 ],
+      [ 3753, 5680 ],
+      [ 3745, 5645 ],
+      [ 3744, 5642 ],
+      [ 3728, 5693 ],
+      [ 3717, 5678 ],
+      [ 3754, 5677 ]
+    ]
+  },
+  {
+    "name": "Motherlode Mine Dark Trough Fix",
+    "aabbs": [
+      [ 3747, 5671, 3747, 5673 ],
+      [ 3750, 5676 ],
+      [ 3745, 5661 ],
+      [ 3748, 5659, 3749, 5659 ],
+      [ 3749, 5660, 3749, 5673 ]
+    ]
+  },
+  {
+    "name": "EDGEVILLE_PATH_OVERLAY",
+    "aabbs": [
+      [ 3093, 3501, 3097, 3500 ],
+      [ 3079, 3502, 3085, 3503 ],
+      [ 3104, 3507, 3113, 3508 ],
+      [ 3112, 3514, 3119, 3515 ],
+      [ 3122, 3516, 3129, 3517 ],
+      [ 3107, 3502, 3108, 3508 ],
+      [ 3079, 3501, 3080, 3502 ],
+      [ 3079, 3504, 3080, 3506 ],
+      [ 3099, 3497, 3100, 3500 ],
+      [ 3084, 3501, 3088, 3502 ],
+      [ 3113, 3509, 3114, 3514 ],
+      [ 3113, 3508, 3114, 3509 ],
+      [ 3101, 3508, 3103, 3509 ],
+      [ 3103, 3508, 3104, 3509 ],
+      [ 3134, 3516, 3134, 3517 ],
+      [ 3102, 3498, 3104, 3499 ],
+      [ 3102, 3498, 3104, 3499 ],
+      [ 3101, 3498, 3101, 3499 ],
+      [ 3099, 3495, 3099, 3496 ],
+      [ 3117, 3516, 3118, 3516 ],
+      [ 3119, 3515, 3121, 3517 ],
+      [ 3098, 3500 ],
+      [ 3114, 3507 ],
+      [ 3112, 3513 ],
+      [ 3135, 3516 ],
+      [ 3106, 3506 ],
+      [ 3083, 3501 ],
+      [ 3101, 3510 ]
+    ]
+  },
+  {
+    "name": "EDGEVILLE_BRIDGE",
+    "aabbs": [
+      [ 3130, 3516, 3133, 3518 ]
+    ]
+  },
+  {
+    "name": "EDGEVILLE_BANK_PERIMETER_FIX",
+    "aabbs": [
+      [ 3090, 3494, 3090, 3497 ],
+      [ 3091, 3493, 3091, 3497 ]
+    ]
+  },
+  {
+    "name": "EDGEVILLE_BANK_WINDOW_FIX",
+    "aabbs": [
+      [ 3089, 3493, 3089, 3498 ]
+    ]
+  },
+  {
+    "name": "EDGEVILLE_BANK_TILING",
+    "aabbs": [
+      [ 3098, 3498 ],
+      [ 3098, 3496 ],
+      [ 3098, 3494 ],
+      [ 3098, 3492 ],
+      [ 3098, 3490 ],
+      [ 3098, 3488 ],
+      [ 3097, 3499 ],
+      [ 3096, 3488 ],
+      [ 3095, 3499 ],
+      [ 3094, 3488 ],
+      [ 3093, 3499 ],
+      [ 3092, 3488 ],
+      [ 3091, 3489 ],
+      [ 3091, 3491 ],
+      [ 3091, 3493 ],
+      [ 3091, 3495 ],
+      [ 3091, 3497 ],
+      [ 3091, 3499 ],
+      [ 3090, 3494 ],
+      [ 3090, 3496 ]
+    ]
+  },
+  {
+    "name": "EDGEVILLE_BANK",
+    "aabbs": [
+      [ 3091, 3488, 3098, 3499 ]
+    ]
+  },
+  {
+    "name": "EDGEVILLE_BANK_SURROUNDING_PATH",
+    "aabbs": [
+      [ 3089, 3500, 3091, 3501 ],
+      [ 3089, 3492, 3093, 3502 ],
+      [ 3091, 3498, 3093, 3500 ],
+      [ 3086, 3485, 3088, 3502 ],
+      [ 3089, 3490, 3090, 3492 ],
+      [ 3088, 3483, 3092, 3489 ]
+    ]
+  },
+  {
+    "name": "EDGEVILLE_DORIS_HOUSE",
+    "aabbs": [
+      [ 3077, 3489, 3081, 3496 ]
+    ]
+  },
+  {
+    "name": "EDGEVILLE_MONASTERY",
+    "aabbs": [
+      [ 3041, 3471, 3062, 3509 ]
+    ]
+  },
+  {
+    "name": "EDGEVILLE_GUARD_TOWER_FLOOR",
+    "aabbs": [
+      [ 3107, 3511, 3111, 3517 ]
+    ]
+  },
+  {
+    "name": "EDGEVILLE_FURNACE_FLOOR",
+    "aabbs": [
+      [ 3105, 3496, 3110, 3501 ]
+    ]
+  },
+  {
+    "name": "EDGEVILLE_MANS_HOUSE_FLOOR",
+    "aabbs": [
+      [ 3091, 3507, 3100, 3513 ]
+    ]
+  },
+  {
+    "name": "EDGEVILLE_GENERAL_STORE_FLOOR_FIX",
+    "aabbs": [
+      [ 3078, 3507, 3082, 3507 ]
+    ]
+  },
+  {
+    "name": "EDGEVILLE_GENERAL_STORE_FLOOR",
+    "aabbs": [
+      [ 3076, 3507, 3084, 3513 ]
+    ]
+  },
+  {
+    "name": "Edgeville Dungeon & Varrock Sewers",
+    "areas": [
+      "VARROCK_SEWERS"
+    ],
+    "aabbs": [
+      [ 3089, 9818, 3135, 9890 ],
+      [ 3086, 9891, 3088, 9901 ],
+      [ 3089, 9891, 3135, 9919 ],
+      [ 3072, 9920, 3141, 9983 ],
+      [ 3136, 9856, 3151, 9919 ],
+      [ 3072, 9984, 3135, 10017 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Clan Cup portal cave",
+    "aabbs": [
+      [ 3145, 9813, 3169, 9838 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Varrock West bank",
+    "aabbs": [
+      [ 3186, 9817, 3197, 9835 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Champion's Challenge",
+    "regions": [ 12696 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Phoenix Gang Hideout",
+    "regions": [ 12952 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Blue Moon Inn basement",
+    "aabbs": [
+      [ 3229, 9796, 3242, 9807 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "EVIL_DAVE",
+    "aabbs": [
+      [ 3072, 9877, 3085, 9899, 0 ],
+      [ 3066, 9893, 3071, 9899, 0 ],
+      [ 3071, 9878, 3071, 9892, 0 ],
+      [ 3068, 9878, 3070, 9884, 0 ],
+      [ 3067, 9878, 3067, 9883, 0 ],
+      [ 3079, 9872, 3085, 9876, 0 ],
+      [ 3086, 9877, 3086, 9878, 0 ],
+      [ 3086, 9879, 3088, 9890, 0 ],
+      [ 3073, 9892, 3086, 9900, 0 ],
+      [ 3076, 9901, 3082, 9905, 0 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "SEERS_BANK",
+    "aabbs": [
+      [ 2719, 3487, 2730, 3497 ]
+    ]
+  },
+  {
+    "name": "SEERS_HOUSES",
+    "aabbs": [
+      [ 2709, 3476, 2716, 3482 ],
+      [ 2699, 3470, 2705, 3476 ],
+      [ 2710, 3470, 2715, 3473 ],
+      [ 2706, 3471, 1, 2709, 3473, 1 ],
+      [ 2716, 3470, 1, 2716, 3473, 1 ],
+      [ 2735, 3499, 2739, 3505 ]
+    ]
+  },
+  {
+    "name": "SEERS_CHURCH",
+    "aabbs": [
+      [ 2690, 3459, 2703, 3466 ]
+    ]
+  },
+  {
+    "name": "SEERS_BAR",
+    "aabbs": [
+      [ 2689, 3488, 2700, 3498 ],
+      [ 2689, 3488, 2693, 3488 ],
+      [ 2696, 3488 ]
+    ]
+  },
+  {
+    "name": "SEERS_BAR_ENTRANCE",
+    "aabbs": [
+      [ 2694, 3488, 2695, 3488 ]
+    ]
+  },
+  {
+    "name": "SEERS_CAMELOT_CASTLE_BLENDED",
+    "aabbs": [
+      [ 2750, 3495, 2 ],
+      [ 2751, 3494, 2 ],
+      [ 2750, 3494, 2 ],
+      [ 2766, 3495, 2 ],
+      [ 2765, 3494, 2 ],
+      [ 2766, 3494, 2 ]
+    ]
+  },
+  {
+    "name": "SEERS_CAMELOT_CASTLE",
+    "aabbs": [
+      [ 2748, 3504, 0, 2767, 3517, 0 ],
+      [ 2748, 3496, 0, 2751, 3503, 0 ],
+      [ 2765, 3496, 0, 2768, 3503, 0 ],
+      [ 2752, 3501, 1, 2764, 3503, 1 ],
+      [ 2748, 3504, 1, 2768, 3517, 1 ],
+      [ 2748, 3496, 1, 2751, 3503, 1 ],
+      [ 2765, 3496, 1, 2768, 3503, 1 ],
+      [ 2752, 3492, 1, 2764, 3495, 1 ],
+      [ 2765, 3490, 0, 2770, 3495, 0 ],
+      [ 2746, 3490, 0, 2751, 3495, 0 ],
+      [ 2765, 3490, 1, 2770, 3495, 1 ],
+      [ 2746, 3490, 1, 2751, 3495, 1 ],
+      [ 2746, 3490, 2, 2751, 3493, 2 ],
+      [ 2746, 3494, 2, 2749, 3495, 2 ],
+      [ 2765, 3490, 2, 2770, 3493, 2 ],
+      [ 2767, 3494, 2, 2770, 3495, 2 ]
+    ]
+  },
+  {
+    "name": "SEERS_CAMELOT_CASTLE_KNIGHTSWAVE_OVERWORLD",
+    "aabbs": [
+      [ 2764, 3502, 2, 2764, 3512, 2 ],
+      [ 2752, 3502, 2, 2752, 3512, 2 ],
+      [ 2753, 3502, 2, 2763, 3513, 2 ]
+    ]
+  },
+  {
+    "name": "ELEMENTAL_WORKSHOP_HOUSE",
+    "aabbs": [
+      [ 2709, 3496, 2711, 3498 ],
+      [ 2704, 3497, 2705, 3498 ],
+      [ 2704, 3496, 2708, 3496 ],
+      [ 2704, 3492, 2714, 3495 ],
+      [ 2706, 3487, 2711, 3491 ],
+      [ 2706, 3487, 2708, 3487 ],
+      [ 2711, 3487 ]
+    ]
+  },
+  {
+    "name": "ELEMENTAL_WORKSHOP_HOUSE_ENTRANCE",
+    "aabbs": [
+      [ 2709, 3487, 2710, 3487 ]
+    ]
+  },
+  {
+    "name": "SEERS_COURTHOUSE",
+    "aabbs": [
+      [ 2732, 3465, 2739, 3471 ]
+    ]
+  },
+  {
+    "name": "Elemental Workshop floor 1",
+    "aabbs": [
+      [ 2670, 9857, 2763, 9934 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "SINCLAIR_MANSION",
+    "aabbs": [
+      [ 2733, 3574, 2747, 3582 ],
+      [ 2739, 3573, 2742, 3573 ]
+    ]
+  },
+  {
+    "name": "GOBLIN_FORT_DWARF_CANNON_UPPER_FLOORS",
+    "aabbs": [
+      [ 2569, 3440, 1, 2571, 3444, 1 ],
+      [ 2567, 3442, 2, 2571, 3444, 2 ]
+    ]
+  },
+  {
+    "name": "STRONGHOLD_SLAYER_CAVE",
+    "aabbs": [
+      [ 2371, 9743, 2495, 9847, 0 ],
+      [ 2496, 9792, 2499, 9847, 0 ],
+      [ 2371, 9848, 2431, 9855, 0 ],
+      [ 2500, 9792, 2503, 9843, 0 ],
+      [ 2500, 9844, 2500, 9846, 0 ],
+      [ 2501, 9844, 2501, 9845, 0 ],
+      [ 2502, 9844, 2502, 9844, 0 ],
+      [ 2432, 9848, 2445, 9848, 0 ],
+      [ 2432, 9849, 2437, 9849, 0 ],
+      [ 2432, 9850, 2436, 9850, 0 ],
+      [ 2432, 9851, 2435, 9851, 0 ],
+      [ 2432, 9852, 2434, 9852, 0 ],
+      [ 2432, 9853, 2433, 9853, 0 ],
+      [ 2432, 9854, 0 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "WATERFALL_DUNGEON",
+    "aabbs": [
+      [ 2554, 9858, 2597, 9919, 0 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "WATERFALL_DUNGEON_CHALICE_ROOM",
+    "aabbs": [
+      [ 2588, 9890, 2619, 9919, 0 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "WATERFALL_DUNGEON_CHALICE_ROOM_FLOODED",
+    "aabbs": [
+      [ 2524, 9890, 2555, 9919, 0 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "GOBLIN_CAVE",
+    "regions": [
+      10393
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "WHITE_WOLF_MOUNTAIN",
+    "aabbs": [
+      [ 2786, 3486, 2805, 3534 ],
+      [ 2806, 3490, 2830, 3544 ],
+      [ 2831, 3537, 2837, 3541 ],
+      [ 2831, 3533, 2848, 3536 ],
+      [ 2831, 3490, 2875, 3532 ],
+      [ 2861, 3533, 2872, 3535 ],
+      [ 2876, 3495, 2880, 3528 ],
+      [ 2876, 3490, 2877, 3494 ],
+      [ 2881, 3520, 2906, 3525 ],
+      [ 2881, 3517, 2885, 3519 ],
+      [ 2881, 3504, 2882, 3516 ],
+      [ 2881, 3495, 2886, 3503 ],
+      [ 2826, 3476, 2873, 3489 ],
+      [ 2874, 3486, 2877, 3489 ],
+      [ 2830, 3463, 2874, 3475 ],
+      [ 2833, 3461, 2874, 3462 ],
+      [ 2838, 3446, 2879, 3460 ],
+      [ 2843, 3443, 2879, 3445 ],
+      [ 2850, 3441, 2878, 3442 ],
+      [ 2853, 3438, 2879, 3440 ],
+      [ 2858, 3435, 2879, 3437 ],
+      [ 2862, 3432, 2879, 3434 ],
+      [ 2865, 3430, 2878, 3431 ],
+      [ 2866, 3424, 2872, 3429 ],
+      [ 2875, 3461, 2880, 3472 ],
+      [ 2880, 3453, 2881, 3460 ],
+      [ 2431, 5374, 2496, 5439 ]
+    ]
+  },
+  {
+    "name": "ICE_MOUNTAIN",
+    "aabbs": [
+      [ 2992, 3493, 3019, 3510 ],
+      [ 3020, 3494, 3023, 3509 ],
+      [ 2994, 3487, 3018, 3492 ],
+      [ 2996, 3480, 3016, 3486 ],
+      [ 2995, 3478, 3020, 3479 ],
+      [ 2992, 3468, 3030, 3477 ],
+      [ 2989, 3464, 3026, 3467 ],
+      [ 2987, 3462, 3021, 3463 ],
+      [ 2987, 3457, 3018, 3461 ],
+      [ 2987, 3468, 2991, 3474 ],
+      [ 3031, 3469, 3032, 3475 ],
+      [ 3012, 3511, 3018, 3512 ]
+    ]
+  },
+  {
+    "name": "ASGARNIA_MOUNTAINS",
+    "areas": [
+      "ICE_MOUNTAIN",
+      "WHITE_WOLF_MOUNTAIN"
+    ]
+  },
+  {
+    "name": "KEEP_LE_FAYE_JAIL",
+    "regions": [
+      7490
+    ]
+  },
+  {
+    "name": "KEEP_LE_FAYE_INSTANCE",
+    "aabbs": [
+      [ 1670, 4230, 1721, 4280 ]
+    ]
+  },
+  {
+    "name": "KEEP_LE_FAYE",
+    "areas": [
+      "KEEP_LE_FAYE_INSTANCE"
+    ],
+    "aabbs": [
+      [ 2747, 3389, 2782, 3415 ]
+    ]
+  },
+  {
+    "name": "CATHERBY_BEACH_OBELISK_WATER_FIX",
+    "aabbs": [
+      [ 2843, 3421, 2845, 3423 ]
+    ]
+  },
+  {
+    "name": "CATHERBY_BEACH_LADDER_FIX",
+    "aabbs": [
+      [ 2842, 3424 ]
+    ]
+  },
+  {
+    "name": "CATHERBY_BEACH_SHORELINE_FIX",
+    "aabbs": [
+      [ 2869, 3414, 2870, 3416 ],
+      [ 2864, 3420, 2865, 3423 ],
+      [ 2851, 3423, 2863, 3426 ],
+      [ 2848, 3427, 2848, 3428 ],
+      [ 2847, 3429 ],
+      [ 2843, 3430, 2845, 3430 ]
+    ]
+  },
+  {
+    "name": "CATHERBY_BANK",
+    "aabbs": [
+      [ 2806, 3438, 2812, 3445 ]
+    ]
+  },
+  {
+    "name": "CATHERBY",
+    "aabbs": [
+      [ 2789, 3413, 2863, 3432 ],
+      [ 2864, 3424, 2866, 3432 ],
+      [ 2857, 3433, 2863, 3436 ],
+      [ 2789, 3433, 2856, 3439 ],
+      [ 2857, 3437, 2860, 3437 ],
+      [ 2839, 3440, 2851, 3444 ],
+      [ 2851, 3440, 2854, 3441 ],
+      [ 2839, 3445, 2844, 3447 ],
+      [ 2845, 3445 ],
+      [ 2789, 3440, 2838, 3462 ],
+      [ 2839, 3453, 2842, 3460 ],
+      [ 2789, 3463, 2832, 3476 ],
+      [ 2802, 3410, 2805, 3412 ]
+    ]
+  },
+  {
+    "name": "RIMMINGTON",
+    "aabbs": [
+      [ 2905, 3195, 2995, 3265 ],
+      [ 2945, 3186, 2989, 3195 ]
+    ]
+  },
+  {
+    "name": "PORT_SARIM_BETTYS_HOUSE",
+    "aabbs": [
+      [ 3011, 3256, 3016, 3261 ]
+    ]
+  },
+  {
+    "name": "PORT_SARIM",
+    "aabbs": [
+      [ 3005, 3174, 3064, 3265 ]
+    ]
+  },
+  {
+    "name": "MUDSKIPPER_POINT",
+    "aabbs": [
+      [ 2977, 3102, 3008, 3132 ]
+    ]
+  },
+  {
+    "name": "NORTH_OF_MUDSKIPPER",
+    "aabbs": [
+      [ 2984, 3133, 3041, 3169 ]
+    ]
+  },
+  {
+    "name": "IMCANDO_PENINSULA",
+    "areas": [
+      "MUDSKIPPER_POINT",
+      "NORTH_OF_MUDSKIPPER"
+    ]
+  },
+  {
+    "name": "SOUTH_FALADOR_FARM",
+    "aabbs": [
+      [ 3011, 3279, 3069, 3322 ]
+    ]
+  },
+  {
+    "name": "CRAFTING_GUILD",
+    "aabbs": [
+      [ 2910, 3265, 2945, 3296 ]
+    ]
+  },
+  {
+    "name": "SOUTH_FALADOR",
+    "aabbs": [
+      [ 2900, 3195, 3069, 3308 ],
+      [ 2971, 3100, 3060, 3195 ],
+      [ 2924, 3185, 2980, 3202 ]
+    ]
+  },
+  {
+    "name": "ASGARNIA_ICE_DUNGEON_NORMAL",
+    "aabbs": [
+      [ 2984, 9536, 3019, 9601 ],
+      [ 2980, 9571, 2983, 9585 ]
+    ]
+  },
+  {
+    "name": "ASGARNIA_ICE_DUNGEON_SNOWY",
+    "aabbs": [
+      [ 3020, 9531, 3085, 9605 ],
+      [ 2971, 9586, 2983, 9597 ],
+      [ 2971, 9548, 2983, 9570 ],
+      [ 2971, 9571, 2981, 9574 ],
+      [ 2971, 9575, 2977, 9585 ],
+      [ 2929, 9548, 2970, 9597 ]
+    ]
+  },
+  {
+    "name": "ASGARNIA_ICE_DUNGEON_SNOW_FIX",
+    "aabbs": [
+      [ 3031, 9536, 3073, 9600 ],
+      [ 3019, 9536, 3030, 9564 ],
+      [ 2983, 9595, 2985, 9595 ],
+      [ 2982, 9593, 2984, 9594 ],
+      [ 2977, 9591, 2981, 9596 ],
+      [ 2977, 9590, 2980, 9590 ],
+      [ 2977, 9589, 2978, 9589 ],
+      [ 2955, 9548, 2976, 9596 ],
+      [ 2977, 9571, 2981, 9574 ],
+      [ 2977, 9548, 2982, 9570 ],
+      [ 2983, 9555, 2983, 9569 ],
+      [ 2915, 9553, 2954, 9586 ]
+    ]
+  },
+  {
+    "name": "ASGARNIA_ICE_DUNGEON_SNOW_FIX_2",
+    "aabbs": [
+      [ 3023, 9585 ],
+      [ 3012, 9573, 3019, 9597 ],
+      [ 3029, 9582 ],
+      [ 3027, 9581 ],
+      [ 3026, 9576 ]
+    ]
+  },
+  {
+    "name": "ASGARNIA_ICE_DUNGEON_ICE_FIX",
+    "aabbs": [
+      [ 2963, 9581, 2964, 9581 ],
+      [ 2965, 9577, 2967, 9579 ],
+      [ 2957, 9571, 2963, 9579 ],
+      [ 2964, 9569, 2969, 9572 ],
+      [ 2957, 9569, 2963, 9570 ],
+      [ 2956, 9565, 2956, 9568 ],
+      [ 2957, 9553, 2968, 9568 ],
+      [ 2969, 9553, 2976, 9568 ]
+    ]
+  },
+  {
+    "name": "ASGARNIA_ICE_DUNGEON",
+    "aabbs": [
+      [ 2882, 9536, 3085, 9599 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "ROYAL_TITANS_ARENA",
+    "aabbs": [
+      [ 2906, 9555, 2916, 9580 ]
+    ]
+  },
+  {
+    "name": "KARAMJA_VOLCANO",
+    "aabbs": [
+      [ 2827, 3158, 2859, 3192 ]
+    ]
+  },
+  {
+    "name": "BRIMHAVEN_DOCKS_TEXTURED",
+    "aabbs": [
+      [ 2771, 3223, 2773, 3235 ]
+    ]
+  },
+  {
+    "name": "BRIMHAVEN_AGILITY_ARENA",
+    "regions": [
+      11157
+    ]
+  },
+  {
+    "name": "HEROES_GUILD",
+    "aabbs": [
+      [ 2892, 3507, 2898, 3514 ],
+      [ 2894, 3504, 2896, 3517 ],
+      [ 2899, 3509, 2901, 3512 ]
+    ]
+  },
+  {
+    "name": "HEROES_GUILD_BASEMENT",
+    "aabbs": [
+      [ 2943, 9880, 2953, 9918, 0 ],
+      [ 2901, 9920, 2942, 9932, 0 ],
+      [ 2900, 9920, 2900, 9931, 0 ],
+      [ 2899, 9920, 2899, 9930, 0 ],
+      [ 2898, 9920, 2898, 9929, 0 ],
+      [ 2896, 9920, 2897, 9928, 0 ],
+      [ 2893, 9920, 2895, 9927, 0 ],
+      [ 2891, 9920, 2892, 9926, 0 ],
+      [ 2889, 9920, 2890, 9925, 0 ],
+      [ 2887, 9920, 2888, 9924, 0 ],
+      [ 2886, 9920, 2886, 9923, 0 ],
+      [ 2884, 9920, 2885, 9922, 0 ],
+      [ 2883, 9920, 2883, 9921, 0 ],
+      [ 2882, 9920, 0 ],
+      [ 2880, 9896, 2942, 9919, 0 ],
+      [ 2911, 9887, 2942, 9895, 0 ],
+      [ 2926, 9880, 2942, 9886, 0 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "WARRIORS_GUILD",
+    "aabbs": [
+      [ 2837, 3537, 2875, 3555 ],
+      [ 2849, 3534, 2859, 3536 ]
+    ]
+  },
+  {
+    "name": "WARRIORS_GUILD_FLOOR_2",
+    "aabbs": [
+      [ 2837, 3533, 1, 2877, 3557, 1 ]
+    ]
+  },
+  {
+    "name": "WARRIORS_GUILD_BASEMENT",
+    "aabbs": [
+      [ 2901, 9981, 2942, 9948 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "ROGUES_DEN",
+    "regionBoxes": [
+      [ 11854, 12111 ]
+    ],
+    "regions": [ 12109 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "BURTHORPE",
+    "aabbs": [
+      [ 2830, 3533, 2938, 3576 ],
+      [ 2880, 3576, 2938, 3581 ],
+      [ 2838, 3538, 2928, 3553 ],
+      [ 2873, 3521, 2935, 3533 ]
+    ]
+  },
+  {
+    "name": "GAMES_ROOM_INNER",
+    "aabbs": [
+      [ 2194, 4946, 2221, 4973 ]
+    ]
+  },
+  {
+    "name": "GAMES_ROOM",
+    "aabbs": [
+      [ 2179, 4931, 2236, 4988 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "EAST_ARDOUGNE_FURNACE",
+    "aabbs": [
+      [ 2600, 3310, 2603, 3314 ]
+    ]
+  },
+  {
+    "name": "EAST_ARDOUGNE_BANK_NORTH",
+    "aabbs": [
+      [ 2612, 3330, 2621, 3335 ]
+    ]
+  },
+  {
+    "name": "EAST_ARDOUGNE_COBBLE_OFFICE",
+    "aabbs": [
+      [ 2668, 3320, 2673, 3323 ],
+      [ 2668, 3318, 2675, 3319 ],
+      [ 2671, 3315, 2675, 3317 ],
+      [ 2670, 3316, 2670, 3317 ]
+    ]
+  },
+  {
+    "name": "EAST_ARDOUGNE_COBBLE_OFFICE_BLENDING",
+    "aabbs": [
+      [ 2668, 3317 ],
+      [ 2669, 3316 ],
+      [ 2670, 3315 ]
+    ]
+  },
+  {
+    "name": "EAST_ARDOUGNE_COBBLE_CHRUCH",
+    "aabbs": [
+      [ 2609, 3304, 0, 2612, 3307, 0 ]
+    ]
+  },
+  {
+    "name": "EAST_ARDOUGNE_COBBLE_DOCK_HOUSE",
+    "aabbs": [
+      [ 2643, 3269, 2650, 3272 ],
+      [ 2647, 3273, 2650, 3273 ]
+    ]
+  },
+  {
+    "name": "PLAGUE_CITY_SEWERS",
+    "aabbs": [
+      [ 2496, 9728, 2559, 9789 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "WEST_ARDOUGNE_COBBLE_HOUSES",
+    "aabbs": [
+      [ 2547, 3289, 2549, 3292 ],
+      [ 2539, 3284, 2546, 3292 ],
+      [ 2522, 3313, 2529, 3319 ],
+      [ 2542, 3324, 2546, 3327 ]
+    ]
+  },
+  {
+    "name": "KHAZARD_BATTLEFIELD_COBBLE",
+    "aabbs": [
+      [ 2522, 3255, 2526, 3258 ],
+      [ 2500, 3251, 2506, 3259 ]
+    ]
+  },
+  {
+    "name": "EAST_ARDOUGNE_PATHING_FIXES",
+    "aabbs": [
+      [ 2570, 3313 ],
+      [ 2564, 3306 ],
+      [ 2565, 3307 ]
+    ]
+  },
+  {
+    "name": "EAST_ARDOUGNE_HAZEL_HOUSE",
+    "aabbs": [
+      [ 2562, 3265, 2579, 3278 ]
+    ]
+  },
+  {
+    "name": "EAST_ARDOUGNE_BRIDGE",
+    "aabbs": [
+      [ 2594, 3295, 2603, 3298 ]
+    ]
+  },
+  {
+    "name": "EAST_ARDOUGNE_HANDELMORT_STONE_FLOOR",
+    "aabbs": [
+      [ 2625, 3308, 0, 2645, 3327, 0 ]
+    ]
+  },
+  {
+    "name": "EAST_ARDOUGNE_HANDELMORT_BALCONY",
+    "aabbs": [
+      [ 2630, 3318, 1, 2640, 3320, 1 ]
+    ]
+  },
+  {
+    "name": "WEST_ARDOUGNE",
+    "aabbs": [
+      [ 2460, 3279, 2558, 3335 ],
+      [ 2510, 3264, 2558, 3279 ],
+      [ 2429, 3305, 2466, 3323 ]
+    ]
+  },
+  {
+    "name": "WEST_ARDOUGNE_CARPET_FIX",
+    "aabbs": [
+      [ 2542, 3286, 2544, 3289 ],
+      [ 2526, 3314, 2526, 3317 ]
+    ]
+  },
+  {
+    "name": "SOTE_CUTSCENE_ARDOUGNE_SQUARE",
+    "regions": [
+      13404
+    ]
+  },
+  {
+    "name": "EAST_ARDOUGNE",
+    "areas": [
+      "SOTE_CUTSCENE_ARDOUGNE_SQUARE"
+    ],
+    "aabbs": [
+      [ 2558, 3257, 2686, 3342 ]
+    ]
+  },
+  {
+    "name": "EAST_ARDOUGNE_CASTLE_DIRT_FIX",
+    "aabbs": [
+      [ 2565, 3279, 2592, 3313 ]
+    ]
+  },
+  {
+    "name": "EAST_ARDOUGNE_CASTLE_PATH_FIX",
+    "aabbs": [
+      [ 2585, 3298, 2593, 3314 ]
+    ]
+  },
+  {
+    "name": "EAST_ARDOUGNE_BANK",
+    "aabbs": [
+      [ 2652, 3280, 0, 2658, 3287, 0 ],
+      [ 2649, 3285, 0, 2651, 3287, 0 ],
+      [ 2649, 3280, 0, 2651, 3282, 0 ]
+    ]
+  },
+  {
+    "name": "EAST_ARDOUGNE_DOCKS_FIX",
+    "aabbs": [
+      [ 2667, 3264, 2689, 3276 ]
+    ]
+  },
+  {
+    "name": "CLOCK_TOWER_DUNGEON_COLORED_TILES",
+    "aabbs": [
+      [ 2578, 9649, 2579, 9650 ]
+    ]
+  },
+  {
+    "name": "CLOCK_TOWER_DUNGEON",
+    "aabbs": [
+      [ 2560, 9599, 2623, 9663 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "WITCHAVEN",
+    "aabbs": [
+      [ 2693, 3262, 2744, 3298 ],
+      [ 2702, 3299, 2744, 3310 ],
+      [ 2714, 3311, 2744, 3320 ]
+    ]
+  },
+  {
+    "name": "WITCHAVEN_DUNGEON",
+    "regions": [ 9295, 10903 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "LEGENDS_GUILD_DUNGEON",
+    "regions": [ 10904 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "KHAZARD_BATTLEFIELD_COBBLE_OUTSIDE",
+    "aabbs": [
+      [ 2507, 3254, 2512, 3259 ],
+      [ 2508, 3250, 2509, 3251 ],
+      [ 2517, 3256, 2518, 3257 ],
+      [ 2514, 3248, 2520, 3250 ]
+    ]
+  },
+  {
+    "name": "KANDARIN_MONISTARY",
+    "aabbs": [
+      [ 2590, 3203, 2622, 3221 ]
+    ]
+  },
+  {
+    "name": "KANDARIN_MONISTARY_WINGS_PARTIAL_TILES",
+    "aabbs": [
+      [ 2611, 3205, 2620, 3213 ],
+      [ 2592, 3205, 2601, 3213 ]
+    ]
+  },
+  {
+    "name": "KANDARIN_MONISTARY_WINGS",
+    "aabbs": [
+      [ 2614, 3214, 2617, 3214 ],
+      [ 2613, 3213, 2618, 3213 ],
+      [ 2612, 3212, 2619, 3212 ],
+      [ 2611, 3207, 2620, 3211 ],
+      [ 2621, 3208, 2621, 3210 ],
+      [ 2612, 3206, 2619, 3206 ],
+      [ 2613, 3205, 2618, 3205 ],
+      [ 2614, 3204, 2617, 3204 ],
+      [ 2595, 3214, 2598, 3214 ],
+      [ 2594, 3213, 2599, 3213 ],
+      [ 2593, 3212, 2600, 3212 ],
+      [ 2592, 3207, 2601, 3211 ],
+      [ 2591, 3208, 2591, 3210 ],
+      [ 2593, 3206, 2600, 3206 ],
+      [ 2594, 3205, 2599, 3205 ],
+      [ 2595, 3204, 2598, 3204 ]
+    ]
+  },
+  {
+    "name": "YANILLE_AGILITY_DUNGEON_ENTRANCE",
+    "aabbs": [
+      [ 2568, 3122, 2571, 3125 ]
+    ]
+  },
+  {
+    "name": "YANILLE_BANK",
+    "aabbs": [
+      [ 2609, 3088, 2616, 3097 ]
+    ]
+  },
+  {
+    "name": "YANILLE_WATCHTOWER_TOP",
+    "aabbs": [
+      [ 2927, 4711, 2, 2934, 4718, 2 ]
+    ]
+  },
+  {
+    "name": "YANILLE_WATCHTOWER_MIDDLE",
+    "aabbs": [
+      [ 2543, 3111, 1, 2550, 3118, 1 ]
+    ]
+  },
+  {
+    "name": "YANILLE_WATCHTOWER_BOTTOM_DOORWAY",
+    "aabbs": [
+      [ 2550, 3114, 0, 2550, 3115, 0 ]
+    ]
+  },
+  {
+    "name": "YANILLE_WATCHTOWER_BOTTOM",
+    "aabbs": [
+      [ 2543, 3111, 0, 2549, 3118, 0 ],
+      [ 2550, 3111, 0, 2550, 3113, 0 ],
+      [ 2550, 3116, 0, 2550, 3118, 0 ]
+    ]
+  },
+  {
+    "name": "YANILLE_MAGIC_GUILD_FLOORS",
+    "aabbs": [
+      [ 2585, 3081, 1, 2596, 3094, 1 ],
+      [ 2585, 3081, 2, 2596, 3094, 2 ]
+    ]
+  },
+  {
+    "name": "YANILLE_INSTANCE",
+    "regions": [
+      11593
+    ]
+  },
+  {
+    "name": "YANILLE",
+    "areas": [
+      "YANILLE_INSTANCE"
+    ],
+    "aabbs": [
+      [ 2531, 3070, 2622, 3127 ]
+    ]
+  },
+  {
+    "name": "YANILLE_DUNGEON",
+    "regions": [ 10388 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "GUTANOTH_CAVE",
+    "aabbs": [
+      [ 2560, 9408, 2626, 9475 ]
+    ]
+  },
+  {
+    "name": "NIGHTMARE_ZONE_AND_KING_BLACK_DRAGON",
+    "aabbs": [
+      [ 2241, 4670, 2303, 4722 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "CASTLE_WARS_LOBBY",
+    "aabbs": [
+      [ 2434, 3080, 2448, 3104 ]
+    ]
+  },
+  {
+    "name": "CASTLE_WARS_ARENA_SARADOMIN_SIDE",
+    "aabbs": [
+      [ 2373, 3068, 2435, 3086 ],
+      [ 2435, 3086, 3282, 3091 ],
+      [ 2388, 3091, 2435, 3093 ],
+      [ 2404, 3093, 2435, 3095 ],
+      [ 2407, 3095, 2435, 3098 ],
+      [ 2409, 3098, 2435, 3117 ],
+      [ 2414, 3117, 2435, 3123 ],
+      [ 2420, 3123, 2430, 3127 ],
+      [ 2400, 3092, 2411, 3104 ],
+      [ 2400, 3103, 2411, 3113 ]
+    ]
+  },
+  {
+    "name": "CASTLE_WARS_ARENA_ZAMORAK_SIDE",
+    "aabbs": [
+      [ 2364, 3125, 2423, 3139 ],
+      [ 2364, 3120, 2417, 3125 ],
+      [ 2364, 3114, 2412, 3120 ],
+      [ 2364, 3104, 2400, 3114 ],
+      [ 2364, 3093, 2399, 3105 ],
+      [ 2354, 3087, 2384, 3093 ],
+      [ 2364, 3082, 2374, 3087 ]
+    ]
+  },
+  {
+    "name": "CASTLE_WARS_ARENA",
+    "aabbs": [
+      [ 2364, 3068, 2435, 3139 ]
+    ]
+  },
+  {
+    "name": "CASTLE_WARS_UNDERGROUND",
+    "regions": [ 9620 ]
+  },
+  {
+    "name": "CASTLE_WARS",
+    "aabbs": [
+      [ 2364, 3068, 2435, 3139 ],
+      [ 2434, 3080, 2448, 3104 ]
+    ]
+  },
+  {
+    "name": "OBSERVATORY_DUNGEON",
+    "regions": [
+      9362
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "SMOKE_DEVIL_DUNGEON",
+    "regionBoxes": [
+      [ 9363, 9619 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "LMS_ARENA_WILD_VARROCK",
+    "regionBoxes": [
+      [ 13918, 14432 ]
+    ]
+  },
+  {
+    "name": "LMS_ARENA_DESERTED_ISLAND",
+    "regionBoxes": [
+      [ 13658, 13916 ]
+    ]
+  },
+  {
+    "name": "CLAN_WARS_ARENAS_OVERWORLD",
+    "regionBoxes": [
+      [ 13644, 13646 ]
+    ],
+    "aabbs": [
+      [ 3384, 5096, 3391, 5112 ]
+    ]
+  },
+  {
+    "name": "CLAN_WARS_ARENAS_OTHER",
+    "regionBoxes": [
+      [ 13641, 13642 ],
+      [ 13133, 13135 ]
+    ],
+    "aabbs": [
+      [ 3384, 5113, 3391, 5119 ],
+      [ 3384, 5080, 3391, 5095 ]
+    ]
+  },
+  {
+    "name": "CLAN_WARS_ARENAS",
+    "areas": [
+      "CLAN_WARS_ARENAS_OVERWORLD",
+      "CLAN_WARS_ARENAS_OTHER"
+    ]
+  },
+  {
+    "name": "SMOKE_DUNGEON",
+    "regionBoxes": [
+      [ 12690, 13202 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Desert Mining Camp (The Tourist Trap)",
+    "regions": [
+      13203
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "PVP_ARENA",
+    "aabbs": [
+      [ 3312, 3199, 3407, 3290 ]
+    ]
+  },
+  {
+    "name": "SHANTAY_PASS",
+    "aabbs": [
+      [ 3294, 3114, 3311, 3135 ]
+    ]
+  },
+  {
+    "name": "MAGE_TRAINING_ARENA",
+    "aabbs": [
+      [ 3347, 3288, 3374, 3327 ]
+    ]
+  },
+  {
+    "name": "AL_KHARID_GRASS_FIXES",
+    "aabbs": [
+      [ 3348, 3293, 0, 3415, 3329, 0 ],
+      [ 3399, 3267, 0, 3414, 3292, 0 ],
+      [ 3393, 3269, 0, 3398, 3292, 0 ],
+      [ 3389, 3274, 0, 3392, 3292, 0 ],
+      [ 3383, 3290, 0, 3385, 3292, 0 ],
+      [ 3358, 3292, 0, 3382, 3292, 0 ],
+      [ 3365, 3291, 0, 3375, 3291, 0 ],
+      [ 3316, 3328, 0, 3327, 3330, 0 ],
+      [ 3347, 3298, 0, 3347, 3314, 0 ],
+      [ 3266, 3262, 0, 3269, 3263, 0 ],
+      [ 3275, 3294, 0, 3275, 3295, 0 ],
+      [ 3292, 3328, 0, 3300, 3329, 0 ]
+    ]
+  },
+  {
+    "name": "AL_KHARID_DIRT_FIX",
+    "aabbs": [
+      [ 3328, 3310, 0, 3344, 3327, 0 ],
+      [ 3335, 3309, 0, 3341, 3309, 0 ],
+      [ 3337, 3308, 0, 3341, 3308, 0 ],
+      [ 3339, 3307, 0, 3341, 3307, 0 ],
+      [ 3301, 3328, 0, 3303, 3330, 0 ],
+      [ 3341, 3306 ],
+      [ 3275, 3321, 0, 3291, 3329, 0 ]
+    ]
+  },
+  {
+    "name": "AL_KHARID_WELL",
+    "aabbs": [
+      [ 3293, 3183 ]
+    ]
+  },
+  {
+    "name": "AL_KHARID_BUILDINGS",
+    "aabbs": [
+      [ 3265, 3161, 3272, 3173 ],
+      [ 3270, 3179, 3279, 3194 ],
+      [ 3285, 3187, 3290, 3192 ],
+      [ 3289, 3202, 3296, 3206 ],
+      [ 3297, 3185, 3306, 3194 ],
+      [ 3319, 3191, 3323, 3197 ],
+      [ 3312, 3173, 3318, 3186 ],
+      [ 3313, 3160, 3318, 3165 ],
+      [ 3282, 3159, 3303, 3177 ]
+    ]
+  },
+  {
+    "name": "AL_KHARID",
+    "aabbs": [
+      [ 3276, 3195, 3337, 3265 ],
+      [ 3259, 3135, 3345, 3201 ],
+      [ 3253, 3155, 3265, 3182 ]
+    ]
+  },
+  {
+    "name": "EAST_AL_KHARID",
+    "aabbs": [
+      [ 3344, 3129, 3384, 3200 ],
+      [ 3384, 3141, 3391, 3203 ],
+      [ 3391, 3164, 3412, 3203 ],
+      [ 3412, 3170, 3426, 3197 ]
+    ]
+  },
+  {
+    "name": "AL_KHARID_MINE",
+    "aabbs": [
+      [ 3270, 3258, 3337, 3322 ]
+    ]
+  },
+  {
+    "name": "DESERT_MINING_CAMP",
+    "aabbs": [
+      [ 3272, 3011, 3306, 3042 ]
+    ]
+  },
+  {
+    "name": "AGILITY_PYRAMID_TOP",
+    "regions": [
+      12105
+    ]
+  },
+  {
+    "name": "SOPHANEM_TEMPLE_FLOORS",
+    "aabbs": [
+      [ 3308, 2796, 0, 3316, 2803, 0 ],
+      [ 3307, 2801, 0, 3307, 2803, 0 ],
+      [ 3307, 2796, 0, 3307, 2798, 0 ],
+      [ 3277, 2765, 0, 3285, 2777, 0 ],
+      [ 3277, 2764, 0, 3279, 2764, 0 ],
+      [ 3283, 2764, 0, 3285, 2764, 0 ]
+    ]
+  },
+  {
+    "name": "SOPHANEM_BUILDING_FLOORS",
+    "aabbs": [
+      [ 3313, 2782, 0, 3318, 2792, 0 ],
+      [ 3312, 2763, 0, 3317, 2777, 0 ],
+      [ 3312, 2753, 0, 3316, 2758, 0 ],
+      [ 3280, 2753, 0, 3288, 2756, 0 ],
+      [ 3280, 2757, 0, 3284, 2757, 0 ]
+    ]
+  },
+  {
+    "name": "SOPHANEM_UPPER_FLOORS",
+    "aabbs": [
+      [ 3268, 2747, 1, 3322, 2810, 1 ]
+    ]
+  },
+  {
+    "name": "SOPHANEM_TEMPLE_UPPER_FLOORS",
+    "aabbs": [
+      [ 3306, 2796, 1, 3316, 2803, 1 ],
+      [ 3306, 2796, 2, 3316, 2803, 2 ],
+      [ 3306, 2796, 3, 3316, 2803, 3 ]
+    ]
+  },
+  {
+    "name": "SOPHANEM_PYRAMIDS",
+    "aabbs": [
+      [ 3282, 2788, 3295, 2801 ],
+      [ 3287, 2765, 3302, 2780 ]
+    ]
+  },
+  {
+    "name": "SOPHANEM_TEMPLE_BANK",
+    "regions": [
+      11088
+    ]
+  },
+  {
+    "name": "SOPHANEM_TEMPLE_BANK_PRE_CONTACT",
+    "aabbs": [
+      [ 2757, 5128, 2773, 5146 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "SOPHANEM_TEMPLE_BANK_POST_CONTACT",
+    "aabbs": [
+      [ 2790, 5157, 2809, 5175 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "SOPHANEM_TRAPDOOR",
+    "aabbs": [
+      [ 3315, 2797, 0 ]
+    ]
+  },
+  {
+    "name": "SOPHANEM",
+    "aabbs": [
+      [ 3268, 2747, 3322, 2810 ]
+    ]
+  },
+  {
+    "name": "KHARIDIAN_DESERT_DEEP",
+    "areas": [
+      "AGILITY_PYRAMID_TOP"
+    ],
+    "aabbs": [
+      [ 3198, 2817, 3322, 2989 ],
+      [ 3315, 2812, 3469, 2928 ]
+    ]
+  },
+  {
+    "name": "KHARIDIAN_DESERT_MID",
+    "aabbs": [
+      [ 3135, 2885, 3524, 3051 ]
+    ]
+  },
+  {
+    "name": "KHARIDIAN_DESERT",
+    "aabbs": [
+      [ 3196, 2997, 3526, 3134 ],
+      [ 3134, 2600, 3565, 3069 ],
+      [ 3114, 2786, 3216, 2974 ]
+    ]
+  },
+  {
+    "name": "KHARID_DESERT_REGION",
+    "aabbs": [
+      [ 3268, 2672, 3414, 3321 ],
+      [ 3271, 3322, 3392, 3327 ],
+      [ 3356, 3328, 3392, 3329 ],
+      [ 3316, 3328, 3350, 3329 ],
+      [ 3319, 3330, 3322, 3330 ],
+      [ 3271, 3328, 3315, 3328 ],
+      [ 3271, 3329, 3306, 3329 ],
+      [ 3300, 3330, 3304, 3330 ],
+      [ 3267, 3233, 3267, 3321 ],
+      [ 3266, 3240, 3266, 3297 ],
+      [ 3265, 3247, 3265, 3254 ],
+      [ 3415, 3172, 3424, 3191 ],
+      [ 3415, 2748, 3480, 3171 ],
+      [ 3481, 2907, 3544, 3132 ],
+      [ 3175, 2671, 3267, 3135 ],
+      [ 3129, 2623, 3174, 3066 ],
+      [ 3266, 3136, 3267, 3203 ],
+      [ 3267, 3204, 3267, 3223 ],
+      [ 3254, 3148, 3265, 3183 ],
+      [ 3259, 3184, 3265, 3200 ],
+      [ 3265, 3201, 3265, 3202 ],
+      [ 3264, 3201 ]
+    ]
+  },
+  {
+    "name": "DESERT_TREASURE_PYRAMID_LEVEL_1",
+    "regions": [ 11597 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "DESERT_TREASURE_PYRAMID_LEVEL_2",
+    "regions": [ 11341 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "DESERT_TREASURE_PYRAMID_LEVEL_3",
+    "regions": [ 11085 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "DESERT_TREASURE_PYRAMID_LEVEL_4",
+    "regions": [ 12945 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "DESERT_TREASURE_PYRAMID",
+    "areas": [
+      "DESERT_TREASURE_PYRAMID_LEVEL_1",
+      "DESERT_TREASURE_PYRAMID_LEVEL_2",
+      "DESERT_TREASURE_PYRAMID_LEVEL_3",
+      "DESERT_TREASURE_PYRAMID_LEVEL_4"
+    ]
+  },
+  {
+    "name": "Enakhra's Temple",
+    "regions": [ 12433 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Klenter's Pyramid (A Tail of Two Cats)",
+    "regions": [ 13199 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Genie cave",
+    "regions": [ 13457 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Beneath Cursed Sands cave",
+    "regions": [ 13456, 13712 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "PYRAMID_PLUNDER",
+    "regions": [
+      7749
+    ]
+  },
+  {
+    "name": "PYRAMID_PLUNDER_WRONG_LOBBY_1",
+    "aabbs": [
+      [ 1924, 4448, 1943, 4467, 2 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "PYRAMID_PLUNDER_WRONG_LOBBY_2",
+    "aabbs": [
+      [ 1958, 4418, 1978, 4437, 2 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "PYRAMID_PLUNDER_WRONG_LOBBY_3",
+    "aabbs": [
+      [ 1957, 4447, 1978, 4468, 3 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "PYRAMID_PLUNDER_CORRECT_LOBBY",
+    "aabbs": [
+      [ 1924, 4417, 1944, 4437, 3 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "PYRAMID_PLUNDER_ROOM_1",
+    "aabbs": [
+      [ 1922, 4463, 1933, 4473, 0 ],
+      [ 1922, 4474, 1930, 4478, 0 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "PYRAMID_PLUNDER_ROOM_2",
+    "aabbs": [
+      [ 1948, 4463, 1957, 4474, 0 ],
+      [ 1952, 4475, 1957, 4478, 0 ],
+      [ 1958, 4463, 1960, 4472, 0 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "PYRAMID_PLUNDER_ROOM_3",
+    "aabbs": [
+      [ 1973, 4453, 1980, 4472, 0 ],
+      [ 1969, 4455, 1972, 4465, 0 ],
+      [ 1970, 4453, 1972, 4454, 0 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "PYRAMID_PLUNDER_ROOM_4",
+    "aabbs": [
+      [ 1923, 4450, 1930, 4455, 0 ],
+      [ 1931, 4448, 1942, 4459, 0 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "PYRAMID_PLUNDER_ROOM_5",
+    "aabbs": [
+      [ 1951, 4443, 1962, 4455, 0 ],
+      [ 1963, 4443, 1966, 4447, 0 ],
+      [ 1964, 4442, 1966, 4442, 0 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "PYRAMID_PLUNDER_ROOM_6",
+    "aabbs": [
+      [ 1951, 4443, 1962, 4455, 0 ],
+      [ 1963, 4443, 1966, 4447, 0 ],
+      [ 1964, 4442, 1966, 4442, 0 ],
+      [ 1921, 4423, 1932, 4440, 0 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "PYRAMID_PLUNDER_ROOM_7",
+    "aabbs": [
+      [ 1940, 4420, 1955, 4433, 0 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "PYRAMID_PLUNDER_ROOM_8",
+    "aabbs": [
+      [ 1967, 4426, 1979, 4437, 0 ],
+      [ 1971, 4419, 1979, 4425, 0 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "NECROPOLIS",
+    "aabbs": [
+      [ 3275, 2670, 3405, 2749 ],
+      [ 3322, 2750, 3370, 2773 ]
+    ]
+  },
+  {
+    "name": "RIVER_ELID_WATERFALL",
+    "aabbs": [
+      [ 3369, 3131, 3370, 3133 ]
+    ]
+  },
+  {
+    "name": "KALPHITE_LAIR",
+    "regionBoxes": [
+      [ 13972, 13972, 2 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "KALPHITE_LAIR_QUEEN_ROOM",
+    "regionBoxes": [
+      [ 13972, 13972, 0 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "KALPHITE_SLAYER_CAVE",
+    "aabbs": [
+      [ 3264, 9472, 3330, 9550 ],
+      [ 3331, 9475, 3349, 9529 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "SCARAB_LAIR_TEMPLE",
+    "regions": [
+      8516
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "SCARAB_LAIR_MIDDLE",
+    "regions": [
+      9538
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "SCARAB_LAIR_BOTTOM",
+    "regions": [
+      9027
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "CANIFIS_BAR_FLOOR",
+    "aabbs": [
+      [ 3488, 3471, 3504, 3477 ],
+      [ 3488, 3468, 3499, 3470 ],
+      [ 3500, 3469, 3500, 3470 ],
+      [ 3501, 3470 ],
+      [ 3491, 3479, 3497, 3479 ]
+    ]
+  },
+  {
+    "name": "CANIFIS_BAR_FLOOR_BLENDED",
+    "aabbs": [
+      [ 3498, 3478 ],
+      [ 3490, 3478 ],
+      [ 3502, 3470 ],
+      [ 3501, 3496 ],
+      [ 3500, 3468 ]
+    ]
+  },
+  {
+    "name": "CROMBWICK_MANOR",
+    "aabbs": [
+      [ 3713, 3350, 1, 3738, 3367, 3 ]
+    ]
+  },
+  {
+    "name": "SLEPE_CHURCH",
+    "aabbs": [
+      [ 3734, 3306, 3742, 3324 ],
+      [ 3736, 3302, 3740, 3305 ],
+      [ 3743, 3316, 3744, 3319 ],
+      [ 3733, 3316, 3733, 3319 ]
+    ]
+  },
+  {
+    "name": "SLEPE_HOUSES",
+    "aabbs": [
+      [ 3740, 3333, 3751, 3340 ],
+      [ 3697, 3329, 3703, 3341 ],
+      [ 3692, 3313, 3698, 3316 ],
+      [ 3690, 3310, 3698, 3312 ],
+      [ 3690, 3306, 3695, 3309 ],
+      [ 3701, 3296, 3710, 3305 ],
+      [ 3714, 3301, 3721, 3308 ]
+    ]
+  },
+  {
+    "name": "SLEPE",
+    "aabbs": [
+      [ 3705, 3289, 3772, 3396 ],
+      [ 3689, 3292, 3704, 3342 ],
+      [ 3685, 3311, 3688, 3317 ],
+      [ 3709, 3397, 3729, 3401 ],
+      [ 3730, 3397, 3769, 3414 ]
+    ]
+  },
+  {
+    "name": "HALLOWED_SEPULCHRE_LOBBY",
+    "regions": [
+      9565
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "HALLOWED_SEPULCHRE_FLOOR_1",
+    "aabbs": [
+      [ 2220, 5938, 2325, 6032 ]
+    ]
+  },
+  {
+    "name": "HALLOWED_SEPULCHRE_FLOOR_2",
+    "aabbs": [
+      [ 2475, 5938, 2580, 6032 ]
+    ]
+  },
+  {
+    "name": "HALLOWED_SEPULCHRE_FLOOR_3",
+    "aabbs": [
+      [ 2350, 5800, 2455, 5906 ]
+    ]
+  },
+  {
+    "name": "HALLOWED_SEPULCHRE_FLOOR_4",
+    "aabbs": [
+      [ 2475, 5800, 2580, 5906 ]
+    ]
+  },
+  {
+    "name": "HALLOWED_SEPULCHRE_FLOOR_5",
+    "aabbs": [
+      [ 2220, 5800, 2325, 5906 ]
+    ]
+  },
+  {
+    "name": "VER_SINHAZA_WATER_FIX",
+    "aabbs": [
+      [ 3682, 3257 ],
+      [ 3681, 3256 ],
+      [ 3678, 3259, 3684, 3263 ],
+      [ 3683, 3258 ]
+    ]
+  },
+  {
+    "name": "VER_SINHAZA_CUTSCENE",
+    "aabbs": [
+      [ 2064, 4880, 2087, 4903 ]
+    ]
+  },
+  {
+    "name": "VER_SINHAZA",
+    "areas": [
+      "VER_SINHAZA_CUTSCENE"
+    ],
+    "aabbs": [
+      [ 3641, 3202, 3684, 3236 ]
+    ]
+  },
+  {
+    "name": "MEIYERDITCH",
+    "aabbs": [
+      [ 3587, 3200, 3627, 3310 ],
+      [ 3618, 3311, 3647, 3327 ],
+      [ 3628, 3239, 3647, 3310 ],
+      [ 3628, 3232, 3637, 3238 ],
+      [ 3638, 3237, 3639, 3238 ],
+      [ 3628, 3229, 3630, 3231 ],
+      [ 3628, 3200, 3632, 3208 ],
+      [ 3633, 3200, 3637, 3206 ],
+      [ 3586, 3136, 3647, 3199 ]
+    ]
+  },
+  {
+    "name": "MEIYERDITCH_MYREQUE_HIDEOUT",
+    "regions": [
+      14486
+    ]
+  },
+  {
+    "name": "MEIYERDITCH_MINES",
+    "regions": [
+      9544
+    ]
+  },
+  {
+    "name": "CASTLE_DRAKAN",
+    "aabbs": [
+      [ 3520, 3328, 3594, 3388 ]
+    ]
+  },
+  {
+    "name": "DARKMEYER",
+    "aabbs": [
+      [ 3590, 3330, 3636, 3399 ],
+      [ 3636, 3330, 3662, 3392 ],
+      [ 3662, 3335, 3669, 3384 ]
+    ]
+  },
+  {
+    "name": "PORT_PHASMATYS",
+    "aabbs": [
+      [ 3649, 3456, 3688, 3508 ],
+      [ 3688, 3456, 3710, 3484 ],
+      [ 3670, 3503, 3684, 3514 ]
+    ]
+  },
+  {
+    "name": "FENKENSTRAINS_CASTLE",
+    "aabbs": [
+      [ 3534, 3536, 3562, 3565 ]
+    ]
+  },
+  {
+    "name": "MORYTANIA_SLAYER_TOWER",
+    "aabbs": [
+      [ 3405, 3531, 3452, 3579 ]
+    ]
+  },
+  {
+    "name": "CANIFIS",
+    "regions": [
+      13878
+    ]
+  },
+  {
+    "name": "MORYTANIA_SLAYER_TOWER",
+    "aabbs": [
+      [ 3405, 3531, 3452, 3579 ]
+    ]
+  },
+  {
+    "name": "CANIFIS",
+    "regions": [
+      13878
+    ]
+  },
+  {
+    "name": "MORYTANIA_SPIDER_CAVES",
+    "aabbs": [
+      [ 3648, 9792, 3711, 9871 ],
+      [ 3602, 9792, 3647, 9855 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "TEMPLE_TREKKING_INSTANCES",
+    "regionBoxes": [
+      [ 8014, 8270 ],
+      [ 8782, 9806 ]
+    ],
+    "aabbs": [
+      [ 2123, 4996, 2164, 5036 ]
+    ]
+  },
+  {
+    "name": "MORTTON",
+    "regions": [
+      13875
+    ]
+  },
+  {
+    "name": "BARROWS_TUNNELS",
+    "regionBoxes": [
+      [ 14231, 14231, 0 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "BARROWS_CRYPTS",
+    "regionBoxes": [
+      [ 14231, 14231, 3 ]
+    ]
+  },
+  {
+    "name": "BARROWS_UNDERGROUND",
+    "regions": [ 14231 ]
+  },
+  {
+    "name": "BARROWS_CRYPT_DHAROK",
+    "aabbs": [
+      [ 3546, 9707, 3563, 9722, 3 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "BARROWS_CRYPT_GUTHAN",
+    "aabbs": [
+      [ 3530, 9696, 3548, 9711, 3 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "BARROWS_CRYPT_KARIL",
+    "aabbs": [
+      [ 3542, 9675, 3560, 9691, 3 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "BARROWS_CRYPT_AHRIM",
+    "aabbs": [
+      [ 3547, 9691, 3564, 9707, 3 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "BARROWS_CRYPT_TORAG",
+    "aabbs": [
+      [ 3561, 9679, 3578, 9695, 3 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "BARROWS_CRYPT_VERAC",
+    "aabbs": [
+      [ 3565, 9699, 3582, 9713, 3 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "BARROWS",
+    "regions": [
+      14131
+    ]
+  },
+  {
+    "name": "SHADE_CATACOMBS",
+    "regions": [ 13975 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Tomb of Ivandis (In Aid of Myreque)",
+    "aabbs": [
+      [ 3486, 9854, 3517, 9880, 0 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Mort Myre Myreque Hideout",
+    "aabbs": [
+      [ 3466, 9832, 3492, 9850, 0 ],
+      [ 3467, 9831, 3493, 9831, 0 ],
+      [ 3469, 9830, 3495, 9830, 0 ],
+      [ 3471, 9829, 3496, 9829, 0 ],
+      [ 3472, 9828, 3497, 9828, 0 ],
+      [ 3473, 9827, 3498, 9827, 0 ],
+      [ 3474, 9825, 3498, 9826, 0 ],
+      [ 3475, 9823, 3499, 9824, 0 ],
+      [ 3476, 9819, 3500, 9822, 0 ],
+      [ 3478, 9815, 3507, 9818, 0 ],
+      [ 3480, 9814, 0 ],
+      [ 3481, 9812, 3498, 9814, 0 ],
+      [ 3484, 9807, 3507, 9811, 0 ],
+      [ 3488, 9802, 3507, 9806, 0 ],
+      [ 3499, 9812, 3507, 9814, 0 ],
+      [ 3501, 9819, 3501, 9821, 0 ],
+      [ 3502, 9819, 3502, 9820, 0 ],
+      [ 3503, 9819, 0 ],
+      [ 3477, 9817, 3477, 9818, 0 ],
+      [ 3475, 9822, 0 ],
+      [ 3475, 9821, 0 ],
+      [ 3479, 9814, 0 ],
+      [ 3480, 9813, 0 ],
+      [ 3482, 9810, 3483, 9811, 0 ],
+      [ 3483, 9808, 3483, 9809, 0 ],
+      [ 3485, 9805, 3487, 9806, 0 ],
+      [ 3486, 9803, 3487, 9804, 0 ],
+      [ 3487, 9802, 0 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Mort Myre Myreque Hideout fairy ring",
+    "aabbs": [
+      [ 3434, 9817, 3456, 9831, 0 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Mort Myre Myreque Hideout west cave 1",
+    "aabbs": [
+      [ 3459, 9809, 3468, 9822, 0 ],
+      [ 3469, 9810, 3469, 9821, 0 ],
+      [ 3470, 9811, 3470, 9821, 0 ],
+      [ 3471, 9812, 3471, 9820, 0 ],
+      [ 3472, 9813, 3472, 9819, 0 ],
+      [ 3473, 9814, 3473, 9818, 0 ],
+      [ 3461, 9823, 3467, 9823, 0 ],
+      [ 3458, 9810, 3458, 9819, 0 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Mort Myre Myreque Hideout west cave 2",
+    "aabbs": [
+      [ 3466, 9804, 3478, 9808, 0 ],
+      [ 3467, 9809, 3477, 9809, 0 ],
+      [ 3469, 9810, 3477, 9810, 0 ],
+      [ 3470, 9811, 3476, 9811, 0 ],
+      [ 3471, 9812, 3474, 9812, 0 ],
+      [ 3467, 9801, 3472, 9804, 0 ],
+      [ 3473, 9802, 3473, 9803, 0 ],
+      [ 3474, 9803, 3477, 9803, 0 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Mort Myre Myreque Hideout west cave 3",
+    "aabbs": [
+      [ 3463, 9795, 3463, 9799, 0 ],
+      [ 3464, 9794, 3464, 9800, 0 ],
+      [ 3465, 9793, 3465, 9800, 0 ],
+      [ 3466, 9793, 3467, 9800, 0 ],
+      [ 3468, 9794, 3470, 9800, 0 ],
+      [ 3471, 9793, 3471, 9801, 0 ],
+      [ 3472, 9793, 3473, 9802, 0 ],
+      [ 3474, 9793, 3474, 9802, 0 ],
+      [ 3475, 9794, 3475, 9801, 0 ],
+      [ 3476, 9794, 3476, 9801, 0 ],
+      [ 3477, 9795, 3477, 9801, 0 ],
+      [ 3478, 9796, 3478, 9801, 0 ],
+      [ 3479, 9797, 3479, 9800, 0 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Mort Myre Myreque Hideout",
+    "aabbs": [
+      [ 3463, 9795, 3463, 9799, 0 ],
+      [ 3464, 9794, 3464, 9800, 0 ],
+      [ 3465, 9793, 3465, 9800, 0 ],
+      [ 3466, 9793, 3467, 9800, 0 ],
+      [ 3468, 9794, 3470, 9800, 0 ],
+      [ 3471, 9793, 3471, 9801, 0 ],
+      [ 3472, 9793, 3473, 9802, 0 ],
+      [ 3474, 9793, 3474, 9802, 0 ],
+      [ 3475, 9794, 3475, 9801, 0 ],
+      [ 3476, 9794, 3476, 9801, 0 ],
+      [ 3477, 9795, 3477, 9801, 0 ],
+      [ 3478, 9796, 3478, 9801, 0 ],
+      [ 3479, 9797, 3479, 9800, 0 ],
+      [ 3500, 9832, 3517, 9843, 0 ],
+      [ 3501, 9844, 3517, 9844, 0 ],
+      [ 3503, 9845, 3517, 9845, 0 ],
+      [ 3505, 9846, 3517, 9846, 0 ],
+      [ 3508, 9847, 3516, 9847, 0 ],
+      [ 3511, 9848, 3515, 9848, 0 ],
+      [ 3501, 9831, 3516, 9831, 0 ],
+      [ 3503, 9830, 3515, 9830, 0 ],
+      [ 3506, 9829, 3514, 9829, 0 ],
+      [ 3507, 9828, 3513, 9828, 0 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Meiyerditch Laboratories",
+    "regions": [
+      14232,
+      14233,
+      14487,
+      14488
+    ],
+    "aabbs": [
+      [ 3511, 9792, 3519, 9820 ],
+      [ 3509, 9792, 3510, 9818 ],
+      [ 3510, 9819 ],
+      [ 3512, 9821, 3519, 9821 ],
+      [ 3514, 9822, 3519, 9822 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "BURGH_DE_ROTT",
+    "aabbs": [
+      [ 3468, 3164, 3583, 3258 ]
+    ]
+  },
+  {
+    "name": "BURGH_DE_ROTT_BASEMENT",
+    "regions": [
+      13974
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "ABANDONED_MINE_OVERWORLD",
+    "aabbs": [
+      [ 3423, 3201, 3461, 3261 ]
+    ]
+  },
+  {
+    "name": "ABANDONED_MINE_1",
+    "regions": [ 13718 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "ABANDONED_MINE_2",
+    "regions": [ 11079 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "ABANDONED_MINE_3",
+    "regions": [ 10822 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "ABANDONED_MINE_4",
+    "regions": [ 11078 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "ABANDONED_MINE_5",
+    "aabbs": [
+      [ 2688, 4416, 2754, 4482 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "ABANDONED_MINE_6",
+    "regions": [ 11077 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "ABANDONED_MINE",
+    "areas": [
+      "ABANDONED_MINE_1",
+      "ABANDONED_MINE_2",
+      "ABANDONED_MINE_3",
+      "ABANDONED_MINE_4",
+      "ABANDONED_MINE_5",
+      "ABANDONED_MINE_6"
+    ]
+  },
+  {
+    "name": "GROTESQUE_GUARDIANS",
+    "regions": [
+      6727
+    ]
+  },
+  {
+    "name": "MORYTANIA",
+    "areas": [
+      "VER_SINHAZA_CUTSCENE",
+      "TEMPLE_TREKKING_INSTANCES",
+      "GROTESQUE_GUARDIANS"
+    ],
+    "aabbs": [
+      [ 3432, 3167, 3775, 3486 ],
+      [ 3494, 3145, 3775, 3166 ],
+      [ 3422, 3204, 3431, 3274 ],
+      [ 3414, 3275, 3431, 3294 ],
+      [ 3417, 3295, 3431, 3327 ],
+      [ 3400, 3328, 3431, 3452 ],
+      [ 3400, 3321, 3416, 3327 ],
+      [ 3413, 3453, 3431, 3466 ],
+      [ 3424, 3467, 3431, 3470 ],
+      [ 3432, 3487, 3755, 3598 ],
+      [ 3403, 3509, 3431, 3583 ],
+      [ 3413, 3501, 3431, 3508 ],
+      [ 3416, 3496, 3431, 3500 ],
+      [ 3420, 3486, 3431, 3495 ],
+      [ 3419, 3482, 3433, 3486 ]
+    ]
+  },
+  {
+    "name": "THE_INFERNO",
+    "regions": [
+      9043
+    ]
+  },
+  {
+    "name": "TZHAAR_FIGHT_CAVES",
+    "regions": [ 9551 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "TZHAAR_CITY_REGION",
+    "regions": [ 9552 ],
+    "regionBoxes": [
+      [ 9807, 10064 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "TZHAAR",
+    "areas": [
+      "TZHAAR_FIGHT_CAVES",
+      "TZHAAR_CITY_REGION"
+    ]
+  },
+  {
+    "name": "HAM Store Room",
+    "regions": [ 10321 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Witchhaven Dungeon (Slug Menace)",
+    "regions": [ 9295 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "BLAST_FURNACE",
+    "regions": [ 7757 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "TREE_GNOME_STRONGHOLD_INSTANCE",
+    "regionBoxes": [
+      [ 7766, 8023 ]
+    ]
+  },
+  {
+    "name": "TREE_GNOME_STRONGHOLD",
+    "areas": [
+      "TREE_GNOME_STRONGHOLD_INSTANCE"
+    ],
+    "aabbs": [
+      [ 2368, 3387, 2496, 3525 ],
+      [ 2404, 3511, 2431, 3547 ],
+      [ 2484, 3387, 2507, 3406 ]
+    ]
+  },
+  {
+    "name": "EYES_OF_GLOUPHRIE_GNOME_AND_GOBLIN_BATTLE_CUTSCENE",
+    "aabbs": [
+      [ 2112, 4928, 2165, 4991 ]
+    ]
+  },
+  {
+    "name": "REVENANT_CAVES",
+    "regionBoxes": [
+      [ 12701, 12959 ]
+    ]
+  },
+  {
+    "name": "FROZEN_WASTE_PLATEAU",
+    "aabbs": [
+      [ 2939, 3903, 2989, 3970 ],
+      [ 2990, 3907, 3002, 3940 ],
+      [ 2939, 3865, 2980, 3909 ],
+      [ 2939, 3834, 2958, 3865 ],
+      [ 2990, 3904, 2999, 3906 ],
+      [ 3003, 3909, 3006, 3930 ],
+      [ 2990, 3941, 2999, 3948 ],
+      [ 3000, 3941, 3002, 3942 ]
+    ]
+  },
+  {
+    "name": "WILDERNESS_HIGH",
+    "aabbs": [
+      [ 2939, 3903, 3391, 3974 ]
+    ]
+  },
+  {
+    "name": "WILDERNESS_MID_HIGH",
+    "aabbs": [
+      [ 2939, 3806, 3391, 3903 ]
+    ]
+  },
+  {
+    "name": "WILDERNESS_MID",
+    "aabbs": [
+      [ 2939, 3730, 3391, 3806 ]
+    ]
+  },
+  {
+    "name": "WILDERNESS_MID_LOW",
+    "aabbs": [
+      [ 2939, 3558, 3391, 3730 ]
+    ]
+  },
+  {
+    "name": "WILDERNESS_LOW",
+    "aabbs": [
+      [ 2939, 3522, 3391, 3558 ]
+    ]
+  },
+  {
+    "name": "WILDERNESS",
+    "aabbs": [
+      [ 2939, 3522, 3391, 3974 ]
+    ]
+  },
+  {
+    "name": "WILDERNESS_NORTH_OF_RESOURCE_AREA",
+    "aabbs": [
+      [ 3175, 3945, 3202, 3967 ]
+    ]
+  },
+  {
+    "name": "WILDERNESS_FOUNTAIN_OF_RUNE",
+    "aabbs": [
+      [ 3373, 3892, 3375, 3894 ]
+    ]
+  },
+  {
+    "name": "MAGE_ARENA_BANK",
+    "aabbs": [
+      [ 2525, 4706, 2551, 4727 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "MAGE_ARENA_GOD_STATUES",
+    "aabbs": [
+      [ 2495, 4682, 2520, 4730 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Corporeal Beast Lair",
+    "regions": [ 11842, 11844 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Deep Wilderness Dungeon",
+    "aabbs": [
+      [ 3012, 10364, 3059, 10366, 0 ],
+      [ 3011, 10305, 3070, 10363, 0 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Lava Maze Dungeon",
+    "regions": [ 12192 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Wilderness Slayer Cave",
+    "regionBoxes": [
+      [ 13469, 13726 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Callisto, Vet'ion, Venenatis and Escape Caves",
+    "regions": [
+      13215,
+      13472,
+      13473,
+      13727
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Wilderness - Slayer Cave - Entrance Wall Fix",
+    "aabbs": [
+      [ 3261, 3665, 3262, 3665 ],
+      [ 3291, 3747, 3292, 3747 ]
+    ]
+  },
+  {
+    "name": "Daimon's Crater - Bounty Hunter",
+    "regions": [
+      13374,
+      13375,
+      13376,
+      13630,
+      13631,
+      13632,
+      13886,
+      13887,
+      13888
+    ]
+  },
+  {
+    "name": "Vet'ion/Calvar'ion Lair Carpet Fix",
+    "aabbs": [
+      [ 1884, 11534, 1890, 11541 ]
+    ]
+  },
+  {
+    "name": "Vet'ion Lair Entrance Fix",
+    "aabbs": [
+      [ 3220, 3786, 3223, 3791 ]
+    ]
+  },
+  {
+    "name": "Wilderness - Zombie Pirate Boat",
+    "aabbs": [
+      [ 3350, 3616, 3378, 3631 ],
+      [ 3372, 3632, 3378, 3640 ]
+    ]
+  },
+  {
+    "name": "GIELINOR_SNOWY_NORTHERN_REGION",
+    "aabbs": [
+      [ 2748, 3711, 2942, 3980 ]
+    ]
+  },
+  {
+    "name": "RELLEKKA_SNOWY_REGION",
+    "aabbs": [
+      [ 2702, 3744, 2747, 3779 ],
+      [ 2726, 3780, 2748, 3802 ],
+      [ 2711, 3780, 2725, 3800 ],
+      [ 2723, 3710, 2758, 3743 ]
+    ]
+  },
+  {
+    "name": "RELLEKKA_HUNTER_ICEBERG",
+    "aabbs": [
+      [ 2699, 3810, 2741, 3839 ],
+      [ 2711, 3801, 2725, 3809 ],
+      [ 2726, 3803, 2738, 3809 ]
+    ]
+  },
+  {
+    "name": "TROLLHEIM",
+    "regions": [
+      11577,
+      11321,
+      11320,
+      11576,
+      11319,
+      11063
+    ],
+    "aabbs": [
+      [ 2726, 3662, 2751, 3753 ],
+      [ 2780, 3584, 2815, 3647 ]
+    ]
+  },
+  {
+    "name": "Trollheim tunnel",
+    "regions": [
+      11676
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Saba's cave",
+    "regions": [
+      9034
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "White Wolf Mountain passage",
+    "aabbs": [
+      [ 2803, 9856, 2879, 9887 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "TROLL_STRONGHOLD",
+    "areas": [
+      "TROLL_STRONGHOLD_PLANE_0",
+      "TROLL_STRONGHOLD_PLANE_1",
+      "TROLL_STRONGHOLD_PLANE_2"
+    ]
+  },
+  {
+    "name": "TROLL_STRONGHOLD_PLANE_0",
+    "aabbs": [
+      [ 2815, 10048, 2878, 10111, 0 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "TROLL_STRONGHOLD_PLANE_1",
+    "aabbs": [
+      [ 2847, 10062, 2858, 10072, 0 ],
+      [ 2848, 10097, 2857, 10109, 0 ],
+      [ 2822, 10048, 1, 2863, 10111, 1 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "TROLL_STRONGHOLD_PLANE_2",
+    "aabbs": [
+      [ 2837, 10050, 2847, 10057, 1 ],
+      [ 2837, 10103, 2846, 10111, 1 ],
+      [ 2819, 10048, 2, 2863, 10111, 2 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Eadgar's Cave",
+    "aabbs": [
+      [ 2883, 10072, 2900, 10090 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Troll Cave",
+    "aabbs": [
+      [ 2928, 10080, 2940, 10088 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "WEISS_REGION",
+    "regions": [
+      11325,
+      11581
+    ]
+  },
+  {
+    "name": "WEISS_UNDERGROUND",
+    "regions": [
+      10842
+    ]
+  },
+  {
+    "name": "WEISS_FIRE_PIT",
+    "aabbs": [
+      [ 2875, 3932, 2876, 3933 ]
+    ]
+  },
+  {
+    "name": "INTERIOR_WEISS_THRONE_TENT",
+    "aabbs": [
+      [ 2866, 3930, 2878, 3942 ]
+    ]
+  },
+  {
+    "name": "MOUNTAIN_CAMP_LAKE",
+    "aabbs": [
+      [ 2754, 3675, 2789, 3707 ],
+      [ 2789, 3682, 2802, 3708 ]
+    ]
+  },
+  {
+    "name": "MOUNTAIN_CAMP_ENTRY_PATH",
+    "aabbs": [
+      [ 2766, 3655, 2780, 3673 ]
+    ]
+  },
+  {
+    "name": "MOUNTAIN_CAMP",
+    "aabbs": [
+      [ 2750, 3671, 2815, 3711 ],
+      [ 2779, 3652, 2815, 3671 ]
+    ]
+  },
+  {
+    "name": "RELLEKKA",
+    "aabbs": [
+      [ 2594, 3646, 2692, 3747 ]
+    ]
+  },
+  {
+    "name": "FREMENNIK_PROVINCE",
+    "aabbs": [
+      [ 2692, 3639, 2815, 3711 ],
+      [ 2752, 3720, 2753, 3740 ],
+      [ 2626, 3712, 2751, 3799 ],
+      [ 2687, 3800, 2739, 3838 ],
+      [ 2706, 3839, 2730, 3881 ],
+      [ 2468, 3606, 2691, 3711 ],
+      [ 2566, 3583, 2639, 3605 ],
+      [ 2640, 3595, 2652, 3605 ],
+      [ 2640, 3593, 2649, 3594 ],
+      [ 2653, 3599, 2677, 3605 ],
+      [ 2666, 3598, 2671, 3598 ],
+      [ 2655, 3597, 2657, 3598 ],
+      [ 2678, 3603, 2691, 3605 ],
+      [ 2685, 3599, 2701, 3602 ],
+      [ 2692, 3603, 2798, 3638 ],
+      [ 2702, 3598, 2795, 3602 ],
+      [ 2714, 3594, 2730, 3597 ],
+      [ 2731, 3592, 2792, 3597 ],
+      [ 2740, 3590, 2756, 3591 ],
+      [ 2742, 3588, 2747, 3589 ],
+      [ 2758, 3586, 2790, 3591 ],
+      [ 2765, 3577, 2786, 3585 ]
+    ]
+  },
+  {
+    "name": "FREMENNIK_SLAYER_DUNGEON",
+    "regions": [
+      10907,
+      10908,
+      11164
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "KELDAGRIM_INTERIORS",
+    "aabbs": [
+      [ 2834, 10204, 2841, 10215 ],
+      [ 2834, 10191, 2844, 10199 ],
+      [ 2861, 10185, 2897, 10212 ],
+      [ 2857, 10221, 2865, 10228 ],
+      [ 2903, 10213, 2907, 10219 ],
+      [ 2922, 10209, 2926, 10214 ],
+      [ 2909, 10192, 2918, 10196 ],
+      [ 2913, 10187, 2918, 10191 ],
+      [ 2927, 10185, 2936, 10198 ],
+      [ 2932, 10199, 2936, 10200 ],
+      [ 2846, 10182, 2851, 10186 ],
+      [ 2823, 10228, 2831, 10233 ],
+      [ 2824, 10223, 2830, 10227 ],
+      [ 2903, 10201, 2910, 10208 ],
+      [ 2848, 10221, 2853, 10227 ]
+    ]
+  },
+  {
+    "name": "RED_AXE_REGION",
+    "regions": [
+      7501
+    ]
+  },
+  {
+    "name": "KELDAGRIM",
+    "regionBoxes": [
+      [ 11422, 11679 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "GWENITH",
+    "aabbs": [
+      [ 2187, 3397, 2229, 3424 ]
+    ]
+  },
+  {
+    "name": "PRIFDDINAS",
+    "regionBoxes": [
+      [ 12637, 13408 ]
+    ]
+  },
+  {
+    "name": "ZALCANO",
+    "regions": [
+      12126
+    ]
+  },
+  {
+    "name": "MYNYDD",
+    "aabbs": [
+      [ 2119, 3384, 2215, 3453 ]
+    ]
+  },
+  {
+    "name": "LLETYA",
+    "aabbs": [
+      [ 2313, 3147, 2363, 3194 ]
+    ]
+  },
+  {
+    "name": "LLETYA_UPPER_LEVELS",
+    "aabbs": [
+      [ 2313, 3147, 1, 2363, 3194, 1 ],
+      [ 2313, 3147, 2, 2363, 3194, 2 ]
+    ]
+  },
+  {
+    "name": "Lletya Crossbow Fix",
+    "aabbs": [
+      [ 2322, 3163, 2322, 3164 ],
+      [ 2898, 6171, 2898, 6172 ],
+      [ 2770, 6107, 2770, 6108 ]
+    ]
+  },
+  {
+    "name": "Lletya Wood Floors Fix",
+    "aabbs": [
+      [ 2322, 3163, 2322, 3164 ],
+      [ 2332, 3180, 2343, 3188 ],
+      [ 2322, 3162, 2329, 3181 ],
+      [ 2332, 3155, 2343, 3163 ],
+      [ 2349, 3161, 2357, 3182 ],
+      [ 2344, 3155, 2353, 3160 ],
+      [ 2344, 3183, 2353, 3188 ],
+      [ 2332, 3166, 2344, 3168 ],
+      [ 2333, 3175, 2344, 3177 ],
+      [ 2342, 3169, 2348, 3174 ],
+      [ 2908, 6188, 2930, 6196 ],
+      [ 2926, 6163, 2933, 6187 ],
+      [ 2907, 6163, 2925, 6171 ],
+      [ 2909, 6183, 2925, 6185 ],
+      [ 2909, 6174, 2925, 6176 ],
+      [ 2918, 6177, 2925, 6182 ],
+      [ 2898, 6170, 2905, 6189 ],
+      [ 2784, 6104, 2785, 6105 ],
+      [ 2770, 6106, 2777, 6125 ],
+      [ 2780, 6124, 2802, 6134 ],
+      [ 2798, 6105, 2805, 6123 ],
+      [ 2779, 6099, 2791, 6107 ],
+      [ 2781, 6119, 2792, 6122 ],
+      [ 2790, 6114, 2796, 6118 ],
+      [ 2797, 6111, 2797, 6119 ],
+      [ 2796, 6098, 2801, 6104 ]
+    ]
+  },
+  {
+    "name": "POISON_WASTE",
+    "aabbs": [
+      [ 2166, 3025, 2315, 3119 ],
+      [ 2181, 3117, 2280, 3131 ],
+      [ 2301, 3079, 2364, 3137 ]
+    ]
+  },
+  {
+    "name": "POISON_WASTE_DUNGEON",
+    "regions": [
+      5954,
+      5955
+    ]
+  },
+  {
+    "name": "ARANDAR_MAINLAND",
+    "aabbs": [
+      [ 2309, 3234, 2394, 3337 ]
+    ]
+  },
+  {
+    "name": "ARANDAR_PRIFDDINAS",
+    "aabbs": [
+      [ 3333, 5986, 3391, 6089 ]
+    ]
+  },
+  {
+    "name": "ARANDAR",
+    "areas": [
+      "ARANDAR_MAINLAND",
+      "ARANDAR_PRIFDDINAS"
+    ]
+  },
+  {
+    "name": "SOTE_GRAND_LIBRARY",
+    "regionBoxes": [
+      [ 10335, 10592 ]
+    ]
+  },
+  {
+    "name": "SOTE_LLETYA_ON_FIRE",
+    "regions": [
+      11616
+    ]
+  },
+  {
+    "name": "SOTE_LLETYA_MOSTLY_DONE_BURNING",
+    "regions": [
+      11103
+    ]
+  },
+  {
+    "name": "SOTE_TEMPLE_OF_LIGHT_SEREN_CUTSCENE",
+    "aabbs": [
+      [ 3219, 5913, 3237, 5933 ]
+    ]
+  },
+  {
+    "name": "SOTE_FRAGMENT_OF_SEREN_ARENA",
+    "aabbs": [
+      [ 3264, 5887, 3328, 5951 ]
+    ]
+  },
+  {
+    "name": "SOTE_CUTSCENE_LLETYA",
+    "regionBoxes": [
+      [ 10846, 11360 ]
+    ]
+  },
+  {
+    "name": "SOTE_IORWERTH_CAMP_DUNGEON",
+    "regions": [ 8855 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "SOTE_LADY_TRAHAEARN_HIDEOUT",
+    "regions": [ 9365 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "TYRAS_CAMP_INSTANCE",
+    "regions": [
+      9287
+    ]
+  },
+  {
+    "name": "TEMPLE_OF_LIGHT_EXCAVATION",
+    "regions": [
+      7752,
+      8008
+    ]
+  },
+  {
+    "name": "TEMPLE_OF_LIGHT",
+    "regions": [
+      7496
+    ]
+  },
+  {
+    "name": "EAST_ARDOUGNE_UNDERGROUND",
+    "areas": [
+      "TEMPLE_OF_LIGHT",
+      "TEMPLE_OF_LIGHT_EXCAVATION"
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Underground Pass section 1",
+    "aabbs": [
+      [ 2377, 9663, 2414, 9673, 0 ],
+      [ 2378, 9674, 2383, 9674, 0 ],
+      [ 2379, 9675, 2383, 9675, 0 ],
+      [ 2380, 9676, 2383, 9676, 0 ],
+      [ 2381, 9677, 2383, 9687, 0 ],
+      [ 2382, 9688, 2383, 9689, 0 ],
+      [ 2383, 9690, 0 ],
+      [ 2384, 9674, 2414, 9691, 0 ],
+      [ 2387, 9692, 2414, 9692, 0 ],
+      [ 2409, 9693, 0 ],
+      [ 2410, 9693, 2411, 9694, 0 ],
+      [ 2412, 9693, 2421, 9699, 0 ],
+      [ 2411, 9695, 2411, 9696, 0 ],
+      [ 2413, 9700, 2419, 9700, 0 ],
+      [ 2415, 9664, 2421, 9692, 0 ],
+      [ 2422, 9665, 2422, 9683, 0 ],
+      [ 2423, 9667, 2423, 9682, 0 ],
+      [ 2424, 9669, 2425, 9681, 0 ],
+      [ 2426, 9670, 2428, 9680, 0 ],
+      [ 2429, 9671, 2433, 9680, 0 ],
+      [ 2429, 9721, 2500, 9727, 0 ],
+      [ 2434, 9668, 2500, 9720, 0 ],
+      [ 2422, 9669, 2433, 9700, 0 ],
+      [ 2424, 9701, 2433, 9701, 0 ],
+      [ 2426, 9702, 2433, 9703, 0 ],
+      [ 2427, 9704, 2433, 9705, 0 ],
+      [ 2428, 9706, 2433, 9707, 0 ],
+      [ 2429, 9708, 2433, 9715, 0 ],
+      [ 2430, 9716, 2433, 9720, 0 ],
+      [ 2424, 9668, 2433, 9668, 0 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Underground Pass rocky hill trap",
+    "regions": [ 9878 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Underground Pass section 2",
+    "aabbs": [
+      [ 2415, 9599, 2432, 9647, 0 ],
+      [ 2415, 9648, 2431, 9663, 0 ],
+      [ 2367, 9614, 2414, 9662, 0 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Underground Pass unicorn section",
+    "aabbs": [
+      [ 2365, 9588, 2390, 9614, 0 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Underground Pass section 3",
+    "aabbs": [
+      [ 2368, 9702, 2429, 9731, 0 ],
+      [ 2406, 9701, 2414, 9701, 0 ],
+      [ 2406, 9700, 2413, 9700, 0 ],
+      [ 2406, 9699, 2412, 9699, 0 ],
+      [ 2406, 9698, 2411, 9698, 0 ],
+      [ 2406, 9697, 2409, 9697, 0 ],
+      [ 2395, 9697, 2405, 9701, 0 ],
+      [ 2394, 9697, 2394, 9701, 0 ],
+      [ 2393, 9696, 2393, 9701, 0 ],
+      [ 2392, 9694, 2392, 9701, 0 ],
+      [ 2391, 9693, 2391, 9701, 0 ],
+      [ 2368, 9693, 2390, 9701, 0 ],
+      [ 2368, 9675, 2380, 9692, 0 ],
+      [ 2368, 9674, 2379, 9674, 0 ],
+      [ 2368, 9673, 2378, 9673, 0 ],
+      [ 2368, 9671, 2377, 9672, 0 ],
+      [ 2368, 9670, 2377, 9670, 0 ],
+      [ 2368, 9669, 2376, 9669, 0 ],
+      [ 2368, 9668, 2375, 9668, 0 ],
+      [ 2368, 9666, 2374, 9667, 0 ],
+      [ 2368, 9664, 2373, 9665, 0 ],
+      [ 2381, 9686, 2381, 9692, 0 ],
+      [ 2382, 9688, 2382, 9692, 0 ],
+      [ 2383, 9689, 2383, 9692, 0 ],
+      [ 2384, 9690, 2385, 9692, 0 ],
+      [ 2386, 9691, 2387, 9692, 0 ],
+      [ 2388, 9692, 2390, 9692, 0 ],
+      [ 2415, 9701, 2416, 9701, 0 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Underground Pass final area upper",
+    "regions": [
+      8009
+    ],
+    "regionBoxes": [
+      [ 8519, 8521 ]
+    ],
+    "aabbs": [
+      2095, 4527, 2192, 4752
+    ]
+  },
+  {
+    "name": "Klank's area (Underground Pass)",
+    "regionBoxes": [
+      [ 9369, 9370 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "WELL_OF_VOYAGE",
+    "aabbs": [
+      [ 2306, 9608, 2359, 9639 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "TIRANNWN_LEAF_TRAP_1",
+    "aabbs": [
+      [ 2309, 9652, 2318, 9661 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "TIRANNWN_LEAF_TRAP_2",
+    "aabbs": [
+      [ 2332, 9652, 2341, 9661 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "TIRANNWN_LEAF_TRAP_3",
+    "aabbs": [
+      [ 2350, 9652, 2359, 9661 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "TIRANNWN_LEAF_TRAP_4",
+    "aabbs": [
+      [ 2350, 9639, 2359, 9648 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "TIRANNWN_MAINLAND",
+    "areas": [
+      "SOTE_LLETYA_ON_FIRE",
+      "SOTE_CUTSCENE_LLETYA"
+    ],
+    "aabbs": [
+      [ 2116, 3021, 2320, 3455 ],
+      [ 2321, 3140, 2365, 3202 ],
+      [ 2321, 3227, 2392, 3334 ]
+    ]
+  },
+  {
+    "name": "TIRANNWN",
+    "areas": [
+      "TIRANNWN_MAINLAND",
+      "PRIFDDINAS"
+    ]
+  },
+  {
+    "name": "ZANARIS_MAIN",
+    "aabbs": [
+      [ 2368, 4479, 2495, 4416 ],
+      [ 2368, 4415, 2431, 4352 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "ZANARIS_FAIRY_QUEENS_HIDEOUT",
+    "aabbs": [
+      [ 2304, 4479, 2367, 4416 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "EVIL_CHICKEN_LAIR",
+    "aabbs": [
+      [ 2432, 4415, 2495, 4352 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "ZANARIS",
+    "areas": [
+      "ZANARIS_MAIN",
+      "ZANARIS_FAIRY_QUEENS_HIDEOUT"
+    ]
+  },
+  {
+    "name": "GOD_WARS_DUNGEON_WILDERNESS",
+    "regions": [
+      12190
+    ]
+  },
+  {
+    "name": "GOD_WARS_DUNGEON",
+    "areas": [
+      "GOD_WARS_DUNGEON_WILDERNESS"
+    ],
+    "regionBoxes": [
+      [ 11345, 11603 ]
+    ]
+  },
+  {
+    "name": "ISLE_OF_SOULS_DUNGEON",
+    "regions": [
+      8593
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "ISLE_OF_SOULS_MAINLAND",
+    "regionBoxes": [
+      [ 8235, 9262 ]
+    ]
+  },
+  {
+    "name": "ISLE_OF_SOULS_INSTANCE",
+    "regionBoxes": [
+      [ 7515, 8542 ]
+    ]
+  },
+  {
+    "name": "ISLE_OF_SOULS",
+    "areas": [
+      "ISLE_OF_SOULS_MAINLAND",
+      "ISLE_OF_SOULS_INSTANCE"
+    ]
+  },
+  {
+    "name": "ISLE_OF_SOULS_HOT_ZONES",
+    "aabbs": [
+      [ 2270, 2884, 2301, 2944 ],
+      [ 2265, 2890, 2269, 2912 ],
+      [ 2261, 2892, 2264, 2912 ],
+      [ 2249, 2913, 2262, 2914 ],
+      [ 2253, 2894, 2260, 2912 ],
+      [ 2248, 2895, 2252, 2912 ],
+      [ 2246, 2899, 2247, 2910 ],
+      [ 2244, 2900, 2245, 2909 ],
+      [ 2240, 2961, 2264, 2968 ],
+      [ 2241, 2957, 2268, 2960 ],
+      [ 2245, 2952, 2266, 2956 ],
+      [ 2239, 2964, 2239, 2967 ],
+      [ 2266, 2961, 2266, 2963 ],
+      [ 2248, 2969, 2260, 2969 ],
+      [ 2250, 2970, 2253, 2970 ],
+      [ 2265, 2961, 2265, 2967 ]
+    ]
+  },
+  {
+    "name": "SOUL_WARS_ARENA_TUTORIAL",
+    "aabbs": [
+      [ 1921, 5950, 2110, 6018 ]
+    ]
+  },
+  {
+    "name": "SOUL_WARS_RED_BASE_TUTORIAL",
+    "aabbs": [
+      [ 2080, 5982, 2110, 6018 ],
+      [ 2076, 5956, 2105, 5982 ],
+      [ 2048, 5963, 2081, 6010 ],
+      [ 2048, 5954, 2068, 6010 ]
+    ]
+  },
+  {
+    "name": "SOUL_WARS_BLUE_BASE_TUTORIAL",
+    "aabbs": [
+      [ 1924, 5953, 1953, 6013 ],
+      [ 1953, 5961, 1985, 6013 ]
+    ]
+  },
+  {
+    "name": "SOUL_WARS_ARENA",
+    "areas": [
+      "SOUL_WARS_ARENA_TUTORIAL"
+    ],
+    "aabbs": [
+      [ 2113, 2878, 2302, 2946 ]
+    ]
+  },
+  {
+    "name": "SOUL_WARS_RED_BASE",
+    "areas": [
+      "SOUL_WARS_RED_BASE_TUTORIAL"
+    ],
+    "aabbs": [
+      [ 2272, 2910, 2302, 2946 ],
+      [ 2268, 2884, 2297, 2910 ],
+      [ 2240, 2891, 2273, 2938 ],
+      [ 2240, 2882, 2260, 2938 ]
+    ]
+  },
+  {
+    "name": "SOUL_WARS_BLUE_BASE",
+    "areas": [
+      "SOUL_WARS_BLUE_BASE_TUTORIAL"
+    ],
+    "aabbs": [
+      [ 2116, 2881, 2145, 2941 ],
+      [ 2145, 2889, 2177, 2941 ]
+    ]
+  },
+  {
+    "name": "UNDERGROUND_OLD_ONES_RUINS",
+    "regions": [
+      5274,
+      5276,
+      5532,
+      5785
+    ]
+  },
+  {
+    "name": "KARUULM_SLAYER_DUNGEON_PLANE_0",
+    "regionBoxes": [
+      [ 5022, 5279, 0 ],
+      [ 5279, 5536, 0 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "KARUULM_SLAYER_DUNGEON_PLANE_1",
+    "regionBoxes": [
+      [ 5022, 5535, 1 ],
+      [ 5280, 5536, 1 ]
+    ],
+    "regions": [
+      5279
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "KARUULM_SLAYER_DUNGEON_PLANE_2",
+    "regionBoxes": [
+      [ 5022, 5535, 2 ]
+    ],
+    "regions": [
+      5279
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "KARUULM_SLAYER_DUNGEON",
+    "areas": [
+      "KARUULM_SLAYER_DUNGEON_PLANE_0",
+      "KARUULM_SLAYER_DUNGEON_PLANE_1",
+      "KARUULM_SLAYER_DUNGEON_PLANE_2"
+    ]
+  },
+  {
+    "name": "MOUNT_KARUULM",
+    "aabbs": [
+      [ 1245, 3765, 1358, 3860 ]
+    ]
+  },
+  {
+    "name": "LIZARDMAN_TEMPLE",
+    "regions": [ 5277 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "LIZARDMAN_SHAMAN_CAVES",
+    "regions": [ 5275 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "GARDEN_OF_DEATH_1",
+    "regions": [ 5276 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "GARDEN_OF_DEATH_2",
+    "regions": [ 5532 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "GARDEN_OF_DEATH_3",
+    "regions": [ 5274 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "GARDEN_OF_DEATH_4",
+    "regions": [ 5785 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "CHASM_OF_FIRE",
+    "regions": [ 5789 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Tale of the Righteous red cave",
+    "regions": [ 4763 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Giants' Den",
+    "regions": [ 5786 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Don't know, but should be separate",
+    "regions": [ 4764 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Don't know 2, but should be separate",
+    "regions": [ 5787 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Don't know 3, but should be separate",
+    "regions": [ 6043 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Don't know 4, but should be separate",
+    "regions": [ 6299 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Woodcutting Guild ents",
+    "regions": [ 6298 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Don't know 5, but should be separate",
+    "regions": [ 6555 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Don't know 5, but should be separate",
+    "regions": [ 6297 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "White Knights' Castle crypt",
+    "aabbs": [
+      [ 2956, 9728, 2979, 9747 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "XERICS_LOOKOUT",
+    "aabbs": [
+      [ 1580, 3526, 1596, 3534 ]
+    ]
+  },
+  {
+    "name": "SHAYZIEN_COMBAT_RING",
+    "aabbs": [
+      [ 1539, 3618, 1548, 3627 ]
+    ]
+  },
+  {
+    "name": "SHAYZIEN_ENCAMPMENT",
+    "aabbs": [
+      [ 1467, 3607, 1540, 3678 ],
+      [ 1540, 3613, 1559, 3650 ]
+    ]
+  },
+  {
+    "name": "SHAYZIEN_SHAYZIA_RUIN",
+    "aabbs": [
+      [ 1577, 3587, 1594, 3604 ]
+    ]
+  },
+  {
+    "name": "SHAYZIEN_GRAVEYARD_OF_HEROES",
+    "aabbs": [
+      [ 1472, 3541, 1515, 3583 ]
+    ]
+  },
+  {
+    "name": "SHAYZIEN_EAST_ENTRANCE_BLEND_FIX",
+    "aabbs": [
+      [ 1556, 3575, 1556, 3577 ]
+    ]
+  },
+  {
+    "name": "SHAYZIEN",
+    "aabbs": [
+      [ 1467, 3607, 1540, 3678 ],
+      [ 1540, 3613, 1559, 3650 ],
+      [ 1477, 3584, 1525, 3616 ],
+      [ 1460, 3537, 1574, 3599 ],
+      [ 1535, 3523, 1574, 3537 ],
+      [ 1567, 3584, 1595, 3606 ]
+    ]
+  },
+  {
+    "name": "HOSIDIUS",
+    "aabbs": [
+      [ 1720, 3560, 1802, 3641 ]
+    ]
+  },
+  {
+    "name": "SKOTIZO",
+    "regions": [
+      9048
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "KOUREND_CATACOMBS_DUNGEON",
+    "aabbs": [
+      [ 1584, 9976, 1751, 10111 ]
+    ]
+  },
+  {
+    "name": "KOUREND_CATACOMBS",
+    "areas": [
+      "KOUREND_CATACOMBS_DUNGEON",
+      "SKOTIZO"
+    ]
+  },
+  {
+    "name": "BLOOD_ALTAR",
+    "aabbs": [
+      [ 1703, 3815, 1739, 3844 ],
+      [ 1739, 3817, 1751, 3839 ],
+      [ 1751, 3815, 1791, 3833 ]
+    ]
+  },
+  {
+    "name": "DARK_ALTAR",
+    "aabbs": [
+      [ 1660, 3864, 1747, 3904 ]
+    ]
+  },
+  {
+    "name": "ARCEUUS",
+    "aabbs": [
+      [ 1572, 3799, 1597, 3838 ],
+      [ 1566, 3805, 1586, 3832 ],
+      [ 1562, 3811, 1570, 3823 ],
+      [ 1588, 3778, 1608, 3838 ],
+      [ 1598, 3731, 1730, 3854 ],
+      [ 1623, 3710, 1730, 3731 ],
+      [ 1616, 3842, 1658, 3874 ],
+      [ 1625, 3817, 1856, 3905 ]
+    ]
+  },
+  {
+    "name": "ZEAH_SNOWY_NORTHERN_REGION",
+    "aabbs": [
+      [ 1852, 3839, 1914, 3901 ],
+      [ 1503, 3887, 1636, 3901 ],
+      [ 1513, 3876, 1622, 3886 ],
+      [ 1518, 3839, 1600, 3875 ],
+      [ 1637, 3894, 1668, 3901 ],
+      [ 1407, 3902, 1900, 3965 ],
+      [ 1655, 3966, 1818, 4058 ],
+      [ 1503, 3966, 1605, 4058 ]
+    ]
+  },
+  {
+    "name": "WINTERTODT_ARENA",
+    "aabbs": [
+      [ 1606, 3966, 1654, 4058 ]
+    ]
+  },
+  {
+    "name": "LOVAKENGJ",
+    "aabbs": [
+      [ 1421, 3788, 1560, 3844 ],
+      [ 1418, 3845, 1517, 3878 ],
+      [ 1518, 3845, 1525, 3871 ],
+      [ 1526, 3845, 1530, 3865 ],
+      [ 1422, 3879, 1508, 3889 ],
+      [ 1445, 3890, 1498, 3894 ],
+      [ 1457, 3895, 1473, 3900 ],
+      [ 1436, 3756, 1587, 3787 ],
+      [ 1438, 3745, 1582, 3755 ],
+      [ 1445, 3737, 1555, 3744 ],
+      [ 1473, 3734, 1555, 3736 ],
+      [ 1556, 3734, 1562, 3744 ],
+      [ 1502, 3730, 1552, 3733 ],
+      [ 1509, 3727, 1547, 3729 ],
+      [ 1517, 3724, 1544, 3726 ],
+      [ 1529, 3716, 1543, 3723 ],
+      [ 1561, 3788, 1562, 3810 ],
+      [ 1563, 3788, 1563, 3809 ],
+      [ 1564, 3788, 1564, 3808 ],
+      [ 1565, 3788, 1565, 3807 ],
+      [ 1566, 3788, 1566, 3806 ],
+      [ 1567, 3788, 1567, 3805 ],
+      [ 1568, 3788, 1568, 3804 ],
+      [ 1569, 3799, 1569, 3803 ],
+      [ 1570, 3799, 1570, 3802 ],
+      [ 1571, 3799, 1571, 3801 ],
+      [ 1572, 3799, 1572, 3800 ],
+      [ 1573, 3799 ],
+      [ 1569, 3788, 1583, 3798 ],
+      [ 1584, 3788, 1584, 3797 ],
+      [ 1428, 3780, 1435, 3787 ],
+      [ 1553, 3731, 1561, 3733 ],
+      [ 1553, 3730, 1556, 3730 ],
+      [ 1588, 3770, 1590, 3782 ],
+      [ 1591, 3770, 1597, 3773 ],
+      [ 1591, 3774, 1596, 3778 ],
+      [ 1591, 3779, 1591, 3781 ],
+      [ 1592, 3779, 1593, 3779 ],
+      [ 1588, 3783, 1589, 3783 ],
+      [ 1583, 3748, 1586, 3755 ],
+      [ 1563, 3743, 1577, 3744 ],
+      [ 1563, 3742, 1569, 3742 ],
+      [ 1419, 3815, 1420, 3844 ]
+    ]
+  },
+  {
+    "name": "MOUNT_QUIDAMORTEM",
+    "aabbs": [
+      [ 1194, 3520, 1292, 3594 ],
+      [ 1287, 3556, 1300, 3596 ],
+      [ 1300, 3580, 1308, 3596 ],
+      [ 1230, 3588, 1269, 3611 ]
+    ]
+  },
+  {
+    "name": "KEBOS_LOWLANDS",
+    "aabbs": [
+      [ 1167, 3582, 1345, 3664 ],
+      [ 1292, 3526, 1355, 3588 ],
+      [ 1275, 3631, 1329, 3692 ]
+    ]
+  },
+  {
+    "name": "ZEAH_WOODLAND_AREAS",
+    "aabbs": [
+      [ 1430, 3383, 1897, 3677 ],
+      [ 1539, 3678, 1639, 3711 ],
+      [ 1548, 3712, 1617, 3732 ],
+      [ 1640, 3678, 1897, 3707 ],
+      [ 1735, 3708, 1856, 3815 ],
+      [ 1198, 3665, 1253, 3790 ],
+      [ 1254, 3693, 1287, 3772 ],
+      [ 1288, 3694, 1324, 3764 ],
+      [ 1325, 3694, 1351, 3755 ],
+      [ 1352, 3715, 1363, 3751 ],
+      [ 1254, 3666, 1272, 3692 ],
+      [ 1400, 3465, 1429, 3589 ]
+    ]
+  },
+  {
+    "name": "FARMING_GUILD_HESPORI",
+    "regions": [
+      5021
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "MESS_HALL_KITCHEN",
+    "aabbs": [
+      [ 1643, 3622, 1649, 3631 ]
+    ]
+  },
+  {
+    "name": "THE_STRANGLEWOOD_EXTENDED",
+    "aabbs": [
+      [ 1080, 3264, 1378, 3476 ]
+    ]
+  },
+  {
+    "name": "THE_STRANGLEWOOD",
+    "regionBoxes": [
+      [ 4403, 4659 ],
+      [ 4404, 4917 ]
+    ]
+  },
+  {
+    "name": "THE_STRANGLEWOOD_QUEST_UNDERGROUND_AREAS",
+    "regionBoxes": [
+      [ 4760, 4761 ]
+    ]
+  },
+  {
+    "name": "JUDGE_OF_YAMA_BOSS",
+    "regionBoxes": [
+      [ 6492, 6748 ]
+    ]
+  },
+  {
+    "name": "XAMPHUR_BOSS",
+    "regions": [
+      12124
+    ]
+  },
+  {
+    "name": "SARACHNIS_LAIR",
+    "aabbs": [
+      [ 1830, 9890, 1853, 9913 ]
+    ]
+  },
+  {
+    "name": "ZEAH_UPPER_LEVELS",
+    "aabbs": [
+      [ 1085, 2870, 1, 1938, 4078, 3 ]
+    ]
+  },
+  {
+    "name": "ZEAH",
+    "aabbs": [
+      [ 1085, 2870, 1938, 4078 ]
+    ]
+  },
+  {
+    "name": "FOSSIL_ISLAND_WYVERN_TASK_CAVE",
+    "regions": [
+      14496
+    ]
+  },
+  {
+    "name": "TAR_SWAMP",
+    "aabbs": [
+      [ 3632, 3694, 3712, 3800 ],
+      [ 3631, 3782, 3697, 3809 ]
+    ]
+  },
+  {
+    "name": "FOSSIL_ISLAND_CENTRAL_BANK_FIX",
+    "aabbs": [
+      [ 3742, 3802, 3744, 3805 ]
+    ]
+  },
+  {
+    "name": "FOSSIL_ISLAND_HILL_HOUSE_INTERIOR",
+    "aabbs": [
+      [ 3770, 3867, 3772, 3872 ],
+      [ 3759, 3864, 3769, 3875 ],
+      [ 3758, 3871, 3758, 3874 ],
+      [ 3758, 3864, 3758, 3867 ]
+    ]
+  },
+  {
+    "name": "FOSSIL_ISLAND_HILL_HOUSE_FIX",
+    "aabbs": [
+      [ 3747, 3858, 3799, 3885 ]
+    ]
+  },
+  {
+    "name": "FOSSIL_ISLAND_HILL_TEXTURE_FIX",
+    "aabbs": [
+      [ 3657, 3720, 3845, 3900 ]
+    ]
+  },
+  {
+    "name": "FOSSIL_ISLAND_VOLCANO",
+    "aabbs": [
+      [ 3789, 3802, 3833, 3841 ],
+      [ 3784, 3802, 3788, 3831 ],
+      [ 3781, 3819, 3783, 3828 ],
+      [ 3781, 3802, 3783, 3814 ],
+      [ 3777, 3802, 3780, 3812 ],
+      [ 3768, 3778, 3826, 3801 ],
+      [ 3827, 3782, 3829, 3801 ],
+      [ 3826, 3749, 3836, 3762 ],
+      [ 3810, 3738, 3820, 3748 ],
+      [ 3772, 3774, 3824, 3777 ],
+      [ 3775, 3802, 3776, 3807 ],
+      [ 3776, 3750, 3789, 3773 ],
+      [ 3790, 3755, 3825, 3773 ]
+    ]
+  },
+  {
+    "name": "FOSSIL_ISLAND",
+    "aabbs": [
+      [ 3626, 3693, 3851, 3908 ]
+    ]
+  },
+  {
+    "name": "APE_ATOLL_WATERFALLS",
+    "aabbs": [
+      [ 2754, 2734, 2754, 2736 ],
+      [ 2751, 2738, 2752, 2738 ]
+    ]
+  },
+  {
+    "name": "KARAMJA_INSTANCE_SOUTH_OF_MUSA_POINT",
+    "regions": [
+      10055
+    ]
+  },
+  {
+    "name": "KARAMJA_INSTANCE_SHIPYARD",
+    "aabbs": [
+      [ 2560, 4544, 2642, 4607 ]
+    ]
+  },
+  {
+    "name": "KARAMJA_INSTANCES",
+    "areas": [
+      "KARAMJA_INSTANCE_SOUTH_OF_MUSA_POINT",
+      "KARAMJA_INSTANCE_SHIPYARD"
+    ]
+  },
+  {
+    "name": "KARAMJA_VOLCANO_DUNGEON",
+    "aabbs": [
+      [ 2818, 9606, 2876, 9663, 0 ],
+      [ 2822, 9538, 2876, 9605, 0 ],
+      [ 2819, 9605, 2821, 9605, 0 ],
+      [ 2820, 9604, 2821, 9604, 0 ],
+      [ 2821, 9602, 2821, 9603, 0 ],
+      [ 2825, 9664, 2840, 9669, 0 ],
+      [ 2841, 9664, 2841, 9668, 0 ],
+      [ 2842, 9664, 2843, 9666, 0 ],
+      [ 2844, 9664, 2844, 9665, 0 ],
+      [ 2845, 9664, 2847, 9664, 0 ],
+      [ 2824, 9664, 2824, 9668, 0 ],
+      [ 2823, 9664, 2823, 9667, 0 ],
+      [ 2821, 9664, 2822, 9666, 0 ],
+      [ 2820, 9664, 2820, 9665, 0 ],
+      [ 2819, 9664, 0 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "KARAMJA",
+    "areas": [
+      "KARAMJA_INSTANCES"
+    ],
+    "aabbs": [
+      [ 2686, 3124, 2809, 3257 ],
+      [ 2810, 3124, 2917, 3209 ],
+      [ 2918, 3132, 2964, 3184 ],
+      [ 2746, 2873, 2973, 3123 ],
+      [ 2974, 2873, 3009, 3081 ]
+    ]
+  },
+  {
+    "name": "Rantz's cave (Big Chompy Bird Hunting)",
+    "regions": [ 10642 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "SHILO_VILLAGE_MINE",
+    "regions": [ 11410 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Tomb of Bervirius (Shilo Village)",
+    "regions": [ 11154 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Ah Za Rhoon 1 (Shilo Village)",
+    "regions": [ 11665 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Ah Za Rhoon 2 (Shilo Village)",
+    "regions": [ 11666 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Viyeldi caves top floor (Legends' Quest)",
+    "regions": [ 11153 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Karamjan Temple (Dragon Slayer 2)",
+    "regions": [ 11408, 11409 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "COSMIC_ENTITYS_PLANE",
+    "aabbs": [
+      [ 2048, 4800, 2111, 4863 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "VOID_KNIGHTS_OUTPOST",
+    "regions": [
+      10537
+    ]
+  },
+  {
+    "name": "PEST_CONTROL",
+    "regions": [
+      10536
+    ]
+  },
+  {
+    "name": "CRASH_ISLAND",
+    "regions": [
+      11562
+    ]
+  },
+  {
+    "name": "ENTRANA_GLASS_BUILDING_FIX",
+    "aabbs": [
+      [ 2829, 3347, 2835, 3353 ],
+      [ 2829, 3346 ],
+      [ 2833, 3346 ]
+    ]
+  },
+  {
+    "name": "ENTRANA",
+    "aabbs": [
+      [ 2798, 3326, 2873, 3396 ],
+      [ 2873, 3326, 2882, 3344 ]
+    ]
+  },
+  {
+    "name": "CRANDOR",
+    "aabbs": [
+      [ 2810, 3221, 2869, 3314 ]
+    ]
+  },
+  {
+    "name": "FISHING_PLATFORM",
+    "aabbs": [
+      [ 2756, 3268, 2799, 3295 ]
+    ]
+  },
+  {
+    "name": "MOS_LE_HARMLESS",
+    "aabbs": [
+      [ 3643, 2923, 3858, 3075 ]
+    ]
+  },
+  {
+    "name": "MOS_LE_HARMLESS_INSTANCE",
+    "aabbs": [
+      [ 1952, 5312, 1983, 5344 ]
+    ]
+  },
+  {
+    "name": "MOS_LE_HARMLESS_ALL",
+    "areas": [
+      "MOS_LE_HARMLESS",
+      "MOS_LE_HARMLESS_INSTANCE"
+    ]
+  },
+  {
+    "name": "BRAINDEATH_ISLAND",
+    "regions": [
+      8784
+    ],
+    "aabbs": [
+      [ 2112, 5042, 2175, 5183 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "HARMONY",
+    "regions": [
+      15148
+    ]
+  },
+  {
+    "name": "DRAGONTOOTH_ISLAND",
+    "regions": [
+      15159
+    ]
+  },
+  {
+    "name": "ICEBERG",
+    "aabbs": [
+      [ 2622, 3974, 2686, 4091 ]
+    ]
+  },
+  {
+    "name": "PENGUIN_BASE",
+    "aabbs": [
+      [ 2631, 10369, 2684, 10431 ]
+    ]
+  },
+  {
+    "name": "ISLAND_OF_STONE",
+    "regions": [
+      9790
+    ]
+  },
+  {
+    "name": "MISCELLANIA",
+    "aabbs": [
+      [ 2485, 3800, 2629, 3923 ]
+    ]
+  },
+  {
+    "name": "WATERBIRTH_ISLAND",
+    "regions": [
+      10042
+    ]
+  },
+  {
+    "name": "NEITIZNOT",
+    "regions": [
+      9275
+    ]
+  },
+  {
+    "name": "JATIZSO",
+    "regions": [
+      9531
+    ]
+  },
+  {
+    "name": "FREMENNIK_ISLES_NORTH",
+    "regionBoxes": [
+      [ 9276, 9532 ]
+    ]
+  },
+  {
+    "name": "FREMENNIK_ISLES",
+    "areas": [
+      "JATIZSO",
+      "NEITIZNOT",
+      "FREMENNIK_ISLES_NORTH"
+    ]
+  },
+  {
+    "name": "FREMENNIK_TRIALS_KOSCHEI_THE_DEATHLESS",
+    "regions": [ 10653 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "BRINE_RAT_CAVERN",
+    "regions": [ 10910 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "UNGAEL",
+    "regions": [
+      9023
+    ]
+  },
+  {
+    "name": "PIRATES_COVE",
+    "regions": [
+      8763
+    ]
+  },
+  {
+    "name": "LUNAR_DREAM_WORLD",
+    "regions": [
+      6991
+    ],
+    "regionBoxes": [
+      [ 7247, 7250 ]
+    ]
+  },
+  {
+    "name": "LUNAR_VILLAGE_HOUSE_INTERIORS_GROUND",
+    "aabbs": [
+      [ 2097, 3917, 0, 2104, 3922, 0 ],
+      [ 2090, 3922, 0, 2091, 3922, 0 ],
+      [ 2089, 3917, 0, 2092, 3921, 0 ],
+      [ 2082, 3921, 0, 2084, 3922, 0 ],
+      [ 2070, 3919, 2075, 3922 ],
+      [ 2078, 3915, 0 ],
+      [ 2069, 3915, 0 ],
+      [ 2071, 3907, 0 ],
+      [ 2066, 3913, 0, 2081, 3914, 0 ],
+      [ 2069, 3910, 0, 2081, 3912, 0 ],
+      [ 2066, 3908, 0, 2068, 3910, 0 ],
+      [ 2069, 3909, 0, 2078, 3909, 0 ],
+      [ 2075, 3908, 0, 2078, 3908, 0 ],
+      [ 2069, 3908, 0, 2072, 3908, 0 ],
+      [ 2086, 3904, 0, 2090, 3909, 0 ],
+      [ 2094, 3905, 0, 2098, 3908, 0 ],
+      [ 2107, 3911, 0 ],
+      [ 2102, 3911, 0 ],
+      [ 2107, 3904, 0 ],
+      [ 2103, 3904, 0 ],
+      [ 2102, 3905, 0, 2107, 3910, 0 ],
+      [ 2072, 3897, 2076, 3899 ],
+      [ 2083, 3892, 0, 2084, 3899, 0 ],
+      [ 2080, 3893, 0, 2082, 3897, 0 ],
+      [ 2081, 3892, 0, 2082, 3892, 0 ],
+      [ 2089, 3899, 0, 2092, 3900, 0 ],
+      [ 2091, 3896, 0, 2092, 3898, 0 ],
+      [ 2099, 3897, 0, 2101, 3898, 0 ],
+      [ 2096, 3896, 0, 2102, 3901, 0 ]
+    ]
+  },
+  {
+    "name": "LUNAR_VILLAGE_HOUSE_INTERIORS_FIRST",
+    "aabbs": [
+      [ 2090, 3922, 1, 2091, 3922, 1 ],
+      [ 2089, 3917, 1, 2092, 3921, 1 ],
+      [ 2082, 3919, 1, 2084, 3922, 1 ],
+      [ 2078, 3915, 1 ],
+      [ 2069, 3915, 1 ],
+      [ 2071, 3907, 1 ],
+      [ 2079, 3910, 1, 2079, 3915, 1 ],
+      [ 2076, 3908, 1, 2078, 3915, 1 ],
+      [ 2080, 3904, 1, 2082, 3915, 1 ],
+      [ 2079, 3904, 1, 2079, 3909, 1 ],
+      [ 2074, 3904, 1, 2078, 3907, 1 ],
+      [ 2085, 3903, 1, 2091, 3910, 1 ],
+      [ 2094, 3904, 1, 2100, 3911, 1 ],
+      [ 2101, 3903, 1, 2108, 3912, 1 ],
+      [ 2079, 3891, 1, 2085, 3900, 1 ],
+      [ 2088, 3890, 1, 2093, 3901, 1 ],
+      [ 2097, 3899, 1, 2101, 3899, 1 ],
+      [ 2099, 3897, 1, 2101, 3898, 1 ],
+      [ 2096, 3896, 1, 2102, 3901, 1 ]
+    ]
+  },
+  {
+    "name": "LUNAR_ESSENCE_MINE",
+    "regions": [
+      9377
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "LADY_ZAY",
+    "aabbs": [
+      [ 2135, 3887, 2145, 3917 ],
+      [ 2219, 3784, 2229, 3814 ]
+    ]
+  },
+  {
+    "name": "LUNAR_ISLE",
+    "regionBoxes": [
+      [ 8252, 8509 ]
+    ]
+  },
+  {
+    "name": "Baba Yaga House Interior",
+    "aabbs": [
+      [ 2448, 4644, 2454, 4650 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "MM2_AIRSHIP_PLATFORM",
+    "aabbs": [
+      [ 2056, 5375, 2109, 5442 ]
+    ]
+  },
+  {
+    "name": "Grand Tree tunnels",
+    "regions": [ 9882 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Tree Gnome Village dungeon",
+    "regions": [ 10309, 10133 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Glarial's Tomb Dungeon",
+    "regions": [ 10137 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "APE_ATOLL",
+    "regionBoxes": [
+      [ 10794, 11051 ]
+    ]
+  },
+  {
+    "name": "Gnome glider hangar (Monkey Madness 1)",
+    "regions": [ 9626 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Ape Atoll Dungeon (Monkey Madness 1)",
+    "regions": [ 10894, 11150 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Banana plantation (Monkey Madness 1)",
+    "regions": [ 10895 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Temple of Marimbo Dungeon (Monkey Madness 1)",
+    "regions": [ 11151 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Kruk's Dungeon hunter area (Monkey Madness 2)",
+    "regions": [ 11662 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "KOUREND_CASTLE_ENTRANCE_FIX",
+    "aabbs": [
+      [ 1623, 3669, 0, 1623, 3677, 0 ]
+    ]
+  },
+  {
+    "name": "KOUREND_CASTLE",
+    "aabbs": [
+      [ 1587, 3656, 0, 1626, 3690, 0 ],
+      [ 1610, 3656, 1, 1617, 3690, 1 ],
+      [ 1618, 3684, 1, 1619, 3690, 1 ],
+      [ 1618, 3676, 1, 1621, 3683, 1 ],
+      [ 1618, 3663, 1, 1621, 3670, 1 ],
+      [ 1618, 3656, 1, 1619, 3662, 1 ],
+      [ 1608, 3676, 1, 1609, 3683, 1 ],
+      [ 1608, 3663, 1, 1609, 3670, 1 ],
+      [ 1605, 3681, 1, 1607, 3683, 1 ],
+      [ 1605, 3663, 1, 1607, 3665, 1 ],
+      [ 1586, 3661, 1, 1604, 3685, 1 ],
+      [ 1610, 3656, 2, 1621, 3690, 2 ],
+      [ 1591, 3681, 2, 1599, 3685, 2 ],
+      [ 1591, 3661, 2, 1599, 3667, 2 ]
+    ]
+  },
+  {
+    "name": "KOUREND_GUARDPOSTS",
+    "aabbs": [
+      [ 1613, 3695, 0, 1615, 3700, 0 ],
+      [ 1613, 3695, 1, 1615, 3700, 1 ],
+      [ 1690, 3677, 0, 1692, 3678, 0 ],
+      [ 1690, 3677, 1, 1692, 3678, 1 ],
+      [ 1690, 3668, 0, 1692, 3669, 0 ],
+      [ 1690, 3668, 1, 1692, 3669, 1 ],
+      [ 1625, 3699, 0, 1626, 3700, 0 ],
+      [ 1631, 3699, 0, 1632, 3700, 0 ],
+      [ 1632, 3646, 0, 1633, 3647, 0 ],
+      [ 1624, 3646, 0, 1625, 3647, 0 ],
+      [ 1613, 3646, 0, 1614, 3650, 0 ],
+      [ 1613, 3646, 1, 1614, 3650, 1 ]
+    ]
+  },
+  {
+    "name": "KOUREND_HOUSES",
+    "aabbs": [
+      [ 1670, 3686, 1677, 3692 ],
+      [ 1669, 3677, 0, 1683, 3683, 0 ],
+      [ 1669, 3677, 1, 1683, 3683, 1 ],
+      [ 1669, 3677, 2, 1683, 3682, 2 ],
+      [ 1670, 3663, 1683, 3669 ],
+      [ 1674, 3654, 1679, 3660 ]
+    ]
+  },
+  {
+    "name": "SHAYZIEN_INTERIORS_COBBLE",
+    "aabbs": [
+      [ 1480, 3548, 0, 1486, 3552, 0 ],
+      [ 1504, 3589, 1513, 3595 ],
+      [ 1517, 3588, 1521, 3593 ],
+      [ 1520, 3587, 1521, 3587 ],
+      [ 1517, 3587, 1518, 3587 ],
+      [ 1531, 3578, 1541, 3582 ],
+      [ 1541, 3568, 1544, 3572 ],
+      [ 1540, 3571, 1540, 3572 ],
+      [ 1540, 3568, 1540, 3596 ],
+      [ 1542, 3557, 1542, 3558 ],
+      [ 1542, 3554, 1542, 3555 ],
+      [ 1538, 3554, 1541, 3558 ],
+      [ 1542, 3548, 1542, 3549 ],
+      [ 1542, 3541, 1542, 3546 ],
+      [ 1538, 3541, 1541, 3549 ],
+      [ 1530, 3542, 1534, 3547 ],
+      [ 1548, 3560, 1553, 3569 ],
+      [ 1549, 3559, 1552, 3559 ],
+      [ 1561, 3568, 1567, 3571 ],
+      [ 1566, 3567, 1567, 3567 ],
+      [ 1561, 3567, 1564, 3567 ],
+      [ 1565, 3543, 1569, 3547 ]
+    ]
+  },
+  {
+    "name": "SHAYZIEN_BANK",
+    "aabbs": [
+      [ 1482, 3589, 1491, 3595 ]
+    ]
+  },
+  {
+    "name": "GREAT_KOUREND_STATUE",
+    "aabbs": [
+      [ 1631, 3668, 1641, 3678 ]
+    ]
+  },
+  {
+    "name": "HOSIDIUS_WELL",
+    "aabbs": [
+      [ 1761, 3597, 1764, 3600 ]
+    ]
+  },
+  {
+    "name": "HOSIDIUS_STAIRS",
+    "aabbs": [
+      [ 1762, 3607, 1763, 3608 ]
+    ]
+  },
+  {
+    "name": "KEBOS_SWAMP_XERIC_DIRT",
+    "aabbs": [
+      [ 1234, 3614, 1241, 3621 ]
+    ]
+  },
+  {
+    "name": "FISHING_TRAWLER_BOAT_PORT_KHAZARD",
+    "aabbs": [
+      [ 2669, 3166, 2673, 3183 ]
+    ]
+  },
+  {
+    "name": "FISHING_TRAWLER_BOAT_FLOODED",
+    "aabbs": [
+      [ 2012, 4824, 2021, 4826 ]
+    ]
+  },
+  {
+    "name": "FISHING_TRAWLER",
+    "aabbs": [
+      [ 1792, 4734, 1855, 4863 ],
+      [ 1855, 4798, 1920, 4893 ],
+      [ 1920, 4798, 1990, 4863 ],
+      [ 1990, 4798, 2047, 4917 ]
+    ]
+  },
+  {
+    "name": "MOGRE_CAMP",
+    "regions": [
+      11924
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "HARMONY_ISLAND_UNDERWATER_TUNNEL",
+    "aabbs": [
+      [ 3779, 9216, 1, 3839, 9278, 1 ]
+    ]
+  },
+  {
+    "name": "FOSSIL_ISLAND_UNDERWATER_AREA",
+    "aabbs": [
+      [ 3712, 10240, 3839, 10303 ]
+    ]
+  },
+  {
+    "name": "COSMIC_ALTAR",
+    "aabbs": [
+      [ 2112, 4799, 2176, 4863 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "DEATH_ALTAR",
+    "aabbs": [
+      [ 2176, 4799, 2240, 4863 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "CHAOS_ALTAR",
+    "aabbs": [
+      [ 2240, 4863, 2303, 4800 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "WRATH_ALTAR",
+    "aabbs": [
+      [ 2304, 4800, 2366, 4863 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "NATURE_ALTAR",
+    "aabbs": [
+      [ 2372, 4863, 2426, 4804 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "LAW_ALTAR",
+    "regions": [ 9803 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "BODY_ALTAR",
+    "aabbs": [
+      [ 2497, 4863, 2543, 4817 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "FIRE_ALTAR",
+    "aabbs": [
+      [ 2553, 4802, 2624, 4864 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "EARTH_ALTAR",
+    "aabbs": [
+      [ 2627, 4815, 2685, 4861 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "WATER_ALTAR",
+    "aabbs": [
+      [ 2688, 4800, 2750, 4862 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "MIND_ALTAR",
+    "aabbs": [
+      [ 2756, 4805, 2810, 4861 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "AIR_ALTAR",
+    "aabbs": [
+      [ 2817, 4802, 2865, 4862 ]
+    ],
+    "hideOtherAreas": true,
+    "fillGaps": false
+  },
+  {
+    "name": "TRUE_BLOOD_ALTAR",
+    "aabbs": [
+      [ 3202, 4800, 3263, 4863 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "LITHKREN_DUNGEON",
+    "regions": [
+      6223
+    ],
+    "regionBoxes": [
+      [ 14242, 14243 ]
+    ]
+  },
+  {
+    "name": "LITHKREN",
+    "aabbs": [
+      [ 3519, 3967, 3602, 4032 ]
+    ]
+  },
+  {
+    "name": "DS2_SHIPS",
+    "regionBoxes": [
+      [ 6486, 6745 ]
+    ]
+  },
+  {
+    "name": "THE_GAUNTLET_NORMAL",
+    "aabbs": [
+      [ 1856, 5632, 1, 1919, 5695, 1 ]
+    ]
+  },
+  {
+    "name": "THE_GAUNTLET_CORRUPTED",
+    "aabbs": [
+      [ 1920, 5632, 1, 1983, 5695, 1 ]
+    ]
+  },
+  {
+    "name": "THE_GAUNTLET_FLOOR_ROOT_FIX",
+    "aabbs": [
+      [ 1858, 5682, 1869, 5693 ],
+      [ 1874, 5682, 1885, 5693 ],
+      [ 1890, 5682, 1901, 5693 ],
+      [ 1858, 5666, 1869, 5677 ],
+      [ 1874, 5666, 1885, 5677 ],
+      [ 1890, 5666, 1901, 5677 ],
+      [ 1858, 5650, 1869, 5661 ],
+      [ 1858, 5634, 1869, 5645 ],
+      [ 1874, 5634, 1885, 5645 ],
+      [ 1890, 5634, 1901, 5645 ],
+      [ 1890, 5650, 1901, 5661 ],
+      [ 1874, 5650, 1885, 5661 ],
+      [ 1906, 5682, 1917, 5693 ],
+      [ 1906, 5666, 1917, 5677 ],
+      [ 1922, 5682, 1933, 5693 ],
+      [ 1922, 5666, 1933, 5677 ],
+      [ 1922, 5650, 1933, 5661 ],
+      [ 1922, 5634, 1933, 5645 ],
+      [ 1938, 5682, 1949, 5693 ],
+      [ 1954, 5682, 1965, 5693 ],
+      [ 1970, 5682, 1981, 5693 ],
+      [ 1970, 5666, 1981, 5677 ],
+      [ 1954, 5666, 1965, 5677 ],
+      [ 1938, 5666, 1949, 5677 ],
+      [ 1938, 5650, 1949, 5661 ],
+      [ 1954, 5650, 1965, 5661 ],
+      [ 1954, 5634, 1965, 5645 ],
+      [ 1938, 5634, 1949, 5645 ]
+    ]
+  },
+  {
+    "name": "THE_GAUNTLET",
+    "areas": [
+      "THE_GAUNTLET_NORMAL",
+      "THE_GAUNTLET_CORRUPTED"
+    ]
+  },
+  {
+    "name": "THE_GAUNTLET_LOBBY",
+    "aabbs": [
+      [ 3025, 6116, 3040, 6131 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "PLAYER_OWNED_HOUSE",
+    "regionBoxes": [
+      [ 7257, 8026 ]
+    ]
+  },
+  {
+    "name": "PLAYER_OWNED_HOUSE_SNOWY",
+    "aabbs": [
+      [ 1984, 5696, 1, 2047, 5823, 1 ]
+    ]
+  },
+  {
+    "name": "BLACKHOLE",
+    "aabbs": [
+      [ 1616, 4728, 1623, 4735 ]
+    ]
+  },
+  {
+    "name": "CAMDOZAAL_VAULT",
+    "aabbs": [
+      [ 2969, 5816, 2970, 5824 ],
+      [ 2952, 5824, 2986, 5857 ]
+    ]
+  },
+  {
+    "name": "CAMDOZAAL_TILED_FLOOR",
+    "aabbs": [
+      [ 2954, 5762, 2951, 5761 ],
+      [ 2953, 5767, 2952, 5763 ],
+      [ 2960, 5780, 2942, 5768 ]
+    ]
+  },
+  {
+    "name": "CAMDOZAAL",
+    "aabbs": [
+      [ 2897, 5760, 3036, 5848 ]
+    ]
+  },
+  {
+    "name": "TEMPOROSS_COVE",
+    "aabbs": [
+      [ 3005, 2941, 3066, 3011 ]
+    ]
+  },
+  {
+    "name": "TEMPLE_OF_THE_EYE_REGULAR",
+    "aabbs": [
+      [ 3548, 9441, 3680, 9535 ]
+    ]
+  },
+  {
+    "name": "TEMPLE_OF_THE_EYE_QUEST_1",
+    "aabbs": [
+      [ 2368, 5601, 2431, 5695 ]
+    ]
+  },
+  {
+    "name": "TEMPLE_OF_THE_EYE_QUEST_2",
+    "aabbs": [
+      [ 2432, 5665, 2495, 5759 ]
+    ]
+  },
+  {
+    "name": "TEMPLE_OF_THE_EYE",
+    "areas": [
+      "TEMPLE_OF_THE_EYE_REGULAR",
+      "TEMPLE_OF_THE_EYE_QUEST_1",
+      "TEMPLE_OF_THE_EYE_QUEST_2"
+    ]
+  },
+  {
+    "name": "TEMPLE_OF_THE_EYE_BLEND_FIX",
+    "aabbs": [
+      [ 3613, 9474 ],
+      [ 3614, 9474, 3616, 9475 ],
+      [ 3617, 9474, 3617, 9475 ],
+      [ 2397, 5634 ],
+      [ 2398, 5634, 2400, 5635 ],
+      [ 2401, 5634, 2401, 5635 ],
+      [ 2461, 5698 ],
+      [ 2462, 5698, 2464, 5699 ],
+      [ 2465, 5698, 2465, 5699 ]
+    ]
+  },
+  {
+    "name": "TEMPLE_OF_THE_EYE_CENTER_PLATFORM",
+    "aabbs": [
+      [ 3610, 9498, 3620, 9511 ],
+      [ 2394, 5658, 2404, 5671 ],
+      [ 2458, 5722, 2468, 5735 ]
+    ]
+  },
+  {
+    "name": "TEMPLE_OF_THE_EYE_ENTRANCE_BRIGHTNESS_FIX",
+    "aabbs": [
+      [ 3611, 9473, 3618, 9478 ],
+      [ 2395, 5633, 2402, 5638 ],
+      [ 2459, 5697, 2466, 5702 ]
+    ]
+  },
+  {
+    "name": "TEMPLE_OF_THE_EYE_ENTRANCE_FIX",
+    "aabbs": [
+      [ 3613, 9471, 3617, 9481 ],
+      [ 2461, 5695, 2465, 5705 ],
+      [ 2397, 5631, 2401, 5641 ]
+    ]
+  },
+  {
+    "name": "DEATHS_OFFICE",
+    "aabbs": [
+      [ 3164, 5719, 3185, 5734 ]
+    ]
+  },
+  {
+    "name": "TOB_ROOM_MAIDEN",
+    "aabbs": [
+      [ 3152, 4416, 3231, 4468 ]
+    ]
+  },
+  {
+    "name": "TOB_ROOM_BLOAT",
+    "aabbs": [
+      [ 3260, 4427, 3327, 4474 ]
+    ]
+  },
+  {
+    "name": "TOB_ROOM_NYCOLAS",
+    "aabbs": [
+      [ 3274, 4226, 3318, 4290 ]
+    ]
+  },
+  {
+    "name": "TOB_ROOM_SOTETSEG",
+    "aabbs": [
+      [ 3264, 4288, 3295, 4336 ]
+    ]
+  },
+  {
+    "name": "TOB_ROOM_XARPUS",
+    "aabbs": [
+      [ 3151, 4368, 3191, 4406 ]
+    ]
+  },
+  {
+    "name": "TOB_ROOM_VERZIK",
+    "aabbs": [
+      [ 3152, 4296, 3186, 4332 ]
+    ]
+  },
+  {
+    "name": "TOB_ROOM_VAULT",
+    "aabbs": [
+      [ 3224, 4305, 3250, 4334 ]
+    ]
+  },
+  {
+    "name": "THEATRE_OF_BLOOD",
+    "aabbs": [
+      [ 3149, 4226, 3327, 4474 ]
+    ]
+  },
+  {
+    "name": "THEATRE_OF_BLOOD_VERZIK",
+    "regions": [ 12611 ]
+  },
+  {
+    "name": "TOA_ENTRANCE_LOBBY",
+    "aabbs": [
+      [ 3344, 9102, 3375, 9135 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "TOA_PATH_HUB",
+    "aabbs": [
+      [ 3520, 5120, 3583, 5183 ]
+    ]
+  },
+  {
+    "name": "TOA_LOOT_ROOM",
+    "aabbs": [
+      [ 3648, 5120, 3711, 5183 ]
+    ]
+  },
+  {
+    "name": "TOA_FINAL_BOSS_PHASE_1",
+    "aabbs": [
+      [ 3776, 5120, 3839, 5183 ]
+    ]
+  },
+  {
+    "name": "TOA_FINAL_BOSS_PHASE_2",
+    "aabbs": [
+      [ 3904, 5120, 3967, 5183 ]
+    ]
+  },
+  {
+    "name": "TOA_FINAL_BOSS",
+    "areas": [
+      "TOA_FINAL_BOSS_PHASE_1",
+      "TOA_FINAL_BOSS_PHASE_2"
+    ]
+  },
+  {
+    "name": "TOA_PATH_OF_SCABARAS_PUZZLE",
+    "aabbs": [
+      [ 3520, 5248, 3583, 5311 ]
+    ]
+  },
+  {
+    "name": "TOA_PATH_OF_SCABARAS_BOSS",
+    "aabbs": [
+      [ 3520, 5376, 3583, 5439 ]
+    ]
+  },
+  {
+    "name": "TOA_PATH_OF_SCABARAS",
+    "areas": [
+      "TOA_PATH_OF_SCABARAS_PUZZLE",
+      "TOA_PATH_OF_SCABARAS_BOSS"
+    ]
+  },
+  {
+    "name": "TOA_PATH_OF_HET_PUZZLE",
+    "aabbs": [
+      [ 3648, 5248, 3711, 5311 ]
+    ]
+  },
+  {
+    "name": "TOA_PATH_OF_HET_BOSS",
+    "aabbs": [
+      [ 3648, 5376, 3711, 5439 ]
+    ]
+  },
+  {
+    "name": "TOA_PATH_OF_HET",
+    "areas": [
+      "TOA_PATH_OF_HET_PUZZLE",
+      "TOA_PATH_OF_HET_BOSS"
+    ]
+  },
+  {
+    "name": "TOA_PATH_OF_APMEKEN_PUZZLE",
+    "aabbs": [
+      [ 3776, 5248, 3839, 5311 ]
+    ]
+  },
+  {
+    "name": "TOA_PATH_OF_APMEKEN_BOSS",
+    "aabbs": [
+      [ 3776, 5376, 3839, 5439 ]
+    ]
+  },
+  {
+    "name": "TOA_PATH_OF_APMEKEN",
+    "areas": [
+      "TOA_PATH_OF_APMEKEN_PUZZLE",
+      "TOA_PATH_OF_APMEKEN_BOSS"
+    ]
+  },
+  {
+    "name": "TOA_PATH_OF_CRONDIS_PUZZLE",
+    "aabbs": [
+      [ 3904, 5248, 3967, 5311 ]
+    ]
+  },
+  {
+    "name": "TOA_PATH_OF_CRONDIS_BOSS",
+    "aabbs": [
+      [ 3904, 5376, 3967, 5439 ]
+    ]
+  },
+  {
+    "name": "TOA_PATH_OF_CRONDIS",
+    "areas": [
+      "TOA_PATH_OF_CRONDIS_PUZZLE",
+      "TOA_PATH_OF_CRONDIS_BOSS"
+    ]
+  },
+  {
+    "name": "TOA_CRONDIS_ISLAND",
+    "aabbs": [
+      [ 3942, 5403, 3942, 5413 ],
+      [ 3926, 5400, 3941, 5416 ],
+      [ 3939, 5399, 3939, 5417 ],
+      [ 3929, 5399, 3938, 5418 ],
+      [ 3923, 5403, 3925, 5413 ]
+    ]
+  },
+  {
+    "name": "TOA_CRONDIS_ISLAND_SUBMERGED",
+    "aabbs": [
+      [ 3943, 5402, 3944, 5415 ]
+    ]
+  },
+  {
+    "name": "TOA_CRONDIS_WATER",
+    "aabbs": [
+      [ 3948, 5387, 3957, 5429 ],
+      [ 3943, 5389, 3947, 5427 ],
+      [ 3921, 5387, 3942, 5429 ],
+      [ 3920, 5388, 3920, 5428 ],
+      [ 3916, 5389, 3919, 5427 ],
+      [ 3915, 5390, 3915, 5426 ],
+      [ 3914, 5391, 3914, 5425 ],
+      [ 3913, 5392, 3913, 5424 ],
+      [ 3912, 5398, 3912, 5418 ],
+      [ 3906, 5399, 3911, 5417 ]
+    ]
+  },
+  {
+    "name": "TOMBS_OF_AMASCUT",
+    "areas": [
+      "TOA_ENTRANCE_LOBBY",
+      "TOA_PATH_HUB",
+      "TOA_LOOT_ROOM",
+      "TOA_FINAL_BOSS_PHASE_1",
+      "TOA_FINAL_BOSS_PHASE_2",
+      "TOA_PATH_OF_SCABARAS_PUZZLE",
+      "TOA_PATH_OF_SCABARAS_BOSS",
+      "TOA_PATH_OF_HET_PUZZLE",
+      "TOA_PATH_OF_HET_BOSS",
+      "TOA_PATH_OF_APMEKEN_PUZZLE",
+      "TOA_PATH_OF_APMEKEN_BOSS",
+      "TOA_PATH_OF_CRONDIS_PUZZLE",
+      "TOA_PATH_OF_CRONDIS_BOSS"
+    ]
+  },
+  {
+    "name": "CHAMBERS_OF_XERIC_ICE_DEMON",
+    "aabbs": [
+      [ 3264, 5344, 3359, 5375 ]
+    ]
+  },
+  {
+    "name": "CHAMBERS_OF_XERIC",
+    "regions": [
+      12889,
+      13136
+    ],
+    "regionBoxes": [
+      [ 13137, 13401 ]
+    ]
+  },
+  {
+    "name": "SISTERHOOD_SANCTUARY",
+    "regionBoxes": [
+      [ 14999, 15513 ]
+    ]
+  },
+  {
+    "name": "NIGHTMARE_OF_ASHIHAMA_ARENA",
+    "regions": [
+      15515
+    ]
+  },
+  {
+    "name": "PEST_CONTROL_LANDER_WATER_FIX",
+    "aabbs": [
+      [ 2660, 2638, 2663, 2644 ],
+      [ 2638, 2642, 2641, 2648 ],
+      [ 2632, 2649, 2635, 2655 ],
+      [ 2656, 2609, 2659, 2615 ]
+    ]
+  },
+  {
+    "name": "BARBARIAN_ASSAULT_WAITING_ROOMS",
+    "aabbs": [
+      [ 2571, 5252, 2616, 5305 ]
+    ]
+  },
+  {
+    "name": "TARNS_LAIR",
+    "regionBoxes": [
+      [ 12615, 12616 ]
+    ]
+  },
+  {
+    "name": "RANDOM_EVENT_CLASSROOM",
+    "aabbs": [
+      [ 1878, 5014, 1894, 5036 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "RANDOM_EVENT_FREAKY_FORESTER",
+    "aabbs": [
+      [ 2576, 4745, 2623, 4799 ]
+    ]
+  },
+  {
+    "name": "RANDOM_EVENT_GRAVEDIGGER",
+    "aabbs": [
+      [ 1920, 4992, 1935, 5007 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "RANDOM_EVENT_BEE_KEEPER",
+    "aabbs": [
+      [ 1920, 5033, 1940, 5055 ]
+    ]
+  },
+  {
+    "name": "RANDOM_EVENT_DRILL_DEMON",
+    "regions": [
+      12619
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "RANDOM_EVENT_FROG_CAVE",
+    "aabbs": [
+      [ 2450, 4764, 2480, 4794 ]
+    ]
+  },
+  {
+    "name": "RANDOM_EVENT_PRISON_PETE",
+    "aabbs": [
+      [ 2059, 4447, 2111, 4479 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "RANDOM_EVENT_QUIZ_MASTER",
+    "regions": [
+      7754
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "RANDOM_EVENT_MIME",
+    "regions": [ 8010 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "KELDAGRIM_RAT_PITS",
+    "regions": [ 7753 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "CHURCH_OF_AYASTER",
+    "regions": [
+      15455
+    ]
+  },
+  {
+    "name": "BLACK_ROOMS",
+    "areas": [
+      "RFD_QUIZ",
+      "RANDOM_EVENT_QUIZ_MASTER"
+    ]
+  },
+  {
+    "name": "CLAN_HALL",
+    "aabbs": [
+      [ 1730, 5442, 1789, 5501 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "LIGHTHOUSE",
+    "aabbs": [
+      [ 2493, 3606, 2594, 3648 ],
+      [ 2564, 3582, 2600, 3613 ]
+    ]
+  },
+  {
+    "name": "LIGHTHOUSE_INSTANCE",
+    "aabbs": [
+      [ 2432, 4624, 2494, 4544 ],
+      [ 2415, 4624, 2431, 4608 ]
+    ]
+  },
+  {
+    "name": "LIGHTHOUSE_DUNGEON",
+    "aabbs": [
+      [ 2496, 4608, 2542, 4666 ],
+      [ 2497, 9984, 2543, 10042 ]
+    ]
+  },
+  {
+    "name": "SORCERESS_GARDEN",
+    "regions": [
+      11605
+    ]
+  },
+  {
+    "name": "PURO_PURO",
+    "regions": [
+      10307
+    ]
+  },
+  {
+    "name": "RATCATCHERS_HOUSE",
+    "regions": [ 11343 ]
+  },
+  {
+    "name": "CANOE_CUTSCENE",
+    "regions": [
+      7238
+    ]
+  },
+  {
+    "name": "FISHER_KINGS_REALM",
+    "aabbs": [
+      [ 2624, 4624, 2815, 4799 ],
+      [ 2576, 4655, 2623, 4744 ]
+    ]
+  },
+  {
+    "name": "ENCHANTED_VALLEY",
+    "regions": [
+      12102
+    ]
+  },
+  {
+    "name": "GIANTS_PLATEAU_CABBAGE_PATCH",
+    "aabbs": [
+      [ 3412, 3179, 3413, 3181 ]
+    ]
+  },
+  {
+    "name": "GIANTS_FOUNDRY",
+    "aabbs": [
+      [ 3331, 11456, 3393, 11520 ]
+    ]
+  },
+  {
+    "name": "ELID_CAVE",
+    "regions": [
+      13461
+    ],
+    "aabbs": [
+      [ 3346, 9532, 3350, 9535 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "ANCIENT_CAVERN_1",
+    "regions": [ 6482, 6483 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "ANCIENT_CAVERN_2",
+    "regions": [ 6994, 6995 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "ANCIENT_CAVERN",
+    "areas": [
+      "ANCIENT_CAVERN_1",
+      "ANCIENT_CAVERN_2"
+    ]
+  },
+  {
+    "name": "LAND_OF_GOBLINS_CUTSCENE_WATER",
+    "aabbs": [
+      [ 3840, 4352, 3903, 4415 ]
+    ]
+  },
+  {
+    "name": "SHIP_SAILING",
+    "areas": [
+      "DS2_SHIPS"
+    ],
+    "regions": [
+      7242,
+      7243,
+      7499,
+      7500,
+      7755,
+      8011,
+      8012
+    ]
+  },
+  {
+    "name": "WEISS_SALT_MINE",
+    "regions": [
+      11425
+    ]
+  },
+  {
+    "name": "GHORROCK_DUNGEON",
+    "regions": [
+      11681
+    ],
+    "regionBoxes": [
+      [ 11619, 12132 ]
+    ]
+  },
+  {
+    "name": "GOBLIN_VILLAGE_ICE_CAVE",
+    "regions": [
+      7777
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "GOBLIN_VILLAGE_COOKS_CHAMBER_BLEND_FIX",
+    "aabbs": [
+      [ 2979, 9870, 2982, 9872 ]
+    ]
+  },
+  {
+    "name": "GOBLIN_VILLAGE_COOKS_CHAMBER_POST_RFD",
+    "aabbs": [
+      [ 2968, 9864, 2991, 9879 ]
+    ]
+  },
+  {
+    "name": "GOBLIN_VILLAGE_COOKS_CHAMBER_PRE_RFD",
+    "aabbs": [
+      [ 2968, 9904, 2991, 9919 ]
+    ]
+  },
+  {
+    "name": "GOBLIN_VILLAGE_COOKS_CHAMBER",
+    "areas": [
+      "GOBLIN_VILLAGE_COOKS_CHAMBER_PRE_RFD",
+      "GOBLIN_VILLAGE_COOKS_CHAMBER_POST_RFD"
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "GOBLIN_VILLAGE_INSTANCE",
+    "regions": [
+      9812
+    ]
+  },
+  {
+    "name": "TAVERLEY_DUNGEON_BLACK_KNIGHT_KITCHEN",
+    "aabbs": [
+      [ 2918, 9706, 2925, 9713 ]
+    ]
+  },
+  {
+    "name": "TAVERLEY_DUNGEON",
+    "aabbs": [
+      [ 2813, 9783, 2949, 9855 ],
+      [ 2950, 9770, 2970, 9800 ],
+      [ 2844, 9775, 2949, 9782 ],
+      [ 2848, 9768, 2949, 9774 ],
+      [ 2853, 9759, 2938, 9767 ],
+      [ 2884, 9668, 2939, 9758 ]
+    ]
+  },
+  {
+    "name": "ICE_QUEENS_DUNGEON",
+    "aabbs": [
+      [ 2816, 9897, 2879, 9983 ],
+      [ 2880, 9920, 2896, 9977 ]
+    ]
+  },
+  {
+    "name": "TROLLWEISS_CAVES",
+    "regions": [ 11167 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "KELDAGRIM_TUNNEL",
+    "regions": [ 11166 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "The Kendal's cave (Mountain Daughter)",
+    "regions": [ 11165 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "PHANTOM_MUSPAH_BOSS_ROOM",
+    "regions": [
+      11330
+    ]
+  },
+  {
+    "name": "ICY_UNDERGROUND_DARK",
+    "areas": [
+      "WEISS_SALT_MINE",
+      "GHORROCK_DUNGEON",
+      "PHANTOM_MUSPAH_BOSS_ROOM"
+    ]
+  },
+  {
+    "name": "Ghorrock Dungeon Tiles",
+    "aabbs": [
+      [ 2923, 10343, 2931, 10353, 0 ],
+      [ 2922, 10344, 2922, 10352, 0 ],
+      [ 2921, 10347, 2921, 10349, 0 ],
+      [ 2932, 10344, 2932, 10352, 0 ],
+      [ 2933, 10347, 2933, 10349, 0 ],
+      [ 2928, 10342 ],
+      [ 2926, 10342 ]
+    ]
+  },
+  {
+    "name": "Ghorrock Dungeon Dirt Fix",
+    "aabbs": [
+      [ 2916, 10325, 2924, 10331, 0 ],
+      [ 2931, 10320, 2935, 10323, 0 ],
+      [ 2926, 10337, 2928, 10341, 0 ],
+      [ 2920, 10342, 2934, 10354, 0 ],
+      [ 2914, 10338, 2919, 10342, 0 ],
+      [ 2911, 10316, 2913, 10318, 0 ]
+    ]
+  },
+  {
+    "name": "ICY_UNDERGROUND_BRIGHT",
+    "areas": [
+      "ICE_QUEENS_DUNGEON",
+      "GOBLIN_VILLAGE_ICE_CAVE",
+      "TROLLWEISS_CAVES"
+    ]
+  },
+  {
+    "name": "SHADOW_DUNGEON",
+    "regions": [
+      10575,
+      10831
+    ]
+  },
+  {
+    "name": "THE_SCAR_MAIN_AREA",
+    "regions": [
+      7779
+    ],
+    "aabbs": [
+      [ 1984, 6304, 2143, 6463 ]
+    ]
+  },
+  {
+    "name": "THE_SCAR_QUEST_AREAS",
+    "regions": [
+      7012,
+      7524,
+      8804
+    ]
+  },
+  {
+    "name": "THE_SCAR",
+    "areas": [
+      "THE_SCAR_MAIN_AREA",
+      "THE_SCAR_QUEST_AREAS"
+    ]
+  },
+  {
+    "name": "LASSAR_UNDERCITY_MAIN_NORMAL",
+    "regions": [
+      10083
+    ],
+    "regionBoxes": [
+      [ 10338, 10852 ]
+    ]
+  },
+  {
+    "name": "LASSAR_UNDERCITY_MAIN_SHADOW_REALM",
+    "regions": [
+      9059
+    ],
+    "regionBoxes": [
+      [ 9314, 9828 ]
+    ]
+  },
+  {
+    "name": "LASSAR_UNDERCITY_DRAIN_NORMAL",
+    "regions": [
+      11106
+    ]
+  },
+  {
+    "name": "LASSAR_UNDERCITY_DRAIN_SHADOW_REALM",
+    "regions": [
+      10082
+    ]
+  },
+  {
+    "name": "LASSAR_UNDERCITY_SUNKEN_CATHEDRAL",
+    "aabbs": [
+      [ 2372, 6333, 2428, 6397 ],
+      [ 2628, 6333, 2684, 6397 ]
+    ]
+  },
+  {
+    "name": "LASSAR_UNDERCITY_WATER_CUTSCENE",
+    "regions": [
+      12898
+    ]
+  },
+  {
+    "name": "LASSAR_UNDERCITY_WATER",
+    "areas": [
+      "LASSAR_UNDERCITY_MAIN_NORMAL",
+      "LASSAR_UNDERCITY_MAIN_SHADOW_REALM",
+      "LASSAR_UNDERCITY_WATER_CUTSCENE"
+    ]
+  },
+  {
+    "name": "LASSAR_UNDERCITY_NORMAL",
+    "areas": [
+      "LASSAR_UNDERCITY_MAIN_NORMAL",
+      "LASSAR_UNDERCITY_DRAIN_NORMAL",
+      "LASSAR_UNDERCITY_WATER_CUTSCENE"
+    ]
+  },
+  {
+    "name": "LASSAR_UNDERCITY_SHADOW_REALM",
+    "areas": [
+      "LASSAR_UNDERCITY_MAIN_SHADOW_REALM",
+      "LASSAR_UNDERCITY_DRAIN_SHADOW_REALM"
+    ]
+  },
+  {
+    "name": "LASSAR_UNDERCITY",
+    "areas": [
+      "LASSAR_UNDERCITY_NORMAL",
+      "LASSAR_UNDERCITY_SHADOW_REALM"
+    ]
+  },
+  {
+    "name": "ANCIENT_VAULT",
+    "regions": [
+      13156
+    ]
+  },
+  {
+    "name": "GLOD_INSTANCE",
+    "regions": [
+      8534
+    ]
+  },
+  {
+    "name": "PROBABLY_CUTSCENE_GRASS",
+    "aabbs": [
+      [ 3392, 4800, 3399, 4807 ]
+    ]
+  },
+  {
+    "name": "YU_BIUSK",
+    "regions": [
+      15428
+    ]
+  },
+  {
+    "name": "GIANT_MOLE_LAIR",
+    "regions": [
+      6992,
+      6993
+    ]
+  },
+  {
+    "name": "WATERBIRTH_DUNGEON_LEVEL_1",
+    "aabbs": [
+      [ 2432, 10112, 0, 2559, 10175, 0 ]
+    ]
+  },
+  {
+    "name": "WATERBIRTH_DUNGEON_LEVEL_2",
+    "aabbs": [
+      [ 1792, 4352, 1, 1983, 4415, 1 ]
+    ]
+  },
+  {
+    "name": "WATERBIRTH_DUNGEON_LEVEL_3",
+    "aabbs": [
+      [ 1792, 4352, 2, 1983, 4415, 2 ]
+    ]
+  },
+  {
+    "name": "WATERBIRTH_DUNGEON_LEVEL_4",
+    "aabbs": [
+      [ 1792, 4352, 3, 1983, 4415, 3 ]
+    ]
+  },
+  {
+    "name": "WATERBIRTH_DUNGEON_LEVEL_5",
+    "aabbs": [
+      [ 1856, 4352, 0, 1983, 4415, 0 ]
+    ]
+  },
+  {
+    "name": "DAGANNOTH_KINGS_REGULAR_CAVE",
+    "aabbs": [
+      [ 2880, 4416, 0, 2943, 4479, 0 ]
+    ]
+  },
+  {
+    "name": "DAGANNOTH_KINGS_SLAYER_CAVE",
+    "aabbs": [
+      [ 2880, 4352, 0, 2943, 4415, 0 ]
+    ]
+  },
+  {
+    "name": "WATERBIRTH_DUNGEON",
+    "areas": [
+      "WATERBIRTH_DUNGEON_LEVEL_1",
+      "WATERBIRTH_DUNGEON_LEVEL_2",
+      "WATERBIRTH_DUNGEON_LEVEL_3",
+      "WATERBIRTH_DUNGEON_LEVEL_4",
+      "WATERBIRTH_DUNGEON_LEVEL_5",
+      "DAGANNOTH_KINGS_REGULAR_CAVE",
+      "DAGANNOTH_KINGS_SLAYER_CAVE"
+    ]
+  },
+  {
+    "name": "ESSENCE_MINE",
+    "regions": [
+      11595
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "KINGDOM_OF_MISTHALIN_REGION",
+    "aabbs": [
+      [ 3067, 3330, 3399, 3521 ],
+      [ 3070, 3201, 3263, 3329 ],
+      [ 3090, 3186, 3257, 3200 ],
+      [ 3094, 3136, 3252, 3185 ],
+      [ 3264, 3204, 3266, 3329 ],
+      [ 3267, 3224, 3267, 3231 ],
+      [ 3267, 3326, 3270, 3329 ],
+      [ 3267, 3325, 3269, 3325 ],
+      [ 3267, 3323, 3267, 3324 ],
+      [ 3268, 3324 ],
+      [ 3334, 3328, 3339, 3329 ],
+      [ 3346, 3328, 3360, 3329 ],
+      [ 3370, 3329, 3375, 3329 ],
+      [ 3068, 3244, 3069, 3267 ],
+      [ 3067, 3255, 3067, 3256 ],
+      [ 3066, 3255 ],
+      [ 3065, 3245, 3067, 3254 ],
+      [ 3069, 3268, 3069, 3272 ],
+      [ 3069, 3285, 3069, 3310 ],
+      [ 3068, 3296, 3068, 3309 ],
+      [ 3069, 3314, 3069, 3323 ],
+      [ 3400, 3452, 3411, 3508 ],
+      [ 3412, 3462, 3419, 3503 ],
+      [ 3420, 3468, 3425, 3493 ],
+      [ 3426, 3472, 3431, 3485 ],
+      [ 3420, 3466, 3421, 3467 ]
+    ]
+  },
+  {
+    "name": "KINGDOM_OF_ASGARNIA_REGION",
+    "aabbs": [
+      [ 2892, 3198, 3064, 3521 ],
+      [ 2934, 3169, 3063, 3197 ],
+      [ 2973, 3097, 3039, 3168 ],
+      [ 3065, 3257, 3067, 3453 ],
+      [ 3068, 3323, 3069, 3327 ],
+      [ 3068, 3309, 3068, 3322 ],
+      [ 3069, 3310, 3069, 3314 ],
+      [ 3068, 3267, 3068, 3296 ],
+      [ 3069, 3272, 3069, 3285 ],
+      [ 3065, 3256, 3066, 3256 ],
+      [ 3065, 3255 ],
+      [ 2881, 3344, 2891, 3521 ],
+      [ 2868, 3390, 2880, 3521 ],
+      [ 2882, 3522, 2937, 3578 ],
+      [ 2837, 3522, 2881, 3556 ],
+      [ 2854, 3557, 2881, 3578 ],
+      [ 2848, 3557, 2853, 3560 ],
+      [ 2784, 3526, 2836, 3551 ],
+      [ 2790, 3500, 2836, 3525 ],
+      [ 2790, 3495, 2836, 3499 ],
+      [ 2796, 3493, 2809, 3494 ],
+      [ 2826, 3491, 2836, 3494 ],
+      [ 2830, 3482, 2836, 3490 ],
+      [ 2832, 3475, 2836, 3481 ],
+      [ 2834, 3464, 2836, 3474 ],
+      [ 2837, 3464, 2867, 3521 ],
+      [ 2838, 3461, 2867, 3463 ],
+      [ 2842, 3448, 2867, 3460 ],
+      [ 2840, 3449, 2841, 3451 ],
+      [ 2845, 3446, 2867, 3447 ],
+      [ 2851, 3443, 2867, 3445 ],
+      [ 2854, 3441, 2867, 3442 ],
+      [ 2858, 3438, 2867, 3440 ],
+      [ 2866, 3430, 2867, 3437 ],
+      [ 2864, 3434, 2865, 3437 ]
+    ]
+  },
+  {
+    "name": "KINGDOM_OF_KANDARIN_REGION",
+    "aabbs": [
+      [ 2304, 3392, 2827, 3491 ],
+      [ 2286, 3458, 2303, 3491 ],
+      [ 2258, 3492, 2761, 3585 ],
+      [ 2258, 3586, 2414, 3708 ],
+      [ 2512, 3586, 2548, 3596 ],
+      [ 2747, 3586, 2758, 3588 ],
+      [ 2638, 3586, 2741, 3590 ],
+      [ 2646, 3591, 2652, 3592 ],
+      [ 2650, 3593, 2652, 3594 ],
+      [ 2653, 3591, 2716, 3596 ],
+      [ 2717, 3591, 2729, 3593 ],
+      [ 2672, 3597, 2697, 3598 ],
+      [ 2678, 3599, 2684, 3602 ],
+      [ 2658, 3597, 2666, 3598 ],
+      [ 2353, 3335, 2766, 3391 ],
+      [ 2431, 3255, 2801, 3334 ],
+      [ 2431, 3066, 2688, 3254 ],
+      [ 2689, 3237, 2705, 3254 ],
+      [ 2365, 3066, 2430, 3140 ],
+      [ 2400, 3141, 2430, 3202 ],
+      [ 2320, 3028, 2441, 3065 ],
+      [ 2324, 3066, 2364, 3078 ],
+      [ 2558, 3044, 2619, 3065 ],
+      [ 2555, 3063, 2557, 3065 ],
+      [ 2557, 3062 ],
+      [ 2554, 3065 ],
+      [ 2576, 3041, 2590, 3043 ],
+      [ 2579, 3037, 2586, 3040 ],
+      [ 2762, 3492, 2789, 3521 ],
+      [ 2828, 3449, 2834, 3474 ],
+      [ 2828, 3475, 2830, 3487 ],
+      [ 2835, 3452, 2841, 3461 ],
+      [ 2835, 3449, 2839, 3451 ],
+      [ 2828, 3411, 2842, 3448 ],
+      [ 2843, 3411, 2866, 3430 ],
+      [ 2843, 3431, 2865, 3433 ],
+      [ 2843, 3434, 2862, 3437 ],
+      [ 2843, 3438, 2847, 3446 ],
+      [ 2848, 3438, 2851, 3444 ],
+      [ 2852, 3438, 2853, 3440 ]
+    ]
+  },
+  {
+    "name": "FREMENNIK_REGION",
+    "areas": [
+      "FREMENNIK_PROVINCE",
+      "FREMENNIK_ISLES",
+      "MISCELLANIA",
+      "PIRATES_COVE",
+      "LUNAR_ISLE"
+    ]
+  },
+  {
+    "name": "FELDIP_HILLS_SOUTHERN_REGION",
+    "aabbs": [
+      [ 2453, 2875, 2629, 2947 ],
+      [ 2472, 2847, 2613, 2874 ],
+      [ 2483, 2830, 2580, 2846 ],
+      [ 2482, 2948, 2502, 2960 ],
+      [ 2503, 2948, 2507, 2957 ],
+      [ 2570, 2948, 2591, 2954 ],
+      [ 2541, 2948, 2569, 2950 ],
+      [ 2508, 2948, 2513, 2952 ],
+      [ 2592, 2948, 2593, 2949 ],
+      [ 2605, 2948, 2617, 2950 ]
+    ]
+  },
+  {
+    "name": "FELDIP_HILLS",
+    "aabbs": [
+      [ 2579, 3037, 2586, 3040 ],
+      [ 2762, 3492, 2789, 3521 ],
+      [ 2828, 3449, 2834, 3474 ],
+      [ 2828, 3475, 2830, 3487 ],
+      [ 2835, 3452, 2841, 3461 ],
+      [ 2835, 3449, 2839, 3451 ],
+      [ 2828, 3411, 2842, 3448 ],
+      [ 2843, 3411, 2866, 3430 ],
+      [ 2843, 3431, 2865, 3433 ],
+      [ 2843, 3434, 2862, 3437 ],
+      [ 2843, 3438, 2847, 3446 ],
+      [ 2848, 3438, 2851, 3444 ],
+      [ 2852, 3438, 2853, 3440 ],
+      [ 2442, 2997, 2554, 3065 ],
+      [ 2555, 2997, 2557, 3062 ],
+      [ 2558, 2997, 2575, 3043 ],
+      [ 2576, 3013, 2578, 3040 ],
+      [ 2579, 3013, 2652, 3036 ],
+      [ 2576, 2997, 2652, 3012 ],
+      [ 2438, 2816, 2657, 2996 ]
+    ]
+  },
+  {
+    "name": "Eagles Peak nest",
+    "regions": [ 8013 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Polar eagle cave",
+    "regions": [ 10911 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Eagles Peak Jungle Nest",
+    "aabbs": [
+      [ 2508, 9313, 2530, 9330 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "RED_CHINCHOMPA_HUNTING_GROUND",
+    "aabbs": [
+      [ 2509, 9285, 2534, 9309 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "CERBERUS",
+    "aabbs": [
+      [ 1216, 1216, 1406, 1343 ]
+    ]
+  },
+  {
+    "name": "THE_ABYSS_FULL",
+    "aabbs": [
+      [ 2944, 4736, 3135, 4863 ]
+    ]
+  },
+  {
+    "name": "THE_ABYSS",
+    "aabbs": [
+      [ 3034, 4803, 3044, 4863 ],
+      [ 3009, 4803, 3033, 4863 ],
+      [ 3045, 4803, 3071, 4863 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "ABYSSAL_NEXUS",
+    "regions": [
+      11850,
+      11851,
+      12362,
+      12363
+    ],
+    "aabbs": [
+      [ 3034, 4800, 3044, 4801 ],
+      [ 3035, 4802, 3043, 4802 ],
+      [ 3036, 4803, 3042, 4803 ],
+      [ 3008, 4784, 3010, 4793 ],
+      [ 3011, 4784, 3013, 4790 ],
+      [ 3014, 4784, 3027, 4787 ],
+      [ 3024, 4788, 3027, 4788 ],
+      [ 3026, 4789, 3028, 4791 ],
+      [ 3027, 4792, 3030, 4797 ],
+      [ 3031, 4797, 3046, 4799 ],
+      [ 3047, 4791, 3052, 4798 ],
+      [ 3053, 4790, 3071, 4793 ],
+      [ 3068, 4794, 3071, 4797 ],
+      [ 3031, 4790, 3046, 4796 ],
+      [ 3047, 4790, 3052, 4790 ],
+      [ 3029, 4789, 3030, 4791 ],
+      [ 3028, 4752, 3071, 4789 ],
+      [ 3008, 4752, 3027, 4783 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "ABYSS_AREA_ALR",
+    "regions": [
+      12108
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "ABYSSAL_AREAS",
+    "areas": [
+      "THE_ABYSS",
+      "ABYSSAL_NEXUS",
+      "ABYSS_AREA_ALR",
+      "THE_ABYSS_FULL"
+    ]
+  },
+  {
+    "name": "WEREWOLF_AGILITY_AREA",
+    "regions": [ 14234 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "VARLAMORE",
+    "regionBoxes": [
+      [ 4908, 7476 ]
+    ]
+  },
+  {
+    "name": "VARLAMORE_TEMPLE_CRYPT",
+    "aabbs": [
+      [ 1608, 9536, 1663, 9586 ],
+      [ 1664, 9433, 1727, 9548 ],
+      [ 1685, 9549, 1714, 9579 ]
+    ]
+  },
+  {
+    "name": "VARLAMORE_TEMPLE_CRYPT_CENTER",
+    "aabbs": [
+      [ 1683, 9513, 0, 1686, 9516, 0 ]
+    ]
+  },
+  {
+    "name": "VARLAMORE_TEMPLE_CRYPT_FAKE_BRICK_TILES",
+    "aabbs": [
+      [ 1678, 9523, 0, 1679, 9526, 0 ],
+      [ 1673, 9520, 0, 1676, 9521, 0 ],
+      [ 1679, 9512, 0, 1680, 9517, 0 ],
+      [ 1673, 9508, 0, 1676, 9509, 0 ],
+      [ 1678, 9503, 0, 1679, 9506, 0 ],
+      [ 1682, 9509, 0, 1687, 9510, 0 ],
+      [ 1690, 9503, 0, 1691, 9506, 0 ],
+      [ 1693, 9508, 0, 1696, 9509, 0 ],
+      [ 1689, 9512, 0, 1690, 9517, 0 ],
+      [ 1693, 9520, 0, 1694, 9521, 0 ],
+      [ 1695, 9520, 0, 1696, 9520, 0 ],
+      [ 1696, 9521 ],
+      [ 1690, 9523, 0, 1691, 9526, 0 ],
+      [ 1682, 9519, 0, 1687, 9520, 0 ]
+    ]
+  },
+  {
+    "name": "VARLAMORE_TEMPLE_CRYPT_FAKE_SQUARE_TILES",
+    "aabbs": [
+      [ 1677, 9507, 0, 1681, 9511, 0 ],
+      [ 1677, 9518, 0, 1681, 9522, 0 ],
+      [ 1688, 9518, 0, 1692, 9522, 0 ],
+      [ 1688, 9507, 0, 1692, 9511, 0 ]
+    ]
+  },
+  {
+    "name": "HUNTER_GUILD",
+    "regions": [
+      6291
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "HUNTER_GUILD_SURFACE",
+    "aabbs": [
+      [ 1535, 3024, 1575, 3070 ]
+    ]
+  },
+  {
+    "name": "VARLAMORE_SNOWY_MOUNTAINS",
+    "regionBoxes": [
+      [ 5680, 5682 ],
+      [ 5938, 6706 ]
+    ]
+  },
+  {
+    "name": "VARLAMORE_SNOWY_MOUNTAINS_LOWER",
+    "aabbs": [
+      [ 1407, 3116, 1424, 3197 ],
+      [ 1425, 3101, 1451, 3132 ],
+      [ 1411, 3102, 1424, 3115 ],
+      [ 1465, 3165, 1475, 3189 ],
+      [ 1468, 3190, 1475, 3203 ],
+      [ 1453, 3204, 1475, 3226 ],
+      [ 1453, 3227, 1471, 3289 ],
+      [ 1420, 3212, 1452, 3285 ],
+      [ 1409, 3226, 1419, 3273 ],
+      [ 1461, 3290, 1467, 3301 ],
+      [ 1468, 3290, 1534, 3306 ],
+      [ 1480, 3307, 1533, 3311 ],
+      [ 1508, 3312, 1532, 3316 ],
+      [ 1511, 3317, 1527, 3320 ],
+      [ 1518, 3321, 1527, 3323 ],
+      [ 1472, 3268, 1534, 3289 ],
+      [ 1496, 3259, 1534, 3267 ],
+      [ 1515, 3245, 1534, 3258 ],
+      [ 1525, 3217, 1534, 3244 ],
+      [ 1535, 3252, 1543, 3302 ],
+      [ 1544, 3288, 1550, 3294 ],
+      [ 1551, 3288, 1579, 3290 ],
+      [ 1544, 3199, 1580, 3287 ],
+      [ 1535, 3208, 1543, 3251 ],
+      [ 1537, 3205, 1543, 3207 ],
+      [ 1581, 3205, 1601, 3277 ],
+      [ 1581, 3199, 1590, 3204 ],
+      [ 1565, 3196, 1587, 3198 ],
+      [ 1570, 3193, 1584, 3195 ],
+      [ 1602, 3212, 1609, 3271 ],
+      [ 1610, 3223, 1616, 3271 ],
+      [ 1617, 3229, 1620, 3271 ],
+      [ 1621, 3248, 1626, 3271 ],
+      [ 1627, 3252, 1632, 3271 ],
+      [ 1633, 3258, 1638, 3269 ],
+      [ 1607, 3272, 1636, 3277 ],
+      [ 1609, 3278, 1616, 3283 ],
+      [ 1622, 3278, 1634, 3281 ],
+      [ 1581, 3278, 1589, 3280 ],
+      [ 1581, 3281, 1584, 3283 ],
+      [ 1472, 3266, 1489, 3267 ],
+      [ 1507, 3246, 1514, 3255 ],
+      [ 1503, 3248, 1506, 3255 ],
+      [ 1518, 3236, 1524, 3244 ]
+    ]
+  },
+  {
+    "name": "VARLAMORE_SNOWY_MOUNTAINS_UPPER",
+    "aabbs": [
+      [ 1425, 3133, 1465, 3200 ],
+      [ 1419, 3122, 1424, 3171 ],
+      [ 1416, 3144, 1418, 3149 ],
+      [ 1447, 3124, 1462, 3132 ],
+      [ 1434, 3201, 1456, 3211 ],
+      [ 1445, 3212, 1450, 3216 ],
+      [ 1426, 3234, 1447, 3263 ],
+      [ 1437, 3227, 1453, 3233 ],
+      [ 1448, 3234, 1453, 3257 ],
+      [ 1454, 3247, 1458, 3256 ],
+      [ 1429, 3264, 1446, 3267 ],
+      [ 1433, 3268, 1436, 3270 ],
+      [ 1454, 3241, 1455, 3246 ],
+      [ 1448, 3258, 1450, 3261 ],
+      [ 1515, 3297, 1522, 3300 ],
+      [ 1520, 3286, 1534, 3296 ],
+      [ 1535, 3287, 1537, 3293 ],
+      [ 1520, 3268, 1534, 3285 ],
+      [ 1508, 3268, 1519, 3275 ],
+      [ 1502, 3276, 1519, 3293 ],
+      [ 1507, 3294, 1519, 3296 ],
+      [ 1549, 3210, 1585, 3268 ],
+      [ 1542, 3210, 1548, 3223 ],
+      [ 1538, 3224, 1548, 3245 ],
+      [ 1534, 3246, 1548, 3249 ],
+      [ 1538, 3250, 1548, 3255 ],
+      [ 1545, 3256, 1548, 3261 ],
+      [ 1586, 3211, 1593, 3259 ],
+      [ 1594, 3216, 1599, 3259 ],
+      [ 1600, 3225, 1601, 3228 ],
+      [ 1600, 3233, 1604, 3241 ],
+      [ 1600, 3242, 1605, 3255 ],
+      [ 1606, 3248, 1608, 3253 ],
+      [ 1568, 3202, 1577, 3209 ],
+      [ 1578, 3204, 1580, 3209 ],
+      [ 1581, 3206, 1585, 3209 ],
+      [ 1586, 3210, 1588, 3210 ],
+      [ 1559, 3269, 1570, 3270 ],
+      [ 1551, 3207, 1554, 3209 ]
+    ]
+  },
+  {
+    "name": "VARLAMORE_SAVANNA_HUNTER_PIT_TRAPS",
+    "aabbs": [
+      [ 1731, 2992, 0, 1764, 3024, 0 ]
+    ]
+  },
+  {
+    "name": "VARLAMORE_CAM_TORUM_ENTRANCE_PATH_BLENDING_FIX",
+    "aabbs": [
+      [ 1443, 3104, 1444, 3105 ]
+    ]
+  },
+  {
+    "name": "CAM_TORUM",
+    "aabbs": [
+      [ 1406, 9504, 1494, 9605 ],
+      [ 1495, 9504, 1534, 9561 ],
+      [ 1495, 9562, 1497, 9576 ],
+      [ 1498, 9562, 1498, 9575 ],
+      [ 1499, 9562, 1500, 9572 ],
+      [ 1501, 9562, 1501, 9571 ],
+      [ 1502, 9562, 1502, 9568 ],
+      [ 1503, 9562, 1505, 9566 ],
+      [ 1506, 9562, 1508, 9565 ],
+      [ 1392, 9535, 1405, 9579 ],
+      [ 1384, 9535, 1391, 9546 ],
+      [ 1387, 9548, 1391, 9578, 1 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "CAM_TORUM_ENTRANCE_FIX",
+    "aabbs": [
+      [ 1439, 9507, 1, 1440, 9512, 1 ]
+    ]
+  },
+  {
+    "name": "CAM_TORUM_BRIDGE_FIX",
+    "aabbs": [
+      [ 1439, 9584, 1, 1440, 9591, 1 ]
+    ]
+  },
+  {
+    "name": "CAM_TORUM_BUILDING_TILES",
+    "aabbs": [
+      [ 1443, 9581, 1, 1454, 9592, 1 ],
+      [ 1448, 9580, 1, 1449, 9580, 1 ],
+      [ 1449, 9565, 1, 1458, 9570, 1 ]
+    ]
+  },
+  {
+    "name": "CAM_TORUM_BLACKSMITH_FURNACE_FIX",
+    "aabbs": [
+      [ 1450, 9582, 1, 1453, 9586, 1 ]
+    ]
+  },
+  {
+    "name": "CAM_TORUM_BANK_ENTRANCE_FIX",
+    "aabbs": [
+      [ 1448, 9567, 1, 1448, 9568, 1 ]
+    ]
+  },
+  {
+    "name": "PERILOUS_MOONS_ANTECHAMBER_TILES",
+    "aabbs": [
+      [ 1440, 9615, 1, 1440, 9628, 1 ],
+      [ 1442, 9623, 1, 1445, 9625, 1 ],
+      [ 1437, 9623, 1, 1438, 9625, 1 ],
+      [ 1439, 9624, 1, 1441, 9624, 1 ],
+      [ 1446, 9626, 1, 1447, 9628, 1 ],
+      [ 1442, 9625, 1, 1446, 9625, 1 ],
+      [ 1448, 9630, 1, 1449, 9633, 1 ],
+      [ 1444, 9632, 1, 1446, 9632, 1 ],
+      [ 1443, 9631, 1, 1443, 9633, 1 ],
+      [ 1439, 9629, 1, 1441, 9629, 1 ],
+      [ 1437, 9631, 1, 1437, 9633, 1 ],
+      [ 1439, 9635, 1, 1441, 9635, 1 ],
+      [ 1438, 9630, 1, 1442, 9634, 1 ],
+      [ 1440, 9636, 1, 1440, 9639, 1 ],
+      [ 1439, 9640, 1, 1441, 9641, 1 ],
+      [ 1443, 9638, 1, 1446, 9639, 1 ],
+      [ 1447, 9635, 1, 1447, 9637, 1 ],
+      [ 1433, 9632, 1, 1436, 9632, 1 ],
+      [ 1431, 9631, 1, 1432, 9633, 1 ],
+      [ 1433, 9626, 1, 1434, 9629, 1 ],
+      [ 1433, 9635, 1, 1433, 9638, 1 ],
+      [ 1434, 9638, 1, 1434, 9639, 1 ],
+      [ 1443, 9627 ],
+      [ 1444, 9628 ],
+      [ 1445, 9629 ],
+      [ 1443, 9629 ],
+      [ 1437, 9629 ],
+      [ 1435, 9629 ],
+      [ 1436, 9628 ],
+      [ 1437, 9627 ],
+      [ 1435, 9635 ],
+      [ 1436, 9636 ],
+      [ 1437, 9637 ],
+      [ 1437, 9635 ],
+      [ 1443, 9635 ],
+      [ 1448, 9636 ],
+      [ 1432, 9630 ],
+      [ 1434, 9625 ],
+      [ 1432, 9637 ],
+      [ 1435, 9639 ],
+      [ 1445, 9635 ],
+      [ 1444, 9636 ],
+      [ 1443, 9637 ],
+      [ 1445, 9640 ]
+    ]
+  },
+  {
+    "name": "PERILOUS_MOONS_ANTECHABMER_BLEND_FIX",
+    "aabbs": [
+      [ 1433, 9626, 1, 1446, 9638, 1 ],
+      [ 1436, 9639, 1, 1444, 9639, 1 ],
+      [ 1437, 9625, 1, 1443, 9625, 1 ],
+      [ 1447, 9628, 1, 1447, 9636, 1 ]
+    ]
+  },
+  {
+    "name": "PERIOUS_MOONS_ANTECHAMBER",
+    "aabbs": [
+      [ 1418, 9653, 1433, 9640 ],
+      [ 1446, 9640, 1460, 9653 ],
+      [ 1428, 9639, 1433, 9625 ],
+      [ 1446, 9639, 1452, 9625 ],
+      [ 1434, 9642, 1445, 9625 ],
+      [ 1419, 9612, 1460, 9624 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "EARTHBOUND_CAVERN",
+    "aabbs": [
+      [ 1344, 9664, 1407, 9747 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "STREAMBOUND_CAVERN",
+    "regions": [
+      6039
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "ANCIENT_PRISON",
+    "aabbs": [
+      [ 2834, 5184, 2944, 5244 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "ANCIENT_PRISON_SUN_BLEND_FIX",
+    "aabbs": [
+      [ 1370, 9555, 0, 1381, 9566, 0 ]
+    ]
+  },
+  {
+    "name": "ANCIENT_SHRINE",
+    "aabbs": [
+      [ 1501, 9568, 0, 1525, 9592, 0 ],
+      [ 1493, 9571, 0, 1500, 9588, 0 ],
+      [ 1506, 9593, 0, 1520, 9599, 0 ],
+      [ 1526, 9573, 0, 1532, 9588, 0 ],
+      [ 1506, 9560, 0, 1520, 9567, 0 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "THE_BLUE_MOON",
+    "aabbs": [
+      [ 1434, 9649, 0, 1446, 9663, 0 ],
+      [ 1420, 9664, 0, 1460, 9700, 0 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "THE_BLOOD_MOON_ENTRANCE",
+    "aabbs": [
+      [ 1408, 9626, 0, 1422, 9638, 0 ]
+    ]
+  },
+  {
+    "name": "THE_BLOOD_MOON",
+    "areas": [
+      "THE_BLOOD_MOON_ENTRANCE"
+    ],
+    "aabbs": [
+      [ 1370, 9610, 0, 1407, 9654, 1 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "THE_ECLIPSE_MOON_ENTRANCE",
+    "aabbs": [
+      [ 1457, 9626, 0, 1471, 9638, 0 ]
+    ]
+  },
+  {
+    "name": "THE_ECLIPSE_MOON",
+    "areas": [
+      "THE_ECLIPSE_MOON_ENTRANCE"
+    ],
+    "aabbs": [
+      [ 1472, 9610, 0, 1510, 9654, 0 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "PERILOUS_MOONS_REWARD_ROOM",
+    "aabbs": [
+      [ 1496, 9563, 1530, 9596 ]
+    ]
+  },
+  {
+    "name": "COLOSSEUM",
+    "regions": [
+      7316
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "EMIRS_ARENA_UPPER",
+    "regions": [ 13384 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "ENLIGHTENED_JOURNEY_CRASH_SITE",
+    "regions": [ 7244 ]
+  },
+  {
+    "name": "SNOWY_REGIONS",
+    "areas": [
+      "ASGARNIA_ICE_DUNGEON_SNOWY",
+      "ESSENCE_MINE",
+      "FREMENNIK_ISLES_NORTH",
+      "FROZEN_WASTE_PLATEAU",
+      "GIELINOR_SNOWY_NORTHERN_REGION",
+      "RELLEKKA_SNOWY_REGION",
+      "GOBLIN_VILLAGE_ICE_CAVE",
+      "ICEBERG",
+      "ICE_MOUNTAIN",
+      "ICE_QUEENS_DUNGEON",
+      "LUNAR_ISLE",
+      "MISCELLANIA",
+      "WHITE_WOLF_MOUNTAIN",
+      "ZEAH_SNOWY_NORTHERN_REGION",
+      "PLAYER_OWNED_HOUSE_SNOWY",
+      "TROLLHEIM",
+      "VARLAMORE_SNOWY_MOUNTAINS"
+    ]
+  },
+  {
+    "name": "MAINLAND",
+    "aabbs": [
+      [ 1024, 2496, 3967, 4159 ]
+    ]
+  },
+  {
+    "name": "MAINLAND_EXTENSIONS",
+    "areas": [
+      "BRAINDEATH_ISLAND",
+      "CLAN_HALL",
+      "CLAN_WARS_ARENAS_OVERWORLD",
+      "EVIL_BOB_ISLAND",
+      "FISHER_KINGS_REALM",
+      "LMS_ARENA_DESERTED_ISLAND",
+      "LMS_ARENA_WILD_VARROCK",
+      "PLAYER_OWNED_HOUSE",
+      "PURO_PURO",
+      "RANDOM_EVENT_BEE_KEEPER",
+      "RANDOM_EVENT_CLASSROOM",
+      "RANDOM_EVENT_DRILL_DEMON",
+      "RANDOM_EVENT_FREAKY_FORESTER",
+      "RANDOM_EVENT_GRAVEDIGGER",
+      "SORCERESS_GARDEN",
+      "TIRANNWN_MAINLAND",
+      "YU_BIUSK",
+      "AIR_ALTAR",
+      "NATURE_ALTAR",
+      "WATER_ALTAR",
+      "CANOE_CUTSCENE",
+      "EYES_OF_GLOUPHRIE_GNOME_AND_GOBLIN_BATTLE_CUTSCENE",
+      "PROBABLY_CUTSCENE_GRASS",
+      "SOTE_CUTSCENE_ARDOUGNE_SQUARE",
+      "FALADOR_INSTANCE",
+      "GLOD_INSTANCE",
+      "GOBLIN_VILLAGE_INSTANCE",
+      "ISLE_OF_SOULS_INSTANCE",
+      "KARAMJA_INSTANCES",
+      "KEEP_LE_FAYE_INSTANCE",
+      "LIGHTHOUSE_INSTANCE",
+      "LUMBRIDGE_CASTLE_INSTANCE",
+      "MOS_LE_HARMLESS_INSTANCE",
+      "TREE_GNOME_STRONGHOLD_INSTANCE",
+      "TUTORIAL_ISLAND_INSTANCE",
+      "TYRAS_CAMP_INSTANCE",
+      "SHIP_SAILING",
+      "VER_SINHAZA_CUTSCENE",
+      "DEFENDER_OF_VARROCK_CASTLE_UNDER_ATTACK",
+      "CHURCH_OF_AYASTER",
+      "EMIRS_ARENA_UPPER",
+      "YANILLE_INSTANCE",
+      "RATCATCHERS_HOUSE",
+      "ENLIGHTENED_JOURNEY_CRASH_SITE"
+    ],
+    "regions": [
+      8288,
+      8801
+    ]
+  },
+  {
+    "name": "OVERWORLD",
+    "areas": [
+      "MAINLAND",
+      "MAINLAND_EXTENSIONS"
+    ]
+  }
+]

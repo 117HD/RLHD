@@ -49,6 +49,18 @@
         "type": "boolean",
         "description": "Blending is applied slightly differently for overlays and underlays. Defaults to false."
       },
+      "forced": {
+        "type": "boolean",
+        "description": "Force the tile to render even if it has the special hidden color code. Defaults to false."
+      },
+      "depthTested": {
+        "type": "boolean",
+        "description": "Enable depth testing for the tile. Defaults to false, but is always enabled for forced tiles."
+      },
+      "setHue": {
+        "type": "integer",
+        "description": "Force a specific hue."
+      },
       "shiftHue": {
         "type": "integer",
         "description": "Add or subtract from the tile's hue within the range defined by minHue and maxHue. Defaults to 0."
@@ -61,6 +73,10 @@
         "type": "integer",
         "description": "Tile colors with a higher hue value will be clamped to the specified max hue. Defaults to 63."
       },
+      "setSaturation": {
+        "type": "integer",
+        "description": "Force a specific saturation."
+      },
       "shiftSaturation": {
         "type": "integer",
         "description": "Add or subtract from the tile's saturation within the range defined by minSaturation and maxSaturation. Defaults to 0."
@@ -72,6 +88,10 @@
       "maxSaturation": {
         "type": "integer",
         "description": "Tile colors with a higher saturation value will be clamped to the specified max saturation. Defaults to 7."
+      },
+      "setLightness": {
+        "type": "integer",
+        "description": "Force a specific lightness."
       },
       "shiftLightness": {
         "type": "integer",
@@ -92,6 +112,10 @@
       "uvScale": {
         "type": "number",
         "description": "A scaling factor to scale the tile's texture up by. Can be fractional. Defaults to 1."
+      },
+      "heightOffset": {
+        "type": "integer",
+        "description": "Shift the tile up by a fixed amount."
       },
       "replacements": {
         "type": "object",

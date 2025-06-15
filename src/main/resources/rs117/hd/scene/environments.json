@@ -39,6 +39,12 @@
     "fogDepth": 80
   },
   {
+    "area": "Corporeal Beast Lair",
+    "ambientStrength": 0.75,
+    "directionalStrength": 0.1,
+    "fogDepth": 25
+  },
+  {
     "area": "WILDERNESS_HIGH",
     "lightningEffects": true,
     "ambientColor": "#d7d2d2",
@@ -62,6 +68,18 @@
   },
   {
     "area": "WILDERNESS",
+    "ambientColor": "#d7d2d2",
+    "ambientStrength": 0.75,
+    "directionalColor": "#c5b8b6",
+    "directionalStrength": 2,
+    "fogColor": "#25252a",
+    "fogDepth": 30,
+    "groundFogStart": 0,
+    "groundFogEnd": -250,
+    "groundFogOpacity": 0.3
+  },
+  {
+    "area": "Daimon's Crater - Bounty Hunter",
     "ambientColor": "#d7d2d2",
     "ambientStrength": 0.75,
     "directionalColor": "#c5b8b6",
@@ -118,7 +136,10 @@
       190
     ],
     "fogColor": "#525e20",
-    "fogDepth": 50
+    "fogDepth": 50,
+    "groundFogStart": -150,
+    "groundFogEnd": -300,
+    "groundFogOpacity": 0.66
   },
   {
     "area": "STRONGHOLD_OF_SECURITY_DEATH",
@@ -309,17 +330,20 @@
       80,
       190
     ],
-    "fogColor": "#0e081a",
-    "fogDepth": 40
+    "fogColor": "#040407",
+    "fogDepth": 20
   },
   {
     "area": "THEATRE_OF_BLOOD",
     "ambientColor": "#8282b0",
-    "ambientStrength": 3,
+    "ambientStrength": 3.5,
     "directionalColor": "#dfc0c0",
-    "directionalStrength": 5,
-    "fogColor": "#0e0c2c",
-    "fogDepth": 40
+    "directionalStrength": 1.5,
+    "fogColor": "#040407",
+    "fogDepth": 40,
+    "groundFogEnd": -1000,
+    "groundFogStart": -200,
+    "groundFogOpacity": 0.3
   },
   {
     "area": "TOA_LOOT_ROOM",
@@ -340,11 +364,15 @@
     "ambientStrength": 3.5,
     "directionalColor": "#ffc875",
     "directionalStrength": 0,
+    "groundFogOpacity": 1,
+    "groundFogStart": -1900,
+    "groundFogEnd": -2750,
+    "instantTransition": true,
     "sunAngles": [
       80,
       190
     ],
-    "fogDepth": 20
+    "fogDepth": 50
   },
   {
     "area": "BARROWS_TUNNELS",
@@ -352,11 +380,12 @@
     "ambientStrength": 3,
     "directionalColor": "#ffc875",
     "directionalStrength": 0.5,
+    "instantTransition": true,
     "sunAngles": [
       80,
       190
     ],
-    "fogDepth": 20
+    "fogDepth": 30
   },
   {
     "area": "BARROWS",
@@ -487,7 +516,7 @@
     "fogDepth": 20
   },
   {
-    "area": "DRAYNOR_MANOR_BASEMENT",
+    "area": "DRAYNOR_MANOR_CRYPT",
     "ambientColor": "#7891b5",
     "directionalColor": "#4c78b6",
     "directionalStrength": 0,
@@ -495,7 +524,6 @@
       80,
       190
     ],
-    "fogColor": "#190d02",
     "fogDepth": 40
   },
   {
@@ -503,18 +531,20 @@
     "lightningEffects": true,
     "ambientColor": "#615c57",
     "ambientStrength": 1.5,
-    "directionalColor": "#ffbcb7",
-    "directionalStrength": 2,
+    "directionalColor": "#ffd4d1",
+    "directionalStrength": 0.1,
     "fogColor": "#0f0e0d",
-    "fogDepth": 30
+    "waterColor": "#1f2838",
+    "waterCausticsStrength": 0,
+    "fogDepth": 40
   },
   {
     "area": "MOTHERLODE_MINE",
     "ambientColor": "#aaafb6",
     "ambientStrength": 4,
-    "directionalStrength": 1,
+    "directionalStrength": 0.5,
     "sunAngles": [
-      80,
+      75,
       190
     ],
     "fogColor": "#241809",
@@ -633,6 +663,24 @@
     "fogDepth": 35
   },
   {
+    "area": "ESSENCE_MINE",
+    "ambientColor": "#6687a9",
+    "ambientStrength": 0.85,
+    "sunAngles": [ 50, 244 ],
+    "directionalStrength": 0.45,
+    "fogColor": "#adb9c4",
+    "fogDepth": 50
+  },
+  {
+    "area": "ICE_QUEENS_DUNGEON",
+    "ambientColor": "#6687a9",
+    "ambientStrength": 0.85,
+    "sunAngles": [ 73, 244 ],
+    "directionalStrength": 0.45,
+    "fogColor": "#adb9c4",
+    "fogDepth": 50
+  },
+  {
     "area": "GIELINOR_SNOWY_NORTHERN_REGION",
     "ambientColor": "#6fb0ff",
     "ambientStrength": 1.5,
@@ -658,6 +706,18 @@
     "directionalStrength": 1,
     "fogColor": "#aebde0",
     "fogDepth": 70
+  },
+  {
+    "area": "ICEBERG",
+    "ambientColor": "#7CB6EF",
+    "ambientStrength": 1,
+    "directionalColor": "#f4e5c9",
+    "directionalStrength": 1.5,
+    "fogColor": "#aebde0",
+    "fogDepth": 20,
+    "sunAngles": [
+      45, 235
+    ]
   },
   {
     "area": "MOUNTAIN_CAMP_ENTRY_PATH",
@@ -706,6 +766,16 @@
   },
   {
     "area": "WATERBIRTH_ISLAND",
+    "ambientColor": "#6fb0ff",
+    "ambientStrength": 1.75,
+    "sunAngles": [ 72, 235 ],
+    "directionalColor": "#f4e5c9",
+    "directionalStrength": 1.5,
+    "fogColor": "#adb9c4",
+    "fogDepth": 45
+  },
+  {
+    "area": "ISLAND_OF_STONE",
     "ambientColor": "#6fb0ff",
     "ambientStrength": 1.75,
     "sunAngles": [ 72, 235 ],
@@ -850,6 +920,7 @@
     "area": "SOTE_FRAGMENT_OF_SEREN_ARENA",
     "allowSkyOverride": false,
     "ambientColor": "#97baff",
+    "fogColor": "#000000",
     "directionalStrength": 4,
     "fogDepth": 6.5
   },
@@ -862,7 +933,7 @@
     "fogDepth": 40
   },
   {
-    "area": "NIGHTMARE_ZONE",
+    "area": "NIGHTMARE_ZONE_AND_KING_BLACK_DRAGON",
     "ambientColor": "#f2b979",
     "ambientStrength": 0.9,
     "directionalColor": "#97ddff",
@@ -954,7 +1025,10 @@
     "directionalColor": "#f4e5c9",
     "directionalStrength": 0.75,
     "fogColor": "#aebde3",
-    "fogDepth": 75
+    "fogDepth": 75,
+    "groundFogStart": -1750,
+    "groundFogEnd": -2250,
+    "groundFogOpacity": 0.65
   },
   {
     "area": "ARCEUUS",
@@ -1156,15 +1230,15 @@
   },
   {
     "area": "NIGHTMARE_OF_ASHIHAMA_ARENA",
-    "ambientColor": "#9a5dfd",
+    "ambientColor": "#a36bff",
     "ambientStrength": 2.5,
-    "directionalColor": "#00ff60",
+    "directionalColor": "#c9c9c9",
     "directionalStrength": 2,
     "sunAngles": [
       80,
       190
     ],
-    "fogDepth": 30
+    "fogDepth": 50
   },
   {
     "area": "SISTERHOOD_SANCTUARY",
@@ -1174,13 +1248,14 @@
     "area": "MOGRE_CAMP",
     "isUnderwater": true,
     "ambientColor": "#255590",
-    "ambientStrength": 0.5,
+    "ambientStrength": 1.5,
     "directionalColor": "#71a3d0",
-    "directionalStrength": 5,
+    "directionalStrength": 2.5,
     "fogColor": "#133156",
     "fogDepth": 60,
-    "groundFogStart": 0,
-    "groundFogOpacity": 0.5
+    "groundFogStart": -100,
+    "groundFogOpacity": 0.65,
+    "waterCausticsStrength": 3.5
   },
   {
     "area": "HARMONY_ISLAND_UNDERWATER_TUNNEL",
@@ -1203,18 +1278,19 @@
     "area": "FOSSIL_ISLAND_UNDERWATER_AREA",
     "isUnderwater": true,
     "ambientColor": "#255590",
-    "ambientStrength": 0.5,
+    "ambientStrength": 1.5,
     "directionalColor": "#71a3d0",
-    "directionalStrength": 5,
+    "directionalStrength": 3,
     "sunAngles": [
       80,
       190
     ],
     "fogColor": "#133156",
     "fogDepth": 60,
-    "groundFogStart": -400,
-    "groundFogEnd": -750,
-    "groundFogOpacity": 0.5
+    "groundFogStart": -450,
+    "groundFogEnd": -700,
+    "groundFogOpacity": 0.65,
+    "waterCausticsStrength": 4
   },
   {
     "area": "LUNAR_DREAM_WORLD",
@@ -1258,11 +1334,16 @@
     "fogDepth": 40
   },
   {
-    "area": "RANDOM_EVENT_DRILL_DEMON",
-    "ambientColor": "#97baff",
-    "directionalStrength": 4,
-    "fogColor": "#696559",
-    "fogDepth": 6.5
+    "area": "RANDOM_EVENT_GRAVEDIGGER",
+    "ambientColor": "#5a8cc0",
+    "ambientStrength": 3,
+    "directionalColor": "#5a8cc0",
+    "directionalStrength": 0.75,
+    "fogColor": "#1e314b",
+    "fogDepth": 40,
+    "groundFogStart": -150,
+    "groundFogEnd": -350,
+    "groundFogOpacity": 0.5
   },
   {
     "area": "GIANTS_FOUNDRY",
@@ -1321,6 +1402,41 @@
     "fogDepth": 68
   },
   {
+    "area": "ASGARNIA_ICE_DUNGEON_SNOWY",
+    "ambientColor": "#aaafb6",
+    "ambientStrength": 0.75,
+    "directionalStrength": 0.75,
+    "sunAngles": [
+      80,
+      190
+    ],
+    "fogColor": "#adc5e4",
+    "fogDepth": 68
+  },
+  {
+    "area": "ASGARNIA_ICE_DUNGEON_NORMAL",
+    "ambientColor": "#aaafb6",
+    "ambientStrength": 1.75,
+    "directionalStrength": 0.75,
+    "fogDepth": 30,
+    "sunAngles": [
+      80,
+      190
+    ]
+  },
+  {
+    "area": "ROYAL_TITANS_ARENA",
+    "ambientColor": "#aaafb6",
+    "ambientStrength": 1.75,
+    "directionalStrength": 0.75,
+    "fogDepth": 50,
+    "sunAngles": [
+      80,
+      190
+    ],
+    "instantTransition": true
+  },
+  {
     "area": "GOBLIN_VILLAGE_COOKS_CHAMBER",
     "allowSkyOverride": false,
     "ambientColor": "#aaafb6",
@@ -1336,13 +1452,26 @@
   {
     "area": "MAGE_ARENA_BANK",
     "ambientColor": "#97baff",
-    "ambientStrength": 1.5,
-    "directionalStrength": 1,
+    "ambientStrength": 1.75,
+    "instantTransition": true,
+    "directionalStrength": 0.25,
     "sunAngles": [
       80,
       190
     ],
-    "fogDepth": 40
+    "fogDepth": 60
+  },
+  {
+    "area": "MAGE_ARENA_GOD_STATUES",
+    "ambientColor": "#97baff",
+    "ambientStrength": 1.75,
+    "instantTransition": true,
+    "directionalStrength": 0.25,
+    "sunAngles": [
+      80,
+      190
+    ],
+    "fogDepth": 60
   },
   {
     "area": "TEARS_OF_GUTHIX",
@@ -1441,9 +1570,9 @@
     "waterColor": "#2b2b40"
   },
   {
-    "area": "ABYSS",
+    "area": "ABYSSAL_AREAS",
     "fogColor": "#100707",
-    "fogDepth": 65,
+    "fogDepth": 60,
     "ambientColor": "#AAAFB6",
     "ambientStrength": 2.2,
     "directionalColor": "#FFFFFF",
@@ -1554,22 +1683,22 @@
     "fogDepth": 30
   },
   {
-    "area": "RALOS_RISE_LOWER",
-    "ambientColor": "#6fb0ff",
-    "ambientStrength": 1.75,
-    "directionalColor": "#f4e5c9",
-    "directionalStrength": 3,
-    "fogColor": "#aebde0",
-    "fogDepth": 30
-  },
-  {
-    "area": "RALOS_RISE_UPPER",
+    "area": "VARLAMORE_SNOWY_MOUNTAINS_UPPER",
     "ambientColor": "#6fb0ff",
     "ambientStrength": 0.8,
     "directionalColor": "#f4e5c9",
     "directionalStrength": 2,
     "fogColor": "#aebde0",
     "fogDepth": 50
+  },
+  {
+    "area": "VARLAMORE_SNOWY_MOUNTAINS_LOWER",
+    "ambientColor": "#6fb0ff",
+    "ambientStrength": 1.75,
+    "directionalColor": "#f4e5c9",
+    "directionalStrength": 3,
+    "fogColor": "#aebde0",
+    "fogDepth": 30
   },
   {
     "key": "OVERWORLD",

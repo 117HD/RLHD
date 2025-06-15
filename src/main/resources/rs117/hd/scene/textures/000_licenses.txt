@@ -92,3 +92,18 @@ HD_CRATE, HD_CRATE_N texture from 3d Textures. All textures on this site are lic
 -- https://3dtextures.me/2016/08/15/wood-planks-004/
 
 BARK_STONEPINE was created from self taken reference photos by Jin-Jiyunsun, and is licensed to be used under CC0. BARK_STONEPINE_N provided by SirFancyBacon.
+
+ROPE texture from TextureCan. All textures on this site are licensed as CC0.
+-- https://www.texturecan.com/details/424/
+
+LEAF_VEINS texture from TextureCan. All textures on this site are licensed as CC0.
+-- https://www.texturecan.com/details/272/
+
+CARPET and CARPET_N textures from AmbientCG. All textures on this site are licensed as CC0.
+-- https://ambientcg.com/view?id=Fabric030
+
+MUD_1 and MUD_1_N textures are a composite of textures from CC0-Textures. All textures on this site are licensed as CC0.
+-- https://cc0-textures.com/t/th-brown-mud-02
+-- https://cc0-textures.com/t/th-brown-mud-03
+
+GROUND_WEB_# and variants made by SirFancyBacon for the purpose of this project and are licensed as CC0

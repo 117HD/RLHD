@@ -36,8 +36,8 @@ import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.config.DefaultSkyColor;
+import rs117.hd.scene.areas.AABB;
 import rs117.hd.scene.environments.Environment;
-import rs117.hd.utils.AABB;
 import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
@@ -51,8 +51,8 @@ import static rs117.hd.utils.HDUtils.mod;
 import static rs117.hd.utils.HDUtils.rand;
 import static rs117.hd.utils.ResourcePath.path;
 
-@Singleton
 @Slf4j
+@Singleton
 public class EnvironmentManager {
 	private static final ResourcePath ENVIRONMENTS_PATH = Props.getPathOrDefault(
 		"rlhd.environments-path",
@@ -144,7 +144,7 @@ public class EnvironmentManager {
 	private boolean lightningEnabled = false;
 	private boolean forceNextTransition = false;
 
-	private rs117.hd.scene.environments.Environment[] environments;
+	private Environment[] environments;
 	private FileWatcher.UnregisterCallback fileWatcher;
 
 	@Nonnull
@@ -153,7 +153,7 @@ public class EnvironmentManager {
 	public void startUp() {
 		fileWatcher = ENVIRONMENTS_PATH.watch((path, first) -> {
 			try {
-				environments = path.loadJson(plugin.getGson(), rs117.hd.scene.environments.Environment[].class);
+				environments = path.loadJson(plugin.getGson(), Environment[].class);
 				if (environments == null)
 					throw new IOException("Empty or invalid: " + path);
 				log.debug("Loaded {} environments", environments.length);
@@ -376,16 +376,10 @@ public class EnvironmentManager {
 			.toArray(AABB[]::new);
 
 		sceneContext.environments.clear();
-		outer:
 		for (var environment : environments) {
-			for (AABB region : regions) {
-				for (AABB aabb : environment.area.getAabbs()) {
-					if (region.intersects(aabb)) {
-						log.debug("Added environment: {}", environment);
-						sceneContext.environments.add(environment);
-						continue outer;
-					}
-				}
+			if (environment.area.intersects(regions)) {
+				log.debug("Added environment: {}", environment);
+				sceneContext.environments.add(environment);
 			}
 		}
 

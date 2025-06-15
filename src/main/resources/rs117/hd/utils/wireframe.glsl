@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 117 <https://twitter.com/117scape>
+ * Copyright (c) 2024, nucleon <noelcun@protonmail.com>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -22,9 +22,13 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package rs117.hd.scene.model_overrides;
+#pragma once
+#if WIREFRAME
 
-public enum ObjectType
-{
-	NONE, WALL_OBJECT, GROUND_OBJECT, DECORATIVE_OBJECT, GAME_OBJECT
+float wireframeMask() {
+    const float wireframeWidth = 0.8f;
+    vec3 d = smoothstep(vec3(0.0), fwidth(IN.texBlend) * wireframeWidth, IN.texBlend);
+    return min(min(d.x, d.y), d.z);
 }
+
+#endif

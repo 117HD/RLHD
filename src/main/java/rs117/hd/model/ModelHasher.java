@@ -306,15 +306,15 @@ public class ModelHasher {
 
 		for (; i + 5 < length; i += 6)
 			r = 31 * 31 * 31 * 31 * 31 * 31 * r +
-				31 * 31 * 31 * 31 * 31 * Float.floatToIntBits(a[i]) +
-				31 * 31 * 31 * 31 * Float.floatToIntBits(a[i + 1]) +
-				31 * 31 * 31 * Float.floatToIntBits(a[i + 2]) +
-				31 * 31 * Float.floatToIntBits(a[i + 3]) +
-				31 * Float.floatToIntBits(a[i + 4]) +
-				Float.floatToIntBits(a[i + 5]);
+				31 * 31 * 31 * 31 * 31 * (int) (a[i] * 100) +
+				31 * 31 * 31 * 31 * (int) (a[i + 1] * 100) +
+				31 * 31 * 31 * (int) (a[i + 2] * 100) +
+				31 * 31 * (int) (a[i + 3] * 100) +
+				31 * (int) (a[i + 4] * 100) +
+				(int) (a[i + 5] * 100);
 
 		for (; i < length; i++)
-			r = 31 * r + Float.floatToIntBits(a[i]);
+			r = 31 * r + (int) (a[i] * 100);
 
 		return r;
 	}
@@ -328,15 +328,15 @@ public class ModelHasher {
 
 		for (; i + 5 < a.length; i += 6)
 			r = 31 * 31 * 31 * 31 * 31 * 31 * r +
-				31 * 31 * 31 * 31 * 31 * Float.floatToIntBits(a[i]) +
-				31 * 31 * 31 * 31 * Float.floatToIntBits(a[i + 1]) +
-				31 * 31 * 31 * Float.floatToIntBits(a[i + 2]) +
-				31 * 31 * Float.floatToIntBits(a[i + 3]) +
-				31 * Float.floatToIntBits(a[i + 4]) +
-				Float.floatToIntBits(a[i + 5]);
+				31 * 31 * 31 * 31 * 31 * (int) (a[i] * 100) +
+				31 * 31 * 31 * 31 * (int) (a[i + 1] * 100) +
+				31 * 31 * 31 * (int) (a[i + 2] * 100) +
+				31 * 31 * (int) (a[i + 3] * 100) +
+				31 * (int) (a[i + 4] * 100) +
+				(int) (a[i + 5] * 100);
 
 		for (; i < a.length; i++)
-			r = 31 * r + Float.floatToIntBits(a[i]);
+			r = 31 * r + (int) (a[i] * 100);
 
 		return r;
 	}

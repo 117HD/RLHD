@@ -58,7 +58,6 @@ public class Light
 	public TileObject tileObject;
 	public GraphicsObject graphicsObject;
 	public int spotAnimId = -1;
-	public int preOrientation;
 	public int[] projectileRefCounter;
 	public long hash;
 
@@ -105,13 +104,16 @@ public class Light
 		}
 	}
 
-	public void toggleTemporaryVisibility() {
+	public void toggleTemporaryVisibility(boolean changedPlanes) {
 		hiddenTemporarily = !hiddenTemporarily;
-		// Begin fading in or out, while accounting for time already spent fading out or in respectively
-		float beginFadeAt = elapsedTime;
-		if (changedVisibilityAt != -1)
-			beginFadeAt -= Math.max(0, VISIBILITY_FADE - (elapsedTime - changedVisibilityAt));
-		changedVisibilityAt = beginFadeAt;
+		// If visibility changes due to something other than changing planes, fade in or out
+		if (!changedPlanes) {
+			// Begin fading in or out, while accounting for time already spent fading out or in respectively
+			float beginFadeAt = elapsedTime;
+			if (changedVisibilityAt != -1)
+				beginFadeAt -= Math.max(0, VISIBILITY_FADE - (elapsedTime - changedVisibilityAt));
+			changedVisibilityAt = beginFadeAt;
+		}
 	}
 
 	public float getTemporaryVisibilityFade() {

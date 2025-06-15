@@ -208,7 +208,7 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 		Mat4.mul(projectionMatrix, Mat4.scale(.5f, -.5f, .5f));
 		// NDC clip space
 		Mat4.mul(projectionMatrix, Mat4.scale(client.getScale(), client.getScale(), 1));
-		Mat4.mul(projectionMatrix, Mat4.projection(viewportWidth, viewportHeight, NEAR_PLANE));
+		Mat4.mul(projectionMatrix, Mat4.perspective(viewportWidth, viewportHeight, NEAR_PLANE));
 		Mat4.mul(projectionMatrix, Mat4.rotateX(plugin.cameraOrientation[1]));
 		Mat4.mul(projectionMatrix, Mat4.rotateY(plugin.cameraOrientation[0]));
 		Mat4.mul(projectionMatrix, Mat4.translate(
@@ -221,7 +221,7 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 		try {
 			inverseProjection = Mat4.inverse(projectionMatrix);
 		} catch (IllegalArgumentException ex) {
-			System.out.println("Not invertible");
+			log.warn("Not invertible:\n{}", Mat4.format(projectionMatrix));
 		}
 
 		int numFrozenAxes = 0;
@@ -480,7 +480,7 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 					info += counter + ": " + l.hash;
 					info += "\n".repeat(5 - newlines);
 				}
-				if (isSelected && !hideInfo) {
+				if (!hideInfo) {
 					info += String.format("\nradius: %d", liveInfo ? l.radius : l.def.radius);
 					info += String.format("\nstrength: %.1f", liveInfo ? l.strength : l.def.strength);
 					var color = ColorUtils.linearToSrgb(l.def.color);

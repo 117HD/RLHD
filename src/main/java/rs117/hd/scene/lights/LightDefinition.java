@@ -4,11 +4,10 @@ import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import java.util.HashSet;
 import javax.annotation.Nullable;
-import lombok.NoArgsConstructor;
+import rs117.hd.scene.areas.AABB;
 import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.GsonUtils;
 
-@NoArgsConstructor // Called by GSON when parsing JSON
 public class LightDefinition {
 	public String description;
 	@Nullable
@@ -30,7 +29,13 @@ public class LightDefinition {
 	public int despawnDelay;
 	public boolean fixedDespawnTime;
 	public boolean visibleFromOtherPlanes;
+	public boolean ignoreActorHiding;
 	public int renderableIndex = -1;
+
+	@JsonAdapter(AABB.JsonAdapter.class)
+	public AABB[] areas = {};
+	@JsonAdapter(AABB.JsonAdapter.class)
+	public AABB[] excludeAreas = {};
 	@JsonAdapter(GsonUtils.IntegerSetAdapter.class)
 	public HashSet<Integer> npcIds = new HashSet<>();
 	@JsonAdapter(GsonUtils.IntegerSetAdapter.class)

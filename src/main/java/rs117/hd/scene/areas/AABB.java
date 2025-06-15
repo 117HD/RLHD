@@ -23,7 +23,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package rs117.hd.utils;
+package rs117.hd.scene.areas;
 
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
@@ -31,10 +31,11 @@ import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
+import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.coords.*;
-import rs117.hd.data.environments.Area;
+import rs117.hd.scene.AreaManager;
+import rs117.hd.utils.GsonUtils;
 
 import static net.runelite.api.Constants.*;
 
@@ -94,36 +95,27 @@ public class AABB {
 		maxZ = Math.max(z1, z2);
 	}
 
+	public AABB(int[] point) {
+		this(point[0], point[1], point[2]);
+	}
+
 	public AABB(int[] from, int[] to) {
 		this(from[0], from[1], from[2], to[0], to[1], to[2]);
 	}
 
-	public static AABB[] regions(int... regionIds) {
-		return Arrays.stream(regionIds)
-			.mapToObj(AABB::new)
-			.toArray(AABB[]::new);
-	}
-
-	public static AABB regionBox(int fromRegionId, int toRegionId) {
-		int x1 = fromRegionId >>> 8;
-		int y1 = fromRegionId & 0xFF;
-		int x2 = toRegionId >>> 8;
-		int y2 = toRegionId & 0xFF;
-		if (x1 > x2) {
-			int temp = x1;
-			x1 = x2;
-			x2 = temp;
-		}
-		if (y1 > y2) {
-			int temp = y1;
-			y1 = y2;
-			y2 = temp;
-		}
-		return new AABB((x1) << 6, (y1) << 6, ((x2) + 1 << 6) - 1, ((y2) + 1 << 6) - 1);
-	}
-
 	public AABB onPlane(int plane) {
 		return new AABB(minX, minY, plane, maxX, maxY, plane);
+	}
+
+	public AABB expandTo(int[] point) {
+		return new AABB(
+			Math.min(minX, point[0]),
+			Math.min(minY, point[1]),
+			Math.min(minZ, point[2]),
+			Math.max(maxX, point[0]),
+			Math.max(maxY, point[1]),
+			Math.max(maxZ, point[2])
+		);
 	}
 
 	public boolean hasZ() {
@@ -141,11 +133,11 @@ public class AABB {
 		return !isPoint();
 	}
 
-	public boolean contains(int... worldXYZ) {
+	public boolean contains(int... worldPos) {
 		return
-			minX <= worldXYZ[0] && worldXYZ[0] <= maxX &&
-			minY <= worldXYZ[1] && worldXYZ[1] <= maxY &&
-			(worldXYZ.length < 3 || minZ <= worldXYZ[2] && worldXYZ[2] <= maxZ);
+			minX <= worldPos[0] && worldPos[0] <= maxX &&
+			minY <= worldPos[1] && worldPos[1] <= maxY &&
+			(worldPos.length < 3 || minZ <= worldPos[2] && worldPos[2] <= maxZ);
 	}
 
 	public boolean contains(WorldPoint location) {
@@ -160,23 +152,41 @@ public class AABB {
 
 	public boolean intersects(int minX, int minY, int maxX, int maxY) {
 		return
-			minX < this.maxX && maxX > this.minX &&
-			minY < this.maxY && maxY > this.minY;
+			minX <= this.maxX && maxX >= this.minX &&
+			minY <= this.maxY && maxY >= this.minY;
 	}
 
-	public boolean intersects(int minX, int maxX, int minY, int maxY, int minZ, int maxZ) {
+	public boolean intersects(int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
 		return
-			minX < this.maxX && maxX > this.minX &&
-			minY < this.maxY && maxY > this.minY &&
-			minZ < this.maxZ && maxZ > this.minZ;
+			minX <= this.maxX && maxX >= this.minX &&
+			minY <= this.maxY && maxY >= this.minY &&
+			minZ <= this.maxZ && maxZ >= this.minZ;
 	}
 
 	public boolean intersects(AABB other) {
 		return intersects(
-			other.minX, other.maxX,
-			other.minY, other.maxY,
-			other.minZ, other.maxZ
+			other.minX,
+			other.minY,
+			other.minZ,
+			other.maxX,
+			other.maxY,
+			other.maxZ
 		);
+	}
+
+	public boolean intersects(AABB... aabbs) {
+		for (var aabb : aabbs)
+			if (intersects(aabb))
+				return true;
+		return false;
+	}
+
+	public float[] getCenter() {
+		return new float[] {
+			(minX + maxX) / 2.f,
+			(minY + maxY) / 2.f,
+			(minZ + maxZ) / 2.f
+		};
 	}
 
 	@Override
@@ -187,11 +197,16 @@ public class AABB {
 	}
 
 	public String toArgs() {
+		if (hasZ()) {
+			if (isPoint())
+				return String.format("[ %d, %d, %d ]", minX, minY, minZ);
+			if (minZ == maxZ)
+				return String.format("[ %d, %d, %d, %d, %d ]", minX, minY, maxX, maxY, minZ);
+			return String.format("[ %d, %d, %d, %d, %d, %d ]", minX, minY, minZ, maxX, maxY, maxZ);
+		}
 		if (isPoint())
-			return String.format("%d, %d", minX, minY);
-		if (minZ == maxZ)
-			return String.format("%d, %d, %d, %d, %d", minX, minY, maxX, maxY, minZ);
-		return String.format("%d, %d, %d, %d, %d, %d", minX, minY, minZ, maxX, maxY, maxZ);
+			return String.format("[ %d, %d ]", minX, minY);
+		return String.format("[ %d, %d, %d, %d ]", minX, minY, maxX, maxY);
 	}
 
 	@Override
@@ -206,13 +221,13 @@ public class AABB {
 			other.minZ == minZ && other.maxZ == maxZ;
 	}
 
+	@Slf4j
 	public static class JsonAdapter extends TypeAdapter<AABB[]> {
-		private final Area.JsonAdapter areaAdapter = new Area.JsonAdapter();
-
 		@Override
 		public AABB[] read(JsonReader in) throws IOException {
 			in.beginArray();
 			ArrayList<AABB> list = new ArrayList<>();
+			outer:
 			while (in.hasNext() && in.peek() != JsonToken.END_ARRAY) {
 				if (in.peek() == JsonToken.NULL) {
 					in.skipValue();
@@ -226,9 +241,15 @@ public class AABB {
 				}
 
 				if (in.peek() == JsonToken.STRING) {
-					var area = areaAdapter.read(in);
-					Collections.addAll(list, area.aabbs);
-					continue;
+					String name = in.nextString();
+					for (var area : AreaManager.AREAS) {
+						if (name.equals(area.name)) {
+							Collections.addAll(list, area.aabbs);
+							continue outer;
+						}
+					}
+
+					log.warn("No area exists with the name '{}' at {}", name, GsonUtils.location(in), new Throwable());
 				}
 
 				in.beginArray();
@@ -266,7 +287,7 @@ public class AABB {
 						list.add(new AABB(ints[0], ints[1], ints[2], ints[3]));
 						break;
 					case 5:
-						list.add(new AABB(ints[0], ints[2], ints[1], ints[3], ints[4]));
+						list.add(new AABB(ints[0], ints[1], ints[2], ints[3], ints[4]));
 						break;
 					case 6:
 						list.add(new AABB(ints[0], ints[1], ints[2], ints[3], ints[4], ints[5]));
@@ -274,7 +295,7 @@ public class AABB {
 				}
 			}
 			in.endArray();
-			return list.toArray(new AABB[0]);
+			return list.toArray(AABB[]::new);
 		}
 
 		@Override
@@ -286,18 +307,20 @@ public class AABB {
 
 			out.beginArray();
 			for (AABB aabb : aabbs) {
-				out.beginArray();
-				out.value(aabb.minX);
-				out.value(aabb.minY);
+				// Compact JSON array
+				StringBuilder sb = new StringBuilder();
+				sb.append("[ ").append(aabb.minX);
+				sb.append(", ").append(aabb.minY);
 				if (aabb.hasZ())
-					out.value(aabb.minZ);
+					sb.append(", ").append(aabb.minZ);
 				if (aabb.isVolume()) {
-					out.value(aabb.maxX);
-					out.value(aabb.maxY);
+					sb.append(", ").append(aabb.maxX);
+					sb.append(", ").append(aabb.maxY);
 					if (aabb.hasZ())
-						out.value(aabb.maxZ);
+						sb.append(", ").append(aabb.maxZ);
 				}
-				out.endArray();
+				sb.append(" ]");
+				out.jsonValue(sb.toString());
 			}
 			out.endArray();
 		}

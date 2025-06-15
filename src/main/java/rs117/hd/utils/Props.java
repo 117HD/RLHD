@@ -10,7 +10,11 @@ public class Props
 {
 	public static boolean DEVELOPMENT;
 
-	private static final Properties env = new Properties(System.getProperties());
+	private static final Properties env = new Properties();
+
+	static {
+		env.putAll(System.getProperties());
+	}
 
 	public static boolean has(String variableName)
 	{

@@ -1,0 +1,489 @@
+[
+  {
+    "name": "SKULL_OBELISK",
+    "materials": [
+      "SKULLS"
+    ]
+  },
+  {
+    "name": "TRANSPARENT",
+    "materials": [
+      "TRANSPARENT"
+    ]
+  },
+  {
+    "name": "GRASS_1",
+    "materials": [
+      "GRASS_1",
+      "GRASS_2",
+      "GRASS_3"
+    ]
+  },
+  {
+    "name": "OVERWORLD_GRASS_1",
+    "materials": [
+      "GRASS_1",
+      "GRASS_2",
+      "GRASS_3"
+    ]
+  },
+  {
+    "name": "GRASS_SCROLLING",
+    "materials": [
+      "GRASS_SCROLLING"
+    ]
+  },
+  {
+    "name": "STONE_SCROLLING",
+    "materials": [
+      "STONE_SCROLLING"
+    ]
+  },
+  {
+    "name": "VERTICAL_DIRT",
+    "materials": [
+      "DIRT_1_VERT",
+      "DIRT_2_VERT"
+    ]
+  },
+  {
+    "name": "SNOW_1",
+    "materials": [
+      "SNOW_1",
+      "SNOW_1",
+      "SNOW_2",
+      "SNOW_3",
+      "SNOW_3",
+      "SNOW_4"
+    ]
+  },
+  {
+    "name": "SNOW_2",
+    "materials": [
+      "SNOW_2",
+      "SNOW_4"
+    ]
+  },
+  {
+    "name": "GRAVEL",
+    "materials": [
+      "GRAVEL"
+    ]
+  },
+  {
+    "name": "FALADOR_PATHS",
+    "materials": [
+      "FALADOR_PATH_BRICK"
+    ]
+  },
+  {
+    "name": "VARROCK_PATHS",
+    "materials": [
+      "JAGGED_STONE_TILE"
+    ]
+  },
+  {
+    "name": "VARIED_DIRT",
+    "materials": [
+      "GRAVEL",
+      "DIRT_1",
+      "DIRT_2"
+    ]
+  },
+  {
+    "name": "VARIED_DIRT_SHINY",
+    "materials": [
+      "GRAVEL_SHINY",
+      "DIRT_1_SHINY",
+      "DIRT_2_SHINY"
+    ]
+  },
+  {
+    "name": "TILE_SMALL",
+    "materials": [
+      "TILE_SMALL_1"
+    ]
+  },
+  {
+    "name": "CARPET",
+    "materials": [
+      "CARPET"
+    ]
+  },
+  {
+    "name": "BRICK",
+    "materials": [
+      "BRICK"
+    ]
+  },
+  {
+    "name": "BRICK_BROWN",
+    "materials": [
+      "BRICK_BROWN"
+    ]
+  },
+  {
+    "name": "GRUNGE",
+    "materials": [
+      "GRUNGE_1",
+      "GRUNGE_2",
+      "GRUNGE_1"
+    ]
+  },
+  {
+    "name": "GRUNGE_2",
+    "materials": [
+      "GRUNGE_2"
+    ]
+  },
+  {
+    "name": "SUBMERGED_GRUNGE_2",
+    "materials": [
+      "SUBMERGED_GRUNGE_2"
+    ]
+  },
+  {
+    "name": "TILES_2x2_1",
+    "materials": [
+      "TILES_2X2_1"
+    ]
+  },
+  {
+    "name": "TILES_2x2_2",
+    "materials": [
+      "TILES_2X2_2"
+    ]
+  },
+  {
+    "name": "TILES_2X2_1_GLOSS",
+    "materials": [
+      "TILES_2X2_1_GLOSS"
+    ]
+  },
+  {
+    "name": "TILES_2X2_2_GLOSS",
+    "materials": [
+      "TILES_2X2_2_GLOSS"
+    ]
+  },
+  {
+    "name": "TILES_2X2_1_SEMIGLOSS",
+    "materials": [
+      "TILES_2X2_1_SEMIGLOSS"
+    ]
+  },
+  {
+    "name": "TILES_2X2_2_SEMIGLOSS",
+    "materials": [
+      "TILES_2X2_2_SEMIGLOSS"
+    ]
+  },
+  {
+    "name": "MARBLE_1",
+    "materials": [
+      "MARBLE_1",
+      "MARBLE_2",
+      "MARBLE_3"
+    ]
+  },
+  {
+    "name": "MARBLE_2",
+    "materials": [
+      "MARBLE_3",
+      "MARBLE_1",
+      "MARBLE_2"
+    ]
+  },
+  {
+    "name": "MARBLE_1_GLOSS",
+    "materials": [
+      "MARBLE_1_GLOSS",
+      "MARBLE_2_GLOSS",
+      "MARBLE_3_GLOSS"
+    ]
+  },
+  {
+    "name": "MARBLE_2_GLOSS",
+    "materials": [
+      "MARBLE_3_GLOSS",
+      "MARBLE_1_GLOSS",
+      "MARBLE_2_GLOSS"
+    ]
+  },
+  {
+    "name": "MARBLE_1_SEMIGLOSS",
+    "materials": [
+      "MARBLE_1_SEMIGLOSS",
+      "MARBLE_2_SEMIGLOSS",
+      "MARBLE_3_SEMIGLOSS"
+    ]
+  },
+  {
+    "name": "MARBLE_2_SEMIGLOSS",
+    "materials": [
+      "MARBLE_3_SEMIGLOSS",
+      "MARBLE_1_SEMIGLOSS",
+      "MARBLE_2_SEMIGLOSS"
+    ]
+  },
+  {
+    "name": "MARBLE_DARK",
+    "materials": [
+      "MARBLE_DARK"
+    ]
+  },
+  {
+    "name": "LASSAR_UNDERCITY_TILES",
+    "materials": [
+      "LASSAR_UNDERCITY_TILES"
+    ]
+  },
+  {
+    "name": "LASSAR_UNDERCITY_TILES_SUBMERGED",
+    "materials": [
+      "LASSAR_UNDERCITY_TILES_SUBMERGED"
+    ]
+  },
+  {
+    "name": "CAM_TORUM_TILES",
+    "materials": [
+      "CAM_TORUM_TILES"
+    ]
+  },
+  {
+    "name": "BLANK_SEMIGLOSS",
+    "materials": [
+      "BLANK_SEMIGLOSS"
+    ]
+  },
+  {
+    "name": "SAND",
+    "materials": [
+      "SAND_1",
+      "SAND_2",
+      "SAND_3"
+    ]
+  },
+  {
+    "name": "WOOD_PLANKS_1",
+    "materials": [
+      "WOOD_PLANKS_1"
+    ]
+  },
+  {
+    "name": "CLEAN_WOOD_FLOOR",
+    "materials": [
+      "CLEAN_WOOD_FLOOR"
+    ]
+  },
+  {
+    "name": "HD_LAVA",
+    "materials": [
+      "HD_LAVA_1",
+      "HD_LAVA_2",
+      "HD_LAVA_1",
+      "HD_LAVA_1",
+      "HD_LAVA_2",
+      "HD_MAGMA_1",
+      "HD_MAGMA_2"
+    ]
+  },
+  {
+    "name": "STONE_PATTERN",
+    "materials": [
+      "STONE_PATTERN"
+    ]
+  },
+  {
+    "name": "CONCRETE",
+    "materials": [
+      "CONCRETE"
+    ]
+  },
+  {
+    "name": "SAND_BRICK",
+    "materials": [
+      "SAND_BRICK"
+    ]
+  },
+  {
+    "name": "CLEAN_TILE",
+    "materials": [
+      "CLEAN_TILE"
+    ]
+  },
+  {
+    "name": "WORN_TILES",
+    "materials": [
+      "WORN_TILES"
+    ]
+  },
+  {
+    "name": "WATER_FLAT",
+    "materials": [
+      "WATER_FLAT"
+    ]
+  },
+  {
+    "name": "HD_WOOD_PLANKS_2",
+    "materials": [
+      "HD_WOOD_PLANKS_2"
+    ]
+  },
+  {
+    "name": "ICE_1",
+    "materials": [
+      "ICE_1"
+    ]
+  },
+  {
+    "name": "ICE_1_HIGHGLOSS",
+    "materials": [
+      "ICE_1_HIGHGLOSS"
+    ]
+  },
+  {
+    "name": "ICE_4",
+    "materials": [
+      "ICE_4"
+    ]
+  },
+  {
+    "name": "WINTER_JAGGED_STONE_TILE",
+    "materials": [
+      "WINTER_JAGGED_STONE_TILE"
+    ]
+  },
+  {
+    "name": "WINTER_JAGGED_STONE_TILE_LIGHT",
+    "materials": [
+      "WINTER_JAGGED_STONE_TILE_LIGHT"
+    ]
+  },
+  {
+    "name": "WINTER_JAGGED_STONE_TILE_LIGHT_2",
+    "materials": [
+      "WINTER_JAGGED_STONE_TILE_LIGHTER"
+    ]
+  },
+  {
+    "name": "ROCKY_CAVE_FLOOR",
+    "materials": [
+      "GRUNGE_2",
+      "ROCK_2",
+      "ROCK_2",
+      "ROCK_1",
+      "GRAVEL"
+    ]
+  },
+  {
+    "name": "EARTHEN_CAVE_FLOOR",
+    "materials": [
+      "GRUNGE_1",
+      "DIRT_2",
+      "DIRT_2",
+      "ROCK_1",
+      "DIRT_2"
+    ]
+  },
+  {
+    "name": "STONE_CAVE_FLOOR",
+    "materials": [
+      "STONE",
+      "ROCK_1",
+      "ROCK_2"
+    ]
+  },
+  {
+    "name": "SANDY_STONE_FLOOR",
+    "materials": [
+      "SAND_2",
+      "STONE_NORMALED",
+      "ROCK_2",
+      "STONE_NORMALED"
+    ]
+  },
+  {
+    "name": "SANDY_DIRT",
+    "materials": [
+      "SAND_3",
+      "DIRT_1",
+      "SAND_2"
+    ]
+  },
+  {
+    "name": "PACKED_EARTH",
+    "materials": [
+      "DIRT_1",
+      "GRAVEL",
+      "DIRT_1",
+      "DIRT_1",
+      "DIRT_2"
+    ]
+  },
+  {
+    "name": "GRASSY_DIRT",
+    "materials": [
+      "GRASS_1",
+      "DIRT_1",
+      "GRASS_2",
+      "DIRT_2",
+      "GRASS_3"
+    ]
+  },
+  {
+    "name": "OOZE_FLOOR",
+    "materials": [
+      "GRUNGE_1_SHINY",
+      "GRAVEL_SHINY_LIGHT",
+      "GRUNGE_2_SHINY"
+    ]
+  },
+  {
+    "name": "TEMPLE_OF_THE_EYE_FLOOR",
+    "materials": [
+      "GRUNGE_1",
+      "GRAVEL_LIGHT",
+      "GRUNGE_2",
+      "GRAVEL_LIGHT"
+    ]
+  },
+  {
+    "name": "OVERWORLD_ROCKY",
+    "materials": [
+      "ROCK_2",
+      "STONE_NORMALED_DARK",
+      "ROCK_1",
+      "GRAVEL"
+    ]
+  },
+  {
+    "name": "HD_BRICK_BROWN",
+    "materials": [
+      "HD_BRICK_BROWN"
+    ]
+  },
+  {
+    "name": "ABYSSAL_FLOOR",
+    "materials": [
+      "ABYSSAL_2",
+      "ABYSSAL",
+      "ABYSSAL"
+    ]
+  },
+  {
+    "name": "GROUND_WEBS",
+    "materials": [
+      "GROUND_WEB_1",
+      "GROUND_WEB_2",
+      "GROUND_WEB_3"
+    ]
+  },
+  {
+    "name": "ABYSSAL_BILE",
+    "materials": [
+      "ABYSSAL_2_FLOW",
+      "ABYSSAL_FLOW"
+    ]
+  }
+]

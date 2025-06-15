@@ -414,7 +414,7 @@ public class ColorUtils {
 	}
 
 	public static String srgbToHex(float... srgb) {
-		return String.format("#%h", packSrgb(srgb));
+		return String.format("#%06x", packSrgb(srgb));
 	}
 
 	public static String rgbToHex(float... linearRgb) {
