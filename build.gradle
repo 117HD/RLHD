@@ -84,8 +84,8 @@ task exportConstantsToJson {
 	}
 }
 
-tasks.named('build') {
-	dependsOn exportConstantsToJson
+tasks.named('compileJava') {
+	dependsOn 'exportConstantsToJson'
 }
 
 //shadowJar {
