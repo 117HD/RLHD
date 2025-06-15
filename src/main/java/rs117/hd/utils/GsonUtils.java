@@ -22,74 +22,7 @@ public class GsonUtils {
 			str = str.substring(i + 4);
 		return str;
 	}
-
-	public static HashSet<String> parseStringArray(JsonReader in) throws IOException {
-		HashSet<String> ids = new HashSet<>();
-		in.beginArray();
-		while (in.hasNext()) {
-			if (in.peek() == JsonToken.STRING) {
-				try {
-					ids.add(in.nextString());
-				} catch (NumberFormatException ex) {
-					String message = "Failed to parse string at " + location(in);
-					if (THROW_WHEN_PARSING_FAILS)
-						throw new RuntimeException(message, ex);
-					log.error(message, ex);
-				}
-			} else {
-				throw new RuntimeException("Unable to parse string: " + in.peek() + " at " + location(in));
-			}
-		}
-		in.endArray();
-		return ids;
-	}
-
-
-	public static HashSet<Integer> parseIDArray(JsonReader in) throws IOException {
-		HashSet<Integer> ids = new HashSet<>();
-		in.beginArray();
-		while (in.hasNext()) {
-			if (in.peek() == JsonToken.NUMBER) {
-				try {
-					ids.add(in.nextInt());
-				} catch (NumberFormatException ex) {
-					String message = "Failed to parse int at " + location(in);
-					if (THROW_WHEN_PARSING_FAILS)
-						throw new RuntimeException(message, ex);
-					log.error(message, ex);
-				}
-			} else {
-				throw new RuntimeException("Unable to parse ID: " + in.peek() + " at " + location(in));
-			}
-		}
-        in.endArray();
-        return ids;
-    }
-
-	public static void writeIDArray(JsonWriter out, HashSet<Integer> listToWrite) throws IOException {
-		if (listToWrite.isEmpty()) {
-			out.nullValue();
-			return;
-		}
-
-		out.beginArray();
-		for (int id : listToWrite)
-			out.value(id);
-		out.endArray();
-	}
-
-	public static class IntegerSetAdapter extends TypeAdapter<HashSet<Integer>> {
-		@Override
-		public HashSet<Integer> read(JsonReader in) throws IOException {
-			return parseIDArray(in);
-		}
-
-		@Override
-		public void write(JsonWriter out, HashSet<Integer> value) throws IOException {
-			writeIDArray(out, value);
-		}
-	}
-
+	
 	@Slf4j
 	public static class DegreesToRadians extends TypeAdapter<Object> {
 		@Override
