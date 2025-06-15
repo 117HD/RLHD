@@ -1,6 +1,5 @@
 package rs117.hd.scene;
 
-import com.google.common.collect.Sets;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -13,7 +12,7 @@ import net.runelite.api.events.*;
 import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import rs117.hd.HdPluginConfig;
-import rs117.hd.data.GameValRepository;
+import rs117.hd.data.GameVals;
 import rs117.hd.data.GameValType;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
@@ -50,7 +49,7 @@ public class FishingSpotReplacer {
 	private FrameTimer frameTimer;
 
 	@Inject
-	private GameValRepository gameValRepository;
+	private GameVals gameVals;
 
 	private final Map<Integer, RuneLiteObject> npcIndexToModel = new HashMap<>();
 	private Animation fishingSpotAnimation;
@@ -60,8 +59,8 @@ public class FishingSpotReplacer {
 		eventBus.register(this);
 		fishingSpotAnimation = client.loadAnimation(FISHING_SPOT_ANIMATION_ID);
 		lavaFishingSpotAnimation = client.loadAnimation(LAVA_SPOT_ANIMATION_ID);
-		FISHING_SPOT_IDS.forEach(id -> NPC_IDS.add(gameValRepository.lookupNameById(GameValType.NPC,id)));
-		LAVA_FISHING_SPOT_IDS.forEach(id -> NPC_IDS.add(gameValRepository.lookupNameById(GameValType.NPC,id)));
+		FISHING_SPOT_IDS.forEach(id -> NPC_IDS.add(gameVals.lookupNameById(GameValType.NPC,id)));
+		LAVA_FISHING_SPOT_IDS.forEach(id -> NPC_IDS.add(gameVals.lookupNameById(GameValType.NPC,id)));
 	}
 
 	public void shutDown() {

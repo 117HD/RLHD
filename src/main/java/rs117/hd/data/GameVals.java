@@ -22,7 +22,7 @@ import java.util.Map;
 
 @Slf4j
 @Singleton
-public class GameValRepository {
+public class GameVals {
 
 	@Inject
 	private HdPlugin plugin;
