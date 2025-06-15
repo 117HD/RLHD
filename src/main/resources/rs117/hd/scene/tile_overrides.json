@@ -5729,10 +5729,16 @@
   {
     "name": "NECROPOLIS_SAND",
     "area": "NECROPOLIS",
+    "groundMaterial": "SAND",
+    "uvOrientation": 42,
     "underlayIds": [
       124
     ],
-    "groundMaterial": "DIRT"
+    "replacements": {
+      "KHARID_SAND": [
+        "s >= 2"
+      ]
+    }
   },
   {
     "name": "SMOKE_DUNGEON",
