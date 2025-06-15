@@ -5640,7 +5640,7 @@
       126
     ],
     "replacements": {
-      "KHARID_GRASS": [
+      "KHARID_GRASS_CLAMPED": [
         "h > 10",
         "h > 9 && s > 3",
         "h == 9 && s > 4"
