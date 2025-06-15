@@ -25566,11 +25566,12 @@
     ]
   },
   {
-    "description": "MONUMENTAL_CHEST_OPEN",
-    "height": 120,
+    "description": "MONUMENTAL_CHEST_NORMAL",
+    "offset": [ 0, 300, -100 ],
     "alignment": "CENTER",
-    "radius": 800,
-    "strength": 7.5,
+    "radius": 900,
+    "strength": 9.5,
+    "fadeOutDuration": 300,
     "color": [
       255,
       191,
@@ -25581,16 +25582,31 @@
     "range": 0,
     "objectIds": [
       32992,
+      32990
+    ]
+  },
+  {
+    "description": "MONUMENTAL_CHEST_UNIQUE",
+    "offset": [ 0, 300, -100 ],
+    "radius": 900,
+    "strength": 9.5,
+    "fadeOutDuration": 300,
+    "color": [
+      205,
+      0,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "objectIds": [
       32993,
-      32994,
-      32990,
       32991
     ]
   },
   {
     "description": "TOB_WALL_TORCH",
-    "height": 200,
-    "alignment": "FRONTRIGHT_CORNER",
+    "offset": [ -100, 250, -100 ],
     "radius": 300,
     "strength": 7.5,
     "color": [
@@ -25599,7 +25615,7 @@
       3
     ],
     "type": "FLICKER",
-    "duration": 0,
+    "duration": 30,
     "range": 20,
     "objectIds": [
       32998,
@@ -25608,10 +25624,10 @@
   },
   {
     "description": "TOB_TELEPORT_CRYSTAL",
-    "height": 200,
+    "height": 300,
     "alignment": "CENTER",
-    "radius": 300,
-    "strength": 7.5,
+    "radius": 600,
+    "strength": 20,
     "color": [
       140,
       0,
@@ -25619,17 +25635,56 @@
     ],
     "type": "PULSE",
     "duration": 1800,
-    "range": 30,
+    "range": 10,
     "objectIds": [
       32996
     ]
   },
   {
+    "description": "TOB_XARPUS_EXHUMED_GROUND",
+    "areas": [ "THEATRE_OF_BLOOD" ],
+    "offset": [ 0, 20, 0 ],
+    "radius": 250,
+    "strength": 10,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 900,
+    "spawnDelay": 900,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 2200,
+    "range": 30,
+    "objectIds": [
+      32743
+    ]
+  },
+  {
+    "description": "TOB_XARPUS_WINDOW",
+    "areas": [ "THEATRE_OF_BLOOD" ],
+    "offset": [ 0, 200, 100 ],
+    "radius": 550,
+    "strength": 10,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 2200,
+    "range": 30,
+    "objectIds": [
+      32662
+    ]
+  },
+  {
     "description": "TOB_BARRIER",
-    "height": 50,
+    "height": 100,
     "alignment": "CENTER",
-    "radius": 150,
-    "strength": 7.5,
+    "radius": 350,
+    "strength": 6,
     "color": [
       255,
       0,
@@ -25643,11 +25698,30 @@
     ]
   },
   {
+    "description": "TOB_VERZIK_BARRIER",
+    "height": 100,
+    "alignment": "CENTER",
+    "radius": 350,
+    "strength": 6,
+    "color": [
+      162,
+      0,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 2200,
+    "range": 30,
+    "objectIds": [
+      33028,
+      47336
+    ]
+  },
+  {
     "description": "PESTILENT_BLOAT_CHAMBER",
     "height": 400,
     "alignment": "CENTER",
-    "radius": 1500,
-    "strength": 15,
+    "radius": 2000,
+    "strength": 20,
     "color": [
       255,
       208,
@@ -25655,15 +25729,14 @@
     ],
     "type": "PULSE",
     "duration": 1800,
-    "range": 10,
+    "range": 5,
     "objectIds": [
       32957
     ]
   },
   {
     "description": "TOB_VERZIK_BIG_WINDOW",
-    "height": 750,
-    "alignment": "FRONT",
+    "offset": [ 0, 750, -50 ],
     "radius": 1000,
     "strength": 16.3,
     "color": [
@@ -25680,9 +25753,8 @@
   },
   {
     "description": "TOB_VERZIK_WINDOW",
-    "height": 450,
-    "alignment": "FRONT",
-    "radius": 600,
+    "offset": [ 0, 500, -100 ],
+    "radius": 800,
     "strength": 10,
     "color": [
       162,
@@ -25698,10 +25770,9 @@
   },
   {
     "description": "TOB_VERZIK_WINDOW_FLOOR",
-    "height": 70,
-    "alignment": "FRONT",
-    "radius": 1000,
-    "strength": 5,
+    "offset": [ 0, 150, -100 ],
+    "radius": 600,
+    "strength": 15,
     "color": [
       162,
       0,
@@ -25715,11 +25786,44 @@
     ]
   },
   {
-    "description": "TOB_SOTETSEG_WINDOW",
-    "height": 400,
-    "alignment": "FRONTRIGHT_CORNER",
+    "description": "TOB_SOTETSEG_WINDOW Low",
+    "offset": [ -400, 125, -135 ],
+    "radius": 2000,
+    "strength": 10 ,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "objectIds": [
+      33052
+    ]
+  },
+  {
+    "description": "TOB_SOTETSEG_WINDOW Mid",
+    "offset": [ -300, 600, -135 ],
     "radius": 1200,
-    "strength": 10,
+    "strength": 3,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "objectIds": [
+      33052
+    ]
+  },
+  {
+    "description": "TOB_SOTETSEG_WINDOW High",
+    "offset": [ -250, 850, -135 ],
+    "radius": 700,
+    "strength": 6,
     "color": [
       255,
       255,
@@ -25734,10 +25838,9 @@
   },
   {
     "description": "TOB_BAT_TORCH",
-    "height": 820,
-    "alignment": "FRONT",
-    "radius": 300,
-    "strength": 10,
+    "offset": [ 0, 820, -70 ],
+    "radius": 425,
+    "strength": 12,
     "color": [
       255,
       0,
@@ -28679,32 +28782,6 @@
     ]
   },
   {
-    "description": "ABYSSAL_NEXUS_TENDRILS_THRONE",
-    "height": 65,
-    "alignment": "CENTER",
-    "radius": 600,
-    "strength": 5,
-    "color": [
-      70,
-      242,
-      31
-    ],
-    "type": "FLICKER",
-    "duration": 2000,
-    "range": 20,
-    "objectIds": [
-      27005,
-      26984,
-      26985,
-      26986,
-      27004,
-      27006,
-      27014,
-      27015,
-      27016
-    ]
-  },
-  {
     "description": "ABYSSAL_NEXUS_FONT",
     "height": 140,
     "alignment": "BACK",
@@ -28740,6 +28817,118 @@
       43713,
       43714
     ]
+  },
+  {
+    "description": "SIRE_BELLY_LIGHT_LOWER",
+    "offset": [ 0, 250, 100 ],
+    "npcIds": [ 5890, 5889, 5891 ],
+    "radius": 250,
+    "strength": 125,
+    "color": [
+      100,
+      0,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 2500,
+    "range": 13
+  },
+  {
+    "description": "SIRE_BELLY_LIGHT_UPPER",
+    "offset": [ 0, 350, 75 ],
+    "npcIds": [ 5890, 5889, 5891 ],
+    "radius": 100,
+    "strength": 125,
+    "color": [
+      100,
+      0,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 2500,
+    "range": 13
+  },
+  {
+    "description": "SIRE_BELLY_LIGHT_EXPLOSION",
+    "offset": [ 0, 325, 200 ],
+    "npcIds": [ 5908 ],
+    "radius": 350,
+    "strength": 200,
+    "color": [
+      100,
+      0,
+      255
+    ],
+    "type": "STATIC"
+  },
+  {
+    "description": "SIRE_BELLY_LIGHT_EXPLOSION_2",
+    "offset": [ 0, 150, 275 ],
+    "npcIds": [ 5908 ],
+    "animationIds": [ -1, 7098, 7099 ],
+    "radius": 450,
+    "strength": 15,
+    "color": [
+      200,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "range": 40,
+    "duration": 100,
+    "fadeInDuration": 400,
+    "fadeOutDuration": 100,
+    "spawnDelay": 150
+  },
+  {
+    "description": "SIRE_THRONE_LIGHT",
+    "offset": [ -50, 170, 50 ],
+    "objectIds": [ 26984 ],
+    "radius": 700,
+    "strength": 25,
+    "color": [
+      25,
+      200,
+      25
+    ],
+    "type": "PULSE",
+    "duration": 2500,
+    "range": 13
+  },
+  {
+    "description": "ABYSSAL_NEXUS_TENDRILS",
+    "height": 45,
+    "alignment": "CENTER",
+    "radius": 475,
+    "strength": 3.5,
+    "color": [
+      70,
+      242,
+      31
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      27014,
+      27015,
+      27016
+    ]
+  },
+  {
+    "description": "Abyssal Nexus - Respiratory System",
+    "height": 275,
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 7.5,
+    "color": [
+      70,
+      242,
+      31
+    ],
+    "objectIds": [ 26953 ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200
   },
   {
     "description": "GOTR_ENTRANCE_BARRIER_YELLOW",

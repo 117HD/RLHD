@@ -156,6 +156,17 @@ public enum WaterType
 		.depthColor(rgb("#000000"))
 		.causticsStrength(0)
 		.flat(true)),
+	ARAXXOR_WASTE(b -> b
+		.specularStrength(.1f)
+		.specularGloss(100)
+		.normalStrength(.05f)
+		.baseOpacity(.9f)
+		.fresnelAmount(.3f)
+		.surfaceColor(srgb(22, 255, 13))
+		.foamColor(srgb(20, 255, 20))
+		.depthColor(srgb(30, 255, 26))
+		.causticsStrength(0)
+		.duration(1.6f)),
 	;
 
 	public final boolean flat;

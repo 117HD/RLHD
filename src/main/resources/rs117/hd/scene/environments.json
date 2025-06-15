@@ -330,17 +330,20 @@
       80,
       190
     ],
-    "fogColor": "#0e081a",
-    "fogDepth": 40
+    "fogColor": "#040407",
+    "fogDepth": 20
   },
   {
     "area": "THEATRE_OF_BLOOD",
     "ambientColor": "#8282b0",
-    "ambientStrength": 3,
+    "ambientStrength": 3.5,
     "directionalColor": "#dfc0c0",
-    "directionalStrength": 5,
-    "fogColor": "#0e0c2c",
-    "fogDepth": 40
+    "directionalStrength": 1.5,
+    "fogColor": "#040407",
+    "fogDepth": 40,
+    "groundFogEnd": -1000,
+    "groundFogStart": -200,
+    "groundFogOpacity": 0.3
   },
   {
     "area": "TOA_LOOT_ROOM",
@@ -1569,7 +1572,7 @@
   {
     "area": "ABYSSAL_AREAS",
     "fogColor": "#100707",
-    "fogDepth": 65,
+    "fogDepth": 60,
     "ambientColor": "#AAAFB6",
     "ambientStrength": 2.2,
     "directionalColor": "#FFFFFF",
