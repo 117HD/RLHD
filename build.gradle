@@ -81,10 +81,14 @@ tasks.withType(JavaCompile).configureEach {
 		}
 
 		def outputFile = new File(outputDir, "gamevals.json")
-		outputFile.text = "// AUTO-GENERATED FILE. DO NOT MODIFY.\n\n" + JsonOutput.prettyPrint(JsonOutput.toJson(fullExport))
+		outputFile.text = "// AUTO-GENERATED FILE. DO NOT MODIFY.\n\n" + JsonOutput.toJson(fullExport)
 		def elapsedMs = (System.nanoTime() - startTime) / 1_000_000
 		println "Export GameVal completed in ${elapsedMs} ms"
 	}
+}*/
+
+/*tasks.named('compileJava') {
+	dependsOn 'exportConstantsToJson'
 }*/
 
 //shadowJar {
