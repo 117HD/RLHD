@@ -789,7 +789,7 @@
     ]
   },
   {
-    "name": "FALADOOR_PARTY_ROOM_STAIRS_FIX",
+    "name": "FALADOR_PARTY_ROOM_STAIRS_FIX",
     "aabbs": [
       [ 3053, 3084, 3054, 3383 ],
       [ 3037, 3084, 3038, 3383 ]
@@ -1630,7 +1630,7 @@
     ]
   },
   {
-    "name": "EAST_ARDOUGNE_COBBLE_CHRUCH",
+    "name": "EAST_ARDOUGNE_COBBLE_CHURCH",
     "aabbs": [
       [ 2609, 3304, 0, 2612, 3307, 0 ]
     ]
@@ -1794,20 +1794,20 @@
     ]
   },
   {
-    "name": "KANDARIN_MONISTARY",
+    "name": "KANDARIN_MONASTERY",
     "aabbs": [
       [ 2590, 3203, 2622, 3221 ]
     ]
   },
   {
-    "name": "KANDARIN_MONISTARY_WINGS_PARTIAL_TILES",
+    "name": "KANDARIN_MONASTERY_WINGS_PARTIAL_TILES",
     "aabbs": [
       [ 2611, 3205, 2620, 3213 ],
       [ 2592, 3205, 2601, 3213 ]
     ]
   },
   {
-    "name": "KANDARIN_MONISTARY_WINGS",
+    "name": "KANDARIN_MONASTERY_WINGS",
     "aabbs": [
       [ 2614, 3214, 2617, 3214 ],
       [ 2613, 3213, 2618, 3213 ],
@@ -6736,7 +6736,7 @@
     ]
   },
   {
-    "name": "PERILOUS_MOONS_ANTECHABMER_BLEND_FIX",
+    "name": "PERILOUS_MOONS_ANTECHAMBER_BLEND_FIX",
     "aabbs": [
       [ 1433, 9626, 1, 1446, 9638, 1 ],
       [ 1436, 9639, 1, 1444, 9639, 1 ],

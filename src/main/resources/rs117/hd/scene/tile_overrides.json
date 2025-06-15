@@ -471,7 +471,7 @@
     "groundMaterial": "VARROCK_PATHS"
   },
   {
-    "name": "VARROCK_ZAMORACK_TEMPLE",
+    "name": "VARROCK_ZAMORAK_TEMPLE",
     "area": "VARROCK_ZAMORAK_TEMPLE",
     "overlayIds": [
       171
@@ -1246,8 +1246,8 @@
     "blended": false
   },
   {
-    "name": "FALADOR_PARTROOM_STAIRS_FIX",
-    "area": "FALADOOR_PARTY_ROOM_STAIRS_FIX",
+    "name": "FALADOR_PARTY_ROOM_STAIRS_FIX",
+    "area": "FALADOR_PARTY_ROOM_STAIRS_FIX",
     "overlayIds": [
       37
     ],
@@ -2107,7 +2107,7 @@
     "blended": false
   },
   {
-    "name": "EAST_ARDOUNGE_INDOORS_FURNACE",
+    "name": "EAST_ARDOUGNE_INDOORS_FURNACE",
     "area": "EAST_ARDOUGNE_FURNACE",
     "overlayIds": [
       10
@@ -2142,8 +2142,8 @@
     "blended": false
   },
   {
-    "name": "EAST_ARDOUNGE_COBBLE_CHURCH",
-    "area": "EAST_ARDOUGNE_COBBLE_CHRUCH",
+    "name": "EAST_ARDOUGNE_COBBLE_CHURCH",
+    "area": "EAST_ARDOUGNE_COBBLE_CHURCH",
     "overlayIds": [
       10
     ],
@@ -2338,7 +2338,7 @@
     "groundMaterial": "VARIED_DIRT_SHINY"
   },
   {
-    "name": "WEST_ARDOUNGE_CARPET_FIX_1",
+    "name": "WEST_ARDOUGNE_CARPET_FIX_1",
     "area": "WEST_ARDOUGNE_CARPET_FIX",
     "overlayIds": [
       14
@@ -2397,16 +2397,16 @@
     }
   },
   {
-    "name": "KANDARIN_MONISTARY_WINGS_TEXTURE_13",
-    "area": "KANDARIN_MONISTARY_WINGS",
+    "name": "KANDARIN_MONASTERY_WINGS_TEXTURE_13",
+    "area": "KANDARIN_MONASTERY_WINGS",
     "overlayIds": [
       13
     ],
     "groundMaterial": "TILES_2X2_2_SEMIGLOSS"
   },
   {
-    "name": "KANDARIN_MONISTARY_FLOOR_TEXTURE",
-    "area": "KANDARIN_MONISTARY",
+    "name": "KANDARIN_MONASTERY_FLOOR_TEXTURE",
+    "area": "KANDARIN_MONASTERY",
     "overlayIds": [
       12
     ],
@@ -4605,7 +4605,7 @@
   },
   {
     "name": "Perilous Moons Antechamber Blend Fix",
-    "area": "PERILOUS_MOONS_ANTECHABMER_BLEND_FIX",
+    "area": "PERILOUS_MOONS_ANTECHAMBER_BLEND_FIX",
     "underlayIds": [ 19, 39, 72 ],
     "overlayIds": [ 0, 37, 139, 228, 229 ],
     "groundMaterial": "DIRT",
@@ -5400,7 +5400,7 @@
     "groundMaterial": "DIRT"
   },
   {
-    "name": "SORCERESS_GUARDEN_GRASS",
+    "name": "SORCERESS_GARDEN_GRASS",
     "area": "SORCERESS_GARDEN",
     "underlayIds": [
       7,
@@ -5412,7 +5412,7 @@
     "groundMaterial": "GRASS_1"
   },
   {
-    "name": "SORCERESS_GUARDEN_SNOW",
+    "name": "SORCERESS_GARDEN_SNOW",
     "area": "SORCERESS_GARDEN",
     "underlayIds": [
       9,
@@ -5732,7 +5732,7 @@
     "blended": false
   },
   {
-    "name": "KARAMJA_VOCALNO_ROCK",
+    "name": "KARAMJA_VOLCANO_ROCK",
     "area": "KARAMJA_VOLCANO",
     "underlayIds": [
       55,
