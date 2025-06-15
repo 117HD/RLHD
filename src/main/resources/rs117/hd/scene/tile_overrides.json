@@ -5468,6 +5468,14 @@
     "shiftHue": -1
   },
   {
+    "name": "KHARID_GRASS_CLAMPED",
+    "groundMaterial": "OVERWORLD_GRASS_1",
+    "maxLightness": 50,
+    "shiftHue": -1,
+    "maxSaturation": 3,
+    "minHue": 9
+  },
+  {
     "name": "KHARID_GRASS_HUE_SHIFT",
     "groundMaterial": "OVERWORLD_GRASS_1",
     "maxLightness": 50,
@@ -5587,6 +5595,33 @@
       ]
     }
 
+  },
+  {
+    "name": "SOUTH_OF_UNKAH",
+    "area": "REGION_SOUTH_OF_UNKAH",
+    "groundMaterial": "SAND",
+    "maxLightness": 60,
+    "shiftHue": -2,
+    "minHue": 6,
+    "maxSaturation": 3,
+    "underlayIds": [
+      61,
+      62,
+      64,
+      52,
+      99,
+      126
+    ],
+    "replacements": {
+      "KHARID_GRASS_CLAMPED": [
+        "h > 10",
+        "h > 9 && s > 3",
+        "h == 9 && s > 4"
+      ],
+      "KHARID_DIRT": [
+        "h == 9 && s == 4"
+      ]
+    }
   },
   {
     "name": "RUINS_OF_UNKAH",
