@@ -418,6 +418,15 @@
     ]
   },
   {
+    "name": "SANDY_DIRT_2",
+    "materials": [
+      "DIRT_1",
+      "GRAVEL",
+      "SAND_1",
+      "DIRT_2"
+    ]
+  },
+  {
     "name": "PACKED_EARTH",
     "materials": [
       "DIRT_1",
