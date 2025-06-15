@@ -1958,13 +1958,6 @@
     ]
   },
   {
-    "description": "Objects - Trees - Teak",
-    "baseMaterial": "GRAY_85",
-    "objectIds": [
-      40758
-    ]
-  },
-  {
     "description": "FARMING_PATCH_1",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
@@ -14603,6 +14596,7 @@
       44101,
       44104,
       44108,
+      43902,
       43903,
       43893,
       43953,
@@ -14633,7 +14627,8 @@
       43998,
       43999,
       43900,
-      43898
+      43898,
+      43899
     ],
     "uvType": "BOX",
     "uvScale": 1.1

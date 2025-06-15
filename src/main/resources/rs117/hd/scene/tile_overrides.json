@@ -1074,26 +1074,6 @@
     "maxSaturation": 3
   },
   {
-    "name": "RUINS_OF_ULLEK_GRASS_FIX",
-    "area": "RUINS_OF_ULLEK_GRASS_FIX",
-    "underlayIds": [
-      61,
-      64,
-      126
-    ],
-    "groundMaterial": "GRASS_1"
-  },
-  {
-    "name": "RUINS_OF_ULLEK_SAND_FIX",
-    "area": "RUINS_OF_ULLEK_SAND_FIX",
-    "underlayIds": [
-      99
-    ],
-    "groundMaterial": "SAND",
-    "shiftHue": -3,
-    "maxSaturation": 3
-  },
-  {
     "name": "GIANTS_PLATEAU_CABBAGE_PATCH_FIX",
     "area": "GIANTS_PLATEAU_CABBAGE_PATCH",
     "overlayIds": [
