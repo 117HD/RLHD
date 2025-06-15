@@ -5661,8 +5661,8 @@
     ],
     "replacements": {
       "KHARID_GRASSY_SAND":[
-        "h > 8 && h < 12 && s == 3",
-        "h == 8 && s == 4"
+        "s == 3 && 9 <= h && h <= 11",
+        "s == 4 && 8 <= h && h <= 9"
       ],
       "KHARID_GRASS": [
         "h > 11",
