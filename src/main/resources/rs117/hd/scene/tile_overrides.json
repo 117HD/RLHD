@@ -5717,6 +5717,16 @@
     }
   },
   {
+    "name": "NECROPOLIS_PATH",
+    "area": "NECROPOLIS",
+    "uvScale": 1.15,
+    "uvOrientation": 42,
+    "overlayIds": [
+      215
+    ],
+    "groundMaterial": "PACKED_EARTH"
+  },
+  {
     "name": "NECROPOLIS_SAND",
     "area": "NECROPOLIS",
     "underlayIds": [
