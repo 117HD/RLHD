@@ -5465,7 +5465,8 @@
     "name": "KHARID_GRASS",
     "groundMaterial": "OVERWORLD_GRASS_1",
     "maxLightness": 50,
-    "shiftHue": -1
+    "shiftHue": -1,
+    "minHue": 9
   },
   {
     "name": "KHARID_GRASS_CLAMPED",
