@@ -12,7 +12,6 @@ import net.runelite.api.*;
 import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
 import rs117.hd.data.GameVals;
-import rs117.hd.data.GameValType;
 import rs117.hd.model.ModelPusher;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.FileWatcher;
@@ -113,13 +112,13 @@ public class ModelOverrideManager {
 			return;
 
 		for (String configName : override.npcIds)
-			addEntry(ModelHash.TYPE_NPC, gameVals.get(GameValType.NPC,configName), override);
+			addEntry(ModelHash.TYPE_NPC, gameVals.getNpc(configName), override);
 		for (String configName : override.objectIds)
-			addEntry(ModelHash.TYPE_OBJECT, gameVals.get(GameValType.OBJECT,configName), override);
+			addEntry(ModelHash.TYPE_OBJECT, gameVals.getObject(configName), override);
 		for (String configName : override.projectileIds)
-			addEntry(ModelHash.TYPE_PROJECTILE, gameVals.get(GameValType.SPOTANIM,configName), override);
+			addEntry(ModelHash.TYPE_PROJECTILE, gameVals.getSpotanim(configName), override);
 		for (String configName : override.graphicsObjectIds)
-			addEntry(ModelHash.TYPE_GRAPHICS_OBJECT, gameVals.get(GameValType.SPOTANIM,configName), override);
+			addEntry(ModelHash.TYPE_GRAPHICS_OBJECT, gameVals.getSpotanim(configName), override);
 	}
 
 	private void addEntry(int type, int id, ModelOverride entry) {

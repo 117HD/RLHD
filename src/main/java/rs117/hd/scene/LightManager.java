@@ -52,7 +52,6 @@ import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.config.MaxDynamicLights;
 import rs117.hd.data.GameVals;
-import rs117.hd.data.GameValType;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 import rs117.hd.scene.lights.Alignment;
@@ -153,11 +152,11 @@ public class LightManager {
 					light.persistent = true;
 					WORLD_LIGHTS.add(light);
 				}
-				lightDef.npcIds.forEach(configName -> NPC_LIGHTS.put(gameVals.get(GameValType.NPC,configName), lightDef));
-				lightDef.objectIds.forEach(configName -> OBJECT_LIGHTS.put(gameVals.get(GameValType.OBJECT,configName), lightDef));
-				lightDef.projectileIds.forEach(configName -> PROJECTILE_LIGHTS.put(gameVals.get(GameValType.SPOTANIM,configName), lightDef));
-				lightDef.spotAnimIds.forEach(configName -> SPOT_ANIM_LIGHTS.put(gameVals.get(GameValType.SPOTANIM,configName), lightDef));
-				lightDef.animationIds.forEach(configName -> ANIMATION_LIGHTS.put(gameVals.get(GameValType.ANIM,configName), lightDef));
+				lightDef.npcIds.forEach(configName -> NPC_LIGHTS.put(gameVals.getNpc(configName), lightDef));
+				lightDef.objectIds.forEach(configName -> OBJECT_LIGHTS.put(gameVals.getObject(configName), lightDef));
+				lightDef.projectileIds.forEach(configName -> PROJECTILE_LIGHTS.put(gameVals.getSpotanim(configName), lightDef));
+				lightDef.spotAnimIds.forEach(configName -> SPOT_ANIM_LIGHTS.put(gameVals.getSpotanim(configName), lightDef));
+				lightDef.animationIds.forEach(configName -> ANIMATION_LIGHTS.put(gameVals.getAnim(configName), lightDef));
 			}
 
 			log.debug("Loaded {} lights", lights.length);

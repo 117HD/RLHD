@@ -13,7 +13,6 @@ import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.data.GameVals;
-import rs117.hd.data.GameValType;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 import rs117.hd.scene.model_overrides.ModelOverride;
@@ -59,8 +58,8 @@ public class FishingSpotReplacer {
 		eventBus.register(this);
 		fishingSpotAnimation = client.loadAnimation(FISHING_SPOT_ANIMATION_ID);
 		lavaFishingSpotAnimation = client.loadAnimation(LAVA_SPOT_ANIMATION_ID);
-		FISHING_SPOT_IDS.forEach(id -> NPC_IDS.add(gameVals.lookupNameById(GameValType.NPC,id)));
-		LAVA_FISHING_SPOT_IDS.forEach(id -> NPC_IDS.add(gameVals.lookupNameById(GameValType.NPC,id)));
+		FISHING_SPOT_IDS.forEach(id -> NPC_IDS.add(gameVals.getNpcConfigName(id)));
+		LAVA_FISHING_SPOT_IDS.forEach(id -> NPC_IDS.add(gameVals.getNpcConfigName(id)));
 	}
 
 	public void shutDown() {

@@ -43,14 +43,14 @@ task exportConstantsToJson {
 	doLast {
 		def startTime = System.nanoTime()
 
-		def outputDir = file('src/main/resources/rs117/hd/gamevals')
+		def outputDir = file('src/main/resources/rs117/hd/')
 		outputDir.mkdirs()
 
 		def exportMap = [
-			'npcs.json'   : ['net.runelite.api.gameval.NpcID'],
-			'objects.json': ['net.runelite.api.gameval.ObjectID', 'net.runelite.api.gameval.ObjectID1'],
-			'anims.json'  : ['net.runelite.api.gameval.AnimationID'],
-			'spotanim.json' : ['net.runelite.api.gameval.SpotanimID']
+			'npcs'     : ['net.runelite.api.gameval.NpcID'],
+			'objects'  : ['net.runelite.api.gameval.ObjectID', 'net.runelite.api.gameval.ObjectID1'],
+			'anims'    : ['net.runelite.api.gameval.AnimationID'],
+			'spotanim' : ['net.runelite.api.gameval.SpotanimID']
 		]
 
 		URLClassLoader loader = new URLClassLoader(
@@ -58,7 +58,9 @@ task exportConstantsToJson {
 			this.class.classLoader
 		)
 
-		exportMap.each { filename, classList ->
+		def fullExport = [:]
+
+		exportMap.each { category, classList ->
 			def constants = [:]
 
 			classList.each { className ->
@@ -75,10 +77,11 @@ task exportConstantsToJson {
 				}
 			}
 
-			def outputFile = new File(outputDir, filename)
-			outputFile.text = JsonOutput.prettyPrint(JsonOutput.toJson(constants))
+			fullExport[category] = constants
 		}
 
+		def outputFile = new File(outputDir, "gamevals.json")
+		outputFile.text = "// AUTO-GENERATED FILE. DO NOT MODIFY.\n\n" + JsonOutput.prettyPrint(JsonOutput.toJson(fullExport))
 		def elapsedMs = (System.nanoTime() - startTime) / 1_000_000
 		println "Export GameVal completed in ${elapsedMs} ms"
 	}
