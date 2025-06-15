@@ -5503,11 +5503,11 @@
     "replacements": {
       "KHARID_GRASS": [
         "h > 10",
-        "h > 9 && s > 3",
-        "h == 9 && s > 4"
+        "h > 9 && s > 2"
       ],
       "KHARID_DIRT": [
         "h < 8",
+        "h == 8 && s == 4",
         "h == 9 && s == 4"
       ]
     }
@@ -5666,8 +5666,7 @@
       ],
       "KHARID_GRASS": [
         "h > 11",
-        "h > 9 && s > 3",
-        "h == 9 && s > 4"
+        "h > 8 && s > 3"
       ],
       "KHARID_DIRT": [
         "h < 8"
