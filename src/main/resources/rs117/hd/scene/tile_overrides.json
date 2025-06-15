@@ -5502,9 +5502,9 @@
     ],
     "replacements": {
       "KHARID_GRASS": [
-        "h > 10",
-        "h > 9 && s > 3",
-        "h == 9 && s > 4"
+        "h >= 19",
+        "h >= 10 && s >= 3",
+        "h == 9 && s >= 5"
       ],
       "KHARID_DIRT": [
         "h < 8",
