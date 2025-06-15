@@ -2388,7 +2388,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				int r = buffer.get() & 0xff;
 				int g = buffer.get() & 0xff;
 				int b = buffer.get() & 0xff;
-				buffer.get(); // alph a
+				buffer.get(); // alpha
 
 				pixels[(height - y - 1) * width + x] = (r << 16) | (g << 8) | b;
 			}

@@ -31,13 +31,13 @@ public class GsonUtils {
 				try {
 					ids.add(in.nextString());
 				} catch (NumberFormatException ex) {
-					String message = "Failed to parse int at " + location(in);
+					String message = "Failed to parse string at " + location(in);
 					if (THROW_WHEN_PARSING_FAILS)
 						throw new RuntimeException(message, ex);
 					log.error(message, ex);
 				}
 			} else {
-				throw new RuntimeException("Unable to parse ID: " + in.peek() + " at " + location(in));
+				throw new RuntimeException("Unable to parse string: " + in.peek() + " at " + location(in));
 			}
 		}
 		in.endArray();
