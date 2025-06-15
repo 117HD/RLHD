@@ -5486,6 +5486,14 @@
     "name": "KHARID_GRASSY_SAND",
     "groundMaterial": "SAND",
     "maxLightness": 60,
+    "shiftHue": -1,
+    "minHue": 6,
+    "maxSaturation": 3
+  },
+  {
+    "name": "KHARID_DIRTY_SAND",
+    "groundMaterial": "SAND",
+    "maxLightness": 60,
     "shiftHue": -2,
     "minHue": 6,
     "maxSaturation": 3
@@ -5768,14 +5776,18 @@
     "replacements": {
       "KHARID_GRASSY_SAND":[
         "s == 2 && 9 <= h && h <= 10",
-        "s == 4 && 8 <= h && h <= 11"
+        "s == 4 && 9 <= h && h <= 11"
+      ],
+      "KHARID_DIRTY_SAND":[
+        "s == 4 && 8 == h"
       ],
       "KHARID_GRASS": [
         "h >= 12",
         "h > 8 && s > 3"
       ],
       "KHARID_DIRT": [
-        "h < 8"
+        "h < 8",
+        "h == 8 && s == 5"
       ]
     }
   },
