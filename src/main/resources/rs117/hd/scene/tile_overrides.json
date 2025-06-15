@@ -5468,12 +5468,51 @@
     "shiftHue": -1
   },
   {
+    "name": "KHARID_GRASS_HUE_SHIFT",
+    "groundMaterial": "OVERWORLD_GRASS_1",
+    "maxLightness": 50,
+    "shiftHue": -2
+  },
+  {
     "name": "KHARID_GRASSY_SAND",
     "groundMaterial": "SAND",
     "maxLightness": 60,
     "shiftHue": -3,
     "minHue": 6,
     "maxSaturation": 3
+  },
+  {
+    "name": "KHARID_DESERT_COAST_GOATS_FIX_2",
+    "area": "KHARIDIAN_DESERT_COAST_GOATS_CUTOUT_FIX",
+    "groundMaterial": "OVERWORLD_GRASS_1",
+    "shiftHue": -1,
+    "underlayIds": [
+      52
+    ]
+  },
+  {
+    "name": "KHARID_DESERT_COAST_GOATS_FIX",
+    "area": "KHARIDIAN_DESERT_COAST_GOATS",
+    "groundMaterial": "SAND",
+    "maxLightness": 60,
+    "shiftHue": -2,
+    "maxSaturation": 4,
+    "underlayIds": [
+      52,
+      61,
+      62,
+      64
+    ],
+    "replacements": {
+      "KHARID_GRASS_HUE_SHIFT": [
+        "h >= 9 && s == 3"
+      ],
+      "KHARID_DIRT": [
+        "h < 8",
+        "h == 8 && s == 4",
+        "h >= 9 && s == 4"
+      ]
+    }
   },
   {
     "name": "KHARID_DESERT_COAST_FIX",
