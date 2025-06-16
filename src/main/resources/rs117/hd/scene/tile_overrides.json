@@ -4374,6 +4374,24 @@
     "blended": false
   },
   {
+    "name": "CERBERUS_GROUND_FIX",
+    "area": "CERBERUS_GROUND_FIX",
+    "overlayIds": [
+      0,
+      11,
+      37
+    ],
+    "underlayIds": [ 0, 72 ],
+    "groundMaterial": "ROCKY_CAVE_FLOOR",
+    "minLightness": 4
+  },
+  {
+    "name": "CERBERUS_LAVA_CORNER_FIX",
+    "area": "CERBERUS_LAVA_CORNER_FIX",
+    "underlayIds": [ 72 ],
+    "setLightness": 0
+  },
+  {
     "name": "SHIP_SAILING_WATER_OVERLAY",
     "area": "SHIP_SAILING",
     "overlayIds": [

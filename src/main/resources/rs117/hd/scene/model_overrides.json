@@ -32164,5 +32164,247 @@
     "description": "TOB Bloat - make floor objects brighter to improve falling shadow visibility",
     "objectIds": [ "TOB_BLOAT_GRATE_MIDDLE", "TOB_BLOAT_GRATE_NORTH", "TOB_BLOAT_GRATE_EAST", "TOB_BLOAT_GRATE_SOUTH", "TOB_BLOAT_GRATE_WEST" ],
     "baseMaterial": "GRAY_150"
+  },
+  {
+    "description": "Cerberus Lair - Floor",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "objectIds": [
+      "LAVA_LAIR_FLOOR_001",
+      "LAVA_LAIR_FLOOR_01",
+      "LAVA_LAIR_FLOOR_02",
+      "LAVA_LAIR_FLOOR_03",
+      "LAVA_LAIR_FLOOR_04",
+      "LAVA_LAIR_FLOOR_05",
+      "LAVA_LAIR_FLOOR_06",
+      "LAVA_LAIR_FLOOR_07_END",
+      "LAVA_LAIR_FLOOR_08_END",
+      "FLOOR_HELL_STONE_DECOR_01",
+      "FLOOR_HELL_STONE_DECOR_02",
+      "FLOOR_HELL_STONE_DECOR_03",
+      "FLOOR_HELL_STONE_DECOR_04",
+      "LAIR_YELLOW_LAVA_PIT",
+      "LAIR_YELLOW_LAVA_PIT_CORNER",
+      "LAIR_YELLOW_LAVA_PIT_001",
+      "LAIR_YELLOW_LAVA_PIT_01",
+      "LAIR_YELLOW_LAVA_PIT_02",
+      "LAIR_YELLOW_LAVA_PIT_03",
+      "LAIR_YELLOW_LAVA_PIT_04",
+      "LAIR_YELLOW_LAVA_PIT_05",
+      "LAIR_YELLOW_LAVA_PIT_06",
+      "LAIR_YELLOW_LAVA_PIT_07",
+      "LAIR_YELLOW_LAVA_PIT_08",
+      "LAIR_YELLOW_LAVA_PIT_09",
+      "LAVA_LAIR_FLOOR_05_M",
+      "LAVA_LAIR_FLOOR_06_M",
+      "LAIR_YELLOW_LAVA_PIT_M_001",
+      "LAIR_YELLOW_LAVA_PIT_M_01",
+      "LAIR_YELLOW_LAVA_PIT_M_02",
+      "LAIR_YELLOW_LAVA_PIT_M_03",
+      "LAIR_YELLOW_LAVA_PIT_M_04",
+      "LAIR_YELLOW_LAVA_PIT_M_05",
+      "LAIR_YELLOW_LAVA_PIT_M_06",
+      "LAIR_YELLOW_LAVA_PIT_M_07",
+      "LAIR_YELLOW_LAVA_PIT_M_08",
+      "LAIR_YELLOW_LAVA_PIT_M_09"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "ROCK_3",
+        "uvType": "BOX",
+        "uvScale": 1.2,
+        "uvOrientation": 120
+      }
+    ]
+  },
+  {
+  "description": "Cerberus Lair - Wall with Skeletons",
+  "baseMaterial": "STONE_NORMALED",
+  "uvType": "BOX",
+  "objectIds": [
+    "BONE_LAIR_WALL_01",
+    "BONE_LAIR_WALL_02",
+    "BONE_LAIR_WALL_03",
+    "BONE_LAIR_WALL_04",
+    "BONE_LAIR_WALL_05",
+    "BONE_LAIR_WALL_06",
+    "BONE_LAIR_WALL_CORNER_03",
+    "BONE_LAIR_CORNER_PEICE_04"
+  ],
+  "colorOverrides": [
+    {
+      "colors": "h == 10",
+      "baseMaterial": "GRUNGE_2",
+      "uvType": "BOX",
+      "uvScale": 0.2
+    }
+  ]
+  },
+  {
+    "description": "Cerberus Lair - Wall with Masks",
+    "baseMaterial": "DIRT_1",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "WALL_OF_SOULS_END_01",
+      "WALL_OF_SOULS_07",
+      "WALL_OF_SOULS_01",
+      "WALL_OF_SOULS_02",
+      "WALL_OF_SOULS_03",
+      "WALL_OF_SOULS_05",
+      "WALL_OF_SOULS_06",
+      "WALL_OF_SOULS_CURVED_01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.2
+      }
+    ]
+  },
+  {
+    "description": "Cerberus Lair - Bone Spikes",
+    "baseMaterial": "METALLIC_1_GLOSS",
+    "objectIds": [
+      "HELLHOUND_LAIR_HORNS_01",
+      "HELLHOUND_LAIR_HORNS_NOBONES_01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 1",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 1.2,
+        "uvOrientation": 120
+      }
+    ]
+  },
+  {
+    "description": "Cerberus Lair - Hide Bubbles",
+    "areas": [ "CERBERUS" ],
+    "hide": true,
+    "objectIds": [
+      "AHOY_GLOOPBUBBLES_LARGER"
+    ]
+  },
+  {
+    "description": "Cerberus Lair - Soul Boat",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      "SOUL_BOAT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h > 4 && h < 7",
+        "baseMaterial": "WOOD_GRAIN_2",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Cerberus Lair - Bone Pillar",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "BONE_PILLAR_01",
+      "BONE_PILLAR_GRAD_01"
+    ]
+  },
+  {
+    "description": "Cerberus Lair - Soul Devourer",
+    "baseMaterial": "GRAY_90",
+    "objectIds": [
+      "SOUL_SKULL_EATER"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 10 && s == 2",
+        "baseMaterial": "GRUNGE_2",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "colors": [ "h == 2", "h == 3", "h == 10 && s == 1" ],
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
+  },
+  {
+    "description": "Cerberus Lair - Wall Filler - Darken",
+    "baseMaterial": "GRAY_50",
+    "objectIds": [
+      "BONE_LAIR_BLACK_BLANK_SPACE"
+    ]
+  },
+  {
+    "description": "Cerberus Lair - Entrance Walls",
+    "areas": [ "CERBERUS" ],
+    "baseMaterial": "ROCK_3_DARK",
+    "uvType": "BOX",
+    "objectIds": [
+      "CAVEWALL_FACE1_BLACK",
+      "HELLHOUND_CAVE_ENTRANCE_01",
+      "HELLHOUND_CAVE_ENTRANCE_02",
+      "HELLHOUND_CAVE_ENTRANCE_03"
+    ]
+  },
+  {
+    "description": "Cerberus Lair - Entrance Walls - Top",
+    "areas": [ "CERBERUS" ],
+    "baseMaterial": "STONE_NORMALED_DARK",
+    "uvType": "BOX",
+    "objectIds": [
+      "BARROWS_MOUNTAIN_CAVEWALL_TOP"
+    ]
+  },
+  {
+    "description": "Cerberus Lair - Tiles",
+    "areas": [ "CERBERUS" ],
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "objectIds": [
+      "BROKEN_GREY_TILE_02",
+      "BROKEN_GREY_TILE_03",
+      "BROKEN_GREY_TILE_04",
+      "BROKEN_GREY_TILE_06",
+      "BROKEN_GREY_TILE_05",
+      "BROKEN_GREY_TILE_07"
+    ]
+  },
+  {
+    "description": "Cerberus Lair - Portcullis & Winch",
+    "areas": [ "CERBERUS" ],
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "objectIds": [
+      "HELLHOUND_IRON_GATE_LOWERED",
+      "HELLHOUND_WINCH",
+      "HELLHOUND_IRON_GATE_ACTIVE",
+      "HELLHOUND_IRON_GATE_UPPER"
+    ]
+  },
+  {
+    "description": "Cerberus Lair - Torch",
+    "areas": [ "CERBERUS" ],
+    "baseMaterial": "NONE",
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "objectIds": [
+      "HELLHOUND_LAIR_TORCH"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 0", "h == 5", "h == 10" ],
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
   }
 ]
