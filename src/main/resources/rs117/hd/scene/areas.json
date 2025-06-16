@@ -4130,32 +4130,38 @@
     ]
   },
   {
+    "name": "FORGOTTEN_TOWER_BASEMENT",
+    "aabbs": [
+      [ 1372, 10215, 1391, 10232, 0 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
     "name": "KARUULM_SLAYER_DUNGEON_PLANE_0",
     "regionBoxes": [
       [ 5022, 5279, 0 ],
-      [ 5279, 5536, 0 ]
+      [ 5280, 5536, 0 ]
+    ],
+    "aabbs": [
+      [ 1344, 10176, 1371, 10239, 0 ],
+      [ 1372, 10233, 1407, 10239, 0 ]
     ],
     "hideOtherAreas": true
   },
   {
     "name": "KARUULM_SLAYER_DUNGEON_PLANE_1",
     "regionBoxes": [
-      [ 5022, 5535, 1 ],
-      [ 5280, 5536, 1 ]
-    ],
-    "regions": [
-      5279
+      [ 5022, 5536, 1 ],
+      [ 5279, 5279, 0 ]
     ],
     "hideOtherAreas": true
   },
   {
     "name": "KARUULM_SLAYER_DUNGEON_PLANE_2",
     "regionBoxes": [
-      [ 5022, 5535, 2 ]
+      [ 5022, 5536, 2 ]
     ],
-    "regions": [
-      5279
-    ],
+    "regions": [ 5279 ],
     "hideOtherAreas": true
   },
   {

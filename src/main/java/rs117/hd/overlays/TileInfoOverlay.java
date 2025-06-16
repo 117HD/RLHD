@@ -1450,7 +1450,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			e.consume();
 
 			if (SwingUtilities.isLeftMouseButton(e)) {
-				if (!Arrays.equals(selectedAreaAabb, hoveredAreaAabb)) {
+				if (!e.isShiftDown() && !Arrays.equals(selectedAreaAabb, hoveredAreaAabb)) {
 					if (TileInfoOverlay.this.hoveredAreaAabb[0] != -1)
 						copyToClipboard(visibleAreas[TileInfoOverlay.this.hoveredAreaAabb[0]]
 							.aabbs[TileInfoOverlay.this.hoveredAreaAabb[1]]
