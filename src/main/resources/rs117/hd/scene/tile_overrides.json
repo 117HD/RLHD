@@ -5623,23 +5623,23 @@
     ],
     "groundMaterial": "EARTHEN_CAVE_FLOOR"
   },
-  {
-    "name": "KARAMJA_VOLCANO_DUNGEON_LAVA",
-    "area": "KARAMJA_VOLCANO_DUNGEON",
-    "overlayIds": [
-      152
-    ],
-    "underlayIds": [
-      0
-    ],
-    "groundMaterial": "HD_LAVA",
-    "forced": true,
-    "blended": false,
-    "heightOffset": -106,
-    "replacements": {
-      "DEFAULT_LAVA": "!textures"
-    }
-  },
+  //  {
+  //    "name": "KARAMJA_VOLCANO_DUNGEON_LAVA",
+  //    "area": "KARAMJA_VOLCANO_DUNGEON",
+  //    "overlayIds": [
+  //      152
+  //    ],
+  //    "underlayIds": [
+  //      0
+  //    ],
+  //    "groundMaterial": "HD_LAVA",
+  //    "forced": true,
+  //    "blended": false,
+  //    "heightOffset": -106,
+  //    "replacements": {
+  //      "DEFAULT_LAVA": "!textures"
+  //    }
+  //  },
   {
     "name": "COMPLEX_TILES_KARAMJA",
     "area": "KARAMJA",
@@ -6069,15 +6069,15 @@
     "groundMaterial": "EARTHEN_CAVE_FLOOR"
   },
   {
-    "name": "FOSSIL_ISLAND_VOLCANO_LAVA",
-    "area": "FOSSIL_ISLAND_VOLCANO",
-    "overlayIds": [
-      152
-    ],
+    "name": "VOLCANIC_MINE_LAVA",
+    "area": "VOLCANIC_MINE",
+    //    "overlayIds": [
+    //      0
+    //    ],
     "groundMaterial": "HD_LAVA",
     "forced": true,
-    "blended": false ,
-    "heightOffset": -51,
+    "blended": false,
+    "heightOffset": -38,
     "replacements": {
       "DEFAULT_LAVA": "!textures"
     }

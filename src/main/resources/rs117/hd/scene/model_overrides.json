@@ -32161,6 +32161,65 @@
     "baseMaterial": "GRAY_150"
   },
   {
+    "description": "Volcanic mine yellow lava",
+    "objectIds": [
+      30990,
+      30991,
+      30992,
+      30993,
+      30994,
+      30995,
+      30996,
+      //      30997,
+      //      30998,
+      //      30999,
+      31001,
+      31002,
+      31003,
+      31004,
+      31005,
+      31006,
+      31007,
+      31008,
+      31009,
+      31010,
+      31011,
+      31012,
+      31013,
+      31014,
+      31015,
+      31016,
+      31017,
+      31018,
+      31019,
+      31020,
+      31021,
+      31022,
+      31023,
+      31024,
+      31025,
+      31026,
+      31027,
+      31028,
+      31029,
+      31030,
+      31034,
+      31035,
+      31036,
+      31037
+    ],
+    "baseMaterial": "ROCK_1",
+    "uvType": "BOX",
+    "uvOrientation": 128
+    //    "colorOverrides": [
+    //      {
+    //        "description": "Hide brown part to allow the tile model underneath to show",
+    //        "colors": "h == 8 && s == 7",
+    //        "baseMaterial": "TRANSPARENT"
+    //      }
+    //    ]
+  },
+  {
     "description": "Karamja Volcano edges",
     "objectIds": [
       25065,
@@ -32178,14 +32237,14 @@
     ],
     "baseMaterial": "ROCK_1",
     "uvType": "BOX",
-    "uvOrientation": 128,
-    "colorOverrides": [
-      {
-        "description": "Hide brown part to allow the tile model underneath to show",
-        "colors": "h == 7",
-        "baseMaterial": "TRANSPARENT"
-      }
-    ]
+    "uvOrientation": 128
+    //    "colorOverrides": [
+    //      {
+    //        "description": "Hide brown part to allow the tile model underneath to show",
+    //        "colors": "h == 7",
+    //        "baseMaterial": "TRANSPARENT"
+    //      }
+    //    ]
   },
   {
     "description": "Karamja Volcano Walls with Lava Edges",
