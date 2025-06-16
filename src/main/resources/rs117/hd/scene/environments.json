@@ -22,7 +22,7 @@
     "fogDepth": 20
   },
   {
-    "area": "LEO'S GRAVEYARD",
+    "area": "RANDOM_EVENT_GRAVEDIGGER",
     "ambientColor": "#5a8cc0",
     "ambientStrength": 3,
     "directionalColor": "#5a8cc0",
