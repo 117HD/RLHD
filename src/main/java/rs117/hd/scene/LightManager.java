@@ -113,7 +113,7 @@ public class LightManager {
 	private final ListMultimap<Integer, LightDefinition> NPC_LIGHTS = ArrayListMultimap.create();
 	private final ListMultimap<Integer, LightDefinition> OBJECT_LIGHTS = ArrayListMultimap.create();
 	private final ListMultimap<Integer, LightDefinition> PROJECTILE_LIGHTS = ArrayListMultimap.create();
-	private final ListMultimap<Integer, LightDefinition> SPOT_ANIM_LIGHTS = ArrayListMultimap.create();
+	private final ListMultimap<Integer, LightDefinition> GRAPHICS_OBJECT_LIGHTS = ArrayListMultimap.create();
 
 	private boolean reloadLights;
 	private EntityHiderConfig entityHiderConfig;
@@ -137,7 +137,7 @@ public class LightManager {
 			NPC_LIGHTS.clear();
 			OBJECT_LIGHTS.clear();
 			PROJECTILE_LIGHTS.clear();
-			SPOT_ANIM_LIGHTS.clear();
+			GRAPHICS_OBJECT_LIGHTS.clear();
 
 			for (LightDefinition lightDef : lights) {
 				lightDef.normalize();
@@ -150,7 +150,7 @@ public class LightManager {
 				lightDef.npcIds.forEach(id -> NPC_LIGHTS.put(id, lightDef));
 				lightDef.objectIds.forEach(id -> OBJECT_LIGHTS.put(id, lightDef));
 				lightDef.projectileIds.forEach(id -> PROJECTILE_LIGHTS.put(id, lightDef));
-				lightDef.spotAnimIds.forEach(id -> SPOT_ANIM_LIGHTS.put(id, lightDef));
+				lightDef.graphicsObjectIds.forEach(id -> GRAPHICS_OBJECT_LIGHTS.put(id, lightDef));
 			}
 
 			log.debug("Loaded {} lights", lights.length);
@@ -187,7 +187,7 @@ public class LightManager {
 
 			client.getNpcs().forEach(npc -> {
 				addNpcLights(npc);
-				addSpotAnimLights(npc);
+				addSpotanimLights(npc);
 			});
 		}
 
@@ -204,8 +204,8 @@ public class LightManager {
 		int drawDistance = plugin.getDrawDistance() * LOCAL_TILE_SIZE;
 		Tile[][][] tiles = sceneContext.scene.getExtendedTiles();
 		int[][][] tileHeights = sceneContext.scene.getTileHeights();
-		var cachedNpcs = client.getCachedNPCs();
-		var cachedPlayers = client.getCachedPlayers();
+		var cachedNpcs = client.getTopLevelWorldView().npcs();
+		var cachedPlayers = client.getTopLevelWorldView().players();
 		int plane = client.getPlane();
 		boolean changedPlanes = false;
 
@@ -258,8 +258,7 @@ public class LightManager {
 						var animation = light.projectile.getAnimation();
 						parentExists = animation != null && light.def.animationIds.contains(animation.getId());
 					}
-					light.orientation = (int) Math.round(
-						Math.atan2(light.projectile.getVelocityZ(), light.projectile.getVelocityX()) / UNIT);
+					light.orientation = light.projectile.getOrientation();
 				}
 			} else if (light.graphicsObject != null) {
 				light.origin[0] = light.graphicsObject.getLocation().getX();
@@ -272,9 +271,9 @@ public class LightManager {
 					parentExists = animation != null && light.def.animationIds.contains(animation.getId());
 				}
 			} else if (light.actor != null && !light.markedForRemoval) {
-				if (light.actor instanceof NPC && light.actor != cachedNpcs[((NPC) light.actor).getIndex()] ||
-					light.actor instanceof Player && light.actor != cachedPlayers[((Player) light.actor).getId()] ||
-					light.spotAnimId != -1 && !light.actor.hasSpotAnim(light.spotAnimId)
+				if (light.actor instanceof NPC && light.actor != cachedNpcs.byIndex(((NPC) light.actor).getIndex()) ||
+					light.actor instanceof Player && light.actor != cachedPlayers.byIndex(((Player) light.actor).getId()) ||
+					light.spotanimId != -1 && !light.actor.hasSpotAnim(light.spotanimId)
 				) {
 					parentExists = false;
 					light.markedForRemoval = true;
@@ -297,7 +296,9 @@ public class LightManager {
 						tileExX < EXTENDED_SCENE_SIZE && tileExY < EXTENDED_SCENE_SIZE &&
 						(tile = tiles[plane][tileExX][tileExY]) != null
 					) {
-						if (!light.def.ignoreActorHiding) {
+						if (!light.def.ignoreActorHiding &&
+							!(light.actor instanceof NPC && ((NPC) light.actor).getComposition().getSize() > 1)
+						) {
 							// Check if the actor is hidden by another actor on the same tile
 							for (var gameObject : tile.getGameObjects()) {
 								if (gameObject == null || !(gameObject.getRenderable() instanceof Actor))
@@ -351,7 +352,7 @@ public class LightManager {
 
 			int orientation = 0;
 			if (light.alignment.relative)
-				orientation = HDUtils.mod(light.orientation + light.preOrientation + light.alignment.orientation, 2048);
+				orientation = HDUtils.mod(light.orientation + light.alignment.orientation, 2048);
 
 			if (light.alignment == Alignment.CUSTOM) {
 				// orientation 0 = south
@@ -670,7 +671,7 @@ public class LightManager {
 				light.markedForRemoval = true;
 	}
 
-	private void addSpotAnimLights(Actor actor) {
+	private void addSpotanimLights(Actor actor) {
 		var sceneContext = plugin.getSceneContext();
 		if (sceneContext == null)
 			return;
@@ -679,7 +680,7 @@ public class LightManager {
 
 		for (var spotAnim : actor.getSpotAnims()) {
 			int spotAnimId = spotAnim.getId();
-			for (var def : SPOT_ANIM_LIGHTS.get(spotAnim.getId())) {
+			for (var def : GRAPHICS_OBJECT_LIGHTS.get(spotAnim.getId())) {
 				if (def.areas.length > 0) {
 					boolean isInArea = Arrays.stream(def.areas).anyMatch(aabb -> aabb.contains(worldPos));
 					if (!isInArea)
@@ -693,7 +694,7 @@ public class LightManager {
 
 				boolean isDuplicate = sceneContext.lights.stream()
 					.anyMatch(light ->
-						light.spotAnimId == spotAnimId &&
+						light.spotanimId == spotAnimId &&
 						light.actor == actor &&
 						light.def == def);
 				if (isDuplicate)
@@ -701,7 +702,7 @@ public class LightManager {
 
 				Light light = new Light(def);
 				light.plane = -1;
-				light.spotAnimId = spotAnimId;
+				light.spotanimId = spotAnimId;
 				light.actor = actor;
 				sceneContext.lights.add(light);
 			}
@@ -930,7 +931,7 @@ public class LightManager {
 				light.hash = newHash;
 				light.tileObject = tileObject;
 				light.plane = plane;
-				light.preOrientation = orientations[i];
+				light.orientation = orientations[i];
 				light.origin[0] = lightX;
 				light.origin[1] = (int) tileHeight - light.def.height - 1;
 				light.origin[2] = lightZ;
@@ -1006,14 +1007,14 @@ public class LightManager {
 	public void onNpcSpawned(NpcSpawned spawn) {
 		NPC npc = spawn.getNpc();
 		addNpcLights(npc);
-		addSpotAnimLights(npc);
+		addSpotanimLights(npc);
 	}
 
 	@Subscribe
 	public void onNpcChanged(NpcChanged change) {
 		// Respawn non-spotanim lights
 		NPC npc = change.getNpc();
-		removeLightIf(light -> light.actor == npc && light.spotAnimId == -1);
+		removeLightIf(light -> light.actor == npc && light.spotanimId == -1);
 		addNpcLights(change.getNpc());
 	}
 
@@ -1025,17 +1026,17 @@ public class LightManager {
 
 	@Subscribe
 	public void onPlayerSpawned(PlayerSpawned spawn) {
-		addSpotAnimLights(spawn.getPlayer());
+		addSpotanimLights(spawn.getPlayer());
 	}
 
 	@Subscribe
 	public void onPlayerChanged(PlayerChanged change) {
-		// Don't add spotAnim lights on player change events, since it breaks death & respawn lights
+		// Don't add spotanim lights on player change events, since it breaks death & respawn lights
 	}
 
 	@Subscribe
 	public void onGraphicChanged(GraphicChanged change) {
-		addSpotAnimLights(change.getActor());
+		addSpotanimLights(change.getActor());
 	}
 
 	@Subscribe
@@ -1054,7 +1055,7 @@ public class LightManager {
 		var lp = graphicsObject.getLocation();
 		int[] worldPos = sceneContext.localToWorld(lp, graphicsObject.getLevel());
 
-		for (LightDefinition def : SPOT_ANIM_LIGHTS.get(graphicsObject.getId())) {
+		for (LightDefinition def : GRAPHICS_OBJECT_LIGHTS.get(graphicsObject.getId())) {
 			if (def.areas.length > 0) {
 				boolean isInArea = Arrays.stream(def.areas).anyMatch(aabb -> aabb.contains(worldPos));
 				if (!isInArea)

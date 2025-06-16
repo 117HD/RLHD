@@ -100,6 +100,7 @@ import rs117.hd.overlays.Timer;
 import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.FishingSpotReplacer;
+import rs117.hd.scene.GamevalManager;
 import rs117.hd.scene.GroundMaterialManager;
 import rs117.hd.scene.LightManager;
 import rs117.hd.scene.ModelOverrideManager;
@@ -123,8 +124,8 @@ import rs117.hd.utils.ResourcePath;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 
-import static net.runelite.api.Constants.SCENE_SIZE;
 import static net.runelite.api.Constants.*;
+import static net.runelite.api.Constants.SCENE_SIZE;
 import static net.runelite.api.Perspective.*;
 import static org.lwjgl.opencl.CL10.*;
 import static org.lwjgl.opengl.GL43C.*;
@@ -217,6 +218,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Inject
 	private TextureManager textureManager;
+
+	@Inject
+	private GamevalManager gamevalManager;
 
 	@Inject
 	private AreaManager areaManager;
@@ -372,6 +376,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	private int viewportOffsetX;
 	private int viewportOffsetY;
+	private int viewportWidth;
+	private int viewportHeight;
 
 	// Uniforms
 	private int uniColorBlindnessIntensity;
@@ -636,6 +642,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				lastStretchedCanvasWidth = lastStretchedCanvasHeight = 0;
 				lastAntiAliasingMode = null;
 
+				gamevalManager.startUp();
 				areaManager.startUp();
 				groundMaterialManager.startUp();
 				tileOverrideManager.startUp();
@@ -693,6 +700,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			environmentManager.shutDown();
 			fishingSpotReplacer.shutDown();
 			areaManager.shutDown();
+			gamevalManager.shutDown();
 
 			if (lwjglInitialized) {
 				lwjglInitialized = false;
@@ -1535,6 +1543,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		viewportOffsetX = client.getViewportXOffset();
 		viewportOffsetY = client.getViewportYOffset();
+		viewportWidth = client.getViewportWidth();
+		viewportHeight = client.getViewportHeight();
 
 		if (!enableFreezeFrame) {
 			if (!redrawPreviousFrame) {
@@ -1953,9 +1963,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			textureProvider != null &&
 			client.getGameState().getState() >= GameState.LOADING.getState()
 		) {
-			final int viewportHeight = client.getViewportHeight();
-			final int viewportWidth = client.getViewportWidth();
-
 			int renderWidthOff = viewportOffsetX;
 			int renderHeightOff = viewportOffsetY;
 			int renderCanvasHeight = canvasHeight;
@@ -2992,15 +2999,19 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	 * @param hash        A unique hash of the renderable consisting of some useful information. See {@link rs117.hd.utils.ModelHash} for more details.
 	 */
 	@Override
-	public void draw(Projection projection, Scene scene, Renderable renderable, int orientation, int x, int y, int z, long hash) {
+	public void draw(Projection projection, @Nullable Scene scene, Renderable renderable, int orientation, int x, int y, int z, long hash) {
 		if (sceneContext == null)
 			return;
 
 		// Hide everything outside the current area if area hiding is enabled
-		if (sceneContext.currentArea != null && renderable instanceof Actor) {
+		if (sceneContext.currentArea != null && (
+			renderable instanceof Actor ||
+			renderable instanceof Projectile ||
+			renderable instanceof GraphicsObject
+		)) {
 			boolean inArea = sceneContext.currentArea.containsPoint(
-				scene.getBaseX() + (x >> LOCAL_COORD_BITS),
-				scene.getBaseY() + (z >> LOCAL_COORD_BITS),
+				sceneContext.scene.getBaseX() + (x >> LOCAL_COORD_BITS),
+				sceneContext.scene.getBaseY() + (z >> LOCAL_COORD_BITS),
 				client.getPlane()
 			);
 			if (!inArea)
