@@ -12652,7 +12652,6 @@
       36240,
       37547,
       37548,
-      37549,
       37550,
       37551,
       37562,
@@ -17171,7 +17170,7 @@
     "flatNormals": true,
     "colorOverrides": [
       {
-        "colors": "h == 34",
+        "colors": "a < 255",
         "baseMaterial": "NONE"
       }
     ]
