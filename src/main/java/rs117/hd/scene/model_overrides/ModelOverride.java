@@ -15,8 +15,8 @@ import rs117.hd.config.SeasonalTheme;
 import rs117.hd.config.VanillaShadowMode;
 import rs117.hd.data.materials.Material;
 import rs117.hd.data.materials.UvType;
+import rs117.hd.scene.GamevalManager;
 import rs117.hd.scene.areas.AABB;
-import rs117.hd.utils.GsonUtils;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.Vector;
 
@@ -39,13 +39,13 @@ public class ModelOverride
 	public SeasonalTheme seasonalTheme;
 	@JsonAdapter(AABB.JsonAdapter.class)
 	public AABB[] areas = {};
-	@JsonAdapter(GsonUtils.IntegerSetAdapter.class)
+	@JsonAdapter(GamevalManager.NpcAdapter.class)
 	public Set<Integer> npcIds = EMPTY;
-	@JsonAdapter(GsonUtils.IntegerSetAdapter.class)
+	@JsonAdapter(GamevalManager.ObjectAdapter.class)
 	public Set<Integer> objectIds = EMPTY;
-	@JsonAdapter(GsonUtils.IntegerSetAdapter.class)
+	@JsonAdapter(GamevalManager.SpotanimAdapter.class)
 	public Set<Integer> projectileIds = EMPTY;
-	@JsonAdapter(GsonUtils.IntegerSetAdapter.class)
+	@JsonAdapter(GamevalManager.SpotanimAdapter.class)
 	public Set<Integer> graphicsObjectIds = EMPTY;
 
 	public Material baseMaterial = Material.NONE;
