@@ -123,8 +123,8 @@ import rs117.hd.utils.ResourcePath;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 
-import static net.runelite.api.Constants.SCENE_SIZE;
 import static net.runelite.api.Constants.*;
+import static net.runelite.api.Constants.SCENE_SIZE;
 import static net.runelite.api.Perspective.*;
 import static org.lwjgl.opencl.CL10.*;
 import static org.lwjgl.opengl.GL43C.*;
@@ -2861,6 +2861,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		int tileExX,
 		int tileExY
 	) {
+		try {
+			frameTimer.begin(Timer.CLICKBOX_CHECK);
+			frameTimer.begin(Timer.VISIBILITY_CHECK);
+			frameTimer.end(Timer.CLICKBOX_CHECK);
+
 		if (sceneContext == null)
 			return false;
 
@@ -2911,6 +2916,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			}
 		}
 		return false;
+		} finally {
+			frameTimer.end(Timer.VISIBILITY_CHECK);
+		}
 	}
 
 	/**

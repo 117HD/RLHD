@@ -48,7 +48,7 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 	public void onFrameCompletion(FrameTimings timings) {
 		long now = System.nanoTime();
 		while (!frames.isEmpty()) {
-			if (now - frames.peekFirst().frameTimestamp < 3e9) // remove entries older than 3 seconds
+			if (now - frames.peekFirst().frameTimestamp < 20e9) // remove entries older than 3 seconds
 				break;
 			frames.removeFirst();
 		}
@@ -91,6 +91,11 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 				.rightFont(FontManager.getRunescapeBoldFont())
 				.right(String.format("%.1f FPS", 1 / (Math.max(cpuTime, gpuTime) / 1e9)))
 				.build());
+
+			panelComponent.getChildren().add(LineComponent.builder()
+				.left("Error compensation:")
+				.right(String.format("%d", frameTimer.errorCompensation))
+				.build());
 		}
 
 		return super.render(g);
@@ -121,10 +126,10 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 
 		// Round timers to zero if they are less than a microsecond off
 		String result = "~0 ms";
-		if (nanos < -1e5 || nanos > 3e3) {
+//		if (Math.abs(nanos) > 1e5) {
 			result = sb.append(Math.round(nanos / 1e3) / 1e3).append(" ms").toString();
 			sb.setLength(0);
-		}
+//		}
 		var font = bold ? FontManager.getRunescapeBoldFont() : FontManager.getRunescapeFont();
 		panelComponent.getChildren().add(LineComponent.builder()
 			.left(name + ":")
