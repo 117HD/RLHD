@@ -325,6 +325,8 @@ public class ModelPusher {
 			if (plugin.enableDetailedTimers)
 				frameTimer.begin(Timer.MODEL_PUSHING_UV);
 
+			int[] faceColors = model.getFaceColors1();
+			byte[] faceTransparencies = model.getFaceTransparencies();
 			for (int face = 0; face < faceCount; face++) {
 				UvType uvType = UvType.GEOMETRY;
 				Material material = baseMaterial;
@@ -347,9 +349,9 @@ public class ModelPusher {
 				}
 
 				if (modelOverride.colorOverrides != null) {
-					int hsl = model.getFaceColors1()[face];
+					int ahsl = (faceTransparencies == null ? 0xFF : 0xFF - (faceTransparencies[face] & 0xFF)) << 16 | faceColors[face];
 					for (var override : modelOverride.colorOverrides) {
-						if (override.hslCondition.test(hsl)) {
+						if (override.ahslCondition.test(ahsl)) {
 							faceOverride = override;
 							material = faceOverride.baseMaterial;
 							break;

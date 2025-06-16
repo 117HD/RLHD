@@ -17176,7 +17176,7 @@
     "flatNormals": true,
     "colorOverrides": [
       {
-        "colors": "h == 34",
+        "colors": "a < 255",
         "baseMaterial": "NONE"
       }
     ]
