@@ -76,6 +76,49 @@ public class GamevalManager {
 		clearGamevals();
 	}
 
+	private String getName(String key, int id) {
+		return GAMEVALS
+			.get(key)
+			.entrySet()
+			.stream()
+			.filter(e -> e.getValue() == id)
+			.map(Map.Entry::getKey)
+			.findFirst()
+			.orElse(null);
+	}
+
+	public int getNpcId(String name) {
+		return GAMEVALS.get(NPC_KEY).get(name);
+	}
+
+	public int getObjectId(String name) {
+		return GAMEVALS.get(OBJECT_KEY).get(name);
+	}
+
+	public int getAnimId(String name) {
+		return GAMEVALS.get(ANIM_KEY).get(name);
+	}
+
+	public int getSpotanimId(String name) {
+		return GAMEVALS.get(SPOTANIM_KEY).get(name);
+	}
+
+	public String getNpcName(int id) {
+		return getName(NPC_KEY, id);
+	}
+
+	public String getObjectName(int id) {
+		return getName(OBJECT_KEY, id);
+	}
+
+	public String getAnimName(int id) {
+		return getName(ANIM_KEY, id);
+	}
+
+	public String getSpotanimName(int id) {
+		return getName(SPOTANIM_KEY, id);
+	}
+
 	@Slf4j
 	@RequiredArgsConstructor
 	private abstract static class GamevalAdapter extends TypeAdapter<HashSet<Integer>> {

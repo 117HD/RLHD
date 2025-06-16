@@ -35,6 +35,7 @@ sourceCompatibility = '11'
 tasks.withType(JavaCompile).configureEach {
 	options.encoding = 'UTF-8'
 }
+
 //task exportConstantsToJson {
 //	doLast {
 //		def startTime = System.nanoTime()
