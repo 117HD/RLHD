@@ -57,8 +57,8 @@ import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.Vector;
 
-import static net.runelite.api.Constants.SCENE_SIZE;
 import static net.runelite.api.Constants.*;
+import static net.runelite.api.Constants.SCENE_SIZE;
 import static net.runelite.api.Perspective.*;
 import static rs117.hd.HdPlugin.ORTHOGRAPHIC_ZOOM;
 import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
@@ -817,20 +817,24 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 							"<col=#ff0000>maybe dynamic</col>"
 				);
 			case MODE_MODEL_INFO:
-				var colors =
-					Arrays.stream(model.getFaceColors1())
-						.distinct()
-						.sorted()
-						.mapToObj(hsl -> {
-							var rawhsl = ColorUtils.unpackRawHsl(hsl);
-							return String.format(
-								"<col=%s>%5d [%2d %1d %3d] </col>",
-								ColorUtils.srgbToHex(ColorUtils.packedHslToSrgb(hsl)),
-								hsl, rawhsl[0], rawhsl[1], rawhsl[2]
-							);
-						})
-						.toArray(String[]::new);
-
+				int[] faceColors = model.getFaceColors1();
+				byte[] faceTransparencies = model.getFaceTransparencies();
+				int[] faceAhsl = new int[model.getFaceCount()];
+				for (int i = 0; i < faceAhsl.length; i++)
+					faceAhsl[i] = (faceTransparencies == null ? 0xFF : 0xFF - (faceTransparencies[i] & 0xFF)) << 16 | faceColors[i];
+				var colors = Arrays.stream(faceAhsl)
+					.distinct()
+					.sorted()
+					.mapToObj(ahsl -> {
+						var hsl = ColorUtils.unpackRawHsl(ahsl);
+						var alpha = ahsl >> 16;
+						return String.format(
+							"<col=%s>%5d [%3d %2d %1d %3d]</col>",
+							String.format("#%08x", ColorUtils.packSrgb(ColorUtils.packedHslToSrgb(ahsl)) << 8 | alpha),
+							ahsl & 0xFFFF, alpha, hsl[0], hsl[1], hsl[2]
+						);
+					})
+					.toArray(String[]::new);
 
 				int columns = clamp((int) Math.round(Math.sqrt(colors.length / 5f)), 3, 8);
 				int rows = (int) Math.ceil(colors.length / (float) columns);
@@ -1038,20 +1042,20 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			end = m.end();
 
 			var hex = m.group(1);
-			int i = Integer.parseInt(hex, 16);
+			int i = (int) Long.parseLong(hex, 16);
 			int r, g, b, a = 0xFF;
 			if (hex.length() == 3) {
-				r = (i >> 8) * 2;
-				g = (i >> 4 & 0xF) * 2;
+				r = (i >>> 8) * 2;
+				g = (i >>> 4 & 0xF) * 2;
 				b = (i & 0xF) * 2;
 			} else if (hex.length() == 6) {
-				r = i >> 16;
-				g = i >> 8 & 0xFF;
+				r = i >>> 16;
+				g = i >>> 8 & 0xFF;
 				b = i & 0xFF;
 			} else if (hex.length() == 8) {
-				r = i >> 24;
-				g = i >> 16 & 0xFF;
-				b = i >> 8 & 0xFF;
+				r = i >>> 24;
+				g = i >>> 16 & 0xFF;
+				b = i >>> 8 & 0xFF;
 				a = i & 0xFF;
 			} else {
 				g2d.drawString(m.group(0), x, y);

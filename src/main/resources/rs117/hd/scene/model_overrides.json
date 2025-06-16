@@ -12658,7 +12658,6 @@
       "PRIF_AGILITY_SHORTCUT_PORTAL",
       "LEAGUE_5_POH_SPIRIT_RING_LAST_BJQ",
       "BH_SUPPLY_CRATE_STACK",
-      "HUNTING_TRAIL4_7L",
       "HUNTING_TRAIL4_8L",
       "DT2_LASSAR_REMNANT_POSTQUEST",
       "BGSOUND_RT_FIRE_LARGE",
@@ -17177,7 +17176,7 @@
     "flatNormals": true,
     "colorOverrides": [
       {
-        "colors": "h == 34",
+        "colors": "a < 255",
         "baseMaterial": "NONE"
       }
     ]

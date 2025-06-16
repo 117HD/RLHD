@@ -82,11 +82,11 @@ public class ModelOverride
 
 	public transient boolean isDummy;
 	public transient Map<AABB, ModelOverride> areaOverrides;
-	public transient HslPredicate hslCondition;
+	public transient AhslPredicate ahslCondition;
 
 	@FunctionalInterface
-	public interface HslPredicate {
-		boolean test(int hsl);
+	public interface AhslPredicate {
+		boolean test(int ahsl);
 	}
 
 	public void normalize(VanillaShadowMode vanillaShadowMode) {
@@ -138,7 +138,7 @@ public class ModelOverride
 		if (colorOverrides != null) {
 			for (var override : colorOverrides) {
 				override.normalize(vanillaShadowMode);
-				override.hslCondition = parseHslConditions(override.colors);
+				override.ahslCondition = parseAhslConditions(override.colors);
 			}
 		}
 
@@ -197,7 +197,7 @@ public class ModelOverride
 			colors,
 			isDummy,
 			areaOverrides,
-			hslCondition
+			ahslCondition
 		);
 	}
 
@@ -206,9 +206,9 @@ public class ModelOverride
 		this.isDummy = isDummy;
 	}
 
-	private HslPredicate parseHslConditions(JsonElement element) {
+	private AhslPredicate parseAhslConditions(JsonElement element) {
 		if (element == null)
-			return hsl -> false;
+			return ahsl -> false;
 
 		JsonArray arr;
 		if (element.isJsonArray()) {
@@ -218,7 +218,7 @@ public class ModelOverride
 			arr.add(element);
 		}
 
-		HslPredicate combinedPredicate = null;
+		AhslPredicate combinedPredicate = null;
 
 		for (var el : arr) {
 			if (el.isJsonNull())
@@ -228,15 +228,15 @@ public class ModelOverride
 				continue;
 			}
 
-			HslPredicate condition;
+			AhslPredicate condition;
 			var prim = el.getAsJsonPrimitive();
 			if (prim.isBoolean()) {
 				boolean bool = prim.getAsBoolean();
-				condition = hsl -> bool;
+				condition = ahsl -> bool;
 			} else if (prim.isNumber()) {
 				try {
 					int targetHsl = prim.getAsInt();
-					condition = hsl -> hsl == targetHsl;
+					condition = ahsl -> ahsl == (targetHsl & 0xFFFF);
 				} catch (Exception ex) {
 					log.warn("Expected integer, but got {} in override '{}'", el, description);
 					continue;
@@ -246,7 +246,7 @@ public class ModelOverride
 
 				if (Props.DEVELOPMENT) {
 					// Ensure all variables are defined
-					final Set<String> knownVariables = Set.of("h", "s", "l", "hsl");
+					final Set<String> knownVariables = Set.of("a", "h", "s", "l", "hsl", "ahsl");
 					for (var variable : expr.variables)
 						if (!knownVariables.contains(variable))
 							throw new IllegalStateException(
@@ -254,17 +254,21 @@ public class ModelOverride
 				}
 
 				var predicate = expr.toPredicate();
-				condition = hsl -> predicate.test(key -> {
+				condition = ahsl -> predicate.test(key -> {
 					switch (key) {
-						default:
-						case "hsl":
-							return hsl;
+						case "a":
+							return ahsl >>> 16 & 0xFF;
 						case "h":
-							return hsl >>> 10 & 0x3F;
+							return ahsl >>> 10 & 0x3F;
 						case "s":
-							return hsl >>> 7 & 0x7;
+							return ahsl >>> 7 & 0x7;
 						case "l":
-							return hsl & 0x7F;
+							return ahsl & 0x7F;
+						case "ahsl":
+							return ahsl;
+						case "hsl":
+						default:
+							return ahsl & 0xFFFF;
 					}
 				});
 			} else {
@@ -276,12 +280,12 @@ public class ModelOverride
 				combinedPredicate = condition;
 			} else {
 				var prev = combinedPredicate;
-				combinedPredicate = hsl -> prev.test(hsl) || condition.test(hsl);
+				combinedPredicate = ahsl -> prev.test(ahsl) || condition.test(ahsl);
 			}
 		}
 
 		if (combinedPredicate == null)
-			return hsl -> false;
+			return ahsl -> false;
 
 		return combinedPredicate;
 	}
