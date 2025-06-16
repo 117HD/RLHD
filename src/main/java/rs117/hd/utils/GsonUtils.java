@@ -1,20 +1,15 @@
 package rs117.hd.utils;
 
-import com.google.common.annotations.VisibleForTesting;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class GsonUtils {
-    @VisibleForTesting
-    public static boolean THROW_WHEN_PARSING_FAILS = false;
-
 	public static String location(JsonReader in) {
 		var str = in.toString();
 		int i = str.indexOf(" at ");
@@ -22,7 +17,7 @@ public class GsonUtils {
 			str = str.substring(i + 4);
 		return str;
 	}
-	
+
 	@Slf4j
 	public static class DegreesToRadians extends TypeAdapter<Object> {
 		@Override

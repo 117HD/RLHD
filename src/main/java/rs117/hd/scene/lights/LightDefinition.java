@@ -1,10 +1,9 @@
 package rs117.hd.scene.lights;
 
 import com.google.gson.annotations.JsonAdapter;
-import com.google.gson.annotations.SerializedName;
 import java.util.HashSet;
 import javax.annotation.Nullable;
-import rs117.hd.data.GameVals;
+import rs117.hd.scene.GamevalManager;
 import rs117.hd.scene.areas.AABB;
 import rs117.hd.utils.ColorUtils;
 
@@ -36,16 +35,15 @@ public class LightDefinition {
 	public AABB[] areas = {};
 	@JsonAdapter(AABB.JsonAdapter.class)
 	public AABB[] excludeAreas = {};
-	@JsonAdapter(GameVals.GameValNpc.class)
+	@JsonAdapter(GamevalManager.NpcAdapter.class)
 	public HashSet<Integer> npcIds = new HashSet<>();
-	@JsonAdapter(GameVals.GameValObject.class)
+	@JsonAdapter(GamevalManager.ObjectAdapter.class)
 	public HashSet<Integer> objectIds = new HashSet<>();
-	@JsonAdapter(GameVals.GameValProjectile.class)
+	@JsonAdapter(GamevalManager.SpotanimAdapter.class)
 	public HashSet<Integer> projectileIds = new HashSet<>();
-	@JsonAdapter(GameVals.GameValSpotAnim.class)
-	@SerializedName("graphicsObjectIds") // TODO: rename this
-	public HashSet<Integer> spotAnimIds = new HashSet<>();
-	@JsonAdapter(GameVals.GameValAnimation.class)
+	@JsonAdapter(GamevalManager.SpotanimAdapter.class)
+	public HashSet<Integer> graphicsObjectIds = new HashSet<>();
+	@JsonAdapter(GamevalManager.AnimationAdapter.class)
 	public HashSet<Integer> animationIds = new HashSet<>();
 
 	public void normalize() {

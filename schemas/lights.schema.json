@@ -155,35 +155,35 @@
       },
       "npcIds": {
         "type": "array",
-        "description": "A set of config name NPC IDs or NpcID keys to apply the light to.",
+        "description": "A set of NPC gameval names to apply the light to.",
         "items": {
           "type": "string"
         }
       },
       "objectIds": {
         "type": "array",
-        "description": "A set of object config name IDs or ObjectID keys to apply the light to.",
+        "description": "A set of object gameval names to apply the light to.",
         "items": {
           "type": "string"
         }
       },
       "projectileIds": {
         "type": "array",
-        "description": "A set of projectile config name IDs to apply the light to.",
+        "description": "A set of projectile gameval names to apply the light to.",
         "items": {
           "type": "string"
         }
       },
       "graphicsObjectIds": {
         "type": "array",
-        "description": "A set of graphics object config name IDs to apply the light to.",
+        "description": "A set of graphics object gameval names to apply the light to.",
         "items": {
           "type": "string"
         }
       },
       "animationIds": {
         "type": "array",
-        "description": "A set of animation config name IDs to display the light for. Must be specified alongside another kind of ID to apply to.",
+        "description": "A set of animation gameval names to display the light for. Must be specified alongside another kind of ID to apply to.",
         "items": {
           "type": "string"
         }

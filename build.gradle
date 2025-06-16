@@ -1,6 +1,3 @@
-/*import groovy.json.JsonOutput
-import java.lang.reflect.Modifier*/
-
 plugins {
 	id 'java'
 //	id 'com.github.johnrengelman.shadow' version '6.1.0'
@@ -38,59 +35,53 @@ sourceCompatibility = '11'
 tasks.withType(JavaCompile).configureEach {
 	options.encoding = 'UTF-8'
 }
-
-/*task exportConstantsToJson {
-	doLast {
-		def startTime = System.nanoTime()
-
-		def outputDir = file('src/main/resources/rs117/hd/')
-		outputDir.mkdirs()
-
-		def exportMap = [
-			'npcs'     : ['net.runelite.api.gameval.NpcID'],
-			'objects'  : ['net.runelite.api.gameval.ObjectID', 'net.runelite.api.gameval.ObjectID1'],
-			'anims'    : ['net.runelite.api.gameval.AnimationID'],
-			'spotanim' : ['net.runelite.api.gameval.SpotanimID']
-		]
-
-		URLClassLoader loader = new URLClassLoader(
-			configurations.compileClasspath.collect { it.toURI().toURL() } as URL[],
-			this.class.classLoader
-		)
-
-		def fullExport = [:]
-
-		exportMap.each { category, classList ->
-			def constants = [:]
-
-			classList.each { className ->
-				def clazz = loader.loadClass(className)
-
-				clazz.declaredFields.each { field ->
-					if (Modifier.isPublic(field.modifiers) &&
-						Modifier.isStatic(field.modifiers) &&
-						Modifier.isFinal(field.modifiers)) {
-
-						field.accessible = true
-						constants[field.name] = field.get(null)
-					}
-				}
-			}
-
-			fullExport[category] = constants
-		}
-
-		def outputFile = new File(outputDir, "gamevals.json")
-		outputFile.text = "// AUTO-GENERATED FILE. DO NOT MODIFY.\n\n" + JsonOutput.toJson(fullExport)
-		def elapsedMs = (System.nanoTime() - startTime) / 1_000_000
-		println "Export GameVal completed in ${elapsedMs} ms"
-	}
-}*/
-
-/*tasks.named('compileJava') {
-	dependsOn 'exportConstantsToJson'
-}*/
-
+//task exportConstantsToJson {
+//	doLast {
+//		def startTime = System.nanoTime()
+//		def exportMap = [
+//			'npcs'     : ['net.runelite.api.gameval.NpcID'],
+//			'objects'  : ['net.runelite.api.gameval.ObjectID', 'net.runelite.api.gameval.ObjectID1'],
+//			'anims'    : ['net.runelite.api.gameval.AnimationID'],
+//			'spotanims': ['net.runelite.api.gameval.SpotanimID']
+//		]
+//
+//		URLClassLoader loader = new URLClassLoader(
+//			configurations.compileClasspath.collect { it.toURI().toURL() } as URL[],
+//			this.class.classLoader
+//		)
+//
+//		def fullExport = [:]
+//
+//		exportMap.each { category, classList ->
+//			def constants = [:]
+//
+//			classList.each { className ->
+//				def clazz = loader.loadClass(className)
+//
+//				clazz.declaredFields.each { field ->
+//					if (Modifier.isPublic(field.modifiers) &&
+//						Modifier.isStatic(field.modifiers) &&
+//						Modifier.isFinal(field.modifiers)) {
+//
+//						field.accessible = true
+//						constants[field.name] = field.get(null)
+//					}
+//				}
+//			}
+//
+//			fullExport[category] = constants
+//		}
+//
+//		def outputFile = file('src/main/resources/rs117/hd/scene/gamevals.json')
+//		outputFile.text = "// AUTO-GENERATED FILE. DO NOT MODIFY.\n" + JsonOutput.toJson(fullExport)
+//		println "Exported gamevals in ${(System.nanoTime() - startTime).intdiv(1_000_000)} ms"
+//	}
+//}
+//
+//tasks.named('compileJava') {
+//	dependsOn 'exportConstantsToJson'
+//}
+//
 //shadowJar {
 //	from sourceSets.test.output
 //	configurations = [project.configurations.testRuntimeClasspath]

@@ -85,7 +85,6 @@ import rs117.hd.config.ShadingMode;
 import rs117.hd.config.ShadowMode;
 import rs117.hd.config.UIScalingMode;
 import rs117.hd.config.VanillaShadowMode;
-import rs117.hd.data.GameVals;
 import rs117.hd.data.WaterType;
 import rs117.hd.data.materials.Material;
 import rs117.hd.model.ModelHasher;
@@ -101,6 +100,7 @@ import rs117.hd.overlays.Timer;
 import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.FishingSpotReplacer;
+import rs117.hd.scene.GamevalManager;
 import rs117.hd.scene.GroundMaterialManager;
 import rs117.hd.scene.LightManager;
 import rs117.hd.scene.ModelOverrideManager;
@@ -220,6 +220,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private TextureManager textureManager;
 
 	@Inject
+	private GamevalManager gamevalManager;
+
+	@Inject
 	private AreaManager areaManager;
 
 	@Inject
@@ -239,9 +242,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Inject
 	private ProceduralGenerator proceduralGenerator;
-
-	@Inject
-	private GameVals gameVals;
 
 	@Inject
 	private SceneUploader sceneUploader;
@@ -641,7 +641,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				lastStretchedCanvasWidth = lastStretchedCanvasHeight = 0;
 				lastAntiAliasingMode = null;
 
-				gameVals.startUp();
+				gamevalManager.startUp();
 				areaManager.startUp();
 				groundMaterialManager.startUp();
 				tileOverrideManager.startUp();
@@ -699,6 +699,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			environmentManager.shutDown();
 			fishingSpotReplacer.shutDown();
 			areaManager.shutDown();
+			gamevalManager.shutDown();
 
 			if (lwjglInitialized) {
 				lwjglInitialized = false;

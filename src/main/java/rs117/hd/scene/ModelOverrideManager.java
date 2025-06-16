@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
-import rs117.hd.data.GameVals;
 import rs117.hd.model.ModelPusher;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.FileWatcher;
@@ -43,9 +42,6 @@ public class ModelOverrideManager {
 
 	@Inject
 	private FishingSpotReplacer fishingSpotReplacer;
-
-	@Inject
-	private GameVals gameVals;
 
 	private final HashMap<Integer, ModelOverride> modelOverrides = new HashMap<>();
 
