@@ -471,7 +471,7 @@
     "groundMaterial": "VARROCK_PATHS"
   },
   {
-    "name": "VARROCK_ZAMORACK_TEMPLE",
+    "name": "VARROCK_ZAMORAK_TEMPLE",
     "area": "VARROCK_ZAMORAK_TEMPLE",
     "overlayIds": [
       171
@@ -1036,6 +1036,13 @@
     "shiftLightness": 10
   },
   {
+    "name": "AL_KHARID_MINE_WALLS",
+    "area": "AL_KHARID_MINE",
+    "groundMaterial": "VERTICAL_GRAVEL",
+    "shiftHue": -2,
+    "overlayIds": [ 26 ]
+  },
+  {
     "name": "KHARID_PATHS_1",
     "area": "KHARID_DESERT_REGION",
     "overlayIds": [
@@ -1239,8 +1246,8 @@
     "blended": false
   },
   {
-    "name": "FALADOR_PARTROOM_STAIRS_FIX",
-    "area": "FALADOOR_PARTY_ROOM_STAIRS_FIX",
+    "name": "FALADOR_PARTY_ROOM_STAIRS_FIX",
+    "area": "FALADOR_PARTY_ROOM_STAIRS_FIX",
     "overlayIds": [
       37
     ],
@@ -1406,6 +1413,27 @@
     "maxLightness": 30
   },
   {
+    "name": "EDGEVILLE_BANK_WINDOW_FIX_BLEND",
+    "area": "EDGEVILLE_BANK_WINDOW_FIX",
+    "description": "For when ground blending is ENABLED",
+    "overlayIds": [
+      10
+    ],
+    "groundMaterial": "VARROCK_PATHS",
+    "replacements": {
+      "EDGEVILLE_BANK_WINDOW_FIX_UNBLEND": "!blending"
+    },
+    "blended": false,
+    "minLightness": 29,
+    "maxLightness": 30
+  },
+  {
+    "name": "EDGEVILLE_BANK_WINDOW_FIX_UNBLEND",
+    "area": "EDGEVILLE_BANK_WINDOW_FIX",
+    "description": "For when ground blending is DISABLED",
+    "groundMaterial": "VARROCK_PATHS"
+  },
+  {
     "name": "EDGEVILLE_BANK_PERIMETER",
     "area": "EDGEVILLE_BANK",
     "overlayIds": [
@@ -1420,6 +1448,7 @@
   {
     "name": "EDGEVILLE_BANK_SURROUNDING_PATH",
     "area": "EDGEVILLE_BANK_SURROUNDING_PATH",
+    "blendedAsOpposite": false,
     "overlayIds": [
       10
     ],
@@ -1524,7 +1553,7 @@
     "groundMaterial": "ABYSSAL_FLOOR"
   },
   {
-    "name": "ABYSSAL_LIQUID",
+    "name": "ABYSSAL_BILE",
     "area": "ABYSSAL_AREAS",
     "overlayIds": [
       66,
@@ -1711,6 +1740,57 @@
     "groundMaterial": "VERTICAL_DIRT"
   },
   {
+    "name": "ASGARNIA_ICE_DUNGEON Water to Ice Fix",
+    "area": "ASGARNIA_ICE_DUNGEON",
+    "overlayIds": [
+      196
+    ],
+    "groundMaterial": "ICE_4",
+    "shiftLightness": 5,
+    "uvScale": 2,
+    "uvOrientation": -100
+  },
+  {
+    "name": "ASGARNIA_ICE_DUNGEON Snow Tiles Fix",
+    "area": "ASGARNIA_ICE_DUNGEON_SNOW_FIX",
+    "description": "For when ground blending is ENABLED",
+    "overlayIds": [ 0, 59, 263 ],
+    "underlayIds": [ 59 ],
+    "groundMaterial": "SNOW_2",
+    "replacements": {
+      "ASGARNIA_ICE_DUNGEON Snow Tiles Fix UNBLEND": "!blending"
+    },
+    "shiftLightness": 27
+  },
+  {
+    "name": "ASGARNIA_ICE_DUNGEON Snow Tiles Fix UNBLEND",
+    "area": "ASGARNIA_ICE_DUNGEON_SNOW_FIX",
+    "description": "For when ground blending is DISABLED",
+    "groundMaterial": "SNOW_2",
+    "shiftLightness": 0
+  },
+  {
+    "name": "ASGARNIA_ICE_DUNGEON Snow Tiles Fix 2",
+    "area": "ASGARNIA_ICE_DUNGEON_SNOW_FIX_2",
+    "overlayIds": [
+      0,
+      59,
+      263
+    ],
+    "underlayIds": [
+      59
+    ],
+    "groundMaterial": "SNOW_2"
+  },
+  {
+    "name": "ASGARNIA_ICE_DUNGEON Ice Tiles Fix",
+    "area": "ASGARNIA_ICE_DUNGEON_ICE_FIX",
+    "overlayIds": [
+      409
+    ],
+    "groundMaterial": "ICE_1_HIGHGLOSS"
+  },
+  {
     "name": "ICE_QUEENS_SYMBOL",
     "area": "ICE_QUEENS_DUNGEON",
     "overlayIds": [
@@ -1865,6 +1945,12 @@
     "groundMaterial": "FALADOR_PATHS"
   },
   {
+    "name": "Elemental Workshop floor",
+    "area": "Elemental Workshop floor 1",
+    "groundMaterial": "PACKED_EARTH",
+    "underlayIds": [ 67 ]
+  },
+  {
     "name": "SINCLAIR_MANSION_FLOOR",
     "area": "SINCLAIR_MANSION",
     "overlayIds": [
@@ -1929,6 +2015,45 @@
     "shiftLightness": 2
   },
   {
+    "name": "Glarial's Tomb floor",
+    "area": "Glarial's Tomb Dungeon",
+    "underlayIds": [
+      48,
+      67
+    ],
+    "groundMaterial": "DIRT",
+    "uvScale": 1.15,
+    "replacements": {
+      "DEFAULT_GRASS": "h > 9"
+    }
+  },
+  {
+    "name": "Waterfall Dungeon tiles",
+    "area": "WATERFALL_DUNGEON",
+    "underlayIds": [
+      50,
+      56,
+      67
+    ],
+    "groundMaterial": "DIRT",
+    "replacements": {
+      "DEFAULT_GRUNGE": "s == 0"
+    }
+  },
+  {
+    "name": "Waterfall Dungeon tiles - Chalice Room",
+    "area": "WATERFALL_DUNGEON_CHALICE_ROOM",
+    "underlayIds": [
+      50,
+      56,
+      67
+    ],
+    "groundMaterial": "DIRT",
+    "replacements": {
+      "DEFAULT_GRUNGE": "s == 0"
+    }
+  },
+  {
     "name": "GOBLIN_CAVE_FLOOR",
     "area": "GOBLIN_CAVE",
     "underlayIds": [
@@ -1937,6 +2062,14 @@
     ],
     "groundMaterial": "DIRT",
     "uvScale": 1.15
+  },
+  {
+    "name": "MOTHERLODE_MINE_WATER",
+    "area": "MOTHERLODE_MINE",
+    "overlayIds": [
+      6
+    ],
+    "waterType": "MLM_WATER"
   },
   {
     "name": "CATHERBY_BEACH_OBELISK_WATER_FIX",
@@ -1974,7 +2107,7 @@
     "blended": false
   },
   {
-    "name": "EAST_ARDOUNGE_INDOORS_FURNACE",
+    "name": "EAST_ARDOUGNE_INDOORS_FURNACE",
     "area": "EAST_ARDOUGNE_FURNACE",
     "overlayIds": [
       10
@@ -2009,8 +2142,8 @@
     "blended": false
   },
   {
-    "name": "EAST_ARDOUNGE_COBBLE_CHURCH",
-    "area": "EAST_ARDOUGNE_COBBLE_CHRUCH",
+    "name": "EAST_ARDOUGNE_COBBLE_CHURCH",
+    "area": "EAST_ARDOUGNE_COBBLE_CHURCH",
     "overlayIds": [
       10
     ],
@@ -2205,7 +2338,7 @@
     "groundMaterial": "VARIED_DIRT_SHINY"
   },
   {
-    "name": "WEST_ARDOUNGE_CARPET_FIX_1",
+    "name": "WEST_ARDOUGNE_CARPET_FIX_1",
     "area": "WEST_ARDOUGNE_CARPET_FIX",
     "overlayIds": [
       14
@@ -2264,16 +2397,16 @@
     }
   },
   {
-    "name": "KANDARIN_MONISTARY_WINGS_TEXTURE_13",
-    "area": "KANDARIN_MONISTARY_WINGS",
+    "name": "KANDARIN_MONASTERY_WINGS_TEXTURE_13",
+    "area": "KANDARIN_MONASTERY_WINGS",
     "overlayIds": [
       13
     ],
     "groundMaterial": "TILES_2X2_2_SEMIGLOSS"
   },
   {
-    "name": "KANDARIN_MONISTARY_FLOOR_TEXTURE",
-    "area": "KANDARIN_MONISTARY",
+    "name": "KANDARIN_MONASTERY_FLOOR_TEXTURE",
+    "area": "KANDARIN_MONASTERY",
     "overlayIds": [
       12
     ],
@@ -2918,6 +3051,25 @@
     "groundMaterial": "VARROCK_PATHS"
   },
   {
+    "name": "Werewolf Agility course path",
+    "area": "WEREWOLF_AGILITY_AREA",
+    "groundMaterial": "GRAVEL",
+    "uvOrientation": 84,
+    "uvScale": 1.2,
+    "overlayIds": [ 83 ]
+  },
+  {
+    "name": "Werewolf Agility area - COMPLEX",
+    "area": "WEREWOLF_AGILITY_AREA",
+    "groundMaterial": "OVERWORLD_ROCKY",
+    "uvOrientation": 84,
+    "uvScale": 1.2,
+    "replacements": {
+      "DEFAULT_DIRT": "h > 7 && s > 1"
+    },
+    "underlayIds": [ 92, 93, 94, 96]
+  },
+  {
     "name": "SLEPE_PATHS",
     "area": "SLEPE",
     "overlayIds": [
@@ -2932,6 +3084,16 @@
       11
     ],
     "groundMaterial": "DIRT"
+  },
+  {
+    "name": "ABANDONED_MINE_LIFT_PLATFORM",
+    "area": "ABANDONED_MINE",
+    "uvOrientation": 512,
+    "shiftLightness": 2,
+    "overlayIds": [
+      14
+    ],
+    "groundMaterial": "HD_WOOD_PLANKS_2"
   },
   {
     "name": "TRUE_BLOOD_ALTAR_BLOOD",
@@ -2989,11 +3151,12 @@
   },
   {
     "name": "LLETYA_WOOD_FLOORS",
-    "area": "LLETYA_UPPER_LEVELS",
+    "area": "Lletya Wood Floors Fix",
     "overlayIds": [
       22
     ],
-    "groundMaterial": "HD_WOOD_PLANKS_2"
+    "groundMaterial": "HD_WOOD_PLANKS_2",
+    "uvScale": 1.25
   },
   {
     "name": "TIRANNWN_PATHS",
@@ -3002,6 +3165,16 @@
       106
     ],
     "groundMaterial": "GRASSY_DIRT"
+  },
+  {
+    "name": "Grand Library Floor",
+    "area": "SOTE_GRAND_LIBRARY",
+    "groundMaterial": "CARPET",
+    "overlayIds": [
+      63
+    ],
+    "uvOrientation": 256,
+    "uvScale": 0.7
   },
   {
     "name": "PRIFDDINAS_POND_WATER",
@@ -3687,6 +3860,19 @@
     "blended": false
   },
   {
+    "name": "CAMDOZAAL_TILES",
+    "area": "CAMDOZAAL_TILED_FLOOR",
+    "underlayIds": [
+      16,
+      44,
+      46
+    ],
+    "groundMaterial": "MARBLE_1",
+    "uvOrientation": 117,
+    "uvScale": 1.2,
+    "blended": false
+  },
+  {
     "name": "CAMDOZAAL_STONE_PATH",
     "area": "CAMDOZAAL",
     "overlayIds": [
@@ -3950,8 +4136,10 @@
     "name": "CANOE_CUTSCENE_STONE",
     "area": "CANOE_CUTSCENE",
     "overlayIds": [
-      0,
       11
+    ],
+    "underlayIds": [
+      72
     ],
     "groundMaterial": "STONE_SCROLLING"
   },
@@ -4417,7 +4605,7 @@
   },
   {
     "name": "Perilous Moons Antechamber Blend Fix",
-    "area": "PERILOUS_MOONS_ANTECHABMER_BLEND_FIX",
+    "area": "PERILOUS_MOONS_ANTECHAMBER_BLEND_FIX",
     "underlayIds": [ 19, 39, 72 ],
     "overlayIds": [ 0, 37, 139, 228, 229 ],
     "groundMaterial": "DIRT",
@@ -4580,6 +4768,30 @@
       196
     ],
     "waterType": "WATER"
+  },
+  {
+    "name": "STRONGHOLD_OF_SECURITY_OOZE_WATER_FIX",
+    "area": "STRONGHOLD_OF_SECURITY_PESTILENCE_WATER_AND_DIRT_FIX",
+    "overlayIds": [
+      29
+    ],
+    "waterType": "ABYSS_BILE"
+  },
+  {
+    "area": "STRONGHOLD_OF_SECURITY_PESTILENCE_WATER_AND_DIRT_FIX",
+    "overlayIds": [
+      77
+    ],
+    "groundMaterial": "ABYSSAL_FLOOR",
+    "setSaturation": -2,
+    "blended": false
+  },
+  {
+    "area": "STRONGHOLD_OF_SECURITY_PESTILENCE_GRASS_FIX",
+    "overlayIds": [
+      29
+    ],
+    "groundMaterial": "ABYSSAL_FLOOR"
   },
   {
     "name": "OVERLAY_DIRT",
@@ -4934,7 +5146,6 @@
   {
     "name": "EDGEVILLE_PATH_OVERLAY_48_CUSTOM_PATH",
     "groundMaterial": "VARROCK_PATHS",
-    "blendedAsOpposite": true,
     "maxHue": 0,
     "maxSaturation": 0,
     "shiftLightness": 8,
@@ -5005,7 +5216,7 @@
       61,
       93
     ],
-    "groundMaterial": "OOZE_FLOOR"
+    "groundMaterial": "ABYSSAL_FLOOR"
   },
   {
     "name": "STRONGHOLD_OF_SECURITY_GRASS",
@@ -5126,10 +5337,37 @@
     "blended": false
   },
   {
+    "name": "MAGE_TRAINING_ARENA_AND_KHARID_MINE_DIRT_FIX",
+    "area": "MAGE_TRAINING_ARENA_AND_KHARID_MINE_DIRT_FIX",
+    "groundMaterial": "SAND",
+    "maxLightness": 60,
+    "shiftHue": -1,
+    "shiftSaturation": 1,
+    "maxSaturation": 4,
+    "underlayIds": [
+      45,
+      50,
+      52,
+      61,
+      62,
+      126
+    ],
+    "replacements": {
+      "KHARID_GRASS": [
+        "h > 11",
+        "h > 9 && s > 3"
+      ],
+      "DEFAULT_GRASS": [
+        "h == 9 && s == 4"
+      ]
+    }
+  },
+  {
     "area": "AL_KHARID_GRASS_FIXES",
     "underlayIds": [
       49,
       50,
+      52,
       62,
       61,
       64
@@ -5162,7 +5400,7 @@
     "groundMaterial": "DIRT"
   },
   {
-    "name": "SORCERESS_GUARDEN_GRASS",
+    "name": "SORCERESS_GARDEN_GRASS",
     "area": "SORCERESS_GARDEN",
     "underlayIds": [
       7,
@@ -5174,7 +5412,7 @@
     "groundMaterial": "GRASS_1"
   },
   {
-    "name": "SORCERESS_GUARDEN_SNOW",
+    "name": "SORCERESS_GARDEN_SNOW",
     "area": "SORCERESS_GARDEN",
     "underlayIds": [
       9,
@@ -5217,12 +5455,137 @@
     "shiftLightness": 5
   },
   {
-    "name": "KHARID_SAND_1",
-    "area": "KHARID_DESERT_REGION",
+    "name": "KHARID_DIRT",
+    "groundMaterial": "DIRT",
+    "maxLightness": 50,
+    "shiftHue": -1,
+    "shiftSaturation": -1
+  },
+  {
+    "name": "KHARID_GRASS",
+    "groundMaterial": "OVERWORLD_GRASS_1",
+    "maxLightness": 50,
+    "shiftHue": -1,
+    "minHue": 9
+  },
+  {
+    "name": "KHARID_GRASS_CLAMPED",
+    "groundMaterial": "OVERWORLD_GRASS_1",
+    "maxLightness": 50,
+    "shiftHue": -1,
+    "maxSaturation": 3,
+    "minHue": 9
+  },
+  {
+    "name": "KHARID_GRASS_HUE_SHIFT",
+    "groundMaterial": "OVERWORLD_GRASS_1",
+    "maxLightness": 50,
+    "shiftHue": -2
+  },
+  {
+    "name": "KHARID_GRASSY_SAND",
+    "groundMaterial": "SAND",
+    "maxLightness": 60,
+    "shiftHue": -1,
+    "minHue": 6,
+    "maxSaturation": 3
+  },
+  {
+    "name": "KHARID_DIRTY_SAND",
+    "groundMaterial": "SAND",
+    "maxLightness": 60,
+    "shiftHue": -2,
+    "minHue": 6,
+    "maxSaturation": 3
+  },
+  {
+    "name": "KHARIDIAN_DEEP_DESERT_CREVICE",
+    "groundMaterial": "SAND",
+    "maxLightness": 60,
+    "shiftHue": -2,
+    "shiftSaturation": -2,
+    "minSaturation": 3
+  },
+  {
+    "name": "KHARID_DESERT_COAST_GOATS_FIX_2",
+    "area": "KHARIDIAN_DESERT_COAST_GOATS_CUTOUT_FIX",
+    "groundMaterial": "OVERWORLD_GRASS_1",
+    "shiftHue": -1,
+    "underlayIds": [
+      52
+    ]
+  },
+  {
+    "name": "KHARID_DESERT_COAST_GOATS_FIX",
+    "area": "KHARIDIAN_DESERT_COAST_GOATS",
+    "groundMaterial": "SAND",
+    "maxLightness": 60,
+    "shiftHue": -2,
+    "maxSaturation": 4,
+    "underlayIds": [
+      52,
+      61,
+      62,
+      64
+    ],
+    "replacements": {
+      "KHARID_GRASS_HUE_SHIFT": [
+        "h >= 9 && s == 3"
+      ],
+      "KHARID_DIRT": [
+        "h < 8",
+        "h == 8 && s == 4",
+        "h >= 9 && s == 4"
+      ]
+    }
+  },
+  {
+    "name": "KHARID_DESERT_COAST_FIX",
+    "area": "KHARIDIAN_COAST_FIX",
+    "groundMaterial": "SAND",
+    "maxLightness": 60,
+    "shiftHue": -2,
+    "maxSaturation": 4,
     "underlayIds": [
       45,
       49,
       50,
+      52,
+      53,
+      58,
+      61,
+      62,
+      63,
+      64,
+      67,
+      68,
+      69,
+      99,
+      126,
+      129
+    ],
+    "replacements": {
+      "KHARID_GRASS": [
+        "h >= 19",
+        "h >= 10 && s >= 3",
+        "h == 9 && s >= 5"
+      ],
+      "KHARID_DIRT": [
+        "h < 8",
+        "h == 8 && s == 4",
+        "h == 9 && s == 4"
+      ]
+    }
+  },
+  {
+    "name": "RIVER_ELID_DIRT_FIX",
+    "area": "RIVER_ELID",
+    "underlayIds": [
+      45,
+      49,
+      50,
+      52,
+      53,
       58,
       61,
       62,
@@ -5232,7 +5595,183 @@
       68,
       69,
       126,
+      129,
+      138
+    ],
+    "groundMaterial": "SAND",
+    "minHue": 6,
+    "maxHue": 6,
+    "minSaturation": 3,
+    "maxSaturation": 3,
+    "replacements": {
+      "KHARID_DIRT": [
+        "h == 7 && s > 3 && s < 8"
+      ],
+      "KHARID_GRASSY_SAND": [
+        "h == 8 && s == 5 || s == 6"
+      ]
+    }
+
+  },
+  {
+    "name": "SOUTH_OF_UNKAH",
+    "area": "REGION_SOUTH_OF_UNKAH",
+    "groundMaterial": "SAND",
+    "maxLightness": 60,
+    "shiftHue": -2,
+    "minHue": 6,
+    "maxSaturation": 3,
+    "underlayIds": [
+      61,
+      62,
+      64,
+      52,
+      99,
+      126
+    ],
+    "replacements": {
+      "KHARID_GRASS_CLAMPED": [
+        "h > 10",
+        "h > 9 && s > 3",
+        "h == 9 && s > 4"
+      ],
+      "KHARID_GRASSY_SAND": [
+        "h == 8 && s >= 5",
+        "h == 8 && s == 4",
+        "h == 8 && s >= 5"
+      ],
+      "KHARID_DIRT": [
+        "h == 9 && s == 4"
+      ]
+    }
+  },
+  {
+    "name": "RUINS_OF_UNKAH",
+    "area": "RUINS_OF_UNKAH",
+    "groundMaterial": "SAND",
+    "maxLightness": 60,
+    "shiftHue": -2,
+    "minHue": 6,
+    "maxSaturation": 3,
+    "underlayIds": [
+      61,
+      62,
+      64,
+      52,
+      99,
+      126
+    ],
+    "replacements": {
+      "KHARID_GRASS_CLAMPED": [
+        "h > 10",
+        "h > 9 && s > 3",
+        "h == 9 && s > 4"
+      ]
+    }
+  },
+  {
+    "name": "UZER_OASIS",
+    "area": "UZER_OASIS",
+    "groundMaterial": "SAND",
+    "maxLightness": 60,
+    "shiftHue": -2,
+    "maxSaturation": 4,
+    "underlayIds": [
+      45,
+      49,
+      50,
+      52,
+      53,
+      58,
+      61,
+      62,
+      63,
+      64,
+      67,
+      68,
+      69,
+      99,
+      126,
       129
+    ],
+    "replacements": {
+      "KHARID_GRASS": [
+        "h > 10",
+        "h > 9 && s > 3",
+        "h == 9 && s > 4"
+      ],
+      "DEFAULT_DIRT": [
+        "h < 8",
+        "h == 8 && s == 4",
+        "h == 9 && s == 4"
+      ]
+    }
+  },
+  {
+    "name": "KHARIDIAN_CREVICE",
+    "area": "KHARIDIAN_CREVICE",
+    "groundMaterial": "SAND",
+    "minHue": 6,
+    "maxHue": 6,
+    "minSaturation": 3,
+    "maxSaturation": 3,
+    "underlayIds": [
+      61,
+      126,
+      138
+    ],
+    "replacements": {
+      "KHARIDIAN_DEEP_DESERT_CREVICE": [
+        "h <= 6"
+      ]
+    }
+  },
+  {
+    "name": "SOUTH_RUINS_OF_ULLEK_OVERWORLD_SAND",
+    "area": "SOUTH_OF_RUINS_OF_ULLEK",
+    "groundMaterial": "SAND",
+    "minHue": 6,
+    "maxHue": 6,
+    "minSaturation": 3,
+    "maxSaturation": 3,
+    "underlayIds": [
+      61,
+      62,
+      64,
+      99,
+      126
+    ],
+    "replacements": {
+      "KHARID_GRASS": [
+        "h >= 10"
+      ],
+      "KHARID_DIRT": [
+        "h == 8 && s >= 4 && l < 27",
+        "h == 9 && s >= 4",
+        "h == 7 && s >= 4 && l < 25"
+      ]
+    }
+  },
+  {
+    "name": "KHARIDIAN_DESERT_SAND",
+    "area": "KHARIDIAN_DESERT",
+    "underlayIds": [
+      45,
+      49,
+      50,
+      52,
+      53,
+      58,
+      61,
+      62,
+      63,
+      64,
+      67,
+      68,
+      69,
+      126,
+      129,
+      138
     ],
     "groundMaterial": "SAND",
     "minHue": 6,
@@ -5241,12 +5780,73 @@
     "maxSaturation": 3
   },
   {
+    "name": "KHARID_SAND",
+    "area": "KHARID_DESERT_REGION",
+    "groundMaterial": "SAND",
+    "maxLightness": 60,
+    "shiftHue": -2,
+    "maxSaturation": 4,
+    "underlayIds": [
+      45,
+      49,
+      50,
+      52,
+      53,
+      58,
+      61,
+      62,
+      63,
+      64,
+      67,
+      68,
+      69,
+      99,
+      126,
+      129
+    ],
+    "replacements": {
+      "KHARID_GRASSY_SAND":[
+        "s == 2 && 9 <= h && h <= 10",
+        "s == 4 && 9 <= h && h <= 11"
+      ],
+      "KHARID_DIRTY_SAND":[
+        "s == 4 && 8 == h"
+      ],
+      "KHARID_GRASS": [
+        "h >= 12",
+        "h > 8 && s > 3"
+      ],
+      "KHARID_DIRT": [
+        "h < 8",
+        "h == 8 && s == 5"
+      ]
+    }
+  },
+  {
+    "name": "NECROPOLIS_PATH",
+    "area": "NECROPOLIS",
+    "uvScale": 1.15,
+    "uvOrientation": 42,
+    "overlayIds": [
+      215
+    ],
+    "groundMaterial": "PACKED_EARTH"
+  },
+  {
     "name": "NECROPOLIS_SAND",
     "area": "NECROPOLIS",
+    "groundMaterial": "SANDY_DIRT_2",
+    "uvOrientation": 42,
     "underlayIds": [
-      124
+      121,
+      124,
+      125
     ],
-    "groundMaterial": "DIRT"
+    "replacements": {
+      "KHARID_SAND": [
+        "s >= 2"
+      ]
+    }
   },
   {
     "name": "SMOKE_DUNGEON",
@@ -5298,7 +5898,7 @@
     "blended": false
   },
   {
-    "name": "KARAMJA_VOCALNO_ROCK",
+    "name": "KARAMJA_VOLCANO_ROCK",
     "area": "KARAMJA_VOLCANO",
     "underlayIds": [
       55,
@@ -5966,9 +6566,9 @@
       58
     ],
     "groundMaterial": "SNOW_1",
-    "maxHue": 0,
+    "shiftHue": 4,
     "maxSaturation": 0,
-    "minLightness": 100,
+    "minLightness": 78,
     "maxLightness": 100
   },
   {
@@ -6055,6 +6655,64 @@
       103
     ],
     "groundMaterial": "VARIED_DIRT"
+  },
+  {
+    "name": "ARAXXOR_WEB_OVERLAY",
+    "area": "MORYTANIA_SPIDER_CAVES",
+    "overlayIds": [
+      370
+    ],
+    "groundMaterial": "GROUND_WEBS",
+    "blended": false,
+    "uvScale": 3,
+    "uvOrientation": 89,
+    "shiftLightness": 14
+  },
+  {
+    "name": "ARAXXOR_WASTE_WATER",
+    "area": "MORYTANIA_SPIDER_CAVES",
+    "overlayIds": [
+      364
+    ],
+    "waterType": "ARAXXOR_WASTE"
+  },
+  {
+    "name": "MORYTANIA_SPIDER_CAVES_WEB_1",
+    "area": "MORYTANIA_SPIDER_CAVES",
+    "overlayIds": [
+      191
+    ],
+    "underlayIds": [
+      72,
+      79,
+      81,
+      84
+    ],
+    "groundMaterial": "GROUND_WEBS",
+    "uvScale": 2,
+    "uvOrientation": 90,
+    "shiftLightness": 7,
+    "replacements": {
+      "DEFAULT_PACKED_EARTH": "h < 10"
+    }
+  },
+  {
+    "name": "MORYTANIA_SPIDER_CAVES_WEB_2",
+    "area": "MORYTANIA_SPIDER_CAVES",
+    "underlayIds": [
+      39,
+      62,
+      80,
+      85,
+      138
+    ],
+    "groundMaterial": "GROUND_WEBS",
+    "uvScale": 2,
+    "uvOrientation": 32,
+    "shiftLightness": 7,
+    "replacements": {
+      "DEFAULT_PACKED_EARTH": "h < 10"
+    }
   },
   {
     "name": "GOBLIN_VILLAGE_TILES_BLEND_FIX",
@@ -6213,7 +6871,7 @@
     "overlayIds": [
       256
     ],
-    "groundMaterial": "FINE_CARPET"
+    "groundMaterial": "CARPET"
   },
 
   {
@@ -6443,6 +7101,24 @@
     "groundMaterial": "GRASS_SCROLLING"
   },
   {
+    "name": "MOGRE_CAMP_SAND",
+    "area": "MOGRE_CAMP",
+    "underlayIds": [
+      68
+    ],
+    "groundMaterial": "SANDY_DIRT"
+  },
+  {
+    "name": "FOSSIL_ISLAND_UNDERWATER_AREA_SAND",
+    "area": "FOSSIL_ISLAND_UNDERWATER_AREA",
+    "underlayIds": [
+      68,
+      129
+    ],
+    "groundMaterial": "SANDY_DIRT",
+    "uvOrientation": 100
+  },
+  {
     "name": "ISLE_OF_SOULS_HOT_ZONE_COMPLEX",
     "area": "ISLE_OF_SOULS_HOT_ZONES",
     "underlayIds": [
@@ -6508,6 +7184,21 @@
       191
     ],
     "groundMaterial": "ROCKY_CAVE_FLOOR"
+  },
+  {
+    "name": "THE_GAUNTLET_FLOOR_ROOT_FIX",
+    "area": "THE_GAUNTLET_FLOOR_ROOT_FIX",
+    "underlayIds": [ 72 ],
+    "groundMaterial": "MARBLE_2",
+    "uvScale": 0.5
+  },
+  {
+    "name": "TOB_VERZIK_CARPET",
+    "area": "THEATRE_OF_BLOOD_VERZIK",
+    "overlayIds": [
+      103
+    ],
+    "groundMaterial": "CARPET"
   },
   {
     "name": "OVERWORLD_GRASS_UNDERLAY",
@@ -6582,6 +7273,19 @@
       15
     ],
     "groundMaterial": "PACKED_EARTH"
+  },
+  {
+    "name": "Essence Mine Snow",
+    "area": "ESSENCE_MINE",
+    "underlayIds": [
+      55,
+      56,
+      58,
+      59
+    ],
+    "groundMaterial": "SNOW_1",
+    "shiftHue": 5,
+    "setLightness": 72
   },
   {
     "name": "UNDERLAY_SNOW",

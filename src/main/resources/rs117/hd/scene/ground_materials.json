@@ -47,6 +47,12 @@
     ]
   },
   {
+    "name": "VERTICAL_GRAVEL",
+    "materials": [
+      "VERTICAL_GRAVEL"
+    ]
+  },
+  {
     "name": "SNOW_1",
     "materials": [
       "SNOW_1",
@@ -108,12 +114,6 @@
     "name": "CARPET",
     "materials": [
       "CARPET"
-    ]
-  },
-  {
-    "name": "FINE_CARPET",
-    "materials": [
-      "FINE_CARPET"
     ]
   },
   {
@@ -410,6 +410,23 @@
     ]
   },
   {
+    "name": "SANDY_DIRT",
+    "materials": [
+      "SAND_3",
+      "DIRT_1",
+      "SAND_2"
+    ]
+  },
+  {
+    "name": "SANDY_DIRT_2",
+    "materials": [
+      "DIRT_1",
+      "GRAVEL",
+      "SAND_1",
+      "DIRT_2"
+    ]
+  },
+  {
     "name": "PACKED_EARTH",
     "materials": [
       "DIRT_1",
@@ -467,6 +484,21 @@
       "ABYSSAL_2",
       "ABYSSAL",
       "ABYSSAL"
+    ]
+  },
+  {
+    "name": "GROUND_WEBS",
+    "materials": [
+      "GROUND_WEB_1",
+      "GROUND_WEB_2",
+      "GROUND_WEB_3"
+    ]
+  },
+  {
+    "name": "ABYSSAL_BILE",
+    "materials": [
+      "ABYSSAL_2_FLOW",
+      "ABYSSAL_FLOW"
     ]
   }
 ]

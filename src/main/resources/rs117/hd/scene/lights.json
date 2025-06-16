@@ -17613,10 +17613,10 @@
   },
   {
     "description": "HELLRAT",
-    "height": 20,
+    "height": 40,
     "alignment": "CENTER",
-    "radius": 220,
-    "strength": 7.5,
+    "radius": 240,
+    "strength": 5.5,
     "color": [
       255,
       0,
@@ -17626,7 +17626,24 @@
     "duration": 0,
     "range": 0,
     "npcIds": [
-      4809,
+      4809
+    ]
+  },
+  {
+    "description": "HELLRAT BEHEMOTH",
+    "height": 80,
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 12.5,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "npcIds": [
       6793
     ]
   },
@@ -18652,15 +18669,15 @@
     ]
   },
   {
-    "description": "FRAGMENT_OF_SEREN",
+    "description": "FRAGMENT_OF_SEREN_PRE_DEFEAT",
     "height": 200,
     "alignment": "CENTER",
     "radius": 500,
-    "strength": 17.5,
+    "strength": 14.5,
     "color": [
-      187,
-      153,
-      255
+      255,
+      0,
+      0
     ],
     "type": "PULSE",
     "duration": 3200,
@@ -19513,10 +19530,12 @@
     ]
   },
   {
-    "description": "THE_NIGHTMARE_INACTIVE",
-    "height": 100,
-    "alignment": "CENTER",
-    "radius": 1200,
+    "description": "Nightmare of Ashihama - Encounter Active",
+    "height": 125,
+    "radius": 1500,
+    "spawnDelay": 2000,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 2000,
     "strength": 15,
     "color": [
       255,
@@ -19524,14 +19543,152 @@
       166
     ],
     "type": "PULSE",
-    "duration": 1950,
-    "range": 20,
+    "duration": 2300,
+    "range": 8,
     "npcIds": [
       9461,
       9462,
       9463,
       9464
     ]
+  },
+  {
+    "description": "Nightmare of Ashihama - Pool of Nightmares - Main",
+    "height": 200,
+    "radius": 200,
+    "strength": 10,
+    "color": [
+      255,
+      0,
+      166
+    ],
+    "type": "PULSE",
+    "duration": 2950,
+    "range": 10,
+    "objectIds": [ 29706 ]
+  },
+  {
+    "description": "Nightmare of Ashihama - Pool of Nightmares - Highlight South",
+    "offset": [ 100, 75, 0 ],
+    "radius": 200,
+    "strength": 10,
+    "color": [
+      255,
+      0,
+      166
+    ],
+    "type": "STATIC",
+    "objectIds": [ 29706 ]
+  },
+  {
+    "description": "Nightmare of Ashihama - Pool of Nightmares - Highlight North",
+    "offset": [ -100, 60, 0 ],
+    "radius": 200,
+    "strength": 10,
+    "color": [
+      255,
+      0,
+      166
+    ],
+    "type": "STATIC",
+    "objectIds": [ 29706 ]
+  },
+  {
+    "description": "Nightmare of Ashihama - Pool of Nightmares - Highlight East",
+    "offset": [ 0, 75, 100 ],
+    "radius": 200,
+    "strength": 10,
+    "color": [
+      255,
+      0,
+      166
+    ],
+    "type": "STATIC",
+    "objectIds": [ 29706 ]
+  },
+  {
+    "description": "Nightmare of Ashihama - Pool of Nightmares - Highlight West",
+    "offset": [ 0, 75, -100 ],
+    "radius": 200,
+    "strength": 10,
+    "color": [
+      255,
+      0,
+      166
+    ],
+    "type": "STATIC",
+    "objectIds": [ 29706 ]
+  },
+  {
+    "description": "Nightmare of Ashihama - Energy Barrier 1",
+    "offset": [ 0, 200, 150 ],
+    "radius": 600,
+    "strength": 18,
+    "color": [
+      255,
+      0,
+      166
+    ],
+    "type": "PULSE",
+    "duration": 2000,
+    "range": 7,
+    "objectIds": [
+      37730,
+      37731
+    ]
+  },
+  {
+    "description": "Nightmare of Ashihama - Energy Barrier 2",
+    "offset": [ 0, 200, -150 ],
+    "radius": 600,
+    "strength": 10,
+    "color": [
+      255,
+      0,
+      166
+    ],
+    "type": "PULSE",
+    "duration": 750,
+    "range": 7,
+    "objectIds": [
+      37730,
+      37731
+    ]
+  },
+  {
+    "description": "Nightmare of Ashihama - Magic Projectile",
+    "offset": [ 0, -50, 0 ],
+    "radius": 250,
+    "strength": 10,
+    "fadeInDuration": 50,
+    "fadeOutDuration": 200,
+    "color": [
+      255,
+      0,
+      166
+    ],
+    "type": "PULSE",
+    "duration": 1750,
+    "range": 20,
+    "projectileIds": [ 1764 ]
+  },
+  {
+    "description": "Nightmare of Ashihama - Charged Totem",
+    "offset": [ 200, 1100, 200 ],
+    "radius": 2000,
+    "spawnDelay": 200,
+    "strength": 20,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 300,
+    "color": [
+      0,
+      128,
+      128
+    ],
+    "type": "PULSE",
+    "duration": 1750,
+    "range": 7,
+    "npcIds": [ 9445, 9442, 9439, 9436 ]
   },
   {
     "description": "FIRE_GIANT",
@@ -19939,6 +20096,24 @@
     ]
   },
   {
+    "description": "STANDING_TORCH_SHORTER_RADIUS",
+    "height": 200,
+    "alignment": "CENTER",
+    "radius": 350,
+    "strength": 9,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      10658
+    ]
+  },
+  {
     "description": "STANDING_TORCH_SHORT",
     "height": 200,
     "alignment": "CENTER",
@@ -20115,10 +20290,9 @@
   },
   {
     "description": "WALL_TORCH_MID",
-    "height": 200,
-    "alignment": "CENTER",
-    "radius": 300,
-    "strength": 12.5,
+    "offset": [ 0, 185, 0 ],
+    "radius": 250,
+    "strength": 7.5,
     "color": [
       252,
       148,
@@ -20130,17 +20304,49 @@
     "objectIds": [
       196,
       197,
-      7432,
       202,
       203,
       206,
       11474,
       5746,
-      4501,
       5787,
       24414,
       2175,
       30130
+    ]
+  },
+  {
+    "description": "Varrock Wall Candelabra",
+    "offset": [ 0, 215 , 0 ],
+    "radius": 275,
+    "strength": 5.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      7432
+    ]
+  },
+  {
+    "description": "Varrock Lantern",
+    "offset": [ -10, 155 , 0 ],
+    "radius": 220,
+    "strength": 8.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      4501
     ]
   },
   {
@@ -20166,7 +20372,7 @@
     "height": 220,
     "alignment": "CENTER",
     "radius": 300,
-    "strength": 12.5,
+    "strength": 7.5,
     "color": [
       252,
       148,
@@ -20200,8 +20406,8 @@
   },
   {
     "description": "FLOOR_CANDLES_1",
-    "height": 10,
-    "radius": 300,
+    "height": 40,
+    "radius": 280,
     "strength": 10,
     "color": [
       252,
@@ -20218,8 +20424,8 @@
   },
   {
     "description": "FLOOR_CANDLES_2",
-    "height": 10,
-    "radius": 200,
+    "height": 40,
+    "radius": 190,
     "strength": 10,
     "color": [
       252,
@@ -20252,8 +20458,61 @@
       4691,
       10307,
       16901,
-      23577,
+      23577
+    ]
+  },
+  {
+    "description": "Aris Tent Lantern",
+    "height": 200,
+    "alignment": "CENTER",
+    "radius": 350,
+    "strength": 7.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
       2492
+    ]
+  },
+  {
+    "description": "Aris Tent Candle",
+    "offset": [ 0, 150, 0 ],
+    "alignment": "CENTER",
+    "radius": 125,
+    "strength": 15.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      2458
+    ]
+  },
+  {
+    "description": "Aris Tent Crystal Ball",
+    "height": 120,
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 10.5,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 10,
+    "range": 30,
+    "objectIds": [
+      2459
     ]
   },
   {
@@ -20403,7 +20662,8 @@
       5499,
       12796,
       3775,
-      49927
+      49927,
+      44021
     ]
   },
   {
@@ -20483,16 +20743,13 @@
       40775,
       8712,
       10824,
-      24969,
       40777,
       4618,
       10058,
-      24970,
       6093,
       6094,
       6095,
       6096,
-      7185,
       9439,
       9440,
       9441,
@@ -20509,6 +20766,57 @@
       30138,
       6781,
       6783
+    ]
+  },
+  {
+    "description": "Lumbridge Castle Fireplace",
+    "offset": [ 50, 70, 0 ],
+    "radius": 400,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      24970
+    ]
+  },
+  {
+    "description": "Blue Moon Inn Fireplace",
+    "offset": [ 0, 40, 0 ],
+    "radius": 300,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      7185
+    ]
+  },
+  {
+    "description": "Lumbridge General Store Fireplace",
+    "offset": [ 30, 70, 0 ],
+    "radius": 235,
+    "strength": 11.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      24969
     ]
   },
   {
@@ -20701,8 +21009,7 @@
   },
   {
     "description": "MINE_LANTERN",
-    "height": 180,
-    "alignment": "CENTER",
+    "offset": [ -10, 120, 50 ],
     "radius": 700,
     "strength": 6.3,
     "color": [
@@ -20712,11 +21019,29 @@
     ],
     "type": "FLICKER",
     "duration": 0,
-    "range": 30,
+    "range": 15,
     "objectIds": [
-      25056,
+      15796,
       17829,
-      25055
+      25055,
+      25056
+    ]
+  },
+  {
+    "description": "MINE_LANTERN_2",
+    "offset": [ -10, 120, 70 ],
+    "radius": 400,
+    "strength": 8.3,
+    "color": [
+      252,
+      208,
+      104
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      37573
     ]
   },
   {
@@ -21231,10 +21556,10 @@
     ]
   },
   {
-    "description": "HEARTH",
-    "height": 50,
+    "description": "Varrock Blacksmith Hearth",
+    "offset": [ 0, 100, 40 ],
     "alignment": "CENTER",
-    "radius": 650,
+    "radius": 350,
     "strength": 12.5,
     "color": [
       252,
@@ -21978,108 +22303,11 @@
     "duration": 1250,
     "range": 20,
     "objectIds": [
-      33354,
-      33355,
-      33356,
-      33357,
-      33358,
-      33359,
-      33360,
-      33361,
-      33362,
-      33363,
-      33364,
-      33365,
-      33366,
-      33367,
-      33368,
-      33369,
-      33370,
-      33371,
-      33372,
-      33373,
-      33374,
-      33375,
-      33376,
-      33377,
-      33378,
-      33379,
-      33380,
-      33381,
-      33382,
-      33383,
-      33384,
-      33385,
-      33386,
-      33387,
-      33388,
-      33389,
-      33390,
-      33391,
-      33392,
-      33393,
-      33394,
-      33395,
-      33396,
-      33397,
-      33398,
-      33399,
-      33400,
-      33401,
-      33402,
-      33403,
-      33404,
-      33405,
-      33406,
-      33407,
+      27097,
       33408,
       33409,
       33410,
-      33423,
-      33424,
-      33425,
-      33426,
-      33427,
-      33428,
-      33429,
-      33430,
-      33431,
-      37547,
-      37548,
-      37549,
-      37550,
-      37551,
-      37552,
-      37553,
-      37554,
-      37555,
-      37556,
-      37557,
-      37559,
-      37560,
-      37561,
-      37562,
-      37563,
-      37564,
-      37565,
-      37566,
-      37567,
-      37568,
-      37569,
-      37571,
-      37572,
-      37573,
-      41413,
-      37574,
-      41414,
-      37575,
-      41415,
-      37576,
-      37577,
-      37578,
-      37579,
-      37580,
-      27097
+      37550
     ]
   },
   {
@@ -22997,18 +23225,18 @@
   },
   {
     "description": "WELL_OF_VOYAGE",
-    "height": 200,
+    "height": 400,
     "alignment": "CENTER",
-    "radius": 250,
-    "strength": 15,
+    "radius": 700,
+    "strength": 20,
     "color": [
       255,
       255,
       255
     ],
     "type": "PULSE",
-    "duration": 1200,
-    "range": 30,
+    "duration": 3000,
+    "range": 7,
     "objectIds": [
       4004,
       4005
@@ -23016,9 +23244,9 @@
   },
   {
     "description": "ELVEN_LAMP",
-    "height": 180,
+    "height": 160,
     "alignment": "CENTER",
-    "radius": 250,
+    "radius": 350,
     "strength": 10,
     "color": [
       255,
@@ -23026,8 +23254,8 @@
       255
     ],
     "type": "PULSE",
-    "duration": 1000,
-    "range": 10,
+    "duration": 2000,
+    "range": 7,
     "objectIds": [
       35867,
       35868,
@@ -23038,10 +23266,26 @@
   },
   {
     "description": "GRAND_LIBRARY_PORTAL",
-    "height": 150,
-    "alignment": "CENTER",
+    "offset": [ -15, 150, 0 ],
     "radius": 450,
-    "strength": 12.5,
+    "strength": 3,
+    "color": [
+      0,
+      200,
+      225
+    ],
+    "type": "PULSE",
+    "duration": 1200,
+    "range": 10,
+    "objectIds": [
+      35075
+    ]
+  },
+  {
+    "description": "GRAND_LIBRARY_PORTAL_2",
+    "offset": [ 0, 5, 0 ],
+    "radius": 450,
+    "strength": 10,
     "color": [
       0,
       200,
@@ -23056,10 +23300,9 @@
   },
   {
     "description": "GRAND_LIBRARY_CRYSTAL_1",
-    "height": 310,
-    "alignment": "FRONTLEFT",
-    "radius": 200,
-    "strength": 12.5,
+    "offset": [ 50, 310, -50 ],
+    "radius": 350,
+    "strength": 8,
     "color": [
       0,
       200,
@@ -23074,10 +23317,9 @@
   },
   {
     "description": "GRAND_LIBRARY_CRYSTAL_2",
-    "height": 140,
-    "alignment": "FRONTLEFT",
-    "radius": 200,
-    "strength": 12.5,
+    "offset": [ 50, 160, -50 ],
+    "radius": 350,
+    "strength": 8,
     "color": [
       0,
       200,
@@ -23089,15 +23331,16 @@
     "objectIds": [
       35059,
       35061,
+      35064,
       35384
     ]
   },
   {
     "description": "GRAND_LIBRARY_LIGHT_1",
-    "height": 140,
+    "height": 90,
     "alignment": "CENTER",
-    "radius": 200,
-    "strength": 12.5,
+    "radius": 300,
+    "strength": 10,
     "color": [
       0,
       200,
@@ -23112,10 +23355,9 @@
   },
   {
     "description": "GRAND_LIBRARY_LIGHT_2",
-    "height": 310,
-    "alignment": "CENTER",
-    "radius": 200,
-    "strength": 12.5,
+    "offset": [ -40, 360, 0 ],
+    "radius": 350,
+    "strength": 10,
     "color": [
       0,
       200,
@@ -23131,11 +23373,10 @@
     ]
   },
   {
-    "description": "GRAND_LIBRARY_SEAL",
-    "height": 150,
-    "alignment": "FRONT",
+    "description": "GRAND_LIBRARY_SEAL 1",
+    "offset": [ -90, 160, -50 ],
     "radius": 300,
-    "strength": 12.5,
+    "strength": 8,
     "color": [
       0,
       200,
@@ -23153,14 +23394,65 @@
       35461,
       35463,
       35465
-    ]
+    ],
+    "fadeOutDuration": 300
+  },
+  {
+    "description": "GRAND_LIBRARY_SEAL_2",
+    "offset": [ 90, 160, -50 ],
+    "radius": 300,
+    "strength": 8,
+    "color": [
+      0,
+      200,
+      225
+    ],
+    "type": "PULSE",
+    "duration": 3200,
+    "range": 5,
+    "objectIds": [
+      35451,
+      35453,
+      35455,
+      35457,
+      35459,
+      35461,
+      35463,
+      35465
+    ],
+    "fadeOutDuration": 300
+  },
+  {
+    "description": "GRAND_LIBRARY_SEAL_3",
+    "offset": [ 0, 150, -80 ],
+    "radius": 300,
+    "strength": 5,
+    "color": [
+      0,
+      200,
+      225
+    ],
+    "type": "PULSE",
+    "duration": 3200,
+    "range": 5,
+    "objectIds": [
+      35451,
+      35453,
+      35455,
+      35457,
+      35459,
+      35461,
+      35463,
+      35465
+    ],
+    "fadeOutDuration": 300
   },
   {
     "description": "GRAND_LIBRARY_SEAL_BROKEN",
     "height": 150,
-    "alignment": "FRONT",
-    "radius": 300,
-    "strength": 12.5,
+    "alignment": "BACK",
+    "radius": 80,
+    "strength": 120,
     "color": [
       0,
       200,
@@ -23182,7 +23474,7 @@
     ]
   },
   {
-    "description": "FRAGMENT_OF_SEREN",
+    "description": "FRAGMENT_OF_SEREN_POST_DEFEAT",
     "height": 280,
     "alignment": "CENTER",
     "radius": 500,
@@ -23255,7 +23547,7 @@
       255
     ],
     "type": "PULSE",
-    "duration": 900,
+    "duration": 2000,
     "range": 20,
     "objectIds": [
       36083,
@@ -23337,9 +23629,8 @@
   },
   {
     "description": "GAUNTLET_LIT_NODE_1",
-    "height": 210,
-    "alignment": "BACKRIGHT",
-    "radius": 200,
+    "offset": [ -80, 210, 20 ],
+    "radius": 300,
     "strength": 10,
     "color": [
       0,
@@ -23355,9 +23646,8 @@
   },
   {
     "description": "GAUNTLET_LIT_NODE_2",
-    "height": 210,
-    "alignment": "BACKLEFT",
-    "radius": 200,
+    "offset": [ 80, 210, 20 ],
+    "radius": 300,
     "strength": 10,
     "color": [
       0,
@@ -23406,6 +23696,23 @@
     "objectIds": [
       36064
     ]
+  },
+  {
+    "description": "GAUNTLET_FISHING_SPOT",
+    "height": 40,
+    "alignment": "CENTER",
+    "radius": 225,
+    "strength": 10,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      36068
+    ],
+    "fadeOutDuration": 100
   },
   {
     "description": "CORRUPTED_TELEPORT_PLATFORM",
@@ -23481,10 +23788,9 @@
   },
   {
     "description": "CORRUPTED_GAUNTLET_LIT_NODE_1",
-    "height": 210,
-    "alignment": "BACKRIGHT",
-    "radius": 200,
-    "strength": 10,
+    "offset": [ -80, 210, 20 ],
+    "radius": 350,
+    "strength": 7,
     "color": [
       255,
       0,
@@ -23499,10 +23805,9 @@
   },
   {
     "description": "CORRUPTED_GAUNTLET_LIT_NODE_2",
-    "height": 210,
-    "alignment": "BACKLEFT",
-    "radius": 200,
-    "strength": 10,
+    "offset": [ 80, 210, 20 ],
+    "radius": 350,
+    "strength": 7,
     "color": [
       255,
       0,
@@ -23550,6 +23855,23 @@
     "objectIds": [
       35967
     ]
+  },
+  {
+    "description": "GAUNTLET_FISHING_SPOT",
+    "height": 40,
+    "alignment": "CENTER",
+    "radius": 225,
+    "strength": 10,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      35971
+    ],
+    "fadeOutDuration": 100
   },
   {
     "description": "ZALCANO_ROCK_FORMATION_GLOWING",
@@ -23786,11 +24108,10 @@
     ]
   },
   {
-    "description": "PYRAMID_PLUNDER_TOMB_DOOR",
+    "description": "PYRAMID_PLUNDER_TOMB_DOOR_1",
     "height": 100,
-    "alignment": "FRONT",
     "radius": 400,
-    "strength": 10,
+    "strength": 15,
     "color": [
       255,
       224,
@@ -23800,14 +24121,30 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      20931,
+      20931
+    ]
+  },
+  {
+    "description": "PYRAMID_PLUNDER_TOMB_DOOR_2",
+    "height": 100,
+    "radius": 350,
+    "strength": 65,
+    "color": [
+      255,
+      224,
+      166
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "objectIds": [
       20932
     ]
   },
   {
     "description": "PYRAMID_PLUNDER_WALL_TORCH",
     "height": 205,
-    "offset": [ -15, 0, 0 ],
+    "offset": [ -30, 0, -5 ],
     "radius": 350,
     "strength": 12.5,
     "color": [
@@ -24567,13 +24904,12 @@
   {
     "description": "CORP_PRIVATE_PORTAL_EXIT",
     "height": 30,
-    "alignment": "CENTER",
     "radius": 500,
     "strength": 10,
     "color": [
       255,
-      216,
-      87
+      255,
+      255
     ],
     "type": "PULSE",
     "duration": 1550,
@@ -24581,6 +24917,119 @@
     "objectIds": [
       9369
     ]
+  },
+  {
+    "description": "Corporeal Beast Ancient Brazier Lit High",
+    "offset": [ -14, 250, 15 ],
+    "radius": 350,
+    "strength": 5,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 150,
+    "color": [
+      100,
+      150,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 1550,
+    "range": 20,
+    "objectIds": [
+      41016
+    ]
+  },
+  {
+    "description": "Corporeal Beast Ancient Brazier Lit Low",
+    "offset": [ 30, 25, 18 ],
+    "radius": 450,
+    "strength": 7,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 150,
+    "color": [
+      100,
+      150,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 1000,
+    "range": 25,
+    "objectIds": [
+      41016
+    ]
+  },
+  {
+    "description": "Corporeal Beast Magic Projectile",
+    "offset": [ 0, -20, 0 ],
+    "radius": 275,
+    "spawnDelay": 250,
+    "strength": 4,
+    "fadeOutDuration": 200,
+    "fadeInDuration": 200,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 1000,
+    "range": 25,
+    "projectileIds": [
+      314,
+      316
+    ]
+  },
+  {
+    "description": "Corporeal Beast Explosion Projectile",
+    "offset": [ 0, 50, 0 ],
+    "radius": 350,
+    "strength": 3,
+    "spawnDelay": 100,
+    "fadeInDuration": 500,
+    "fadeOutDuration": 200,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 1000,
+    "range": 25,
+    "projectileIds": [
+      315
+    ]
+  },
+  {
+    "description": "Corporeal Beast Dark Core - Stationary",
+    "offset": [ 0, 100, 0 ],
+    "radius": 260,
+    "strength": 7,
+    "fadeOutDuration": 300,
+    "fadeInDuration": 200,
+    "color": [
+      150,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 1000,
+    "range": 10,
+    "npcIds": [ 320 ]
+  },
+  {
+    "description": "Corporeal Beast Dark Core - Moving",
+    "offset": [ 0, -40, 0 ],
+    "radius": 250,
+    "strength": 6,
+    "fadeOutDuration": 300,
+    "fadeInDuration": 200,
+    "color": [
+      150,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 1000,
+    "range": 10,
+    "projectileIds": [ 319 ]
   },
   {
     "description": "TUNNEL_EXIT",
@@ -24861,9 +25310,8 @@
   },
   {
     "description": "CLAN_HALL_PORTAL",
-    "height": 130,
-    "alignment": "FRONT",
-    "radius": 700,
+    "offset": [ 0, 150, -100 ],
+    "radius": 600,
     "strength": 12.5,
     "color": [
       0,
@@ -25118,11 +25566,12 @@
     ]
   },
   {
-    "description": "MONUMENTAL_CHEST_OPEN",
-    "height": 120,
+    "description": "MONUMENTAL_CHEST_NORMAL",
+    "offset": [ 0, 300, -100 ],
     "alignment": "CENTER",
-    "radius": 800,
-    "strength": 7.5,
+    "radius": 900,
+    "strength": 9.5,
+    "fadeOutDuration": 300,
     "color": [
       255,
       191,
@@ -25133,16 +25582,31 @@
     "range": 0,
     "objectIds": [
       32992,
+      32990
+    ]
+  },
+  {
+    "description": "MONUMENTAL_CHEST_UNIQUE",
+    "offset": [ 0, 300, -100 ],
+    "radius": 900,
+    "strength": 9.5,
+    "fadeOutDuration": 300,
+    "color": [
+      205,
+      0,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "objectIds": [
       32993,
-      32994,
-      32990,
       32991
     ]
   },
   {
     "description": "TOB_WALL_TORCH",
-    "height": 200,
-    "alignment": "FRONTRIGHT_CORNER",
+    "offset": [ -100, 250, -100 ],
     "radius": 300,
     "strength": 7.5,
     "color": [
@@ -25151,7 +25615,7 @@
       3
     ],
     "type": "FLICKER",
-    "duration": 0,
+    "duration": 30,
     "range": 20,
     "objectIds": [
       32998,
@@ -25160,10 +25624,10 @@
   },
   {
     "description": "TOB_TELEPORT_CRYSTAL",
-    "height": 200,
+    "height": 300,
     "alignment": "CENTER",
-    "radius": 300,
-    "strength": 7.5,
+    "radius": 600,
+    "strength": 20,
     "color": [
       140,
       0,
@@ -25171,17 +25635,56 @@
     ],
     "type": "PULSE",
     "duration": 1800,
-    "range": 30,
+    "range": 10,
     "objectIds": [
       32996
     ]
   },
   {
+    "description": "TOB_XARPUS_EXHUMED_GROUND",
+    "areas": [ "THEATRE_OF_BLOOD" ],
+    "offset": [ 0, 20, 0 ],
+    "radius": 250,
+    "strength": 10,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 900,
+    "spawnDelay": 900,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 2200,
+    "range": 30,
+    "objectIds": [
+      32743
+    ]
+  },
+  {
+    "description": "TOB_XARPUS_WINDOW",
+    "areas": [ "THEATRE_OF_BLOOD" ],
+    "offset": [ 0, 200, 100 ],
+    "radius": 550,
+    "strength": 10,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 2200,
+    "range": 30,
+    "objectIds": [
+      32662
+    ]
+  },
+  {
     "description": "TOB_BARRIER",
-    "height": 50,
+    "height": 100,
     "alignment": "CENTER",
-    "radius": 150,
-    "strength": 7.5,
+    "radius": 350,
+    "strength": 6,
     "color": [
       255,
       0,
@@ -25195,11 +25698,30 @@
     ]
   },
   {
+    "description": "TOB_VERZIK_BARRIER",
+    "height": 100,
+    "alignment": "CENTER",
+    "radius": 350,
+    "strength": 6,
+    "color": [
+      162,
+      0,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 2200,
+    "range": 30,
+    "objectIds": [
+      33028,
+      47336
+    ]
+  },
+  {
     "description": "PESTILENT_BLOAT_CHAMBER",
     "height": 400,
     "alignment": "CENTER",
-    "radius": 1500,
-    "strength": 15,
+    "radius": 2000,
+    "strength": 20,
     "color": [
       255,
       208,
@@ -25207,15 +25729,14 @@
     ],
     "type": "PULSE",
     "duration": 1800,
-    "range": 10,
+    "range": 5,
     "objectIds": [
       32957
     ]
   },
   {
     "description": "TOB_VERZIK_BIG_WINDOW",
-    "height": 750,
-    "alignment": "FRONT",
+    "offset": [ 0, 750, -50 ],
     "radius": 1000,
     "strength": 16.3,
     "color": [
@@ -25232,9 +25753,8 @@
   },
   {
     "description": "TOB_VERZIK_WINDOW",
-    "height": 450,
-    "alignment": "FRONT",
-    "radius": 600,
+    "offset": [ 0, 500, -100 ],
+    "radius": 800,
     "strength": 10,
     "color": [
       162,
@@ -25250,10 +25770,9 @@
   },
   {
     "description": "TOB_VERZIK_WINDOW_FLOOR",
-    "height": 70,
-    "alignment": "FRONT",
-    "radius": 1000,
-    "strength": 5,
+    "offset": [ 0, 150, -100 ],
+    "radius": 600,
+    "strength": 15,
     "color": [
       162,
       0,
@@ -25267,11 +25786,44 @@
     ]
   },
   {
-    "description": "TOB_SOTETSEG_WINDOW",
-    "height": 400,
-    "alignment": "FRONTRIGHT_CORNER",
+    "description": "TOB_SOTETSEG_WINDOW Low",
+    "offset": [ -400, 125, -135 ],
+    "radius": 2000,
+    "strength": 10 ,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "objectIds": [
+      33052
+    ]
+  },
+  {
+    "description": "TOB_SOTETSEG_WINDOW Mid",
+    "offset": [ -300, 600, -135 ],
     "radius": 1200,
-    "strength": 10,
+    "strength": 3,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "objectIds": [
+      33052
+    ]
+  },
+  {
+    "description": "TOB_SOTETSEG_WINDOW High",
+    "offset": [ -250, 850, -135 ],
+    "radius": 700,
+    "strength": 6,
     "color": [
       255,
       255,
@@ -25286,10 +25838,9 @@
   },
   {
     "description": "TOB_BAT_TORCH",
-    "height": 820,
-    "alignment": "FRONT",
-    "radius": 300,
-    "strength": 10,
+    "offset": [ 0, 820, -70 ],
+    "radius": 425,
+    "strength": 12,
     "color": [
       255,
       0,
@@ -25632,6 +26183,40 @@
     ]
   },
   {
+    "description": "BLAST_FURNACE_STOVE_TOP",
+    "offset": [ 0, 215, 0 ],
+    "radius": 40,
+    "strength": 75,
+    "color": [
+      200,
+      70,
+      10
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 5,
+    "objectIds": [
+      9087
+    ]
+  },
+  {
+    "description": "BLAST_FURNACE_STOVE_BOTTOM",
+    "offset": [ 140, 70, 0 ],
+    "radius": 90,
+    "strength": 45,
+    "color": [
+      200,
+      70,
+      10
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 5,
+    "objectIds": [
+      9087
+    ]
+  },
+  {
     "description": "CANIFIS_TUBE",
     "height": 130,
     "alignment": "CENTER",
@@ -25651,9 +26236,9 @@
   },
   {
     "description": "CAMELOT_COOKING_RANGE",
-    "height": 120,
+    "offset": [ 0, 120, 0 ],
     "alignment": "CENTER",
-    "radius": 800,
+    "radius": 225,
     "strength": 5,
     "color": [
       252,
@@ -25668,9 +26253,8 @@
     ]
   },
   {
-    "description": "WALL_STATIC_LAMPS",
-    "height": 190,
-    "alignment": "CENTER",
+    "description": "Lantern with Glass",
+    "offset": [ -5, 210, 0 ],
     "radius": 450,
     "strength": 7.5,
     "color": [
@@ -27951,7 +28535,9 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      43704
+      43704,
+      43787,
+      43812
     ]
   },
   {
@@ -27969,7 +28555,9 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      43711
+      43711,
+      43794,
+      43819
     ]
   },
   {
@@ -27987,7 +28575,9 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      43703
+      43703,
+      43786,
+      43811
     ]
   },
   {
@@ -28005,7 +28595,10 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      43702
+      43702,
+      43785,
+      43810,
+      43821
     ]
   },
   {
@@ -28023,7 +28616,9 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      43710
+      43710,
+      43793,
+      43818
     ]
   },
   {
@@ -28041,7 +28636,9 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      43701
+      43701,
+      43784,
+      43809
     ]
   },
   {
@@ -28059,7 +28656,10 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      43705
+      43705,
+      43788,
+      43813,
+      43822
     ]
   },
   {
@@ -28077,7 +28677,9 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      43709
+      43709,
+      43792,
+      43817
     ]
   },
   {
@@ -28095,7 +28697,9 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      43706
+      43706,
+      43789,
+      43814
     ]
   },
   {
@@ -28113,7 +28717,9 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      43707
+      43707,
+      43790,
+      43815
     ]
   },
   {
@@ -28131,7 +28737,9 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      43712
+      43712,
+      43795,
+      43820
     ]
   },
   {
@@ -28149,7 +28757,9 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      43708
+      43708,
+      43791,
+      43816
     ]
   },
   {
@@ -28169,32 +28779,6 @@
     "objectIds": [
       43729,
       43730
-    ]
-  },
-  {
-    "description": "ABYSSAL_NEXUS_TENDRILS_THRONE",
-    "height": 65,
-    "alignment": "CENTER",
-    "radius": 600,
-    "strength": 5,
-    "color": [
-      70,
-      242,
-      31
-    ],
-    "type": "FLICKER",
-    "duration": 2000,
-    "range": 20,
-    "objectIds": [
-      27005,
-      26984,
-      26985,
-      26986,
-      27004,
-      27006,
-      27014,
-      27015,
-      27016
     ]
   },
   {
@@ -28233,6 +28817,118 @@
       43713,
       43714
     ]
+  },
+  {
+    "description": "SIRE_BELLY_LIGHT_LOWER",
+    "offset": [ 0, 250, 100 ],
+    "npcIds": [ 5890, 5889, 5891 ],
+    "radius": 250,
+    "strength": 125,
+    "color": [
+      100,
+      0,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 2500,
+    "range": 13
+  },
+  {
+    "description": "SIRE_BELLY_LIGHT_UPPER",
+    "offset": [ 0, 350, 75 ],
+    "npcIds": [ 5890, 5889, 5891 ],
+    "radius": 100,
+    "strength": 125,
+    "color": [
+      100,
+      0,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 2500,
+    "range": 13
+  },
+  {
+    "description": "SIRE_BELLY_LIGHT_EXPLOSION",
+    "offset": [ 0, 325, 200 ],
+    "npcIds": [ 5908 ],
+    "radius": 350,
+    "strength": 200,
+    "color": [
+      100,
+      0,
+      255
+    ],
+    "type": "STATIC"
+  },
+  {
+    "description": "SIRE_BELLY_LIGHT_EXPLOSION_2",
+    "offset": [ 0, 150, 275 ],
+    "npcIds": [ 5908 ],
+    "animationIds": [ -1, 7098, 7099 ],
+    "radius": 450,
+    "strength": 15,
+    "color": [
+      200,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "range": 40,
+    "duration": 100,
+    "fadeInDuration": 400,
+    "fadeOutDuration": 100,
+    "spawnDelay": 150
+  },
+  {
+    "description": "SIRE_THRONE_LIGHT",
+    "offset": [ -50, 170, 50 ],
+    "objectIds": [ 26984 ],
+    "radius": 700,
+    "strength": 25,
+    "color": [
+      25,
+      200,
+      25
+    ],
+    "type": "PULSE",
+    "duration": 2500,
+    "range": 13
+  },
+  {
+    "description": "ABYSSAL_NEXUS_TENDRILS",
+    "height": 45,
+    "alignment": "CENTER",
+    "radius": 475,
+    "strength": 3.5,
+    "color": [
+      70,
+      242,
+      31
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      27014,
+      27015,
+      27016
+    ]
+  },
+  {
+    "description": "Abyssal Nexus - Respiratory System",
+    "height": 275,
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 7.5,
+    "color": [
+      70,
+      242,
+      31
+    ],
+    "objectIds": [ 26953 ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200
   },
   {
     "description": "GOTR_ENTRANCE_BARRIER_YELLOW",
@@ -28472,7 +29168,7 @@
   {
     "description": "Drake Maw Idle",
     "height": 50,
-    "offset": [ -20, 5, 252 ],
+    "offset": [ -17, -3, 249 ],
     "radius": 32,
     "strength": 120,
     "color": "#ff8c00",
@@ -30148,7 +30844,7 @@
     "range": 10
   },
   {
-    "description": "WINTERTODT_LIT_BRAZIER",
+    "description": "WINTERTODT_LIT_BRAZIER_MAIN",
     "height": 300,
     "alignment": "CENTER",
     "radius": 600,
@@ -30163,6 +30859,24 @@
     "range": 15,
     "fadeInDuration": 50,
     "fadeOutDuration": 100,
+    "objectIds": [
+      29314,
+      31926
+    ]
+  },
+  {
+    "description": "WINTERTODT_LIT_BRAZIER_FLICKER",
+    "offset": [ -7, 135, -4 ],
+    "radius": 100,
+    "strength": 300,
+    "color": [
+      165,
+      255,
+      56
+    ],
+    "type": "FLICKER",
+    "duration": 10,
+    "range": 45,
     "objectIds": [
       29314,
       31926
@@ -33307,10 +34021,9 @@
   },
   {
     "description": "STRONGHOLD_OF_SECURITY_WAR_LIGHT",
-    "height": 90,
-    "alignment": "RIGHT",
+    "height": 80,
     "radius": 400,
-    "strength": 7.5,
+    "strength": 9.5,
     "color": [
       255,
       80,
@@ -33342,10 +34055,9 @@
   },
   {
     "description": "STRONGHOLD_OF_SECURITY_FAMINE_LIGHT",
-    "height": 220,
-    "alignment": "RIGHT",
-    "radius": 400,
-    "strength": 7.5,
+    "offset": [ -30, 250, 0 ],
+    "radius": 500,
+    "strength": 3.5,
     "color": [
       255,
       216,
@@ -33393,8 +34105,7 @@
   },
   {
     "description": "STRONGHOLD_OF_SECURITY_DEATH_LIGHT",
-    "height": 225,
-    "alignment": "FRONT",
+    "offset": [ 40, 225, 0 ],
     "radius": 550,
     "strength": 4,
     "color": [
@@ -33725,8 +34436,7 @@
   },
   {
     "description": "Wall Lantern",
-    "height": 235,
-    "alignment": "CENTER",
+    "offset": [ 0, 200, 0 ],
     "radius": 250,
     "strength": 6.5,
     "color": [
@@ -35258,6 +35968,17 @@
     "fadeOutDuration": 300
   },
   {
+    "description": "Basalisk Knight - Magic Attack",
+    "alignment": "CENTER",
+    "radius": 215,
+    "strength": 11,
+    "color": [ 220, 0, 255 ],
+    "projectileIds": [ 1735 ],
+    "fadeInDuration": 350,
+    "spawnDelay": 750,
+    "fadeOutDuration": 600
+  },
+  {
     "description": "Venenatis, Spindel, Artio, Callisto and Escape Caves exit cave",
     "objectIds": [
       46999,
@@ -35553,5 +36274,765 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 20
+  },
+  {
+    "description": "Hespori Status Flower - Open",
+    "height": 100,
+    "alignment": "CENTER",
+    "radius": 195,
+    "strength": 15,
+    "fadeInDuration": 100,
+    "color": [
+      40,
+      240,
+      40
+    ],
+    "type": "STATIC",
+    "duration": 4500,
+    "range": 10,
+    "objectIds": [ 34705 ]
+  },
+  {
+    "description": "Hespori Combat Flower - Open - Wide",
+    "height": 70,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 7,
+    "fadeOutDuration": 700,
+    "fadeInDuration": 75,
+    "spawnDelay": 1300,
+    "color": [
+      40,
+      240,
+      40
+    ],
+    "type": "PULSE",
+    "duration": 2500,
+    "range": 15,
+    "npcIds": [ 8584 ],
+    "animationIds": [ -1, 8229 ]
+  },
+  {
+    "description": "Hespori Combat Flower - Open - Short",
+    "height": 70,
+    "alignment": "CENTER",
+    "radius": 125,
+    "strength": 12,
+    "fadeOutDuration": 600,
+    "fadeInDuration": 500,
+    "spawnDelay": 400,
+    "color": [
+      40,
+      240,
+      40
+    ],
+    "type": "PULSE",
+    "duration": 2500,
+    "range": 15,
+    "npcIds": [ 8584 ],
+    "animationIds": [ -1, 8229 ]
+  },
+  {
+    "description": "Hespori Magic Attack",
+    "radius": 250,
+    "height": -50,
+    "strength": 8.8,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 1000,
+    "fadeOutDuration": 250,
+    "projectileIds": [
+      1640
+    ]
+  },
+  {
+    "description": "Baba Yaga's House - Cooking Range",
+    "offset": [ -15, 165, 0 ],
+    "radius": 120,
+    "strength": 8,
+    "color": [
+      230,
+      100,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 5,
+    "objectIds": [
+      16812
+    ]
+  },
+  {
+    "description": "Grotesque Guardians Dawn Ranged Attack",
+    "projectileIds": [
+      1437,
+      1444
+    ],
+    "offset": [ 0, 0, 0 ],
+    "radius": 210,
+    "strength": 20,
+    "color": [
+      50,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "spawnDelay": 300,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200
+  },
+  {
+    "description": "Grotesque Guardians Dawn Freeze",
+    "projectileIds": [
+      1445
+    ],
+    "offset": [ 0, -20, 0 ],
+    "radius": 195,
+    "strength": 10,
+    "color": [
+      135,
+      135,
+      135
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "spawnDelay": 300,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200
+  },
+  {
+    "description": "Grotesque Guardians Flames",
+    "graphicsObjectIds": [
+      1434
+    ],
+    "offset": [ 0, 10, 0 ],
+    "radius": 175,
+    "strength": 20,
+    "color": [
+      50,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 300,
+    "fixedDespawnTime": true,
+    "despawnDelay": 2500
+  },
+  {
+    "description": "Grotesque Guardians Dusk Final Phase",
+    "npcIds": [
+      7888
+    ],
+    "offset": [ 0, 50, 0 ],
+    "radius": 700,
+    "strength": 20,
+    "color": [
+      50,
+      0,
+      255
+    ],
+    "type": "STATIC"
+  },
+  {
+    "description": "Grotesque Guardians Dusk Heal Orb",
+    "objectIds": [
+      31678,
+      31679,
+      31680
+    ],
+    "offset": [ 0, 10, 0 ],
+    "radius": 200,
+    "strength": 20,
+    "color": [
+      50,
+      0,
+      255
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 100,
+    "fadeOutDuration": 150
+  },
+  {
+    "description": "Paterdomus Temple Basement Monument lights",
+    "height": 160,
+    "offset": [ 0, -37, -90 ],
+    "radius": 150,
+    "strength": 7.7,
+    "color": [
+      255,
+      255,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 30,
+    "range": 10,
+    "objectIds": [
+      3493,
+      3494,
+      3495,
+      3496
+    ]
+  },
+  {
+    "description": "Paterdomus Temple Basement Monument lights - Angled",
+    "height": 160,
+    "offset": [ -40, -37, -74 ],
+    "radius": 150,
+    "strength": 7.7,
+    "color": [
+      255,
+      255,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 30,
+    "range": 10,
+    "objectIds": [
+      3497,
+      3498,
+      3499
+    ]
+  },
+  {
+    "description": "Elemental Workshop wall lantern",
+    "offset": [ 4, 155, 0 ],
+    "radius": 500,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      18536
+    ]
+  },
+  {
+    "description": "Glowing Fungus",
+    "offset": [ 0, 8, 0 ],
+    "radius": 180,
+    "strength": 8,
+    "color": [
+      100,
+      3,
+      187
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 5,
+    "objectIds": [
+      4932,
+      4933
+    ]
+  },
+  {
+    "description": "Crystal Outcropping",
+    "offset": [ 0, 6, 0 ],
+    "radius": 180,
+    "strength": 8,
+    "color": [
+      187,
+      3,
+      187
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 5,
+    "objectIds": [
+      4926,
+      4927,
+      4928
+    ]
+  },
+  {
+    "description": "Hueycoatl Campfire",
+    "height": 50,
+    "radius": 400,
+    "strength": 12,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 15,
+    "objectIds": [
+      55200
+    ]
+  },
+  {
+    "description": "Hueycoatl Brazier",
+    "height": 650,
+    "radius": 400,
+    "strength": 12,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "fadeInDuration": 100,
+    "fadeOutDuration": 200,
+    "duration": 600,
+    "range": 15,
+    "objectIds": [
+      55210,
+      55218,
+      55226
+    ]
+  },
+  {
+    "description": "Hueycoatl Melee Projectile",
+    "height": 0,
+    "radius": 220,
+    "strength": 12,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "FLICKER",
+    "fadeInDuration": 100,
+    "fadeOutDuration": 300,
+    "duration": 600,
+    "range": 15,
+    "projectileIds": [ 2969 ]
+  },
+  {
+    "description": "Hueycoatl Range Projectile",
+    "offset": [ 5, 20, 5 ],
+    "radius": 210,
+    "strength": 12,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "FLICKER",
+    "fadeInDuration": 100,
+    "fadeOutDuration": 300,
+    "duration": 600,
+    "range": 15,
+    "projectileIds": [ 2972 ]
+  },
+  {
+    "description": "Hueycoatl Mage Projectile",
+    "height": 20,
+    "radius": 285,
+    "strength": 14,
+    "color": [
+      0,
+      200,
+      255
+    ],
+    "type": "FLICKER",
+    "fadeInDuration": 100,
+    "fadeOutDuration": 300,
+    "duration": 600,
+    "range": 15,
+    "projectileIds": [ 2975 ]
+  },
+  {
+    "description": "Hueycoatl Ground Attack",
+    "height": 25,
+    "radius": 105,
+    "strength": 6,
+    "color": [
+      0,
+      200,
+      255
+    ],
+    "type": "FLICKER",
+    "fixedDespawnTime": true,
+    "despawnDelay": 3500,
+    "fadeInDuration": 400,
+    "fadeOutDuration": 200,
+    "duration": 600,
+    "range": 15,
+    "graphicsObjectIds": [ 3001 ]
+  },
+  {
+    "description": "Asgarnia Ice Dungeon Ladder",
+    "objectIds": [ 17385 ],
+    "height": 360,
+    "radius": 900,
+    "strength": 10,
+    "color": [
+      187.73344,
+      217.66177,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 1000,
+    "range": 0.2
+  },
+  {
+    "description": "Asgarnia Ice Dungeon - Royal Titans Lava 1",
+    "worldX": 2908,
+    "worldY": 9573,
+    "height": 220,
+    "radius": 300,
+    "strength": 10,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "PULSE",
+    "duration": 1100,
+    "range": 10
+  },
+  {
+    "description": "Asgarnia Ice Dungeon - Royal Titans Lava 2",
+    "worldX": 2908,
+    "worldY": 9571,
+    "height": 220,
+    "radius": 300,
+    "strength": 10,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "PULSE",
+    "duration": 1050,
+    "range": 10
+  },
+  {
+    "description": "Asgarnia Ice Dungeon - Royal Titans Lava 3",
+    "worldX": 2908,
+    "worldY": 9569,
+    "height": 220,
+    "radius": 300,
+    "strength": 10,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "PULSE",
+    "duration": 1250,
+    "range": 10
+  },
+  {
+    "description": "Asgarnia Ice Dungeon - Royal Titans Lava 4",
+    "worldX": 2908,
+    "worldY": 9567,
+    "height": 220,
+    "radius": 300,
+    "strength": 10,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "PULSE",
+    "duration": 1150,
+    "range": 10
+  },
+  {
+    "description": "Asgarnia Ice Dungeon - Royal Titans Lava 5",
+    "worldX": 2908,
+    "worldY": 9565,
+    "height": 220,
+    "radius": 300,
+    "strength": 10,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "PULSE",
+    "duration": 1200,
+    "range": 10
+  },
+  {
+    "description": "Asgarnia Ice Dungeon - Royal Titans Lava 6",
+    "worldX": 2908,
+    "worldY": 9563,
+    "height": 220,
+    "radius": 300,
+    "strength": 10,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "PULSE",
+    "duration": 1100,
+    "range": 10
+  },
+  {
+    "description": "Asgarnia Ice Dungeon - Royal Titans Lava 7",
+    "worldX": 2908,
+    "worldY": 9561,
+    "height": 220,
+    "radius": 300,
+    "strength": 10,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "PULSE",
+    "duration": 1075,
+    "range": 10
+  },
+  {
+    "description": "FIRE",
+    "height": 100,
+    "radius": 200,
+    "strength": 15.5,
+    "fadeInDuration": 10,
+    "fadeOutDuration": 100,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      56001
+    ]
+  },
+  {
+    "description": "Royal Titans - Branda Body Light Front",
+    "offset": [ 0, 300, 0 ],
+    "radius": 700,
+    "strength": 20,
+    "color": [
+      255,
+      124,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "npcIds": [ 12596 ],
+    "fadeInDuration": 100,
+    "fadeOutDuration": 400
+  },
+  {
+    "description": "Royal Titans - Branda Body Light Back",
+    "offset": [ 0, 350, -150 ],
+    "radius": 700,
+    "strength": 12,
+    "color": [
+      255,
+      124,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "npcIds": [ 12596 ],
+    "fadeInDuration": 100,
+    "fadeOutDuration": 400
+  },
+  {
+    "description": "Royal Titans - Branda Body Light Top",
+    "offset": [ 0, 550, 0 ],
+    "radius": 400,
+    "strength": 15,
+    "color": [
+      255,
+      124,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "npcIds": [ 12596 ],
+    "fadeInDuration": 100,
+    "fadeOutDuration": 400
+  },
+  {
+    "description": "Royal Titans - Branda Respawn",
+    "offset": [ 0, 250, 0 ],
+    "radius": 650,
+    "strength": 20,
+    "color": [
+      255,
+      124,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "npcIds": [ 14148 ],
+    "animationIds": [ 11992 ],
+    "fadeInDuration": 400,
+    "fixedDespawnTime": true,
+    "despawnDelay": 3100,
+    "fadeOutDuration": 600
+  },
+  {
+    "description": "Royal Titans - Eldric Body Light Front",
+    "offset": [ 0, 300, 70 ],
+    "radius": 600,
+    "strength": 4,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "npcIds": [ 14147 ],
+    "fadeInDuration": 100,
+    "fadeOutDuration": 400
+  },
+  {
+    "description": "Royal Titans - Eldric Body Light Back",
+    "offset": [ 0, 350, -180 ],
+    "radius": 600,
+    "strength": 1.5,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "npcIds": [ 14147 ],
+    "fadeInDuration": 100,
+    "fadeOutDuration": 400
+  },
+  {
+    "description": "Royal Titans - Eldric Body Light Top",
+    "offset": [ 0, 550, 0 ],
+    "radius": 400,
+    "strength": 1,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "npcIds": [ 14147 ],
+    "fadeInDuration": 100,
+    "fadeOutDuration": 400
+  },
+  {
+    "description": "Royal Titans - Fire Elemental",
+    "offset": [ 0, 100, 0 ],
+    "radius": 150,
+    "strength": 20,
+    "color": [
+      255,
+      124,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "npcIds": [ 14150 ],
+    "animationIds": [ -1, 11947, 11956 ],
+    "fadeInDuration": 100,
+    "fadeOutDuration": 200
+  },
+  {
+    "description": "Royal Titans - Ice Elemental",
+    "offset": [ 0, 150, 10 ],
+    "radius": 225,
+    "strength": 15,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "npcIds": [ 14151 ],
+    "animationIds": [ -1, 11950, 11954 ],
+    "fadeInDuration": 100,
+    "fadeOutDuration": 200
+  },
+  {
+    "description": "Royal Titans - Ice",
+    "offset": [ 0, 100, 10 ],
+    "radius": 175,
+    "strength": 15,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "graphicsObjectIds": [ 3226 ],
+    "fixedDespawnTime": true,
+    "despawnDelay": 1300,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 600
+  },
+  {
+    "description": "Giantsoul Amulet Teleport - Fire",
+    "offset": [ 0, 225, 10 ],
+    "radius": 200,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "graphicsObjectIds": [ 3226 ],
+    "fixedDespawnTime": true,
+    "despawnDelay": 1300,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 600
+  },
+  {
+    "description": "Ullek Furnace",
+    "offset": [ 0, 80, -180 ],
+    "radius": 450,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      43895
+    ]
+  },
+  {
+    "description": "Ullek Dungeon - Fire Arrow",
+    "offset": [ 0, 80, 0 ],
+    "radius": 350,
+    "strength": 3.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "npcIds": [
+      11559
+    ],
+    "fadeOutDuration": 100,
+    "fadeInDuration": 300
   }
 ]
