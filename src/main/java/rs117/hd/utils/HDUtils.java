@@ -32,8 +32,8 @@ import net.runelite.api.*;
 import rs117.hd.scene.areas.AABB;
 import rs117.hd.scene.areas.Area;
 
-import static net.runelite.api.Constants.SCENE_SIZE;
 import static net.runelite.api.Constants.*;
+import static net.runelite.api.Constants.SCENE_SIZE;
 import static net.runelite.api.Perspective.*;
 import static rs117.hd.scene.ProceduralGenerator.VERTICES_PER_FACE;
 import static rs117.hd.scene.ProceduralGenerator.faceLocalVertices;
@@ -158,6 +158,10 @@ public class HDUtils {
 	}
 
 	public static int clamp(int value, int min, int max) {
+		return Math.min(Math.max(value, min), max);
+	}
+
+	public static long clamp(long value, long min, long max) {
 		return Math.min(Math.max(value, min), max);
 	}
 

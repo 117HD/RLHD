@@ -9,6 +9,7 @@ import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
 
 import static org.lwjgl.opengl.GL33C.*;
+import static rs117.hd.utils.HDUtils.clamp;
 
 @Slf4j
 @Singleton
@@ -28,8 +29,7 @@ public class FrameTimer {
 
 	private boolean isInactive = true;
 	private long cumulativeError = 0;
-	private long cumulativeErrorCompensation = 17;
-	private boolean calculatedCumulativeError = false;
+	private long errorCompensation;
 
 	private void initialize() {
 		clientThread.invokeLater(() -> {
@@ -44,39 +44,20 @@ public class FrameTimer {
 			isInactive = false;
 			plugin.enableDetailedTimers = true;
 
-			// Check if we've calculated the cumulativeCost of calling nanoTime()
-			if(!calculatedCumulativeError) {
-				final int iterations = 1000;
-				long loopBaseLine, start, end;
-				int i;
-
-				// Warm-Up to ensure JIT has compiled the usage of nanoTime()
-				for (i = 0; i < iterations; i++) {
-					System.nanoTime();
+			// Estimate the timer's own runtime, with a warm-up run first
+			final int iterations = 1000;
+			for (int i = 0; i < 2; i++) {
+				long time = System.nanoTime();
+				for (int j = 0; j < iterations; j++) {
+					begin(Timer.DRAW_FRAME);
+					end(Timer.DRAW_FRAME);
 				}
-
-				// grab a baseline of a for loops performance
-				i = 0;
-				start = System.nanoTime();
-				for (; i < iterations; i++){}
-				end = System.nanoTime();
-				loopBaseLine = end - start;
-
-				// grab how long invoking nanoTime() takes
-				i = 0;
-				start = System.nanoTime();
-				for (; i < iterations; i++) System.nanoTime();
-				end = System.nanoTime();
-
-				// Calculate the cumulativeCost of nanoTime() so it can be removed from the frame timers. Clamp to be between 17 - 34
-				cumulativeErrorCompensation = Math.max(17, Math.min(30, ((end - start) - loopBaseLine) / iterations));
-				log.debug(
-					"FrameTimer cumulative error calculation completed {} iterations, calculating a compensation value of: {}",
-					iterations,
-					cumulativeErrorCompensation
-				);
-				calculatedCumulativeError = true;
+				time = System.nanoTime() - time;
+				errorCompensation = time / iterations;
 			}
+			log.debug("Estimated the FrameTimer's own error to be around {} ns", errorCompensation);
+			// Clamp to a sensible range, just in case
+			errorCompensation = clamp(errorCompensation, 0, 50);
 		});
 	}
 
@@ -140,7 +121,7 @@ public class FrameTimer {
 			glQueryCounter(gpuQueries[timer.ordinal() * 2 + 1], GL_TIMESTAMP);
 			// leave the GPU timer active, since it needs to be gathered at a later point
 		} else {
-			cumulativeError += cumulativeErrorCompensation; // compensate slightly for the timer's own overhead
+			cumulativeError += errorCompensation; // compensate slightly for the timer's own overhead
 			timings[timer.ordinal()] += System.nanoTime() - cumulativeError;
 			activeTimers[timer.ordinal()] = false;
 		}
