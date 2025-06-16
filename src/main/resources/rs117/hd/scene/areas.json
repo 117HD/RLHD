@@ -2882,7 +2882,7 @@
   {
     "name": "BARROWS_TUNNELS",
     "regionBoxes": [
-      [ 14231, 14231, 0 ]
+      [ 14231, 14231, 0, 1 ]
     ],
     "hideOtherAreas": true
   },
