@@ -2844,18 +2844,6 @@
     ]
   },
   {
-    "name": "MORYTANIA_SLAYER_TOWER",
-    "aabbs": [
-      [ 3405, 3531, 3452, 3579 ]
-    ]
-  },
-  {
-    "name": "CANIFIS",
-    "regions": [
-      13878
-    ]
-  },
-  {
     "name": "MORYTANIA_SPIDER_CAVES",
     "aabbs": [
       [ 3648, 9792, 3711, 9871 ],
