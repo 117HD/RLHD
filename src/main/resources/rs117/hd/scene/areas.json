@@ -291,6 +291,12 @@
     ]
   },
   {
+    "name": "LEO'S GRAVEYARD",
+    "aabbs": [
+      [ 1919, 5008, 1936, 4992 ]
+    ]
+  },
+  {
     "name": "VARROCK_MUSEUM_BASEMENT",
     "aabbs": [
       [ 1729, 4929, 1790, 4990 ],
