@@ -295,6 +295,18 @@
     ]
   },
   {
+    "name": "LAVA_NOISE",
+    "materials": [
+      "LAVA_NOISE_1",
+      "LAVA_NOISE_2",
+      "LAVA_NOISE_3",
+      "LAVA_NOISE_1",
+      "LAVA_NOISE_2",
+      "MAGMA_NOISE_1",
+      "MAGMA_NOISE_2"
+    ]
+  },
+  {
     "name": "STONE_PATTERN",
     "materials": [
       "STONE_PATTERN"

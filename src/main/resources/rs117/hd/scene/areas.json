@@ -4130,32 +4130,38 @@
     ]
   },
   {
+    "name": "FORGOTTEN_TOWER_BASEMENT",
+    "aabbs": [
+      [ 1372, 10215, 1391, 10232, 0 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
     "name": "KARUULM_SLAYER_DUNGEON_PLANE_0",
     "regionBoxes": [
       [ 5022, 5279, 0 ],
-      [ 5279, 5536, 0 ]
+      [ 5280, 5536, 0 ]
+    ],
+    "aabbs": [
+      [ 1344, 10176, 1371, 10239, 0 ],
+      [ 1372, 10233, 1407, 10239, 0 ]
     ],
     "hideOtherAreas": true
   },
   {
     "name": "KARUULM_SLAYER_DUNGEON_PLANE_1",
     "regionBoxes": [
-      [ 5022, 5535, 1 ],
-      [ 5280, 5536, 1 ]
-    ],
-    "regions": [
-      5279
+      [ 5022, 5536, 1 ],
+      [ 5279, 5279, 0 ]
     ],
     "hideOtherAreas": true
   },
   {
     "name": "KARUULM_SLAYER_DUNGEON_PLANE_2",
     "regionBoxes": [
-      [ 5022, 5535, 2 ]
+      [ 5022, 5536, 2 ]
     ],
-    "regions": [
-      5279
-    ],
+    "regions": [ 5279 ],
     "hideOtherAreas": true
   },
   {
@@ -4167,9 +4173,35 @@
     ]
   },
   {
+    "name": "KARUULM_SLAYER_DUNGEON_BLUE_LAVA",
+    "aabbs": [
+      [ 1241, 10143, 1284, 10210, 0 ],
+      [ 1285, 10179, 1296, 10214, 0 ],
+      [ 1297, 10188, 1329, 10219, 0 ],
+      [ 1289, 10220, 1340, 10286, 0 ],
+      [ 1341, 10221, 1364, 10249, 0 ]
+    ]
+  },
+  {
+    "name": "KARUULM_SLAYER_DUNGEON_FLOOR_FIX",
+    "aabbs": [
+      [ 1311, 10185, 1312, 10185, 0 ],
+      [ 1318, 10187, 1321, 10191, 0 ],
+      [ 1302, 10180, 1305, 10191, 0 ],
+      [ 1330, 10188, 1334, 10199, 0 ],
+      [ 1326, 10213, 1330, 10216, 0 ]
+    ]
+  },
+  {
     "name": "MOUNT_KARUULM",
     "aabbs": [
       [ 1245, 3765, 1358, 3860 ]
+    ]
+  },
+  {
+    "name": "MOUNT_KARUULM_PLANE_0",
+    "aabbs": [
+      [ 1245, 3765, 1358, 3860, 0 ]
     ]
   },
   {
@@ -4579,6 +4611,15 @@
       [ 3775, 3802, 3776, 3807 ],
       [ 3776, 3750, 3789, 3773 ],
       [ 3790, 3755, 3825, 3773 ]
+    ],
+    "areas": [
+      "VOLCANIC_MINE"
+    ]
+  },
+  {
+    "name": "VOLCANIC_MINE",
+    "regionBoxes": [
+      [ 15262, 15263, 1 ]
     ]
   },
   {
@@ -5983,6 +6024,13 @@
   {
     "name": "KELDAGRIM_TUNNEL",
     "regions": [ 11166 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "OURANIA_ALTAR",
+    "aabbs": [
+      [ 2944, 5505, 3134, 5695 ]
+    ],
     "hideOtherAreas": true
   },
   {

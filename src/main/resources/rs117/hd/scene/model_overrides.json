@@ -4438,20 +4438,15 @@
       17215,
       17216,
       17217,
-      25099,
-      25100,
-      25101,
       25039,
       25049,
       25050,
       25051,
       25052,
-      25059,
-      25060,
-      25061,
-      25062,
-      25063,
-      25064,
+      25099,
+      25100,
+      25101,
+      25140,
       29634,
       32163,
       32164,
@@ -4461,8 +4456,7 @@
       55988,
       55976,
       55977,
-      55978,
-      25140
+      55978
     ],
     "uvType": "BOX",
     "uvScale": 0.75,
@@ -32164,5 +32158,255 @@
     "description": "TOB Bloat - make floor objects brighter to improve falling shadow visibility",
     "objectIds": [ 32944, 32945, 32946, 32947, 32948 ],
     "baseMaterial": "GRAY_150"
+  },
+  {
+    "description": "Volcanic mine yellow lava",
+    "objectIds": [
+      30990,
+      30991,
+      30992,
+      30993,
+      30994,
+      30995,
+      30996,
+      //      30997,
+      //      30998,
+      //      30999,
+      31001,
+      31002,
+      31003,
+      31004,
+      31005,
+      31006,
+      31007,
+      31008,
+      31009,
+      31010,
+      31011,
+      31012,
+      31013,
+      31014,
+      31015,
+      31016,
+      31017,
+      31018,
+      31019,
+      31020,
+      31021,
+      31022,
+      31023,
+      31024,
+      31025,
+      31026,
+      31027,
+      31028,
+      31029,
+      31030,
+      31034,
+      31035,
+      31036,
+      31037
+    ],
+    "baseMaterial": "ROCK_1",
+    "uvType": "BOX",
+    "uvOrientation": 128
+    //    "colorOverrides": [
+    //      {
+    //        "description": "Hide brown part to allow the tile model underneath to show",
+    //        "colors": "h == 8 && s == 7",
+    //        "baseMaterial": "TRANSPARENT"
+    //      }
+    //    ]
+  },
+  {
+    "description": "Karamja Volcano edges",
+    "objectIds": [
+      25065,
+      25066,
+      25067,
+      25068,
+      25069,
+      25070,
+      25071,
+      25072,
+      25073,
+      25074,
+      25075,
+      25076
+    ],
+    "baseMaterial": "ROCK_1",
+    "uvType": "BOX",
+    "uvOrientation": 128
+    //    "colorOverrides": [
+    //      {
+    //        "description": "Hide brown part to allow the tile model underneath to show",
+    //        "colors": "h == 7",
+    //        "baseMaterial": "TRANSPARENT"
+    //      }
+    //    ]
+  },
+  {
+    "description": "Karamja Volcano Walls with Lava Edges",
+    "objectIds": [
+      25059,
+      25060,
+      25061,
+      25062,
+      25063,
+      25064
+    ],
+    "baseMaterial": "ROCK_2",
+    "uvType": "BOX",
+    "flatNormals": true
+  },
+  {
+    "description": "Yellow Lava edges",
+    "objectIds": [
+      14416,
+      14417,
+      14418,
+      14419,
+      14420,
+      14421,
+      14422,
+      14423,
+      14424,
+      14425,
+      14426,
+      40671,
+      40672,
+      40673,
+      40674,
+      40675,
+      40676,
+      40677,
+      40678,
+      40679,
+      40680,
+      40681
+    ],
+    "baseMaterial": "ROCK_2",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 128
+  },
+  {
+    "description": "Yellow Lava tiles",
+    "objectIds": [
+      14427,
+      40670
+    ]
+  },
+  {
+    "description": "Lovakengj Lava tiles with Rock",
+    "objectIds": [
+      14429,
+      14430
+    ],
+    "hide": true
+  },
+  {
+    "description": "Lovakengj Lava vents",
+    "objectIds": [
+      14437,
+      14438
+    ],
+    "baseMaterial": "DIRT_2",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 8",
+        "baseMaterial": "HD_LAVA_2",
+        "uvType": "WORLD_XZ"
+    }
+  ]
+},
+  {
+    "description": "Lovakengj Lava furnace",
+    "objectIds": [
+      28562
+    ],
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": [ "h == 8 && l > 22", 9098, 9100, 9101, 9102, 9103, 9105, 9106, 9107, 9109 ],
+        "baseMaterial": "HD_LAVA_2",
+        "uvType": "WORLD_XZ"
+      }
+    ]
+  },
+  {
+    "description": "Blue lava edges",
+    "objectIds": [
+      34321,
+      34322,
+      34323,
+      34324,
+
+      34326,
+      34327,
+      34328,
+      34329,
+      34330,
+      34331
+    ],
+    "baseMaterial": "ROCK_2",
+    "uvType": "BOX"
+  },
+  {
+    "description": "Blue lava",
+    "objectIds": [
+      34320
+    ]
+  },
+  {
+    "description": "Blue lava bubbles and flames",
+    "objectIds": [
+      34332,
+      34333
+    ]
+  },
+  {
+    "description": "Karuulm Dungeon lava edges",
+    "objectIds": [
+      34325,
+      34518,
+      34519,
+      34520,
+      34521,
+      34522,
+      34525,
+      34526,
+      34528,
+      34529
+    ],
+    "baseMaterial": "ROCK_2",
+    "uvType": "BOX"
+  },
+  {
+    "description": "Karuulm Dungeon lava",
+    "objectIds": [
+      34517,
+      34541,
+      34542,
+      34543
+    ],
+    "baseMaterial": "ROCK_2",
+    "uvType": "BOX"
+  },
+  {
+    "description": "Karuulm Dungeon Exit",
+    "objectIds": [
+      34514
+    ],
+    "baseMaterial": "ROCK_2",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0 && l > 10",
+        "baseMaterial": "GRAY_75"
+      }
+    ]
   }
 ]

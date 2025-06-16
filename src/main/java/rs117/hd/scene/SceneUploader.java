@@ -367,6 +367,8 @@ public class SceneUploader {
 		if (sceneTilePaint != null || override.forced) {
 			sceneContext.filledTiles[tileExX][tileExY] |= (byte) (1 << tile.getPlane());
 
+			// Tile paints may be forced, even if a tile model exists for the tile.
+			// This may lead to Z-fighting if the forced tile doesn't have a height offset.
 			boolean depthTested = override.depthTested ||
 								  override.forced && (sceneTilePaint == null || sceneTilePaint.getNeColor() == HIDDEN_HSL);
 
@@ -975,7 +977,8 @@ public class SceneUploader {
 			} else {
 				boolean isOverlay = ProceduralGenerator.isOverlayFace(tile, face);
 				var override = tileOverrideManager.getOverride(scene, tile, worldPos, isOverlay ? overlayId : underlayId);
-				if (isHidden && !override.forced)
+				// Hidden tile model faces aren't drawn, even if they're forced to be included in tile blending
+				if (isHidden)
 					continue;
 
 				textureId = faceTextures == null ? -1 : faceTextures[face];
