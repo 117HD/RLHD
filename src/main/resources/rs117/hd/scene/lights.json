@@ -19087,9 +19087,9 @@
     "duration": 2000,
     "range": 20,
     "npcIds": [
-      5862,
-      5863,
-      5866
+      "CERBERUS_ATTACKING",
+      "CERBERUS_SITTING",
+      "CERBERUS_RESETTING"
     ]
   },
   {
@@ -19105,7 +19105,7 @@
     "type": "FLICKER",
     "duration": 600,
     "range": 15,
-    "objectIds": [ 21772 ]
+    "objectIds": [ "HELLHOUND_IRON_GATE_ACTIVE" ]
   },
   {
     "description": "CERBERUS_LAIR_NORTH_LAVA_FLOW_RIGHT",
@@ -19120,7 +19120,7 @@
     "type": "FLICKER",
     "duration": 600,
     "range": 15,
-    "objectIds": [ 21772 ]
+    "objectIds": [ "HELLHOUND_IRON_GATE_ACTIVE" ]
   },
   {
     "description": "TEMPOROSS",
@@ -28360,7 +28360,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      21773
+      "SOUL_SKULL_EATER"
     ]
   },
   {
@@ -28377,7 +28377,7 @@
     "duration": 3000,
     "range": 8,
     "objectIds": [
-      23101
+      "SOUL_BOAT"
     ]
   },
   {
@@ -28394,7 +28394,7 @@
     "duration": 3100,
     "range": 8,
     "objectIds": [
-      23101
+      "SOUL_BOAT"
     ]
   },
   {
@@ -28411,7 +28411,7 @@
     "duration": 3200,
     "range": 8,
     "objectIds": [
-      23101
+      "SOUL_BOAT"
     ]
   },
   {
@@ -28428,7 +28428,7 @@
     "duration": 2700,
     "range": 8,
     "objectIds": [
-      23101
+      "SOUL_BOAT"
     ]
   },
   {
@@ -28445,7 +28445,7 @@
     "duration": 2500,
     "range": 8,
     "objectIds": [
-      23101
+      "SOUL_BOAT"
     ]
   },
   {
@@ -28462,7 +28462,7 @@
     "duration": 3500,
     "range": 8,
     "objectIds": [
-      23101
+      "SOUL_BOAT"
     ]
   },
   {

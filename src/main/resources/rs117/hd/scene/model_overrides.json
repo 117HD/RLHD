@@ -32170,43 +32170,43 @@
     "baseMaterial": "STONE_NORMALED",
     "uvType": "BOX",
     "objectIds": [
-      20196,
-      21696,
-      21697,
-      21698,
-      21699,
-      21700,
-      21701,
-      21702,
-      21703,
-      21704,
-      21705,
-      21706,
-      21707,
-      21708,
-      21709,
-      21710,
-      21711,
-      21712,
-      21713,
-      21714,
-      21715,
-      21716,
-      21717,
-      21718,
-      21748,
-      21749,
-      21750,
-      21751,
-      21752,
-      21753,
-      21754,
-      21755,
-      21756,
-      21757,
-      21758,
-      21759,
-      21760
+      "LAVA_LAIR_FLOOR_001",
+      "LAVA_LAIR_FLOOR_01",
+      "LAVA_LAIR_FLOOR_02",
+      "LAVA_LAIR_FLOOR_03",
+      "LAVA_LAIR_FLOOR_04",
+      "LAVA_LAIR_FLOOR_05",
+      "LAVA_LAIR_FLOOR_06",
+      "LAVA_LAIR_FLOOR_07_END",
+      "LAVA_LAIR_FLOOR_08_END",
+      "FLOOR_HELL_STONE_DECOR_01",
+      "FLOOR_HELL_STONE_DECOR_02",
+      "FLOOR_HELL_STONE_DECOR_03",
+      "FLOOR_HELL_STONE_DECOR_04",
+      "LAIR_YELLOW_LAVA_PIT",
+      "LAIR_YELLOW_LAVA_PIT_CORNER",
+      "LAIR_YELLOW_LAVA_PIT_001",
+      "LAIR_YELLOW_LAVA_PIT_01",
+      "LAIR_YELLOW_LAVA_PIT_02",
+      "LAIR_YELLOW_LAVA_PIT_03",
+      "LAIR_YELLOW_LAVA_PIT_04",
+      "LAIR_YELLOW_LAVA_PIT_05",
+      "LAIR_YELLOW_LAVA_PIT_06",
+      "LAIR_YELLOW_LAVA_PIT_07",
+      "LAIR_YELLOW_LAVA_PIT_08",
+      "LAIR_YELLOW_LAVA_PIT_09",
+      "LAVA_LAIR_FLOOR_05_M",
+      "LAVA_LAIR_FLOOR_06_M",
+      "LAIR_YELLOW_LAVA_PIT_M_001",
+      "LAIR_YELLOW_LAVA_PIT_M_01",
+      "LAIR_YELLOW_LAVA_PIT_M_02",
+      "LAIR_YELLOW_LAVA_PIT_M_03",
+      "LAIR_YELLOW_LAVA_PIT_M_04",
+      "LAIR_YELLOW_LAVA_PIT_M_05",
+      "LAIR_YELLOW_LAVA_PIT_M_06",
+      "LAIR_YELLOW_LAVA_PIT_M_07",
+      "LAIR_YELLOW_LAVA_PIT_M_08",
+      "LAIR_YELLOW_LAVA_PIT_M_09"
     ],
     "colorOverrides": [
       {
@@ -32223,14 +32223,14 @@
   "baseMaterial": "STONE_NORMALED",
   "uvType": "BOX",
   "objectIds": [
-    7823,
-    7824,
-    7825,
-    7826,
-    7827,
-    7828,
-    7829,
-    7830
+    "BONE_LAIR_WALL_01",
+    "BONE_LAIR_WALL_02",
+    "BONE_LAIR_WALL_03",
+    "BONE_LAIR_WALL_04",
+    "BONE_LAIR_WALL_05",
+    "BONE_LAIR_WALL_06",
+    "BONE_LAIR_WALL_CORNER_03",
+    "BONE_LAIR_CORNER_PEICE_04"
   ],
   "colorOverrides": [
     {
@@ -32247,14 +32247,14 @@
     "uvType": "BOX",
     "uvScale": 0.8,
     "objectIds": [
-      22494,
-      21946,
-      21775,
-      21776,
-      21777,
-      21779,
-      21780,
-      21947
+      "WALL_OF_SOULS_END_01",
+      "WALL_OF_SOULS_07",
+      "WALL_OF_SOULS_01",
+      "WALL_OF_SOULS_02",
+      "WALL_OF_SOULS_03",
+      "WALL_OF_SOULS_05",
+      "WALL_OF_SOULS_06",
+      "WALL_OF_SOULS_CURVED_01"
     ],
     "colorOverrides": [
       {
@@ -32269,8 +32269,8 @@
     "description": "Cerberus Lair - Bone Spikes",
     "baseMaterial": "METALLIC_1_GLOSS",
     "objectIds": [
-      21765,
-      21766
+      "HELLHOUND_LAIR_HORNS_01",
+      "HELLHOUND_LAIR_HORNS_NOBONES_01"
     ],
     "colorOverrides": [
       {
@@ -32287,14 +32287,14 @@
     "areas": [ "CERBERUS" ],
     "hide": true,
     "objectIds": [
-      17118
+      "AHOY_GLOOPBUBBLES_LARGER"
     ]
   },
   {
     "description": "Cerberus Lair - Soul Boat",
     "baseMaterial": "GRUNGE_2",
     "objectIds": [
-      23101
+      "SOUL_BOAT"
     ],
     "colorOverrides": [
       {
@@ -32311,15 +32311,15 @@
     "uvType": "BOX",
     "uvScale": 0.5,
     "objectIds": [
-      21761,
-      21762
+      "BONE_PILLAR_01",
+      "BONE_PILLAR_GRAD_01"
     ]
   },
   {
     "description": "Cerberus Lair - Soul Devourer",
     "baseMaterial": "GRAY_90",
     "objectIds": [
-      21773
+      "SOUL_SKULL_EATER"
     ],
     "colorOverrides": [
       {
@@ -32338,7 +32338,7 @@
     "description": "Cerberus Lair - Wall Filler - Darken",
     "baseMaterial": "GRAY_50",
     "objectIds": [
-      7834
+      "BONE_LAIR_BLACK_BLANK_SPACE"
     ]
   },
   {
@@ -32347,10 +32347,10 @@
     "baseMaterial": "ROCK_3_DARK",
     "uvType": "BOX",
     "objectIds": [
-      1502,
-      26564,
-      26565,
-      26566
+      "CAVEWALL_FACE1_BLACK",
+      "HELLHOUND_CAVE_ENTRANCE_01",
+      "HELLHOUND_CAVE_ENTRANCE_02",
+      "HELLHOUND_CAVE_ENTRANCE_03"
     ]
   },
   {
@@ -32359,7 +32359,7 @@
     "baseMaterial": "STONE_NORMALED_DARK",
     "uvType": "BOX",
     "objectIds": [
-      20737
+      "BARROWS_MOUNTAIN_CAVEWALL_TOP"
     ]
   },
   {
@@ -32368,12 +32368,12 @@
     "baseMaterial": "STONE_NORMALED",
     "uvType": "BOX",
     "objectIds": [
-      23107,
-      23108,
-      23109,
-      23610,
-      23112,
-      26294
+      "BROKEN_GREY_TILE_02",
+      "BROKEN_GREY_TILE_03",
+      "BROKEN_GREY_TILE_04",
+      "BROKEN_GREY_TILE_06",
+      "BROKEN_GREY_TILE_05",
+      "BROKEN_GREY_TILE_07"
     ]
   },
   {
@@ -32383,10 +32383,10 @@
     "uvType": "BOX",
     "uvScale": 0.2,
     "objectIds": [
-      23102,
-      23104,
-      21772,
-      26571
+      "HELLHOUND_IRON_GATE_LOWERED",
+      "HELLHOUND_WINCH",
+      "HELLHOUND_IRON_GATE_ACTIVE",
+      "HELLHOUND_IRON_GATE_UPPER"
     ]
   },
   {
@@ -32396,7 +32396,7 @@
     "uvType": "BOX",
     "uvScale": 0.2,
     "objectIds": [
-      26570
+      "HELLHOUND_LAIR_TORCH"
     ],
     "colorOverrides": [
       {
