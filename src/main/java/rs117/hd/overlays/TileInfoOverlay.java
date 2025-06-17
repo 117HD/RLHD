@@ -568,6 +568,17 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			}
 		}
 
+		var decorObject = tile.getDecorativeObject();
+		if (decorObject != null) {
+			lines.add(String.format(
+				"Decor Object: %s preori=%d%s",
+				getIdAndImpostorId(decorObject, decorObject.getRenderable()),
+				HDUtils.getBakedOrientation(decorObject.getConfig()),
+				getModelInfo(decorObject.getRenderable())
+			));
+			lines.add("Decor Type: " + HDUtils.getObjectType(decorObject.getConfig()));
+		}
+
 		GroundObject groundObject = tile.getGroundObject();
 		if (groundObject != null) {
 			lines.add(String.format(
