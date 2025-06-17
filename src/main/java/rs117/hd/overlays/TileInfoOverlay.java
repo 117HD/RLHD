@@ -47,6 +47,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import rs117.hd.HdPlugin;
 import rs117.hd.data.materials.Material;
 import rs117.hd.scene.AreaManager;
+import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.GamevalManager;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SceneContext;
@@ -100,6 +101,9 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 
 	@Inject
 	private ProceduralGenerator proceduralGenerator;
+
+	@Inject
+	private EnvironmentManager environmentManager;
 
 	@Getter
 	private boolean active;
@@ -473,6 +477,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 
 			lines.add("Scene point: " + tileX + ", " + tileY + ", " + tileZ);
 			lines.add("World point: " + Arrays.toString(worldPos));
+			lines.add("Environment: " + environmentManager.currentEnvironment);
 			lines.add(String.format(
 				"Region ID: %d (%d, %d)",
 				HDUtils.worldToRegionID(worldPos),
