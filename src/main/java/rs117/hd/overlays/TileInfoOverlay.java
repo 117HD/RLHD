@@ -1458,16 +1458,16 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 
 	private void copyToClipboard(String toCopy, @Nullable String description) {
 		Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-		StringSelection string = new StringSelection(toCopy);
+		StringSelection string = new StringSelection("\"" + toCopy + "\"");
 		clipboard.setContents(string, null);
 		clientThread.invoke(() -> client.addChatMessage(
 			ChatMessageType.GAMEMESSAGE,
 			"117 HD",
-			ColorUtil.wrapWithColorTag("[117 HD] " + (
+			"<col=006600>[117 HD] " + (
 				description == null ?
 					"Copied to clipboard: " + toCopy :
 					description
-			), Color.GREEN),
+			),
 			"117 HD"
 		));
 	}
