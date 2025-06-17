@@ -1354,7 +1354,8 @@
       "WILD2_TREE_STUMP",
       "WILD3_TREE_STUMP",
       "WILD4_TREE_STUMP",
-      "DOV_HUNTING_TREESTUMP_NOOP"
+      "DOV_HUNTING_TREESTUMP_NOOP",
+      "BURGH_TREE_STUMP"
     ],
     "uvType": "BOX",
     "uvScale": 0.8
@@ -6457,7 +6458,8 @@
     "objectIds": [
       "FARMING_COUNTER",
       "FAI_FALADOR_COUNTER",
-      "RIMMINGTON_TABLE"
+      "RIMMINGTON_TABLE",
+      "FARMING_COUNTER_MORY"
     ],
     "uvType": "BOX",
     "uvOrientation": 512
@@ -6562,7 +6564,8 @@
       "CON_CONTRACT_VARROCK_MID_TABLE_MAHOGANY",
       "DADDYSHOME_TABLE_BROKEN_1OP",
       "DADDYSHOME_TABLE_FIXED",
-      "AHOY_TABLE"
+      "AHOY_TABLE",
+      "BURGH_WOODEN_TABLE_BROKEN"
     ],
     "uvOrientationY": 512,
     "uvType": "BOX",
@@ -6889,6 +6892,24 @@
     "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [
       "CANNONBALLS"
+    ]
+  },
+  {
+    "description": "Object - Wooden - Plank - Chest with metallic banding",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "objectIds": [
+      "BURGH_CHEST_CLOSED"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h > 10 && s == 1 || h > 10 && s == 3",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 89
+      }
     ]
   },
   {
@@ -7241,7 +7262,8 @@
       "WILD6_SPIRALSTAIRS",
       "DK_SPIRALSTAIRS",
       "WILD6_SPIRALSTAIRS_MIDDLE",
-      "WILD6_SPIRALSTAIRSTOP"
+      "WILD6_SPIRALSTAIRSTOP",
+      "CANAFIS_SPIRALSTAIRS"
     ]
   },
   {
@@ -8761,15 +8783,15 @@
   {
     "description": "PHASMATYS - House - Walls",
     "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "uvScale": 0.83,
     "objectIds": [
       "AHOY_HARBOURWALLS",
       "AHOY_HARBOURWALL_CRUMBLY_1",
       "AHOY_HARBOURWALL_CRUMBLY_2",
       "AHOY_HARBOURWALL_CRUMBLY_1_MIRROR",
       "AHOY_HARBOURWALL_CRUMBLY_2_MIRROR"
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.83
+    ]
   },
   {
     "description": "PHASMATYS - Stone - Rubble - Small",
@@ -9140,7 +9162,9 @@
     "description": "Objects - Wooden - Barrel with Metal Band",
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [
-      "AGGIE_COURTYARD_BARREL"
+      "AGGIE_COURTYARD_BARREL",
+      "BURGH_BARREL",
+      "CANAFIS_BARREL_TAP"
     ],
     "uvOrientation": 100,
     "uvType": "BOX",
@@ -9750,7 +9774,8 @@
       "AHOY_HARBOUR_DOOR",
       "AHOY_HARBOUR_DOOR_OPEN",
       "FARMING_INACTIVE_SHOP_DOOR",
-      "BARROWS_LOCKED_DOOR"
+      "BARROWS_LOCKED_DOOR",
+      "BURGH_VILLAGE_DOOR_INACTIVE"
     ],
     "uvType": "BOX",
     "uvOrientation": 512,
@@ -9798,6 +9823,16 @@
       "BARROWS_BRICKS_PILE_2_PURPLE"
     ],
     "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Morytania - Objects  - Metallic - Barrows Water Pump",
+    "baseMaterial": "METALLIC_1",
+    "objectIds": [
+      "BARROWS_WATERPUMP"
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 89,
+    "uvScale": 0.5
   },
   {
     "description": "Morytania - Ground  - Wooden - Boat Launch - Burgh De Rott",
@@ -10000,8 +10035,7 @@
     "objectIds": [
       "BIGTABLE",
       "TABLE",
-      "BEDSIDETABLE",
-      "BURGH_QUEST_FOOD_TABLE"
+      "BEDSIDETABLE"
     ],
     "uvType": "BOX",
     "uvOrientation": 512,
@@ -10012,7 +10046,8 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "PIRATETREASURE_WOODEN_TABLE_SMALL",
-      "MYQ3_HIDEOUT_SMALL_TABLE"
+      "MYQ3_HIDEOUT_SMALL_TABLE",
+      "BURGH_QUEST_FOOD_TABLE"
     ],
     "uvType": "BOX",
     "flatNormals": true
@@ -11330,7 +11365,8 @@
     "uvScale": 0.6,
     "objectIds": [
       "OLDCHAIR",
-      "OLDCHAIR2"
+      "OLDCHAIR2",
+      "BURGH_SMASHEDCHAIR"
     ]
   },
   {
@@ -13021,7 +13057,8 @@
       "PIRATETREASURE_COUNTER",
       "ROYAL_TABLE",
       "ROYAL_GENERAL_STORE_COUNTER",
-      "HUNTING_SHOP_COUNTER"
+      "HUNTING_SHOP_COUNTER",
+      "BURGH_GENERAL_STORE_COUNTER"
     ],
     "uvType": "BOX",
     "uvOrientationY": 512
@@ -17928,9 +17965,12 @@
     "uvScale": 0.6
   },
   {
-    "description": "Trollheim Food Trouph",
+    "description": "Food Trouph",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ "EADGAR_KITCHEN_FOODTROUGH" ],
+    "objectIds": [
+      "EADGAR_KITCHEN_FOODTROUGH",
+      "AHOY_FOODTROUGH"
+    ],
     "uvType": "BOX",
     "uvOrientation": 512
   },
@@ -23152,7 +23192,14 @@
   {
     "description": "Wooden shelves - Empty or with pottery",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ "COOKINGSHELFEMPTY", "FARMING_SHELVES_EMPTY", "FARM_SHELF", "QIP_SHEEP_SHEARER_COOKINGSHELVESEMPTY" ],
+    "objectIds": [
+      "COOKINGSHELFEMPTY",
+      "FARMING_SHELVES_EMPTY",
+      "FARM_SHELF",
+      "QIP_SHEEP_SHEARER_COOKINGSHELVESEMPTY",
+      "BURGH_SHELVES",
+      "BURGH_BOOKCASE3"
+    ],
     "uvType": "BOX",
     "uvScale": 0.8,
     "uvOrientationX": 512,
@@ -23192,7 +23239,8 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "COOKINGSHELF",
-      "QIP_COOK_COOKINGSHELF"
+      "QIP_COOK_COOKINGSHELF",
+      "CANAFIS_COOKING_SHELVES"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -25647,8 +25695,8 @@
     "uvOrientationZ": 512,
     "colorOverrides": [
       {
-        "colors": [ 21507, 21548, 21595 ],
-        "baseMaterial": "NONE",
+        "colors": "a < 255",
+        "baseMaterial": "BLANK_GLOSS",
         "uvType": "WORLD_XY"
       }
     ]
@@ -27246,7 +27294,8 @@
     "description": "Spiral Staircase top with rails - Concrete textured",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      "SPIRALSTAIRSTOP"
+      "SPIRALSTAIRSTOP",
+      "CANAFIS_SPIRALSTAIRSTOP"
     ],
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -31423,7 +31472,18 @@
       }
     ],
     "objectIds": [
-      "REGICIDE_TREE_DEAD1SWAMP"
+      "REGICIDE_TREE_DEAD1SWAMP",
+      "BURGH_TREE_DEAD_SMALLER"
+    ]
+  },
+  {
+    "description": "Morytania trees",
+    "baseMaterial": "BARK",
+    "uvOrientation": 89,
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "BURGH_TREE_DEAD"
     ]
   },
   {
@@ -32404,6 +32464,287 @@
         "baseMaterial": "METALLIC_1_SEMIGLOSS",
         "uvType": "BOX",
         "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Burgh De Root bookcase with books - Needs proper UV",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "BURGH_BOOKCASE",
+      "BURGH_BOOKCASE2"
+    ],
+    "uvType": "BOX",
+    "uvOrientationX": 512,
+    "colorOverrides": [
+      {
+        "description": "Paper",
+        "colors": "h == 12 && s == 1",
+        "baseMaterial": "GRAY_65",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Books",
+        "colors": "h < 12 || h > 13",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Burgh De Root bank booth",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "BURGH_BANKBOOTH_REPAIRED"
+    ],
+    "uvType": "BOX",
+    "uvOrientationX": 512,
+    "colorOverrides": [
+      {
+        "description": "Glass",
+        "colors": "a < 255",
+        "baseMaterial": "BLANK_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "Burgh De Root bank ruined booths",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "BURGH_BANKBOOTH_TOO_DAMAGED",
+      "BURGH_BANKBOOTH_TOO_DAMAGED2"
+    ],
+    "uvType": "BOX",
+    "uvOrientationX": 512,
+    "colorOverrides": [
+      {
+        "description": "Glass",
+        "colors": "h > 12",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.25,
+        "uvOrientation": 128
+      }
+    ]
+  },
+  {
+    "description": "Burgh De Root - Bed",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "BURGH_BED"
+    ],
+    "uvType": "BOX",
+    "uvOrientationX": 512,
+    "colorOverrides": [
+      {
+        "description": "Cloth",
+        "colors": "h < 13 || h == 13 && s == 2",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.25,
+        "uvOrientation": 128
+      }
+    ]
+  },
+  {
+    "description": "Burgh De Root - Well - Needs proper UV",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      "BURGH_WELL"
+    ],
+    "uvType": "BOX",
+    "uvOrientationY": 512,
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "description": "Bottom stone bricks",
+        "colors": "h >= 13 && s >= 5 && l <= 10",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "ROPE",
+        "colors": "h == 10",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "Burgh De Rott - Wooden crate with Snails",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "BURGH_CRATE_SNAILS"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "retainVanillaUvs": false,
+    "colorOverrides": [
+      {
+        "description": "Items",
+        "colors": "h < 13",
+        "baseMaterial": "GRUNGE_3_SHINY",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Burgh De Rott - Wooden crate with Tinderboxes",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "BURGH_CRATE_TINDERBOXES"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "retainVanillaUvs": false,
+    "colorOverrides": [
+      {
+        "description": "Items",
+        "colors": "h > 13",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Burgh De Rott - Wooden crate with Axes",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "BURGH_CRATE_AXES"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "retainVanillaUvs": false,
+    "colorOverrides": [
+      {
+        "description": "Axe Head",
+        "colors": "h == 5",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "description": "Axe Handle",
+        "colors": "h == 10",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 89
+      }
+    ]
+  },
+  {
+    "description": "Burgh De Rott - Wooden shelves with items and crates",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "BURGH_SHELVES_STOCKED_AXES",
+      "BURGH_SHELVES_STOCKED_TINDERBOXES",
+      "BURGH_SHELVES_STOCKED_SNAILS"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "retainVanillaUvs": false,
+    "colorOverrides": [
+      {
+        "description": "Axe Head",
+        "colors": "h == 5",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "description": "Axe Handle",
+        "colors": "h == 10",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 89
+      },
+      {
+        "description": "Items",
+        "colors": "h == 12",
+        "baseMaterial": "GRUNGE_3_SHINY",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Items",
+        "colors": "h > 13",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Burgh De Rott - broken bar",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "BURGH_BAR_DAMAGED"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512
+  },
+  {
+    "description": "Burgh De Rott - broken bar",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "BURGH_BAR_PUMPS_DAMAGED"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "colorOverrides": [
+      {
+        "description": "Pumps",
+        "colors": "h == 16",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "description": "Handle",
+        "colors": "h == 10 && s == 2",
+        "baseMaterial": "GRUNGE_3_SHINY",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Burgh De Rott-  Wooden - WheelBarrow",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ "BURGH_WHEEL_BARROW" ],
+    "uvType": "BOX",
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512
+  },
+  {
+    "description": "Canafis - Bed",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "CANAFIS_BED"
+    ],
+    "uvType": "BOX",
+    "uvOrientationX": 512,
+    "colorOverrides": [
+      {
+        "description": "Cloth",
+        "colors": "h == 8 || h ==7 && s == 3 || h == 6 && s == 1",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.25,
+        "uvOrientation": 128
       }
     ]
   }
