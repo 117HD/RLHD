@@ -4988,7 +4988,8 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "ENAKH_LADDER_ON_GROUND",
-      "ENAKH_WHEEL_BARROW"
+      "ENAKH_WHEEL_BARROW",
+      "ELID_WHEEL_BARROW"
     ],
     "uvType": "BOX",
     "uvScale": 0.66,
@@ -8976,7 +8977,8 @@
       "SHAYZIEN_CRATE_02",
       "SHAYZIEN_CRATE_03",
       "PISCARILIUS_CRATE_04",
-      "BIM_SUPPLY_CRATE"
+      "BIM_SUPPLY_CRATE",
+      "NECROPOLIS_CRATE01_DEFAULT01"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -8991,7 +8993,8 @@
       "PISCARILIUS_CRATE_02",
       "FGUILD_BOOK_TREES_LOC",
       "FAI_VARROCK_LARGE_CRATES_INACTIVE",
-      "SHAYZIEN_CRATE_02_INACTIVE_DARK"
+      "SHAYZIEN_CRATE_02_INACTIVE_DARK",
+      "NECROPOLIS_CRATE01_STACK01"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -9954,7 +9957,8 @@
       "WILDY_HUB_BROKEN_STOOL",
       "SHAYZIEN_STOOL",
       "TOTE_PORTAL_TO_GOTR_CHILD_HIDDEN",
-      "POG_STOOL"
+      "POG_STOOL",
+      "HOSIDIUS_SERVERY_STOOL"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -13339,7 +13343,7 @@
     "uvScale": 0.6
   },
   {
-    "description": "Necropolis ground objects",
+    "description": "Necropolis ground objects - unused - none of these exist on the map",
     "baseMaterial": "DIRT_1",
     "objectIds": [
       "CLIFF_SAND01_1",
@@ -13354,8 +13358,91 @@
     "uvType": "WORLD_XZ"
   },
   {
+    "description": "Necropolis - Wooden Retaining Walls",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvType": "BOX",
+    "objectIds": [
+      "SCAFFOLD_WOODEN01_RETAINING03",
+      "SCAFFOLD_WOODEN01_RETAINING02",
+      "SCAFFOLD_WOODEN01_RETAINING05",
+      "SCAFFOLD_WOODEN01_RETAINING06",
+      "SCAFFOLD_WOODEN01_RETAINING04",
+      "SCAFFOLD_WOODEN01_RETAINING08"
+    ]
+  },
+  {
+    "description": "Necropolis - Smashed Table",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "objectIds": [
+      "NECROPOLIS_TABLE01_BROKEN01"
+    ]
+  },
+  {
+    "description": "Necropolis - Wooden Table with Tools",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "objectIds": [
+      "NECROPOLIS_TABLE01_DEFAULT01",
+      "NECROPOLIS_TABLE01_TOOLS01",
+      "SCAFFOLD_WOODEN02_DEFAULT03_DECORATED02",
+      "SCAFFOLD_WOODEN02_DEFAULT03_DECORATED01",
+      "SCAFFOLD_WOODEN02_DEFAULT03",
+      "SCAFFOLD_WOODEN02_DEFAULT03"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Necropolis - Wooden Scaffold Flipped",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "uvType": "BOX",
+    "objectIds": [
+      "SCAFFOLD_WOODEN02_DEFAULT01_DECORATED01",
+      "SCAFFOLD_WOODEN02_DEFAULT02",
+      "SCAFFOLD_WOODEN02_DEFAULT01",
+      "SCAFFOLD_WOODEN02_DEFAULT02_DECORATED02",
+      "SCAFFOLD_WOODEN02_DEFAULT02_DECORATED01",
+      "SCAFFOLD_WOODEN02_DEFAULT01_DECORATED02",
+      "SCAFFOLD_WOODEN02_DEFAULT04_DECORATED01",
+      "SCAFFOLD_WOODEN02_DEFAULT04_DECORATED02",
+      "SCAFFOLD_WOODEN02_DEFAULT04"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h < 6",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Necropolis - Shovel",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 512,
+    "objectIds": [
+      "NECROPOLIS_SHOVEL01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 1 ",
+        "baseMaterial": "DIRT_1"
+      },
+      {
+        "colors": "h < 6",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
     "description": "Tombs of Amascut invocation board",
-    "flatNormals": true,
     "objectIds": [
       "TOA_INVOCATION_BOARD"
     ]
