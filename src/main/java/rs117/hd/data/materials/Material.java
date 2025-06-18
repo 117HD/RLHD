@@ -357,6 +357,9 @@ public enum Material {
 		.setNormalMap(GRAVEL_N)
 		.setSpecular(0.4f, 130)
 	),
+	VERTICAL_GRAVEL(GRAVEL, p -> p
+		.setNormalMap(null)
+	),
 	GRAVEL_LIGHT(GRAVEL, p -> p
 		.setBrightness(1.5f)
 	),
@@ -409,6 +412,10 @@ public enum Material {
 	GRUNGE_3(p -> p
 		.setNormalMap(GRUNGE_3_N)
 		.setSpecular(0.25f, 30)
+	),
+	GRUNGE_3_SHINY(GRUNGE_3, p -> p
+		.setBrightness(1.45f)
+		.setSpecular(0.5f, 300)
 	),
 	GRUNGE_3_LIGHT(GRUNGE_3, p -> p
 		.setBrightness(1.45f)
@@ -510,6 +517,8 @@ public enum Material {
 		.setNormalMap(CARPET_N)
 		.setSpecular(0.25f,30)
 	),
+	CARPET_LIGHT(CARPET, p -> p
+		.setBrightness(1.45f)),
 	BURLAP,
 	FALADOR_PATH_BRICK_N,
 	FALADOR_PATH_BRICK(p -> p

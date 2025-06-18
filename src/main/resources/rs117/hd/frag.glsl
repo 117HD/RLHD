@@ -38,6 +38,7 @@ uniform sampler2D shadowMap;
 uniform vec3 cameraPos;
 uniform float drawDistance;
 uniform int expandedMapLoadingChunks;
+uniform float gammaCorrection;
 uniform mat4 lightProjectionMatrix;
 uniform float elapsedTime;
 uniform float colorBlindnessIntensity;
@@ -535,6 +536,8 @@ void main() {
 
         outputColor.rgb = mix(outputColor.rgb, blendColor, combinedFog);
     }
+
+    outputColor.rgb = pow(outputColor.rgb, vec3(gammaCorrection));
 
     FragColor = outputColor;
 }

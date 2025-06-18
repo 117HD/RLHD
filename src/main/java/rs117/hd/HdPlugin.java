@@ -100,6 +100,7 @@ import rs117.hd.overlays.Timer;
 import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.FishingSpotReplacer;
+import rs117.hd.scene.GamevalManager;
 import rs117.hd.scene.GroundMaterialManager;
 import rs117.hd.scene.LightManager;
 import rs117.hd.scene.ModelOverrideManager;
@@ -123,8 +124,8 @@ import rs117.hd.utils.ResourcePath;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 
-import static net.runelite.api.Constants.SCENE_SIZE;
 import static net.runelite.api.Constants.*;
+import static net.runelite.api.Constants.SCENE_SIZE;
 import static net.runelite.api.Perspective.*;
 import static org.lwjgl.opencl.CL10.*;
 import static org.lwjgl.opengl.GL43C.*;
@@ -134,6 +135,7 @@ import static rs117.hd.utils.HDUtils.MAX_FLOAT_WITH_128TH_PRECISION;
 import static rs117.hd.utils.HDUtils.PI;
 import static rs117.hd.utils.HDUtils.clamp;
 import static rs117.hd.utils.ResourcePath.path;
+import static rs117.hd.utils.Vector.pow;
 
 @PluginDescriptor(
 	name = "117 HD",
@@ -218,6 +220,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Inject
 	private TextureManager textureManager;
+
+	@Inject
+	private GamevalManager gamevalManager;
 
 	@Inject
 	private AreaManager areaManager;
@@ -395,6 +400,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private int uniWaterColorLight;
 	private int uniWaterColorMid;
 	private int uniWaterColorDark;
+	private int uniGammaCorrection;
 	private int uniAmbientStrength;
 	private int uniAmbientColor;
 	private int uniLightStrength;
@@ -440,6 +446,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private int uniUiAlphaOverlay;
 	private int uniTextureArray;
 	private int uniElapsedTime;
+	private int uniUiGammaCorrection;
+	private int uniUiGammaCalibration;
+	private int uniUiGammaCalibrationTimer;
 
 	private int uniSkyboxModelMatrix;
 	private int uniSkyboxProjectionMatrix;
@@ -498,7 +507,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public final float[] cameraPosition = new float[3];
 	public final float[] cameraOrientation = new float[2];
 	public final int[] cameraFocalPoint = new int[2];
-	public final int[] cameraShift = new int[2];
+	private final int[] cameraShift = new int[2];
+	private int cameraZoom;
+	private boolean tileVisibilityCached;
+	private final boolean[][][] tileIsVisible = new boolean[MAX_Z][EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE];
 
 	public double elapsedTime;
 	public double elapsedClientTime;
@@ -508,6 +520,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private double lastFrameClientTime;
 	private int gameTicksUntilSceneReload = 0;
 	private long colorFilterChangedAt;
+	private long brightnessChangedAt;
 	private int[] sceneMinMaxXY = new int[4];
 
 	@Provides
@@ -657,6 +670,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				lastStretchedCanvasWidth = lastStretchedCanvasHeight = 0;
 				lastAntiAliasingMode = null;
 
+				gamevalManager.startUp();
 				areaManager.startUp();
 				groundMaterialManager.startUp();
 				tileOverrideManager.startUp();
@@ -714,6 +728,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			environmentManager.shutDown();
 			fishingSpotReplacer.shutDown();
 			areaManager.shutDown();
+			gamevalManager.shutDown();
 
 			if (lwjglInitialized) {
 				lwjglInitialized = false;
@@ -961,6 +976,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		uniWaterColorDark = glGetUniformLocation(glSceneProgram, "waterColorDark");
 		uniDrawDistance = glGetUniformLocation(glSceneProgram, "drawDistance");
 		uniExpandedMapLoadingChunks = glGetUniformLocation(glSceneProgram, "expandedMapLoadingChunks");
+		uniGammaCorrection = glGetUniformLocation(glSceneProgram, "gammaCorrection");
 		uniAmbientStrength = glGetUniformLocation(glSceneProgram, "ambientStrength");
 		uniAmbientColor = glGetUniformLocation(glSceneProgram, "ambientColor");
 		uniLightStrength = glGetUniformLocation(glSceneProgram, "lightStrength");
@@ -998,6 +1014,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		uniTexSourceDimensions = glGetUniformLocation(glUiProgram, "sourceDimensions");
 		uniUiColorBlindnessIntensity = glGetUniformLocation(glUiProgram, "colorBlindnessIntensity");
 		uniUiAlphaOverlay = glGetUniformLocation(glUiProgram, "alphaOverlay");
+		uniUiGammaCorrection = glGetUniformLocation(glUiProgram, "gammaCorrection");
+		uniUiGammaCalibration = glGetUniformLocation(glUiProgram, "showGammaCalibration");
+		uniUiGammaCalibrationTimer = glGetUniformLocation(glUiProgram, "gammaCalibrationTimer");
 
 		uniSkyboxFogColor = glGetUniformLocation(glSkyboxProgram, "fogColor");
 		uniSkyboxModelMatrix = glGetUniformLocation(glSkyboxProgram, "modelMatrix");
@@ -1635,11 +1654,18 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			}
 
 			if (updateUniforms) {
-				cameraPosition[0] = (float) cameraX;
-				cameraPosition[1] = (float) cameraY;
-				cameraPosition[2] = (float) cameraZ;
-				cameraOrientation[0] = (float) cameraYaw;
-				cameraOrientation[1] = (float) cameraPitch;
+				float[] newCameraPosition = { (float) cameraX, (float) cameraY, (float) cameraZ };
+				float[] newCameraOrientation = { (float) cameraYaw, (float) cameraPitch };
+				int newZoom = configShadowsEnabled && configExpandShadowDraw ? client.get3dZoom() / 2 : client.get3dZoom();
+				if (!Arrays.equals(cameraPosition, newCameraPosition) ||
+					!Arrays.equals(cameraOrientation, newCameraOrientation) ||
+					cameraZoom != newZoom
+				) {
+					System.arraycopy(newCameraPosition, 0, cameraPosition, 0, cameraPosition.length);
+					System.arraycopy(newCameraOrientation, 0, cameraOrientation, 0, cameraOrientation.length);
+					cameraZoom = newZoom;
+					tileVisibilityCached = false;
+				}
 
 				if (sceneContext.scene == scene) {
 					cameraFocalPoint[0] = client.getOculusOrbFocalPointX();
@@ -1711,7 +1737,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (sceneContext == null)
 			return;
 
+		tileVisibilityCached = true;
+
 		frameTimer.end(Timer.DRAW_SCENE);
+		frameTimer.begin(Timer.RENDER_FRAME);
 		frameTimer.begin(Timer.UPLOAD_GEOMETRY);
 
 		// The client only updates animations once per client tick, so we can skip updating geometry buffers,
@@ -2178,8 +2207,15 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 			// Clear scene
 			frameTimer.begin(Timer.CLEAR_SCENE);
+			float gammaCorrection = 100f / config.brightness();
+			float[] gammaCorrectedFogColor = pow(fogColor, gammaCorrection);
+			glClearColor(
+				gammaCorrectedFogColor[0],
+				gammaCorrectedFogColor[1],
+				gammaCorrectedFogColor[2],
+				1f
+			);
 			glClearDepthf(0);
-			glClearColor(fogColor[0], fogColor[1], fogColor[2], 1f);
 
 			// Draw Skybox
 			float[] skyboxProperties = environmentManager.getSkyboxProperties();
@@ -2251,10 +2287,17 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			glUniform3fv(uniWaterColorMid, waterColorMid);
 			glUniform3fv(uniWaterColorDark, waterColorDark);
 
-			float brightness = config.brightness() / 20f;
-			glUniform1f(uniAmbientStrength, environmentManager.currentAmbientStrength * brightness);
+			glUniform1f(uniGammaCorrection, gammaCorrection);
+			float ambientStrength = environmentManager.currentAmbientStrength;
+			float directionalStrength = environmentManager.currentDirectionalStrength;
+			if (config.useLegacyBrightness()) {
+				float factor = config.legacyBrightness() / 20f;
+				ambientStrength *= factor;
+				directionalStrength *= factor;
+			}
+			glUniform1f(uniAmbientStrength, ambientStrength);
 			glUniform3fv(uniAmbientColor, environmentManager.currentAmbientColor);
-			glUniform1f(uniLightStrength, environmentManager.currentDirectionalStrength * brightness);
+			glUniform1f(uniLightStrength, directionalStrength);
 			glUniform3fv(uniLightColor, environmentManager.currentDirectionalColor);
 
 			glUniform1f(uniUnderglowStrength, environmentManager.currentUnderglowStrength);
@@ -2404,6 +2447,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
 
 		frameTimer.end(Timer.DRAW_FRAME);
+		frameTimer.end(Timer.RENDER_FRAME);
 		frameTimer.endFrameAndReset();
 		frameModelInfoMap.clear();
 		checkGLErrors();
@@ -2430,6 +2474,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		glUniform2i(uniTexSourceDimensions, canvasWidth, canvasHeight);
 		glUniform1f(uniUiColorBlindnessIntensity, config.colorBlindnessIntensity() / 100f);
 		glUniform4fv(uniUiAlphaOverlay, ColorUtils.srgba(overlayColor));
+		glUniform1f(uniUiGammaCorrection, 100f / config.brightness());
+		final int gammaCalibrationTimeout = 3000;
+		float gammaCalibrationTimer = System.currentTimeMillis() - brightnessChangedAt;
+		glUniform1i(uniUiGammaCalibration, gammaCalibrationTimer < gammaCalibrationTimeout ? 1 : 0);
+		glUniform1f(uniUiGammaCalibrationTimer, 1 - gammaCalibrationTimer / gammaCalibrationTimeout);
 
 		if (client.isStretchedEnabled()) {
 			Dimension dim = client.getStretchedDimensions();
@@ -2602,6 +2651,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			initTileHeightMap(scene);
 		}
 
+		tileVisibilityCached = false;
 		lightManager.loadSceneLights(nextSceneContext, sceneContext);
 		fishingSpotReplacer.despawnRuneLiteObjects();
 
@@ -2665,8 +2715,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		}
 	}
 
-	public void reloadSceneNextGameTick()
-	{
+	public void reloadSceneNextGameTick() {
 		reloadSceneIn(1);
 	}
 
@@ -2802,6 +2851,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 						}
 
 						switch (key) {
+							case KEY_BRIGHTNESS:
+								brightnessChangedAt = System.currentTimeMillis();
+								break;
 							case KEY_EXPANDED_MAP_LOADING_CHUNKS:
 								client.setExpandedMapLoading(getExpandedMapLoadingChunks());
 								// fall-through
@@ -2981,6 +3033,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (orthographicProjection)
 			return true;
 
+		if (tileVisibilityCached)
+			return tileIsVisible[plane][tileExX][tileExY];
+
 		int[][][] tileHeights = scene.getTileHeights();
 		int x = ((tileExX - SCENE_OFFSET) << Perspective.LOCAL_COORD_BITS) + 64;
 		int z = ((tileExY - SCENE_OFFSET) << Perspective.LOCAL_COORD_BITS) + 64;
@@ -2999,32 +3054,35 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		y -= (int) cameraPosition[1];
 		z -= (int) cameraPosition[2];
 
-		int radius = 96; // ~ 64 * sqrt(2)
+		final int tileRadius = 96; // ~ 64 * sqrt(2)
+		final int leftClip = client.getRasterizer3D_clipNegativeMidX();
+		final int rightClip = client.getRasterizer3D_clipMidX2();
+		final int topClip = client.getRasterizer3D_clipNegativeMidY();
 
-		int zoom = (configShadowsEnabled && configExpandShadowDraw) ? client.get3dZoom() / 2 : client.get3dZoom();
-		int Rasterizer3D_clipMidX2 = client.getRasterizer3D_clipMidX2();
-		int Rasterizer3D_clipNegativeMidX = client.getRasterizer3D_clipNegativeMidX();
-		int Rasterizer3D_clipNegativeMidY = client.getRasterizer3D_clipNegativeMidY();
+		// Transform the local coordinates using the yaw (horizontal rotation)
+		final int transformedZ = yawCos * z - yawSin * x >> 16;
+		final int depth = pitchCos * tileRadius + pitchSin * y + pitchCos * transformedZ >> 16;
 
-		int var11 = yawCos * z - yawSin * x >> 16;
-		int var12 = pitchSin * y + pitchCos * var11 >> 16;
-		int var13 = pitchCos * radius >> 16;
-		int depth = var12 + var13;
+		boolean visible = false;
+
+		// Check if the tile is within the near plane of the frustum
 		if (depth > NEAR_PLANE) {
-			int rx = z * yawSin + yawCos * x >> 16;
-			int var16 = (rx - radius) * zoom;
-			int var17 = (rx + radius) * zoom;
-			// left && right
-			if (var16 < Rasterizer3D_clipMidX2 * depth && var17 > Rasterizer3D_clipNegativeMidX * depth) {
-				int ry = pitchCos * y - var11 * pitchSin >> 16;
-				int ybottom = pitchSin * radius >> 16;
-				int var20 = (ry + ybottom) * zoom;
-				// top
-				// we don't test the bottom so we don't have to find the height of all the models on the tile
-				return var20 > Rasterizer3D_clipNegativeMidY * depth;
+			final int transformedX = z * yawSin + yawCos * x >> 16;
+			final int leftPoint = transformedX - tileRadius;
+			// Check left and right bounds
+			if (leftPoint * cameraZoom < rightClip * depth) {
+				final int rightPoint = transformedX + tileRadius;
+				if (rightPoint * cameraZoom > leftClip * depth) {
+					// Transform the local Y using pitch (vertical rotation)
+					final int transformedY = pitchCos * y - transformedZ * pitchSin;
+					final int bottomPoint = transformedY + pitchSin * tileRadius >> 16;
+					// Check top bound (we skip bottom bound to avoid computing model heights)
+					visible = bottomPoint * cameraZoom > topClip * depth;
+				}
 			}
 		}
-		return false;
+
+		return tileIsVisible[plane][tileExX][tileExY] = visible;
 	}
 
 	/**
@@ -3037,34 +3095,29 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (orthographicProjection)
 			return false;
 
-		final int XYZMag = model.getXYZMag();
-		final int bottomY = model.getBottomY();
-		final int zoom = (configShadowsEnabled && configExpandShadowDraw) ? client.get3dZoom() / 2 : client.get3dZoom();
-		final int modelHeight = model.getModelHeight();
+		final int leftClip = client.getRasterizer3D_clipNegativeMidX();
+		final int rightClip = client.getRasterizer3D_clipMidX2();
+		final int topClip = client.getRasterizer3D_clipNegativeMidY();
+		final int bottomClip = client.getRasterizer3D_clipMidY2();
 
-		int Rasterizer3D_clipMidX2 = client.getRasterizer3D_clipMidX2();
-		int Rasterizer3D_clipNegativeMidX = client.getRasterizer3D_clipNegativeMidX();
-		int Rasterizer3D_clipNegativeMidY = client.getRasterizer3D_clipNegativeMidY();
-		int Rasterizer3D_clipMidY2 = client.getRasterizer3D_clipMidY2();
+		final int modelRadius = model.getXYZMag();
+		final int transformedZ = yawCos * z - yawSin * x >> 16;
+		final int depth = pitchCos * modelRadius + pitchSin * y + pitchCos * transformedZ >> 16;
 
-		int var11 = yawCos * z - yawSin * x >> 16;
-		int var12 = pitchSin * y + pitchCos * var11 >> 16;
-		int var13 = pitchCos * XYZMag >> 16;
-		int depth = var12 + var13;
 		if (depth > NEAR_PLANE) {
-			int rx = z * yawSin + yawCos * x >> 16;
-			int var16 = (rx - XYZMag) * zoom;
-			if (var16 / depth < Rasterizer3D_clipMidX2) {
-				int var17 = (rx + XYZMag) * zoom;
-				if (var17 / depth > Rasterizer3D_clipNegativeMidX) {
-					int ry = pitchCos * y - var11 * pitchSin >> 16;
-					int yheight = pitchSin * XYZMag >> 16;
-					int ybottom = (pitchCos * bottomY >> 16) + yheight;
-					int var20 = (ry + ybottom) * zoom;
-					if (var20 / depth > Rasterizer3D_clipNegativeMidY) {
-						int ytop = (pitchCos * modelHeight >> 16) + yheight;
-						int var22 = (ry - ytop) * zoom;
-						return var22 / depth >= Rasterizer3D_clipMidY2;
+			final int transformedX = z * yawSin + yawCos * x >> 16;
+			final int leftPoint = transformedX - modelRadius;
+			if (leftPoint * cameraZoom < rightClip * depth) {
+				final int rightPoint = transformedX + modelRadius;
+				if (rightPoint * cameraZoom > leftClip * depth) {
+					final int transformedY = pitchCos * y - transformedZ * pitchSin >> 16;
+					final int transformedRadius = pitchSin * modelRadius;
+					final int bottomExtent = pitchCos * model.getBottomY() + transformedRadius >> 16;
+					final int bottomPoint = transformedY + bottomExtent;
+					if (bottomPoint * cameraZoom > topClip * depth) {
+						final int topExtent = pitchCos * model.getModelHeight() + transformedRadius >> 16;
+						final int topPoint = transformedY - topExtent;
+						return topPoint * cameraZoom >= bottomClip * depth; // inverted check
 					}
 				}
 			}
@@ -3090,7 +3143,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			return;
 
 		// Hide everything outside the current area if area hiding is enabled
-		if (sceneContext.currentArea != null && renderable instanceof Actor) {
+		if (sceneContext.currentArea != null && (
+			renderable instanceof Actor ||
+			renderable instanceof Projectile ||
+			renderable instanceof GraphicsObject
+		)) {
 			boolean inArea = sceneContext.currentArea.containsPoint(
 				sceneContext.scene.getBaseX() + (x >> LOCAL_COORD_BITS),
 				sceneContext.scene.getBaseY() + (z >> LOCAL_COORD_BITS),
@@ -3484,7 +3541,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	public void checkGLErrors() {
-		if (!log.isDebugEnabled())
+		if (!log.isDebugEnabled() || developerTools.isFrameTimingsOverlayEnabled())
 			return;
 
 		while (true) {

@@ -287,19 +287,54 @@ public interface HdPluginConfig extends Config
 		return Contrast.DEFAULT;
 	}
 
+	String KEY_BRIGHTNESS = "screenBrightness";
+	@Range(
+		min = 50,
+		max = 200
+	)
+	@Units(Units.PERCENT)
+	@ConfigItem(
+		keyName = KEY_BRIGHTNESS,
+		name = "Brightness",
+		description =
+			"Controls the brightness of the game, excluding UI.<br>" +
+			"Adjust until the disk on the left is barely visible.",
+		position = 13,
+		section = generalSettings
+	)
+	default int brightness() {
+		return 100;
+	}
+
+	@ConfigItem(
+		keyName = "useLegacyBrightness",
+		name = "Enable Legacy Brightness",
+		description =
+			"Whether the legacy brightness option below should be applied.<br>" +
+			"We recommend leaving this disabled.",
+		position = 14,
+		section = generalSettings
+	)
+	default boolean useLegacyBrightness() {
+		return false;
+	}
+
 	@Range(
 		min = 1,
 		max = 50
 	)
 	@ConfigItem(
 		keyName = "brightness2",
-		name = "Brightness",
-		description = "Controls the brightness of environmental lighting.<br>" +
+		name = "Legacy Brightness",
+		description =
+			"Controls the strength of the sun and ambient lighting.<br>" +
 			"A brightness value of 20 is recommended.",
-		position = 13,
+		position = 15,
 		section = generalSettings
 	)
-	default int brightness() { return 20; }
+	default int legacyBrightness() {
+		return 20;
+	}
 
 	@ConfigItem(
 		keyName = "renderSkybox",
