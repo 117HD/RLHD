@@ -118,7 +118,7 @@ void add_face_prio_distance(const uint localId, const ModelInfo minfo, out int p
     }
 }
 
-int map_face_priority(uint localId, ModelInfo minfo, int thisPriority, int thisDistance, out int prio) {
+int map_face_priority(uint localId, const ModelInfo minfo, int thisPriority, int thisDistance, out int prio) {
     int size = minfo.size;
 
     // Compute average distances for 0/2, 3/4, and 6/8
@@ -151,7 +151,7 @@ int map_face_priority(uint localId, ModelInfo minfo, int thisPriority, int thisD
     return 0;
 }
 
-void insert_face(uint localId, ModelInfo minfo, int adjPrio, int distance, int prioIdx) {
+void insert_face(uint localId, const ModelInfo minfo, int adjPrio, int distance, int prioIdx) {
     int size = minfo.size;
 
     if (localId < size) {
@@ -212,7 +212,7 @@ void undoVanillaShading(inout int hsl, vec3 unrotatedNormal) {
     hsl |= lightness;
 }
 
-void sort_and_insert(uint localId, ModelInfo minfo, int thisPriority, int thisDistance) {
+void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int thisDistance) {
     int offset = minfo.offset;
     int size = minfo.size;
 
