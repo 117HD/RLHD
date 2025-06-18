@@ -41,7 +41,6 @@ import net.runelite.client.ui.overlay.Overlay;
 import net.runelite.client.ui.overlay.OverlayLayer;
 import net.runelite.client.ui.overlay.OverlayManager;
 import net.runelite.client.ui.overlay.OverlayPosition;
-import net.runelite.client.util.ColorUtil;
 import net.runelite.client.util.Text;
 import org.apache.commons.lang3.tuple.Pair;
 import rs117.hd.HdPlugin;
@@ -479,6 +478,13 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 				worldPos[0] >> 6,
 				worldPos[1] >> 6
 			));
+
+			for (var environment : sceneContext.environments) {
+				if (environment.area.containsPoint(worldPos)) {
+					lines.add("Environment: " + environment);
+					break;
+				}
+			}
 
 			int overlayId = scene.getOverlayIds()[tileZ][tileExX][tileExY];
 			var overlay = tileOverrideManager.getOverrideBeforeReplacements(worldPos, OVERLAY_FLAG | overlayId);
@@ -1526,7 +1532,6 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 				pendingSelection = null;
 			}
 		} else if (SwingUtilities.isRightMouseButton(e)) {
-			e.consume();
 			if (!hoveredGamevals.isEmpty()) {
 				if (copiedGamevalsHash != hoveredGamevalsHash) {
 					copiedGamevalsHash = hoveredGamevalsHash;
