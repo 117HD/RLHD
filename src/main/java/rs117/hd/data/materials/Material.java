@@ -517,6 +517,8 @@ public enum Material {
 		.setNormalMap(CARPET_N)
 		.setSpecular(0.25f,30)
 	),
+	CARPET_LIGHT(CARPET, p -> p
+		.setBrightness(1.45f)),
 	BURLAP,
 	FALADOR_PATH_BRICK_N,
 	FALADOR_PATH_BRICK(p -> p

@@ -4989,7 +4989,8 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "ENAKH_LADDER_ON_GROUND",
-      "ENAKH_WHEEL_BARROW"
+      "ENAKH_WHEEL_BARROW",
+      "ELID_WHEEL_BARROW"
     ],
     "uvType": "BOX",
     "uvScale": 0.66,
@@ -8998,7 +8999,8 @@
       "SHAYZIEN_CRATE_02",
       "SHAYZIEN_CRATE_03",
       "PISCARILIUS_CRATE_04",
-      "BIM_SUPPLY_CRATE"
+      "BIM_SUPPLY_CRATE",
+      "NECROPOLIS_CRATE01_DEFAULT01"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -9013,7 +9015,8 @@
       "PISCARILIUS_CRATE_02",
       "FGUILD_BOOK_TREES_LOC",
       "FAI_VARROCK_LARGE_CRATES_INACTIVE",
-      "SHAYZIEN_CRATE_02_INACTIVE_DARK"
+      "SHAYZIEN_CRATE_02_INACTIVE_DARK",
+      "NECROPOLIS_CRATE01_STACK01"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -9989,7 +9992,8 @@
       "WILDY_HUB_BROKEN_STOOL",
       "SHAYZIEN_STOOL",
       "TOTE_PORTAL_TO_GOTR_CHILD_HIDDEN",
-      "POG_STOOL"
+      "POG_STOOL",
+      "HOSIDIUS_SERVERY_STOOL"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -12864,7 +12868,9 @@
     "baseMaterial": "PLANT_GRUNGE_1",
     "objectIds": [
       "CACTUS3",
-      "FEUD_CACTUS_ROW"
+      "FEUD_CACTUS_ROW",
+      "DESERT_CACTUS_FULL_ALT",
+      "DESERT_CACTUS_EMPTY_ALT"
     ]
   },
   {
@@ -13215,11 +13221,32 @@
       "BREW_BAMBOO_TREE_MID",
       "BREW_BAMBOO_TREE_UPPERMID",
       "TREE_PALM01_CLUSTER01",
-      "TREE_PALM01_CLUSTER02"
+      "TREE_PALM01_CLUSTER02",
+      "TREE_PALM03_BASE",
+      "TREE_PALM03_MID",
+      "TREE_PALM03_TOP"
     ],
     "uvType": "BOX",
     "uvScale": 0.62,
     "uvOrientation": 512
+  },
+  {
+    "description": "Tropical Tree Dead",
+    "baseMaterial": "LEAF_VEINS",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "objectIds": [
+      "TREE_PALM01_DEAD01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.62,
+        "uvOrientation": 512
+      }
+    ]
   },
   {
     "description": "Tropical Tree Big - Leaning",
@@ -13376,7 +13403,7 @@
     "uvScale": 0.6
   },
   {
-    "description": "Necropolis ground objects",
+    "description": "Necropolis ground objects - unused - none of these exist on the map",
     "baseMaterial": "DIRT_1",
     "objectIds": [
       "CLIFF_SAND01_1",
@@ -13391,8 +13418,581 @@
     "uvType": "WORLD_XZ"
   },
   {
+    "description": "Necropolis - Wooden Retaining Walls",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvType": "BOX",
+    "objectIds": [
+      "SCAFFOLD_WOODEN01_RETAINING03",
+      "SCAFFOLD_WOODEN01_RETAINING02",
+      "SCAFFOLD_WOODEN01_RETAINING05",
+      "SCAFFOLD_WOODEN01_RETAINING06",
+      "SCAFFOLD_WOODEN01_RETAINING04",
+      "SCAFFOLD_WOODEN01_RETAINING08"
+    ]
+  },
+  {
+    "description": "Necropolis - Smashed Table",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "objectIds": [
+      "NECROPOLIS_TABLE01_BROKEN01"
+    ]
+  },
+  {
+    "description": "Necropolis - Wooden Table with Tools",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "objectIds": [
+      "NECROPOLIS_TABLE01_DEFAULT01",
+      "NECROPOLIS_TABLE01_TOOLS01",
+      "SCAFFOLD_WOODEN02_DEFAULT03_DECORATED02",
+      "SCAFFOLD_WOODEN02_DEFAULT03_DECORATED01",
+      "SCAFFOLD_WOODEN02_DEFAULT03",
+      "SCAFFOLD_WOODEN02_DEFAULT03"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Necropolis - Wooden Scaffold Flipped",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvType": "BOX",
+    "objectIds": [
+      "SCAFFOLD_WOODEN02_DEFAULT01_DECORATED01",
+      "SCAFFOLD_WOODEN02_DEFAULT02",
+      "SCAFFOLD_WOODEN02_DEFAULT01",
+      "SCAFFOLD_WOODEN02_DEFAULT02_DECORATED02",
+      "SCAFFOLD_WOODEN02_DEFAULT02_DECORATED01",
+      "SCAFFOLD_WOODEN02_DEFAULT01_DECORATED02",
+      "SCAFFOLD_WOODEN02_DEFAULT04_DECORATED01",
+      "SCAFFOLD_WOODEN02_DEFAULT04_DECORATED02",
+      "SCAFFOLD_WOODEN02_DEFAULT04"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h < 6",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Necropolis - Shovel",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 512,
+    "objectIds": [
+      "NECROPOLIS_SHOVEL01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 1",
+        "baseMaterial": "ROCK_3"
+      },
+      {
+        "colors": "h < 6",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Necropolis - Tents",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvType": "MODEL_XZ",
+    "objectIds": [
+      "TENT_SQUARE01_DEFAULT01",
+      "NECROPOLIS_TENT_DEFAULT01",
+      "NECROPOLIS_TENT_DEFAULT02",
+      "NECROPOLIS_TENT_DEFAULT03"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      },
+      {
+        "colors": ["h == 7 && s == 2", "h == 8"],
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h == 7 && s == 1",
+        "baseMaterial": "BURLAP",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      }
+    ]
+  },
+  {
+    "description": "Necropolis - Cloth Barriers and Tanning Line",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "NECROPOLIS_CAMP_TANNINGLINE01",
+      "NECROPOLIS_CAMP01_BARRIER03",
+      "NECROPOLIS_CAMP01_BARRIER04"
+    ],
+    "colorOverrides": [
+      {
+        "colors": ["h == 4", "h == 7"],
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Necropolis - Rug",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "NECROPOLIS_CARPET_ROLLEDOUT",
+      "NECROPOLIS_CARPET_ROLLEDUP"
+    ]
+  },
+  {
+    "description": "Necropolis - Cushion",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "NECROPOLIS_CAMP_CUSHION01",
+      "NECROPOLIS_CAMP_CUSHION02",
+      "NECROPOLIS_CAMP_CUSHION03"
+    ]
+  },
+  {
+    "description": "Necropolis - Ruined Buildings",
+    "baseMaterial": "GRAVEL",
+    "uvScale": 0.75,
+    "uvType": "BOX",
+    "objectIds": [
+      "BCS_NECROPOLIS_ENTRY_NOCLIMBABLE",
+      "BCS_NECROPOLIS_ENTRY_CLIMBABLE",
+      "BCS_NECROPOLIS_ENTRY02",
+      "BCS_NECROPOLIS_ENTRY01",
+      "WALLKIT_MASTABA01_CORNER01",
+      "WALLKIT_MASTABA02_CORNER01",
+      "WALLKIT_MASTABA01_DAMAGED02",
+      "WALLKIT_MASTABA01_DAMAGED03",
+      "WALLKIT_MASTABA01_DAMAGED04",
+      "WALLKIT_MASTABA02_DAMAGED01",
+      "WALLKIT_MASTABA01_DEFAULT02",
+      "WALLKIT_MASTABA01_DOORWAY01",
+      "WALLKIT_MASTABA01_WALL01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 39",
+        "baseMaterial": "MARBLE_2",
+        "uvType": "BOX",
+        "uvOrientation": 123,
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Necropolis - Ruined Buildings",
+    "baseMaterial": "GRAVEL_LIGHT",
+    "uvScale": 0.75,
+    "uvType": "BOX",
+    "objectIds": [
+      "WALLKIT_MASTABA02_ROOF02",
+      "WALLKIT_MASTABA01_ROOF01",
+      "WALLKIT_MASTABA01_ROOF02",
+      "WALLKIT_MASTABA01_ROOF03"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 39",
+        "baseMaterial": "MARBLE_2",
+        "uvType": "BOX",
+        "uvOrientation": 123,
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Necropolis - Ruined Pillar",
+    "baseMaterial": "GRAVEL",
+    "uvScale": 0.75,
+    "castShadows": false,
+    "uvType": "BOX",
+    "objectIds": [
+      "EMBEDED_SUPPORT01_STONE01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 39",
+        "baseMaterial": "MARBLE_2",
+        "uvType": "BOX",
+        "uvOrientation": 223,
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Necropolis - Pillars",
+    "baseMaterial": "STONE_NORMALED",
+    "uvScale": 1.5,
+    "uvType": "BOX",
+    "objectIds": [
+      "PILLAR_COLUMN_OSMUMTEN04",
+      "PILLAR_COLUMN_OSMUMTEN01",
+      "PILLAR_SUPPORT01_OSMUMTEN01",
+      "PILLAR_COLUMN_OSMUMTEN02",
+      "PILLAR_COLUMN_OSMUMTEN03"
+    ],
+    "colorOverrides": [
+      {
+        "colors": ["h == 0", "h == 7 && s == 5", "h == 8", "h == 29", "h == 39"],
+        "baseMaterial": "MARBLE_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Tombs of Amascut - Pyramid Lower",
+    "baseMaterial": "GRAVEL_LIGHT",
+    "uvScale": 1.5,
+    "uvType": "BOX",
+    "castShadows": false,
+    "objectIds": [
+      "TOA_ENTRANCE_LVL0_04",
+      "TOA_ENTRANCE_LVL0_04_01",
+      "TOA_ENTRANCE_LVL0_05",
+      "TOA_ENTRANCE_LVL0_05_01",
+      "TOA_ENTRANCE_LVL0_06",
+      "TOA_ENTRANCE_LVL0_06_01",
+      "TOA_ENTRANCE_LVL0_07",
+      "TOA_ENTRANCE_LVL0_07_01",
+      "TOA_ENTRANCE_LVL0_08",
+      "TOA_ENTRANCE_LVL0_09",
+      "TOA_ENTRANCE_LVL0_10",
+      "TOA_ENTRANCE_LVL0_11",
+      "TOA_ENTRANCE_LVL0_12",
+      "TOA_ENTRANCE_LVL0_13",
+      "TOA_ENTRANCE_LVL0_14",
+      "TOA_ENTRANCE_LVL0_15",
+      "TOA_ENTRANCE_LVL0_16",
+      "TOA_ENTRANCE_LVL0_17",
+      "TOA_ENTRANCE_LVL0_18",
+      "TOA_ENTRANCE_LVL0_19",
+      "TOA_ENTRANCE_LVL0_20",
+      "TOA_ENTRANCE_LVL0_21",
+      "TOA_ENTRANCE_LVL0_22",
+      "TOA_ENTRANCE_LVL0_23",
+      "TOA_ENTRANCE_LVL0_24",
+      "TOA_ENTRANCE_LVL0_25",
+      "TOA_ENTRANCE_LVL0_26",
+      "TOA_ENTRANCE_LVL0_27",
+      "TOA_ENTRANCE_LVL0_28",
+      "TOA_ENTRANCE_LVL0_29",
+      "TOA_ENTRANCE_LVL0_30",
+      "TOA_ENTRANCE_LVL0_31",
+      "TOA_ENTRANCE_LVL0_32",
+      "TOA_ENTRANCE_LVL0_35",
+      "TOA_ENTRANCE_LVL0_36",
+      "TOA_ENTRANCE_LVL0_37",
+      "TOA_ENTRANCE_LVL0_38",
+      "TOA_ENTRANCE_LVL0_39",
+      "TOA_ENTRANCE_LVL0_40",
+      "TOA_ENTRANCE_LVL0_41",
+      "TOA_ENTRANCE_LVL0_42",
+      "TOA_ENTRANCE_LVL0_43",
+      "TOA_ENTRANCE_LVL0_44",
+      "TOA_ENTRANCE_LVL0_45",
+      "TOA_ENTRANCE_LVL0_46",
+      "TOA_ENTRANCE_LVL0_47",
+      "TOA_ENTRANCE_LVL0_48",
+      "TOA_ENTRANCE_LVL0_49",
+      "TOA_ENTRANCE_LVL0_50",
+      "TOA_ENTRANCE_LVL0_51",
+      "TOA_ENTRANCE_LVL0_52",
+      "TOA_ENTRANCE_LVL0_53",
+      "TOA_ENTRANCE_STEPS01",
+      "TOA_ENTRANCE_STEPS02",
+      "TOA_ENTRANCE_STEPS03",
+      "TOA_ENTRANCE_STEPS04",
+      "TOA_ENTRANCE_STEPS05",
+      "TOA_ENTRANCE_STEPS06",
+      "TOA_ENTRANCE_STEPS07",
+      "TOA_ENTRANCE_STEPS08",
+      "TOA_ENTRANCE_STEPS09",
+      "TOA_ENTRANCE_STEPS10",
+      "TOA_ENTRANCE_STEPS11",
+      "TOA_ENTRANCE_STEPS12",
+      "TOA_ENTRANCE_STEPS13",
+      "TOA_ENTRANCE_STEPS14",
+      "TOA_ENTRANCE_STEPS15",
+      "TOA_ENTRANCE_STEPS16",
+      "TOA_ENTRANCE_STEPS17",
+      "TOA_ENTRANCE_STEPS18",
+      "TOA_ENTRANCE_STEPS19",
+      "TOA_ENTRANCE_STEPS20",
+      "TOA_ENTRANCE_STEPS21",
+      "TOA_ENTRANCE_STEPS22",
+      "TOA_ENTRANCE_STEPS23",
+      "TOA_ENTRANCE_STEPS24",
+      "TOA_ENTRANCE_STEPS25",
+      "TOA_ENTRANCE_STEPS26",
+      "TOA_ENTRANCE_STEPS27",
+      "TOA_ENTRANCE_STEPS28",
+      "TOA_ENTRANCE_STEPS29",
+      "TOA_ENTRANCE_STEPS30",
+      "TOA_ENTRANCE_STEPS31",
+      "TOA_ENTRANCE_STEPS32",
+      "TOA_ENTRANCE_STEPS33",
+      "TOA_ENTRANCE_STEPS_SIDE01",
+      "TOA_ENTRANCE_STEPS_SIDE02",
+      "TOA_ENTRANCE_STEPS_SIDE03",
+      "TOA_ENTRANCE_STEPS_SIDE04",
+      "TOA_ENTRANCE_STEPS_SIDE05",
+      "TOA_ENTRANCE_STEPS_SIDE06",
+      "TOA_ENTRANCE_STEPS_SIDE07",
+      "TOA_ENTRANCE_STEPS_SIDE08",
+      "TOA_ENTRANCE_STEPS_SIDE11",
+      "TOA_ENTRANCE_STEPS_SIDE12",
+      "TOA_ENTRANCE_STEPS_SIDE13",
+      "TOA_ENTRANCE_STEPS_SIDE14",
+      "TOA_ENTRANCE_STEPS_SIDE15",
+      "TOA_ENTRANCE_STEPS_SIDE16",
+      "TOA_ENTRANCE_STEPS_SIDE17",
+      "TOA_ENTRANCE_STEPS_SIDE18",
+      "NECROPOLIS_OBELISK"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h > 38",
+        "baseMaterial": "MARBLE_3",
+        "uvType": "BOX",
+        "uvOrientation": 123,
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Tombs of Amascut - Pyramid Middle",
+    "baseMaterial": "MARBLE_3",
+    "uvScale": 1.5,
+    "uvType": "BOX",
+    "objectIds": [
+      "TOA_ENTRANCE_BLOCKED",
+      "TOA_ENTRANCE_BLOCKED_NOOP",
+      "TOA_ENTRANCE_OPEN",
+      "TOA_ENTRANCE_LVL0_01_01",
+      "TOA_ENTRANCE_LVL0_01_02",
+      "TOA_ENTRANCE_LVL0_01_03",
+      "TOA_ENTRANCE_LVL0_01_05",
+      "TOA_ENTRANCE_LVL0_01_06",
+      "TOA_ENTRANCE_LVL0_01_07",
+      "TOA_ENTRANCE_LVL0_01_08",
+      "TOA_ENTRANCE_LVL0_01_09",
+      "TOA_ENTRANCE_LVL0_01_10",
+      "TOA_ENTRANCE_LVL0_01_11",
+      "TOA_ENTRANCE_LVL0_01_12",
+      "TOA_ENTRANCE_LVL0_01_14",
+      "TOA_ENTRANCE_LVL0_01_15",
+      "TOA_ENTRANCE_LVL0_02_01",
+      "TOA_ENTRANCE_LVL0_02_02",
+      "TOA_ENTRANCE_LVL0_02_03",
+      "TOA_ENTRANCE_LVL0_02_04",
+      "TOA_ENTRANCE_LVL0_03_01",
+      "TOA_ENTRANCE_LVL0_03_02",
+      "TOA_ENTRANCE_LVL0_03_03",
+      "TOA_ENTRANCE_LVL0_03_04",
+      "TOA_ENTRANCE_LVL0_04_02",
+      "TOA_ENTRANCE_LVL0_04_03",
+      "TOA_ENTRANCE_LVL0_04_04",
+      "TOA_ENTRANCE_LVL0_04_05",
+      "TOA_ENTRANCE_LVL0_05_02",
+      "TOA_ENTRANCE_LVL0_05_03",
+      "TOA_ENTRANCE_LVL0_05_04",
+      "TOA_ENTRANCE_LVL0_05_05",
+      "TOA_ENTRANCE_LVL0_06_02",
+      "TOA_ENTRANCE_LVL0_06_03",
+      "TOA_ENTRANCE_LVL0_06_04",
+      "TOA_ENTRANCE_LVL0_06_05",
+      "TOA_ENTRANCE_LVL0_07_02",
+      "TOA_ENTRANCE_LVL0_07_03",
+      "TOA_ENTRANCE_LVL0_07_04",
+      "TOA_ENTRANCE_LVL0_07_05",
+      "TOA_ENTRANCE_LVL1_02",
+      "TOA_ENTRANCE_LVL1_03",
+      "TOA_ENTRANCE_LVL1_04",
+      "TOA_ENTRANCE_LVL1_05",
+      "TOA_ENTRANCE_LVL1_06",
+      "TOA_ENTRANCE_LVL1_07",
+      "TOA_ENTRANCE_LVL1_08",
+      "TOA_ENTRANCE_LVL1_09",
+      "TOA_ENTRANCE_LVL1_10",
+      "TOA_ENTRANCE_LVL1_11",
+      "TOA_ENTRANCE_LVL1_12",
+      "TOA_ENTRANCE_LVL1_13",
+      "TOA_ENTRANCE_LVL1_14",
+      "TOA_ENTRANCE_LVL1_15",
+      "TOA_ENTRANCE_LVL1_16",
+      "TOA_ENTRANCE_LVL1_17",
+      "TOA_ENTRANCE_LVL1_18",
+      "TOA_ENTRANCE_LVL1_19",
+      "TOA_ENTRANCE_LVL1_20",
+      "TOA_ENTRANCE_LVL1_21",
+      "TOA_ENTRANCE_LVL1_22",
+      "TOA_ENTRANCE_LVL1_23",
+      "TOA_ENTRANCE_LVL1_24",
+      "TOA_ENTRANCE_LVL1_25",
+      "TOA_ENTRANCE_LVL1_26",
+      "TOA_ENTRANCE_LVL1_27",
+      "TOA_ENTRANCE_LVL1_28",
+      "TOA_ENTRANCE_LVL1_29",
+      "TOA_ENTRANCE_LVL1_30",
+      "TOA_ENTRANCE_LVL1_31",
+      "TOA_ENTRANCE_LVL1_32",
+      "TOA_ENTRANCE_LVL1_33",
+      "TOA_ENTRANCE_LVL1_34",
+      "TOA_ENTRANCE_LVL1_35",
+      "TOA_ENTRANCE_LVL1_36",
+      "TOA_ENTRANCE_LVL1_37",
+      "TOA_ENTRANCE_LVL1_38",
+      "TOA_ENTRANCE_LVL1_39",
+      "TOA_ENTRANCE_LVL1_40",
+      "TOA_ENTRANCE_LVL1_41",
+      "TOA_ENTRANCE_LVL1_42",
+      "TOA_ENTRANCE_LVL1_43",
+      "TOA_ENTRANCE_LVL1_44",
+      "TOA_ENTRANCE_LVL1_45",
+      "TOA_ENTRANCE_LVL1_46",
+      "TOA_ENTRANCE_LVL1_47",
+      "TOA_ENTRANCE_LVL1_48",
+      "TOA_ENTRANCE_LVL1_49",
+      "TOA_ENTRANCE_LVL1_50",
+      "TOA_ENTRANCE_LVL1_51",
+      "TOA_ENTRANCE_LVL1_52",
+      "TOA_ENTRANCE_LVL1_53",
+      "TOA_ENTRANCE_LVL1_54",
+      "TOA_ENTRANCE_LVL1_55",
+      "TOA_ENTRANCE_LVL1_56",
+      "TOA_ENTRANCE_LVL1_56",
+      "TOA_ENTRANCE_LVL1_57",
+      "TOA_ENTRANCE_LVL1_58",
+      "TOA_ENTRANCE_LVL1_59",
+      "TOA_ENTRANCE_LVL1_60",
+      "TOA_ENTRANCE_LVL1_61",
+      "TOA_ENTRANCE_LVL1_62",
+      "TOA_ENTRANCE_LVL1_63",
+      "TOA_ENTRANCE_STEPS_SIDE09",
+      "TOA_ENTRANCE_STEPS_SIDE10",
+      "TOA_ENTRANCE_STEPS_SIDE19",
+      "TOA_ENTRANCE_STEPS_SIDE20",
+      "TOA_ENTRANCE_STEPS34",
+      "TOA_ENTRANCE_STEPS35",
+      "TOA_ENTRANCE_STEPS36",
+      "TOA_ENTRANCE_STEPS37",
+      "TOA_ENTRANCE_STEPS38",
+      "TOA_ENTRANCE_STEPS39",
+      "TOA_ENTRANCE_STEPS40",
+      "TOA_ENTRANCE_STEPS41",
+      "TOA_ENTRANCE_STEPS42",
+      "TOA_ENTRANCE_STEPS43",
+      "TOA_ENTRANCE_STEPS44",
+      "TOA_ENTRANCE_STEPS45",
+      "NECROPOLIS_STONE_PILE01"
+    ]
+  },
+  {
+    "description": "Tombs of Amascut - Pyramid Top",
+    "baseMaterial": "ROCK_3",
+    "uvType": "MODEL_XZ",
+    "objectIds": [
+      "TOA_ENTRANCE_LVL2_01",
+      "TOA_ENTRANCE_LVL2_02",
+      "TOA_ENTRANCE_LVL2_03",
+      "TOA_ENTRANCE_LVL2_04",
+      "TOA_ENTRANCE_LVL2_06",
+      "TOA_ENTRANCE_LVL2_07",
+      "TOA_ENTRANCE_LVL2_08",
+      "TOA_ENTRANCE_LVL2_09"
+    ]
+  },
+  {
+    "description": "Tombs of Amascut - Pyramid Top - Fix Transparent Square",
+    "baseMaterial": "ROCK_3",
+    "uvType": "MODEL_XZ",
+    "objectIds": [
+      "TOA_ENTRANCE_LVL2_05"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "TRANSPARENT"
+      }
+    ]
+  },
+  {
+    "description": "Necropolis - Rocks",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "NECROPOLIS_ROCKS_01",
+      "NECROPOLIS_ROCKS_02",
+      "NECROPOLIS_ROCKS_03",
+      "NECROPOLIS_ROCKS_04",
+      "NECROPOLIS_ROCKS_05",
+      "NECROPOLIS_ROCKS_06"
+    ]
+  },
+  {
+    "description": "Necropolis - Stone Chips",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      "NECROPOLIS_SAND_DETAIL1",
+      "NECROPOLIS_SAND_DETAIL2",
+      "NECROPOLIS_SAND_DETAIL3",
+      "NECROPOLIS_DUGUPSOIL_05",
+      "NECROPOLIS_DUGUPSOIL_06",
+      "NECROPOLIS_DUGUPSOIL_07",
+      "NECROPOLIS_DUGUPSOIL_09",
+      "NECROPOLIS_DUGUPSOIL_10",
+      "NECROPOLIS_DUGUPSOIL_11"
+    ]
+  },
+  {
+    "description": "Necropolis - Sand Patches",
+    "baseMaterial": "GRAVEL_LIGHT",
+    "uvType": "MODEL_XZ",
+    "objectIds": [
+      "DECAL_SAND01_PILE01",
+      "DECAL_SAND01_PILE02",
+      "DECOKIT_SAND01_PILE01"
+    ]
+  },
+  {
+    "description": "Necropolis - Stone Tiles",
+    "baseMaterial": "MARBLE_3",
+    "uvScale": 1.5,
+    "uvType": "BOX",
+    "objectIds": [
+      "NECROPOLIS_TILE_01",
+      "NECROPOLIS_TILE_02",
+      "NECROPOLIS_TILE_03",
+      "NECROPOLIS_TILE_05",
+      "NECROPOLIS_TILE_07"
+    ]
+  },
+  {
     "description": "Tombs of Amascut invocation board",
-    "flatNormals": true,
     "objectIds": [
       "TOA_INVOCATION_BOARD"
     ]
@@ -13587,7 +14187,9 @@
     "objectIds": [
       "FARMING_SHOP_SACKS",
       "_100_GOBLIN_SACK_EMPTY",
-      "WILDY_HUB_SACK_KNIFE"
+      "WILDY_HUB_SACK_KNIFE",
+      "GRAB_EVIL_TWIN_SACK_PILE_SMALL",
+      "GRAB_EVIL_TWIN_SACK_PILE_LARGE"
     ],
     "uvType": "BOX",
     "uvOrientation": 256,
@@ -17083,10 +17685,24 @@
       "ENAKH_LEAFLESSBUSH",
       "FAI_LEAFLESS_BUSH_LARGE_01",
       "FAI_LEAFLESS_BUSH_LARGE_02",
-      "DOV_HUNTING_PLANT2_NOOP"
+      "DOV_HUNTING_PLANT2_NOOP",
+      "BUSH_DESERT_DEAD01",
+      "BUSH_DESERT_DEAD02"
     ],
     "uvType": "BOX",
     "uvOrientation": 600
+  },
+  {
+    "description": "Objects - Bush - Desert",
+    "baseMaterial": "PLANT_GRUNGE_1",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "BUSH_DESERT_DEFAULT01",
+      "BUSH_DESERT_DEFAULT02",
+      "BUSH_DESERT_DEFAULT03",
+      "BUSH_DESERT_DEFAULT04"
+    ]
   },
   {
     "description": "Mage Training Arena - Marble - Portal Pillars",
@@ -18043,7 +18659,19 @@
   {
     "description": "Skeleton",
     "baseMaterial": "BONE",
-    "objectIds": [ "CORPSE", "CORPSE4", "CHICKENQUEST_SKELETON_1", "CHICKENQUEST_SKELETON_2", "CHICKENQUEST_SKELETON_3", "MY2ARM_SKELETON", "RAT_BOSS_CORPSE02", "RAT_BOSS_CORPSE01" ],
+    "objectIds": [
+      "CORPSE",
+      "CORPSE4",
+      "CHICKENQUEST_SKELETON_1",
+      "CHICKENQUEST_SKELETON_2",
+      "CHICKENQUEST_SKELETON_3",
+      "MY2ARM_SKELETON",
+      "RAT_BOSS_CORPSE02",
+      "RAT_BOSS_CORPSE01",
+      "NECROPOLIS_SKELETON_1",
+      "NECROPOLIS_SKELETON_2",
+      "NECROPOLIS_SKELETON_3"
+    ],
     "uvType": "BOX",
     "uvOrientation": 768,
     "uvScale": 0.75
@@ -18051,7 +18679,7 @@
   {
     "description": "Bones - Medium",
     "baseMaterial": "BONE",
-    "objectIds": [ "MY2ARM_BONES1", "MY2ARM_BONES2", "MY2ARM_BONES3", "MY2ARM_BONES4" ],
+    "objectIds": [ "MY2ARM_BONES1", "MY2ARM_BONES2", "MY2ARM_BONES3", "MY2ARM_BONES4", "NECROPOLIS_BONES1", "NECROPOLIS_BONES3" ],
     "uvType": "BOX",
     "uvOrientation": 768,
     "uvScale": 0.6
