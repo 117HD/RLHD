@@ -488,7 +488,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public final float[] cameraPosition = new float[3];
 	public final float[] cameraOrientation = new float[2];
 	public final int[] cameraFocalPoint = new int[2];
-	public final int[] cameraShift = new int[2];
+	private final int[] cameraShift = new int[2];
+	private int cameraZoom;
+	private boolean tileVisibilityCached;
+	private final boolean[][][] tileIsVisible = new boolean[MAX_Z][EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE];
 
 	public double elapsedTime;
 	public double elapsedClientTime;
@@ -1573,11 +1576,18 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			}
 
 			if (updateUniforms) {
-				cameraPosition[0] = (float) cameraX;
-				cameraPosition[1] = (float) cameraY;
-				cameraPosition[2] = (float) cameraZ;
-				cameraOrientation[0] = (float) cameraYaw;
-				cameraOrientation[1] = (float) cameraPitch;
+				float[] newCameraPosition = { (float) cameraX, (float) cameraY, (float) cameraZ };
+				float[] newCameraOrientation = { (float) cameraYaw, (float) cameraPitch };
+				int newZoom = configShadowsEnabled && configExpandShadowDraw ? client.get3dZoom() / 2 : client.get3dZoom();
+				if (!Arrays.equals(cameraPosition, newCameraPosition) ||
+					!Arrays.equals(cameraOrientation, newCameraOrientation) ||
+					cameraZoom != newZoom
+				) {
+					System.arraycopy(newCameraPosition, 0, cameraPosition, 0, cameraPosition.length);
+					System.arraycopy(newCameraOrientation, 0, cameraOrientation, 0, cameraOrientation.length);
+					cameraZoom = newZoom;
+					tileVisibilityCached = false;
+				}
 
 				if (sceneContext.scene == scene) {
 					cameraFocalPoint[0] = client.getOculusOrbFocalPointX();
@@ -1648,6 +1658,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public void postDrawScene() {
 		if (sceneContext == null)
 			return;
+
+		tileVisibilityCached = true;
 
 		frameTimer.end(Timer.DRAW_SCENE);
 		frameTimer.begin(Timer.UPLOAD_GEOMETRY);
@@ -2524,6 +2536,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			initTileHeightMap(scene);
 		}
 
+		tileVisibilityCached = false;
 		lightManager.loadSceneLights(nextSceneContext, sceneContext);
 		fishingSpotReplacer.despawnRuneLiteObjects();
 
@@ -2587,8 +2600,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		}
 	}
 
-	public void reloadSceneNextGameTick()
-	{
+	public void reloadSceneNextGameTick() {
 		reloadSceneIn(1);
 	}
 
@@ -2906,6 +2918,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (orthographicProjection)
 			return true;
 
+		if (tileVisibilityCached)
+			return tileIsVisible[plane][tileExX][tileExY];
+
 		int[][][] tileHeights = scene.getTileHeights();
 		int x = ((tileExX - SCENE_OFFSET) << Perspective.LOCAL_COORD_BITS) + 64;
 		int z = ((tileExY - SCENE_OFFSET) << Perspective.LOCAL_COORD_BITS) + 64;
@@ -2926,7 +2941,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		int radius = 96; // ~ 64 * sqrt(2)
 
-		int zoom = (configShadowsEnabled && configExpandShadowDraw) ? client.get3dZoom() / 2 : client.get3dZoom();
 		int Rasterizer3D_clipMidX2 = client.getRasterizer3D_clipMidX2();
 		int Rasterizer3D_clipNegativeMidX = client.getRasterizer3D_clipNegativeMidX();
 		int Rasterizer3D_clipNegativeMidY = client.getRasterizer3D_clipNegativeMidY();
@@ -2935,21 +2949,22 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		int var12 = pitchSin * y + pitchCos * var11 >> 16;
 		int var13 = pitchCos * radius >> 16;
 		int depth = var12 + var13;
+		boolean visible = false;
 		if (depth > NEAR_PLANE) {
 			int rx = z * yawSin + yawCos * x >> 16;
-			int var16 = (rx - radius) * zoom;
-			int var17 = (rx + radius) * zoom;
+			int var16 = (rx - radius) * cameraZoom;
+			int var17 = (rx + radius) * cameraZoom;
 			// left && right
 			if (var16 < Rasterizer3D_clipMidX2 * depth && var17 > Rasterizer3D_clipNegativeMidX * depth) {
 				int ry = pitchCos * y - var11 * pitchSin >> 16;
 				int ybottom = pitchSin * radius >> 16;
-				int var20 = (ry + ybottom) * zoom;
+				int var20 = (ry + ybottom) * cameraZoom;
 				// top
 				// we don't test the bottom so we don't have to find the height of all the models on the tile
-				return var20 > Rasterizer3D_clipNegativeMidY * depth;
+				visible = var20 > Rasterizer3D_clipNegativeMidY * depth;
 			}
 		}
-		return false;
+		return tileIsVisible[plane][tileExX][tileExY] = visible;
 	}
 
 	/**
