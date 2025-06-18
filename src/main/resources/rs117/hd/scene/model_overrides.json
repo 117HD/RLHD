@@ -12488,7 +12488,6 @@
       "CASTLEWARS_ZAMORAK_QUIT",
       "CASTLEWARS_RANDOM_TELE",
       "POH_EXIT_PORTAL",
-      "GOLEM_DEMON_PORTAL",
       "DT_PORTAL",
       "RD_PORTAL_ROOM1_ENTRANCE",
       "RD_PORTAL_ROOM1_EXIT",
@@ -13097,8 +13096,6 @@
       "GOLEM_PLINTH_FEMALE_TURNED_MIRROR",
       "GOLEM_PLINTH_FEMALE_TURNED",
       "GOLEM_STATUE_HAMMER",
-      "GOLEM_DEMON_CAVEWALL",
-      "GOLEM_DEMON_CAVEWALL_TOP_HIGHER",
       "GOLEM_WALL_WOMAN",
       "GOLEM_STATUETTE_FACING_LEFT",
       "GOLEM_STATUETTE_FACING_RIGHT"
@@ -13246,6 +13243,42 @@
     "uvScale": 0.75,
     "objectIds": [
       "GOLEM_BLACK_MUSHROOMS"
+    ]
+  },
+  {
+    "description": "Kharidian Desert - Carpet Merchant Tent",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvType": "MODEL_XZ",
+    "objectIds": [
+      "CARPET_SHADETENT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      },
+      {
+        "colors": ["h == 8 && s == 7", "h == 37"],
+        "baseMaterial": "METALLIC_1"
+      },
+      {
+        "colors": "h == 8 && s == 2",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.3
+      }
+    ]
+  },
+  {
+    "description": "Kharidian Desert - Carpet Merchant Rugs",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "CARPET_ROLLEDOUT",
+      "CARPET_ROLLEDUP_PILE",
+      "CARPET_ROLLEDUP"
     ]
   },
   {
