@@ -13553,7 +13553,24 @@
       "WALLKIT_MASTABA02_DAMAGED01",
       "WALLKIT_MASTABA01_DEFAULT02",
       "WALLKIT_MASTABA01_DOORWAY01",
-      "WALLKIT_MASTABA01_WALL01",
+      "WALLKIT_MASTABA01_WALL01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 39",
+        "baseMaterial": "MARBLE_2",
+        "uvType": "BOX",
+        "uvOrientation": 123,
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Necropolis - Ruined Buildings",
+    "baseMaterial": "GRAVEL_LIGHT",
+    "uvScale": 0.75,
+    "uvType": "BOX",
+    "objectIds": [
       "WALLKIT_MASTABA02_ROOF02",
       "WALLKIT_MASTABA01_ROOF01",
       "WALLKIT_MASTABA01_ROOF02",
@@ -13583,7 +13600,7 @@
         "colors": "h == 39",
         "baseMaterial": "MARBLE_2",
         "uvType": "BOX",
-        "uvOrientation": 123,
+        "uvOrientation": 223,
         "uvScale": 0.5
       }
     ]
