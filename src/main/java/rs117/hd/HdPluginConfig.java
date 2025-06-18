@@ -966,14 +966,14 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
-	String KEY_ASYNC_UI_COPY = "experimentalUseInterfaceAsyncCopy";
+	String KEY_ASYNC_UI_COPY = "experimentalAsyncUICopy";
 	@ConfigItem(
 		keyName = KEY_ASYNC_UI_COPY,
-		name = "Perform UI Copy Async",
-		description = "Improves performance by moving UI copy to a thread pool",
+		name = "Perform UI copy asynchronously",
+		description = "Slightly improves performance by delaying the UI by one frame.",
 		section = experimentalSettings
 	)
-	default boolean useInterfaceAsyncCopy() {
+	default boolean asyncUICopy() {
 		return false;
 	}
 

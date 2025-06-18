@@ -16,7 +16,10 @@ import static org.lwjgl.opengl.GL15C.*;
 import static org.lwjgl.opengl.GL21C.*;
 
 @Slf4j
-public class AsyncInterfaceCopy implements Runnable {
+public class AsyncUICopy implements Runnable {
+	@Inject
+	private Client client;
+
 	@Inject
 	private FrameTimer timer;
 
@@ -25,35 +28,36 @@ public class AsyncInterfaceCopy implements Runnable {
 
 	private IntBuffer mappedBuffer;
 	private int[] pixels;
-	private int interfacePho;
+	private int interfacePbo;
 	private int interfaceTexture;
 	private int width;
 	private int height;
 
 	@Override
 	public void run() {
-		long t = System.nanoTime();
+		timer.begin(Timer.COPY_UI);
 		mappedBuffer.put(pixels, 0, width * height);
+		timer.end(Timer.COPY_UI);
 		completionSemaphore.release();
-		timer.add(Timer.COPY_UI, System.nanoTime() - t);
 	}
 
-	public void prepare(BufferProvider provider, int interfacePho, int interfaceTex) {
+	public void prepare(int interfacePbo, int interfaceTex) {
 		if (mappedBuffer != null)
 			return;
 
 		timer.begin(Timer.MAP_UI_BUFFER);
-		glBindBuffer(GL_PIXEL_UNPACK_BUFFER, interfacePho);
-		ByteBuffer mappedBuffer = glMapBuffer(GL_PIXEL_UNPACK_BUFFER, GL_WRITE_ONLY);
+		glBindBuffer(GL_PIXEL_UNPACK_BUFFER, interfacePbo);
+		ByteBuffer buffer = glMapBuffer(GL_PIXEL_UNPACK_BUFFER, GL_WRITE_ONLY);
 		glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
 		timer.end(Timer.MAP_UI_BUFFER);
-
-		if (mappedBuffer == null)
+		if (buffer == null)
 			return;
 
-		this.interfacePho = interfacePho;
+		this.interfacePbo = interfacePbo;
 		this.interfaceTexture = interfaceTex;
-		this.mappedBuffer = mappedBuffer.asIntBuffer();
+		this.mappedBuffer = buffer.asIntBuffer();
+
+		var provider = client.getBufferProvider();
 		this.pixels = provider.getPixels();
 		this.width = provider.getWidth();
 		this.height = provider.getHeight();
@@ -62,7 +66,7 @@ public class AsyncInterfaceCopy implements Runnable {
 	}
 
 	public boolean complete() {
-		// Check if there are any workers doing anything
+		// Ensure there isn't already another UI copy in progress
 		if (mappedBuffer == null)
 			return false;
 
@@ -76,7 +80,7 @@ public class AsyncInterfaceCopy implements Runnable {
 		}
 
 		timer.begin(Timer.UPLOAD_UI);
-		glBindBuffer(GL_PIXEL_UNPACK_BUFFER, interfacePho);
+		glBindBuffer(GL_PIXEL_UNPACK_BUFFER, interfacePbo);
 		glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
 		glBindTexture(GL_TEXTURE_2D, interfaceTexture);
 		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, 0);

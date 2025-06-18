@@ -90,7 +90,7 @@ import rs117.hd.data.materials.Material;
 import rs117.hd.model.ModelHasher;
 import rs117.hd.model.ModelOffsets;
 import rs117.hd.model.ModelPusher;
-import rs117.hd.opengl.AsyncInterfaceCopy;
+import rs117.hd.opengl.AsyncUICopy;
 import rs117.hd.opengl.compute.ComputeMode;
 import rs117.hd.opengl.compute.OpenCLManager;
 import rs117.hd.opengl.shader.Shader;
@@ -249,7 +249,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private SceneUploader sceneUploader;
 
 	@Inject
-	private AsyncInterfaceCopy interfaceAsyncCopy;
+	private AsyncUICopy asyncUICopy;
 
 	@Inject
 	private ModelPusher modelPusher;
@@ -1667,11 +1667,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		tileVisibilityCached = true;
 
 		frameTimer.end(Timer.DRAW_SCENE);
-
-		// Upload the UI which should be done copying on the CPU side from the previous frame
-		if (configAsyncUICopy)
-			interfaceAsyncCopy.complete();
-
 		frameTimer.begin(Timer.RENDER_FRAME);
 		frameTimer.begin(Timer.UPLOAD_GEOMETRY);
 
@@ -1903,34 +1898,34 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			glBindTexture(GL_TEXTURE_2D, 0);
 		}
 
-		if (configAsyncUICopy) {
-			// Prepare to upload the current UI for the next frame
-			interfaceAsyncCopy.prepare(client.getBufferProvider(), interfacePbo, interfaceTexture);
+		// Copy the UI at the end of the frame instead, and upload it before the next frame
+		if (configAsyncUICopy)
 			return;
-		}
 
-		frameTimer.begin(Timer.UPLOAD_UI);
 		final BufferProvider bufferProvider = client.getBufferProvider();
 		final int[] pixels = bufferProvider.getPixels();
 		final int width = bufferProvider.getWidth();
 		final int height = bufferProvider.getHeight();
 
+		frameTimer.begin(Timer.MAP_UI_BUFFER);
 		glBindBuffer(GL_PIXEL_UNPACK_BUFFER, interfacePbo);
 		ByteBuffer mappedBuffer = glMapBuffer(GL_PIXEL_UNPACK_BUFFER, GL_WRITE_ONLY);
+		frameTimer.end(Timer.MAP_UI_BUFFER);
 		if (mappedBuffer == null) {
 			log.error("Unable to map interface PBO. Skipping UI...");
 		} else {
 			frameTimer.begin(Timer.COPY_UI);
 			mappedBuffer.asIntBuffer().put(pixels, 0, width * height);
 			frameTimer.end(Timer.COPY_UI);
+
+			frameTimer.begin(Timer.UPLOAD_UI);
 			glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
 			glBindTexture(GL_TEXTURE_2D, interfaceTexture);
 			glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, 0);
+			frameTimer.end(Timer.UPLOAD_UI);
 		}
 		glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
 		glBindTexture(GL_TEXTURE_2D, 0);
-
-		frameTimer.end(Timer.UPLOAD_UI);
 	}
 
 	@Override
@@ -2350,6 +2345,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
 
+		// Begin copying the UI to be displayed the next frame
+		if (configAsyncUICopy)
+			asyncUICopy.prepare(interfacePbo, interfaceTexture);
+
 		frameTimer.end(Timer.DRAW_FRAME);
 		frameTimer.end(Timer.RENDER_FRAME);
 		frameTimer.endFrameAndReset();
@@ -2754,8 +2753,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 								break;
 							case KEY_ASYNC_UI_COPY:
 								if (configAsyncUICopy)
-									interfaceAsyncCopy.complete();
-								configAsyncUICopy = config.useInterfaceAsyncCopy();
+									asyncUICopy.complete();
+								configAsyncUICopy = config.asyncUICopy();
 								break;
 						}
 
@@ -3391,6 +3390,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Subscribe(priority = -1) // Run after the low detail plugin
 	public void onBeforeRender(BeforeRender beforeRender) {
+		// Upload the UI which we started copying at the end of the previous frame
+		if (configAsyncUICopy)
+			asyncUICopy.complete();
+
 		if (client.getScene() == null)
 			return;
 		// The game runs significantly slower with lower planes in Chambers of Xeric

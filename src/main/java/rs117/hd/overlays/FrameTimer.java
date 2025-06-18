@@ -111,10 +111,6 @@ public class FrameTimer {
 		}
 	}
 
-	public void add(Timer timer, long nanos) {
-		timings[timer.ordinal()] += nanos;
-	}
-
 	public void endFrameAndReset() {
 		if (isInactive)
 			return;
