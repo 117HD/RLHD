@@ -20,6 +20,8 @@ public enum Timer {
 	UPDATE_LIGHTS,
 	IMPOSTOR_TRACKING,
 	REPLACE_FISHING_SPOTS,
+	MAP_UI_BUFFER(false, "Map UI Buffer"),
+	COPY_UI(false, "Copy UI"),
 	RENDER_FRAME(true),
 	UPLOAD_GEOMETRY(true),
 	UPLOAD_UI(true, "Upload UI"),
